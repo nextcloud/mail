@@ -56,9 +56,9 @@ table#mail_messages {
     margin: 0.2em 1em 0 0 !important;
 }
 
-#content-wrapper {
-	background: #eee;
-}
+/*#content-wrapper {*/
+	/*background: #eee;*/
+/*}*/
 
 #mail-setup {
 	font-size: 1.5em;
