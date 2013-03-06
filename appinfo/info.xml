@@ -1,0 +1,10 @@
+<?xml version="1.0"?>
+<info>
+	<id>mail</id>
+	<name>Mail</name>
+	<description>Just a mail app</description>
+	<version>0.1</version>
+	<licence>AGPL</licence>
+	<author>Jakob, Bart &amp; Tom</author>
+	<require>4.93</require>
+</info>

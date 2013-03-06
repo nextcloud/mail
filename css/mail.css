@@ -1,0 +1,150 @@
+#leftcontent {
+    padding: 0;
+    margin: 0;
+}
+
+#rightcontent, .rightcontent {
+	position: absolute;
+	top: 0;
+	left: 20em;
+	right: 0;
+	bottom: 0;
+	overflow-x: hidden;
+	overflow-y: auto;
+}
+
+#bottomcontrols {
+    padding: 0;
+    bottom: 0px;
+    height: 2.8em;
+    width: 20em;
+    margin: 0;
+    background: #eee;
+    border-top: 1px solid #ccc;
+    position: fixed;
+    -moz-box-shadow: 0 -3px 3px -3px #000;
+    -webkit-box-shadow: 0 -3px 3px -3px #000;
+    box-shadow: 0 -3px 3px -3px #000;
+}
+
+button.control {
+    float: left;
+    margin: 0.2em 0 0 1em;
+    height: 2.4em;
+    width: 2.4em; /* border: 0 none; border-radius: 0; -moz-box-shadow: none; box-shadow: none; outline: 0 none;*/
+}
+
+table#mail_messages {
+	width: 100%;
+}
+
+.settings {
+    background: url('%webroot%/core/img/actions/settings.svg') no-repeat center;
+    float: right !important;
+    margin: 0.2em 1em 0 0 !important;
+}
+
+#firstrun {
+    position: relative;
+    top: 50%;
+    left: 50%;
+    margin-left: -25em;
+    margin-top: -10em;
+    width: 50em;
+    height: 20em;
+    text-align: center;
+    font-weight: bold;
+    font-size: 1.5em;
+    color: #777;
+}
+
+#firstrun small {
+    display: block;
+    font-weight: normal;
+    font-size: 0.8em;
+    margin: .5em 0 1em 0;
+}
+
+#firstrun .button {
+    font-size: 0.7em;
+}
+
+#firstrun #selections {
+    font-size: 0.8em;
+    margin: 2em auto 2em 10em;
+    clear: both;
+}
+
+#firstrun #email_address {
+    width: 20em;
+}
+
+#firstrun #selections #addaccount_dialog_firstrun {
+    width: 40em;
+    border: 1px solid;
+    border-color: gray;
+    border-radius: 10px;
+    -moz-border-radius: 10px; /* Firefox 3.6 and earlier */
+}
+
+#firstrun #selections #addaccount_dialog_firstrun {
+    height: 7em;
+}
+
+.mail_message_summary.template {
+    display: none;
+}
+
+.mail_message_summary {
+}
+
+#mail_messages>tbody>tr>td {
+    border-bottom: 1px solid black;
+}
+
+#mail_messages>tbody>tr>td:last {
+    border-bottom: none;
+}
+
+#mail_messages>tbody>tr.unseen>td {
+    font-weight: bold;
+}
+
+.mail_message_summary_info {
+    white-space: nowrap;
+    overflow: hidden;
+    padding-left: 5px;
+}
+
+.mail_message_summary_subject {
+    white-space: nowrap;
+    overflow: hidden;
+    padding-left: 5px;
+}
+
+.mail_message_summary_date {
+    padding-left: 5px;
+}
+
+.mail_message_loading {
+    display: none;
+}
+
+/* editor */
+.ui-autocomplete-loading {
+    background: white url('%webroot%/core/img/loading.gif') right center no-repeat;
+}
+
+#to {
+    width: 95%;
+}
+
+#subject {
+    width: 95%;
+}
+
+#body {
+    width: 95%;
+    height: 209px;
+    resize: none;
+}
