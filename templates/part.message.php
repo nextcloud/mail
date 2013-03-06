@@ -23,6 +23,13 @@
 </tr>
 <tr id="mail_message">
 	<td colspan="3" class="mail_message_body">
-		<?php print_unescaped($_['message']['body']); ?>
+		<div id="mail-content">
+			<?php print_unescaped($_['message']['body']); ?>
+		</div>
+		<div class="reply-message-fields">
+			<textarea name="body" class="reply-message-body" ></textarea>
+			<input class="reply-message-send" type="submit" value="<?php p($l->t('Reply')) ?>">
+		</div>
+
 	</td>
 </tr>

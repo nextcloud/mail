@@ -27,6 +27,12 @@
     box-shadow: 0 -3px 3px -3px #000;
 }
 
+.loading {
+	position: relative;
+	left: 50%;
+	top: 200px;
+}
+
 button.control {
     float: left;
     margin: 0.2em 0 0 1em;
@@ -91,6 +97,16 @@ table#mail_messages {
     height: 7em;
 }
 
+#new-message {
+	width: 60%;
+	margin: 10px;
+}
+
+reply-message-fields {
+	width: 60%;
+	margin: 10px;
+}
+
 .mail_message_summary.template {
     display: none;
 }
@@ -98,8 +114,12 @@ table#mail_messages {
 .mail_message_summary {
 }
 
+#mail_messages>tbody>tr {
+	height: 40px;
+}
+
 #mail_messages>tbody>tr>td {
-    border-bottom: 1px solid black;
+    border-bottom: 1px solid #cccccc;
 }
 
 #mail_messages>tbody>tr>td:last {
@@ -143,8 +163,14 @@ table#mail_messages {
     width: 95%;
 }
 
-#body {
+#new-message-body {
     width: 95%;
-    height: 209px;
+    height: 100px;
     resize: none;
+}
+
+.reply-message-body {
+	width: 95%;
+	height: 50px;
+	resize: none;
 }
