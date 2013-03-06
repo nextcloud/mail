@@ -28,9 +28,15 @@
 }
 
 .loading {
-	position: relative;
+	position: absolute;
 	left: 50%;
 	top: 200px;
+}
+
+.mail_account {
+	padding: .5em .8em;
+	font-weight: bold;
+	border-bottom: 1px solid #ddd;
 }
 
 button.control {
@@ -119,11 +125,7 @@ reply-message-fields {
 }
 
 #mail_messages>tbody>tr>td {
-    border-bottom: 1px solid #cccccc;
-}
-
-#mail_messages>tbody>tr>td:last {
-    border-bottom: none;
+    border-top: 1px solid #eee;
 }
 
 #mail_messages>tbody>tr.unseen>td {
@@ -173,4 +175,12 @@ reply-message-fields {
 	width: 95%;
 	height: 50px;
 	resize: none;
+}
+
+.unread-count {
+	float: right;
+}
+
+.unread {
+	font-weight: bold;
 }

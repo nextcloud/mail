@@ -12,7 +12,7 @@ if (count($accounts) == 0) {
 </div>
 <div id="rightcontent" class="rightcontent">
 	<form id="new-message" >
-		<input type="button" id="mail_new_message" value="<?php p($l->t('New Message')); ?>">
+		<input type="button" id="mail_new_message" value="<?php p($l->t('New Message')); ?>" style="display: none">
 		<div id="new-message-fields" style="display: none">
 			<input type="text" name="to" id="to" placeholder="<?php p($l->t('To')); ?>"/>
 			<input type="text" name="subject" id="subject" placeholder="<?php p($l->t('Subject')); ?>"/>
@@ -21,7 +21,7 @@ if (count($accounts) == 0) {
 		</div>
 	</form>
 
-	<img class="loading" id="messages-loading" src="<?php print_unescaped(OCP\Util::imagePath('core', 'loading.gif')); ?>" style="display: none" />
+	<img class="loading" id="messages-loading" src="<?php print_unescaped(OCP\Util::imagePath('core', 'loading.gif')); ?>" />
 
 	<table id="mail_messages">
 		<tr class="template mail_message_summary" data-message-id="0">

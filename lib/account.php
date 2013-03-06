@@ -82,10 +82,23 @@ class Account {
 			$folders[] = $mailbox->getListArray();
 		}
 
-		usort($folders, function ($a, $b) {
-			return strcmp($a['id'], $b['id']);
-		});
+		$inbox = null;
+		foreach ($folders as $key=>$value) {
+			if ($value['id'] === 'INBOX') {
+				  $inbox = $key;
+			}
+		}
 
-		return array('id' => $this->getId(), 'name' => $this->getName(), 'folders' => $folders);
+		if ($inbox) {
+			self::move_to_top($folders, $inbox);
+		}
+
+		return array('id' => $this->getId(), 'email' => $this->getEMailAddress(), 'folders' => $folders);
+	}
+
+	private static function move_to_top(&$array, $key) {
+		$temp = array($key => $array[$key]);
+		unset($array[$key]);
+		$array = $temp + $array;
 	}
 }

@@ -87,7 +87,7 @@ namespace OCA\Mail {
 				try {
 					$response[] = $account->getListArray();
 				} catch (\Horde_Imap_Client_Exception $e) {
-					$response[] = array('id' => $account->getId(), 'name' => $account->getName(), 'error' => $e->getMessage());
+					$response[] = array('id' => $account->getId(), 'email' => $account->getEMailAddress(), 'error' => $e->getMessage());
 				}
 			}
 

@@ -30,15 +30,7 @@ Mail = {
                             folder_id = first_folder.data('folder_id');
                             account_id = first_folder.parent().data('account_id');
 
-
-                            $.ajax(OC.filePath('mail', 'ajax', 'messages.php'), {
-                                data:{'account_id':account_id, 'folder_id':folder_id},
-                                type:'GET',
-                                success:function (jsondata) {
-                                    messages = jsondata.data;
-                                    Mail.UI.addMessages(messages);
-                                }
-                            });
+							Mail.UI.loadMessages(account_id, folder_id);
 
                             // Save current folder
                             Mail.UI.setFolderActive(account_id, folder_id);
@@ -101,6 +93,8 @@ Mail = {
             Mail.UI.setFolderInactive(Mail.State.current_account_id, Mail.State.current_folder_id);
             Mail.UI.setFolderActive(account_id, folder_id);
             Mail.UI.clearMessages();
+
+			$('#mail_new_message').fadeIn();
 
             $.getJSON(OC.filePath('mail', 'ajax', 'messages.php'), {'account_id':account_id, 'folder_id':folder_id}, function (jsondata) {
 				$('#messages-loading').fadeOut();
