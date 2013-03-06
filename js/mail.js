@@ -231,10 +231,10 @@ $(document).ready(function () {
     // auto detect button handling
     $('#auto_detect_account').click(function () {
         $('#auto_detect_account').attr('disabled', "disabled");
-        $('#auto_detect_account').val(t('mail', 'Checking ...'));
+        $('#auto_detect_account').val(t('mail', 'Connecting ...'));
         var email_address, password;
-        email_address = $('#email_address').val();
-        password = $('#password').val();
+        email_address = $('#mail-address').val();
+        password = $('#mail-password').val();
         $.ajax(OC.filePath('mail', 'ajax', 'account/autodetect.php'), {
             data:{email_address:email_address, password:password},
             type:'POST',
@@ -244,7 +244,7 @@ $(document).ready(function () {
                     window.location.reload();
                 } else {
                     $('#auto_detect_account').attr('disabled', 'false');
-                    $('#auto_detect_account').val(t('mail', 'Auto Detect'));
+                    $('#auto_detect_account').val(t('mail', 'Connect'));
                     var error;
 
                     if (jsondata.message == 'email') {

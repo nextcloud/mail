@@ -56,51 +56,49 @@ table#mail_messages {
     margin: 0.2em 1em 0 0 !important;
 }
 
-#firstrun {
-    position: relative;
-    top: 50%;
-    left: 50%;
-    margin-left: -25em;
-    margin-top: -10em;
-    width: 50em;
-    height: 20em;
-    text-align: center;
-    font-weight: bold;
-    font-size: 1.5em;
-    color: #777;
+#content-wrapper {
+	background: #eee;
 }
 
-#firstrun small {
-    display: block;
-    font-weight: normal;
-    font-size: 0.8em;
-    margin: .5em 0 1em 0;
+#mail-setup {
+	font-size: 1.5em;
+	margin: 2em auto 0;
 }
 
-#firstrun .button {
-    font-size: 0.7em;
+#mail-setup fieldset {
+	width: 17em;
+	margin: 5em auto 2em;
+	padding: 0;
 }
 
-#firstrun #selections {
-    font-size: 0.8em;
-    margin: 2em auto 2em 10em;
-    clear: both;
+#mail-setup legend {
+	text-align: center;
 }
 
-#firstrun #email_address {
-    width: 20em;
+#mail-setup input[type="text"],
+#mail-setup input[type="password"] {
+	width: 100%;
+	box-sizing: border-box;
 }
 
-#firstrun #selections #addaccount_dialog_firstrun {
-    width: 40em;
-    border: 1px solid;
-    border-color: gray;
-    border-radius: 10px;
-    -moz-border-radius: 10px; /* Firefox 3.6 and earlier */
+#mail-setup label.infield{
+	position: absolute;
+	width: 90%;
+	padding-left: 0;
+	font-size: 19px;
+	color: #aaa;
+	white-space: nowrap;
+	overflow: hidden;
+	text-overflow: ellipsis;
 }
 
-#firstrun #selections #addaccount_dialog_firstrun {
-    height: 7em;
+#mail-setup .groupbottom label {
+	top: .65em;
+}
+
+.connect {
+	font-size: 1em;
+	float: right;
 }
 
 #new-message {

@@ -1,15 +1,17 @@
-<div id="firstrun">
-    <h1><?php p($l->t("You don't have any email account configured yet.")) ?></h1>
-    <div id="selections">
-	    <fieldset id="addaccount_dialog_firstrun">
-	        <legend style="margin-left:10px;"><img src="<?php print_unescaped(OCP\Util::imagePath('mail','mail.png')); ?>"> <?php p($l->t('Add email account')) ?></legend>
-            <input type="email" id="email_address" placeholder="<?php p($l->t('E-Mail Address')); ?>" />
-            <input type="password" id="password" placeholder="<?php p($l->t('IMAP Password')); ?>" />
-	        <input type="submit" value="<?php p($l->t('Auto Detect')); ?>" id="auto_detect_account" />
-	    </fieldset>
-    </div>
-    <div>
-        <small><?php p($l->t('You can manage your email accounts here:')); ?></small>
-	    <a class="button"><?php p($l->t('Settings')); ?></a>
-	</div>
-</div>
+<form id="mail-setup">
+	<fieldset>
+		<legend><?php p($l->t('Connect your mail account')) ?></legend>
+
+		<p class="infield grouptop">
+			<input type="text" name="mail-address" id="mail-address" placeholder=""
+				   value="" autofocus autocomplete="off" required/>
+			<label for="mail-address" class="infield"><?php p($l->t('Mail Address')); ?></label>
+		</p>
+
+		<p class="infield groupbottom">
+			<input type="password" name="mail-password" id="mail-password" value="" placeholder="" />
+			<label for="mail-password" class="infield"><?php p($l->t('IMAP Password')); ?></label>
+		</p>
+		<input type="submit" id="auto_detect_account" class="connect primary" value="<?php p($l->t('Connect')); ?>"/>
+	</fieldset>
+</form>
