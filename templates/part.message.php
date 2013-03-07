@@ -18,7 +18,7 @@
         <img src="<?php print_unescaped(OCP\Util::imagePath('mail', 'reply-all.png')); ?>" />
         <img src="<?php print_unescaped(OCP\Util::imagePath('mail', 'forward.png')); ?>" />
         <br/>
-	    <?php p(OCP\Util::formatDate($_['message']['date'])); ?>
+	    <?php p($_['message']['date']); ?>
 	</td>
 </tr>
 <tr id="mail_message">
