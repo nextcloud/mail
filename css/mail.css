@@ -60,27 +60,23 @@ table#mail_messages {
 	/*background: #eee;*/
 /*}*/
 
+
+
+/* SETUP */
 #mail-setup {
-	font-size: 1.5em;
-	margin: 2em auto 0;
+	font-size:1.5em; overflow:hidden;
 }
-
 #mail-setup fieldset {
-	width: 17em;
-	margin: 5em auto 2em;
-	padding: 0;
+	position:relative; width:17em; margin:5em auto 2em; padding:0;
 }
-
 #mail-setup legend {
-	text-align: center;
+	text-align:center;
 }
-
 #mail-setup input[type="text"],
 #mail-setup input[type="password"] {
 	width: 100%;
 	box-sizing: border-box;
 }
-
 #mail-setup label.infield{
 	position: absolute;
 	width: 90%;
@@ -91,15 +87,18 @@ table#mail_messages {
 	overflow: hidden;
 	text-overflow: ellipsis;
 }
-
 #mail-setup .groupbottom label {
 	top: .65em;
 }
-
 .connect {
 	font-size: 1em;
 	float: right;
 }
+#connect-loading {
+	position:absolute; bottom:15px; left:45%;
+}
+
+
 
 #new-message {
 	width: 60%;
