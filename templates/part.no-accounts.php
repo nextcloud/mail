@@ -12,6 +12,7 @@
 			<input type="password" name="mail-password" id="mail-password" value="" placeholder="" />
 			<label for="mail-password" class="infield"><?php p($l->t('IMAP Password')); ?></label>
 		</p>
+		<img id="connect-loading" src="<?php print_unescaped(OCP\Util::imagePath('core', 'loading.gif')); ?>" style="display:none;" />
 		<input type="submit" id="auto_detect_account" class="connect primary" value="<?php p($l->t('Connect')); ?>"/>
 	</fieldset>
 </form>

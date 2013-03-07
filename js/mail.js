@@ -230,8 +230,11 @@ $(document).ready(function () {
 
     // auto detect button handling
     $('#auto_detect_account').click(function () {
+		$('#mail-address').attr('disabled', 'disabled');
+		$('#mail-password').attr('disabled', 'disabled');
         $('#auto_detect_account').attr('disabled', "disabled");
         $('#auto_detect_account').val(t('mail', 'Connecting ...'));
+		$('#connect-loading').fadeIn();
         var email_address, password;
         email_address = $('#mail-address').val();
         password = $('#mail-password').val();
@@ -243,8 +246,11 @@ $(document).ready(function () {
                     // reload on success
                     window.location.reload();
                 } else {
+					$('#mail-address').attr('disabled', 'false');
+					$('#mail-password').attr('disabled', 'false');
                     $('#auto_detect_account').attr('disabled', 'false');
                     $('#auto_detect_account').val(t('mail', 'Connect'));
+					$('#connect-loading').fadeOut();
                     var error;
 
                     if (jsondata.message == 'email') {
