@@ -305,6 +305,7 @@ namespace OCA\Mail {
 						try {
 							$test_account = new Account($account);
 							$client = $test_account->getImapConnection();
+							error_log("Successful: $user_id, $h, $port, $user, $sec_mode");
 							return App::addAccount($user_id, $email, $h, $port, $user, $password, $sec_mode);
 						} catch (\Horde_Imap_Client_Exception $e) {
 							// nothing to do
