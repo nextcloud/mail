@@ -39,6 +39,4 @@ if (count($accounts) == 0) {
 	</table>
 </div>
 
-<?php print_unescaped($this->inc("part.editor")); ?>
-
 <?php } ?>
