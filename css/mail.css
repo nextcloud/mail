@@ -30,7 +30,7 @@
 .loading {
 	position: absolute;
 	left: 50%;
-	top: 200px;
+	top: 50%;
 }
 
 .mail_account {
