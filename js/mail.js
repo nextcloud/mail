@@ -246,8 +246,11 @@ $(document).ready(function () {
                     // reload on success
                     window.location.reload();
                 } else {
+					$('#mail-address').attr('disabled', 'false');
+					$('#mail-password').attr('disabled', 'false');
                     $('#auto_detect_account').attr('disabled', 'false');
                     $('#auto_detect_account').val(t('mail', 'Connect'));
+					$('#connect-loading').fadeOut();
                     var error;
 
                     if (jsondata.message == 'email') {
