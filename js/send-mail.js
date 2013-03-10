@@ -47,4 +47,68 @@ $(function () {
 			}
 		});
 
+	$(document).on('click', '.reply-message-send', function () {
+		//
+		// TODO:
+		//  - disable fields
+		//  - loading animation
+		//  - input validation
+		//  - fadeout on success
+		//  - undo lie - very important
+		//
+
+		$.ajax({
+			url:OC.filePath('mail', 'ajax', 'reply_to.php'),
+			beforeSend:function () {
+			},
+			complete:function () {
+			},
+			data:{
+				'account_id': Mail.State.current_account_id,
+				'folder_id': Mail.State.current_folder_id,
+				'message_id': Mail.State.current_message_id,
+				'body':$('.reply-message-body').val()},
+			success:function () {
+				// close reply
+				$('.reply-message-body').val('');
+			}
+		});
+	});
+
+	$(document).on('click', '#new-message-send', function ()
+	{
+		//
+		// TODO:
+		//  - disable fields
+		//  - loading animation
+		//  - input validation
+		//  - fadeout on success
+		//  - undo lie - very important
+		//
+
+		// send the mail
+		$.ajax({
+			url:OC.filePath('mail', 'ajax', 'send_message.php'),
+			beforeSend:function () {
+//				$('#wait').show();
+			},
+			complete:function () {
+//				$('#wait').hide();
+			},
+			data:{
+				'account_id': Mail.State.current_account_id,
+				'to':$('#to').val(),
+				'subject':$('#subject').val(),
+				'body':$('#body').val()},
+			success:function () {
+				// close composer
+				$('#new-message-fields').slideUp();
+				$('#mail_new_message').fadeIn();
+			}
+		});
+
+		return false;
+	});
+
+
 });

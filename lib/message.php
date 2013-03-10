@@ -28,11 +28,18 @@ class Message {
 	 * @param $conn
 	 * @param $folder_id
 	 * @param $message_id
+	 * @param null $fetch
 	 */
-	function __construct($conn, $folder_id, $message_id) {
+	function __construct($conn, $folder_id, $message_id, $fetch=null) {
 		$this->conn = $conn;
 		$this->folder_id = $folder_id;
 		$this->message_id = $message_id;
+
+		if ($fetch === null) {
+			$this->loadMessageBodies();
+		} else {
+			$this->fetch = $fetch;
+		}
 	}
 
 	// output all the following:
@@ -43,12 +50,16 @@ class Message {
 	public $charset = '';
 	public $attachments = array();
 
-	private $conn, $folder_id, $message_id;
-	private $fetch;
+	/**
+	 * @var \Horde_Imap_Client_Socket
+	 */
+	private $conn;
+	private $folder_id, $message_id;
 
-	public function setInfo($info) {
-		$this->fetch = $info;
-	}
+	/**
+	 * @var
+	 */
+	private $fetch;
 
 	public function getUid() {
 		return $this->fetch->getUid();
@@ -75,10 +86,21 @@ class Message {
 		return $from->label;
 	}
 
+	public function getToEmail() {
+		$e = $this->getEnvelope();
+		$from = $e->to[0];
+		return $from->bare_address;
+	}
+
 	public function getTo() {
 		$e = $this->getEnvelope();
 		$to = $e->to[0];
 		return $to ? $to->label : null;
+	}
+
+	public function getMessageId() {
+		$e = $this->getEnvelope();
+		return $e->message_id;
 	}
 
 	public function getSubject() {
@@ -243,7 +265,6 @@ class Message {
 	}
 
 	public function as_array() {
-		$this->loadMessageBodies();
 		$mail_body = $this->plainmsg;
 		$mail_body = nl2br($mail_body);
 
