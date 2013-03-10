@@ -266,10 +266,10 @@ $(document).ready(function () {
 
 	// new mail message button handling
 	$(document).on('click', '#mail_new_message', function () {
-//		$('#to').val('');
-//		$('#subject').val('');
-//		$('#body').val('');
-//		$('#mail_editor').dialog("open");
+		$('#to').val('');
+		$('#subject').val('');
+		$('#new-message-body').val('');
+
 		$('#mail_new_message').hide();
 		$('#new-message-fields').slideDown();
 	});
@@ -281,12 +281,32 @@ $(document).ready(function () {
 		//  - disable fields
 		//  - loading animation
 		//  - input validation
-		//  - send email
 		//  - fadeout on success
 		//  - undo lie - very important
 		//
-		$('#new-message-fields').slideUp();
-		$('#mail_new_message').fadeIn();
+
+		// send the mail
+		$.ajax({
+			url:OC.filePath('mail', 'ajax', 'send_message.php'),
+			beforeSend:function () {
+//				$('#wait').show();
+			},
+			complete:function () {
+//				$('#wait').hide();
+			},
+			data:{
+				'account_id': Mail.State.current_account_id,
+				'to':$('#to').val(),
+				'subject':$('#subject').val(),
+				'body':$('#body').val()},
+			success:function () {
+				// close composer
+				$('#new-message-fields').slideUp();
+				$('#mail_new_message').fadeIn();
+			}
+		});
+
+		return false;
 	});
 
 	// Clicking on a folder loads the message list
