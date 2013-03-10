@@ -59,7 +59,7 @@ namespace OCA\Mail {
 
 				// loop through all email addresses of this contact
 				foreach ($email as $e) {
-					$displayName = $fn . " <$e>";
+					$displayName = "\"$fn\" <$e>";
 					$receivers[] = array('id'    => $id,
 					                     'label' => $displayName,
 					                     'value' => $displayName);
