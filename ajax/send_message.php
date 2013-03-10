@@ -37,19 +37,13 @@ if (!$account) {
 }
 
 // get sender data
-$from = $account->getName();
-$from_address = $account->getEMailAddress();
+$headers = array();
+$headers['From']= $account->getEMailAddress();
+$headers['Subject'] = $subject;
 
-// parse receiver string
-$parser = new Horde_Mail_Rfc822();
-$tos = $parser->parseAddressList($to, array(
-	'validate' => true
-));
-
-foreach($tos as $t) {
-	// sent mail
-	OCP\Util::sendMail($t->bare_address, $t->label, $subject, $body, $from_address, $from);
-}
+// create transport and send
+$transport = $account->createTransport();
+$transport->send($to, $headers, $body);
 
 //
 // TODO: save message to 'Sent' folder
