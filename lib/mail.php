@@ -61,8 +61,8 @@ namespace OCA\Mail {
 				foreach ($email as $e) {
 					$displayName = $fn . " <$e>";
 					$receivers[] = array('id'    => $id,
-					                     'label' => $displayName,
-					                     'value' => $displayName);
+										 'label' => $displayName,
+										 'value' => $displayName);
 				}
 			}
 
@@ -112,6 +112,7 @@ namespace OCA\Mail {
 			}
 
 			try {
+				/** @var $mailbox \OCA\Mail\Mailbox */
 				$mailbox = $account->getMailbox($folder_id);
 				$messages = $mailbox->getMessages($from, $count);
 
@@ -138,6 +139,7 @@ namespace OCA\Mail {
 			}
 
 			try {
+				/** @var $mailbox \OCA\Mail\Mailbox */
 				$mailbox = $account->getMailbox($folder_id);
 				$m = $mailbox->getMessage($message_id);
 				$message = $m->as_array();
@@ -268,11 +270,10 @@ namespace OCA\Mail {
 			// TODO: will not work on windows - ignore this for now
 			//
 			if (getmxrr($host, $mx_records, $mx_weight) == false)
-					{
-						return false;
-					}
+			{
+				return false;
+			}
 
-			var_dump($mx_records);
 			if (stripos($mx_records[0], 'google') !== false) {
 				return true;
 			}
