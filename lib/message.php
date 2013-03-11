@@ -144,13 +144,13 @@ class Message {
 		if ($structure_type == 'multipart') {
 			$i = 1;
 			foreach($structure->getParts() as $p) {
-				$this->getpart($p, $i++);
+				$this->getPart($p, $i++);
 			}
 		} else {
 			if ($structure->findBody() != null) {
 				// get the body from the server
 				$partId = $structure->findBody();
-				$this->getpart($structure->getPart($partId), $partId);
+				$this->getPart($structure->getPart($partId), $partId);
 			}
 		}
 	}
@@ -172,7 +172,7 @@ class Message {
 	 * @param $p \Horde_Mime_Part
 	 * @param $partno
 	 */
-	private function getpart($p, $partno) {
+	private function getPart($p, $partno) {
 		// ATTACHMENT
 		// Any part with a filename is an attachment,
 		// so an attached text file (type 0) is not mistaken as the message.
@@ -237,7 +237,7 @@ class Message {
 //		}
 	}
 
-	private function get_attachment_info() {
+	private function getAttachmentInfo() {
 		$attachment_info = array();
 		foreach ($this->attachments as $filename => $data) {
 			// TODO: mime-type ???
@@ -258,7 +258,7 @@ class Message {
 
 		$data = $this->getListArray();
 		$data['body'] = $mail_body;
-		$data['attachments'] = $this->get_attachment_info();
+		$data['attachments'] = $this->getAttachmentInfo();
 		return $data;
 	}
 
