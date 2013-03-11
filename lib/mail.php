@@ -138,6 +138,7 @@ namespace OCA\Mail {
 			}
 
 			try {
+				/** @var $mailbox \OCA\Mail\Mailbox */
 				$mailbox = $account->getMailbox($folder_id);
 				$m = $mailbox->getMessage($message_id);
 				$message = $m->as_array();
