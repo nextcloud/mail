@@ -205,6 +205,11 @@ class Message {
 			$data = mb_convert_encoding($data, "UTF-8", $charset);
 		}
 
+		//
+		// sanitize
+		//
+		$data = \OCP\Util::sanitizeHTML($data);
+
 		// TEXT
 		if ($p->getPrimaryType() == 'text' && $data) {
 			// Messages may be split in different parts because of inline attachments,
