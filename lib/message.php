@@ -205,6 +205,11 @@ class Message {
 			$data = mb_convert_encoding($data, "UTF-8", $charset);
 		}
 
+		//
+		// link detection
+		//
+		$data = preg_replace('!(http)(s)?:\/\/[a-zA-Z0-9.?&_/]+!', "<a href=\"\\0\" target=\"_blank\">\\0</a>", $data);
+
 		// TEXT
 		if ($p->getPrimaryType() == 'text' && $data) {
 			// Messages may be split in different parts because of inline attachments,
