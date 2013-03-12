@@ -3,7 +3,7 @@
  * ownCloud - Mail app
  *
  * @author Thomas Müller
- * @copyright 2012 Thomas Müller thomas.mueller@tmit.eu
+ * @copyright 2012, 2013 Thomas Müller thomas.mueller@tmit.eu
  *
  * This library is free software; you can redistribute it and/or
  * modify it under the terms of the GNU AFFERO GENERAL PUBLIC LICENSE
@@ -57,7 +57,7 @@ class Message {
 	private $folder_id, $message_id;
 
 	/**
-	 * @var
+	 * @var \Horde_Imap_Client_Data_Fetch
 	 */
 	private $fetch;
 
@@ -144,6 +144,7 @@ class Message {
 		// $list is an array of Horde_Imap_Client_Data_Fetch objects.
 		$ids = new \Horde_Imap_Client_Ids($this->message_id);
 		$headers = $this->conn->fetch($this->folder_id, $fetch_query, array('ids' => $ids));
+		/** @var $fetch \Horde_Imap_Client_Data_Fetch */
 		$fetch = $headers[$this->message_id];
 
 		// set $this->fetch to get to, from ...
@@ -157,13 +158,13 @@ class Message {
 		if ($structure_type == 'multipart') {
 			$i = 1;
 			foreach($structure->getParts() as $p) {
-				$this->getpart($p, $i++);
+				$this->getPart($p, $i++);
 			}
 		} else {
 			if ($structure->findBody() != null) {
 				// get the body from the server
 				$partId = $structure->findBody();
-				$this->queryBodyPart($partId);
+				$this->getPart($structure->getPart($partId), $partId);
 			}
 		}
 	}
@@ -173,19 +174,19 @@ class Message {
 		$fetch_query = new \Horde_Imap_Client_Fetch_Query();
 		$ids = new \Horde_Imap_Client_Ids($this->message_id);
 
-		$bodypart_params = array('decode' => true);
-
-		$fetch_query->bodyPart($partId, $bodypart_params);
+		$fetch_query->bodyPart($partId);
 		$headers = $this->conn->fetch($this->folder_id, $fetch_query, array('ids' => $ids));
+		/** @var $fetch \Horde_Imap_Client_Data_Fetch */
 		$fetch = $headers[$this->message_id];
 
 		return $fetch->getBodyPart($partId);
 	}
 
-	private function getpart($p, $partno) {
-
-		// $partno = '1', '2', '2.1', '2.1.3', etc if multipart, 0 if not multipart
-
+	/**
+	 * @param $p \Horde_Mime_Part
+	 * @param $partno
+	 */
+	private function getPart($p, $partno) {
 		// ATTACHMENT
 		// Any part with a filename is an attachment,
 		// so an attached text file (type 0) is not mistaken as the message.
@@ -204,21 +205,17 @@ class Message {
 
 		// DECODE DATA
 		$data = $this->queryBodyPart($partno);
+		$p->setContents($data);
+		$data = $p->toString();
 
-		// Any part may be encoded, even plain text messages, so check everything.
-//		if (strtolower($p)=='quoted_printable') {
-//			$data = quoted_printable_decode($data);
-//		}
-//		if (strtolower($p[5])=='base64') {
-//			$data = base64_decode($data);
-//		}
-		// no need to decode 7-bit, 8-bit, or binary
+		// decode quotes
+		$data = quoted_printable_decode($data);
 
 		//
 		// convert the data
 		//
 		$charset = $p->getCharset();
-		if (isset( $charset)) {
+		if (isset( $charset) and $charset !== '') {
 			$data = mb_convert_encoding($data, "UTF-8", $charset);
 		}
 
@@ -254,7 +251,7 @@ class Message {
 //		}
 	}
 
-	private function get_attachment_info() {
+	private function getAttachmentInfo() {
 		$attachment_info = array();
 		foreach ($this->attachments as $filename => $data) {
 			// TODO: mime-type ???
@@ -274,7 +271,7 @@ class Message {
 
 		$data = $this->getListArray();
 		$data['body'] = $mail_body;
-		$data['attachments'] = $this->get_attachment_info();
+		$data['attachments'] = $this->getAttachmentInfo();
 		return $data;
 	}
 
