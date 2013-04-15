@@ -77,7 +77,7 @@ if( $task eq 'read' ){
 		my @totranslate = crawlFiles('.');
 		my %ignore = readIgnorelist();
 		my $output = "${whereami}/templates/$app.pot";
-		my $packageName = "ownCloud $app"
+		my $packageName = "ownCloud $app";
 		print "  Processing $app\n";
 
 		foreach my $file ( @totranslate ){
