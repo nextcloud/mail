@@ -43,9 +43,10 @@ sub readIgnorelist{
 	return %ignore;
 }
 
+my $app = shift( @ARGV );
 my $task = shift( @ARGV );
 
-die( "Usage: l10n.pl task\ntask: read, write\n" ) unless $task;
+die( "Usage: l10n.pl app task\ntask: read, write\n" ) unless $task;
 
 # Our current position
 my $whereami = cwd();
@@ -72,7 +73,6 @@ if( $task eq 'read' ){
 	print "Mode: reading\n";
 	foreach my $dir ( @dirs ){
 		my @temp = split( /\//, $dir );
-		my $app = pop( @temp );
 		chdir( $dir );
 		my @totranslate = crawlFiles('.');
 		my %ignore = readIgnorelist();
