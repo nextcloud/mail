@@ -5,4 +5,5 @@ host = https://www.transifex.net
 file_filter = <lang>/mail.po
 source_file = templates/mail.pot
 source_lang = en
+type = PO
 
