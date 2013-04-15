@@ -96,7 +96,6 @@ elsif( $task eq 'write' ){
 	print "Mode: write\n";
 	foreach my $dir ( @dirs ){
 		my @temp = split( /\//, $dir );
-		my $app = pop( @temp );
 		chdir( $dir.'/l10n' );
 		print "  Processing $app\n";
 		foreach my $language ( @languages ){
