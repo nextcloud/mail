@@ -44,9 +44,8 @@ sub readIgnorelist{
 }
 
 my $task = shift( @ARGV );
-my $place = '../..';
 
-die( "Usage: l10n.pl task\ntask: read, write\n" ) unless $task && $place;
+die( "Usage: l10n.pl task\ntask: read, write\n" ) unless $task;
 
 # Our current position
 my $whereami = cwd();
@@ -56,7 +55,6 @@ die( "Program must be executed in a l10n-folder called 'l10n'" ) unless $wheream
 my $pwd = dirname(cwd());
 
 my @dirs = ();
-# push(@dirs, "../../mail");
 push(@dirs, $pwd);
 
 # Languages
@@ -79,15 +77,17 @@ if( $task eq 'read' ){
 		my @totranslate = crawlFiles('.');
 		my %ignore = readIgnorelist();
 		my $output = "${whereami}/templates/$app.pot";
+		my $packageName = "ownCloud $app"
 		print "  Processing $app\n";
 
 		foreach my $file ( @totranslate ){
 			next if $ignore{$file};
+			# TODO: add support for twig templates
 			my $keyword = ( $file =~ /\.js$/ ? 't:2' : 't');
 			my $language = ( $file =~ /\.js$/ ? 'Python' : 'PHP');
 			my $joinexisting = ( -e $output ? '--join-existing' : '');
 			print "    Reading $file\n";
-			`xgettext --output="$output" $joinexisting --keyword=$keyword --language=$language "$file" --from-code=UTF-8 --package-version="5.0.0" --package-name="ownCloud Core" --msgid-bugs-address="translations\@owncloud.org"`;
+			`xgettext --output="$output" $joinexisting --keyword=$keyword --language=$language "$file" --from-code=UTF-8 --package-version="5.0.0" --package-name="$packageName" --msgid-bugs-address="translations\@owncloud.org"`;
 		}
 		chdir( $whereami );
 	}
