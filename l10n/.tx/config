@@ -1,0 +1,8 @@
+[main]
+host = https://www.transifex.net
+
+[owncloud.mail]
+file_filter = <lang>/mail.po
+source_file = templates/mail.pot
+source_lang = en
+
