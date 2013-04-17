@@ -25,9 +25,9 @@ OCP\JSON::checkLoggedIn();
 OCP\JSON::checkAppEnabled('mail');
 
 $account_id = isset( $_GET['account_id'] ) ? $_GET['account_id'] : null;
-$subject = isset( $_GET['subject'] ) ? $_GET['subject'] : null;
+$folder_id = isset( $_GET['folder_id'] ) ? $_GET['folder_id'] : null;
+$message_id = isset( $_GET['message_id'] ) ? $_GET['message_id'] : null;
 $body = isset( $_GET['body'] ) ? $_GET['body'] : null;
-$to = isset( $_GET['to'] ) ? $_GET['to'] : null;
 
 $account = OCA\Mail\App::getAccount( OCP\User::getUser(), $account_id);
 if (!$account) {
@@ -36,14 +36,19 @@ if (!$account) {
 	exit();
 }
 
+// in reply to handling
+$mailbox = $account->getMailbox($folder_id);
+$message = $mailbox->getMessage($message_id);
+
 // get sender data
 $headers = array();
 $headers['From']= $account->getEMailAddress();
-$headers['Subject'] = $subject;
+$headers['Subject'] = "RE: " . $message->getSubject();
+$headers['In-Reply-To'] = $message->getMessageId();
 
 // create transport and send
 $transport = $account->createTransport();
-$transport->send($to, $headers, $body);
+$transport->send($message->getToEmail(), $headers, $body);
 
 //
 // TODO: save message to 'Sent' folder

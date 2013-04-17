@@ -63,7 +63,7 @@ class Account {
 
 	/**
 	 * @param $folder_id
-	 * @return Mailbox
+	 * @return \OCA\Mail\Mailbox
 	 */
 	public function getMailbox($folder_id) {
 		$conn = $this->getImapConnection();
@@ -100,5 +100,15 @@ class Account {
 		$temp = array($key => $array[$key]);
 		unset($array[$key]);
 		$array = $temp + $array;
+	}
+
+	/**
+	 * @return \Horde_Mail_Transport_Sendmail
+	 */
+	public function createTransport() {
+		//
+		// TODO: implement according to the SMTP settings
+		//
+		return new \Horde_Mail_Transport_Sendmail();
 	}
 }
