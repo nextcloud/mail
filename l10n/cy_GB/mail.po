@@ -10,12 +10,12 @@ msgstr ""
 "POT-Creation-Date: 2013-04-17 02:47+0200\n"
 "PO-Revision-Date: 2013-04-17 00:47+0000\n"
 "Last-Translator: I Robot <owncloud-bot@tmit.eu>\n"
-"Language-Team: Burmese (Myanmar) (http://www.transifex.com/projects/p/owncloud/language/my_MM/)\n"
+"Language-Team: Welsh (United Kingdom) (http://www.transifex.com/projects/p/owncloud/language/cy_GB/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"Language: my_MM\n"
-"Plural-Forms: nplurals=1; plural=0;\n"
+"Language: cy_GB\n"
+"Plural-Forms: nplurals=4; plural=(n==1) ? 0 : (n==2) ? 1 : (n != 8 && n != 11) ? 2 : 3;\n"
 
 #: 3rdparty/Horde/Exception/NotFound.php:27
 msgid "Not Found"
@@ -2138,7 +2138,7 @@ msgstr ""
 
 #: js/mail.js:42 js/mail.js:115 js/mail.js:148 js/mail.js:205 js/mail.js:261
 msgid "Error"
-msgstr ""
+msgstr "Gwall"
 
 #: js/mail.js:236
 msgid "Connecting ..."
@@ -2158,7 +2158,7 @@ msgstr ""
 
 #: templates/index.php:17
 msgid "To"
-msgstr "သို့"
+msgstr ""
 
 #: templates/index.php:18
 msgid "Subject"

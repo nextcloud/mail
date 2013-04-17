@@ -3,12 +3,13 @@
 # This file is distributed under the same license as the PACKAGE package.
 # 
 # Translators:
+# Art O. Pal <artopal@fastmail.fm>, 2013.
 msgid ""
 msgstr ""
 "Project-Id-Version: ownCloud\n"
 "Report-Msgid-Bugs-To: http://bugs.owncloud.org/\n"
-"POT-Creation-Date: 2013-04-16 02:42+0200\n"
-"PO-Revision-Date: 2013-04-16 00:42+0000\n"
+"POT-Creation-Date: 2013-04-17 02:47+0200\n"
+"PO-Revision-Date: 2013-04-17 00:47+0000\n"
 "Last-Translator: I Robot <owncloud-bot@tmit.eu>\n"
 "Language-Team: Spanish (http://www.transifex.com/projects/p/owncloud/language/es/)\n"
 "MIME-Version: 1.0\n"
@@ -19,15 +20,15 @@ msgstr ""
 
 #: 3rdparty/Horde/Exception/NotFound.php:27
 msgid "Not Found"
-msgstr ""
+msgstr "No encontrado"
 
 #: 3rdparty/Horde/Exception/PermissionDenied.php:27
 msgid "Permission Denied"
-msgstr ""
+msgstr "Permiso denegado"
 
 #: 3rdparty/Horde/Imap/Client/Auth/DigestMD5.php:149
 msgid "Authentication failure."
-msgstr ""
+msgstr "Falla de autenticación."
 
 #: 3rdparty/Horde/Imap/Client/Base.php:1856
 #: 3rdparty/Horde/Imap/Client/Base.php:1915
@@ -37,16 +38,16 @@ msgstr ""
 #: 3rdparty/Horde/Imap/Client/Exception/NoSupportExtension.php:36
 #, php-format
 msgid "The server does not support the %s extension."
-msgstr ""
+msgstr "El servidor no soporta la extensión %s."
 
 #: 3rdparty/Horde/Imap/Client/Exception/NoSupportPop3.php:25
 #, php-format
 msgid "%s not supported on POP3 servers."
-msgstr ""
+msgstr "%s no es soportado por los servidores POP3."
 
 #: 3rdparty/Horde/Imap/Client/Exception/SearchCharset.php:36
 msgid "Cannot convert search query text to new charset"
-msgstr ""
+msgstr "No se puede convertir el texto de la consulta de búsqueda a un nuevo grupo de caracteres"
 
 #: 3rdparty/Horde/Imap/Client/Interaction/Server/Tagged.php:34
 msgid "Bad tagged response."
@@ -55,71 +56,71 @@ msgstr ""
 #: 3rdparty/Horde/Imap/Client/Socket/Pop3.php:189
 #: 3rdparty/Horde/Imap/Client/Socket/Pop3.php:201
 msgid "Could not open secure connection to the POP3 server."
-msgstr ""
+msgstr "No se pudo crear una conexión segura con el servidor POP3."
 
 #: 3rdparty/Horde/Imap/Client/Socket/Pop3.php:189
 msgid "Server does not support secure connections."
-msgstr ""
+msgstr "El servidor no soporta conexiones seguras."
 
 #: 3rdparty/Horde/Imap/Client/Socket/Pop3.php:240
 msgid "POP3 server denied authentication."
-msgstr ""
+msgstr "El servidor POP3 denegó la autenticación."
 
 #: 3rdparty/Horde/Imap/Client/Socket/Pop3.php:280
 msgid "Error connecting to POP3 server."
-msgstr ""
+msgstr "Error de conexión con el servidor POP3."
 
 #: 3rdparty/Horde/Imap/Client/Socket/Pop3.php:334
 #: 3rdparty/Horde/Imap/Client/Socket.php:592
 msgid "Unexpected response from server when authenticating."
-msgstr ""
+msgstr "El servidor dio una respuesta inesperada durante la autenticación."
 
 #: 3rdparty/Horde/Imap/Client/Socket/Pop3.php:374
 #: 3rdparty/Horde/Imap/Client/Socket.php:636
 #, php-format
 msgid "Unknown authentication method: %s"
-msgstr ""
+msgstr "Método de autenticación desconocido: %s."
 
 #: 3rdparty/Horde/Imap/Client/Socket/Pop3.php:1112
 msgid "POP3 Server closed the connection unexpectedly."
-msgstr ""
+msgstr "El servidor POP3 cerró la conexión inesperadamente."
 
 #: 3rdparty/Horde/Imap/Client/Socket/Pop3.php:1172
 msgid "POP3 error reported by server."
-msgstr ""
+msgstr "El servidor reportó un error de POP3."
 
 #: 3rdparty/Horde/Imap/Client/Socket.php:311
 msgid "Server does not support TLS connections."
-msgstr ""
+msgstr "El servidor no soporta conexiones vía TLS."
 
 #: 3rdparty/Horde/Imap/Client/Socket.php:323
 msgid "Could not open secure TLS connection to the IMAP server."
-msgstr ""
+msgstr "No se pudo realizar una conexión segura vía TLS con el servidor IMAP."
 
 #: 3rdparty/Horde/Imap/Client/Socket.php:366
 msgid "No supported IMAP authentication method could be found."
-msgstr ""
+msgstr "No se pudo encontrar ningún método soportado de autenticación IMAP."
 
 #: 3rdparty/Horde/Imap/Client/Socket.php:383
 msgid "Mail server denied authentication."
-msgstr ""
+msgstr "El servidor de correo denegó la autenticación."
 
 #: 3rdparty/Horde/Imap/Client/Socket.php:492
 msgid "Error connecting to mail server."
-msgstr ""
+msgstr "Error de conexión con el servidor de correo."
 
 #: 3rdparty/Horde/Imap/Client/Socket.php:515
 msgid "Server rejected connection."
-msgstr ""
+msgstr "El servidor rechazó la conexión."
 
 #: 3rdparty/Horde/Imap/Client/Socket.php:524
 msgid "The mail server does not support IMAP4rev1 (RFC 3501)."
-msgstr ""
+msgstr "El servidor de correo no soporta IMAP4rev1 (RFC 3501)."
 
 #: 3rdparty/Horde/Imap/Client/Socket.php:920
 #, php-format
 msgid "Could not open mailbox \"%s\"."
-msgstr ""
+msgstr "No se pudo abrir la bandeja \"%s\"."
 
 #: 3rdparty/Horde/Imap/Client/Socket.php:1874
 #: 3rdparty/Horde/Imap/Client/Socket.php:2544
@@ -132,7 +133,7 @@ msgstr ""
 #: 3rdparty/Horde/Imap/Client/Socket.php:3537
 #, php-format
 msgid "Invalid METADATA entry: \"%s\"."
-msgstr ""
+msgstr "Entrada de METADATA inválida: \"%s\"."
 
 #: 3rdparty/Horde/Imap/Client/Socket.php:3624
 #, php-format
@@ -142,24 +143,24 @@ msgstr ""
 #: 3rdparty/Horde/Imap/Client/Socket.php:3857
 #: 3rdparty/Horde/Imap/Client/Socket.php:4128
 msgid "Error when communicating with the mail server."
-msgstr ""
+msgstr "Error de comunicación con el servidor de correo."
 
 #: 3rdparty/Horde/Imap/Client/Socket.php:3983
 #: 3rdparty/Horde/Imap/Client/Socket.php:4014
 msgid "IMAP error reported by server."
-msgstr ""
+msgstr "Error IMAP reportado por el servidor."
 
 #: 3rdparty/Horde/Imap/Client/Socket.php:3998
 msgid "IMAP Server closed the connection."
-msgstr ""
+msgstr "El servidor IMAP terminó la conexión."
 
 #: 3rdparty/Horde/Imap/Client/Socket.php:4050
 msgid "Mail server closed the connection unexpectedly."
-msgstr ""
+msgstr "El servidor de correo terminó la conexión inesperadamente."
 
 #: 3rdparty/Horde/Imap/Client/Socket.php:4325
 msgid "Charset used in search query is not supported on the mail server."
-msgstr ""
+msgstr "El grupo de caracteres usado en la consulta de búsqueda no es soportado por el servidor de correo."
 
 #: 3rdparty/Horde/Imap/Client/Socket.php:4337
 #: 3rdparty/Horde/Imap/Client/Socket.php:4379
@@ -168,15 +169,15 @@ msgstr ""
 
 #: 3rdparty/Horde/Imap/Client/Socket.php:4420
 msgid "Could not save message on server."
-msgstr ""
+msgstr "No se pudo guardar el mensaje en el servidor."
 
 #: 3rdparty/Horde/Imap/Client/Socket.php:4429
 msgid "Could not save message data because it is too large."
-msgstr ""
+msgstr "No se pudieron guardar los datos del mensaje porque este es demasiado grande."
 
 #: 3rdparty/Horde/Imap/Client/Socket.php:4468
 msgid "The comparison algorithm was not recognized by the server."
-msgstr ""
+msgstr "El algoritmo de comparación no fue reconocido por el servidor."
 
 #: 3rdparty/Horde/Imap/Client/Socket.php:4486
 msgid "The metadata item could not be saved because it is too large."

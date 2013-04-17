@@ -3,12 +3,13 @@
 # This file is distributed under the same license as the PACKAGE package.
 # 
 # Translators:
+# Daisuke Deguchi <ddeguchi@nagoya-u.jp>, 2013.
 msgid ""
 msgstr ""
 "Project-Id-Version: ownCloud\n"
 "Report-Msgid-Bugs-To: http://bugs.owncloud.org/\n"
-"POT-Creation-Date: 2013-04-16 02:42+0200\n"
-"PO-Revision-Date: 2013-04-16 00:42+0000\n"
+"POT-Creation-Date: 2013-04-17 02:47+0200\n"
+"PO-Revision-Date: 2013-04-17 00:47+0000\n"
 "Last-Translator: I Robot <owncloud-bot@tmit.eu>\n"
 "Language-Team: Japanese (Japan) (http://www.transifex.com/projects/p/owncloud/language/ja_JP/)\n"
 "MIME-Version: 1.0\n"
@@ -2142,7 +2143,7 @@ msgstr "エラー"
 
 #: js/mail.js:236
 msgid "Connecting ..."
-msgstr ""
+msgstr "接続中..."
 
 #: js/mail.js:252 templates/part.no-accounts.php:16
 msgid "Connect"
@@ -2150,11 +2151,11 @@ msgstr "接続"
 
 #: js/mail.js:257
 msgid "Not a email address"
-msgstr ""
+msgstr "メールアドレスではありません"
 
 #: templates/index.php:15
 msgid "New Message"
-msgstr ""
+msgstr "新しいメッセージ"
 
 #: templates/index.php:17
 msgid "To"
@@ -2162,7 +2163,7 @@ msgstr "終了"
 
 #: templates/index.php:18
 msgid "Subject"
-msgstr ""
+msgstr "件名"
 
 #: templates/index.php:20
 msgid "Send"
@@ -2170,16 +2171,16 @@ msgstr "送信"
 
 #: templates/part.message.php:31
 msgid "Reply"
-msgstr ""
+msgstr "返信"
 
 #: templates/part.no-accounts.php:3
 msgid "Connect your mail account"
-msgstr ""
+msgstr "メールアカウントに接続"
 
 #: templates/part.no-accounts.php:8
 msgid "Mail Address"
-msgstr ""
+msgstr "メールアドレス"
 
 #: templates/part.no-accounts.php:13
 msgid "IMAP Password"
-msgstr ""
+msgstr "IMAP パスワード"
