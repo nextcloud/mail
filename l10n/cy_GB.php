@@ -1,3 +1,6 @@
 <?php $TRANSLATIONS = array(
-"Error" => "Gwall"
+"Other" => "Arall",
+"Error" => "Gwall",
+"To" => "I",
+"Send" => "Anfon"
 );

@@ -3,13 +3,14 @@
 # This file is distributed under the same license as the PACKAGE package.
 # 
 # Translators:
+# Mirodin <blobbyjj@ymail.com>, 2013
 msgid ""
 msgstr ""
 "Project-Id-Version: ownCloud\n"
 "Report-Msgid-Bugs-To: http://bugs.owncloud.org/\n"
-"POT-Creation-Date: 2013-04-17 02:47+0200\n"
-"PO-Revision-Date: 2013-04-17 00:47+0000\n"
-"Last-Translator: I Robot <owncloud-bot@tmit.eu>\n"
+"POT-Creation-Date: 2013-04-18 02:47+0200\n"
+"PO-Revision-Date: 2013-04-17 08:30+0000\n"
+"Last-Translator: Mirodin <blobbyjj@ymail.com>\n"
 "Language-Team: German <translations@owncloud.org>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -2144,7 +2145,7 @@ msgstr "Fehler"
 msgid "Connecting ..."
 msgstr ""
 
-#: js/mail.js:252 templates/part.no-accounts.php:16
+#: js/mail.js:252 templates/no-accounts.php:16
 msgid "Connect"
 msgstr "Verbinden"
 
@@ -2152,34 +2153,34 @@ msgstr "Verbinden"
 msgid "Not a email address"
 msgstr ""
 
-#: templates/index.php:15
+#: templates/index.php:8
 msgid "New Message"
 msgstr ""
 
-#: templates/index.php:17
+#: templates/index.php:10
 msgid "To"
-msgstr "bis"
+msgstr "an"
 
-#: templates/index.php:18
+#: templates/index.php:11
 msgid "Subject"
 msgstr ""
 
-#: templates/index.php:20
+#: templates/index.php:13
 msgid "Send"
 msgstr "Senden"
 
-#: templates/part.message.php:31
-msgid "Reply"
-msgstr ""
-
-#: templates/part.no-accounts.php:3
+#: templates/no-accounts.php:3
 msgid "Connect your mail account"
 msgstr ""
 
-#: templates/part.no-accounts.php:8
+#: templates/no-accounts.php:8
 msgid "Mail Address"
 msgstr ""
 
-#: templates/part.no-accounts.php:13
+#: templates/no-accounts.php:13
 msgid "IMAP Password"
+msgstr ""
+
+#: templates/part.message.php:31
+msgid "Reply"
 msgstr ""

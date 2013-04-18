@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: ownCloud mail 5.0.0\n"
 "Report-Msgid-Bugs-To: translations@owncloud.org\n"
-"POT-Creation-Date: 2013-04-17 02:47+0200\n"
+"POT-Creation-Date: 2013-04-18 02:47+0200\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -2144,7 +2144,7 @@ msgstr ""
 msgid "Connecting ..."
 msgstr ""
 
-#: js/mail.js:252 templates/part.no-accounts.php:16
+#: js/mail.js:252 templates/no-accounts.php:16
 msgid "Connect"
 msgstr ""
 
@@ -2152,34 +2152,34 @@ msgstr ""
 msgid "Not a email address"
 msgstr ""
 
-#: templates/index.php:15
+#: templates/index.php:8
 msgid "New Message"
 msgstr ""
 
-#: templates/index.php:17
+#: templates/index.php:10
 msgid "To"
 msgstr ""
 
-#: templates/index.php:18
+#: templates/index.php:11
 msgid "Subject"
 msgstr ""
 
-#: templates/index.php:20
+#: templates/index.php:13
 msgid "Send"
+msgstr ""
+
+#: templates/no-accounts.php:3
+msgid "Connect your mail account"
+msgstr ""
+
+#: templates/no-accounts.php:8
+msgid "Mail Address"
+msgstr ""
+
+#: templates/no-accounts.php:13
+msgid "IMAP Password"
 msgstr ""
 
 #: templates/part.message.php:31
 msgid "Reply"
-msgstr ""
-
-#: templates/part.no-accounts.php:3
-msgid "Connect your mail account"
-msgstr ""
-
-#: templates/part.no-accounts.php:8
-msgid "Mail Address"
-msgstr ""
-
-#: templates/part.no-accounts.php:13
-msgid "IMAP Password"
 msgstr ""

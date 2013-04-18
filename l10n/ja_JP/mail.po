@@ -3,14 +3,14 @@
 # This file is distributed under the same license as the PACKAGE package.
 # 
 # Translators:
-# Daisuke Deguchi <ddeguchi@nagoya-u.jp>, 2013.
+# Daisuke Deguchi <ddeguchi@nagoya-u.jp>, 2013
 msgid ""
 msgstr ""
 "Project-Id-Version: ownCloud\n"
 "Report-Msgid-Bugs-To: http://bugs.owncloud.org/\n"
-"POT-Creation-Date: 2013-04-17 02:47+0200\n"
-"PO-Revision-Date: 2013-04-17 00:47+0000\n"
-"Last-Translator: I Robot <owncloud-bot@tmit.eu>\n"
+"POT-Creation-Date: 2013-04-18 02:47+0200\n"
+"PO-Revision-Date: 2013-04-17 08:30+0000\n"
+"Last-Translator: Daisuke Deguchi <ddeguchi@nagoya-u.jp>\n"
 "Language-Team: Japanese (Japan) (http://www.transifex.com/projects/p/owncloud/language/ja_JP/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -311,243 +311,243 @@ msgstr ""
 
 #: 3rdparty/Horde/Nls/Countries.php:8 3rdparty/Horde/Nls/Tld.php:16
 msgid "Afghanistan"
-msgstr ""
+msgstr "アフガニスタン"
 
 #: 3rdparty/Horde/Nls/Countries.php:9
 msgid "Åland Islands"
-msgstr ""
+msgstr "オーランド諸島"
 
 #: 3rdparty/Horde/Nls/Countries.php:10 3rdparty/Horde/Nls/Tld.php:19
 msgid "Albania"
-msgstr ""
+msgstr "アルバニア"
 
 #: 3rdparty/Horde/Nls/Countries.php:11 3rdparty/Horde/Nls/Tld.php:73
 msgid "Algeria"
-msgstr ""
+msgstr "アルジェリア"
 
 #: 3rdparty/Horde/Nls/Countries.php:12 3rdparty/Horde/Nls/Tld.php:25
 msgid "American Samoa"
-msgstr ""
+msgstr "アメリカ領サモア"
 
 #: 3rdparty/Horde/Nls/Countries.php:13 3rdparty/Horde/Nls/Tld.php:14
 msgid "Andorra"
-msgstr ""
+msgstr "アンドラ"
 
 #: 3rdparty/Horde/Nls/Countries.php:14 3rdparty/Horde/Nls/Tld.php:22
 msgid "Angola"
-msgstr ""
+msgstr "アンゴラ"
 
 #: 3rdparty/Horde/Nls/Countries.php:15 3rdparty/Horde/Nls/Tld.php:18
 msgid "Anguilla"
-msgstr ""
+msgstr "アンギラ"
 
 #: 3rdparty/Horde/Nls/Countries.php:16 3rdparty/Horde/Nls/Tld.php:23
 msgid "Antarctica"
-msgstr ""
+msgstr "南極大陸"
 
 #: 3rdparty/Horde/Nls/Countries.php:17 3rdparty/Horde/Nls/Tld.php:17
 msgid "Antigua and Barbuda"
-msgstr ""
+msgstr "アンティグア・バーブーダ"
 
 #: 3rdparty/Horde/Nls/Countries.php:18 3rdparty/Horde/Nls/Tld.php:24
 msgid "Argentina"
-msgstr ""
+msgstr "アルゼンチン"
 
 #: 3rdparty/Horde/Nls/Countries.php:19 3rdparty/Horde/Nls/Tld.php:20
 msgid "Armenia"
-msgstr ""
+msgstr "アルメニア"
 
 #: 3rdparty/Horde/Nls/Countries.php:20 3rdparty/Horde/Nls/Tld.php:28
 msgid "Aruba"
-msgstr ""
+msgstr "アルバ"
 
 #: 3rdparty/Horde/Nls/Countries.php:21 3rdparty/Horde/Nls/Tld.php:27
 msgid "Australia"
-msgstr ""
+msgstr "オーストラリア"
 
 #: 3rdparty/Horde/Nls/Countries.php:22 3rdparty/Horde/Nls/Tld.php:26
 msgid "Austria"
-msgstr ""
+msgstr "オーストリア"
 
 #: 3rdparty/Horde/Nls/Countries.php:23 3rdparty/Horde/Nls/Tld.php:30
 msgid "Azerbaijan"
-msgstr ""
+msgstr "アゼルバイジャン"
 
 #: 3rdparty/Horde/Nls/Countries.php:24 3rdparty/Horde/Nls/Tld.php:44
 msgid "Bahamas"
-msgstr ""
+msgstr "バハマ"
 
 #: 3rdparty/Horde/Nls/Countries.php:25 3rdparty/Horde/Nls/Tld.php:37
 msgid "Bahrain"
-msgstr ""
+msgstr "バーレーン"
 
 #: 3rdparty/Horde/Nls/Countries.php:26 3rdparty/Horde/Nls/Tld.php:33
 msgid "Bangladesh"
-msgstr ""
+msgstr "バングラデシュ"
 
 #: 3rdparty/Horde/Nls/Countries.php:27 3rdparty/Horde/Nls/Tld.php:32
 msgid "Barbados"
-msgstr ""
+msgstr "バルバドス"
 
 #: 3rdparty/Horde/Nls/Countries.php:28 3rdparty/Horde/Nls/Tld.php:48
 msgid "Belarus"
-msgstr ""
+msgstr "ベラルーシ"
 
 #: 3rdparty/Horde/Nls/Countries.php:29 3rdparty/Horde/Nls/Tld.php:34
 msgid "Belgium"
-msgstr ""
+msgstr "ベルギー"
 
 #: 3rdparty/Horde/Nls/Countries.php:30 3rdparty/Horde/Nls/Tld.php:49
 msgid "Belize"
-msgstr ""
+msgstr "ベリーズ"
 
 #: 3rdparty/Horde/Nls/Countries.php:31 3rdparty/Horde/Nls/Tld.php:39
 msgid "Benin"
-msgstr ""
+msgstr "ベナン"
 
 #: 3rdparty/Horde/Nls/Countries.php:32 3rdparty/Horde/Nls/Tld.php:40
 msgid "Bermuda"
-msgstr ""
+msgstr "バミューダ諸島"
 
 #: 3rdparty/Horde/Nls/Countries.php:33 3rdparty/Horde/Nls/Tld.php:45
 msgid "Bhutan"
-msgstr ""
+msgstr "ブータン"
 
 #: 3rdparty/Horde/Nls/Countries.php:34 3rdparty/Horde/Nls/Tld.php:42
 msgid "Bolivia"
-msgstr ""
+msgstr "ボリビア"
 
 #: 3rdparty/Horde/Nls/Countries.php:35
 msgid "Bonaire, Sint Eustatius and Saba"
-msgstr ""
+msgstr "ボネール、シント・ユースタティウス・サバ"
 
 #: 3rdparty/Horde/Nls/Countries.php:36 3rdparty/Horde/Nls/Tld.php:31
 msgid "Bosnia and Herzegovina"
-msgstr ""
+msgstr "ボスニア・ヘルツェゴビナ"
 
 #: 3rdparty/Horde/Nls/Countries.php:37 3rdparty/Horde/Nls/Tld.php:47
 msgid "Botswana"
-msgstr ""
+msgstr "ボツワナ"
 
 #: 3rdparty/Horde/Nls/Countries.php:38 3rdparty/Horde/Nls/Tld.php:46
 msgid "Bouvet Island"
-msgstr ""
+msgstr "ブーベ島"
 
 #: 3rdparty/Horde/Nls/Countries.php:39 3rdparty/Horde/Nls/Tld.php:43
 msgid "Brazil"
-msgstr ""
+msgstr "ブラジル"
 
 #: 3rdparty/Horde/Nls/Countries.php:40 3rdparty/Horde/Nls/Tld.php:118
 msgid "British Indian Ocean Territory"
-msgstr ""
+msgstr "イギリス領インド洋地域"
 
 #: 3rdparty/Horde/Nls/Countries.php:41 3rdparty/Horde/Nls/Tld.php:41
 msgid "Brunei Darussalam"
-msgstr ""
+msgstr "ブルネイ・ダルサラーム"
 
 #: 3rdparty/Horde/Nls/Countries.php:42 3rdparty/Horde/Nls/Tld.php:36
 msgid "Bulgaria"
-msgstr ""
+msgstr "ブルガリア"
 
 #: 3rdparty/Horde/Nls/Countries.php:43 3rdparty/Horde/Nls/Tld.php:35
 msgid "Burkina Faso"
-msgstr ""
+msgstr "ブルキナファソ"
 
 #: 3rdparty/Horde/Nls/Countries.php:44 3rdparty/Horde/Nls/Tld.php:38
 msgid "Burundi"
-msgstr ""
+msgstr "ブルンジ"
 
 #: 3rdparty/Horde/Nls/Countries.php:45 3rdparty/Horde/Nls/Tld.php:129
 msgid "Cambodia"
-msgstr ""
+msgstr "カンボジア"
 
 #: 3rdparty/Horde/Nls/Countries.php:46 3rdparty/Horde/Nls/Tld.php:59
 msgid "Cameroon"
-msgstr ""
+msgstr "カメルーン"
 
 #: 3rdparty/Horde/Nls/Countries.php:47 3rdparty/Horde/Nls/Tld.php:50
 msgid "Canada"
-msgstr ""
+msgstr "カナダ"
 
 #: 3rdparty/Horde/Nls/Countries.php:48 3rdparty/Horde/Nls/Tld.php:64
 msgid "Cape Verde"
-msgstr ""
+msgstr "カーボベルデ"
 
 #: 3rdparty/Horde/Nls/Countries.php:49 3rdparty/Horde/Nls/Tld.php:136
 msgid "Cayman Islands"
-msgstr ""
+msgstr "ケイマン諸島"
 
 #: 3rdparty/Horde/Nls/Countries.php:50 3rdparty/Horde/Nls/Tld.php:53
 msgid "Central African Republic"
-msgstr ""
+msgstr "中央アフリカ共和国"
 
 #: 3rdparty/Horde/Nls/Countries.php:51 3rdparty/Horde/Nls/Tld.php:225
 msgid "Chad"
-msgstr ""
+msgstr "チャド"
 
 #: 3rdparty/Horde/Nls/Countries.php:52 3rdparty/Horde/Nls/Tld.php:58
 msgid "Chile"
-msgstr ""
+msgstr "チリ"
 
 #: 3rdparty/Horde/Nls/Countries.php:53 3rdparty/Horde/Nls/Tld.php:60
 msgid "China"
-msgstr ""
+msgstr "中国"
 
 #: 3rdparty/Horde/Nls/Countries.php:54 3rdparty/Horde/Nls/Tld.php:65
 msgid "Christmas Island"
-msgstr ""
+msgstr "クリスマス島"
 
 #: 3rdparty/Horde/Nls/Countries.php:55 3rdparty/Horde/Nls/Tld.php:51
 msgid "Cocos (Keeling) Islands"
-msgstr ""
+msgstr "ココス（キーリング）諸島"
 
 #: 3rdparty/Horde/Nls/Countries.php:56 3rdparty/Horde/Nls/Tld.php:61
 msgid "Colombia"
-msgstr ""
+msgstr "コロンビア"
 
 #: 3rdparty/Horde/Nls/Countries.php:57 3rdparty/Horde/Nls/Tld.php:131
 msgid "Comoros"
-msgstr ""
+msgstr "コモロ"
 
 #: 3rdparty/Horde/Nls/Countries.php:58
 msgid "Congo"
-msgstr ""
+msgstr "コンゴ共和国"
 
 #: 3rdparty/Horde/Nls/Countries.php:59 3rdparty/Horde/Nls/Tld.php:52
 msgid "Congo, The Democratic Republic of the"
-msgstr ""
+msgstr "コンゴ民主共和国"
 
 #: 3rdparty/Horde/Nls/Countries.php:60 3rdparty/Horde/Nls/Tld.php:57
 msgid "Cook Islands"
-msgstr ""
+msgstr "クック諸島"
 
 #: 3rdparty/Horde/Nls/Countries.php:61 3rdparty/Horde/Nls/Tld.php:62
 msgid "Costa Rica"
-msgstr ""
+msgstr "コスタリカ"
 
 #: 3rdparty/Horde/Nls/Countries.php:62
 msgid "Côte d'Ivoire"
-msgstr ""
+msgstr "コートジボワール"
 
 #: 3rdparty/Horde/Nls/Countries.php:63
 msgid "Croatia"
-msgstr ""
+msgstr "クロアチア"
 
 #: 3rdparty/Horde/Nls/Countries.php:64 3rdparty/Horde/Nls/Tld.php:63
 msgid "Cuba"
-msgstr ""
+msgstr "キューバ"
 
 #: 3rdparty/Horde/Nls/Countries.php:65
 msgid "Curaçao"
-msgstr ""
+msgstr "キュラソー"
 
 #: 3rdparty/Horde/Nls/Countries.php:66 3rdparty/Horde/Nls/Tld.php:66
 msgid "Cyprus"
-msgstr ""
+msgstr "キプロス"
 
 #: 3rdparty/Horde/Nls/Countries.php:67 3rdparty/Horde/Nls/Tld.php:67
 msgid "Czech Republic"
-msgstr ""
+msgstr "チェコ共和国"
 
 #: 3rdparty/Horde/Nls/Countries.php:68 3rdparty/Horde/Nls/Tld.php:70
 msgid "Denmark"
@@ -755,7 +755,7 @@ msgstr ""
 
 #: 3rdparty/Horde/Nls/Countries.php:119 3rdparty/Horde/Nls/Tld.php:126
 msgid "Japan"
-msgstr ""
+msgstr "日本"
 
 #: 3rdparty/Horde/Nls/Countries.php:120 3rdparty/Horde/Nls/Tld.php:123
 msgid "Jersey"
@@ -2145,7 +2145,7 @@ msgstr "エラー"
 msgid "Connecting ..."
 msgstr "接続中..."
 
-#: js/mail.js:252 templates/part.no-accounts.php:16
+#: js/mail.js:252 templates/no-accounts.php:16
 msgid "Connect"
 msgstr "接続"
 
@@ -2153,34 +2153,34 @@ msgstr "接続"
 msgid "Not a email address"
 msgstr "メールアドレスではありません"
 
-#: templates/index.php:15
+#: templates/index.php:8
 msgid "New Message"
 msgstr "新しいメッセージ"
 
-#: templates/index.php:17
+#: templates/index.php:10
 msgid "To"
 msgstr "終了"
 
-#: templates/index.php:18
+#: templates/index.php:11
 msgid "Subject"
 msgstr "件名"
 
-#: templates/index.php:20
+#: templates/index.php:13
 msgid "Send"
 msgstr "送信"
+
+#: templates/no-accounts.php:3
+msgid "Connect your mail account"
+msgstr "メールアカウントに接続"
+
+#: templates/no-accounts.php:8
+msgid "Mail Address"
+msgstr "メールアドレス"
+
+#: templates/no-accounts.php:13
+msgid "IMAP Password"
+msgstr "IMAP パスワード"
 
 #: templates/part.message.php:31
 msgid "Reply"
 msgstr "返信"
-
-#: templates/part.no-accounts.php:3
-msgid "Connect your mail account"
-msgstr "メールアカウントに接続"
-
-#: templates/part.no-accounts.php:8
-msgid "Mail Address"
-msgstr "メールアドレス"
-
-#: templates/part.no-accounts.php:13
-msgid "IMAP Password"
-msgstr "IMAP パスワード"

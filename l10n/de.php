@@ -2,6 +2,6 @@
 "Other" => "Andere",
 "Error" => "Fehler",
 "Connect" => "Verbinden",
-"To" => "bis",
+"To" => "an",
 "Send" => "Senden"
 );

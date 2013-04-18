@@ -3,14 +3,14 @@
 # This file is distributed under the same license as the PACKAGE package.
 # 
 # Translators:
-# Vincenzo Reale <vinx.reale@gmail.com>, 2013.
+# Vincenzo Reale <vinx.reale@gmail.com>, 2013
 msgid ""
 msgstr ""
 "Project-Id-Version: ownCloud\n"
 "Report-Msgid-Bugs-To: http://bugs.owncloud.org/\n"
-"POT-Creation-Date: 2013-04-17 02:47+0200\n"
-"PO-Revision-Date: 2013-04-17 00:47+0000\n"
-"Last-Translator: I Robot <owncloud-bot@tmit.eu>\n"
+"POT-Creation-Date: 2013-04-18 02:47+0200\n"
+"PO-Revision-Date: 2013-04-17 07:40+0000\n"
+"Last-Translator: Vincenzo Reale <vinx.reale@gmail.com>\n"
 "Language-Team: Italian (http://www.transifex.com/projects/p/owncloud/language/it/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -33,7 +33,7 @@ msgstr "Autenticazione non riuscita."
 #: 3rdparty/Horde/Imap/Client/Base.php:1856
 #: 3rdparty/Horde/Imap/Client/Base.php:1915
 msgid "Cannot expunge read-only mailbox."
-msgstr ""
+msgstr "Impossibile cancellare una casella in sola lettura."
 
 #: 3rdparty/Horde/Imap/Client/Exception/NoSupportExtension.php:36
 #, php-format
@@ -128,7 +128,7 @@ msgstr "Impossibile aprire la casella di posta \"%s\"."
 #: 3rdparty/Horde/Imap/Client/Socket.php:2992
 #: 3rdparty/Horde/Imap/Client/Socket.php:3048
 msgid "Mailbox does not support mod-sequences."
-msgstr ""
+msgstr "La casella di posta non supporta mod-sequences."
 
 #: 3rdparty/Horde/Imap/Client/Socket.php:3537
 #, php-format
@@ -248,7 +248,7 @@ msgstr "L'oggetto non può essere eliminato poiché non esiste."
 
 #: 3rdparty/Horde/Imap/Client/Socket.php:4630
 msgid "The special-use attribute requested for the mailbox is not supported."
-msgstr ""
+msgstr "L'attributo special-use richiesto per la casella di posta non è supportato."
 
 #: 3rdparty/Horde/Imap/Client/Utf7imap.php:117
 #: 3rdparty/Horde/Imap/Client/Utf7imap.php:142
@@ -695,7 +695,7 @@ msgstr "Haiti"
 
 #: 3rdparty/Horde/Nls/Countries.php:104
 msgid "Heard Island and McDonald Islands"
-msgstr "Isole Hears e McDonald"
+msgstr "Isole Heard e McDonald"
 
 #: 3rdparty/Horde/Nls/Countries.php:105 3rdparty/Horde/Nls/Tld.php:248
 msgid "Holy See (Vatican City State)"
@@ -1228,7 +1228,7 @@ msgstr "Turkmenistan"
 
 #: 3rdparty/Horde/Nls/Countries.php:237 3rdparty/Horde/Nls/Tld.php:224
 msgid "Turks and Caicos Islands"
-msgstr ""
+msgstr "Isole Turks e Caicos"
 
 #: 3rdparty/Horde/Nls/Countries.php:238 3rdparty/Horde/Nls/Tld.php:238
 msgid "Tuvalu"
@@ -1405,7 +1405,7 @@ msgstr "Bengalese"
 
 #: 3rdparty/Horde/Nls/Languages.php:28
 msgid "Tibetan Standard, Tibetan, Central"
-msgstr ""
+msgstr "Tibetano standard, Tibetano, Centrale"
 
 #: 3rdparty/Horde/Nls/Languages.php:29
 msgid "Breton"
@@ -1443,7 +1443,7 @@ msgstr "Ceco"
 msgid ""
 "Old Church Slavonic, Church Slavic, Church Slavonic, Old Bulgarian, Old "
 "Slavonic"
-msgstr ""
+msgstr "Antico slavonico ecclesiastico, slavo ecclesiastico, slavonico ecclesiastico, bulgaro antico, slavonico antico"
 
 #: 3rdparty/Horde/Nls/Languages.php:38
 msgid "Chuvash"
@@ -1463,7 +1463,7 @@ msgstr "Tedesco"
 
 #: 3rdparty/Horde/Nls/Languages.php:42
 msgid "Divehi; Dhivehi; Maldivian;"
-msgstr ""
+msgstr "Divehi; Dhivehi; Maldiviano;"
 
 #: 3rdparty/Horde/Nls/Languages.php:43
 msgid "Dzongkha"
@@ -1503,7 +1503,7 @@ msgstr "Iraniano"
 
 #: 3rdparty/Horde/Nls/Languages.php:52
 msgid "Fula; Fulah; Pulaar; Pular"
-msgstr ""
+msgstr "Fula; Fulah; Pulaar; Pular"
 
 #: 3rdparty/Horde/Nls/Languages.php:53
 msgid "Finnish"
@@ -1595,7 +1595,7 @@ msgstr "Indonesiano"
 
 #: 3rdparty/Horde/Nls/Languages.php:75
 msgid "Interlingue"
-msgstr ""
+msgstr "Interlingua"
 
 #: 3rdparty/Horde/Nls/Languages.php:76
 msgid "Igbo"
@@ -1631,7 +1631,7 @@ msgstr "Giapponese"
 
 #: 3rdparty/Horde/Nls/Languages.php:84
 msgid "Javanese"
-msgstr ""
+msgstr "Giavanese"
 
 #: 3rdparty/Horde/Nls/Languages.php:85
 msgid "Georgian"
@@ -1639,15 +1639,15 @@ msgstr "Georgiano"
 
 #: 3rdparty/Horde/Nls/Languages.php:86
 msgid "Kongo"
-msgstr ""
+msgstr "Kongo"
 
 #: 3rdparty/Horde/Nls/Languages.php:87
 msgid "Kikuyu, Gikuyu"
-msgstr ""
+msgstr "Kikuyu, Gikuyu"
 
 #: 3rdparty/Horde/Nls/Languages.php:88
 msgid "Kwanyama, Kuanyama"
-msgstr ""
+msgstr "Kwanyama, Kuanyama"
 
 #: 3rdparty/Horde/Nls/Languages.php:89
 msgid "Kazakh"
@@ -1655,7 +1655,7 @@ msgstr "Kazako"
 
 #: 3rdparty/Horde/Nls/Languages.php:90
 msgid "Kalaallisut, Greenlandic"
-msgstr ""
+msgstr "Kalaallisut, groenlandese"
 
 #: 3rdparty/Horde/Nls/Languages.php:91
 msgid "Khmer"
@@ -1671,11 +1671,11 @@ msgstr "Coreano"
 
 #: 3rdparty/Horde/Nls/Languages.php:94
 msgid "Kanuri"
-msgstr ""
+msgstr "Kanuri"
 
 #: 3rdparty/Horde/Nls/Languages.php:95
 msgid "Kashmiri"
-msgstr ""
+msgstr "Kashmiri"
 
 #: 3rdparty/Horde/Nls/Languages.php:96
 msgid "Kurdish"
@@ -1687,11 +1687,11 @@ msgstr "Komi"
 
 #: 3rdparty/Horde/Nls/Languages.php:98
 msgid "Cornish"
-msgstr ""
+msgstr "Cornico"
 
 #: 3rdparty/Horde/Nls/Languages.php:99
 msgid "Kirghiz, Kyrgyz"
-msgstr ""
+msgstr "Kirghizo"
 
 #: 3rdparty/Horde/Nls/Languages.php:100
 msgid "Latin"
@@ -1707,7 +1707,7 @@ msgstr "Luganda"
 
 #: 3rdparty/Horde/Nls/Languages.php:103
 msgid "Limburgish, Limburgan, Limburger"
-msgstr ""
+msgstr "Limburghese"
 
 #: 3rdparty/Horde/Nls/Languages.php:104
 msgid "Lingala"
@@ -1715,7 +1715,7 @@ msgstr "Lingala"
 
 #: 3rdparty/Horde/Nls/Languages.php:105
 msgid "Lao"
-msgstr ""
+msgstr "Laotiano"
 
 #: 3rdparty/Horde/Nls/Languages.php:106
 msgid "Lithuanian"
@@ -1723,7 +1723,7 @@ msgstr "Lituano"
 
 #: 3rdparty/Horde/Nls/Languages.php:107
 msgid "Luba-Katanga"
-msgstr ""
+msgstr "Luba-Katanga"
 
 #: 3rdparty/Horde/Nls/Languages.php:108
 msgid "Latvian"
@@ -1731,11 +1731,11 @@ msgstr "Lettone"
 
 #: 3rdparty/Horde/Nls/Languages.php:109
 msgid "Malagasy"
-msgstr ""
+msgstr "Malgascio"
 
 #: 3rdparty/Horde/Nls/Languages.php:110
 msgid "Marshallese"
-msgstr ""
+msgstr "Marshallese"
 
 #: 3rdparty/Horde/Nls/Languages.php:111
 msgid "Maori"
@@ -1747,7 +1747,7 @@ msgstr "Macedone"
 
 #: 3rdparty/Horde/Nls/Languages.php:113
 msgid "Malayalam"
-msgstr ""
+msgstr "Malayalam"
 
 #: 3rdparty/Horde/Nls/Languages.php:114
 msgid "Mongolian"
@@ -1755,11 +1755,11 @@ msgstr "Mongolo"
 
 #: 3rdparty/Horde/Nls/Languages.php:115
 msgid "Marathi"
-msgstr ""
+msgstr "Marathi"
 
 #: 3rdparty/Horde/Nls/Languages.php:116
 msgid "Malay"
-msgstr ""
+msgstr "Malese"
 
 #: 3rdparty/Horde/Nls/Languages.php:117
 msgid "Maltese"
@@ -1767,7 +1767,7 @@ msgstr "Maltese"
 
 #: 3rdparty/Horde/Nls/Languages.php:118
 msgid "Burmese"
-msgstr ""
+msgstr "Birmano"
 
 #: 3rdparty/Horde/Nls/Languages.php:120
 msgid "Norwegian Bokmål"
@@ -1775,7 +1775,7 @@ msgstr "Norvegese Bokmål"
 
 #: 3rdparty/Horde/Nls/Languages.php:121
 msgid "North Ndebele"
-msgstr ""
+msgstr "Ndebele settentrionale"
 
 #: 3rdparty/Horde/Nls/Languages.php:122
 msgid "Nepali"
@@ -1799,7 +1799,7 @@ msgstr "Norvegese"
 
 #: 3rdparty/Horde/Nls/Languages.php:127
 msgid "South Ndebele"
-msgstr ""
+msgstr "Ndebele meridionale"
 
 #: 3rdparty/Horde/Nls/Languages.php:128
 msgid "Navajo, Navaho"
@@ -1807,7 +1807,7 @@ msgstr "Navajo, Navaho"
 
 #: 3rdparty/Horde/Nls/Languages.php:129
 msgid "Chichewa; Chewa; Nyanja"
-msgstr ""
+msgstr "Chichewa; Chewa; Nyanja"
 
 #: 3rdparty/Horde/Nls/Languages.php:130
 msgid "Occitan"
@@ -1815,7 +1815,7 @@ msgstr "Occitano"
 
 #: 3rdparty/Horde/Nls/Languages.php:131
 msgid "Ojibwe, Ojibwa"
-msgstr ""
+msgstr "Ojibwe, Ojibwa"
 
 #: 3rdparty/Horde/Nls/Languages.php:132
 msgid "Oromo"
@@ -1855,7 +1855,7 @@ msgstr "Quechua"
 
 #: 3rdparty/Horde/Nls/Languages.php:141
 msgid "Romansh"
-msgstr ""
+msgstr "Romancio"
 
 #: 3rdparty/Horde/Nls/Languages.php:142
 msgid "Kirundi"
@@ -1863,7 +1863,7 @@ msgstr "Kirundi"
 
 #: 3rdparty/Horde/Nls/Languages.php:143
 msgid "Romanian, Moldavian, Moldovan"
-msgstr ""
+msgstr "Rumeno, moldavo"
 
 #: 3rdparty/Horde/Nls/Languages.php:144
 msgid "Russian"
@@ -1883,19 +1883,19 @@ msgstr "Sardo"
 
 #: 3rdparty/Horde/Nls/Languages.php:148
 msgid "Sindhi"
-msgstr ""
+msgstr "Sindhi"
 
 #: 3rdparty/Horde/Nls/Languages.php:149
 msgid "Northern Sami"
-msgstr ""
+msgstr "Sami settentrionale"
 
 #: 3rdparty/Horde/Nls/Languages.php:150
 msgid "Sango"
-msgstr ""
+msgstr "Sango"
 
 #: 3rdparty/Horde/Nls/Languages.php:151
 msgid "Sinhala, Sinhalese"
-msgstr ""
+msgstr "Singalese"
 
 #: 3rdparty/Horde/Nls/Languages.php:152
 msgid "Slovak"
@@ -1911,7 +1911,7 @@ msgstr "Samoano"
 
 #: 3rdparty/Horde/Nls/Languages.php:155
 msgid "Shona"
-msgstr ""
+msgstr "Shona"
 
 #: 3rdparty/Horde/Nls/Languages.php:156
 msgid "Somali"
@@ -1927,15 +1927,15 @@ msgstr "Serbo"
 
 #: 3rdparty/Horde/Nls/Languages.php:159
 msgid "Swati"
-msgstr ""
+msgstr "Swati"
 
 #: 3rdparty/Horde/Nls/Languages.php:160
 msgid "Southern Sotho"
-msgstr ""
+msgstr "Sotho meridionale"
 
 #: 3rdparty/Horde/Nls/Languages.php:161
 msgid "Sundanese"
-msgstr ""
+msgstr "Sundanese"
 
 #: 3rdparty/Horde/Nls/Languages.php:162
 msgid "Swedish"
@@ -1955,15 +1955,15 @@ msgstr "Telugu"
 
 #: 3rdparty/Horde/Nls/Languages.php:166
 msgid "Tajik"
-msgstr ""
+msgstr "Tajiko"
 
 #: 3rdparty/Horde/Nls/Languages.php:167
 msgid "Thai"
-msgstr ""
+msgstr "Thai"
 
 #: 3rdparty/Horde/Nls/Languages.php:168
 msgid "Tigrinya"
-msgstr ""
+msgstr "Tigrino"
 
 #: 3rdparty/Horde/Nls/Languages.php:169
 msgid "Turkmen"
@@ -1971,15 +1971,15 @@ msgstr "Turkmeno"
 
 #: 3rdparty/Horde/Nls/Languages.php:170
 msgid "Tagalog"
-msgstr ""
+msgstr "Tagalog"
 
 #: 3rdparty/Horde/Nls/Languages.php:171
 msgid "Tswana"
-msgstr ""
+msgstr "Tswana"
 
 #: 3rdparty/Horde/Nls/Languages.php:172
 msgid "Tonga (Tonga Islands)"
-msgstr ""
+msgstr "Tonga (Isole Tonga)"
 
 #: 3rdparty/Horde/Nls/Languages.php:173
 msgid "Turkish"
@@ -1987,7 +1987,7 @@ msgstr "Turco"
 
 #: 3rdparty/Horde/Nls/Languages.php:174
 msgid "Tsonga"
-msgstr ""
+msgstr "Tsonga"
 
 #: 3rdparty/Horde/Nls/Languages.php:175
 msgid "Tatar"
@@ -2003,7 +2003,7 @@ msgstr "Tahitiano"
 
 #: 3rdparty/Horde/Nls/Languages.php:178
 msgid "Uighur, Uyghur"
-msgstr ""
+msgstr "Uighur, Uyghur"
 
 #: 3rdparty/Horde/Nls/Languages.php:179
 msgid "Ukrainian"
@@ -2031,7 +2031,7 @@ msgstr "Volapük"
 
 #: 3rdparty/Horde/Nls/Languages.php:185
 msgid "Walloon"
-msgstr ""
+msgstr "Vallone"
 
 #: 3rdparty/Horde/Nls/Languages.php:186
 msgid "Wolof"
@@ -2043,7 +2043,7 @@ msgstr "Xhosa"
 
 #: 3rdparty/Horde/Nls/Languages.php:188
 msgid "Yiddish"
-msgstr ""
+msgstr "Yiddish"
 
 #: 3rdparty/Horde/Nls/Languages.php:189
 msgid "Yoruba"
@@ -2051,7 +2051,7 @@ msgstr "Yoruba"
 
 #: 3rdparty/Horde/Nls/Languages.php:190
 msgid "Zhuang, Chuang"
-msgstr ""
+msgstr "Zhuang, Chuang"
 
 #: 3rdparty/Horde/Nls/Languages.php:191
 msgid "Chinese"
@@ -2063,7 +2063,7 @@ msgstr "Zulu"
 
 #: 3rdparty/Horde/Nls/Tld.php:13
 msgid "Ascension Island"
-msgstr ""
+msgstr "Isola Ascensione"
 
 #: 3rdparty/Horde/Nls/Tld.php:21
 msgid "Netherlands Antilles"
@@ -2111,11 +2111,11 @@ msgstr "Isola Reunion"
 
 #: 3rdparty/Horde/Nls/Tld.php:210
 msgid "Saint Helena"
-msgstr ""
+msgstr "Sant'Elena"
 
 #: 3rdparty/Horde/Nls/Tld.php:212
 msgid "Svalbard and Jan Mayen Islands"
-msgstr ""
+msgstr "Isole Svalbard e Jan Mayen"
 
 #: 3rdparty/Horde/Nls/Tld.php:220
 msgid "Soviet Union"
@@ -2145,7 +2145,7 @@ msgstr "Errore"
 msgid "Connecting ..."
 msgstr "Connessione in corso..."
 
-#: js/mail.js:252 templates/part.no-accounts.php:16
+#: js/mail.js:252 templates/no-accounts.php:16
 msgid "Connect"
 msgstr "Connetti"
 
@@ -2153,34 +2153,34 @@ msgstr "Connetti"
 msgid "Not a email address"
 msgstr "Non è un indirizzo di posta"
 
-#: templates/index.php:15
+#: templates/index.php:8
 msgid "New Message"
 msgstr "Nuovo messaggio"
 
-#: templates/index.php:17
+#: templates/index.php:10
 msgid "To"
 msgstr "A"
 
-#: templates/index.php:18
+#: templates/index.php:11
 msgid "Subject"
 msgstr "Oggetto"
 
-#: templates/index.php:20
+#: templates/index.php:13
 msgid "Send"
 msgstr "Invia"
+
+#: templates/no-accounts.php:3
+msgid "Connect your mail account"
+msgstr "Connetti il tuo account di posta"
+
+#: templates/no-accounts.php:8
+msgid "Mail Address"
+msgstr "Indirizzo di posta"
+
+#: templates/no-accounts.php:13
+msgid "IMAP Password"
+msgstr "Password IMAP"
 
 #: templates/part.message.php:31
 msgid "Reply"
 msgstr "Rispondi"
-
-#: templates/part.no-accounts.php:3
-msgid "Connect your mail account"
-msgstr "Connetti il tuo account di posta"
-
-#: templates/part.no-accounts.php:8
-msgid "Mail Address"
-msgstr "Indirizzo di posta"
-
-#: templates/part.no-accounts.php:13
-msgid "IMAP Password"
-msgstr "Password IMAP"

@@ -7,8 +7,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: ownCloud\n"
 "Report-Msgid-Bugs-To: http://bugs.owncloud.org/\n"
-"POT-Creation-Date: 2013-04-17 02:47+0200\n"
-"PO-Revision-Date: 2013-04-17 00:47+0000\n"
+"POT-Creation-Date: 2013-04-18 02:47+0200\n"
+"PO-Revision-Date: 2013-04-17 17:20+0000\n"
 "Last-Translator: I Robot <owncloud-bot@tmit.eu>\n"
 "Language-Team: Welsh (United Kingdom) (http://www.transifex.com/projects/p/owncloud/language/cy_GB/)\n"
 "MIME-Version: 1.0\n"
@@ -1324,7 +1324,7 @@ msgstr ""
 
 #: 3rdparty/Horde/Nls/Geoip.php:328
 msgid "Other"
-msgstr ""
+msgstr "Arall"
 
 #: 3rdparty/Horde/Nls/Languages.php:9
 msgid "Afar"
@@ -2144,7 +2144,7 @@ msgstr "Gwall"
 msgid "Connecting ..."
 msgstr ""
 
-#: js/mail.js:252 templates/part.no-accounts.php:16
+#: js/mail.js:252 templates/no-accounts.php:16
 msgid "Connect"
 msgstr ""
 
@@ -2152,34 +2152,34 @@ msgstr ""
 msgid "Not a email address"
 msgstr ""
 
-#: templates/index.php:15
+#: templates/index.php:8
 msgid "New Message"
 msgstr ""
 
-#: templates/index.php:17
+#: templates/index.php:10
 msgid "To"
-msgstr ""
+msgstr "I"
 
-#: templates/index.php:18
+#: templates/index.php:11
 msgid "Subject"
 msgstr ""
 
-#: templates/index.php:20
+#: templates/index.php:13
 msgid "Send"
+msgstr "Anfon"
+
+#: templates/no-accounts.php:3
+msgid "Connect your mail account"
+msgstr ""
+
+#: templates/no-accounts.php:8
+msgid "Mail Address"
+msgstr ""
+
+#: templates/no-accounts.php:13
+msgid "IMAP Password"
 msgstr ""
 
 #: templates/part.message.php:31
 msgid "Reply"
-msgstr ""
-
-#: templates/part.no-accounts.php:3
-msgid "Connect your mail account"
-msgstr ""
-
-#: templates/part.no-accounts.php:8
-msgid "Mail Address"
-msgstr ""
-
-#: templates/part.no-accounts.php:13
-msgid "IMAP Password"
 msgstr ""

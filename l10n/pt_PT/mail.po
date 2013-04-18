@@ -3,13 +3,14 @@
 # This file is distributed under the same license as the PACKAGE package.
 # 
 # Translators:
+# Helder Meneses <helder.meneses@gmail.com>, 2013
 msgid ""
 msgstr ""
 "Project-Id-Version: ownCloud\n"
 "Report-Msgid-Bugs-To: http://bugs.owncloud.org/\n"
-"POT-Creation-Date: 2013-04-17 02:47+0200\n"
-"PO-Revision-Date: 2013-04-17 00:47+0000\n"
-"Last-Translator: I Robot <owncloud-bot@tmit.eu>\n"
+"POT-Creation-Date: 2013-04-18 02:47+0200\n"
+"PO-Revision-Date: 2013-04-17 21:10+0000\n"
+"Last-Translator: Helder Meneses <helder.meneses@gmail.com>\n"
 "Language-Team: Portuguese (Portugal) (http://www.transifex.com/projects/p/owncloud/language/pt_PT/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -19,15 +20,15 @@ msgstr ""
 
 #: 3rdparty/Horde/Exception/NotFound.php:27
 msgid "Not Found"
-msgstr ""
+msgstr "Não foi encontrado"
 
 #: 3rdparty/Horde/Exception/PermissionDenied.php:27
 msgid "Permission Denied"
-msgstr ""
+msgstr "Permissão negada"
 
 #: 3rdparty/Horde/Imap/Client/Auth/DigestMD5.php:149
 msgid "Authentication failure."
-msgstr ""
+msgstr "Erro de autenticação"
 
 #: 3rdparty/Horde/Imap/Client/Base.php:1856
 #: 3rdparty/Horde/Imap/Client/Base.php:1915
@@ -37,12 +38,12 @@ msgstr ""
 #: 3rdparty/Horde/Imap/Client/Exception/NoSupportExtension.php:36
 #, php-format
 msgid "The server does not support the %s extension."
-msgstr ""
+msgstr "O servidor não suporta a extensão %s."
 
 #: 3rdparty/Horde/Imap/Client/Exception/NoSupportPop3.php:25
 #, php-format
 msgid "%s not supported on POP3 servers."
-msgstr ""
+msgstr "%s não suportado nos servidores POP3"
 
 #: 3rdparty/Horde/Imap/Client/Exception/SearchCharset.php:36
 msgid "Cannot convert search query text to new charset"
@@ -55,19 +56,19 @@ msgstr ""
 #: 3rdparty/Horde/Imap/Client/Socket/Pop3.php:189
 #: 3rdparty/Horde/Imap/Client/Socket/Pop3.php:201
 msgid "Could not open secure connection to the POP3 server."
-msgstr ""
+msgstr "Não foi possível abrir uma ligação segura ao servidor POP3"
 
 #: 3rdparty/Horde/Imap/Client/Socket/Pop3.php:189
 msgid "Server does not support secure connections."
-msgstr ""
+msgstr "O servidor não suporta ligações seguras"
 
 #: 3rdparty/Horde/Imap/Client/Socket/Pop3.php:240
 msgid "POP3 server denied authentication."
-msgstr ""
+msgstr "O servidor POP3 rejeitou a autenticação"
 
 #: 3rdparty/Horde/Imap/Client/Socket/Pop3.php:280
 msgid "Error connecting to POP3 server."
-msgstr ""
+msgstr "Erro a ligar ao servidor POP3"
 
 #: 3rdparty/Horde/Imap/Client/Socket/Pop3.php:334
 #: 3rdparty/Horde/Imap/Client/Socket.php:592
@@ -78,23 +79,23 @@ msgstr ""
 #: 3rdparty/Horde/Imap/Client/Socket.php:636
 #, php-format
 msgid "Unknown authentication method: %s"
-msgstr ""
+msgstr "Método de autenticação desconhecido: %s"
 
 #: 3rdparty/Horde/Imap/Client/Socket/Pop3.php:1112
 msgid "POP3 Server closed the connection unexpectedly."
-msgstr ""
+msgstr "O servidor POP3 fechou a ligação inesperadamente."
 
 #: 3rdparty/Horde/Imap/Client/Socket/Pop3.php:1172
 msgid "POP3 error reported by server."
-msgstr ""
+msgstr "Erro no protocolo POP3 reportado pelo servidor."
 
 #: 3rdparty/Horde/Imap/Client/Socket.php:311
 msgid "Server does not support TLS connections."
-msgstr ""
+msgstr "O servidor não suporta ligações TLS"
 
 #: 3rdparty/Horde/Imap/Client/Socket.php:323
 msgid "Could not open secure TLS connection to the IMAP server."
-msgstr ""
+msgstr "Não foi possível abrir ligação segura TLS ao servidor IMAP"
 
 #: 3rdparty/Horde/Imap/Client/Socket.php:366
 msgid "No supported IMAP authentication method could be found."
@@ -102,15 +103,15 @@ msgstr ""
 
 #: 3rdparty/Horde/Imap/Client/Socket.php:383
 msgid "Mail server denied authentication."
-msgstr ""
+msgstr "O servidor de email rejeitou a autenticação."
 
 #: 3rdparty/Horde/Imap/Client/Socket.php:492
 msgid "Error connecting to mail server."
-msgstr ""
+msgstr "Erro a ligar ao servidor de email"
 
 #: 3rdparty/Horde/Imap/Client/Socket.php:515
 msgid "Server rejected connection."
-msgstr ""
+msgstr "O servidor rejeitou a ligação."
 
 #: 3rdparty/Horde/Imap/Client/Socket.php:524
 msgid "The mail server does not support IMAP4rev1 (RFC 3501)."
@@ -119,7 +120,7 @@ msgstr ""
 #: 3rdparty/Horde/Imap/Client/Socket.php:920
 #, php-format
 msgid "Could not open mailbox \"%s\"."
-msgstr ""
+msgstr "Não foi possível abrir a caixa de correio \"%s\""
 
 #: 3rdparty/Horde/Imap/Client/Socket.php:1874
 #: 3rdparty/Horde/Imap/Client/Socket.php:2544
@@ -168,7 +169,7 @@ msgstr ""
 
 #: 3rdparty/Horde/Imap/Client/Socket.php:4420
 msgid "Could not save message on server."
-msgstr ""
+msgstr "Não foi possível guardar a mensagem no servidor"
 
 #: 3rdparty/Horde/Imap/Client/Socket.php:4429
 msgid "Could not save message data because it is too large."
@@ -196,11 +197,11 @@ msgstr ""
 
 #: 3rdparty/Horde/Imap/Client/Socket.php:4515
 msgid "Remote server is temporarily unavailable."
-msgstr ""
+msgstr "O servidor remoto está temporariamente indisponível."
 
 #: 3rdparty/Horde/Imap/Client/Socket.php:4523
 msgid "Authentication failed."
-msgstr ""
+msgstr "Falhou a autenticação."
 
 #: 3rdparty/Horde/Imap/Client/Socket.php:4531
 msgid "Authentication was successful, but authorization failed."
@@ -208,7 +209,7 @@ msgstr ""
 
 #: 3rdparty/Horde/Imap/Client/Socket.php:4539
 msgid "Authentication credentials have expired."
-msgstr ""
+msgstr "As credenciais de autenticação expiraram."
 
 #: 3rdparty/Horde/Imap/Client/Socket.php:4547
 msgid "Operation failed due to a lack of a secure connection."
@@ -230,7 +231,7 @@ msgstr ""
 
 #: 3rdparty/Horde/Imap/Client/Socket.php:4594
 msgid "The mail server has denied the request."
-msgstr ""
+msgstr "O servidor de email negou o pedido."
 
 #: 3rdparty/Horde/Imap/Client/Socket.php:4603
 msgid ""
@@ -262,7 +263,7 @@ msgstr ""
 
 #: 3rdparty/Horde/Mime/Headers.php:535
 msgid "List-Help"
-msgstr ""
+msgstr "Listar-Ajuda"
 
 #: 3rdparty/Horde/Mime/Headers.php:536
 msgid "List-Unsubscribe"
@@ -290,11 +291,11 @@ msgstr ""
 
 #: 3rdparty/Horde/Mime/Mail.php:417
 msgid "Plaintext Version of Message"
-msgstr ""
+msgstr "Versão texto simples da Mensagem"
 
 #: 3rdparty/Horde/Mime/Mail.php:419
 msgid "HTML Version of Message"
-msgstr ""
+msgstr "Versão HTML da Mensagem"
 
 #: 3rdparty/Horde/Mime/Mdn.php:188
 msgid "Disposition Notification"
@@ -310,7 +311,7 @@ msgstr ""
 
 #: 3rdparty/Horde/Nls/Countries.php:8 3rdparty/Horde/Nls/Tld.php:16
 msgid "Afghanistan"
-msgstr ""
+msgstr "Afeganistão"
 
 #: 3rdparty/Horde/Nls/Countries.php:9
 msgid "Åland Islands"
@@ -318,11 +319,11 @@ msgstr ""
 
 #: 3rdparty/Horde/Nls/Countries.php:10 3rdparty/Horde/Nls/Tld.php:19
 msgid "Albania"
-msgstr ""
+msgstr "Albânia"
 
 #: 3rdparty/Horde/Nls/Countries.php:11 3rdparty/Horde/Nls/Tld.php:73
 msgid "Algeria"
-msgstr ""
+msgstr "Algeria"
 
 #: 3rdparty/Horde/Nls/Countries.php:12 3rdparty/Horde/Nls/Tld.php:25
 msgid "American Samoa"
@@ -330,11 +331,11 @@ msgstr ""
 
 #: 3rdparty/Horde/Nls/Countries.php:13 3rdparty/Horde/Nls/Tld.php:14
 msgid "Andorra"
-msgstr ""
+msgstr "Andorra"
 
 #: 3rdparty/Horde/Nls/Countries.php:14 3rdparty/Horde/Nls/Tld.php:22
 msgid "Angola"
-msgstr ""
+msgstr "Angola"
 
 #: 3rdparty/Horde/Nls/Countries.php:15 3rdparty/Horde/Nls/Tld.php:18
 msgid "Anguilla"
@@ -342,7 +343,7 @@ msgstr ""
 
 #: 3rdparty/Horde/Nls/Countries.php:16 3rdparty/Horde/Nls/Tld.php:23
 msgid "Antarctica"
-msgstr ""
+msgstr "Antartida"
 
 #: 3rdparty/Horde/Nls/Countries.php:17 3rdparty/Horde/Nls/Tld.php:17
 msgid "Antigua and Barbuda"
@@ -350,11 +351,11 @@ msgstr ""
 
 #: 3rdparty/Horde/Nls/Countries.php:18 3rdparty/Horde/Nls/Tld.php:24
 msgid "Argentina"
-msgstr ""
+msgstr "Argentina"
 
 #: 3rdparty/Horde/Nls/Countries.php:19 3rdparty/Horde/Nls/Tld.php:20
 msgid "Armenia"
-msgstr ""
+msgstr "Arménia"
 
 #: 3rdparty/Horde/Nls/Countries.php:20 3rdparty/Horde/Nls/Tld.php:28
 msgid "Aruba"
@@ -362,19 +363,19 @@ msgstr ""
 
 #: 3rdparty/Horde/Nls/Countries.php:21 3rdparty/Horde/Nls/Tld.php:27
 msgid "Australia"
-msgstr ""
+msgstr "Austrália"
 
 #: 3rdparty/Horde/Nls/Countries.php:22 3rdparty/Horde/Nls/Tld.php:26
 msgid "Austria"
-msgstr ""
+msgstr "Áustria"
 
 #: 3rdparty/Horde/Nls/Countries.php:23 3rdparty/Horde/Nls/Tld.php:30
 msgid "Azerbaijan"
-msgstr ""
+msgstr "Azerbaijão "
 
 #: 3rdparty/Horde/Nls/Countries.php:24 3rdparty/Horde/Nls/Tld.php:44
 msgid "Bahamas"
-msgstr ""
+msgstr "Bahamas"
 
 #: 3rdparty/Horde/Nls/Countries.php:25 3rdparty/Horde/Nls/Tld.php:37
 msgid "Bahrain"
@@ -382,11 +383,11 @@ msgstr ""
 
 #: 3rdparty/Horde/Nls/Countries.php:26 3rdparty/Horde/Nls/Tld.php:33
 msgid "Bangladesh"
-msgstr ""
+msgstr "Bangladesh"
 
 #: 3rdparty/Horde/Nls/Countries.php:27 3rdparty/Horde/Nls/Tld.php:32
 msgid "Barbados"
-msgstr ""
+msgstr "Barbados"
 
 #: 3rdparty/Horde/Nls/Countries.php:28 3rdparty/Horde/Nls/Tld.php:48
 msgid "Belarus"
@@ -394,7 +395,7 @@ msgstr ""
 
 #: 3rdparty/Horde/Nls/Countries.php:29 3rdparty/Horde/Nls/Tld.php:34
 msgid "Belgium"
-msgstr ""
+msgstr "Bélgica"
 
 #: 3rdparty/Horde/Nls/Countries.php:30 3rdparty/Horde/Nls/Tld.php:49
 msgid "Belize"
@@ -414,7 +415,7 @@ msgstr ""
 
 #: 3rdparty/Horde/Nls/Countries.php:34 3rdparty/Horde/Nls/Tld.php:42
 msgid "Bolivia"
-msgstr ""
+msgstr "Bolívia"
 
 #: 3rdparty/Horde/Nls/Countries.php:35
 msgid "Bonaire, Sint Eustatius and Saba"
@@ -426,7 +427,7 @@ msgstr ""
 
 #: 3rdparty/Horde/Nls/Countries.php:37 3rdparty/Horde/Nls/Tld.php:47
 msgid "Botswana"
-msgstr ""
+msgstr "Botswana"
 
 #: 3rdparty/Horde/Nls/Countries.php:38 3rdparty/Horde/Nls/Tld.php:46
 msgid "Bouvet Island"
@@ -434,7 +435,7 @@ msgstr ""
 
 #: 3rdparty/Horde/Nls/Countries.php:39 3rdparty/Horde/Nls/Tld.php:43
 msgid "Brazil"
-msgstr ""
+msgstr "Brasil"
 
 #: 3rdparty/Horde/Nls/Countries.php:40 3rdparty/Horde/Nls/Tld.php:118
 msgid "British Indian Ocean Territory"
@@ -446,7 +447,7 @@ msgstr ""
 
 #: 3rdparty/Horde/Nls/Countries.php:42 3rdparty/Horde/Nls/Tld.php:36
 msgid "Bulgaria"
-msgstr ""
+msgstr "Bulgária"
 
 #: 3rdparty/Horde/Nls/Countries.php:43 3rdparty/Horde/Nls/Tld.php:35
 msgid "Burkina Faso"
@@ -458,7 +459,7 @@ msgstr ""
 
 #: 3rdparty/Horde/Nls/Countries.php:45 3rdparty/Horde/Nls/Tld.php:129
 msgid "Cambodia"
-msgstr ""
+msgstr "Cambodja"
 
 #: 3rdparty/Horde/Nls/Countries.php:46 3rdparty/Horde/Nls/Tld.php:59
 msgid "Cameroon"
@@ -474,7 +475,7 @@ msgstr ""
 
 #: 3rdparty/Horde/Nls/Countries.php:49 3rdparty/Horde/Nls/Tld.php:136
 msgid "Cayman Islands"
-msgstr ""
+msgstr "Ilhas Caimão"
 
 #: 3rdparty/Horde/Nls/Countries.php:50 3rdparty/Horde/Nls/Tld.php:53
 msgid "Central African Republic"
@@ -486,7 +487,7 @@ msgstr ""
 
 #: 3rdparty/Horde/Nls/Countries.php:52 3rdparty/Horde/Nls/Tld.php:58
 msgid "Chile"
-msgstr ""
+msgstr "Chile"
 
 #: 3rdparty/Horde/Nls/Countries.php:53 3rdparty/Horde/Nls/Tld.php:60
 msgid "China"
@@ -502,7 +503,7 @@ msgstr ""
 
 #: 3rdparty/Horde/Nls/Countries.php:56 3rdparty/Horde/Nls/Tld.php:61
 msgid "Colombia"
-msgstr ""
+msgstr "Colômbia"
 
 #: 3rdparty/Horde/Nls/Countries.php:57 3rdparty/Horde/Nls/Tld.php:131
 msgid "Comoros"
@@ -522,7 +523,7 @@ msgstr ""
 
 #: 3rdparty/Horde/Nls/Countries.php:61 3rdparty/Horde/Nls/Tld.php:62
 msgid "Costa Rica"
-msgstr ""
+msgstr "Costa Rica"
 
 #: 3rdparty/Horde/Nls/Countries.php:62
 msgid "Côte d'Ivoire"
@@ -534,7 +535,7 @@ msgstr ""
 
 #: 3rdparty/Horde/Nls/Countries.php:64 3rdparty/Horde/Nls/Tld.php:63
 msgid "Cuba"
-msgstr ""
+msgstr "Cuba"
 
 #: 3rdparty/Horde/Nls/Countries.php:65
 msgid "Curaçao"
@@ -546,11 +547,11 @@ msgstr ""
 
 #: 3rdparty/Horde/Nls/Countries.php:67 3rdparty/Horde/Nls/Tld.php:67
 msgid "Czech Republic"
-msgstr ""
+msgstr "Republica Checa"
 
 #: 3rdparty/Horde/Nls/Countries.php:68 3rdparty/Horde/Nls/Tld.php:70
 msgid "Denmark"
-msgstr ""
+msgstr "Dinamarca"
 
 #: 3rdparty/Horde/Nls/Countries.php:69 3rdparty/Horde/Nls/Tld.php:69
 msgid "Djibouti"
@@ -562,19 +563,19 @@ msgstr ""
 
 #: 3rdparty/Horde/Nls/Countries.php:71 3rdparty/Horde/Nls/Tld.php:72
 msgid "Dominican Republic"
-msgstr ""
+msgstr "Republica Dominicana"
 
 #: 3rdparty/Horde/Nls/Countries.php:72 3rdparty/Horde/Nls/Tld.php:74
 msgid "Ecuador"
-msgstr ""
+msgstr "Equador"
 
 #: 3rdparty/Horde/Nls/Countries.php:73 3rdparty/Horde/Nls/Tld.php:76
 msgid "Egypt"
-msgstr ""
+msgstr "Egito"
 
 #: 3rdparty/Horde/Nls/Countries.php:74 3rdparty/Horde/Nls/Tld.php:221
 msgid "El Salvador"
-msgstr ""
+msgstr "El Salvador"
 
 #: 3rdparty/Horde/Nls/Countries.php:75 3rdparty/Horde/Nls/Tld.php:100
 msgid "Equatorial Guinea"
@@ -590,7 +591,7 @@ msgstr ""
 
 #: 3rdparty/Horde/Nls/Countries.php:78 3rdparty/Horde/Nls/Tld.php:80
 msgid "Ethiopia"
-msgstr ""
+msgstr "Etiópia"
 
 #: 3rdparty/Horde/Nls/Countries.php:79 3rdparty/Horde/Nls/Tld.php:84
 msgid "Falkland Islands (Malvinas)"
@@ -602,15 +603,15 @@ msgstr ""
 
 #: 3rdparty/Horde/Nls/Countries.php:81 3rdparty/Horde/Nls/Tld.php:83
 msgid "Fiji"
-msgstr ""
+msgstr "Ilhas Fiji"
 
 #: 3rdparty/Horde/Nls/Countries.php:82 3rdparty/Horde/Nls/Tld.php:82
 msgid "Finland"
-msgstr ""
+msgstr "Finlândia"
 
 #: 3rdparty/Horde/Nls/Countries.php:83 3rdparty/Horde/Nls/Tld.php:87
 msgid "France"
-msgstr ""
+msgstr "França"
 
 #: 3rdparty/Horde/Nls/Countries.php:84 3rdparty/Horde/Nls/Tld.php:92
 msgid "French Guiana"
@@ -638,19 +639,19 @@ msgstr ""
 
 #: 3rdparty/Horde/Nls/Countries.php:90 3rdparty/Horde/Nls/Tld.php:68
 msgid "Germany"
-msgstr ""
+msgstr "Alemanha"
 
 #: 3rdparty/Horde/Nls/Countries.php:91 3rdparty/Horde/Nls/Tld.php:94
 msgid "Ghana"
-msgstr ""
+msgstr "Gana"
 
 #: 3rdparty/Horde/Nls/Countries.php:92 3rdparty/Horde/Nls/Tld.php:95
 msgid "Gibraltar"
-msgstr ""
+msgstr "Gibraltar"
 
 #: 3rdparty/Horde/Nls/Countries.php:93 3rdparty/Horde/Nls/Tld.php:101
 msgid "Greece"
-msgstr ""
+msgstr "Grécia"
 
 #: 3rdparty/Horde/Nls/Countries.php:94 3rdparty/Horde/Nls/Tld.php:96
 msgid "Greenland"
@@ -1019,7 +1020,7 @@ msgstr ""
 
 #: 3rdparty/Horde/Nls/Countries.php:185 3rdparty/Horde/Nls/Tld.php:195
 msgid "Portugal"
-msgstr ""
+msgstr "Portugal"
 
 #: 3rdparty/Horde/Nls/Countries.php:186 3rdparty/Horde/Nls/Tld.php:193
 msgid "Puerto Rico"
@@ -1027,7 +1028,7 @@ msgstr ""
 
 #: 3rdparty/Horde/Nls/Countries.php:187 3rdparty/Horde/Nls/Tld.php:198
 msgid "Qatar"
-msgstr ""
+msgstr "Qatar"
 
 #: 3rdparty/Horde/Nls/Countries.php:188
 msgid "Réunion"
@@ -1035,7 +1036,7 @@ msgstr ""
 
 #: 3rdparty/Horde/Nls/Countries.php:189 3rdparty/Horde/Nls/Tld.php:200
 msgid "Romania"
-msgstr ""
+msgstr "Roménia"
 
 #: 3rdparty/Horde/Nls/Countries.php:190 3rdparty/Horde/Nls/Tld.php:202
 msgid "Russian Federation"
@@ -1846,7 +1847,7 @@ msgstr ""
 
 #: 3rdparty/Horde/Nls/Languages.php:139
 msgid "Portuguese"
-msgstr ""
+msgstr "Português"
 
 #: 3rdparty/Horde/Nls/Languages.php:140
 msgid "Quechua"
@@ -1866,7 +1867,7 @@ msgstr ""
 
 #: 3rdparty/Horde/Nls/Languages.php:144
 msgid "Russian"
-msgstr ""
+msgstr "Russo"
 
 #: 3rdparty/Horde/Nls/Languages.php:145
 msgid "Kinyarwanda"
@@ -2054,7 +2055,7 @@ msgstr ""
 
 #: 3rdparty/Horde/Nls/Languages.php:191
 msgid "Chinese"
-msgstr ""
+msgstr "Chinês"
 
 #: 3rdparty/Horde/Nls/Languages.php:192
 msgid "Zulu"
@@ -2074,7 +2075,7 @@ msgstr ""
 
 #: 3rdparty/Horde/Nls/Tld.php:54
 msgid "Congo, Republic of"
-msgstr ""
+msgstr "Republica do Congo "
 
 #: 3rdparty/Horde/Nls/Tld.php:56
 msgid "Cote d'Ivoire"
@@ -2082,7 +2083,7 @@ msgstr ""
 
 #: 3rdparty/Horde/Nls/Tld.php:81
 msgid "European Union"
-msgstr ""
+msgstr "União Europeia"
 
 #: 3rdparty/Horde/Nls/Tld.php:108
 msgid "Heard and McDonald Islands"
@@ -2118,11 +2119,11 @@ msgstr ""
 
 #: 3rdparty/Horde/Nls/Tld.php:220
 msgid "Soviet Union"
-msgstr ""
+msgstr "União Soviética"
 
 #: 3rdparty/Horde/Nls/Tld.php:235
 msgid "East Timor"
-msgstr ""
+msgstr "Timor Leste"
 
 #: 3rdparty/Horde/Nls/Tld.php:239
 msgid "Taiwan"
@@ -2134,7 +2135,7 @@ msgstr ""
 
 #: 3rdparty/Horde/Nls/Tld.php:259
 msgid "Yugoslavia"
-msgstr ""
+msgstr "Jugoslávia"
 
 #: js/mail.js:42 js/mail.js:115 js/mail.js:148 js/mail.js:205 js/mail.js:261
 msgid "Error"
@@ -2142,9 +2143,9 @@ msgstr "Erro"
 
 #: js/mail.js:236
 msgid "Connecting ..."
-msgstr ""
+msgstr "A ligar..."
 
-#: js/mail.js:252 templates/part.no-accounts.php:16
+#: js/mail.js:252 templates/no-accounts.php:16
 msgid "Connect"
 msgstr "Ligar"
 
@@ -2152,34 +2153,34 @@ msgstr "Ligar"
 msgid "Not a email address"
 msgstr ""
 
-#: templates/index.php:15
+#: templates/index.php:8
 msgid "New Message"
-msgstr ""
+msgstr "Nova Mensagem"
 
-#: templates/index.php:17
+#: templates/index.php:10
 msgid "To"
 msgstr "Para"
 
-#: templates/index.php:18
+#: templates/index.php:11
 msgid "Subject"
-msgstr ""
+msgstr "Assunto"
 
-#: templates/index.php:20
+#: templates/index.php:13
 msgid "Send"
 msgstr "Enviar"
 
-#: templates/part.message.php:31
-msgid "Reply"
-msgstr ""
-
-#: templates/part.no-accounts.php:3
+#: templates/no-accounts.php:3
 msgid "Connect your mail account"
 msgstr ""
 
-#: templates/part.no-accounts.php:8
+#: templates/no-accounts.php:8
 msgid "Mail Address"
-msgstr ""
+msgstr "Endereço de email"
 
-#: templates/part.no-accounts.php:13
+#: templates/no-accounts.php:13
 msgid "IMAP Password"
-msgstr ""
+msgstr "Password IMAP"
+
+#: templates/part.message.php:31
+msgid "Reply"
+msgstr "Responder"
