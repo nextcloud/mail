@@ -2,6 +2,8 @@
 "Not Found" => "Nenalezeno",
 "Permission Denied" => "Přístup odepřen",
 "Authentication failure." => "Chyba ověření.",
+"The server does not support the %s extension." => "Server nepodporuje rozšíření %s.",
+"Server rejected connection." => "Server odmítl spojení.",
 "Authentication failed." => "Ověření selhalo.",
 "Afghanistan" => "Afghánistán",
 "Åland Islands" => "Ålandské ostrovy",
