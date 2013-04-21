@@ -260,7 +260,14 @@ $(document).ready(function () {
                     }
                     OC.dialogs.alert(error, t('mail', 'Error'));
                 }
-            }
+            },
+			error: function(jqXHR, textStatus, errorThrown){
+				var error = errorThrown || textStatus || t('mail', 'Unknown error');
+				$('#auto_detect_account').attr('disabled', 'false');
+				 $('#auto_detect_account').val(t('mail', 'Connect'));
+				$('#connect-loading').fadeOut();
+				OC.dialogs.alert(error, t('mail', 'Server Error'));
+			}
         });
     });
 
