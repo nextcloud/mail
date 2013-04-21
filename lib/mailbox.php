@@ -59,8 +59,7 @@ class Mailbox {
 		ob_start(); // fix for Horde warnings
 		$messages = array();
 		foreach ($headers as $message_id => $header) {
-			$message = new Message($this->conn, $this->folder_id, $message_id);
-			$message->setInfo($header);
+			$message = new Message($this->conn, $this->folder_id, $message_id, $header);
 			$messages[] = $message->getListArray();
 		}
 		ob_clean();
