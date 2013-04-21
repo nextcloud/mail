@@ -108,6 +108,9 @@ class Message {
 		return $e->subject;
 	}
 
+	/**
+	 * @return \Horde_Imap_Client_DateTime
+	 */
 	public function getSentDate() {
 		// TODO: Use internal imap date for now
 		return $this->fetch->getImapDate();
@@ -289,6 +292,7 @@ class Message {
 		$data['date'] = \OCP\Util::formatDate($this->getSentDate()->format('U'));
 		$data['size'] = \OCP\Util::humanFileSize($this->getSize());
 		$data['flags'] = $this->getFlags();
+		$data['date-int'] = $this->getSentDate()->getTimestamp();
 		return $data;
 	}
 }
