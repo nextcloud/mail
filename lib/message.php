@@ -3,7 +3,7 @@
  * ownCloud - Mail app
  *
  * @author Thomas Müller
- * @copyright 2012 Thomas Müller thomas.mueller@tmit.eu
+ * @copyright 2012, 2013 Thomas Müller thomas.mueller@tmit.eu
  *
  * This library is free software; you can redistribute it and/or
  * modify it under the terms of the GNU AFFERO GENERAL PUBLIC LICENSE
@@ -28,11 +28,18 @@ class Message {
 	 * @param $conn
 	 * @param $folder_id
 	 * @param $message_id
+	 * @param null $fetch
 	 */
-	function __construct($conn, $folder_id, $message_id) {
+	function __construct($conn, $folder_id, $message_id, $fetch=null) {
 		$this->conn = $conn;
 		$this->folder_id = $folder_id;
 		$this->message_id = $message_id;
+
+		if ($fetch === null) {
+			$this->loadMessageBodies();
+		} else {
+			$this->fetch = $fetch;
+		}
 	}
 
 	// output all the following:
@@ -43,12 +50,16 @@ class Message {
 	public $charset = '';
 	public $attachments = array();
 
-	private $conn, $folder_id, $message_id;
-	private $fetch;
+	/**
+	 * @var \Horde_Imap_Client_Socket
+	 */
+	private $conn;
+	private $folder_id, $message_id;
 
-	public function setInfo($info) {
-		$this->fetch = $info;
-	}
+	/**
+	 * @var \Horde_Imap_Client_Data_Fetch
+	 */
+	private $fetch;
 
 	public function getUid() {
 		return $this->fetch->getUid();
@@ -75,10 +86,21 @@ class Message {
 		return $from->label;
 	}
 
+	public function getToEmail() {
+		$e = $this->getEnvelope();
+		$from = $e->to[0];
+		return $from->bare_address;
+	}
+
 	public function getTo() {
 		$e = $this->getEnvelope();
 		$to = $e->to[0];
 		return $to ? $to->label : null;
+	}
+
+	public function getMessageId() {
+		$e = $this->getEnvelope();
+		return $e->message_id;
 	}
 
 	public function getSubject() {
@@ -125,6 +147,7 @@ class Message {
 		// $list is an array of Horde_Imap_Client_Data_Fetch objects.
 		$ids = new \Horde_Imap_Client_Ids($this->message_id);
 		$headers = $this->conn->fetch($this->folder_id, $fetch_query, array('ids' => $ids));
+		/** @var $fetch \Horde_Imap_Client_Data_Fetch */
 		$fetch = $headers[$this->message_id];
 
 		// set $this->fetch to get to, from ...
@@ -138,13 +161,13 @@ class Message {
 		if ($structure_type == 'multipart') {
 			$i = 1;
 			foreach($structure->getParts() as $p) {
-				$this->getpart($p, $i++);
+				$this->getPart($p, $i++);
 			}
 		} else {
 			if ($structure->findBody() != null) {
 				// get the body from the server
 				$partId = $structure->findBody();
-				$this->queryBodyPart($partId);
+				$this->getPart($structure->getPart($partId), $partId);
 			}
 		}
 	}
@@ -154,19 +177,19 @@ class Message {
 		$fetch_query = new \Horde_Imap_Client_Fetch_Query();
 		$ids = new \Horde_Imap_Client_Ids($this->message_id);
 
-		$bodypart_params = array('decode' => true);
-
-		$fetch_query->bodyPart($partId, $bodypart_params);
+		$fetch_query->bodyPart($partId);
 		$headers = $this->conn->fetch($this->folder_id, $fetch_query, array('ids' => $ids));
+		/** @var $fetch \Horde_Imap_Client_Data_Fetch */
 		$fetch = $headers[$this->message_id];
 
 		return $fetch->getBodyPart($partId);
 	}
 
-	private function getpart($p, $partno) {
-
-		// $partno = '1', '2', '2.1', '2.1.3', etc if multipart, 0 if not multipart
-
+	/**
+	 * @param $p \Horde_Mime_Part
+	 * @param $partno
+	 */
+	private function getPart($p, $partno) {
 		// ATTACHMENT
 		// Any part with a filename is an attachment,
 		// so an attached text file (type 0) is not mistaken as the message.
@@ -185,23 +208,24 @@ class Message {
 
 		// DECODE DATA
 		$data = $this->queryBodyPart($partno);
+		$p->setContents($data);
+		$data = $p->toString();
 
-		// Any part may be encoded, even plain text messages, so check everything.
-//		if (strtolower($p)=='quoted_printable') {
-//			$data = quoted_printable_decode($data);
-//		}
-//		if (strtolower($p[5])=='base64') {
-//			$data = base64_decode($data);
-//		}
-		// no need to decode 7-bit, 8-bit, or binary
+		// decode quotes
+		$data = quoted_printable_decode($data);
 
 		//
 		// convert the data
 		//
 		$charset = $p->getCharset();
-		if (isset( $charset)) {
+		if (isset( $charset) and $charset !== '') {
 			$data = mb_convert_encoding($data, "UTF-8", $charset);
 		}
+
+		//
+		// sanitize
+		//
+		$data = \OCP\Util::sanitizeHTML($data);
 
 		// TEXT
 		if ($p->getPrimaryType() == 'text' && $data) {
@@ -235,7 +259,7 @@ class Message {
 //		}
 	}
 
-	private function get_attachment_info() {
+	private function getAttachmentInfo() {
 		$attachment_info = array();
 		foreach ($this->attachments as $filename => $data) {
 			// TODO: mime-type ???
@@ -246,7 +270,6 @@ class Message {
 	}
 
 	public function as_array() {
-		$this->loadMessageBodies();
 		$mail_body = $this->plainmsg;
 		$mail_body = nl2br($mail_body);
 
@@ -256,7 +279,7 @@ class Message {
 
 		$data = $this->getListArray();
 		$data['body'] = $mail_body;
-		$data['attachments'] = $this->get_attachment_info();
+		$data['attachments'] = $this->getAttachmentInfo();
 		return $data;
 	}
 

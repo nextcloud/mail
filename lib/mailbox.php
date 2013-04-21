@@ -61,7 +61,7 @@ class Mailbox {
 		foreach ($headers as $message_id => $header) {
 			$message = new Message($this->conn, $this->folder_id, $message_id);
 			$message->setInfo($header);
-			$messages[]= $message->getListArray();
+			$messages[] = $message->getListArray();
 		}
 		ob_clean();
 

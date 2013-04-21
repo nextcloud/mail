@@ -59,10 +59,10 @@ namespace OCA\Mail {
 
 				// loop through all email addresses of this contact
 				foreach ($email as $e) {
-					$displayName = $fn . " <$e>";
+					$displayName = "\"$fn\" <$e>";
 					$receivers[] = array('id'    => $id,
-					                     'label' => $displayName,
-					                     'value' => $displayName);
+										 'label' => $displayName,
+										 'value' => $displayName);
 				}
 			}
 
@@ -112,6 +112,7 @@ namespace OCA\Mail {
 			}
 
 			try {
+				/** @var $mailbox \OCA\Mail\Mailbox */
 				$mailbox = $account->getMailbox($folder_id);
 				$messages = $mailbox->getMessages($from, $count);
 
@@ -138,6 +139,7 @@ namespace OCA\Mail {
 			}
 
 			try {
+				/** @var $mailbox \OCA\Mail\Mailbox */
 				$mailbox = $account->getMailbox($folder_id);
 				$m = $mailbox->getMessage($message_id);
 				$message = $m->as_array();
@@ -196,7 +198,7 @@ namespace OCA\Mail {
 		/**
 		 * @param $user_id
 		 * @param $account_id
-		 * @return Account|bool
+		 * @return Account
 		 */
 		public static function getAccount($user_id, $account_id) {
 			$accounts = App::getAccounts($user_id);
@@ -205,7 +207,7 @@ namespace OCA\Mail {
 				return $accounts[$account_id];
 			}
 
-			return false;
+			return null;
 		}
 
 		public static function addAccount($user_id, $email, $host, $port, $user, $password, $ssl_mode) {
@@ -268,11 +270,10 @@ namespace OCA\Mail {
 			// TODO: will not work on windows - ignore this for now
 			//
 			if (getmxrr($host, $mx_records, $mx_weight) == false)
-					{
-						return false;
-					}
+			{
+				return false;
+			}
 
-			var_dump($mx_records);
 			if (stripos($mx_records[0], 'google') !== false) {
 				return true;
 			}

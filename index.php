@@ -29,9 +29,17 @@ if( !OCP\User::isLoggedIn()) {
 
 // Add JavaScript and CSS files
 OCP\Util::addScript('mail','mail');
+OCP\Util::addScript('mail','send-mail');
 OCP\Util::addScript('mail','jquery.endless-scroll');
 OCP\Util::addStyle('mail','mail');
 
 OCP\App::setActiveNavigationEntry( 'mail');
-$tmpl = new OCP\Template( 'mail', 'index', 'user' );
-$tmpl->printPage();
+
+$accounts = OCA\Mail\App::getFolders(OCP\User::getUser());
+if (count($accounts) == 0) {
+	$tmpl = new OCP\Template( 'mail', 'no-accounts', 'user' );
+	$tmpl->printPage();
+} else {
+	$tmpl = new OCP\Template( 'mail', 'index', 'user' );
+	$tmpl->printPage();
+}
