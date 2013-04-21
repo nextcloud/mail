@@ -8,8 +8,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: ownCloud\n"
 "Report-Msgid-Bugs-To: http://bugs.owncloud.org/\n"
-"POT-Creation-Date: 2013-04-19 02:41+0200\n"
-"PO-Revision-Date: 2013-04-18 07:36+0000\n"
+"POT-Creation-Date: 2013-04-21 16:14+0200\n"
+"PO-Revision-Date: 2013-04-20 22:20+0000\n"
 "Last-Translator: Vincenzo Reale <vinx.reale@gmail.com>\n"
 "Language-Team: Italian (http://www.transifex.com/projects/p/owncloud/language/it/)\n"
 "MIME-Version: 1.0\n"
@@ -51,7 +51,7 @@ msgstr "Impossibile convertire il testo di ricerca al nuovo insieme di caratteri
 
 #: 3rdparty/Horde/Imap/Client/Interaction/Server/Tagged.php:34
 msgid "Bad tagged response."
-msgstr ""
+msgstr "Risposta con tag errata."
 
 #: 3rdparty/Horde/Imap/Client/Socket/Pop3.php:189
 #: 3rdparty/Horde/Imap/Client/Socket/Pop3.php:201
@@ -217,7 +217,7 @@ msgstr "L'operazione non è riuscita a causa della mancanza di una connessione s
 
 #: 3rdparty/Horde/Imap/Client/Socket.php:4555
 msgid "You do not have adequate permissions to carry out this operation."
-msgstr ""
+msgstr "Non hai i permessi necessari per effettuare questa operazione."
 
 #: 3rdparty/Horde/Imap/Client/Socket.php:4564
 msgid ""
