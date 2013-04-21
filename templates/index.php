@@ -1,10 +1,3 @@
-<?php
-$accounts = OCA\Mail\App::getFolders(OCP\User::getUser());
-if (count($accounts) == 0) {
-	print_unescaped($this->inc("part.no-accounts"));
-} else {
-	?>
-
 <div id="leftcontent" class="leftcontent">
 	<div id="mail-folders">
 		<img class="loading" src="<?php print_unescaped(OCP\Util::imagePath('core', 'loading.gif')); ?>" />
@@ -38,5 +31,3 @@ if (count($accounts) == 0) {
 		</tr>
 	</table>
 </div>
-
-<?php } ?>
