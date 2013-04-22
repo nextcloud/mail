@@ -94,8 +94,8 @@
 "To" => "Päättyy",
 "Subject" => "Aihe",
 "Send" => "Lähetä",
-"Reply" => "Vastaa",
 "Connect your mail account" => "Yhdistä sähköpostitilisi",
 "Mail Address" => "Sähköpostiosoite",
-"IMAP Password" => "IMAP-salasana"
+"IMAP Password" => "IMAP-salasana",
+"Reply" => "Vastaa"
 );

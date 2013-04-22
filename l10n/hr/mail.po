@@ -7,8 +7,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: ownCloud\n"
 "Report-Msgid-Bugs-To: http://bugs.owncloud.org/\n"
-"POT-Creation-Date: 2013-04-17 02:47+0200\n"
-"PO-Revision-Date: 2013-04-17 00:47+0000\n"
+"POT-Creation-Date: 2013-04-22 02:41+0200\n"
+"PO-Revision-Date: 2013-04-22 00:42+0000\n"
 "Last-Translator: I Robot <owncloud-bot@tmit.eu>\n"
 "Language-Team: Croatian (http://www.transifex.com/projects/p/owncloud/language/hr/)\n"
 "MIME-Version: 1.0\n"
@@ -2144,7 +2144,7 @@ msgstr "Greška"
 msgid "Connecting ..."
 msgstr ""
 
-#: js/mail.js:252 templates/part.no-accounts.php:16
+#: js/mail.js:252 js/mail.js:267 templates/no-accounts.php:16
 msgid "Connect"
 msgstr "Poveži"
 
@@ -2152,34 +2152,42 @@ msgstr "Poveži"
 msgid "Not a email address"
 msgstr ""
 
-#: templates/index.php:15
+#: js/mail.js:265
+msgid "Unknown error"
+msgstr ""
+
+#: js/mail.js:269
+msgid "Server Error"
+msgstr ""
+
+#: templates/index.php:8
 msgid "New Message"
 msgstr ""
 
-#: templates/index.php:17
+#: templates/index.php:10
 msgid "To"
 msgstr "Za"
 
-#: templates/index.php:18
+#: templates/index.php:11
 msgid "Subject"
 msgstr ""
 
-#: templates/index.php:20
+#: templates/index.php:13
 msgid "Send"
+msgstr ""
+
+#: templates/no-accounts.php:3
+msgid "Connect your mail account"
+msgstr ""
+
+#: templates/no-accounts.php:8
+msgid "Mail Address"
+msgstr ""
+
+#: templates/no-accounts.php:13
+msgid "IMAP Password"
 msgstr ""
 
 #: templates/part.message.php:31
 msgid "Reply"
-msgstr ""
-
-#: templates/part.no-accounts.php:3
-msgid "Connect your mail account"
-msgstr ""
-
-#: templates/part.no-accounts.php:8
-msgid "Mail Address"
-msgstr ""
-
-#: templates/part.no-accounts.php:13
-msgid "IMAP Password"
 msgstr ""

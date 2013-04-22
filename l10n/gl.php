@@ -527,8 +527,8 @@
 "To" => "a",
 "Subject" => "Asunto",
 "Send" => "Enviar",
-"Reply" => "Responder",
 "Connect your mail account" => "Conectar a súa conta de correo",
 "Mail Address" => "Enderezo de correo",
-"IMAP Password" => "Contrasinal IMAP"
+"IMAP Password" => "Contrasinal IMAP",
+"Reply" => "Responder"
 );

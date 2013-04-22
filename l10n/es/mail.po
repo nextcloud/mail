@@ -3,13 +3,14 @@
 # This file is distributed under the same license as the PACKAGE package.
 # 
 # Translators:
-# Art O. Pal <artopal@fastmail.fm>, 2013.
+# Art O. Pal <artopal@fastmail.fm>, 2013
+# inye <j.contrerasferrada@gmail.com>, 2013
 msgid ""
 msgstr ""
 "Project-Id-Version: ownCloud\n"
 "Report-Msgid-Bugs-To: http://bugs.owncloud.org/\n"
-"POT-Creation-Date: 2013-04-17 02:47+0200\n"
-"PO-Revision-Date: 2013-04-17 00:47+0000\n"
+"POT-Creation-Date: 2013-04-22 02:41+0200\n"
+"PO-Revision-Date: 2013-04-22 00:42+0000\n"
 "Last-Translator: I Robot <owncloud-bot@tmit.eu>\n"
 "Language-Team: Spanish (http://www.transifex.com/projects/p/owncloud/language/es/)\n"
 "MIME-Version: 1.0\n"
@@ -51,7 +52,7 @@ msgstr "No se puede convertir el texto de la consulta de búsqueda a un nuevo gr
 
 #: 3rdparty/Horde/Imap/Client/Interaction/Server/Tagged.php:34
 msgid "Bad tagged response."
-msgstr ""
+msgstr "Respuesta mal etiquetada."
 
 #: 3rdparty/Horde/Imap/Client/Socket/Pop3.php:189
 #: 3rdparty/Horde/Imap/Client/Socket/Pop3.php:201
@@ -181,70 +182,70 @@ msgstr "El algoritmo de comparación no fue reconocido por el servidor."
 
 #: 3rdparty/Horde/Imap/Client/Socket.php:4486
 msgid "The metadata item could not be saved because it is too large."
-msgstr ""
+msgstr "El ítem metadata no puede guardarse porque es demasiado grande."
 
 #: 3rdparty/Horde/Imap/Client/Socket.php:4495
 msgid ""
 "The metadata item could not be saved because the server does not support "
 "private annotations."
-msgstr ""
+msgstr "El ítem metadata no puede guardarse porque el servidor no soporta anotaciones privadas."
 
 #: 3rdparty/Horde/Imap/Client/Socket.php:4504
 msgid ""
 "The metadata item could not be saved because the maximum number of "
 "annotations has been exceeded."
-msgstr ""
+msgstr "El ítem metadata no puede guardarse porque el se excedió el numero máximo de anotaciones."
 
 #: 3rdparty/Horde/Imap/Client/Socket.php:4515
 msgid "Remote server is temporarily unavailable."
-msgstr ""
+msgstr "El servidor remoto no está disponible temporalmente."
 
 #: 3rdparty/Horde/Imap/Client/Socket.php:4523
 msgid "Authentication failed."
-msgstr ""
+msgstr "La autenticación a fallado."
 
 #: 3rdparty/Horde/Imap/Client/Socket.php:4531
 msgid "Authentication was successful, but authorization failed."
-msgstr ""
+msgstr "La autenticación se realizó exitosamente, pero la autorización falló."
 
 #: 3rdparty/Horde/Imap/Client/Socket.php:4539
 msgid "Authentication credentials have expired."
-msgstr ""
+msgstr "Las credenciales de autenticación han expirado."
 
 #: 3rdparty/Horde/Imap/Client/Socket.php:4547
 msgid "Operation failed due to a lack of a secure connection."
-msgstr ""
+msgstr "La operación falló debido a una falla de la conexión segura."
 
 #: 3rdparty/Horde/Imap/Client/Socket.php:4555
 msgid "You do not have adequate permissions to carry out this operation."
-msgstr ""
+msgstr "No tiene los permisos adecuados para realizar esta operación."
 
 #: 3rdparty/Horde/Imap/Client/Socket.php:4564
 msgid ""
 "There was a temporary issue when attempting this operation. Please try again"
 " later."
-msgstr ""
+msgstr "Hubo un problema temporal al intentar esta operación. Por favor inténtelo de nuevo más tarde."
 
 #: 3rdparty/Horde/Imap/Client/Socket.php:4578
 msgid "The mail server is reporting corrupt data in your mailbox."
-msgstr ""
+msgstr "El servidor de correos está reportando datos corruptos  en tu buzón de correos."
 
 #: 3rdparty/Horde/Imap/Client/Socket.php:4594
 msgid "The mail server has denied the request."
-msgstr ""
+msgstr "El servidor de correo ha negado la solicitud."
 
 #: 3rdparty/Horde/Imap/Client/Socket.php:4603
 msgid ""
 "The operation failed because the quota has been exceeded on the mail server."
-msgstr ""
+msgstr "La operación falló porque se ha excedido la cuota en el servidor de correo."
 
 #: 3rdparty/Horde/Imap/Client/Socket.php:4612
 msgid "The object could not be created because it already exists."
-msgstr ""
+msgstr "El objeto no puede ser creado porque ya existe."
 
 #: 3rdparty/Horde/Imap/Client/Socket.php:4621
 msgid "The object could not be deleted because it does not exist."
-msgstr ""
+msgstr "El objeto no pudo borrarse porque no existe."
 
 #: 3rdparty/Horde/Imap/Client/Socket.php:4630
 msgid "The special-use attribute requested for the mailbox is not supported."
@@ -295,7 +296,7 @@ msgstr ""
 
 #: 3rdparty/Horde/Mime/Mail.php:419
 msgid "HTML Version of Message"
-msgstr ""
+msgstr "Versión HTML del Mensaje"
 
 #: 3rdparty/Horde/Mime/Mdn.php:188
 msgid "Disposition Notification"
@@ -487,7 +488,7 @@ msgstr ""
 
 #: 3rdparty/Horde/Nls/Countries.php:52 3rdparty/Horde/Nls/Tld.php:58
 msgid "Chile"
-msgstr ""
+msgstr "Chile"
 
 #: 3rdparty/Horde/Nls/Countries.php:53 3rdparty/Horde/Nls/Tld.php:60
 msgid "China"
@@ -587,7 +588,7 @@ msgstr ""
 
 #: 3rdparty/Horde/Nls/Countries.php:77 3rdparty/Horde/Nls/Tld.php:75
 msgid "Estonia"
-msgstr ""
+msgstr "Estonia"
 
 #: 3rdparty/Horde/Nls/Countries.php:78 3rdparty/Horde/Nls/Tld.php:80
 msgid "Ethiopia"
@@ -607,11 +608,11 @@ msgstr ""
 
 #: 3rdparty/Horde/Nls/Countries.php:82 3rdparty/Horde/Nls/Tld.php:82
 msgid "Finland"
-msgstr ""
+msgstr "Finlandia"
 
 #: 3rdparty/Horde/Nls/Countries.php:83 3rdparty/Horde/Nls/Tld.php:87
 msgid "France"
-msgstr ""
+msgstr "Francia"
 
 #: 3rdparty/Horde/Nls/Countries.php:84 3rdparty/Horde/Nls/Tld.php:92
 msgid "French Guiana"
@@ -639,7 +640,7 @@ msgstr ""
 
 #: 3rdparty/Horde/Nls/Countries.php:90 3rdparty/Horde/Nls/Tld.php:68
 msgid "Germany"
-msgstr ""
+msgstr "Alemania"
 
 #: 3rdparty/Horde/Nls/Countries.php:91 3rdparty/Horde/Nls/Tld.php:94
 msgid "Ghana"
@@ -651,7 +652,7 @@ msgstr ""
 
 #: 3rdparty/Horde/Nls/Countries.php:93 3rdparty/Horde/Nls/Tld.php:101
 msgid "Greece"
-msgstr ""
+msgstr "Grecia"
 
 #: 3rdparty/Horde/Nls/Countries.php:94 3rdparty/Horde/Nls/Tld.php:96
 msgid "Greenland"
@@ -659,7 +660,7 @@ msgstr ""
 
 #: 3rdparty/Horde/Nls/Countries.php:95 3rdparty/Horde/Nls/Tld.php:90
 msgid "Grenada"
-msgstr ""
+msgstr "Granada"
 
 #: 3rdparty/Horde/Nls/Countries.php:96 3rdparty/Horde/Nls/Tld.php:99
 msgid "Guadeloupe"
@@ -699,7 +700,7 @@ msgstr ""
 
 #: 3rdparty/Horde/Nls/Countries.php:105 3rdparty/Horde/Nls/Tld.php:248
 msgid "Holy See (Vatican City State)"
-msgstr ""
+msgstr "Vaticano"
 
 #: 3rdparty/Horde/Nls/Countries.php:106 3rdparty/Horde/Nls/Tld.php:109
 msgid "Honduras"
@@ -743,19 +744,19 @@ msgstr ""
 
 #: 3rdparty/Horde/Nls/Countries.php:116 3rdparty/Horde/Nls/Tld.php:115
 msgid "Israel"
-msgstr ""
+msgstr "Israel"
 
 #: 3rdparty/Horde/Nls/Countries.php:117 3rdparty/Horde/Nls/Tld.php:122
 msgid "Italy"
-msgstr ""
+msgstr "Italia"
 
 #: 3rdparty/Horde/Nls/Countries.php:118 3rdparty/Horde/Nls/Tld.php:124
 msgid "Jamaica"
-msgstr ""
+msgstr "Jamaica"
 
 #: 3rdparty/Horde/Nls/Countries.php:119 3rdparty/Horde/Nls/Tld.php:126
 msgid "Japan"
-msgstr ""
+msgstr "Japon"
 
 #: 3rdparty/Horde/Nls/Countries.php:120 3rdparty/Horde/Nls/Tld.php:123
 msgid "Jersey"
@@ -1487,7 +1488,7 @@ msgstr ""
 
 #: 3rdparty/Horde/Nls/Languages.php:48
 msgid "Spanish; Castilian"
-msgstr ""
+msgstr "Español; Castellano"
 
 #: 3rdparty/Horde/Nls/Languages.php:49
 msgid "Estonian"
@@ -1867,7 +1868,7 @@ msgstr ""
 
 #: 3rdparty/Horde/Nls/Languages.php:144
 msgid "Russian"
-msgstr ""
+msgstr "Ruso"
 
 #: 3rdparty/Horde/Nls/Languages.php:145
 msgid "Kinyarwanda"
@@ -2143,44 +2144,52 @@ msgstr "Error"
 
 #: js/mail.js:236
 msgid "Connecting ..."
-msgstr ""
+msgstr "Conectando..."
 
-#: js/mail.js:252 templates/part.no-accounts.php:16
+#: js/mail.js:252 js/mail.js:267 templates/no-accounts.php:16
 msgid "Connect"
 msgstr "Conectar"
 
 #: js/mail.js:257
 msgid "Not a email address"
+msgstr "No es un correo"
+
+#: js/mail.js:265
+msgid "Unknown error"
 msgstr ""
 
-#: templates/index.php:15
+#: js/mail.js:269
+msgid "Server Error"
+msgstr ""
+
+#: templates/index.php:8
 msgid "New Message"
-msgstr ""
+msgstr "Nuevo Mensaje"
 
-#: templates/index.php:17
+#: templates/index.php:10
 msgid "To"
 msgstr "Hasta"
 
-#: templates/index.php:18
+#: templates/index.php:11
 msgid "Subject"
-msgstr ""
+msgstr "Asunto"
 
-#: templates/index.php:20
+#: templates/index.php:13
 msgid "Send"
 msgstr "Enviar"
 
+#: templates/no-accounts.php:3
+msgid "Connect your mail account"
+msgstr "Conecte su cuenta de correo"
+
+#: templates/no-accounts.php:8
+msgid "Mail Address"
+msgstr "Mail"
+
+#: templates/no-accounts.php:13
+msgid "IMAP Password"
+msgstr ""
+
 #: templates/part.message.php:31
 msgid "Reply"
-msgstr ""
-
-#: templates/part.no-accounts.php:3
-msgid "Connect your mail account"
-msgstr ""
-
-#: templates/part.no-accounts.php:8
-msgid "Mail Address"
-msgstr ""
-
-#: templates/part.no-accounts.php:13
-msgid "IMAP Password"
 msgstr ""

@@ -7,8 +7,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: ownCloud\n"
 "Report-Msgid-Bugs-To: http://bugs.owncloud.org/\n"
-"POT-Creation-Date: 2013-04-18 02:47+0200\n"
-"PO-Revision-Date: 2013-04-17 17:20+0000\n"
+"POT-Creation-Date: 2013-04-22 02:41+0200\n"
+"PO-Revision-Date: 2013-04-22 00:42+0000\n"
 "Last-Translator: I Robot <owncloud-bot@tmit.eu>\n"
 "Language-Team: Welsh (United Kingdom) (http://www.transifex.com/projects/p/owncloud/language/cy_GB/)\n"
 "MIME-Version: 1.0\n"
@@ -2144,12 +2144,20 @@ msgstr "Gwall"
 msgid "Connecting ..."
 msgstr ""
 
-#: js/mail.js:252 templates/no-accounts.php:16
+#: js/mail.js:252 js/mail.js:267 templates/no-accounts.php:16
 msgid "Connect"
 msgstr ""
 
 #: js/mail.js:257
 msgid "Not a email address"
+msgstr ""
+
+#: js/mail.js:265
+msgid "Unknown error"
+msgstr ""
+
+#: js/mail.js:269
+msgid "Server Error"
 msgstr ""
 
 #: templates/index.php:8
