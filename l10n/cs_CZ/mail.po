@@ -3,15 +3,16 @@
 # This file is distributed under the same license as the PACKAGE package.
 # 
 # Translators:
+# Martin <fireball@atlas.cz>, 2013
 # Michal Hrušecký <Michal@hrusecky.net>, 2013
 # Tomáš Chvátal <tomas.chvatal@gmail.com>, 2013
 msgid ""
 msgstr ""
 "Project-Id-Version: ownCloud\n"
 "Report-Msgid-Bugs-To: http://bugs.owncloud.org/\n"
-"POT-Creation-Date: 2013-04-22 02:41+0200\n"
-"PO-Revision-Date: 2013-04-22 00:42+0000\n"
-"Last-Translator: I Robot <owncloud-bot@tmit.eu>\n"
+"POT-Creation-Date: 2013-04-23 02:44+0200\n"
+"PO-Revision-Date: 2013-04-22 01:00+0000\n"
+"Last-Translator: Martin <fireball@atlas.cz>\n"
 "Language-Team: Czech (Czech Republic) (http://www.transifex.com/projects/p/owncloud/language/cs_CZ/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -34,7 +35,7 @@ msgstr "Chyba ověření."
 #: 3rdparty/Horde/Imap/Client/Base.php:1856
 #: 3rdparty/Horde/Imap/Client/Base.php:1915
 msgid "Cannot expunge read-only mailbox."
-msgstr ""
+msgstr "Nelze vymazat mailbox, který je pouze pro čtení."
 
 #: 3rdparty/Horde/Imap/Client/Exception/NoSupportExtension.php:36
 #, php-format
@@ -48,11 +49,11 @@ msgstr "%s není podporováno na serverech POP3."
 
 #: 3rdparty/Horde/Imap/Client/Exception/SearchCharset.php:36
 msgid "Cannot convert search query text to new charset"
-msgstr ""
+msgstr "Text dotazu vyhledávání nelze zkonverovat do nové znakové sady"
 
 #: 3rdparty/Horde/Imap/Client/Interaction/Server/Tagged.php:34
 msgid "Bad tagged response."
-msgstr ""
+msgstr "Špatně označená odezva."
 
 #: 3rdparty/Horde/Imap/Client/Socket/Pop3.php:189
 #: 3rdparty/Horde/Imap/Client/Socket/Pop3.php:201
@@ -61,54 +62,54 @@ msgstr "Nelze otevřít zabezpečené spojení se serverem POP3."
 
 #: 3rdparty/Horde/Imap/Client/Socket/Pop3.php:189
 msgid "Server does not support secure connections."
-msgstr ""
+msgstr "Server nepodporuje zabezpečená připojení."
 
 #: 3rdparty/Horde/Imap/Client/Socket/Pop3.php:240
 msgid "POP3 server denied authentication."
-msgstr ""
+msgstr "Server POP3 odmítl ověření."
 
 #: 3rdparty/Horde/Imap/Client/Socket/Pop3.php:280
 msgid "Error connecting to POP3 server."
-msgstr ""
+msgstr "Chyba připojení na POP3 server."
 
 #: 3rdparty/Horde/Imap/Client/Socket/Pop3.php:334
 #: 3rdparty/Horde/Imap/Client/Socket.php:592
 msgid "Unexpected response from server when authenticating."
-msgstr ""
+msgstr "Neočekávaná odpověď serveru během ověření."
 
 #: 3rdparty/Horde/Imap/Client/Socket/Pop3.php:374
 #: 3rdparty/Horde/Imap/Client/Socket.php:636
 #, php-format
 msgid "Unknown authentication method: %s"
-msgstr ""
+msgstr "Neznámá metoda ověření: %s"
 
 #: 3rdparty/Horde/Imap/Client/Socket/Pop3.php:1112
 msgid "POP3 Server closed the connection unexpectedly."
-msgstr ""
+msgstr "Server POP3 neočekávaně ukončil připojení."
 
 #: 3rdparty/Horde/Imap/Client/Socket/Pop3.php:1172
 msgid "POP3 error reported by server."
-msgstr ""
+msgstr "Server oznámil chybu POP3."
 
 #: 3rdparty/Horde/Imap/Client/Socket.php:311
 msgid "Server does not support TLS connections."
-msgstr ""
+msgstr "Server nepodporuje TLS připojení."
 
 #: 3rdparty/Horde/Imap/Client/Socket.php:323
 msgid "Could not open secure TLS connection to the IMAP server."
-msgstr ""
+msgstr "Nelze otevřít zabezpečené TLS připojení k IMAP serveru."
 
 #: 3rdparty/Horde/Imap/Client/Socket.php:366
 msgid "No supported IMAP authentication method could be found."
-msgstr ""
+msgstr "Nebyla zjištěna podporovaná metoda ověření IMAP."
 
 #: 3rdparty/Horde/Imap/Client/Socket.php:383
 msgid "Mail server denied authentication."
-msgstr ""
+msgstr "Mailserver odmítl ověření."
 
 #: 3rdparty/Horde/Imap/Client/Socket.php:492
 msgid "Error connecting to mail server."
-msgstr ""
+msgstr "Chyba během připojení k mailserveru."
 
 #: 3rdparty/Horde/Imap/Client/Socket.php:515
 msgid "Server rejected connection."
@@ -116,12 +117,12 @@ msgstr "Server odmítl spojení."
 
 #: 3rdparty/Horde/Imap/Client/Socket.php:524
 msgid "The mail server does not support IMAP4rev1 (RFC 3501)."
-msgstr ""
+msgstr "Mailserver nepodporuje IMAP4rev1 (RFC 3501)."
 
 #: 3rdparty/Horde/Imap/Client/Socket.php:920
 #, php-format
 msgid "Could not open mailbox \"%s\"."
-msgstr ""
+msgstr "Nelze otevřít mailbox \"%s\"."
 
 #: 3rdparty/Horde/Imap/Client/Socket.php:1874
 #: 3rdparty/Horde/Imap/Client/Socket.php:2544
@@ -129,27 +130,27 @@ msgstr ""
 #: 3rdparty/Horde/Imap/Client/Socket.php:2992
 #: 3rdparty/Horde/Imap/Client/Socket.php:3048
 msgid "Mailbox does not support mod-sequences."
-msgstr ""
+msgstr "Mailbox nepodporuje mod-sequences."
 
 #: 3rdparty/Horde/Imap/Client/Socket.php:3537
 #, php-format
 msgid "Invalid METADATA entry: \"%s\"."
-msgstr ""
+msgstr "Chybný vstup METADAT: \"%s\"."
 
 #: 3rdparty/Horde/Imap/Client/Socket.php:3624
 #, php-format
 msgid "Invalid METADATA value type \"%s\"."
-msgstr ""
+msgstr "Chybná hodnota METADAT typu \"%s\"."
 
 #: 3rdparty/Horde/Imap/Client/Socket.php:3857
 #: 3rdparty/Horde/Imap/Client/Socket.php:4128
 msgid "Error when communicating with the mail server."
-msgstr ""
+msgstr "Chyba během komunikace s mailserverm."
 
 #: 3rdparty/Horde/Imap/Client/Socket.php:3983
 #: 3rdparty/Horde/Imap/Client/Socket.php:4014
 msgid "IMAP error reported by server."
-msgstr ""
+msgstr "Chyba IMAP odeslaná serverm."
 
 #: 3rdparty/Horde/Imap/Client/Socket.php:3998
 msgid "IMAP Server closed the connection."
@@ -161,44 +162,44 @@ msgstr "Poštovní server neočekávaně uzavřel spojení."
 
 #: 3rdparty/Horde/Imap/Client/Socket.php:4325
 msgid "Charset used in search query is not supported on the mail server."
-msgstr ""
+msgstr "Aktualně použitý dotaz vyhledávání není mailesrverem podporován."
 
 #: 3rdparty/Horde/Imap/Client/Socket.php:4337
 #: 3rdparty/Horde/Imap/Client/Socket.php:4379
 msgid "The mail server was unable to parse the contents of the mail message."
-msgstr ""
+msgstr "Mailserveru se nepodařilo přeložit obsah zprávy."
 
 #: 3rdparty/Horde/Imap/Client/Socket.php:4420
 msgid "Could not save message on server."
-msgstr "Nelze uložit zprávu na server."
+msgstr "Na server nelze uložit zprávu."
 
 #: 3rdparty/Horde/Imap/Client/Socket.php:4429
 msgid "Could not save message data because it is too large."
-msgstr ""
+msgstr "Nelze uložit data zprávy, neboť zpráva je příliš velká."
 
 #: 3rdparty/Horde/Imap/Client/Socket.php:4468
 msgid "The comparison algorithm was not recognized by the server."
-msgstr ""
+msgstr "Srovnávací algoritmus nebyl serverem rozeznán."
 
 #: 3rdparty/Horde/Imap/Client/Socket.php:4486
 msgid "The metadata item could not be saved because it is too large."
-msgstr ""
+msgstr "Položka metadat nemůže být pro svou velikost uložena."
 
 #: 3rdparty/Horde/Imap/Client/Socket.php:4495
 msgid ""
 "The metadata item could not be saved because the server does not support "
 "private annotations."
-msgstr ""
+msgstr "Položka metadat nemohla být uložena, neboť server nepodporuje privátní anotace."
 
 #: 3rdparty/Horde/Imap/Client/Socket.php:4504
 msgid ""
 "The metadata item could not be saved because the maximum number of "
 "annotations has been exceeded."
-msgstr ""
+msgstr "Položka metadat nemůže být uložena, neboť bylo dosaženo maxima anotací."
 
 #: 3rdparty/Horde/Imap/Client/Socket.php:4515
 msgid "Remote server is temporarily unavailable."
-msgstr ""
+msgstr "Vzdáoený server je dočasně nedostupný."
 
 #: 3rdparty/Horde/Imap/Client/Socket.php:4523
 msgid "Authentication failed."
@@ -206,50 +207,50 @@ msgstr "Ověření selhalo."
 
 #: 3rdparty/Horde/Imap/Client/Socket.php:4531
 msgid "Authentication was successful, but authorization failed."
-msgstr ""
+msgstr "Ověření bylo úspěšné, autorizace však selhala."
 
 #: 3rdparty/Horde/Imap/Client/Socket.php:4539
 msgid "Authentication credentials have expired."
-msgstr ""
+msgstr "Kredit ověření vypršel."
 
 #: 3rdparty/Horde/Imap/Client/Socket.php:4547
 msgid "Operation failed due to a lack of a secure connection."
-msgstr ""
+msgstr "Operace selhala z důvodu chybějícího zabepečeného připojení."
 
 #: 3rdparty/Horde/Imap/Client/Socket.php:4555
 msgid "You do not have adequate permissions to carry out this operation."
-msgstr ""
+msgstr "Nemáte dostatečené oprávnění k provedení této operace."
 
 #: 3rdparty/Horde/Imap/Client/Socket.php:4564
 msgid ""
 "There was a temporary issue when attempting this operation. Please try again"
 " later."
-msgstr ""
+msgstr "Během provádění operace se vysktyla chyba. Prosím opakujte operaci znovu později."
 
 #: 3rdparty/Horde/Imap/Client/Socket.php:4578
 msgid "The mail server is reporting corrupt data in your mailbox."
-msgstr "Server pošty hlásí poškozená data ve vaší schránce."
+msgstr "Mailserver hlásí poškozená data ve vaší schránce."
 
 #: 3rdparty/Horde/Imap/Client/Socket.php:4594
 msgid "The mail server has denied the request."
-msgstr "Server pošty zamítl požadavek."
+msgstr "Mailserver zamítl požadavek."
 
 #: 3rdparty/Horde/Imap/Client/Socket.php:4603
 msgid ""
 "The operation failed because the quota has been exceeded on the mail server."
-msgstr ""
+msgstr "Kvóta na mailserveru byla dosažena, operace selhala."
 
 #: 3rdparty/Horde/Imap/Client/Socket.php:4612
 msgid "The object could not be created because it already exists."
-msgstr ""
+msgstr "Objekt nelze vytvořit, neboť již existuje,"
 
 #: 3rdparty/Horde/Imap/Client/Socket.php:4621
 msgid "The object could not be deleted because it does not exist."
-msgstr ""
+msgstr "Objekt nelze odstranit, neboť neexistuje."
 
 #: 3rdparty/Horde/Imap/Client/Socket.php:4630
 msgid "The special-use attribute requested for the mailbox is not supported."
-msgstr ""
+msgstr "Atribut požadovaný po mailboxu není podporován."
 
 #: 3rdparty/Horde/Imap/Client/Utf7imap.php:117
 #: 3rdparty/Horde/Imap/Client/Utf7imap.php:142
@@ -260,47 +261,47 @@ msgstr ""
 #: 3rdparty/Horde/Imap/Client/Utf7imap.php:234
 #: 3rdparty/Horde/Imap/Client/Utf7imap.php:240
 msgid "Error converting UTF7-IMAP string."
-msgstr ""
+msgstr "Chyba při konvertování řetězce UTF7-IMAP."
 
 #: 3rdparty/Horde/Mime/Headers.php:535
 msgid "List-Help"
-msgstr ""
+msgstr "Seznam-Nápověda"
 
 #: 3rdparty/Horde/Mime/Headers.php:536
 msgid "List-Unsubscribe"
-msgstr ""
+msgstr "Seznam-Zamítnuto"
 
 #: 3rdparty/Horde/Mime/Headers.php:537
 msgid "List-Subscribe"
-msgstr ""
+msgstr "Seznam-Schváleno"
 
 #: 3rdparty/Horde/Mime/Headers.php:538
 msgid "List-Owner"
-msgstr ""
+msgstr "Seznam-Vlastníci"
 
 #: 3rdparty/Horde/Mime/Headers.php:539
 msgid "List-Post"
-msgstr ""
+msgstr "Seznam-Odesláno"
 
 #: 3rdparty/Horde/Mime/Headers.php:540
 msgid "List-Archive"
-msgstr ""
+msgstr "Seznam-Archiv"
 
 #: 3rdparty/Horde/Mime/Headers.php:542
 msgid "List-Id"
-msgstr "List-Id"
+msgstr "Seznam-Id"
 
 #: 3rdparty/Horde/Mime/Mail.php:417
 msgid "Plaintext Version of Message"
-msgstr ""
+msgstr "Verze prostého textu zprávy"
 
 #: 3rdparty/Horde/Mime/Mail.php:419
 msgid "HTML Version of Message"
-msgstr "HTML verze zprávy"
+msgstr "Verze HTML zprávy"
 
 #: 3rdparty/Horde/Mime/Mdn.php:188
 msgid "Disposition Notification"
-msgstr ""
+msgstr "Dispoziční oznámení"
 
 #: 3rdparty/Horde/Mime/Mdn.php:200
 #, php-format
@@ -308,7 +309,7 @@ msgid ""
 "The message sent on %s to %s with subject \"%s\" has been displayed.\n"
 "\n"
 "This is no guarantee that the message has been read or understood."
-msgstr ""
+msgstr "Zpráva odeslaná %s příjemci %s s předmětem \"%s\" byla zobrazena.⏎\n⏎\nNelze však garantovat, že zpráva byla přečtena, či pochopena."
 
 #: 3rdparty/Horde/Nls/Countries.php:8 3rdparty/Horde/Nls/Tld.php:16
 msgid "Afghanistan"
@@ -420,7 +421,7 @@ msgstr "Bolívie"
 
 #: 3rdparty/Horde/Nls/Countries.php:35
 msgid "Bonaire, Sint Eustatius and Saba"
-msgstr ""
+msgstr "Bonaire, Sint Eustatius and Saba"
 
 #: 3rdparty/Horde/Nls/Countries.php:36 3rdparty/Horde/Nls/Tld.php:31
 msgid "Bosnia and Herzegovina"
@@ -540,7 +541,7 @@ msgstr "Kuba"
 
 #: 3rdparty/Horde/Nls/Countries.php:65
 msgid "Curaçao"
-msgstr ""
+msgstr "Karakas"
 
 #: 3rdparty/Horde/Nls/Countries.php:66 3rdparty/Horde/Nls/Tld.php:66
 msgid "Cyprus"
@@ -989,7 +990,7 @@ msgstr "Palau"
 
 #: 3rdparty/Horde/Nls/Countries.php:177 3rdparty/Horde/Nls/Tld.php:194
 msgid "Palestinian Territory, Occupied"
-msgstr ""
+msgstr "Oblast okupované Palestiny"
 
 #: 3rdparty/Horde/Nls/Countries.php:178 3rdparty/Horde/Nls/Tld.php:184
 msgid "Panama"
@@ -1053,7 +1054,7 @@ msgstr "Svatý Bartoloměj"
 
 #: 3rdparty/Horde/Nls/Countries.php:193
 msgid "Saint Helena, Ascension and Tristan da Cunha"
-msgstr ""
+msgstr "Svatá Helena, Ascension a Tristan da Cunha"
 
 #: 3rdparty/Horde/Nls/Countries.php:194 3rdparty/Horde/Nls/Tld.php:132
 msgid "Saint Kitts and Nevis"
@@ -1065,7 +1066,7 @@ msgstr "Svatá Lucie"
 
 #: 3rdparty/Horde/Nls/Countries.php:196
 msgid "Saint Martin (French part)"
-msgstr ""
+msgstr "Svatý Martin (francouzská část)"
 
 #: 3rdparty/Horde/Nls/Countries.php:197 3rdparty/Horde/Nls/Tld.php:191
 msgid "Saint Pierre and Miquelon"
@@ -1113,7 +1114,7 @@ msgstr "Singapur"
 
 #: 3rdparty/Horde/Nls/Countries.php:208
 msgid "Sint Maarten (Dutch part)"
-msgstr ""
+msgstr "Svatý Martin (holandská část)"
 
 #: 3rdparty/Horde/Nls/Countries.php:209 3rdparty/Horde/Nls/Tld.php:213
 msgid "Slovakia"
@@ -1310,7 +1311,7 @@ msgstr "Zimbabwe"
 
 #: 3rdparty/Horde/Nls/Geoip.php:324
 msgid "Asia/Pacific Region"
-msgstr ""
+msgstr "Asijsko-Pacifický region"
 
 #: 3rdparty/Horde/Nls/Geoip.php:325
 msgid "Europe"
@@ -1318,11 +1319,11 @@ msgstr "Evropa"
 
 #: 3rdparty/Horde/Nls/Geoip.php:326
 msgid "Anonymous Proxy"
-msgstr ""
+msgstr "Naznámá proxy"
 
 #: 3rdparty/Horde/Nls/Geoip.php:327
 msgid "Satellite Provider"
-msgstr ""
+msgstr "Stalitní poskytovatel"
 
 #: 3rdparty/Horde/Nls/Geoip.php:328
 msgid "Other"
@@ -1330,15 +1331,15 @@ msgstr "Jiný"
 
 #: 3rdparty/Horde/Nls/Languages.php:9
 msgid "Afar"
-msgstr ""
+msgstr "Afar"
 
 #: 3rdparty/Horde/Nls/Languages.php:10
 msgid "Abkhaz"
-msgstr ""
+msgstr "Abcházský"
 
 #: 3rdparty/Horde/Nls/Languages.php:11
 msgid "Avestan"
-msgstr ""
+msgstr "Avestan"
 
 #: 3rdparty/Horde/Nls/Languages.php:12
 msgid "Afrikaans"
@@ -1346,15 +1347,15 @@ msgstr "Afrikánský"
 
 #: 3rdparty/Horde/Nls/Languages.php:13
 msgid "Akan"
-msgstr ""
+msgstr "Akanský"
 
 #: 3rdparty/Horde/Nls/Languages.php:14
 msgid "Amharic"
-msgstr ""
+msgstr "Amharický"
 
 #: 3rdparty/Horde/Nls/Languages.php:15
 msgid "Aragonese"
-msgstr ""
+msgstr "Araginský"
 
 #: 3rdparty/Horde/Nls/Languages.php:16
 msgid "Arabic"
@@ -1366,11 +1367,11 @@ msgstr "Asamský"
 
 #: 3rdparty/Horde/Nls/Languages.php:18
 msgid "Avaric"
-msgstr ""
+msgstr "Avarský"
 
 #: 3rdparty/Horde/Nls/Languages.php:19
 msgid "Aymara"
-msgstr ""
+msgstr "Aymarský"
 
 #: 3rdparty/Horde/Nls/Languages.php:20
 msgid "Azerbaijani"
@@ -1378,7 +1379,7 @@ msgstr "Ázerbájdžánský"
 
 #: 3rdparty/Horde/Nls/Languages.php:21
 msgid "Bashkir"
-msgstr ""
+msgstr "Baskický"
 
 #: 3rdparty/Horde/Nls/Languages.php:22
 msgid "Belarusian"
@@ -1390,15 +1391,15 @@ msgstr "Bulharský"
 
 #: 3rdparty/Horde/Nls/Languages.php:24
 msgid "Bihari"
-msgstr ""
+msgstr "Biharijský"
 
 #: 3rdparty/Horde/Nls/Languages.php:25
 msgid "Bislama"
-msgstr ""
+msgstr "Bislamský"
 
 #: 3rdparty/Horde/Nls/Languages.php:26
 msgid "Bambara"
-msgstr ""
+msgstr "Bambarský"
 
 #: 3rdparty/Horde/Nls/Languages.php:27
 msgid "Bengali"
@@ -1406,35 +1407,35 @@ msgstr "Bengálský"
 
 #: 3rdparty/Horde/Nls/Languages.php:28
 msgid "Tibetan Standard, Tibetan, Central"
-msgstr ""
+msgstr "Tibestý standart, Tibetský, centrální"
 
 #: 3rdparty/Horde/Nls/Languages.php:29
 msgid "Breton"
-msgstr ""
+msgstr "Bretačký"
 
 #: 3rdparty/Horde/Nls/Languages.php:30
 msgid "Bosnian"
-msgstr ""
+msgstr "Bosenský"
 
 #: 3rdparty/Horde/Nls/Languages.php:31
 msgid "Catalan; Valencian"
-msgstr ""
+msgstr "Katalánský; Valencijský"
 
 #: 3rdparty/Horde/Nls/Languages.php:32
 msgid "Chechen"
-msgstr ""
+msgstr "Čečenský"
 
 #: 3rdparty/Horde/Nls/Languages.php:33
 msgid "Chamorro"
-msgstr ""
+msgstr "Chamorrejský"
 
 #: 3rdparty/Horde/Nls/Languages.php:34
 msgid "Corsican"
-msgstr ""
+msgstr "Korsický"
 
 #: 3rdparty/Horde/Nls/Languages.php:35
 msgid "Cree"
-msgstr ""
+msgstr "Cree"
 
 #: 3rdparty/Horde/Nls/Languages.php:36
 msgid "Czech"
@@ -1444,11 +1445,11 @@ msgstr "Český"
 msgid ""
 "Old Church Slavonic, Church Slavic, Church Slavonic, Old Bulgarian, Old "
 "Slavonic"
-msgstr ""
+msgstr "Old Church Slavonic, Church Slavic, Church Slavonic, Old Bulgarian, Old Slavonic"
 
 #: 3rdparty/Horde/Nls/Languages.php:38
 msgid "Chuvash"
-msgstr ""
+msgstr "Chuvash"
 
 #: 3rdparty/Horde/Nls/Languages.php:39
 msgid "Welsh"
@@ -1464,19 +1465,19 @@ msgstr "Německý"
 
 #: 3rdparty/Horde/Nls/Languages.php:42
 msgid "Divehi; Dhivehi; Maldivian;"
-msgstr ""
+msgstr "Divehi; Dhivehi; Maldivian;"
 
 #: 3rdparty/Horde/Nls/Languages.php:43
 msgid "Dzongkha"
-msgstr ""
+msgstr "Dzongkha"
 
 #: 3rdparty/Horde/Nls/Languages.php:44
 msgid "Ewe"
-msgstr ""
+msgstr "Ewe"
 
 #: 3rdparty/Horde/Nls/Languages.php:45
 msgid "Greek, Modern"
-msgstr ""
+msgstr "Řeský, moderní"
 
 #: 3rdparty/Horde/Nls/Languages.php:46
 msgid "English"
@@ -1484,11 +1485,11 @@ msgstr "Anglický"
 
 #: 3rdparty/Horde/Nls/Languages.php:47
 msgid "Esperanto"
-msgstr ""
+msgstr "Esperantský"
 
 #: 3rdparty/Horde/Nls/Languages.php:48
 msgid "Spanish; Castilian"
-msgstr ""
+msgstr "Španělský, Katalánský"
 
 #: 3rdparty/Horde/Nls/Languages.php:49
 msgid "Estonian"
@@ -1504,7 +1505,7 @@ msgstr "Perský"
 
 #: 3rdparty/Horde/Nls/Languages.php:52
 msgid "Fula; Fulah; Pulaar; Pular"
-msgstr ""
+msgstr "Fula; Fulah; Pulaar; Pular"
 
 #: 3rdparty/Horde/Nls/Languages.php:53
 msgid "Finnish"
@@ -1512,11 +1513,11 @@ msgstr "Finský"
 
 #: 3rdparty/Horde/Nls/Languages.php:54
 msgid "Fijian"
-msgstr ""
+msgstr "Fidžský"
 
 #: 3rdparty/Horde/Nls/Languages.php:55
 msgid "Faroese"
-msgstr ""
+msgstr "Faroese"
 
 #: 3rdparty/Horde/Nls/Languages.php:56
 msgid "French"
@@ -1524,7 +1525,7 @@ msgstr "Francouzský"
 
 #: 3rdparty/Horde/Nls/Languages.php:57
 msgid "Western Frisian"
-msgstr ""
+msgstr "Western Frisian"
 
 #: 3rdparty/Horde/Nls/Languages.php:58
 msgid "Irish"
@@ -1532,7 +1533,7 @@ msgstr "Irský"
 
 #: 3rdparty/Horde/Nls/Languages.php:59
 msgid "Scottish Gaelic; Gaelic"
-msgstr ""
+msgstr "Skotský, Galský"
 
 #: 3rdparty/Horde/Nls/Languages.php:60
 msgid "Galician"
@@ -1548,15 +1549,15 @@ msgstr "Gujarati"
 
 #: 3rdparty/Horde/Nls/Languages.php:63
 msgid "Manx"
-msgstr ""
+msgstr "Manx"
 
 #: 3rdparty/Horde/Nls/Languages.php:64
 msgid "Hausa"
-msgstr ""
+msgstr "Hausa"
 
 #: 3rdparty/Horde/Nls/Languages.php:65
 msgid "Hebrew (modern)"
-msgstr ""
+msgstr "Hebrejský (moderní)"
 
 #: 3rdparty/Horde/Nls/Languages.php:66
 msgid "Hindi"
@@ -1564,7 +1565,7 @@ msgstr "Hindský"
 
 #: 3rdparty/Horde/Nls/Languages.php:67
 msgid "Hiri Motu"
-msgstr ""
+msgstr "Hiri Motu"
 
 #: 3rdparty/Horde/Nls/Languages.php:68
 msgid "Croatian"
@@ -1572,7 +1573,7 @@ msgstr "Chorvatský"
 
 #: 3rdparty/Horde/Nls/Languages.php:69
 msgid "Haitian; Haitian Creole"
-msgstr ""
+msgstr "Haitian; Haitian Creole"
 
 #: 3rdparty/Horde/Nls/Languages.php:70
 msgid "Hungarian"
@@ -1584,11 +1585,11 @@ msgstr "Arménský"
 
 #: 3rdparty/Horde/Nls/Languages.php:72
 msgid "Herero"
-msgstr ""
+msgstr "Herero"
 
 #: 3rdparty/Horde/Nls/Languages.php:73
 msgid "Interlingua"
-msgstr ""
+msgstr "Interlingua"
 
 #: 3rdparty/Horde/Nls/Languages.php:74
 msgid "Indonesian"
@@ -1596,23 +1597,23 @@ msgstr "Indonéský"
 
 #: 3rdparty/Horde/Nls/Languages.php:75
 msgid "Interlingue"
-msgstr ""
+msgstr "Interlingue"
 
 #: 3rdparty/Horde/Nls/Languages.php:76
 msgid "Igbo"
-msgstr ""
+msgstr "Igbo"
 
 #: 3rdparty/Horde/Nls/Languages.php:77
 msgid "Nuosu"
-msgstr ""
+msgstr "Nuosu"
 
 #: 3rdparty/Horde/Nls/Languages.php:78
 msgid "Inupiaq"
-msgstr ""
+msgstr "Inupiaq"
 
 #: 3rdparty/Horde/Nls/Languages.php:79
 msgid "Ido"
-msgstr ""
+msgstr "Ido"
 
 #: 3rdparty/Horde/Nls/Languages.php:80
 msgid "Icelandic"
@@ -1624,7 +1625,7 @@ msgstr "Italský"
 
 #: 3rdparty/Horde/Nls/Languages.php:82
 msgid "Inuktitut"
-msgstr ""
+msgstr "Inuktitut"
 
 #: 3rdparty/Horde/Nls/Languages.php:83
 msgid "Japanese"
@@ -1632,7 +1633,7 @@ msgstr "Japonský"
 
 #: 3rdparty/Horde/Nls/Languages.php:84
 msgid "Javanese"
-msgstr ""
+msgstr "Javanese"
 
 #: 3rdparty/Horde/Nls/Languages.php:85
 msgid "Georgian"
@@ -1640,15 +1641,15 @@ msgstr "Gruzínský"
 
 #: 3rdparty/Horde/Nls/Languages.php:86
 msgid "Kongo"
-msgstr ""
+msgstr "Konžský"
 
 #: 3rdparty/Horde/Nls/Languages.php:87
 msgid "Kikuyu, Gikuyu"
-msgstr ""
+msgstr "Kikuyu, Gikuyu"
 
 #: 3rdparty/Horde/Nls/Languages.php:88
 msgid "Kwanyama, Kuanyama"
-msgstr ""
+msgstr "Kwanyama, Kuanyama"
 
 #: 3rdparty/Horde/Nls/Languages.php:89
 msgid "Kazakh"
@@ -1656,7 +1657,7 @@ msgstr "Kazachšský"
 
 #: 3rdparty/Horde/Nls/Languages.php:90
 msgid "Kalaallisut, Greenlandic"
-msgstr ""
+msgstr "Kalbrijský, Gronský"
 
 #: 3rdparty/Horde/Nls/Languages.php:91
 msgid "Khmer"
@@ -1672,15 +1673,15 @@ msgstr "Korejský"
 
 #: 3rdparty/Horde/Nls/Languages.php:94
 msgid "Kanuri"
-msgstr ""
+msgstr "Kanuri"
 
 #: 3rdparty/Horde/Nls/Languages.php:95
 msgid "Kashmiri"
-msgstr ""
+msgstr "Kašmirský"
 
 #: 3rdparty/Horde/Nls/Languages.php:96
 msgid "Kurdish"
-msgstr ""
+msgstr "Kurdský"
 
 #: 3rdparty/Horde/Nls/Languages.php:97
 msgid "Komi"
@@ -1688,11 +1689,11 @@ msgstr "Komi"
 
 #: 3rdparty/Horde/Nls/Languages.php:98
 msgid "Cornish"
-msgstr ""
+msgstr "Konžský"
 
 #: 3rdparty/Horde/Nls/Languages.php:99
 msgid "Kirghiz, Kyrgyz"
-msgstr ""
+msgstr "Kyrgizský"
 
 #: 3rdparty/Horde/Nls/Languages.php:100
 msgid "Latin"
@@ -1700,7 +1701,7 @@ msgstr "Latinský"
 
 #: 3rdparty/Horde/Nls/Languages.php:101
 msgid "Luxembourgish, Letzeburgesch"
-msgstr ""
+msgstr "Lucemburský"
 
 #: 3rdparty/Horde/Nls/Languages.php:102
 msgid "Luganda"
@@ -1708,11 +1709,11 @@ msgstr "Luganda"
 
 #: 3rdparty/Horde/Nls/Languages.php:103
 msgid "Limburgish, Limburgan, Limburger"
-msgstr ""
+msgstr "Limburgish, Limburgan, Limburger"
 
 #: 3rdparty/Horde/Nls/Languages.php:104
 msgid "Lingala"
-msgstr ""
+msgstr "Lingala"
 
 #: 3rdparty/Horde/Nls/Languages.php:105
 msgid "Lao"
@@ -1724,7 +1725,7 @@ msgstr "Litevský"
 
 #: 3rdparty/Horde/Nls/Languages.php:107
 msgid "Luba-Katanga"
-msgstr ""
+msgstr "Luba-Katanga"
 
 #: 3rdparty/Horde/Nls/Languages.php:108
 msgid "Latvian"
@@ -1732,11 +1733,11 @@ msgstr "Lotyšský"
 
 #: 3rdparty/Horde/Nls/Languages.php:109
 msgid "Malagasy"
-msgstr ""
+msgstr "Malagasjký"
 
 #: 3rdparty/Horde/Nls/Languages.php:110
 msgid "Marshallese"
-msgstr ""
+msgstr "Maršalský"
 
 #: 3rdparty/Horde/Nls/Languages.php:111
 msgid "Maori"
@@ -1756,7 +1757,7 @@ msgstr "Mongolský"
 
 #: 3rdparty/Horde/Nls/Languages.php:115
 msgid "Marathi"
-msgstr ""
+msgstr "Marathi"
 
 #: 3rdparty/Horde/Nls/Languages.php:116
 msgid "Malay"
@@ -1768,15 +1769,15 @@ msgstr "Maltézský"
 
 #: 3rdparty/Horde/Nls/Languages.php:118
 msgid "Burmese"
-msgstr ""
+msgstr "Bramský"
 
 #: 3rdparty/Horde/Nls/Languages.php:120
 msgid "Norwegian Bokmål"
-msgstr ""
+msgstr "Norwegian Bokmål"
 
 #: 3rdparty/Horde/Nls/Languages.php:121
 msgid "North Ndebele"
-msgstr ""
+msgstr "North Ndebele"
 
 #: 3rdparty/Horde/Nls/Languages.php:122
 msgid "Nepali"
@@ -1784,7 +1785,7 @@ msgstr "Nepálský"
 
 #: 3rdparty/Horde/Nls/Languages.php:123
 msgid "Ndonga"
-msgstr ""
+msgstr "Ndonga"
 
 #: 3rdparty/Horde/Nls/Languages.php:124
 msgid "Dutch"
@@ -1792,7 +1793,7 @@ msgstr "Holandský"
 
 #: 3rdparty/Horde/Nls/Languages.php:125
 msgid "Norwegian Nynorsk"
-msgstr ""
+msgstr "Norský"
 
 #: 3rdparty/Horde/Nls/Languages.php:126
 msgid "Norwegian"
@@ -1800,27 +1801,27 @@ msgstr "Norský"
 
 #: 3rdparty/Horde/Nls/Languages.php:127
 msgid "South Ndebele"
-msgstr ""
+msgstr "South Ndebele"
 
 #: 3rdparty/Horde/Nls/Languages.php:128
 msgid "Navajo, Navaho"
-msgstr ""
+msgstr "Navažský"
 
 #: 3rdparty/Horde/Nls/Languages.php:129
 msgid "Chichewa; Chewa; Nyanja"
-msgstr ""
+msgstr "Chichewa; Chewa; Nyanja"
 
 #: 3rdparty/Horde/Nls/Languages.php:130
 msgid "Occitan"
-msgstr ""
+msgstr "Occitan"
 
 #: 3rdparty/Horde/Nls/Languages.php:131
 msgid "Ojibwe, Ojibwa"
-msgstr ""
+msgstr "Ojibwe, Ojibwa"
 
 #: 3rdparty/Horde/Nls/Languages.php:132
 msgid "Oromo"
-msgstr ""
+msgstr "Oromo"
 
 #: 3rdparty/Horde/Nls/Languages.php:133
 msgid "Oriya"
@@ -1828,15 +1829,15 @@ msgstr "Oriya"
 
 #: 3rdparty/Horde/Nls/Languages.php:134
 msgid "Ossetian, Ossetic"
-msgstr ""
+msgstr "Osetijský"
 
 #: 3rdparty/Horde/Nls/Languages.php:135
 msgid "Panjabi, Punjabi"
-msgstr ""
+msgstr "Pandžábský"
 
 #: 3rdparty/Horde/Nls/Languages.php:136
 msgid "Pali"
-msgstr ""
+msgstr "Pali"
 
 #: 3rdparty/Horde/Nls/Languages.php:137
 msgid "Polish"
@@ -1844,7 +1845,7 @@ msgstr "Polský"
 
 #: 3rdparty/Horde/Nls/Languages.php:138
 msgid "Pashto, Pushto"
-msgstr ""
+msgstr "Pashto, Pushto"
 
 #: 3rdparty/Horde/Nls/Languages.php:139
 msgid "Portuguese"
@@ -1852,19 +1853,19 @@ msgstr "Portugalský"
 
 #: 3rdparty/Horde/Nls/Languages.php:140
 msgid "Quechua"
-msgstr ""
+msgstr "Kečujský"
 
 #: 3rdparty/Horde/Nls/Languages.php:141
 msgid "Romansh"
-msgstr ""
+msgstr "Románský"
 
 #: 3rdparty/Horde/Nls/Languages.php:142
 msgid "Kirundi"
-msgstr ""
+msgstr "Kirundi"
 
 #: 3rdparty/Horde/Nls/Languages.php:143
 msgid "Romanian, Moldavian, Moldovan"
-msgstr ""
+msgstr "Rumunský, Moldavský"
 
 #: 3rdparty/Horde/Nls/Languages.php:144
 msgid "Russian"
@@ -1872,31 +1873,31 @@ msgstr "Ruský"
 
 #: 3rdparty/Horde/Nls/Languages.php:145
 msgid "Kinyarwanda"
-msgstr ""
+msgstr "Kinyarwanda"
 
 #: 3rdparty/Horde/Nls/Languages.php:146
 msgid "Sanskrit"
-msgstr ""
+msgstr "Sanskrtský"
 
 #: 3rdparty/Horde/Nls/Languages.php:147
 msgid "Sardinian"
-msgstr ""
+msgstr "Sardinijský"
 
 #: 3rdparty/Horde/Nls/Languages.php:148
 msgid "Sindhi"
-msgstr ""
+msgstr "Sindhi"
 
 #: 3rdparty/Horde/Nls/Languages.php:149
 msgid "Northern Sami"
-msgstr ""
+msgstr "Northern Sami"
 
 #: 3rdparty/Horde/Nls/Languages.php:150
 msgid "Sango"
-msgstr ""
+msgstr "Sango"
 
 #: 3rdparty/Horde/Nls/Languages.php:151
 msgid "Sinhala, Sinhalese"
-msgstr ""
+msgstr "Sinhala, Sinhalese"
 
 #: 3rdparty/Horde/Nls/Languages.php:152
 msgid "Slovak"
@@ -1904,7 +1905,7 @@ msgstr "Slovenský"
 
 #: 3rdparty/Horde/Nls/Languages.php:153
 msgid "Slovene"
-msgstr ""
+msgstr "Slovinský"
 
 #: 3rdparty/Horde/Nls/Languages.php:154
 msgid "Samoan"
@@ -1912,11 +1913,11 @@ msgstr "Samojský"
 
 #: 3rdparty/Horde/Nls/Languages.php:155
 msgid "Shona"
-msgstr ""
+msgstr "Shona"
 
 #: 3rdparty/Horde/Nls/Languages.php:156
 msgid "Somali"
-msgstr ""
+msgstr "Somálský"
 
 #: 3rdparty/Horde/Nls/Languages.php:157
 msgid "Albanian"
@@ -1928,15 +1929,15 @@ msgstr "Srbský"
 
 #: 3rdparty/Horde/Nls/Languages.php:159
 msgid "Swati"
-msgstr ""
+msgstr "Swati"
 
 #: 3rdparty/Horde/Nls/Languages.php:160
 msgid "Southern Sotho"
-msgstr ""
+msgstr "Jižně Sotský"
 
 #: 3rdparty/Horde/Nls/Languages.php:161
 msgid "Sundanese"
-msgstr ""
+msgstr "Sundanese"
 
 #: 3rdparty/Horde/Nls/Languages.php:162
 msgid "Swedish"
@@ -1964,11 +1965,11 @@ msgstr "Thajský"
 
 #: 3rdparty/Horde/Nls/Languages.php:168
 msgid "Tigrinya"
-msgstr ""
+msgstr "Tigrinya"
 
 #: 3rdparty/Horde/Nls/Languages.php:169
 msgid "Turkmen"
-msgstr ""
+msgstr "Turkmenský"
 
 #: 3rdparty/Horde/Nls/Languages.php:170
 msgid "Tagalog"
@@ -1976,11 +1977,11 @@ msgstr "Tagalog"
 
 #: 3rdparty/Horde/Nls/Languages.php:171
 msgid "Tswana"
-msgstr ""
+msgstr "Tswanský"
 
 #: 3rdparty/Horde/Nls/Languages.php:172
 msgid "Tonga (Tonga Islands)"
-msgstr ""
+msgstr "Tonga (Tonga Islands)"
 
 #: 3rdparty/Horde/Nls/Languages.php:173
 msgid "Turkish"
@@ -1988,23 +1989,23 @@ msgstr "Turecký"
 
 #: 3rdparty/Horde/Nls/Languages.php:174
 msgid "Tsonga"
-msgstr ""
+msgstr "Tsonga"
 
 #: 3rdparty/Horde/Nls/Languages.php:175
 msgid "Tatar"
-msgstr ""
+msgstr "Tatarský"
 
 #: 3rdparty/Horde/Nls/Languages.php:176
 msgid "Twi"
-msgstr ""
+msgstr "Twi"
 
 #: 3rdparty/Horde/Nls/Languages.php:177
 msgid "Tahitian"
-msgstr ""
+msgstr "Tahitský"
 
 #: 3rdparty/Horde/Nls/Languages.php:178
 msgid "Uighur, Uyghur"
-msgstr ""
+msgstr "Uighur, Uyghur"
 
 #: 3rdparty/Horde/Nls/Languages.php:179
 msgid "Ukrainian"
@@ -2016,11 +2017,11 @@ msgstr "Urdský"
 
 #: 3rdparty/Horde/Nls/Languages.php:181
 msgid "Uzbek"
-msgstr ""
+msgstr "Uzbecký"
 
 #: 3rdparty/Horde/Nls/Languages.php:182
 msgid "Venda"
-msgstr ""
+msgstr "Venda"
 
 #: 3rdparty/Horde/Nls/Languages.php:183
 msgid "Vietnamese"
@@ -2028,19 +2029,19 @@ msgstr "Vietnamský"
 
 #: 3rdparty/Horde/Nls/Languages.php:184
 msgid "Volapük"
-msgstr ""
+msgstr "Volapük"
 
 #: 3rdparty/Horde/Nls/Languages.php:185
 msgid "Walloon"
-msgstr ""
+msgstr "Walloon"
 
 #: 3rdparty/Horde/Nls/Languages.php:186
 msgid "Wolof"
-msgstr ""
+msgstr "Wolof"
 
 #: 3rdparty/Horde/Nls/Languages.php:187
 msgid "Xhosa"
-msgstr ""
+msgstr "Xhosa"
 
 #: 3rdparty/Horde/Nls/Languages.php:188
 msgid "Yiddish"
@@ -2048,11 +2049,11 @@ msgstr "Jidiš"
 
 #: 3rdparty/Horde/Nls/Languages.php:189
 msgid "Yoruba"
-msgstr ""
+msgstr "Yorubský"
 
 #: 3rdparty/Horde/Nls/Languages.php:190
 msgid "Zhuang, Chuang"
-msgstr ""
+msgstr "Zhuang, Chuang"
 
 #: 3rdparty/Horde/Nls/Languages.php:191
 msgid "Chinese"
@@ -2060,7 +2061,7 @@ msgstr "Čínský"
 
 #: 3rdparty/Horde/Nls/Languages.php:192
 msgid "Zulu"
-msgstr ""
+msgstr "Zulu"
 
 #: 3rdparty/Horde/Nls/Tld.php:13
 msgid "Ascension Island"
@@ -2072,11 +2073,11 @@ msgstr "Nizozemské Antily"
 
 #: 3rdparty/Horde/Nls/Tld.php:29
 msgid "Aland Islands"
-msgstr ""
+msgstr "Aland Islands"
 
 #: 3rdparty/Horde/Nls/Tld.php:54
 msgid "Congo, Republic of"
-msgstr ""
+msgstr "Konžská repulika"
 
 #: 3rdparty/Horde/Nls/Tld.php:56
 msgid "Cote d'Ivoire"
@@ -2092,7 +2093,7 @@ msgstr "Heardův ostrov a McDonaldovy ostrovy"
 
 #: 3rdparty/Horde/Nls/Tld.php:110
 msgid "Croatia/Hrvatska"
-msgstr ""
+msgstr "Chorvatský"
 
 #: 3rdparty/Horde/Nls/Tld.php:148
 msgid "Libyan Arab Jamahiriya"
@@ -2108,7 +2109,7 @@ msgstr "Pitcairnův ostrov"
 
 #: 3rdparty/Horde/Nls/Tld.php:199
 msgid "Reunion Island"
-msgstr ""
+msgstr "Spojené ostrovy"
 
 #: 3rdparty/Horde/Nls/Tld.php:210
 msgid "Saint Helena"
@@ -2116,7 +2117,7 @@ msgstr "Svatá Helena"
 
 #: 3rdparty/Horde/Nls/Tld.php:212
 msgid "Svalbard and Jan Mayen Islands"
-msgstr ""
+msgstr "Svalbard and Jan Mayen Islands"
 
 #: 3rdparty/Horde/Nls/Tld.php:220
 msgid "Soviet Union"
@@ -2152,15 +2153,15 @@ msgstr "Připojit"
 
 #: js/mail.js:257
 msgid "Not a email address"
-msgstr ""
+msgstr "Není mailová adresa"
 
 #: js/mail.js:265
 msgid "Unknown error"
-msgstr ""
+msgstr "Neznámá chyba"
 
 #: js/mail.js:269
 msgid "Server Error"
-msgstr ""
+msgstr "Chyba serveru"
 
 #: templates/index.php:8
 msgid "New Message"
@@ -2180,7 +2181,7 @@ msgstr "Odeslat"
 
 #: templates/no-accounts.php:3
 msgid "Connect your mail account"
-msgstr ""
+msgstr "Připojte se ke svému mailovému účtu"
 
 #: templates/no-accounts.php:8
 msgid "Mail Address"

@@ -3,13 +3,15 @@
 # This file is distributed under the same license as the PACKAGE package.
 # 
 # Translators:
+# Wasilis <m.wasilis@yahoo.de>, 2013
+# KAT.RAT12 <spanish.katerina@gmail.com>, 2013
 msgid ""
 msgstr ""
 "Project-Id-Version: ownCloud\n"
 "Report-Msgid-Bugs-To: http://bugs.owncloud.org/\n"
-"POT-Creation-Date: 2013-04-22 02:41+0200\n"
-"PO-Revision-Date: 2013-04-22 00:42+0000\n"
-"Last-Translator: I Robot <owncloud-bot@tmit.eu>\n"
+"POT-Creation-Date: 2013-04-23 02:44+0200\n"
+"PO-Revision-Date: 2013-04-22 20:00+0000\n"
+"Last-Translator: KAT.RAT12 <spanish.katerina@gmail.com>\n"
 "Language-Team: Greek (http://www.transifex.com/projects/p/owncloud/language/el/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -19,60 +21,60 @@ msgstr ""
 
 #: 3rdparty/Horde/Exception/NotFound.php:27
 msgid "Not Found"
-msgstr ""
+msgstr "Δεν βρεθηκαν"
 
 #: 3rdparty/Horde/Exception/PermissionDenied.php:27
 msgid "Permission Denied"
-msgstr ""
+msgstr "Σφάλμα δικαιωμάτων"
 
 #: 3rdparty/Horde/Imap/Client/Auth/DigestMD5.php:149
 msgid "Authentication failure."
-msgstr ""
+msgstr "Σφάλμα πιστοποίησης"
 
 #: 3rdparty/Horde/Imap/Client/Base.php:1856
 #: 3rdparty/Horde/Imap/Client/Base.php:1915
 msgid "Cannot expunge read-only mailbox."
-msgstr ""
+msgstr "Δεν μπορείτε να εξαλείφετε μόνο για ανάγνωση mailbox."
 
 #: 3rdparty/Horde/Imap/Client/Exception/NoSupportExtension.php:36
 #, php-format
 msgid "The server does not support the %s extension."
-msgstr ""
+msgstr "Ο διακομιστής δεν υποστηρίζει την επέκταση του %s."
 
 #: 3rdparty/Horde/Imap/Client/Exception/NoSupportPop3.php:25
 #, php-format
 msgid "%s not supported on POP3 servers."
-msgstr ""
+msgstr "%s δεν υποστηρίζεται σε POP3 διακομιστες."
 
 #: 3rdparty/Horde/Imap/Client/Exception/SearchCharset.php:36
 msgid "Cannot convert search query text to new charset"
-msgstr ""
+msgstr "Δεν είναι δυνατή η μετατροπή αναζήτησης κειμένου για νέο σύνολο χαρακτήρων "
 
 #: 3rdparty/Horde/Imap/Client/Interaction/Server/Tagged.php:34
 msgid "Bad tagged response."
-msgstr ""
+msgstr "Δεν μπόρεσε να ανοίξει την σύνδεση με τον διακομίστή ΡΟΡ3 με ασφάλεια"
 
 #: 3rdparty/Horde/Imap/Client/Socket/Pop3.php:189
 #: 3rdparty/Horde/Imap/Client/Socket/Pop3.php:201
 msgid "Could not open secure connection to the POP3 server."
-msgstr ""
+msgstr "Ο διακομισττής δεν υποστηρίζει τις ασφαλείς συνδέσεις"
 
 #: 3rdparty/Horde/Imap/Client/Socket/Pop3.php:189
 msgid "Server does not support secure connections."
-msgstr ""
+msgstr "Ο διακομιστής δεν υποστηρίζει τις συνδέσεις ασφάλειας "
 
 #: 3rdparty/Horde/Imap/Client/Socket/Pop3.php:240
 msgid "POP3 server denied authentication."
-msgstr ""
+msgstr "Σφάλμα σύνδεσης με τον διακο΄μιστή ΡΟΡ3."
 
 #: 3rdparty/Horde/Imap/Client/Socket/Pop3.php:280
 msgid "Error connecting to POP3 server."
-msgstr ""
+msgstr "Σφάλμα σύνδεσης με τον διακομιστή ΡΟΡ3."
 
 #: 3rdparty/Horde/Imap/Client/Socket/Pop3.php:334
 #: 3rdparty/Horde/Imap/Client/Socket.php:592
 msgid "Unexpected response from server when authenticating."
-msgstr ""
+msgstr "Απροσδόκητη απάντηση από τον διακομσιτή κάτά την επικύρωση."
 
 #: 3rdparty/Horde/Imap/Client/Socket/Pop3.php:374
 #: 3rdparty/Horde/Imap/Client/Socket.php:636
@@ -82,11 +84,11 @@ msgstr ""
 
 #: 3rdparty/Horde/Imap/Client/Socket/Pop3.php:1112
 msgid "POP3 Server closed the connection unexpectedly."
-msgstr ""
+msgstr "Αναφορά σφάλματος ΡΟΡ3 από τον διακομιστή "
 
 #: 3rdparty/Horde/Imap/Client/Socket/Pop3.php:1172
 msgid "POP3 error reported by server."
-msgstr ""
+msgstr "Αναφορά σφάλματος από τον διακομιστή "
 
 #: 3rdparty/Horde/Imap/Client/Socket.php:311
 msgid "Server does not support TLS connections."
@@ -94,11 +96,11 @@ msgstr ""
 
 #: 3rdparty/Horde/Imap/Client/Socket.php:323
 msgid "Could not open secure TLS connection to the IMAP server."
-msgstr ""
+msgstr "Ο διακομισττής δεν υποστηρίζει τις ασφαλείς συνδέσεις"
 
 #: 3rdparty/Horde/Imap/Client/Socket.php:366
 msgid "No supported IMAP authentication method could be found."
-msgstr ""
+msgstr "Δεν βρέθηκε τρόπος πιστοποίησης ΙΜΑΡ. "
 
 #: 3rdparty/Horde/Imap/Client/Socket.php:383
 msgid "Mail server denied authentication."
@@ -110,16 +112,16 @@ msgstr ""
 
 #: 3rdparty/Horde/Imap/Client/Socket.php:515
 msgid "Server rejected connection."
-msgstr ""
+msgstr "Ο διακομιστής μηνυμάτων δεν υποστηρίζει τα ΙΜΑΡ4REV1 (RFC 3501)"
 
 #: 3rdparty/Horde/Imap/Client/Socket.php:524
 msgid "The mail server does not support IMAP4rev1 (RFC 3501)."
-msgstr ""
+msgstr "Ο διακομσιτής μηνυμάτων δεν υποστηρίζει τα ΙΜΑΡ4rev1 (REC 3501)"
 
 #: 3rdparty/Horde/Imap/Client/Socket.php:920
 #, php-format
 msgid "Could not open mailbox \"%s\"."
-msgstr ""
+msgstr "Δεν μπόρεσε να ανοίξει τα εισερχόμενα %s."
 
 #: 3rdparty/Horde/Imap/Client/Socket.php:1874
 #: 3rdparty/Horde/Imap/Client/Socket.php:2544
@@ -127,12 +129,12 @@ msgstr ""
 #: 3rdparty/Horde/Imap/Client/Socket.php:2992
 #: 3rdparty/Horde/Imap/Client/Socket.php:3048
 msgid "Mailbox does not support mod-sequences."
-msgstr ""
+msgstr "Τό μενού των εισερχομένων δεν υποστηρίζει τις σειρές mod "
 
 #: 3rdparty/Horde/Imap/Client/Socket.php:3537
 #, php-format
 msgid "Invalid METADATA entry: \"%s\"."
-msgstr ""
+msgstr "Μη έγκυρη εισαγωγή ΜΕΤΑDATA %s."
 
 #: 3rdparty/Horde/Imap/Client/Socket.php:3624
 #, php-format
@@ -142,104 +144,104 @@ msgstr ""
 #: 3rdparty/Horde/Imap/Client/Socket.php:3857
 #: 3rdparty/Horde/Imap/Client/Socket.php:4128
 msgid "Error when communicating with the mail server."
-msgstr ""
+msgstr "Σφάλμα κατά την επικοινωνία με τον διακομιστή μηνυμάτων."
 
 #: 3rdparty/Horde/Imap/Client/Socket.php:3983
 #: 3rdparty/Horde/Imap/Client/Socket.php:4014
 msgid "IMAP error reported by server."
-msgstr ""
+msgstr "Αναφορά σφάλματος ΙΜΑΡ από τον διακομίστή."
 
 #: 3rdparty/Horde/Imap/Client/Socket.php:3998
 msgid "IMAP Server closed the connection."
-msgstr ""
+msgstr "Ο Διακομιστής ΙΜΑΡ έκλεισε την σύνδεση."
 
 #: 3rdparty/Horde/Imap/Client/Socket.php:4050
 msgid "Mail server closed the connection unexpectedly."
-msgstr ""
+msgstr "Ο διακομιστής έκλεισε την σύνδεση απροσδόκητα. "
 
 #: 3rdparty/Horde/Imap/Client/Socket.php:4325
 msgid "Charset used in search query is not supported on the mail server."
-msgstr ""
+msgstr "Ο διακομιστής μηνυμάτων δεν μπόρεσε να φιλτράρει τα περιεχόμενα του ηλεκτρονικού μηνύματος."
 
 #: 3rdparty/Horde/Imap/Client/Socket.php:4337
 #: 3rdparty/Horde/Imap/Client/Socket.php:4379
 msgid "The mail server was unable to parse the contents of the mail message."
-msgstr ""
+msgstr "Το περιεχόμενο του μηνύματος δεν μπόρεσε να περάσει στον διακομιστή."
 
 #: 3rdparty/Horde/Imap/Client/Socket.php:4420
 msgid "Could not save message on server."
-msgstr ""
+msgstr "Δεν μπόρεσε να αποθηκεύσει το μήνυμα στον διακομιστή. "
 
 #: 3rdparty/Horde/Imap/Client/Socket.php:4429
 msgid "Could not save message data because it is too large."
-msgstr ""
+msgstr "Δεν μπόρεσε να αποθηκεύσει ττο μήνυμα γιατί ήταν πολύ μεγάλο. "
 
 #: 3rdparty/Horde/Imap/Client/Socket.php:4468
 msgid "The comparison algorithm was not recognized by the server."
-msgstr ""
+msgstr "Ο αλγόριθμος της σύγκρισης δεν αναγνωρίσθηκε από τον διακομιστή. "
 
 #: 3rdparty/Horde/Imap/Client/Socket.php:4486
 msgid "The metadata item could not be saved because it is too large."
-msgstr ""
+msgstr "Το τμήμα metadata δεν μπόρεσε να αποθηκευτεί γιατί ήταν πολύ μεγάλο. "
 
 #: 3rdparty/Horde/Imap/Client/Socket.php:4495
 msgid ""
 "The metadata item could not be saved because the server does not support "
 "private annotations."
-msgstr ""
+msgstr "Το τμήμα metadata δεν μπόρεσε να αποθηκευτεί γιατί έχει ξεπεραστεί ο μέγιστος αριθμός αναφορών."
 
 #: 3rdparty/Horde/Imap/Client/Socket.php:4504
 msgid ""
 "The metadata item could not be saved because the maximum number of "
 "annotations has been exceeded."
-msgstr ""
+msgstr "Το τμήμα metadata δεν μπόρεσε να αποθηκευτεί γιατί έχει υπερβεί τον μέγιστο αριθμό σημειώσεων."
 
 #: 3rdparty/Horde/Imap/Client/Socket.php:4515
 msgid "Remote server is temporarily unavailable."
-msgstr ""
+msgstr "Ο διακομιστής δεν είναι διαθέσιμος προς το παρόν."
 
 #: 3rdparty/Horde/Imap/Client/Socket.php:4523
 msgid "Authentication failed."
-msgstr ""
+msgstr "Η διαδικασία επικύρωσης απέτυχε "
 
 #: 3rdparty/Horde/Imap/Client/Socket.php:4531
 msgid "Authentication was successful, but authorization failed."
-msgstr ""
+msgstr "Η πιστοποίηση ήταν επιτυχής αλλά η εξουσιοδότηση απέτυχε. "
 
 #: 3rdparty/Horde/Imap/Client/Socket.php:4539
 msgid "Authentication credentials have expired."
-msgstr ""
+msgstr "Η προθεσμία των πιστοποιητικών επικύρωσης έχει περάσει. "
 
 #: 3rdparty/Horde/Imap/Client/Socket.php:4547
 msgid "Operation failed due to a lack of a secure connection."
-msgstr ""
+msgstr "Η έπιχείρηση απέτυχε λόγω ασφαλούς σύνδεσης."
 
 #: 3rdparty/Horde/Imap/Client/Socket.php:4555
 msgid "You do not have adequate permissions to carry out this operation."
-msgstr ""
+msgstr "Δεν έχετε επαρκή άδεια για να διεξάγετε αυτήν την επιχείρηση."
 
 #: 3rdparty/Horde/Imap/Client/Socket.php:4564
 msgid ""
 "There was a temporary issue when attempting this operation. Please try again"
 " later."
-msgstr ""
+msgstr "Υπηρξε προσωρινό πρόβλημα σε αυτήν την προσπάθεια. Παρακαλώ προσπαθήστε αργότερα. "
 
 #: 3rdparty/Horde/Imap/Client/Socket.php:4578
 msgid "The mail server is reporting corrupt data in your mailbox."
-msgstr ""
+msgstr "Ο διακομιστής μηνυμάτων αναφέρει ελαττωματικό αρχείο στα εισερχόμενα μηνύματα."
 
 #: 3rdparty/Horde/Imap/Client/Socket.php:4594
 msgid "The mail server has denied the request."
-msgstr ""
+msgstr "Ο διακομιστής μηνυμάτων αρνήθηκε την πρόσβαση στο αίτημα "
 
 #: 3rdparty/Horde/Imap/Client/Socket.php:4603
 msgid ""
 "The operation failed because the quota has been exceeded on the mail server."
-msgstr ""
+msgstr "Η προσπάθεια απέτυχε λόγω υπέρβασης αριθμού μηνυμάτων στον διακομιστή."
 
 #: 3rdparty/Horde/Imap/Client/Socket.php:4612
 msgid "The object could not be created because it already exists."
-msgstr ""
+msgstr "Το αντικείμενο δεν μπόρεσε να δημιουργηθεί διότι υπάρχει ήδη."
 
 #: 3rdparty/Horde/Imap/Client/Socket.php:4621
 msgid "The object could not be deleted because it does not exist."
@@ -258,11 +260,11 @@ msgstr ""
 #: 3rdparty/Horde/Imap/Client/Utf7imap.php:234
 #: 3rdparty/Horde/Imap/Client/Utf7imap.php:240
 msgid "Error converting UTF7-IMAP string."
-msgstr ""
+msgstr "Σφάλμα κατά την μετατροπή της σειράς UTF7-IMAP."
 
 #: 3rdparty/Horde/Mime/Headers.php:535
 msgid "List-Help"
-msgstr ""
+msgstr "Λίστα Βοήθειας "
 
 #: 3rdparty/Horde/Mime/Headers.php:536
 msgid "List-Unsubscribe"
@@ -270,19 +272,19 @@ msgstr ""
 
 #: 3rdparty/Horde/Mime/Headers.php:537
 msgid "List-Subscribe"
-msgstr ""
+msgstr "Λίστα Εγγραφή "
 
 #: 3rdparty/Horde/Mime/Headers.php:538
 msgid "List-Owner"
-msgstr ""
+msgstr "Λίστα-Κατόχου "
 
 #: 3rdparty/Horde/Mime/Headers.php:539
 msgid "List-Post"
-msgstr ""
+msgstr "Λίστα-Ταχυδρομείο"
 
 #: 3rdparty/Horde/Mime/Headers.php:540
 msgid "List-Archive"
-msgstr ""
+msgstr "Λίστα Αρχείο "
 
 #: 3rdparty/Horde/Mime/Headers.php:542
 msgid "List-Id"
@@ -290,7 +292,7 @@ msgstr ""
 
 #: 3rdparty/Horde/Mime/Mail.php:417
 msgid "Plaintext Version of Message"
-msgstr ""
+msgstr "Μήνυμα Βασικού κειμένου "
 
 #: 3rdparty/Horde/Mime/Mail.php:419
 msgid "HTML Version of Message"
@@ -298,7 +300,7 @@ msgstr ""
 
 #: 3rdparty/Horde/Mime/Mdn.php:188
 msgid "Disposition Notification"
-msgstr ""
+msgstr "Διαθέσιμη Ενημέρωση "
 
 #: 3rdparty/Horde/Mime/Mdn.php:200
 #, php-format
@@ -310,27 +312,27 @@ msgstr ""
 
 #: 3rdparty/Horde/Nls/Countries.php:8 3rdparty/Horde/Nls/Tld.php:16
 msgid "Afghanistan"
-msgstr ""
+msgstr "Αφγανιστάν "
 
 #: 3rdparty/Horde/Nls/Countries.php:9
 msgid "Åland Islands"
-msgstr ""
+msgstr "Νησιά Αλαντ "
 
 #: 3rdparty/Horde/Nls/Countries.php:10 3rdparty/Horde/Nls/Tld.php:19
 msgid "Albania"
-msgstr ""
+msgstr "Αλβανία "
 
 #: 3rdparty/Horde/Nls/Countries.php:11 3rdparty/Horde/Nls/Tld.php:73
 msgid "Algeria"
-msgstr ""
+msgstr "Αλγερία "
 
 #: 3rdparty/Horde/Nls/Countries.php:12 3rdparty/Horde/Nls/Tld.php:25
 msgid "American Samoa"
-msgstr ""
+msgstr "Αμερικανικά Σαμόα "
 
 #: 3rdparty/Horde/Nls/Countries.php:13 3rdparty/Horde/Nls/Tld.php:14
 msgid "Andorra"
-msgstr ""
+msgstr "Ανδόρρα "
 
 #: 3rdparty/Horde/Nls/Countries.php:14 3rdparty/Horde/Nls/Tld.php:22
 msgid "Angola"

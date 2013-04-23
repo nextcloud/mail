@@ -523,6 +523,8 @@
 "Connecting ..." => "Connessione in corso...",
 "Connect" => "Connetti",
 "Not a email address" => "Non è un indirizzo di posta",
+"Unknown error" => "Errore sconosciuto",
+"Server Error" => "Errore del server",
 "New Message" => "Nuovo messaggio",
 "To" => "A",
 "Subject" => "Oggetto",

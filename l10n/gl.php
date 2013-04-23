@@ -523,6 +523,8 @@
 "Connecting ..." => "Conectando ...",
 "Connect" => "Conectar",
 "Not a email address" => "Non é un enderezo de correo",
+"Unknown error" => "Produciuse un erro descoñecido",
+"Server Error" => "Produciuse un erro do servidor",
 "New Message" => "Mensaxe nova",
 "To" => "a",
 "Subject" => "Asunto",

@@ -523,6 +523,8 @@
 "Connecting ..." => "Ühendamine ...",
 "Connect" => "Ühenda",
 "Not a email address" => "Pole e-posti aadress",
+"Unknown error" => "Tundmatu viga",
+"Server Error" => "Serveri viga",
 "New Message" => "Uus sõnum",
 "To" => "Kuni",
 "Subject" => "Teema",
