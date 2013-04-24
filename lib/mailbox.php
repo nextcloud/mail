@@ -66,7 +66,7 @@ class Mailbox {
 
 		// sort by time
 		usort($messages, function($a, $b) {
-			return $a['date-int'] < $b['date-int'];
+			return $a['dateInt'] < $b['dateInt'];
 		});
 
 		return $messages;

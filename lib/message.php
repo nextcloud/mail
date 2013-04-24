@@ -296,7 +296,7 @@ class Message {
 		$data['date'] = \OCP\Util::formatDate($this->getSentDate()->format('U'));
 		$data['size'] = \OCP\Util::humanFileSize($this->getSize());
 		$data['flags'] = $this->getFlags();
-		$data['date-int'] = $this->getSentDate()->getTimestamp();
+		$data['dateInt'] = $this->getSentDate()->getTimestamp();
 		return $data;
 	}
 }

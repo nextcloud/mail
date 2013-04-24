@@ -20,7 +20,6 @@
 		<tr class="template mail_message_summary" data-message-id="0">
 			<td class="mail_message_summary_from"></td>
 			<td class="mail_message_summary_subject"></td>
-			<td class="mail_message_summary_date"></td>
 		</tr>
 		<tr class="template_loading mail_message_loading">
 			<td></td>
