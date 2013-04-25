@@ -5,13 +5,14 @@
 # Translators:
 # Xuetian Weng <wengxt@gmail.com>, 2013
 # Xuetian Weng <wengxt@gmail.com>, 2013
+# zhangmin <zm1990s@gmail.com>, 2013
 msgid ""
 msgstr ""
 "Project-Id-Version: ownCloud\n"
 "Report-Msgid-Bugs-To: http://bugs.owncloud.org/\n"
-"POT-Creation-Date: 2013-04-23 02:44+0200\n"
-"PO-Revision-Date: 2013-04-22 02:00+0000\n"
-"Last-Translator: Xuetian Weng <wengxt@gmail.com>\n"
+"POT-Creation-Date: 2013-04-25 02:42+0200\n"
+"PO-Revision-Date: 2013-04-24 14:50+0000\n"
+"Last-Translator: zhangmin <zm1990s@gmail.com>\n"
 "Language-Team: Chinese (China) (http://www.transifex.com/projects/p/owncloud/language/zh_CN/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -34,94 +35,94 @@ msgstr "认证失败。"
 #: 3rdparty/Horde/Imap/Client/Base.php:1856
 #: 3rdparty/Horde/Imap/Client/Base.php:1915
 msgid "Cannot expunge read-only mailbox."
-msgstr ""
+msgstr "无法删除只读邮箱。"
 
 #: 3rdparty/Horde/Imap/Client/Exception/NoSupportExtension.php:36
 #, php-format
 msgid "The server does not support the %s extension."
-msgstr ""
+msgstr "本服务不支持 %s 扩展。"
 
 #: 3rdparty/Horde/Imap/Client/Exception/NoSupportPop3.php:25
 #, php-format
 msgid "%s not supported on POP3 servers."
-msgstr ""
+msgstr "%s 不支持 POP3 服务器。"
 
 #: 3rdparty/Horde/Imap/Client/Exception/SearchCharset.php:36
 msgid "Cannot convert search query text to new charset"
-msgstr ""
+msgstr "不能将查询文本转换成新字符"
 
 #: 3rdparty/Horde/Imap/Client/Interaction/Server/Tagged.php:34
 msgid "Bad tagged response."
-msgstr ""
+msgstr "坏标签响应。"
 
 #: 3rdparty/Horde/Imap/Client/Socket/Pop3.php:189
 #: 3rdparty/Horde/Imap/Client/Socket/Pop3.php:201
 msgid "Could not open secure connection to the POP3 server."
-msgstr ""
+msgstr "不能使用安全连接到 POP3 服务器。"
 
 #: 3rdparty/Horde/Imap/Client/Socket/Pop3.php:189
 msgid "Server does not support secure connections."
-msgstr ""
+msgstr "服务器不支持安全连接。"
 
 #: 3rdparty/Horde/Imap/Client/Socket/Pop3.php:240
 msgid "POP3 server denied authentication."
-msgstr ""
+msgstr "POP3服务器拒绝认证。"
 
 #: 3rdparty/Horde/Imap/Client/Socket/Pop3.php:280
 msgid "Error connecting to POP3 server."
-msgstr ""
+msgstr "连接到 POP3 服务器出错。"
 
 #: 3rdparty/Horde/Imap/Client/Socket/Pop3.php:334
 #: 3rdparty/Horde/Imap/Client/Socket.php:592
 msgid "Unexpected response from server when authenticating."
-msgstr ""
+msgstr "进行身份验证时服务器出现意外响应。"
 
 #: 3rdparty/Horde/Imap/Client/Socket/Pop3.php:374
 #: 3rdparty/Horde/Imap/Client/Socket.php:636
 #, php-format
 msgid "Unknown authentication method: %s"
-msgstr ""
+msgstr "未知认证模式： %s"
 
 #: 3rdparty/Horde/Imap/Client/Socket/Pop3.php:1112
 msgid "POP3 Server closed the connection unexpectedly."
-msgstr ""
+msgstr "POP3 服务器意外断开。"
 
 #: 3rdparty/Horde/Imap/Client/Socket/Pop3.php:1172
 msgid "POP3 error reported by server."
-msgstr ""
+msgstr "POP3 服务器出现错误报告。"
 
 #: 3rdparty/Horde/Imap/Client/Socket.php:311
 msgid "Server does not support TLS connections."
-msgstr ""
+msgstr "服务器不支持TLS 连接。"
 
 #: 3rdparty/Horde/Imap/Client/Socket.php:323
 msgid "Could not open secure TLS connection to the IMAP server."
-msgstr ""
+msgstr "不能为IMAP服务器启用安全TLS连接。"
 
 #: 3rdparty/Horde/Imap/Client/Socket.php:366
 msgid "No supported IMAP authentication method could be found."
-msgstr ""
+msgstr "未找到支持的 IMAP 认证模式。"
 
 #: 3rdparty/Horde/Imap/Client/Socket.php:383
 msgid "Mail server denied authentication."
-msgstr ""
+msgstr "邮件服务器拒绝认证。"
 
 #: 3rdparty/Horde/Imap/Client/Socket.php:492
 msgid "Error connecting to mail server."
-msgstr ""
+msgstr "连接到邮件服务器出错。"
 
 #: 3rdparty/Horde/Imap/Client/Socket.php:515
 msgid "Server rejected connection."
-msgstr ""
+msgstr "服务器拒绝连接。"
 
 #: 3rdparty/Horde/Imap/Client/Socket.php:524
 msgid "The mail server does not support IMAP4rev1 (RFC 3501)."
-msgstr ""
+msgstr "邮件服务器不支持 IMAP4rev1 (RFC 3501)。"
 
 #: 3rdparty/Horde/Imap/Client/Socket.php:920
 #, php-format
 msgid "Could not open mailbox \"%s\"."
-msgstr ""
+msgstr "不能打开邮箱 \"%s\"。"
 
 #: 3rdparty/Horde/Imap/Client/Socket.php:1874
 #: 3rdparty/Horde/Imap/Client/Socket.php:2544
@@ -129,44 +130,44 @@ msgstr ""
 #: 3rdparty/Horde/Imap/Client/Socket.php:2992
 #: 3rdparty/Horde/Imap/Client/Socket.php:3048
 msgid "Mailbox does not support mod-sequences."
-msgstr ""
+msgstr "邮箱不支持mod-sequences。"
 
 #: 3rdparty/Horde/Imap/Client/Socket.php:3537
 #, php-format
 msgid "Invalid METADATA entry: \"%s\"."
-msgstr ""
+msgstr "无效的元数据项：\"%s\"。"
 
 #: 3rdparty/Horde/Imap/Client/Socket.php:3624
 #, php-format
 msgid "Invalid METADATA value type \"%s\"."
-msgstr ""
+msgstr "无效的元数据值类型 \"%s\" 。"
 
 #: 3rdparty/Horde/Imap/Client/Socket.php:3857
 #: 3rdparty/Horde/Imap/Client/Socket.php:4128
 msgid "Error when communicating with the mail server."
-msgstr ""
+msgstr "与邮件服务器通信时出错。"
 
 #: 3rdparty/Horde/Imap/Client/Socket.php:3983
 #: 3rdparty/Horde/Imap/Client/Socket.php:4014
 msgid "IMAP error reported by server."
-msgstr ""
+msgstr "服务器出现IMAP 错误报告。"
 
 #: 3rdparty/Horde/Imap/Client/Socket.php:3998
 msgid "IMAP Server closed the connection."
-msgstr ""
+msgstr "IMAP 服务器关闭连接。"
 
 #: 3rdparty/Horde/Imap/Client/Socket.php:4050
 msgid "Mail server closed the connection unexpectedly."
-msgstr ""
+msgstr "邮件服务器意外断开连接。"
 
 #: 3rdparty/Horde/Imap/Client/Socket.php:4325
 msgid "Charset used in search query is not supported on the mail server."
-msgstr ""
+msgstr "搜索框用的字符不被邮件服务器支持。"
 
 #: 3rdparty/Horde/Imap/Client/Socket.php:4337
 #: 3rdparty/Horde/Imap/Client/Socket.php:4379
 msgid "The mail server was unable to parse the contents of the mail message."
-msgstr ""
+msgstr "邮件服务器无法解析邮件的内容。"
 
 #: 3rdparty/Horde/Imap/Client/Socket.php:4420
 msgid "Could not save message on server."
@@ -182,23 +183,23 @@ msgstr "比较算法未被服务器识别。"
 
 #: 3rdparty/Horde/Imap/Client/Socket.php:4486
 msgid "The metadata item could not be saved because it is too large."
-msgstr ""
+msgstr "原数据项太大，不能保存。"
 
 #: 3rdparty/Horde/Imap/Client/Socket.php:4495
 msgid ""
 "The metadata item could not be saved because the server does not support "
 "private annotations."
-msgstr ""
+msgstr "无法保存元数据项，因为服务器不支持私人注解。"
 
 #: 3rdparty/Horde/Imap/Client/Socket.php:4504
 msgid ""
 "The metadata item could not be saved because the maximum number of "
 "annotations has been exceeded."
-msgstr ""
+msgstr "无法保存元数据项，因为已经超过了注释数的最大值。"
 
 #: 3rdparty/Horde/Imap/Client/Socket.php:4515
 msgid "Remote server is temporarily unavailable."
-msgstr ""
+msgstr "远程服务器暂时不可用。"
 
 #: 3rdparty/Horde/Imap/Client/Socket.php:4523
 msgid "Authentication failed."
@@ -214,7 +215,7 @@ msgstr "认证已过期。"
 
 #: 3rdparty/Horde/Imap/Client/Socket.php:4547
 msgid "Operation failed due to a lack of a secure connection."
-msgstr ""
+msgstr "由于缺少一个安全的连接，操作失败。"
 
 #: 3rdparty/Horde/Imap/Client/Socket.php:4555
 msgid "You do not have adequate permissions to carry out this operation."
@@ -224,32 +225,32 @@ msgstr "您没有足够的权限执行此操作。"
 msgid ""
 "There was a temporary issue when attempting this operation. Please try again"
 " later."
-msgstr ""
+msgstr "尝试此操作时出现一个暂时性问题。请稍后再试。"
 
 #: 3rdparty/Horde/Imap/Client/Socket.php:4578
 msgid "The mail server is reporting corrupt data in your mailbox."
-msgstr ""
+msgstr "邮件服务器正在报告您邮箱中损坏的资料。"
 
 #: 3rdparty/Horde/Imap/Client/Socket.php:4594
 msgid "The mail server has denied the request."
-msgstr ""
+msgstr "邮件服务器已经拒绝了这一要求。"
 
 #: 3rdparty/Horde/Imap/Client/Socket.php:4603
 msgid ""
 "The operation failed because the quota has been exceeded on the mail server."
-msgstr ""
+msgstr "操作失败，因为​​超出邮件服务器的配额。"
 
 #: 3rdparty/Horde/Imap/Client/Socket.php:4612
 msgid "The object could not be created because it already exists."
-msgstr ""
+msgstr "不能创建对象，因为它已经存在。"
 
 #: 3rdparty/Horde/Imap/Client/Socket.php:4621
 msgid "The object could not be deleted because it does not exist."
-msgstr ""
+msgstr "该对象不能被删除，因为它不存在。"
 
 #: 3rdparty/Horde/Imap/Client/Socket.php:4630
 msgid "The special-use attribute requested for the mailbox is not supported."
-msgstr ""
+msgstr "邮箱需要的特殊用途属性不被支持。"
 
 #: 3rdparty/Horde/Imap/Client/Utf7imap.php:117
 #: 3rdparty/Horde/Imap/Client/Utf7imap.php:142
@@ -260,35 +261,35 @@ msgstr ""
 #: 3rdparty/Horde/Imap/Client/Utf7imap.php:234
 #: 3rdparty/Horde/Imap/Client/Utf7imap.php:240
 msgid "Error converting UTF7-IMAP string."
-msgstr ""
+msgstr "转换UTF7-IMAP字符串错误。"
 
 #: 3rdparty/Horde/Mime/Headers.php:535
 msgid "List-Help"
-msgstr ""
+msgstr "列表-帮助"
 
 #: 3rdparty/Horde/Mime/Headers.php:536
 msgid "List-Unsubscribe"
-msgstr ""
+msgstr "列表-退订的"
 
 #: 3rdparty/Horde/Mime/Headers.php:537
 msgid "List-Subscribe"
-msgstr ""
+msgstr "列表-已订阅的"
 
 #: 3rdparty/Horde/Mime/Headers.php:538
 msgid "List-Owner"
-msgstr ""
+msgstr "列表-所有人"
 
 #: 3rdparty/Horde/Mime/Headers.php:539
 msgid "List-Post"
-msgstr ""
+msgstr "列表-发送"
 
 #: 3rdparty/Horde/Mime/Headers.php:540
 msgid "List-Archive"
-msgstr ""
+msgstr "列表-存档"
 
 #: 3rdparty/Horde/Mime/Headers.php:542
 msgid "List-Id"
-msgstr ""
+msgstr "列表-Id"
 
 #: 3rdparty/Horde/Mime/Mail.php:417
 msgid "Plaintext Version of Message"
@@ -300,7 +301,7 @@ msgstr "信件的 HTML 版本"
 
 #: 3rdparty/Horde/Mime/Mdn.php:188
 msgid "Disposition Notification"
-msgstr ""
+msgstr "处理通知"
 
 #: 3rdparty/Horde/Mime/Mdn.php:200
 #, php-format
@@ -308,7 +309,7 @@ msgid ""
 "The message sent on %s to %s with subject \"%s\" has been displayed.\n"
 "\n"
 "This is no guarantee that the message has been read or understood."
-msgstr ""
+msgstr "在 %s 上发送到 %s ，主题为 \"%s\" 的消息已被查看了。\n\n这不代表此消息已经被阅读或理会了。"
 
 #: 3rdparty/Horde/Nls/Countries.php:8 3rdparty/Horde/Nls/Tld.php:16
 msgid "Afghanistan"
@@ -316,7 +317,7 @@ msgstr "阿富汗"
 
 #: 3rdparty/Horde/Nls/Countries.php:9
 msgid "Åland Islands"
-msgstr ""
+msgstr "奥兰群岛（Åland Islands）"
 
 #: 3rdparty/Horde/Nls/Countries.php:10 3rdparty/Horde/Nls/Tld.php:19
 msgid "Albania"
@@ -328,7 +329,7 @@ msgstr "阿尔及利亚"
 
 #: 3rdparty/Horde/Nls/Countries.php:12 3rdparty/Horde/Nls/Tld.php:25
 msgid "American Samoa"
-msgstr ""
+msgstr "美属萨摩亚（American Samoa）"
 
 #: 3rdparty/Horde/Nls/Countries.php:13 3rdparty/Horde/Nls/Tld.php:14
 msgid "Andorra"
@@ -360,7 +361,7 @@ msgstr "亚美尼亚"
 
 #: 3rdparty/Horde/Nls/Countries.php:20 3rdparty/Horde/Nls/Tld.php:28
 msgid "Aruba"
-msgstr ""
+msgstr "阿鲁巴岛（Aruba）"
 
 #: 3rdparty/Horde/Nls/Countries.php:21 3rdparty/Horde/Nls/Tld.php:27
 msgid "Australia"
@@ -420,7 +421,7 @@ msgstr "玻利维亚"
 
 #: 3rdparty/Horde/Nls/Countries.php:35
 msgid "Bonaire, Sint Eustatius and Saba"
-msgstr ""
+msgstr "博内尔岛、圣尤斯特歇斯岛及萨巴岛（Bonaire, Sint Eustatius and Saba）"
 
 #: 3rdparty/Horde/Nls/Countries.php:36 3rdparty/Horde/Nls/Tld.php:31
 msgid "Bosnia and Herzegovina"
@@ -540,7 +541,7 @@ msgstr "古巴"
 
 #: 3rdparty/Horde/Nls/Countries.php:65
 msgid "Curaçao"
-msgstr ""
+msgstr "库拉索岛（Curaçao）"
 
 #: 3rdparty/Horde/Nls/Countries.php:66 3rdparty/Horde/Nls/Tld.php:66
 msgid "Cyprus"
@@ -1049,7 +1050,7 @@ msgstr "卢旺达"
 
 #: 3rdparty/Horde/Nls/Countries.php:192
 msgid "Saint Barthélemy"
-msgstr ""
+msgstr "圣巴托洛缪岛（Saint Barthélemy）"
 
 #: 3rdparty/Horde/Nls/Countries.php:193
 msgid "Saint Helena, Ascension and Tristan da Cunha"
@@ -1065,7 +1066,7 @@ msgstr "圣卢西亚岛"
 
 #: 3rdparty/Horde/Nls/Countries.php:196
 msgid "Saint Martin (French part)"
-msgstr ""
+msgstr "法属圣马丁(Saint Martin)"
 
 #: 3rdparty/Horde/Nls/Countries.php:197 3rdparty/Horde/Nls/Tld.php:191
 msgid "Saint Pierre and Miquelon"
@@ -1113,7 +1114,7 @@ msgstr "新加坡"
 
 #: 3rdparty/Horde/Nls/Countries.php:208
 msgid "Sint Maarten (Dutch part)"
-msgstr ""
+msgstr " 荷属圣马丁(Sint Maarten)"
 
 #: 3rdparty/Horde/Nls/Countries.php:209 3rdparty/Horde/Nls/Tld.php:213
 msgid "Slovakia"
@@ -1318,11 +1319,11 @@ msgstr "欧洲"
 
 #: 3rdparty/Horde/Nls/Geoip.php:326
 msgid "Anonymous Proxy"
-msgstr ""
+msgstr "匿名代理"
 
 #: 3rdparty/Horde/Nls/Geoip.php:327
 msgid "Satellite Provider"
-msgstr ""
+msgstr "卫星供应商"
 
 #: 3rdparty/Horde/Nls/Geoip.php:328
 msgid "Other"
@@ -1334,7 +1335,7 @@ msgstr "阿法尔语"
 
 #: 3rdparty/Horde/Nls/Languages.php:10
 msgid "Abkhaz"
-msgstr ""
+msgstr "阿布哈兹（Abkhaz）"
 
 #: 3rdparty/Horde/Nls/Languages.php:11
 msgid "Avestan"
@@ -1346,7 +1347,7 @@ msgstr "南非荷兰语"
 
 #: 3rdparty/Horde/Nls/Languages.php:13
 msgid "Akan"
-msgstr ""
+msgstr "阿肯语（Akan）"
 
 #: 3rdparty/Horde/Nls/Languages.php:14
 msgid "Amharic"
@@ -1354,7 +1355,7 @@ msgstr "阿比西尼亚语"
 
 #: 3rdparty/Horde/Nls/Languages.php:15
 msgid "Aragonese"
-msgstr ""
+msgstr "阿拉贡语（Aragonese）"
 
 #: 3rdparty/Horde/Nls/Languages.php:16
 msgid "Arabic"
@@ -1366,7 +1367,7 @@ msgstr "阿萨姆语"
 
 #: 3rdparty/Horde/Nls/Languages.php:18
 msgid "Avaric"
-msgstr ""
+msgstr "阿瓦尔语（Avaric）"
 
 #: 3rdparty/Horde/Nls/Languages.php:19
 msgid "Aymara"
@@ -1398,7 +1399,7 @@ msgstr "比斯拉马语"
 
 #: 3rdparty/Horde/Nls/Languages.php:26
 msgid "Bambara"
-msgstr ""
+msgstr "班巴拉语（Bambara）"
 
 #: 3rdparty/Horde/Nls/Languages.php:27
 msgid "Bengali"
@@ -1406,7 +1407,7 @@ msgstr "孟加拉语"
 
 #: 3rdparty/Horde/Nls/Languages.php:28
 msgid "Tibetan Standard, Tibetan, Central"
-msgstr ""
+msgstr "中央西藏藏语（Tibetan Standard, Tibetan, Central）"
 
 #: 3rdparty/Horde/Nls/Languages.php:29
 msgid "Breton"
@@ -1418,7 +1419,7 @@ msgstr "波斯尼亚语"
 
 #: 3rdparty/Horde/Nls/Languages.php:31
 msgid "Catalan; Valencian"
-msgstr ""
+msgstr "巴伦西亚加泰罗尼亚语（Catalan; Valencian）"
 
 #: 3rdparty/Horde/Nls/Languages.php:32
 msgid "Chechen"
@@ -1434,7 +1435,7 @@ msgstr "科西嘉语"
 
 #: 3rdparty/Horde/Nls/Languages.php:35
 msgid "Cree"
-msgstr ""
+msgstr "克里语（Cree）"
 
 #: 3rdparty/Horde/Nls/Languages.php:36
 msgid "Czech"
@@ -1444,7 +1445,7 @@ msgstr "捷克语"
 msgid ""
 "Old Church Slavonic, Church Slavic, Church Slavonic, Old Bulgarian, Old "
 "Slavonic"
-msgstr ""
+msgstr "Old Church Slavonic, Church Slavic, Church Slavonic, Old Bulgarian, Old Slavonic"
 
 #: 3rdparty/Horde/Nls/Languages.php:38
 msgid "Chuvash"
@@ -1464,7 +1465,7 @@ msgstr "德语"
 
 #: 3rdparty/Horde/Nls/Languages.php:42
 msgid "Divehi; Dhivehi; Maldivian;"
-msgstr ""
+msgstr "迪维希语（Divehi; Dhivehi; Maldivian;）"
 
 #: 3rdparty/Horde/Nls/Languages.php:43
 msgid "Dzongkha"
@@ -1472,11 +1473,11 @@ msgstr "不丹语"
 
 #: 3rdparty/Horde/Nls/Languages.php:44
 msgid "Ewe"
-msgstr ""
+msgstr "埃维语（Ewe）"
 
 #: 3rdparty/Horde/Nls/Languages.php:45
 msgid "Greek, Modern"
-msgstr ""
+msgstr "现代希腊语（Greek, Modern）"
 
 #: 3rdparty/Horde/Nls/Languages.php:46
 msgid "English"
@@ -1488,7 +1489,7 @@ msgstr "世界语"
 
 #: 3rdparty/Horde/Nls/Languages.php:48
 msgid "Spanish; Castilian"
-msgstr ""
+msgstr "西班牙语/卡斯蒂利亚语（Spanish; Castilian）"
 
 #: 3rdparty/Horde/Nls/Languages.php:49
 msgid "Estonian"
@@ -1504,7 +1505,7 @@ msgstr "波斯语"
 
 #: 3rdparty/Horde/Nls/Languages.php:52
 msgid "Fula; Fulah; Pulaar; Pular"
-msgstr ""
+msgstr "富拉语（Fula; Fulah; Pulaar; Pular）"
 
 #: 3rdparty/Horde/Nls/Languages.php:53
 msgid "Finnish"
@@ -1524,7 +1525,7 @@ msgstr "法语"
 
 #: 3rdparty/Horde/Nls/Languages.php:57
 msgid "Western Frisian"
-msgstr ""
+msgstr "西弗里西亚语（Western Frisian）"
 
 #: 3rdparty/Horde/Nls/Languages.php:58
 msgid "Irish"
@@ -1532,7 +1533,7 @@ msgstr "爱尔兰语"
 
 #: 3rdparty/Horde/Nls/Languages.php:59
 msgid "Scottish Gaelic; Gaelic"
-msgstr ""
+msgstr "苏格兰盖尔语（Scottish Gaelic; Gaelic）"
 
 #: 3rdparty/Horde/Nls/Languages.php:60
 msgid "Galician"
@@ -1556,7 +1557,7 @@ msgstr "豪撒语"
 
 #: 3rdparty/Horde/Nls/Languages.php:65
 msgid "Hebrew (modern)"
-msgstr ""
+msgstr "现代希伯来语Hebrew (modern)"
 
 #: 3rdparty/Horde/Nls/Languages.php:66
 msgid "Hindi"
@@ -1572,7 +1573,7 @@ msgstr "克罗地亚语"
 
 #: 3rdparty/Horde/Nls/Languages.php:69
 msgid "Haitian; Haitian Creole"
-msgstr ""
+msgstr "海地克里奥尔语（Haitian; Haitian Creole）"
 
 #: 3rdparty/Horde/Nls/Languages.php:70
 msgid "Hungarian"
@@ -1600,11 +1601,11 @@ msgstr "国际语"
 
 #: 3rdparty/Horde/Nls/Languages.php:76
 msgid "Igbo"
-msgstr ""
+msgstr "伊博语（Igbo）"
 
 #: 3rdparty/Horde/Nls/Languages.php:77
 msgid "Nuosu"
-msgstr ""
+msgstr "彝语（Nuosu）"
 
 #: 3rdparty/Horde/Nls/Languages.php:78
 msgid "Inupiaq"
@@ -1640,15 +1641,15 @@ msgstr "格鲁吉亚语"
 
 #: 3rdparty/Horde/Nls/Languages.php:86
 msgid "Kongo"
-msgstr ""
+msgstr "刚果语（Kongo）"
 
 #: 3rdparty/Horde/Nls/Languages.php:87
 msgid "Kikuyu, Gikuyu"
-msgstr ""
+msgstr "基库尤语（Kikuyu, Gikuyu）"
 
 #: 3rdparty/Horde/Nls/Languages.php:88
 msgid "Kwanyama, Kuanyama"
-msgstr ""
+msgstr "Kwanyama, Kuanyama"
 
 #: 3rdparty/Horde/Nls/Languages.php:89
 msgid "Kazakh"
@@ -1656,7 +1657,7 @@ msgstr "哈萨克语"
 
 #: 3rdparty/Horde/Nls/Languages.php:90
 msgid "Kalaallisut, Greenlandic"
-msgstr ""
+msgstr "格陵兰语（Kalaallisut, Greenlandic）"
 
 #: 3rdparty/Horde/Nls/Languages.php:91
 msgid "Khmer"
@@ -1672,7 +1673,7 @@ msgstr "韩语"
 
 #: 3rdparty/Horde/Nls/Languages.php:94
 msgid "Kanuri"
-msgstr ""
+msgstr "卡努里语（Kanuri）"
 
 #: 3rdparty/Horde/Nls/Languages.php:95
 msgid "Kashmiri"
@@ -1692,7 +1693,7 @@ msgstr "康沃尔语"
 
 #: 3rdparty/Horde/Nls/Languages.php:99
 msgid "Kirghiz, Kyrgyz"
-msgstr ""
+msgstr "吉尔吉斯语（Kirghiz, Kyrgyz）"
 
 #: 3rdparty/Horde/Nls/Languages.php:100
 msgid "Latin"
@@ -1700,7 +1701,7 @@ msgstr "拉丁语"
 
 #: 3rdparty/Horde/Nls/Languages.php:101
 msgid "Luxembourgish, Letzeburgesch"
-msgstr ""
+msgstr "Luxembourgish, Letzeburgesch"
 
 #: 3rdparty/Horde/Nls/Languages.php:102
 msgid "Luganda"
@@ -1708,7 +1709,7 @@ msgstr "卢干达语"
 
 #: 3rdparty/Horde/Nls/Languages.php:103
 msgid "Limburgish, Limburgan, Limburger"
-msgstr ""
+msgstr "林堡语（Limburgish, Limburgan, Limburger）"
 
 #: 3rdparty/Horde/Nls/Languages.php:104
 msgid "Lingala"
@@ -1724,7 +1725,7 @@ msgstr "立陶宛语"
 
 #: 3rdparty/Horde/Nls/Languages.php:107
 msgid "Luba-Katanga"
-msgstr ""
+msgstr "加丹加语（Luba-Katanga）"
 
 #: 3rdparty/Horde/Nls/Languages.php:108
 msgid "Latvian"
@@ -1776,7 +1777,7 @@ msgstr "挪威语(博克马尔语)"
 
 #: 3rdparty/Horde/Nls/Languages.php:121
 msgid "North Ndebele"
-msgstr ""
+msgstr "北恩德贝勒语（North Ndebele）"
 
 #: 3rdparty/Horde/Nls/Languages.php:122
 msgid "Nepali"
@@ -1800,15 +1801,15 @@ msgstr "挪威语"
 
 #: 3rdparty/Horde/Nls/Languages.php:127
 msgid "South Ndebele"
-msgstr ""
+msgstr "南恩德贝勒语"
 
 #: 3rdparty/Horde/Nls/Languages.php:128
 msgid "Navajo, Navaho"
-msgstr ""
+msgstr "纳瓦霍语（Navajo, Navaho）"
 
 #: 3rdparty/Horde/Nls/Languages.php:129
 msgid "Chichewa; Chewa; Nyanja"
-msgstr ""
+msgstr "齐切瓦语（Chichewa; Chewa; Nyanja）"
 
 #: 3rdparty/Horde/Nls/Languages.php:130
 msgid "Occitan"
@@ -1816,7 +1817,7 @@ msgstr "欧西坦语"
 
 #: 3rdparty/Horde/Nls/Languages.php:131
 msgid "Ojibwe, Ojibwa"
-msgstr ""
+msgstr "奥吉布瓦语（Ojibwe, Ojibwa）"
 
 #: 3rdparty/Horde/Nls/Languages.php:132
 msgid "Oromo"
@@ -1828,11 +1829,11 @@ msgstr "奥利亚语"
 
 #: 3rdparty/Horde/Nls/Languages.php:134
 msgid "Ossetian, Ossetic"
-msgstr ""
+msgstr "奥塞梯语（Ossetian, Ossetic）"
 
 #: 3rdparty/Horde/Nls/Languages.php:135
 msgid "Panjabi, Punjabi"
-msgstr ""
+msgstr "旁遮普语（Panjabi, Punjabi）"
 
 #: 3rdparty/Horde/Nls/Languages.php:136
 msgid "Pali"
@@ -1844,7 +1845,7 @@ msgstr "波兰语"
 
 #: 3rdparty/Horde/Nls/Languages.php:138
 msgid "Pashto, Pushto"
-msgstr ""
+msgstr "普什图语（Pashto, Pushto）"
 
 #: 3rdparty/Horde/Nls/Languages.php:139
 msgid "Portuguese"
@@ -1856,15 +1857,15 @@ msgstr "盖丘亚语"
 
 #: 3rdparty/Horde/Nls/Languages.php:141
 msgid "Romansh"
-msgstr ""
+msgstr "罗曼什语（Romansh）"
 
 #: 3rdparty/Horde/Nls/Languages.php:142
 msgid "Kirundi"
-msgstr ""
+msgstr "基隆迪语（Kirundi）"
 
 #: 3rdparty/Horde/Nls/Languages.php:143
 msgid "Romanian, Moldavian, Moldovan"
-msgstr ""
+msgstr "罗马尼亚语（Romanian, Moldavian, Moldovan）"
 
 #: 3rdparty/Horde/Nls/Languages.php:144
 msgid "Russian"
@@ -1896,7 +1897,7 @@ msgstr "桑戈语"
 
 #: 3rdparty/Horde/Nls/Languages.php:151
 msgid "Sinhala, Sinhalese"
-msgstr ""
+msgstr "僧伽罗语（Sinhala, Sinhalese）"
 
 #: 3rdparty/Horde/Nls/Languages.php:152
 msgid "Slovak"
@@ -1904,7 +1905,7 @@ msgstr "斯洛伐克语"
 
 #: 3rdparty/Horde/Nls/Languages.php:153
 msgid "Slovene"
-msgstr ""
+msgstr "斯洛文尼亚语（Slovene）"
 
 #: 3rdparty/Horde/Nls/Languages.php:154
 msgid "Samoan"
@@ -1932,7 +1933,7 @@ msgstr "斯瓦蒂语"
 
 #: 3rdparty/Horde/Nls/Languages.php:160
 msgid "Southern Sotho"
-msgstr ""
+msgstr "南索托语（Southern Sotho）"
 
 #: 3rdparty/Horde/Nls/Languages.php:161
 msgid "Sundanese"
@@ -1980,7 +1981,7 @@ msgstr "茨瓦纳语"
 
 #: 3rdparty/Horde/Nls/Languages.php:172
 msgid "Tonga (Tonga Islands)"
-msgstr ""
+msgstr "Tonga (Tonga Islands)"
 
 #: 3rdparty/Horde/Nls/Languages.php:173
 msgid "Turkish"
@@ -2004,7 +2005,7 @@ msgstr "塔希提语"
 
 #: 3rdparty/Horde/Nls/Languages.php:178
 msgid "Uighur, Uyghur"
-msgstr ""
+msgstr "维吾尔语（Uighur, Uyghur）"
 
 #: 3rdparty/Horde/Nls/Languages.php:179
 msgid "Ukrainian"
@@ -2052,7 +2053,7 @@ msgstr "约鲁巴语"
 
 #: 3rdparty/Horde/Nls/Languages.php:190
 msgid "Zhuang, Chuang"
-msgstr ""
+msgstr "壮语（Zhuang, Chuang）"
 
 #: 3rdparty/Horde/Nls/Languages.php:191
 msgid "Chinese"
@@ -2072,11 +2073,11 @@ msgstr "荷属安的列斯群岛"
 
 #: 3rdparty/Horde/Nls/Tld.php:29
 msgid "Aland Islands"
-msgstr ""
+msgstr "Aland Islands"
 
 #: 3rdparty/Horde/Nls/Tld.php:54
 msgid "Congo, Republic of"
-msgstr ""
+msgstr "刚果共和国"
 
 #: 3rdparty/Horde/Nls/Tld.php:56
 msgid "Cote d'Ivoire"
@@ -2092,7 +2093,7 @@ msgstr "赫德岛和麦克唐纳群岛"
 
 #: 3rdparty/Horde/Nls/Tld.php:110
 msgid "Croatia/Hrvatska"
-msgstr ""
+msgstr "克罗地亚/赫尔瓦"
 
 #: 3rdparty/Horde/Nls/Tld.php:148
 msgid "Libyan Arab Jamahiriya"
@@ -2152,7 +2153,7 @@ msgstr "连接"
 
 #: js/mail.js:257
 msgid "Not a email address"
-msgstr ""
+msgstr "不是一个邮件地址"
 
 #: js/mail.js:265
 msgid "Unknown error"
