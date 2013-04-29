@@ -11,8 +11,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: ownCloud\n"
 "Report-Msgid-Bugs-To: http://bugs.owncloud.org/\n"
-"POT-Creation-Date: 2013-04-28 02:42+0200\n"
-"PO-Revision-Date: 2013-04-28 00:41+0000\n"
+"POT-Creation-Date: 2013-04-29 02:42+0200\n"
+"PO-Revision-Date: 2013-04-28 00:50+0000\n"
 "Last-Translator: msoko <sokolovitch@yahoo.com>\n"
 "Language-Team: Spanish (http://www.transifex.com/projects/p/owncloud/language/es/)\n"
 "MIME-Version: 1.0\n"
@@ -2126,7 +2126,7 @@ msgstr "Unión Soviética"
 
 #: 3rdparty/Horde/Nls/Tld.php:235
 msgid "East Timor"
-msgstr ""
+msgstr "Timor Oriental"
 
 #: 3rdparty/Horde/Nls/Tld.php:239
 msgid "Taiwan"
@@ -2134,7 +2134,7 @@ msgstr "Taiwan"
 
 #: 3rdparty/Horde/Nls/Tld.php:255
 msgid "Wallis and Futuna Islands"
-msgstr ""
+msgstr "Islas Horn"
 
 #: 3rdparty/Horde/Nls/Tld.php:259
 msgid "Yugoslavia"
