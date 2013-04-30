@@ -1,5 +1,6 @@
 <?php $TRANSLATIONS = array(
 "Other" => "Anna",
 "Error" => "Feil",
-"To" => "Til"
+"To" => "Til",
+"Send" => "Send"
 );
