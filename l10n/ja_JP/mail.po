@@ -8,8 +8,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: ownCloud\n"
 "Report-Msgid-Bugs-To: http://bugs.owncloud.org/\n"
-"POT-Creation-Date: 2013-04-27 02:42+0200\n"
-"PO-Revision-Date: 2013-04-26 08:26+0000\n"
+"POT-Creation-Date: 2013-05-01 02:42+0200\n"
+"PO-Revision-Date: 2013-04-30 04:50+0000\n"
 "Last-Translator: Daisuke Deguchi <ddeguchi@nagoya-u.jp>\n"
 "Language-Team: Japanese (Japan) (http://www.transifex.com/projects/p/owncloud/language/ja_JP/)\n"
 "MIME-Version: 1.0\n"
@@ -1313,7 +1313,7 @@ msgstr "アジア太平洋地域"
 
 #: 3rdparty/Horde/Nls/Geoip.php:325
 msgid "Europe"
-msgstr ""
+msgstr "ヨーロッパ"
 
 #: 3rdparty/Horde/Nls/Geoip.php:326
 msgid "Anonymous Proxy"
@@ -1333,7 +1333,7 @@ msgstr ""
 
 #: 3rdparty/Horde/Nls/Languages.php:10
 msgid "Abkhaz"
-msgstr ""
+msgstr "アブハジア"
 
 #: 3rdparty/Horde/Nls/Languages.php:11
 msgid "Avestan"
