@@ -3,124 +3,123 @@
 # This file is distributed under the same license as the PACKAGE package.
 # 
 # Translators:
-# ismail yenigül <ismail.yenigul@surgate.com>, 2013
 msgid ""
 msgstr ""
 "Project-Id-Version: ownCloud\n"
 "Report-Msgid-Bugs-To: http://bugs.owncloud.org/\n"
 "POT-Creation-Date: 2013-05-02 02:56+0200\n"
-"PO-Revision-Date: 2013-05-01 16:10+0000\n"
-"Last-Translator: ismail yenigül <ismail.yenigul@surgate.com>\n"
-"Language-Team: Turkish (http://www.transifex.com/projects/p/owncloud/language/tr/)\n"
+"PO-Revision-Date: 2013-04-15 19:58+0000\n"
+"Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
+"Language-Team: Pirate English (http://www.transifex.com/projects/p/owncloud/language/en@pirate/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"Language: tr\n"
-"Plural-Forms: nplurals=2; plural=(n > 1);\n"
+"Language: en@pirate\n"
+"Plural-Forms: nplurals=2; plural=(n != 1);\n"
 
 #: 3rdparty/Horde/Exception/NotFound.php:27
 msgid "Not Found"
-msgstr "Bulunamadı"
+msgstr ""
 
 #: 3rdparty/Horde/Exception/PermissionDenied.php:27
 msgid "Permission Denied"
-msgstr "Erişim reddedildi"
+msgstr ""
 
 #: 3rdparty/Horde/Imap/Client/Auth/DigestMD5.php:149
 msgid "Authentication failure."
-msgstr "Kimlik doğrulaması başarısız oldu."
+msgstr ""
 
 #: 3rdparty/Horde/Imap/Client/Base.php:1856
 #: 3rdparty/Horde/Imap/Client/Base.php:1915
 msgid "Cannot expunge read-only mailbox."
-msgstr "Salt-okunur e-posta kutusu silinemez"
+msgstr ""
 
 #: 3rdparty/Horde/Imap/Client/Exception/NoSupportExtension.php:36
 #, php-format
 msgid "The server does not support the %s extension."
-msgstr "Sunucu %s eklentisini desteklemiyor."
+msgstr ""
 
 #: 3rdparty/Horde/Imap/Client/Exception/NoSupportPop3.php:25
 #, php-format
 msgid "%s not supported on POP3 servers."
-msgstr "%s desteklenen bir POP3 sunucusu değil."
+msgstr ""
 
 #: 3rdparty/Horde/Imap/Client/Exception/SearchCharset.php:36
 msgid "Cannot convert search query text to new charset"
-msgstr "Arama sorgu metnini yeni karakter setine çevrilemedi"
+msgstr ""
 
 #: 3rdparty/Horde/Imap/Client/Interaction/Server/Tagged.php:34
 msgid "Bad tagged response."
-msgstr "Kötü işaretlendi(tagged) cevabı"
+msgstr ""
 
 #: 3rdparty/Horde/Imap/Client/Socket/Pop3.php:189
 #: 3rdparty/Horde/Imap/Client/Socket/Pop3.php:201
 msgid "Could not open secure connection to the POP3 server."
-msgstr "POP3 sunucusuna güvenli bağlantı açılamadı."
+msgstr ""
 
 #: 3rdparty/Horde/Imap/Client/Socket/Pop3.php:189
 msgid "Server does not support secure connections."
-msgstr "Sunucu güvenli bağlantıyı desteklemiyor."
+msgstr ""
 
 #: 3rdparty/Horde/Imap/Client/Socket/Pop3.php:240
 msgid "POP3 server denied authentication."
-msgstr "POP3 sunucusu doğrulama isteğini engelledi."
+msgstr ""
 
 #: 3rdparty/Horde/Imap/Client/Socket/Pop3.php:280
 msgid "Error connecting to POP3 server."
-msgstr "POP3 sunucusuna bağlantı hatası."
+msgstr ""
 
 #: 3rdparty/Horde/Imap/Client/Socket/Pop3.php:334
 #: 3rdparty/Horde/Imap/Client/Socket.php:592
 msgid "Unexpected response from server when authenticating."
-msgstr "Kimlik doğrulaması yapılıyorken sunucudan beklenmedik bir cevap alındı."
+msgstr ""
 
 #: 3rdparty/Horde/Imap/Client/Socket/Pop3.php:374
 #: 3rdparty/Horde/Imap/Client/Socket.php:636
 #, php-format
 msgid "Unknown authentication method: %s"
-msgstr "Bilinmeyen doğrulama metodu:%s"
+msgstr ""
 
 #: 3rdparty/Horde/Imap/Client/Socket/Pop3.php:1112
 msgid "POP3 Server closed the connection unexpectedly."
-msgstr "POP3 sunucusu bağlantıyı beklenmedik bir şekilde kapattı."
+msgstr ""
 
 #: 3rdparty/Horde/Imap/Client/Socket/Pop3.php:1172
 msgid "POP3 error reported by server."
-msgstr "Sunucu tarafından POP3 hatası bildirildi."
+msgstr ""
 
 #: 3rdparty/Horde/Imap/Client/Socket.php:311
 msgid "Server does not support TLS connections."
-msgstr "Sunucu TLS bağlantılarını desteklemiyor."
+msgstr ""
 
 #: 3rdparty/Horde/Imap/Client/Socket.php:323
 msgid "Could not open secure TLS connection to the IMAP server."
-msgstr "IMAP sunucusuna güvenli TLS bağlantısı açılamadı."
+msgstr ""
 
 #: 3rdparty/Horde/Imap/Client/Socket.php:366
 msgid "No supported IMAP authentication method could be found."
-msgstr "Desteklenen bir IMAP doğrulama metodu bulunamadı."
+msgstr ""
 
 #: 3rdparty/Horde/Imap/Client/Socket.php:383
 msgid "Mail server denied authentication."
-msgstr "E-posta sunucusu doğrulamayı engelledi."
+msgstr ""
 
 #: 3rdparty/Horde/Imap/Client/Socket.php:492
 msgid "Error connecting to mail server."
-msgstr "E-posta sunucusuna bağlantı hatası."
+msgstr ""
 
 #: 3rdparty/Horde/Imap/Client/Socket.php:515
 msgid "Server rejected connection."
-msgstr "Sunucu bağlantıyı kapattı."
+msgstr ""
 
 #: 3rdparty/Horde/Imap/Client/Socket.php:524
 msgid "The mail server does not support IMAP4rev1 (RFC 3501)."
-msgstr "E-posta sunucusu IMAP4rev1 (RFC 3501) desteklemiyor."
+msgstr ""
 
 #: 3rdparty/Horde/Imap/Client/Socket.php:920
 #, php-format
 msgid "Could not open mailbox \"%s\"."
-msgstr "\"%s\" e-posta kutusu açılamadı."
+msgstr ""
 
 #: 3rdparty/Horde/Imap/Client/Socket.php:1874
 #: 3rdparty/Horde/Imap/Client/Socket.php:2544
@@ -128,127 +127,127 @@ msgstr "\"%s\" e-posta kutusu açılamadı."
 #: 3rdparty/Horde/Imap/Client/Socket.php:2992
 #: 3rdparty/Horde/Imap/Client/Socket.php:3048
 msgid "Mailbox does not support mod-sequences."
-msgstr "E-posta kutusunun mod-sequences desteği yok."
+msgstr ""
 
 #: 3rdparty/Horde/Imap/Client/Socket.php:3537
 #, php-format
 msgid "Invalid METADATA entry: \"%s\"."
-msgstr "Geçersiz METADATA  kaydı: \"%s\"."
+msgstr ""
 
 #: 3rdparty/Horde/Imap/Client/Socket.php:3624
 #, php-format
 msgid "Invalid METADATA value type \"%s\"."
-msgstr "Geçersiz METADA değer tipi \"%s\"."
+msgstr ""
 
 #: 3rdparty/Horde/Imap/Client/Socket.php:3857
 #: 3rdparty/Horde/Imap/Client/Socket.php:4128
 msgid "Error when communicating with the mail server."
-msgstr "E-posta sunucusu ile iletişim kuruluyorken hata oluştu."
+msgstr ""
 
 #: 3rdparty/Horde/Imap/Client/Socket.php:3983
 #: 3rdparty/Horde/Imap/Client/Socket.php:4014
 msgid "IMAP error reported by server."
-msgstr "Sunucu tarafından IMAP hatası bildirildi."
+msgstr ""
 
 #: 3rdparty/Horde/Imap/Client/Socket.php:3998
 msgid "IMAP Server closed the connection."
-msgstr "IMAP sunucusu bağlantıyı kapattı."
+msgstr ""
 
 #: 3rdparty/Horde/Imap/Client/Socket.php:4050
 msgid "Mail server closed the connection unexpectedly."
-msgstr "E-posta sunucusu bağlantıyı beklenmedik bir şekilde kapattı."
+msgstr ""
 
 #: 3rdparty/Horde/Imap/Client/Socket.php:4325
 msgid "Charset used in search query is not supported on the mail server."
-msgstr "Arama sorgusunda kullanılan karakter seti e-posta sunucusunda desteklenmemektedir."
+msgstr ""
 
 #: 3rdparty/Horde/Imap/Client/Socket.php:4337
 #: 3rdparty/Horde/Imap/Client/Socket.php:4379
 msgid "The mail server was unable to parse the contents of the mail message."
-msgstr "E-posta sunucusu e-posta içeriğini ayrıştıramadı."
+msgstr ""
 
 #: 3rdparty/Horde/Imap/Client/Socket.php:4420
 msgid "Could not save message on server."
-msgstr "Mesaj sunucu üzerine kaydedilemedi."
+msgstr ""
 
 #: 3rdparty/Horde/Imap/Client/Socket.php:4429
 msgid "Could not save message data because it is too large."
-msgstr "Mesaj boyutu çok büyük olduğu için kaydedilemedi."
+msgstr ""
 
 #: 3rdparty/Horde/Imap/Client/Socket.php:4468
 msgid "The comparison algorithm was not recognized by the server."
-msgstr "Karşılaştırma algoritması sunucu tarafından tanınmıyor."
+msgstr ""
 
 #: 3rdparty/Horde/Imap/Client/Socket.php:4486
 msgid "The metadata item could not be saved because it is too large."
-msgstr "Metadata çok büyük olduğu için kaydedilemedi."
+msgstr ""
 
 #: 3rdparty/Horde/Imap/Client/Socket.php:4495
 msgid ""
 "The metadata item could not be saved because the server does not support "
 "private annotations."
-msgstr "Sunucu özel açıklamalar desteklemediği için metadata kaydedilemedi."
+msgstr ""
 
 #: 3rdparty/Horde/Imap/Client/Socket.php:4504
 msgid ""
 "The metadata item could not be saved because the maximum number of "
 "annotations has been exceeded."
-msgstr "Ek açıklamalar izin verilen sayıyı aştığı için metada kaydedilemedi."
+msgstr ""
 
 #: 3rdparty/Horde/Imap/Client/Socket.php:4515
 msgid "Remote server is temporarily unavailable."
-msgstr "Uzak sunucu geçici olarak kullanılamıyor."
+msgstr ""
 
 #: 3rdparty/Horde/Imap/Client/Socket.php:4523
 msgid "Authentication failed."
-msgstr "Kimlik doğrulaması başarısız oldu."
+msgstr ""
 
 #: 3rdparty/Horde/Imap/Client/Socket.php:4531
 msgid "Authentication was successful, but authorization failed."
-msgstr "Kimlik doğrulama başarılı oldu, ama yetkilendirme başarısız."
+msgstr ""
 
 #: 3rdparty/Horde/Imap/Client/Socket.php:4539
 msgid "Authentication credentials have expired."
-msgstr "Kimlik doğrulama bilgilerinin süresi dolmuş."
+msgstr ""
 
 #: 3rdparty/Horde/Imap/Client/Socket.php:4547
 msgid "Operation failed due to a lack of a secure connection."
-msgstr "İşlem güvenli bir bağlantı eksikliği nedeniyle başarısız oldu."
+msgstr ""
 
 #: 3rdparty/Horde/Imap/Client/Socket.php:4555
 msgid "You do not have adequate permissions to carry out this operation."
-msgstr "Bu işlemi yürütmek için yeterli izniniz yok."
+msgstr ""
 
 #: 3rdparty/Horde/Imap/Client/Socket.php:4564
 msgid ""
 "There was a temporary issue when attempting this operation. Please try again"
 " later."
-msgstr "Bu işlem yapılırken geçici bir sorun vardı. Daha sonra tekrar deneyiniz."
+msgstr ""
 
 #: 3rdparty/Horde/Imap/Client/Socket.php:4578
 msgid "The mail server is reporting corrupt data in your mailbox."
-msgstr "Posta sunucusu posta kutunuzdaki bozuk veri bildiriyor."
+msgstr ""
 
 #: 3rdparty/Horde/Imap/Client/Socket.php:4594
 msgid "The mail server has denied the request."
-msgstr "Posta sunucusu isteğini reddetti."
+msgstr ""
 
 #: 3rdparty/Horde/Imap/Client/Socket.php:4603
 msgid ""
 "The operation failed because the quota has been exceeded on the mail server."
-msgstr "Posta sunucusunda kota aşıldığı için işlem başarısız oldu."
+msgstr ""
 
 #: 3rdparty/Horde/Imap/Client/Socket.php:4612
 msgid "The object could not be created because it already exists."
-msgstr "Nesne zaten var olduğu için oluşturulamadı."
+msgstr ""
 
 #: 3rdparty/Horde/Imap/Client/Socket.php:4621
 msgid "The object could not be deleted because it does not exist."
-msgstr "Olmadığı için nesne silinemedi."
+msgstr ""
 
 #: 3rdparty/Horde/Imap/Client/Socket.php:4630
 msgid "The special-use attribute requested for the mailbox is not supported."
-msgstr "Posta kutusu için istenen özel kullanım özelliği desteklenmiyor."
+msgstr ""
 
 #: 3rdparty/Horde/Imap/Client/Utf7imap.php:117
 #: 3rdparty/Horde/Imap/Client/Utf7imap.php:142
@@ -259,47 +258,47 @@ msgstr "Posta kutusu için istenen özel kullanım özelliği desteklenmiyor."
 #: 3rdparty/Horde/Imap/Client/Utf7imap.php:234
 #: 3rdparty/Horde/Imap/Client/Utf7imap.php:240
 msgid "Error converting UTF7-IMAP string."
-msgstr "UTF7-IMAP dize dönüştürme hatası."
+msgstr ""
 
 #: 3rdparty/Horde/Mime/Headers.php:535
 msgid "List-Help"
-msgstr "Liste-Yardım"
+msgstr ""
 
 #: 3rdparty/Horde/Mime/Headers.php:536
 msgid "List-Unsubscribe"
-msgstr "Liste-Üyeliktençık"
+msgstr ""
 
 #: 3rdparty/Horde/Mime/Headers.php:537
 msgid "List-Subscribe"
-msgstr "Liste-Üyeol"
+msgstr ""
 
 #: 3rdparty/Horde/Mime/Headers.php:538
 msgid "List-Owner"
-msgstr "Liste-Sahibi"
+msgstr ""
 
 #: 3rdparty/Horde/Mime/Headers.php:539
 msgid "List-Post"
-msgstr "Liste-Gönder"
+msgstr ""
 
 #: 3rdparty/Horde/Mime/Headers.php:540
 msgid "List-Archive"
-msgstr "Liste-Arşiv"
+msgstr ""
 
 #: 3rdparty/Horde/Mime/Headers.php:542
 msgid "List-Id"
-msgstr "Liste-Numarası"
+msgstr ""
 
 #: 3rdparty/Horde/Mime/Mail.php:417
 msgid "Plaintext Version of Message"
-msgstr "Mesajın düz-metin sürümü"
+msgstr ""
 
 #: 3rdparty/Horde/Mime/Mail.php:419
 msgid "HTML Version of Message"
-msgstr "Mesajın HTML sürümü"
+msgstr ""
 
 #: 3rdparty/Horde/Mime/Mdn.php:188
 msgid "Disposition Notification"
-msgstr "Durumu Bildirimi"
+msgstr ""
 
 #: 3rdparty/Horde/Mime/Mdn.php:200
 #, php-format
@@ -307,1888 +306,1888 @@ msgid ""
 "The message sent on %s to %s with subject \"%s\" has been displayed.\n"
 "\n"
 "This is no guarantee that the message has been read or understood."
-msgstr " %s tarihinde %s  şuna gönderilen \"%s\"  başlıklı mesaj gösterildi.⏎\n⏎\nBu mesajın okunduğu veya anlaşıldığını garanti etmez."
+msgstr ""
 
 #: 3rdparty/Horde/Nls/Countries.php:8 3rdparty/Horde/Nls/Tld.php:16
 msgid "Afghanistan"
-msgstr "Afganistan"
+msgstr ""
 
 #: 3rdparty/Horde/Nls/Countries.php:9
 msgid "Åland Islands"
-msgstr "Åland Adaları"
+msgstr ""
 
 #: 3rdparty/Horde/Nls/Countries.php:10 3rdparty/Horde/Nls/Tld.php:19
 msgid "Albania"
-msgstr "Arnavutluk"
+msgstr ""
 
 #: 3rdparty/Horde/Nls/Countries.php:11 3rdparty/Horde/Nls/Tld.php:73
 msgid "Algeria"
-msgstr "Cezayir"
+msgstr ""
 
 #: 3rdparty/Horde/Nls/Countries.php:12 3rdparty/Horde/Nls/Tld.php:25
 msgid "American Samoa"
-msgstr "Amerikan Samoası"
+msgstr ""
 
 #: 3rdparty/Horde/Nls/Countries.php:13 3rdparty/Horde/Nls/Tld.php:14
 msgid "Andorra"
-msgstr "Andorra"
+msgstr ""
 
 #: 3rdparty/Horde/Nls/Countries.php:14 3rdparty/Horde/Nls/Tld.php:22
 msgid "Angola"
-msgstr "Angora"
+msgstr ""
 
 #: 3rdparty/Horde/Nls/Countries.php:15 3rdparty/Horde/Nls/Tld.php:18
 msgid "Anguilla"
-msgstr "Anguilla"
+msgstr ""
 
 #: 3rdparty/Horde/Nls/Countries.php:16 3rdparty/Horde/Nls/Tld.php:23
 msgid "Antarctica"
-msgstr "Antarktika"
+msgstr ""
 
 #: 3rdparty/Horde/Nls/Countries.php:17 3rdparty/Horde/Nls/Tld.php:17
 msgid "Antigua and Barbuda"
-msgstr "Antigua ve Barbuda"
+msgstr ""
 
 #: 3rdparty/Horde/Nls/Countries.php:18 3rdparty/Horde/Nls/Tld.php:24
 msgid "Argentina"
-msgstr "Arjantin"
+msgstr ""
 
 #: 3rdparty/Horde/Nls/Countries.php:19 3rdparty/Horde/Nls/Tld.php:20
 msgid "Armenia"
-msgstr "Ermenistan"
+msgstr ""
 
 #: 3rdparty/Horde/Nls/Countries.php:20 3rdparty/Horde/Nls/Tld.php:28
 msgid "Aruba"
-msgstr "Aruba"
+msgstr ""
 
 #: 3rdparty/Horde/Nls/Countries.php:21 3rdparty/Horde/Nls/Tld.php:27
 msgid "Australia"
-msgstr "Avustralya"
+msgstr ""
 
 #: 3rdparty/Horde/Nls/Countries.php:22 3rdparty/Horde/Nls/Tld.php:26
 msgid "Austria"
-msgstr "Avusturya"
+msgstr ""
 
 #: 3rdparty/Horde/Nls/Countries.php:23 3rdparty/Horde/Nls/Tld.php:30
 msgid "Azerbaijan"
-msgstr "Azerbeycan"
+msgstr ""
 
 #: 3rdparty/Horde/Nls/Countries.php:24 3rdparty/Horde/Nls/Tld.php:44
 msgid "Bahamas"
-msgstr "Bahamalar"
+msgstr ""
 
 #: 3rdparty/Horde/Nls/Countries.php:25 3rdparty/Horde/Nls/Tld.php:37
 msgid "Bahrain"
-msgstr "Bahreyn"
+msgstr ""
 
 #: 3rdparty/Horde/Nls/Countries.php:26 3rdparty/Horde/Nls/Tld.php:33
 msgid "Bangladesh"
-msgstr "Bangladeş"
+msgstr ""
 
 #: 3rdparty/Horde/Nls/Countries.php:27 3rdparty/Horde/Nls/Tld.php:32
 msgid "Barbados"
-msgstr "Barbados"
+msgstr ""
 
 #: 3rdparty/Horde/Nls/Countries.php:28 3rdparty/Horde/Nls/Tld.php:48
 msgid "Belarus"
-msgstr "Beyaz Rusya"
+msgstr ""
 
 #: 3rdparty/Horde/Nls/Countries.php:29 3rdparty/Horde/Nls/Tld.php:34
 msgid "Belgium"
-msgstr "Belçika"
+msgstr ""
 
 #: 3rdparty/Horde/Nls/Countries.php:30 3rdparty/Horde/Nls/Tld.php:49
 msgid "Belize"
-msgstr "Belize"
+msgstr ""
 
 #: 3rdparty/Horde/Nls/Countries.php:31 3rdparty/Horde/Nls/Tld.php:39
 msgid "Benin"
-msgstr "Benin"
+msgstr ""
 
 #: 3rdparty/Horde/Nls/Countries.php:32 3rdparty/Horde/Nls/Tld.php:40
 msgid "Bermuda"
-msgstr "Bermuda"
+msgstr ""
 
 #: 3rdparty/Horde/Nls/Countries.php:33 3rdparty/Horde/Nls/Tld.php:45
 msgid "Bhutan"
-msgstr "Butan"
+msgstr ""
 
 #: 3rdparty/Horde/Nls/Countries.php:34 3rdparty/Horde/Nls/Tld.php:42
 msgid "Bolivia"
-msgstr "Bolivya"
+msgstr ""
 
 #: 3rdparty/Horde/Nls/Countries.php:35
 msgid "Bonaire, Sint Eustatius and Saba"
-msgstr "Bonaire, Sint Eustatius ve Saba"
+msgstr ""
 
 #: 3rdparty/Horde/Nls/Countries.php:36 3rdparty/Horde/Nls/Tld.php:31
 msgid "Bosnia and Herzegovina"
-msgstr "Bosna-Hersek"
+msgstr ""
 
 #: 3rdparty/Horde/Nls/Countries.php:37 3rdparty/Horde/Nls/Tld.php:47
 msgid "Botswana"
-msgstr "Botsvana"
+msgstr ""
 
 #: 3rdparty/Horde/Nls/Countries.php:38 3rdparty/Horde/Nls/Tld.php:46
 msgid "Bouvet Island"
-msgstr "Bouvet Adası"
+msgstr ""
 
 #: 3rdparty/Horde/Nls/Countries.php:39 3rdparty/Horde/Nls/Tld.php:43
 msgid "Brazil"
-msgstr "Brezilya"
+msgstr ""
 
 #: 3rdparty/Horde/Nls/Countries.php:40 3rdparty/Horde/Nls/Tld.php:118
 msgid "British Indian Ocean Territory"
-msgstr "İngiliz Hint Okyanusu Toprakları"
+msgstr ""
 
 #: 3rdparty/Horde/Nls/Countries.php:41 3rdparty/Horde/Nls/Tld.php:41
 msgid "Brunei Darussalam"
-msgstr "Brunei Sultanlığı"
+msgstr ""
 
 #: 3rdparty/Horde/Nls/Countries.php:42 3rdparty/Horde/Nls/Tld.php:36
 msgid "Bulgaria"
-msgstr "Bulgaristan"
+msgstr ""
 
 #: 3rdparty/Horde/Nls/Countries.php:43 3rdparty/Horde/Nls/Tld.php:35
 msgid "Burkina Faso"
-msgstr "Burkina Faso"
+msgstr ""
 
 #: 3rdparty/Horde/Nls/Countries.php:44 3rdparty/Horde/Nls/Tld.php:38
 msgid "Burundi"
-msgstr "Burundi"
+msgstr ""
 
 #: 3rdparty/Horde/Nls/Countries.php:45 3rdparty/Horde/Nls/Tld.php:129
 msgid "Cambodia"
-msgstr "Kamboçya"
+msgstr ""
 
 #: 3rdparty/Horde/Nls/Countries.php:46 3rdparty/Horde/Nls/Tld.php:59
 msgid "Cameroon"
-msgstr "Kamerun"
+msgstr ""
 
 #: 3rdparty/Horde/Nls/Countries.php:47 3rdparty/Horde/Nls/Tld.php:50
 msgid "Canada"
-msgstr "Kanada"
+msgstr ""
 
 #: 3rdparty/Horde/Nls/Countries.php:48 3rdparty/Horde/Nls/Tld.php:64
 msgid "Cape Verde"
-msgstr "Cape Verde"
+msgstr ""
 
 #: 3rdparty/Horde/Nls/Countries.php:49 3rdparty/Horde/Nls/Tld.php:136
 msgid "Cayman Islands"
-msgstr "Cayman Adaları"
+msgstr ""
 
 #: 3rdparty/Horde/Nls/Countries.php:50 3rdparty/Horde/Nls/Tld.php:53
 msgid "Central African Republic"
-msgstr "Orta Afrika Cumhuriyeti"
+msgstr ""
 
 #: 3rdparty/Horde/Nls/Countries.php:51 3rdparty/Horde/Nls/Tld.php:225
 msgid "Chad"
-msgstr "Çad"
+msgstr ""
 
 #: 3rdparty/Horde/Nls/Countries.php:52 3rdparty/Horde/Nls/Tld.php:58
 msgid "Chile"
-msgstr "Şili"
+msgstr ""
 
 #: 3rdparty/Horde/Nls/Countries.php:53 3rdparty/Horde/Nls/Tld.php:60
 msgid "China"
-msgstr "Çin"
+msgstr ""
 
 #: 3rdparty/Horde/Nls/Countries.php:54 3rdparty/Horde/Nls/Tld.php:65
 msgid "Christmas Island"
-msgstr "Christmas Adası"
+msgstr ""
 
 #: 3rdparty/Horde/Nls/Countries.php:55 3rdparty/Horde/Nls/Tld.php:51
 msgid "Cocos (Keeling) Islands"
-msgstr "Cocos (Keeling) Adaları"
+msgstr ""
 
 #: 3rdparty/Horde/Nls/Countries.php:56 3rdparty/Horde/Nls/Tld.php:61
 msgid "Colombia"
-msgstr "Kolombiya"
+msgstr ""
 
 #: 3rdparty/Horde/Nls/Countries.php:57 3rdparty/Horde/Nls/Tld.php:131
 msgid "Comoros"
-msgstr "Komorlar"
+msgstr ""
 
 #: 3rdparty/Horde/Nls/Countries.php:58
 msgid "Congo"
-msgstr "Kongo"
+msgstr ""
 
 #: 3rdparty/Horde/Nls/Countries.php:59 3rdparty/Horde/Nls/Tld.php:52
 msgid "Congo, The Democratic Republic of the"
-msgstr "Kongo Demokratik Cumhuriyeti"
+msgstr ""
 
 #: 3rdparty/Horde/Nls/Countries.php:60 3rdparty/Horde/Nls/Tld.php:57
 msgid "Cook Islands"
-msgstr "Cook Adaları"
+msgstr ""
 
 #: 3rdparty/Horde/Nls/Countries.php:61 3rdparty/Horde/Nls/Tld.php:62
 msgid "Costa Rica"
-msgstr "Kostarika"
+msgstr ""
 
 #: 3rdparty/Horde/Nls/Countries.php:62
 msgid "Côte d'Ivoire"
-msgstr "Fildişi Sahili"
+msgstr ""
 
 #: 3rdparty/Horde/Nls/Countries.php:63
 msgid "Croatia"
-msgstr "Hırvatistan"
+msgstr ""
 
 #: 3rdparty/Horde/Nls/Countries.php:64 3rdparty/Horde/Nls/Tld.php:63
 msgid "Cuba"
-msgstr "Küba"
+msgstr ""
 
 #: 3rdparty/Horde/Nls/Countries.php:65
 msgid "Curaçao"
-msgstr "Curacao"
+msgstr ""
 
 #: 3rdparty/Horde/Nls/Countries.php:66 3rdparty/Horde/Nls/Tld.php:66
 msgid "Cyprus"
-msgstr "Kıbrıs"
+msgstr ""
 
 #: 3rdparty/Horde/Nls/Countries.php:67 3rdparty/Horde/Nls/Tld.php:67
 msgid "Czech Republic"
-msgstr "Çek Cumhuriyeti"
+msgstr ""
 
 #: 3rdparty/Horde/Nls/Countries.php:68 3rdparty/Horde/Nls/Tld.php:70
 msgid "Denmark"
-msgstr "Danimarka"
+msgstr ""
 
 #: 3rdparty/Horde/Nls/Countries.php:69 3rdparty/Horde/Nls/Tld.php:69
 msgid "Djibouti"
-msgstr "Cibuti"
+msgstr ""
 
 #: 3rdparty/Horde/Nls/Countries.php:70 3rdparty/Horde/Nls/Tld.php:71
 msgid "Dominica"
-msgstr "Dominika"
+msgstr ""
 
 #: 3rdparty/Horde/Nls/Countries.php:71 3rdparty/Horde/Nls/Tld.php:72
 msgid "Dominican Republic"
-msgstr "Dominik Cumhuriyeti"
+msgstr ""
 
 #: 3rdparty/Horde/Nls/Countries.php:72 3rdparty/Horde/Nls/Tld.php:74
 msgid "Ecuador"
-msgstr "Ekvador"
+msgstr ""
 
 #: 3rdparty/Horde/Nls/Countries.php:73 3rdparty/Horde/Nls/Tld.php:76
 msgid "Egypt"
-msgstr "Mısır"
+msgstr ""
 
 #: 3rdparty/Horde/Nls/Countries.php:74 3rdparty/Horde/Nls/Tld.php:221
 msgid "El Salvador"
-msgstr "El Salvador"
+msgstr ""
 
 #: 3rdparty/Horde/Nls/Countries.php:75 3rdparty/Horde/Nls/Tld.php:100
 msgid "Equatorial Guinea"
-msgstr "Ekvator Ginesi"
+msgstr ""
 
 #: 3rdparty/Horde/Nls/Countries.php:76 3rdparty/Horde/Nls/Tld.php:78
 msgid "Eritrea"
-msgstr "Eritre"
+msgstr ""
 
 #: 3rdparty/Horde/Nls/Countries.php:77 3rdparty/Horde/Nls/Tld.php:75
 msgid "Estonia"
-msgstr "Estonya"
+msgstr ""
 
 #: 3rdparty/Horde/Nls/Countries.php:78 3rdparty/Horde/Nls/Tld.php:80
 msgid "Ethiopia"
-msgstr "Etiyopya"
+msgstr ""
 
 #: 3rdparty/Horde/Nls/Countries.php:79 3rdparty/Horde/Nls/Tld.php:84
 msgid "Falkland Islands (Malvinas)"
-msgstr "Falkland Adaları (Malvinas)"
+msgstr ""
 
 #: 3rdparty/Horde/Nls/Countries.php:80 3rdparty/Horde/Nls/Tld.php:86
 msgid "Faroe Islands"
-msgstr "Faroe Adaları"
+msgstr ""
 
 #: 3rdparty/Horde/Nls/Countries.php:81 3rdparty/Horde/Nls/Tld.php:83
 msgid "Fiji"
-msgstr "Fiji"
+msgstr ""
 
 #: 3rdparty/Horde/Nls/Countries.php:82 3rdparty/Horde/Nls/Tld.php:82
 msgid "Finland"
-msgstr "Finlandiya"
+msgstr ""
 
 #: 3rdparty/Horde/Nls/Countries.php:83 3rdparty/Horde/Nls/Tld.php:87
 msgid "France"
-msgstr "Fransa"
+msgstr ""
 
 #: 3rdparty/Horde/Nls/Countries.php:84 3rdparty/Horde/Nls/Tld.php:92
 msgid "French Guiana"
-msgstr "Fransız Guyanası"
+msgstr ""
 
 #: 3rdparty/Horde/Nls/Countries.php:85 3rdparty/Horde/Nls/Tld.php:186
 msgid "French Polynesia"
-msgstr "Fransız Polinezyası"
+msgstr ""
 
 #: 3rdparty/Horde/Nls/Countries.php:86 3rdparty/Horde/Nls/Tld.php:226
 msgid "French Southern Territories"
-msgstr "Fransız Güney Toprakları"
+msgstr ""
 
 #: 3rdparty/Horde/Nls/Countries.php:87 3rdparty/Horde/Nls/Tld.php:88
 msgid "Gabon"
-msgstr "Gabon"
+msgstr ""
 
 #: 3rdparty/Horde/Nls/Countries.php:88 3rdparty/Horde/Nls/Tld.php:97
 msgid "Gambia"
-msgstr "Gambiya"
+msgstr ""
 
 #: 3rdparty/Horde/Nls/Countries.php:89 3rdparty/Horde/Nls/Tld.php:91
 msgid "Georgia"
-msgstr "Georgia"
+msgstr ""
 
 #: 3rdparty/Horde/Nls/Countries.php:90 3rdparty/Horde/Nls/Tld.php:68
 msgid "Germany"
-msgstr "Almanya"
+msgstr ""
 
 #: 3rdparty/Horde/Nls/Countries.php:91 3rdparty/Horde/Nls/Tld.php:94
 msgid "Ghana"
-msgstr "Gana"
+msgstr ""
 
 #: 3rdparty/Horde/Nls/Countries.php:92 3rdparty/Horde/Nls/Tld.php:95
 msgid "Gibraltar"
-msgstr "Cebelitarık"
+msgstr ""
 
 #: 3rdparty/Horde/Nls/Countries.php:93 3rdparty/Horde/Nls/Tld.php:101
 msgid "Greece"
-msgstr "Yunanistan"
+msgstr ""
 
 #: 3rdparty/Horde/Nls/Countries.php:94 3rdparty/Horde/Nls/Tld.php:96
 msgid "Greenland"
-msgstr "Grönland"
+msgstr ""
 
 #: 3rdparty/Horde/Nls/Countries.php:95 3rdparty/Horde/Nls/Tld.php:90
 msgid "Grenada"
-msgstr "Grenada"
+msgstr ""
 
 #: 3rdparty/Horde/Nls/Countries.php:96 3rdparty/Horde/Nls/Tld.php:99
 msgid "Guadeloupe"
-msgstr "Guadeloupe"
+msgstr ""
 
 #: 3rdparty/Horde/Nls/Countries.php:97 3rdparty/Horde/Nls/Tld.php:104
 msgid "Guam"
-msgstr "Guam"
+msgstr ""
 
 #: 3rdparty/Horde/Nls/Countries.php:98 3rdparty/Horde/Nls/Tld.php:103
 msgid "Guatemala"
-msgstr "Guatemala"
+msgstr ""
 
 #: 3rdparty/Horde/Nls/Countries.php:99 3rdparty/Horde/Nls/Tld.php:93
 msgid "Guernsey"
-msgstr "Guernsey"
+msgstr ""
 
 #: 3rdparty/Horde/Nls/Countries.php:100 3rdparty/Horde/Nls/Tld.php:98
 msgid "Guinea"
-msgstr "Gine"
+msgstr ""
 
 #: 3rdparty/Horde/Nls/Countries.php:101 3rdparty/Horde/Nls/Tld.php:105
 msgid "Guinea-Bissau"
-msgstr "Gine-Bissau"
+msgstr ""
 
 #: 3rdparty/Horde/Nls/Countries.php:102 3rdparty/Horde/Nls/Tld.php:106
 msgid "Guyana"
-msgstr "Guyana"
+msgstr ""
 
 #: 3rdparty/Horde/Nls/Countries.php:103 3rdparty/Horde/Nls/Tld.php:111
 msgid "Haiti"
-msgstr "Haiti"
+msgstr ""
 
 #: 3rdparty/Horde/Nls/Countries.php:104
 msgid "Heard Island and McDonald Islands"
-msgstr "Heard Adası ve McDonald Adaları"
+msgstr ""
 
 #: 3rdparty/Horde/Nls/Countries.php:105 3rdparty/Horde/Nls/Tld.php:248
 msgid "Holy See (Vatican City State)"
-msgstr "Kutsal Devlet (Vatikan Şehir Devleti)"
+msgstr ""
 
 #: 3rdparty/Horde/Nls/Countries.php:106 3rdparty/Horde/Nls/Tld.php:109
 msgid "Honduras"
-msgstr "Honduras"
+msgstr ""
 
 #: 3rdparty/Horde/Nls/Countries.php:107 3rdparty/Horde/Nls/Tld.php:107
 msgid "Hong Kong"
-msgstr "Hong Kong"
+msgstr ""
 
 #: 3rdparty/Horde/Nls/Countries.php:108 3rdparty/Horde/Nls/Tld.php:112
 msgid "Hungary"
-msgstr "Macaristan"
+msgstr ""
 
 #: 3rdparty/Horde/Nls/Countries.php:109 3rdparty/Horde/Nls/Tld.php:121
 msgid "Iceland"
-msgstr "İzlanda"
+msgstr ""
 
 #: 3rdparty/Horde/Nls/Countries.php:110 3rdparty/Horde/Nls/Tld.php:117
 msgid "India"
-msgstr "Hindistan"
+msgstr ""
 
 #: 3rdparty/Horde/Nls/Countries.php:111 3rdparty/Horde/Nls/Tld.php:113
 msgid "Indonesia"
-msgstr "Endonezya"
+msgstr ""
 
 #: 3rdparty/Horde/Nls/Countries.php:112 3rdparty/Horde/Nls/Tld.php:120
 msgid "Iran, Islamic Republic of"
-msgstr "İran İslam Cumhuriyeti"
+msgstr ""
 
 #: 3rdparty/Horde/Nls/Countries.php:113 3rdparty/Horde/Nls/Tld.php:119
 msgid "Iraq"
-msgstr "Irak"
+msgstr ""
 
 #: 3rdparty/Horde/Nls/Countries.php:114 3rdparty/Horde/Nls/Tld.php:114
 msgid "Ireland"
-msgstr "İrlanda"
+msgstr ""
 
 #: 3rdparty/Horde/Nls/Countries.php:115 3rdparty/Horde/Nls/Tld.php:116
 msgid "Isle of Man"
-msgstr "Isle of Man"
+msgstr ""
 
 #: 3rdparty/Horde/Nls/Countries.php:116 3rdparty/Horde/Nls/Tld.php:115
 msgid "Israel"
-msgstr "İsrail"
+msgstr ""
 
 #: 3rdparty/Horde/Nls/Countries.php:117 3rdparty/Horde/Nls/Tld.php:122
 msgid "Italy"
-msgstr "İtalya"
+msgstr ""
 
 #: 3rdparty/Horde/Nls/Countries.php:118 3rdparty/Horde/Nls/Tld.php:124
 msgid "Jamaica"
-msgstr "Jamaika"
+msgstr ""
 
 #: 3rdparty/Horde/Nls/Countries.php:119 3rdparty/Horde/Nls/Tld.php:126
 msgid "Japan"
-msgstr "Japonya"
+msgstr ""
 
 #: 3rdparty/Horde/Nls/Countries.php:120 3rdparty/Horde/Nls/Tld.php:123
 msgid "Jersey"
-msgstr "Jersey"
+msgstr ""
 
 #: 3rdparty/Horde/Nls/Countries.php:121 3rdparty/Horde/Nls/Tld.php:125
 msgid "Jordan"
-msgstr "Ürdün"
+msgstr ""
 
 #: 3rdparty/Horde/Nls/Countries.php:122 3rdparty/Horde/Nls/Tld.php:137
 msgid "Kazakhstan"
-msgstr "Kazakistan"
+msgstr ""
 
 #: 3rdparty/Horde/Nls/Countries.php:123 3rdparty/Horde/Nls/Tld.php:127
 msgid "Kenya"
-msgstr "Kenya"
+msgstr ""
 
 #: 3rdparty/Horde/Nls/Countries.php:124 3rdparty/Horde/Nls/Tld.php:130
 msgid "Kiribati"
-msgstr "Kiribati"
+msgstr ""
 
 #: 3rdparty/Horde/Nls/Countries.php:125 3rdparty/Horde/Nls/Tld.php:133
 msgid "Korea, Democratic People's Republic of"
-msgstr "Kore Demokratik Halk Cumhuriyeti"
+msgstr ""
 
 #: 3rdparty/Horde/Nls/Countries.php:126 3rdparty/Horde/Nls/Tld.php:134
 msgid "Korea, Republic of"
-msgstr "Kore Cumhuriyeti"
+msgstr ""
 
 #: 3rdparty/Horde/Nls/Countries.php:127 3rdparty/Horde/Nls/Tld.php:135
 msgid "Kuwait"
-msgstr "Kuveyt"
+msgstr ""
 
 #: 3rdparty/Horde/Nls/Countries.php:128 3rdparty/Horde/Nls/Tld.php:128
 msgid "Kyrgyzstan"
-msgstr "Kırgızistan"
+msgstr ""
 
 #: 3rdparty/Horde/Nls/Countries.php:129 3rdparty/Horde/Nls/Tld.php:138
 msgid "Lao People's Democratic Republic"
-msgstr "Lao Demokratik Halk Cumhuriyeti"
+msgstr ""
 
 #: 3rdparty/Horde/Nls/Countries.php:130 3rdparty/Horde/Nls/Tld.php:147
 msgid "Latvia"
-msgstr "Letonya"
+msgstr ""
 
 #: 3rdparty/Horde/Nls/Countries.php:131 3rdparty/Horde/Nls/Tld.php:139
 msgid "Lebanon"
-msgstr "Lübnan"
+msgstr ""
 
 #: 3rdparty/Horde/Nls/Countries.php:132 3rdparty/Horde/Nls/Tld.php:144
 msgid "Lesotho"
-msgstr "Lesotho"
+msgstr ""
 
 #: 3rdparty/Horde/Nls/Countries.php:133 3rdparty/Horde/Nls/Tld.php:143
 msgid "Liberia"
-msgstr "Liberya"
+msgstr ""
 
 #: 3rdparty/Horde/Nls/Countries.php:134
 msgid "Libya"
-msgstr "Libya"
+msgstr ""
 
 #: 3rdparty/Horde/Nls/Countries.php:135 3rdparty/Horde/Nls/Tld.php:141
 msgid "Liechtenstein"
-msgstr "Lihtenştayn"
+msgstr ""
 
 #: 3rdparty/Horde/Nls/Countries.php:136 3rdparty/Horde/Nls/Tld.php:145
 msgid "Lithuania"
-msgstr "Litvanya"
+msgstr ""
 
 #: 3rdparty/Horde/Nls/Countries.php:137 3rdparty/Horde/Nls/Tld.php:146
 msgid "Luxembourg"
-msgstr "Lüksemburg"
+msgstr ""
 
 #: 3rdparty/Horde/Nls/Countries.php:138 3rdparty/Horde/Nls/Tld.php:159
 msgid "Macao"
-msgstr "Macao"
+msgstr ""
 
 #: 3rdparty/Horde/Nls/Countries.php:139
 msgid "Macedonia, The former Yugoslav Republic of"
-msgstr "Makedonya, Eski Yugoslav Cumhuriyeti"
+msgstr ""
 
 #: 3rdparty/Horde/Nls/Countries.php:140 3rdparty/Horde/Nls/Tld.php:153
 msgid "Madagascar"
-msgstr "Madagaskar"
+msgstr ""
 
 #: 3rdparty/Horde/Nls/Countries.php:141 3rdparty/Horde/Nls/Tld.php:167
 msgid "Malawi"
-msgstr "Malawi"
+msgstr ""
 
 #: 3rdparty/Horde/Nls/Countries.php:142 3rdparty/Horde/Nls/Tld.php:169
 msgid "Malaysia"
-msgstr "Malezya"
+msgstr ""
 
 #: 3rdparty/Horde/Nls/Countries.php:143 3rdparty/Horde/Nls/Tld.php:166
 msgid "Maldives"
-msgstr "Maldivler"
+msgstr ""
 
 #: 3rdparty/Horde/Nls/Countries.php:144 3rdparty/Horde/Nls/Tld.php:156
 msgid "Mali"
-msgstr "Mali"
+msgstr ""
 
 #: 3rdparty/Horde/Nls/Countries.php:145 3rdparty/Horde/Nls/Tld.php:164
 msgid "Malta"
-msgstr "Malta"
+msgstr ""
 
 #: 3rdparty/Horde/Nls/Countries.php:146 3rdparty/Horde/Nls/Tld.php:154
 msgid "Marshall Islands"
-msgstr "Marshall Adaları"
+msgstr ""
 
 #: 3rdparty/Horde/Nls/Countries.php:147 3rdparty/Horde/Nls/Tld.php:161
 msgid "Martinique"
-msgstr "Martinik"
+msgstr ""
 
 #: 3rdparty/Horde/Nls/Countries.php:148 3rdparty/Horde/Nls/Tld.php:162
 msgid "Mauritania"
-msgstr "Moritanya"
+msgstr ""
 
 #: 3rdparty/Horde/Nls/Countries.php:149 3rdparty/Horde/Nls/Tld.php:165
 msgid "Mauritius"
-msgstr "Mauritius"
+msgstr ""
 
 #: 3rdparty/Horde/Nls/Countries.php:150 3rdparty/Horde/Nls/Tld.php:258
 msgid "Mayotte"
-msgstr "Mayotte"
+msgstr ""
 
 #: 3rdparty/Horde/Nls/Countries.php:151 3rdparty/Horde/Nls/Tld.php:168
 msgid "Mexico"
-msgstr "Meksika"
+msgstr ""
 
 #: 3rdparty/Horde/Nls/Countries.php:152 3rdparty/Horde/Nls/Tld.php:85
 msgid "Micronesia, Federated States of"
-msgstr "Mikronezya, Federe Devletleri"
+msgstr ""
 
 #: 3rdparty/Horde/Nls/Countries.php:153 3rdparty/Horde/Nls/Tld.php:151
 msgid "Moldova, Republic of"
-msgstr "Moldova Cumhuriyeti"
+msgstr ""
 
 #: 3rdparty/Horde/Nls/Countries.php:154 3rdparty/Horde/Nls/Tld.php:150
 msgid "Monaco"
-msgstr "monaco"
+msgstr ""
 
 #: 3rdparty/Horde/Nls/Countries.php:155 3rdparty/Horde/Nls/Tld.php:158
 msgid "Mongolia"
-msgstr "Moğolistan"
+msgstr ""
 
 #: 3rdparty/Horde/Nls/Countries.php:156 3rdparty/Horde/Nls/Tld.php:152
 msgid "Montenegro"
-msgstr "Karadağ"
+msgstr ""
 
 #: 3rdparty/Horde/Nls/Countries.php:157 3rdparty/Horde/Nls/Tld.php:163
 msgid "Montserrat"
-msgstr "Montserrat"
+msgstr ""
 
 #: 3rdparty/Horde/Nls/Countries.php:158 3rdparty/Horde/Nls/Tld.php:149
 msgid "Morocco"
-msgstr "Fas"
+msgstr ""
 
 #: 3rdparty/Horde/Nls/Countries.php:159 3rdparty/Horde/Nls/Tld.php:170
 msgid "Mozambique"
-msgstr "Mozambik"
+msgstr ""
 
 #: 3rdparty/Horde/Nls/Countries.php:160 3rdparty/Horde/Nls/Tld.php:157
 msgid "Myanmar"
-msgstr "Myanmar"
+msgstr ""
 
 #: 3rdparty/Horde/Nls/Countries.php:161 3rdparty/Horde/Nls/Tld.php:171
 msgid "Namibia"
-msgstr "Namibya"
+msgstr ""
 
 #: 3rdparty/Horde/Nls/Countries.php:162 3rdparty/Horde/Nls/Languages.php:119
 #: 3rdparty/Horde/Nls/Tld.php:180
 msgid "Nauru"
-msgstr "Nauru"
+msgstr ""
 
 #: 3rdparty/Horde/Nls/Countries.php:163 3rdparty/Horde/Nls/Tld.php:179
 msgid "Nepal"
-msgstr "Nepal"
+msgstr ""
 
 #: 3rdparty/Horde/Nls/Countries.php:164 3rdparty/Horde/Nls/Tld.php:177
 msgid "Netherlands"
-msgstr "Hollanda"
+msgstr ""
 
 #: 3rdparty/Horde/Nls/Countries.php:165 3rdparty/Horde/Nls/Tld.php:172
 msgid "New Caledonia"
-msgstr "Yeni Kaledonya"
+msgstr ""
 
 #: 3rdparty/Horde/Nls/Countries.php:166 3rdparty/Horde/Nls/Tld.php:182
 msgid "New Zealand"
-msgstr "Yeni Zelanda"
+msgstr ""
 
 #: 3rdparty/Horde/Nls/Countries.php:167 3rdparty/Horde/Nls/Tld.php:176
 msgid "Nicaragua"
-msgstr "Nikaragua"
+msgstr ""
 
 #: 3rdparty/Horde/Nls/Countries.php:168 3rdparty/Horde/Nls/Tld.php:173
 msgid "Niger"
-msgstr "Nijer"
+msgstr ""
 
 #: 3rdparty/Horde/Nls/Countries.php:169 3rdparty/Horde/Nls/Tld.php:175
 msgid "Nigeria"
-msgstr "Nijerya"
+msgstr ""
 
 #: 3rdparty/Horde/Nls/Countries.php:170 3rdparty/Horde/Nls/Tld.php:181
 msgid "Niue"
-msgstr "Niue"
+msgstr ""
 
 #: 3rdparty/Horde/Nls/Countries.php:171 3rdparty/Horde/Nls/Tld.php:174
 msgid "Norfolk Island"
-msgstr "Norfolk Adası"
+msgstr ""
 
 #: 3rdparty/Horde/Nls/Countries.php:172 3rdparty/Horde/Nls/Tld.php:160
 msgid "Northern Mariana Islands"
-msgstr "Kuzey Mariana Adaları"
+msgstr ""
 
 #: 3rdparty/Horde/Nls/Countries.php:173 3rdparty/Horde/Nls/Tld.php:178
 msgid "Norway"
-msgstr "Norveç"
+msgstr ""
 
 #: 3rdparty/Horde/Nls/Countries.php:174 3rdparty/Horde/Nls/Tld.php:183
 msgid "Oman"
-msgstr "Umman"
+msgstr ""
 
 #: 3rdparty/Horde/Nls/Countries.php:175 3rdparty/Horde/Nls/Tld.php:189
 msgid "Pakistan"
-msgstr "Pakistan"
+msgstr ""
 
 #: 3rdparty/Horde/Nls/Countries.php:176 3rdparty/Horde/Nls/Tld.php:196
 msgid "Palau"
-msgstr "Palau"
+msgstr ""
 
 #: 3rdparty/Horde/Nls/Countries.php:177 3rdparty/Horde/Nls/Tld.php:194
 msgid "Palestinian Territory, Occupied"
-msgstr "Filistin, işgal altında"
+msgstr ""
 
 #: 3rdparty/Horde/Nls/Countries.php:178 3rdparty/Horde/Nls/Tld.php:184
 msgid "Panama"
-msgstr "Panama"
+msgstr ""
 
 #: 3rdparty/Horde/Nls/Countries.php:179 3rdparty/Horde/Nls/Tld.php:187
 msgid "Papua New Guinea"
-msgstr "Papua Yeni Gine"
+msgstr ""
 
 #: 3rdparty/Horde/Nls/Countries.php:180 3rdparty/Horde/Nls/Tld.php:197
 msgid "Paraguay"
-msgstr "Paraguay"
+msgstr ""
 
 #: 3rdparty/Horde/Nls/Countries.php:181 3rdparty/Horde/Nls/Tld.php:185
 msgid "Peru"
-msgstr "Peru"
+msgstr ""
 
 #: 3rdparty/Horde/Nls/Countries.php:182 3rdparty/Horde/Nls/Tld.php:188
 msgid "Philippines"
-msgstr "Filipinler"
+msgstr ""
 
 #: 3rdparty/Horde/Nls/Countries.php:183
 msgid "Pitcairn"
-msgstr "Pitcairn"
+msgstr ""
 
 #: 3rdparty/Horde/Nls/Countries.php:184 3rdparty/Horde/Nls/Tld.php:190
 msgid "Poland"
-msgstr "Polonya"
+msgstr ""
 
 #: 3rdparty/Horde/Nls/Countries.php:185 3rdparty/Horde/Nls/Tld.php:195
 msgid "Portugal"
-msgstr "Portekiz"
+msgstr ""
 
 #: 3rdparty/Horde/Nls/Countries.php:186 3rdparty/Horde/Nls/Tld.php:193
 msgid "Puerto Rico"
-msgstr "Portoriko"
+msgstr ""
 
 #: 3rdparty/Horde/Nls/Countries.php:187 3rdparty/Horde/Nls/Tld.php:198
 msgid "Qatar"
-msgstr "Katar"
+msgstr ""
 
 #: 3rdparty/Horde/Nls/Countries.php:188
 msgid "Réunion"
-msgstr "Réunion"
+msgstr ""
 
 #: 3rdparty/Horde/Nls/Countries.php:189 3rdparty/Horde/Nls/Tld.php:200
 msgid "Romania"
-msgstr "Romanya"
+msgstr ""
 
 #: 3rdparty/Horde/Nls/Countries.php:190 3rdparty/Horde/Nls/Tld.php:202
 msgid "Russian Federation"
-msgstr "Rusya Federasyonu"
+msgstr ""
 
 #: 3rdparty/Horde/Nls/Countries.php:191 3rdparty/Horde/Nls/Tld.php:203
 msgid "Rwanda"
-msgstr "Ruanda"
+msgstr ""
 
 #: 3rdparty/Horde/Nls/Countries.php:192
 msgid "Saint Barthélemy"
-msgstr "Saint Barthelemy"
+msgstr ""
 
 #: 3rdparty/Horde/Nls/Countries.php:193
 msgid "Saint Helena, Ascension and Tristan da Cunha"
-msgstr "Saint Helena, Ascension veTristan da Cunha"
+msgstr ""
 
 #: 3rdparty/Horde/Nls/Countries.php:194 3rdparty/Horde/Nls/Tld.php:132
 msgid "Saint Kitts and Nevis"
-msgstr "Saint Kitts and Nevis"
+msgstr ""
 
 #: 3rdparty/Horde/Nls/Countries.php:195 3rdparty/Horde/Nls/Tld.php:140
 msgid "Saint Lucia"
-msgstr "Saint Lucia"
+msgstr ""
 
 #: 3rdparty/Horde/Nls/Countries.php:196
 msgid "Saint Martin (French part)"
-msgstr "Aziz Martin (Fransızca bölümü)"
+msgstr ""
 
 #: 3rdparty/Horde/Nls/Countries.php:197 3rdparty/Horde/Nls/Tld.php:191
 msgid "Saint Pierre and Miquelon"
-msgstr "Saint Pierre and Miquelon"
+msgstr ""
 
 #: 3rdparty/Horde/Nls/Countries.php:198 3rdparty/Horde/Nls/Tld.php:249
 msgid "Saint Vincent and the Grenadines"
-msgstr "Saint Vincent and the Grenadines"
+msgstr ""
 
 #: 3rdparty/Horde/Nls/Countries.php:199 3rdparty/Horde/Nls/Tld.php:256
 msgid "Samoa"
-msgstr "Samoa"
+msgstr ""
 
 #: 3rdparty/Horde/Nls/Countries.php:200 3rdparty/Horde/Nls/Tld.php:215
 msgid "San Marino"
-msgstr "San Marino"
+msgstr ""
 
 #: 3rdparty/Horde/Nls/Countries.php:201 3rdparty/Horde/Nls/Tld.php:219
 msgid "Sao Tome and Principe"
-msgstr "Sao Tome and Principe"
+msgstr ""
 
 #: 3rdparty/Horde/Nls/Countries.php:202 3rdparty/Horde/Nls/Tld.php:204
 msgid "Saudi Arabia"
-msgstr "Suudi Arabistan"
+msgstr ""
 
 #: 3rdparty/Horde/Nls/Countries.php:203 3rdparty/Horde/Nls/Tld.php:216
 msgid "Senegal"
-msgstr "Senegal"
+msgstr ""
 
 #: 3rdparty/Horde/Nls/Countries.php:204 3rdparty/Horde/Nls/Tld.php:201
 msgid "Serbia"
-msgstr "Sırbistan"
+msgstr ""
 
 #: 3rdparty/Horde/Nls/Countries.php:205 3rdparty/Horde/Nls/Tld.php:206
 msgid "Seychelles"
-msgstr "Seyşeller"
+msgstr ""
 
 #: 3rdparty/Horde/Nls/Countries.php:206 3rdparty/Horde/Nls/Tld.php:214
 msgid "Sierra Leone"
-msgstr "Sierra Leone"
+msgstr ""
 
 #: 3rdparty/Horde/Nls/Countries.php:207 3rdparty/Horde/Nls/Tld.php:209
 msgid "Singapore"
-msgstr "Singapur"
+msgstr ""
 
 #: 3rdparty/Horde/Nls/Countries.php:208
 msgid "Sint Maarten (Dutch part)"
-msgstr "Sint Maarten (Hollanda bölümü)"
+msgstr ""
 
 #: 3rdparty/Horde/Nls/Countries.php:209 3rdparty/Horde/Nls/Tld.php:213
 msgid "Slovakia"
-msgstr "Slovakya"
+msgstr ""
 
 #: 3rdparty/Horde/Nls/Countries.php:210 3rdparty/Horde/Nls/Tld.php:211
 msgid "Slovenia"
-msgstr "Slovenya"
+msgstr ""
 
 #: 3rdparty/Horde/Nls/Countries.php:211 3rdparty/Horde/Nls/Tld.php:205
 msgid "Solomon Islands"
-msgstr "Solomon Adaları"
+msgstr ""
 
 #: 3rdparty/Horde/Nls/Countries.php:212 3rdparty/Horde/Nls/Tld.php:217
 msgid "Somalia"
-msgstr "Somali"
+msgstr ""
 
 #: 3rdparty/Horde/Nls/Countries.php:213 3rdparty/Horde/Nls/Tld.php:260
 msgid "South Africa"
-msgstr "Güney Afrika"
+msgstr ""
 
 #: 3rdparty/Horde/Nls/Countries.php:214 3rdparty/Horde/Nls/Tld.php:102
 msgid "South Georgia and the South Sandwich Islands"
-msgstr "Güney Georgia ve Güney Sandwich Adaları"
+msgstr ""
 
 #: 3rdparty/Horde/Nls/Countries.php:215
 msgid "South Sudan"
-msgstr "Güney Sudan"
+msgstr ""
 
 #: 3rdparty/Horde/Nls/Countries.php:216 3rdparty/Horde/Nls/Tld.php:79
 msgid "Spain"
-msgstr "İspanya"
+msgstr ""
 
 #: 3rdparty/Horde/Nls/Countries.php:217 3rdparty/Horde/Nls/Tld.php:142
 msgid "Sri Lanka"
-msgstr "Srilanka"
+msgstr ""
 
 #: 3rdparty/Horde/Nls/Countries.php:218 3rdparty/Horde/Nls/Tld.php:207
 msgid "Sudan"
-msgstr "Sudan"
+msgstr ""
 
 #: 3rdparty/Horde/Nls/Countries.php:219 3rdparty/Horde/Nls/Tld.php:218
 msgid "Suriname"
-msgstr "Surinam"
+msgstr ""
 
 #: 3rdparty/Horde/Nls/Countries.php:220
 msgid "Svalbard and Jan Mayen"
-msgstr "Svalbard and Jan Mayen"
+msgstr ""
 
 #: 3rdparty/Horde/Nls/Countries.php:221 3rdparty/Horde/Nls/Tld.php:223
 msgid "Swaziland"
-msgstr "Svaziland"
+msgstr ""
 
 #: 3rdparty/Horde/Nls/Countries.php:222 3rdparty/Horde/Nls/Tld.php:208
 msgid "Sweden"
-msgstr "İsveç"
+msgstr ""
 
 #: 3rdparty/Horde/Nls/Countries.php:223 3rdparty/Horde/Nls/Tld.php:55
 msgid "Switzerland"
-msgstr "İsviçre"
+msgstr ""
 
 #: 3rdparty/Horde/Nls/Countries.php:224 3rdparty/Horde/Nls/Tld.php:222
 msgid "Syrian Arab Republic"
-msgstr "Suriye Arap Cumhuriyeti"
+msgstr ""
 
 #: 3rdparty/Horde/Nls/Countries.php:225
 msgid "Taiwan, Province of China"
-msgstr "Tayvan"
+msgstr ""
 
 #: 3rdparty/Horde/Nls/Countries.php:226 3rdparty/Horde/Nls/Tld.php:229
 msgid "Tajikistan"
-msgstr "Tacikistan"
+msgstr ""
 
 #: 3rdparty/Horde/Nls/Countries.php:227 3rdparty/Horde/Nls/Tld.php:240
 msgid "Tanzania, United Republic of"
-msgstr "Tanzanya Birleşik Cumhuriyeti"
+msgstr ""
 
 #: 3rdparty/Horde/Nls/Countries.php:228 3rdparty/Horde/Nls/Tld.php:228
 msgid "Thailand"
-msgstr "Tayland"
+msgstr ""
 
 #: 3rdparty/Horde/Nls/Countries.php:229 3rdparty/Horde/Nls/Tld.php:231
 msgid "Timor-Leste"
-msgstr "Doğu Timor"
+msgstr ""
 
 #: 3rdparty/Horde/Nls/Countries.php:230 3rdparty/Horde/Nls/Tld.php:227
 msgid "Togo"
-msgstr "Togo"
+msgstr ""
 
 #: 3rdparty/Horde/Nls/Countries.php:231 3rdparty/Horde/Nls/Tld.php:230
 msgid "Tokelau"
-msgstr "Tokelau"
+msgstr ""
 
 #: 3rdparty/Horde/Nls/Countries.php:232 3rdparty/Horde/Nls/Tld.php:234
 msgid "Tonga"
-msgstr "Tonga"
+msgstr ""
 
 #: 3rdparty/Horde/Nls/Countries.php:233 3rdparty/Horde/Nls/Tld.php:237
 msgid "Trinidad and Tobago"
-msgstr "Trinidad ve Tobago"
+msgstr ""
 
 #: 3rdparty/Horde/Nls/Countries.php:234 3rdparty/Horde/Nls/Tld.php:233
 msgid "Tunisia"
-msgstr "Tunus"
+msgstr ""
 
 #: 3rdparty/Horde/Nls/Countries.php:235 3rdparty/Horde/Nls/Tld.php:236
 msgid "Turkey"
-msgstr "Türkiye"
+msgstr ""
 
 #: 3rdparty/Horde/Nls/Countries.php:236 3rdparty/Horde/Nls/Tld.php:232
 msgid "Turkmenistan"
-msgstr "Türkmenistan"
+msgstr ""
 
 #: 3rdparty/Horde/Nls/Countries.php:237 3rdparty/Horde/Nls/Tld.php:224
 msgid "Turks and Caicos Islands"
-msgstr "Turks ve Caicos Adaları"
+msgstr ""
 
 #: 3rdparty/Horde/Nls/Countries.php:238 3rdparty/Horde/Nls/Tld.php:238
 msgid "Tuvalu"
-msgstr "Tuvalu"
+msgstr ""
 
 #: 3rdparty/Horde/Nls/Countries.php:239 3rdparty/Horde/Nls/Tld.php:242
 msgid "Uganda"
-msgstr "Uganda"
+msgstr ""
 
 #: 3rdparty/Horde/Nls/Countries.php:240 3rdparty/Horde/Nls/Tld.php:241
 msgid "Ukraine"
-msgstr "Ukrayna"
+msgstr ""
 
 #: 3rdparty/Horde/Nls/Countries.php:241 3rdparty/Horde/Nls/Tld.php:15
 msgid "United Arab Emirates"
-msgstr "Birleşik Arap Emirlikleri"
+msgstr ""
 
 #: 3rdparty/Horde/Nls/Countries.php:242 3rdparty/Horde/Nls/Tld.php:89
 #: 3rdparty/Horde/Nls/Tld.php:243
 msgid "United Kingdom"
-msgstr "Büyük Britanya"
+msgstr ""
 
 #: 3rdparty/Horde/Nls/Countries.php:243 3rdparty/Horde/Nls/Tld.php:245
 msgid "United States"
-msgstr "Amerika Birleşik Devletleri"
+msgstr ""
 
 #: 3rdparty/Horde/Nls/Countries.php:244 3rdparty/Horde/Nls/Tld.php:244
 msgid "United States Minor Outlying Islands"
-msgstr "Amerika Birleşik Devletleri Küçük Dış Adaları"
+msgstr ""
 
 #: 3rdparty/Horde/Nls/Countries.php:245 3rdparty/Horde/Nls/Tld.php:246
 msgid "Uruguay"
-msgstr "Uruguay"
+msgstr ""
 
 #: 3rdparty/Horde/Nls/Countries.php:246 3rdparty/Horde/Nls/Tld.php:247
 msgid "Uzbekistan"
-msgstr "Özbekistan"
+msgstr ""
 
 #: 3rdparty/Horde/Nls/Countries.php:247 3rdparty/Horde/Nls/Tld.php:254
 msgid "Vanuatu"
-msgstr "Vanuatu"
+msgstr ""
 
 #: 3rdparty/Horde/Nls/Countries.php:248 3rdparty/Horde/Nls/Tld.php:250
 msgid "Venezuela"
-msgstr "Venezuela"
+msgstr ""
 
 #: 3rdparty/Horde/Nls/Countries.php:249 3rdparty/Horde/Nls/Tld.php:253
 msgid "Viet Nam"
-msgstr "Vietnam"
+msgstr ""
 
 #: 3rdparty/Horde/Nls/Countries.php:250 3rdparty/Horde/Nls/Tld.php:251
 msgid "Virgin Islands, British"
-msgstr "Virgin Adaları, İngiliz"
+msgstr ""
 
 #: 3rdparty/Horde/Nls/Countries.php:251 3rdparty/Horde/Nls/Tld.php:252
 msgid "Virgin Islands, U.S."
-msgstr "Virgin Adaları, ABD"
+msgstr ""
 
 #: 3rdparty/Horde/Nls/Countries.php:252
 msgid "Wallis and Futuna"
-msgstr "Wallis ve Futuna"
+msgstr ""
 
 #: 3rdparty/Horde/Nls/Countries.php:253 3rdparty/Horde/Nls/Tld.php:77
 msgid "Western Sahara"
-msgstr "Batı Sahra"
+msgstr ""
 
 #: 3rdparty/Horde/Nls/Countries.php:254 3rdparty/Horde/Nls/Tld.php:257
 msgid "Yemen"
-msgstr "Yemen"
+msgstr ""
 
 #: 3rdparty/Horde/Nls/Countries.php:255 3rdparty/Horde/Nls/Tld.php:261
 msgid "Zambia"
-msgstr "Zambiya"
+msgstr ""
 
 #: 3rdparty/Horde/Nls/Countries.php:256 3rdparty/Horde/Nls/Tld.php:262
 msgid "Zimbabwe"
-msgstr "Zimbabve"
+msgstr ""
 
 #: 3rdparty/Horde/Nls/Geoip.php:324
 msgid "Asia/Pacific Region"
-msgstr "Asya / Pasifik Bölgesi"
+msgstr ""
 
 #: 3rdparty/Horde/Nls/Geoip.php:325
 msgid "Europe"
-msgstr "Avrupa"
+msgstr ""
 
 #: 3rdparty/Horde/Nls/Geoip.php:326
 msgid "Anonymous Proxy"
-msgstr "Anonim Proxy"
+msgstr ""
 
 #: 3rdparty/Horde/Nls/Geoip.php:327
 msgid "Satellite Provider"
-msgstr "Uydu sağlayıcısı"
+msgstr ""
 
 #: 3rdparty/Horde/Nls/Geoip.php:328
 msgid "Other"
-msgstr "Diğer"
+msgstr ""
 
 #: 3rdparty/Horde/Nls/Languages.php:9
 msgid "Afar"
-msgstr "Afar"
+msgstr ""
 
 #: 3rdparty/Horde/Nls/Languages.php:10
 msgid "Abkhaz"
-msgstr "Abhaz"
+msgstr ""
 
 #: 3rdparty/Horde/Nls/Languages.php:11
 msgid "Avestan"
-msgstr "Avesta"
+msgstr ""
 
 #: 3rdparty/Horde/Nls/Languages.php:12
 msgid "Afrikaans"
-msgstr "Afrikaans"
+msgstr ""
 
 #: 3rdparty/Horde/Nls/Languages.php:13
 msgid "Akan"
-msgstr "Akan"
+msgstr ""
 
 #: 3rdparty/Horde/Nls/Languages.php:14
 msgid "Amharic"
-msgstr "Amharic"
+msgstr ""
 
 #: 3rdparty/Horde/Nls/Languages.php:15
 msgid "Aragonese"
-msgstr "Aragon"
+msgstr ""
 
 #: 3rdparty/Horde/Nls/Languages.php:16
 msgid "Arabic"
-msgstr "Arapça"
+msgstr ""
 
 #: 3rdparty/Horde/Nls/Languages.php:17
 msgid "Assamese"
-msgstr "Assam"
+msgstr ""
 
 #: 3rdparty/Horde/Nls/Languages.php:18
 msgid "Avaric"
-msgstr "Avar"
+msgstr ""
 
 #: 3rdparty/Horde/Nls/Languages.php:19
 msgid "Aymara"
-msgstr "Aymara"
+msgstr ""
 
 #: 3rdparty/Horde/Nls/Languages.php:20
 msgid "Azerbaijani"
-msgstr "Azeri"
+msgstr ""
 
 #: 3rdparty/Horde/Nls/Languages.php:21
 msgid "Bashkir"
-msgstr "Başkurt"
+msgstr ""
 
 #: 3rdparty/Horde/Nls/Languages.php:22
 msgid "Belarusian"
-msgstr "Belarus"
+msgstr ""
 
 #: 3rdparty/Horde/Nls/Languages.php:23
 msgid "Bulgarian"
-msgstr "Bulgar"
+msgstr ""
 
 #: 3rdparty/Horde/Nls/Languages.php:24
 msgid "Bihari"
-msgstr "Bihari"
+msgstr ""
 
 #: 3rdparty/Horde/Nls/Languages.php:25
 msgid "Bislama"
-msgstr "Bislama"
+msgstr ""
 
 #: 3rdparty/Horde/Nls/Languages.php:26
 msgid "Bambara"
-msgstr "Bambara"
+msgstr ""
 
 #: 3rdparty/Horde/Nls/Languages.php:27
 msgid "Bengali"
-msgstr "Bengal"
+msgstr ""
 
 #: 3rdparty/Horde/Nls/Languages.php:28
 msgid "Tibetan Standard, Tibetan, Central"
-msgstr "Tibet Standart, Tibet, Orta"
+msgstr ""
 
 #: 3rdparty/Horde/Nls/Languages.php:29
 msgid "Breton"
-msgstr "Breton"
+msgstr ""
 
 #: 3rdparty/Horde/Nls/Languages.php:30
 msgid "Bosnian"
-msgstr "Bosna"
+msgstr ""
 
 #: 3rdparty/Horde/Nls/Languages.php:31
 msgid "Catalan; Valencian"
-msgstr "Katalan; Valencia"
+msgstr ""
 
 #: 3rdparty/Horde/Nls/Languages.php:32
 msgid "Chechen"
-msgstr "Çeçen"
+msgstr ""
 
 #: 3rdparty/Horde/Nls/Languages.php:33
 msgid "Chamorro"
-msgstr "Chamorro"
+msgstr ""
 
 #: 3rdparty/Horde/Nls/Languages.php:34
 msgid "Corsican"
-msgstr "Korsikalı"
+msgstr ""
 
 #: 3rdparty/Horde/Nls/Languages.php:35
 msgid "Cree"
-msgstr "Cree"
+msgstr ""
 
 #: 3rdparty/Horde/Nls/Languages.php:36
 msgid "Czech"
-msgstr "Çek"
+msgstr ""
 
 #: 3rdparty/Horde/Nls/Languages.php:37
 msgid ""
 "Old Church Slavonic, Church Slavic, Church Slavonic, Old Bulgarian, Old "
 "Slavonic"
-msgstr "Eski Kilise Slav, Kilise Slav, Kilise Slav, Eski Bulgar, Eski Slav"
+msgstr ""
 
 #: 3rdparty/Horde/Nls/Languages.php:38
 msgid "Chuvash"
-msgstr "Çuvaş"
+msgstr ""
 
 #: 3rdparty/Horde/Nls/Languages.php:39
 msgid "Welsh"
-msgstr "\t\nGal dili"
+msgstr ""
 
 #: 3rdparty/Horde/Nls/Languages.php:40
 msgid "Danish"
-msgstr "Danimarka dili"
+msgstr ""
 
 #: 3rdparty/Horde/Nls/Languages.php:41
 msgid "German"
-msgstr "Almanca"
+msgstr ""
 
 #: 3rdparty/Horde/Nls/Languages.php:42
 msgid "Divehi; Dhivehi; Maldivian;"
-msgstr "Divehi, Dhivehi, Maldiv;"
+msgstr ""
 
 #: 3rdparty/Horde/Nls/Languages.php:43
 msgid "Dzongkha"
-msgstr "Dzongkha"
+msgstr ""
 
 #: 3rdparty/Horde/Nls/Languages.php:44
 msgid "Ewe"
-msgstr "Ewe"
+msgstr ""
 
 #: 3rdparty/Horde/Nls/Languages.php:45
 msgid "Greek, Modern"
-msgstr "Modern Yunanca"
+msgstr ""
 
 #: 3rdparty/Horde/Nls/Languages.php:46
 msgid "English"
-msgstr "İngilizce"
+msgstr ""
 
 #: 3rdparty/Horde/Nls/Languages.php:47
 msgid "Esperanto"
-msgstr "Esperanto"
+msgstr ""
 
 #: 3rdparty/Horde/Nls/Languages.php:48
 msgid "Spanish; Castilian"
-msgstr "İspanyolca; Kastilya"
+msgstr ""
 
 #: 3rdparty/Horde/Nls/Languages.php:49
 msgid "Estonian"
-msgstr "Estonya dili"
+msgstr ""
 
 #: 3rdparty/Horde/Nls/Languages.php:50
 msgid "Basque"
-msgstr "Bask"
+msgstr ""
 
 #: 3rdparty/Horde/Nls/Languages.php:51
 msgid "Persian"
-msgstr "Farsça"
+msgstr ""
 
 #: 3rdparty/Horde/Nls/Languages.php:52
 msgid "Fula; Fulah; Pulaar; Pular"
-msgstr "Fula; Fulah; Pulaar; Pular"
+msgstr ""
 
 #: 3rdparty/Horde/Nls/Languages.php:53
 msgid "Finnish"
-msgstr "Fince"
+msgstr ""
 
 #: 3rdparty/Horde/Nls/Languages.php:54
 msgid "Fijian"
-msgstr "Fiji"
+msgstr ""
 
 #: 3rdparty/Horde/Nls/Languages.php:55
 msgid "Faroese"
-msgstr "Faroe"
+msgstr ""
 
 #: 3rdparty/Horde/Nls/Languages.php:56
 msgid "French"
-msgstr "Fransızca"
+msgstr ""
 
 #: 3rdparty/Horde/Nls/Languages.php:57
 msgid "Western Frisian"
-msgstr "Batı Frizcesi"
+msgstr ""
 
 #: 3rdparty/Horde/Nls/Languages.php:58
 msgid "Irish"
-msgstr "İrlandaca"
+msgstr ""
 
 #: 3rdparty/Horde/Nls/Languages.php:59
 msgid "Scottish Gaelic; Gaelic"
-msgstr "İskoç Galler; Gal"
+msgstr ""
 
 #: 3rdparty/Horde/Nls/Languages.php:60
 msgid "Galician"
-msgstr "Galicia"
+msgstr ""
 
 #: 3rdparty/Horde/Nls/Languages.php:61
 msgid "Guarani"
-msgstr "Guarani"
+msgstr ""
 
 #: 3rdparty/Horde/Nls/Languages.php:62
 msgid "Gujarati"
-msgstr "Gujarati"
+msgstr ""
 
 #: 3rdparty/Horde/Nls/Languages.php:63
 msgid "Manx"
-msgstr "Man dili"
+msgstr ""
 
 #: 3rdparty/Horde/Nls/Languages.php:64
 msgid "Hausa"
-msgstr "Hausa"
+msgstr ""
 
 #: 3rdparty/Horde/Nls/Languages.php:65
 msgid "Hebrew (modern)"
-msgstr "İbranice (modern)"
+msgstr ""
 
 #: 3rdparty/Horde/Nls/Languages.php:66
 msgid "Hindi"
-msgstr "Hintçe"
+msgstr ""
 
 #: 3rdparty/Horde/Nls/Languages.php:67
 msgid "Hiri Motu"
-msgstr "Hiri Motu"
+msgstr ""
 
 #: 3rdparty/Horde/Nls/Languages.php:68
 msgid "Croatian"
-msgstr "Hırvatca"
+msgstr ""
 
 #: 3rdparty/Horde/Nls/Languages.php:69
 msgid "Haitian; Haitian Creole"
-msgstr "Haiti; Haiti Creole"
+msgstr ""
 
 #: 3rdparty/Horde/Nls/Languages.php:70
 msgid "Hungarian"
-msgstr "Macarca"
+msgstr ""
 
 #: 3rdparty/Horde/Nls/Languages.php:71
 msgid "Armenian"
-msgstr "Ermenice"
+msgstr ""
 
 #: 3rdparty/Horde/Nls/Languages.php:72
 msgid "Herero"
-msgstr "Herero"
+msgstr ""
 
 #: 3rdparty/Horde/Nls/Languages.php:73
 msgid "Interlingua"
-msgstr "Interlingua"
+msgstr ""
 
 #: 3rdparty/Horde/Nls/Languages.php:74
 msgid "Indonesian"
-msgstr "Endonezya dili"
+msgstr ""
 
 #: 3rdparty/Horde/Nls/Languages.php:75
 msgid "Interlingue"
-msgstr "Interlingue"
+msgstr ""
 
 #: 3rdparty/Horde/Nls/Languages.php:76
 msgid "Igbo"
-msgstr "Igbo"
+msgstr ""
 
 #: 3rdparty/Horde/Nls/Languages.php:77
 msgid "Nuosu"
-msgstr "Nuosu"
+msgstr ""
 
 #: 3rdparty/Horde/Nls/Languages.php:78
 msgid "Inupiaq"
-msgstr "Inupiaq"
+msgstr ""
 
 #: 3rdparty/Horde/Nls/Languages.php:79
 msgid "Ido"
-msgstr "Ido"
+msgstr ""
 
 #: 3rdparty/Horde/Nls/Languages.php:80
 msgid "Icelandic"
-msgstr "İzlandaca"
+msgstr ""
 
 #: 3rdparty/Horde/Nls/Languages.php:81
 msgid "Italian"
-msgstr "İtalyanca"
+msgstr ""
 
 #: 3rdparty/Horde/Nls/Languages.php:82
 msgid "Inuktitut"
-msgstr "Inuktitut"
+msgstr ""
 
 #: 3rdparty/Horde/Nls/Languages.php:83
 msgid "Japanese"
-msgstr "Japonca"
+msgstr ""
 
 #: 3rdparty/Horde/Nls/Languages.php:84
 msgid "Javanese"
-msgstr "Cava dili"
+msgstr ""
 
 #: 3rdparty/Horde/Nls/Languages.php:85
 msgid "Georgian"
-msgstr "Gürcü dili"
+msgstr ""
 
 #: 3rdparty/Horde/Nls/Languages.php:86
 msgid "Kongo"
-msgstr "Kongo"
+msgstr ""
 
 #: 3rdparty/Horde/Nls/Languages.php:87
 msgid "Kikuyu, Gikuyu"
-msgstr "Kikuyu, Gikuyu"
+msgstr ""
 
 #: 3rdparty/Horde/Nls/Languages.php:88
 msgid "Kwanyama, Kuanyama"
-msgstr "Kwanyama, Kuanyama"
+msgstr ""
 
 #: 3rdparty/Horde/Nls/Languages.php:89
 msgid "Kazakh"
-msgstr "Kazak dili"
+msgstr ""
 
 #: 3rdparty/Horde/Nls/Languages.php:90
 msgid "Kalaallisut, Greenlandic"
-msgstr "Kalaallisut, Grönland"
+msgstr ""
 
 #: 3rdparty/Horde/Nls/Languages.php:91
 msgid "Khmer"
-msgstr "Khmer"
+msgstr ""
 
 #: 3rdparty/Horde/Nls/Languages.php:92
 msgid "Kannada"
-msgstr "Kannada"
+msgstr ""
 
 #: 3rdparty/Horde/Nls/Languages.php:93
 msgid "Korean"
-msgstr "Kore"
+msgstr ""
 
 #: 3rdparty/Horde/Nls/Languages.php:94
 msgid "Kanuri"
-msgstr "Kanuri"
+msgstr ""
 
 #: 3rdparty/Horde/Nls/Languages.php:95
 msgid "Kashmiri"
-msgstr "Keşmir"
+msgstr ""
 
 #: 3rdparty/Horde/Nls/Languages.php:96
 msgid "Kurdish"
-msgstr "Kürtçe"
+msgstr ""
 
 #: 3rdparty/Horde/Nls/Languages.php:97
 msgid "Komi"
-msgstr "Komi"
+msgstr ""
 
 #: 3rdparty/Horde/Nls/Languages.php:98
 msgid "Cornish"
-msgstr "Keltçe"
+msgstr ""
 
 #: 3rdparty/Horde/Nls/Languages.php:99
 msgid "Kirghiz, Kyrgyz"
-msgstr "Kırgız"
+msgstr ""
 
 #: 3rdparty/Horde/Nls/Languages.php:100
 msgid "Latin"
-msgstr "Latin"
+msgstr ""
 
 #: 3rdparty/Horde/Nls/Languages.php:101
 msgid "Luxembourgish, Letzeburgesch"
-msgstr "Lüksemburgca"
+msgstr ""
 
 #: 3rdparty/Horde/Nls/Languages.php:102
 msgid "Luganda"
-msgstr "Luganda"
+msgstr ""
 
 #: 3rdparty/Horde/Nls/Languages.php:103
 msgid "Limburgish, Limburgan, Limburger"
-msgstr "Limburgish, Limburgan, Limburger"
+msgstr ""
 
 #: 3rdparty/Horde/Nls/Languages.php:104
 msgid "Lingala"
-msgstr "Lingala"
+msgstr ""
 
 #: 3rdparty/Horde/Nls/Languages.php:105
 msgid "Lao"
-msgstr "Lao"
+msgstr ""
 
 #: 3rdparty/Horde/Nls/Languages.php:106
 msgid "Lithuanian"
-msgstr "Litvanya dili"
+msgstr ""
 
 #: 3rdparty/Horde/Nls/Languages.php:107
 msgid "Luba-Katanga"
-msgstr "Luba-Katanga"
+msgstr ""
 
 #: 3rdparty/Horde/Nls/Languages.php:108
 msgid "Latvian"
-msgstr "Letonya dili"
+msgstr ""
 
 #: 3rdparty/Horde/Nls/Languages.php:109
 msgid "Malagasy"
-msgstr "Madagaskar dili"
+msgstr ""
 
 #: 3rdparty/Horde/Nls/Languages.php:110
 msgid "Marshallese"
-msgstr "Marshallese"
+msgstr ""
 
 #: 3rdparty/Horde/Nls/Languages.php:111
 msgid "Maori"
-msgstr "Yeni Zelanda yerli dili"
+msgstr ""
 
 #: 3rdparty/Horde/Nls/Languages.php:112
 msgid "Macedonian"
-msgstr "Makedonya dili"
+msgstr ""
 
 #: 3rdparty/Horde/Nls/Languages.php:113
 msgid "Malayalam"
-msgstr "Malayalam"
+msgstr ""
 
 #: 3rdparty/Horde/Nls/Languages.php:114
 msgid "Mongolian"
-msgstr "Moğolca"
+msgstr ""
 
 #: 3rdparty/Horde/Nls/Languages.php:115
 msgid "Marathi"
-msgstr "Marathi"
+msgstr ""
 
 #: 3rdparty/Horde/Nls/Languages.php:116
 msgid "Malay"
-msgstr "Malay Dili"
+msgstr ""
 
 #: 3rdparty/Horde/Nls/Languages.php:117
 msgid "Maltese"
-msgstr "Malta dili"
+msgstr ""
 
 #: 3rdparty/Horde/Nls/Languages.php:118
 msgid "Burmese"
-msgstr "Birmanya dili"
+msgstr ""
 
 #: 3rdparty/Horde/Nls/Languages.php:120
 msgid "Norwegian Bokmål"
-msgstr "Norveççe"
+msgstr ""
 
 #: 3rdparty/Horde/Nls/Languages.php:121
 msgid "North Ndebele"
-msgstr "Kuzey Ndebele"
+msgstr ""
 
 #: 3rdparty/Horde/Nls/Languages.php:122
 msgid "Nepali"
-msgstr "Nepal"
+msgstr ""
 
 #: 3rdparty/Horde/Nls/Languages.php:123
 msgid "Ndonga"
-msgstr "Ndonga"
+msgstr ""
 
 #: 3rdparty/Horde/Nls/Languages.php:124
 msgid "Dutch"
-msgstr "Hollanda halkı"
+msgstr ""
 
 #: 3rdparty/Horde/Nls/Languages.php:125
 msgid "Norwegian Nynorsk"
-msgstr "Norveççe Nynorsk"
+msgstr ""
 
 #: 3rdparty/Horde/Nls/Languages.php:126
 msgid "Norwegian"
-msgstr "Norveççe"
+msgstr ""
 
 #: 3rdparty/Horde/Nls/Languages.php:127
 msgid "South Ndebele"
-msgstr "Güney Ndebele"
+msgstr ""
 
 #: 3rdparty/Horde/Nls/Languages.php:128
 msgid "Navajo, Navaho"
-msgstr "Navajo, Navaho"
+msgstr ""
 
 #: 3rdparty/Horde/Nls/Languages.php:129
 msgid "Chichewa; Chewa; Nyanja"
-msgstr "Chichewa; Chewa; Nyanja"
+msgstr ""
 
 #: 3rdparty/Horde/Nls/Languages.php:130
 msgid "Occitan"
-msgstr "Oksitanca"
+msgstr ""
 
 #: 3rdparty/Horde/Nls/Languages.php:131
 msgid "Ojibwe, Ojibwa"
-msgstr "Ojibwe, Ojibwa"
+msgstr ""
 
 #: 3rdparty/Horde/Nls/Languages.php:132
 msgid "Oromo"
-msgstr "Oromo"
+msgstr ""
 
 #: 3rdparty/Horde/Nls/Languages.php:133
 msgid "Oriya"
-msgstr "Oriya"
+msgstr ""
 
 #: 3rdparty/Horde/Nls/Languages.php:134
 msgid "Ossetian, Ossetic"
-msgstr "Osetya, Osetçe"
+msgstr ""
 
 #: 3rdparty/Horde/Nls/Languages.php:135
 msgid "Panjabi, Punjabi"
-msgstr "Panjabi, Pencap"
+msgstr ""
 
 #: 3rdparty/Horde/Nls/Languages.php:136
 msgid "Pali"
-msgstr "Pali"
+msgstr ""
 
 #: 3rdparty/Horde/Nls/Languages.php:137
 msgid "Polish"
-msgstr "Polonya dili"
+msgstr ""
 
 #: 3rdparty/Horde/Nls/Languages.php:138
 msgid "Pashto, Pushto"
-msgstr "Peştuca"
+msgstr ""
 
 #: 3rdparty/Horde/Nls/Languages.php:139
 msgid "Portuguese"
-msgstr "Portekizce"
+msgstr ""
 
 #: 3rdparty/Horde/Nls/Languages.php:140
 msgid "Quechua"
-msgstr "Quechua"
+msgstr ""
 
 #: 3rdparty/Horde/Nls/Languages.php:141
 msgid "Romansh"
-msgstr "Romanş"
+msgstr ""
 
 #: 3rdparty/Horde/Nls/Languages.php:142
 msgid "Kirundi"
-msgstr "Kirundi"
+msgstr ""
 
 #: 3rdparty/Horde/Nls/Languages.php:143
 msgid "Romanian, Moldavian, Moldovan"
-msgstr "Romanya, Moldova"
+msgstr ""
 
 #: 3rdparty/Horde/Nls/Languages.php:144
 msgid "Russian"
-msgstr "Rusça"
+msgstr ""
 
 #: 3rdparty/Horde/Nls/Languages.php:145
 msgid "Kinyarwanda"
-msgstr "Kinyarwanda"
+msgstr ""
 
 #: 3rdparty/Horde/Nls/Languages.php:146
 msgid "Sanskrit"
-msgstr "Sanskritçe"
+msgstr ""
 
 #: 3rdparty/Horde/Nls/Languages.php:147
 msgid "Sardinian"
-msgstr "Sardinya Dili"
+msgstr ""
 
 #: 3rdparty/Horde/Nls/Languages.php:148
 msgid "Sindhi"
-msgstr "Sindhi"
+msgstr ""
 
 #: 3rdparty/Horde/Nls/Languages.php:149
 msgid "Northern Sami"
-msgstr "Kuzey Sami"
+msgstr ""
 
 #: 3rdparty/Horde/Nls/Languages.php:150
 msgid "Sango"
-msgstr "Sango"
+msgstr ""
 
 #: 3rdparty/Horde/Nls/Languages.php:151
 msgid "Sinhala, Sinhalese"
-msgstr "Sinhala"
+msgstr ""
 
 #: 3rdparty/Horde/Nls/Languages.php:152
 msgid "Slovak"
-msgstr "Slovakça"
+msgstr ""
 
 #: 3rdparty/Horde/Nls/Languages.php:153
 msgid "Slovene"
-msgstr "Slovence"
+msgstr ""
 
 #: 3rdparty/Horde/Nls/Languages.php:154
 msgid "Samoan"
-msgstr "Samoa"
+msgstr ""
 
 #: 3rdparty/Horde/Nls/Languages.php:155
 msgid "Shona"
-msgstr "Shona"
+msgstr ""
 
 #: 3rdparty/Horde/Nls/Languages.php:156
 msgid "Somali"
-msgstr "Somali"
+msgstr ""
 
 #: 3rdparty/Horde/Nls/Languages.php:157
 msgid "Albanian"
-msgstr "Arnavutça"
+msgstr ""
 
 #: 3rdparty/Horde/Nls/Languages.php:158
 msgid "Serbian"
-msgstr "Sırpça"
+msgstr ""
 
 #: 3rdparty/Horde/Nls/Languages.php:159
 msgid "Swati"
-msgstr "Swati"
+msgstr ""
 
 #: 3rdparty/Horde/Nls/Languages.php:160
 msgid "Southern Sotho"
-msgstr "Southern Sotho"
+msgstr ""
 
 #: 3rdparty/Horde/Nls/Languages.php:161
 msgid "Sundanese"
-msgstr "Sundaca"
+msgstr ""
 
 #: 3rdparty/Horde/Nls/Languages.php:162
 msgid "Swedish"
-msgstr "İsveççe"
+msgstr ""
 
 #: 3rdparty/Horde/Nls/Languages.php:163
 msgid "Swahili"
-msgstr "Swahili"
+msgstr ""
 
 #: 3rdparty/Horde/Nls/Languages.php:164
 msgid "Tamil"
-msgstr "Tamil"
+msgstr ""
 
 #: 3rdparty/Horde/Nls/Languages.php:165
 msgid "Telugu"
-msgstr "Telugu"
+msgstr ""
 
 #: 3rdparty/Horde/Nls/Languages.php:166
 msgid "Tajik"
-msgstr "Tacik"
+msgstr ""
 
 #: 3rdparty/Horde/Nls/Languages.php:167
 msgid "Thai"
-msgstr "Tayland dili"
+msgstr ""
 
 #: 3rdparty/Horde/Nls/Languages.php:168
 msgid "Tigrinya"
-msgstr "Tigrinya"
+msgstr ""
 
 #: 3rdparty/Horde/Nls/Languages.php:169
 msgid "Turkmen"
-msgstr "Türkmen"
+msgstr ""
 
 #: 3rdparty/Horde/Nls/Languages.php:170
 msgid "Tagalog"
-msgstr "Tagalog"
+msgstr ""
 
 #: 3rdparty/Horde/Nls/Languages.php:171
 msgid "Tswana"
-msgstr "Tswana"
+msgstr ""
 
 #: 3rdparty/Horde/Nls/Languages.php:172
 msgid "Tonga (Tonga Islands)"
-msgstr "Tonga (Tonga Adaları)"
+msgstr ""
 
 #: 3rdparty/Horde/Nls/Languages.php:173
 msgid "Turkish"
-msgstr "Türkçe"
+msgstr ""
 
 #: 3rdparty/Horde/Nls/Languages.php:174
 msgid "Tsonga"
-msgstr "Tsonga"
+msgstr ""
 
 #: 3rdparty/Horde/Nls/Languages.php:175
 msgid "Tatar"
-msgstr "Tatar"
+msgstr ""
 
 #: 3rdparty/Horde/Nls/Languages.php:176
 msgid "Twi"
-msgstr "Twi"
+msgstr ""
 
 #: 3rdparty/Horde/Nls/Languages.php:177
 msgid "Tahitian"
-msgstr "Tahiti dili"
+msgstr ""
 
 #: 3rdparty/Horde/Nls/Languages.php:178
 msgid "Uighur, Uyghur"
-msgstr "Uygur"
+msgstr ""
 
 #: 3rdparty/Horde/Nls/Languages.php:179
 msgid "Ukrainian"
-msgstr "Ukraynaca"
+msgstr ""
 
 #: 3rdparty/Horde/Nls/Languages.php:180
 msgid "Urdu"
-msgstr "Urdu dili"
+msgstr ""
 
 #: 3rdparty/Horde/Nls/Languages.php:181
 msgid "Uzbek"
-msgstr "Özbekçe"
+msgstr ""
 
 #: 3rdparty/Horde/Nls/Languages.php:182
 msgid "Venda"
-msgstr "Venda"
+msgstr ""
 
 #: 3rdparty/Horde/Nls/Languages.php:183
 msgid "Vietnamese"
-msgstr "Vietnam dili"
+msgstr ""
 
 #: 3rdparty/Horde/Nls/Languages.php:184
 msgid "Volapük"
-msgstr "Volapük"
+msgstr ""
 
 #: 3rdparty/Horde/Nls/Languages.php:185
 msgid "Walloon"
-msgstr "Valon dili"
+msgstr ""
 
 #: 3rdparty/Horde/Nls/Languages.php:186
 msgid "Wolof"
-msgstr "Wolof"
+msgstr ""
 
 #: 3rdparty/Horde/Nls/Languages.php:187
 msgid "Xhosa"
-msgstr "Xhosa"
+msgstr ""
 
 #: 3rdparty/Horde/Nls/Languages.php:188
 msgid "Yiddish"
-msgstr "Eskenazi dili"
+msgstr ""
 
 #: 3rdparty/Horde/Nls/Languages.php:189
 msgid "Yoruba"
-msgstr "Yoruba"
+msgstr ""
 
 #: 3rdparty/Horde/Nls/Languages.php:190
 msgid "Zhuang, Chuang"
-msgstr "Zhuang, Chuang"
+msgstr ""
 
 #: 3rdparty/Horde/Nls/Languages.php:191
 msgid "Chinese"
-msgstr "Çince"
+msgstr ""
 
 #: 3rdparty/Horde/Nls/Languages.php:192
 msgid "Zulu"
-msgstr "Zulu dili"
+msgstr ""
 
 #: 3rdparty/Horde/Nls/Tld.php:13
 msgid "Ascension Island"
-msgstr "Ascension  Adası"
+msgstr ""
 
 #: 3rdparty/Horde/Nls/Tld.php:21
 msgid "Netherlands Antilles"
-msgstr "Hollanda Antilleri"
+msgstr ""
 
 #: 3rdparty/Horde/Nls/Tld.php:29
 msgid "Aland Islands"
-msgstr "Aland Adaları"
+msgstr ""
 
 #: 3rdparty/Horde/Nls/Tld.php:54
 msgid "Congo, Republic of"
-msgstr "Kongo Cumhuriyeti"
+msgstr ""
 
 #: 3rdparty/Horde/Nls/Tld.php:56
 msgid "Cote d'Ivoire"
-msgstr "Fildişi Sahili"
+msgstr ""
 
 #: 3rdparty/Horde/Nls/Tld.php:81
 msgid "European Union"
-msgstr "Avrupa Birliği"
+msgstr ""
 
 #: 3rdparty/Horde/Nls/Tld.php:108
 msgid "Heard and McDonald Islands"
-msgstr "Heard Adası ve McDonald Adaları"
+msgstr ""
 
 #: 3rdparty/Horde/Nls/Tld.php:110
 msgid "Croatia/Hrvatska"
-msgstr "Hırvatça"
+msgstr ""
 
 #: 3rdparty/Horde/Nls/Tld.php:148
 msgid "Libyan Arab Jamahiriya"
-msgstr "Libya"
+msgstr ""
 
 #: 3rdparty/Horde/Nls/Tld.php:155
 msgid "Macedonia, The Former Yugoslav Republic of"
-msgstr "Makedonya, Eski Yugoslav Cumhuriyeti"
+msgstr ""
 
 #: 3rdparty/Horde/Nls/Tld.php:192
 msgid "Pitcairn Island"
-msgstr "Pitcairn Adası"
+msgstr ""
 
 #: 3rdparty/Horde/Nls/Tld.php:199
 msgid "Reunion Island"
-msgstr "Reunion Adası"
+msgstr ""
 
 #: 3rdparty/Horde/Nls/Tld.php:210
 msgid "Saint Helena"
-msgstr "Saint Helena"
+msgstr ""
 
 #: 3rdparty/Horde/Nls/Tld.php:212
 msgid "Svalbard and Jan Mayen Islands"
-msgstr "Svalbard ve Jan Mayen Adaları"
+msgstr ""
 
 #: 3rdparty/Horde/Nls/Tld.php:220
 msgid "Soviet Union"
-msgstr "Sovyetler Birliği"
+msgstr ""
 
 #: 3rdparty/Horde/Nls/Tld.php:235
 msgid "East Timor"
-msgstr "Doğu Timor"
+msgstr ""
 
 #: 3rdparty/Horde/Nls/Tld.php:239
 msgid "Taiwan"
-msgstr "Tayvan"
+msgstr ""
 
 #: 3rdparty/Horde/Nls/Tld.php:255
 msgid "Wallis and Futuna Islands"
-msgstr "Wallis ve Futuna Adaları"
+msgstr ""
 
 #: 3rdparty/Horde/Nls/Tld.php:259
 msgid "Yugoslavia"
-msgstr "Yugoslavya"
+msgstr ""
 
 #: js/mail.js:42 js/mail.js:115 js/mail.js:148 js/mail.js:205 js/mail.js:261
 msgid "Error"
-msgstr "Hata"
+msgstr ""
 
 #: js/mail.js:236
 msgid "Connecting ..."
-msgstr "Bağlanıyor ..."
+msgstr ""
 
 #: js/mail.js:252 js/mail.js:267 templates/no-accounts.php:16
 msgid "Connect"
-msgstr "Bağlan"
+msgstr ""
 
 #: js/mail.js:257
 msgid "Not a email address"
-msgstr "E-posta adresi değil"
+msgstr ""
 
 #: js/mail.js:265
 msgid "Unknown error"
-msgstr "Bilinmeyen hata"
+msgstr ""
 
 #: js/mail.js:269
 msgid "Server Error"
-msgstr "Sunucu Hatası"
+msgstr ""
 
 #: templates/index.php:8
 msgid "New Message"
-msgstr "Yeni Mesaj"
+msgstr ""
 
 #: templates/index.php:10
 msgid "To"
-msgstr "Kime"
+msgstr ""
 
 #: templates/index.php:11
 msgid "Subject"
-msgstr "Konu"
+msgstr ""
 
 #: templates/index.php:13
 msgid "Send"
-msgstr "Gönder"
+msgstr ""
 
 #: templates/no-accounts.php:3
 msgid "Connect your mail account"
-msgstr "E-posta hesabınızı bağlayın"
+msgstr ""
 
 #: templates/no-accounts.php:8
 msgid "Mail Address"
-msgstr "Mail adresi"
+msgstr ""
 
 #: templates/no-accounts.php:13
 msgid "IMAP Password"
-msgstr "IMAP Parola"
+msgstr ""
 
 #: templates/part.message.php:31
 msgid "Reply"
-msgstr "Cevap"
+msgstr ""
