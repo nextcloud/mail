@@ -13,8 +13,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: ownCloud\n"
 "Report-Msgid-Bugs-To: http://bugs.owncloud.org/\n"
-"POT-Creation-Date: 2013-05-01 02:42+0200\n"
-"PO-Revision-Date: 2013-04-30 16:20+0000\n"
+"POT-Creation-Date: 2013-05-03 02:43+0200\n"
+"PO-Revision-Date: 2013-05-02 09:40+0000\n"
 "Last-Translator: traductor <transifex-2.7.mensaje@spamgourmet.com>\n"
 "Language-Team: German (Germany) <translations@owncloud.org>\n"
 "MIME-Version: 1.0\n"
@@ -165,7 +165,7 @@ msgstr "Der Mail-Server hat die Verbindung unerwartet geschlossen."
 
 #: 3rdparty/Horde/Imap/Client/Socket.php:4325
 msgid "Charset used in search query is not supported on the mail server."
-msgstr ""
+msgstr "Der Zeichensatz, welchen Sie bei der Suchanfrage benutzt haben, wird nicht vom Mailserver unterstützt."
 
 #: 3rdparty/Horde/Imap/Client/Socket.php:4337
 #: 3rdparty/Horde/Imap/Client/Socket.php:4379
@@ -232,7 +232,7 @@ msgstr ""
 
 #: 3rdparty/Horde/Imap/Client/Socket.php:4578
 msgid "The mail server is reporting corrupt data in your mailbox."
-msgstr ""
+msgstr "Laut Mailserver-Meldung befinden sich unlesbare Daten in Ihrer Mailbox."
 
 #: 3rdparty/Horde/Imap/Client/Socket.php:4594
 msgid "The mail server has denied the request."
@@ -908,7 +908,7 @@ msgstr ""
 
 #: 3rdparty/Horde/Nls/Countries.php:156 3rdparty/Horde/Nls/Tld.php:152
 msgid "Montenegro"
-msgstr ""
+msgstr "Montenegro"
 
 #: 3rdparty/Horde/Nls/Countries.php:157 3rdparty/Horde/Nls/Tld.php:163
 msgid "Montserrat"
@@ -1249,7 +1249,7 @@ msgstr "Ukraine"
 
 #: 3rdparty/Horde/Nls/Countries.php:241 3rdparty/Horde/Nls/Tld.php:15
 msgid "United Arab Emirates"
-msgstr ""
+msgstr "Vereinigte Arabische Emirate"
 
 #: 3rdparty/Horde/Nls/Countries.php:242 3rdparty/Horde/Nls/Tld.php:89
 #: 3rdparty/Horde/Nls/Tld.php:243
@@ -1322,7 +1322,7 @@ msgstr "Europa"
 
 #: 3rdparty/Horde/Nls/Geoip.php:326
 msgid "Anonymous Proxy"
-msgstr ""
+msgstr "Anonymer Proxy"
 
 #: 3rdparty/Horde/Nls/Geoip.php:327
 msgid "Satellite Provider"
@@ -1362,7 +1362,7 @@ msgstr ""
 
 #: 3rdparty/Horde/Nls/Languages.php:16
 msgid "Arabic"
-msgstr ""
+msgstr "Arabisch"
 
 #: 3rdparty/Horde/Nls/Languages.php:17
 msgid "Assamese"
@@ -1390,7 +1390,7 @@ msgstr ""
 
 #: 3rdparty/Horde/Nls/Languages.php:23
 msgid "Bulgarian"
-msgstr ""
+msgstr "Bulgarisch"
 
 #: 3rdparty/Horde/Nls/Languages.php:24
 msgid "Bihari"
@@ -1418,7 +1418,7 @@ msgstr ""
 
 #: 3rdparty/Horde/Nls/Languages.php:30
 msgid "Bosnian"
-msgstr ""
+msgstr "Bosnisch"
 
 #: 3rdparty/Horde/Nls/Languages.php:31
 msgid "Catalan; Valencian"
@@ -1442,7 +1442,7 @@ msgstr ""
 
 #: 3rdparty/Horde/Nls/Languages.php:36
 msgid "Czech"
-msgstr ""
+msgstr "Tschechisch"
 
 #: 3rdparty/Horde/Nls/Languages.php:37
 msgid ""
@@ -1572,7 +1572,7 @@ msgstr ""
 
 #: 3rdparty/Horde/Nls/Languages.php:68
 msgid "Croatian"
-msgstr ""
+msgstr "Kroatisch"
 
 #: 3rdparty/Horde/Nls/Languages.php:69
 msgid "Haitian; Haitian Creole"
@@ -1580,15 +1580,15 @@ msgstr ""
 
 #: 3rdparty/Horde/Nls/Languages.php:70
 msgid "Hungarian"
-msgstr ""
+msgstr "Ungarisch"
 
 #: 3rdparty/Horde/Nls/Languages.php:71
 msgid "Armenian"
-msgstr ""
+msgstr "Armenisch"
 
 #: 3rdparty/Horde/Nls/Languages.php:72
 msgid "Herero"
-msgstr ""
+msgstr "Herero"
 
 #: 3rdparty/Horde/Nls/Languages.php:73
 msgid "Interlingua"
@@ -1596,7 +1596,7 @@ msgstr ""
 
 #: 3rdparty/Horde/Nls/Languages.php:74
 msgid "Indonesian"
-msgstr ""
+msgstr "Indonesisch"
 
 #: 3rdparty/Horde/Nls/Languages.php:75
 msgid "Interlingue"
@@ -1620,7 +1620,7 @@ msgstr ""
 
 #: 3rdparty/Horde/Nls/Languages.php:80
 msgid "Icelandic"
-msgstr ""
+msgstr "Isländisch"
 
 #: 3rdparty/Horde/Nls/Languages.php:81
 msgid "Italian"
@@ -1880,7 +1880,7 @@ msgstr ""
 
 #: 3rdparty/Horde/Nls/Languages.php:146
 msgid "Sanskrit"
-msgstr ""
+msgstr "Sanskrit"
 
 #: 3rdparty/Horde/Nls/Languages.php:147
 msgid "Sardinian"
@@ -1904,11 +1904,11 @@ msgstr ""
 
 #: 3rdparty/Horde/Nls/Languages.php:152
 msgid "Slovak"
-msgstr ""
+msgstr "Slowakisch"
 
 #: 3rdparty/Horde/Nls/Languages.php:153
 msgid "Slovene"
-msgstr ""
+msgstr "Slowenisch"
 
 #: 3rdparty/Horde/Nls/Languages.php:154
 msgid "Samoan"
@@ -1944,7 +1944,7 @@ msgstr ""
 
 #: 3rdparty/Horde/Nls/Languages.php:162
 msgid "Swedish"
-msgstr ""
+msgstr "Schwedisch"
 
 #: 3rdparty/Horde/Nls/Languages.php:163
 msgid "Swahili"
@@ -1988,7 +1988,7 @@ msgstr ""
 
 #: 3rdparty/Horde/Nls/Languages.php:173
 msgid "Turkish"
-msgstr ""
+msgstr "Türkisch"
 
 #: 3rdparty/Horde/Nls/Languages.php:174
 msgid "Tsonga"
@@ -2060,7 +2060,7 @@ msgstr ""
 
 #: 3rdparty/Horde/Nls/Languages.php:191
 msgid "Chinese"
-msgstr ""
+msgstr "Chinesisch"
 
 #: 3rdparty/Horde/Nls/Languages.php:192
 msgid "Zulu"
@@ -2088,7 +2088,7 @@ msgstr ""
 
 #: 3rdparty/Horde/Nls/Tld.php:81
 msgid "European Union"
-msgstr ""
+msgstr "Europäische Union"
 
 #: 3rdparty/Horde/Nls/Tld.php:108
 msgid "Heard and McDonald Islands"
@@ -2160,15 +2160,15 @@ msgstr ""
 
 #: js/mail.js:265
 msgid "Unknown error"
-msgstr ""
+msgstr "Unbekannter Fehler"
 
 #: js/mail.js:269
 msgid "Server Error"
-msgstr ""
+msgstr "Serverfehler"
 
 #: templates/index.php:8
 msgid "New Message"
-msgstr ""
+msgstr "Neue Nachricht"
 
 #: templates/index.php:10
 msgid "To"
@@ -2176,7 +2176,7 @@ msgstr "an"
 
 #: templates/index.php:11
 msgid "Subject"
-msgstr ""
+msgstr "Betreff"
 
 #: templates/index.php:13
 msgid "Send"
@@ -2188,12 +2188,12 @@ msgstr ""
 
 #: templates/no-accounts.php:8
 msgid "Mail Address"
-msgstr ""
+msgstr "E-Mail-Adresse"
 
 #: templates/no-accounts.php:13
 msgid "IMAP Password"
-msgstr ""
+msgstr "IMAP-Passwort"
 
 #: templates/part.message.php:31
 msgid "Reply"
-msgstr ""
+msgstr "Antwort"
