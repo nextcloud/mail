@@ -13,9 +13,9 @@ msgid ""
 msgstr ""
 "Project-Id-Version: ownCloud\n"
 "Report-Msgid-Bugs-To: http://bugs.owncloud.org/\n"
-"POT-Creation-Date: 2013-05-03 02:43+0200\n"
-"PO-Revision-Date: 2013-05-02 09:40+0000\n"
-"Last-Translator: traductor <transifex-2.7.mensaje@spamgourmet.com>\n"
+"POT-Creation-Date: 2013-05-04 02:43+0200\n"
+"PO-Revision-Date: 2013-05-03 08:50+0000\n"
+"Last-Translator: stefanniedermann <stefan.niedermann@googlemail.com>\n"
 "Language-Team: German (Germany) <translations@owncloud.org>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -170,7 +170,7 @@ msgstr "Der Zeichensatz, welchen Sie bei der Suchanfrage benutzt haben, wird nic
 #: 3rdparty/Horde/Imap/Client/Socket.php:4337
 #: 3rdparty/Horde/Imap/Client/Socket.php:4379
 msgid "The mail server was unable to parse the contents of the mail message."
-msgstr ""
+msgstr "Der Mail-Server war nciht in der Lage, den Inhalt der E-Mail zu parsen."
 
 #: 3rdparty/Horde/Imap/Client/Socket.php:4420
 msgid "Could not save message on server."
@@ -178,27 +178,27 @@ msgstr "Konnte Nachricht nicht auf Server speichern."
 
 #: 3rdparty/Horde/Imap/Client/Socket.php:4429
 msgid "Could not save message data because it is too large."
-msgstr ""
+msgstr "Konnte den Nachrichten-Inhalt nicht speichern, da dieser zu groß ist."
 
 #: 3rdparty/Horde/Imap/Client/Socket.php:4468
 msgid "The comparison algorithm was not recognized by the server."
-msgstr ""
+msgstr "Der Vergleichs-Algorithmus wurde vom Server nicht erkannt."
 
 #: 3rdparty/Horde/Imap/Client/Socket.php:4486
 msgid "The metadata item could not be saved because it is too large."
-msgstr ""
+msgstr "Das Meta-Daten-Item konnte nicht gespeichert werden, weil es zu groß ist."
 
 #: 3rdparty/Horde/Imap/Client/Socket.php:4495
 msgid ""
 "The metadata item could not be saved because the server does not support "
 "private annotations."
-msgstr ""
+msgstr "Das Meta-Daten-Item konnte nicht gespeichert werden, weil der Server keine privaten Anmerkungen unterstützt."
 
 #: 3rdparty/Horde/Imap/Client/Socket.php:4504
 msgid ""
 "The metadata item could not be saved because the maximum number of "
 "annotations has been exceeded."
-msgstr ""
+msgstr "Das Meta-Daten-Item konnte nicht gespeichert werden, weil die maximal Anzahl von Anmerkungen überschritten wurde."
 
 #: 3rdparty/Horde/Imap/Client/Socket.php:4515
 msgid "Remote server is temporarily unavailable."
