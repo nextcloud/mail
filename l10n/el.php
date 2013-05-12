@@ -12,6 +12,7 @@
 "POP3 server denied authentication." => "Σφάλμα σύνδεσης με τον διακο΄μιστή ΡΟΡ3.",
 "Error connecting to POP3 server." => "Σφάλμα σύνδεσης με τον διακομιστή ΡΟΡ3.",
 "Unexpected response from server when authenticating." => "Απροσδόκητη απάντηση από τον διακομσιτή κάτά την επικύρωση.",
+"Unknown authentication method: %s" => "Άγνωστη μέθοδος πιστοποίησης: %s",
 "POP3 Server closed the connection unexpectedly." => "Αναφορά σφάλματος ΡΟΡ3 από τον διακομιστή ",
 "POP3 error reported by server." => "Αναφορά σφάλματος από τον διακομιστή ",
 "Server does not support TLS connections." => "Ο διακομιστής δεν υποστηρίζει τις συνδέσεις TLS.",
