@@ -17,6 +17,8 @@
 "Error connecting to mail server." => "Erro a ligar ao servidor de email",
 "Server rejected connection." => "O servidor rejeitou a ligação.",
 "Could not open mailbox \"%s\"." => "Não foi possível abrir a caixa de correio \"%s\"",
+"IMAP error reported by server." => "Erro no protocolo IMAP reportado pelo servidor.",
+"IMAP Server closed the connection." => "O Servidor IMAP fechou a ligação.",
 "Could not save message on server." => "Não foi possível guardar a mensagem no servidor",
 "Remote server is temporarily unavailable." => "O servidor remoto está temporariamente indisponível.",
 "Authentication failed." => "Falhou a autenticação.",

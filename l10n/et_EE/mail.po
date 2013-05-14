@@ -9,8 +9,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: ownCloud\n"
 "Report-Msgid-Bugs-To: http://bugs.owncloud.org/\n"
-"POT-Creation-Date: 2013-04-28 02:42+0200\n"
-"PO-Revision-Date: 2013-04-27 19:24+0000\n"
+"POT-Creation-Date: 2013-05-14 02:47+0200\n"
+"PO-Revision-Date: 2013-05-13 20:18+0000\n"
 "Last-Translator: Rivo Zängov <eraser@eraser.ee>\n"
 "Language-Team: Estonian (Estonia) (http://www.transifex.com/projects/p/owncloud/language/et_EE/)\n"
 "MIME-Version: 1.0\n"
@@ -34,7 +34,7 @@ msgstr "Autentimine ebaõnnestus."
 #: 3rdparty/Horde/Imap/Client/Base.php:1856
 #: 3rdparty/Horde/Imap/Client/Base.php:1915
 msgid "Cannot expunge read-only mailbox."
-msgstr "Ainult-lugemiseks postkasti ei saa kustutada"
+msgstr "Ainult-lugemiseks postkasti ei saa kustutada."
 
 #: 3rdparty/Horde/Imap/Client/Exception/NoSupportExtension.php:36
 #, php-format
@@ -57,7 +57,7 @@ msgstr "Halvasti sildistatud vastus."
 #: 3rdparty/Horde/Imap/Client/Socket/Pop3.php:189
 #: 3rdparty/Horde/Imap/Client/Socket/Pop3.php:201
 msgid "Could not open secure connection to the POP3 server."
-msgstr "Ei suuda luua turvatud ühendust POP3 serverisse."
+msgstr "Ei suuda luua turvatud ühendust POP3 serveriga."
 
 #: 3rdparty/Horde/Imap/Client/Socket/Pop3.php:189
 msgid "Server does not support secure connections."
@@ -69,7 +69,7 @@ msgstr "POP3 server keeldus autentimisest."
 
 #: 3rdparty/Horde/Imap/Client/Socket/Pop3.php:280
 msgid "Error connecting to POP3 server."
-msgstr "Viga ühendumisel POP3 serveriga."
+msgstr "Viga POP3 serveriga ühendumisel."
 
 #: 3rdparty/Horde/Imap/Client/Socket/Pop3.php:334
 #: 3rdparty/Horde/Imap/Client/Socket.php:592
@@ -640,7 +640,7 @@ msgstr "Gruusia"
 
 #: 3rdparty/Horde/Nls/Countries.php:90 3rdparty/Horde/Nls/Tld.php:68
 msgid "Germany"
-msgstr "Saaksamaa"
+msgstr "Saksamaa"
 
 #: 3rdparty/Horde/Nls/Countries.php:91 3rdparty/Horde/Nls/Tld.php:94
 msgid "Ghana"
@@ -945,7 +945,7 @@ msgstr "Uus-Kaledoonia"
 
 #: 3rdparty/Horde/Nls/Countries.php:166 3rdparty/Horde/Nls/Tld.php:182
 msgid "New Zealand"
-msgstr "Uus meremaa"
+msgstr "Uus Meremaa"
 
 #: 3rdparty/Horde/Nls/Countries.php:167 3rdparty/Horde/Nls/Tld.php:176
 msgid "Nicaragua"
