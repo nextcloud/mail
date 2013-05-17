@@ -3,13 +3,14 @@
 # This file is distributed under the same license as the PACKAGE package.
 # 
 # Translators:
+# AriesAnywhere Anywhere <ariesanywhere@gmail.com>, 2013
 msgid ""
 msgstr ""
 "Project-Id-Version: ownCloud\n"
 "Report-Msgid-Bugs-To: http://bugs.owncloud.org/\n"
-"POT-Creation-Date: 2013-04-27 02:42+0200\n"
-"PO-Revision-Date: 2013-04-26 08:26+0000\n"
-"Last-Translator: I Robot <owncloud-bot@tmit.eu>\n"
+"POT-Creation-Date: 2013-05-17 02:48+0200\n"
+"PO-Revision-Date: 2013-05-16 21:24+0000\n"
+"Last-Translator: AriesAnywhere Anywhere <ariesanywhere@gmail.com>\n"
 "Language-Team: Thai (Thailand) (http://www.transifex.com/projects/p/owncloud/language/th_TH/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -19,7 +20,7 @@ msgstr ""
 
 #: 3rdparty/Horde/Exception/NotFound.php:27
 msgid "Not Found"
-msgstr ""
+msgstr "ไม่พบ"
 
 #: 3rdparty/Horde/Exception/PermissionDenied.php:27
 msgid "Permission Denied"
@@ -106,7 +107,7 @@ msgstr ""
 
 #: 3rdparty/Horde/Imap/Client/Socket.php:492
 msgid "Error connecting to mail server."
-msgstr ""
+msgstr "เกิดข้อผิดพลาดในการเชื่อมต่อกับเซิร์ฟเวอร์ระบบเมล์"
 
 #: 3rdparty/Horde/Imap/Client/Socket.php:515
 msgid "Server rejected connection."
