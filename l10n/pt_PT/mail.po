@@ -8,8 +8,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: ownCloud\n"
 "Report-Msgid-Bugs-To: http://bugs.owncloud.org/\n"
-"POT-Creation-Date: 2013-05-29 02:42+0200\n"
-"PO-Revision-Date: 2013-05-28 23:16+0000\n"
+"POT-Creation-Date: 2013-05-30 02:55+0200\n"
+"PO-Revision-Date: 2013-05-29 23:35+0000\n"
 "Last-Translator: Helder Meneses <helder.meneses@gmail.com>\n"
 "Language-Team: Portuguese (Portugal) (http://www.transifex.com/projects/p/owncloud/language/pt_PT/)\n"
 "MIME-Version: 1.0\n"
@@ -511,7 +511,7 @@ msgstr ""
 
 #: 3rdparty/Horde/Nls/Countries.php:58
 msgid "Congo"
-msgstr ""
+msgstr "Congo"
 
 #: 3rdparty/Horde/Nls/Countries.php:59 3rdparty/Horde/Nls/Tld.php:52
 msgid "Congo, The Democratic Republic of the"
@@ -531,7 +531,7 @@ msgstr ""
 
 #: 3rdparty/Horde/Nls/Countries.php:63
 msgid "Croatia"
-msgstr ""
+msgstr "Croácia"
 
 #: 3rdparty/Horde/Nls/Countries.php:64 3rdparty/Horde/Nls/Tld.php:63
 msgid "Cuba"
@@ -619,7 +619,7 @@ msgstr ""
 
 #: 3rdparty/Horde/Nls/Countries.php:85 3rdparty/Horde/Nls/Tld.php:186
 msgid "French Polynesia"
-msgstr ""
+msgstr "Polinésia Francesa"
 
 #: 3rdparty/Horde/Nls/Countries.php:86 3rdparty/Horde/Nls/Tld.php:226
 msgid "French Southern Territories"
@@ -823,11 +823,11 @@ msgstr ""
 
 #: 3rdparty/Horde/Nls/Countries.php:136 3rdparty/Horde/Nls/Tld.php:145
 msgid "Lithuania"
-msgstr ""
+msgstr "Lituânia"
 
 #: 3rdparty/Horde/Nls/Countries.php:137 3rdparty/Horde/Nls/Tld.php:146
 msgid "Luxembourg"
-msgstr ""
+msgstr "Luxemburgo"
 
 #: 3rdparty/Horde/Nls/Countries.php:138 3rdparty/Horde/Nls/Tld.php:159
 msgid "Macao"
@@ -839,7 +839,7 @@ msgstr ""
 
 #: 3rdparty/Horde/Nls/Countries.php:140 3rdparty/Horde/Nls/Tld.php:153
 msgid "Madagascar"
-msgstr ""
+msgstr "Madagascar"
 
 #: 3rdparty/Horde/Nls/Countries.php:141 3rdparty/Horde/Nls/Tld.php:167
 msgid "Malawi"
@@ -847,19 +847,19 @@ msgstr ""
 
 #: 3rdparty/Horde/Nls/Countries.php:142 3rdparty/Horde/Nls/Tld.php:169
 msgid "Malaysia"
-msgstr ""
+msgstr "Malásia"
 
 #: 3rdparty/Horde/Nls/Countries.php:143 3rdparty/Horde/Nls/Tld.php:166
 msgid "Maldives"
-msgstr ""
+msgstr "Maldivas"
 
 #: 3rdparty/Horde/Nls/Countries.php:144 3rdparty/Horde/Nls/Tld.php:156
 msgid "Mali"
-msgstr ""
+msgstr "Mali"
 
 #: 3rdparty/Horde/Nls/Countries.php:145 3rdparty/Horde/Nls/Tld.php:164
 msgid "Malta"
-msgstr ""
+msgstr "Malta"
 
 #: 3rdparty/Horde/Nls/Countries.php:146 3rdparty/Horde/Nls/Tld.php:154
 msgid "Marshall Islands"
@@ -871,7 +871,7 @@ msgstr ""
 
 #: 3rdparty/Horde/Nls/Countries.php:148 3rdparty/Horde/Nls/Tld.php:162
 msgid "Mauritania"
-msgstr ""
+msgstr "Mauritánia"
 
 #: 3rdparty/Horde/Nls/Countries.php:149 3rdparty/Horde/Nls/Tld.php:165
 msgid "Mauritius"
@@ -883,7 +883,7 @@ msgstr ""
 
 #: 3rdparty/Horde/Nls/Countries.php:151 3rdparty/Horde/Nls/Tld.php:168
 msgid "Mexico"
-msgstr ""
+msgstr "Mexico"
 
 #: 3rdparty/Horde/Nls/Countries.php:152 3rdparty/Horde/Nls/Tld.php:85
 msgid "Micronesia, Federated States of"
@@ -1016,7 +1016,7 @@ msgstr ""
 
 #: 3rdparty/Horde/Nls/Countries.php:184 3rdparty/Horde/Nls/Tld.php:190
 msgid "Poland"
-msgstr ""
+msgstr "Polónia"
 
 #: 3rdparty/Horde/Nls/Countries.php:185 3rdparty/Horde/Nls/Tld.php:195
 msgid "Portugal"

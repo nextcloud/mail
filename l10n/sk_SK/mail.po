@@ -8,8 +8,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: ownCloud\n"
 "Report-Msgid-Bugs-To: http://bugs.owncloud.org/\n"
-"POT-Creation-Date: 2013-05-29 02:42+0200\n"
-"PO-Revision-Date: 2013-05-28 23:16+0000\n"
+"POT-Creation-Date: 2013-05-30 02:55+0200\n"
+"PO-Revision-Date: 2013-05-29 23:35+0000\n"
 "Last-Translator: mhh <marian.hvolka@stuba.sk>\n"
 "Language-Team: Slovak (Slovakia) (http://www.transifex.com/projects/p/owncloud/language/sk_SK/)\n"
 "MIME-Version: 1.0\n"
@@ -165,78 +165,78 @@ msgstr "Znaková sada použitá v požiadavke nie je podporovaná poštovým ser
 #: 3rdparty/Horde/Imap/Client/Socket.php:4337
 #: 3rdparty/Horde/Imap/Client/Socket.php:4379
 msgid "The mail server was unable to parse the contents of the mail message."
-msgstr ""
+msgstr "Serveru pošty sa nedarí spracovať obsah emailu"
 
 #: 3rdparty/Horde/Imap/Client/Socket.php:4420
 msgid "Could not save message on server."
-msgstr ""
+msgstr "Nemožno uložiť email na server."
 
 #: 3rdparty/Horde/Imap/Client/Socket.php:4429
 msgid "Could not save message data because it is too large."
-msgstr ""
+msgstr "Dáta emailu sú príliš veľké a ich nemožno uložiť."
 
 #: 3rdparty/Horde/Imap/Client/Socket.php:4468
 msgid "The comparison algorithm was not recognized by the server."
-msgstr ""
+msgstr "Porovnávací algoritmus nebol serverom rozpoznaný."
 
 #: 3rdparty/Horde/Imap/Client/Socket.php:4486
 msgid "The metadata item could not be saved because it is too large."
-msgstr ""
+msgstr "Metadáta nemožno uložiť pre ich veľkosť."
 
 #: 3rdparty/Horde/Imap/Client/Socket.php:4495
 msgid ""
 "The metadata item could not be saved because the server does not support "
 "private annotations."
-msgstr ""
+msgstr "Metadáta nemohli byť uložené, pretože server nepodporuje osobné poznámky."
 
 #: 3rdparty/Horde/Imap/Client/Socket.php:4504
 msgid ""
 "The metadata item could not be saved because the maximum number of "
 "annotations has been exceeded."
-msgstr ""
+msgstr "Metadáta nemohli byť uložené, pretože maximálny počet anotácií bol prekročený."
 
 #: 3rdparty/Horde/Imap/Client/Socket.php:4515
 msgid "Remote server is temporarily unavailable."
-msgstr ""
+msgstr "Vzdialený server je dočasne nedostupný."
 
 #: 3rdparty/Horde/Imap/Client/Socket.php:4523
 msgid "Authentication failed."
-msgstr ""
+msgstr "Zlyhalo overenie."
 
 #: 3rdparty/Horde/Imap/Client/Socket.php:4531
 msgid "Authentication was successful, but authorization failed."
-msgstr ""
+msgstr "Úspešné overenie, autorizácia však zlyhala."
 
 #: 3rdparty/Horde/Imap/Client/Socket.php:4539
 msgid "Authentication credentials have expired."
-msgstr ""
+msgstr "Overovanie údajov uplynulo."
 
 #: 3rdparty/Horde/Imap/Client/Socket.php:4547
 msgid "Operation failed due to a lack of a secure connection."
-msgstr ""
+msgstr "Operácia zlyhala z dôvodu chýbajúceho zabezpečeného pripojenia."
 
 #: 3rdparty/Horde/Imap/Client/Socket.php:4555
 msgid "You do not have adequate permissions to carry out this operation."
-msgstr ""
+msgstr "Nemáte dostatočné oprávnenie na vykonanie tejto operácie."
 
 #: 3rdparty/Horde/Imap/Client/Socket.php:4564
 msgid ""
 "There was a temporary issue when attempting this operation. Please try again"
 " later."
-msgstr ""
+msgstr "Vyskytla sa dočasná chyba pri vykonávaní tejto operácie. Skúste to neskôr."
 
 #: 3rdparty/Horde/Imap/Client/Socket.php:4578
 msgid "The mail server is reporting corrupt data in your mailbox."
-msgstr ""
+msgstr "Poštový server hlási poškodené dáta v poštovej schránke."
 
 #: 3rdparty/Horde/Imap/Client/Socket.php:4594
 msgid "The mail server has denied the request."
-msgstr ""
+msgstr "Poštový server odmietol požiadavku."
 
 #: 3rdparty/Horde/Imap/Client/Socket.php:4603
 msgid ""
 "The operation failed because the quota has been exceeded on the mail server."
-msgstr ""
+msgstr "Operácia zlyhala, pretože bola prekročená kvóta na poštovom serveri."
 
 #: 3rdparty/Horde/Imap/Client/Socket.php:4612
 msgid "The object could not be created because it already exists."
@@ -244,11 +244,11 @@ msgstr "Objekt nemožno vytvoriť, pretože už existuje."
 
 #: 3rdparty/Horde/Imap/Client/Socket.php:4621
 msgid "The object could not be deleted because it does not exist."
-msgstr ""
+msgstr "Objekt nemožno odstrániť, pretože neexistuje."
 
 #: 3rdparty/Horde/Imap/Client/Socket.php:4630
 msgid "The special-use attribute requested for the mailbox is not supported."
-msgstr ""
+msgstr "Použitie špeciálneho atribútu požadované pre poštové schránky nie je podporovaný."
 
 #: 3rdparty/Horde/Imap/Client/Utf7imap.php:117
 #: 3rdparty/Horde/Imap/Client/Utf7imap.php:142
@@ -259,35 +259,35 @@ msgstr ""
 #: 3rdparty/Horde/Imap/Client/Utf7imap.php:234
 #: 3rdparty/Horde/Imap/Client/Utf7imap.php:240
 msgid "Error converting UTF7-IMAP string."
-msgstr ""
+msgstr "Chyba pri konverzii reťazca UTF7-IMAP."
 
 #: 3rdparty/Horde/Mime/Headers.php:535
 msgid "List-Help"
-msgstr ""
+msgstr "Zoznam-Pomocník"
 
 #: 3rdparty/Horde/Mime/Headers.php:536
 msgid "List-Unsubscribe"
-msgstr ""
+msgstr "Zoznam-Zrušiť odber"
 
 #: 3rdparty/Horde/Mime/Headers.php:537
 msgid "List-Subscribe"
-msgstr ""
+msgstr "Zoznam- Začať odber"
 
 #: 3rdparty/Horde/Mime/Headers.php:538
 msgid "List-Owner"
-msgstr ""
+msgstr "Zoznam-Vlastník"
 
 #: 3rdparty/Horde/Mime/Headers.php:539
 msgid "List-Post"
-msgstr ""
+msgstr "Zoznam-Odpoveď"
 
 #: 3rdparty/Horde/Mime/Headers.php:540
 msgid "List-Archive"
-msgstr ""
+msgstr "Zoznam-Archív"
 
 #: 3rdparty/Horde/Mime/Headers.php:542
 msgid "List-Id"
-msgstr ""
+msgstr "Zoznam-Id"
 
 #: 3rdparty/Horde/Mime/Mail.php:417
 msgid "Plaintext Version of Message"
@@ -307,7 +307,7 @@ msgid ""
 "The message sent on %s to %s with subject \"%s\" has been displayed.\n"
 "\n"
 "This is no guarantee that the message has been read or understood."
-msgstr ""
+msgstr "Email odoslaný %s adresátovi %s s predmetom \"%s\" bola zobrazená.\n\nNemožno však zaručiť, že bola prečítaná, alebo pochopená."
 
 #: 3rdparty/Horde/Nls/Countries.php:8 3rdparty/Horde/Nls/Tld.php:16
 msgid "Afghanistan"
