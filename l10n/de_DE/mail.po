@@ -13,8 +13,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: ownCloud\n"
 "Report-Msgid-Bugs-To: http://bugs.owncloud.org/\n"
-"POT-Creation-Date: 2013-05-30 02:55+0200\n"
-"PO-Revision-Date: 2013-05-29 23:35+0000\n"
+"POT-Creation-Date: 2013-05-31 15:03+0200\n"
+"PO-Revision-Date: 2013-05-31 10:30+0000\n"
 "Last-Translator: traductor <transifex-2.7.mensaje@spamgourmet.com>\n"
 "Language-Team: German (Germany) <translations@owncloud.org>\n"
 "MIME-Version: 1.0\n"
@@ -700,7 +700,7 @@ msgstr "Haiti"
 
 #: 3rdparty/Horde/Nls/Countries.php:104
 msgid "Heard Island and McDonald Islands"
-msgstr ""
+msgstr "Heard und McDonaldinseln"
 
 #: 3rdparty/Horde/Nls/Countries.php:105 3rdparty/Horde/Nls/Tld.php:248
 msgid "Holy See (Vatican City State)"
@@ -892,7 +892,7 @@ msgstr "Mexiko"
 
 #: 3rdparty/Horde/Nls/Countries.php:152 3rdparty/Horde/Nls/Tld.php:85
 msgid "Micronesia, Federated States of"
-msgstr ""
+msgstr "Föderierte Staaten von Mikronesien"
 
 #: 3rdparty/Horde/Nls/Countries.php:153 3rdparty/Horde/Nls/Tld.php:151
 msgid "Moldova, Republic of"
@@ -1077,7 +1077,7 @@ msgstr "Saint-Pierre und Miquelon"
 
 #: 3rdparty/Horde/Nls/Countries.php:198 3rdparty/Horde/Nls/Tld.php:249
 msgid "Saint Vincent and the Grenadines"
-msgstr ""
+msgstr "St. Vincent und die Grenadinen"
 
 #: 3rdparty/Horde/Nls/Countries.php:199 3rdparty/Horde/Nls/Tld.php:256
 msgid "Samoa"
@@ -1141,7 +1141,7 @@ msgstr "Südafrika"
 
 #: 3rdparty/Horde/Nls/Countries.php:214 3rdparty/Horde/Nls/Tld.php:102
 msgid "South Georgia and the South Sandwich Islands"
-msgstr ""
+msgstr "Südgeorgien und die Südlichen Sandwichinseln"
 
 #: 3rdparty/Horde/Nls/Countries.php:215
 msgid "South Sudan"
@@ -1201,7 +1201,7 @@ msgstr "Thailand"
 
 #: 3rdparty/Horde/Nls/Countries.php:229 3rdparty/Horde/Nls/Tld.php:231
 msgid "Timor-Leste"
-msgstr ""
+msgstr "Osttimor"
 
 #: 3rdparty/Horde/Nls/Countries.php:230 3rdparty/Horde/Nls/Tld.php:227
 msgid "Togo"
@@ -1209,7 +1209,7 @@ msgstr "Togo"
 
 #: 3rdparty/Horde/Nls/Countries.php:231 3rdparty/Horde/Nls/Tld.php:230
 msgid "Tokelau"
-msgstr ""
+msgstr "Tokelau"
 
 #: 3rdparty/Horde/Nls/Countries.php:232 3rdparty/Horde/Nls/Tld.php:234
 msgid "Tonga"
@@ -1262,7 +1262,7 @@ msgstr "Vereinigte Staaten"
 
 #: 3rdparty/Horde/Nls/Countries.php:244 3rdparty/Horde/Nls/Tld.php:244
 msgid "United States Minor Outlying Islands"
-msgstr ""
+msgstr "United States Minor Outlying Islands (Kleinere und entlegene Inselbesitzungen der Vereinigten Staaten)"
 
 #: 3rdparty/Horde/Nls/Countries.php:245 3rdparty/Horde/Nls/Tld.php:246
 msgid "Uruguay"
@@ -1346,7 +1346,7 @@ msgstr ""
 
 #: 3rdparty/Horde/Nls/Languages.php:12
 msgid "Afrikaans"
-msgstr ""
+msgstr "Afrikaans"
 
 #: 3rdparty/Horde/Nls/Languages.php:13
 msgid "Akan"
@@ -1378,7 +1378,7 @@ msgstr ""
 
 #: 3rdparty/Horde/Nls/Languages.php:20
 msgid "Azerbaijani"
-msgstr ""
+msgstr "Aserbaidschanisch"
 
 #: 3rdparty/Horde/Nls/Languages.php:21
 msgid "Bashkir"
@@ -1406,7 +1406,7 @@ msgstr ""
 
 #: 3rdparty/Horde/Nls/Languages.php:27
 msgid "Bengali"
-msgstr ""
+msgstr "Bengalisch"
 
 #: 3rdparty/Horde/Nls/Languages.php:28
 msgid "Tibetan Standard, Tibetan, Central"
@@ -1414,7 +1414,7 @@ msgstr ""
 
 #: 3rdparty/Horde/Nls/Languages.php:29
 msgid "Breton"
-msgstr ""
+msgstr "Bretonisch"
 
 #: 3rdparty/Horde/Nls/Languages.php:30
 msgid "Bosnian"
@@ -1434,7 +1434,7 @@ msgstr ""
 
 #: 3rdparty/Horde/Nls/Languages.php:34
 msgid "Corsican"
-msgstr ""
+msgstr "Korsisch"
 
 #: 3rdparty/Horde/Nls/Languages.php:35
 msgid "Cree"
