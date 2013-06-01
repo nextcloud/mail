@@ -13,8 +13,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: ownCloud\n"
 "Report-Msgid-Bugs-To: http://bugs.owncloud.org/\n"
-"POT-Creation-Date: 2013-05-31 15:03+0200\n"
-"PO-Revision-Date: 2013-05-31 10:30+0000\n"
+"POT-Creation-Date: 2013-06-01 02:42+0200\n"
+"PO-Revision-Date: 2013-05-31 23:26+0000\n"
 "Last-Translator: traductor <transifex-2.7.mensaje@spamgourmet.com>\n"
 "Language-Team: German (Germany) <translations@owncloud.org>\n"
 "MIME-Version: 1.0\n"
@@ -1057,7 +1057,7 @@ msgstr "Saint-Barthélemy"
 
 #: 3rdparty/Horde/Nls/Countries.php:193
 msgid "Saint Helena, Ascension and Tristan da Cunha"
-msgstr ""
+msgstr "St. Helena, Ascension und Tristan da Cunha"
 
 #: 3rdparty/Horde/Nls/Countries.php:194 3rdparty/Horde/Nls/Tld.php:132
 msgid "Saint Kitts and Nevis"
@@ -1496,7 +1496,7 @@ msgstr "Spanisch (Kastilisch)"
 
 #: 3rdparty/Horde/Nls/Languages.php:49
 msgid "Estonian"
-msgstr ""
+msgstr "Estisch"
 
 #: 3rdparty/Horde/Nls/Languages.php:50
 msgid "Basque"
@@ -1564,7 +1564,7 @@ msgstr "Hebräisch (modern)"
 
 #: 3rdparty/Horde/Nls/Languages.php:66
 msgid "Hindi"
-msgstr ""
+msgstr "Hindi"
 
 #: 3rdparty/Horde/Nls/Languages.php:67
 msgid "Hiri Motu"
@@ -1636,11 +1636,11 @@ msgstr "Japanisch"
 
 #: 3rdparty/Horde/Nls/Languages.php:84
 msgid "Javanese"
-msgstr ""
+msgstr "Javanisch"
 
 #: 3rdparty/Horde/Nls/Languages.php:85
 msgid "Georgian"
-msgstr ""
+msgstr "Georgisch"
 
 #: 3rdparty/Horde/Nls/Languages.php:86
 msgid "Kongo"
@@ -1672,7 +1672,7 @@ msgstr ""
 
 #: 3rdparty/Horde/Nls/Languages.php:93
 msgid "Korean"
-msgstr ""
+msgstr "Koreanisch"
 
 #: 3rdparty/Horde/Nls/Languages.php:94
 msgid "Kanuri"
@@ -1684,7 +1684,7 @@ msgstr ""
 
 #: 3rdparty/Horde/Nls/Languages.php:96
 msgid "Kurdish"
-msgstr ""
+msgstr "Kurdisch"
 
 #: 3rdparty/Horde/Nls/Languages.php:97
 msgid "Komi"
@@ -1692,7 +1692,7 @@ msgstr ""
 
 #: 3rdparty/Horde/Nls/Languages.php:98
 msgid "Cornish"
-msgstr ""
+msgstr "Kornisch"
 
 #: 3rdparty/Horde/Nls/Languages.php:99
 msgid "Kirghiz, Kyrgyz"
@@ -1700,7 +1700,7 @@ msgstr ""
 
 #: 3rdparty/Horde/Nls/Languages.php:100
 msgid "Latin"
-msgstr ""
+msgstr "Latein"
 
 #: 3rdparty/Horde/Nls/Languages.php:101
 msgid "Luxembourgish, Letzeburgesch"
@@ -1736,7 +1736,7 @@ msgstr ""
 
 #: 3rdparty/Horde/Nls/Languages.php:109
 msgid "Malagasy"
-msgstr ""
+msgstr "Madagassisch"
 
 #: 3rdparty/Horde/Nls/Languages.php:110
 msgid "Marshallese"
@@ -1744,11 +1744,11 @@ msgstr ""
 
 #: 3rdparty/Horde/Nls/Languages.php:111
 msgid "Maori"
-msgstr ""
+msgstr "Maori"
 
 #: 3rdparty/Horde/Nls/Languages.php:112
 msgid "Macedonian"
-msgstr ""
+msgstr "Mazedonisch"
 
 #: 3rdparty/Horde/Nls/Languages.php:113
 msgid "Malayalam"
@@ -1756,7 +1756,7 @@ msgstr ""
 
 #: 3rdparty/Horde/Nls/Languages.php:114
 msgid "Mongolian"
-msgstr ""
+msgstr "Mongolisch"
 
 #: 3rdparty/Horde/Nls/Languages.php:115
 msgid "Marathi"
@@ -1768,11 +1768,11 @@ msgstr ""
 
 #: 3rdparty/Horde/Nls/Languages.php:117
 msgid "Maltese"
-msgstr ""
+msgstr "Maltesisch"
 
 #: 3rdparty/Horde/Nls/Languages.php:118
 msgid "Burmese"
-msgstr ""
+msgstr "Burmesisch"
 
 #: 3rdparty/Horde/Nls/Languages.php:120
 msgid "Norwegian Bokmål"
@@ -1928,7 +1928,7 @@ msgstr ""
 
 #: 3rdparty/Horde/Nls/Languages.php:158
 msgid "Serbian"
-msgstr ""
+msgstr "Serbisch"
 
 #: 3rdparty/Horde/Nls/Languages.php:159
 msgid "Swati"
@@ -1964,7 +1964,7 @@ msgstr ""
 
 #: 3rdparty/Horde/Nls/Languages.php:167
 msgid "Thai"
-msgstr ""
+msgstr "Thailändisch"
 
 #: 3rdparty/Horde/Nls/Languages.php:168
 msgid "Tigrinya"
@@ -2004,7 +2004,7 @@ msgstr ""
 
 #: 3rdparty/Horde/Nls/Languages.php:177
 msgid "Tahitian"
-msgstr ""
+msgstr "Tahitisch"
 
 #: 3rdparty/Horde/Nls/Languages.php:178
 msgid "Uighur, Uyghur"
@@ -2012,7 +2012,7 @@ msgstr ""
 
 #: 3rdparty/Horde/Nls/Languages.php:179
 msgid "Ukrainian"
-msgstr ""
+msgstr "Ukrainisch"
 
 #: 3rdparty/Horde/Nls/Languages.php:180
 msgid "Urdu"
@@ -2036,7 +2036,7 @@ msgstr ""
 
 #: 3rdparty/Horde/Nls/Languages.php:185
 msgid "Walloon"
-msgstr ""
+msgstr "Wallonisch"
 
 #: 3rdparty/Horde/Nls/Languages.php:186
 msgid "Wolof"
@@ -2048,7 +2048,7 @@ msgstr ""
 
 #: 3rdparty/Horde/Nls/Languages.php:188
 msgid "Yiddish"
-msgstr ""
+msgstr "Jiddisch"
 
 #: 3rdparty/Horde/Nls/Languages.php:189
 msgid "Yoruba"
@@ -2064,7 +2064,7 @@ msgstr "Chinesisch"
 
 #: 3rdparty/Horde/Nls/Languages.php:192
 msgid "Zulu"
-msgstr ""
+msgstr "Zulu"
 
 #: 3rdparty/Horde/Nls/Tld.php:13
 msgid "Ascension Island"
@@ -2104,7 +2104,7 @@ msgstr ""
 
 #: 3rdparty/Horde/Nls/Tld.php:155
 msgid "Macedonia, The Former Yugoslav Republic of"
-msgstr ""
+msgstr "Ehemalige Jugoslawische Republik Mazedonien"
 
 #: 3rdparty/Horde/Nls/Tld.php:192
 msgid "Pitcairn Island"
