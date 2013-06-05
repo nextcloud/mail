@@ -5,6 +5,8 @@
 # Translators:
 # a.tangemann <a.tangemann@web.de>, 2013
 # arkascha <foss@christian-reiner.info>, 2013
+# Christoph Sczigiol <christoph.sczigiol@gmail.com>, 2013
+# DeLegendary <hablux@web.de>, 2013
 # Marcel Kühlhorn <susefan93@gmx.de>, 2013
 # stefanniedermann <stefan.niedermann@googlemail.com>, 2013
 # traductor <transifex-2.7.mensaje@spamgourmet.com>, 2013
@@ -13,9 +15,9 @@ msgid ""
 msgstr ""
 "Project-Id-Version: ownCloud\n"
 "Report-Msgid-Bugs-To: http://bugs.owncloud.org/\n"
-"POT-Creation-Date: 2013-06-03 03:05+0200\n"
-"PO-Revision-Date: 2013-06-02 23:17+0000\n"
-"Last-Translator: traductor <transifex-2.7.mensaje@spamgourmet.com>\n"
+"POT-Creation-Date: 2013-06-05 02:42+0200\n"
+"PO-Revision-Date: 2013-06-04 17:14+0000\n"
+"Last-Translator: DeLegendary <hablux@web.de>\n"
 "Language-Team: German (Germany) <translations@owncloud.org>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -1334,11 +1336,11 @@ msgstr "Andere"
 
 #: 3rdparty/Horde/Nls/Languages.php:9
 msgid "Afar"
-msgstr ""
+msgstr "Afar"
 
 #: 3rdparty/Horde/Nls/Languages.php:10
 msgid "Abkhaz"
-msgstr ""
+msgstr "Abkhaz"
 
 #: 3rdparty/Horde/Nls/Languages.php:11
 msgid "Avestan"
@@ -1528,7 +1530,7 @@ msgstr "Französisch"
 
 #: 3rdparty/Horde/Nls/Languages.php:57
 msgid "Western Frisian"
-msgstr ""
+msgstr "Westfriesland"
 
 #: 3rdparty/Horde/Nls/Languages.php:58
 msgid "Irish"
