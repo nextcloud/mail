@@ -271,6 +271,7 @@
 "Sri Lanka" => "Sri Lanka",
 "Sudan" => "Sudan",
 "Suriname" => "Surinam",
+"Svalbard and Jan Mayen" => "Spitzbergen und Jan Mayen",
 "Swaziland" => "Swaziland",
 "Sweden" => "Schweden",
 "Switzerland" => "Schweiz",
