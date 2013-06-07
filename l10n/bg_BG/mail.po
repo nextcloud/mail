@@ -3,13 +3,14 @@
 # This file is distributed under the same license as the PACKAGE package.
 # 
 # Translators:
+# Димитър Кръстев <dimitar.t.krastev@gmail.com>, 2013
 msgid ""
 msgstr ""
 "Project-Id-Version: ownCloud\n"
 "Report-Msgid-Bugs-To: http://bugs.owncloud.org/\n"
-"POT-Creation-Date: 2013-06-03 03:05+0200\n"
-"PO-Revision-Date: 2013-06-02 23:17+0000\n"
-"Last-Translator: I Robot <owncloud-bot@tmit.eu>\n"
+"POT-Creation-Date: 2013-06-07 03:08+0200\n"
+"PO-Revision-Date: 2013-06-06 01:53+0000\n"
+"Last-Translator: Димитър Кръстев <dimitar.t.krastev@gmail.com>\n"
 "Language-Team: Bulgarian (Bulgaria) (http://www.transifex.com/projects/p/owncloud/language/bg_BG/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -42,7 +43,7 @@ msgstr ""
 #: 3rdparty/Horde/Imap/Client/Exception/NoSupportPop3.php:25
 #, php-format
 msgid "%s not supported on POP3 servers."
-msgstr ""
+msgstr "%s не се поддържа на POP3 сървъри."
 
 #: 3rdparty/Horde/Imap/Client/Exception/SearchCharset.php:36
 msgid "Cannot convert search query text to new charset"
@@ -55,7 +56,7 @@ msgstr ""
 #: 3rdparty/Horde/Imap/Client/Socket/Pop3.php:189
 #: 3rdparty/Horde/Imap/Client/Socket/Pop3.php:201
 msgid "Could not open secure connection to the POP3 server."
-msgstr ""
+msgstr "Не може да се осъщесви защитена връзка към POP3 сървъра."
 
 #: 3rdparty/Horde/Imap/Client/Socket/Pop3.php:189
 msgid "Server does not support secure connections."

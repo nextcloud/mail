@@ -3,13 +3,14 @@
 # This file is distributed under the same license as the PACKAGE package.
 # 
 # Translators:
+# Magnus Magnusson <maggiymir@gmail.com>, 2013
 msgid ""
 msgstr ""
 "Project-Id-Version: ownCloud\n"
 "Report-Msgid-Bugs-To: http://bugs.owncloud.org/\n"
-"POT-Creation-Date: 2013-06-03 03:05+0200\n"
-"PO-Revision-Date: 2013-06-02 23:16+0000\n"
-"Last-Translator: I Robot <owncloud-bot@tmit.eu>\n"
+"POT-Creation-Date: 2013-06-07 03:08+0200\n"
+"PO-Revision-Date: 2013-06-06 09:24+0000\n"
+"Last-Translator: Magnus Magnusson <maggiymir@gmail.com>\n"
 "Language-Team: Icelandic (http://www.transifex.com/projects/p/owncloud/language/is/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -19,11 +20,11 @@ msgstr ""
 
 #: 3rdparty/Horde/Exception/NotFound.php:27
 msgid "Not Found"
-msgstr ""
+msgstr "Fannst ekki"
 
 #: 3rdparty/Horde/Exception/PermissionDenied.php:27
 msgid "Permission Denied"
-msgstr ""
+msgstr "Aðgangi neitað"
 
 #: 3rdparty/Horde/Imap/Client/Auth/DigestMD5.php:149
 msgid "Authentication failure."
@@ -106,7 +107,7 @@ msgstr ""
 
 #: 3rdparty/Horde/Imap/Client/Socket.php:492
 msgid "Error connecting to mail server."
-msgstr ""
+msgstr "Villa við tengingu við póstþjón."
 
 #: 3rdparty/Horde/Imap/Client/Socket.php:515
 msgid "Server rejected connection."
@@ -119,7 +120,7 @@ msgstr ""
 #: 3rdparty/Horde/Imap/Client/Socket.php:920
 #, php-format
 msgid "Could not open mailbox \"%s\"."
-msgstr ""
+msgstr "Gat ekki opað pósthólfið \"%s\"."
 
 #: 3rdparty/Horde/Imap/Client/Socket.php:1874
 #: 3rdparty/Horde/Imap/Client/Socket.php:2544
@@ -510,7 +511,7 @@ msgstr ""
 
 #: 3rdparty/Horde/Nls/Countries.php:58
 msgid "Congo"
-msgstr ""
+msgstr "Kongó"
 
 #: 3rdparty/Horde/Nls/Countries.php:59 3rdparty/Horde/Nls/Tld.php:52
 msgid "Congo, The Democratic Republic of the"
@@ -534,7 +535,7 @@ msgstr ""
 
 #: 3rdparty/Horde/Nls/Countries.php:64 3rdparty/Horde/Nls/Tld.php:63
 msgid "Cuba"
-msgstr ""
+msgstr "Kúba"
 
 #: 3rdparty/Horde/Nls/Countries.php:65
 msgid "Curaçao"
@@ -550,7 +551,7 @@ msgstr ""
 
 #: 3rdparty/Horde/Nls/Countries.php:68 3rdparty/Horde/Nls/Tld.php:70
 msgid "Denmark"
-msgstr ""
+msgstr "Danmörk"
 
 #: 3rdparty/Horde/Nls/Countries.php:69 3rdparty/Horde/Nls/Tld.php:69
 msgid "Djibouti"
@@ -606,11 +607,11 @@ msgstr ""
 
 #: 3rdparty/Horde/Nls/Countries.php:82 3rdparty/Horde/Nls/Tld.php:82
 msgid "Finland"
-msgstr ""
+msgstr "Finnland"
 
 #: 3rdparty/Horde/Nls/Countries.php:83 3rdparty/Horde/Nls/Tld.php:87
 msgid "France"
-msgstr ""
+msgstr "Frakkland"
 
 #: 3rdparty/Horde/Nls/Countries.php:84 3rdparty/Horde/Nls/Tld.php:92
 msgid "French Guiana"
@@ -714,7 +715,7 @@ msgstr ""
 
 #: 3rdparty/Horde/Nls/Countries.php:109 3rdparty/Horde/Nls/Tld.php:121
 msgid "Iceland"
-msgstr ""
+msgstr "Ísland"
 
 #: 3rdparty/Horde/Nls/Countries.php:110 3rdparty/Horde/Nls/Tld.php:117
 msgid "India"
@@ -742,7 +743,7 @@ msgstr ""
 
 #: 3rdparty/Horde/Nls/Countries.php:116 3rdparty/Horde/Nls/Tld.php:115
 msgid "Israel"
-msgstr ""
+msgstr "Ísrael"
 
 #: 3rdparty/Horde/Nls/Countries.php:117 3rdparty/Horde/Nls/Tld.php:122
 msgid "Italy"
@@ -754,7 +755,7 @@ msgstr ""
 
 #: 3rdparty/Horde/Nls/Countries.php:119 3rdparty/Horde/Nls/Tld.php:126
 msgid "Japan"
-msgstr ""
+msgstr "Japan"
 
 #: 3rdparty/Horde/Nls/Countries.php:120 3rdparty/Horde/Nls/Tld.php:123
 msgid "Jersey"
@@ -971,7 +972,7 @@ msgstr ""
 
 #: 3rdparty/Horde/Nls/Countries.php:173 3rdparty/Horde/Nls/Tld.php:178
 msgid "Norway"
-msgstr ""
+msgstr "Noregur"
 
 #: 3rdparty/Horde/Nls/Countries.php:174 3rdparty/Horde/Nls/Tld.php:183
 msgid "Oman"
@@ -1015,7 +1016,7 @@ msgstr ""
 
 #: 3rdparty/Horde/Nls/Countries.php:184 3rdparty/Horde/Nls/Tld.php:190
 msgid "Poland"
-msgstr ""
+msgstr "Pólland"
 
 #: 3rdparty/Horde/Nls/Countries.php:185 3rdparty/Horde/Nls/Tld.php:195
 msgid "Portugal"
@@ -1312,7 +1313,7 @@ msgstr ""
 
 #: 3rdparty/Horde/Nls/Geoip.php:325
 msgid "Europe"
-msgstr ""
+msgstr "Evrópa"
 
 #: 3rdparty/Horde/Nls/Geoip.php:326
 msgid "Anonymous Proxy"
@@ -1614,7 +1615,7 @@ msgstr ""
 
 #: 3rdparty/Horde/Nls/Languages.php:80
 msgid "Icelandic"
-msgstr ""
+msgstr "Íslenska"
 
 #: 3rdparty/Horde/Nls/Languages.php:81
 msgid "Italian"
@@ -1790,11 +1791,11 @@ msgstr ""
 
 #: 3rdparty/Horde/Nls/Languages.php:125
 msgid "Norwegian Nynorsk"
-msgstr ""
+msgstr "Nýnorska"
 
 #: 3rdparty/Horde/Nls/Languages.php:126
 msgid "Norwegian"
-msgstr ""
+msgstr "Norska"
 
 #: 3rdparty/Horde/Nls/Languages.php:127
 msgid "South Ndebele"
@@ -1938,7 +1939,7 @@ msgstr ""
 
 #: 3rdparty/Horde/Nls/Languages.php:162
 msgid "Swedish"
-msgstr ""
+msgstr "Sænska"
 
 #: 3rdparty/Horde/Nls/Languages.php:163
 msgid "Swahili"
@@ -2142,7 +2143,7 @@ msgstr "Villa"
 
 #: js/mail.js:236
 msgid "Connecting ..."
-msgstr ""
+msgstr "Tengist..."
 
 #: js/mail.js:252 js/mail.js:267 templates/no-accounts.php:16
 msgid "Connect"
@@ -2166,7 +2167,7 @@ msgstr ""
 
 #: templates/index.php:10
 msgid "To"
-msgstr ""
+msgstr "Til"
 
 #: templates/index.php:11
 msgid "Subject"
@@ -2190,4 +2191,4 @@ msgstr ""
 
 #: templates/part.message.php:31
 msgid "Reply"
-msgstr ""
+msgstr "Svara"
