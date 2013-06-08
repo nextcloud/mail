@@ -8,8 +8,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: ownCloud\n"
 "Report-Msgid-Bugs-To: http://bugs.owncloud.org/\n"
-"POT-Creation-Date: 2013-06-03 03:05+0200\n"
-"PO-Revision-Date: 2013-06-02 23:17+0000\n"
+"POT-Creation-Date: 2013-06-08 03:22+0200\n"
+"PO-Revision-Date: 2013-06-07 23:17+0000\n"
 "Last-Translator: Min2liz <min2lizz@gmail.com>\n"
 "Language-Team: Lithuanian (Lithuania) (http://www.transifex.com/projects/p/owncloud/language/lt_LT/)\n"
 "MIME-Version: 1.0\n"
@@ -2175,7 +2175,7 @@ msgstr ""
 
 #: templates/index.php:13
 msgid "Send"
-msgstr ""
+msgstr "Siųsti"
 
 #: templates/no-accounts.php:3
 msgid "Connect your mail account"

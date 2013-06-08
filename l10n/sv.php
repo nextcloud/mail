@@ -175,6 +175,7 @@
 "Other" => "Annat",
 "Error" => "Fel",
 "Connect" => "Anslut",
+"Unknown error" => "Okänt fel",
 "To" => "Till",
 "Send" => "Skicka"
 );

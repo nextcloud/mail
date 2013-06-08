@@ -90,6 +90,7 @@
 "Connecting ..." => "Yhdistetään...",
 "Connect" => "Yhdistä",
 "Not a email address" => "Ei sähköpostiosoite",
+"Unknown error" => "Tuntematon virhe",
 "New Message" => "Uusi viesti",
 "To" => "Päättyy",
 "Subject" => "Aihe",

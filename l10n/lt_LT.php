@@ -10,5 +10,6 @@
 "Other" => "Kita",
 "Error" => "Klaida",
 "Connect" => "Prisijungti",
-"To" => "Iki"
+"To" => "Iki",
+"Send" => "Siųsti"
 );

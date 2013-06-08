@@ -8,6 +8,7 @@
 "Other" => "Más",
 "Error" => "Hiba",
 "Connect" => "Kapcsolódás",
+"Unknown error" => "Ismeretlen hiba",
 "To" => "Eddig",
 "Send" => "Küldjük el"
 );
