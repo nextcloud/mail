@@ -94,6 +94,7 @@
 "Error" => "Erro",
 "Connecting ..." => "A ligar...",
 "Connect" => "Ligar",
+"Unknown error" => "Erro Desconhecido",
 "New Message" => "Nova Mensagem",
 "To" => "Para",
 "Subject" => "Assunto",

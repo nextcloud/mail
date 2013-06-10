@@ -8,8 +8,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: ownCloud\n"
 "Report-Msgid-Bugs-To: http://bugs.owncloud.org/\n"
-"POT-Creation-Date: 2013-06-09 02:41+0200\n"
-"PO-Revision-Date: 2013-06-08 23:17+0000\n"
+"POT-Creation-Date: 2013-06-10 03:41+0200\n"
+"PO-Revision-Date: 2013-06-10 00:50+0000\n"
 "Last-Translator: Helder Meneses <helder.meneses@gmail.com>\n"
 "Language-Team: Portuguese (Portugal) (http://www.transifex.com/projects/p/owncloud/language/pt_PT/)\n"
 "MIME-Version: 1.0\n"
@@ -2155,7 +2155,7 @@ msgstr ""
 
 #: js/mail.js:265
 msgid "Unknown error"
-msgstr ""
+msgstr "Erro Desconhecido"
 
 #: js/mail.js:269
 msgid "Server Error"
