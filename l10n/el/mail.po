@@ -4,17 +4,21 @@
 # 
 # Translators:
 # Efstathios Iosifidis <iefstathios@gmail.com>, 2013
+# Efstathios Iosifidis <iosifidis@opensuse.org>, 2013
+# KAT.RAT12 <spanish.katerina@gmail.com>, 2013
 # Petros Kyladitis <petros.kyladitis@gmail.com>, 2013
 # Teogramm <theodorewii121@hotmail.com>, 2013
+# Teogramm <theodorewii121@hotmail.com>, 2013
+# Wasilis <inactive+Wasilis@transifex.com>, 2013
 # Wasilis <inactive+Wasilis@transifex.com>, 2013
 # KAT.RAT12 <spanish.katerina@gmail.com>, 2013
 msgid ""
 msgstr ""
 "Project-Id-Version: ownCloud\n"
 "Report-Msgid-Bugs-To: http://bugs.owncloud.org/\n"
-"POT-Creation-Date: 2013-06-24 02:42+0200\n"
-"PO-Revision-Date: 2013-06-23 23:14+0000\n"
-"Last-Translator: Teogramm <theodorewii121@hotmail.com>\n"
+"POT-Creation-Date: 2013-06-25 02:43+0200\n"
+"PO-Revision-Date: 2013-06-24 23:14+0000\n"
+"Last-Translator: Efstathios Iosifidis <iefstathios@gmail.com>\n"
 "Language-Team: Greek (http://www.transifex.com/projects/p/owncloud/language/el/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -403,7 +407,7 @@ msgstr "Βέλγιο "
 
 #: 3rdparty/Horde/Nls/Countries.php:30 3rdparty/Horde/Nls/Tld.php:49
 msgid "Belize"
-msgstr ""
+msgstr "Μπελίζ"
 
 #: 3rdparty/Horde/Nls/Countries.php:31 3rdparty/Horde/Nls/Tld.php:39
 msgid "Benin"
@@ -487,7 +491,7 @@ msgstr "Δημοκρατία Κεντρικής Αφρικής "
 
 #: 3rdparty/Horde/Nls/Countries.php:51 3rdparty/Horde/Nls/Tld.php:225
 msgid "Chad"
-msgstr ""
+msgstr "Τσαντ"
 
 #: 3rdparty/Horde/Nls/Countries.php:52 3rdparty/Horde/Nls/Tld.php:58
 msgid "Chile"
@@ -531,7 +535,7 @@ msgstr "Κόστα Ρίκα "
 
 #: 3rdparty/Horde/Nls/Countries.php:62
 msgid "Côte d'Ivoire"
-msgstr ""
+msgstr "Ακτή Ελεφαντοστού"
 
 #: 3rdparty/Horde/Nls/Countries.php:63
 msgid "Croatia"
@@ -915,7 +919,7 @@ msgstr "Μοντσερρατ "
 
 #: 3rdparty/Horde/Nls/Countries.php:158 3rdparty/Horde/Nls/Tld.php:149
 msgid "Morocco"
-msgstr ""
+msgstr "Μαρόκο"
 
 #: 3rdparty/Horde/Nls/Countries.php:159 3rdparty/Horde/Nls/Tld.php:170
 msgid "Mozambique"
@@ -923,7 +927,7 @@ msgstr "Μοζαμβίκη"
 
 #: 3rdparty/Horde/Nls/Countries.php:160 3rdparty/Horde/Nls/Tld.php:157
 msgid "Myanmar"
-msgstr ""
+msgstr "Μιανμάρ"
 
 #: 3rdparty/Horde/Nls/Countries.php:161 3rdparty/Horde/Nls/Tld.php:171
 msgid "Namibia"
@@ -940,11 +944,11 @@ msgstr "Νεπάλ"
 
 #: 3rdparty/Horde/Nls/Countries.php:164 3rdparty/Horde/Nls/Tld.php:177
 msgid "Netherlands"
-msgstr ""
+msgstr "Ολλανδία"
 
 #: 3rdparty/Horde/Nls/Countries.php:165 3rdparty/Horde/Nls/Tld.php:172
 msgid "New Caledonia"
-msgstr ""
+msgstr "Νέα Καληδονία"
 
 #: 3rdparty/Horde/Nls/Countries.php:166 3rdparty/Horde/Nls/Tld.php:182
 msgid "New Zealand"
@@ -1361,7 +1365,7 @@ msgstr ""
 
 #: 3rdparty/Horde/Nls/Languages.php:16
 msgid "Arabic"
-msgstr ""
+msgstr "Αραβικά"
 
 #: 3rdparty/Horde/Nls/Languages.php:17
 msgid "Assamese"
@@ -1441,7 +1445,7 @@ msgstr ""
 
 #: 3rdparty/Horde/Nls/Languages.php:36
 msgid "Czech"
-msgstr ""
+msgstr "Τσέχικα"
 
 #: 3rdparty/Horde/Nls/Languages.php:37
 msgid ""
@@ -1495,11 +1499,11 @@ msgstr ""
 
 #: 3rdparty/Horde/Nls/Languages.php:49
 msgid "Estonian"
-msgstr ""
+msgstr "Εσθονικά"
 
 #: 3rdparty/Horde/Nls/Languages.php:50
 msgid "Basque"
-msgstr ""
+msgstr "Βασκικά"
 
 #: 3rdparty/Horde/Nls/Languages.php:51
 msgid "Persian"
@@ -1511,7 +1515,7 @@ msgstr ""
 
 #: 3rdparty/Horde/Nls/Languages.php:53
 msgid "Finnish"
-msgstr ""
+msgstr "Φινλανδικά"
 
 #: 3rdparty/Horde/Nls/Languages.php:54
 msgid "Fijian"
@@ -1531,7 +1535,7 @@ msgstr ""
 
 #: 3rdparty/Horde/Nls/Languages.php:58
 msgid "Irish"
-msgstr ""
+msgstr "Ιρλανδικά"
 
 #: 3rdparty/Horde/Nls/Languages.php:59
 msgid "Scottish Gaelic; Gaelic"
@@ -1747,7 +1751,7 @@ msgstr ""
 
 #: 3rdparty/Horde/Nls/Languages.php:112
 msgid "Macedonian"
-msgstr ""
+msgstr "Σλαβομακεδονική"
 
 #: 3rdparty/Horde/Nls/Languages.php:113
 msgid "Malayalam"
@@ -1791,7 +1795,7 @@ msgstr ""
 
 #: 3rdparty/Horde/Nls/Languages.php:124
 msgid "Dutch"
-msgstr ""
+msgstr "Ολλανδικά"
 
 #: 3rdparty/Horde/Nls/Languages.php:125
 msgid "Norwegian Nynorsk"
@@ -1843,7 +1847,7 @@ msgstr ""
 
 #: 3rdparty/Horde/Nls/Languages.php:137
 msgid "Polish"
-msgstr ""
+msgstr "Πολωνικά"
 
 #: 3rdparty/Horde/Nls/Languages.php:138
 msgid "Pashto, Pushto"
@@ -1851,7 +1855,7 @@ msgstr ""
 
 #: 3rdparty/Horde/Nls/Languages.php:139
 msgid "Portuguese"
-msgstr ""
+msgstr "Πορτογαλικά"
 
 #: 3rdparty/Horde/Nls/Languages.php:140
 msgid "Quechua"
@@ -1871,7 +1875,7 @@ msgstr ""
 
 #: 3rdparty/Horde/Nls/Languages.php:144
 msgid "Russian"
-msgstr ""
+msgstr "Ρωσικά"
 
 #: 3rdparty/Horde/Nls/Languages.php:145
 msgid "Kinyarwanda"
@@ -1903,11 +1907,11 @@ msgstr ""
 
 #: 3rdparty/Horde/Nls/Languages.php:152
 msgid "Slovak"
-msgstr ""
+msgstr "Σλοβακικά"
 
 #: 3rdparty/Horde/Nls/Languages.php:153
 msgid "Slovene"
-msgstr ""
+msgstr "Σλοβενικά"
 
 #: 3rdparty/Horde/Nls/Languages.php:154
 msgid "Samoan"
@@ -1923,11 +1927,11 @@ msgstr ""
 
 #: 3rdparty/Horde/Nls/Languages.php:157
 msgid "Albanian"
-msgstr ""
+msgstr "Αλβανικά"
 
 #: 3rdparty/Horde/Nls/Languages.php:158
 msgid "Serbian"
-msgstr ""
+msgstr "Σέρβικα"
 
 #: 3rdparty/Horde/Nls/Languages.php:159
 msgid "Swati"
@@ -1943,7 +1947,7 @@ msgstr ""
 
 #: 3rdparty/Horde/Nls/Languages.php:162
 msgid "Swedish"
-msgstr ""
+msgstr "Σουηδικά"
 
 #: 3rdparty/Horde/Nls/Languages.php:163
 msgid "Swahili"
@@ -2011,7 +2015,7 @@ msgstr ""
 
 #: 3rdparty/Horde/Nls/Languages.php:179
 msgid "Ukrainian"
-msgstr ""
+msgstr "Ουκρανικά"
 
 #: 3rdparty/Horde/Nls/Languages.php:180
 msgid "Urdu"
@@ -2063,7 +2067,7 @@ msgstr ""
 
 #: 3rdparty/Horde/Nls/Languages.php:192
 msgid "Zulu"
-msgstr ""
+msgstr "Ζουλού"
 
 #: 3rdparty/Horde/Nls/Tld.php:13
 msgid "Ascension Island"
@@ -2123,15 +2127,15 @@ msgstr ""
 
 #: 3rdparty/Horde/Nls/Tld.php:220
 msgid "Soviet Union"
-msgstr ""
+msgstr "Σοβιετική Ένωση"
 
 #: 3rdparty/Horde/Nls/Tld.php:235
 msgid "East Timor"
-msgstr ""
+msgstr "Ανατολικό Τιμόρ"
 
 #: 3rdparty/Horde/Nls/Tld.php:239
 msgid "Taiwan"
-msgstr ""
+msgstr "Ταϊβάν"
 
 #: 3rdparty/Horde/Nls/Tld.php:255
 msgid "Wallis and Futuna Islands"
@@ -2139,7 +2143,7 @@ msgstr ""
 
 #: 3rdparty/Horde/Nls/Tld.php:259
 msgid "Yugoslavia"
-msgstr ""
+msgstr "Γιουγκοσλαβία"
 
 #: js/mail.js:42 js/mail.js:115 js/mail.js:148 js/mail.js:205 js/mail.js:261
 msgid "Error"
@@ -2147,7 +2151,7 @@ msgstr "Σφάλμα"
 
 #: js/mail.js:236
 msgid "Connecting ..."
-msgstr ""
+msgstr "Σύνδεση ..."
 
 #: js/mail.js:252 js/mail.js:267 templates/no-accounts.php:16
 msgid "Connect"
@@ -2163,11 +2167,11 @@ msgstr "Άγνωστο σφάλμα"
 
 #: js/mail.js:269
 msgid "Server Error"
-msgstr ""
+msgstr "Σφάλμα Διακομιστή"
 
 #: templates/index.php:8
 msgid "New Message"
-msgstr ""
+msgstr "Νέο Μήνυμα"
 
 #: templates/index.php:10
 msgid "To"
@@ -2175,7 +2179,7 @@ msgstr "Έως"
 
 #: templates/index.php:11
 msgid "Subject"
-msgstr ""
+msgstr "Θέμα"
 
 #: templates/index.php:13
 msgid "Send"
@@ -2183,16 +2187,16 @@ msgstr "Αποστολή"
 
 #: templates/no-accounts.php:3
 msgid "Connect your mail account"
-msgstr ""
+msgstr "Σύνδεση με τον λογαριασμό αλληλογραφίας σας"
 
 #: templates/no-accounts.php:8
 msgid "Mail Address"
-msgstr ""
+msgstr "Διεύθυνση Αλληλογραφίας"
 
 #: templates/no-accounts.php:13
 msgid "IMAP Password"
-msgstr ""
+msgstr "Συνθηματικό IMAP"
 
 #: templates/part.message.php:31
 msgid "Reply"
-msgstr ""
+msgstr "Απάντηση"
