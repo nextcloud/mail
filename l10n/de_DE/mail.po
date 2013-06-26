@@ -17,9 +17,9 @@ msgid ""
 msgstr ""
 "Project-Id-Version: ownCloud\n"
 "Report-Msgid-Bugs-To: http://bugs.owncloud.org/\n"
-"POT-Creation-Date: 2013-06-25 02:43+0200\n"
-"PO-Revision-Date: 2013-06-24 23:14+0000\n"
-"Last-Translator: Mario Siegmann <mario_siegmann@web.de>\n"
+"POT-Creation-Date: 2013-06-26 02:42+0200\n"
+"PO-Revision-Date: 2013-06-25 23:14+0000\n"
+"Last-Translator: traductor <transifex-2.7.mensaje@spamgourmet.com>\n"
 "Language-Team: German (Germany) <translations@owncloud.org>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -1456,7 +1456,7 @@ msgstr "Alt Kirchen Slavisch, Kirchen Slavisch, Kirchen Slavonisch, Alt Bulgaris
 
 #: 3rdparty/Horde/Nls/Languages.php:38
 msgid "Chuvash"
-msgstr ""
+msgstr "Tschuwaschisch"
 
 #: 3rdparty/Horde/Nls/Languages.php:39
 msgid "Welsh"
@@ -1520,7 +1520,7 @@ msgstr "Finnisch"
 
 #: 3rdparty/Horde/Nls/Languages.php:54
 msgid "Fijian"
-msgstr ""
+msgstr "Fidschi"
 
 #: 3rdparty/Horde/Nls/Languages.php:55
 msgid "Faroese"
@@ -1540,7 +1540,7 @@ msgstr "Irisch"
 
 #: 3rdparty/Horde/Nls/Languages.php:59
 msgid "Scottish Gaelic; Gaelic"
-msgstr ""
+msgstr "Schottisches Gälisch; Gälisch"
 
 #: 3rdparty/Horde/Nls/Languages.php:60
 msgid "Galician"
@@ -1548,7 +1548,7 @@ msgstr "Galicisch"
 
 #: 3rdparty/Horde/Nls/Languages.php:61
 msgid "Guarani"
-msgstr ""
+msgstr "Guarani"
 
 #: 3rdparty/Horde/Nls/Languages.php:62
 msgid "Gujarati"
@@ -1580,7 +1580,7 @@ msgstr "Kroatisch"
 
 #: 3rdparty/Horde/Nls/Languages.php:69
 msgid "Haitian; Haitian Creole"
-msgstr ""
+msgstr "Haitianisch; Haitianisches Kreolisch"
 
 #: 3rdparty/Horde/Nls/Languages.php:70
 msgid "Hungarian"
@@ -1728,7 +1728,7 @@ msgstr ""
 
 #: 3rdparty/Horde/Nls/Languages.php:106
 msgid "Lithuanian"
-msgstr ""
+msgstr "Litauisch"
 
 #: 3rdparty/Horde/Nls/Languages.php:107
 msgid "Luba-Katanga"
@@ -1788,7 +1788,7 @@ msgstr ""
 
 #: 3rdparty/Horde/Nls/Languages.php:122
 msgid "Nepali"
-msgstr ""
+msgstr "Nepali"
 
 #: 3rdparty/Horde/Nls/Languages.php:123
 msgid "Ndonga"
@@ -1916,7 +1916,7 @@ msgstr "Slowenisch"
 
 #: 3rdparty/Horde/Nls/Languages.php:154
 msgid "Samoan"
-msgstr ""
+msgstr "Samoanisch"
 
 #: 3rdparty/Horde/Nls/Languages.php:155
 msgid "Shona"
@@ -1928,7 +1928,7 @@ msgstr ""
 
 #: 3rdparty/Horde/Nls/Languages.php:157
 msgid "Albanian"
-msgstr ""
+msgstr "Albanisch"
 
 #: 3rdparty/Horde/Nls/Languages.php:158
 msgid "Serbian"
@@ -2000,7 +2000,7 @@ msgstr ""
 
 #: 3rdparty/Horde/Nls/Languages.php:175
 msgid "Tatar"
-msgstr ""
+msgstr "Tatarisch"
 
 #: 3rdparty/Horde/Nls/Languages.php:176
 msgid "Twi"
