@@ -3,13 +3,14 @@
 # This file is distributed under the same license as the PACKAGE package.
 # 
 # Translators:
+# వీవెన్ <veeven@gmail.com>, 2013
 msgid ""
 msgstr ""
 "Project-Id-Version: ownCloud\n"
 "Report-Msgid-Bugs-To: http://bugs.owncloud.org/\n"
-"POT-Creation-Date: 2013-07-01 03:34+0200\n"
-"PO-Revision-Date: 2013-06-30 23:14+0000\n"
-"Last-Translator: I Robot <owncloud-bot@tmit.eu>\n"
+"POT-Creation-Date: 2013-07-02 15:31+0200\n"
+"PO-Revision-Date: 2013-07-02 08:10+0000\n"
+"Last-Translator: వీవెన్ <veeven@gmail.com>\n"
 "Language-Team: Telugu (http://www.transifex.com/projects/p/owncloud/language/te/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -310,7 +311,7 @@ msgstr ""
 
 #: 3rdparty/Horde/Nls/Countries.php:8 3rdparty/Horde/Nls/Tld.php:16
 msgid "Afghanistan"
-msgstr ""
+msgstr "ఆఫ్ఘనిస్తాన్"
 
 #: 3rdparty/Horde/Nls/Countries.php:9
 msgid "Åland Islands"
@@ -394,7 +395,7 @@ msgstr ""
 
 #: 3rdparty/Horde/Nls/Countries.php:29 3rdparty/Horde/Nls/Tld.php:34
 msgid "Belgium"
-msgstr ""
+msgstr "బెల్జియం"
 
 #: 3rdparty/Horde/Nls/Countries.php:30 3rdparty/Horde/Nls/Tld.php:49
 msgid "Belize"

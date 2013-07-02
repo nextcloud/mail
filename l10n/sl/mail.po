@@ -10,8 +10,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: ownCloud\n"
 "Report-Msgid-Bugs-To: http://bugs.owncloud.org/\n"
-"POT-Creation-Date: 2013-07-01 03:34+0200\n"
-"PO-Revision-Date: 2013-06-30 23:14+0000\n"
+"POT-Creation-Date: 2013-07-02 15:31+0200\n"
+"PO-Revision-Date: 2013-07-01 20:00+0000\n"
 "Last-Translator: barbarak <barbarak@arnes.si>\n"
 "Language-Team: Slovenian (http://www.transifex.com/projects/p/owncloud/language/sl/)\n"
 "MIME-Version: 1.0\n"
@@ -35,7 +35,7 @@ msgstr "Overitev je spodletela."
 #: 3rdparty/Horde/Imap/Client/Base.php:1856
 #: 3rdparty/Horde/Imap/Client/Base.php:1915
 msgid "Cannot expunge read-only mailbox."
-msgstr ""
+msgstr "Poštnega predala s pravicami samo za branje, ni mogoče izprazniti"
 
 #: 3rdparty/Horde/Imap/Client/Exception/NoSupportExtension.php:36
 #, php-format
@@ -101,7 +101,7 @@ msgstr "Varne povezave TLS s strežnikom IMAP ni mogoče vzpostaviti."
 
 #: 3rdparty/Horde/Imap/Client/Socket.php:366
 msgid "No supported IMAP authentication method could be found."
-msgstr ""
+msgstr "Nobenega podprtega načina za avtentikacjo IMAP ni bilo mogoče najti."
 
 #: 3rdparty/Horde/Imap/Client/Socket.php:383
 msgid "Mail server denied authentication."
@@ -117,12 +117,12 @@ msgstr "Strežnik je zavrnil povezavo."
 
 #: 3rdparty/Horde/Imap/Client/Socket.php:524
 msgid "The mail server does not support IMAP4rev1 (RFC 3501)."
-msgstr ""
+msgstr "Poštni strežnik ne podpira IMAP4rev1 (RFC 3501)."
 
 #: 3rdparty/Horde/Imap/Client/Socket.php:920
 #, php-format
 msgid "Could not open mailbox \"%s\"."
-msgstr ""
+msgstr "Poštnega predala ni bilo mogoče odpreti \"%s\"."
 
 #: 3rdparty/Horde/Imap/Client/Socket.php:1874
 #: 3rdparty/Horde/Imap/Client/Socket.php:2544
@@ -135,26 +135,26 @@ msgstr ""
 #: 3rdparty/Horde/Imap/Client/Socket.php:3537
 #, php-format
 msgid "Invalid METADATA entry: \"%s\"."
-msgstr ""
+msgstr "Neveljaven vnos metapodatkov: \"%s\"."
 
 #: 3rdparty/Horde/Imap/Client/Socket.php:3624
 #, php-format
 msgid "Invalid METADATA value type \"%s\"."
-msgstr ""
+msgstr "Neveljavna vrednost metapodatkov \"%s\"."
 
 #: 3rdparty/Horde/Imap/Client/Socket.php:3857
 #: 3rdparty/Horde/Imap/Client/Socket.php:4128
 msgid "Error when communicating with the mail server."
-msgstr ""
+msgstr "Napaka pri komunikaciji s poštnim strežnikom."
 
 #: 3rdparty/Horde/Imap/Client/Socket.php:3983
 #: 3rdparty/Horde/Imap/Client/Socket.php:4014
 msgid "IMAP error reported by server."
-msgstr ""
+msgstr "Napaka IMAP"
 
 #: 3rdparty/Horde/Imap/Client/Socket.php:3998
 msgid "IMAP Server closed the connection."
-msgstr ""
+msgstr "Strežnik IMAP je prekinil povezavo."
 
 #: 3rdparty/Horde/Imap/Client/Socket.php:4050
 msgid "Mail server closed the connection unexpectedly."
@@ -162,12 +162,12 @@ msgstr "Povezava s poštnim strežnikom je bila nepričakovano prekinjena."
 
 #: 3rdparty/Horde/Imap/Client/Socket.php:4325
 msgid "Charset used in search query is not supported on the mail server."
-msgstr ""
+msgstr "Nabor znakov, uporabljen pri iskanju, ni podprt."
 
 #: 3rdparty/Horde/Imap/Client/Socket.php:4337
 #: 3rdparty/Horde/Imap/Client/Socket.php:4379
 msgid "The mail server was unable to parse the contents of the mail message."
-msgstr ""
+msgstr "Poštni strežnik ni uspel razčleniti vsebino sporočila."
 
 #: 3rdparty/Horde/Imap/Client/Socket.php:4420
 msgid "Could not save message on server."
@@ -179,27 +179,27 @@ msgstr "Sporočila ni bilo mogoče shraniti, saj presega sprejemljivo velikost."
 
 #: 3rdparty/Horde/Imap/Client/Socket.php:4468
 msgid "The comparison algorithm was not recognized by the server."
-msgstr ""
+msgstr "Strežnik ni prepoznal primerjalnega algoritma."
 
 #: 3rdparty/Horde/Imap/Client/Socket.php:4486
 msgid "The metadata item could not be saved because it is too large."
-msgstr ""
+msgstr "Metapodatkov ni bilo mogoče shraniti, saj presegajo dovoljeno velikost."
 
 #: 3rdparty/Horde/Imap/Client/Socket.php:4495
 msgid ""
 "The metadata item could not be saved because the server does not support "
 "private annotations."
-msgstr ""
+msgstr "Metapodatkov ni bilo mogoče shraniti, saj strežnik ne podpira zasebnih zapisov."
 
 #: 3rdparty/Horde/Imap/Client/Socket.php:4504
 msgid ""
 "The metadata item could not be saved because the maximum number of "
 "annotations has been exceeded."
-msgstr ""
+msgstr "Metapodatkov ni bilo mogoče shraniti, saj je bilo število dovoljenih zapisov preseženo."
 
 #: 3rdparty/Horde/Imap/Client/Socket.php:4515
 msgid "Remote server is temporarily unavailable."
-msgstr ""
+msgstr "Oddaljeni strežnik trenutno ni dosegljiv."
 
 #: 3rdparty/Horde/Imap/Client/Socket.php:4523
 msgid "Authentication failed."
@@ -207,15 +207,15 @@ msgstr "Napaka pri avtentikaciji."
 
 #: 3rdparty/Horde/Imap/Client/Socket.php:4531
 msgid "Authentication was successful, but authorization failed."
-msgstr ""
+msgstr "Avtentikacija je uspela, vendar je avtorizacija spodletela."
 
 #: 3rdparty/Horde/Imap/Client/Socket.php:4539
 msgid "Authentication credentials have expired."
-msgstr ""
+msgstr "Prijavni podatki so potekli."
 
 #: 3rdparty/Horde/Imap/Client/Socket.php:4547
 msgid "Operation failed due to a lack of a secure connection."
-msgstr ""
+msgstr "Operacija je spodletela, saj ni bilo na voljo varne povezave."
 
 #: 3rdparty/Horde/Imap/Client/Socket.php:4555
 msgid "You do not have adequate permissions to carry out this operation."
@@ -225,11 +225,11 @@ msgstr "Nimate pravic za izvedbo te operacije."
 msgid ""
 "There was a temporary issue when attempting this operation. Please try again"
 " later."
-msgstr ""
+msgstr "Pri izvajanju operacije je prišlo do napake. Poskusite znova kasneje."
 
 #: 3rdparty/Horde/Imap/Client/Socket.php:4578
 msgid "The mail server is reporting corrupt data in your mailbox."
-msgstr ""
+msgstr "Poštni strežnik poroča, da je vsebina v vašem poštnem predalu poškodovana."
 
 #: 3rdparty/Horde/Imap/Client/Socket.php:4594
 msgid "The mail server has denied the request."
@@ -238,15 +238,15 @@ msgstr "Poštni strežnik je zavrnil zahtevo."
 #: 3rdparty/Horde/Imap/Client/Socket.php:4603
 msgid ""
 "The operation failed because the quota has been exceeded on the mail server."
-msgstr ""
+msgstr "Operacija je spodletela, saj je bila kvota na poštnem strežniku presežena."
 
 #: 3rdparty/Horde/Imap/Client/Socket.php:4612
 msgid "The object could not be created because it already exists."
-msgstr ""
+msgstr "Objekta ni bilo mogoče ustvariti, saj že obstaja."
 
 #: 3rdparty/Horde/Imap/Client/Socket.php:4621
 msgid "The object could not be deleted because it does not exist."
-msgstr ""
+msgstr "Objekta ni bilo mogoče izbrisati, saj ne obstaja."
 
 #: 3rdparty/Horde/Imap/Client/Socket.php:4630
 msgid "The special-use attribute requested for the mailbox is not supported."
@@ -261,7 +261,7 @@ msgstr ""
 #: 3rdparty/Horde/Imap/Client/Utf7imap.php:234
 #: 3rdparty/Horde/Imap/Client/Utf7imap.php:240
 msgid "Error converting UTF7-IMAP string."
-msgstr ""
+msgstr "Napaka pri pretvorbi spremenljivke UTF7-IMAP"
 
 #: 3rdparty/Horde/Mime/Headers.php:535
 msgid "List-Help"
