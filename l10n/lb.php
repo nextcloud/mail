@@ -2,5 +2,6 @@
 "Other" => "Aner",
 "Error" => "Fehler",
 "Connect" => "Verbannen",
-"To" => "Fir"
+"To" => "Fir",
+"Send" => "Schécken"
 );
