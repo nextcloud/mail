@@ -14,13 +14,14 @@
 # stefanniedermann <stefan.niedermann@googlemail.com>, 2013
 # traductor <transifex-2.7.mensaje@spamgourmet.com>, 2013
 # Mirodin <blobbyjj@ymail.com>, 2013
+# kabum <uu.kabum@gmail.com>, 2013
 msgid ""
 msgstr ""
 "Project-Id-Version: ownCloud\n"
 "Report-Msgid-Bugs-To: http://bugs.owncloud.org/\n"
-"POT-Creation-Date: 2013-07-11 02:42+0200\n"
-"PO-Revision-Date: 2013-07-10 23:34+0000\n"
-"Last-Translator: JamFX <niko@nik-o-mat.de>\n"
+"POT-Creation-Date: 2013-07-12 02:42+0200\n"
+"PO-Revision-Date: 2013-07-11 23:14+0000\n"
+"Last-Translator: kabum <uu.kabum@gmail.com>\n"
 "Language-Team: German (Germany) <translations@owncloud.org>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -1481,7 +1482,7 @@ msgstr "Dzongkha"
 
 #: 3rdparty/Horde/Nls/Languages.php:44
 msgid "Ewe"
-msgstr ""
+msgstr "Ewe"
 
 #: 3rdparty/Horde/Nls/Languages.php:45
 msgid "Greek, Modern"
@@ -1513,7 +1514,7 @@ msgstr "Persisch"
 
 #: 3rdparty/Horde/Nls/Languages.php:52
 msgid "Fula; Fulah; Pulaar; Pular"
-msgstr ""
+msgstr "Fulfulde"
 
 #: 3rdparty/Horde/Nls/Languages.php:53
 msgid "Finnish"
@@ -1553,7 +1554,7 @@ msgstr "Guarani"
 
 #: 3rdparty/Horde/Nls/Languages.php:62
 msgid "Gujarati"
-msgstr ""
+msgstr "Gujaratisch"
 
 #: 3rdparty/Horde/Nls/Languages.php:63
 msgid "Manx"
@@ -1893,19 +1894,19 @@ msgstr "Sardisch"
 
 #: 3rdparty/Horde/Nls/Languages.php:148
 msgid "Sindhi"
-msgstr ""
+msgstr "Sindhi"
 
 #: 3rdparty/Horde/Nls/Languages.php:149
 msgid "Northern Sami"
-msgstr ""
+msgstr "Nordsamisch"
 
 #: 3rdparty/Horde/Nls/Languages.php:150
 msgid "Sango"
-msgstr ""
+msgstr "Sango"
 
 #: 3rdparty/Horde/Nls/Languages.php:151
 msgid "Sinhala, Sinhalese"
-msgstr ""
+msgstr "Singhalesisch"
 
 #: 3rdparty/Horde/Nls/Languages.php:152
 msgid "Slovak"
@@ -1921,11 +1922,11 @@ msgstr "Samoanisch"
 
 #: 3rdparty/Horde/Nls/Languages.php:155
 msgid "Shona"
-msgstr ""
+msgstr "Shona"
 
 #: 3rdparty/Horde/Nls/Languages.php:156
 msgid "Somali"
-msgstr ""
+msgstr "Somali"
 
 #: 3rdparty/Horde/Nls/Languages.php:157
 msgid "Albanian"
@@ -1937,15 +1938,15 @@ msgstr "Serbisch"
 
 #: 3rdparty/Horde/Nls/Languages.php:159
 msgid "Swati"
-msgstr ""
+msgstr "Swati"
 
 #: 3rdparty/Horde/Nls/Languages.php:160
 msgid "Southern Sotho"
-msgstr ""
+msgstr "Sesotho"
 
 #: 3rdparty/Horde/Nls/Languages.php:161
 msgid "Sundanese"
-msgstr ""
+msgstr "Sundanesisch"
 
 #: 3rdparty/Horde/Nls/Languages.php:162
 msgid "Swedish"
@@ -1953,19 +1954,19 @@ msgstr "Schwedisch"
 
 #: 3rdparty/Horde/Nls/Languages.php:163
 msgid "Swahili"
-msgstr ""
+msgstr "Swahili"
 
 #: 3rdparty/Horde/Nls/Languages.php:164
 msgid "Tamil"
-msgstr ""
+msgstr "Tamil"
 
 #: 3rdparty/Horde/Nls/Languages.php:165
 msgid "Telugu"
-msgstr ""
+msgstr "Telugu"
 
 #: 3rdparty/Horde/Nls/Languages.php:166
 msgid "Tajik"
-msgstr ""
+msgstr "Tadschikisch"
 
 #: 3rdparty/Horde/Nls/Languages.php:167
 msgid "Thai"
@@ -1973,23 +1974,23 @@ msgstr "Thailändisch"
 
 #: 3rdparty/Horde/Nls/Languages.php:168
 msgid "Tigrinya"
-msgstr ""
+msgstr "Tigrinya"
 
 #: 3rdparty/Horde/Nls/Languages.php:169
 msgid "Turkmen"
-msgstr ""
+msgstr "Turkmenisch"
 
 #: 3rdparty/Horde/Nls/Languages.php:170
 msgid "Tagalog"
-msgstr ""
+msgstr "Tagalog"
 
 #: 3rdparty/Horde/Nls/Languages.php:171
 msgid "Tswana"
-msgstr ""
+msgstr "Tswana"
 
 #: 3rdparty/Horde/Nls/Languages.php:172
 msgid "Tonga (Tonga Islands)"
-msgstr ""
+msgstr "Tonga (Königreich Tonga)"
 
 #: 3rdparty/Horde/Nls/Languages.php:173
 msgid "Turkish"
@@ -1997,7 +1998,7 @@ msgstr "Türkisch"
 
 #: 3rdparty/Horde/Nls/Languages.php:174
 msgid "Tsonga"
-msgstr ""
+msgstr "Xitsonga"
 
 #: 3rdparty/Horde/Nls/Languages.php:175
 msgid "Tatar"
@@ -2005,7 +2006,7 @@ msgstr "Tatarisch"
 
 #: 3rdparty/Horde/Nls/Languages.php:176
 msgid "Twi"
-msgstr ""
+msgstr "Twi"
 
 #: 3rdparty/Horde/Nls/Languages.php:177
 msgid "Tahitian"
@@ -2013,7 +2014,7 @@ msgstr "Tahitisch"
 
 #: 3rdparty/Horde/Nls/Languages.php:178
 msgid "Uighur, Uyghur"
-msgstr ""
+msgstr "Uigurisch"
 
 #: 3rdparty/Horde/Nls/Languages.php:179
 msgid "Ukrainian"
@@ -2021,15 +2022,15 @@ msgstr "Ukrainisch"
 
 #: 3rdparty/Horde/Nls/Languages.php:180
 msgid "Urdu"
-msgstr ""
+msgstr "Urdu"
 
 #: 3rdparty/Horde/Nls/Languages.php:181
 msgid "Uzbek"
-msgstr ""
+msgstr "Usbekisch"
 
 #: 3rdparty/Horde/Nls/Languages.php:182
 msgid "Venda"
-msgstr ""
+msgstr "Tshivenda"
 
 #: 3rdparty/Horde/Nls/Languages.php:183
 msgid "Vietnamese"
@@ -2037,7 +2038,7 @@ msgstr "Vietnamesisch"
 
 #: 3rdparty/Horde/Nls/Languages.php:184
 msgid "Volapük"
-msgstr ""
+msgstr "Volapük"
 
 #: 3rdparty/Horde/Nls/Languages.php:185
 msgid "Walloon"
@@ -2045,11 +2046,11 @@ msgstr "Wallonisch"
 
 #: 3rdparty/Horde/Nls/Languages.php:186
 msgid "Wolof"
-msgstr ""
+msgstr "Wolof"
 
 #: 3rdparty/Horde/Nls/Languages.php:187
 msgid "Xhosa"
-msgstr ""
+msgstr "Xhosa"
 
 #: 3rdparty/Horde/Nls/Languages.php:188
 msgid "Yiddish"
@@ -2057,11 +2058,11 @@ msgstr "Jiddisch"
 
 #: 3rdparty/Horde/Nls/Languages.php:189
 msgid "Yoruba"
-msgstr ""
+msgstr "Yoruba"
 
 #: 3rdparty/Horde/Nls/Languages.php:190
 msgid "Zhuang, Chuang"
-msgstr ""
+msgstr "Zhuang"
 
 #: 3rdparty/Horde/Nls/Languages.php:191
 msgid "Chinese"
@@ -2097,7 +2098,7 @@ msgstr "Europäische Union"
 
 #: 3rdparty/Horde/Nls/Tld.php:108
 msgid "Heard and McDonald Islands"
-msgstr ""
+msgstr "Heard und McDonaldinseln"
 
 #: 3rdparty/Horde/Nls/Tld.php:110
 msgid "Croatia/Hrvatska"
@@ -2105,7 +2106,7 @@ msgstr "Kroatien"
 
 #: 3rdparty/Horde/Nls/Tld.php:148
 msgid "Libyan Arab Jamahiriya"
-msgstr ""
+msgstr "Libysch-Arabische Dschamahirija"
 
 #: 3rdparty/Horde/Nls/Tld.php:155
 msgid "Macedonia, The Former Yugoslav Republic of"
