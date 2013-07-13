@@ -8,8 +8,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: ownCloud\n"
 "Report-Msgid-Bugs-To: http://bugs.owncloud.org/\n"
-"POT-Creation-Date: 2013-07-12 02:42+0200\n"
-"PO-Revision-Date: 2013-07-11 23:14+0000\n"
+"POT-Creation-Date: 2013-07-13 03:52+0200\n"
+"PO-Revision-Date: 2013-07-12 23:14+0000\n"
 "Last-Translator: Helder Meneses <helder.meneses@gmail.com>\n"
 "Language-Team: Portuguese (Portugal) (http://www.transifex.com/projects/p/owncloud/language/pt_PT/)\n"
 "MIME-Version: 1.0\n"
@@ -2159,7 +2159,7 @@ msgstr "Erro Desconhecido"
 
 #: js/mail.js:269
 msgid "Server Error"
-msgstr ""
+msgstr "Erro no servidor"
 
 #: templates/index.php:8
 msgid "New Message"
@@ -2179,7 +2179,7 @@ msgstr "Enviar"
 
 #: templates/no-accounts.php:3
 msgid "Connect your mail account"
-msgstr ""
+msgstr "Ligar à sua conta de correio"
 
 #: templates/no-accounts.php:8
 msgid "Mail Address"
