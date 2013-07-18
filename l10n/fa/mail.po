@@ -10,8 +10,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: ownCloud\n"
 "Report-Msgid-Bugs-To: http://bugs.owncloud.org/\n"
-"POT-Creation-Date: 2013-07-17 03:39-0400\n"
-"PO-Revision-Date: 2013-07-17 07:37+0000\n"
+"POT-Creation-Date: 2013-07-18 02:41-0400\n"
+"PO-Revision-Date: 2013-07-18 05:14+0000\n"
 "Last-Translator: miki_mika1362 <miki_mika1362@yahoo.com>\n"
 "Language-Team: Persian (http://www.transifex.com/projects/p/owncloud/language/fa/)\n"
 "MIME-Version: 1.0\n"
@@ -85,11 +85,11 @@ msgstr "روش احراز هویت نامعلوم: %s"
 
 #: 3rdparty/Horde/Imap/Client/Socket/Pop3.php:1112
 msgid "POP3 Server closed the connection unexpectedly."
-msgstr ""
+msgstr "سرورPOP3 به صورت غیرمنتظره اتصال را بسته است."
 
 #: 3rdparty/Horde/Imap/Client/Socket/Pop3.php:1172
 msgid "POP3 error reported by server."
-msgstr ""
+msgstr "خطای POP3 توسط سرور گزارش شده است."
 
 #: 3rdparty/Horde/Imap/Client/Socket.php:311
 msgid "Server does not support TLS connections."
@@ -265,43 +265,43 @@ msgstr ""
 
 #: 3rdparty/Horde/Mime/Headers.php:535
 msgid "List-Help"
-msgstr ""
+msgstr "لیست راهنما"
 
 #: 3rdparty/Horde/Mime/Headers.php:536
 msgid "List-Unsubscribe"
-msgstr ""
+msgstr "لیست لغو عضویت"
 
 #: 3rdparty/Horde/Mime/Headers.php:537
 msgid "List-Subscribe"
-msgstr ""
+msgstr "لیست عضویت "
 
 #: 3rdparty/Horde/Mime/Headers.php:538
 msgid "List-Owner"
-msgstr ""
+msgstr "لیست مالک"
 
 #: 3rdparty/Horde/Mime/Headers.php:539
 msgid "List-Post"
-msgstr ""
+msgstr "لیست پست"
 
 #: 3rdparty/Horde/Mime/Headers.php:540
 msgid "List-Archive"
-msgstr ""
+msgstr "لیست آرشیو"
 
 #: 3rdparty/Horde/Mime/Headers.php:542
 msgid "List-Id"
-msgstr ""
+msgstr "لیست Id"
 
 #: 3rdparty/Horde/Mime/Mail.php:417
 msgid "Plaintext Version of Message"
-msgstr ""
+msgstr "نسخه متنی پیغام"
 
 #: 3rdparty/Horde/Mime/Mail.php:419
 msgid "HTML Version of Message"
-msgstr ""
+msgstr "نسخه HTML پیغام"
 
 #: 3rdparty/Horde/Mime/Mdn.php:188
 msgid "Disposition Notification"
-msgstr ""
+msgstr "هشدار از طریق وضع"
 
 #: 3rdparty/Horde/Mime/Mdn.php:200
 #, php-format
@@ -313,111 +313,111 @@ msgstr ""
 
 #: 3rdparty/Horde/Nls/Countries.php:8 3rdparty/Horde/Nls/Tld.php:16
 msgid "Afghanistan"
-msgstr ""
+msgstr "افغانستان"
 
 #: 3rdparty/Horde/Nls/Countries.php:9
 msgid "Åland Islands"
-msgstr ""
+msgstr "جزایر آلاند"
 
 #: 3rdparty/Horde/Nls/Countries.php:10 3rdparty/Horde/Nls/Tld.php:19
 msgid "Albania"
-msgstr ""
+msgstr "آلبانی"
 
 #: 3rdparty/Horde/Nls/Countries.php:11 3rdparty/Horde/Nls/Tld.php:73
 msgid "Algeria"
-msgstr ""
+msgstr "الجزایر"
 
 #: 3rdparty/Horde/Nls/Countries.php:12 3rdparty/Horde/Nls/Tld.php:25
 msgid "American Samoa"
-msgstr ""
+msgstr "ساموای آمریکا"
 
 #: 3rdparty/Horde/Nls/Countries.php:13 3rdparty/Horde/Nls/Tld.php:14
 msgid "Andorra"
-msgstr ""
+msgstr "آندورا"
 
 #: 3rdparty/Horde/Nls/Countries.php:14 3rdparty/Horde/Nls/Tld.php:22
 msgid "Angola"
-msgstr ""
+msgstr "آنگولا"
 
 #: 3rdparty/Horde/Nls/Countries.php:15 3rdparty/Horde/Nls/Tld.php:18
 msgid "Anguilla"
-msgstr ""
+msgstr "آنگویلا"
 
 #: 3rdparty/Horde/Nls/Countries.php:16 3rdparty/Horde/Nls/Tld.php:23
 msgid "Antarctica"
-msgstr ""
+msgstr "قطب جنوب"
 
 #: 3rdparty/Horde/Nls/Countries.php:17 3rdparty/Horde/Nls/Tld.php:17
 msgid "Antigua and Barbuda"
-msgstr ""
+msgstr "آنتیگوا و باربودا"
 
 #: 3rdparty/Horde/Nls/Countries.php:18 3rdparty/Horde/Nls/Tld.php:24
 msgid "Argentina"
-msgstr ""
+msgstr "آرژانتین"
 
 #: 3rdparty/Horde/Nls/Countries.php:19 3rdparty/Horde/Nls/Tld.php:20
 msgid "Armenia"
-msgstr ""
+msgstr "ارمنستان"
 
 #: 3rdparty/Horde/Nls/Countries.php:20 3rdparty/Horde/Nls/Tld.php:28
 msgid "Aruba"
-msgstr ""
+msgstr "آروبا"
 
 #: 3rdparty/Horde/Nls/Countries.php:21 3rdparty/Horde/Nls/Tld.php:27
 msgid "Australia"
-msgstr ""
+msgstr "استرالیا"
 
 #: 3rdparty/Horde/Nls/Countries.php:22 3rdparty/Horde/Nls/Tld.php:26
 msgid "Austria"
-msgstr ""
+msgstr "اتریش"
 
 #: 3rdparty/Horde/Nls/Countries.php:23 3rdparty/Horde/Nls/Tld.php:30
 msgid "Azerbaijan"
-msgstr ""
+msgstr "آذربایجان"
 
 #: 3rdparty/Horde/Nls/Countries.php:24 3rdparty/Horde/Nls/Tld.php:44
 msgid "Bahamas"
-msgstr ""
+msgstr "باهاما"
 
 #: 3rdparty/Horde/Nls/Countries.php:25 3rdparty/Horde/Nls/Tld.php:37
 msgid "Bahrain"
-msgstr ""
+msgstr "بحرین"
 
 #: 3rdparty/Horde/Nls/Countries.php:26 3rdparty/Horde/Nls/Tld.php:33
 msgid "Bangladesh"
-msgstr ""
+msgstr "بنگلادش"
 
 #: 3rdparty/Horde/Nls/Countries.php:27 3rdparty/Horde/Nls/Tld.php:32
 msgid "Barbados"
-msgstr ""
+msgstr "باربادوس"
 
 #: 3rdparty/Horde/Nls/Countries.php:28 3rdparty/Horde/Nls/Tld.php:48
 msgid "Belarus"
-msgstr ""
+msgstr "بلاروس"
 
 #: 3rdparty/Horde/Nls/Countries.php:29 3rdparty/Horde/Nls/Tld.php:34
 msgid "Belgium"
-msgstr ""
+msgstr "بلژیک"
 
 #: 3rdparty/Horde/Nls/Countries.php:30 3rdparty/Horde/Nls/Tld.php:49
 msgid "Belize"
-msgstr ""
+msgstr "بلیز"
 
 #: 3rdparty/Horde/Nls/Countries.php:31 3rdparty/Horde/Nls/Tld.php:39
 msgid "Benin"
-msgstr ""
+msgstr "بنین"
 
 #: 3rdparty/Horde/Nls/Countries.php:32 3rdparty/Horde/Nls/Tld.php:40
 msgid "Bermuda"
-msgstr ""
+msgstr "برمودا"
 
 #: 3rdparty/Horde/Nls/Countries.php:33 3rdparty/Horde/Nls/Tld.php:45
 msgid "Bhutan"
-msgstr ""
+msgstr "بوتان"
 
 #: 3rdparty/Horde/Nls/Countries.php:34 3rdparty/Horde/Nls/Tld.php:42
 msgid "Bolivia"
-msgstr ""
+msgstr "بولیوی"
 
 #: 3rdparty/Horde/Nls/Countries.php:35
 msgid "Bonaire, Sint Eustatius and Saba"
@@ -425,127 +425,127 @@ msgstr ""
 
 #: 3rdparty/Horde/Nls/Countries.php:36 3rdparty/Horde/Nls/Tld.php:31
 msgid "Bosnia and Herzegovina"
-msgstr ""
+msgstr "بوسنی و هرزگوین"
 
 #: 3rdparty/Horde/Nls/Countries.php:37 3rdparty/Horde/Nls/Tld.php:47
 msgid "Botswana"
-msgstr ""
+msgstr "بوتسوانا"
 
 #: 3rdparty/Horde/Nls/Countries.php:38 3rdparty/Horde/Nls/Tld.php:46
 msgid "Bouvet Island"
-msgstr ""
+msgstr "جزیره بووت"
 
 #: 3rdparty/Horde/Nls/Countries.php:39 3rdparty/Horde/Nls/Tld.php:43
 msgid "Brazil"
-msgstr ""
+msgstr "برزیل"
 
 #: 3rdparty/Horde/Nls/Countries.php:40 3rdparty/Horde/Nls/Tld.php:118
 msgid "British Indian Ocean Territory"
-msgstr ""
+msgstr "قلمرو اقیانوس هند بریتانیا"
 
 #: 3rdparty/Horde/Nls/Countries.php:41 3rdparty/Horde/Nls/Tld.php:41
 msgid "Brunei Darussalam"
-msgstr ""
+msgstr "برونئی دارالسلام"
 
 #: 3rdparty/Horde/Nls/Countries.php:42 3rdparty/Horde/Nls/Tld.php:36
 msgid "Bulgaria"
-msgstr ""
+msgstr "بلغارستان"
 
 #: 3rdparty/Horde/Nls/Countries.php:43 3rdparty/Horde/Nls/Tld.php:35
 msgid "Burkina Faso"
-msgstr ""
+msgstr "بورکینا فاسو"
 
 #: 3rdparty/Horde/Nls/Countries.php:44 3rdparty/Horde/Nls/Tld.php:38
 msgid "Burundi"
-msgstr ""
+msgstr "بروندی"
 
 #: 3rdparty/Horde/Nls/Countries.php:45 3rdparty/Horde/Nls/Tld.php:129
 msgid "Cambodia"
-msgstr ""
+msgstr "کامبوج"
 
 #: 3rdparty/Horde/Nls/Countries.php:46 3rdparty/Horde/Nls/Tld.php:59
 msgid "Cameroon"
-msgstr ""
+msgstr "کامرون"
 
 #: 3rdparty/Horde/Nls/Countries.php:47 3rdparty/Horde/Nls/Tld.php:50
 msgid "Canada"
-msgstr ""
+msgstr "کانادا"
 
 #: 3rdparty/Horde/Nls/Countries.php:48 3rdparty/Horde/Nls/Tld.php:64
 msgid "Cape Verde"
-msgstr ""
+msgstr "کیپ ورد"
 
 #: 3rdparty/Horde/Nls/Countries.php:49 3rdparty/Horde/Nls/Tld.php:136
 msgid "Cayman Islands"
-msgstr ""
+msgstr "جزایر کیمن"
 
 #: 3rdparty/Horde/Nls/Countries.php:50 3rdparty/Horde/Nls/Tld.php:53
 msgid "Central African Republic"
-msgstr ""
+msgstr "جمهوری آفریقای مرکزی"
 
 #: 3rdparty/Horde/Nls/Countries.php:51 3rdparty/Horde/Nls/Tld.php:225
 msgid "Chad"
-msgstr ""
+msgstr "خرده کاغذ"
 
 #: 3rdparty/Horde/Nls/Countries.php:52 3rdparty/Horde/Nls/Tld.php:58
 msgid "Chile"
-msgstr ""
+msgstr "شیلی"
 
 #: 3rdparty/Horde/Nls/Countries.php:53 3rdparty/Horde/Nls/Tld.php:60
 msgid "China"
-msgstr ""
+msgstr "چین"
 
 #: 3rdparty/Horde/Nls/Countries.php:54 3rdparty/Horde/Nls/Tld.php:65
 msgid "Christmas Island"
-msgstr ""
+msgstr "جزیره کریسمس"
 
 #: 3rdparty/Horde/Nls/Countries.php:55 3rdparty/Horde/Nls/Tld.php:51
 msgid "Cocos (Keeling) Islands"
-msgstr ""
+msgstr "جزایر کوکز(Keeling)"
 
 #: 3rdparty/Horde/Nls/Countries.php:56 3rdparty/Horde/Nls/Tld.php:61
 msgid "Colombia"
-msgstr ""
+msgstr "کلمبیا"
 
 #: 3rdparty/Horde/Nls/Countries.php:57 3rdparty/Horde/Nls/Tld.php:131
 msgid "Comoros"
-msgstr ""
+msgstr "کومور"
 
 #: 3rdparty/Horde/Nls/Countries.php:58
 msgid "Congo"
-msgstr ""
+msgstr "کنگو"
 
 #: 3rdparty/Horde/Nls/Countries.php:59 3rdparty/Horde/Nls/Tld.php:52
 msgid "Congo, The Democratic Republic of the"
-msgstr ""
+msgstr "کنگو، جمهوری دموکراتیک"
 
 #: 3rdparty/Horde/Nls/Countries.php:60 3rdparty/Horde/Nls/Tld.php:57
 msgid "Cook Islands"
-msgstr ""
+msgstr "جزایر کوک"
 
 #: 3rdparty/Horde/Nls/Countries.php:61 3rdparty/Horde/Nls/Tld.php:62
 msgid "Costa Rica"
-msgstr ""
+msgstr "کاستاریکا"
 
 #: 3rdparty/Horde/Nls/Countries.php:62
 msgid "Côte d'Ivoire"
-msgstr ""
+msgstr "ساحل عاج"
 
 #: 3rdparty/Horde/Nls/Countries.php:63
 msgid "Croatia"
-msgstr ""
+msgstr "کرواسی"
 
 #: 3rdparty/Horde/Nls/Countries.php:64 3rdparty/Horde/Nls/Tld.php:63
 msgid "Cuba"
-msgstr ""
+msgstr "کوبا"
 
 #: 3rdparty/Horde/Nls/Countries.php:65
 msgid "Curaçao"
-msgstr ""
+msgstr "ویدیو"
 
 #: 3rdparty/Horde/Nls/Countries.php:66 3rdparty/Horde/Nls/Tld.php:66
 msgid "Cyprus"
-msgstr ""
+msgstr "قبرس"
 
 #: 3rdparty/Horde/Nls/Countries.php:67 3rdparty/Horde/Nls/Tld.php:67
 msgid "Czech Republic"
@@ -557,19 +557,19 @@ msgstr "دانمارک"
 
 #: 3rdparty/Horde/Nls/Countries.php:69 3rdparty/Horde/Nls/Tld.php:69
 msgid "Djibouti"
-msgstr ""
+msgstr "جیبوتی"
 
 #: 3rdparty/Horde/Nls/Countries.php:70 3rdparty/Horde/Nls/Tld.php:71
 msgid "Dominica"
-msgstr ""
+msgstr "دومینیکا"
 
 #: 3rdparty/Horde/Nls/Countries.php:71 3rdparty/Horde/Nls/Tld.php:72
 msgid "Dominican Republic"
-msgstr ""
+msgstr "جمهوری دومینیکن"
 
 #: 3rdparty/Horde/Nls/Countries.php:72 3rdparty/Horde/Nls/Tld.php:74
 msgid "Ecuador"
-msgstr ""
+msgstr "اکوادور"
 
 #: 3rdparty/Horde/Nls/Countries.php:73 3rdparty/Horde/Nls/Tld.php:76
 msgid "Egypt"
@@ -577,39 +577,39 @@ msgstr "مصر"
 
 #: 3rdparty/Horde/Nls/Countries.php:74 3rdparty/Horde/Nls/Tld.php:221
 msgid "El Salvador"
-msgstr ""
+msgstr "السالوادور"
 
 #: 3rdparty/Horde/Nls/Countries.php:75 3rdparty/Horde/Nls/Tld.php:100
 msgid "Equatorial Guinea"
-msgstr ""
+msgstr "گینه استوایی"
 
 #: 3rdparty/Horde/Nls/Countries.php:76 3rdparty/Horde/Nls/Tld.php:78
 msgid "Eritrea"
-msgstr ""
+msgstr "اریتره"
 
 #: 3rdparty/Horde/Nls/Countries.php:77 3rdparty/Horde/Nls/Tld.php:75
 msgid "Estonia"
-msgstr ""
+msgstr "استونی"
 
 #: 3rdparty/Horde/Nls/Countries.php:78 3rdparty/Horde/Nls/Tld.php:80
 msgid "Ethiopia"
-msgstr ""
+msgstr "اتیوپی"
 
 #: 3rdparty/Horde/Nls/Countries.php:79 3rdparty/Horde/Nls/Tld.php:84
 msgid "Falkland Islands (Malvinas)"
-msgstr ""
+msgstr "جزایر فالکلند (مالویناس)"
 
 #: 3rdparty/Horde/Nls/Countries.php:80 3rdparty/Horde/Nls/Tld.php:86
 msgid "Faroe Islands"
-msgstr ""
+msgstr "جزایر فارو"
 
 #: 3rdparty/Horde/Nls/Countries.php:81 3rdparty/Horde/Nls/Tld.php:83
 msgid "Fiji"
-msgstr ""
+msgstr "فیجی"
 
 #: 3rdparty/Horde/Nls/Countries.php:82 3rdparty/Horde/Nls/Tld.php:82
 msgid "Finland"
-msgstr ""
+msgstr "فنلاند"
 
 #: 3rdparty/Horde/Nls/Countries.php:83 3rdparty/Horde/Nls/Tld.php:87
 msgid "France"
@@ -617,127 +617,127 @@ msgstr "فرانسه"
 
 #: 3rdparty/Horde/Nls/Countries.php:84 3rdparty/Horde/Nls/Tld.php:92
 msgid "French Guiana"
-msgstr ""
+msgstr "گویان فرانسه"
 
 #: 3rdparty/Horde/Nls/Countries.php:85 3rdparty/Horde/Nls/Tld.php:186
 msgid "French Polynesia"
-msgstr ""
+msgstr "پلینزی فرانسه"
 
 #: 3rdparty/Horde/Nls/Countries.php:86 3rdparty/Horde/Nls/Tld.php:226
 msgid "French Southern Territories"
-msgstr ""
+msgstr "مناطق جنوبی فرانسوی"
 
 #: 3rdparty/Horde/Nls/Countries.php:87 3rdparty/Horde/Nls/Tld.php:88
 msgid "Gabon"
-msgstr ""
+msgstr "گابن"
 
 #: 3rdparty/Horde/Nls/Countries.php:88 3rdparty/Horde/Nls/Tld.php:97
 msgid "Gambia"
-msgstr ""
+msgstr "گامبیا"
 
 #: 3rdparty/Horde/Nls/Countries.php:89 3rdparty/Horde/Nls/Tld.php:91
 msgid "Georgia"
-msgstr ""
+msgstr "گرجستان"
 
 #: 3rdparty/Horde/Nls/Countries.php:90 3rdparty/Horde/Nls/Tld.php:68
 msgid "Germany"
-msgstr ""
+msgstr "آلمان"
 
 #: 3rdparty/Horde/Nls/Countries.php:91 3rdparty/Horde/Nls/Tld.php:94
 msgid "Ghana"
-msgstr ""
+msgstr "غنا"
 
 #: 3rdparty/Horde/Nls/Countries.php:92 3rdparty/Horde/Nls/Tld.php:95
 msgid "Gibraltar"
-msgstr ""
+msgstr "جبل الطارق"
 
 #: 3rdparty/Horde/Nls/Countries.php:93 3rdparty/Horde/Nls/Tld.php:101
 msgid "Greece"
-msgstr ""
+msgstr "یونان"
 
 #: 3rdparty/Horde/Nls/Countries.php:94 3rdparty/Horde/Nls/Tld.php:96
 msgid "Greenland"
-msgstr ""
+msgstr "گرینلند"
 
 #: 3rdparty/Horde/Nls/Countries.php:95 3rdparty/Horde/Nls/Tld.php:90
 msgid "Grenada"
-msgstr ""
+msgstr "گرانادا"
 
 #: 3rdparty/Horde/Nls/Countries.php:96 3rdparty/Horde/Nls/Tld.php:99
 msgid "Guadeloupe"
-msgstr ""
+msgstr "جزیره گوادلوپ"
 
 #: 3rdparty/Horde/Nls/Countries.php:97 3rdparty/Horde/Nls/Tld.php:104
 msgid "Guam"
-msgstr ""
+msgstr "گوام"
 
 #: 3rdparty/Horde/Nls/Countries.php:98 3rdparty/Horde/Nls/Tld.php:103
 msgid "Guatemala"
-msgstr ""
+msgstr "گواتمالا"
 
 #: 3rdparty/Horde/Nls/Countries.php:99 3rdparty/Horde/Nls/Tld.php:93
 msgid "Guernsey"
-msgstr ""
+msgstr "گواتمالا"
 
 #: 3rdparty/Horde/Nls/Countries.php:100 3rdparty/Horde/Nls/Tld.php:98
 msgid "Guinea"
-msgstr ""
+msgstr "گینه"
 
 #: 3rdparty/Horde/Nls/Countries.php:101 3rdparty/Horde/Nls/Tld.php:105
 msgid "Guinea-Bissau"
-msgstr ""
+msgstr "گینه بیسائو"
 
 #: 3rdparty/Horde/Nls/Countries.php:102 3rdparty/Horde/Nls/Tld.php:106
 msgid "Guyana"
-msgstr ""
+msgstr "گویان"
 
 #: 3rdparty/Horde/Nls/Countries.php:103 3rdparty/Horde/Nls/Tld.php:111
 msgid "Haiti"
-msgstr ""
+msgstr "هائیتی"
 
 #: 3rdparty/Horde/Nls/Countries.php:104
 msgid "Heard Island and McDonald Islands"
-msgstr ""
+msgstr "جزیره هرد و جزایر مک دونالد"
 
 #: 3rdparty/Horde/Nls/Countries.php:105 3rdparty/Horde/Nls/Tld.php:248
 msgid "Holy See (Vatican City State)"
-msgstr ""
+msgstr "هولی (خارجه واتیکان شهر)"
 
 #: 3rdparty/Horde/Nls/Countries.php:106 3rdparty/Horde/Nls/Tld.php:109
 msgid "Honduras"
-msgstr ""
+msgstr "هندوراس"
 
 #: 3rdparty/Horde/Nls/Countries.php:107 3rdparty/Horde/Nls/Tld.php:107
 msgid "Hong Kong"
-msgstr ""
+msgstr "هنگ کنگ"
 
 #: 3rdparty/Horde/Nls/Countries.php:108 3rdparty/Horde/Nls/Tld.php:112
 msgid "Hungary"
-msgstr ""
+msgstr "مجارستان"
 
 #: 3rdparty/Horde/Nls/Countries.php:109 3rdparty/Horde/Nls/Tld.php:121
 msgid "Iceland"
-msgstr ""
+msgstr "ایسلند"
 
 #: 3rdparty/Horde/Nls/Countries.php:110 3rdparty/Horde/Nls/Tld.php:117
 msgid "India"
-msgstr ""
+msgstr "هند"
 
 #: 3rdparty/Horde/Nls/Countries.php:111 3rdparty/Horde/Nls/Tld.php:113
 msgid "Indonesia"
-msgstr ""
+msgstr "اندونزی"
 
 #: 3rdparty/Horde/Nls/Countries.php:112 3rdparty/Horde/Nls/Tld.php:120
 msgid "Iran, Islamic Republic of"
-msgstr ""
+msgstr "ایران، جمهوری اسلامی"
 
 #: 3rdparty/Horde/Nls/Countries.php:113 3rdparty/Horde/Nls/Tld.php:119
 msgid "Iraq"
-msgstr ""
+msgstr "عراق"
 
 #: 3rdparty/Horde/Nls/Countries.php:114 3rdparty/Horde/Nls/Tld.php:114
 msgid "Ireland"
-msgstr ""
+msgstr "ایرلند"
 
 #: 3rdparty/Horde/Nls/Countries.php:115 3rdparty/Horde/Nls/Tld.php:116
 msgid "Isle of Man"
@@ -749,288 +749,288 @@ msgstr "رژیم اشغال‌گر قدس"
 
 #: 3rdparty/Horde/Nls/Countries.php:117 3rdparty/Horde/Nls/Tld.php:122
 msgid "Italy"
-msgstr ""
+msgstr "ایتالیا"
 
 #: 3rdparty/Horde/Nls/Countries.php:118 3rdparty/Horde/Nls/Tld.php:124
 msgid "Jamaica"
-msgstr ""
+msgstr "جامائیکا"
 
 #: 3rdparty/Horde/Nls/Countries.php:119 3rdparty/Horde/Nls/Tld.php:126
 msgid "Japan"
-msgstr ""
+msgstr "ژاپن"
 
 #: 3rdparty/Horde/Nls/Countries.php:120 3rdparty/Horde/Nls/Tld.php:123
 msgid "Jersey"
-msgstr ""
+msgstr "جرسی"
 
 #: 3rdparty/Horde/Nls/Countries.php:121 3rdparty/Horde/Nls/Tld.php:125
 msgid "Jordan"
-msgstr ""
+msgstr "اردن"
 
 #: 3rdparty/Horde/Nls/Countries.php:122 3rdparty/Horde/Nls/Tld.php:137
 msgid "Kazakhstan"
-msgstr ""
+msgstr "قزاقستان"
 
 #: 3rdparty/Horde/Nls/Countries.php:123 3rdparty/Horde/Nls/Tld.php:127
 msgid "Kenya"
-msgstr ""
+msgstr "کنیا"
 
 #: 3rdparty/Horde/Nls/Countries.php:124 3rdparty/Horde/Nls/Tld.php:130
 msgid "Kiribati"
-msgstr ""
+msgstr "کیریباتی"
 
 #: 3rdparty/Horde/Nls/Countries.php:125 3rdparty/Horde/Nls/Tld.php:133
 msgid "Korea, Democratic People's Republic of"
-msgstr ""
+msgstr "کره، جمهوری دموکراتیک خلق"
 
 #: 3rdparty/Horde/Nls/Countries.php:126 3rdparty/Horde/Nls/Tld.php:134
 msgid "Korea, Republic of"
-msgstr ""
+msgstr "کره، جمهوری"
 
 #: 3rdparty/Horde/Nls/Countries.php:127 3rdparty/Horde/Nls/Tld.php:135
 msgid "Kuwait"
-msgstr ""
+msgstr "کویت"
 
 #: 3rdparty/Horde/Nls/Countries.php:128 3rdparty/Horde/Nls/Tld.php:128
 msgid "Kyrgyzstan"
-msgstr ""
+msgstr "قرقیزستان"
 
 #: 3rdparty/Horde/Nls/Countries.php:129 3rdparty/Horde/Nls/Tld.php:138
 msgid "Lao People's Democratic Republic"
-msgstr ""
+msgstr "جمهوری دموکراتیک خلق لائوس"
 
 #: 3rdparty/Horde/Nls/Countries.php:130 3rdparty/Horde/Nls/Tld.php:147
 msgid "Latvia"
-msgstr ""
+msgstr "لتونی"
 
 #: 3rdparty/Horde/Nls/Countries.php:131 3rdparty/Horde/Nls/Tld.php:139
 msgid "Lebanon"
-msgstr ""
+msgstr "لبنان"
 
 #: 3rdparty/Horde/Nls/Countries.php:132 3rdparty/Horde/Nls/Tld.php:144
 msgid "Lesotho"
-msgstr ""
+msgstr "لسوتو"
 
 #: 3rdparty/Horde/Nls/Countries.php:133 3rdparty/Horde/Nls/Tld.php:143
 msgid "Liberia"
-msgstr ""
+msgstr "کشور لیبریا"
 
 #: 3rdparty/Horde/Nls/Countries.php:134
 msgid "Libya"
-msgstr ""
+msgstr "لیبی"
 
 #: 3rdparty/Horde/Nls/Countries.php:135 3rdparty/Horde/Nls/Tld.php:141
 msgid "Liechtenstein"
-msgstr ""
+msgstr "لیختن اشتاین"
 
 #: 3rdparty/Horde/Nls/Countries.php:136 3rdparty/Horde/Nls/Tld.php:145
 msgid "Lithuania"
-msgstr ""
+msgstr "لیتوانی"
 
 #: 3rdparty/Horde/Nls/Countries.php:137 3rdparty/Horde/Nls/Tld.php:146
 msgid "Luxembourg"
-msgstr ""
+msgstr "لوکزامبورگ"
 
 #: 3rdparty/Horde/Nls/Countries.php:138 3rdparty/Horde/Nls/Tld.php:159
 msgid "Macao"
-msgstr ""
+msgstr "ماکائو"
 
 #: 3rdparty/Horde/Nls/Countries.php:139
 msgid "Macedonia, The former Yugoslav Republic of"
-msgstr ""
+msgstr "مقدونیه، جمهوری یوگسلاوی سابق"
 
 #: 3rdparty/Horde/Nls/Countries.php:140 3rdparty/Horde/Nls/Tld.php:153
 msgid "Madagascar"
-msgstr ""
+msgstr "ماداگاسکار"
 
 #: 3rdparty/Horde/Nls/Countries.php:141 3rdparty/Horde/Nls/Tld.php:167
 msgid "Malawi"
-msgstr ""
+msgstr "مالاوی"
 
 #: 3rdparty/Horde/Nls/Countries.php:142 3rdparty/Horde/Nls/Tld.php:169
 msgid "Malaysia"
-msgstr ""
+msgstr "مالزی"
 
 #: 3rdparty/Horde/Nls/Countries.php:143 3rdparty/Horde/Nls/Tld.php:166
 msgid "Maldives"
-msgstr ""
+msgstr "مالدیو"
 
 #: 3rdparty/Horde/Nls/Countries.php:144 3rdparty/Horde/Nls/Tld.php:156
 msgid "Mali"
-msgstr ""
+msgstr "مالی"
 
 #: 3rdparty/Horde/Nls/Countries.php:145 3rdparty/Horde/Nls/Tld.php:164
 msgid "Malta"
-msgstr ""
+msgstr "جزیره مالت"
 
 #: 3rdparty/Horde/Nls/Countries.php:146 3rdparty/Horde/Nls/Tld.php:154
 msgid "Marshall Islands"
-msgstr ""
+msgstr "جزایر مارشال"
 
 #: 3rdparty/Horde/Nls/Countries.php:147 3rdparty/Horde/Nls/Tld.php:161
 msgid "Martinique"
-msgstr ""
+msgstr "مارتینیک"
 
 #: 3rdparty/Horde/Nls/Countries.php:148 3rdparty/Horde/Nls/Tld.php:162
 msgid "Mauritania"
-msgstr ""
+msgstr "موریتانی"
 
 #: 3rdparty/Horde/Nls/Countries.php:149 3rdparty/Horde/Nls/Tld.php:165
 msgid "Mauritius"
-msgstr ""
+msgstr "موریس"
 
 #: 3rdparty/Horde/Nls/Countries.php:150 3rdparty/Horde/Nls/Tld.php:258
 msgid "Mayotte"
-msgstr ""
+msgstr "مایوت"
 
 #: 3rdparty/Horde/Nls/Countries.php:151 3rdparty/Horde/Nls/Tld.php:168
 msgid "Mexico"
-msgstr ""
+msgstr "مکزیک"
 
 #: 3rdparty/Horde/Nls/Countries.php:152 3rdparty/Horde/Nls/Tld.php:85
 msgid "Micronesia, Federated States of"
-msgstr ""
+msgstr "میکرونزی، ایالات فدرال"
 
 #: 3rdparty/Horde/Nls/Countries.php:153 3rdparty/Horde/Nls/Tld.php:151
 msgid "Moldova, Republic of"
-msgstr ""
+msgstr "مولدووا، جمهوری"
 
 #: 3rdparty/Horde/Nls/Countries.php:154 3rdparty/Horde/Nls/Tld.php:150
 msgid "Monaco"
-msgstr ""
+msgstr "اهل موناکو"
 
 #: 3rdparty/Horde/Nls/Countries.php:155 3rdparty/Horde/Nls/Tld.php:158
 msgid "Mongolia"
-msgstr ""
+msgstr "مغولستان"
 
 #: 3rdparty/Horde/Nls/Countries.php:156 3rdparty/Horde/Nls/Tld.php:152
 msgid "Montenegro"
-msgstr ""
+msgstr "مونته نگرو"
 
 #: 3rdparty/Horde/Nls/Countries.php:157 3rdparty/Horde/Nls/Tld.php:163
 msgid "Montserrat"
-msgstr ""
+msgstr "مونتسرات"
 
 #: 3rdparty/Horde/Nls/Countries.php:158 3rdparty/Horde/Nls/Tld.php:149
 msgid "Morocco"
-msgstr ""
+msgstr "مراکش"
 
 #: 3rdparty/Horde/Nls/Countries.php:159 3rdparty/Horde/Nls/Tld.php:170
 msgid "Mozambique"
-msgstr ""
+msgstr "موزامبیک"
 
 #: 3rdparty/Horde/Nls/Countries.php:160 3rdparty/Horde/Nls/Tld.php:157
 msgid "Myanmar"
-msgstr ""
+msgstr "میانمار"
 
 #: 3rdparty/Horde/Nls/Countries.php:161 3rdparty/Horde/Nls/Tld.php:171
 msgid "Namibia"
-msgstr ""
+msgstr "نامیبیا"
 
 #: 3rdparty/Horde/Nls/Countries.php:162 3rdparty/Horde/Nls/Languages.php:119
 #: 3rdparty/Horde/Nls/Tld.php:180
 msgid "Nauru"
-msgstr ""
+msgstr "نائورو"
 
 #: 3rdparty/Horde/Nls/Countries.php:163 3rdparty/Horde/Nls/Tld.php:179
 msgid "Nepal"
-msgstr ""
+msgstr "نپال"
 
 #: 3rdparty/Horde/Nls/Countries.php:164 3rdparty/Horde/Nls/Tld.php:177
 msgid "Netherlands"
-msgstr ""
+msgstr "هلند"
 
 #: 3rdparty/Horde/Nls/Countries.php:165 3rdparty/Horde/Nls/Tld.php:172
 msgid "New Caledonia"
-msgstr ""
+msgstr "کالدونیای جدید"
 
 #: 3rdparty/Horde/Nls/Countries.php:166 3rdparty/Horde/Nls/Tld.php:182
 msgid "New Zealand"
-msgstr ""
+msgstr "نیوزیلند"
 
 #: 3rdparty/Horde/Nls/Countries.php:167 3rdparty/Horde/Nls/Tld.php:176
 msgid "Nicaragua"
-msgstr ""
+msgstr "نیکاراگوئه"
 
 #: 3rdparty/Horde/Nls/Countries.php:168 3rdparty/Horde/Nls/Tld.php:173
 msgid "Niger"
-msgstr ""
+msgstr "نیجر"
 
 #: 3rdparty/Horde/Nls/Countries.php:169 3rdparty/Horde/Nls/Tld.php:175
 msgid "Nigeria"
-msgstr ""
+msgstr "نیجریه"
 
 #: 3rdparty/Horde/Nls/Countries.php:170 3rdparty/Horde/Nls/Tld.php:181
 msgid "Niue"
-msgstr ""
+msgstr "نیوئه"
 
 #: 3rdparty/Horde/Nls/Countries.php:171 3rdparty/Horde/Nls/Tld.php:174
 msgid "Norfolk Island"
-msgstr ""
+msgstr "جزیره نورفولک"
 
 #: 3rdparty/Horde/Nls/Countries.php:172 3rdparty/Horde/Nls/Tld.php:160
 msgid "Northern Mariana Islands"
-msgstr ""
+msgstr "جزایر ماریانای شمالی"
 
 #: 3rdparty/Horde/Nls/Countries.php:173 3rdparty/Horde/Nls/Tld.php:178
 msgid "Norway"
-msgstr ""
+msgstr "نروژ"
 
 #: 3rdparty/Horde/Nls/Countries.php:174 3rdparty/Horde/Nls/Tld.php:183
 msgid "Oman"
-msgstr ""
+msgstr "عمان"
 
 #: 3rdparty/Horde/Nls/Countries.php:175 3rdparty/Horde/Nls/Tld.php:189
 msgid "Pakistan"
-msgstr ""
+msgstr "پاکستان"
 
 #: 3rdparty/Horde/Nls/Countries.php:176 3rdparty/Horde/Nls/Tld.php:196
 msgid "Palau"
-msgstr ""
+msgstr "پالائو"
 
 #: 3rdparty/Horde/Nls/Countries.php:177 3rdparty/Horde/Nls/Tld.php:194
 msgid "Palestinian Territory, Occupied"
-msgstr ""
+msgstr "سرزمین فلسطین، اشغال"
 
 #: 3rdparty/Horde/Nls/Countries.php:178 3rdparty/Horde/Nls/Tld.php:184
 msgid "Panama"
-msgstr ""
+msgstr "پاناما"
 
 #: 3rdparty/Horde/Nls/Countries.php:179 3rdparty/Horde/Nls/Tld.php:187
 msgid "Papua New Guinea"
-msgstr ""
+msgstr "پاپوآ گینه نو"
 
 #: 3rdparty/Horde/Nls/Countries.php:180 3rdparty/Horde/Nls/Tld.php:197
 msgid "Paraguay"
-msgstr ""
+msgstr "پاراگوئه"
 
 #: 3rdparty/Horde/Nls/Countries.php:181 3rdparty/Horde/Nls/Tld.php:185
 msgid "Peru"
-msgstr ""
+msgstr "پرو"
 
 #: 3rdparty/Horde/Nls/Countries.php:182 3rdparty/Horde/Nls/Tld.php:188
 msgid "Philippines"
-msgstr ""
+msgstr "فیلیپین"
 
 #: 3rdparty/Horde/Nls/Countries.php:183
 msgid "Pitcairn"
-msgstr ""
+msgstr "پیتکارین"
 
 #: 3rdparty/Horde/Nls/Countries.php:184 3rdparty/Horde/Nls/Tld.php:190
 msgid "Poland"
-msgstr ""
+msgstr "لهستان"
 
 #: 3rdparty/Horde/Nls/Countries.php:185 3rdparty/Horde/Nls/Tld.php:195
 msgid "Portugal"
-msgstr ""
+msgstr "پرتغال"
 
 #: 3rdparty/Horde/Nls/Countries.php:186 3rdparty/Horde/Nls/Tld.php:193
 msgid "Puerto Rico"
-msgstr ""
+msgstr "پورتوریکو"
 
 #: 3rdparty/Horde/Nls/Countries.php:187 3rdparty/Horde/Nls/Tld.php:198
 msgid "Qatar"
-msgstr ""
+msgstr "قطر"
 
 #: 3rdparty/Horde/Nls/Countries.php:188
 msgid "Réunion"
@@ -1038,19 +1038,19 @@ msgstr ""
 
 #: 3rdparty/Horde/Nls/Countries.php:189 3rdparty/Horde/Nls/Tld.php:200
 msgid "Romania"
-msgstr ""
+msgstr "رومانی"
 
 #: 3rdparty/Horde/Nls/Countries.php:190 3rdparty/Horde/Nls/Tld.php:202
 msgid "Russian Federation"
-msgstr ""
+msgstr "فدراسیون روسیه"
 
 #: 3rdparty/Horde/Nls/Countries.php:191 3rdparty/Horde/Nls/Tld.php:203
 msgid "Rwanda"
-msgstr ""
+msgstr "رواندا"
 
 #: 3rdparty/Horde/Nls/Countries.php:192
 msgid "Saint Barthélemy"
-msgstr ""
+msgstr "سنت بارتلیمی"
 
 #: 3rdparty/Horde/Nls/Countries.php:193
 msgid "Saint Helena, Ascension and Tristan da Cunha"
@@ -1058,47 +1058,47 @@ msgstr ""
 
 #: 3rdparty/Horde/Nls/Countries.php:194 3rdparty/Horde/Nls/Tld.php:132
 msgid "Saint Kitts and Nevis"
-msgstr ""
+msgstr "سنت کیتس و نویس"
 
 #: 3rdparty/Horde/Nls/Countries.php:195 3rdparty/Horde/Nls/Tld.php:140
 msgid "Saint Lucia"
-msgstr ""
+msgstr "سنت لوسیا"
 
 #: 3rdparty/Horde/Nls/Countries.php:196
 msgid "Saint Martin (French part)"
-msgstr ""
+msgstr "سنت مارتین (بخش فرانسوی)"
 
 #: 3rdparty/Horde/Nls/Countries.php:197 3rdparty/Horde/Nls/Tld.php:191
 msgid "Saint Pierre and Miquelon"
-msgstr ""
+msgstr "سنت پیر و میکلون"
 
 #: 3rdparty/Horde/Nls/Countries.php:198 3rdparty/Horde/Nls/Tld.php:249
 msgid "Saint Vincent and the Grenadines"
-msgstr ""
+msgstr "سنت وینسنت و گرنادین"
 
 #: 3rdparty/Horde/Nls/Countries.php:199 3rdparty/Horde/Nls/Tld.php:256
 msgid "Samoa"
-msgstr ""
+msgstr "ساموآ"
 
 #: 3rdparty/Horde/Nls/Countries.php:200 3rdparty/Horde/Nls/Tld.php:215
 msgid "San Marino"
-msgstr ""
+msgstr "سان مارینو"
 
 #: 3rdparty/Horde/Nls/Countries.php:201 3rdparty/Horde/Nls/Tld.php:219
 msgid "Sao Tome and Principe"
-msgstr ""
+msgstr "سائو تومه و پرینسیپ"
 
 #: 3rdparty/Horde/Nls/Countries.php:202 3rdparty/Horde/Nls/Tld.php:204
 msgid "Saudi Arabia"
-msgstr ""
+msgstr "عربستان سعودی"
 
 #: 3rdparty/Horde/Nls/Countries.php:203 3rdparty/Horde/Nls/Tld.php:216
 msgid "Senegal"
-msgstr ""
+msgstr "سنگال"
 
 #: 3rdparty/Horde/Nls/Countries.php:204 3rdparty/Horde/Nls/Tld.php:201
 msgid "Serbia"
-msgstr ""
+msgstr "صربستان"
 
 #: 3rdparty/Horde/Nls/Countries.php:205 3rdparty/Horde/Nls/Tld.php:206
 msgid "Seychelles"
@@ -1106,23 +1106,23 @@ msgstr ""
 
 #: 3rdparty/Horde/Nls/Countries.php:206 3rdparty/Horde/Nls/Tld.php:214
 msgid "Sierra Leone"
-msgstr ""
+msgstr "سیرالئون"
 
 #: 3rdparty/Horde/Nls/Countries.php:207 3rdparty/Horde/Nls/Tld.php:209
 msgid "Singapore"
-msgstr ""
+msgstr "سنگاپور"
 
 #: 3rdparty/Horde/Nls/Countries.php:208
 msgid "Sint Maarten (Dutch part)"
-msgstr ""
+msgstr "سنت مارتن (بخشی هلندی)"
 
 #: 3rdparty/Horde/Nls/Countries.php:209 3rdparty/Horde/Nls/Tld.php:213
 msgid "Slovakia"
-msgstr ""
+msgstr "اسلواکی"
 
 #: 3rdparty/Horde/Nls/Countries.php:210 3rdparty/Horde/Nls/Tld.php:211
 msgid "Slovenia"
-msgstr ""
+msgstr "اسلوونی"
 
 #: 3rdparty/Horde/Nls/Countries.php:211 3rdparty/Horde/Nls/Tld.php:205
 msgid "Solomon Islands"
@@ -1130,200 +1130,200 @@ msgstr ""
 
 #: 3rdparty/Horde/Nls/Countries.php:212 3rdparty/Horde/Nls/Tld.php:217
 msgid "Somalia"
-msgstr ""
+msgstr "سومالی"
 
 #: 3rdparty/Horde/Nls/Countries.php:213 3rdparty/Horde/Nls/Tld.php:260
 msgid "South Africa"
-msgstr ""
+msgstr "آفریقای جنوبی"
 
 #: 3rdparty/Horde/Nls/Countries.php:214 3rdparty/Horde/Nls/Tld.php:102
 msgid "South Georgia and the South Sandwich Islands"
-msgstr ""
+msgstr "جورجیای جنوبی و جزایر ساندویچ جنوبی"
 
 #: 3rdparty/Horde/Nls/Countries.php:215
 msgid "South Sudan"
-msgstr ""
+msgstr "جنوب سودان"
 
 #: 3rdparty/Horde/Nls/Countries.php:216 3rdparty/Horde/Nls/Tld.php:79
 msgid "Spain"
-msgstr ""
+msgstr "اسپانیا"
 
 #: 3rdparty/Horde/Nls/Countries.php:217 3rdparty/Horde/Nls/Tld.php:142
 msgid "Sri Lanka"
-msgstr ""
+msgstr "سریلانکا"
 
 #: 3rdparty/Horde/Nls/Countries.php:218 3rdparty/Horde/Nls/Tld.php:207
 msgid "Sudan"
-msgstr ""
+msgstr "سودان"
 
 #: 3rdparty/Horde/Nls/Countries.php:219 3rdparty/Horde/Nls/Tld.php:218
 msgid "Suriname"
-msgstr ""
+msgstr "سورینام"
 
 #: 3rdparty/Horde/Nls/Countries.php:220
 msgid "Svalbard and Jan Mayen"
-msgstr ""
+msgstr "اسوالبارد و جان ماین"
 
 #: 3rdparty/Horde/Nls/Countries.php:221 3rdparty/Horde/Nls/Tld.php:223
 msgid "Swaziland"
-msgstr ""
+msgstr "سوازیلند"
 
 #: 3rdparty/Horde/Nls/Countries.php:222 3rdparty/Horde/Nls/Tld.php:208
 msgid "Sweden"
-msgstr ""
+msgstr "سوئد"
 
 #: 3rdparty/Horde/Nls/Countries.php:223 3rdparty/Horde/Nls/Tld.php:55
 msgid "Switzerland"
-msgstr ""
+msgstr "سویس"
 
 #: 3rdparty/Horde/Nls/Countries.php:224 3rdparty/Horde/Nls/Tld.php:222
 msgid "Syrian Arab Republic"
-msgstr ""
+msgstr "جمهوری عربی سوریه"
 
 #: 3rdparty/Horde/Nls/Countries.php:225
 msgid "Taiwan, Province of China"
-msgstr ""
+msgstr "تایوان، استان چین"
 
 #: 3rdparty/Horde/Nls/Countries.php:226 3rdparty/Horde/Nls/Tld.php:229
 msgid "Tajikistan"
-msgstr ""
+msgstr "تاجیکستان"
 
 #: 3rdparty/Horde/Nls/Countries.php:227 3rdparty/Horde/Nls/Tld.php:240
 msgid "Tanzania, United Republic of"
-msgstr ""
+msgstr "تانزانیا، جمهوری متحده"
 
 #: 3rdparty/Horde/Nls/Countries.php:228 3rdparty/Horde/Nls/Tld.php:228
 msgid "Thailand"
-msgstr ""
+msgstr "تایلند"
 
 #: 3rdparty/Horde/Nls/Countries.php:229 3rdparty/Horde/Nls/Tld.php:231
 msgid "Timor-Leste"
-msgstr ""
+msgstr "تیمور لسته"
 
 #: 3rdparty/Horde/Nls/Countries.php:230 3rdparty/Horde/Nls/Tld.php:227
 msgid "Togo"
-msgstr ""
+msgstr "توگو"
 
 #: 3rdparty/Horde/Nls/Countries.php:231 3rdparty/Horde/Nls/Tld.php:230
 msgid "Tokelau"
-msgstr ""
+msgstr "توکلائو"
 
 #: 3rdparty/Horde/Nls/Countries.php:232 3rdparty/Horde/Nls/Tld.php:234
 msgid "Tonga"
-msgstr ""
+msgstr "تونگا"
 
 #: 3rdparty/Horde/Nls/Countries.php:233 3rdparty/Horde/Nls/Tld.php:237
 msgid "Trinidad and Tobago"
-msgstr ""
+msgstr "ترینیداد و توباگو"
 
 #: 3rdparty/Horde/Nls/Countries.php:234 3rdparty/Horde/Nls/Tld.php:233
 msgid "Tunisia"
-msgstr ""
+msgstr "تونس"
 
 #: 3rdparty/Horde/Nls/Countries.php:235 3rdparty/Horde/Nls/Tld.php:236
 msgid "Turkey"
-msgstr ""
+msgstr "ترکیه"
 
 #: 3rdparty/Horde/Nls/Countries.php:236 3rdparty/Horde/Nls/Tld.php:232
 msgid "Turkmenistan"
-msgstr ""
+msgstr "ترکمنستان"
 
 #: 3rdparty/Horde/Nls/Countries.php:237 3rdparty/Horde/Nls/Tld.php:224
 msgid "Turks and Caicos Islands"
-msgstr ""
+msgstr "جزایر ترکس و کیاکوس"
 
 #: 3rdparty/Horde/Nls/Countries.php:238 3rdparty/Horde/Nls/Tld.php:238
 msgid "Tuvalu"
-msgstr ""
+msgstr "تووالو"
 
 #: 3rdparty/Horde/Nls/Countries.php:239 3rdparty/Horde/Nls/Tld.php:242
 msgid "Uganda"
-msgstr ""
+msgstr "اوگاندا"
 
 #: 3rdparty/Horde/Nls/Countries.php:240 3rdparty/Horde/Nls/Tld.php:241
 msgid "Ukraine"
-msgstr ""
+msgstr "اوکراین"
 
 #: 3rdparty/Horde/Nls/Countries.php:241 3rdparty/Horde/Nls/Tld.php:15
 msgid "United Arab Emirates"
-msgstr ""
+msgstr "امارات متحده عربی"
 
 #: 3rdparty/Horde/Nls/Countries.php:242 3rdparty/Horde/Nls/Tld.php:89
 #: 3rdparty/Horde/Nls/Tld.php:243
 msgid "United Kingdom"
-msgstr ""
+msgstr "انگلستان"
 
 #: 3rdparty/Horde/Nls/Countries.php:243 3rdparty/Horde/Nls/Tld.php:245
 msgid "United States"
-msgstr ""
+msgstr "ایالات متحده"
 
 #: 3rdparty/Horde/Nls/Countries.php:244 3rdparty/Horde/Nls/Tld.php:244
 msgid "United States Minor Outlying Islands"
-msgstr ""
+msgstr "جزایر کوچک دورافتادهی ایالات متحده"
 
 #: 3rdparty/Horde/Nls/Countries.php:245 3rdparty/Horde/Nls/Tld.php:246
 msgid "Uruguay"
-msgstr ""
+msgstr "اروگوئه"
 
 #: 3rdparty/Horde/Nls/Countries.php:246 3rdparty/Horde/Nls/Tld.php:247
 msgid "Uzbekistan"
-msgstr ""
+msgstr "ازبکستان"
 
 #: 3rdparty/Horde/Nls/Countries.php:247 3rdparty/Horde/Nls/Tld.php:254
 msgid "Vanuatu"
-msgstr ""
+msgstr "وانواتو"
 
 #: 3rdparty/Horde/Nls/Countries.php:248 3rdparty/Horde/Nls/Tld.php:250
 msgid "Venezuela"
-msgstr ""
+msgstr "ونزوئلا"
 
 #: 3rdparty/Horde/Nls/Countries.php:249 3rdparty/Horde/Nls/Tld.php:253
 msgid "Viet Nam"
-msgstr ""
+msgstr "ویتنام"
 
 #: 3rdparty/Horde/Nls/Countries.php:250 3rdparty/Horde/Nls/Tld.php:251
 msgid "Virgin Islands, British"
-msgstr ""
+msgstr "جزایر ویرجین، بریتانیا"
 
 #: 3rdparty/Horde/Nls/Countries.php:251 3rdparty/Horde/Nls/Tld.php:252
 msgid "Virgin Islands, U.S."
-msgstr ""
+msgstr "جزایر ویرجین، ایالات متحده"
 
 #: 3rdparty/Horde/Nls/Countries.php:252
 msgid "Wallis and Futuna"
-msgstr ""
+msgstr "والیس و فوتونا"
 
 #: 3rdparty/Horde/Nls/Countries.php:253 3rdparty/Horde/Nls/Tld.php:77
 msgid "Western Sahara"
-msgstr ""
+msgstr "صحرای غربی"
 
 #: 3rdparty/Horde/Nls/Countries.php:254 3rdparty/Horde/Nls/Tld.php:257
 msgid "Yemen"
-msgstr ""
+msgstr "یمن"
 
 #: 3rdparty/Horde/Nls/Countries.php:255 3rdparty/Horde/Nls/Tld.php:261
 msgid "Zambia"
-msgstr ""
+msgstr "زامبیا"
 
 #: 3rdparty/Horde/Nls/Countries.php:256 3rdparty/Horde/Nls/Tld.php:262
 msgid "Zimbabwe"
-msgstr ""
+msgstr "زیمبابوه"
 
 #: 3rdparty/Horde/Nls/Geoip.php:324
 msgid "Asia/Pacific Region"
-msgstr ""
+msgstr "منطقه آسیا / اقیانوسیه"
 
 #: 3rdparty/Horde/Nls/Geoip.php:325
 msgid "Europe"
-msgstr ""
+msgstr "اروپا"
 
 #: 3rdparty/Horde/Nls/Geoip.php:326
 msgid "Anonymous Proxy"
-msgstr ""
+msgstr "پروکسی ناشناس"
 
 #: 3rdparty/Horde/Nls/Geoip.php:327
 msgid "Satellite Provider"
-msgstr ""
+msgstr "ارائه دهنده ماهواره ای"
 
 #: 3rdparty/Horde/Nls/Geoip.php:328
 msgid "Other"
