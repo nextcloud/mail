@@ -3,14 +3,15 @@
 # This file is distributed under the same license as the PACKAGE package.
 # 
 # Translators:
+# ebela <bela@dandre.hu>, 2013
 # Tamas Nagy <mail@tamas-nagy.net>, 2013
 msgid ""
 msgstr ""
 "Project-Id-Version: ownCloud\n"
 "Report-Msgid-Bugs-To: http://bugs.owncloud.org/\n"
-"POT-Creation-Date: 2013-07-19 02:44-0400\n"
-"PO-Revision-Date: 2013-07-19 05:24+0000\n"
-"Last-Translator: Tamas Nagy <mail@tamas-nagy.net>\n"
+"POT-Creation-Date: 2013-07-20 02:42-0400\n"
+"PO-Revision-Date: 2013-07-20 05:24+0000\n"
+"Last-Translator: ebela <bela@dandre.hu>\n"
 "Language-Team: Hungarian (Hungary) (http://www.transifex.com/projects/p/owncloud/language/hu_HU/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -28,82 +29,82 @@ msgstr "Hozzáférés megtagadva"
 
 #: 3rdparty/Horde/Imap/Client/Auth/DigestMD5.php:149
 msgid "Authentication failure."
-msgstr ""
+msgstr "Authentikációs hiba"
 
 #: 3rdparty/Horde/Imap/Client/Base.php:1856
 #: 3rdparty/Horde/Imap/Client/Base.php:1915
 msgid "Cannot expunge read-only mailbox."
-msgstr ""
+msgstr "Nem lehet törölni a csak-olvasható postfiókot."
 
 #: 3rdparty/Horde/Imap/Client/Exception/NoSupportExtension.php:36
 #, php-format
 msgid "The server does not support the %s extension."
-msgstr ""
+msgstr "A szerver nem támogatja a %s kiterjesztést."
 
 #: 3rdparty/Horde/Imap/Client/Exception/NoSupportPop3.php:25
 #, php-format
 msgid "%s not supported on POP3 servers."
-msgstr ""
+msgstr "%s nincs támogatva a POP3 szervereknél."
 
 #: 3rdparty/Horde/Imap/Client/Exception/SearchCharset.php:36
 msgid "Cannot convert search query text to new charset"
-msgstr ""
+msgstr "Nem lehet a keresés szövegét átkonvertálni az új karakterkészletre"
 
 #: 3rdparty/Horde/Imap/Client/Interaction/Server/Tagged.php:34
 msgid "Bad tagged response."
-msgstr ""
+msgstr "Rosszul jelölt(tagged) válasz."
 
 #: 3rdparty/Horde/Imap/Client/Socket/Pop3.php:189
 #: 3rdparty/Horde/Imap/Client/Socket/Pop3.php:201
 msgid "Could not open secure connection to the POP3 server."
-msgstr ""
+msgstr "Nem lehet biztonságos kapcsolatot létesíteni a POP3 szerver felé."
 
 #: 3rdparty/Horde/Imap/Client/Socket/Pop3.php:189
 msgid "Server does not support secure connections."
-msgstr ""
+msgstr "A szerver nem támogatja a titkosított kapcsolatokat."
 
 #: 3rdparty/Horde/Imap/Client/Socket/Pop3.php:240
 msgid "POP3 server denied authentication."
-msgstr ""
+msgstr "A POP3 szerver elutasította az azonosítást."
 
 #: 3rdparty/Horde/Imap/Client/Socket/Pop3.php:280
 msgid "Error connecting to POP3 server."
-msgstr ""
+msgstr "Hiba a POP3 szerverhez kapcsolodáskor."
 
 #: 3rdparty/Horde/Imap/Client/Socket/Pop3.php:334
 #: 3rdparty/Horde/Imap/Client/Socket.php:592
 msgid "Unexpected response from server when authenticating."
-msgstr ""
+msgstr "Nem várt válasz a szervertől az azonosítás közben."
 
 #: 3rdparty/Horde/Imap/Client/Socket/Pop3.php:374
 #: 3rdparty/Horde/Imap/Client/Socket.php:636
 #, php-format
 msgid "Unknown authentication method: %s"
-msgstr ""
+msgstr "Ismeretlen hitelesítési metodus: %s"
 
 #: 3rdparty/Horde/Imap/Client/Socket/Pop3.php:1112
 msgid "POP3 Server closed the connection unexpectedly."
-msgstr ""
+msgstr "Nem várt módon a POP3 szerver lezárta a kapcsolatot."
 
 #: 3rdparty/Horde/Imap/Client/Socket/Pop3.php:1172
 msgid "POP3 error reported by server."
-msgstr ""
+msgstr "POP3 hibát jelzett a szerver."
 
 #: 3rdparty/Horde/Imap/Client/Socket.php:311
 msgid "Server does not support TLS connections."
-msgstr ""
+msgstr "A szerver nem támogatja a TLS kapcsolatokat."
 
 #: 3rdparty/Horde/Imap/Client/Socket.php:323
 msgid "Could not open secure TLS connection to the IMAP server."
-msgstr ""
+msgstr "Nem lehet biztonságos TLS kapcsolatot létrehozni az IMAP szerver felé."
 
 #: 3rdparty/Horde/Imap/Client/Socket.php:366
 msgid "No supported IMAP authentication method could be found."
-msgstr ""
+msgstr "Nincs támogatott IMAP autentikációs metódus."
 
 #: 3rdparty/Horde/Imap/Client/Socket.php:383
 msgid "Mail server denied authentication."
-msgstr ""
+msgstr "A levelező szerver elutasította az autentikációt."
 
 #: 3rdparty/Horde/Imap/Client/Socket.php:492
 msgid "Error connecting to mail server."
