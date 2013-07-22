@@ -10,8 +10,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: ownCloud\n"
 "Report-Msgid-Bugs-To: http://bugs.owncloud.org/\n"
-"POT-Creation-Date: 2013-07-21 02:43-0400\n"
-"PO-Revision-Date: 2013-07-21 05:14+0000\n"
+"POT-Creation-Date: 2013-07-22 02:45-0400\n"
+"PO-Revision-Date: 2013-07-22 06:45+0000\n"
 "Last-Translator: miki_mika1362 <miki_mika1362@yahoo.com>\n"
 "Language-Team: Persian (http://www.transifex.com/projects/p/owncloud/language/fa/)\n"
 "MIME-Version: 1.0\n"
@@ -93,11 +93,11 @@ msgstr "خطای POP3 توسط سرور گزارش شده است."
 
 #: 3rdparty/Horde/Imap/Client/Socket.php:311
 msgid "Server does not support TLS connections."
-msgstr ""
+msgstr "سرور اتصالات TLS را پشتیبانی نمی کند."
 
 #: 3rdparty/Horde/Imap/Client/Socket.php:323
 msgid "Could not open secure TLS connection to the IMAP server."
-msgstr ""
+msgstr "نمی تواند اتصال امن TLS را برای سرور IMAP باز کند."
 
 #: 3rdparty/Horde/Imap/Client/Socket.php:366
 msgid "No supported IMAP authentication method could be found."
@@ -105,24 +105,24 @@ msgstr ""
 
 #: 3rdparty/Horde/Imap/Client/Socket.php:383
 msgid "Mail server denied authentication."
-msgstr ""
+msgstr "سرویس دهنده پست الکترونیکی احراز هویت را رد کرده است."
 
 #: 3rdparty/Horde/Imap/Client/Socket.php:492
 msgid "Error connecting to mail server."
-msgstr ""
+msgstr "خطا در اتصال به سرویس دهنده پست الکترونیکی."
 
 #: 3rdparty/Horde/Imap/Client/Socket.php:515
 msgid "Server rejected connection."
-msgstr ""
+msgstr "سرور اتصال را رد کرده است."
 
 #: 3rdparty/Horde/Imap/Client/Socket.php:524
 msgid "The mail server does not support IMAP4rev1 (RFC 3501)."
-msgstr ""
+msgstr "سرویس دهنده پست الکترونیکیIMAP4rev1 (RFC 3501) را پشتیبانی نمی کند."
 
 #: 3rdparty/Horde/Imap/Client/Socket.php:920
 #, php-format
 msgid "Could not open mailbox \"%s\"."
-msgstr ""
+msgstr "نمی تواند صندوق ورودی ایمیل را باز کند\"%s\"."
 
 #: 3rdparty/Horde/Imap/Client/Socket.php:1874
 #: 3rdparty/Horde/Imap/Client/Socket.php:2544
@@ -130,60 +130,60 @@ msgstr ""
 #: 3rdparty/Horde/Imap/Client/Socket.php:2992
 #: 3rdparty/Horde/Imap/Client/Socket.php:3048
 msgid "Mailbox does not support mod-sequences."
-msgstr ""
+msgstr "صندوق ورودی توالی را پشتیبانی نمی کند."
 
 #: 3rdparty/Horde/Imap/Client/Socket.php:3537
 #, php-format
 msgid "Invalid METADATA entry: \"%s\"."
-msgstr ""
+msgstr "ورود ابرداده نامعتبر:\"%s\"."
 
 #: 3rdparty/Horde/Imap/Client/Socket.php:3624
 #, php-format
 msgid "Invalid METADATA value type \"%s\"."
-msgstr ""
+msgstr "نوع مقدار ابرداده نامعتبر است \"%s\"."
 
 #: 3rdparty/Horde/Imap/Client/Socket.php:3857
 #: 3rdparty/Horde/Imap/Client/Socket.php:4128
 msgid "Error when communicating with the mail server."
-msgstr ""
+msgstr "خطا در هنگام ارتباط با سرویس دهنده پست الکترونیکی."
 
 #: 3rdparty/Horde/Imap/Client/Socket.php:3983
 #: 3rdparty/Horde/Imap/Client/Socket.php:4014
 msgid "IMAP error reported by server."
-msgstr ""
+msgstr "خطای IMAP گزارش شده توسط سرور."
 
 #: 3rdparty/Horde/Imap/Client/Socket.php:3998
 msgid "IMAP Server closed the connection."
-msgstr ""
+msgstr "سرور IMAP ارتباط را بسته است."
 
 #: 3rdparty/Horde/Imap/Client/Socket.php:4050
 msgid "Mail server closed the connection unexpectedly."
-msgstr ""
+msgstr "سرویس دهنده پست الکترونیکی به طور غیر منتظره ایی اتصال را بسته است."
 
 #: 3rdparty/Horde/Imap/Client/Socket.php:4325
 msgid "Charset used in search query is not supported on the mail server."
-msgstr ""
+msgstr "نویسه های استفاده شده در جستجو بر روی سرویس دهنده پست الکترونیکی پشتیبانی نمی شود."
 
 #: 3rdparty/Horde/Imap/Client/Socket.php:4337
 #: 3rdparty/Horde/Imap/Client/Socket.php:4379
 msgid "The mail server was unable to parse the contents of the mail message."
-msgstr ""
+msgstr "سرویس دهنده پست الکترونیکی قادر به تجزیه محتویات پیغام ایمیل نبود."
 
 #: 3rdparty/Horde/Imap/Client/Socket.php:4420
 msgid "Could not save message on server."
-msgstr ""
+msgstr "نمی تواند پیغام را بر روی سرور ذخیره کند."
 
 #: 3rdparty/Horde/Imap/Client/Socket.php:4429
 msgid "Could not save message data because it is too large."
-msgstr ""
+msgstr "نمی تواند اطلاعات پیغام را به علت بزرگ بودن ذخیره کند."
 
 #: 3rdparty/Horde/Imap/Client/Socket.php:4468
 msgid "The comparison algorithm was not recognized by the server."
-msgstr ""
+msgstr "الگوریتم مقایسه توسط سرور شناخته نشده است."
 
 #: 3rdparty/Horde/Imap/Client/Socket.php:4486
 msgid "The metadata item could not be saved because it is too large."
-msgstr ""
+msgstr "آیتم ابرداده به علت بزرگ بودن نمی تواند ذخیره شود."
 
 #: 3rdparty/Horde/Imap/Client/Socket.php:4495
 msgid ""
@@ -1335,35 +1335,35 @@ msgstr ""
 
 #: 3rdparty/Horde/Nls/Languages.php:10
 msgid "Abkhaz"
-msgstr ""
+msgstr "آبخاز"
 
 #: 3rdparty/Horde/Nls/Languages.php:11
 msgid "Avestan"
-msgstr ""
+msgstr "اوستایی"
 
 #: 3rdparty/Horde/Nls/Languages.php:12
 msgid "Afrikaans"
-msgstr ""
+msgstr "آفریکانس"
 
 #: 3rdparty/Horde/Nls/Languages.php:13
 msgid "Akan"
-msgstr ""
+msgstr "آکان"
 
 #: 3rdparty/Horde/Nls/Languages.php:14
 msgid "Amharic"
-msgstr ""
+msgstr "امهری"
 
 #: 3rdparty/Horde/Nls/Languages.php:15
 msgid "Aragonese"
-msgstr ""
+msgstr "آراگونی"
 
 #: 3rdparty/Horde/Nls/Languages.php:16
 msgid "Arabic"
-msgstr ""
+msgstr "عربی"
 
 #: 3rdparty/Horde/Nls/Languages.php:17
 msgid "Assamese"
-msgstr ""
+msgstr "آسامی"
 
 #: 3rdparty/Horde/Nls/Languages.php:18
 msgid "Avaric"
@@ -1371,51 +1371,51 @@ msgstr ""
 
 #: 3rdparty/Horde/Nls/Languages.php:19
 msgid "Aymara"
-msgstr ""
+msgstr "آیمارا"
 
 #: 3rdparty/Horde/Nls/Languages.php:20
 msgid "Azerbaijani"
-msgstr ""
+msgstr "آذربایجان"
 
 #: 3rdparty/Horde/Nls/Languages.php:21
 msgid "Bashkir"
-msgstr ""
+msgstr "بکشیر"
 
 #: 3rdparty/Horde/Nls/Languages.php:22
 msgid "Belarusian"
-msgstr ""
+msgstr "بلاروس"
 
 #: 3rdparty/Horde/Nls/Languages.php:23
 msgid "Bulgarian"
-msgstr ""
+msgstr "بلغاری"
 
 #: 3rdparty/Horde/Nls/Languages.php:24
 msgid "Bihari"
-msgstr ""
+msgstr "بیهاری"
 
 #: 3rdparty/Horde/Nls/Languages.php:25
 msgid "Bislama"
-msgstr ""
+msgstr "بیسلاما"
 
 #: 3rdparty/Horde/Nls/Languages.php:26
 msgid "Bambara"
-msgstr ""
+msgstr "بامبارایی"
 
 #: 3rdparty/Horde/Nls/Languages.php:27
 msgid "Bengali"
-msgstr ""
+msgstr "بنگالی"
 
 #: 3rdparty/Horde/Nls/Languages.php:28
 msgid "Tibetan Standard, Tibetan, Central"
-msgstr ""
+msgstr "استاندارد تبت، تبت، آسیای مرکزی"
 
 #: 3rdparty/Horde/Nls/Languages.php:29
 msgid "Breton"
-msgstr ""
+msgstr "برتون"
 
 #: 3rdparty/Horde/Nls/Languages.php:30
 msgid "Bosnian"
-msgstr ""
+msgstr "بوسنی"
 
 #: 3rdparty/Horde/Nls/Languages.php:31
 msgid "Catalan; Valencian"
@@ -1423,15 +1423,15 @@ msgstr ""
 
 #: 3rdparty/Horde/Nls/Languages.php:32
 msgid "Chechen"
-msgstr ""
+msgstr "چچن"
 
 #: 3rdparty/Horde/Nls/Languages.php:33
 msgid "Chamorro"
-msgstr ""
+msgstr "چامورو"
 
 #: 3rdparty/Horde/Nls/Languages.php:34
 msgid "Corsican"
-msgstr ""
+msgstr "کورسی"
 
 #: 3rdparty/Horde/Nls/Languages.php:35
 msgid "Cree"
@@ -1457,11 +1457,11 @@ msgstr ""
 
 #: 3rdparty/Horde/Nls/Languages.php:40
 msgid "Danish"
-msgstr ""
+msgstr "دانمارکی"
 
 #: 3rdparty/Horde/Nls/Languages.php:41
 msgid "German"
-msgstr ""
+msgstr "آلمانی"
 
 #: 3rdparty/Horde/Nls/Languages.php:42
 msgid "Divehi; Dhivehi; Maldivian;"
@@ -1469,7 +1469,7 @@ msgstr ""
 
 #: 3rdparty/Horde/Nls/Languages.php:43
 msgid "Dzongkha"
-msgstr ""
+msgstr "جونخایی"
 
 #: 3rdparty/Horde/Nls/Languages.php:44
 msgid "Ewe"
@@ -1477,7 +1477,7 @@ msgstr ""
 
 #: 3rdparty/Horde/Nls/Languages.php:45
 msgid "Greek, Modern"
-msgstr ""
+msgstr "یونانی، مدرن"
 
 #: 3rdparty/Horde/Nls/Languages.php:46
 msgid "English"
@@ -1485,11 +1485,11 @@ msgstr "انگلیسی"
 
 #: 3rdparty/Horde/Nls/Languages.php:47
 msgid "Esperanto"
-msgstr ""
+msgstr "زبان بین المللی"
 
 #: 3rdparty/Horde/Nls/Languages.php:48
 msgid "Spanish; Castilian"
-msgstr ""
+msgstr "اسپانیایی کاستیلی"
 
 #: 3rdparty/Horde/Nls/Languages.php:49
 msgid "Estonian"
@@ -1497,11 +1497,11 @@ msgstr ""
 
 #: 3rdparty/Horde/Nls/Languages.php:50
 msgid "Basque"
-msgstr ""
+msgstr "باسک"
 
 #: 3rdparty/Horde/Nls/Languages.php:51
 msgid "Persian"
-msgstr ""
+msgstr "فارسی"
 
 #: 3rdparty/Horde/Nls/Languages.php:52
 msgid "Fula; Fulah; Pulaar; Pular"
@@ -1509,11 +1509,11 @@ msgstr ""
 
 #: 3rdparty/Horde/Nls/Languages.php:53
 msgid "Finnish"
-msgstr ""
+msgstr "فنلاندی"
 
 #: 3rdparty/Horde/Nls/Languages.php:54
 msgid "Fijian"
-msgstr ""
+msgstr "فیجی"
 
 #: 3rdparty/Horde/Nls/Languages.php:55
 msgid "Faroese"
@@ -1521,31 +1521,31 @@ msgstr ""
 
 #: 3rdparty/Horde/Nls/Languages.php:56
 msgid "French"
-msgstr ""
+msgstr "زبان فرانسه"
 
 #: 3rdparty/Horde/Nls/Languages.php:57
 msgid "Western Frisian"
-msgstr ""
+msgstr "فریزی غربی"
 
 #: 3rdparty/Horde/Nls/Languages.php:58
 msgid "Irish"
-msgstr ""
+msgstr "ایرلندی"
 
 #: 3rdparty/Horde/Nls/Languages.php:59
 msgid "Scottish Gaelic; Gaelic"
-msgstr ""
+msgstr "گیلی اسکاتلندی، اسکاتلندی"
 
 #: 3rdparty/Horde/Nls/Languages.php:60
 msgid "Galician"
-msgstr ""
+msgstr "گالیسی"
 
 #: 3rdparty/Horde/Nls/Languages.php:61
 msgid "Guarani"
-msgstr ""
+msgstr "گوارانی"
 
 #: 3rdparty/Horde/Nls/Languages.php:62
 msgid "Gujarati"
-msgstr ""
+msgstr "گجراتی"
 
 #: 3rdparty/Horde/Nls/Languages.php:63
 msgid "Manx"
@@ -1557,11 +1557,11 @@ msgstr ""
 
 #: 3rdparty/Horde/Nls/Languages.php:65
 msgid "Hebrew (modern)"
-msgstr ""
+msgstr "عبری (مدرن)"
 
 #: 3rdparty/Horde/Nls/Languages.php:66
 msgid "Hindi"
-msgstr ""
+msgstr "هندی"
 
 #: 3rdparty/Horde/Nls/Languages.php:67
 msgid "Hiri Motu"
@@ -1569,7 +1569,7 @@ msgstr ""
 
 #: 3rdparty/Horde/Nls/Languages.php:68
 msgid "Croatian"
-msgstr ""
+msgstr "کرواتی"
 
 #: 3rdparty/Horde/Nls/Languages.php:69
 msgid "Haitian; Haitian Creole"
@@ -1577,11 +1577,11 @@ msgstr ""
 
 #: 3rdparty/Horde/Nls/Languages.php:70
 msgid "Hungarian"
-msgstr ""
+msgstr "مجار"
 
 #: 3rdparty/Horde/Nls/Languages.php:71
 msgid "Armenian"
-msgstr ""
+msgstr "ارمنی"
 
 #: 3rdparty/Horde/Nls/Languages.php:72
 msgid "Herero"
@@ -1589,19 +1589,19 @@ msgstr ""
 
 #: 3rdparty/Horde/Nls/Languages.php:73
 msgid "Interlingua"
-msgstr ""
+msgstr "سرخپوستی آمریکایی"
 
 #: 3rdparty/Horde/Nls/Languages.php:74
 msgid "Indonesian"
-msgstr ""
+msgstr "اندونزی"
 
 #: 3rdparty/Horde/Nls/Languages.php:75
 msgid "Interlingue"
-msgstr ""
+msgstr "اینترلینگو"
 
 #: 3rdparty/Horde/Nls/Languages.php:76
 msgid "Igbo"
-msgstr ""
+msgstr "ایگبویی"
 
 #: 3rdparty/Horde/Nls/Languages.php:77
 msgid "Nuosu"
@@ -1613,35 +1613,35 @@ msgstr ""
 
 #: 3rdparty/Horde/Nls/Languages.php:79
 msgid "Ido"
-msgstr ""
+msgstr "ایدو"
 
 #: 3rdparty/Horde/Nls/Languages.php:80
 msgid "Icelandic"
-msgstr ""
+msgstr "زبان ایسلندی"
 
 #: 3rdparty/Horde/Nls/Languages.php:81
 msgid "Italian"
-msgstr ""
+msgstr "ایتالیایی"
 
 #: 3rdparty/Horde/Nls/Languages.php:82
 msgid "Inuktitut"
-msgstr ""
+msgstr "اینوکتیتوت"
 
 #: 3rdparty/Horde/Nls/Languages.php:83
 msgid "Japanese"
-msgstr ""
+msgstr "ژاپنی"
 
 #: 3rdparty/Horde/Nls/Languages.php:84
 msgid "Javanese"
-msgstr ""
+msgstr "جاوه"
 
 #: 3rdparty/Horde/Nls/Languages.php:85
 msgid "Georgian"
-msgstr ""
+msgstr "گرجی"
 
 #: 3rdparty/Horde/Nls/Languages.php:86
 msgid "Kongo"
-msgstr ""
+msgstr "کنگویی"
 
 #: 3rdparty/Horde/Nls/Languages.php:87
 msgid "Kikuyu, Gikuyu"
@@ -1653,7 +1653,7 @@ msgstr ""
 
 #: 3rdparty/Horde/Nls/Languages.php:89
 msgid "Kazakh"
-msgstr ""
+msgstr "قزاقستان"
 
 #: 3rdparty/Horde/Nls/Languages.php:90
 msgid "Kalaallisut, Greenlandic"
@@ -2033,15 +2033,15 @@ msgstr ""
 
 #: 3rdparty/Horde/Nls/Languages.php:185
 msgid "Walloon"
-msgstr ""
+msgstr "والونی"
 
 #: 3rdparty/Horde/Nls/Languages.php:186
 msgid "Wolof"
-msgstr ""
+msgstr "ولوف"
 
 #: 3rdparty/Horde/Nls/Languages.php:187
 msgid "Xhosa"
-msgstr ""
+msgstr "خوزا"
 
 #: 3rdparty/Horde/Nls/Languages.php:188
 msgid "Yiddish"
@@ -2061,39 +2061,39 @@ msgstr ""
 
 #: 3rdparty/Horde/Nls/Languages.php:192
 msgid "Zulu"
-msgstr ""
+msgstr "اهل ناتال در جنوب افریقا"
 
 #: 3rdparty/Horde/Nls/Tld.php:13
 msgid "Ascension Island"
-msgstr ""
+msgstr "جزیره معراج"
 
 #: 3rdparty/Horde/Nls/Tld.php:21
 msgid "Netherlands Antilles"
-msgstr ""
+msgstr "آنتیل هلند"
 
 #: 3rdparty/Horde/Nls/Tld.php:29
 msgid "Aland Islands"
-msgstr ""
+msgstr "جزایر آلاند"
 
 #: 3rdparty/Horde/Nls/Tld.php:54
 msgid "Congo, Republic of"
-msgstr ""
+msgstr "کنگو، جمهوری"
 
 #: 3rdparty/Horde/Nls/Tld.php:56
 msgid "Cote d'Ivoire"
-msgstr ""
+msgstr "ساحل عاج"
 
 #: 3rdparty/Horde/Nls/Tld.php:81
 msgid "European Union"
-msgstr ""
+msgstr "اتحادیه اروپا"
 
 #: 3rdparty/Horde/Nls/Tld.php:108
 msgid "Heard and McDonald Islands"
-msgstr ""
+msgstr "هرد و جزایر مک دونالد"
 
 #: 3rdparty/Horde/Nls/Tld.php:110
 msgid "Croatia/Hrvatska"
-msgstr ""
+msgstr "کرواسی / Hrvatska"
 
 #: 3rdparty/Horde/Nls/Tld.php:148
 msgid "Libyan Arab Jamahiriya"
@@ -2101,43 +2101,43 @@ msgstr ""
 
 #: 3rdparty/Horde/Nls/Tld.php:155
 msgid "Macedonia, The Former Yugoslav Republic of"
-msgstr ""
+msgstr "مقدونیه، جمهوری سابق یوگسلاوی"
 
 #: 3rdparty/Horde/Nls/Tld.php:192
 msgid "Pitcairn Island"
-msgstr ""
+msgstr "جزیره پیتکارین"
 
 #: 3rdparty/Horde/Nls/Tld.php:199
 msgid "Reunion Island"
-msgstr ""
+msgstr "جزیره ریونیون"
 
 #: 3rdparty/Horde/Nls/Tld.php:210
 msgid "Saint Helena"
-msgstr ""
+msgstr "جزیره سنت هلن در جنوب غربی افریقا"
 
 #: 3rdparty/Horde/Nls/Tld.php:212
 msgid "Svalbard and Jan Mayen Islands"
-msgstr ""
+msgstr "جزایر سوالبارد و یان ماین جان"
 
 #: 3rdparty/Horde/Nls/Tld.php:220
 msgid "Soviet Union"
-msgstr ""
+msgstr "اتحاد جماهیر شوروی"
 
 #: 3rdparty/Horde/Nls/Tld.php:235
 msgid "East Timor"
-msgstr ""
+msgstr "تیمور شرقی"
 
 #: 3rdparty/Horde/Nls/Tld.php:239
 msgid "Taiwan"
-msgstr ""
+msgstr "تایوان"
 
 #: 3rdparty/Horde/Nls/Tld.php:255
 msgid "Wallis and Futuna Islands"
-msgstr ""
+msgstr "جزایر والیس و فوتونا"
 
 #: 3rdparty/Horde/Nls/Tld.php:259
 msgid "Yugoslavia"
-msgstr ""
+msgstr "یوگسلاوی"
 
 #: js/mail.js:42 js/mail.js:115 js/mail.js:148 js/mail.js:205 js/mail.js:261
 msgid "Error"
@@ -2145,7 +2145,7 @@ msgstr "خطا"
 
 #: js/mail.js:236
 msgid "Connecting ..."
-msgstr ""
+msgstr "اتصال..."
 
 #: js/mail.js:252 js/mail.js:267 templates/no-accounts.php:16
 msgid "Connect"
@@ -2153,7 +2153,7 @@ msgstr "اتصال"
 
 #: js/mail.js:257
 msgid "Not a email address"
-msgstr ""
+msgstr "یادداشت یک آدرس ایمیل"
 
 #: js/mail.js:265
 msgid "Unknown error"
@@ -2161,11 +2161,11 @@ msgstr "خطای نامشخص"
 
 #: js/mail.js:269
 msgid "Server Error"
-msgstr ""
+msgstr "خطای سرور"
 
 #: templates/index.php:8
 msgid "New Message"
-msgstr ""
+msgstr "پیغام جدید"
 
 #: templates/index.php:10
 msgid "To"
@@ -2173,7 +2173,7 @@ msgstr "به"
 
 #: templates/index.php:11
 msgid "Subject"
-msgstr ""
+msgstr "موضوع"
 
 #: templates/index.php:13
 msgid "Send"
@@ -2181,16 +2181,16 @@ msgstr "ارسال"
 
 #: templates/no-accounts.php:3
 msgid "Connect your mail account"
-msgstr ""
+msgstr "اتصال حساب پست الکترونیکی خود"
 
 #: templates/no-accounts.php:8
 msgid "Mail Address"
-msgstr ""
+msgstr "آدرس ایمیل"
 
 #: templates/no-accounts.php:13
 msgid "IMAP Password"
-msgstr ""
+msgstr "رمزعبورIMAP "
 
 #: templates/part.message.php:31
 msgid "Reply"
-msgstr ""
+msgstr "پاسخ"
