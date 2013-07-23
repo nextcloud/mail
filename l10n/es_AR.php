@@ -5,7 +5,7 @@
 "Cannot expunge read-only mailbox." => "No fue posible purgar casilla de correo de solo lectura.",
 "The server does not support the %s extension." => "El servidor no soporta la extensión %s.",
 "%s not supported on POP3 servers." => "%s no es soportado en servidores POP3.",
-"Cannot convert search query text to new charset" => "No se puede convertir el texto de la consulta de búsqueda a un nuevo conjunto de caracteres",
+"Cannot convert search query text to new charset" => "No se puede convertir el texto de de búsqueda al otro conjunto de caracteres",
 "Bad tagged response." => "Respuesta mal etiquetada.",
 "Could not open secure connection to the POP3 server." => "No se pudo crear una conexión segura con el servidor POP3.",
 "Server does not support secure connections." => "El servidor no soporta conexiones seguras.",

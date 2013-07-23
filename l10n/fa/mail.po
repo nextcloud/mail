@@ -10,8 +10,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: ownCloud\n"
 "Report-Msgid-Bugs-To: http://bugs.owncloud.org/\n"
-"POT-Creation-Date: 2013-07-22 02:45-0400\n"
-"PO-Revision-Date: 2013-07-22 06:45+0000\n"
+"POT-Creation-Date: 2013-07-23 02:41-0400\n"
+"PO-Revision-Date: 2013-07-23 05:04+0000\n"
 "Last-Translator: miki_mika1362 <miki_mika1362@yahoo.com>\n"
 "Language-Team: Persian (http://www.transifex.com/projects/p/owncloud/language/fa/)\n"
 "MIME-Version: 1.0\n"
@@ -189,68 +189,68 @@ msgstr "آیتم ابرداده به علت بزرگ بودن نمی تواند 
 msgid ""
 "The metadata item could not be saved because the server does not support "
 "private annotations."
-msgstr ""
+msgstr "آیتم ابرداده نمی تواند ذخیره شود زیرا سرور حاشیه نویسی های خصوصی را پشتیبانی نمی کند."
 
 #: 3rdparty/Horde/Imap/Client/Socket.php:4504
 msgid ""
 "The metadata item could not be saved because the maximum number of "
 "annotations has been exceeded."
-msgstr ""
+msgstr "آیتم ابرداده نمی تواند ذخیره شود زیرا چون حداکثر تعداد حاشیه نویسی بیش از حد شده است."
 
 #: 3rdparty/Horde/Imap/Client/Socket.php:4515
 msgid "Remote server is temporarily unavailable."
-msgstr ""
+msgstr "سرور دور از دسترس تقریبا در دسترس نیست."
 
 #: 3rdparty/Horde/Imap/Client/Socket.php:4523
 msgid "Authentication failed."
-msgstr ""
+msgstr "تأیید اعتبار انجام نشد."
 
 #: 3rdparty/Horde/Imap/Client/Socket.php:4531
 msgid "Authentication was successful, but authorization failed."
-msgstr ""
+msgstr "تایید موفقیت آمیز بود، اما مجوز ناموفق بود."
 
 #: 3rdparty/Horde/Imap/Client/Socket.php:4539
 msgid "Authentication credentials have expired."
-msgstr ""
+msgstr "تصدیق اعتبار منقضی شده است."
 
 #: 3rdparty/Horde/Imap/Client/Socket.php:4547
 msgid "Operation failed due to a lack of a secure connection."
-msgstr ""
+msgstr "با توجه به اتصال امن عملیات شکست خورده است."
 
 #: 3rdparty/Horde/Imap/Client/Socket.php:4555
 msgid "You do not have adequate permissions to carry out this operation."
-msgstr ""
+msgstr "شما مجوز کافی برای انجام این عملیات را ندارید."
 
 #: 3rdparty/Horde/Imap/Client/Socket.php:4564
 msgid ""
 "There was a temporary issue when attempting this operation. Please try again"
 " later."
-msgstr ""
+msgstr "یک مسئله موقت وجود دارد زمانیکه این عملیات در حال انجام است. لطفا بعدا امتحان کنید."
 
 #: 3rdparty/Horde/Imap/Client/Socket.php:4578
 msgid "The mail server is reporting corrupt data in your mailbox."
-msgstr ""
+msgstr "سرویس دهنده پست الکترونیکی داده های فاسد در صندوق پستی خود را گزارش می دهد."
 
 #: 3rdparty/Horde/Imap/Client/Socket.php:4594
 msgid "The mail server has denied the request."
-msgstr ""
+msgstr "سرویس دهنده پست الکترونیکی درخواست را رد کرده است."
 
 #: 3rdparty/Horde/Imap/Client/Socket.php:4603
 msgid ""
 "The operation failed because the quota has been exceeded on the mail server."
-msgstr ""
+msgstr "عملیات شکست خورده است زیرا سهمیه بندی بر روی سرویس دهنده پست الکترونیکی بیش از حد شده است."
 
 #: 3rdparty/Horde/Imap/Client/Socket.php:4612
 msgid "The object could not be created because it already exists."
-msgstr ""
+msgstr "شئ را نمی تواند بسازد زیرا در حال حاضر موجود است."
 
 #: 3rdparty/Horde/Imap/Client/Socket.php:4621
 msgid "The object could not be deleted because it does not exist."
-msgstr ""
+msgstr "شئ را نمی تواند پاک کند زیرا موجود نیست."
 
 #: 3rdparty/Horde/Imap/Client/Socket.php:4630
 msgid "The special-use attribute requested for the mailbox is not supported."
-msgstr ""
+msgstr "ویژگی خاص درخواست شده برای صندوق پستی پشتیبانی نمی شود."
 
 #: 3rdparty/Horde/Imap/Client/Utf7imap.php:117
 #: 3rdparty/Horde/Imap/Client/Utf7imap.php:142
@@ -261,7 +261,7 @@ msgstr ""
 #: 3rdparty/Horde/Imap/Client/Utf7imap.php:234
 #: 3rdparty/Horde/Imap/Client/Utf7imap.php:240
 msgid "Error converting UTF7-IMAP string."
-msgstr ""
+msgstr "خطا در تبدیل رشته UTF7-IMAP"
 
 #: 3rdparty/Horde/Mime/Headers.php:535
 msgid "List-Help"
