@@ -46,6 +46,7 @@
 "Other" => "Andet",
 "Error" => "Fejl",
 "Connect" => "Tilslut",
+"Unknown error" => "Ukendt fejl",
 "To" => "Til",
 "Send" => "Send"
 );
