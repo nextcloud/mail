@@ -5,6 +5,7 @@
 "Other" => "Khác",
 "Error" => "Lỗi",
 "Connect" => "Kết nối",
+"Unknown error" => "Lỗi chưa biết",
 "To" => "Tới",
 "Send" => "Gởi"
 );
