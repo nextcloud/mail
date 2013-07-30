@@ -10,8 +10,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: ownCloud\n"
 "Report-Msgid-Bugs-To: http://bugs.owncloud.org/\n"
-"POT-Creation-Date: 2013-07-28 02:42-0400\n"
-"PO-Revision-Date: 2013-07-27 18:20+0000\n"
+"POT-Creation-Date: 2013-07-30 02:42-0400\n"
+"PO-Revision-Date: 2013-07-29 16:40+0000\n"
 "Last-Translator: Sappe\n"
 "Language-Team: Danish (http://www.transifex.com/projects/p/owncloud/language/da/)\n"
 "MIME-Version: 1.0\n"
@@ -40,12 +40,12 @@ msgstr ""
 #: 3rdparty/Horde/Imap/Client/Exception/NoSupportExtension.php:36
 #, php-format
 msgid "The server does not support the %s extension."
-msgstr ""
+msgstr "serveren understøtter ikke %s udvidelsen."
 
 #: 3rdparty/Horde/Imap/Client/Exception/NoSupportPop3.php:25
 #, php-format
 msgid "%s not supported on POP3 servers."
-msgstr ""
+msgstr "%s er ikke understøttet på POP3 servere."
 
 #: 3rdparty/Horde/Imap/Client/Exception/SearchCharset.php:36
 msgid "Cannot convert search query text to new charset"
@@ -317,7 +317,7 @@ msgstr "Afghanistan"
 
 #: 3rdparty/Horde/Nls/Countries.php:9
 msgid "Åland Islands"
-msgstr ""
+msgstr "Ålandsøerne"
 
 #: 3rdparty/Horde/Nls/Countries.php:10 3rdparty/Horde/Nls/Tld.php:19
 msgid "Albania"
@@ -341,7 +341,7 @@ msgstr "Angola"
 
 #: 3rdparty/Horde/Nls/Countries.php:15 3rdparty/Horde/Nls/Tld.php:18
 msgid "Anguilla"
-msgstr ""
+msgstr "Anguilla"
 
 #: 3rdparty/Horde/Nls/Countries.php:16 3rdparty/Horde/Nls/Tld.php:23
 msgid "Antarctica"
@@ -349,7 +349,7 @@ msgstr "Antarktis"
 
 #: 3rdparty/Horde/Nls/Countries.php:17 3rdparty/Horde/Nls/Tld.php:17
 msgid "Antigua and Barbuda"
-msgstr ""
+msgstr "Antigua og Barbuda"
 
 #: 3rdparty/Horde/Nls/Countries.php:18 3rdparty/Horde/Nls/Tld.php:24
 msgid "Argentina"
@@ -393,7 +393,7 @@ msgstr "Barbados"
 
 #: 3rdparty/Horde/Nls/Countries.php:28 3rdparty/Horde/Nls/Tld.php:48
 msgid "Belarus"
-msgstr ""
+msgstr "Hviderusland"
 
 #: 3rdparty/Horde/Nls/Countries.php:29 3rdparty/Horde/Nls/Tld.php:34
 msgid "Belgium"
@@ -401,11 +401,11 @@ msgstr "Belgien"
 
 #: 3rdparty/Horde/Nls/Countries.php:30 3rdparty/Horde/Nls/Tld.php:49
 msgid "Belize"
-msgstr ""
+msgstr "Belize"
 
 #: 3rdparty/Horde/Nls/Countries.php:31 3rdparty/Horde/Nls/Tld.php:39
 msgid "Benin"
-msgstr ""
+msgstr "Benin"
 
 #: 3rdparty/Horde/Nls/Countries.php:32 3rdparty/Horde/Nls/Tld.php:40
 msgid "Bermuda"
@@ -417,19 +417,19 @@ msgstr "Bhutan"
 
 #: 3rdparty/Horde/Nls/Countries.php:34 3rdparty/Horde/Nls/Tld.php:42
 msgid "Bolivia"
-msgstr ""
+msgstr "Bolivia"
 
 #: 3rdparty/Horde/Nls/Countries.php:35
 msgid "Bonaire, Sint Eustatius and Saba"
-msgstr ""
+msgstr "Bonaire, Sint Eustatius og Saba"
 
 #: 3rdparty/Horde/Nls/Countries.php:36 3rdparty/Horde/Nls/Tld.php:31
 msgid "Bosnia and Herzegovina"
-msgstr ""
+msgstr "Bosnien-Hercegovina"
 
 #: 3rdparty/Horde/Nls/Countries.php:37 3rdparty/Horde/Nls/Tld.php:47
 msgid "Botswana"
-msgstr ""
+msgstr "Botswana"
 
 #: 3rdparty/Horde/Nls/Countries.php:38 3rdparty/Horde/Nls/Tld.php:46
 msgid "Bouvet Island"
@@ -437,7 +437,7 @@ msgstr ""
 
 #: 3rdparty/Horde/Nls/Countries.php:39 3rdparty/Horde/Nls/Tld.php:43
 msgid "Brazil"
-msgstr ""
+msgstr "Brasilien"
 
 #: 3rdparty/Horde/Nls/Countries.php:40 3rdparty/Horde/Nls/Tld.php:118
 msgid "British Indian Ocean Territory"
@@ -449,11 +449,11 @@ msgstr ""
 
 #: 3rdparty/Horde/Nls/Countries.php:42 3rdparty/Horde/Nls/Tld.php:36
 msgid "Bulgaria"
-msgstr ""
+msgstr "Bilgraien"
 
 #: 3rdparty/Horde/Nls/Countries.php:43 3rdparty/Horde/Nls/Tld.php:35
 msgid "Burkina Faso"
-msgstr ""
+msgstr "Burkina Faso"
 
 #: 3rdparty/Horde/Nls/Countries.php:44 3rdparty/Horde/Nls/Tld.php:38
 msgid "Burundi"
@@ -465,7 +465,7 @@ msgstr "Cambodia"
 
 #: 3rdparty/Horde/Nls/Countries.php:46 3rdparty/Horde/Nls/Tld.php:59
 msgid "Cameroon"
-msgstr ""
+msgstr "Cameroun"
 
 #: 3rdparty/Horde/Nls/Countries.php:47 3rdparty/Horde/Nls/Tld.php:50
 msgid "Canada"
@@ -473,11 +473,11 @@ msgstr "Canada"
 
 #: 3rdparty/Horde/Nls/Countries.php:48 3rdparty/Horde/Nls/Tld.php:64
 msgid "Cape Verde"
-msgstr ""
+msgstr "Kap Verde"
 
 #: 3rdparty/Horde/Nls/Countries.php:49 3rdparty/Horde/Nls/Tld.php:136
 msgid "Cayman Islands"
-msgstr ""
+msgstr "Caymanøerne"
 
 #: 3rdparty/Horde/Nls/Countries.php:50 3rdparty/Horde/Nls/Tld.php:53
 msgid "Central African Republic"
@@ -493,7 +493,7 @@ msgstr "Chile"
 
 #: 3rdparty/Horde/Nls/Countries.php:53 3rdparty/Horde/Nls/Tld.php:60
 msgid "China"
-msgstr ""
+msgstr "Kina"
 
 #: 3rdparty/Horde/Nls/Countries.php:54 3rdparty/Horde/Nls/Tld.php:65
 msgid "Christmas Island"
@@ -533,7 +533,7 @@ msgstr ""
 
 #: 3rdparty/Horde/Nls/Countries.php:63
 msgid "Croatia"
-msgstr ""
+msgstr "Kroatien"
 
 #: 3rdparty/Horde/Nls/Countries.php:64 3rdparty/Horde/Nls/Tld.php:63
 msgid "Cuba"
@@ -549,7 +549,7 @@ msgstr ""
 
 #: 3rdparty/Horde/Nls/Countries.php:67 3rdparty/Horde/Nls/Tld.php:67
 msgid "Czech Republic"
-msgstr ""
+msgstr "Tjekkiet"
 
 #: 3rdparty/Horde/Nls/Countries.php:68 3rdparty/Horde/Nls/Tld.php:70
 msgid "Denmark"
@@ -569,11 +569,11 @@ msgstr ""
 
 #: 3rdparty/Horde/Nls/Countries.php:72 3rdparty/Horde/Nls/Tld.php:74
 msgid "Ecuador"
-msgstr ""
+msgstr "Ecuador"
 
 #: 3rdparty/Horde/Nls/Countries.php:73 3rdparty/Horde/Nls/Tld.php:76
 msgid "Egypt"
-msgstr ""
+msgstr "Egypten"
 
 #: 3rdparty/Horde/Nls/Countries.php:74 3rdparty/Horde/Nls/Tld.php:221
 msgid "El Salvador"
@@ -589,7 +589,7 @@ msgstr ""
 
 #: 3rdparty/Horde/Nls/Countries.php:77 3rdparty/Horde/Nls/Tld.php:75
 msgid "Estonia"
-msgstr ""
+msgstr "Estland"
 
 #: 3rdparty/Horde/Nls/Countries.php:78 3rdparty/Horde/Nls/Tld.php:80
 msgid "Ethiopia"
@@ -629,15 +629,15 @@ msgstr ""
 
 #: 3rdparty/Horde/Nls/Countries.php:87 3rdparty/Horde/Nls/Tld.php:88
 msgid "Gabon"
-msgstr ""
+msgstr "Gabon"
 
 #: 3rdparty/Horde/Nls/Countries.php:88 3rdparty/Horde/Nls/Tld.php:97
 msgid "Gambia"
-msgstr ""
+msgstr "Gambia"
 
 #: 3rdparty/Horde/Nls/Countries.php:89 3rdparty/Horde/Nls/Tld.php:91
 msgid "Georgia"
-msgstr ""
+msgstr "Georgien"
 
 #: 3rdparty/Horde/Nls/Countries.php:90 3rdparty/Horde/Nls/Tld.php:68
 msgid "Germany"
@@ -645,11 +645,11 @@ msgstr "Tyskland"
 
 #: 3rdparty/Horde/Nls/Countries.php:91 3rdparty/Horde/Nls/Tld.php:94
 msgid "Ghana"
-msgstr ""
+msgstr "Ghana"
 
 #: 3rdparty/Horde/Nls/Countries.php:92 3rdparty/Horde/Nls/Tld.php:95
 msgid "Gibraltar"
-msgstr ""
+msgstr "Gibraltar"
 
 #: 3rdparty/Horde/Nls/Countries.php:93 3rdparty/Horde/Nls/Tld.php:101
 msgid "Greece"
@@ -661,7 +661,7 @@ msgstr "Grønland"
 
 #: 3rdparty/Horde/Nls/Countries.php:95 3rdparty/Horde/Nls/Tld.php:90
 msgid "Grenada"
-msgstr ""
+msgstr "Grenada"
 
 #: 3rdparty/Horde/Nls/Countries.php:96 3rdparty/Horde/Nls/Tld.php:99
 msgid "Guadeloupe"
@@ -669,7 +669,7 @@ msgstr ""
 
 #: 3rdparty/Horde/Nls/Countries.php:97 3rdparty/Horde/Nls/Tld.php:104
 msgid "Guam"
-msgstr ""
+msgstr "Guam"
 
 #: 3rdparty/Horde/Nls/Countries.php:98 3rdparty/Horde/Nls/Tld.php:103
 msgid "Guatemala"
