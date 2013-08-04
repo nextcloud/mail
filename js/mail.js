@@ -60,7 +60,7 @@ Mail = {
             var table = $('#mail_messages');
             var template = table.find('tr.template').clone();
             var template_loading = table.find('tr.template_loading').clone();
-            messages = data.messages;
+            var messages = data.messages;
 
             //table.date('');
             for (var i in messages) {
@@ -75,8 +75,29 @@ Mail = {
                 }
                 clone.find('.mail_message_summary_from').text(message.from);
                 clone.find('.mail_message_summary_subject').text(message.subject);
-                clone.find('.mail_message_summary_date').text(message.date);
-                clone.find('.mail_message_summary_size').text(message.size);
+
+				var lastModified = new Date(message.dateInt*1000);
+				var lastModifiedTime = Math.round(lastModified.getTime() / 1000);
+
+				// date column
+				var modifiedColor = Math.round((Math.round((new Date()).getTime() / 1000)-lastModifiedTime)/60/60/24*5);
+				if (modifiedColor > 200) {
+					modifiedColor = 200;
+				}
+
+				td = $('<td></td>').attr({ "class": "date" });
+				td.append($('<span></span>').attr({
+					"class": "modified",
+					"title": formatDate(lastModified),
+					"style": 'color:rgb('+modifiedColor+','+modifiedColor+','+modifiedColor+')'
+				}).text( relative_modified_date(lastModifiedTime) ));
+
+				// delete icon
+				td.append($('<a></a>').attr({
+					"class": "action delete",
+					"original-title": t('mail', 'Delete message')
+				}).append($('<img class="svg" src="'+OC.imagePath('core', 'actions/delete')+'">')));
+				clone.append(td);
 
                 table.append(clone);
 
