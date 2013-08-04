@@ -24,6 +24,9 @@
 OCP\JSON::checkLoggedIn();
 OCP\JSON::checkAppEnabled('mail');
 
+// testing all possible configurations can take some time
+set_time_limit(0);
+
 $email_address = isset($_POST['email_address']) ? $_POST['email_address'] : null;
 $password = isset( $_POST['password'] ) ? $_POST['password'] : null;
 if (!$email_address || !filter_var($email_address, FILTER_VALIDATE_EMAIL)) {

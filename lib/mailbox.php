@@ -25,18 +25,17 @@ class Mailbox {
 
 	public function getMessages($from = 0, $count = 2) {
 		$total = $this->getTotalMessages();
-		if (($from + $count) > $total) {
-			$count = $total - $from;
-		}
+		$from = $total - $from;
+		$to = max($from - $count, 0);
 
 		$headers = array();
 
 		$fetch_query = new \Horde_Imap_Client_Fetch_Query();
 		$fetch_query->envelope();
 		$fetch_query->flags();
-		$fetch_query->seq();
+//		$fetch_query->seq();
 		$fetch_query->size();
-		$fetch_query->uid();
+//		$fetch_query->uid();
 		$fetch_query->imapDate();
 
 		$headers = array_merge($headers, array(
@@ -51,10 +50,10 @@ class Mailbox {
 			'peek'  => true
 		));
 
-		$opt = array('ids' => ($from + 1) . ':' . ($from + 1 + $count));
-		$opt = array();
+		$ids = new \Horde_Imap_Client_Ids("$from:$to", true);
+		$options = array('ids' => $ids);
 		// $list is an array of Horde_Imap_Client_Data_Fetch objects.
-		$headers = $this->conn->fetch($this->folder_id, $fetch_query, $opt);
+		$headers = $this->conn->fetch($this->folder_id, $fetch_query, $options);
 
 		ob_start(); // fix for Horde warnings
 		$messages = array();

@@ -194,7 +194,7 @@ Mail = {
                             }
 
                             $.ajax(OC.filePath('mail', 'ajax', 'append_messages.php'), {
-                                async:false, // no async!
+                                async:true,
                                 data:{ 'account_id':Mail.State.current_account_id, 'folder_id':Mail.State.current_folder_id, 'from':from, 'count':20},
                                 type:'GET',
                                 success:function (jsondata) {
@@ -204,15 +204,14 @@ Mail = {
                                     else {
                                         OC.dialogs.alert(jsondata.data.message, t('mail', 'Error'));
                                     }
-                                }
+									// If we did not get any new messages stop
+									new_length = $('#mail_messages .mail_message_summary').length - 1;
+									// minus 1 because of the template
+									if (from == new_length || ( from == new_length + 1 && Mail.State.current_message_id !== null )) {
+										$('#mail_messages').data('stop_loading', 'true')
+									}
+								}
                             });
-
-                            // If we did not get any new messages stop
-                            new_length = $('#mail_messages .mail_message_summary').length - 1;
-                            // minus 1 because of the template
-                            if (from == new_length || ( from == new_length + 1 && Mail.State.current_message_id !== null )) {
-                                $('#mail_messages').data('stop_loading', 'true')
-                            }
                         }
                     }
                 }
@@ -296,5 +295,5 @@ $(document).ready(function () {
 		Mail.UI.openMessage(message_id);
 	});
 
-//    Mail.UI.bindEndlessScrolling();
+    Mail.UI.bindEndlessScrolling();
 });
