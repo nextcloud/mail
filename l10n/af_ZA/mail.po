@@ -7,8 +7,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: ownCloud\n"
 "Report-Msgid-Bugs-To: http://bugs.owncloud.org/\n"
-"POT-Creation-Date: 2013-05-25 02:55+0200\n"
-"PO-Revision-Date: 2013-05-24 13:28+0000\n"
+"POT-Creation-Date: 2013-08-07 11:26-0400\n"
+"PO-Revision-Date: 2013-08-07 15:26+0000\n"
 "Last-Translator: I Robot <owncloud-bot@tmit.eu>\n"
 "Language-Team: Afrikaans (South Africa) (http://www.transifex.com/projects/p/owncloud/language/af_ZA/)\n"
 "MIME-Version: 1.0\n"
@@ -2136,27 +2136,31 @@ msgstr ""
 msgid "Yugoslavia"
 msgstr ""
 
-#: js/mail.js:42 js/mail.js:115 js/mail.js:148 js/mail.js:205 js/mail.js:261
+#: js/mail.js:42 js/mail.js:136 js/mail.js:169 js/mail.js:226 js/mail.js:281
 msgid "Error"
 msgstr ""
 
-#: js/mail.js:236
+#: js/mail.js:98
+msgid "Delete message"
+msgstr ""
+
+#: js/mail.js:256
 msgid "Connecting ..."
 msgstr ""
 
-#: js/mail.js:252 js/mail.js:267 templates/no-accounts.php:16
+#: js/mail.js:272 js/mail.js:287 templates/no-accounts.php:16
 msgid "Connect"
 msgstr ""
 
-#: js/mail.js:257
+#: js/mail.js:277
 msgid "Not a email address"
 msgstr ""
 
-#: js/mail.js:265
+#: js/mail.js:285
 msgid "Unknown error"
 msgstr ""
 
-#: js/mail.js:269
+#: js/mail.js:289
 msgid "Server Error"
 msgstr ""
 
