@@ -520,6 +520,7 @@
 "Wallis and Futuna Islands" => "Wallis- och Futunaöarna",
 "Yugoslavia" => "Jugoslavien",
 "Error" => "Fel",
+"Delete message" => "Radera meddelande",
 "Connecting ..." => "Ansluter ...",
 "Connect" => "Anslut",
 "Not a email address" => "Inte en e-postadress",

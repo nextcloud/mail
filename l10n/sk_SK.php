@@ -520,6 +520,7 @@
 "Wallis and Futuna Islands" => "Ostrovy Wallis a Futuna",
 "Yugoslavia" => "Juhoslávia",
 "Error" => "Chyba",
+"Delete message" => "Zmazať správu",
 "Connecting ..." => "Pripájam sa...",
 "Connect" => "Pripojiť",
 "Not a email address" => "Žiadna emailová adresa",
