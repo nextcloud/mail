@@ -26,6 +26,7 @@
 "IMAP Server closed the connection." => "IMAP-server lukkede forbindelsen.",
 "Mail server closed the connection unexpectedly." => "Mailserver lukkede forbindelsen uventet.",
 "Could not save message on server." => "Kunne ikke gemme besked på server. ",
+"Could not save message data because it is too large." => "Kunne ikke gemme besked data, fordi denne er for stor.",
 "Authentication failed." => "Godkendelse mislykkedes.",
 "The mail server has denied the request." => "Mailserveren har afvist anmodningen.",
 "The object could not be created because it already exists." => "Objektet kunne ikke oprettes, fordi det allerede findes.",

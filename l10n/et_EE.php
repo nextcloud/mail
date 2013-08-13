@@ -520,6 +520,7 @@
 "Wallis and Futuna Islands" => "Wallis ja Futuna saarestik",
 "Yugoslavia" => "Jugoslaavia",
 "Error" => "Viga",
+"Delete message" => "Kustuta sõnum",
 "Connecting ..." => "Ühendamine ...",
 "Connect" => "Ühenda",
 "Not a email address" => "Pole e-posti aadress",
