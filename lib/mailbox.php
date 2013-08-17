@@ -35,7 +35,7 @@ class Mailbox {
 		$fetch_query->flags();
 //		$fetch_query->seq();
 		$fetch_query->size();
-//		$fetch_query->uid();
+		$fetch_query->uid();
 		$fetch_query->imapDate();
 
 		$headers = array_merge($headers, array(
@@ -57,7 +57,8 @@ class Mailbox {
 
 		ob_start(); // fix for Horde warnings
 		$messages = array();
-		foreach ($headers as $message_id => $header) {
+		foreach ($headers->ids() as $message_id) {
+			$header = $headers[$message_id];
 			$message = new Message($this->conn, $this->folder_id, $message_id, $header);
 			$messages[] = $message->getListArray();
 		}
