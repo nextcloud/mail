@@ -92,6 +92,7 @@ $(function () {
 			beforeSend:function () {
 //				$('#wait').show();
 			},
+			type: 'POST',
 			complete:function () {
 //				$('#wait').hide();
 			},
@@ -99,7 +100,7 @@ $(function () {
 				'account_id': Mail.State.current_account_id,
 				'to':$('#to').val(),
 				'subject':$('#subject').val(),
-				'body':$('#body').val()},
+				'body':$('#new-message-body').val()},
 			success:function () {
 				// close composer
 				$('#new-message-fields').slideUp();

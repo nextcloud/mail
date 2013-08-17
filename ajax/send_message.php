@@ -24,10 +24,10 @@
 OCP\JSON::checkLoggedIn();
 OCP\JSON::checkAppEnabled('mail');
 
-$account_id = isset( $_GET['account_id'] ) ? $_GET['account_id'] : null;
-$subject = isset( $_GET['subject'] ) ? $_GET['subject'] : null;
-$body = isset( $_GET['body'] ) ? $_GET['body'] : null;
-$to = isset( $_GET['to'] ) ? $_GET['to'] : null;
+$account_id = isset( $_POST['account_id'] ) ? $_POST['account_id'] : null;
+$subject = isset( $_POST['subject'] ) ? $_POST['subject'] : null;
+$body = isset( $_POST['body'] ) ? $_POST['body'] : null;
+$to = isset( $_POST['to'] ) ? $_POST['to'] : null;
 
 $account = OCA\Mail\App::getAccount( OCP\User::getUser(), $account_id);
 if (!$account) {
