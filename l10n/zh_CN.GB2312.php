@@ -9,6 +9,7 @@
 "Other" => "其他",
 "Error" => "出错",
 "Connect" => "连接",
+"Unknown error" => "未知错误...",
 "To" => "到",
 "Send" => "发送"
 );

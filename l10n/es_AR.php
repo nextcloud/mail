@@ -520,6 +520,7 @@
 "Wallis and Futuna Islands" => "Islas Horn",
 "Yugoslavia" => "Yugoslavia",
 "Error" => "Error",
+"Delete message" => "Eliminar mensaje",
 "Connecting ..." => "Conectando...",
 "Connect" => "Conectar",
 "Not a email address" => "No es una dirección de correo",
