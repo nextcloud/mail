@@ -9,6 +9,7 @@
 # Christoph Sczigiol <christoph.sczigiol@gmail.com>, 2013
 # DeLegendary <hablux@web.de>, 2013
 # FlorianScholz <work@bgstyle.de>, 2013
+# FlorianScholz <work@bgstyle.de>, 2013
 # JamFX <niko@nik-o-mat.de>, 2013
 # kabum <uu.kabum@gmail.com>, 2013
 # Marcel Kühlhorn <susefan93@gmx.de>, 2013
@@ -20,9 +21,9 @@ msgid ""
 msgstr ""
 "Project-Id-Version: ownCloud\n"
 "Report-Msgid-Bugs-To: http://bugs.owncloud.org/\n"
-"POT-Creation-Date: 2013-08-09 09:05-0400\n"
-"PO-Revision-Date: 2013-08-09 11:21+0000\n"
-"Last-Translator: I Robot <owncloud-bot@tmit.eu>\n"
+"POT-Creation-Date: 2013-08-27 12:21-0400\n"
+"PO-Revision-Date: 2013-08-26 08:10+0000\n"
+"Last-Translator: FlorianScholz <work@bgstyle.de>\n"
 "Language-Team: German (Switzerland) (http://www.transifex.com/projects/p/owncloud/language/de_CH/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -2155,7 +2156,7 @@ msgstr "Fehler"
 
 #: js/mail.js:98
 msgid "Delete message"
-msgstr ""
+msgstr "Nachricht löschen"
 
 #: js/mail.js:256
 msgid "Connecting ..."
