@@ -520,6 +520,7 @@
 "Wallis and Futuna Islands" => "瓦利斯和富圖納群島",
 "Yugoslavia" => "南斯拉夫",
 "Error" => "錯誤",
+"Delete message" => "刪除訊息",
 "Connecting ..." => "連線中...",
 "Connect" => "連線",
 "Not a email address" => "不是合法的電子郵件地址",

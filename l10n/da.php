@@ -6,6 +6,7 @@
 "The server does not support the %s extension." => "serveren understøtter ikke %s udvidelsen.",
 "%s not supported on POP3 servers." => "%s er ikke understøttet på POP3 servere.",
 "Cannot convert search query text to new charset" => "Kan ikke konvertere søgningens forespørgselstekst til myt tegnsæt ",
+"Bad tagged response." => "Dårligt mærket svar.",
 "Could not open secure connection to the POP3 server." => "Kunne ikke åbne en sikker forbindelse til POP3-serveren",
 "Server does not support secure connections." => "Serveren understøtter ikke sikre forbindelser.",
 "POP3 server denied authentication." => "POP3-serveren nægtede godkendelse",
