@@ -7,8 +7,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: ownCloud\n"
 "Report-Msgid-Bugs-To: http://bugs.owncloud.org/\n"
-"POT-Creation-Date: 2013-08-09 09:05-0400\n"
-"PO-Revision-Date: 2013-08-09 11:21+0000\n"
+"POT-Creation-Date: 2013-09-10 11:44-0400\n"
+"PO-Revision-Date: 2013-09-09 23:30+0000\n"
 "Last-Translator: I Robot <owncloud-bot@tmit.eu>\n"
 "Language-Team: Albanian (http://www.transifex.com/projects/p/owncloud/language/sq/)\n"
 "MIME-Version: 1.0\n"
@@ -1324,7 +1324,7 @@ msgstr ""
 
 #: 3rdparty/Horde/Nls/Geoip.php:328
 msgid "Other"
-msgstr ""
+msgstr "Të tjera"
 
 #: 3rdparty/Horde/Nls/Languages.php:9
 msgid "Afar"
@@ -2170,7 +2170,7 @@ msgstr ""
 
 #: templates/index.php:10
 msgid "To"
-msgstr ""
+msgstr "Për"
 
 #: templates/index.php:11
 msgid "Subject"

@@ -26,6 +26,7 @@
 "Remote server is temporarily unavailable." => "Etäpalvelin on väliaikaisesti saavuttamattomissa.",
 "Authentication failed." => "Tunnistautuminen epäonnistui.",
 "Authentication was successful, but authorization failed." => "Tunnistautuminen onnistui, mutta valtuutus epäonnistui.",
+"Authentication credentials have expired." => "Kirjautumistiedot ovat vanhentuneet.",
 "The mail server has denied the request." => "Sähköpostipalvelin hylkäsi pyynnön.",
 "Plaintext Version of Message" => "Viestin raakatekstiversio",
 "HTML Version of Message" => "Viestin HTML-versio",
