@@ -7,8 +7,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: ownCloud\n"
 "Report-Msgid-Bugs-To: http://bugs.owncloud.org/\n"
-"POT-Creation-Date: 2013-08-07 11:26-0400\n"
-"PO-Revision-Date: 2013-08-07 15:26+0000\n"
+"POT-Creation-Date: 2013-09-20 11:49-0400\n"
+"PO-Revision-Date: 2013-09-20 07:40+0000\n"
 "Last-Translator: I Robot <owncloud-bot@tmit.eu>\n"
 "Language-Team: Serbian (Latin) (http://www.transifex.com/projects/p/owncloud/language/sr@latin/)\n"
 "MIME-Version: 1.0\n"
@@ -2138,7 +2138,7 @@ msgstr ""
 
 #: js/mail.js:42 js/mail.js:136 js/mail.js:169 js/mail.js:226 js/mail.js:281
 msgid "Error"
-msgstr ""
+msgstr "Greška"
 
 #: js/mail.js:98
 msgid "Delete message"
@@ -2178,7 +2178,7 @@ msgstr ""
 
 #: templates/index.php:13
 msgid "Send"
-msgstr ""
+msgstr "Pošalji"
 
 #: templates/no-accounts.php:3
 msgid "Connect your mail account"
