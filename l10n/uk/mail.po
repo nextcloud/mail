@@ -9,8 +9,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: ownCloud\n"
 "Report-Msgid-Bugs-To: http://bugs.owncloud.org/\n"
-"POT-Creation-Date: 2013-09-22 13:54-0400\n"
-"PO-Revision-Date: 2013-09-22 12:00+0000\n"
+"POT-Creation-Date: 2013-09-29 01:59-0400\n"
+"PO-Revision-Date: 2013-09-27 19:07+0000\n"
 "Last-Translator: zubr139 <zubr139@ukr.net>\n"
 "Language-Team: Ukrainian (http://www.transifex.com/projects/p/owncloud/language/uk/)\n"
 "MIME-Version: 1.0\n"
@@ -1201,7 +1201,7 @@ msgstr ""
 
 #: 3rdparty/Horde/Nls/Countries.php:230 3rdparty/Horde/Nls/Tld.php:227
 msgid "Togo"
-msgstr ""
+msgstr "Того"
 
 #: 3rdparty/Horde/Nls/Countries.php:231 3rdparty/Horde/Nls/Tld.php:230
 msgid "Tokelau"
@@ -1258,27 +1258,27 @@ msgstr "Сполучені Штати"
 
 #: 3rdparty/Horde/Nls/Countries.php:244 3rdparty/Horde/Nls/Tld.php:244
 msgid "United States Minor Outlying Islands"
-msgstr ""
+msgstr "Сполучені Штати Америки Зовнішні малі острови"
 
 #: 3rdparty/Horde/Nls/Countries.php:245 3rdparty/Horde/Nls/Tld.php:246
 msgid "Uruguay"
-msgstr ""
+msgstr "Уругвай"
 
 #: 3rdparty/Horde/Nls/Countries.php:246 3rdparty/Horde/Nls/Tld.php:247
 msgid "Uzbekistan"
-msgstr ""
+msgstr "Узбекистан"
 
 #: 3rdparty/Horde/Nls/Countries.php:247 3rdparty/Horde/Nls/Tld.php:254
 msgid "Vanuatu"
-msgstr ""
+msgstr "Вануату"
 
 #: 3rdparty/Horde/Nls/Countries.php:248 3rdparty/Horde/Nls/Tld.php:250
 msgid "Venezuela"
-msgstr ""
+msgstr "Венесуела"
 
 #: 3rdparty/Horde/Nls/Countries.php:249 3rdparty/Horde/Nls/Tld.php:253
 msgid "Viet Nam"
-msgstr ""
+msgstr "В'єтнам"
 
 #: 3rdparty/Horde/Nls/Countries.php:250 3rdparty/Horde/Nls/Tld.php:251
 msgid "Virgin Islands, British"
@@ -1294,23 +1294,23 @@ msgstr ""
 
 #: 3rdparty/Horde/Nls/Countries.php:253 3rdparty/Horde/Nls/Tld.php:77
 msgid "Western Sahara"
-msgstr ""
+msgstr "Західна Сахара"
 
 #: 3rdparty/Horde/Nls/Countries.php:254 3rdparty/Horde/Nls/Tld.php:257
 msgid "Yemen"
-msgstr ""
+msgstr "Ємен"
 
 #: 3rdparty/Horde/Nls/Countries.php:255 3rdparty/Horde/Nls/Tld.php:261
 msgid "Zambia"
-msgstr ""
+msgstr "Замбія"
 
 #: 3rdparty/Horde/Nls/Countries.php:256 3rdparty/Horde/Nls/Tld.php:262
 msgid "Zimbabwe"
-msgstr ""
+msgstr "Зімбабве"
 
 #: 3rdparty/Horde/Nls/Geoip.php:324
 msgid "Asia/Pacific Region"
-msgstr ""
+msgstr "Азія/Тихоокеанський регіон"
 
 #: 3rdparty/Horde/Nls/Geoip.php:325
 msgid "Europe"
@@ -1358,7 +1358,7 @@ msgstr "Арагонська"
 
 #: 3rdparty/Horde/Nls/Languages.php:16
 msgid "Arabic"
-msgstr ""
+msgstr "Арабська"
 
 #: 3rdparty/Horde/Nls/Languages.php:17
 msgid "Assamese"
@@ -1374,23 +1374,23 @@ msgstr ""
 
 #: 3rdparty/Horde/Nls/Languages.php:20
 msgid "Azerbaijani"
-msgstr ""
+msgstr "Азербайджанська"
 
 #: 3rdparty/Horde/Nls/Languages.php:21
 msgid "Bashkir"
-msgstr ""
+msgstr "Башкирська"
 
 #: 3rdparty/Horde/Nls/Languages.php:22
 msgid "Belarusian"
-msgstr ""
+msgstr "Білоруська"
 
 #: 3rdparty/Horde/Nls/Languages.php:23
 msgid "Bulgarian"
-msgstr ""
+msgstr "Болгарська"
 
 #: 3rdparty/Horde/Nls/Languages.php:24
 msgid "Bihari"
-msgstr ""
+msgstr "Біхарі"
 
 #: 3rdparty/Horde/Nls/Languages.php:25
 msgid "Bislama"
@@ -1456,11 +1456,11 @@ msgstr ""
 
 #: 3rdparty/Horde/Nls/Languages.php:40
 msgid "Danish"
-msgstr ""
+msgstr "Данська"
 
 #: 3rdparty/Horde/Nls/Languages.php:41
 msgid "German"
-msgstr ""
+msgstr "Німецька"
 
 #: 3rdparty/Horde/Nls/Languages.php:42
 msgid "Divehi; Dhivehi; Maldivian;"
@@ -1868,7 +1868,7 @@ msgstr ""
 
 #: 3rdparty/Horde/Nls/Languages.php:144
 msgid "Russian"
-msgstr ""
+msgstr "російська"
 
 #: 3rdparty/Horde/Nls/Languages.php:145
 msgid "Kinyarwanda"
@@ -1984,7 +1984,7 @@ msgstr ""
 
 #: 3rdparty/Horde/Nls/Languages.php:173
 msgid "Turkish"
-msgstr ""
+msgstr "Турецька"
 
 #: 3rdparty/Horde/Nls/Languages.php:174
 msgid "Tsonga"
@@ -2144,7 +2144,7 @@ msgstr "Помилка"
 
 #: js/mail.js:98
 msgid "Delete message"
-msgstr ""
+msgstr "Вилучити повідомлення"
 
 #: js/mail.js:256
 msgid "Connecting ..."
@@ -2160,11 +2160,11 @@ msgstr ""
 
 #: js/mail.js:285
 msgid "Unknown error"
-msgstr ""
+msgstr "Невідома помилка"
 
 #: js/mail.js:289
 msgid "Server Error"
-msgstr ""
+msgstr "Помилка сервера"
 
 #: templates/index.php:8
 msgid "New Message"
@@ -2184,7 +2184,7 @@ msgstr "Надіслати"
 
 #: templates/no-accounts.php:3
 msgid "Connect your mail account"
-msgstr ""
+msgstr "Підключити обліковий запис електронної пошти"
 
 #: templates/no-accounts.php:8
 msgid "Mail Address"
@@ -2192,7 +2192,7 @@ msgstr ""
 
 #: templates/no-accounts.php:13
 msgid "IMAP Password"
-msgstr ""
+msgstr "IMAP Пароль"
 
 #: templates/part.message.php:31
 msgid "Reply"
