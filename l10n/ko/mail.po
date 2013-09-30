@@ -3,16 +3,16 @@
 # This file is distributed under the same license as the PACKAGE package.
 # 
 # Translators:
-# Sungjin Gang <potopro@gmail.com>, 2013
-# Sungjin Gang <potopro@gmail.com>, 2013
+# ujuc Gang <potopro@gmail.com>, 2013
+# ujuc Gang <potopro@gmail.com>, 2013
 # smallsnail <bjh13579@gmail.com>, 2013
 msgid ""
 msgstr ""
 "Project-Id-Version: ownCloud\n"
 "Report-Msgid-Bugs-To: http://bugs.owncloud.org/\n"
-"POT-Creation-Date: 2013-08-09 09:05-0400\n"
-"PO-Revision-Date: 2013-08-09 11:21+0000\n"
-"Last-Translator: I Robot <owncloud-bot@tmit.eu>\n"
+"POT-Creation-Date: 2013-09-30 11:08-0400\n"
+"PO-Revision-Date: 2013-09-29 10:43+0000\n"
+"Last-Translator: smallsnail <bjh13579@gmail.com>\n"
 "Language-Team: Korean (http://www.transifex.com/projects/p/owncloud/language/ko/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -966,364 +966,364 @@ msgstr "니우에"
 
 #: 3rdparty/Horde/Nls/Countries.php:171 3rdparty/Horde/Nls/Tld.php:174
 msgid "Norfolk Island"
-msgstr ""
+msgstr "노퍽 섬"
 
 #: 3rdparty/Horde/Nls/Countries.php:172 3rdparty/Horde/Nls/Tld.php:160
 msgid "Northern Mariana Islands"
-msgstr ""
+msgstr "북마리아나 제도"
 
 #: 3rdparty/Horde/Nls/Countries.php:173 3rdparty/Horde/Nls/Tld.php:178
 msgid "Norway"
-msgstr ""
+msgstr "노르웨이"
 
 #: 3rdparty/Horde/Nls/Countries.php:174 3rdparty/Horde/Nls/Tld.php:183
 msgid "Oman"
-msgstr ""
+msgstr "오만"
 
 #: 3rdparty/Horde/Nls/Countries.php:175 3rdparty/Horde/Nls/Tld.php:189
 msgid "Pakistan"
-msgstr ""
+msgstr "파키스탄"
 
 #: 3rdparty/Horde/Nls/Countries.php:176 3rdparty/Horde/Nls/Tld.php:196
 msgid "Palau"
-msgstr ""
+msgstr "팔라우"
 
 #: 3rdparty/Horde/Nls/Countries.php:177 3rdparty/Horde/Nls/Tld.php:194
 msgid "Palestinian Territory, Occupied"
-msgstr ""
+msgstr "팔레스타인 영토"
 
 #: 3rdparty/Horde/Nls/Countries.php:178 3rdparty/Horde/Nls/Tld.php:184
 msgid "Panama"
-msgstr ""
+msgstr "파나마"
 
 #: 3rdparty/Horde/Nls/Countries.php:179 3rdparty/Horde/Nls/Tld.php:187
 msgid "Papua New Guinea"
-msgstr ""
+msgstr "파푸아 뉴기니"
 
 #: 3rdparty/Horde/Nls/Countries.php:180 3rdparty/Horde/Nls/Tld.php:197
 msgid "Paraguay"
-msgstr ""
+msgstr "파라과이"
 
 #: 3rdparty/Horde/Nls/Countries.php:181 3rdparty/Horde/Nls/Tld.php:185
 msgid "Peru"
-msgstr ""
+msgstr "페루"
 
 #: 3rdparty/Horde/Nls/Countries.php:182 3rdparty/Horde/Nls/Tld.php:188
 msgid "Philippines"
-msgstr ""
+msgstr "필리핀"
 
 #: 3rdparty/Horde/Nls/Countries.php:183
 msgid "Pitcairn"
-msgstr ""
+msgstr "핏케언 제도"
 
 #: 3rdparty/Horde/Nls/Countries.php:184 3rdparty/Horde/Nls/Tld.php:190
 msgid "Poland"
-msgstr ""
+msgstr "폴란드"
 
 #: 3rdparty/Horde/Nls/Countries.php:185 3rdparty/Horde/Nls/Tld.php:195
 msgid "Portugal"
-msgstr ""
+msgstr "포르투갈"
 
 #: 3rdparty/Horde/Nls/Countries.php:186 3rdparty/Horde/Nls/Tld.php:193
 msgid "Puerto Rico"
-msgstr ""
+msgstr "푸에르토리코"
 
 #: 3rdparty/Horde/Nls/Countries.php:187 3rdparty/Horde/Nls/Tld.php:198
 msgid "Qatar"
-msgstr ""
+msgstr "카타르"
 
 #: 3rdparty/Horde/Nls/Countries.php:188
 msgid "Réunion"
-msgstr ""
+msgstr "레위니옹"
 
 #: 3rdparty/Horde/Nls/Countries.php:189 3rdparty/Horde/Nls/Tld.php:200
 msgid "Romania"
-msgstr ""
+msgstr "루마니아"
 
 #: 3rdparty/Horde/Nls/Countries.php:190 3rdparty/Horde/Nls/Tld.php:202
 msgid "Russian Federation"
-msgstr ""
+msgstr "러시아 연방"
 
 #: 3rdparty/Horde/Nls/Countries.php:191 3rdparty/Horde/Nls/Tld.php:203
 msgid "Rwanda"
-msgstr ""
+msgstr "르완다"
 
 #: 3rdparty/Horde/Nls/Countries.php:192
 msgid "Saint Barthélemy"
-msgstr ""
+msgstr "생바르텔레미"
 
 #: 3rdparty/Horde/Nls/Countries.php:193
 msgid "Saint Helena, Ascension and Tristan da Cunha"
-msgstr ""
+msgstr "세인트헬레나 어센션 트리스탄다쿠냐"
 
 #: 3rdparty/Horde/Nls/Countries.php:194 3rdparty/Horde/Nls/Tld.php:132
 msgid "Saint Kitts and Nevis"
-msgstr ""
+msgstr "세인트키츠 네비스"
 
 #: 3rdparty/Horde/Nls/Countries.php:195 3rdparty/Horde/Nls/Tld.php:140
 msgid "Saint Lucia"
-msgstr ""
+msgstr "세인트루시아"
 
 #: 3rdparty/Horde/Nls/Countries.php:196
 msgid "Saint Martin (French part)"
-msgstr ""
+msgstr "세인트마틴 섬 (프랑스 령)"
 
 #: 3rdparty/Horde/Nls/Countries.php:197 3rdparty/Horde/Nls/Tld.php:191
 msgid "Saint Pierre and Miquelon"
-msgstr ""
+msgstr "생피에르 미클롱"
 
 #: 3rdparty/Horde/Nls/Countries.php:198 3rdparty/Horde/Nls/Tld.php:249
 msgid "Saint Vincent and the Grenadines"
-msgstr ""
+msgstr "세인트빈센트 그레나딘"
 
 #: 3rdparty/Horde/Nls/Countries.php:199 3rdparty/Horde/Nls/Tld.php:256
 msgid "Samoa"
-msgstr ""
+msgstr "사모아"
 
 #: 3rdparty/Horde/Nls/Countries.php:200 3rdparty/Horde/Nls/Tld.php:215
 msgid "San Marino"
-msgstr ""
+msgstr "산 마리노"
 
 #: 3rdparty/Horde/Nls/Countries.php:201 3rdparty/Horde/Nls/Tld.php:219
 msgid "Sao Tome and Principe"
-msgstr ""
+msgstr "상투메 프린시페"
 
 #: 3rdparty/Horde/Nls/Countries.php:202 3rdparty/Horde/Nls/Tld.php:204
 msgid "Saudi Arabia"
-msgstr ""
+msgstr "사우디 아라비아"
 
 #: 3rdparty/Horde/Nls/Countries.php:203 3rdparty/Horde/Nls/Tld.php:216
 msgid "Senegal"
-msgstr ""
+msgstr "세네갈"
 
 #: 3rdparty/Horde/Nls/Countries.php:204 3rdparty/Horde/Nls/Tld.php:201
 msgid "Serbia"
-msgstr ""
+msgstr "세르비아"
 
 #: 3rdparty/Horde/Nls/Countries.php:205 3rdparty/Horde/Nls/Tld.php:206
 msgid "Seychelles"
-msgstr ""
+msgstr "세이셸"
 
 #: 3rdparty/Horde/Nls/Countries.php:206 3rdparty/Horde/Nls/Tld.php:214
 msgid "Sierra Leone"
-msgstr ""
+msgstr "시에라리온"
 
 #: 3rdparty/Horde/Nls/Countries.php:207 3rdparty/Horde/Nls/Tld.php:209
 msgid "Singapore"
-msgstr ""
+msgstr "싱가포르"
 
 #: 3rdparty/Horde/Nls/Countries.php:208
 msgid "Sint Maarten (Dutch part)"
-msgstr ""
+msgstr "세인트마틴 섬 (네덜란드 령)"
 
 #: 3rdparty/Horde/Nls/Countries.php:209 3rdparty/Horde/Nls/Tld.php:213
 msgid "Slovakia"
-msgstr ""
+msgstr "슬로바키아"
 
 #: 3rdparty/Horde/Nls/Countries.php:210 3rdparty/Horde/Nls/Tld.php:211
 msgid "Slovenia"
-msgstr ""
+msgstr "슬로베니아"
 
 #: 3rdparty/Horde/Nls/Countries.php:211 3rdparty/Horde/Nls/Tld.php:205
 msgid "Solomon Islands"
-msgstr ""
+msgstr "솔로몬 제도"
 
 #: 3rdparty/Horde/Nls/Countries.php:212 3rdparty/Horde/Nls/Tld.php:217
 msgid "Somalia"
-msgstr ""
+msgstr "소말리아"
 
 #: 3rdparty/Horde/Nls/Countries.php:213 3rdparty/Horde/Nls/Tld.php:260
 msgid "South Africa"
-msgstr ""
+msgstr "남 아프리카 공화국"
 
 #: 3rdparty/Horde/Nls/Countries.php:214 3rdparty/Horde/Nls/Tld.php:102
 msgid "South Georgia and the South Sandwich Islands"
-msgstr ""
+msgstr "사우스 조지아 및 사우스 샌드위치 군도"
 
 #: 3rdparty/Horde/Nls/Countries.php:215
 msgid "South Sudan"
-msgstr ""
+msgstr "남 수단"
 
 #: 3rdparty/Horde/Nls/Countries.php:216 3rdparty/Horde/Nls/Tld.php:79
 msgid "Spain"
-msgstr ""
+msgstr "스페인"
 
 #: 3rdparty/Horde/Nls/Countries.php:217 3rdparty/Horde/Nls/Tld.php:142
 msgid "Sri Lanka"
-msgstr ""
+msgstr "스리랑카"
 
 #: 3rdparty/Horde/Nls/Countries.php:218 3rdparty/Horde/Nls/Tld.php:207
 msgid "Sudan"
-msgstr ""
+msgstr "수단"
 
 #: 3rdparty/Horde/Nls/Countries.php:219 3rdparty/Horde/Nls/Tld.php:218
 msgid "Suriname"
-msgstr ""
+msgstr "수리남"
 
 #: 3rdparty/Horde/Nls/Countries.php:220
 msgid "Svalbard and Jan Mayen"
-msgstr ""
+msgstr "스발바르 얀마옌 제도"
 
 #: 3rdparty/Horde/Nls/Countries.php:221 3rdparty/Horde/Nls/Tld.php:223
 msgid "Swaziland"
-msgstr ""
+msgstr "스와질랜드"
 
 #: 3rdparty/Horde/Nls/Countries.php:222 3rdparty/Horde/Nls/Tld.php:208
 msgid "Sweden"
-msgstr ""
+msgstr "스웨덴"
 
 #: 3rdparty/Horde/Nls/Countries.php:223 3rdparty/Horde/Nls/Tld.php:55
 msgid "Switzerland"
-msgstr ""
+msgstr "스위스"
 
 #: 3rdparty/Horde/Nls/Countries.php:224 3rdparty/Horde/Nls/Tld.php:222
 msgid "Syrian Arab Republic"
-msgstr ""
+msgstr "시리아"
 
 #: 3rdparty/Horde/Nls/Countries.php:225
 msgid "Taiwan, Province of China"
-msgstr ""
+msgstr "대만"
 
 #: 3rdparty/Horde/Nls/Countries.php:226 3rdparty/Horde/Nls/Tld.php:229
 msgid "Tajikistan"
-msgstr ""
+msgstr "타지키스탄"
 
 #: 3rdparty/Horde/Nls/Countries.php:227 3rdparty/Horde/Nls/Tld.php:240
 msgid "Tanzania, United Republic of"
-msgstr ""
+msgstr "탄자니아"
 
 #: 3rdparty/Horde/Nls/Countries.php:228 3rdparty/Horde/Nls/Tld.php:228
 msgid "Thailand"
-msgstr ""
+msgstr "태국"
 
 #: 3rdparty/Horde/Nls/Countries.php:229 3rdparty/Horde/Nls/Tld.php:231
 msgid "Timor-Leste"
-msgstr ""
+msgstr "동티모르"
 
 #: 3rdparty/Horde/Nls/Countries.php:230 3rdparty/Horde/Nls/Tld.php:227
 msgid "Togo"
-msgstr ""
+msgstr "토고"
 
 #: 3rdparty/Horde/Nls/Countries.php:231 3rdparty/Horde/Nls/Tld.php:230
 msgid "Tokelau"
-msgstr ""
+msgstr "토켈라우"
 
 #: 3rdparty/Horde/Nls/Countries.php:232 3rdparty/Horde/Nls/Tld.php:234
 msgid "Tonga"
-msgstr ""
+msgstr "통가"
 
 #: 3rdparty/Horde/Nls/Countries.php:233 3rdparty/Horde/Nls/Tld.php:237
 msgid "Trinidad and Tobago"
-msgstr ""
+msgstr "트리니다드 토바고"
 
 #: 3rdparty/Horde/Nls/Countries.php:234 3rdparty/Horde/Nls/Tld.php:233
 msgid "Tunisia"
-msgstr ""
+msgstr "튀니지"
 
 #: 3rdparty/Horde/Nls/Countries.php:235 3rdparty/Horde/Nls/Tld.php:236
 msgid "Turkey"
-msgstr ""
+msgstr "터키"
 
 #: 3rdparty/Horde/Nls/Countries.php:236 3rdparty/Horde/Nls/Tld.php:232
 msgid "Turkmenistan"
-msgstr ""
+msgstr "투르크메니스탄"
 
 #: 3rdparty/Horde/Nls/Countries.php:237 3rdparty/Horde/Nls/Tld.php:224
 msgid "Turks and Caicos Islands"
-msgstr ""
+msgstr "터크스 케이커스 제도"
 
 #: 3rdparty/Horde/Nls/Countries.php:238 3rdparty/Horde/Nls/Tld.php:238
 msgid "Tuvalu"
-msgstr ""
+msgstr "투발루"
 
 #: 3rdparty/Horde/Nls/Countries.php:239 3rdparty/Horde/Nls/Tld.php:242
 msgid "Uganda"
-msgstr ""
+msgstr "우간다"
 
 #: 3rdparty/Horde/Nls/Countries.php:240 3rdparty/Horde/Nls/Tld.php:241
 msgid "Ukraine"
-msgstr ""
+msgstr "우크라이나"
 
 #: 3rdparty/Horde/Nls/Countries.php:241 3rdparty/Horde/Nls/Tld.php:15
 msgid "United Arab Emirates"
-msgstr ""
+msgstr "아랍 에미리트"
 
 #: 3rdparty/Horde/Nls/Countries.php:242 3rdparty/Horde/Nls/Tld.php:89
 #: 3rdparty/Horde/Nls/Tld.php:243
 msgid "United Kingdom"
-msgstr ""
+msgstr "영국"
 
 #: 3rdparty/Horde/Nls/Countries.php:243 3rdparty/Horde/Nls/Tld.php:245
 msgid "United States"
-msgstr ""
+msgstr "미국"
 
 #: 3rdparty/Horde/Nls/Countries.php:244 3rdparty/Horde/Nls/Tld.php:244
 msgid "United States Minor Outlying Islands"
-msgstr ""
+msgstr "미국령 군소 제도"
 
 #: 3rdparty/Horde/Nls/Countries.php:245 3rdparty/Horde/Nls/Tld.php:246
 msgid "Uruguay"
-msgstr ""
+msgstr "우루과이"
 
 #: 3rdparty/Horde/Nls/Countries.php:246 3rdparty/Horde/Nls/Tld.php:247
 msgid "Uzbekistan"
-msgstr ""
+msgstr "우즈베키스탄"
 
 #: 3rdparty/Horde/Nls/Countries.php:247 3rdparty/Horde/Nls/Tld.php:254
 msgid "Vanuatu"
-msgstr ""
+msgstr "바누아투"
 
 #: 3rdparty/Horde/Nls/Countries.php:248 3rdparty/Horde/Nls/Tld.php:250
 msgid "Venezuela"
-msgstr ""
+msgstr "베네수엘라"
 
 #: 3rdparty/Horde/Nls/Countries.php:249 3rdparty/Horde/Nls/Tld.php:253
 msgid "Viet Nam"
-msgstr ""
+msgstr "베트남"
 
 #: 3rdparty/Horde/Nls/Countries.php:250 3rdparty/Horde/Nls/Tld.php:251
 msgid "Virgin Islands, British"
-msgstr ""
+msgstr "영국령 버진 아일랜드"
 
 #: 3rdparty/Horde/Nls/Countries.php:251 3rdparty/Horde/Nls/Tld.php:252
 msgid "Virgin Islands, U.S."
-msgstr ""
+msgstr "미국령 버진 아일랜드"
 
 #: 3rdparty/Horde/Nls/Countries.php:252
 msgid "Wallis and Futuna"
-msgstr ""
+msgstr "월리스푸투나 제도"
 
 #: 3rdparty/Horde/Nls/Countries.php:253 3rdparty/Horde/Nls/Tld.php:77
 msgid "Western Sahara"
-msgstr ""
+msgstr "서 사하라"
 
 #: 3rdparty/Horde/Nls/Countries.php:254 3rdparty/Horde/Nls/Tld.php:257
 msgid "Yemen"
-msgstr ""
+msgstr "예멘"
 
 #: 3rdparty/Horde/Nls/Countries.php:255 3rdparty/Horde/Nls/Tld.php:261
 msgid "Zambia"
-msgstr ""
+msgstr "잠비아"
 
 #: 3rdparty/Horde/Nls/Countries.php:256 3rdparty/Horde/Nls/Tld.php:262
 msgid "Zimbabwe"
-msgstr ""
+msgstr "짐바브웨"
 
 #: 3rdparty/Horde/Nls/Geoip.php:324
 msgid "Asia/Pacific Region"
-msgstr ""
+msgstr "아시아 / 태평양 지역"
 
 #: 3rdparty/Horde/Nls/Geoip.php:325
 msgid "Europe"
-msgstr ""
+msgstr "유럽"
 
 #: 3rdparty/Horde/Nls/Geoip.php:326
 msgid "Anonymous Proxy"
-msgstr ""
+msgstr "익명 프록시"
 
 #: 3rdparty/Horde/Nls/Geoip.php:327
 msgid "Satellite Provider"
-msgstr ""
+msgstr "위성통신 제공자"
 
 #: 3rdparty/Horde/Nls/Geoip.php:328
 msgid "Other"
@@ -1331,245 +1331,245 @@ msgstr "기타"
 
 #: 3rdparty/Horde/Nls/Languages.php:9
 msgid "Afar"
-msgstr ""
+msgstr "아파어"
 
 #: 3rdparty/Horde/Nls/Languages.php:10
 msgid "Abkhaz"
-msgstr ""
+msgstr "아브하즈어"
 
 #: 3rdparty/Horde/Nls/Languages.php:11
 msgid "Avestan"
-msgstr ""
+msgstr "아베스타어"
 
 #: 3rdparty/Horde/Nls/Languages.php:12
 msgid "Afrikaans"
-msgstr ""
+msgstr "아프리칸스어"
 
 #: 3rdparty/Horde/Nls/Languages.php:13
 msgid "Akan"
-msgstr ""
+msgstr "아칸어"
 
 #: 3rdparty/Horde/Nls/Languages.php:14
 msgid "Amharic"
-msgstr ""
+msgstr "암하라어"
 
 #: 3rdparty/Horde/Nls/Languages.php:15
 msgid "Aragonese"
-msgstr ""
+msgstr "아라곤 어"
 
 #: 3rdparty/Horde/Nls/Languages.php:16
 msgid "Arabic"
-msgstr ""
+msgstr "아랍어"
 
 #: 3rdparty/Horde/Nls/Languages.php:17
 msgid "Assamese"
-msgstr ""
+msgstr "아삼어"
 
 #: 3rdparty/Horde/Nls/Languages.php:18
 msgid "Avaric"
-msgstr ""
+msgstr "아바르어"
 
 #: 3rdparty/Horde/Nls/Languages.php:19
 msgid "Aymara"
-msgstr ""
+msgstr "아이마라어"
 
 #: 3rdparty/Horde/Nls/Languages.php:20
 msgid "Azerbaijani"
-msgstr ""
+msgstr "아제르바이잔어"
 
 #: 3rdparty/Horde/Nls/Languages.php:21
 msgid "Bashkir"
-msgstr ""
+msgstr "바시키르어"
 
 #: 3rdparty/Horde/Nls/Languages.php:22
 msgid "Belarusian"
-msgstr ""
+msgstr "벨로루시어"
 
 #: 3rdparty/Horde/Nls/Languages.php:23
 msgid "Bulgarian"
-msgstr ""
+msgstr "불가리아어"
 
 #: 3rdparty/Horde/Nls/Languages.php:24
 msgid "Bihari"
-msgstr ""
+msgstr "비하르어"
 
 #: 3rdparty/Horde/Nls/Languages.php:25
 msgid "Bislama"
-msgstr ""
+msgstr "비슬라마어"
 
 #: 3rdparty/Horde/Nls/Languages.php:26
 msgid "Bambara"
-msgstr ""
+msgstr "밤바라어"
 
 #: 3rdparty/Horde/Nls/Languages.php:27
 msgid "Bengali"
-msgstr ""
+msgstr "벵골어"
 
 #: 3rdparty/Horde/Nls/Languages.php:28
 msgid "Tibetan Standard, Tibetan, Central"
-msgstr ""
+msgstr "티벳어"
 
 #: 3rdparty/Horde/Nls/Languages.php:29
 msgid "Breton"
-msgstr ""
+msgstr "브리타니아어"
 
 #: 3rdparty/Horde/Nls/Languages.php:30
 msgid "Bosnian"
-msgstr ""
+msgstr "보스니아어"
 
 #: 3rdparty/Horde/Nls/Languages.php:31
 msgid "Catalan; Valencian"
-msgstr ""
+msgstr "카탈루냐어"
 
 #: 3rdparty/Horde/Nls/Languages.php:32
 msgid "Chechen"
-msgstr ""
+msgstr "체첸어"
 
 #: 3rdparty/Horde/Nls/Languages.php:33
 msgid "Chamorro"
-msgstr ""
+msgstr "차모로어"
 
 #: 3rdparty/Horde/Nls/Languages.php:34
 msgid "Corsican"
-msgstr ""
+msgstr "코르시카 섬 방언"
 
 #: 3rdparty/Horde/Nls/Languages.php:35
 msgid "Cree"
-msgstr ""
+msgstr "크리어"
 
 #: 3rdparty/Horde/Nls/Languages.php:36
 msgid "Czech"
-msgstr ""
+msgstr "체코어"
 
 #: 3rdparty/Horde/Nls/Languages.php:37
 msgid ""
 "Old Church Slavonic, Church Slavic, Church Slavonic, Old Bulgarian, Old "
 "Slavonic"
-msgstr ""
+msgstr "고 교회 슬라브어, 교회 슬라브어, 고 불가리아어, 고 슬라브어"
 
 #: 3rdparty/Horde/Nls/Languages.php:38
 msgid "Chuvash"
-msgstr ""
+msgstr "추바슈어"
 
 #: 3rdparty/Horde/Nls/Languages.php:39
 msgid "Welsh"
-msgstr ""
+msgstr "웨일스 어"
 
 #: 3rdparty/Horde/Nls/Languages.php:40
 msgid "Danish"
-msgstr ""
+msgstr "덴마크어"
 
 #: 3rdparty/Horde/Nls/Languages.php:41
 msgid "German"
-msgstr ""
+msgstr "독일어"
 
 #: 3rdparty/Horde/Nls/Languages.php:42
 msgid "Divehi; Dhivehi; Maldivian;"
-msgstr ""
+msgstr "디베히어; 몰디브어;"
 
 #: 3rdparty/Horde/Nls/Languages.php:43
 msgid "Dzongkha"
-msgstr ""
+msgstr "존카어"
 
 #: 3rdparty/Horde/Nls/Languages.php:44
 msgid "Ewe"
-msgstr ""
+msgstr "에웨어"
 
 #: 3rdparty/Horde/Nls/Languages.php:45
 msgid "Greek, Modern"
-msgstr ""
+msgstr "현대 그리스어"
 
 #: 3rdparty/Horde/Nls/Languages.php:46
 msgid "English"
-msgstr ""
+msgstr "영어"
 
 #: 3rdparty/Horde/Nls/Languages.php:47
 msgid "Esperanto"
-msgstr ""
+msgstr "에스페란토"
 
 #: 3rdparty/Horde/Nls/Languages.php:48
 msgid "Spanish; Castilian"
-msgstr ""
+msgstr "스페인어; 카스티야어"
 
 #: 3rdparty/Horde/Nls/Languages.php:49
 msgid "Estonian"
-msgstr ""
+msgstr "에스토니아어"
 
 #: 3rdparty/Horde/Nls/Languages.php:50
 msgid "Basque"
-msgstr ""
+msgstr "바스크어"
 
 #: 3rdparty/Horde/Nls/Languages.php:51
 msgid "Persian"
-msgstr ""
+msgstr "페르시아어"
 
 #: 3rdparty/Horde/Nls/Languages.php:52
 msgid "Fula; Fulah; Pulaar; Pular"
-msgstr ""
+msgstr "풀라니어"
 
 #: 3rdparty/Horde/Nls/Languages.php:53
 msgid "Finnish"
-msgstr ""
+msgstr "핀란드어"
 
 #: 3rdparty/Horde/Nls/Languages.php:54
 msgid "Fijian"
-msgstr ""
+msgstr "피지어"
 
 #: 3rdparty/Horde/Nls/Languages.php:55
 msgid "Faroese"
-msgstr ""
+msgstr "페로어"
 
 #: 3rdparty/Horde/Nls/Languages.php:56
 msgid "French"
-msgstr ""
+msgstr "프랑스어"
 
 #: 3rdparty/Horde/Nls/Languages.php:57
 msgid "Western Frisian"
-msgstr ""
+msgstr "서 프리슬란트 어"
 
 #: 3rdparty/Horde/Nls/Languages.php:58
 msgid "Irish"
-msgstr ""
+msgstr "아일랜드어"
 
 #: 3rdparty/Horde/Nls/Languages.php:59
 msgid "Scottish Gaelic; Gaelic"
-msgstr ""
+msgstr "스코틀랜드 게일어; 게일어"
 
 #: 3rdparty/Horde/Nls/Languages.php:60
 msgid "Galician"
-msgstr ""
+msgstr "갈리시아어"
 
 #: 3rdparty/Horde/Nls/Languages.php:61
 msgid "Guarani"
-msgstr ""
+msgstr "과라니어"
 
 #: 3rdparty/Horde/Nls/Languages.php:62
 msgid "Gujarati"
-msgstr ""
+msgstr "구자라트어"
 
 #: 3rdparty/Horde/Nls/Languages.php:63
 msgid "Manx"
-msgstr ""
+msgstr "맨 섬 어"
 
 #: 3rdparty/Horde/Nls/Languages.php:64
 msgid "Hausa"
-msgstr ""
+msgstr "하우사어"
 
 #: 3rdparty/Horde/Nls/Languages.php:65
 msgid "Hebrew (modern)"
-msgstr ""
+msgstr "(현대) 히브리어"
 
 #: 3rdparty/Horde/Nls/Languages.php:66
 msgid "Hindi"
-msgstr ""
+msgstr "힌두어"
 
 #: 3rdparty/Horde/Nls/Languages.php:67
 msgid "Hiri Motu"
-msgstr ""
+msgstr "모투어"
 
 #: 3rdparty/Horde/Nls/Languages.php:68
 msgid "Croatian"
-msgstr ""
+msgstr "크로아티아어"
 
 #: 3rdparty/Horde/Nls/Languages.php:69
 msgid "Haitian; Haitian Creole"
@@ -1629,7 +1629,7 @@ msgstr ""
 
 #: 3rdparty/Horde/Nls/Languages.php:83
 msgid "Japanese"
-msgstr ""
+msgstr "일본어"
 
 #: 3rdparty/Horde/Nls/Languages.php:84
 msgid "Javanese"
@@ -1669,7 +1669,7 @@ msgstr ""
 
 #: 3rdparty/Horde/Nls/Languages.php:93
 msgid "Korean"
-msgstr ""
+msgstr "한국어"
 
 #: 3rdparty/Horde/Nls/Languages.php:94
 msgid "Kanuri"
@@ -1841,7 +1841,7 @@ msgstr ""
 
 #: 3rdparty/Horde/Nls/Languages.php:137
 msgid "Polish"
-msgstr ""
+msgstr "폴란드어"
 
 #: 3rdparty/Horde/Nls/Languages.php:138
 msgid "Pashto, Pushto"
@@ -1941,7 +1941,7 @@ msgstr ""
 
 #: 3rdparty/Horde/Nls/Languages.php:162
 msgid "Swedish"
-msgstr ""
+msgstr "스웨덴어"
 
 #: 3rdparty/Horde/Nls/Languages.php:163
 msgid "Swahili"
@@ -2121,7 +2121,7 @@ msgstr ""
 
 #: 3rdparty/Horde/Nls/Tld.php:220
 msgid "Soviet Union"
-msgstr ""
+msgstr "소련"
 
 #: 3rdparty/Horde/Nls/Tld.php:235
 msgid "East Timor"
@@ -2145,11 +2145,11 @@ msgstr "오류"
 
 #: js/mail.js:98
 msgid "Delete message"
-msgstr ""
+msgstr "메시지 삭제"
 
 #: js/mail.js:256
 msgid "Connecting ..."
-msgstr ""
+msgstr "연결중..."
 
 #: js/mail.js:272 js/mail.js:287 templates/no-accounts.php:16
 msgid "Connect"
@@ -2157,19 +2157,19 @@ msgstr "접속"
 
 #: js/mail.js:277
 msgid "Not a email address"
-msgstr ""
+msgstr "이메일 주소가 아닙니다"
 
 #: js/mail.js:285
 msgid "Unknown error"
-msgstr ""
+msgstr "알려지지 않은 오류"
 
 #: js/mail.js:289
 msgid "Server Error"
-msgstr ""
+msgstr "서버 오류"
 
 #: templates/index.php:8
 msgid "New Message"
-msgstr ""
+msgstr "새 메시지"
 
 #: templates/index.php:10
 msgid "To"
@@ -2185,16 +2185,16 @@ msgstr "전송"
 
 #: templates/no-accounts.php:3
 msgid "Connect your mail account"
-msgstr ""
+msgstr "메일 주소 연결"
 
 #: templates/no-accounts.php:8
 msgid "Mail Address"
-msgstr ""
+msgstr "메일 주소"
 
 #: templates/no-accounts.php:13
 msgid "IMAP Password"
-msgstr ""
+msgstr "IMAP 비밀번호"
 
 #: templates/part.message.php:31
 msgid "Reply"
-msgstr ""
+msgstr "답장"
