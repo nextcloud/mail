@@ -3,15 +3,16 @@
 # This file is distributed under the same license as the PACKAGE package.
 # 
 # Translators:
+# carlosamp <carlos.am.pereira@hotmail.com>, 2013
 # FernandoMASilva, 2013
 # Helder Meneses <helder.meneses@gmail.com>, 2013
 msgid ""
 msgstr ""
 "Project-Id-Version: ownCloud\n"
 "Report-Msgid-Bugs-To: http://bugs.owncloud.org/\n"
-"POT-Creation-Date: 2013-10-03 10:14-0400\n"
-"PO-Revision-Date: 2013-10-03 12:21+0000\n"
-"Last-Translator: I Robot <owncloud-bot@tmit.eu>\n"
+"POT-Creation-Date: 2013-10-19 08:26-0400\n"
+"PO-Revision-Date: 2013-10-18 09:50+0000\n"
+"Last-Translator: carlosamp <carlos.am.pereira@hotmail.com>\n"
 "Language-Team: Portuguese (Portugal) (http://www.transifex.com/projects/p/owncloud/language/pt_PT/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -1456,11 +1457,11 @@ msgstr ""
 
 #: 3rdparty/Horde/Nls/Languages.php:40
 msgid "Danish"
-msgstr ""
+msgstr "Dinamarquês"
 
 #: 3rdparty/Horde/Nls/Languages.php:41
 msgid "German"
-msgstr ""
+msgstr "Alemão"
 
 #: 3rdparty/Horde/Nls/Languages.php:42
 msgid "Divehi; Dhivehi; Maldivian;"
@@ -1496,7 +1497,7 @@ msgstr ""
 
 #: 3rdparty/Horde/Nls/Languages.php:50
 msgid "Basque"
-msgstr ""
+msgstr "Basco"
 
 #: 3rdparty/Horde/Nls/Languages.php:51
 msgid "Persian"
@@ -1620,7 +1621,7 @@ msgstr ""
 
 #: 3rdparty/Horde/Nls/Languages.php:81
 msgid "Italian"
-msgstr ""
+msgstr "Italiano"
 
 #: 3rdparty/Horde/Nls/Languages.php:82
 msgid "Inuktitut"
@@ -1636,7 +1637,7 @@ msgstr ""
 
 #: 3rdparty/Horde/Nls/Languages.php:85
 msgid "Georgian"
-msgstr ""
+msgstr "Georgiano"
 
 #: 3rdparty/Horde/Nls/Languages.php:86
 msgid "Kongo"
@@ -1652,7 +1653,7 @@ msgstr ""
 
 #: 3rdparty/Horde/Nls/Languages.php:89
 msgid "Kazakh"
-msgstr ""
+msgstr "Cazaque"
 
 #: 3rdparty/Horde/Nls/Languages.php:90
 msgid "Kalaallisut, Greenlandic"
@@ -1880,7 +1881,7 @@ msgstr ""
 
 #: 3rdparty/Horde/Nls/Languages.php:147
 msgid "Sardinian"
-msgstr ""
+msgstr "Sardo"
 
 #: 3rdparty/Horde/Nls/Languages.php:148
 msgid "Sindhi"
@@ -1900,7 +1901,7 @@ msgstr ""
 
 #: 3rdparty/Horde/Nls/Languages.php:152
 msgid "Slovak"
-msgstr ""
+msgstr "Eslovaco"
 
 #: 3rdparty/Horde/Nls/Languages.php:153
 msgid "Slovene"
@@ -1940,7 +1941,7 @@ msgstr ""
 
 #: 3rdparty/Horde/Nls/Languages.php:162
 msgid "Swedish"
-msgstr ""
+msgstr "Sueco"
 
 #: 3rdparty/Horde/Nls/Languages.php:163
 msgid "Swahili"
@@ -1992,7 +1993,7 @@ msgstr ""
 
 #: 3rdparty/Horde/Nls/Languages.php:175
 msgid "Tatar"
-msgstr ""
+msgstr "Tártaro"
 
 #: 3rdparty/Horde/Nls/Languages.php:176
 msgid "Twi"
@@ -2008,7 +2009,7 @@ msgstr ""
 
 #: 3rdparty/Horde/Nls/Languages.php:179
 msgid "Ukrainian"
-msgstr ""
+msgstr "Ucraniano"
 
 #: 3rdparty/Horde/Nls/Languages.php:180
 msgid "Urdu"
@@ -2080,7 +2081,7 @@ msgstr "Republica do Congo "
 
 #: 3rdparty/Horde/Nls/Tld.php:56
 msgid "Cote d'Ivoire"
-msgstr ""
+msgstr "Costa do Marfim"
 
 #: 3rdparty/Horde/Nls/Tld.php:81
 msgid "European Union"
