@@ -8,13 +8,14 @@
 # ggam <ggam@brainleakage.com>, 2013
 # inye <j.contrerasferrada@gmail.com>, 2013
 # msoko <sokolovitch@yahoo.com>, 2013
+# Rubén del Campo <yo@rubendelcampo.es>, 2013
 msgid ""
 msgstr ""
 "Project-Id-Version: ownCloud\n"
 "Report-Msgid-Bugs-To: http://bugs.owncloud.org/\n"
-"POT-Creation-Date: 2013-10-03 10:14-0400\n"
-"PO-Revision-Date: 2013-10-03 12:21+0000\n"
-"Last-Translator: Art O. Pal <artopal@fastmail.fm>\n"
+"POT-Creation-Date: 2013-10-27 04:24-0400\n"
+"PO-Revision-Date: 2013-10-24 10:20+0000\n"
+"Last-Translator: Rubén del Campo <yo@rubendelcampo.es>\n"
 "Language-Team: Spanish (http://www.transifex.com/projects/p/owncloud/language/es/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -164,7 +165,7 @@ msgstr "El servidor de correo terminó la conexión inesperadamente."
 
 #: 3rdparty/Horde/Imap/Client/Socket.php:4325
 msgid "Charset used in search query is not supported on the mail server."
-msgstr "El grupo de caracteres usado en la consulta de búsqueda no es soportado por el servidor de correo."
+msgstr "El grupo de caracteres usado en la consulta de búsqueda no está soportado por el servidor de correo."
 
 #: 3rdparty/Horde/Imap/Client/Socket.php:4337
 #: 3rdparty/Horde/Imap/Client/Socket.php:4379
@@ -231,7 +232,7 @@ msgstr "Hubo un problema temporal al intentar esta operación. Por favor intént
 
 #: 3rdparty/Horde/Imap/Client/Socket.php:4578
 msgid "The mail server is reporting corrupt data in your mailbox."
-msgstr "El servidor de correo está informando de datos corruptos  en tu buzón de correo."
+msgstr "El servidor de correo está informando de datos corruptos en tu buzón de correo."
 
 #: 3rdparty/Horde/Imap/Client/Socket.php:4594
 msgid "The mail server has denied the request."
@@ -279,7 +280,7 @@ msgstr "Lista-Suscribirse"
 
 #: 3rdparty/Horde/Mime/Headers.php:538
 msgid "List-Owner"
-msgstr "Lista-Titular"
+msgstr "Lista-Propietario"
 
 #: 3rdparty/Horde/Mime/Headers.php:539
 msgid "List-Post"
@@ -299,7 +300,7 @@ msgstr "Versión del mensaje en texto plano"
 
 #: 3rdparty/Horde/Mime/Mail.php:419
 msgid "HTML Version of Message"
-msgstr "Versión HTML del Mensaje"
+msgstr "Versión HTML del mensaje"
 
 #: 3rdparty/Horde/Mime/Mdn.php:188
 msgid "Disposition Notification"
@@ -783,7 +784,7 @@ msgstr "Kiribati"
 
 #: 3rdparty/Horde/Nls/Countries.php:125 3rdparty/Horde/Nls/Tld.php:133
 msgid "Korea, Democratic People's Republic of"
-msgstr "Corea, República Popular Democrática de"
+msgstr "República Popular Democrática de Corea"
 
 #: 3rdparty/Horde/Nls/Countries.php:126 3rdparty/Horde/Nls/Tld.php:134
 msgid "Korea, Republic of"
@@ -799,7 +800,7 @@ msgstr "Kyrgyzstan"
 
 #: 3rdparty/Horde/Nls/Countries.php:129 3rdparty/Horde/Nls/Tld.php:138
 msgid "Lao People's Democratic Republic"
-msgstr "Lao República Democrática Popular de"
+msgstr "República Democrática Popular de Lao"
 
 #: 3rdparty/Horde/Nls/Countries.php:130 3rdparty/Horde/Nls/Tld.php:147
 msgid "Latvia"
@@ -895,7 +896,7 @@ msgstr "Estados Federados de Micronesia"
 
 #: 3rdparty/Horde/Nls/Countries.php:153 3rdparty/Horde/Nls/Tld.php:151
 msgid "Moldova, Republic of"
-msgstr "Moldavia, República de"
+msgstr "República de Moldavia"
 
 #: 3rdparty/Horde/Nls/Countries.php:154 3rdparty/Horde/Nls/Tld.php:150
 msgid "Monaco"

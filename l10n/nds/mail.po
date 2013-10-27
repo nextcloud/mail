@@ -1,21 +1,21 @@
 # SOME DESCRIPTIVE TITLE.
 # Copyright (C) YEAR THE PACKAGE'S COPYRIGHT HOLDER
 # This file is distributed under the same license as the PACKAGE package.
-# FIRST AUTHOR <EMAIL@ADDRESS>, YEAR.
-#
-#, fuzzy
+# 
+# Translators:
 msgid ""
 msgstr ""
-"Project-Id-Version: ownCloud mail 5.0.0\n"
-"Report-Msgid-Bugs-To: translations@owncloud.org\n"
+"Project-Id-Version: ownCloud\n"
+"Report-Msgid-Bugs-To: http://bugs.owncloud.org/\n"
 "POT-Creation-Date: 2013-10-27 04:24-0400\n"
-"PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
-"Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
-"Language-Team: LANGUAGE <LL@li.org>\n"
-"Language: \n"
+"PO-Revision-Date: 2013-10-24 10:48+0000\n"
+"Last-Translator: I Robot <owncloud-bot@tmit.eu>\n"
+"Language-Team: Low German (http://www.transifex.com/projects/p/owncloud/language/nds/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
+"Language: nds\n"
+"Plural-Forms: nplurals=2; plural=(n != 1);\n"
 
 #: 3rdparty/Horde/Exception/NotFound.php:27
 msgid "Not Found"
@@ -220,8 +220,8 @@ msgstr ""
 
 #: 3rdparty/Horde/Imap/Client/Socket.php:4564
 msgid ""
-"There was a temporary issue when attempting this operation. Please try again "
-"later."
+"There was a temporary issue when attempting this operation. Please try again"
+" later."
 msgstr ""
 
 #: 3rdparty/Horde/Imap/Client/Socket.php:4578
