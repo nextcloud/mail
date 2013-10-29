@@ -8,9 +8,9 @@ msgid ""
 msgstr ""
 "Project-Id-Version: ownCloud\n"
 "Report-Msgid-Bugs-To: http://bugs.owncloud.org/\n"
-"POT-Creation-Date: 2013-10-03 10:14-0400\n"
-"PO-Revision-Date: 2013-10-03 12:21+0000\n"
-"Last-Translator: I Robot <owncloud-bot@tmit.eu>\n"
+"POT-Creation-Date: 2013-10-29 09:23-0400\n"
+"PO-Revision-Date: 2013-10-27 19:30+0000\n"
+"Last-Translator: Mariano <mstreet@kde.org.ar>\n"
 "Language-Team: Esperanto (http://www.transifex.com/projects/p/owncloud/language/eo/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -43,7 +43,7 @@ msgstr ""
 #: 3rdparty/Horde/Imap/Client/Exception/NoSupportPop3.php:25
 #, php-format
 msgid "%s not supported on POP3 servers."
-msgstr ""
+msgstr "%s ne kongruas kun la POP3-serviloj."
 
 #: 3rdparty/Horde/Imap/Client/Exception/SearchCharset.php:36
 msgid "Cannot convert search query text to new charset"
@@ -79,7 +79,7 @@ msgstr ""
 #: 3rdparty/Horde/Imap/Client/Socket.php:636
 #, php-format
 msgid "Unknown authentication method: %s"
-msgstr ""
+msgstr "Nekonatas aŭtentiga metodo: %s"
 
 #: 3rdparty/Horde/Imap/Client/Socket/Pop3.php:1112
 msgid "POP3 Server closed the connection unexpectedly."
@@ -91,7 +91,7 @@ msgstr ""
 
 #: 3rdparty/Horde/Imap/Client/Socket.php:311
 msgid "Server does not support TLS connections."
-msgstr ""
+msgstr "La servilo ne kongruas kun TLS-konektoj."
 
 #: 3rdparty/Horde/Imap/Client/Socket.php:323
 msgid "Could not open secure TLS connection to the IMAP server."
@@ -111,7 +111,7 @@ msgstr "Eraris konektado al poŝtoservilo."
 
 #: 3rdparty/Horde/Imap/Client/Socket.php:515
 msgid "Server rejected connection."
-msgstr ""
+msgstr "La servilo malakceptis la konekton."
 
 #: 3rdparty/Horde/Imap/Client/Socket.php:524
 msgid "The mail server does not support IMAP4rev1 (RFC 3501)."
@@ -143,7 +143,7 @@ msgstr ""
 #: 3rdparty/Horde/Imap/Client/Socket.php:3857
 #: 3rdparty/Horde/Imap/Client/Socket.php:4128
 msgid "Error when communicating with the mail server."
-msgstr ""
+msgstr "Eraris komuniko kun la retpoŝtoservilo."
 
 #: 3rdparty/Horde/Imap/Client/Socket.php:3983
 #: 3rdparty/Horde/Imap/Client/Socket.php:4014
@@ -165,7 +165,7 @@ msgstr ""
 #: 3rdparty/Horde/Imap/Client/Socket.php:4337
 #: 3rdparty/Horde/Imap/Client/Socket.php:4379
 msgid "The mail server was unable to parse the contents of the mail message."
-msgstr ""
+msgstr "La retpoŝtoservilo ne kapablis analizi la enhavon de la retpoŝtomesaĝo."
 
 #: 3rdparty/Horde/Imap/Client/Socket.php:4420
 msgid "Could not save message on server."
@@ -343,7 +343,7 @@ msgstr "Angvilo"
 
 #: 3rdparty/Horde/Nls/Countries.php:16 3rdparty/Horde/Nls/Tld.php:23
 msgid "Antarctica"
-msgstr ""
+msgstr "Antarkto"
 
 #: 3rdparty/Horde/Nls/Countries.php:17 3rdparty/Horde/Nls/Tld.php:17
 msgid "Antigua and Barbuda"
@@ -431,7 +431,7 @@ msgstr "Bocvano"
 
 #: 3rdparty/Horde/Nls/Countries.php:38 3rdparty/Horde/Nls/Tld.php:46
 msgid "Bouvet Island"
-msgstr ""
+msgstr "Buvetinsulo"
 
 #: 3rdparty/Horde/Nls/Countries.php:39 3rdparty/Horde/Nls/Tld.php:43
 msgid "Brazil"
@@ -491,7 +491,7 @@ msgstr "Ĉilio"
 
 #: 3rdparty/Horde/Nls/Countries.php:53 3rdparty/Horde/Nls/Tld.php:60
 msgid "China"
-msgstr ""
+msgstr "Ĉinujo"
 
 #: 3rdparty/Horde/Nls/Countries.php:54 3rdparty/Horde/Nls/Tld.php:65
 msgid "Christmas Island"
@@ -523,7 +523,7 @@ msgstr ""
 
 #: 3rdparty/Horde/Nls/Countries.php:61 3rdparty/Horde/Nls/Tld.php:62
 msgid "Costa Rica"
-msgstr ""
+msgstr "Kostariko"
 
 #: 3rdparty/Horde/Nls/Countries.php:62
 msgid "Côte d'Ivoire"
@@ -535,7 +535,7 @@ msgstr "Kroatujo"
 
 #: 3rdparty/Horde/Nls/Countries.php:64 3rdparty/Horde/Nls/Tld.php:63
 msgid "Cuba"
-msgstr ""
+msgstr "Kubo"
 
 #: 3rdparty/Horde/Nls/Countries.php:65
 msgid "Curaçao"
@@ -551,7 +551,7 @@ msgstr "Ĉeĥujo"
 
 #: 3rdparty/Horde/Nls/Countries.php:68 3rdparty/Horde/Nls/Tld.php:70
 msgid "Denmark"
-msgstr ""
+msgstr "Danujo"
 
 #: 3rdparty/Horde/Nls/Countries.php:69 3rdparty/Horde/Nls/Tld.php:69
 msgid "Djibouti"
@@ -611,7 +611,7 @@ msgstr "Suomujo"
 
 #: 3rdparty/Horde/Nls/Countries.php:83 3rdparty/Horde/Nls/Tld.php:87
 msgid "France"
-msgstr ""
+msgstr "Francujo"
 
 #: 3rdparty/Horde/Nls/Countries.php:84 3rdparty/Horde/Nls/Tld.php:92
 msgid "French Guiana"
@@ -639,7 +639,7 @@ msgstr "Kartvelujo"
 
 #: 3rdparty/Horde/Nls/Countries.php:90 3rdparty/Horde/Nls/Tld.php:68
 msgid "Germany"
-msgstr ""
+msgstr "Germanujo"
 
 #: 3rdparty/Horde/Nls/Countries.php:91 3rdparty/Horde/Nls/Tld.php:94
 msgid "Ghana"
@@ -667,7 +667,7 @@ msgstr ""
 
 #: 3rdparty/Horde/Nls/Countries.php:97 3rdparty/Horde/Nls/Tld.php:104
 msgid "Guam"
-msgstr ""
+msgstr "Gvamo"
 
 #: 3rdparty/Horde/Nls/Countries.php:98 3rdparty/Horde/Nls/Tld.php:103
 msgid "Guatemala"
@@ -707,7 +707,7 @@ msgstr "Honduro"
 
 #: 3rdparty/Horde/Nls/Countries.php:107 3rdparty/Horde/Nls/Tld.php:107
 msgid "Hong Kong"
-msgstr ""
+msgstr "Honkongo"
 
 #: 3rdparty/Horde/Nls/Countries.php:108 3rdparty/Horde/Nls/Tld.php:112
 msgid "Hungary"
@@ -944,7 +944,7 @@ msgstr ""
 
 #: 3rdparty/Horde/Nls/Countries.php:166 3rdparty/Horde/Nls/Tld.php:182
 msgid "New Zealand"
-msgstr ""
+msgstr "Nov-Zelando"
 
 #: 3rdparty/Horde/Nls/Countries.php:167 3rdparty/Horde/Nls/Tld.php:176
 msgid "Nicaragua"
@@ -984,7 +984,7 @@ msgstr "Pakistano"
 
 #: 3rdparty/Horde/Nls/Countries.php:176 3rdparty/Horde/Nls/Tld.php:196
 msgid "Palau"
-msgstr ""
+msgstr "Palaŭo"
 
 #: 3rdparty/Horde/Nls/Countries.php:177 3rdparty/Horde/Nls/Tld.php:194
 msgid "Palestinian Territory, Occupied"
@@ -996,7 +996,7 @@ msgstr "Panamo"
 
 #: 3rdparty/Horde/Nls/Countries.php:179 3rdparty/Horde/Nls/Tld.php:187
 msgid "Papua New Guinea"
-msgstr ""
+msgstr "Papuo-Nov-Gvineo"
 
 #: 3rdparty/Horde/Nls/Countries.php:180 3rdparty/Horde/Nls/Tld.php:197
 msgid "Paraguay"
@@ -1012,7 +1012,7 @@ msgstr "Filipinoj"
 
 #: 3rdparty/Horde/Nls/Countries.php:183
 msgid "Pitcairn"
-msgstr ""
+msgstr "Pitkarno"
 
 #: 3rdparty/Horde/Nls/Countries.php:184 3rdparty/Horde/Nls/Tld.php:190
 msgid "Poland"
@@ -1076,11 +1076,11 @@ msgstr "Sankta Vincento kaj la Grenadinoj"
 
 #: 3rdparty/Horde/Nls/Countries.php:199 3rdparty/Horde/Nls/Tld.php:256
 msgid "Samoa"
-msgstr ""
+msgstr "Samoo"
 
 #: 3rdparty/Horde/Nls/Countries.php:200 3rdparty/Horde/Nls/Tld.php:215
 msgid "San Marino"
-msgstr ""
+msgstr "San-Marino"
 
 #: 3rdparty/Horde/Nls/Countries.php:201 3rdparty/Horde/Nls/Tld.php:219
 msgid "Sao Tome and Principe"
@@ -1261,7 +1261,7 @@ msgstr ""
 
 #: 3rdparty/Horde/Nls/Countries.php:245 3rdparty/Horde/Nls/Tld.php:246
 msgid "Uruguay"
-msgstr ""
+msgstr "Urugvajo"
 
 #: 3rdparty/Horde/Nls/Countries.php:246 3rdparty/Horde/Nls/Tld.php:247
 msgid "Uzbekistan"
@@ -1273,7 +1273,7 @@ msgstr ""
 
 #: 3rdparty/Horde/Nls/Countries.php:248 3rdparty/Horde/Nls/Tld.php:250
 msgid "Venezuela"
-msgstr ""
+msgstr "Venezuelo"
 
 #: 3rdparty/Horde/Nls/Countries.php:249 3rdparty/Horde/Nls/Tld.php:253
 msgid "Viet Nam"
@@ -1503,7 +1503,7 @@ msgstr "persa"
 
 #: 3rdparty/Horde/Nls/Languages.php:52
 msgid "Fula; Fulah; Pulaar; Pular"
-msgstr ""
+msgstr "fula"
 
 #: 3rdparty/Horde/Nls/Languages.php:53
 msgid "Finnish"
@@ -1631,7 +1631,7 @@ msgstr "japana"
 
 #: 3rdparty/Horde/Nls/Languages.php:84
 msgid "Javanese"
-msgstr ""
+msgstr "java"
 
 #: 3rdparty/Horde/Nls/Languages.php:85
 msgid "Georgian"
@@ -1699,7 +1699,7 @@ msgstr "Latino"
 
 #: 3rdparty/Horde/Nls/Languages.php:101
 msgid "Luxembourgish, Letzeburgesch"
-msgstr ""
+msgstr "luksemburga"
 
 #: 3rdparty/Horde/Nls/Languages.php:102
 msgid "Luganda"
@@ -1707,11 +1707,11 @@ msgstr ""
 
 #: 3rdparty/Horde/Nls/Languages.php:103
 msgid "Limburgish, Limburgan, Limburger"
-msgstr ""
+msgstr "limburga"
 
 #: 3rdparty/Horde/Nls/Languages.php:104
 msgid "Lingala"
-msgstr ""
+msgstr "lingala"
 
 #: 3rdparty/Horde/Nls/Languages.php:105
 msgid "Lao"
@@ -1743,7 +1743,7 @@ msgstr ""
 
 #: 3rdparty/Horde/Nls/Languages.php:112
 msgid "Macedonian"
-msgstr ""
+msgstr "makedona"
 
 #: 3rdparty/Horde/Nls/Languages.php:113
 msgid "Malayalam"
@@ -1751,7 +1751,7 @@ msgstr ""
 
 #: 3rdparty/Horde/Nls/Languages.php:114
 msgid "Mongolian"
-msgstr ""
+msgstr "mongola"
 
 #: 3rdparty/Horde/Nls/Languages.php:115
 msgid "Marathi"
@@ -1763,7 +1763,7 @@ msgstr ""
 
 #: 3rdparty/Horde/Nls/Languages.php:117
 msgid "Maltese"
-msgstr ""
+msgstr "malta"
 
 #: 3rdparty/Horde/Nls/Languages.php:118
 msgid "Burmese"
@@ -1771,7 +1771,7 @@ msgstr ""
 
 #: 3rdparty/Horde/Nls/Languages.php:120
 msgid "Norwegian Bokmål"
-msgstr ""
+msgstr "bokmala norvega"
 
 #: 3rdparty/Horde/Nls/Languages.php:121
 msgid "North Ndebele"
@@ -1791,7 +1791,7 @@ msgstr "nederlanda"
 
 #: 3rdparty/Horde/Nls/Languages.php:125
 msgid "Norwegian Nynorsk"
-msgstr ""
+msgstr "novnorvega norvega"
 
 #: 3rdparty/Horde/Nls/Languages.php:126
 msgid "Norwegian"
@@ -1811,7 +1811,7 @@ msgstr ""
 
 #: 3rdparty/Horde/Nls/Languages.php:130
 msgid "Occitan"
-msgstr ""
+msgstr "okcitana"
 
 #: 3rdparty/Horde/Nls/Languages.php:131
 msgid "Ojibwe, Ojibwa"
@@ -1871,7 +1871,7 @@ msgstr "rusa"
 
 #: 3rdparty/Horde/Nls/Languages.php:145
 msgid "Kinyarwanda"
-msgstr ""
+msgstr "ruanda"
 
 #: 3rdparty/Horde/Nls/Languages.php:146
 msgid "Sanskrit"
@@ -1879,7 +1879,7 @@ msgstr "Sanskrito"
 
 #: 3rdparty/Horde/Nls/Languages.php:147
 msgid "Sardinian"
-msgstr ""
+msgstr "sarda"
 
 #: 3rdparty/Horde/Nls/Languages.php:148
 msgid "Sindhi"
@@ -1943,7 +1943,7 @@ msgstr "sveda"
 
 #: 3rdparty/Horde/Nls/Languages.php:163
 msgid "Swahili"
-msgstr ""
+msgstr "svahila"
 
 #: 3rdparty/Horde/Nls/Languages.php:164
 msgid "Tamil"
@@ -1971,15 +1971,15 @@ msgstr "turkmena"
 
 #: 3rdparty/Horde/Nls/Languages.php:170
 msgid "Tagalog"
-msgstr ""
+msgstr "tagaloga"
 
 #: 3rdparty/Horde/Nls/Languages.php:171
 msgid "Tswana"
-msgstr ""
+msgstr "cvana"
 
 #: 3rdparty/Horde/Nls/Languages.php:172
 msgid "Tonga (Tonga Islands)"
-msgstr ""
+msgstr "Tongo (Tonginsuloj)"
 
 #: 3rdparty/Horde/Nls/Languages.php:173
 msgid "Turkish"
@@ -1987,23 +1987,23 @@ msgstr "turka"
 
 #: 3rdparty/Horde/Nls/Languages.php:174
 msgid "Tsonga"
-msgstr ""
+msgstr "conga"
 
 #: 3rdparty/Horde/Nls/Languages.php:175
 msgid "Tatar"
-msgstr ""
+msgstr "tatara"
 
 #: 3rdparty/Horde/Nls/Languages.php:176
 msgid "Twi"
-msgstr ""
+msgstr "akana"
 
 #: 3rdparty/Horde/Nls/Languages.php:177
 msgid "Tahitian"
-msgstr ""
+msgstr "tahitia"
 
 #: 3rdparty/Horde/Nls/Languages.php:178
 msgid "Uighur, Uyghur"
-msgstr ""
+msgstr "ujgura"
 
 #: 3rdparty/Horde/Nls/Languages.php:179
 msgid "Ukrainian"
@@ -2019,7 +2019,7 @@ msgstr "uzbeka"
 
 #: 3rdparty/Horde/Nls/Languages.php:182
 msgid "Venda"
-msgstr ""
+msgstr "venda"
 
 #: 3rdparty/Horde/Nls/Languages.php:183
 msgid "Vietnamese"
@@ -2035,11 +2035,11 @@ msgstr "valona"
 
 #: 3rdparty/Horde/Nls/Languages.php:186
 msgid "Wolof"
-msgstr ""
+msgstr "volofa"
 
 #: 3rdparty/Horde/Nls/Languages.php:187
 msgid "Xhosa"
-msgstr ""
+msgstr "kosa"
 
 #: 3rdparty/Horde/Nls/Languages.php:188
 msgid "Yiddish"
@@ -2047,15 +2047,15 @@ msgstr "jida"
 
 #: 3rdparty/Horde/Nls/Languages.php:189
 msgid "Yoruba"
-msgstr ""
+msgstr "joruba"
 
 #: 3rdparty/Horde/Nls/Languages.php:190
 msgid "Zhuang, Chuang"
-msgstr ""
+msgstr "ĝŭanga"
 
 #: 3rdparty/Horde/Nls/Languages.php:191
 msgid "Chinese"
-msgstr ""
+msgstr "ĉina"
 
 #: 3rdparty/Horde/Nls/Languages.php:192
 msgid "Zulu"
@@ -2079,7 +2079,7 @@ msgstr ""
 
 #: 3rdparty/Horde/Nls/Tld.php:56
 msgid "Cote d'Ivoire"
-msgstr ""
+msgstr "Eburbordo"
 
 #: 3rdparty/Horde/Nls/Tld.php:81
 msgid "European Union"
@@ -2091,7 +2091,7 @@ msgstr ""
 
 #: 3rdparty/Horde/Nls/Tld.php:110
 msgid "Croatia/Hrvatska"
-msgstr ""
+msgstr "Kroatujo"
 
 #: 3rdparty/Horde/Nls/Tld.php:148
 msgid "Libyan Arab Jamahiriya"
@@ -2119,7 +2119,7 @@ msgstr ""
 
 #: 3rdparty/Horde/Nls/Tld.php:220
 msgid "Soviet Union"
-msgstr ""
+msgstr "Sovietujo"
 
 #: 3rdparty/Horde/Nls/Tld.php:235
 msgid "East Timor"
@@ -2143,7 +2143,7 @@ msgstr "Eraro"
 
 #: js/mail.js:98
 msgid "Delete message"
-msgstr ""
+msgstr "Forigi mesaĝon"
 
 #: js/mail.js:256
 msgid "Connecting ..."

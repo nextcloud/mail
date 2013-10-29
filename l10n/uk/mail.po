@@ -9,8 +9,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: ownCloud\n"
 "Report-Msgid-Bugs-To: http://bugs.owncloud.org/\n"
-"POT-Creation-Date: 2013-10-21 14:15-0400\n"
-"PO-Revision-Date: 2013-10-20 23:10+0000\n"
+"POT-Creation-Date: 2013-10-29 09:23-0400\n"
+"PO-Revision-Date: 2013-10-27 19:20+0000\n"
 "Last-Translator: zubr139 <zubr139@ukr.net>\n"
 "Language-Team: Ukrainian (http://www.transifex.com/projects/p/owncloud/language/uk/)\n"
 "MIME-Version: 1.0\n"
@@ -1133,7 +1133,7 @@ msgstr "Сомалі"
 
 #: 3rdparty/Horde/Nls/Countries.php:213 3rdparty/Horde/Nls/Tld.php:260
 msgid "South Africa"
-msgstr ""
+msgstr "Південно-Африканська Республіка"
 
 #: 3rdparty/Horde/Nls/Countries.php:214 3rdparty/Horde/Nls/Tld.php:102
 msgid "South Georgia and the South Sandwich Islands"
@@ -1197,7 +1197,7 @@ msgstr "Таїланд"
 
 #: 3rdparty/Horde/Nls/Countries.php:229 3rdparty/Horde/Nls/Tld.php:231
 msgid "Timor-Leste"
-msgstr ""
+msgstr "Тіморі Леште"
 
 #: 3rdparty/Horde/Nls/Countries.php:230 3rdparty/Horde/Nls/Tld.php:227
 msgid "Togo"
@@ -1282,15 +1282,15 @@ msgstr "В'єтнам"
 
 #: 3rdparty/Horde/Nls/Countries.php:250 3rdparty/Horde/Nls/Tld.php:251
 msgid "Virgin Islands, British"
-msgstr ""
+msgstr "Віргінські Острови, Британія"
 
 #: 3rdparty/Horde/Nls/Countries.php:251 3rdparty/Horde/Nls/Tld.php:252
 msgid "Virgin Islands, U.S."
-msgstr ""
+msgstr "Віргінські острови, США"
 
 #: 3rdparty/Horde/Nls/Countries.php:252
 msgid "Wallis and Futuna"
-msgstr ""
+msgstr "Волліс і Футуна"
 
 #: 3rdparty/Horde/Nls/Countries.php:253 3rdparty/Horde/Nls/Tld.php:77
 msgid "Western Sahara"
@@ -1414,19 +1414,19 @@ msgstr ""
 
 #: 3rdparty/Horde/Nls/Languages.php:30
 msgid "Bosnian"
-msgstr ""
+msgstr "Боснійська"
 
 #: 3rdparty/Horde/Nls/Languages.php:31
 msgid "Catalan; Valencian"
-msgstr ""
+msgstr "Каталонська; Валенсія"
 
 #: 3rdparty/Horde/Nls/Languages.php:32
 msgid "Chechen"
-msgstr ""
+msgstr "Чеченська"
 
 #: 3rdparty/Horde/Nls/Languages.php:33
 msgid "Chamorro"
-msgstr ""
+msgstr "Чаморро"
 
 #: 3rdparty/Horde/Nls/Languages.php:34
 msgid "Corsican"
@@ -1434,17 +1434,17 @@ msgstr ""
 
 #: 3rdparty/Horde/Nls/Languages.php:35
 msgid "Cree"
-msgstr ""
+msgstr "Крі"
 
 #: 3rdparty/Horde/Nls/Languages.php:36
 msgid "Czech"
-msgstr ""
+msgstr "Чеська"
 
 #: 3rdparty/Horde/Nls/Languages.php:37
 msgid ""
 "Old Church Slavonic, Church Slavic, Church Slavonic, Old Bulgarian, Old "
 "Slavonic"
-msgstr ""
+msgstr "Старослов'янська, Церковнослов'янською, Церковно-слов'янська, Старослов'янська Болгарська, Старослов'янська"
 
 #: 3rdparty/Horde/Nls/Languages.php:38
 msgid "Chuvash"
@@ -1464,7 +1464,7 @@ msgstr "Німецька"
 
 #: 3rdparty/Horde/Nls/Languages.php:42
 msgid "Divehi; Dhivehi; Maldivian;"
-msgstr ""
+msgstr "Діверхі; Дхівехі; Мальдівська;"
 
 #: 3rdparty/Horde/Nls/Languages.php:43
 msgid "Dzongkha"
@@ -1476,23 +1476,23 @@ msgstr ""
 
 #: 3rdparty/Horde/Nls/Languages.php:45
 msgid "Greek, Modern"
-msgstr ""
+msgstr "Грецька, Сучасна"
 
 #: 3rdparty/Horde/Nls/Languages.php:46
 msgid "English"
-msgstr ""
+msgstr "Англійська"
 
 #: 3rdparty/Horde/Nls/Languages.php:47
 msgid "Esperanto"
-msgstr ""
+msgstr "Есперанто"
 
 #: 3rdparty/Horde/Nls/Languages.php:48
 msgid "Spanish; Castilian"
-msgstr ""
+msgstr "Іспанська; Кастільська"
 
 #: 3rdparty/Horde/Nls/Languages.php:49
 msgid "Estonian"
-msgstr ""
+msgstr "Естонська"
 
 #: 3rdparty/Horde/Nls/Languages.php:50
 msgid "Basque"
@@ -1500,7 +1500,7 @@ msgstr ""
 
 #: 3rdparty/Horde/Nls/Languages.php:51
 msgid "Persian"
-msgstr ""
+msgstr "Перська"
 
 #: 3rdparty/Horde/Nls/Languages.php:52
 msgid "Fula; Fulah; Pulaar; Pular"
@@ -1508,7 +1508,7 @@ msgstr ""
 
 #: 3rdparty/Horde/Nls/Languages.php:53
 msgid "Finnish"
-msgstr ""
+msgstr "Фінська"
 
 #: 3rdparty/Horde/Nls/Languages.php:54
 msgid "Fijian"
@@ -1520,7 +1520,7 @@ msgstr ""
 
 #: 3rdparty/Horde/Nls/Languages.php:56
 msgid "French"
-msgstr ""
+msgstr "Французька"
 
 #: 3rdparty/Horde/Nls/Languages.php:57
 msgid "Western Frisian"

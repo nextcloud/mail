@@ -315,6 +315,7 @@
 "Taiwan" => "Ταϊβάν",
 "Yugoslavia" => "Γιουγκοσλαβία",
 "Error" => "Σφάλμα",
+"Delete message" => "Διαγραφή μηνύματος",
 "Connecting ..." => "Σύνδεση ...",
 "Connect" => "Σύνδεση",
 "Unknown error" => "Άγνωστο σφάλμα",
