@@ -4,6 +4,7 @@
 "%s not supported on POP3 servers." => "%s ne kongruas kun la POP3-serviloj.",
 "Error connecting to POP3 server." => "Eraris konektado al POP3-servilo.",
 "Unknown authentication method: %s" => "Nekonatas aŭtentiga metodo: %s",
+"POP3 error reported by server." => "POP3-eraron raportis servilo.",
 "Server does not support TLS connections." => "La servilo ne kongruas kun TLS-konektoj.",
 "Error connecting to mail server." => "Eraris konektado al poŝtoservilo.",
 "Server rejected connection." => "La servilo malakceptis la konekton.",
