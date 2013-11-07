@@ -93,7 +93,7 @@
 "Bonaire, Sint Eustatius and Saba" => "Bonaire, Sint Eustatius ja Saba",
 "Bosnia and Herzegovina" => "Bosnia ja Hertsegoviina",
 "Botswana" => "Botswana",
-"Bouvet Island" => "Bouvet 'saar",
+"Bouvet Island" => "Bouvet' saar",
 "Brazil" => "Brasiilia",
 "British Indian Ocean Territory" => "Briti India ookeani ala",
 "Brunei Darussalam" => "Brunei",
