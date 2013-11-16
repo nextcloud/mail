@@ -9,8 +9,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: ownCloud\n"
 "Report-Msgid-Bugs-To: translations@owncloud.org\n"
-"POT-Creation-Date: 2013-11-06 23:38-0500\n"
-"PO-Revision-Date: 2013-11-05 18:50+0000\n"
+"POT-Creation-Date: 2013-11-16 00:02-0500\n"
+"PO-Revision-Date: 2013-11-15 15:00+0000\n"
 "Last-Translator: zubr139 <zubr139@ukr.net>\n"
 "Language-Team: Ukrainian (http://www.transifex.com/projects/p/owncloud/language/uk/)\n"
 "MIME-Version: 1.0\n"
@@ -1452,7 +1452,7 @@ msgstr ""
 
 #: 3rdparty/Horde/Nls/Languages.php:39
 msgid "Welsh"
-msgstr ""
+msgstr "Валійська"
 
 #: 3rdparty/Horde/Nls/Languages.php:40
 msgid "Danish"
@@ -1528,7 +1528,7 @@ msgstr ""
 
 #: 3rdparty/Horde/Nls/Languages.php:58
 msgid "Irish"
-msgstr ""
+msgstr "Ірландська"
 
 #: 3rdparty/Horde/Nls/Languages.php:59
 msgid "Scottish Gaelic; Gaelic"
@@ -1576,7 +1576,7 @@ msgstr ""
 
 #: 3rdparty/Horde/Nls/Languages.php:70
 msgid "Hungarian"
-msgstr ""
+msgstr "Угорська"
 
 #: 3rdparty/Horde/Nls/Languages.php:71
 msgid "Armenian"
@@ -1640,7 +1640,7 @@ msgstr "Грузинська"
 
 #: 3rdparty/Horde/Nls/Languages.php:86
 msgid "Kongo"
-msgstr ""
+msgstr "Конґо"
 
 #: 3rdparty/Horde/Nls/Languages.php:87
 msgid "Kikuyu, Gikuyu"
@@ -1652,7 +1652,7 @@ msgstr ""
 
 #: 3rdparty/Horde/Nls/Languages.php:89
 msgid "Kazakh"
-msgstr ""
+msgstr "Казахська"
 
 #: 3rdparty/Horde/Nls/Languages.php:90
 msgid "Kalaallisut, Greenlandic"
@@ -1720,7 +1720,7 @@ msgstr ""
 
 #: 3rdparty/Horde/Nls/Languages.php:106
 msgid "Lithuanian"
-msgstr ""
+msgstr "Литовська"
 
 #: 3rdparty/Horde/Nls/Languages.php:107
 msgid "Luba-Katanga"
@@ -1728,7 +1728,7 @@ msgstr ""
 
 #: 3rdparty/Horde/Nls/Languages.php:108
 msgid "Latvian"
-msgstr ""
+msgstr "Латвійська"
 
 #: 3rdparty/Horde/Nls/Languages.php:109
 msgid "Malagasy"
@@ -1760,7 +1760,7 @@ msgstr ""
 
 #: 3rdparty/Horde/Nls/Languages.php:116
 msgid "Malay"
-msgstr ""
+msgstr "Малайська"
 
 #: 3rdparty/Horde/Nls/Languages.php:117
 msgid "Maltese"
@@ -1840,7 +1840,7 @@ msgstr ""
 
 #: 3rdparty/Horde/Nls/Languages.php:137
 msgid "Polish"
-msgstr ""
+msgstr "Польська"
 
 #: 3rdparty/Horde/Nls/Languages.php:138
 msgid "Pashto, Pushto"
@@ -1940,7 +1940,7 @@ msgstr ""
 
 #: 3rdparty/Horde/Nls/Languages.php:162
 msgid "Swedish"
-msgstr ""
+msgstr "Шведська"
 
 #: 3rdparty/Horde/Nls/Languages.php:163
 msgid "Swahili"
@@ -2016,7 +2016,7 @@ msgstr ""
 
 #: 3rdparty/Horde/Nls/Languages.php:181
 msgid "Uzbek"
-msgstr ""
+msgstr "Узбецька"
 
 #: 3rdparty/Horde/Nls/Languages.php:182
 msgid "Venda"
@@ -2032,7 +2032,7 @@ msgstr ""
 
 #: 3rdparty/Horde/Nls/Languages.php:185
 msgid "Walloon"
-msgstr ""
+msgstr "Валлонська"
 
 #: 3rdparty/Horde/Nls/Languages.php:186
 msgid "Wolof"
@@ -2108,7 +2108,7 @@ msgstr ""
 
 #: 3rdparty/Horde/Nls/Tld.php:199
 msgid "Reunion Island"
-msgstr ""
+msgstr "Острів Реюньон"
 
 #: 3rdparty/Horde/Nls/Tld.php:210
 msgid "Saint Helena"
@@ -2196,4 +2196,4 @@ msgstr "IMAP Пароль"
 
 #: templates/part.message.php:31
 msgid "Reply"
-msgstr ""
+msgstr "Відповісти"
