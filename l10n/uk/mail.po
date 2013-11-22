@@ -9,8 +9,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: ownCloud\n"
 "Report-Msgid-Bugs-To: translations@owncloud.org\n"
-"POT-Creation-Date: 2013-11-16 00:02-0500\n"
-"PO-Revision-Date: 2013-11-15 15:00+0000\n"
+"POT-Creation-Date: 2013-11-21 23:02-0500\n"
+"PO-Revision-Date: 2013-11-17 22:40+0000\n"
 "Last-Translator: zubr139 <zubr139@ukr.net>\n"
 "Language-Team: Ukrainian (http://www.transifex.com/projects/p/owncloud/language/uk/)\n"
 "MIME-Version: 1.0\n"
@@ -1764,11 +1764,11 @@ msgstr "Малайська"
 
 #: 3rdparty/Horde/Nls/Languages.php:117
 msgid "Maltese"
-msgstr ""
+msgstr "Мальтійська"
 
 #: 3rdparty/Horde/Nls/Languages.php:118
 msgid "Burmese"
-msgstr ""
+msgstr "Бірманська"
 
 #: 3rdparty/Horde/Nls/Languages.php:120
 msgid "Norwegian Bokmål"
@@ -1788,15 +1788,15 @@ msgstr ""
 
 #: 3rdparty/Horde/Nls/Languages.php:124
 msgid "Dutch"
-msgstr ""
+msgstr "Голландська"
 
 #: 3rdparty/Horde/Nls/Languages.php:125
 msgid "Norwegian Nynorsk"
-msgstr ""
+msgstr "Норвезька нюнорськ"
 
 #: 3rdparty/Horde/Nls/Languages.php:126
 msgid "Norwegian"
-msgstr ""
+msgstr "Норвезька"
 
 #: 3rdparty/Horde/Nls/Languages.php:127
 msgid "South Ndebele"
@@ -1916,7 +1916,7 @@ msgstr ""
 
 #: 3rdparty/Horde/Nls/Languages.php:156
 msgid "Somali"
-msgstr ""
+msgstr "Сомалійська"
 
 #: 3rdparty/Horde/Nls/Languages.php:157
 msgid "Albanian"
@@ -1968,11 +1968,11 @@ msgstr ""
 
 #: 3rdparty/Horde/Nls/Languages.php:169
 msgid "Turkmen"
-msgstr ""
+msgstr "Туркменська"
 
 #: 3rdparty/Horde/Nls/Languages.php:170
 msgid "Tagalog"
-msgstr ""
+msgstr "Тагальська"
 
 #: 3rdparty/Horde/Nls/Languages.php:171
 msgid "Tswana"
@@ -1992,7 +1992,7 @@ msgstr ""
 
 #: 3rdparty/Horde/Nls/Languages.php:175
 msgid "Tatar"
-msgstr ""
+msgstr "Татарська"
 
 #: 3rdparty/Horde/Nls/Languages.php:176
 msgid "Twi"

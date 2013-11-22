@@ -10,8 +10,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: ownCloud\n"
 "Report-Msgid-Bugs-To: translations@owncloud.org\n"
-"POT-Creation-Date: 2013-11-16 00:02-0500\n"
-"PO-Revision-Date: 2013-11-15 22:04+0000\n"
+"POT-Creation-Date: 2013-11-21 23:02-0500\n"
+"PO-Revision-Date: 2013-11-19 19:30+0000\n"
 "Last-Translator: mateju <>\n"
 "Language-Team: Slovenian (http://www.transifex.com/projects/p/owncloud/language/sl/)\n"
 "MIME-Version: 1.0\n"
@@ -101,15 +101,15 @@ msgstr "Varne povezave TLS s strežnikom IMAP ni mogoče vzpostaviti."
 
 #: 3rdparty/Horde/Imap/Client/Socket.php:366
 msgid "No supported IMAP authentication method could be found."
-msgstr "Nobenega podprtega načina za avtentikacjo IMAP ni bilo mogoče najti."
+msgstr "Ni najdenega ustrezno podprtega načina overitve IMAP."
 
 #: 3rdparty/Horde/Imap/Client/Socket.php:383
 msgid "Mail server denied authentication."
-msgstr "Poštni strežnik je zavrnil uporabniško ime in/ali geslo."
+msgstr "Poštni strežnik je zavrnil overitev."
 
 #: 3rdparty/Horde/Imap/Client/Socket.php:492
 msgid "Error connecting to mail server."
-msgstr "Napaka pri povezavi do poštnega strežnika."
+msgstr "Napaka med povezovanjem s poštnim strežnikom."
 
 #: 3rdparty/Horde/Imap/Client/Socket.php:515
 msgid "Server rejected connection."
@@ -117,12 +117,12 @@ msgstr "Strežnik je zavrnil povezavo."
 
 #: 3rdparty/Horde/Imap/Client/Socket.php:524
 msgid "The mail server does not support IMAP4rev1 (RFC 3501)."
-msgstr "Poštni strežnik ne podpira IMAP4rev1 (RFC 3501)."
+msgstr "Poštni strežnik ne podpira protokola IMAP4rev1 (RFC 3501)."
 
 #: 3rdparty/Horde/Imap/Client/Socket.php:920
 #, php-format
 msgid "Could not open mailbox \"%s\"."
-msgstr "Poštnega predala ni bilo mogoče odpreti \"%s\"."
+msgstr "Ni mogoče odpreti poštnega predala \"%s\"."
 
 #: 3rdparty/Horde/Imap/Client/Socket.php:1874
 #: 3rdparty/Horde/Imap/Client/Socket.php:2544
@@ -145,7 +145,7 @@ msgstr "Neveljavna vrednost metapodatkov \"%s\"."
 #: 3rdparty/Horde/Imap/Client/Socket.php:3857
 #: 3rdparty/Horde/Imap/Client/Socket.php:4128
 msgid "Error when communicating with the mail server."
-msgstr "Napaka pri komunikaciji s poštnim strežnikom."
+msgstr "Napaka pri izmenjavi podatkov s poštnim strežnikom."
 
 #: 3rdparty/Horde/Imap/Client/Socket.php:3983
 #: 3rdparty/Horde/Imap/Client/Socket.php:4014
@@ -171,7 +171,7 @@ msgstr "Poštni strežnik ni uspel razčleniti vsebino sporočila."
 
 #: 3rdparty/Horde/Imap/Client/Socket.php:4420
 msgid "Could not save message on server."
-msgstr "Sporočil ni bilo mogoče shraniti na strežnik."
+msgstr "Sporočil ni mogoče shraniti na strežnik."
 
 #: 3rdparty/Horde/Imap/Client/Socket.php:4429
 msgid "Could not save message data because it is too large."
@@ -203,7 +203,7 @@ msgstr "Oddaljeni strežnik trenutno ni dosegljiv."
 
 #: 3rdparty/Horde/Imap/Client/Socket.php:4523
 msgid "Authentication failed."
-msgstr "Napaka pri avtentikaciji."
+msgstr "OVeritev je spodletela."
 
 #: 3rdparty/Horde/Imap/Client/Socket.php:4531
 msgid "Authentication was successful, but authorization failed."
@@ -211,7 +211,7 @@ msgstr "Avtentikacija je uspela, vendar je avtorizacija spodletela."
 
 #: 3rdparty/Horde/Imap/Client/Socket.php:4539
 msgid "Authentication credentials have expired."
-msgstr "Prijavni podatki so potekli."
+msgstr "Prijavna poverila so časovno potekla."
 
 #: 3rdparty/Horde/Imap/Client/Socket.php:4547
 msgid "Operation failed due to a lack of a secure connection."
@@ -261,7 +261,7 @@ msgstr "Uporaba posebnega atributa, ki ste ga zahtevali v poštnem predalu, ni p
 #: 3rdparty/Horde/Imap/Client/Utf7imap.php:234
 #: 3rdparty/Horde/Imap/Client/Utf7imap.php:240
 msgid "Error converting UTF7-IMAP string."
-msgstr "Napaka pri pretvorbi spremenljivke UTF7-IMAP"
+msgstr "Napaka med pretvarjanjem niza UTF7-IMAP"
 
 #: 3rdparty/Horde/Mime/Headers.php:535
 msgid "List-Help"
@@ -309,7 +309,7 @@ msgid ""
 "The message sent on %s to %s with subject \"%s\" has been displayed.\n"
 "\n"
 "This is no guarantee that the message has been read or understood."
-msgstr ""
+msgstr "Sporočilo poslano %s za %s z zadevo \"%s\" je bilo prikazano.\n\nTo ni zagotovilo, da je bilo sporočilo tudi v celoti prebrano in vsebina razumljena."
 
 #: 3rdparty/Horde/Nls/Countries.php:8 3rdparty/Horde/Nls/Tld.php:16
 msgid "Afghanistan"
@@ -893,7 +893,7 @@ msgstr "Mikronezija, Federalna država"
 
 #: 3rdparty/Horde/Nls/Countries.php:153 3rdparty/Horde/Nls/Tld.php:151
 msgid "Moldova, Republic of"
-msgstr "Republika Kongo"
+msgstr "Republika Moldavija"
 
 #: 3rdparty/Horde/Nls/Countries.php:154 3rdparty/Horde/Nls/Tld.php:150
 msgid "Monaco"
@@ -990,7 +990,7 @@ msgstr "Palau"
 
 #: 3rdparty/Horde/Nls/Countries.php:177 3rdparty/Horde/Nls/Tld.php:194
 msgid "Palestinian Territory, Occupied"
-msgstr "Preračunaj &zaseden prostor"
+msgstr "Palestinsko zasedeno ozemlje"
 
 #: 3rdparty/Horde/Nls/Countries.php:178 3rdparty/Horde/Nls/Tld.php:184
 msgid "Panama"
@@ -1054,7 +1054,7 @@ msgstr "Saint Barthélemy"
 
 #: 3rdparty/Horde/Nls/Countries.php:193
 msgid "Saint Helena, Ascension and Tristan da Cunha"
-msgstr "St. Helena, Ascension in Tristan, funti"
+msgstr "St. Helena, Ascension in Tristan da Cunha"
 
 #: 3rdparty/Horde/Nls/Countries.php:194 3rdparty/Horde/Nls/Tld.php:132
 msgid "Saint Kitts and Nevis"
@@ -1142,7 +1142,7 @@ msgstr "Južna Georgia in Južni Sandwichevi otoki"
 
 #: 3rdparty/Horde/Nls/Countries.php:215
 msgid "South Sudan"
-msgstr "Sudan, funti"
+msgstr "Južni Sudan"
 
 #: 3rdparty/Horde/Nls/Countries.php:216 3rdparty/Horde/Nls/Tld.php:79
 msgid "Spain"
@@ -1190,7 +1190,7 @@ msgstr "Tadžikistan"
 
 #: 3rdparty/Horde/Nls/Countries.php:227 3rdparty/Horde/Nls/Tld.php:240
 msgid "Tanzania, United Republic of"
-msgstr "Srednjeafriška republika"
+msgstr "Tanzanija"
 
 #: 3rdparty/Horde/Nls/Countries.php:228 3rdparty/Horde/Nls/Tld.php:228
 msgid "Thailand"
@@ -1287,7 +1287,7 @@ msgstr "Britanski deviški otoki"
 
 #: 3rdparty/Horde/Nls/Countries.php:251 3rdparty/Horde/Nls/Tld.php:252
 msgid "Virgin Islands, U.S."
-msgstr "Britanski deviški otoki"
+msgstr "Ameriški deviški otoki"
 
 #: 3rdparty/Horde/Nls/Countries.php:252
 msgid "Wallis and Futuna"
@@ -1367,7 +1367,7 @@ msgstr "asamski"
 
 #: 3rdparty/Horde/Nls/Languages.php:18
 msgid "Avaric"
-msgstr "Avaric"
+msgstr "avarski"
 
 #: 3rdparty/Horde/Nls/Languages.php:19
 msgid "Aymara"
@@ -1435,7 +1435,7 @@ msgstr "korzijski"
 
 #: 3rdparty/Horde/Nls/Languages.php:35
 msgid "Cree"
-msgstr "Cree"
+msgstr "krijski"
 
 #: 3rdparty/Horde/Nls/Languages.php:36
 msgid "Czech"
@@ -1857,7 +1857,7 @@ msgstr "kečvanski"
 
 #: 3rdparty/Horde/Nls/Languages.php:141
 msgid "Romansh"
-msgstr "Romansh"
+msgstr "retoromanščina"
 
 #: 3rdparty/Horde/Nls/Languages.php:142
 msgid "Kirundi"
@@ -2053,7 +2053,7 @@ msgstr "jorubski"
 
 #: 3rdparty/Horde/Nls/Languages.php:190
 msgid "Zhuang, Chuang"
-msgstr "Zhuang, Chuang"
+msgstr "čuangski"
 
 #: 3rdparty/Horde/Nls/Languages.php:191
 msgid "Chinese"
