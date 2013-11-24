@@ -10,16 +10,17 @@
 # Petros Kyladitis <petros.kyladitis@gmail.com>, 2013
 # Teogramm <theodorewii121@hotmail.com>, 2013
 # Teogramm <theodorewii121@hotmail.com>, 2013
+# vkehayas <vkehayas@gmail.com>, 2013
 # Wasilis <inactive+Wasilis@transifex.com>, 2013
 # Wasilis <inactive+Wasilis@transifex.com>, 2013
 # KAT.RAT12 <spanish.katerina@gmail.com>, 2013
 msgid ""
 msgstr ""
 "Project-Id-Version: ownCloud\n"
-"Report-Msgid-Bugs-To: http://bugs.owncloud.org/\n"
-"POT-Creation-Date: 2013-10-29 09:23-0400\n"
-"PO-Revision-Date: 2013-10-27 09:40+0000\n"
-"Last-Translator: Efstathios Iosifidis <iefstathios@gmail.com>\n"
+"Report-Msgid-Bugs-To: translations@owncloud.org\n"
+"POT-Creation-Date: 2013-11-24 02:10-0500\n"
+"PO-Revision-Date: 2013-11-24 00:30+0000\n"
+"Last-Translator: vkehayas <vkehayas@gmail.com>\n"
 "Language-Team: Greek (http://www.transifex.com/projects/p/owncloud/language/el/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -1173,7 +1174,7 @@ msgstr ""
 
 #: 3rdparty/Horde/Nls/Countries.php:221 3rdparty/Horde/Nls/Tld.php:223
 msgid "Swaziland"
-msgstr ""
+msgstr "Σουαζιλάνδη"
 
 #: 3rdparty/Horde/Nls/Countries.php:222 3rdparty/Horde/Nls/Tld.php:208
 msgid "Sweden"
@@ -1185,11 +1186,11 @@ msgstr "Ελβετία"
 
 #: 3rdparty/Horde/Nls/Countries.php:224 3rdparty/Horde/Nls/Tld.php:222
 msgid "Syrian Arab Republic"
-msgstr ""
+msgstr "Συρία"
 
 #: 3rdparty/Horde/Nls/Countries.php:225
 msgid "Taiwan, Province of China"
-msgstr ""
+msgstr "Ταϊβάν"
 
 #: 3rdparty/Horde/Nls/Countries.php:226 3rdparty/Horde/Nls/Tld.php:229
 msgid "Tajikistan"
@@ -1197,7 +1198,7 @@ msgstr "Τατζικιστάν"
 
 #: 3rdparty/Horde/Nls/Countries.php:227 3rdparty/Horde/Nls/Tld.php:240
 msgid "Tanzania, United Republic of"
-msgstr ""
+msgstr "Τανζανία"
 
 #: 3rdparty/Horde/Nls/Countries.php:228 3rdparty/Horde/Nls/Tld.php:228
 msgid "Thailand"
@@ -1217,11 +1218,11 @@ msgstr "Τοκελάου"
 
 #: 3rdparty/Horde/Nls/Countries.php:232 3rdparty/Horde/Nls/Tld.php:234
 msgid "Tonga"
-msgstr ""
+msgstr "Τονγκά"
 
 #: 3rdparty/Horde/Nls/Countries.php:233 3rdparty/Horde/Nls/Tld.php:237
 msgid "Trinidad and Tobago"
-msgstr ""
+msgstr "Τρίνιδαδ και Τομπάκο"
 
 #: 3rdparty/Horde/Nls/Countries.php:234 3rdparty/Horde/Nls/Tld.php:233
 msgid "Tunisia"
@@ -1278,7 +1279,7 @@ msgstr "Ουζμπεκιστάν"
 
 #: 3rdparty/Horde/Nls/Countries.php:247 3rdparty/Horde/Nls/Tld.php:254
 msgid "Vanuatu"
-msgstr ""
+msgstr "Βανουάτου"
 
 #: 3rdparty/Horde/Nls/Countries.php:248 3rdparty/Horde/Nls/Tld.php:250
 msgid "Venezuela"
@@ -1290,11 +1291,11 @@ msgstr "Βιετνάμ"
 
 #: 3rdparty/Horde/Nls/Countries.php:250 3rdparty/Horde/Nls/Tld.php:251
 msgid "Virgin Islands, British"
-msgstr ""
+msgstr "Παρθένες Νήσοι, Βρετανία"
 
 #: 3rdparty/Horde/Nls/Countries.php:251 3rdparty/Horde/Nls/Tld.php:252
 msgid "Virgin Islands, U.S."
-msgstr ""
+msgstr "Παρθένες Νήσοι, Η.Π.Α."
 
 #: 3rdparty/Horde/Nls/Countries.php:252
 msgid "Wallis and Futuna"
@@ -1302,7 +1303,7 @@ msgstr ""
 
 #: 3rdparty/Horde/Nls/Countries.php:253 3rdparty/Horde/Nls/Tld.php:77
 msgid "Western Sahara"
-msgstr ""
+msgstr "Δυτική Σαχάρα"
 
 #: 3rdparty/Horde/Nls/Countries.php:254 3rdparty/Horde/Nls/Tld.php:257
 msgid "Yemen"
@@ -1318,7 +1319,7 @@ msgstr "Ζιμπάμπουε"
 
 #: 3rdparty/Horde/Nls/Geoip.php:324
 msgid "Asia/Pacific Region"
-msgstr ""
+msgstr "Ασία/ Περιοχή Ειρηνικού"
 
 #: 3rdparty/Horde/Nls/Geoip.php:325
 msgid "Europe"
@@ -1330,7 +1331,7 @@ msgstr "Ανώνυμος Διαμεσολαβητής"
 
 #: 3rdparty/Horde/Nls/Geoip.php:327
 msgid "Satellite Provider"
-msgstr ""
+msgstr "Πάροχος Δορυφόρου"
 
 #: 3rdparty/Horde/Nls/Geoip.php:328
 msgid "Other"
@@ -1390,7 +1391,7 @@ msgstr ""
 
 #: 3rdparty/Horde/Nls/Languages.php:22
 msgid "Belarusian"
-msgstr ""
+msgstr "Λευκορώσικα"
 
 #: 3rdparty/Horde/Nls/Languages.php:23
 msgid "Bulgarian"
@@ -1422,11 +1423,11 @@ msgstr ""
 
 #: 3rdparty/Horde/Nls/Languages.php:30
 msgid "Bosnian"
-msgstr ""
+msgstr "Βοσνιακά"
 
 #: 3rdparty/Horde/Nls/Languages.php:31
 msgid "Catalan; Valencian"
-msgstr ""
+msgstr "Καταλανικά - Βαλενσιανά"
 
 #: 3rdparty/Horde/Nls/Languages.php:32
 msgid "Chechen"
@@ -1438,7 +1439,7 @@ msgstr ""
 
 #: 3rdparty/Horde/Nls/Languages.php:34
 msgid "Corsican"
-msgstr ""
+msgstr "Κορσικανικά"
 
 #: 3rdparty/Horde/Nls/Languages.php:35
 msgid "Cree"
@@ -1460,11 +1461,11 @@ msgstr ""
 
 #: 3rdparty/Horde/Nls/Languages.php:39
 msgid "Welsh"
-msgstr ""
+msgstr "Ουαλικά"
 
 #: 3rdparty/Horde/Nls/Languages.php:40
 msgid "Danish"
-msgstr ""
+msgstr "Δανέζικα"
 
 #: 3rdparty/Horde/Nls/Languages.php:41
 msgid "German"
@@ -1496,7 +1497,7 @@ msgstr "Εσπεράντο"
 
 #: 3rdparty/Horde/Nls/Languages.php:48
 msgid "Spanish; Castilian"
-msgstr ""
+msgstr "Ισπανικά - Καστιγιάνικα"
 
 #: 3rdparty/Horde/Nls/Languages.php:49
 msgid "Estonian"
@@ -1548,7 +1549,7 @@ msgstr ""
 
 #: 3rdparty/Horde/Nls/Languages.php:61
 msgid "Guarani"
-msgstr ""
+msgstr "Γκουαράνι"
 
 #: 3rdparty/Horde/Nls/Languages.php:62
 msgid "Gujarati"
@@ -1564,11 +1565,11 @@ msgstr ""
 
 #: 3rdparty/Horde/Nls/Languages.php:65
 msgid "Hebrew (modern)"
-msgstr ""
+msgstr "Εβραϊκά (μοντέρνα)"
 
 #: 3rdparty/Horde/Nls/Languages.php:66
 msgid "Hindi"
-msgstr ""
+msgstr "Χίντι"
 
 #: 3rdparty/Horde/Nls/Languages.php:67
 msgid "Hiri Motu"
@@ -1576,7 +1577,7 @@ msgstr ""
 
 #: 3rdparty/Horde/Nls/Languages.php:68
 msgid "Croatian"
-msgstr ""
+msgstr "Κροατικά"
 
 #: 3rdparty/Horde/Nls/Languages.php:69
 msgid "Haitian; Haitian Creole"
@@ -1584,7 +1585,7 @@ msgstr ""
 
 #: 3rdparty/Horde/Nls/Languages.php:70
 msgid "Hungarian"
-msgstr ""
+msgstr "Ούγγρικα"
 
 #: 3rdparty/Horde/Nls/Languages.php:71
 msgid "Armenian"
@@ -1600,7 +1601,7 @@ msgstr ""
 
 #: 3rdparty/Horde/Nls/Languages.php:74
 msgid "Indonesian"
-msgstr ""
+msgstr "Ινδονησιακά"
 
 #: 3rdparty/Horde/Nls/Languages.php:75
 msgid "Interlingue"
@@ -1644,11 +1645,11 @@ msgstr ""
 
 #: 3rdparty/Horde/Nls/Languages.php:85
 msgid "Georgian"
-msgstr ""
+msgstr "Γεωργιανά"
 
 #: 3rdparty/Horde/Nls/Languages.php:86
 msgid "Kongo"
-msgstr ""
+msgstr "Κονγκολέζικα"
 
 #: 3rdparty/Horde/Nls/Languages.php:87
 msgid "Kikuyu, Gikuyu"
@@ -1660,7 +1661,7 @@ msgstr ""
 
 #: 3rdparty/Horde/Nls/Languages.php:89
 msgid "Kazakh"
-msgstr ""
+msgstr "Καζάκικα"
 
 #: 3rdparty/Horde/Nls/Languages.php:90
 msgid "Kalaallisut, Greenlandic"
@@ -1688,7 +1689,7 @@ msgstr ""
 
 #: 3rdparty/Horde/Nls/Languages.php:96
 msgid "Kurdish"
-msgstr ""
+msgstr "Κουρδικά"
 
 #: 3rdparty/Horde/Nls/Languages.php:97
 msgid "Komi"
@@ -1704,7 +1705,7 @@ msgstr ""
 
 #: 3rdparty/Horde/Nls/Languages.php:100
 msgid "Latin"
-msgstr ""
+msgstr "Λατινικά"
 
 #: 3rdparty/Horde/Nls/Languages.php:101
 msgid "Luxembourgish, Letzeburgesch"
@@ -1728,7 +1729,7 @@ msgstr ""
 
 #: 3rdparty/Horde/Nls/Languages.php:106
 msgid "Lithuanian"
-msgstr ""
+msgstr "Λιθουανικά"
 
 #: 3rdparty/Horde/Nls/Languages.php:107
 msgid "Luba-Katanga"
