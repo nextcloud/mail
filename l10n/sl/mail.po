@@ -10,8 +10,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: ownCloud\n"
 "Report-Msgid-Bugs-To: translations@owncloud.org\n"
-"POT-Creation-Date: 2013-11-21 23:02-0500\n"
-"PO-Revision-Date: 2013-11-19 19:30+0000\n"
+"POT-Creation-Date: 2013-11-26 05:12-0500\n"
+"PO-Revision-Date: 2013-11-25 19:35+0000\n"
 "Last-Translator: mateju <>\n"
 "Language-Team: Slovenian (http://www.transifex.com/projects/p/owncloud/language/sl/)\n"
 "MIME-Version: 1.0\n"
@@ -179,7 +179,7 @@ msgstr "Sporočila ni bilo mogoče shraniti, saj presega sprejemljivo velikost."
 
 #: 3rdparty/Horde/Imap/Client/Socket.php:4468
 msgid "The comparison algorithm was not recognized by the server."
-msgstr "Strežnik ni prepoznal primerjalnega algoritma."
+msgstr "Primerjalni algoritem, poslan na strežnik, ni veljaven."
 
 #: 3rdparty/Horde/Imap/Client/Socket.php:4486
 msgid "The metadata item could not be saved because it is too large."
@@ -189,13 +189,13 @@ msgstr "Metapodatkov ni bilo mogoče shraniti, saj presegajo dovoljeno velikost.
 msgid ""
 "The metadata item could not be saved because the server does not support "
 "private annotations."
-msgstr "Metapodatkov ni bilo mogoče shraniti, saj strežnik ne podpira zasebnih zapisov."
+msgstr "Metapodatkov ni mogoče shraniti, ker strežnik ne podpira zasebnih zapisov."
 
 #: 3rdparty/Horde/Imap/Client/Socket.php:4504
 msgid ""
 "The metadata item could not be saved because the maximum number of "
 "annotations has been exceeded."
-msgstr "Metapodatkov ni bilo mogoče shraniti, saj je bilo število dovoljenih zapisov preseženo."
+msgstr "Metapodatkov ni mogoče shraniti, ker je število dovoljenih zapisov že preseženo."
 
 #: 3rdparty/Horde/Imap/Client/Socket.php:4515
 msgid "Remote server is temporarily unavailable."
@@ -207,7 +207,7 @@ msgstr "OVeritev je spodletela."
 
 #: 3rdparty/Horde/Imap/Client/Socket.php:4531
 msgid "Authentication was successful, but authorization failed."
-msgstr "Avtentikacija je uspela, vendar je avtorizacija spodletela."
+msgstr "Čeprav je postopek overitve uspel, je prijava spodletela."
 
 #: 3rdparty/Horde/Imap/Client/Socket.php:4539
 msgid "Authentication credentials have expired."
@@ -215,11 +215,11 @@ msgstr "Prijavna poverila so časovno potekla."
 
 #: 3rdparty/Horde/Imap/Client/Socket.php:4547
 msgid "Operation failed due to a lack of a secure connection."
-msgstr "Operacija je spodletela, saj ni bilo na voljo varne povezave."
+msgstr "Opravilo je spodletelo zaradi neustrezno vzpostavljene varne povezave."
 
 #: 3rdparty/Horde/Imap/Client/Socket.php:4555
 msgid "You do not have adequate permissions to carry out this operation."
-msgstr "Nimate pravic za izvedbo te operacije."
+msgstr "Ni ustreznih dovoljenje za izvedbo tega opravila."
 
 #: 3rdparty/Horde/Imap/Client/Socket.php:4564
 msgid ""
@@ -242,11 +242,11 @@ msgstr "Operacija je spodletela, saj je bila kvota na poštnem strežniku prese�
 
 #: 3rdparty/Horde/Imap/Client/Socket.php:4612
 msgid "The object could not be created because it already exists."
-msgstr "Objekta ni bilo mogoče ustvariti, saj že obstaja."
+msgstr "Predmeta ni mogoče ustvariti, ker že obstaja."
 
 #: 3rdparty/Horde/Imap/Client/Socket.php:4621
 msgid "The object could not be deleted because it does not exist."
-msgstr "Objekta ni bilo mogoče izbrisati, saj ne obstaja."
+msgstr "Predmeta ni mogoče izbrisati, ker ne obstaja."
 
 #: 3rdparty/Horde/Imap/Client/Socket.php:4630
 msgid "The special-use attribute requested for the mailbox is not supported."
