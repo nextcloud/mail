@@ -3,15 +3,16 @@
 # This file is distributed under the same license as the PACKAGE package.
 # 
 # Translators:
+# Ádám Radovits <adamradovits12@hotmail.com>, 2013
 # ebela <bela@dandre.hu>, 2013
 # Tamas Nagy <mail@tamas-nagy.net>, 2013
 msgid ""
 msgstr ""
 "Project-Id-Version: ownCloud\n"
-"Report-Msgid-Bugs-To: http://bugs.owncloud.org/\n"
-"POT-Creation-Date: 2013-10-03 10:14-0400\n"
-"PO-Revision-Date: 2013-10-03 12:21+0000\n"
-"Last-Translator: I Robot <owncloud-bot@tmit.eu>\n"
+"Report-Msgid-Bugs-To: translations@owncloud.org\n"
+"POT-Creation-Date: 2013-11-29 15:18-0500\n"
+"PO-Revision-Date: 2013-11-27 20:50+0000\n"
+"Last-Translator: Ádám Radovits <adamradovits12@hotmail.com>\n"
 "Language-Team: Hungarian (Hungary) (http://www.transifex.com/projects/p/owncloud/language/hu_HU/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -108,7 +109,7 @@ msgstr "A levelező szerver elutasította az autentikációt."
 
 #: 3rdparty/Horde/Imap/Client/Socket.php:492
 msgid "Error connecting to mail server."
-msgstr ""
+msgstr "Nem sikerült csatlakozni a levelező szerverhez."
 
 #: 3rdparty/Horde/Imap/Client/Socket.php:515
 msgid "Server rejected connection."
@@ -312,71 +313,71 @@ msgstr ""
 
 #: 3rdparty/Horde/Nls/Countries.php:8 3rdparty/Horde/Nls/Tld.php:16
 msgid "Afghanistan"
-msgstr ""
+msgstr "Afganisztán "
 
 #: 3rdparty/Horde/Nls/Countries.php:9
 msgid "Åland Islands"
-msgstr ""
+msgstr "Åland-szigetek"
 
 #: 3rdparty/Horde/Nls/Countries.php:10 3rdparty/Horde/Nls/Tld.php:19
 msgid "Albania"
-msgstr ""
+msgstr "Albánia"
 
 #: 3rdparty/Horde/Nls/Countries.php:11 3rdparty/Horde/Nls/Tld.php:73
 msgid "Algeria"
-msgstr ""
+msgstr "Algéria"
 
 #: 3rdparty/Horde/Nls/Countries.php:12 3rdparty/Horde/Nls/Tld.php:25
 msgid "American Samoa"
-msgstr ""
+msgstr "Amerikai Szamoa"
 
 #: 3rdparty/Horde/Nls/Countries.php:13 3rdparty/Horde/Nls/Tld.php:14
 msgid "Andorra"
-msgstr ""
+msgstr "Andorra"
 
 #: 3rdparty/Horde/Nls/Countries.php:14 3rdparty/Horde/Nls/Tld.php:22
 msgid "Angola"
-msgstr ""
+msgstr "Angola"
 
 #: 3rdparty/Horde/Nls/Countries.php:15 3rdparty/Horde/Nls/Tld.php:18
 msgid "Anguilla"
-msgstr ""
+msgstr "Anguilla"
 
 #: 3rdparty/Horde/Nls/Countries.php:16 3rdparty/Horde/Nls/Tld.php:23
 msgid "Antarctica"
-msgstr ""
+msgstr "Antartika"
 
 #: 3rdparty/Horde/Nls/Countries.php:17 3rdparty/Horde/Nls/Tld.php:17
 msgid "Antigua and Barbuda"
-msgstr ""
+msgstr "Antigua és Barbuda"
 
 #: 3rdparty/Horde/Nls/Countries.php:18 3rdparty/Horde/Nls/Tld.php:24
 msgid "Argentina"
-msgstr ""
+msgstr "Argentina"
 
 #: 3rdparty/Horde/Nls/Countries.php:19 3rdparty/Horde/Nls/Tld.php:20
 msgid "Armenia"
-msgstr ""
+msgstr "Örményország"
 
 #: 3rdparty/Horde/Nls/Countries.php:20 3rdparty/Horde/Nls/Tld.php:28
 msgid "Aruba"
-msgstr ""
+msgstr "Aruba"
 
 #: 3rdparty/Horde/Nls/Countries.php:21 3rdparty/Horde/Nls/Tld.php:27
 msgid "Australia"
-msgstr ""
+msgstr "Ausztrália"
 
 #: 3rdparty/Horde/Nls/Countries.php:22 3rdparty/Horde/Nls/Tld.php:26
 msgid "Austria"
-msgstr ""
+msgstr "Ausztria"
 
 #: 3rdparty/Horde/Nls/Countries.php:23 3rdparty/Horde/Nls/Tld.php:30
 msgid "Azerbaijan"
-msgstr ""
+msgstr "Azerbajdzsán"
 
 #: 3rdparty/Horde/Nls/Countries.php:24 3rdparty/Horde/Nls/Tld.php:44
 msgid "Bahamas"
-msgstr ""
+msgstr "Bahama-szigetek"
 
 #: 3rdparty/Horde/Nls/Countries.php:25 3rdparty/Horde/Nls/Tld.php:37
 msgid "Bahrain"
@@ -1576,7 +1577,7 @@ msgstr ""
 
 #: 3rdparty/Horde/Nls/Languages.php:70
 msgid "Hungarian"
-msgstr ""
+msgstr "Magyar"
 
 #: 3rdparty/Horde/Nls/Languages.php:71
 msgid "Armenian"
@@ -2144,11 +2145,11 @@ msgstr "Hiba"
 
 #: js/mail.js:98
 msgid "Delete message"
-msgstr ""
+msgstr "Üzenet törlése"
 
 #: js/mail.js:256
 msgid "Connecting ..."
-msgstr ""
+msgstr "Csatlakozás ..."
 
 #: js/mail.js:272 js/mail.js:287 templates/no-accounts.php:16
 msgid "Connect"
@@ -2156,7 +2157,7 @@ msgstr "Kapcsolódás"
 
 #: js/mail.js:277
 msgid "Not a email address"
-msgstr ""
+msgstr "Nem e-mail cím"
 
 #: js/mail.js:285
 msgid "Unknown error"
@@ -2164,11 +2165,11 @@ msgstr "Ismeretlen hiba"
 
 #: js/mail.js:289
 msgid "Server Error"
-msgstr ""
+msgstr "Szerverhiba"
 
 #: templates/index.php:8
 msgid "New Message"
-msgstr ""
+msgstr "Új üzenet"
 
 #: templates/index.php:10
 msgid "To"
@@ -2176,7 +2177,7 @@ msgstr "Eddig"
 
 #: templates/index.php:11
 msgid "Subject"
-msgstr ""
+msgstr "Tárgy"
 
 #: templates/index.php:13
 msgid "Send"
@@ -2184,16 +2185,16 @@ msgstr "Küldjük el"
 
 #: templates/no-accounts.php:3
 msgid "Connect your mail account"
-msgstr ""
+msgstr "Csatlakozás a postafiókodhoz"
 
 #: templates/no-accounts.php:8
 msgid "Mail Address"
-msgstr ""
+msgstr "E-mail cím"
 
 #: templates/no-accounts.php:13
 msgid "IMAP Password"
-msgstr ""
+msgstr "IMAP jelszó"
 
 #: templates/part.message.php:31
 msgid "Reply"
-msgstr ""
+msgstr "Válasz"
