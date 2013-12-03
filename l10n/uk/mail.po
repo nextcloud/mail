@@ -10,8 +10,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: ownCloud\n"
 "Report-Msgid-Bugs-To: translations@owncloud.org\n"
-"POT-Creation-Date: 2013-11-29 15:18-0500\n"
-"PO-Revision-Date: 2013-11-28 21:50+0000\n"
+"POT-Creation-Date: 2013-12-02 19:19-0500\n"
+"PO-Revision-Date: 2013-12-01 21:50+0000\n"
 "Last-Translator: zubr139 <zubr139@ukr.net>\n"
 "Language-Team: Ukrainian (http://www.transifex.com/projects/p/owncloud/language/uk/)\n"
 "MIME-Version: 1.0\n"
@@ -1411,7 +1411,7 @@ msgstr ""
 
 #: 3rdparty/Horde/Nls/Languages.php:29
 msgid "Breton"
-msgstr ""
+msgstr "Бретонська"
 
 #: 3rdparty/Horde/Nls/Languages.php:30
 msgid "Bosnian"
@@ -1431,7 +1431,7 @@ msgstr "Чаморро"
 
 #: 3rdparty/Horde/Nls/Languages.php:34
 msgid "Corsican"
-msgstr ""
+msgstr "Корсиканська"
 
 #: 3rdparty/Horde/Nls/Languages.php:35
 msgid "Cree"
@@ -1469,11 +1469,11 @@ msgstr "Діверхі; Дхівехі; Мальдівська;"
 
 #: 3rdparty/Horde/Nls/Languages.php:43
 msgid "Dzongkha"
-msgstr ""
+msgstr "Дзонг-ке"
 
 #: 3rdparty/Horde/Nls/Languages.php:44
 msgid "Ewe"
-msgstr ""
+msgstr "Еве"
 
 #: 3rdparty/Horde/Nls/Languages.php:45
 msgid "Greek, Modern"
@@ -1497,7 +1497,7 @@ msgstr "Естонська"
 
 #: 3rdparty/Horde/Nls/Languages.php:50
 msgid "Basque"
-msgstr ""
+msgstr "Ба́скська"
 
 #: 3rdparty/Horde/Nls/Languages.php:51
 msgid "Persian"
@@ -1513,11 +1513,11 @@ msgstr "Фінська"
 
 #: 3rdparty/Horde/Nls/Languages.php:54
 msgid "Fijian"
-msgstr ""
+msgstr "Фіджійська"
 
 #: 3rdparty/Horde/Nls/Languages.php:55
 msgid "Faroese"
-msgstr ""
+msgstr "Фарерська"
 
 #: 3rdparty/Horde/Nls/Languages.php:56
 msgid "French"
@@ -2105,7 +2105,7 @@ msgstr ""
 
 #: 3rdparty/Horde/Nls/Tld.php:192
 msgid "Pitcairn Island"
-msgstr ""
+msgstr "Острів Піткерн"
 
 #: 3rdparty/Horde/Nls/Tld.php:199
 msgid "Reunion Island"
@@ -2113,11 +2113,11 @@ msgstr "Острів Реюньон"
 
 #: 3rdparty/Horde/Nls/Tld.php:210
 msgid "Saint Helena"
-msgstr ""
+msgstr "Острів Святої Єлени"
 
 #: 3rdparty/Horde/Nls/Tld.php:212
 msgid "Svalbard and Jan Mayen Islands"
-msgstr ""
+msgstr "Острови Шпіцберген і Ян-Маєн"
 
 #: 3rdparty/Horde/Nls/Tld.php:220
 msgid "Soviet Union"

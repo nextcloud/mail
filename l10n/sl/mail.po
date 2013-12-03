@@ -10,8 +10,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: ownCloud\n"
 "Report-Msgid-Bugs-To: translations@owncloud.org\n"
-"POT-Creation-Date: 2013-11-27 14:06-0500\n"
-"PO-Revision-Date: 2013-11-27 18:00+0000\n"
+"POT-Creation-Date: 2013-12-02 19:19-0500\n"
+"PO-Revision-Date: 2013-11-30 13:30+0000\n"
 "Last-Translator: mateju <>\n"
 "Language-Team: Slovenian (http://www.transifex.com/projects/p/owncloud/language/sl/)\n"
 "MIME-Version: 1.0\n"
@@ -229,7 +229,7 @@ msgstr "Med izvajanjem opravila je prišlo do napake. Poskusite znova kasneje."
 
 #: 3rdparty/Horde/Imap/Client/Socket.php:4578
 msgid "The mail server is reporting corrupt data in your mailbox."
-msgstr "Poštni strežnik poroča, da je vsebina v vašem poštnem predalu poškodovana."
+msgstr "Zaznane so napake vsebine podatkov na poštnem predalu."
 
 #: 3rdparty/Horde/Imap/Client/Socket.php:4594
 msgid "The mail server has denied the request."
@@ -250,7 +250,7 @@ msgstr "Predmeta ni mogoče izbrisati, ker ne obstaja."
 
 #: 3rdparty/Horde/Imap/Client/Socket.php:4630
 msgid "The special-use attribute requested for the mailbox is not supported."
-msgstr "Uporaba posebnega atributa, ki ste ga zahtevali v poštnem predalu, ni podprta."
+msgstr "Uporaba zahtevanega posebnega atributa za poštni predal ni podprta."
 
 #: 3rdparty/Horde/Imap/Client/Utf7imap.php:117
 #: 3rdparty/Horde/Imap/Client/Utf7imap.php:142
