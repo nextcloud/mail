@@ -9,10 +9,10 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: ownCloud\n"
-"Report-Msgid-Bugs-To: http://bugs.owncloud.org/\n"
-"POT-Creation-Date: 2013-10-03 10:14-0400\n"
-"PO-Revision-Date: 2013-10-03 12:21+0000\n"
-"Last-Translator: muro <janne.morsky@metropolia.fi>\n"
+"Report-Msgid-Bugs-To: translations@owncloud.org\n"
+"POT-Creation-Date: 2013-12-11 15:29-0500\n"
+"PO-Revision-Date: 2013-12-09 12:10+0000\n"
+"Last-Translator: Jiri Grönroos <jiri.gronroos@iki.fi>\n"
 "Language-Team: Finnish (Finland) (http://www.transifex.com/projects/p/owncloud/language/fi_FI/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -40,7 +40,7 @@ msgstr ""
 #: 3rdparty/Horde/Imap/Client/Exception/NoSupportExtension.php:36
 #, php-format
 msgid "The server does not support the %s extension."
-msgstr ""
+msgstr "Palvelin ei tue laajennusta %s."
 
 #: 3rdparty/Horde/Imap/Client/Exception/NoSupportPop3.php:25
 #, php-format
@@ -75,13 +75,13 @@ msgstr "Virhe yhdistäessä POP3-palvelimeen."
 #: 3rdparty/Horde/Imap/Client/Socket/Pop3.php:334
 #: 3rdparty/Horde/Imap/Client/Socket.php:592
 msgid "Unexpected response from server when authenticating."
-msgstr ""
+msgstr "Odottamaton vastaus palvelimelta tunnistautumisen yhteydessä."
 
 #: 3rdparty/Horde/Imap/Client/Socket/Pop3.php:374
 #: 3rdparty/Horde/Imap/Client/Socket.php:636
 #, php-format
 msgid "Unknown authentication method: %s"
-msgstr ""
+msgstr "Tuntematon tunnistautumistapa: %s"
 
 #: 3rdparty/Horde/Imap/Client/Socket/Pop3.php:1112
 msgid "POP3 Server closed the connection unexpectedly."
@@ -215,11 +215,11 @@ msgstr "Kirjautumistiedot ovat vanhentuneet."
 
 #: 3rdparty/Horde/Imap/Client/Socket.php:4547
 msgid "Operation failed due to a lack of a secure connection."
-msgstr ""
+msgstr "Toiminto epäonnistui salatun yhteyden puutteen vuoksi."
 
 #: 3rdparty/Horde/Imap/Client/Socket.php:4555
 msgid "You do not have adequate permissions to carry out this operation."
-msgstr ""
+msgstr "Käyttöoikeutesi eivät riitä tämän toiminnon suorittamiseen."
 
 #: 3rdparty/Horde/Imap/Client/Socket.php:4564
 msgid ""
@@ -2085,7 +2085,7 @@ msgstr ""
 
 #: 3rdparty/Horde/Nls/Tld.php:81
 msgid "European Union"
-msgstr ""
+msgstr "Euroopan unioni"
 
 #: 3rdparty/Horde/Nls/Tld.php:108
 msgid "Heard and McDonald Islands"
@@ -2121,11 +2121,11 @@ msgstr ""
 
 #: 3rdparty/Horde/Nls/Tld.php:220
 msgid "Soviet Union"
-msgstr ""
+msgstr "Neuvostoliitto"
 
 #: 3rdparty/Horde/Nls/Tld.php:235
 msgid "East Timor"
-msgstr ""
+msgstr "Itä-Timor"
 
 #: 3rdparty/Horde/Nls/Tld.php:239
 msgid "Taiwan"
