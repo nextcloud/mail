@@ -10,8 +10,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: ownCloud\n"
 "Report-Msgid-Bugs-To: translations@owncloud.org\n"
-"POT-Creation-Date: 2013-12-02 19:19-0500\n"
-"PO-Revision-Date: 2013-12-01 21:50+0000\n"
+"POT-Creation-Date: 2013-12-21 02:42-0500\n"
+"PO-Revision-Date: 2013-12-21 02:30+0000\n"
 "Last-Translator: zubr139 <zubr139@ukr.net>\n"
 "Language-Team: Ukrainian (http://www.transifex.com/projects/p/owncloud/language/uk/)\n"
 "MIME-Version: 1.0\n"
@@ -1407,7 +1407,7 @@ msgstr "Бенгальська"
 
 #: 3rdparty/Horde/Nls/Languages.php:28
 msgid "Tibetan Standard, Tibetan, Central"
-msgstr ""
+msgstr "Тибетська Стандартна, Тибетська, Центральна"
 
 #: 3rdparty/Horde/Nls/Languages.php:29
 msgid "Breton"
@@ -1905,7 +1905,7 @@ msgstr "Словацька"
 
 #: 3rdparty/Horde/Nls/Languages.php:153
 msgid "Slovene"
-msgstr ""
+msgstr "Словенська"
 
 #: 3rdparty/Horde/Nls/Languages.php:154
 msgid "Samoan"
@@ -1977,7 +1977,7 @@ msgstr "Тагальська"
 
 #: 3rdparty/Horde/Nls/Languages.php:171
 msgid "Tswana"
-msgstr ""
+msgstr "Тсвана"
 
 #: 3rdparty/Horde/Nls/Languages.php:172
 msgid "Tonga (Tonga Islands)"
@@ -1989,7 +1989,7 @@ msgstr "Турецька"
 
 #: 3rdparty/Horde/Nls/Languages.php:174
 msgid "Tsonga"
-msgstr ""
+msgstr "Тсонга"
 
 #: 3rdparty/Horde/Nls/Languages.php:175
 msgid "Tatar"
@@ -2001,7 +2001,7 @@ msgstr ""
 
 #: 3rdparty/Horde/Nls/Languages.php:177
 msgid "Tahitian"
-msgstr ""
+msgstr "Таїтянська"
 
 #: 3rdparty/Horde/Nls/Languages.php:178
 msgid "Uighur, Uyghur"
