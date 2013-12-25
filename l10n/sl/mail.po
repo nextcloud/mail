@@ -10,8 +10,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: ownCloud\n"
 "Report-Msgid-Bugs-To: translations@owncloud.org\n"
-"POT-Creation-Date: 2013-12-02 19:19-0500\n"
-"PO-Revision-Date: 2013-11-30 13:30+0000\n"
+"POT-Creation-Date: 2013-12-25 02:41-0500\n"
+"PO-Revision-Date: 2013-12-24 22:37+0000\n"
 "Last-Translator: mateju <>\n"
 "Language-Team: Slovenian (http://www.transifex.com/projects/p/owncloud/language/sl/)\n"
 "MIME-Version: 1.0\n"
@@ -265,7 +265,7 @@ msgstr "Napaka med pretvarjanjem niza UTF7-IMAP"
 
 #: 3rdparty/Horde/Mime/Headers.php:535
 msgid "List-Help"
-msgstr "Prikaži pomoč"
+msgstr "Pomoč seznama"
 
 #: 3rdparty/Horde/Mime/Headers.php:536
 msgid "List-Unsubscribe"
@@ -277,19 +277,19 @@ msgstr "Naročilo na dopisni seznam"
 
 #: 3rdparty/Horde/Mime/Headers.php:538
 msgid "List-Owner"
-msgstr "Prikaži lastnika"
+msgstr "Lastnik seznama"
 
 #: 3rdparty/Horde/Mime/Headers.php:539
 msgid "List-Post"
-msgstr "Prikaži prispevek"
+msgstr "Objava seznama"
 
 #: 3rdparty/Horde/Mime/Headers.php:540
 msgid "List-Archive"
-msgstr "Prikaži arhiv"
+msgstr "Arhiv seznama"
 
 #: 3rdparty/Horde/Mime/Headers.php:542
 msgid "List-Id"
-msgstr "Prikaži ID"
+msgstr "ID Seznama"
 
 #: 3rdparty/Horde/Mime/Mail.php:417
 msgid "Plaintext Version of Message"
