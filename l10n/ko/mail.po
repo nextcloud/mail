@@ -3,16 +3,19 @@
 # This file is distributed under the same license as the PACKAGE package.
 # 
 # Translators:
+# 책읽는달팽 <bjh13579@gmail.com>, 2013
+# Park Shinjo <peremen@gmail.com>, 2013
 # ujuc Gang <potopro@gmail.com>, 2013
 # ujuc Gang <potopro@gmail.com>, 2013
-# smallsnail <bjh13579@gmail.com>, 2013
+# ujuc Gang <potopro@gmail.com>, 2013
+# 책읽는달팽 <bjh13579@gmail.com>, 2013
 msgid ""
 msgstr ""
 "Project-Id-Version: ownCloud\n"
-"Report-Msgid-Bugs-To: http://bugs.owncloud.org/\n"
-"POT-Creation-Date: 2013-10-03 10:14-0400\n"
-"PO-Revision-Date: 2013-10-03 12:21+0000\n"
-"Last-Translator: smallsnail <bjh13579@gmail.com>\n"
+"Report-Msgid-Bugs-To: translations@owncloud.org\n"
+"POT-Creation-Date: 2013-12-29 02:41-0500\n"
+"PO-Revision-Date: 2013-12-28 22:06+0000\n"
+"Last-Translator: Shinjo Park <kde@peremen.name>\n"
 "Language-Team: Korean (http://www.transifex.com/projects/p/owncloud/language/ko/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -26,7 +29,7 @@ msgstr "찾을 수 없음"
 
 #: 3rdparty/Horde/Exception/PermissionDenied.php:27
 msgid "Permission Denied"
-msgstr "권한 거부"
+msgstr "권한 거부됨"
 
 #: 3rdparty/Horde/Imap/Client/Auth/DigestMD5.php:149
 msgid "Authentication failure."
@@ -35,7 +38,7 @@ msgstr "인증 실패."
 #: 3rdparty/Horde/Imap/Client/Base.php:1856
 #: 3rdparty/Horde/Imap/Client/Base.php:1915
 msgid "Cannot expunge read-only mailbox."
-msgstr "읽기만 가능한 메일상자는 삭제할 수 없습니다."
+msgstr "읽기만 가능한 편지함을 삭제할 수 없습니다."
 
 #: 3rdparty/Horde/Imap/Client/Exception/NoSupportExtension.php:36
 #, php-format
@@ -45,71 +48,71 @@ msgstr "서버에서 %s 확장을 지원하지 않습니다."
 #: 3rdparty/Horde/Imap/Client/Exception/NoSupportPop3.php:25
 #, php-format
 msgid "%s not supported on POP3 servers."
-msgstr "%s는 POP3 서버를 지원하지 않습니다."
+msgstr "%s은(는) POP3 서버에서 지원되지 않습니다."
 
 #: 3rdparty/Horde/Imap/Client/Exception/SearchCharset.php:36
 msgid "Cannot convert search query text to new charset"
-msgstr "새로운 문자 셋에서 찾으시는 쿼리 텍스트를 변경하지 못하였습니다."
+msgstr "찾을 텍스트를 새로운 문자 인코딩으로 변환할 수 없음"
 
 #: 3rdparty/Horde/Imap/Client/Interaction/Server/Tagged.php:34
 msgid "Bad tagged response."
-msgstr ""
+msgstr "잘못된 태그가 있는 응답."
 
 #: 3rdparty/Horde/Imap/Client/Socket/Pop3.php:189
 #: 3rdparty/Horde/Imap/Client/Socket/Pop3.php:201
 msgid "Could not open secure connection to the POP3 server."
-msgstr "POP3 서버에서 안전 접속을 할 수 없습니다."
+msgstr "POP3 서버로 보안 접속을 할 수 없습니다."
 
 #: 3rdparty/Horde/Imap/Client/Socket/Pop3.php:189
 msgid "Server does not support secure connections."
-msgstr "서버에서 안전 접속을 지원하지 않습니다."
+msgstr "서버에서 보안 접속을 지원하지 않습니다."
 
 #: 3rdparty/Horde/Imap/Client/Socket/Pop3.php:240
 msgid "POP3 server denied authentication."
-msgstr "POP3 서버 인증을 받을 수 없습니다."
+msgstr "POP3 서버에서 인증을 거부하였습니다."
 
 #: 3rdparty/Horde/Imap/Client/Socket/Pop3.php:280
 msgid "Error connecting to POP3 server."
-msgstr "POP3 서버와 접속을 할 수 없습니다."
+msgstr "POP3 서버에 접속할 수 없습니다."
 
 #: 3rdparty/Horde/Imap/Client/Socket/Pop3.php:334
 #: 3rdparty/Horde/Imap/Client/Socket.php:592
 msgid "Unexpected response from server when authenticating."
-msgstr ""
+msgstr "서버에 인증하는 중 예상하지 못한 응답이 돌아왔습니다."
 
 #: 3rdparty/Horde/Imap/Client/Socket/Pop3.php:374
 #: 3rdparty/Horde/Imap/Client/Socket.php:636
 #, php-format
 msgid "Unknown authentication method: %s"
-msgstr "알수 없는 인증 방법: %s"
+msgstr "알 수 없는 인증 방법: %s"
 
 #: 3rdparty/Horde/Imap/Client/Socket/Pop3.php:1112
 msgid "POP3 Server closed the connection unexpectedly."
-msgstr "POP3 서버가 예기치 않게 연결이 끊어졌습니다."
+msgstr "POP3 서버에서 예기치 않게 연결이 끊어졌습니다."
 
 #: 3rdparty/Horde/Imap/Client/Socket/Pop3.php:1172
 msgid "POP3 error reported by server."
-msgstr "서버에 POP3 오류가 보고되었습니다."
+msgstr "서버에서 POP3 오류를 보고하였습니다."
 
 #: 3rdparty/Horde/Imap/Client/Socket.php:311
 msgid "Server does not support TLS connections."
-msgstr "이 서버에서는 TLS 접속을 지원하지 않습니다."
+msgstr "이 서버는 TLS 접속을 지원하지 않습니다."
 
 #: 3rdparty/Horde/Imap/Client/Socket.php:323
 msgid "Could not open secure TLS connection to the IMAP server."
-msgstr "IMAP 서버로 보안 TLS 연결을 열수 없습니다."
+msgstr "IMAP 서버로 보안 TLS 연결을 열 수 없습니다."
 
 #: 3rdparty/Horde/Imap/Client/Socket.php:366
 msgid "No supported IMAP authentication method could be found."
-msgstr ""
+msgstr "지원하는 IMAP 인증 방법을 찾을 수 없습니다."
 
 #: 3rdparty/Horde/Imap/Client/Socket.php:383
 msgid "Mail server denied authentication."
-msgstr "메일 서버가 인증을 거부했습니다."
+msgstr "메일 서버에서 인증을 거부했습니다."
 
 #: 3rdparty/Horde/Imap/Client/Socket.php:492
 msgid "Error connecting to mail server."
-msgstr "메일 서버에 접속하는데 오류가 있습니다."
+msgstr "메일 서버 접속 오류입니다."
 
 #: 3rdparty/Horde/Imap/Client/Socket.php:515
 msgid "Server rejected connection."
@@ -122,7 +125,7 @@ msgstr "메일 서버가 IMAP4rev1 (RFC 3501)을 지원하지 않습니다."
 #: 3rdparty/Horde/Imap/Client/Socket.php:920
 #, php-format
 msgid "Could not open mailbox \"%s\"."
-msgstr "\"%s\" 편지함을 열수 없습니다."
+msgstr "\"%s\" 편지함을 열 수 없습니다."
 
 #: 3rdparty/Horde/Imap/Client/Socket.php:1874
 #: 3rdparty/Horde/Imap/Client/Socket.php:2544
@@ -130,12 +133,12 @@ msgstr "\"%s\" 편지함을 열수 없습니다."
 #: 3rdparty/Horde/Imap/Client/Socket.php:2992
 #: 3rdparty/Horde/Imap/Client/Socket.php:3048
 msgid "Mailbox does not support mod-sequences."
-msgstr ""
+msgstr "편지함에서 mod 시퀀스를 지원하지 않습니다."
 
 #: 3rdparty/Horde/Imap/Client/Socket.php:3537
 #, php-format
 msgid "Invalid METADATA entry: \"%s\"."
-msgstr "잘못된 메타데이터 기입: \"%s\"."
+msgstr "잘못된 메타데이터 항목: \"%s\"."
 
 #: 3rdparty/Horde/Imap/Client/Socket.php:3624
 #, php-format
@@ -145,29 +148,29 @@ msgstr "잘못된 메타데이터 값 형식 \"%s\"."
 #: 3rdparty/Horde/Imap/Client/Socket.php:3857
 #: 3rdparty/Horde/Imap/Client/Socket.php:4128
 msgid "Error when communicating with the mail server."
-msgstr "메일 서버와 통신하던중에 문제가 생겼습니다."
+msgstr "메일 서버와 통신 중 문제가 발생하였습니다."
 
 #: 3rdparty/Horde/Imap/Client/Socket.php:3983
 #: 3rdparty/Horde/Imap/Client/Socket.php:4014
 msgid "IMAP error reported by server."
-msgstr "서버에 IMAP 오류가 보고 되었습니다."
+msgstr "서버에서 IMAP 오류를 보고하였습니다."
 
 #: 3rdparty/Horde/Imap/Client/Socket.php:3998
 msgid "IMAP Server closed the connection."
-msgstr "IMAP 서버와의 연결이 끊겼습니다"
+msgstr "IMAP 서버에서 연결을 끊었습니다."
 
 #: 3rdparty/Horde/Imap/Client/Socket.php:4050
 msgid "Mail server closed the connection unexpectedly."
-msgstr "메일 서버가 예기치 않게 연결이 끊어졌습니다."
+msgstr "메일 서버에서 예기치 않게 연결이 끊어졌습니다."
 
 #: 3rdparty/Horde/Imap/Client/Socket.php:4325
 msgid "Charset used in search query is not supported on the mail server."
-msgstr ""
+msgstr "검색 문자열에 사용한 문자 인코딩을 메일 서버에서 지원하지 않습니다."
 
 #: 3rdparty/Horde/Imap/Client/Socket.php:4337
 #: 3rdparty/Horde/Imap/Client/Socket.php:4379
 msgid "The mail server was unable to parse the contents of the mail message."
-msgstr ""
+msgstr "메일 서버에서 메시지의 내용을 처리할 수 없습니다."
 
 #: 3rdparty/Horde/Imap/Client/Socket.php:4420
 msgid "Could not save message on server."
@@ -175,31 +178,31 @@ msgstr "서버에 메시지를 저장하지 못했습니다."
 
 #: 3rdparty/Horde/Imap/Client/Socket.php:4429
 msgid "Could not save message data because it is too large."
-msgstr "데이터가 너무커서 저장하지 못했습니다."
+msgstr "데이터가 너무 커서 저장하지 못했습니다."
 
 #: 3rdparty/Horde/Imap/Client/Socket.php:4468
 msgid "The comparison algorithm was not recognized by the server."
-msgstr ""
+msgstr "서버에서 압축 알고리즘을 인식할 수 없습니다."
 
 #: 3rdparty/Horde/Imap/Client/Socket.php:4486
 msgid "The metadata item could not be saved because it is too large."
-msgstr ""
+msgstr "메타데이터가 너무 커서 메타데이터 항목을 저장할 수 없습니다."
 
 #: 3rdparty/Horde/Imap/Client/Socket.php:4495
 msgid ""
 "The metadata item could not be saved because the server does not support "
 "private annotations."
-msgstr ""
+msgstr "서버에서 개별 주석을 지원하지 않아서 메타데이터 항목을 저장할 수 없습니다."
 
 #: 3rdparty/Horde/Imap/Client/Socket.php:4504
 msgid ""
 "The metadata item could not be saved because the maximum number of "
 "annotations has been exceeded."
-msgstr ""
+msgstr "최대 허용 주석 개수를 초과해서 메타데이터 항목을 저장할 수 없습니다."
 
 #: 3rdparty/Horde/Imap/Client/Socket.php:4515
 msgid "Remote server is temporarily unavailable."
-msgstr "일시적으로 리모트 서버가 사용불가능 합니다."
+msgstr "원격 서버를 일시적으로 사용할 수 없습니다."
 
 #: 3rdparty/Horde/Imap/Client/Socket.php:4523
 msgid "Authentication failed."
@@ -207,11 +210,11 @@ msgstr "인증 실패함."
 
 #: 3rdparty/Horde/Imap/Client/Socket.php:4531
 msgid "Authentication was successful, but authorization failed."
-msgstr "인증은 성공했지만, 권한부여는 실패했습니다."
+msgstr "인증이 성공하였지만 권한 부여에 실패하였습니다."
 
 #: 3rdparty/Horde/Imap/Client/Socket.php:4539
 msgid "Authentication credentials have expired."
-msgstr "인증 확인서가 만료되었습니다."
+msgstr "인증 정보가 만료되었습니다."
 
 #: 3rdparty/Horde/Imap/Client/Socket.php:4547
 msgid "Operation failed due to a lack of a secure connection."
@@ -219,17 +222,17 @@ msgstr "보안 연결이 없어서 작업이 실패했습니다."
 
 #: 3rdparty/Horde/Imap/Client/Socket.php:4555
 msgid "You do not have adequate permissions to carry out this operation."
-msgstr "당신께선 이 작업을 실행할 적당한 권한을 가지고 있지 않습니다."
+msgstr "이 작업을 실행할 충분한 권한이 없습니다."
 
 #: 3rdparty/Horde/Imap/Client/Socket.php:4564
 msgid ""
 "There was a temporary issue when attempting this operation. Please try again"
 " later."
-msgstr "작업을 실행하던 도중 일시적인 문제가 발생하였습니다. 다시 시도해주세요."
+msgstr "작업을 실행하는 중 일시적인 문제가 발생하였습니다. 나중에 다시 시도하십시오."
 
 #: 3rdparty/Horde/Imap/Client/Socket.php:4578
 msgid "The mail server is reporting corrupt data in your mailbox."
-msgstr ""
+msgstr "메일 서버에서 편지함의 데이터가 잘못되었다고 보고하였습니다."
 
 #: 3rdparty/Horde/Imap/Client/Socket.php:4594
 msgid "The mail server has denied the request."
@@ -238,19 +241,19 @@ msgstr "메일 서버가 요청을 거부했습니다."
 #: 3rdparty/Horde/Imap/Client/Socket.php:4603
 msgid ""
 "The operation failed because the quota has been exceeded on the mail server."
-msgstr ""
+msgstr "메일 서버 사용량이 가득 차서 작업을 수행할 수 없습니다."
 
 #: 3rdparty/Horde/Imap/Client/Socket.php:4612
 msgid "The object could not be created because it already exists."
-msgstr ""
+msgstr "이미 존재하는 객체를 만들 수 없습니다."
 
 #: 3rdparty/Horde/Imap/Client/Socket.php:4621
 msgid "The object could not be deleted because it does not exist."
-msgstr ""
+msgstr "존재하지 않는 객체를 삭제할 수 없습니다."
 
 #: 3rdparty/Horde/Imap/Client/Socket.php:4630
 msgid "The special-use attribute requested for the mailbox is not supported."
-msgstr ""
+msgstr "편지함에서 요청한 special-use 속성을 사용할 수 없습니다."
 
 #: 3rdparty/Horde/Imap/Client/Utf7imap.php:117
 #: 3rdparty/Horde/Imap/Client/Utf7imap.php:142
@@ -261,47 +264,47 @@ msgstr ""
 #: 3rdparty/Horde/Imap/Client/Utf7imap.php:234
 #: 3rdparty/Horde/Imap/Client/Utf7imap.php:240
 msgid "Error converting UTF7-IMAP string."
-msgstr "UTF7-IMAP 스트링 변경 오류"
+msgstr "UTF7-IMAP 문자열 변환 오류입니다."
 
 #: 3rdparty/Horde/Mime/Headers.php:535
 msgid "List-Help"
-msgstr ""
+msgstr "List-Help"
 
 #: 3rdparty/Horde/Mime/Headers.php:536
 msgid "List-Unsubscribe"
-msgstr ""
+msgstr "List-Unsubscribe"
 
 #: 3rdparty/Horde/Mime/Headers.php:537
 msgid "List-Subscribe"
-msgstr ""
+msgstr "List-Subscribe"
 
 #: 3rdparty/Horde/Mime/Headers.php:538
 msgid "List-Owner"
-msgstr ""
+msgstr "List-Owner"
 
 #: 3rdparty/Horde/Mime/Headers.php:539
 msgid "List-Post"
-msgstr ""
+msgstr "List-Post"
 
 #: 3rdparty/Horde/Mime/Headers.php:540
 msgid "List-Archive"
-msgstr ""
+msgstr "List-Archive"
 
 #: 3rdparty/Horde/Mime/Headers.php:542
 msgid "List-Id"
-msgstr ""
+msgstr "List-Id"
 
 #: 3rdparty/Horde/Mime/Mail.php:417
 msgid "Plaintext Version of Message"
-msgstr "메시지 텍스트 버전"
+msgstr "메시지의 일반 텍스트 버전"
 
 #: 3rdparty/Horde/Mime/Mail.php:419
 msgid "HTML Version of Message"
-msgstr "메시지 HTML 버전"
+msgstr "메시지의 HTML 버전"
 
 #: 3rdparty/Horde/Mime/Mdn.php:188
 msgid "Disposition Notification"
-msgstr ""
+msgstr "읽음 확인"
 
 #: 3rdparty/Horde/Mime/Mdn.php:200
 #, php-format
@@ -309,7 +312,7 @@ msgid ""
 "The message sent on %s to %s with subject \"%s\" has been displayed.\n"
 "\n"
 "This is no guarantee that the message has been read or understood."
-msgstr ""
+msgstr "%s에 %s 님에게 보낸 제목이 \"%s\"인 메시지가 표시되었습니다.\n\n메시지를 읽었거나 이해하였음을 보장할 수 없습니다."
 
 #: 3rdparty/Horde/Nls/Countries.php:8 3rdparty/Horde/Nls/Tld.php:16
 msgid "Afghanistan"
@@ -329,7 +332,7 @@ msgstr "알제리"
 
 #: 3rdparty/Horde/Nls/Countries.php:12 3rdparty/Horde/Nls/Tld.php:25
 msgid "American Samoa"
-msgstr "아메"
+msgstr "미국령 사모아"
 
 #: 3rdparty/Horde/Nls/Countries.php:13 3rdparty/Horde/Nls/Tld.php:14
 msgid "Andorra"
@@ -353,7 +356,7 @@ msgstr "앤티가 바부다"
 
 #: 3rdparty/Horde/Nls/Countries.php:18 3rdparty/Horde/Nls/Tld.php:24
 msgid "Argentina"
-msgstr "아르"
+msgstr "아르헨티나"
 
 #: 3rdparty/Horde/Nls/Countries.php:19 3rdparty/Horde/Nls/Tld.php:20
 msgid "Armenia"
@@ -405,7 +408,7 @@ msgstr "벨리즈"
 
 #: 3rdparty/Horde/Nls/Countries.php:31 3rdparty/Horde/Nls/Tld.php:39
 msgid "Benin"
-msgstr "베넹"
+msgstr "베냉"
 
 #: 3rdparty/Horde/Nls/Countries.php:32 3rdparty/Horde/Nls/Tld.php:40
 msgid "Bermuda"
@@ -421,7 +424,7 @@ msgstr "볼리비아"
 
 #: 3rdparty/Horde/Nls/Countries.php:35
 msgid "Bonaire, Sint Eustatius and Saba"
-msgstr "네덜란드령 카리브"
+msgstr "보네르, 신트외스타티위스, 사바 섬"
 
 #: 3rdparty/Horde/Nls/Countries.php:36 3rdparty/Horde/Nls/Tld.php:31
 msgid "Bosnia and Herzegovina"
@@ -909,7 +912,7 @@ msgstr "몬테네그로"
 
 #: 3rdparty/Horde/Nls/Countries.php:157 3rdparty/Horde/Nls/Tld.php:163
 msgid "Montserrat"
-msgstr "몬트세렛"
+msgstr "몬트세랫"
 
 #: 3rdparty/Horde/Nls/Countries.php:158 3rdparty/Horde/Nls/Tld.php:149
 msgid "Morocco"
@@ -942,7 +945,7 @@ msgstr "네덜란드"
 
 #: 3rdparty/Horde/Nls/Countries.php:165 3rdparty/Horde/Nls/Tld.php:172
 msgid "New Caledonia"
-msgstr "누벨칼레도니 (뉴칼레도니아)"
+msgstr "뉴칼레도니아"
 
 #: 3rdparty/Horde/Nls/Countries.php:166 3rdparty/Horde/Nls/Tld.php:182
 msgid "New Zealand"
@@ -990,7 +993,7 @@ msgstr "팔라우"
 
 #: 3rdparty/Horde/Nls/Countries.php:177 3rdparty/Horde/Nls/Tld.php:194
 msgid "Palestinian Territory, Occupied"
-msgstr "팔레스타인 영토"
+msgstr "팔레스타인"
 
 #: 3rdparty/Horde/Nls/Countries.php:178 3rdparty/Horde/Nls/Tld.php:184
 msgid "Panama"
@@ -1134,7 +1137,7 @@ msgstr "소말리아"
 
 #: 3rdparty/Horde/Nls/Countries.php:213 3rdparty/Horde/Nls/Tld.php:260
 msgid "South Africa"
-msgstr "남 아프리카 공화국"
+msgstr "남아프리카 공화국"
 
 #: 3rdparty/Horde/Nls/Countries.php:214 3rdparty/Horde/Nls/Tld.php:102
 msgid "South Georgia and the South Sandwich Islands"
@@ -1142,7 +1145,7 @@ msgstr "사우스 조지아 및 사우스 샌드위치 군도"
 
 #: 3rdparty/Horde/Nls/Countries.php:215
 msgid "South Sudan"
-msgstr "남 수단"
+msgstr "남수단"
 
 #: 3rdparty/Horde/Nls/Countries.php:216 3rdparty/Horde/Nls/Tld.php:79
 msgid "Spain"
@@ -1246,7 +1249,7 @@ msgstr "우크라이나"
 
 #: 3rdparty/Horde/Nls/Countries.php:241 3rdparty/Horde/Nls/Tld.php:15
 msgid "United Arab Emirates"
-msgstr "아랍 에미리트"
+msgstr "아랍에미리트"
 
 #: 3rdparty/Horde/Nls/Countries.php:242 3rdparty/Horde/Nls/Tld.php:89
 #: 3rdparty/Horde/Nls/Tld.php:243
@@ -1283,11 +1286,11 @@ msgstr "베트남"
 
 #: 3rdparty/Horde/Nls/Countries.php:250 3rdparty/Horde/Nls/Tld.php:251
 msgid "Virgin Islands, British"
-msgstr "영국령 버진 아일랜드"
+msgstr "영국령 버진 제도"
 
 #: 3rdparty/Horde/Nls/Countries.php:251 3rdparty/Horde/Nls/Tld.php:252
 msgid "Virgin Islands, U.S."
-msgstr "미국령 버진 아일랜드"
+msgstr "미국령 버진 제도"
 
 #: 3rdparty/Horde/Nls/Countries.php:252
 msgid "Wallis and Futuna"
@@ -1295,7 +1298,7 @@ msgstr "월리스푸투나 제도"
 
 #: 3rdparty/Horde/Nls/Countries.php:253 3rdparty/Horde/Nls/Tld.php:77
 msgid "Western Sahara"
-msgstr "서 사하라"
+msgstr "서사하라"
 
 #: 3rdparty/Horde/Nls/Countries.php:254 3rdparty/Horde/Nls/Tld.php:257
 msgid "Yemen"
@@ -1311,7 +1314,7 @@ msgstr "짐바브웨"
 
 #: 3rdparty/Horde/Nls/Geoip.php:324
 msgid "Asia/Pacific Region"
-msgstr "아시아 / 태평양 지역"
+msgstr "아시아/태평양 지역"
 
 #: 3rdparty/Horde/Nls/Geoip.php:325
 msgid "Europe"
@@ -1323,7 +1326,7 @@ msgstr "익명 프록시"
 
 #: 3rdparty/Horde/Nls/Geoip.php:327
 msgid "Satellite Provider"
-msgstr "위성통신 제공자"
+msgstr "위성 통신 제공자"
 
 #: 3rdparty/Horde/Nls/Geoip.php:328
 msgid "Other"
@@ -1335,7 +1338,7 @@ msgstr "아파어"
 
 #: 3rdparty/Horde/Nls/Languages.php:10
 msgid "Abkhaz"
-msgstr "아브하즈어"
+msgstr "압하즈어"
 
 #: 3rdparty/Horde/Nls/Languages.php:11
 msgid "Avestan"
@@ -1355,7 +1358,7 @@ msgstr "암하라어"
 
 #: 3rdparty/Horde/Nls/Languages.php:15
 msgid "Aragonese"
-msgstr "아라곤 어"
+msgstr "아라곤어"
 
 #: 3rdparty/Horde/Nls/Languages.php:16
 msgid "Arabic"
@@ -1383,7 +1386,7 @@ msgstr "바시키르어"
 
 #: 3rdparty/Horde/Nls/Languages.php:22
 msgid "Belarusian"
-msgstr "벨로루시어"
+msgstr "벨라루스어"
 
 #: 3rdparty/Horde/Nls/Languages.php:23
 msgid "Bulgarian"
@@ -1407,11 +1410,11 @@ msgstr "벵골어"
 
 #: 3rdparty/Horde/Nls/Languages.php:28
 msgid "Tibetan Standard, Tibetan, Central"
-msgstr "티벳어"
+msgstr "티베트어"
 
 #: 3rdparty/Horde/Nls/Languages.php:29
 msgid "Breton"
-msgstr "브리타니아어"
+msgstr "브르타뉴어"
 
 #: 3rdparty/Horde/Nls/Languages.php:30
 msgid "Bosnian"
@@ -1431,7 +1434,7 @@ msgstr "차모로어"
 
 #: 3rdparty/Horde/Nls/Languages.php:34
 msgid "Corsican"
-msgstr "코르시카 섬 방언"
+msgstr "코르시카어"
 
 #: 3rdparty/Horde/Nls/Languages.php:35
 msgid "Cree"
@@ -1453,7 +1456,7 @@ msgstr "추바슈어"
 
 #: 3rdparty/Horde/Nls/Languages.php:39
 msgid "Welsh"
-msgstr "웨일스 어"
+msgstr "웨일스어"
 
 #: 3rdparty/Horde/Nls/Languages.php:40
 msgid "Danish"
@@ -1469,7 +1472,7 @@ msgstr "디베히어; 몰디브어;"
 
 #: 3rdparty/Horde/Nls/Languages.php:43
 msgid "Dzongkha"
-msgstr "존카어"
+msgstr "종카어"
 
 #: 3rdparty/Horde/Nls/Languages.php:44
 msgid "Ewe"
@@ -1525,7 +1528,7 @@ msgstr "프랑스어"
 
 #: 3rdparty/Horde/Nls/Languages.php:57
 msgid "Western Frisian"
-msgstr "서 프리슬란트 어"
+msgstr "서프리지아어"
 
 #: 3rdparty/Horde/Nls/Languages.php:58
 msgid "Irish"
@@ -1549,7 +1552,7 @@ msgstr "구자라트어"
 
 #: 3rdparty/Horde/Nls/Languages.php:63
 msgid "Manx"
-msgstr "맨 섬 어"
+msgstr "맨어"
 
 #: 3rdparty/Horde/Nls/Languages.php:64
 msgid "Hausa"
@@ -1581,7 +1584,7 @@ msgstr "헝가리어"
 
 #: 3rdparty/Horde/Nls/Languages.php:71
 msgid "Armenian"
-msgstr "아르메니안어"
+msgstr "아르메니아어"
 
 #: 3rdparty/Horde/Nls/Languages.php:72
 msgid "Herero"
@@ -1597,15 +1600,15 @@ msgstr "인도네시아어"
 
 #: 3rdparty/Horde/Nls/Languages.php:75
 msgid "Interlingue"
-msgstr "옥시덴탈 언어"
+msgstr "인테르링구에"
 
 #: 3rdparty/Horde/Nls/Languages.php:76
 msgid "Igbo"
-msgstr "이그보우어"
+msgstr "이그보어"
 
 #: 3rdparty/Horde/Nls/Languages.php:77
 msgid "Nuosu"
-msgstr "이족 어"
+msgstr "노수어"
 
 #: 3rdparty/Horde/Nls/Languages.php:78
 msgid "Inupiaq"
@@ -1613,7 +1616,7 @@ msgstr "이누피아크어"
 
 #: 3rdparty/Horde/Nls/Languages.php:79
 msgid "Ido"
-msgstr "이도 어"
+msgstr "이도"
 
 #: 3rdparty/Horde/Nls/Languages.php:80
 msgid "Icelandic"
@@ -1685,7 +1688,7 @@ msgstr "쿠르드어"
 
 #: 3rdparty/Horde/Nls/Languages.php:97
 msgid "Komi"
-msgstr "페름어"
+msgstr "코미어"
 
 #: 3rdparty/Horde/Nls/Languages.php:98
 msgid "Cornish"
@@ -1773,11 +1776,11 @@ msgstr "버마어"
 
 #: 3rdparty/Horde/Nls/Languages.php:120
 msgid "Norwegian Bokmål"
-msgstr "보크몰"
+msgstr "노르웨이어 보크몰"
 
 #: 3rdparty/Horde/Nls/Languages.php:121
 msgid "North Ndebele"
-msgstr "북 은데벨레어"
+msgstr "북은데벨레어"
 
 #: 3rdparty/Horde/Nls/Languages.php:122
 msgid "Nepali"
@@ -1793,7 +1796,7 @@ msgstr "네덜란드어"
 
 #: 3rdparty/Horde/Nls/Languages.php:125
 msgid "Norwegian Nynorsk"
-msgstr "뉘노르스크"
+msgstr "노르웨이어 뉘노르스크"
 
 #: 3rdparty/Horde/Nls/Languages.php:126
 msgid "Norwegian"
@@ -1801,7 +1804,7 @@ msgstr "노르웨이어"
 
 #: 3rdparty/Horde/Nls/Languages.php:127
 msgid "South Ndebele"
-msgstr "남 은데벨레어"
+msgstr "남은데벨레어"
 
 #: 3rdparty/Horde/Nls/Languages.php:128
 msgid "Navajo, Navaho"
@@ -1817,7 +1820,7 @@ msgstr "오크어"
 
 #: 3rdparty/Horde/Nls/Languages.php:131
 msgid "Ojibwe, Ojibwa"
-msgstr "오지브웨이어"
+msgstr "오지브웨어"
 
 #: 3rdparty/Horde/Nls/Languages.php:132
 msgid "Oromo"
@@ -1845,7 +1848,7 @@ msgstr "폴란드어"
 
 #: 3rdparty/Horde/Nls/Languages.php:138
 msgid "Pashto, Pushto"
-msgstr "아프가니스탄어"
+msgstr "파슈토어"
 
 #: 3rdparty/Horde/Nls/Languages.php:139
 msgid "Portuguese"
@@ -1881,7 +1884,7 @@ msgstr "산스크리트어"
 
 #: 3rdparty/Horde/Nls/Languages.php:147
 msgid "Sardinian"
-msgstr "사르디나어"
+msgstr "사르데냐어"
 
 #: 3rdparty/Horde/Nls/Languages.php:148
 msgid "Sindhi"
@@ -1889,7 +1892,7 @@ msgstr "신드어"
 
 #: 3rdparty/Horde/Nls/Languages.php:149
 msgid "Northern Sami"
-msgstr "북 사미어"
+msgstr "북부 사미어"
 
 #: 3rdparty/Horde/Nls/Languages.php:150
 msgid "Sango"
@@ -1897,7 +1900,7 @@ msgstr "상고어"
 
 #: 3rdparty/Horde/Nls/Languages.php:151
 msgid "Sinhala, Sinhalese"
-msgstr "싱할라어"
+msgstr "신할라어"
 
 #: 3rdparty/Horde/Nls/Languages.php:152
 msgid "Slovak"
@@ -1933,7 +1936,7 @@ msgstr "스와티어"
 
 #: 3rdparty/Horde/Nls/Languages.php:160
 msgid "Southern Sotho"
-msgstr "남 소토어"
+msgstr "남소토어"
 
 #: 3rdparty/Horde/Nls/Languages.php:161
 msgid "Sundanese"
@@ -1957,7 +1960,7 @@ msgstr "텔루구어"
 
 #: 3rdparty/Horde/Nls/Languages.php:166
 msgid "Tajik"
-msgstr "타지키스탄어"
+msgstr "타지크어"
 
 #: 3rdparty/Horde/Nls/Languages.php:167
 msgid "Thai"
@@ -2001,7 +2004,7 @@ msgstr "트위어"
 
 #: 3rdparty/Horde/Nls/Languages.php:177
 msgid "Tahitian"
-msgstr "타이티어"
+msgstr "타히티어"
 
 #: 3rdparty/Horde/Nls/Languages.php:178
 msgid "Uighur, Uyghur"
@@ -2093,11 +2096,11 @@ msgstr "허드 맥도널드 제도"
 
 #: 3rdparty/Horde/Nls/Tld.php:110
 msgid "Croatia/Hrvatska"
-msgstr "크로아티아/헤르체코비나"
+msgstr "크로아티아"
 
 #: 3rdparty/Horde/Nls/Tld.php:148
 msgid "Libyan Arab Jamahiriya"
-msgstr "대리비아 아랍 사회주의 인민 자마히리야"
+msgstr "리비아"
 
 #: 3rdparty/Horde/Nls/Tld.php:155
 msgid "Macedonia, The Former Yugoslav Republic of"
@@ -2149,7 +2152,7 @@ msgstr "메시지 삭제"
 
 #: js/mail.js:256
 msgid "Connecting ..."
-msgstr "연결중..."
+msgstr "연결 중..."
 
 #: js/mail.js:272 js/mail.js:287 templates/no-accounts.php:16
 msgid "Connect"
@@ -2161,7 +2164,7 @@ msgstr "이메일 주소가 아닙니다"
 
 #: js/mail.js:285
 msgid "Unknown error"
-msgstr "알려지지 않은 오류"
+msgstr "알 수 없는 오류"
 
 #: js/mail.js:289
 msgid "Server Error"
@@ -2173,7 +2176,7 @@ msgstr "새 메시지"
 
 #: templates/index.php:10
 msgid "To"
-msgstr "끝"
+msgstr "받는 사람"
 
 #: templates/index.php:11
 msgid "Subject"
@@ -2181,11 +2184,11 @@ msgstr "제목"
 
 #: templates/index.php:13
 msgid "Send"
-msgstr "전송"
+msgstr "보내기"
 
 #: templates/no-accounts.php:3
 msgid "Connect your mail account"
-msgstr "메일 주소 연결"
+msgstr "메일 계정 연결"
 
 #: templates/no-accounts.php:8
 msgid "Mail Address"
@@ -2193,7 +2196,7 @@ msgstr "메일 주소"
 
 #: templates/no-accounts.php:13
 msgid "IMAP Password"
-msgstr "IMAP 비밀번호"
+msgstr "IMAP 암호"
 
 #: templates/part.message.php:31
 msgid "Reply"
