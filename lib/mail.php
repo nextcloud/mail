@@ -22,11 +22,12 @@
 
 namespace {
 	// add include path to this apps 3rdparty
-	$incPath = __DIR__."/../3rdparty";
-	set_include_path(get_include_path() . PATH_SEPARATOR . $incPath);
+//	$incPath = __DIR__."/../3rdparty";
+//	set_include_path(get_include_path() . PATH_SEPARATOR . $incPath);
 
 	// load Horde's auto loader
-	require_once 'Horde/Autoloader/Default.php';
+//	require_once 'Horde/Autoloader/Default.php';
+	require __DIR__ . '/../vendor/autoload.php';
 
 	// bypass Horde Translation system
 	Horde_Translation::setHandler('Horde_Imap_Client', new OC_Translation_Handler());
@@ -260,17 +261,16 @@ namespace OCA\Mail {
 		private static function isGoogleAppsAccount($host) {
 			// filter pure gmail accounts
 			if (stripos($host, 'google') !== false) {
-				return false;
+				return true;
 			}
 			if (stripos($host, 'gmail') !== false) {
-				return false;
+				return true;
 			}
 
 			//
 			// TODO: will not work on windows - ignore this for now
 			//
-			if (getmxrr($host, $mx_records, $mx_weight) == false)
-			{
+			if (getmxrr($host, $mx_records, $mx_weight) == false) {
 				return false;
 			}
 
