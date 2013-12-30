@@ -1,0 +1,23 @@
+{
+	"repositories": [
+		{
+			"type": "pear",
+			"url": "http://pear.horde.org"
+		}
+	],
+    "require": {
+        "php": ">=5.3.0",
+        "pear-pear.horde.org/Horde_Date": ">=2.0.0@stable,<=3.0.0alpha1@stable",
+        "pear-pear.horde.org/Horde_Exception": ">=2.0.0@stable,<=3.0.0alpha1@stable",
+        "pear-pear.horde.org/Horde_Imap_Client": ">=2.14.0@stable,<=3.0.0alpha1@stable",
+        "pear-pear.horde.org/Horde_Mail": ">=2.1.0@stable,<=3.0.0alpha1@stable",
+        "pear-pear.horde.org/Horde_Mime": ">=2.1.0@stable,<=3.0.0alpha1@stable",
+        "pear-pear.horde.org/Horde_Nls": ">=2.0.0@stable,<=3.0.0alpha1@stable",
+        "pear-pear.horde.org/Horde_Stream": ">=1.0.0@stable,<=2.0.0alpha1@stable",
+        "pear-pear.horde.org/Horde_Support": ">=2.0.5@stable,<=3.0.0alpha1@stable",
+        "pear-pear.horde.org/Horde_Text_Filter": ">=2.1.0@stable,<=3.0.0alpha1@stable",
+        "pear-pear.horde.org/Horde_Text_Flowed": ">=2.0.0@stable,<=3.0.0alpha1@stable",
+        "pear-pear.horde.org/Horde_Util": ">=2.2.0@stable,<=3.0.0alpha1@stable"
+    }
+}
+
