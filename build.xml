@@ -3,7 +3,7 @@
 	<property file="build.properties"/>
 
 	<!-- test - Tests if the code syntax is correct and executes phpunit tests -->
-	<target name="test" depends="build">
+	<target name="test">
 		<apply executable="php" failonerror="true">
 			<arg value="-l" />
 			<fileset dir=".">
