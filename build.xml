@@ -14,9 +14,9 @@
 		<!--<exec executable="phpunit" failonerror="true">-->
 			<!--<arg value="-c" />-->
 			<!--<arg path="${build.src.dir}/app/"/>-->
-			<!--<arg value="--log-junit" />-->
+			<!--<arg value="- -log-junit" />-->
 			<!--<arg path="${report.dir}/phpunit.xml"/>-->
-			<!--<arg value="--coverage-clover" />-->
+			<!--<arg value="- -coverage-clover" />-->
 			<!--<arg path=" ${report.dir}/clover.xml"/>-->
 		<!--</exec>-->
 	</target>
