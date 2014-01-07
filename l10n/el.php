@@ -1,17 +1,17 @@
 <?php $TRANSLATIONS = array(
 "Error" => "Σφάλμα",
 "Delete message" => "Διαγραφή μηνύματος",
-"Connecting ..." => "Σύνδεση ...",
+"Connecting ..." => "Σύνδεση σε εξέλιξη ...",
 "Connect" => "Σύνδεση",
 "Not a email address" => "Δεν είναι διεύθυνση ηλ. ταχυδρομείου",
 "Unknown error" => "Άγνωστο σφάλμα",
 "Server Error" => "Σφάλμα Διακομιστή",
 "New Message" => "Νέο Μήνυμα",
-"To" => "Έως",
+"To" => "Προς",
 "Subject" => "Θέμα",
 "Send" => "Αποστολή",
-"Connect your mail account" => "Σύνδεση με τον λογαριασμό αλληλογραφίας σας",
-"Mail Address" => "Διεύθυνση Αλληλογραφίας",
-"IMAP Password" => "Συνθηματικό IMAP",
+"Connect your mail account" => "Σύνδεση με το λογαριασμό ηλ. ταχυδρομείου σας",
+"Mail Address" => "Διεύθυνση Ηλ. Ταχυδρομείου",
+"IMAP Password" => "Κωδικός IMAP",
 "Reply" => "Απάντηση"
 );

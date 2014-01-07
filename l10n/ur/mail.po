@@ -3,78 +3,76 @@
 # This file is distributed under the same license as the PACKAGE package.
 # 
 # Translators:
-# arifpedia <arifpedia@gmail.com>, 2014
-# minion, 2013
 msgid ""
 msgstr ""
 "Project-Id-Version: ownCloud\n"
 "Report-Msgid-Bugs-To: translations@owncloud.org\n"
 "POT-Creation-Date: 2014-01-07 02:41-0500\n"
-"PO-Revision-Date: 2014-01-07 07:10+0000\n"
-"Last-Translator: arifpedia <arifpedia@gmail.com>\n"
-"Language-Team: Indonesian (http://www.transifex.com/projects/p/owncloud/language/id/)\n"
+"PO-Revision-Date: 2014-01-06 23:45+0000\n"
+"Last-Translator: I Robot\n"
+"Language-Team: Urdu (http://www.transifex.com/projects/p/owncloud/language/ur/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"Language: id\n"
-"Plural-Forms: nplurals=1; plural=0;\n"
+"Language: ur\n"
+"Plural-Forms: nplurals=2; plural=(n != 1);\n"
 
 #: js/mail.js:42 js/mail.js:136 js/mail.js:169 js/mail.js:226 js/mail.js:281
 msgid "Error"
-msgstr "Galat"
+msgstr ""
 
 #: js/mail.js:98
 msgid "Delete message"
-msgstr "Hapus Pesan"
+msgstr ""
 
 #: js/mail.js:256
 msgid "Connecting ..."
-msgstr "Menghubungkan ..."
+msgstr ""
 
 #: js/mail.js:272 js/mail.js:287 templates/no-accounts.php:16
 msgid "Connect"
-msgstr "Sambungkan"
+msgstr ""
 
 #: js/mail.js:277
 msgid "Not a email address"
-msgstr "Bukan sebuah alamat email"
+msgstr ""
 
 #: js/mail.js:285
 msgid "Unknown error"
-msgstr "Galat tidak diketahui"
+msgstr ""
 
 #: js/mail.js:289
 msgid "Server Error"
-msgstr "Kesalahan Server"
+msgstr ""
 
 #: templates/index.php:8
 msgid "New Message"
-msgstr "Pasan Baru"
+msgstr ""
 
 #: templates/index.php:10
 msgid "To"
-msgstr "Kepada"
+msgstr ""
 
 #: templates/index.php:11
 msgid "Subject"
-msgstr "Judul"
+msgstr ""
 
 #: templates/index.php:13
 msgid "Send"
-msgstr "Kirim"
+msgstr ""
 
 #: templates/no-accounts.php:3
 msgid "Connect your mail account"
-msgstr "Hubungkan akun email anda"
+msgstr ""
 
 #: templates/no-accounts.php:8
 msgid "Mail Address"
-msgstr "Alamat Email"
+msgstr ""
 
 #: templates/no-accounts.php:13
 msgid "IMAP Password"
-msgstr "Sandi IMAP"
+msgstr ""
 
 #: templates/part.message.php:31
 msgid "Reply"
-msgstr "Balas"
+msgstr ""
