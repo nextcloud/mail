@@ -1,5 +1,6 @@
 <?php $TRANSLATIONS = array(
 "Error" => "Erro",
+"Delete message" => "Eliminar mensagem",
 "Connecting ..." => "A ligar...",
 "Connect" => "Ligar",
 "Not a email address" => "O endereço de email não é valido",
