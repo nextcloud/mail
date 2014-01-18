@@ -3,14 +3,15 @@
 # This file is distributed under the same license as the PACKAGE package.
 # 
 # Translators:
+# Sơn Nguyễn <sonnghit@gmail.com>, 2014
 # xtdv <truong.tx8@gmail.com>, 2013
 msgid ""
 msgstr ""
 "Project-Id-Version: ownCloud\n"
 "Report-Msgid-Bugs-To: translations@owncloud.org\n"
-"POT-Creation-Date: 2013-12-31 02:41-0500\n"
-"PO-Revision-Date: 2013-12-31 07:42+0000\n"
-"Last-Translator: I Robot <owncloud-bot@tmit.eu>\n"
+"POT-Creation-Date: 2014-01-18 02:41-0500\n"
+"PO-Revision-Date: 2014-01-18 04:00+0000\n"
+"Last-Translator: Sơn Nguyễn <sonnghit@gmail.com>\n"
 "Language-Team: Vietnamese (http://www.transifex.com/projects/p/owncloud/language/vi/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -24,11 +25,11 @@ msgstr "Lỗi"
 
 #: js/mail.js:98
 msgid "Delete message"
-msgstr ""
+msgstr "Xóa th"
 
 #: js/mail.js:256
 msgid "Connecting ..."
-msgstr ""
+msgstr "Đang kết nối..."
 
 #: js/mail.js:272 js/mail.js:287 templates/no-accounts.php:16
 msgid "Connect"
@@ -36,7 +37,7 @@ msgstr "Kết nối"
 
 #: js/mail.js:277
 msgid "Not a email address"
-msgstr ""
+msgstr "Đây không phải là một địa chỉ thư điện tử"
 
 #: js/mail.js:285
 msgid "Unknown error"
@@ -44,11 +45,11 @@ msgstr "Lỗi chưa biết"
 
 #: js/mail.js:289
 msgid "Server Error"
-msgstr ""
+msgstr "Máy chủ bị l"
 
 #: templates/index.php:8
 msgid "New Message"
-msgstr ""
+msgstr "Tin m"
 
 #: templates/index.php:10
 msgid "To"
@@ -56,7 +57,7 @@ msgstr "Tới"
 
 #: templates/index.php:11
 msgid "Subject"
-msgstr ""
+msgstr "Tiêu "
 
 #: templates/index.php:13
 msgid "Send"
@@ -64,16 +65,16 @@ msgstr "Gởi"
 
 #: templates/no-accounts.php:3
 msgid "Connect your mail account"
-msgstr ""
+msgstr "Kết nối tới hòm thư của bạn"
 
 #: templates/no-accounts.php:8
 msgid "Mail Address"
-msgstr ""
+msgstr "Địa chỉ hòm th"
 
 #: templates/no-accounts.php:13
 msgid "IMAP Password"
-msgstr ""
+msgstr "Mật khẩu "
 
 #: templates/part.message.php:31
 msgid "Reply"
-msgstr ""
+msgstr "Trả l"
