@@ -1,6 +1,9 @@
 <?php $TRANSLATIONS = array(
 "Error" => "Errorea",
+"Delete message" => "Ezabatu mezua",
+"Connecting ..." => "Konektatzen ...",
 "Connect" => "Konektatu",
+"Not a email address" => "Ez da eposta helbide bat",
 "Unknown error" => "Errore ezezaguna",
 "Server Error" => "Zerbitzari errorea",
 "New Message" => "Mezu berria",

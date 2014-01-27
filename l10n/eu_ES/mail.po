@@ -3,78 +3,76 @@
 # This file is distributed under the same license as the PACKAGE package.
 # 
 # Translators:
-# asieriko <asieriko@gmail.com>, 2014
-# Piarres Beobide <pi@beobide.net>, 2013
 msgid ""
 msgstr ""
 "Project-Id-Version: ownCloud\n"
 "Report-Msgid-Bugs-To: translations@owncloud.org\n"
 "POT-Creation-Date: 2014-01-27 03:23-0500\n"
-"PO-Revision-Date: 2014-01-26 21:20+0000\n"
-"Last-Translator: asieriko <asieriko@gmail.com>\n"
-"Language-Team: Basque (http://www.transifex.com/projects/p/owncloud/language/eu/)\n"
+"PO-Revision-Date: 2014-01-27 08:21+0000\n"
+"Last-Translator: I Robot\n"
+"Language-Team: Basque (Spain) (http://www.transifex.com/projects/p/owncloud/language/eu_ES/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"Language: eu\n"
+"Language: eu_ES\n"
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
 
 #: js/mail.js:42 js/mail.js:136 js/mail.js:169 js/mail.js:226 js/mail.js:281
 msgid "Error"
-msgstr "Errorea"
+msgstr ""
 
 #: js/mail.js:98
 msgid "Delete message"
-msgstr "Ezabatu mezua"
+msgstr ""
 
 #: js/mail.js:256
 msgid "Connecting ..."
-msgstr "Konektatzen ..."
+msgstr ""
 
 #: js/mail.js:272 js/mail.js:287 templates/no-accounts.php:16
 msgid "Connect"
-msgstr "Konektatu"
+msgstr ""
 
 #: js/mail.js:277
 msgid "Not a email address"
-msgstr "Ez da eposta helbide bat"
+msgstr ""
 
 #: js/mail.js:285
 msgid "Unknown error"
-msgstr "Errore ezezaguna"
+msgstr ""
 
 #: js/mail.js:289
 msgid "Server Error"
-msgstr "Zerbitzari errorea"
+msgstr ""
 
 #: templates/index.php:8
 msgid "New Message"
-msgstr "Mezu berria"
+msgstr ""
 
 #: templates/index.php:10
 msgid "To"
-msgstr "Nori"
+msgstr ""
 
 #: templates/index.php:11
 msgid "Subject"
-msgstr "Gaia"
+msgstr ""
 
 #: templates/index.php:13
 msgid "Send"
-msgstr "Bidali"
+msgstr ""
 
 #: templates/no-accounts.php:3
 msgid "Connect your mail account"
-msgstr "Zure posta kontua konektatu"
+msgstr ""
 
 #: templates/no-accounts.php:8
 msgid "Mail Address"
-msgstr "Posta helbidea"
+msgstr ""
 
 #: templates/no-accounts.php:13
 msgid "IMAP Password"
-msgstr "IMAP pasahitza"
+msgstr ""
 
 #: templates/part.message.php:31
 msgid "Reply"
-msgstr "Erantzun"
+msgstr ""
