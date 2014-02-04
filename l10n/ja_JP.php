@@ -5,7 +5,7 @@
 "Connect" => "接続",
 "Not a email address" => "メールアドレスではありません",
 "Unknown error" => "不明なエラー",
-"Server Error" => "サーバエラー",
+"Server Error" => "サーバーエラー",
 "New Message" => "新しいメッセージ",
 "To" => "終了",
 "Subject" => "件名",
