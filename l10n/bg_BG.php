@@ -1,5 +1,6 @@
 <?php $TRANSLATIONS = array(
 "Error" => "Грешка",
 "Connect" => "Свързване",
-"To" => "До"
+"To" => "До",
+"Send" => "Изпрати"
 );

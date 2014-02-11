@@ -1,5 +1,6 @@
 <?php $TRANSLATIONS = array(
 "Error" => "خطا",
+"Delete message" => "حذف پیام",
 "Connecting ..." => "اتصال...",
 "Connect" => "اتصال",
 "Not a email address" => "یادداشت یک آدرس ایمیل",
