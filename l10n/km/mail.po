@@ -3,13 +3,14 @@
 # This file is distributed under the same license as the PACKAGE package.
 # 
 # Translators:
+# សុវិចិត្រ Sovichet ទេព Tep <sovichet.tep@gmail.com>, 2014
 msgid ""
 msgstr ""
 "Project-Id-Version: ownCloud\n"
 "Report-Msgid-Bugs-To: translations@owncloud.org\n"
-"POT-Creation-Date: 2014-02-25 02:42-0500\n"
-"PO-Revision-Date: 2014-02-24 12:10+0000\n"
-"Last-Translator: I Robot\n"
+"POT-Creation-Date: 2014-02-27 02:42-0500\n"
+"PO-Revision-Date: 2014-02-26 12:31+0000\n"
+"Last-Translator: សុវិចិត្រ Sovichet ទេព Tep <sovichet.tep@gmail.com>\n"
 "Language-Team: Khmer (http://www.transifex.com/projects/p/owncloud/language/km/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -23,31 +24,31 @@ msgstr "កំហុស"
 
 #: js/mail.js:98
 msgid "Delete message"
-msgstr ""
+msgstr "លុប​សារ"
 
 #: js/mail.js:256
 msgid "Connecting ..."
-msgstr ""
+msgstr "កំពុង​ភ្ជាប់ ..."
 
 #: js/mail.js:272 js/mail.js:287 templates/no-accounts.php:16
 msgid "Connect"
-msgstr ""
+msgstr "ភ្ជាប់"
 
 #: js/mail.js:277
 msgid "Not a email address"
-msgstr ""
+msgstr "មិន​មែន​ជា​អាសយដ្ឋាន​អ៊ីមែល​ទេ"
 
 #: js/mail.js:285
 msgid "Unknown error"
-msgstr ""
+msgstr "មិន​ស្គាល់​កំហុស"
 
 #: js/mail.js:289
 msgid "Server Error"
-msgstr ""
+msgstr "កំហុស​ម៉ាស៊ីន​បម្រើ"
 
 #: templates/index.php:8
 msgid "New Message"
-msgstr ""
+msgstr "សារ​ថ្មី"
 
 #: templates/index.php:10
 msgid "To"
@@ -55,24 +56,24 @@ msgstr "ទៅ"
 
 #: templates/index.php:11
 msgid "Subject"
-msgstr ""
+msgstr "ប្រធានបទ"
 
 #: templates/index.php:13
 msgid "Send"
-msgstr ""
+msgstr "ផ្ញើ"
 
 #: templates/no-accounts.php:3
 msgid "Connect your mail account"
-msgstr ""
+msgstr "ភ្ជាប់​គណនី​អ៊ីមែល​របស់​អ្នក"
 
 #: templates/no-accounts.php:8
 msgid "Mail Address"
-msgstr ""
+msgstr "អាសយដ្ឋាន​អ៊ីមែល"
 
 #: templates/no-accounts.php:13
 msgid "IMAP Password"
-msgstr ""
+msgstr "ពាក្យ​សម្ងាត់ IMAP"
 
 #: templates/part.message.php:31
 msgid "Reply"
-msgstr ""
+msgstr "ឆ្លើយតប"
