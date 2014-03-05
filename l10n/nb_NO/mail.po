@@ -4,14 +4,15 @@
 # 
 # Translators:
 # espenbye <espenbye@me.com>, 2014
+# vidaren <news@vidartysse.net>, 2014
 # Tronan90 <Trond@nansenmail.net>, 2013
 msgid ""
 msgstr ""
 "Project-Id-Version: ownCloud\n"
 "Report-Msgid-Bugs-To: translations@owncloud.org\n"
-"POT-Creation-Date: 2014-02-18 06:29-0500\n"
-"PO-Revision-Date: 2014-02-18 09:41+0000\n"
-"Last-Translator: espenbye <espenbye@me.com>\n"
+"POT-Creation-Date: 2014-03-05 02:42-0500\n"
+"PO-Revision-Date: 2014-03-02 20:10+0000\n"
+"Last-Translator: vidaren <news@vidartysse.net>\n"
 "Language-Team: Norwegian Bokmål (Norway) (http://www.transifex.com/projects/p/owncloud/language/nb_NO/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -37,7 +38,7 @@ msgstr "Koble til"
 
 #: js/mail.js:277
 msgid "Not a email address"
-msgstr ""
+msgstr "Ikke en e-postadresse"
 
 #: js/mail.js:285
 msgid "Unknown error"
@@ -65,7 +66,7 @@ msgstr "Send"
 
 #: templates/no-accounts.php:3
 msgid "Connect your mail account"
-msgstr ""
+msgstr "Koble til din epost-konto"
 
 #: templates/no-accounts.php:8
 msgid "Mail Address"
