@@ -5,7 +5,7 @@
 # Translators:
 # fd2012 <inactive+fd2012@transifex.com>, 2013
 # LundF <mail@luca-friedrich.de>, 2013
-# Marcel Kühlhorn <susefan93@gmx.de>, 2013
+# Marcel Kühlhorn <tux93@opensuse.org>, 2013
 # Mario Siegmann <mario_siegmann@web.de>, 2013
 # JamFX <niko@nik-o-mat.de>, 2013
 # Pwnicorn <pwnicorndev@gmail.com>, 2013
@@ -15,8 +15,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: ownCloud\n"
 "Report-Msgid-Bugs-To: translations@owncloud.org\n"
-"POT-Creation-Date: 2014-02-18 06:29-0500\n"
-"PO-Revision-Date: 2014-02-18 09:40+0000\n"
+"POT-Creation-Date: 2014-03-08 02:41-0500\n"
+"PO-Revision-Date: 2014-03-08 06:30+0000\n"
 "Last-Translator: I Robot\n"
 "Language-Team: German (http://www.transifex.com/projects/p/owncloud/language/de/)\n"
 "MIME-Version: 1.0\n"
