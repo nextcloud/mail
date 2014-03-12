@@ -8,7 +8,7 @@ Maintainers:
 - [Jan C. Borchardt](https://github.com/jancborchardt)
 - [Sebastian Schmid](https://github.com/sebastian-schmid)
 
-Allumni:
+Alumni:
 --------
 - [Jakob Sack](https://github.com/jakobsack)
 
@@ -17,10 +17,14 @@ Contact us if you'd like to join!
 Developer setup info:
 ---------------------
 ### Master branch:
-Just clone this repo into your apps directory.
+Just clone this repo into your apps directory. Additionally you need Composer to install dependencies:
+```bash
+curl -sS https://getcomposer.org/installer | php
+php composer.phar install
+```
 
 ### appframework branch:
-Get the latest version of the appframework:
+Get the latest version of the appframework into the apps directory:
 ```bash
 git clone git://github.com/owncloud/appframework.git
 ```
