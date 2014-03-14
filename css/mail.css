@@ -50,12 +50,6 @@ table#mail_messages {
 	width: 100%;
 }
 
-.settings {
-    background: url('%webroot%/core/img/actions/settings.svg') no-repeat center;
-    float: right !important;
-    margin: 0.2em 1em 0 0 !important;
-}
-
 /*#content-wrapper {*/
 	/*background: #eee;*/
 /*}*/
