@@ -147,10 +147,6 @@ a.action.delete { float:right; }
 }
 
 /* editor */
-.ui-autocomplete-loading {
-    background: white url('%webroot%/core/img/loading.gif') right center no-repeat;
-}
-
 #to {
     width: 95%;
 }
