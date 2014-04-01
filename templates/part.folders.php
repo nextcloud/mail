@@ -5,16 +5,15 @@
 		<?php foreach ($account['folders'] as $folder): ?>
 		<?php $unseen = $folder['unseen'] ?>
 		<li data-folder_id="<?php p($folder['id']); ?>"
-			<?php if ($unseen > 0) {
-			print_unescaped('class="unread"');
-		}?>
-				>
-			<?php p($folder['name']); ?>
-			<span class="unread-count">
-			<?php if ($unseen > 0) {
-				p($unseen);
-			}?>
-			</span>
+			<?php if ($unseen > 0) { print_unescaped('class="unread"'); }?> >
+			<a>
+				<?php p($folder['name']); ?>
+				<span class="utils">
+				<?php if ($unseen > 0) {
+					p($unseen);
+				}?>
+				</span>
+			</a>
 		</li>
 		<?php endforeach; ?>
 	</ul>
