@@ -1,2 +1,7 @@
+# Composer
+composer.lock
+composer.phar
+vendor/
+
 # Mac OS
 .DS_Store
