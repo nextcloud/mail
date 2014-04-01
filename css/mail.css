@@ -148,7 +148,7 @@ a.action.delete { float:right; }
 }
 
 .reply-message-body {
-	width: 95%;
+	width: 90%;
 	height: 50px;
 	resize: none;
 }
