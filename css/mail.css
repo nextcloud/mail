@@ -102,6 +102,7 @@ reply-message-fields {
 
 #mail_messages>tbody>tr>td {
     border-top: 1px solid #eee;
+    padding-left: 10px;
 }
 
 #mail_messages>tbody>tr.unseen>td {
