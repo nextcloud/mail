@@ -7,8 +7,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: ownCloud\n"
 "Report-Msgid-Bugs-To: translations@owncloud.org\n"
-"POT-Creation-Date: 2014-04-08 02:42-0400\n"
-"PO-Revision-Date: 2014-04-07 19:30+0000\n"
+"POT-Creation-Date: 2014-04-09 02:42-0400\n"
+"PO-Revision-Date: 2014-04-08 22:20+0000\n"
 "Last-Translator: I Robot\n"
 "Language-Team: Asturian (http://www.transifex.com/projects/p/owncloud/language/ast/)\n"
 "MIME-Version: 1.0\n"
@@ -39,7 +39,7 @@ msgstr ""
 
 #: js/mail.js:285
 msgid "Unknown error"
-msgstr ""
+msgstr "Fallu desconocíu"
 
 #: js/mail.js:289
 msgid "Server Error"
@@ -59,7 +59,7 @@ msgstr ""
 
 #: templates/index.php:13
 msgid "Send"
-msgstr ""
+msgstr "Unviar"
 
 #: templates/no-accounts.php:3
 msgid "Connect your mail account"

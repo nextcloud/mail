@@ -1,3 +1,5 @@
 <?php $TRANSLATIONS = array(
-"To" => "Hasta"
+"Unknown error" => "Fallu desconocíu",
+"To" => "Hasta",
+"Send" => "Unviar"
 );
