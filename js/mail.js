@@ -20,12 +20,12 @@ Mail = {
                 success:function (jsondata) {
                     if (jsondata.status == 'success') {
                         folders = jsondata.data;
-                        $('#mail-folders').html(folders);
+                        $('#app-navigation').html(folders);
 
-                        first_folder = $('#leftcontent').find('.mail_folders li');
+                        first_folder = $('#app-navigation').find('.mail_folders li');
 
                         if (first_folder.length > 0) {
-                            $('#leftcontent').fadeIn(800);
+                            $('#app-navigation').fadeIn(800);
                             first_folder = first_folder.first();
                             folder_id = first_folder.data('folder_id');
                             account_id = first_folder.parent().data('account_id');
@@ -37,8 +37,9 @@ Mail = {
                             Mail.State.current_account_id = account_id;
                             Mail.State.current_folder_id = folder_id;
                         } else {
-                            $('#leftcontent').fadeOut(800);
-                        }                    } else {
+                            $('#app-navigation').fadeOut(800);
+                        }
+                    } else {
                         OC.dialogs.alert(jsondata.data.message, t('mail', 'Error'));
                     }
                 }
@@ -194,7 +195,7 @@ Mail = {
         bindEndlessScrolling:function () {
             // Add handler for endless scrolling
             //   (using jquery.endless-scroll.js)
-            $('#rightcontent').endlessScroll({
+            $('#app-content').endlessScroll({
                 fireDelay:10,
                 fireOnce:false,
                 loader:'',
@@ -240,7 +241,7 @@ Mail = {
         },
 
         unbindEndlessScrolling:function () {
-            $('#rightcontent').unbind('scroll');
+            $('#app-content').unbind('scroll');
         }
     }
 }
