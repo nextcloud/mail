@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: ownCloud mail 5.0.0\n"
 "Report-Msgid-Bugs-To: translations@owncloud.org\n"
-"POT-Creation-Date: 2014-04-17 15:03-0400\n"
+"POT-Creation-Date: 2014-04-18 02:42-0400\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -17,47 +17,47 @@ msgstr ""
 "Content-Type: text/plain; charset=CHARSET\n"
 "Content-Transfer-Encoding: 8bit\n"
 
-#: js/mail.js:42 js/mail.js:136 js/mail.js:169 js/mail.js:226 js/mail.js:281
+#: js/mail.js:43 js/mail.js:137 js/mail.js:170 js/mail.js:227 js/mail.js:282
 msgid "Error"
 msgstr ""
 
-#: js/mail.js:98
+#: js/mail.js:99
 msgid "Delete message"
 msgstr ""
 
-#: js/mail.js:256
+#: js/mail.js:257
 msgid "Connecting ..."
 msgstr ""
 
-#: js/mail.js:272 js/mail.js:287 templates/no-accounts.php:16
+#: js/mail.js:273 js/mail.js:288 templates/no-accounts.php:16
 msgid "Connect"
 msgstr ""
 
-#: js/mail.js:277
+#: js/mail.js:278
 msgid "Not a email address"
 msgstr ""
 
-#: js/mail.js:285
+#: js/mail.js:286
 msgid "Unknown error"
 msgstr ""
 
-#: js/mail.js:289
+#: js/mail.js:290
 msgid "Server Error"
 msgstr ""
 
-#: templates/index.php:8
+#: templates/index.php:7
 msgid "New Message"
 msgstr ""
 
-#: templates/index.php:10
+#: templates/index.php:9
 msgid "To"
 msgstr ""
 
-#: templates/index.php:11
+#: templates/index.php:10
 msgid "Subject"
 msgstr ""
 
-#: templates/index.php:13
+#: templates/index.php:12
 msgid "Send"
 msgstr ""
 
