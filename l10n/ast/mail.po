@@ -3,12 +3,13 @@
 # This file is distributed under the same license as the PACKAGE package.
 # 
 # Translators:
+# Iñigo Varela <ivarela@softastur.org>, 2014
 msgid ""
 msgstr ""
 "Project-Id-Version: ownCloud\n"
 "Report-Msgid-Bugs-To: translations@owncloud.org\n"
-"POT-Creation-Date: 2014-04-28 02:42-0400\n"
-"PO-Revision-Date: 2014-04-27 10:52+0000\n"
+"POT-Creation-Date: 2014-05-02 02:42-0400\n"
+"PO-Revision-Date: 2014-05-01 16:40+0000\n"
 "Last-Translator: Iñigo Varela <ivarela@softastur.org>\n"
 "Language-Team: Asturian (http://www.transifex.com/projects/p/owncloud/language/ast/)\n"
 "MIME-Version: 1.0\n"
@@ -27,7 +28,7 @@ msgstr ""
 
 #: js/mail.js:257
 msgid "Connecting ..."
-msgstr ""
+msgstr "Coneutando..."
 
 #: js/mail.js:273 js/mail.js:288 templates/no-accounts.php:16
 msgid "Connect"
@@ -47,7 +48,7 @@ msgstr ""
 
 #: templates/index.php:7
 msgid "New Message"
-msgstr ""
+msgstr "Mensaxe nuevu"
 
 #: templates/index.php:9
 msgid "To"
