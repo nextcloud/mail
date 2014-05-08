@@ -56,19 +56,6 @@ table#mail_messages {
 	width: 100%;
 	box-sizing: border-box;
 }
-#mail-setup label.infield{
-	position: absolute;
-	width: 90%;
-	padding-left: 0;
-	font-size: 19px;
-	color: #aaa;
-	white-space: nowrap;
-	overflow: hidden;
-	text-overflow: ellipsis;
-}
-#mail-setup .groupbottom label {
-	top: .65em;
-}
 .connect {
 	font-size: 1em;
 	float: right;
