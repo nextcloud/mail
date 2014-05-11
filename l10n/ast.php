@@ -12,6 +12,6 @@
 "Send" => "Unviar",
 "Connect your mail account" => "Coneuta la to cuenta de corréu",
 "Mail Address" => "Direición de corréu",
-"IMAP Password" => "IMAP Contraseña ",
+"IMAP Password" => "Contraseña IMAP",
 "Reply" => "Rempuesta"
 );
