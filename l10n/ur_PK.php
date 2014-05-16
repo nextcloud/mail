@@ -1,3 +1,4 @@
 <?php $TRANSLATIONS = array(
-"Error" => "ایرر"
+"Error" => "ایرر",
+"Send" => "بھجیں"
 );
