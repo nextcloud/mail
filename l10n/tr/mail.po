@@ -5,14 +5,14 @@
 # Translators:
 # ismail yenigül <ismail.yenigul@surgate.com>, 2013
 # tridinebandim, 2013
-# volkangezer <volkangezer@gmail.com>, 2013
+# volkangezer <volkangezer@gmail.com>, 2013-2014
 msgid ""
 msgstr ""
 "Project-Id-Version: ownCloud\n"
 "Report-Msgid-Bugs-To: translations@owncloud.org\n"
-"POT-Creation-Date: 2014-04-16 02:42-0400\n"
-"PO-Revision-Date: 2014-04-16 05:40+0000\n"
-"Last-Translator: I Robot\n"
+"POT-Creation-Date: 2014-05-25 02:41-0400\n"
+"PO-Revision-Date: 2014-05-24 14:32+0000\n"
+"Last-Translator: volkangezer <volkangezer@gmail.com>\n"
 "Language-Team: Turkish (http://www.transifex.com/projects/p/owncloud/language/tr/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -20,53 +20,53 @@ msgstr ""
 "Language: tr\n"
 "Plural-Forms: nplurals=2; plural=(n > 1);\n"
 
-#: js/mail.js:42 js/mail.js:136 js/mail.js:169 js/mail.js:226 js/mail.js:281
+#: js/mail.js:43 js/mail.js:137 js/mail.js:170 js/mail.js:227 js/mail.js:282
 msgid "Error"
 msgstr "Hata"
 
-#: js/mail.js:98
+#: js/mail.js:99
 msgid "Delete message"
 msgstr "Mesajı sil"
 
-#: js/mail.js:256
+#: js/mail.js:257
 msgid "Connecting ..."
 msgstr "Bağlanıyor ..."
 
-#: js/mail.js:272 js/mail.js:287 templates/no-accounts.php:16
+#: js/mail.js:273 js/mail.js:288 templates/no-accounts.php:16
 msgid "Connect"
 msgstr "Bağlan"
 
-#: js/mail.js:277
+#: js/mail.js:278
 msgid "Not a email address"
-msgstr "E-posta adresi değil"
+msgstr "Bir e-posta adresi değil"
 
-#: js/mail.js:285
+#: js/mail.js:286
 msgid "Unknown error"
 msgstr "Bilinmeyen hata"
 
-#: js/mail.js:289
+#: js/mail.js:290
 msgid "Server Error"
 msgstr "Sunucu Hatası"
 
-#: templates/index.php:8
+#: templates/index.php:7
 msgid "New Message"
 msgstr "Yeni Mesaj"
 
-#: templates/index.php:10
+#: templates/index.php:9
 msgid "To"
 msgstr "Kime"
 
-#: templates/index.php:11
+#: templates/index.php:10
 msgid "Subject"
 msgstr "Konu"
 
-#: templates/index.php:13
+#: templates/index.php:12
 msgid "Send"
 msgstr "Gönder"
 
 #: templates/no-accounts.php:3
 msgid "Connect your mail account"
-msgstr "E-posta hesabınızı bağlayın"
+msgstr "Posta hesabınızı bağlayın"
 
 #: templates/no-accounts.php:8
 msgid "Mail Address"
@@ -78,4 +78,4 @@ msgstr "IMAP Parolası"
 
 #: templates/part.message.php:31
 msgid "Reply"
-msgstr "Cevap"
+msgstr "Yanıtla"
