@@ -1,4 +1,5 @@
 <?php $TRANSLATIONS = array(
 "Error" => "Error",
-"Connect" => "Conectar"
+"Connect" => "Conectar",
+"Unknown error" => "Error desconocido"
 );
