@@ -3,14 +3,14 @@
 # This file is distributed under the same license as the PACKAGE package.
 # 
 # Translators:
-# mhh <marian.hvolka@stuba.sk>, 2013
+# Marián Hvolka <marian.hvolka@stuba.sk>, 2013
 msgid ""
 msgstr ""
 "Project-Id-Version: ownCloud\n"
 "Report-Msgid-Bugs-To: translations@owncloud.org\n"
-"POT-Creation-Date: 2014-04-16 02:42-0400\n"
-"PO-Revision-Date: 2014-04-16 05:40+0000\n"
-"Last-Translator: mhh <marian.hvolka@stuba.sk>\n"
+"POT-Creation-Date: 2014-06-11 02:41-0400\n"
+"PO-Revision-Date: 2014-06-10 13:02+0000\n"
+"Last-Translator: Marián Hvolka <marian.hvolka@stuba.sk>\n"
 "Language-Team: Slovak (Slovakia) (http://www.transifex.com/projects/p/owncloud/language/sk_SK/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -18,47 +18,47 @@ msgstr ""
 "Language: sk_SK\n"
 "Plural-Forms: nplurals=3; plural=(n==1) ? 0 : (n>=2 && n<=4) ? 1 : 2;\n"
 
-#: js/mail.js:42 js/mail.js:136 js/mail.js:169 js/mail.js:226 js/mail.js:281
+#: js/mail.js:43 js/mail.js:137 js/mail.js:170 js/mail.js:227 js/mail.js:282
 msgid "Error"
 msgstr "Chyba"
 
-#: js/mail.js:98
+#: js/mail.js:99
 msgid "Delete message"
 msgstr "Zmazať správu"
 
-#: js/mail.js:256
+#: js/mail.js:257
 msgid "Connecting ..."
 msgstr "Pripájam sa..."
 
-#: js/mail.js:272 js/mail.js:287 templates/no-accounts.php:16
+#: js/mail.js:273 js/mail.js:288 templates/no-accounts.php:16
 msgid "Connect"
 msgstr "Pripojiť"
 
-#: js/mail.js:277
+#: js/mail.js:278
 msgid "Not a email address"
 msgstr "Žiadna emailová adresa"
 
-#: js/mail.js:285
+#: js/mail.js:286
 msgid "Unknown error"
 msgstr "Neznáma chyba"
 
-#: js/mail.js:289
+#: js/mail.js:290
 msgid "Server Error"
 msgstr "Chyba servera"
 
-#: templates/index.php:8
+#: templates/index.php:7
 msgid "New Message"
 msgstr "Nová správa"
 
-#: templates/index.php:10
+#: templates/index.php:9
 msgid "To"
 msgstr "Do"
 
-#: templates/index.php:11
+#: templates/index.php:10
 msgid "Subject"
 msgstr "Predmet"
 
-#: templates/index.php:13
+#: templates/index.php:12
 msgid "Send"
 msgstr "Odoslať"
 
