@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: ownCloud mail 5.0.0\n"
 "Report-Msgid-Bugs-To: translations@owncloud.org\n"
-"POT-Creation-Date: 2014-06-27 02:41-0400\n"
+"POT-Creation-Date: 2014-06-28 02:41-0400\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -29,7 +29,7 @@ msgstr ""
 msgid "Connecting ..."
 msgstr ""
 
-#: js/mail.js:273 js/mail.js:288 templates/no-accounts.php:16
+#: js/mail.js:273 js/mail.js:288 templates/no-accounts.php:18
 msgid "Connect"
 msgstr ""
 
@@ -65,11 +65,11 @@ msgstr ""
 msgid "Connect your mail account"
 msgstr ""
 
-#: templates/no-accounts.php:8
+#: templates/no-accounts.php:7 templates/no-accounts.php:9
 msgid "Mail Address"
 msgstr ""
 
-#: templates/no-accounts.php:13
+#: templates/no-accounts.php:14 templates/no-accounts.php:15
 msgid "IMAP Password"
 msgstr ""
 
