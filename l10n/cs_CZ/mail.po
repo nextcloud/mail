@@ -3,17 +3,17 @@
 # This file is distributed under the same license as the PACKAGE package.
 # 
 # Translators:
-# janinko <janinko.g@gmail.com>, 2013
-# Martin <fireball@atlas.cz>, 2013
+# Honza Brázdil <janinko.g@gmail.com>, 2013
+# Martin Skopal <fireball@atlas.cz>, 2013
 # Michal Hrušecký <Michal@hrusecky.net>, 2013
-# pstast <petr@stastny.eu>, 2013
+# Petr Šťastný <petr@stastny.eu>, 2013
 # Tomáš Chvátal <tomas.chvatal@gmail.com>, 2013
 msgid ""
 msgstr ""
 "Project-Id-Version: ownCloud\n"
 "Report-Msgid-Bugs-To: translations@owncloud.org\n"
-"POT-Creation-Date: 2014-04-16 02:42-0400\n"
-"PO-Revision-Date: 2014-04-16 05:40+0000\n"
+"POT-Creation-Date: 2014-07-03 02:41-0400\n"
+"PO-Revision-Date: 2014-07-03 06:11+0000\n"
 "Last-Translator: I Robot\n"
 "Language-Team: Czech (Czech Republic) (http://www.transifex.com/projects/p/owncloud/language/cs_CZ/)\n"
 "MIME-Version: 1.0\n"
@@ -22,47 +22,47 @@ msgstr ""
 "Language: cs_CZ\n"
 "Plural-Forms: nplurals=3; plural=(n==1) ? 0 : (n>=2 && n<=4) ? 1 : 2;\n"
 
-#: js/mail.js:42 js/mail.js:136 js/mail.js:169 js/mail.js:226 js/mail.js:281
+#: js/mail.js:43 js/mail.js:137 js/mail.js:170 js/mail.js:227 js/mail.js:282
 msgid "Error"
 msgstr "Chyba"
 
-#: js/mail.js:98
+#: js/mail.js:99
 msgid "Delete message"
 msgstr "Smazat zprávu"
 
-#: js/mail.js:256
+#: js/mail.js:257
 msgid "Connecting ..."
 msgstr "Připojuji se..."
 
-#: js/mail.js:272 js/mail.js:287 templates/no-accounts.php:16
+#: js/mail.js:273 js/mail.js:288 templates/no-accounts.php:18
 msgid "Connect"
 msgstr "Připojit"
 
-#: js/mail.js:277
+#: js/mail.js:278
 msgid "Not a email address"
 msgstr "Není e-mailová adresa"
 
-#: js/mail.js:285
+#: js/mail.js:286
 msgid "Unknown error"
 msgstr "Neznámá chyba"
 
-#: js/mail.js:289
+#: js/mail.js:290
 msgid "Server Error"
 msgstr "Chyba serveru"
 
-#: templates/index.php:8
+#: templates/index.php:7
 msgid "New Message"
 msgstr "Nová zpráva"
 
-#: templates/index.php:10
+#: templates/index.php:9
 msgid "To"
 msgstr "Komu"
 
-#: templates/index.php:11
+#: templates/index.php:10
 msgid "Subject"
 msgstr "Předmět"
 
-#: templates/index.php:13
+#: templates/index.php:12
 msgid "Send"
 msgstr "Odeslat"
 
@@ -70,11 +70,11 @@ msgstr "Odeslat"
 msgid "Connect your mail account"
 msgstr "Připojte se ke svému e-mailovému účtu"
 
-#: templates/no-accounts.php:8
+#: templates/no-accounts.php:7 templates/no-accounts.php:9
 msgid "Mail Address"
 msgstr "E-mailová adresa"
 
-#: templates/no-accounts.php:13
+#: templates/no-accounts.php:14 templates/no-accounts.php:15
 msgid "IMAP Password"
 msgstr "Heslo IMAP"
 

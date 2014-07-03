@@ -3,14 +3,14 @@
 # This file is distributed under the same license as the PACKAGE package.
 # 
 # Translators:
-# dixebra <davidlopezcastanon@gmail.com>, 2014
+# David López Castañón <davidlopezcastanon@gmail.com>, 2014
 # Iñigo Varela <ivarela@softastur.org>, 2014
 msgid ""
 msgstr ""
 "Project-Id-Version: ownCloud\n"
 "Report-Msgid-Bugs-To: translations@owncloud.org\n"
-"POT-Creation-Date: 2014-05-11 02:42-0400\n"
-"PO-Revision-Date: 2014-05-10 14:20+0000\n"
+"POT-Creation-Date: 2014-07-03 02:41-0400\n"
+"PO-Revision-Date: 2014-07-03 06:11+0000\n"
 "Last-Translator: Iñigo Varela <ivarela@softastur.org>\n"
 "Language-Team: Asturian (http://www.transifex.com/projects/p/owncloud/language/ast/)\n"
 "MIME-Version: 1.0\n"
@@ -31,7 +31,7 @@ msgstr "Desaniciar mensaxe"
 msgid "Connecting ..."
 msgstr "Coneutando..."
 
-#: js/mail.js:273 js/mail.js:288 templates/no-accounts.php:16
+#: js/mail.js:273 js/mail.js:288 templates/no-accounts.php:18
 msgid "Connect"
 msgstr "Coneutar"
 
@@ -67,11 +67,11 @@ msgstr "Unviar"
 msgid "Connect your mail account"
 msgstr "Coneuta la to cuenta de corréu"
 
-#: templates/no-accounts.php:8
+#: templates/no-accounts.php:7 templates/no-accounts.php:9
 msgid "Mail Address"
 msgstr "Direición de corréu"
 
-#: templates/no-accounts.php:13
+#: templates/no-accounts.php:14 templates/no-accounts.php:15
 msgid "IMAP Password"
 msgstr "Contraseña IMAP"
 

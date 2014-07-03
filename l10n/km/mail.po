@@ -3,14 +3,14 @@
 # This file is distributed under the same license as the PACKAGE package.
 # 
 # Translators:
-# សុវិចិត្រ Sovichet ទេព Tep, 2014
+# Sovichet Tep, 2014
 msgid ""
 msgstr ""
 "Project-Id-Version: ownCloud\n"
 "Report-Msgid-Bugs-To: translations@owncloud.org\n"
-"POT-Creation-Date: 2014-04-16 02:42-0400\n"
-"PO-Revision-Date: 2014-04-16 05:40+0000\n"
-"Last-Translator: សុវិចិត្រ Sovichet ទេព Tep\n"
+"POT-Creation-Date: 2014-07-03 02:41-0400\n"
+"PO-Revision-Date: 2014-07-03 06:11+0000\n"
+"Last-Translator: Sovichet Tep\n"
 "Language-Team: Khmer (http://www.transifex.com/projects/p/owncloud/language/km/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -18,47 +18,47 @@ msgstr ""
 "Language: km\n"
 "Plural-Forms: nplurals=1; plural=0;\n"
 
-#: js/mail.js:42 js/mail.js:136 js/mail.js:169 js/mail.js:226 js/mail.js:281
+#: js/mail.js:43 js/mail.js:137 js/mail.js:170 js/mail.js:227 js/mail.js:282
 msgid "Error"
 msgstr "កំហុស"
 
-#: js/mail.js:98
+#: js/mail.js:99
 msgid "Delete message"
 msgstr "លុប​សារ"
 
-#: js/mail.js:256
+#: js/mail.js:257
 msgid "Connecting ..."
 msgstr "កំពុង​ភ្ជាប់ ..."
 
-#: js/mail.js:272 js/mail.js:287 templates/no-accounts.php:16
+#: js/mail.js:273 js/mail.js:288 templates/no-accounts.php:18
 msgid "Connect"
 msgstr "ភ្ជាប់"
 
-#: js/mail.js:277
+#: js/mail.js:278
 msgid "Not a email address"
 msgstr "មិន​មែន​ជា​អាសយដ្ឋាន​អ៊ីមែល​ទេ"
 
-#: js/mail.js:285
+#: js/mail.js:286
 msgid "Unknown error"
 msgstr "មិន​ស្គាល់​កំហុស"
 
-#: js/mail.js:289
+#: js/mail.js:290
 msgid "Server Error"
 msgstr "កំហុស​ម៉ាស៊ីន​បម្រើ"
 
-#: templates/index.php:8
+#: templates/index.php:7
 msgid "New Message"
 msgstr "សារ​ថ្មី"
 
-#: templates/index.php:10
+#: templates/index.php:9
 msgid "To"
 msgstr "ទៅ"
 
-#: templates/index.php:11
+#: templates/index.php:10
 msgid "Subject"
 msgstr "ប្រធានបទ"
 
-#: templates/index.php:13
+#: templates/index.php:12
 msgid "Send"
 msgstr "ផ្ញើ"
 
@@ -66,11 +66,11 @@ msgstr "ផ្ញើ"
 msgid "Connect your mail account"
 msgstr "ភ្ជាប់​គណនី​អ៊ីមែល​របស់​អ្នក"
 
-#: templates/no-accounts.php:8
+#: templates/no-accounts.php:7 templates/no-accounts.php:9
 msgid "Mail Address"
 msgstr "អាសយដ្ឋាន​អ៊ីមែល"
 
-#: templates/no-accounts.php:13
+#: templates/no-accounts.php:14 templates/no-accounts.php:15
 msgid "IMAP Password"
 msgstr "ពាក្យ​សម្ងាត់ IMAP"
 

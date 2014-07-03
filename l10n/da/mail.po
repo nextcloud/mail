@@ -3,16 +3,16 @@
 # This file is distributed under the same license as the PACKAGE package.
 # 
 # Translators:
-# Sappe, 2013
-# claus_chr <claus_chr@webspeed.dk>, 2013
+# Anders J. Sørensen, 2013
+# Claus Christensen <claus_chr@webspeed.dk>, 2013
 # Peter Jespersen <flywheeldk@gmail.com>, 2013
-# nubii <theis@tbinger.dk>, 2013
+# Theis Binger <theis@tbinger.dk>, 2013
 msgid ""
 msgstr ""
 "Project-Id-Version: ownCloud\n"
 "Report-Msgid-Bugs-To: translations@owncloud.org\n"
-"POT-Creation-Date: 2014-04-16 02:42-0400\n"
-"PO-Revision-Date: 2014-04-16 05:40+0000\n"
+"POT-Creation-Date: 2014-07-03 02:41-0400\n"
+"PO-Revision-Date: 2014-07-03 06:11+0000\n"
 "Last-Translator: I Robot\n"
 "Language-Team: Danish (http://www.transifex.com/projects/p/owncloud/language/da/)\n"
 "MIME-Version: 1.0\n"
@@ -21,47 +21,47 @@ msgstr ""
 "Language: da\n"
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
 
-#: js/mail.js:42 js/mail.js:136 js/mail.js:169 js/mail.js:226 js/mail.js:281
+#: js/mail.js:43 js/mail.js:137 js/mail.js:170 js/mail.js:227 js/mail.js:282
 msgid "Error"
 msgstr "Fejl"
 
-#: js/mail.js:98
+#: js/mail.js:99
 msgid "Delete message"
 msgstr "Slet besked"
 
-#: js/mail.js:256
+#: js/mail.js:257
 msgid "Connecting ..."
 msgstr "Forbinder ..."
 
-#: js/mail.js:272 js/mail.js:287 templates/no-accounts.php:16
+#: js/mail.js:273 js/mail.js:288 templates/no-accounts.php:18
 msgid "Connect"
 msgstr "Tilslut"
 
-#: js/mail.js:277
+#: js/mail.js:278
 msgid "Not a email address"
 msgstr "Ikke en email adresse"
 
-#: js/mail.js:285
+#: js/mail.js:286
 msgid "Unknown error"
 msgstr "Ukendt fejl"
 
-#: js/mail.js:289
+#: js/mail.js:290
 msgid "Server Error"
 msgstr "Server Fejl"
 
-#: templates/index.php:8
+#: templates/index.php:7
 msgid "New Message"
 msgstr "Ny Besked"
 
-#: templates/index.php:10
+#: templates/index.php:9
 msgid "To"
 msgstr "Til"
 
-#: templates/index.php:11
+#: templates/index.php:10
 msgid "Subject"
 msgstr "Emne"
 
-#: templates/index.php:13
+#: templates/index.php:12
 msgid "Send"
 msgstr "Send"
 
@@ -69,11 +69,11 @@ msgstr "Send"
 msgid "Connect your mail account"
 msgstr "Forbind din mail-konto"
 
-#: templates/no-accounts.php:8
+#: templates/no-accounts.php:7 templates/no-accounts.php:9
 msgid "Mail Address"
 msgstr "Mail Adresse"
 
-#: templates/no-accounts.php:13
+#: templates/no-accounts.php:14 templates/no-accounts.php:15
 msgid "IMAP Password"
 msgstr "IMAP Kodeord"
 

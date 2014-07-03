@@ -3,14 +3,14 @@
 # This file is distributed under the same license as the PACKAGE package.
 # 
 # Translators:
-# cjtess <claudio.tessone@gmail.com>, 2013
-# gmoriello <gmoriello@gmail.com>, 2013
+# CJTess <claudio.tessone@gmail.com>, 2013
+# German <inactive+gmoriello@transifex.com>, 2013
 msgid ""
 msgstr ""
 "Project-Id-Version: ownCloud\n"
 "Report-Msgid-Bugs-To: translations@owncloud.org\n"
-"POT-Creation-Date: 2014-04-16 02:42-0400\n"
-"PO-Revision-Date: 2014-04-16 05:40+0000\n"
+"POT-Creation-Date: 2014-07-03 02:41-0400\n"
+"PO-Revision-Date: 2014-07-03 06:11+0000\n"
 "Last-Translator: I Robot\n"
 "Language-Team: Spanish (Argentina) (http://www.transifex.com/projects/p/owncloud/language/es_AR/)\n"
 "MIME-Version: 1.0\n"
@@ -19,47 +19,47 @@ msgstr ""
 "Language: es_AR\n"
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
 
-#: js/mail.js:42 js/mail.js:136 js/mail.js:169 js/mail.js:226 js/mail.js:281
+#: js/mail.js:43 js/mail.js:137 js/mail.js:170 js/mail.js:227 js/mail.js:282
 msgid "Error"
 msgstr "Error"
 
-#: js/mail.js:98
+#: js/mail.js:99
 msgid "Delete message"
 msgstr "Eliminar mensaje"
 
-#: js/mail.js:256
+#: js/mail.js:257
 msgid "Connecting ..."
 msgstr "Conectando..."
 
-#: js/mail.js:272 js/mail.js:287 templates/no-accounts.php:16
+#: js/mail.js:273 js/mail.js:288 templates/no-accounts.php:18
 msgid "Connect"
 msgstr "Conectar"
 
-#: js/mail.js:277
+#: js/mail.js:278
 msgid "Not a email address"
 msgstr "No es una dirección de correo"
 
-#: js/mail.js:285
+#: js/mail.js:286
 msgid "Unknown error"
 msgstr "Error desconocido"
 
-#: js/mail.js:289
+#: js/mail.js:290
 msgid "Server Error"
 msgstr "Error del Servidor"
 
-#: templates/index.php:8
+#: templates/index.php:7
 msgid "New Message"
 msgstr "Nuevo Mensaje"
 
-#: templates/index.php:10
+#: templates/index.php:9
 msgid "To"
 msgstr "Hasta"
 
-#: templates/index.php:11
+#: templates/index.php:10
 msgid "Subject"
 msgstr "Asunto"
 
-#: templates/index.php:13
+#: templates/index.php:12
 msgid "Send"
 msgstr "Enviar"
 
@@ -67,11 +67,11 @@ msgstr "Enviar"
 msgid "Connect your mail account"
 msgstr "Conectá tu cuenta de correo"
 
-#: templates/no-accounts.php:8
+#: templates/no-accounts.php:7 templates/no-accounts.php:9
 msgid "Mail Address"
 msgstr "Dirección de correo"
 
-#: templates/no-accounts.php:13
+#: templates/no-accounts.php:14 templates/no-accounts.php:15
 msgid "IMAP Password"
 msgstr "Contraseña IMAP"
 

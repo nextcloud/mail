@@ -4,17 +4,17 @@
 # 
 # Translators:
 # Dr. ROX <to.dr.rox@gmail.com>, 2013
-# fizikiukas <fizikiukas@gmail.com>, 2013
+# Valentinas <fizikiukas@gmail.com>, 2013
 # Liudas Ališauskas <liudas.alisauskas@gmail.com>, 2013
-# Min2liz <min2lizz@gmail.com>, 2013
-# Min2liz <min2lizz@gmail.com>, 2013
-# fizikiukas <fizikiukas@gmail.com>, 2013
+# Mindaugas <min2lizz@gmail.com>, 2013
+# Mindaugas <min2lizz@gmail.com>, 2013
+# Valentinas <fizikiukas@gmail.com>, 2013
 msgid ""
 msgstr ""
 "Project-Id-Version: ownCloud\n"
 "Report-Msgid-Bugs-To: translations@owncloud.org\n"
-"POT-Creation-Date: 2014-04-16 02:42-0400\n"
-"PO-Revision-Date: 2014-04-16 05:40+0000\n"
+"POT-Creation-Date: 2014-07-03 02:41-0400\n"
+"PO-Revision-Date: 2014-07-03 06:11+0000\n"
 "Last-Translator: I Robot\n"
 "Language-Team: Lithuanian (Lithuania) (http://www.transifex.com/projects/p/owncloud/language/lt_LT/)\n"
 "MIME-Version: 1.0\n"
@@ -23,47 +23,47 @@ msgstr ""
 "Language: lt_LT\n"
 "Plural-Forms: nplurals=3; plural=(n%10==1 && n%100!=11 ? 0 : n%10>=2 && (n%100<10 || n%100>=20) ? 1 : 2);\n"
 
-#: js/mail.js:42 js/mail.js:136 js/mail.js:169 js/mail.js:226 js/mail.js:281
+#: js/mail.js:43 js/mail.js:137 js/mail.js:170 js/mail.js:227 js/mail.js:282
 msgid "Error"
 msgstr "Klaida"
 
-#: js/mail.js:98
+#: js/mail.js:99
 msgid "Delete message"
 msgstr "Ištrinti laišką"
 
-#: js/mail.js:256
+#: js/mail.js:257
 msgid "Connecting ..."
 msgstr "Jungiamasi..."
 
-#: js/mail.js:272 js/mail.js:287 templates/no-accounts.php:16
+#: js/mail.js:273 js/mail.js:288 templates/no-accounts.php:18
 msgid "Connect"
 msgstr "Prisijungti"
 
-#: js/mail.js:277
+#: js/mail.js:278
 msgid "Not a email address"
 msgstr "Tai ne el. pašto adresas"
 
-#: js/mail.js:285
+#: js/mail.js:286
 msgid "Unknown error"
 msgstr "Neatpažinta klaida"
 
-#: js/mail.js:289
+#: js/mail.js:290
 msgid "Server Error"
 msgstr "Serverio klaida"
 
-#: templates/index.php:8
+#: templates/index.php:7
 msgid "New Message"
 msgstr "Naujas laiškas"
 
-#: templates/index.php:10
+#: templates/index.php:9
 msgid "To"
 msgstr "Iki"
 
-#: templates/index.php:11
+#: templates/index.php:10
 msgid "Subject"
 msgstr "Tema"
 
-#: templates/index.php:13
+#: templates/index.php:12
 msgid "Send"
 msgstr "Siųsti"
 
@@ -71,11 +71,11 @@ msgstr "Siųsti"
 msgid "Connect your mail account"
 msgstr "Prijungti savo paštą"
 
-#: templates/no-accounts.php:8
+#: templates/no-accounts.php:7 templates/no-accounts.php:9
 msgid "Mail Address"
 msgstr "Pašto adresas"
 
-#: templates/no-accounts.php:13
+#: templates/no-accounts.php:14 templates/no-accounts.php:15
 msgid "IMAP Password"
 msgstr "IMAP slaptažodis"
 
