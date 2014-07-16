@@ -1,3 +1,21 @@
+<script id="mail-folder-template" type="text/x-handlebars-template">
+	<h2 class="mail_account">{{email}}</h2>
+	<ul class="mail_folders" data-account_id="{{id}}">
+		{{#each folders}}
+		<li data-folder_id="{{id}}"
+			{{#if unseen}} class="unread"{{/if}}
+		>
+		<a>
+			{{name}}
+			{{#if unseen}}
+			<span class="utils">{{unseen}}</span>
+			{{/if}}
+		</a>
+	</li>
+	{{/each}}
+	</ul>
+</script>
+
 <div id="app">
 	<div id="app-navigation">
 		<img class="loading" src="<?php print_unescaped(OCP\Util::imagePath('core', 'loading.gif')); ?>" />
