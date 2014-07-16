@@ -7,10 +7,11 @@
  */
 
 $app = new \OCA\Mail\AppInfo\Application();
-
 $app->registerRoutes($this,
 	array(
-		'routes' => array(),
+		'routes' => array(
+			array('name' => 'page#index', 'url' => '/', 'verb' => 'GET'),
+		),
 		'resources' => array(
 			'accounts' => array('url' => '/accounts'),
 			'folders' => array('url' => '/accounts/{accountId}/folders'),

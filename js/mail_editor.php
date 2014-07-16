@@ -35,7 +35,7 @@ $(function () {
 						$('#wait').hide();
 					},
 					data:{
-						'account_id': Mail.State.current_account_id,
+						'account_id': Mail.State.currentAccountId,
 						'to':$('#to').val(),
 						'subject':$('#subject').val(),
 						'body':$('#body').val()},

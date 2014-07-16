@@ -12,9 +12,12 @@
 namespace OCA\Mail\AppInfo;
 
 
+use OCA\Mail\Controller\AccountsController;
+use OCA\Mail\Db\MailAccountMapper;
 use \OCP\AppFramework\App;
 
 use \OCA\Mail\Controller\PageController;
+use OCP\AppFramework\IAppContainer;
 
 
 class Application extends App {
@@ -29,11 +32,32 @@ class Application extends App {
 		 * Controllers
 		 */
 		$container->registerService('PageController', function($c) {
+			/** @var IAppContainer $c */
 			return new PageController(
-			$c->query('AppName'),
+				$c->query('AppName'),
 				$c->query('Request'),
+				$c->query('MailAccountMapper'),
 				$c->query('UserId')
 			);
+		});
+
+		$container->registerService('AccountsController', function($c) {
+			/** @var IAppContainer $c */
+			return new AccountsController(
+				$c->query('AppName'),
+				$c->query('Request'),
+				$c->query('MailAccountMapper'),
+				$c->query('UserId')
+			);
+		});
+
+
+		/**
+		 * Mappers
+		 */
+		$container->registerService('MailAccountMapper', function ($c) {
+			/** @var IAppContainer $c */
+			return new MailAccountMapper($c->getServer()->getDb());
 		});
 
 

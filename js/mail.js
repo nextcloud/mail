@@ -1,12 +1,12 @@
 Mail = {
     State:{
-        current_folder_id:null,
-        current_account_id:null,
-        current_message_id:null
+        currentFolderId:null,
+        currentAccountId:null,
+        currentMessageId:null
     },
     UI:{
         initializeInterface:function () {
-            var folders, messages, first_folder, account_id, folder_id;
+            var folders, messages, firstFolder, accountId, folderId;
 
             /* 1. Load folder list,
              * 2. Display it
@@ -18,24 +18,24 @@ Mail = {
                 data:{},
                 type:'GET',
                 success:function (jsondata) {
-                    if (jsondata.status == 'success') {
+                    if (jsondata.status === 'success') {
                         folders = jsondata.data;
                         $('#app-navigation').html(folders);
 
-                        first_folder = $('#app-navigation').find('.mail_folders li');
+                        firstFolder = $('#app-navigation').find('.mail_folders li');
 
-                        if (first_folder.length > 0) {
+                        if (firstFolder.length > 0) {
                             $('#app-navigation').fadeIn(800);
-                            first_folder = first_folder.first();
-                            folder_id = first_folder.data('folder_id');
-                            account_id = first_folder.parent().data('account_id');
+                            firstFolder = firstFolder.first();
+                            folderId = firstFolder.data('folder_id');
+                            accountId = firstFolder.parent().data('account_id');
 
-							Mail.UI.loadMessages(account_id, folder_id);
+							Mail.UI.loadMessages(accountId, folderId);
 
                             // Save current folder
-                            Mail.UI.setFolderActive(account_id, folder_id);
-                            Mail.State.current_account_id = account_id;
-                            Mail.State.current_folder_id = folder_id;
+                            Mail.UI.setFolderActive(accountId, folderId);
+                            Mail.State.currentAccountId = accountId;
+                            Mail.State.currentFolderId = folderId;
                         } else {
                             $('#app-navigation').fadeOut(800);
                         }
@@ -112,7 +112,7 @@ Mail = {
 
         loadMessages:function (account_id, folder_id) {
             // Set folder active
-            Mail.UI.setFolderInactive(Mail.State.current_account_id, Mail.State.current_folder_id);
+            Mail.UI.setFolderInactive(Mail.State.currentAccountId, Mail.State.currentFolderId);
             Mail.UI.setFolderActive(account_id, folder_id);
             Mail.UI.clearMessages();
 
@@ -125,14 +125,14 @@ Mail = {
                     // Add messages
                     Mail.UI.addMessages(jsondata.data);
 
-                    Mail.State.current_account_id = account_id;
-                    Mail.State.current_folder_id = folder_id;
-                    Mail.State.current_message_id = null;
+                    Mail.State.currentAccountId = account_id;
+                    Mail.State.currentFolderId = folder_id;
+                    Mail.State.currentMessageId = null;
                 }
                 else {
                     // Set the old folder as being active
                     Mail.UI.setFolderInactive(account_id, folder_id);
-                    Mail.UI.setFolderActive(Mail.State.current_account_id, Mail.State.current_folder_id);
+                    Mail.UI.setFolderActive(Mail.State.currentAccountId, Mail.State.currentFolderId);
 
                     OC.dialogs.alert(jsondata.data.message, t('mail', 'Error'));
                 }
@@ -144,7 +144,7 @@ Mail = {
 
             // close email first
             Mail.UI.closeMessage();
-            if (Mail.State.current_message_id === message_id) {
+            if (Mail.State.currentMessageId === message_id) {
                 return;
             }
 
@@ -152,7 +152,7 @@ Mail = {
             var load_row = $('#mail_messages').find('tr.mail_message_loading[data-message-id="' + message_id + '"]');
             load_row.show();
 
-            $.getJSON(OC.filePath('mail', 'ajax', 'message.php'), {'account_id':Mail.State.current_account_id, 'folder_id':Mail.State.current_folder_id, 'message_id':message_id }, function (jsondata) {
+            $.getJSON(OC.filePath('mail', 'ajax', 'message.php'), {'account_id':Mail.State.currentAccountId, 'folder_id':Mail.State.currentFolderId, 'message_id':message_id }, function (jsondata) {
                 if (jsondata.status == 'success') {
 
                     summary_row.hide();
@@ -164,7 +164,7 @@ Mail = {
                     load_row.after(jsondata.data);
 
                     // Set current Message as active
-                    Mail.State.current_message_id = message_id;
+                    Mail.State.currentMessageId = message_id;
                 }
                 else {
                     OC.dialogs.alert(jsondata.data.message, t('mail', 'Error'));
@@ -175,11 +175,11 @@ Mail = {
         closeMessage:function () {
             // Check if message is open
             var message;
-            if (Mail.State.current_message_id !== null) {
+            if (Mail.State.currentMessageId !== null) {
                 $('#mail_message').remove();
                 $('#mail_message_header').remove();
 
-                var summary_row = $('#mail_messages tr.mail_message_summary[data-message-id="' + Mail.State.current_message_id + '"]');
+                var summary_row = $('#mail_messages tr.mail_message_summary[data-message-id="' + Mail.State.currentMessageId + '"]');
                 summary_row.show();
             }
         },
@@ -188,8 +188,8 @@ Mail = {
             $('.mail_folders[data-account_id="' + account_id + '"]>li[data-folder_id="' + folder_id + '"]').addClass('active');
         },
 
-        setFolderInactive:function (account_id, folder_id) {
-            $('.mail_folders[data-account_id="' + account_id + '"]>li[data-folder_id="' + folder_id + '"]').removeClass('active');
+        setFolderInactive:function (accountId, folderId) {
+            $('.mail_folders[data-account_id="' + accountId + '"]>li[data-folder_id="' + folderId + '"]').removeClass('active');
         },
 
         bindEndlessScrolling:function () {
@@ -200,10 +200,10 @@ Mail = {
                 fireOnce:false,
                 loader:'',
                 callback:function (i) {
-                    var from, new_length;
+                    var from, newLength;
 
                     // Only do the work if we show a folder
-                    if (Mail.State.current_account_id !== null && Mail.State.current_folder_id !== null) {
+                    if (Mail.State.currentAccountId !== null && Mail.State.currentFolderId !== null) {
 
                         // do not work if we already hit the end
                         if ($('#mail_messages').data('stop_loading') != 'true') {
@@ -211,26 +211,32 @@ Mail = {
                             // minus 1 because of the template
 
                             // decrease if a message is shown
-                            if (Mail.State.current_message_id !== null) {
+                            if (Mail.State.currentMessageId !== null) {
                                 from = from - 1;
                             }
 
                             $.ajax(OC.filePath('mail', 'ajax', 'append_messages.php'), {
                                 async:true,
-                                data:{ 'account_id':Mail.State.current_account_id, 'folder_id':Mail.State.current_folder_id, 'from':from, 'count':20},
+                                data:{
+									'account_id':Mail.State.currentAccountId,
+									'folder_id':Mail.State.currentFolderId,
+									'from':from,
+									'count':20
+								},
                                 type:'GET',
                                 success:function (jsondata) {
-                                    if (jsondata.status == 'success') {
+                                    if (jsondata.status === 'success') {
                                         Mail.UI.addMessages(jsondata.data);
                                     }
                                     else {
                                         OC.dialogs.alert(jsondata.data.message, t('mail', 'Error'));
                                     }
 									// If we did not get any new messages stop
-									new_length = $('#mail_messages .mail_message_summary').length - 1;
+									newLength = $('#mail_messages .mail_message_summary').length - 1;
 									// minus 1 because of the template
-									if (from == new_length || ( from == new_length + 1 && Mail.State.current_message_id !== null )) {
-										$('#mail_messages').data('stop_loading', 'true')
+									if (from === newLength || ( from === newLength + 1 &&
+										Mail.State.currentMessageId !== null )) {
+										$('#mail_messages').data('stop_loading', 'true');
 									}
 								}
                             });
@@ -244,7 +250,7 @@ Mail = {
             $('#app-content').unbind('scroll');
         }
     }
-}
+};
 
 $(document).ready(function () {
     Mail.UI.initializeInterface();
@@ -256,11 +262,15 @@ $(document).ready(function () {
         $('#auto_detect_account').attr('disabled', "disabled");
         $('#auto_detect_account').val(t('mail', 'Connecting ...'));
 		$('#connect-loading').fadeIn();
-        var email_address, password;
-        email_address = $('#mail-address').val();
+        var emailAddress, password;
+        emailAddress = $('#mail-address').val();
         password = $('#mail-password').val();
-        $.ajax(OC.filePath('mail', 'ajax', 'account/autodetect.php'), {
-            data:{email_address:email_address, password:password},
+        $.ajax(OC.generateUrl('apps/mail/accounts'), {
+            data:{
+				emailAddress : emailAddress,
+				password : password,
+				autoDetect : true
+			},
             type:'POST',
             success:function (jsondata) {
                 if (jsondata.status == 'success') {
@@ -274,7 +284,7 @@ $(document).ready(function () {
 					$('#connect-loading').fadeOut();
                     var error;
 
-                    if (jsondata.message == 'email') {
+                    if (jsondata.message === 'email') {
                         error = t('mail', 'Not a email address');
                     } else {
                         error = 'Unknown error code: ' + jsondata.message;
@@ -285,7 +295,7 @@ $(document).ready(function () {
 			error: function(jqXHR, textStatus, errorThrown){
 				var error = errorThrown || textStatus || t('mail', 'Unknown error');
 				$('#auto_detect_account').attr('disabled', 'false');
-				 $('#auto_detect_account').val(t('mail', 'Connect'));
+				$('#auto_detect_account').val(t('mail', 'Connect'));
 				$('#connect-loading').fadeOut();
 				OC.dialogs.alert(error, t('mail', 'Server Error'));
 			}
@@ -304,17 +314,16 @@ $(document).ready(function () {
 
 	// Clicking on a folder loads the message list
 	$(document).on('click', 'ul.mail_folders li', function () {
-		var account_id, folder_id;
-		account_id = $(this).parent().data('account_id');
-		folder_id = $(this).data('folder_id');
+		var accountId = $(this).parent().data('account_id');
+		var folderId = $(this).data('folder_id');
 
-		Mail.UI.loadMessages(account_id, folder_id);
+		Mail.UI.loadMessages(accountId, folderId);
 	});
 
 	// Clicking on a message loads the entire message
 	$(document).on('click', '#mail_messages .mail_message_summary', function () {
-		var message_id = $(this).data('message_id');
-		Mail.UI.openMessage(message_id);
+		var messageId = $(this).data('message_id');
+		Mail.UI.openMessage(messageId);
 	});
 
     Mail.UI.bindEndlessScrolling();

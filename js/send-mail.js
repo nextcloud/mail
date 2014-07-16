@@ -64,9 +64,9 @@ $(function () {
 			complete:function () {
 			},
 			data:{
-				'account_id': Mail.State.current_account_id,
-				'folder_id': Mail.State.current_folder_id,
-				'message_id': Mail.State.current_message_id,
+				'account_id': Mail.State.currentAccountId,
+				'folder_id': Mail.State.currentFolderId,
+				'message_id': Mail.State.currentMessageId,
 				'body':$('.reply-message-body').val()},
 			success:function () {
 				// close reply
@@ -97,7 +97,7 @@ $(function () {
 //				$('#wait').hide();
 			},
 			data:{
-				'account_id': Mail.State.current_account_id,
+				'account_id': Mail.State.currentAccountId,
 				'to':$('#to').val(),
 				'subject':$('#subject').val(),
 				'body':$('#new-message-body').val()},
