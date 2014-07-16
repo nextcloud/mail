@@ -1,4 +1,4 @@
-Mail = {
+var Mail = {
     State:{
         currentFolderId:null,
         currentAccountId:null,
@@ -6,45 +6,60 @@ Mail = {
     },
     UI:{
         initializeInterface:function () {
-            var folders, messages, firstFolder, accountId, folderId;
-
             /* 1. Load folder list,
              * 2. Display it
              * 3. If an account with folders exists
              * 4.   Load message list
              * 5.   Display message list
              */
-            $.ajax(OC.filePath('mail', 'ajax', 'folders.php'), {
-                data:{},
-                type:'GET',
-                success:function (jsondata) {
-                    if (jsondata.status === 'success') {
-                        folders = jsondata.data;
-                        $('#app-navigation').html(folders);
 
-                        firstFolder = $('#app-navigation').find('.mail_folders li');
+			$.ajax(OC.generateUrl('apps/mail/accounts'), {
+				data:{},
+				type:'GET',
+				success:function (jsondata) {
+					_.each(jsondata, function(account){
+						var accountId = account.accountId;
+						Mail.UI.loadFoldersForAccount(accountId);
+					});
+				}
+			});
 
-                        if (firstFolder.length > 0) {
-                            $('#app-navigation').fadeIn(800);
-                            firstFolder = firstFolder.first();
-                            folderId = firstFolder.data('folder_id');
-                            accountId = firstFolder.parent().data('account_id');
+        },
+
+		loadFoldersForAccount : function(accountId) {
+			var folders, firstFolder, folderId;
+
+			$.ajax(OC.generateUrl('apps/mail/accounts/{accountId}/folders', {accountId: accountId}), {
+				data:{},
+				type:'GET',
+				success:function (jsondata) {
+					if (jsondata.status === 'success') {
+						folders = jsondata.data;
+						$('#app-navigation').html(folders);
+
+						firstFolder = $('#app-navigation').find('.mail_folders li');
+
+						if (firstFolder.length > 0) {
+							$('#app-navigation').fadeIn(800);
+							firstFolder = firstFolder.first();
+							folderId = firstFolder.data('folder_id');
+							accountId = firstFolder.parent().data('account_id');
 
 							Mail.UI.loadMessages(accountId, folderId);
 
-                            // Save current folder
-                            Mail.UI.setFolderActive(accountId, folderId);
-                            Mail.State.currentAccountId = accountId;
-                            Mail.State.currentFolderId = folderId;
-                        } else {
-                            $('#app-navigation').fadeOut(800);
-                        }
-                    } else {
-                        OC.dialogs.alert(jsondata.data.message, t('mail', 'Error'));
-                    }
-                }
-            });
-        },
+							// Save current folder
+							Mail.UI.setFolderActive(accountId, folderId);
+							Mail.State.currentAccountId = accountId;
+							Mail.State.currentFolderId = folderId;
+						} else {
+							$('#app-navigation').fadeOut(800);
+						}
+					} else {
+						OC.dialogs.alert(jsondata.data.message, t('mail', 'Error'));
+					}
+				}
+			});
+		},
 
         clearMessages:function () {
             var table = $('#mail_messages');

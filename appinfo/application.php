@@ -13,6 +13,7 @@ namespace OCA\Mail\AppInfo;
 
 
 use OCA\Mail\Controller\AccountsController;
+use OCA\Mail\Controller\FoldersController;
 use OCA\Mail\Db\MailAccountMapper;
 use \OCP\AppFramework\App;
 
@@ -51,6 +52,15 @@ class Application extends App {
 			);
 		});
 
+		$container->registerService('FoldersController', function($c) {
+			/** @var IAppContainer $c */
+			return new FoldersController(
+				$c->query('AppName'),
+				$c->query('Request'),
+				$c->query('MailAccountMapper'),
+				$c->query('UserId')
+			);
+		});
 
 		/**
 		 * Mappers

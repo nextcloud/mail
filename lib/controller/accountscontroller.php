@@ -51,9 +51,10 @@ class AccountsController extends Controller
 
 	/**
 	 * @NoAdminRequired
+	 * @NoCSRFRequired
 	 */
 	public function index() {
-		$mailAccounts = $this->mapper->findByUserId($this->$currentUserId);
+		$mailAccounts = $this->mapper->findByUserId($this->currentUserId);
 
 		$json = array();
 		foreach ($mailAccounts as $mailAccount) {
@@ -71,7 +72,7 @@ class AccountsController extends Controller
 	 */
 	public function show($accountId) {
 		try {
-			$account = $this->mapper->find($this->$currentUserId, $accountId);
+			$account = $this->mapper->find($this->currentUserId, $accountId);
 
 			return new JSONResponse($account->toJson());
 		} catch (DoesNotExistException $e) {

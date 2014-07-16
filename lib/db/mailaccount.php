@@ -193,7 +193,7 @@ class MailAccount {
 			'imap-host' => $this->getInboundHost(),
 			'imap-port' => $this->getInboundHostPort(),
 			'imap-user' => $this->getInboundUser(),
-			'imap-password' => $this->getInboundPassword(),
+//			'imap-password' => $this->getInboundPassword(),
 			'imap-ssl-mode' => $this->getInboundSslMode(),
 		);
 	}

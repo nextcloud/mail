@@ -8,12 +8,26 @@
 
 namespace OCA\Mail;
 
+use OCA\Mail\Db\MailAccount;
+
 class Account {
 	private $info;
 
 	// input $conn = IMAP conn, $folder_id = folder id
 	function __construct($info) {
 		$this->info = $info;
+		if ($info instanceof MailAccount) {
+			$this->info = array(
+				'host' => $info->getInboundHost(),
+				'user' => $info->getInboundUser(),
+				'password' => $info->getInboundPassword(),
+				'port' => $info->getInboundHostPort(),
+				'ssl_mode' => $info->getInboundSslMode(),
+				'id' => $info->getMailAccountId(),
+				'email' => $info->getEmail(),
+				'name' => $info->getMailAccountName(),
+			);
+		}
 	}
 
 	public function getId() {
