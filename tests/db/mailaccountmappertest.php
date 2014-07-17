@@ -23,7 +23,7 @@
 namespace OCA\Mail\Db;
 
 
-use OCP\AppFramework\Db\MapperTestUtility;
+use Test\AppFramework\Db\MapperTestUtility;
 
 class MailAccountMapperTest extends MapperTestUtility {
 
