@@ -1,4 +1,4 @@
-/* global Handlebars */
+/* global Handlebars, relative_modified_date, formatDate */
 var Mail = {
     State:{
         currentFolderId:null,
@@ -7,12 +7,30 @@ var Mail = {
     },
     UI:{
         initializeInterface:function () {
-            /* 1. Load folder list,
-             * 2. Display it
-             * 3. If an account with folders exists
-             * 4.   Load message list
-             * 5.   Display message list
-             */
+			Handlebars.registerHelper("colorOfDate", function(dateInt) {
+				var lastModified = new Date(dateInt*1000);
+				var lastModifiedTime = Math.round(lastModified.getTime() / 1000);
+
+				// date column
+				var modifiedColor = Math.round((Math.round((new Date()).getTime() / 1000)-lastModifiedTime)/60/60/24*5);
+				if (modifiedColor > 200) {
+					modifiedColor = 200;
+				}
+				return 'rgb('+modifiedColor+','+modifiedColor+','+modifiedColor+')';
+			});
+
+			Handlebars.registerHelper("relativeModifiedDate", function(dateInt) {
+				var lastModified = new Date(dateInt*1000);
+				var lastModifiedTime = Math.round(lastModified.getTime() / 1000);
+				return relative_modified_date(lastModifiedTime);
+			});
+
+			Handlebars.registerHelper("formatDate", function(dateInt) {
+				var lastModified = new Date(dateInt*1000);
+				return formatDate(lastModified);
+			});
+
+			//formatDate(lastModified)
 
 			$.ajax(OC.generateUrl('apps/mail/accounts'), {
 				data:{},
@@ -27,7 +45,7 @@ var Mail = {
         },
 
 		loadFoldersForAccount : function(accountId) {
-			var folders, firstFolder, folderId;
+			var firstFolder, folderId;
 
 			$.ajax(OC.generateUrl('apps/mail/accounts/{accountId}/folders', {accountId: accountId}), {
 				data:{},
@@ -72,56 +90,10 @@ var Mail = {
         },
 
         addMessages:function (data) {
-            var table = $('#mail_messages');
-            var template = table.find('tr.template').clone();
-            var loadingTemplate = table.find('tr.template_loading').clone();
-            var messages = data.messages;
-
-            //table.date('');
-            for (var i in messages) {
-                var message = messages[i];
-                var clone = template.clone();
-                clone.removeClass('template');
-
-                clone.data('message_id', message.id);
-                clone.attr('data-message-id', message.id);
-                if (message.flags['unseen']) {
-                    clone.addClass('unseen');
-                }
-                clone.find('.mail_message_summary_from').text(message.from);
-                clone.find('.mail_message_summary_subject').text(message.subject);
-
-				var lastModified = new Date(message.dateInt*1000);
-				var lastModifiedTime = Math.round(lastModified.getTime() / 1000);
-
-				// date column
-				var modifiedColor = Math.round((Math.round((new Date()).getTime() / 1000)-lastModifiedTime)/60/60/24*5);
-				if (modifiedColor > 200) {
-					modifiedColor = 200;
-				}
-
-				var td = $('<td></td>').attr({ "class": "date" });
-				td.append($('<span></span>').attr({
-					"class": "modified",
-					"title": formatDate(lastModified),
-					"style": 'color:rgb('+modifiedColor+','+modifiedColor+','+modifiedColor+')'
-				}).text( relative_modified_date(lastModifiedTime) ));
-
-				// delete icon
-				td.append($('<a></a>').attr({
-					"class": "action delete",
-					"original-title": t('mail', 'Delete message')
-				}).append($('<img class="svg" src="'+OC.imagePath('core', 'actions/delete')+'">')));
-				clone.append(td);
-
-                table.append(clone);
-
-                // add loading row
-                var loadingClone = loadingTemplate.clone();
-                loadingClone.removeClass('template_loading');
-                loadingClone.attr('data-message-id', message.id);
-                table.append(loadingClone);
-            }
+			var source   = $("#mail-messages-template").html();
+			var template = Handlebars.compile(source);
+			var html = template({messages:data});
+			$('#mail_messages').html(html);
         },
 
         loadMessages:function (accountId, folderId) {
@@ -134,45 +106,42 @@ var Mail = {
 
             $.ajax(
 				OC.generateUrl('apps/mail/accounts/{accountId}/folders/{folderId}/messages',
-					{'accountId':accountId, 'folderId':folderId}), {
+					{'accountId':accountId, 'folderId':encodeURIComponent(folderId)}), {
 					data: {},
 					type:'GET',
 					success: function (jsondata) {
 						$('#messages-loading').fadeOut();
 
-						if (jsondata.status === 'success') {
-							// Add messages
-							Mail.UI.addMessages(jsondata.data);
+						// Add messages
+						Mail.UI.addMessages(jsondata);
 
-							Mail.State.currentAccountId = accountId;
-							Mail.State.currentFolderId = folderId;
-							Mail.State.currentMessageId = null;
-						}
-						else {
-							// Set the old folder as being active
-							Mail.UI.setFolderInactive(accountId, folderId);
-							Mail.UI.setFolderActive(Mail.State.currentAccountId, Mail.State.currentFolderId);
+						Mail.State.currentAccountId = accountId;
+						Mail.State.currentFolderId = folderId;
+						Mail.State.currentMessageId = null;
+					},
+					error: function() {
 
-							OC.dialogs.alert(jsondata.data.message, t('mail', 'Error'));
-						}
+						// Set the old folder as being active
+						Mail.UI.setFolderInactive(accountId, folderId);
+						Mail.UI.setFolderActive(Mail.State.currentAccountId, Mail.State.currentFolderId);
+
+//						OC.dialogs.alert(jsondata.data.message, t('mail', 'Error'));
 					}
 				});
         },
 
-        openMessage:function (message_id) {
-            var message;
-
+        openMessage:function (messageId) {
             // close email first
             Mail.UI.closeMessage();
-            if (Mail.State.currentMessageId === message_id) {
+            if (Mail.State.currentMessageId === messageId) {
                 return;
             }
 
-            var summary_row = $('#mail_messages tr.mail_message_summary[data-message-id="' + message_id + '"]');
-            var load_row = $('#mail_messages').find('tr.mail_message_loading[data-message-id="' + message_id + '"]');
+            var summary_row = $('#mail_messages tr.mail_message_summary[data-message-id="' + messageId + '"]');
+            var load_row = $('#mail_messages').find('tr.mail_message_loading[data-message-id="' + messageId + '"]');
             load_row.show();
 
-            $.getJSON(OC.filePath('mail', 'ajax', 'message.php'), {'account_id':Mail.State.currentAccountId, 'folder_id':Mail.State.currentFolderId, 'message_id':message_id }, function (jsondata) {
+            $.getJSON(OC.filePath('mail', 'ajax', 'message.php'), {'account_id':Mail.State.currentAccountId, 'folder_id':Mail.State.currentFolderId, 'message_id':messageId }, function (jsondata) {
                 if (jsondata.status == 'success') {
 
                     summary_row.hide();
@@ -184,7 +153,7 @@ var Mail = {
                     load_row.after(jsondata.data);
 
                     // Set current Message as active
-                    Mail.State.currentMessageId = message_id;
+                    Mail.State.currentMessageId = messageId;
                 }
                 else {
                     OC.dialogs.alert(jsondata.data.message, t('mail', 'Error'));
@@ -194,7 +163,6 @@ var Mail = {
 
         closeMessage:function () {
             // Check if message is open
-            var message;
             if (Mail.State.currentMessageId !== null) {
                 $('#mail_message').remove();
                 $('#mail_message_header').remove();
@@ -332,5 +300,5 @@ $(document).ready(function () {
 		Mail.UI.openMessage(messageId);
 	});
 
-    Mail.UI.bindEndlessScrolling();
+//    Mail.UI.bindEndlessScrolling();
 });

@@ -15,6 +15,52 @@
 	{{/each}}
 	</ul>
 </script>
+<script id="mail-messages-template" type="text/x-handlebars-template">
+	<tbody>
+	{{#each messages}}
+		<tr class="mail_message_summary {{#if flags.unseen}}unseen{{/if}}" data-message-id="{{id}}">
+			<td class="mail_message_summary_from">{{from}}</td>
+			<td class="mail_message_summary_subject">{{subject}}</td>
+			<td class="date">
+				<span class="modified"
+					title="{{formatDate dateInt}}"
+					style="color:{{colorOfDate dateInt}}">{{relativeModifiedDate dateInt}}</span>
+				<a class="icon-delete action delete"></a>
+			</td>
+		</tr>
+		<tr class="template_loading mail_message_loading">
+			<td></td>
+			<td>
+		<img src="<?php print_unescaped(OCP\Util::imagePath('core', 'loading.gif')); ?>" />
+			</td>
+			<td></td>
+		</tr>
+	{{/each}}
+	</tbody>
+</script>
+<script id="mail-message-template" type="text/x-handlebars-template">
+	<tr id="mail_message_header">
+		<td>
+			<img src="{{senderImage}}" width="32px" height="32px" />
+		</td>
+		<td>
+			{{from}}
+			<br/>
+			{{subject}}
+			<br/>
+			{{#each attachments}}
+				{{filename}} ( $a['size}} )
+			{{/each}}
+			</td>
+		<td>
+			<img src="reply.png" />
+			<img src="reply-all.png" />
+			<img src="forward.png" />
+			<br/>
+			{{date}}
+		</td>
+	</tr>
+</script>
 
 <div id="app">
 	<div id="app-navigation">
@@ -34,17 +80,6 @@
 		<img class="loading" id="messages-loading" src="<?php print_unescaped(OCP\Util::imagePath('core', 'loading.gif')); ?>" />
 
 		<table id="mail_messages">
-			<tr class="template mail_message_summary" data-message-id="0">
-				<td class="mail_message_summary_from"></td>
-				<td class="mail_message_summary_subject"></td>
-			</tr>
-			<tr class="template_loading mail_message_loading">
-				<td></td>
-				<td>
-					<img src="<?php print_unescaped(OCP\Util::imagePath('core', 'loading.gif')); ?>" />
-				</td>
-				<td></td>
-			</tr>
 		</table>
 	</div>
 </div>
