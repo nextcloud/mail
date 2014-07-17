@@ -6,7 +6,7 @@ php:
 
 env:
   global:
-    - CORE_BRANCH=fix-appframework-test-namespaces-master
+    - CORE_BRANCH=master
   matrix:
     - DB=sqlite
 
