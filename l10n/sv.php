@@ -1,10 +1,9 @@
 <?php $TRANSLATIONS = array(
-"Error" => "Fel",
 "Delete message" => "Radera meddelande",
+"Error" => "Fel",
 "Connecting ..." => "Ansluter ...",
-"Connect" => "Anslut",
-"Not a email address" => "Inte en e-postadress",
 "Unknown error" => "Okänt fel",
+"Connect" => "Anslut",
 "Server Error" => "Serverfel",
 "New Message" => "Nytt meddelande",
 "To" => "Till",

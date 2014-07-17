@@ -1,10 +1,9 @@
 <?php $TRANSLATIONS = array(
-"Error" => "エラー",
 "Delete message" => "メッセージを削除",
+"Error" => "エラー",
 "Connecting ..." => "接続中...",
-"Connect" => "接続",
-"Not a email address" => "メールアドレスではありません",
 "Unknown error" => "不明なエラー",
+"Connect" => "接続",
 "Server Error" => "サーバーエラー",
 "New Message" => "新しいメッセージ",
 "To" => "終了",

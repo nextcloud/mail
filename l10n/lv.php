@@ -1,7 +1,7 @@
 <?php $TRANSLATIONS = array(
 "Error" => "Kļūda",
-"Connect" => "Savienoties",
 "Unknown error" => "Nezināma kļūda",
+"Connect" => "Savienoties",
 "To" => "Līdz",
 "Send" => "Sūtīt"
 );

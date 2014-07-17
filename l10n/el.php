@@ -1,10 +1,9 @@
 <?php $TRANSLATIONS = array(
-"Error" => "Σφάλμα",
 "Delete message" => "Διαγραφή μηνύματος",
+"Error" => "Σφάλμα",
 "Connecting ..." => "Σύνδεση σε εξέλιξη ...",
-"Connect" => "Σύνδεση",
-"Not a email address" => "Δεν είναι διεύθυνση ηλ. ταχυδρομείου",
 "Unknown error" => "Άγνωστο σφάλμα",
+"Connect" => "Σύνδεση",
 "Server Error" => "Σφάλμα Διακομιστή",
 "New Message" => "Νέο Μήνυμα",
 "To" => "Προς",

@@ -1,7 +1,7 @@
 <?php $TRANSLATIONS = array(
 "Error" => "שגיאה",
-"Connect" => "התחברות",
 "Unknown error" => "שגיאה בלתי ידועה",
+"Connect" => "התחברות",
 "To" => "עבור",
 "Send" => "שליחה"
 );

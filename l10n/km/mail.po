@@ -8,9 +8,9 @@ msgid ""
 msgstr ""
 "Project-Id-Version: ownCloud\n"
 "Report-Msgid-Bugs-To: translations@owncloud.org\n"
-"POT-Creation-Date: 2014-07-03 02:41-0400\n"
-"PO-Revision-Date: 2014-07-03 06:11+0000\n"
-"Last-Translator: Sovichet Tep\n"
+"POT-Creation-Date: 2014-07-17 02:41-0400\n"
+"PO-Revision-Date: 2014-07-17 06:41+0000\n"
+"Last-Translator: I Robot\n"
 "Language-Team: Khmer (http://www.transifex.com/projects/p/owncloud/language/km/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -18,47 +18,47 @@ msgstr ""
 "Language: km\n"
 "Plural-Forms: nplurals=1; plural=0;\n"
 
-#: js/mail.js:43 js/mail.js:137 js/mail.js:170 js/mail.js:227 js/mail.js:282
-msgid "Error"
-msgstr "កំហុស"
-
-#: js/mail.js:99
+#: js/mail.js:113
 msgid "Delete message"
 msgstr "លុប​សារ"
 
-#: js/mail.js:257
+#: js/mail.js:156 js/mail.js:190 js/mail.js:252
+msgid "Error"
+msgstr "កំហុស"
+
+#: js/mail.js:283
 msgid "Connecting ..."
 msgstr "កំពុង​ភ្ជាប់ ..."
 
-#: js/mail.js:273 js/mail.js:288 templates/no-accounts.php:18
-msgid "Connect"
-msgstr "ភ្ជាប់"
-
-#: js/mail.js:278
-msgid "Not a email address"
-msgstr "មិន​មែន​ជា​អាសយដ្ឋាន​អ៊ីមែល​ទេ"
-
-#: js/mail.js:286
+#: js/mail.js:300
 msgid "Unknown error"
 msgstr "មិន​ស្គាល់​កំហុស"
 
-#: js/mail.js:290
+#: js/mail.js:304 templates/no-accounts.php:18
+msgid "Connect"
+msgstr "ភ្ជាប់"
+
+#: js/mail.js:306
 msgid "Server Error"
 msgstr "កំហុស​ម៉ាស៊ីន​បម្រើ"
 
-#: templates/index.php:7
+#: lib/controller/accountscontroller.php:138
+msgid "Auto detect failed. Please use manual mode."
+msgstr ""
+
+#: templates/index.php:25
 msgid "New Message"
 msgstr "សារ​ថ្មី"
 
-#: templates/index.php:9
+#: templates/index.php:27
 msgid "To"
 msgstr "ទៅ"
 
-#: templates/index.php:10
+#: templates/index.php:28
 msgid "Subject"
 msgstr "ប្រធានបទ"
 
-#: templates/index.php:12
+#: templates/index.php:30
 msgid "Send"
 msgstr "ផ្ញើ"
 

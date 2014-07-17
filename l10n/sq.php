@@ -1,10 +1,9 @@
 <?php $TRANSLATIONS = array(
-"Error" => "Veprim i gabuar",
 "Delete message" => "Fshi mesazhin",
+"Error" => "Veprim i gabuar",
 "Connecting ..." => "Duke u lidhur...",
-"Connect" => "Lidhu",
-"Not a email address" => "Jo një adrese email-i",
 "Unknown error" => "Gabim panjohur",
+"Connect" => "Lidhu",
 "Server Error" => "Gabim N'server",
 "New Message" => "Mesazh i'ri",
 "To" => "Për",

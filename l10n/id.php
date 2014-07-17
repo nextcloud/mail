@@ -1,10 +1,9 @@
 <?php $TRANSLATIONS = array(
-"Error" => "Galat",
 "Delete message" => "Hapus Pesan",
+"Error" => "Galat",
 "Connecting ..." => "Menghubungkan ...",
-"Connect" => "Sambungkan",
-"Not a email address" => "Bukan sebuah alamat email",
 "Unknown error" => "Galat tidak diketahui",
+"Connect" => "Sambungkan",
 "Server Error" => "Kesalahan Server",
 "New Message" => "Pasan Baru",
 "To" => "Kepada",

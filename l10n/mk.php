@@ -1,10 +1,9 @@
 <?php $TRANSLATIONS = array(
-"Error" => "Грешка",
 "Delete message" => "Избриши порака",
+"Error" => "Грешка",
 "Connecting ..." => "Се поврзувам ...",
-"Connect" => "Поврзи се",
-"Not a email address" => "Не е адреса за е-пошта",
 "Unknown error" => "Непозната грешка",
+"Connect" => "Поврзи се",
 "Server Error" => "Серверска грешка",
 "New Message" => "Нова порака",
 "To" => "До",

@@ -7,8 +7,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: ownCloud\n"
 "Report-Msgid-Bugs-To: translations@owncloud.org\n"
-"POT-Creation-Date: 2014-04-16 02:42-0400\n"
-"PO-Revision-Date: 2014-04-16 05:40+0000\n"
+"POT-Creation-Date: 2014-07-17 02:41-0400\n"
+"PO-Revision-Date: 2014-07-17 06:41+0000\n"
 "Last-Translator: I Robot\n"
 "Language-Team: Serbian (http://www.transifex.com/projects/p/owncloud/language/sr/)\n"
 "MIME-Version: 1.0\n"
@@ -17,47 +17,47 @@ msgstr ""
 "Language: sr\n"
 "Plural-Forms: nplurals=3; plural=(n%10==1 && n%100!=11 ? 0 : n%10>=2 && n%10<=4 && (n%100<10 || n%100>=20) ? 1 : 2);\n"
 
-#: js/mail.js:42 js/mail.js:136 js/mail.js:169 js/mail.js:226 js/mail.js:281
-msgid "Error"
-msgstr "Грешка"
-
-#: js/mail.js:98
+#: js/mail.js:113
 msgid "Delete message"
 msgstr ""
 
-#: js/mail.js:256
+#: js/mail.js:156 js/mail.js:190 js/mail.js:252
+msgid "Error"
+msgstr "Грешка"
+
+#: js/mail.js:283
 msgid "Connecting ..."
 msgstr ""
 
-#: js/mail.js:272 js/mail.js:287 templates/no-accounts.php:16
-msgid "Connect"
-msgstr "Повежи ме"
-
-#: js/mail.js:277
-msgid "Not a email address"
-msgstr ""
-
-#: js/mail.js:285
+#: js/mail.js:300
 msgid "Unknown error"
 msgstr ""
 
-#: js/mail.js:289
+#: js/mail.js:304 templates/no-accounts.php:18
+msgid "Connect"
+msgstr "Повежи ме"
+
+#: js/mail.js:306
 msgid "Server Error"
 msgstr ""
 
-#: templates/index.php:8
+#: lib/controller/accountscontroller.php:138
+msgid "Auto detect failed. Please use manual mode."
+msgstr ""
+
+#: templates/index.php:25
 msgid "New Message"
 msgstr ""
 
-#: templates/index.php:10
+#: templates/index.php:27
 msgid "To"
 msgstr "До"
 
-#: templates/index.php:11
+#: templates/index.php:28
 msgid "Subject"
 msgstr ""
 
-#: templates/index.php:13
+#: templates/index.php:30
 msgid "Send"
 msgstr "Пошаљи"
 
@@ -65,11 +65,11 @@ msgstr "Пошаљи"
 msgid "Connect your mail account"
 msgstr ""
 
-#: templates/no-accounts.php:8
+#: templates/no-accounts.php:7 templates/no-accounts.php:9
 msgid "Mail Address"
 msgstr ""
 
-#: templates/no-accounts.php:13
+#: templates/no-accounts.php:14 templates/no-accounts.php:15
 msgid "IMAP Password"
 msgstr ""
 

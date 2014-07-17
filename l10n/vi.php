@@ -1,10 +1,9 @@
 <?php $TRANSLATIONS = array(
-"Error" => "Lỗi",
 "Delete message" => "Xóa th",
+"Error" => "Lỗi",
 "Connecting ..." => "Đang kết nối...",
-"Connect" => "Kết nối",
-"Not a email address" => "Đây không phải là một địa chỉ thư điện tử",
 "Unknown error" => "Lỗi chưa biết",
+"Connect" => "Kết nối",
 "Server Error" => "Máy chủ bị l",
 "New Message" => "Tin m",
 "To" => "Tới",

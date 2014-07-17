@@ -1,9 +1,8 @@
 <?php $TRANSLATIONS = array(
 "Error" => "შეცდომა",
 "Connecting ..." => "ვუკავშირდები...",
-"Connect" => "დაკავშირება",
-"Not a email address" => "ეს არ არის იმეილ მისამართი",
 "Unknown error" => "უცნობი შეცდომა",
+"Connect" => "დაკავშირება",
 "Server Error" => "სერვერის შეცდომა",
 "New Message" => "ახალი მესიჯი",
 "To" => "მდე",

@@ -1,10 +1,9 @@
 <?php $TRANSLATIONS = array(
-"Error" => "错误",
 "Delete message" => "删除信息",
+"Error" => "错误",
 "Connecting ..." => "正在连接 ...",
-"Connect" => "连接",
-"Not a email address" => "不是一个邮件地址",
 "Unknown error" => "未知错误",
+"Connect" => "连接",
 "Server Error" => "服务器错误",
 "New Message" => "新信件",
 "To" => "至",

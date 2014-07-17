@@ -1,9 +1,8 @@
 <?php $TRANSLATIONS = array(
-"Error" => "Fehler",
 "Delete message" => "Message läschen",
-"Connect" => "Verbannen",
-"Not a email address" => "Keng e-mail Adress",
+"Error" => "Fehler",
 "Unknown error" => "Et ass en onbekannte Fehler opgetrueden",
+"Connect" => "Verbannen",
 "Server Error" => "Server Fehler",
 "New Message" => "Neie Message",
 "To" => "Fir",

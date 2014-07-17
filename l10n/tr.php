@@ -1,10 +1,9 @@
 <?php $TRANSLATIONS = array(
-"Error" => "Hata",
 "Delete message" => "Mesajı sil",
+"Error" => "Hata",
 "Connecting ..." => "Bağlanıyor ...",
-"Connect" => "Bağlan",
-"Not a email address" => "Bir e-posta adresi değil",
 "Unknown error" => "Bilinmeyen hata",
+"Connect" => "Bağlan",
 "Server Error" => "Sunucu Hatası",
 "New Message" => "Yeni Mesaj",
 "To" => "Kime",

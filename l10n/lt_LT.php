@@ -1,10 +1,9 @@
 <?php $TRANSLATIONS = array(
-"Error" => "Klaida",
 "Delete message" => "Ištrinti laišką",
+"Error" => "Klaida",
 "Connecting ..." => "Jungiamasi...",
-"Connect" => "Prisijungti",
-"Not a email address" => "Tai ne el. pašto adresas",
 "Unknown error" => "Neatpažinta klaida",
+"Connect" => "Prisijungti",
 "Server Error" => "Serverio klaida",
 "New Message" => "Naujas laiškas",
 "To" => "Iki",

@@ -1,7 +1,7 @@
 <?php $TRANSLATIONS = array(
 "Error" => "خاتالىق",
-"Connect" => "باغلان",
 "Unknown error" => "يوچۇن خاتالىق",
+"Connect" => "باغلان",
 "To" => "قوبۇللىغۇچى",
 "Subject" => "تېما",
 "Send" => "يوللا",

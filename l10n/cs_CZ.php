@@ -1,10 +1,9 @@
 <?php $TRANSLATIONS = array(
-"Error" => "Chyba",
 "Delete message" => "Smazat zprávu",
+"Error" => "Chyba",
 "Connecting ..." => "Připojuji se...",
-"Connect" => "Připojit",
-"Not a email address" => "Není e-mailová adresa",
 "Unknown error" => "Neznámá chyba",
+"Connect" => "Připojit",
 "Server Error" => "Chyba serveru",
 "New Message" => "Nová zpráva",
 "To" => "Komu",

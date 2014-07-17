@@ -1,6 +1,6 @@
 <?php $TRANSLATIONS = array(
 "Error" => "ਗਲਤੀ",
-"Connect" => "ਕੁਨੈਕਟ",
 "Unknown error" => "ਅਣਜਾਣ ਗਲਤੀ",
+"Connect" => "ਕੁਨੈਕਟ",
 "Send" => "ਭੇਜੋ"
 );

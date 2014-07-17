@@ -8,8 +8,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: ownCloud\n"
 "Report-Msgid-Bugs-To: translations@owncloud.org\n"
-"POT-Creation-Date: 2014-07-03 02:41-0400\n"
-"PO-Revision-Date: 2014-07-03 06:11+0000\n"
+"POT-Creation-Date: 2014-07-17 02:41-0400\n"
+"PO-Revision-Date: 2014-07-17 06:41+0000\n"
 "Last-Translator: I Robot\n"
 "Language-Team: Macedonian (http://www.transifex.com/projects/p/owncloud/language/mk/)\n"
 "MIME-Version: 1.0\n"
@@ -18,47 +18,47 @@ msgstr ""
 "Language: mk\n"
 "Plural-Forms: nplurals=2; plural=(n % 10 == 1 && n % 100 != 11) ? 0 : 1;\n"
 
-#: js/mail.js:43 js/mail.js:137 js/mail.js:170 js/mail.js:227 js/mail.js:282
-msgid "Error"
-msgstr "Грешка"
-
-#: js/mail.js:99
+#: js/mail.js:113
 msgid "Delete message"
 msgstr "Избриши порака"
 
-#: js/mail.js:257
+#: js/mail.js:156 js/mail.js:190 js/mail.js:252
+msgid "Error"
+msgstr "Грешка"
+
+#: js/mail.js:283
 msgid "Connecting ..."
 msgstr "Се поврзувам ..."
 
-#: js/mail.js:273 js/mail.js:288 templates/no-accounts.php:18
-msgid "Connect"
-msgstr "Поврзи се"
-
-#: js/mail.js:278
-msgid "Not a email address"
-msgstr "Не е адреса за е-пошта"
-
-#: js/mail.js:286
+#: js/mail.js:300
 msgid "Unknown error"
 msgstr "Непозната грешка"
 
-#: js/mail.js:290
+#: js/mail.js:304 templates/no-accounts.php:18
+msgid "Connect"
+msgstr "Поврзи се"
+
+#: js/mail.js:306
 msgid "Server Error"
 msgstr "Серверска грешка"
 
-#: templates/index.php:7
+#: lib/controller/accountscontroller.php:138
+msgid "Auto detect failed. Please use manual mode."
+msgstr ""
+
+#: templates/index.php:25
 msgid "New Message"
 msgstr "Нова порака"
 
-#: templates/index.php:9
+#: templates/index.php:27
 msgid "To"
 msgstr "До"
 
-#: templates/index.php:10
+#: templates/index.php:28
 msgid "Subject"
 msgstr "Тема"
 
-#: templates/index.php:12
+#: templates/index.php:30
 msgid "Send"
 msgstr "Прати"
 

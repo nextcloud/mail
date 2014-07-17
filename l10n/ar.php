@@ -1,10 +1,9 @@
 <?php $TRANSLATIONS = array(
-"Error" => "خطأ",
 "Delete message" => "حذف الرسالة",
+"Error" => "خطأ",
 "Connecting ..." => "جاري الاتصال ...",
-"Connect" => "اتصال",
-"Not a email address" => "ليس بريد الكتروني",
 "Unknown error" => "حدث خطأ غير معروف. ",
+"Connect" => "اتصال",
 "Server Error" => "خطا في الخادم",
 "New Message" => "رسالة جديدة",
 "To" => "إلى",

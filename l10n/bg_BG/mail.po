@@ -3,13 +3,14 @@
 # This file is distributed under the same license as the PACKAGE package.
 # 
 # Translators:
-# Димитър Кръстев <dimitar.t.krastev@gmail.com>, 2013
+# Dimitar Krastev <dimitar.t.krastev@gmail.com>, 2013
+# Ivo, 2014
 msgid ""
 msgstr ""
 "Project-Id-Version: ownCloud\n"
 "Report-Msgid-Bugs-To: translations@owncloud.org\n"
-"POT-Creation-Date: 2014-04-16 02:42-0400\n"
-"PO-Revision-Date: 2014-04-16 05:40+0000\n"
+"POT-Creation-Date: 2014-07-17 02:41-0400\n"
+"PO-Revision-Date: 2014-07-17 06:41+0000\n"
 "Last-Translator: I Robot\n"
 "Language-Team: Bulgarian (Bulgaria) (http://www.transifex.com/projects/p/owncloud/language/bg_BG/)\n"
 "MIME-Version: 1.0\n"
@@ -18,62 +19,62 @@ msgstr ""
 "Language: bg_BG\n"
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
 
-#: js/mail.js:42 js/mail.js:136 js/mail.js:169 js/mail.js:226 js/mail.js:281
+#: js/mail.js:113
+msgid "Delete message"
+msgstr "Изтрий съобщение"
+
+#: js/mail.js:156 js/mail.js:190 js/mail.js:252
 msgid "Error"
 msgstr "Грешка"
 
-#: js/mail.js:98
-msgid "Delete message"
-msgstr ""
-
-#: js/mail.js:256
+#: js/mail.js:283
 msgid "Connecting ..."
-msgstr ""
+msgstr "Свързване ..."
 
-#: js/mail.js:272 js/mail.js:287 templates/no-accounts.php:16
-msgid "Connect"
-msgstr "Свързване"
-
-#: js/mail.js:277
-msgid "Not a email address"
-msgstr ""
-
-#: js/mail.js:285
+#: js/mail.js:300
 msgid "Unknown error"
-msgstr ""
+msgstr "Непозната грешка"
 
-#: js/mail.js:289
+#: js/mail.js:304 templates/no-accounts.php:18
+msgid "Connect"
+msgstr "Свържи"
+
+#: js/mail.js:306
 msgid "Server Error"
+msgstr "Грешка в Сървъра"
+
+#: lib/controller/accountscontroller.php:138
+msgid "Auto detect failed. Please use manual mode."
 msgstr ""
 
-#: templates/index.php:8
+#: templates/index.php:25
 msgid "New Message"
-msgstr ""
+msgstr "Ново Съобщение"
 
-#: templates/index.php:10
+#: templates/index.php:27
 msgid "To"
 msgstr "До"
 
-#: templates/index.php:11
+#: templates/index.php:28
 msgid "Subject"
-msgstr ""
+msgstr "Относно"
 
-#: templates/index.php:13
+#: templates/index.php:30
 msgid "Send"
 msgstr "Изпрати"
 
 #: templates/no-accounts.php:3
 msgid "Connect your mail account"
-msgstr ""
+msgstr "Свържи имейла си"
 
-#: templates/no-accounts.php:8
+#: templates/no-accounts.php:7 templates/no-accounts.php:9
 msgid "Mail Address"
-msgstr ""
+msgstr "Адрес на пощата"
 
-#: templates/no-accounts.php:13
+#: templates/no-accounts.php:14 templates/no-accounts.php:15
 msgid "IMAP Password"
-msgstr ""
+msgstr "IMAP Парола"
 
 #: templates/part.message.php:31
 msgid "Reply"
-msgstr ""
+msgstr "Отговори"

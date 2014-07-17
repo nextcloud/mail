@@ -13,8 +13,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: ownCloud\n"
 "Report-Msgid-Bugs-To: translations@owncloud.org\n"
-"POT-Creation-Date: 2014-07-03 02:41-0400\n"
-"PO-Revision-Date: 2014-07-03 06:11+0000\n"
+"POT-Creation-Date: 2014-07-17 02:41-0400\n"
+"PO-Revision-Date: 2014-07-17 06:41+0000\n"
 "Last-Translator: I Robot\n"
 "Language-Team: Korean (http://www.transifex.com/projects/p/owncloud/language/ko/)\n"
 "MIME-Version: 1.0\n"
@@ -23,47 +23,47 @@ msgstr ""
 "Language: ko\n"
 "Plural-Forms: nplurals=1; plural=0;\n"
 
-#: js/mail.js:43 js/mail.js:137 js/mail.js:170 js/mail.js:227 js/mail.js:282
-msgid "Error"
-msgstr "오류"
-
-#: js/mail.js:99
+#: js/mail.js:113
 msgid "Delete message"
 msgstr "메시지 삭제"
 
-#: js/mail.js:257
+#: js/mail.js:156 js/mail.js:190 js/mail.js:252
+msgid "Error"
+msgstr "오류"
+
+#: js/mail.js:283
 msgid "Connecting ..."
 msgstr "연결 중..."
 
-#: js/mail.js:273 js/mail.js:288 templates/no-accounts.php:18
-msgid "Connect"
-msgstr "접속"
-
-#: js/mail.js:278
-msgid "Not a email address"
-msgstr "이메일 주소가 아닙니다"
-
-#: js/mail.js:286
+#: js/mail.js:300
 msgid "Unknown error"
 msgstr "알 수 없는 오류"
 
-#: js/mail.js:290
+#: js/mail.js:304 templates/no-accounts.php:18
+msgid "Connect"
+msgstr "접속"
+
+#: js/mail.js:306
 msgid "Server Error"
 msgstr "서버 오류"
 
-#: templates/index.php:7
+#: lib/controller/accountscontroller.php:138
+msgid "Auto detect failed. Please use manual mode."
+msgstr ""
+
+#: templates/index.php:25
 msgid "New Message"
 msgstr "새 메시지"
 
-#: templates/index.php:9
+#: templates/index.php:27
 msgid "To"
 msgstr "받는 사람"
 
-#: templates/index.php:10
+#: templates/index.php:28
 msgid "Subject"
 msgstr "제목"
 
-#: templates/index.php:12
+#: templates/index.php:30
 msgid "Send"
 msgstr "보내기"
 

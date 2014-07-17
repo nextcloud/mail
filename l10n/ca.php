@@ -1,10 +1,9 @@
 <?php $TRANSLATIONS = array(
-"Error" => "Error",
 "Delete message" => "Esborra el missatge",
+"Error" => "Error",
 "Connecting ..." => "Connectant...",
-"Connect" => "Connecta",
-"Not a email address" => "No és una adreça de correu",
 "Unknown error" => "Error desconegut",
+"Connect" => "Connecta",
 "Server Error" => "Error del servidor",
 "New Message" => "Missatge nou",
 "To" => "Per a",

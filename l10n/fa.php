@@ -1,10 +1,9 @@
 <?php $TRANSLATIONS = array(
-"Error" => "خطا",
 "Delete message" => "حذف پیام",
+"Error" => "خطا",
 "Connecting ..." => "اتصال...",
-"Connect" => "اتصال",
-"Not a email address" => "یادداشت یک آدرس ایمیل",
 "Unknown error" => "خطای نامشخص",
+"Connect" => "اتصال",
 "Server Error" => "خطای سرور",
 "New Message" => "پیغام جدید",
 "To" => "به",

@@ -1,10 +1,9 @@
 <?php $TRANSLATIONS = array(
-"Error" => "Hiba",
 "Delete message" => "Üzenet törlése",
+"Error" => "Hiba",
 "Connecting ..." => "Csatlakozás ...",
-"Connect" => "Kapcsolódás",
-"Not a email address" => "Nem e-mail cím",
 "Unknown error" => "Ismeretlen hiba",
+"Connect" => "Kapcsolódás",
 "Server Error" => "Szerverhiba",
 "New Message" => "Új üzenet",
 "To" => "Eddig",

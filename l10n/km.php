@@ -1,10 +1,9 @@
 <?php $TRANSLATIONS = array(
-"Error" => "កំហុស",
 "Delete message" => "លុប​សារ",
+"Error" => "កំហុស",
 "Connecting ..." => "កំពុង​ភ្ជាប់ ...",
-"Connect" => "ភ្ជាប់",
-"Not a email address" => "មិន​មែន​ជា​អាសយដ្ឋាន​អ៊ីមែល​ទេ",
 "Unknown error" => "មិន​ស្គាល់​កំហុស",
+"Connect" => "ភ្ជាប់",
 "Server Error" => "កំហុស​ម៉ាស៊ីន​បម្រើ",
 "New Message" => "សារ​ថ្មី",
 "To" => "ទៅ",

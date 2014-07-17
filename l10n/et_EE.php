@@ -1,10 +1,9 @@
 <?php $TRANSLATIONS = array(
-"Error" => "Viga",
 "Delete message" => "Kustuta sõnum",
+"Error" => "Viga",
 "Connecting ..." => "Ühendamine ...",
-"Connect" => "Ühenda",
-"Not a email address" => "Pole e-posti aadress",
 "Unknown error" => "Tundmatu viga",
+"Connect" => "Ühenda",
 "Server Error" => "Serveri viga",
 "New Message" => "Uus sõnum",
 "To" => "Kuni",
