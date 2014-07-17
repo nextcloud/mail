@@ -94,8 +94,8 @@ class AccountsController extends Controller
 	 */
 	public function destroy($accountId) {
 		try {
-			$this->mapper->find($this->currentUserId, $accountId);
-			$this->mapper->delete($accountId);
+			$mailAccount = $this->mapper->find($this->currentUserId, $accountId);
+			$this->mapper->delete($mailAccount);
 
 			return new JSONResponse();
 		} catch (DoesNotExistException $e) {

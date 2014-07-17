@@ -60,6 +60,7 @@ class MailAccountMapperTest extends MapperTestUtility {
 	 * Initialize Mapper
 	 */
 	public function setup(){
+		parent::setUp();
 		$this->mapper = new MailAccountMapper($this->db);
 		
 		$this->mailAccount = new MailAccount($this->row);
@@ -73,26 +74,12 @@ class MailAccountMapperTest extends MapperTestUtility {
 		$userId = $this->mailAccount->getOcUserId();
 		$mailAccountId = $this->mailAccount->getMailAccountId();
 		
-		$sql = 'SELECT * FROM ' . $this->mapper->getTableName() . ' WHERE ocuserid = ? and mailaccountid = ?';
+		$sql = 'SELECT * FROM `' . $this->mapper->getTableName() . '` WHERE ocuserid = ? and mailaccountid = ?';
 		
-		$this->setMapperResult($sql, array($userId, $mailAccountId), new MailAccount($this->row));
+		$this->setMapperResult($sql, array($userId, $mailAccountId), array($this->row));
 		
 		$result = $this->mapper->find($userId, $mailAccountId);
 		$this->assertEquals($this->mailAccount, $result);
 	}
-	
-	public function testFindByUserId(){
-		
-	}
-	
-	public function testSave(){
-		
-	}
-	
-	public function testUpdate(){
-		
-	}
-	
-	public function testDelete(){
-	}
+
 }

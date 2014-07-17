@@ -27,8 +27,6 @@ use OCP\IDb;
 
 class MailAccountMapper extends Mapper {
 
-	//	public function __construct(IDb $db, $tableName, $entityClass=null){
-
 	public function __construct(IDb $db){
 		parent::__construct($db, 'mail_mailaccounts');
 	}
@@ -159,12 +157,5 @@ class MailAccountMapper extends Mapper {
 
 		$this->execute($sql, $params);
 	}*/
-
-	/**
-	 * @param int $mailAccountId
-	 */
-	public function delete($accountId){
-		$this->delete($this->getTableName(), $accountId);
-	}
 
 }
