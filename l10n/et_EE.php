@@ -1,10 +1,10 @@
 <?php $TRANSLATIONS = array(
-"Delete message" => "Kustuta sõnum",
 "Error" => "Viga",
 "Connecting ..." => "Ühendamine ...",
 "Unknown error" => "Tundmatu viga",
 "Connect" => "Ühenda",
 "Server Error" => "Serveri viga",
+"Auto detect failed. Please use manual mode." => "Automaatne tuvastus ebaõnnestus. Palun proovi käsitsi.",
 "New Message" => "Uus sõnum",
 "To" => "Kuni",
 "Subject" => "Teema",

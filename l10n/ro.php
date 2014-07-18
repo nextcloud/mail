@@ -1,5 +1,4 @@
 <?php $TRANSLATIONS = array(
-"Delete message" => "Șterge mesajul",
 "Error" => "Eroare",
 "Connecting ..." => "Se conectează...",
 "Unknown error" => "Eroare necunoscută",

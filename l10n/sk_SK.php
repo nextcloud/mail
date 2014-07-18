@@ -1,5 +1,4 @@
 <?php $TRANSLATIONS = array(
-"Delete message" => "Zmazať správu",
 "Error" => "Chyba",
 "Connecting ..." => "Pripájam sa...",
 "Unknown error" => "Neznáma chyba",

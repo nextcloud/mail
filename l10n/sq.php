@@ -1,5 +1,4 @@
 <?php $TRANSLATIONS = array(
-"Delete message" => "Fshi mesazhin",
 "Error" => "Veprim i gabuar",
 "Connecting ..." => "Duke u lidhur...",
 "Unknown error" => "Gabim panjohur",

@@ -7,8 +7,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: ownCloud\n"
 "Report-Msgid-Bugs-To: translations@owncloud.org\n"
-"POT-Creation-Date: 2014-07-17 02:41-0400\n"
-"PO-Revision-Date: 2014-07-17 06:41+0000\n"
+"POT-Creation-Date: 2014-07-18 02:41-0400\n"
+"PO-Revision-Date: 2014-07-18 06:41+0000\n"
 "Last-Translator: I Robot\n"
 "Language-Team: Spanish (Costa Rica) (http://www.transifex.com/projects/p/owncloud/language/es_CR/)\n"
 "MIME-Version: 1.0\n"
@@ -17,27 +17,23 @@ msgstr ""
 "Language: es_CR\n"
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
 
-#: js/mail.js:113
-msgid "Delete message"
-msgstr ""
-
-#: js/mail.js:156 js/mail.js:190 js/mail.js:252
+#: js/mail.js:128 js/mail.js:159 js/mail.js:220
 msgid "Error"
 msgstr ""
 
-#: js/mail.js:283
+#: js/mail.js:251
 msgid "Connecting ..."
 msgstr ""
 
-#: js/mail.js:300
+#: js/mail.js:268
 msgid "Unknown error"
 msgstr ""
 
-#: js/mail.js:304 templates/no-accounts.php:18
+#: js/mail.js:272 templates/no-accounts.php:18
 msgid "Connect"
 msgstr ""
 
-#: js/mail.js:306
+#: js/mail.js:274
 msgid "Server Error"
 msgstr ""
 
@@ -45,19 +41,19 @@ msgstr ""
 msgid "Auto detect failed. Please use manual mode."
 msgstr ""
 
-#: templates/index.php:25
+#: templates/index.php:71
 msgid "New Message"
 msgstr ""
 
-#: templates/index.php:27
+#: templates/index.php:73
 msgid "To"
 msgstr ""
 
-#: templates/index.php:28
+#: templates/index.php:74
 msgid "Subject"
 msgstr ""
 
-#: templates/index.php:30
+#: templates/index.php:76
 msgid "Send"
 msgstr ""
 

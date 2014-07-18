@@ -1,5 +1,4 @@
 <?php $TRANSLATIONS = array(
-"Delete message" => "Xóa th",
 "Error" => "Lỗi",
 "Connecting ..." => "Đang kết nối...",
 "Unknown error" => "Lỗi chưa biết",

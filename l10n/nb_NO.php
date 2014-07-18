@@ -1,10 +1,10 @@
 <?php $TRANSLATIONS = array(
-"Delete message" => "Slett melding",
 "Error" => "Feil",
 "Connecting ..." => "Kobler til...",
 "Unknown error" => "Ukjent feil",
 "Connect" => "Koble til",
 "Server Error" => "Serverfeil",
+"Auto detect failed. Please use manual mode." => "Automatisk påvisning feilet. Bruk manuelt oppsett.",
 "New Message" => "Ny melding",
 "To" => "Til",
 "Subject" => "Emne",

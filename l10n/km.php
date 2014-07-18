@@ -1,5 +1,4 @@
 <?php $TRANSLATIONS = array(
-"Delete message" => "លុប​សារ",
 "Error" => "កំហុស",
 "Connecting ..." => "កំពុង​ភ្ជាប់ ...",
 "Unknown error" => "មិន​ស្គាល់​កំហុស",

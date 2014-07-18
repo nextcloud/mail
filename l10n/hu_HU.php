@@ -1,5 +1,4 @@
 <?php $TRANSLATIONS = array(
-"Delete message" => "Üzenet törlése",
 "Error" => "Hiba",
 "Connecting ..." => "Csatlakozás ...",
 "Unknown error" => "Ismeretlen hiba",

@@ -1,10 +1,10 @@
 <?php $TRANSLATIONS = array(
-"Delete message" => "Delete message",
 "Error" => "Error",
 "Connecting ..." => "Connecting ...",
 "Unknown error" => "Unknown error",
 "Connect" => "Connect",
 "Server Error" => "Server Error",
+"Auto detect failed. Please use manual mode." => "Auto detect failed. Please use manual mode.",
 "New Message" => "New Message",
 "To" => "To",
 "Subject" => "Subject",

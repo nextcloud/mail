@@ -1,10 +1,10 @@
 <?php $TRANSLATIONS = array(
-"Delete message" => "Изтрий съобщение",
 "Error" => "Грешка",
 "Connecting ..." => "Свързване ...",
 "Unknown error" => "Непозната грешка",
 "Connect" => "Свържи",
 "Server Error" => "Грешка в Сървъра",
+"Auto detect failed. Please use manual mode." => "Неуспешни автоматични настройки. Моля, използвайте ръчен режим.",
 "New Message" => "Ново Съобщение",
 "To" => "До",
 "Subject" => "Относно",

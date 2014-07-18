@@ -1,5 +1,4 @@
 <?php $TRANSLATIONS = array(
-"Delete message" => "刪除訊息",
 "Error" => "錯誤",
 "Connecting ..." => "連線中...",
 "Unknown error" => "未知的錯誤",
