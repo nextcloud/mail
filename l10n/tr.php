@@ -4,6 +4,7 @@
 "Unknown error" => "Bilinmeyen hata",
 "Connect" => "Bağlan",
 "Server Error" => "Sunucu Hatası",
+"Auto detect failed. Please use manual mode." => "Otomatik sınama başarısız. Lütfen el kipini kullanın.",
 "New Message" => "Yeni Mesaj",
 "To" => "Kime",
 "Subject" => "Konu",

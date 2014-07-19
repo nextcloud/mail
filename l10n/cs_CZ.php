@@ -4,6 +4,7 @@
 "Unknown error" => "Neznámá chyba",
 "Connect" => "Připojit",
 "Server Error" => "Chyba serveru",
+"Auto detect failed. Please use manual mode." => "Autodetekce selhala. Prosím použijte manuální mód.",
 "New Message" => "Nová zpráva",
 "To" => "Komu",
 "Subject" => "Předmět",

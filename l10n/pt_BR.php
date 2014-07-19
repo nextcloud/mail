@@ -4,6 +4,7 @@
 "Unknown error" => "Erro desconhecido",
 "Connect" => "Conectar",
 "Server Error" => "Erro do Servidor",
+"Auto detect failed. Please use manual mode." => "Auto detecção falhou. Por favor use o modo manual.",
 "New Message" => "Nova Mensagem",
 "To" => "Para",
 "Subject" => "Assunto",
