@@ -70,59 +70,6 @@ namespace OCA\Mail {
 			return $receivers;
 		}
 
-		/**
-		 * Loads all user's accounts, connects to each server and queries all folders
-		 *
-		 * @static
-		 * @param $user_id
-		 * @return array
-		 */
-		public static function getFolders($user_id) {
-			$response = array();
-
-			// get all account configured by the user
-			$accounts = App::getAccounts($user_id);
-
-			// iterate ...
-			foreach ($accounts as $account) {
-				try {
-					$response[] = $account->getListArray();
-				} catch (\Horde_Imap_Client_Exception $e) {
-					$response[] = array('id' => $account->getId(), 'email' => $account->getEMailAddress(), 'error' => $e->getMessage());
-				}
-			}
-
-			return $response;
-		}
-
-		/**
-		 * @static
-		 * @param $user_id
-		 * @param $account_id
-		 * @param $folder_id
-		 * @param int $from
-		 * @param int $count
-		 * @return array
-		 */
-		public static function getMessages($user_id, $account_id, $folder_id, $from = 0, $count = 20) {
-			// get the account
-			$account = App::getAccount($user_id, $account_id);
-			if (!$account) {
-				//@TODO: i18n
-				return array('error' => 'unknown account');
-			}
-
-			try {
-				/** @var $mailbox \OCA\Mail\Mailbox */
-				$mailbox = $account->getMailbox($folder_id);
-				$messages = $mailbox->getMessages($from, $count);
-
-				return array('account_id' => $account_id, 'folder_id' => $folder_id, 'messages' => $messages);
-			} catch (\Horde_Imap_Client_Exception $e) {
-				return array('error' => $e->getMessage());
-			}
-		}
-
 		public static function getPhoto($email) {
 			$result = \OCP\Contacts::search($email, array('EMAIL'));
 			if (count($result) > 0) {
@@ -133,52 +80,5 @@ namespace OCA\Mail {
 			}
 			return \OCP\Util::imagePath('mail', 'person.png');
 		}
-
-		/**
-		 * @param $user_id
-		 * @return Account[]
-		 */
-		private static function getAccounts($user_id) {
-			$account_ids = \OCP\Config::getUserValue($user_id, 'mail', 'accounts', '');
-			if ($account_ids == "") {
-				return array();
-			}
-
-			$account_ids = explode(',', $account_ids);
-
-			$accounts = array();
-			foreach ($account_ids as $id) {
-				$account_string = 'account[' . $id . ']';
-
-				$accounts[$id] = new Account(array(
-					'id'       => $id,
-					'name'     => \OCP\Config::getUserValue($user_id, 'mail', $account_string . '[name]'),
-					'email'    => \OCP\Config::getUserValue($user_id, 'mail', $account_string . '[email]'),
-					'host'     => \OCP\Config::getUserValue($user_id, 'mail', $account_string . '[host]'),
-					'port'     => \OCP\Config::getUserValue($user_id, 'mail', $account_string . '[port]'),
-					'user'     => \OCP\Config::getUserValue($user_id, 'mail', $account_string . '[user]'),
-					'password' => base64_decode(\OCP\Config::getUserValue($user_id, 'mail', $account_string . '[password]')),
-					'ssl_mode' => \OCP\Config::getUserValue($user_id, 'mail', $account_string . '[ssl_mode]')
-				));
-			}
-
-			return $accounts;
-		}
-
-		/**
-		 * @param $user_id
-		 * @param $account_id
-		 * @return Account
-		 */
-		public static function getAccount($user_id, $account_id) {
-			$accounts = App::getAccounts($user_id);
-
-			if (isset($accounts[$account_id])) {
-				return $accounts[$account_id];
-			}
-
-			return null;
-		}
-
 	}
 }

@@ -1,3 +1,4 @@
+/* global Mail */
 $(function () {
 
 	function split(val) {
@@ -26,9 +27,8 @@ $(function () {
 			search:function () {
 				// custom minLength
 				var term = extractLast(this.value);
-				if (term.length < 2) {
-					return false;
-				}
+				return term.length >= 2;
+
 			},
 			focus:function () {
 				// prevent value inserted on focus
@@ -58,16 +58,16 @@ $(function () {
 		//
 
 		$.ajax({
-			url:OC.filePath('mail', 'ajax', 'reply_to.php'),
+			url:OC.generateUrl('/apps/mail/accounts/{accountId}/send', {accountId: Mail.State.currentAccountId}),
 			beforeSend:function () {
 			},
 			complete:function () {
 			},
 			data:{
-				'account_id': Mail.State.currentAccountId,
-				'folder_id': Mail.State.currentFolderId,
-				'message_id': Mail.State.currentMessageId,
-				'body':$('.reply-message-body').val()},
+				'folderId': Mail.State.currentFolderId,
+				'messageId': Mail.State.currentMessageId,
+				'body':$('.reply-message-body').val()
+			},
 			success:function () {
 				// close reply
 				$('.reply-message-body').val('');
@@ -88,7 +88,7 @@ $(function () {
 
 		// send the mail
 		$.ajax({
-			url:OC.filePath('mail', 'ajax', 'send_message.php'),
+			url:OC.generateUrl('/apps/mail/accounts/{accountId}/send', {accountId: Mail.State.currentAccountId}),
 			beforeSend:function () {
 //				$('#wait').show();
 			},
@@ -97,10 +97,10 @@ $(function () {
 //				$('#wait').hide();
 			},
 			data:{
-				'account_id': Mail.State.currentAccountId,
 				'to':$('#to').val(),
 				'subject':$('#subject').val(),
-				'body':$('#new-message-body').val()},
+				'body':$('#new-message-body').val()
+			},
 			success:function () {
 				// close composer
 				$('#new-message-fields').slideUp();

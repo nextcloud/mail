@@ -11,6 +11,7 @@ $app->registerRoutes($this,
 	array(
 		'routes' => array(
 			array('name' => 'page#index', 'url' => '/', 'verb' => 'GET'),
+			array('name' => 'accounts#send', 'url' => '/accounts/{accountId}/send', 'verb' => 'POST'),
 		),
 		'resources' => array(
 			'accounts' => array('url' => '/accounts'),

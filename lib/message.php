@@ -26,14 +26,14 @@ class Message {
 
 	/**
 	 * @param $conn
-	 * @param $folder_id
-	 * @param $message_id
+	 * @param $folderId
+	 * @param $messageId
 	 * @param null $fetch
 	 */
-	function __construct($conn, $folder_id, $message_id, $fetch=null) {
+	function __construct($conn, $folderId, $messageId, $fetch=null) {
 		$this->conn = $conn;
-		$this->folder_id = $folder_id;
-		$this->message_id = $message_id;
+		$this->folderId = $folderId;
+		$this->messageId = $messageId;
 
 		if ($fetch === null) {
 			$this->loadMessageBodies();
@@ -45,8 +45,8 @@ class Message {
 	// output all the following:
 	// the message may in $htmlmsg, $plainmsg, or both
 	public $header = null;
-	public $htmlmsg = '';
-	public $plainmsg = '';
+	public $htmlMessage = '';
+	public $plainMessage = '';
 	public $charset = '';
 	public $attachments = array();
 
@@ -54,7 +54,8 @@ class Message {
 	 * @var \Horde_Imap_Client_Socket
 	 */
 	private $conn;
-	private $folder_id, $message_id;
+	private $folderId;
+	private $messageId;
 
 	/**
 	 * @var \Horde_Imap_Client_Data_Fetch
@@ -145,10 +146,10 @@ class Message {
 		));
 
 		// $list is an array of Horde_Imap_Client_Data_Fetch objects.
-		$ids = new \Horde_Imap_Client_Ids($this->message_id);
-		$headers = $this->conn->fetch($this->folder_id, $fetch_query, array('ids' => $ids));
+		$ids = new \Horde_Imap_Client_Ids($this->messageId);
+		$headers = $this->conn->fetch($this->folderId, $fetch_query, array('ids' => $ids));
 		/** @var $fetch \Horde_Imap_Client_Data_Fetch */
-		$fetch = $headers[$this->message_id];
+		$fetch = $headers[$this->messageId];
 
 		// set $this->fetch to get to, from ...
 		$this->fetch = $fetch;
@@ -175,21 +176,21 @@ class Message {
 	private function queryBodyPart($partId) {
 
 		$fetch_query = new \Horde_Imap_Client_Fetch_Query();
-		$ids = new \Horde_Imap_Client_Ids($this->message_id);
+		$ids = new \Horde_Imap_Client_Ids($this->messageId);
 
 		$fetch_query->bodyPart($partId);
-		$headers = $this->conn->fetch($this->folder_id, $fetch_query, array('ids' => $ids));
+		$headers = $this->conn->fetch($this->folderId, $fetch_query, array('ids' => $ids));
 		/** @var $fetch \Horde_Imap_Client_Data_Fetch */
-		$fetch = $headers[$this->message_id];
+		$fetch = $headers[$this->messageId];
 
 		return $fetch->getBodyPart($partId);
 	}
 
 	/**
 	 * @param $p \Horde_Mime_Part
-	 * @param $partno
+	 * @param $partNo
 	 */
-	private function getPart($p, $partno) {
+	private function getPart($p, $partNo) {
 		// ATTACHMENT
 		// Any part with a filename is an attachment,
 		// so an attached text file (type 0) is not mistaken as the message.
@@ -207,7 +208,7 @@ class Message {
 		}
 
 		// DECODE DATA
-		$data = $this->queryBodyPart($partno);
+		$data = $this->queryBodyPart($partNo);
 		$p->setContents($data);
 		$data = $p->toString();
 
@@ -236,9 +237,9 @@ class Message {
 			// Messages may be split in different parts because of inline attachments,
 			// so append parts together with blank row.
 			if ($p->getSubType() == 'plain') {
-				$this->plainmsg .= trim($data) ."\n\n";
+				$this->plainMessage .= trim($data) ."\n\n";
 			} else {
-				$this->htmlmsg .= $data ."<br><br>";
+				$this->htmlMessage .= $data ."<br><br>";
 				$this->charset = $charset;  // assume all parts are same charset
 			}
 		}
@@ -249,7 +250,7 @@ class Message {
 		// There are no PHP functions to parse embedded messages,
 		// so this just appends the raw source to the main message.
 		elseif ($p[0]=='message' && $data) {
-			$this->plainmsg .= trim($data) ."\n\n";
+			$this->plainMessage .= trim($data) ."\n\n";
 		}
 
 		//
@@ -274,10 +275,10 @@ class Message {
 	}
 
 	public function as_array() {
-		$mail_body = $this->plainmsg;
+		$mail_body = $this->plainMessage;
 		$mail_body = nl2br($mail_body);
 
-		if (empty($this->plainmsg) && !empty($this->htmlmsg)) {
+		if (empty($this->plainMessage) && !empty($this->htmlMessage)) {
 			$mail_body = "<br/><h2>Only Html body available!</h2><br/>";
 		}
 

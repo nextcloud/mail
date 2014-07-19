@@ -23,6 +23,7 @@
 namespace OCA\Mail\Controller;
 
 use Horde_Imap_Client_Socket;
+use OCA\Mail\Account;
 use OCA\Mail\Db\MailAccount;
 use OCP\AppFramework\Controller;
 use OCP\AppFramework\Db\DoesNotExistException;
@@ -137,6 +138,46 @@ class AccountsController extends Controller
 		return new JSONResponse(
 			array('message' => $l->t('Auto detect failed. Please use manual mode.')),
 			HTTP::STATUS_BAD_REQUEST);
+	}
+
+	public function send($accountId) {
+
+		$subject = $this->params('subject');
+		$body = $this->params('body');
+		$to = $this->params('to');
+
+		$dbAccount = $this->mapper->find($this->currentUserId, $accountId);
+		$account = new Account($dbAccount);
+
+		// get sender data
+		$headers = array();
+		$headers['From']= $account->getEMailAddress();
+		$headers['Subject'] = $subject;
+
+		// in reply to handling
+		$folderId = $this->params('folderId');
+		$messageId = $this->params('messageId');
+		if (!is_null($folderId) && !is_null($messageId)) {
+			$mailbox = $account->getMailbox($folderId);
+			$message = $mailbox->getMessage($messageId);
+
+			if (is_null($subject)) {
+				$headers['Subject'] = "RE: " . $message->getSubject();
+			}
+			$headers['In-Reply-To'] = $message->getMessageId();
+			$to = $message->getToEmail();
+		}
+
+		// create transport and send
+		$transport = $account->createTransport();
+		$transport->send($to, $headers, $body);
+
+		//
+		// TODO: save message to 'Sent' folder
+		// TODO: remove from drafts folder as well
+		//
+
+		return new JSONResponse();
 	}
 
 	/**
