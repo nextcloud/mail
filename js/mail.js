@@ -137,24 +137,34 @@ var Mail = {
 			var loadRow = $('#mail_messages').find('tr.mail_message_loading[data-message-id="' + messageId + '"]');
 			loadRow.show();
 
-			$.getJSON(OC.filePath('mail', 'ajax', 'message.php'), {'account_id':Mail.State.currentAccountId, 'folder_id':Mail.State.currentFolderId, 'message_id':messageId }, function (jsondata) {
-				if (jsondata.status == 'success') {
+			$.ajax(
+				OC.generateUrl('apps/mail/accounts/{accountId}/folders/{folderId}/messages/{messageId}',
+					{
+					accountId: Mail.State.currentAccountId,
+					folderId: encodeURIComponent(Mail.State.currentFolderId),
+					messageId: messageId
+				}), {
+					data: {},
+					type:'GET',
+					success: function (data) {
+						summaryRow.hide();
 
-					summaryRow.hide();
+						// hide loading
+						loadRow.hide();
 
-					// hide loading
-					loadRow.hide();
+						// Find the correct message
+						var source   = $("#mail-message-template").html();
+						var template = Handlebars.compile(source);
+						var html = template(data);
+						loadRow.after(html);
 
-					// Find the correct message
-					loadRow.after(jsondata.data);
-
-					// Set current Message as active
-					Mail.State.currentMessageId = messageId;
-				}
-				else {
-					OC.dialogs.alert(jsondata.data.message, t('mail', 'Error'));
-				}
-			});
+						// Set current Message as active
+						Mail.State.currentMessageId = messageId;
+					},
+					error: function() {
+						OC.dialogs.alert(t('mail', 'Error while loading mail message.'), t('mail', 'Error'));
+					}
+				});
 		},
 
 		closeMessage:function () {
@@ -255,7 +265,7 @@ $(document).ready(function () {
 				autoDetect : true
 			},
 			type:'POST',
-			success:function (jsondata) {
+			success:function () {
 				// reload on success
 				window.location.reload();
 			},
@@ -291,7 +301,7 @@ $(document).ready(function () {
 
 	// Clicking on a message loads the entire message
 	$(document).on('click', '#mail_messages .mail_message_summary', function () {
-		var messageId = $(this).data('message_id');
+		var messageId = $(this).data('messageId');
 		Mail.UI.openMessage(messageId);
 	});
 

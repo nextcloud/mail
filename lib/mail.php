@@ -123,37 +123,6 @@ namespace OCA\Mail {
 			}
 		}
 
-		/**
-		 * @static
-		 * @param $user_id
-		 * @param $account_id
-		 * @param $folder_id
-		 * @param $message_id
-		 * @return array
-		 */
-		public static function getMessage($user_id, $account_id, $folder_id, $message_id) {
-			// get the account
-			$account = App::getAccount($user_id, $account_id);
-			if (!$account) {
-				//@TODO: i18n
-				return array('error' => 'unknown account');
-			}
-
-			try {
-				/** @var $mailbox \OCA\Mail\Mailbox */
-				$mailbox = $account->getMailbox($folder_id);
-				$m = $mailbox->getMessage($message_id);
-				$message = $m->as_array();
-
-				// add sender image
-				$message['sender_image'] = self::getPhoto($m->getFromEmail());
-
-				return array('message' => $message);
-			} catch (\Horde_Imap_Client_Exception $e) {
-				return array('error' => $e->getMessage());
-			}
-		}
-
 		public static function getPhoto($email) {
 			$result = \OCP\Contacts::search($email, array('EMAIL'));
 			if (count($result) > 0) {

@@ -22,6 +22,7 @@
 
 namespace OCA\Mail\Controller;
 
+use OCA\Mail\App;
 use OCA\Mail\Db\MailAccount;
 use OCP\AppFramework\Controller;
 use OCP\AppFramework\Db\DoesNotExistException;
@@ -65,15 +66,17 @@ class MessagesController extends Controller
 	 * @NoAdminRequired
 	 * @NoCSRFRequired
 	 *
-	 * @param int $messageId
+	 * @param int $id
 	 * @return JSONResponse
 	 */
-	public function show($messageId)
+	public function show($id)
 	{
 		$mailBox = $this->getFolder();
 
-		$m = $mailBox->getMessage($messageId);
+		$m = $mailBox->getMessage($id);
 		$json = $m->as_array();
+		$json['senderImage'] = App::getPhoto($m->getFromEmail());
+
 
 		return new JSONResponse($json);
 	}
