@@ -53,10 +53,10 @@ class MessagesController extends Controller
 	 * @param int $to
 	 * @return JSONResponse
 	 */
-	public function index($from=0, $to=20)
+	public function index($from=0, $to=40)
 	{
 		$mailBox = $this->getFolder();
-		$json = $mailBox->getMessages($from, $to);
+		$json = $mailBox->getMessages($from, $to-$from);
 
 		return new JSONResponse($json);
 	}

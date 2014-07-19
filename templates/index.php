@@ -16,8 +16,7 @@
 	</ul>
 </script>
 <script id="mail-messages-template" type="text/x-handlebars-template">
-	<tbody>
-	{{#each messages}}
+	{{#each this}}
 		<tr class="mail_message_summary {{#if flags.unseen}}unseen{{/if}}" data-message-id="{{id}}">
 			<td class="mail_message_summary_from">{{from}}</td>
 			<td class="mail_message_summary_subject">{{subject}}</td>
@@ -36,7 +35,6 @@
 			<td></td>
 		</tr>
 	{{/each}}
-	</tbody>
 </script>
 <script id="mail-message-template" type="text/x-handlebars-template">
 	<tr id="mail_message_header">
@@ -80,6 +78,7 @@
 		<img class="loading" id="messages-loading" src="<?php print_unescaped(OCP\Util::imagePath('core', 'loading.gif')); ?>" />
 
 		<table id="mail_messages">
+			<tbody></tbody>
 		</table>
 	</div>
 </div>

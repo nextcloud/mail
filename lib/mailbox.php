@@ -26,7 +26,7 @@ class Mailbox {
 	public function getMessages($from = 0, $count = 2) {
 		$total = $this->getTotalMessages();
 		$from = $total - $from;
-		$to = max($from - $count, 0);
+		$to = max($from - $count, 1);
 
 		$headers = array();
 
