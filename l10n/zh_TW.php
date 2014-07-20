@@ -4,12 +4,12 @@
 "Unknown error" => "未知的錯誤",
 "Connect" => "連線",
 "Server Error" => "伺服器錯誤",
+"Reply" => "回覆",
 "New Message" => "新郵件",
 "To" => "至",
 "Subject" => "主旨",
 "Send" => "寄出",
 "Connect your mail account" => "連結您的郵件帳戶",
 "Mail Address" => "電子郵件地址",
-"IMAP Password" => "IMAP 密碼",
-"Reply" => "回覆"
+"IMAP Password" => "IMAP 密碼"
 );

@@ -9,8 +9,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: ownCloud\n"
 "Report-Msgid-Bugs-To: translations@owncloud.org\n"
-"POT-Creation-Date: 2014-07-18 02:41-0400\n"
-"PO-Revision-Date: 2014-07-18 06:41+0000\n"
+"POT-Creation-Date: 2014-07-20 02:41-0400\n"
+"PO-Revision-Date: 2014-07-20 06:41+0000\n"
 "Last-Translator: I Robot\n"
 "Language-Team: Basque (http://www.transifex.com/projects/p/owncloud/language/eu/)\n"
 "MIME-Version: 1.0\n"
@@ -19,43 +19,51 @@ msgstr ""
 "Language: eu\n"
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
 
-#: js/mail.js:128 js/mail.js:159 js/mail.js:220
+#: js/mail.js:124 js/mail.js:165
 msgid "Error"
 msgstr "Errorea"
 
-#: js/mail.js:251
+#: js/mail.js:165
+msgid "Error while loading mail message."
+msgstr ""
+
+#: js/mail.js:256
 msgid "Connecting ..."
 msgstr "Konektatzen ..."
 
-#: js/mail.js:268
+#: js/mail.js:273
 msgid "Unknown error"
 msgstr "Errore ezezaguna"
 
-#: js/mail.js:272 templates/no-accounts.php:18
+#: js/mail.js:277 templates/no-accounts.php:18
 msgid "Connect"
 msgstr "Konektatu"
 
-#: js/mail.js:274
+#: js/mail.js:279
 msgid "Server Error"
 msgstr "Zerbitzari errorea"
 
-#: lib/controller/accountscontroller.php:138
+#: lib/controller/accountscontroller.php:139
 msgid "Auto detect failed. Please use manual mode."
 msgstr ""
 
-#: templates/index.php:71
+#: templates/index.php:68
+msgid "Reply"
+msgstr "Erantzun"
+
+#: templates/index.php:81
 msgid "New Message"
 msgstr "Mezu berria"
 
-#: templates/index.php:73
+#: templates/index.php:84
 msgid "To"
 msgstr "Nori"
 
-#: templates/index.php:74
+#: templates/index.php:85
 msgid "Subject"
 msgstr "Gaia"
 
-#: templates/index.php:76
+#: templates/index.php:87
 msgid "Send"
 msgstr "Bidali"
 
@@ -70,7 +78,3 @@ msgstr "Posta helbidea"
 #: templates/no-accounts.php:14 templates/no-accounts.php:15
 msgid "IMAP Password"
 msgstr "IMAP pasahitza"
-
-#: templates/part.message.php:31
-msgid "Reply"
-msgstr "Erantzun"
