@@ -139,9 +139,8 @@ var Mail = {
 				return;
 			}
 
-			var summaryRow = $('#mail_messages tr.mail_message_summary[data-message-id="' + messageId + '"]');
-			var loadRow = $('#mail_messages').find('tr.mail_message_loading[data-message-id="' + messageId + '"]');
-			loadRow.show();
+			var summaryRow = $('#mail-message-summary-' + messageId);
+			summaryRow.find('.mail_message_loading').fadeIn();
 
 			$.ajax(
 				OC.generateUrl('apps/mail/accounts/{accountId}/folders/{folderId}/messages/{messageId}',
@@ -153,16 +152,15 @@ var Mail = {
 					data: {},
 					type:'GET',
 					success: function (data) {
-						summaryRow.hide();
-
-						// hide loading
-						loadRow.hide();
-
-						// Find the correct message
+						// Render the message body
 						var source   = $("#mail-message-template").html();
 						var template = Handlebars.compile(source);
 						var html = template(data);
-						loadRow.after(html);
+						summaryRow.find('.mail_message_loading').fadeOut(function(){
+							var mailBody = summaryRow.find('.mail_message');
+							mailBody.html(html);
+							mailBody.fadeIn();
+						});
 
 						// Set current Message as active
 						Mail.State.currentMessageId = messageId;
@@ -176,12 +174,8 @@ var Mail = {
 		closeMessage:function () {
 			// Check if message is open
 			if (Mail.State.currentMessageId !== null) {
-				$('#mail_message').remove();
-				$('#mail_message_header').remove();
-
-				var summaryRow =
-					$('#mail_messages tr.mail_message_summary[data-message-id="' + Mail.State.currentMessageId + '"]');
-				summaryRow.show();
+				var summaryRow = $('#mail-message-summary-' + Mail.State.currentMessageId);
+				summaryRow.find('.mail_message').fadeOut();
 			}
 		},
 

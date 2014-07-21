@@ -17,7 +17,7 @@
 </script>
 <script id="mail-messages-template" type="text/x-handlebars-template">
 	{{#each this}}
-	<div class="mail_message_summary {{#if flags.unseen}}unseen{{/if}}" data-message-id="{{id}}">
+	<div id="mail-message-summary-{{id}}" class="mail_message_summary {{#if flags.unseen}}unseen{{/if}}" data-message-id="{{id}}">
 		<div class="sender-image">
 			{{#if senderImage}}
 			<img src="{{senderImage}}" width="32px" height="32px"/>
@@ -33,50 +33,26 @@
 					  style="color:{{colorOfDate dateInt}}">{{relativeModifiedDate dateInt}}</span>
 			<a class="icon-delete action delete"></a>
 		</div>
-		<div class="template_loading mail_message_loading" data-message-id="{{id}}">
-			<img src="<?php print_unescaped(OCP\Util::imagePath('core', 'loading.gif')); ?>"/>
-		</div>
+		<div class="mail_message_loading icon-loading"></div>
+		<div class="mail_message"></div>
 	</div>
 	{{/each}}
 </script>
 <script id="mail-message-template" type="text/x-handlebars-template">
-	<tr id="mail_message_header">
-		<td>
-			{{#if senderImage}}
-			<img src="{{senderImage}}" width="32px" height="32px"/>
-			{{else}}
-			<div class="avatar" data-username="{{from}}"></div>
-			{{/if}}
-		</td>
-		<td>
-			{{from}}
-			<br/>
-			{{subject}}
-			<br/>
-			{{#each attachments}}
-			{{filename}} ( {{size}} )
-			{{/each}}
-		</td>
-		<td>
-			<img src="<?php print_unescaped(OCP\Util::imagePath('mail', 'reply.png')); ?>" />
-			<img src="<?php print_unescaped(OCP\Util::imagePath('mail', 'reply-all.png')); ?>" />
-			<img src="<?php print_unescaped(OCP\Util::imagePath('mail', 'forward.png')); ?>" />
-			<br/>
-			{{formatDate dateInt}}
-		</td>
-	</tr>
-	<tr id="mail_message">
-		<td colspan="3" class="mail_message_body">
-			<div id="mail-content">
-				{{{body}}}
-			</div>
-			<div class="reply-message-fields">
-				<textarea name="body" class="reply-message-body"></textarea>
-				<input class="reply-message-send" type="submit" value="<?php p($l->t('Reply')) ?>">
-			</div>
-
-		</td>
-	</tr>
+	<div class="mail-message-attachments">
+		{{#each attachments}}
+		{{filename}} ( {{size}} )
+		{{/each}}
+	</div>
+	<div class="mail-message-body">
+		<div id="mail-content">
+			{{{body}}}
+		</div>
+		<div class="reply-message-fields">
+			<textarea name="body" class="reply-message-body"></textarea>
+			<input class="reply-message-send" type="submit" value="<?php p($l->t('Reply')) ?>">
+		</div>
+	</div>
 </script>
 
 <div id="app">

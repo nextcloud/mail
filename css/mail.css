@@ -76,7 +76,7 @@ button.control {
 
 
 .mail_message_summary {
-	height: 44px;
+	min-height: 44px;
     border-top: 1px solid #eee;
     position: relative;
 }
@@ -154,4 +154,9 @@ a.action.delete { float:right; }
 .avatar {
 	width: 32px;
 	height: 32px;
+}
+
+.mail_message_loading {
+	height: 32px;
+	margin-bottom: 10px;
 }
