@@ -66,11 +66,10 @@ button.control {
 
 
 #new-message {
-	width: 60%;
 	margin: 10px;
 }
 
-reply-message-fields {
+.reply-message-fields {
 	width: 60%;
 	margin: 10px;
 }
@@ -129,17 +128,15 @@ a.action.delete { float:right; }
 }
 
 /* editor */
-#to {
-    width: 95%;
-}
 
-#subject {
-    width: 95%;
+#to,
+#subject,
+#new-message-body {
+    width: 100%;
 }
 
 #new-message-body {
-    width: 95%;
-    height: 100px;
+    height: 150px;
     resize: none;
 }
 

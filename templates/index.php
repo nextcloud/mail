@@ -86,10 +86,14 @@
 			<input type="button" id="mail_new_message" value="<?php p($l->t('New Message')); ?>" style="display: none">
 
 			<div id="new-message-fields" style="display: none">
-				<input type="text" name="to" id="to" placeholder="<?php p($l->t('To')); ?>"/>
-				<input type="text" name="subject" id="subject" placeholder="<?php p($l->t('Subject')); ?>"/>
-				<textarea name="body" id="new-message-body"></textarea>
-				<input id="new-message-send" class="send" type="submit" value="<?php p($l->t('Send')) ?>">
+				<input type="text" name="to" id="to"
+					placeholder="<?php p($l->t('Recipient')); ?>" />
+				<input type="text" name="subject" id="subject"
+					placeholder="<?php p($l->t('Subject')); ?>" />
+				<textarea name="body" id="new-message-body"
+					placeholder="<?php p($l->t('Message')); ?> …"></textarea>
+				<input id="new-message-send" class="send" type="submit"
+					value="<?php p($l->t('Send')) ?>">
 			</div>
 		</form>
 
