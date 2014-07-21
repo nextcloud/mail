@@ -1,5 +1,6 @@
 <?php $TRANSLATIONS = array(
 "Error" => "Hata",
+"Error while loading mail message." => "Posta iletisi yüklenirken hata.",
 "Connecting ..." => "Bağlanıyor ...",
 "Unknown error" => "Bilinmeyen hata",
 "Connect" => "Bağlan",

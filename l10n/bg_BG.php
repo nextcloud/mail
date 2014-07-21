@@ -1,5 +1,6 @@
 <?php $TRANSLATIONS = array(
 "Error" => "Грешка",
+"Error while loading mail message." => "Грешка по време на зареждането на имейл съобщението",
 "Connecting ..." => "Свързване ...",
 "Unknown error" => "Непозната грешка",
 "Connect" => "Свържи",
