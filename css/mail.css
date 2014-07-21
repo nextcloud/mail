@@ -60,6 +60,10 @@ button.control {
 }
 
 
+#app-navigation .utils {
+    padding: 0 7px;
+}
+
 
 #new-message {
 	width: 60%;
