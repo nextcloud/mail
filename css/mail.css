@@ -84,6 +84,7 @@ button.control {
     display: inline-block;
     position: absolute;
     padding: 5px;
+    padding-left: 10px;
 }
 
 .mail_message_summary_from,
@@ -98,7 +99,7 @@ button.control {
 
 .mail_message_summary_from {
     width: 180px;
-    margin-left: 32px;
+    margin-left: 37px;
 }
 
 .mail_message_summary_subject {
@@ -106,7 +107,7 @@ button.control {
 }
 
 .date {
-    width: 140px;
+    width: 120px;
     position: absolute;
     right: 0;
     top: 0;
