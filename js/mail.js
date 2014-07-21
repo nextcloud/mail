@@ -79,7 +79,7 @@ var Mail = {
 		},
 
 		clearMessages:function () {
-			var table = $('#mail_messages tbody');
+			var table = $('#mail_messages');
 
 			table.empty();
 			$('#messages-loading').fadeIn();
@@ -89,7 +89,7 @@ var Mail = {
 			var source   = $("#mail-messages-template").html();
 			var template = Handlebars.compile(source);
 			var html = template(data);
-			$('#mail_messages tbody').append(html);
+			$('#mail_messages').append(html);
 		},
 
 		loadMessages:function (accountId, folderId) {
