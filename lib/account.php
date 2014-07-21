@@ -107,7 +107,7 @@ class Account {
 			self::move_to_top($folders, $inbox);
 		}
 
-		return array('id' => $this->getId(), 'email' => $this->getEMailAddress(), 'folders' => $folders);
+		return array('id' => $this->getId(), 'email' => $this->getEMailAddress(), 'folders' => array_values( $folders));
 	}
 
 	private static function move_to_top(&$array, $key) {
