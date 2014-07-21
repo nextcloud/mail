@@ -1,6 +1,10 @@
 Mail app
 ============
 
+[![Build Status](https://travis-ci.org/owncloud/mail.svg?branch=master)](https://travis-ci.org/owncloud/mail)
+
+For use with [ownCloud](https://owncloud.org) 7.
+
 Maintainers:
 ------------
 - [Thomas Müller](https://github.com/DeepDiver1975)
@@ -16,23 +20,8 @@ Contact us if you'd like to join!
 
 Developer setup info:
 ---------------------
-### Master branch:
 Just clone this repo into your apps directory. Additionally you need Composer to install dependencies:
 ```bash
 curl -sS https://getcomposer.org/installer | php
 php composer.phar install
-```
-
-### appframework branch:
-Get the latest version of the appframework into the apps directory:
-```bash
-git clone git://github.com/owncloud/appframework.git
-```
-Enable the appframework in the app settings of ownCloud.
-
-Get the lastest version of the rework:
-```bash
-git clone git://github.com/owncloud/mail.git
-cd mail
-git checkout appframework
 ```
