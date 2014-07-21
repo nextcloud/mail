@@ -55,6 +55,7 @@ var Mail = {
 					var template = Handlebars.compile(source);
 					var html = template(jsondata);
 
+					$('#app-navigation').removeClass('icon-loading');
 					$('#app-navigation').html(html);
 
 					firstFolder = $('#app-navigation').find('.mail_folders li');
@@ -92,7 +93,7 @@ var Mail = {
 			$('#mail_messages').append(html);
 
 			_.each($('.avatar'), function(a) {
-				$(a).imageplaceholder($(a).data('user'));
+				$(a).imageplaceholder($(a).data('user'), $(a).data('user'));
 			}
 			);
 		},
@@ -103,7 +104,7 @@ var Mail = {
 			Mail.UI.setFolderActive(accountId, folderId);
 			Mail.UI.clearMessages();
 
-			$('#mail_new_message').fadeIn();
+			$('#app-content').addClass('icon-loading');
 
 			$.ajax(
 				OC.generateUrl('apps/mail/accounts/{accountId}/folders/{folderId}/messages',
@@ -111,10 +112,11 @@ var Mail = {
 					data: {},
 					type:'GET',
 					success: function (jsondata) {
-						$('#messages-loading').fadeOut();
+//						$('#app-content').removeClass('icon-loading');
 
 						// Add messages
 						Mail.UI.addMessages(jsondata);
+						$('#app-content').removeClass('icon-loading');
 
 						Mail.State.currentAccountId = accountId;
 						Mail.State.currentFolderId = folderId;

@@ -80,10 +80,8 @@
 </script>
 
 <div id="app">
-	<div id="app-navigation">
-		<img class="loading" src="<?php print_unescaped(OCP\Util::imagePath('core', 'loading.gif')); ?>"/>
-	</div>
-	<div id="app-content">
+	<div id="app-navigation" class="icon-loading"></div>
+	<div id="app-content"  class="icon-loading">
 		<form id="new-message">
 			<input type="button" id="mail_new_message" value="<?php p($l->t('New Message')); ?>" style="display: none">
 
@@ -95,10 +93,6 @@
 			</div>
 		</form>
 
-		<img class="loading" id="messages-loading"
-			 src="<?php print_unescaped(OCP\Util::imagePath('core', 'loading.gif')); ?>"/>
-
-		<div id="mail_messages">
-		</div>
+		<div id="mail_messages"></div>
 	</div>
 </div>
