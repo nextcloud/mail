@@ -20,19 +20,6 @@
  *
  */
 
-namespace {
-	// add include path to this apps 3rdparty
-//	$incPath = __DIR__."/../3rdparty";
-//	set_include_path(get_include_path() . PATH_SEPARATOR . $incPath);
-
-	// load Horde's auto loader
-//	require_once 'Horde/Autoloader/Default.php';
-	require __DIR__ . '/../vendor/autoload.php';
-
-	// bypass Horde Translation system
-	Horde_Translation::setHandler('Horde_Imap_Client', new OC_Translation_Handler());
-}
-
 namespace OCA\Mail {
 
 	class App

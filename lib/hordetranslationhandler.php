@@ -1,12 +1,10 @@
 <?php
-/**
- * Created by JetBrains PhpStorm.
- * User: thomas
- * Date: 13.11.12
- * Time: 23:51
- * To change this template use File | Settings | File Templates.
- */
-class OC_Translation_Handler  implements Horde_Translation_Handler
+
+namespace OCA\Mail;
+
+use Horde_Translation_Handler;
+
+class HordeTranslationHandler  implements Horde_Translation_Handler
 {
 	/**
 	 * Returns the translation of a message.

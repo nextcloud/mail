@@ -1,15 +1,11 @@
 <?php
 
-OC::$CLASSPATH['OCA\Mail\App'] = 'apps/mail/lib/mail.php';
-OC::$CLASSPATH['OCA\Mail\Account'] = 'apps/mail/lib/account.php';
-OC::$CLASSPATH['OCA\Mail\Mailbox'] = 'apps/mail/lib/mailbox.php';
-OC::$CLASSPATH['OCA\Mail\Message'] = 'apps/mail/lib/message.php';
-OC::$CLASSPATH['OC_Translation_Handler'] = 'apps/mail/lib/OC_Translation_Handler.php';
+use OCA\Mail\HordeTranslationHandler;
 
 require_once __DIR__ .  '/../vendor/autoload.php';
 
 // bypass Horde Translation system
-Horde_Translation::setHandler('Horde_Imap_Client', new OC_Translation_Handler());
+Horde_Translation::setHandler('Horde_Imap_Client', new HordeTranslationHandler());
 
 OCP\App::addNavigationEntry( array(
   'id' => 'mail_index',
