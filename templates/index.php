@@ -17,23 +17,19 @@
 </script>
 <script id="mail-messages-template" type="text/x-handlebars-template">
 	{{#each this}}
-	<tr class="mail_message_summary {{#if flags.unseen}}unseen{{/if}}" data-message-id="{{id}}">
-		<td class="mail_message_summary_from">{{from}}</td>
-		<td class="mail_message_summary_subject">{{subject}}</td>
-		<td class="date">
+	<div class="mail_message_summary {{#if flags.unseen}}unseen{{/if}}" data-message-id="{{id}}">
+		<div class="mail_message_summary_from">{{from}}</div>
+		<div class="mail_message_summary_subject">{{subject}}</div>
+		<div class="date">
 				<span class="modified"
 					  title="{{formatDate dateInt}}"
 					  style="color:{{colorOfDate dateInt}}">{{relativeModifiedDate dateInt}}</span>
 			<a class="icon-delete action delete"></a>
-		</td>
-	</tr>
-	<tr class="template_loading mail_message_loading" data-message-id="{{id}}">
-		<td></td>
-		<td>
+		</div>
+		<div class="template_loading mail_message_loading" data-message-id="{{id}}">
 			<img src="<?php print_unescaped(OCP\Util::imagePath('core', 'loading.gif')); ?>"/>
-		</td>
-		<td></td>
-	</tr>
+		</div>
+	</div>
 	{{/each}}
 </script>
 <script id="mail-message-template" type="text/x-handlebars-template">
@@ -91,8 +87,7 @@
 		<img class="loading" id="messages-loading"
 			 src="<?php print_unescaped(OCP\Util::imagePath('core', 'loading.gif')); ?>"/>
 
-		<table id="mail_messages">
-			<tbody></tbody>
-		</table>
+		<div id="mail_messages">
+		</div>
 	</div>
 </div>
