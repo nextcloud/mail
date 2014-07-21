@@ -215,31 +215,27 @@ class AccountsController extends Controller
 	 * Secure IMAP (IMAP4-SSL) - port 585
 	 * IMAP4 over SSL (IMAPS) - port 993
 	 */
-	private function testAccount($userId, $email, $host, $user, $password)
+	private function testAccount($userId, $email, $host, $users, $password)
 	{
-		$account = array(
-			'name' => $email,
-			'host' => $host,
-			'user' => $user,
-			'password' => $password,
-		);
+		if (!is_array($users)) {
+			$users = array($users);
+		}
 
 		$ports = array(143, 585, 993);
 		$encryptionProtocols = array('ssl', 'tls', null);
 		$hostPrefixes = array('', 'imap.');
 		foreach ($hostPrefixes as $hostPrefix) {
 			$url = $hostPrefix . $host;
-			$account['host'] = $url;
 			foreach ($ports as $port) {
-				$account['port'] = $port;
 				foreach ($encryptionProtocols as $encryptionProtocol) {
-					$account['ssl_mode'] = $encryptionProtocol;
-					try {
-						$this->getImapConnection($url, $port, $user, $password, $encryptionProtocol);
-						$this->log("Test-Account-Successful: $userId, $url, $port, $user, $encryptionProtocol");
-						return $this->addAccount($userId, $email, $url, $port, $user, $password, $encryptionProtocol);
-					} catch (\Horde_Imap_Client_Exception $e) {
-						$this->log("Test-Account-Failed: $userId, $url, $port, $user, $encryptionProtocol");
+					foreach($users as $user) {
+						try {
+							$this->getImapConnection($url, $port, $user, $password, $encryptionProtocol);
+							$this->log("Test-Account-Successful: $userId, $url, $port, $user, $encryptionProtocol");
+							return $this->addAccount($userId, $email, $url, $port, $user, $password, $encryptionProtocol);
+						} catch (\Horde_Imap_Client_Exception $e) {
+							$this->log("Test-Account-Failed: $userId, $url, $port, $user, $encryptionProtocol");
+						}
 					}
 				}
 			}
@@ -317,15 +313,37 @@ class AccountsController extends Controller
 		}
 
 		/*
+		 * Try to get the mx record for the email address
+		 */
+		$mxHosts = $this->getMxRecord($host);
+		if ($mxHosts) {
+			foreach($mxHosts as $mxHost) {
+				$result = $this->testAccount($ocUserId, $email, $mxHost, array($user, $email), $password);
+				if ($result) {
+					return $result;
+				}
+			}
+		}
+
+		/*
 		 * IMAP login with full email address as user
 		 * works for a lot of providers (e.g. Google Mail)
 		 */
-		return $this->testAccount($ocUserId, $email, $host, $email, $password);
+		return $this->testAccount($ocUserId, $email, $host, array($user, $email), $password);
 	}
 
 	private function log($message) {
 		// TODO: DI
 		\OC::$server->getLogger()->info($message, array('app' => 'mail'));
+	}
+
+	private function getMxRecord($host) {
+		if (getmxrr($host, $mx_records, $mx_weight) == false) {
+			return false;
+		}
+
+		// TODO: sort by weight
+		return $mx_records;
 	}
 
 }
