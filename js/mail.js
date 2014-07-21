@@ -312,4 +312,6 @@ $(document).ready(function () {
 	});
 
 	Mail.UI.bindEndlessScrolling();
+
+	$('textarea').autosize();
 });
