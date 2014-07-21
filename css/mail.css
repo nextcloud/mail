@@ -78,6 +78,12 @@ reply-message-fields {
     position: relative;
 }
 
+.sender-image {
+    display: inline-block;
+    position: absolute;
+    padding: 5px;
+}
+
 .mail_message_summary_from,
 .mail_message_summary_subject,
 .date {
@@ -90,6 +96,7 @@ reply-message-fields {
 
 .mail_message_summary_from {
     width: 180px;
+    margin-left: 32px;
 }
 
 .mail_message_summary_subject {
