@@ -9,7 +9,7 @@ $l = OC_L10N::get('mail');
 Horde_Translation::setHandler('Horde_Imap_Client', new HordeTranslationHandler());
 
 OCP\App::addNavigationEntry(array(
-  'id' => 'mail_index',
+  'id' => 'mail',
   'order' => 1,
   'href' => OCP\Util::linkToRoute( 'mail.page.index' ),
   'icon' => OCP\Util::imagePath( 'mail', 'mail.svg' ),
