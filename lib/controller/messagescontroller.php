@@ -90,17 +90,17 @@ class MessagesController extends Controller
 	 * @IsAdminExemption
 	 * @IsSubAdminExemption
 	 *
-	 * @param $messageId
+	 * @param int $id
 	 * @return JSONResponse
 	 */
-	public function destroy($messageId)
+	public function destroy($id)
 	{
 		try {
 			$mailBox = $this->getFolder();
 			//
 			// TODO: let's see how we implement delete
 			//
-			$mailBox->deleteMessage($messageId);
+			$mailBox->deleteMessage($id);
 
 			return new JSONResponse();
 		} catch (DoesNotExistException $e) {

@@ -126,7 +126,14 @@ button.control {
 }
 
 /* float delete icon to the right */
-a.action.delete { float:right; }
+/*a.action.delete { float:right; }*/
+
+#mail_messages a.action.delete {
+	position: absolute;
+	right: 0;
+	padding: 17px 14px;
+}
+
 
 .mail_message_loading {
     display: none;
