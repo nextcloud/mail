@@ -113,8 +113,6 @@ var Mail = {
 					data: {},
 					type:'GET',
 					success: function (jsondata) {
-//						$('#app-content').removeClass('icon-loading');
-
 						// Add messages
 						Mail.UI.addMessages(jsondata);
 						$('#app-content').removeClass('icon-loading');
