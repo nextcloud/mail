@@ -116,7 +116,9 @@ button.control {
     opacity: .5;
 }
 
-.mail_message_summary.unseen {
+.mail_message_summary.unseen .mail_message_summary_from,
+.mail_message_summary.unseen .mail_message_summary_subject,
+.mail_message_summary.unseen .date {
     font-weight: bold;
 }
 
