@@ -55,6 +55,7 @@ var Mail = {
 					var template = Handlebars.compile(source);
 					var html = template(jsondata);
 
+					$('#app-navigation').removeClass('icon-loading');
 					$('#app-navigation').html(html);
 
 					firstFolder = $('#app-navigation').find('.mail_folders li');
@@ -79,7 +80,7 @@ var Mail = {
 		},
 
 		clearMessages:function () {
-			var table = $('#mail_messages tbody');
+			var table = $('#mail_messages');
 
 			table.empty();
 			$('#messages-loading').fadeIn();
@@ -89,7 +90,12 @@ var Mail = {
 			var source   = $("#mail-messages-template").html();
 			var template = Handlebars.compile(source);
 			var html = template(data);
-			$('#mail_messages tbody').append(html);
+			$('#mail_messages').append(html);
+
+			_.each($('.avatar'), function(a) {
+				$(a).imageplaceholder($(a).data('user'), $(a).data('user'));
+			}
+			);
 		},
 
 		loadMessages:function (accountId, folderId) {
@@ -99,6 +105,7 @@ var Mail = {
 			Mail.UI.clearMessages();
 
 			$('#mail_new_message').fadeIn();
+			$('#app-content').addClass('icon-loading');
 
 			$.ajax(
 				OC.generateUrl('apps/mail/accounts/{accountId}/folders/{folderId}/messages',
@@ -106,10 +113,9 @@ var Mail = {
 					data: {},
 					type:'GET',
 					success: function (jsondata) {
-						$('#messages-loading').fadeOut();
-
 						// Add messages
 						Mail.UI.addMessages(jsondata);
+						$('#app-content').removeClass('icon-loading');
 
 						Mail.State.currentAccountId = accountId;
 						Mail.State.currentFolderId = folderId;
@@ -128,14 +134,20 @@ var Mail = {
 
 		openMessage:function (messageId) {
 			// close email first
-			Mail.UI.closeMessage();
+			// Check if message is open
+			if (Mail.State.currentMessageId !== null) {
+				var currentOpenMessage = $('#mail-message-summary-' + Mail.State.currentMessageId);
+				currentOpenMessage.find('.mail_message').fadeOut(function(){
+					var nextOpenMessage = $('#mail-message-summary-' + messageId);
+					nextOpenMessage[0].scrollIntoView(true);
+				});
+			}
 			if (Mail.State.currentMessageId === messageId) {
 				return;
 			}
 
-			var summaryRow = $('#mail_messages tr.mail_message_summary[data-message-id="' + messageId + '"]');
-			var loadRow = $('#mail_messages').find('tr.mail_message_loading[data-message-id="' + messageId + '"]');
-			loadRow.show();
+			var summaryRow = $('#mail-message-summary-' + messageId);
+			summaryRow.find('.mail_message_loading').fadeIn();
 
 			$.ajax(
 				OC.generateUrl('apps/mail/accounts/{accountId}/folders/{folderId}/messages/{messageId}',
@@ -147,16 +159,15 @@ var Mail = {
 					data: {},
 					type:'GET',
 					success: function (data) {
-						summaryRow.hide();
-
-						// hide loading
-						loadRow.hide();
-
-						// Find the correct message
+						// Render the message body
 						var source   = $("#mail-message-template").html();
 						var template = Handlebars.compile(source);
 						var html = template(data);
-						loadRow.after(html);
+						summaryRow.find('.mail_message_loading').fadeOut(function(){
+							var mailBody = summaryRow.find('.mail_message');
+							mailBody.html(html);
+							mailBody.fadeIn();
+						});
 
 						// Set current Message as active
 						Mail.State.currentMessageId = messageId;
@@ -165,18 +176,6 @@ var Mail = {
 						OC.dialogs.alert(t('mail', 'Error while loading mail message.'), t('mail', 'Error'));
 					}
 				});
-		},
-
-		closeMessage:function () {
-			// Check if message is open
-			if (Mail.State.currentMessageId !== null) {
-				$('#mail_message').remove();
-				$('#mail_message_header').remove();
-
-				var summaryRow =
-					$('#mail_messages tr.mail_message_summary[data-message-id="' + Mail.State.currentMessageId + '"]');
-				summaryRow.show();
-			}
 		},
 
 		setFolderActive:function (accountId, folderId) {
@@ -300,10 +299,12 @@ $(document).ready(function () {
 	});
 
 	// Clicking on a message loads the entire message
-	$(document).on('click', '#mail_messages .mail_message_summary', function () {
-		var messageId = $(this).data('messageId');
+	$(document).on('click', '#mail_messages .mail-message-header', function () {
+		var messageId = $(this).parent().data('messageId');
 		Mail.UI.openMessage(messageId);
 	});
 
 	Mail.UI.bindEndlessScrolling();
+
+	$('textarea').autosize();
 });

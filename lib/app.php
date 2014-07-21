@@ -65,7 +65,7 @@ namespace OCA\Mail {
 					return substr($s, strpos($s, 'http'));
 				}
 			}
-			return \OCP\Util::imagePath('mail', 'person.png');
+			return null;
 		}
 	}
 }

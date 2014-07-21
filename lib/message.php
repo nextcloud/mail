@@ -292,6 +292,7 @@ class Message {
 		$data = array();
 		$data['id'] = $this->getUid();
 		$data['from'] = $this->getFrom();
+		$data['fromEmail'] = $this->getFromEmail();
 		$data['to'] = $this->getTo();
 		$data['subject'] = $this->getSubject();
 		$data['date'] = \OCP\Util::formatDate($this->getSentDate()->format('U'));

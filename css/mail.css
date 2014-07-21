@@ -19,8 +19,7 @@
 }
 
 .mail_account {
-	padding: .5em .8em;
-	font-weight: bold;
+	padding: 11px 12px;
 	border-bottom: 1px solid #ddd;
 }
 
@@ -29,10 +28,6 @@ button.control {
     margin: 0.2em 0 0 1em;
     height: 2.4em;
     width: 2.4em; /* border: 0 none; border-radius: 0; -moz-box-shadow: none; box-shadow: none; outline: 0 none;*/
-}
-
-table#mail_messages {
-	width: 100%;
 }
 
 /*#content-wrapper {*/
@@ -65,51 +60,69 @@ table#mail_messages {
 }
 
 
+#app-navigation .utils {
+    padding: 0 7px;
+}
+
 
 #new-message {
-	width: 60%;
 	margin: 10px;
 }
 
-reply-message-fields {
+.reply-message-fields {
 	width: 60%;
-	margin: 10px;
 }
 
-.mail_message_summary.template {
-    display: none;
-}
 
 .mail_message_summary {
-}
-
-#mail_messages>tbody>tr {
-	height: 40px;
-}
-
-#mail_messages>tbody>tr>td {
     border-top: 1px solid #eee;
+    position: relative;
+}
+
+.mail-message-header {
+    height: 44px;
+}
+
+.sender-image {
+    display: inline-block;
+    position: absolute;
+    padding: 5px;
     padding-left: 10px;
 }
 
-#mail_messages>tbody>tr.unseen>td {
-    font-weight: bold;
-}
-
-.mail_message_summary_info {
+.mail_message_summary_from,
+.mail_message_summary_subject,
+.date {
+    display: inline-block;
+    padding: 12px;
     white-space: nowrap;
     overflow: hidden;
-    padding-left: 5px;
+    text-overflow: ellipsis;
+}
+
+.mail_message_summary_from {
+    width: 180px;
+    margin-left: 37px;
 }
 
 .mail_message_summary_subject {
-    white-space: nowrap;
-    overflow: hidden;
-    padding-left: 5px;
+    width: 50%;
 }
 
-.mail_message_summary_date {
-    padding-left: 5px;
+.date {
+    width: 120px;
+    position: absolute;
+    right: 0;
+    top: 0;
+    -ms-filter: "progid:DXImageTransform.Microsoft.Alpha(Opacity=50)";
+    filter: alpha(opacity=50);
+    opacity: .5;
+}
+
+.mail_message_summary.unseen .mail_message_summary_from,
+.mail_message_summary.unseen .mail_message_summary_subject,
+.mail_message_summary.unseen .date {
+    font-weight: bold;
 }
 
 /* float delete icon to the right */
@@ -120,17 +133,15 @@ a.action.delete { float:right; }
 }
 
 /* editor */
-#to {
-    width: 95%;
-}
 
-#subject {
-    width: 95%;
+#to,
+#subject,
+#new-message-body {
+    width: 100%;
 }
 
 #new-message-body {
-    width: 95%;
-    height: 100px;
+    height: 150px;
     resize: none;
 }
 
@@ -142,4 +153,19 @@ a.action.delete { float:right; }
 
 .unread {
 	font-weight: bold;
+}
+
+
+.avatar {
+	width: 32px;
+	height: 32px;
+}
+
+.mail_message_loading {
+	height: 32px;
+	margin-bottom: 10px;
+}
+
+.mail-message-body {
+    margin: 10px;
 }
