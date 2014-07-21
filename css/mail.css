@@ -31,10 +31,6 @@ button.control {
     width: 2.4em; /* border: 0 none; border-radius: 0; -moz-box-shadow: none; box-shadow: none; outline: 0 none;*/
 }
 
-table#mail_messages {
-	width: 100%;
-}
-
 /*#content-wrapper {*/
 	/*background: #eee;*/
 /*}*/
@@ -76,40 +72,34 @@ reply-message-fields {
 	margin: 10px;
 }
 
-.mail_message_summary.template {
-    display: none;
-}
 
 .mail_message_summary {
-}
-
-#mail_messages>tbody>tr {
-	height: 40px;
-}
-
-#mail_messages>tbody>tr>td {
+	height: 44px;
     border-top: 1px solid #eee;
-    padding-left: 10px;
+    position: relative;
 }
 
-#mail_messages>tbody>tr.unseen>td {
+.mail_message_summary_from,
+.mail_message_summary_subject,
+.date {
+    display: inline-block;
+    padding: 12px;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
+.mail_message_summary_from {
+    width: 180px;
+}
+
+.date {
+    position: absolute;
+    right: 0;
+}
+
+#mail_message_summary .unseen {
     font-weight: bold;
-}
-
-.mail_message_summary_info {
-    white-space: nowrap;
-    overflow: hidden;
-    padding-left: 5px;
-}
-
-.mail_message_summary_subject {
-    white-space: nowrap;
-    overflow: hidden;
-    padding-left: 5px;
-}
-
-.mail_message_summary_date {
-    padding-left: 5px;
 }
 
 /* float delete icon to the right */
