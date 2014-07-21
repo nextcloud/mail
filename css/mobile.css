@@ -1,0 +1,17 @@
+@media only screen and (max-width: 768px) {
+
+.mail_message_summary {
+	height: 68px;
+}
+
+.mail_message_summary_from {
+	padding-bottom: 0;
+}
+
+.mail_message_summary_subject {
+	padding-top: 0;
+	width: 100%;
+}
+
+/* end of media query */
+}

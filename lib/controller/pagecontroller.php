@@ -57,6 +57,7 @@ class PageController extends Controller {
 		\OCP\Util::addScript('mail','jquery.endless-scroll');
 		\OCP\Util::addScript('mail','handlebars-v1.3.0');
 		\OCP\Util::addStyle('mail','mail');
+		\OCP\Util::addStyle('mail','mobile');
 
 		$accounts = $this->mailAccountMapper->findByUserId($this->currentUserId);
 		if (!empty($accounts)) {

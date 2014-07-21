@@ -92,9 +92,18 @@ reply-message-fields {
     width: 180px;
 }
 
+.mail_message_summary_subject {
+    width: 50%;
+}
+
 .date {
+    width: 140px;
     position: absolute;
     right: 0;
+    top: 0;
+    -ms-filter: "progid:DXImageTransform.Microsoft.Alpha(Opacity=50)";
+    filter: alpha(opacity=50);
+    opacity: .5;
 }
 
 .mail_message_summary.unseen {
