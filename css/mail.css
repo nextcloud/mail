@@ -98,7 +98,7 @@ reply-message-fields {
     right: 0;
 }
 
-#mail_message_summary .unseen {
+.mail_message_summary.unseen {
     font-weight: bold;
 }
 
