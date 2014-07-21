@@ -18,20 +18,22 @@
 <script id="mail-messages-template" type="text/x-handlebars-template">
 	{{#each this}}
 	<div id="mail-message-summary-{{id}}" class="mail_message_summary {{#if flags.unseen}}unseen{{/if}}" data-message-id="{{id}}">
-		<div class="sender-image">
-			{{#if senderImage}}
-			<img src="{{senderImage}}" width="32px" height="32px"/>
-			{{else}}
-			<div class="avatar" data-user="{{from}}" data-size="32"></div>
-			{{/if}}
-		</div>
-		<div class="mail_message_summary_from">{{from}}</div>
-		<div class="mail_message_summary_subject">{{subject}}</div>
-		<div class="date">
-				<span class="modified"
-					  title="{{formatDate dateInt}}"
-					  style="color:{{colorOfDate dateInt}}">{{relativeModifiedDate dateInt}}</span>
-			<a class="icon-delete action delete"></a>
+		<div class="mail-message-header">
+			<div class="sender-image">
+				{{#if senderImage}}
+				<img src="{{senderImage}}" width="32px" height="32px"/>
+				{{else}}
+				<div class="avatar" data-user="{{from}}" data-size="32"></div>
+				{{/if}}
+			</div>
+			<div class="mail_message_summary_from">{{from}}</div>
+			<div class="mail_message_summary_subject">{{subject}}</div>
+			<div class="date">
+					<span class="modified"
+						  title="{{formatDate dateInt}}"
+						  style="color:{{colorOfDate dateInt}}">{{relativeModifiedDate dateInt}}</span>
+				<a class="icon-delete action delete"></a>
+			</div>
 		</div>
 		<div class="mail_message_loading icon-loading"></div>
 		<div class="mail_message"></div>

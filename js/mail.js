@@ -299,8 +299,8 @@ $(document).ready(function () {
 	});
 
 	// Clicking on a message loads the entire message
-	$(document).on('click', '#mail_messages .mail_message_summary', function () {
-		var messageId = $(this).data('messageId');
+	$(document).on('click', '#mail_messages .mail-message-header', function () {
+		var messageId = $(this).parent().data('messageId');
 		Mail.UI.openMessage(messageId);
 	});
 
