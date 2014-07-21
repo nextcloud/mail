@@ -5,6 +5,6 @@
 	<description>Just a mail app</description>
 	<version>0.1</version>
 	<licence>AGPL</licence>
-	<author>Jakob, Bart &amp; Tom</author>
-	<require>4.93</require>
+	<author>Thomas Müller &amp; Jan-Christoph Borchardt</author>
+	<require>7</require>
 </info>
