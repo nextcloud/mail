@@ -1,7 +1,7 @@
 @media only screen and (max-width: 768px) {
 
 .mail_message_summary {
-	height: 68px;
+	min-height: 68px;
 }
 
 .mail_message_summary_from {
