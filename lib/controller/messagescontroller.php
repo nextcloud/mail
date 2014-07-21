@@ -59,6 +59,11 @@ class MessagesController extends Controller
 		$mailBox = $this->getFolder();
 		$json = $mailBox->getMessages($from, $to-$from);
 
+		$json = array_map(function($j) {
+			$j['senderImage'] = App::getPhoto($j['fromEmail']);
+			return $j;
+		}, $json);
+
 		return new JSONResponse($json);
 	}
 
