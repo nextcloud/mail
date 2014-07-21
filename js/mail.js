@@ -104,6 +104,7 @@ var Mail = {
 			Mail.UI.setFolderActive(accountId, folderId);
 			Mail.UI.clearMessages();
 
+			$('#mail_new_message').fadeIn();
 			$('#app-content').addClass('icon-loading');
 
 			$.ajax(
