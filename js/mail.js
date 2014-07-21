@@ -134,7 +134,14 @@ var Mail = {
 
 		openMessage:function (messageId) {
 			// close email first
-			Mail.UI.closeMessage();
+			// Check if message is open
+			if (Mail.State.currentMessageId !== null) {
+				var currentOpenMessage = $('#mail-message-summary-' + Mail.State.currentMessageId);
+				currentOpenMessage.find('.mail_message').fadeOut(function(){
+					var nextOpenMessage = $('#mail-message-summary-' + messageId);
+					nextOpenMessage[0].scrollIntoView(true);
+				});
+			}
 			if (Mail.State.currentMessageId === messageId) {
 				return;
 			}
@@ -169,14 +176,6 @@ var Mail = {
 						OC.dialogs.alert(t('mail', 'Error while loading mail message.'), t('mail', 'Error'));
 					}
 				});
-		},
-
-		closeMessage:function () {
-			// Check if message is open
-			if (Mail.State.currentMessageId !== null) {
-				var summaryRow = $('#mail-message-summary-' + Mail.State.currentMessageId);
-				summaryRow.find('.mail_message').fadeOut();
-			}
 		},
 
 		setFolderActive:function (accountId, folderId) {
