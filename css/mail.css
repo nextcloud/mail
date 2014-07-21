@@ -71,7 +71,6 @@ button.control {
 
 .reply-message-fields {
 	width: 60%;
-	margin: 10px;
 }
 
 
@@ -161,4 +160,9 @@ a.action.delete { float:right; }
 .mail_message_loading {
 	height: 32px;
 	margin-bottom: 10px;
+}
+
+.mail-message-body {
+    margin: 10px;
+    margin-top: 0;
 }

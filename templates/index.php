@@ -41,17 +41,20 @@
 	{{/each}}
 </script>
 <script id="mail-message-template" type="text/x-handlebars-template">
-	<div class="mail-message-attachments">
-		{{#each attachments}}
-		{{filename}} ( {{size}} )
-		{{/each}}
-	</div>
 	<div class="mail-message-body">
 		<div id="mail-content">
 			{{{body}}}
 		</div>
+
+		<div class="mail-message-attachments">
+			{{#each attachments}}
+			{{filename}} ( {{size}} )
+			{{/each}}
+		</div>
+
 		<div class="reply-message-fields">
-			<textarea name="body" class="reply-message-body"></textarea>
+			<textarea name="body" class="reply-message-body"
+				placeholder="<?php p($l->t('Reply')); ?> …"></textarea>
 			<input class="reply-message-send" type="submit" value="<?php p($l->t('Reply')) ?>">
 		</div>
 	</div>
