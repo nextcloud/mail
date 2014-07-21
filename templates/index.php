@@ -18,6 +18,13 @@
 <script id="mail-messages-template" type="text/x-handlebars-template">
 	{{#each this}}
 	<div class="mail_message_summary {{#if flags.unseen}}unseen{{/if}}" data-message-id="{{id}}">
+		<div class="sender-image">
+			{{#if senderImage}}
+			<img src="{{senderImage}}" width="32px" height="32px"/>
+			{{else}}
+			<div class="avatar" data-user="{{from}}" data-size="32"></div>
+			{{/if}}
+		</div>
 		<div class="mail_message_summary_from">{{from}}</div>
 		<div class="mail_message_summary_subject">{{subject}}</div>
 		<div class="date">
@@ -35,7 +42,11 @@
 <script id="mail-message-template" type="text/x-handlebars-template">
 	<tr id="mail_message_header">
 		<td>
+			{{#if senderImage}}
 			<img src="{{senderImage}}" width="32px" height="32px"/>
+			{{else}}
+			<div class="avatar" data-username="{{from}}"></div>
+			{{/if}}
 		</td>
 		<td>
 			{{from}}

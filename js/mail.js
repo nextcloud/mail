@@ -90,6 +90,11 @@ var Mail = {
 			var template = Handlebars.compile(source);
 			var html = template(data);
 			$('#mail_messages').append(html);
+
+			_.each($('.avatar'), function(a) {
+				$(a).imageplaceholder($(a).data('user'));
+			}
+			);
 		},
 
 		loadMessages:function (accountId, folderId) {
