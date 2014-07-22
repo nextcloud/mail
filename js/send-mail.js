@@ -56,10 +56,12 @@ $(function () {
 		//
 
 		// loading feedback: show spinner and disable elements
-		$('.reply-message-body').addClass('icon-loading');
-		$('.reply-message-body').prop('disabled', true);
-		$('.reply-message-send').prop('disabled', true);
-		$('.reply-message-send').val(t('mail', 'Sending …'));
+		var replyMessageBody = $('.reply-message-body');
+		var replyMessageSend = $('.reply-message-send');
+		replyMessageBody.addClass('icon-loading');
+		replyMessageBody.prop('disabled', true);
+		replyMessageSend.prop('disabled', true);
+		replyMessageSend.val(t('mail', 'Sending …'));
 
 		$.ajax({
 			url:OC.generateUrl('/apps/mail/accounts/{accountId}/send', {accountId: Mail.State.currentAccountId}),
@@ -70,8 +72,9 @@ $(function () {
 			data:{
 				'folderId': Mail.State.currentFolderId,
 				'messageId': Mail.State.currentMessageId,
-				'body':$('.reply-message-body').val()
+				'body':replyMessageBody.val()
 			},
+			type: 'POST',
 			success:function () {
 				// close reply
 				$('.reply-message-body').val('');
@@ -89,12 +92,14 @@ $(function () {
 		//
 
 		// loading feedback: show spinner and disable elements
-		$('#new-message-body').addClass('icon-loading');
+		var newMessageBody = $('#new-message-body');
+		var newMessageSend = $('#new-message-send');
+		newMessageBody.addClass('icon-loading');
 		$('#to').prop('disabled', true);
 		$('#subject').prop('disabled', true);
-		$('#new-message-body').prop('disabled', true);
-		$('#new-message-send').prop('disabled', true);
-		$('#new-message-send').val(t('mail', 'Sending …'));
+		newMessageBody.prop('disabled', true);
+		newMessageSend.prop('disabled', true);
+		newMessageSend.val(t('mail', 'Sending …'));
 
 		// send the mail
 		$.ajax({
@@ -109,7 +114,7 @@ $(function () {
 			data:{
 				'to':$('#to').val(),
 				'subject':$('#subject').val(),
-				'body':$('#new-message-body').val()
+				'body':newMessageBody.val()
 			},
 			success:function () {
 				// close composer
