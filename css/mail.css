@@ -144,6 +144,7 @@ button.control {
 /* editor */
 
 #new-message-fields {
+    position: relative;
     width: 60%;
 }
 #to,
@@ -167,28 +168,31 @@ button.control {
     margin: 0;
     border-top-left-radius: 0;
     border-top-right-radius: 0;
-}
-
-#new-message-body {
     height: 100px;
     resize: none;
 }
+#new-message-send {
+    position: absolute;
+    bottom: 5px;
+    right: 0;
+    margin: 0 !important;
+}
+
 
 .reply-message-fields {
     position: relative;
     width: 60%;
 }
 .reply-message-body {
-	width: 90%;
+	width: 100%;
 	height: 100px;
 	resize: none;
 }
 .reply-message-send {
     position: absolute;
-    width: 10% !important;
     right: 0;
-    top: 0;
-    height: 100px;
+    margin: 0 !important;
+    bottom: 8px;
 }
 
 .unread {
