@@ -69,6 +69,11 @@ button.control {
 	margin: 10px;
 }
 
+
+#mail_messages {
+    padding-bottom: 250px;
+}
+
 .reply-message-fields {
 	width: 60%;
 }
@@ -124,7 +129,6 @@ button.control {
 .mail_message_summary.unseen .date {
     font-weight: bold;
 }
-
 
 #mail_messages .action.delete {
 	position: absolute;
