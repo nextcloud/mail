@@ -159,6 +159,10 @@ var Mail = {
 				});
 		},
 
+		downloadAttachment: function(messageId, attachmentId) {
+
+		},
+
 		openMessage:function (messageId) {
 			// close email first
 			// Check if message is open
@@ -340,6 +344,13 @@ $(document).ready(function () {
 		messageElement.slideUp();
 		var messageId = messageElement.data('messageId');
 		Mail.UI.deleteMessage(messageId);
+	});
+
+	$(document).on('click', '#mail_messages .attachment-download', function(event) {
+		event.stopPropagation();
+		var messageId = $(this).parent().parent().parent().parent().parent().data('messageId');
+		var attachmentId = $(this).parent().data('attachmentId');
+		Mail.UI.downloadAttachment(messageId, attachmentId);
 	});
 
 	Mail.UI.bindEndlessScrolling();

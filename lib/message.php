@@ -200,10 +200,12 @@ class Message {
 			// TODO: decode necessary ???
 			//
 //			$filename = OC_SimpleMail_Helper::decode($filename);
-
-			// for now we just keep the size - we need a new function to download an attachment
-			// this is a problem if two files have same name
-			$this->attachments[$filename] = $p->getBytes();
+			$this->attachments[]= array(
+				'id' => $p->getMimeId(),
+				'fileName' => $filename,
+				'mime' => $p->getType(),
+				'size' => $p->getBytes()
+			);
 			return;
 		}
 
@@ -264,16 +266,6 @@ class Message {
 //		}
 	}
 
-	private function getAttachmentInfo() {
-		$attachment_info = array();
-		foreach ($this->attachments as $filename => $data) {
-			// TODO: mime-type ???
-			array_push($attachment_info, array("filename" => $filename, "size" => $data));
-		}
-
-		return $attachment_info;
-	}
-
 	public function as_array() {
 		$mail_body = $this->plainMessage;
 		$mail_body = nl2br($mail_body);
@@ -284,7 +276,7 @@ class Message {
 
 		$data = $this->getListArray();
 		$data['body'] = $mail_body;
-		$data['attachments'] = $this->getAttachmentInfo();
+		$data['attachments'] = $this->attachments;
 		return $data;
 	}
 
