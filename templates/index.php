@@ -32,8 +32,8 @@
 					<span class="modified"
 						  title="{{formatDate dateInt}}"
 						  style="color:{{colorOfDate dateInt}}">{{relativeModifiedDate dateInt}}</span>
-				<a class="icon-delete action delete"></a>
 			</div>
+			<div class="icon-delete action delete"></div>
 		</div>
 		<div class="mail_message_loading icon-loading"></div>
 		<div class="mail_message"></div>

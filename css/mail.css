@@ -112,7 +112,7 @@ button.control {
 .date {
     width: 120px;
     position: absolute;
-    right: 0;
+    right: 44px; /* leave room for delete action */
     top: 0;
     -ms-filter: "progid:DXImageTransform.Microsoft.Alpha(Opacity=50)";
     filter: alpha(opacity=50);
@@ -125,13 +125,15 @@ button.control {
     font-weight: bold;
 }
 
-/* float delete icon to the right */
-/*a.action.delete { float:right; }*/
 
-#mail_messages a.action.delete {
+#mail_messages .action.delete {
 	position: absolute;
+    top: 0;
 	right: 0;
-	padding: 17px 14px;
+	padding: 22px;
+    -ms-filter: "progid:DXImageTransform.Microsoft.Alpha(Opacity=50)";
+    filter: alpha(opacity=50);
+    opacity: .5;
 }
 
 

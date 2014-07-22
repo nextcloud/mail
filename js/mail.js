@@ -329,7 +329,7 @@ $(document).ready(function () {
 		Mail.UI.openMessage(messageId);
 	});
 
-	$(document).on('click', '#mail_messages a.action.delete', function () {
+	$(document).on('click', '#mail_messages .action.delete', function () {
 		var messageId = $(this).parent().parent().parent().data('messageId');
 		Mail.UI.deleteMessage(messageId);
 	});
