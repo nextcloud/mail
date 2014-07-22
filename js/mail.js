@@ -144,7 +144,9 @@ var Mail = {
 					type:'DELETE',
 					success: function () {
 						var summaryRow = $('#mail-message-summary-' + messageId);
-						summaryRow.find('.mail_message_loading').fadeOut(function(){
+						summaryRow.find('.mail_message_loading').animate({
+							height: "toggle"
+						}, 500, function(){
 							summaryRow.remove();
 						});
 
@@ -329,8 +331,10 @@ $(document).ready(function () {
 		Mail.UI.openMessage(messageId);
 	});
 
-	$(document).on('click', '#mail_messages .action.delete', function () {
-		var messageId = $(this).parent().parent().parent().data('messageId');
+	$(document).on('click', '#mail_messages .action.delete', function(event) {
+		event.stopPropagation();
+		$(this).removeClass('icon-delete').addClass('icon-loading');
+		var messageId = $(this).parent().parent().data('messageId');
 		Mail.UI.deleteMessage(messageId);
 	});
 
