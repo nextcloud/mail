@@ -47,11 +47,15 @@
 		</div>
 
 		<div class="mail-message-attachments">
-			<div class="icon-download attachment-download" title="<?php p($l->t('Download attachment')); ?>"></div>
-			<div class="icon-upload attachment-save-to-cloud" title="<?php p($l->t('Save to files')); ?>"></div>
-			{{#each attachments}}
-			{{filename}} ( {{humanFileSize size}} )
-			{{/each}}
+			<ul>
+				{{#each attachments}}
+				<li>{{filename}} ({{humanFileSize size}})</li>
+				{{/each}}
+			</ul>
+			<p>
+				<button class="icon-download attachment-download"><?php p($l->t('Download attachment')); ?></button>
+				<button class="icon-upload attachment-save-to-cloud"><?php p($l->t('Save to files')); ?></button>
+			</p>
 		</div>
 
 		<div class="reply-message-fields">
