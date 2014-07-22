@@ -120,6 +120,13 @@ $(function () {
 				// close composer
 				$('#new-message-fields').slideUp();
 				$('#mail_new_message').fadeIn();
+				// remove loading feedback
+				newMessageBody.removeClass('icon-loading');
+				$('#to').prop('disabled', false);
+				$('#subject').prop('disabled', false);
+				newMessageBody.prop('disabled', false);
+				newMessageSend.prop('disabled', false);
+				newMessageSend.val(t('mail', 'Send'));
 			}
 		});
 
