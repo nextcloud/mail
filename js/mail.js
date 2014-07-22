@@ -172,7 +172,7 @@ var Mail = {
 			}
 
 			var summaryRow = $('#mail-message-summary-' + messageId);
-			summaryRow.find('.mail_message_loading').fadeIn();
+			summaryRow.find('.mail_message_loading').slideDown();
 
 			$.ajax(
 				OC.generateUrl('apps/mail/accounts/{accountId}/folders/{folderId}/messages/{messageId}',
@@ -191,7 +191,7 @@ var Mail = {
 						summaryRow.find('.mail_message_loading').fadeOut(function(){
 							var mailBody = summaryRow.find('.mail_message');
 							mailBody.html(html);
-							mailBody.fadeIn();
+							mailBody.slideDown();
 						});
 
 						// Set current Message as active
