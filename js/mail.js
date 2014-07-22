@@ -144,7 +144,7 @@ var Mail = {
 					type:'DELETE',
 					success: function () {
 						var summaryRow = $('#mail-message-summary-' + messageId);
-						summaryRow.find('.mail_message_loading').slideUp(function(){
+						summaryRow.find('.mail_message_loading').fadeOut(function(){
 							summaryRow.remove();
 						});
 
@@ -152,7 +152,7 @@ var Mail = {
 						Mail.State.currentMessageId = null;
 					},
 					error: function() {
-						OC.dialogs.alert(t('mail', 'Error while loading mail message.'), t('mail', 'Error'));
+						OC.notification.show(t('mail', 'Error while deleting mail.'));
 					}
 				});
 		},
@@ -333,8 +333,10 @@ $(document).ready(function () {
 	$(document).on('click', '#mail_messages .action.delete', function(event) {
 		event.stopPropagation();
 		$(this).removeClass('icon-delete').addClass('icon-loading');
-		$(this).parent().parent().addClass('transparency');
-		var messageId = $(this).parent().parent().data('messageId');
+		var messageElement = $(this).parent().parent();
+		messageElement.addClass('transparency');
+		messageElement.slideUp();
+		var messageId = messageElement.data('messageId');
 		Mail.UI.deleteMessage(messageId);
 	});
 
