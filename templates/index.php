@@ -51,8 +51,8 @@
 			<ul>
 				<li class="mail-message-attachment" data-attachment-id="{{attachment.id}}" data-attachment-mime="{{attachment.mime}}">
 					{{attachment.fileName}} ( {{humanFileSize attachment.size}} )
-					<button class="icon-download attachment-download" title="<?php p($l->t('Download attachment')); ?>"></div>
-					<button class="icon-upload attachment-save-to-cloud" title="<?php p($l->t('Save to files')); ?>"></div>
+					<button class="icon-download attachment-download" title="<?php p($l->t('Download attachment')); ?>"></button>
+					<button class="icon-upload attachment-save-to-cloud" title="<?php p($l->t('Save to files')); ?>"></button>
 				</li>
 			</ul>
 			{{/if}}
@@ -61,8 +61,8 @@
 				{{#each attachments}}
 				<li class="mail-message-attachment" data-attachment-id="{{id}}" data-attachment-mime="{{mime}}">
 					{{fileName}} ( {{humanFileSize size}} )
-					<button class="icon-download attachment-download" title="<?php p($l->t('Download attachment')); ?>"></div>
-					<button class="icon-upload attachment-save-to-cloud" title="<?php p($l->t('Save to files')); ?>"></div>
+					<button class="icon-download attachment-download" title="<?php p($l->t('Download attachment')); ?>"></button>
+					<button class="icon-upload attachment-save-to-cloud" title="<?php p($l->t('Save to files')); ?>"></button>
 				</li>
 				{{/each}}
 			</ul>
