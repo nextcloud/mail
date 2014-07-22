@@ -333,6 +333,7 @@ $(document).ready(function () {
 	$(document).on('click', '#mail_messages .action.delete', function(event) {
 		event.stopPropagation();
 		$(this).removeClass('icon-delete').addClass('icon-loading');
+		$(this).parent().parent().addClass('transparency');
 		var messageId = $(this).parent().parent().data('messageId');
 		Mail.UI.deleteMessage(messageId);
 	});
