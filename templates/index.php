@@ -49,10 +49,10 @@
 		<div class="mail-message-attachments">
 			{{#if attachment}}
 			<ul>
-				<li class="mail-message-attachment" data-attachment-id="{{attachment.id}}" data-attachment-mime="{{attachment.mime}}">
-					{{attachment.fileName}} ( {{humanFileSize attachment.size}} )
-					<button class="icon-download attachment-download" title="<?php p($l->t('Download attachment')); ?>"></button>
-					<button class="icon-upload attachment-save-to-cloud" title="<?php p($l->t('Save to files')); ?>"></button>
+				<li class="mail-message-attachment mail-message-attachment-single" data-attachment-id="{{attachment.id}}" data-attachment-mime="{{attachment.mime}}">
+					{{attachment.fileName}} <span class="attachment-size">({{humanFileSize attachment.size}})</span><br/>
+					<button class="icon-download attachment-download"><?php p($l->t('Download attachment')); ?></button>
+					<button class="icon-upload attachment-save-to-cloud"><?php p($l->t('Save to files')); ?></button>
 				</li>
 			</ul>
 			{{/if}}
@@ -60,14 +60,14 @@
 			<ul>
 				{{#each attachments}}
 				<li class="mail-message-attachment" data-attachment-id="{{id}}" data-attachment-mime="{{mime}}">
-					{{fileName}} ( {{humanFileSize size}} )
 					<button class="icon-download attachment-download" title="<?php p($l->t('Download attachment')); ?>"></button>
 					<button class="icon-upload attachment-save-to-cloud" title="<?php p($l->t('Save to files')); ?>"></button>
+					{{fileName}} <span class="attachment-size">({{humanFileSize size}})</span>
 				</li>
 				{{/each}}
 			</ul>
 			<p>
-				<button class="icon-download attachments-download"><?php p($l->t('Download attachments')); ?></button>
+				<button class="icon-download attachments-download"><?php p($l->t('Download all attachments')); ?></button>
 				<button class="icon-upload attachments-save-to-cloud"><?php p($l->t('Save all to files')); ?></button>
 			</p>
 			{{/if}}

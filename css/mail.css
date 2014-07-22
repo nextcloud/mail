@@ -230,12 +230,20 @@ button.control {
 }
 .attachment-save-to-cloud,
 .attachment-download {
-	width: 24px;
 	height: 24px;
-	display: inline-block;
 }
+/* show icon + text for Download all button
+    as well as when there is only one attachment */
 .attachments-save-to-cloud,
-.attachments-download {
+.attachments-download,
+.mail-message-attachment-single .attachment-save-to-cloud,
+.mail-message-attachment-single .attachment-download {
     background-position: 4px center;
     padding-left: 24px;
+}
+/* show attachment size less prominent */
+.attachment-size {
+    -ms-filter: "progid:DXImageTransform.Microsoft.Alpha(Opacity=50)";
+    filter: alpha(opacity=50);
+    opacity: .5;
 }
