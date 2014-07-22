@@ -144,9 +144,7 @@ var Mail = {
 					type:'DELETE',
 					success: function () {
 						var summaryRow = $('#mail-message-summary-' + messageId);
-						summaryRow.find('.mail_message_loading').animate({
-							height: "toggle"
-						}, 500, function(){
+						summaryRow.find('.mail_message_loading').slideUp(function(){
 							summaryRow.remove();
 						});
 
