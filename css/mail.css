@@ -69,6 +69,11 @@ button.control {
 	margin: 10px;
 }
 
+
+#mail_messages {
+    padding-bottom: 250px;
+}
+
 .reply-message-fields {
 	width: 60%;
 }
@@ -112,7 +117,7 @@ button.control {
 .date {
     width: 120px;
     position: absolute;
-    right: 0;
+    right: 44px; /* leave room for delete action */
     top: 0;
     -ms-filter: "progid:DXImageTransform.Microsoft.Alpha(Opacity=50)";
     filter: alpha(opacity=50);
@@ -125,8 +130,16 @@ button.control {
     font-weight: bold;
 }
 
-/* float delete icon to the right */
-a.action.delete { float:right; }
+#mail_messages .action.delete {
+	position: absolute;
+    top: 0;
+	right: 0;
+	padding: 22px;
+    -ms-filter: "progid:DXImageTransform.Microsoft.Alpha(Opacity=50)";
+    filter: alpha(opacity=50);
+    opacity: .5;
+}
+
 
 .mail_message_loading {
     display: none;

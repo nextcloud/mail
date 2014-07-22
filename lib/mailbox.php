@@ -106,4 +106,11 @@ class Mailbox {
 		}
 	}
 
+	public function deleteMessage($messageId) {
+		$dest = "Trash";
+		$ids = new \Horde_Imap_Client_Ids($messageId);
+		$result = $this->conn->copy($this->folder_id, $dest, array('move' => true, 'ids' => $ids));
+		\OC::$server->getLogger()->info("Message deleted: {result}", array('result' => $result));
+	}
+
 }

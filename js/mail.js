@@ -132,6 +132,31 @@ var Mail = {
 				});
 		},
 
+		deleteMessage:function (messageId) {
+			$.ajax(
+				OC.generateUrl('apps/mail/accounts/{accountId}/folders/{folderId}/messages/{messageId}',
+					{
+					accountId: Mail.State.currentAccountId,
+					folderId: encodeURIComponent(Mail.State.currentFolderId),
+					messageId: messageId
+				}), {
+					data: {},
+					type:'DELETE',
+					success: function () {
+						var summaryRow = $('#mail-message-summary-' + messageId);
+						summaryRow.find('.mail_message_loading').slideUp(function(){
+							summaryRow.remove();
+						});
+
+						// Set current Message as active
+						Mail.State.currentMessageId = null;
+					},
+					error: function() {
+						OC.dialogs.alert(t('mail', 'Error while loading mail message.'), t('mail', 'Error'));
+					}
+				});
+		},
+
 		openMessage:function (messageId) {
 			// close email first
 			// Check if message is open
@@ -147,7 +172,7 @@ var Mail = {
 			}
 
 			var summaryRow = $('#mail-message-summary-' + messageId);
-			summaryRow.find('.mail_message_loading').fadeIn();
+			summaryRow.find('.mail_message_loading').slideDown();
 
 			$.ajax(
 				OC.generateUrl('apps/mail/accounts/{accountId}/folders/{folderId}/messages/{messageId}',
@@ -166,7 +191,7 @@ var Mail = {
 						summaryRow.find('.mail_message_loading').fadeOut(function(){
 							var mailBody = summaryRow.find('.mail_message');
 							mailBody.html(html);
-							mailBody.fadeIn();
+							mailBody.slideDown();
 						});
 
 						// Set current Message as active
@@ -302,6 +327,13 @@ $(document).ready(function () {
 	$(document).on('click', '#mail_messages .mail-message-header', function () {
 		var messageId = $(this).parent().data('messageId');
 		Mail.UI.openMessage(messageId);
+	});
+
+	$(document).on('click', '#mail_messages .action.delete', function(event) {
+		event.stopPropagation();
+		$(this).removeClass('icon-delete').addClass('icon-loading');
+		var messageId = $(this).parent().parent().data('messageId');
+		Mail.UI.deleteMessage(messageId);
 	});
 
 	Mail.UI.bindEndlessScrolling();
