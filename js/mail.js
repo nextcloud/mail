@@ -192,6 +192,7 @@ var Mail = {
 							var mailBody = summaryRow.find('.mail_message');
 							mailBody.html(html);
 							mailBody.slideDown();
+							mailBody.parent().removeClass('unseen');
 						});
 
 						// Set current Message as active
