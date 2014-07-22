@@ -7,7 +7,6 @@
 "Auto detect failed. Please use manual mode." => "Automaattinen havaitseminen epäonnistui. Käytä manuaalitilaa.",
 "Reply" => "Vastaa",
 "New Message" => "Uusi viesti",
-"To" => "Päättyy",
 "Subject" => "Aihe",
 "Send" => "Lähetä",
 "Connect your mail account" => "Yhdistä sähköpostitilisi",

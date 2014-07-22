@@ -13,8 +13,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: ownCloud\n"
 "Report-Msgid-Bugs-To: translations@owncloud.org\n"
-"POT-Creation-Date: 2014-07-20 02:41-0400\n"
-"PO-Revision-Date: 2014-07-20 06:41+0000\n"
+"POT-Creation-Date: 2014-07-22 02:41-0400\n"
+"PO-Revision-Date: 2014-07-22 06:41+0000\n"
 "Last-Translator: I Robot\n"
 "Language-Team: Czech (Czech Republic) (http://www.transifex.com/projects/p/owncloud/language/cs_CZ/)\n"
 "MIME-Version: 1.0\n"
@@ -23,27 +23,31 @@ msgstr ""
 "Language: cs_CZ\n"
 "Plural-Forms: nplurals=3; plural=(n==1) ? 0 : (n>=2 && n<=4) ? 1 : 2;\n"
 
-#: js/mail.js:124 js/mail.js:165
+#: appinfo/app.php:16
+msgid "Mail"
+msgstr ""
+
+#: js/mail.js:130 js/mail.js:176
 msgid "Error"
 msgstr "Chyba"
 
-#: js/mail.js:165
+#: js/mail.js:176
 msgid "Error while loading mail message."
-msgstr ""
+msgstr "Chyba během načítání e-mailů."
 
-#: js/mail.js:256
+#: js/mail.js:255
 msgid "Connecting ..."
 msgstr "Připojuji se..."
 
-#: js/mail.js:273
+#: js/mail.js:272
 msgid "Unknown error"
 msgstr "Neznámá chyba"
 
-#: js/mail.js:277 templates/no-accounts.php:18
+#: js/mail.js:276 templates/no-accounts.php:18
 msgid "Connect"
 msgstr "Připojit"
 
-#: js/mail.js:279
+#: js/mail.js:278
 msgid "Server Error"
 msgstr "Chyba serveru"
 
@@ -51,23 +55,27 @@ msgstr "Chyba serveru"
 msgid "Auto detect failed. Please use manual mode."
 msgstr "Autodetekce selhala. Prosím použijte manuální mód."
 
-#: templates/index.php:68
+#: templates/index.php:57 templates/index.php:58
 msgid "Reply"
 msgstr "Odpověď"
 
-#: templates/index.php:81
+#: templates/index.php:67
 msgid "New Message"
 msgstr "Nová zpráva"
 
-#: templates/index.php:84
-msgid "To"
-msgstr "Komu"
+#: templates/index.php:71
+msgid "Recipient"
+msgstr ""
 
-#: templates/index.php:85
+#: templates/index.php:73
 msgid "Subject"
 msgstr "Předmět"
 
-#: templates/index.php:87
+#: templates/index.php:75
+msgid "Message"
+msgstr ""
+
+#: templates/index.php:77
 msgid "Send"
 msgstr "Odeslat"
 

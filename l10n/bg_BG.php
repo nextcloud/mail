@@ -8,7 +8,6 @@
 "Auto detect failed. Please use manual mode." => "Неуспешни автоматични настройки. Моля, използвайте ръчен режим.",
 "Reply" => "Отговори",
 "New Message" => "Ново Съобщение",
-"To" => "До",
 "Subject" => "Относно",
 "Send" => "Изпрати",
 "Connect your mail account" => "Свържи имейла си",

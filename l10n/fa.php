@@ -6,7 +6,6 @@
 "Server Error" => "خطای سرور",
 "Reply" => "پاسخ",
 "New Message" => "پیغام جدید",
-"To" => "به",
 "Subject" => "موضوع",
 "Send" => "ارسال",
 "Connect your mail account" => "اتصال حساب پست الکترونیکی خود",

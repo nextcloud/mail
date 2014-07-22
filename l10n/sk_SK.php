@@ -6,7 +6,6 @@
 "Server Error" => "Chyba servera",
 "Reply" => "Odpoveď",
 "New Message" => "Nová správa",
-"To" => "Do",
 "Subject" => "Predmet",
 "Send" => "Odoslať",
 "Connect your mail account" => "Pripojte sa k svojmu emailovému účtu",

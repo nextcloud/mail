@@ -6,7 +6,6 @@
 "Server Error" => "سرور کی خرابی",
 "Reply" => "جواب",
 "New Message" => "جدید رسالہ",
-"To" => "طرف",
 "Subject" => "عنوان",
 "Send" => "بھجیں",
 "Connect your mail account" => "اپنے  میل اکاؤنٹ سے منسلک کریں",

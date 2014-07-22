@@ -6,7 +6,6 @@
 "Server Error" => "Kesalahan Server",
 "Reply" => "Balas",
 "New Message" => "Pasan Baru",
-"To" => "Kepada",
 "Subject" => "Judul",
 "Send" => "Kirim",
 "Connect your mail account" => "Hubungkan akun email anda",

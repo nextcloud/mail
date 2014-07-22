@@ -8,7 +8,6 @@
 "Auto detect failed. Please use manual mode." => "Automatische Erkennung fehlgeschlagen. Bitte nutze den manuellen Modus.",
 "Reply" => "Antwort",
 "New Message" => "Neue Nachricht",
-"To" => "an",
 "Subject" => "Betreff",
 "Send" => "Senden",
 "Connect your mail account" => "Ihr E-Mail-Konto verknüpfen",

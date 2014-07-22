@@ -6,7 +6,6 @@
 "Server Error" => "Zerbitzari errorea",
 "Reply" => "Erantzun",
 "New Message" => "Mezu berria",
-"To" => "Nori",
 "Subject" => "Gaia",
 "Send" => "Bidali",
 "Connect your mail account" => "Zure posta kontua konektatu",

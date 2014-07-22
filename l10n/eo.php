@@ -6,7 +6,6 @@
 "Server Error" => "Servila eraro",
 "Reply" => "Respondi",
 "New Message" => "Nova mesaĝo",
-"To" => "Ĝis",
 "Subject" => "Temo",
 "Send" => "Sendi",
 "Connect your mail account" => "Konekti vian poŝtokonton",

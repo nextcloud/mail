@@ -9,9 +9,9 @@ msgid ""
 msgstr ""
 "Project-Id-Version: ownCloud\n"
 "Report-Msgid-Bugs-To: translations@owncloud.org\n"
-"POT-Creation-Date: 2014-07-21 02:41-0400\n"
-"PO-Revision-Date: 2014-07-20 15:51+0000\n"
-"Last-Translator: Ivo\n"
+"POT-Creation-Date: 2014-07-22 02:41-0400\n"
+"PO-Revision-Date: 2014-07-22 06:41+0000\n"
+"Last-Translator: I Robot\n"
 "Language-Team: Bulgarian (Bulgaria) (http://www.transifex.com/projects/p/owncloud/language/bg_BG/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -19,27 +19,31 @@ msgstr ""
 "Language: bg_BG\n"
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
 
-#: js/mail.js:124 js/mail.js:165
+#: appinfo/app.php:16
+msgid "Mail"
+msgstr ""
+
+#: js/mail.js:130 js/mail.js:176
 msgid "Error"
 msgstr "Грешка"
 
-#: js/mail.js:165
+#: js/mail.js:176
 msgid "Error while loading mail message."
 msgstr "Грешка по време на зареждането на имейл съобщението"
 
-#: js/mail.js:256
+#: js/mail.js:255
 msgid "Connecting ..."
 msgstr "Свързване ..."
 
-#: js/mail.js:273
+#: js/mail.js:272
 msgid "Unknown error"
 msgstr "Непозната грешка"
 
-#: js/mail.js:277 templates/no-accounts.php:18
+#: js/mail.js:276 templates/no-accounts.php:18
 msgid "Connect"
 msgstr "Свържи"
 
-#: js/mail.js:279
+#: js/mail.js:278
 msgid "Server Error"
 msgstr "Грешка в Сървъра"
 
@@ -47,23 +51,27 @@ msgstr "Грешка в Сървъра"
 msgid "Auto detect failed. Please use manual mode."
 msgstr "Неуспешни автоматични настройки. Моля, използвайте ръчен режим."
 
-#: templates/index.php:68
+#: templates/index.php:57 templates/index.php:58
 msgid "Reply"
 msgstr "Отговори"
 
-#: templates/index.php:81
+#: templates/index.php:67
 msgid "New Message"
 msgstr "Ново Съобщение"
 
-#: templates/index.php:84
-msgid "To"
-msgstr "До"
+#: templates/index.php:71
+msgid "Recipient"
+msgstr ""
 
-#: templates/index.php:85
+#: templates/index.php:73
 msgid "Subject"
 msgstr "Относно"
 
-#: templates/index.php:87
+#: templates/index.php:75
+msgid "Message"
+msgstr ""
+
+#: templates/index.php:77
 msgid "Send"
 msgstr "Изпрати"
 

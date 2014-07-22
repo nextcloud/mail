@@ -10,8 +10,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: ownCloud\n"
 "Report-Msgid-Bugs-To: translations@owncloud.org\n"
-"POT-Creation-Date: 2014-07-20 02:41-0400\n"
-"PO-Revision-Date: 2014-07-20 06:41+0000\n"
+"POT-Creation-Date: 2014-07-22 02:41-0400\n"
+"PO-Revision-Date: 2014-07-22 06:41+0000\n"
 "Last-Translator: I Robot\n"
 "Language-Team: Ukrainian (http://www.transifex.com/projects/p/owncloud/language/uk/)\n"
 "MIME-Version: 1.0\n"
@@ -20,27 +20,31 @@ msgstr ""
 "Language: uk\n"
 "Plural-Forms: nplurals=3; plural=(n%10==1 && n%100!=11 ? 0 : n%10>=2 && n%10<=4 && (n%100<10 || n%100>=20) ? 1 : 2);\n"
 
-#: js/mail.js:124 js/mail.js:165
+#: appinfo/app.php:16
+msgid "Mail"
+msgstr ""
+
+#: js/mail.js:130 js/mail.js:176
 msgid "Error"
 msgstr "Помилка"
 
-#: js/mail.js:165
+#: js/mail.js:176
 msgid "Error while loading mail message."
 msgstr ""
 
-#: js/mail.js:256
+#: js/mail.js:255
 msgid "Connecting ..."
 msgstr "Підключення ..."
 
-#: js/mail.js:273
+#: js/mail.js:272
 msgid "Unknown error"
 msgstr "Невідома помилка"
 
-#: js/mail.js:277 templates/no-accounts.php:18
+#: js/mail.js:276 templates/no-accounts.php:18
 msgid "Connect"
 msgstr "З'єднати"
 
-#: js/mail.js:279
+#: js/mail.js:278
 msgid "Server Error"
 msgstr "Помилка сервера"
 
@@ -48,23 +52,27 @@ msgstr "Помилка сервера"
 msgid "Auto detect failed. Please use manual mode."
 msgstr ""
 
-#: templates/index.php:68
+#: templates/index.php:57 templates/index.php:58
 msgid "Reply"
 msgstr "Відповісти"
 
-#: templates/index.php:81
+#: templates/index.php:67
 msgid "New Message"
 msgstr "Нове повідомлення"
 
-#: templates/index.php:84
-msgid "To"
-msgstr "По"
+#: templates/index.php:71
+msgid "Recipient"
+msgstr ""
 
-#: templates/index.php:85
+#: templates/index.php:73
 msgid "Subject"
 msgstr "Тема"
 
-#: templates/index.php:87
+#: templates/index.php:75
+msgid "Message"
+msgstr ""
+
+#: templates/index.php:77
 msgid "Send"
 msgstr "Надіслати"
 

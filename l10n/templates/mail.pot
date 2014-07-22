@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: ownCloud mail 5.0.0\n"
 "Report-Msgid-Bugs-To: translations@owncloud.org\n"
-"POT-Creation-Date: 2014-07-21 02:41-0400\n"
+"POT-Creation-Date: 2014-07-22 02:41-0400\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -17,27 +17,31 @@ msgstr ""
 "Content-Type: text/plain; charset=CHARSET\n"
 "Content-Transfer-Encoding: 8bit\n"
 
-#: js/mail.js:124 js/mail.js:165
+#: appinfo/app.php:16
+msgid "Mail"
+msgstr ""
+
+#: js/mail.js:130 js/mail.js:176
 msgid "Error"
 msgstr ""
 
-#: js/mail.js:165
+#: js/mail.js:176
 msgid "Error while loading mail message."
 msgstr ""
 
-#: js/mail.js:256
+#: js/mail.js:255
 msgid "Connecting ..."
 msgstr ""
 
-#: js/mail.js:273
+#: js/mail.js:272
 msgid "Unknown error"
 msgstr ""
 
-#: js/mail.js:277 templates/no-accounts.php:18
+#: js/mail.js:276 templates/no-accounts.php:18
 msgid "Connect"
 msgstr ""
 
-#: js/mail.js:279
+#: js/mail.js:278
 msgid "Server Error"
 msgstr ""
 
@@ -45,23 +49,27 @@ msgstr ""
 msgid "Auto detect failed. Please use manual mode."
 msgstr ""
 
-#: templates/index.php:68
+#: templates/index.php:57 templates/index.php:58
 msgid "Reply"
 msgstr ""
 
-#: templates/index.php:81
+#: templates/index.php:67
 msgid "New Message"
 msgstr ""
 
-#: templates/index.php:84
-msgid "To"
+#: templates/index.php:71
+msgid "Recipient"
 msgstr ""
 
-#: templates/index.php:85
+#: templates/index.php:73
 msgid "Subject"
 msgstr ""
 
-#: templates/index.php:87
+#: templates/index.php:75
+msgid "Message"
+msgstr ""
+
+#: templates/index.php:77
 msgid "Send"
 msgstr ""
 

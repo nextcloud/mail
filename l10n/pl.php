@@ -6,7 +6,6 @@
 "Server Error" => "Błąd serwera",
 "Reply" => "Odpowiedz",
 "New Message" => "Nowa wiadomość",
-"To" => "Do",
 "Subject" => "Temat",
 "Send" => "Wyślij",
 "Connect your mail account" => "Połącz twoje konto mailowe",

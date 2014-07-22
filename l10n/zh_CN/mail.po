@@ -13,8 +13,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: ownCloud\n"
 "Report-Msgid-Bugs-To: translations@owncloud.org\n"
-"POT-Creation-Date: 2014-07-20 02:41-0400\n"
-"PO-Revision-Date: 2014-07-20 06:41+0000\n"
+"POT-Creation-Date: 2014-07-22 02:41-0400\n"
+"PO-Revision-Date: 2014-07-22 06:41+0000\n"
 "Last-Translator: I Robot\n"
 "Language-Team: Chinese (China) (http://www.transifex.com/projects/p/owncloud/language/zh_CN/)\n"
 "MIME-Version: 1.0\n"
@@ -23,27 +23,31 @@ msgstr ""
 "Language: zh_CN\n"
 "Plural-Forms: nplurals=1; plural=0;\n"
 
-#: js/mail.js:124 js/mail.js:165
+#: appinfo/app.php:16
+msgid "Mail"
+msgstr ""
+
+#: js/mail.js:130 js/mail.js:176
 msgid "Error"
 msgstr "错误"
 
-#: js/mail.js:165
+#: js/mail.js:176
 msgid "Error while loading mail message."
-msgstr ""
+msgstr "下载邮件信息时发生了错误。"
 
-#: js/mail.js:256
+#: js/mail.js:255
 msgid "Connecting ..."
 msgstr "正在连接 ..."
 
-#: js/mail.js:273
+#: js/mail.js:272
 msgid "Unknown error"
 msgstr "未知错误"
 
-#: js/mail.js:277 templates/no-accounts.php:18
+#: js/mail.js:276 templates/no-accounts.php:18
 msgid "Connect"
 msgstr "连接"
 
-#: js/mail.js:279
+#: js/mail.js:278
 msgid "Server Error"
 msgstr "服务器错误"
 
@@ -51,23 +55,27 @@ msgstr "服务器错误"
 msgid "Auto detect failed. Please use manual mode."
 msgstr "自动检测失败，请使用手动模式。"
 
-#: templates/index.php:68
+#: templates/index.php:57 templates/index.php:58
 msgid "Reply"
 msgstr "回复"
 
-#: templates/index.php:81
+#: templates/index.php:67
 msgid "New Message"
 msgstr "新信件"
 
-#: templates/index.php:84
-msgid "To"
-msgstr "至"
+#: templates/index.php:71
+msgid "Recipient"
+msgstr ""
 
-#: templates/index.php:85
+#: templates/index.php:73
 msgid "Subject"
 msgstr "主题"
 
-#: templates/index.php:87
+#: templates/index.php:75
+msgid "Message"
+msgstr ""
+
+#: templates/index.php:77
 msgid "Send"
 msgstr "发送"
 

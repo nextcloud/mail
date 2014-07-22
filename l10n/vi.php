@@ -6,7 +6,6 @@
 "Server Error" => "Máy chủ bị l",
 "Reply" => "Trả l",
 "New Message" => "Tin m",
-"To" => "Tới",
 "Subject" => "Tiêu ",
 "Send" => "Gởi",
 "Connect your mail account" => "Kết nối tới hòm thư của bạn",

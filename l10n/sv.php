@@ -6,7 +6,6 @@
 "Server Error" => "Serverfel",
 "Reply" => "Svara",
 "New Message" => "Nytt meddelande",
-"To" => "Till",
 "Subject" => "Rubrik",
 "Send" => "Skicka",
 "Connect your mail account" => "Anslut ditt e-postkonto",

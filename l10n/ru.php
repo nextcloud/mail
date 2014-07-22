@@ -1,5 +1,6 @@
 <?php $TRANSLATIONS = array(
 "Error" => "Ошибка",
+"Error while loading mail message." => "Ошибка загрузки почтового сообщения.",
 "Connecting ..." => "Подключение ...",
 "Unknown error" => "Неизвестная ошибка",
 "Connect" => "Соединить",
@@ -7,7 +8,6 @@
 "Auto detect failed. Please use manual mode." => "Авто-обнаружение потерпело неудачу. Пожалуйста, воспользуйтесь ручным режимом.",
 "Reply" => "Ответ",
 "New Message" => "Новое сообщение",
-"To" => "До",
 "Subject" => "Тема",
 "Send" => "Отправить",
 "Connect your mail account" => "Подключите ваш почтовый аккаунт",

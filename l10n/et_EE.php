@@ -7,7 +7,6 @@
 "Auto detect failed. Please use manual mode." => "Automaatne tuvastus ebaõnnestus. Palun proovi käsitsi.",
 "Reply" => "Vasta",
 "New Message" => "Uus sõnum",
-"To" => "Kuni",
 "Subject" => "Teema",
 "Send" => "Saada",
 "Connect your mail account" => "Ühenda oma e-posti konto",

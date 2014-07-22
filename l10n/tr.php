@@ -8,7 +8,6 @@
 "Auto detect failed. Please use manual mode." => "Otomatik sınama başarısız. Lütfen el kipini kullanın.",
 "Reply" => "Yanıtla",
 "New Message" => "Yeni Mesaj",
-"To" => "Kime",
 "Subject" => "Konu",
 "Send" => "Gönder",
 "Connect your mail account" => "Posta hesabınızı bağlayın",

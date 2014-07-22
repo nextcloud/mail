@@ -6,7 +6,6 @@
 "Server Error" => "កំហុស​ម៉ាស៊ីន​បម្រើ",
 "Reply" => "ឆ្លើយតប",
 "New Message" => "សារ​ថ្មី",
-"To" => "ទៅ",
 "Subject" => "ប្រធានបទ",
 "Send" => "ផ្ញើ",
 "Connect your mail account" => "ភ្ជាប់​គណនី​អ៊ីមែល​របស់​អ្នក",

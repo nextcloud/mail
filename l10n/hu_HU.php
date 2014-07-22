@@ -6,7 +6,6 @@
 "Server Error" => "Szerverhiba",
 "Reply" => "Válasz",
 "New Message" => "Új üzenet",
-"To" => "Eddig",
 "Subject" => "Tárgy",
 "Send" => "Küldjük el",
 "Connect your mail account" => "Csatlakozás a postafiókodhoz",

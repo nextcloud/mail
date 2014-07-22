@@ -6,7 +6,6 @@
 "Server Error" => "Gabim N'server",
 "Reply" => "Përgjigju",
 "New Message" => "Mesazh i'ri",
-"To" => "Për",
 "Subject" => "Subjekti",
 "Send" => "Dërgo",
 "Connect your mail account" => "Lidhni llogarinë tuaj të mail-it",

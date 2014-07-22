@@ -7,7 +7,6 @@
 "Auto detect failed. Please use manual mode." => "La auto detección falló. Use el modo manual.",
 "Reply" => "Responder",
 "New Message" => "Nuevo Mensaje",
-"To" => "Hasta",
 "Subject" => "Asunto",
 "Send" => "Enviar",
 "Connect your mail account" => "Conecte su cuenta de correo",

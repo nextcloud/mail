@@ -5,7 +5,6 @@
 "Server Error" => "Server Fehler",
 "Reply" => "Äntwerten",
 "New Message" => "Neie Message",
-"To" => "Fir",
 "Subject" => "Sujet",
 "Send" => "Schécken",
 "IMAP Password" => "IMAP Passwuert"
