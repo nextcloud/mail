@@ -50,12 +50,16 @@ $(function () {
 	$(document).on('click', '.reply-message-send', function () {
 		//
 		// TODO:
-		//  - disable fields
-		//  - loading animation
 		//  - input validation
-		//  - fadeout on success
+		//  - feedback on success
 		//  - undo lie - very important
 		//
+
+		// loading feedback: show spinner and disable elements
+		$('.reply-message-body').addClass('icon-loading');
+		$('.reply-message-body').prop('disabled', true);
+		$('.reply-message-send').prop('disabled', true);
+		$('.reply-message-send').val(t('mail', 'Sending …'));
 
 		$.ajax({
 			url:OC.generateUrl('/apps/mail/accounts/{accountId}/send', {accountId: Mail.State.currentAccountId}),
@@ -79,12 +83,18 @@ $(function () {
 	{
 		//
 		// TODO:
-		//  - disable fields
-		//  - loading animation
 		//  - input validation
-		//  - fadeout on success
+		//  - feedback on success
 		//  - undo lie - very important
 		//
+
+		// loading feedback: show spinner and disable elements
+		$('#new-message-body').addClass('icon-loading');
+		$('#to').prop('disabled', true);
+		$('#subject').prop('disabled', true);
+		$('#new-message-body').prop('disabled', true);
+		$('#new-message-send').prop('disabled', true);
+		$('#new-message-send').val(t('mail', 'Sending …'));
 
 		// send the mail
 		$.ajax({
