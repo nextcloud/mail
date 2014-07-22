@@ -47,8 +47,10 @@
 		</div>
 
 		<div class="mail-message-attachments">
+			<div class="icon-download attachment-download" title="<?php p($l->t('Download attachment')); ?>"></div>
+			<div class="icon-upload attachment-save-to-cloud" title="<?php p($l->t('Save to files')); ?>"></div>
 			{{#each attachments}}
-			{{filename}} ( {{size}} )
+			{{filename}} ( {{humanFileSize size}} )
 			{{/each}}
 		</div>
 

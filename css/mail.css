@@ -219,9 +219,14 @@ button.control {
     border-bottom: 1px dotted #07d;
 }
 
-
 .transparency {
     -ms-filter: "progid:DXImageTransform.Microsoft.Alpha(Opacity=50)";
     filter: alpha(opacity=50);
     opacity: .5;
+}
+.attachment-save-to-cloud,
+.attachment-download {
+	width: 24px;
+	height: 24px;
+	display: inline-block;
 }

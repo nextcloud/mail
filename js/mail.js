@@ -1,4 +1,4 @@
-/* global Handlebars, relative_modified_date, formatDate */
+/* global Handlebars, relative_modified_date, formatDate, humanFileSize */
 var Mail = {
 	State:{
 		currentFolderId:null,
@@ -30,7 +30,9 @@ var Mail = {
 				return formatDate(lastModified);
 			});
 
-			//formatDate(lastModified)
+			Handlebars.registerHelper("humanFileSize", function(size) {
+				return humanFileSize(size);
+			});
 
 			$.ajax(OC.generateUrl('apps/mail/accounts'), {
 				data:{},
