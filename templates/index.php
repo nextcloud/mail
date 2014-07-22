@@ -47,19 +47,30 @@
 		</div>
 
 		<div class="mail-message-attachments">
+			{{#if attachment}}
+			<ul>
+				<li class="mail-message-attachment" data-attachment-id="{{attachment.id}}" data-attachment-mime="{{attachment.mime}}">
+					{{attachment.fileName}} ( {{humanFileSize attachment.size}} )
+					<button class="icon-download attachment-download" title="<?php p($l->t('Download attachment')); ?>"></div>
+					<button class="icon-upload attachment-save-to-cloud" title="<?php p($l->t('Save to files')); ?>"></div>
+				</li>
+			</ul>
+			{{/if}}
+			{{#if attachments}}
 			<ul>
 				{{#each attachments}}
 				<li class="mail-message-attachment" data-attachment-id="{{id}}" data-attachment-mime="{{mime}}">
-					<div class="icon-download attachment-download" title="<?php p($l->t('Download attachment')); ?>"></div>
-					<div class="icon-upload attachment-save-to-cloud" title="<?php p($l->t('Save to files')); ?>"></div>
 					{{fileName}} ( {{humanFileSize size}} )
+					<button class="icon-download attachment-download" title="<?php p($l->t('Download attachment')); ?>"></div>
+					<button class="icon-upload attachment-save-to-cloud" title="<?php p($l->t('Save to files')); ?>"></div>
 				</li>
 				{{/each}}
 			</ul>
 			<p>
-				<button class="icon-download attachment-download"><?php p($l->t('Download attachment')); ?></button>
-				<button class="icon-upload attachment-save-to-cloud"><?php p($l->t('Save to files')); ?></button>
+				<button class="icon-download attachments-download"><?php p($l->t('Download attachments')); ?></button>
+				<button class="icon-upload attachments-save-to-cloud"><?php p($l->t('Save all to files')); ?></button>
 			</p>
+			{{/if}}
 		</div>
 
 		<div class="reply-message-fields">

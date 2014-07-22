@@ -276,7 +276,12 @@ class Message {
 
 		$data = $this->getListArray();
 		$data['body'] = $mail_body;
-		$data['attachments'] = $this->attachments;
+		if (count($this->attachments) === 1) {
+			$data['attachment'] = $this->attachments[0];
+		}
+		if (count($this->attachments) > 1) {
+			$data['attachments'] = $this->attachments;
+		}
 		return $data;
 	}
 
