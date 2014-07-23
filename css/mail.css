@@ -214,6 +214,11 @@ button.control {
     margin: 10px;
 }
 
+.mail-message-body a {
+    color: #07d;
+    border-bottom: 1px dotted #07d;
+}
+
 
 .transparency {
     -ms-filter: "progid:DXImageTransform.Microsoft.Alpha(Opacity=50)";
