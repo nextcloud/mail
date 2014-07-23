@@ -174,7 +174,7 @@ var Mail = {
 					},
 					type:'POST',
 					success: function () {
-						OC.Notification.show(t('mail', 'Attachment(s) saved to your cloud.'));
+						OC.Notification.show(t('mail', 'Attachment(s) saved to Files.'));
 					},
 					error: function() {
 						OC.Notification.show(t('mail', 'Error while deleting mail.'));
