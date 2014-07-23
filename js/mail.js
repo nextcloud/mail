@@ -180,7 +180,7 @@ var Mail = {
 								OC.Notification.show(t('mail', 'Attachment(s) saved to Files.'));
 							},
 							error: function() {
-								OC.Notification.show(t('mail', 'Error while deleting mail.'));
+								OC.Notification.show(t('mail', 'Error while saving attachment(s) to Files.'));
 							}
 						});
 				},
@@ -378,6 +378,12 @@ $(document).ready(function () {
 		var messageId = $(this).parent().parent().parent().parent().parent().parent().data('messageId');
 		var attachmentId = $(this).parent().data('attachmentId');
 		Mail.UI.saveAttachment(messageId, attachmentId);
+	});
+
+	$(document).on('click', '#mail_messages .attachments-save-to-cloud', function(event) {
+		event.stopPropagation();
+		var messageId = $(this).parent().parent().parent().parent().parent().data('messageId');
+		Mail.UI.saveAttachment(messageId);
 	});
 
 	Mail.UI.bindEndlessScrolling();

@@ -69,7 +69,6 @@
 				{{/each}}
 			</ul>
 			<p>
-				<button class="icon-download attachments-download"><?php p($l->t('Download all attachments')); ?></button>
 				<button class="icon-upload attachments-save-to-cloud"><?php p($l->t('Save all to Files')); ?></button>
 			</p>
 			{{/if}}

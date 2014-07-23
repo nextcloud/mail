@@ -129,18 +129,27 @@ class MessagesController extends Controller
 	public function saveAttachment($messageId, $attachmentId, $targetPath) {
 		$mailBox = $this->getFolder();
 
-		$attachment = $mailBox->getAttachment($messageId, $attachmentId);
-
-		$fileName = $attachment->getName();
-		$fullPath = "$targetPath/$fileName";
-		$counter = 0;
-		while($this->userFolder->nodeExists($fullPath)) {
-			$fullPath = "$targetPath/$counter-$fileName";
-			$counter++;
+		$attachmentIds = array($attachmentId);
+		if($attachmentId === 0) {
+			$m = $mailBox->getMessage($messageId);
+			$attachmentIds = array_map(function($a){
+				return $a['id'];
+			}, $m->attachments);
 		}
+		foreach($attachmentIds as $attachmentId) {
+			$attachment = $mailBox->getAttachment($messageId, $attachmentId);
 
-		$newFile = $this->userFolder->newFile($fullPath);
-		$newFile->putContent($attachment->getContents());
+			$fileName = $attachment->getName();
+			$fullPath = "$targetPath/$fileName";
+			$counter = 0;
+			while($this->userFolder->nodeExists($fullPath)) {
+				$fullPath = "$targetPath/$counter-$fileName";
+				$counter++;
+			}
+
+			$newFile = $this->userFolder->newFile($fullPath);
+			$newFile->putContent($attachment->getContents());
+		}
 
 		return new JSONResponse();
 	}
