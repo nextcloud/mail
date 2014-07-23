@@ -162,7 +162,7 @@ var Mail = {
 			// Check if message is open
 			if (Mail.State.currentMessageId !== null) {
 				var currentOpenMessage = $('#mail-message-summary-' + Mail.State.currentMessageId);
-				currentOpenMessage.find('.mail_message').fadeOut(function(){
+				currentOpenMessage.find('.mail_message').slideUp(function(){
 					var nextOpenMessage = $('#mail-message-summary-' + messageId);
 					nextOpenMessage[0].scrollIntoView(true);
 				});
