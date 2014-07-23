@@ -74,10 +74,6 @@ button.control {
     padding-bottom: 250px;
 }
 
-.reply-message-fields {
-	width: 60%;
-}
-
 
 .mail_message_summary {
     border-top: 1px solid #eee;
@@ -147,21 +143,56 @@ button.control {
 
 /* editor */
 
+#new-message-fields {
+    position: relative;
+    width: 60%;
+}
 #to,
 #subject,
 #new-message-body {
     width: 100%;
 }
 
+#to {
+    margin: 0;
+    border-bottom-left-radius: 0;
+    border-bottom-right-radius: 0;
+}
+#subject {
+    margin: 0;
+    border-top: none;
+    border-bottom: none;
+    border-radius: 0;
+}
 #new-message-body {
-    height: 150px;
+    margin: 0;
+    border-top-left-radius: 0;
+    border-top-right-radius: 0;
+    height: 100px;
     resize: none;
 }
+#new-message-send {
+    position: absolute;
+    bottom: 5px;
+    right: 0;
+    margin: 0 !important;
+}
 
+
+.reply-message-fields {
+    position: relative;
+    width: 60%;
+}
 .reply-message-body {
-	width: 90%;
-	height: 50px;
+	width: 100%;
+	height: 100px;
 	resize: none;
+}
+.reply-message-send {
+    position: absolute;
+    right: 0;
+    margin: 0 !important;
+    bottom: 8px;
 }
 
 .unread {

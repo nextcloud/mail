@@ -50,12 +50,18 @@ $(function () {
 	$(document).on('click', '.reply-message-send', function () {
 		//
 		// TODO:
-		//  - disable fields
-		//  - loading animation
 		//  - input validation
-		//  - fadeout on success
+		//  - feedback on success
 		//  - undo lie - very important
 		//
+
+		// loading feedback: show spinner and disable elements
+		var replyMessageBody = $('.reply-message-body');
+		var replyMessageSend = $('.reply-message-send');
+		replyMessageBody.addClass('icon-loading');
+		replyMessageBody.prop('disabled', true);
+		replyMessageSend.prop('disabled', true);
+		replyMessageSend.val(t('mail', 'Sending …'));
 
 		$.ajax({
 			url:OC.generateUrl('/apps/mail/accounts/{accountId}/send', {accountId: Mail.State.currentAccountId}),
@@ -66,8 +72,9 @@ $(function () {
 			data:{
 				'folderId': Mail.State.currentFolderId,
 				'messageId': Mail.State.currentMessageId,
-				'body':$('.reply-message-body').val()
+				'body':replyMessageBody.val()
 			},
+			type: 'POST',
 			success:function () {
 				// close reply
 				$('.reply-message-body').val('');
@@ -79,12 +86,20 @@ $(function () {
 	{
 		//
 		// TODO:
-		//  - disable fields
-		//  - loading animation
 		//  - input validation
-		//  - fadeout on success
+		//  - feedback on success
 		//  - undo lie - very important
 		//
+
+		// loading feedback: show spinner and disable elements
+		var newMessageBody = $('#new-message-body');
+		var newMessageSend = $('#new-message-send');
+		newMessageBody.addClass('icon-loading');
+		$('#to').prop('disabled', true);
+		$('#subject').prop('disabled', true);
+		newMessageBody.prop('disabled', true);
+		newMessageSend.prop('disabled', true);
+		newMessageSend.val(t('mail', 'Sending …'));
 
 		// send the mail
 		$.ajax({
@@ -99,12 +114,19 @@ $(function () {
 			data:{
 				'to':$('#to').val(),
 				'subject':$('#subject').val(),
-				'body':$('#new-message-body').val()
+				'body':newMessageBody.val()
 			},
 			success:function () {
 				// close composer
 				$('#new-message-fields').slideUp();
 				$('#mail_new_message').fadeIn();
+				// remove loading feedback
+				newMessageBody.removeClass('icon-loading');
+				$('#to').prop('disabled', false);
+				$('#subject').prop('disabled', false);
+				newMessageBody.prop('disabled', false);
+				newMessageSend.prop('disabled', false);
+				newMessageSend.val(t('mail', 'Send'));
 			}
 		});
 
