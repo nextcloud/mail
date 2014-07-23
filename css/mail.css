@@ -228,6 +228,9 @@ button.control {
 .mail-message-attachments {
     margin-bottom: 20px;
 }
+.mail-message-attachment {
+    height: 38px;
+}
 .attachment-save-to-cloud,
 .attachment-download {
 	height: 32px;
