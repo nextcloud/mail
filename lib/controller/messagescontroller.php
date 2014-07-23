@@ -174,6 +174,7 @@ class MessagesController extends Controller
 		));
 		$downloadUrl = \OC_Helper::makeURLAbsolute($downloadUrl);
 		$attachment['downloadUrl'] = $downloadUrl;
+		$attachment['mimeUrl'] = \OC_Helper::mimetypeIcon($attachment['mime']);
 		return $attachment;
 	}
 
