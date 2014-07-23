@@ -31,6 +31,7 @@ class TestHelper extends \PHPUnit_Framework_TestCase {
 			array('<a href="https://google.com" target="_blank">https://google.com</a>', 'https://google.com'),
 			array('<a href="ftp://google.com" target="_blank">ftp://google.com</a>', 'ftp://google.com'),
 			array('<a href="http://www.themukt.com/2014/07/23/take-control-cloud-owncloud-7/" target="_blank">http://www.themukt.com/2014/07/23/take-control-cloud-owncloud-7/</a>', 'http://www.themukt.com/2014/07/23/take-control-cloud-owncloud-7/'),
+			array('<a href="https://travis-ci.org/owncloud/music/builds/22037091" target="_blank">https://travis-ci.org/owncloud/music/builds/22037091</a>', 'https://travis-ci.org/owncloud/music/builds/22037091'),
 		);
 	}
 }
