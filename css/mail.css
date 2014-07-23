@@ -230,7 +230,7 @@ button.control {
 }
 .attachment-save-to-cloud,
 .attachment-download {
-	height: 24px;
+	height: 32px;
     float: left;
     display: inline-block;
 }
@@ -240,8 +240,8 @@ button.control {
 .attachments-download,
 .mail-message-attachment-single .attachment-save-to-cloud,
 .mail-message-attachment-single .attachment-download {
-    background-position: 4px center;
-    padding-left: 24px;
+    background-position: 9px center;
+    padding-left: 32px;
 }
 /* show attachment size less prominent */
 .attachment-size {

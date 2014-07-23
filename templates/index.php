@@ -52,7 +52,7 @@
 				<li class="mail-message-attachment mail-message-attachment-single" data-attachment-id="{{attachment.id}}" data-attachment-mime="{{attachment.mime}}">
 					<img class="attachment-icon" src="{{attachment.mimeUrl}}" />
 					{{attachment.fileName}} <span class="attachment-size">({{humanFileSize attachment.size}})</span><br/>
-					<a class="button icon-download attachment-download" href="{{attachment.downloadUrl}}" title="<?php p($l->t('Download attachment')); ?>"></a>
+					<a class="button icon-download attachment-download" href="{{attachment.downloadUrl}}"><?php p($l->t('Download attachment')); ?></a>
 					<button class="icon-upload attachment-save-to-cloud"><?php p($l->t('Save to files')); ?></button>
 				</li>
 			</ul>
