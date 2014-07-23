@@ -199,6 +199,8 @@ var Mail = {
 					var nextOpenMessage = $('#mail-message-summary-' + messageId);
 					nextOpenMessage[0].scrollIntoView(true);
 				});
+				Mail.State.currentMessageId = null;
+				return;
 			}
 			if (Mail.State.currentMessageId === messageId) {
 				return;
