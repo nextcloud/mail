@@ -229,10 +229,11 @@ class Message {
 		// sanitize
 		//
 		$data = \OCP\Util::sanitizeHTML($data);
+
 		//
 		// link detection
 		//
-		$data = preg_replace('!(http)(s)?:\/\/[a-zA-Z0-9.?&_/]+!', "<a href=\"\\0\" target=\"_blank\">\\0</a>", $data);
+		$data = $this->convertLinks($data);
 
 		// TEXT
 		if ($p->getPrimaryType() == 'text' && $data) {
@@ -304,6 +305,15 @@ class Message {
 		$data['size'] = \OCP\Util::humanFileSize($this->getSize());
 		$data['flags'] = $this->getFlags();
 		$data['dateInt'] = $this->getSentDate()->getTimestamp();
+		return $data;
+	}
+
+	/**
+	 * @param string $data
+	 * @return string
+	 */
+	public static function convertLinks($data) {
+		$data = preg_replace("/(http|https|ftp|ftps)\:\/\/[a-zA-Z0-9\-\.]+\.[a-zA-Z]{2,3}(\/\S*)?/", "<a href=\"\\0\" target=\"_blank\">\\0</a>", $data);
 		return $data;
 	}
 }
