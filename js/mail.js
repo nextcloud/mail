@@ -160,26 +160,34 @@ var Mail = {
 		},
 
 		saveAttachment: function(messageId, attachmentId) {
-			$.ajax(
-				OC.generateUrl(
-					'apps/mail/accounts/{accountId}/folders/{folderId}/messages/{messageId}/attachment/{attachmentId}',
-					{
-					accountId: Mail.State.currentAccountId,
-					folderId: encodeURIComponent(Mail.State.currentFolderId),
-					messageId: messageId,
-					attachmentId: attachmentId
-				}), {
-					data: {
-						targetPath: '/'
-					},
-					type:'POST',
-					success: function () {
-						OC.Notification.show(t('mail', 'Attachment(s) saved to Files.'));
-					},
-					error: function() {
-						OC.Notification.show(t('mail', 'Error while deleting mail.'));
-					}
-				});
+			OC.dialogs.filepicker(
+				t('mail', 'Choose a folder store the attachment'),
+				function (path) {
+					$.ajax(
+						OC.generateUrl(
+							'apps/mail/accounts/{accountId}/folders/{folderId}/messages/{messageId}/attachment/{attachmentId}',
+						{
+							accountId: Mail.State.currentAccountId,
+							folderId: encodeURIComponent(Mail.State.currentFolderId),
+							messageId: messageId,
+							attachmentId: attachmentId
+						}), {
+							data: {
+								targetPath: path
+							},
+							type:'POST',
+							success: function () {
+								OC.Notification.show(t('mail', 'Attachment(s) saved to Files.'));
+							},
+							error: function() {
+								OC.Notification.show(t('mail', 'Error while deleting mail.'));
+							}
+						});
+				},
+				false,
+				'httpd/unix-directory',
+				true
+			);
 		},
 
 		openMessage:function (messageId) {
