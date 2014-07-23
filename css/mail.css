@@ -231,6 +231,8 @@ button.control {
 .attachment-save-to-cloud,
 .attachment-download {
 	height: 24px;
+    float: left;
+    display: inline-block;
 }
 /* show icon + text for Download all button
     as well as when there is only one attachment */
@@ -246,4 +248,7 @@ button.control {
     -ms-filter: "progid:DXImageTransform.Microsoft.Alpha(Opacity=50)";
     filter: alpha(opacity=50);
     opacity: .5;
+}
+.attachment-icon {
+    vertical-align: middle;
 }
