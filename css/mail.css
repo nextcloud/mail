@@ -1,15 +1,15 @@
 #bottomcontrols {
-    padding: 0;
-    bottom: 0px;
-    height: 2.8em;
-    width: 20em;
-    margin: 0;
-    background: #eee;
-    border-top: 1px solid #ccc;
-    position: fixed;
-    -moz-box-shadow: 0 -3px 3px -3px #000;
-    -webkit-box-shadow: 0 -3px 3px -3px #000;
-    box-shadow: 0 -3px 3px -3px #000;
+	padding: 0;
+	bottom: 0px;
+	height: 2.8em;
+	width: 20em;
+	margin: 0;
+	background: #eee;
+	border-top: 1px solid #ccc;
+	position: fixed;
+	-moz-box-shadow: 0 -3px 3px -3px #000;
+	-webkit-box-shadow: 0 -3px 3px -3px #000;
+	box-shadow: 0 -3px 3px -3px #000;
 }
 
 .loading {
@@ -24,10 +24,10 @@
 }
 
 button.control {
-    float: left;
-    margin: 0.2em 0 0 1em;
-    height: 2.4em;
-    width: 2.4em; /* border: 0 none; border-radius: 0; -moz-box-shadow: none; box-shadow: none; outline: 0 none;*/
+	float: left;
+	margin: 0.2em 0 0 1em;
+	height: 2.4em;
+	width: 2.4em; /* border: 0 none; border-radius: 0; -moz-box-shadow: none; box-shadow: none; outline: 0 none;*/
 }
 
 /*#content-wrapper {*/
@@ -61,128 +61,128 @@ button.control {
 
 
 #app-navigation .utils {
-    padding: 0 7px;
+	padding: 0 7px;
 }
 
 
 #new-message {
 	margin: 10px;
-    margin-left: 49px;
+	margin-left: 49px;
 }
 
 
 #mail_messages {
-    padding-bottom: 250px;
+	padding-bottom: 250px;
 }
 
 
 .mail_message_summary {
-    border-top: 1px solid #eee;
-    position: relative;
+	border-top: 1px solid #eee;
+	position: relative;
 }
 
 .mail-message-header {
-    height: 44px;
+	height: 44px;
 }
 
 .sender-image {
-    display: inline-block;
-    position: absolute;
-    padding: 5px;
-    padding-left: 10px;
+	display: inline-block;
+	position: absolute;
+	padding: 5px;
+	padding-left: 10px;
 }
 
 .mail_message_summary_from,
 .mail_message_summary_subject,
 .date {
-    display: inline-block;
-    padding: 12px;
-    white-space: nowrap;
-    overflow: hidden;
-    text-overflow: ellipsis;
+	display: inline-block;
+	padding: 12px;
+	white-space: nowrap;
+	overflow: hidden;
+	text-overflow: ellipsis;
 }
 
 .mail_message_summary_from {
-    width: 180px;
-    margin-left: 37px;
+	width: 180px;
+	margin-left: 37px;
 }
 
 .mail_message_summary_subject {
-    width: 50%;
+	width: 50%;
 }
 
 .date {
-    width: 120px;
-    position: absolute;
-    right: 44px; /* leave room for delete action */
-    top: 0;
-    -ms-filter: "progid:DXImageTransform.Microsoft.Alpha(Opacity=50)";
-    filter: alpha(opacity=50);
-    opacity: .5;
+	width: 120px;
+	position: absolute;
+	right: 44px; /* leave room for delete action */
+	top: 0;
+	-ms-filter: "progid:DXImageTransform.Microsoft.Alpha(Opacity=50)";
+	filter: alpha(opacity=50);
+	opacity: .5;
 }
 
 .mail_message_summary.unseen .mail_message_summary_from,
 .mail_message_summary.unseen .mail_message_summary_subject,
 .mail_message_summary.unseen .date {
-    font-weight: bold;
+	font-weight: bold;
 }
 
 #mail_messages .action.delete {
 	position: absolute;
-    top: 0;
+	top: 0;
 	right: 0;
 	padding: 22px;
-    -ms-filter: "progid:DXImageTransform.Microsoft.Alpha(Opacity=50)";
-    filter: alpha(opacity=50);
-    opacity: .5;
+	-ms-filter: "progid:DXImageTransform.Microsoft.Alpha(Opacity=50)";
+	filter: alpha(opacity=50);
+	opacity: .5;
 }
 
 
 .mail_message_loading {
-    display: none;
+	display: none;
 }
 
 /* editor */
 
 #new-message-fields {
-    position: relative;
-    width: 60%;
+	position: relative;
+	width: 60%;
 }
 #to,
 #subject,
 #new-message-body {
-    width: 100%;
+	width: 100%;
 }
 
 #to {
-    margin: 0;
-    border-bottom-left-radius: 0;
-    border-bottom-right-radius: 0;
+	margin: 0;
+	border-bottom-left-radius: 0;
+	border-bottom-right-radius: 0;
 }
 #subject {
-    margin: 0;
-    border-top: none;
-    border-bottom: none;
-    border-radius: 0;
+	margin: 0;
+	border-top: none;
+	border-bottom: none;
+	border-radius: 0;
 }
 #new-message-body {
-    margin: 0;
-    border-top-left-radius: 0;
-    border-top-right-radius: 0;
-    height: 100px;
-    resize: none;
+	margin: 0;
+	border-top-left-radius: 0;
+	border-top-right-radius: 0;
+	height: 100px;
+	resize: none;
 }
 #new-message-send {
-    position: absolute;
-    bottom: 5px;
-    right: 0;
-    margin: 0 !important;
+	position: absolute;
+	bottom: 5px;
+	right: 0;
+	margin: 0 !important;
 }
 
 
 .reply-message-fields {
-    position: relative;
-    width: 60%;
+	position: relative;
+	width: 60%;
 }
 .reply-message-body {
 	width: 100%;
@@ -190,10 +190,10 @@ button.control {
 	resize: none;
 }
 .reply-message-send {
-    position: absolute;
-    right: 0;
-    margin: 0 !important;
-    bottom: 8px;
+	position: absolute;
+	right: 0;
+	margin: 0 !important;
+	bottom: 8px;
 }
 
 .unread {
@@ -212,14 +212,14 @@ button.control {
 }
 
 .mail-message-body {
-    margin: 10px;
-    margin-left: 49px;
+	margin: 10px;
+	margin-left: 49px;
 }
 
 .mail-message-body a {
-    color: #07d;
-    border-bottom: 1px dotted #07d;
-    word-wrap: break-word;
+	color: #07d;
+	border-bottom: 1px dotted #07d;
+	word-wrap: break-word;
 }
 .mail-signature {
 	font-family: monospace;
@@ -228,41 +228,41 @@ button.control {
 }
 
 .transparency {
-    -ms-filter: "progid:DXImageTransform.Microsoft.Alpha(Opacity=50)";
-    filter: alpha(opacity=50);
-    opacity: .5;
+	-ms-filter: "progid:DXImageTransform.Microsoft.Alpha(Opacity=50)";
+	filter: alpha(opacity=50);
+	opacity: .5;
 }
 
 .mail-message-attachments {
-    margin-bottom: 20px;
+	margin-bottom: 20px;
 }
 .mail-message-attachment {
-    height: 38px;
-    white-space: nowrap;
-    overflow: hidden;
-    text-overflow: ellipsis;
+	height: 38px;
+	white-space: nowrap;
+	overflow: hidden;
+	text-overflow: ellipsis;
 }
 .attachment-save-to-cloud,
 .attachment-download {
 	height: 32px;
-    float: left;
-    display: inline-block;
+	float: left;
+	display: inline-block;
 }
 /* show icon + text for Download all button
-    as well as when there is only one attachment */
+	as well as when there is only one attachment */
 .attachments-save-to-cloud,
 .attachments-download,
 .mail-message-attachment-single .attachment-save-to-cloud,
 .mail-message-attachment-single .attachment-download {
-    background-position: 9px center;
-    padding-left: 32px;
+	background-position: 9px center;
+	padding-left: 32px;
 }
 /* show attachment size less prominent */
 .attachment-size {
-    -ms-filter: "progid:DXImageTransform.Microsoft.Alpha(Opacity=50)";
-    filter: alpha(opacity=50);
-    opacity: .5;
+	-ms-filter: "progid:DXImageTransform.Microsoft.Alpha(Opacity=50)";
+	filter: alpha(opacity=50);
+	opacity: .5;
 }
 .attachment-icon {
-    vertical-align: middle;
+	vertical-align: middle;
 }
