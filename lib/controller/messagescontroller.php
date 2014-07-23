@@ -44,6 +44,7 @@ class MessagesController extends Controller
 		parent::__construct($appName, $request);
 		$this->mapper = $mapper;
 		$this->currentUserId = $currentUserId;
+		$this->userFolder = \OC::$server->getUserFolder();
 	}
 
 	/**
@@ -102,7 +103,7 @@ class MessagesController extends Controller
 	 *
 	 * @param int $messageId
 	 * @param int $attachmentId
-	 * @return JSONResponse
+	 * @return AttachmentDownloadResponse
 	 */
 	public function downloadAttachment($messageId, $attachmentId)
 	{
@@ -116,6 +117,33 @@ class MessagesController extends Controller
 			$attachment->getType());
 	}
 
+	/**
+	 * @NoAdminRequired
+	 * @NoCSRFRequired
+	 *
+	 * @param int $messageId
+	 * @param int $attachmentId
+	 * @param string $targetPath
+	 * @return JSONResponse
+	 */
+	public function saveAttachment($messageId, $attachmentId, $targetPath) {
+		$mailBox = $this->getFolder();
+
+		$attachment = $mailBox->getAttachment($messageId, $attachmentId);
+
+		$fileName = $attachment->getName();
+		$fullPath = "$targetPath/$fileName";
+		$counter = 0;
+		while($this->userFolder->nodeExists($fullPath)) {
+			$fullPath = "$targetPath/$counter-$fileName";
+			$counter++;
+		}
+
+		$newFile = $this->userFolder->newFile($fullPath);
+		$newFile->putContent($attachment->getContents());
+
+		return new JSONResponse();
+	}
 	/**
 	 * @IsAdminExemption
 	 * @IsSubAdminExemption

@@ -154,13 +154,32 @@ var Mail = {
 						Mail.State.currentMessageId = null;
 					},
 					error: function() {
-						OC.notification.show(t('mail', 'Error while deleting mail.'));
+						OC.Notification.show(t('mail', 'Error while deleting mail.'));
 					}
 				});
 		},
 
-		downloadAttachment: function(messageId, attachmentId) {
-
+		saveAttachment: function(messageId, attachmentId) {
+			$.ajax(
+				OC.generateUrl(
+					'apps/mail/accounts/{accountId}/folders/{folderId}/messages/{messageId}/attachment/{attachmentId}',
+					{
+					accountId: Mail.State.currentAccountId,
+					folderId: encodeURIComponent(Mail.State.currentFolderId),
+					messageId: messageId,
+					attachmentId: attachmentId
+				}), {
+					data: {
+						targetPath: '/'
+					},
+					type:'POST',
+					success: function () {
+						OC.Notification.show(t('mail', 'Attachment(s) saved to your cloud.'));
+					},
+					error: function() {
+						OC.Notification.show(t('mail', 'Error while deleting mail.'));
+					}
+				});
 		},
 
 		openMessage:function (messageId) {
@@ -346,11 +365,11 @@ $(document).ready(function () {
 		Mail.UI.deleteMessage(messageId);
 	});
 
-	$(document).on('click', '#mail_messages .attachment-download', function(event) {
+	$(document).on('click', '#mail_messages .attachment-save-to-cloud', function(event) {
 		event.stopPropagation();
-		var messageId = $(this).parent().parent().parent().parent().parent().data('messageId');
+		var messageId = $(this).parent().parent().parent().parent().parent().parent().data('messageId');
 		var attachmentId = $(this).parent().data('attachmentId');
-		Mail.UI.downloadAttachment(messageId, attachmentId);
+		Mail.UI.saveAttachment(messageId, attachmentId);
 	});
 
 	Mail.UI.bindEndlessScrolling();

@@ -16,6 +16,10 @@ $app->registerRoutes($this,
 				'name' => 'messages#downloadAttachment',
 				'url' => '/accounts/{accountId}/folders/{folderId}/messages/{messageId}/attachment/{attachmentId}',
 				'verb' => 'GET'),
+			array(
+				'name' => 'messages#saveAttachment',
+				'url' => '/accounts/{accountId}/folders/{folderId}/messages/{messageId}/attachment/{attachmentId}',
+				'verb' => 'POST'),
 		),
 		'resources' => array(
 			'accounts' => array('url' => '/accounts'),
