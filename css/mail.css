@@ -219,6 +219,7 @@ button.control {
 .mail-message-body a {
     color: #07d;
     border-bottom: 1px dotted #07d;
+    word-wrap: break-word;
 }
 
 
