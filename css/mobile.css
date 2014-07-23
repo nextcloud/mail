@@ -1,20 +1,26 @@
 @media only screen and (max-width: 768px) {
 
+/* adjust message list for mobile */
 .mail-message-header {
 	height: 68px;
 }
-
 .mail_message_summary_from {
 	padding-bottom: 0;
 }
-
 .mail_message_summary_subject {
 	padding-top: 0;
 	width: 90%;
 	margin-left: 37px;
 }
 
-#new-message-fields {
+/* use full width on mobile, don't leave whitespace on left */
+.mail-message-body {
+	margin-left: 10px;
+}
+
+/*make sure text fields occupy full width */
+#new-message-fields,
+.reply-message-fields {
 	width: 100%;
 }
 
