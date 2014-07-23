@@ -67,6 +67,7 @@ button.control {
 
 #new-message {
 	margin: 10px;
+    margin-left: 49px;
 }
 
 
@@ -212,6 +213,7 @@ button.control {
 
 .mail-message-body {
     margin: 10px;
+    margin-left: 49px;
 }
 
 .mail-message-body a {
