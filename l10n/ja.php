@@ -1,4 +1,5 @@
 <?php $TRANSLATIONS = array(
+"Mail" => "メール",
 "Error" => "エラー",
 "Error while loading mail message." => "メールメッセージの読み込みエラー",
 "Connecting ..." => "接続中...",
@@ -9,6 +10,7 @@
 "Reply" => "返信",
 "New Message" => "新しいメッセージ",
 "Subject" => "件名",
+"Message" => "メッセージ",
 "Send" => "送信",
 "Connect your mail account" => "メールアカウントに接続",
 "Mail Address" => "メールアドレス",

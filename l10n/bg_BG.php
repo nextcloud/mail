@@ -1,4 +1,5 @@
 <?php $TRANSLATIONS = array(
+"Mail" => "Поща",
 "Error" => "Грешка",
 "Error while loading mail message." => "Грешка по време на зареждането на имейл съобщението",
 "Connecting ..." => "Свързване ...",
@@ -8,7 +9,9 @@
 "Auto detect failed. Please use manual mode." => "Неуспешни автоматични настройки. Моля, използвайте ръчен режим.",
 "Reply" => "Отговори",
 "New Message" => "Ново Съобщение",
+"Recipient" => "Получател",
 "Subject" => "Относно",
+"Message" => "Съобщение",
 "Send" => "Изпрати",
 "Connect your mail account" => "Свържи имейла си",
 "Mail Address" => "Адрес на пощата",

@@ -1,4 +1,5 @@
 <?php $TRANSLATIONS = array(
 "Error" => "Greška",
-"Connect" => "Poveži"
+"Connect" => "Poveži",
+"Message" => "Poruka"
 );

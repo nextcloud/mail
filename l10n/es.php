@@ -1,5 +1,7 @@
 <?php $TRANSLATIONS = array(
+"Mail" => "Correo electrónico",
 "Error" => "Error",
+"Error while loading mail message." => "Error al cargar el mensaje.",
 "Connecting ..." => "Conectando...",
 "Unknown error" => "Error desconocido",
 "Connect" => "Conectar",
@@ -7,7 +9,9 @@
 "Auto detect failed. Please use manual mode." => "La auto detección falló. Use el modo manual.",
 "Reply" => "Responder",
 "New Message" => "Nuevo Mensaje",
+"Recipient" => "Destinatario",
 "Subject" => "Asunto",
+"Message" => "Mensaje",
 "Send" => "Enviar",
 "Connect your mail account" => "Conecte su cuenta de correo",
 "Mail Address" => "Dirección de correo",

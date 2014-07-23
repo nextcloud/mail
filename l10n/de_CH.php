@@ -7,6 +7,7 @@
 "Reply" => "Antwort",
 "New Message" => "Neue Nachricht",
 "Subject" => "Betreff",
+"Message" => "Mitteilung",
 "Send" => "Senden",
 "Connect your mail account" => "Ihr E-Mail-Konto verbinden",
 "Mail Address" => "E-Mail-Adresse",

@@ -7,6 +7,7 @@
 "Reply" => "Responde",
 "New Message" => "Nove message",
 "Subject" => "Subjecto",
+"Message" => "Message",
 "Send" => "Invia",
 "Connect your mail account" => "Connecte tu conto de posta",
 "Mail Address" => "Adresse de Posta",

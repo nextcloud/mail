@@ -1,4 +1,5 @@
 <?php $TRANSLATIONS = array(
+"Mail" => "Correio",
 "Error" => "Erro",
 "Connecting ..." => "A ligar...",
 "Unknown error" => "Erro Desconhecido",
@@ -7,6 +8,7 @@
 "Reply" => "Responder",
 "New Message" => "Nova Mensagem",
 "Subject" => "Assunto",
+"Message" => "Mensagem",
 "Send" => "Enviar",
 "Connect your mail account" => "Ligar à sua conta de correio",
 "Mail Address" => "Endereço de email",

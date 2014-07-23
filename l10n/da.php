@@ -1,4 +1,5 @@
 <?php $TRANSLATIONS = array(
+"Mail" => "Mail",
 "Error" => "Fejl",
 "Connecting ..." => "Forbinder ...",
 "Unknown error" => "Ukendt fejl",
@@ -8,6 +9,7 @@
 "Reply" => "Besvar",
 "New Message" => "Ny Besked",
 "Subject" => "Emne",
+"Message" => "Besked",
 "Send" => "Send",
 "Connect your mail account" => "Forbind din mail-konto",
 "Mail Address" => "Mail Adresse",

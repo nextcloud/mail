@@ -1,4 +1,5 @@
 <?php $TRANSLATIONS = array(
+"Mail" => "Elektronska pošta",
 "Error" => "Napaka",
 "Error while loading mail message." => "Napaka med nalaganjem sporočila elektronske pošte.",
 "Connecting ..." => "Povezovanje ...",
@@ -9,6 +10,7 @@
 "Reply" => "Odgovori",
 "New Message" => "Novo sporočilo",
 "Subject" => "Zadeva",
+"Message" => "Sporočilo",
 "Send" => "Pošlji",
 "Connect your mail account" => "Povezava s poštnim računom",
 "Mail Address" => "Elektronski naslov",

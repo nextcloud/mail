@@ -1,4 +1,5 @@
 <?php $TRANSLATIONS = array(
 "Error" => "Ralat",
-"Connect" => "Berhubung"
+"Connect" => "Berhubung",
+"Message" => "Mesej"
 );

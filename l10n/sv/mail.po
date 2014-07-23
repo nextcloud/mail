@@ -11,8 +11,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: ownCloud\n"
 "Report-Msgid-Bugs-To: translations@owncloud.org\n"
-"POT-Creation-Date: 2014-07-22 02:41-0400\n"
-"PO-Revision-Date: 2014-07-22 06:41+0000\n"
+"POT-Creation-Date: 2014-07-23 02:44-0400\n"
+"PO-Revision-Date: 2014-07-22 07:01+0000\n"
 "Last-Translator: I Robot\n"
 "Language-Team: Swedish (http://www.transifex.com/projects/p/owncloud/language/sv/)\n"
 "MIME-Version: 1.0\n"
@@ -23,29 +23,29 @@ msgstr ""
 
 #: appinfo/app.php:16
 msgid "Mail"
-msgstr ""
+msgstr "Post"
 
-#: js/mail.js:130 js/mail.js:176
+#: js/mail.js:130 js/mail.js:155 js/mail.js:202
 msgid "Error"
 msgstr "Fel"
 
-#: js/mail.js:176
+#: js/mail.js:155 js/mail.js:202
 msgid "Error while loading mail message."
 msgstr ""
 
-#: js/mail.js:255
+#: js/mail.js:281
 msgid "Connecting ..."
 msgstr "Ansluter ..."
 
-#: js/mail.js:272
+#: js/mail.js:298
 msgid "Unknown error"
 msgstr "Okänt fel"
 
-#: js/mail.js:276 templates/no-accounts.php:18
+#: js/mail.js:302 templates/no-accounts.php:18
 msgid "Connect"
 msgstr "Anslut"
 
-#: js/mail.js:278
+#: js/mail.js:304
 msgid "Server Error"
 msgstr "Serverfel"
 
@@ -71,7 +71,7 @@ msgstr "Rubrik"
 
 #: templates/index.php:75
 msgid "Message"
-msgstr ""
+msgstr "Meddelande"
 
 #: templates/index.php:77
 msgid "Send"

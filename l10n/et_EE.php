@@ -1,4 +1,5 @@
 <?php $TRANSLATIONS = array(
+"Mail" => "Kirjad",
 "Error" => "Viga",
 "Connecting ..." => "Ühendamine ...",
 "Unknown error" => "Tundmatu viga",
@@ -8,6 +9,7 @@
 "Reply" => "Vasta",
 "New Message" => "Uus sõnum",
 "Subject" => "Teema",
+"Message" => "Sõnum",
 "Send" => "Saada",
 "Connect your mail account" => "Ühenda oma e-posti konto",
 "Mail Address" => "E-posti aadress",

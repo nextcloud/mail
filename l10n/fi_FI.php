@@ -1,5 +1,7 @@
 <?php $TRANSLATIONS = array(
+"Mail" => "Sähköposti",
 "Error" => "Virhe",
+"Error while loading mail message." => "Virhe sähköpostiviestiä ladatessa.",
 "Connecting ..." => "Yhdistetään...",
 "Unknown error" => "Tuntematon virhe",
 "Connect" => "Yhdistä",
@@ -7,7 +9,9 @@
 "Auto detect failed. Please use manual mode." => "Automaattinen havaitseminen epäonnistui. Käytä manuaalitilaa.",
 "Reply" => "Vastaa",
 "New Message" => "Uusi viesti",
+"Recipient" => "Vastaanottaja",
 "Subject" => "Aihe",
+"Message" => "Viesti",
 "Send" => "Lähetä",
 "Connect your mail account" => "Yhdistä sähköpostitilisi",
 "Mail Address" => "Sähköpostiosoite",

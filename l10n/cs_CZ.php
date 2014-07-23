@@ -1,4 +1,5 @@
 <?php $TRANSLATIONS = array(
+"Mail" => "Pošta",
 "Error" => "Chyba",
 "Error while loading mail message." => "Chyba během načítání e-mailů.",
 "Connecting ..." => "Připojuji se...",
@@ -8,7 +9,9 @@
 "Auto detect failed. Please use manual mode." => "Autodetekce selhala. Prosím použijte manuální mód.",
 "Reply" => "Odpověď",
 "New Message" => "Nová zpráva",
+"Recipient" => "Příjemce",
 "Subject" => "Předmět",
+"Message" => "Zpráva",
 "Send" => "Odeslat",
 "Connect your mail account" => "Připojte se ke svému e-mailovému účtu",
 "Mail Address" => "E-mailová adresa",

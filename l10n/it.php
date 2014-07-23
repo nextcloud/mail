@@ -1,5 +1,7 @@
 <?php $TRANSLATIONS = array(
+"Mail" => "Posta",
 "Error" => "Errore",
+"Error while loading mail message." => "Errore durante il caricamento del messaggio.",
 "Connecting ..." => "Connessione in corso...",
 "Unknown error" => "Errore sconosciuto",
 "Connect" => "Connetti",
@@ -7,7 +9,9 @@
 "Auto detect failed. Please use manual mode." => "Rilevamento automatico non riuscito. Usa la modalità manuale.",
 "Reply" => "Rispondi",
 "New Message" => "Nuovo messaggio",
+"Recipient" => "Destinatario",
 "Subject" => "Oggetto",
+"Message" => "Messaggio",
 "Send" => "Invia",
 "Connect your mail account" => "Connetti il tuo account di posta",
 "Mail Address" => "Indirizzo di posta",

@@ -1,4 +1,5 @@
 <?php $TRANSLATIONS = array(
+"Mail" => "សំបុត្រ",
 "Error" => "កំហុស",
 "Connecting ..." => "កំពុង​ភ្ជាប់ ...",
 "Unknown error" => "មិន​ស្គាល់​កំហុស",

@@ -1,4 +1,5 @@
 <?php $TRANSLATIONS = array(
+"Mail" => "E-mail",
 "Error" => "Fout",
 "Error while loading mail message." => "Fout bij laden e-mailbericht.",
 "Connecting ..." => "Verbinden...",
@@ -8,7 +9,9 @@
 "Auto detect failed. Please use manual mode." => "Automatisch vaststellen mislukt. Gebruik handmatige modus.",
 "Reply" => "Antwoord",
 "New Message" => "Nieuw bericht",
+"Recipient" => "Ontvanger",
 "Subject" => "Onderwerp",
+"Message" => "Bericht",
 "Send" => "Versturen",
 "Connect your mail account" => "Verbind uw e-mailaccount",
 "Mail Address" => "E-mailadres",

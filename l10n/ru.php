@@ -1,4 +1,5 @@
 <?php $TRANSLATIONS = array(
+"Mail" => "Почта",
 "Error" => "Ошибка",
 "Error while loading mail message." => "Ошибка загрузки почтового сообщения.",
 "Connecting ..." => "Подключение ...",
@@ -9,6 +10,7 @@
 "Reply" => "Ответ",
 "New Message" => "Новое сообщение",
 "Subject" => "Тема",
+"Message" => "Сообщение",
 "Send" => "Отправить",
 "Connect your mail account" => "Подключите ваш почтовый аккаунт",
 "Mail Address" => "Почтовый адрес",

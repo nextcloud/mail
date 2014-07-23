@@ -7,6 +7,7 @@
 "Reply" => "پاسخ",
 "New Message" => "پیغام جدید",
 "Subject" => "موضوع",
+"Message" => "پیغام",
 "Send" => "ارسال",
 "Connect your mail account" => "اتصال حساب پست الکترونیکی خود",
 "Mail Address" => "آدرس ایمیل",

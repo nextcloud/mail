@@ -1,4 +1,5 @@
 <?php $TRANSLATIONS = array(
+"Mail" => "Posta",
 "Error" => "Hata",
 "Error while loading mail message." => "Posta iletisi yüklenirken hata.",
 "Connecting ..." => "Bağlanıyor ...",
@@ -8,7 +9,9 @@
 "Auto detect failed. Please use manual mode." => "Otomatik sınama başarısız. Lütfen el kipini kullanın.",
 "Reply" => "Yanıtla",
 "New Message" => "Yeni Mesaj",
+"Recipient" => "Alıcı",
 "Subject" => "Konu",
+"Message" => "Mesaj",
 "Send" => "Gönder",
 "Connect your mail account" => "Posta hesabınızı bağlayın",
 "Mail Address" => "Posta Adresi",
