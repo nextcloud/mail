@@ -15,12 +15,12 @@ class Mailbox {
 	 */
 	private $conn;
 
-	private $folder_id;
+	private $folderId;
 
 	// input $conn = IMAP conn, $folder_id = folder id
 	function __construct($conn, $folder_id) {
 		$this->conn = $conn;
-		$this->folder_id = $folder_id;
+		$this->folderId = $folder_id;
 	}
 
 	public function getMessages($from = 0, $count = 2) {
@@ -53,13 +53,13 @@ class Mailbox {
 		$ids = new \Horde_Imap_Client_Ids("$from:$to", true);
 		$options = array('ids' => $ids);
 		// $list is an array of Horde_Imap_Client_Data_Fetch objects.
-		$headers = $this->conn->fetch($this->folder_id, $fetch_query, $options);
+		$headers = $this->conn->fetch($this->folderId, $fetch_query, $options);
 
 		ob_start(); // fix for Horde warnings
 		$messages = array();
 		foreach ($headers->ids() as $message_id) {
 			$header = $headers[$message_id];
-			$message = new Message($this->conn, $this->folder_id, $message_id, $header);
+			$message = new Message($this->conn, $this->folderId, $message_id, $header);
 			$messages[] = $message->getListArray();
 		}
 		ob_clean();
@@ -77,11 +77,11 @@ class Mailbox {
 	 * @return Message
 	 */
 	public function getMessage($message_id) {
-		return new Message($this->conn, $this->folder_id, $message_id);
+		return new Message($this->conn, $this->folderId, $message_id);
 	}
 
 	private function getStatus($flags = \Horde_Imap_Client::STATUS_ALL) {
-		return $this->conn->status($this->folder_id, $flags);
+		return $this->conn->status($this->folderId, $flags);
 	}
 
 	public function getTotalMessages() {
@@ -90,7 +90,7 @@ class Mailbox {
 	}
 
 	public function getDisplayName() {
-		return \Horde_Imap_Client_Utf7imap::Utf7ImapToUtf8($this->folder_id);
+		return \Horde_Imap_Client_Utf7imap::Utf7ImapToUtf8($this->folderId);
 	}
 
 	/**
@@ -100,17 +100,29 @@ class Mailbox {
 		$display_name = $this->getDisplayName();
 		try {
 			$status = $this->getStatus();
-			return array('id' => $this->folder_id, 'name' => $display_name, 'unseen' => $status['unseen'], 'total' => $status['messages']);
+			return array('id' => $this->folderId, 'name' => $display_name, 'unseen' => $status['unseen'], 'total' => $status['messages']);
 		} catch (\Horde_Imap_Client_Exception $e) {
-			return array('id' => $this->folder_id, 'name' => $display_name, 'unseen' => 0, 'total' => 0, 'error' => $e->getMessage());
+			return array('id' => $this->folderId, 'name' => $display_name, 'unseen' => 0, 'total' => 0, 'error' => $e->getMessage());
 		}
 	}
 
+	/**
+	 * @param int $messageId
+	 */
 	public function deleteMessage($messageId) {
 		$dest = "Trash";
 		$ids = new \Horde_Imap_Client_Ids($messageId);
-		$result = $this->conn->copy($this->folder_id, $dest, array('move' => true, 'ids' => $ids));
+		$result = $this->conn->copy($this->folderId, $dest, array('move' => true, 'ids' => $ids));
 		\OC::$server->getLogger()->info("Message deleted: {result}", array('result' => $result));
+	}
+
+	/**
+	 * @param int $messageId
+	 * @param int $attachmentId
+	 * @return Attachment
+	 */
+	public function getAttachment($messageId, $attachmentId) {
+		return new Attachment($this->conn, $this->folderId, $messageId, $attachmentId);
 	}
 
 }

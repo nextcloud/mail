@@ -22,8 +22,8 @@
 
 namespace OCA\Mail\Controller;
 
+use OCA\Mail\AttachmentDownloadResponse;
 use OCA\Mail\App;
-use OCA\Mail\Db\MailAccount;
 use OCP\AppFramework\Controller;
 use OCP\AppFramework\Db\DoesNotExistException;
 use OCP\AppFramework\Http\JSONResponse;
@@ -44,6 +44,7 @@ class MessagesController extends Controller
 		parent::__construct($appName, $request);
 		$this->mapper = $mapper;
 		$this->currentUserId = $currentUserId;
+		$this->userFolder = \OC::$server->getUserFolder();
 	}
 
 	/**
@@ -76,16 +77,82 @@ class MessagesController extends Controller
 	 */
 	public function show($id)
 	{
+		$accountId = $this->params('accountId');
+		$folderId = $this->params('folderId');
 		$mailBox = $this->getFolder();
 
 		$m = $mailBox->getMessage($id);
 		$json = $m->as_array();
 		$json['senderImage'] = App::getPhoto($m->getFromEmail());
 
+		if (isset($json['attachment'])) {
+			$json['attachment'] = $this->enrichDownloadUrl($accountId, $folderId, $id, $json['attachment']);
+		}
+		if (isset($json['attachments'])) {
+			$json['attachments'] = array_map(function($a) use($accountId, $folderId, $id) {
+				return $this->enrichDownloadUrl($accountId, $folderId, $id, $a);
+			}, $json['attachments']);
+		}
 
 		return new JSONResponse($json);
 	}
 
+	/**
+	 * @NoAdminRequired
+	 * @NoCSRFRequired
+	 *
+	 * @param int $messageId
+	 * @param int $attachmentId
+	 * @return AttachmentDownloadResponse
+	 */
+	public function downloadAttachment($messageId, $attachmentId)
+	{
+		$mailBox = $this->getFolder();
+
+		$attachment = $mailBox->getAttachment($messageId, $attachmentId);
+
+		return new AttachmentDownloadResponse(
+			$attachment->getContents(),
+			$attachment->getName(),
+			$attachment->getType());
+	}
+
+	/**
+	 * @NoAdminRequired
+	 * @NoCSRFRequired
+	 *
+	 * @param int $messageId
+	 * @param int $attachmentId
+	 * @param string $targetPath
+	 * @return JSONResponse
+	 */
+	public function saveAttachment($messageId, $attachmentId, $targetPath) {
+		$mailBox = $this->getFolder();
+
+		$attachmentIds = array($attachmentId);
+		if($attachmentId === 0) {
+			$m = $mailBox->getMessage($messageId);
+			$attachmentIds = array_map(function($a){
+				return $a['id'];
+			}, $m->attachments);
+		}
+		foreach($attachmentIds as $attachmentId) {
+			$attachment = $mailBox->getAttachment($messageId, $attachmentId);
+
+			$fileName = $attachment->getName();
+			$fullPath = "$targetPath/$fileName";
+			$counter = 0;
+			while($this->userFolder->nodeExists($fullPath)) {
+				$fullPath = "$targetPath/$counter-$fileName";
+				$counter++;
+			}
+
+			$newFile = $this->userFolder->newFile($fullPath);
+			$newFile->putContent($attachment->getContents());
+		}
+
+		return new JSONResponse();
+	}
 	/**
 	 * @IsAdminExemption
 	 * @IsSubAdminExemption
@@ -127,6 +194,25 @@ class MessagesController extends Controller
 		$m = new \OCA\Mail\Account($account);
 		$folderId = $this->params('folderId');
 		return $m->getMailbox($folderId);
+	}
+
+	/**
+	 * @param $id
+	 * @param $accountId
+	 * @param $folderId
+	 * @return callable
+	 */
+	private function enrichDownloadUrl($accountId, $folderId, $id, $attachment) {
+		$downloadUrl = \OCP\Util::linkToRoute('mail.messages.downloadAttachment', array(
+			'accountId' => $accountId,
+			'folderId' => $folderId,
+			'messageId' => $id,
+			'attachmentId' => $attachment['id'],
+		));
+		$downloadUrl = \OC_Helper::makeURLAbsolute($downloadUrl);
+		$attachment['downloadUrl'] = $downloadUrl;
+		$attachment['mimeUrl'] = \OC_Helper::mimetypeIcon($attachment['mime']);
+		return $attachment;
 	}
 
 }

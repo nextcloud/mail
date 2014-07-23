@@ -1,4 +1,4 @@
-/* global Handlebars, relative_modified_date, formatDate */
+/* global Handlebars, relative_modified_date, formatDate, humanFileSize */
 var Mail = {
 	State:{
 		currentFolderId:null,
@@ -30,7 +30,9 @@ var Mail = {
 				return formatDate(lastModified);
 			});
 
-			//formatDate(lastModified)
+			Handlebars.registerHelper("humanFileSize", function(size) {
+				return humanFileSize(size);
+			});
 
 			$.ajax(OC.generateUrl('apps/mail/accounts'), {
 				data:{},
@@ -152,9 +154,40 @@ var Mail = {
 						Mail.State.currentMessageId = null;
 					},
 					error: function() {
-						OC.notification.show(t('mail', 'Error while deleting mail.'));
+						OC.Notification.show(t('mail', 'Error while deleting mail.'));
 					}
 				});
+		},
+
+		saveAttachment: function(messageId, attachmentId) {
+			OC.dialogs.filepicker(
+				t('mail', 'Choose a folder store the attachment'),
+				function (path) {
+					$.ajax(
+						OC.generateUrl(
+							'apps/mail/accounts/{accountId}/folders/{folderId}/messages/{messageId}/attachment/{attachmentId}',
+						{
+							accountId: Mail.State.currentAccountId,
+							folderId: encodeURIComponent(Mail.State.currentFolderId),
+							messageId: messageId,
+							attachmentId: attachmentId
+						}), {
+							data: {
+								targetPath: path
+							},
+							type:'POST',
+							success: function () {
+								OC.Notification.show(t('mail', 'Attachment(s) saved to Files.'));
+							},
+							error: function() {
+								OC.Notification.show(t('mail', 'Error while saving attachment(s) to Files.'));
+							}
+						});
+				},
+				false,
+				'httpd/unix-directory',
+				true
+			);
 		},
 
 		openMessage:function (messageId) {
@@ -338,6 +371,19 @@ $(document).ready(function () {
 		messageElement.slideUp();
 		var messageId = messageElement.data('messageId');
 		Mail.UI.deleteMessage(messageId);
+	});
+
+	$(document).on('click', '#mail_messages .attachment-save-to-cloud', function(event) {
+		event.stopPropagation();
+		var messageId = $(this).parent().parent().parent().parent().parent().parent().data('messageId');
+		var attachmentId = $(this).parent().data('attachmentId');
+		Mail.UI.saveAttachment(messageId, attachmentId);
+	});
+
+	$(document).on('click', '#mail_messages .attachments-save-to-cloud', function(event) {
+		event.stopPropagation();
+		var messageId = $(this).parent().parent().parent().parent().parent().data('messageId');
+		Mail.UI.saveAttachment(messageId);
 	});
 
 	Mail.UI.bindEndlessScrolling();

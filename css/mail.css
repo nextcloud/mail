@@ -222,9 +222,39 @@ button.control {
     word-wrap: break-word;
 }
 
-
 .transparency {
     -ms-filter: "progid:DXImageTransform.Microsoft.Alpha(Opacity=50)";
     filter: alpha(opacity=50);
     opacity: .5;
+}
+
+.mail-message-attachments {
+    margin-bottom: 20px;
+}
+.mail-message-attachment {
+    height: 38px;
+}
+.attachment-save-to-cloud,
+.attachment-download {
+	height: 32px;
+    float: left;
+    display: inline-block;
+}
+/* show icon + text for Download all button
+    as well as when there is only one attachment */
+.attachments-save-to-cloud,
+.attachments-download,
+.mail-message-attachment-single .attachment-save-to-cloud,
+.mail-message-attachment-single .attachment-download {
+    background-position: 9px center;
+    padding-left: 32px;
+}
+/* show attachment size less prominent */
+.attachment-size {
+    -ms-filter: "progid:DXImageTransform.Microsoft.Alpha(Opacity=50)";
+    filter: alpha(opacity=50);
+    opacity: .5;
+}
+.attachment-icon {
+    vertical-align: middle;
 }
