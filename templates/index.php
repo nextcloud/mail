@@ -45,6 +45,11 @@
 		<div id="mail-content">
 			{{{body}}}
 		</div>
+		{{#if signature}}
+		<div class="mail-signature">
+			{{{signature}}}
+		</div>
+		{{/if}}
 
 		<div class="mail-message-attachments">
 			{{#if attachment}}

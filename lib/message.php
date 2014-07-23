@@ -267,15 +267,23 @@ class Message {
 	}
 
 	public function as_array() {
-		$mail_body = $this->plainMessage;
-		$mail_body = nl2br($mail_body);
+		$mailBody = $this->plainMessage;
 
+		$signature = null;
 		if (empty($this->plainMessage) && !empty($this->htmlMessage)) {
-			$mail_body = "<br/><h2>Only Html body available!</h2><br/>";
+			$mailBody = "<br/><h2>Only Html body available!</h2><br/>";
+		} else {
+			// split off the signature
+			$parts = explode("-- \r\n", $mailBody);
+			if (count($parts) > 1) {
+				$signature = nl2br(array_pop($parts));
+				$mailBody = implode("-- \r\n", $parts);
+			}
 		}
 
 		$data = $this->getListArray();
-		$data['body'] = $mail_body;
+		$data['body'] = nl2br($mailBody);
+		$data['signature'] = $signature;
 		if (count($this->attachments) === 1) {
 			$data['attachment'] = $this->attachments[0];
 		}
