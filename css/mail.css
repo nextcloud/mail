@@ -221,6 +221,11 @@ button.control {
     border-bottom: 1px dotted #07d;
     word-wrap: break-word;
 }
+.mail-signature {
+	font-family: monospace;
+	opacity: 0.5;
+	line-height: initial;
+}
 
 .transparency {
     -ms-filter: "progid:DXImageTransform.Microsoft.Alpha(Opacity=50)";
