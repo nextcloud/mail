@@ -233,6 +233,9 @@ button.control {
 }
 .mail-message-attachment {
     height: 38px;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
 }
 .attachment-save-to-cloud,
 .attachment-download {
