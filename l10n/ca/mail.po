@@ -8,8 +8,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: ownCloud\n"
 "Report-Msgid-Bugs-To: translations@owncloud.org\n"
-"POT-Creation-Date: 2014-07-23 02:44-0400\n"
-"PO-Revision-Date: 2014-07-22 07:01+0000\n"
+"POT-Creation-Date: 2014-07-24 02:41-0400\n"
+"PO-Revision-Date: 2014-07-24 06:41+0000\n"
 "Last-Translator: I Robot\n"
 "Language-Team: Catalan (http://www.transifex.com/projects/p/owncloud/language/ca/)\n"
 "MIME-Version: 1.0\n"
@@ -22,57 +22,89 @@ msgstr ""
 msgid "Mail"
 msgstr "Correu electrónic"
 
-#: js/mail.js:130 js/mail.js:155 js/mail.js:202
+#: js/mail.js:132 js/mail.js:237
 msgid "Error"
 msgstr "Error"
 
-#: js/mail.js:155 js/mail.js:202
+#: js/mail.js:157
+msgid "Error while deleting mail."
+msgstr ""
+
+#: js/mail.js:164
+msgid "Choose a folder store the attachment"
+msgstr ""
+
+#: js/mail.js:180
+msgid "Attachment(s) saved to Files."
+msgstr ""
+
+#: js/mail.js:183
+msgid "Error while saving attachment(s) to Files."
+msgstr ""
+
+#: js/mail.js:237
 msgid "Error while loading mail message."
 msgstr ""
 
-#: js/mail.js:281
+#: js/mail.js:316
 msgid "Connecting ..."
 msgstr "Connectant..."
 
-#: js/mail.js:298
+#: js/mail.js:333
 msgid "Unknown error"
 msgstr "Error desconegut"
 
-#: js/mail.js:302 templates/no-accounts.php:18
+#: js/mail.js:337 templates/no-accounts.php:18
 msgid "Connect"
 msgstr "Connecta"
 
-#: js/mail.js:304
+#: js/mail.js:339
 msgid "Server Error"
 msgstr "Error del servidor"
+
+#: js/send-mail.js:64 js/send-mail.js:102
+msgid "Sending …"
+msgstr ""
+
+#: js/send-mail.js:129 templates/index.php:104
+msgid "Send"
+msgstr "Envia"
 
 #: lib/controller/accountscontroller.php:139
 msgid "Auto detect failed. Please use manual mode."
 msgstr ""
 
-#: templates/index.php:57 templates/index.php:58
+#: templates/index.php:60 templates/index.php:69
+msgid "Download attachment"
+msgstr ""
+
+#: templates/index.php:61 templates/index.php:70
+msgid "Save to Files"
+msgstr ""
+
+#: templates/index.php:77
+msgid "Save all to Files"
+msgstr ""
+
+#: templates/index.php:84 templates/index.php:85
 msgid "Reply"
 msgstr "Respon"
 
-#: templates/index.php:67
+#: templates/index.php:94
 msgid "New Message"
 msgstr "Missatge nou"
 
-#: templates/index.php:71
+#: templates/index.php:98
 msgid "Recipient"
 msgstr ""
 
-#: templates/index.php:73
+#: templates/index.php:100
 msgid "Subject"
 msgstr "Títol"
 
-#: templates/index.php:75
+#: templates/index.php:102
 msgid "Message"
 msgstr "Missatge"
-
-#: templates/index.php:77
-msgid "Send"
-msgstr "Envia"
 
 #: templates/no-accounts.php:3
 msgid "Connect your mail account"

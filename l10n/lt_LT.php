@@ -5,11 +5,11 @@
 "Unknown error" => "Neatpažinta klaida",
 "Connect" => "Prisijungti",
 "Server Error" => "Serverio klaida",
+"Send" => "Siųsti",
 "Reply" => "Atsakyti",
 "New Message" => "Naujas laiškas",
 "Subject" => "Tema",
 "Message" => "Žinutė",
-"Send" => "Siųsti",
 "Connect your mail account" => "Prijungti savo paštą",
 "Mail Address" => "Pašto adresas",
 "IMAP Password" => "IMAP slaptažodis"

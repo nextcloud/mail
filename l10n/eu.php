@@ -5,11 +5,11 @@
 "Unknown error" => "Errore ezezaguna",
 "Connect" => "Konektatu",
 "Server Error" => "Zerbitzari errorea",
+"Send" => "Bidali",
 "Reply" => "Erantzun",
 "New Message" => "Mezu berria",
 "Subject" => "Gaia",
 "Message" => "Mezua",
-"Send" => "Bidali",
 "Connect your mail account" => "Zure posta kontua konektatu",
 "Mail Address" => "Posta helbidea",
 "IMAP Password" => "IMAP pasahitza"

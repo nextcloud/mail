@@ -2,6 +2,6 @@
 "Mail" => "Post",
 "Error" => "Feil",
 "Connect" => "Kopla til",
-"Message" => "Melding",
-"Send" => "Send"
+"Send" => "Send",
+"Message" => "Melding"
 );

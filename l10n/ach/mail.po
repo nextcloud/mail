@@ -7,8 +7,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: ownCloud\n"
 "Report-Msgid-Bugs-To: translations@owncloud.org\n"
-"POT-Creation-Date: 2014-07-22 02:41-0400\n"
-"PO-Revision-Date: 2014-07-22 06:41+0000\n"
+"POT-Creation-Date: 2014-07-24 02:41-0400\n"
+"PO-Revision-Date: 2014-07-24 06:41+0000\n"
 "Last-Translator: I Robot\n"
 "Language-Team: Acoli (http://www.transifex.com/projects/p/owncloud/language/ach/)\n"
 "MIME-Version: 1.0\n"
@@ -21,56 +21,88 @@ msgstr ""
 msgid "Mail"
 msgstr ""
 
-#: js/mail.js:130 js/mail.js:176
+#: js/mail.js:132 js/mail.js:237
 msgid "Error"
 msgstr ""
 
-#: js/mail.js:176
+#: js/mail.js:157
+msgid "Error while deleting mail."
+msgstr ""
+
+#: js/mail.js:164
+msgid "Choose a folder store the attachment"
+msgstr ""
+
+#: js/mail.js:180
+msgid "Attachment(s) saved to Files."
+msgstr ""
+
+#: js/mail.js:183
+msgid "Error while saving attachment(s) to Files."
+msgstr ""
+
+#: js/mail.js:237
 msgid "Error while loading mail message."
 msgstr ""
 
-#: js/mail.js:255
+#: js/mail.js:316
 msgid "Connecting ..."
 msgstr ""
 
-#: js/mail.js:272
+#: js/mail.js:333
 msgid "Unknown error"
 msgstr ""
 
-#: js/mail.js:276 templates/no-accounts.php:18
+#: js/mail.js:337 templates/no-accounts.php:18
 msgid "Connect"
 msgstr ""
 
-#: js/mail.js:278
+#: js/mail.js:339
 msgid "Server Error"
+msgstr ""
+
+#: js/send-mail.js:64 js/send-mail.js:102
+msgid "Sending …"
+msgstr ""
+
+#: js/send-mail.js:129 templates/index.php:104
+msgid "Send"
 msgstr ""
 
 #: lib/controller/accountscontroller.php:139
 msgid "Auto detect failed. Please use manual mode."
 msgstr ""
 
-#: templates/index.php:57 templates/index.php:58
-msgid "Reply"
+#: templates/index.php:60 templates/index.php:69
+msgid "Download attachment"
 msgstr ""
 
-#: templates/index.php:67
-msgid "New Message"
-msgstr ""
-
-#: templates/index.php:71
-msgid "Recipient"
-msgstr ""
-
-#: templates/index.php:73
-msgid "Subject"
-msgstr ""
-
-#: templates/index.php:75
-msgid "Message"
+#: templates/index.php:61 templates/index.php:70
+msgid "Save to Files"
 msgstr ""
 
 #: templates/index.php:77
-msgid "Send"
+msgid "Save all to Files"
+msgstr ""
+
+#: templates/index.php:84 templates/index.php:85
+msgid "Reply"
+msgstr ""
+
+#: templates/index.php:94
+msgid "New Message"
+msgstr ""
+
+#: templates/index.php:98
+msgid "Recipient"
+msgstr ""
+
+#: templates/index.php:100
+msgid "Subject"
+msgstr ""
+
+#: templates/index.php:102
+msgid "Message"
 msgstr ""
 
 #: templates/no-accounts.php:3

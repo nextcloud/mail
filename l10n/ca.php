@@ -5,11 +5,11 @@
 "Unknown error" => "Error desconegut",
 "Connect" => "Connecta",
 "Server Error" => "Error del servidor",
+"Send" => "Envia",
 "Reply" => "Respon",
 "New Message" => "Missatge nou",
 "Subject" => "Títol",
 "Message" => "Missatge",
-"Send" => "Envia",
 "Connect your mail account" => "Connecta amb el compte de correu",
 "Mail Address" => "Adreça de correu",
 "IMAP Password" => "Contrasenya IMAP"
