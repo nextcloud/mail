@@ -20,7 +20,7 @@ class Html {
 	 */
 	public function convertLinks($data) {
 		$data = preg_replace("/(http|https|ftp|ftps)\:\/\/[a-zA-Z0-9\-\.]+\.[a-zA-Z]{2,3}(\/\S*)?/",
-			"<a href=\"\\0\" target=\"_blank\">\\0</a>", $data);
+			"<a href=\"\\0\" target=\"_blank\" rel=\"noreferrer\">\\0</a>", $data);
 		return $data;
 	}
 

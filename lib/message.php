@@ -37,14 +37,14 @@ class Message {
 		$this->folderId = $folderId;
 		$this->messageId = $messageId;
 
+		// TODO: inject ???
+		$this->htmlService = new Html();
+
 		if ($fetch === null) {
 			$this->loadMessageBodies();
 		} else {
 			$this->fetch = $fetch;
 		}
-
-		// TODO: inject ???
-		$this->htmlService = new Html();
 	}
 
 	// output all the following:
