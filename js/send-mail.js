@@ -82,9 +82,18 @@ $(function () {
 		});
 	});
 
+
+	// cc/bcc toggling
 	$(document).on('click', '#new-message-cc-bcc-toggle', function() {
 		$('#new-message-cc-bcc').slideToggle();
+		$('#new-message-cc-bcc #cc').focus();
 	});
+
+	$(document).on('click', '#reply-message-cc-bcc-toggle', function() {
+		$('#reply-message-cc-bcc').slideToggle();
+		$('#reply-message-cc-bcc #cc').focus();
+	});
+
 
 	$(document).on('click', '#new-message-send', function () {
 		//
