@@ -223,7 +223,8 @@ button.control {
 	margin-left: 49px;
 }
 
-#mail-content a {
+#mail-content a,
+.mail-signature a {
 	color: #07d;
 	border-bottom: 1px dotted #07d;
 	word-wrap: break-word;
