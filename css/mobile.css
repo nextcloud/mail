@@ -12,6 +12,9 @@
 	width: 90%;
 	margin-left: 37px;
 }
+.date {
+	max-width: 25%;
+}
 
 /* use full width on mobile, don't leave whitespace on left */
 .mail-message-body {
