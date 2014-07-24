@@ -80,6 +80,16 @@
 		</div>
 
 		<div class="reply-message-fields">
+			<input type="text" name="to" id="to"
+					placeholder="<?php p($l->t('Recipient')); ?>" />
+
+			<a href="#" id="reply-message-cc-bcc-toggle"
+					class="transparency">+ cc/bcc</a>
+			<div id="reply-message-cc-bcc">
+				<input type="text" name="cc" id="cc"
+					placeholder="<?php p($l->t('cc')); ?>" />
+			</div>
+
 			<textarea name="body" class="reply-message-body"
 				placeholder="<?php p($l->t('Reply')); ?> …"></textarea>
 			<input class="reply-message-send" type="submit" value="<?php p($l->t('Reply')) ?>">
