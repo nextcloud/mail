@@ -46,8 +46,8 @@ button.control {
 #mail-setup h2 {
 	text-align:center;
 }
-#mail-setup input[type="text"],
-#mail-setup input[type="password"] {
+#mail-address,
+#mail-password {
 	width: 100%;
 	box-sizing: border-box;
 }

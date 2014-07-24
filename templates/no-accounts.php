@@ -3,7 +3,7 @@
 		<h2><?php p($l->t('Connect your mail account')) ?></h2>
 
 		<p class="grouptop">
-			<input type="text" name="mail-address" id="mail-address"
+			<input type="email" name="mail-address" id="mail-address"
 				placeholder="<?php p($l->t('Mail Address')); ?>" value=""
 				autofocus autocomplete="off" required/>
 			<label for="mail-address" class="infield"><?php p($l->t('Mail Address')); ?></label>
