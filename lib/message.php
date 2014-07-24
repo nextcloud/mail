@@ -242,21 +242,12 @@ class Message {
 			$data = mb_convert_encoding($data, "UTF-8", $charset);
 		}
 
-		//
-		// sanitize
-		//
-		$data = \OCP\Util::sanitizeHTML($data);
-
-		//
-		// link detection
-		//
-		$data = $this->htmlService->convertLinks($data);
-
 		// TEXT
 		if ($p->getPrimaryType() == 'text' && $data) {
 			// Messages may be split in different parts because of inline attachments,
 			// so append parts together with blank row.
 			if ($p->getSubType() == 'plain') {
+				$data = \OCP\Util::sanitizeHTML($data);
 				$this->plainMessage .= trim($data) ."\n\n";
 			} else {
 				$this->htmlMessage .= $data ."<br><br>";
@@ -287,16 +278,15 @@ class Message {
 	public function as_array() {
 		$mailBody = $this->plainMessage;
 
-		$signature = null;
-		if (empty($this->plainMessage) && !empty($this->htmlMessage)) {
-			$mailBody = $this->htmlService->sanitizeHtmlMailBody($mailBody);
+		$data = $this->getListArray();
+		if (!empty($this->htmlMessage)) {
+			$data['hasHtmlBody'] = true;
 		} else {
 			list($mailBody, $signature) = $this->htmlService->parseMailBody($mailBody);
+			$data['body'] = nl2br($mailBody);
+			$data['signature'] = $signature;
 		}
 
-		$data = $this->getListArray();
-		$data['body'] = nl2br($mailBody);
-		$data['signature'] = $signature;
 		if (count($this->attachments) === 1) {
 			$data['attachment'] = $this->attachments[0];
 		}
@@ -319,6 +309,10 @@ class Message {
 		$data['dateInt'] = $this->getSentDate()->getTimestamp();
 		$data['cc'] = implode(', ', $this->getCCList());
 		return $data;
+	}
+
+	public function getHtmlBody() {
+		return $this->htmlService->sanitizeHtmlMailBody($this->htmlMessage);
 	}
 
 }
