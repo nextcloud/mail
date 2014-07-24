@@ -94,6 +94,10 @@
 				placeholder="<?php p($l->t('Reply')); ?> …"></textarea>
 			<input class="reply-message-send" type="submit" value="<?php p($l->t('Reply')) ?>">
 		</div>
+		<div class="reply-message-more">
+			<a href="#" class="reply-message-forward"><?php p($l->t('Forward')) ?></a>
+			<!-- TODO: add attachment picker -->
+		</div>
 	</div>
 </script>
 
@@ -121,6 +125,7 @@
 				<input id="new-message-send" class="send" type="submit"
 					value="<?php p($l->t('Send')) ?>">
 			</div>
+			<!-- TODO: add attachment picker -->
 		</form>
 
 		<div id="mail_messages"></div>
