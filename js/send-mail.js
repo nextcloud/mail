@@ -82,8 +82,11 @@ $(function () {
 		});
 	});
 
-	$(document).on('click', '#new-message-send', function ()
-	{
+	$(document).on('click', '#new-message-cc-bcc-toggle', function() {
+		$('#new-message-cc-bcc').slideToggle();
+	});
+
+	$(document).on('click', '#new-message-send', function () {
 		//
 		// TODO:
 		//  - input validation
