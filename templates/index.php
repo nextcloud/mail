@@ -95,7 +95,7 @@
 			<input class="reply-message-send" type="submit" value="<?php p($l->t('Reply')) ?>">
 		</div>
 		<div class="reply-message-more">
-			<a href="#" class="reply-message-forward"><?php p($l->t('Forward')) ?></a>
+			<a href="#" class="reply-message-forward transparency"><?php p($l->t('Forward')) ?></a>
 			<!-- TODO: add attachment picker -->
 		</div>
 	</div>
