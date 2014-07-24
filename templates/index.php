@@ -84,12 +84,12 @@
 					placeholder="<?php p($l->t('Recipient')); ?>" />
 
 			<a href="#" id="reply-message-cc-bcc-toggle"
-					class="transparency">+ cc/bcc</a>
+					class="transparency">+ cc</a>
 			<div id="reply-message-cc-bcc">
 				<input type="text" name="cc" id="cc"
 					placeholder="<?php p($l->t('cc')); ?>" />
-				<input type="text" name="bcc" id="bcc"
-					placeholder="<?php p($l->t('bcc')); ?>" />
+				<!--<input type="text" name="bcc" id="bcc"
+					placeholder="<?php p($l->t('bcc')); ?>" />-->
 			</div>
 
 			<textarea name="body" class="reply-message-body"
