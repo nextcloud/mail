@@ -11,7 +11,7 @@
 *
 */
 
-class TestHelper extends \PHPUnit_Framework_TestCase {
+class TestHtml extends \PHPUnit_Framework_TestCase {
 
 	/**
 	 * @dataProvider linkDetectionProvider
@@ -20,7 +20,8 @@ class TestHelper extends \PHPUnit_Framework_TestCase {
 	 */
 	public function testLinkDetection($expected, $text){
 
-		$withLinks = \OCA\Mail\Message::convertLinks($text);
+		$html = new \OCA\Mail\Service\Html();
+		$withLinks = $html->convertLinks($text);
 		$this->assertSame($expected, $withLinks);
     }
 
@@ -32,6 +33,27 @@ class TestHelper extends \PHPUnit_Framework_TestCase {
 			array('<a href="ftp://google.com" target="_blank">ftp://google.com</a>', 'ftp://google.com'),
 			array('<a href="http://www.themukt.com/2014/07/23/take-control-cloud-owncloud-7/" target="_blank">http://www.themukt.com/2014/07/23/take-control-cloud-owncloud-7/</a>', 'http://www.themukt.com/2014/07/23/take-control-cloud-owncloud-7/'),
 			array('<a href="https://travis-ci.org/owncloud/music/builds/22037091" target="_blank">https://travis-ci.org/owncloud/music/builds/22037091</a>', 'https://travis-ci.org/owncloud/music/builds/22037091'),
+		);
+	}
+
+	/**
+	 * @dataProvider parseMailBodyProvider
+	 * @param $expected
+	 * @param $text
+	 */
+	public function testParseMailBody($expectedBody, $expectedSignature, $text){
+
+		$html = new \OCA\Mail\Service\Html();
+		list($b, $s) = $html->parseMailBody($text);
+		$this->assertSame($expectedBody, $b);
+		$this->assertSame($expectedSignature, $s);
+	}
+
+	public function parseMailBodyProvider() {
+		return array(
+			array('abc', null, 'abc'),
+			array('abc', 'def', "abc-- \r\ndef"),
+			array("abc-- \r\ndef", 'ghi', "abc-- \r\ndef-- \r\nghi"),
 		);
 	}
 }

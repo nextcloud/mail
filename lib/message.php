@@ -22,7 +22,7 @@
 
 namespace OCA\Mail;
 
-use Horde_Mail_Rfc822_Address;
+use OCA\Mail\Service\Html;
 
 class Message {
 
@@ -42,6 +42,9 @@ class Message {
 		} else {
 			$this->fetch = $fetch;
 		}
+
+		// TODO: inject ???
+		$this->htmlService = new Html();
 	}
 
 	// output all the following:
@@ -247,7 +250,7 @@ class Message {
 		//
 		// link detection
 		//
-		$data = $this->convertLinks($data);
+		$data = $this->htmlService->convertLinks($data);
 
 		// TEXT
 		if ($p->getPrimaryType() == 'text' && $data) {
@@ -286,14 +289,9 @@ class Message {
 
 		$signature = null;
 		if (empty($this->plainMessage) && !empty($this->htmlMessage)) {
-			$mailBody = "<br/><h2>Only Html body available!</h2><br/>";
+			$mailBody = $this->htmlService->sanitizeHtmlMailBody($mailBody);
 		} else {
-			// split off the signature
-			$parts = explode("-- \r\n", $mailBody);
-			if (count($parts) > 1) {
-				$signature = nl2br(array_pop($parts));
-				$mailBody = implode("-- \r\n", $parts);
-			}
+			list($mailBody, $signature) = $this->htmlService->parseMailBody($mailBody);
 		}
 
 		$data = $this->getListArray();
@@ -323,12 +321,4 @@ class Message {
 		return $data;
 	}
 
-	/**
-	 * @param string $data
-	 * @return string
-	 */
-	public static function convertLinks($data) {
-		$data = preg_replace("/(http|https|ftp|ftps)\:\/\/[a-zA-Z0-9\-\.]+\.[a-zA-Z]{2,3}(\/\S*)?/", "<a href=\"\\0\" target=\"_blank\">\\0</a>", $data);
-		return $data;
-	}
 }
