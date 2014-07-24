@@ -99,6 +99,8 @@ $(function () {
 		var newMessageSend = $('#new-message-send');
 		newMessageBody.addClass('icon-loading');
 		$('#to').prop('disabled', true);
+		$('#cc').prop('disabled', true);
+		$('#bcc').prop('disabled', true);
 		$('#subject').prop('disabled', true);
 		newMessageBody.prop('disabled', true);
 		newMessageSend.prop('disabled', true);
@@ -116,6 +118,8 @@ $(function () {
 			},
 			data:{
 				'to':$('#to').val(),
+				'cc':$('#cc').val(),
+				'bcc':$('#bcc').val(),
 				'subject':$('#subject').val(),
 				'body':newMessageBody.val()
 			},
@@ -126,6 +130,8 @@ $(function () {
 				// remove loading feedback
 				newMessageBody.removeClass('icon-loading');
 				$('#to').prop('disabled', false);
+				$('#cc').prop('disabled', false);
+				$('#bcc').prop('disabled', false);
 				$('#subject').prop('disabled', false);
 				newMessageBody.prop('disabled', false);
 				newMessageSend.prop('disabled', false);
