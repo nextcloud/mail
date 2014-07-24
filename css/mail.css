@@ -66,12 +66,6 @@ button.control {
 }
 
 
-#new-message {
-	margin: 10px;
-	margin-left: 49px;
-}
-
-
 #mail_messages {
 	padding-bottom: 250px;
 }
@@ -145,29 +139,49 @@ button.control {
 
 /* editor */
 
+#new-message {
+	margin: 10px;
+	margin-left: 49px;
+}
 #new-message-fields {
 	position: relative;
 	width: 60%;
 }
 #to,
+#cc,
+#bcc,
 #subject,
 #new-message-body {
 	width: 100%;
 }
 
+/* border and radius style rules to be replaced by grouptop, groupbottom etc
+	once https://github.com/owncloud/core/pull/9847 is merged and backported */
 #to {
 	margin: 0;
+	padding-right: 60px; /* for cc-bcc-toggle */
 	border-bottom-left-radius: 0;
 	border-bottom-right-radius: 0;
 }
-#subject {
+#new-message-cc-bcc-toggle {
+	position: absolute;
+	right: 0;
+	top: 0;
+	padding: 6px;
+}
+#new-message-cc-bcc {
+	display: none;
+}
+#subject,
+#cc,
+#bcc {
 	margin: 0;
 	border-top: none;
-	border-bottom: none;
 	border-radius: 0;
 }
 #new-message-body {
 	margin: 0;
+	border-top: none;
 	border-top-left-radius: 0;
 	border-top-right-radius: 0;
 	height: 100px;

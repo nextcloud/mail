@@ -96,6 +96,14 @@
 			<div id="new-message-fields" style="display: none">
 				<input type="text" name="to" id="to"
 					placeholder="<?php p($l->t('Recipient')); ?>" />
+				<a href="#" id="new-message-cc-bcc-toggle"
+					class="transparency">+ cc/bcc</a>
+				<div id="new-message-cc-bcc">
+					<input type="text" name="cc" id="cc"
+						placeholder="<?php p($l->t('cc')); ?>" />
+					<input type="text" name="bcc" id="bcc"
+						placeholder="<?php p($l->t('bcc')); ?>" />
+				</div>
 				<input type="text" name="subject" id="subject"
 					placeholder="<?php p($l->t('Subject')); ?>" />
 				<textarea name="body" id="new-message-body"
