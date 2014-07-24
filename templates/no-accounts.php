@@ -1,6 +1,6 @@
 <form id="mail-setup">
 	<fieldset>
-		<legend><?php p($l->t('Connect your mail account')) ?></legend>
+		<h2><?php p($l->t('Connect your mail account')) ?></h2>
 
 		<p class="grouptop">
 			<input type="text" name="mail-address" id="mail-address"

@@ -37,13 +37,13 @@ button.control {
 
 
 /* SETUP */
-#mail-setup {
-	font-size:1.5em; overflow:hidden;
-}
 #mail-setup fieldset {
-	position:relative; width:17em; margin:5em auto 2em; padding:0;
+	position: relative;
+	width: 250px;
+	margin: 0 auto;
+	padding-top: 100px;
 }
-#mail-setup legend {
+#mail-setup h2 {
 	text-align:center;
 }
 #mail-setup input[type="text"],
@@ -52,11 +52,12 @@ button.control {
 	box-sizing: border-box;
 }
 .connect {
-	font-size: 1em;
 	float: right;
 }
 #connect-loading {
-	position:absolute; bottom:15px; left:45%;
+	position: absolute;
+	bottom: 48px;
+	left: 45%;
 }
 
 
