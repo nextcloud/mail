@@ -3,6 +3,7 @@
 # This file is distributed under the same license as the PACKAGE package.
 # 
 # Translators:
+# Alexander Savchenko, 2014
 # jekader <jekader@gmail.com>, 2013
 # rodionc <rodionc@gmail.com>, 2014
 # Serge Shpikin <rkfg@rkfg.me>, 2013
@@ -13,9 +14,9 @@ msgid ""
 msgstr ""
 "Project-Id-Version: ownCloud\n"
 "Report-Msgid-Bugs-To: translations@owncloud.org\n"
-"POT-Creation-Date: 2014-07-24 02:41-0400\n"
-"PO-Revision-Date: 2014-07-24 06:41+0000\n"
-"Last-Translator: I Robot\n"
+"POT-Creation-Date: 2014-07-25 02:41-0400\n"
+"PO-Revision-Date: 2014-07-24 09:30+0000\n"
+"Last-Translator: Alexander Savchenko\n"
 "Language-Team: Russian (http://www.transifex.com/projects/p/owncloud/language/ru/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -37,7 +38,7 @@ msgstr ""
 
 #: js/mail.js:164
 msgid "Choose a folder store the attachment"
-msgstr ""
+msgstr "Выберите папку для хранения вложения"
 
 #: js/mail.js:180
 msgid "Attachment(s) saved to Files."
@@ -69,7 +70,7 @@ msgstr "Ошибка сервера"
 
 #: js/send-mail.js:64 js/send-mail.js:102
 msgid "Sending …"
-msgstr ""
+msgstr "Отправляется ..."
 
 #: js/send-mail.js:129 templates/index.php:104
 msgid "Send"
@@ -81,7 +82,7 @@ msgstr "Авто-обнаружение потерпело неудачу. По�
 
 #: templates/index.php:60 templates/index.php:69
 msgid "Download attachment"
-msgstr ""
+msgstr "Скачать вложение"
 
 #: templates/index.php:61 templates/index.php:70
 msgid "Save to Files"

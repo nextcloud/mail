@@ -19,9 +19,9 @@ msgid ""
 msgstr ""
 "Project-Id-Version: ownCloud\n"
 "Report-Msgid-Bugs-To: translations@owncloud.org\n"
-"POT-Creation-Date: 2014-07-24 02:41-0400\n"
-"PO-Revision-Date: 2014-07-24 06:41+0000\n"
-"Last-Translator: I Robot\n"
+"POT-Creation-Date: 2014-07-25 02:41-0400\n"
+"PO-Revision-Date: 2014-07-24 11:20+0000\n"
+"Last-Translator: Mario Siegmann <mario_siegmann@web.de>\n"
 "Language-Team: German (Germany) (http://www.transifex.com/projects/p/owncloud/language/de_DE/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -39,19 +39,19 @@ msgstr "Fehler"
 
 #: js/mail.js:157
 msgid "Error while deleting mail."
-msgstr ""
+msgstr "Fehler beim Löschen der E-Mail."
 
 #: js/mail.js:164
 msgid "Choose a folder store the attachment"
-msgstr ""
+msgstr "Ordner zum Anhang speichern auswählen"
 
 #: js/mail.js:180
 msgid "Attachment(s) saved to Files."
-msgstr ""
+msgstr "Anhang/Anhänge unter Dateien gespeichert."
 
 #: js/mail.js:183
 msgid "Error while saving attachment(s) to Files."
-msgstr ""
+msgstr "Fehler beim Speichern des Anhang/Anhänge unter Dateien."
 
 #: js/mail.js:237
 msgid "Error while loading mail message."
@@ -75,7 +75,7 @@ msgstr "Serverfehler"
 
 #: js/send-mail.js:64 js/send-mail.js:102
 msgid "Sending …"
-msgstr ""
+msgstr "Sende ..."
 
 #: js/send-mail.js:129 templates/index.php:104
 msgid "Send"
@@ -87,15 +87,15 @@ msgstr "Automatische Erkennung fehlgeschlagen. Bitte nutzen Sie den manuellen Mo
 
 #: templates/index.php:60 templates/index.php:69
 msgid "Download attachment"
-msgstr ""
+msgstr "Anhang herunterladen"
 
 #: templates/index.php:61 templates/index.php:70
 msgid "Save to Files"
-msgstr ""
+msgstr "Unter Dateien speichern"
 
 #: templates/index.php:77
 msgid "Save all to Files"
-msgstr ""
+msgstr "Alles unter Dateien speichern"
 
 #: templates/index.php:84 templates/index.php:85
 msgid "Reply"
