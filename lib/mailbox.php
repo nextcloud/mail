@@ -73,11 +73,11 @@ class Mailbox {
 	}
 
 	/**
-	 * @param $message_id
+	 * @param $messageId
 	 * @return Message
 	 */
-	public function getMessage($message_id) {
-		return new Message($this->conn, $this->folderId, $message_id);
+	public function getMessage($messageId, $loadHtmlMessageBody) {
+		return new Message($this->conn, $this->folderId, $messageId, null, $loadHtmlMessageBody);
 	}
 
 	private function getStatus($flags = \Horde_Imap_Client::STATUS_ALL) {

@@ -111,7 +111,7 @@ class MessagesController extends Controller
 	public function getHtmlBody($messageId) {
 		$mailBox = $this->getFolder();
 
-		$m = $mailBox->getMessage($messageId);
+		$m = $mailBox->getMessage($messageId, true);
 		$html = $m->getHtmlBody();
 
 		return new HtmlResponse($html);
