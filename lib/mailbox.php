@@ -76,7 +76,7 @@ class Mailbox {
 	 * @param $messageId
 	 * @return Message
 	 */
-	public function getMessage($messageId, $loadHtmlMessageBody) {
+	public function getMessage($messageId, $loadHtmlMessageBody = false) {
 		return new Message($this->conn, $this->folderId, $messageId, null, $loadHtmlMessageBody);
 	}
 

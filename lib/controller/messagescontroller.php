@@ -103,7 +103,6 @@ class MessagesController extends Controller
 
 	/**
 	 * @NoAdminRequired
-	 * @NoCSRFRequired
 	 *
 	 * @param int $messageId
 	 * @return JSONResponse
@@ -240,6 +239,7 @@ class MessagesController extends Controller
 			'accountId' => $accountId,
 			'folderId' => $folderId,
 			'messageId' => $id,
+			'requesttoken' => \OC_Util::callRegister(),
 		));
 		return \OC_Helper::makeURLAbsolute($htmlBodyUrl);
 	}
