@@ -1,3 +1,3 @@
 <?php $TRANSLATIONS = array(
-"To" => "bis"
+"Mail" => "E-Mail"
 );

@@ -3,15 +3,16 @@
 # This file is distributed under the same license as the PACKAGE package.
 # 
 # Translators:
+# Alexander Gabilondo <alexgabi@openmailbox.org>, 2014
 # asieriko <asieriko@gmail.com>, 2014
 # Piarres Beobide <pi@beobide.net>, 2013
 msgid ""
 msgstr ""
 "Project-Id-Version: ownCloud\n"
 "Report-Msgid-Bugs-To: translations@owncloud.org\n"
-"POT-Creation-Date: 2014-07-24 02:41-0400\n"
-"PO-Revision-Date: 2014-07-24 06:41+0000\n"
-"Last-Translator: I Robot\n"
+"POT-Creation-Date: 2014-07-26 02:41-0400\n"
+"PO-Revision-Date: 2014-07-25 22:40+0000\n"
+"Last-Translator: Alexander Gabilondo <alexgabi@openmailbox.org>\n"
 "Language-Team: Basque (http://www.transifex.com/projects/p/owncloud/language/eu/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -29,23 +30,23 @@ msgstr "Errorea"
 
 #: js/mail.js:157
 msgid "Error while deleting mail."
-msgstr ""
+msgstr "Errorea mezua ezabatzean"
 
 #: js/mail.js:164
 msgid "Choose a folder store the attachment"
-msgstr ""
+msgstr "Aukeratu karpeta bat eranskina gordetzeko"
 
 #: js/mail.js:180
 msgid "Attachment(s) saved to Files."
-msgstr ""
+msgstr "Eranskina(k) gordeta Fitxategiak-en"
 
 #: js/mail.js:183
 msgid "Error while saving attachment(s) to Files."
-msgstr ""
+msgstr "Errorea eranskina(k) Fitxategiak-en gordetzean"
 
 #: js/mail.js:237
 msgid "Error while loading mail message."
-msgstr ""
+msgstr "Errorea posta mezua kargatzean"
 
 #: js/mail.js:316
 msgid "Connecting ..."
@@ -65,7 +66,7 @@ msgstr "Zerbitzari errorea"
 
 #: js/send-mail.js:64 js/send-mail.js:102
 msgid "Sending …"
-msgstr ""
+msgstr "Bidaltzen..."
 
 #: js/send-mail.js:129 templates/index.php:104
 msgid "Send"
@@ -73,19 +74,19 @@ msgstr "Bidali"
 
 #: lib/controller/accountscontroller.php:139
 msgid "Auto detect failed. Please use manual mode."
-msgstr ""
+msgstr "Autodetekzioak huts egin du. Erabili eskuzko modua"
 
 #: templates/index.php:60 templates/index.php:69
 msgid "Download attachment"
-msgstr ""
+msgstr "Deskargatu eranskina"
 
 #: templates/index.php:61 templates/index.php:70
 msgid "Save to Files"
-msgstr ""
+msgstr "Gorde Fitxategiak-en"
 
 #: templates/index.php:77
 msgid "Save all to Files"
-msgstr ""
+msgstr "Gorde dena Fitxategiak-en"
 
 #: templates/index.php:84 templates/index.php:85
 msgid "Reply"
@@ -97,7 +98,7 @@ msgstr "Mezu berria"
 
 #: templates/index.php:98
 msgid "Recipient"
-msgstr ""
+msgstr "Ontzia"
 
 #: templates/index.php:100
 msgid "Subject"

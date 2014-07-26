@@ -4,13 +4,14 @@
 # 
 # Translators:
 # Cyryl Sochacki <cyrylsochacki@gmail.com>, 2013
+# JurijPietrowicz <aleksander_cichon@fastmail.fm>, 2014
 msgid ""
 msgstr ""
 "Project-Id-Version: ownCloud\n"
 "Report-Msgid-Bugs-To: translations@owncloud.org\n"
-"POT-Creation-Date: 2014-07-24 02:41-0400\n"
-"PO-Revision-Date: 2014-07-24 06:41+0000\n"
-"Last-Translator: I Robot\n"
+"POT-Creation-Date: 2014-07-26 02:41-0400\n"
+"PO-Revision-Date: 2014-07-25 23:50+0000\n"
+"Last-Translator: JurijPietrowicz <aleksander_cichon@fastmail.fm>\n"
 "Language-Team: Polish (http://www.transifex.com/projects/p/owncloud/language/pl/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -28,7 +29,7 @@ msgstr "Błąd"
 
 #: js/mail.js:157
 msgid "Error while deleting mail."
-msgstr ""
+msgstr "Błąd usuwania poczty."
 
 #: js/mail.js:164
 msgid "Choose a folder store the attachment"
@@ -36,19 +37,19 @@ msgstr ""
 
 #: js/mail.js:180
 msgid "Attachment(s) saved to Files."
-msgstr ""
+msgstr "Załącznik(i) zapisany(e) do Plików."
 
 #: js/mail.js:183
 msgid "Error while saving attachment(s) to Files."
-msgstr ""
+msgstr "Błąd zapisu załącznika(ów) do Plików."
 
 #: js/mail.js:237
 msgid "Error while loading mail message."
-msgstr ""
+msgstr "Błąd ładowania wiadomości."
 
 #: js/mail.js:316
 msgid "Connecting ..."
-msgstr "Łączę..."
+msgstr "Łączenie..."
 
 #: js/mail.js:333
 msgid "Unknown error"
@@ -64,7 +65,7 @@ msgstr "Błąd serwera"
 
 #: js/send-mail.js:64 js/send-mail.js:102
 msgid "Sending …"
-msgstr ""
+msgstr "Wysyłanie..."
 
 #: js/send-mail.js:129 templates/index.php:104
 msgid "Send"
@@ -72,19 +73,19 @@ msgstr "Wyślij"
 
 #: lib/controller/accountscontroller.php:139
 msgid "Auto detect failed. Please use manual mode."
-msgstr ""
+msgstr "Autowykrywanie nie powiodło się. Proszę użyć trybu ręcznego."
 
 #: templates/index.php:60 templates/index.php:69
 msgid "Download attachment"
-msgstr ""
+msgstr "Pobierz załącznik"
 
 #: templates/index.php:61 templates/index.php:70
 msgid "Save to Files"
-msgstr ""
+msgstr "Zapisz do plików"
 
 #: templates/index.php:77
 msgid "Save all to Files"
-msgstr ""
+msgstr "Zapisz wszystko do plików"
 
 #: templates/index.php:84 templates/index.php:85
 msgid "Reply"
@@ -96,7 +97,7 @@ msgstr "Nowa wiadomość"
 
 #: templates/index.php:98
 msgid "Recipient"
-msgstr ""
+msgstr "Adresat"
 
 #: templates/index.php:100
 msgid "Subject"

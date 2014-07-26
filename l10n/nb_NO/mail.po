@@ -4,15 +4,16 @@
 # 
 # Translators:
 # Espen Bye <espenbye@me.com>, 2014
+# Knut Erik Hollund, 2014
 # vidaren <news@vidartysse.net>, 2014
 # Trond Nansen <Trond@nansenmail.net>, 2013
 msgid ""
 msgstr ""
 "Project-Id-Version: ownCloud\n"
 "Report-Msgid-Bugs-To: translations@owncloud.org\n"
-"POT-Creation-Date: 2014-07-24 02:41-0400\n"
-"PO-Revision-Date: 2014-07-24 06:41+0000\n"
-"Last-Translator: I Robot\n"
+"POT-Creation-Date: 2014-07-26 02:41-0400\n"
+"PO-Revision-Date: 2014-07-25 22:00+0000\n"
+"Last-Translator: Knut Erik Hollund\n"
 "Language-Team: Norwegian Bokmål (Norway) (http://www.transifex.com/projects/p/owncloud/language/nb_NO/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -30,23 +31,23 @@ msgstr "Feil"
 
 #: js/mail.js:157
 msgid "Error while deleting mail."
-msgstr ""
+msgstr "Kan ikke slette e-post."
 
 #: js/mail.js:164
 msgid "Choose a folder store the attachment"
-msgstr ""
+msgstr "Velg en mappe for lagring av vedlegg."
 
 #: js/mail.js:180
 msgid "Attachment(s) saved to Files."
-msgstr ""
+msgstr "Vedlegg(ene) er lager som filer."
 
 #: js/mail.js:183
 msgid "Error while saving attachment(s) to Files."
-msgstr ""
+msgstr "Feil ved lagring av vedlegg(ene) til mappen."
 
 #: js/mail.js:237
 msgid "Error while loading mail message."
-msgstr ""
+msgstr "Feil ved henting av e-post."
 
 #: js/mail.js:316
 msgid "Connecting ..."
@@ -66,7 +67,7 @@ msgstr "Serverfeil"
 
 #: js/send-mail.js:64 js/send-mail.js:102
 msgid "Sending …"
-msgstr ""
+msgstr "Sender ..."
 
 #: js/send-mail.js:129 templates/index.php:104
 msgid "Send"
@@ -78,15 +79,15 @@ msgstr "Automatisk påvisning feilet. Bruk manuelt oppsett."
 
 #: templates/index.php:60 templates/index.php:69
 msgid "Download attachment"
-msgstr ""
+msgstr "Laster ned vedlegg."
 
 #: templates/index.php:61 templates/index.php:70
 msgid "Save to Files"
-msgstr ""
+msgstr "Lagring til fil"
 
 #: templates/index.php:77
 msgid "Save all to Files"
-msgstr ""
+msgstr "Lagre all som filer"
 
 #: templates/index.php:84 templates/index.php:85
 msgid "Reply"
@@ -98,7 +99,7 @@ msgstr "Ny melding"
 
 #: templates/index.php:98
 msgid "Recipient"
-msgstr ""
+msgstr "Mottaker"
 
 #: templates/index.php:100
 msgid "Subject"
