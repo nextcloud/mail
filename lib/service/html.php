@@ -12,10 +12,12 @@
 
 namespace OCA\Mail\Service;
 
+use HTMLPurifier_Config;
+
 class Html {
 
 	public function __construct() {
-		$config = \HTMLPurifier_Config::createDefault();
+		$config = HTMLPurifier_Config::createDefault();
 		$config->set('HTML.SafeIframe', true);
 		$config->set('URI.SafeIframeRegexp',
 			'%^(?:https?:)?//(' .
