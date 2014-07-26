@@ -32,11 +32,11 @@ class Message {
 	 * @param $messageId
 	 * @param null $fetch
 	 */
-	function __construct($conn, $folderId, $messageId, $fetch=null, $loadHtmlMessageBody=false) {
+	function __construct($conn, $folderId, $messageId, $fetch=null, $loadHtmlMessage=false) {
 		$this->conn = $conn;
 		$this->folderId = $folderId;
 		$this->messageId = $messageId;
-		$this->loadHtmlMessageBody = $loadHtmlMessageBody;
+		$this->loadHtmlMessage = $loadHtmlMessage;
 
 		// TODO: inject ???
 		$this->htmlService = new Html();
@@ -54,6 +54,7 @@ class Message {
 	public $plainMessage = '';
 	public $attachments = array();
 	private $loadHtmlMessage = false;
+	private $hasHtmlMessage = false;
 
 	/**
 	 * @var \Horde_Imap_Client_Socket
@@ -253,9 +254,10 @@ class Message {
 		$mailBody = $this->plainMessage;
 
 		$data = $this->getListArray();
-		if (!empty($this->htmlMessage)) {
+		if ($this->hasHtmlMessage) {
 			$data['hasHtmlBody'] = true;
 		} else {
+			$mailBody = $this->htmlService->convertLinks($mailBody);
 			list($mailBody, $signature) = $this->htmlService->parseMailBody($mailBody);
 			$data['body'] = nl2br($mailBody);
 			$data['signature'] = $signature;
@@ -316,6 +318,7 @@ class Message {
 	 * @param int $partNo
 	 */
 	private function handleHtmlMessage($p, $partNo) {
+		$this->hasHtmlMessage = true;
 		if ($this->loadHtmlMessage) {
 			$data = $this->loadBodyData($p, $partNo);
 			$this->htmlMessage .= $data . "<br><br>";
