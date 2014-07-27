@@ -190,11 +190,7 @@ class AccountsController extends Controller
 			$transport->send($to, $headers, $body);
 
 			$sentFolder = $account->getSentFolder();
-			$sentFolder->saveMessage(array(
-				'to' => $to,
-				'headers' => $headers,
-				'body' => $body
-			));
+			$sentFolder->saveMessage($to, $headers, $body);
 
 		} catch (\Horde_Mail_Exception $ex) {
 			return new JSONResponse(

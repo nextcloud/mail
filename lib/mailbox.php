@@ -8,6 +8,9 @@
 
 namespace OCA\Mail;
 
+use Horde_Imap_Client;
+use Horde_Mime_Headers;
+
 class Mailbox {
 
 	/**
@@ -125,11 +128,28 @@ class Mailbox {
 		return new Attachment($this->conn, $this->folderId, $messageId, $attachmentId);
 	}
 
-	public function saveMessage() {
-		//
-		// TODO: find out how to use append()
-		//
-		$this->conn->append($this->folderId, array());
+	/**
+	 * @param string $to
+	 * @param array $headers
+	 * @param string $body
+	 */
+	public function saveMessage($to, $headers, $body) {
+		$h = new Horde_Mime_Headers();
+		$h->addHeader('to', $to);
+
+		foreach($headers as $k => $v) {
+			$h->addHeader($k, $v);
+		}
+
+		$data = $h->toString();
+		$data .= $body;
+
+		$this->conn->append($this->folderId, array(
+			array(
+				'data' => $data,
+				'flags' => array(Horde_Imap_Client::FLAG_SEEN)
+			)
+		));
 	}
 
 }
