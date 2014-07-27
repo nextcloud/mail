@@ -232,6 +232,14 @@ var Mail = {
 
 							$('iframe').load(function() {
 								$(this).height( $(this).contents().find("html").height() + 10);
+								$(this).contents().find('html').css({
+									'margin': '',
+									'font-weight': 'normal',
+									'font-size': '.8em',
+									'line-height': '1.6em',
+									'font-family': "'Open Sans', Frutiger, Calibri, 'Myriad Pro', Myriad, sans-serif",
+									'color': '#000'
+								});
 							});
 
 						});
