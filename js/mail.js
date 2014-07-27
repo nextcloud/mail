@@ -232,8 +232,8 @@ var Mail = {
 
 							$('iframe').load(function() {
 								$(this).height( $(this).contents().find("html").height() + 10);
-								$(this).contents().find('html').css({
-									'margin': '',
+								$(this).contents().find('body').css({
+									'margin': '0',
 									'font-weight': 'normal',
 									'font-size': '.8em',
 									'line-height': '1.6em',
