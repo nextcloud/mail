@@ -50,10 +50,9 @@ class ProxyController extends Controller {
 		$mailURL = $this->urlGenerator->linkToRoute($route);
 		$url = $this->request->getParam('src');
 
-		if(!filter_var($url, FILTER_VALIDATE_URL)) {
-			return new JSONResponse("URL is not valid.");
+		if (strpos($url, 'http://') !== 0 && strpos($url, 'https://') !== 0) {
+			throw new \Exception('URL is not valid.', 1);
 		}
-
 
 			$params = array(
 			'url' => $url,
