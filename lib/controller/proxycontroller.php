@@ -54,7 +54,7 @@ class ProxyController extends Controller {
 			throw new \Exception('URL is not valid.', 1);
 		}
 
-			$params = array(
+		$params = array(
 			'url' => $url,
 			'mailURL' => $mailURL,
 		);
