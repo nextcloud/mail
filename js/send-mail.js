@@ -19,7 +19,7 @@ $(function () {
 		.autocomplete({
 			source:function (request, response) {
 				$.getJSON(
-					OC.filePath('mail', 'ajax', 'receivers.php'),
+					OC.generateUrl('/apps/mail/accounts/autoComplete'),
 					{
 						term:extractLast(request.term)
 					}, response);

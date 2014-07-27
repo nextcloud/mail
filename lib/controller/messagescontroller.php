@@ -3,17 +3,7 @@
  * ownCloud - Mail app
  *
  * @author Thomas Müller
- * @copyright 2013 Thomas Müller thomas.mueller@tmit.eu
- *
- * This library is free software; you can redistribute it and/or
- * modify it under the terms of the GNU AFFERO GENERAL PUBLIC LICENSE
- * License as published by the Free Software Foundation; either
- * version 3 of the License, or any later version.
- *
- * This library is distributed in the hope that it will be useful,
- * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- * GNU AFFERO GENERAL PUBLIC LICENSE for more details.
+ * @copyright 2013-2014 Thomas Müller thomas.mueller@tmit.eu
  *
  * You should have received a copy of the GNU Lesser General Public
  * License along with this library.  If not, see <http://www.gnu.org/licenses/>.
@@ -23,8 +13,8 @@
 namespace OCA\Mail\Controller;
 
 use OCA\Mail\AttachmentDownloadResponse;
-use OCA\Mail\App;
 use OCA\Mail\HtmlResponse;
+use OCA\Mail\Service\ContactsIntegration;
 use OCP\AppFramework\Controller;
 use OCP\AppFramework\Db\DoesNotExistException;
 use OCP\AppFramework\Http\JSONResponse;
@@ -41,11 +31,17 @@ class MessagesController extends Controller
 	 */
 	private $currentUserId;
 
-	public function __construct($appName, $request, $mapper, $currentUserId){
+	/**
+	 * @var ContactsIntegration
+	 */
+	private $contactsIntegration;
+
+	public function __construct($appName, $request, $mapper, $currentUserId, $userFolder, $contactsIntegration){
 		parent::__construct($appName, $request);
 		$this->mapper = $mapper;
 		$this->currentUserId = $currentUserId;
-		$this->userFolder = \OC::$server->getUserFolder();
+		$this->userFolder = $userFolder;
+		$this->contactsIntegration = $contactsIntegration;
 	}
 
 	/**
@@ -62,7 +58,7 @@ class MessagesController extends Controller
 		$json = $mailBox->getMessages($from, $to-$from);
 
 		$json = array_map(function($j) {
-			$j['senderImage'] = App::getPhoto($j['fromEmail']);
+			$j['senderImage'] = $this->contactsIntegration->getPhoto($j['fromEmail']);
 			return $j;
 		}, $json);
 

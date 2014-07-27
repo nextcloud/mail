@@ -25,6 +25,7 @@ namespace OCA\Mail\Controller;
 use Horde_Imap_Client_Socket;
 use OCA\Mail\Account;
 use OCA\Mail\Db\MailAccount;
+use OCA\Mail\Service\ContactsIntegration;
 use OCP\AppFramework\Controller;
 use OCP\AppFramework\Db\DoesNotExistException;
 use OCP\AppFramework\Http\JSONResponse;
@@ -44,10 +45,16 @@ class AccountsController extends Controller
 	 */
 	private $currentUserId;
 
-	public function __construct($appName, $request, $mailAccountMapper, $currentUserId){
+	/**
+	 * @var ContactsIntegration
+	 */
+	private $contactsIntegration;
+
+	public function __construct($appName, $request, $mailAccountMapper, $currentUserId, $contactsIntegration){
 		parent::__construct($appName, $request);
 		$this->mapper = $mailAccountMapper;
 		$this->currentUserId = $currentUserId;
+		$this->contactsIntegration = $contactsIntegration;
 	}
 
 	/**
@@ -178,15 +185,36 @@ class AccountsController extends Controller
 		}
 
 		// create transport and send
-		$transport = $account->createTransport();
-		$transport->send($to, $headers, $body);
+		try {
+			$transport = $account->createTransport();
+			$transport->send($to, $headers, $body);
+
+			$sentFolder = $account->getSentFolder();
+			$sentFolder->saveMessage(array(
+				'to' => $to,
+				'headers' => $headers,
+				'body' => $body
+			));
+
+		} catch (\Horde_Mail_Exception $ex) {
+			return new JSONResponse(
+				array('message' => $ex->getMessage()),
+				Http::STATUS_INTERNAL_SERVER_ERROR
+			);
+		}
 
 		//
-		// TODO: save message to 'Sent' folder
 		// TODO: remove from drafts folder as well
 		//
 
 		return new JSONResponse();
+	}
+
+	/**
+	 * @param $term
+	 */
+	public function autoComplete($term) {
+		return $this->contactsIntegration->getMatchingRecipient( $term );
 	}
 
 	/**

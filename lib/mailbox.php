@@ -125,4 +125,11 @@ class Mailbox {
 		return new Attachment($this->conn, $this->folderId, $messageId, $attachmentId);
 	}
 
+	public function saveMessage() {
+		//
+		// TODO: find out how to use append()
+		//
+		$this->conn->append($this->folderId, array());
+	}
+
 }
