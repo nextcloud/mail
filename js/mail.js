@@ -196,14 +196,15 @@ var Mail = {
 			if (Mail.State.currentMessageId !== null) {
 				var currentOpenMessage = $('#mail-message-summary-' + Mail.State.currentMessageId);
 				currentOpenMessage.find('.mail_message').slideUp(function(){
+					summaryRow.find('.mail_message').html('');
 					var nextOpenMessage = $('#mail-message-summary-' + messageId);
 					nextOpenMessage[0].scrollIntoView(true);
 				});
+				var lastMessageId = Mail.State.currentMessageId;
 				Mail.State.currentMessageId = null;
-				return;
-			}
-			if (Mail.State.currentMessageId === messageId) {
-				return;
+				if (lastMessageId === messageId) {
+					return;
+				}
 			}
 
 			var summaryRow = $('#mail-message-summary-' + messageId);
