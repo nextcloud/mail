@@ -11,6 +11,7 @@ Maintainers
 -----------
 - [Thomas Müller](https://github.com/DeepDiver1975)
 - [Jan C. Borchardt](https://github.com/jancborchardt)
+- [Lukas Reschke](https://github.com/LukasReschke)
 - past contributors: [Jakob Sack](https://github.com/jakobsack), [Bart Visscher](https://github.com/bartv2), [Sebastian Schmid](https://github.com/sebastian-schmid)
 
 Contact us if you'd like to join!
