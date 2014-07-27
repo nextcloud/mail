@@ -40,7 +40,7 @@ class ProxyController extends Controller {
 	/**
 	 * @NoAdminRequired
 	 * @NoCSRFRequired
-	 *
+	 * @throws \Exception If the URL is not valid.
 	 * @return TemplateResponse
 	 */
 	public function redirect() {
