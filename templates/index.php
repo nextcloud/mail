@@ -86,9 +86,13 @@
 
 			<a href="#" id="reply-message-cc-bcc-toggle"
 					class="transparency"><?php p($l->t('+ cc')); ?></a>
-			<div id="reply-message-cc-bcc">
+			<div id="reply-message-cc-bcc"
+				{{#unless cc}}
+				class="hidden"
+				{{/unless}}
+				>
 				<input type="text" name="cc" id="cc"
-					placeholder="<?php p($l->t('cc')); ?>" value="{{cc}}"/>
+					placeholder="<?php p($l->t('cc')); ?>" value="{{cc}}" />
 				<!--<input type="text" name="bcc" id="bcc"
 					placeholder="<?php p($l->t('bcc')); ?>" />-->
 			</div>

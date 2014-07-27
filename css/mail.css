@@ -172,8 +172,7 @@ button.control {
 	top: 0;
 	padding: 6px;
 }
-#new-message-cc-bcc,
-#reply-message-cc-bcc {
+#new-message-cc-bcc {
 	display: none;
 }
 #subject,
