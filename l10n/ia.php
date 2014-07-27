@@ -1,4 +1,5 @@
 <?php $TRANSLATIONS = array(
+"Mail" => "Posta",
 "Error" => "Error",
 "Connecting ..." => "Il connecte...",
 "Unknown error" => "Error Incognite",

@@ -3,14 +3,15 @@
 # This file is distributed under the same license as the PACKAGE package.
 # 
 # Translators:
+# hklcf <hklcfs@gmail.com>, 2014
 # ronnietse <tseronnie@ymail.com>, 2013-2014
 msgid ""
 msgstr ""
 "Project-Id-Version: ownCloud\n"
 "Report-Msgid-Bugs-To: translations@owncloud.org\n"
-"POT-Creation-Date: 2014-07-24 02:41-0400\n"
-"PO-Revision-Date: 2014-07-24 06:41+0000\n"
-"Last-Translator: I Robot\n"
+"POT-Creation-Date: 2014-07-27 02:41-0400\n"
+"PO-Revision-Date: 2014-07-26 16:30+0000\n"
+"Last-Translator: hklcf <hklcfs@gmail.com>\n"
 "Language-Team: Chinese (Hong Kong) (http://www.transifex.com/projects/p/owncloud/language/zh_HK/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -20,7 +21,7 @@ msgstr ""
 
 #: appinfo/app.php:16
 msgid "Mail"
-msgstr ""
+msgstr "電子郵件"
 
 #: js/mail.js:132 js/mail.js:237
 msgid "Error"
@@ -52,7 +53,7 @@ msgstr "連接中"
 
 #: js/mail.js:333
 msgid "Unknown error"
-msgstr ""
+msgstr "不明錯誤"
 
 #: js/mail.js:337 templates/no-accounts.php:18
 msgid "Connect"
@@ -60,15 +61,15 @@ msgstr "連線"
 
 #: js/mail.js:339
 msgid "Server Error"
-msgstr ""
+msgstr "伺服器錯誤"
 
 #: js/send-mail.js:64 js/send-mail.js:102
 msgid "Sending …"
-msgstr ""
+msgstr "發送中 …"
 
 #: js/send-mail.js:129 templates/index.php:104
 msgid "Send"
-msgstr "傳送"
+msgstr "發送"
 
 #: lib/controller/accountscontroller.php:139
 msgid "Auto detect failed. Please use manual mode."
@@ -104,7 +105,7 @@ msgstr "標題"
 
 #: templates/index.php:102
 msgid "Message"
-msgstr "信息"
+msgstr "訊息"
 
 #: templates/no-accounts.php:3
 msgid "Connect your mail account"
@@ -116,4 +117,4 @@ msgstr "電郵地址"
 
 #: templates/no-accounts.php:14 templates/no-accounts.php:15
 msgid "IMAP Password"
-msgstr ""
+msgstr "IMAP 密碼"
