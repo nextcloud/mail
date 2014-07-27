@@ -52,9 +52,13 @@ class FoldersController extends Controller
 	 * @NoCSRFRequired
 	 */
 	public function index() {
-		$account = $this->getAccount();
-		$m = new \OCA\Mail\Account($account);
-		$json = $m->getListArray();
+		$accounts = $this->getAccount();
+		$json = array();
+
+		foreach($accounts as $account) {
+			$m = new \OCA\Mail\Account($account);
+			$json[$account->getMailAccountId()] = $m->getListArray();
+		}
 
 		return new JSONResponse($json);
 	}
@@ -143,10 +147,18 @@ class FoldersController extends Controller
 		return $imapConnection;
 	}
 
+	/**
+	 * @return array|\OCA\Mail\Db\MailAccount[]
+	 */
 	private function getAccount()
 	{
 		$accountId = $this->params('accountId');
-		return $this->mapper->find($this->currentUserId, $accountId);
+
+		if($accountId === 'allAccounts') {
+			return $this->mapper->findByUserId($this->currentUserId);
+		}
+
+		return array($this->mapper->find($this->currentUserId, $accountId));
 	}
 
 	private function getImap(MailAccount $account)

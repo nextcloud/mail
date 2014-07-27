@@ -38,16 +38,22 @@ var Mail = {
 				data:{},
 				type:'GET',
 				success:function (jsondata) {
-					_.each(jsondata, function(account){
-						var accountId = account.accountId;
-						Mail.UI.loadFoldersForAccount(accountId);
-					});
+						var source   = $("#mail-account-manager").html();
+						var template = Handlebars.compile(source);
+						var html = template(jsondata);
+						$('#accountManager').html(html);
+						Mail.UI.loadFoldersForAccount('allAccounts');
 				}
 			});
 		},
 
 		loadFoldersForAccount : function(accountId) {
 			var firstFolder, folderId;
+
+			Mail.UI.clearFolders();
+			Mail.UI.clearMessages();
+			$('#app-navigation').addClass('icon-loading');
+			$('#app-content').addClass('icon-loading');
 
 			$.ajax(OC.generateUrl('apps/mail/accounts/{accountId}/folders', {accountId: accountId}), {
 				data:{},
@@ -58,7 +64,7 @@ var Mail = {
 					var html = template(jsondata);
 
 					$('#app-navigation').removeClass('icon-loading');
-					$('#app-navigation').html(html);
+					$('#folders').html(html);
 
 					firstFolder = $('#app-navigation').find('.mail_folders li');
 
@@ -86,6 +92,18 @@ var Mail = {
 
 			table.empty();
 			$('#messages-loading').fadeIn();
+		},
+
+		clearFolders:function () {
+			var list = $('.mail_folders');
+
+			list.empty();
+		},
+
+		hideMenu:function () {
+			var menu = $('#new-message');
+
+			menu.addClass('hidden');
 		},
 
 		addMessages:function (data) {
@@ -245,6 +263,16 @@ var Mail = {
 				.addClass('active');
 		},
 
+		addAccount:function () {
+			$('#mail_messages').addClass('hidden');
+
+			Mail.UI.clearFolders();
+			Mail.UI.hideMenu();
+
+			var menu = $('#mail-setup');
+			menu.removeClass('hidden');
+		},
+
 		setFolderInactive:function (accountId, folderId) {
 			$('.mail_folders[data-account_id="' + accountId + '"]>li[data-folder_id="' + folderId + '"]')
 				.removeClass('active');
@@ -387,6 +415,19 @@ $(document).ready(function () {
 		event.stopPropagation();
 		var messageId = $(this).parent().parent().parent().parent().parent().data('messageId');
 		Mail.UI.saveAttachment(messageId);
+	});
+
+	$(document).on('change', '#app-navigation .mail_account', function(event) {
+		event.stopPropagation();
+
+		var accountId;
+
+		accountId = $( this ).val();
+		if(accountId === 'addAccount') {
+			Mail.UI.addAccount();
+		} else {
+			Mail.UI.loadFoldersForAccount(accountId);
+		}
 	});
 
 	Mail.UI.bindEndlessScrolling();

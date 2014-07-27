@@ -1,19 +1,29 @@
-<script id="mail-folder-template" type="text/x-handlebars-template">
-	<h2 class="mail_account">{{email}}</h2>
-	<ul class="mail_folders" data-account_id="{{id}}">
-		{{#each folders}}
-		<li data-folder_id="{{id}}"
-		{{#if unseen}} class="unread"{{/if}}
-		>
-		<a>
-			{{name}}
-			{{#if unseen}}
-			<span class="utils">{{unseen}}</span>
-			{{/if}}
-		</a>
-		</li>
+<script id="mail-account-manager" type="text/x-handlebars-template">
+	<select class="mail_account">
+		<option value="allAccounts"><?php p($l->t('All accounts')) ?></option>
+		{{#each this}}
+		<option value="{{accountId}}">{{name}}</option>
 		{{/each}}
-	</ul>
+		<option value="addAccount"><?php p($l->t('+ Add account')) ?></option>
+	</select>
+</script>
+<script id="mail-folder-template" type="text/x-handlebars-template">
+	{{#each this}}
+		<ul class="mail_folders" data-account_id="{{id}}">
+			{{#each folders}}
+			<li data-folder_id="{{id}}"
+			{{#if unseen}} class="unread"{{/if}}
+			>
+			<a>
+				{{name}}
+				{{#if unseen}}
+				<span class="utils">{{unseen}}</span>
+				{{/if}}
+			</a>
+			</li>
+			{{/each}}
+		</ul>
+	{{/each}}
 </script>
 <script id="mail-messages-template" type="text/x-handlebars-template">
 	{{#each this}}
@@ -88,7 +98,10 @@
 </script>
 
 <div id="app">
-	<div id="app-navigation" class="icon-loading"></div>
+	<div id="app-navigation" class="icon-loading">
+		<div id="accountManager"></div>
+		<div id="folders"></div>
+	</div>
 	<div id="app-content"  class="icon-loading">
 		<form id="new-message">
 			<input type="button" id="mail_new_message" value="<?php p($l->t('New Message')); ?>" style="display: none">
@@ -106,5 +119,28 @@
 		</form>
 
 		<div id="mail_messages"></div>
+
+		<form id="mail-setup" class="hidden">
+			<fieldset>
+				<h2><?php p($l->t('Connect your mail account')) ?></h2>
+
+				<p class="grouptop">
+					<input type="email" name="mail-address" id="mail-address"
+						   placeholder="<?php p($l->t('Mail Address')); ?>" value=""
+						   autofocus autocomplete="off" required/>
+					<label for="mail-address" class="infield"><?php p($l->t('Mail Address')); ?></label>
+				</p>
+
+				<p class="groupbottom">
+					<input type="password" name="mail-password" id="mail-password"
+						   placeholder="<?php p($l->t('IMAP Password')); ?>" value="" />
+					<label for="mail-password" class="infield"><?php p($l->t('IMAP Password')); ?></label>
+				</p>
+				<img id="connect-loading" src="<?php print_unescaped(OCP\Util::imagePath('core', 'loading.gif')); ?>" style="display:none;" />
+				<input type="submit" id="auto_detect_account" class="connect primary" value="<?php p($l->t('Connect')); ?>"/>
+			</fieldset>
+		</form>
+
+
 	</div>
 </div>
