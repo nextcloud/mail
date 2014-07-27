@@ -217,7 +217,7 @@ button.control {
 	margin-left: 49px;
 }
 
-.mail-message-body a {
+#mail-content a {
 	color: #07d;
 	border-bottom: 1px dotted #07d;
 	word-wrap: break-word;
