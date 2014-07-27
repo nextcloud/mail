@@ -52,6 +52,7 @@ class Application extends App {
 				$c->query('Request'),
 				$c->query('MailAccountMapper'),
 				$c->query('UserId'),
+				$c->getServer()->getUserFolder(),
 				$c->query('ContactsIntegration')
 			);
 		});

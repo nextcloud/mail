@@ -36,6 +36,11 @@ class MessagesController extends Controller
 	 */
 	private $contactsIntegration;
 
+	/**
+	 * @var \OCP\Files\Folder
+	 */
+	private $userFolder;
+
 	public function __construct($appName, $request, $mapper, $currentUserId, $userFolder, $contactsIntegration){
 		parent::__construct($appName, $request);
 		$this->mapper = $mapper;
