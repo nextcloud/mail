@@ -84,7 +84,7 @@
 					placeholder="<?php p($l->t('Recipient')); ?>" />
 
 			<a href="#" id="reply-message-cc-bcc-toggle"
-					class="transparency">+ cc</a>
+					class="transparency"><?php p($l->t('+ cc')); ?></a>
 			<div id="reply-message-cc-bcc">
 				<input type="text" name="cc" id="cc"
 					placeholder="<?php p($l->t('cc')); ?>" />
@@ -93,7 +93,7 @@
 			</div>
 
 			<textarea name="body" class="reply-message-body"
-				placeholder="<?php p($l->t('Reply')); ?> …"></textarea>
+				placeholder="<?php p($l->t('Reply …')); ?>"></textarea>
 			<input class="reply-message-send" type="submit" value="<?php p($l->t('Reply')) ?>">
 		</div>
 		<div class="reply-message-more">
@@ -113,7 +113,7 @@
 				<input type="text" name="to" id="to"
 					placeholder="<?php p($l->t('Recipient')); ?>" />
 				<a href="#" id="new-message-cc-bcc-toggle"
-					class="transparency">+ cc/bcc</a>
+					class="transparency"><?php p($l->t('+ cc/bcc')); ?></a>
 				<div id="new-message-cc-bcc">
 					<input type="text" name="cc" id="cc"
 						placeholder="<?php p($l->t('cc')); ?>" />
@@ -123,7 +123,7 @@
 				<input type="text" name="subject" id="subject"
 					placeholder="<?php p($l->t('Subject')); ?>" />
 				<textarea name="body" id="new-message-body"
-					placeholder="<?php p($l->t('Message')); ?> …"></textarea>
+					placeholder="<?php p($l->t('Message …')); ?>"></textarea>
 				<input id="new-message-send" class="send" type="submit"
 					value="<?php p($l->t('Send')) ?>">
 			</div>
