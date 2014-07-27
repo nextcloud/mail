@@ -24,6 +24,14 @@ $app->registerRoutes($this,
 				'name' => 'messages#getHtmlBody',
 				'url' => '/accounts/{accountId}/folders/{folderId}/messages/{messageId}/html',
 				'verb' => 'GET'),
+			array(
+				'name' => 'proxy#redirect',
+				'url' => '/redirect',
+				'verb' => 'GET'),
+			array(
+				'name' => 'proxy#proxy',
+				'url' => '/proxy',
+				'verb' => 'GET'),
 		),
 		'resources' => array(
 			'accounts' => array('url' => '/accounts'),

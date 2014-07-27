@@ -13,16 +13,80 @@
 namespace OCA\Mail\Service;
 
 use HTMLPurifier_Config;
+use HTMLPurifier_AttrTransform;
+use HTMLPurifier_URIFilter;
+use OCP\Util;
+use OC_Helper;
+
+class HTMLPurifier_URIFilter_TransformURLScheme extends HTMLPurifier_URIFilter
+{
+	public $name = 'TransformURLScheme';
+	public $post = true;
+
+	/**
+	 * Transformator which will rewrite all HTTPS and HTTP urls to
+	 * @param \HTMLPurifier_URI $uri
+	 * @param HTMLPurifier_Config $config
+	 * @param \HTMLPurifier_Context $context
+	 * @return bool
+	 */
+	public function filter(&$uri, $config, $context) {
+		/** @var \HTMLPurifier_Context $context */
+		/** @var \HTMLPurifier_Config $config */
+
+		// Only HTTPS and HTTP urls should get rewritten
+		if ($uri->scheme !== 'https' && $uri->scheme !== 'http') {
+			return true;
+		}
+
+		$originalURL = urlencode($uri->scheme.'://'.$uri->host.$uri->path);
+		if($uri->query !== null) {
+			$originalURL = $originalURL.urlencode('?'.$uri->query);
+		}
+
+		// Get the HTML attribute
+		$element = $context->get('CurrentAttr');
+
+		//var_dump(\OC::$server->getRouter());
+		//exit();
+		// If element is of type "href" it is most likely a link that should get redirected
+		// otherwise it's an element that we send through our proxy
+		if($element === 'href') {
+			$uri = new \HTMLPurifier_URI(
+				Util::getServerProtocol(),
+				null,
+				Util::getServerHost(),
+				null,
+				OC_Helper::linkToRoute( 'mail.proxy.redirect' ),
+				'src='.$originalURL,
+				null);
+		} else {
+			$uri = new \HTMLPurifier_URI(
+				Util::getServerProtocol(),
+				null,
+				Util::getServerHost(),
+				null,
+				OC_Helper::linkToRoute( 'mail.proxy.proxy' ),
+				'src='.$originalURL.'&requesttoken='.\OC::$session->get('requesttoken'),
+				null);
+		}
+
+		return true;
+	}
+}
+
 
 class Html {
 
 	public function __construct() {
 		$config = HTMLPurifier_Config::createDefault();
-		$config->set('HTML.SafeIframe', true);
-		$config->set('URI.SafeIframeRegexp',
-			'%^(?:https?:)?//(' .
-			'www.youtube(?:-nocookie)?.com/embed/|' .
-			'player.vimeo.com/video/)%'); //allow YouTube and Vimeo
+		$config->set('HTML.TargetBlank', true);
+		$config->set('HTML.NoFollow', true);
+
+		// Rewrite URL for redirection and proxying of content
+		$uri = $config->getDefinition('URI');
+		$uri->addFilter(new HTMLPurifier_URIFilter_TransformURLScheme(), $config);
+
 		$this->purifier = new \HTMLPurifier($config);
 	}
 
