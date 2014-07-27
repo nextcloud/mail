@@ -82,8 +82,20 @@ $(function () {
 		});
 	});
 
-	$(document).on('click', '#new-message-send', function ()
-	{
+
+	// cc/bcc toggling
+	$(document).on('click', '#new-message-cc-bcc-toggle', function() {
+		$('#new-message-cc-bcc').slideToggle();
+		$('#new-message-cc-bcc #cc').focus();
+	});
+
+	$(document).on('click', '#reply-message-cc-bcc-toggle', function() {
+		$('#reply-message-cc-bcc').slideToggle();
+		$('#reply-message-cc-bcc #cc').focus();
+	});
+
+
+	$(document).on('click', '#new-message-send', function () {
 		//
 		// TODO:
 		//  - input validation
@@ -96,6 +108,8 @@ $(function () {
 		var newMessageSend = $('#new-message-send');
 		newMessageBody.addClass('icon-loading');
 		$('#to').prop('disabled', true);
+		$('#cc').prop('disabled', true);
+		$('#bcc').prop('disabled', true);
 		$('#subject').prop('disabled', true);
 		newMessageBody.prop('disabled', true);
 		newMessageSend.prop('disabled', true);
@@ -113,6 +127,8 @@ $(function () {
 			},
 			data:{
 				'to':$('#to').val(),
+				'cc':$('#cc').val(),
+				'bcc':$('#bcc').val(),
 				'subject':$('#subject').val(),
 				'body':newMessageBody.val()
 			},
@@ -123,6 +139,8 @@ $(function () {
 				// remove loading feedback
 				newMessageBody.removeClass('icon-loading');
 				$('#to').prop('disabled', false);
+				$('#cc').prop('disabled', false);
+				$('#bcc').prop('disabled', false);
 				$('#subject').prop('disabled', false);
 				newMessageBody.prop('disabled', false);
 				newMessageSend.prop('disabled', false);

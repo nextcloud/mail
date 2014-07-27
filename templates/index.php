@@ -26,7 +26,7 @@
 				<div class="avatar" data-user="{{from}}" data-size="32"></div>
 				{{/if}}
 			</div>
-			<div class="mail_message_summary_from">{{from}}</div>
+			<div class="mail_message_summary_from" title="fromEmail">{{from}}</div>
 			<div class="mail_message_summary_subject">{{subject}}</div>
 			<div class="date">
 					<span class="modified"
@@ -80,9 +80,30 @@
 		</div>
 
 		<div class="reply-message-fields">
+			<input type="text" name="to" id="to"
+				placeholder="<?php p($l->t('Recipient')); ?>"
+				value="{{fromEmail}}"/>
+
+			<a href="#" id="reply-message-cc-bcc-toggle"
+					class="transparency"><?php p($l->t('+ cc')); ?></a>
+			<div id="reply-message-cc-bcc"
+				{{#unless cc}}
+				class="hidden"
+				{{/unless}}
+				>
+				<input type="text" name="cc" id="cc"
+					placeholder="<?php p($l->t('cc')); ?>" value="{{cc}}" />
+				<!--<input type="text" name="bcc" id="bcc"
+					placeholder="<?php p($l->t('bcc')); ?>" />-->
+			</div>
+
 			<textarea name="body" class="reply-message-body"
-				placeholder="<?php p($l->t('Reply')); ?> …"></textarea>
+				placeholder="<?php p($l->t('Reply …')); ?>"></textarea>
 			<input class="reply-message-send" type="submit" value="<?php p($l->t('Reply')) ?>">
+		</div>
+		<div class="reply-message-more">
+			<!--<a href="#" class="reply-message-forward transparency"><?php p($l->t('Forward')) ?></a>-->
+			<!-- TODO: add attachment picker -->
 		</div>
 	</div>
 </script>
@@ -96,13 +117,22 @@
 			<div id="new-message-fields" style="display: none">
 				<input type="text" name="to" id="to"
 					placeholder="<?php p($l->t('Recipient')); ?>" />
+				<a href="#" id="new-message-cc-bcc-toggle"
+					class="transparency"><?php p($l->t('+ cc/bcc')); ?></a>
+				<div id="new-message-cc-bcc">
+					<input type="text" name="cc" id="cc"
+						placeholder="<?php p($l->t('cc')); ?>" />
+					<input type="text" name="bcc" id="bcc"
+						placeholder="<?php p($l->t('bcc')); ?>" />
+				</div>
 				<input type="text" name="subject" id="subject"
 					placeholder="<?php p($l->t('Subject')); ?>" />
 				<textarea name="body" id="new-message-body"
-					placeholder="<?php p($l->t('Message')); ?> …"></textarea>
+					placeholder="<?php p($l->t('Message …')); ?>"></textarea>
 				<input id="new-message-send" class="send" type="submit"
 					value="<?php p($l->t('Send')) ?>">
 			</div>
+			<!-- TODO: add attachment picker -->
 		</form>
 
 		<div id="mail_messages"></div>

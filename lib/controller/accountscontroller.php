@@ -145,6 +145,8 @@ class AccountsController extends Controller
 		$subject = $this->params('subject');
 		$body = $this->params('body');
 		$to = $this->params('to');
+		$cc = $this->params('cc');
+		$bcc = $this->params('bcc');
 
 		$dbAccount = $this->mapper->find($this->currentUserId, $accountId);
 		$account = new Account($dbAccount);
@@ -153,6 +155,13 @@ class AccountsController extends Controller
 		$headers = array();
 		$headers['From']= $account->getEMailAddress();
 		$headers['Subject'] = $subject;
+
+		if (!is_null($cc)) {
+			$headers['Cc'] = $cc;
+		}
+		if (!is_null($bcc)) {
+			$headers['Bcc'] = $bcc;
+		}
 
 		// in reply to handling
 		$folderId = $this->params('folderId');

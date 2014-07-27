@@ -22,6 +22,8 @@
 
 namespace OCA\Mail;
 
+use Horde_Mail_Rfc822_Address;
+
 class Message {
 
 	/**
@@ -97,6 +99,18 @@ class Message {
 		$e = $this->getEnvelope();
 		$to = $e->to[0];
 		return $to ? $to->label : null;
+	}
+
+	public function getCCList() {
+		$e = $this->getEnvelope();
+		$cc = $e->cc;
+		$result = array();
+
+		foreach($cc as $c) {
+			$result[]= $c->bare_address;
+		}
+
+		return $result;
 	}
 
 	public function getMessageId() {
@@ -305,6 +319,7 @@ class Message {
 		$data['size'] = \OCP\Util::humanFileSize($this->getSize());
 		$data['flags'] = $this->getFlags();
 		$data['dateInt'] = $this->getSentDate()->getTimestamp();
+		$data['cc'] = implode(', ', $this->getCCList());
 		return $data;
 	}
 
