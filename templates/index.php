@@ -26,7 +26,7 @@
 				<div class="avatar" data-user="{{from}}" data-size="32"></div>
 				{{/if}}
 			</div>
-			<div class="mail_message_summary_from">{{from}}</div>
+			<div class="mail_message_summary_from" title="fromEmail">{{from}}</div>
 			<div class="mail_message_summary_subject">{{subject}}</div>
 			<div class="date">
 					<span class="modified"
@@ -81,13 +81,14 @@
 
 		<div class="reply-message-fields">
 			<input type="text" name="to" id="to"
-					placeholder="<?php p($l->t('Recipient')); ?>" />
+				placeholder="<?php p($l->t('Recipient')); ?>"
+				value="{{fromEmail}}"/>
 
 			<a href="#" id="reply-message-cc-bcc-toggle"
 					class="transparency"><?php p($l->t('+ cc')); ?></a>
 			<div id="reply-message-cc-bcc">
 				<input type="text" name="cc" id="cc"
-					placeholder="<?php p($l->t('cc')); ?>" />
+					placeholder="<?php p($l->t('cc')); ?>" value="{{cc}}"/>
 				<!--<input type="text" name="bcc" id="bcc"
 					placeholder="<?php p($l->t('bcc')); ?>" />-->
 			</div>
