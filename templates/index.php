@@ -44,7 +44,7 @@
 	<div class="mail-message-body">
 		<div id="mail-content">
 			{{#if hasHtmlBody}}
-				<iframe src="{{htmlBodyUrl}}" sandbox seamless>
+				<iframe src="{{htmlBodyUrl}}" sandbox="allow-top-navigation" seamless>
 				</iframe>
 			{{else}}
 				{{{body}}}

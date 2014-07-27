@@ -18,6 +18,14 @@ use HTMLPurifier_URIFilter;
 use OCP\Util;
 use OC_Helper;
 
+class HTMLPurifier_AttrTransform_TargetAttribute extends HTMLPurifier_AttrTransform {
+	public function transform($attr, $config, $context) {
+		$attr['target'] = '_top';
+		return $attr;
+	}
+}
+
+
 class HTMLPurifier_URIFilter_TransformURLScheme extends HTMLPurifier_URIFilter
 {
 	public $name = 'TransformURLScheme';
@@ -47,8 +55,6 @@ class HTMLPurifier_URIFilter_TransformURLScheme extends HTMLPurifier_URIFilter
 		// Get the HTML attribute
 		$element = $context->get('CurrentAttr');
 
-		//var_dump(\OC::$server->getRouter());
-		//exit();
 		// If element is of type "href" it is most likely a link that should get redirected
 		// otherwise it's an element that we send through our proxy
 		if($element === 'href') {
@@ -80,7 +86,11 @@ class Html {
 
 	public function __construct() {
 		$config = HTMLPurifier_Config::createDefault();
-		$config->set('HTML.TargetBlank', true);
+
+		// Append target="_parent" to all link (a) elements since it is iframed
+		$htmlDef = $config->getHTMLDefinition(true);
+		$link = $htmlDef->addBlankElement('a');
+		$link->attr_transform_post[] = new HTMLPurifier_AttrTransform_TargetAttribute();
 
 		// Rewrite URL for redirection and proxying of content
 		$uri = $config->getDefinition('URI');
