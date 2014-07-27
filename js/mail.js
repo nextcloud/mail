@@ -229,6 +229,11 @@ var Mail = {
 							mailBody.html(html);
 							mailBody.slideDown();
 							mailBody.parent().removeClass('unseen');
+
+							$('iframe').load(function() {
+								$(this).height( $(this).contents().find("html").height() + 10);
+							});
+
 						});
 
 						// Set current Message as active

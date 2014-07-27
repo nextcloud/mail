@@ -220,7 +220,6 @@ button.control {
 }
 #mail-content iframe {
 	width: 100%;
-	min-height: 300px;
 }
 
 #mail-content a,
