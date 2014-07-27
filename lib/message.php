@@ -170,7 +170,7 @@ class Message {
 		/** @var $fetch \Horde_Imap_Client_Data_Fetch */
 		$fetch = $headers[$this->messageId];
 		if (is_null($fetch)) {
-			throw new DoesNotExistException("Unknown message id: $this->messageId");
+			throw new DoesNotExistException("This email ($this->messageId) can't be found. Probably it was deleted from the server recently. Please reload.");
 		}
 
 		// set $this->fetch to get to, from ...
