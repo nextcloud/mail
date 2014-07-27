@@ -81,7 +81,6 @@ class Html {
 	public function __construct() {
 		$config = HTMLPurifier_Config::createDefault();
 		$config->set('HTML.TargetBlank', true);
-		$config->set('HTML.NoFollow', true);
 
 		// Rewrite URL for redirection and proxying of content
 		$uri = $config->getDefinition('URI');
