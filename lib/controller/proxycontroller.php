@@ -22,11 +22,10 @@
 
 namespace OCA\Mail\Controller;
 
-use OCP\AppFramework\Http\JSONResponse;
 use \OCP\IURLGenerator;
 use OCP\AppFramework\Controller;
 use OCP\AppFramework\Http\TemplateResponse;
-use OCA\Mail\ProxyDownloadResponse;
+use OCA\Mail\Http\ProxyDownloadResponse;
 
 class ProxyController extends Controller {
 

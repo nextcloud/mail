@@ -12,8 +12,8 @@
 
 namespace OCA\Mail\Controller;
 
-use OCA\Mail\AttachmentDownloadResponse;
-use OCA\Mail\HtmlResponse;
+use OCA\Mail\Http\AttachmentDownloadResponse;
+use OCA\Mail\Http\HtmlResponse;
 use OCA\Mail\Service\ContactsIntegration;
 use OCP\AppFramework\Controller;
 use OCP\AppFramework\Db\DoesNotExistException;
