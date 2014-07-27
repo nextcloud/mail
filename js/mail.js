@@ -196,7 +196,7 @@ var Mail = {
 			if (Mail.State.currentMessageId !== null) {
 				var currentOpenMessage = $('#mail-message-summary-' + Mail.State.currentMessageId);
 				currentOpenMessage.find('.mail_message').slideUp(function(){
-					summaryRow.find('.mail_message').html('');
+					currentOpenMessage.find('.mail_message').html('');
 					var nextOpenMessage = $('#mail-message-summary-' + messageId);
 					nextOpenMessage[0].scrollIntoView(true);
 				});
