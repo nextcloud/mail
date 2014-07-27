@@ -24,6 +24,7 @@ namespace OCA\Mail\Controller;
 
 use OCA\Mail\AttachmentDownloadResponse;
 use OCA\Mail\App;
+use OCA\Mail\HtmlResponse;
 use OCP\AppFramework\Controller;
 use OCP\AppFramework\Db\DoesNotExistException;
 use OCP\AppFramework\Http\JSONResponse;
@@ -84,6 +85,9 @@ class MessagesController extends Controller
 		$m = $mailBox->getMessage($id);
 		$json = $m->as_array();
 		$json['senderImage'] = App::getPhoto($m->getFromEmail());
+		if ($json['hasHtmlBody']){
+			$json['htmlBodyUrl'] = $this->buildHtmlBodyUrl($accountId, $folderId, $id);
+		}
 
 		if (isset($json['attachment'])) {
 			$json['attachment'] = $this->enrichDownloadUrl($accountId, $folderId, $id, $json['attachment']);
@@ -95,6 +99,21 @@ class MessagesController extends Controller
 		}
 
 		return new JSONResponse($json);
+	}
+
+	/**
+	 * @NoAdminRequired
+	 *
+	 * @param int $messageId
+	 * @return JSONResponse
+	 */
+	public function getHtmlBody($messageId) {
+		$mailBox = $this->getFolder();
+
+		$m = $mailBox->getMessage($messageId, true);
+		$html = $m->getHtmlBody();
+
+		return new HtmlResponse($html);
 	}
 
 	/**
@@ -213,6 +232,16 @@ class MessagesController extends Controller
 		$attachment['downloadUrl'] = $downloadUrl;
 		$attachment['mimeUrl'] = \OC_Helper::mimetypeIcon($attachment['mime']);
 		return $attachment;
+	}
+
+	private function buildHtmlBodyUrl($accountId, $folderId, $id) {
+		$htmlBodyUrl = \OCP\Util::linkToRoute('mail.messages.getHtmlBody', array(
+			'accountId' => $accountId,
+			'folderId' => $folderId,
+			'messageId' => $id,
+			'requesttoken' => \OC_Util::callRegister(),
+		));
+		return \OC_Helper::makeURLAbsolute($htmlBodyUrl);
 	}
 
 }

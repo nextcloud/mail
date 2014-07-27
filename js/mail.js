@@ -229,6 +229,19 @@ var Mail = {
 							mailBody.html(html);
 							mailBody.slideDown();
 							mailBody.parent().removeClass('unseen');
+
+							$('iframe').load(function() {
+								$(this).height( $(this).contents().find("html").height() + 10);
+								$(this).contents().find('body').css({
+									'margin': '0',
+									'font-weight': 'normal',
+									'font-size': '.8em',
+									'line-height': '1.6em',
+									'font-family': "'Open Sans', Frutiger, Calibri, 'Myriad Pro', Myriad, sans-serif",
+									'color': '#000'
+								});
+							});
+
 						});
 
 						// Set current Message as active

@@ -22,7 +22,7 @@
 
 namespace OCA\Mail;
 
-use Horde_Mail_Rfc822_Address;
+use OCA\Mail\Service\Html;
 
 class Message {
 
@@ -32,10 +32,14 @@ class Message {
 	 * @param $messageId
 	 * @param null $fetch
 	 */
-	function __construct($conn, $folderId, $messageId, $fetch=null) {
+	function __construct($conn, $folderId, $messageId, $fetch=null, $loadHtmlMessage=false) {
 		$this->conn = $conn;
 		$this->folderId = $folderId;
 		$this->messageId = $messageId;
+		$this->loadHtmlMessage = $loadHtmlMessage;
+
+		// TODO: inject ???
+		$this->htmlService = new Html();
 
 		if ($fetch === null) {
 			$this->loadMessageBodies();
@@ -45,12 +49,12 @@ class Message {
 	}
 
 	// output all the following:
-	// the message may in $htmlmsg, $plainmsg, or both
 	public $header = null;
 	public $htmlMessage = '';
 	public $plainMessage = '';
-	public $charset = '';
 	public $attachments = array();
+	private $loadHtmlMessage = false;
+	private $hasHtmlMessage = false;
 
 	/**
 	 * @var \Horde_Imap_Client_Socket
@@ -210,10 +214,6 @@ class Message {
 		// so an attached text file (type 0) is not mistaken as the message.
 		$filename = $p->getName();
 		if (isset($filename)) {
-			//
-			// TODO: decode necessary ???
-			//
-//			$filename = OC_SimpleMail_Helper::decode($filename);
 			$this->attachments[]= array(
 				'id' => $p->getMimeId(),
 				'fileName' => $filename,
@@ -223,42 +223,20 @@ class Message {
 			return;
 		}
 
-		// DECODE DATA
-		$data = $this->queryBodyPart($partNo);
-		$p->setContents($data);
-		$data = $p->toString();
-
-		// decode quotes
-		$data = quoted_printable_decode($data);
-
-		//
-		// convert the data
-		//
-		$charset = $p->getCharset();
-		if (isset( $charset) and $charset !== '') {
-			$data = mb_convert_encoding($data, "UTF-8", $charset);
+		if ($p->getPrimaryType() === 'multipart') {
+			$this->handleMultiPartMessage($p, $partNo);
+			return;
 		}
 
-		//
-		// sanitize
-		//
-		$data = \OCP\Util::sanitizeHTML($data);
-
-		//
-		// link detection
-		//
-		$data = $this->convertLinks($data);
+		if ($p->getType() === 'text/plain') {
+			$this->handleTextMessage($p, $partNo);
+			return;
+		}
 
 		// TEXT
-		if ($p->getPrimaryType() == 'text' && $data) {
-			// Messages may be split in different parts because of inline attachments,
-			// so append parts together with blank row.
-			if ($p->getSubType() == 'plain') {
-				$this->plainMessage .= trim($data) ."\n\n";
-			} else {
-				$this->htmlMessage .= $data ."<br><br>";
-				$this->charset = $charset;  // assume all parts are same charset
-			}
+		if ($p->getPrimaryType() === 'text') {
+			$this->handleHtmlMessage($p, $partNo);
+			return;
 		}
 
 		// EMBEDDED MESSAGE
@@ -266,39 +244,25 @@ class Message {
 		// but AOL uses type 1 (multipart), which is not handled here.
 		// There are no PHP functions to parse embedded messages,
 		// so this just appends the raw source to the main message.
-		elseif ($p[0]=='message' && $data) {
+		if ($p[0]=='message') {
+			$data = $this->loadBodyData($p, $partNo);
 			$this->plainMessage .= trim($data) ."\n\n";
 		}
-
-		//
-		// TODO: is recursion necessary???
-		//
-
-		// SUBPART RECURSION
-//		if ($p->parts) {
-//			foreach ($p->parts as $partno0=>$p2)
-//			$this->getpart($mbox,$mid,$p2,$partno.'.'.($partno0+1));  // 1.2, 1.2.1, etc.
-//		}
 	}
 
 	public function as_array() {
 		$mailBody = $this->plainMessage;
 
-		$signature = null;
-		if (empty($this->plainMessage) && !empty($this->htmlMessage)) {
-			$mailBody = "<br/><h2>Only Html body available!</h2><br/>";
+		$data = $this->getListArray();
+		if ($this->hasHtmlMessage) {
+			$data['hasHtmlBody'] = true;
 		} else {
-			// split off the signature
-			$parts = explode("-- \r\n", $mailBody);
-			if (count($parts) > 1) {
-				$signature = nl2br(array_pop($parts));
-				$mailBody = implode("-- \r\n", $parts);
-			}
+			$mailBody = $this->htmlService->convertLinks($mailBody);
+			list($mailBody, $signature) = $this->htmlService->parseMailBody($mailBody);
+			$data['body'] = nl2br($mailBody);
+			$data['signature'] = $signature;
 		}
 
-		$data = $this->getListArray();
-		$data['body'] = nl2br($mailBody);
-		$data['signature'] = $signature;
 		if (count($this->attachments) === 1) {
 			$data['attachment'] = $this->attachments[0];
 		}
@@ -323,12 +287,67 @@ class Message {
 		return $data;
 	}
 
+	public function getHtmlBody() {
+		return $this->htmlService->sanitizeHtmlMailBody($this->htmlMessage);
+	}
+
 	/**
-	 * @param string $data
-	 * @return string
+	 * @param \Horde_Mime_Part $part
+	 * @param int $partNo
 	 */
-	public static function convertLinks($data) {
-		$data = preg_replace("/(http|https|ftp|ftps)\:\/\/[a-zA-Z0-9\-\.]+\.[a-zA-Z]{2,3}(\/\S*)?/", "<a href=\"\\0\" target=\"_blank\">\\0</a>", $data);
+	private function handleMultiPartMessage($part, $partNo) {
+		$i = 1;
+		foreach ($part->getParts() as $p) {
+			$this->getPart($p, "$partNo.$i");
+			$i++;
+		}
+	}
+
+	/**
+	 * @param \Horde_Mime_Part $p
+	 * @param int $partNo
+	 */
+	private function handleTextMessage($p, $partNo) {
+		$data = $this->loadBodyData($p, $partNo);
+		$data = \OCP\Util::sanitizeHTML($data);
+		$this->plainMessage .= trim($data) ."\n\n";
+	}
+
+	/**
+	 * @param \Horde_Mime_Part $p
+	 * @param int $partNo
+	 */
+	private function handleHtmlMessage($p, $partNo) {
+		$this->hasHtmlMessage = true;
+		if ($this->loadHtmlMessage) {
+			$data = $this->loadBodyData($p, $partNo);
+			$this->htmlMessage .= $data . "<br><br>";
+		}
+	}
+
+	/**
+	 * @param \Horde_Mime_Part $p
+	 * @param int $partNo
+	 * @return bool|mixed|string
+	 */
+	private function loadBodyData($p, $partNo) {
+		// DECODE DATA
+		$data = $this->queryBodyPart($partNo);
+		$p->setContents($data);
+		$data = $p->toString();
+
+		// decode quotes
+		$data = quoted_printable_decode($data);
+
+		//
+		// convert the data
+		//
+		$charset = $p->getCharset();
+		if (isset($charset) and $charset !== '') {
+			$data = mb_convert_encoding($data, "UTF-8", $charset);
+			return $data;
+		}
 		return $data;
 	}
+
 }

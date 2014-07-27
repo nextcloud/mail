@@ -218,6 +218,9 @@ button.control {
 	margin: 10px;
 	margin-left: 49px;
 }
+#mail-content iframe {
+	width: 100%;
+}
 
 #mail-content a,
 .mail-signature a {

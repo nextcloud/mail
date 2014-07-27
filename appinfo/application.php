@@ -15,6 +15,7 @@ namespace OCA\Mail\AppInfo;
 use OCA\Mail\Controller\AccountsController;
 use OCA\Mail\Controller\FoldersController;
 use OCA\Mail\Controller\MessagesController;
+use OCA\Mail\Controller\ProxyController;
 use OCA\Mail\Db\MailAccountMapper;
 use \OCP\AppFramework\App;
 
@@ -70,6 +71,15 @@ class Application extends App {
 				$c->query('Request'),
 				$c->query('MailAccountMapper'),
 				$c->query('UserId')
+			);
+		});
+
+		$container->registerService('ProxyController', function($c) {
+			/** @var IAppContainer $c */
+			return new ProxyController(
+				$c->query('AppName'),
+				$c->query('Request'),
+				$c->query('ServerContainer')->getURLGenerator()
 			);
 		});
 

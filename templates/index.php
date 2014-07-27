@@ -43,7 +43,12 @@
 <script id="mail-message-template" type="text/x-handlebars-template">
 	<div class="mail-message-body">
 		<div id="mail-content">
-			{{{body}}}
+			{{#if hasHtmlBody}}
+				<iframe src="{{htmlBodyUrl}}" sandbox="allow-top-navigation allow-same-origin" seamless>
+				</iframe>
+			{{else}}
+				{{{body}}}
+			{{/if}}
 		</div>
 		{{#if signature}}
 		<div class="mail-signature">

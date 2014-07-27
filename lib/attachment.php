@@ -101,6 +101,7 @@ class Attachment {
 		/* Content-Disposition. */
 		if ($tmp = $mimeHeaders->getValue('content-disposition', \Horde_Mime_Headers::VALUE_BASE)) {
 			$this->mimePart->setDisposition($tmp);
+
 			foreach ($mimeHeaders->getValue('content-disposition', \Horde_Mime_Headers::VALUE_PARAMS) as $key => $val) {
 				$this->mimePart->setDispositionParameter($key, $val);
 			}
