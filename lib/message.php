@@ -23,6 +23,7 @@
 namespace OCA\Mail;
 
 use OCA\Mail\Service\Html;
+use OCP\AppFramework\Db\DoesNotExistException;
 
 class Message {
 
@@ -168,6 +169,9 @@ class Message {
 		$headers = $this->conn->fetch($this->folderId, $fetch_query, array('ids' => $ids));
 		/** @var $fetch \Horde_Imap_Client_Data_Fetch */
 		$fetch = $headers[$this->messageId];
+		if (is_null($fetch)) {
+			throw new DoesNotExistException("Unknown message id: $this->messageId");
+		}
 
 		// set $this->fetch to get to, from ...
 		$this->fetch = $fetch;
