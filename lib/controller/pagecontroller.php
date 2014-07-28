@@ -57,6 +57,9 @@ class PageController extends Controller {
 		\OCP\Util::addScript('mail','jquery.endless-scroll');
 		\OCP\Util::addScript('mail','handlebars-v1.3.0');
 		\OCP\Util::addScript('mail','jquery.autosize');
+		\OCP\Util::addScript('mail','backbone');
+		\OCP\Util::addScript('mail','models/attachment');
+		\OCP\Util::addScript('mail','views/attachment');
 		\OCP\Util::addStyle('mail','mail');
 		\OCP\Util::addStyle('mail','mobile');
 

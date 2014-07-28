@@ -200,8 +200,9 @@ class AccountsController extends Controller
 		$attachments = $this->params('attachments');
 		if (is_array($attachments)) {
 			foreach($attachments as $attachment) {
-				if ($this->userFolder->nodeExists($attachment)) {
-					$f = $this->userFolder->get($attachment);
+				$fileName = $attachment['fileName'];
+				if ($this->userFolder->nodeExists($fileName)) {
+					$f = $this->userFolder->get($fileName);
 					if ($f instanceof \OCP\Files\File) {
 						$a = new \Horde_Mime_Part();
 						$a->setName($f->getName());
