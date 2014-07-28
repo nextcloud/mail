@@ -197,8 +197,10 @@ class AccountsController extends Controller
 		// build mime body
 		$p = new \Horde_Mime_Part();
 		$p->setContents($body);
+		$p->setType('text/plain');
 		$attachments = $this->params('attachments');
 		if (is_array($attachments)) {
+			$p->setType('multipart');
 			foreach($attachments as $attachment) {
 				$fileName = $attachment['fileName'];
 				if ($this->userFolder->nodeExists($fileName)) {
