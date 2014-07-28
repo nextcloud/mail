@@ -85,7 +85,7 @@ class MessagesController extends Controller
 
 		$m = $mailBox->getMessage($id);
 		$json = $m->as_array();
-		$json['senderImage'] = App::getPhoto($m->getFromEmail());
+		$json['senderImage'] = $this->contactsIntegration->getPhoto($m->getFromEmail());
 		if ($json['hasHtmlBody']){
 			$json['htmlBodyUrl'] = $this->buildHtmlBodyUrl($accountId, $folderId, $id);
 		}
@@ -184,9 +184,6 @@ class MessagesController extends Controller
 	{
 		try {
 			$mailBox = $this->getFolder();
-			//
-			// TODO: let's see how we implement delete
-			//
 			$mailBox->deleteMessage($id);
 
 			return new JSONResponse();
