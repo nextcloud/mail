@@ -1,4 +1,5 @@
-<?php $TRANSLATIONS = array(
+<?php
+$TRANSLATIONS = array(
 "Error" => "Hiba",
 "Connecting ..." => "Csatlakozás ...",
 "Unknown error" => "Ismeretlen hiba",
@@ -12,3 +13,4 @@
 "Mail Address" => "E-mail cím",
 "IMAP Password" => "IMAP jelszó"
 );
+$PLURAL_FORMS = "nplurals=2; plural=(n != 1);";

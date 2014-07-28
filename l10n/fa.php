@@ -1,4 +1,5 @@
-<?php $TRANSLATIONS = array(
+<?php
+$TRANSLATIONS = array(
 "Error" => "خطا",
 "Connecting ..." => "اتصال...",
 "Unknown error" => "خطای نامشخص",
@@ -12,3 +13,4 @@
 "Mail Address" => "آدرس ایمیل",
 "IMAP Password" => "رمزعبورIMAP "
 );
+$PLURAL_FORMS = "nplurals=1; plural=0;";

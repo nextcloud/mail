@@ -1,4 +1,5 @@
-<?php $TRANSLATIONS = array(
+<?php
+$TRANSLATIONS = array(
 "Error" => "შეცდომა",
 "Connecting ..." => "ვუკავშირდები...",
 "Unknown error" => "უცნობი შეცდომა",
@@ -12,3 +13,4 @@
 "Mail Address" => "იმეილ მისამართ",
 "IMAP Password" => "IMAP პაროლი"
 );
+$PLURAL_FORMS = "nplurals=1; plural=0;";

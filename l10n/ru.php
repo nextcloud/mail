@@ -1,4 +1,5 @@
-<?php $TRANSLATIONS = array(
+<?php
+$TRANSLATIONS = array(
 "Mail" => "Почта",
 "Error" => "Ошибка",
 "Error while deleting mail." => "Ошибка при удалении письма",
@@ -24,3 +25,4 @@
 "Mail Address" => "Почтовый адрес",
 "IMAP Password" => "Пароль IMAP"
 );
+$PLURAL_FORMS = "nplurals=3; plural=(n%10==1 && n%100!=11 ? 0 : n%10>=2 && n%10<=4 && (n%100<10 || n%100>=20) ? 1 : 2);";

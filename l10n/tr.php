@@ -1,4 +1,5 @@
-<?php $TRANSLATIONS = array(
+<?php
+$TRANSLATIONS = array(
 "Mail" => "Posta",
 "Error" => "Hata",
 "Error while loading mail message." => "Posta iletisi yüklenirken hata.",
@@ -16,3 +17,4 @@
 "Mail Address" => "Posta Adresi",
 "IMAP Password" => "IMAP Parolası"
 );
+$PLURAL_FORMS = "nplurals=2; plural=(n > 1);";

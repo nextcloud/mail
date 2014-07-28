@@ -1,4 +1,5 @@
-<?php $TRANSLATIONS = array(
+<?php
+$TRANSLATIONS = array(
 "Mail" => "សំបុត្រ",
 "Error" => "កំហុស",
 "Connecting ..." => "កំពុង​ភ្ជាប់ ...",
@@ -13,3 +14,4 @@
 "Mail Address" => "អាសយដ្ឋាន​អ៊ីមែល",
 "IMAP Password" => "ពាក្យ​សម្ងាត់ IMAP"
 );
+$PLURAL_FORMS = "nplurals=1; plural=0;";

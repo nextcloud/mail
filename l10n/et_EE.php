@@ -1,4 +1,5 @@
-<?php $TRANSLATIONS = array(
+<?php
+$TRANSLATIONS = array(
 "Mail" => "Kirjad",
 "Error" => "Viga",
 "Error while deleting mail." => "Viga ilmnes kirja kustutamisel.",
@@ -24,3 +25,4 @@
 "Mail Address" => "E-posti aadress",
 "IMAP Password" => "IMAP parool"
 );
+$PLURAL_FORMS = "nplurals=2; plural=(n != 1);";

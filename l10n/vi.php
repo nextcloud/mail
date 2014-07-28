@@ -1,4 +1,5 @@
-<?php $TRANSLATIONS = array(
+<?php
+$TRANSLATIONS = array(
 "Error" => "Lỗi",
 "Connecting ..." => "Đang kết nối...",
 "Unknown error" => "Lỗi chưa biết",
@@ -12,3 +13,4 @@
 "Mail Address" => "Địa chỉ hòm th",
 "IMAP Password" => "Mật khẩu "
 );
+$PLURAL_FORMS = "nplurals=1; plural=0;";

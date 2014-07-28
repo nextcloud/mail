@@ -1,4 +1,5 @@
-<?php $TRANSLATIONS = array(
+<?php
+$TRANSLATIONS = array(
 "Mail" => "電子郵件",
 "Error" => "錯誤",
 "Connecting ..." => "連接中",
@@ -14,3 +15,4 @@
 "Mail Address" => "電郵地址",
 "IMAP Password" => "IMAP 密碼"
 );
+$PLURAL_FORMS = "nplurals=1; plural=0;";

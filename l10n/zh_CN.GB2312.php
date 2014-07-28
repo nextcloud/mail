@@ -1,4 +1,5 @@
-<?php $TRANSLATIONS = array(
+<?php
+$TRANSLATIONS = array(
 "Not Found" => "未找到",
 "Permission Denied" => "权限不足",
 "Authentication failure." => "验证错误",
@@ -13,3 +14,4 @@
 "To" => "到",
 "Send" => "发送"
 );
+$PLURAL_FORMS = "nplurals=1; plural=0;";

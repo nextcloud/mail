@@ -1,4 +1,5 @@
-<?php $TRANSLATIONS = array(
+<?php
+$TRANSLATIONS = array(
 "Mail" => "Mail",
 "Error" => "Fejl",
 "Connecting ..." => "Forbinder ...",
@@ -14,3 +15,4 @@
 "Mail Address" => "Mail Adresse",
 "IMAP Password" => "IMAP Kodeord"
 );
+$PLURAL_FORMS = "nplurals=2; plural=(n != 1);";

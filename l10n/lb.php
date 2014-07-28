@@ -1,4 +1,5 @@
-<?php $TRANSLATIONS = array(
+<?php
+$TRANSLATIONS = array(
 "Error" => "Fehler",
 "Unknown error" => "Et ass en onbekannte Fehler opgetrueden",
 "Connect" => "Verbannen",
@@ -9,3 +10,4 @@
 "Subject" => "Sujet",
 "IMAP Password" => "IMAP Passwuert"
 );
+$PLURAL_FORMS = "nplurals=2; plural=(n != 1);";

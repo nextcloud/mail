@@ -1,4 +1,5 @@
-<?php $TRANSLATIONS = array(
+<?php
+$TRANSLATIONS = array(
 "Error" => "ایرر",
 "Connecting ..." => "منسلک ہو رہا ہے",
 "Unknown error" => "غیر معروف خرابی",
@@ -12,3 +13,4 @@
 "Mail Address" => "میل ایڈریس",
 "IMAP Password" => "ای ایم ایے پی پاس ورڈ"
 );
+$PLURAL_FORMS = "nplurals=2; plural=(n != 1);";

@@ -1,4 +1,5 @@
-<?php $TRANSLATIONS = array(
+<?php
+$TRANSLATIONS = array(
 "Mail" => "Ταχυδρομείο",
 "Error" => "Σφάλμα",
 "Error while deleting mail." => "Σφάλμα κατά την διαγραφή του mail.",
@@ -24,3 +25,4 @@
 "Mail Address" => "Διεύθυνση Ηλ. Ταχυδρομείου",
 "IMAP Password" => "Κωδικός IMAP"
 );
+$PLURAL_FORMS = "nplurals=2; plural=(n != 1);";

@@ -1,4 +1,5 @@
-<?php $TRANSLATIONS = array(
+<?php
+$TRANSLATIONS = array(
 "Error" => "Veprim i gabuar",
 "Connecting ..." => "Duke u lidhur...",
 "Unknown error" => "Gabim panjohur",
@@ -12,3 +13,4 @@
 "Mail Address" => "Adresa Mail-it",
 "IMAP Password" => "Fjalëkalimi IMAP"
 );
+$PLURAL_FORMS = "nplurals=2; plural=(n != 1);";

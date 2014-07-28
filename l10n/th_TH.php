@@ -1,4 +1,5 @@
-<?php $TRANSLATIONS = array(
+<?php
+$TRANSLATIONS = array(
 "Error" => "ข้อผิดพลาด",
 "Connecting ..." => "กำลังเชื่อมต่อ ...",
 "Unknown error" => "ข้อผิดพลาดที่ไม่ทราบสาเหตุ",
@@ -7,3 +8,4 @@
 "Reply" => "ตอบกลับ",
 "New Message" => "ข้อความใหม่"
 );
+$PLURAL_FORMS = "nplurals=1; plural=0;";

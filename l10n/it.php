@@ -1,4 +1,5 @@
-<?php $TRANSLATIONS = array(
+<?php
+$TRANSLATIONS = array(
 "Mail" => "Posta",
 "Error" => "Errore",
 "Error while deleting mail." => "Errore durante l'eliminazione delle email",
@@ -24,3 +25,4 @@
 "Mail Address" => "Indirizzo di posta",
 "IMAP Password" => "Password IMAP"
 );
+$PLURAL_FORMS = "nplurals=2; plural=(n != 1);";

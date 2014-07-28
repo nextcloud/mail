@@ -1,4 +1,5 @@
-<?php $TRANSLATIONS = array(
+<?php
+$TRANSLATIONS = array(
 "Mail" => "邮件",
 "Error" => "错误",
 "Error while loading mail message." => "下载邮件信息时发生了错误。",
@@ -16,3 +17,4 @@
 "Mail Address" => "邮件地址",
 "IMAP Password" => "IMAP 密码"
 );
+$PLURAL_FORMS = "nplurals=1; plural=0;";

@@ -1,4 +1,5 @@
-<?php $TRANSLATIONS = array(
+<?php
+$TRANSLATIONS = array(
 "Mail" => "Corréu",
 "Error" => "Fallu",
 "Error while loading mail message." => "Fallu entrín se cargaba'l mensaxe del corréu.",
@@ -14,3 +15,4 @@
 "Mail Address" => "Direición de corréu",
 "IMAP Password" => "Contraseña IMAP"
 );
+$PLURAL_FORMS = "nplurals=2; plural=(n != 1);";

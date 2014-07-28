@@ -1,4 +1,5 @@
-<?php $TRANSLATIONS = array(
+<?php
+$TRANSLATIONS = array(
 "Mail" => "Elektronska pošta",
 "Error" => "Napaka",
 "Error while deleting mail." => "Prišlo je do napake med brisanjems sporočil.",
@@ -24,3 +25,4 @@
 "Mail Address" => "Elektronski naslov",
 "IMAP Password" => "Geslo IMAP"
 );
+$PLURAL_FORMS = "nplurals=4; plural=(n%100==1 ? 0 : n%100==2 ? 1 : n%100==3 || n%100==4 ? 2 : 3);";

@@ -1,4 +1,5 @@
-<?php $TRANSLATIONS = array(
+<?php
+$TRANSLATIONS = array(
 "Mail" => "Retpoŝto",
 "Error" => "Eraro",
 "Connecting ..." => "Konektante...",
@@ -13,3 +14,4 @@
 "Mail Address" => "Poŝtadreso",
 "IMAP Password" => "IMAP-pasvorto"
 );
+$PLURAL_FORMS = "nplurals=2; plural=(n != 1);";

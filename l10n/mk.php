@@ -1,4 +1,5 @@
-<?php $TRANSLATIONS = array(
+<?php
+$TRANSLATIONS = array(
 "Mail" => "Електронска пошта",
 "Error" => "Грешка",
 "Connecting ..." => "Се поврзувам ...",
@@ -13,3 +14,4 @@
 "Mail Address" => "Адреса за електронска пошта",
 "IMAP Password" => "IMAP лозинка"
 );
+$PLURAL_FORMS = "nplurals=2; plural=(n % 10 == 1 && n % 100 != 11) ? 0 : 1;";

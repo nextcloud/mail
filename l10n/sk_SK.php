@@ -1,4 +1,5 @@
-<?php $TRANSLATIONS = array(
+<?php
+$TRANSLATIONS = array(
 "Mail" => "Pošta",
 "Error" => "Chyba",
 "Connecting ..." => "Pripájam sa...",
@@ -13,3 +14,4 @@
 "Mail Address" => "Emailová adresa",
 "IMAP Password" => "IMAP heslo"
 );
+$PLURAL_FORMS = "nplurals=3; plural=(n==1) ? 0 : (n>=2 && n<=4) ? 1 : 2;";
