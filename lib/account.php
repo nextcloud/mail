@@ -8,6 +8,7 @@
 
 namespace OCA\Mail;
 
+use OCA\Mail\Cache\UserCache;
 use OCA\Mail\Db\MailAccount;
 
 class Account {
@@ -52,8 +53,18 @@ class Account {
 		$port = $this->info['port'];
 		$ssl_mode = $this->info['ssl_mode'];
 
-		$client = new \Horde_Imap_Client_Socket(array(
-			'username' => $user, 'password' => $password, 'hostspec' => $host, 'port' => $port, 'secure' => $ssl_mode, 'timeout' => 2));
+		$client = new \Horde_Imap_Client_Socket(
+			array(
+				'username' => $user,
+				'password' => $password,
+				'hostspec' => $host,
+				'port' => $port,
+				'secure' => $ssl_mode,
+				'timeout' => 2,
+				'cache' => array(
+					'backend' => new UserCache()
+				)
+			));
 		$client->login();
 		return $client;
 	}

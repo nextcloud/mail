@@ -22,6 +22,7 @@
 
 namespace OCA\Mail\Controller;
 
+use OCA\Mail\Account;
 use OCA\Mail\Db\MailAccount;
 use OCP\AppFramework\Controller;
 use OCP\AppFramework\Db\DoesNotExistException;
@@ -88,7 +89,8 @@ class FoldersController extends Controller
 	public function destroy($folderId) {
 		try {
 			$account = $this->getAccount();
-			$imap = $this->getImap($account);
+			$account = new Account($account);
+			$imap = $account->getImapConnection();
 			$imap->deleteMailbox($folderId);
 
 			return new JSONResponse();
@@ -104,7 +106,8 @@ class FoldersController extends Controller
 		try {
 			$mailbox = $this->params('mailbox');
 			$account = $this->getAccount();
-			$imap = $this->getImap($account);
+			$account = new Account($account);
+			$imap = $account->getImapConnection();
 
 			// TODO: read http://tools.ietf.org/html/rfc6154
 			$imap->createMailbox($mailbox);
@@ -126,30 +129,6 @@ class FoldersController extends Controller
 	 * TODO: private functions below have to be removed from controller -> imap service to be build
 	 */
 
-	/**
-	 * @param string $host
-	 * @param int $port
-	 * @param string $user
-	 * @param string $password
-	 * @param string $ssl_mode
-	 * @return \Horde_Imap_Client_Socket a ready to use IMAP connection
-	 */
-	private function getImapConnection($host, $port, $user, $password, $ssl_mode) {
-		$imapConnection = new \Horde_Imap_Client_Socket(array(
-			'username' => $user,
-			'password' => $password,
-			'hostspec' => $host,
-			'port' => $port,
-			'secure' => $ssl_mode,
-			'timeout' => 2));
-
-		$imapConnection->login();
-		return $imapConnection;
-	}
-
-	/**
-	 * @return array|\OCA\Mail\Db\MailAccount[]
-	 */
 	private function getAccount()
 	{
 		$accountId = $this->params('accountId');
@@ -159,16 +138,5 @@ class FoldersController extends Controller
 		}
 
 		return array($this->mapper->find($this->currentUserId, $accountId));
-	}
-
-	private function getImap(MailAccount $account)
-	{
-		return $this->getImapConnection(
-			$account->getInboundHost(),
-			$account->getInboundHostPort(),
-			$account->getInboundUser(),
-			$account->getInboundPassword(),
-			$account->getInboundSslMode()
-		);
 	}
 }
