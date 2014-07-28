@@ -8,7 +8,6 @@
 "Reply" => "Antwort",
 "New Message" => "Neue Nachricht",
 "Subject" => "Betreff",
-"Message" => "Mitteilung",
 "Connect your mail account" => "Ihr E-Mail-Konto verbinden",
 "Mail Address" => "E-Mail-Adresse",
 "IMAP Password" => "IMAP-Passwort"

@@ -16,11 +16,10 @@
 "Download attachment" => "Descargar o anexo",
 "Save to Files" => "Gardar en Ficheiros",
 "Save all to Files" => "Gardar todo en Ficheiros",
+"Recipient" => "Destinatario",
 "Reply" => "Responder",
 "New Message" => "Mensaxe nova",
-"Recipient" => "Destinatario",
 "Subject" => "Asunto",
-"Message" => "Mensaxe",
 "Connect your mail account" => "Conectar a súa conta de correo",
 "Mail Address" => "Enderezo de correo",
 "IMAP Password" => "Contrasinal IMAP"

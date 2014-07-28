@@ -8,11 +8,10 @@
 "Server Error" => "Sunucu Hatası",
 "Send" => "Gönder",
 "Auto detect failed. Please use manual mode." => "Otomatik sınama başarısız. Lütfen el kipini kullanın.",
+"Recipient" => "Alıcı",
 "Reply" => "Yanıtla",
 "New Message" => "Yeni Mesaj",
-"Recipient" => "Alıcı",
 "Subject" => "Konu",
-"Message" => "Mesaj",
 "Connect your mail account" => "Posta hesabınızı bağlayın",
 "Mail Address" => "Posta Adresi",
 "IMAP Password" => "IMAP Parolası"

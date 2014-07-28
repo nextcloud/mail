@@ -16,11 +16,10 @@
 "Download attachment" => "添付ファイルをダウンロード",
 "Save to Files" => "ファイルに保存",
 "Save all to Files" => "全てファイルに保存",
+"Recipient" => "受信者",
 "Reply" => "返信",
 "New Message" => "新しいメッセージ",
-"Recipient" => "受信者",
 "Subject" => "件名",
-"Message" => "メッセージ",
 "Connect your mail account" => "メールアカウントに接続",
 "Mail Address" => "メールアドレス",
 "IMAP Password" => "IMAP パスワード"

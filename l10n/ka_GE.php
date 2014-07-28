@@ -8,7 +8,6 @@
 "Reply" => "პასუხი",
 "New Message" => "ახალი მესიჯი",
 "Subject" => "სათაური",
-"Message" => "მესიჯი",
 "Connect your mail account" => "დაუკავშირდით თქვენს იმეილ ანგარიშს",
 "Mail Address" => "იმეილ მისამართ",
 "IMAP Password" => "IMAP პაროლი"

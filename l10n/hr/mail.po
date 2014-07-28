@@ -7,8 +7,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: ownCloud\n"
 "Report-Msgid-Bugs-To: translations@owncloud.org\n"
-"POT-Creation-Date: 2014-07-24 02:41-0400\n"
-"PO-Revision-Date: 2014-07-24 06:41+0000\n"
+"POT-Creation-Date: 2014-07-28 02:41-0400\n"
+"PO-Revision-Date: 2014-07-28 06:41+0000\n"
 "Last-Translator: I Robot\n"
 "Language-Team: Croatian (http://www.transifex.com/projects/p/owncloud/language/hr/)\n"
 "MIME-Version: 1.0\n"
@@ -21,7 +21,7 @@ msgstr ""
 msgid "Mail"
 msgstr ""
 
-#: js/mail.js:132 js/mail.js:237
+#: js/mail.js:132 js/mail.js:251
 msgid "Error"
 msgstr "Greška"
 
@@ -41,31 +41,31 @@ msgstr ""
 msgid "Error while saving attachment(s) to Files."
 msgstr ""
 
-#: js/mail.js:237
+#: js/mail.js:251
 msgid "Error while loading mail message."
 msgstr ""
 
-#: js/mail.js:316
+#: js/mail.js:330
 msgid "Connecting ..."
 msgstr ""
 
-#: js/mail.js:333
+#: js/mail.js:347
 msgid "Unknown error"
 msgstr ""
 
-#: js/mail.js:337 templates/no-accounts.php:18
+#: js/mail.js:351 templates/no-accounts.php:18
 msgid "Connect"
 msgstr "Poveži"
 
-#: js/mail.js:339
+#: js/mail.js:353
 msgid "Server Error"
 msgstr ""
 
-#: js/send-mail.js:64 js/send-mail.js:102
+#: js/send-mail.js:64 js/send-mail.js:116
 msgid "Sending …"
 msgstr ""
 
-#: js/send-mail.js:129 templates/index.php:104
+#: js/send-mail.js:147 templates/index.php:138
 msgid "Send"
 msgstr ""
 
@@ -73,37 +73,61 @@ msgstr ""
 msgid "Auto detect failed. Please use manual mode."
 msgstr ""
 
-#: templates/index.php:60 templates/index.php:69
+#: templates/index.php:65 templates/index.php:74
 msgid "Download attachment"
 msgstr ""
 
-#: templates/index.php:61 templates/index.php:70
+#: templates/index.php:66 templates/index.php:75
 msgid "Save to Files"
 msgstr ""
 
-#: templates/index.php:77
+#: templates/index.php:82
 msgid "Save all to Files"
 msgstr ""
 
-#: templates/index.php:84 templates/index.php:85
-msgid "Reply"
-msgstr ""
-
-#: templates/index.php:94
-msgid "New Message"
-msgstr ""
-
-#: templates/index.php:98
+#: templates/index.php:89 templates/index.php:124
 msgid "Recipient"
 msgstr ""
 
-#: templates/index.php:100
+#: templates/index.php:93
+msgid "+ cc"
+msgstr ""
+
+#: templates/index.php:100 templates/index.php:129
+msgid "cc"
+msgstr ""
+
+#: templates/index.php:102 templates/index.php:131
+msgid "bcc"
+msgstr ""
+
+#: templates/index.php:106
+msgid "Reply …"
+msgstr ""
+
+#: templates/index.php:107
+msgid "Reply"
+msgstr ""
+
+#: templates/index.php:110
+msgid "Forward"
+msgstr ""
+
+#: templates/index.php:120
+msgid "New Message"
+msgstr ""
+
+#: templates/index.php:126
+msgid "+ cc/bcc"
+msgstr ""
+
+#: templates/index.php:134
 msgid "Subject"
 msgstr ""
 
-#: templates/index.php:102
-msgid "Message"
-msgstr "Poruka"
+#: templates/index.php:136
+msgid "Message …"
+msgstr ""
 
 #: templates/no-accounts.php:3
 msgid "Connect your mail account"
@@ -115,4 +139,24 @@ msgstr ""
 
 #: templates/no-accounts.php:14 templates/no-accounts.php:15
 msgid "IMAP Password"
+msgstr ""
+
+#: templates/redirect.php:5
+msgid "Redirect Warning"
+msgstr ""
+
+#: templates/redirect.php:6
+#, php-format
+msgid "The previous page is sending you to %s."
+msgstr ""
+
+#: templates/redirect.php:7
+#, php-format
+msgid ""
+"If you do not want to visit that page, you can return to <a href=\"%s\">the "
+"mail app</a>."
+msgstr ""
+
+#: templates/redirect.php:10
+msgid "Click here to visit the website."
 msgstr ""

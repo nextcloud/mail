@@ -8,7 +8,6 @@
 "Reply" => "Відповісти",
 "New Message" => "Нове повідомлення",
 "Subject" => "Тема",
-"Message" => "Повідомлення",
 "Connect your mail account" => "Підключити обліковий запис електронної пошти",
 "Mail Address" => "Поштова адреса",
 "IMAP Password" => "IMAP Пароль"

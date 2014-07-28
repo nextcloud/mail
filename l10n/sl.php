@@ -16,11 +16,10 @@
 "Download attachment" => "Prejmi prilogo",
 "Save to Files" => "Shrani v mapo datotek",
 "Save all to Files" => "Shrani vse v mapo datotek",
+"Recipient" => "Prejemnik",
 "Reply" => "Odgovori",
 "New Message" => "Novo sporočilo",
-"Recipient" => "Prejemnik",
 "Subject" => "Zadeva",
-"Message" => "Sporočilo",
 "Connect your mail account" => "Povezava s poštnim računom",
 "Mail Address" => "Elektronski naslov",
 "IMAP Password" => "Geslo IMAP"

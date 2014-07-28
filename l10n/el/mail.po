@@ -3,6 +3,7 @@
 # This file is distributed under the same license as the PACKAGE package.
 # 
 # Translators:
+# Playerthe12 <a7652246@drdrb.net>, 2014
 # Efstathios Iosifidis <iefstathios@gmail.com>, 2013
 # Efstathios Iosifidis <iosifidis@opensuse.org>, 2013
 # Georgia, 2013
@@ -18,8 +19,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: ownCloud\n"
 "Report-Msgid-Bugs-To: translations@owncloud.org\n"
-"POT-Creation-Date: 2014-07-24 02:41-0400\n"
-"PO-Revision-Date: 2014-07-24 06:41+0000\n"
+"POT-Creation-Date: 2014-07-28 02:41-0400\n"
+"PO-Revision-Date: 2014-07-28 06:41+0000\n"
 "Last-Translator: I Robot\n"
 "Language-Team: Greek (http://www.transifex.com/projects/p/owncloud/language/el/)\n"
 "MIME-Version: 1.0\n"
@@ -32,89 +33,113 @@ msgstr ""
 msgid "Mail"
 msgstr "Ταχυδρομείο"
 
-#: js/mail.js:132 js/mail.js:237
+#: js/mail.js:132 js/mail.js:251
 msgid "Error"
 msgstr "Σφάλμα"
 
 #: js/mail.js:157
 msgid "Error while deleting mail."
-msgstr ""
+msgstr "Σφάλμα κατά την διαγραφή του mail."
 
 #: js/mail.js:164
 msgid "Choose a folder store the attachment"
-msgstr ""
+msgstr "Επιλέξτε έναν φάκελο για να αποθηκεύσετε το συνημένο"
 
 #: js/mail.js:180
 msgid "Attachment(s) saved to Files."
-msgstr ""
+msgstr "Το(-α) συνημένο(-α) αποθηκεύτηκαν στα Έγγραφα."
 
 #: js/mail.js:183
 msgid "Error while saving attachment(s) to Files."
-msgstr ""
+msgstr "Σφάλμα κατά την αποθήκευση συνημένου(-ων) στα Έγγραφα."
 
-#: js/mail.js:237
+#: js/mail.js:251
 msgid "Error while loading mail message."
-msgstr ""
+msgstr "Σφάλμα κατά την φόρτωση μυνημάτος ηλεκτρονικού ταχυδρομείου"
 
-#: js/mail.js:316
+#: js/mail.js:330
 msgid "Connecting ..."
 msgstr "Σύνδεση σε εξέλιξη ..."
 
-#: js/mail.js:333
+#: js/mail.js:347
 msgid "Unknown error"
 msgstr "Άγνωστο σφάλμα"
 
-#: js/mail.js:337 templates/no-accounts.php:18
+#: js/mail.js:351 templates/no-accounts.php:18
 msgid "Connect"
 msgstr "Σύνδεση"
 
-#: js/mail.js:339
+#: js/mail.js:353
 msgid "Server Error"
 msgstr "Σφάλμα Διακομιστή"
 
-#: js/send-mail.js:64 js/send-mail.js:102
+#: js/send-mail.js:64 js/send-mail.js:116
 msgid "Sending …"
-msgstr ""
+msgstr "Αποστολή..."
 
-#: js/send-mail.js:129 templates/index.php:104
+#: js/send-mail.js:147 templates/index.php:138
 msgid "Send"
 msgstr "Αποστολή"
 
 #: lib/controller/accountscontroller.php:139
 msgid "Auto detect failed. Please use manual mode."
-msgstr ""
+msgstr " Η αυτόματη ανίχνευση απέτυχε. Παρακαλούμε χρησιμοποιήστε τη χειροκίνητη λειτουργία."
 
-#: templates/index.php:60 templates/index.php:69
+#: templates/index.php:65 templates/index.php:74
 msgid "Download attachment"
-msgstr ""
+msgstr "Κατεβάστε το συνημμένο"
 
-#: templates/index.php:61 templates/index.php:70
+#: templates/index.php:66 templates/index.php:75
 msgid "Save to Files"
-msgstr ""
+msgstr "Αποθήκευση στα Έγγραφα"
 
-#: templates/index.php:77
+#: templates/index.php:82
 msgid "Save all to Files"
+msgstr "Αποθήκευση όλων στα Έγγραφα"
+
+#: templates/index.php:89 templates/index.php:124
+msgid "Recipient"
+msgstr "παραλήπτης"
+
+#: templates/index.php:93
+msgid "+ cc"
 msgstr ""
 
-#: templates/index.php:84 templates/index.php:85
+#: templates/index.php:100 templates/index.php:129
+msgid "cc"
+msgstr ""
+
+#: templates/index.php:102 templates/index.php:131
+msgid "bcc"
+msgstr ""
+
+#: templates/index.php:106
+msgid "Reply …"
+msgstr ""
+
+#: templates/index.php:107
 msgid "Reply"
 msgstr "Απάντηση"
 
-#: templates/index.php:94
+#: templates/index.php:110
+msgid "Forward"
+msgstr ""
+
+#: templates/index.php:120
 msgid "New Message"
 msgstr "Νέο Μήνυμα"
 
-#: templates/index.php:98
-msgid "Recipient"
+#: templates/index.php:126
+msgid "+ cc/bcc"
 msgstr ""
 
-#: templates/index.php:100
+#: templates/index.php:134
 msgid "Subject"
 msgstr "Θέμα"
 
-#: templates/index.php:102
-msgid "Message"
-msgstr "Μήνυμα"
+#: templates/index.php:136
+msgid "Message …"
+msgstr ""
 
 #: templates/no-accounts.php:3
 msgid "Connect your mail account"
@@ -127,3 +152,23 @@ msgstr "Διεύθυνση Ηλ. Ταχυδρομείου"
 #: templates/no-accounts.php:14 templates/no-accounts.php:15
 msgid "IMAP Password"
 msgstr "Κωδικός IMAP"
+
+#: templates/redirect.php:5
+msgid "Redirect Warning"
+msgstr ""
+
+#: templates/redirect.php:6
+#, php-format
+msgid "The previous page is sending you to %s."
+msgstr ""
+
+#: templates/redirect.php:7
+#, php-format
+msgid ""
+"If you do not want to visit that page, you can return to <a href=\"%s\">the "
+"mail app</a>."
+msgstr ""
+
+#: templates/redirect.php:10
+msgid "Click here to visit the website."
+msgstr ""

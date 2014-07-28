@@ -8,7 +8,6 @@
 "Reply" => "پاسخ",
 "New Message" => "پیغام جدید",
 "Subject" => "موضوع",
-"Message" => "پیغام",
 "Connect your mail account" => "اتصال حساب پست الکترونیکی خود",
 "Mail Address" => "آدرس ایمیل",
 "IMAP Password" => "رمزعبورIMAP "

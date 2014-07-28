@@ -16,11 +16,10 @@
 "Download attachment" => "Download attachment",
 "Save to Files" => "Save to Files",
 "Save all to Files" => "Save all to Files",
+"Recipient" => "Recipient",
 "Reply" => "Reply",
 "New Message" => "New Message",
-"Recipient" => "Recipient",
 "Subject" => "Subject",
-"Message" => "Message",
 "Connect your mail account" => "Connect your mail account",
 "Mail Address" => "Mail Address",
 "IMAP Password" => "IMAP Password"

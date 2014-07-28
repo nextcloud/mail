@@ -9,7 +9,6 @@
 "Reply" => "回覆",
 "New Message" => "新郵件",
 "Subject" => "主旨",
-"Message" => "訊息",
 "Connect your mail account" => "連結您的郵件帳戶",
 "Mail Address" => "電子郵件地址",
 "IMAP Password" => "IMAP 密碼"

@@ -9,7 +9,6 @@
 "Reply" => "Respondi",
 "New Message" => "Nova mesaĝo",
 "Subject" => "Temo",
-"Message" => "Mesaĝo",
 "Connect your mail account" => "Konekti vian poŝtokonton",
 "Mail Address" => "Poŝtadreso",
 "IMAP Password" => "IMAP-pasvorto"

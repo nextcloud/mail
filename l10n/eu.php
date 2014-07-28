@@ -16,11 +16,10 @@
 "Download attachment" => "Deskargatu eranskina",
 "Save to Files" => "Gorde Fitxategiak-en",
 "Save all to Files" => "Gorde dena Fitxategiak-en",
+"Recipient" => "Ontzia",
 "Reply" => "Erantzun",
 "New Message" => "Mezu berria",
-"Recipient" => "Ontzia",
 "Subject" => "Gaia",
-"Message" => "Mezua",
 "Connect your mail account" => "Zure posta kontua konektatu",
 "Mail Address" => "Posta helbidea",
 "IMAP Password" => "IMAP pasahitza"

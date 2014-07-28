@@ -7,6 +7,5 @@
 "Reply" => "Äntwerten",
 "New Message" => "Neie Message",
 "Subject" => "Sujet",
-"Message" => "Message",
 "IMAP Password" => "IMAP Passwuert"
 );

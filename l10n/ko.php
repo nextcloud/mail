@@ -8,7 +8,6 @@
 "Reply" => "답장",
 "New Message" => "새 메시지",
 "Subject" => "제목",
-"Message" => "메시지",
 "Connect your mail account" => "메일 계정 연결",
 "Mail Address" => "메일 주소",
 "IMAP Password" => "IMAP 암호"

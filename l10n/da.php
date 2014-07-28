@@ -10,7 +10,6 @@
 "Reply" => "Besvar",
 "New Message" => "Ny Besked",
 "Subject" => "Emne",
-"Message" => "Besked",
 "Connect your mail account" => "Forbind din mail-konto",
 "Mail Address" => "Mail Adresse",
 "IMAP Password" => "IMAP Kodeord"

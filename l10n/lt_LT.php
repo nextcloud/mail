@@ -9,7 +9,6 @@
 "Reply" => "Atsakyti",
 "New Message" => "Naujas laiškas",
 "Subject" => "Tema",
-"Message" => "Žinutė",
 "Connect your mail account" => "Prijungti savo paštą",
 "Mail Address" => "Pašto adresas",
 "IMAP Password" => "IMAP slaptažodis"

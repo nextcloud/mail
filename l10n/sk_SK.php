@@ -9,7 +9,6 @@
 "Reply" => "Odpoveď",
 "New Message" => "Nová správa",
 "Subject" => "Predmet",
-"Message" => "Správa",
 "Connect your mail account" => "Pripojte sa k svojmu emailovému účtu",
 "Mail Address" => "Emailová adresa",
 "IMAP Password" => "IMAP heslo"

@@ -16,11 +16,10 @@
 "Download attachment" => "Скачать вложение",
 "Save to Files" => "Сохранить в Файлы",
 "Save all to Files" => "Сохранить всё в Файлы",
+"Recipient" => "Получатель",
 "Reply" => "Ответ",
 "New Message" => "Новое сообщение",
-"Recipient" => "Получатель",
 "Subject" => "Тема",
-"Message" => "Сообщение",
 "Connect your mail account" => "Подключите ваш почтовый аккаунт",
 "Mail Address" => "Почтовый адрес",
 "IMAP Password" => "Пароль IMAP"

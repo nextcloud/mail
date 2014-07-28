@@ -9,7 +9,6 @@
 "Reply" => "Одговор",
 "New Message" => "Нова порака",
 "Subject" => "Тема",
-"Message" => "Порака",
 "Connect your mail account" => "Поврзете се со вашата сметка за електронска пошта",
 "Mail Address" => "Адреса за електронска пошта",
 "IMAP Password" => "IMAP лозинка"

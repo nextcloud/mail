@@ -15,11 +15,10 @@
 "Download attachment" => "Stáhnout přílohu",
 "Save to Files" => "Uložit do Souborů",
 "Save all to Files" => "Uložit vše do Souborů",
+"Recipient" => "Příjemce",
 "Reply" => "Odpověď",
 "New Message" => "Nová zpráva",
-"Recipient" => "Příjemce",
 "Subject" => "Předmět",
-"Message" => "Zpráva",
 "Connect your mail account" => "Připojte se ke svému e-mailovému účtu",
 "Mail Address" => "E-mailová adresa",
 "IMAP Password" => "Heslo IMAP"

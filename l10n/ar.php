@@ -9,7 +9,6 @@
 "Reply" => "رد",
 "New Message" => "رسالة جديدة",
 "Subject" => "الموضوع",
-"Message" => "رسالة",
 "Connect your mail account" => "اتصل بـ حساب بريدك الالكتروني",
 "Mail Address" => "عنوان البريد",
 "IMAP Password" => "كلمة المرور الخاصة بـ IMAP"

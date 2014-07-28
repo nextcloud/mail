@@ -16,11 +16,10 @@
 "Download attachment" => "Download bijlage",
 "Save to Files" => "Opslaan in Bestanden",
 "Save all to Files" => "Alles opslaan in Bestanden",
+"Recipient" => "Ontvanger",
 "Reply" => "Antwoord",
 "New Message" => "Nieuw bericht",
-"Recipient" => "Ontvanger",
 "Subject" => "Onderwerp",
-"Message" => "Bericht",
 "Connect your mail account" => "Verbind uw e-mailaccount",
 "Mail Address" => "E-mailadres",
 "IMAP Password" => "IMAP wachtwoord"

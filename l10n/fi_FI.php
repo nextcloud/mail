@@ -13,11 +13,10 @@
 "Download attachment" => "Lataa liite",
 "Save to Files" => "Tallenna tiedostosovellukseen",
 "Save all to Files" => "Tallenna kaikki tiedostosovellukseen",
+"Recipient" => "Vastaanottaja",
 "Reply" => "Vastaa",
 "New Message" => "Uusi viesti",
-"Recipient" => "Vastaanottaja",
 "Subject" => "Aihe",
-"Message" => "Viesti",
 "Connect your mail account" => "Yhdistä sähköpostitilisi",
 "Mail Address" => "Sähköpostiosoite",
 "IMAP Password" => "IMAP-salasana"

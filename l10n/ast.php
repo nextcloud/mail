@@ -10,7 +10,6 @@
 "Reply" => "Rempuesta",
 "New Message" => "Mensaxe nuevu",
 "Subject" => "Asuntu",
-"Message" => "Mensaxe",
 "Connect your mail account" => "Coneuta la to cuenta de corréu",
 "Mail Address" => "Direición de corréu",
 "IMAP Password" => "Contraseña IMAP"

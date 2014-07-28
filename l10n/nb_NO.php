@@ -16,11 +16,10 @@
 "Download attachment" => "Laster ned vedlegg.",
 "Save to Files" => "Lagring til fil",
 "Save all to Files" => "Lagre all som filer",
+"Recipient" => "Mottaker",
 "Reply" => "Svar",
 "New Message" => "Ny melding",
-"Recipient" => "Mottaker",
 "Subject" => "Emne",
-"Message" => "Melding",
 "Connect your mail account" => "Koble til din epost-konto",
 "Mail Address" => "E-postadresse",
 "IMAP Password" => "IMAP-passord"

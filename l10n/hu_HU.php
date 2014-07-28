@@ -8,7 +8,6 @@
 "Reply" => "Válasz",
 "New Message" => "Új üzenet",
 "Subject" => "Tárgy",
-"Message" => "Üzenet",
 "Connect your mail account" => "Csatlakozás a postafiókodhoz",
 "Mail Address" => "E-mail cím",
 "IMAP Password" => "IMAP jelszó"

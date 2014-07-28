@@ -9,7 +9,6 @@
 "Reply" => "Răspunde",
 "New Message" => "Mesaj nou",
 "Subject" => "Subiect",
-"Message" => "Mesaj",
 "Connect your mail account" => "Conectează contul tău de email",
 "Mail Address" => "Adresă de email",
 "IMAP Password" => "Parolă IMAP"

@@ -8,7 +8,6 @@
 "Reply" => "Trả l",
 "New Message" => "Tin m",
 "Subject" => "Tiêu ",
-"Message" => "Tin nhắn",
 "Connect your mail account" => "Kết nối tới hòm thư của bạn",
 "Mail Address" => "Địa chỉ hòm th",
 "IMAP Password" => "Mật khẩu "

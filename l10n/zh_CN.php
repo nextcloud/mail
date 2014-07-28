@@ -8,11 +8,10 @@
 "Server Error" => "服务器错误",
 "Send" => "发送",
 "Auto detect failed. Please use manual mode." => "自动检测失败，请使用手动模式。",
+"Recipient" => "收件人",
 "Reply" => "回复",
 "New Message" => "新信件",
-"Recipient" => "收件人",
 "Subject" => "主题",
-"Message" => "消息",
 "Connect your mail account" => "连接您的邮件账户",
 "Mail Address" => "邮件地址",
 "IMAP Password" => "IMAP 密码"

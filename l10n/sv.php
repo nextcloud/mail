@@ -15,11 +15,10 @@
 "Download attachment" => "Ladda ner bilaga",
 "Save to Files" => "Spara till Filer",
 "Save all to Files" => "Spara allt till Filer",
+"Recipient" => "Mottagare",
 "Reply" => "Svara",
 "New Message" => "Nytt meddelande",
-"Recipient" => "Mottagare",
 "Subject" => "Rubrik",
-"Message" => "Meddelande",
 "Connect your mail account" => "Anslut ditt e-postkonto",
 "Mail Address" => "E-postadress",
 "IMAP Password" => "IMAP-lösenord"
