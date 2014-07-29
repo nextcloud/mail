@@ -18,11 +18,22 @@ $TRANSLATIONS = array(
 "Save to Files" => "Запази във Файлове",
 "Save all to Files" => "Запази всички във Файлове",
 "Recipient" => "Получател",
+"+ cc" => "+ cc",
+"cc" => "cc",
+"bcc" => "bcc",
+"Reply …" => "Отговори...",
 "Reply" => "Отговори",
+"Forward" => "Препрати",
 "New Message" => "Ново Съобщение",
+"+ cc/bcc" => "+ cc/bcc",
 "Subject" => "Относно",
+"Message …" => "Съобщение...",
 "Connect your mail account" => "Свържи имейла си",
 "Mail Address" => "Адрес на пощата",
-"IMAP Password" => "IMAP Парола"
+"IMAP Password" => "IMAP Парола",
+"Redirect Warning" => "Предупреждение за Пренасочване",
+"The previous page is sending you to %s." => "Предходната страница те праща към %s.",
+"If you do not want to visit that page, you can return to <a href=\"%s\">the mail app</a>." => "Ако не искаш да посетиш тази страници можеш да се върнеш към <a href=\"%s\">пощата</a>.",
+"Click here to visit the website." => "Натисни тук, за да посетиш интернет страницата."
 );
 $PLURAL_FORMS = "nplurals=2; plural=(n != 1);";

@@ -18,11 +18,22 @@ $TRANSLATIONS = array(
 "Save to Files" => "Opslaan in Bestanden",
 "Save all to Files" => "Alles opslaan in Bestanden",
 "Recipient" => "Ontvanger",
+"+ cc" => "+ cc",
+"cc" => "cc",
+"bcc" => "bcc",
+"Reply …" => "Antwoord …",
 "Reply" => "Antwoord",
+"Forward" => "Doorsturen",
 "New Message" => "Nieuw bericht",
+"+ cc/bcc" => "+ cc/bcc",
 "Subject" => "Onderwerp",
+"Message …" => "Bericht ...",
 "Connect your mail account" => "Verbind uw e-mailaccount",
 "Mail Address" => "E-mailadres",
-"IMAP Password" => "IMAP wachtwoord"
+"IMAP Password" => "IMAP wachtwoord",
+"Redirect Warning" => "Omleidingswaarschuwing",
+"The previous page is sending you to %s." => "De vorige pagina stuurt u naar %s",
+"If you do not want to visit that page, you can return to <a href=\"%s\">the mail app</a>." => "Als u die pagina niet wilt bezoeken, kunt u teruggaan naar <a href=\"%s\">de e-mail app</a>.",
+"Click here to visit the website." => "Klik hier om de website te bezoeken."
 );
 $PLURAL_FORMS = "nplurals=2; plural=(n != 1);";

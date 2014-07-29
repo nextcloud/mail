@@ -15,11 +15,18 @@ $TRANSLATIONS = array(
 "Save to Files" => "Tallenna tiedostosovellukseen",
 "Save all to Files" => "Tallenna kaikki tiedostosovellukseen",
 "Recipient" => "Vastaanottaja",
+"Reply …" => "Vastaa…",
 "Reply" => "Vastaa",
+"Forward" => "Välitä",
 "New Message" => "Uusi viesti",
 "Subject" => "Aihe",
+"Message …" => "Viesti…",
 "Connect your mail account" => "Yhdistä sähköpostitilisi",
 "Mail Address" => "Sähköpostiosoite",
-"IMAP Password" => "IMAP-salasana"
+"IMAP Password" => "IMAP-salasana",
+"Redirect Warning" => "Varoitus uudelleenohjauksesta",
+"The previous page is sending you to %s." => "Edellinen sivu pyrkii lähettämään sinut sivulle %s.",
+"If you do not want to visit that page, you can return to <a href=\"%s\">the mail app</a>." => "Jos et halua päätyä kyseiselle sivulle, voit palata <a href=\"%s\">sähköpostisovellukseen</a>.",
+"Click here to visit the website." => "Napsauta tästä siirtyäksesi verkkosivulle."
 );
 $PLURAL_FORMS = "nplurals=2; plural=(n != 1);";

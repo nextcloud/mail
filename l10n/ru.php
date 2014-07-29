@@ -18,11 +18,22 @@ $TRANSLATIONS = array(
 "Save to Files" => "Сохранить в Файлы",
 "Save all to Files" => "Сохранить всё в Файлы",
 "Recipient" => "Получатель",
+"+ cc" => "+ Копия",
+"cc" => "Копия",
+"bcc" => "Скрытая копия",
+"Reply …" => "Ответить ...",
 "Reply" => "Ответ",
+"Forward" => "Переслать",
 "New Message" => "Новое сообщение",
+"+ cc/bcc" => "+ Копия/Скрытая копия",
 "Subject" => "Тема",
+"Message …" => "Сообщение...",
 "Connect your mail account" => "Подключите ваш почтовый аккаунт",
 "Mail Address" => "Почтовый адрес",
-"IMAP Password" => "Пароль IMAP"
+"IMAP Password" => "Пароль IMAP",
+"Redirect Warning" => "Предупреждение перенаправления",
+"The previous page is sending you to %s." => "Предыдущая страница отправляет вас на %s.",
+"If you do not want to visit that page, you can return to <a href=\"%s\">the mail app</a>." => "Если вы не хотите посещать ту страницу, вы можете вернуться к <a href=\"%s\">почтовому приложению</a>.",
+"Click here to visit the website." => "Нажмите здесь чтобы посетить website."
 );
 $PLURAL_FORMS = "nplurals=3; plural=(n%10==1 && n%100!=11 ? 0 : n%10>=2 && n%10<=4 && (n%100<10 || n%100>=20) ? 1 : 2);";

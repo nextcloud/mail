@@ -18,11 +18,22 @@ $TRANSLATIONS = array(
 "Save to Files" => "Gorde Fitxategiak-en",
 "Save all to Files" => "Gorde dena Fitxategiak-en",
 "Recipient" => "Ontzia",
+"+ cc" => "+ cc",
+"cc" => "cc",
+"bcc" => "bcc",
+"Reply …" => "Erantzun...",
 "Reply" => "Erantzun",
+"Forward" => "Birbidali",
 "New Message" => "Mezu berria",
+"+ cc/bcc" => "+ cc/bcc",
 "Subject" => "Gaia",
+"Message …" => "Mezua...",
 "Connect your mail account" => "Zure posta kontua konektatu",
 "Mail Address" => "Posta helbidea",
-"IMAP Password" => "IMAP pasahitza"
+"IMAP Password" => "IMAP pasahitza",
+"Redirect Warning" => "Birbideratu abisua",
+"The previous page is sending you to %s." => "Aurreko orria bidaltzen ari zara %s-ri.",
+"If you do not want to visit that page, you can return to <a href=\"%s\">the mail app</a>." => "Ez baduzu nahi orri hori bisitatu, itzul zaitezke <a href=\"%s\">posta aplikaziora</a>.",
+"Click here to visit the website." => "Klikatu hemen web orria bisitatzeko."
 );
 $PLURAL_FORMS = "nplurals=2; plural=(n != 1);";

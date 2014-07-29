@@ -18,11 +18,16 @@ $TRANSLATIONS = array(
 "Save to Files" => "Lagring til fil",
 "Save all to Files" => "Lagre all som filer",
 "Recipient" => "Mottaker",
+"Reply …" => "Svar ...",
 "Reply" => "Svar",
+"Forward" => "Videresend",
 "New Message" => "Ny melding",
 "Subject" => "Emne",
+"Message …" => "Melding ...",
 "Connect your mail account" => "Koble til din epost-konto",
 "Mail Address" => "E-postadresse",
-"IMAP Password" => "IMAP-passord"
+"IMAP Password" => "IMAP-passord",
+"The previous page is sending you to %s." => "Den forrige siden sender deg til %s.",
+"Click here to visit the website." => "Trykk her for å besøke nettstedet."
 );
 $PLURAL_FORMS = "nplurals=2; plural=(n != 1);";

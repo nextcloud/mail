@@ -1,5 +1,6 @@
 <?php
 $TRANSLATIONS = array(
+"Mail" => "메일",
 "Error" => "오류",
 "Connecting ..." => "연결 중...",
 "Unknown error" => "알 수 없는 오류",
