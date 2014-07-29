@@ -82,29 +82,26 @@ class Attachment {
 
 		$this->mimePart = new \Horde_Mime_Part();
 
-		if ($tmp = $mimeHeaders->getValue('content-type', \Horde_Mime_Headers::VALUE_BASE)) {
-			$this->mimePart->setType($tmp);
+		// To prevent potential problems with the SOP we serve all files with the
+		// MIME type "application/octet-stream"
+		$this->mimePart->setType('application/octet-stream');
 
-			$contentTypeParameters = $mimeHeaders->getValue('content-type', \Horde_Mime_Headers::VALUE_PARAMS);
-			foreach ($contentTypeParameters as $key => $val) {
-				$this->mimePart->setContentTypeParameter($key, $val);
+		// Serve all files with a content-disposition of "attachment" to prevent Cross-Site Scripting
+		$this->mimePart->setDisposition('attachment');
+
+		// Extract headers from part
+		$vars = array(
+			'filename',
+		);
+		foreach ($mimeHeaders->getValue('content-disposition', \Horde_Mime_Headers::VALUE_PARAMS) as $key => $val) {
+			if(in_array($key, $vars)) {
+				$this->mimePart->setDispositionParameter($key, $val);
 			}
-		} else {
-			$this->mimePart->setType('application/octet-stream');
 		}
 
 		/* Content transfer encoding. */
 		if ($tmp = $mimeHeaders->getValue('content-transfer-encoding')) {
 			$this->mimePart->setTransferEncoding($tmp);
-		}
-
-		/* Content-Disposition. */
-		if ($tmp = $mimeHeaders->getValue('content-disposition', \Horde_Mime_Headers::VALUE_BASE)) {
-			$this->mimePart->setDisposition($tmp);
-
-			foreach ($mimeHeaders->getValue('content-disposition', \Horde_Mime_Headers::VALUE_PARAMS) as $key => $val) {
-				$this->mimePart->setDispositionParameter($key, $val);
-			}
 		}
 
 		$body = $fetch->getBodyPart($this->attachmentId);
