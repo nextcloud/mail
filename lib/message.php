@@ -147,9 +147,7 @@ class Message {
 		$fetch_query->envelope();
 		$fetch_query->structure();
 		$fetch_query->flags();
-		$fetch_query->seq();
 		$fetch_query->size();
-		$fetch_query->uid();
 		$fetch_query->imapDate();
 
 		$headers = array_merge($headers, array(

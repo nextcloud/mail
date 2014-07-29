@@ -8,7 +8,7 @@
 
 namespace OCA\Mail;
 
-use OCA\Mail\Cache\UserCache;
+use OCA\Mail\Cache\Cache;
 use OCA\Mail\Db\MailAccount;
 
 class Account {
@@ -62,7 +62,9 @@ class Account {
 				'secure' => $ssl_mode,
 				'timeout' => 2,
 				'cache' => array(
-					'backend' => new UserCache()
+					'backend' => new Cache(array(
+							'cacheob' => \OC::$server->getCache()
+						))
 				)
 			));
 		$client->login();
