@@ -216,6 +216,7 @@ button.control {
 .mail-message-body {
 	margin: 10px;
 	margin-left: 49px;
+	margin-bottom: 50px;
 }
 #mail-content iframe {
 	width: 100%;
@@ -225,6 +226,7 @@ button.control {
 .mail-signature a {
 	color: #07d;
 	border-bottom: 1px dotted #07d;
+	text-decoration: none;
 	word-wrap: break-word;
 }
 .mail-signature {

@@ -252,8 +252,11 @@ var Mail = {
 							mailBody.slideDown();
 							mailBody.parent().removeClass('unseen');
 
+							// HTML mail rendering
 							$('iframe').load(function() {
-								$(this).height( $(this).contents().find("html").height() + 10);
+								// Expand height to not have two scrollbars
+								$(this).height( $(this).contents().find("html").height() + 30);
+								// Fix styling
 								$(this).contents().find('body').css({
 									'margin': '0',
 									'font-weight': 'normal',
@@ -261,6 +264,18 @@ var Mail = {
 									'line-height': '1.6em',
 									'font-family': "'Open Sans', Frutiger, Calibri, 'Myriad Pro', Myriad, sans-serif",
 									'color': '#000'
+								});
+								// Fix font when different font is forced
+								$(this).contents().find('font').prop({
+									'face': 'Open Sans',
+									'color': '#000'
+								});
+								// Fix link styling
+								$(this).contents().find('a').css({
+									'color': '#07d',
+									'border-bottom': '1px dotted #07d',
+									'text-decoration': 'none',
+									'word-wrap': 'break-word'
 								});
 							});
 
