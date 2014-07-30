@@ -216,6 +216,7 @@ button.control {
 .mail-message-body {
 	margin: 10px;
 	margin-left: 49px;
+	margin-bottom: 50px;
 }
 #mail-content iframe {
 	width: 100%;
