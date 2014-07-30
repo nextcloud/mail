@@ -267,6 +267,13 @@ var Mail = {
 									'face': 'Open Sans',
 									'color': '#000'
 								});
+								// Fix link styling
+								$(this).contents().find('a').css({
+									'color': '#07d',
+									'border-bottom': '1px dotted #07d',
+									'text-decoration': 'none',
+									'word-wrap': 'break-word'
+								});
 							});
 
 						});
