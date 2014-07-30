@@ -38,6 +38,10 @@ var Mail = {
 				data:{},
 				type:'GET',
 				success:function (jsondata) {
+						// don't try to load accounts if there are none
+						if(jsondata.length === 0) {
+							return;
+						}
 						var source   = $("#mail-account-manager").html();
 						var template = Handlebars.compile(source);
 						var html = template(jsondata);
