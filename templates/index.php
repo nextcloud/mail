@@ -123,7 +123,7 @@
 	</div>
 </script>
 <script id="mail-attachment-template" type="text/x-handlebars-template">
-{{fileName}}
+{{fileName}} <div class="new-message-attachments-action svg icon-delete"></div>
 </script>
 <div id="app">
 	<div id="app-navigation" class="icon-loading">
@@ -149,11 +149,11 @@
 					placeholder="<?php p($l->t('Subject')); ?>" />
 				<textarea name="body" id="new-message-body"
 					placeholder="<?php p($l->t('Message …')); ?>"></textarea>
-				<div id="new-message-attachments">
-					<ul></ul>
-					<input type="button" id="mail_new_attachment" value="<?php p($l->t('Add attachment from Files')); ?>">
-					<input id="new-message-send" class="send" type="submit" value="<?php p($l->t('Send')) ?>">
-				</div>
+				<input id="new-message-send" class="send" type="submit" value="<?php p($l->t('Send')) ?>">
+			</div>
+			<div id="new-message-attachments">
+				<ul></ul>
+				<input type="button" id="mail_new_attachment" value="<?php p($l->t('Add attachment from Files')); ?>">
 			</div>
 		</form>
 

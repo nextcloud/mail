@@ -239,6 +239,23 @@ button.control {
 	opacity: .5;
 }
 
+
+
+#new-message-attachments {
+	display: none;
+	position: absolute;
+	width: 35%;
+	right: 0;
+	top: 0;
+	margin: 10px;
+}
+.new-message-attachments-action {
+	display: inline-block;
+	width: 24px;
+	height: 24px;
+	vertical-align: bottom
+}
+
 .mail-message-attachments {
 	margin-bottom: 20px;
 }

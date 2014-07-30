@@ -395,6 +395,7 @@ $(document).ready(function () {
 
 		$('#mail_new_message').hide();
 		$('#new-message-fields').slideDown();
+		$('#new-message-attachments').slideDown();
 	});
 
 	// Clicking on a folder loads the message list

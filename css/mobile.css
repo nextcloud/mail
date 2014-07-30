@@ -21,9 +21,16 @@
 	margin-left: 10px;
 }
 
-/*make sure text fields occupy full width */
+/* make sure text fields occupy full width */
 #new-message-fields,
 .reply-message-fields {
+	width: 100%;
+}
+
+/* position attachment picker below message fields */
+#new-message-attachments {
+	position: relative;
+	margin: 0;
 	width: 100%;
 }
 
