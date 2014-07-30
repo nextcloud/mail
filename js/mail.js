@@ -262,6 +262,11 @@ var Mail = {
 									'font-family': "'Open Sans', Frutiger, Calibri, 'Myriad Pro', Myriad, sans-serif",
 									'color': '#000'
 								});
+								// Fix font when different font is forced
+								$(this).contents().find('font').prop({
+									'face': 'Open Sans',
+									'color': '#000'
+								});
 							});
 
 						});
