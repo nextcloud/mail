@@ -42,7 +42,7 @@ var Mail = {
 						var template = Handlebars.compile(source);
 						var html = template(jsondata);
 						$('#accountManager').html(html);
-						Mail.UI.loadFoldersForAccount('allAccounts');
+						Mail.UI.loadFoldersForAccount(jsondata[0].accountId);
 				}
 			});
 		},
