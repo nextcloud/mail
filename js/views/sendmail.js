@@ -40,6 +40,8 @@ views.SendMail = Backbone.View.extend({
 		$('#cc').prop('disabled', true);
 		$('#bcc').prop('disabled', true);
 		$('#subject').prop('disabled', true);
+		$('.new-message-attachments-action').css('display', 'none');
+		$('#mail_new_attachment').prop('disabled', true);
 		newMessageBody.prop('disabled', true);
 		newMessageSend.prop('disabled', true);
 		newMessageSend.val(t('mail', 'Sending …'));
@@ -73,6 +75,8 @@ views.SendMail = Backbone.View.extend({
 				$('#cc').prop('disabled', false);
 				$('#bcc').prop('disabled', false);
 				$('#subject').prop('disabled', false);
+				$('.new-message-attachments-action').css('display', 'inline-block');
+				$('#mail_new_attachment').prop('disabled', false);
 				newMessageBody.prop('disabled', false);
 				newMessageSend.prop('disabled', false);
 				newMessageSend.val(t('mail', 'Send'));
