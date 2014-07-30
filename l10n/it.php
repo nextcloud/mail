@@ -18,11 +18,19 @@ $TRANSLATIONS = array(
 "Save to Files" => "Salva in File",
 "Save all to Files" => "Salva tutto in File",
 "Recipient" => "Destinatario",
+"+ cc" => "+ cc",
+"cc" => "cc",
+"bcc" => "ccn",
+"Reply …" => "Rispondi...",
 "Reply" => "Rispondi",
+"Forward" => "Inoltra",
 "New Message" => "Nuovo messaggio",
+"+ cc/bcc" => "+ cc/ccn",
 "Subject" => "Oggetto",
+"Message …" => "Messaggio…",
 "Connect your mail account" => "Connetti il tuo account di posta",
 "Mail Address" => "Indirizzo di posta",
-"IMAP Password" => "Password IMAP"
+"IMAP Password" => "Password IMAP",
+"Click here to visit the website." => "Fai clic qui per visitare il sito web."
 );
 $PLURAL_FORMS = "nplurals=2; plural=(n != 1);";

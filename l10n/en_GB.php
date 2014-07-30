@@ -18,11 +18,22 @@ $TRANSLATIONS = array(
 "Save to Files" => "Save to Files",
 "Save all to Files" => "Save all to Files",
 "Recipient" => "Recipient",
+"+ cc" => "+ cc",
+"cc" => "cc",
+"bcc" => "bcc",
+"Reply …" => "Reply…",
 "Reply" => "Reply",
+"Forward" => "Forward",
 "New Message" => "New Message",
+"+ cc/bcc" => "+ cc/bcc",
 "Subject" => "Subject",
+"Message …" => "Message…",
 "Connect your mail account" => "Connect your mail account",
 "Mail Address" => "Mail Address",
-"IMAP Password" => "IMAP Password"
+"IMAP Password" => "IMAP Password",
+"Redirect Warning" => "Redirect Warning",
+"The previous page is sending you to %s." => "The previous page is sending you to %s.",
+"If you do not want to visit that page, you can return to <a href=\"%s\">the mail app</a>." => "If you do not want to visit that page, you can return to <a href=\"%s\">the mail app</a>.",
+"Click here to visit the website." => "Click here to visit the website."
 );
 $PLURAL_FORMS = "nplurals=2; plural=(n != 1);";

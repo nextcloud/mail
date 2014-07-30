@@ -32,6 +32,8 @@ $TRANSLATIONS = array(
 "Mail Address" => "Adres mailowy",
 "IMAP Password" => "IMAP Hasło",
 "Redirect Warning" => "Ostrzeżenia przekierowania",
+"The previous page is sending you to %s." => "Poprzednia strona odsyła Cię do %s.",
+"If you do not want to visit that page, you can return to <a href=\"%s\">the mail app</a>." => "Jeśli nie chcesz odwiedzać tej strony, możesz wrócić <a href=\"%s\">aplikacji pocztowej</a>.",
 "Click here to visit the website." => "Kliknij tutaj aby przejść na stronę."
 );
 $PLURAL_FORMS = "nplurals=3; plural=(n==1 ? 0 : n%10>=2 && n%10<=4 && (n%100<10 || n%100>=20) ? 1 : 2);";
