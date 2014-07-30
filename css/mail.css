@@ -138,6 +138,10 @@ button.control {
 
 /* editor */
 
+#mail_new_message {
+	margin: 10px;
+}
+
 #new-message {
 	margin: 10px;
 	margin-left: 49px;
