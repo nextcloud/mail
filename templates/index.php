@@ -1,6 +1,6 @@
 <script id="mail-account-manager" type="text/x-handlebars-template">
 	<select class="mail_account">
-		<option value="allAccounts"><?php p($l->t('All accounts')) ?></option>
+		<!--<option value="allAccounts"><?php p($l->t('All accounts')) ?></option>-->
 		{{#each this}}
 		<option value="{{accountId}}">{{name}}</option>
 		{{/each}}
