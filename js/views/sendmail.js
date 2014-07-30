@@ -65,7 +65,7 @@ views.SendMail = Backbone.View.extend({
 			},
 			success:function () {
 				// close composer
-				$('#new-message-fields').slideUp();
+				$('#new-message').slideUp();
 				$('#mail_new_message').fadeIn();
 				// remove loading feedback
 				newMessageBody.removeClass('icon-loading');
