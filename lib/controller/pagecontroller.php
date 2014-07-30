@@ -60,6 +60,7 @@ class PageController extends Controller {
 		\OCP\Util::addScript('mail','backbone');
 		\OCP\Util::addScript('mail','models/attachment');
 		\OCP\Util::addScript('mail','views/attachment');
+		\OCP\Util::addScript('mail','views/sendmail');
 		\OCP\Util::addStyle('mail','mail');
 		\OCP\Util::addStyle('mail','mobile');
 

@@ -1,7 +1,5 @@
-/* global Mail, models, views */
+/* global Mail, views */
 $(function () {
-
-	var attachments = new models.Attachments();
 
 	function split(val) {
 		return val.split(/,\s*/);
@@ -96,10 +94,9 @@ $(function () {
 		$('#reply-message-cc-bcc #cc').focus();
 	});
 
-	// setup attachment view
-	var view = new views.Attachments({
-		el: $('#new-message-attachments'),
-		collection: attachments
+	// setup sendmail view
+	var view = new views.SendMail({
+		el: $('#new-message')
 	});
 
 	// And render it

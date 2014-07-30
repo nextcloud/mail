@@ -123,7 +123,7 @@
 	</div>
 </script>
 <script id="mail-attachment-template" type="text/x-handlebars-template">
-{{fileName}} <div class="new-message-attachments-action svg icon-delete"></div>
+{{fileName}} <div class="new-message-attachments-action svg icon-delete" data-attachment-id="{{id}}"></div>
 </script>
 <div id="app">
 	<div id="app-navigation" class="icon-loading">
@@ -131,10 +131,10 @@
 		<div id="folders"></div>
 	</div>
 	<div id="app-content"  class="icon-loading">
-		<form id="new-message">
-			<input type="button" id="mail_new_message" value="<?php p($l->t('New Message')); ?>" style="display: none">
+		<input type="button" id="mail_new_message" value="<?php p($l->t('New Message')); ?>" style="display: none">
+		<div id="new-message" style="display: none">
 
-			<div id="new-message-fields" style="display: none">
+			<div id="new-message-fields">
 				<input type="text" name="to" id="to"
 					placeholder="<?php p($l->t('Recipient')); ?>" />
 				<a href="#" id="new-message-cc-bcc-toggle"
@@ -155,7 +155,7 @@
 				<ul></ul>
 				<input type="button" id="mail_new_attachment" value="<?php p($l->t('Add attachment from Files')); ?>">
 			</div>
-		</form>
+		</div>
 
 		<div id="mail_messages"></div>
 

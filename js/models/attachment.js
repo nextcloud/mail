@@ -3,6 +3,9 @@ var models = {};
 
 models.Attachment = Backbone.Model.extend({
 
+	initialize: function () {
+		this.set('id', _.uniqueId());
+	}
 });
 
 models.Attachments = Backbone.Collection.extend({

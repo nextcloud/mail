@@ -1,4 +1,4 @@
-/* global Backbone, Handlebars, Mail */
+/* global Backbone, Handlebars */
 
 var views = {};
 
@@ -29,7 +29,7 @@ views.Attachments = Backbone.View.extend({
 
 	events: {
 		"click #mail_new_attachment" : "addAttachment",
-		"click #new-message-send" : "sendMail"
+		"click .new-message-attachments-action" : "removeAttachment"
 	},
 
 	initialize: function(options) {
@@ -42,6 +42,8 @@ views.Attachments = Backbone.View.extend({
 		this.collection.bind('reset', this.render);
 		this.collection.bind('add', this.render);
 		this.collection.bind('remove', this.render);
+
+
 	},
 
 	addAttachment: function() {
@@ -57,62 +59,10 @@ views.Attachments = Backbone.View.extend({
 			});
 	},
 
-	sendMail: function() {
-		//
-		// TODO:
-		//  - input validation
-		//  - feedback on success
-		//  - undo lie - very important
-		//
+	removeAttachment: function(event) {
+		var model = this.collection.get($(event.target).data('attachmentId'));
+		this.collection.remove(model);
 
-		// loading feedback: show spinner and disable elements
-		var newMessageBody = $('#new-message-body');
-		var newMessageSend = $('#new-message-send');
-		newMessageBody.addClass('icon-loading');
-		$('#to').prop('disabled', true);
-		$('#cc').prop('disabled', true);
-		$('#bcc').prop('disabled', true);
-		$('#subject').prop('disabled', true);
-		newMessageBody.prop('disabled', true);
-		newMessageSend.prop('disabled', true);
-		newMessageSend.val(t('mail', 'Sending …'));
-
-		var self = this;
-		// send the mail
-		$.ajax({
-			url:OC.generateUrl('/apps/mail/accounts/{accountId}/send', {accountId: Mail.State.currentAccountId}),
-			beforeSend:function () {
-//				$('#wait').show();
-			},
-			type: 'POST',
-			complete:function () {
-//				$('#wait').hide();
-			},
-			data:{
-				'to':$('#to').val(),
-				'cc':$('#cc').val(),
-				'bcc':$('#bcc').val(),
-				'subject':$('#subject').val(),
-				'body':newMessageBody.val(),
-				'attachments': self.collection.toJSON()
-			},
-			success:function () {
-				// close composer
-				$('#new-message-fields').slideUp();
-				$('#mail_new_message').fadeIn();
-				// remove loading feedback
-				newMessageBody.removeClass('icon-loading');
-				$('#to').prop('disabled', false);
-				$('#cc').prop('disabled', false);
-				$('#bcc').prop('disabled', false);
-				$('#subject').prop('disabled', false);
-				newMessageBody.prop('disabled', false);
-				newMessageSend.prop('disabled', false);
-				newMessageSend.val(t('mail', 'Send'));
-			}
-		});
-
-		return false;
 	},
 
 	render: function() {
