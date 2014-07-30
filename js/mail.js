@@ -183,7 +183,7 @@ var Mail = {
 
 		saveAttachment: function(messageId, attachmentId) {
 			OC.dialogs.filepicker(
-				t('mail', 'Choose a folder store the attachment'),
+				t('mail', 'Choose a folder to store the attachment in'),
 				function (path) {
 					$.ajax(
 						OC.generateUrl(
