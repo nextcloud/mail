@@ -19,8 +19,7 @@
 }
 
 .mail_account {
-	padding: 11px 12px;
-	border-bottom: 1px solid #ddd;
+	width: 100%;
 }
 
 button.control {
