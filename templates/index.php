@@ -123,7 +123,7 @@
 	</div>
 </script>
 <script id="mail-attachment-template" type="text/x-handlebars-template">
-{{fileName}} <div class="new-message-attachments-action svg icon-delete" data-attachment-id="{{id}}"></div>
+<span>{{displayName}}</span><div class="new-message-attachments-action svg icon-delete" data-attachment-id="{{id}}"></div>
 </script>
 <div id="app">
 	<div id="app-navigation" class="icon-loading">
