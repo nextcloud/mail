@@ -25,6 +25,7 @@ namespace OCA\Mail\Controller;
 use Horde_Imap_Client_Socket;
 use OCA\Mail\Account;
 use OCA\Mail\Db\MailAccount;
+use OCA\Mail\Helper\MimeMail;
 use OCA\Mail\Service\ContactsIntegration;
 use OCP\AppFramework\Controller;
 use OCP\AppFramework\Db\DoesNotExistException;
@@ -224,8 +225,10 @@ class AccountsController extends Controller
 			$transport = $account->createTransport();
 			$mail->send($transport);
 
-//			$sentFolder = $account->getSentFolder();
-//			$sentFolder->saveMessage($to, $headers, $mimeBody);
+			$sentFolder = $account->getSentFolder();
+			$raw = stream_get_contents($mail->getRaw());
+
+			$sentFolder->saveMessage($raw);
 
 		} catch (\Horde_Mail_Exception $ex) {
 			return new JSONResponse(
