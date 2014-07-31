@@ -41,7 +41,7 @@
 				<div class="avatar" data-user="{{from}}" data-size="32"></div>
 				{{/if}}
 			</div>
-			<div class="mail_message_summary_from" title="fromEmail">{{from}}</div>
+			<div class="mail_message_summary_from" title="{{fromEmail}}">{{from}}</div>
 			<div class="mail_message_summary_subject">{{subject}}</div>
 			<div class="date">
 					<span class="modified"
