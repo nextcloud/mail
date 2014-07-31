@@ -1,4 +1,4 @@
-/* global Mail */
+/* global Mail, views */
 $(function () {
 
 	function split(val) {
@@ -19,7 +19,7 @@ $(function () {
 		.autocomplete({
 			source:function (request, response) {
 				$.getJSON(
-					OC.filePath('mail', 'ajax', 'receivers.php'),
+					OC.generateUrl('/apps/mail/accounts/autoComplete'),
 					{
 						term:extractLast(request.term)
 					}, response);
@@ -94,62 +94,11 @@ $(function () {
 		$('#reply-message-cc-bcc #cc').focus();
 	});
 
-
-	$(document).on('click', '#new-message-send', function () {
-		//
-		// TODO:
-		//  - input validation
-		//  - feedback on success
-		//  - undo lie - very important
-		//
-
-		// loading feedback: show spinner and disable elements
-		var newMessageBody = $('#new-message-body');
-		var newMessageSend = $('#new-message-send');
-		newMessageBody.addClass('icon-loading');
-		$('#to').prop('disabled', true);
-		$('#cc').prop('disabled', true);
-		$('#bcc').prop('disabled', true);
-		$('#subject').prop('disabled', true);
-		newMessageBody.prop('disabled', true);
-		newMessageSend.prop('disabled', true);
-		newMessageSend.val(t('mail', 'Sending …'));
-
-		// send the mail
-		$.ajax({
-			url:OC.generateUrl('/apps/mail/accounts/{accountId}/send', {accountId: Mail.State.currentAccountId}),
-			beforeSend:function () {
-//				$('#wait').show();
-			},
-			type: 'POST',
-			complete:function () {
-//				$('#wait').hide();
-			},
-			data:{
-				'to':$('#to').val(),
-				'cc':$('#cc').val(),
-				'bcc':$('#bcc').val(),
-				'subject':$('#subject').val(),
-				'body':newMessageBody.val()
-			},
-			success:function () {
-				// close composer
-				$('#new-message-fields').slideUp();
-				$('#mail_new_message').fadeIn();
-				// remove loading feedback
-				newMessageBody.removeClass('icon-loading');
-				$('#to').prop('disabled', false);
-				$('#cc').prop('disabled', false);
-				$('#bcc').prop('disabled', false);
-				$('#subject').prop('disabled', false);
-				newMessageBody.prop('disabled', false);
-				newMessageSend.prop('disabled', false);
-				newMessageSend.val(t('mail', 'Send'));
-			}
-		});
-
-		return false;
+	// setup sendmail view
+	var view = new views.SendMail({
+		el: $('#new-message')
 	});
 
-
+	// And render it
+	view.render();
 });

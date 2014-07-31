@@ -22,7 +22,7 @@
  */
 
 
-namespace OCA\Mail;
+namespace OCA\Mail\Http;
 
 use OCP\AppFramework\Http\DownloadResponse;
 

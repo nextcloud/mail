@@ -122,17 +122,19 @@
 		</div>
 	</div>
 </script>
-
+<script id="mail-attachment-template" type="text/x-handlebars-template">
+<span>{{displayName}}</span><div class="new-message-attachments-action svg icon-delete" data-attachment-id="{{id}}"></div>
+</script>
 <div id="app">
 	<div id="app-navigation" class="icon-loading">
 		<div id="accountManager"></div>
 		<div id="folders"></div>
 	</div>
 	<div id="app-content"  class="icon-loading">
-		<form id="new-message">
-			<input type="button" id="mail_new_message" value="<?php p($l->t('New Message')); ?>" style="display: none">
+		<input type="button" id="mail_new_message" value="<?php p($l->t('New Message')); ?>" style="display: none">
+		<div id="new-message" style="display: none">
 
-			<div id="new-message-fields" style="display: none">
+			<div id="new-message-fields">
 				<input type="text" name="to" id="to"
 					placeholder="<?php p($l->t('Recipient')); ?>" />
 				<a href="#" id="new-message-cc-bcc-toggle"
@@ -147,11 +149,13 @@
 					placeholder="<?php p($l->t('Subject')); ?>" />
 				<textarea name="body" id="new-message-body"
 					placeholder="<?php p($l->t('Message …')); ?>"></textarea>
-				<input id="new-message-send" class="send" type="submit"
-					value="<?php p($l->t('Send')) ?>">
+				<input id="new-message-send" class="send" type="submit" value="<?php p($l->t('Send')) ?>">
 			</div>
-			<!-- TODO: add attachment picker -->
-		</form>
+			<div id="new-message-attachments">
+				<ul></ul>
+				<input type="button" id="mail_new_attachment" value="<?php p($l->t('Add attachment from Files')); ?>">
+			</div>
+		</div>
 
 		<div id="mail_messages"></div>
 

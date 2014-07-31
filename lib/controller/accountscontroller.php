@@ -25,6 +25,7 @@ namespace OCA\Mail\Controller;
 use Horde_Imap_Client_Socket;
 use OCA\Mail\Account;
 use OCA\Mail\Db\MailAccount;
+use OCA\Mail\Service\ContactsIntegration;
 use OCP\AppFramework\Controller;
 use OCP\AppFramework\Db\DoesNotExistException;
 use OCP\AppFramework\Http\JSONResponse;
@@ -44,10 +45,22 @@ class AccountsController extends Controller
 	 */
 	private $currentUserId;
 
-	public function __construct($appName, $request, $mailAccountMapper, $currentUserId){
+	/**
+	 * @var ContactsIntegration
+	 */
+	private $contactsIntegration;
+
+	/**
+	 * @var \OCP\Files\Folder
+	 */
+	private $userFolder;
+
+	public function __construct($appName, $request, $mailAccountMapper, $currentUserId, $userFolder, $contactsIntegration){
 		parent::__construct($appName, $request);
 		$this->mapper = $mailAccountMapper;
 		$this->currentUserId = $currentUserId;
+		$this->userFolder = $userFolder;
+		$this->contactsIntegration = $contactsIntegration;
 	}
 
 	/**
@@ -140,6 +153,10 @@ class AccountsController extends Controller
 			HTTP::STATUS_BAD_REQUEST);
 	}
 
+	/**
+	 * @param int $accountId
+	 * @return JSONResponse
+	 */
 	public function send($accountId) {
 
 		$subject = $this->params('subject');
@@ -177,16 +194,56 @@ class AccountsController extends Controller
 			$to = $message->getToEmail();
 		}
 
+		// build mime body
+		$p = new \Horde_Mime_Part();
+		$p->setContents($body);
+		$p->setType('text/plain');
+		$attachments = $this->params('attachments');
+		if (is_array($attachments)) {
+			$p->setType('multipart');
+			foreach($attachments as $attachment) {
+				$fileName = $attachment['fileName'];
+				if ($this->userFolder->nodeExists($fileName)) {
+					$f = $this->userFolder->get($fileName);
+					if ($f instanceof \OCP\Files\File) {
+						$a = new \Horde_Mime_Part();
+						$a->setName($f->getName());
+						$a->setContents($f->getContent());
+						$a->setType($f->getMimeType());
+						$p->addPart($a);
+					}
+				}
+			}
+		}
+
+		$mimeBody = $p->toString();
 		// create transport and send
-		$transport = $account->createTransport();
-		$transport->send($to, $headers, $body);
+		try {
+			$transport = $account->createTransport();
+			$transport->send($to, $headers, $mimeBody);
+
+			$sentFolder = $account->getSentFolder();
+			$sentFolder->saveMessage($to, $headers, $mimeBody);
+
+		} catch (\Horde_Mail_Exception $ex) {
+			return new JSONResponse(
+				array('message' => $ex->getMessage()),
+				Http::STATUS_INTERNAL_SERVER_ERROR
+			);
+		}
 
 		//
-		// TODO: save message to 'Sent' folder
 		// TODO: remove from drafts folder as well
 		//
 
 		return new JSONResponse();
+	}
+
+	/**
+	 * @param $term
+	 */
+	public function autoComplete($term) {
+		return $this->contactsIntegration->getMatchingRecipient( $term );
 	}
 
 	/**

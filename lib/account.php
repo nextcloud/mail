@@ -125,4 +125,12 @@ class Account {
 		//
 		return new \Horde_Mail_Transport_Sendmail();
 	}
+
+	public function getSentFolder() {
+		//
+		// TODO: read settings/server special folders how the sent folder is named
+		//
+		$conn = $this->getImapConnection();
+		return new Mailbox($conn, 'Sent');
+	}
 }

@@ -408,7 +408,8 @@ $(document).ready(function () {
 		$('#new-message-body').val('');
 
 		$('#mail_new_message').hide();
-		$('#new-message-fields').slideDown();
+		$('#new-message').slideDown();
+		$('#to').focus();
 	});
 
 	// Clicking on a folder loads the message list

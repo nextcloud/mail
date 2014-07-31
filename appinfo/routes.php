@@ -12,6 +12,7 @@ $app->registerRoutes($this,
 		'routes' => array(
 			array('name' => 'page#index', 'url' => '/', 'verb' => 'GET'),
 			array('name' => 'accounts#send', 'url' => '/accounts/{accountId}/send', 'verb' => 'POST'),
+			array('name' => 'accounts#autoComplete', 'url' => '/accounts/autoComplete', 'verb' => 'GET'),
 			array(
 				'name' => 'messages#downloadAttachment',
 				'url' => '/accounts/{accountId}/folders/{folderId}/messages/{messageId}/attachment/{attachmentId}',
