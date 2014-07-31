@@ -193,37 +193,39 @@ class AccountsController extends Controller
 			$headers['In-Reply-To'] = $message->getMessageId();
 			$to = $message->getToEmail();
 		}
+		$headers['To'] = $to;
 
 		// build mime body
-		$p = new \Horde_Mime_Part();
-		$p->setContents($body);
-		$p->setType('text/plain');
+		$mail = new \Horde_Mime_Mail();
+		$mail->addHeaders($headers);
+		$mail->setBody($body);
+
 		$attachments = $this->params('attachments');
 		if (is_array($attachments)) {
-			$p->setType('multipart');
 			foreach($attachments as $attachment) {
 				$fileName = $attachment['fileName'];
 				if ($this->userFolder->nodeExists($fileName)) {
 					$f = $this->userFolder->get($fileName);
 					if ($f instanceof \OCP\Files\File) {
 						$a = new \Horde_Mime_Part();
+						$a->setCharset('us-ascii');
+						$a->setDisposition('attachment');
 						$a->setName($f->getName());
 						$a->setContents($f->getContent());
 						$a->setType($f->getMimeType());
-						$p->addPart($a);
+						$mail->addMimePart($a);
 					}
 				}
 			}
 		}
 
-		$mimeBody = $p->toString();
 		// create transport and send
 		try {
 			$transport = $account->createTransport();
-			$transport->send($to, $headers, $mimeBody);
+			$mail->send($transport);
 
-			$sentFolder = $account->getSentFolder();
-			$sentFolder->saveMessage($to, $headers, $mimeBody);
+//			$sentFolder = $account->getSentFolder();
+//			$sentFolder->saveMessage($to, $headers, $mimeBody);
 
 		} catch (\Horde_Mail_Exception $ex) {
 			return new JSONResponse(
