@@ -3,7 +3,6 @@ $TRANSLATIONS = array(
 "Mail" => "Elektronska pošta",
 "Error" => "Napaka",
 "Error while deleting mail." => "Prišlo je do napake med brisanjems sporočil.",
-"Choose a folder store the attachment" => "Izbor mape za shranjevanje prilog.",
 "Attachment(s) saved to Files." => "Priloge so shranjene v mapo datotek.",
 "Error while saving attachment(s) to Files." => "Napaka med shranjevanjem prilog v mapo datotek.",
 "Error while loading mail message." => "Napaka med nalaganjem sporočila elektronske pošte.",

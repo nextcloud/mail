@@ -3,7 +3,6 @@ $TRANSLATIONS = array(
 "Mail" => "Поща",
 "Error" => "Грешка",
 "Error while deleting mail." => "Грешка при изтриването на имейла.",
-"Choose a folder store the attachment" => "Избери папка, където да бъзе запазен прикаченият файл",
 "Attachment(s) saved to Files." => "Прикаченият файл(ове) запазен във Файлове.",
 "Error while saving attachment(s) to Files." => "Грешка при запазване на прикачения файл(ове) във Файлове.",
 "Error while loading mail message." => "Грешка при зареждане на имейл съобщение.",

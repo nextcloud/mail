@@ -3,7 +3,6 @@ $TRANSLATIONS = array(
 "Mail" => "EMail",
 "Error" => "Erro",
 "Error while deleting mail." => "Erro enquanto excluia email.",
-"Choose a folder store the attachment" => "Escolha uma pasta para armazenar o anexo",
 "Attachment(s) saved to Files." => "Anexo(s) salvos para Arquivo.",
 "Error while saving attachment(s) to Files." => "Erro enquanto salvava anexo(s) para Arquivos",
 "Error while loading mail message." => "Erro enquanto carregava mensagem de email.",

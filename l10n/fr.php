@@ -3,7 +3,6 @@ $TRANSLATIONS = array(
 "Mail" => "Mail",
 "Error" => "Erreur",
 "Error while deleting mail." => "Erreur lors de la suppression du courriel.",
-"Choose a folder store the attachment" => "Choisissez un dossier pour archiver les pièces-jointes.",
 "Connecting ..." => "Connexion ...",
 "Unknown error" => "Erreur inconnue",
 "Connect" => "Connecter",

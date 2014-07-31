@@ -3,7 +3,6 @@ $TRANSLATIONS = array(
 "Mail" => "メール",
 "Error" => "エラー",
 "Error while deleting mail." => "メールの削除中にエラーが発生",
-"Choose a folder store the attachment" => "添付ファイルを保存するフォルダを選択",
 "Attachment(s) saved to Files." => "添付ファイルを保存しました。",
 "Error while saving attachment(s) to Files." => "添付ファイルの保存中にエラーが発生しました。",
 "Error while loading mail message." => "メールメッセージの読み込みエラー",

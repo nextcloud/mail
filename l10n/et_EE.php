@@ -3,7 +3,6 @@ $TRANSLATIONS = array(
 "Mail" => "Kirjad",
 "Error" => "Viga",
 "Error while deleting mail." => "Viga ilmnes kirja kustutamisel.",
-"Choose a folder store the attachment" => "Vali manuse salvestamiseks kaust.",
 "Attachment(s) saved to Files." => "Manus(ed) on salvestatud failidesse.",
 "Error while saving attachment(s) to Files." => "Viga ilmnes manus(te) salvestamisel failidesse.",
 "Error while loading mail message." => "Viga ilmnes kirja laadimisel.",

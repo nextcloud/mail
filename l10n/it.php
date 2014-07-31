@@ -3,7 +3,6 @@ $TRANSLATIONS = array(
 "Mail" => "Posta",
 "Error" => "Errore",
 "Error while deleting mail." => "Errore durante l'eliminazione delle email",
-"Choose a folder store the attachment" => "Scegli una cartella dove salvare l'allegato",
 "Attachment(s) saved to Files." => "Allegati salvati in File.",
 "Error while saving attachment(s) to Files." => "Errore durante il salvataggio degli allegati in File.",
 "Error while loading mail message." => "Errore durante il caricamento del messaggio.",
@@ -31,6 +30,9 @@ $TRANSLATIONS = array(
 "Connect your mail account" => "Connetti il tuo account di posta",
 "Mail Address" => "Indirizzo di posta",
 "IMAP Password" => "Password IMAP",
+"Redirect Warning" => "Avviso di redirezione",
+"The previous page is sending you to %s." => "La pagina precedente ti sta inviando su %s.",
+"If you do not want to visit that page, you can return to <a href=\"%s\">the mail app</a>." => "Se non vuoi visitare tale pagina, puoi tornare all'<a href=\"%s\">applicazione di posta</a>.",
 "Click here to visit the website." => "Fai clic qui per visitare il sito web."
 );
 $PLURAL_FORMS = "nplurals=2; plural=(n != 1);";

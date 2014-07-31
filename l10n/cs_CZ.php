@@ -3,7 +3,6 @@ $TRANSLATIONS = array(
 "Mail" => "Pošta",
 "Error" => "Chyba",
 "Error while deleting mail." => "Chyba při mazání e-mailu.",
-"Choose a folder store the attachment" => "Vybrat adresář pro uložení přílohy",
 "Attachment(s) saved to Files." => "Příloha(y) uložena do Souborů.",
 "Error while saving attachment(s) to Files." => "Chyba při ukládání příloh(y) do Souborů.",
 "Error while loading mail message." => "Chyba během načítání e-mailů.",

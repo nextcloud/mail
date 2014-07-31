@@ -3,7 +3,6 @@ $TRANSLATIONS = array(
 "Mail" => "Posta",
 "Error" => "Errorea",
 "Error while deleting mail." => "Errorea mezua ezabatzean",
-"Choose a folder store the attachment" => "Aukeratu karpeta bat eranskina gordetzeko",
 "Attachment(s) saved to Files." => "Eranskina(k) gordeta Fitxategiak-en",
 "Error while saving attachment(s) to Files." => "Errorea eranskina(k) Fitxategiak-en gordetzean",
 "Error while loading mail message." => "Errorea posta mezua kargatzean",

@@ -3,7 +3,6 @@ $TRANSLATIONS = array(
 "Mail" => "Ταχυδρομείο",
 "Error" => "Σφάλμα",
 "Error while deleting mail." => "Σφάλμα κατά την διαγραφή του mail.",
-"Choose a folder store the attachment" => "Επιλέξτε έναν φάκελο για να αποθηκεύσετε το συνημένο",
 "Attachment(s) saved to Files." => "Το(-α) συνημένο(-α) αποθηκεύτηκαν στα Έγγραφα.",
 "Error while saving attachment(s) to Files." => "Σφάλμα κατά την αποθήκευση συνημένου(-ων) στα Έγγραφα.",
 "Error while loading mail message." => "Σφάλμα κατά την φόρτωση μυνημάτος ηλεκτρονικού ταχυδρομείου",

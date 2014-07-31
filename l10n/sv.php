@@ -3,7 +3,6 @@ $TRANSLATIONS = array(
 "Mail" => "Post",
 "Error" => "Fel",
 "Error while deleting mail." => "Ett fel uppstod när mailet skulle raderas.",
-"Choose a folder store the attachment" => "Välj en mapp för att spara bilagan",
 "Attachment(s) saved to Files." => "Bilagor sparades till Filer",
 "Error while saving attachment(s) to Files." => "Fel när bilagor skulle sparas till Filer",
 "Error while loading mail message." => "Fel när mailmeddelandet skulle laddas.",

@@ -3,7 +3,6 @@ $TRANSLATIONS = array(
 "Mail" => "E-post",
 "Error" => "Feil",
 "Error while deleting mail." => "Kan ikke slette e-post.",
-"Choose a folder store the attachment" => "Velg en mappe for lagring av vedlegg.",
 "Attachment(s) saved to Files." => "Vedlegg(ene) er lager som filer.",
 "Error while saving attachment(s) to Files." => "Feil ved lagring av vedlegg(ene) til mappen.",
 "Error while loading mail message." => "Feil ved henting av e-post.",
