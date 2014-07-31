@@ -100,12 +100,13 @@
 		</div>
 
 		<div class="reply-message-fields">
+			<a href="#" id="reply-message-cc-bcc-toggle"
+					class="transparency"><?php p($l->t('+ cc')); ?></a>
+
 			<input type="text" name="to" id="to"
 				placeholder="<?php p($l->t('Recipient')); ?>"
 				value="{{fromEmail}}"/>
 
-			<a href="#" id="reply-message-cc-bcc-toggle"
-					class="transparency"><?php p($l->t('+ cc')); ?></a>
 			<div id="reply-message-cc-bcc"
 				{{#unless cc}}
 				class="hidden"
@@ -140,10 +141,10 @@
 		<div id="new-message" style="display: none">
 
 			<div id="new-message-fields">
-				<input type="text" name="to" id="to"
-					placeholder="<?php p($l->t('Recipient')); ?>" />
 				<a href="#" id="new-message-cc-bcc-toggle"
 					class="transparency"><?php p($l->t('+ cc/bcc')); ?></a>
+				<input type="text" name="to" id="to"
+					placeholder="<?php p($l->t('Recipient')); ?>" />
 				<div id="new-message-cc-bcc">
 					<input type="text" name="cc" id="cc"
 						placeholder="<?php p($l->t('cc')); ?>" />
