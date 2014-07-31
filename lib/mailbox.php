@@ -148,24 +148,13 @@ class Mailbox {
 	}
 
 	/**
-	 * @param string $to
-	 * @param array $headers
-	 * @param string $body
+	 * @param string $rawBody
 	 */
-	public function saveMessage($to, $headers, $body) {
-		$h = new Horde_Mime_Headers();
-		$h->addHeader('to', $to);
-
-		foreach($headers as $k => $v) {
-			$h->addHeader($k, $v);
-		}
-
-		$data = $h->toString();
-		$data .= $body;
+	public function saveMessage($rawBody) {
 
 		$this->conn->append($this->folderId, array(
 			array(
-				'data' => $data,
+				'data' => $rawBody,
 				'flags' => array(Horde_Imap_Client::FLAG_SEEN)
 			)
 		));

@@ -7,6 +7,7 @@ $l = OC_L10N::get('mail');
 
 // bypass Horde Translation system
 Horde_Translation::setHandler('Horde_Imap_Client', new HordeTranslationHandler());
+Horde_Translation::setHandler('Horde_Mime', new HordeTranslationHandler());
 
 OCP\App::addNavigationEntry(array(
   'id' => 'mail',
