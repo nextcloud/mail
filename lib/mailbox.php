@@ -103,9 +103,28 @@ class Mailbox {
 		$display_name = $this->getDisplayName();
 		try {
 			$status = $this->getStatus();
-			return array('id' => $this->folderId, 'name' => $display_name, 'unseen' => $status['unseen'], 'total' => $status['messages']);
+			$unseen = $status['unseen'];
+			$total = $status['messages'];
+			if ($this->isTrash()) {
+				$unseen = 0;
+			}
+			$isEmpty = ($total === 0);
+			return array(
+				'id' => $this->folderId,
+				'name' => $display_name,
+				'unseen' => $unseen,
+				'total' => $total,
+				'isEmpty' => $isEmpty
+			);
 		} catch (\Horde_Imap_Client_Exception $e) {
-			return array('id' => $this->folderId, 'name' => $display_name, 'unseen' => 0, 'total' => 0, 'error' => $e->getMessage());
+			return array(
+				'id' => $this->folderId,
+				'name' => $display_name,
+				'unseen' => 0,
+				'total' => 0,
+				'error' => $e->getMessage(),
+				'isEmpty' => true
+			);
 		}
 	}
 
@@ -150,6 +169,13 @@ class Mailbox {
 				'flags' => array(Horde_Imap_Client::FLAG_SEEN)
 			)
 		));
+	}
+
+	private function isTrash() {
+		//
+		// TODO: where is the trash
+		//
+		return ($this->folderId === 'Trash');
 	}
 
 }

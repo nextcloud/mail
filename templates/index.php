@@ -12,7 +12,12 @@
 		<ul class="mail_folders" data-account_id="{{id}}">
 			{{#each folders}}
 			<li data-folder_id="{{id}}"
-			{{#if unseen}} class="unread"{{/if}}
+			{{#if unseen}}
+			class="unread"
+			{{/if}}
+			{{#if isEmpty}}
+			class="empty"
+			{{/if}}
 			>
 			<a>
 				{{name}}
