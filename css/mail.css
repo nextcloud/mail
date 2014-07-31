@@ -60,11 +60,16 @@ button.control {
 }
 
 
+/* app navigation */
 #app-navigation .utils {
 	padding: 0 7px;
 }
 
+#app-navigation .empty {
+	display: none;
+}
 
+/* app content*/
 #mail_messages {
 	padding-bottom: 250px;
 }
