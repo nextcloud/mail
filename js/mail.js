@@ -270,6 +270,10 @@ var Mail = {
 									'face': 'Open Sans',
 									'color': '#000'
 								});
+								$(this).contents().find('.moz-text-flowed').css({
+									'font-family': 'inherit',
+									'font-size': 'inherit'
+								});
 							});
 
 						});
