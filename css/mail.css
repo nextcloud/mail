@@ -109,6 +109,11 @@ button.control {
 .mail_message_summary_subject {
 	width: 45%;
 }
+/* with attachment */
+.mail_message_summary_subject.icon-public {
+	padding-left: 32px;
+	background-position: 10px center;
+}
 
 .date {
 	width: 120px;
