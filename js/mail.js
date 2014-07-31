@@ -255,7 +255,7 @@ var Mail = {
 							// HTML mail rendering
 							$('iframe').load(function() {
 								// Expand height to not have two scrollbars
-								$(this).height( $(this).contents().find("body").height() + 10);
+								$(this).height( $(this).contents().find('html').height() + 20);
 								// Fix styling
 								$(this).contents().find('body').css({
 									'margin': '0',
@@ -274,6 +274,8 @@ var Mail = {
 									'font-family': 'inherit',
 									'font-size': 'inherit'
 								});
+								// Expand height again after rendering to account for new size
+								$(this).height( $(this).contents().find('html').height() + 20);
 							});
 
 						});
