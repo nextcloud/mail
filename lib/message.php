@@ -140,6 +140,19 @@ class Message {
 		return $this->fetch->getSize();
 	}
 
+	private function hasAttachments() {
+		$primaryType = $this->fetch->getStructure()->getPrimaryType();
+		$secondaryType = $this->fetch->getStructure()->getSubType();
+		if ($primaryType !== 'multipart') {
+			return false;
+		}
+		if ($secondaryType === 'mixed') {
+			return true;
+		}
+
+		return false;
+	}
+
 	private function loadMessageBodies() {
 		$headers = array();
 
@@ -288,6 +301,7 @@ class Message {
 		$data['flags'] = $this->getFlags();
 		$data['dateInt'] = $this->getSentDate()->getTimestamp();
 		$data['cc'] = implode(', ', $this->getCCList());
+		$data['hasAttachments'] = $this->hasAttachments();
 		return $data;
 	}
 

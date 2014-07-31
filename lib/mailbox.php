@@ -40,6 +40,7 @@ class Mailbox {
 		$fetch_query->size();
 		$fetch_query->uid();
 		$fetch_query->imapDate();
+		$fetch_query->structure();
 
 		$headers = array_merge($headers, array(
 			'importance',

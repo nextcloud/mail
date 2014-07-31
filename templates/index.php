@@ -48,6 +48,9 @@
 						  title="{{formatDate dateInt}}"
 						  style="color:{{colorOfDate dateInt}}">{{relativeModifiedDate dateInt}}</span>
 			</div>
+			{{#if hasAttachments}}
+			<div class="icon-public"></div>
+			{{/if}}
 			<div class="icon-delete action delete"></div>
 		</div>
 		<div class="mail_message_loading icon-loading"></div>
