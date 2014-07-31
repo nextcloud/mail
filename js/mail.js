@@ -255,7 +255,7 @@ var Mail = {
 							// HTML mail rendering
 							$('iframe').load(function() {
 								// Expand height to not have two scrollbars
-								$(this).height( $(this).contents().find("html").height() + 30);
+								$(this).height( $(this).contents().find("body").height() + 10);
 								// Fix styling
 								$(this).contents().find('body').css({
 									'margin': '0',
@@ -269,13 +269,6 @@ var Mail = {
 								$(this).contents().find('font').prop({
 									'face': 'Open Sans',
 									'color': '#000'
-								});
-								// Fix link styling
-								$(this).contents().find('a').css({
-									'color': '#07d',
-									'border-bottom': '1px dotted #07d',
-									'text-decoration': 'none',
-									'word-wrap': 'break-word'
 								});
 							});
 
