@@ -22,6 +22,7 @@
 
 namespace OCA\Mail;
 
+use Horde_Imap_Client;
 use OCA\Mail\Service\Html;
 use OCP\AppFramework\Db\DoesNotExistException;
 
@@ -76,8 +77,12 @@ class Message {
 	public function getFlags() {
 		$flags = $this->fetch->getFlags();
 		return array(
-			'unseen' => !in_array('\seen', $flags),
-			'flagged' => in_array('\flagged', $flags),
+			'unseen' => !in_array(Horde_Imap_Client::FLAG_SEEN, $flags),
+			'flagged' => in_array(Horde_Imap_Client::FLAG_FLAGGED, $flags),
+			'answered' => !in_array(Horde_Imap_Client::FLAG_ANSWERED, $flags),
+			'deleted' => in_array(Horde_Imap_Client::FLAG_DELETED, $flags),
+			'draft' => !in_array(Horde_Imap_Client::FLAG_DRAFT, $flags),
+			'forwarded' => in_array(Horde_Imap_Client::FLAG_FORWARDED, $flags),
 			'hasAttachments' => $this->hasAttachments()
 		);
 	}
