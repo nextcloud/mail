@@ -260,7 +260,12 @@ class Message {
 		}
 
 		// TEXT
-		if ($p->getPrimaryType() === 'text') {
+		if ($p->getType() === 'text/calendar') {
+			// TODO: skip inline ics for now
+			return;
+		}
+
+		if ($p->getType() === 'text/html') {
 			$this->handleHtmlMessage($p, $partNo);
 			return;
 		}
