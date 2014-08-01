@@ -75,7 +75,11 @@ class Message {
 
 	public function getFlags() {
 		$flags = $this->fetch->getFlags();
-		return array('unseen' => !in_array("\seen", $flags));
+		return array(
+			'unseen' => !in_array('\seen', $flags),
+			'flagged' => in_array('\flagged', $flags),
+			'hasAttachments' => $this->hasAttachments()
+		);
 	}
 
 	public function getEnvelope() {
@@ -301,7 +305,6 @@ class Message {
 		$data['flags'] = $this->getFlags();
 		$data['dateInt'] = $this->getSentDate()->getTimestamp();
 		$data['cc'] = implode(', ', $this->getCCList());
-		$data['hasAttachments'] = $this->hasAttachments();
 		return $data;
 	}
 

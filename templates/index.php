@@ -36,13 +36,13 @@
 		<div class="mail-message-header">
 			<div class="sender-image">
 				{{#if senderImage}}
-				<img src="{{senderImage}}" width="32px" height="32px"/>
+				<img src="{{senderImage}}" width="32px" height="32px" class="{{#if flags.hasAttachments}} icon-star{{/if}}"/>
 				{{else}}
-				<div class="avatar" data-user="{{from}}" data-size="32"></div>
+				<div class="avatar{{#if flags.flagged}} icon-star{{/if}}" data-user="{{from}}" data-size="32"></div>
 				{{/if}}
 			</div>
 			<div class="mail_message_summary_from" title="{{fromEmail}}">{{from}}</div>
-			<div class="mail_message_summary_subject{{#if hasAttachments}} icon-public{{/if}}">
+			<div class="mail_message_summary_subject{{#if flags.hasAttachments}} icon-public{{/if}}">
 				{{subject}}
 			</div>
 			<div class="date">
