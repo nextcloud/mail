@@ -83,7 +83,7 @@ class Message {
 			'deleted' => in_array(Horde_Imap_Client::FLAG_DELETED, $flags),
 			'draft' => !in_array(Horde_Imap_Client::FLAG_DRAFT, $flags),
 			'forwarded' => in_array(Horde_Imap_Client::FLAG_FORWARDED, $flags),
-			'hasAttachments' => $this->hasAttachments()
+			'hasAttachments' => $this->hasAttachments($this->fetch->getStructure())
 		);
 	}
 
@@ -149,14 +149,25 @@ class Message {
 		return $this->fetch->getSize();
 	}
 
-	private function hasAttachments() {
-		$primaryType = $this->fetch->getStructure()->getPrimaryType();
-		$secondaryType = $this->fetch->getStructure()->getSubType();
-		if ($primaryType !== 'multipart') {
-			return false;
-		}
-		if ($secondaryType === 'mixed') {
-			return true;
+	/**
+	 * @param \Horde_Mime_Part $part
+	 * @return bool
+	 */
+	private function hasAttachments($part) {
+		foreach($part->getParts() as $p) {
+			/**
+			 * @var \Horde_Mime_Part $p
+			 */
+			$filename = $p->getName();
+			if (!is_null($p->getContentId())) {
+				continue;
+			}
+			if (isset($filename)) {
+				return true;
+			}
+			if ($this->hasAttachments($p)) {
+				return true;
+			}
 		}
 
 		return false;
