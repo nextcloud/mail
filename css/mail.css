@@ -223,6 +223,15 @@ button.control {
 	height: 32px;
 }
 
+.star {
+	width: 16px;
+	height: 16px;
+	display: inline-block;
+	position: absolute;
+	top: 3px;
+	left: 34px;
+}
+
 .mail_message_loading {
 	height: 32px;
 	margin-bottom: 10px;
