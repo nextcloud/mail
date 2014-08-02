@@ -64,8 +64,10 @@
 	<div class="mail-message-body">
 		<div id="mail-content">
 			{{#if hasHtmlBody}}
+			<div class="icon-loading">
 				<iframe src="{{htmlBodyUrl}}" sandbox="allow-top-navigation allow-same-origin" seamless>
 				</iframe>
+			</div>
 			{{else}}
 				{{{body}}}
 			{{/if}}
