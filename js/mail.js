@@ -47,7 +47,7 @@ var Mail = {
 						var html = template(jsondata);
 						$('#accountManager').html(html);
 						Mail.UI.loadFoldersForAccount(jsondata[0].accountId);
-				}
+					}
 			});
 		},
 
@@ -186,9 +186,11 @@ var Mail = {
 				t('mail', 'Choose a folder to store the attachment in'),
 				function (path) {
 					// Loading feedback
-					$('.attachment-save-to-cloud').removeClass('icon-upload').addClass('icon-loading-small');
-					$('.attachment-save-to-cloud').html(t('mail', 'Saving to Files …'));
-					$('.attachment-save-to-cloud').prop('disabled', true);
+					$('.attachment-save-to-cloud')
+						.removeClass('icon-upload')
+						.addClass('icon-loading-small')
+						.html(t('mail', 'Saving to Files …'))
+						.prop('disabled', true);
 
 					$.ajax(
 						OC.generateUrl(
@@ -204,16 +206,26 @@ var Mail = {
 							},
 							type:'POST',
 							success: function () {
-								OC.Notification.show(t('mail', 'Attachment(s) saved to Files.'));
+								if (typeof attachmentId === "undefined") {
+									OC.Notification.show(t('mail', 'Attachments saved to Files.'));
+								} else {
+									OC.Notification.show(t('mail', 'Attachment saved to Files.'));
+								}
 							},
 							error: function() {
-								OC.Notification.show(t('mail', 'Error while saving attachment(s) to Files.'));
+								if (typeof attachmentId === "undefined") {
+									OC.Notification.show(t('mail', 'Error while saving attachments to Files.'));
+								} else {
+									OC.Notification.show(t('mail', 'Error while saving attachment to Files.'));
+								}
 							},
 							complete: function() {
 								// Remove loading feedback again
-								$('.attachment-save-to-cloud').removeClass('icon-loading-small').addClass('icon-upload');
-								$('.attachment-save-to-cloud').html(t('mail', 'Save to Files'));
-								$('.attachment-save-to-cloud').prop('disabled', false);
+								$('.attachment-save-to-cloud')
+									.removeClass('icon-loading-small')
+									.addClass('icon-upload')
+									.html(t('mail', 'Save to Files'))
+									.prop('disabled', false);
 							}
 						});
 				},
