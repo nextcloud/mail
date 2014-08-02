@@ -12,6 +12,7 @@ $TRANSLATIONS = array(
 "Connect" => "Verbinden",
 "Server Error" => "Server foutmelding",
 "Sending …" => "Versturen ...",
+"Choose a folder store the attachment" => "Kies een map om de bijlage in op te slaan",
 "Send" => "Versturen",
 "Auto detect failed. Please use manual mode." => "Automatisch vaststellen mislukt. Gebruik handmatige modus.",
 "Download attachment" => "Download bijlage",

@@ -13,6 +13,7 @@ $TRANSLATIONS = array(
 "Connect" => "Свържи",
 "Server Error" => "Грешка в Сървъра",
 "Sending …" => "Изпращане...",
+"Choose a folder store the attachment" => "Избери папка, където да бъзе запазен прикаченият файл",
 "Send" => "Изпрати",
 "Auto detect failed. Please use manual mode." => "Неуспешни автоматични настройки. Моля, използвай ръчен режим.",
 "All accounts" => "Всички профили",

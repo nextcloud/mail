@@ -13,6 +13,7 @@ $TRANSLATIONS = array(
 "Connect" => "Connetti",
 "Server Error" => "Errore del server",
 "Sending …" => "Invio in corso...",
+"Choose a folder store the attachment" => "Scegli una cartella dove salvare l'allegato",
 "Send" => "Invia",
 "Auto detect failed. Please use manual mode." => "Rilevamento automatico non riuscito. Usa la modalità manuale.",
 "All accounts" => "Tutti gli account",

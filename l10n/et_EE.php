@@ -12,6 +12,7 @@ $TRANSLATIONS = array(
 "Connect" => "Ühenda",
 "Server Error" => "Serveri viga",
 "Sending …" => "Saadan ...",
+"Choose a folder store the attachment" => "Vali manuse salvestamiseks kaust.",
 "Send" => "Saada",
 "Auto detect failed. Please use manual mode." => "Automaatne tuvastus ebaõnnestus. Palun proovi käsitsi.",
 "Download attachment" => "Lae manus alla",

@@ -12,6 +12,7 @@ $TRANSLATIONS = array(
 "Connect" => "Připojit",
 "Server Error" => "Chyba serveru",
 "Sending …" => "Odesílám ...",
+"Choose a folder store the attachment" => "Vybrat adresář pro uložení přílohy",
 "Send" => "Odeslat",
 "Auto detect failed. Please use manual mode." => "Autodetekce selhala. Prosím použijte manuální mód.",
 "Download attachment" => "Stáhnout přílohu",

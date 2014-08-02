@@ -12,6 +12,7 @@ $TRANSLATIONS = array(
 "Connect" => "Połącz",
 "Server Error" => "Błąd serwera",
 "Sending …" => "Wysyłanie...",
+"Choose a folder store the attachment" => "Wybierz folder do zapisu załącznika",
 "Send" => "Wyślij",
 "Auto detect failed. Please use manual mode." => "Autowykrywanie nie powiodło się. Proszę użyć trybu ręcznego.",
 "Download attachment" => "Pobierz załącznik",

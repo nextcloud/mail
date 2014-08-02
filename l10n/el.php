@@ -13,6 +13,7 @@ $TRANSLATIONS = array(
 "Connect" => "Σύνδεση",
 "Server Error" => "Σφάλμα Διακομιστή",
 "Sending …" => "Αποστολή...",
+"Choose a folder store the attachment" => "Επιλέξτε έναν φάκελο για να αποθηκεύσετε το συνημένο",
 "Send" => "Αποστολή",
 "Auto detect failed. Please use manual mode." => " Η αυτόματη ανίχνευση απέτυχε. Παρακαλούμε χρησιμοποιήστε τη χειροκίνητη λειτουργία.",
 "All accounts" => "Όλοι οι λογαριασμοί",
