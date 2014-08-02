@@ -12,6 +12,11 @@
 	width: 90%;
 	margin-left: 37px;
 }
+/* with attachment */
+.mail_message_summary_subject.icon-public {
+	background-position: 10px 2px;
+	margin-left: 17px;
+}
 .date {
 	max-width: 25%;
 }

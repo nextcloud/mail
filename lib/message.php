@@ -22,6 +22,7 @@
 
 namespace OCA\Mail;
 
+use Horde_Imap_Client;
 use OCA\Mail\Service\Html;
 use OCP\AppFramework\Db\DoesNotExistException;
 
@@ -75,7 +76,15 @@ class Message {
 
 	public function getFlags() {
 		$flags = $this->fetch->getFlags();
-		return array('unseen' => !in_array("\seen", $flags));
+		return array(
+			'unseen' => !in_array(Horde_Imap_Client::FLAG_SEEN, $flags),
+			'flagged' => in_array(Horde_Imap_Client::FLAG_FLAGGED, $flags),
+			'answered' => !in_array(Horde_Imap_Client::FLAG_ANSWERED, $flags),
+			'deleted' => in_array(Horde_Imap_Client::FLAG_DELETED, $flags),
+			'draft' => !in_array(Horde_Imap_Client::FLAG_DRAFT, $flags),
+			'forwarded' => in_array(Horde_Imap_Client::FLAG_FORWARDED, $flags),
+			'hasAttachments' => $this->hasAttachments($this->fetch->getStructure())
+		);
 	}
 
 	public function getEnvelope() {
@@ -138,6 +147,30 @@ class Message {
 
 	public function getSize() {
 		return $this->fetch->getSize();
+	}
+
+	/**
+	 * @param \Horde_Mime_Part $part
+	 * @return bool
+	 */
+	private function hasAttachments($part) {
+		foreach($part->getParts() as $p) {
+			/**
+			 * @var \Horde_Mime_Part $p
+			 */
+			$filename = $p->getName();
+			if (!is_null($p->getContentId())) {
+				continue;
+			}
+			if (isset($filename)) {
+				return true;
+			}
+			if ($this->hasAttachments($p)) {
+				return true;
+			}
+		}
+
+		return false;
 	}
 
 	private function loadMessageBodies() {
@@ -238,7 +271,12 @@ class Message {
 		}
 
 		// TEXT
-		if ($p->getPrimaryType() === 'text') {
+		if ($p->getType() === 'text/calendar') {
+			// TODO: skip inline ics for now
+			return;
+		}
+
+		if ($p->getType() === 'text/html') {
 			$this->handleHtmlMessage($p, $partNo);
 			return;
 		}

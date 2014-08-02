@@ -109,6 +109,11 @@ button.control {
 .mail_message_summary_subject {
 	width: 45%;
 }
+/* with attachment */
+.mail_message_summary_subject.icon-public {
+	padding-left: 32px;
+	background-position: 10px center;
+}
 
 .date {
 	width: 120px;
@@ -216,6 +221,15 @@ button.control {
 .avatar {
 	width: 32px;
 	height: 32px;
+}
+
+.star {
+	width: 16px;
+	height: 16px;
+	display: inline-block;
+	position: absolute;
+	top: 3px;
+	left: 34px;
 }
 
 .mail_message_loading {
