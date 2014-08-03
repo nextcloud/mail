@@ -17,6 +17,7 @@ use OCA\Mail\Controller\FoldersController;
 use OCA\Mail\Controller\MessagesController;
 use OCA\Mail\Controller\ProxyController;
 use OCA\Mail\Db\MailAccountMapper;
+use OCA\Mail\Service\AutoConfig;
 use OCA\Mail\Service\ContactsIntegration;
 use \OCP\AppFramework\App;
 
@@ -53,7 +54,8 @@ class Application extends App {
 				$c->query('MailAccountMapper'),
 				$c->query('UserId'),
 				$c->getServer()->getUserFolder(),
-				$c->query('ContactsIntegration')
+				$c->query('ContactsIntegration'),
+				$c->query('AutoConfig')
 			);
 		});
 
@@ -104,6 +106,13 @@ class Application extends App {
 			return new ContactsIntegration($c->getServer()->getContactsManager());
 		});
 
+		$container->registerService('AutoConfig', function ($c) {
+			/** @var IAppContainer $c */
+			return new AutoConfig(
+				$c->query('MailAccountMapper'),
+				$c->query('UserId')
+			);
+		});
 		/**
 		 * Core
 		 */
