@@ -52,15 +52,15 @@ class PageController extends Controller {
 	 */
 	public function index() {
 
-		\OCP\Util::addScript('mail','mail');
-		\OCP\Util::addScript('mail','send-mail');
-		\OCP\Util::addScript('mail','jquery.endless-scroll');
 		\OCP\Util::addScript('mail','handlebars-v1.3.0');
 		\OCP\Util::addScript('mail','jquery.autosize');
 		\OCP\Util::addScript('mail','backbone');
 		\OCP\Util::addScript('mail','models/attachment');
 		\OCP\Util::addScript('mail','views/attachment');
 		\OCP\Util::addScript('mail','views/sendmail');
+		\OCP\Util::addScript('mail','views/message');
+		\OCP\Util::addScript('mail','mail');
+		\OCP\Util::addScript('mail','send-mail');
 		\OCP\Util::addStyle('mail','mail');
 		\OCP\Util::addStyle('mail','mobile');
 

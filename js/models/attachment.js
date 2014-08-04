@@ -18,3 +18,9 @@ models.Attachment = Backbone.Model.extend({
 models.Attachments = Backbone.Collection.extend({
 	model: models.Attachment
 });
+
+models.Message = Backbone.Model.extend();
+
+models.MessageList = Backbone.Collection.extend({
+	model: models.Message
+});
