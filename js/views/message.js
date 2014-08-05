@@ -28,6 +28,12 @@ views.Messages = Backbone.View.extend({
 
 	loadMore: function() {
 		var from = this.collection.size();
+		// Remove loading feedback again
+		$('#load-more-mail-messages')
+			.addClass('icon-loading-small')
+			.val(t('mail', 'Loading …'))
+			.prop('disabled', true);
+
 		$.ajax(
 			OC.generateUrl('apps/mail/accounts/{accountId}/folders/{folderId}/messages?from={from}&to={to}',
 				{
@@ -49,6 +55,13 @@ views.Messages = Backbone.View.extend({
 
 					// Set the old folder as being active
 					Mail.UI.setFolderActive(Mail.State.currentAccountId, Mail.State.currentFolderId);
+				},
+				complete: function() {
+					// Remove loading feedback again
+					$('#load-more-mail-messages')
+						.removeClass('icon-loading-small')
+						.val(t('mail', 'Load more …'))
+						.prop('disabled', false);
 				}
 			});
 	},

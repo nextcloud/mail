@@ -172,7 +172,7 @@
 
 		<div id="mail_messages">
 			<div id="mail-message-list"></div>
-			<input type="button" id="load-more-mail-messages" value="<?php p($l->t('Load more ...')); ?>"></div>
+			<input type="button" id="load-more-mail-messages" value="<?php p($l->t('Load more …')); ?>"></div>
 		</div>
 
 		<form id="mail-setup" class="hidden">
