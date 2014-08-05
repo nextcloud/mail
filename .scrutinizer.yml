@@ -3,6 +3,7 @@ filter:
         - 'vendor/*'
         - 'js/jquery*'
         - 'js/handlebars*'
+        - 'js/backbone*'
 
 imports:
     - javascript
