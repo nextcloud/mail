@@ -191,6 +191,39 @@ var Mail = {
 				});
 		},
 
+		toggleMessageStar: function(messageId, starred) {
+			$.ajax(
+				OC.generateUrl('apps/mail/accounts/{accountId}/folders/{folderId}/messages/{messageId}/toggleStar',
+					{
+					accountId: Mail.State.currentAccountId,
+					folderId: encodeURIComponent(Mail.State.currentFolderId),
+					messageId: messageId
+				}), {
+					data: {
+						starred: starred
+					},
+					type:'POST',
+					success: function () {
+						if (starred) {
+							$('#mail-message-summary-' + messageId)
+								.find('.star')
+								.removeClass('icon-starred')
+								.addClass('icon-star')
+								.data('starred', false);
+						} else {
+							$('#mail-message-summary-' + messageId)
+								.find('.star')
+								.removeClass('icon-star')
+								.addClass('icon-starred')
+								.data('starred', true);
+						}
+					},
+					error: function() {
+						OC.Notification.show(t('mail', 'Error while un-staring.'));
+					}
+				});
+		},
+
 		saveAttachment: function(messageId, attachmentId) {
 			OC.dialogs.filepicker(
 				t('mail', 'Choose a folder to store the attachment in'),
@@ -418,6 +451,12 @@ $(document).ready(function () {
 		messageElement.slideUp();
 		var messageId = messageElement.data('messageId');
 		Mail.UI.deleteMessage(messageId);
+	});
+
+	$(document).on('click', '#mail_messages .star', function(event) {
+		event.stopPropagation();
+		var messageId = $(this).parent().parent().data('messageId');
+		Mail.UI.toggleMessageStar(messageId, $(this).data('starred'));
 	});
 
 	$(document).on('click', '#mail_messages .attachment-save-to-cloud', function(event) {

@@ -12,6 +12,7 @@
 
 namespace OCA\Mail\Controller;
 
+use Horde_Imap_Client;
 use OCA\Mail\Http\AttachmentDownloadResponse;
 use OCA\Mail\Http\HtmlResponse;
 use OCA\Mail\Service\ContactsIntegration;
@@ -173,6 +174,22 @@ class MessagesController extends Controller
 
 		return new JSONResponse();
 	}
+
+	/**
+	 * @NoAdminRequired
+	 *
+	 * @param int $messageId
+	 * @param boolean $starred
+	 * @return JSONResponse
+	 */
+	public function toggleStar($messageId, $starred) {
+		$mailBox = $this->getFolder();
+
+		$mailBox->setMessageFlag($messageId, Horde_Imap_Client::FLAG_FLAGGED, !$starred);
+
+		return new JSONResponse();
+	}
+
 	/**
 	 * @IsAdminExemption
 	 * @IsSubAdminExemption

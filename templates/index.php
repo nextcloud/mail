@@ -42,7 +42,9 @@
 				{{/if}}
 			</div>
 			{{#if flags.flagged}}
-			<div class="star icon-starred"></div>
+			<div class="star icon-starred" data-starred="true"></div>
+			{{else}}
+			<div class="star icon-star" data-starred="false"></div>
 			{{/if}}
 			<div class="mail_message_summary_from" title="{{fromEmail}}">{{from}}</div>
 			<div class="mail_message_summary_subject{{#if flags.hasAttachments}} icon-public{{/if}}">
