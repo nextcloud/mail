@@ -392,7 +392,8 @@ $(document).ready(function () {
 	Mail.UI.initializeInterface();
 
 	// auto detect button handling
-	$('#auto_detect_account').click(function () {
+	$('#auto_detect_account').click(function (event) {
+		event.preventDefault();
 		$('#mail-address').attr('disabled', 'disabled');
 		$('#mail-password').attr('disabled', 'disabled');
 		$('#auto_detect_account').attr('disabled', "disabled");
