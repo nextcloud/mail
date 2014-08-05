@@ -325,6 +325,8 @@ var Mail = {
 
 			var menu = $('#mail-setup');
 			menu.removeClass('hidden');
+			// don't show New Message button on Add account screen
+			$('#mail_new_message').hide();
 		},
 
 		setFolderInactive:function (accountId, folderId) {
@@ -394,10 +396,10 @@ $(document).ready(function () {
 	// auto detect button handling
 	$('#auto_detect_account').click(function (event) {
 		event.preventDefault();
-		$('#mail-address').attr('disabled', 'disabled');
-		$('#mail-password').attr('disabled', 'disabled');
-		$('#auto_detect_account').attr('disabled', "disabled");
-		$('#auto_detect_account').val(t('mail', 'Connecting ...'));
+		$('#mail-address').prop('disabled', true);
+		$('#mail-password').prop('disabled', true);
+		$('#auto_detect_account').prop('disabled', true);
+		$('#auto_detect_account').val(t('mail', 'Connecting …'));
 		$('#connect-loading').fadeIn();
 		var emailAddress, password;
 		emailAddress = $('#mail-address').val();
@@ -415,12 +417,14 @@ $(document).ready(function () {
 			},
 			error: function(jqXHR, textStatus, errorThrown){
 				var error = errorThrown || textStatus || t('mail', 'Unknown error');
-				$('#mail-address').attr('disabled', 'false');
-				$('#mail-password').attr('disabled', 'false');
-				$('#auto_detect_account').attr('disabled', 'false');
+				OC.dialogs.alert(error, t('mail', 'Server Error'));
+			},
+			complete: function() {
+				$('#mail-address').prop('disabled', false);
+				$('#mail-password').prop('disabled', false);
+				$('#auto_detect_account').prop('disabled', false);
 				$('#auto_detect_account').val(t('mail', 'Connect'));
 				$('#connect-loading').fadeOut();
-				OC.dialogs.alert(error, t('mail', 'Server Error'));
 			}
 		});
 	});
