@@ -192,6 +192,13 @@ var Mail = {
 		},
 
 		toggleMessageStar: function(messageId, starred) {
+			// Loading feedback
+			$('#mail-message-summary-' + messageId)
+				.find('.star')
+				.removeClass('icon-starred')
+				.removeClass('icon-star')
+				.addClass('icon-loading-small');
+
 			$.ajax(
 				OC.generateUrl('apps/mail/accounts/{accountId}/folders/{folderId}/messages/{messageId}/toggleStar',
 					{
@@ -207,19 +214,30 @@ var Mail = {
 						if (starred) {
 							$('#mail-message-summary-' + messageId)
 								.find('.star')
-								.removeClass('icon-starred')
+								.removeClass('icon-loading-small')
 								.addClass('icon-star')
 								.data('starred', false);
 						} else {
 							$('#mail-message-summary-' + messageId)
 								.find('.star')
-								.removeClass('icon-star')
+								.removeClass('icon-loading-small')
 								.addClass('icon-starred')
 								.data('starred', true);
 						}
 					},
 					error: function() {
-						OC.Notification.show(t('mail', 'Error while un-staring.'));
+						OC.Notification.show(t('mail', 'Message could not be favorited. Please try again.'));
+						if(starred) {
+							$('#mail-message-summary-' + messageId)
+								.find('.star')
+								.removeClass('icon-loading-small')
+								.addClass('icon-starred');
+						} else {
+							$('#mail-message-summary-' + messageId)
+								.find('.star')
+								.removeClass('icon-loading-small')
+								.addClass('icon-star');
+						}
 					}
 				});
 		},
