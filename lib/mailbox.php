@@ -9,6 +9,7 @@
 namespace OCA\Mail;
 
 use Horde_Imap_Client;
+use Horde_Imap_Client_Ids;
 use Horde_Mime_Headers;
 
 class Mailbox {
@@ -159,6 +160,24 @@ class Mailbox {
 				'flags' => array(Horde_Imap_Client::FLAG_SEEN)
 			)
 		));
+	}
+
+	/**
+	 * @param int $uid
+	 * @param string $flag
+	 * @param boolean $add
+	 */
+	public function setMessageFlag($uid, $flag, $add) {
+
+		$options = array(
+			'ids' => new Horde_Imap_Client_Ids($uid)
+		);
+		if ($add) {
+			$options['add'] = array($flag);
+		} else {
+			$options['remove'] = array($flag);
+		}
+		$this->conn->store($this->folderId, $options);
 	}
 
 	private function isTrash() {
