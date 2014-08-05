@@ -73,6 +73,16 @@ button.control {
 #mail_messages {
 	padding-bottom: 250px;
 }
+#load-more-mail-messages {
+	display: none;
+	margin: 50px 40% -50px;
+	padding: 10px;
+}
+/* TODO: put this in core icons.css as general rule for buttons with icons */
+#load-more-mail-messages.icon-loading-small {
+	padding-left: 32px;
+	background-position: 9px center;
+}
 
 
 .mail_message_summary {

@@ -1,9 +1,10 @@
-/* global Handlebars, relative_modified_date, formatDate, humanFileSize */
+/* global Handlebars, relative_modified_date, formatDate, humanFileSize, views */
 var Mail = {
 	State:{
-		currentFolderId:null,
-		currentAccountId:null,
-		currentMessageId:null
+		currentFolderId: null,
+		currentAccountId: null,
+		currentMessageId: null,
+		messageView: null
 	},
 	UI:{
 		initializeInterface:function () {
@@ -33,6 +34,15 @@ var Mail = {
 			Handlebars.registerHelper("humanFileSize", function(size) {
 				return humanFileSize(size);
 			});
+
+
+			// setup sendmail view
+			Mail.State.messageView = new views.Messages({
+				el: $('#mail_messages')
+			});
+
+			// And render it
+			Mail.State.messageView.render();
 
 			$.ajax(OC.generateUrl('apps/mail/accounts'), {
 				data:{},
@@ -92,9 +102,7 @@ var Mail = {
 		},
 
 		clearMessages:function () {
-			var table = $('#mail_messages');
-
-			table.empty();
+			Mail.State.messageView.collection.reset();
 			$('#messages-loading').fadeIn();
 		},
 
@@ -111,10 +119,11 @@ var Mail = {
 		},
 
 		addMessages:function (data) {
-			var source   = $("#mail-messages-template").html();
-			var template = Handlebars.compile(source);
-			var html = template(data);
-			$('#mail_messages').append(html);
+//			var source   = $("#mail-messages-template").html();
+//			var template = Handlebars.compile(source);
+//			var html = template(data);
+//			$('#mail_messages').append(html);
+			Mail.State.messageView.collection.add(data);
 
 			_.each($('.avatar'), function(a) {
 				$(a).imageplaceholder($(a).data('user'), $(a).data('user'));
@@ -140,6 +149,7 @@ var Mail = {
 						// Add messages
 						Mail.UI.addMessages(jsondata);
 						$('#app-content').removeClass('icon-loading');
+						$('#load-more-mail-messages').fadeIn();
 
 						Mail.State.currentAccountId = accountId;
 						Mail.State.currentFolderId = folderId;
@@ -330,60 +340,6 @@ var Mail = {
 		setFolderInactive:function (accountId, folderId) {
 			$('.mail_folders[data-account_id="' + accountId + '"]>li[data-folder_id="' + folderId + '"]')
 				.removeClass('active');
-		},
-
-		bindEndlessScrolling:function () {
-			// Add handler for endless scrolling
-			//   (using jquery.endless-scroll.js)
-			$('#app-content').endlessScroll({
-				fireDelay:10,
-				fireOnce:false,
-				loader:OC.imagePath('core', 'loading.gif'),
-				callback:function (i) {
-					var from, newLength;
-
-					// Only do the work if we show a folder
-					if (Mail.State.currentAccountId !== null && Mail.State.currentFolderId !== null) {
-
-						// do not work if we already hit the end
-						if ($('#mail_messages').data('stop_loading') !== 'true') {
-							from = $('#mail_messages .mail_message_summary').length - 1;
-							// minus 1 because of the template
-
-							// decrease if a message is shown
-							if (Mail.State.currentMessageId !== null) {
-								from = from - 1;
-							}
-
-							$.ajax(
-								OC.generateUrl('apps/mail/accounts/{accountId}/folders/{folderId}/messages?from={from}&to={to}',
-									{
-									'accountId':Mail.State.currentAccountId,
-									'folderId':encodeURIComponent(Mail.State.currentFolderId),
-									from: from,
-									to: from+20
-								}), {
-									type:'GET',
-									success:function (jsondata) {
-										Mail.UI.addMessages(jsondata.data);
-
-										// If we did not get any new messages stop
-										newLength = $('#mail_messages .mail_message_summary').length - 1;
-										// minus 1 because of the template
-										if (from === newLength || ( from === newLength + 1 &&
-											Mail.State.currentMessageId !== null )) {
-											$('#mail_messages').data('stop_loading', 'true');
-										}
-									}
-								});
-						}
-					}
-				}
-			});
-		},
-
-		unbindEndlessScrolling:function () {
-			$('#app-content').unbind('scroll');
 		}
 	}
 };
@@ -484,8 +440,6 @@ $(document).ready(function () {
 			Mail.UI.loadFoldersForAccount(accountId);
 		}
 	});
-
-	Mail.UI.bindEndlessScrolling();
 
 	$('textarea').autosize();
 });
