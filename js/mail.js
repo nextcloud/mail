@@ -361,8 +361,9 @@ var Mail = {
 								});
 								// Expand height again after rendering to account for new size
 								$(this).height( $(this).contents().find('html').height() + 20);
+								// Remove spinner when loading finished
+								$('iframe').parent().removeClass('icon-loading');
 							});
-
 						});
 
 						// Set current Message as active
