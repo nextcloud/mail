@@ -39,7 +39,7 @@ class Mailbox {
 		$fetch_query->flags();
 //		$fetch_query->seq();
 		$fetch_query->size();
-		$fetch_query->uid();
+//		$fetch_query->uid();
 		$fetch_query->imapDate();
 		$fetch_query->structure();
 
