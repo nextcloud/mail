@@ -33,6 +33,9 @@ class TestHtml extends \PHPUnit_Framework_TestCase {
 			array('<a href="ftp://google.com" target="_blank" rel="noreferrer">ftp://google.com</a>', 'ftp://google.com'),
 			array('<a href="http://www.themukt.com/2014/07/23/take-control-cloud-owncloud-7/" target="_blank" rel="noreferrer">http://www.themukt.com/2014/07/23/take-control-cloud-owncloud-7/</a>', 'http://www.themukt.com/2014/07/23/take-control-cloud-owncloud-7/'),
 			array('<a href="https://travis-ci.org/owncloud/music/builds/22037091" target="_blank" rel="noreferrer">https://travis-ci.org/owncloud/music/builds/22037091</a>', 'https://travis-ci.org/owncloud/music/builds/22037091'),
+			array('(<a href="ftp://google.com" target="_blank" rel="noreferrer">ftp://google.com</a>)', '(ftp://google.com)'),
+			array('<a href="https://build.opensuse.org/package/view_file/isv:ownCloud:community:7.0/owncloud/debian.changelog?expand=1" target="_blank" rel="noreferrer">https://build.opensuse.org/package/view_file/isv:ownCloud:community:7.0/owncloud/debian.changelog?expand=1</a>', 'https://build.opensuse.org/package/view_file/isv:ownCloud:community:7.0/owncloud/debian.changelog?expand=1'),
+			array('(<a href="https://build.opensuse.org/package/view_file/isv:ownCloud:community:7.0/owncloud/debian.changelog?expand=1" target="_blank" rel="noreferrer">https://build.opensuse.org/package/view_file/isv:ownCloud:community:7.0/owncloud/debian.changelog?expand=1</a>)', '(https://build.opensuse.org/package/view_file/isv:ownCloud:community:7.0/owncloud/debian.changelog?expand=1)'),
 		);
 	}
 
