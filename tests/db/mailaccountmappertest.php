@@ -67,7 +67,7 @@ class MailAccountMapperTest extends MapperTestUtility {
 	}
 	
 	public function testTableName(){
-		$this->assertSame('*PREFIX*mail_mailaccounts', $this->mapper->getTableName());
+		$this->assertSame('*PREFIX*mail_accounts', $this->mapper->getTableName());
 	}
 	
 	public function testFind(){
