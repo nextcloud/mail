@@ -242,7 +242,7 @@ class AccountsController extends Controller
 
 			$sentFolder->saveMessage($raw);
 
-		} catch (\Horde_Mail_Exception $ex) {
+		} catch (\Horde_Exception $ex) {
 			return new JSONResponse(
 				array('message' => $ex->getMessage()),
 				Http::STATUS_INTERNAL_SERVER_ERROR

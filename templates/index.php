@@ -170,6 +170,7 @@
 				<ul></ul>
 				<input type="button" id="mail_new_attachment" value="<?php p($l->t('Add attachment from Files')); ?>">
 			</div>
+			<div><span id="new-message-msg" class="msg"></div>
 		</div>
 
 		<div id="mail_messages">
