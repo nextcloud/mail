@@ -139,6 +139,7 @@ var Mail = {
 
 			$('#mail_new_message').fadeIn();
 			$('#app-content').addClass('icon-loading');
+			$('#load-more-mail-messages').hide();
 
 			$.ajax(
 				OC.generateUrl('apps/mail/accounts/{accountId}/folders/{folderId}/messages',
