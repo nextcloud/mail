@@ -151,6 +151,17 @@ button.control {
 	opacity: .5;
 }
 
+.msg.success {
+	color: #fff;
+	background-color: #47a447;
+	padding: 3px;
+}
+.msg.error {
+	color: #fff;
+	background-color: #d2322d;
+	padding: 3px;
+}
+
 
 .mail_message_loading {
 	display: none;
