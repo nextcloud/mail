@@ -190,12 +190,11 @@ var Mail = {
 						$('#mail-message-summary-' + messageId)
 							.remove();
 
-						// Set current Message as active
-						Mail.UI.setMessageActive(null);
-
-						// open next message
-						var nextMessageId = nextMessage.data('messageId');
-						Mail.UI.openMessage(nextMessageId);
+						// When currently open message is deleted, open next one
+						if(messageId === Mail.State.currentMessageId) {
+							var nextMessageId = nextMessage.data('messageId');
+							Mail.UI.openMessage(nextMessageId);
+						}
 					},
 					error: function() {
 						OC.Notification.show(t('mail', 'Error while deleting mail.'));
@@ -493,10 +492,6 @@ $(document).ready(function () {
 		var messageElement = $(this).parent().parent()
 			.addClass('transparency')
 			.slideUp();
-
-		$('#mail-message')
-			.html('')
-			.addClass('icon-loading');
 
 		var messageId = messageElement.data('messageId');
 		Mail.UI.deleteMessage(messageId);
