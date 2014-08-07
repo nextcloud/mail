@@ -67,7 +67,8 @@ var Mail = {
 			Mail.UI.clearFolders();
 			Mail.UI.clearMessages();
 			$('#app-navigation').addClass('icon-loading');
-			$('#app-content').addClass('icon-loading');
+			$('#mail_messages').addClass('icon-loading');
+			$('#mail-message').addClass('icon-loading');
 
 			$.ajax(OC.generateUrl('apps/mail/accounts/{accountId}/folders', {accountId: accountId}), {
 				data:{},
@@ -142,7 +143,7 @@ var Mail = {
 			Mail.UI.clearMessages();
 
 			$('#mail_new_message').fadeIn();
-			$('#app-content').addClass('icon-loading');
+			$('#mail_messages').addClass('icon-loading');
 			$('#load-more-mail-messages').hide();
 
 			$.ajax(
@@ -153,7 +154,7 @@ var Mail = {
 					success: function (jsondata) {
 						// Add messages
 						Mail.UI.addMessages(jsondata);
-						$('#app-content').removeClass('icon-loading');
+						$('#mail_messages').removeClass('icon-loading');
 						$('#load-more-mail-messages').fadeIn();
 
 						Mail.State.currentAccountId = accountId;

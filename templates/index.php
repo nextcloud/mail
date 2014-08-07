@@ -145,7 +145,7 @@
 			value="<?php p($l->t('New Message')); ?>" style="display: none">
 		<div id="folders"></div>
 	</div>
-	<div id="app-content"  class="icon-loading">
+	<div id="app-content">
 		<div id="new-message" style="display: none">
 
 			<div id="new-message-fields">
@@ -172,7 +172,7 @@
 			<div><span id="new-message-msg" class="msg"></div>
 		</div>
 
-		<div id="mail_messages">
+		<div id="mail_messages" class="icon-loading">
 			<div id="mail-message-list"></div>
 			<input type="button" id="load-more-mail-messages" value="<?php p($l->t('Load more …')); ?>">
 		</div>
