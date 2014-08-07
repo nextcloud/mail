@@ -150,8 +150,9 @@ button.control {
 }
 /* with attachment */
 .mail_message_summary_subject.icon-public {
-	background-position: 10px 2px;
-	margin-left: 17px;
+	background-position: 0 2px;
+	padding-left: 21px;
+	margin-left: 27px;
 }
 
 .date {
