@@ -49,7 +49,7 @@ views.Attachments = Backbone.View.extend({
 	addAttachment: function() {
 		var self = this;
 		OC.dialogs.filepicker(
-			t('mail', 'Choose a folder to store the attachment in'),
+			t('mail', 'Choose a file to add as attachment'),
 			function (path) {
 				self.collection.add([
 					{

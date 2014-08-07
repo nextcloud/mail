@@ -1,26 +1,5 @@
 @media only screen and (max-width: 768px) {
 
-/* adjust message list for mobile */
-.mail-message-header {
-	height: 68px;
-}
-.mail_message_summary_from {
-	padding-bottom: 0;
-}
-.mail_message_summary_subject {
-	padding-top: 0;
-	width: 90%;
-	margin-left: 37px;
-}
-/* with attachment */
-.mail_message_summary_subject.icon-public {
-	background-position: 10px 2px;
-	margin-left: 17px;
-}
-.date {
-	max-width: 25%;
-}
-
 /* use full width on mobile, don't leave whitespace on left */
 .mail-message-body {
 	margin-left: 10px;

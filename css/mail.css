@@ -86,8 +86,19 @@ button.control {
 
 
 /* app content*/
+
+/* override the app content scrolling behavior
+	because we use 2 custom scrollable areas */
+#app-content {
+	overflow: hidden;
+}
+
 #mail_messages {
 	padding-bottom: 250px;
+	width: 35%;
+	height: 100%;
+	overflow-x: hidden;
+	overflow-y: auto;
 }
 #load-more-mail-messages {
 	display: none;
@@ -100,14 +111,16 @@ button.control {
 	background-position: 9px center;
 }
 
+.mail-message-header {
+	height: 68px;
+}
 
 .mail_message_summary {
 	border-top: 1px solid #eee;
 	position: relative;
 }
-
-.mail-message-header {
-	height: 44px;
+.mail_message_summary.active {
+	background-color: #f8f8f8;
 }
 
 .sender-image {
@@ -130,19 +143,24 @@ button.control {
 .mail_message_summary_from {
 	width: 180px;
 	margin-left: 37px;
+	padding-bottom: 0;
 }
 
 .mail_message_summary_subject {
-	width: 45%;
+	padding-top: 0;
+	width: 90%;
+	margin-left: 37px;
 }
 /* with attachment */
 .mail_message_summary_subject.icon-public {
-	padding-left: 32px;
-	background-position: 10px center;
+	background-position: 0 2px;
+	padding-left: 21px;
+	margin-left: 27px;
 }
 
 .date {
 	width: 120px;
+	max-width: 25%;
 	position: absolute;
 	right: 44px; /* leave room for delete action */
 	top: 0;
@@ -179,21 +197,21 @@ button.control {
 }
 
 
-.mail_message_loading {
-	display: none;
-}
-
 /* editor */
 
 #mail_new_message {
+	width: 90%;
 	padding: 10px;
 	margin: 4px 10px;
-	width: 90%;
 }
 
 #new-message {
+	position: absolute;
+	right: 0;
+	width: 60%;
 	margin: 10px;
 	margin-left: 49px;
+	z-index: 100;
 }
 #new-message-fields,
 .reply-message-fields {
@@ -243,6 +261,9 @@ button.control {
 	height: 100px;
 	resize: none;
 }
+#new-message-body {
+	height: 300px;
+}
 #new-message-send,
 .reply-message-send {
 	position: absolute;
@@ -279,11 +300,6 @@ button.control {
 	display: inline-block;
 }
 
-.mail_message_loading {
-	height: 32px;
-	margin-bottom: 10px;
-}
-
 .mail-message-body {
 	margin: 10px;
 	margin-left: 49px;
@@ -312,6 +328,15 @@ button.control {
 	opacity: .5;
 }
 
+#mail-message {
+	position: absolute;
+	top: 0;
+	right: 0;
+	width: 65%;
+	height: 100%;
+	overflow-y: auto;
+	overflow-x: hidden;
+}
 
 
 #new-message-attachments {
