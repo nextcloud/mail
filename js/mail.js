@@ -160,6 +160,9 @@ var Mail = {
 						Mail.State.currentAccountId = accountId;
 						Mail.State.currentFolderId = folderId;
 						Mail.State.currentMessageId = null;
+
+						var messageId = jsondata[0].id;
+						Mail.UI.openMessage(messageId);
 					},
 					error: function() {
 
@@ -183,6 +186,7 @@ var Mail = {
 					data: {},
 					type:'DELETE',
 					success: function () {
+						var nextMessage = $('#mail-message-summary-' + messageId).next();
 						$('#mail-message-summary-' + messageId)
 							.remove();
 
@@ -190,7 +194,8 @@ var Mail = {
 						Mail.State.currentMessageId = null;
 
 						// open next message
-//						Mail.UI.openMessage(messageId+1);
+						var nextMessageId = nextMessage.data('messageId');
+						Mail.UI.openMessage(nextMessageId);
 					},
 					error: function() {
 						OC.Notification.show(t('mail', 'Error while deleting mail.'));
