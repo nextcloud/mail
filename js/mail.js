@@ -159,7 +159,7 @@ var Mail = {
 
 						Mail.State.currentAccountId = accountId;
 						Mail.State.currentFolderId = folderId;
-						Mail.State.currentMessageId = null;
+						Mail.UI.setMessageActive(null);
 
 						var messageId = jsondata[0].id;
 						Mail.UI.openMessage(messageId);
@@ -191,7 +191,7 @@ var Mail = {
 							.remove();
 
 						// Set current Message as active
-						Mail.State.currentMessageId = null;
+						Mail.UI.setMessageActive(null);
 
 						// open next message
 						var nextMessageId = nextMessage.data('messageId');
@@ -316,7 +316,7 @@ var Mail = {
 					.html('')
 					.addClass('icon-loading');
 				var lastMessageId = Mail.State.currentMessageId;
-				Mail.State.currentMessageId = null;
+				Mail.UI.setMessageActive(null);
 				if (lastMessageId === messageId) {
 					return;
 				}
@@ -379,7 +379,7 @@ var Mail = {
 						});
 
 						// Set current Message as active
-						Mail.State.currentMessageId = messageId;
+						Mail.UI.setMessageActive(messageId);
 					},
 					error: function() {
 						OC.dialogs.alert(t('mail', 'Error while loading mail message.'), t('mail', 'Error'));
@@ -390,6 +390,22 @@ var Mail = {
 		setFolderActive:function (accountId, folderId) {
 			$('.mail_folders[data-account_id="' + accountId + '"]>li[data-folder_id="' + folderId + '"]')
 				.addClass('active');
+		},
+
+		setMessageActive:function (messageId) {
+			// Set active class for current message and remove it from old one
+
+			if(Mail.State.currentMessageId !== null) {
+				$('#mail-message-summary-'+Mail.State.currentMessageId)
+					.removeClass('active');
+			}
+
+			Mail.State.currentMessageId = messageId;
+
+			if(messageId !== null) {
+				$('#mail-message-summary-'+messageId)
+					.addClass('active');
+			}
 		},
 
 		addAccount:function () {

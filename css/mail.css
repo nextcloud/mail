@@ -119,6 +119,9 @@ button.control {
 	border-top: 1px solid #eee;
 	position: relative;
 }
+.mail_message_summary.active {
+	background-color: #eee;
+}
 
 .sender-image {
 	display: inline-block;
