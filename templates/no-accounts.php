@@ -4,7 +4,8 @@
 
 		<p class="grouptop">
 			<input type="email" name="mail-address" id="mail-address"
-				placeholder="<?php p($l->t('Mail Address')); ?>" value=""
+				placeholder="<?php p($l->t('Mail Address')); ?>"
+				value="<?php p(\OCP\Config::getUserValue(\OCP\User::getUser(), 'settings', 'email', '')); ?>"
 				autofocus autocomplete="off" required/>
 			<label for="mail-address" class="infield"><?php p($l->t('Mail Address')); ?></label>
 		</p>
