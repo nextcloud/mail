@@ -65,7 +65,11 @@ views.SendMail = Backbone.View.extend({
 			success:function () {
 				// close composer
 				$('#new-message').slideUp();
-				$('#mail_new_message').fadeIn();
+				$('#mail_new_message').prop('disabled', false);
+				$('#to').val('');
+				$('#subject').val('');
+				$('#new-message-body').val('');
+				self.attachments.reset();
 			},
 			error: function (jqXHR) {
 				OC.msg.finishedAction('#new-message-msg', {
