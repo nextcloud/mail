@@ -109,7 +109,7 @@ class Attachment {
 	}
 
 	/**
-	 * @return mixed
+	 * @return string
 	 */
 	public function getContents() {
 		return $this->mimePart->getContents();

@@ -47,6 +47,9 @@ class MailAccount {
 		}
 	}
 	
+	/**
+	 * @return integer
+	 */
 	public function getOcUserId(){
 		return $this->ocUserId;
 	}
