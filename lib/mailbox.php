@@ -10,7 +10,6 @@ namespace OCA\Mail;
 
 use Horde_Imap_Client;
 use Horde_Imap_Client_Ids;
-use Horde_Mime_Headers;
 
 class Mailbox {
 

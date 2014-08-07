@@ -91,6 +91,9 @@ class Message {
 		return $this->fetch->getEnvelope();
 	}
 
+	/**
+	 * @return string
+	 */
 	public function getFromEmail() {
 		$e = $this->getEnvelope();
 		$from = $e->from[0];
@@ -226,6 +229,9 @@ class Message {
 		}
 	}
 
+	/**
+	 * @param integer $partId
+	 */
 	private function queryBodyPart($partId) {
 
 		$fetch_query = new \Horde_Imap_Client_Fetch_Query();
@@ -368,7 +374,7 @@ class Message {
 	/**
 	 * @param \Horde_Mime_Part $p
 	 * @param int $partNo
-	 * @return bool|mixed|string
+	 * @return string
 	 */
 	private function loadBodyData($p, $partNo) {
 		// DECODE DATA

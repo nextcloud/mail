@@ -72,7 +72,7 @@ class Account {
 	}
 
 	/**
-	 * @param $pattern
+	 * @param string $pattern
 	 * @return Mailbox[]
 	 */
 	public function listMailboxes($pattern) {

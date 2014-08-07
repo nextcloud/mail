@@ -231,7 +231,7 @@ class MessagesController extends Controller
 	}
 
 	/**
-	 * @param $id
+	 * @param integer $id
 	 * @param $accountId
 	 * @param $folderId
 	 * @return callable
@@ -249,6 +249,9 @@ class MessagesController extends Controller
 		return $attachment;
 	}
 
+	/**
+	 * @param integer $id
+	 */
 	private function buildHtmlBodyUrl($accountId, $folderId, $id) {
 		$htmlBodyUrl = \OCP\Util::linkToRoute('mail.messages.getHtmlBody', array(
 			'accountId' => $accountId,

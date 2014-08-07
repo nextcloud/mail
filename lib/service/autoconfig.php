@@ -91,13 +91,13 @@ class AutoConfig {
 	 * @IsAdminExemption
 	 * @IsSubAdminExemption
 	 *
-	 * @param $ocUserId
+	 * @param string $ocUserId
 	 * @param $email
 	 * @param $inboundHost
 	 * @param $inboundHostPort
 	 * @param $inboundUser
 	 * @param $inboundPassword
-	 * @param $inboundSslMode
+	 * @param string|null $inboundSslMode
 	 * @return int MailAccountId
 	 */
 	private function addAccount($ocUserId, $email, $inboundHost, $inboundHostPort, $inboundUser, $inboundPassword, $inboundSslMode)

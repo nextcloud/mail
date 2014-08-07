@@ -22,9 +22,7 @@
 
 namespace OCA\Mail\Controller;
 
-use Horde_Imap_Client_Socket;
 use OCA\Mail\Account;
-use OCA\Mail\Db\MailAccount;
 use OCA\Mail\Service\AutoConfig;
 use OCA\Mail\Service\ContactsIntegration;
 use OCP\AppFramework\Controller;

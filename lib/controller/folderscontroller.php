@@ -23,7 +23,6 @@
 namespace OCA\Mail\Controller;
 
 use OCA\Mail\Account;
-use OCA\Mail\Db\MailAccount;
 use OCP\AppFramework\Controller;
 use OCP\AppFramework\Db\DoesNotExistException;
 use OCP\AppFramework\Http\JSONResponse;
