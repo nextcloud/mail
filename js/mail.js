@@ -446,11 +446,7 @@ $(document).ready(function () {
 
 	// new mail message button handling
 	$(document).on('click', '#mail_new_message', function () {
-		$('#to').val('');
-		$('#subject').val('');
-		$('#new-message-body').val('');
-
-		$('#mail_new_message').hide();
+		$('#mail_new_message').prop('disabled', true);
 		$('#new-message').slideDown();
 		$('#to').focus();
 	});

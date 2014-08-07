@@ -143,10 +143,11 @@
 <div id="app">
 	<div id="app-navigation" class="icon-loading">
 		<div id="accountManager"></div>
+		<input type="button" id="mail_new_message" class="primary"
+			value="<?php p($l->t('New Message')); ?>" style="display: none">
 		<div id="folders"></div>
 	</div>
 	<div id="app-content"  class="icon-loading">
-		<input type="button" id="mail_new_message" value="<?php p($l->t('New Message')); ?>" style="display: none">
 		<div id="new-message" style="display: none">
 
 			<div id="new-message-fields">
