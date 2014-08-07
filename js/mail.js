@@ -418,6 +418,9 @@ var Mail = {
 
 		addAccount:function () {
 			$('#mail_messages').addClass('hidden');
+			$('#mail-message').addClass('hidden');
+			$('#mail_new_message').addClass('hidden');
+			$('#folders').addClass('hidden');
 
 			Mail.UI.clearFolders();
 			Mail.UI.hideMenu();

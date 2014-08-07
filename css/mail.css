@@ -36,11 +36,11 @@ button.control {
 
 
 /* SETUP */
-#mail-setup fieldset {
-	position: relative;
+#mail-setup {
+	position: absolute;
 	width: 250px;
-	margin: 0 auto;
-	padding-top: 100px;
+	top: 20%;
+	left: 40%;
 }
 #mail-setup h2 {
 	text-align:center;
