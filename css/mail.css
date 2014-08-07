@@ -88,7 +88,10 @@ button.control {
 /* app content*/
 #mail_messages {
 	padding-bottom: 250px;
-	width: 30%;
+	width: 35%;
+	height: 100%;
+	overflow-x: hidden;
+	overflow-y: auto;
 }
 #load-more-mail-messages {
 	display: none;
@@ -101,14 +104,13 @@ button.control {
 	background-position: 9px center;
 }
 
+.mail-message-header {
+	height: 68px;
+}
 
 .mail_message_summary {
 	border-top: 1px solid #eee;
 	position: relative;
-}
-
-.mail-message-header {
-	height: 44px;
 }
 
 .sender-image {
@@ -131,19 +133,23 @@ button.control {
 .mail_message_summary_from {
 	width: 180px;
 	margin-left: 37px;
+	padding-bottom: 0;
 }
 
 .mail_message_summary_subject {
-	width: 45%;
+	padding-top: 0;
+	width: 90%;
+	margin-left: 37px;
 }
 /* with attachment */
 .mail_message_summary_subject.icon-public {
-	padding-left: 32px;
-	background-position: 10px center;
+	background-position: 10px 2px;
+	margin-left: 17px;
 }
 
 .date {
 	width: 120px;
+	max-width: 25%;
 	position: absolute;
 	right: 44px; /* leave room for delete action */
 	top: 0;
@@ -308,7 +314,7 @@ button.control {
 	position: absolute;
 	top: 0;
 	right: 0;
-	width: 70%;
+	width: 65%;
 	height: 100%;
 }
 
