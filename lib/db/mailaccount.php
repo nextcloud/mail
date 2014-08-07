@@ -186,16 +186,24 @@ class MailAccount {
 	 * @return array
 	 */
 	public function toJson() {
-		return array(
+		$result = array(
 			'accountId' => $this->getMailAccountId(),
 			'name' => $this->getMailAccountName(),
-			'email' => $this->getEmail(),
-			'imap-host' => $this->getInboundHost(),
-			'imap-port' => $this->getInboundHostPort(),
-			'imap-user' => $this->getInboundUser(),
-//			'imap-password' => $this->getInboundPassword(),
-			'imap-ssl-mode' => $this->getInboundSslMode(),
+			'emailAddress' => $this->getEmail(),
+			'imapHost' => $this->getInboundHost(),
+			'imapPort' => $this->getInboundHostPort(),
+			'imapUser' => $this->getInboundUser(),
+			'imapSslMode' => $this->getInboundSslMode(),
 		);
+
+		if (!is_null($this->getOutboundHost())) {
+			$result['smtpHost'] = $this->getOutboundHost();
+			$result['smtpPort'] = $this->getOutboundHostPort();
+			$result['smtpUser'] = $this->getOutboundUser();
+			$result['smtpSslMode'] = $this->getOutboundSslMode();
+		}
+
+		return $result;
 	}
 
 	/**
