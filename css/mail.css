@@ -167,12 +167,12 @@ button.control {
 	opacity: .5;
 }
 
-.msg.success {
+#app-content .msg.success {
 	color: #fff;
 	background-color: #47a447;
 	padding: 3px;
 }
-.msg.error {
+#app-content .msg.error {
 	color: #fff;
 	background-color: #d2322d;
 	padding: 3px;
