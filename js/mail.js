@@ -447,15 +447,18 @@ $(document).ready(function () {
 	$('#auto_detect_account').click(function (event) {
 		event.preventDefault();
 		$('#mail-address').prop('disabled', true);
+		$('#mail-mail-account-name').prop('disabled', true);
 		$('#mail-password').prop('disabled', true);
-		$('#auto_detect_account').prop('disabled', true);
-		$('#auto_detect_account').val(t('mail', 'Connecting …'));
+		$('#auto_detect_account')
+			.prop('disabled', true)
+			.val(t('mail', 'Connecting …'));
 		$('#connect-loading').fadeIn();
-		var emailAddress, password;
-		emailAddress = $('#mail-address').val();
-		password = $('#mail-password').val();
+		var emailAddress = $('#mail-address').val();
+		var accountName = $('#mail-mail-account-name').val();
+		var password = $('#mail-password').val();
 		$.ajax(OC.generateUrl('apps/mail/accounts'), {
 			data:{
+				accountName: accountName,
 				emailAddress : emailAddress,
 				password : password,
 				autoDetect : true
@@ -471,9 +474,11 @@ $(document).ready(function () {
 			},
 			complete: function() {
 				$('#mail-address').prop('disabled', false);
+				$('#mail-mail-account-name').prop('disabled', false);
 				$('#mail-password').prop('disabled', false);
-				$('#auto_detect_account').prop('disabled', false);
-				$('#auto_detect_account').val(t('mail', 'Connect'));
+				$('#auto_detect_account')
+					.prop('disabled', false)
+					.val(t('mail', 'Connect'));
 				$('#connect-loading').fadeOut();
 			}
 		});
