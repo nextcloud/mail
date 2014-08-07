@@ -60,14 +60,30 @@ button.control {
 }
 
 
+
+
+
+
 /* app navigation */
+
+/* fix scrolling */
+#app-navigation {
+	overflow-y: auto;
+	overflow-x: hidden;
+}
+
 #app-navigation .utils {
 	padding: 0 7px;
 }
 
+/* do not display empty folders in the sidebar */
 #app-navigation .empty {
 	display: none;
 }
+
+
+
+
 
 /* app content*/
 #mail_messages {
