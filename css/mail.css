@@ -120,7 +120,7 @@ button.control {
 	position: relative;
 }
 .mail_message_summary.active {
-	background-color: #eee;
+	background-color: #f8f8f8;
 }
 
 .sender-image {
