@@ -9,25 +9,25 @@
 </script>
 <script id="mail-folder-template" type="text/x-handlebars-template">
 	{{#each this}}
-		<ul class="mail_folders" data-account_id="{{id}}">
-			{{#each folders}}
-			<li data-folder_id="{{id}}"
+	<ul class="mail_folders" data-account_id="{{id}}">
+		{{#each folders}}
+		<li data-folder_id="{{id}}"
+		{{#if unseen}}
+		class="unread"
+		{{/if}}
+		{{#if isEmpty}}
+		class="empty"
+		{{/if}}
+		>
+		<a>
+			{{name}}
 			{{#if unseen}}
-			class="unread"
+			<span class="utils">{{unseen}}</span>
 			{{/if}}
-			{{#if isEmpty}}
-			class="empty"
-			{{/if}}
-			>
-			<a>
-				{{name}}
-				{{#if unseen}}
-				<span class="utils">{{unseen}}</span>
-				{{/if}}
-			</a>
-			</li>
-			{{/each}}
-		</ul>
+		</a>
+		</li>
+		{{/each}}
+	</ul>
 	{{/each}}
 </script>
 <script id="mail-messages-template" type="text/x-handlebars-template">
@@ -57,8 +57,6 @@
 			</div>
 			<div class="icon-delete action delete"></div>
 		</div>
-		<div class="mail_message_loading icon-loading"></div>
-		<div class="mail_message"></div>
 	</div>
 	{{/each}}
 </script>
@@ -71,7 +69,7 @@
 				</iframe>
 			</div>
 			{{else}}
-				{{{body}}}
+			{{{body}}}
 			{{/if}}
 		</div>
 		{{#if signature}}
@@ -110,35 +108,35 @@
 
 		<div class="reply-message-fields">
 			<a href="#" id="reply-message-cc-bcc-toggle"
-					class="transparency"><?php p($l->t('+ cc')); ?></a>
+			   class="transparency"><?php p($l->t('+ cc')); ?></a>
 
 			<input type="text" name="to" id="to"
-				placeholder="<?php p($l->t('Recipient')); ?>"
-				value="{{fromEmail}}"/>
+				   placeholder="<?php p($l->t('Recipient')); ?>"
+				   value="{{fromEmail}}"/>
 
 			<div id="reply-message-cc-bcc"
-				{{#unless cc}}
-				class="hidden"
-				{{/unless}}
-				>
-				<input type="text" name="cc" id="cc"
-					placeholder="<?php p($l->t('cc')); ?>" value="{{cc}}" />
-				<!--<input type="text" name="bcc" id="bcc"
-					placeholder="<?php p($l->t('bcc')); ?>" />-->
-			</div>
+			{{#unless cc}}
+			class="hidden"
+			{{/unless}}
+			>
+			<input type="text" name="cc" id="cc"
+				   placeholder="<?php p($l->t('cc')); ?>" value="{{cc}}" />
+			<!--<input type="text" name="bcc" id="bcc"
+				placeholder="<?php p($l->t('bcc')); ?>" />-->
+		</div>
 
-			<textarea name="body" class="reply-message-body"
-				placeholder="<?php p($l->t('Reply …')); ?>"></textarea>
-			<input class="reply-message-send" type="submit" value="<?php p($l->t('Reply')) ?>">
-		</div>
-		<div class="reply-message-more">
-			<!--<a href="#" class="reply-message-forward transparency"><?php p($l->t('Forward')) ?></a>-->
-			<!-- TODO: add attachment picker -->
-		</div>
+		<textarea name="body" class="reply-message-body"
+				  placeholder="<?php p($l->t('Reply …')); ?>"></textarea>
+		<input class="reply-message-send" type="submit" value="<?php p($l->t('Reply')) ?>">
+	</div>
+	<div class="reply-message-more">
+		<!--<a href="#" class="reply-message-forward transparency"><?php p($l->t('Forward')) ?></a>-->
+		<!-- TODO: add attachment picker -->
+	</div>
 	</div>
 </script>
 <script id="mail-attachment-template" type="text/x-handlebars-template">
-<span>{{displayName}}</span><div class="new-message-attachments-action svg icon-delete" data-attachment-id="{{id}}"></div>
+	<span>{{displayName}}</span><div class="new-message-attachments-action svg icon-delete" data-attachment-id="{{id}}"></div>
 </script>
 <div id="app">
 	<div id="app-navigation" class="icon-loading">
@@ -152,19 +150,19 @@
 
 			<div id="new-message-fields">
 				<a href="#" id="new-message-cc-bcc-toggle"
-					class="transparency"><?php p($l->t('+ cc/bcc')); ?></a>
+				   class="transparency"><?php p($l->t('+ cc/bcc')); ?></a>
 				<input type="text" name="to" id="to"
-					placeholder="<?php p($l->t('Recipient')); ?>" />
+					   placeholder="<?php p($l->t('Recipient')); ?>" />
 				<div id="new-message-cc-bcc">
 					<input type="text" name="cc" id="cc"
-						placeholder="<?php p($l->t('cc')); ?>" />
+						   placeholder="<?php p($l->t('cc')); ?>" />
 					<input type="text" name="bcc" id="bcc"
-						placeholder="<?php p($l->t('bcc')); ?>" />
+						   placeholder="<?php p($l->t('bcc')); ?>" />
 				</div>
 				<input type="text" name="subject" id="subject"
-					placeholder="<?php p($l->t('Subject')); ?>" />
+					   placeholder="<?php p($l->t('Subject')); ?>" />
 				<textarea name="body" id="new-message-body"
-					placeholder="<?php p($l->t('Message …')); ?>"></textarea>
+						  placeholder="<?php p($l->t('Message …')); ?>"></textarea>
 				<input id="new-message-send" class="send" type="submit" value="<?php p($l->t('Send')) ?>">
 			</div>
 			<div id="new-message-attachments">
@@ -176,30 +174,33 @@
 
 		<div id="mail_messages">
 			<div id="mail-message-list"></div>
-			<input type="button" id="load-more-mail-messages" value="<?php p($l->t('Load more …')); ?>"></div>
+			<input type="button" id="load-more-mail-messages" value="<?php p($l->t('Load more …')); ?>">
 		</div>
 
-		<form id="mail-setup" class="hidden">
-			<fieldset>
-				<h2><?php p($l->t('Connect your mail account')) ?></h2>
-
-				<p class="grouptop">
-					<input type="email" name="mail-address" id="mail-address"
-						   placeholder="<?php p($l->t('Mail Address')); ?>" value=""
-						   autofocus autocomplete="off" required/>
-					<label for="mail-address" class="infield"><?php p($l->t('Mail Address')); ?></label>
-				</p>
-
-				<p class="groupbottom">
-					<input type="password" name="mail-password" id="mail-password"
-						   placeholder="<?php p($l->t('IMAP Password')); ?>" value="" />
-					<label for="mail-password" class="infield"><?php p($l->t('IMAP Password')); ?></label>
-				</p>
-				<img id="connect-loading" src="<?php print_unescaped(OCP\Util::imagePath('core', 'loading.gif')); ?>" style="display:none;" />
-				<input type="submit" id="auto_detect_account" class="connect primary" value="<?php p($l->t('Connect')); ?>"/>
-			</fieldset>
-		</form>
-
-
+		<div id="mail-message" class="icon-loading">
+		</div>
 	</div>
+
+	<form id="mail-setup" class="hidden">
+		<fieldset>
+			<h2><?php p($l->t('Connect your mail account')) ?></h2>
+
+			<p class="grouptop">
+				<input type="email" name="mail-address" id="mail-address"
+					   placeholder="<?php p($l->t('Mail Address')); ?>" value=""
+					   autofocus autocomplete="off" required/>
+				<label for="mail-address" class="infield"><?php p($l->t('Mail Address')); ?></label>
+			</p>
+
+			<p class="groupbottom">
+				<input type="password" name="mail-password" id="mail-password"
+					   placeholder="<?php p($l->t('IMAP Password')); ?>" value="" />
+				<label for="mail-password" class="infield"><?php p($l->t('IMAP Password')); ?></label>
+			</p>
+			<img id="connect-loading" src="<?php print_unescaped(OCP\Util::imagePath('core', 'loading.gif')); ?>" style="display:none;" />
+			<input type="submit" id="auto_detect_account" class="connect primary" value="<?php p($l->t('Connect')); ?>"/>
+		</fieldset>
+	</form>
+
+
 </div>

@@ -88,6 +88,7 @@ button.control {
 /* app content*/
 #mail_messages {
 	padding-bottom: 250px;
+	width: 30%;
 }
 #load-more-mail-messages {
 	display: none;
@@ -178,10 +179,6 @@ button.control {
 	padding: 3px;
 }
 
-
-.mail_message_loading {
-	display: none;
-}
 
 /* editor */
 
@@ -279,11 +276,6 @@ button.control {
 	display: inline-block;
 }
 
-.mail_message_loading {
-	height: 32px;
-	margin-bottom: 10px;
-}
-
 .mail-message-body {
 	margin: 10px;
 	margin-left: 49px;
@@ -312,6 +304,13 @@ button.control {
 	opacity: .5;
 }
 
+#mail-message {
+	position: absolute;
+	top: 0;
+	right: 0;
+	width: 70%;
+	height: 100%;
+}
 
 
 #new-message-attachments {

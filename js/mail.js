@@ -104,6 +104,10 @@ var Mail = {
 		clearMessages:function () {
 			Mail.State.messageView.collection.reset();
 			$('#messages-loading').fadeIn();
+
+			$('#mail-message')
+				.html('')
+				.addClass('icon-loading');
 		},
 
 		clearFolders:function () {
@@ -178,13 +182,14 @@ var Mail = {
 					data: {},
 					type:'DELETE',
 					success: function () {
-						var summaryRow = $('#mail-message-summary-' + messageId);
-						summaryRow.find('.mail_message_loading').fadeOut(function(){
-							summaryRow.remove();
-						});
+						$('#mail-message-summary-' + messageId)
+							.remove();
 
 						// Set current Message as active
 						Mail.State.currentMessageId = null;
+
+						// open next message
+//						Mail.UI.openMessage(messageId+1);
 					},
 					error: function() {
 						OC.Notification.show(t('mail', 'Error while deleting mail.'));
@@ -301,12 +306,9 @@ var Mail = {
 			// close email first
 			// Check if message is open
 			if (Mail.State.currentMessageId !== null) {
-				var currentOpenMessage = $('#mail-message-summary-' + Mail.State.currentMessageId);
-				currentOpenMessage.find('.mail_message').slideUp(function(){
-					currentOpenMessage.find('.mail_message').html('');
-					var nextOpenMessage = $('#mail-message-summary-' + messageId);
-					nextOpenMessage[0].scrollIntoView(true);
-				});
+				$('#mail-message')
+					.html('')
+					.addClass('icon-loading');
 				var lastMessageId = Mail.State.currentMessageId;
 				Mail.State.currentMessageId = null;
 				if (lastMessageId === messageId) {
@@ -314,8 +316,7 @@ var Mail = {
 				}
 			}
 
-			var summaryRow = $('#mail-message-summary-' + messageId);
-			summaryRow.find('.mail_message_loading').slideDown();
+			var mailBody = $('#mail-message');
 
 			$.ajax(
 				OC.generateUrl('apps/mail/accounts/{accountId}/folders/{folderId}/messages/{messageId}',
@@ -331,45 +332,44 @@ var Mail = {
 						var source   = $("#mail-message-template").html();
 						var template = Handlebars.compile(source);
 						var html = template(data);
-						summaryRow.find('.mail_message_loading').fadeOut(function(){
-							var mailBody = summaryRow.find('.mail_message');
-							mailBody.html(html);
-							mailBody.slideDown();
-							mailBody.parent().removeClass('unseen');
+						mailBody
+							.html(html)
+							.removeClass('icon-loading');
+						$('#mail-message-summary-' + messageId)
+							.removeClass('unseen');
 
-							// HTML mail rendering
-							$('iframe').load(function() {
-								// Expand height to not have two scrollbars
-								$(this).height( $(this).contents().find('html').height() + 20);
-								// Fix styling
-								$(this).contents().find('body').css({
-									'margin': '0',
-									'font-weight': 'normal',
-									'font-size': '.8em',
-									'line-height': '1.6em',
-									'font-family': "'Open Sans', Frutiger, Calibri, 'Myriad Pro', Myriad, sans-serif",
-									'color': '#000'
-								});
-								// Fix font when different font is forced
-								$(this).contents().find('font').prop({
-									'face': 'Open Sans',
-									'color': '#000'
-								});
-								$(this).contents().find('.moz-text-flowed').css({
-									'font-family': 'inherit',
-									'font-size': 'inherit'
-								});
-								// Expand height again after rendering to account for new size
-								$(this).height( $(this).contents().find('html').height() + 20);
-								// Grey out previous replies
-								$(this).contents().find('blockquote').css({
-									'-ms-filter': '"progid:DXImageTransform.Microsoft.Alpha(Opacity=50)"',
-									'filter': 'alpha(opacity=50)',
-									'opacity': '.5'
-								});
-								// Remove spinner when loading finished
-								$('iframe').parent().removeClass('icon-loading');
+						// HTML mail rendering
+						$('iframe').load(function() {
+							// Expand height to not have two scrollbars
+							$(this).height( $(this).contents().find('html').height() + 20);
+							// Fix styling
+							$(this).contents().find('body').css({
+								'margin': '0',
+								'font-weight': 'normal',
+								'font-size': '.8em',
+								'line-height': '1.6em',
+								'font-family': "'Open Sans', Frutiger, Calibri, 'Myriad Pro', Myriad, sans-serif",
+								'color': '#000'
 							});
+							// Fix font when different font is forced
+							$(this).contents().find('font').prop({
+								'face': 'Open Sans',
+								'color': '#000'
+							});
+							$(this).contents().find('.moz-text-flowed').css({
+								'font-family': 'inherit',
+								'font-size': 'inherit'
+							});
+							// Expand height again after rendering to account for new size
+							$(this).height( $(this).contents().find('html').height() + 20);
+							// Grey out previous replies
+							$(this).contents().find('blockquote').css({
+								'-ms-filter': '"progid:DXImageTransform.Microsoft.Alpha(Opacity=50)"',
+								'filter': 'alpha(opacity=50)',
+								'opacity': '.5'
+							});
+							// Remove spinner when loading finished
+							$('iframe').parent().removeClass('icon-loading');
 						});
 
 						// Set current Message as active
@@ -468,9 +468,14 @@ $(document).ready(function () {
 	$(document).on('click', '#mail_messages .action.delete', function(event) {
 		event.stopPropagation();
 		$(this).removeClass('icon-delete').addClass('icon-loading');
-		var messageElement = $(this).parent().parent();
-		messageElement.addClass('transparency');
-		messageElement.slideUp();
+		var messageElement = $(this).parent().parent()
+			.addClass('transparency')
+			.slideUp();
+
+		$('#mail-message')
+			.html('')
+			.addClass('icon-loading');
+
 		var messageId = messageElement.data('messageId');
 		Mail.UI.deleteMessage(messageId);
 	});
