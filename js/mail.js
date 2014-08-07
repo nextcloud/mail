@@ -308,6 +308,11 @@ var Mail = {
 		},
 
 		openMessage:function (messageId) {
+			// Do not reload email when clicking same again
+			if(Mail.State.currentMessageId === messageId) {
+				return;
+			}
+
 			// close email first
 			// Check if message is open
 			if (Mail.State.currentMessageId !== null) {
