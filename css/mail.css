@@ -86,6 +86,13 @@ button.control {
 
 
 /* app content*/
+
+/* override the app content scrolling behavior
+	because we use 2 custom scrollable areas */
+#app-content {
+	overflow: hidden;
+}
+
 #mail_messages {
 	padding-bottom: 250px;
 	width: 35%;
@@ -316,6 +323,8 @@ button.control {
 	right: 0;
 	width: 65%;
 	height: 100%;
+	overflow-y: auto;
+	overflow-x: hidden;
 }
 
 
