@@ -147,7 +147,6 @@
 	</div>
 	<div id="app-content">
 		<div id="new-message" style="display: none">
-
 			<div id="new-message-fields">
 				<a href="#" id="new-message-cc-bcc-toggle"
 				   class="transparency"><?php p($l->t('+ cc/bcc')); ?></a>

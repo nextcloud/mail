@@ -308,6 +308,10 @@ var Mail = {
 		},
 
 		openMessage:function (messageId) {
+			// Fade out the message composer
+			$('#mail_new_message').prop('disabled', false);
+			$('#new-message').hide();
+
 			// Do not reload email when clicking same again
 			if(Mail.State.currentMessageId === messageId) {
 				return;
@@ -473,8 +477,10 @@ $(document).ready(function () {
 	// new mail message button handling
 	$(document).on('click', '#mail_new_message', function () {
 		$('#mail_new_message').prop('disabled', true);
-		$('#new-message').slideDown();
+		$('#new-message').fadeIn();
+		$('#mail-message').html('');
 		$('#to').focus();
+		Mail.UI.setMessageActive(null);
 	});
 
 	// Clicking on a folder loads the message list

@@ -200,14 +200,18 @@ button.control {
 /* editor */
 
 #mail_new_message {
+	width: 90%;
 	padding: 10px;
 	margin: 4px 10px;
-	width: 90%;
 }
 
 #new-message {
+	position: absolute;
+	right: 0;
+	width: 60%;
 	margin: 10px;
 	margin-left: 49px;
+	z-index: 100;
 }
 #new-message-fields,
 .reply-message-fields {
@@ -256,6 +260,9 @@ button.control {
 	border-top-right-radius: 0;
 	height: 100px;
 	resize: none;
+}
+#new-message-body {
+	height: 300px;
 }
 #new-message-send,
 .reply-message-send {
