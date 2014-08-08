@@ -37,12 +37,14 @@ var Mail = {
 
 
 			// setup sendmail view
-			Mail.State.messageView = new views.Messages({
-				el: $('#mail_messages')
-			});
+			if ($('#mail_messages').length) {
+				Mail.State.messageView = new views.Messages({
+					el: $('#mail_messages')
+				});
 
-			// And render it
-			Mail.State.messageView.render();
+				// And render it
+				Mail.State.messageView.render();
+			}
 
 			$.ajax(OC.generateUrl('apps/mail/accounts'), {
 				data:{},
