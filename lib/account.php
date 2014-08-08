@@ -111,7 +111,7 @@ class Account {
 
 		$inbox = null;
 		foreach ($folders as $key=>$value) {
-			if ($value['id'] === 'INBOX') {
+			if ($value['id'] === base64_encode('INBOX')) {
 				  $inbox = $key;
 			}
 		}

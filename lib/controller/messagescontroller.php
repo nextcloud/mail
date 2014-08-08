@@ -226,7 +226,7 @@ class MessagesController extends Controller
 	{
 		$account = $this->getAccount();
 		$m = new \OCA\Mail\Account($account);
-		$folderId = $this->params('folderId');
+		$folderId = base64_decode($this->params('folderId'));
 		return $m->getMailbox($folderId);
 	}
 

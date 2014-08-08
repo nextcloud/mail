@@ -111,7 +111,7 @@ class Mailbox {
 			}
 			$isEmpty = ($total === 0);
 			return array(
-				'id' => $this->folderId,
+				'id' => base64_encode($this->folderId),
 				'name' => $display_name,
 				'unseen' => $unseen,
 				'total' => $total,

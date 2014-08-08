@@ -44,8 +44,3 @@ $app->registerRoutes($this,
 			'messages' => array('url' => '/accounts/{accountId}/folders/{folderId}/messages'),
 		)
 	));
-
-// oC JS config
-$this->create('mail_editor', 'js/mail_editor.js')
-	->actionInclude('mail/js/mail_editor.php');
-
