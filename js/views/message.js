@@ -7,12 +7,13 @@ views.Messages = Backbone.View.extend({
 	// The collection will be kept here
 	collection: null,
 
+	template: null,
+
 	events: {
 		"click #load-more-mail-messages" : "loadMore"
-//		"click .new-message-attachments-action" : "removeAttachment"
 	},
 
-	initialize: function(options) {
+	initialize: function() {
 		this.collection = new models.MessageList();
 
 		this.template = Handlebars.compile($("#mail-messages-template").html());
