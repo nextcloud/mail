@@ -136,9 +136,10 @@ class AccountsController extends Controller
 	public function create($autoDetect)
 	{
 		if ($autoDetect) {
+			$name = $this->params('accountName');
 			$email = $this->params('emailAddress');
 			$password = $this->params('password');
-			$newAccountId = $this->autoConfig->createAutoDetected($email, $password);
+			$newAccountId = $this->autoConfig->createAutoDetected($email, $password, $name);
 		} else {
 			return new JSONResponse(array(), HTTP::STATUS_NOT_IMPLEMENTED);
 //			$email = $this->params('email');

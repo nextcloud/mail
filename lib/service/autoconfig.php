@@ -40,8 +40,7 @@ class AutoConfig {
 	 * Secure IMAP (IMAP4-SSL) - port 585
 	 * IMAP4 over SSL (IMAPS) - port 993
 	 */
-	private function testAccount($email, $host, $users, $password)
-	{
+	private function testAccount($email, $host, $users, $password, $name) {
 		if (!is_array($users)) {
 			$users = array($users);
 		}
@@ -57,7 +56,7 @@ class AutoConfig {
 						try {
 							$this->getImapConnection($url, $port, $user, $password, $encryptionProtocol);
 							$this->log("Test-Account-Successful: $this->userId, $url, $port, $user, $encryptionProtocol");
-							return $this->addAccount($this->userId, $email, $url, $port, $user, $password, $encryptionProtocol);
+							return $this->addAccount($this->userId, $email, $url, $port, $user, $password, $encryptionProtocol, $name);
 						} catch (\Horde_Imap_Client_Exception $e) {
 							$error = $e->getMessage();
 							$this->log("Test-Account-Failed: $this->userId, $url, $port, $user, $encryptionProtocol -> $error");
@@ -100,13 +99,13 @@ class AutoConfig {
 	 * @param string|null $inboundSslMode
 	 * @return int MailAccountId
 	 */
-	private function addAccount($ocUserId, $email, $inboundHost, $inboundHostPort, $inboundUser, $inboundPassword, $inboundSslMode)
+	private function addAccount($ocUserId, $email, $inboundHost, $inboundHostPort, $inboundUser, $inboundPassword, $inboundSslMode, $name)
 	{
 
 		$mailAccount = new MailAccount();
 		$mailAccount->setOcUserId($ocUserId);
 		$mailAccount->setMailAccountId(time());
-		$mailAccount->setMailAccountName($email);
+		$mailAccount->setMailAccountName($name);
 		$mailAccount->setEmail($email);
 		$mailAccount->setInboundHost($inboundHost);
 		$mailAccount->setInboundHostPort($inboundHostPort);
@@ -125,7 +124,7 @@ class AutoConfig {
 	 * @param $password
 	 * @return int|null
 	 */
-	public function createAutoDetected($email, $password)
+	public function createAutoDetected($email, $password, $name)
 	{
 		// splitting the email address into user and host part
 		list($user, $host) = explode("@", $email);
@@ -154,7 +153,7 @@ class AutoConfig {
 					try {
 						$this->getImapConnection($host, $port, $user, $password, $encryptionProtocol);
 						$this->log("Test-Account-Successful: $this->userId, $host, $port, $user, $encryptionProtocol");
-						return $this->addAccount($this->userId, $email, $host, $port, $user, $password, $encryptionProtocol);
+						return $this->addAccount($this->userId, $email, $host, $port, $user, $password, $encryptionProtocol, $name);
 					} catch (\Horde_Imap_Client_Exception $e) {
 						$error = $e->getMessage();
 						$this->log("Test-Account-Failed: $this->userId, $host, $port, $user, $encryptionProtocol -> $error");
@@ -170,7 +169,7 @@ class AutoConfig {
 		$mxHosts = $this->getMxRecord($host);
 		if ($mxHosts) {
 			foreach($mxHosts as $mxHost) {
-				$result = $this->testAccount($email, $mxHost, array($user, $email), $password);
+				$result = $this->testAccount($email, $mxHost, array($user, $email), $password, $name);
 				if ($result) {
 					return $result;
 				}
@@ -181,7 +180,7 @@ class AutoConfig {
 		 * IMAP login with full email address as user
 		 * works for a lot of providers (e.g. Google Mail)
 		 */
-		return $this->testAccount($email, $host, array($user, $email), $password);
+		return $this->testAccount($email, $host, array($user, $email), $password, $name);
 	}
 
 	private function log($message) {

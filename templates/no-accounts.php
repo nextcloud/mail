@@ -3,13 +3,19 @@
 		<h2><?php p($l->t('Connect your mail account')) ?></h2>
 
 		<p class="grouptop">
-			<input type="email" name="mail-address" id="mail-address"
-				placeholder="<?php p($l->t('Mail Address')); ?>"
-				value="<?php p(\OCP\Config::getUserValue(\OCP\User::getUser(), 'settings', 'email', '')); ?>"
-				autofocus autocomplete="off" required/>
+			<input type="text" name="mail-account-name" id="mail-account-name"
+				   placeholder="<?php p($l->t('Name')); ?>"
+				   value="<?php p(\OCP\User::getDisplayName(\OCP\User::getUser())); ?>"
+				   autofocus autocomplete="off" required/>
 			<label for="mail-address" class="infield"><?php p($l->t('Mail Address')); ?></label>
 		</p>
-
+		<p class="groupmiddle">
+			<input type="email" name="mail-address" id="mail-address"
+				   placeholder="<?php p($l->t('Mail Address')); ?>"
+				   value="<?php p(\OCP\Config::getUserValue(\OCP\User::getUser(), 'settings', 'email', '')); ?>"
+				   autofocus autocomplete="off" required/>
+			<label for="mail-address" class="infield"><?php p($l->t('Mail Address')); ?></label>
+		</p>
 		<p class="groupbottom">
 			<input type="password" name="mail-password" id="mail-password"
 				placeholder="<?php p($l->t('IMAP Password')); ?>" value="" />

@@ -46,6 +46,7 @@ button.control {
 	text-align:center;
 }
 #mail-address,
+#mail-account-name,
 #mail-password {
 	width: 100%;
 	box-sizing: border-box;
@@ -55,7 +56,7 @@ button.control {
 }
 #connect-loading {
 	position: absolute;
-	bottom: 48px;
+	top: 35%;
 	left: 45%;
 }
 
