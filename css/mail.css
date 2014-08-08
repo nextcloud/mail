@@ -56,7 +56,7 @@ button.control {
 }
 #connect-loading {
 	position: absolute;
-	bottom: 48px;
+	top: 35%;
 	left: 45%;
 }
 

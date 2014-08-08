@@ -446,15 +446,15 @@ $(document).ready(function () {
 	// auto detect button handling
 	$('#auto_detect_account').click(function (event) {
 		event.preventDefault();
+		$('#mail-account-name').prop('disabled', true);
 		$('#mail-address').prop('disabled', true);
-		$('#mail-mail-account-name').prop('disabled', true);
 		$('#mail-password').prop('disabled', true);
 		$('#auto_detect_account')
 			.prop('disabled', true)
 			.val(t('mail', 'Connecting …'));
 		$('#connect-loading').fadeIn();
 		var emailAddress = $('#mail-address').val();
-		var accountName = $('#mail-mail-account-name').val();
+		var accountName = $('#mail-account-name').val();
 		var password = $('#mail-password').val();
 		$.ajax(OC.generateUrl('apps/mail/accounts'), {
 			data:{
@@ -473,13 +473,13 @@ $(document).ready(function () {
 				OC.dialogs.alert(error, t('mail', 'Server Error'));
 			},
 			complete: function() {
+				$('#mail-account-name').prop('disabled', false);
 				$('#mail-address').prop('disabled', false);
-				$('#mail-mail-account-name').prop('disabled', false);
 				$('#mail-password').prop('disabled', false);
 				$('#auto_detect_account')
 					.prop('disabled', false)
 					.val(t('mail', 'Connect'));
-				$('#connect-loading').fadeOut();
+				$('#connect-loading').hide();
 			}
 		});
 	});
