@@ -8,7 +8,7 @@ $(function () {
 	function extractLast(term) {
 		return split(term).pop();
 	}
-	$('#to')
+	$('#to,#cc,#bcc')
 		// don't navigate away from the field on tab when selecting an item
 		.bind('keydown', function (event) {
 			if (event.keyCode === $.ui.keyCode.TAB &&
@@ -87,11 +87,13 @@ $(function () {
 	$(document).on('click', '#new-message-cc-bcc-toggle', function() {
 		$('#new-message-cc-bcc').slideToggle();
 		$('#new-message-cc-bcc #cc').focus();
+		$('#new-message-cc-bcc-toggle').fadeOut();
 	});
 
 	$(document).on('click', '#reply-message-cc-bcc-toggle', function() {
 		$('#reply-message-cc-bcc').slideToggle();
 		$('#reply-message-cc-bcc #cc').focus();
+		$('#reply-message-cc-bcc-toggle').fadeOut();
 	});
 
 	// setup sendmail view
