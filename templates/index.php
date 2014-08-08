@@ -2,7 +2,7 @@
 	<select class="mail_account">
 		<!--<option value="allAccounts"><?php p($l->t('All accounts')) ?></option>-->
 		{{#each this}}
-		<option value="{{accountId}}">{{name}}</option>
+		<option value="{{accountId}}">{{emailAddress}}</option>
 		{{/each}}
 		<option value="addAccount"><?php p($l->t('+ Add account')) ?></option>
 	</select>
