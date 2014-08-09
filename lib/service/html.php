@@ -18,14 +18,6 @@ use HTMLPurifier_URIFilter;
 use OCP\Util;
 use OC_Helper;
 
-class HTMLPurifier_AttrTransform_TargetAttribute extends HTMLPurifier_AttrTransform {
-	public function transform($attr, $config, $context) {
-		$attr['target'] = '_top';
-		return $attr;
-	}
-}
-
-
 class HTMLPurifier_URIFilter_TransformURLScheme extends HTMLPurifier_URIFilter
 {
 	public $name = 'TransformURLScheme';
@@ -87,10 +79,8 @@ class Html {
 	public function __construct() {
 		$config = HTMLPurifier_Config::createDefault();
 
-		// Append target="_parent" to all link (a) elements since it is iframed
-		$htmlDef = $config->getHTMLDefinition(true);
-		$link = $htmlDef->addBlankElement('a');
-		$link->attr_transform_post[] = new HTMLPurifier_AttrTransform_TargetAttribute();
+		// Append target="_blank" to all link (a) elements
+		$config->set('HTML.TargetBlank', true);
 
 		// Rewrite URL for redirection and proxying of content
 		$uri = $config->getDefinition('URI');
