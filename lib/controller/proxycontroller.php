@@ -49,6 +49,7 @@ class ProxyController extends Controller {
 		$route = 'mail.page.index';
 		$mailURL = $this->urlGenerator->linkToRoute($route);
 		$url = $this->request->getParam('src');
+		$authorizedRedirect = false;
 
 		if (strpos($url, 'http://') !== 0 && strpos($url, 'https://') !== 0) {
 			throw new \Exception('URL is not valid.', 1);
@@ -60,10 +61,13 @@ class ProxyController extends Controller {
 		// additional JS file here.
 		if(parse_url($_SERVER['HTTP_REFERER'], PHP_URL_HOST) === Util::getServerHostName()) {
 			Util::addScript('mail', 'autoredirect');
+			$authorizedRedirect = true;
 		}
 
 		$params = array(
+			'authorizedRedirect' => $authorizedRedirect,
 			'url' => $url,
+			'urlHost' => parse_url($url, PHP_URL_HOST),
 			'mailURL' => $mailURL,
 		);
 		return new TemplateResponse($this->appName, $templateName, $params, 'guest');
