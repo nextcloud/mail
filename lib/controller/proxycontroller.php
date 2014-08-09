@@ -23,8 +23,10 @@
 namespace OCA\Mail\Controller;
 
 use \OCP\IURLGenerator;
+use \OCP\Util;
 use OCP\AppFramework\Controller;
 use OCP\AppFramework\Http\TemplateResponse;
+use OCP\AppFramework\Http\RedirectResponse;
 use OCA\Mail\Http\ProxyDownloadResponse;
 
 class ProxyController extends Controller {
@@ -53,12 +55,19 @@ class ProxyController extends Controller {
 			throw new \Exception('URL is not valid.', 1);
 		}
 
+		// If the request has a referrer from this domain redirect the user without interaction
+		// this is there to prevent an open redirector.
+		// Since we can't prevent the referrer from being added with a HTTP only header we rely on an
+		// additional JS file here.
+		if(parse_url($_SERVER['HTTP_REFERER'], PHP_URL_HOST) === Util::getServerHostName()) {
+			Util::addScript('mail', 'autoredirect');
+		}
+
 		$params = array(
 			'url' => $url,
 			'mailURL' => $mailURL,
 		);
 		return new TemplateResponse($this->appName, $templateName, $params, 'guest');
-
 	}
 
 	/**
