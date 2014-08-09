@@ -26,7 +26,6 @@ use \OCP\IURLGenerator;
 use \OCP\Util;
 use OCP\AppFramework\Controller;
 use OCP\AppFramework\Http\TemplateResponse;
-use OCP\AppFramework\Http\RedirectResponse;
 use OCA\Mail\Http\ProxyDownloadResponse;
 
 class ProxyController extends Controller {
