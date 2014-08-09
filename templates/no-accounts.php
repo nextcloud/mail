@@ -7,7 +7,7 @@
 				   placeholder="<?php p($l->t('Name')); ?>"
 				   value="<?php p(\OCP\User::getDisplayName(\OCP\User::getUser())); ?>"
 				   autofocus autocomplete="off" required/>
-			<label for="mail-address" class="infield"><?php p($l->t('Mail Address')); ?></label>
+			<label for="mail-account-name" class="infield"><?php p($l->t('Name')); ?></label>
 		</p>
 		<p class="groupmiddle">
 			<input type="email" name="mail-address" id="mail-address"
