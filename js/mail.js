@@ -59,7 +59,10 @@ var Mail = {
 						var html = template(jsondata);
 						$('#accountManager').html(html);
 						Mail.UI.loadFoldersForAccount(jsondata[0].accountId);
-					}
+					},
+				error: function() {
+//					OC.msg.finishedAction('', '');
+				}
 			});
 		},
 
@@ -71,6 +74,8 @@ var Mail = {
 			$('#app-navigation').addClass('icon-loading');
 			$('#mail_messages').addClass('icon-loading');
 			$('#mail-message').addClass('icon-loading');
+
+			OC.msg.startAction('#app-navigation-msg', '');
 
 			$.ajax(OC.generateUrl('apps/mail/accounts/{accountId}/folders', {accountId: accountId}), {
 				data:{},
@@ -100,6 +105,18 @@ var Mail = {
 					} else {
 						$('#app-navigation').fadeOut(800);
 					}
+				},
+				error: function() {
+					OC.msg.finishedAction('#app-navigation-msg', {
+						status: 'error',
+						data: {
+							message: t('mail', 'Error while loading the selected account.')
+						}
+					});
+					$('#app-navigation')
+						.removeClass('icon-loading');
+					$('#app-content')
+						.removeClass('icon-loading');
 				}
 			});
 		},

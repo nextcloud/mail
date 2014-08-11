@@ -186,12 +186,12 @@ button.control {
 	opacity: .5;
 }
 
-.msg.success {
+#app-navigation .msg.success {
 	color: #fff;
 	background-color: #47a447;
 	padding: 3px;
 }
-.msg.error {
+#app-navigation .msg.error {
 	color: #fff;
 	background-color: #d2322d;
 	padding: 3px;
