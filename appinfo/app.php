@@ -2,15 +2,9 @@
 
 use OCA\Mail\HordeTranslationHandler;
 
-$autoload = __DIR__ .  '/../vendor/autoload.php';
-if (!is_readable($autoload)) {
-	print 'Cannot read "autoload.php". Did you run composer ?'.
-	      "<pre>cd path/to/owncloud/apps/mail\n".
-	      "curl -sS https://getcomposer.org/installer | php\n".
-	      'php composer.phar install</pre>';
-	exit;
+if ((@include_once __DIR__ . '/../vendor/autoload.php')===false) {
+	throw new Exception('Cannot include autoload. Did you run install dependencies using composer?');
 }
-require_once $autoload;
 $l = OC_L10N::get('mail');
 
 // bypass Horde Translation system
