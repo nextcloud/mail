@@ -4,16 +4,8 @@
  *
  * @author Sebastian Schmid
  * @copyright 2013 Sebastian Schmid mail@sebastian-schmid.de
- *
- * This library is free software; you can redistribute it and/or
- * modify it under the terms of the GNU AFFERO GENERAL PUBLIC LICENSE
- * License as published by the Free Software Foundation; either
- * version 3 of the License, or any later version.
- *
- * This library is distributed in the hope that it will be useful,
- * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- * GNU AFFERO GENERAL PUBLIC LICENSE for more details.
+ * @author Thomas Müller
+ * @copyright 2014 Thomas Müller deepdiver@owncloud.com
  *
  * You should have received a copy of the GNU Lesser General Public
  * License along with this library.  If not, see <http://www.gnu.org/licenses/>.
@@ -22,167 +14,96 @@
 
 namespace OCA\Mail\Db;
 
-class MailAccount {
+use OCP\AppFramework\Db\Entity;
 
-	private $ocUserId;
-	private $mailAccountId;
-	private $mailAccountName;
-	private $email;
-	private $inboundHost;
-	private $inboundHostPort;
-	private $inboundSslMode;
-	private $inboundUser;
-	private $inboundPassword;
-	private $inboundService;
-	private $outboundHost;
-	private $outboundHostPort;
-	private $outboundSslMode;
-	private $outboundUser;
-	private $outboundPassword;
-	private $outboundService;
-	
-	public function __construct($fromRow=null){
-		if($fromRow){
-			$this->fromRow($fromRow);
+/**
+ * Class MailAccount
+ *
+ * @package OCA\Mail\Db
+ *
+ * @method string getUserId()
+ * @method void setUserId(string $userId)
+ * @method string getName()
+ * @method void setName(string $name)
+ * @method string getEmail()
+ * @method void setEmail(string $email)
+ * @method string getInboundHost()
+ * @method void setInboundHost(string $inboundHost)
+ * @method integer getInboundPort()
+ * @method void setInboundPort(integer $inboundPort)
+ * @method string getInboundSslMode()
+ * @method void setInboundSslMode(string $inboundSslMode)
+ * @method string getInboundUser()
+ * @method void setInboundUser(string $inboundUser)
+ * @method string getInboundPassword()
+ * @method void setInboundPassword(string $inboundPassword)
+ * @method string getOutboundHost()
+ * @method void setOutboundHost(string $outboundHost)
+ * @method integer getOutboundPort()
+ * @method void setOutboundPort(integer $outboundPort)
+ * @method string getOutboundSslMode()
+ * @method void setOutboundSslMode(string $outboundSslMode)
+ * @method string getOutboundUser()
+ * @method void setOutboundUser(string $outboundUser)
+ * @method string getOutboundPassword()
+ * @method void setOutboundPassword(string $outboundPassword)
+ */
+class MailAccount extends Entity{
+
+	public $userId;
+	public $name;
+	public $email;
+	public $inboundHost;
+	public $inboundPort;
+	public $inboundSslMode;
+	public $inboundUser;
+	public $inboundPassword;
+	public $outboundHost;
+	public $outboundPort;
+	public $outboundSslMode;
+	public $outboundUser;
+	public $outboundPassword;
+
+	public function __construct($params = array()) {
+
+		if (isset($params['name'])) {
+			$this->setName($params['name']);
 		}
-	}
-	
-	/**
-	 * @return integer
-	 */
-	public function getOcUserId(){
-		return $this->ocUserId;
-	}
-	
-	public function setOcUserId($ocUserId){
-		$this->ocUserId = $ocUserId;
-	}
+		if (isset($params['emailAddress'])) {
+			$this->setEmail($params['emailAddress']);
+		}
 
-	/**
-	 * @return int
-	 */
-	public function getMailAccountId(){
-		return $this->mailAccountId;
-	}
-	
-	public function setMailAccountId($mailAccountId){
-		$this->mailAccountId = $mailAccountId;
-	}
-	
-	public function getMailAccountName(){
-		return $this->mailAccountName;
-	}
-	
-	public function setMailAccountName($mailAccountName){
-		$this->mailAccountName = $mailAccountName;
-	}
-	
-	public function getEmail(){
-		return $this->email;
-	}
-	
-	public function setEmail($email){
-		$this->email = $email;
-	}
-	
-	public function getInboundHost(){
-		return $this->inboundHost;
-	}
-	
-	public function setInboundHost($inboundHost){
-		$this->inboundHost = $inboundHost;
-	}
-	
-	public function getInboundHostPort(){
-		return $this->inboundHostPort;
-	}
-	
-	public function setInboundHostPort($inboundHostPort){
-		$this->inboundHostPort = $inboundHostPort;
-	}
-	
-	public function getInboundSslMode(){
-		return $this->inboundSslMode;
-	}
-	
-	public function setInboundSslMode($inboundSslMode){
-		$this->inboundSslMode = $inboundSslMode;
-	}
-	
-	public function getInboundUser(){
-		return $this->inboundUser;
-	}
-	
-	public function setInboundUser($inboundUser){
-		$this->inboundUser = $inboundUser;
-	}
-	
-	public function getInboundPassword(){
-		//return $this->decryptPassword($this->inboundPassword);
-		return $this->inboundPassword;
-	}
-	
-	public function setInboundPassword($inboundPassword){
-		//$this->inboundPassword = $this->encryptPassword($inboundPassword);
-		$this->inboundPassword = $inboundPassword;
-	}
-	
-	public function getInboundService(){
-		return $this->inboundService;
-	}
-	
-	public function setInboundService($inboundService){
-		$this->inboundService = $inboundService;
-	}
-	
-	public function getOutboundHost(){
-		return $this->outboundHost;
-	}
-	
-	public function setOutboundHost($outboundHost){
-		$this->outboundHost = $outboundHost;
-	}
-	
-	public function getOutboundHostPort(){
-		return $this->outboundHostPort;
-	}
-	
-	public function setOutboundHostPort($outboundHostPort){
-		$this->outboundHostPort = $outboundHostPort;
-	}
-	
-	public function getOutboundSslMode(){
-		return $this->outboundSslMode;
-	}
-	
-	public function setOutboundSslMode($outboundSslMode){
-		$this->outboundSslMode = $outboundSslMode;
-	}
-	
-	public function getOutboundUser(){
-		return $this->outboundUser;
-	}
-	
-	public function setOutboundUser($outboundUser){
-		$this->outboundUser = $outboundUser;
-	}
-	
-	public function getOutboundPassword(){
-		//return $this->decryptPassword($this->outboundPassword);
-		return $this->outboundPassword;
-	}
-	
-	public function setOutboundPassword($outboundPassword){
-		//$this->outboundPassword = $this->encryptPassword($outboundPassword);
-		$this->outboundPassword = $outboundPassword;
-	}
-	
-	public function getOutboundService(){
-		return $this->outboundService;
-	}
-	
-	public function setOutboundService($outboundService){
-		$this->outboundService = $outboundService;
+		if (isset($params['imapHost'])) {
+			$this->setInboundHost($params['imapHost']);
+		}
+		if (isset($params['imapPort'])) {
+			$this->setInboundPort($params['imapPort']);
+		}
+		if (isset($params['imapSslMode'])) {
+			$this->setInboundSslMode($params['imapSslMode']);
+		}
+		if (isset($params['imapUser'])) {
+			$this->setInboundUser($params['imapUser']);
+		}
+		if (isset($params['imapPassword'])) {
+			$this->setInboundPassword($params['imapPassword']);
+		}
+
+		if (isset($params['smtpHost'])) {
+			$this->setOutboundHost($params['smtpHost']);
+		}
+		if (isset($params['smtpPort'])) {
+			$this->setOutboundPort($params['smtpPort']);
+		}
+		if (isset($params['smtpSslMode'])) {
+			$this->setOutboundSslMode($params['smtpSslMode']);
+		}
+		if (isset($params['smtpUser'])) {
+			$this->setOutboundUser($params['smtpUser']);
+		}
+		if (isset($params['smtpPassword'])) {
+			$this->setOutboundPassword($params['smtpPassword']);
+		}
 	}
 
 	/**
@@ -190,44 +111,22 @@ class MailAccount {
 	 */
 	public function toJson() {
 		$result = array(
-			'accountId' => $this->getMailAccountId(),
-			'name' => $this->getMailAccountName(),
+			'accountId' => $this->getId(),
+			'name' => $this->getName(),
 			'emailAddress' => $this->getEmail(),
 			'imapHost' => $this->getInboundHost(),
-			'imapPort' => $this->getInboundHostPort(),
+			'imapPort' => $this->getInboundPort(),
 			'imapUser' => $this->getInboundUser(),
 			'imapSslMode' => $this->getInboundSslMode(),
 		);
 
 		if (!is_null($this->getOutboundHost())) {
 			$result['smtpHost'] = $this->getOutboundHost();
-			$result['smtpPort'] = $this->getOutboundHostPort();
+			$result['smtpPort'] = $this->getOutboundPort();
 			$result['smtpUser'] = $this->getOutboundUser();
 			$result['smtpSslMode'] = $this->getOutboundSslMode();
 		}
 
 		return $result;
-	}
-
-	/**
-	 * private functions
-	 */
-	private function fromRow($row){
-		$this->ocUserId = $row['ocuserid'];
-		$this->mailAccountId = $row['mailaccountid'];
-		$this->mailAccountName = $row['mailaccountname'];
-		$this->email = $row['email'];
-		$this->inboundHost = $row['inboundhost'];
-		$this->inboundHostPort = $row['inboundhostport'];
-		$this->inboundSslMode = $row['inboundsslmode'];
-		$this->inboundUser = $row['inbounduser'];
-		$this->inboundPassword = $row['inboundpassword'];
-		$this->inboundService = $row['inboundservice'];
-		$this->outboundHost = $row['outboundhost'];
-		$this->outboundHostPort = $row['outboundhostport'];
-		$this->outboundSslMode = $row['outboundsslmode'];
-		$this->outboundUser = $row['outbounduser'];
-		$this->outboundPassword = $row['outboundpassword'];
-		$this->outboundService = $row['outboundservice'];
 	}
 }

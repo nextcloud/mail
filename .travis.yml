@@ -19,10 +19,12 @@ before_install:
   - composer install
   - wget https://raw.githubusercontent.com/owncloud/administration/master/travis-ci/before_install.sh
   - bash ./before_install.sh mail $CORE_BRANCH $DB
+  - cd ../core
+  - php occ app:enable mail
 
 script:
   # Test lint
-  - cd ../core/apps/mail
+  - cd apps/mail
   - sh -c "if [ '$DB' = 'sqlite' ]; then ant test; fi"
 
   # Run phpunit tests
