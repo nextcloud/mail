@@ -30,11 +30,20 @@ use OCA\Mail\Http\ProxyDownloadResponse;
 
 class ProxyController extends Controller {
 
+	/**
+	 * @var \OCP\IURLGenerator
+	 */
 	private $urlGenerator;
 
-	public function __construct($appName, $request, IURLGenerator $urlGenerator){
+	/**
+	 * @var \OCP\ISession
+	 */
+	private $session;
+
+	public function __construct($appName, $request, IURLGenerator $urlGenerator, \OCP\ISession $session){
 		parent::__construct($appName, $request);
 		$this->urlGenerator = $urlGenerator;
+		$this->session = $session;
 	}
 
 	/**
@@ -83,6 +92,9 @@ class ProxyController extends Controller {
 	 * @return ProxyDownloadResponse
 	 */
 	public function proxy() {
+		// close the session to allow parallel downloads
+		$this->session->close();
+
 		$resourceURL = $this->request->getParam('src');
 		$content =  \OC_Util::getUrlContent($resourceURL);
 		return new ProxyDownloadResponse($content, $resourceURL, 'application/octet-stream');

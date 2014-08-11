@@ -86,7 +86,8 @@ class Application extends App {
 			return new ProxyController(
 				$c->query('AppName'),
 				$c->query('Request'),
-				$c->query('ServerContainer')->getURLGenerator()
+				$c->query('ServerContainer')->getURLGenerator(),
+				$c->query('ServerContainer')->getSession()
 			);
 		});
 
