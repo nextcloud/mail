@@ -1,3 +1,3 @@
 $(document).ready(function () {
-	$('#redirectLink').click();
+	$('#redirectLink').get(0).click();
 });
