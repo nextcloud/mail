@@ -11,6 +11,7 @@ $TRANSLATIONS = array(
 "Server Error" => "Σφάλμα Διακομιστή",
 "Connect" => "Σύνδεση",
 "Sending …" => "Αποστολή...",
+"Loading …" => "Φόρτωση ...",
 "Send" => "Αποστολή",
 "Auto detect failed. Please use manual mode." => " Η αυτόματη ανίχνευση απέτυχε. Παρακαλούμε χρησιμοποιήστε τη χειροκίνητη λειτουργία.",
 "All accounts" => "Όλοι οι λογαριασμοί",
