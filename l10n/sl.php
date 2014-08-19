@@ -38,6 +38,7 @@ $TRANSLATIONS = array(
 "Message …" => "Sporočilo ...",
 "Add attachment from Files" => "Dodaj prilogo iz mape Datoteke",
 "Connect your mail account" => "Povezava s poštnim računom",
+"Name" => "Ime",
 "Mail Address" => "Elektronski naslov",
 "IMAP Password" => "Geslo IMAP",
 "Redirect Warning" => "Opozorilo preusmeritve",

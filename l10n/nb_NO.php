@@ -38,6 +38,7 @@ $TRANSLATIONS = array(
 "Message …" => "Melding ...",
 "Add attachment from Files" => "Legg til vedlegg fra Filer",
 "Connect your mail account" => "Koble til din epost-konto",
+"Name" => "Navn",
 "Mail Address" => "E-postadresse",
 "IMAP Password" => "IMAP-passord",
 "Redirect Warning" => "Varsel om omdirigering",

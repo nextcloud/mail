@@ -38,6 +38,7 @@ $TRANSLATIONS = array(
 "Message …" => "メッセージ …",
 "Add attachment from Files" => "添付ファイルを追加",
 "Connect your mail account" => "メールアカウントに接続",
+"Name" => "名前",
 "Mail Address" => "メールアドレス",
 "IMAP Password" => "IMAP パスワード",
 "Redirect Warning" => "リダイレクト警告",

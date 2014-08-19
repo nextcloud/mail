@@ -32,6 +32,7 @@ $TRANSLATIONS = array(
 "Message …" => "Сообщение...",
 "Add attachment from Files" => "Добавить вложение из файла",
 "Connect your mail account" => "Подключите ваш почтовый аккаунт",
+"Name" => "Имя",
 "Mail Address" => "Почтовый адрес",
 "IMAP Password" => "Пароль IMAP",
 "Redirect Warning" => "Предупреждение перенаправления",

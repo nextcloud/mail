@@ -38,6 +38,7 @@ $TRANSLATIONS = array(
 "Message …" => "Mensaxe ...",
 "Add attachment from Files" => "Amestar axuntos dende Ficheros",
 "Connect your mail account" => "Coneuta la to cuenta de corréu",
+"Name" => "Nome",
 "Mail Address" => "Direición de corréu",
 "IMAP Password" => "Contraseña IMAP",
 "Redirect Warning" => "Avisu de Redireición",

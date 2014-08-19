@@ -1,6 +1,7 @@
 <?php
 $TRANSLATIONS = array(
 "Mail" => "Pošta",
+"Error while loading the selected account." => "Chyba během načítání vybraného účtu.",
 "Error" => "Chyba",
 "Error while deleting mail." => "Chyba při mazání e-mailu.",
 "Message could not be favorited. Please try again." => "Zpráva nemohla být upřednostněna. Prosím zkuste to znovu.",
@@ -17,6 +18,7 @@ $TRANSLATIONS = array(
 "Server Error" => "Chyba serveru",
 "Connect" => "Připojit",
 "Sending …" => "Odesílám ...",
+"Choose a file to add as attachment" => "Vybrat soubor k přiložení",
 "Loading …" => "Načítání ...",
 "Load more …" => "Načíst další ...",
 "Send" => "Odeslat",
@@ -38,6 +40,7 @@ $TRANSLATIONS = array(
 "Message …" => "Zpráva ...",
 "Add attachment from Files" => "Přidat přílohu ze Souborů",
 "Connect your mail account" => "Připojte se ke svému e-mailovému účtu",
+"Name" => "Název",
 "Mail Address" => "E-mailová adresa",
 "IMAP Password" => "Heslo IMAP",
 "Redirect Warning" => "Upozornění na přesměrování",

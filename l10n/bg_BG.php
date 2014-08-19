@@ -1,6 +1,7 @@
 <?php
 $TRANSLATIONS = array(
 "Mail" => "Поща",
+"Error while loading the selected account." => "Грешка при зареждането на избрания профил.",
 "Error" => "Грешка",
 "Error while deleting mail." => "Грешка при изтриването на имейла.",
 "Message could not be favorited. Please try again." => "Неуспешно маркиране на съобщението като любимо. Моля, опитай отново.",
@@ -17,6 +18,7 @@ $TRANSLATIONS = array(
 "Server Error" => "Грешка в Сървъра",
 "Connect" => "Свържи",
 "Sending …" => "Изпращане...",
+"Choose a file to add as attachment" => "Избери файл за прикачване",
 "Loading …" => "Зареждане ...",
 "Load more …" => "Зареди повече ...",
 "Send" => "Изпрати",
@@ -38,6 +40,7 @@ $TRANSLATIONS = array(
 "Message …" => "Съобщение...",
 "Add attachment from Files" => "Добави прикачен файл от Файлове",
 "Connect your mail account" => "Свържи имейла си",
+"Name" => "Име",
 "Mail Address" => "Адрес на пощата",
 "IMAP Password" => "IMAP Парола",
 "Redirect Warning" => "Предупреждение за Пренасочване",

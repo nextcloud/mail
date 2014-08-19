@@ -1,6 +1,7 @@
 <?php
 $TRANSLATIONS = array(
 "Mail" => "Posta",
+"Error while loading the selected account." => "Seçili hesap yüklenirken hata.",
 "Error" => "Hata",
 "Error while deleting mail." => "Posta silinirken hata.",
 "Message could not be favorited. Please try again." => "İleti favorilere eklenemedi. Lütfen yeniden deneyin.",
@@ -17,6 +18,7 @@ $TRANSLATIONS = array(
 "Server Error" => "Sunucu Hatası",
 "Connect" => "Bağlan",
 "Sending …" => "Gönderiliyor...",
+"Choose a file to add as attachment" => "Ek olarak eklemek için bir dosya seçin",
 "Loading …" => "Yükleniyor...",
 "Load more …" => "Daha fazla yükle...",
 "Send" => "Gönder",
@@ -38,6 +40,7 @@ $TRANSLATIONS = array(
 "Message …" => "İleti ...",
 "Add attachment from Files" => "Dosyalardan ek ekle",
 "Connect your mail account" => "Posta hesabınızı bağlayın",
+"Name" => "Ad",
 "Mail Address" => "Posta Adresi",
 "IMAP Password" => "IMAP Parolası",
 "Redirect Warning" => "Yönlendirme Uyarısı",

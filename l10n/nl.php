@@ -1,6 +1,7 @@
 <?php
 $TRANSLATIONS = array(
 "Mail" => "E-mail",
+"Error while loading the selected account." => "Fout tijdens het laden van het gekozen account.",
 "Error" => "Fout",
 "Error while deleting mail." => "Fout bij verwijderen e-mail",
 "Message could not be favorited. Please try again." => "Bericht kon niet als favoriet gemarkeerd worden. Probeer het opnieuw.",
@@ -17,6 +18,7 @@ $TRANSLATIONS = array(
 "Server Error" => "Server foutmelding",
 "Connect" => "Verbinden",
 "Sending …" => "Versturen ...",
+"Choose a file to add as attachment" => "Kies een bestand om als bijlage toe te voegen",
 "Loading …" => "Laden...",
 "Load more …" => "Laad meer ...",
 "Send" => "Versturen",
@@ -38,6 +40,7 @@ $TRANSLATIONS = array(
 "Message …" => "Bericht ...",
 "Add attachment from Files" => "Voeg een bijlage toe uit Bestanden",
 "Connect your mail account" => "Verbind uw e-mailaccount",
+"Name" => "Naam",
 "Mail Address" => "E-mailadres",
 "IMAP Password" => "IMAP wachtwoord",
 "Redirect Warning" => "Omleidingswaarschuwing",

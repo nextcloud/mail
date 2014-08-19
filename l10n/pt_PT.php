@@ -38,6 +38,7 @@ $TRANSLATIONS = array(
 "Message …" => "Mensagem ...",
 "Add attachment from Files" => "Adicionar anexo a partir dos ficheiros",
 "Connect your mail account" => "Ligar à sua conta de correio",
+"Name" => "Nome",
 "Mail Address" => "Endereço de email",
 "IMAP Password" => "Password IMAP",
 "Redirect Warning" => "Redirecionar Aviso",

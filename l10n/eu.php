@@ -1,6 +1,7 @@
 <?php
 $TRANSLATIONS = array(
 "Mail" => "Posta",
+"Error while loading the selected account." => "Errorea hautatutako kontua kargatzean.",
 "Error" => "Errorea",
 "Error while deleting mail." => "Errorea mezua ezabatzean",
 "Message could not be favorited. Please try again." => "Mezua ezin da markatu gogoko bezala. Saiatu berriz.",
@@ -17,6 +18,7 @@ $TRANSLATIONS = array(
 "Server Error" => "Zerbitzari errorea",
 "Connect" => "Konektatu",
 "Sending …" => "Bidaltzen...",
+"Choose a file to add as attachment" => "Hautatu fitxategia gehitzeko eranskin gisa",
 "Loading …" => "Kargatzen ...",
 "Load more …" => "Kargatu gehiago...",
 "Send" => "Bidali",
@@ -38,6 +40,7 @@ $TRANSLATIONS = array(
 "Message …" => "Mezua...",
 "Add attachment from Files" => "Gehitu eranskina Fitxategiak-etik",
 "Connect your mail account" => "Zure posta kontua konektatu",
+"Name" => "Izena",
 "Mail Address" => "Posta helbidea",
 "IMAP Password" => "IMAP pasahitza",
 "Redirect Warning" => "Birbideratu abisua",

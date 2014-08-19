@@ -38,6 +38,7 @@ $TRANSLATIONS = array(
 "Message …" => "پیفام ...",
 "Add attachment from Files" => "افزودن الصاق از فایل ها",
 "Connect your mail account" => "اتصال حساب پست الکترونیکی خود",
+"Name" => "نام",
 "Mail Address" => "آدرس ایمیل",
 "IMAP Password" => "رمزعبورIMAP ",
 "Redirect Warning" => "ریدایرکت کردن اخطارها",

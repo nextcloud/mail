@@ -31,6 +31,7 @@ $TRANSLATIONS = array(
 "Message …" => "Μήνυμα ...",
 "Add attachment from Files" => "Προσθέστε συνημένο αρχείο απο τα έγραφα",
 "Connect your mail account" => "Σύνδεση με το λογαριασμό ηλ. ταχυδρομείου σας",
+"Name" => "Όνομα",
 "Mail Address" => "Διεύθυνση Ηλ. Ταχυδρομείου",
 "IMAP Password" => "Κωδικός IMAP",
 "Redirect Warning" => "Ανακατεύθυνση προειδοποίησης",

@@ -1,6 +1,7 @@
 <?php
 $TRANSLATIONS = array(
 "Mail" => "Posta",
+"Error while loading the selected account." => "Errore durante il caricamento dell'account selezionato.",
 "Error" => "Errore",
 "Error while deleting mail." => "Errore durante l'eliminazione delle email",
 "Message could not be favorited. Please try again." => "Il messaggio non può essere aggiunto ai preferiti. Prova ancora.",
@@ -17,6 +18,7 @@ $TRANSLATIONS = array(
 "Server Error" => "Errore del server",
 "Connect" => "Connetti",
 "Sending …" => "Invio in corso...",
+"Choose a file to add as attachment" => "Scegli un file da aggiungere come allegato",
 "Loading …" => "Caricamento in corso...",
 "Load more …" => "Carica altro...",
 "Send" => "Invia",
@@ -38,6 +40,7 @@ $TRANSLATIONS = array(
 "Message …" => "Messaggio…",
 "Add attachment from Files" => "Aggiungi allegato da File",
 "Connect your mail account" => "Connetti il tuo account di posta",
+"Name" => "Nome",
 "Mail Address" => "Indirizzo di posta",
 "IMAP Password" => "Password IMAP",
 "Redirect Warning" => "Avviso di redirezione",
