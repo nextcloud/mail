@@ -511,7 +511,7 @@ $(document).ready(function () {
 			},
 			type:'POST',
 			success:function (data) {
-				Mail.State.router.navigate('accounts/' + data);
+				Mail.State.router.navigate('accounts/' + data.data.id, {trigger: true});
 			},
 			error: function(jqXHR, textStatus, errorThrown){
 				var error = errorThrown || textStatus || t('mail', 'Unknown error');
