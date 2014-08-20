@@ -195,6 +195,13 @@ var Mail = {
 		},
 
 		deleteMessage:function (messageId) {
+			// When currently open message is deleted, open next one
+			var nextMessage = $('#mail-message-summary-' + messageId).next();
+			if(messageId === Mail.State.currentMessageId) {
+				var nextMessageId = nextMessage.data('messageId');
+				Mail.UI.openMessage(nextMessageId);
+			}
+
 			$.ajax(
 				OC.generateUrl('apps/mail/accounts/{accountId}/folders/{folderId}/messages/{messageId}',
 					{
@@ -205,15 +212,7 @@ var Mail = {
 					data: {},
 					type:'DELETE',
 					success: function () {
-						var nextMessage = $('#mail-message-summary-' + messageId).next();
-						$('#mail-message-summary-' + messageId)
-							.remove();
-
-						// When currently open message is deleted, open next one
-						if(messageId === Mail.State.currentMessageId) {
-							var nextMessageId = nextMessage.data('messageId');
-							Mail.UI.openMessage(nextMessageId);
-						}
+						$('#mail-message-summary-' + messageId).remove();
 					},
 					error: function() {
 						OC.Notification.show(t('mail', 'Error while deleting mail.'));
