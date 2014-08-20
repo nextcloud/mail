@@ -8,14 +8,7 @@
 		<name>*dbprefix*mail_accounts</name>
 		<declaration>
 			<field>
-				<name>ocuserid</name>
-				<type>text</type>
-				<default></default>
-				<notnull>true</notnull>
-				<length>64</length>
-			</field>
-			<field>
-				<name>mailaccountid</name>
+				<name>id</name>
 				<type>integer</type>
 				<autoincrement>1</autoincrement>
 				<default>0</default>
@@ -23,7 +16,14 @@
 				<length>4</length>
 			</field>
 			<field>
-				<name>mailaccountname</name>
+				<name>user_id</name>
+				<type>text</type>
+				<default></default>
+				<notnull>true</notnull>
+				<length>64</length>
+			</field>
+			<field>
+				<name>name</name>
 				<type>text</type>
 				<default></default>
 				<notnull>false</notnull>
@@ -37,102 +37,80 @@
 				<length>64</length>
 			</field>
 			<field>
-				<name>inboundhost</name>
+				<name>inbound_host</name>
 				<type>text</type>
 				<default></default>
 				<notnull>true</notnull>
 				<length>64</length>
 			</field>
 			<field>
-				<name>inboundhostport</name>
+				<name>inbound_port</name>
 				<type>text</type>
 				<default></default>
 				<notnull>true</notnull>
 				<length>6</length>
 			</field>
 			<field>
-				<name>inboundsslmode</name>
+				<name>inbound_ssl_mode</name>
 				<type>text</type>
 				<default></default>
 				<notnull>true</notnull>
 				<length>10</length>
 			</field>
 			<field>
-				<name>inbounduser</name>
+				<name>inbound_user</name>
 				<type>text</type>
 				<default></default>
 				<notnull>true</notnull>
 				<length>64</length>
 			</field>
 			<field>
-				<name>inboundpassword</name>
+				<name>inbound_password</name>
 				<type>text</type>
 				<default></default>
 				<notnull>true</notnull>
 				<length>255</length>
 			</field>
 			<field>
-				<name>inboundservice</name>
-				<type>text</type>
-				<default></default>
-				<notnull>false</notnull>
-				<length>10</length>
-			</field>
-			<field>
-				<name>outboundhost</name>
+				<name>outbound_host</name>
 				<type>text</type>
 				<default></default>
 				<notnull>false</notnull>
 				<length>64</length>
 			</field>
 			<field>
-				<name>outboundhostport</name>
+				<name>outbound_port</name>
 				<type>text</type>
 				<default></default>
 				<notnull>false</notnull>
 				<length>6</length>
 			</field>
 			<field>
-				<name>outboundsslmode</name>
+				<name>outbound_ssl_mode</name>
 				<type>text</type>
 				<default></default>
 				<notnull>false</notnull>
 				<length>10</length>
 			</field>
 			<field>
-				<name>outbounduser</name>
+				<name>outbound_user</name>
 				<type>text</type>
 				<default></default>
 				<notnull>false</notnull>
 				<length>64</length>
 			</field>
 			<field>
-				<name>outboundpassword</name>
+				<name>outbound_password</name>
 				<type>text</type>
 				<default></default>
 				<notnull>false</notnull>
 				<length>255</length>
-			</field>
-			<field>
-				<name>outboundservice</name>
-				<type>text</type>
-				<default></default>
-				<notnull>false</notnull>
-				<length>10</length>
 			</field>
 
 			<index>
-				<name>mail_ocuserid_index</name>
+				<name>mail_userid_index</name>
 				<field>
-					<name>ocuserid</name>
-					<sorting>ascending</sorting>
-				</field>
-			</index>
-			<index>
-				<name>mail_mailaccountid_index</name>
-				<unique>true</unique>
-				<field>
-					<name>mailaccountid</name>
+					<name>user_id</name>
 					<sorting>ascending</sorting>
 				</field>
 			</index>

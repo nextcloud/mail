@@ -17,7 +17,8 @@
         "pear-pear.horde.org/Horde_Support": ">=2.0.5@stable,<=3.0.0alpha1@stable",
         "pear-pear.horde.org/Horde_Text_Filter": ">=2.1.0@stable,<=3.0.0alpha1@stable",
         "pear-pear.horde.org/Horde_Text_Flowed": ">=2.0.0@stable,<=3.0.0alpha1@stable",
-        "pear-pear.horde.org/Horde_Util": ">=2.2.0@stable,<=3.0.0alpha1@stable",
+		"pear-pear.horde.org/Horde_Util": ">=2.2.0@stable,<=3.0.0alpha1@stable",
+		"pear-pear.horde.org/Horde_Smtp": ">=1.5.0@stable,<=2.0.0alpha1@stable",
 		"ezyang/htmlpurifier": "v4.6.0"
 	}
 }

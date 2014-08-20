@@ -23,6 +23,7 @@
 namespace OCA\Mail\Controller;
 
 use OCA\Mail\Account;
+use OCA\Mail\Db\MailAccount;
 use OCA\Mail\Service\AutoConfig;
 use OCA\Mail\Service\ContactsIntegration;
 use OCP\AppFramework\Controller;
@@ -135,28 +136,37 @@ class AccountsController extends Controller
 	 */
 	public function create($autoDetect)
 	{
-		if ($autoDetect) {
-			$name = $this->params('accountName');
-			$email = $this->params('emailAddress');
-			$password = $this->params('password');
-			$newAccountId = $this->autoConfig->createAutoDetected($email, $password, $name);
-		} else {
-			return new JSONResponse(array(), HTTP::STATUS_NOT_IMPLEMENTED);
-//			$email = $this->params('email');
-//			$inboundHost = $this->params('imap-server');
-//			$inboundHostPort = $this->params('imap-port');
-//			$inboundUser = $this->params('imap-user');
-//			$inboundPassword = $this->params('imap-password');
-//			$inboundSslMode = $this->params('imap-ssl-mode');
-//
-//			$newAccountId = $this->addAccount($this->currentUserId, $email, $inboundHost, $inboundHostPort,
-//				$inboundUser, $inboundPassword, $inboundSslMode);
-		}
+		try {
+			if ($autoDetect) {
+				$name = $this->params('accountName');
+				$email = $this->params('emailAddress');
+				$password = $this->params('password');
+				$newAccount = $this->autoConfig->createAutoDetected($email, $password, $name);
+				$this->mapper->save($newAccount);
+			} else {
+				$newAccount = new MailAccount($this->getParams());
+				$newAccount->getUserId($this->currentUserId);
 
-		if ($newAccountId) {
+				$a = new Account($newAccount);
+				// connect to imap
+				$a->getImapConnection();
+
+				// connect to smtp
+				$smtp = $a->createTransport();
+				$smtp->getSMTPObject();
+				$this->mapper->save($newAccount);
+			}
+
+			if ($newAccount) {
+				return new JSONResponse(
+					array('data' => array('id' => $newAccount->getId())),
+					Http::STATUS_CREATED);
+			}
+		} catch (\Exception $ex) {
+			$l = new \OC_L10N('mail');
 			return new JSONResponse(
-				array('data' => array('id' => $newAccountId)),
-				Http::STATUS_CREATED);
+				array('message' => $l->t('Creating account failed: ' . $ex->getMessage())),
+				HTTP::STATUS_BAD_REQUEST);
 		}
 
 		$l = new \OC_L10N('mail');

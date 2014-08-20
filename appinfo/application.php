@@ -110,7 +110,6 @@ class Application extends App {
 		$container->registerService('AutoConfig', function ($c) {
 			/** @var IAppContainer $c */
 			return new AutoConfig(
-				$c->query('MailAccountMapper'),
 				$c->query('UserId')
 			);
 		});

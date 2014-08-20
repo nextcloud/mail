@@ -57,7 +57,7 @@ class FoldersController extends Controller
 
 		foreach($accounts as $account) {
 			$m = new \OCA\Mail\Account($account);
-			$json[$account->getMailAccountId()] = $m->getListArray();
+			$json[$account->getId()] = $m->getListArray();
 		}
 
 		return new JSONResponse($json);

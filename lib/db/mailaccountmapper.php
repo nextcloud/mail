@@ -34,15 +34,14 @@ class MailAccountMapper extends Mapper {
 	/** Finds an Mail Account by id
 	 *
 	 * @param int $userId
-	 * @param int $mailAccountId
+	 * @param int $accountId
 	 * @return MailAccount
 	 */
-	public function find($userId, $mailAccountId){
-		$sql = 'SELECT * FROM `' . $this->getTableName() . '` WHERE ocuserid = ? and mailaccountid = ?';
-		$params = array($userId, $mailAccountId);
+	public function find($userId, $accountId){
+		$sql = 'SELECT * FROM `' . $this->getTableName() . '` WHERE user_id = ? and id = ?';
+		$params = array($userId, $accountId);
 
-		$row = $this->findOneQuery($sql, $params);
-		return new MailAccount($row);
+		return $this->findEntity($sql, $params);
 	}
 
 	/**
@@ -52,110 +51,24 @@ class MailAccountMapper extends Mapper {
 	 * @return MailAccount[]
 	 */
 	public function findByUserId($userId){
-		$sql = 'SELECT * FROM ' . $this->getTableName() . ' WHERE ocuserid = ?';
+		$sql = 'SELECT * FROM ' . $this->getTableName() . ' WHERE user_id = ?';
 		$params = array($userId);
 
-		$result = $this->execute($sql, $params);
-		$mailAccounts = array();
-		while( $row = $result->fetchRow()) {
-			$mailAccount = new MailAccount($row);
-			$mailAccounts[] = $mailAccount;
-		}
-
-		return $mailAccounts;
+		return $this->findEntities($sql, $params);
 	}
 
 	/**
 	 * Saves an User Account into the database
-	 * @param MailAccount $mailAccount
-	 * @internal param \OCA\Mail\Db\Account $User $userAccount the User Account to be saved
-	 * @return MailAccount with the filled in mailaccountid
+	 * @param MailAccount $account
+	 * @return MailAccount
 	 */
-	public function save($mailAccount){
-		$sql = 'INSERT INTO ' . $this->getTableName() . '(
-			 `ocuserid`,
-			 `mailaccountid`,
-			 `mailaccountname`,
-			 `email`,
-			 `inboundhost`,
-			 `inboundhostport`,
-			 `inboundsslmode`,
-			 `inbounduser`,
-			 `inboundpassword`,
-			 `inboundservice`,
-			 `outboundhost`,
-			 `outboundhostport`,
-			 `outboundsslmode`,
-			 `outbounduser`,
-			 `outboundpassword`,
-			 `outboundservice`
-			 )' . 'VALUES(?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)';
-
-		$params = array(
-			$mailAccount->getOcUserId(),
-			$mailAccount->getMailAccountId(),
-			$mailAccount->getMailAccountName(),
-			$mailAccount->getEmail(),
-			$mailAccount->getInboundHost(),
-			$mailAccount->getInboundHostPort(),
-			$mailAccount->getInboundSslMode(),
-			$mailAccount->getInboundUser(),
-			$mailAccount->getInboundPassword(),
-			$mailAccount->getInboundService(),
-			$mailAccount->getOutboundHost(),
-			$mailAccount->getOutboundHostPort(),
-			$mailAccount->getOutboundSslMode(),
-			$mailAccount->getOutboundUser(),
-			$mailAccount->getOutboundPassword(),
-			$mailAccount->getOutboundService()
-		);
-
-		$this->execute($sql, $params);
-
-		return $mailAccount;
+	public function save(MailAccount $account) {
+		if (is_null($account->getId())) {
+			return $this->insert($account);
+		} else {
+			$this->update($account);
+			return $account;
+		}
 	}
-
-	/**
-	 * Updates a Mail Account
-	 * @param  MailAccount $mailAccount
-	 */
-	/*public function update($mailAccount){
-		$sql = 'UPDATE ' . $this->getTableName() . 'SET
-		 	`mailaccountname` = ?,
-		 	`email` = ?,
-		 	`inboundhost` = ?,
-		 	`inboundhostport` = ?,
-		 	`inboundsslmode` = ?,
-		 	`inbounduser` = ?,
-		 	`inboundpassword` = ?,
-		 	`inboundservice` = ?,
-		 	`outboundhost` = ?,
-		 	`outboundhostport` = ?,
-		 	`outboundsslmode` = ?,
-		 	`outbounduser` = ?,
-		 	`outboundpassword` = ?,
-		 	`outboundservice` = ?
-			WHERE `mailaccountid` = ?';
-
-		$params = array(
-			$mailAccount->getMailAccountName(),
-			$mailAccount->getEmail(),
-			$mailAccount->getInboundHost(),
-			$mailAccount->getInboundHostPort(),
-			$mailAccount->getInboundSslMode(),
-			$mailAccount->getInboundUser(),
-			$mailAccount->getInboundPassword(),
-			$mailAccount->getInboundService(),
-			$mailAccount->getOutboundHost(),
-			$mailAccount->getOutboundHostPort(),
-			$mailAccount->getOutboundSslMode(),
-			$mailAccount->getOutboundUser(),
-			$mailAccount->getOutboundPassword(),
-			$mailAccount->getOutboundService(),
-			$mailAccount->getMailAccountId()
-		);
-
-		$this->execute($sql, $params);
-	}*/
 
 }

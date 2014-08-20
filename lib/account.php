@@ -1,6 +1,8 @@
 <?php
 /**
  * Copyright (c) 2012 Bart Visscher <bartv@thisnet.nl>
+ * Copyright (c) 2014 Thomas Müller <deepdiver@owncloud.com>
+ *
  * This file is licensed under the Affero General Public License version 3 or
  * later.
  * See the COPYING-README file.
@@ -12,46 +14,37 @@ use OCA\Mail\Cache\Cache;
 use OCA\Mail\Db\MailAccount;
 
 class Account {
-	private $info;
 
-	// input $conn = IMAP conn, $folder_id = folder id
-	function __construct($info) {
-		$this->info = $info;
-		if ($info instanceof MailAccount) {
-			$this->info = array(
-				'host' => $info->getInboundHost(),
-				'user' => $info->getInboundUser(),
-				'password' => $info->getInboundPassword(),
-				'port' => $info->getInboundHostPort(),
-				'ssl_mode' => $info->getInboundSslMode(),
-				'id' => $info->getMailAccountId(),
-				'email' => $info->getEmail(),
-				'name' => $info->getMailAccountName(),
-			);
-		}
+	/**
+	 * @var MailAccount
+	 */
+	private $account;
+
+	/**
+	 * @param MailAccount $info
+	 */
+	function __construct(MailAccount $account) {
+		$this->account = $account;
 	}
 
 	public function getId() {
-		return $this->info['id'];
+		return $this->account->getId();
 	}
 
 	public function getName() {
-		return $this->info['name'];
+		return $this->account->getName();
 	}
 
 	public function getEMailAddress() {
-		return $this->info['email'];
+		return $this->account->getEmail();
 	}
 
 	public function getImapConnection() {
-		//
-		// TODO: cache connections for / within accounts???
-		//
-		$host = $this->info['host'];
-		$user = $this->info['user'];
-		$password = $this->info['password'];
-		$port = $this->info['port'];
-		$ssl_mode = $this->info['ssl_mode'];
+		$host = $this->account->getInboundHost();
+		$user = $this->account->getInboundUser();
+		$password = $this->account->getInboundPassword();
+		$port = $this->account->getInboundPort();
+		$ssl_mode = $this->account->getInboundSslMode();
 
 		$client = new \Horde_Imap_Client_Socket(
 			array(
@@ -130,13 +123,19 @@ class Account {
 	}
 
 	/**
-	 * @return \Horde_Mail_Transport_Sendmail
+	 * @return \Horde_Mail_Transport_Smtphorde
 	 */
 	public function createTransport() {
-		//
-		// TODO: implement according to the SMTP settings
-		//
-		return new \Horde_Mail_Transport_Sendmail();
+		$host = $this->account->getOutboundHost();
+		$params = array(
+			'host' => $host,
+			'password' => $this->account->getOutboundPassword(),
+			'port' => $this->account->getOutboundPort(),
+			'username' => $this->account->getOutboundUser(),
+			'secure' => $this->account->getOutboundSslMode(),
+			'timeout' => 2
+		);
+		return new \Horde_Mail_Transport_Smtphorde($params);
 	}
 
 	public function getSentFolder() {
