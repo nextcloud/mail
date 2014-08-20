@@ -4,7 +4,6 @@
 		{{#each this}}
 		<option value="{{accountId}}">{{emailAddress}}</option>
 		{{/each}}
-		<option value="addAccount"><?php p($l->t('+ Add account')) ?></option>
 	</select>
 </script>
 <script id="mail-attachment-template" type="text/x-handlebars-template">

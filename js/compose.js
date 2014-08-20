@@ -40,10 +40,13 @@ var Mail = {
 						if(jsondata.length === 0) {
 							return;
 						}
-						var source   = $("#mail-account-manager").html();
-						var template = Handlebars.compile(source);
-						var html = template(jsondata);
-						$('#accountManager').html(html);
+						// only show account switcher when there are multiple
+						if(jsondata.length > 1) {
+							var source   = $("#mail-account-manager").html();
+							var template = Handlebars.compile(source);
+							var html = template(jsondata);
+							$('#accountManager').html(html);
+						}
 						Mail.State.currentAccountId = jsondata[0].accountId;
 				},
 				error: function() {
