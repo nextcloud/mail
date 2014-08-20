@@ -36,8 +36,14 @@ var Mail = {
 				return humanFileSize(size);
 			});
 
-			var protocolHandlerUrl = window.location.protocol + '//' + window.location.host + OC.generateUrl('apps/mail/accounts?uri=%s');
-			navigator.registerProtocolHandler("mailto", protocolHandlerUrl, "ownCloud Mail");
+			// ask to handle all mailto: links
+			if(window.navigator.registerProtocolHandler) {
+				var url = window.location.protocol + '//'
+					+ window.location.host
+					+ OC.generateUrl('apps/mail/accounts?uri=%s');
+				window.navigator
+					.registerProtocolHandler("mailto", url, "ownCloud Mail");
+			}
 
 			var AppRouter = Backbone.Router.extend({
 				routes: {
