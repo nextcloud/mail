@@ -12,9 +12,9 @@
 </script>
 <div id="app">
 	<div id="app-content">
-		<div id="accountManager"></div>
 		<div><span id="app-navigation-msg" class="msg"></span></div>
 		<div id="new-message">
+			<div id="accountManager"></div>
 			<div id="new-message-fields">
 				<a href="#" id="new-message-cc-bcc-toggle"
 				   class="transparency"><?php p($l->t('+ cc/bcc')); ?></a>

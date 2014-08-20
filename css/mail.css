@@ -206,6 +206,10 @@ button.control {
 	margin: 4px 10px;
 }
 
+#accountManager {
+	width: 60%;
+}
+
 #new-message {
 	position: absolute;
 	right: 0;
