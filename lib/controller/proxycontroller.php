@@ -23,17 +23,27 @@
 namespace OCA\Mail\Controller;
 
 use \OCP\IURLGenerator;
+use \OCP\Util;
 use OCP\AppFramework\Controller;
 use OCP\AppFramework\Http\TemplateResponse;
 use OCA\Mail\Http\ProxyDownloadResponse;
 
 class ProxyController extends Controller {
 
+	/**
+	 * @var \OCP\IURLGenerator
+	 */
 	private $urlGenerator;
 
-	public function __construct($appName, $request, IURLGenerator $urlGenerator){
+	/**
+	 * @var \OCP\ISession
+	 */
+	private $session;
+
+	public function __construct($appName, $request, IURLGenerator $urlGenerator, \OCP\ISession $session){
 		parent::__construct($appName, $request);
 		$this->urlGenerator = $urlGenerator;
+		$this->session = $session;
 	}
 
 	/**
@@ -48,17 +58,28 @@ class ProxyController extends Controller {
 		$route = 'mail.page.index';
 		$mailURL = $this->urlGenerator->linkToRoute($route);
 		$url = $this->request->getParam('src');
+		$authorizedRedirect = false;
 
 		if (strpos($url, 'http://') !== 0 && strpos($url, 'https://') !== 0) {
 			throw new \Exception('URL is not valid.', 1);
 		}
 
+		// If the request has a referrer from this domain redirect the user without interaction
+		// this is there to prevent an open redirector.
+		// Since we can't prevent the referrer from being added with a HTTP only header we rely on an
+		// additional JS file here.
+		if(parse_url($_SERVER['HTTP_REFERER'], PHP_URL_HOST) === Util::getServerHostName()) {
+			Util::addScript('mail', 'autoredirect');
+			$authorizedRedirect = true;
+		}
+
 		$params = array(
+			'authorizedRedirect' => $authorizedRedirect,
 			'url' => $url,
+			'urlHost' => parse_url($url, PHP_URL_HOST),
 			'mailURL' => $mailURL,
 		);
 		return new TemplateResponse($this->appName, $templateName, $params, 'guest');
-
 	}
 
 	/**
@@ -71,6 +92,9 @@ class ProxyController extends Controller {
 	 * @return ProxyDownloadResponse
 	 */
 	public function proxy() {
+		// close the session to allow parallel downloads
+		$this->session->close();
+
 		$resourceURL = $this->request->getParam('src');
 		$content =  \OC_Util::getUrlContent($resourceURL);
 		return new ProxyDownloadResponse($content, $resourceURL, 'application/octet-stream');
