@@ -206,10 +206,6 @@ button.control {
 	margin: 4px 10px;
 }
 
-#accountManager {
-	width: 60%;
-}
-
 #new-message {
 	position: absolute;
 	right: 0;
@@ -389,4 +385,16 @@ button.control {
 }
 .attachment-icon {
 	vertical-align: middle;
+}
+
+
+
+/* compose */
+
+.compose #accountManager {
+	width: 60%;
+}
+
+.compose #new-message {
+	left: 25%;
 }

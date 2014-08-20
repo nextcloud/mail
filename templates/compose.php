@@ -11,7 +11,7 @@
 	<span>{{displayName}}</span><div class="new-message-attachments-action svg icon-delete" data-attachment-id="{{id}}"></div>
 </script>
 <div id="app">
-	<div id="app-content">
+	<div id="app-content" class="compose">
 		<div><span id="app-navigation-msg" class="msg"></span></div>
 		<div id="new-message">
 			<div id="accountManager"></div>
