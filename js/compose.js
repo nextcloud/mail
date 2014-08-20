@@ -73,5 +73,10 @@ $(document).ready(function () {
 		Mail.State.currentAccountId = $( this ).val();
 	});
 
+	if($('#cc').attr('value') || $('#bcc').attr('value')) {
+		$('#new-message-cc-bcc').show();
+		$('#new-message-cc-bcc-toggle').hide();
+	}
+
 	$('textarea').autosize();
 });
