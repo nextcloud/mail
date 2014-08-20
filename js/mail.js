@@ -1,10 +1,11 @@
-/* global Handlebars, relative_modified_date, formatDate, humanFileSize, views */
+/* global Backbone, Handlebars, relative_modified_date, formatDate, humanFileSize, views */
 var Mail = {
 	State:{
 		currentFolderId: null,
 		currentAccountId: null,
 		currentMessageId: null,
-		messageView: null
+		messageView: null,
+		router: null
 	},
 	UI:{
 		initializeInterface:function () {
@@ -35,6 +36,25 @@ var Mail = {
 				return humanFileSize(size);
 			});
 
+			var AppRouter = Backbone.Router.extend({
+				routes: {
+					"accounts/new": "newAccount",
+					"*actions": "defaultRoute" // matches http://example.com/#anything-here
+				},
+
+				newAccount: function() {
+					Mail.UI.addAccount();
+				},
+
+				defaultRoute: function() {
+//					alert('default');
+				}
+			});
+			// Initiate the router
+			Mail.State.router = new AppRouter();
+
+			// Start Backbone history a necessary step for bookmarkable URL's
+			Backbone.history.start();
 
 			// setup sendmail view
 			if ($('#mail_messages').length) {
@@ -51,14 +71,15 @@ var Mail = {
 				type:'GET',
 				success:function (jsondata) {
 						// don't try to load accounts if there are none
-						if(jsondata.length === 0) {
-							return;
-						}
 						var source   = $("#mail-account-manager").html();
 						var template = Handlebars.compile(source);
 						var html = template(jsondata);
 						$('#accountManager').html(html);
-						Mail.UI.loadFoldersForAccount(jsondata[0].accountId);
+						if(jsondata.length === 0) {
+							Mail.State.router.navigate('accounts/new');
+						} else {
+							Mail.UI.loadFoldersForAccount(jsondata[0].accountId);
+						}
 					},
 				error: function() {
 //					OC.msg.finishedAction('', '');
@@ -440,6 +461,7 @@ var Mail = {
 			$('#mail-message').addClass('hidden');
 			$('#mail_new_message').addClass('hidden');
 			$('#folders').addClass('hidden');
+			$('#app-navigation').removeClass('icon-loading');
 
 			Mail.UI.clearFolders();
 			Mail.UI.hideMenu();
