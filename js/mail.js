@@ -43,6 +43,7 @@ var Mail = {
 				},
 
 				loadAccount: function(id) {
+					$('select.mail_account').val(id);
 					if (id === 'new') {
 						Mail.UI.addAccount();
 					} else {
