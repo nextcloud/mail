@@ -387,9 +387,11 @@ class AutoConfig {
 	 */
 	private function canConnect($url, $port) {
 		$fp = fsockopen ( $url, $port);
-		$result = (is_resource($fp));
-		fclose($fp);
-		return $result;
+		if (is_resource($fp)) {
+			fclose($fp);
+			return true;
+		}
+		return false;
 	}
 
 }

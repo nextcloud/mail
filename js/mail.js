@@ -1,10 +1,11 @@
-/* global Handlebars, relative_modified_date, formatDate, humanFileSize, views */
+/* global Backbone, Handlebars, relative_modified_date, formatDate, humanFileSize, views */
 var Mail = {
 	State:{
 		currentFolderId: null,
 		currentAccountId: null,
 		currentMessageId: null,
-		messageView: null
+		messageView: null,
+		router: null
 	},
 	UI:{
 		initializeInterface:function () {
@@ -35,38 +36,65 @@ var Mail = {
 				return humanFileSize(size);
 			});
 
+			var AppRouter = Backbone.Router.extend({
+				routes: {
+					"accounts/:id": "loadAccount",
+					"*actions": "defaultRoute" // matches http://example.com/#anything-here
+				},
+
+				loadAccount: function(id) {
+					if (id === 'new') {
+						Mail.UI.addAccount();
+					} else {
+						Mail.UI.loadFoldersForAccount(id);
+					}
+				},
+
+				defaultRoute: function() {
+//					alert('default');
+				}
+			});
+			// Initiate the router
+			Mail.State.router = new AppRouter();
 
 			// setup sendmail view
-			if ($('#mail_messages').length) {
-				Mail.State.messageView = new views.Messages({
-					el: $('#mail_messages')
-				});
-
-				// And render it
-				Mail.State.messageView.render();
-			}
+			Mail.State.messageView = new views.Messages({
+				el: $('#mail_messages')
+			});
+			Mail.State.messageView.render();
 
 			$.ajax(OC.generateUrl('apps/mail/accounts'), {
 				data:{},
 				type:'GET',
 				success:function (jsondata) {
 						// don't try to load accounts if there are none
-						if(jsondata.length === 0) {
-							return;
-						}
 						var source   = $("#mail-account-manager").html();
 						var template = Handlebars.compile(source);
 						var html = template(jsondata);
 						$('#accountManager').html(html);
-						Mail.UI.loadFoldersForAccount(jsondata[0].accountId);
+						if(jsondata.length === 0) {
+							Mail.State.router.navigate('accounts/new', {trigger: true});
+						} else {
+							Mail.State.router.navigate('accounts/' + jsondata[0].accountId, {trigger: true});
+						}
 					},
 				error: function() {
 //					OC.msg.finishedAction('', '');
 				}
 			});
+
+			// Start Backbone history a necessary step for bookmarkable URL's
+			Backbone.history.start();
 		},
 
 		loadFoldersForAccount : function(accountId) {
+
+			$('#mail_messages').removeClass('hidden');
+			$('#mail-message').removeClass('hidden');
+			$('#mail_new_message').removeClass('hidden');
+			$('#folders').removeClass('hidden');
+			$('#mail-setup').addClass('hidden');
+
 			var firstFolder, folderId;
 
 			Mail.UI.clearFolders();
@@ -439,6 +467,7 @@ var Mail = {
 			$('#mail-message').addClass('hidden');
 			$('#mail_new_message').addClass('hidden');
 			$('#folders').addClass('hidden');
+			$('#app-navigation').removeClass('icon-loading');
 
 			Mail.UI.clearFolders();
 			Mail.UI.hideMenu();
@@ -480,9 +509,8 @@ $(document).ready(function () {
 				autoDetect : true
 			},
 			type:'POST',
-			success:function () {
-				// reload on success
-				window.location.reload();
+			success:function (data) {
+				Mail.State.router.navigate('accounts/' + data.data.id, {trigger: true});
 			},
 			error: function(jqXHR, textStatus, errorThrown){
 				var error = errorThrown || textStatus || t('mail', 'Unknown error');
@@ -556,14 +584,8 @@ $(document).ready(function () {
 	$(document).on('change', '#app-navigation .mail_account', function(event) {
 		event.stopPropagation();
 
-		var accountId;
-
-		accountId = $( this ).val();
-		if(accountId === 'addAccount') {
-			Mail.UI.addAccount();
-		} else {
-			Mail.UI.loadFoldersForAccount(accountId);
-		}
+		var id = $( this ).val();
+		Mail.State.router.navigate('accounts/' + id, {trigger: true});
 	});
 
 	$('textarea').autosize();

@@ -64,23 +64,6 @@ class PageController extends Controller {
 		\OCP\Util::addStyle('mail','mail');
 		\OCP\Util::addStyle('mail','mobile');
 
-		$accounts = $this->mailAccountMapper->findByUserId($this->currentUserId);
-		if (!empty($accounts)) {
-			$templateName = 'index';
-			$params = array(
-				'accounts' => $accounts,
-			);
-		} else {
-			$templateName = 'no-accounts';
-			$params = array(
-				'accounts' => false,
-				'legend' => 'Connect your mail account',
-				'mailAddress' => 'Mail Address',
-				'imapPassword' => 'IMAP Password',
-				'connect' => 'Connect'
-			);
-		}
-
-		return new TemplateResponse($this->appName, $templateName, $params);
+		return new TemplateResponse($this->appName, 'index', array());
 	}
 }
