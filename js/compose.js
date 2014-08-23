@@ -69,14 +69,36 @@ $(document).ready(function () {
 
 	$(document).on('change', '#app-navigation .mail_account', function(event) {
 		event.stopPropagation();
-
 		Mail.State.currentAccountId = $( this ).val();
+	});
+
+	$(document).on('click', '#nav-to-mail', function(event) {
+		event.stopPropagation();
+		location.href = OC.generateUrl('/apps/mail/');
+	});
+
+	$(document).on('click', '#back-in-time', function(event) {
+		event.stopPropagation();
+		window.history.back();
 	});
 
 	if($('#cc').attr('value') || $('#bcc').attr('value')) {
 		$('#new-message-cc-bcc').show();
 		$('#new-message-cc-bcc-toggle').hide();
 	}
+
+	// setup sendmail view
+	var view = new views.SendMail({
+		el: $('#new-message')
+	});
+
+	view.sentCallback = function() {
+		$('#nav-buttons').removeClass('hidden');
+		$('#new-message-fields').slideUp();
+	};
+	// And render it
+	view.render();
+
 
 	$('textarea').autosize();
 });

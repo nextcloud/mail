@@ -1,6 +1,5 @@
 <script id="mail-account-manager" type="text/x-handlebars-template">
 	<select class="mail_account">
-		<!--<option value="allAccounts"><?php p($l->t('All accounts')) ?></option>-->
 		{{#each this}}
 		<option value="{{accountId}}">{{emailAddress}}</option>
 		{{/each}}
@@ -40,6 +39,10 @@
 				<input type="button" id="mail_new_attachment" value="<?php p($l->t('Add attachment from Files')); ?>">
 			</div>
 			<div><span id="new-message-msg" class="msg"></div>
+			<div id="nav-buttons" class="hidden">
+				<input type="button" id="nav-to-mail" value="<?php p($l->t('Open Mail App')); ?>">
+				<input type="button" id="back-in-time" value="<?php p($l->t('Back')); ?>">
+			</div>
 		</div>
 
 	</div>

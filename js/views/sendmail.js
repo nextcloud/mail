@@ -7,6 +7,8 @@ views.SendMail = Backbone.View.extend({
 	// The collection will be kept here
 	attachments: null,
 
+	sentCallback: null,
+
 	events: {
 		"click #new-message-send" : "sendMail"
 	},
@@ -36,10 +38,14 @@ views.SendMail = Backbone.View.extend({
 		var newMessageBody = $('#new-message-body');
 		var newMessageSend = $('#new-message-send');
 		newMessageBody.addClass('icon-loading');
-		$('#to').prop('disabled', true);
-		$('#cc').prop('disabled', true);
-		$('#bcc').prop('disabled', true);
-		$('#subject').prop('disabled', true);
+		var to = $('#to');
+		var cc = $('#cc');
+		var bcc = $('#bcc');
+		var subject = $('#subject');
+		to.prop('disabled', true);
+		cc.prop('disabled', true);
+		bcc.prop('disabled', true);
+		subject.prop('disabled', true);
 		$('.new-message-attachments-action').css('display', 'none');
 		$('#mail_new_attachment').prop('disabled', true);
 		newMessageBody.prop('disabled', true);
@@ -55,16 +61,27 @@ views.SendMail = Backbone.View.extend({
 			},
 			type: 'POST',
 			data:{
-				'to':$('#to').val(),
-				'cc':$('#cc').val(),
-				'bcc':$('#bcc').val(),
-				'subject':$('#subject').val(),
+				'to': to.val(),
+				'cc': cc.val(),
+				'bcc': bcc.val(),
+				'subject': subject.val(),
 				'body':newMessageBody.val(),
 				'attachments': self.attachments.toJSON()
 			},
 			success:function () {
+				OC.msg.finishedAction('#new-message-msg', {
+					status: 'success',
+					data: {
+						message: t('mail', 'Mail sent to {Receiver}', {Receiver: to.val()})
+					}
+				});
+
 				// close composer
-				$('#new-message').slideUp();
+				if (self.sentCallback !== null) {
+					self.sentCallback();
+				} else {
+					$('#new-message').slideUp();
+				}
 				$('#mail_new_message').prop('disabled', false);
 				$('#to').val('');
 				$('#subject').val('');
