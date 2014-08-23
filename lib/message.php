@@ -29,10 +29,11 @@ use OCP\AppFramework\Db\DoesNotExistException;
 class Message {
 
 	/**
-	 * @param $conn
-	 * @param $folderId
-	 * @param $messageId
-	 * @param null $fetch
+	 * @param \Horde_Imap_Client_Socket $conn
+	 * @param string $folderId
+	 * @param integer $messageId
+	 * @param \Horde_Imap_Client_Data_Fetch|null $fetch
+	 * @param boolean $loadHtmlMessage
 	 */
 	function __construct($conn, $folderId, $messageId, $fetch=null, $loadHtmlMessage=false) {
 		$this->conn = $conn;
@@ -70,10 +71,16 @@ class Message {
 	 */
 	private $fetch;
 
+	/**
+	 * @return int
+	 */
 	public function getUid() {
 		return $this->fetch->getUid();
 	}
 
+	/**
+	 * @return array
+	 */
 	public function getFlags() {
 		$flags = $this->fetch->getFlags();
 		return array(
@@ -87,6 +94,9 @@ class Message {
 		);
 	}
 
+	/**
+	 * @return \Horde_Imap_Client_Data_Envelope
+	 */
 	public function getEnvelope() {
 		return $this->fetch->getEnvelope();
 	}
@@ -97,19 +107,25 @@ class Message {
 	public function getFromEmail() {
 		$e = $this->getEnvelope();
 		$from = $e->from[0];
-		return $from->bare_address;
+		return $from ? $from->bare_address : null;
 	}
 
+	/**
+	 * @return string
+	 */
 	public function getFrom() {
 		$e = $this->getEnvelope();
 		$from = $e->from[0];
-		return $from->label;
+		return $from ? $from->label : null;
 	}
 
+	/**
+	 * @return string
+	 */
 	public function getToEmail() {
 		$e = $this->getEnvelope();
-		$from = $e->to[0];
-		return $from->bare_address;
+		$to = $e->to[0];
+		return $to ? $to->bare_address : null;
 	}
 
 	public function getTo() {
