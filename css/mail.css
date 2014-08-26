@@ -386,3 +386,15 @@ button.control {
 .attachment-icon {
 	vertical-align: middle;
 }
+
+
+
+/* compose */
+
+.compose #accountManager {
+	width: 60%;
+}
+
+.compose #new-message {
+	left: 25%;
+}

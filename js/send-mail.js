@@ -101,6 +101,10 @@ $(function () {
 		el: $('#new-message')
 	});
 
+	view.sentCallback = function() {
+
+	};
+
 	// And render it
 	view.render();
 });

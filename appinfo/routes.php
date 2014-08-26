@@ -11,6 +11,7 @@ $app->registerRoutes($this,
 	array(
 		'routes' => array(
 			array('name' => 'page#index', 'url' => '/', 'verb' => 'GET'),
+			array('name' => 'page#compose', 'url' => '/compose', 'verb' => 'GET'),
 			array('name' => 'accounts#send', 'url' => '/accounts/{accountId}/send', 'verb' => 'POST'),
 			array('name' => 'accounts#autoComplete', 'url' => '/accounts/autoComplete', 'verb' => 'GET'),
 			array(

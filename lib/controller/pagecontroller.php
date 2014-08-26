@@ -66,4 +66,45 @@ class PageController extends Controller {
 
 		return new TemplateResponse($this->appName, 'index', array());
 	}
+
+	/**
+	 * @NoAdminRequired
+	 * @NoCSRFRequired
+	 *
+	 * @param string $uri
+	 * @return TemplateResponse renders the compose page
+	 */
+	public function compose($uri) {
+
+		$parts = parse_url($uri);
+
+		$params = array('mailto' => $parts['path']);
+		$parts = explode('&', $parts['query']);
+		foreach($parts as $part) {
+			$pair = explode('=', $part, 2);
+			$params[strtolower($pair[0])] = urldecode($pair[1]);
+		}
+
+		$params = array_merge(array(
+			'mailto' => '',
+			'cc' => '',
+			'bcc' => '',
+			'subject' => '',
+			'body' => ''
+		), $params);
+
+		\OCP\Util::addScript('mail','handlebars-v1.3.0');
+		\OCP\Util::addScript('mail','jquery.autosize');
+		\OCP\Util::addScript('mail','backbone');
+		\OCP\Util::addScript('mail','models/attachment');
+		\OCP\Util::addScript('mail','views/attachment');
+		\OCP\Util::addScript('mail','views/sendmail');
+		\OCP\Util::addScript('mail','compose');
+		\OCP\Util::addScript('mail','send-mail');
+		\OCP\Util::addStyle('mail','mail');
+		\OCP\Util::addStyle('mail','compose');
+		\OCP\Util::addStyle('mail','mobile');
+
+		return new TemplateResponse($this->appName, 'compose', $params);
+	}
 }
