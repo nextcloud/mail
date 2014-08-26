@@ -10,6 +10,7 @@ views.Messages = Backbone.View.extend({
 	template: null,
 
 	events: {
+		"click #load-new-mail-messages" : "loadNew",
 		"click #load-more-mail-messages" : "loadMore"
 	},
 
@@ -27,9 +28,19 @@ views.Messages = Backbone.View.extend({
 		this.collection.bind('remove', this.render);
 	},
 
+	loadNew: function() {
+		// Add loading feedback
+		$('#load-new-mail-messages')
+			.addClass('icon-loading-small')
+			.val(t('mail', 'Checking mail …'))
+			.prop('disabled', true);
+
+		window.location.reload();
+	},
+
 	loadMore: function() {
 		var from = this.collection.size();
-		// Remove loading feedback again
+		// Add loading feedback
 		$('#load-more-mail-messages')
 			.addClass('icon-loading-small')
 			.val(t('mail', 'Loading …'))

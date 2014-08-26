@@ -191,6 +191,7 @@ var Mail = {
 
 			$('#mail_new_message').fadeIn();
 			$('#mail_messages').addClass('icon-loading');
+			$('#load-new-mail-messages').hide();
 			$('#load-more-mail-messages').hide();
 
 			$.ajax(
@@ -202,6 +203,8 @@ var Mail = {
 						// Add messages
 						Mail.UI.addMessages(jsondata);
 						$('#mail_messages').removeClass('icon-loading');
+						$('#load-new-mail-messages').fadeIn();
+						$('#load-new-mail-messages').prop('disabled', false);
 						$('#load-more-mail-messages').fadeIn();
 
 						Mail.State.currentAccountId = accountId;
