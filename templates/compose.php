@@ -41,7 +41,7 @@
 			<div><span id="new-message-msg" class="msg"></div>
 			<div id="nav-buttons" class="hidden">
 				<input type="button" id="nav-to-mail" value="<?php p($l->t('Open Mail App')); ?>">
-				<input type="button" id="back-in-time" value="<?php p($l->t('Back')); ?>">
+				<input type="button" id="back-in-time" value="<?php p($l->t('Back to website')); ?>">
 			</div>
 		</div>
 
