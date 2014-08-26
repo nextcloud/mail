@@ -142,7 +142,6 @@ class AccountsController extends Controller
 				$email = $this->params('emailAddress');
 				$password = $this->params('password');
 				$newAccount = $this->autoConfig->createAutoDetected($email, $password, $name);
-				$this->mapper->save($newAccount);
 			} else {
 				$newAccount = new MailAccount($this->getParams());
 				$newAccount->getUserId($this->currentUserId);
@@ -154,10 +153,10 @@ class AccountsController extends Controller
 				// connect to smtp
 				$smtp = $a->createTransport();
 				$smtp->getSMTPObject();
-				$this->mapper->save($newAccount);
 			}
 
 			if ($newAccount) {
+				$this->mapper->save($newAccount);
 				return new JSONResponse(
 					array('data' => array('id' => $newAccount->getId())),
 					Http::STATUS_CREATED);
