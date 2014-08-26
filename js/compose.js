@@ -95,6 +95,7 @@ $(document).ready(function () {
 	view.sentCallback = function() {
 		$('#nav-buttons').removeClass('hidden');
 		$('#new-message-fields').slideUp();
+		$('#new-message-attachments').slideUp();
 	};
 	// And render it
 	view.render();
