@@ -22,6 +22,7 @@
 
 namespace OCA\Mail\Controller;
 
+use Horde_Mail_Rfc822_Address;
 use OCA\Mail\Account;
 use OCA\Mail\Db\MailAccount;
 use OCA\Mail\Service\AutoConfig;
@@ -191,7 +192,9 @@ class AccountsController extends Controller
 
 		// get sender data
 		$headers = array();
-		$headers['From']= $account->getEMailAddress();
+		$from = new Horde_Mail_Rfc822_Address($account->getEMailAddress());
+		$from->personal = $account->getName();
+		$headers['From']= $from;
 		$headers['Subject'] = $subject;
 
 		if (!is_null($cc)) {
