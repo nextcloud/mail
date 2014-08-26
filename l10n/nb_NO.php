@@ -1,6 +1,7 @@
 <?php
 $TRANSLATIONS = array(
 "Mail" => "E-post",
+"Error while loading the selected account." => "Feil ved lasting av den valgte kontoen.",
 "Error" => "Feil",
 "Error while deleting mail." => "Kan ikke slette e-post.",
 "Message could not be favorited. Please try again." => "Kunne ikke stjernemerke meldingen. Prøv igjen.",
@@ -17,9 +18,11 @@ $TRANSLATIONS = array(
 "Server Error" => "Serverfeil",
 "Connect" => "Koble til",
 "Sending …" => "Sender ...",
+"Choose a file to add as attachment" => "Velg en fil å legge til som vedlegg",
 "Loading …" => "Laster...",
 "Load more …" => "Last mer ...",
 "Send" => "Send",
+"Creating account failed: " => "Oppretting av konto feilet:",
 "Auto detect failed. Please use manual mode." => "Automatisk påvisning feilet. Bruk manuelt oppsett.",
 "All accounts" => "Alle kontoer",
 "+ Add account" => "+ Legg til konto",
@@ -41,6 +44,7 @@ $TRANSLATIONS = array(
 "Name" => "Navn",
 "Mail Address" => "E-postadresse",
 "IMAP Password" => "IMAP-passord",
+"Forwarding you to %s" => "Videresender deg til %s",
 "Redirect Warning" => "Varsel om omdirigering",
 "The previous page is sending you to %s." => "Den forrige siden sender deg til %s.",
 "If you do not want to visit that page, you can return to <a href=\"%s\">the mail app</a>." => "Hvis du ikke ønsker å gå til den siden, kan du gå tilbake til <a href=\"%s\">e-post app</a>.",

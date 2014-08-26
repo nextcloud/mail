@@ -1,6 +1,7 @@
 <?php
 $TRANSLATIONS = array(
 "Mail" => "Elektronska pošta",
+"Error while loading the selected account." => "Prišlo je do napake med nalaganjem izbranega računa.",
 "Error" => "Napaka",
 "Error while deleting mail." => "Prišlo je do napake med brisanjems sporočil.",
 "Message could not be favorited. Please try again." => "Sporočila ni mogoče označiti kot priljubljenega. Poskusite znova.",
@@ -17,9 +18,11 @@ $TRANSLATIONS = array(
 "Server Error" => "Napaka strežnika",
 "Connect" => "Poveži",
 "Sending …" => "Pošiljanje ...",
+"Choose a file to add as attachment" => "Izbor datoteke za prilogo",
 "Loading …" => "Nalaganje ...",
 "Load more …" => "Naloži več ...",
 "Send" => "Pošlji",
+"Creating account failed: " => "Ustvarjanje računa je spodletelo:",
 "Auto detect failed. Please use manual mode." => "Samodejno zaznavanje je spodletelo. Zaznavo bo treba izvesti ročno.",
 "All accounts" => "Vsi računi",
 "+ Add account" => "+ Dodaj račun",
@@ -41,6 +44,7 @@ $TRANSLATIONS = array(
 "Name" => "Ime",
 "Mail Address" => "Elektronski naslov",
 "IMAP Password" => "Geslo IMAP",
+"Forwarding you to %s" => "Povezava bo preusmerjena na %s",
 "Redirect Warning" => "Opozorilo preusmeritve",
 "The previous page is sending you to %s." => "Prej obiskana stran zahteva preusmeritev na %s.",
 "If you do not want to visit that page, you can return to <a href=\"%s\">the mail app</a>." => "Če en želite obiskati te strani, se lahko vrnete na stran <a href=\"%s\">programa spletne pošte</a>.",

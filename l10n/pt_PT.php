@@ -1,6 +1,7 @@
 <?php
 $TRANSLATIONS = array(
 "Mail" => "Correio",
+"Error while loading the selected account." => "Erro a carregar a conta seleccionada.",
 "Error" => "Erro",
 "Error while deleting mail." => "Erro durante a eliminação de correio.",
 "Message could not be favorited. Please try again." => "Não foi possível definir a mensagem como favorita. Por favor, tente de novo.",
@@ -17,6 +18,7 @@ $TRANSLATIONS = array(
 "Server Error" => "Erro no servidor",
 "Connect" => "Ligar",
 "Sending …" => "Enviando ...",
+"Choose a file to add as attachment" => "Escolha um ficheiro para adicionar como anexo",
 "Loading …" => "A carregar...",
 "Load more …" => "Carregar mais ...",
 "Send" => "Enviar",

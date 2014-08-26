@@ -1,8 +1,10 @@
 <?php
 $TRANSLATIONS = array(
 "Mail" => "Sähköposti",
+"Error while loading the selected account." => "Virhe ladatessa valittua tiliä.",
 "Error" => "Virhe",
 "Error while deleting mail." => "Virhe sähköpostia poistaessa.",
+"Choose a folder to store the attachment in" => "Valitse kansio liitetiedoston tallentamiselle",
 "Saving to Files …" => "Tallennetaan tiedostosovellukseen…",
 "Attachments saved to Files." => "Liitteet tallennettu tiedostoihin.",
 "Attachment saved to Files." => "Liite tallennettu tiedostoihin.",
@@ -19,6 +21,7 @@ $TRANSLATIONS = array(
 "Loading …" => "Ladataan…",
 "Load more …" => "Lataa lisää…",
 "Send" => "Lähetä",
+"Creating account failed: " => "Tilin luominen epäonnistui:",
 "Auto detect failed. Please use manual mode." => "Automaattinen havaitseminen epäonnistui. Käytä manuaalitilaa.",
 "All accounts" => "Kaikki tilit",
 "+ Add account" => "+ Lisää tili",
