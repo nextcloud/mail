@@ -181,7 +181,7 @@
 		</div>
 	</div>
 
-	<form id="mail-setup" class="hidden">
+	<form id="mail-setup" class="hidden" method="post">
 		<fieldset>
 			<h2><?php p($l->t('Connect your mail account')) ?></h2>
 
