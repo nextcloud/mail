@@ -134,16 +134,22 @@ class Message {
 		return $to ? $to->label : null;
 	}
 
+	/**
+	 * @return array
+	 */
+	public function getToList() {
+		$e = $this->getEnvelope();
+		return $this->convertAddressList($e->to);
+	}
+
 	public function getCCList() {
 		$e = $this->getEnvelope();
-		$cc = $e->cc;
-		$result = array();
+		return $this->convertAddressList($e->cc);
+	}
 
-		foreach($cc as $c) {
-			$result[]= $c->bare_address;
-		}
-
-		return $result;
+	public function getBCList() {
+		$e = $this->getEnvelope();
+		return $this->convertAddressList($e->bcc);
 	}
 
 	public function getMessageId() {
@@ -340,12 +346,16 @@ class Message {
 		$data['from'] = $this->getFrom();
 		$data['fromEmail'] = $this->getFromEmail();
 		$data['to'] = $this->getTo();
+		$data['toList'] = $this->getToList();
 		$data['subject'] = $this->getSubject();
 		$data['date'] = \OCP\Util::formatDate($this->getSentDate()->format('U'));
 		$data['size'] = \OCP\Util::humanFileSize($this->getSize());
 		$data['flags'] = $this->getFlags();
 		$data['dateInt'] = $this->getSentDate()->getTimestamp();
-		$data['cc'] = implode(', ', $this->getCCList());
+		$data['cc'] = implode(', ', array_map(function($item) {
+			return $item['email'];
+		}, $this->getCCList()));
+		$data['ccList'] = $this->getCCList();
 		return $data;
 	}
 
@@ -410,6 +420,21 @@ class Message {
 			return $data;
 		}
 		return $data;
+	}
+
+	/**
+	 * @param \Horde_Imap_Client_Data_Envelope $envelope
+	 * @return array
+	 */
+	private function convertAddressList($envelope) {
+		$list = array();
+		foreach ($envelope as $t) {
+			$list[] = array(
+				'label' => $t->label,
+				'email' => $t->bare_address
+			);
+		}
+		return $list;
 	}
 
 }

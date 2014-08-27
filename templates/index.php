@@ -64,11 +64,20 @@
 	<div id="mail-message-header" class="section">
 		<h2>{{subject}}</h2>
 		<p class="transparency">
-			<span title="{{fromEmail}}">{{from}}</span> 
-			<?php p($l->t('to')); ?> 
-			<span title="{{toEmail}}">{{to}}</span> 
-			(<?php p($l->t('cc')); ?> 
-			<span title="{{ccEmail}}">{{cc}}</span>)
+			<span title="{{fromEmail}}">{{from}}</span>
+			{{#if toList}}
+			<?php p($l->t('to')); ?>
+			{{#each toList}}
+			{{#if @index}}, {{/if}}<span title="{{email}}">{{label}}</span>
+			{{/each}}
+			{{/if}}
+			{{#if ccList}}
+			(<?php p($l->t('cc')); ?>
+			{{#each ccList}}
+			{{#if @index}}, {{/if}}<span title="{{email}}">{{label}}</span>
+			{{/each}}
+			)
+			{{/if}}
 		</p>
 	</div>
 	<div class="mail-message-body">
