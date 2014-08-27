@@ -68,6 +68,8 @@ $(function () {
 		replyMessageBody.prop('disabled', true);
 		replyMessageSend.prop('disabled', true);
 		replyMessageSend.val(t('mail', 'Sending …'));
+		$('.reply-message-fields #to').prop('disabled', true);
+		$('.reply-message-fields #cc').prop('disabled', true);
 
 		$.ajax({
 			url:OC.generateUrl('/apps/mail/accounts/{accountId}/send', {accountId: Mail.State.currentAccountId}),
