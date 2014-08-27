@@ -16,14 +16,14 @@
 			<div id="new-message-fields">
 				<a href="#" id="new-message-cc-bcc-toggle"
 				   class="transparency"><?php p($l->t('+ cc/bcc')); ?></a>
-				<input type="text" name="to" id="to"
+				<input type="text" name="to" id="to" class="recipient-autocomplete"
 					   placeholder="<?php p($l->t('Recipient')); ?>"
 					   value="<?php p($_['mailto']) ?>" />
 				<div id="new-message-cc-bcc">
-					<input type="text" name="cc" id="cc"
+					<input type="text" name="cc" id="cc" class="recipient-autocomplete"
 						   placeholder="<?php p($l->t('cc')); ?>"
 						   value="<?php p($_['cc']) ?>" />
-					<input type="text" name="bcc" id="bcc"
+					<input type="text" name="bcc" id="bcc" class="recipient-autocomplete"
 						   placeholder="<?php p($l->t('bcc')); ?>"
 						   value="<?php p($_['bcc']) ?>" />
 				</div>

@@ -110,7 +110,7 @@
 			<a href="#" id="reply-message-cc-bcc-toggle"
 			   class="transparency"><?php p($l->t('+ cc')); ?></a>
 
-			<input type="text" name="to" id="to"
+			<input type="text" name="to" id="to" class="recipient-autocomplete"
 				   placeholder="<?php p($l->t('Recipient')); ?>"
 				   value="{{fromEmail}}"/>
 
@@ -119,9 +119,9 @@
 			class="hidden"
 			{{/unless}}
 			>
-			<input type="text" name="cc" id="cc"
+			<input type="text" name="cc" id="cc" class="recipient-autocomplete"
 				   placeholder="<?php p($l->t('cc')); ?>" value="{{cc}}" />
-			<!--<input type="text" name="bcc" id="bcc"
+			<!--<input type="text" name="bcc" id="bcc" class="recipient-autocomplete"
 				placeholder="<?php p($l->t('bcc')); ?>" />-->
 		</div>
 
@@ -151,12 +151,12 @@
 			<div id="new-message-fields">
 				<a href="#" id="new-message-cc-bcc-toggle"
 				   class="transparency"><?php p($l->t('+ cc/bcc')); ?></a>
-				<input type="text" name="to" id="to"
+				<input type="text" name="to" id="to" class="recipient-autocomplete"
 					   placeholder="<?php p($l->t('Recipient')); ?>" />
 				<div id="new-message-cc-bcc">
-					<input type="text" name="cc" id="cc"
+					<input type="text" name="cc" id="cc" class="recipient-autocomplete"
 						   placeholder="<?php p($l->t('cc')); ?>" />
-					<input type="text" name="bcc" id="bcc"
+					<input type="text" name="bcc" id="bcc" class="recipient-autocomplete"
 						   placeholder="<?php p($l->t('bcc')); ?>" />
 				</div>
 				<input type="text" name="subject" id="subject"
