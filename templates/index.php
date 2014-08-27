@@ -127,7 +127,7 @@
 
 		<textarea name="body" class="reply-message-body"
 				  placeholder="<?php p($l->t('Reply …')); ?>"></textarea>
-		<input class="reply-message-send" type="submit" value="<?php p($l->t('Reply')) ?>">
+		<input class="reply-message-send primary" type="submit" value="<?php p($l->t('Reply')) ?>">
 	</div>
 	<div class="reply-message-more">
 		<!--<a href="#" class="reply-message-forward transparency"><?php p($l->t('Forward')) ?></a>-->
@@ -163,7 +163,7 @@
 					   placeholder="<?php p($l->t('Subject')); ?>" />
 				<textarea name="body" id="new-message-body"
 						  placeholder="<?php p($l->t('Message …')); ?>"></textarea>
-				<input id="new-message-send" class="send" type="submit" value="<?php p($l->t('Send')) ?>">
+				<input id="new-message-send" class="send primary" type="submit" value="<?php p($l->t('Send')) ?>">
 			</div>
 			<div id="new-message-attachments">
 				<ul></ul>
