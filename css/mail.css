@@ -383,10 +383,6 @@ button.control {
 
 /* compose */
 
-.compose #accountManager {
-	width: 60%;
-}
-
 .compose #new-message {
 	left: 25%;
 }
