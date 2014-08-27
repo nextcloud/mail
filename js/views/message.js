@@ -35,17 +35,22 @@ views.Messages = Backbone.View.extend({
 			.val(t('mail', 'Checking mail …'))
 			.prop('disabled', true);
 
-		window.location.reload();
+		this.loadMore(true);
 	},
 
-	loadMore: function() {
+	loadMore: function(reload) {
+		reload = reload || false;
 		var from = this.collection.size();
+		if (reload){
+			from = 0;
+		}
 		// Add loading feedback
 		$('#load-more-mail-messages')
 			.addClass('icon-loading-small')
 			.val(t('mail', 'Loading …'))
 			.prop('disabled', true);
 
+		self = this;
 		$.ajax(
 			OC.generateUrl('apps/mail/accounts/{accountId}/folders/{folderId}/messages?from={from}&to={to}',
 				{
@@ -57,6 +62,9 @@ views.Messages = Backbone.View.extend({
 				data: {},
 				type:'GET',
 				success: function (jsondata) {
+					if (reload){
+						self.collection.reset();
+					}
 					// Add messages
 					Mail.UI.addMessages(jsondata);
 					$('#app-content').removeClass('icon-loading');
@@ -73,6 +81,10 @@ views.Messages = Backbone.View.extend({
 					$('#load-more-mail-messages')
 						.removeClass('icon-loading-small')
 						.val(t('mail', 'Load more …'))
+						.prop('disabled', false);
+					$('#load-new-mail-messages')
+						.removeClass('icon-loading-small')
+						.val(t('mail', 'Check mail'))
 						.prop('disabled', false);
 				}
 			});
