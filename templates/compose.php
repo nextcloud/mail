@@ -32,7 +32,7 @@
 					   value="<?php p($_['subject']) ?>" />
 				<textarea name="body" id="new-message-body"
 						  placeholder="<?php p($l->t('Message …')); ?>"><?php p($_['body']); ?></textarea>
-				<input id="new-message-send" class="send" type="submit" value="<?php p($l->t('Send')) ?>">
+				<input id="new-message-send" class="send primary" type="submit" value="<?php p($l->t('Send')) ?>">
 			</div>
 			<div id="new-message-attachments">
 				<ul></ul>

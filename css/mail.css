@@ -223,7 +223,6 @@ button.control {
 #new-message-fields,
 .reply-message-fields {
 	position: relative;
-	width: 60%;
 }
 #to,
 #cc,
@@ -346,13 +345,6 @@ button.control {
 }
 
 
-#new-message-attachments {
-	position: absolute;
-	width: 35%;
-	right: 0;
-	top: 0;
-	margin: 10px;
-}
 .new-message-attachments-action {
 	display: inline-block;
 	width: 24px;
@@ -396,10 +388,6 @@ button.control {
 
 
 /* compose */
-
-.compose #accountManager {
-	width: 60%;
-}
 
 .compose #new-message {
 	left: 25%;
