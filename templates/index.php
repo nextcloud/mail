@@ -61,6 +61,16 @@
 	{{/each}}
 </script>
 <script id="mail-message-template" type="text/x-handlebars-template">
+	<div id="mail-message-header" class="section">
+		<h2>{{subject}}</h2>
+		<p class="transparency">
+			<span title="{{fromEmail}}">{{from}}</span> 
+			<?php p($l->t('to')); ?> 
+			<span title="{{toEmail}}">{{to}}</span> 
+			(<?php p($l->t('cc')); ?> 
+			<span title="{{ccEmail}}">{{cc}}</span>)
+		</p>
+	</div>
 	<div class="mail-message-body">
 		<div id="mail-content">
 			{{#if hasHtmlBody}}
