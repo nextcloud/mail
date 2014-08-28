@@ -164,12 +164,34 @@
 <script id="mail-attachment-template" type="text/x-handlebars-template">
 	<span>{{displayName}}</span><div class="new-message-attachments-action svg icon-delete" data-attachment-id="{{id}}"></div>
 </script>
+<script id="mail-settings-template" type="text/x-handlebars-template">
+<div id="mailsettings">
+    <h2 role="button" tabindex="0" data-id="mailaccount">Mailaccount</h2>
+    <ul class="mailaccount-list">
+        <li data-permissions="31" data-backend="local" data-id="1">
+            <input type="checkbox" title="Active" checked="checked" name="active">
+            <label>Contacts</label>
+            <span class="actions">
+                <a class="icon-delete delete action" original-title="Delete"></a>
+            </span>
+        </li>
+    </ul>
+    <ul class="oc-addnew" style="display: inline-block; width: auto; height: auto;" aria-disabled="false"><li><a class="oc-addnew-init">Add Mail Account</a></li><li><input type="text" placeholder="Display name" id="add-address-book" autofocus="" tabindex="0" style="display: none;" class="oc-addnew-name"><button class="new-button primary icon-checkmark-white" style="display: none;"></button></li></ul>
+</div>
+</script>
 <div id="app">
 	<div id="app-navigation" class="icon-loading">
 		<div id="accountManager"></div>
 		<input type="button" id="mail_new_message" class="primary"
 			value="<?php p($l->t('New Message')); ?>" style="display: none">
 		<div id="folders"></div>
+        <div id="app-settings">
+            <div id="app-settings-header">
+                <button class="settings-button"
+                        data-apps-slide-toggle="#app-settings-content"></button>
+            </div>
+            <div id="app-settings-content"> </div>
+        </div>
 	</div>
 	<div id="app-content">
 		<div id="new-message" style="display: none">

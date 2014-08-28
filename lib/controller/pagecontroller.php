@@ -24,6 +24,7 @@ namespace OCA\Mail\Controller;
 
 
 use OCP\AppFramework\Controller;
+use OCP\AppFramework\Http\JSONResponse;
 use OCP\AppFramework\Http\TemplateResponse;
 
 class PageController extends Controller {
@@ -61,6 +62,7 @@ class PageController extends Controller {
 		\OCP\Util::addScript('mail','views/message');
 		\OCP\Util::addScript('mail','mail');
 		\OCP\Util::addScript('mail','send-mail');
+		\OCP\Util::addScript('mail','settings');
 		\OCP\Util::addStyle('mail','mail');
 		\OCP\Util::addStyle('mail','mobile');
 

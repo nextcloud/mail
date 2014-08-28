@@ -16,6 +16,7 @@ use OCA\Mail\Controller\AccountsController;
 use OCA\Mail\Controller\FoldersController;
 use OCA\Mail\Controller\MessagesController;
 use OCA\Mail\Controller\ProxyController;
+use OCA\Mail\Controller\SettingsController;
 use OCA\Mail\Db\MailAccountMapper;
 use OCA\Mail\Service\AutoConfig;
 use OCA\Mail\Service\ContactsIntegration;
@@ -39,6 +40,16 @@ class Application extends App {
 		$container->registerService('PageController', function($c) {
 			/** @var IAppContainer $c */
 			return new PageController(
+				$c->query('AppName'),
+				$c->query('Request'),
+				$c->query('MailAccountMapper'),
+				$c->query('UserId')
+			);
+		});
+
+		$container->registerService('SettingsController', function($c) {
+			/** @var IAppContainer $c */
+			return new SettingsController(
 				$c->query('AppName'),
 				$c->query('Request'),
 				$c->query('MailAccountMapper'),
