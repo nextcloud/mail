@@ -312,10 +312,29 @@ button.control {
 	display: inline-block;
 }
 
+
+
+
+
+/* message display */
+
+#mail-message-header {
+	position: fixed;
+	height: 90px;
+	width: 50%;
+	background-color: rgba(255,255,255,.9);
+}
+#mail-message-header h2,
+#mail-message-header p {
+	white-space: nowrap;
+	overflow: hidden;
+	text-overflow: ellipsis;
+	padding-bottom: 7px;
+	margin-bottom: 0;
+}
+
 .mail-message-body {
-	margin: 10px;
-	margin-left: 49px;
-	margin-bottom: 50px;
+	margin: 100px 10px 50px 30px;
 }
 #mail-content iframe {
 	width: 100%;

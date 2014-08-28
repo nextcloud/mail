@@ -61,6 +61,25 @@
 	{{/each}}
 </script>
 <script id="mail-message-template" type="text/x-handlebars-template">
+	<div id="mail-message-header" class="section">
+		<h2>{{subject}}</h2>
+		<p class="transparency">
+			<span title="{{fromEmail}}">{{from}}</span>
+			{{#if toList}}
+			<?php p($l->t('to')); ?>
+			{{#each toList}}
+			{{#if @index}}, {{/if}}<span title="{{email}}">{{label}}</span>
+			{{/each}}
+			{{/if}}
+			{{#if ccList}}
+			(<?php p($l->t('cc')); ?>
+			{{#each ccList}}
+			{{#if @index}}, {{/if}}<span title="{{email}}">{{label}}</span>
+			{{/each}}
+			)
+			{{/if}}
+		</p>
+	</div>
 	<div class="mail-message-body">
 		<div id="mail-content">
 			{{#if hasHtmlBody}}
