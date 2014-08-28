@@ -4,6 +4,7 @@ var Mail = {
 		currentFolderId: null,
 		currentAccountId: null,
 		currentMessageId: null,
+		accounts: null,
 		messageView: null,
 		router: null
 	},
@@ -34,6 +35,25 @@ var Mail = {
 
 			Handlebars.registerHelper("humanFileSize", function(size) {
 				return humanFileSize(size);
+			});
+
+			Handlebars.registerHelper("printAddressList", function(addressList) {
+				var currentAddress = _.find(Mail.State.accounts, function(item) {
+					return item.accountId === Mail.State.currentAccountId;
+				});
+
+				var str = _.reduce(addressList, function(memo, value, index) {
+					if (index !== 0) {
+						memo += ', ';
+					}
+					var label = Handlebars.Utils.escapeExpression(value.label);
+					var email = Handlebars.Utils.escapeExpression(value.email);
+					if (currentAddress && email === currentAddress.emailAddress) {
+						label = t('mail', 'you');
+					}
+					return memo + '<span title="' + email + '">' + label + '</span>';
+				}, "");
+				return new Handlebars.SafeString(str);
 			});
 
 			// ask to handle all mailto: links
@@ -76,6 +96,7 @@ var Mail = {
 				data:{},
 				type:'GET',
 				success:function (jsondata) {
+					Mail.State.accounts = jsondata;
 						// don't try to load accounts if there are none
 						var source   = $("#mail-account-manager").html();
 						var template = Handlebars.compile(source);
@@ -180,10 +201,6 @@ var Mail = {
 		},
 
 		addMessages:function (data) {
-//			var source   = $("#mail-messages-template").html();
-//			var template = Handlebars.compile(source);
-//			var html = template(data);
-//			$('#mail_messages').append(html);
 			Mail.State.messageView.collection.add(data);
 
 			_.each($('.avatar'), function(a) {
