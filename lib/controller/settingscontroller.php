@@ -29,14 +29,36 @@ use OCP\AppFramework\Http\JSONResponse;
 class SettingsController extends Controller {
 
 	/**
+	 * @var \OCA\Mail\Db\MailAccountMapper
+	 */
+	private $mapper;
+
+	public function __construct($appName,
+		$request,
+		$mailAccountMapper,
+		$currentUserId,
+		$autoConfig) {
+		parent::__construct($appName, $request);
+		$this->mapper = $mailAccountMapper;
+		$this->currentUserId = $currentUserId;
+		$this->autoConfig = $autoConfig;
+	}
+	/**
 	 * @NoAdminRequired
 	 * @NoCSRFRequired
 	 *
-	 * @return TemplateResponse renders the settings page
+	 * @return JSONResponse renders the settings page
 	 */
 	public function index() {
 
-        return new JSONResponse(array('test'));
+		$mailAccounts = $this->mapper->findByUserId($this->currentUserId);
+
+		$json = array();
+		foreach ($mailAccounts as $mailAccount) {
+			$json[] = $mailAccount->toJson();
+		}
+
+		return new JSONResponse($json);
 	}
 
 }
