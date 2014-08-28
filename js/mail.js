@@ -535,13 +535,35 @@ $(document).ready(function () {
 		var emailAddress = $('#mail-address').val();
 		var accountName = $('#mail-account-name').val();
 		var password = $('#mail-password').val();
-		$.ajax(OC.generateUrl('apps/mail/accounts'), {
-			data:{
+
+		var dataArray = {
+			accountName: accountName,
+			emailAddress: emailAddress,
+			password: password,
+			autoDetect: true
+		};
+
+		if($('#mail-setup-manual').css('display') === 'block') {
+			dataArray = {
 				accountName: accountName,
-				emailAddress : emailAddress,
-				password : password,
-				autoDetect : true
-			},
+				emailAddress: emailAddress,
+				password: password,
+				imapHost: $('#mail-imap-host').val(),
+				imapPort: $('#mail-imap-port').val(),
+				imapSslMode: $('#mail-imap-sslmode').val(),
+				imapUser: $('#mail-imap-user').val(),
+				imapPassword: $('#mail-imap-password').val(),
+				smtpHost: $('#mail-smtp-host').val(),
+				smtpPort: $('#mail-smtp-port').val(),
+				smtpSslMode: $('#mail-smtp-sslmode').val(),
+				smtpUser: $('#mail-smtp-user').val(),
+				smtpPassword: $('#mail-smtp-password').val(),
+				autoDetect: false
+			};
+		}
+
+		$.ajax(OC.generateUrl('apps/mail/accounts'), {
+			data: dataArray,
 			type:'POST',
 			success:function (data) {
 				Mail.State.router.navigate('accounts/' + data.data.id, {trigger: true});
@@ -560,6 +582,12 @@ $(document).ready(function () {
 				$('#connect-loading').hide();
 			}
 		});
+	});
+
+	// toggle for advanced account configuration
+	$(document).on('click', '#mail-setup-manual-toggle', function () {
+		$('#mail-setup-manual').slideToggle();
+		$('#mail-imap-host').focus();
 	});
 
 	// new mail message button handling

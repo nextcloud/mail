@@ -39,28 +39,35 @@ button.control {
 #mail-setup {
 	position: absolute;
 	width: 250px;
-	top: 20%;
+	top: 10%;
 	left: 40%;
+	padding-bottom: 50px;
 }
 #mail-setup h2 {
 	text-align:center;
 }
-#mail-address,
-#mail-account-name,
-#mail-password {
+#mail-setup input {
 	width: 100%;
 	box-sizing: border-box;
 }
+
+#mail-setup-manual-toggle {
+	background-position: right;
+	padding-right: 16px;
+	margin-left: 6px;
+	-ms-filter: "progid:DXImageTransform.Microsoft.Alpha(Opacity=30)";
+	filter: alpha(opacity=30);
+	opacity: .3;
+}
+
 .connect {
-	float: right;
+	margin: 0;
 }
 #connect-loading {
 	position: absolute;
-	top: 35%;
+	top: 40px;
 	left: 45%;
 }
-
-
 
 
 
