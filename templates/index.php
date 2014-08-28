@@ -67,15 +67,11 @@
 			<span title="{{fromEmail}}">{{from}}</span>
 			{{#if toList}}
 			<?php p($l->t('to')); ?>
-			{{#each toList}}
-			{{#if @index}}, {{/if}}<span title="{{email}}">{{label}}</span>
-			{{/each}}
+			{{printAddressList toList}}
 			{{/if}}
 			{{#if ccList}}
 			(<?php p($l->t('cc')); ?>
-			{{#each ccList}}
-			{{#if @index}}, {{/if}}<span title="{{email}}">{{label}}</span>
-			{{/each}}
+			{{printAddressList ccList}}
 			)
 			{{/if}}
 		</p>
