@@ -10,7 +10,6 @@
 </script>
 <div id="app">
 	<div id="app-content" class="compose">
-		<div><span id="app-navigation-msg" class="msg"></span></div>
 		<div id="new-message">
 			<div id="accountManager"></div>
 			<div id="new-message-fields">

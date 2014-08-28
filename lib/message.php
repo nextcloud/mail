@@ -263,6 +263,9 @@ class Message {
 		$headers = $this->conn->fetch($this->folderId, $fetch_query, array('ids' => $ids));
 		/** @var $fetch \Horde_Imap_Client_Data_Fetch */
 		$fetch = $headers[$this->messageId];
+		if (is_null($fetch)) {
+			throw new DoesNotExistException("Mail body for this mail($this->messageId) could not be loaded");
+		}
 
 		return $fetch->getBodyPart($partId);
 	}
