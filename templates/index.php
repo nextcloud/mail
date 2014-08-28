@@ -173,6 +173,7 @@
 		</div>
 
 		<div id="mail_messages" class="icon-loading">
+			<input type="button" id="load-new-mail-messages" value="<?php p($l->t('Check mail …')); ?>">
 			<div id="mail-message-list"></div>
 			<input type="button" id="load-more-mail-messages" value="<?php p($l->t('Load more …')); ?>">
 		</div>

@@ -101,12 +101,18 @@ button.control {
 	overflow-x: hidden;
 	overflow-y: auto;
 }
+#load-new-mail-messages {
+	display: none;
+	margin: 10px 35%;
+	padding: 10px 10px 6px;
+}
 #load-more-mail-messages {
 	display: none;
-	margin: 50px 40% -50px;
-	padding: 10px;
+	margin: 50px 40% 50px;
+	padding: 10px 10px 6px;
 }
 /* TODO: put this in core icons.css as general rule for buttons with icons */
+#load-new-mail-messages.icon-loading-small,
 #load-more-mail-messages.icon-loading-small {
 	padding-left: 32px;
 	background-position: 9px center;

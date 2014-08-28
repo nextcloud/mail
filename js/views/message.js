@@ -10,6 +10,7 @@ views.Messages = Backbone.View.extend({
 	template: null,
 
 	events: {
+		"click #load-new-mail-messages" : "loadNew",
 		"click #load-more-mail-messages" : "loadMore"
 	},
 
@@ -27,14 +28,29 @@ views.Messages = Backbone.View.extend({
 		this.collection.bind('remove', this.render);
 	},
 
-	loadMore: function() {
+	loadNew: function() {
+		// Add loading feedback
+		$('#load-new-mail-messages')
+			.addClass('icon-loading-small')
+			.val(t('mail', 'Checking mail …'))
+			.prop('disabled', true);
+
+		this.loadMore(true);
+	},
+
+	loadMore: function(reload) {
+		reload = reload || false;
 		var from = this.collection.size();
-		// Remove loading feedback again
+		if (reload){
+			from = 0;
+		}
+		// Add loading feedback
 		$('#load-more-mail-messages')
 			.addClass('icon-loading-small')
 			.val(t('mail', 'Loading …'))
 			.prop('disabled', true);
 
+		self = this;
 		$.ajax(
 			OC.generateUrl('apps/mail/accounts/{accountId}/folders/{folderId}/messages?from={from}&to={to}',
 				{
@@ -46,6 +62,9 @@ views.Messages = Backbone.View.extend({
 				data: {},
 				type:'GET',
 				success: function (jsondata) {
+					if (reload){
+						self.collection.reset();
+					}
 					// Add messages
 					Mail.UI.addMessages(jsondata);
 					$('#app-content').removeClass('icon-loading');
@@ -62,6 +81,10 @@ views.Messages = Backbone.View.extend({
 					$('#load-more-mail-messages')
 						.removeClass('icon-loading-small')
 						.val(t('mail', 'Load more …'))
+						.prop('disabled', false);
+					$('#load-new-mail-messages')
+						.removeClass('icon-loading-small')
+						.val(t('mail', 'Check mail'))
 						.prop('disabled', false);
 				}
 			});
