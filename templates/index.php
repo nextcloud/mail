@@ -41,16 +41,23 @@
 				<div class="avatar" data-user="{{from}}" data-size="32"></div>
 				{{/if}}
 			</div>
+
 			{{#if flags.flagged}}
 			<div class="star icon-starred" data-starred="true"></div>
 			{{else}}
 			<div class="star icon-star" data-starred="false"></div>
 			{{/if}}
+
 			{{#if flags.answered}}
 			<div class="icon-reply"></div>
 			{{/if}}
+
+			{{#if flags.hasAttachments}}
+			<div class="icon-public icon-attachment"></div>
+			{{/if}}
+
 			<div class="mail_message_summary_from" title="{{fromEmail}}">{{from}}</div>
-			<div class="mail_message_summary_subject{{#if flags.hasAttachments}} icon-public{{/if}}">
+			<div class="mail_message_summary_subject">
 				{{subject}}
 			</div>
 			<div class="date">

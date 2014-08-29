@@ -158,12 +158,6 @@ button.control {
 	width: 75%;
 	margin-left: 37px;
 }
-/* with attachment */
-.mail_message_summary_subject.icon-public {
-	background-position: 0 2px;
-	padding-left: 21px;
-	margin-left: 27px;
-}
 
 .date {
 	position: absolute;
@@ -313,7 +307,16 @@ button.control {
 .icon-reply {
 	background-image: url('../img/reply.svg');
 	position: absolute;
-	left: 10px;
+	left: 9px;
+	top: 40px;
+	-ms-filter: "progid:DXImageTransform.Microsoft.Alpha(Opacity=20)";
+	filter: alpha(opacity=20);
+	opacity: .2;
+}
+
+.icon-attachment {
+	position: absolute;
+	left: 27px;
 	top: 40px;
 	-ms-filter: "progid:DXImageTransform.Microsoft.Alpha(Opacity=20)";
 	filter: alpha(opacity=20);
