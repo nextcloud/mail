@@ -53,12 +53,12 @@ class Account {
 				'hostspec' => $host,
 				'port' => $port,
 				'secure' => $ssl_mode,
-				'timeout' => 2,
-				'cache' => array(
-					'backend' => new Cache(array(
-							'cacheob' => \OC::$server->getCache()
-						))
-				)
+				'timeout' => 20,
+//				'cache' => array(
+//					'backend' => new Cache(array(
+//							'cacheob' => \OC::$server->getCache()
+//						))
+//				)
 			));
 		$client->login();
 		return $client;
