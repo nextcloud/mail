@@ -86,9 +86,9 @@ class Message {
 		return array(
 			'unseen' => !in_array(Horde_Imap_Client::FLAG_SEEN, $flags),
 			'flagged' => in_array(Horde_Imap_Client::FLAG_FLAGGED, $flags),
-			'answered' => !in_array(Horde_Imap_Client::FLAG_ANSWERED, $flags),
+			'answered' => in_array(Horde_Imap_Client::FLAG_ANSWERED, $flags),
 			'deleted' => in_array(Horde_Imap_Client::FLAG_DELETED, $flags),
-			'draft' => !in_array(Horde_Imap_Client::FLAG_DRAFT, $flags),
+			'draft' => in_array(Horde_Imap_Client::FLAG_DRAFT, $flags),
 			'forwarded' => in_array(Horde_Imap_Client::FLAG_FORWARDED, $flags),
 			'hasAttachments' => $this->hasAttachments($this->fetch->getStructure())
 		);

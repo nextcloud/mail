@@ -46,6 +46,9 @@
 			{{else}}
 			<div class="star icon-star" data-starred="false"></div>
 			{{/if}}
+			{{#if flags.answered}}
+			<div class="icon-reply"></div>
+			{{/if}}
 			<div class="mail_message_summary_from" title="{{fromEmail}}">{{from}}</div>
 			<div class="mail_message_summary_subject{{#if flags.hasAttachments}} icon-public{{/if}}">
 				{{subject}}

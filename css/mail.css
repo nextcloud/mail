@@ -310,6 +310,15 @@ button.control {
 	display: inline-block;
 }
 
+.icon-reply {
+	background-image: url('../img/reply.svg');
+	position: absolute;
+	left: 10px;
+	top: 40px;
+	-ms-filter: "progid:DXImageTransform.Microsoft.Alpha(Opacity=20)";
+	filter: alpha(opacity=20);
+	opacity: .2;
+}
 
 
 
