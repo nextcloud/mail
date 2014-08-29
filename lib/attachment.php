@@ -93,9 +93,12 @@ class Attachment {
 		$vars = array(
 			'filename',
 		);
-		foreach ($mimeHeaders->getValue('content-disposition', \Horde_Mime_Headers::VALUE_PARAMS) as $key => $val) {
-			if(in_array($key, $vars)) {
-				$this->mimePart->setDispositionParameter($key, $val);
+		$contentDisposition = $mimeHeaders->getValue('content-disposition', \Horde_Mime_Headers::VALUE_PARAMS);
+		if (!is_null($contentDisposition)) {
+			foreach ($contentDisposition as $key => $val) {
+				if(in_array($key, $vars)) {
+					$this->mimePart->setDispositionParameter($key, $val);
+				}
 			}
 		}
 
