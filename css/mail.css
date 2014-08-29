@@ -454,6 +454,7 @@ button.control {
 .attachment-save-to-cloud,
 .attachment-download {
 	height: 32px;
+	min-width: 32px;
 	float: left;
 	display: inline-block;
 }
