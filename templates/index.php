@@ -153,6 +153,7 @@
 		<textarea name="body" class="reply-message-body"
 				  placeholder="<?php p($l->t('Reply …')); ?>"></textarea>
 		<input class="reply-message-send primary" type="submit" value="<?php p($l->t('Reply')) ?>">
+		<div><span id="reply-msg" class="msg"></div>
 	</div>
 	<div class="reply-message-more">
 		<!--<a href="#" class="reply-message-forward transparency"><?php p($l->t('Forward')) ?></a>-->
