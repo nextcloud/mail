@@ -166,7 +166,6 @@
 </script>
 <script id="mail-settings-template" type="text/x-handlebars-template">
 <div id="mailsettings">
-    <h2 role="button" tabindex="0" data-id="mailaccount">Mailaccounts</h2>
     <ul class="mailaccount-list">
 		{{#each this}}
         <li id="mail-account-{{accountId}}" data-account-id="{{accountId}}">

@@ -89,6 +89,11 @@ button.control {
 	display: none;
 }
 
+.mailaccount-list li {
+    margin-top:5px;
+    margin-bottom:5px;
+}
+
 .mailaccount-list .actions {
     display: inline-flex;
     position: absolute;
