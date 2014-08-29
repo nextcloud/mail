@@ -304,6 +304,7 @@ button.control {
 .star.icon-star {
 	display: none;
 }
+.mail_message_summary.active .star.icon-star,
 .mail_message_summary:hover .star.icon-star,
 .mail_message_summary:focus .star.icon-star {
 	display: inline-block;
