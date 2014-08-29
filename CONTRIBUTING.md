@@ -18,7 +18,7 @@ Help us to maximize the effort we can spend fixing issues and adding new feature
 [template]: https://raw.github.com/owncloud/core/master/issue_template.md
 [mailinglist]: https://mail.kde.org/mailman/listinfo/owncloud
 [forum]: http://forum.owncloud.org/
-[irc]: http://webchat.freenode.net/?channels=owncloud&uio=d4
+[irc]: https://webchat.freenode.net/?channels=owncloud-mail
 
 ## Contributing to Source Code
 
