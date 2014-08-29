@@ -148,14 +148,14 @@ button.control {
 }
 
 .mail_message_summary_from {
-	width: 180px;
+	width: 55%;
 	margin-left: 37px;
 	padding-bottom: 0;
 }
 
 .mail_message_summary_subject {
 	padding-top: 0;
-	width: 90%;
+	width: 75%;
 	margin-left: 37px;
 }
 /* with attachment */
@@ -166,10 +166,8 @@ button.control {
 }
 
 .date {
-	width: 120px;
-	max-width: 25%;
 	position: absolute;
-	right: 44px; /* leave room for delete action */
+	right: 0;
 	top: 0;
 	-ms-filter: "progid:DXImageTransform.Microsoft.Alpha(Opacity=50)";
 	filter: alpha(opacity=50);
@@ -184,9 +182,9 @@ button.control {
 
 #mail_messages .action.delete {
 	position: absolute;
-	top: 0;
+	bottom: 0;
 	right: 0;
-	padding: 22px;
+	padding: 20px;
 	-ms-filter: "progid:DXImageTransform.Microsoft.Alpha(Opacity=20)";
 	filter: alpha(opacity=20);
 	opacity: .2;
