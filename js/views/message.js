@@ -50,7 +50,7 @@ views.Messages = Backbone.View.extend({
 			.val(t('mail', 'Loading …'))
 			.prop('disabled', true);
 
-		self = this;
+		var self = this;
 		$.ajax(
 			OC.generateUrl('apps/mail/accounts/{accountId}/folders/{folderId}/messages?from={from}&to={to}',
 				{
@@ -72,7 +72,7 @@ views.Messages = Backbone.View.extend({
 					Mail.State.currentMessageId = null;
 				},
 				error: function() {
-
+					Mail.UI.showError(t('mail', 'Error while loading messages.'));
 					// Set the old folder as being active
 					Mail.UI.setFolderActive(Mail.State.currentAccountId, Mail.State.currentFolderId);
 				},

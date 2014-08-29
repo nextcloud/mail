@@ -5,54 +5,36 @@ var Mail = {
 	},
 	UI:{
 		initializeInterface:function () {
-			Handlebars.registerHelper("colorOfDate", function(dateInt) {
-				var lastModified = new Date(dateInt*1000);
-				var lastModifiedTime = Math.round(lastModified.getTime() / 1000);
-
-				// date column
-				var modifiedColor = Math.round((Math.round((new Date()).getTime() / 1000)-lastModifiedTime)/60/60/24*5);
-				if (modifiedColor > 200) {
-					modifiedColor = 200;
-				}
-				return 'rgb('+modifiedColor+','+modifiedColor+','+modifiedColor+')';
-			});
-
-			Handlebars.registerHelper("relativeModifiedDate", function(dateInt) {
-				var lastModified = new Date(dateInt*1000);
-				var lastModifiedTime = Math.round(lastModified.getTime() / 1000);
-				return relative_modified_date(lastModifiedTime);
-			});
-
-			Handlebars.registerHelper("formatDate", function(dateInt) {
-				var lastModified = new Date(dateInt*1000);
-				return formatDate(lastModified);
-			});
-
-			Handlebars.registerHelper("humanFileSize", function(size) {
-				return humanFileSize(size);
-			});
 
 			$.ajax(OC.generateUrl('apps/mail/accounts'), {
 				data:{},
 				type:'GET',
 				success:function (jsondata) {
-						// don't try to load accounts if there are none
-						if(jsondata.length === 0) {
-							return;
-						}
-						// only show account switcher when there are multiple
-						if(jsondata.length > 1) {
-							var source   = $("#mail-account-manager").html();
-							var template = Handlebars.compile(source);
-							var html = template(jsondata);
-							$('#accountManager').html(html);
-						}
-						Mail.State.currentAccountId = jsondata[0].accountId;
+					// don't try to load accounts if there are none
+					if(jsondata.length === 0) {
+						return;
+					}
+					// only show account switcher when there are multiple
+					if(jsondata.length > 1) {
+						var source   = $("#mail-account-manager").html();
+						var template = Handlebars.compile(source);
+						var html = template(jsondata);
+						$('#accountManager').html(html);
+					}
+					Mail.State.currentAccountId = jsondata[0].accountId;
 				},
 				error: function() {
-//					OC.msg.finishedAction('', '');
+					Mail.UI.showError(t('mail', 'Error while loading the accounts.'));
 				}
 			});
+		},
+
+		showError: function(message) {
+			OC.Notification.show(message);
+			$('#app-navigation')
+				.removeClass('icon-loading');
+			$('#app-content')
+				.removeClass('icon-loading');
 		},
 
 		hideMenu:function () {

@@ -158,7 +158,6 @@
 		<div id="accountManager"></div>
 		<input type="button" id="mail_new_message" class="primary"
 			value="<?php p($l->t('New Message')); ?>" style="display: none">
-		<div><span id="app-navigation-msg" class="msg"></span></div>
 		<div id="folders"></div>
 	</div>
 	<div id="app-content">

@@ -19,6 +19,7 @@ use OCA\Mail\Service\ContactsIntegration;
 use OCP\AppFramework\Controller;
 use OCP\AppFramework\Db\DoesNotExistException;
 use OCP\AppFramework\Http\JSONResponse;
+use OCP\AppFramework\Http\TemplateResponse;
 
 class MessagesController extends Controller
 {
@@ -110,12 +111,16 @@ class MessagesController extends Controller
 	 * @return JSONResponse
 	 */
 	public function getHtmlBody($messageId) {
-		$mailBox = $this->getFolder();
+		try {
+			$mailBox = $this->getFolder();
 
-		$m = $mailBox->getMessage($messageId, true);
-		$html = $m->getHtmlBody();
+			$m = $mailBox->getMessage($messageId, true);
+			$html = $m->getHtmlBody();
 
-		return new HtmlResponse($html);
+			return new HtmlResponse($html);
+		} catch(\Exception $ex) {
+			return new TemplateResponse($this->appName, 'error', array('message' => $ex->getMessage()), 'none');
+		}
 	}
 
 	/**

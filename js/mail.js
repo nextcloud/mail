@@ -97,7 +97,7 @@ var Mail = {
 				data:{},
 				type:'GET',
 				success:function (jsondata) {
-					Mail.State.accounts = jsondata;
+						Mail.State.accounts = jsondata;
 						// don't try to load accounts if there are none
 						var source   = $("#mail-account-manager").html();
 						var template = Handlebars.compile(source);
@@ -110,7 +110,7 @@ var Mail = {
 						}
 					},
 				error: function() {
-//					OC.msg.finishedAction('', '');
+					Mail.UI.showError(t('mail', 'Error while loading the accounts.'));
 				}
 			});
 
@@ -133,8 +133,6 @@ var Mail = {
 			$('#app-navigation').addClass('icon-loading');
 			$('#mail_messages').addClass('icon-loading');
 			$('#mail-message').addClass('icon-loading');
-
-			OC.msg.startAction('#app-navigation-msg', '');
 
 			$.ajax(OC.generateUrl('apps/mail/accounts/{accountId}/folders', {accountId: accountId}), {
 				data:{},
@@ -166,18 +164,24 @@ var Mail = {
 					}
 				},
 				error: function() {
-					OC.msg.finishedAction('#app-navigation-msg', {
-						status: 'error',
-						data: {
-							message: t('mail', 'Error while loading the selected account.')
-						}
-					});
-					$('#app-navigation')
-						.removeClass('icon-loading');
-					$('#app-content')
-						.removeClass('icon-loading');
+					Mail.UI.showError(t('mail', 'Error while loading the selected account.'));
 				}
 			});
+		},
+
+		showError: function(message) {
+			OC.Notification.show(message);
+			$('#app-navigation')
+				.removeClass('icon-loading');
+			$('#app-content')
+				.removeClass('icon-loading');
+			$('#mail-message')
+				.removeClass('icon-loading');
+			$('#mail_message')
+				.removeClass('icon-loading');
+			_.delay(function() {
+				OC.Notification.hide();
+			}, 4000);
 		},
 
 		clearMessages:function () {
@@ -247,7 +251,7 @@ var Mail = {
 						Mail.UI.setFolderInactive(accountId, folderId);
 						Mail.UI.setFolderActive(Mail.State.currentAccountId, Mail.State.currentFolderId);
 
-//						OC.dialogs.alert(jsondata.data.message, t('mail', 'Error'));
+						Mail.UI.showError(t('mail', 'Error while loading messages.'));
 					}
 				});
 		},
@@ -466,7 +470,7 @@ var Mail = {
 						Mail.UI.setMessageActive(messageId);
 					},
 					error: function() {
-						OC.dialogs.alert(t('mail', 'Error while loading mail message.'), t('mail', 'Error'));
+						Mail.UI.showError(t('mail', 'Error while loading the selected mail message.'));
 					}
 				});
 		},
@@ -544,7 +548,7 @@ $(document).ready(function () {
 			},
 			error: function(jqXHR, textStatus, errorThrown){
 				var error = errorThrown || textStatus || t('mail', 'Unknown error');
-				OC.dialogs.alert(error, t('mail', 'Server Error'));
+				Mail.UI.showError(t('mail', 'Error while creating an account: ' + error));
 			},
 			complete: function() {
 				$('#mail-account-name').prop('disabled', false);
