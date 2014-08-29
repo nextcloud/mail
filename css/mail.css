@@ -89,13 +89,16 @@ button.control {
 	display: none;
 }
 
-
 .mailaccount-list .actions {
     display: inline-flex;
     position: absolute;
     right: 0;
-}
 
+}
+.mailaccount-list .actions.icon-delete {
+    height: 16px;
+    width: 16px;
+}
 
 /* app content*/
 

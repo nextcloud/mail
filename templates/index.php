@@ -169,15 +169,15 @@
     <h2 role="button" tabindex="0" data-id="mailaccount">Mailaccounts</h2>
     <ul class="mailaccount-list">
 		{{#each this}}
-        <li>
-            <label>{{emailAddress}}</label>
+        <li id="mail-account-{{accountId}}" data-account-id="{{accountId}}">
+            {{emailAddress}}
             <span class="actions">
                 <a class="icon-delete delete action" original-title="Delete"></a>
             </span>
         </li>
 		{{/each}}
     </ul>
-	<input id="new_mail_account" type="submit" value="<?php p($l->t('New Mail Account')); ?>" class="new-button primary">
+	<input id="new_mail_account" type="submit" value="<?php p($l->t('New Mail Account')); ?>" class="new-button">
 </div>
 </script>
 <div id="app">
