@@ -24,7 +24,6 @@ namespace OCA\Mail\Controller;
 
 
 use OCP\AppFramework\Controller;
-use OCP\AppFramework\Http\JSONResponse;
 use OCP\AppFramework\Http\TemplateResponse;
 
 class PageController extends Controller {

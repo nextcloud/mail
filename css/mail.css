@@ -90,7 +90,11 @@ button.control {
 }
 
 
-
+.mailaccount-list .actions {
+    display: inline-flex;
+    position: absolute;
+    right: 0;
+}
 
 
 /* app content*/

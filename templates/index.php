@@ -169,8 +169,7 @@
     <h2 role="button" tabindex="0" data-id="mailaccount">Mailaccounts</h2>
     <ul class="mailaccount-list">
 		{{#each this}}
-        <li data-permissions="31" data-backend="local" data-id="1">
-            <input type="checkbox" title="Active" checked="checked" name="active">
+        <li>
             <label>{{emailAddress}}</label>
             <span class="actions">
                 <a class="icon-delete delete action" original-title="Delete"></a>
@@ -178,7 +177,7 @@
         </li>
 		{{/each}}
     </ul>
-    <ul class="oc-addnew" style="display: inline-block; width: auto; height: auto;" aria-disabled="false"><li><a class="oc-addnew-init">Add Mail Account</a></li><li><input type="text" placeholder="Display name" id="add-address-book" autofocus="" tabindex="0" style="display: none;" class="oc-addnew-name"><button class="new-button primary icon-checkmark-white" style="display: none;"></button></li></ul>
+	<input id="new_mail_account" type="submit" value="<?php p($l->t('New Mail Account')); ?>" class="new-button primary">
 </div>
 </script>
 <div id="app">
