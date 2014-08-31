@@ -5,11 +5,9 @@ Mail app
 [![Scrutinizer Code Quality](https://scrutinizer-ci.com/g/owncloud/mail/badges/quality-score.png?b=master)](https://scrutinizer-ci.com/g/owncloud/mail/?branch=master)
 [![Code Coverage](https://scrutinizer-ci.com/g/owncloud/mail/badges/coverage.png?b=master)](https://scrutinizer-ci.com/g/owncloud/mail/?branch=master)
 
-An email app for [ownCloud](https://owncloud.org) (minimum version 7). At the moment it is a basic IMAP client and in heavy development.
+An email app for [ownCloud](https://owncloud.org) (minimum version 7). At the moment it is a basic IMAP client and in heavy development. (A possibility for the future would be to also have it be a dedicated email server. But that would always be optional, require additional dependencies and is out of scope for now.)
 
-At the moment we try to use it ourselves and fix [issues related to dogfooding](https://github.com/owncloud/mail/issues?q=is%3Aopen+is%3Aissue+label%3Adogfood) as well as [integrate with other parts of ownCloud](https://github.com/owncloud/mail/issues?q=is%3Aopen+is%3Aissue+label%3Aintegration).
-
-A possibility for the future would be to also have it be a dedicated email server. But that would always be optional, require additional dependencies and is out of scope for now.
+We’re working towards a [0.1 release](https://github.com/owncloud/mail/issues?q=is%3Aopen+is%3Aissue+milestone%3A0.1) at the moment. If you experience any issues or have enhancement suggestions, please report them in our [issue tracker](https://github.com/owncloud/mail/issues).
 
 
 Maintainers
