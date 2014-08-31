@@ -43,6 +43,8 @@ class Message {
 		$this->loadHtmlMessage = $loadHtmlMessage;
 
 		// TODO: inject ???
+//		$cacheDir = \OC::$server->getUserFolder() . '/mail/html-cache';
+//		$this->htmlService = new Html($cacheDir);
 		$this->htmlService = new Html();
 
 		if ($fetch === null) {
@@ -302,6 +304,7 @@ class Message {
 		if (isset($filename)) {
 			$this->attachments[]= array(
 				'id' => $p->getMimeId(),
+				'messageId' => $this->messageId,
 				'fileName' => $filename,
 				'mime' => $p->getType(),
 				'size' => $p->getBytes()

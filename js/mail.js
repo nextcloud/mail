@@ -232,7 +232,6 @@ var Mail = {
 					data: {},
 					type:'GET',
 					success: function (jsondata) {
-
 						Mail.State.currentAccountId = accountId;
 						Mail.State.currentFolderId = folderId;
 						Mail.UI.setMessageActive(null);
@@ -669,14 +668,14 @@ $(document).ready(function () {
 
 	$(document).on('click', '#mail-message .attachment-save-to-cloud', function(event) {
 		event.stopPropagation();
-		var messageId = $(this).parent().parent().parent().parent().parent().parent().data('messageId');
+		var messageId = $(this).parent().data('messageId');
 		var attachmentId = $(this).parent().data('attachmentId');
 		Mail.UI.saveAttachment(messageId, attachmentId);
 	});
 
 	$(document).on('click', '#mail-message .attachments-save-to-cloud', function(event) {
 		event.stopPropagation();
-		var messageId = $(this).parent().parent().parent().parent().parent().data('messageId');
+		var messageId = $(this).parent().data('messageId');
 		Mail.UI.saveAttachment(messageId);
 	});
 });
