@@ -90,8 +90,7 @@ button.control {
 }
 
 .mailaccount-list li {
-    margin-top:5px;
-    margin-bottom:5px;
+	padding: 10px 0;
 }
 
 .mailaccount-list .actions {
