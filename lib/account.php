@@ -254,9 +254,9 @@ class Account {
 					);
 					return $specialRolesOrder[$roleA] - $specialRolesOrder[$roleB];
 				}
-			} elseif ($roleA === null && $roleB === null) {
-				return strcasecmp($a->getDisplayName(), $b->getDisplayName());
-			}
+			} 
+			// we get here if $roleA === null && $roleB === null
+			return strcasecmp($a->getDisplayName(), $b->getDisplayName());
 		});
 
 		$this->mailboxes = $mailboxes;

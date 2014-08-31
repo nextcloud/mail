@@ -265,9 +265,5 @@ class Mailbox {
 		}
 		$this->conn->store($this->folderId, $options);
 	}
-
-	private function isTrash() {
-		return $this->getSpecialRole() === 'trash';
-	}
 }
 
