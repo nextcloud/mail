@@ -35,10 +35,14 @@ views.Messages = Backbone.View.extend({
 			.val(t('mail', 'Checking mail …'))
 			.prop('disabled', true);
 
-		this.loadMore(true);
+		this.loadMessages(true);
 	},
 
-	loadMore: function(reload) {
+	loadMore: function() {
+		this.loadMessages(false);
+	},
+
+	loadMessages: function(reload) {
 		reload = reload || false;
 		var from = this.collection.size();
 		if (reload){
