@@ -68,24 +68,45 @@ $(function () {
 		replyMessageBody.prop('disabled', true);
 		replyMessageSend.prop('disabled', true);
 		replyMessageSend.val(t('mail', 'Sending …'));
-		$('.reply-message-fields #to').prop('disabled', true);
-		$('.reply-message-fields #cc').prop('disabled', true);
+		var to = $('.reply-message-fields #to');
+		var cc = $('.reply-message-fields #cc');
+
+		to.prop('disabled', true);
+		cc.prop('disabled', true);
 
 		$.ajax({
 			url:OC.generateUrl('/apps/mail/accounts/{accountId}/send', {accountId: Mail.State.currentAccountId}),
 			beforeSend:function () {
 			},
 			complete:function () {
+				replyMessageBody.removeClass('icon-loading');
+				replyMessageBody.prop('disabled', false);
+				replyMessageSend.prop('disabled', false);
+				replyMessageSend.val(t('mail', 'Reply'));
+				$('.reply-message-fields #to').prop('disabled', false);
+				$('.reply-message-fields #cc').prop('disabled', false);
 			},
 			data:{
-				'folderId': Mail.State.currentFolderId,
-				'messageId': Mail.State.currentMessageId,
-				'body':replyMessageBody.val()
+				to: to.val(),
+				cc: cc.val(),
+				folderId: Mail.State.currentFolderId,
+				messageId: Mail.State.currentMessageId,
+				body:replyMessageBody.val()
 			},
 			type: 'POST',
 			success:function () {
+				OC.msg.finishedAction('#reply-msg', {
+					status: 'success',
+					data: {
+						message: t('mail', 'Mail sent to {Receiver}', {Receiver: to.val()})
+					}
+				});
+
 				// close reply
 				$('.reply-message-body').val('');
+			},
+			error: function() {
+				Mail.UI.showError(t('mail', 'Error sending the reply.'));
 			}
 		});
 	});

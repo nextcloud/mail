@@ -205,7 +205,7 @@ class AccountsController extends Controller
 		}
 
 		// in reply to handling
-		$folderId = $this->params('folderId');
+		$folderId = base64_decode($this->params('folderId'));
 		$messageId = $this->params('messageId');
 		if (!is_null($folderId) && !is_null($messageId)) {
 			$mailbox = $account->getMailbox($folderId);
@@ -215,7 +215,9 @@ class AccountsController extends Controller
 				$headers['Subject'] = "RE: " . $message->getSubject();
 			}
 			$headers['In-Reply-To'] = $message->getMessageId();
-			$to = $message->getToEmail();
+			if (is_null($to)) {
+				$to = $message->getToEmail();
+			}
 		}
 		$headers['To'] = $to;
 
