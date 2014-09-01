@@ -525,9 +525,13 @@ $(document).ready(function () {
 	// auto detect button handling
 	$('#auto_detect_account').click(function (event) {
 		event.preventDefault();
-		$('#mail-account-name').prop('disabled', true);
-		$('#mail-address').prop('disabled', true);
-		$('#mail-password').prop('disabled', true);
+		$('#mail-account-name, #mail-address, #mail-password, #mail-setup-manual-toggle')
+			.prop('disabled', true);
+		$('#mail-imap-host, #mail-imap-port, #mail-imap-sslmode, #mail-imap-user, #mail-imap-password')
+			.prop('disabled', true);
+		$('#mail-smtp-host, #mail-smtp-port, #mail-smtp-sslmode, #mail-smtp-user, #mail-smtp-password')
+			.prop('disabled', true);
+
 		$('#auto_detect_account')
 			.prop('disabled', true)
 			.val(t('mail', 'Connecting …'));
@@ -573,13 +577,17 @@ $(document).ready(function () {
 				Mail.UI.showError(t('mail', 'Error while creating an account: ' + error));
 			},
 			complete: function() {
-				$('#mail-account-name').prop('disabled', false);
-				$('#mail-address').prop('disabled', false);
-				$('#mail-password').prop('disabled', false);
+				$('#mail-account-name, #mail-address, #mail-password, #mail-setup-manual-toggle')
+					.prop('disabled', false);
+				$('#mail-imap-host, #mail-imap-port, #mail-imap-sslmode, #mail-imap-user, #mail-imap-password')
+					.prop('disabled', false);
+				$('#mail-smtp-host, #mail-smtp-port, #mail-smtp-sslmode, #mail-smtp-user, #mail-smtp-password')
+					.prop('disabled', false);
 				$('#auto_detect_account')
 					.prop('disabled', false)
 					.val(t('mail', 'Connect'));
 				$('#connect-loading').hide();
+				$('#mail-setup-manual').hide();
 			}
 		});
 	});
@@ -588,6 +596,14 @@ $(document).ready(function () {
 	$(document).on('click', '#mail-setup-manual-toggle', function () {
 		$('#mail-setup-manual').slideToggle();
 		$('#mail-imap-host').focus();
+		if($('#mail-address').parent().prop('class') === 'groupmiddle') {
+			$('#mail-password').slideToggle(function() {
+				$('#mail-address').parent().removeClass('groupmiddle').addClass('groupbottom');
+			});
+		} else {
+			$('#mail-password').slideToggle();
+			$('#mail-address').parent().removeClass('groupbottom').addClass('groupmiddle');
+		};
 	});
 
 	// new mail message button handling
