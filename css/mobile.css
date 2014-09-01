@@ -1,10 +1,5 @@
 @media only screen and (max-width: 768px) {
 
-/* use full width on mobile, don't leave whitespace on left */
-.mail-message-body {
-	margin-left: 10px;
-}
-
 /* make sure text fields occupy full width */
 #new-message-fields,
 .reply-message-fields {
