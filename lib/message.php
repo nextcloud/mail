@@ -155,6 +155,11 @@ class Message {
 		return $this->convertAddressList($e->bcc);
 	}
 
+	public function getReplyToList() {
+		$e = $this->getEnvelope();
+		return $this->convertAddressList($e->from);
+	}
+
 	// on reply, fill cc with everyone from to and cc except yourself
 	public function getReplyCcList() {
 		$e = $this->getEnvelope();
@@ -369,10 +374,8 @@ class Message {
 		$data['size'] = \OCP\Util::humanFileSize($this->getSize());
 		$data['flags'] = $this->getFlags();
 		$data['dateInt'] = $this->getSentDate()->getTimestamp();
-		$data['cc'] = implode(', ', array_map(function($item) {
-			return $item['email'];
-		}, $this->getCCList()));
 		$data['ccList'] = $this->getCCList();
+		$data['replyToList'] = $this->getReplyToList();
 		$data['replyCcList'] = $this->getReplyCcList();
 		return $data;
 	}

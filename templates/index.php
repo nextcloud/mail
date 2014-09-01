@@ -137,10 +137,10 @@
 
 			<input type="text" name="to" id="to" class="recipient-autocomplete"
 				   placeholder="<?php p($l->t('Recipient')); ?>"
-				   value="{{fromEmail}}"/>
+				   value="{{printAddressListPlain replyToList}}"/>
 
 			<div id="reply-message-cc-bcc"
-			{{#unless cc}}
+			{{#unless replyCcList}}
 			class="hidden"
 			{{/unless}}
 			>
