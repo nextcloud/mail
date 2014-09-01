@@ -2,12 +2,21 @@
 
 var views = views || {};
 
-views.Messages = Backbone.View.extend({
+views.Message = Backbone.Marionette.ItemView.extend({
+
+	template: null,
+
+	initialize: function() {
+		this.template = Handlebars.compile($("#mail-messages-template").html());
+	}
+});
+
+views.Messages = Backbone.Marionette.CollectionView.extend({
 
 	// The collection will be kept here
 	collection: null,
 
-	template: null,
+	childView: views.Message,
 
 	events: {
 		"click #load-new-mail-messages" : "loadNew",
@@ -16,16 +25,6 @@ views.Messages = Backbone.View.extend({
 
 	initialize: function() {
 		this.collection = new models.MessageList();
-
-		this.template = Handlebars.compile($("#mail-messages-template").html());
-
-		// Ensure our methods keep the `this` reference to the view itself
-		_.bindAll(this, 'render');
-
-		// Bind collection changes to re-rendering
-		this.collection.bind('reset', this.render);
-		this.collection.bind('add', this.render);
-		this.collection.bind('remove', this.render);
 	},
 
 	loadNew: function() {
@@ -70,7 +69,12 @@ views.Messages = Backbone.View.extend({
 						self.collection.reset();
 					}
 					// Add messages
-					Mail.UI.addMessages(jsondata);
+					Mail.State.messageView.collection.add(jsondata);
+
+					_.each($('.avatar'), function(a) {
+							$(a).imageplaceholder($(a).data('user'), $(a).data('user'));
+						}
+					);
 					$('#app-content').removeClass('icon-loading');
 
 					Mail.State.currentMessageId = null;
@@ -92,16 +96,16 @@ views.Messages = Backbone.View.extend({
 						.prop('disabled', false);
 				}
 			});
-	},
-
-	render: function() {
-		// Clear potential old entries first
-		var element = this.$el.find('#mail-message-list');
-		element.empty();
-
-		var html = this.template(this.collection.toJSON());
-		element.append(html);
-
-		return this;
 	}
+
+//	render: function() {
+//		// Clear potential old entries first
+//		var element = this.$el.find('#mail-message-list');
+//		element.empty();
+//
+//		var html = this.template(this.collection.toJSON());
+//		element.append(html);
+//
+//		return this;
+//	}
 });

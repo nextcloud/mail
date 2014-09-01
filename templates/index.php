@@ -23,7 +23,6 @@
 	{{/each}}
 </script>
 <script id="mail-messages-template" type="text/x-handlebars-template">
-	{{#each this}}
 	<div id="mail-message-summary-{{id}}" class="mail_message_summary {{#if flags.unseen}}unseen{{/if}}" data-message-id="{{id}}">
 		<div class="mail-message-header">
 			<div class="sender-image">
@@ -60,7 +59,6 @@
 			<div class="icon-delete action delete"></div>
 		</div>
 	</div>
-	{{/each}}
 </script>
 <script id="mail-message-template" type="text/x-handlebars-template">
 	<div id="mail-message-header" class="section">
