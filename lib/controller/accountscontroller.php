@@ -145,7 +145,7 @@ class AccountsController extends Controller
 				$newAccount = $this->autoConfig->createAutoDetected($email, $password, $name);
 			} else {
 				$newAccount = new MailAccount($this->getParams());
-				$newAccount->getUserId($this->currentUserId);
+				$newAccount->setUserId($this->currentUserId);
 
 				$a = new Account($newAccount);
 				// connect to imap

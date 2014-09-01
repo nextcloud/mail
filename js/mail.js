@@ -525,9 +525,13 @@ $(document).ready(function () {
 	// auto detect button handling
 	$('#auto_detect_account').click(function (event) {
 		event.preventDefault();
-		$('#mail-account-name').prop('disabled', true);
-		$('#mail-address').prop('disabled', true);
-		$('#mail-password').prop('disabled', true);
+		$('#mail-account-name, #mail-address, #mail-password, #mail-setup-manual-toggle')
+			.prop('disabled', true);
+		$('#mail-imap-host, #mail-imap-port, #mail-imap-sslmode, #mail-imap-user, #mail-imap-password')
+			.prop('disabled', true);
+		$('#mail-smtp-host, #mail-smtp-port, #mail-smtp-sslmode, #mail-smtp-user, #mail-smtp-password')
+			.prop('disabled', true);
+
 		$('#auto_detect_account')
 			.prop('disabled', true)
 			.val(t('mail', 'Connecting …'));
@@ -535,13 +539,35 @@ $(document).ready(function () {
 		var emailAddress = $('#mail-address').val();
 		var accountName = $('#mail-account-name').val();
 		var password = $('#mail-password').val();
-		$.ajax(OC.generateUrl('apps/mail/accounts'), {
-			data:{
+
+		var dataArray = {
+			accountName: accountName,
+			emailAddress: emailAddress,
+			password: password,
+			autoDetect: true
+		};
+
+		if($('#mail-setup-manual').css('display') === 'block') {
+			dataArray = {
 				accountName: accountName,
-				emailAddress : emailAddress,
-				password : password,
-				autoDetect : true
-			},
+				emailAddress: emailAddress,
+				password: password,
+				imapHost: $('#mail-imap-host').val(),
+				imapPort: $('#mail-imap-port').val(),
+				imapSslMode: $('#mail-imap-sslmode').val(),
+				imapUser: $('#mail-imap-user').val(),
+				imapPassword: $('#mail-imap-password').val(),
+				smtpHost: $('#mail-smtp-host').val(),
+				smtpPort: $('#mail-smtp-port').val(),
+				smtpSslMode: $('#mail-smtp-sslmode').val(),
+				smtpUser: $('#mail-smtp-user').val(),
+				smtpPassword: $('#mail-smtp-password').val(),
+				autoDetect: false
+			};
+		}
+
+		$.ajax(OC.generateUrl('apps/mail/accounts'), {
+			data: dataArray,
 			type:'POST',
 			success:function (data) {
 				Mail.State.router.navigate('accounts/' + data.data.id, {trigger: true});
@@ -551,15 +577,33 @@ $(document).ready(function () {
 				Mail.UI.showError(t('mail', 'Error while creating an account: ' + error));
 			},
 			complete: function() {
-				$('#mail-account-name').prop('disabled', false);
-				$('#mail-address').prop('disabled', false);
-				$('#mail-password').prop('disabled', false);
+				$('#mail-account-name, #mail-address, #mail-password, #mail-setup-manual-toggle')
+					.prop('disabled', false);
+				$('#mail-imap-host, #mail-imap-port, #mail-imap-sslmode, #mail-imap-user, #mail-imap-password')
+					.prop('disabled', false);
+				$('#mail-smtp-host, #mail-smtp-port, #mail-smtp-sslmode, #mail-smtp-user, #mail-smtp-password')
+					.prop('disabled', false);
 				$('#auto_detect_account')
 					.prop('disabled', false)
 					.val(t('mail', 'Connect'));
 				$('#connect-loading').hide();
+				$('#mail-setup-manual').hide();
 			}
 		});
+	});
+
+	// toggle for advanced account configuration
+	$(document).on('click', '#mail-setup-manual-toggle', function () {
+		$('#mail-setup-manual').slideToggle();
+		$('#mail-imap-host').focus();
+		if($('#mail-address').parent().prop('class') === 'groupmiddle') {
+			$('#mail-password').slideToggle(function() {
+				$('#mail-address').parent().removeClass('groupmiddle').addClass('groupbottom');
+			});
+		} else {
+			$('#mail-password').slideToggle();
+			$('#mail-address').parent().removeClass('groupbottom').addClass('groupmiddle');
+		};
 	});
 
 	// new mail message button handling
