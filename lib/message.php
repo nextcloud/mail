@@ -35,11 +35,13 @@ class Message {
 	 * @param \Horde_Imap_Client_Data_Fetch|null $fetch
 	 * @param boolean $loadHtmlMessage
 	 */
-	function __construct($conn, $folderId, $messageId, $fetch=null, $loadHtmlMessage=false) {
+	function __construct($conn, $folderId, $messageId, $fetch=null,
+		$loadHtmlMessage=false, $accountEmail='') {
 		$this->conn = $conn;
 		$this->folderId = $folderId;
 		$this->messageId = $messageId;
 		$this->loadHtmlMessage = $loadHtmlMessage;
+		$this->accountEmail = $accountEmail;
 
 		// TODO: inject ???
 		$this->htmlService = new Html();
@@ -58,6 +60,7 @@ class Message {
 	public $attachments = array();
 	private $loadHtmlMessage = false;
 	private $hasHtmlMessage = false;
+	private $accountEmail;
 
 	/**
 	 * @var \Horde_Imap_Client_Socket
@@ -150,6 +153,17 @@ class Message {
 	public function getBCList() {
 		$e = $this->getEnvelope();
 		return $this->convertAddressList($e->bcc);
+	}
+
+	// on reply, fill cc with everyone from to and cc except yourself
+	public function getReplyCcList() {
+		$e = $this->getEnvelope();
+		$list = new \Horde_Mail_Rfc822_List();
+		$list->add($e->to);
+		$list->add($e->cc);
+		$list->unique();
+		$list->remove($this->accountEmail);
+		return $this->convertAddressList($list);
 	}
 
 	public function getMessageId() {
@@ -359,6 +373,7 @@ class Message {
 			return $item['email'];
 		}, $this->getCCList()));
 		$data['ccList'] = $this->getCCList();
+		$data['replyCcList'] = $this->getReplyCcList();
 		return $data;
 	}
 
