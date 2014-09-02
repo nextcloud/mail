@@ -85,8 +85,9 @@ class MessagesController extends Controller
 		$folderId = $this->params('folderId');
 		$mailBox = $this->getFolder();
 
+		$account = $this->getAccount();
 		$m = $mailBox->getMessage($id);
-		$json = $m->as_array();
+		$json = $m->getFullMessage($account->getEmail());
 		$json['senderImage'] = $this->contactsIntegration->getPhoto($m->getFromEmail());
 		if (isset($json['hasHtmlBody'])){
 			$json['htmlBodyUrl'] = $this->buildHtmlBodyUrl($accountId, $folderId, $id);

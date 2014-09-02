@@ -36,12 +36,11 @@ class Message {
 	 * @param boolean $loadHtmlMessage
 	 */
 	function __construct($conn, $folderId, $messageId, $fetch=null,
-		$loadHtmlMessage=false, $accountEmail='') {
+		$loadHtmlMessage=false) {
 		$this->conn = $conn;
 		$this->folderId = $folderId;
 		$this->messageId = $messageId;
 		$this->loadHtmlMessage = $loadHtmlMessage;
-		$this->accountEmail = $accountEmail;
 
 		// TODO: inject ???
 		$this->htmlService = new Html();
@@ -60,7 +59,6 @@ class Message {
 	public $attachments = array();
 	private $loadHtmlMessage = false;
 	private $hasHtmlMessage = false;
-	private $accountEmail;
 
 	/**
 	 * @var \Horde_Imap_Client_Socket
@@ -161,13 +159,13 @@ class Message {
 	}
 
 	// on reply, fill cc with everyone from to and cc except yourself
-	public function getReplyCcList() {
+	public function getReplyCcList($ownMail) {
 		$e = $this->getEnvelope();
 		$list = new \Horde_Mail_Rfc822_List();
 		$list->add($e->to);
 		$list->add($e->cc);
 		$list->unique();
-		$list->remove($this->accountEmail);
+		$list->remove($ownMail);
 		return $this->convertAddressList($list);
 	}
 
@@ -185,7 +183,6 @@ class Message {
 	 * @return \Horde_Imap_Client_DateTime
 	 */
 	public function getSentDate() {
-		// TODO: Use internal imap date for now
 		return $this->fetch->getImapDate();
 	}
 
@@ -340,7 +337,7 @@ class Message {
 		}
 	}
 
-	public function as_array() {
+	public function getFullMessage($ownMail) {
 		$mailBody = $this->plainMessage;
 
 		$data = $this->getListArray();
@@ -359,6 +356,9 @@ class Message {
 		if (count($this->attachments) > 1) {
 			$data['attachments'] = $this->attachments;
 		}
+
+		$data['replyToList'] = $this->getReplyToList();
+		$data['replyCcList'] = $this->getReplyCcList($ownMail);
 		return $data;
 	}
 
@@ -375,8 +375,6 @@ class Message {
 		$data['flags'] = $this->getFlags();
 		$data['dateInt'] = $this->getSentDate()->getTimestamp();
 		$data['ccList'] = $this->getCCList();
-		$data['replyToList'] = $this->getReplyToList();
-		$data['replyCcList'] = $this->getReplyCcList();
 		return $data;
 	}
 
