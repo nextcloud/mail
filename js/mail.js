@@ -603,7 +603,7 @@ $(document).ready(function () {
 		} else {
 			$('#mail-password').slideToggle();
 			$('#mail-address').parent().removeClass('groupbottom').addClass('groupmiddle');
-		};
+		}
 	});
 
 	// new mail message button handling
