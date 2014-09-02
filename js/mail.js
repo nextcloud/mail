@@ -63,7 +63,11 @@ var Mail = {
 					}
 					var label = Handlebars.Utils.escapeExpression(value.label);
 					var email = Handlebars.Utils.escapeExpression(value.email);
-					return memo + '"' + label + '" <' + email + '>';
+					if(label === email) {
+						return email;
+					} else {
+						return memo + '"' + label + '" <' + email + '>';
+					}
 				}, "");
 				return str;
 			});
