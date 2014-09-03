@@ -82,8 +82,13 @@ class Html {
 		// Append target="_blank" to all link (a) elements
 		$config->set('HTML.TargetBlank', true);
 
+		// Disable the cache since ownCloud has no really appcache
+		// TODO: Fix this - requires https://github.com/owncloud/core/issues/10767 to be fixed
+		$config->set('Cache.DefinitionImpl', null);
+
 		// Rewrite URL for redirection and proxying of content
 		$uri = $config->getDefinition('URI');
+
 		$uri->addFilter(new HTMLPurifier_URIFilter_TransformURLScheme(), $config);
 
 		$this->purifier = new \HTMLPurifier($config);
