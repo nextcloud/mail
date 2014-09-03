@@ -173,7 +173,7 @@
 </script>
 <div id="app">
 	<div id="app-navigation" class="icon-loading">
-		<input type="button" id="mail_new_message" class="primary"
+		<input type="button" id="mail_new_message" class="icon-rename"
 			value="<?php p($l->t('New Message')); ?>" style="display: none">
 		<div id="folders"></div>
         <div id="app-settings">

@@ -225,9 +225,12 @@ button.control {
 /* editor */
 
 #mail_new_message {
-	width: 90%;
+	width: 92%;
 	padding: 10px;
-	margin: 4px 10px;
+	padding-left: 34px;
+	margin: 12px 10px 0;
+	background-position: 10px center;
+	text-align: left;
 }
 
 #new-message {
