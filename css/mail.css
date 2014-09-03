@@ -89,10 +89,14 @@ button.control {
 	display: none;
 }
 
+.mail_account_email {
+	opacity: .5;
+	padding: 20px 0 10px 12px;
+}
+
 .mailaccount-list li {
 	padding: 10px 0;
 }
-
 .mailaccount-list .actions {
 	display: inline-flex;
 	position: absolute;
@@ -100,6 +104,8 @@ button.control {
 	min-height: 16px;
 	min-width: 16px;
 }
+
+
 
 /* app content*/
 

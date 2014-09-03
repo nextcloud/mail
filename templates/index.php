@@ -9,6 +9,7 @@
 </script>
 <script id="mail-folder-template" type="text/x-handlebars-template">
 	{{#each this}}
+	<h2 class="mail_account_email">{{email}}</h2>
 	<ul class="mail_folders" data-account_id="{{id}}">
 		{{#each folders}}
 		<li data-folder_id="{{id}}"
