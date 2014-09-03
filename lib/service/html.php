@@ -84,7 +84,7 @@ class Html {
 
 		// Disable the cache since ownCloud has no really appcache
 		// TODO: Fix this - requires https://github.com/owncloud/core/issues/10767 to be fixed
-		$config->set('Core.DefinitionCache', null);
+		$config->set('Core.DefinitionImpl', null);
 
 		// Rewrite URL for redirection and proxying of content
 		$uri = $config->getDefinition('URI');
