@@ -1,12 +1,3 @@
-<script id="mail-account-manager" type="text/x-handlebars-template">
-	<select class="mail_account">
-		<option value="all"><?php p($l->t('All accounts')) ?></option>
-		{{#each this}}
-		<option value="{{accountId}}">{{emailAddress}}</option>
-		{{/each}}
-		<option value="new"><?php p($l->t('+ Add account')) ?></option>
-	</select>
-</script>
 <script id="mail-folder-template" type="text/x-handlebars-template">
 	{{#each this}}
 	<h2 class="mail_account_email">{{email}}</h2>
@@ -182,7 +173,6 @@
 </script>
 <div id="app">
 	<div id="app-navigation" class="icon-loading">
-		<div id="accountManager"></div>
 		<input type="button" id="mail_new_message" class="primary"
 			value="<?php p($l->t('New Message')); ?>" style="display: none">
 		<div id="folders"></div>

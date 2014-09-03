@@ -115,10 +115,6 @@ var Mail = {
 				success:function (jsondata) {
 						Mail.State.accounts = jsondata;
 						// don't try to load accounts if there are none
-						var source   = $("#mail-account-manager").html();
-						var template = Handlebars.compile(source);
-						var html = template(jsondata);
-						$('#accountManager').html(html);
 						if(jsondata.length === 0) {
 							Mail.State.router.navigate('accounts/new', {trigger: true});
 						} else if(jsondata.length >= 2) {
