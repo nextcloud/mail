@@ -678,6 +678,10 @@ $(document).ready(function () {
 	$(document).on('change', '#app-navigation .mail_account', function(event) {
 		event.stopPropagation();
 
+		// hide buttons in message list while loading
+		$('#load-new-mail-messages').hide();
+		$('#load-more-mail-messages').hide();
+
 		var id = $( this ).val();
 		Mail.State.router.navigate('accounts/' + id, {trigger: true});
 	});
