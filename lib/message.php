@@ -35,7 +35,8 @@ class Message {
 	 * @param \Horde_Imap_Client_Data_Fetch|null $fetch
 	 * @param boolean $loadHtmlMessage
 	 */
-	function __construct($conn, $folderId, $messageId, $fetch=null, $loadHtmlMessage=false) {
+	function __construct($conn, $folderId, $messageId, $fetch=null,
+		$loadHtmlMessage=false) {
 		$this->conn = $conn;
 		$this->folderId = $folderId;
 		$this->messageId = $messageId;
@@ -152,6 +153,22 @@ class Message {
 		return $this->convertAddressList($e->bcc);
 	}
 
+	public function getReplyToList() {
+		$e = $this->getEnvelope();
+		return $this->convertAddressList($e->from);
+	}
+
+	// on reply, fill cc with everyone from to and cc except yourself
+	public function getReplyCcList($ownMail) {
+		$e = $this->getEnvelope();
+		$list = new \Horde_Mail_Rfc822_List();
+		$list->add($e->to);
+		$list->add($e->cc);
+		$list->unique();
+		$list->remove($ownMail);
+		return $this->convertAddressList($list);
+	}
+
 	public function getMessageId() {
 		$e = $this->getEnvelope();
 		return $e->message_id;
@@ -166,7 +183,6 @@ class Message {
 	 * @return \Horde_Imap_Client_DateTime
 	 */
 	public function getSentDate() {
-		// TODO: Use internal imap date for now
 		return $this->fetch->getImapDate();
 	}
 
@@ -321,7 +337,7 @@ class Message {
 		}
 	}
 
-	public function as_array() {
+	public function getFullMessage($ownMail) {
 		$mailBody = $this->plainMessage;
 
 		$data = $this->getListArray();
@@ -340,6 +356,9 @@ class Message {
 		if (count($this->attachments) > 1) {
 			$data['attachments'] = $this->attachments;
 		}
+
+		$data['replyToList'] = $this->getReplyToList();
+		$data['replyCcList'] = $this->getReplyCcList($ownMail);
 		return $data;
 	}
 
@@ -355,9 +374,6 @@ class Message {
 		$data['size'] = \OCP\Util::humanFileSize($this->getSize());
 		$data['flags'] = $this->getFlags();
 		$data['dateInt'] = $this->getSentDate()->getTimestamp();
-		$data['cc'] = implode(', ', array_map(function($item) {
-			return $item['email'];
-		}, $this->getCCList()));
 		$data['ccList'] = $this->getCCList();
 		return $data;
 	}

@@ -56,6 +56,22 @@ var Mail = {
 				return new Handlebars.SafeString(str);
 			});
 
+			Handlebars.registerHelper("printAddressListPlain", function(addressList) {
+				var str = _.reduce(addressList, function(memo, value, index) {
+					if (index !== 0) {
+						memo += ', ';
+					}
+					var label = Handlebars.Utils.escapeExpression(value.label);
+					var email = Handlebars.Utils.escapeExpression(value.email);
+					if(label === email) {
+						return email;
+					} else {
+						return memo + '"' + label + '" <' + email + '>';
+					}
+				}, "");
+				return str;
+			});
+
 			// ask to handle all mailto: links
 			if(window.navigator.registerProtocolHandler) {
 				var url = window.location.protocol + '//' +
