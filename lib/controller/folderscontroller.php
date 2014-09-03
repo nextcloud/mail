@@ -132,7 +132,7 @@ class FoldersController extends Controller
 	{
 		$accountId = $this->params('accountId');
 
-		if($accountId === 'allAccounts') {
+		if($accountId === 'all') {
 			return $this->mapper->findByUserId($this->currentUserId);
 		}
 

@@ -121,6 +121,8 @@ var Mail = {
 						$('#accountManager').html(html);
 						if(jsondata.length === 0) {
 							Mail.State.router.navigate('accounts/new', {trigger: true});
+						} else if(jsondata.length >= 2) {
+							Mail.State.router.navigate('accounts/all', {trigger: true});
 						} else {
 							Mail.State.router.navigate('accounts/' + jsondata[0].accountId, {trigger: true});
 						}
