@@ -89,9 +89,17 @@ button.control {
 	display: none;
 }
 
+.mailaccount-list li {
+	padding: 10px 0;
+}
 
-
-
+.mailaccount-list .actions {
+	display: inline-flex;
+	position: absolute;
+	right: 0;
+	min-height: 16px;
+	min-width: 16px;
+}
 
 /* app content*/
 

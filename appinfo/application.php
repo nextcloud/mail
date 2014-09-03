@@ -16,6 +16,7 @@ use OCA\Mail\Controller\AccountsController;
 use OCA\Mail\Controller\FoldersController;
 use OCA\Mail\Controller\MessagesController;
 use OCA\Mail\Controller\ProxyController;
+use OCA\Mail\Controller\SettingsController;
 use OCA\Mail\Db\MailAccountMapper;
 use OCA\Mail\Service\AutoConfig;
 use OCA\Mail\Service\ContactsIntegration;

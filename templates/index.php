@@ -164,12 +164,34 @@
 <script id="mail-attachment-template" type="text/x-handlebars-template">
 	<span>{{displayName}}</span><div class="new-message-attachments-action svg icon-delete" data-attachment-id="{{id}}"></div>
 </script>
+<script id="mail-settings-template" type="text/x-handlebars-template">
+<div id="mailsettings">
+    <ul class="mailaccount-list">
+		{{#each this}}
+        <li id="mail-account-{{accountId}}" data-account-id="{{accountId}}">
+            {{emailAddress}}
+            <span class="actions">
+                <a class="icon-delete delete action" original-title="Delete"></a>
+            </span>
+        </li>
+		{{/each}}
+    </ul>
+	<input id="new_mail_account" type="submit" value="<?php p($l->t('New Mail Account')); ?>" class="new-button">
+</div>
+</script>
 <div id="app">
 	<div id="app-navigation" class="icon-loading">
 		<div id="accountManager"></div>
 		<input type="button" id="mail_new_message" class="primary"
 			value="<?php p($l->t('New Message')); ?>" style="display: none">
 		<div id="folders"></div>
+        <div id="app-settings">
+            <div id="app-settings-header">
+                <button class="settings-button"
+                        data-apps-slide-toggle="#app-settings-content"></button>
+            </div>
+            <div id="app-settings-content"> </div>
+        </div>
 	</div>
 	<div id="app-content">
 		<div id="new-message" style="display: none">
