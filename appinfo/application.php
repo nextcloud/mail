@@ -47,16 +47,6 @@ class Application extends App {
 			);
 		});
 
-		$container->registerService('SettingsController', function($c) {
-			/** @var IAppContainer $c */
-			return new SettingsController(
-				$c->query('AppName'),
-				$c->query('Request'),
-				$c->query('MailAccountMapper'),
-				$c->query('UserId')
-			);
-		});
-
 		$container->registerService('AccountsController', function($c) {
 			/** @var IAppContainer $c */
 			return new AccountsController(

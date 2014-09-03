@@ -1,7 +1,8 @@
+/* global Handlebars, Mail */
 $(document).ready(function(){
 
     // Add the settings page
-    $.ajax(OC.generateUrl('apps/mail/settings'), {
+    $.ajax(OC.generateUrl('apps/mail/accounts'), {
         data:{},
         type:'GET',
         success:function (jsondata) {
@@ -28,7 +29,7 @@ $(document).ready(function(){
                 window.location.reload();
 			},
             error: function() {
-			    OC.Notification.show(t('mail', 'Error while deleting account.'));
+				OC.Notification.show(t('mail', 'Error while deleting account.'));
 			}
 
 		});
