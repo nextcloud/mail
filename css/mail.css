@@ -234,11 +234,7 @@ button.control {
 }
 
 #new-message {
-	position: absolute;
-	right: 0;
-	width: 60%;
 	margin: 10px;
-	margin-left: 49px;
 	z-index: 100;
 }
 #new-message-fields,
@@ -266,7 +262,7 @@ button.control {
 #reply-message-cc-bcc-toggle {
 	position: absolute;
 	right: 0;
-	top: 0;
+	/*top: 0;*/
 	padding: 6px;
 }
 #new-message-cc-bcc {

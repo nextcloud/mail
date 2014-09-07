@@ -171,6 +171,37 @@
 	<input id="new_mail_account" type="submit" value="<?php p($l->t('New Mail Account')); ?>" class="new-button">
 </div>
 </script>
+<script id="new-message-template" type="text/x-handlebars-template">
+	<div id="new-message">
+		<div id="new-message-fields">
+			<select class="mail_account">
+				{{#each aliases}}
+				<option value="{{accountId}}">{{emailAddress}}</option>
+				{{/each}}
+			</select>
+			<a href="#" id="new-message-cc-bcc-toggle"
+			   class="transparency"><?php p($l->t('+ cc/bcc')); ?></a>
+			<input type="text" name="to" id="to" class="recipient-autocomplete"
+				   placeholder="<?php p($l->t('Recipient')); ?>" />
+			<div id="new-message-cc-bcc">
+				<input type="text" name="cc" id="cc" class="recipient-autocomplete"
+					   placeholder="<?php p($l->t('cc')); ?>" />
+				<input type="text" name="bcc" id="bcc" class="recipient-autocomplete"
+					   placeholder="<?php p($l->t('bcc')); ?>" />
+			</div>
+			<input type="text" name="subject" id="subject"
+				   placeholder="<?php p($l->t('Subject')); ?>" />
+			<textarea name="body" id="new-message-body"
+					  placeholder="<?php p($l->t('Message …')); ?>"></textarea>
+			<input id="new-message-send" class="send primary" type="submit" value="<?php p($l->t('Send')) ?>">
+		</div>
+		<div id="new-message-attachments">
+			<ul></ul>
+			<input type="button" id="mail_new_attachment" value="<?php p($l->t('Add attachment from Files')); ?>">
+		</div>
+		<div><span id="new-message-msg" class="msg"></div>
+	</div>
+</script>
 <div id="app">
 	<div id="app-navigation" class="icon-loading">
 		<input type="button" id="mail_new_message" class="icon-rename"
@@ -185,30 +216,6 @@
         </div>
 	</div>
 	<div id="app-content">
-		<div id="new-message" style="display: none">
-			<div id="new-message-fields">
-				<a href="#" id="new-message-cc-bcc-toggle"
-				   class="transparency"><?php p($l->t('+ cc/bcc')); ?></a>
-				<input type="text" name="to" id="to" class="recipient-autocomplete"
-					   placeholder="<?php p($l->t('Recipient')); ?>" />
-				<div id="new-message-cc-bcc">
-					<input type="text" name="cc" id="cc" class="recipient-autocomplete"
-						   placeholder="<?php p($l->t('cc')); ?>" />
-					<input type="text" name="bcc" id="bcc" class="recipient-autocomplete"
-						   placeholder="<?php p($l->t('bcc')); ?>" />
-				</div>
-				<input type="text" name="subject" id="subject"
-					   placeholder="<?php p($l->t('Subject')); ?>" />
-				<textarea name="body" id="new-message-body"
-						  placeholder="<?php p($l->t('Message …')); ?>"></textarea>
-				<input id="new-message-send" class="send primary" type="submit" value="<?php p($l->t('Send')) ?>">
-			</div>
-			<div id="new-message-attachments">
-				<ul></ul>
-				<input type="button" id="mail_new_attachment" value="<?php p($l->t('Add attachment from Files')); ?>">
-			</div>
-			<div><span id="new-message-msg" class="msg"></div>
-		</div>
 
 		<div id="mail_messages" class="icon-loading">
 			<input type="button" id="load-new-mail-messages" value="<?php p($l->t('Check mail …')); ?>">

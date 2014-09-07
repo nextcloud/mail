@@ -103,7 +103,7 @@ var Mail = {
 			// Initiate the router
 			Mail.State.router = new AppRouter();
 
-			// setup sendmail view
+			// setup messages  view
 			Mail.State.messageView = new views.Messages({
 				el: $('#mail_messages')
 			});
@@ -214,9 +214,7 @@ var Mail = {
 		},
 
 		hideMenu:function () {
-			var menu = $('#new-message');
-
-			menu.addClass('hidden');
+			$('#new-message').addClass('hidden');
 		},
 
 		addMessages:function (data) {
@@ -256,8 +254,10 @@ var Mail = {
 						Mail.State.currentFolderId = folderId;
 						Mail.UI.setMessageActive(null);
 
-						var messageId = jsondata[0].id;
-						Mail.UI.openMessage(messageId);
+						if(jsondata.length > 0) {
+							var messageId = jsondata[0].id;
+							Mail.UI.openMessage(messageId);
+						}
 					},
 					error: function() {
 
@@ -623,9 +623,25 @@ $(document).ready(function () {
 	// new mail message button handling
 	$(document).on('click', '#mail_new_message', function () {
 		$('#mail_new_message').prop('disabled', true);
-		$('#new-message').fadeIn();
-		$('#mail-message').html('');
-		$('#to').focus();
+//		$('#new-message').fadeIn();
+//		$('#mail-message').html('');
+//		$('#to').focus();
+
+		// setup sendmail view
+		var view = new views.SendMail({
+			el: $('#mail-message'),
+			aliases: Mail.State.accounts
+		});
+
+		view.sentCallback = function() {
+
+		};
+
+		// And render it
+		view.render();
+
+//		$('#mail-message').html(html);
+
 		Mail.UI.setMessageActive(null);
 	});
 

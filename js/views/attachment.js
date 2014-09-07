@@ -42,8 +42,6 @@ views.Attachments = Backbone.View.extend({
 		this.collection.bind('reset', this.render);
 		this.collection.bind('add', this.render);
 		this.collection.bind('remove', this.render);
-
-
 	},
 
 	addAttachment: function() {
