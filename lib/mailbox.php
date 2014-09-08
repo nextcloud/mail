@@ -20,10 +20,21 @@ class Mailbox {
 
 	private $folderId;
 
-	// input $conn = IMAP conn, $folder_id = folder id
-	function __construct($conn, $folder_id) {
+	private $attributes;
+
+	private $specialRole;
+
+	private $delimiter;
+
+	function __construct($conn, $folderId, $attributes, $delimiter='/') {
 		$this->conn = $conn;
-		$this->folderId = $folder_id;
+		$this->folderId = $folderId;
+		$this->attributes = $attributes;
+		$this->delimiter = $delimiter;
+		$this->getSpecialRoleFromAttributes();
+		if ($this->specialRole === null) {
+			$this->guessSpecialRole();
+		}
 	}
 
 	public function getMessages($from = 0, $count = 2) {
@@ -96,37 +107,113 @@ class Mailbox {
 	public function getDisplayName() {
 		return \Horde_Imap_Client_Utf7imap::Utf7ImapToUtf8($this->folderId);
 	}
+	
+	public function getFolderId() {
+		return $this->folderId;
+	}
 
+	public function getSpecialRole() {
+		return $this->specialRole;
+	}
 	/**
 	 * @return array
 	 */
 	public function getListArray() {
-		$display_name = $this->getDisplayName();
+		$displayName = $this->getDisplayName();
 		try {
 			$status = $this->getStatus();
-			$unseen = $status['unseen'];
 			$total = $status['messages'];
-			if ($this->isTrash()) {
-				$unseen = 0;
-			}
+			$specialRole = $this->getSpecialRole();
+			$unseen = ($specialRole === 'trash') ? 0 : $status['unseen'];
 			$isEmpty = ($total === 0);
 			return array(
 				'id' => base64_encode($this->folderId),
-				'name' => $display_name,
+				'name' => $displayName,
+				'specialRole' => $specialRole,
 				'unseen' => $unseen,
 				'total' => $total,
 				'isEmpty' => $isEmpty
 			);
 		} catch (\Horde_Imap_Client_Exception $e) {
 			return array(
-				'id' => $this->folderId,
-				'name' => $display_name,
+				'id' => base64_encode($this->folderId),
+				'name' => $displayName,
+				'specialRole' => null,
 				'unseen' => 0,
 				'total' => 0,
 				'error' => $e->getMessage(),
 				'isEmpty' => true
 			);
 		}
+	}
+	/**
+	 * Get the special use role of the mailbox
+	 *
+	 * This method reads the attributes sent by the server 
+	 *
+	 */
+	protected function getSpecialRoleFromAttributes() {
+		/*
+		 * @todo: support multiple attributes on same folder
+		 * "any given server or  message store may support
+		 *  any combination of the attributes"
+		 *  https://tools.ietf.org/html/rfc6154
+		 */
+		$result = null;
+		if (is_array($this->attributes)) {
+			/* Convert attributes to lowercase, because gmail
+			 * returns them as lowercase (eg. \trash and not \Trash)
+			 */
+			$specialUseAttributes = array(
+				strtolower(Horde_Imap_Client::SPECIALUSE_ALL),
+				strtolower(Horde_Imap_Client::SPECIALUSE_ARCHIVE),
+				strtolower(Horde_Imap_Client::SPECIALUSE_DRAFTS),
+				strtolower(Horde_Imap_Client::SPECIALUSE_FLAGGED),
+				strtolower(Horde_Imap_Client::SPECIALUSE_JUNK),
+				strtolower(Horde_Imap_Client::SPECIALUSE_SENT),
+				strtolower(Horde_Imap_Client::SPECIALUSE_TRASH)
+			);
+
+			$attributes = array_map(function($n) {
+				return strtolower($n);
+			}, $this->attributes);
+
+			foreach ($specialUseAttributes as $attr)  {
+				if (in_array($attr, $attributes)) {
+					$result = ltrim($attr, '\\');
+					break;
+				}
+			}
+
+		}
+
+		$this->specialRole = $result;
+	}
+
+	/**
+	 * Assign a special role to this mailbox based on its name
+	 */
+	protected function guessSpecialRole() {
+		
+		$specialFoldersDict = array(
+			'inbox'   => array('inbox'),
+			'sent'    => array('sent', 'sent items', 'sent messages', 'sent-mail'),
+			'draft'   => array('draft', 'drafts'),
+			'archive' => array('archive', 'archives'),
+			'trash'   => array('deleted messages', 'trash'),
+			'junk'    => array('junk', 'spam'),
+		);
+		
+		$lowercaseId = strtolower(reset(explode($this->delimiter, $this->folderId, 2)));
+		$result = null;
+		foreach ($specialFoldersDict as $specialRole => $specialNames) {
+			if (in_array($lowercaseId, $specialNames)) {
+				$result = $specialRole;
+				break;
+			}
+		}
+
+		$this->specialRole = $result;
 	}
 
 	/**
@@ -178,12 +265,5 @@ class Mailbox {
 		}
 		$this->conn->store($this->folderId, $options);
 	}
-
-	private function isTrash() {
-		//
-		// TODO: where is the trash
-		//
-		return ($this->folderId === 'Trash');
-	}
-
 }
+
