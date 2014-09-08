@@ -204,7 +204,8 @@ class Mailbox {
 			'junk'    => array('junk', 'spam'),
 		);
 		
-		$lowercaseId = strtolower(reset(explode($this->delimiter, $this->folderId, 2)));
+		$lowercaseExplode = explode($this->delimiter, $this->folderId, 2);
+		$lowercaseId = strtolower(reset($lowercaseExplode));
 		$result = null;
 		foreach ($specialFoldersDict as $specialRole => $specialNames) {
 			if (in_array($lowercaseId, $specialNames)) {
