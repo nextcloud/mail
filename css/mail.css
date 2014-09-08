@@ -89,10 +89,14 @@ button.control {
 	display: none;
 }
 
+.mail_account_email {
+	opacity: .5;
+	padding: 20px 0 10px 12px;
+}
+
 .mailaccount-list li {
 	padding: 10px 0;
 }
-
 .mailaccount-list .actions {
 	display: inline-flex;
 	position: absolute;
@@ -100,6 +104,8 @@ button.control {
 	min-height: 16px;
 	min-width: 16px;
 }
+
+
 
 /* app content*/
 
@@ -219,17 +225,16 @@ button.control {
 /* editor */
 
 #mail_new_message {
-	width: 90%;
+	width: 92%;
 	padding: 10px;
-	margin: 4px 10px;
+	padding-left: 34px;
+	margin: 12px 10px 0;
+	background-position: 10px center;
+	text-align: left;
 }
 
 #new-message {
-	position: absolute;
-	right: 0;
-	width: 60%;
 	margin: 10px;
-	margin-left: 49px;
 	z-index: 100;
 }
 #new-message-fields,
@@ -257,7 +262,7 @@ button.control {
 #reply-message-cc-bcc-toggle {
 	position: absolute;
 	right: 0;
-	top: 0;
+	/*top: 0;*/
 	padding: 6px;
 }
 #new-message-cc-bcc {

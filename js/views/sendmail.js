@@ -1,4 +1,4 @@
-/* global Backbone, Mail, models */
+/* global Backbone, Handlebars, Mail, models */
 
 var views = views || {};
 
@@ -9,21 +9,23 @@ views.SendMail = Backbone.View.extend({
 
 	sentCallback: null,
 
+	aliases: null,
+	currentAccountId: null,
+
 	events: {
-		"click #new-message-send" : "sendMail"
+		"click #new-message-send" : "sendMail",
+		"click .mail_account" : "changeAlias"
 	},
 
 	initialize: function(options) {
 		this.attachments = new models.Attachments();
-		this.collection = options.collection;
+		this.aliases = options.aliases;
+		this.el = options.el;
+		this.currentAccountId = this.aliases[0].accountId;
+	},
 
-		var view = new views.Attachments({
-			el: $('#new-message-attachments'),
-			collection: this.attachments
-		});
-
-		// And render it
-		view.render();
+	changeAlias: function(event) {
+		this.currentAccountId = parseInt($(event.target).val());
 	},
 
 	sendMail: function() {
@@ -55,7 +57,7 @@ views.SendMail = Backbone.View.extend({
 		var self = this;
 		// send the mail
 		$.ajax({
-			url:OC.generateUrl('/apps/mail/accounts/{accountId}/send', {accountId: Mail.State.currentAccountId}),
+			url:OC.generateUrl('/apps/mail/accounts/{accountId}/send', {accountId: this.currentAccountId}),
 			beforeSend:function () {
 				OC.msg.startAction('#new-message-msg', {});
 			},
@@ -115,6 +117,20 @@ views.SendMail = Backbone.View.extend({
 	},
 
 	render: function() {
+		var source   = $("#new-message-template").html();
+		var template = Handlebars.compile(source);
+		var html = template({aliases: this.aliases});
+
+		this.$el.html(html);
+
+		var view = new views.Attachments({
+			el: $('#new-message-attachments'),
+			collection: this.attachments
+		});
+
+		// And render it
+		view.render();
+
 		return this;
 	}
 });

@@ -81,29 +81,7 @@ var Mail = {
 					.registerProtocolHandler("mailto", url, "ownCloud Mail");
 			}
 
-			var AppRouter = Backbone.Router.extend({
-				routes: {
-					"accounts/:id": "loadAccount",
-					"*actions": "defaultRoute" // matches http://example.com/#anything-here
-				},
-
-				loadAccount: function(id) {
-					$('select.mail_account').val(id);
-					if (id === 'new') {
-						Mail.UI.addAccount();
-					} else {
-						Mail.UI.loadFoldersForAccount(id);
-					}
-				},
-
-				defaultRoute: function() {
-//					alert('default');
-				}
-			});
-			// Initiate the router
-			Mail.State.router = new AppRouter();
-
-			// setup sendmail view
+			// setup messages  view
 			Mail.State.messageView = new views.Messages({
 				el: $('#mail_messages')
 			});
@@ -114,24 +92,15 @@ var Mail = {
 				type:'GET',
 				success:function (jsondata) {
 						Mail.State.accounts = jsondata;
-						// don't try to load accounts if there are none
-						var source   = $("#mail-account-manager").html();
-						var template = Handlebars.compile(source);
-						var html = template(jsondata);
-						$('#accountManager').html(html);
-						if(jsondata.length === 0) {
-							Mail.State.router.navigate('accounts/new', {trigger: true});
-						} else {
-							Mail.State.router.navigate('accounts/' + jsondata[0].accountId, {trigger: true});
-						}
+						_.each(Mail.State.accounts, function(a) {
+							Mail.UI.loadFoldersForAccount(a.accountId);
+						});
 					},
 				error: function() {
 					Mail.UI.showError(t('mail', 'Error while loading the accounts.'));
 				}
 			});
 
-			// Start Backbone history a necessary step for bookmarkable URL's
-			Backbone.history.start();
 		},
 
 		loadFoldersForAccount : function(accountId) {
@@ -159,7 +128,7 @@ var Mail = {
 					var html = template(jsondata);
 
 					$('#app-navigation').removeClass('icon-loading');
-					$('#folders').html(html);
+					$('#folders').append(html);
 
 					firstFolder = $('#app-navigation').find('.mail_folders li');
 
@@ -216,9 +185,7 @@ var Mail = {
 		},
 
 		hideMenu:function () {
-			var menu = $('#new-message');
-
-			menu.addClass('hidden');
+			$('#new-message').addClass('hidden');
 		},
 
 		addMessages:function (data) {
@@ -258,8 +225,10 @@ var Mail = {
 						Mail.State.currentFolderId = folderId;
 						Mail.UI.setMessageActive(null);
 
-						var messageId = jsondata[0].id;
-						Mail.UI.openMessage(messageId);
+						if(jsondata.length > 0) {
+							var messageId = jsondata[0].id;
+							Mail.UI.openMessage(messageId);
+						}
 					},
 					error: function() {
 
@@ -586,7 +555,8 @@ $(document).ready(function () {
 			data: dataArray,
 			type:'POST',
 			success:function (data) {
-				Mail.State.router.navigate('accounts/' + data.data.id, {trigger: true});
+//				Mail.State.router.navigate('accounts/' + data.data.id, {trigger: true});
+				// TODO: refresh folder view
 			},
 			error: function(jqXHR, textStatus, errorThrown){
 				var error = errorThrown || textStatus || t('mail', 'Unknown error');
@@ -625,9 +595,25 @@ $(document).ready(function () {
 	// new mail message button handling
 	$(document).on('click', '#mail_new_message', function () {
 		$('#mail_new_message').prop('disabled', true);
-		$('#new-message').fadeIn();
-		$('#mail-message').html('');
-		$('#to').focus();
+//		$('#new-message').fadeIn();
+//		$('#mail-message').html('');
+//		$('#to').focus();
+
+		// setup sendmail view
+		var view = new views.SendMail({
+			el: $('#mail-message'),
+			aliases: Mail.State.accounts
+		});
+
+		view.sentCallback = function() {
+
+		};
+
+		// And render it
+		view.render();
+
+//		$('#mail-message').html(html);
+
 		Mail.UI.setMessageActive(null);
 	});
 
@@ -673,17 +659,6 @@ $(document).ready(function () {
 		event.stopPropagation();
 		var messageId = $(this).parent().parent().parent().parent().parent().data('messageId');
 		Mail.UI.saveAttachment(messageId);
-	});
-
-	$(document).on('change', '#app-navigation .mail_account', function(event) {
-		event.stopPropagation();
-
-		// hide buttons in message list while loading
-		$('#load-new-mail-messages').hide();
-		$('#load-more-mail-messages').hide();
-
-		var id = $( this ).val();
-		Mail.State.router.navigate('accounts/' + id, {trigger: true});
 	});
 
 	$('textarea').autosize();

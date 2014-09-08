@@ -38,7 +38,8 @@ $(document).ready(function(){
 	});
 
     $(document).on('click', '#new_mail_account', function () {
-        Mail.State.router.navigate('accounts/new', {trigger: true});
+//        Mail.State.router.navigate('accounts/new', {trigger: true});
+		// TODO: handle this properly
     });
 
 });

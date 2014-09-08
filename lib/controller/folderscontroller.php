@@ -131,11 +131,6 @@ class FoldersController extends Controller
 	private function getAccount()
 	{
 		$accountId = $this->params('accountId');
-
-		if($accountId === 'allAccounts') {
-			return $this->mapper->findByUserId($this->currentUserId);
-		}
-
 		return array($this->mapper->find($this->currentUserId, $accountId));
 	}
 }

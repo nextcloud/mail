@@ -124,16 +124,4 @@ $(function () {
 		$('#reply-message-cc-bcc #cc').focus();
 		$('#reply-message-cc-bcc-toggle').fadeOut();
 	});
-
-	// setup sendmail view
-	var view = new views.SendMail({
-		el: $('#new-message')
-	});
-
-	view.sentCallback = function() {
-
-	};
-
-	// And render it
-	view.render();
 });
