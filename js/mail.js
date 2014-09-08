@@ -91,10 +91,14 @@ var Mail = {
 				data:{},
 				type:'GET',
 				success:function (jsondata) {
-						Mail.State.accounts = jsondata;
-						_.each(Mail.State.accounts, function(a) {
-							Mail.UI.loadFoldersForAccount(a.accountId);
-						});
+						if (jsondata.length === 0) {
+							Mail.UI.addAccount();
+						} else {
+							Mail.State.accounts = jsondata;
+							_.each(Mail.State.accounts, function(a) {
+								Mail.UI.loadFoldersForAccount(a.accountId);
+							});
+						}
 					},
 				error: function() {
 					Mail.UI.showError(t('mail', 'Error while loading the accounts.'));
