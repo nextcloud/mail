@@ -395,6 +395,9 @@ var Mail = {
 				}
 			}
 
+			// Set current Message as active
+			Mail.UI.setMessageActive(messageId);
+
 			var mailBody = $('#mail-message');
 
 			$.ajax(
@@ -450,9 +453,6 @@ var Mail = {
 							// Remove spinner when loading finished
 							$('iframe').parent().removeClass('icon-loading');
 						});
-
-						// Set current Message as active
-						Mail.UI.setMessageActive(messageId);
 					},
 					error: function() {
 						Mail.UI.showError(t('mail', 'Error while loading the selected mail message.'));
