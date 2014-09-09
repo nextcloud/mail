@@ -200,6 +200,11 @@
 		<div><span id="new-message-msg" class="msg"></div>
 	</div>
 </script>
+<script id="message-list-template" type="text/x-handlebars-template">
+	<input type="button" id="load-new-mail-messages" value="<?php p($l->t('Check mail …')); ?>">
+		<div id="mail-message-list"></div>
+	<input type="button" id="load-more-mail-messages" value="<?php p($l->t('Load more …')); ?>">
+</script>
 <div id="app">
 	<div id="app-navigation" class="icon-loading">
 		<input type="button" id="mail_new_message" class="icon-rename"
@@ -216,9 +221,6 @@
 	<div id="app-content">
 
 		<div id="mail_messages" class="icon-loading">
-			<input type="button" id="load-new-mail-messages" value="<?php p($l->t('Check mail …')); ?>">
-			<div id="mail-message-list"></div>
-			<input type="button" id="load-more-mail-messages" value="<?php p($l->t('Load more …')); ?>">
 		</div>
 
 		<div id="mail-message" class="icon-loading">

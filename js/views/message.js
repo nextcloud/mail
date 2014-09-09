@@ -11,19 +11,24 @@ views.Message = Backbone.Marionette.ItemView.extend({
 	}
 });
 
-views.Messages = Backbone.Marionette.CollectionView.extend({
+views.Messages = Backbone.Marionette.CompositeView.extend({
 
 	// The collection will be kept here
 	collection: null,
 
 	childView: views.Message,
 
+	childViewContainer: '#mail-message-list',
+
 	events: {
 		"click #load-new-mail-messages" : "loadNew",
 		"click #load-more-mail-messages" : "loadMore"
 	},
 
+	template: null,
+
 	initialize: function() {
+		this.template = Handlebars.compile($("#message-list-template").html());
 		this.collection = new models.MessageList();
 	},
 
@@ -98,14 +103,4 @@ views.Messages = Backbone.Marionette.CollectionView.extend({
 			});
 	}
 
-//	render: function() {
-//		// Clear potential old entries first
-//		var element = this.$el.find('#mail-message-list');
-//		element.empty();
-//
-//		var html = this.template(this.collection.toJSON());
-//		element.append(html);
-//
-//		return this;
-//	}
 });
