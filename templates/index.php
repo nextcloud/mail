@@ -128,6 +128,7 @@
 			<input type="text" name="to" id="to" class="recipient-autocomplete"
 				   placeholder="<?php p($l->t('Recipient')); ?>"
 				   value="{{printAddressListPlain replyToList}}"/>
+			<label id="to-label" for="to" class="transparency"><?php p($l->t('to')); ?></label>
 
 			<div id="reply-message-cc-bcc"
 			{{#unless replyCcList}}
@@ -171,16 +172,17 @@
 </script>
 <script id="new-message-template" type="text/x-handlebars-template">
 	<div id="new-message">
+		<select class="mail_account">
+			{{#each aliases}}
+			<option value="{{accountId}}"><?php p($l->t('from')); ?> {{name}} &lt;{{emailAddress}}&gt;</option>
+			{{/each}}
+		</select>
 		<div id="new-message-fields">
-			<select class="mail_account">
-				{{#each aliases}}
-				<option value="{{accountId}}"><?php p($l->t('from')); ?> {{name}} &lt;{{emailAddress}}&gt;</option>
-				{{/each}}
-			</select>
 			<a href="#" id="new-message-cc-bcc-toggle"
 			   class="transparency"><?php p($l->t('+ cc/bcc')); ?></a>
 			<input type="text" name="to" id="to" class="recipient-autocomplete"
 				   placeholder="<?php p($l->t('Recipient')); ?>" />
+			<label id="to-label" for="to" class="transparency"><?php p($l->t('to')); ?></label>
 			<div id="new-message-cc-bcc">
 				<input type="text" name="cc" id="cc" class="recipient-autocomplete"
 					   placeholder="<?php p($l->t('cc')); ?>" />

@@ -18,6 +18,7 @@
 				<input type="text" name="to" id="to" class="recipient-autocomplete"
 					   placeholder="<?php p($l->t('Recipient')); ?>"
 					   value="<?php p($_['mailto']) ?>" />
+				<label id="to-label" for="to" class="transparency"><?php p($l->t('to')); ?></label>
 				<div id="new-message-cc-bcc">
 					<input type="text" name="cc" id="cc" class="recipient-autocomplete"
 						   placeholder="<?php p($l->t('cc')); ?>"

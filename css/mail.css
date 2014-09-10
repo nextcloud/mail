@@ -257,6 +257,13 @@ button.control {
 	padding-right: 60px; /* for cc-bcc-toggle */
 	border-bottom-left-radius: 0;
 	border-bottom-right-radius: 0;
+	padding-left: 30px;
+}
+#to-label {
+	position: absolute;
+	left: 0;
+	top: 0;
+	padding: 6px;
 }
 #new-message-cc-bcc-toggle,
 #reply-message-cc-bcc-toggle {
