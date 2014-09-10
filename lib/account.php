@@ -165,7 +165,7 @@ class Account {
 	 * @return array In the form array(<special use>=><folder id>, ...)
 	 */
 	public function getSpecialFoldersIds() {
-		$folderRoles = array('inbox', 'sent', 'draft', 'trash', 'archive', 'junk');
+		$folderRoles = array('inbox', 'sent', 'drafts', 'trash', 'archive', 'junk');
 		$specialFoldersIds = array();
 		
 		foreach ($folderRoles as $role) {
@@ -246,7 +246,7 @@ class Account {
 					$specialRolesOrder = array(
 						'all'     => 0,
 						'inbox'   => 1,
-						'draft'   => 2,
+						'drafts'   => 2,
 						'sent'    => 3,
 						'archive' => 4,
 						'junk'    => 5,
