@@ -456,6 +456,8 @@ var Mail = {
 							});
 							// Remove spinner when loading finished
 							$('iframe').parent().removeClass('icon-loading');
+
+							$('textarea').autosize();
 						});
 					},
 					error: function() {
@@ -664,6 +666,4 @@ $(document).ready(function () {
 		var messageId = $(this).parent().parent().parent().parent().parent().data('messageId');
 		Mail.UI.saveAttachment(messageId);
 	});
-
-	$('textarea').autosize();
 });

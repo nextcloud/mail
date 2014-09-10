@@ -22,6 +22,8 @@ var Mail = {
 						$('#accountManager').html(html);
 					}
 					Mail.State.currentAccountId = jsondata[0].accountId;
+
+					$('textarea').autosize();
 				},
 				error: function() {
 					Mail.UI.showError(t('mail', 'Error while loading the accounts.'));
@@ -79,9 +81,7 @@ $(document).ready(function () {
 		$('#new-message-fields').slideUp();
 		$('#new-message-attachments').slideUp();
 	};
+
 	// And render it
 	view.render();
-
-
-	$('textarea').autosize();
 });
