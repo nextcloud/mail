@@ -176,7 +176,7 @@
 		<div id="new-message-fields">
 			<select class="mail_account">
 				{{#each aliases}}
-				<option value="{{accountId}}">{{emailAddress}}</option>
+				<option value="{{accountId}}"><?php p($l->t('from')); ?> {{name}} &lt;{{emailAddress}}&gt;</option>
 				{{/each}}
 			</select>
 			<a href="#" id="new-message-cc-bcc-toggle"
