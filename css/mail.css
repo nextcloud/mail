@@ -448,8 +448,9 @@ button.control {
 
 
 
-/* compose */
+/* compose (handling mailto links) */
 
-.compose #new-message {
-	left: 25%;
+.compose {
+	width: 60%;
+	margin: 0 auto;
 }
