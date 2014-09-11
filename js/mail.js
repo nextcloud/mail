@@ -600,9 +600,6 @@ $(document).ready(function () {
 	// new mail message button handling
 	$(document).on('click', '#mail_new_message', function () {
 		$('#mail_new_message').prop('disabled', true);
-//		$('#new-message').fadeIn();
-//		$('#mail-message').html('');
-//		$('#to').focus();
 
 		// setup sendmail view
 		var view = new views.SendMail({
@@ -617,7 +614,8 @@ $(document).ready(function () {
 		// And render it
 		view.render();
 
-//		$('#mail-message').html(html);
+		// focus 'to' field automatically on clicking New message button
+		$('#to').focus();
 
 		Mail.UI.setMessageActive(null);
 	});
