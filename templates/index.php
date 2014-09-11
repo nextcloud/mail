@@ -123,11 +123,10 @@
 
 		<div class="reply-message-fields">
 			<a href="#" id="reply-message-cc-bcc-toggle"
-			   class="transparency"><?php p($l->t('+ cc')); ?></a>
+				class="transparency"><?php p($l->t('+ cc')); ?></a>
 
 			<input type="text" name="to" id="to" class="recipient-autocomplete"
-				   placeholder="<?php p($l->t('Recipient')); ?>"
-				   value="{{printAddressListPlain replyToList}}"/>
+				value="{{printAddressListPlain replyToList}}"/>
 			<label id="to-label" for="to" class="transparency"><?php p($l->t('to')); ?></label>
 
 			<div id="reply-message-cc-bcc"
@@ -135,14 +134,17 @@
 			class="hidden"
 			{{/unless}}
 			>
-			<input type="text" name="cc" id="cc" class="recipient-autocomplete"
-				   placeholder="<?php p($l->t('cc')); ?>" value="{{printAddressListPlain replyCcList}}" />
-			<!--<input type="text" name="bcc" id="bcc" class="recipient-autocomplete"
-				placeholder="<?php p($l->t('bcc')); ?>" />-->
+				<input type="text" name="cc" id="cc" class="recipient-autocomplete"
+					value="{{printAddressListPlain replyCcList}}" />
+				<label id="cc-label" for="cc" class="transparency"><?php p($l->t('cc')); ?></label>
+				<!--
+				<input type="text" name="bcc" id="bcc" class="recipient-autocomplete" />
+				<label id="bcc-label" for="bcc" class="transparency"><?php p($l->t('bcc')); ?></label>
+				-->
 		</div>
 
 		<textarea name="body" class="reply-message-body"
-				  placeholder="<?php p($l->t('Reply …')); ?>"></textarea>
+			placeholder="<?php p($l->t('Reply …')); ?>"></textarea>
 		<input class="reply-message-send primary" type="submit" value="<?php p($l->t('Reply')) ?>">
 		<div><span id="reply-msg" class="msg"></div>
 	</div>
@@ -179,20 +181,19 @@
 		</select>
 		<div id="new-message-fields">
 			<a href="#" id="new-message-cc-bcc-toggle"
-			   class="transparency"><?php p($l->t('+ cc/bcc')); ?></a>
-			<input type="text" name="to" id="to" class="recipient-autocomplete"
-				   placeholder="<?php p($l->t('Recipient')); ?>" />
+				class="transparency"><?php p($l->t('+ cc/bcc')); ?></a>
+			<input type="text" name="to" id="to" class="recipient-autocomplete" />
 			<label id="to-label" for="to" class="transparency"><?php p($l->t('to')); ?></label>
 			<div id="new-message-cc-bcc">
-				<input type="text" name="cc" id="cc" class="recipient-autocomplete"
-					   placeholder="<?php p($l->t('cc')); ?>" />
-				<input type="text" name="bcc" id="bcc" class="recipient-autocomplete"
-					   placeholder="<?php p($l->t('bcc')); ?>" />
+				<input type="text" name="cc" id="cc" class="recipient-autocomplete" />
+				<label id="cc-label" for="cc" class="transparency"><?php p($l->t('cc')); ?></label>
+				<input type="text" name="bcc" id="bcc" class="recipient-autocomplete" />
+				<label id="bcc-label" for="bcc" class="transparency"><?php p($l->t('bcc')); ?></label>
 			</div>
 			<input type="text" name="subject" id="subject"
-				   placeholder="<?php p($l->t('Subject')); ?>" />
+				placeholder="<?php p($l->t('Subject')); ?>" />
 			<textarea name="body" id="new-message-body"
-					  placeholder="<?php p($l->t('Message …')); ?>"></textarea>
+				placeholder="<?php p($l->t('Message …')); ?>"></textarea>
 			<input id="new-message-send" class="send primary" type="submit" value="<?php p($l->t('Send')) ?>">
 		</div>
 		<div id="new-message-attachments">
