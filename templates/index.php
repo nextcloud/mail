@@ -123,7 +123,10 @@
 
 		<div class="reply-message-fields">
 			<a href="#" id="reply-message-cc-bcc-toggle"
-			   class="transparency"><?php p($l->t('+ cc')); ?></a>
+				{{#if replyCcList}}
+				class="hidden"
+				{{/if}}
+				class="transparency"><?php p($l->t('+ cc')); ?></a>
 
 			<input type="text" name="to" id="to" class="recipient-autocomplete"
 				   placeholder="<?php p($l->t('Recipient')); ?>"
