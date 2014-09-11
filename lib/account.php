@@ -185,6 +185,7 @@ class Account {
 	}
 	
 	/**
+	 * @param string $sourceFolderId
 	 * @param int $messageId
 	 */
 	public function deleteMessage($sourceFolderId, $messageId) {
