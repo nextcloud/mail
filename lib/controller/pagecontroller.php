@@ -81,12 +81,13 @@ class PageController extends Controller {
 		$parts = parse_url($uri);
 
 		$params = array('mailto' => $parts['path']);
-		$parts = explode('&', $parts['query']);
-		foreach($parts as $part) {
-			$pair = explode('=', $part, 2);
-			$params[strtolower($pair[0])] = urldecode($pair[1]);
+		if (isset($parts['query'])) {
+			$parts = explode('&', $parts['query']);
+			foreach($parts as $part) {
+				$pair = explode('=', $part, 2);
+				$params[strtolower($pair[0])] = urldecode($pair[1]);
+			}
 		}
-
 		$params = array_merge(array(
 			'mailto' => '',
 			'cc' => '',
