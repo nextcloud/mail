@@ -122,14 +122,10 @@ button.control {
 	overflow-x: hidden;
 	overflow-y: auto;
 }
-#load-new-mail-messages {
-	display: none;
-	margin: 10px 35%;
-	padding: 10px 10px 6px;
-}
+#load-new-mail-messages,
 #load-more-mail-messages {
 	display: none;
-	margin: 10px 35%;
+	margin: 10px auto;
 	padding: 10px 10px 6px;
 }
 /* TODO: put this in core icons.css as general rule for buttons with icons */
@@ -472,8 +468,9 @@ button.control {
 
 
 
-/* compose */
+/* compose (handling mailto links) */
 
-.compose #new-message {
-	left: 25%;
+.compose {
+	width: 60%;
+	margin: 0 auto;
 }

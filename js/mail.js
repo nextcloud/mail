@@ -220,9 +220,9 @@ var Mail = {
 						// Add messages
 						Mail.UI.addMessages(jsondata);
 						$('#mail_messages').removeClass('icon-loading');
-						$('#load-new-mail-messages').fadeIn();
+						$('#load-new-mail-messages').fadeIn().css('display','block');
 						$('#load-new-mail-messages').prop('disabled', false);
-						$('#load-more-mail-messages').fadeIn();
+						$('#load-more-mail-messages').fadeIn().css('display','block');
 
 						Mail.State.currentAccountId = accountId;
 						Mail.State.currentFolderId = folderId;

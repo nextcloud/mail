@@ -1,7 +1,7 @@
 /* global Handlebars, relative_modified_date, formatDate, humanFileSize, views */
 var Mail = {
 	State:{
-		currentAccountId: null
+		accounts: null
 	},
 	UI:{
 		initializeInterface:function () {
@@ -10,6 +10,8 @@ var Mail = {
 				data:{},
 				type:'GET',
 				success:function (jsondata) {
+					Mail.State.accounts = jsondata;
+
 					// don't try to load accounts if there are none
 					if(jsondata.length === 0) {
 						return;
@@ -21,9 +23,24 @@ var Mail = {
 						var html = template(jsondata);
 						$('#accountManager').html(html);
 					}
-					Mail.State.currentAccountId = jsondata[0].accountId;
+
+					// setup sendmail view
+					var view = new views.SendMail({
+						el: $('#app-content'),
+						aliases: Mail.State.accounts
+					});
+
+					view.sentCallback = function() {
+						$('#nav-buttons').removeClass('hidden');
+						$('#new-message-fields').slideUp();
+						$('#new-message-attachments').slideUp();
+					};
+					// And render it
+					view.render();
+
 
 					$('textarea').autosize();
+
 				},
 				error: function() {
 					Mail.UI.showError(t('mail', 'Error while loading the accounts.'));
@@ -51,11 +68,6 @@ var Mail = {
 $(document).ready(function () {
 	Mail.UI.initializeInterface();
 
-	$(document).on('change', '#app-navigation .mail_account', function(event) {
-		event.stopPropagation();
-		Mail.State.currentAccountId = $( this ).val();
-	});
-
 	$(document).on('click', '#nav-to-mail', function(event) {
 		event.stopPropagation();
 		location.href = OC.generateUrl('/apps/mail/');
@@ -71,17 +83,4 @@ $(document).ready(function () {
 		$('#new-message-cc-bcc-toggle').hide();
 	}
 
-	// setup sendmail view
-	var view = new views.SendMail({
-		el: $('#new-message')
-	});
-
-	view.sentCallback = function() {
-		$('#nav-buttons').removeClass('hidden');
-		$('#new-message-fields').slideUp();
-		$('#new-message-attachments').slideUp();
-	};
-
-	// And render it
-	view.render();
 });

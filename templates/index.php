@@ -53,8 +53,8 @@
 			</div>
 			<div class="date">
 					<span class="modified"
-						  title="{{formatDate dateInt}}"
-						  style="color:{{colorOfDate dateInt}}">{{relativeModifiedDate dateInt}}</span>
+						title="{{formatDate dateInt}}"
+						style="color:{{colorOfDate dateInt}}">{{relativeModifiedDate dateInt}}</span>
 			</div>
 			<div class="icon-delete action delete"></div>
 		</div>
@@ -123,6 +123,9 @@
 
 		<div class="reply-message-fields">
 			<a href="#" id="reply-message-cc-bcc-toggle"
+				{{#if replyCcList}}
+				class="hidden"
+				{{/if}}
 				class="transparency"><?php p($l->t('+ cc')); ?></a>
 
 			<input type="text" name="to" id="to" class="recipient-autocomplete"
@@ -159,16 +162,16 @@
 </script>
 <script id="mail-settings-template" type="text/x-handlebars-template">
 <div id="mailsettings">
-    <ul class="mailaccount-list">
+	<ul class="mailaccount-list">
 		{{#each this}}
-        <li id="mail-account-{{accountId}}" data-account-id="{{accountId}}">
-            {{emailAddress}}
-            <span class="actions">
-                <a class="icon-delete delete action" original-title="Delete"></a>
-            </span>
-        </li>
+		<li id="mail-account-{{accountId}}" data-account-id="{{accountId}}">
+			{{emailAddress}}
+			<span class="actions">
+				<a class="icon-delete delete action" original-title="Delete"></a>
+			</span>
+		</li>
 		{{/each}}
-    </ul>
+	</ul>
 	<input id="new_mail_account" type="submit" value="<?php p($l->t('New Mail Account')); ?>" class="new-button">
 </div>
 </script>
@@ -213,13 +216,13 @@
 		<input type="button" id="mail_new_message" class="icon-rename"
 			value="<?php p($l->t('New Message')); ?>" style="display: none">
 		<div id="folders"></div>
-        <div id="app-settings">
-            <div id="app-settings-header">
-                <button class="settings-button"
-                        data-apps-slide-toggle="#app-settings-content"></button>
-            </div>
-            <div id="app-settings-content"> </div>
-        </div>
+		<div id="app-settings">
+			<div id="app-settings-header">
+				<button class="settings-button"
+					data-apps-slide-toggle="#app-settings-content"></button>
+			</div>
+			<div id="app-settings-content"> </div>
+		</div>
 	</div>
 	<div id="app-content">
 
