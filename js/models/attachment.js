@@ -24,3 +24,9 @@ models.Message = Backbone.Model.extend();
 models.MessageList = Backbone.Collection.extend({
 	model: models.Message
 });
+
+models.Folder = Backbone.Model.extend();
+
+models.FolderList = Backbone.Collection.extend({
+	model: models.Folder
+});

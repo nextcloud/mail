@@ -81,11 +81,17 @@ var Mail = {
 					.registerProtocolHandler("mailto", url, "ownCloud Mail");
 			}
 
-			// setup messages  view
+			// setup messages view
 			Mail.State.messageView = new views.Messages({
 				el: $('#mail_messages')
 			});
 			Mail.State.messageView.render();
+
+			// setup folder view
+			Mail.State.folderView = new views.Folders({
+				el: $('#folders')
+			});
+			Mail.State.folderView.render();
 
 			$.ajax(OC.generateUrl('apps/mail/accounts'), {
 				data:{},
@@ -116,7 +122,7 @@ var Mail = {
 
 			var firstFolder, folderId;
 
-			Mail.UI.clearFolders();
+//			Mail.UI.clearFolders();
 			Mail.UI.clearMessages();
 			$('#app-navigation').addClass('icon-loading');
 			$('#mail_messages').addClass('icon-loading');
@@ -126,12 +132,10 @@ var Mail = {
 				data:{},
 				type:'GET',
 				success:function (jsondata) {
-					var source   = $("#mail-folder-template").html();
-					var template = Handlebars.compile(source);
-					var html = template(jsondata);
 
 					$('#app-navigation').removeClass('icon-loading');
-					$('#folders').append(html);
+
+					Mail.State.folderView.collection.add(jsondata);
 
 					firstFolder = $('#app-navigation').find('.mail_folders li');
 
