@@ -254,6 +254,30 @@ button.control {
 	border-bottom-left-radius: 0;
 	border-bottom-right-radius: 0;
 }
+
+#new-message-cc-bcc,
+#reply-message-cc-bcc {
+	position: relative;
+}
+#to-label,
+#cc-label,
+#bcc-label {
+	position: absolute;
+	left: 0;
+	top: 0;
+	padding: 6px;
+	cursor: text;
+}
+#bcc-label {
+	top: initial;
+	bottom: 0;
+}
+#to,
+#cc,
+#bcc {
+	padding-left: 30px;
+}
+
 #new-message-cc-bcc-toggle,
 #reply-message-cc-bcc-toggle {
 	position: absolute;

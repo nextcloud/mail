@@ -5,39 +5,44 @@
 		{{/each}}
 	</select>
 </script>
+
 <script id="mail-attachment-template" type="text/x-handlebars-template">
 	<span>{{displayName}}</span>
 	<div class="new-message-attachments-action svg icon-delete" data-attachment-id="{{id}}"></div>
 </script>
+
 <script id="new-message-template" type="text/x-handlebars-template">
 	<div id="new-message">
+		<select class="mail_account">
+			{{#each aliases}}
+			<option value="{{accountId}}">{{emailAddress}}</option>
+			{{/each}}
+		</select>
+
 		<div id="new-message-fields">
-			<select class="mail_account">
-				{{#each aliases}}
-				<option value="{{accountId}}">{{emailAddress}}</option>
-				{{/each}}
-			</select>
 			<a href="#" id="new-message-cc-bcc-toggle"
-			   class="transparency"><?php p($l->t('+ cc/bcc')); ?></a>
+				class="transparency"><?php p($l->t('+ cc/bcc')); ?></a>
 			<input type="text" name="to" id="to" class="recipient-autocomplete"
-				   placeholder="<?php p($l->t('Recipient')); ?>"
-				   value="<?php p($_['mailto']) ?>"/>
+				value="<?php p($_['mailto']) ?>"/>
+			<label id="to-label" for="to" class="transparency"><?php p($l->t('to')); ?></label>
 
 			<div id="new-message-cc-bcc">
 				<input type="text" name="cc" id="cc" class="recipient-autocomplete"
-					   placeholder="<?php p($l->t('cc')); ?>"
-					   value="<?php p($_['cc']) ?>"/>
+					value="<?php p($_['cc']) ?>"/>
+				<label id="cc-label" for="cc" class="transparency"><?php p($l->t('cc')); ?></label>
 				<input type="text" name="bcc" id="bcc" class="recipient-autocomplete"
-					   placeholder="<?php p($l->t('bcc')); ?>"
-					   value="<?php p($_['bcc']) ?>"/>
+					value="<?php p($_['bcc']) ?>"/>
+				<label id="bcc-label" for="bcc" class="transparency"><?php p($l->t('bcc')); ?></label>
 			</div>
+
 			<input type="text" name="subject" id="subject"
-				   placeholder="<?php p($l->t('Subject')); ?>"
-				   value="<?php p($_['subject']) ?>"/>
+				placeholder="<?php p($l->t('Subject')); ?>"
+				value="<?php p($_['subject']) ?>"/>
 			<textarea name="body" id="new-message-body"
-					  placeholder="<?php p($l->t('Message …')); ?>"></textarea>
+				placeholder="<?php p($l->t('Message …')); ?>"></textarea>
 			<input id="new-message-send" class="send primary" type="submit" value="<?php p($l->t('Send')) ?>">
 		</div>
+
 		<div id="new-message-attachments">
 			<ul></ul>
 			<input type="button" id="mail_new_attachment" value="<?php p($l->t('Add attachment from Files')); ?>">
@@ -49,6 +54,7 @@
 		</div>
 	</div>
 </script>
+
 <div id="app">
 	<div id="app-content" class="compose">
 	</div>

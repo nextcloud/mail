@@ -53,8 +53,8 @@
 			</div>
 			<div class="date">
 					<span class="modified"
-						  title="{{formatDate dateInt}}"
-						  style="color:{{colorOfDate dateInt}}">{{relativeModifiedDate dateInt}}</span>
+						title="{{formatDate dateInt}}"
+						style="color:{{colorOfDate dateInt}}">{{relativeModifiedDate dateInt}}</span>
 			</div>
 			<div class="icon-delete action delete"></div>
 		</div>
@@ -129,22 +129,25 @@
 				class="transparency"><?php p($l->t('+ cc')); ?></a>
 
 			<input type="text" name="to" id="to" class="recipient-autocomplete"
-				   placeholder="<?php p($l->t('Recipient')); ?>"
-				   value="{{printAddressListPlain replyToList}}"/>
+				value="{{printAddressListPlain replyToList}}"/>
+			<label id="to-label" for="to" class="transparency"><?php p($l->t('to')); ?></label>
 
 			<div id="reply-message-cc-bcc"
 			{{#unless replyCcList}}
 			class="hidden"
 			{{/unless}}
 			>
-			<input type="text" name="cc" id="cc" class="recipient-autocomplete"
-				   placeholder="<?php p($l->t('cc')); ?>" value="{{printAddressListPlain replyCcList}}" />
-			<!--<input type="text" name="bcc" id="bcc" class="recipient-autocomplete"
-				placeholder="<?php p($l->t('bcc')); ?>" />-->
+				<input type="text" name="cc" id="cc" class="recipient-autocomplete"
+					value="{{printAddressListPlain replyCcList}}" />
+				<label id="cc-label" for="cc" class="transparency"><?php p($l->t('cc')); ?></label>
+				<!--
+				<input type="text" name="bcc" id="bcc" class="recipient-autocomplete" />
+				<label id="bcc-label" for="bcc" class="transparency"><?php p($l->t('bcc')); ?></label>
+				-->
 		</div>
 
 		<textarea name="body" class="reply-message-body"
-				  placeholder="<?php p($l->t('Reply …')); ?>"></textarea>
+			placeholder="<?php p($l->t('Reply …')); ?>"></textarea>
 		<input class="reply-message-send primary" type="submit" value="<?php p($l->t('Reply')) ?>">
 		<div><span id="reply-msg" class="msg"></div>
 	</div>
@@ -159,41 +162,41 @@
 </script>
 <script id="mail-settings-template" type="text/x-handlebars-template">
 <div id="mailsettings">
-    <ul class="mailaccount-list">
+	<ul class="mailaccount-list">
 		{{#each this}}
-        <li id="mail-account-{{accountId}}" data-account-id="{{accountId}}">
-            {{emailAddress}}
-            <span class="actions">
-                <a class="icon-delete delete action" original-title="Delete"></a>
-            </span>
-        </li>
+		<li id="mail-account-{{accountId}}" data-account-id="{{accountId}}">
+			{{emailAddress}}
+			<span class="actions">
+				<a class="icon-delete delete action" original-title="Delete"></a>
+			</span>
+		</li>
 		{{/each}}
-    </ul>
+	</ul>
 	<input id="new_mail_account" type="submit" value="<?php p($l->t('New Mail Account')); ?>" class="new-button">
 </div>
 </script>
 <script id="new-message-template" type="text/x-handlebars-template">
 	<div id="new-message">
+		<select class="mail_account">
+			{{#each aliases}}
+			<option value="{{accountId}}"><?php p($l->t('from')); ?> {{name}} &lt;{{emailAddress}}&gt;</option>
+			{{/each}}
+		</select>
 		<div id="new-message-fields">
-			<select class="mail_account">
-				{{#each aliases}}
-				<option value="{{accountId}}"><?php p($l->t('from')); ?> {{name}} &lt;{{emailAddress}}&gt;</option>
-				{{/each}}
-			</select>
 			<a href="#" id="new-message-cc-bcc-toggle"
-			   class="transparency"><?php p($l->t('+ cc/bcc')); ?></a>
-			<input type="text" name="to" id="to" class="recipient-autocomplete"
-				   placeholder="<?php p($l->t('Recipient')); ?>" />
+				class="transparency"><?php p($l->t('+ cc/bcc')); ?></a>
+			<input type="text" name="to" id="to" class="recipient-autocomplete" />
+			<label id="to-label" for="to" class="transparency"><?php p($l->t('to')); ?></label>
 			<div id="new-message-cc-bcc">
-				<input type="text" name="cc" id="cc" class="recipient-autocomplete"
-					   placeholder="<?php p($l->t('cc')); ?>" />
-				<input type="text" name="bcc" id="bcc" class="recipient-autocomplete"
-					   placeholder="<?php p($l->t('bcc')); ?>" />
+				<input type="text" name="cc" id="cc" class="recipient-autocomplete" />
+				<label id="cc-label" for="cc" class="transparency"><?php p($l->t('cc')); ?></label>
+				<input type="text" name="bcc" id="bcc" class="recipient-autocomplete" />
+				<label id="bcc-label" for="bcc" class="transparency"><?php p($l->t('bcc')); ?></label>
 			</div>
 			<input type="text" name="subject" id="subject"
-				   placeholder="<?php p($l->t('Subject')); ?>" />
+				placeholder="<?php p($l->t('Subject')); ?>" />
 			<textarea name="body" id="new-message-body"
-					  placeholder="<?php p($l->t('Message …')); ?>"></textarea>
+				placeholder="<?php p($l->t('Message …')); ?>"></textarea>
 			<input id="new-message-send" class="send primary" type="submit" value="<?php p($l->t('Send')) ?>">
 		</div>
 		<div id="new-message-attachments">
@@ -213,13 +216,13 @@
 		<input type="button" id="mail_new_message" class="icon-rename"
 			value="<?php p($l->t('New Message')); ?>" style="display: none">
 		<div id="folders"></div>
-        <div id="app-settings">
-            <div id="app-settings-header">
-                <button class="settings-button"
-                        data-apps-slide-toggle="#app-settings-content"></button>
-            </div>
-            <div id="app-settings-content"> </div>
-        </div>
+		<div id="app-settings">
+			<div id="app-settings-header">
+				<button class="settings-button"
+					data-apps-slide-toggle="#app-settings-content"></button>
+			</div>
+			<div id="app-settings-content"> </div>
+		</div>
 	</div>
 	<div id="app-content">
 
