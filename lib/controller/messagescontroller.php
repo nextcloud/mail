@@ -206,10 +206,11 @@ class MessagesController extends Controller
 	public function destroy($id)
 	{
 		try {
-			$mailBox = $this->getFolder();
-			$mailBox->deleteMessage($id);
-
+			$account = $this->getAccount();
+			$m = new \OCA\Mail\Account($account);
+			$m->deleteMessage(base64_decode($this->params('folderId')), $id);
 			return new JSONResponse();
+
 		} catch (DoesNotExistException $e) {
 			return new JSONResponse();
 		}
