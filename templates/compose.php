@@ -1,7 +1,7 @@
 <script id="mail-account-manager" type="text/x-handlebars-template">
 	<select class="mail_account">
 		{{#each this}}
-		<option value="{{accountId}}">{{emailAddress}}</option>
+		<option value="{{accountId}}"><?php p($l->t('from')); ?> {{name}} &lt;{{emailAddress}}&gt;</option>
 		{{/each}}
 	</select>
 </script>
