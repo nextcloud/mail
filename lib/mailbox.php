@@ -198,7 +198,7 @@ class Mailbox {
 		$specialFoldersDict = array(
 			'inbox'   => array('inbox'),
 			'sent'    => array('sent', 'sent items', 'sent messages', 'sent-mail'),
-			'drafts'   => array('draft', 'drafts'),
+			'drafts'  => array('draft', 'drafts'),
 			'archive' => array('archive', 'archives'),
 			'trash'   => array('deleted messages', 'trash'),
 			'junk'    => array('junk', 'spam'),

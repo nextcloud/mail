@@ -165,7 +165,7 @@ class Account {
 	 * @return array In the form array(<special use>=><folder id>, ...)
 	 */
 	public function getSpecialFoldersIds() {
-		$folderRoles = array('inbox', 'sent', 'drafts', 'trash', 'archive', 'junk');
+		$folderRoles = array('inbox', 'sent', 'drafts', 'trash', 'archive', 'junk', 'flagged', 'all');
 		$specialFoldersIds = array();
 		
 		foreach ($folderRoles as $role) {
@@ -235,6 +235,25 @@ class Account {
 		usort($mailboxes, function($a, $b) {
 			$roleA = $a->getSpecialRole();
 			$roleB = $b->getSpecialRole();
+			$specialRolesOrder = array(
+				'all'     => 0,
+				'inbox'   => 1,
+				'flagged' => 2,
+				'drafts'  => 3,
+				'sent'    => 4,
+				'archive' => 5,
+				'junk'    => 6,
+				'trash'   => 7,
+			);
+			// if there is a flag unknown to us, we ignore it for sorting :
+			// the folder will be sorted by name like any other 'normal' folder
+			if (array_key_exists($roleA, $specialRolesOrder) === false) {
+				$roleA = null;
+			}
+			if (array_key_exists($roleB, $specialRolesOrder) === false) {
+				$roleB = null;
+			}
+
 			if ($roleA === null && $roleB !== null) {
 				return 1;
 			} elseif ($roleA !== null && $roleB === null){
@@ -243,15 +262,6 @@ class Account {
 				if ($roleA === $roleB) {
 					return strcasecmp($a->getdisplayName(), $b->getDisplayName());
 				} else {
-					$specialRolesOrder = array(
-						'all'     => 0,
-						'inbox'   => 1,
-						'drafts'   => 2,
-						'sent'    => 3,
-						'archive' => 4,
-						'junk'    => 5,
-						'trash'   => 6,
-					);
 					return $specialRolesOrder[$roleA] - $specialRolesOrder[$roleB];
 				}
 			} 
