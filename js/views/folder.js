@@ -4,11 +4,7 @@ var views = views || {};
 
 views.Folder = Backbone.Marionette.ItemView.extend({
 
-	template: null,
-
-	initialize: function() {
-		this.template = Handlebars.compile($("#mail-folder-template").html());
-	}
+	template: "#mail-folder-template"
 
 });
 

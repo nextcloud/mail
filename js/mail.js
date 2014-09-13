@@ -1,4 +1,4 @@
-/* global Backbone, Handlebars, relative_modified_date, formatDate, humanFileSize, views */
+/* global Handlebars, Marionette, relative_modified_date, formatDate, humanFileSize, views */
 var Mail = {
 	State:{
 		currentFolderId: null,
@@ -71,6 +71,10 @@ var Mail = {
 				}, "");
 				return str;
 			});
+
+			Marionette.TemplateCache.prototype.compileTemplate = function(rawTemplate) {
+				return Handlebars.compile(rawTemplate);
+			};
 
 			// ask to handle all mailto: links
 			if(window.navigator.registerProtocolHandler) {
@@ -209,6 +213,12 @@ var Mail = {
 			Mail.UI.setFolderInactive(Mail.State.currentAccountId, Mail.State.currentFolderId);
 			Mail.UI.setFolderActive(accountId, folderId);
 			Mail.UI.clearMessages();
+			$('#mail_messages').removeClass('hidden');
+			$('#mail-message').removeClass('hidden');
+			$('#mail_new_message').removeClass('hidden');
+			$('#folders').removeClass('hidden');
+			$('#mail-setup').addClass('hidden');
+
 
 			$('#mail_new_message').fadeIn();
 			$('#mail_messages').addClass('icon-loading');
@@ -497,14 +507,13 @@ var Mail = {
 			$('#mail_messages').addClass('hidden');
 			$('#mail-message').addClass('hidden');
 			$('#mail_new_message').addClass('hidden');
-			$('#folders').addClass('hidden');
+//			$('#folders').addClass('hidden');
 			$('#app-navigation').removeClass('icon-loading');
 
-			Mail.UI.clearFolders();
+//			Mail.UI.clearFolders();
 			Mail.UI.hideMenu();
 
-			var menu = $('#mail-setup');
-			menu.removeClass('hidden');
+			$('#mail-setup').removeClass('hidden');
 			// don't show New Message button on Add account screen
 			$('#mail_new_message').hide();
 		},
@@ -567,8 +576,8 @@ $(document).ready(function () {
 			data: dataArray,
 			type:'POST',
 			success:function (data) {
-//				Mail.State.router.navigate('accounts/' + data.data.id, {trigger: true});
-				// TODO: refresh folder view
+				var newAccountId = data.data.id;
+				Mail.UI.loadFoldersForAccount(newAccountId);
 			},
 			error: function(jqXHR, textStatus, errorThrown){
 				var error = errorThrown || textStatus || t('mail', 'Unknown error');
