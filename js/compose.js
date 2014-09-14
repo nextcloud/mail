@@ -32,6 +32,7 @@ var Mail = {
 
 					view.sentCallback = function() {
 						$('#nav-buttons').removeClass('hidden');
+						$('.mail_account').slideUp();
 						$('#new-message-fields').slideUp();
 						$('#new-message-attachments').slideUp();
 					};

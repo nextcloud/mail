@@ -44,6 +44,7 @@ views.SendMail = Backbone.View.extend({
 		var cc = $('#cc');
 		var bcc = $('#bcc');
 		var subject = $('#subject');
+		$('.mail_account').prop('disabled', true);
 		to.prop('disabled', true);
 		cc.prop('disabled', true);
 		bcc.prop('disabled', true);
@@ -101,6 +102,7 @@ views.SendMail = Backbone.View.extend({
 			complete: function() {
 				// remove loading feedback
 				newMessageBody.removeClass('icon-loading');
+				$('.mail_account').prop('disabled', false);
 				$('#to').prop('disabled', false);
 				$('#cc').prop('disabled', false);
 				$('#bcc').prop('disabled', false);
