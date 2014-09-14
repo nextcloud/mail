@@ -210,6 +210,7 @@ var Mail = {
 			$('#mail_messages').addClass('icon-loading');
 			$('#load-new-mail-messages').hide();
 			$('#load-more-mail-messages').hide();
+			$('#emptycontent').hide();
 
 			$.ajax(
 				OC.generateUrl('apps/mail/accounts/{accountId}/folders/{folderId}/messages',
@@ -217,21 +218,23 @@ var Mail = {
 					data: {},
 					type:'GET',
 					success: function (jsondata) {
-						// Add messages
-						Mail.UI.addMessages(jsondata);
-						$('#mail_messages').removeClass('icon-loading');
-						$('#load-new-mail-messages').fadeIn().css('display','block');
-						$('#load-new-mail-messages').prop('disabled', false);
-						$('#load-more-mail-messages').fadeIn().css('display','block');
 
 						Mail.State.currentAccountId = accountId;
 						Mail.State.currentFolderId = folderId;
 						Mail.UI.setMessageActive(null);
-
+						$('#mail_messages').removeClass('icon-loading');
 						if(jsondata.length > 0) {
+							Mail.UI.addMessages(jsondata);
 							var messageId = jsondata[0].id;
 							Mail.UI.openMessage(messageId);
+							$('#load-more-mail-messages').fadeIn().css('display','block');
+						} else {
+							$('#emptycontent').show();
+							$('#mail-message').removeClass('icon-loading');
 						}
+						$('#load-new-mail-messages').fadeIn().css('display','block');
+						$('#load-new-mail-messages').prop('disabled', false);
+
 					},
 					error: function() {
 
