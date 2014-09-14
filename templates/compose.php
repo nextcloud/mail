@@ -15,7 +15,7 @@
 	<div id="new-message">
 		<select class="mail_account">
 			{{#each aliases}}
-			<option value="{{accountId}}">{{emailAddress}}</option>
+			<option value="{{accountId}}"><?php p($l->t('from')); ?> {{name}} &lt;{{emailAddress}}&gt;</option>
 			{{/each}}
 		</select>
 
