@@ -89,6 +89,16 @@ button.control {
 	display: none;
 }
 
+#app-navigation .special-inbox,
+#app-navigation .special-all {
+	display: block;
+}
+
+#emptycontent {
+	position: static;
+	margin-top: 2em;
+}
+
 .mail_account_email {
 	opacity: .5;
 	padding: 20px 0 10px 12px;
