@@ -10,15 +10,15 @@ namespace OCA\Mail;
 
 use Horde_Imap_Client;
 use Horde_Imap_Client_Ids;
+use Horde_Imap_Client_Mailbox;
+use Horde_Imap_Client_Socket;
 
 class Mailbox {
 
 	/**
-	 * @var \Horde_Imap_Client_Socket
+	 * @var Horde_Imap_Client_Socket
 	 */
 	private $conn;
-
-	private $folderId;
 
 	private $attributes;
 
@@ -26,9 +26,20 @@ class Mailbox {
 
 	private $delimiter;
 
-	function __construct($conn, $folderId, $attributes, $delimiter='/') {
+	/**
+	 * @var Horde_Imap_Client_Mailbox
+	 */
+	private $mailBox;
+
+	/**
+	 * @param Horde_Imap_Client_Socket $conn
+	 * @param Horde_Imap_Client_Mailbox $mailBox
+	 * @param array $attributes
+	 * @param string $delimiter
+	 */
+	function __construct($conn, $mailBox, $attributes, $delimiter='/') {
 		$this->conn = $conn;
-		$this->folderId = $folderId;
+		$this->mailBox = $mailBox;
 		$this->attributes = $attributes;
 		$this->delimiter = $delimiter;
 		$this->getSpecialRoleFromAttributes();
@@ -68,13 +79,13 @@ class Mailbox {
 		$ids = new \Horde_Imap_Client_Ids("$from:$to", true);
 		$options = array('ids' => $ids);
 		// $list is an array of Horde_Imap_Client_Data_Fetch objects.
-		$headers = $this->conn->fetch($this->folderId, $fetch_query, $options);
+		$headers = $this->conn->fetch($this->mailBox, $fetch_query, $options);
 
 		ob_start(); // fix for Horde warnings
 		$messages = array();
 		foreach ($headers->ids() as $message_id) {
 			$header = $headers[$message_id];
-			$message = new Message($this->conn, $this->folderId, $message_id, $header);
+			$message = new Message($this->conn, $this->mailBox, $message_id, $header);
 			$messages[] = $message->getListArray();
 		}
 		ob_clean();
@@ -92,11 +103,11 @@ class Mailbox {
 	 * @return Message
 	 */
 	public function getMessage($messageId, $loadHtmlMessageBody = false) {
-		return new Message($this->conn, $this->folderId, $messageId, null, $loadHtmlMessageBody);
+		return new Message($this->conn, $this->mailBox, $messageId, null, $loadHtmlMessageBody);
 	}
 
 	private function getStatus($flags = \Horde_Imap_Client::STATUS_ALL) {
-		return $this->conn->status($this->folderId, $flags);
+		return $this->conn->status($this->mailBox, $flags);
 	}
 
 	public function getTotalMessages() {
@@ -104,12 +115,15 @@ class Mailbox {
 		return $status['messages'];
 	}
 
+	/**
+	 * @return string
+	 */
 	public function getDisplayName() {
-		return \Horde_Imap_Client_Utf7imap::Utf7ImapToUtf8($this->folderId);
+		return $this->mailBox->utf8;
 	}
 	
 	public function getFolderId() {
-		return $this->folderId;
+		return $this->mailBox->utf7imap;
 	}
 
 	public function getSpecialRole() {
@@ -127,7 +141,7 @@ class Mailbox {
 			$unseen = ($specialRole === 'trash') ? 0 : $status['unseen'];
 			$isEmpty = ($total === 0);
 			return array(
-				'id' => base64_encode($this->folderId),
+				'id' => base64_encode($this->getFolderId()),
 				'name' => $displayName,
 				'specialRole' => $specialRole,
 				'unseen' => $unseen,
@@ -136,7 +150,7 @@ class Mailbox {
 			);
 		} catch (\Horde_Imap_Client_Exception $e) {
 			return array(
-				'id' => base64_encode($this->folderId),
+				'id' => base64_encode($this->getFolderId()),
 				'name' => $displayName,
 				'specialRole' => null,
 				'unseen' => 0,
@@ -204,7 +218,7 @@ class Mailbox {
 			'junk'    => array('junk', 'spam'),
 		);
 		
-		$lowercaseExplode = explode($this->delimiter, $this->folderId, 2);
+		$lowercaseExplode = explode($this->delimiter, $this->getFolderId(), 2);
 		$lowercaseId = strtolower(reset($lowercaseExplode));
 		$result = null;
 		foreach ($specialFoldersDict as $specialRole => $specialNames) {
@@ -223,7 +237,7 @@ class Mailbox {
 	public function deleteMessage($messageId) {
 		$dest = "Trash";
 		$ids = new \Horde_Imap_Client_Ids($messageId);
-		$result = $this->conn->copy($this->folderId, $dest, array('move' => true, 'ids' => $ids));
+		$result = $this->conn->copy($this->mailBox, $dest, array('move' => true, 'ids' => $ids));
 		\OC::$server->getLogger()->info("Message deleted: {result}", array('result' => $result));
 	}
 
@@ -233,7 +247,7 @@ class Mailbox {
 	 * @return Attachment
 	 */
 	public function getAttachment($messageId, $attachmentId) {
-		return new Attachment($this->conn, $this->folderId, $messageId, $attachmentId);
+		return new Attachment($this->conn, $this->mailBox, $messageId, $attachmentId);
 	}
 
 	/**
@@ -241,7 +255,7 @@ class Mailbox {
 	 */
 	public function saveMessage($rawBody) {
 
-		$this->conn->append($this->folderId, array(
+		$this->conn->append($this->mailBox, array(
 			array(
 				'data' => $rawBody,
 				'flags' => array(Horde_Imap_Client::FLAG_SEEN)
@@ -264,7 +278,7 @@ class Mailbox {
 		} else {
 			$options['remove'] = array($flag);
 		}
-		$this->conn->store($this->folderId, $options);
+		$this->conn->store($this->mailBox, $options);
 	}
 }
 

@@ -10,7 +10,8 @@
 
 namespace OCA\Mail;
 
-use OCA\Mail\Cache\Cache;
+use Horde_Imap_Client_Mailbox;
+use Horde_Imap_Client_Socket;
 use Horde_Imap_Client;
 use OCA\Mail\Db\MailAccount;
 
@@ -25,6 +26,11 @@ class Account {
 	 *  @var Mailbox[]
 	 */
 	private $mailboxes;
+
+	/**
+	 * @var Horde_Imap_Client_Socket
+	 */
+	private $client;
 
 	/**
 	 * @param MailAccount $info
@@ -46,29 +52,29 @@ class Account {
 		return $this->account->getEmail();
 	}
 
+	/**
+	 * @return Horde_Imap_Client_Socket
+	 */
 	public function getImapConnection() {
-		$host = $this->account->getInboundHost();
-		$user = $this->account->getInboundUser();
-		$password = $this->account->getInboundPassword();
-		$port = $this->account->getInboundPort();
-		$ssl_mode = $this->account->getInboundSslMode();
+		if (is_null($this->client)) {
+			$host = $this->account->getInboundHost();
+			$user = $this->account->getInboundUser();
+			$password = $this->account->getInboundPassword();
+			$port = $this->account->getInboundPort();
+			$ssl_mode = $this->account->getInboundSslMode();
 
-		$client = new \Horde_Imap_Client_Socket(
-			array(
-				'username' => $user,
-				'password' => $password,
-				'hostspec' => $host,
-				'port' => $port,
-				'secure' => $ssl_mode,
-				'timeout' => 20,
-//				'cache' => array(
-//					'backend' => new Cache(array(
-//							'cacheob' => \OC::$server->getCache()
-//						))
-//				)
-			));
-		$client->login();
-		return $client;
+			$this->client = new \Horde_Imap_Client_Socket(
+				array(
+					'username' => $user,
+					'password' => $password,
+					'hostspec' => $host,
+					'port' => $port,
+					'secure' => $ssl_mode,
+					'timeout' => 20,
+				));
+			$this->client->login();
+		}
+		return $this->client;
 	}
 
 	/**
@@ -93,18 +99,19 @@ class Account {
 
 		$mailboxes = array();
 		foreach ($mboxes as $mailbox) {
-			$mailboxes[] = new Mailbox($conn, $mailbox['mailbox']->utf7imap, $mailbox['attributes'], $mailbox['delimiter']);
+			$mailboxes[] = new Mailbox($conn, $mailbox['mailbox'], $mailbox['attributes'], $mailbox['delimiter']);
 		}
 		return $mailboxes;
 	}
 
 	/**
-	 * @param $folderId
+	 * @param string $folderId
 	 * @return \OCA\Mail\Mailbox
 	 */
 	public function getMailbox($folderId) {
 		$conn = $this->getImapConnection();
-		return new Mailbox($conn, $folderId, array());
+		$mailbox = new Horde_Imap_Client_Mailbox($folderId, true);
+		return new Mailbox($conn, $mailbox, array());
 	}
 
 	/**
@@ -211,6 +218,7 @@ class Account {
 			$maxMessages = 0;
 			$maxFolder = reset($specialFolders);
 			foreach ($specialFolders as $folder) {
+				/** @var Mailbox $folder */
 				if ($folder->getTotalMessages() > $maxMessages) {
 					$maxMessages = $folder->getTotalMessages();
 					$maxFolder = $folder;

@@ -28,13 +28,13 @@ class Attachment {
 
 	/**
 	 * @param \Horde_Imap_Client_Socket $conn
-	 * @param int $folderId
+	 * @param \Horde_Imap_Client_Mailbox $mailBox
 	 * @param int $messageId
 	 * @param int $attachmentId
 	 */
-	function __construct($conn, $folderId, $messageId, $attachmentId) {
+	function __construct($conn, $mailBox, $messageId, $attachmentId) {
 		$this->conn = $conn;
-		$this->folderId = $folderId;
+		$this->mailBox = $mailBox;
 		$this->messageId = $messageId;
 		$this->attachmentId = $attachmentId;
 
@@ -45,7 +45,11 @@ class Attachment {
 	 * @var \Horde_Imap_Client_Socket
 	 */
 	private $conn;
-	private $folderId;
+
+	/**
+	 * @var \Horde_Imap_Client_Mailbox
+	 */
+	private $mailBox;
 	private $messageId;
 	private $attachmentId;
 
@@ -75,7 +79,7 @@ class Attachment {
 
 		// $list is an array of Horde_Imap_Client_Data_Fetch objects.
 		$ids = new \Horde_Imap_Client_Ids($this->messageId);
-		$headers = $this->conn->fetch($this->folderId, $fetch_query, array('ids' => $ids));
+		$headers = $this->conn->fetch($this->mailBox, $fetch_query, array('ids' => $ids));
 		/** @var $fetch \Horde_Imap_Client_Data_Fetch */
 		$fetch = $headers[$this->messageId];
 		$mimeHeaders = $fetch->getMimeHeader($this->attachmentId, \Horde_Imap_Client_Data_Fetch::HEADER_PARSE);
