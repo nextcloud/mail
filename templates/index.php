@@ -1,5 +1,4 @@
 <script id="mail-folder-template" type="text/x-handlebars-template">
-	{{#each this}}
 	<h2 class="mail_account_email">{{email}}</h2>
 	<ul class="mail_folders" data-account_id="{{id}}">
 		{{#each folders}}
@@ -18,7 +17,6 @@
 		</li>
 		{{/each}}
 	</ul>
-	{{/each}}
 </script>
 <script id="mail-messages-template" type="text/x-handlebars-template">
 	<div id="mail-message-summary-{{id}}" class="mail_message_summary {{#if flags.unseen}}unseen{{/if}}" data-message-id="{{id}}">

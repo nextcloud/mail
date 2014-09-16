@@ -4,11 +4,7 @@ var views = views || {};
 
 views.Message = Backbone.Marionette.ItemView.extend({
 
-	template: null,
-
-	initialize: function() {
-		this.template = Handlebars.compile($("#mail-messages-template").html());
-	},
+	template: "#mail-messages-template",
 
 	onRender: function () {
 		// Get rid of that pesky wrapping-div.
@@ -36,10 +32,9 @@ views.Messages = Backbone.Marionette.CompositeView.extend({
 		"click #load-more-mail-messages" : "loadMore"
 	},
 
-	template: null,
+	template: "#message-list-template",
 
 	initialize: function() {
-		this.template = Handlebars.compile($("#message-list-template").html());
 		this.collection = new models.MessageList();
 	},
 

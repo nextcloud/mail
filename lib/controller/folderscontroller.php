@@ -52,13 +52,9 @@ class FoldersController extends Controller
 	 * @NoCSRFRequired
 	 */
 	public function index() {
-		$accounts = $this->getAccount();
-		$json = array();
-
-		foreach($accounts as $account) {
-			$m = new \OCA\Mail\Account($account);
-			$json[$account->getId()] = $m->getListArray();
-		}
+		$account = $this->getAccount();
+		$m = new \OCA\Mail\Account($account);
+		$json = $m->getListArray();
 
 		return new JSONResponse($json);
 	}
@@ -131,6 +127,6 @@ class FoldersController extends Controller
 	private function getAccount()
 	{
 		$accountId = $this->params('accountId');
-		return array($this->mapper->find($this->currentUserId, $accountId));
+		return $this->mapper->find($this->currentUserId, $accountId);
 	}
 }
