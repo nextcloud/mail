@@ -30,15 +30,15 @@ class Message {
 
 	/**
 	 * @param \Horde_Imap_Client_Socket $conn
-	 * @param string $folderId
+	 * @param \Horde_Imap_Client_Mailbox $mailBox
 	 * @param integer $messageId
 	 * @param \Horde_Imap_Client_Data_Fetch|null $fetch
 	 * @param boolean $loadHtmlMessage
 	 */
-	function __construct($conn, $folderId, $messageId, $fetch=null,
+	function __construct($conn, $mailBox, $messageId, $fetch=null,
 		$loadHtmlMessage=false) {
 		$this->conn = $conn;
-		$this->folderId = $folderId;
+		$this->mailBox = $mailBox;
 		$this->messageId = $messageId;
 		$this->loadHtmlMessage = $loadHtmlMessage;
 
@@ -64,7 +64,11 @@ class Message {
 	 * @var \Horde_Imap_Client_Socket
 	 */
 	private $conn;
-	private $folderId;
+
+	/**
+	 * @var \Horde_Imap_Client_Mailbox
+	 */
+	private $mailBox;
 	private $messageId;
 
 	/**
@@ -238,7 +242,7 @@ class Message {
 
 		// $list is an array of Horde_Imap_Client_Data_Fetch objects.
 		$ids = new \Horde_Imap_Client_Ids($this->messageId);
-		$headers = $this->conn->fetch($this->folderId, $fetch_query, array('ids' => $ids));
+		$headers = $this->conn->fetch($this->mailBox, $fetch_query, array('ids' => $ids));
 		/** @var $fetch \Horde_Imap_Client_Data_Fetch */
 		$fetch = $headers[$this->messageId];
 		if (is_null($fetch)) {
@@ -276,7 +280,7 @@ class Message {
 		$ids = new \Horde_Imap_Client_Ids($this->messageId);
 
 		$fetch_query->bodyPart($partId);
-		$headers = $this->conn->fetch($this->folderId, $fetch_query, array('ids' => $ids));
+		$headers = $this->conn->fetch($this->mailBox, $fetch_query, array('ids' => $ids));
 		/** @var $fetch \Horde_Imap_Client_Data_Fetch */
 		$fetch = $headers[$this->messageId];
 		if (is_null($fetch)) {
