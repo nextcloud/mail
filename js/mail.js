@@ -345,7 +345,6 @@ var Mail = {
 					$('.attachment-save-to-cloud')
 						.removeClass('icon-upload')
 						.addClass('icon-loading-small')
-						.html(t('mail', 'Saving to Files …'))
 						.prop('disabled', true);
 
 					$.ajax(
@@ -380,7 +379,6 @@ var Mail = {
 								$('.attachment-save-to-cloud')
 									.removeClass('icon-loading-small')
 									.addClass('icon-upload')
-									.html(t('mail', 'Save to Files'))
 									.prop('disabled', false);
 							}
 						});
