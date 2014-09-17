@@ -1,12 +1,12 @@
 <script id="mail-folder-template" type="text/x-handlebars-template">
 	<li data-folder_id="{{id}}"
 		class="
-	{{#if unseen}}unread{{/if}}
-	{{#if specialRole}} special-{{specialRole}}{{/if}}
-	{{#if folders}} collapsible{{/if}}
-	{{#if open}} open{{/if}}
-	">
-		<button class="collapse"></button>
+		{{#if unseen}}unread{{/if}}
+		{{#if specialRole}} special-{{specialRole}}{{/if}}
+		{{#if folders}} collapsible{{/if}}
+		{{#if open}} open{{/if}}
+		">
+		{{#if folders}}<button class="collapse"></button>{{/if}}
 		<a>
 			{{name}}
 			{{#if unseen}}

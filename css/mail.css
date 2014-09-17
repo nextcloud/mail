@@ -94,7 +94,15 @@ button.control {
 	display: block;
 }
 
+
+
 /* START: should be done in core/apps.css */
+
+#app-navigation .collapse {
+	display: inline-block !important;
+	opacity: .3;
+}
+
 #app-navigation ul ul {
 	display: none;
 }
