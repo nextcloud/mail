@@ -345,6 +345,10 @@ button.control {
 .unread {
 	font-weight: bold;
 }
+/* make sure subfolders of unread folders are not bolded as well */
+.unread ul {
+	font-weight: normal;
+}
 
 
 .avatar {
