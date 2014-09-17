@@ -167,10 +167,13 @@ class MessagesController extends Controller
 			$attachment = $mailBox->getAttachment($messageId, $attachmentId);
 
 			$fileName = $attachment->getName();
-			$fullPath = "$targetPath/$fileName";
-			$counter = 0;
+			$fileParts = pathinfo($fileName);
+			$fileName = $fileParts['filename'];
+			$fileExtension = $fileParts['extension'];
+			$fullPath = "$targetPath/$fileName.$fileExtension";
+			$counter = 2;
 			while($this->userFolder->nodeExists($fullPath)) {
-				$fullPath = "$targetPath/$counter-$fileName";
+				$fullPath = "$targetPath/$fileName ($counter).$fileExtension";
 				$counter++;
 			}
 
