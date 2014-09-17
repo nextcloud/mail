@@ -521,3 +521,19 @@ button.control {
 	width: 60%;
 	margin: 0 auto;
 }
+
+
+
+/* icons */
+.icon-inbox {
+	background-image: url('../img/inbox.svg');
+}
+.icon-drafts {
+	background-image: url('../img/drafts.svg');
+}
+.icon-sent {
+	background-image: url('../img/sent.svg');
+}
+.icon-trash {
+	background-image: url('../img/trash.svg');
+}
