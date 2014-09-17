@@ -40,14 +40,23 @@ class Account {
 		$this->mailboxes = null;
 	}
 
+	/**
+	 * @return int
+	 */
 	public function getId() {
 		return $this->account->getId();
 	}
 
+	/**
+	 * @return string
+	 */
 	public function getName() {
 		return $this->account->getName();
 	}
 
+	/**
+	 * @return string
+	 */
 	public function getEMailAddress() {
 		return $this->account->getEmail();
 	}
@@ -191,6 +200,45 @@ class Account {
 		return $this->getSpecialFolder('sent', true);
 	}
 	
+	/**
+	 * @param string $sourceFolderId
+	 * @param int $messageId
+	 */
+	public function deleteMessage($sourceFolderId, $messageId) {
+		
+		// by default we will create a 'Trash' folder if no trash is found
+		$trashId = "Trash";
+		$createTrash = true;
+
+		$trashFolder = $this->getSpecialFolder('trash', true);
+
+		if (empty($trashFolder) === false) {
+			$trashId = $trashFolder->getFolderId();
+			$createTrash = false;
+		} else {
+			// no trash -> guess
+			$trashes = array_filter($this->getMailboxes(), function($box) {
+				/**
+				 * @var Mailbox $box
+				 */
+				return (stripos($box->getDisplayName(), 'trash') !== FALSE);
+			});
+			if (!empty($trashes)) {
+				$trashId = array_values($trashes)[0]->getFolderId();
+				$createTrash = false;
+			}
+		}
+
+		$hordeMessageIds = new \Horde_Imap_Client_Ids($messageId);
+		$hordeSourceMailBox = new Horde_Imap_Client_Mailbox($sourceFolderId, true);
+		$hordeTrashMailBox = new Horde_Imap_Client_Mailbox($trashId, true);
+
+		$result = $this->getImapConnection()->copy($hordeSourceMailBox, $hordeTrashMailBox,
+			array('create' => $createTrash, 'move' => true, 'ids' => $hordeMessageIds));
+
+		\OC::$server->getLogger()->info("Message moved to trash: {result}", array('result' => $result));
+	}
+	
 	/*
 	 * Get mailbox(es) that have the given special use role
 	 *
@@ -241,6 +289,10 @@ class Account {
 
 		$mailboxes = $this->getMailboxes();
 		usort($mailboxes, function($a, $b) {
+			/**
+			 * @var Mailbox $a
+			 * @var Mailbox $b
+			 */
 			$roleA = $a->getSpecialRole();
 			$roleB = $b->getSpecialRole();
 			$specialRolesOrder = array(
