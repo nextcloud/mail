@@ -40,14 +40,23 @@ class Account {
 		$this->mailboxes = null;
 	}
 
+	/**
+	 * @return int
+	 */
 	public function getId() {
 		return $this->account->getId();
 	}
 
+	/**
+	 * @return string
+	 */
 	public function getName() {
 		return $this->account->getName();
 	}
 
+	/**
+	 * @return string
+	 */
 	public function getEMailAddress() {
 		return $this->account->getEmail();
 	}
@@ -209,10 +218,12 @@ class Account {
 		}
 
 		$hordeMessageIds = new \Horde_Imap_Client_Ids($messageId);
-		$result = $this->getImapConnection()->copy($sourceFolderId, $trashId, array('create' => $createTrash, 'move' => true, 'ids' => $hordeMessageIds));
-		\OC::$server->getLogger()->info("Message moved to trash: {result}", array('result' => $result));
-		
+		$hordeSourceMailBox = new Horde_Imap_Client_Mailbox($sourceFolderId, true);
+		$hordeTrashMailBox = new Horde_Imap_Client_Mailbox($trashId, true);
+		$result = $this->getImapConnection()->copy($hordeSourceMailBox, $hordeTrashMailBox,
+			array('create' => $createTrash, 'move' => true, 'ids' => $hordeMessageIds));
 
+		\OC::$server->getLogger()->info("Message moved to trash: {result}", array('result' => $result));
 	}
 	
 	/*
@@ -265,6 +276,10 @@ class Account {
 
 		$mailboxes = $this->getMailboxes();
 		usort($mailboxes, function($a, $b) {
+			/**
+			 * @var Mailbox $a
+			 * @var Mailbox $b
+			 */
 			$roleA = $a->getSpecialRole();
 			$roleB = $b->getSpecialRole();
 			$specialRolesOrder = array(
