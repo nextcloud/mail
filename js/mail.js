@@ -636,14 +636,6 @@ $(document).ready(function () {
 		Mail.UI.setMessageActive(null);
 	});
 
-	// Clicking on a folder loads the message list
-	$(document).on('click', 'ul.mail_folders li', function () {
-		var accountId = $(this).parent().data('account_id');
-		var folderId = $(this).data('folder_id');
-
-		Mail.UI.loadMessages(accountId, folderId);
-	});
-
 	// Clicking on a message loads the entire message
 	$(document).on('click', '#mail_messages .mail-message-header', function () {
 		var messageId = $(this).parent().data('messageId');

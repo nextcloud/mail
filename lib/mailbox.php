@@ -119,6 +119,12 @@ class Mailbox {
 	 * @return string
 	 */
 	public function getDisplayName() {
+		$parts = explode($this->delimiter, $this->mailBox->utf8, 2);
+
+		if (count($parts) > 1) {
+			return $parts[1];
+		}
+
 		return $this->mailBox->utf8;
 	}
 	
@@ -126,9 +132,21 @@ class Mailbox {
 		return $this->mailBox->utf7imap;
 	}
 
+	public function getParent() {
+		$folderId = $this->getFolderId();
+		$parts = explode($this->delimiter, $folderId, 2);
+
+		if (count($parts) > 1) {
+			return $parts[0];
+		}
+
+		return null;
+	}
+
 	public function getSpecialRole() {
 		return $this->specialRole;
 	}
+
 	/**
 	 * @return array
 	 */
@@ -142,6 +160,7 @@ class Mailbox {
 			$isEmpty = ($total === 0);
 			return array(
 				'id' => base64_encode($this->getFolderId()),
+				'parent' => $this->getParent(),
 				'name' => $displayName,
 				'specialRole' => $specialRole,
 				'unseen' => $unseen,

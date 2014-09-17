@@ -56,6 +56,27 @@ class FoldersController extends Controller
 		$m = new \OCA\Mail\Account($account);
 		$json = $m->getListArray();
 
+		$folders = array_filter($json['folders'], function($folder){
+			return is_null($folder['parent']);
+		});
+		foreach($json['folders'] as $folder) {
+			if (is_null($folder['parent'])) {
+				continue;
+			}
+			$parentName = $folder['parent'];
+			foreach($folders as &$parent) {
+				if($parent['name'] === $parentName) {
+					if (!isset($parent['folders'])) {
+						$parent['folders'] = array();
+					}
+					$parent['folders'][] = $folder;
+					break;
+				}
+			}
+		}
+
+		$json['folders'] = $folders;
+
 		return new JSONResponse($json);
 	}
 
