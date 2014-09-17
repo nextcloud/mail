@@ -64,7 +64,7 @@ var Mail = {
 					var label = Handlebars.Utils.escapeExpression(value.label);
 					var email = Handlebars.Utils.escapeExpression(value.email);
 					if(label === email) {
-						return email;
+						return memo + email;
 					} else {
 						return memo + '"' + label + '" <' + email + '>';
 					}
