@@ -1,4 +1,4 @@
-/* global Backbone, Handlebars, Mail, models */
+/* global Backbone, Handlebars, models, escapeHTML */
 
 var views = views || {};
 
@@ -25,7 +25,7 @@ views.SendMail = Backbone.View.extend({
 	},
 
 	changeAlias: function(event) {
-		this.currentAccountId = parseInt($(event.target).val());
+		this.currentAccountId = parseInt($(event.target).val(), 10);
 	},
 
 	sendMail: function() {
@@ -75,7 +75,7 @@ views.SendMail = Backbone.View.extend({
 				OC.msg.finishedAction('#new-message-msg', {
 					status: 'success',
 					data: {
-						message: t('mail', 'Mail sent to {Receiver}', {Receiver: to.val()})
+						message: t('mail', 'Mail sent to {Receiver}', {Receiver: escapeHTML(to.val())})
 					}
 				});
 

@@ -23,6 +23,7 @@
 namespace OCA\Mail;
 
 use Horde_Imap_Client_Data_Fetch;
+use OCP\AppFramework\Db\DoesNotExistException;
 
 class Attachment {
 
@@ -81,6 +82,9 @@ class Attachment {
 		$ids = new \Horde_Imap_Client_Ids($this->messageId);
 		$headers = $this->conn->fetch($this->mailBox, $fetch_query, array('ids' => $ids));
 		/** @var $fetch \Horde_Imap_Client_Data_Fetch */
+		if (!isset($headers[$this->messageId])) {
+			throw new DoesNotExistException('Unable to load the attachment.');
+		}
 		$fetch = $headers[$this->messageId];
 		$mimeHeaders = $fetch->getMimeHeader($this->attachmentId, \Horde_Imap_Client_Data_Fetch::HEADER_PARSE);
 

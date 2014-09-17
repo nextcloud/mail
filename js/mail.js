@@ -233,7 +233,6 @@ var Mail = {
 					data: {},
 					type:'GET',
 					success: function (jsondata) {
-
 						Mail.State.currentAccountId = accountId;
 						Mail.State.currentFolderId = folderId;
 						Mail.UI.setMessageActive(null);
@@ -283,7 +282,7 @@ var Mail = {
 						$('#mail-message-summary-' + messageId).remove();
 					},
 					error: function() {
-						OC.Notification.show(t('mail', 'Error while deleting mail.'));
+						Mail.UI.showError(t('mail', 'Error while deleting mail.'));
 					}
 				});
 		},
@@ -323,7 +322,7 @@ var Mail = {
 						}
 					},
 					error: function() {
-						OC.Notification.show(t('mail', 'Message could not be favorited. Please try again.'));
+						Mail.UI.showError(t('mail', 'Message could not be favorited. Please try again.'));
 						if(starred) {
 							$('#mail-message-summary-' + messageId)
 								.find('.star')
@@ -347,7 +346,6 @@ var Mail = {
 					$('.attachment-save-to-cloud')
 						.removeClass('icon-upload')
 						.addClass('icon-loading-small')
-						.html(t('mail', 'Saving to Files …'))
 						.prop('disabled', true);
 
 					$.ajax(
@@ -365,16 +363,16 @@ var Mail = {
 							type:'POST',
 							success: function () {
 								if (typeof attachmentId === "undefined") {
-									OC.Notification.show(t('mail', 'Attachments saved to Files.'));
+									Mail.UI.showError(t('mail', 'Attachments saved to Files.'));
 								} else {
-									OC.Notification.show(t('mail', 'Attachment saved to Files.'));
+									Mail.UI.showError(t('mail', 'Attachment saved to Files.'));
 								}
 							},
 							error: function() {
 								if (typeof attachmentId === "undefined") {
-									OC.Notification.show(t('mail', 'Error while saving attachments to Files.'));
+									Mail.UI.showError(t('mail', 'Error while saving attachments to Files.'));
 								} else {
-									OC.Notification.show(t('mail', 'Error while saving attachment to Files.'));
+									Mail.UI.showError(t('mail', 'Error while saving attachment to Files.'));
 								}
 							},
 							complete: function() {
@@ -382,7 +380,6 @@ var Mail = {
 								$('.attachment-save-to-cloud')
 									.removeClass('icon-loading-small')
 									.addClass('icon-upload')
-									.html(t('mail', 'Save to Files'))
 									.prop('disabled', false);
 							}
 						});
@@ -660,16 +657,16 @@ $(document).ready(function () {
 		Mail.UI.toggleMessageStar(messageId, $(this).data('starred'));
 	});
 
-	$(document).on('click', '#mail_messages .attachment-save-to-cloud', function(event) {
+	$(document).on('click', '#mail-message .attachment-save-to-cloud', function(event) {
 		event.stopPropagation();
-		var messageId = $(this).parent().parent().parent().parent().parent().parent().data('messageId');
+		var messageId = $(this).parent().data('messageId');
 		var attachmentId = $(this).parent().data('attachmentId');
 		Mail.UI.saveAttachment(messageId, attachmentId);
 	});
 
-	$(document).on('click', '#mail_messages .attachments-save-to-cloud', function(event) {
+	$(document).on('click', '#mail-message .attachments-save-to-cloud', function(event) {
 		event.stopPropagation();
-		var messageId = $(this).parent().parent().parent().parent().parent().data('messageId');
+		var messageId = $(this).data('messageId');
 		Mail.UI.saveAttachment(messageId);
 	});
 });
