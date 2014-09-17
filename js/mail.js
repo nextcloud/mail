@@ -281,7 +281,7 @@ var Mail = {
 						$('#mail-message-summary-' + messageId).remove();
 					},
 					error: function() {
-						OC.Notification.show(t('mail', 'Error while deleting mail.'));
+						Mail.UI.showError(t('mail', 'Error while deleting mail.'));
 					}
 				});
 		},
@@ -321,7 +321,7 @@ var Mail = {
 						}
 					},
 					error: function() {
-						OC.Notification.show(t('mail', 'Message could not be favorited. Please try again.'));
+						Mail.UI.showError(t('mail', 'Message could not be favorited. Please try again.'));
 						if(starred) {
 							$('#mail-message-summary-' + messageId)
 								.find('.star')
@@ -362,16 +362,16 @@ var Mail = {
 							type:'POST',
 							success: function () {
 								if (typeof attachmentId === "undefined") {
-									OC.Notification.show(t('mail', 'Attachments saved to Files.'));
+									Mail.UI.showError(t('mail', 'Attachments saved to Files.'));
 								} else {
-									OC.Notification.show(t('mail', 'Attachment saved to Files.'));
+									Mail.UI.showError(t('mail', 'Attachment saved to Files.'));
 								}
 							},
 							error: function() {
 								if (typeof attachmentId === "undefined") {
-									OC.Notification.show(t('mail', 'Error while saving attachments to Files.'));
+									Mail.UI.showError(t('mail', 'Error while saving attachments to Files.'));
 								} else {
-									OC.Notification.show(t('mail', 'Error while saving attachment to Files.'));
+									Mail.UI.showError(t('mail', 'Error while saving attachment to Files.'));
 								}
 							},
 							complete: function() {
@@ -673,7 +673,7 @@ $(document).ready(function () {
 
 	$(document).on('click', '#mail-message .attachments-save-to-cloud', function(event) {
 		event.stopPropagation();
-		var messageId = $(this).parent().data('messageId');
+		var messageId = $(this).data('messageId');
 		Mail.UI.saveAttachment(messageId);
 	});
 });

@@ -112,7 +112,7 @@
 				{{/each}}
 			</ul>
 			<p>
-				<button class="icon-upload attachments-save-to-cloud"><?php p($l->t('Save all to Files')); ?></button>
+				<button data-message-id="{{id}}" class="icon-upload attachments-save-to-cloud"><?php p($l->t('Save all to Files')); ?></button>
 			</p>
 			{{/if}}
 		</div>
