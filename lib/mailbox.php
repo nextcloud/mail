@@ -161,6 +161,7 @@ class Mailbox {
 			$specialRole = $this->getSpecialRole();
 			$unseen = ($specialRole === 'trash') ? 0 : $status['unseen'];
 			$isEmpty = ($total === 0);
+			$noSelect = in_array('\\noselect', $this->attributes);
 			return array(
 				'id' => base64_encode($this->getFolderId()),
 				'parent' => $this->getParent(),
@@ -169,7 +170,8 @@ class Mailbox {
 				'unseen' => $unseen,
 				'total' => $total,
 				'isEmpty' => $isEmpty,
-				'accountId' => $accountId
+				'accountId' => $accountId,
+				'noSelect' => $noSelect
 			);
 		} catch (\Horde_Imap_Client_Exception $e) {
 			return array(
@@ -180,7 +182,8 @@ class Mailbox {
 				'total' => 0,
 				'error' => $e->getMessage(),
 				'isEmpty' => true,
-				'accountId' => $accountId
+				'accountId' => $accountId,
+				'noSelect' => true
 			);
 		}
 	}
