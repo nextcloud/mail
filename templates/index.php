@@ -7,7 +7,7 @@
 		{{#if open}} open{{/if}}
 		">
 		{{#if folders}}<button class="collapse"></button>{{/if}}
-		<a>
+		<a{{#if specialRole}} class="icon-{{specialRole}}"{{/if}}>
 			{{name}}
 			{{#if unseen}}
 			<span class="utils">{{unseen}}</span>
@@ -227,7 +227,7 @@
 </script>
 <div id="app">
 	<div id="app-navigation" class="icon-loading">
-		<input type="button" id="mail_new_message" class="icon-rename"
+		<input type="button" id="mail_new_message" class="icon-add"
 			value="<?php p($l->t('New Message')); ?>" style="display: none">
 		<div id="folders"></div>
 		<div id="app-settings">
