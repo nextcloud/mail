@@ -135,7 +135,7 @@ class Account {
 
 		$folders = array();
 		foreach ($this->getMailboxes() as $mailbox) {
-			$folders[] = $mailbox->getListArray();
+			$folders[] = $mailbox->getListArray($this->getId());
 		}
 		return array(
 			'id'             => $this->getId(),

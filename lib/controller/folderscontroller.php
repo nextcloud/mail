@@ -75,7 +75,7 @@ class FoldersController extends Controller
 			}
 		}
 
-		$json['folders'] = $folders;
+		$json['folders'] = array_values($folders);
 
 		return new JSONResponse($json);
 	}

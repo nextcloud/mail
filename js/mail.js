@@ -75,6 +75,7 @@ var Mail = {
 			Marionette.TemplateCache.prototype.compileTemplate = function(rawTemplate) {
 				return Handlebars.compile(rawTemplate);
 			};
+			Marionette.ItemView.prototype.modelEvents = { "change" : "render"};
 
 			// ask to handle all mailto: links
 			if(window.navigator.registerProtocolHandler) {
@@ -147,7 +148,7 @@ var Mail = {
 						$('#app-navigation').fadeIn(800);
 						firstFolder = firstFolder.first();
 						folderId = firstFolder.data('folder_id');
-						accountId = firstFolder.parent().data('account_id');
+						accountId = firstFolder.parent().parent().data('account_id');
 
 						Mail.UI.loadMessages(accountId, folderId);
 
@@ -483,7 +484,7 @@ var Mail = {
 		},
 
 		setFolderActive:function (accountId, folderId) {
-			$('.mail_folders[data-account_id="' + accountId + '"]>li[data-folder_id="' + folderId + '"]')
+			$('.mail_folders[data-account_id="' + accountId + '"] li[data-folder_id="' + folderId + '"]')
 				.addClass('active');
 		},
 
@@ -519,7 +520,7 @@ var Mail = {
 		},
 
 		setFolderInactive:function (accountId, folderId) {
-			$('.mail_folders[data-account_id="' + accountId + '"]>li[data-folder_id="' + folderId + '"]')
+			$('.mail_folders[data-account_id="' + accountId + '"] li[data-folder_id="' + folderId + '"]')
 				.removeClass('active');
 		}
 	}

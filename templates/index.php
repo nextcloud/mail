@@ -1,13 +1,11 @@
 <script id="mail-folder-template" type="text/x-handlebars-template">
-	<h2 class="mail_account_email">{{email}}</h2>
-	<ul class="mail_folders with-icon" data-account_id="{{id}}">
-		{{#each folders}}
-		<li data-folder_id="{{id}}"
+	<li data-folder_id="{{id}}"
 		class="
-		{{#if unseen}}unread{{/if}}
-		{{#if specialRole}} special-{{specialRole}}{{/if}}
-		{{#if folders}} collapsible{{/if}}
-		">
+	{{#if unseen}}unread{{/if}}
+	{{#if specialRole}} special-{{specialRole}}{{/if}}
+	{{#if folders}} collapsible{{/if}}
+	{{#if open}} open{{/if}}
+	">
 		<button class="collapse"></button>
 		<a>
 			{{name}}
@@ -16,22 +14,25 @@
 			{{/if}}
 		</a>
 		<ul>
-		{{#each folders}}
+			{{#each folders}}
 			<li data-folder_id="{{id}}"
 				class="
-			{{#if unseen}}unread{{/if}}
-			{{#if specialRole}} special-{{specialRole}}{{/if}}
-			">
+		{{#if unseen}}unread{{/if}}
+		{{#if specialRole}} special-{{specialRole}}{{/if}}
+		">
 				<a>
 					{{name}}
 					{{#if unseen}}
 					<span class="utils">{{unseen}}</span>
 					{{/if}}
 				</a>
-		{{/each}}
+				{{/each}}
 		</ul>
-		</li>
-		{{/each}}
+	</li>
+</script>
+<script id="mail-account-template" type="text/x-handlebars-template">
+	<h2 class="mail_account_email">{{email}}</h2>
+	<ul id="mail_folders" class="mail_folders with-icon" data-account_id="{{id}}">
 	</ul>
 </script>
 <script id="mail-messages-template" type="text/x-handlebars-template">

@@ -150,7 +150,7 @@ class Mailbox {
 	/**
 	 * @return array
 	 */
-	public function getListArray() {
+	public function getListArray($accountId) {
 		$displayName = $this->getDisplayName();
 		try {
 			$status = $this->getStatus();
@@ -165,7 +165,8 @@ class Mailbox {
 				'specialRole' => $specialRole,
 				'unseen' => $unseen,
 				'total' => $total,
-				'isEmpty' => $isEmpty
+				'isEmpty' => $isEmpty,
+				'accountId' => $accountId
 			);
 		} catch (\Horde_Imap_Client_Exception $e) {
 			return array(
@@ -175,7 +176,8 @@ class Mailbox {
 				'unseen' => 0,
 				'total' => 0,
 				'error' => $e->getMessage(),
-				'isEmpty' => true
+				'isEmpty' => true,
+				'accountId' => $accountId
 			);
 		}
 	}
