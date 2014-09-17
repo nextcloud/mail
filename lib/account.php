@@ -191,6 +191,30 @@ class Account {
 		return $this->getSpecialFolder('sent', true);
 	}
 	
+	/**
+	 * @param string $sourceFolderId
+	 * @param int $messageId
+	 */
+	public function deleteMessage($sourceFolderId, $messageId) {
+		
+		// by default we will create a 'Trash' folder if no trash is found
+		$trashId = "Trash";
+		$createTrash = true;
+
+		$trashFolder = $this->getSpecialFolder('trash', true);
+
+		if (empty($trashFolder) === false) {
+			$trashId = $trashFolder->getFolderId();
+			$createTrash = false;
+		}
+
+		$hordeMessageIds = new \Horde_Imap_Client_Ids($messageId);
+		$result = $this->getImapConnection()->copy($sourceFolderId, $trashId, array('create' => $createTrash, 'move' => true, 'ids' => $hordeMessageIds));
+		\OC::$server->getLogger()->info("Message moved to trash: {result}", array('result' => $result));
+		
+
+	}
+	
 	/*
 	 * Get mailbox(es) that have the given special use role
 	 *
