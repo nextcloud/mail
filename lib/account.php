@@ -215,27 +215,28 @@ class Account {
 		if (empty($trashFolder) === false) {
 			$trashId = $trashFolder->getFolderId();
 			$createTrash = false;
+		} else {
+			// no trash -> guess
+			$trashes = array_filter($this->getMailboxes(), function($box) {
+				/**
+				 * @var Mailbox $box
+				 */
+				return (stripos($box->getDisplayName(), 'trash') !== FALSE);
+			});
+			if (!empty($trashes)) {
+				$trashId = array_values($trashes)[0]->getFolderId();
+				$createTrash = false;
+			}
 		}
 
 		$hordeMessageIds = new \Horde_Imap_Client_Ids($messageId);
 		$hordeSourceMailBox = new Horde_Imap_Client_Mailbox($sourceFolderId, true);
 		$hordeTrashMailBox = new Horde_Imap_Client_Mailbox($trashId, true);
-		try {
-			$result = $this->getImapConnection()->copy($hordeSourceMailBox, $hordeTrashMailBox,
-				array('create' => $createTrash, 'move' => true, 'ids' => $hordeMessageIds));
 
-			\OC::$server->getLogger()->info("Message moved to trash: {result}", array('result' => $result));
-		} catch (\Horde_Imap_Client_Exception_ServerResponse $ex) {
-			$error = $ex->getMessage() . PHP_EOL;
-			$error .= $ex->command . PHP_EOL;
-			$error .= $ex->status . PHP_EOL;
-			$error .= $ex->details . PHP_EOL;
+		$result = $this->getImapConnection()->copy($hordeSourceMailBox, $hordeTrashMailBox,
+			array('create' => $createTrash, 'move' => true, 'ids' => $hordeMessageIds));
 
-			\OC::$server->getLogger()->info("Message moved to {trash} failed: {error}",
-				array('trash' => $trashId, 'error' => $error));
-
-			throw;
-		}
+		\OC::$server->getLogger()->info("Message moved to trash: {result}", array('result' => $result));
 	}
 	
 	/*
