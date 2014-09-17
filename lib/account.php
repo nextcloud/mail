@@ -220,10 +220,22 @@ class Account {
 		$hordeMessageIds = new \Horde_Imap_Client_Ids($messageId);
 		$hordeSourceMailBox = new Horde_Imap_Client_Mailbox($sourceFolderId, true);
 		$hordeTrashMailBox = new Horde_Imap_Client_Mailbox($trashId, true);
-		$result = $this->getImapConnection()->copy($hordeSourceMailBox, $hordeTrashMailBox,
-			array('create' => $createTrash, 'move' => true, 'ids' => $hordeMessageIds));
+		try {
+			$result = $this->getImapConnection()->copy($hordeSourceMailBox, $hordeTrashMailBox,
+				array('create' => $createTrash, 'move' => true, 'ids' => $hordeMessageIds));
 
-		\OC::$server->getLogger()->info("Message moved to trash: {result}", array('result' => $result));
+			\OC::$server->getLogger()->info("Message moved to trash: {result}", array('result' => $result));
+		} catch (\Horde_Imap_Client_Exception_ServerResponse $ex) {
+			$error = $ex->getMessage() . PHP_EOL;
+			$error .= $ex->command . PHP_EOL;
+			$error .= $ex->status . PHP_EOL;
+			$error .= $ex->details . PHP_EOL;
+
+			\OC::$server->getLogger()->info("Message moved to {trash} failed: {error}",
+				array('trash' => $trashId, 'error' => $error));
+
+			throw;
+		}
 	}
 	
 	/*
