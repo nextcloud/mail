@@ -28,5 +28,9 @@ models.MessageList = Backbone.Collection.extend({
 models.Folder = Backbone.Model.extend();
 
 models.FolderList = Backbone.Collection.extend({
-	model: models.Folder
+	model: models.Folder,
+
+	comparator: function(folder) {
+		return folder.get("id");
+	}
 });
