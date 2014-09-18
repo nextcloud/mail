@@ -125,6 +125,9 @@ class Mailbox {
 			return $parts[1];
 		}
 
+		if (strtolower($this->mailBox->utf8) === 'inbox') {
+			return ucwords(strtolower($this->mailBox->utf8));
+		}
 		return $this->mailBox->utf8;
 	}
 	
