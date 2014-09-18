@@ -140,6 +140,9 @@ class Mailbox {
 		$parts = explode($this->delimiter, $folderId, 2);
 
 		if (count($parts) > 1) {
+			if (strtolower($parts[0]) === 'inbox') {
+				return ucwords(strtolower($parts[0]));
+			}
 			return $parts[0];
 		}
 
