@@ -24,7 +24,8 @@ views.Folder = Backbone.Marionette.ItemView.extend({
 		e.preventDefault();
 		var accountId = this.model.get('accountId');
 		var folderId = $(e.currentTarget).parent().data('folder_id');
-		Mail.UI.loadMessages(accountId, folderId);
+		var noSelect = $(e.currentTarget).parent().data('no_select');
+		Mail.UI.loadMessages(accountId, folderId, noSelect);
 	}
 });
 
