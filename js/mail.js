@@ -109,11 +109,13 @@ var Mail = {
 				type:'GET',
 				success:function (jsondata) {
 						Mail.State.accounts = jsondata;
-						_.each(Mail.State.accounts, function(a) {
-							Mail.UI.loadFoldersForAccount(a.accountId);
-						});
 						if (jsondata.length === 0) {
 							Mail.UI.addAccount();
+						} else {
+							var firstAccountId = jsondata[0].accountId;
+							_.each(Mail.State.accounts, function(a) {
+								Mail.UI.loadFoldersForAccount(a.accountId, firstAccountId);
+							});
 						}
 					},
 				error: function() {
@@ -123,7 +125,7 @@ var Mail = {
 
 		},
 
-		loadFoldersForAccount : function(accountId) {
+		loadFoldersForAccount : function(accountId, firstAccountId) {
 
 			$('#mail_messages').removeClass('hidden');
 			$('#mail-message').removeClass('hidden');
@@ -131,9 +133,6 @@ var Mail = {
 			$('#folders').removeClass('hidden');
 			$('#mail-setup').addClass('hidden');
 
-			var firstFolder, folderId;
-
-//			Mail.UI.clearFolders();
 			Mail.UI.clearMessages();
 			$('#app-navigation').addClass('icon-loading');
 			$('#mail_messages').addClass('icon-loading');
@@ -148,13 +147,8 @@ var Mail = {
 
 					Mail.State.folderView.collection.add(jsondata);
 
-					firstFolder = $('#app-navigation').find('.mail_folders li');
-
-					if (firstFolder.length > 0) {
-						$('#app-navigation').fadeIn(800);
-						firstFolder = firstFolder.first();
-						folderId = firstFolder.data('folder_id');
-						accountId = firstFolder.parent().parent().data('account_id');
+					if (jsondata.id === firstAccountId) {
+						var folderId = jsondata.folders[0].id;
 
 						Mail.UI.loadMessages(accountId, folderId);
 
@@ -162,8 +156,6 @@ var Mail = {
 						Mail.UI.setFolderActive(accountId, folderId);
 						Mail.State.currentAccountId = accountId;
 						Mail.State.currentFolderId = folderId;
-					} else {
-						$('#app-navigation').fadeOut(800);
 					}
 				},
 				error: function() {
