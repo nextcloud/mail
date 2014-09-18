@@ -250,7 +250,7 @@ class Mailbox {
 		);
 		
 		$lowercaseExplode = explode($this->delimiter, $this->getFolderId(), 2);
-		$lowercaseId = strtolower(reset($lowercaseExplode));
+		$lowercaseId = strtolower(array_pop($lowercaseExplode));
 		$result = null;
 		foreach ($specialFoldersDict as $specialRole => $specialNames) {
 			if (in_array($lowercaseId, $specialNames)) {
