@@ -1,5 +1,5 @@
 <script id="mail-folder-template" type="text/x-handlebars-template">
-	<li data-folder_id="{{id}}"
+	<li data-folder_id="{{id}}" data-no_select="{{noSelect}}"
 		class="
 		{{#if unseen}}unread{{/if}}
 		{{#if specialRole}} special-{{specialRole}}{{/if}}

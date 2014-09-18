@@ -176,6 +176,7 @@ class Mailbox {
 		} catch (\Horde_Imap_Client_Exception $e) {
 			return array(
 				'id' => base64_encode($this->getFolderId()),
+				'parent' => null,
 				'name' => $displayName,
 				'specialRole' => null,
 				'unseen' => 0,

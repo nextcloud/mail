@@ -127,16 +127,14 @@ var Mail = {
 
 		loadFoldersForAccount : function(accountId, firstAccountId) {
 
-			$('#mail_messages').removeClass('hidden');
-			$('#mail-message').removeClass('hidden');
+			$('#mail_messages').removeClass('hidden').addClass('icon-loading');
+			$('#mail-message').removeClass('hidden').addClass('icon-loading');
 			$('#mail_new_message').removeClass('hidden');
 			$('#folders').removeClass('hidden');
 			$('#mail-setup').addClass('hidden');
 
 			Mail.UI.clearMessages();
 			$('#app-navigation').addClass('icon-loading');
-			$('#mail_messages').addClass('icon-loading');
-			$('#mail-message').addClass('icon-loading');
 
 			$.ajax(OC.generateUrl('apps/mail/accounts/{accountId}/folders', {accountId: accountId}), {
 				data:{},
@@ -150,7 +148,7 @@ var Mail = {
 					if (jsondata.id === firstAccountId) {
 						var folderId = jsondata.folders[0].id;
 
-						Mail.UI.loadMessages(accountId, folderId);
+						Mail.UI.loadMessages(accountId, folderId, false);
 
 						// Save current folder
 						Mail.UI.setFolderActive(accountId, folderId);
@@ -207,56 +205,69 @@ var Mail = {
 			);
 		},
 
-		loadMessages:function (accountId, folderId) {
+		loadMessages:function (accountId, folderId, noSelect) {
 			// Set folder active
 			Mail.UI.setFolderInactive(Mail.State.currentAccountId, Mail.State.currentFolderId);
 			Mail.UI.setFolderActive(accountId, folderId);
 			Mail.UI.clearMessages();
-			$('#mail_messages').removeClass('hidden');
+			$('#mail_messages')
+				.removeClass('hidden')
+				.addClass('icon-loading');
 			$('#mail-message').removeClass('hidden');
-			$('#mail_new_message').removeClass('hidden');
+			$('#mail_new_message')
+				.removeClass('hidden')
+				.fadeIn();
 			$('#folders').removeClass('hidden');
 			$('#mail-setup').addClass('hidden');
 
 
-			$('#mail_new_message').fadeIn();
-			$('#mail_messages').addClass('icon-loading');
 			$('#load-new-mail-messages').hide();
 			$('#load-more-mail-messages').hide();
 			$('#emptycontent').hide();
 
-			$.ajax(
-				OC.generateUrl('apps/mail/accounts/{accountId}/folders/{folderId}/messages',
-					{'accountId':accountId, 'folderId':encodeURIComponent(folderId)}), {
-					data: {},
-					type:'GET',
-					success: function (jsondata) {
-						Mail.State.currentAccountId = accountId;
-						Mail.State.currentFolderId = folderId;
-						Mail.UI.setMessageActive(null);
-						$('#mail_messages').removeClass('icon-loading');
-						if(jsondata.length > 0) {
-							Mail.UI.addMessages(jsondata);
-							var messageId = jsondata[0].id;
-							Mail.UI.openMessage(messageId);
-							$('#load-more-mail-messages').fadeIn().css('display','block');
-						} else {
-							$('#emptycontent').show();
-							$('#mail-message').removeClass('icon-loading');
+			if (noSelect) {
+				$('#emptycontent').show();
+				$('#mail-message').removeClass('icon-loading');
+				Mail.State.currentAccountId = accountId;
+				Mail.State.currentFolderId = folderId;
+				Mail.UI.setMessageActive(null);
+				$('#mail_messages').removeClass('icon-loading');
+			} else {
+				$.ajax(
+					OC.generateUrl('apps/mail/accounts/{accountId}/folders/{folderId}/messages',
+						{'accountId':accountId, 'folderId':encodeURIComponent(folderId)}), {
+						data: {},
+						type:'GET',
+						success: function (jsondata) {
+							Mail.State.currentAccountId = accountId;
+							Mail.State.currentFolderId = folderId;
+							Mail.UI.setMessageActive(null);
+							$('#mail_messages').removeClass('icon-loading');
+							if(jsondata.length > 0) {
+								Mail.UI.addMessages(jsondata);
+								var messageId = jsondata[0].id;
+								Mail.UI.openMessage(messageId);
+								$('#load-more-mail-messages').fadeIn().css('display','block');
+							} else {
+								$('#emptycontent').show();
+								$('#mail-message').removeClass('icon-loading');
+							}
+							$('#load-new-mail-messages')
+								.fadeIn()
+								.css('display','block')
+								.prop('disabled', false);
+
+						},
+						error: function() {
+
+							// Set the old folder as being active
+							Mail.UI.setFolderInactive(accountId, folderId);
+							Mail.UI.setFolderActive(Mail.State.currentAccountId, Mail.State.currentFolderId);
+
+							Mail.UI.showError(t('mail', 'Error while loading messages.'));
 						}
-						$('#load-new-mail-messages').fadeIn().css('display','block');
-						$('#load-new-mail-messages').prop('disabled', false);
-
-					},
-					error: function() {
-
-						// Set the old folder as being active
-						Mail.UI.setFolderInactive(accountId, folderId);
-						Mail.UI.setFolderActive(Mail.State.currentAccountId, Mail.State.currentFolderId);
-
-						Mail.UI.showError(t('mail', 'Error while loading messages.'));
-					}
-				});
+					});
+			}
 		},
 
 		deleteMessage:function (messageId) {
