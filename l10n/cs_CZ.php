@@ -30,6 +30,7 @@ $TRANSLATIONS = array(
 "Send" => "Odeslat",
 "Creating account failed: " => "Vytvoření účtu selhalo:",
 "Auto detect failed. Please use manual mode." => "Autodetekce selhala. Prosím použijte ruční nastavení.",
+"from" => "z",
 "+ cc/bcc" => "+cc/bcc",
 "to" => "do",
 "cc" => "cc",

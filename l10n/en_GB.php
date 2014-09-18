@@ -30,6 +30,7 @@ $TRANSLATIONS = array(
 "Send" => "Send",
 "Creating account failed: " => "Creating account failed: ",
 "Auto detect failed. Please use manual mode." => "Auto detect failed. Please use manual mode.",
+"from" => "from",
 "+ cc/bcc" => "+ cc/bcc",
 "to" => "to",
 "cc" => "cc",

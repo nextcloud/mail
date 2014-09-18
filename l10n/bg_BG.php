@@ -30,6 +30,7 @@ $TRANSLATIONS = array(
 "Send" => "Изпрати",
 "Creating account failed: " => "Създаване на профила неуспешно:",
 "Auto detect failed. Please use manual mode." => "Неуспешни автоматични настройки. Моля, използвай ръчен режим.",
+"from" => "от",
 "+ cc/bcc" => "+ cc/bcc",
 "to" => "до",
 "cc" => "cc",

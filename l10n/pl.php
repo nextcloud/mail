@@ -30,6 +30,7 @@ $TRANSLATIONS = array(
 "Send" => "Wyślij",
 "Creating account failed: " => "Utworzenie konta nie powiodło się:",
 "Auto detect failed. Please use manual mode." => "Autowykrywanie nie powiodło się. Proszę użyć trybu ręcznego.",
+"from" => "z",
 "+ cc/bcc" => "+ cc/bcc",
 "to" => "do",
 "cc" => "cc",

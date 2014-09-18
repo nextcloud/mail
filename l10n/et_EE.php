@@ -30,6 +30,7 @@ $TRANSLATIONS = array(
 "Send" => "Saada",
 "Creating account failed: " => "Konto loomine ebaõnnestus:",
 "Auto detect failed. Please use manual mode." => "Automaatne tuvastus ebaõnnestus. Palun proovi käsitsi.",
+"from" => "alates",
 "+ cc/bcc" => "+ cc/bcc",
 "to" => "kuni",
 "cc" => "cc",

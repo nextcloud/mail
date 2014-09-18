@@ -28,6 +28,7 @@ $TRANSLATIONS = array(
 "Send" => "Envoyer",
 "Creating account failed: " => "La création du compte a échoué :",
 "Auto detect failed. Please use manual mode." => "L'auto-détection a échoué. Veuillez utiliser le mode manuel.",
+"from" => "de",
 "to" => "à",
 "Subject" => "Sujet",
 "Message …" => "Message ...",

@@ -22,6 +22,7 @@ $TRANSLATIONS = array(
 "Check mail" => "Comprobar corréu",
 "Send" => "Unviar",
 "Auto detect failed. Please use manual mode." => "Falló l'autodeteición. Por favor, usa el mou manual.",
+"from" => "Dende",
 "+ cc/bcc" => "+ cc/cct",
 "to" => "hasta",
 "cc" => "cc",

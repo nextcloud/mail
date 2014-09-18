@@ -30,6 +30,7 @@ $TRANSLATIONS = array(
 "Send" => "Pošlji",
 "Creating account failed: " => "Ustvarjanje računa je spodletelo:",
 "Auto detect failed. Please use manual mode." => "Samodejno zaznavanje je spodletelo. Zaznavo bo treba izvesti ročno.",
+"from" => "od",
 "+ cc/bcc" => "+ kp/skp",
 "to" => "za",
 "cc" => "kp",
