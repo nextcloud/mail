@@ -20,7 +20,7 @@
 		{{#if unseen}}unread{{/if}}
 		{{#if specialRole}} special-{{specialRole}}{{/if}}
 		">
-				<a>
+				<a{{#if specialRole}} class="icon-{{specialRole}}"{{/if}}>
 					{{name}}
 					{{#if unseen}}
 					<span class="utils">{{unseen}}</span>
