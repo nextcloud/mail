@@ -224,7 +224,8 @@ class Account {
 				return (stripos($box->getDisplayName(), 'trash') !== FALSE);
 			});
 			if (!empty($trashes)) {
-				$trashId = array_values($trashes)[0]->getFolderId();
+				$trashId = array_values($trashes);
+				$trashId = $trashId[0]->getFolderId();
 				$createTrash = false;
 			}
 		}
