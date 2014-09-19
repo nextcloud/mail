@@ -212,6 +212,7 @@ button.control {
 	width: 55%;
 	margin-left: 37px;
 	padding-bottom: 0;
+	opacity: .5;
 }
 
 .mail_message_summary_subject {
