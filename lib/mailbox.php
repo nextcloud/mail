@@ -20,10 +20,19 @@ class Mailbox {
 	 */
 	private $conn;
 
+	/**
+	 * @var array
+	 */
 	private $attributes;
 
+	/**
+	 * @var string
+	 */
 	private $specialRole;
 
+	/**
+	 * @var string
+	 */
 	private $delimiter;
 
 	/**
