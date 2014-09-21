@@ -33,6 +33,11 @@ class Mailbox {
 	/**
 	 * @var string
 	 */
+	private $displayName;
+
+	/**
+	 * @var string 
+	 */
 	private $delimiter;
 
 	/**
@@ -55,6 +60,7 @@ class Mailbox {
 		if ($this->specialRole === null) {
 			$this->guessSpecialRole();
 		}
+		$this->makeDisplayName();
 	}
 
 	public function getMessages($from = 0, $count = 2) {
@@ -124,22 +130,20 @@ class Mailbox {
 		return $status['messages'];
 	}
 
-	/**
-	 * @return string
-	 */
-	public function getDisplayName() {
+	protected function makeDisplayName() {
 		$parts = explode($this->delimiter, $this->mailBox->utf8, 2);
 
 		if (count($parts) > 1) {
-			return $parts[1];
+			$displayName = $parts[1];
+		} elseif (strtolower($this->mailBox->utf8) === 'inbox') {
+			$displayName = 'Inbox';
+		} else {
+			$displayName = $this->mailBox->utf8;
 		}
 
-		if (strtolower($this->mailBox->utf8) === 'inbox') {
-			return ucwords(strtolower($this->mailBox->utf8));
-		}
-		return $this->mailBox->utf8;
+		$this->displayName = $displayName;
 	}
-	
+
 	public function getFolderId() {
 		return $this->mailBox->utf7imap;
 	}
@@ -160,6 +164,14 @@ class Mailbox {
 
 	public function getSpecialRole() {
 		return $this->specialRole;
+	}
+
+	public function getDisplayName() {
+		return $this->displayName;
+	}
+
+	public function setDisplayName($displayName) {
+		$this->displayName = $displayName;
 	}
 
 	/**

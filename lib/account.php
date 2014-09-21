@@ -132,6 +132,7 @@ class Account {
 		if ($this->mailboxes === null) {
 			$this->mailboxes = $this->listMailboxes();
 			$this->sortMailboxes();
+			$this->localizeSpecialMailboxes();
 		}
 
 		return $this->mailboxes;
@@ -276,6 +277,18 @@ class Account {
 			return $maxFolder;
 		} else {
 			return $specialFolders;
+		}
+	}
+
+	protected function localizeSpecialMailboxes() {
+
+		$mailboxes = $this->getMailboxes();
+		$specialIds = $this->getSpecialFoldersIds();
+		$l = new \OC_L10N('mail');
+		foreach ($mailboxes as $i => $mailbox) {
+			if (in_array($mailbox->getFolderId(), $specialIds) === true) {
+				$mailboxes[$i]->setDisplayName($l->t(ucwords($mailbox->getSpecialRole())));
+			}
 		}
 	}
 
