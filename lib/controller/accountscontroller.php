@@ -22,6 +22,7 @@
 
 namespace OCA\Mail\Controller;
 
+use Horde_Imap_Client;
 use Horde_Mail_Rfc822_Address;
 use OCA\Mail\Account;
 use OCA\Mail\Db\MailAccount;
@@ -207,6 +208,7 @@ class AccountsController extends Controller
 		// in reply to handling
 		$folderId = base64_decode($this->params('folderId'));
 		$messageId = $this->params('messageId');
+		$mailbox = null;
 		if (!is_null($folderId) && !is_null($messageId)) {
 			$mailbox = $account->getMailbox($folderId);
 			$message = $mailbox->getMessage($messageId);
@@ -250,9 +252,14 @@ class AccountsController extends Controller
 			$transport = $account->createTransport();
 			$mail->send($transport);
 
+			// in case of reply we flag the message as answered
+			if ($mailbox) {
+				$mailbox->setMessageFlag($messageId, Horde_Imap_Client::FLAG_ANSWERED, true);
+			}
+
+			// save the message in the sent folder
 			$sentFolder = $account->getSentFolder();
 			$raw = stream_get_contents($mail->getRaw());
-
 			$sentFolder->saveMessage($raw);
 
 		} catch (\Horde_Exception $ex) {
@@ -261,10 +268,6 @@ class AccountsController extends Controller
 				Http::STATUS_INTERNAL_SERVER_ERROR
 			);
 		}
-
-		//
-		// TODO: remove from drafts folder as well
-		//
 
 		return new JSONResponse();
 	}
