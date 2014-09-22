@@ -280,8 +280,23 @@ class Account {
 		}
 	}
 
+	/**
+	 *  Localizes the name of the special use folders
+	 *
+	 *  The display name of the best candidate folder for each special use
+	 *  is localized to the user's language
+	 */
 	protected function localizeSpecialMailboxes() {
 
+		/*
+		 * t('Inbox')
+		 * t('Sent')
+		 * t('Drafts')
+		 * t('Archive')
+		 * t('Junk')
+		 * t('Flagged')
+		 * t('All')
+		 */
 		$mailboxes = $this->getMailboxes();
 		$specialIds = $this->getSpecialFoldersIds();
 		$l = new \OC_L10N('mail');
