@@ -14,6 +14,12 @@ views.Message = Backbone.Marionette.ItemView.extend({
 		// nesting elements during re-render.
 		this.$el.unwrap();
 		this.setElement(this.$el);
+
+		var displayName = this.model.get('from');
+		_.each(this.$el.find('.avatar'), function(a) {
+			$(a).height('32px');
+			$(a).imageplaceholder(displayName, displayName);
+		});
 	}
 
 });
@@ -36,6 +42,16 @@ views.Messages = Backbone.Marionette.CompositeView.extend({
 
 	initialize: function() {
 		this.collection = new models.MessageList();
+	},
+
+	setMessageFlag: function(messageId, flag, val) {
+		val = val || true;
+		var message = this.collection.get(messageId);
+		if (message) {
+			message
+				.get('flags')
+				.set(flag, val);
+		}
 	},
 
 	loadNew: function() {
@@ -82,10 +98,10 @@ views.Messages = Backbone.Marionette.CompositeView.extend({
 					// Add messages
 					Mail.State.messageView.collection.add(jsondata);
 
-					_.each($('.avatar'), function(a) {
-							$(a).imageplaceholder($(a).data('user'), $(a).data('user'));
-						}
-					);
+					//_.each($('.avatar'), function(a) {
+					//		$(a).imageplaceholder($(a).data('user'), $(a).data('user'));
+					//	}
+					//);
 					$('#app-content').removeClass('icon-loading');
 
 					Mail.State.currentMessageId = null;

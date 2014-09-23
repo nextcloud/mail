@@ -70,6 +70,7 @@ $(function () {
 		replyMessageSend.val(t('mail', 'Sending …'));
 		var to = $('.reply-message-fields #to');
 		var cc = $('.reply-message-fields #cc');
+		var messageId = Mail.State.currentMessageId;
 
 		to.prop('disabled', true);
 		cc.prop('disabled', true);
@@ -90,11 +91,12 @@ $(function () {
 				to: to.val(),
 				cc: cc.val(),
 				folderId: Mail.State.currentFolderId,
-				messageId: Mail.State.currentMessageId,
+				messageId: messageId,
 				body:replyMessageBody.val()
 			},
 			type: 'POST',
 			success:function () {
+				Mail.State.messageView.setMessageFlag(messageId, 'answered');
 				OC.msg.finishedAction('#reply-msg', {
 					status: 'success',
 					data: {

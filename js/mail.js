@@ -82,6 +82,7 @@ var Mail = {
 				return Handlebars.compile(rawTemplate);
 			};
 			Marionette.ItemView.prototype.modelEvents = { "change" : "render"};
+			Marionette.CompositeView.prototype.modelEvents = { "change" : "render"};
 
 			// ask to handle all mailto: links
 			if(window.navigator.registerProtocolHandler) {
@@ -103,6 +104,8 @@ var Mail = {
 				el: $('#folders')
 			});
 			Mail.State.folderView.render();
+
+			//Mail.State.folderView.listenTo();
 
 			$.ajax(OC.generateUrl('apps/mail/accounts'), {
 				data:{},
@@ -186,12 +189,6 @@ var Mail = {
 				.addClass('icon-loading');
 		},
 
-		clearFolders:function () {
-			var list = $('.mail_folders');
-
-			list.empty();
-		},
-
 		hideMenu:function () {
 			$('#new-message').addClass('hidden');
 		},
@@ -199,10 +196,10 @@ var Mail = {
 		addMessages:function (data) {
 			Mail.State.messageView.collection.add(data);
 
-			_.each($('.avatar'), function(a) {
-				$(a).imageplaceholder($(a).data('user'), $(a).data('user'));
-			}
-			);
+			//_.each($('.avatar'), function(a) {
+			//	$(a).imageplaceholder($(a).data('user'), $(a).data('user'));
+			//}
+			//);
 		},
 
 		loadMessages:function (accountId, folderId, noSelect) {
@@ -502,8 +499,8 @@ var Mail = {
 			// Set active class for current message and remove it from old one
 
 			if(Mail.State.currentMessageId !== null) {
-				$('#mail-message-summary-'+Mail.State.currentMessageId)
-					.removeClass('active');
+				//$('#mail-message-summary-'+Mail.State.currentMessageId).removeClass('active');
+				Mail.State.messageView.setMessageFlag(messageId, 'unseen', false);
 			}
 
 			Mail.State.currentMessageId = messageId;
@@ -518,10 +515,8 @@ var Mail = {
 			$('#mail_messages').addClass('hidden');
 			$('#mail-message').addClass('hidden');
 			$('#mail_new_message').addClass('hidden');
-//			$('#folders').addClass('hidden');
 			$('#app-navigation').removeClass('icon-loading');
 
-//			Mail.UI.clearFolders();
 			Mail.UI.hideMenu();
 
 			$('#mail-setup').removeClass('hidden');

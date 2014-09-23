@@ -19,7 +19,39 @@ models.Attachments = Backbone.Collection.extend({
 	model: models.Attachment
 });
 
-models.Message = Backbone.Model.extend();
+models.MessageFlags = Backbone.Model.extend({
+	defaults: {
+		answered: false
+	}
+});
+
+models.Message = Backbone.Model.extend({
+	defaults: {
+		flags: []
+	},
+
+	initialize: function() {
+		this.set('flags', new models.MessageFlags(this.get('flags')));
+		this.listenTo(this.get('flags'), 'change', this._transformEvent);
+	},
+
+	_transformEvent: function(flags) {
+		this.trigger('change');
+		this.trigger('change:flags', flags);
+	},
+
+	// Custom toJSON
+	toJSON: function() {
+		var data = Backbone.Model.prototype.toJSON.call(this);
+		if (data.flags && data.flags.toJSON) {
+			data.flags = data.flags.toJSON();
+		}
+		if (!data.id) {
+			data.id = this.cid;
+		}
+		return data;
+	}
+});
 
 models.MessageList = Backbone.Collection.extend({
 	model: models.Message
