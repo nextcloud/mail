@@ -35,12 +35,11 @@ models.Message = Backbone.Model.extend({
 		this.listenTo(this.get('flags'), 'change', this._transformEvent);
 	},
 
-	_transformEvent: function(flags) {
+	_transformEvent: function() {
 		this.trigger('change');
-		this.trigger('change:flags', flags);
+		this.trigger('change:flags', this);
 	},
 
-	// Custom toJSON
 	toJSON: function() {
 		var data = Backbone.Model.prototype.toJSON.call(this);
 		if (data.flags && data.flags.toJSON) {
@@ -72,7 +71,24 @@ models.FolderList = Backbone.Collection.extend({
 });
 
 models.Account = Backbone.Model.extend({
-	folders: models.FolderList
+	defaults: {
+		folders: []
+	},
+
+	initialize: function() {
+		this.set('folders', new models.FolderList(this.get('folders')));
+	},
+
+	toJSON: function() {
+		var data = Backbone.Model.prototype.toJSON.call(this);
+		if (data.folders && data.folders.toJSON) {
+			data.folders = data.folders.toJSON();
+		}
+		if (!data.id) {
+			data.id = this.cid;
+		}
+		return data;
+	}
 });
 
 models.AccountList = Backbone.Collection.extend({

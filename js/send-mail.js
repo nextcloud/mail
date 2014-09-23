@@ -96,7 +96,7 @@ $(function () {
 			},
 			type: 'POST',
 			success:function () {
-				Mail.State.messageView.setMessageFlag(messageId, 'answered');
+				Mail.State.messageView.setMessageFlag(messageId, 'answered', true);
 				OC.msg.finishedAction('#reply-msg', {
 					status: 'success',
 					data: {

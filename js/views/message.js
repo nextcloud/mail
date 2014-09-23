@@ -1,4 +1,4 @@
-/* global Backbone, Handlebars, Mail, models */
+/* global Backbone, Mail, models */
 
 var views = views || {};
 
@@ -42,10 +42,14 @@ views.Messages = Backbone.Marionette.CompositeView.extend({
 
 	initialize: function() {
 		this.collection = new models.MessageList();
+		this.collection.on('change:flags', this.changeFlags, this);
+	},
+
+	changeFlags: function(model) {
+		this.trigger('change:flags', model);
 	},
 
 	setMessageFlag: function(messageId, flag, val) {
-		val = val || true;
 		var message = this.collection.get(messageId);
 		if (message) {
 			message

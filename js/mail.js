@@ -105,7 +105,8 @@ var Mail = {
 			});
 			Mail.State.folderView.render();
 
-			//Mail.State.folderView.listenTo();
+			Mail.State.folderView.listenTo(Mail.State.messageView, 'change:flags',
+				Mail.State.folderView.changeMessageFlags);
 
 			$.ajax(OC.generateUrl('apps/mail/accounts'), {
 				data:{},
@@ -445,8 +446,8 @@ var Mail = {
 						mailBody
 							.html(html)
 							.removeClass('icon-loading');
-						$('#mail-message-summary-' + messageId)
-							.removeClass('unseen');
+						//$('#mail-message-summary-' + messageId).removeClass('unseen');
+						Mail.State.messageView.setMessageFlag(messageId, 'unseen', false);
 
 						// HTML mail rendering
 						$('iframe').load(function() {
@@ -499,8 +500,7 @@ var Mail = {
 			// Set active class for current message and remove it from old one
 
 			if(Mail.State.currentMessageId !== null) {
-				//$('#mail-message-summary-'+Mail.State.currentMessageId).removeClass('active');
-				Mail.State.messageView.setMessageFlag(messageId, 'unseen', false);
+				$('#mail-message-summary-'+Mail.State.currentMessageId).removeClass('active');
 			}
 
 			Mail.State.currentMessageId = messageId;

@@ -52,7 +52,7 @@ views.Account = Backbone.Marionette.CompositeView.extend({
 
 	initialize: function(options) {
 		this.model = options.model;
-		this.collection = new models.FolderList(this.model.get('folders'));
+		this.collection = this.model.get('folders');
 	}
 
 });
@@ -66,6 +66,24 @@ views.Folders = Backbone.Marionette.CollectionView.extend({
 
 	initialize: function() {
 		this.collection = new models.AccountList();
+	},
+
+	changeMessageFlags: function(model) {
+		var unseen = model.get('flags').get('unseen');
+		var prevUnseen = model._previousAttributes.flags.unseen;
+		if (unseen === prevUnseen) {
+			return;
+		}
+		// TODO: currentFolderId and currentAccountId should be an attribute of this view
+		var activeAccount = Mail.State.currentAccountId;
+		var activeFolder = Mail.State.currentFolderId;
+		activeAccount = this.collection.get(activeAccount);
+		activeFolder = activeAccount.get('folders').get(activeFolder);
+		if (unseen) {
+			activeFolder.set('unseen', activeFolder.get('unseen') + 1);
+		} else {
+			activeFolder.set('unseen', activeFolder.get('unseen') - 1);
+		}
 	}
 
 });
