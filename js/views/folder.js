@@ -26,16 +26,6 @@ views.Folder = Backbone.Marionette.ItemView.extend({
 		var folderId = $(e.currentTarget).parent().data('folder_id');
 		var noSelect = $(e.currentTarget).parent().data('no_select');
 		Mail.UI.loadMessages(accountId, folderId, noSelect);
-	},
-
-	onRender: function() {
-		// Get rid of that pesky wrapping-div.
-		// Assumes 1 child element present in template.
-		this.$el = this.$el.children();
-		// Unwrap the element to prevent infinitely
-		// nesting elements during re-render.
-		this.$el.unwrap();
-		this.setElement(this.$el);
 	}
 });
 
