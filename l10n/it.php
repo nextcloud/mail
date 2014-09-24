@@ -65,7 +65,6 @@ $TRANSLATIONS = array(
 "SMTP SSL mode" => "Modalità SSL SMTP",
 "SMTP User" => "Utente SMTP",
 "SMTP Password" => "Password SMTP",
-"Forwarding you to %s" => "Sarai inoltrato a %s",
 "Redirect Warning" => "Avviso di redirezione",
 "The previous page is sending you to %s." => "La pagina precedente ti sta inviando su %s.",
 "If you do not want to visit that page, you can return to <a href=\"%s\">the mail app</a>." => "Se non vuoi visitare tale pagina, puoi tornare all'<a href=\"%s\">applicazione di posta</a>.",

@@ -2,6 +2,7 @@
 $TRANSLATIONS = array(
 "Mail" => "Correio",
 "Error while loading the accounts." => "Erro a carregar as contas.",
+"you" => "Você",
 "Error while loading the selected account." => "Erro a carregar a conta seleccionada.",
 "Error while loading messages." => "Erro durante o carregamento das mensagens.",
 "Error while deleting mail." => "Erro durante a eliminação de correio.",
@@ -48,6 +49,7 @@ $TRANSLATIONS = array(
 "Forward" => "Para a frente",
 "New Mail Account" => "Nova conta de correio ",
 "Check mail …" => "verificar correio",
+"No mail in this folder!" => "Nenhum email nesta pasta",
 "New Message" => "Nova Mensagem",
 "Connect your mail account" => "Ligar à sua conta de correio",
 "Name" => "Nome",
@@ -63,7 +65,6 @@ $TRANSLATIONS = array(
 "SMTP SSL mode" => "Modo SMTP SSL",
 "SMTP User" => "Utilizador SMTP",
 "SMTP Password" => "Password SMTP",
-"Forwarding you to %s" => "A redireccionar para %s",
 "Redirect Warning" => "Redirecionar Aviso",
 "The previous page is sending you to %s." => "A página anterior está a envia-lo para %s.",
 "If you do not want to visit that page, you can return to <a href=\"%s\">the mail app</a>." => "Se não quer visitar a pagina, voçê pode voltar para <a href=\"%s\">a aplicação de mail</a>.",

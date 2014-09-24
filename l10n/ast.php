@@ -51,7 +51,6 @@ $TRANSLATIONS = array(
 "SMTP SSL mode" => "Mou SMTP SSL",
 "SMTP User" => "Usuariu SMTP",
 "SMTP Password" => "Contraseña SMTP",
-"Forwarding you to %s" => "Redirixiéndote a %s",
 "Redirect Warning" => "Avisu de Redireición",
 "The previous page is sending you to %s." => "La páxina anterior ta dirixiéndote a %s.",
 "If you do not want to visit that page, you can return to <a href=\"%s\">the mail app</a>." => "Si nun quies dir a esta páxina, pues volver a <a href=\"%s\">l'aplicación de corréu</a>.",

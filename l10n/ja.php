@@ -63,7 +63,6 @@ $TRANSLATIONS = array(
 "SMTP SSL mode" => "SMTP SSLモード",
 "SMTP User" => "SMTPユーザー",
 "SMTP Password" => "SMTP パスワード",
-"Forwarding you to %s" => "%s へ転送します。",
 "Redirect Warning" => "リダイレクト警告",
 "The previous page is sending you to %s." => "前のページを%sに送信しています。",
 "If you do not want to visit that page, you can return to <a href=\"%s\">the mail app</a>." => "ページを開きたくない場合は、<a href=\"%s\">メールアプリ</a> に戻ることができます。",

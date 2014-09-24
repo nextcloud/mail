@@ -65,7 +65,6 @@ $TRANSLATIONS = array(
 "SMTP SSL mode" => "SMTP SSL kipi",
 "SMTP User" => "SMTP Kullanıcısı",
 "SMTP Password" => "SMTP Parolası",
-"Forwarding you to %s" => "%s sitesine yönlendiriliyorsunuz",
 "Redirect Warning" => "Yönlendirme Uyarısı",
 "The previous page is sending you to %s." => "Önceki sayfa sizi %s sayfasına yönlendiriyor.",
 "If you do not want to visit that page, you can return to <a href=\"%s\">the mail app</a>." => "Bu sayfayı ziyaret etmek istemiyorsanız, <a href=\"%s\">posta uygulamasına</a> geri dönebilirsiniz.",
