@@ -181,13 +181,16 @@ class Account {
 	 * 
 	 * @return array In the form array(<special use>=><folder id>, ...)
 	 */
-	public function getSpecialFoldersIds() {
+	public function getSpecialFoldersIds($base64_encode=true) {
 		$folderRoles = array('inbox', 'sent', 'drafts', 'trash', 'archive', 'junk', 'flagged', 'all');
 		$specialFoldersIds = array();
 		
 		foreach ($folderRoles as $role) {
 			$folder = $this->getSpecialFolder($role, true);
-			$specialFoldersIds[$role] = empty($folder) ? null : base64_encode($folder->getFolderId());
+			$specialFoldersIds[$role] = empty($folder) ? null : $folder->getFolderId();
+			if ($specialFoldersIds[$role] !== null && $base64_encode === true) {
+				$specialFoldersIds[$role] = base64_encode($specialFoldersIds[$role]);
+			}
 		}
 		return $specialFoldersIds;
 	}
@@ -298,11 +301,11 @@ class Account {
 		 * t('All')
 		 */
 		$mailboxes = $this->getMailboxes();
-		$specialIds = $this->getSpecialFoldersIds();
+		$specialIds = $this->getSpecialFoldersIds(false);
 		$l = new \OC_L10N('mail');
 		foreach ($mailboxes as $i => $mailbox) {
 			if (in_array($mailbox->getFolderId(), $specialIds) === true) {
-				$mailboxes[$i]->setDisplayName($l->t(ucwords($mailbox->getSpecialRole())));
+				$mailboxes[$i]->setDisplayName((string)$l->t(ucwords($mailbox->getSpecialRole())));
 			}
 		}
 	}
