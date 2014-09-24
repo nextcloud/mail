@@ -7,7 +7,7 @@
 		{{#if open}} open{{/if}}
 		">
 		{{#if folders}}<button class="collapse"></button>{{/if}}
-		<a{{#if specialRole}} class="icon-{{specialRole}}"{{/if}}>
+		<a class="folder {{#if specialRole}} icon-{{specialRole}}{{/if}}">
 			{{name}}
 			{{#if unseen}}
 			<span class="utils">{{unseen}}</span>
@@ -20,7 +20,7 @@
 		{{#if unseen}}unread{{/if}}
 		{{#if specialRole}} special-{{specialRole}}{{/if}}
 		">
-				<a{{#if specialRole}} class="icon-{{specialRole}}"{{/if}}>
+				<a class="folder {{#if specialRole}} icon-{{specialRole}}{{/if}}">
 					{{name}}
 					{{#if unseen}}
 					<span class="utils">{{unseen}}</span>
