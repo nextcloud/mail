@@ -230,7 +230,7 @@ class AutoConfig {
 		$url = 'https://autoconfig.thunderbird.net/v1.1/'.$domain;
 		try {
 			$xml = @simplexml_load_file($url);
-			if (is_null($xml) || !$xml->emailProvider) {
+			if (!is_object($xml) || !$xml->emailProvider) {
 				return array();
 			}
 			$provider = array(
