@@ -298,7 +298,7 @@ class Account {
 			// TRANSLATORS: translated mail box name
 			'sent'    => $l->t('Sent'),
 			// TRANSLATORS: translated mail box name
-			'drafts'  => $l->t('Draft'),
+			'drafts'  => $l->t('Drafts'),
 			// TRANSLATORS: translated mail box name
 			'archive' => $l->t('Archive'),
 			// TRANSLATORS: translated mail box name
