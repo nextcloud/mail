@@ -132,6 +132,7 @@ class Account {
 		if ($this->mailboxes === null) {
 			$this->mailboxes = $this->listMailboxes();
 			$this->sortMailboxes();
+			$this->localizeSpecialMailboxes();
 		}
 
 		return $this->mailboxes;
@@ -180,13 +181,16 @@ class Account {
 	 * 
 	 * @return array In the form array(<special use>=><folder id>, ...)
 	 */
-	public function getSpecialFoldersIds() {
+	public function getSpecialFoldersIds($base64_encode=true) {
 		$folderRoles = array('inbox', 'sent', 'drafts', 'trash', 'archive', 'junk', 'flagged', 'all');
 		$specialFoldersIds = array();
 		
 		foreach ($folderRoles as $role) {
 			$folder = $this->getSpecialFolder($role, true);
-			$specialFoldersIds[$role] = empty($folder) ? null : base64_encode($folder->getFolderId());
+			$specialFoldersIds[$role] = empty($folder) ? null : $folder->getFolderId();
+			if ($specialFoldersIds[$role] !== null && $base64_encode === true) {
+				$specialFoldersIds[$role] = base64_encode($specialFoldersIds[$role]);
+			}
 		}
 		return $specialFoldersIds;
 	}
@@ -276,6 +280,33 @@ class Account {
 			return $maxFolder;
 		} else {
 			return $specialFolders;
+		}
+	}
+
+	/**
+	 *  Localizes the name of the special use folders
+	 *
+	 *  The display name of the best candidate folder for each special use
+	 *  is localized to the user's language
+	 */
+	protected function localizeSpecialMailboxes() {
+
+		/*
+		 * t('Inbox')
+		 * t('Sent')
+		 * t('Drafts')
+		 * t('Archive')
+		 * t('Junk')
+		 * t('Flagged')
+		 * t('All')
+		 */
+		$mailboxes = $this->getMailboxes();
+		$specialIds = $this->getSpecialFoldersIds(false);
+		$l = new \OC_L10N('mail');
+		foreach ($mailboxes as $i => $mailbox) {
+			if (in_array($mailbox->getFolderId(), $specialIds) === true) {
+				$mailboxes[$i]->setDisplayName((string)$l->t(ucwords($mailbox->getSpecialRole())));
+			}
 		}
 	}
 
