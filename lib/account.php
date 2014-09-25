@@ -291,21 +291,31 @@ class Account {
 	 */
 	protected function localizeSpecialMailboxes() {
 
-		/*
-		 * t('Inbox')
-		 * t('Sent')
-		 * t('Drafts')
-		 * t('Archive')
-		 * t('Junk')
-		 * t('Flagged')
-		 * t('All')
-		 */
+		$l = new \OC_L10N('mail');
+		$map = array(
+			// TRANSLATORS: translated mail box name
+			'inbox'   => $l->t('Inbox'),
+			// TRANSLATORS: translated mail box name
+			'sent'    => $l->t('Sent'),
+			// TRANSLATORS: translated mail box name
+			'drafts'  => $l->t('Draft'),
+			// TRANSLATORS: translated mail box name
+			'archive' => $l->t('Archive'),
+			// TRANSLATORS: translated mail box name
+			'trash'   => $l->t('Trash'),
+			// TRANSLATORS: translated mail box name
+			'junk'    => $l->t('Junk'),
+			// TRANSLATORS: translated mail box name
+			'all'     => $l->t('All')
+		);
 		$mailboxes = $this->getMailboxes();
 		$specialIds = $this->getSpecialFoldersIds(false);
-		$l = new \OC_L10N('mail');
 		foreach ($mailboxes as $i => $mailbox) {
 			if (in_array($mailbox->getFolderId(), $specialIds) === true) {
-				$mailboxes[$i]->setDisplayName((string)$l->t(ucwords($mailbox->getSpecialRole())));
+				if (isset($map[$mailbox->getSpecialRole()])) {
+					$translatedDisplayName = $map[$mailbox->getSpecialRole()];
+					$mailboxes[$i]->setDisplayName((string)$translatedDisplayName);
+				}
 			}
 		}
 	}
