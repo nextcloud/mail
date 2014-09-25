@@ -36,7 +36,7 @@
 	</ul>
 </script>
 <script id="mail-messages-template" type="text/x-handlebars-template">
-	<div id="mail-message-summary-{{id}}" class="mail_message_summary {{#if flags.unseen}}unseen{{/if}}" data-message-id="{{id}}">
+	<div id="mail-message-summary-{{id}}" class="mail_message_summary {{#if flags.unseen}}unseen{{/if}} {{#if active}}active{{/if}}" data-message-id="{{id}}">
 		<div class="mail-message-header">
 			<div class="sender-image">
 				{{#if senderImage}}

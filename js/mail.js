@@ -196,11 +196,6 @@ var Mail = {
 
 		addMessages:function (data) {
 			Mail.State.messageView.collection.add(data);
-
-			//_.each($('.avatar'), function(a) {
-			//	$(a).imageplaceholder($(a).data('user'), $(a).data('user'));
-			//}
-			//);
 		},
 
 		loadMessages:function (accountId, folderId, noSelect) {
@@ -446,7 +441,7 @@ var Mail = {
 						mailBody
 							.html(html)
 							.removeClass('icon-loading');
-						//$('#mail-message-summary-' + messageId).removeClass('unseen');
+
 						Mail.State.messageView.setMessageFlag(messageId, 'unseen', false);
 
 						// HTML mail rendering
@@ -497,18 +492,8 @@ var Mail = {
 		},
 
 		setMessageActive:function (messageId) {
-			// Set active class for current message and remove it from old one
-
-			if(Mail.State.currentMessageId !== null) {
-				$('#mail-message-summary-'+Mail.State.currentMessageId).removeClass('active');
-			}
-
+			Mail.State.messageView.setActiveMessage(messageId);
 			Mail.State.currentMessageId = messageId;
-
-			if(messageId !== null) {
-				$('#mail-message-summary-'+messageId)
-					.addClass('active');
-			}
 		},
 
 		addAccount:function () {

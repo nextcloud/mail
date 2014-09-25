@@ -27,7 +27,8 @@ models.MessageFlags = Backbone.Model.extend({
 
 models.Message = Backbone.Model.extend({
 	defaults: {
-		flags: []
+		flags: [],
+		active: false
 	},
 
 	initialize: function() {

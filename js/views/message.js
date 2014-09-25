@@ -26,12 +26,13 @@ views.Message = Backbone.Marionette.ItemView.extend({
 
 views.Messages = Backbone.Marionette.CompositeView.extend({
 
-	// The collection will be kept here
 	collection: null,
 
 	childView: views.Message,
 
 	childViewContainer: '#mail-message-list',
+
+	currentMessageId: null,
 
 	events: {
 		"click #load-new-mail-messages" : "loadNew",
@@ -56,6 +57,28 @@ views.Messages = Backbone.Marionette.CompositeView.extend({
 				.get('flags')
 				.set(flag, val);
 		}
+	},
+
+	setActiveMessage: function(messageId) {
+		// Set active class for current message and remove it from old one
+
+		var message = null;
+		if(this.currentMessageId !== null) {
+			message = this.collection.get(this.currentMessageId);
+			if (message) {
+				message.set('active', false);
+			}
+		}
+
+		this.currentMessageId = messageId;
+
+		if(messageId !== null) {
+			message = this.collection.get(this.currentMessageId);
+			if (message) {
+				message.set('active', true);
+			}
+		}
+
 	},
 
 	loadNew: function() {
@@ -100,12 +123,8 @@ views.Messages = Backbone.Marionette.CompositeView.extend({
 						self.collection.reset();
 					}
 					// Add messages
-					Mail.State.messageView.collection.add(jsondata);
+					self.collection.add(jsondata);
 
-					//_.each($('.avatar'), function(a) {
-					//		$(a).imageplaceholder($(a).data('user'), $(a).data('user'));
-					//	}
-					//);
 					$('#app-content').removeClass('icon-loading');
 
 					Mail.State.currentMessageId = null;
