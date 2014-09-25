@@ -25,6 +25,7 @@ namespace OCA\Mail;
 use Horde_Imap_Client;
 use OCA\Mail\Service\Html;
 use OCP\AppFramework\Db\DoesNotExistException;
+use OCP\Util;
 
 class Message {
 
@@ -281,7 +282,14 @@ class Message {
 		$fetch_query = new \Horde_Imap_Client_Fetch_Query();
 		$ids = new \Horde_Imap_Client_Ids($this->messageId);
 
-		$fetch_query->bodyPart($partId);
+		$query_opts = array(
+			'decode' => true,
+			'peek' => true
+		);
+
+		$fetch_query->bodyPart($partId, $query_opts);
+		$fetch_query->bodyPartSize($partId);
+
 		$headers = $this->conn->fetch($this->mailBox, $fetch_query, array('ids' => $ids));
 		/** @var $fetch \Horde_Imap_Client_Data_Fetch */
 		$fetch = $headers[$this->messageId];
@@ -377,8 +385,8 @@ class Message {
 		$data['to'] = $this->getTo();
 		$data['toList'] = $this->getToList();
 		$data['subject'] = $this->getSubject();
-		$data['date'] = \OCP\Util::formatDate($this->getSentDate()->format('U'));
-		$data['size'] = \OCP\Util::humanFileSize($this->getSize());
+		$data['date'] = Util::formatDate($this->getSentDate()->format('U'));
+		$data['size'] = Util::humanFileSize($this->getSize());
 		$data['flags'] = $this->getFlags();
 		$data['dateInt'] = $this->getSentDate()->getTimestamp();
 		$data['ccList'] = $this->getCCList();
@@ -407,7 +415,7 @@ class Message {
 	 */
 	private function handleTextMessage($p, $partNo) {
 		$data = $this->loadBodyData($p, $partNo);
-		$data = \OCP\Util::sanitizeHTML($data);
+		$data = Util::sanitizeHTML($data);
 		$this->plainMessage .= trim($data) ."\n\n";
 	}
 
@@ -432,20 +440,7 @@ class Message {
 		// DECODE DATA
 		$data = $this->queryBodyPart($partNo);
 		$p->setContents($data);
-		$data = $p->toString();
-
-		// decode quotes
-		$data = quoted_printable_decode($data);
-
-		//
-		// convert the data
-		//
-		$charset = $p->getCharset();
-		if (isset($charset) and $charset !== '') {
-			$data = mb_convert_encoding($data, "UTF-8", $charset);
-			return $data;
-		}
-		return $data;
+		return $p->getContents();
 	}
 
 	/**
