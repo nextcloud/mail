@@ -352,7 +352,11 @@ var Mail = {
 				t('mail', 'Choose a folder to store the attachment in'),
 				function (path) {
 					// Loading feedback
-					$('.attachment-save-to-cloud')
+					var saveToFilesBtnSelector = '.attachment-save-to-cloud';
+					if (typeof attachmentId !== "undefined") {
+						saveToFilesBtnSelector = 'li[data-attachment-id="'+attachmentId+'"] '+saveToFilesBtnSelector;
+					}
+					$(saveToFilesBtnSelector)
 						.removeClass('icon-upload')
 						.addClass('icon-loading-small')
 						.prop('disabled', true);
