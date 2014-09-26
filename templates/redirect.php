@@ -6,7 +6,7 @@
 		<p>
 			<a href="<?php p($_['url']) ?>" rel="noreferrer" id="redirectLink"
 				style="color: #fff !important;">
-				<?php p($l->t('Forwarding you to %s - click here if you\'re not automatically redirected within the next seconds.', array($_['urlHost'])));?>
+				<?php p($l->t('Forwarding you to %s - click here if you are not automatically redirected within the next few seconds.', array($_['urlHost'])));?>
 			</a>
 		</p>
 	</div>
