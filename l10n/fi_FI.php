@@ -60,7 +60,6 @@ $TRANSLATIONS = array(
 "SMTP SSL mode" => "SMTP SSL -tila",
 "SMTP User" => "SMTP-käyttäjä",
 "SMTP Password" => "SMTP-salasana",
-"Forwarding you to %s - click here if you're not automatically redirected within the next seconds." => "Ohjataan sinut kohteeseen %s - napsauta tästä, jos selain ei siirry eteenpäin muutaman sekunnin kuluessa.",
 "Redirect Warning" => "Varoitus uudelleenohjauksesta",
 "The previous page is sending you to %s." => "Edellinen sivu pyrkii lähettämään sinut sivulle %s.",
 "If you do not want to visit that page, you can return to <a href=\"%s\">the mail app</a>." => "Jos et halua päätyä kyseiselle sivulle, voit palata <a href=\"%s\">sähköpostisovellukseen</a>.",

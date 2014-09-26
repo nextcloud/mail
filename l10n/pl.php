@@ -65,7 +65,6 @@ $TRANSLATIONS = array(
 "SMTP SSL mode" => "Tryb SSL SMTP",
 "SMTP User" => "Użytkownik SMTP",
 "SMTP Password" => "Hasło SMTP",
-"Forwarding you to %s - click here if you're not automatically redirected within the next seconds." => "Przekierowuję do %s - kliknij tutaj, jeśli nie nastąpi automatyczne przekierowanie w ciągu kilku sekund.",
 "Redirect Warning" => "Ostrzeżenie przekierowania",
 "The previous page is sending you to %s." => "Poprzednia strona odsyła Cię do %s.",
 "If you do not want to visit that page, you can return to <a href=\"%s\">the mail app</a>." => "Jeśli nie chcesz odwiedzać tej strony, możesz wrócić do <a href=\"%s\">aplikacji pocztowej</a>.",

@@ -65,7 +65,6 @@ $TRANSLATIONS = array(
 "SMTP SSL mode" => "SMTP SSL-tilstand",
 "SMTP User" => "SMTP-bruger",
 "SMTP Password" => "SMTP-kodeord",
-"Forwarding you to %s - click here if you're not automatically redirected within the next seconds." => "Viderestiller dig til %s - klik her hvis du ikke bliver viderestillet automatisk inden for få sekunder.",
 "Redirect Warning" => "Advarsel om viderestilling",
 "The previous page is sending you to %s." => "Den foregående side sender dig til %s.",
 "If you do not want to visit that page, you can return to <a href=\"%s\">the mail app</a>." => "Hvis du ikke ønsker at besøge denne side, så kan du gå tilbage til <a href=\"%s\">postprogrammet</a>.",
