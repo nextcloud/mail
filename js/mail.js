@@ -584,7 +584,7 @@ $(document).ready(function () {
 			type:'POST',
 			success:function (data) {
 				var newAccountId = data.data.id;
-				Mail.UI.loadFoldersForAccount(newAccountId);
+				Mail.UI.loadFoldersForAccount(newAccountId, newAccountId);
 			},
 			error: function(jqXHR, textStatus, errorThrown){
 				var error = errorThrown || textStatus || t('mail', 'Unknown error');
