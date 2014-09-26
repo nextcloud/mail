@@ -382,6 +382,7 @@ button.control {
 	position: absolute;
 	top: 0;
 	left: 31px;
+	z-index: 10;
 }
 /* only show star on hover of row */
 .star.icon-star {
