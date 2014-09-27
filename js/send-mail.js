@@ -98,7 +98,7 @@ $(function () {
 				OC.msg.finishedAction('#reply-msg', {
 					status: 'success',
 					data: {
-						message: t('mail', 'Mail sent to {Receiver}', {Receiver: to.val()})
+						message: t('mail', 'Message sent to {Receiver}', {Receiver: to.val()})
 					}
 				});
 

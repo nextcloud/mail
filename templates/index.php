@@ -221,7 +221,7 @@
 </script>
 <script id="message-list-template" type="text/x-handlebars-template">
 	<input type="button" id="load-new-mail-messages" value="<?php p($l->t('Check mail …')); ?>">
-	<div id="emptycontent" style="display: none;"><?php p($l->t('No mail in this folder!')); ?></div>
+	<div id="emptycontent" style="display: none;"><?php p($l->t('No messages in this folder!')); ?></div>
 	<div id="mail-message-list"></div>
 	<input type="button" id="load-more-mail-messages" value="<?php p($l->t('Load more …')); ?>">
 </script>
