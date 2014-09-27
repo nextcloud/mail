@@ -291,7 +291,7 @@ var Mail = {
 						$('#mail-message-summary-' + messageId).remove();
 					},
 					error: function() {
-						Mail.UI.showError(t('mail', 'Error while deleting mail.'));
+						Mail.UI.showError(t('mail', 'Error while deleting message.'));
 					}
 				});
 		},
@@ -331,7 +331,7 @@ var Mail = {
 						}
 					},
 					error: function() {
-						Mail.UI.showError(t('mail', 'Message could not be favorited. Please try again.'));
+						Mail.UI.showError(t('mail', 'Message could not be starred. Please try again.'));
 						if(starred) {
 							$('#mail-message-summary-' + messageId)
 								.find('.star')
@@ -484,7 +484,7 @@ var Mail = {
 						});
 					},
 					error: function() {
-						Mail.UI.showError(t('mail', 'Error while loading the selected mail message.'));
+						Mail.UI.showError(t('mail', 'Error while loading the selected message.'));
 					}
 				});
 		},
