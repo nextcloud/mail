@@ -95,6 +95,24 @@ button.control {
 }
 
 
+/* do not overlap collapse icon with special use icon */
+#app-navigation .special-inbox .collapse,
+#app-navigation .special-drafts .collapse,
+#app-navigation .special-sent .collapse,
+#app-navigation .special-trash .collapse {
+	display: none !important;
+}
+#app-navigation .special-inbox:hover .collapse,
+#app-navigation .special-inbox:focus .collapse,
+#app-navigation .special-drafts:hover .collapse,
+#app-navigation .special-drafts:focus .collapse,
+#app-navigation .special-sent:hover .collapse,
+#app-navigation .special-sent:focus .collapse,
+#app-navigation .special-trash:hover .collapse,
+#app-navigation .special-trash:focus .collapse {
+	display: inline-block !important;
+}
+
 
 /* START: should be done in core/apps.css */
 
