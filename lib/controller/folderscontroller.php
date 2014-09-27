@@ -63,9 +63,9 @@ class FoldersController extends Controller
 			if (is_null($folder['parent'])) {
 				continue;
 			}
-			$parentName = $folder['parent'];
+			$parentId = $folder['parent'];
 			foreach($folders as &$parent) {
-				if($parent['name'] === $parentName) {
+				if($parent['id'] === $parentId) {
 					if (!isset($parent['folders'])) {
 						$parent['folders'] = array();
 					}

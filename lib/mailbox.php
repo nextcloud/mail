@@ -153,9 +153,6 @@ class Mailbox {
 		$parts = explode($this->delimiter, $folderId, 2);
 
 		if (count($parts) > 1) {
-			if (strtolower($parts[0]) === 'inbox') {
-				return ucwords(strtolower($parts[0]));
-			}
 			return $parts[0];
 		}
 
@@ -186,9 +183,11 @@ class Mailbox {
 			$unseen = ($specialRole === 'trash') ? 0 : $status['unseen'];
 			$isEmpty = ($total === 0);
 			$noSelect = in_array('\\noselect', $this->attributes);
+			$parentId = $this->getParent();
+			$parentId = ($parentId !== null) ? base64_encode($parentId) : null;
 			return array(
 				'id' => base64_encode($this->getFolderId()),
-				'parent' => $this->getParent(),
+				'parent' => $parentId,
 				'name' => $displayName,
 				'specialRole' => $specialRole,
 				'unseen' => $unseen,
