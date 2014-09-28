@@ -306,7 +306,9 @@ class Account {
 			// TRANSLATORS: translated mail box name
 			'junk'    => $l->t('Junk'),
 			// TRANSLATORS: translated mail box name
-			'all'     => $l->t('All')
+			'all'     => $l->t('All'),
+			// TRANSLATORS: translated mail box name
+			'flagged' => $l->t('Starred'),
 		);
 		$mailboxes = $this->getMailboxes();
 		$specialIds = $this->getSpecialFoldersIds(false);
@@ -324,7 +326,7 @@ class Account {
 	 * Sort mailboxes
 	 *
 	 * Sort the array of mailboxes with 
-	 *  - special use folders coming first in this order: all, inbox, draft, sent, archive, junk, trash 
+	 *  - special use folders coming first in this order: all, inbox, flagged, drafts, sent, archive, junk, trash 
 	 *  - 'normal' folders coming after that, sorted alphabetically
 	 */
 	protected function sortMailboxes() {
