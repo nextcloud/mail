@@ -36,7 +36,7 @@
 	</ul>
 </script>
 <script id="mail-messages-template" type="text/x-handlebars-template">
-	<div id="mail-message-summary-{{id}}" class="mail_message_summary {{#if flags.unseen}}unseen{{/if}} {{#if active}}active{{/if}}" data-message-id="{{id}}">
+	<div class="mail_message_summary {{#if flags.unseen}}unseen{{/if}} {{#if active}}active{{/if}}" data-message-id="{{id}}">
 		<div class="mail-message-header">
 			<div class="sender-image">
 				{{#if senderImage}}
@@ -171,7 +171,7 @@
 	</div>
 </script>
 <script id="mail-attachment-template" type="text/x-handlebars-template">
-	<span>{{displayName}}</span><div class="new-message-attachments-action svg icon-delete" data-attachment-id="{{id}}"></div>
+	<span>{{displayName}}</span><div class="new-message-attachments-action svg icon-delete"></div>
 </script>
 <script id="mail-settings-template" type="text/x-handlebars-template">
 <div id="mailsettings">
@@ -213,11 +213,13 @@
 			<input id="new-message-send" class="send primary" type="submit" value="<?php p($l->t('Send')) ?>">
 		</div>
 		<div id="new-message-attachments">
-			<ul></ul>
-			<input type="button" id="mail_new_attachment" value="<?php p($l->t('Add attachment from Files')); ?>">
 		</div>
 		<div><span id="new-message-msg" class="msg"></div>
 	</div>
+</script>
+<script id="mail-attachments-template" type="text/x-handlebars-template">
+	<ul></ul>
+	<input type="button" id="mail_new_attachment" value="<?php p($l->t('Add attachment from Files')); ?>">
 </script>
 <script id="message-list-template" type="text/x-handlebars-template">
 	<input type="button" id="load-new-mail-messages" value="<?php p($l->t('Check mail …')); ?>">

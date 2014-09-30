@@ -1,4 +1,4 @@
-/* global Mail, views */
+/* global Mail */
 $(function () {
 
 	function split(val) {
