@@ -239,8 +239,7 @@ class Message {
 		$headers[] = 'content-type';
 
 		$fetch_query->headers('imp', $headers, array(
-			'cache' => true,
-			'peek'  => true
+			'cache' => true
 		));
 
 		// $list is an array of Horde_Imap_Client_Data_Fetch objects.
@@ -283,8 +282,7 @@ class Message {
 		$ids = new \Horde_Imap_Client_Ids($this->messageId);
 
 		$query_opts = array(
-			'decode' => true,
-			'peek' => true
+			'decode' => true
 		);
 
 		$fetch_query->bodyPart($partId, $query_opts);
