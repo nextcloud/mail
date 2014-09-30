@@ -263,32 +263,6 @@ var Mail = {
 			}
 		},
 
-		deleteMessage:function (messageId) {
-			// When currently open message is deleted, open next one
-			var nextMessage = $('#mail-message-summary-' + messageId).next();
-			if(messageId === Mail.State.currentMessageId) {
-				var nextMessageId = nextMessage.data('messageId');
-				Mail.UI.openMessage(nextMessageId);
-			}
-
-			$.ajax(
-				OC.generateUrl('apps/mail/accounts/{accountId}/folders/{folderId}/messages/{messageId}',
-					{
-					accountId: Mail.State.currentAccountId,
-					folderId: encodeURIComponent(Mail.State.currentFolderId),
-					messageId: messageId
-				}), {
-					data: {},
-					type:'DELETE',
-					success: function () {
-						$('#mail-message-summary-' + messageId).remove();
-					},
-					error: function() {
-						Mail.UI.showError(t('mail', 'Error while deleting message.'));
-					}
-				});
-		},
-
 		toggleMessageStar: function(messageId, starred) {
 			// Loading feedback
 			$('#mail-message-summary-' + messageId)
@@ -631,17 +605,6 @@ $(document).ready(function () {
 	$(document).on('click', '#mail_messages .mail-message-header', function () {
 		var messageId = $(this).parent().data('messageId');
 		Mail.UI.openMessage(messageId);
-	});
-
-	$(document).on('click', '#mail_messages .action.delete', function(event) {
-		event.stopPropagation();
-		$(this).removeClass('icon-delete').addClass('icon-loading');
-		var messageElement = $(this).parent().parent()
-			.addClass('transparency')
-			.slideUp();
-
-		var messageId = messageElement.data('messageId');
-		Mail.UI.deleteMessage(messageId);
 	});
 
 	$(document).on('click', '#mail_messages .star', function(event) {

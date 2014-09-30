@@ -6,6 +6,14 @@ views.Message = Backbone.Marionette.ItemView.extend({
 
 	template: "#mail-messages-template",
 
+	ui:{
+		iconDelete : '.action.delete'
+	},
+
+	events: {
+		"click .action.delete" : "deleteMessage"
+	},
+
 	onRender: function () {
 		// Get rid of that pesky wrapping-div.
 		// Assumes 1 child element present in template.
@@ -20,7 +28,37 @@ views.Message = Backbone.Marionette.ItemView.extend({
 			$(a).height('32px');
 			$(a).imageplaceholder(displayName, displayName);
 		});
+	},
+	deleteMessage: function() {
+		var thisModel = this.model;
+		this.ui.iconDelete.removeClass('icon-delete').addClass('icon-loading');
+		this.$el.addClass('transparency').slideUp(function() {
+			var thisModelCollection = thisModel.collection;
+			thisModelCollection.remove(thisModel);
+			var nextMessage = thisModelCollection.at(0);
+			if (nextMessage) {
+				Mail.UI.openMessage(nextMessage.id);
+			}
+		});
+
+		// really delete the message
+		$.ajax(
+			OC.generateUrl('apps/mail/accounts/{accountId}/folders/{folderId}/messages/{messageId}',
+				{
+				accountId: Mail.State.currentAccountId,
+				folderId: encodeURIComponent(Mail.State.currentFolderId),
+				messageId: thisModel.id
+			}), {
+				data: {},
+				type:'DELETE',
+				success: function () {
+				},
+				error: function() {
+					Mail.UI.showError(t('mail', 'Error while deleting message.'));
+				}
+			});
 	}
+
 
 });
 
@@ -147,5 +185,4 @@ views.Messages = Backbone.Marionette.CompositeView.extend({
 				}
 			});
 	}
-
 });
