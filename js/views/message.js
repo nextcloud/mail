@@ -7,11 +7,14 @@ views.Message = Backbone.Marionette.ItemView.extend({
 	template: "#mail-messages-template",
 
 	ui:{
-		iconDelete : '.action.delete'
+		iconDelete : '.action.delete',
+		star : '.star'
 	},
 
 	events: {
-		"click .action.delete" : "deleteMessage"
+		"click .action.delete" : "deleteMessage",
+		"click .mail-message-header" : "openMessage",
+		"click .star" : "toggleMessageStar"
 	},
 
 	onRender: function () {
@@ -29,7 +32,46 @@ views.Message = Backbone.Marionette.ItemView.extend({
 			$(a).imageplaceholder(displayName, displayName);
 		});
 	},
-	deleteMessage: function() {
+
+	toggleMessageStar: function(event) {
+		event.stopPropagation();
+
+		var messageId = this.model.id;
+		var starred = this.model.get('flags').get('flagged');
+		var thisModel = this.model;
+		this.ui.star
+			.removeClass('icon-starred')
+			.removeClass('icon-star')
+			.addClass('icon-loading-small');
+
+		$.ajax(
+			OC.generateUrl('apps/mail/accounts/{accountId}/folders/{folderId}/messages/{messageId}/toggleStar',
+			{
+				accountId: Mail.State.currentAccountId,
+				folderId: encodeURIComponent(Mail.State.currentFolderId),
+				messageId: messageId
+			}), {
+				data: {
+					starred: starred
+				},
+				type:'POST',
+				success: function () {
+					thisModel.get('flags').set('flagged', !starred);
+				},
+				error: function() {
+					Mail.UI.showError(t('mail', 'Message could not be starred. Please try again.'));
+					thisModel.get('flags').set('flagged', starred);
+				}
+			});
+	},
+
+	openMessage: function() {
+		event.stopPropagation();
+		Mail.UI.openMessage(this.model.id);
+	},
+
+	deleteMessage: function(event) {
+		event.stopPropagation();
 		var thisModel = this.model;
 		this.ui.iconDelete.removeClass('icon-delete').addClass('icon-loading');
 		this.$el.addClass('transparency').slideUp(function() {

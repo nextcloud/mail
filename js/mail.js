@@ -263,57 +263,6 @@ var Mail = {
 			}
 		},
 
-		toggleMessageStar: function(messageId, starred) {
-			// Loading feedback
-			$('#mail-message-summary-' + messageId)
-				.find('.star')
-				.removeClass('icon-starred')
-				.removeClass('icon-star')
-				.addClass('icon-loading-small');
-
-			$.ajax(
-				OC.generateUrl('apps/mail/accounts/{accountId}/folders/{folderId}/messages/{messageId}/toggleStar',
-					{
-					accountId: Mail.State.currentAccountId,
-					folderId: encodeURIComponent(Mail.State.currentFolderId),
-					messageId: messageId
-				}), {
-					data: {
-						starred: starred
-					},
-					type:'POST',
-					success: function () {
-						if (starred) {
-							$('#mail-message-summary-' + messageId)
-								.find('.star')
-								.removeClass('icon-loading-small')
-								.addClass('icon-star')
-								.data('starred', false);
-						} else {
-							$('#mail-message-summary-' + messageId)
-								.find('.star')
-								.removeClass('icon-loading-small')
-								.addClass('icon-starred')
-								.data('starred', true);
-						}
-					},
-					error: function() {
-						Mail.UI.showError(t('mail', 'Message could not be starred. Please try again.'));
-						if(starred) {
-							$('#mail-message-summary-' + messageId)
-								.find('.star')
-								.removeClass('icon-loading-small')
-								.addClass('icon-starred');
-						} else {
-							$('#mail-message-summary-' + messageId)
-								.find('.star')
-								.removeClass('icon-loading-small')
-								.addClass('icon-star');
-						}
-					}
-				});
-		},
-
 		saveAttachment: function(messageId, attachmentId) {
 			OC.dialogs.filepicker(
 				t('mail', 'Choose a folder to store the attachment in'),
@@ -599,18 +548,6 @@ $(document).ready(function () {
 		$('#to').focus();
 
 		Mail.UI.setMessageActive(null);
-	});
-
-	// Clicking on a message loads the entire message
-	$(document).on('click', '#mail_messages .mail-message-header', function () {
-		var messageId = $(this).parent().data('messageId');
-		Mail.UI.openMessage(messageId);
-	});
-
-	$(document).on('click', '#mail_messages .star', function(event) {
-		event.stopPropagation();
-		var messageId = $(this).parent().parent().data('messageId');
-		Mail.UI.toggleMessageStar(messageId, $(this).data('starred'));
 	});
 
 	$(document).on('click', '#mail-message .attachment-save-to-cloud', function(event) {
