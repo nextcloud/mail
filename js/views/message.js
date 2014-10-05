@@ -2,6 +2,10 @@
 
 var views = views || {};
 
+views.DetailedMessage = Backbone.Marionette.ItemView.extend({
+	template: "#mail-message-template"
+});
+
 views.Message = Backbone.Marionette.ItemView.extend({
 
 	template: "#mail-messages-template",
@@ -76,10 +80,16 @@ views.Message = Backbone.Marionette.ItemView.extend({
 		this.ui.iconDelete.removeClass('icon-delete').addClass('icon-loading');
 		this.$el.addClass('transparency').slideUp(function() {
 			var thisModelCollection = thisModel.collection;
+			var index = thisModelCollection.indexOf(thisModel);
+			var nextMessage = thisModelCollection.at(index+1);
+			if (!nextMessage) {
+				nextMessage = thisModelCollection.at(index-1);
+			}
 			thisModelCollection.remove(thisModel);
-			var nextMessage = thisModelCollection.at(0);
-			if (nextMessage) {
-				Mail.UI.openMessage(nextMessage.id);
+			if (Mail.State.currentMessageId === thisModel.id) {
+				if (nextMessage) {
+					Mail.UI.openMessage(nextMessage.id);
+				}
 			}
 		});
 
