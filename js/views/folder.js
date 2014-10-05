@@ -70,7 +70,7 @@ views.Folders = Backbone.Marionette.CollectionView.extend({
 
 	changeMessageFlags: function(model) {
 		var unseen = model.get('flags').get('unseen');
-		var prevUnseen = model._previousAttributes.flags.unseen;
+		var prevUnseen = model._previousAttributes.flags.get('unseen');
 		if (unseen === prevUnseen) {
 			return;
 		}
