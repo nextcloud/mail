@@ -134,6 +134,13 @@ views.Messages = Backbone.Marionette.CompositeView.extend({
 	initialize: function() {
 		this.collection = new models.MessageList();
 		this.collection.on('change:flags', this.changeFlags, this);
+
+		var self = this;
+		_.delay(function() {
+			setInterval(function(){
+				self.loadNew();
+			}, 60*1000);
+		},30*1000);
 	},
 
 	changeFlags: function(model) {
@@ -172,6 +179,12 @@ views.Messages = Backbone.Marionette.CompositeView.extend({
 	},
 
 	loadNew: function() {
+		if (!Mail.State.currentAccountId) {
+			return;
+		}
+		if (!Mail.State.currentFolderId) {
+			return;
+		}
 		// Add loading feedback
 		$('#load-new-mail-messages')
 			.addClass('icon-loading-small')
