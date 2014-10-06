@@ -69,7 +69,7 @@ views.Message = Backbone.Marionette.ItemView.extend({
 			});
 	},
 
-	openMessage: function() {
+	openMessage: function(event) {
 		event.stopPropagation();
 		Mail.UI.openMessage(this.model.id);
 	},
