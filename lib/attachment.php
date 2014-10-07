@@ -74,8 +74,7 @@ class Attachment {
 		$headers[] = 'content-type';
 
 		$fetch_query->headers('imp', $headers, array(
-			'cache' => true,
-			'peek'  => true
+			'cache' => true
 		));
 
 		// $list is an array of Horde_Imap_Client_Data_Fetch objects.

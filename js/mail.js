@@ -82,6 +82,7 @@ var Mail = {
 				return Handlebars.compile(rawTemplate);
 			};
 			Marionette.ItemView.prototype.modelEvents = { "change" : "render"};
+			Marionette.CompositeView.prototype.modelEvents = { "change" : "render"};
 
 			// ask to handle all mailto: links
 			if(window.navigator.registerProtocolHandler) {
@@ -103,6 +104,9 @@ var Mail = {
 				el: $('#folders')
 			});
 			Mail.State.folderView.render();
+
+			Mail.State.folderView.listenTo(Mail.State.messageView, 'change:flags',
+				Mail.State.folderView.changeMessageFlags);
 
 			$.ajax(OC.generateUrl('apps/mail/accounts'), {
 				data:{},
@@ -186,23 +190,12 @@ var Mail = {
 				.addClass('icon-loading');
 		},
 
-		clearFolders:function () {
-			var list = $('.mail_folders');
-
-			list.empty();
-		},
-
 		hideMenu:function () {
 			$('#new-message').addClass('hidden');
 		},
 
 		addMessages:function (data) {
 			Mail.State.messageView.collection.add(data);
-
-			_.each($('.avatar'), function(a) {
-				$(a).imageplaceholder($(a).data('user'), $(a).data('user'));
-			}
-			);
 		},
 
 		loadMessages:function (accountId, folderId, noSelect) {
@@ -268,83 +261,6 @@ var Mail = {
 						}
 					});
 			}
-		},
-
-		deleteMessage:function (messageId) {
-			// When currently open message is deleted, open next one
-			var nextMessage = $('#mail-message-summary-' + messageId).next();
-			if(messageId === Mail.State.currentMessageId) {
-				var nextMessageId = nextMessage.data('messageId');
-				Mail.UI.openMessage(nextMessageId);
-			}
-
-			$.ajax(
-				OC.generateUrl('apps/mail/accounts/{accountId}/folders/{folderId}/messages/{messageId}',
-					{
-					accountId: Mail.State.currentAccountId,
-					folderId: encodeURIComponent(Mail.State.currentFolderId),
-					messageId: messageId
-				}), {
-					data: {},
-					type:'DELETE',
-					success: function () {
-						$('#mail-message-summary-' + messageId).remove();
-					},
-					error: function() {
-						Mail.UI.showError(t('mail', 'Error while deleting message.'));
-					}
-				});
-		},
-
-		toggleMessageStar: function(messageId, starred) {
-			// Loading feedback
-			$('#mail-message-summary-' + messageId)
-				.find('.star')
-				.removeClass('icon-starred')
-				.removeClass('icon-star')
-				.addClass('icon-loading-small');
-
-			$.ajax(
-				OC.generateUrl('apps/mail/accounts/{accountId}/folders/{folderId}/messages/{messageId}/toggleStar',
-					{
-					accountId: Mail.State.currentAccountId,
-					folderId: encodeURIComponent(Mail.State.currentFolderId),
-					messageId: messageId
-				}), {
-					data: {
-						starred: starred
-					},
-					type:'POST',
-					success: function () {
-						if (starred) {
-							$('#mail-message-summary-' + messageId)
-								.find('.star')
-								.removeClass('icon-loading-small')
-								.addClass('icon-star')
-								.data('starred', false);
-						} else {
-							$('#mail-message-summary-' + messageId)
-								.find('.star')
-								.removeClass('icon-loading-small')
-								.addClass('icon-starred')
-								.data('starred', true);
-						}
-					},
-					error: function() {
-						Mail.UI.showError(t('mail', 'Message could not be starred. Please try again.'));
-						if(starred) {
-							$('#mail-message-summary-' + messageId)
-								.find('.star')
-								.removeClass('icon-loading-small')
-								.addClass('icon-starred');
-						} else {
-							$('#mail-message-summary-' + messageId)
-								.find('.star')
-								.removeClass('icon-loading-small')
-								.addClass('icon-star');
-						}
-					}
-				});
 		},
 
 		saveAttachment: function(messageId, attachmentId) {
@@ -448,8 +364,8 @@ var Mail = {
 						mailBody
 							.html(html)
 							.removeClass('icon-loading');
-						$('#mail-message-summary-' + messageId)
-							.removeClass('unseen');
+
+						Mail.State.messageView.setMessageFlag(messageId, 'unseen', false);
 
 						// HTML mail rendering
 						$('iframe').load(function() {
@@ -499,29 +415,16 @@ var Mail = {
 		},
 
 		setMessageActive:function (messageId) {
-			// Set active class for current message and remove it from old one
-
-			if(Mail.State.currentMessageId !== null) {
-				$('#mail-message-summary-'+Mail.State.currentMessageId)
-					.removeClass('active');
-			}
-
+			Mail.State.messageView.setActiveMessage(messageId);
 			Mail.State.currentMessageId = messageId;
-
-			if(messageId !== null) {
-				$('#mail-message-summary-'+messageId)
-					.addClass('active');
-			}
 		},
 
 		addAccount:function () {
 			$('#mail_messages').addClass('hidden');
 			$('#mail-message').addClass('hidden');
 			$('#mail_new_message').addClass('hidden');
-//			$('#folders').addClass('hidden');
 			$('#app-navigation').removeClass('icon-loading');
 
-//			Mail.UI.clearFolders();
 			Mail.UI.hideMenu();
 
 			$('#mail-setup').removeClass('hidden');
@@ -645,29 +548,6 @@ $(document).ready(function () {
 		$('#to').focus();
 
 		Mail.UI.setMessageActive(null);
-	});
-
-	// Clicking on a message loads the entire message
-	$(document).on('click', '#mail_messages .mail-message-header', function () {
-		var messageId = $(this).parent().data('messageId');
-		Mail.UI.openMessage(messageId);
-	});
-
-	$(document).on('click', '#mail_messages .action.delete', function(event) {
-		event.stopPropagation();
-		$(this).removeClass('icon-delete').addClass('icon-loading');
-		var messageElement = $(this).parent().parent()
-			.addClass('transparency')
-			.slideUp();
-
-		var messageId = messageElement.data('messageId');
-		Mail.UI.deleteMessage(messageId);
-	});
-
-	$(document).on('click', '#mail_messages .star', function(event) {
-		event.stopPropagation();
-		var messageId = $(this).parent().parent().data('messageId');
-		Mail.UI.toggleMessageStar(messageId, $(this).data('starred'));
 	});
 
 	$(document).on('click', '#mail-message .attachment-save-to-cloud', function(event) {

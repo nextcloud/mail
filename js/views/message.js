@@ -1,10 +1,25 @@
-/* global Backbone, Handlebars, Mail, models */
+/* global Backbone, Mail, models */
 
 var views = views || {};
+
+views.DetailedMessage = Backbone.Marionette.ItemView.extend({
+	template: "#mail-message-template"
+});
 
 views.Message = Backbone.Marionette.ItemView.extend({
 
 	template: "#mail-messages-template",
+
+	ui:{
+		iconDelete : '.action.delete',
+		star : '.star'
+	},
+
+	events: {
+		"click .action.delete" : "deleteMessage",
+		"click .mail-message-header" : "openMessage",
+		"click .star" : "toggleMessageStar"
+	},
 
 	onRender: function () {
 		// Get rid of that pesky wrapping-div.
@@ -14,18 +29,100 @@ views.Message = Backbone.Marionette.ItemView.extend({
 		// nesting elements during re-render.
 		this.$el.unwrap();
 		this.setElement(this.$el);
+
+		var displayName = this.model.get('from');
+		_.each(this.$el.find('.avatar'), function(a) {
+			$(a).height('32px');
+			$(a).imageplaceholder(displayName, displayName);
+		});
+	},
+
+	toggleMessageStar: function(event) {
+		event.stopPropagation();
+
+		var messageId = this.model.id;
+		var starred = this.model.get('flags').get('flagged');
+		var thisModel = this.model;
+		this.ui.star
+			.removeClass('icon-starred')
+			.removeClass('icon-star')
+			.addClass('icon-loading-small');
+
+		$.ajax(
+			OC.generateUrl('apps/mail/accounts/{accountId}/folders/{folderId}/messages/{messageId}/toggleStar',
+			{
+				accountId: Mail.State.currentAccountId,
+				folderId: encodeURIComponent(Mail.State.currentFolderId),
+				messageId: messageId
+			}), {
+				data: {
+					starred: starred
+				},
+				type:'POST',
+				success: function () {
+					thisModel.get('flags').set('flagged', !starred);
+				},
+				error: function() {
+					Mail.UI.showError(t('mail', 'Message could not be starred. Please try again.'));
+					thisModel.get('flags').set('flagged', starred);
+				}
+			});
+	},
+
+	openMessage: function(event) {
+		event.stopPropagation();
+		Mail.UI.openMessage(this.model.id);
+	},
+
+	deleteMessage: function(event) {
+		event.stopPropagation();
+		var thisModel = this.model;
+		this.ui.iconDelete.removeClass('icon-delete').addClass('icon-loading');
+		this.$el.addClass('transparency').slideUp(function() {
+			var thisModelCollection = thisModel.collection;
+			var index = thisModelCollection.indexOf(thisModel);
+			var nextMessage = thisModelCollection.at(index+1);
+			if (!nextMessage) {
+				nextMessage = thisModelCollection.at(index-1);
+			}
+			thisModelCollection.remove(thisModel);
+			if (Mail.State.currentMessageId === thisModel.id) {
+				if (nextMessage) {
+					Mail.UI.openMessage(nextMessage.id);
+				}
+			}
+		});
+
+		// really delete the message
+		$.ajax(
+			OC.generateUrl('apps/mail/accounts/{accountId}/folders/{folderId}/messages/{messageId}',
+				{
+				accountId: Mail.State.currentAccountId,
+				folderId: encodeURIComponent(Mail.State.currentFolderId),
+				messageId: thisModel.id
+			}), {
+				data: {},
+				type:'DELETE',
+				success: function () {
+				},
+				error: function() {
+					Mail.UI.showError(t('mail', 'Error while deleting message.'));
+				}
+			});
 	}
+
 
 });
 
 views.Messages = Backbone.Marionette.CompositeView.extend({
 
-	// The collection will be kept here
 	collection: null,
 
 	childView: views.Message,
 
 	childViewContainer: '#mail-message-list',
+
+	currentMessageId: null,
 
 	events: {
 		"click #load-new-mail-messages" : "loadNew",
@@ -36,9 +133,58 @@ views.Messages = Backbone.Marionette.CompositeView.extend({
 
 	initialize: function() {
 		this.collection = new models.MessageList();
+		this.collection.on('change:flags', this.changeFlags, this);
+
+		var self = this;
+		_.delay(function() {
+			setInterval(function(){
+				self.loadNew();
+			}, 60*1000);
+		},30*1000);
+	},
+
+	changeFlags: function(model) {
+		this.trigger('change:flags', model);
+	},
+
+	setMessageFlag: function(messageId, flag, val) {
+		var message = this.collection.get(messageId);
+		if (message) {
+			message
+				.get('flags')
+				.set(flag, val);
+		}
+	},
+
+	setActiveMessage: function(messageId) {
+		// Set active class for current message and remove it from old one
+
+		var message = null;
+		if(this.currentMessageId !== null) {
+			message = this.collection.get(this.currentMessageId);
+			if (message) {
+				message.set('active', false);
+			}
+		}
+
+		this.currentMessageId = messageId;
+
+		if(messageId !== null) {
+			message = this.collection.get(this.currentMessageId);
+			if (message) {
+				message.set('active', true);
+			}
+		}
+
 	},
 
 	loadNew: function() {
+		if (!Mail.State.currentAccountId) {
+			return;
+		}
+		if (!Mail.State.currentFolderId) {
+			return;
+		}
 		// Add loading feedback
 		$('#load-new-mail-messages')
 			.addClass('icon-loading-small')
@@ -80,12 +226,8 @@ views.Messages = Backbone.Marionette.CompositeView.extend({
 						self.collection.reset();
 					}
 					// Add messages
-					Mail.State.messageView.collection.add(jsondata);
+					self.collection.add(jsondata);
 
-					_.each($('.avatar'), function(a) {
-							$(a).imageplaceholder($(a).data('user'), $(a).data('user'));
-						}
-					);
 					$('#app-content').removeClass('icon-loading');
 
 					Mail.State.currentMessageId = null;
@@ -108,5 +250,4 @@ views.Messages = Backbone.Marionette.CompositeView.extend({
 				}
 			});
 	}
-
 });
