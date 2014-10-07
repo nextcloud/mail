@@ -438,7 +438,10 @@ class Message {
 		// DECODE DATA
 		$data = $this->queryBodyPart($partNo);
 		$p->setContents($data);
-		return $p->getContents();
+		$data = $p->getContents();
+
+		$data = iconv($p->getCharset(), 'utf-8', $data);
+		return $data;
 	}
 
 	/**
