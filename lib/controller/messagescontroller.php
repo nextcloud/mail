@@ -201,8 +201,7 @@ class MessagesController extends Controller
 	}
 
 	/**
-	 * @IsAdminExemption
-	 * @IsSubAdminExemption
+	 * @NoAdminRequired
 	 *
 	 * @param int $id
 	 * @return JSONResponse
