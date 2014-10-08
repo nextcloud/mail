@@ -37,6 +37,7 @@ class TestHtml extends \PHPUnit_Framework_TestCase {
 			array('<a href="https://build.opensuse.org/package/view_file/isv:ownCloud:community:7.0/owncloud/debian.changelog?expand=1" target="_blank" rel="noreferrer">https://build.opensuse.org/package/view_file/isv:ownCloud:community:7.0/owncloud/debian.changelog?expand=1</a>', 'https://build.opensuse.org/package/view_file/isv:ownCloud:community:7.0/owncloud/debian.changelog?expand=1'),
 			array('(<a href="https://build.opensuse.org/package/view_file/isv:ownCloud:community:7.0/owncloud/debian.changelog?expand=1" target="_blank" rel="noreferrer">https://build.opensuse.org/package/view_file/isv:ownCloud:community:7.0/owncloud/debian.changelog?expand=1</a>)', '(https://build.opensuse.org/package/view_file/isv:ownCloud:community:7.0/owncloud/debian.changelog?expand=1)'),
 			array('<a href="http://apps.owncloud.com/content/show.php/Music?content=160485" target="_blank" rel="noreferrer">http://apps.owncloud.com/content/show.php/Music?content=160485</a>', 'http://apps.owncloud.com/content/show.php/Music?content=160485'),
+			array('<a href="https://groups.google.com/forum/#!forum/ctpug" target="_blank" rel="noreferrer">https://groups.google.com/forum/#!forum/ctpug</a>', 'https://groups.google.com/forum/#!forum/ctpug'),
 		);
 	}
 

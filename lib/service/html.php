@@ -99,7 +99,7 @@ class Html {
 	 * @return string
 	 */
 	public function convertLinks($data) {
-		$regex = "/(ht|f)tp(s?)\:\/\/(([a-zA-Z0-9\-\._]+(\.[a-zA-Z0-9\-\._]+)+)|localhost)(\/?)([a-zA-Z0-9\-\.\?\,\'\/\\\+&amp;%\$#_]*)?([\d\w\.\/\%\+\-\=\&amp;\?\:\\\&quot;\'\,\|\~\;]*)/";
+		$regex = "/(ht|f)tp(s?)\:\/\/(([a-zA-Z0-9\-\._]+(\.[a-zA-Z0-9\-\._]+)+)|localhost)(\/?)([a-zA-Z0-9\-\.\?\,\'\/\\\+&amp;%\$#!_]*)?([\d\w\.\/\%\+\-\=\&amp;\?\:\\\&quot;\'\,\|\~\;]*)/";
 		$data = preg_replace($regex, "<a href=\"\\0\" target=\"_blank\" rel=\"noreferrer\">\\0</a>", $data);
 		return $data;
 	}
