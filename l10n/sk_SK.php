@@ -26,6 +26,7 @@ $TRANSLATIONS = array(
 "Sent" => "Odoslané",
 "Trash" => "Kôš",
 "All" => "Všetky",
+"Starred" => "S hviezdičkou",
 "Creating account failed: " => "Vytvorenie účtu zlyhalo:",
 "Auto detect failed. Please use manual mode." => "Automatická detekcia zlyhala. Prosím, použite manuálny režim.",
 "from" => "od",

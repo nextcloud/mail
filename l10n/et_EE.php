@@ -26,6 +26,7 @@ $TRANSLATIONS = array(
 "Send" => "Saada",
 "Sent" => "Saadetud",
 "All" => "Kõik",
+"Starred" => "Tärniga märgitud",
 "Creating account failed: " => "Konto loomine ebaõnnestus:",
 "Auto detect failed. Please use manual mode." => "Automaatne tuvastus ebaõnnestus. Palun proovi käsitsi.",
 "from" => "alates",

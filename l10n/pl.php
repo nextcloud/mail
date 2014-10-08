@@ -26,6 +26,7 @@ $TRANSLATIONS = array(
 "Send" => "Wyślij",
 "Sent" => "Wyślij",
 "All" => "Wszystkie",
+"Starred" => "Oznaczone",
 "Creating account failed: " => "Utworzenie konta nie powiodło się:",
 "Auto detect failed. Please use manual mode." => "Autowykrywanie nie powiodło się. Proszę użyć trybu ręcznego.",
 "from" => "z",

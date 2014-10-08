@@ -31,6 +31,7 @@ $TRANSLATIONS = array(
 "Trash" => "ゴミ箱",
 "Junk" => "迷惑メール",
 "All" => "すべて",
+"Starred" => "共有",
 "Creating account failed: " => "アカウント作成に失敗:",
 "Auto detect failed. Please use manual mode." => "自動判別に失敗しました。手動モードをご利用ください。",
 "from" => "開始",
