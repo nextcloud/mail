@@ -177,6 +177,7 @@ class AccountsController extends Controller
 	}
 
 	/**
+	 * @NoAdminRequired
 	 * @param int $accountId
 	 * @return JSONResponse
 	 */
