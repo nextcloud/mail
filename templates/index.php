@@ -228,9 +228,15 @@
 </script>
 <div id="app">
 	<div id="app-navigation" class="icon-loading">
-		<input type="button" id="mail_new_message" class="icon-add"
-			value="<?php p($l->t('New Message')); ?>" style="display: none">
-		<div id="folders"></div>
+		<ul>
+			<li>
+			<input type="button" id="mail_new_message" class="icon-add"
+				value="<?php p($l->t('New Message')); ?>" style="display: none">
+			</li>
+			<li>
+				<div id="folders"></div>
+			</li>
+		</ul>
 		<div id="app-settings">
 			<div id="app-settings-header">
 				<button class="settings-button"
