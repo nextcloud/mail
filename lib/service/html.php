@@ -65,7 +65,7 @@ class HTMLPurifier_URIFilter_TransformURLScheme extends HTMLPurifier_URIFilter
 				Util::getServerHost(),
 				null,
 				OC_Helper::linkToRoute( 'mail.proxy.proxy' ),
-				'src='.$originalURL.'&requesttoken='.\OC::$session->get('requesttoken'),
+				'src='.$originalURL.'&requesttoken='.\OC::$server->getSession()->get('requesttoken'),
 				null);
 		}
 
