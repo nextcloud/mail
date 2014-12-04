@@ -260,9 +260,12 @@ class AccountsController extends Controller
 			}
 
 			// save the message in the sent folder
+                        //TODO: create folder if it does not exist
 			$sentFolder = $account->getSentFolder();
-			$raw = stream_get_contents($mail->getRaw());
-			$sentFolder->saveMessage($raw);
+                        if (!is_null($sentFolder)) {
+                            $raw = stream_get_contents($mail->getRaw());
+                            $sentFolder->saveMessage($raw);
+                        }
 
 		} catch (\Horde_Exception $ex) {
 			return new JSONResponse(

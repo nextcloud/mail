@@ -201,7 +201,12 @@ class Account {
 	 * @return Mailbox The best candidate for the "sent mail" inbox
 	 */
 	public function getSentFolder() {
-		return $this->getSpecialFolder('sent', true);
+                $sentFolders = $this->getSpecialFolder('sent', true);
+                if (count($sentFolders) > 1) {
+                    return $sentFolders[0];
+                } else {
+                    return null;
+                }
 	}
 	
 	/**
