@@ -33,7 +33,7 @@ class Account {
 	private $client;
 
 	/**
-	 * @param MailAccount $info
+	 * @param MailAccount $account
 	 */
 	function __construct(MailAccount $account) {
 		$this->account = $account;

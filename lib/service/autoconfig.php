@@ -13,10 +13,8 @@
 namespace OCA\Mail\Service;
 
 use Exception;
-use Horde_Imap_Client_Socket;
 use OCA\Mail\Account;
 use OCA\Mail\Db\MailAccount;
-use OCA\Mail\Db\MailAccountMapper;
 
 class AutoConfig {
 
@@ -77,7 +75,7 @@ class AutoConfig {
 			$users = array($users);
 		}
 
-		// port 25 should be the last on to test
+		// port 25 should be the last one to test
 		$ports = array(587, 465, 25);
 		$protocols = array('ssl', 'tls', null);
 		$hostPrefixes = array('');
@@ -122,8 +120,8 @@ class AutoConfig {
 
 	/**
 	 * @param $email
-	 * @param $ocUserId
 	 * @param $password
+	 * @param $name
 	 * @return MailAccount|null
 	 */
 	public function createAutoDetected($email, $password, $name) {
@@ -323,9 +321,9 @@ class AutoConfig {
 	}
 
 	/**
+	 * @param $account
 	 * @param $email
 	 * @param $password
-	 * @param $name
 	 * @return MailAccount|null
 	 */
 	private function detectSmtp(MailAccount $account, $email, $password) {

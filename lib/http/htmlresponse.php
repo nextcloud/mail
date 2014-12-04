@@ -18,7 +18,7 @@ class HtmlResponse extends Response {
 
 	private $content;
 
-	public function __construct($content){
+	public function __construct($content) {
 		$this->content = $content;
 	}
 
@@ -26,7 +26,7 @@ class HtmlResponse extends Response {
 	 * Simply sets the headers and returns the file contents
 	 * @return string the file contents
 	 */
-	public function render(){
+	public function render() {
 		return $this->content;
 	}
 
