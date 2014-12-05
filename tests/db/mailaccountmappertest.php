@@ -37,7 +37,8 @@ class MailAccountMapperTest extends \PHPUnit_Framework_TestCase {
 	 * Initialize Mapper
 	 */
 	public function setup(){
-		$this->db = new Db();
+		$db = \OC::$server->getDatabaseConnection();
+		$this->db = new Db($db);
 		$this->mapper = new MailAccountMapper($this->db);
 
 		$this->account = new MailAccount();
