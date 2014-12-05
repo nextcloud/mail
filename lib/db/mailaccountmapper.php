@@ -27,7 +27,7 @@ use OCP\IDb;
 
 class MailAccountMapper extends Mapper {
 
-	public function __construct(IDb $db){
+	public function __construct(IDb $db) {
 		parent::__construct($db, 'mail_accounts');
 	}
 
@@ -37,7 +37,7 @@ class MailAccountMapper extends Mapper {
 	 * @param int $accountId
 	 * @return MailAccount
 	 */
-	public function find($userId, $accountId){
+	public function find($userId, $accountId) {
 		$sql = 'SELECT * FROM `' . $this->getTableName() . '` WHERE user_id = ? and id = ?';
 		$params = array($userId, $accountId);
 
@@ -50,7 +50,7 @@ class MailAccountMapper extends Mapper {
 	 * @param $userId
 	 * @return MailAccount[]
 	 */
-	public function findByUserId($userId){
+	public function findByUserId($userId) {
 		$sql = 'SELECT * FROM ' . $this->getTableName() . ' WHERE user_id = ?';
 		$params = array($userId);
 
