@@ -4,6 +4,7 @@ filter:
         - 'js/jquery*'
         - 'js/handlebars*'
         - 'js/backbone*'
+        - 'l10n/*'
 
 imports:
     - javascript
