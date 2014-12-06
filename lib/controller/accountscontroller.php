@@ -261,8 +261,8 @@ class AccountsController extends Controller
 
 			// save the message in the sent folder
 			$sentFolder = $account->getSentFolder();
-                        $raw = stream_get_contents($mail->getRaw());
-                        $sentFolder->saveMessage($raw);
+			$raw = stream_get_contents($mail->getRaw());
+			$sentFolder->saveMessage($raw);
 		} catch (\Horde_Exception $ex) {
 			return new JSONResponse(
 				array('message' => $ex->getMessage()),
