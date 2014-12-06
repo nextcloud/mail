@@ -155,7 +155,6 @@ class Account {
 		);
 	}
 
-
 	/**
 	 * @return \Horde_Mail_Transport_Smtphorde
 	 */
@@ -186,8 +185,8 @@ class Account {
 		$specialFoldersIds = array();
 		
 		foreach ($folderRoles as $role) {
-			$folder = $this->getSpecialFolder($role, true);
-			$specialFoldersIds[$role] = empty($folder) ? null : $folder->getFolderId();
+			$folders = $this->getSpecialFolder($role, true);
+			$specialFoldersIds[$role] = (count($folders) === 0) ? null : $folders[0]->getFolderId();
 			if ($specialFoldersIds[$role] !== null && $base64_encode === true) {
 				$specialFoldersIds[$role] = base64_encode($specialFoldersIds[$role]);
 			}
@@ -201,12 +200,24 @@ class Account {
 	 * @return Mailbox The best candidate for the "sent mail" inbox
 	 */
 	public function getSentFolder() {
+                //check for existense
                 $sentFolders = $this->getSpecialFolder('sent', true);
-                if (count($sentFolders) > 1) {
-                    return $sentFolders[0];
-                } else {
-                    return null;
+                if (count($sentFolders) === 0) {
+                        //no special folder found -> search by name
+                        $sentFoldersByName = $this->listMailboxes(array('sent', 'Sent'));
+                        if (count($sentFoldersByName) > 0) {
+                                return $this->guessBestMailbox($sentFoldersByName);
+                        } else {
+                                //sent folder does not exist - let's create one
+                                $conn = $this->getImapConnection();
+                                //TODO: also search for translated sent mailboxes
+                                $conn->createMailbox('Sent', array(
+                                    'special_use' => array('sent'),
+                                ));
+                                return $this->guessBestMailBox($this->listMailboxes('Sent'));
+                        }
                 }
+                return $sentFolders[0];
 	}
 	
 	/**
@@ -214,15 +225,14 @@ class Account {
 	 * @param int $messageId
 	 */
 	public function deleteMessage($sourceFolderId, $messageId) {
-		
 		// by default we will create a 'Trash' folder if no trash is found
 		$trashId = "Trash";
 		$createTrash = true;
 
-		$trashFolder = $this->getSpecialFolder('trash', true);
+		$trashFolders = $this->getSpecialFolder('trash', true);
 
-		if (empty($trashFolder) === false) {
-			$trashId = $trashFolder->getFolderId();
+		if (count($trashFolders) !== 0) {
+			$trashId = $trashFolders[0]->getFolderId();
 			$createTrash = false;
 		} else {
 			// no trash -> guess
@@ -248,15 +258,36 @@ class Account {
 
 		\OC::$server->getLogger()->info("Message moved to trash: {result}", array('result' => $result));
 	}
-	
-	/*
+        
+        /**
+         * Get 'best' mailbox guess
+         * 
+         * For now the best candidate is the one with
+	 * the most messages in it.
+         * 
+         * @param array $folders
+         * @return Mailbox
+         */
+        protected function guessBestMailBox(array $folders) {
+                $maxMessages = -1;
+                $bestGuess = null;
+                foreach ($folders as $folder) {
+                        /** @var Mailbox $folder */
+                        if ($folder->getTotalMessages() > $maxMessages) {
+                                $maxMessages = $folder->getTotalMessages();
+                                $bestGuess = $folder;
+                        }
+                }
+                return $bestGuess;
+        }
+        
+	/**
 	 * Get mailbox(es) that have the given special use role
 	 *
-	 * With this method we can get a list of all mailboxes tht have been
+	 * With this method we can get a list of all mailboxes that have been
 	 * determined to have a specific special use role. It can also return
 	 * the best candidate for this role, for situations where we want
-	 * one single folder. Right now the best candidate is the one with
-	 * the most messages in it.
+	 * one single folder.
 	 *
 	 * @param string $role Special role of the folder we want to get ('sent', 'inbox', etc.)
 	 * @param bool $guessBest If set to true, return only the folder with the most messages in it
@@ -273,19 +304,10 @@ class Account {
 		}
 
 		if ($guessBest === true && count($specialFolders) > 0) {
-			$maxMessages = 0;
-			$maxFolder = reset($specialFolders);
-			foreach ($specialFolders as $folder) {
-				/** @var Mailbox $folder */
-				if ($folder->getTotalMessages() > $maxMessages) {
-					$maxMessages = $folder->getTotalMessages();
-					$maxFolder = $folder;
-				}
-			}
-			return $maxFolder;
-		} else {
-			return $specialFolders;
-		}
+			return array($this->guessBestMailBox($specialFolders));
+                } else {
+                        return $specialFolders;
+                }
 	}
 
 	/**
