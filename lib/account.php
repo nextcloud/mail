@@ -200,24 +200,24 @@ class Account {
 	 * @return Mailbox The best candidate for the "sent mail" inbox
 	 */
 	public function getSentFolder() {
-                //check for existense
-                $sentFolders = $this->getSpecialFolder('sent', true);
-                if (count($sentFolders) === 0) {
-                        //no special folder found -> search by name
-                        $sentFoldersByName = $this->listMailboxes(array('sent', 'Sent'));
-                        if (count($sentFoldersByName) > 0) {
-                                return $this->guessBestMailbox($sentFoldersByName);
-                        } else {
-                                //sent folder does not exist - let's create one
-                                $conn = $this->getImapConnection();
-                                //TODO: also search for translated sent mailboxes
-                                $conn->createMailbox('Sent', array(
-                                    'special_use' => array('sent'),
-                                ));
-                                return $this->guessBestMailBox($this->listMailboxes('Sent'));
-                        }
-                }
-                return $sentFolders[0];
+		//check for existense
+		$sentFolders = $this->getSpecialFolder('sent', true);
+		if (count($sentFolders) === 0) {
+			//no special folder found -> search by name
+			$sentFoldersByName = $this->listMailboxes(array('sent', 'Sent'));
+			if (count($sentFoldersByName) > 0) {
+				return $this->guessBestMailbox($sentFoldersByName);
+			} else {
+				//sent folder does not exist - let's create one
+				$conn = $this->getImapConnection();
+				//TODO: also search for translated sent mailboxes
+				$conn->createMailbox('Sent', array(
+					'special_use' => array('sent'),
+				));
+				return $this->guessBestMailBox($this->listMailboxes('Sent'));
+			}
+		}
+		return $sentFolders[0];
 	}
 	
 	/**
@@ -258,29 +258,29 @@ class Account {
 
 		\OC::$server->getLogger()->info("Message moved to trash: {result}", array('result' => $result));
 	}
-        
-        /**
-         * Get 'best' mailbox guess
-         * 
-         * For now the best candidate is the one with
+
+	/**
+	 * Get 'best' mailbox guess
+	 * 
+	 * For now the best candidate is the one with
 	 * the most messages in it.
-         * 
-         * @param array $folders
-         * @return Mailbox
-         */
-        protected function guessBestMailBox(array $folders) {
-                $maxMessages = -1;
-                $bestGuess = null;
-                foreach ($folders as $folder) {
-                        /** @var Mailbox $folder */
-                        if ($folder->getTotalMessages() > $maxMessages) {
-                                $maxMessages = $folder->getTotalMessages();
-                                $bestGuess = $folder;
-                        }
-                }
-                return $bestGuess;
-        }
-        
+	 * 
+	 * @param array $folders
+	 * @return Mailbox
+	 */
+	protected function guessBestMailBox(array $folders) {
+		$maxMessages = -1;
+		$bestGuess = null;
+		foreach ($folders as $folder) {
+			/** @var Mailbox $folder */
+			if ($folder->getTotalMessages() > $maxMessages) {
+				$maxMessages = $folder->getTotalMessages();
+				$bestGuess = $folder;
+			}
+		}
+		return $bestGuess;
+	}
+
 	/**
 	 * Get mailbox(es) that have the given special use role
 	 *
@@ -305,9 +305,9 @@ class Account {
 
 		if ($guessBest === true && count($specialFolders) > 0) {
 			return array($this->guessBestMailBox($specialFolders));
-                } else {
-                        return $specialFolders;
-                }
+		} else {
+			return $specialFolders;
+		}
 	}
 
 	/**
