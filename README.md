@@ -7,6 +7,8 @@ Mail app
 
 An email app for [ownCloud](https://owncloud.org) (minimum version 7). At the moment it is a basic IMAP client and in heavy development. (A possibility for the future would be to also have it be a dedicated email server. But that would always be optional, require additional dependencies and is out of scope for now.)
 
+![](https://raw.githubusercontent.com/owncloud/screenshots/master/mail/mail.png)
+
 We’re working towards a [0.1 release](https://github.com/owncloud/mail/milestones/0.1) at the moment. If you experience any issues or have enhancement suggestions, please report them in our [issue tracker](https://github.com/owncloud/mail/issues).
 
 
