@@ -400,8 +400,10 @@ var Mail = {
 							// Remove spinner when loading finished
 							$('iframe').parent().removeClass('icon-loading');
 
-							$('textarea').autosize();
 						});
+
+						$('textarea').autosize({append:'"\n\n"'});
+
 					},
 					error: function() {
 						Mail.UI.showError(t('mail', 'Error while loading the selected message.'));

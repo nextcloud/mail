@@ -40,7 +40,7 @@ var Mail = {
 					view.render();
 
 
-					$('textarea').autosize();
+					$('textarea').autosize({append:'"\n\n"'});
 
 				},
 				error: function() {
