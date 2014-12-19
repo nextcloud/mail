@@ -133,7 +133,7 @@ views.SendMail = Backbone.View.extend({
 		// And render it
 		view.render();
 
-		$('textarea').autosize();
+		$('textarea').autosize({append:'"\n\n"'});
 
 		return this;
 	}
