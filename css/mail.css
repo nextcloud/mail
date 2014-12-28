@@ -121,7 +121,15 @@ button.control {
 	opacity: .3;
 }
 
+#app-navigation ul {
+	overflow-x: hidden;
+}
+
 #app-navigation ul ul {
+	display: block;
+}
+
+#app-navigation ul ul ul {
 	display: none;
 }
 
