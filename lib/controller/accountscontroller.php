@@ -278,7 +278,8 @@ class AccountsController extends Controller
 	}
 
 	/**
-	 * @param $term
+	 * @NoAdminRequired
+	 * @param string $term
 	 */
 	public function autoComplete($term) {
 		return $this->contactsIntegration->getMatchingRecipient( $term );
