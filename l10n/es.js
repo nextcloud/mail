@@ -38,7 +38,7 @@ OC.L10N.register(
     "All" : "Todos",
     "Starred" : "Destacado",
     "Creating account failed: " : "No se pudo crear la cuenta:",
-    "Auto detect failed. Please use manual mode." : "La auto detección falló. Use el modo manual.",
+    "Auto detect failed. Please use manual mode." : "La autodetección falló. Use el modo manual.",
     "from" : "Desde",
     "+ cc/bcc" : "+ cc/bcc",
     "to" : "para",
