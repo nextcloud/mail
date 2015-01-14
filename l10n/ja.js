@@ -58,7 +58,7 @@ OC.L10N.register(
     "Forward" : "転送",
     "New Mail Account" : "新規メールアカウント",
     "Check mail …" : "メール確認 ...",
-    "No messages in this folder!" : "このフォルダにメッセージはありません。",
+    "No messages in this folder!" : "このフォルダーにメッセージはありません。",
     "New Message" : "新しいメッセージ",
     "Connect your mail account" : "メールアカウントに接続",
     "Name" : "名前",
