@@ -54,7 +54,7 @@ OC.L10N.register(
     "Save to Files" : "Guardar en Archivos",
     "Save all to Files" : "Guardar todo en Archivos",
     "+ cc" : "+ cc",
-    "Reply …" : "Responder …",
+    "Reply …" : "Responder…",
     "Forward" : "Reenviar",
     "New Mail Account" : "Nueva cuenta de correo electrónico ",
     "Check mail …" : "Revisar correo...",
