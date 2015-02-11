@@ -12,7 +12,7 @@
     "Error while loading the selected message." : "選択メッセージの読み込み中にエラーが発生",
     "Connecting …" : "接続中 …",
     "Unknown error" : "不明なエラー",
-    "Error while creating an account: " : "アカウント作成エラー",
+    "Error while creating an account: " : "アカウント作成エラー:",
     "Connect" : "接続",
     "Sending …" : "送信中 …",
     "Reply" : "返信",

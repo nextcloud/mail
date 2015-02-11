@@ -37,7 +37,7 @@ $TRANSLATIONS = array(
 "All" => "Vše",
 "Starred" => "S hvězdičkou",
 "Creating account failed: " => "Vytvoření účtu selhalo:",
-"Auto detect failed. Please use manual mode." => "Autodetekce selhala. Prosím použijte ruční nastavení.",
+"Auto detect failed. Please use manual mode." => "Autodetekce selhala. Použijte prosím ruční nastavení.",
 "from" => "od",
 "+ cc/bcc" => "+cc/bcc",
 "to" => "do",
@@ -77,6 +77,6 @@ $TRANSLATIONS = array(
 "Redirect Warning" => "Upozornění na přesměrování",
 "The previous page is sending you to %s." => "Předchozí stránka vás přesměrovává na %s.",
 "If you do not want to visit that page, you can return to <a href=\"%s\">the mail app</a>." => "Pokud nechcete tuto stránku navštívit, vraťte se do <a href=\"%s\">emailové aplikace</a>.",
-"Click here to visit the website." => "Klikněte zde pro navštívení webové stránky."
+"Click here to visit the website." => "Klikněte sem pro otevření webové stránky."
 );
 $PLURAL_FORMS = "nplurals=3; plural=(n==1) ? 0 : (n>=2 && n<=4) ? 1 : 2;";
