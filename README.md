@@ -32,3 +32,11 @@ Just clone this repo into your apps directory. Additionally you need Composer to
 curl -sS https://getcomposer.org/installer | php
 php composer.phar install
 ```
+
+### How do I reset the Mail app
+Connect to your database and run the following commands where **oc\_** is your table prefix (defaults to oc\_)
+
+```sql
+DELETE FROM oc_appconfig WHERE appid = 'mail';
+DROP TABLE oc_mail_accounts;
+```
