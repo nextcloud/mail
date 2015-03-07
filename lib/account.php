@@ -203,19 +203,13 @@ class Account {
 		//check for existense
 		$sentFolders = $this->getSpecialFolder('sent', true);
 		if (count($sentFolders) === 0) {
-			//no special folder found -> search by name
-			$sentFoldersByName = $this->listMailboxes(array('sent', 'Sent'));
-			if (count($sentFoldersByName) > 0) {
-				return $this->guessBestMailbox($sentFoldersByName);
-			} else {
-				//sent folder does not exist - let's create one
-				$conn = $this->getImapConnection();
-				//TODO: also search for translated sent mailboxes
-				$conn->createMailbox('Sent', array(
-					'special_use' => array('sent'),
-				));
-				return $this->guessBestMailBox($this->listMailboxes('Sent'));
-			}
+			//sent folder does not exist - let's create one
+			$conn = $this->getImapConnection();
+			//TODO: also search for translated sent mailboxes
+			$conn->createMailbox('Sent', array(
+				'special_use' => array('sent'),
+			));
+			return $this->guessBestMailBox($this->listMailboxes('Sent'));
 		}
 		return $sentFolders[0];
 	}
