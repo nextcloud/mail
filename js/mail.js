@@ -240,7 +240,13 @@ var Mail = {
 								Mail.UI.addMessages(jsondata);
 								var messageId = jsondata[0].id;
 								Mail.UI.openMessage(messageId);
-								$('#load-more-mail-messages').fadeIn().css('display','block');
+                                                                // Show 'Load More' button if there are
+                                                                // more messages than the pagination limit
+								if (jsondata.length > 20) {
+                                                                        $('#load-more-mail-messages')
+                                                                                .fadeIn()
+                                                                                .css('display','block');
+                                                                }
 							} else {
 								$('#emptycontent').show();
 								$('#mail-message').removeClass('icon-loading');
