@@ -236,6 +236,11 @@ var Mail = {
 							Mail.State.currentFolderId = folderId;
 							Mail.UI.setMessageActive(null);
 							$('#mail_messages').removeClass('icon-loading');
+							
+							// Fade out the message composer
+							$('#mail_new_message').prop('disabled', false);
+							$('#new-message').hide();
+			
 							if(jsondata.length > 0) {
 								Mail.UI.addMessages(jsondata);
 								var messageId = jsondata[0].id;
@@ -320,10 +325,6 @@ var Mail = {
 		},
 
 		openMessage:function (messageId) {
-			// Fade out the message composer
-			$('#mail_new_message').prop('disabled', false);
-			$('#new-message').hide();
-
 			// Do not reload email when clicking same again
 			if(Mail.State.currentMessageId === messageId) {
 				return;
