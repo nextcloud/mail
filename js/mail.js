@@ -228,7 +228,7 @@ var Mail = {
 			} else {
 				$.ajax(
 					OC.generateUrl('apps/mail/accounts/{accountId}/folders/{folderId}/messages',
-						{'accountId':accountId, 'folderId':encodeURIComponent(folderId)}), {
+						{'accountId':accountId, 'folderId':folderId}), {
 						data: {},
 						type:'GET',
 						success: function (jsondata) {
@@ -287,7 +287,7 @@ var Mail = {
 							'apps/mail/accounts/{accountId}/folders/{folderId}/messages/{messageId}/attachment/{attachmentId}',
 						{
 							accountId: Mail.State.currentAccountId,
-							folderId: encodeURIComponent(Mail.State.currentFolderId),
+							folderId: Mail.State.currentFolderId,
 							messageId: messageId,
 							attachmentId: attachmentId
 						}), {
@@ -352,7 +352,7 @@ var Mail = {
 				OC.generateUrl('apps/mail/accounts/{accountId}/folders/{folderId}/messages/{messageId}',
 					{
 					accountId: Mail.State.currentAccountId,
-					folderId: encodeURIComponent(Mail.State.currentFolderId),
+					folderId: Mail.State.currentFolderId,
 					messageId: messageId
 				}), {
 					data: {},
