@@ -43,7 +43,7 @@ OC.L10N.register(
     "+ cc/bcc" : "+ cc/bcc",
     "to" : "à",
     "cc" : "cc",
-    "bcc" : "bcc",
+    "bcc" : "cci",
     "Subject" : "Sujet",
     "Message …" : "Message ...",
     "Add attachment from Files" : "Ajouter une pièce jointe depuis les Fichiers",
