@@ -52,7 +52,7 @@ views.Message = Backbone.Marionette.ItemView.extend({
 			OC.generateUrl('apps/mail/accounts/{accountId}/folders/{folderId}/messages/{messageId}/toggleStar',
 			{
 				accountId: Mail.State.currentAccountId,
-				folderId: encodeURIComponent(Mail.State.currentFolderId),
+				folderId: Mail.State.currentFolderId,
 				messageId: messageId
 			}), {
 				data: {
@@ -98,7 +98,7 @@ views.Message = Backbone.Marionette.ItemView.extend({
 			OC.generateUrl('apps/mail/accounts/{accountId}/folders/{folderId}/messages/{messageId}',
 				{
 				accountId: Mail.State.currentAccountId,
-				folderId: encodeURIComponent(Mail.State.currentFolderId),
+				folderId: Mail.State.currentFolderId,
 				messageId: thisModel.id
 			}), {
 				data: {},
@@ -208,7 +208,7 @@ views.Messages = Backbone.Marionette.CompositeView.extend({
 			OC.generateUrl('apps/mail/accounts/{accountId}/folders/{folderId}/messages?from={from}&to={to}',
 				{
 				'accountId': Mail.State.currentAccountId,
-				'folderId':encodeURIComponent(Mail.State.currentFolderId),
+				'folderId':Mail.State.currentFolderId,
 				'from': from,
 				'to': from + 20
 			}), {
