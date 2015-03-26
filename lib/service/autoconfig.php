@@ -19,14 +19,22 @@ use OCA\Mail\Db\MailAccount;
 class AutoConfig {
 
 	/**
+	 *
+	 * @var Logger 
+	 */
+	private $logger;
+	
+	/**
 	 * @var string
 	 */
 	private $userId;
 
 	/**
+	 * @param Logger $logger
 	 * @param string $userId
 	 */
-	public function __construct($userId) {
+	public function __construct(Logger $logger, $userId) {
+		$this->logger = $logger;
 		$this->userId = $userId;
 	}
 
@@ -61,7 +69,7 @@ class AutoConfig {
 							return $this->connectImap($email, $password, $name, $host, $port, $encryptionProtocol, $user);
 						} catch (\Horde_Imap_Client_Exception $e) {
 							$error = $e->getMessage();
-							$this->log("Test-Account-Failed: $this->userId, $url, $port, $user, $encryptionProtocol -> $error");
+							$this->logger->info("Test-Account-Failed: $this->userId, $url, $port, $user, $encryptionProtocol -> $error");
 						}
 					}
 				}
@@ -104,12 +112,12 @@ class AutoConfig {
 							$smtp = $a->createTransport();
 							$smtp->getSMTPObject();
 
-							$this->log("Test-Account-Successful: $this->userId, $url, $port, $user, $protocol");
+							$this->logger->info("Test-Account-Successful: $this->userId, $url, $port, $user, $protocol");
 
 							return $account;
 						} catch (\Exception $e) {
 							$error = $e->getMessage();
-							$this->log("Test-Account-Failed: $this->userId, $url, $port, $user, $protocol -> $error");
+							$this->logger->info("Test-Account-Failed: $this->userId, $url, $port, $user, $protocol -> $error");
 						}
 					}
 				}
@@ -148,7 +156,7 @@ class AutoConfig {
 					} elseif ($imap['username'] === '%EMAILLOCALPART%') {
 						list($user,) = explode("@", $email);
 					} else {
-						$this->log("Unknown username variable: " . $imap['username']);
+						$this->logger->info("Unknown username variable: " . $imap['username']);
 						return null;
 					}
 					try {
@@ -156,7 +164,7 @@ class AutoConfig {
 						break;
 					} catch (\Horde_Imap_Client_Exception $e) {
 						$error = $e->getMessage();
-						$this->log("Test-Account-Failed: $this->userId, $host, $port, $user, $encryptionProtocol -> $error");
+						$this->logger->info("Test-Account-Failed: $this->userId, $host, $port, $user, $encryptionProtocol -> $error");
 					}
 				}
 			}
@@ -168,7 +176,7 @@ class AutoConfig {
 						} elseif ($smtp['username'] === '%EMAILLOCALPART%') {
 							list($user,) = explode("@", $email);
 						} else {
-							$this->log("Unknown username variable: " . $smtp['username']);
+							$this->logger->info("Unknown username variable: " . $smtp['username']);
 							return null;
 						}
 
@@ -185,7 +193,7 @@ class AutoConfig {
 						break;
 					} catch(\PEAR_Exception $ex) {
 						$error = $ex->getMessage();
-						$this->log("Test-Account-Failed(smtp): $error");
+						$this->logger->info("Test-Account-Failed(smtp): $error");
 					}
 
 				}
@@ -199,11 +207,6 @@ class AutoConfig {
 		}
 
 		return null;
-	}
-
-	private function log($message) {
-		// TODO: DI
-		\OC::$server->getLogger()->info($message, array('app' => 'mail'));
 	}
 
 	/**
@@ -374,7 +377,7 @@ class AutoConfig {
 
 		$a = new Account($account);
 		$a->getImapConnection();
-		$this->log("Test-Account-Successful: $this->userId, $host, $port, $user, $encryptionProtocol");
+		$this->logger->info("Test-Account-Successful: $this->userId, $host, $port, $user, $encryptionProtocol");
 		return $account;
 	}
 
