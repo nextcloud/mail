@@ -37,18 +37,25 @@ class MessagesController extends Controller
 	 * @var ContactsIntegration
 	 */
 	private $contactsIntegration;
+	
+	/**
+	 *
+	 * @var \OCA\Mail\Service\Logger
+	 */
+	private $logger;
 
 	/**
 	 * @var \OCP\Files\Folder
 	 */
 	private $userFolder;
 
-	public function __construct($appName, $request, $mapper, $currentUserId, $userFolder, $contactsIntegration){
+	public function __construct($appName, $request, $mapper, $currentUserId, $userFolder, $contactsIntegration, $logger) {
 		parent::__construct($appName, $request);
 		$this->mapper = $mapper;
 		$this->currentUserId = $currentUserId;
 		$this->userFolder = $userFolder;
 		$this->contactsIntegration = $contactsIntegration;
+		$this->logger = $logger;
 	}
 
 	/**
@@ -62,6 +69,10 @@ class MessagesController extends Controller
 	public function index($from=0, $to=20)
 	{
 		$mailBox = $this->getFolder();
+		
+		$folderId = $mailBox->getFolderId();
+		$this->logger->debug("loading messages $from to $to of folder <$folderId>");
+		
 		$json = $mailBox->getMessages($from, $to-$from);
 
 		$ci = $this->contactsIntegration;
