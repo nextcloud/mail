@@ -60,6 +60,12 @@ class AccountsController extends Controller
 	 * @var \OCP\Files\Folder
 	 */
 	private $userFolder;
+	
+	/**
+	 *
+	 * @var Logger
+	 */
+	private $logger;
 
 	public function __construct($appName,
 		$request,
@@ -67,13 +73,15 @@ class AccountsController extends Controller
 		$currentUserId,
 		$userFolder,
 		$contactsIntegration,
-		$autoConfig) {
+		$autoConfig,
+		$logger) {
 		parent::__construct($appName, $request);
 		$this->mapper = $mailAccountMapper;
 		$this->currentUserId = $currentUserId;
 		$this->userFolder = $userFolder;
 		$this->contactsIntegration = $contactsIntegration;
 		$this->autoConfig = $autoConfig;
+		$this->logger = $logger;
 	}
 
 	/**
@@ -140,37 +148,44 @@ class AccountsController extends Controller
 	{
 		try {
 			if ($autoDetect) {
+				$this->logger->info('setting up auto detected account');
 				$name = $this->params('accountName');
 				$email = $this->params('emailAddress');
 				$password = $this->params('password');
 				$newAccount = $this->autoConfig->createAutoDetected($email, $password, $name);
 			} else {
+				$this->logger->info('Setting up manually configured account');
 				$newAccount = new MailAccount($this->getParams());
 				$newAccount->setUserId($this->currentUserId);
 
 				$a = new Account($newAccount);
 				// connect to imap
+				$this->logger->debug('Connecting to imap');
 				$a->getImapConnection();
 
 				// connect to smtp
+				$this->logger->debug('Connecting to smtp');
 				$smtp = $a->createTransport();
 				$smtp->getSMTPObject();
 			}
 
 			if ($newAccount) {
 				$this->mapper->save($newAccount);
+				$this->logger->debug("account created " . $name->getId());
 				return new JSONResponse(
 					array('data' => array('id' => $newAccount->getId())),
 					Http::STATUS_CREATED);
 			}
 		} catch (\Exception $ex) {
 			$l = new \OC_L10N('mail');
+			$this->logger->error('Creating account failed: ' . $ex->getMessage());
 			return new JSONResponse(
-				array('message' => $l->t('Creating account failed: ' . $ex->getMessage())),
+				array('message' => $l->t('Creating account failed: ') . $ex->getMessage()),
 				HTTP::STATUS_BAD_REQUEST);
 		}
 
 		$l = new \OC_L10N('mail');
+		$this->logger->info('Auto detect failed');
 		return new JSONResponse(
 			array('message' => $l->t('Auto detect failed. Please use manual mode.')),
 			HTTP::STATUS_BAD_REQUEST);
