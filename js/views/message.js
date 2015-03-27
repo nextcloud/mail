@@ -223,7 +223,7 @@ views.Messages = Backbone.Marionette.CompositeView.extend({
 
 					$('#app-content').removeClass('icon-loading');
 
-					Mail.State.currentMessageId = null;
+					Mail.UI.setMessageActive(Mail.State.currentMessageId);
 				},
 				error: function() {
 					Mail.UI.showError(t('mail', 'Error while loading messages.'));
