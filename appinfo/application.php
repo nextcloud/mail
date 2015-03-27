@@ -56,7 +56,8 @@ class Application extends App {
 				$c->query('UserId'),
 				$c->getServer()->getUserFolder(),
 				$c->query('ContactsIntegration'),
-				$c->query('AutoConfig')
+				$c->query('AutoConfig'),
+				$c->query('Logger')
 			);
 		});
 
