@@ -596,8 +596,15 @@ $(document).ready(function () {
 				Mail.UI.loadFoldersForAccount(newAccountId, newAccountId);
 			},
 			error: function (jqXHR, textStatus, errorThrown) {
-				var error = errorThrown || textStatus || t('mail', 'Unknown error');
-				Mail.UI.showError(t('mail', 'Error while creating an account: ' + error));
+				switch (jqXHR.status) {
+					case 400:
+						var response = JSON.parse(jqXHR.responseText);
+						Mail.UI.showError(t('mail', response.message));
+						break;
+					default:
+						var error = errorThrown || textStatus || t('mail', 'Unknown error');
+						Mail.UI.showError(t('mail', 'Error while creating an account: ' + error));
+				}
 			},
 			complete: function () {
 				$('#mail-account-name, #mail-address, #mail-password, #mail-setup-manual-toggle')
