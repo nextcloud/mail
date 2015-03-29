@@ -38,6 +38,7 @@ class TestHtml extends \PHPUnit_Framework_TestCase {
 			array('(<a href="https://build.opensuse.org/package/view_file/isv:ownCloud:community:7.0/owncloud/debian.changelog?expand=1" target="_blank" rel="noreferrer">https://build.opensuse.org/package/view_file/isv:ownCloud:community:7.0/owncloud/debian.changelog?expand=1</a>)', '(https://build.opensuse.org/package/view_file/isv:ownCloud:community:7.0/owncloud/debian.changelog?expand=1)'),
 			array('<a href="http://apps.owncloud.com/content/show.php/Music?content=160485" target="_blank" rel="noreferrer">http://apps.owncloud.com/content/show.php/Music?content=160485</a>', 'http://apps.owncloud.com/content/show.php/Music?content=160485'),
 			array('<a href="https://groups.google.com/forum/#!forum/ctpug" target="_blank" rel="noreferrer">https://groups.google.com/forum/#!forum/ctpug</a>', 'https://groups.google.com/forum/#!forum/ctpug'),
+			array('<a href="http://www.amazon.de/s/ref=nb_sb_noss?__mk_de_DE=%C3%85M%C3%85%C5%BD%C3%95%C3%91&url=search-alias%3Daps&field-keywords=Fax%2C+Kopierer+scanner+Laser&rh=i%3Aaps%2Ck%3AFax%5Cc+Kopierer+scanner+Laser" target="_blank" rel="noreferrer">http://www.amazon.de/s/ref=nb_sb_noss?__mk_de_DE=%C3%85M%C3%85%C5%BD%C3%95%C3%91&url=search-alias%3Daps&field-keywords=Fax%2C+Kopierer+scanner+Laser&rh=i%3Aaps%2Ck%3AFax%5Cc+Kopierer+scanner+Laser</a>', 'http://www.amazon.de/s/ref=nb_sb_noss?__mk_de_DE=%C3%85M%C3%85%C5%BD%C3%95%C3%91&url=search-alias%3Daps&field-keywords=Fax%2C+Kopierer+scanner+Laser&rh=i%3Aaps%2Ck%3AFax%5Cc+Kopierer+scanner+Laser'),
 		);
 	}
 
