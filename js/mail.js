@@ -105,8 +105,8 @@ var Mail = {
 			});
 			Mail.State.folderView.render();
 
-			Mail.State.folderView.listenTo(Mail.State.messageView, 'change:flags',
-				Mail.State.folderView.changeMessageFlags);
+			Mail.State.folderView.listenTo(Mail.State.messageView, 'change:unseen',
+				Mail.State.folderView.changeUnseen);
 
 			$.ajax(OC.generateUrl('apps/mail/accounts'), {
 				data:{},
