@@ -67,13 +67,8 @@ views.Folders = Backbone.Marionette.CollectionView.extend({
 	initialize: function() {
 		this.collection = new models.AccountList();
 	},
-
-	changeMessageFlags: function(model) {
-		var unseen = model.get('flags').get('unseen');
-		var prevUnseen = model._previousAttributes.flags.get('unseen');
-		if (unseen === prevUnseen) {
-			return;
-		}
+	
+	changeUnseen: function(model, unseen) {
 		// TODO: currentFolderId and currentAccountId should be an attribute of this view
 		var activeAccount = Mail.State.currentAccountId;
 		var activeFolder = Mail.State.currentFolderId;
@@ -82,7 +77,9 @@ views.Folders = Backbone.Marionette.CollectionView.extend({
 		if (unseen) {
 			activeFolder.set('unseen', activeFolder.get('unseen') + 1);
 		} else {
-			activeFolder.set('unseen', activeFolder.get('unseen') - 1);
+			if (activeFolder.get('unseen') > 0) {
+				activeFolder.set('unseen', activeFolder.get('unseen') - 1);
+			}
 		}
 	}
 
