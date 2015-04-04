@@ -171,7 +171,7 @@ class AccountsController extends Controller
 
 			if ($newAccount) {
 				$this->mapper->save($newAccount);
-				$this->logger->debug("account created " . $name->getId());
+				$this->logger->debug("account created " . $newAccount->getId());
 				return new JSONResponse(
 					array('data' => array('id' => $newAccount->getId())),
 					Http::STATUS_CREATED);
