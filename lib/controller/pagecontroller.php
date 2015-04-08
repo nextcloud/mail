@@ -67,7 +67,17 @@ class PageController extends Controller {
 		\OCP\Util::addStyle('mail','mail');
 		\OCP\Util::addStyle('mail','mobile');
 
-		return new TemplateResponse($this->appName, 'index', array());
+
+		$response = new TemplateResponse($this->appName, 'index', array());
+		// set csp rules for ownCloud 8.1
+		if (class_exists('OCP\AppFramework\Http\ContentSecurityPolicy')) {
+			$csp = new \OCP\AppFramework\Http\ContentSecurityPolicy();
+			$csp->addAllowedFrameDomain('\'self\'');
+			$response->setContentSecurityPolicy($csp);
+	        }
+
+
+		return $response;
 	}
 
 	/**
