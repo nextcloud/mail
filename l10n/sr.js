@@ -34,7 +34,7 @@ OC.L10N.register(
     "Drafts" : "Недовршено",
     "Archive" : "Архива",
     "Trash" : "Смеће",
-    "Junk" : "Ђубре",
+    "Junk" : "Отпад",
     "All" : "Све",
     "Starred" : "Означено звездицом",
     "Creating account failed: " : "Прављење налога није успело:",

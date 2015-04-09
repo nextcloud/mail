@@ -105,8 +105,8 @@ var Mail = {
 			});
 			Mail.State.folderView.render();
 
-			Mail.State.folderView.listenTo(Mail.State.messageView, 'change:flags',
-				Mail.State.folderView.changeMessageFlags);
+			Mail.State.folderView.listenTo(Mail.State.messageView, 'change:unseen',
+				Mail.State.folderView.changeUnseen);
 
 			$.ajax(OC.generateUrl('apps/mail/accounts'), {
 				data:{},
@@ -228,7 +228,7 @@ var Mail = {
 			} else {
 				$.ajax(
 					OC.generateUrl('apps/mail/accounts/{accountId}/folders/{folderId}/messages',
-						{'accountId':accountId, 'folderId':encodeURIComponent(folderId)}), {
+						{'accountId':accountId, 'folderId':folderId}), {
 						data: {},
 						type:'GET',
 						success: function (jsondata) {
@@ -245,7 +245,13 @@ var Mail = {
 								Mail.UI.addMessages(jsondata);
 								var messageId = jsondata[0].id;
 								Mail.UI.openMessage(messageId);
-								$('#load-more-mail-messages').fadeIn().css('display','block');
+                                                                // Show 'Load More' button if there are
+                                                                // more messages than the pagination limit
+								if (jsondata.length > 20) {
+                                                                        $('#load-more-mail-messages')
+                                                                                .fadeIn()
+                                                                                .css('display','block');
+                                                                }
 							} else {
 								$('#emptycontent').show();
 								$('#mail-message').removeClass('icon-loading');
@@ -287,7 +293,7 @@ var Mail = {
 							'apps/mail/accounts/{accountId}/folders/{folderId}/messages/{messageId}/attachment/{attachmentId}',
 						{
 							accountId: Mail.State.currentAccountId,
-							folderId: encodeURIComponent(Mail.State.currentFolderId),
+							folderId: Mail.State.currentFolderId,
 							messageId: messageId,
 							attachmentId: attachmentId
 						}), {
@@ -352,7 +358,7 @@ var Mail = {
 				OC.generateUrl('apps/mail/accounts/{accountId}/folders/{folderId}/messages/{messageId}',
 					{
 					accountId: Mail.State.currentAccountId,
-					folderId: encodeURIComponent(Mail.State.currentFolderId),
+					folderId: Mail.State.currentFolderId,
 					messageId: messageId
 				}), {
 					data: {},
