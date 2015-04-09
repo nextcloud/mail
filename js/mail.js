@@ -200,7 +200,6 @@ var Mail = {
 
 		loadMessages:function (accountId, folderId, noSelect) {
 			// Set folder active
-			Mail.UI.setFolderInactive(Mail.State.currentAccountId, Mail.State.currentFolderId);
 			Mail.UI.setFolderActive(accountId, folderId);
 			Mail.UI.clearMessages();
 			$('#mail_messages')
@@ -265,7 +264,6 @@ var Mail = {
 						error: function() {
 
 							// Set the old folder as being active
-							Mail.UI.setFolderInactive(accountId, folderId);
 							Mail.UI.setFolderActive(Mail.State.currentAccountId, Mail.State.currentFolderId);
 
 							Mail.UI.showError(t('mail', 'Error while loading messages.'));
@@ -419,6 +417,8 @@ var Mail = {
 		},
 
 		setFolderActive:function (accountId, folderId) {
+			$('.mail_folders[data-account_id="' + accountId + '"] li')
+				.removeClass('active');
 			$('.mail_folders[data-account_id="' + accountId + '"] li[data-folder_id="' + folderId + '"]')
 				.addClass('active');
 		},
@@ -439,11 +439,6 @@ var Mail = {
 			$('#mail-setup').removeClass('hidden');
 			// don't show New Message button on Add account screen
 			$('#mail_new_message').hide();
-		},
-
-		setFolderInactive:function (accountId, folderId) {
-			$('.mail_folders[data-account_id="' + accountId + '"] li[data-folder_id="' + folderId + '"]')
-				.removeClass('active');
 		}
 	}
 };
