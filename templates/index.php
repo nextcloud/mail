@@ -177,7 +177,7 @@
 	<ul class="mailaccount-list">
 		{{#each this}}
 		<li id="mail-account-{{accountId}}" data-account-id="{{accountId}}">
-			{{emailAddress}}
+			<span class="mail-account-name">{{emailAddress}}</span>
 			<span class="actions">
 				<a class="icon-delete delete action" original-title="Delete"></a>
 			</span>

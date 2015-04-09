@@ -160,6 +160,8 @@ button.control {
 .mail_account_email {
 	opacity: .5;
 	padding: 20px 0 10px 12px;
+	overflow: hidden;
+	text-overflow: ellipsis;
 }
 
 .mailaccount-list li {
@@ -552,6 +554,17 @@ button.control {
 	margin: 0 auto;
 }
 
+
+/* settings */
+.mailaccount-list .mail-account-name {
+	display: inline-block;
+	width: 90%;
+	overflow: hidden;
+	text-overflow: ellipsis;
+}
+.mailaccount-list .actions {
+	opacity: .5;
+}
 
 
 /* icons */
