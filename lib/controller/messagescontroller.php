@@ -141,7 +141,7 @@ class MessagesController extends Controller
 	 * @NoCSRFRequired
 	 *
 	 * @param int $messageId
-	 * @param int $attachmentId
+	 * @param string $attachmentId
 	 * @return AttachmentDownloadResponse
 	 */
 	public function downloadAttachment($messageId, $attachmentId)

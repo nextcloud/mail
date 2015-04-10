@@ -284,7 +284,7 @@ class Mailbox {
 
 	/**
 	 * @param int $messageId
-	 * @param int $attachmentId
+	 * @param string $attachmentId
 	 * @return Attachment
 	 */
 	public function getAttachment($messageId, $attachmentId) {
