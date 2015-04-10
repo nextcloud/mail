@@ -60,7 +60,7 @@ views.SendMail = Backbone.View.extend({
 		$.ajax({
 			url:OC.generateUrl('/apps/mail/accounts/{accountId}/send', {accountId: this.currentAccountId}),
 			beforeSend:function () {
-				OC.msg.startAction('#new-message-msg', {});
+				OC.msg.startAction('#new-message-msg', "");
 			},
 			type: 'POST',
 			data:{
@@ -75,7 +75,7 @@ views.SendMail = Backbone.View.extend({
 				OC.msg.finishedAction('#new-message-msg', {
 					status: 'success',
 					data: {
-						message: t('mail', 'Message sent to {Receiver}', {Receiver: escapeHTML(to.val())})
+						message: t('mail', 'Message sent to {Receiver}', {Receiver: to.val()}, 0, {escape: false})
 					}
 				});
 
