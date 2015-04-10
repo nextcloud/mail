@@ -28,7 +28,7 @@ If you’d like to join, just go through the [issue list](https://github.com/own
 
 Developer setup info
 --------------------
-Just clone this repo into your apps directory. Additionally you need Composer to install dependencies:
+Just clone this repo into your apps directory ([ownCloud Core installation needed](https://doc.owncloud.org/server/8.1/developer_manual/general/devenv.html)). Additionally you need Composer to install dependencies:
 ```bash
 curl -sS https://getcomposer.org/installer | php
 php composer.phar install
