@@ -18,8 +18,9 @@ Maintainers
 - [Thomas Müller](https://github.com/DeepDiver1975)
 - [Jan-Christoph Borchardt](https://github.com/jancborchardt)
 - [Lukas Reschke](https://github.com/LukasReschke)
+- [Christoph Wurst](https://github.com/wurstchristoph)
 - [Thomas Imbreckx](https://github.com/zinks-)
-- [PoPoutdoor](https://github.com/PoPoutdoor)
+- [Plato Leung](https://github.com/PoPoutdoor)
 - [Steffen Lindner](https://github.com/Gomez)
 - past contributors: [Jakob Sack](https://github.com/jakobsack), [Bart Visscher](https://github.com/bartv2), [Sebastian Schmid](https://github.com/sebastian-schmid)
 
