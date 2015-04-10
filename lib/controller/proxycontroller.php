@@ -85,6 +85,7 @@ class ProxyController extends Controller {
 
 	/**
 	 * @NoAdminRequired
+	 * @NoCSRFRequired
 	 *
 	 * TODO: Cache the proxied content to prevent unnecessary requests from the oC server
 	 *       The caching should also already happen in a cronjob so that the sender of the
