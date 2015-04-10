@@ -184,7 +184,7 @@
 		</li>
 		{{/each}}
 	</ul>
-	<input id="new_mail_account" type="submit" value="<?php p($l->t('New Mail Account')); ?>" class="new-button">
+	<input id="new_mail_account" type="submit" value="<?php p($l->t('Add mail account')); ?>" class="new-button">
 </div>
 </script>
 <script id="new-message-template" type="text/x-handlebars-template">
@@ -221,7 +221,7 @@
 	<input type="button" id="mail_new_attachment" value="<?php p($l->t('Add attachment from Files')); ?>">
 </script>
 <script id="message-list-template" type="text/x-handlebars-template">
-	<input type="button" id="load-new-mail-messages" value="<?php p($l->t('Check mail …')); ?>">
+	<input type="button" id="load-new-mail-messages" value="<?php p($l->t('Check messages …')); ?>">
 	<div id="emptycontent" style="display: none;"><?php p($l->t('No messages in this folder!')); ?></div>
 	<div id="mail-message-list"></div>
 	<input type="button" id="load-more-mail-messages" value="<?php p($l->t('Load more …')); ?>">
@@ -231,7 +231,7 @@
 		<ul>
 			<li>
 			<input type="button" id="mail_new_message" class="icon-add"
-				value="<?php p($l->t('New Message')); ?>" style="display: none">
+				value="<?php p($l->t('New message')); ?>" style="display: none">
 			</li>
 			<li>
 				<div id="folders"></div>
