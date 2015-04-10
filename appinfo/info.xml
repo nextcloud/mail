@@ -2,9 +2,11 @@
 <info>
 	<id>mail</id>
 	<name>Mail</name>
-	<description>Just a mail app</description>
+	<description>Easy to use email client which connects to your mail server via IMAP and SMTP.</description>
 	<version>0.1</version>
 	<licence>AGPL</licence>
-	<author>Thomas Müller &amp; Jan-Christoph Borchardt &amp; Lukas Reschke</author>
-	<require>7</require>
+	<author>Thomas Müller, Jan-Christoph Borchardt, Lukas Reschke, Christoph Wurst, Thomas Imbreckx, Steffen Lindner, Plato Leung &amp; many more …</author>
+	<dependencies>
+		<owncloud min-version="8.0" max-version="8.1" />
+	</dependencies>
 </info>
