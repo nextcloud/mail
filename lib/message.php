@@ -23,6 +23,7 @@
 namespace OCA\Mail;
 
 use Horde_Imap_Client;
+use Horde_Imap_Client_Data_Fetch;
 use OCA\Mail\Service\Html;
 use OCP\AppFramework\Db\DoesNotExistException;
 use OCP\Util;
@@ -274,31 +275,6 @@ class Message {
 	}
 
 	/**
-	 * @param integer $partId
-	 */
-	private function queryBodyPart($partId) {
-
-		$fetch_query = new \Horde_Imap_Client_Fetch_Query();
-		$ids = new \Horde_Imap_Client_Ids($this->messageId);
-
-		$query_opts = array(
-			'decode' => true
-		);
-
-		$fetch_query->bodyPart($partId, $query_opts);
-		$fetch_query->bodyPartSize($partId);
-
-		$headers = $this->conn->fetch($this->mailBox, $fetch_query, array('ids' => $ids));
-		/** @var $fetch \Horde_Imap_Client_Data_Fetch */
-		$fetch = $headers[$this->messageId];
-		if (is_null($fetch)) {
-			throw new DoesNotExistException("Mail body for this mail($this->messageId) could not be loaded");
-		}
-
-		return $fetch->getBodyPart($partId);
-	}
-
-	/**
 	 * @param $p \Horde_Mime_Part
 	 * @param $partNo
 	 */
@@ -436,7 +412,27 @@ class Message {
 	 */
 	private function loadBodyData($p, $partNo) {
 		// DECODE DATA
-		$data = $this->queryBodyPart($partNo);
+		$fetch_query = new \Horde_Imap_Client_Fetch_Query();
+		$ids = new \Horde_Imap_Client_Ids($this->messageId);
+
+		$fetch_query->bodyPart($partNo);
+		$fetch_query->bodyPartSize($partNo);
+		$fetch_query->mimeHeader($partNo);
+
+		$headers = $this->conn->fetch($this->mailBox, $fetch_query, array('ids' => $ids));
+		/** @var $fetch \Horde_Imap_Client_Data_Fetch */
+		$fetch = $headers[$this->messageId];
+		if (is_null($fetch)) {
+			throw new DoesNotExistException("Mail body for this mail($this->messageId) could not be loaded");
+		}
+
+		$mimeHeaders = $fetch->getMimeHeader($partNo, Horde_Imap_Client_Data_Fetch::HEADER_PARSE);
+		if ($enc = $mimeHeaders->getValue('content-transfer-encoding')) {
+			$p->setTransferEncoding($enc);
+		}
+
+		$data = $fetch->getBodyPart($partNo);
+
 		$p->setContents($data);
 		$data = $p->getContents();
 
