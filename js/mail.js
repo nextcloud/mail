@@ -339,9 +339,6 @@ var Mail = {
 			// close email first
 			// Check if message is open
 			if (Mail.State.currentMessageId !== null) {
-				$('#mail-message')
-					.html('')
-					.addClass('icon-loading');
 				var lastMessageId = Mail.State.currentMessageId;
 				Mail.UI.setMessageActive(null);
 				if (lastMessageId === messageId) {
@@ -349,8 +346,16 @@ var Mail = {
 				}
 			}
 
+			$('#mail-message')
+				.html('')
+				.addClass('icon-loading');
+
 			// Set current Message as active
 			Mail.UI.setMessageActive(messageId);
+
+			// Fade out the message composer
+			$('#mail_new_message').prop('disabled', false);
+			$('#new-message').hide();
 
 			var mailBody = $('#mail-message');
 
