@@ -208,13 +208,19 @@ class Message {
 			 * @var \Horde_Mime_Part $p
 			 */
 			$filename = $p->getName();
-			if (!is_null($p->getContentId())) {
+
+			if(!is_null($p->getContentId())) {
 				continue;
 			}
-			if (isset($filename)) {
-				return true;
+			if(isset($filename)) {
+				// do not show technical attachments
+				if(($filename === 'signature.asc') || ($filename === 'smime.p7s')) {
+					continue;
+				} else {
+					return true;
+				}
 			}
-			if ($this->hasAttachments($p)) {
+			if($this->hasAttachments($p)) {
 				return true;
 			}
 		}
@@ -283,7 +289,10 @@ class Message {
 		// Any part with a filename is an attachment,
 		// so an attached text file (type 0) is not mistaken as the message.
 		$filename = $p->getName();
-		if (isset($filename)) {
+		if(isset($filename)) {
+			if(($filename === 'signature.asc') || ($filename === 'smime.p7s')) {
+				return;
+			}
 			$this->attachments[]= array(
 				'id' => $p->getMimeId(),
 				'messageId' => $this->messageId,
