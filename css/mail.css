@@ -387,6 +387,9 @@ button.control {
 	right: 0;
 	margin: 0 !important;
 }
+#reply-msg {
+	float: left;
+}
 
 .unread {
 	font-weight: bold;
