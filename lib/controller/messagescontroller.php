@@ -144,8 +144,7 @@ class MessagesController extends Controller
 	 * @param string $attachmentId
 	 * @return AttachmentDownloadResponse
 	 */
-	public function downloadAttachment($messageId, $attachmentId)
-	{
+	public function downloadAttachment($messageId, $attachmentId) {
 		$mailBox = $this->getFolder();
 
 		$attachment = $mailBox->getAttachment($messageId, $attachmentId);
