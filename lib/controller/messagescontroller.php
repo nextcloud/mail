@@ -73,7 +73,7 @@ class MessagesController extends Controller
 		$folderId = $mailBox->getFolderId();
 		$this->logger->debug("loading messages $from to $to of folder <$folderId>");
 
-		$json = $mailBox->getMessages($from, $to-$from, $filter);
+		$json = $mailBox->getMessages($from, $to-$from+1, $filter);
 
 		$ci = $this->contactsIntegration;
 		$json = array_map(function($j) use($ci) {
