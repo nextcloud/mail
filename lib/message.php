@@ -29,6 +29,10 @@ use OCP\AppFramework\Db\DoesNotExistException;
 use OCP\Util;
 
 class Message {
+	/**
+	 * @var string[]
+	 */
+	private $attachmentsToIgnore = ['signature.asc', 'smime.p7s'];
 
 	/**
 	 * @param \Horde_Imap_Client_Socket $conn
@@ -60,7 +64,7 @@ class Message {
 	public $header = null;
 	public $htmlMessage = '';
 	public $plainMessage = '';
-	public $attachments = array();
+	public $attachments = [];
 	private $loadHtmlMessage = false;
 	private $hasHtmlMessage = false;
 
@@ -92,7 +96,7 @@ class Message {
 	 */
 	public function getFlags() {
 		$flags = $this->fetch->getFlags();
-		return array(
+		return [
 			'unseen' => !in_array(Horde_Imap_Client::FLAG_SEEN, $flags),
 			'flagged' => in_array(Horde_Imap_Client::FLAG_FLAGGED, $flags),
 			'answered' => in_array(Horde_Imap_Client::FLAG_ANSWERED, $flags),
@@ -100,7 +104,7 @@ class Message {
 			'draft' => in_array(Horde_Imap_Client::FLAG_DRAFT, $flags),
 			'forwarded' => in_array(Horde_Imap_Client::FLAG_FORWARDED, $flags),
 			'hasAttachments' => $this->hasAttachments($this->fetch->getStructure())
-		);
+		];
 	}
 
 	/**
@@ -208,13 +212,19 @@ class Message {
 			 * @var \Horde_Mime_Part $p
 			 */
 			$filename = $p->getName();
-			if (!is_null($p->getContentId())) {
+
+			if(!is_null($p->getContentId())) {
 				continue;
 			}
-			if (isset($filename)) {
-				return true;
+			if(isset($filename)) {
+				// do not show technical attachments
+				if(in_array($filename, $this->attachmentsToIgnore)) {
+					continue;
+				} else {
+					return true;
+				}
 			}
-			if ($this->hasAttachments($p)) {
+			if($this->hasAttachments($p)) {
 				return true;
 			}
 		}
@@ -223,7 +233,7 @@ class Message {
 	}
 
 	private function loadMessageBodies() {
-		$headers = array();
+		$headers = [];
 
 		$fetch_query = new \Horde_Imap_Client_Fetch_Query();
 		$fetch_query->envelope();
@@ -232,20 +242,20 @@ class Message {
 		$fetch_query->size();
 		$fetch_query->imapDate();
 
-		$headers = array_merge($headers, array(
+		$headers = array_merge($headers, [
 			'importance',
 			'list-post',
 			'x-priority'
-		));
+		]);
 		$headers[] = 'content-type';
 
-		$fetch_query->headers('imp', $headers, array(
+		$fetch_query->headers('imp', $headers, [
 			'cache' => true
-		));
+		]);
 
 		// $list is an array of Horde_Imap_Client_Data_Fetch objects.
 		$ids = new \Horde_Imap_Client_Ids($this->messageId);
-		$headers = $this->conn->fetch($this->mailBox, $fetch_query, array('ids' => $ids));
+		$headers = $this->conn->fetch($this->mailBox, $fetch_query, ['ids' => $ids]);
 		/** @var $fetch \Horde_Imap_Client_Data_Fetch */
 		$fetch = $headers[$this->messageId];
 		if (is_null($fetch)) {
@@ -283,14 +293,17 @@ class Message {
 		// Any part with a filename is an attachment,
 		// so an attached text file (type 0) is not mistaken as the message.
 		$filename = $p->getName();
-		if (isset($filename)) {
-			$this->attachments[]= array(
+		if(isset($filename)) {
+			if(in_array($filename, $this->attachmentsToIgnore)) {
+				return;
+			}
+			$this->attachments[]= [
 				'id' => $p->getMimeId(),
 				'messageId' => $this->messageId,
 				'fileName' => $filename,
 				'mime' => $p->getType(),
 				'size' => $p->getBytes()
-			);
+			];
 			return;
 		}
 
@@ -352,7 +365,7 @@ class Message {
 	}
 
 	public function getListArray() {
-		$data = array();
+		$data = [];
 		$data['id'] = $this->getUid();
 		$data['from'] = $this->getFrom();
 		$data['fromEmail'] = $this->getFromEmail();
@@ -409,6 +422,8 @@ class Message {
 	 * @param \Horde_Mime_Part $p
 	 * @param int $partNo
 	 * @return string
+	 * @throws DoesNotExistException
+	 * @throws \Exception
 	 */
 	private function loadBodyData($p, $partNo) {
 		// DECODE DATA
@@ -419,7 +434,7 @@ class Message {
 		$fetch_query->bodyPartSize($partNo);
 		$fetch_query->mimeHeader($partNo);
 
-		$headers = $this->conn->fetch($this->mailBox, $fetch_query, array('ids' => $ids));
+		$headers = $this->conn->fetch($this->mailBox, $fetch_query, ['ids' => $ids]);
 		/** @var $fetch \Horde_Imap_Client_Data_Fetch */
 		$fetch = $headers[$this->messageId];
 		if (is_null($fetch)) {
@@ -445,12 +460,12 @@ class Message {
 	 * @return array
 	 */
 	private function convertAddressList($envelope) {
-		$list = array();
+		$list = [];
 		foreach ($envelope as $t) {
-			$list[] = array(
+			$list[] = [
 				'label' => $t->label,
 				'email' => $t->bare_address
-			);
+			];
 		}
 		return $list;
 	}
