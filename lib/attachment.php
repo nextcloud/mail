@@ -31,7 +31,7 @@ class Attachment {
 	 * @param \Horde_Imap_Client_Socket $conn
 	 * @param \Horde_Imap_Client_Mailbox $mailBox
 	 * @param int $messageId
-	 * @param int $attachmentId
+	 * @param string $attachmentId
 	 */
 	function __construct($conn, $mailBox, $messageId, $attachmentId) {
 		$this->conn = $conn;
@@ -66,20 +66,20 @@ class Attachment {
 		$fetch_query->bodyPart($this->attachmentId);
 		$fetch_query->mimeHeader($this->attachmentId);
 
-		$headers = array_merge($headers, array(
+		$headers = array_merge($headers, [
 			'importance',
 			'list-post',
 			'x-priority'
-		));
+		]);
 		$headers[] = 'content-type';
 
-		$fetch_query->headers('imp', $headers, array(
+		$fetch_query->headers('imp', $headers, [
 			'cache' => true
-		));
+		]);
 
 		// $list is an array of Horde_Imap_Client_Data_Fetch objects.
 		$ids = new \Horde_Imap_Client_Ids($this->messageId);
-		$headers = $this->conn->fetch($this->mailBox, $fetch_query, array('ids' => $ids));
+		$headers = $this->conn->fetch($this->mailBox, $fetch_query, ['ids' => $ids]);
 		/** @var $fetch Horde_Imap_Client_Data_Fetch */
 		if (!isset($headers[$this->messageId])) {
 			throw new DoesNotExistException('Unable to load the attachment.');
@@ -97,14 +97,20 @@ class Attachment {
 		$this->mimePart->setDisposition('attachment');
 
 		// Extract headers from part
-		$vars = array(
-			'filename',
-		);
 		$contentDisposition = $mimeHeaders->getValue('content-disposition', \Horde_Mime_Headers::VALUE_PARAMS);
 		if (!is_null($contentDisposition)) {
+			$vars = ['filename'];
 			foreach ($contentDisposition as $key => $val) {
 				if(in_array($key, $vars)) {
 					$this->mimePart->setDispositionParameter($key, $val);
+				}
+			}
+		} else {
+			$contentDisposition = $mimeHeaders->getValue('content-type', \Horde_Mime_Headers::VALUE_PARAMS);
+			$vars = ['name'];
+			foreach ($contentDisposition as $key => $val) {
+				if(in_array($key, $vars)) {
+					$this->mimePart->setContentTypeParameter($key, $val);
 				}
 			}
 		}
