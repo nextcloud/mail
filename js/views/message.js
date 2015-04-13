@@ -136,6 +136,8 @@ views.Messages = Backbone.Marionette.CompositeView.extend({
 		"click #load-more-mail-messages" : "loadMore"
 	},
 
+	filterCriteria: null,
+
 	template: "#message-list-template",
 
 	initialize: function() {
@@ -202,6 +204,12 @@ views.Messages = Backbone.Marionette.CompositeView.extend({
 		this.loadMessages(false);
 	},
 
+	filterCurrentMailbox: function(query) {
+		this.filterCriteria = {
+			text: query
+		};
+		this.loadNew();
+	},
 	loadMessages: function(reload) {
 		reload = reload || false;
 		var from = this.collection.size();
@@ -214,15 +222,27 @@ views.Messages = Backbone.Marionette.CompositeView.extend({
 			.val(t('mail', 'Loading …'))
 			.prop('disabled', true);
 
-		var self = this;
-		$.ajax(
-			OC.generateUrl('apps/mail/accounts/{accountId}/folders/{folderId}/messages?from={from}&to={to}',
-				{
+		var url = OC.generateUrl(
+			'apps/mail/accounts/{accountId}/folders/{folderId}/messages?from={from}&to={to}',
+			{
 				'accountId': Mail.State.currentAccountId,
 				'folderId':Mail.State.currentFolderId,
 				'from': from,
 				'to': from + 20
-			}), {
+			});
+		if (this.filterCriteria) {
+			url = OC.generateUrl(
+				'apps/mail/accounts/{accountId}/folders/{folderId}/messages?filter={query}&from={from}&to={to}',
+				{
+					'accountId': Mail.State.currentAccountId,
+					'folderId':Mail.State.currentFolderId,
+					'query': this.filterCriteria.text,
+					'from': from,
+					'to': from + 20
+				});
+		}
+		var self = this;
+		$.ajax(url, {
 				data: {},
 				type:'GET',
 				success: function (jsondata) {
