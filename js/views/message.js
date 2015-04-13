@@ -43,10 +43,17 @@ views.Message = Backbone.Marionette.ItemView.extend({
 		var messageId = this.model.id;
 		var starred = this.model.get('flags').get('flagged');
 		var thisModel = this.model;
-		this.ui.star
-			.removeClass('icon-starred')
-			.removeClass('icon-star')
-			.addClass('icon-loading-small');
+
+		// directly change star state in the interface for quick feedback
+		if(starred) {
+			this.ui.star
+				.removeClass('icon-starred')
+				.addClass('icon-star');
+		} else {
+			this.ui.star
+				.removeClass('icon-star')
+				.addClass('icon-starred');
+		}
 
 		$.ajax(
 			OC.generateUrl('apps/mail/accounts/{accountId}/folders/{folderId}/messages/{messageId}/toggleStar',
