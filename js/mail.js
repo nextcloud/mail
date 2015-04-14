@@ -499,7 +499,26 @@ $(document).ready(function () {
 			data: dataArray,
 			type:'POST',
 			success:function (data) {
+				// reload accounts
 				var newAccountId = data.data.id;
+				$.ajax(OC.generateUrl('apps/mail/accounts'), {
+					data:{},
+					type:'GET',
+					success:function (jsondata) {
+							Mail.State.accounts = jsondata;
+							if (jsondata.length === 0) {
+								Mail.UI.addAccount();
+							} else {
+								var firstAccountId = jsondata[0].accountId;
+								_.each(Mail.State.accounts, function(a) {
+									Mail.UI.loadFoldersForAccount(a.accountId, firstAccountId);
+								});
+							}
+						},
+					error: function() {
+						Mail.UI.showError(t('mail', 'Error while loading the accounts.'));
+					}
+				});
 				Mail.UI.loadFoldersForAccount(newAccountId, newAccountId);
 			},
 			error: function(jqXHR, textStatus, errorThrown){
