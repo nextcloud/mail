@@ -288,7 +288,7 @@
 						value="" />
 					<label for="mail-imap-host" class="infield"><?php p($l->t('IMAP Host')); ?></label>
 				</p>
-				<p class="groupmiddle">
+				<p class="groupmiddle" id="mail-imap-ssl">
 						<label for="mail-imap-sslmode"><?php p($l->t('IMAP security')); ?></label>
 						<select name="mail-imap-sslmode" id="mail-imap-sslmode" title="<?php p($l->t('IMAP security')); ?>">
 							<option value="none"><?php p($l->t('none')); ?></option>
@@ -321,7 +321,7 @@
 						value="" />
 					<label for="mail-smtp-host" class="infield"><?php p($l->t('SMTP Host')); ?></label>
 				</p>
-				<p class="groupmiddle">
+				<p class="groupmiddle" id="mail-smtp-ssl">
 					<label for="mail-smtp-sslmode"><?php p($l->t('SMTP security')); ?></label>
 					<select name="mail-smtp-sslmode" id="mail-smtp-sslmode" title="<?php p($l->t('SMTP security')); ?>">
 						<option value="none"><?php p($l->t('none')); ?></option>

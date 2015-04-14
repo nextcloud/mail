@@ -60,6 +60,17 @@ button.control {
 	opacity: .3;
 }
 
+#mail-imap-ssl,
+#mail-smtp-ssl {
+	float: right;
+	margin: -3px -3px -52px 0;
+	z-index: 100;
+}
+#mail-imap-ssl label,
+#mail-smtp-ssl label {
+	opacity: .4;
+}
+
 .connect {
 	margin: 0;
 }
