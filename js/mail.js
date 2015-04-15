@@ -1,6 +1,6 @@
 /* global Handlebars, Marionette, relative_modified_date, formatDate, humanFileSize, views */
 var Mail = {
-	State:{
+	State: {
 		currentFolderId: null,
 		currentAccountId: null,
 		currentMessageId: null,
@@ -8,41 +8,54 @@ var Mail = {
 		messageView: null,
 		router: null
 	},
-	UI:{
-		initializeInterface:function () {
-			Handlebars.registerHelper("colorOfDate", function(dateInt) {
-				var lastModified = new Date(dateInt*1000);
+	Search: {
+		timeoutID: null,
+		attach: function (search) {
+			search.setFilter('mail', Mail.Search.filter);
+		},
+		filter: function (query) {
+			window.clearTimeout(Mail.Search.timeoutID);
+			Mail.Search.timeoutID = window.setTimeout(function() {
+				Mail.State.messageView.filterCurrentMailbox(query);
+			}, 500);
+			$('#searchresults').hide();
+		}
+	},
+	UI: {
+		initializeInterface: function () {
+			Handlebars.registerHelper("colorOfDate", function (dateInt) {
+				var lastModified = new Date(dateInt * 1000);
 				var lastModifiedTime = Math.round(lastModified.getTime() / 1000);
 
 				// date column
-				var modifiedColor = Math.round((Math.round((new Date()).getTime() / 1000)-lastModifiedTime)/60/60/24*5);
+				var modifiedColor = Math.round((Math.round((new Date()).getTime() / 1000) - lastModifiedTime) / 60 / 60 / 24 * 5);
 				if (modifiedColor > 200) {
 					modifiedColor = 200;
 				}
-				return 'rgb('+modifiedColor+','+modifiedColor+','+modifiedColor+')';
+				return 'rgb(' + modifiedColor + ',' + modifiedColor + ',' + modifiedColor + ')';
 			});
 
-			Handlebars.registerHelper("relativeModifiedDate", function(dateInt) {
-				var lastModified = new Date(dateInt*1000);
+			Handlebars.registerHelper("relativeModifiedDate", function (dateInt) {
+				var lastModified = new Date(dateInt * 1000);
 				var lastModifiedTime = Math.round(lastModified.getTime() / 1000);
 				return relative_modified_date(lastModifiedTime);
 			});
 
-			Handlebars.registerHelper("formatDate", function(dateInt) {
-				var lastModified = new Date(dateInt*1000);
+			Handlebars.registerHelper("formatDate", function (dateInt) {
+				var lastModified = new Date(dateInt * 1000);
 				return formatDate(lastModified);
 			});
 
-			Handlebars.registerHelper("humanFileSize", function(size) {
+			Handlebars.registerHelper("humanFileSize", function (size) {
 				return humanFileSize(size);
 			});
 
-			Handlebars.registerHelper("printAddressList", function(addressList) {
-				var currentAddress = _.find(Mail.State.accounts, function(item) {
+			Handlebars.registerHelper("printAddressList", function (addressList) {
+				var currentAddress = _.find(Mail.State.accounts, function (item) {
 					return item.accountId === Mail.State.currentAccountId;
 				});
 
-				var str = _.reduce(addressList, function(memo, value, index) {
+				var str = _.reduce(addressList, function (memo, value, index) {
 					if (index !== 0) {
 						memo += ', ';
 					}
@@ -59,8 +72,8 @@ var Mail = {
 				return new Handlebars.SafeString(str);
 			});
 
-			Handlebars.registerHelper("printAddressListPlain", function(addressList) {
-				var str = _.reduce(addressList, function(memo, value, index) {
+			Handlebars.registerHelper("printAddressListPlain", function (addressList) {
+				var str = _.reduce(addressList, function (memo, value, index) {
 					if (index !== 0) {
 						memo += ', ';
 					}
@@ -69,7 +82,7 @@ var Mail = {
 						.replace(/(^'|'$)/g, '');
 					label = Handlebars.Utils.escapeExpression(label);
 					var email = Handlebars.Utils.escapeExpression(value.email);
-					if(label === email) {
+					if (label === email) {
 						return memo + email;
 					} else {
 						return memo + '"' + label + '" <' + email + '>';
@@ -78,14 +91,14 @@ var Mail = {
 				return str;
 			});
 
-			Marionette.TemplateCache.prototype.compileTemplate = function(rawTemplate) {
+			Marionette.TemplateCache.prototype.compileTemplate = function (rawTemplate) {
 				return Handlebars.compile(rawTemplate);
 			};
-			Marionette.ItemView.prototype.modelEvents = { "change" : "render"};
-			Marionette.CompositeView.prototype.modelEvents = { "change" : "render"};
+			Marionette.ItemView.prototype.modelEvents = {"change": "render"};
+			Marionette.CompositeView.prototype.modelEvents = {"change": "render"};
 
 			// ask to handle all mailto: links
-			if(window.navigator.registerProtocolHandler) {
+			if (window.navigator.registerProtocolHandler) {
 				var url = window.location.protocol + '//' +
 					window.location.host +
 					OC.generateUrl('apps/mail/compose?uri=%s');
@@ -108,28 +121,30 @@ var Mail = {
 			Mail.State.folderView.listenTo(Mail.State.messageView, 'change:unseen',
 				Mail.State.folderView.changeUnseen);
 
+			OC.Plugins.register('OCA.Search', Mail.Search);
+
 			$.ajax(OC.generateUrl('apps/mail/accounts'), {
-				data:{},
-				type:'GET',
-				success:function (jsondata) {
-						Mail.State.accounts = jsondata;
-						if (jsondata.length === 0) {
-							Mail.UI.addAccount();
-						} else {
-							var firstAccountId = jsondata[0].accountId;
-							_.each(Mail.State.accounts, function(a) {
-								Mail.UI.loadFoldersForAccount(a.accountId, firstAccountId);
-							});
-						}
-					},
-				error: function() {
+				data: {},
+				type: 'GET',
+				success: function (jsondata) {
+					Mail.State.accounts = jsondata;
+					if (jsondata.length === 0) {
+						Mail.UI.addAccount();
+					} else {
+						var firstAccountId = jsondata[0].accountId;
+						_.each(Mail.State.accounts, function (a) {
+							Mail.UI.loadFoldersForAccount(a.accountId, firstAccountId);
+						});
+					}
+				},
+				error: function () {
 					Mail.UI.showError(t('mail', 'Error while loading the accounts.'));
 				}
 			});
 
 		},
 
-		loadFoldersForAccount : function(accountId, firstAccountId) {
+		loadFoldersForAccount: function (accountId, firstAccountId) {
 
 			$('#mail_messages').removeClass('hidden').addClass('icon-loading');
 			$('#mail-message').removeClass('hidden').addClass('icon-loading');
@@ -141,9 +156,9 @@ var Mail = {
 			$('#app-navigation').addClass('icon-loading');
 
 			$.ajax(OC.generateUrl('apps/mail/accounts/{accountId}/folders', {accountId: accountId}), {
-				data:{},
-				type:'GET',
-				success:function (jsondata) {
+				data: {},
+				type: 'GET',
+				success: function (jsondata) {
 
 					$('#app-navigation').removeClass('icon-loading');
 
@@ -160,13 +175,13 @@ var Mail = {
 						Mail.State.currentFolderId = folderId;
 					}
 				},
-				error: function() {
+				error: function () {
 					Mail.UI.showError(t('mail', 'Error while loading the selected account.'));
 				}
 			});
 		},
 
-		showError: function(message) {
+		showError: function (message) {
 			OC.Notification.show(message);
 			$('#app-navigation')
 				.removeClass('icon-loading');
@@ -176,12 +191,12 @@ var Mail = {
 				.removeClass('icon-loading');
 			$('#mail_message')
 				.removeClass('icon-loading');
-			_.delay(function() {
+			_.delay(function () {
 				OC.Notification.hide();
 			}, 4000);
 		},
 
-		clearMessages:function () {
+		clearMessages: function () {
 			Mail.State.messageView.collection.reset();
 			$('#messages-loading').fadeIn();
 
@@ -190,15 +205,15 @@ var Mail = {
 				.addClass('icon-loading');
 		},
 
-		hideMenu:function () {
+		hideMenu: function () {
 			$('#new-message').addClass('hidden');
 		},
 
-		addMessages:function (data) {
+		addMessages: function (data) {
 			Mail.State.messageView.collection.add(data);
 		},
 
-		loadMessages:function (accountId, folderId, noSelect) {
+		loadMessages: function (accountId, folderId, noSelect) {
 			// Set folder active
 			Mail.UI.setFolderActive(accountId, folderId);
 			Mail.UI.clearMessages();
@@ -227,41 +242,41 @@ var Mail = {
 			} else {
 				$.ajax(
 					OC.generateUrl('apps/mail/accounts/{accountId}/folders/{folderId}/messages',
-						{'accountId':accountId, 'folderId':folderId}), {
+						{'accountId': accountId, 'folderId': folderId}), {
 						data: {},
-						type:'GET',
+						type: 'GET',
 						success: function (jsondata) {
 							Mail.State.currentAccountId = accountId;
 							Mail.State.currentFolderId = folderId;
 							Mail.UI.setMessageActive(null);
 							$('#mail_messages').removeClass('icon-loading');
-							
+
 							// Fade out the message composer
 							$('#mail_new_message').prop('disabled', false);
 							$('#new-message').hide();
-			
-							if(jsondata.length > 0) {
+
+							if (jsondata.length > 0) {
 								Mail.UI.addMessages(jsondata);
 								var messageId = jsondata[0].id;
 								Mail.UI.openMessage(messageId);
-                                                                // Show 'Load More' button if there are
-                                                                // more messages than the pagination limit
+								// Show 'Load More' button if there are
+								// more messages than the pagination limit
 								if (jsondata.length > 20) {
-                                                                        $('#load-more-mail-messages')
-                                                                                .fadeIn()
-                                                                                .css('display','block');
-                                                                }
+									$('#load-more-mail-messages')
+										.fadeIn()
+										.css('display', 'block');
+								}
 							} else {
 								$('#emptycontent').show();
 								$('#mail-message').removeClass('icon-loading');
 							}
 							$('#load-new-mail-messages')
 								.fadeIn()
-								.css('display','block')
+								.css('display', 'block')
 								.prop('disabled', false);
 
 						},
-						error: function() {
+						error: function () {
 
 							// Set the old folder as being active
 							Mail.UI.setFolderActive(Mail.State.currentAccountId, Mail.State.currentFolderId);
@@ -272,14 +287,14 @@ var Mail = {
 			}
 		},
 
-		saveAttachment: function(messageId, attachmentId) {
+		saveAttachment: function (messageId, attachmentId) {
 			OC.dialogs.filepicker(
 				t('mail', 'Choose a folder to store the attachment in'),
 				function (path) {
 					// Loading feedback
 					var saveToFilesBtnSelector = '.attachment-save-to-cloud';
 					if (typeof attachmentId !== "undefined") {
-						saveToFilesBtnSelector = 'li[data-attachment-id="'+attachmentId+'"] '+saveToFilesBtnSelector;
+						saveToFilesBtnSelector = 'li[data-attachment-id="' + attachmentId + '"] ' + saveToFilesBtnSelector;
 					}
 					$(saveToFilesBtnSelector)
 						.removeClass('icon-upload')
@@ -289,16 +304,16 @@ var Mail = {
 					$.ajax(
 						OC.generateUrl(
 							'apps/mail/accounts/{accountId}/folders/{folderId}/messages/{messageId}/attachment/{attachmentId}',
-						{
-							accountId: Mail.State.currentAccountId,
-							folderId: Mail.State.currentFolderId,
-							messageId: messageId,
-							attachmentId: attachmentId
-						}), {
+							{
+								accountId: Mail.State.currentAccountId,
+								folderId: Mail.State.currentFolderId,
+								messageId: messageId,
+								attachmentId: attachmentId
+							}), {
 							data: {
 								targetPath: path
 							},
-							type:'POST',
+							type: 'POST',
 							success: function () {
 								if (typeof attachmentId === "undefined") {
 									Mail.UI.showError(t('mail', 'Attachments saved to Files.'));
@@ -306,14 +321,14 @@ var Mail = {
 									Mail.UI.showError(t('mail', 'Attachment saved to Files.'));
 								}
 							},
-							error: function() {
+							error: function () {
 								if (typeof attachmentId === "undefined") {
 									Mail.UI.showError(t('mail', 'Error while saving attachments to Files.'));
 								} else {
 									Mail.UI.showError(t('mail', 'Error while saving attachment to Files.'));
 								}
 							},
-							complete: function() {
+							complete: function () {
 								// Remove loading feedback again
 								$('.attachment-save-to-cloud')
 									.removeClass('icon-loading-small')
@@ -328,9 +343,9 @@ var Mail = {
 			);
 		},
 
-		openMessage:function (messageId) {
+		openMessage: function (messageId) {
 			// Do not reload email when clicking same again
-			if(Mail.State.currentMessageId === messageId) {
+			if (Mail.State.currentMessageId === messageId) {
 				return;
 			}
 
@@ -344,9 +359,8 @@ var Mail = {
 				}
 			}
 
-			$('#mail-message')
-				.html('')
-				.addClass('icon-loading');
+			var mailBody = $('#mail-message');
+			mailBody.html('').addClass('icon-loading');
 
 			// Set current Message as active
 			Mail.UI.setMessageActive(messageId);
@@ -354,8 +368,6 @@ var Mail = {
 			// Fade out the message composer
 			$('#mail_new_message').prop('disabled', false);
 			$('#new-message').hide();
-
-			var mailBody = $('#mail-message');
 
 			$.ajax(
 				OC.generateUrl('apps/mail/accounts/{accountId}/folders/{folderId}/messages/{messageId}',
@@ -365,10 +377,10 @@ var Mail = {
 					messageId: messageId
 				}), {
 					data: {},
-					type:'GET',
+					type: 'GET',
 					success: function (data) {
 						// Render the message body
-						var source   = $("#mail-message-template").html();
+						var source = $("#mail-message-template").html();
 						var template = Handlebars.compile(source);
 						var html = template(data);
 						mailBody
@@ -378,9 +390,9 @@ var Mail = {
 						Mail.State.messageView.setMessageFlag(messageId, 'unseen', false);
 
 						// HTML mail rendering
-						$('iframe').load(function() {
+						$('iframe').load(function () {
 							// Expand height to not have two scrollbars
-							$(this).height( $(this).contents().find('html').height() + 20);
+							$(this).height($(this).contents().find('html').height() + 20);
 							// Fix styling
 							$(this).contents().find('body').css({
 								'margin': '0',
@@ -400,7 +412,7 @@ var Mail = {
 								'font-size': 'inherit'
 							});
 							// Expand height again after rendering to account for new size
-							$(this).height( $(this).contents().find('html').height() + 20);
+							$(this).height($(this).contents().find('html').height() + 20);
 							// Grey out previous replies
 							$(this).contents().find('blockquote').css({
 								'-ms-filter': '"progid:DXImageTransform.Microsoft.Alpha(Opacity=50)"',
@@ -412,28 +424,28 @@ var Mail = {
 
 						});
 
-						$('textarea').autosize({append:'"\n\n"'});
+						$('textarea').autosize({append: '"\n\n"'});
 
 					},
-					error: function() {
+					error: function () {
 						Mail.UI.showError(t('mail', 'Error while loading the selected message.'));
 					}
 				});
 		},
 
-		setFolderActive:function (accountId, folderId) {
+		setFolderActive: function (accountId, folderId) {
 			$('.mail_folders[data-account_id="' + accountId + '"] li')
 				.removeClass('active');
 			$('.mail_folders[data-account_id="' + accountId + '"] li[data-folder_id="' + folderId + '"]')
 				.addClass('active');
 		},
 
-		setMessageActive:function (messageId) {
+		setMessageActive: function (messageId) {
 			Mail.State.messageView.setActiveMessage(messageId);
 			Mail.State.currentMessageId = messageId;
 		},
 
-		addAccount:function () {
+		addAccount: function () {
 			$('#mail_messages').addClass('hidden');
 			$('#mail-message').addClass('hidden');
 			$('#mail_new_message').addClass('hidden');
@@ -492,7 +504,7 @@ $(document).ready(function () {
 			autoDetect: true
 		};
 
-		if($('#mail-setup-manual').css('display') === 'block') {
+		if ($('#mail-setup-manual').css('display') === 'block') {
 			dataArray = {
 				accountName: accountName,
 				emailAddress: emailAddress,
@@ -537,11 +549,11 @@ $(document).ready(function () {
 				});
 				Mail.UI.loadFoldersForAccount(newAccountId, newAccountId);
 			},
-			error: function(jqXHR, textStatus, errorThrown){
+			error: function (jqXHR, textStatus, errorThrown) {
 				var error = errorThrown || textStatus || t('mail', 'Unknown error');
 				Mail.UI.showError(t('mail', 'Error while creating an account: ' + error));
 			},
-			complete: function() {
+			complete: function () {
 				$('#mail-account-name, #mail-address, #mail-password, #mail-setup-manual-toggle')
 					.prop('disabled', false);
 				$('#mail-imap-host, #mail-imap-port, #mail-imap-sslmode, #mail-imap-user, #mail-imap-password')
@@ -585,8 +597,8 @@ $(document).ready(function () {
 	$(document).on('click', '#mail-setup-manual-toggle', function () {
 		$('#mail-setup-manual').slideToggle();
 		$('#mail-imap-host').focus();
-		if($('#mail-address').parent().prop('class') === 'groupmiddle') {
-			$('#mail-password').slideToggle(function() {
+		if ($('#mail-address').parent().prop('class') === 'groupmiddle') {
+			$('#mail-password').slideToggle(function () {
 				$('#mail-address').parent().removeClass('groupmiddle').addClass('groupbottom');
 			});
 		} else {
@@ -605,7 +617,7 @@ $(document).ready(function () {
 			aliases: Mail.State.accounts
 		});
 
-		view.sentCallback = function() {
+		view.sentCallback = function () {
 
 		};
 
@@ -632,7 +644,7 @@ $(document).ready(function () {
 		Mail.UI.saveAttachment(messageId, attachmentId);
 	});
 
-	$(document).on('click', '#mail-message .attachments-save-to-cloud', function(event) {
+	$(document).on('click', '#mail-message .attachments-save-to-cloud', function (event) {
 		event.stopPropagation();
 		var messageId = $(this).data('messageId');
 		Mail.UI.saveAttachment(messageId);

@@ -121,6 +121,18 @@ views.Message = Backbone.Marionette.ItemView.extend({
 
 });
 
+views.NoSearchResultMessageListView = Marionette.ItemView.extend({
+	initialize: function(options) {
+		this.model.set('searchTerm', options.filterCriteria.text || "");
+	},
+
+	template: "#no-search-results-message-list-template",
+
+	onRender: function() {
+		$('#load-more-mail-messages').hide();
+	}
+});
+
 views.Messages = Backbone.Marionette.CompositeView.extend({
 
 	collection: null,
@@ -136,11 +148,24 @@ views.Messages = Backbone.Marionette.CompositeView.extend({
 		"click #load-more-mail-messages" : "loadMore"
 	},
 
+	filterCriteria: null,
+
 	template: "#message-list-template",
 
 	initialize: function() {
 		this.collection = new models.MessageList();
 		this.collection.on('change:flags', this.changeFlags, this);
+	},
+
+	getEmptyView: function() {
+		if (this.filterCriteria) {
+			return views.NoSearchResultMessageListView;
+		}
+		return views.template;
+	},
+
+	emptyViewOptions: function () {
+		return { filterCriteria: this.filterCriteria };
 	},
 
 	changeFlags: function(model) {
@@ -202,6 +227,12 @@ views.Messages = Backbone.Marionette.CompositeView.extend({
 		this.loadMessages(false);
 	},
 
+	filterCurrentMailbox: function(query) {
+		this.filterCriteria = {
+			text: query
+		};
+		this.loadNew();
+	},
 	loadMessages: function(reload) {
 		reload = reload || false;
 		var from = this.collection.size();
@@ -209,20 +240,34 @@ views.Messages = Backbone.Marionette.CompositeView.extend({
 			from = 0;
 		}
 		// Add loading feedback
+//		$('#load-new-mail-messages').show();
+//		$('#load-more-mail-messages').hide();
 		$('#load-more-mail-messages')
 			.addClass('icon-loading-small')
 			.val(t('mail', 'Loading …'))
 			.prop('disabled', true);
 
-		var self = this;
-		$.ajax(
-			OC.generateUrl('apps/mail/accounts/{accountId}/folders/{folderId}/messages?from={from}&to={to}',
-				{
+		var url = OC.generateUrl(
+			'apps/mail/accounts/{accountId}/folders/{folderId}/messages?from={from}&to={to}',
+			{
 				'accountId': Mail.State.currentAccountId,
 				'folderId':Mail.State.currentFolderId,
 				'from': from,
 				'to': from + 20
-			}), {
+			});
+		if (this.filterCriteria) {
+			url = OC.generateUrl(
+				'apps/mail/accounts/{accountId}/folders/{folderId}/messages?filter={query}&from={from}&to={to}',
+				{
+					'accountId': Mail.State.currentAccountId,
+					'folderId':Mail.State.currentFolderId,
+					'query': this.filterCriteria.text,
+					'from': from,
+					'to': from + 20
+				});
+		}
+		var self = this;
+		$.ajax(url, {
 				data: {},
 				type:'GET',
 				success: function (jsondata) {

@@ -220,6 +220,9 @@
 	<ul></ul>
 	<input type="button" id="mail_new_attachment" value="<?php p($l->t('Add attachment from Files')); ?>">
 </script>
+<script id="no-search-results-message-list-template" type="text/x-handlebars-template">
+	<div id="emptycontent"><?php p($l->t('No search results for {{searchTerm}}')); ?></div>
+</script>
 <script id="message-list-template" type="text/x-handlebars-template">
 	<input type="button" id="load-new-mail-messages" value="<?php p($l->t('Check messages …')); ?>">
 	<div id="emptycontent" style="display: none;"><?php p($l->t('No messages in this folder!')); ?></div>

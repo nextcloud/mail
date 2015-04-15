@@ -64,16 +64,16 @@ class MessagesController extends Controller
 	 *
 	 * @param int $from
 	 * @param int $to
+	 * @param string $filter
 	 * @return JSONResponse
 	 */
-	public function index($from=0, $to=20)
-	{
+	public function index($from=0, $to=20, $filter = null) {
 		$mailBox = $this->getFolder();
 		
 		$folderId = $mailBox->getFolderId();
 		$this->logger->debug("loading messages $from to $to of folder <$folderId>");
-		
-		$json = $mailBox->getMessages($from, $to-$from);
+
+		$json = $mailBox->getMessages($from, $to-$from+1, $filter);
 
 		$ci = $this->contactsIntegration;
 		$json = array_map(function($j) use($ci) {
