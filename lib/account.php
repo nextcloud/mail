@@ -124,7 +124,7 @@ class Account {
 	public function getMailbox($folderId) {
 		$conn = $this->getImapConnection();
 		$parts = explode('/', $folderId);
-		if (count($parts) > 1 && $parts[2] === 'FLAGGED') {
+		if (count($parts) > 1 && $parts[1] === 'FLAGGED') {
 			$mailbox = new Horde_Imap_Client_Mailbox($parts[0], true);
 			return new SearchMailbox($conn, $mailbox, array());
 		}
