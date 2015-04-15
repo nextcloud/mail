@@ -444,6 +444,22 @@ var Mail = {
 			$('#mail-setup').removeClass('hidden');
 			// don't show New Message button on Add account screen
 			$('#mail_new_message').hide();
+		},
+
+		toggleSendButton:function () {
+			if(($('#to').val() !== '') && (($('#subject').val() !== '') || ($('#new-message-body').val() !== ''))) {
+				$('#new-message-send').removeAttr('disabled');
+			} else {
+				$('#new-message-send').attr('disabled', true);
+			}
+		},
+
+		toggleReplyButton:function () {
+			if(($('.reply-message-fields #to').val() !== '') && ($('.reply-message-body').val() !== '')) {
+				$('.reply-message-send').removeAttr('disabled');
+			} else {
+				$('.reply-message-send').attr('disabled', true);
+			}
 		}
 	}
 };
@@ -601,6 +617,13 @@ $(document).ready(function () {
 
 		Mail.UI.setMessageActive(null);
 	});
+
+	// disable send/reply buttons unless recipient and either subject or message body is filled
+	$(document).on('change input paste keyup', '#to', Mail.UI.toggleSendButton);
+	$(document).on('change input paste keyup', '#subject', Mail.UI.toggleSendButton);
+	$(document).on('change input paste keyup', '#new-message-body', Mail.UI.toggleSendButton);
+	$(document).on('change input paste keyup', '.reply-message-fields #to', Mail.UI.toggleReplyButton);
+	$(document).on('change input paste keyup', '.reply-message-body', Mail.UI.toggleReplyButton);
 
 	$(document).on('click', '#mail-message .attachment-save-to-cloud', function(event) {
 		event.stopPropagation();
