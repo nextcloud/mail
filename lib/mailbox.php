@@ -19,7 +19,7 @@ class Mailbox {
 	/**
 	 * @var Horde_Imap_Client_Socket
 	 */
-	private $conn;
+	protected $conn;
 
 	/**
 	 * @var array
@@ -44,7 +44,7 @@ class Mailbox {
 	/**
 	 * @var Horde_Imap_Client_Mailbox
 	 */
-	private $mailBox;
+	protected $mailBox;
 
 	/**
 	 * @param Horde_Imap_Client_Socket $conn
@@ -65,9 +65,14 @@ class Mailbox {
 	}
 
 	public function getMessages($from = 0, $count = 2, $filter) {
-		$query = new Horde_Imap_Client_Search_Query();
-		if ($filter) {
-			$query->text($filter, false);
+
+		if ($filter instanceof Horde_Imap_Client_Search_Query) {
+			$query = $filter;
+		} else {
+			$query = new Horde_Imap_Client_Search_Query();
+			if ($filter) {
+				$query->text($filter, false);
+			}
 		}
 		$result = $this->conn->search($this->mailBox, $query, ['sort' => [Horde_Imap_Client::SORT_DATE]]);
 		$ids = array_reverse($result['match']->ids);
@@ -125,7 +130,7 @@ class Mailbox {
 		return new Message($this->conn, $this->mailBox, $messageId, null, $loadHtmlMessageBody);
 	}
 
-	private function getStatus($flags = \Horde_Imap_Client::STATUS_ALL) {
+	protected function getStatus($flags = \Horde_Imap_Client::STATUS_ALL) {
 		return $this->conn->status($this->mailBox, $flags);
 	}
 

@@ -119,16 +119,20 @@ class Account {
 		$conn = $this->getImapConnection();
 
 		// if successful -> get all folders of that account
-		$mboxes = $conn->listMailboxes($pattern, Horde_Imap_Client::MBOX_ALL, array(
+		$mailBoxes = $conn->listMailboxes($pattern, Horde_Imap_Client::MBOX_ALL, array(
 			'attributes' => true,
 			'special_use' => true,
 			'sort' => true
 		));
 
 		$mailboxes = array();
-		foreach ($mboxes as $mailbox) {
+		foreach ($mailBoxes as $mailbox) {
 			$mailboxes[] = new Mailbox($conn, $mailbox['mailbox'], $mailbox['attributes'], $mailbox['delimiter']);
+			if ($mailbox['mailbox']->utf8 === 'INBOX') {
+				$mailboxes[] = new SearchMailbox($conn, $mailbox['mailbox'], $mailbox['attributes'], $mailbox['delimiter']);
+			}
 		}
+
 		return $mailboxes;
 	}
 
@@ -138,6 +142,11 @@ class Account {
 	 */
 	public function getMailbox($folderId) {
 		$conn = $this->getImapConnection();
+		$parts = explode('/', $folderId);
+		if (count($parts) > 1 && $parts[1] === 'FLAGGED') {
+			$mailbox = new Horde_Imap_Client_Mailbox($parts[0], true);
+			return new SearchMailbox($conn, $mailbox, array());
+		}
 		$mailbox = new Horde_Imap_Client_Mailbox($folderId, true);
 		return new Mailbox($conn, $mailbox, array());
 	}

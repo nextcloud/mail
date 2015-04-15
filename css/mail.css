@@ -585,6 +585,9 @@ button.control {
 .icon-inbox {
 	background-image: url('../img/inbox.svg');
 }
+.icon-flagged {
+	background-image: url('../img/star.svg');
+}
 .icon-drafts {
 	background-image: url('../img/drafts.svg');
 }
