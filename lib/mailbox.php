@@ -67,7 +67,7 @@ class Mailbox {
 	public function getMessages($from = 0, $count = 2, $filter) {
 		$query = new Horde_Imap_Client_Search_Query();
 		if ($filter) {
-			$query->text($filter);
+			$query->text($filter, false);
 		}
 		$result = $this->conn->search($this->mailBox, $query, ['sort' => [Horde_Imap_Client::SORT_DATE]]);
 		$ids = array_reverse($result['match']->ids);
