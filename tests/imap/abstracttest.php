@@ -3,6 +3,7 @@ namespace OCA\Mail\Tests\Imap;
 
 use OCA\Mail\Account;
 use OCA\Mail\Db\MailAccount;
+use OCA\Mail\Mailbox;
 
 abstract class AbstractTest extends \PHPUnit_Framework_TestCase
 {
@@ -67,6 +68,27 @@ abstract class AbstractTest extends \PHPUnit_Framework_TestCase
 
 	private function deleteMailbox($mailbox) {
 		$this->getTestAccount()->deleteMailbox($mailbox);
+	}
+
+	protected function createTestMessage(
+		Mailbox $mailbox,
+		$subject = 'Don\'t panic!',
+		$contents = 'Don\'t forget your towel',
+		$from = 'someone@there.com',
+		$to = 'me@here.com'
+	) {
+		$message = "From: $from
+Subject: $subject
+To: $to
+Message-ID: <20150415133206.Horde.M8uzSs0lxFX6uUE2sc6_rw5@localhost>
+User-Agent: Horde Application Framework 5
+Date: Wed, 15 Apr 2015 13:32:06 +0000
+Content-Type: text/plain; charset=UTF-8; format=flowed; DelSp=Yes
+MIME-Version: 1.0
+
+
+$contents";
+		$mailbox->saveMessage($message);
 	}
 
 }

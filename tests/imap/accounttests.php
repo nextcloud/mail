@@ -15,5 +15,19 @@ class AccountTests extends AbstractTest {
 		$this->assertTrue(count($m) === 1);
 	}
 
+	public function testListMessages() {
+		$newMailBox = parent::createMailBox('nasty stuff');
+		$count = $newMailBox->getTotalMessages();
+		$this->assertEquals(0, $count);
+		$messages = $count = $newMailBox->getMessages();
+		$this->assertInternalType('array', $messages);
+		$this->assertEquals(0, count($messages));
+		$this->createTestMessage($newMailBox);
+		$count = $newMailBox->getTotalMessages();
+		$this->assertEquals(1, $count);
+		$messages = $count = $newMailBox->getMessages();
+		$this->assertInternalType('array', $messages);
+		$this->assertEquals(1, count($messages));
+	}
 
 }
