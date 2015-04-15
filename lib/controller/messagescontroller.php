@@ -20,6 +20,7 @@ use OCP\AppFramework\Controller;
 use OCP\AppFramework\Db\DoesNotExistException;
 use OCP\AppFramework\Http\JSONResponse;
 use OCP\AppFramework\Http\TemplateResponse;
+use OCP\IL10N;
 
 class MessagesController extends Controller
 {
@@ -39,7 +40,6 @@ class MessagesController extends Controller
 	private $contactsIntegration;
 	
 	/**
-	 *
 	 * @var \OCA\Mail\Service\Logger
 	 */
 	private $logger;
@@ -49,13 +49,29 @@ class MessagesController extends Controller
 	 */
 	private $userFolder;
 
-	public function __construct($appName, $request, $mapper, $currentUserId, $userFolder, $contactsIntegration, $logger) {
+	/**
+	 * @var IL10N
+	 */
+	private $l10n;
+
+	/**
+	 * @param string $appName
+	 * @param \OCP\IRequest $request
+	 * @param $mapper
+	 * @param $currentUserId
+	 * @param $userFolder
+	 * @param $contactsIntegration
+	 * @param $logger
+	 * @param $l10n
+	 */
+	public function __construct($appName, $request, $mapper, $currentUserId, $userFolder, $contactsIntegration, $logger, $l10n) {
 		parent::__construct($appName, $request);
 		$this->mapper = $mapper;
 		$this->currentUserId = $currentUserId;
 		$this->userFolder = $userFolder;
 		$this->contactsIntegration = $contactsIntegration;
 		$this->logger = $logger;
+		$this->l10n = $l10n;
 	}
 
 	/**
@@ -81,7 +97,7 @@ class MessagesController extends Controller
 				$j['fromEmail'] = $j['toEmail'];
 				$j['from'] = $j['to'];
 				if(count($j['toList']) > 1) {
-					$j['from'] .= ' & others';
+					$j['from'] .= ' ' . $this->l10n->t('& others');
 				}
 			}
 			$j['senderImage'] = $ci->getPhoto($j['fromEmail']);

@@ -80,7 +80,8 @@ class Application extends App {
 				$c->query('UserId'),
 				$c->getServer()->getUserFolder(),
 				$c->query('ContactsIntegration'),
-				$c->query('Logger')
+				$c->query('Logger'),
+				$c->getServer()->getL10N('mail')
 			);
 		});
 
@@ -117,6 +118,7 @@ class Application extends App {
 				$c->query('UserId')
 			);
 		});
+
 		$container->registerService('Logger', function ($c) {
 			/** @var IAppContainer $c */
 			return new Logger(
