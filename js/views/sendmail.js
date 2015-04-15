@@ -87,6 +87,8 @@ views.SendMail = Backbone.View.extend({
 				}
 				$('#mail_new_message').prop('disabled', false);
 				$('#to').val('');
+				$('#cc').val('');
+				$('#bcc').val('');
 				$('#subject').val('');
 				$('#new-message-body').val('');
 				self.attachments.reset();
