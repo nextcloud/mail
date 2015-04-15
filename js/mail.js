@@ -434,7 +434,7 @@ var Mail = {
 		},
 
 		setFolderActive: function (accountId, folderId) {
-			$('.mail_folders[data-account_id="' + accountId + '"] li')
+			$('.mail_folders li')
 				.removeClass('active');
 			$('.mail_folders[data-account_id="' + accountId + '"] li[data-folder_id="' + folderId + '"]')
 				.addClass('active');
