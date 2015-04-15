@@ -41,6 +41,12 @@ class FoldersController extends Controller
 	 */
 	private $currentUserId;
 
+	/**
+	 * @param string $appName
+	 * @param \OCP\IRequest $request
+	 * @param $mailAccountMapper
+	 * @param $currentUserId
+	 */
 	public function __construct($appName, $request, $mailAccountMapper, $currentUserId){
 		parent::__construct($appName, $request);
 		$this->mapper = $mailAccountMapper;
@@ -53,7 +59,7 @@ class FoldersController extends Controller
 	 */
 	public function index() {
 		$account = $this->getAccount();
-		$m = new \OCA\Mail\Account($account);
+		$m = new Account($account);
 		$json = $m->getListArray();
 
 		$folders = array_filter($json['folders'], function($folder){
@@ -101,6 +107,8 @@ class FoldersController extends Controller
 
 	/**
 	 * @NoAdminRequired
+	 * @param string $folderId
+	 * @return JSONResponse
 	 */
 	public function destroy($folderId) {
 		try {
@@ -144,7 +152,6 @@ class FoldersController extends Controller
 	/**
 	 * TODO: private functions below have to be removed from controller -> imap service to be build
 	 */
-
 	private function getAccount()
 	{
 		$accountId = $this->params('accountId');
