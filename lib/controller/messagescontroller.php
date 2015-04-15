@@ -80,6 +80,9 @@ class MessagesController extends Controller
 			if ($mailBox->getSpecialRole() === 'sent') {
 				$j['fromEmail'] = $j['toEmail'];
 				$j['from'] = $j['to'];
+				if(count($j['toList']) > 1) {
+					$j['from'] .= ' & others';
+				}
 			}
 			$j['senderImage'] = $ci->getPhoto($j['fromEmail']);
 			return $j;
