@@ -5,7 +5,7 @@ namespace OCA\Mail\Tests\Imap;
 class AccountTests extends AbstractTest {
 
 	public function testListMailBoxes() {
-		$newMailBox = parent::createMailBox('nasty stuff');
+		$newMailBox = $this->createMailBox('nasty stuff');
 		$mailBoxes = $this->getTestAccount()->getListArray();
 		$this->assertInternalType('array', $mailBoxes);
 

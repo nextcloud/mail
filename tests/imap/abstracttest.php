@@ -5,9 +5,17 @@ use OCA\Mail\Account;
 use OCA\Mail\Db\MailAccount;
 use OCA\Mail\Mailbox;
 
-abstract class AbstractTest extends \PHPUnit_Framework_TestCase
-{
+abstract class AbstractTest extends \PHPUnit_Framework_TestCase {
+
+	/**
+	 * @var Account
+	 */
 	private static $account;
+
+	/**
+	 * @var Mailbox[]
+	 */
+	private static $createdMailboxes;
 
 	public static function setUpBeforeClass() {
 		if (false === \getenv('EMAIL_USERNAME')) {
@@ -42,6 +50,12 @@ abstract class AbstractTest extends \PHPUnit_Framework_TestCase
 		self::$account->getImapConnection();
 	}
 
+	public static function tearDownAfterClass() {
+		foreach(self::$createdMailboxes as $createdMailbox) {
+			self::deleteMailbox($createdMailbox);
+		}
+	}
+
 	/**
 	 * @param $name
 	 * @return \OCA\Mail\Mailbox
@@ -56,7 +70,9 @@ abstract class AbstractTest extends \PHPUnit_Framework_TestCase
 			// Ignore mailbox not found
 		}
 
-		return $this->getTestAccount()->createMailbox($uniqueName);
+		$mailbox = $this->getTestAccount()->createMailbox($uniqueName);
+		self::$createdMailboxes[]= $mailbox;
+		return $mailbox;
 	}
 
 	/**
@@ -66,8 +82,8 @@ abstract class AbstractTest extends \PHPUnit_Framework_TestCase
 		return self::$account;
 	}
 
-	private function deleteMailbox($mailbox) {
-		$this->getTestAccount()->deleteMailbox($mailbox);
+	private static function deleteMailbox($mailbox) {
+		self::$account->deleteMailbox($mailbox);
 	}
 
 	protected function createTestMessage(
