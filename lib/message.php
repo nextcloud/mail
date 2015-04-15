@@ -370,6 +370,7 @@ class Message {
 		$data['from'] = $this->getFrom();
 		$data['fromEmail'] = $this->getFromEmail();
 		$data['to'] = $this->getTo();
+		$data['toEMail'] = $this->getToEmail();
 		$data['toList'] = $this->getToList();
 		$data['subject'] = $this->getSubject();
 		$data['date'] = Util::formatDate($this->getSentDate()->format('U'));

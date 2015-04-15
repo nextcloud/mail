@@ -76,7 +76,11 @@ class MessagesController extends Controller
 		$json = $mailBox->getMessages($from, $to-$from);
 
 		$ci = $this->contactsIntegration;
-		$json = array_map(function($j) use($ci) {
+		$json = array_map(function($j) use($ci, $mailBox) {
+			if ($mailBox->getSpecialRole() === 'sent') {
+				$j['fromEmail'] = $j['toEmail'];
+				$j['from'] = $j['to'];
+			}
 			$j['senderImage'] = $ci->getPhoto($j['fromEmail']);
 			return $j;
 		}, $json);
