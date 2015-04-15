@@ -1,46 +1,38 @@
 language: php
 php:
-  - 5.4
-  - 5.5
-  - 5.6
-
+- 5.4
+- 5.5
+- 5.6
 env:
   global:
-    - CORE_BRANCH=master
+  - CORE_BRANCH=master
+  - secure: AaTeRG3kL/LeMOcMgul08EUBM7Kdtrkz9EAGPauKdxXbxggP0j5SxN8ciYxc8CiVni0CYJofW07YjG6tXqhvHeMINHx8Q+5KUUfiLwNrLgl1sMkh7vPR9EA5Z1Y8Nz4N1Qt7zxpqWKPHUsjUNFWxP2TPHEq2FEOGeKbsI7GOYas=
+  - secure: S5agbWaWSLgbujsVhZB9WkCAM0ris8uh9hPnspYw48bolkMhknJ7JxOWGV4rOcJ52kdOgifFRE9XYi65RFLL8zuaZDBU2zFoXO3fpatziYEiIWnxVrkogw1pnh/FeRnrUld+QDykFyUcfSGdFRw5R5FuZHrxe+Q5bHfiEjh4hlE=
   matrix:
-    - DB=sqlite
-
+  - DB=sqlite
 branches:
   only:
-    - master
-    - stable7
-
+  - master
+  - stable7
 before_install:
-  - composer install
-  - wget https://raw.githubusercontent.com/owncloud/administration/master/travis-ci/before_install.sh
-  - bash ./before_install.sh mail $CORE_BRANCH $DB
-  - cd ../core
-  - php occ app:enable mail
-
+- composer install
+- wget https://raw.githubusercontent.com/owncloud/administration/master/travis-ci/before_install.sh
+- bash ./before_install.sh mail $CORE_BRANCH $DB
+- cd ../core
+- php occ app:enable mail
 script:
-  # Test lint
-  - cd apps/mail
-  - sh -c "if [ '$DB' = 'sqlite' ]; then ant test; fi"
-
-  # Run phpunit tests
-  - cd tests
-  - phpunit --configuration phpunit.xml
-
-  # Create coverage report
-  - wget https://scrutinizer-ci.com/ocular.phar
-  - php ocular.phar code-coverage:upload --format=php-clover clover.xml
-
+- cd apps/mail
+- sh -c "if [ '$DB' = 'sqlite' ]; then ant test; fi"
+- cd tests
+- phpunit --configuration phpunit.xml
+- wget https://scrutinizer-ci.com/ocular.phar
+- php ocular.phar code-coverage:upload --format=php-clover clover.xml
 matrix:
   include:
-    - php: 5.4
-      env: DB=mysql
-    - php: 5.4
-      env: DB=pgsql
+  - php: 5.4
+    env: DB=mysql
+  - php: 5.4
+    env: DB=pgsql
   allow_failures:
-    - php: hhvm
+  - php: hhvm
   fast_finish: true
