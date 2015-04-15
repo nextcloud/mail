@@ -87,6 +87,25 @@ class Account {
 	}
 
 	/**
+	 * @param string $mailBox
+	 * @return Mailbox
+	 */
+	public function createMailbox($mailBox) {
+		$conn = $this->getImapConnection();
+		$conn->createMailbox($mailBox);
+
+		return $this->getMailbox($mailBox);
+	}
+
+	public function deleteMailbox($mailBox) {
+		if ($mailBox instanceof Mailbox) {
+			$mailBox = $mailBox->getDisplayName();
+		}
+		$conn = $this->getImapConnection();
+		$conn->deleteMailbox($mailBox);
+	}
+
+	/**
 	 * Lists mailboxes (folders) for this account.
 	 *
 	 * Lists mailboxes and also queries the server for their 'special use',

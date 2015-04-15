@@ -107,7 +107,7 @@ class Mailbox {
 			$message = new Message($this->conn, $this->mailBox, $message_id, $header);
 			$messages[] = $message->getListArray();
 		}
-		ob_clean();
+		ob_get_clean();
 
 		// sort by time
 		usort($messages, function($a, $b) {
