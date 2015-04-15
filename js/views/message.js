@@ -121,6 +121,18 @@ views.Message = Backbone.Marionette.ItemView.extend({
 
 });
 
+views.NoSearchResultMessageListView = Marionette.ItemView.extend({
+	initialize: function(options) {
+		this.model.set('searchTerm', options.filterCriteria.text || "");
+	},
+
+	template: "#no-search-results-message-list-template",
+
+	onRender: function() {
+		$('#load-more-mail-messages').hide();
+	}
+});
+
 views.Messages = Backbone.Marionette.CompositeView.extend({
 
 	collection: null,
@@ -143,6 +155,17 @@ views.Messages = Backbone.Marionette.CompositeView.extend({
 	initialize: function() {
 		this.collection = new models.MessageList();
 		this.collection.on('change:flags', this.changeFlags, this);
+	},
+
+	getEmptyView: function() {
+		if (this.filterCriteria) {
+			return views.NoSearchResultMessageListView;
+		}
+		return views.template;
+	},
+
+	emptyViewOptions: function () {
+		return { filterCriteria: this.filterCriteria };
 	},
 
 	changeFlags: function(model) {
@@ -217,6 +240,8 @@ views.Messages = Backbone.Marionette.CompositeView.extend({
 			from = 0;
 		}
 		// Add loading feedback
+//		$('#load-new-mail-messages').show();
+//		$('#load-more-mail-messages').hide();
 		$('#load-more-mail-messages')
 			.addClass('icon-loading-small')
 			.val(t('mail', 'Loading …'))
