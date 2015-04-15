@@ -75,7 +75,7 @@ views.SendMail = Backbone.View.extend({
 				OC.msg.finishedAction('#new-message-msg', {
 					status: 'success',
 					data: {
-						message: t('mail', 'Message sent to {Receiver}', {Receiver: to.val()}, 0, {escape: false})
+						message: t('mail', 'Message sent!')
 					}
 				});
 
