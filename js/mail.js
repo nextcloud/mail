@@ -540,6 +540,30 @@ $(document).ready(function () {
 			}
 		});
 	});
+	
+	// set standard port for the selected IMAP & SMTP security
+	
+	$(document).on('change', '#mail-imap-sslmode', function () {
+		var imapDefaultPort = 143;
+		var imapDefaultSecurePort = 993;
+
+		if ($(this).val() == "none") {
+			$('#mail-imap-port').val(imapDefaultPort);		
+		} else {
+			$('#mail-imap-port').val(imapDefaultSecurePort);		
+		}
+	});
+
+	$(document).on('change', '#mail-smtp-sslmode', function () {
+		var smtpDefaultPort = 25;
+		var smtpDefaultSecurePort = 465;
+
+		if ($(this).val() == "none") {
+			$('#mail-smtp-port').val(smtpDefaultPort);		
+		} else  {
+			$('#mail-smtp-port').val(smtpDefaultSecurePort);				
+		}
+	});
 
 	// toggle for advanced account configuration
 	$(document).on('click', '#mail-setup-manual-toggle', function () {
