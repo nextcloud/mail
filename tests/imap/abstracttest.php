@@ -42,10 +42,31 @@ abstract class AbstractTest extends \PHPUnit_Framework_TestCase
 	}
 
 	/**
+	 * @param $name
+	 * @return \OCA\Mail\Mailbox
+	 */
+	public function createMailBox($name) {
+		$uniqueName = $name . uniqid();
+
+		try {
+			$mailbox = $this->getTestAccount()->getMailbox($uniqueName);
+			$this->deleteMailbox($mailbox);
+		} catch (\Exception $e) {
+			// Ignore mailbox not found
+		}
+
+		return $this->getTestAccount()->createMailbox($uniqueName);
+	}
+
+	/**
 	 * @return Account
 	 */
 	protected function getTestAccount() {
 		return self::$account;
+	}
+
+	private function deleteMailbox($mailbox) {
+		$this->getTestAccount()->deleteMailbox($mailbox);
 	}
 
 }
