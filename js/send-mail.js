@@ -53,7 +53,7 @@ $(function () {
 		}
 	});
 
-	$(document).on('click', '.reply-message-send', function () {
+	function sendReply() {
 		//
 		// TODO:
 		//  - input validation
@@ -111,8 +111,19 @@ $(function () {
 				Mail.UI.showError(t('mail', 'Error sending the reply.'));
 			}
 		});
+	};
+
+	$(document).on('keypress', '.reply-message-body', function(event) {
+		// check for ctrl+enter
+		if (event.keyCode === 13 && event.ctrlKey) {
+			var sendBtnState = $('.reply-message-send').attr('disabled');
+			if (sendBtnState === undefined) {
+				sendReply();
+			}
+		}
 	});
 
+	$(document).on('click', '.reply-message-send', sendReply);
 
 	// cc/bcc toggling
 	$(document).on('click', '#new-message-cc-bcc-toggle', function() {

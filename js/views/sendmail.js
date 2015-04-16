@@ -14,6 +14,7 @@ views.SendMail = Backbone.View.extend({
 
 	events: {
 		"click #new-message-send" : "sendMail",
+		"keypress #new-message-body" : "handleKeyPress",
 		"click .mail_account" : "changeAlias"
 	},
 
@@ -26,6 +27,16 @@ views.SendMail = Backbone.View.extend({
 
 	changeAlias: function(event) {
 		this.currentAccountId = parseInt($(event.target).val(), 10);
+	},
+
+	handleKeyPress: function(event) {
+		// check for ctrl+enter
+		if (event.keyCode === 13 && event.ctrlKey) {
+			var sendBtnState = $('#new-message-send').attr('disabled');
+			if (sendBtnState === undefined) {
+				this.sendMail();
+			}
+		}
 	},
 
 	sendMail: function() {
