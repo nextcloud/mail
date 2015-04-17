@@ -282,7 +282,8 @@ var Mail = {
 					// Loading feedback
 					var saveToFilesBtnSelector = '.attachment-save-to-cloud';
 					if (typeof attachmentId !== "undefined") {
-						saveToFilesBtnSelector = 'li[data-attachment-id="' + attachmentId + '"] ' + saveToFilesBtnSelector;
+						saveToFilesBtnSelector = 'li[data-attachment-id="'
+							+ attachmentId + '"] ' + saveToFilesBtnSelector;
 					}
 					$(saveToFilesBtnSelector)
 						.removeClass('icon-upload')
@@ -291,7 +292,8 @@ var Mail = {
 
 					$.ajax(
 						OC.generateUrl(
-							'apps/mail/accounts/{accountId}/folders/{folderId}/messages/{messageId}/attachment/{attachmentId}',
+							'apps/mail/accounts/{accountId}/folders/{folderId}/'
+							+ 'messages/{messageId}/attachment/{attachmentId}',
 							{
 								accountId: Mail.State.currentAccountId,
 								folderId: Mail.State.currentFolderId,

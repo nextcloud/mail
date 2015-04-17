@@ -3,13 +3,13 @@ $(document).ready(function(){
 
     // Add the settings page
     $.ajax(OC.generateUrl('apps/mail/accounts'), {
-        data:{},
-        type:'GET',
-        success:function (jsondata) {
-                var source   = $("#mail-settings-template").html();
-                var template = Handlebars.compile(source);
-                var html = template(jsondata);
-                $('#app-settings-content').html(html);
+        data: {},
+        type: 'GET',
+        success: function (jsondata) {
+            var source   = $("#mail-settings-template").html();
+            var template = Handlebars.compile(source);
+            var html = template(jsondata);
+            $('#app-settings-content').html(html);
         }
     });
 
