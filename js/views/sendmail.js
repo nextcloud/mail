@@ -112,7 +112,6 @@ views.SendMail = Backbone.View.extend({
 				$('.new-message-attachments-action').css('display', 'inline-block');
 				$('#mail_new_attachment').prop('disabled', false);
 				newMessageBody.prop('disabled', false);
-				newMessageSend.prop('disabled', false);
 				newMessageSend.val(t('mail', 'Send'));
 			}
 		});
