@@ -573,7 +573,7 @@ $(document).ready(function () {
 	});
 
 	$(document).on('change', '#mail-smtp-sslmode', function () {
-		var smtpDefaultPort = 25;
+		var smtpDefaultPort = 587;
 		var smtpDefaultSecurePort = 465;
 
 		if ($(this).val() === 'none') {

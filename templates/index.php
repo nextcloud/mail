@@ -336,7 +336,7 @@
 				<p class="groupmiddle">
 					<input type="email" name="mail-smtp-port" id="mail-smtp-port"
 						placeholder="<?php p($l->t('SMTP Port')); ?>"
-						value="25" />
+						value="587" />
 					<label for="mail-smtp-port" class="infield"><?php p($l->t('SMTP Port (default 25, ssl 465)')); ?></label>
 				</p>
 				<p class="groupmiddle">
