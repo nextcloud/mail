@@ -96,7 +96,7 @@ class MessagesController extends Controller
 			if ($mailBox->getSpecialRole() === 'sent') {
 				$j['fromEmail'] = $j['toEmail'];
 				$j['from'] = $j['to'];
-				if(count($j['toList']) > 1) {
+				if((count($j['toList']) > 1) || (count($j['ccList']) > 0)) {
 					$j['from'] .= ' ' . $this->l10n->t('& others');
 				}
 			}
