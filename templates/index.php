@@ -66,8 +66,9 @@
 			</div>
 			<div class="date">
 					<span class="modified"
-						title="{{formatDate dateInt}}"
-						style="color:{{colorOfDate dateInt}}">{{relativeModifiedDate dateInt}}</span>
+						title="{{formatDate dateInt}}">
+						{{relativeModifiedDate dateInt}}
+					</span>
 			</div>
 			<div class="icon-delete action delete"></div>
 		</div>
@@ -299,7 +300,7 @@
 							<option value="tls"><?php p($l->t('tls')); ?></option>
 						</select>
 				</p>
-				<p class="groupmiddle"> 
+				<p class="groupmiddle">
 					<input type="email" name="mail-imap-port" id="mail-imap-port"
 						placeholder="<?php p($l->t('IMAP Port')); ?>"
 						value="143" />

@@ -23,18 +23,6 @@ var Mail = {
 	},
 	UI: {
 		initializeInterface: function () {
-			Handlebars.registerHelper("colorOfDate", function (dateInt) {
-				var lastModified = new Date(dateInt * 1000);
-				var lastModifiedTime = Math.round(lastModified.getTime() / 1000);
-
-				// date column
-				var modifiedColor = Math.round((Math.round((new Date()).getTime() / 1000) - lastModifiedTime) / 60 / 60 / 24 * 5);
-				if (modifiedColor > 200) {
-					modifiedColor = 200;
-				}
-				return 'rgb(' + modifiedColor + ',' + modifiedColor + ',' + modifiedColor + ')';
-			});
-
 			Handlebars.registerHelper("relativeModifiedDate", function (dateInt) {
 				var lastModified = new Date(dateInt * 1000);
 				var lastModifiedTime = Math.round(lastModified.getTime() / 1000);
@@ -568,17 +556,17 @@ $(document).ready(function () {
 			}
 		});
 	});
-	
+
 	// set standard port for the selected IMAP & SMTP security
-	
+
 	$(document).on('change', '#mail-imap-sslmode', function () {
 		var imapDefaultPort = 143;
 		var imapDefaultSecurePort = 993;
 
 		if ($(this).val() == "none") {
-			$('#mail-imap-port').val(imapDefaultPort);		
+			$('#mail-imap-port').val(imapDefaultPort);
 		} else {
-			$('#mail-imap-port').val(imapDefaultSecurePort);		
+			$('#mail-imap-port').val(imapDefaultSecurePort);
 		}
 	});
 
@@ -587,9 +575,9 @@ $(document).ready(function () {
 		var smtpDefaultSecurePort = 465;
 
 		if ($(this).val() == "none") {
-			$('#mail-smtp-port').val(smtpDefaultPort);		
+			$('#mail-smtp-port').val(smtpDefaultPort);
 		} else  {
-			$('#mail-smtp-port').val(smtpDefaultSecurePort);				
+			$('#mail-smtp-port').val(smtpDefaultSecurePort);
 		}
 	});
 
