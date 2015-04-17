@@ -282,7 +282,8 @@ var Mail = {
 					// Loading feedback
 					var saveToFilesBtnSelector = '.attachment-save-to-cloud';
 					if (typeof attachmentId !== "undefined") {
-						saveToFilesBtnSelector = 'li[data-attachment-id="' + attachmentId + '"] ' + saveToFilesBtnSelector;
+						saveToFilesBtnSelector = 'li[data-attachment-id="'
+							+ attachmentId + '"] ' + saveToFilesBtnSelector;
 					}
 					$(saveToFilesBtnSelector)
 						.removeClass('icon-upload')
@@ -291,7 +292,8 @@ var Mail = {
 
 					$.ajax(
 						OC.generateUrl(
-							'apps/mail/accounts/{accountId}/folders/{folderId}/messages/{messageId}/attachment/{attachmentId}',
+							'apps/mail/accounts/{accountId}/folders/{folderId}/'
+							+ 'messages/{messageId}/attachment/{attachmentId}',
 							{
 								accountId: Mail.State.currentAccountId,
 								folderId: Mail.State.currentFolderId,
@@ -563,7 +565,7 @@ $(document).ready(function () {
 		var imapDefaultPort = 143;
 		var imapDefaultSecurePort = 993;
 
-		if ($(this).val() == "none") {
+		if ($(this).val() === 'none') {
 			$('#mail-imap-port').val(imapDefaultPort);
 		} else {
 			$('#mail-imap-port').val(imapDefaultSecurePort);
@@ -574,7 +576,7 @@ $(document).ready(function () {
 		var smtpDefaultPort = 25;
 		var smtpDefaultSecurePort = 465;
 
-		if ($(this).val() == "none") {
+		if ($(this).val() === 'none') {
 			$('#mail-smtp-port').val(smtpDefaultPort);
 		} else  {
 			$('#mail-smtp-port').val(smtpDefaultSecurePort);

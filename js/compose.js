@@ -1,4 +1,4 @@
-/* global Handlebars, relative_modified_date, formatDate, humanFileSize, views */
+/* global Handlebars, views */
 var Mail = {
 	State:{
 		accounts: null

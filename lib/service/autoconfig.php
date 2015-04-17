@@ -20,10 +20,10 @@ class AutoConfig {
 
 	/**
 	 *
-	 * @var Logger 
+	 * @var Logger
 	 */
 	private $logger;
-	
+
 	/**
 	 * @var string
 	 */
@@ -214,7 +214,7 @@ class AutoConfig {
 	 * @return bool|array
 	 */
 	private function getMxRecord($host) {
-		if (getmxrr($host, $mx_records, $mx_weight) == false) {
+		if (getmxrr($host, $mx_records, $mx_weight) === false) {
 			return false;
 		}
 
@@ -287,7 +287,7 @@ class AutoConfig {
 			return null;
 		}
 
-		$this->detectSmtp($account, $email, $password, $name);
+		$this->detectSmtp($account, $email, $password);
 
 		return $account;
 	}

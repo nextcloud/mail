@@ -3,13 +3,13 @@ $(document).ready(function(){
 
     // Add the settings page
     $.ajax(OC.generateUrl('apps/mail/accounts'), {
-        data:{},
-        type:'GET',
-        success:function (jsondata) {
-                var source   = $("#mail-settings-template").html();
-                var template = Handlebars.compile(source);
-                var html = template(jsondata);
-                $('#app-settings-content').html(html);
+        data: {},
+        type: 'GET',
+        success: function (jsondata) {
+            var source   = $("#mail-settings-template").html();
+            var template = Handlebars.compile(source);
+            var html = template(jsondata);
+            $('#app-settings-content').html(html);
         }
     });
 
@@ -21,11 +21,11 @@ $(document).ready(function(){
 		var accountId = $(this).parent().parent().data('account-id');
 
 		$.ajax(OC.generateUrl('/apps/mail/accounts/{accountId}'), {
-			data:{accountId:accountId},
+			data: {accountId:accountId},
 			type: 'DELETE',
-			success:function (accountId) {
-                //reload the complate page
-                // TOOD should only reload the app nav/content
+			success: function () {
+                // reload the complete page
+                // TODO should only reload the app nav/content
                 window.location.reload();
 			},
             error: function() {

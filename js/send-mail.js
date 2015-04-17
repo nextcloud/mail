@@ -110,7 +110,7 @@ $(function () {
 				Mail.UI.showError(t('mail', 'Error sending the reply.'));
 			}
 		});
-	};
+	}
 
 	$(document).on('keypress', '.reply-message-body', function(event) {
 		// check for ctrl+enter

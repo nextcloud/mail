@@ -1,4 +1,4 @@
-/* global Backbone, Handlebars, models, escapeHTML */
+/* global Backbone, Handlebars, models */
 
 var views = views || {};
 

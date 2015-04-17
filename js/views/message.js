@@ -1,4 +1,4 @@
-/* global Backbone, Mail, models */
+/* global Backbone, Marionette, Mail, models */
 
 var views = views || {};
 
