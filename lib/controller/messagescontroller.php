@@ -296,11 +296,11 @@ class MessagesController extends Controller
 	 * @param integer $id
 	 */
 	private function buildHtmlBodyUrl($accountId, $folderId, $id) {
-		$htmlBodyUrl = \OCP\Util::linkToRoute('mail.messages.getHtmlBody', array(
+		$htmlBodyUrl = \OC::$server->getURLGenerator()->linkToRoute('mail.messages.getHtmlBody', array(
 			'accountId' => $accountId,
 			'folderId' => $folderId,
 			'messageId' => $id,
-			'requesttoken' => \OC_Util::callRegister(),
+			'requesttoken' => \OCP\Util::callRegister(),
 		));
 		return \OC_Helper::makeURLAbsolute($htmlBodyUrl);
 	}

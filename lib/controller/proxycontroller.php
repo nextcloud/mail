@@ -98,7 +98,7 @@ class ProxyController extends Controller {
 		$this->session->close();
 
 		$resourceURL = $this->request->getParam('src');
-		$content =  \OC_Util::getUrlContent($resourceURL);
+		$content =  \OC::$server->getHelper()->getUrlContent($resourceURL);
 		return new ProxyDownloadResponse($content, $resourceURL, 'application/octet-stream');
 	}
 }
