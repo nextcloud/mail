@@ -60,7 +60,7 @@ class AccountsController extends Controller
 	 * @var \OCP\Files\Folder
 	 */
 	private $userFolder;
-	
+
 	/**
 	 *
 	 * @var Logger
@@ -231,7 +231,7 @@ class AccountsController extends Controller
 			$message = $mailbox->getMessage($messageId);
 
 			if (is_null($subject)) {
-				$headers['Subject'] = "RE: " . $message->getSubject();
+				$headers['Subject'] = 'Re: ' . $message->getSubject();
 			}
 			$headers['In-Reply-To'] = $message->getMessageId();
 			if (is_null($to)) {
