@@ -66,8 +66,9 @@
 			</div>
 			<div class="date">
 					<span class="modified"
-						title="{{formatDate dateInt}}"
-						style="color:{{colorOfDate dateInt}}">{{relativeModifiedDate dateInt}}</span>
+						title="{{formatDate dateInt}}">
+						{{relativeModifiedDate dateInt}}
+					</span>
 			</div>
 			<div class="icon-delete action delete"></div>
 		</div>

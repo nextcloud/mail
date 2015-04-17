@@ -23,18 +23,6 @@ var Mail = {
 	},
 	UI: {
 		initializeInterface: function () {
-			Handlebars.registerHelper("colorOfDate", function (dateInt) {
-				var lastModified = new Date(dateInt * 1000);
-				var lastModifiedTime = Math.round(lastModified.getTime() / 1000);
-
-				// date column
-				var modifiedColor = Math.round((Math.round((new Date()).getTime() / 1000) - lastModifiedTime) / 60 / 60 / 24 * 5);
-				if (modifiedColor > 200) {
-					modifiedColor = 200;
-				}
-				return 'rgb(' + modifiedColor + ',' + modifiedColor + ',' + modifiedColor + ')';
-			});
-
 			Handlebars.registerHelper("relativeModifiedDate", function (dateInt) {
 				var lastModified = new Date(dateInt * 1000);
 				var lastModifiedTime = Math.round(lastModified.getTime() / 1000);
