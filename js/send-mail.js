@@ -82,7 +82,6 @@ $(function () {
 			complete:function () {
 				replyMessageBody.removeClass('icon-loading');
 				replyMessageBody.prop('disabled', false);
-				replyMessageSend.prop('disabled', false);
 				replyMessageSend.val(t('mail', 'Reply'));
 				$('.reply-message-fields #to').prop('disabled', false);
 				$('.reply-message-fields #cc').prop('disabled', false);
