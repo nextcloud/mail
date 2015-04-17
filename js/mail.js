@@ -6,7 +6,8 @@ var Mail = {
 		currentMessageId: null,
 		accounts: null,
 		messageView: null,
-		router: null
+		router: null,
+		Cache: null
 	},
 	Search: {
 		timeoutID: null,
@@ -19,6 +20,46 @@ var Mail = {
 				Mail.State.messageView.filterCurrentMailbox(query);
 			}, 500);
 			$('#searchresults').hide();
+		}
+	},
+	Communication: {
+		get: function (url, options) {
+			var defaultOptions = {
+					ttl: 60000,
+					cache: true,
+					key: url
+				},
+				allOptions = options || {};
+			_.defaults(allOptions, defaultOptions);
+
+			if (allOptions.cache) {
+				var cache = $.initNamespaceStorage(allOptions.key).localStorage;
+				var ttl = cache.get('ttl');
+				if (ttl && ttl < Date.now()) {
+					cache.removeAll();
+				}
+				var item = cache.get('data');
+				if (item) {
+					options.success(item);
+					return;
+				}
+			}
+			$.ajax(url, {
+				data: {},
+				type: 'GET',
+				error: function () {
+					options.error();
+				},
+				success: function (data) {
+					if (allOptions.cache) {
+						cache.set('data', data);
+						if (typeof allOptions.ttl === 'number') {
+							cache.set('ttl', Date.now() + allOptions.ttl);
+						}
+					}
+					options.success(data);
+				}
+			});
 		}
 	},
 	UI: {
@@ -111,25 +152,23 @@ var Mail = {
 
 			OC.Plugins.register('OCA.Search', Mail.Search);
 
-			$.ajax(OC.generateUrl('apps/mail/accounts'), {
-				data: {},
-				type: 'GET',
+			Mail.Communication.get(OC.generateUrl('apps/mail/accounts'), {
 				success: function (jsondata) {
 					Mail.State.accounts = jsondata;
 					if (jsondata.length === 0) {
 						Mail.UI.addAccount();
 					} else {
 						var firstAccountId = jsondata[0].accountId;
-						_.each(Mail.State.accounts, function (a) {
+						_.each(jsondata, function (a) {
 							Mail.UI.loadFoldersForAccount(a.accountId, firstAccountId);
 						});
 					}
 				},
 				error: function () {
 					Mail.UI.showError(t('mail', 'Error while loading the accounts.'));
-				}
+				},
+				ttl: 'no'
 			});
-
 		},
 
 		loadFoldersForAccount: function (accountId, firstAccountId) {
@@ -143,13 +182,9 @@ var Mail = {
 			Mail.UI.clearMessages();
 			$('#app-navigation').addClass('icon-loading');
 
-			$.ajax(OC.generateUrl('apps/mail/accounts/{accountId}/folders', {accountId: accountId}), {
-				data: {},
-				type: 'GET',
+			Mail.Communication.get(OC.generateUrl('apps/mail/accounts/{accountId}/folders', {accountId: accountId}), {
 				success: function (jsondata) {
-
 					$('#app-navigation').removeClass('icon-loading');
-
 					Mail.State.folderView.collection.add(jsondata);
 
 					if (jsondata.id === firstAccountId) {
@@ -165,7 +200,8 @@ var Mail = {
 				},
 				error: function () {
 					Mail.UI.showError(t('mail', 'Error while loading the selected account.'));
-				}
+				},
+				ttl: 'no'
 			});
 		},
 
@@ -207,8 +243,8 @@ var Mail = {
 			Mail.UI.clearMessages();
 			$('#mail_messages')
 				.removeClass('hidden')
-				.addClass('icon-loading');
-			$('#mail-message').removeClass('hidden');
+				.addClass('icon-loading')
+				.removeClass('hidden');
 			$('#mail_new_message')
 				.removeClass('hidden')
 				.fadeIn();
@@ -228,11 +264,9 @@ var Mail = {
 				Mail.UI.setMessageActive(null);
 				$('#mail_messages').removeClass('icon-loading');
 			} else {
-				$.ajax(
+				Mail.Communication.get(
 					OC.generateUrl('apps/mail/accounts/{accountId}/folders/{folderId}/messages',
 						{'accountId': accountId, 'folderId': folderId}), {
-						data: {},
-						type: 'GET',
 						success: function (jsondata) {
 							Mail.State.currentAccountId = accountId;
 							Mail.State.currentFolderId = folderId;
@@ -270,7 +304,8 @@ var Mail = {
 							Mail.UI.setFolderActive(Mail.State.currentAccountId, Mail.State.currentFolderId);
 
 							Mail.UI.showError(t('mail', 'Error while loading messages.'));
-						}
+						},
+						cache: false
 					});
 			}
 		},

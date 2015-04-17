@@ -1,3 +1,6 @@
+<?php
+script('mail', 'jquery.storageapi');
+?>
 <script id="mail-folder-template" type="text/x-handlebars-template">
 	<li data-folder_id="{{id}}" data-no_select="{{noSelect}}"
 		class="
