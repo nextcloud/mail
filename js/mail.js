@@ -565,10 +565,14 @@ $(document).ready(function () {
 		var imapDefaultPort = 143;
 		var imapDefaultSecurePort = 993;
 
-		if ($(this).val() === 'none') {
-			$('#mail-imap-port').val(imapDefaultPort);
-		} else {
-			$('#mail-imap-port').val(imapDefaultSecurePort);
+		switch ($(this).val()) {
+			case 'none':
+			case 'tls':
+				$('#mail-imap-port').val(imapDefaultPort);
+				break;
+			case 'ssl':
+				$('#mail-imap-port').val(imapDefaultSecurePort);
+				break;
 		}
 	});
 
@@ -576,10 +580,14 @@ $(document).ready(function () {
 		var smtpDefaultPort = 587;
 		var smtpDefaultSecurePort = 465;
 
-		if ($(this).val() === 'none') {
-			$('#mail-smtp-port').val(smtpDefaultPort);
-		} else  {
-			$('#mail-smtp-port').val(smtpDefaultSecurePort);
+		switch ($(this).val()) {
+			case 'none':
+			case 'tls':
+				$('#mail-smtp-port').val(smtpDefaultPort);
+				break;
+			case 'ssl':
+				$('#mail-smtp-port').val(smtpDefaultSecurePort);
+				break;
 		}
 	});
 
