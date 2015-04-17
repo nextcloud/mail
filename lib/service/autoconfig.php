@@ -287,7 +287,7 @@ class AutoConfig {
 			return null;
 		}
 
-		$this->detectSmtp($account, $email, $password, $name);
+		$this->detectSmtp($account, $email, $password);
 
 		return $account;
 	}

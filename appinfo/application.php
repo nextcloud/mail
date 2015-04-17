@@ -126,11 +126,11 @@ class Application extends App {
 				$c->query('ServerContainer')->getLogger()
 			);
 		});
-		
+
 		/**
 		 * Core
 		 */
-		$container->registerService('UserId', function($c) {
+		$container->registerService('UserId', function() {
 			return \OCP\User::getUser();
 		});
 	}

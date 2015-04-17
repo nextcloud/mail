@@ -21,11 +21,11 @@ $(document).ready(function(){
 		var accountId = $(this).parent().parent().data('account-id');
 
 		$.ajax(OC.generateUrl('/apps/mail/accounts/{accountId}'), {
-			data:{accountId:accountId},
+			data: {accountId:accountId},
 			type: 'DELETE',
-			success:function (accountId) {
-                //reload the complate page
-                // TOOD should only reload the app nav/content
+			success: function () {
+                // reload the complete page
+                // TODO should only reload the app nav/content
                 window.location.reload();
 			},
             error: function() {

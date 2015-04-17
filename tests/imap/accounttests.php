@@ -19,13 +19,13 @@ class AccountTests extends AbstractTest {
 		$newMailBox = parent::createMailBox('nasty stuff');
 		$count = $newMailBox->getTotalMessages();
 		$this->assertEquals(0, $count);
-		$messages = $count = $newMailBox->getMessages();
+		$messages = $newMailBox->getMessages();
 		$this->assertInternalType('array', $messages);
 		$this->assertEquals(0, count($messages));
 		$this->createTestMessage($newMailBox);
 		$count = $newMailBox->getTotalMessages();
 		$this->assertEquals(1, $count);
-		$messages = $count = $newMailBox->getMessages();
+		$messages = $newMailBox->getMessages();
 		$this->assertInternalType('array', $messages);
 		$this->assertEquals(1, count($messages));
 	}
