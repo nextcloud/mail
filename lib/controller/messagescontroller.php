@@ -38,7 +38,7 @@ class MessagesController extends Controller
 	 * @var ContactsIntegration
 	 */
 	private $contactsIntegration;
-	
+
 	/**
 	 * @var \OCA\Mail\Service\Logger
 	 */
@@ -85,7 +85,7 @@ class MessagesController extends Controller
 	 */
 	public function index($from=0, $to=20, $filter = null) {
 		$mailBox = $this->getFolder();
-		
+
 		$folderId = $mailBox->getFolderId();
 		$this->logger->debug("loading messages $from to $to of folder <$folderId>");
 
@@ -96,7 +96,7 @@ class MessagesController extends Controller
 			if ($mailBox->getSpecialRole() === 'sent') {
 				$j['fromEmail'] = $j['toEmail'];
 				$j['from'] = $j['to'];
-				if(count($j['toList']) > 1) {
+				if((count($j['toList']) > 1) || (count($j['ccList']) > 0)) {
 					$j['from'] .= ' ' . $this->l10n->t('& others');
 				}
 			}
