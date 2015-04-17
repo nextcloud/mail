@@ -5,19 +5,22 @@ use OCA\Mail\HordeTranslationHandler;
 if ((@include_once __DIR__ . '/../vendor/autoload.php')===false) {
 	throw new Exception('Cannot include autoload. Did you run install dependencies using composer?');
 }
-$l = OC_L10N::get('mail');
 
 // bypass Horde Translation system
 Horde_Translation::setHandler('Horde_Imap_Client', new HordeTranslationHandler());
 Horde_Translation::setHandler('Horde_Mime', new HordeTranslationHandler());
 Horde_Translation::setHandler('Horde_Smtp', new HordeTranslationHandler());
 
-OCP\App::addNavigationEntry(array(
-  'id' => 'mail',
-  'order' => 1,
-  'href' => OCP\Util::linkToRoute( 'mail.page.index' ),
-  'icon' => OCP\Util::imagePath( 'mail', 'mail.svg' ),
-  'name' => $l->t('Mail'),
-));
-
-//OCP\App::registerPersonal('mail','settings');
+\OC::$server->getNavigationManager()->add(
+	function () {
+		$l = \OC::$server->getL10N('mail');
+		$g =  \OC::$server->getURLGenerator();
+		return [
+			'id' => 'mail',
+			'order' => 1,
+			'href' => $g->linkToRoute( 'mail.page.index' ),
+			'icon' => $g->imagePath( 'mail', 'mail.svg' ),
+			'name' => $l->t('Mail'),
+		];
+	}
+);

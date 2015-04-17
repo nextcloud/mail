@@ -340,7 +340,7 @@ class Account {
 	 */
 	protected function localizeSpecialMailboxes() {
 
-		$l = new \OC_L10N('mail');
+		$l = \OC::$server->getL10N('mail');
 		$map = array(
 			// TRANSLATORS: translated mail box name
 			'inbox'   => $l->t('Inbox'),
