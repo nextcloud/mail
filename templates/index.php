@@ -300,7 +300,7 @@
 							<option value="tls"><?php p($l->t('tls')); ?></option>
 						</select>
 				</p>
-				<p class="groupmiddle"> 
+				<p class="groupmiddle">
 					<input type="email" name="mail-imap-port" id="mail-imap-port"
 						placeholder="<?php p($l->t('IMAP Port')); ?>"
 						value="143" />

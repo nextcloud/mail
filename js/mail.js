@@ -556,17 +556,17 @@ $(document).ready(function () {
 			}
 		});
 	});
-	
+
 	// set standard port for the selected IMAP & SMTP security
-	
+
 	$(document).on('change', '#mail-imap-sslmode', function () {
 		var imapDefaultPort = 143;
 		var imapDefaultSecurePort = 993;
 
 		if ($(this).val() == "none") {
-			$('#mail-imap-port').val(imapDefaultPort);		
+			$('#mail-imap-port').val(imapDefaultPort);
 		} else {
-			$('#mail-imap-port').val(imapDefaultSecurePort);		
+			$('#mail-imap-port').val(imapDefaultSecurePort);
 		}
 	});
 
@@ -575,9 +575,9 @@ $(document).ready(function () {
 		var smtpDefaultSecurePort = 465;
 
 		if ($(this).val() == "none") {
-			$('#mail-smtp-port').val(smtpDefaultPort);		
+			$('#mail-smtp-port').val(smtpDefaultPort);
 		} else  {
-			$('#mail-smtp-port').val(smtpDefaultSecurePort);				
+			$('#mail-smtp-port').val(smtpDefaultSecurePort);
 		}
 	});
 
