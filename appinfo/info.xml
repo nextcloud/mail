@@ -6,6 +6,10 @@
 	<version>0.1</version>
 	<licence>AGPL</licence>
 	<author>Thomas Müller, Jan-Christoph Borchardt, Lukas Reschke, Christoph Wurst, Thomas Imbreckx, Steffen Lindner, Plato Leung &amp; many more …</author>
+	<documentation>
+		<user>https://github.com/owncloud/mail/wiki</user>
+		<admin>https://github.com/owncloud/mail#readme</admin>
+	</documentation>
 	<dependencies>
 		<owncloud min-version="8.0" max-version="8.1" />
 	</dependencies>
