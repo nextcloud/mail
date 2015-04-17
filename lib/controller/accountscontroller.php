@@ -284,6 +284,7 @@ class AccountsController extends Controller
 			$raw = stream_get_contents($mail->getRaw());
 			$sentFolder->saveMessage($raw);
 		} catch (\Horde_Exception $ex) {
+			$this->logger->error('Sending mail failed: ' . $ex->getMessage());
 			return new JSONResponse(
 				array('message' => $ex->getMessage()),
 				Http::STATUS_INTERNAL_SERVER_ERROR
