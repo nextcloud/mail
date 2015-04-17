@@ -53,7 +53,7 @@ class HTMLPurifier_URIFilter_TransformURLScheme extends HTMLPurifier_URIFilter {
 				null,
 				Util::getServerHost(),
 				null,
-				OC_Helper::linkToRoute( 'mail.proxy.redirect' ),
+				\OC::$server->getURLGenerator()->linkToRoute( 'mail.proxy.redirect' ),
 				'src='.$originalURL,
 				null);
 		} else {
@@ -62,7 +62,7 @@ class HTMLPurifier_URIFilter_TransformURLScheme extends HTMLPurifier_URIFilter {
 				null,
 				Util::getServerHost(),
 				null,
-				OC_Helper::linkToRoute( 'mail.proxy.proxy' ),
+				\OC::$server->getURLGenerator()->linkToRoute( 'mail.proxy.proxy' ),
 				'src='.$originalURL.'&requesttoken='.\OC::$server->getSession()->get('requesttoken'),
 				null);
 		}

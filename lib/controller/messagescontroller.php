@@ -286,7 +286,7 @@ class MessagesController extends Controller
 			'messageId' => $id,
 			'attachmentId' => $attachment['id'],
 		));
-		$downloadUrl = \OC_Helper::makeURLAbsolute($downloadUrl);
+		$downloadUrl = \OC::$server->getURLGenerator()->getAbsoluteURL($downloadUrl);
 		$attachment['downloadUrl'] = $downloadUrl;
 		$attachment['mimeUrl'] = \OC_Helper::mimetypeIcon($attachment['mime']);
 		return $attachment;
@@ -302,7 +302,7 @@ class MessagesController extends Controller
 			'messageId' => $id,
 			'requesttoken' => \OCP\Util::callRegister(),
 		));
-		return \OC_Helper::makeURLAbsolute($htmlBodyUrl);
+		return \OC::$server->getURLGenerator()->getAbsoluteURL($htmlBodyUrl);
 	}
 
 }
