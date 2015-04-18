@@ -336,6 +336,26 @@ class Mailbox {
 			]
 		]);
 	}
+	
+	/**
+	 * Save draft
+	 * 
+	 * @param string $rawBody
+	 * @return int UID of the saved draft
+	 */
+	public function saveDraft($rawBody) {
+
+		$uids = $this->conn->append($this->mailBox, [
+			[
+				'data' => $rawBody,
+				'flags' => [
+					Horde_Imap_Client::FLAG_DRAFT,
+					Horde_Imap_Client::FLAG_SEEN
+				]
+			]
+		]);
+		return $uids->current();
+	}
 
 	/**
 	 * @param int $uid

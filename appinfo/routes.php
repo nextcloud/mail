@@ -13,6 +13,7 @@ $app->registerRoutes($this,
 			['name' => 'page#index', 'url' => '/', 'verb' => 'GET'],
 			['name' => 'page#compose', 'url' => '/compose', 'verb' => 'GET'],
 			['name' => 'accounts#send', 'url' => '/accounts/{accountId}/send', 'verb' => 'POST'],
+			['name' => 'accounts#draft', 'url' => '/accounts/{accountId}/draft', 'verb' => 'POST'],
 			['name' => 'accounts#autoComplete', 'url' => '/accounts/autoComplete', 'verb' => 'GET'],
 			[
 				'name' => 'messages#downloadAttachment',

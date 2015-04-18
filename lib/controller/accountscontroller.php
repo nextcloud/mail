@@ -23,6 +23,9 @@
 namespace OCA\Mail\Controller;
 
 use Horde_Imap_Client;
+use Horde_Mime_Headers_Date;
+use Horde_Mime_Mail;
+use Horde_Mime_Part;
 use Horde_Mail_Rfc822_Address;
 use OCA\Mail\Account;
 use OCA\Mail\Db\MailAccount;
@@ -141,8 +144,6 @@ class AccountsController extends Controller {
 
 	/**
 	 * @NoAdminRequired
-	 * @param $accountId
-	 * @return JSONResponse
 	 */
 	public function destroy($accountId) {
 		try {
@@ -229,6 +230,7 @@ class AccountsController extends Controller {
 		$to = $this->params('to');
 		$cc = $this->params('cc');
 		$bcc = $this->params('bcc');
+		$draftUID = $this->params('draftUID');
 
 		$dbAccount = $this->mapper->find($this->currentUserId, $accountId);
 		$account = new Account($dbAccount);
@@ -271,7 +273,7 @@ class AccountsController extends Controller {
 		$headers['To'] = $to;
 
 		// build mime body
-		$mail = new \Horde_Mime_Mail();
+		$mail = new Horde_Mime_Mail();
 		$mail->addHeaders($headers);
 		$mail->setBody($body);
 
@@ -307,7 +309,19 @@ class AccountsController extends Controller {
 			// save the message in the sent folder
 			$sentFolder = $account->getSentFolder();
 			$raw = stream_get_contents($mail->getRaw());
-			$sentFolder->saveMessage($raw, [Horde_Imap_Client::FLAG_SEEN]);
+			$sentFolder->saveMessage($raw, [
+				Horde_Imap_Client::FLAG_SEEN
+			]);
+
+			// delete draft message
+			if (!is_null($draftUID)) {
+				$draftsFolder = $account->getDraftsFolder();
+				$folderId = $draftsFolder->getFolderId();
+				$this->logger->debug("deleting sent draft <$draftUID> in folder <$folderId>");
+				$draftsFolder->setMessageFlag($draftUID, \Horde_Imap_Client::FLAG_DELETED, true);
+				$account->deleteDraft($draftUID);
+				$this->logger->debug("sent draft <$draftUID> deleted");
+			}
 		} catch (\Horde_Exception $ex) {
 			$this->logger->error('Sending mail failed: ' . $ex->getMessage());
 			return new JSONResponse(
@@ -317,6 +331,86 @@ class AccountsController extends Controller {
 		}
 
 		return new JSONResponse();
+	}
+
+	/**
+	 * @NoAdminRequired
+	 *
+	 * @param int $accountId
+	 * @return JSONResponse
+	 */
+	public function draft($accountId) {
+		$subject = $this->params('subject');
+		$body = $this->params('body');
+		$to = $this->params('to');
+		$cc = $this->params('cc');
+		$bcc = $this->params('bcc');
+		$uid = $this->params('uid');
+
+		if (!is_null($uid)) {
+			$this->logger->info("Saving a new draft in accout <$accountId>");
+		} else {
+			$this->logger->info("Updating draft <$uid> in account <$accountId>");
+		}
+
+		$dbAccount = $this->mapper->find($this->currentUserId, $accountId);
+		$account = new Account($dbAccount);
+
+		// get sender data
+		$headers = array();
+		$from = new Horde_Mail_Rfc822_Address($account->getEMailAddress());
+		$from->personal = $account->getName();
+		$headers['From']= $from;
+		$headers['Subject'] = $subject;
+
+		if (trim($cc) !== '') {
+			$headers['Cc'] = trim($cc);
+		}
+		if (trim($bcc) !== '') {
+			$headers['Bcc'] = trim($bcc);
+		}
+
+		$headers['To'] = $to;
+		$headers['Date'] = Horde_Mime_Headers_Date::create();
+
+		// build mime body
+		$mail = new Horde_Mime_Mail();
+		$mail->addHeaders($headers);
+		$bodyPart = new Horde_Mime_Part();
+		$bodyPart->appendContents($body, [
+			'encoding' => \Horde_Mime_Part::ENCODE_8BIT
+		]);
+		$mail->setBasePart($bodyPart);
+
+		// create transport and save message
+		try {
+			// save the message in the drafts folder
+			$draftsFolder = $account->getDraftsFolder();
+			$raw = stream_get_contents($mail->getRaw());
+			$newUid = $draftsFolder->saveDraft($raw);
+
+			// delete old version if one exists
+			if (!is_null($uid)) {
+				$folderId = $draftsFolder->getFolderId();
+				$this->logger->debug("deleting outdated draft <$uid> in folder <$folderId>");
+				$draftsFolder->setMessageFlag($uid, \Horde_Imap_Client::FLAG_DELETED, true);
+				$account->deleteDraft($uid);
+				$this->logger->debug("draft <$uid> deleted");
+			}
+		} catch (\Horde_Exception $ex) {
+			$this->logger->error('Saving draft failed: ' . $ex->getMessage());
+			return new JSONResponse(
+				[
+					'message' => $ex->getMessage()
+				],
+				Http::STATUS_INTERNAL_SERVER_ERROR
+			);
+		}
+
+		return new JSONResponse(
+			[
+				'uid' => $newUid
+			]);
 	}
 
 	/**

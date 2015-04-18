@@ -111,6 +111,15 @@ views.Message = Backbone.Marionette.ItemView.extend({
 				data: {},
 				type:'DELETE',
 				success: function () {
+					// delete local storage draft
+					var storage = $.localStorage;
+					var draftId = 'draft'
+						+ '.' + Mail.State.currentAccountId.toString()
+						+ '.' + Mail.State.currentFolderId.toString()
+						+ '.' + thisModel.id;
+					if (storage.isSet(draftId)) {
+						storage.remove(draftId);
+					}
 				},
 				error: function() {
 					Mail.UI.showError(t('mail', 'Error while deleting message.'));

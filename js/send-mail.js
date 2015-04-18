@@ -1,4 +1,4 @@
-/* global Mail */
+/* global Mail, OC */
 $(function () {
 
 	function split(val) {
@@ -52,6 +52,32 @@ $(function () {
 			});
 		}
 	});
+
+	function getReplyMessage() {
+		var message = {};
+
+		var replyMessageBody = $('.reply-message-body');
+		var to = $('.reply-message-fields #to');
+		var cc = $('.reply-message-fields #cc');
+		message.body = replyMessageBody.val();
+		message.to = to.val();
+		message.cc = cc.val();
+
+		return message;
+	}
+
+	function saveReplyLocally() {
+		if (Mail.State.currentMessageId === null) {
+			// new message
+			return;
+		}
+		var storage = $.localStorage;
+		storage.set('draft'
+			+ '.' + Mail.State.currentAccountId.toString()
+			+ '.' + Mail.State.currentFolderId.toString()
+			+ '.' + Mail.State.currentMessageId.toString(),
+			getReplyMessage());
+	}
 
 	function sendReply() {
 		//
@@ -116,6 +142,8 @@ $(function () {
 			}
 		}
 	});
+	
+	$(document).on('keyup', '.reply-message-body, #to, #cc', saveReplyLocally);
 
 	$(document).on('click', '.reply-message-send', sendReply);
 
