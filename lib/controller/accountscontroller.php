@@ -33,6 +33,8 @@ use OCP\AppFramework\Db\DoesNotExistException;
 use OCP\AppFramework\Http\JSONResponse;
 use OCP\AppFramework\Http\Response;
 use OCP\AppFramework\Http;
+use OCP\IL10N;
+use OCP\ILogger;
 
 class AccountsController extends Controller
 {
@@ -62,10 +64,14 @@ class AccountsController extends Controller
 	private $userFolder;
 
 	/**
-	 *
-	 * @var Logger
+	 * @var ILogger
 	 */
 	private $logger;
+
+	/**
+	 * @var IL10N
+	 */
+	private $l10n;
 
 	public function __construct($appName,
 		$request,
@@ -74,7 +80,9 @@ class AccountsController extends Controller
 		$userFolder,
 		$contactsIntegration,
 		$autoConfig,
-		$logger) {
+		$logger,
+		$l10n
+	) {
 		parent::__construct($appName, $request);
 		$this->mapper = $mailAccountMapper;
 		$this->currentUserId = $currentUserId;
@@ -82,6 +90,7 @@ class AccountsController extends Controller
 		$this->contactsIntegration = $contactsIntegration;
 		$this->autoConfig = $autoConfig;
 		$this->logger = $logger;
+		$this->l10n = $l10n;
 	}
 
 	/**
@@ -177,17 +186,15 @@ class AccountsController extends Controller
 					Http::STATUS_CREATED);
 			}
 		} catch (\Exception $ex) {
-			$l = new \OC_L10N('mail');
 			$this->logger->error('Creating account failed: ' . $ex->getMessage());
 			return new JSONResponse(
-				array('message' => $l->t('Creating account failed: ') . $ex->getMessage()),
+				array('message' => $this->$l10n->t('Creating account failed: ') . $ex->getMessage()),
 				HTTP::STATUS_BAD_REQUEST);
 		}
 
-		$l = new \OC_L10N('mail');
 		$this->logger->info('Auto detect failed');
 		return new JSONResponse(
-			array('message' => $l->t('Auto detect failed. Please use manual mode.')),
+			array('message' => $this->l10n->t('Auto detect failed. Please use manual mode.')),
 			HTTP::STATUS_BAD_REQUEST);
 	}
 

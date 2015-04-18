@@ -286,7 +286,7 @@ class MessagesController extends Controller
 			'messageId' => $id,
 			'attachmentId' => $attachment['id'],
 		));
-		$downloadUrl = \OC_Helper::makeURLAbsolute($downloadUrl);
+		$downloadUrl = \OC::$server->getURLGenerator()->getAbsoluteURL($downloadUrl);
 		$attachment['downloadUrl'] = $downloadUrl;
 		$attachment['mimeUrl'] = \OC_Helper::mimetypeIcon($attachment['mime']);
 		return $attachment;
@@ -296,13 +296,13 @@ class MessagesController extends Controller
 	 * @param integer $id
 	 */
 	private function buildHtmlBodyUrl($accountId, $folderId, $id) {
-		$htmlBodyUrl = \OCP\Util::linkToRoute('mail.messages.getHtmlBody', array(
+		$htmlBodyUrl = \OC::$server->getURLGenerator()->linkToRoute('mail.messages.getHtmlBody', array(
 			'accountId' => $accountId,
 			'folderId' => $folderId,
 			'messageId' => $id,
-			'requesttoken' => \OC_Util::callRegister(),
+			'requesttoken' => \OCP\Util::callRegister(),
 		));
-		return \OC_Helper::makeURLAbsolute($htmlBodyUrl);
+		return \OC::$server->getURLGenerator()->getAbsoluteURL($htmlBodyUrl);
 	}
 
 }
