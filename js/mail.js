@@ -497,6 +497,21 @@ var Mail = {
 			} else {
 				$('.reply-message-send').attr('disabled', true);
 			}
+		},
+
+		toggleManualSetup:function() {
+			$('#mail-setup-manual').slideToggle();
+			$('#mail-imap-host').focus();
+			if($('#mail-address').parent().prop('class') === 'groupmiddle') {
+				$('#mail-password').slideToggle(function() {
+					$('#mail-address').parent()
+						.removeClass('groupmiddle').addClass('groupbottom');
+				});
+			} else {
+				$('#mail-password').slideToggle();
+				$('#mail-address').parent()
+					.removeClass('groupbottom').addClass('groupmiddle');
+			}
 		}
 	}
 };
@@ -529,6 +544,7 @@ $(document).ready(function () {
 			autoDetect: true
 		};
 
+		// if manual setup is open, use manual values
 		if ($('#mail-setup-manual').css('display') === 'block') {
 			dataArray = {
 				accountName: accountName,
@@ -555,19 +571,24 @@ $(document).ready(function () {
 				// reload accounts
 				var newAccountId = data.data.id;
 				$.ajax(OC.generateUrl('apps/mail/accounts'), {
-					data:{},
-					type:'GET',
-					success:function (jsondata) {
-							Mail.State.accounts = jsondata;
-							if (jsondata.length === 0) {
-								Mail.UI.addAccount();
-							} else {
-								var firstAccountId = jsondata[0].accountId;
-								_.each(Mail.State.accounts, function(a) {
-									Mail.UI.loadFoldersForAccount(a.accountId, firstAccountId);
-								});
-							}
-						},
+					data: {},
+					type: 'GET',
+					success: function (jsondata) {
+						Mail.State.accounts = jsondata;
+						if (jsondata.length === 0) {
+							Mail.UI.addAccount();
+						} else {
+							var firstAccountId = jsondata[0].accountId;
+							_.each(Mail.State.accounts, function(a) {
+								Mail.UI.loadFoldersForAccount(a.accountId, firstAccountId);
+							});
+						}
+
+						// if manual setup is open, close it after connection
+						if($('#mail-setup-manual').css('display') === 'block') {
+							Mail.UI.toggleManualSetup();
+						}
+					},
 					error: function() {
 						Mail.UI.showError(t('mail', 'Error while loading the accounts.'));
 					}
@@ -589,7 +610,6 @@ $(document).ready(function () {
 					.prop('disabled', false)
 					.val(t('mail', 'Connect'));
 				$('#connect-loading').hide();
-				$('#mail-setup-manual').hide();
 			}
 		});
 	});
@@ -620,16 +640,7 @@ $(document).ready(function () {
 
 	// toggle for advanced account configuration
 	$(document).on('click', '#mail-setup-manual-toggle', function () {
-		$('#mail-setup-manual').slideToggle();
-		$('#mail-imap-host').focus();
-		if ($('#mail-address').parent().prop('class') === 'groupmiddle') {
-			$('#mail-password').slideToggle(function () {
-				$('#mail-address').parent().removeClass('groupmiddle').addClass('groupbottom');
-			});
-		} else {
-			$('#mail-password').slideToggle();
-			$('#mail-address').parent().removeClass('groupbottom').addClass('groupmiddle');
-		}
+		Mail.UI.toggleManualSetup();
 	});
 
 	// new mail message button handling
