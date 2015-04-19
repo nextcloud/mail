@@ -15,7 +15,7 @@ abstract class AbstractTest extends \PHPUnit_Framework_TestCase {
 	/**
 	 * @var Mailbox[]
 	 */
-	private static $createdMailboxes;
+	private static $createdMailboxes = [];
 
 	public static function setUpBeforeClass() {
 		if (false === \getenv('EMAIL_USER')) {
