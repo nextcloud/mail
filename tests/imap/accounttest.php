@@ -2,7 +2,7 @@
 
 namespace OCA\Mail\Tests\Imap;
 
-class AccountTests extends AbstractTest {
+class AccountTest extends AbstractTest {
 
 	public function testListMailBoxes() {
 		$newMailBox = $this->createMailBox('nasty stuff');

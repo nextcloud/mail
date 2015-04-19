@@ -11,7 +11,9 @@
 *
 */
 
-class TestHtml extends \PHPUnit_Framework_TestCase {
+namespace OCA\Mail\Tests\Service;
+
+class HtmlTest extends \PHPUnit_Framework_TestCase {
 
 	/**
 	 * @dataProvider linkDetectionProvider
