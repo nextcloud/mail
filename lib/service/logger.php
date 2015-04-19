@@ -30,12 +30,12 @@ class Logger {
 
 	/**
 	 * 
-	 * @param string $AppName
+	 * @param string $appName
 	 * @param ILogger $logger
 	 */
-	public function __construct($AppName, ILogger $logger) {
+	public function __construct($appName, ILogger $logger) {
 		$this->context = [
-			'app' => $AppName,
+			'app' => $appName,
 		];
 		$this->logger = $logger;
 	}
