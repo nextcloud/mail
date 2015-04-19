@@ -18,9 +18,9 @@ abstract class AbstractTest extends \PHPUnit_Framework_TestCase {
 	private static $createdMailboxes;
 
 	public static function setUpBeforeClass() {
-		if (false === \getenv('EMAIL_USERNAME')) {
+		if (false === \getenv('EMAIL_USER')) {
 			throw new \RuntimeException(
-				'Please set environment variable EMAIL_USERNAME before running functional tests'
+				'Please set environment variable EMAIL_USER before running functional tests'
 			);
 		}
 
@@ -29,7 +29,7 @@ abstract class AbstractTest extends \PHPUnit_Framework_TestCase {
 				'Please set environment variable EMAIL_PASSWORD before running functional tests'
 			);
 		}
-		$user = \getenv('EMAIL_USERNAME');
+		$user = \getenv('EMAIL_USER');
 		$password = \getenv('EMAIL_PASSWORD');
 		$a = new MailAccount();
 		$a->setId(-1);
