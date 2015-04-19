@@ -15,6 +15,7 @@ namespace OCA\Mail\Service;
 use Exception;
 use OCA\Mail\Account;
 use OCA\Mail\Db\MailAccount;
+use OCP\Security\ICrypto;
 
 class AutoConfig {
 
@@ -29,12 +30,18 @@ class AutoConfig {
 	private $userId;
 
 	/**
+	 * @var ICrypto
+	 */
+	private $crypto;
+
+	/**
 	 * @param Logger $logger
 	 * @param string $userId
 	 */
-	public function __construct(Logger $logger, $userId) {
+	public function __construct(Logger $logger, $userId, ICrypto $crypto) {
 		$this->logger = $logger;
 		$this->userId = $userId;
+		$this->crypto = $crypto;
 	}
 
 	/**
@@ -104,6 +111,7 @@ class AutoConfig {
 							$account->setOutboundHost($url);
 							$account->setOutboundPort($port);
 							$account->setOutboundUser($user);
+							$password = $this->crypto->decrypt($password);
 							$account->setOutboundPassword($password);
 							$account->setOutboundSslMode($protocol);
 
@@ -181,6 +189,7 @@ class AutoConfig {
 
 						$account->setOutboundHost($smtp['hostname']);
 						$account->setOutboundPort($smtp['port']);
+						$password = $this->crypto->decrypt($password);
 						$account->setOutboundPassword($password);
 						$account->setOutboundUser($user);
 						$account->setOutboundSslMode(strtolower($smtp['socketType']));
@@ -372,6 +381,7 @@ class AutoConfig {
 		$account->setInboundPort($port);
 		$account->setInboundSslMode($encryptionProtocol);
 		$account->setInboundUser($user);
+		$password = $this->crypto->decrypt($password);
 		$account->setInboundPassword($password);
 
 		$a = new Account($account);

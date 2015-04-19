@@ -116,7 +116,8 @@ class Application extends App {
 			/** @var IAppContainer $c */
 			return new AutoConfig(
 				$c->query('Logger'),
-				$c->query('UserId')
+				$c->query('UserId'),
+				$c->getServer()->getCrypto()
 			);
 		});
 
