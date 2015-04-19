@@ -66,6 +66,9 @@ class MailAccount extends Entity{
 
 	public function __construct($params = array()) {
 
+		if (isset($params['accountId'])) {
+			$this->setId($params['accountId']);
+		}
 		if (isset($params['accountName'])) {
 			$this->setName($params['accountName']);
 		}

@@ -47,4 +47,24 @@ class TestMailAccount extends \PHPUnit_Framework_TestCase {
 		), $a->toJson());
 	}
 
+	public function testMailAccountConstruct() {
+		$expected = [
+			'accountId' => 12345,
+			'accountName' => 'Peter Parker',
+			'emailAddress' => 'peter.parker@marvel.com',
+			'imapHost' => 'mail.marvel.com',
+			'imapPort' => 159,
+			'imapUser' => 'spiderman',
+			'imapSslMode' => 'tls',
+			'smtpHost' => 'smtp.marvel.com',
+			'smtpPort' => 458,
+			'smtpUser' => 'spiderman',
+			'smtpSslMode' => 'ssl'
+		];
+		$a = new MailAccount($expected);
+		// TODO: fix inconsistency
+		$expected['name'] = $expected['accountName'];
+		unset($expected['accountName']);
+		$this->assertEquals($expected, $a->toJson());
+	}
 }

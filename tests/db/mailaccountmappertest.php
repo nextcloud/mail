@@ -64,6 +64,14 @@ class MailAccountMapperTest extends \PHPUnit_Framework_TestCase {
 
 		$result = $this->mapper->find($b->getUserId(), $b->getId());
 		$this->assertEquals($b->toJson(), $result->toJson());
+
+		$result = $this->mapper->findByUserId($b->getUserId());
+		$c = array_filter($result, function($a) use($b){
+			/** @var MailAccount $a */
+			return $a->getId() === $b->getId();
+		});
+		$c = array_pop($c);
+		$this->assertEquals($b->toJson(), $c->toJson());
 	}
 
 	public function testSave() {
@@ -85,5 +93,4 @@ class MailAccountMapperTest extends \PHPUnit_Framework_TestCase {
 		$this->assertNotNull($b->getId());
 		$this->assertEquals($b->getId(), $c->getId());
 	}
-
 }
