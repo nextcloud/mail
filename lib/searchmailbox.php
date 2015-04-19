@@ -9,7 +9,6 @@
 namespace OCA\Mail;
 
 use Horde_Imap_Client;
-use Horde_Imap_Client_Ids;
 use Horde_Imap_Client_Mailbox;
 use Horde_Imap_Client_Search_Query;
 use Horde_Imap_Client_Socket;
@@ -27,7 +26,7 @@ class SearchMailbox extends Mailbox {
 		parent::setDisplayName('Favorites');
 	}
 
-	public function getMessages($from = 0, $count = 2, $filter) {
+	public function getMessages($from = 0, $count = 2, $filter = '') {
 		$query = new Horde_Imap_Client_Search_Query();
 		$query->flag('FLAGGED');
 		if ($filter) {
