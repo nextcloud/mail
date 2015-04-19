@@ -64,7 +64,7 @@ class Mailbox {
 		$this->makeDisplayName();
 	}
 
-	public function getMessages($from = 0, $count = 2, $filter) {
+	public function getMessages($from = 0, $count = 2, $filter = '') {
 
 		if ($filter instanceof Horde_Imap_Client_Search_Query) {
 			$query = $filter;
