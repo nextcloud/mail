@@ -19,7 +19,6 @@ use OCA\Mail\Db\MailAccount;
 class AutoConfig {
 
 	/**
-	 *
 	 * @var Logger
 	 */
 	private $logger;
