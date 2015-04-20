@@ -304,7 +304,7 @@ script('mail', 'jquery.storageapi');
 						</select>
 				</p>
 				<p class="groupmiddle">
-					<input type="email" name="mail-imap-port" id="mail-imap-port"
+					<input type="number" name="mail-imap-port" id="mail-imap-port"
 						placeholder="<?php p($l->t('IMAP Port')); ?>"
 						value="143" />
 					<label for="mail-imap-port" class="infield"><?php p($l->t('IMAP Port')); ?></label>
@@ -337,7 +337,7 @@ script('mail', 'jquery.storageapi');
 					</select>
 				</p>
 				<p class="groupmiddle">
-					<input type="email" name="mail-smtp-port" id="mail-smtp-port"
+					<input type="number" name="mail-smtp-port" id="mail-smtp-port"
 						placeholder="<?php p($l->t('SMTP Port')); ?>"
 						value="25" />
 					<label for="mail-smtp-port" class="infield"><?php p($l->t('SMTP Port (default 25, ssl 465)')); ?></label>
