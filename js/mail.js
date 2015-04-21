@@ -1,4 +1,4 @@
-/* global Handlebars, Marionette, relative_modified_date, formatDate, humanFileSize, views */
+/* global Handlebars, Marionette, Notification, relative_modified_date, formatDate, humanFileSize, views */
 var Mail = {
 	State: {
 		currentFolderId: null,
@@ -21,6 +21,52 @@ var Mail = {
 				Mail.State.messageView.filterCurrentMailbox(query);
 			}, 500);
 			$('#searchresults').hide();
+		}
+	},
+	BackGround: {
+		checkForNotifications: function() {
+			_.each(Mail.State.accounts, function (a) {
+				Mail.Communication.get(OC.generateUrl('apps/mail/accounts/{accountId}/folders', {accountId: a.accountId}), {
+					success: function (jsondata) {
+						var localAccount = Mail.State.folderView.collection.get(jsondata.id);
+						var folders = localAccount.get('folders');
+						_.each(jsondata.folders, function(f) {
+							var localFolder = folders.get(f.id);
+							if (f.uidvalidity !== localFolder.get('uidvalidity') ||
+								f.uidnext !== localFolder.get('uidnext')) {
+
+								// send notification
+								Notification.requestPermission(function() {
+									new Notification(
+										"New Mail arrived!",
+										{
+											body: 'You have new messages in ' + f.name,
+											tag: 'not-' + f.accountId + '-' + f.name,
+											icon: OC.filePath('mail', 'img', 'mail.png')
+										}
+									);
+								});
+								// update folder status
+								localFolder.set('uidvalidity', f.uidvalidity);
+								localFolder.set('uidnext', f.uidnext);
+								localFolder.set('unseen', f.unseen);
+								localFolder.set('total', f.total);
+
+								// reload if current selected folder has changed
+								if (Mail.State.currentAccountId === f.accountId &&
+									Mail.State.currentFolderId === f.id) {
+									Mail.UI.loadMessages(f.accountId, f.id);
+								}
+
+								// TODO: save updated folder status in localStorage
+							}
+						});
+					},
+					error: function () {
+					},
+					cache: false
+				});
+			});
 		}
 	},
 	Communication: {
@@ -66,6 +112,25 @@ var Mail = {
 		}
 	},
 	UI: {
+		loadAccounts: function () {
+			Mail.Communication.get(OC.generateUrl('apps/mail/accounts'), {
+				success: function (jsondata) {
+					Mail.State.accounts = jsondata;
+					if (jsondata.length === 0) {
+						Mail.UI.addAccount();
+					} else {
+						var firstAccountId = jsondata[0].accountId;
+						_.each(jsondata, function (a) {
+							Mail.UI.loadFoldersForAccount(a.accountId, firstAccountId);
+						});
+					}
+				},
+				error: function () {
+					Mail.UI.showError(t('mail', 'Error while loading the accounts.'));
+				},
+				ttl: 'no'
+			});
+		},
 		initializeInterface: function () {
 			Handlebars.registerHelper("relativeModifiedDate", function (dateInt) {
 				var lastModified = new Date(dateInt * 1000);
@@ -155,23 +220,8 @@ var Mail = {
 
 			OC.Plugins.register('OCA.Search', Mail.Search);
 
-			Mail.Communication.get(OC.generateUrl('apps/mail/accounts'), {
-				success: function (jsondata) {
-					Mail.State.accounts = jsondata;
-					if (jsondata.length === 0) {
-						Mail.UI.addAccount();
-					} else {
-						var firstAccountId = jsondata[0].accountId;
-						_.each(jsondata, function (a) {
-							Mail.UI.loadFoldersForAccount(a.accountId, firstAccountId);
-						});
-					}
-				},
-				error: function () {
-					Mail.UI.showError(t('mail', 'Error while loading the accounts.'));
-				},
-				ttl: 'no'
-			});
+			setInterval(Mail.BackGround.checkForNotifications, 5*60*1000);
+			this.loadAccounts();
 		},
 
 		loadFoldersForAccount: function (accountId, firstAccountId) {

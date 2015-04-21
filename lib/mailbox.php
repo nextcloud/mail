@@ -130,7 +130,7 @@ class Mailbox {
 		return new Message($this->conn, $this->mailBox, $messageId, null, $loadHtmlMessageBody);
 	}
 
-	protected function getStatus($flags = \Horde_Imap_Client::STATUS_ALL) {
+	public function getStatus($flags = \Horde_Imap_Client::STATUS_ALL) {
 		return $this->conn->status($this->mailBox, $flags);
 	}
 
@@ -203,7 +203,9 @@ class Mailbox {
 				'total' => $total,
 				'isEmpty' => $isEmpty,
 				'accountId' => $accountId,
-				'noSelect' => $noSelect
+				'noSelect' => $noSelect,
+				'uidvalidity' => $status['uidvalidity'],
+				'uidnext' => $status['uidnext']
 			);
 		} catch (\Horde_Imap_Client_Exception $e) {
 			return array(

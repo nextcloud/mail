@@ -30,4 +30,16 @@ class AccountTest extends AbstractTest {
 		$this->assertEquals(1, count($messages));
 	}
 
+	public function testDetectChangeInMailBox() {
+		$newMailBox = parent::createMailBox('nasty stuff');
+		$status0 = $newMailBox->getStatus();
+
+//		$this->createTestMessage($newMailBox);
+		$status1 = $newMailBox->getStatus();
+
+		$this->assertEquals($status0['uidvalidity'], $status1['uidvalidity']);
+		$this->assertEquals($status0['uidnext'], $status1['uidnext']);
+		$this->assertEquals($status0, $status1);
+	}
+
 }
