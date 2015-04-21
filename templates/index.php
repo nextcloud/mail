@@ -310,7 +310,7 @@ script('mail', 'jquery.storageapi');
 					<label for="mail-imap-port" class="infield"><?php p($l->t('IMAP Port')); ?></label>
 				</p>
 				<p class="groupmiddle">
-					<input type="email" name="mail-imap-user" id="mail-imap-user"
+					<input type="text" name="mail-imap-user" id="mail-imap-user"
 						placeholder="<?php p($l->t('IMAP User')); ?>"
 						value="" />
 					<label for="mail-imap-user" class="infield"><?php p($l->t('IMAP User')); ?></label>
@@ -343,7 +343,7 @@ script('mail', 'jquery.storageapi');
 					<label for="mail-smtp-port" class="infield"><?php p($l->t('SMTP Port (default 25, ssl 465)')); ?></label>
 				</p>
 				<p class="groupmiddle">
-					<input type="email" name="mail-smtp-user" id="mail-smtp-user"
+					<input type="text" name="mail-smtp-user" id="mail-smtp-user"
 						placeholder="<?php p($l->t('SMTP User')); ?>"
 						value="" />
 					<label for="mail-smtp-user" class="infield"><?php p($l->t('SMTP User')); ?></label>
