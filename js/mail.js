@@ -38,8 +38,9 @@ var Mail = {
 						success: function(jsondata) {
 							_.each(jsondata, function(f) {
 								// send notification
-								Notification.requestPermission(function() {
-									new Notification(
+								if (Notification.permission === "granted") {
+									// If it's okay let's create a notification
+									var notification = new Notification(
 										"ownCloud Mail",
 										{
 											body: 'New messages in ' + f.name,
@@ -47,7 +48,8 @@ var Mail = {
 											icon: OC.filePath('mail', 'img', 'mail-notification.png')
 										}
 									);
-								});
+									notification.show();
+								}
 								// update folder status
 								var localFolder = folders.get(f.id);
 								localFolder.set('uidvalidity', f.uidvalidity);
@@ -219,6 +221,9 @@ var Mail = {
 
 			Mail.State.folderView.listenTo(Mail.State.messageView, 'change:unseen',
 				Mail.State.folderView.changeUnseen);
+
+			// request permissions
+			Notification.requestPermission();
 
 			OC.Plugins.register('OCA.Search', Mail.Search);
 
