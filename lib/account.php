@@ -470,7 +470,7 @@ class Account {
 			// get unread messages
 			$m = new Mailbox($imp, Horde_Imap_Client_Mailbox::get($folderId), []);
 			$changedBoxes[$folderId] = $m->getListArray($this->getId(), $s);
-			$changedBoxes[$folderId]['messages'] = $m->getMessagesSince($uidNext);
+			$changedBoxes[$folderId]['messages'] = $m->getMessagesSince($uidNext, $s['uidnext']);
 		}
 
 		return $changedBoxes;

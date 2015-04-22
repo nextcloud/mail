@@ -336,9 +336,10 @@ class Mailbox {
 		$this->conn->store($this->mailBox, $options);
 	}
 
-	public function getMessagesSince($sinceUid) {
+	public function getMessagesSince($fromUid, $toUid) {
 		$query = new Horde_Imap_Client_Search_Query();
-		$query->flag('SEEN', false);
+//		$query->flag('SEEN', false);
+		$query->ids(new Horde_Imap_Client_Ids("$fromUid:$toUid"));
 		return $this->getMessages(-1, -1, $query);
 	}
 }
