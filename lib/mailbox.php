@@ -185,10 +185,12 @@ class Mailbox {
 	/**
 	 * @return array
 	 */
-	public function getListArray($accountId) {
+	public function getListArray($accountId, $status = null) {
 		$displayName = $this->getDisplayName();
 		try {
-			$status = $this->getStatus();
+			if (is_null($status)) {
+				$status = $this->getStatus();
+			}
 			$total = $status['messages'];
 			$specialRole = $this->getSpecialRole();
 			$unseen = ($specialRole === 'trash') ? 0 : $status['unseen'];
@@ -196,7 +198,7 @@ class Mailbox {
 			$noSelect = in_array('\\noselect', $this->attributes);
 			$parentId = $this->getParent();
 			$parentId = ($parentId !== null) ? base64_encode($parentId) : null;
-			return array(
+			return [
 				'id' => base64_encode($this->getFolderId()),
 				'parent' => $parentId,
 				'name' => $displayName,
@@ -208,9 +210,9 @@ class Mailbox {
 				'noSelect' => $noSelect,
 				'uidvalidity' => $status['uidvalidity'],
 				'uidnext' => $status['uidnext']
-			);
+			];
 		} catch (\Horde_Imap_Client_Exception $e) {
-			return array(
+			return [
 				'id' => base64_encode($this->getFolderId()),
 				'parent' => null,
 				'name' => $displayName,
@@ -221,7 +223,7 @@ class Mailbox {
 				'isEmpty' => true,
 				'accountId' => $accountId,
 				'noSelect' => true
-			);
+			];
 		}
 	}
 	/**

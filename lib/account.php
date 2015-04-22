@@ -467,17 +467,10 @@ class Account {
 				$uidValidity === $s['uidvalidity']) {
 				continue;
 			}
-			$changedBoxes[$folderId]= [
-				'lastStatus' => $query[$folderId],
-				'currentStatus' => $s
-			];
-		}
-
-		// get unread messages
-		foreach($changedBoxes as $folderId => $status) {
+			// get unread messages
 			$m = new Mailbox($imp, Horde_Imap_Client_Mailbox::get($folderId), []);
-			$messages = $m->getMessagesSince($status['lastStatus']['uidnext']);
-			$changedBoxes[$folderId]['messages']= $messages;
+			$changedBoxes[$folderId] = $m->getListArray($this->getId(), $s);
+			$changedBoxes[$folderId]['messages'] = $m->getMessagesSince($status['lastStatus']['uidnext']);
 		}
 
 		return $changedBoxes;

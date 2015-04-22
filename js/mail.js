@@ -39,16 +39,31 @@ var Mail = {
 							_.each(jsondata, function(f) {
 								// send notification
 								if (Notification.permission === "granted") {
+									var from = _.map(f.messages, function(m){
+										return m.from;
+									});
+									from = _.uniq(from);
+									if (from.length > 2) {
+										from = from.slice(0,2);
+										from.push('…');
+									} else {
+										from = from.slice(0,2);
+									}
+									var body = t('mail',
+										'{newMessageCount} new messages in {folderName} \n from {from}', {
+										newMessageCount: f.messages.length,
+										folderName: f.name,
+										from: from.join()
+									});
 									// If it's okay let's create a notification
-									var notification = new Notification(
+									new Notification(
 										"ownCloud Mail",
 										{
-											body: 'New messages in ' + f.name,
+											body: body,
 											tag: 'not-' + f.accountId + '-' + f.name,
 											icon: OC.filePath('mail', 'img', 'mail-notification.png')
 										}
 									);
-									notification.show();
 								}
 								// update folder status
 								var localFolder = folders.get(f.id);
@@ -60,7 +75,7 @@ var Mail = {
 								// reload if current selected folder has changed
 								if (Mail.State.currentAccountId === f.accountId &&
 									Mail.State.currentFolderId === f.id) {
-									Mail.UI.loadMessages(f.accountId, f.id);
+									Mail.State.messageView.collection.add(f.messages);
 								}
 
 								// TODO: save updated folder status in localStorage
