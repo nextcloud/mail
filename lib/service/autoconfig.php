@@ -111,7 +111,7 @@ class AutoConfig {
 							$account->setOutboundHost($url);
 							$account->setOutboundPort($port);
 							$account->setOutboundUser($user);
-							$password = $this->crypto->decrypt($password);
+							$password = $this->crypto->encrypt($password);
 							$account->setOutboundPassword($password);
 							$account->setOutboundSslMode($protocol);
 
@@ -189,7 +189,7 @@ class AutoConfig {
 
 						$account->setOutboundHost($smtp['hostname']);
 						$account->setOutboundPort($smtp['port']);
-						$password = $this->crypto->decrypt($password);
+						$password = $this->crypto->encrypt($password);
 						$account->setOutboundPassword($password);
 						$account->setOutboundUser($user);
 						$account->setOutboundSslMode(strtolower($smtp['socketType']));
@@ -381,7 +381,7 @@ class AutoConfig {
 		$account->setInboundPort($port);
 		$account->setInboundSslMode($encryptionProtocol);
 		$account->setInboundUser($user);
-		$password = $this->crypto->decrypt($password);
+		$password = $this->crypto->encrypt($password);
 		$account->setInboundPassword($password);
 
 		$a = new Account($account);
