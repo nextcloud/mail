@@ -38,11 +38,11 @@ var Mail = {
 								// send notification
 								Notification.requestPermission(function() {
 									new Notification(
-										"New Mail arrived!",
+										"ownCloud Mail",
 										{
-											body: 'You have new messages in ' + f.name,
+											body: 'New messages in ' + f.name,
 											tag: 'not-' + f.accountId + '-' + f.name,
-											icon: OC.filePath('mail', 'img', 'mail.png')
+											icon: OC.filePath('mail', 'img', 'mail-notification.png')
 										}
 									);
 								});
