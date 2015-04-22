@@ -61,6 +61,7 @@ $TRANSLATIONS = array(
 "IMAP Password" => "Geslo IMAP",
 "Manual configuration" => "Ročna nastavitev",
 "IMAP Host" => "Gostitelj IMAP",
+"none" => "brez",
 "IMAP Port" => "Vrata IMAP",
 "IMAP User" => "Uporabnik IMAP",
 "SMTP Host" => "Gostitelj SMTP",

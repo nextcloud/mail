@@ -61,6 +61,7 @@ $TRANSLATIONS = array(
 "IMAP Password" => "IMAP 암호",
 "Manual configuration" => "수동 설정",
 "IMAP Host" => "IMAP 호스트",
+"none" => "없음",
 "IMAP Port" => "IMAP 포트",
 "IMAP User" => "IMAP 사용자",
 "SMTP Host" => "SMTP 호스트",

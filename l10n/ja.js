@@ -62,6 +62,7 @@ OC.L10N.register(
     "IMAP Password" : "IMAP パスワード",
     "Manual configuration" : "手動設定",
     "IMAP Host" : "IMAPホスト",
+    "none" : "なし",
     "IMAP Port" : "IMAPポート",
     "IMAP User" : "IMAPユーザー",
     "SMTP Host" : "SMTPホスト",
