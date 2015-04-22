@@ -76,7 +76,9 @@ class Mailbox {
 		}
 		$result = $this->conn->search($this->mailBox, $query, ['sort' => [Horde_Imap_Client::SORT_DATE]]);
 		$ids = array_reverse($result['match']->ids);
-		$ids = array_slice($ids, $from, $count);
+		if ($from >= 0 && $count >= 0) {
+			$ids = array_slice($ids, $from, $count);
+		}
 		$ids = new \Horde_Imap_Client_Ids($ids, false);
 
 		$headers = [];
@@ -307,12 +309,12 @@ class Mailbox {
 	 */
 	public function saveMessage($rawBody) {
 
-		$this->conn->append($this->mailBox, array(
-			array(
+		$this->conn->append($this->mailBox, [
+			[
 				'data' => $rawBody,
-				'flags' => array(Horde_Imap_Client::FLAG_SEEN)
-			)
-		));
+				'flags' => []
+			]
+		]);
 	}
 
 	/**
@@ -321,16 +323,21 @@ class Mailbox {
 	 * @param boolean $add
 	 */
 	public function setMessageFlag($uid, $flag, $add) {
-
-		$options = array(
+		$options = [
 			'ids' => new Horde_Imap_Client_Ids($uid)
-		);
+		];
 		if ($add) {
-			$options['add'] = array($flag);
+			$options['add'] = [$flag];
 		} else {
-			$options['remove'] = array($flag);
+			$options['remove'] = [$flag];
 		}
 		$this->conn->store($this->mailBox, $options);
+	}
+
+	public function getMessagesSince($sinceUid) {
+		$query = new Horde_Imap_Client_Search_Query();
+		$query->flag('SEEN', false);
+		return $this->getMessages(-1, -1, $query);
 	}
 }
 

@@ -28,8 +28,7 @@ use OCP\AppFramework\Db\DoesNotExistException;
 use OCP\AppFramework\Http\JSONResponse;
 use OCP\AppFramework\Http;
 
-class FoldersController extends Controller
-{
+class FoldersController extends Controller {
 
 	/**
 	 * @var \OCA\Mail\Db\MailAccountMapper
@@ -140,6 +139,39 @@ class FoldersController extends Controller
 			return new JSONResponse(
 				array('data' => array('id' => $newFolderId)),
 				Http::STATUS_CREATED);
+		} catch (\Horde_Imap_Client_Exception $e) {
+			$response = new JSONResponse();
+			$response->setStatus(Http::STATUS_INTERNAL_SERVER_ERROR);
+			return $response;
+		} catch (DoesNotExistException $e) {
+			return new JSONResponse();
+		}
+	}
+
+	/**
+	 * @NoAdminRequired
+	 * @param $folders
+	 * @return JSONResponse
+	 */
+	public function detectChanges($folders) {
+		try {
+			$query = [];
+			foreach($folders as $folder) {
+				$folderId = base64_decode($folder['id']);
+				$parts = explode('/', $folderId);
+				if (count($parts) > 1 && $parts[1] === 'FLAGGED') {
+					continue;
+				}
+				if (isset($folder['error'])) {
+					continue;
+				}
+				$query[$folderId] = $folder;
+			}
+			$account = $this->getAccount();
+			$m = new Account($account);
+			$mailBoxes = $m->getChangedMailboxes($query);
+
+			return new JSONResponse($mailBoxes);
 		} catch (\Horde_Imap_Client_Exception $e) {
 			$response = new JSONResponse();
 			$response->setStatus(Http::STATUS_INTERNAL_SERVER_ERROR);

@@ -26,15 +26,17 @@ var Mail = {
 	BackGround: {
 		checkForNotifications: function() {
 			_.each(Mail.State.accounts, function (a) {
-				Mail.Communication.get(OC.generateUrl('apps/mail/accounts/{accountId}/folders', {accountId: a.accountId}), {
-					success: function (jsondata) {
-						var localAccount = Mail.State.folderView.collection.get(jsondata.id);
-						var folders = localAccount.get('folders');
-						_.each(jsondata.folders, function(f) {
-							var localFolder = folders.get(f.id);
-							if (f.uidvalidity !== localFolder.get('uidvalidity') ||
-								f.uidnext !== localFolder.get('uidnext')) {
+				var localAccount = Mail.State.folderView.collection.get(a.accountId);
+				var folders = localAccount.get('folders');
 
+				$.ajax(
+					OC.generateUrl('apps/mail/accounts/{accountId}/folders/detectChanges', {accountId: a.accountId}), {
+						data: JSON.stringify({folders: folders.toJSON()}),
+						contentType: "application/json; charset=utf-8",
+						dataType: "json",
+						type: 'POST',
+						success: function(jsondata) {
+							_.each(jsondata, function(f) {
 								// send notification
 								Notification.requestPermission(function() {
 									new Notification(
@@ -47,6 +49,7 @@ var Mail = {
 									);
 								});
 								// update folder status
+								var localFolder = folders.get(f.id);
 								localFolder.set('uidvalidity', f.uidvalidity);
 								localFolder.set('uidnext', f.uidnext);
 								localFolder.set('unseen', f.unseen);
@@ -59,13 +62,12 @@ var Mail = {
 								}
 
 								// TODO: save updated folder status in localStorage
-							}
-						});
-					},
-					error: function () {
-					},
-					cache: false
-				});
+
+							});
+						}
+
+					}
+				);
 			});
 		}
 	},
@@ -96,7 +98,7 @@ var Mail = {
 			return $.ajax(url, {
 				data: {},
 				type: 'GET',
-				error: function (xhr, textStatus, errorThrown) {
+				error: function (xhr, textStatus) {
 					options.error(textStatus);
 				},
 				success: function (data) {
@@ -292,7 +294,7 @@ var Mail = {
 
 		loadMessages: function (accountId, folderId, noSelect) {
 			if (Mail.State.currentlyLoading !== null) {
-			    Mail.State.currentlyLoading.abort();
+				Mail.State.currentlyLoading.abort();
 			}
 			// Set folder active
 			Mail.UI.setFolderActive(accountId, folderId);
@@ -389,11 +391,11 @@ var Mail = {
 								'folders/{folderId}/messages/{messageId}/' +
 								'attachment/{attachmentId}',
 							{
-								accountId: Mail.State.currentAccountId,
-								folderId: Mail.State.currentFolderId,
-								messageId: messageId,
-								attachmentId: attachmentId
-							}), {
+							accountId: Mail.State.currentAccountId,
+							folderId: Mail.State.currentFolderId,
+							messageId: messageId,
+							attachmentId: attachmentId
+						}), {
 							data: {
 								targetPath: path
 							},
@@ -687,13 +689,13 @@ $(document).ready(function () {
 		var imapDefaultSecurePort = 993;
 
 		switch ($(this).val()) {
-			case 'none':
-			case 'tls':
-				$('#mail-imap-port').val(imapDefaultPort);
-				break;
-			case 'ssl':
-				$('#mail-imap-port').val(imapDefaultSecurePort);
-				break;
+		case 'none':
+		case 'tls':
+			$('#mail-imap-port').val(imapDefaultPort);
+			break;
+		case 'ssl':
+			$('#mail-imap-port').val(imapDefaultSecurePort);
+			break;
 		}
 	});
 
@@ -702,13 +704,13 @@ $(document).ready(function () {
 		var smtpDefaultSecurePort = 465;
 
 		switch ($(this).val()) {
-			case 'none':
-			case 'tls':
-				$('#mail-smtp-port').val(smtpDefaultPort);
-				break;
-			case 'ssl':
-				$('#mail-smtp-port').val(smtpDefaultSecurePort);
-				break;
+		case 'none':
+		case 'tls':
+			$('#mail-smtp-port').val(smtpDefaultPort);
+			break;
+		case 'ssl':
+			$('#mail-smtp-port').val(smtpDefaultSecurePort);
+			break;
 		}
 	});
 
