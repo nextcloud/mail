@@ -15,7 +15,6 @@ namespace OCA\Mail\Service;
 use HTMLPurifier_Config;
 use HTMLPurifier_URIFilter;
 use OCP\Util;
-use OC_Helper;
 
 class HTMLPurifier_URIFilter_TransformURLScheme extends HTMLPurifier_URIFilter {
 	public $name = 'TransformURLScheme';

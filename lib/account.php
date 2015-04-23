@@ -435,7 +435,7 @@ class Account {
 	 * Convert special security mode values into Horde parameters
 	 *
 	 * @param string $sslmode
-	 * @return string|bool
+	 * @return false|string
 	 */
 	protected function convertSslMode($sslmode) {
 		switch ($sslmode) {

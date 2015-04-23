@@ -159,6 +159,9 @@ class Mailbox {
 		return $this->mailBox->utf7imap;
 	}
 
+	/**
+	 * @return string
+	 */
 	public function getParent() {
 		$folderId = $this->getFolderId();
 		$parts = explode($this->delimiter, $folderId, 2);
@@ -178,11 +181,15 @@ class Mailbox {
 		return $this->displayName;
 	}
 
+	/**
+	 * @param string $displayName
+	 */
 	public function setDisplayName($displayName) {
 		$this->displayName = $displayName;
 	}
 
 	/**
+	 * @param integer $accountId
 	 * @return array
 	 */
 	public function getListArray($accountId, $status = null) {
