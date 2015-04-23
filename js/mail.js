@@ -50,7 +50,7 @@ var Mail = {
 										from = from.slice(0,2);
 									}
 									var body = t('mail',
-										'{newMessageCount} new messages in {folderName} \n from {from}', {
+										'{newMessageCount} new messages in {folderName} \nfrom {from}', {
 										newMessageCount: f.messages.length,
 										folderName: f.name,
 										from: from.join()
