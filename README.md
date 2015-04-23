@@ -34,10 +34,14 @@ curl -sS https://getcomposer.org/installer | php
 php composer.phar install
 ```
 
-### How do I reset the Mail app
+### Resetting the app
 Connect to your database and run the following commands where **oc\_** is your table prefix (defaults to oc\_)
-
 ```sql
 DELETE FROM oc_appconfig WHERE appid = 'mail';
 DROP TABLE oc_mail_accounts;
+```
+
+Go to ownCloud Mail in the browser and run this from the developer console to clear the cache:
+```
+localStorage.clear();
 ```
