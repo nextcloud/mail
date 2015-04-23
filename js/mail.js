@@ -4,6 +4,7 @@ var Mail = {
 		currentFolderId: null,
 		currentAccountId: null,
 		currentMessageId: null,
+		currentlyLoading: null,
 		accounts: null,
 		messageView: null,
 		router: null,
@@ -44,11 +45,11 @@ var Mail = {
 					return;
 				}
 			}
-			$.ajax(url, {
+			return $.ajax(url, {
 				data: {},
 				type: 'GET',
-				error: function () {
-					options.error();
+				error: function (xhr, textStatus, errorThrown) {
+					options.error(textStatus);
 				},
 				success: function (data) {
 					if (allOptions.cache) {
@@ -238,6 +239,9 @@ var Mail = {
 		},
 
 		loadMessages: function (accountId, folderId, noSelect) {
+			if (Mail.State.currentlyLoading !== null) {
+			    Mail.State.currentlyLoading.abort();
+			}
 			// Set folder active
 			Mail.UI.setFolderActive(accountId, folderId);
 			Mail.UI.clearMessages();
@@ -263,11 +267,13 @@ var Mail = {
 				Mail.State.currentFolderId = folderId;
 				Mail.UI.setMessageActive(null);
 				$('#mail_messages').removeClass('icon-loading');
+				Mail.State.currentlyLoading = null;
 			} else {
-				Mail.Communication.get(
+				Mail.State.currentlyLoading = Mail.Communication.get(
 					OC.generateUrl('apps/mail/accounts/{accountId}/folders/{folderId}/messages',
 						{'accountId': accountId, 'folderId': folderId}), {
 						success: function (jsondata) {
+							Mail.State.currentlyLoading = null;
 							Mail.State.currentAccountId = accountId;
 							Mail.State.currentFolderId = folderId;
 							Mail.UI.setMessageActive(null);
@@ -298,12 +304,12 @@ var Mail = {
 								.prop('disabled', false);
 
 						},
-						error: function () {
-
-							// Set the old folder as being active
-							Mail.UI.setFolderActive(Mail.State.currentAccountId, Mail.State.currentFolderId);
-
-							Mail.UI.showError(t('mail', 'Error while loading messages.'));
+						error: function (textStatus) {
+							if (textStatus !== 'abort') {
+								// Set the old folder as being active
+								Mail.UI.setFolderActive(Mail.State.currentAccountId, Mail.State.currentFolderId);
+								Mail.UI.showError(t('mail', 'Error while loading messages.'));
+							}
 						},
 						cache: false
 					});
