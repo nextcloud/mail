@@ -298,9 +298,9 @@ script('mail', 'jquery.storageapi');
 				<p class="groupmiddle" id="mail-imap-ssl">
 						<label for="mail-imap-sslmode"><?php p($l->t('IMAP security')); ?></label>
 						<select name="mail-imap-sslmode" id="mail-imap-sslmode" title="<?php p($l->t('IMAP security')); ?>">
-							<option value="none"><?php p($l->t('none')); ?></option>
-							<option value="ssl"><?php p($l->t('ssl')); ?></option>
-							<option value="tls"><?php p($l->t('tls')); ?></option>
+							<option value="none"><?php p($l->t('None')); ?></option>
+							<option value="ssl"><?php p($l->t('SSL/TLS')); ?></option>
+							<option value="tls"><?php p($l->t('STARTTLS')); ?></option>
 						</select>
 				</p>
 				<p class="groupmiddle">
@@ -331,15 +331,15 @@ script('mail', 'jquery.storageapi');
 				<p class="groupmiddle" id="mail-smtp-ssl">
 					<label for="mail-smtp-sslmode"><?php p($l->t('SMTP security')); ?></label>
 					<select name="mail-smtp-sslmode" id="mail-smtp-sslmode" title="<?php p($l->t('SMTP security')); ?>">
-						<option value="none"><?php p($l->t('none')); ?></option>
-						<option value="ssl"><?php p($l->t('ssl')); ?></option>
-						<option value="tls"><?php p($l->t('tls')); ?></option>
+						<option value="none"><?php p($l->t('None')); ?></option>
+						<option value="ssl"><?php p($l->t('SSL/TLS')); ?></option>
+						<option value="tls"><?php p($l->t('STARTTLS')); ?></option>
 					</select>
 				</p>
 				<p class="groupmiddle">
 					<input type="number" name="mail-smtp-port" id="mail-smtp-port"
 						placeholder="<?php p($l->t('SMTP Port')); ?>"
-						value="25" />
+						value="587" />
 					<label for="mail-smtp-port" class="infield"><?php p($l->t('SMTP Port (default 25, ssl 465)')); ?></label>
 				</p>
 				<p class="groupmiddle">

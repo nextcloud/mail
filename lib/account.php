@@ -70,7 +70,7 @@ class Account {
 			$user = $this->account->getInboundUser();
 			$password = $this->account->getInboundPassword();
 			$port = $this->account->getInboundPort();
-			$ssl_mode = $this->account->getInboundSslMode();
+			$ssl_mode = $this->convertSslMode($this->account->getInboundSslMode());
 
 			$this->client = new \Horde_Imap_Client_Socket(
 				array(
@@ -193,25 +193,25 @@ class Account {
 			'password' => $this->account->getOutboundPassword(),
 			'port' => $this->account->getOutboundPort(),
 			'username' => $this->account->getOutboundUser(),
-			'secure' => $this->account->getOutboundSslMode(),
+			'secure' => $this->convertSslMode($this->account->getOutboundSslMode()),
 			'timeout' => 2
 		);
 		return new \Horde_Mail_Transport_Smtphorde($params);
 	}
-	
+
 	/**
 	 * Lists special use folders for this account.
 	 *
 	 * The special uses returned are the "best" one for each special role,
 	 * picked amongst the ones returned by the server, as well
 	 * as the one guessed by our code.
-	 * 
+	 *
 	 * @return array In the form array(<special use>=><folder id>, ...)
 	 */
 	public function getSpecialFoldersIds($base64_encode=true) {
 		$folderRoles = array('inbox', 'sent', 'drafts', 'trash', 'archive', 'junk', 'flagged', 'all');
 		$specialFoldersIds = array();
-		
+
 		foreach ($folderRoles as $role) {
 			$folders = $this->getSpecialFolder($role, true);
 			$specialFoldersIds[$role] = (count($folders) === 0) ? null : $folders[0]->getFolderId();
@@ -241,7 +241,7 @@ class Account {
 		}
 		return $sentFolders[0];
 	}
-	
+
 	/**
 	 * @param string $sourceFolderId
 	 * @param int $messageId
@@ -283,10 +283,10 @@ class Account {
 
 	/**
 	 * Get 'best' mailbox guess
-	 * 
+	 *
 	 * For now the best candidate is the one with
 	 * the most messages in it.
-	 * 
+	 *
 	 * @param array $folders
 	 * @return Mailbox
 	 */
@@ -315,9 +315,9 @@ class Account {
 	 * @param bool $guessBest If set to true, return only the folder with the most messages in it
 	 *
 	 * @return Mailbox[] if $guessBest is false, or Mailbox if $guessBest is true. Empty array() if no match.
-	 */ 
+	 */
 	protected function getSpecialFolder($role, $guessBest=true) {
-		
+
 		$specialFolders = array();
 		foreach ($this->getMailboxes() as $mailbox) {
 			if ($role === $mailbox->getSpecialRole()) {
@@ -374,8 +374,8 @@ class Account {
 	/**
 	 * Sort mailboxes
 	 *
-	 * Sort the array of mailboxes with 
-	 *  - special use folders coming first in this order: all, inbox, flagged, drafts, sent, archive, junk, trash 
+	 * Sort the array of mailboxes with
+	 *  - special use folders coming first in this order: all, inbox, flagged, drafts, sent, archive, junk, trash
 	 *  - 'normal' folders coming after that, sorted alphabetically
 	 */
 	protected function sortMailboxes() {
@@ -417,12 +417,27 @@ class Account {
 				} else {
 					return $specialRolesOrder[$roleA] - $specialRolesOrder[$roleB];
 				}
-			} 
+			}
 			// we get here if $roleA === null && $roleB === null
 			return strcasecmp($a->getDisplayName(), $b->getDisplayName());
 		});
 
 		$this->mailboxes = $mailboxes;
+	}
+
+	/**
+	 * Convert special security mode values into Horde parameters
+	 *
+	 * @param string $sslmode
+	 * @return string|bool
+	 */
+	protected function convertSslMode($sslmode) {
+		switch ($sslmode) {
+			case 'none':
+				return false;
+				break;
+		}
+		return $sslmode;
 	}
 }
 
