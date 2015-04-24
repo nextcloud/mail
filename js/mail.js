@@ -549,6 +549,7 @@ var Mail = {
 		setMessageActive: function (messageId) {
 			Mail.State.messageView.setActiveMessage(messageId);
 			Mail.State.currentMessageId = messageId;
+			Mail.State.folderView.updateTitle();
 		},
 
 		addAccount: function () {

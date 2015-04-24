@@ -81,6 +81,22 @@ views.Folders = Backbone.Marionette.CollectionView.extend({
 				activeFolder.set('unseen', activeFolder.get('unseen') - 1);
 			}
 		}
+		this.updateTitle();
+	},
+
+	updateTitle: function() {
+
+		var activeAccount = Mail.State.currentAccountId;
+		var activeFolder = Mail.State.currentFolderId;
+		activeAccount = this.collection.get(activeAccount);
+		activeFolder = activeAccount.get('folders').get(activeFolder);
+		var unread = activeFolder.get('unseen');
+
+		if ( unread > 0) {
+			window.document.title = activeFolder.get('name') + ' (' + unread + ') - ' + activeAccount.get('email') + ' - Mail - ' + oc_defaults.title;
+		} else {
+			window.document.title = activeFolder.get('name') + ' - ' + activeAccount.get('email') + ' - Mail - ' + oc_defaults.title;
+		}
 	}
 
 });
