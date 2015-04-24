@@ -451,10 +451,21 @@ class Account {
 	 * @return array
 	 */
 	public function getChangedMailboxes($query) {
+		$imp = $this->getImapConnection();
+		$allBoxes = $this->getMailboxes();
+		$allBoxesMap = [];
+		foreach($allBoxes as $mb) {
+			$allBoxesMap[$mb->getFolderId()] = $mb;
+		}
+
+		// TODO: non existing mailboxes
+		$mailBoxNames = array_filter(array_keys($query), function($folderId) {
+			return isset($allBoxesMap[$folderId]);
+		});
 		$mailBoxNames = array_map(function($folderId) {
 			return Horde_Imap_Client_Mailbox::get($folderId, true);
-		}, array_keys($query));
-		$imp = $this->getImapConnection();
+		}, $mailBoxNames);
+
 		$status = $imp->status($mailBoxNames);
 
 		// filter for changed mailboxes
@@ -468,9 +479,16 @@ class Account {
 				continue;
 			}
 			// get unread messages
-			$m = new Mailbox($imp, Horde_Imap_Client_Mailbox::get($folderId), []);
-			$changedBoxes[$folderId] = $m->getListArray($this->getId(), $s);
-			$changedBoxes[$folderId]['messages'] = $m->getMessagesSince($uidNext, $s['uidnext']);
+			if (isset($allBoxesMap[$folderId])) {
+				/** @var Mailbox $m */
+				$m = $allBoxesMap[$folderId];
+				$role = $m->getSpecialRole();
+				if (is_null($role) || $role === 'inbox') {
+					$changedBoxes[$folderId] = $m->getListArray($this->getId(), $s);
+					$changedBoxes[$folderId]['messages'] = $m->getMessagesSince($uidNext, $s['uidnext']);
+
+				}
+			}
 		}
 
 		return $changedBoxes;

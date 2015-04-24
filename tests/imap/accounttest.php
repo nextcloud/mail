@@ -30,18 +30,6 @@ class AccountTest extends AbstractTest {
 		$this->assertEquals(1, count($messages));
 	}
 
-	public function testDetectChangeInMailBox() {
-		$newMailBox = parent::createMailBox('nasty stuff');
-		$status0 = $newMailBox->getStatus();
-
-//		$this->createTestMessage($newM	ailBox);
-		$status1 = $newMailBox->getStatus();
-
-		$this->assertEquals($status0['uidvalidity'], $status1['uidvalidity']);
-		$this->assertEquals($status0['uidnext'], $status1['uidnext']);
-		$this->assertEquals($status0, $status1);
-	}
-
 	public function testGetChangedMailboxes() {
 		$newMailBox = parent::createMailBox('nasty stuff');
 		$status = $newMailBox->getStatus();
@@ -59,6 +47,14 @@ class AccountTest extends AbstractTest {
 
 		$this->assertEquals(1, count($changedMailBoxes));
 		$this->assertEquals(1, count($changedMailBoxes[$newMailBox->getFolderId()]['messages']));
+	}
+
+	public function testGetChangedMailboxesForNotExisting() {
+		$changedMailBoxes = $this->getTestAccount()->getChangedMailboxes([
+			'you-dont-know-me' => ['uidvalidity' => 0, 'uidnext' => 0]
+		]);
+
+		$this->assertEquals(0, count($changedMailBoxes));
 	}
 
 }
