@@ -10,9 +10,11 @@
 
 namespace OCA\Mail;
 
+use Horde_Imap_Client_Ids;
 use Horde_Imap_Client_Mailbox;
 use Horde_Imap_Client_Socket;
 use Horde_Imap_Client;
+use Horde_Mail_Transport_Smtphorde;
 use OCA\Mail\Db\MailAccount;
 
 class Account {
@@ -38,6 +40,7 @@ class Account {
 	function __construct(MailAccount $account) {
 		$this->account = $account;
 		$this->mailboxes = null;
+		$this->crypto = \OC::$server->getCrypto();
 	}
 
 	/**
@@ -69,18 +72,19 @@ class Account {
 			$host = $this->account->getInboundHost();
 			$user = $this->account->getInboundUser();
 			$password = $this->account->getInboundPassword();
+			$password = $this->crypto->decrypt($password);
 			$port = $this->account->getInboundPort();
 			$ssl_mode = $this->convertSslMode($this->account->getInboundSslMode());
 
 			$this->client = new \Horde_Imap_Client_Socket(
-				array(
+				[
 					'username' => $user,
 					'password' => $password,
 					'hostspec' => $host,
 					'port' => $port,
 					'secure' => $ssl_mode,
 					'timeout' => 20,
-				));
+				]);
 			$this->client->login();
 		}
 		return $this->client;
@@ -184,19 +188,20 @@ class Account {
 	}
 
 	/**
-	 * @return \Horde_Mail_Transport_Smtphorde
+	 * @return Horde_Mail_Transport_Smtphorde
 	 */
 	public function createTransport() {
-		$host = $this->account->getOutboundHost();
-		$params = array(
-			'host' => $host,
-			'password' => $this->account->getOutboundPassword(),
+		$password = $this->account->getOutboundPassword();
+		$password = $this->crypto->decrypt($password);
+		$params = [
+			'host' => $this->account->getOutboundHost(),
+			'password' => $password,
 			'port' => $this->account->getOutboundPort(),
 			'username' => $this->account->getOutboundUser(),
 			'secure' => $this->convertSslMode($this->account->getOutboundSslMode()),
 			'timeout' => 2
-		);
-		return new \Horde_Mail_Transport_Smtphorde($params);
+		];
+		return new Horde_Mail_Transport_Smtphorde($params);
 	}
 
 	/**
@@ -206,6 +211,7 @@ class Account {
 	 * picked amongst the ones returned by the server, as well
 	 * as the one guessed by our code.
 	 *
+	 * @param bool $base64_encode
 	 * @return array In the form array(<special use>=><folder id>, ...)
 	 */
 	public function getSpecialFoldersIds($base64_encode=true) {
@@ -228,7 +234,7 @@ class Account {
 	 * @return Mailbox The best candidate for the "sent mail" inbox
 	 */
 	public function getSentFolder() {
-		//check for existense
+		//check for existence
 		$sentFolders = $this->getSpecialFolder('sent', true);
 		if (count($sentFolders) === 0) {
 			//sent folder does not exist - let's create one
@@ -271,7 +277,7 @@ class Account {
 			}
 		}
 
-		$hordeMessageIds = new \Horde_Imap_Client_Ids($messageId);
+		$hordeMessageIds = new Horde_Imap_Client_Ids($messageId);
 		$hordeSourceMailBox = new Horde_Imap_Client_Mailbox($sourceFolderId, true);
 		$hordeTrashMailBox = new Horde_Imap_Client_Mailbox($trashId, true);
 

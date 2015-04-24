@@ -58,7 +58,8 @@ class Application extends App {
 				$c->query('ContactsIntegration'),
 				$c->query('AutoConfig'),
 				$c->query('Logger'),
-				$c->getServer()->getL10N('mail')
+				$c->getServer()->getL10N('mail'),
+				$c->getServer()->getCrypto()
 			);
 		});
 
@@ -116,7 +117,8 @@ class Application extends App {
 			/** @var IAppContainer $c */
 			return new AutoConfig(
 				$c->query('Logger'),
-				$c->query('UserId')
+				$c->query('UserId'),
+				$c->getServer()->getCrypto()
 			);
 		});
 
