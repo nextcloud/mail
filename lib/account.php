@@ -16,6 +16,7 @@ use Horde_Imap_Client_Socket;
 use Horde_Imap_Client;
 use Horde_Mail_Transport_Smtphorde;
 use OCA\Mail\Db\MailAccount;
+use OCP\IConfig;
 
 class Account {
 
@@ -34,6 +35,9 @@ class Account {
 	 */
 	private $client;
 
+	/** @var IConfig */
+	private $config;
+
 	/**
 	 * @param MailAccount $account
 	 */
@@ -41,6 +45,7 @@ class Account {
 		$this->account = $account;
 		$this->mailboxes = null;
 		$this->crypto = \OC::$server->getCrypto();
+		$this->config = \OC::$server->getConfig();
 	}
 
 	/**
@@ -76,15 +81,18 @@ class Account {
 			$port = $this->account->getInboundPort();
 			$ssl_mode = $this->convertSslMode($this->account->getInboundSslMode());
 
-			$this->client = new \Horde_Imap_Client_Socket(
-				[
-					'username' => $user,
-					'password' => $password,
-					'hostspec' => $host,
-					'port' => $port,
-					'secure' => $ssl_mode,
-					'timeout' => 20,
-				]);
+			$params = [
+				'username' => $user,
+				'password' => $password,
+				'hostspec' => $host,
+				'port' => $port,
+				'secure' => $ssl_mode,
+				'timeout' => 20,
+			];
+			if ($this->config->getSystemValue('app.mail.imaplog.enabled', false)) {
+				$params['debug'] = $this->config->getSystemValue('datadirectory') . '/horde.log';
+			}
+			$this->client = new \Horde_Imap_Client_Socket($params);
 			$this->client->login();
 		}
 		return $this->client;
