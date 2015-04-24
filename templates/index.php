@@ -225,7 +225,10 @@ script('mail', 'jquery.storageapi');
 	<input type="button" id="mail_new_attachment" value="<?php p($l->t('Add attachment from Files')); ?>">
 </script>
 <script id="no-search-results-message-list-template" type="text/x-handlebars-template">
-	<div id="emptycontent"><?php p($l->t('No search results for {{searchTerm}}')); ?></div>
+	<div id="emptycontent" class="emptycontent-search">
+		<div class="icon-search"></div>
+		<h2><?php p($l->t('No search results for {{searchTerm}}')); ?></h2>
+	</div>
 </script>
 <script id="message-list-template" type="text/x-handlebars-template">
 	<input type="button" id="load-new-mail-messages" value="<?php p($l->t('Check messages …')); ?>">

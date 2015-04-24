@@ -168,9 +168,13 @@ button.control {
 }
 /* STOP: should be done in core/apps.css */
 
-#emptycontent {
+#emptycontent,
+#mail_messages #emptycontent.emptycontent-search {
 	position: static;
 	margin-top: 2em;
+}
+#mail_messages #emptycontent.emptycontent-search h2 {
+	line-height: 150%;
 }
 #mail_messages #emptycontent {
 	position: absolute;
