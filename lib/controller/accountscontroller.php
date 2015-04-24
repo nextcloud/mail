@@ -172,12 +172,12 @@ class AccountsController extends Controller {
 				$newAccount = new MailAccount($this->getParams());
 				$newAccount->setUserId($this->currentUserId);
 				$newAccount->setInboundPassword(
-					$this->crypto->decrypt(
+					$this->crypto->encrypt(
 						$newAccount->getInboundPassword()
 					)
 				);
 				$newAccount->setOutboundPassword(
-					$this->crypto->decrypt(
+					$this->crypto->encrypt(
 						$newAccount->getOutboundPassword()
 					)
 				);
