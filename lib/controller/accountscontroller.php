@@ -188,7 +188,7 @@ class AccountsController extends Controller
 		} catch (\Exception $ex) {
 			$this->logger->error('Creating account failed: ' . $ex->getMessage());
 			return new JSONResponse(
-				array('message' => $this->$l10n->t('Creating account failed: ') . $ex->getMessage()),
+				array('message' => $this->l10n->t('Creating account failed: ') . $ex->getMessage()),
 				HTTP::STATUS_BAD_REQUEST);
 		}
 
