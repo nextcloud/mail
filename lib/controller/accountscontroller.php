@@ -35,6 +35,7 @@ use OCP\AppFramework\Http\Response;
 use OCP\AppFramework\Http;
 use OCP\IL10N;
 use OCP\ILogger;
+use OCP\Security\ICrypto;
 
 class AccountsController extends Controller
 {
@@ -73,6 +74,9 @@ class AccountsController extends Controller
 	 */
 	private $l10n;
 
+	/** @var ICrypto */
+	private $crypto;
+
 	public function __construct($appName,
 		$request,
 		$mailAccountMapper,
@@ -81,7 +85,8 @@ class AccountsController extends Controller
 		$contactsIntegration,
 		$autoConfig,
 		$logger,
-		$l10n
+		$l10n,
+		$crypto
 	) {
 		parent::__construct($appName, $request);
 		$this->mapper = $mailAccountMapper;
@@ -91,6 +96,7 @@ class AccountsController extends Controller
 		$this->autoConfig = $autoConfig;
 		$this->logger = $logger;
 		$this->l10n = $l10n;
+		$this->crypto = $crypto;
 	}
 
 	/**
@@ -166,6 +172,16 @@ class AccountsController extends Controller
 				$this->logger->info('Setting up manually configured account');
 				$newAccount = new MailAccount($this->getParams());
 				$newAccount->setUserId($this->currentUserId);
+				$newAccount->setInboundPassword(
+					$this->crypto->decrypt(
+						$newAccount->getInboundPassword()
+					)
+				);
+				$newAccount->setOutboundPassword(
+					$this->crypto->decrypt(
+						$newAccount->getOutboundPassword()
+					)
+				);
 
 				$a = new Account($newAccount);
 				// connect to imap
