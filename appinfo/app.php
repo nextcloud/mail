@@ -11,18 +11,15 @@ Horde_Translation::setHandler('Horde_Imap_Client', new HordeTranslationHandler()
 Horde_Translation::setHandler('Horde_Mime', new HordeTranslationHandler());
 Horde_Translation::setHandler('Horde_Smtp', new HordeTranslationHandler());
 
-function generateNavigation() {
-	$l = \OC::$server->getL10N('mail');
-	$g =  \OC::$server->getURLGenerator();
-	return [
+$l = \OC::$server->getL10N('mail');
+$g =  \OC::$server->getURLGenerator();
+
+\OC::$server->getNavigationManager()->add(
+	[
 		'id' => 'mail',
 		'order' => 1,
 		'href' => $g->linkToRoute( 'mail.page.index' ),
 		'icon' => $g->imagePath( 'mail', 'mail.svg' ),
 		'name' => $l->t('Mail'),
-	];
-}
-
-\OC::$server->getNavigationManager()->add(
-	generateNavigation()
+	]
 );
