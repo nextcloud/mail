@@ -33,6 +33,9 @@ var Mail = {
 					icon: icon
 				}
 			);
+			notification.onclick = function(x) {
+				window.focus(); this.cancel();
+			};
 			setTimeout(function () {
 				notification.close()
 			}, 5000);
