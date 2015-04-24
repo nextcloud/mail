@@ -33,6 +33,8 @@ var Mail = {
 				allOptions = options || {};
 			_.defaults(allOptions, defaultOptions);
 
+			// don't cache for the time being
+			allOptions.cache = false;
 			if (allOptions.cache) {
 				var cache = $.initNamespaceStorage(allOptions.key).localStorage;
 				var ttl = cache.get('ttl');
