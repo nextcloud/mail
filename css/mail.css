@@ -172,6 +172,9 @@ button.control {
 	position: static;
 	margin-top: 2em;
 }
+#mail_messages #emptycontent {
+	position: absolute;
+}
 
 .mail_account_email {
 	opacity: .5;
