@@ -232,6 +232,9 @@ var Mail = {
 
 		hideMenu: function () {
 			$('#new-message').addClass('hidden');
+			if (Mail.State.accounts.length === 0) {
+				$('#app-navigation').hide();
+			}
 		},
 
 		addMessages: function (data) {
