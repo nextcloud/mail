@@ -262,7 +262,10 @@ script('mail', 'jquery.storageapi');
 
 	<form id="mail-setup" class="hidden" method="post">
 		<fieldset>
-			<h2><?php p($l->t('Connect your mail account')) ?></h2>
+			<div id="emptycontent">
+				<div class="icon-mail"></div>
+				<h2><?php p($l->t('Connect your mail account')) ?></h2>
+			</div>
 
 			<p class="grouptop">
 				<input type="text" name="mail-account-name" id="mail-account-name"

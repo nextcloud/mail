@@ -38,13 +38,18 @@ button.control {
 /* SETUP */
 #mail-setup {
 	position: absolute;
+	z-index: 1001;
 	width: 250px;
 	top: 10%;
 	left: 40%;
 	padding-bottom: 50px;
 }
 #mail-setup h2 {
-	text-align:center;
+	text-align: center;
+	position: relative;
+	width: 300%;
+	left: -100%;
+	margin-bottom: 20px;
 }
 #mail-setup input {
 	width: 100%;
@@ -76,8 +81,8 @@ button.control {
 }
 #connect-loading {
 	position: absolute;
-	top: 52px;
-	left: 45%;
+	top: 184px;
+	left: 43%;
 }
 
 
