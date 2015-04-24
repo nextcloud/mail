@@ -77,7 +77,7 @@ var Mail = {
 									// If it's okay let's create a notification
 									var tag = 'not-' + f.accountId + '-' + f.name;
 									var icon = OC.filePath('mail', 'img', 'mail-notification.png');
-									this.showNotification(localAccount.get('email'), body, tag, icon);
+									Mail.BackGround.showNotification(localAccount.get('email'), body, tag, icon);
 								}
 								// update folder status
 								var localFolder = folders.get(f.id);
