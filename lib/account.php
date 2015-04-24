@@ -458,7 +458,7 @@ class Account {
 			$allBoxesMap[$mb->getFolderId()] = $mb;
 		}
 
-		// TODO: non existing mailboxes
+		// filter non existing mailboxes
 		$mailBoxNames = array_filter(array_keys($query), function($folderId) {
 			return isset($allBoxesMap[$folderId]);
 		});
