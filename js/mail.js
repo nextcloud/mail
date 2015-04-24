@@ -25,8 +25,14 @@ var Mail = {
 	},
 	BackGround: {
 		showNotification: function (title, body, tag, icon) {
-			if (typeof Notification !== 'undefined') {
+			// notifications not supported -> go away
+			if (typeof Notification === 'undefined') {
 				return;
+			}
+			// browser is active -> go away
+			if (!document.hidden) {
+				// visibility is not yet properly working
+				//return;
 			}
 			var notification = new Notification(
 				title,
@@ -92,8 +98,7 @@ var Mail = {
 									Mail.State.messageView.collection.add(f.messages);
 								}
 
-								// TODO: save updated folder status in localStorage
-
+								Mail.State.folderView.updateTitle();
 							});
 						}
 
