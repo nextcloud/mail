@@ -479,6 +479,7 @@ class Account {
 		// filter for changed mailboxes
 		$changedBoxes = [];
 		foreach($status as $folderId => $s) {
+			$folderId = Horde_Imap_Client_Mailbox::get($folderId, false)->utf7imap;
 			$uidValidity = $query[$folderId]['uidvalidity'];
 			$uidNext = $query[$folderId]['uidnext'];
 
@@ -494,7 +495,6 @@ class Account {
 				if (is_null($role) || $role === 'inbox') {
 					$changedBoxes[$folderId] = $m->getListArray($this->getId(), $s);
 					$changedBoxes[$folderId]['messages'] = $m->getMessagesSince($uidNext, $s['uidnext']);
-
 				}
 			}
 		}
