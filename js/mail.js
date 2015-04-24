@@ -50,6 +50,7 @@ var Mail = {
 						success: function(jsondata) {
 							_.each(jsondata, function(f) {
 								// send notification
+								Mail.UI.changeFavicon(OC.filePath('mail', 'img', 'favicon-notification.png'));
 								if (Notification.permission === "granted") {
 									var from = _.map(f.messages, function(m){
 										return m.from;
@@ -138,6 +139,9 @@ var Mail = {
 		}
 	},
 	UI: {
+		changeFavicon: function (src) {
+			$("link[rel='shortcut icon'").attr("href",src);
+		},
 		loadAccounts: function () {
 			Mail.Communication.get(OC.generateUrl('apps/mail/accounts'), {
 				success: function (jsondata) {
@@ -789,4 +793,9 @@ $(document).ready(function () {
 		var messageId = $(this).data('messageId');
 		Mail.UI.saveAttachment(messageId);
 	});
+
+	$(document).on('show', function() {
+		Mail.UI.changeFavicon(OC.filePath('mail', 'img', 'favicon.png'));
+	});
+
 });
