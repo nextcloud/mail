@@ -37,8 +37,7 @@ use OCP\IL10N;
 use OCP\ILogger;
 use OCP\Security\ICrypto;
 
-class AccountsController extends Controller
-{
+class AccountsController extends Controller {
 	/**
 	 * @var \OCA\Mail\Db\MailAccountMapper
 	 */
