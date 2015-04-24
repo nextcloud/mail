@@ -25,6 +25,9 @@ var Mail = {
 	},
 	BackGround: {
 		showNotification: function (title, body, tag, icon) {
+			if (typeof Notification !== 'undefined') {
+				return;
+			}
 			var notification = new Notification(
 				title,
 				{
@@ -34,7 +37,7 @@ var Mail = {
 				}
 			);
 			notification.onclick = function(x) {
-				window.focus(); this.cancel();
+				window.focus();
 			};
 			setTimeout(function () {
 				notification.close()
