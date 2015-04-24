@@ -459,7 +459,7 @@ class Account {
 		}
 
 		// filter non existing mailboxes
-		$mailBoxNames = array_filter(array_keys($query), function($folderId) {
+		$mailBoxNames = array_filter(array_keys($query), function($folderId) use($allBoxesMap) {
 			return isset($allBoxesMap[$folderId]);
 		});
 		$mailBoxNames = array_map(function($folderId) {

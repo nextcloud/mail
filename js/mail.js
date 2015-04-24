@@ -57,7 +57,7 @@ var Mail = {
 									});
 									// If it's okay let's create a notification
 									new Notification(
-										"ownCloud Mail",
+										localAccount.get('email'),
 										{
 											body: body,
 											tag: 'not-' + f.accountId + '-' + f.name,
