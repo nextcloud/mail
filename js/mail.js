@@ -24,7 +24,19 @@ var Mail = {
 		}
 	},
 	BackGround: {
-		checkForNotifications: function() {
+		showNotification: function (title, body, tag, icon) {
+			var notification = new Notification(
+				title,
+				{
+					body: body,
+					tag: tag,
+					icon: icon
+				}
+			);
+			setTimeout(function () {
+				notification.close()
+			}, 5000);
+		}, checkForNotifications: function() {
 			_.each(Mail.State.accounts, function (a) {
 				var localAccount = Mail.State.folderView.collection.get(a.accountId);
 				var folders = localAccount.get('folders');
@@ -56,14 +68,9 @@ var Mail = {
 										from: from.join()
 									});
 									// If it's okay let's create a notification
-									new Notification(
-										localAccount.get('email'),
-										{
-											body: body,
-											tag: 'not-' + f.accountId + '-' + f.name,
-											icon: OC.filePath('mail', 'img', 'mail-notification.png')
-										}
-									);
+									var tag = 'not-' + f.accountId + '-' + f.name;
+									var icon = OC.filePath('mail', 'img', 'mail-notification.png');
+									this.showNotification(localAccount.get('email'), body, tag, icon);
 								}
 								// update folder status
 								var localFolder = folders.get(f.id);
