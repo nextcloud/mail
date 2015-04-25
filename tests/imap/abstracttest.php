@@ -53,11 +53,7 @@ abstract class AbstractTest extends \PHPUnit_Framework_TestCase {
 
 	public static function tearDownAfterClass() {
 		foreach(self::$createdMailboxes as $createdMailbox) {
-			try {
-				self::deleteMailbox($createdMailbox);
-			} catch (\Exception $ex) {
-				// TODO: there is still something wrong here - needs investigation
-			}
+			self::deleteMailbox($createdMailbox);
 		}
 	}
 
