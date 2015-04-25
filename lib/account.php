@@ -105,6 +105,7 @@ class Account {
 	public function createMailbox($mailBox) {
 		$conn = $this->getImapConnection();
 		$conn->createMailbox($mailBox);
+		$this->mailboxes = null;
 
 		return $this->getMailbox($mailBox);
 	}
@@ -115,6 +116,7 @@ class Account {
 		}
 		$conn = $this->getImapConnection();
 		$conn->deleteMailbox($mailBox);
+		$this->mailboxes = null;
 	}
 
 	/**
