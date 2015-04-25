@@ -24,15 +24,15 @@ var Mail = {
 		}
 	},
 	BackGround: {
-		showNotification: function (title, body, tag, icon) {
+		showNotification: function (title, body, tag, icon, accountId, folderId) {
 			// notifications not supported -> go away
 			if (typeof Notification === 'undefined') {
 				return;
 			}
 			// browser is active -> go away
-			if (!document.hidden) {
-				// visibility is not yet properly working
-				//return;
+			var isWindowFocused = document.querySelector(':focus') !== null;
+			if (isWindowFocused) {
+				return;
 			}
 			var notification = new Notification(
 				title,
@@ -43,6 +43,7 @@ var Mail = {
 				}
 			);
 			notification.onclick = function(x) {
+				Mail.UI.setFolderActive(accountId, folderId);
 				window.focus();
 			};
 			setTimeout(function () {
@@ -83,7 +84,7 @@ var Mail = {
 									// If it's okay let's create a notification
 									var tag = 'not-' + f.accountId + '-' + f.name;
 									var icon = OC.filePath('mail', 'img', 'mail-notification.png');
-									Mail.BackGround.showNotification(localAccount.get('email'), body, tag, icon);
+									Mail.BackGround.showNotification(localAccount.get('email'), body, tag, icon, f.accountId, f.id);
 								}
 								// update folder status
 								var localFolder = folders.get(f.id);
