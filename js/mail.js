@@ -43,7 +43,7 @@ var Mail = {
 				}
 			);
 			notification.onclick = function(x) {
-				Mail.UI.setFolderActive(accountId, folderId);
+				Mail.UI.loadMessages(accountId, folderId, false);
 				window.focus();
 			};
 			setTimeout(function () {
