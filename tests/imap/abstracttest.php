@@ -53,7 +53,11 @@ abstract class AbstractTest extends \PHPUnit_Framework_TestCase {
 
 	public static function tearDownAfterClass() {
 		foreach(self::$createdMailboxes as $createdMailbox) {
-			self::deleteMailbox($createdMailbox);
+			try {
+				self::deleteMailbox($createdMailbox);
+			} catch (\Exception $ex) {
+				// TODO: there is still something wrong here - needs investigation
+			}
 		}
 	}
 
@@ -62,7 +66,7 @@ abstract class AbstractTest extends \PHPUnit_Framework_TestCase {
 	 * @return \OCA\Mail\Mailbox
 	 */
 	public function createMailBox($name) {
-		$uniqueName = $name . uniqid();
+		$uniqueName = $name;
 
 		try {
 			$mailbox = $this->getTestAccount()->getMailbox($uniqueName);

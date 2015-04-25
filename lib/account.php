@@ -111,7 +111,7 @@ class Account {
 
 	public function deleteMailbox($mailBox) {
 		if ($mailBox instanceof Mailbox) {
-			$mailBox = $mailBox->getDisplayName();
+			$mailBox = $mailBox->getFolderId();
 		}
 		$conn = $this->getImapConnection();
 		$conn->deleteMailbox($mailBox);

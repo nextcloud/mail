@@ -4,6 +4,29 @@ namespace OCA\Mail\Tests\Imap;
 
 class AccountTest extends AbstractTest {
 
+	/**
+	 * @dataProvider providesMailBoxNames
+	 * @param $name
+	 */
+	public function xtestCreateAndDelete($name) {
+		$newMailBox = $this->createMailBox($name);
+		$mb = $this->getTestAccount()->getMailbox($name);
+
+		$this->assertNotNull($mb);
+		$this->getTestAccount()->deleteMailbox($name);
+		$mb = $this->getTestAccount()->getMailbox($name);
+
+		$this->assertNull($mb);
+	}
+
+	public function providesMailBoxNames() {
+		return [
+			['boxbox'],
+			['box box'],
+			['äöü']
+		];
+	}
+
 	public function testListMailBoxes() {
 		$newMailBox = $this->createMailBox('nasty stuff');
 		$mailBoxes = $this->getTestAccount()->getListArray();
