@@ -152,7 +152,7 @@ var Mail = {
 	},
 	UI: {
 		changeFavicon: function (src) {
-			$("link[rel='shortcut icon'").attr("href",src);
+			$('link[rel="shortcut icon"]').attr('href',src);
 		},
 		loadAccounts: function () {
 			Mail.Communication.get(OC.generateUrl('apps/mail/accounts'), {
