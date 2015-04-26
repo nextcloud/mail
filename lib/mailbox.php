@@ -124,6 +124,10 @@ class Mailbox {
 		return $messages;
 	}
 
+	public function attributes() {
+		return $this->attributes;
+	}
+
 	/**
 	 * @param $messageId
 	 * @return Message
