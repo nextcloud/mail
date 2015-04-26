@@ -261,7 +261,9 @@ var Mail = {
 				Mail.State.folderView.changeUnseen);
 
 			// request permissions
-			Notification.requestPermission();
+			if(typeof Notification !== 'undefined') {
+				Notification.requestPermission();
+			}
 
 			OC.Plugins.register('OCA.Search', Mail.Search);
 
