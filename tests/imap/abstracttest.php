@@ -62,7 +62,7 @@ abstract class AbstractTest extends \PHPUnit_Framework_TestCase {
 	 * @return \OCA\Mail\Mailbox
 	 */
 	public function createMailBox($name) {
-		$uniqueName = $name;
+		$uniqueName = $name . uniqid();
 
 		try {
 			$mailbox = $this->getTestAccount()->getMailbox($uniqueName);
