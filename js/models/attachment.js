@@ -54,7 +54,11 @@ models.Message = Backbone.Model.extend({
 });
 
 models.MessageList = Backbone.Collection.extend({
-	model: models.Message
+	model: models.Message,
+
+	comparator: function(message) {
+		return message.get("dateInt") * -1;
+	}
 });
 
 models.Folder = Backbone.Model.extend({

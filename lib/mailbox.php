@@ -76,7 +76,9 @@ class Mailbox {
 		}
 		$result = $this->conn->search($this->mailBox, $query, ['sort' => [Horde_Imap_Client::SORT_DATE]]);
 		$ids = array_reverse($result['match']->ids);
-		$ids = array_slice($ids, $from, $count);
+		if ($from >= 0 && $count >= 0) {
+			$ids = array_slice($ids, $from, $count);
+		}
 		$ids = new \Horde_Imap_Client_Ids($ids, false);
 
 		$headers = [];
@@ -130,7 +132,7 @@ class Mailbox {
 		return new Message($this->conn, $this->mailBox, $messageId, null, $loadHtmlMessageBody);
 	}
 
-	protected function getStatus($flags = \Horde_Imap_Client::STATUS_ALL) {
+	public function getStatus($flags = \Horde_Imap_Client::STATUS_ALL) {
 		return $this->conn->status($this->mailBox, $flags);
 	}
 
@@ -157,6 +159,9 @@ class Mailbox {
 		return $this->mailBox->utf7imap;
 	}
 
+	/**
+	 * @return string
+	 */
 	public function getParent() {
 		$folderId = $this->getFolderId();
 		$parts = explode($this->delimiter, $folderId, 2);
@@ -176,17 +181,23 @@ class Mailbox {
 		return $this->displayName;
 	}
 
+	/**
+	 * @param string $displayName
+	 */
 	public function setDisplayName($displayName) {
 		$this->displayName = $displayName;
 	}
 
 	/**
+	 * @param integer $accountId
 	 * @return array
 	 */
-	public function getListArray($accountId) {
+	public function getListArray($accountId, $status = null) {
 		$displayName = $this->getDisplayName();
 		try {
-			$status = $this->getStatus();
+			if (is_null($status)) {
+				$status = $this->getStatus();
+			}
 			$total = $status['messages'];
 			$specialRole = $this->getSpecialRole();
 			$unseen = ($specialRole === 'trash') ? 0 : $status['unseen'];
@@ -194,7 +205,7 @@ class Mailbox {
 			$noSelect = in_array('\\noselect', $this->attributes);
 			$parentId = $this->getParent();
 			$parentId = ($parentId !== null) ? base64_encode($parentId) : null;
-			return array(
+			return [
 				'id' => base64_encode($this->getFolderId()),
 				'parent' => $parentId,
 				'name' => $displayName,
@@ -203,10 +214,12 @@ class Mailbox {
 				'total' => $total,
 				'isEmpty' => $isEmpty,
 				'accountId' => $accountId,
-				'noSelect' => $noSelect
-			);
+				'noSelect' => $noSelect,
+				'uidvalidity' => $status['uidvalidity'],
+				'uidnext' => $status['uidnext']
+			];
 		} catch (\Horde_Imap_Client_Exception $e) {
-			return array(
+			return [
 				'id' => base64_encode($this->getFolderId()),
 				'parent' => null,
 				'name' => $displayName,
@@ -217,7 +230,7 @@ class Mailbox {
 				'isEmpty' => true,
 				'accountId' => $accountId,
 				'noSelect' => true
-			);
+			];
 		}
 	}
 	/**
@@ -302,15 +315,16 @@ class Mailbox {
 
 	/**
 	 * @param string $rawBody
+	 * @param array $flags
 	 */
-	public function saveMessage($rawBody) {
+	public function saveMessage($rawBody, $flags = []) {
 
-		$this->conn->append($this->mailBox, array(
-			array(
+		$this->conn->append($this->mailBox, [
+			[
 				'data' => $rawBody,
-				'flags' => array(Horde_Imap_Client::FLAG_SEEN)
-			)
-		));
+				'flags' => $flags
+			]
+		]);
 	}
 
 	/**
@@ -319,16 +333,22 @@ class Mailbox {
 	 * @param boolean $add
 	 */
 	public function setMessageFlag($uid, $flag, $add) {
-
-		$options = array(
+		$options = [
 			'ids' => new Horde_Imap_Client_Ids($uid)
-		);
+		];
 		if ($add) {
-			$options['add'] = array($flag);
+			$options['add'] = [$flag];
 		} else {
-			$options['remove'] = array($flag);
+			$options['remove'] = [$flag];
 		}
 		$this->conn->store($this->mailBox, $options);
+	}
+
+	public function getMessagesSince($fromUid, $toUid) {
+		$query = new Horde_Imap_Client_Search_Query();
+//		$query->flag('SEEN', false);
+		$query->ids(new Horde_Imap_Client_Ids("$fromUid:$toUid"));
+		return $this->getMessages(-1, -1, $query);
 	}
 }
 

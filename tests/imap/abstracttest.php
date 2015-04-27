@@ -13,7 +13,7 @@ abstract class AbstractTest extends \PHPUnit_Framework_TestCase {
 	private static $account;
 
 	/**
-	 * @var Mailbox[]
+	 * @var string[]
 	 */
 	private static $createdMailboxes = [];
 
@@ -53,7 +53,11 @@ abstract class AbstractTest extends \PHPUnit_Framework_TestCase {
 
 	public static function tearDownAfterClass() {
 		foreach(self::$createdMailboxes as $createdMailbox) {
-			self::deleteMailbox($createdMailbox);
+			try {
+				self::deleteMailbox($createdMailbox);
+			} catch(\Exception $ex) {
+
+			}
 		}
 	}
 
@@ -62,17 +66,15 @@ abstract class AbstractTest extends \PHPUnit_Framework_TestCase {
 	 * @return \OCA\Mail\Mailbox
 	 */
 	public function createMailBox($name) {
-		$uniqueName = $name . uniqid();
-
 		try {
-			$mailbox = $this->getTestAccount()->getMailbox($uniqueName);
-			$this->deleteMailbox($mailbox);
+			$this->getTestAccount()->getMailbox($name);
+			$this->deleteMailbox($name);
 		} catch (\Exception $e) {
 			// Ignore mailbox not found
 		}
 
-		$mailbox = $this->getTestAccount()->createMailbox($uniqueName);
-		self::$createdMailboxes[]= $mailbox;
+		$mailbox = $this->getTestAccount()->createMailbox($name);
+		self::$createdMailboxes[$name]= $mailbox;
 		return $mailbox;
 	}
 
@@ -85,6 +87,32 @@ abstract class AbstractTest extends \PHPUnit_Framework_TestCase {
 
 	private static function deleteMailbox($mailbox) {
 		self::$account->deleteMailbox($mailbox);
+	}
+
+	public function existsMailBox($name) {
+		$name = \Horde_Imap_Client_Mailbox::get($name, false);
+		$mb = $this->getTestAccount()->getMailbox($name);
+		try {
+			$mb->getStatus();
+			return true;
+		} catch (\Exception $ex) {
+			return false;
+		}
+	}
+
+
+	/**
+	 * @param $name
+	 */
+	protected function assertMailBoxExists($name) {
+		$this->assertTrue($this->existsMailBox($name));
+	}
+
+	/**
+	 * @param $name
+	 */
+	protected function assertMailBoxNotExists($name) {
+		$this->assertFalse($this->existsMailBox($name));
 	}
 
 	protected function createTestMessage(

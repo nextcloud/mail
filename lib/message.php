@@ -35,7 +35,7 @@ class Message {
 	private $attachmentsToIgnore = ['signature.asc', 'smime.p7s'];
 
 	/**
-	 * @param \Horde_Imap_Client_Socket $conn
+	 * @param \Horde_Imap_Client_Socket|null $conn
 	 * @param \Horde_Imap_Client_Mailbox $mailBox
 	 * @param integer $messageId
 	 * @param \Horde_Imap_Client_Data_Fetch|null $fetch
@@ -186,6 +186,9 @@ class Message {
 		return $e->message_id;
 	}
 
+	/**
+	 * @return string
+	 */
 	public function getSubject() {
 		$e = $this->getEnvelope();
 		return $e->subject;
@@ -339,6 +342,9 @@ class Message {
 		}
 	}
 
+	/**
+	 * @param string $ownMail
+	 */
 	public function getFullMessage($ownMail) {
 		$mailBody = $this->plainMessage;
 

@@ -8,40 +8,44 @@
 
 $app = new \OCA\Mail\AppInfo\Application();
 $app->registerRoutes($this,
-	array(
-		'routes' => array(
-			array('name' => 'page#index', 'url' => '/', 'verb' => 'GET'),
-			array('name' => 'page#compose', 'url' => '/compose', 'verb' => 'GET'),
-			array('name' => 'accounts#send', 'url' => '/accounts/{accountId}/send', 'verb' => 'POST'),
-			array('name' => 'accounts#autoComplete', 'url' => '/accounts/autoComplete', 'verb' => 'GET'),
-			array(
+	[
+		'routes' => [
+			['name' => 'page#index', 'url' => '/', 'verb' => 'GET'],
+			['name' => 'page#compose', 'url' => '/compose', 'verb' => 'GET'],
+			['name' => 'accounts#send', 'url' => '/accounts/{accountId}/send', 'verb' => 'POST'],
+			['name' => 'accounts#autoComplete', 'url' => '/accounts/autoComplete', 'verb' => 'GET'],
+			[
 				'name' => 'messages#downloadAttachment',
 				'url' => '/accounts/{accountId}/folders/{folderId}/messages/{messageId}/attachment/{attachmentId}',
-				'verb' => 'GET'),
-			array(
+				'verb' => 'GET'],
+			[
 				'name' => 'messages#saveAttachment',
 				'url' => '/accounts/{accountId}/folders/{folderId}/messages/{messageId}/attachment/{attachmentId}',
-				'verb' => 'POST'),
-			array(
+				'verb' => 'POST'],
+			[
 				'name' => 'messages#getHtmlBody',
 				'url' => '/accounts/{accountId}/folders/{folderId}/messages/{messageId}/html',
-				'verb' => 'GET'),
-			array(
+				'verb' => 'GET'],
+			[
 				'name' => 'messages#toggleStar',
 				'url' => '/accounts/{accountId}/folders/{folderId}/messages/{messageId}/toggleStar',
-				'verb' => 'POST'),
-			array(
+				'verb' => 'POST'],
+			[
 				'name' => 'proxy#redirect',
 				'url' => '/redirect',
-				'verb' => 'GET'),
-			array(
+				'verb' => 'GET'],
+			[
 				'name' => 'proxy#proxy',
 				'url' => '/proxy',
-				'verb' => 'GET'),
-		),
-		'resources' => array(
-			'accounts' => array('url' => '/accounts'),
-			'folders' => array('url' => '/accounts/{accountId}/folders'),
-			'messages' => array('url' => '/accounts/{accountId}/folders/{folderId}/messages'),
-		)
-	));
+				'verb' => 'GET'],
+			[
+				'name' => 'folders#detectChanges',
+				'url' => '/accounts/{accountId}/folders/detectChanges',
+				'verb' => 'POST'],
+		],
+		'resources' => [
+			'accounts' => ['url' => '/accounts'],
+			'folders' => ['url' => '/accounts/{accountId}/folders'],
+			'messages' => ['url' => '/accounts/{accountId}/folders/{folderId}/messages'],
+		]
+	]);

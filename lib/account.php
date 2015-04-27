@@ -16,6 +16,7 @@ use Horde_Imap_Client_Socket;
 use Horde_Imap_Client;
 use Horde_Mail_Transport_Smtphorde;
 use OCA\Mail\Db\MailAccount;
+use OCP\IConfig;
 
 class Account {
 
@@ -34,6 +35,9 @@ class Account {
 	 */
 	private $client;
 
+	/** @var IConfig */
+	private $config;
+
 	/**
 	 * @param MailAccount $account
 	 */
@@ -41,6 +45,7 @@ class Account {
 		$this->account = $account;
 		$this->mailboxes = null;
 		$this->crypto = \OC::$server->getCrypto();
+		$this->config = \OC::$server->getConfig();
 	}
 
 	/**
@@ -76,15 +81,18 @@ class Account {
 			$port = $this->account->getInboundPort();
 			$ssl_mode = $this->convertSslMode($this->account->getInboundSslMode());
 
-			$this->client = new \Horde_Imap_Client_Socket(
-				[
-					'username' => $user,
-					'password' => $password,
-					'hostspec' => $host,
-					'port' => $port,
-					'secure' => $ssl_mode,
-					'timeout' => 20,
-				]);
+			$params = [
+				'username' => $user,
+				'password' => $password,
+				'hostspec' => $host,
+				'port' => $port,
+				'secure' => $ssl_mode,
+				'timeout' => 20,
+			];
+			if ($this->config->getSystemValue('app.mail.imaplog.enabled', false)) {
+				$params['debug'] = $this->config->getSystemValue('datadirectory') . '/horde.log';
+			}
+			$this->client = new \Horde_Imap_Client_Socket($params);
 			$this->client->login();
 		}
 		return $this->client;
@@ -97,16 +105,19 @@ class Account {
 	public function createMailbox($mailBox) {
 		$conn = $this->getImapConnection();
 		$conn->createMailbox($mailBox);
+		$this->mailboxes = null;
 
+		$mailBox = \Horde_Imap_Client_Mailbox::get($mailBox, false)->utf7imap;
 		return $this->getMailbox($mailBox);
 	}
 
 	public function deleteMailbox($mailBox) {
 		if ($mailBox instanceof Mailbox) {
-			$mailBox = $mailBox->getDisplayName();
+			$mailBox = $mailBox->getFolderId();
 		}
 		$conn = $this->getImapConnection();
 		$conn->deleteMailbox($mailBox);
+		$this->mailboxes = null;
 	}
 
 	/**
@@ -160,7 +171,7 @@ class Account {
 	 *
 	 * @return Mailbox[]
 	 */
-	protected function getMailboxes() {
+	public function getMailboxes() {
 		if ($this->mailboxes === null) {
 			$this->mailboxes = $this->listMailboxes();
 			$this->sortMailboxes();
@@ -435,7 +446,7 @@ class Account {
 	 * Convert special security mode values into Horde parameters
 	 *
 	 * @param string $sslmode
-	 * @return string|bool
+	 * @return false|string
 	 */
 	protected function convertSslMode($sslmode) {
 		switch ($sslmode) {
@@ -444,6 +455,54 @@ class Account {
 				break;
 		}
 		return $sslmode;
+	}
+
+	/**
+	 * @param $query
+	 * @return array
+	 */
+	public function getChangedMailboxes($query) {
+		$imp = $this->getImapConnection();
+		$allBoxes = $this->getMailboxes();
+		$allBoxesMap = [];
+		foreach($allBoxes as $mb) {
+			$allBoxesMap[$mb->getFolderId()] = $mb;
+		}
+
+		// filter non existing mailboxes
+		$mailBoxNames = array_filter(array_keys($query), function($folderId) use($allBoxesMap) {
+			return isset($allBoxesMap[$folderId]);
+		});
+		$mailBoxNames = array_map(function($folderId) {
+			return Horde_Imap_Client_Mailbox::get($folderId, true);
+		}, $mailBoxNames);
+
+		$status = $imp->status($mailBoxNames);
+
+		// filter for changed mailboxes
+		$changedBoxes = [];
+		foreach($status as $folderId => $s) {
+			$folderId = Horde_Imap_Client_Mailbox::get($folderId, false)->utf7imap;
+			$uidValidity = $query[$folderId]['uidvalidity'];
+			$uidNext = $query[$folderId]['uidnext'];
+
+			if ($uidNext === $s['uidnext'] &&
+				$uidValidity === $s['uidvalidity']) {
+				continue;
+			}
+			// get unread messages
+			if (isset($allBoxesMap[$folderId])) {
+				/** @var Mailbox $m */
+				$m = $allBoxesMap[$folderId];
+				$role = $m->getSpecialRole();
+				if (is_null($role) || $role === 'inbox') {
+					$changedBoxes[$folderId] = $m->getListArray($this->getId(), $s);
+					$changedBoxes[$folderId]['messages'] = $m->getMessagesSince($uidNext, $s['uidnext']);
+				}
+			}
+		}
+
+		return $changedBoxes;
 	}
 }
 

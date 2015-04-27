@@ -4,19 +4,51 @@ namespace OCA\Mail\Tests\Imap;
 
 class AccountTest extends AbstractTest {
 
-	public function testListMailBoxes() {
-		$newMailBox = $this->createMailBox('nasty stuff');
+	/**
+	 * @dataProvider providesMailBoxNames
+	 * @param $name
+	 */
+	public function testCreateAndDelete($name) {
+		$name = uniqid($name);
+		$this->createMailBox($name);
+		$this->assertMailBoxExists($name);
+
+		$this->getTestAccount()->deleteMailbox($name);
+		$this->assertMailBoxNotExists($name);
+	}
+
+	public function providesMailBoxNames() {
+		return [
+			['boxbox'],
+			['box box'],
+			// TODO: there is still some utf8/utf7 fuxx up somewhere
+//			['äöü']
+		];
+	}
+
+	/**
+	 * @dataProvider providesMailBoxNames
+	 * @param $name
+	 */
+	public function testListMailBoxes($name) {
+		$name = uniqid($name);
+		$this->createMailBox($name);
 		$mailBoxes = $this->getTestAccount()->getListArray();
 		$this->assertInternalType('array', $mailBoxes);
 
-		$m = array_filter($mailBoxes['folders'], function($item) use ($newMailBox) {
-			return $item['name'] === $newMailBox->getDisplayName();
+		$m = array_filter($mailBoxes['folders'], function($item) use ($name) {
+			return $item['name'] === $name;
 		});
 		$this->assertTrue(count($m) === 1);
 	}
 
-	public function testListMessages() {
-		$newMailBox = parent::createMailBox('nasty stuff');
+	/**
+	 * @dataProvider providesMailBoxNames
+	 * @param $name
+	 */
+	public function testListMessages($name) {
+		$name = uniqid($name);
+		$newMailBox = parent::createMailBox($name);
 		$count = $newMailBox->getTotalMessages();
 		$this->assertEquals(0, $count);
 		$messages = $newMailBox->getMessages();
@@ -30,4 +62,35 @@ class AccountTest extends AbstractTest {
 		$this->assertEquals(1, count($messages));
 	}
 
+	/**
+	 * @dataProvider providesMailBoxNames
+	 * @param $name
+	 */
+	public function testGetChangedMailboxes($name) {
+		$name = uniqid($name);
+		$newMailBox = parent::createMailBox($name);
+		$status = $newMailBox->getStatus();
+		$changedMailBoxes = $this->getTestAccount()->getChangedMailboxes([
+			$newMailBox->getFolderId() => [ 'uidvalidity' => $status['uidvalidity'], 'uidnext' => $status['uidnext'] ]
+		]);
+
+		$this->assertEquals(0, count($changedMailBoxes));
+
+		$this->createTestMessage($newMailBox);
+
+		$changedMailBoxes = $this->getTestAccount()->getChangedMailboxes([
+			$newMailBox->getFolderId() => [ 'uidvalidity' => $status['uidvalidity'], 'uidnext' => $status['uidnext'] ]
+		]);
+
+		$this->assertEquals(1, count($changedMailBoxes));
+		$this->assertEquals(1, count($changedMailBoxes[$newMailBox->getFolderId()]['messages']));
+	}
+
+	public function testGetChangedMailboxesForNotExisting() {
+		$changedMailBoxes = $this->getTestAccount()->getChangedMailboxes([
+			'you-dont-know-me' => ['uidvalidity' => 0, 'uidnext' => 0]
+		]);
+
+		$this->assertEquals(0, count($changedMailBoxes));
+	}
 }

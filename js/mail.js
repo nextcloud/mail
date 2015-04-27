@@ -1,4 +1,4 @@
-/* global Handlebars, Marionette, relative_modified_date, formatDate, humanFileSize, views */
+/* global Handlebars, Marionette, Notification, relative_modified_date, formatDate, humanFileSize, views */
 var Mail = {
 	State: {
 		currentFolderId: null,
@@ -21,6 +21,91 @@ var Mail = {
 				Mail.State.messageView.filterCurrentMailbox(query);
 			}, 500);
 			$('#searchresults').hide();
+		}
+	},
+	BackGround: {
+		showNotification: function (title, body, tag, icon, accountId, folderId) {
+			// notifications not supported -> go away
+			if (typeof Notification === 'undefined') {
+				return;
+			}
+			// browser is active -> go away
+			var isWindowFocused = document.querySelector(':focus') !== null;
+			if (isWindowFocused) {
+				return;
+			}
+			var notification = new Notification(
+				title,
+				{
+					body: body,
+					tag: tag,
+					icon: icon
+				}
+			);
+			notification.onclick = function(x) {
+				Mail.UI.loadMessages(accountId, folderId, false);
+				window.focus();
+			};
+			setTimeout(function () {
+				notification.close()
+			}, 5000);
+		}, checkForNotifications: function() {
+			_.each(Mail.State.accounts, function (a) {
+				var localAccount = Mail.State.folderView.collection.get(a.accountId);
+				var folders = localAccount.get('folders');
+
+				$.ajax(
+					OC.generateUrl('apps/mail/accounts/{accountId}/folders/detectChanges', {accountId: a.accountId}), {
+						data: JSON.stringify({folders: folders.toJSON()}),
+						contentType: "application/json; charset=utf-8",
+						dataType: "json",
+						type: 'POST',
+						success: function(jsondata) {
+							_.each(jsondata, function(f) {
+								// send notification
+								Mail.UI.changeFavicon(OC.filePath('mail', 'img', 'favicon-notification.png'));
+								if (Notification.permission === "granted") {
+									var from = _.map(f.messages, function(m){
+										return m.from;
+									});
+									from = _.uniq(from);
+									if (from.length > 2) {
+										from = from.slice(0,2);
+										from.push('…');
+									} else {
+										from = from.slice(0,2);
+									}
+									var body = t('mail',
+										'{newMessageCount} new messages in {folderName} \nfrom {from}', {
+										newMessageCount: f.messages.length,
+										folderName: f.name,
+										from: from.join()
+									});
+									// If it's okay let's create a notification
+									var tag = 'not-' + f.accountId + '-' + f.name;
+									var icon = OC.filePath('mail', 'img', 'mail-notification.png');
+									Mail.BackGround.showNotification(localAccount.get('email'), body, tag, icon, f.accountId, f.id);
+								}
+								// update folder status
+								var localFolder = folders.get(f.id);
+								localFolder.set('uidvalidity', f.uidvalidity);
+								localFolder.set('uidnext', f.uidnext);
+								localFolder.set('unseen', f.unseen);
+								localFolder.set('total', f.total);
+
+								// reload if current selected folder has changed
+								if (Mail.State.currentAccountId === f.accountId &&
+									Mail.State.currentFolderId === f.id) {
+									Mail.State.messageView.collection.add(f.messages);
+								}
+
+								Mail.State.folderView.updateTitle();
+							});
+						}
+
+					}
+				);
+			});
 		}
 	},
 	Communication: {
@@ -50,7 +135,7 @@ var Mail = {
 			return $.ajax(url, {
 				data: {},
 				type: 'GET',
-				error: function (xhr, textStatus, errorThrown) {
+				error: function (xhr, textStatus) {
 					options.error(textStatus);
 				},
 				success: function (data) {
@@ -66,6 +151,28 @@ var Mail = {
 		}
 	},
 	UI: {
+		changeFavicon: function (src) {
+			$('link[rel="shortcut icon"]').attr('href',src);
+		},
+		loadAccounts: function () {
+			Mail.Communication.get(OC.generateUrl('apps/mail/accounts'), {
+				success: function (jsondata) {
+					Mail.State.accounts = jsondata;
+					if (jsondata.length === 0) {
+						Mail.UI.addAccount();
+					} else {
+						var firstAccountId = jsondata[0].accountId;
+						_.each(jsondata, function (a) {
+							Mail.UI.loadFoldersForAccount(a.accountId, firstAccountId);
+						});
+					}
+				},
+				error: function () {
+					Mail.UI.showError(t('mail', 'Error while loading the accounts.'));
+				},
+				ttl: 'no'
+			});
+		},
 		initializeInterface: function () {
 			Handlebars.registerHelper("relativeModifiedDate", function (dateInt) {
 				var lastModified = new Date(dateInt * 1000);
@@ -153,25 +260,15 @@ var Mail = {
 			Mail.State.folderView.listenTo(Mail.State.messageView, 'change:unseen',
 				Mail.State.folderView.changeUnseen);
 
+			// request permissions
+			if(typeof Notification !== 'undefined') {
+				Notification.requestPermission();
+			}
+
 			OC.Plugins.register('OCA.Search', Mail.Search);
 
-			Mail.Communication.get(OC.generateUrl('apps/mail/accounts'), {
-				success: function (jsondata) {
-					Mail.State.accounts = jsondata;
-					if (jsondata.length === 0) {
-						Mail.UI.addAccount();
-					} else {
-						var firstAccountId = jsondata[0].accountId;
-						_.each(jsondata, function (a) {
-							Mail.UI.loadFoldersForAccount(a.accountId, firstAccountId);
-						});
-					}
-				},
-				error: function () {
-					Mail.UI.showError(t('mail', 'Error while loading the accounts.'));
-				},
-				ttl: 'no'
-			});
+			setInterval(Mail.BackGround.checkForNotifications, 5*60*1000);
+			this.loadAccounts();
 		},
 
 		loadFoldersForAccount: function (accountId, firstAccountId) {
@@ -242,7 +339,7 @@ var Mail = {
 
 		loadMessages: function (accountId, folderId, noSelect) {
 			if (Mail.State.currentlyLoading !== null) {
-			    Mail.State.currentlyLoading.abort();
+				Mail.State.currentlyLoading.abort();
 			}
 			// Set folder active
 			Mail.UI.setFolderActive(accountId, folderId);
@@ -339,11 +436,11 @@ var Mail = {
 								'folders/{folderId}/messages/{messageId}/' +
 								'attachment/{attachmentId}',
 							{
-								accountId: Mail.State.currentAccountId,
-								folderId: Mail.State.currentFolderId,
-								messageId: messageId,
-								attachmentId: attachmentId
-							}), {
+							accountId: Mail.State.currentAccountId,
+							folderId: Mail.State.currentFolderId,
+							messageId: messageId,
+							attachmentId: attachmentId
+						}), {
 							data: {
 								targetPath: path
 							},
@@ -477,6 +574,7 @@ var Mail = {
 		setMessageActive: function (messageId) {
 			Mail.State.messageView.setActiveMessage(messageId);
 			Mail.State.currentMessageId = messageId;
+			Mail.State.folderView.updateTitle();
 		},
 
 		addAccount: function () {
@@ -637,13 +735,13 @@ $(document).ready(function () {
 		var imapDefaultSecurePort = 993;
 
 		switch ($(this).val()) {
-			case 'none':
-			case 'tls':
-				$('#mail-imap-port').val(imapDefaultPort);
-				break;
-			case 'ssl':
-				$('#mail-imap-port').val(imapDefaultSecurePort);
-				break;
+		case 'none':
+		case 'tls':
+			$('#mail-imap-port').val(imapDefaultPort);
+			break;
+		case 'ssl':
+			$('#mail-imap-port').val(imapDefaultSecurePort);
+			break;
 		}
 	});
 
@@ -652,13 +750,13 @@ $(document).ready(function () {
 		var smtpDefaultSecurePort = 465;
 
 		switch ($(this).val()) {
-			case 'none':
-			case 'tls':
-				$('#mail-smtp-port').val(smtpDefaultPort);
-				break;
-			case 'ssl':
-				$('#mail-smtp-port').val(smtpDefaultSecurePort);
-				break;
+		case 'none':
+		case 'tls':
+			$('#mail-smtp-port').val(smtpDefaultPort);
+			break;
+		case 'ssl':
+			$('#mail-smtp-port').val(smtpDefaultSecurePort);
+			break;
 		}
 	});
 
@@ -709,4 +807,9 @@ $(document).ready(function () {
 		var messageId = $(this).data('messageId');
 		Mail.UI.saveAttachment(messageId);
 	});
+
+	$(document).on('show', function() {
+		Mail.UI.changeFavicon(OC.filePath('mail', 'img', 'favicon.png'));
+	});
+
 });
