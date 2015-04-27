@@ -33,6 +33,7 @@ use OCP\AppFramework\Db\DoesNotExistException;
 use OCP\AppFramework\Http\JSONResponse;
 use OCP\AppFramework\Http\Response;
 use OCP\AppFramework\Http;
+use OCP\Files\File;
 use OCP\IL10N;
 use OCP\ILogger;
 use OCP\Security\ICrypto;
@@ -140,6 +141,8 @@ class AccountsController extends Controller {
 
 	/**
 	 * @NoAdminRequired
+	 * @param $accountId
+	 * @return JSONResponse
 	 */
 	public function destroy($accountId) {
 		try {
@@ -278,7 +281,7 @@ class AccountsController extends Controller {
 				$fileName = $attachment['fileName'];
 				if ($this->userFolder->nodeExists($fileName)) {
 					$f = $this->userFolder->get($fileName);
-					if ($f instanceof \OCP\Files\File) {
+					if ($f instanceof File) {
 						$a = new \Horde_Mime_Part();
 						$a->setCharset('us-ascii');
 						$a->setDisposition('attachment');
@@ -304,7 +307,7 @@ class AccountsController extends Controller {
 			// save the message in the sent folder
 			$sentFolder = $account->getSentFolder();
 			$raw = stream_get_contents($mail->getRaw());
-			$sentFolder->saveMessage($raw);
+			$sentFolder->saveMessage($raw, [Horde_Imap_Client::FLAG_SEEN]);
 		} catch (\Horde_Exception $ex) {
 			$this->logger->error('Sending mail failed: ' . $ex->getMessage());
 			return new JSONResponse(
@@ -319,6 +322,7 @@ class AccountsController extends Controller {
 	/**
 	 * @NoAdminRequired
 	 * @param string $term
+	 * @return array
 	 */
 	public function autoComplete($term) {
 		return $this->contactsIntegration->getMatchingRecipient( $term );

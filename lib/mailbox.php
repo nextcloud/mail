@@ -315,13 +315,14 @@ class Mailbox {
 
 	/**
 	 * @param string $rawBody
+	 * @param array $flags
 	 */
-	public function saveMessage($rawBody) {
+	public function saveMessage($rawBody, $flags = []) {
 
 		$this->conn->append($this->mailBox, [
 			[
 				'data' => $rawBody,
-				'flags' => []
+				'flags' => $flags
 			]
 		]);
 	}
