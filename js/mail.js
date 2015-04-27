@@ -7,6 +7,7 @@ var Mail = {
 		currentlyLoading: null,
 		accounts: null,
 		messageView: null,
+		composeView: null,
 		router: null,
 		Cache: null
 	},
@@ -769,18 +770,20 @@ $(document).ready(function () {
 	$(document).on('click', '#mail_new_message', function () {
 		$('#mail_new_message').prop('disabled', true);
 
-		// setup sendmail view
-		var view = new views.SendMail({
-			el: $('#mail-message'),
-			aliases: Mail.State.accounts
-		});
+		if (Mail.State.composeView === null) {
+			// setup sendmail view
+			Mail.State.composeView = new views.SendMail({
+				el: $('#mail-message'),
+				aliases: Mail.State.accounts
+			});
 
-		view.sentCallback = function () {
+			Mail.State.composeView.sentCallback = function () {
 
-		};
+			};
+		}
 
-		// And render it
-		view.render();
+		Mail.State.composeView.attachments.reset();
+		Mail.State.composeView.render();
 
 		// focus 'to' field automatically on clicking New message button
 		$('#to').focus();
