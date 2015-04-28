@@ -160,10 +160,10 @@ class Account {
 		$conn = $this->getImapConnection();
 		$parts = explode('/', $folderId);
 		if (count($parts) > 1 && $parts[1] === 'FLAGGED') {
-			$mailbox = new Horde_Imap_Client_Mailbox($parts[0], true);
+			$mailbox = new Horde_Imap_Client_Mailbox($parts[0]);
 			return new SearchMailbox($conn, $mailbox, array());
 		}
-		$mailbox = new Horde_Imap_Client_Mailbox($folderId, true);
+		$mailbox = new Horde_Imap_Client_Mailbox($folderId);
 		return new Mailbox($conn, $mailbox, array());
 	}
 
@@ -290,8 +290,8 @@ class Account {
 		}
 
 		$hordeMessageIds = new Horde_Imap_Client_Ids($messageId);
-		$hordeSourceMailBox = new Horde_Imap_Client_Mailbox($sourceFolderId, true);
-		$hordeTrashMailBox = new Horde_Imap_Client_Mailbox($trashId, true);
+		$hordeSourceMailBox = new Horde_Imap_Client_Mailbox($sourceFolderId);
+		$hordeTrashMailBox = new Horde_Imap_Client_Mailbox($trashId);
 
 		$result = $this->getImapConnection()->copy($hordeSourceMailBox, $hordeTrashMailBox,
 			array('create' => $createTrash, 'move' => true, 'ids' => $hordeMessageIds));

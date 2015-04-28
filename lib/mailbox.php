@@ -156,7 +156,7 @@ class Mailbox {
 	}
 
 	public function getFolderId() {
-		return $this->mailBox->utf7imap;
+		return $this->mailBox->utf8;
 	}
 
 	/**
