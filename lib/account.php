@@ -135,6 +135,7 @@ class Account {
 
 		// if successful -> get all folders of that account
 		$mailBoxes = $conn->listMailboxes($pattern, Horde_Imap_Client::MBOX_ALL, array(
+			'delimiter' => true,
 			'attributes' => true,
 			'special_use' => true,
 			'sort' => true
