@@ -156,7 +156,13 @@ class Mailbox {
 	}
 
 	public function getFolderId() {
-		return $this->mailBox->utf7imap;
+		$folderId = $this->mailBox->utf8;
+
+		if (strlen($folderId) > 6 && strpos($folderId, 'INBOX' . $this->delimiter) === 0) {
+			return substr($folderId, 6);
+		}
+
+		return $folderId;
 	}
 
 	/**

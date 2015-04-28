@@ -90,7 +90,6 @@ abstract class AbstractTest extends \PHPUnit_Framework_TestCase {
 	}
 
 	public function existsMailBox($name) {
-		$name = \Horde_Imap_Client_Mailbox::get($name, false);
 		$mb = $this->getTestAccount()->getMailbox($name);
 		try {
 			$mb->getStatus();

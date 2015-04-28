@@ -9,7 +9,7 @@
 		"php": ">=5.3.0",
 		"pear-pear.horde.org/Horde_Date": "^2.0.0@stable",
 		"pear-pear.horde.org/Horde_Exception": "^2.0.0@stable",
-		"pear-pear.horde.org/Horde_Imap_Client": "^2.27.0@stable",
+		"pear-pear.horde.org/Horde_Imap_Client": "^2.28.0@stable",
 		"pear-pear.horde.org/Horde_Mail": "^2.1.0@stable",
 		"pear-pear.horde.org/Horde_Mime": "^2.1.0@stable",
 		"pear-pear.horde.org/Horde_Nls": "^2.0.0@stable",

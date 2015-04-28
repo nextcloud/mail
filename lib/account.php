@@ -107,7 +107,6 @@ class Account {
 		$conn->createMailbox($mailBox);
 		$this->mailboxes = null;
 
-		$mailBox = \Horde_Imap_Client_Mailbox::get($mailBox, false)->utf7imap;
 		return $this->getMailbox($mailBox);
 	}
 
@@ -135,6 +134,7 @@ class Account {
 
 		// if successful -> get all folders of that account
 		$mailBoxes = $conn->listMailboxes($pattern, Horde_Imap_Client::MBOX_ALL, array(
+			'delimiter' => true,
 			'attributes' => true,
 			'special_use' => true,
 			'sort' => true
@@ -159,10 +159,10 @@ class Account {
 		$conn = $this->getImapConnection();
 		$parts = explode('/', $folderId);
 		if (count($parts) > 1 && $parts[1] === 'FLAGGED') {
-			$mailbox = new Horde_Imap_Client_Mailbox($parts[0], true);
+			$mailbox = new Horde_Imap_Client_Mailbox($parts[0]);
 			return new SearchMailbox($conn, $mailbox, array());
 		}
-		$mailbox = new Horde_Imap_Client_Mailbox($folderId, true);
+		$mailbox = new Horde_Imap_Client_Mailbox($folderId);
 		return new Mailbox($conn, $mailbox, array());
 	}
 
@@ -289,8 +289,8 @@ class Account {
 		}
 
 		$hordeMessageIds = new Horde_Imap_Client_Ids($messageId);
-		$hordeSourceMailBox = new Horde_Imap_Client_Mailbox($sourceFolderId, true);
-		$hordeTrashMailBox = new Horde_Imap_Client_Mailbox($trashId, true);
+		$hordeSourceMailBox = new Horde_Imap_Client_Mailbox($sourceFolderId);
+		$hordeTrashMailBox = new Horde_Imap_Client_Mailbox($trashId);
 
 		$result = $this->getImapConnection()->copy($hordeSourceMailBox, $hordeTrashMailBox,
 			array('create' => $createTrash, 'move' => true, 'ids' => $hordeMessageIds));
@@ -473,16 +473,12 @@ class Account {
 		$mailBoxNames = array_filter(array_keys($query), function($folderId) use($allBoxesMap) {
 			return isset($allBoxesMap[$folderId]);
 		});
-		$mailBoxNames = array_map(function($folderId) {
-			return Horde_Imap_Client_Mailbox::get($folderId, true);
-		}, $mailBoxNames);
 
 		$status = $imp->status($mailBoxNames);
 
 		// filter for changed mailboxes
 		$changedBoxes = [];
 		foreach($status as $folderId => $s) {
-			$folderId = Horde_Imap_Client_Mailbox::get($folderId, false)->utf7imap;
 			$uidValidity = $query[$folderId]['uidvalidity'];
 			$uidNext = $query[$folderId]['uidnext'];
 

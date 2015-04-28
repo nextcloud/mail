@@ -21,8 +21,7 @@ class AccountTest extends AbstractTest {
 		return [
 			['boxbox'],
 			['box box'],
-			// TODO: there is still some utf8/utf7 fuxx up somewhere
-//			['äöü']
+			['äöü']
 		];
 	}
 
