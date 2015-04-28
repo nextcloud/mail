@@ -3,6 +3,7 @@ php:
 - 5.4
 - 5.5
 - 5.6
+#- hhvm
 
 env:
   global:
@@ -15,20 +16,21 @@ branches:
   only:
   - master
   - stable7
+
 before_install:
-- composer self-update
-- composer install
-- wget https://raw.githubusercontent.com/owncloud/administration/master/travis-ci/before_install.sh
-- bash ./before_install.sh mail $CORE_BRANCH $DB
-- cd ../core
-- php occ app:enable mail
+  - composer self-update
+  - composer install
+  - wget https://raw.githubusercontent.com/owncloud/administration/master/travis-ci/before_install.sh
+  - bash ./before_install.sh mail $CORE_BRANCH $DB
+  - cd ../core
+  - php occ app:enable mail
 script:
-- cd apps/mail
-- sh -c "if [ '$DB' = 'sqlite' ]; then ant test; fi"
-- cd tests
-- phpunit --configuration phpunit.xml
-- wget https://scrutinizer-ci.com/ocular.phar
-- php ocular.phar code-coverage:upload --format=php-clover clover.xml
+  - cd apps/mail
+  - find . -name \*.php -exec php -l "{}" \;
+  - cd tests
+  - phpunit --configuration phpunit.xml
+  - wget https://scrutinizer-ci.com/ocular.phar
+  - php ocular.phar code-coverage:upload --format=php-clover clover.xml
 matrix:
   include:
   - php: 5.4
