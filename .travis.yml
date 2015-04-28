@@ -26,7 +26,7 @@ before_install:
   - php occ app:enable mail
 script:
   - cd apps/mail
-  - find . -name \*.php -exec php -l "{}" \;
+  - find . -name \*.php -not -path './vendor/*' -exec php -l "{}" \;
   - cd tests
   - phpunit --configuration phpunit.xml
   - wget https://scrutinizer-ci.com/ocular.phar
