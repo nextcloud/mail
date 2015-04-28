@@ -62,7 +62,7 @@ abstract class AbstractTest extends \PHPUnit_Framework_TestCase {
 	}
 
 	/**
-	 * @param $name
+	 * @param string $name
 	 * @return \OCA\Mail\Mailbox
 	 */
 	public function createMailBox($name) {
@@ -101,14 +101,14 @@ abstract class AbstractTest extends \PHPUnit_Framework_TestCase {
 
 
 	/**
-	 * @param $name
+	 * @param string $name
 	 */
 	protected function assertMailBoxExists($name) {
 		$this->assertTrue($this->existsMailBox($name));
 	}
 
 	/**
-	 * @param $name
+	 * @param string $name
 	 */
 	protected function assertMailBoxNotExists($name) {
 		$this->assertFalse($this->existsMailBox($name));

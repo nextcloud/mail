@@ -171,6 +171,10 @@ class Message {
 	}
 
 	// on reply, fill cc with everyone from to and cc except yourself
+
+	/**
+	 * @param string $ownMail
+	 */
 	public function getReplyCcList($ownMail) {
 		$e = $this->getEnvelope();
 		$list = new \Horde_Mail_Rfc822_List();
