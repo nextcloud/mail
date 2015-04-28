@@ -107,7 +107,6 @@ class Account {
 		$conn->createMailbox($mailBox);
 		$this->mailboxes = null;
 
-		$mailBox = \Horde_Imap_Client_Mailbox::get($mailBox, false)->utf7imap;
 		return $this->getMailbox($mailBox);
 	}
 
@@ -474,16 +473,12 @@ class Account {
 		$mailBoxNames = array_filter(array_keys($query), function($folderId) use($allBoxesMap) {
 			return isset($allBoxesMap[$folderId]);
 		});
-		$mailBoxNames = array_map(function($folderId) {
-			return Horde_Imap_Client_Mailbox::get($folderId, true);
-		}, $mailBoxNames);
 
 		$status = $imp->status($mailBoxNames);
 
 		// filter for changed mailboxes
 		$changedBoxes = [];
 		foreach($status as $folderId => $s) {
-			$folderId = Horde_Imap_Client_Mailbox::get($folderId, false)->utf7imap;
 			$uidValidity = $query[$folderId]['uidvalidity'];
 			$uidNext = $query[$folderId]['uidnext'];
 
