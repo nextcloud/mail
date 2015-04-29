@@ -15,6 +15,7 @@ use Horde_Imap_Client_Mailbox;
 use Horde_Imap_Client_Socket;
 use Horde_Imap_Client;
 use Horde_Mail_Transport_Smtphorde;
+use OCA\Mail\Cache\Cache;
 use OCA\Mail\Db\MailAccount;
 use OCP\IConfig;
 
@@ -91,6 +92,16 @@ class Account {
 			];
 			if ($this->config->getSystemValue('app.mail.imaplog.enabled', false)) {
 				$params['debug'] = $this->config->getSystemValue('datadirectory') . '/horde.log';
+			}
+			if ($this->config->getSystemValue('app.mail.server-side-cache.enabled', false)) {
+				$cacheFac = \OC::$server->getMemCacheFactory();
+				if ($cacheFac->isAvailable()) {
+					$params['cache'] = [
+						'backend' => new Cache(array(
+							'cacheob' => $cacheFac->create(md5($this->getId() . $this->getEMailAddress()))
+						))];
+				}
+
 			}
 			$this->client = new \Horde_Imap_Client_Socket($params);
 			$this->client->login();
