@@ -45,3 +45,11 @@ Go to ownCloud Mail in the browser and run this from the developer console to cl
 ```
 localStorage.clear();
 ```
+
+### Debug mode
+You can enable IMAP backend logging. Add this to your config.php:
+```php
+'app.mail.imaplog.enabled' => true
+```
+
+A horde.log will appear in the same directory as your owncloud.log.
