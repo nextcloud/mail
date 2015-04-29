@@ -342,7 +342,7 @@ class Account {
 			}
 		}
 
-		if ($guessBest === true && count($specialFolders) > 0) {
+		if ($guessBest === true && count($specialFolders) > 1) {
 			return array($this->guessBestMailBox($specialFolders));
 		} else {
 			return $specialFolders;

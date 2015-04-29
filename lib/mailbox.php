@@ -138,7 +138,7 @@ class Mailbox {
 
 	public function getTotalMessages() {
 		$status = $this->getStatus(\Horde_Imap_Client::STATUS_MESSAGES);
-		return $status['messages'];
+		return (int) $status['messages'];
 	}
 
 	protected function makeDisplayName() {
