@@ -63,7 +63,6 @@ OC.L10N.register(
     "IMAP Password" : "IMAP Parolası",
     "Manual configuration" : "El ile yapılandırma",
     "IMAP Host" : "IMAP Sunucusu",
-    "none" : "hiçbiri",
     "IMAP Port" : "IMAP Bağ. Nok.",
     "IMAP User" : "IMAP Kullanıcısı",
     "SMTP Host" : "SMTP Sunucusu",

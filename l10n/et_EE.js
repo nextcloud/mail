@@ -62,7 +62,6 @@ OC.L10N.register(
     "IMAP Password" : "IMAP parool",
     "Manual configuration" : "Käsitsi seadistsamine",
     "IMAP Host" : "IMAP host",
-    "none" : "pole",
     "IMAP Port" : "IMAP port",
     "IMAP User" : "IMAP kasutaja",
     "SMTP Host" : "SMTP host",

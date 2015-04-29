@@ -62,7 +62,6 @@ OC.L10N.register(
     "IMAP Password" : "IMAP-passord",
     "Manual configuration" : "Manuell konfigurering",
     "IMAP Host" : "IMAP-vert",
-    "none" : "ingen",
     "IMAP Port" : "IMAP-port",
     "IMAP User" : "IMAP-bruker",
     "SMTP Host" : "SMTP-vert",

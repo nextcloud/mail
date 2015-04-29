@@ -59,7 +59,6 @@ OC.L10N.register(
     "IMAP Password" : "Hasło IMAP",
     "Manual configuration" : "Ręczna konfiguracja",
     "IMAP Host" : "Serwer IMAP",
-    "none" : "brak",
     "IMAP Port" : "Port IMAP",
     "IMAP User" : "Użytkownik IMAP",
     "SMTP Host" : "Serwer SMTP",

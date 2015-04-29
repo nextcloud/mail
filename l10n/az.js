@@ -62,7 +62,6 @@ OC.L10N.register(
     "IMAP Password" : "IMAP Şifrəsi",
     "Manual configuration" : "Əllə konfiqurasiya",
     "IMAP Host" : "IMAP Host",
-    "none" : "heç nə",
     "IMAP Port" : "IMAP Port",
     "IMAP User" : "IMAP İstifadəçi",
     "SMTP Host" : "SMTP Host",

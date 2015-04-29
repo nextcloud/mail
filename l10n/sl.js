@@ -62,7 +62,6 @@ OC.L10N.register(
     "IMAP Password" : "Geslo IMAP",
     "Manual configuration" : "Ročna nastavitev",
     "IMAP Host" : "Gostitelj IMAP",
-    "none" : "brez",
     "IMAP Port" : "Vrata IMAP",
     "IMAP User" : "Uporabnik IMAP",
     "SMTP Host" : "Gostitelj SMTP",
