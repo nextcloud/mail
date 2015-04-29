@@ -568,6 +568,9 @@
 .icon-sent {
 	background-image: url('../img/sent.svg');
 }
+.icon-junk {
+	background-image: url('../img/junk.svg');
+}
 .icon-trash {
 	background-image: url('../img/trash.svg');
 }
