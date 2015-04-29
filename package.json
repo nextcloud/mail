@@ -1,0 +1,30 @@
+{
+  "name": "mail",
+  "version": "0.0.1",
+  "description": "Mail app for ownCloud",
+  "main": "index.js",
+  "directories": {
+    "test": "tests"
+  },
+  "scripts": {
+    "test": "./node_modules/.bin/jshint . && ./node_modules/.bin/jsxhint ."
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/owncloud/mail.git"
+  },
+  "keywords": [
+    "ownCloud",
+    "mail"
+  ],
+  "author": "Thomas Müller and others",
+  "license": "AGPL",
+  "bugs": {
+    "url": "https://github.com/owncloud/mail/issues"
+  },
+  "homepage": "https://github.com/owncloud/mail",
+  "devDependencies": {
+    "jshint": "^2.7.0",
+    "jsxhint": "^0.14.0"
+  }
+}

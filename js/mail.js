@@ -24,6 +24,10 @@ var Mail = {
 			$('#searchresults').hide();
 		}
 	},
+    /*jshint maxparams: 6 */
+    /* Todo: Refactor if you are touching
+       https://jslinterrors.com/this-function-has-too-many-parameters
+     */
 	BackGround: {
 		showNotification: function (title, body, tag, icon, accountId, folderId) {
 			// notifications not supported -> go away
@@ -85,7 +89,8 @@ var Mail = {
 									// If it's okay let's create a notification
 									var tag = 'not-' + f.accountId + '-' + f.name;
 									var icon = OC.filePath('mail', 'img', 'mail-notification.png');
-									Mail.BackGround.showNotification(localAccount.get('email'), body, tag, icon, f.accountId, f.id);
+									Mail.BackGround.showNotification(localAccount.get('email'), body, tag, icon,
+                                                                     f.accountId, f.id);
 								}
 								// update folder status
 								var localFolder = folders.get(f.id);

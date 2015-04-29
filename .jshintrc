@@ -1,5 +1,5 @@
 {
-	"camelcase": true,
+	"camelcase": false,
 	"eqeqeq": true,
 	"immed": true,
 	"latedef": false,
@@ -22,7 +22,6 @@
 		"describe": true,
 		"beforeEach": true,
 		"afterEach": true,
-		"sinon": true,
 		"fakeServer": true,
 		"_": true,
 		"OC": true,

@@ -1,0 +1,10 @@
+node_modules
+l10n
+vendor
+/* Static 3rd party */
+js/jquery.storageapi.js
+js/backbone.js
+js/jquery.autosize.js
+js/jquery-visibility.js
+js/handlebars-v1.3.0.js
+js/backbone.marionette.js
