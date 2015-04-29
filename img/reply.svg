@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
 <svg xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#" xmlns="http://www.w3.org/2000/svg" height="16" width="16" version="1.1" xmlns:cc="http://creativecommons.org/ns#" xmlns:dc="http://purl.org/dc/elements/1.1/">
- <g transform="matrix(-1,0,0,1,16,-1036.4)">
+ <g opacity=".5" transform="matrix(-1,0,0,1,16,-1036.4)">
   <path d="m1 1051.4s0.39147-7.8025 7-10v-4l7 7-7 7v-4c-5.1157 0-7 4-7 4z"/>
  </g>
 </svg>
