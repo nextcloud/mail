@@ -295,7 +295,8 @@ class Account {
 		$result = $this->getImapConnection()->copy($hordeSourceMailBox, $hordeTrashMailBox,
 			array('create' => $createTrash, 'move' => true, 'ids' => $hordeMessageIds));
 
-		\OC::$server->getLogger()->info("Message moved to trash: {result}", array('result' => $result));
+		\OC::$server->getLogger()->info("Message moved to trash: {message} from mailbox {mailbox}",
+			array('message' => $messageId, 'mailbox' => $sourceFolderId));
 	}
 
 	/**
