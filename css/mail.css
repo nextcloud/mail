@@ -38,13 +38,18 @@ button.control {
 /* SETUP */
 #mail-setup {
 	position: absolute;
+	z-index: 1001;
 	width: 250px;
 	top: 10%;
-	left: 40%;
+	left: 35%;
 	padding-bottom: 50px;
 }
 #mail-setup h2 {
-	text-align:center;
+	text-align: center;
+	position: relative;
+	width: 300%;
+	left: -100%;
+	margin-bottom: 20px;
 }
 #mail-setup input {
 	width: 100%;
@@ -76,8 +81,8 @@ button.control {
 }
 #connect-loading {
 	position: absolute;
-	top: 52px;
-	left: 45%;
+	top: 184px;
+	left: 43%;
 }
 
 
@@ -163,9 +168,16 @@ button.control {
 }
 /* STOP: should be done in core/apps.css */
 
-#emptycontent {
+#emptycontent,
+#mail_messages #emptycontent.emptycontent-search {
 	position: static;
 	margin-top: 2em;
+}
+#mail_messages #emptycontent.emptycontent-search h2 {
+	line-height: 150%;
+}
+#mail_messages #emptycontent {
+	position: absolute;
 }
 
 .mail_account_email {

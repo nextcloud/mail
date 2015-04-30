@@ -332,6 +332,16 @@ var Mail = {
 
 		hideMenu: function () {
 			$('#new-message').addClass('hidden');
+			if (Mail.State.accounts.length === 0) {
+				$('#app-navigation').hide();
+				$('#app-navigation-toggle').css('background-image', 'none');
+			}
+		},
+
+		showMenu: function () {
+			$('#new-message').removeClass('hidden');
+			$('#app-navigation').show();
+			$('#app-navigation-toggle').css('background-image', '');
 		},
 
 		addMessages: function (data) {
@@ -725,6 +735,8 @@ $(document).ready(function () {
 					.prop('disabled', false)
 					.val(t('mail', 'Connect'));
 				$('#connect-loading').hide();
+
+				Mail.UI.showMenu();
 			}
 		});
 	});

@@ -226,11 +226,17 @@ script('mail', 'jquery-visibility');
 	<input type="button" id="mail_new_attachment" value="<?php p($l->t('Add attachment from Files')); ?>">
 </script>
 <script id="no-search-results-message-list-template" type="text/x-handlebars-template">
-	<div id="emptycontent"><?php p($l->t('No search results for {{searchTerm}}')); ?></div>
+	<div id="emptycontent" class="emptycontent-search">
+		<div class="icon-search"></div>
+		<h2><?php p($l->t('No search results for {{searchTerm}}')); ?></h2>
+	</div>
 </script>
 <script id="message-list-template" type="text/x-handlebars-template">
 	<input type="button" id="load-new-mail-messages" value="<?php p($l->t('Check messages …')); ?>">
-	<div id="emptycontent" style="display: none;"><?php p($l->t('No messages in this folder!')); ?></div>
+	<div id="emptycontent" style="display: none;">
+		<div class="icon-mail"></div>
+		<h2><?php p($l->t('No messages in this folder!')); ?></h2>
+	</div>
 	<div id="mail-message-list"></div>
 	<input type="button" id="load-more-mail-messages" value="<?php p($l->t('Load more …')); ?>">
 </script>
@@ -263,7 +269,10 @@ script('mail', 'jquery-visibility');
 
 	<form id="mail-setup" class="hidden" method="post">
 		<fieldset>
-			<h2><?php p($l->t('Connect your mail account')) ?></h2>
+			<div id="emptycontent">
+				<div class="icon-mail"></div>
+				<h2><?php p($l->t('Connect your mail account')) ?></h2>
+			</div>
 
 			<p class="grouptop">
 				<input type="text" name="mail-account-name" id="mail-account-name"
