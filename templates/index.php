@@ -11,7 +11,7 @@ script('mail', 'jquery-visibility');
 		{{#if open}} open{{/if}}
 		">
 		{{#if folders}}<button class="collapse"></button>{{/if}}
-		<a class="folder {{#if specialRole}} icon-{{specialRole}}{{/if}}">
+		<a class="folder {{#if specialRole}} icon-{{specialRole}} svg{{/if}}">
 			{{name}}
 			{{#if unseen}}
 			<span class="utils">{{unseen}}</span>
@@ -24,7 +24,8 @@ script('mail', 'jquery-visibility');
 		{{#if unseen}}unread{{/if}}
 		{{#if specialRole}} special-{{specialRole}}{{/if}}
 		">
-				<a class="folder {{#if specialRole}} icon-{{specialRole}}{{/if}}">
+				<a class="folder
+					{{#if specialRole}} icon-{{specialRole}} svg{{/if}}">
 					{{name}}
 					{{#if unseen}}
 					<span class="utils">{{unseen}}</span>
