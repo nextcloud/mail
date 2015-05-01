@@ -250,6 +250,7 @@
 	position: absolute;
 	right: 0;
 	top: 0;
+	max-width: 40%;
 	-ms-filter: "progid:DXImageTransform.Microsoft.Alpha(Opacity=50)";
 	filter: alpha(opacity=50);
 	opacity: .5;
