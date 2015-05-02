@@ -1,5 +1,15 @@
 @media only screen and (max-width: 768px) {
 
+/* make header scroll away on mobile */
+#mail-message-header {
+	position: relative;
+	width: initial;
+	height: 100px;
+}
+.mail-message-body {
+	margin: 0 10px 50px 30px;
+}
+
 /* make sure text fields occupy full width */
 #new-message-fields,
 .reply-message-fields {
