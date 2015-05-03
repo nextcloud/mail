@@ -85,10 +85,16 @@ abstract class AbstractTest extends \PHPUnit_Framework_TestCase {
 		return self::$account;
 	}
 
+	/**
+	 * @param string $mailbox
+	 */
 	private static function deleteMailbox($mailbox) {
 		self::$account->deleteMailbox($mailbox);
 	}
 
+	/**
+	 * @param string $name
+	 */
 	public function existsMailBox($name) {
 		$mb = $this->getTestAccount()->getMailbox($name);
 		try {
