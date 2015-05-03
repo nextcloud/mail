@@ -3,6 +3,7 @@ OC.L10N.register(
     {
     "Mail" : "Pošta",
     "Error while loading the accounts." : "Chyba při načítání účtů.",
+    "{newMessageCount} new messages in {folderName} \nfrom {from}" : "{newMessageCount} nových zpráv v {folderName} \nod {from}",
     "you" : "vy",
     "Error while loading the selected account." : "Chyba během načítání vybraného účtu.",
     "Error while loading messages." : "Chyba během načítání zpráv.",
@@ -69,6 +70,9 @@ OC.L10N.register(
     "Manual configuration" : "Ruční nastavení",
     "IMAP Host" : "IMAP hostitel",
     "IMAP security" : "IMAP zabezpečení",
+    "None" : "Žádné",
+    "SSL/TLS" : "SSL/TLS",
+    "STARTTLS" : "STARTTLS",
     "IMAP Port" : "IMAP port",
     "IMAP User" : "IMAP uživatel",
     "SMTP Host" : "SMTP hostitel",

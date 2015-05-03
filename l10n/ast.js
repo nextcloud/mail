@@ -62,6 +62,7 @@ OC.L10N.register(
     "IMAP Password" : "Contraseña IMAP",
     "Manual configuration" : "Configuración manual",
     "IMAP Host" : "Agospiu IMAP",
+    "None" : "Dengún",
     "IMAP Port" : "Puertu IMAP",
     "IMAP User" : "Usuariu IMAP",
     "SMTP Host" : "Agospiu SMTP",

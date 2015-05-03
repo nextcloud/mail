@@ -3,6 +3,7 @@ OC.L10N.register(
     {
     "Mail" : "Mail",
     "Error while loading the accounts." : "Fehler beim Laden der Konten.",
+    "{newMessageCount} new messages in {folderName} \nfrom {from}" : "{newMessageCount} neue Nachrichten in {folderName}\nvon {from}",
     "you" : "Sie",
     "Error while loading the selected account." : "Fehler beim Laden des ausgewählten Kontos.",
     "Error while loading messages." : "Fehler beim Laden der Nachrichten.",
@@ -69,6 +70,9 @@ OC.L10N.register(
     "Manual configuration" : "Manuelle Konfiguration",
     "IMAP Host" : "IMAP-Host",
     "IMAP security" : "IMAP-Sicherheit",
+    "None" : "Keine",
+    "SSL/TLS" : "SSL/TLS",
+    "STARTTLS" : "STARTTLS",
     "IMAP Port" : "IMAP-Port",
     "IMAP User" : "IMAP-Benutzer",
     "SMTP Host" : "SMTP-Host",

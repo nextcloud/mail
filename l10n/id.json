@@ -65,6 +65,7 @@
     "Manual configuration" : "Konfigurasi manual",
     "IMAP Host" : "Host IMAP",
     "IMAP security" : "Keamanan IMAP",
+    "None" : "Tidak ada",
     "IMAP Port" : "Port IMAP",
     "IMAP User" : "Pengguna IMAP",
     "SMTP Host" : "Host SMTP",

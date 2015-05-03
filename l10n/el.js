@@ -3,6 +3,7 @@ OC.L10N.register(
     {
     "Mail" : "Αλληλογραφία",
     "Error while loading the accounts." : "Σφάλμα κατά τη φόρτωση των λογαριασμών.",
+    "{newMessageCount} new messages in {folderName} \nfrom {from}" : "{newMessageCount} νέα μηνύματα σε {folderName} \nαπό {from}",
     "you" : "εσείς",
     "Error while loading the selected account." : "Σφάλμα κατά τη φόρτωση του επιλεγμένου λογαριασμού.",
     "Error while loading messages." : "Σφάλμα κατά τη φόρτωση μηνυμάτων.",
@@ -69,6 +70,9 @@ OC.L10N.register(
     "Manual configuration" : "Χειροκίνητη ρύθμιση",
     "IMAP Host" : "Διακομιστής IMAP",
     "IMAP security" : "Ασφάλεια IMAP",
+    "None" : "Τίποτα",
+    "SSL/TLS" : "SSL/TLS",
+    "STARTTLS" : "STARTTLS",
     "IMAP Port" : "Θύρα IMAP",
     "IMAP User" : "Χρήστης IMAP",
     "SMTP Host" : "Διακομιστής SMTP",

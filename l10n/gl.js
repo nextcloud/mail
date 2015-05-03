@@ -3,6 +3,7 @@ OC.L10N.register(
     {
     "Mail" : "Correo",
     "Error while loading the accounts." : "Produciuse un erro mentres cargaba as contas.",
+    "{newMessageCount} new messages in {folderName} \nfrom {from}" : "{newMessageCount} mensaxes novas en {folderName} \nde {from}",
     "you" : "vostede",
     "Error while loading the selected account." : "Produciuse un erro ao cargar a conta seleccionada.",
     "Error while loading messages." : "Produciuse un erro mentres cargaba as mensaxes.",
@@ -69,6 +70,9 @@ OC.L10N.register(
     "Manual configuration" : "Configuración manual",
     "IMAP Host" : "Servidor IMAP",
     "IMAP security" : "Seguridade IMAP",
+    "None" : "Ningún",
+    "SSL/TLS" : "SSL/TLS",
+    "STARTTLS" : "STARTTLS",
     "IMAP Port" : "Porto IMAP",
     "IMAP User" : "Usuario IMAP",
     "SMTP Host" : "Servidor SMTP",

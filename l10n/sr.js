@@ -3,6 +3,7 @@ OC.L10N.register(
     {
     "Mail" : "Пошта",
     "Error while loading the accounts." : "Грешка при учитавању налога.",
+    "{newMessageCount} new messages in {folderName} \nfrom {from}" : "Нових порука: {newMessageCount} у {folderName} \nод {from}",
     "you" : "ви",
     "Error while loading the selected account." : "Грешка при учитавању изабраног налога.",
     "Error while loading messages." : "Грешка при учитавању порука.",
@@ -69,6 +70,9 @@ OC.L10N.register(
     "Manual configuration" : "Ручна постава",
     "IMAP Host" : "ИМАП домаћин",
     "IMAP security" : "ИМАП безбедност",
+    "None" : "Ништа",
+    "SSL/TLS" : "ССЛ/ТЛС",
+    "STARTTLS" : "СТАРТТЛС",
     "IMAP Port" : "ИМАП порт",
     "IMAP User" : "ИМАП корисник",
     "SMTP Host" : "СМТП домаћин",

@@ -63,6 +63,7 @@ OC.L10N.register(
     "IMAP Password" : "IMAP Парола",
     "Manual configuration" : "Ръчна конфигурация",
     "IMAP Host" : "IMAP Сървър",
+    "None" : "Няма",
     "IMAP Port" : "IMAP Порт",
     "IMAP User" : "IMAP Потребител",
     "SMTP Host" : "SMTP Сървър",

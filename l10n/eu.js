@@ -61,6 +61,7 @@ OC.L10N.register(
     "IMAP Password" : "IMAP pasahitza",
     "Manual configuration" : "Eskuzko konfigurazioa",
     "IMAP Host" : "IMAP Ostalaria",
+    "None" : "Ezer",
     "IMAP Port" : "IMAP Portua",
     "IMAP User" : "IMAP Erabiltzailea",
     "SMTP Host" : "SMTP Ostalaria",

@@ -65,6 +65,7 @@ OC.L10N.register(
     "Manual configuration" : "Ručné nastavenie",
     "IMAP Host" : "IMAP Host",
     "IMAP security" : "IMAP zabezpečenie",
+    "None" : "Žiadny",
     "IMAP Port" : "IMAP Port",
     "IMAP User" : "IMAP používateľ",
     "SMTP Host" : "SMTP Host",

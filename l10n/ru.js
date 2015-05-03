@@ -67,6 +67,7 @@ OC.L10N.register(
     "Manual configuration" : "Ручная настройка",
     "IMAP Host" : "Адрес сервера IMAP",
     "IMAP security" : "Безопасность IMAP",
+    "None" : "Отсутствует",
     "IMAP Port" : "Порт сервера IMAP",
     "IMAP User" : "Пользователь сервера IMAP",
     "SMTP Host" : "Адрес сервера SMTP",
@@ -80,4 +81,4 @@ OC.L10N.register(
     "If you do not want to visit that page, you can return to <a href=\"%s\">the mail app</a>." : "Если вы не хотите посещать ту страницу, вы можете вернуться к <a href=\"%s\">почтовому приложению</a>.",
     "Click here to visit the website." : "Нажмите здесь чтобы посетить website."
 },
-"nplurals=3; plural=(n%10==1 && n%100!=11 ? 0 : n%10>=2 && n%10<=4 && (n%100<10 || n%100>=20) ? 1 : 2);");
+"nplurals=4; plural=(n%10==1 && n%100!=11 ? 0 : n%10>=2 && n%10<=4 && (n%100<12 || n%100>14) ? 1 : n%10==0 || (n%10>=5 && n%10<=9) || (n%100>=11 && n%100<=14)? 2 : 3);");
