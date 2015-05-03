@@ -409,8 +409,8 @@
 	background-size: 16px;
 	display: inline-block;
 	position: absolute;
-	top: 0;
-	left: 31px;
+	left: 25px;
+	top: 37px;
 	z-index: 10;
 }
 /* only show star on hover of row */
@@ -426,20 +426,24 @@
 .icon-reply {
 	background-image: url('../img/reply.svg');
 	position: absolute;
-	left: 9px;
+	left: 49px;
 	top: 40px;
-	-ms-filter: "progid:DXImageTransform.Microsoft.Alpha(Opacity=20)";
-	filter: alpha(opacity=20);
-	opacity: .2;
+	-ms-filter: "progid:DXImageTransform.Microsoft.Alpha(Opacity=50)";
+	filter: alpha(opacity=50);
+	opacity: .5;
+}
+.icon-reply ~ .mail_message_summary_subject {
+	margin-left: 57px;
+	width: 65%;
 }
 
 .icon-attachment {
 	position: absolute;
-	left: 27px;
+	left: 9px;
 	top: 40px;
-	-ms-filter: "progid:DXImageTransform.Microsoft.Alpha(Opacity=20)";
-	filter: alpha(opacity=20);
-	opacity: .2;
+	-ms-filter: "progid:DXImageTransform.Microsoft.Alpha(Opacity=25)";
+	filter: alpha(opacity=25);
+	opacity: .25;
 }
 
 .icon-reply,
