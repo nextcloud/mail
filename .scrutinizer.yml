@@ -11,5 +11,5 @@ imports:
     - php
 
 tools:
-    external_code_coverage: true
-
+    external_code_coverage:
+        timeout: 1200 # Timeout in seconds. 20 minutes
