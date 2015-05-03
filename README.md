@@ -46,10 +46,20 @@ Go to ownCloud Mail in the browser and run this from the developer console to cl
 localStorage.clear();
 ```
 
+Configuration
+-------------
+Certain advanced or experimental features need specific enablement in config.php:
+
 ### Debug mode
-You can enable IMAP backend logging. Add this to your config.php:
+You can enable IMAP backend logging. A horde.log will appear in the same directory as your owncloud.log.
 ```php
 'app.mail.imaplog.enabled' => true
 ```
 
-A horde.log will appear in the same directory as your owncloud.log.
+### Server-side caching
+Mailbox messages and accounts can be cached on the ownCloud server to reduce mail server load:
+This requires a valid memcache to be configured
+```php
+'app.mail.server-side-cache.enabled' => true
+```
+
