@@ -35,7 +35,6 @@
 	padding-right: 16px;
 	margin-left: 6px;
 	-ms-filter: "progid:DXImageTransform.Microsoft.Alpha(Opacity=30)";
-	filter: alpha(opacity=30);
 	opacity: .3;
 }
 
@@ -161,8 +160,17 @@
 	text-overflow: ellipsis;
 }
 
+
+/* settings */
+
 .mailaccount-list li {
 	padding: 10px 0;
+}
+.mailaccount-list .mail-account-name {
+	display: inline-block;
+	width: 90%;
+	overflow: hidden;
+	text-overflow: ellipsis;
 }
 .mailaccount-list .actions {
 	display: inline-flex;
@@ -170,8 +178,14 @@
 	right: 0;
 	min-height: 16px;
 	min-width: 16px;
+	-ms-filter: "progid:DXImageTransform.Microsoft.Alpha(Opacity=25)";
+	opacity: .25;
 }
-
+.mailaccount-list .actions:hover,
+.mailaccount-list .actions:focus {
+	-ms-filter: "progid:DXImageTransform.Microsoft.Alpha(Opacity=50)";
+	opacity: .5;
+}
 
 
 /* app content*/
@@ -252,7 +266,6 @@
 	top: 0;
 	max-width: 40%;
 	-ms-filter: "progid:DXImageTransform.Microsoft.Alpha(Opacity=50)";
-	filter: alpha(opacity=50);
 	opacity: .5;
 }
 
@@ -267,14 +280,12 @@
 	bottom: 0;
 	right: 0;
 	padding: 20px;
-	-ms-filter: "progid:DXImageTransform.Microsoft.Alpha(Opacity=20)";
-	filter: alpha(opacity=20);
-	opacity: .2;
+	-ms-filter: "progid:DXImageTransform.Microsoft.Alpha(Opacity=25)";
+	opacity: .25;
 }
 #mail_messages .action.delete:hover,
 #mail_messages .action.delete:focus {
 	-ms-filter: "progid:DXImageTransform.Microsoft.Alpha(Opacity=50)";
-	filter: alpha(opacity=50);
 	opacity: .5;
 }
 
@@ -416,6 +427,13 @@
 /* only show star on hover of row */
 .star.icon-star {
 	display: none;
+	-ms-filter: "progid:DXImageTransform.Microsoft.Alpha(Opacity=50)";
+	opacity: .5;
+}
+.star.icon-star:hover,
+.star.icon-star:focus {
+	-ms-filter: "progid:DXImageTransform.Microsoft.Alpha(Opacity=100)";
+	opacity: 1;
 }
 .mail_message_summary.active .star.icon-star,
 .mail_message_summary:hover .star.icon-star,
@@ -429,7 +447,6 @@
 	left: 49px;
 	top: 40px;
 	-ms-filter: "progid:DXImageTransform.Microsoft.Alpha(Opacity=50)";
-	filter: alpha(opacity=50);
 	opacity: .5;
 }
 .icon-reply ~ .mail_message_summary_subject {
@@ -442,7 +459,6 @@
 	left: 9px;
 	top: 40px;
 	-ms-filter: "progid:DXImageTransform.Microsoft.Alpha(Opacity=25)";
-	filter: alpha(opacity=25);
 	opacity: .25;
 }
 
@@ -495,7 +511,6 @@
 
 .transparency {
 	-ms-filter: "progid:DXImageTransform.Microsoft.Alpha(Opacity=50)";
-	filter: alpha(opacity=50);
 	opacity: .5;
 }
 
@@ -544,7 +559,6 @@
 /* show attachment size less prominent */
 .attachment-size {
 	-ms-filter: "progid:DXImageTransform.Microsoft.Alpha(Opacity=50)";
-	filter: alpha(opacity=50);
 	opacity: .5;
 }
 .attachment-icon {
@@ -560,17 +574,6 @@
 	margin: 0 auto;
 }
 
-
-/* settings */
-.mailaccount-list .mail-account-name {
-	display: inline-block;
-	width: 90%;
-	overflow: hidden;
-	text-overflow: ellipsis;
-}
-.mailaccount-list .actions {
-	opacity: .5;
-}
 
 
 /* icons */
