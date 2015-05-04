@@ -70,9 +70,6 @@ views.SendMail = Backbone.View.extend({
 		// send the mail
 		$.ajax({
 			url:OC.generateUrl('/apps/mail/accounts/{accountId}/send', {accountId: this.currentAccountId}),
-			beforeSend:function () {
-				OC.msg.startAction('#new-message-msg', "");
-			},
 			type: 'POST',
 			data:{
 				'to': to.val(),
@@ -83,12 +80,7 @@ views.SendMail = Backbone.View.extend({
 				'attachments': self.attachments.toJSON()
 			},
 			success:function () {
-				OC.msg.finishedAction('#new-message-msg', {
-					status: 'success',
-					data: {
-						message: t('mail', 'Message sent!')
-					}
-				});
+				OC.Notification.showTemporary(t('mail', 'Message sent!'));
 
 				// close composer
 				if (self.sentCallback !== null) {
@@ -105,12 +97,7 @@ views.SendMail = Backbone.View.extend({
 				self.attachments.reset();
 			},
 			error: function (jqXHR) {
-				OC.msg.finishedAction('#new-message-msg', {
-					status: 'error',
-					data: {
-						message: jqXHR.responseJSON.message
-					}
-				});
+				OC.Notification.showTemporary(jqXHR.responseJSON.message);
 			},
 			complete: function() {
 				// remove loading feedback
