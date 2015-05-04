@@ -19,13 +19,13 @@ abstract class AbstractTest extends \PHPUnit_Framework_TestCase {
 
 	public static function setUpBeforeClass() {
 		if (false === \getenv('EMAIL_USER')) {
-			throw new \RuntimeException(
+			throw new \PHPUnit_Framework_SkippedTestError(
 				'Please set environment variable EMAIL_USER before running functional tests'
 			);
 		}
 
 		if (false === \getenv('EMAIL_PASSWORD')) {
-			throw new \RuntimeException(
+			throw new \PHPUnit_Framework_SkippedTestError(
 				'Please set environment variable EMAIL_PASSWORD before running functional tests'
 			);
 		}
