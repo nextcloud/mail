@@ -35,7 +35,6 @@
 	padding-right: 16px;
 	margin-left: 6px;
 	-ms-filter: "progid:DXImageTransform.Microsoft.Alpha(Opacity=30)";
-	filter: alpha(opacity=30);
 	opacity: .3;
 }
 
@@ -252,7 +251,6 @@
 	top: 0;
 	max-width: 40%;
 	-ms-filter: "progid:DXImageTransform.Microsoft.Alpha(Opacity=50)";
-	filter: alpha(opacity=50);
 	opacity: .5;
 }
 
@@ -268,13 +266,11 @@
 	right: 0;
 	padding: 20px;
 	-ms-filter: "progid:DXImageTransform.Microsoft.Alpha(Opacity=20)";
-	filter: alpha(opacity=20);
 	opacity: .2;
 }
 #mail_messages .action.delete:hover,
 #mail_messages .action.delete:focus {
 	-ms-filter: "progid:DXImageTransform.Microsoft.Alpha(Opacity=50)";
-	filter: alpha(opacity=50);
 	opacity: .5;
 }
 
@@ -429,7 +425,6 @@
 	left: 49px;
 	top: 40px;
 	-ms-filter: "progid:DXImageTransform.Microsoft.Alpha(Opacity=50)";
-	filter: alpha(opacity=50);
 	opacity: .5;
 }
 .icon-reply ~ .mail_message_summary_subject {
@@ -442,7 +437,6 @@
 	left: 9px;
 	top: 40px;
 	-ms-filter: "progid:DXImageTransform.Microsoft.Alpha(Opacity=25)";
-	filter: alpha(opacity=25);
 	opacity: .25;
 }
 
@@ -495,7 +489,6 @@
 
 .transparency {
 	-ms-filter: "progid:DXImageTransform.Microsoft.Alpha(Opacity=50)";
-	filter: alpha(opacity=50);
 	opacity: .5;
 }
 
@@ -544,7 +537,6 @@
 /* show attachment size less prominent */
 .attachment-size {
 	-ms-filter: "progid:DXImageTransform.Microsoft.Alpha(Opacity=50)";
-	filter: alpha(opacity=50);
 	opacity: .5;
 }
 .attachment-icon {
