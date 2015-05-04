@@ -312,6 +312,8 @@ class Account {
 	 * @param int $messageId
 	 */
 	public function deleteMessage($sourceFolderId, $messageId) {
+		$mb = $this->getMailbox($sourceFolderId);
+		$hordeSourceMailBox = $mb->getHordeMailBox();
 		// by default we will create a 'Trash' folder if no trash is found
 		$trashId = "Trash";
 		$createTrash = true;
@@ -337,7 +339,6 @@ class Account {
 		}
 
 		$hordeMessageIds = new Horde_Imap_Client_Ids($messageId);
-		$hordeSourceMailBox = new Horde_Imap_Client_Mailbox($sourceFolderId);
 		$hordeTrashMailBox = new Horde_Imap_Client_Mailbox($trashId);
 
 		if ($sourceFolderId === $trashId) {

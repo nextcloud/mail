@@ -380,5 +380,9 @@ class Mailbox {
 		$query->ids(new Horde_Imap_Client_Ids("$fromUid:$toUid"));
 		return $this->getMessages(-1, -1, $query);
 	}
+
+	public function getHordeMailBox() {
+		return $this->mailBox;
+	}
 }
 
