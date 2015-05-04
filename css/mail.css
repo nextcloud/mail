@@ -412,6 +412,13 @@
 /* only show star on hover of row */
 .star.icon-star {
 	display: none;
+	-ms-filter: "progid:DXImageTransform.Microsoft.Alpha(Opacity=50)";
+	opacity: .5;
+}
+.star.icon-star:hover,
+.star.icon-star:focus {
+	-ms-filter: "progid:DXImageTransform.Microsoft.Alpha(Opacity=100)";
+	opacity: 1;
 }
 .mail_message_summary.active .star.icon-star,
 .mail_message_summary:hover .star.icon-star,
