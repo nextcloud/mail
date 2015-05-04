@@ -3,7 +3,7 @@ php:
 - 5.4
 - 5.5
 - 5.6
-#- hhvm
+- hhvm
 
 env:
   global:
@@ -12,10 +12,11 @@ env:
   - secure: S5agbWaWSLgbujsVhZB9WkCAM0ris8uh9hPnspYw48bolkMhknJ7JxOWGV4rOcJ52kdOgifFRE9XYi65RFLL8zuaZDBU2zFoXO3fpatziYEiIWnxVrkogw1pnh/FeRnrUld+QDykFyUcfSGdFRw5R5FuZHrxe+Q5bHfiEjh4hlE=
   matrix:
   - DB=sqlite
+
 branches:
   only:
   - master
-  - stable7
+  - /^stable\d*$/
 
 before_install:
   - composer self-update
@@ -24,19 +25,28 @@ before_install:
   - bash ./before_install.sh mail $CORE_BRANCH $DB
   - cd ../core
   - php occ app:enable mail
+
 script:
+  # Test lint
   - cd apps/mail
   - find . -name \*.php -not -path './vendor/*' -exec php -l "{}" \;
+
+  # Run phpunit tests
   - cd tests
   - phpunit --configuration phpunit.xml
-  - wget https://scrutinizer-ci.com/ocular.phar
-  - php ocular.phar code-coverage:upload --format=php-clover clover.xml
+
+  # Create coverage report
+  - sh -c "if [ '$TRAVIS_PHP_VERSION' != 'hhvm' ]; then wget https://scrutinizer-ci.com/ocular.phar; fi"
+  - sh -c "if [ '$TRAVIS_PHP_VERSION' != 'hhvm' ]; then php ocular.phar code-coverage:upload --format=php-clover clover.xml; fi"
 matrix:
   include:
   - php: 5.4
     env: DB=mysql
   - php: 5.4
     env: DB=pgsql
+  - php: 5.4
+    env: "DB=mysql CORE_BRANCH=stable8"
+
   allow_failures:
   - php: hhvm
   fast_finish: true
