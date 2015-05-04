@@ -123,6 +123,7 @@ class Account {
 		$conn->createMailbox($mailBox);
 		$this->mailboxes = null;
 
+//		$mailBox = \Horde_Imap_Client_Mailbox::get($mailBox, false)->utf7imap;
 		return $this->getMailbox($mailBox);
 	}
 
@@ -203,8 +204,19 @@ class Account {
 	public function getListArray() {
 
 		$folders = array();
-		foreach ($this->getMailboxes() as $mailbox) {
-			$folders[] = $mailbox->getListArray($this->getId());
+		$mailBoxes = $this->getMailboxes();
+		$mailBoxNames = array_map(function($mb) {
+			/** @var Mailbox $mb */
+			return $mb->getFolderId();
+		}, array_filter($mailBoxes, function($mb) {
+			/** @var Mailbox $mb */
+			return (!$mb instanceof SearchMailbox) && (!in_array('\noselect', $mb->attributes()));
+		}));
+
+		$status = $this->getImapConnection()->status($mailBoxNames);
+		foreach ($mailBoxes as $mailbox) {
+			$s = isset($status[$mailbox->getFolderId()]) ? $status[$mailbox->getFolderId()] : null;
+			$folders[] = $mailbox->getListArray($this->getId(), $s);
 		}
 		return array(
 			'id'             => $this->getId(),
@@ -516,6 +528,15 @@ class Account {
 		}
 
 		return $changedBoxes;
+	}
+
+	public function reconnect() {
+		$this->mailboxes = null;
+		if ($this->client) {
+			$this->client->close();
+			$this->client = null;
+		}
+		$this->getImapConnection();
 	}
 }
 
