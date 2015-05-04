@@ -574,7 +574,20 @@
 	margin: 0 auto;
 }
 
-
+/* settings */
+.mailaccount-list .mail-account-name {
+	display: inline-block;
+	width: 90%;
+	overflow: hidden;
+	text-overflow: ellipsis;
+}
+.mailaccount-list .actions {
+	opacity: .5;
+}
+.app-settings-hint {
+	margin-top: 15px;
+	color: #555;
+}
 
 /* icons */
 .icon-inbox {

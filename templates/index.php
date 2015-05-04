@@ -189,6 +189,8 @@ script('mail', 'jquery-visibility');
 		{{/each}}
 	</ul>
 	<input id="new_mail_account" type="submit" value="<?php p($l->t('Add mail account')); ?>" class="new-button">
+
+	<p class="app-settings-hint"><?php print_unescaped($l->t('Looking to encrypt your emails? Install the <a href="https://www.mailvelope.com/" target="_blank">Mailvelope browser extension</a>!')); ?></p>
 </div>
 </script>
 <script id="new-message-template" type="text/x-handlebars-template">
