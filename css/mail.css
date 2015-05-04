@@ -265,8 +265,8 @@
 	bottom: 0;
 	right: 0;
 	padding: 20px;
-	-ms-filter: "progid:DXImageTransform.Microsoft.Alpha(Opacity=20)";
-	opacity: .2;
+	-ms-filter: "progid:DXImageTransform.Microsoft.Alpha(Opacity=25)";
+	opacity: .25;
 }
 #mail_messages .action.delete:hover,
 #mail_messages .action.delete:focus {
