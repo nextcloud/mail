@@ -160,8 +160,17 @@
 	text-overflow: ellipsis;
 }
 
+
+/* settings */
+
 .mailaccount-list li {
 	padding: 10px 0;
+}
+.mailaccount-list .mail-account-name {
+	display: inline-block;
+	width: 90%;
+	overflow: hidden;
+	text-overflow: ellipsis;
 }
 .mailaccount-list .actions {
 	display: inline-flex;
@@ -169,8 +178,14 @@
 	right: 0;
 	min-height: 16px;
 	min-width: 16px;
+	-ms-filter: "progid:DXImageTransform.Microsoft.Alpha(Opacity=25)";
+	opacity: .25;
 }
-
+.mailaccount-list .actions:hover,
+.mailaccount-list .actions:focus {
+	-ms-filter: "progid:DXImageTransform.Microsoft.Alpha(Opacity=50)";
+	opacity: .5;
+}
 
 
 /* app content*/
@@ -559,17 +574,6 @@
 	margin: 0 auto;
 }
 
-
-/* settings */
-.mailaccount-list .mail-account-name {
-	display: inline-block;
-	width: 90%;
-	overflow: hidden;
-	text-overflow: ellipsis;
-}
-.mailaccount-list .actions {
-	opacity: .5;
-}
 
 
 /* icons */
