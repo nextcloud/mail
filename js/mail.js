@@ -43,13 +43,13 @@ var Mail = {
 					icon: icon
 				}
 			);
-			notification.onclick = function(x) {
+			notification.onclick = function() {
 				Mail.UI.loadMessages(accountId, folderId, false);
 				window.focus();
 			};
 			setTimeout(function () {
-				notification.close()
-			}, 5000);
+				notification.close();
+			}, 10000);
 		}, checkForNotifications: function() {
 			_.each(Mail.State.accounts, function (a) {
 				var localAccount = Mail.State.folderView.collection.get(a.accountId);
