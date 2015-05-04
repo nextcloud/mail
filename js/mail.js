@@ -498,6 +498,10 @@ var Mail = {
 				Mail.State.composeView.data = data;
 			}
 
+			if (data && data.hasHtmlBody) {
+				Mail.UI.showError(t('mail', 'Opening HTML drafts is not supported yet.'));
+			}
+
 			Mail.State.composeView.attachments.reset();
 			Mail.State.composeView.render();
 

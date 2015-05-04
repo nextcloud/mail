@@ -121,9 +121,8 @@ class MessagesController extends Controller
 
 		$account = $this->getAccount();
 		$m = $mailBox->getMessage($id);
-		$json = $m->getFullMessage($account->getEmail(), ($mailBox->getSpecialRole() === 'sent'));
-
-		$json['senderImage'] = $this->contactsIntegration->getPhoto($json['fromEmail']);
+		$json = $m->getFullMessage($account->getEmail(), $mailBox->getSpecialRole());
+		$json['senderImage'] = $this->contactsIntegration->getPhoto($m->getFromEmail());
 		if (isset($json['hasHtmlBody'])){
 			$json['htmlBodyUrl'] = $this->buildHtmlBodyUrl($accountId, $folderId, $id);
 		}
@@ -132,7 +131,7 @@ class MessagesController extends Controller
 			$json['attachment'] = $this->enrichDownloadUrl($accountId, $folderId, $id, $json['attachment']);
 		}
 		if (isset($json['attachments'])) {
-			$json['attachments'] = array_map(function($a) use($accountId, $folderId, $id) {
+			$json['attachments'] = array_map(function($a) use ($accountId, $folderId, $id) {
 				return $this->enrichDownloadUrl($accountId, $folderId, $id, $a);
 			}, $json['attachments']);
 		}
