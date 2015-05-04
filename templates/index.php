@@ -182,7 +182,8 @@ script('mail', 'jquery-visibility');
 		<li id="mail-account-{{accountId}}" data-account-id="{{accountId}}">
 			<span class="mail-account-name">{{emailAddress}}</span>
 			<span class="actions">
-				<a class="icon-delete delete action" original-title="Delete"></a>
+				<a class="icon-delete delete action"
+					title="<?php p($l->t('Delete')); ?>"></a>
 			</span>
 		</li>
 		{{/each}}
