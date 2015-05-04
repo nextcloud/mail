@@ -689,14 +689,8 @@ $(document).ready(function () {
 					data: {},
 					type: 'GET',
 					success: function (jsondata) {
-						Mail.State.accounts = jsondata;
 						if (jsondata.length === 0) {
 							Mail.UI.addAccount();
-						} else {
-							var firstAccountId = jsondata[0].accountId;
-							_.each(Mail.State.accounts, function(a) {
-								Mail.UI.loadFoldersForAccount(a.accountId, firstAccountId);
-							});
 						}
 
 						// if manual setup is open, close it after connection
