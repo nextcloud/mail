@@ -168,7 +168,6 @@ script('mail', 'jquery-visibility');
 		<textarea name="body" class="reply-message-body"
 			placeholder="<?php p($l->t('Reply …')); ?>"></textarea>
 		<input class="reply-message-send primary" type="submit" value="<?php p($l->t('Reply')) ?>" disabled>
-		<div><span id="reply-msg" class="msg"></div>
 	</div>
 	<div class="reply-message-more">
 		<!--<a href="#" class="reply-message-forward transparency"><?php p($l->t('Forward')) ?></a>-->
@@ -219,7 +218,6 @@ script('mail', 'jquery-visibility');
 		</div>
 		<div id="new-message-attachments">
 		</div>
-		<div><span id="new-message-msg" class="msg"></div>
 	</div>
 </script>
 <script id="mail-attachments-template" type="text/x-handlebars-template">

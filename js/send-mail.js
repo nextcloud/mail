@@ -96,12 +96,7 @@ $(function () {
 			type: 'POST',
 			success:function () {
 				Mail.State.messageView.setMessageFlag(messageId, 'answered', true);
-				OC.msg.finishedAction('#reply-msg', {
-					status: 'success',
-					data: {
-						message: t('mail', 'Message sent!')
-					}
-				});
+				OC.Notification.showTemporary(t('mail', 'Message sent!'));
 
 				// close reply
 				$('.reply-message-body').val('');

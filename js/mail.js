@@ -307,7 +307,7 @@ var Mail = {
 		},
 
 		showError: function (message) {
-			OC.Notification.show(message);
+			OC.Notification.showTemporary(message);
 			$('#app-navigation')
 				.removeClass('icon-loading');
 			$('#app-content')
@@ -316,9 +316,6 @@ var Mail = {
 				.removeClass('icon-loading');
 			$('#mail_message')
 				.removeClass('icon-loading');
-			_.delay(function () {
-				OC.Notification.hide();
-			}, 4000);
 		},
 
 		clearMessages: function () {
