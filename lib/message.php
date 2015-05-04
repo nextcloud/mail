@@ -349,7 +349,7 @@ class Message {
 	/**
 	 * @param string $ownMail
 	 */
-	public function getFullMessage($ownMail) {
+	public function getFullMessage($ownMail, $fromSent = false) {
 		$mailBody = $this->plainMessage;
 
 		$data = $this->getListArray();
@@ -369,8 +369,13 @@ class Message {
 			$data['attachments'] = $this->attachments;
 		}
 
-		$data['replyToList'] = $this->getReplyToList();
-		$data['replyCcList'] = $this->getReplyCcList($ownMail);
+		if ($fromSent) {
+			$data['replyToList'] = $this->getToList();
+			$data['replyCcList'] = $this->getCCList();
+		} else {
+			$data['replyToList'] = $this->getReplyToList();
+			$data['replyCcList'] = $this->getReplyCcList($ownMail);
+		}
 		return $data;
 	}
 

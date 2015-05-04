@@ -114,16 +114,16 @@ class MessagesController extends Controller
 	 * @param int $id
 	 * @return JSONResponse
 	 */
-	public function show($id)
-	{
+	public function show($id) {
 		$accountId = $this->params('accountId');
 		$folderId = $this->params('folderId');
 		$mailBox = $this->getFolder();
 
 		$account = $this->getAccount();
 		$m = $mailBox->getMessage($id);
-		$json = $m->getFullMessage($account->getEmail());
-		$json['senderImage'] = $this->contactsIntegration->getPhoto($m->getFromEmail());
+		$json = $m->getFullMessage($account->getEmail(), ($mailBox->getSpecialRole() === 'sent'));
+
+		$json['senderImage'] = $this->contactsIntegration->getPhoto($json['fromEmail']);
 		if (isset($json['hasHtmlBody'])){
 			$json['htmlBodyUrl'] = $this->buildHtmlBodyUrl($accountId, $folderId, $id);
 		}
