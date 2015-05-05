@@ -67,13 +67,37 @@ views.Folders = Backbone.Marionette.CollectionView.extend({
 	initialize: function() {
 		this.collection = new models.AccountList();
 	},
-	
+
+	getFolderById: function () {
+		var activeAccount = Mail.State.currentAccountId;
+		activeAccount = this.collection.get(activeAccount);
+		activeFolder = activeAccount.get('folders').get(Mail.State.currentFolderId);
+
+		if (!_.isUndefined(activeFolder)) {
+			return activeFolder;
+		}
+
+		// bad hack to navigate down the tree ...
+		var folderId = atob(Mail.State.currentFolderId);
+		var parts = folderId.split('/');
+		var activeFolder = activeAccount;
+		var k = '';
+		_.each(parts, function(p){
+			if (k.length > 0) {
+				k += '/';
+			}
+			k += p;
+			var folders = activeFolder.folders || activeFolder.get('folders');
+			activeFolder = folders.filter(function(f) {
+				return f.id === btoa(k);
+			}).shift();
+		});
+		return activeFolder;
+	},
+
 	changeUnseen: function(model, unseen) {
 		// TODO: currentFolderId and currentAccountId should be an attribute of this view
-		var activeAccount = Mail.State.currentAccountId;
-		var activeFolder = Mail.State.currentFolderId;
-		activeAccount = this.collection.get(activeAccount);
-		activeFolder = activeAccount.get('folders').get(activeFolder);
+		var activeFolder = this.getFolderById();
 		if (unseen) {
 			activeFolder.set('unseen', activeFolder.get('unseen') + 1);
 		} else {
@@ -87,16 +111,16 @@ views.Folders = Backbone.Marionette.CollectionView.extend({
 	updateTitle: function() {
 
 		var activeAccount = Mail.State.currentAccountId;
-		var activeFolder = Mail.State.currentFolderId;
 		activeAccount = this.collection.get(activeAccount);
-		activeFolder = activeAccount.get('folders').get(activeFolder);
-		var unread = activeFolder.get('unseen');
+		var activeFolder = this.getFolderById();
+		var unread = activeFolder.unseen || activeFolder.get('unseen');
+		var name = activeFolder.name || activeFolder.get('name');
 
-		if (unread > 0) {
-			window.document.title = activeFolder.get('name') + ' (' + unread + ') - ' +
+		if ( unread > 0) {
+			window.document.title = name + ' (' + unread + ') - ' +
 			activeAccount.get('email') + ' - Mail - ' + oc_defaults.title;
 		} else {
-			window.document.title = activeFolder.get('name') + ' - ' + activeAccount.get('email') +
+			window.document.title = name + ' - ' + activeAccount.get('email') +
 			' - Mail - ' + oc_defaults.title;
 		}
 	}
