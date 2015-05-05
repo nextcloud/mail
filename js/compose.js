@@ -59,7 +59,6 @@ var Mail = {
 
 		hideMenu:function () {
 			var menu = $('#new-message');
-
 			menu.addClass('hidden');
 		}
 

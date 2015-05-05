@@ -395,7 +395,6 @@ var Mail = {
 
 							// Fade out the message composer
 							$('#mail_new_message').prop('disabled', false);
-							$('#new-message').hide();
 
 							if (jsondata.length > 0) {
 								Mail.UI.addMessages(jsondata);
@@ -520,10 +519,10 @@ var Mail = {
 
 		loadDraft: function(messageId) {
 			var storage = $.localStorage;
-			var draftId = 'draft'
-				+ '.' + Mail.State.currentAccountId.toString()
-				+ '.' + Mail.State.currentFolderId.toString()
-				+ '.' + messageId.toString();
+			var draftId = 'draft' +
+				'.' + Mail.State.currentAccountId.toString() +
+				'.' + Mail.State.currentFolderId.toString() +
+				'.' + messageId.toString();
 			if (storage.isSet(draftId)) {
 				return storage.get(draftId);
 			} else {
@@ -531,9 +530,13 @@ var Mail = {
 			}
 		},
 
-		openMessage: function(messageId) {
+		openMessage: function (messageId, force) {
 			// Do not reload email when clicking same again
 			if (Mail.State.currentMessageId === messageId) {
+				return;
+			}
+			force = force || false;
+			if (!force && $('#new-message').length) {
 				return;
 			}
 
@@ -561,7 +564,6 @@ var Mail = {
 
 			// Fade out the message composer
 			$('#mail_new_message').prop('disabled', false);
-			$('#new-message').hide();
 
 			var self = this;
 			var loadMessageSuccess = function (data) {
@@ -765,13 +767,13 @@ $(document).ready(function () {
 			},
 			error: function (jqXHR, textStatus, errorThrown) {
 				switch (jqXHR.status) {
-					case 400:
-						var response = JSON.parse(jqXHR.responseText);
-						Mail.UI.showError(t('mail', response.message));
-						break;
-					default:
-						var error = errorThrown || textStatus || t('mail', 'Unknown error');
-						Mail.UI.showError(t('mail', 'Error while creating an account: ' + error));
+				case 400:
+					var response = JSON.parse(jqXHR.responseText);
+					Mail.UI.showError(t('mail', response.message));
+					break;
+				default:
+					var error = errorThrown || textStatus || t('mail', 'Unknown error');
+					Mail.UI.showError(t('mail', 'Error while creating an account: ' + error));
 				}
 			},
 			complete: function () {
