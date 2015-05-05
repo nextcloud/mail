@@ -156,7 +156,7 @@ script('mail', 'jquery-visibility');
 			class="hidden"
 			{{/unless}}
 			>
-				<input type="text" name="cc" id="cc" value="{{replyCc}}" class="recipient-autocomplete"
+				<input type="text" name="cc" id="cc" class="recipient-autocomplete"
 					value="{{printAddressListPlain replyCcList}}" />
 				<label id="cc-label" for="cc" class="transparency"><?php p($l->t('cc')); ?></label>
 				<!--
