@@ -307,7 +307,7 @@ views.Messages = Backbone.Marionette.CompositeView.extend({
 						.prop('disabled', false);
 					$('#load-new-mail-messages')
 						.removeClass('icon-loading-small')
-						.val(t('mail', 'Check mail'))
+						.val(t('mail', 'Check messages …'))
 						.prop('disabled', false);
 				}
 			});
