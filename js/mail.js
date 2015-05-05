@@ -641,6 +641,8 @@ var Mail = {
 		},
 
 		setFolderActive: function (accountId, folderId) {
+			Mail.State.messageView.clearFilter();
+
 			$('.mail_folders li')
 				.removeClass('active');
 			$('.mail_folders[data-account_id="' + accountId + '"] li[data-folder_id="' + folderId + '"]')

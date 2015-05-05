@@ -246,6 +246,12 @@ views.Messages = Backbone.Marionette.CompositeView.extend({
 		};
 		this.loadNew();
 	},
+
+	clearFilter: function() {
+		$('#searchbox').val('');
+		this.filterCriteria = null;
+	},
+
 	loadMessages: function(reload) {
 		reload = reload || false;
 		var from = this.collection.size();
