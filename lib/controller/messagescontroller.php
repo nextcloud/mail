@@ -93,6 +93,10 @@ class MessagesController extends Controller
 
 		$ci = $this->contactsIntegration;
 		$json = array_map(function($j) use($ci, $mailBox) {
+			if ($mailBox->getSpecialRole() === 'trash') {
+				$j['delete'] = (string)$this->l10n->t('Delete permanently');
+			}
+
 			if ($mailBox->getSpecialRole() === 'sent') {
 				$j['fromEmail'] = $j['toEmail'];
 				$j['from'] = $j['to'];
@@ -100,6 +104,7 @@ class MessagesController extends Controller
 					$j['from'] .= ' ' . $this->l10n->t('& others');
 				}
 			}
+
 			$j['senderImage'] = $ci->getPhoto($j['fromEmail']);
 			return $j;
 		}, $json);

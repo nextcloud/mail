@@ -75,7 +75,7 @@ script('mail', 'jquery-visibility');
 						{{relativeModifiedDate dateInt}}
 					</span>
 			</div>
-			<div class="icon-delete action delete"></div>
+			<div class="icon-delete action delete" title="{{delete}}"></div>
 		</div>
 	</div>
 </script>

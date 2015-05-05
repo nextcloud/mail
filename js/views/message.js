@@ -2,6 +2,8 @@
 
 var views = views || {};
 
+$('.action.delete').tipsy({gravity:'e', live:true});
+
 views.DetailedMessage = Backbone.Marionette.ItemView.extend({
 	template: "#mail-message-template"
 });
@@ -85,7 +87,9 @@ views.Message = Backbone.Marionette.ItemView.extend({
 		event.stopPropagation();
 		var thisModel = this.model;
 		this.ui.iconDelete.removeClass('icon-delete').addClass('icon-loading');
+		$('.tipsy').remove();
 		this.$el.addClass('transparency').slideUp(function() {
+			$('.tipsy').remove();
 			var thisModelCollection = thisModel.collection;
 			var index = thisModelCollection.indexOf(thisModel);
 			var nextMessage = thisModelCollection.at(index+1);
