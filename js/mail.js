@@ -152,6 +152,12 @@ var Mail = {
 		}
 	},
 	UI: {
+		renderSettings: function () {
+			var source   = $("#mail-settings-template").html();
+			var template = Handlebars.compile(source);
+			var html = template(Mail.State.accounts);
+			$('#app-settings-content').html(html);
+		},
 		changeFavicon: function (src) {
 			$('link[rel="shortcut icon"]').attr('href',src);
 		},
@@ -159,6 +165,7 @@ var Mail = {
 			Mail.Communication.get(OC.generateUrl('apps/mail/accounts'), {
 				success: function (jsondata) {
 					Mail.State.accounts = jsondata;
+					Mail.UI.renderSettings();
 					if (jsondata.length === 0) {
 						Mail.UI.addAccount();
 					} else {
@@ -752,33 +759,9 @@ $(document).ready(function () {
 		$.ajax(OC.generateUrl('apps/mail/accounts'), {
 			data: dataArray,
 			type:'POST',
-			success:function (data) {
+			success:function () {
 				// reload accounts
-				var newAccountId = data.data.id;
-				$.ajax(OC.generateUrl('apps/mail/accounts'), {
-					data: {},
-					type: 'GET',
-					success: function (jsondata) {
-						Mail.State.accounts = jsondata;
-						if (jsondata.length === 0) {
-							Mail.UI.addAccount();
-						} else {
-							var firstAccountId = jsondata[0].accountId;
-							_.each(Mail.State.accounts, function(a) {
-								Mail.UI.loadFoldersForAccount(a.accountId, firstAccountId);
-							});
-						}
-
-						// if manual setup is open, close it after connection
-						if($('#mail-setup-manual').css('display') === 'block') {
-							Mail.UI.toggleManualSetup();
-						}
-					},
-					error: function() {
-						Mail.UI.showError(t('mail', 'Error while loading the accounts.'));
-					}
-				});
-				Mail.UI.loadFoldersForAccount(newAccountId, newAccountId);
+				Mail.UI.loadAccounts();
 			},
 			error: function (jqXHR, textStatus, errorThrown) {
 				switch (jqXHR.status) {
