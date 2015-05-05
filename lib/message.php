@@ -349,7 +349,7 @@ class Message {
 	/**
 	 * @param string $ownMail
 	 */
-	public function getFullMessage($ownMail, $fromSent = false) {
+	public function getFullMessage($ownMail, $specialRole=null) {
 		$mailBody = $this->plainMessage;
 
 		$data = $this->getListArray();
@@ -358,7 +358,7 @@ class Message {
 		} else {
 			$mailBody = $this->htmlService->convertLinks($mailBody);
 			list($mailBody, $signature) = $this->htmlService->parseMailBody($mailBody);
-			$data['body'] = nl2br($mailBody);
+			$data['body'] = $specialRole === 'drafts' ? $mailBody : nl2br($mailBody);
 			$data['signature'] = $signature;
 		}
 
@@ -369,7 +369,7 @@ class Message {
 			$data['attachments'] = $this->attachments;
 		}
 
-		if ($fromSent) {
+		if ($specialRole === 'sent') {
 			$data['replyToList'] = $this->getToList();
 			$data['replyCcList'] = $this->getCCList();
 		} else {

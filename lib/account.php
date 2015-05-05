@@ -266,6 +266,26 @@ class Account {
 		}
 		return $specialFoldersIds;
 	}
+	
+	/**
+	 * Get the "drafts" mailbox
+	 *
+	 * @return Mailbox The best candidate for the "drafts" inbox
+	 */
+	public function getDraftsFolder() {
+		// check for existense
+		$draftsFolder = $this->getSpecialFolder('drafts', true);
+		if (count($draftsFolder) === 0) {
+			// drafts folder does not exist - let's create one
+			$conn = $this->getImapConnection();
+			// TODO: also search for translated drafts mailboxes
+			$conn->createMailbox('Drafts', array(
+				'special_use' => array('drafts'),
+			));
+			return $this->guessBestMailBox($this->listMailboxes('Drafts'));
+		}
+		return $draftsFolder[0];
+	}
 
 	/**
 	 * Get the "sent mail" mailbox
@@ -325,6 +345,18 @@ class Account {
 
 		\OC::$server->getLogger()->info("Message moved to trash: {message} from mailbox {mailbox}",
 			array('message' => $messageId, 'mailbox' => $sourceFolderId));
+	}
+
+	/**
+	 * 
+	 * @param int $messageId
+	 */
+	public function deleteDraft($messageId) {
+		$draftsFolder = $this->getDraftsFolder();
+		
+		$IDs = new \Horde_Imap_Client_Ids($messageId);
+		$draftsMailBox = new \Horde_Imap_Client_Mailbox($draftsFolder->getFolderId(), true);
+		$this->getImapConnection()->expunge($draftsMailBox);
 	}
 
 	/**

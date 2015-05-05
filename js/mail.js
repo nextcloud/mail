@@ -43,13 +43,13 @@ var Mail = {
 					icon: icon
 				}
 			);
-			notification.onclick = function() {
+			notification.onclick = function(x) {
 				Mail.UI.loadMessages(accountId, folderId, false);
 				window.focus();
 			};
 			setTimeout(function () {
 				notification.close();
-			}, 10000);
+			}, 5000);
 		}, checkForNotifications: function() {
 			_.each(Mail.State.accounts, function (a) {
 				var localAccount = Mail.State.folderView.collection.get(a.accountId);
@@ -482,11 +482,59 @@ var Mail = {
 			);
 		},
 
-		openMessage: function (messageId) {
+		openComposer: function(data) {
+			$('#mail_new_message').prop('disabled', true);
+
+			if (Mail.State.composeView === null) {
+				// setup sendmail view
+				Mail.State.composeView = new views.SendMail({
+					el: $('#mail-message'),
+					aliases: Mail.State.accounts,
+					data: data
+				});
+
+				Mail.State.composeView.sentCallback = function () {};
+			} else {
+				Mail.State.composeView.data = data;
+			}
+
+			if (data && data.hasHtmlBody) {
+				Mail.UI.showError(t('mail', 'Opening HTML drafts is not supported yet.'));
+			}
+
+			Mail.State.composeView.attachments.reset();
+			Mail.State.composeView.render();
+
+			// focus 'to' field automatically on clicking New message button
+			$('#to').focus();
+
+			Mail.UI.setMessageActive(null);
+		},
+
+		loadDraft: function(messageId) {
+			var storage = $.localStorage;
+			var draftId = 'draft'
+				+ '.' + Mail.State.currentAccountId.toString()
+				+ '.' + Mail.State.currentFolderId.toString()
+				+ '.' + messageId.toString();
+			if (storage.isSet(draftId)) {
+				return storage.get(draftId);
+			} else {
+				return null;
+			}
+		},
+
+		openMessage: function(messageId) {
 			// Do not reload email when clicking same again
 			if (Mail.State.currentMessageId === messageId) {
 				return;
 			}
+
+			// check if message is a draft
+			var accountId = Mail.State.currentAccountId;
+			var account = Mail.State.folderView.collection.findWhere({id: accountId});
+			var draftsFolder = account.attributes.specialFolders.drafts;
+			var draft = draftsFolder === Mail.State.currentFolderId;
 
 			// close email first
 			// Check if message is open
@@ -508,6 +556,68 @@ var Mail = {
 			$('#mail_new_message').prop('disabled', false);
 			$('#new-message').hide();
 
+			var self = this;
+			var loadMessageSuccess = function (data) {
+				// load local storage draft
+				var draft = self.loadDraft(messageId);
+				if (draft) {
+					data.replyCc = draft.cc;
+					data.replyBcc = draft.bcc;
+					data.replyBody = draft.body;
+				}
+
+				// Render the message body
+				var source = $("#mail-message-template").html();
+				var template = Handlebars.compile(source);
+				var html = template(data);
+				mailBody
+					.html(html)
+					.removeClass('icon-loading');
+
+				Mail.State.messageView.setMessageFlag(messageId, 'unseen', false);
+
+				// HTML mail rendering
+				$('iframe').load(function () {
+					// Expand height to not have two scrollbars
+					$(this).height($(this).contents().find('html').height() + 20);
+					// Fix styling
+					$(this).contents().find('body').css({
+						'margin': '0',
+						'font-weight': 'normal',
+						'font-size': '.8em',
+						'line-height': '1.6em',
+						'font-family': "'Open Sans', Frutiger, Calibri, 'Myriad Pro', Myriad, sans-serif",
+						'color': '#000'
+					});
+					// Fix font when different font is forced
+					$(this).contents().find('font').prop({
+						'face': 'Open Sans',
+						'color': '#000'
+					});
+					$(this).contents().find('.moz-text-flowed').css({
+						'font-family': 'inherit',
+						'font-size': 'inherit'
+					});
+					// Expand height again after rendering to account for new size
+					$(this).height($(this).contents().find('html').height() + 20);
+					// Grey out previous replies
+					$(this).contents().find('blockquote').css({
+						'-ms-filter': '"progid:DXImageTransform.Microsoft.Alpha(Opacity=50)"',
+						'filter': 'alpha(opacity=50)',
+						'opacity': '.5'
+					});
+					// Remove spinner when loading finished
+					$('iframe').parent().removeClass('icon-loading');
+
+				});
+
+				$('textarea').autosize({append: '"\n\n"'});
+			};
+			
+			var loadDraftSuccess = function(data) {
+				self.openComposer(data);
+			};
+
 			$.ajax(
 				OC.generateUrl('apps/mail/accounts/{accountId}/folders/{folderId}/messages/{messageId}',
 					{
@@ -518,53 +628,11 @@ var Mail = {
 					data: {},
 					type: 'GET',
 					success: function (data) {
-						// Render the message body
-						var source = $("#mail-message-template").html();
-						var template = Handlebars.compile(source);
-						var html = template(data);
-						mailBody
-							.html(html)
-							.removeClass('icon-loading');
-
-						Mail.State.messageView.setMessageFlag(messageId, 'unseen', false);
-
-						// HTML mail rendering
-						$('iframe').load(function () {
-							// Expand height to not have two scrollbars
-							$(this).height($(this).contents().find('html').height() + 20);
-							// Fix styling
-							$(this).contents().find('body').css({
-								'margin': '0',
-								'font-weight': 'normal',
-								'font-size': '.8em',
-								'line-height': '1.6em',
-								'font-family': "'Open Sans', Frutiger, Calibri, 'Myriad Pro', Myriad, sans-serif",
-								'color': '#000'
-							});
-							// Fix font when different font is forced
-							$(this).contents().find('font').prop({
-								'face': 'Open Sans',
-								'color': '#000'
-							});
-							$(this).contents().find('.moz-text-flowed').css({
-								'font-family': 'inherit',
-								'font-size': 'inherit'
-							});
-							// Expand height again after rendering to account for new size
-							$(this).height($(this).contents().find('html').height() + 20);
-							// Grey out previous replies
-							$(this).contents().find('blockquote').css({
-								'-ms-filter': '"progid:DXImageTransform.Microsoft.Alpha(Opacity=50)"',
-								'filter': 'alpha(opacity=50)',
-								'opacity': '.5'
-							});
-							// Remove spinner when loading finished
-							$('iframe').parent().removeClass('icon-loading');
-
-						});
-
-						$('textarea').autosize({append: '"\n\n"'});
-
+						if (draft) {
+							loadDraftSuccess(data);
+						} else {
+							loadMessageSuccess(data);
+						}
 					},
 					error: function () {
 						Mail.UI.showError(t('mail', 'Error while loading the selected message.'));
@@ -776,29 +844,7 @@ $(document).ready(function () {
 	});
 
 	// new mail message button handling
-	$(document).on('click', '#mail_new_message', function () {
-		$('#mail_new_message').prop('disabled', true);
-
-		if (Mail.State.composeView === null) {
-			// setup sendmail view
-			Mail.State.composeView = new views.SendMail({
-				el: $('#mail-message'),
-				aliases: Mail.State.accounts
-			});
-
-			Mail.State.composeView.sentCallback = function () {
-
-			};
-		}
-
-		Mail.State.composeView.attachments.reset();
-		Mail.State.composeView.render();
-
-		// focus 'to' field automatically on clicking New message button
-		$('#to').focus();
-
-		Mail.UI.setMessageActive(null);
-	});
+	$(document).on('click', '#mail_new_message', Mail.UI.openComposer);
 
 	// disable send/reply buttons unless recipient and either subject or message body is filled
 	$(document).on('change input paste keyup', '#to', Mail.UI.toggleSendButton);

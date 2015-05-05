@@ -156,17 +156,17 @@ script('mail', 'jquery-visibility');
 			class="hidden"
 			{{/unless}}
 			>
-				<input type="text" name="cc" id="cc" class="recipient-autocomplete"
+				<input type="text" name="cc" id="cc" value="{{replyCc}}" class="recipient-autocomplete"
 					value="{{printAddressListPlain replyCcList}}" />
 				<label id="cc-label" for="cc" class="transparency"><?php p($l->t('cc')); ?></label>
 				<!--
-				<input type="text" name="bcc" id="bcc" class="recipient-autocomplete" />
+				<input type="text" name="bcc" id="bcc" value="{{replyBcc}}" class="recipient-autocomplete" />
 				<label id="bcc-label" for="bcc" class="transparency"><?php p($l->t('bcc')); ?></label>
 				-->
 		</div>
 
 		<textarea name="body" class="reply-message-body"
-			placeholder="<?php p($l->t('Reply …')); ?>"></textarea>
+			placeholder="<?php p($l->t('Reply …')); ?>">{{replyBody}}</textarea>
 		<input class="reply-message-send primary" type="submit" value="<?php p($l->t('Reply')) ?>" disabled>
 	</div>
 	<div class="reply-message-more">
@@ -202,18 +202,18 @@ script('mail', 'jquery-visibility');
 		<div id="new-message-fields">
 			<a href="#" id="new-message-cc-bcc-toggle"
 				class="transparency"><?php p($l->t('+ cc/bcc')); ?></a>
-			<input type="text" name="to" id="to" class="recipient-autocomplete" />
+			<input type="text" name="to" id="to" value="{{to}}" class="recipient-autocomplete" />
 			<label id="to-label" for="to" class="transparency"><?php p($l->t('to')); ?></label>
 			<div id="new-message-cc-bcc">
-				<input type="text" name="cc" id="cc" class="recipient-autocomplete" />
+				<input type="text" name="cc" id="cc" value="{{cc}}" class="recipient-autocomplete" />
 				<label id="cc-label" for="cc" class="transparency"><?php p($l->t('cc')); ?></label>
-				<input type="text" name="bcc" id="bcc" class="recipient-autocomplete" />
+				<input type="text" name="bcc" id="bcc" value="{{bcc}}" class="recipient-autocomplete" />
 				<label id="bcc-label" for="bcc" class="transparency"><?php p($l->t('bcc')); ?></label>
 			</div>
-			<input type="text" name="subject" id="subject"
+			<input type="text" name="subject" id="subject" value="{{subject}}"
 				placeholder="<?php p($l->t('Subject')); ?>" />
 			<textarea name="body" id="new-message-body"
-				placeholder="<?php p($l->t('Message …')); ?>"></textarea>
+				placeholder="<?php p($l->t('Message …')); ?>">{{message}}</textarea>
 			<input id="new-message-send" class="send primary" type="submit" value="<?php p($l->t('Send')) ?>" disabled>
 		</div>
 		<div id="new-message-attachments">
