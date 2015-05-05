@@ -267,6 +267,14 @@ script('mail', 'jquery-visibility');
 	</div>
 
 	<form id="mail-setup" class="hidden" method="post">
+		<div class="hidden-visually">
+			<!-- Hack for Safari and Chromium/Chrome which ignore autocomplete="off" -->
+			<input type="text" id="fake_user" name="fake_user"
+				autocomplete="off" tabindex="-1">
+			<input type="password" id="fake_password" name="fake_password"
+				autocomplete="off" tabindex="-1">
+		</div>
+
 		<fieldset>
 			<div id="emptycontent">
 				<div class="icon-mail"></div>
