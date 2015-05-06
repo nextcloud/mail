@@ -78,8 +78,8 @@ views.Folders = Backbone.Marionette.CollectionView.extend({
 
 		// bad hack to navigate down the tree ...
 		var folderId = atob(Mail.State.currentFolderId);
-		var parts = folderId.split('/');
 		var activeFolder = activeAccount;
+		var parts = folderId.split(activeFolder.get('delimiter'));
 		var k = '';
 		_.each(parts, function(p){
 			if (!_.isUndefined(activeFolder)) {
