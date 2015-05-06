@@ -366,6 +366,7 @@ var Mail = {
 			$('#mail_new_message')
 				.removeClass('hidden')
 				.fadeIn();
+			$('#mail-message').removeClass('hidden');
 			$('#folders').removeClass('hidden');
 			$('#mail-setup').addClass('hidden');
 
