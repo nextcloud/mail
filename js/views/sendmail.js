@@ -48,7 +48,7 @@ views.SendMail = Backbone.View.extend({
 	handleKeyPress: function(event) {
 		var key = event.keyCode || event.which;
 		var sendBtnState = $('#new-message-send').attr('disabled');
-		
+
 		// check for ctrl+enter
 		if (key === 13 && event.ctrlKey) {
 			if (sendBtnState === undefined) {
@@ -77,17 +77,17 @@ views.SendMail = Backbone.View.extend({
 		var cc = $('#cc');
 		var bcc = $('#bcc');
 		var subject = $('#subject');
-		
+
 		message.body = newMessageBody.val();
 		message.to = to.val();
 		message.cc = cc.val();
 		message.bcc = bcc.val();
 		message.subject = subject.val();
 		message.attachments = this.attachments.toJSON();
-		
+
 		return message;
 	},
-	
+
 	sendMail: function() {
 		clearTimeout(this.draftTimerIMAP);
 		//
@@ -141,11 +141,12 @@ views.SendMail = Backbone.View.extend({
 					$('#new-message').slideUp();
 				}
 				$('#mail_new_message').prop('disabled', false);
-				$('#to').val('');
-				$('#cc').val('');
-				$('#bcc').val('');
-				$('#subject').val('');
-				$('#new-message-body').val('');
+				to.val('');
+				cc.val('');
+				bcc.val('');
+				subject.val('');
+				newMessageBody.val('');
+				newMessageBody.trigger('autosize.resize');
 				self.attachments.reset();
 				if (self.draftUID !== null) {
 					// the sent message was a draft
