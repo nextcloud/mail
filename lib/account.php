@@ -562,8 +562,16 @@ class Account {
 				$m = $allBoxesMap[$folderId];
 				$role = $m->getSpecialRole();
 				if (is_null($role) || $role === 'inbox') {
-					$changedBoxes[$folderId] = $m->getListArray($this->getId(), $s);
-					$changedBoxes[$folderId]['messages'] = $m->getMessagesSince($uidNext, $s['uidnext']);
+					$newMessages = $m->getMessagesSince($uidNext, $s['uidnext']);
+					// only trigger updates in case new messages are actually available
+					if (!empty($newMessages)) {
+						$changedBoxes[$folderId] = $m->getListArray($this->getId(), $s);
+						$changedBoxes[$folderId]['messages'] = $newMessages;
+						$newUnreadMessages = array_filter($newMessages, function($m) {
+							return $m['flags']['unseen'];
+						});
+						$changedBoxes[$folderId]['newUnReadCounter'] = count($newUnreadMessages);
+					}
 				}
 			}
 		}

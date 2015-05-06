@@ -94,9 +94,11 @@ var Mail = {
 						success: function(jsondata) {
 							_.each(jsondata, function(f) {
 								// send notification
-								Mail.UI.changeFavicon(OC.filePath('mail', 'img', 'favicon-notification.png'));
-								this.showMailNotification(localAccount.get('email'), f);
-								
+								if (f.newUnReadCounter > 0) {
+									Mail.UI.changeFavicon(OC.filePath('mail', 'img', 'favicon-notification.png'));
+									Mail.BackGround.showMailNotification(localAccount.get('email'), f);
+								}
+
 								// update folder status
 								var localFolder = folders.get(f.id);
 								localFolder.set('uidvalidity', f.uidvalidity);
