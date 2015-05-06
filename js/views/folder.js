@@ -113,7 +113,7 @@ views.Folders = Backbone.Marionette.CollectionView.extend({
 		var activeAccount = Mail.State.currentAccountId;
 		activeAccount = this.collection.get(activeAccount);
 		var activeFolder = this.getFolderById();
-		var unread = activeFolder.unseen || activeFolder.get('unseen');
+		var unread = activeFolder.unseen;
 		var name = activeFolder.name || activeFolder.get('name');
 
 		if ( unread > 0) {
