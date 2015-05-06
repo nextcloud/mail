@@ -66,7 +66,7 @@ script('mail', 'jquery-visibility');
 			{{/if}}
 
 			<div class="mail_message_summary_from" title="{{fromEmail}}">{{from}}</div>
-			<div class="mail_message_summary_subject">
+			<div class="mail_message_summary_subject" title="{{subject}}">
 				{{subject}}
 			</div>
 			<div class="date">
@@ -81,7 +81,7 @@ script('mail', 'jquery-visibility');
 </script>
 <script id="mail-message-template" type="text/x-handlebars-template">
 	<div id="mail-message-header" class="section">
-		<h2>{{subject}}</h2>
+		<h2 title="{{subject}}">{{subject}}</h2>
 		<p class="transparency">
 			<span title="{{fromEmail}}">{{from}}</span>
 			{{#if toList}}
