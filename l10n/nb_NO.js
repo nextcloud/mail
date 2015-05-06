@@ -26,7 +26,6 @@ OC.L10N.register(
     "Checking mail …" : "Sjekker e-post …",
     "Loading …" : "Laster...",
     "Load more …" : "Last mer ...",
-    "Check mail" : "Sjekk e-post",
     "Send" : "Send",
     "Inbox" : "Innboks",
     "Sent" : "Sendt",

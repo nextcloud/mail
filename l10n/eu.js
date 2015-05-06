@@ -25,7 +25,6 @@ OC.L10N.register(
     "Checking mail …" : "Postari dagoen begiratzen ...",
     "Loading …" : "Kargatzen ...",
     "Load more …" : "Kargatu gehiago...",
-    "Check mail" : "Begiratu postarik dagoen",
     "Send" : "Bidali",
     "Inbox" : "Sarrera ontzia",
     "Sent" : "Bidalia",

@@ -26,7 +26,6 @@ OC.L10N.register(
     "Checking mail …" : "Uute kirjade kontrollimine ...",
     "Loading …" : "Laadimine ...",
     "Load more …" : "Laadi rohkem ...",
-    "Check mail" : "Kontrolli kirju",
     "Send" : "Saada",
     "Inbox" : "Saaabuvad",
     "Sent" : "Saadetud",

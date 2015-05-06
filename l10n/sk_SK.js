@@ -26,7 +26,6 @@ OC.L10N.register(
     "Checking mail …" : "Kontrolujem email ...",
     "Loading …" : "Načítavam...",
     "Load more …" : "Načítať ďalšie ...",
-    "Check mail" : "Skontrolovať email",
     "Send" : "Odoslať",
     "Inbox" : "Doručené",
     "Sent" : "Odoslané",

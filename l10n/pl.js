@@ -24,7 +24,6 @@ OC.L10N.register(
     "Checking mail …" : "Sprawdzanie poczty ...",
     "Loading …" : "Wczytuję ...",
     "Load more …" : "Załaduj dalsze ...",
-    "Check mail" : "Sprawdź pocztę",
     "Send" : "Wyślij",
     "Inbox" : "Odbiorcza",
     "Sent" : "Wyślij",

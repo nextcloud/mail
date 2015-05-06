@@ -26,7 +26,6 @@ OC.L10N.register(
     "Checking mail …" : "Mail yoxlanılır ...",
     "Loading …" : "Yüklənir...",
     "Load more …" : "Çoxlu yüklə ...",
-    "Check mail" : "Məktubu yoxla",
     "Send" : "Göndər",
     "Inbox" : "Gələn qutusu",
     "Sent" : "Göndərildi",

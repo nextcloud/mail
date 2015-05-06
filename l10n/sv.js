@@ -26,7 +26,6 @@ OC.L10N.register(
     "Checking mail …" : "Kontrollerar e-post ...",
     "Loading …" : "Laddar ...",
     "Load more …" : "Ladda mer ...",
-    "Check mail" : "Kontrollera e-post",
     "Send" : "Skicka",
     "Inbox" : "Inkorg",
     "Sent" : "Skickad",

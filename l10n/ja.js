@@ -27,7 +27,6 @@ OC.L10N.register(
     "Checking mail …" : "メール確認中...",
     "Loading …" : "読込中...",
     "Load more …" : "読込中 …",
-    "Check mail" : "メール確認",
     "Send" : "送信",
     "Inbox" : "受信箱",
     "Sent" : "送信",

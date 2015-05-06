@@ -26,7 +26,6 @@ OC.L10N.register(
     "Checking mail …" : "Comprobando'l corréu...",
     "Loading …" : "Cargando ...",
     "Load more …" : "Cargar más …",
-    "Check mail" : "Comprobar corréu",
     "Send" : "Unviar",
     "Inbox" : "Bandexa d'entrada",
     "Sent" : "Unvíos",
