@@ -89,9 +89,7 @@ script('mail', 'jquery-visibility');
 			{{printAddressList toList}}
 			{{/if}}
 			{{#if ccList}}
-			(<?php p($l->t('cc')); ?>
-			{{printAddressList ccList}}
-			)
+			(<?php p($l->t('cc')); ?> {{printAddressList ccList}})
 			{{/if}}
 		</p>
 	</div>
