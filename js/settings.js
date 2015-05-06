@@ -1,4 +1,4 @@
-/* global Handlebars, Mail */
+/* global Mail */
 $(document).ready(function(){
 
     // delete account in settings

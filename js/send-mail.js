@@ -72,10 +72,10 @@ $(function () {
 			return;
 		}
 		var storage = $.localStorage;
-		storage.set('draft'
-			+ '.' + Mail.State.currentAccountId.toString()
-			+ '.' + Mail.State.currentFolderId.toString()
-			+ '.' + Mail.State.currentMessageId.toString(),
+		storage.set('draft' +
+			'.' + Mail.State.currentAccountId.toString() +
+			'.' + Mail.State.currentFolderId.toString() +
+			'.' + Mail.State.currentMessageId.toString(),
 			getReplyMessage());
 	}
 
