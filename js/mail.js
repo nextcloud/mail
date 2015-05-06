@@ -81,9 +81,10 @@ var Mail = {
 									} else {
 										from = from.slice(0,2);
 									}
-									var body = t('mail',
-										'{newMessageCount} new messages in {folderName} \nfrom {from}', {
-										newMessageCount: f.messages.length,
+									var body = n('mail',
+										'%n new message in {folderName} \nfrom {from}',
+										'%n new messages in {folderName} \nfrom {from}',
+										f.messages.length, {
 										folderName: f.name,
 										from: from.join()
 									});
