@@ -70,7 +70,7 @@ var Mail = {
 							_.each(jsondata, function(f) {
 								// send notification
 								Mail.UI.changeFavicon(OC.filePath('mail', 'img', 'favicon-notification.png'));
-								if (Notification.permission === "granted") {
+								if (Notification.permission === "granted" && f.messages.length > 0) {
 									var from = _.map(f.messages, function(m){
 										return m.from;
 									});
