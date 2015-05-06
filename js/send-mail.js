@@ -125,7 +125,8 @@ $(function () {
 				OC.Notification.showTemporary(t('mail', 'Message sent!'));
 
 				// close reply
-				$('.reply-message-body').val('');
+				replyMessageBody.val('');
+				replyMessageBody.trigger('autosize.resize');
 			},
 			error: function() {
 				Mail.UI.showError(t('mail', 'Error sending the reply.'));
@@ -142,7 +143,7 @@ $(function () {
 			}
 		}
 	});
-	
+
 	$(document).on('keyup', '.reply-message-body, #to, #cc', saveReplyLocally);
 
 	$(document).on('click', '.reply-message-send', sendReply);
