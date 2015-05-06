@@ -1,4 +1,4 @@
-/* global Backbone, Mail, models */
+/* global Backbone, Mail, models, oc_defaults */
 
 var views = views || {};
 
@@ -92,10 +92,12 @@ views.Folders = Backbone.Marionette.CollectionView.extend({
 		activeFolder = activeAccount.get('folders').get(activeFolder);
 		var unread = activeFolder.get('unseen');
 
-		if ( unread > 0) {
-			window.document.title = activeFolder.get('name') + ' (' + unread + ') - ' + activeAccount.get('email') + ' - Mail - ' + oc_defaults.title;
+		if (unread > 0) {
+			window.document.title = activeFolder.get('name') + ' (' + unread + ') - ' +
+			activeAccount.get('email') + ' - Mail - ' + oc_defaults.title;
 		} else {
-			window.document.title = activeFolder.get('name') + ' - ' + activeAccount.get('email') + ' - Mail - ' + oc_defaults.title;
+			window.document.title = activeFolder.get('name') + ' - ' + activeAccount.get('email') +
+			' - Mail - ' + oc_defaults.title;
 		}
 	}
 

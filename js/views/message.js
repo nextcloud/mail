@@ -117,10 +117,10 @@ views.Message = Backbone.Marionette.ItemView.extend({
 				success: function () {
 					// delete local storage draft
 					var storage = $.localStorage;
-					var draftId = 'draft'
-						+ '.' + Mail.State.currentAccountId.toString()
-						+ '.' + Mail.State.currentFolderId.toString()
-						+ '.' + thisModel.id;
+					var draftId = 'draft' +
+						'.' + Mail.State.currentAccountId.toString() +
+						'.' + Mail.State.currentFolderId.toString() +
+						'.' + thisModel.id;
 					if (storage.isSet(draftId)) {
 						storage.remove(draftId);
 					}
