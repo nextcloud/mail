@@ -155,19 +155,21 @@ views.SendMail = Backbone.View.extend({
 				}
 			},
 			error: function (jqXHR) {
+				newMessageSend.prop('disabled', false);
 				OC.Notification.showTemporary(jqXHR.responseJSON.message);
 			},
 			complete: function() {
 				// remove loading feedback
 				newMessageBody.removeClass('icon-loading');
 				$('.mail_account').prop('disabled', false);
-				$('#to').prop('disabled', false);
-				$('#cc').prop('disabled', false);
-				$('#bcc').prop('disabled', false);
-				$('#subject').prop('disabled', false);
+				to.prop('disabled', false);
+				cc.prop('disabled', false);
+				bcc.prop('disabled', false);
+				subject.prop('disabled', false);
 				$('.new-message-attachments-action').css('display', 'inline-block');
 				$('#mail_new_attachment').prop('disabled', false);
 				newMessageBody.prop('disabled', false);
+				newMessageSend.prop('disabled', false);
 				newMessageSend.val(t('mail', 'Send'));
 			}
 		});
