@@ -72,7 +72,6 @@ views.Folders = Backbone.Marionette.CollectionView.extend({
 		var activeAccount = Mail.State.currentAccountId;
 		activeAccount = this.collection.get(activeAccount);
 		activeFolder = activeAccount.get('folders').get(Mail.State.currentFolderId);
-
 		if (!_.isUndefined(activeFolder)) {
 			return activeFolder;
 		}
@@ -83,14 +82,14 @@ views.Folders = Backbone.Marionette.CollectionView.extend({
 		var activeFolder = activeAccount;
 		var k = '';
 		_.each(parts, function(p){
-			if (k.length > 0) {
-				k += '/';
-			}
-			k += p;
-
 			if (!_.isUndefined(activeFolder)) {
 				return;
 			}
+			if (k.length > 0) {
+				k += activeFolder.get('delimiter');
+			}
+			k += p;
+
 
 			var folders = activeFolder.folders || activeFolder.get('folders');
 			activeFolder = folders.filter(function(f) {

@@ -220,7 +220,8 @@ class Mailbox {
 				'accountId' => $accountId,
 				'noSelect' => $noSelect,
 				'uidvalidity' => $status['uidvalidity'],
-				'uidnext' => $status['uidnext']
+				'uidnext' => $status['uidnext'],
+				'delimiter' => $this->delimiter
 			];
 		} catch (\Horde_Imap_Client_Exception $e) {
 			return [
