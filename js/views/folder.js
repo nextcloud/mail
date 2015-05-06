@@ -87,6 +87,11 @@ views.Folders = Backbone.Marionette.CollectionView.extend({
 				k += '/';
 			}
 			k += p;
+
+			if (!_.isUndefined(activeFolder)) {
+				return;
+			}
+
 			var folders = activeFolder.folders || activeFolder.get('folders');
 			activeFolder = folders.filter(function(f) {
 				return f.id === btoa(k);
