@@ -47,14 +47,15 @@ var Mail = {
 					icon: icon
 				}
 			);
-			notification.onclick = function(x) {
+			notification.onclick = function() {
 				Mail.UI.loadMessages(accountId, folderId, false);
 				window.focus();
 			};
 			setTimeout(function () {
 				notification.close();
 			}, 5000);
-		}, checkForNotifications: function() {
+		},
+		checkForNotifications: function() {
 			_.each(Mail.State.accounts, function (a) {
 				var localAccount = Mail.State.folderView.collection.get(a.accountId);
 				var folders = localAccount.get('folders');
@@ -90,7 +91,7 @@ var Mail = {
 									var tag = 'not-' + f.accountId + '-' + f.name;
 									var icon = OC.filePath('mail', 'img', 'mail-notification.png');
 									Mail.BackGround.showNotification(localAccount.get('email'), body, tag, icon,
-                                                                     f.accountId, f.id);
+										f.accountId, f.id);
 								}
 								// update folder status
 								var localFolder = folders.get(f.id);
