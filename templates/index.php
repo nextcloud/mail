@@ -6,6 +6,7 @@ script('mail', 'jquery-visibility');
 	<li data-folder_id="{{id}}" data-no_select="{{noSelect}}"
 		class="
 		{{#if unseen}}unread{{/if}}
+		{{#if active}} active{{/if}}
 		{{#if specialRole}} special-{{specialRole}}{{/if}}
 		{{#if folders}} collapsible{{/if}}
 		{{#if open}} open{{/if}}
