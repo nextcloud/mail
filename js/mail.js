@@ -55,6 +55,31 @@ var Mail = {
 				notification.close();
 			}, 5000);
 		},
+		showMailNotification: function (email, folder) {
+			if (Notification.permission === "granted" && folder.messages.length > 0) {
+				var from = _.map(folder.messages, function (m) {
+					return m.from;
+				});
+				from = _.uniq(from);
+				if (from.length > 2) {
+					from = from.slice(0, 2);
+					from.push('…');
+				} else {
+					from = from.slice(0, 2);
+				}
+				var body = n('mail',
+					'%n new message in {folderName} \nfrom {from}',
+					'%n new messages in {folderName} \nfrom {from}',
+					folder.messages.length, {
+						folderName: folder.name,
+						from: from.join()
+					});
+				// If it's okay let's create a notification
+				var tag = 'not-' + folder.accountId + '-' + folder.name;
+				var icon = OC.filePath('mail', 'img', 'mail-notification.png');
+				Mail.BackGround.showNotification(email, body, tag, icon, folder.accountId, folder.id);
+			}
+		},
 		checkForNotifications: function() {
 			_.each(Mail.State.accounts, function (a) {
 				var localAccount = Mail.State.folderView.collection.get(a.accountId);
@@ -69,30 +94,11 @@ var Mail = {
 						success: function(jsondata) {
 							_.each(jsondata, function(f) {
 								// send notification
-								Mail.UI.changeFavicon(OC.filePath('mail', 'img', 'favicon-notification.png'));
-								if (Notification.permission === "granted") {
-									var from = _.map(f.messages, function(m){
-										return m.from;
-									});
-									from = _.uniq(from);
-									if (from.length > 2) {
-										from = from.slice(0,2);
-										from.push('…');
-									} else {
-										from = from.slice(0,2);
-									}
-									var body = t('mail',
-										'{newMessageCount} new messages in {folderName} \nfrom {from}', {
-										newMessageCount: f.messages.length,
-										folderName: f.name,
-										from: from.join()
-									});
-									// If it's okay let's create a notification
-									var tag = 'not-' + f.accountId + '-' + f.name;
-									var icon = OC.filePath('mail', 'img', 'mail-notification.png');
-									Mail.BackGround.showNotification(localAccount.get('email'), body, tag, icon,
-										f.accountId, f.id);
+								if (f.newUnReadCounter > 0) {
+									Mail.UI.changeFavicon(OC.filePath('mail', 'img', 'favicon-notification.png'));
+									Mail.BackGround.showMailNotification(localAccount.get('email'), f);
 								}
+
 								// update folder status
 								var localFolder = folders.get(f.id);
 								localFolder.set('uidvalidity', f.uidvalidity);
