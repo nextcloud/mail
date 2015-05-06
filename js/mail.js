@@ -659,10 +659,19 @@ var Mail = {
 		setFolderActive: function (accountId, folderId) {
 			Mail.State.messageView.clearFilter();
 
-			$('.mail_folders li')
-				.removeClass('active');
-			$('.mail_folders[data-account_id="' + accountId + '"] li[data-folder_id="' + folderId + '"]')
-				.addClass('active');
+			// disable all other folders for all accounts
+			_.each(Mail.State.accounts, function (account) {
+				var localAccount = Mail.State.folderView.collection.get(account.accountId);
+				var folders = localAccount.get('folders');
+				_.each(folders.models, function(folder) {
+					folders.get(folder).set('active', false);
+				});
+			});
+
+			Mail.State.folderView.collection.get(accountId)
+				.get('folders')
+				.get(folderId)
+				.set('active', true);
 		},
 
 		setMessageActive: function (messageId) {
