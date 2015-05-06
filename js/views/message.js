@@ -88,6 +88,9 @@ views.Message = Backbone.Marionette.ItemView.extend({
 		var thisModel = this.model;
 		this.ui.iconDelete.removeClass('icon-delete').addClass('icon-loading');
 		$('.tipsy').remove();
+
+		thisModel.get('flags').set('unseen', false);
+
 		this.$el.addClass('transparency').slideUp(function() {
 			$('.tipsy').remove();
 			var thisModelCollection = thisModel.collection;
