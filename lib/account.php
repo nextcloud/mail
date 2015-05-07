@@ -153,14 +153,14 @@ class Account {
 		$conn = $this->getImapConnection();
 
 		// if successful -> get all folders of that account
-		$mailBoxes = $conn->listMailboxes($pattern, Horde_Imap_Client::MBOX_ALL, array(
+		$mailBoxes = $conn->listMailboxes($pattern, Horde_Imap_Client::MBOX_ALL, [
 			'delimiter' => true,
 			'attributes' => true,
 			'special_use' => true,
 			'sort' => true
-		));
+		]);
 
-		$mailboxes = array();
+		$mailboxes = [];
 		foreach ($mailBoxes as $mailbox) {
 			$mailboxes[] = new Mailbox($conn, $mailbox['mailbox'], $mailbox['attributes'], $mailbox['delimiter']);
 			if ($mailbox['mailbox']->utf8 === 'INBOX') {
@@ -180,10 +180,10 @@ class Account {
 		$parts = explode('/', $folderId);
 		if (count($parts) > 1 && $parts[1] === 'FLAGGED') {
 			$mailbox = new Horde_Imap_Client_Mailbox($parts[0]);
-			return new SearchMailbox($conn, $mailbox, array());
+			return new SearchMailbox($conn, $mailbox, []);
 		}
 		$mailbox = new Horde_Imap_Client_Mailbox($folderId);
-		return new Mailbox($conn, $mailbox, array());
+		return new Mailbox($conn, $mailbox, []);
 	}
 
 	/**
@@ -206,7 +206,7 @@ class Account {
 	 */
 	public function getListArray() {
 
-		$folders = array();
+		$folders = [];
 		$mailBoxes = $this->getMailboxes();
 		$mailBoxNames = array_map(function($mb) {
 			/** @var Mailbox $mb */
@@ -256,11 +256,11 @@ class Account {
 	 * as the one guessed by our code.
 	 *
 	 * @param bool $base64_encode
-	 * @return array In the form array(<special use>=><folder id>, ...)
+	 * @return array In the form [<special use>=><folder id>, ...]
 	 */
 	public function getSpecialFoldersIds($base64_encode=true) {
-		$folderRoles = array('inbox', 'sent', 'drafts', 'trash', 'archive', 'junk', 'flagged', 'all');
-		$specialFoldersIds = array();
+		$folderRoles = ['inbox', 'sent', 'drafts', 'trash', 'archive', 'junk', 'flagged', 'all'];
+		$specialFoldersIds = [];
 
 		foreach ($folderRoles as $role) {
 			$folders = $this->getSpecialFolder($role, true);
@@ -284,9 +284,9 @@ class Account {
 			// drafts folder does not exist - let's create one
 			$conn = $this->getImapConnection();
 			// TODO: also search for translated drafts mailboxes
-			$conn->createMailbox('Drafts', array(
-				'special_use' => array('drafts'),
-			));
+			$conn->createMailbox('Drafts',[
+				'special_use' => ['drafts'],
+			]);
 			return $this->guessBestMailBox($this->listMailboxes('Drafts'));
 		}
 		return $draftsFolder[0];
@@ -304,9 +304,9 @@ class Account {
 			//sent folder does not exist - let's create one
 			$conn = $this->getImapConnection();
 			//TODO: also search for translated sent mailboxes
-			$conn->createMailbox('Sent', array(
-				'special_use' => array('sent'),
-			));
+			$conn->createMailbox('Sent', [
+				'special_use' => ['sent'],
+			]);
 			return $this->guessBestMailBox($this->listMailboxes('Sent'));
 		}
 		return $sentFolders[0];
@@ -406,11 +406,11 @@ class Account {
 	 * @param string $role Special role of the folder we want to get ('sent', 'inbox', etc.)
 	 * @param bool $guessBest If set to true, return only the folder with the most messages in it
 	 *
-	 * @return Mailbox[] if $guessBest is false, or Mailbox if $guessBest is true. Empty array() if no match.
+	 * @return Mailbox[] if $guessBest is false, or Mailbox if $guessBest is true. Empty [] if no match.
 	 */
 	protected function getSpecialFolder($role, $guessBest=true) {
 
-		$specialFolders = array();
+		$specialFolders = [];
 		foreach ($this->getMailboxes() as $mailbox) {
 			if ($role === $mailbox->getSpecialRole()) {
 				$specialFolders[] = $mailbox;
@@ -418,7 +418,7 @@ class Account {
 		}
 
 		if ($guessBest === true && count($specialFolders) > 1) {
-			return array($this->guessBestMailBox($specialFolders));
+			return [$this->guessBestMailBox($specialFolders)];
 		} else {
 			return $specialFolders;
 		}
@@ -433,7 +433,7 @@ class Account {
 	protected function localizeSpecialMailboxes() {
 
 		$l = \OC::$server->getL10N('mail');
-		$map = array(
+		$map = [
 			// TRANSLATORS: translated mail box name
 			'inbox'   => $l->t('Inbox'),
 			// TRANSLATORS: translated mail box name
@@ -450,7 +450,7 @@ class Account {
 			'all'     => $l->t('All'),
 			// TRANSLATORS: translated mail box name
 			'flagged' => $l->t('Starred'),
-		);
+		];
 		$mailboxes = $this->getMailboxes();
 		$specialIds = $this->getSpecialFoldersIds(false);
 		foreach ($mailboxes as $i => $mailbox) {
@@ -480,7 +480,7 @@ class Account {
 			 */
 			$roleA = $a->getSpecialRole();
 			$roleB = $b->getSpecialRole();
-			$specialRolesOrder = array(
+			$specialRolesOrder = [
 				'all'     => 0,
 				'inbox'   => 1,
 				'flagged' => 2,
@@ -489,7 +489,7 @@ class Account {
 				'archive' => 5,
 				'junk'    => 6,
 				'trash'   => 7,
-			);
+			];
 			// if there is a flag unknown to us, we ignore it for sorting :
 			// the folder will be sorted by name like any other 'normal' folder
 			if (array_key_exists($roleA, $specialRolesOrder) === false) {
@@ -545,7 +545,7 @@ class Account {
 		}
 
 		// filter non existing mailboxes
-		$mailBoxNames = array_filter(array_keys($query), function($folderId) use($allBoxesMap) {
+		$mailBoxNames = array_filter(array_keys($query), function($folderId) use ($allBoxesMap) {
 			return isset($allBoxesMap[$folderId]);
 		});
 

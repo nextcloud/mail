@@ -74,12 +74,12 @@ class ProxyController extends Controller {
 			$authorizedRedirect = true;
 		}
 
-		$params = array(
+		$params = [
 			'authorizedRedirect' => $authorizedRedirect,
 			'url' => $url,
 			'urlHost' => parse_url($url, PHP_URL_HOST),
 			'mailURL' => $mailURL,
-		);
+		];
 		return new TemplateResponse($this->appName, $templateName, $params, 'guest');
 	}
 

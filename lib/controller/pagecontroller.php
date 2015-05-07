@@ -22,7 +22,6 @@
 
 namespace OCA\Mail\Controller;
 
-
 use OCP\AppFramework\Controller;
 use OCP\AppFramework\Http\TemplateResponse;
 
@@ -67,15 +66,13 @@ class PageController extends Controller {
 		\OCP\Util::addStyle('mail','mail');
 		\OCP\Util::addStyle('mail','mobile');
 
-
-		$response = new TemplateResponse($this->appName, 'index', array());
+		$response = new TemplateResponse($this->appName, 'index', []);
 		// set csp rules for ownCloud 8.1
 		if (class_exists('OCP\AppFramework\Http\ContentSecurityPolicy')) {
 			$csp = new \OCP\AppFramework\Http\ContentSecurityPolicy();
 			$csp->addAllowedFrameDomain('\'self\'');
 			$response->setContentSecurityPolicy($csp);
-	        }
-
+		}
 
 		return $response;
 	}
@@ -91,7 +88,7 @@ class PageController extends Controller {
 
 		$parts = parse_url($uri);
 
-		$params = array('mailto' => $parts['path']);
+		$params = ['mailto' => $parts['path']];
 		if (isset($parts['query'])) {
 			$parts = explode('&', $parts['query']);
 			foreach($parts as $part) {
@@ -99,13 +96,13 @@ class PageController extends Controller {
 				$params[strtolower($pair[0])] = urldecode($pair[1]);
 			}
 		}
-		$params = array_merge(array(
+		$params = array_merge([
 			'mailto' => '',
 			'cc' => '',
 			'bcc' => '',
 			'subject' => '',
 			'body' => ''
-		), $params);
+		], $params);
 
 		\OCP\Util::addScript('mail','handlebars-v1.3.0');
 		\OCP\Util::addScript('mail','jquery.autosize');

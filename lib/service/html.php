@@ -70,7 +70,6 @@ class HTMLPurifier_URIFilter_TransformURLScheme extends HTMLPurifier_URIFilter {
 	}
 }
 
-
 class Html {
 
 	public function __construct() {
@@ -115,7 +114,10 @@ class Html {
 			$body = implode("-- \r\n", $parts);
 		}
 
-		return array($body, $signature);
+		return [
+			$body,
+			$signature
+		];
 	}
 
 	public function sanitizeHtmlMailBody($mailBody) {

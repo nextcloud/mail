@@ -256,7 +256,7 @@ class Mailbox {
 			/* Convert attributes to lowercase, because gmail
 			 * returns them as lowercase (eg. \trash and not \Trash)
 			 */
-			$specialUseAttributes = array(
+			$specialUseAttributes = [
 				strtolower(Horde_Imap_Client::SPECIALUSE_ALL),
 				strtolower(Horde_Imap_Client::SPECIALUSE_ARCHIVE),
 				strtolower(Horde_Imap_Client::SPECIALUSE_DRAFTS),
@@ -264,7 +264,7 @@ class Mailbox {
 				strtolower(Horde_Imap_Client::SPECIALUSE_JUNK),
 				strtolower(Horde_Imap_Client::SPECIALUSE_SENT),
 				strtolower(Horde_Imap_Client::SPECIALUSE_TRASH)
-			);
+			];
 
 			$attributes = array_map(function($n) {
 				return strtolower($n);
@@ -286,16 +286,16 @@ class Mailbox {
 	 * Assign a special role to this mailbox based on its name
 	 */
 	protected function guessSpecialRole() {
-		
-		$specialFoldersDict = array(
-			'inbox'   => array('inbox'),
-			'sent'    => array('sent', 'sent items', 'sent messages', 'sent-mail'),
-			'drafts'  => array('draft', 'drafts'),
-			'archive' => array('archive', 'archives'),
-			'trash'   => array('deleted messages', 'trash'),
-			'junk'    => array('junk', 'spam'),
-		);
-		
+
+		$specialFoldersDict = [
+			'inbox'   => ['inbox'],
+			'sent'    => ['sent', 'sent items', 'sent messages', 'sent-mail'],
+			'drafts'  => ['draft', 'drafts'],
+			'archive' => ['archive', 'archives'],
+			'trash'   => ['deleted messages', 'trash'],
+			'junk'    => ['junk', 'spam'],
+		];
+
 		$lowercaseExplode = explode($this->delimiter, $this->getFolderId(), 2);
 		$lowercaseId = strtolower(array_pop($lowercaseExplode));
 		$result = null;
@@ -371,7 +371,6 @@ class Mailbox {
 
 	public function getMessagesSince($fromUid, $toUid) {
 		$query = new Horde_Imap_Client_Search_Query();
-//		$query->flag('SEEN', false);
 		$query->ids(new Horde_Imap_Client_Ids("$fromUid:$toUid"));
 		return $this->getMessages(-1, -1, $query);
 	}

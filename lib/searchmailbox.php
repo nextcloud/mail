@@ -8,7 +8,6 @@
 
 namespace OCA\Mail;
 
-use Horde_Imap_Client;
 use Horde_Imap_Client_Mailbox;
 use Horde_Imap_Client_Search_Query;
 use Horde_Imap_Client_Socket;
@@ -37,6 +36,7 @@ class SearchMailbox extends Mailbox {
 	}
 
 	public function setDisplayName($displayName) {
+
 	}
 
 	public function getFolderId() {

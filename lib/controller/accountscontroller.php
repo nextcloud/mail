@@ -109,7 +109,7 @@ class AccountsController extends Controller {
 	public function index() {
 		$mailAccounts = $this->mapper->findByUserId($this->currentUserId);
 
-		$json = array();
+		$json = [];
 		foreach ($mailAccounts as $mailAccount) {
 			$json[] = $mailAccount->toJson();
 		}
@@ -129,7 +129,7 @@ class AccountsController extends Controller {
 
 			return new JSONResponse($account->toJson());
 		} catch (DoesNotExistException $e) {
-			return new JSONResponse(array(), 404);
+			return new JSONResponse([], 404);
 		}
 	}
 
@@ -201,7 +201,7 @@ class AccountsController extends Controller {
 				$this->mapper->save($newAccount);
 				$this->logger->debug("account created " . $newAccount->getId());
 				return new JSONResponse(
-					array('data' => array('id' => $newAccount->getId())),
+					['data' => ['id' => $newAccount->getId()]],
 					Http::STATUS_CREATED);
 			}
 		} catch (\Exception $ex) {
@@ -236,7 +236,7 @@ class AccountsController extends Controller {
 		$account = new Account($dbAccount);
 
 		// get sender data
-		$headers = array();
+		$headers = [];
 		$from = new Horde_Mail_Rfc822_Address($account->getEMailAddress());
 		$from->personal = $account->getName();
 		$headers['From']= $from;
@@ -357,7 +357,7 @@ class AccountsController extends Controller {
 		$account = new Account($dbAccount);
 
 		// get sender data
-		$headers = array();
+		$headers = [];
 		$from = new Horde_Mail_Rfc822_Address($account->getEMailAddress());
 		$from->personal = $account->getName();
 		$headers['From']= $from;

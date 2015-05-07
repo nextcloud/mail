@@ -29,6 +29,7 @@ use OCP\AppFramework\Db\DoesNotExistException;
 use OCP\Util;
 
 class Message {
+
 	/**
 	 * @var string[]
 	 */
