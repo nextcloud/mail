@@ -218,12 +218,14 @@ class Account {
 			$s = isset($status[$mailbox->getFolderId()]) ? $status[$mailbox->getFolderId()] : null;
 			$folders[] = $mailbox->getListArray($this->getId(), $s);
 		}
-		return array(
+		$delimiter = reset($folders)['delimiter'];
+		return [
 			'id'             => $this->getId(),
 			'email'          => $this->getEMailAddress(),
 			'folders'        => array_values($folders),
-			'specialFolders' => $this->getSpecialFoldersIds()
-		);
+			'specialFolders' => $this->getSpecialFoldersIds(),
+			'delimiter' => $delimiter,
+		];
 	}
 
 	/**

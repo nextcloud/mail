@@ -63,11 +63,26 @@ models.MessageList = Backbone.Collection.extend({
 
 models.Folder = Backbone.Model.extend({
 	defaults: {
-		open: false
+		open: false,
+		folders: []
+	},
+	initialize: function() {
+		this.set('folders', new models.FolderList(this.get('folders')));
 	},
 
 	toggleOpen: function() {
 		this.set({open: !this.get('open')});
+	},
+
+	toJSON: function() {
+		var data = Backbone.Model.prototype.toJSON.call(this);
+		if (data.folders && data.folders.toJSON) {
+			data.folders = data.folders.toJSON();
+		}
+		if (!data.id) {
+			data.id = this.cid;
+		}
+		return data;
 	}
 });
 
