@@ -68,16 +68,18 @@ views.Folders = Backbone.Marionette.CollectionView.extend({
 		this.collection = new models.AccountList();
 	},
 
-	getFolderById: function () {
-		var activeAccount = Mail.State.currentAccountId;
+	getFolderById: function (accountId, folderId) {
+		accountId = accountId || Mail.State.currentAccountId;
+		folderId = folderId || Mail.State.currentFolderId;
+		var activeAccount = accountId;
 		activeAccount = this.collection.get(activeAccount);
-		activeFolder = activeAccount.get('folders').get(Mail.State.currentFolderId);
+		activeFolder = activeAccount.get('folders').get(folderId);
 		if (!_.isUndefined(activeFolder)) {
 			return activeFolder;
 		}
 
 		// bad hack to navigate down the tree ...
-		var folderId = atob(Mail.State.currentFolderId);
+		folderId = atob(folderId);
 		var activeFolder = activeAccount;
 		var parts = folderId.split(activeFolder.get('delimiter'));
 		var k = '';

@@ -674,9 +674,7 @@ var Mail = {
 				});
 			});
 
-			Mail.State.folderView.collection.get(accountId)
-				.get('folders')
-				.get(folderId)
+			Mail.State.folderView.getFolderById(accountId, folderId)
 				.set('active', true);
 		},
 
