@@ -69,9 +69,8 @@ views.Folders = Backbone.Marionette.CollectionView.extend({
 	},
 
 	getFolderById: function (accountId, folderId) {
-		accountId = accountId || Mail.State.currentAccountId;
+		var activeAccount = accountId || Mail.State.currentAccountId;
 		folderId = folderId || Mail.State.currentFolderId;
-		var activeAccount = accountId;
 		activeAccount = this.collection.get(activeAccount);
 		activeFolder = activeAccount.get('folders').get(folderId);
 		if (!_.isUndefined(activeFolder)) {
