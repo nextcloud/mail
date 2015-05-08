@@ -348,6 +348,7 @@ class Message {
 
 	/**
 	 * @param string $ownMail
+	 * @param string $specialRole
 	 */
 	public function getFullMessage($ownMail, $specialRole=null) {
 		$mailBody = $this->plainMessage;
