@@ -127,6 +127,9 @@ class Account {
 		return $this->getMailbox($mailBox);
 	}
 
+	/**
+	 * @param string $mailBox
+	 */
 	public function deleteMailbox($mailBox) {
 		if ($mailBox instanceof Mailbox) {
 			$mailBox = $mailBox->getFolderId();
