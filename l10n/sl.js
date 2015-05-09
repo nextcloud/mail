@@ -3,7 +3,6 @@ OC.L10N.register(
     {
     "Mail" : "Elektronska pošta",
     "Error while loading the accounts." : "Prišlo je do napake med nalaganjem računa.¸",
-    "{newMessageCount} new messages in {folderName} \nfrom {from}" : "{newMessageCount} novih sporočil v {folderName} \nod {from}",
     "you" : "vi",
     "Error while loading the selected account." : "Prišlo je do napake med nalaganjem izbranega računa.",
     "Error while loading messages." : "Prišlo je do napake nalaganja sporočil.",
@@ -40,6 +39,7 @@ OC.L10N.register(
     "Starred" : "Označeno",
     "Creating account failed: " : "Ustvarjanje računa je spodletelo:",
     "Auto detect failed. Please use manual mode." : "Samodejno zaznavanje je spodletelo. Zaznavo bo treba izvesti ročno.",
+    "Delete permanently" : "Izbriši dokončno",
     "& others" : "in drugo",
     "from" : "od",
     "+ cc/bcc" : "+ kp/skp",
@@ -58,6 +58,7 @@ OC.L10N.register(
     "+ cc" : "+ kp",
     "Reply …" : "Odgovori ...",
     "Forward" : "Posreduj",
+    "Delete" : "Izbriši",
     "Add mail account" : "Dodajte poštni račun",
     "No search results for {{searchTerm}}" : "Ni rezultatov iskanja za  {{searchTerm}}",
     "No messages in this folder!" : "V tej mapi ni sporočil!",

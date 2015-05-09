@@ -3,7 +3,6 @@ OC.L10N.register(
     {
     "Mail" : "Correio",
     "Error while loading the accounts." : "Erro a carregar as contas.",
-    "{newMessageCount} new messages in {folderName} \nfrom {from}" : "{newMessageCount} novas mensagens em {folderName} \nde {from}",
     "you" : "Você",
     "Error while loading the selected account." : "Erro a carregar a conta seleccionada.",
     "Error while loading messages." : "Erro durante o carregamento das mensagens.",
@@ -40,6 +39,7 @@ OC.L10N.register(
     "Starred" : "Marcado",
     "Creating account failed: " : "Não foi possível criar a conta:",
     "Auto detect failed. Please use manual mode." : "A deteção automática falhou. Por favor, utilize o modo manual",
+    "Delete permanently" : "Eliminar permanentemente",
     "& others" : "e outros",
     "from" : "de",
     "+ cc/bcc" : "+ cc/bcc",
@@ -58,6 +58,7 @@ OC.L10N.register(
     "+ cc" : "+ cc",
     "Reply …" : "Responder...",
     "Forward" : "Avançar",
+    "Delete" : "Apagar",
     "Add mail account" : "Adicionar conta de correio",
     "No search results for {{searchTerm}}" : "Sem resultados de procura para {{searchTerm}}",
     "No messages in this folder!" : "Nenhuma mensagem nesta pasta!",

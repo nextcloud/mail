@@ -3,7 +3,6 @@ OC.L10N.register(
     {
     "Mail" : "Posta",
     "Error while loading the accounts." : "Hesaplar yüklenirken hata.",
-    "{newMessageCount} new messages in {folderName} \nfrom {from}" : "{folderName} içinde  {from} dan {newMessageCount} yeni mesaj bulundu",
     "you" : "siz",
     "Error while loading the selected account." : "Seçili hesap yüklenirken hata.",
     "Error while loading messages." : "İletiler yüklenirken hata.",
@@ -40,6 +39,7 @@ OC.L10N.register(
     "Starred" : "Yıldızlı",
     "Creating account failed: " : "Hesap oluşturma başarısız:",
     "Auto detect failed. Please use manual mode." : "Otomatik sınama başarısız. Lütfen el kipini kullanın.",
+    "Delete permanently" : "Kalıcı olarak sil",
     "& others" : "& diğerleri",
     "from" : "kimden",
     "+ cc/bcc" : "+ cc/bcc",
@@ -58,6 +58,7 @@ OC.L10N.register(
     "+ cc" : "+ cc",
     "Reply …" : "Yanıtla...",
     "Forward" : "İlet",
+    "Delete" : "Sil",
     "Add mail account" : "Posta hesabı ekle",
     "No search results for {{searchTerm}}" : "{{searchTerm}} için hiç bir sonuç bulunamadı",
     "No messages in this folder!" : "Bu klasörde ileti yok!",
