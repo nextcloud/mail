@@ -6,7 +6,7 @@
 [![Code Coverage](https://scrutinizer-ci.com/g/owncloud/mail/badges/coverage.png?b=master)](https://scrutinizer-ci.com/g/owncloud/mail/?branch=master)
 [![Dependency Status](https://www.versioneye.com/user/projects/54e50fadd1ec5734f400078a/badge.svg?style=flat)](https://www.versioneye.com/user/projects/54e50fadd1ec5734f400078a)
 
-**An email app for [ownCloud](https://owncloud.org) (minimum version 8). At the moment it is a basic IMAP client and in heavy development.** (A possibility for the future would be to also have it be a dedicated email server. But that would always be optional, require additional dependencies and is out of scope for now.)
+**An email app for [ownCloud](https://owncloud.org) (minimum version 7 & PHP 5.4). At the moment it is a basic IMAP client and in heavy development.** (A possibility for the future would be to also have it be a dedicated email server. But that would always be optional, require additional dependencies and is out of scope for now.)
 
 ![](https://raw.githubusercontent.com/owncloud/screenshots/master/mail/mail.png)
 
