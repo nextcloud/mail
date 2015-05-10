@@ -1,6 +1,9 @@
 <?php
 script('mail', 'jquery.storageapi');
 script('mail', 'jquery-visibility');
+if (version_compare(implode('.', \OCP\Util::getVersion()), '8.0', '<=')) {
+	style('mail', 'stable7');
+}
 ?>
 <script id="mail-folder-template" type="text/x-handlebars-template">
 	<li data-folder_id="{{id}}" data-no_select="{{noSelect}}"
