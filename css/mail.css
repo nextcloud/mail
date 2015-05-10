@@ -608,3 +608,33 @@
 .icon-trash {
 	background-image: url('../img/trash.svg');
 }
+
+
+
+/* ownCloud 7 compatibility */
+
+.hidden-visually {
+	position: absolute;
+	left:-10000px;
+	top: auto;
+	width: 1px;
+	height: 1px;
+	overflow: hidden;
+}
+
+#emptycontent h2,
+.emptycontent h2 {
+	font-size: 22px;
+	margin-bottom: 10px;
+}
+#emptycontent [class^="icon-"],
+.emptycontent [class^="icon-"],
+#emptycontent [class*=" icon-"],
+.emptycontent [class*=" icon-"] {
+	background-size: 64px;
+	height: 64px;
+	width: 64px;
+	margin: 0 auto 15px;
+	-ms-filter: "progid:DXImageTransform.Microsoft.Alpha(Opacity=40)";
+	opacity: .4;
+}
