@@ -53,6 +53,8 @@ matrix:
     env: DB=pgsql
   - php: 5.4
     env: "DB=mysql CORE_BRANCH=stable8"
+  - php: 5.4
+    env: "DB=mysql CORE_BRANCH=stable7"
 
   allow_failures:
   - php: hhvm
