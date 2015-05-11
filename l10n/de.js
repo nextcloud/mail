@@ -3,6 +3,7 @@ OC.L10N.register(
     {
     "Mail" : "Mail",
     "Error while loading the accounts." : "Fehler beim Laden der Konten.",
+    "_%n new message in {folderName} \nfrom {from}_::_%n new messages in {folderName} \nfrom {from}_" : ["%n neue Nachricht in {folderName} \nvon {from}","%n neue Nachrichten in {folderName} \nvon {from}"],
     "you" : "Du",
     "Error while loading the selected account." : "Fehler beim Laden des ausgewählten Kontos.",
     "Error while loading messages." : "Fehler beim Laden der Nachrichten.",
@@ -11,6 +12,7 @@ OC.L10N.register(
     "Attachment saved to Files." : "Anhang unter Dateien gespeichert.",
     "Error while saving attachments to Files." : "Fehler beim Speichern der Anhänge unter Dateien.",
     "Error while saving attachment to Files." : "Fehler beim Speichern des Anhangs unter Dateien.",
+    "Opening HTML drafts is not supported yet." : "Das Öffnen von HTML-Entwürfen wird noch nicht unterstützt.",
     "Error while loading the selected message." : "Fehler beim Laden der ausgewählten Nachricht.",
     "Connecting …" : "Verbinden…",
     "Unknown error" : "Unbekannter Fehler",
@@ -61,6 +63,7 @@ OC.L10N.register(
     "Forward" : "Weiterleiten",
     "Delete" : "Löschen",
     "Add mail account" : "E-Mail-Konto hinzufügen",
+    "Looking to encrypt your emails? Install the <a href=\"https://www.mailvelope.com/\" target=\"_blank\">Mailvelope browser extension</a>!" : "Suchst Du nach einer Möglichkeit, Deine E-Mails zu verschlüsseln? Installiere die <a href=\"https://www.mailvelope.com/\" target=\"_blank\">Mailvelope Browser-Erweiterung</a>!",
     "No search results for {{searchTerm}}" : "Keine Suchergebnisse zu {{searchTerm}}",
     "No messages in this folder!" : "Keine Nachrichten in diesem Ordner gefunden!",
     "New message" : "Neue Nachricht",
@@ -84,7 +87,7 @@ OC.L10N.register(
     "SMTP Password" : "SMTP Passwort",
     "Forwarding you to %s - click here if you are not automatically redirected within the next few seconds." : "Du wirst zu %s weitergeleitet - Bitte hier klicken, wenn Du nicht automatisch innerhalb der nächsten Sekunden weitergeleitet wirst.",
     "Redirect Warning" : "Umleitungswarnung",
-    "The previous page is sending you to %s." : "Die vorhergehende Seite leitet dich zu %s weiter.",
+    "The previous page is sending you to %s." : "Die vorangegangene Seite leitet Dich zu %s weiter.",
     "If you do not want to visit that page, you can return to <a href=\"%s\">the mail app</a>." : "Wenn Du diese Seite nicht besuchen möchtest, kannst Du <a href=\"%s\">zur Mail-App</a> zurück kehren.",
     "Click here to visit the website." : "Zum Öffnen der Webseite hier klicken."
 },

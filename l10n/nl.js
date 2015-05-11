@@ -3,6 +3,7 @@ OC.L10N.register(
     {
     "Mail" : "E-mail",
     "Error while loading the accounts." : "Fout tijdens het laden van de accounts.",
+    "_%n new message in {folderName} \nfrom {from}_::_%n new messages in {folderName} \nfrom {from}_" : ["%n nieuw bericht in {folderName} \nvan {from}","%n nieuwe berichten in {folderName} \nvan {from}"],
     "you" : "je",
     "Error while loading the selected account." : "Fout tijdens het laden van het gekozen account.",
     "Error while loading messages." : "Fout bij laden berichten.",

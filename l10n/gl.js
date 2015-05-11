@@ -3,6 +3,7 @@ OC.L10N.register(
     {
     "Mail" : "Correo",
     "Error while loading the accounts." : "Produciuse un erro mentres cargaba as contas.",
+    "_%n new message in {folderName} \nfrom {from}_::_%n new messages in {folderName} \nfrom {from}_" : ["%n mensaxe nova en {folderName} \nde {from}","%n mensaxes novas en {folderName} \nde {from}"],
     "you" : "vostede",
     "Error while loading the selected account." : "Produciuse un erro ao cargar a conta seleccionada.",
     "Error while loading messages." : "Produciuse un erro mentres cargaba as mensaxes.",

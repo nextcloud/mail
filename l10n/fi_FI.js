@@ -3,6 +3,7 @@ OC.L10N.register(
     {
     "Mail" : "Sähköposti",
     "Error while loading the accounts." : "Virhe tilejä ladatessa.",
+    "_%n new message in {folderName} \nfrom {from}_::_%n new messages in {folderName} \nfrom {from}_" : ["%n uusi viesti kansiossa {folderName},\nlähettäjä {from}","%n uutta viestiä kansiossa {folderName},\nlähettäjä {from}"],
     "you" : "sinä",
     "Error while loading the selected account." : "Virhe ladatessa valittua tiliä.",
     "Error while loading messages." : "Virhe viestejä ladatessa.",

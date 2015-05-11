@@ -1,6 +1,7 @@
 { "translations": {
     "Mail" : "Пошта",
     "Error while loading the accounts." : "Грешка при учитавању налога.",
+    "_%n new message in {folderName} \nfrom {from}_::_%n new messages in {folderName} \nfrom {from}_" : ["%n нова порука у {folderName} \nод {from}","%n нове поруке у {folderName} \nод {from}","%n нових порука у {folderName} \nод {from}"],
     "you" : "ви",
     "Error while loading the selected account." : "Грешка при учитавању изабраног налога.",
     "Error while loading messages." : "Грешка при учитавању порука.",

@@ -3,6 +3,7 @@ OC.L10N.register(
     {
     "Mail" : "Pošta",
     "Error while loading the accounts." : "Chyba při načítání účtů.",
+    "_%n new message in {folderName} \nfrom {from}_::_%n new messages in {folderName} \nfrom {from}_" : ["%n nová zpráva v {folderName} \nod {from}","%n nové zprávy v {folderName} \nod {from}","%n nových zpráv v {folderName} \nod {from}"],
     "you" : "vy",
     "Error while loading the selected account." : "Chyba během načítání vybraného účtu.",
     "Error while loading messages." : "Chyba během načítání zpráv.",
