@@ -1,22 +1,22 @@
 language: php
 php:
-- 5.4
-- 5.5
-- 5.6
-- hhvm
+  - 5.4
+  - 5.5
+  - 5.6
+  - hhvm
 
 env:
   global:
-  - CORE_BRANCH=master
-  - secure: AaTeRG3kL/LeMOcMgul08EUBM7Kdtrkz9EAGPauKdxXbxggP0j5SxN8ciYxc8CiVni0CYJofW07YjG6tXqhvHeMINHx8Q+5KUUfiLwNrLgl1sMkh7vPR9EA5Z1Y8Nz4N1Qt7zxpqWKPHUsjUNFWxP2TPHEq2FEOGeKbsI7GOYas=
-  - secure: S5agbWaWSLgbujsVhZB9WkCAM0ris8uh9hPnspYw48bolkMhknJ7JxOWGV4rOcJ52kdOgifFRE9XYi65RFLL8zuaZDBU2zFoXO3fpatziYEiIWnxVrkogw1pnh/FeRnrUld+QDykFyUcfSGdFRw5R5FuZHrxe+Q5bHfiEjh4hlE=
+    - CORE_BRANCH=master
+    - secure: AaTeRG3kL/LeMOcMgul08EUBM7Kdtrkz9EAGPauKdxXbxggP0j5SxN8ciYxc8CiVni0CYJofW07YjG6tXqhvHeMINHx8Q+5KUUfiLwNrLgl1sMkh7vPR9EA5Z1Y8Nz4N1Qt7zxpqWKPHUsjUNFWxP2TPHEq2FEOGeKbsI7GOYas=
+    - secure: S5agbWaWSLgbujsVhZB9WkCAM0ris8uh9hPnspYw48bolkMhknJ7JxOWGV4rOcJ52kdOgifFRE9XYi65RFLL8zuaZDBU2zFoXO3fpatziYEiIWnxVrkogw1pnh/FeRnrUld+QDykFyUcfSGdFRw5R5FuZHrxe+Q5bHfiEjh4hlE=
   matrix:
-  - DB=sqlite
+    - DB=sqlite
 
 branches:
   only:
-  - master
-  - /^stable\d*$/
+    - master
+    - /^stable\d+(\.\d+)?$/
 
 before_install:
   - composer self-update
@@ -47,15 +47,15 @@ script:
   - sh -c "if [ '$TRAVIS_PHP_VERSION' != 'hhvm' ]; then php ocular.phar code-coverage:upload --format=php-clover clover.xml; fi"
 matrix:
   include:
-  - php: 5.4
-    env: DB=mysql
-  - php: 5.4
-    env: DB=pgsql
-  - php: 5.4
-    env: "DB=mysql CORE_BRANCH=stable8"
-  - php: 5.4
-    env: "DB=mysql CORE_BRANCH=stable7"
+    - php: 5.4
+      env: DB=mysql
+    - php: 5.4
+      env: DB=pgsql
+    - php: 5.4
+      env: "DB=mysql CORE_BRANCH=stable8"
+    - php: 5.4
+      env: "DB=mysql CORE_BRANCH=stable7"
 
   allow_failures:
-  - php: hhvm
+    - php: hhvm
   fast_finish: true
