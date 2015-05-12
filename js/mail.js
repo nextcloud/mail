@@ -709,6 +709,9 @@ var Mail = {
 			// disable all other folders for all accounts
 			_.each(Mail.State.accounts, function (account) {
 				var localAccount = Mail.State.folderView.collection.get(account.accountId);
+				if (_.isUndefined(localAccount)) {
+					return;
+				}
 				var folders = localAccount.get('folders');
 				_.each(folders.models, function(folder) {
 					folders.get(folder).set('active', false);
