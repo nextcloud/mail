@@ -10,7 +10,7 @@
 
 ![](https://raw.githubusercontent.com/owncloud/screenshots/master/mail/mail.png)
 
-We’re working towards a [0.1 release](https://github.com/owncloud/mail/milestones/0.1) at the moment. If you experience any issues or have enhancement suggestions, please report them in our [issue tracker](https://github.com/owncloud/mail/issues).
+We’re working towards a [0.2 release](https://github.com/owncloud/mail/milestones/0.2) at the moment. If you experience any issues or have enhancement suggestions, please report them in our [issue tracker](https://github.com/owncloud/mail/issues).
 
 
 ## Why is this so awesome?
