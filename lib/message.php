@@ -394,6 +394,7 @@ class Message {
 		$data['size'] = Util::humanFileSize($this->getSize());
 		$data['flags'] = $this->getFlags();
 		$data['dateInt'] = $this->getSentDate()->getTimestamp();
+		$data['dateIso'] = $this->getSentDate()->format('c');
 		$data['ccList'] = $this->getCCList();
 		return $data;
 	}
