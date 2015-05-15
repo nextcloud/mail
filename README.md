@@ -31,7 +31,7 @@ And in the works for [version 0.2](https://github.com/owncloud/mail/milestones/0
 ## Installation
 
 In your ownCloud, simply navigate to »Apps«, choose the category »Productivity«, find the Mail app and enable it.
-Then open the Mail app from the app switcher. Put in your email account credentials and off you go!
+Then open the Mail app from the app menu. Put in your email account credentials and off you go!
 
 If you experience any issues or have enhancement suggestions you can report them in our [issue tracker](https://github.com/owncloud/mail/issues). Please follow the [issue template](https://raw.githubusercontent.com/owncloud/core/master/issue_template.md) so we get the info we need to be able to debug and fix the problem. Thanks!
 
