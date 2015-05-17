@@ -10,8 +10,6 @@
 
 ![](https://raw.githubusercontent.com/owncloud/screenshots/master/mail/mail.png)
 
-We’re working towards a [0.2 release](https://github.com/owncloud/mail/milestones/0.2) at the moment. If you experience any issues or have enhancement suggestions, please report them in our [issue tracker](https://github.com/owncloud/mail/issues).
-
 
 ## Why is this so awesome?
 
@@ -28,6 +26,14 @@ And in the works for [version 0.2](https://github.com/owncloud/mail/milestones/0
 * :inbox_tray: [Unified inbox](https://github.com/owncloud/mail/issues/120)
 * :package: [Folder management & moving mails](https://github.com/owncloud/mail/issues/411)
 * :iphone: [Support for small mobile screens](https://github.com/owncloud/mail/issues/457)
+
+
+## Installation
+
+In your ownCloud, simply navigate to »Apps«, choose the category »Productivity«, find the Mail app and enable it.
+Then open the Mail app from the app menu. Put in your email account credentials and off you go!
+
+If you experience any issues or have enhancement suggestions you can report them in our [issue tracker](https://github.com/owncloud/mail/issues). Please follow the [issue template](https://raw.githubusercontent.com/owncloud/core/master/issue_template.md) so we get the info we need to be able to debug and fix the problem. Thanks!
 
 
 ## Maintainers
