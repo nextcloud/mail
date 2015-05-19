@@ -11,6 +11,7 @@ namespace OCA\Mail;
 use Horde_Imap_Client_Mailbox;
 use Horde_Imap_Client_Search_Query;
 use Horde_Imap_Client_Socket;
+use Horde_Imap_Client;
 
 class SearchMailbox extends Mailbox {
 
@@ -21,8 +22,8 @@ class SearchMailbox extends Mailbox {
 	 * @param string $delimiter
 	 */
 	function __construct($conn, $mailBox, $attributes, $delimiter = '/') {
+                $attributes[] = Horde_Imap_Client::SPECIALUSE_FLAGGED;
 		parent::__construct($conn, $mailBox, $attributes, $delimiter);
-		parent::setDisplayName('Favorites');
 	}
 
 	public function getMessages($from = 0, $count = 2, $filter = '') {
@@ -35,10 +36,6 @@ class SearchMailbox extends Mailbox {
 		return parent::getMessages($from, $count, $query);
 	}
 
-	public function setDisplayName($displayName) {
-
-	}
-
 	public function getFolderId() {
 		return parent::getFolderId() . '/FLAGGED';
 	}
@@ -47,11 +44,7 @@ class SearchMailbox extends Mailbox {
 		return null;
 	}
 
-	public function getSpecialRole() {
-		return 'flagged';
-	}
-
-	public function getStatus($flags = \Horde_Imap_Client::STATUS_ALL) {
+	public function getStatus() {
 		$status = parent::getStatus();
 		$status['unseen'] = 0;
 

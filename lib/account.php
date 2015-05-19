@@ -449,7 +449,7 @@ class Account {
 			// TRANSLATORS: translated mail box name
 			'all'     => $l->t('All'),
 			// TRANSLATORS: translated mail box name
-			'flagged' => $l->t('Starred'),
+			'flagged' => $l->t('Favorites'),
 		];
 		$mailboxes = $this->getMailboxes();
 		$specialIds = $this->getSpecialFoldersIds(false);
