@@ -26,9 +26,9 @@ class MessageTest extends \PHPUnit_Framework_TestCase {
 			'to' => 'a@b.org, tom@example.org, b@example.org',
 			'cc' => 'a@b.org, tom@example.org, a@example.org'
 		));
-		$m = new \OCA\Mail\Message(null, 'INBOX', 123, $data);
+		$message = new \OCA\Mail\Message(null, 'INBOX', 123, $data);
 
-		$cc = $m->getReplyCcList('a@b.org');
+		$cc = $message->getReplyCcList('a@b.org');
 		$this->assertTrue(is_array($cc));
 		$this->assertEquals(3, count($cc));
 		$cc = array_map(function($item) {
@@ -58,11 +58,11 @@ class MessageTest extends \PHPUnit_Framework_TestCase {
 			->willReturn($firstResult);
 
 
-		$m = new \OCA\Mail\Message($conn, 'INBOX', 123, null, true);
-		$htmlBody = $m->getHtmlBody();
+		$message = new \OCA\Mail\Message($conn, 'INBOX', 123, null, true);
+		$htmlBody = $message->getHtmlBody();
 		$this->assertTrue(strlen($htmlBody) > 1000);
 
-		$plainTextBody = $m->getPlainBody();
+		$plainTextBody = $message->getPlainBody();
 		$this->assertTrue(strlen($plainTextBody) > 1000);
 	}
 }
