@@ -43,7 +43,8 @@ var Mail = {
 		currentFolderId: null,
 		currentAccountId: null,
 		currentMessageId: null,
-		currentlyLoading: null,
+		messagesLoading: null,
+		messageLoading: null,
 		accounts: null,
 		messageView: null,
 		composeView: null,
@@ -406,8 +407,11 @@ var Mail = {
 		},
 
 		loadMessages: function (accountId, folderId, noSelect) {
-			if (Mail.State.currentlyLoading !== null) {
-				Mail.State.currentlyLoading.abort();
+			if (Mail.State.messagesLoading !== null) {
+				Mail.State.messagesLoading.abort();
+			}
+			if (Mail.State.messageLoading !== null) {
+				Mail.State.messageLoading.abort();
 			}
 			// Set folder active
 			Mail.UI.setFolderActive(accountId, folderId);
@@ -681,7 +685,7 @@ var Mail = {
 				self.openComposer(data);
 			};
 
-			$.ajax(
+			Mail.State.messageLoading = $.ajax(
 				OC.generateUrl('apps/mail/accounts/{accountId}/folders/{folderId}/messages/{messageId}',
 					{
 					accountId: Mail.State.currentAccountId,
@@ -697,8 +701,10 @@ var Mail = {
 							loadMessageSuccess(data);
 						}
 					},
-					error: function () {
-						Mail.UI.showError(t('mail', 'Error while loading the selected message.'));
+					error: function (jqXHR, textStatus) {
+						if (textStatus !== 'abort') {
+							Mail.UI.showError(t('mail', 'Error while loading the selected message.'));
+						}
 					}
 				});
 		},
