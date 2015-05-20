@@ -13,11 +13,13 @@
 namespace OCA\Mail\Controller;
 
 use Horde_Imap_Client;
+use OCA\Mail\Db\MailAccountMapper;
 use OCA\Mail\Http\AttachmentDownloadResponse;
 use OCA\Mail\Http\HtmlResponse;
 use OCA\Mail\Service\ContactsIntegration;
 use OCP\AppFramework\Controller;
 use OCP\AppFramework\Db\DoesNotExistException;
+use OCP\AppFramework\Http\ContentSecurityPolicy;
 use OCP\AppFramework\Http\JSONResponse;
 use OCP\AppFramework\Http\TemplateResponse;
 use OCP\IL10N;
@@ -57,14 +59,21 @@ class MessagesController extends Controller {
 	/**
 	 * @param string $appName
 	 * @param \OCP\IRequest $request
-	 * @param $mapper
+	 * @param MailAccountMapper $mapper
 	 * @param $currentUserId
 	 * @param $userFolder
 	 * @param $contactsIntegration
 	 * @param $logger
 	 * @param $l10n
 	 */
-	public function __construct($appName, $request, $mapper, $currentUserId, $userFolder, $contactsIntegration, $logger, $l10n) {
+	public function __construct($appName,
+								$request,
+								MailAccountMapper $mapper,
+								$currentUserId,
+								$userFolder,
+								$contactsIntegration,
+								$logger,
+								$l10n) {
 		parent::__construct($appName, $request);
 		$this->mapper = $mapper;
 		$this->currentUserId = $currentUserId;
@@ -157,7 +166,17 @@ class MessagesController extends Controller {
 			$m = $mailBox->getMessage($messageId, true);
 			$html = $m->getHtmlBody();
 
-			return new HtmlResponse($html);
+			// Harden the default security policy
+			$policy = new ContentSecurityPolicy();
+			$policy->allowEvalScript(false);
+			$policy->disallowScriptDomain('\'self\'');
+			$policy->disallowConnectDomain('\'self\'');
+			$policy->disallowFontDomain('\'self\'');
+			$policy->disallowMediaDomain('\'self\'');
+
+			$htmlResponse = new HtmlResponse($html);
+			$htmlResponse->setContentSecurityPolicy($policy);
+			return $htmlResponse;
 		} catch(\Exception $ex) {
 			return new TemplateResponse($this->appName, 'error', ['message' => $ex->getMessage()], 'none');
 		}
