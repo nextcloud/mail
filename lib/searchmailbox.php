@@ -21,7 +21,7 @@ class SearchMailbox extends Mailbox {
 	 * @param array $attributes
 	 * @param string $delimiter
 	 */
-	function __construct($conn, $mailBox, $attributes, $delimiter = '/') {
+	public function __construct($conn, $mailBox, $attributes, $delimiter = '/') {
                 $attributes[] = Horde_Imap_Client::SPECIALUSE_FLAGGED;
 		parent::__construct($conn, $mailBox, $attributes, $delimiter);
 	}

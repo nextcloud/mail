@@ -52,7 +52,7 @@ class Mailbox {
 	 * @param array $attributes
 	 * @param string $delimiter
 	 */
-	function __construct($conn, $mailBox, $attributes, $delimiter='/') {
+	public function __construct($conn, $mailBox, $attributes, $delimiter='/') {
 		$this->conn = $conn;
 		$this->mailBox = $mailBox;
 		$this->attributes = $attributes;

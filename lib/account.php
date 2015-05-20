@@ -28,7 +28,7 @@ class Account {
 	private $account;
 
 	/**
-	 *  @var Mailbox[]
+	 *  @var Mailbox[]|null
 	 */
 	private $mailboxes;
 
@@ -36,6 +36,9 @@ class Account {
 	 * @var Horde_Imap_Client_Socket
 	 */
 	private $client;
+
+	/** @var ICrypto */
+	private $crypto;
 
 	/** @var IConfig */
 	private $config;
@@ -46,7 +49,7 @@ class Account {
 	/**
 	 * @param MailAccount $account
 	 */
-	function __construct(MailAccount $account) {
+	public function __construct(MailAccount $account) {
 		$this->account = $account;
 		$this->mailboxes = null;
 		$this->crypto = \OC::$server->getCrypto();
@@ -368,7 +371,6 @@ class Account {
 	public function deleteDraft($messageId) {
 		$draftsFolder = $this->getDraftsFolder();
 		
-		$IDs = new \Horde_Imap_Client_Ids($messageId);
 		$draftsMailBox = new \Horde_Imap_Client_Mailbox($draftsFolder->getFolderId(), true);
 		$this->getImapConnection()->expunge($draftsMailBox);
 	}
@@ -527,7 +529,6 @@ class Account {
 		switch ($sslmode) {
 			case 'none':
 				return false;
-				break;
 		}
 		return $sslmode;
 	}

@@ -33,7 +33,7 @@ class Attachment {
 	 * @param int $messageId
 	 * @param string $attachmentId
 	 */
-	function __construct($conn, $mailBox, $messageId, $attachmentId) {
+	public function __construct($conn, $mailBox, $messageId, $attachmentId) {
 		$this->conn = $conn;
 		$this->mailBox = $mailBox;
 		$this->messageId = $messageId;
