@@ -98,7 +98,7 @@ script('mail', 'jquery-visibility');
 		<div id="mail-content">
 			{{#if hasHtmlBody}}
 			<div class="icon-loading">
-				<iframe src="{{htmlBodyUrl}}" sandbox="allow-popups allow-same-origin" seamless>
+				<iframe src="{{htmlBodyUrl}}" seamless>
 				</iframe>
 			</div>
 			{{else}}
