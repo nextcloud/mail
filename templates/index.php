@@ -244,11 +244,11 @@ script('mail', 'jquery-visibility');
 <div id="app">
 	<div id="app-navigation" class="icon-loading">
 		<ul>
-			<li>
+			<li id="mail-new-message-fixed">
 			<input type="button" id="mail_new_message" class="icon-add"
 				value="<?php p($l->t('New message')); ?>" style="display: none">
 			</li>
-			<li>
+			<li id="mail-new-message-list">
 				<div id="folders"></div>
 			</li>
 		</ul>

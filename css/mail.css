@@ -301,7 +301,16 @@
 }
 
 /* editor */
-
+#mail-new-message-fixed {
+	position: fixed !important;
+	width: 241px !important;
+	z-index: 1;
+	padding-bottom: 12px;
+	background-color: rgba(245, 245, 245, .75);
+}
+#mail-new-message-list {
+	margin-top: 50px;
+}
 #mail_new_message {
 	width: 92%;
 	padding: 10px;
