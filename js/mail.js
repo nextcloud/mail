@@ -494,7 +494,7 @@ var Mail = {
 							attachmentId + '"] ' + saveToFilesBtnSelector;
 					}
 					$(saveToFilesBtnSelector)
-						.removeClass('icon-upload')
+						.removeClass('icon-folder')
 						.addClass('icon-loading-small')
 						.prop('disabled', true);
 
@@ -531,7 +531,7 @@ var Mail = {
 								// Remove loading feedback again
 								$('.attachment-save-to-cloud')
 									.removeClass('icon-loading-small')
-									.addClass('icon-upload')
+									.addClass('icon-folder')
 									.prop('disabled', false);
 							}
 						});
@@ -676,7 +676,7 @@ var Mail = {
 
 				$('textarea').autosize({append: '"\n\n"'});
 			};
-			
+
 			var loadDraftSuccess = function(data) {
 				self.openComposer(data);
 			};
