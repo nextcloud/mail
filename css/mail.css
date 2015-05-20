@@ -602,6 +602,9 @@
 .icon-sent {
 	background-image: url('../img/sent.svg');
 }
+.icon-archive {
+	background-image: url('../img/archive.svg');
+}
 .icon-junk {
 	background-image: url('../img/junk.svg');
 }
