@@ -166,16 +166,20 @@ class MessagesController extends Controller {
 			$m = $mailBox->getMessage($messageId, true);
 			$html = $m->getHtmlBody();
 
-			// Harden the default security policy
-			$policy = new ContentSecurityPolicy();
-			$policy->allowEvalScript(false);
-			$policy->disallowScriptDomain('\'self\'');
-			$policy->disallowConnectDomain('\'self\'');
-			$policy->disallowFontDomain('\'self\'');
-			$policy->disallowMediaDomain('\'self\'');
-
 			$htmlResponse = new HtmlResponse($html);
-			$htmlResponse->setContentSecurityPolicy($policy);
+
+			// Harden the default security policy
+			// FIXME: Remove once ownCloud 8.1 is a requirement for the mail app
+			if(class_exists('\OCP\AppFramework\Http\ContentSecurityPolicy')) {
+				$policy = new ContentSecurityPolicy();
+				$policy->allowEvalScript(false);
+				$policy->disallowScriptDomain('\'self\'');
+				$policy->disallowConnectDomain('\'self\'');
+				$policy->disallowFontDomain('\'self\'');
+				$policy->disallowMediaDomain('\'self\'');
+				$htmlResponse->setContentSecurityPolicy($policy);
+			}
+
 			return $htmlResponse;
 		} catch(\Exception $ex) {
 			return new TemplateResponse($this->appName, 'error', ['message' => $ex->getMessage()], 'none');
