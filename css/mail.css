@@ -483,7 +483,10 @@
 	min-height: 16px;
 }
 
-
+.icon-add {
+	display: inline-block;
+	vertical-align: text-top;
+}
 
 
 /* message display */

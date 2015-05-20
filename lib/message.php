@@ -134,6 +134,14 @@ class Message {
 	}
 
 	/**
+	 * @return array
+	 */
+	public function getFromList() {
+		$e = $this->getEnvelope();
+		return $this->convertAddressList($e->from);
+	}
+
+	/**
 	 * @return string
 	 */
 	public function getToEmail() {
@@ -386,6 +394,7 @@ class Message {
 		$data['id'] = $this->getUid();
 		$data['from'] = $this->getFrom();
 		$data['fromEmail'] = $this->getFromEmail();
+		$data['fromList'] = $this->getFromList();
 		$data['to'] = $this->getTo();
 		$data['toEmail'] = $this->getToEmail();
 		$data['toList'] = $this->getToList();

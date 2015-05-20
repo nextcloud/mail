@@ -84,7 +84,7 @@ script('mail', 'jquery-visibility');
 	<div id="mail-message-header" class="section">
 		<h2 title="{{subject}}">{{subject}}</h2>
 		<p class="transparency">
-			<span title="{{fromEmail}}">{{from}}</span>
+			{{printAddressList fromList}}
 			{{#if toList}}
 			<?php p($l->t('to')); ?>
 			{{printAddressList toList}}
