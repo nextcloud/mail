@@ -398,8 +398,18 @@ class Message {
 		return $data;
 	}
 
+	/**
+	 * @return string
+	 */
 	public function getHtmlBody() {
 		return $this->htmlService->sanitizeHtmlMailBody($this->htmlMessage);
+	}
+
+	/**
+	 * @return string
+	 */
+	public function getPlainBody() {
+		return $this->plainMessage;
 	}
 
 	/**
@@ -469,7 +479,7 @@ class Message {
 		$p->setContents($data);
 		$data = $p->getContents();
 
-		$data = iconv($p->getCharset(), 'utf-8', $data);
+		$data = iconv($p->getCharset(), 'utf-8//IGNORE', $data);
 		return $data;
 	}
 

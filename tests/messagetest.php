@@ -38,5 +38,32 @@ class MessageTest extends \PHPUnit_Framework_TestCase {
 		$this->assertTrue(in_array('a@example.org', $cc));
 		$this->assertTrue(in_array('b@example.org', $cc));
 	}
+
+	public function testIconvHtmlMessage() {
+		$conn = $this->getMockBuilder('Horde_Imap_Client_Socket')
+		->disableOriginalConstructor()
+			->setMethods(['fetch'])
+			->getMock();
+
+		// mock first fetch
+		$firstFetch = new Horde_Imap_Client_Data_Fetch();
+		$firstPart = Horde_Mime_Part::parseMessage(file_get_contents(__DIR__ . '/data/mail-message-123.txt'), ['level' => 1]);
+		$firstFetch->setStructure($firstPart);
+		$firstFetch->setBodyPart(1, $firstPart->getPart(1)->getContents());
+		$firstFetch->setBodyPart(2, $firstPart->getPart(2)->getContents());
+		$firstResult = new Horde_Imap_Client_Fetch_Results();
+		$firstResult[123] = $firstFetch;
+		$conn->expects($this->any())
+			->method('fetch')
+			->willReturn($firstResult);
+
+
+		$m = new \OCA\Mail\Message($conn, 'INBOX', 123, null, true);
+		$htmlBody = $m->getHtmlBody();
+		$this->assertTrue(strlen($htmlBody) > 1000);
+
+		$plainTextBody = $m->getPlainBody();
+		$this->assertTrue(strlen($plainTextBody) > 1000);
+	}
 }
 
