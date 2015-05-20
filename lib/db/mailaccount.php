@@ -48,7 +48,7 @@ use OCP\AppFramework\Db\Entity;
  * @method string getOutboundPassword()
  * @method void setOutboundPassword(string $outboundPassword)
  */
-class MailAccount extends Entity{
+class MailAccount extends Entity {
 
 	public $userId;
 	public $name;
@@ -64,7 +64,7 @@ class MailAccount extends Entity{
 	public $outboundUser;
 	public $outboundPassword;
 
-	public function __construct($params = array()) {
+	public function __construct($params=[]) {
 
 		if (isset($params['accountId'])) {
 			$this->setId($params['accountId']);
@@ -113,7 +113,7 @@ class MailAccount extends Entity{
 	 * @return array
 	 */
 	public function toJson() {
-		$result = array(
+		$result = [
 			'accountId' => $this->getId(),
 			'name' => $this->getName(),
 			'emailAddress' => $this->getEmail(),
@@ -121,7 +121,7 @@ class MailAccount extends Entity{
 			'imapPort' => $this->getInboundPort(),
 			'imapUser' => $this->getInboundUser(),
 			'imapSslMode' => $this->getInboundSslMode(),
-		);
+		];
 
 		if (!is_null($this->getOutboundHost())) {
 			$result['smtpHost'] = $this->getOutboundHost();

@@ -1,5 +1,4 @@
 <?php
-
 /**
  * ownCloud - Mail
  *
@@ -20,7 +19,6 @@
  * License along with this library.  If not, see <http://www.gnu.org/licenses/>.
  *
  */
-
 
 namespace OCA\Mail\Http;
 
@@ -48,7 +46,6 @@ class ProxyDownloadResponse extends DownloadResponse {
 		$this->addHeader('Cache-Control', 'private');
 		$this->addHeader('Pragma', 'cache');
 	}
-
 
 	/**
 	 * Simply sets the headers and returns the file contents

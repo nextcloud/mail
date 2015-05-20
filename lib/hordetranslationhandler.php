@@ -4,8 +4,7 @@ namespace OCA\Mail;
 
 use Horde_Translation_Handler;
 
-class HordeTranslationHandler  implements Horde_Translation_Handler
-{
+class HordeTranslationHandler  implements Horde_Translation_Handler {
 	/**
 	 * Returns the translation of a message.
 	 *

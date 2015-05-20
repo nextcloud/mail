@@ -54,12 +54,12 @@ class AutoConfig {
 	 */
 	private function testImap($email, $host, $users, $password, $name) {
 		if (!is_array($users)) {
-			$users = array($users);
+			$users = [$users];
 		}
 
-		$ports = array(143, 585, 993);
-		$encryptionProtocols = array('ssl', 'tls', null);
-		$hostPrefixes = array('', 'imap.');
+		$ports = [143, 585, 993];
+		$encryptionProtocols = ['ssl', 'tls', null];
+		$hostPrefixes = ['', 'imap.'];
 		foreach ($hostPrefixes as $hostPrefix) {
 			$url = $hostPrefix . $host;
 			if (gethostbyname($url) === $url) {
@@ -86,15 +86,15 @@ class AutoConfig {
 
 	private function testSmtp(MailAccount $account, $host, $users, $password, $withHostPrefix = false) {
 		if (!is_array($users)) {
-			$users = array($users);
+			$users = [$users];
 		}
 
 		// port 25 should be the last one to test
-		$ports = array(587, 465, 25);
-		$protocols = array('ssl', 'tls', null);
-		$hostPrefixes = array('');
+		$ports = [587, 465, 25];
+		$protocols = ['ssl', 'tls', null];
+		$hostPrefixes = [''];
 		if ($withHostPrefix) {
-			$hostPrefixes = array('', 'imap.');
+			$hostPrefixes = ['', 'imap.'];
 		}
 		foreach ($hostPrefixes as $hostPrefix) {
 			$url = $hostPrefix . $host;
@@ -230,8 +230,7 @@ class AutoConfig {
 		return $mx_records;
 	}
 
-	protected function queryMozillaIspDb($domain, $tryMx=true)
-	{
+	protected function queryMozillaIspDb($domain, $tryMx=true) {
 		if (strpos($domain, '@') !== false) {
 			list(,$domain) = explode('@', $domain);
 		}
@@ -240,13 +239,13 @@ class AutoConfig {
 		try {
 			$xml = @simplexml_load_file($url);
 			if (!is_object($xml) || !$xml->emailProvider) {
-				return array();
+				return [];
 			}
-			$provider = array(
+			$provider = [
 				'displayName' => (string)$xml->emailProvider->displayName,
-			);
+			];
 			foreach($xml->emailProvider->children() as $tag => $server) {
-				if (!in_array($tag, array('incomingServer', 'outgoingServer'))) {
+				if (!in_array($tag, ['incomingServer', 'outgoingServer'])) {
 					continue;
 				}
 				foreach($server->attributes() as $name => $value) {
@@ -254,7 +253,7 @@ class AutoConfig {
 						$type = (string)$value;
 					}
 				}
-				$data = array();
+				$data = [];
 				foreach($server as $name => $value) {
 					foreach($value->children() as $tag => $val) {
 						$data[$name][$tag] = (string)$val;
@@ -277,7 +276,7 @@ class AutoConfig {
 					$provider = $this->queryMozillaIspDb($domain, false);
 				}
 			} else {
-				$provider = array();
+				$provider = [];
 			}
 		}
 		return $provider;
@@ -317,7 +316,7 @@ class AutoConfig {
 		$mxHosts = $this->getMxRecord($host);
 		if ($mxHosts) {
 			foreach ($mxHosts as $mxHost) {
-				$result = $this->testImap($email, $mxHost, array($user, $email), $password, $name);
+				$result = $this->testImap($email, $mxHost, [$user, $email], $password, $name);
 				if ($result) {
 					return $result;
 				}
@@ -328,7 +327,7 @@ class AutoConfig {
 		 * IMAP login with full email address as user
 		 * works for a lot of providers (e.g. Google Mail)
 		 */
-		return $this->testImap($email, $host, array($user, $email), $password, $name);
+		return $this->testImap($email, $host, [$user, $email], $password, $name);
 	}
 
 	/**
@@ -348,7 +347,7 @@ class AutoConfig {
 		$mxHosts = $this->getMxRecord($host);
 		if ($mxHosts) {
 			foreach ($mxHosts as $mxHost) {
-				$result = $this->testSmtp($account, $mxHost, array($user, $email), $password);
+				$result = $this->testSmtp($account, $mxHost, [$user, $email], $password);
 				if ($result) {
 					return $result;
 				}
@@ -359,7 +358,7 @@ class AutoConfig {
 		 * IMAP login with full email address as user
 		 * works for a lot of providers (e.g. Google Mail)
 		 */
-		return $this->testSmtp($account, $host, array($user, $email), $password, true);
+		return $this->testSmtp($account, $host, [$user, $email], $password, true);
 	}
 
 	/**

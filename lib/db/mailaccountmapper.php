@@ -39,7 +39,7 @@ class MailAccountMapper extends Mapper {
 	 */
 	public function find($userId, $accountId) {
 		$sql = 'SELECT * FROM `' . $this->getTableName() . '` WHERE user_id = ? and id = ?';
-		$params = array($userId, $accountId);
+		$params = [$userId, $accountId];
 
 		return $this->findEntity($sql, $params);
 	}
@@ -52,7 +52,7 @@ class MailAccountMapper extends Mapper {
 	 */
 	public function findByUserId($userId) {
 		$sql = 'SELECT * FROM ' . $this->getTableName() . ' WHERE user_id = ?';
-		$params = array($userId);
+		$params = [$userId];
 
 		return $this->findEntities($sql, $params);
 	}

@@ -72,7 +72,7 @@ class FoldersController extends Controller {
 			foreach($folders as &$parent) {
 				if($parent['id'] === $parentId) {
 					if (!isset($parent['folders'])) {
-						$parent['folders'] = array();
+						$parent['folders'] = [];
 					}
 					$parent['folders'][] = $folder;
 					break;
@@ -137,7 +137,7 @@ class FoldersController extends Controller {
 
 			$newFolderId = $mailbox;
 			return new JSONResponse(
-				array('data' => array('id' => $newFolderId)),
+				['data' => ['id' => $newFolderId]],
 				Http::STATUS_CREATED);
 		} catch (\Horde_Imap_Client_Exception $e) {
 			$response = new JSONResponse();

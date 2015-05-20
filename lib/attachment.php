@@ -60,7 +60,7 @@ class Attachment {
 	private $mimePart;
 
 	private function load() {
-		$headers = array();
+		$headers = [];
 
 		$fetch_query = new \Horde_Imap_Client_Fetch_Query();
 		$fetch_query->bodyPart($this->attachmentId);

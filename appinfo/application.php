@@ -11,7 +11,6 @@
 
 namespace OCA\Mail\AppInfo;
 
-
 use OCA\Mail\Controller\AccountsController;
 use OCA\Mail\Controller\FoldersController;
 use OCA\Mail\Controller\MessagesController;
@@ -21,13 +20,10 @@ use OCA\Mail\Service\AutoConfig;
 use OCA\Mail\Service\ContactsIntegration;
 use OCA\Mail\Service\Logger;
 use \OCP\AppFramework\App;
-
 use \OCA\Mail\Controller\PageController;
 use OCP\AppFramework\IAppContainer;
 
-
 class Application extends App {
-
 
 	public function __construct (array $urlParams=array()) {
 		parent::__construct('mail', $urlParams);
@@ -137,4 +133,5 @@ class Application extends App {
 			return \OCP\User::getUser();
 		});
 	}
+
 }
