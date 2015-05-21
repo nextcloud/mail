@@ -549,6 +549,14 @@ var Mail = {
 		openComposer: function(data) {
 			$('#mail_new_message').prop('disabled', true);
 
+			// Abort message loads
+			if (Mail.State.messageLoading !== null) {
+				Mail.State.messageLoading.abort();
+				$('iframe').parent().removeClass('icon-loading');
+				$('#mail-message').removeClass('icon-loading');
+				$('#mail_message').removeClass('icon-loading');
+			}
+
 			if (Mail.State.composeView === null) {
 				// setup sendmail view
 				Mail.State.composeView = new views.SendMail({
@@ -596,6 +604,10 @@ var Mail = {
 			force = force || false;
 			if (!force && $('#new-message').length) {
 				return;
+			}
+			// Abort previous loading requests
+			if (Mail.State.messageLoading !== null) {
+				Mail.State.messageLoading.abort();
 			}
 
 			// check if message is a draft
