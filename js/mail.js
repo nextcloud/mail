@@ -926,5 +926,21 @@ $(document).ready(function () {
 	$(document).on('show', function() {
 		Mail.UI.changeFavicon(OC.filePath('mail', 'img', 'favicon.png'));
 	});
+	
+	// Listens to key strokes, and executes a function based on the key combinations.
+	$(document).keyup(function(event){
+	
+		var key = event.keyCode || event.which;
+		if (Mail.State.currentMessageId) {
+			switch (key) {
+				case 46:
+					// Delete key
+					if (!$('#to, #cc, .reply-message-body').is(':focus')) {
+						$('.mail_message_summary.active .icon-delete.action.delete').click();
+					}
+					break;
+			}
+		}
+	});
 
 });
