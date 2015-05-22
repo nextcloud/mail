@@ -37,7 +37,7 @@ class Mailbox {
 	private $displayName;
 
 	/**
-	 * @var string 
+	 * @var string
 	 */
 	private $delimiter;
 
@@ -241,7 +241,7 @@ class Mailbox {
 	/**
 	 * Get the special use role of the mailbox
 	 *
-	 * This method reads the attributes sent by the server 
+	 * This method reads the attributes sent by the server
 	 *
 	 */
 	protected function getSpecialRoleFromAttributes() {
@@ -289,7 +289,7 @@ class Mailbox {
 
 		$specialFoldersDict = [
 			'inbox'   => ['inbox'],
-			'sent'    => ['sent', 'sent items', 'sent messages', 'sent-mail'],
+			'sent'    => ['sent', 'sent items', 'sent messages', 'sent-mail', 'sentmail'],
 			'drafts'  => ['draft', 'drafts'],
 			'archive' => ['archive', 'archives'],
 			'trash'   => ['deleted messages', 'trash'],
@@ -331,10 +331,10 @@ class Mailbox {
 			]
 		]);
 	}
-	
+
 	/**
 	 * Save draft
-	 * 
+	 *
 	 * @param string $rawBody
 	 * @return int UID of the saved draft
 	 */
@@ -379,4 +379,3 @@ class Mailbox {
 		return $this->mailBox;
 	}
 }
-
