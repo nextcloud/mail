@@ -8,7 +8,7 @@ views.Folder = Backbone.Marionette.ItemView.extend({
 
 	events: {
 		"click .collapse" : "collapseFolder",
-		"click .folder" : "loadMessages"
+		"click .folder" : "loadFolder"
 	},
 
 	initialize: function(options) {
@@ -20,12 +20,12 @@ views.Folder = Backbone.Marionette.ItemView.extend({
 		this.model.toggleOpen();
 	},
 
-	loadMessages: function(e) {
+	loadFolder: function(e) {
 		e.preventDefault();
 		var accountId = this.model.get('accountId');
 		var folderId = $(e.currentTarget).parent().data('folder_id');
 		var noSelect = $(e.currentTarget).parent().data('no_select');
-		Mail.UI.loadMessages(accountId, folderId, noSelect);
+		Mail.UI.loadFolder(accountId, folderId, noSelect);
 	},
 
 	onRender: function() {
@@ -111,7 +111,6 @@ views.Folders = Backbone.Marionette.CollectionView.extend({
 	},
 
 	updateTitle: function() {
-
 		var activeAccount = Mail.State.currentAccountId;
 		activeAccount = this.collection.get(activeAccount);
 		var activeFolder = this.getFolderById();

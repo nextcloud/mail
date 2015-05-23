@@ -1,4 +1,4 @@
-/* global Handlebars, Marionette, Notification, relative_modified_date, formatDate, humanFileSize, views, OC */
+/* global Handlebars, Marionette, Notification, relative_modified_date, formatDate, humanFileSize, views, OC, _ */
 
 if (_.isUndefined(OC.Notification.showTemporary)) {
 
@@ -51,6 +51,74 @@ var Mail = {
 		router: null,
 		Cache: null
 	},
+	Cache: {
+		getFolderPath: function (accountId, folderId) {
+			return 'messages' +
+				'.' +
+				accountId.toString() +
+				'.' +
+				folderId.toString();
+		},
+		getMessagePath: function (accountId, folderId, messageId) {
+			return Mail.Cache.getFolderPath(accountId, folderId) +
+				'.' +
+				messageId.toString();
+		},
+		cleanUp: function(accounts) {
+			var activeAccounts = _.map(accounts, function (account) {
+				return account.accountId;
+			});
+			var storage = $.localStorage;
+			_.each(storage.get('messages'), function (account, accountId) {
+				var isActive = _.any(activeAccounts, function (a) {
+					return a === parseInt(accountId);
+				});
+				if (!isActive) {
+					// Account does not exist anymore -> remove it
+					storage.remove('messages.' + accountId);
+				}
+			});
+		},
+		getFolderMessages: function (accountId, folderId) {
+			var path = Mail.Cache.getFolderPath(accountId, folderId);
+			var storage = $.localStorage;
+			return storage.isSet(path) ? storage.get(path) : null;
+		},
+		getMessage: function (accountId, folderId, messageId) {
+			var path = Mail.Cache.getMessagePath(accountId, folderId, messageId);
+			var storage = $.localStorage;
+			if (storage.isSet(path)) {
+				var message = storage.get(path);
+				// Update the timestamp
+				Mail.Cache.addMessage(accountId, folderId, message);
+				return message;
+			} else {
+				return null;
+			}
+		},
+		addMessage: function (accountId, folderId, message) {
+			var path = Mail.Cache.getMessagePath(accountId, folderId, message.id);
+			var storage = $.localStorage;
+
+			// Add timestamp for later cleanup
+			message.timestamp = Date.now();
+
+			// Save the message to local storage
+			storage.set(path, message);
+
+			// Remove old messages (keep 20 most recently loaded)
+			var messages = $.map(Mail.Cache.getFolderMessages(accountId, folderId), function (value) {
+				return [value];
+			});
+			messages.sort(function (m1, m2) {
+				return m2.timestamp - m1.timestamp;
+			});
+			var oldMessages = messages.slice(20, messages.length);
+			_.each(oldMessages, function(message) {
+				storage.remove(Mail.Cache.getMessagePath(accountId, folderId, message.id));
+			});
+		}
+	},
 	Search: {
 		timeoutID: null,
 		attach: function (search) {
@@ -88,13 +156,14 @@ var Mail = {
 				}
 			);
 			notification.onclick = function() {
-				Mail.UI.loadMessages(accountId, folderId, false);
+				Mail.UI.loadFolder(accountId, folderId, false);
 				window.focus();
 			};
 			setTimeout(function () {
 				notification.close();
 			}, 5000);
 		},
+
 		showMailNotification: function (email, folder) {
 			if (Notification.permission === "granted" && folder.messages.length > 0) {
 				var from = _.map(folder.messages, function (m) {
@@ -120,7 +189,8 @@ var Mail = {
 				Mail.BackGround.showNotification(email, body, tag, icon, folder.accountId, folder.id);
 			}
 		},
-		checkForNotifications: function() {
+
+		checkForNotifications: function () {
 			_.each(Mail.State.accounts, function (a) {
 				var localAccount = Mail.State.folderView.collection.get(a.accountId);
 				var folders = localAccount.get('folders');
@@ -159,7 +229,64 @@ var Mail = {
 					}
 				);
 			});
-		}
+		},
+
+		/**
+		 * Fetch message of the current account/folder in background
+		 * 
+		 * Uses a queue where message IDs are stored and fetched periodically
+		 * The message is only fetched if it's not already cached
+		 */
+		messageFetcher: (function () {
+			var accountId = null;
+			var folderId = null;
+			var pollIntervall = 3 * 1000;
+			var queue = [];
+			var timer = null;
+
+			function fetch () {
+				if (queue.length > 0) {
+					// Empty waiting queue
+					var messages = queue;
+					queue = [];
+
+					_.each(messages, function (messageId) {
+						if (!Mail.Cache.getMessage(accountId, folderId, messageId)) {
+							Mail.Communication.fetchMessage(accountId, folderId, messageId, {
+								backgroundMode: true,
+								onSuccess: function (message) {
+									// Add the fetched message to cache
+									Mail.Cache.addMessage(accountId, folderId, message);
+								}
+							});
+						}
+					});
+				}
+			}
+
+			return {
+				start: function () {
+					accountId = Mail.State.currentAccountId;
+					folderId = Mail.State.currentFolderId;
+					timer = setInterval(fetch, pollIntervall);
+				},
+				restart: function () {
+					// Stop previous fetcher
+					clearInterval(timer);
+
+					// Stop any ajax message requests
+					if (Mail.State.messageLoading !== null) {
+						Mail.State.messageLoading.abort();
+					}
+
+					// Start again
+					this.start();
+				},
+				push: function (message) {
+					queue.push(message);
+				}
+			};
+		}())
 	},
 	Communication: {
 		get: function (url, options) {
@@ -201,6 +328,41 @@ var Mail = {
 					options.success(data);
 				}
 			});
+		},
+		fetchMessage: function (accountId, folderId, messageId, options) {
+			options = options || {};
+			var defaults = {
+				onSuccess: function () { },
+				onError: function () { },
+				backgroundMode: false
+			};
+			_.defaults(options, defaults);
+
+			// Load cached version if available
+			var message = Mail.Cache.getMessage(Mail.State.currentAccountId,
+				Mail.State.currentFolderId,
+				messageId);
+			if (message) {
+				options.onSuccess(message);
+				return;
+			}
+
+			var xhr = $.ajax(
+				OC.generateUrl('apps/mail/accounts/{accountId}/folders/{folderId}/messages/{messageId}',
+				{
+					accountId: accountId,
+					folderId: folderId,
+					messageId: messageId
+				}), {
+					data: {},
+					type: 'GET',
+					success: options.onSuccess,
+					error: options.onError
+				});
+			if (!options.backgroundMode) {
+				// Save xhr to allow aborting unneded requests
+				Mail.State.messageLoading = xhr;
+			}
 		}
 	},
 	UI: {
@@ -217,17 +379,18 @@ var Mail = {
 		},
 		loadAccounts: function () {
 			Mail.Communication.get(OC.generateUrl('apps/mail/accounts'), {
-				success: function (jsondata) {
-					Mail.State.accounts = jsondata;
+				success: function (accounts) {
+					Mail.State.accounts = accounts;
 					Mail.UI.renderSettings();
-					if (jsondata.length === 0) {
+					if (accounts.length === 0) {
 						Mail.UI.addAccount();
 					} else {
-						var firstAccountId = jsondata[0].accountId;
-						_.each(jsondata, function (a) {
+						var firstAccountId = accounts[0].accountId;
+						_.each(accounts, function (a) {
 							Mail.UI.loadFoldersForAccount(a.accountId, firstAccountId);
 						});
 					}
+					Mail.Cache.cleanUp(accounts);
 				},
 				error: function () {
 					Mail.UI.showError(t('mail', 'Error while loading the accounts.'));
@@ -336,7 +499,6 @@ var Mail = {
 		},
 
 		loadFoldersForAccount: function (accountId, firstAccountId) {
-
 			$('#mail_messages').removeClass('hidden').addClass('icon-loading');
 			$('#mail-message').removeClass('hidden').addClass('icon-loading');
 			$('#mail_new_message').removeClass('hidden');
@@ -354,12 +516,15 @@ var Mail = {
 					if (jsondata.id === firstAccountId) {
 						var folderId = jsondata.folders[0].id;
 
-						Mail.UI.loadMessages(accountId, folderId, false);
+						Mail.UI.loadFolder(accountId, folderId, false);
 
 						// Save current folder
 						Mail.UI.setFolderActive(accountId, folderId);
 						Mail.State.currentAccountId = accountId;
 						Mail.State.currentFolderId = folderId;
+
+						// Start fetching messages in background
+						Mail.BackGround.messageFetcher.start();
 					}
 				},
 				error: function () {
@@ -408,8 +573,9 @@ var Mail = {
 			Mail.State.messageView.collection.add(data);
 		},
 
-		loadMessages: function (accountId, folderId, noSelect) {
+		loadFolder: function (accountId, folderId, noSelect) {
 			Mail.UI.Events.onComposerLeave();
+			Mail.UI.Events.onFolderChange();
 
 			if (Mail.State.messagesLoading !== null) {
 				Mail.State.messagesLoading.abort();
@@ -417,6 +583,7 @@ var Mail = {
 			if (Mail.State.messageLoading !== null) {
 				Mail.State.messageLoading.abort();
 			}
+
 			// Set folder active
 			Mail.UI.setFolderActive(accountId, folderId);
 			Mail.UI.clearMessages();
@@ -430,7 +597,6 @@ var Mail = {
 			$('#mail-message').removeClass('hidden');
 			$('#folders').removeClass('hidden');
 			$('#mail-setup').addClass('hidden');
-
 
 			$('#load-new-mail-messages').hide();
 			$('#load-more-mail-messages').hide();
@@ -460,8 +626,14 @@ var Mail = {
 
 							if (jsondata.length > 0) {
 								Mail.UI.addMessages(jsondata);
+
+								// Fetch first 10 messages in background
+								_.each(jsondata.slice(0, 10), function (message) {
+									Mail.BackGround.messageFetcher.push(message.id);
+								});
+
 								var messageId = jsondata[0].id;
-								Mail.UI.openMessage(messageId);
+								Mail.UI.loadMessage(messageId);
 								// Show 'Load More' button if there are
 								// more messages than the pagination limit
 								if (jsondata.length > 20) {
@@ -604,7 +776,13 @@ var Mail = {
 			}
 		},
 
-		openMessage: function (messageId, force) {
+		loadMessage: function (messageId, options) {
+			options = options || {};
+			var defaultOptions = {
+				force: false
+			};
+			_.defaults(options, defaultOptions);
+
 			// Do not reload email when clicking same again
 			if (Mail.State.currentMessageId === messageId) {
 				return;
@@ -612,8 +790,7 @@ var Mail = {
 
 			Mail.UI.Events.onComposerLeave();
 
-			force = force || false;
-			if (!force && $('#new-message').length) {
+			if (!options.force && $('#new-message').length) {
 				return;
 			}
 			// Abort previous loading requests
@@ -647,31 +824,31 @@ var Mail = {
 			$('#mail_new_message').prop('disabled', false);
 
 			var self = this;
-			var loadMessageSuccess = function (data) {
+			var loadMessageSuccess = function (message) {
 				// load local storage draft
 				var draft = self.loadDraft(messageId);
 				if (draft) {
-					data.replyCc = draft.cc;
-					data.replyBcc = draft.bcc;
-					data.replyBody = draft.body;
+					message.replyCc = draft.cc;
+					message.replyBcc = draft.bcc;
+					message.replyBody = draft.body;
 				} else {
 					// Add body content to inline reply (text mails)
-					if (!data.hasHtmlBody) {
-						var date = new Date(data.dateIso);
+					if (!message.hasHtmlBody) {
+						var date = new Date(message.dateIso);
 						var minutes = date.getMinutes();
 
-						data.replyBody = '\n\n\n\n' +
-							data.from + ' – ' +
+						message.replyBody = '\n\n\n\n' +
+							message.from + ' – ' +
 							$.datepicker.formatDate('D, d. MM yy ', date) +
 							date.getHours() + ':' + (minutes < 10 ? '0' : '') + minutes + '\n> ' +
-							jQuery(data.body).text().replace(/\n/g, '\n> ');
+							$(message.body).text().replace(/\n/g, '\n> ');
 					}
 				}
 
 				// Render the message body
 				var source = $("#mail-message-template").html();
 				var template = Handlebars.compile(source);
-				var html = template(data);
+				var html = template(message);
 				mailBody
 					.html(html)
 					.removeClass('icon-loading');
@@ -710,16 +887,17 @@ var Mail = {
 					});
 					// Remove spinner when loading finished
 					$('iframe').parent().removeClass('icon-loading');
+
 					// Add body content to inline reply (html mails)
 					// TODO better html handling, should be fine for the moment!
 					var text = jQuery($(this).contents().find('body').html().replace(/<br>/g, '\n')).text();
 					if (!draft) {
-						var date = new Date(data.dateIso);
+						var date = new Date(message.dateIso);
 						var minutes = date.getMinutes();
 
 						$('.reply-message-body').first().text(
 							'\n\n\n' +
-							data.from + ' – ' +
+							message.from + ' – ' +
 							$.datepicker.formatDate('D, d. MM yy ', date) +
 							date.getHours() + ':' + (minutes < 10 ? '0' : '') + minutes + '\n> ' +
 							text.replace(/\n/g, '\n> ')
@@ -742,23 +920,22 @@ var Mail = {
 				self.openComposer(data);
 			};
 
-			Mail.State.messageLoading = $.ajax(
-				OC.generateUrl('apps/mail/accounts/{accountId}/folders/{folderId}/messages/{messageId}',
-					{
-					accountId: Mail.State.currentAccountId,
-					folderId: Mail.State.currentFolderId,
-					messageId: messageId
-				}), {
-					data: {},
-					type: 'GET',
-					success: function (data) {
+			Mail.Communication.fetchMessage(
+				Mail.State.currentAccountId,
+				Mail.State.currentFolderId,
+				messageId,
+				{
+					onSuccess: function (message) {
 						if (draft) {
-							loadDraftSuccess(data);
+							loadDraftSuccess(message);
 						} else {
-							loadMessageSuccess(data);
+							Mail.Cache.addMessage(Mail.State.currentAccountId,
+								Mail.State.currentFolderId,
+								message);
+								loadMessageSuccess(message);
 						}
 					},
-					error: function (jqXHR, textStatus) {
+					onError: function (jqXHR, textStatus) {
 						if (textStatus !== 'abort') {
 							Mail.UI.showError(t('mail', 'Error while loading the selected message.'));
 						}
@@ -858,6 +1035,11 @@ var Mail = {
 						}
 					}
 				}
+			},
+
+			onFolderChange: function() {
+				// Stop background message fetcher of previous folder
+				Mail.BackGround.messageFetcher.restart();
 			}
 		}
 	}

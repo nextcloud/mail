@@ -80,7 +80,9 @@ views.Message = Backbone.Marionette.ItemView.extend({
 
 	openMessage: function(event) {
 		event.stopPropagation();
-		Mail.UI.openMessage(this.model.id, true);
+		Mail.UI.loadMessage(this.model.id, {
+			force: true
+		});
 	},
 
 	deleteMessage: function(event) {
@@ -265,8 +267,6 @@ views.Messages = Backbone.Marionette.CompositeView.extend({
 			from = 0;
 		}
 		// Add loading feedback
-//		$('#load-new-mail-messages').show();
-//		$('#load-more-mail-messages').hide();
 		$('#load-more-mail-messages')
 			.addClass('icon-loading-small')
 			.val(t('mail', 'Loading …'))
