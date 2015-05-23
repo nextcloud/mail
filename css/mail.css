@@ -197,7 +197,6 @@
 }
 
 #mail_messages {
-	padding-bottom: 250px;
 	width: 30%;
 	height: 100%;
 	overflow-x: hidden;
@@ -208,6 +207,9 @@
 	display: none;
 	margin: 10px auto;
 	padding: 10px 10px 6px;
+}
+#load-more-mail-messages {
+	margin-bottom: 250px;
 }
 /* TODO: put this in core icons.css as general rule for buttons with icons */
 #load-new-mail-messages.icon-loading-small,
