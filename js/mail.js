@@ -321,7 +321,7 @@ var Mail = {
 				Mail.State.folderView.changeUnseen);
 
 			// request permissions
-			if(typeof Notification !== 'undefined') {
+			if (typeof Notification !== 'undefined') {
 				Notification.requestPermission();
 			}
 
@@ -631,6 +631,18 @@ var Mail = {
 					data.replyCc = draft.cc;
 					data.replyBcc = draft.bcc;
 					data.replyBody = draft.body;
+				} else {
+					// Add body content to inline reply (text mails)
+					if (!data.hasHtmlBody) {
+						var date = new Date(data.dateIso);
+						var minutes = date.getMinutes();
+
+						data.replyBody = '\n\n\n\n' +
+							data.from + ' – ' +
+							$.datepicker.formatDate('D, d. MM yy ', date) +
+							date.getHours() + ':' + (minutes < 10 ? '0' : '') + minutes + '\n> ' +
+							jQuery(data.body).text().replace(/\n/g, '\n> ');
+					}
 				}
 
 				// Render the message body
@@ -675,10 +687,32 @@ var Mail = {
 					});
 					// Remove spinner when loading finished
 					$('iframe').parent().removeClass('icon-loading');
+					// Add body content to inline reply (html mails)
+					// TODO better html handling, should be fine for the moment!
+					var text = jQuery($(this).contents().find('body').html().replace(/<br>/g, '\n')).text();
+					if (!draft) {
+						var date = new Date(data.dateIso);
+						var minutes = date.getMinutes();
+
+						$('.reply-message-body').first().text(
+							'\n\n\n' +
+							data.from + ' – ' +
+							$.datepicker.formatDate('D, d. MM yy ', date) +
+							date.getHours() + ':' + (minutes < 10 ? '0' : '') + minutes + '\n> ' +
+							text.replace(/\n/g, '\n> ')
+						);
+					}
 
 				});
 
 				$('textarea').autosize({append: '"\n\n"'});
+				// dirty workaround to set reply message body to the default size
+				$('.reply-message-body').css('height', '');
+
+				// Expand reply message body on click
+				$('.reply-message-body').click(function() {
+					$('.reply-message-body').trigger('autosize.resize');
+				});
 			};
 
 			var loadDraftSuccess = function(data) {
@@ -748,7 +782,7 @@ var Mail = {
 		},
 
 		toggleSendButton:function () {
-			if(($('#to').val() !== '') && (($('#subject').val() !== '') || ($('#new-message-body').val() !== ''))) {
+			if (($('#to').val() !== '') && (($('#subject').val() !== '') || ($('#new-message-body').val() !== ''))) {
 				$('#new-message-send').removeAttr('disabled');
 			} else {
 				$('#new-message-send').attr('disabled', true);
@@ -756,7 +790,7 @@ var Mail = {
 		},
 
 		toggleReplyButton:function () {
-			if(($('.reply-message-fields #to').val() !== '') && ($('.reply-message-body').val() !== '')) {
+			if (($('.reply-message-fields #to').val() !== '') && ($('.reply-message-body').val() !== '')) {
 				$('.reply-message-send').removeAttr('disabled');
 			} else {
 				$('.reply-message-send').attr('disabled', true);
@@ -766,7 +800,7 @@ var Mail = {
 		toggleManualSetup:function() {
 			$('#mail-setup-manual').slideToggle();
 			$('#mail-imap-host').focus();
-			if($('#mail-address').parent().prop('class') === 'groupmiddle') {
+			if ($('#mail-address').parent().prop('class') === 'groupmiddle') {
 				$('#mail-password').slideToggle(function() {
 					$('#mail-address').parent()
 						.removeClass('groupmiddle').addClass('groupbottom');
