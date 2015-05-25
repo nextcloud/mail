@@ -42,7 +42,7 @@ class Message {
 	 * @param \Horde_Imap_Client_Data_Fetch|null $fetch
 	 * @param boolean $loadHtmlMessage
 	 */
-	function __construct($conn, $mailBox, $messageId, $fetch=null,
+	public function __construct($conn, $mailBox, $messageId, $fetch=null,
 		$loadHtmlMessage=false) {
 		$this->conn = $conn;
 		$this->mailBox = $mailBox;

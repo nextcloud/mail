@@ -12,6 +12,7 @@
 
 namespace OCA\Mail\Service;
 
+use HTMLPurifier;
 use HTMLPurifier_Config;
 use HTMLPurifier_URIFilter;
 use OCP\Util;
@@ -72,6 +73,11 @@ class HTMLPurifier_URIFilter_TransformURLScheme extends HTMLPurifier_URIFilter {
 
 class Html {
 
+	/**
+	 * @var HTMLPurifier
+	 */
+	private $purifier;
+
 	public function __construct() {
 		$config = HTMLPurifier_Config::createDefault();
 
@@ -87,7 +93,7 @@ class Html {
 
 		$uri->addFilter(new HTMLPurifier_URIFilter_TransformURLScheme(), $config);
 
-		$this->purifier = new \HTMLPurifier($config);
+		$this->purifier = new HTMLPurifier($config);
 	}
 
 	/**
