@@ -153,11 +153,12 @@
 	position: absolute;
 }
 
-.mail_account_email {
+.mail-account-email {
 	opacity: .5;
 	padding: 20px 0 10px 12px;
 	overflow: hidden;
 	text-overflow: ellipsis;
+	white-space: nowrap;
 }
 
 
