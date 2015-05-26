@@ -44,8 +44,8 @@ class SearchMailbox extends Mailbox {
 		return null;
 	}
 
-	public function getStatus() {
-		$status = parent::getStatus();
+	public function getStatus($flags = \Horde_Imap_Client::STATUS_ALL) {
+		$status = parent::getStatus($flags);
 		$status['unseen'] = 0;
 
 		return $status;
