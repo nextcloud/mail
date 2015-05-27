@@ -34,7 +34,6 @@ OC.L10N.register(
     "Trash" : "Zibil",
     "Junk" : "Önəmsiz",
     "All" : "Hamısı",
-    "Starred" : "Ulduzlu",
     "Creating account failed: " : "Hesabın yaradılmasında səhv:",
     "Auto detect failed. Please use manual mode." : "Avtomatik təyinatda səhv baş verdi. Xahiş olunur əl rejimini seçəsiniz.",
     "Delete permanently" : "Həmişəlik sil",

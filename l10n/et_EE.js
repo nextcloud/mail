@@ -34,7 +34,6 @@ OC.L10N.register(
     "Trash" : "Prügikast",
     "Junk" : "Tämpspost",
     "All" : "Kõik",
-    "Starred" : "Tärniga märgitud",
     "Creating account failed: " : "Konto loomine ebaõnnestus:",
     "Auto detect failed. Please use manual mode." : "Automaatne tuvastus ebaõnnestus. Palun proovi käsitsi.",
     "Delete permanently" : "Kustuta jäädavalt",

@@ -34,7 +34,6 @@ OC.L10N.register(
     "Trash" : "Kôš",
     "Junk" : "Spam",
     "All" : "Všetky",
-    "Starred" : "S hviezdičkou",
     "Creating account failed: " : "Vytvorenie účtu zlyhalo:",
     "Auto detect failed. Please use manual mode." : "Automatická detekcia zlyhala. Prosím, použite manuálny režim.",
     "Delete permanently" : "Zmazať  natrvalo",

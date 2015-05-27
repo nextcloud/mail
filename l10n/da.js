@@ -36,7 +36,6 @@ OC.L10N.register(
     "Trash" : "Papirkurv",
     "Junk" : "Junk",
     "All" : "Alle",
-    "Starred" : "Stjernemarkéret",
     "Creating account failed: " : "Oprettelse af konto mislykkedes:",
     "Auto detect failed. Please use manual mode." : "Fejl ved autodetektion. Anvend venligst manuel opsætning",
     "Delete permanently" : "Slet permanent",

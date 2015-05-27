@@ -36,7 +36,6 @@ OC.L10N.register(
     "Trash" : "Smeti",
     "Junk" : "Neželena pošta",
     "All" : "Vse",
-    "Starred" : "Označeno",
     "Creating account failed: " : "Ustvarjanje računa je spodletelo:",
     "Auto detect failed. Please use manual mode." : "Samodejno zaznavanje je spodletelo. Zaznavo bo treba izvesti ročno.",
     "Delete permanently" : "Izbriši dokončno",
