@@ -12,13 +12,18 @@
 
 namespace OCA\Mail\Service;
 
+use OCP\Contacts\IManager;
+
 class ContactsIntegration {
 	
 	/**
-	 * @var \OCP\Contacts\IManager
+	 * @var IManager
 	 */
 	private $contactsManager;
 
+	/**
+	 * @param IManager $contactsManager
+	 */
 	public function __construct($contactsManager) {
 		$this->contactsManager = $contactsManager;
 	}
@@ -39,6 +44,9 @@ class ContactsIntegration {
 		foreach ($result as $r) {
 			$id = $r['id'];
 			$fn = $r['FN'];
+			if (!isset($r['EMAIL'])) {
+				continue;
+			}
 			$email = $r['EMAIL'];
 			if (!is_array($email)) {
 				$email = [$email];
