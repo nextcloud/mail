@@ -1,4 +1,4 @@
-/* global Handlebars, Marionette, Notification, relative_modified_date, formatDate, humanFileSize, views */
+/* global Handlebars, Marionette, Notification, relative_modified_date, formatDate, humanFileSize, views, OC */
 
 if (_.isUndefined(OC.Notification.showTemporary)) {
 
@@ -204,6 +204,8 @@ var Mail = {
 		}
 	},
 	UI: {
+		composerVisible: false,
+
 		renderSettings: function () {
 			var source   = $("#mail-settings-template").html();
 			var template = Handlebars.compile(source);
@@ -407,6 +409,8 @@ var Mail = {
 		},
 
 		loadMessages: function (accountId, folderId, noSelect) {
+			Mail.UI.Events.onComposerLeave();
+
 			if (Mail.State.messagesLoading !== null) {
 				Mail.State.messagesLoading.abort();
 			}
@@ -547,6 +551,8 @@ var Mail = {
 		},
 
 		openComposer: function(data) {
+			Mail.UI.composerVisible = true;
+
 			$('#mail_new_message').prop('disabled', true);
 
 			// Abort message loads
@@ -568,6 +574,8 @@ var Mail = {
 				Mail.State.composeView.sentCallback = function () {};
 			} else {
 				Mail.State.composeView.data = data;
+				Mail.State.composeView.hasData = false;
+				Mail.State.composeView.hasUnsavedChanges = false;
 			}
 
 			if (data && data.hasHtmlBody) {
@@ -601,6 +609,9 @@ var Mail = {
 			if (Mail.State.currentMessageId === messageId) {
 				return;
 			}
+
+			Mail.UI.Events.onComposerLeave();
+
 			force = force || false;
 			if (!force && $('#new-message').length) {
 				return;
@@ -781,6 +792,8 @@ var Mail = {
 		},
 
 		addAccount: function () {
+			Mail.UI.Events.onComposerLeave();
+
 			$('#mail_messages').addClass('hidden');
 			$('#mail-message').addClass('hidden');
 			$('#mail_new_message').addClass('hidden');
@@ -809,7 +822,7 @@ var Mail = {
 			}
 		},
 
-		toggleManualSetup:function() {
+		toggleManualSetup: function() {
 			$('#mail-setup-manual').slideToggle();
 			$('#mail-imap-host').focus();
 			if ($('#mail-address').parent().prop('class') === 'groupmiddle') {
@@ -821,6 +834,30 @@ var Mail = {
 				$('#mail-password').slideToggle();
 				$('#mail-address').parent()
 					.removeClass('groupbottom').addClass('groupmiddle');
+			}
+		},
+
+		showDraftSavedNotification: function() {
+			OC.Notification.showTemporary(t('mail', 'Draft saved!'));
+		},
+
+		Events: {
+			onComposerLeave: function() {
+				// Trigger only once
+				if (Mail.UI.composerVisible === true) {
+					Mail.UI.composerVisible = false;
+
+					var composer = Mail.State.composeView;
+					if (composer && composer.hasData === true) {
+						if (composer.hasUnsavedChanges === true) {
+							composer.saveDraft(function() {
+								Mail.UI.showDraftSavedNotification();
+							});
+						} else {
+							Mail.UI.showDraftSavedNotification();
+						}
+					}
+				}
 			}
 		}
 	}

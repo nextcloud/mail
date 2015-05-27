@@ -1,4 +1,4 @@
-/* global Backbone, Handlebars, models, OC, Mail */
+/* global Backbone, Handlebars, models, OC, Mail, _ */
 
 var views = views || {};
 
@@ -17,6 +17,8 @@ views.SendMail = Backbone.View.extend({
 	draftTimerIMAP: null,
 	draftTimerLocal: null,
 	draftUID: null,
+	hasData: false,
+	hasUnsavedChanges: false,
 
 	events: {
 		"click #new-message-send" : "sendMail",
@@ -59,6 +61,8 @@ views.SendMail = Backbone.View.extend({
 	},
 
 	handleKeyUp: function() {
+		this.hasData = true;
+		this.hasUnsavedChanges = true;
 		clearTimeout(this.draftTimerIMAP);
 		clearTimeout(this.draftIntervalLocal);
 		var self = this;
@@ -153,6 +157,7 @@ views.SendMail = Backbone.View.extend({
 					Mail.State.messageView.collection.remove({id: self.draftUID});
 					self.draftUID = null;
 				}
+				self.hasUnsavedChanges = false;
 			},
 			error: function (jqXHR) {
 				newMessageSend.prop('disabled', false);
@@ -182,7 +187,7 @@ views.SendMail = Backbone.View.extend({
 		storage.set("draft", "default", this.getMessage());
 	},
 
-	saveDraft: function() {
+	saveDraft: function(onSuccess) {
 		clearTimeout(this.draftTimerIMAP);
 		//
 		// TODO:
@@ -195,7 +200,7 @@ views.SendMail = Backbone.View.extend({
 		var self = this;
 		// send the mail
 		$.ajax({
-			url:OC.generateUrl('/apps/mail/accounts/{accountId}/draft', {accountId: this.currentAccountId}),
+			url: OC.generateUrl('/apps/mail/accounts/{accountId}/draft', {accountId: this.currentAccountId}),
 			beforeSend:function () {
 				OC.msg.startAction('#new-message-msg', "");
 			},
@@ -217,13 +222,11 @@ views.SendMail = Backbone.View.extend({
 						Mail.State.messageView.collection.set([message], {remove: false});
 					}
 				}
+				if (_.isFunction(onSuccess)) {
+					onSuccess();
+				}
 				self.draftUID = data.uid;
-				OC.msg.finishedAction('#new-message-msg', {
-					status: 'success',
-					data: {
-						message: t('mail', 'Draft saved!')
-					}
-				});
+				self.hasUnsavedChanges = false;
 			},
 			error: function (jqXHR) {
 				OC.msg.finishedAction('#new-message-msg', {
