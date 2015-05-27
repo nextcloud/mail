@@ -26,9 +26,9 @@ class MessageTest extends \PHPUnit_Framework_TestCase {
 			'to' => 'a@b.org, tom@example.org, b@example.org',
 			'cc' => 'a@b.org, tom@example.org, a@example.org'
 		));
-		$m = new \OCA\Mail\Message(null, 'INBOX', 123, $data);
+		$message = new \OCA\Mail\Message(null, 'INBOX', 123, $data);
 
-		$cc = $m->getReplyCcList('a@b.org');
+		$cc = $message->getReplyCcList('a@b.org');
 		$this->assertTrue(is_array($cc));
 		$this->assertEquals(3, count($cc));
 		$cc = array_map(function($item) {
@@ -37,6 +37,33 @@ class MessageTest extends \PHPUnit_Framework_TestCase {
 		$this->assertTrue(in_array('tom@example.org', $cc));
 		$this->assertTrue(in_array('a@example.org', $cc));
 		$this->assertTrue(in_array('b@example.org', $cc));
+	}
+
+	public function testIconvHtmlMessage() {
+		$conn = $this->getMockBuilder('Horde_Imap_Client_Socket')
+		->disableOriginalConstructor()
+			->setMethods(['fetch'])
+			->getMock();
+
+		// mock first fetch
+		$firstFetch = new Horde_Imap_Client_Data_Fetch();
+		$firstPart = Horde_Mime_Part::parseMessage(file_get_contents(__DIR__ . '/data/mail-message-123.txt'), ['level' => 1]);
+		$firstFetch->setStructure($firstPart);
+		$firstFetch->setBodyPart(1, $firstPart->getPart(1)->getContents());
+		$firstFetch->setBodyPart(2, $firstPart->getPart(2)->getContents());
+		$firstResult = new Horde_Imap_Client_Fetch_Results();
+		$firstResult[123] = $firstFetch;
+		$conn->expects($this->any())
+			->method('fetch')
+			->willReturn($firstResult);
+
+
+		$message = new \OCA\Mail\Message($conn, 'INBOX', 123, null, true);
+		$htmlBody = $message->getHtmlBody();
+		$this->assertTrue(strlen($htmlBody) > 1000);
+
+		$plainTextBody = $message->getPlainBody();
+		$this->assertTrue(strlen($plainTextBody) > 1000);
 	}
 }
 
