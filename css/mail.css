@@ -11,12 +11,12 @@
 
 /* SETUP */
 #mail-setup {
-	position: absolute;
 	z-index: 1001;
 	width: 250px;
-	top: 10%;
-	left: 35%;
+	top: 15%;
 	padding-bottom: 50px;
+	margin: 0 auto;
+	padding-top: 30px;
 }
 #mail-setup h2 {
 	text-align: center;
@@ -54,8 +54,11 @@
 }
 #connect-loading {
 	position: absolute;
-	top: 184px;
-	left: 43%;
+	top: 204px;
+	left: 0;
+	right: 0;
+	margin-left: auto;
+	margin-right: auto;
 }
 
 
@@ -623,8 +626,6 @@
 .icon-trash {
 	background-image: url('../img/trash.svg');
 }
-
-
 
 /* ownCloud 7 compatibility */
 
