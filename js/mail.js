@@ -269,8 +269,9 @@ var Mail = {
 						label = t('mail', 'you');
 					}
 					var title = t('mail', 'Send message to {email}', {email: email});
-					memo += '<span class="tipsy-mailto" title="' + title + '"><a class="link-mailto" data-email="' + email + '">' + label + '</a></span>';
-					memo += '<span class="icon-add tipsy-mailto" title="' + t('mail', 'Add to Contacts') + '"></span>';
+					memo += '<span class="tipsy-mailto" title="' + title + '">';
+					memo += '<a class="link-mailto" data-email="' +	email + '" data-label="' +	label + '">';
+					memo += label + '</a></span>';
 					return memo;
 				}, "");
 				return new Handlebars.SafeString(str);
@@ -591,7 +592,8 @@ var Mail = {
 			// focus 'to' field automatically on clicking New message button
 			$('#to').focus();
 			if (!_.isUndefined($(data.currentTarget).data().email)) {
-				$('#to').val($(data.currentTarget).data().email);
+				var to = '"' + $(data.currentTarget).data().label + '" <' + $(data.currentTarget).data().email + '>';
+				$('#to').val(to);
 			}
 
 			Mail.UI.setMessageActive(null);
