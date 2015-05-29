@@ -120,10 +120,12 @@ class Application extends App {
 
 		$container->registerService('AutoConfig', function ($c) {
 			/** @var IAppContainer $c */
+			$transport = $c->getServer()->getConfig()->getSystemValue('app.mail.transport', 'smtp');
 			return new AutoConfig(
 				$c->query('Logger'),
 				$c->query('UserId'),
-				$c->getServer()->getCrypto()
+				$c->getServer()->getCrypto(),
+				$transport === 'smtp'
 			);
 		});
 
