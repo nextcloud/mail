@@ -1,4 +1,4 @@
-/* global Backbone, Mail, models, oc_defaults */
+/* global Backbone, Mail, models, oc_defaults, _ */
 
 var views = views || {};
 
@@ -72,7 +72,7 @@ views.Folders = Backbone.Marionette.CollectionView.extend({
 		var activeAccount = accountId || Mail.State.currentAccountId;
 		folderId = folderId || Mail.State.currentFolderId;
 		activeAccount = this.collection.get(activeAccount);
-		activeFolder = activeAccount.get('folders').get(folderId);
+		var activeFolder = activeAccount.get('folders').get(folderId);
 		if (!_.isUndefined(activeFolder)) {
 			return activeFolder;
 		}
@@ -80,7 +80,7 @@ views.Folders = Backbone.Marionette.CollectionView.extend({
 		// bad hack to navigate down the tree ...
 		var delimiter = activeAccount.get('delimiter');
 		folderId = atob(folderId);
-		var activeFolder = activeAccount;
+		activeFolder = activeAccount;
 		var parts = folderId.split(delimiter);
 		var k = '';
 		_.each(parts, function(p){
