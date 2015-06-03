@@ -39,6 +39,7 @@ OC.L10N.register(
     "Trash" : "Cestino",
     "Junk" : "Posta indesiderata",
     "All" : "Tutti",
+    "Favorites" : "Preferiti",
     "Creating account failed: " : "Creazione account non riuscita:",
     "Auto detect failed. Please use manual mode." : "Rilevamento automatico non riuscito. Usa la modalità manuale.",
     "Delete permanently" : "Elimina definitivamente",

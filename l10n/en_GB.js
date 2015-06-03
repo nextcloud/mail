@@ -39,6 +39,7 @@ OC.L10N.register(
     "Trash" : "Trash",
     "Junk" : "Junk",
     "All" : "All",
+    "Favorites" : "Favourites",
     "Creating account failed: " : "Creating account failed: ",
     "Auto detect failed. Please use manual mode." : "Auto detect failed. Please use manual mode.",
     "Delete permanently" : "Delete permanently",

@@ -39,6 +39,7 @@ OC.L10N.register(
     "Trash" : "Смеће",
     "Junk" : "Отпад",
     "All" : "Све",
+    "Favorites" : "Омиљени",
     "Creating account failed: " : "Прављење налога није успело:",
     "Auto detect failed. Please use manual mode." : "Ауто-откривање није успело. Покушајте ручно.",
     "Delete permanently" : "Обриши заувек",

@@ -39,6 +39,7 @@ OC.L10N.register(
     "Trash" : "Tempat sampah",
     "Junk" : "Sampah",
     "All" : "Semua",
+    "Favorites" : "Favorit",
     "Creating account failed: " : "Gagal membuat akun:",
     "Auto detect failed. Please use manual mode." : "Deteksi otomatis gagal. Mohon gunakan modus manual.",
     "Delete permanently" : "Hapus secara permanen",

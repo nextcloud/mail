@@ -33,6 +33,7 @@ OC.L10N.register(
     "Trash" : "Zakarrontzia",
     "Junk" : "Zaborra",
     "All" : "Denak",
+    "Favorites" : "Gogokoak",
     "Creating account failed: " : "Huts egin du kontua sortzen:",
     "Auto detect failed. Please use manual mode." : "Autodetekzioak huts egin du. Erabili eskuzko modua",
     "Delete permanently" : "Ezabatu betirako",

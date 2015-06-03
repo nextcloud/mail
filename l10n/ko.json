@@ -37,6 +37,7 @@
     "Trash" : "휴지통",
     "Junk" : "스팸 메일함",
     "All" : "전체 편지함",
+    "Favorites" : "즐겨찾기",
     "Creating account failed: " : "계정 생성 실패: ",
     "Auto detect failed. Please use manual mode." : "자동 감지가 실패하였습니다. 수동 모드를 사용하십시오.",
     "Delete permanently" : "영구히 삭제",

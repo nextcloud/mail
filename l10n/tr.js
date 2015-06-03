@@ -36,6 +36,7 @@ OC.L10N.register(
     "Trash" : "Çöp Kutusu",
     "Junk" : "Gereksiz",
     "All" : "Tümü",
+    "Favorites" : "Sık kullanılanlar",
     "Creating account failed: " : "Hesap oluşturma başarısız:",
     "Auto detect failed. Please use manual mode." : "Otomatik sınama başarısız. Lütfen el kipini kullanın.",
     "Delete permanently" : "Kalıcı olarak sil",

@@ -32,6 +32,7 @@ OC.L10N.register(
     "Trash" : "Kosz",
     "Junk" : "Spam",
     "All" : "Wszystkie",
+    "Favorites" : "Ulubione",
     "Creating account failed: " : "Utworzenie konta nie powiodło się:",
     "Auto detect failed. Please use manual mode." : "Autowykrywanie nie powiodło się. Proszę użyć trybu ręcznego.",
     "Delete permanently" : "Trwale usuń",

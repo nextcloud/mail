@@ -39,6 +39,7 @@ OC.L10N.register(
     "Trash" : "Papierkorb",
     "Junk" : "Spam",
     "All" : "Alle",
+    "Favorites" : "Favoriten",
     "Creating account failed: " : "Erstellung des Kontos ist fehlgeschlagen:",
     "Auto detect failed. Please use manual mode." : "Automatische Erkennung fehlgeschlagen. Bitte nutzen Sie den manuellen Modus.",
     "Delete permanently" : "Endgültig löschen",

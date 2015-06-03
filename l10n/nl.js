@@ -39,6 +39,7 @@ OC.L10N.register(
     "Trash" : "Verwijderen",
     "Junk" : "Afval",
     "All" : "Alle",
+    "Favorites" : "Favorieten",
     "Creating account failed: " : "Aanmaken account mislukt:",
     "Auto detect failed. Please use manual mode." : "Automatisch vaststellen mislukt. Gebruik handmatige modus.",
     "Delete permanently" : "Definitief verwijderen",

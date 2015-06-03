@@ -38,6 +38,7 @@ OC.L10N.register(
     "Trash" : "Корзина",
     "Junk" : "Спам",
     "All" : "Все",
+    "Favorites" : "Избранное",
     "Creating account failed: " : "Ошибка создания учетной записи:",
     "Auto detect failed. Please use manual mode." : "Не удалось определить настройки автоматически. Воспользуйтесь ручным режимом.",
     "Delete permanently" : "Удалить окончательно",

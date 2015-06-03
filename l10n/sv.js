@@ -38,6 +38,7 @@ OC.L10N.register(
     "Trash" : "Papperskorgen",
     "Junk" : "Skräp",
     "All" : "Alla",
+    "Favorites" : "Favoriter",
     "Creating account failed: " : "Skapa konto misslyckades:",
     "Auto detect failed. Please use manual mode." : "Automatisk detektering misslyckades. Vänligen använd manuellt läge.",
     "Delete permanently" : "Radera permanent",

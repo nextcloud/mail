@@ -39,6 +39,7 @@ OC.L10N.register(
     "Trash" : "Lixeira",
     "Junk" : "Lixo",
     "All" : "Todos",
+    "Favorites" : "Favoritos",
     "Creating account failed: " : "A criação de contas falhou:",
     "Auto detect failed. Please use manual mode." : "Auto detecção falhou. Por favor use o modo manual.",
     "Delete permanently" : "Excluir permanentemente",

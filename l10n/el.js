@@ -39,6 +39,7 @@ OC.L10N.register(
     "Trash" : "Στα απορρίμματα",
     "Junk" : "Ανεπιθύμητα",
     "All" : "Όλες",
+    "Favorites" : "Αγαπημένες",
     "Creating account failed: " : "Η δημιουργία λογαριασμού απέτυχε:",
     "Auto detect failed. Please use manual mode." : " Η αυτόματη ανίχνευση απέτυχε. Παρακαλούμε χρησιμοποιήστε τη χειροκίνητη λειτουργία.",
     "Delete permanently" : "Μόνιμη διαγραφή",

@@ -39,6 +39,7 @@ OC.L10N.register(
     "Trash" : "Koš",
     "Junk" : "Spam",
     "All" : "Vše",
+    "Favorites" : "Oblíbené",
     "Creating account failed: " : "Vytvoření účtu selhalo:",
     "Auto detect failed. Please use manual mode." : "Autodetekce selhala. Použijte prosím ruční nastavení.",
     "Delete permanently" : "Trvale odstranit",

@@ -34,6 +34,7 @@ OC.L10N.register(
     "Trash" : "Papelera",
     "Junk" : "Puxarra",
     "All" : "Toos",
+    "Favorites" : "Favoritos",
     "Creating account failed: " : "Fallu creando la cuenta:",
     "Auto detect failed. Please use manual mode." : "Falló l'autodeteición. Por favor, usa el mou manual.",
     "Delete permanently" : "Desaniciar dafechu",

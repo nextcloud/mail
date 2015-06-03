@@ -39,6 +39,7 @@ OC.L10N.register(
     "Trash" : "Papirkurv",
     "Junk" : "Søppel",
     "All" : "Alle",
+    "Favorites" : "Favoritter",
     "Creating account failed: " : "Oppretting av konto feilet:",
     "Auto detect failed. Please use manual mode." : "Automatisk påvisning feilet. Bruk manuelt oppsett.",
     "Delete permanently" : "Slett permanent",

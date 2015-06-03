@@ -39,6 +39,7 @@ OC.L10N.register(
     "Trash" : "Roskakori",
     "Junk" : "Roskaposti",
     "All" : "Kaikki",
+    "Favorites" : "Suosikit",
     "Creating account failed: " : "Tilin luominen epäonnistui:",
     "Auto detect failed. Please use manual mode." : "Automaattinen havaitseminen epäonnistui. Käytä manuaalitilaa.",
     "Delete permanently" : "Poista pysyvästi",

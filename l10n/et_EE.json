@@ -32,6 +32,7 @@
     "Trash" : "Prügikast",
     "Junk" : "Tämpspost",
     "All" : "Kõik",
+    "Favorites" : "Lemmikud",
     "Creating account failed: " : "Konto loomine ebaõnnestus:",
     "Auto detect failed. Please use manual mode." : "Automaatne tuvastus ebaõnnestus. Palun proovi käsitsi.",
     "Delete permanently" : "Kustuta jäädavalt",

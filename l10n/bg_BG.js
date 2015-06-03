@@ -34,6 +34,7 @@ OC.L10N.register(
     "Trash" : "Боклук",
     "Junk" : "Спам",
     "All" : "Всички",
+    "Favorites" : "Любими",
     "Creating account failed: " : "Създаване на профила неуспешно:",
     "Auto detect failed. Please use manual mode." : "Неуспешни автоматични настройки. Моля, използвай ръчен режим.",
     "Delete permanently" : "Изтрий завинаги",
