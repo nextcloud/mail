@@ -591,7 +591,7 @@ var Mail = {
 
 			// focus 'to' field automatically on clicking New message button
 			$('#to').focus();
-			if (!_.isUndefined($(data.currentTarget).data().email)) {
+			if (!_.isUndefined(data.currentTarget) && !_.isUndefined($(data.currentTarget).data().email)) {
 				var to = '"' + $(data.currentTarget).data().label + '" <' + $(data.currentTarget).data().email + '>';
 				$('#to').val(to);
 			}
