@@ -1,5 +1,5 @@
 /* global Mail, OC */
-$(function () {
+$(function() {
 
 	function split(val) {
 		return val.split(/,\s*/);
@@ -9,11 +9,11 @@ $(function () {
 		return split(term).pop();
 	}
 	$(document).on('focus', '.recipient-autocomplete', function() {
-		if ( !$(this).data("autocomplete") ) { // If the autocomplete wasn't called yet:
+		if (!$(this).data('autocomplete')) { // If the autocomplete wasn't called yet:
 
 			// don't navigate away from the field on tab when selecting an item
 			$(this)
-			.bind('keydown', function (event) {
+			.bind('keydown', function(event) {
 				if (event.keyCode === $.ui.keyCode.TAB &&
 					typeof $(this).data('autocomplete') !== 'undefined' &&
 					$(this).data('autocomplete').menu.active) {
@@ -21,24 +21,24 @@ $(function () {
 				}
 			})
 			.autocomplete({
-				source:function (request, response) {
+				source:function(request, response) {
 					$.getJSON(
 						OC.generateUrl('/apps/mail/accounts/autoComplete'),
 						{
 							term:extractLast(request.term)
 						}, response);
 				},
-				search:function () {
+				search:function() {
 					// custom minLength
 					var term = extractLast(this.value);
 					return term.length >= 2;
 
 				},
-				focus:function () {
+				focus:function() {
 					// prevent value inserted on focus
 					return false;
 				},
-				select:function (event, ui) {
+				select:function(event, ui) {
 					var terms = split(this.value);
 					// remove the current input
 					terms.pop();
@@ -46,7 +46,7 @@ $(function () {
 					terms.push(ui.item.value);
 					// add placeholder to get the comma-and-space at the end
 					terms.push('');
-					this.value = terms.join(", ");
+					this.value = terms.join(', ');
 					return false;
 				}
 			});
@@ -103,9 +103,9 @@ $(function () {
 
 		$.ajax({
 			url:OC.generateUrl('/apps/mail/accounts/{accountId}/send', {accountId: Mail.State.currentAccountId}),
-			beforeSend:function () {
+			beforeSend:function() {
 			},
-			complete:function () {
+			complete:function() {
 				replyMessageBody.removeClass('icon-loading');
 				replyMessageBody.prop('disabled', false);
 				replyMessageSend.prop('disabled', false);
@@ -121,7 +121,7 @@ $(function () {
 				body:replyMessageBody.val()
 			},
 			type: 'POST',
-			success:function () {
+			success:function() {
 				Mail.State.messageView.setMessageFlag(messageId, 'answered', true);
 				OC.Notification.showTemporary(t('mail', 'Message sent!'));
 
