@@ -268,7 +268,11 @@ var Mail = {
 					if (currentAddress && email === currentAddress.emailAddress) {
 						label = t('mail', 'you');
 					}
-					return memo + '<span title="' + email + '">' + label + '</span>';
+					var title = t('mail', 'Send message to {email}', {email: email});
+					memo += '<span class="tipsy-mailto" title="' + title + '">';
+					memo += '<a class="link-mailto" data-email="' +	email + '" data-label="' +	label + '">';
+					memo += label + '</a></span>';
+					return memo;
 				}, "");
 				return new Handlebars.SafeString(str);
 			});
@@ -552,7 +556,7 @@ var Mail = {
 
 		openComposer: function(data) {
 			Mail.UI.composerVisible = true;
-
+			$('.tipsy').remove();
 			$('#mail_new_message').prop('disabled', true);
 
 			// Abort message loads
@@ -587,6 +591,10 @@ var Mail = {
 
 			// focus 'to' field automatically on clicking New message button
 			$('#to').focus();
+			if (!_.isUndefined(data.currentTarget) && !_.isUndefined($(data.currentTarget).data().email)) {
+				var to = '"' + $(data.currentTarget).data().label + '" <' + $(data.currentTarget).data().email + '>';
+				$('#to').val(to);
+			}
 
 			Mail.UI.setMessageActive(null);
 		},
@@ -1006,6 +1014,10 @@ $(document).ready(function () {
 		Mail.UI.saveAttachment(messageId);
 	});
 
+	$(document).on('click', '.link-mailto', function(event){
+		Mail.UI.openComposer(event);
+	});
+
 	$(document).on('show', function() {
 		Mail.UI.changeFavicon(OC.filePath('mail', 'img', 'favicon.png'));
 	});
@@ -1016,12 +1028,12 @@ $(document).ready(function () {
 		var key = event.keyCode || event.which;
 		if (Mail.State.currentMessageId) {
 			switch (key) {
-				case 46:
-					// Delete key
-					if (!$('#to, #cc, .reply-message-body').is(':focus')) {
-						$('.mail_message_summary.active .icon-delete.action.delete').click();
-					}
-					break;
+			case 46:
+				// Delete key
+				if (!$('#to, #cc, .reply-message-body').is(':focus')) {
+					$('.mail_message_summary.active .icon-delete.action.delete').click();
+				}
+				break;
 			}
 		}
 	});
