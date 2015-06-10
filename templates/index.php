@@ -81,6 +81,7 @@ script('mail', 'jquery-visibility');
 	</div>
 </script>
 <script id="mail-message-template" type="text/x-handlebars-template">
+	<div id="mail-message-close" class="icon-close"></div>
 	<div id="mail-message-header" class="section">
 		<h2 title="{{subject}}">{{subject}}</h2>
 		<p class="transparency">
@@ -380,7 +381,7 @@ script('mail', 'jquery-visibility');
 
 
 
-		<div id="mail-message" class="icon-loading">
+		<div id="mail-message" class="icon-loading hidden-mobile">
 		</div>
 	</div>
 

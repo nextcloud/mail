@@ -81,6 +81,7 @@ views.Message = Backbone.Marionette.ItemView.extend({
 
 	openMessage: function(event) {
 		event.stopPropagation();
+		$('#mail-message').removeClass('hidden-mobile');
 		Mail.UI.loadMessage(this.model.id, {
 			force: true
 		});

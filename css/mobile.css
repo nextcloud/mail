@@ -1,5 +1,44 @@
 @media only screen and (max-width: 768px) {
 
+/* full width for message list on mobile */
+#mail_messages {
+	width: 100%;
+}
+
+/* overlay message detail on top of message list */
+#mail-message {
+	z-index: 100;
+	background: #fff;
+	width: 100%;
+	left: 0;
+	height: 100%;
+	top: 0;
+	box-shadow: 0 0 100px rgba(100, 100, 100, .9);
+}
+
+#mail-message-close {
+	display: block;
+	position: fixed;
+	right: 0;
+	top: 45px;
+	width: 44px;
+	height: 44px;
+	background-size: 24px;
+	z-index: 100;
+	cursor: pointer;
+	-ms-filter: "progid:DXImageTransform.Microsoft.Alpha(Opacity=40)";
+	opacity: .4;
+}
+#mail-message-close:hover,
+#mail-message-close:focus {
+	-ms-filter: "progid:DXImageTransform.Microsoft.Alpha(Opacity=60)";
+	opacity: .6;
+}
+
+.hidden-mobile {
+	display: none;
+}
+
 /* make header scroll away on mobile */
 #mail-message-header {
 	position: relative;
@@ -32,7 +71,7 @@
 	width: 80%;
 }
 .mail_message_summary_subject {
-	width: 67%;
+	width: 80%;
 }
 
 /* end of media query */

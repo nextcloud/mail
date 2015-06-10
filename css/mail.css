@@ -507,6 +507,10 @@
 	margin-bottom: 0;
 }
 
+#mail-message-close {
+	display: none;
+}
+
 .mail-message-body {
 	margin: 100px 10px 50px 30px;
 }
