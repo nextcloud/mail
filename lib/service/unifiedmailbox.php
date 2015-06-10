@@ -40,6 +40,7 @@ class UnifiedMailbox implements IMailBox {
 			$messages = $inbox->getMessages($from, $count, $filter);
 			$messages = array_map(function($message) use ($account) {
 				$message['id'] = base64_encode(json_encode([$account->getId(), $message['id']]));
+				$message['accountMail'] = $account->getEmail();
 				return $message;
 			}, $messages);
 
