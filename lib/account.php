@@ -14,6 +14,7 @@ use Horde_Imap_Client_Ids;
 use Horde_Imap_Client_Mailbox;
 use Horde_Imap_Client_Socket;
 use Horde_Imap_Client;
+use Horde_Mail_Transport;
 use Horde_Mail_Transport_Mail;
 use Horde_Mail_Transport_Smtphorde;
 use OCA\Mail\Cache\Cache;
@@ -232,7 +233,7 @@ class Account implements IAccount {
 	}
 
 	/**
-	 * @return Horde_Mail_Transport_Smtphorde
+	 * @return Horde_Mail_Transport
 	 */
 	public function createTransport() {
 		$transport = $this->config->getSystemValue('app.mail.transport', 'smtp');
@@ -620,6 +621,17 @@ class Account implements IAccount {
 	 */
 	public function getEmail() {
 		return $this->account->getEmail();
+	}
+
+	public function testConnectivity() {
+		// connect to imap
+		$this->getImapConnection();
+
+		// connect to smtp
+		$smtp = $this->createTransport();
+		if ($smtp instanceof Horde_Mail_Transport_Smtphorde) {
+			$smtp->getSMTPObject();
+		}
 	}
 }
 
