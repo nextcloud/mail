@@ -134,7 +134,11 @@ class MessagesController extends Controller {
 		$mailBox = $this->getFolder();
 
 		$account = $this->getAccount();
-		$m = $mailBox->getMessage($id);
+		try {
+			$m = $mailBox->getMessage($id);
+		} catch (DoesNotExistException $ex) {
+			return new JSONResponse([], 404);
+		}
 		$json = $m->getFullMessage($account->getEmail(), $mailBox->getSpecialRole());
 		$json['senderImage'] = $this->contactsIntegration->getPhoto($m->getFromEmail());
 		if (isset($json['hasHtmlBody'])){
@@ -266,8 +270,7 @@ class MessagesController extends Controller {
 	 * @param int $id
 	 * @return JSONResponse
 	 */
-	public function destroy($id)
-	{
+	public function destroy($id) {
 		try {
 			$account = $this->getAccount();
 			$m = new \OCA\Mail\Account($account);
@@ -282,9 +285,7 @@ class MessagesController extends Controller {
 	/**
 	 * TODO: private functions below have to be removed from controller -> imap service to be build
 	 */
-
-	private function getAccount()
-	{
+	private function getAccount() {
 		$accountId = $this->params('accountId');
 		return $this->mapper->find($this->currentUserId, $accountId);
 	}
@@ -292,8 +293,7 @@ class MessagesController extends Controller {
 	/**
 	 * @return \OCA\Mail\Mailbox
 	 */
-	private function getFolder()
-	{
+	private function getFolder() {
 		$account = $this->getAccount();
 		$m = new \OCA\Mail\Account($account);
 		$folderId = base64_decode($this->params('folderId'));
