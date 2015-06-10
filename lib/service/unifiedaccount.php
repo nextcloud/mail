@@ -2,6 +2,8 @@
 
 namespace OCA\Mail\Service;
 
+use OCP\IL10N;
+
 class UnifiedAccount implements IAccount {
 
 	const ID = -1;
@@ -9,10 +11,20 @@ class UnifiedAccount implements IAccount {
 	/** @var AccountService */
 	private $accountService;
 
-	public function __construct(AccountService $accountService, $userId) {
+	/** @var IL10N */
+	private $l10n;
+
+	/**
+	 * @param AccountService $accountService
+	 * @param string $userId
+	 * @param IL10N $l10n
+	 */
+	public function __construct(AccountService $accountService, $userId, IL10N $l10n) {
 		$this->accountService = $accountService;
 		$this->userId = $userId;
+		$this->l10n = $l10n;
 	}
+
 	/**
 	 * @return array
 	 */
@@ -38,7 +50,7 @@ class UnifiedAccount implements IAccount {
 	}
 
 	private function buildInbox() {
-		$displayName = 'All inboxes';
+		$displayName = $this->l10n->t('All inboxes');
 		$id = 'all-inboxes';
 
 		$allAccounts = $this->accountService->findByUserId($this->userId);

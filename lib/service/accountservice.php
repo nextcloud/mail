@@ -5,19 +5,22 @@ namespace OCA\Mail\Service;
 use OCA\Mail\Account;
 use OCA\Mail\Db\MailAccount;
 use OCA\Mail\Db\MailAccountMapper;
+use OCP\IL10N;
 
 class AccountService {
 
-	/**
-	 * @var \OCA\Mail\Db\MailAccountMapper
-	 */
+	/** @var \OCA\Mail\Db\MailAccountMapper */
 	private $mapper;
+
+	/** @var IL10N */
+	private $l10n;
 
 	/**
 	 * @param MailAccountMapper $mapper
 	 */
-	public function __construct($mapper) {
+	public function __construct(MailAccountMapper $mapper, IL10N $l10n) {
 		$this->mapper = $mapper;
+		$this->l10n = $l10n;
 	}
 
 	/**
@@ -69,6 +72,6 @@ class AccountService {
 	}
 
 	private function buildUnifiedAccount($userId) {
-		return new UnifiedAccount($this, $userId);
+		return new UnifiedAccount($this, $userId, $this->l10n);
 	}
 }

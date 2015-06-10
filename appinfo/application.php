@@ -47,7 +47,8 @@ class Application extends App {
 		$container->registerService('AccountService', function($c) {
 			/** @var IAppContainer $c */
 			return new AccountService(
-				$c->query('MailAccountMapper')
+				$c->query('MailAccountMapper'),
+				$c->getServer()->getL10N('mail')
 			);
 		});
 
