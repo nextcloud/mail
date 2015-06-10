@@ -157,11 +157,31 @@
 }
 
 .mail-account-email {
+	display: inline-block;
 	opacity: .5;
-	padding: 20px 0 10px 12px;
+	padding: 20px 0 10px 25px;
 	overflow: hidden;
 	text-overflow: ellipsis;
 	white-space: nowrap;
+}
+
+.mail-account-color {
+	display: inline-block;
+	width: 14px;
+	height: 14px;
+	border-radius: 50%;
+	position: relative;
+	left: 15px;
+	top: -12px;
+}
+
+.mail-message-account-color {
+	position: absolute;
+	width: 3px;
+	height: 69px;
+	z-index: 1;
+	-ms-filter: "progid:DXImageTransform.Microsoft.Alpha(Opacity=50)";
+	opacity: .5;
 }
 
 
