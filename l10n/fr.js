@@ -24,7 +24,7 @@ OC.L10N.register(
     "Message sent!" : "Message envoyé !",
     "Error sending the reply." : "Erreur lors de l'envoi de la réponse.",
     "Error while deleting account." : "Erreur lors de la suppression du compte.",
-    "Choose a file to add as attachment" : "Choisissez un fichier à ajouter comme pièce jointe",
+    "Choose a file to add as attachment" : "Choisissez un fichier à joindre au message",
     "Message could not be starred. Please try again." : "Le message n'a pu être placé parmi les favoris. Veuillez essayer à nouveau.",
     "Error while deleting message." : "Erreur lors de la suppression du message.",
     "Checking mail …" : "Relève du courrier ...",
