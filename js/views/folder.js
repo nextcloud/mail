@@ -4,11 +4,11 @@ var views = views || {};
 
 views.Folder = Backbone.Marionette.ItemView.extend({
 
-	template: "#mail-folder-template",
+	template: '#mail-folder-template',
 
 	events: {
-		"click .collapse" : "collapseFolder",
-		"click .folder" : "loadFolder"
+		'click .collapse' : 'collapseFolder',
+		'click .folder' : 'loadFolder'
 	},
 
 	initialize: function(options) {
@@ -44,7 +44,7 @@ views.Account = Backbone.Marionette.CompositeView.extend({
 	collection: null,
 	model: null,
 
-	template: "#mail-account-template",
+	template: '#mail-account-template',
 
 	childView: views.Folder,
 
@@ -68,7 +68,7 @@ views.Folders = Backbone.Marionette.CollectionView.extend({
 		this.collection = new models.AccountList();
 	},
 
-	getFolderById: function (accountId, folderId) {
+	getFolderById: function(accountId, folderId) {
 		var activeAccount = accountId || Mail.State.currentAccountId;
 		folderId = folderId || Mail.State.currentFolderId;
 		activeAccount = this.collection.get(activeAccount);
@@ -83,7 +83,7 @@ views.Folders = Backbone.Marionette.CollectionView.extend({
 		activeFolder = activeAccount;
 		var parts = folderId.split(delimiter);
 		var k = '';
-		_.each(parts, function(p){
+		_.each(parts, function(p) {
 			if (k.length > 0) {
 				k += delimiter;
 			}
@@ -117,7 +117,7 @@ views.Folders = Backbone.Marionette.CollectionView.extend({
 		var unread = activeFolder.unseen;
 		var name = activeFolder.name || activeFolder.get('name');
 
-		if ( unread > 0) {
+		if (unread > 0) {
 			window.document.title = name + ' (' + unread + ') - ' +
 			activeAccount.get('email') + ' - Mail - ' + oc_defaults.title;
 		} else {
