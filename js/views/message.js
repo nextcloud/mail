@@ -98,14 +98,14 @@ views.Message = Backbone.Marionette.ItemView.extend({
 			$('.tipsy').remove();
 			var thisModelCollection = thisModel.collection;
 			var index = thisModelCollection.indexOf(thisModel);
-			var nextMessage = thisModelCollection.at(index+1);
+			var nextMessage = thisModelCollection.at(index-1);
 			if (!nextMessage) {
-				nextMessage = thisModelCollection.at(index-1);
+				nextMessage = thisModelCollection.at(index+1);
 			}
 			thisModelCollection.remove(thisModel);
 			if (Mail.State.currentMessageId === thisModel.id) {
 				if (nextMessage) {
-					Mail.UI.openMessage(nextMessage.id);
+					Mail.UI.loadMessage(nextMessage.id);
 				}
 			}
 		});
