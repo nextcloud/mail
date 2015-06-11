@@ -18,12 +18,18 @@ module.exports = function (grunt) {
 				config: '.jscsrc',
 				verbose: true
 			}
+		},
+		jshint: {
+			jshintrc: '.jshintrc'
 		}
 	});
 
 	// jscs
 	grunt.loadNpmTasks('grunt-jscs');
 
+	// jshint
+	grunt.loadNpmTasks('grunt-contrib-jshint');
+
 	// Default task
-	grunt.registerTask('default', ['grunt-jscs']);
+	grunt.registerTask('default', ['jscs', 'jshint']);
 };
