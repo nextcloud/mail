@@ -24,7 +24,7 @@
         "js/backbone.marionette.js",
         "js/jquery.autosize.js",
         "js/jquery.storageapi.js",
-        "js/jquery.visibility.js"
+        "js/jquery-visibility.js"
     ],
 
     "jsDoc": {
