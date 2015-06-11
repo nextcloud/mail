@@ -3,15 +3,15 @@ var models = {};
 
 models.Attachment = Backbone.Model.extend({
 
-	initialize: function () {
+	initialize: function() {
 		this.set('id', _.uniqueId());
 
 		var s = this.get('fileName');
-		if(s.charAt(0) === '/') {
+		if (s.charAt(0) === '/') {
 			s = s.substr(1);
 		}
 
-		this.set('displayName',s);
+		this.set('displayName', s);
 	}
 });
 
@@ -57,7 +57,7 @@ models.MessageList = Backbone.Collection.extend({
 	model: models.Message,
 
 	comparator: function(message) {
-		return message.get("dateInt") * -1;
+		return message.get('dateInt') * -1;
 	}
 });
 
@@ -115,6 +115,6 @@ models.AccountList = Backbone.Collection.extend({
 	model: models.Account,
 
 	comparator: function(folder) {
-		return folder.get("id");
+		return folder.get('id');
 	}
 });
