@@ -10,7 +10,7 @@ if (_.isUndefined(OC.Notification.showTemporary)) {
 	 * @param {int} [options.timeout=7] timeout in seconds, if this is 0 it will show the message permanently
 	 * @param {boolean} [options.isHTML=false] an indicator for HTML notifications (true) or text (false)
 	 */
-	OC.Notification.showTemporary = function (text, options) {
+	OC.Notification.showTemporary = function(text, options) {
 		var defaults = {
 				isHTML: false,
 				timeout: 7
@@ -39,38 +39,90 @@ if (_.isUndefined(OC.Notification.showTemporary)) {
 }
 
 var Mail = {
-	State: {
-		currentFolderId: null,
-		currentAccountId: null,
-		currentMessageId: null,
-		messagesLoading: null,
-		messageLoading: null,
-		accounts: null,
-		messageView: null,
-		composeView: null,
-		router: null,
-		Cache: null
-	},
+	State: (function() {
+		var accounts = null;
+		var currentFolderId = null;
+		var currentAccountId = null;
+		var currentMessageId = null;
+		var messagesLoading = null;
+		var messageLoading = null;
+		
+		Object.defineProperties(this, {
+			accounts: {
+				get: function() { 
+					return accounts;
+				},
+				set: function(acc) {
+					accounts = acc;
+				}
+			},
+			currentAccountId: {
+				get: function() {
+					return currentAccountId;
+				},
+				set: function(newId) {
+					currentAccountId = newId;
+				}
+			},
+			currentFolderId: {
+				get: function() {
+					return currentFolderId;
+				},
+				set: function(newId) {
+					var oldId = currentFolderId;
+					currentFolderId = newId;
+					if (newId !== oldId) {
+						Mail.UI.Events.onFolderChanged();
+					}
+				}
+			},
+			currentMessageId: {
+				get: function() {
+					return currentMessageId;
+				},
+				set: function(newId) {
+					currentMessageId = newId;
+				}
+			},
+			messagesLoading: {
+				get: function() {
+					return messagesLoading;
+				},
+				set: function(loading) {
+					messagesLoading = loading;
+				}
+			},
+			messageLoading: {
+				get: function() {
+					return messageLoading;
+				},
+				set: function(loading) {
+					messageLoading = loading;
+				}
+			}
+		});
+		return this;
+	})(),
 	Cache: {
-		getFolderPath: function (accountId, folderId) {
+		getFolderPath: function(accountId, folderId) {
 			return 'messages' +
 				'.' +
 				accountId.toString() +
 				'.' +
 				folderId.toString();
 		},
-		getMessagePath: function (accountId, folderId, messageId) {
+		getMessagePath: function(accountId, folderId, messageId) {
 			return Mail.Cache.getFolderPath(accountId, folderId) +
 				'.' +
 				messageId.toString();
 		},
 		cleanUp: function(accounts) {
-			var activeAccounts = _.map(accounts, function (account) {
+			var activeAccounts = _.map(accounts, function(account) {
 				return account.accountId;
 			});
 			var storage = $.localStorage;
-			_.each(storage.get('messages'), function (account, accountId) {
-				var isActive = _.any(activeAccounts, function (a) {
+			_.each(storage.get('messages'), function(account, accountId) {
+				var isActive = _.any(activeAccounts, function(a) {
 					return a === parseInt(accountId);
 				});
 				if (!isActive) {
@@ -79,12 +131,12 @@ var Mail = {
 				}
 			});
 		},
-		getFolderMessages: function (accountId, folderId) {
+		getFolderMessages: function(accountId, folderId) {
 			var path = Mail.Cache.getFolderPath(accountId, folderId);
 			var storage = $.localStorage;
 			return storage.isSet(path) ? storage.get(path) : null;
 		},
-		getMessage: function (accountId, folderId, messageId) {
+		getMessage: function(accountId, folderId, messageId) {
 			var path = Mail.Cache.getMessagePath(accountId, folderId, messageId);
 			var storage = $.localStorage;
 			if (storage.isSet(path)) {
@@ -96,7 +148,7 @@ var Mail = {
 				return null;
 			}
 		},
-		addMessage: function (accountId, folderId, message) {
+		addMessage: function(accountId, folderId, message) {
 			var path = Mail.Cache.getMessagePath(accountId, folderId, message.id);
 			var storage = $.localStorage;
 
@@ -107,10 +159,10 @@ var Mail = {
 			storage.set(path, message);
 
 			// Remove old messages (keep 20 most recently loaded)
-			var messages = $.map(Mail.Cache.getFolderMessages(accountId, folderId), function (value) {
+			var messages = $.map(Mail.Cache.getFolderMessages(accountId, folderId), function(value) {
 				return [value];
 			});
-			messages.sort(function (m1, m2) {
+			messages.sort(function(m1, m2) {
 				return m2.timestamp - m1.timestamp;
 			});
 			var oldMessages = messages.slice(20, messages.length);
@@ -121,13 +173,13 @@ var Mail = {
 	},
 	Search: {
 		timeoutID: null,
-		attach: function (search) {
+		attach: function(search) {
 			search.setFilter('mail', Mail.Search.filter);
 		},
-		filter: function (query) {
+		filter: function(query) {
 			window.clearTimeout(Mail.Search.timeoutID);
 			Mail.Search.timeoutID = window.setTimeout(function() {
-				Mail.State.messageView.filterCurrentMailbox(query);
+				Mail.UI.messageView.filterCurrentMailbox(query);
 			}, 500);
 			$('#searchresults').hide();
 		}
@@ -137,7 +189,7 @@ var Mail = {
        https://jslinterrors.com/this-function-has-too-many-parameters
      */
 	BackGround: {
-		showNotification: function (title, body, tag, icon, accountId, folderId) {
+		showNotification: function(title, body, tag, icon, accountId, folderId) {
 			// notifications not supported -> go away
 			if (typeof Notification === 'undefined') {
 				return;
@@ -159,14 +211,14 @@ var Mail = {
 				Mail.UI.loadFolder(accountId, folderId, false);
 				window.focus();
 			};
-			setTimeout(function () {
+			setTimeout(function() {
 				notification.close();
 			}, 5000);
 		},
 
-		showMailNotification: function (email, folder) {
+		showMailNotification: function(email, folder) {
 			if (Notification.permission === "granted" && folder.messages.length > 0) {
-				var from = _.map(folder.messages, function (m) {
+				var from = _.map(folder.messages, function(m) {
 					return m.from;
 				});
 				from = _.uniq(from);
@@ -190,8 +242,8 @@ var Mail = {
 			}
 		},
 
-		checkForNotifications: function () {
-			_.each(Mail.State.accounts, function (a) {
+		checkForNotifications: function() {
+			_.each(Mail.State.accounts, function(a) {
 				var localAccount = Mail.State.folderView.collection.get(a.accountId);
 				var folders = localAccount.get('folders');
 
@@ -219,7 +271,7 @@ var Mail = {
 								// reload if current selected folder has changed
 								if (Mail.State.currentAccountId === f.accountId &&
 									Mail.State.currentFolderId === f.id) {
-									Mail.State.messageView.collection.add(f.messages);
+									Mail.UI.messageView.collection.add(f.messages);
 								}
 
 								Mail.State.folderView.updateTitle();
@@ -233,11 +285,11 @@ var Mail = {
 
 		/**
 		 * Fetch message of the current account/folder in background
-		 *
+		 * 
 		 * Uses a queue where message IDs are stored and fetched periodically
 		 * The message is only fetched if it's not already cached
 		 */
-		messageFetcher: (function () {
+		messageFetcher: (function() {
 			var accountId = null;
 			var folderId = null;
 			var pollIntervall = 3 * 1000;
@@ -250,11 +302,11 @@ var Mail = {
 					var messages = queue;
 					queue = [];
 
-					_.each(messages, function (messageId) {
+					_.each(messages, function(messageId) {
 						if (!Mail.Cache.getMessage(accountId, folderId, messageId)) {
 							Mail.Communication.fetchMessage(accountId, folderId, messageId, {
 								backgroundMode: true,
-								onSuccess: function (message) {
+								onSuccess: function(message) {
 									// Add the fetched message to cache
 									Mail.Cache.addMessage(accountId, folderId, message);
 								}
@@ -265,12 +317,12 @@ var Mail = {
 			}
 
 			return {
-				start: function () {
+				start: function() {
 					accountId = Mail.State.currentAccountId;
 					folderId = Mail.State.currentFolderId;
 					timer = setInterval(fetch, pollIntervall);
 				},
-				restart: function () {
+				restart: function() {
 					// Stop previous fetcher
 					clearInterval(timer);
 
@@ -282,14 +334,14 @@ var Mail = {
 					// Start again
 					this.start();
 				},
-				push: function (message) {
+				push: function(message) {
 					queue.push(message);
 				}
 			};
 		}())
 	},
 	Communication: {
-		get: function (url, options) {
+		get: function(url, options) {
 			var defaultOptions = {
 					ttl: 60000,
 					cache: true,
@@ -315,10 +367,10 @@ var Mail = {
 			return $.ajax(url, {
 				data: {},
 				type: 'GET',
-				error: function (xhr, textStatus) {
+				error: function(xhr, textStatus) {
 					options.error(textStatus);
 				},
-				success: function (data) {
+				success: function(data) {
 					if (allOptions.cache) {
 						cache.set('data', data);
 						if (typeof allOptions.ttl === 'number') {
@@ -329,11 +381,11 @@ var Mail = {
 				}
 			});
 		},
-		fetchMessage: function (accountId, folderId, messageId, options) {
+		fetchMessage: function(accountId, folderId, messageId, options) {
 			options = options || {};
 			var defaults = {
-				onSuccess: function () { },
-				onError: function () { },
+				onSuccess: function() { },
+				onError: function() { },
 				backgroundMode: false
 			};
 			_.defaults(options, defaults);
@@ -365,61 +417,66 @@ var Mail = {
 			}
 		}
 	},
-	UI: {
-		composerVisible: false,
+	UI: (function() {
+		var messageView = null;
+		var composeView = null;
+		var composerVisible = false;
 
-		renderSettings: function () {
+		this.renderSettings = function() {
 			var source   = $("#mail-settings-template").html();
 			var template = Handlebars.compile(source);
 			var html = template(Mail.State.accounts);
 			$('#app-settings-content').html(html);
-		},
-		changeFavicon: function (src) {
+		};
+
+		this.changeFavicon = function(src) {
 			$('link[rel="shortcut icon"]').attr('href',src);
-		},
-		loadAccounts: function () {
+		};
+
+		this.loadAccounts = function() {
 			Mail.Communication.get(OC.generateUrl('apps/mail/accounts'), {
-				success: function (accounts) {
+				success: function(accounts) {
 					Mail.State.accounts = accounts;
 					Mail.UI.renderSettings();
 					if (accounts.length === 0) {
 						Mail.UI.addAccount();
 					} else {
 						var firstAccountId = accounts[0].accountId;
-						_.each(accounts, function (a) {
+						_.each(accounts, function(a) {
 							Mail.UI.loadFoldersForAccount(a.accountId, firstAccountId);
 						});
 					}
 					Mail.Cache.cleanUp(accounts);
 				},
-				error: function () {
+				error: function() {
 					Mail.UI.showError(t('mail', 'Error while loading the accounts.'));
 				},
 				ttl: 'no'
 			});
-		},
-		initializeInterface: function () {
-			Handlebars.registerHelper("relativeModifiedDate", function (dateInt) {
+		};
+
+		this.initializeInterface = function() {
+			Handlebars.registerHelper("relativeModifiedDate", function(dateInt) {
 				var lastModified = new Date(dateInt * 1000);
 				var lastModifiedTime = Math.round(lastModified.getTime() / 1000);
 				return relative_modified_date(lastModifiedTime);
 			});
 
-			Handlebars.registerHelper("formatDate", function (dateInt) {
+			Handlebars.registerHelper("formatDate", function(dateInt) {
 				var lastModified = new Date(dateInt * 1000);
 				return formatDate(lastModified);
 			});
 
-			Handlebars.registerHelper("humanFileSize", function (size) {
+			Handlebars.registerHelper("humanFileSize", function(size) {
 				return humanFileSize(size);
 			});
 
-			Handlebars.registerHelper("printAddressList", function (addressList) {
-				var currentAddress = _.find(Mail.State.accounts, function (item) {
+			Handlebars.registerHelper("printAddressList", function(addressList) {
+				var currentAddress = _.find(Mail.State.accounts, function(item) {
 					return item.accountId === Mail.State.currentAccountId;
 				});
 
-				var str = _.reduce(addressList, function (memo, value, index) {
+				var str = _.reduce(addressList, function(memo, value, index) {
 					if (index !== 0) {
 						memo += ', ';
 					}
@@ -440,8 +497,8 @@ var Mail = {
 				return new Handlebars.SafeString(str);
 			});
 
-			Handlebars.registerHelper("printAddressListPlain", function (addressList) {
-				var str = _.reduce(addressList, function (memo, value, index) {
+			Handlebars.registerHelper("printAddressListPlain", function(addressList) {
+				var str = _.reduce(addressList, function(memo, value, index) {
 					if (index !== 0) {
 						memo += ', ';
 					}
@@ -475,7 +532,7 @@ var Mail = {
 				}
 			});
 
-			Marionette.TemplateCache.prototype.compileTemplate = function (rawTemplate) {
+			Marionette.TemplateCache.prototype.compileTemplate = function(rawTemplate) {
 				return Handlebars.compile(rawTemplate);
 			};
 			Marionette.ItemView.prototype.modelEvents = {"change": "render"};
@@ -491,10 +548,10 @@ var Mail = {
 			}
 
 			// setup messages view
-			Mail.State.messageView = new views.Messages({
+			Mail.UI.messageView = new views.Messages({
 				el: $('#mail_messages')
 			});
-			Mail.State.messageView.render();
+			Mail.UI.messageView.render();
 
 			// setup folder view
 			Mail.State.folderView = new views.Folders({
@@ -502,7 +559,7 @@ var Mail = {
 			});
 			Mail.State.folderView.render();
 
-			Mail.State.folderView.listenTo(Mail.State.messageView, 'change:unseen',
+			Mail.State.folderView.listenTo(Mail.UI.messageView, 'change:unseen',
 				Mail.State.folderView.changeUnseen);
 
 			// request permissions
@@ -516,9 +573,9 @@ var Mail = {
 
 			setInterval(Mail.BackGround.checkForNotifications, 5*60*1000);
 			this.loadAccounts();
-		},
+		};
 
-		loadFoldersForAccount: function (accountId, firstAccountId) {
+		this.loadFoldersForAccount = function(accountId, firstAccountId) {
 			$('#mail_messages').removeClass('hidden').addClass('icon-loading');
 			$('#mail-message').removeClass('hidden').addClass('icon-loading');
 			$('#mail_new_message').removeClass('hidden');
@@ -529,7 +586,7 @@ var Mail = {
 			$('#app-navigation').addClass('icon-loading');
 
 			Mail.Communication.get(OC.generateUrl('apps/mail/accounts/{accountId}/folders', {accountId: accountId}), {
-				success: function (jsondata) {
+				success: function(jsondata) {
 					$('#app-navigation').removeClass('icon-loading');
 					Mail.State.folderView.collection.add(jsondata);
 
@@ -547,14 +604,14 @@ var Mail = {
 						Mail.BackGround.messageFetcher.start();
 					}
 				},
-				error: function () {
+				error: function() {
 					Mail.UI.showError(t('mail', 'Error while loading the selected account.'));
 				},
 				ttl: 'no'
 			});
-		},
+		};
 
-		showError: function (message) {
+		this.showError = function(message) {
 			OC.Notification.showTemporary(message);
 			$('#app-navigation')
 				.removeClass('icon-loading');
@@ -564,38 +621,37 @@ var Mail = {
 				.removeClass('icon-loading');
 			$('#mail_message')
 				.removeClass('icon-loading');
-		},
+		};
 
-		clearMessages: function () {
-			Mail.State.messageView.collection.reset();
+		this.clearMessages = function() {
+			Mail.UI.messageView.collection.reset();
 			$('#messages-loading').fadeIn();
 
 			$('#mail-message')
 				.html('')
 				.addClass('icon-loading');
-		},
+		};
 
-		hideMenu: function () {
+		this.hideMenu = function() {
 			$('#new-message').addClass('hidden');
 			if (Mail.State.accounts.length === 0) {
 				$('#app-navigation').hide();
 				$('#app-navigation-toggle').css('background-image', 'none');
 			}
-		},
+		};
 
-		showMenu: function () {
+		this.showMenu = function() {
 			$('#new-message').removeClass('hidden');
 			$('#app-navigation').show();
 			$('#app-navigation-toggle').css('background-image', '');
-		},
+		};
 
-		addMessages: function (data) {
-			Mail.State.messageView.collection.add(data);
-		},
+		this.addMessages = function(data) {
+			Mail.UI.messageView.collection.add(data);
+		};
 
-		loadFolder: function (accountId, folderId, noSelect) {
+		this.loadFolder = function(accountId, folderId, noSelect) {
 			Mail.UI.Events.onComposerLeave();
-			Mail.UI.Events.onFolderChange();
 
 			if (Mail.State.messagesLoading !== null) {
 				Mail.State.messagesLoading.abort();
@@ -634,7 +690,7 @@ var Mail = {
 				Mail.State.currentlyLoading = Mail.Communication.get(
 					OC.generateUrl('apps/mail/accounts/{accountId}/folders/{folderId}/messages',
 						{'accountId': accountId, 'folderId': folderId}), {
-						success: function (jsondata) {
+						success: function(jsondata) {
 							Mail.State.currentlyLoading = null;
 							Mail.State.currentAccountId = accountId;
 							Mail.State.currentFolderId = folderId;
@@ -648,7 +704,7 @@ var Mail = {
 								Mail.UI.addMessages(jsondata);
 
 								// Fetch first 10 messages in background
-								_.each(jsondata.slice(0, 10), function (message) {
+								_.each(jsondata.slice(0, 10), function(message) {
 									Mail.BackGround.messageFetcher.push(message.id);
 								});
 
@@ -671,7 +727,7 @@ var Mail = {
 								.prop('disabled', false);
 
 						},
-						error: function (textStatus) {
+						error: function(textStatus) {
 							if (textStatus !== 'abort') {
 								// Set the old folder as being active
 								Mail.UI.setFolderActive(Mail.State.currentAccountId, Mail.State.currentFolderId);
@@ -681,12 +737,12 @@ var Mail = {
 						cache: false
 					});
 			}
-		},
+		};
 
-		saveAttachment: function (messageId, attachmentId) {
+		this.saveAttachment = function(messageId, attachmentId) {
 			OC.dialogs.filepicker(
 				t('mail', 'Choose a folder to store the attachment in'),
-				function (path) {
+				function(path) {
 					// Loading feedback
 					var saveToFilesBtnSelector = '.attachment-save-to-cloud';
 					if (typeof attachmentId !== "undefined") {
@@ -713,21 +769,21 @@ var Mail = {
 								targetPath: path
 							},
 							type: 'POST',
-							success: function () {
+							success: function() {
 								if (typeof attachmentId === "undefined") {
 									Mail.UI.showError(t('mail', 'Attachments saved to Files.'));
 								} else {
 									Mail.UI.showError(t('mail', 'Attachment saved to Files.'));
 								}
 							},
-							error: function () {
+							error: function() {
 								if (typeof attachmentId === "undefined") {
 									Mail.UI.showError(t('mail', 'Error while saving attachments to Files.'));
 								} else {
 									Mail.UI.showError(t('mail', 'Error while saving attachment to Files.'));
 								}
 							},
-							complete: function () {
+							complete: function() {
 								// Remove loading feedback again
 								$('.attachment-save-to-cloud')
 									.removeClass('icon-loading-small')
@@ -740,9 +796,9 @@ var Mail = {
 				'httpd/unix-directory',
 				true
 			);
-		},
+		};
 
-		openComposer: function(data) {
+		this.openComposer = function(data) {
 			Mail.UI.composerVisible = true;
 			$('.tipsy').remove();
 			$('#mail_new_message').prop('disabled', true);
@@ -763,7 +819,7 @@ var Mail = {
 					data: data
 				});
 
-				Mail.State.composeView.sentCallback = function () {};
+				Mail.State.composeView.sentCallback = function() {};
 			} else {
 				Mail.State.composeView.data = data;
 				Mail.State.composeView.hasData = false;
@@ -785,9 +841,9 @@ var Mail = {
 			}
 
 			Mail.UI.setMessageActive(null);
-		},
+		};
 
-		loadDraft: function(messageId) {
+		this.loadDraft = function(messageId) {
 			var storage = $.localStorage;
 			var draftId = 'draft' +
 				'.' + Mail.State.currentAccountId.toString() +
@@ -798,9 +854,9 @@ var Mail = {
 			} else {
 				return null;
 			}
-		},
+		};
 
-		loadMessage: function (messageId, options) {
+		this.loadMessage = function(messageId, options) {
 			options = options || {};
 			var defaultOptions = {
 				force: false
@@ -848,7 +904,7 @@ var Mail = {
 			$('#mail_new_message').prop('disabled', false);
 
 			var self = this;
-			var loadMessageSuccess = function (message) {
+			var loadMessageSuccess = function(message) {
 				// load local storage draft
 				var draft = self.loadDraft(messageId);
 				if (draft) {
@@ -877,10 +933,10 @@ var Mail = {
 					.html(html)
 					.removeClass('icon-loading');
 
-				Mail.State.messageView.setMessageFlag(messageId, 'unseen', false);
+				Mail.UI.messageView.setMessageFlag(messageId, 'unseen', false);
 
 				// HTML mail rendering
-				$('iframe').load(function () {
+				$('iframe').load(function() {
 					// Expand height to not have two scrollbars
 					$(this).height($(this).contents().find('html').height() + 20);
 					// Fix styling
@@ -949,7 +1005,7 @@ var Mail = {
 				Mail.State.currentFolderId,
 				messageId,
 				{
-					onSuccess: function (message) {
+					onSuccess: function(message) {
 						if (draft) {
 							loadDraftSuccess(message);
 						} else {
@@ -959,19 +1015,19 @@ var Mail = {
 								loadMessageSuccess(message);
 						}
 					},
-					onError: function (jqXHR, textStatus) {
+					onError: function(jqXHR, textStatus) {
 						if (textStatus !== 'abort') {
 							Mail.UI.showError(t('mail', 'Error while loading the selected message.'));
 						}
 					}
 				});
-		},
+		};
 
-		setFolderActive: function (accountId, folderId) {
-			Mail.State.messageView.clearFilter();
+		this.setFolderActive = function(accountId, folderId) {
+			Mail.UI.messageView.clearFilter();
 
 			// disable all other folders for all accounts
-			_.each(Mail.State.accounts, function (account) {
+			_.each(Mail.State.accounts, function(account) {
 				var localAccount = Mail.State.folderView.collection.get(account.accountId);
 				if (_.isUndefined(localAccount)) {
 					return;
@@ -984,15 +1040,15 @@ var Mail = {
 
 			Mail.State.folderView.getFolderById(accountId, folderId)
 				.set('active', true);
-		},
+		};
 
-		setMessageActive: function (messageId) {
-			Mail.State.messageView.setActiveMessage(messageId);
+		this.setMessageActive = function(messageId) {
+			Mail.UI.messageView.setActiveMessage(messageId);
 			Mail.State.currentMessageId = messageId;
 			Mail.State.folderView.updateTitle();
-		},
+		};
 
-		addAccount: function () {
+		this.addAccount = function() {
 			Mail.UI.Events.onComposerLeave();
 
 			$('#mail_messages').addClass('hidden');
@@ -1005,25 +1061,25 @@ var Mail = {
 			$('#mail-setup').removeClass('hidden');
 			// don't show New Message button on Add account screen
 			$('#mail_new_message').hide();
-		},
+		};
 
-		toggleSendButton:function () {
+		this.toggleSendButton = function() {
 			if (($('#to').val() !== '') && (($('#subject').val() !== '') || ($('#new-message-body').val() !== ''))) {
 				$('#new-message-send').removeAttr('disabled');
 			} else {
 				$('#new-message-send').attr('disabled', true);
 			}
-		},
+		};
 
-		toggleReplyButton:function () {
+		this.toggleReplyButton = function() {
 			if (($('.reply-message-fields #to').val() !== '') && ($('.reply-message-body').val() !== '')) {
 				$('.reply-message-send').removeAttr('disabled');
 			} else {
 				$('.reply-message-send').attr('disabled', true);
 			}
-		},
+		};
 
-		toggleManualSetup: function() {
+		this.toggleManualSetup = function() {
 			$('#mail-setup-manual').slideToggle();
 			$('#mail-imap-host').focus();
 			if ($('#mail-address').parent().prop('class') === 'groupmiddle') {
@@ -1036,13 +1092,13 @@ var Mail = {
 				$('#mail-address').parent()
 					.removeClass('groupbottom').addClass('groupmiddle');
 			}
-		},
+		};
 
-		showDraftSavedNotification: function() {
+		this.showDraftSavedNotification = function() {
 			OC.Notification.showTemporary(t('mail', 'Draft saved!'));
-		},
+		};
 
-		Events: {
+		this.Events = {
 			onComposerLeave: function() {
 				// Trigger only once
 				if (Mail.UI.composerVisible === true) {
@@ -1061,21 +1117,50 @@ var Mail = {
 				}
 			},
 
-			onFolderChange: function() {
+			onFolderChanged: function() {
 				// Stop background message fetcher of previous folder
 				Mail.BackGround.messageFetcher.restart();
 				// hide message detail view on mobile
 				$('#mail-message').addClass('hidden-mobile');
 			}
-		}
-	}
+		};
+
+		Object.defineProperties(this, {
+			messageView: {
+				get: function() {
+					return messageView;
+				},
+				set: function(mv) {
+					messageView = mv;
+				}
+			},
+			composeView: {
+				get: function() {
+					return composeView;
+				},
+				set: function(cv) {
+					composeView = cv;
+				}
+			},
+			composerVisible: {
+				get: function() {
+					return composerVisible;
+				},
+				set: function(state) {
+					composerVisible = state;
+				}
+			}
+		});
+
+		return this;
+	})()
 };
 
-$(document).ready(function () {
+$(document).ready(function() {
 	Mail.UI.initializeInterface();
 
 	// auto detect button handling
-	$('#auto_detect_account').click(function (event) {
+	$('#auto_detect_account').click(function(event) {
 		event.preventDefault();
 		$('#mail-account-name, #mail-address, #mail-password, #mail-setup-manual-toggle')
 			.prop('disabled', true);
@@ -1122,11 +1207,11 @@ $(document).ready(function () {
 		$.ajax(OC.generateUrl('apps/mail/accounts'), {
 			data: dataArray,
 			type:'POST',
-			success:function () {
+			success:function() {
 				// reload accounts
 				Mail.UI.loadAccounts();
 			},
-			error: function (jqXHR, textStatus, errorThrown) {
+			error: function(jqXHR, textStatus, errorThrown) {
 				switch (jqXHR.status) {
 				case 400:
 					var response = JSON.parse(jqXHR.responseText);
@@ -1137,7 +1222,7 @@ $(document).ready(function () {
 					Mail.UI.showError(t('mail', 'Error while creating an account: ' + error));
 				}
 			},
-			complete: function () {
+			complete: function() {
 				$('#mail-account-name, #mail-address, #mail-password, #mail-setup-manual-toggle')
 					.prop('disabled', false);
 				$('#mail-imap-host, #mail-imap-port, #mail-imap-sslmode, #mail-imap-user, #mail-imap-password')
@@ -1155,8 +1240,7 @@ $(document).ready(function () {
 	});
 
 	// set standard port for the selected IMAP & SMTP security
-
-	$(document).on('change', '#mail-imap-sslmode', function () {
+	$(document).on('change', '#mail-imap-sslmode', function() {
 		var imapDefaultPort = 143;
 		var imapDefaultSecurePort = 993;
 
@@ -1171,7 +1255,7 @@ $(document).ready(function () {
 		}
 	});
 
-	$(document).on('change', '#mail-smtp-sslmode', function () {
+	$(document).on('change', '#mail-smtp-sslmode', function() {
 		var smtpDefaultPort = 587;
 		var smtpDefaultSecurePort = 465;
 
@@ -1187,7 +1271,7 @@ $(document).ready(function () {
 	});
 
 	// toggle for advanced account configuration
-	$(document).on('click', '#mail-setup-manual-toggle', function () {
+	$(document).on('click', '#mail-setup-manual-toggle', function() {
 		Mail.UI.toggleManualSetup();
 	});
 
@@ -1208,7 +1292,7 @@ $(document).ready(function () {
 		Mail.UI.saveAttachment(messageId, attachmentId);
 	});
 
-	$(document).on('click', '#mail-message .attachments-save-to-cloud', function (event) {
+	$(document).on('click', '#mail-message .attachments-save-to-cloud', function(event) {
 		event.stopPropagation();
 		var messageId = $(this).data('messageId');
 		Mail.UI.saveAttachment(messageId);

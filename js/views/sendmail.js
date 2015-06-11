@@ -154,7 +154,7 @@ views.SendMail = Backbone.View.extend({
 				self.attachments.reset();
 				if (self.draftUID !== null) {
 					// the sent message was a draft
-					Mail.State.messageView.collection.remove({id: self.draftUID});
+					Mail.UI.messageView.collection.remove({id: self.draftUID});
 					self.draftUID = null;
 				}
 				self.hasUnsavedChanges = false;
@@ -216,10 +216,10 @@ views.SendMail = Backbone.View.extend({
 			success: function (data) {
 				if (self.draftUID !== null) {
 					// update UID in message list
-					var message = Mail.State.messageView.collection.findWhere({id: self.draftUID});
+					var message = Mail.UI.messageView.collection.findWhere({id: self.draftUID});
 					if (message) {
 						message.set({id: data.uid});
-						Mail.State.messageView.collection.set([message], {remove: false});
+						Mail.UI.messageView.collection.set([message], {remove: false});
 					}
 				}
 				if (_.isFunction(onSuccess)) {
