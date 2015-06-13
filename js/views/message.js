@@ -273,30 +273,16 @@ views.Messages = Backbone.Marionette.CompositeView.extend({
 			.val(t('mail', 'Loading …'))
 			.prop('disabled', true);
 
-		var url = OC.generateUrl(
-			'apps/mail/accounts/{accountId}/folders/{folderId}/messages?from={from}&to={to}',
-			{
-				'accountId': Mail.State.currentAccountId,
-				'folderId':Mail.State.currentFolderId,
-				'from': from,
-				'to': from + 20
-			});
-		if (this.filterCriteria) {
-			url = OC.generateUrl(
-				'apps/mail/accounts/{accountId}/folders/{folderId}/messages?filter={query}&from={from}&to={to}',
-				{
-					'accountId': Mail.State.currentAccountId,
-					'folderId':Mail.State.currentFolderId,
-					'query': this.filterCriteria.text,
-					'from': from,
-					'to': from + 20
-				});
-		}
 		var self = this;
-		$.ajax(url, {
-				data: {},
-				type:'GET',
-				success: function (jsondata) {
+		Mail.Communication.fetchMessageList(
+			Mail.State.currentAccountId,
+			Mail.State.currentFolderId,
+			{
+				from: from,
+				to: from + 20,
+				query: this.filterCriteria ? this.filterCriteria.text : null,
+				force: true,
+				onSuccess: function (jsondata) {
 					if (reload){
 						self.collection.reset();
 					}
@@ -307,12 +293,12 @@ views.Messages = Backbone.Marionette.CompositeView.extend({
 
 					Mail.UI.setMessageActive(Mail.State.currentMessageId);
 				},
-				error: function() {
+				onError: function() {
 					Mail.UI.showError(t('mail', 'Error while loading messages.'));
 					// Set the old folder as being active
 					Mail.UI.setFolderActive(Mail.State.currentAccountId, Mail.State.currentFolderId);
 				},
-				complete: function() {
+				onComplete: function() {
 					// Remove loading feedback again
 					$('#load-more-mail-messages')
 						.removeClass('icon-loading-small')
