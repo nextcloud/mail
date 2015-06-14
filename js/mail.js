@@ -233,7 +233,7 @@ var Mail = {
 
 		/**
 		 * Fetch message of the current account/folder in background
-		 * 
+		 *
 		 * Uses a queue where message IDs are stored and fetched periodically
 		 * The message is only fetched if it's not already cached
 		 */
@@ -1048,6 +1048,8 @@ var Mail = {
 			onFolderChange: function() {
 				// Stop background message fetcher of previous folder
 				Mail.BackGround.messageFetcher.restart();
+				// hide message detail view on mobile
+				$('#mail-message').addClass('hidden-mobile');
 			}
 		}
 	}
@@ -1200,13 +1202,18 @@ $(document).ready(function () {
 		Mail.UI.openComposer(event);
 	});
 
+	// close message when close button is tapped on mobile
+	$(document).on('click', '#mail-message-close', function(){
+		$('#mail-message').addClass('hidden-mobile');
+	});
+
 	$(document).on('show', function() {
 		Mail.UI.changeFavicon(OC.filePath('mail', 'img', 'favicon.png'));
 	});
-	
+
 	// Listens to key strokes, and executes a function based on the key combinations.
 	$(document).keyup(function(event){
-	
+
 		var key = event.keyCode || event.which;
 		if (Mail.State.currentMessageId) {
 			switch (key) {
