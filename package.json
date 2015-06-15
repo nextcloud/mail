@@ -24,6 +24,9 @@
   },
   "homepage": "https://github.com/owncloud/mail",
   "devDependencies": {
+    "grunt-contrib-jshint": "^0.11.2",
+    "grunt-jscs": "^1.8.0",
+    "jscs-jsdoc": "^1.0.1",
     "jshint": "^2.7.0",
     "jsxhint": "^0.14.0"
   }
