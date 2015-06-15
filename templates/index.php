@@ -142,9 +142,9 @@ script('mail', 'jquery-visibility');
 
 		<div class="reply-message-fields">
 			<a href="#" id="reply-message-cc-bcc-toggle"
-				{{#if replyCcList}}
+				{{#ifHasCC replyCCList replyCc}}
 				class="hidden"
-				{{/if}}
+				{{/ifHasCC}}
 				class="transparency"><?php p($l->t('+ cc')); ?></a>
 
 			<input type="text" name="to" id="to" class="recipient-autocomplete"
@@ -152,12 +152,16 @@ script('mail', 'jquery-visibility');
 			<label id="to-label" for="to" class="transparency"><?php p($l->t('to')); ?></label>
 
 			<div id="reply-message-cc-bcc"
-			{{#unless replyCcList}}
+			{{#unlessHasCC replyCCList replyCc}}
 			class="hidden"
-			{{/unless}}
+			{{/unlessHasCC}}
 			>
 				<input type="text" name="cc" id="cc" class="recipient-autocomplete"
-					value="{{printAddressListPlain replyCcList}}" />
+					{{#if replyCc}}
+					value="{{replyCc}}"
+					{{else}}
+					value="{{printAddressListPlain replyCcList}}"
+					{{/if}} />
 				<label id="cc-label" for="cc" class="transparency"><?php p($l->t('cc')); ?></label>
 				<!--
 				<input type="text" name="bcc" id="bcc" value="{{replyBcc}}" class="recipient-autocomplete" />

@@ -459,6 +459,22 @@ var Mail = {
 				return str;
 			});
 
+			Handlebars.registerHelper("ifHasCC", function (cc, ccList, options) {
+				if (!_.isUndefined(cc) || !_.isUndefined(ccList)) {
+					return options.fn(this);
+				} else {
+					return options.inverse(this);
+				}
+			});
+
+			Handlebars.registerHelper("unlessHasCC", function (cc, ccList, options) {
+				if (_.isUndefined(cc) && _.isUndefined(ccList)) {
+					return options.fn(this);
+				} else {
+					return options.inverse(this);
+				}
+			});
+
 			Marionette.TemplateCache.prototype.compileTemplate = function (rawTemplate) {
 				return Handlebars.compile(rawTemplate);
 			};
