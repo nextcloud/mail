@@ -725,11 +725,12 @@ var Mail = {
 								Mail.UI.addMessages(jsondata);
 
 								// Fetch first 10 messages in background
-								_.each(jsondata.slice(0, 10), function(message) {
+								var first10 = Mail.State.messageView.collection.first(10);
+								_.each(first10, function (message) {
 									Mail.BackGround.messageFetcher.push(message.id);
 								});
 
-								var messageId = jsondata[0].id;
+								var messageId = Mail.State.messageView.collection.first().get('id');
 								Mail.UI.loadMessage(messageId);
 								// Show 'Load More' button if there are
 								// more messages than the pagination limit
