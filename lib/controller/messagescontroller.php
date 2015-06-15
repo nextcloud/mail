@@ -160,7 +160,7 @@ class MessagesController extends Controller {
 	/**
 	 * @NoAdminRequired
 	 *
-	 * @param int $messageId
+	 * @param string $messageId
 	 * @return JSONResponse
 	 */
 	public function getHtmlBody($messageId) {
@@ -194,7 +194,7 @@ class MessagesController extends Controller {
 	 * @NoAdminRequired
 	 * @NoCSRFRequired
 	 *
-	 * @param int $messageId
+	 * @param string $messageId
 	 * @param string $attachmentId
 	 * @return AttachmentDownloadResponse
 	 */
@@ -213,7 +213,7 @@ class MessagesController extends Controller {
 	 * @NoAdminRequired
 	 * @NoCSRFRequired
 	 *
-	 * @param int $messageId
+	 * @param string $messageId
 	 * @param string $attachmentId
 	 * @param string $targetPath
 	 * @return JSONResponse
@@ -252,7 +252,7 @@ class MessagesController extends Controller {
 	/**
 	 * @NoAdminRequired
 	 *
-	 * @param int $messageId
+	 * @param string $messageId
 	 * @param boolean $starred
 	 * @return JSONResponse
 	 */
@@ -267,13 +267,13 @@ class MessagesController extends Controller {
 	/**
 	 * @NoAdminRequired
 	 *
-	 * @param int $id
+	 * @param string $messageId
 	 * @return JSONResponse
 	 */
-	public function destroy($id) {
+	public function destroy($messageId) {
 		try {
 			$account = $this->getAccount();
-			$account->deleteMessage(base64_decode($this->params('folderId')), $id);
+			$account->deleteMessage(base64_decode($this->params('folderId')), $messageId);
 			return new JSONResponse();
 
 		} catch (DoesNotExistException $e) {
@@ -299,16 +299,16 @@ class MessagesController extends Controller {
 	}
 
 	/**
-	 * @param integer $id
+	 * @param string $messageId
 	 * @param $accountId
 	 * @param $folderId
 	 * @return callable
 	 */
-	private function enrichDownloadUrl($accountId, $folderId, $id, $attachment) {
+	private function enrichDownloadUrl($accountId, $folderId, $messageId, $attachment) {
 		$downloadUrl = \OCP\Util::linkToRoute('mail.messages.downloadAttachment', [
 			'accountId' => $accountId,
 			'folderId' => $folderId,
-			'messageId' => $id,
+			'messageId' => $messageId,
 			'attachmentId' => $attachment['id'],
 		]);
 		$downloadUrl = \OC::$server->getURLGenerator()->getAbsoluteURL($downloadUrl);
@@ -320,14 +320,14 @@ class MessagesController extends Controller {
 	/**
 	 * @param string $accountId
 	 * @param string $folderId
-	 * @param string $id
+	 * @param string $messageId
 	 * @return string
 	 */
-	private function buildHtmlBodyUrl($accountId, $folderId, $id) {
+	private function buildHtmlBodyUrl($accountId, $folderId, $messageId) {
 		$htmlBodyUrl = \OC::$server->getURLGenerator()->linkToRoute('mail.messages.getHtmlBody', [
 			'accountId' => $accountId,
 			'folderId' => $folderId,
-			'messageId' => $id,
+			'messageId' => $messageId,
 			'requesttoken' => \OCP\Util::callRegister(),
 		]);
 		return \OC::$server->getURLGenerator()->getAbsoluteURL($htmlBodyUrl);
