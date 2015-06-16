@@ -122,7 +122,7 @@ $(function() {
 			},
 			type: 'POST',
 			success:function() {
-				Mail.State.messageView.setMessageFlag(messageId, 'answered', true);
+				Mail.UI.messageView.setMessageFlag(messageId, 'answered', true);
 				OC.Notification.showTemporary(t('mail', 'Message sent!'));
 
 				// close reply
