@@ -326,10 +326,8 @@ var Mail = {
 					// Stop previous fetcher
 					clearInterval(timer);
 
-					// Stop any ajax message requests
-					if (Mail.State.messageLoading !== null) {
-						Mail.State.messageLoading.abort();
-					}
+					// Clear waiting queue
+					queue.length = 0;
 
 					// Start again
 					this.start();
