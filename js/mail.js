@@ -530,6 +530,9 @@ var Mail = {
 				}
 			});
 
+			// Register UI events
+			window.addEventListener('resize', Mail.UI.Events.onWindowResize);
+
 			Marionette.TemplateCache.prototype.compileTemplate = function(rawTemplate) {
 				return Handlebars.compile(rawTemplate);
 			};
@@ -1120,6 +1123,12 @@ var Mail = {
 				Mail.BackGround.messageFetcher.restart();
 				// hide message detail view on mobile
 				$('#mail-message').addClass('hidden-mobile');
+			},
+
+			onWindowResize: function() {
+				// Resize iframe
+				var iframe = $('#mail-content iframe');
+				iframe.height(iframe.contents().find('html').height() + 20);
 			}
 		};
 
