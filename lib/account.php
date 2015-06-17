@@ -19,6 +19,7 @@ use OCA\Mail\Cache\Cache;
 use OCA\Mail\Db\MailAccount;
 use OCP\IConfig;
 use OCP\ICacheFactory;
+use OCP\Security\ICrypto;
 
 class Account {
 
@@ -585,6 +586,9 @@ class Account {
 		return $changedBoxes;
 	}
 
+	/**
+	 * @throws \Horde_Imap_Client_Exception
+	 */
 	public function reconnect() {
 		$this->mailboxes = null;
 		if ($this->client) {

@@ -22,6 +22,7 @@
 
 namespace OCA\Mail\Controller;
 
+use OCP\IRequest;
 use \OCP\IURLGenerator;
 use \OCP\Util;
 use OCP\AppFramework\Controller;
@@ -40,7 +41,16 @@ class ProxyController extends Controller {
 	 */
 	private $session;
 
-	public function __construct($appName, $request, IURLGenerator $urlGenerator, \OCP\ISession $session){
+	/**
+	 * @param string $appName
+	 * @param \OCP\IRequest $request
+	 * @param IURLGenerator $urlGenerator
+	 * @param \OCP\ISession $session
+	 */
+	public function __construct($appName,
+								IRequest $request,
+								IURLGenerator $urlGenerator,
+								\OCP\ISession $session) {
 		parent::__construct($appName, $request);
 		$this->urlGenerator = $urlGenerator;
 		$this->session = $session;

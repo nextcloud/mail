@@ -64,7 +64,10 @@ class MailAccount extends Entity {
 	public $outboundUser;
 	public $outboundPassword;
 
-	public function __construct($params=[]) {
+	/**
+	 * @param array $params
+	 */
+	public function __construct(array $params=[]) {
 
 		if (isset($params['accountId'])) {
 			$this->setId($params['accountId']);
