@@ -34,7 +34,11 @@ views.SendMail = Backbone.View.extend({
 
 	initialize: function(options) {
 		this.attachments = new models.Attachments();
-		this.aliases = options.aliases;
+
+		this.aliases = _.filter(options.aliases, function(item) {
+			return item.accountId !== -1;
+		});
+
 		if (options.data) {
 			this.data = options.data;
 			this.draftUID = options.data.id;
