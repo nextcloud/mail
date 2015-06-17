@@ -214,7 +214,7 @@ class MessagesController extends Controller {
 	 * @NoCSRFRequired
 	 *
 	 * @param int $messageId
-	 * @param int $attachmentId
+	 * @param string $attachmentId
 	 * @param string $targetPath
 	 * @return JSONResponse
 	 */
