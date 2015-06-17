@@ -46,10 +46,10 @@ var Mail = {
 		var currentMessageId = null;
 		var messagesLoading = null;
 		var messageLoading = null;
-		
+
 		Object.defineProperties(this, {
 			accounts: {
-				get: function() { 
+				get: function() {
 					return accounts;
 				},
 				set: function(acc) {
@@ -285,7 +285,7 @@ var Mail = {
 
 		/**
 		 * Fetch message of the current account/folder in background
-		 * 
+		 *
 		 * Uses a queue where message IDs are stored and fetched periodically
 		 * The message is only fetched if it's not already cached
 		 */
@@ -800,6 +800,7 @@ var Mail = {
 			Mail.UI.composerVisible = true;
 			$('.tipsy').remove();
 			$('#mail_new_message').prop('disabled', true);
+			$('#mail-message').removeClass('hidden-mobile');
 
 			// Abort message loads
 			if (Mail.State.messageLoading !== null) {

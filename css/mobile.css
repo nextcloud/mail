@@ -24,7 +24,7 @@
 	width: 44px;
 	height: 44px;
 	background-size: 24px;
-	z-index: 100;
+	z-index: 101;
 	cursor: pointer;
 	-ms-filter: "progid:DXImageTransform.Microsoft.Alpha(Opacity=40)";
 	opacity: .4;
