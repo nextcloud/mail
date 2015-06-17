@@ -177,11 +177,9 @@
 
 .mail-message-account-color {
 	position: absolute;
-	width: 3px;
+	width: 5px;
 	height: 69px;
 	z-index: 1;
-	-ms-filter: "progid:DXImageTransform.Microsoft.Alpha(Opacity=50)";
-	opacity: .5;
 }
 
 
