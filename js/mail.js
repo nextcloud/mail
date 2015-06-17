@@ -434,9 +434,12 @@ var Mail = {
 		var composerVisible = false;
 
 		this.renderSettings = function() {
+			var accounts = _.filter(Mail.State.accounts, function(item) {
+				return item.accountId !== -1;
+			});
 			var source   = $("#mail-settings-template").html();
 			var template = Handlebars.compile(source);
-			var html = template(Mail.State.accounts);
+			var html = template(accounts);
 			$('#app-settings-content').html(html);
 		};
 
