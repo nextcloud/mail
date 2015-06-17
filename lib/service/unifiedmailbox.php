@@ -78,8 +78,13 @@ class UnifiedMailbox implements IMailBox {
 	 */
 	public function getMessage($messageId, $loadHtmlMessageBody = false) {
 		/** @var IMailBox $inbox */
-		list($inbox, $messageId) = $this->resolve($messageId);
-		return $inbox->getMessage($messageId, $loadHtmlMessageBody);
+		/** @var IAccount $account */
+		list($inbox, $messageId, $account) = $this->resolve($messageId);
+		/** @var Message $message */
+		$message = $inbox->getMessage($messageId, $loadHtmlMessageBody);
+		$message->setUid(base64_encode(json_encode([$account->getId(), $message->getUid()])));
+
+		return $message;
 	}
 
 	/**
@@ -120,6 +125,6 @@ class UnifiedMailbox implements IMailBox {
 		$account = $this->accountService->find($this->userId, $data[0]);
 		$inbox = $account->getInbox();
 		$messageId = $data[1];
-		return array($inbox, $messageId);
+		return array($inbox, $messageId, $account);
 	}
 }
