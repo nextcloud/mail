@@ -142,7 +142,7 @@ script('mail', 'jquery-visibility');
 
 		<div class="reply-message-fields">
 			<a href="#" id="reply-message-cc-bcc-toggle"
-				{{#ifHasCC replyCCList replyCc}}
+				{{#ifHasCC replyCc replyCcList}}
 				class="hidden"
 				{{/ifHasCC}}
 				class="transparency"><?php p($l->t('+ cc')); ?></a>
@@ -152,7 +152,7 @@ script('mail', 'jquery-visibility');
 			<label id="to-label" for="to" class="transparency"><?php p($l->t('to')); ?></label>
 
 			<div id="reply-message-cc-bcc"
-			{{#unlessHasCC replyCCList replyCc}}
+			{{#unlessHasCC replyCc replyCcList}}
 			class="hidden"
 			{{/unlessHasCC}}
 			>
