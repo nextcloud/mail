@@ -13,8 +13,9 @@ use Horde_Imap_Client_Ids;
 use Horde_Imap_Client_Mailbox;
 use Horde_Imap_Client_Search_Query;
 use Horde_Imap_Client_Socket;
+use OCA\Mail\Service\IMailBox;
 
-class Mailbox {
+class Mailbox implements IMailBox {
 
 	/**
 	 * @var Horde_Imap_Client_Socket
@@ -405,4 +406,5 @@ class Mailbox {
 	public function getHordeMailBox() {
 		return $this->mailBox;
 	}
+
 }

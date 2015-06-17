@@ -77,33 +77,49 @@ class UnifiedMailbox implements IMailBox {
 	 * @return Message
 	 */
 	public function getMessage($messageId, $loadHtmlMessageBody = false) {
-		$data = json_decode(base64_decode($messageId), true);
-		$account = $this->accountService->find($this->userId, $data[0]);
-		return $account->getInbox()->getMessage($data[1], $loadHtmlMessageBody);
+		/** @var IMailBox $inbox */
+		list($inbox, $messageId) = $this->resolve($messageId);
+		return $inbox->getMessage($messageId, $loadHtmlMessageBody);
 	}
 
 	/**
-	 * @param int $messageId
+	 * @param string $messageId
 	 * @param string $attachmentId
 	 * @return Attachment
 	 */
 	public function getAttachment($messageId, $attachmentId) {
-		// TODO: Implement getAttachment() method.
+		/** @var IMailBox $inbox */
+		list($inbox, $messageId) = $this->resolve($messageId);
+		return $inbox->getAttachment($messageId, $attachmentId);
 	}
 
 	/**
-	 * @param int $messageId
+	 * @param string $messageId
 	 * @param string $flag
 	 * @param mixed $value
 	 */
 	public function setMessageFlag($messageId, $flag, $value) {
-		// TODO: Implement setMessageFlag() method.
+		/** @var IMailBox $inbox */
+		list($inbox, $messageId) = $this->resolve($messageId);
+		return $inbox->setMessageFlag($messageId, $flag, $value);
 	}
 
 	/**
 	 * @return array
 	 */
 	public function getStatus() {
-		// TODO: Implement getStatus() method.
+		return [];
+	}
+
+	/**
+	 * @param string $messageId
+	 * @return array
+	 */
+	private function resolve($messageId) {
+		$data = json_decode(base64_decode($messageId), true);
+		$account = $this->accountService->find($this->userId, $data[0]);
+		$inbox = $account->getInbox();
+		$messageId = $data[1];
+		return array($inbox, $messageId);
 	}
 }

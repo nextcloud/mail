@@ -49,4 +49,5 @@ interface IMailBox {
 	 * @return array
 	 */
 	public function getStatus();
+
 }

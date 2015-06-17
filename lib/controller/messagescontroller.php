@@ -267,13 +267,13 @@ class MessagesController extends Controller {
 	/**
 	 * @NoAdminRequired
 	 *
-	 * @param string $messageId
+	 * @param string $id
 	 * @return JSONResponse
 	 */
-	public function destroy($messageId) {
+	public function destroy($id) {
 		try {
 			$account = $this->getAccount();
-			$account->deleteMessage(base64_decode($this->params('folderId')), $messageId);
+			$account->deleteMessage(base64_decode($this->params('folderId')), $id);
 			return new JSONResponse();
 
 		} catch (DoesNotExistException $e) {

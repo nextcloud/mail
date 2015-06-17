@@ -97,10 +97,15 @@ class UnifiedAccount implements IAccount {
 
 	/**
 	 * @param string $folderId
-	 * @param int $messageId
+	 * @param string $messageId
 	 */
 	public function deleteMessage($folderId, $messageId) {
-		// TODO: Implement deleteMessage() method.
+		$data = json_decode(base64_decode($messageId), true);
+		$account = $this->accountService->find($this->userId, $data[0]);
+		$inbox = $account->getInbox();
+		$messageId = $data[1];
+
+		$account->deleteMessage($inbox->getFolderId(), $messageId);
 	}
 
 	/**
