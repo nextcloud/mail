@@ -73,13 +73,13 @@ class UnifiedMailbox implements IMailBox {
 	}
 
 	/**
-	 * @param int $id
+	 * @param string $messageId
 	 * @return Message
 	 */
-	public function getMessage($id) {
-		$data = json_decode(base64_decode($id), true);
+	public function getMessage($messageId, $loadHtmlMessageBody = false) {
+		$data = json_decode(base64_decode($messageId), true);
 		$account = $this->accountService->find($this->userId, $data[0]);
-		return $account->getInbox()->getMessage($data[1]);
+		return $account->getInbox()->getMessage($data[1], $loadHtmlMessageBody);
 	}
 
 	/**
