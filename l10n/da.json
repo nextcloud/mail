@@ -3,6 +3,7 @@
     "Error while loading the accounts." : "Fejl under indlæsning af konti.",
     "_%n new message in {folderName} \nfrom {from}_::_%n new messages in {folderName} \nfrom {from}_" : ["%n ny besked i {folderName}\nfra {from}","%n nye beskeder i {folderName}\nfra {from}"],
     "you" : "dig",
+    "Send message to {email}" : "Send besked til {email}",
     "Error while loading the selected account." : "Der opstod en fejl under læsningen af den valgte konto.",
     "Error while loading messages." : "Fejl under indlæsning af beskeder.",
     "Choose a folder to store the attachment in" : "Vælg den mappe, hvor vedhæftningen skal gemmes i",

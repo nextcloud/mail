@@ -3,6 +3,7 @@
     "Error while loading the accounts." : "Erreur lors du chargement des comptes.",
     "_%n new message in {folderName} \nfrom {from}_::_%n new messages in {folderName} \nfrom {from}_" : ["%n nouveau message dans {folderName}\nde {from}","%n nouveaux messages dans {folderName}\nde {from}"],
     "you" : "vous",
+    "Send message to {email}" : "Envoyer un mail à {email}",
     "Error while loading the selected account." : "Erreur lors du chargement du compte sélectionné.",
     "Error while loading messages." : "Erreur lors du chargement des messages.",
     "Choose a folder to store the attachment in" : "Choisissez le dossier dans lequel enregistrer la pièce jointe",

@@ -5,6 +5,7 @@ OC.L10N.register(
     "Error while loading the accounts." : "Erro no carregamento das contas.",
     "_%n new message in {folderName} \nfrom {from}_::_%n new messages in {folderName} \nfrom {from}_" : ["%n nova mensagem em {folderName}\nde {from}","%n novas mensagens em {folderName}\nde {from}"],
     "you" : "você",
+    "Send message to {email}" : "Enviar mensagem para {email}",
     "Error while loading the selected account." : "Erro enquanto carregava a conta selecionada",
     "Error while loading messages." : "Erro no carregamento das mensagens.",
     "Choose a folder to store the attachment in" : "Escolha uma pasta para armazenar os anexos",

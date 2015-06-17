@@ -3,6 +3,7 @@
     "Error while loading the accounts." : "Virhe tilejä ladatessa.",
     "_%n new message in {folderName} \nfrom {from}_::_%n new messages in {folderName} \nfrom {from}_" : ["%n uusi viesti kansiossa {folderName},\nlähettäjä {from}","%n uutta viestiä kansiossa {folderName},\nlähettäjä {from}"],
     "you" : "sinä",
+    "Send message to {email}" : "Lähetä viesti osoitteeseen {email}",
     "Error while loading the selected account." : "Virhe ladatessa valittua tiliä.",
     "Error while loading messages." : "Virhe viestejä ladatessa.",
     "Choose a folder to store the attachment in" : "Valitse kansio liitetiedoston tallentamiselle",

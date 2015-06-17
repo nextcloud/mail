@@ -3,6 +3,7 @@
     "Error while loading the accounts." : "Feil ved innlasting av kontoene.",
     "_%n new message in {folderName} \nfrom {from}_::_%n new messages in {folderName} \nfrom {from}_" : ["%n ny melding i {folderName} \nfra {from}","%n nye meldinger i {folderName} \nfra {from}"],
     "you" : "du",
+    "Send message to {email}" : "Send melding til {email}",
     "Error while loading the selected account." : "Feil ved lasting av den valgte kontoen.",
     "Error while loading messages." : "Feil ved innlasting av meldinger.",
     "Choose a folder to store the attachment in" : "Velg en mappe å lagre vedlegget i",
