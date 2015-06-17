@@ -50,7 +50,7 @@ class UnifiedAccount implements IAccount {
 	}
 
 	private function buildInbox() {
-		$displayName = $this->l10n->t('All inboxes');
+		$displayName = (string)$this->l10n->t('All inboxes');
 		$id = 'all-inboxes';
 
 		$allAccounts = $this->accountService->findByUserId($this->userId);
