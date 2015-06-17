@@ -229,18 +229,18 @@ var Mail = {
 					from = from.slice(0, 2);
 				}
 				// special layout if there is only 1 new message
+				var body ='';
 				if (folder.messages.length === 1) {
 					var subject = _.map(folder.messages, function(m) {
 						return m.subject;
 					});
-					var body = n('mail',
-						'{from}\n{subject}',
-						folder.messages.length, {
+					body = t('mail',
+						'{from}\n{subject}', {
 							from: from.join(),
-							subject: subject
+							subject: subject.join()
 						});
 				} else {
-					var body = n('mail',
+					body = n('mail',
 						'%n new message in {folderName} \nfrom {from}',
 						'%n new messages in {folderName} \nfrom {from}',
 						folder.messages.length, {
@@ -1024,7 +1024,7 @@ var Mail = {
 							Mail.Cache.addMessage(Mail.State.currentAccountId,
 								Mail.State.currentFolderId,
 								message);
-								loadMessageSuccess(message);
+							loadMessageSuccess(message);
 						}
 					},
 					onError: function(jqXHR, textStatus) {
