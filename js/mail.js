@@ -228,13 +228,26 @@ var Mail = {
 				} else {
 					from = from.slice(0, 2);
 				}
-				var body = n('mail',
-					'%n new message in {folderName} \nfrom {from}',
-					'%n new messages in {folderName} \nfrom {from}',
-					folder.messages.length, {
-						folderName: folder.name,
-						from: from.join()
+				// special layout if there is only 1 new message
+				var body ='';
+				if (folder.messages.length === 1) {
+					var subject = _.map(folder.messages, function(m) {
+						return m.subject;
 					});
+					body = t('mail',
+						'{from}\n{subject}', {
+							from: from.join(),
+							subject: subject.join()
+						});
+				} else {
+					body = n('mail',
+						'%n new message in {folderName} \nfrom {from}',
+						'%n new messages in {folderName} \nfrom {from}',
+						folder.messages.length, {
+							folderName: folder.name,
+							from: from.join()
+						});
+				}
 				// If it's okay let's create a notification
 				var tag = 'not-' + folder.accountId + '-' + folder.name;
 				var icon = OC.filePath('mail', 'img', 'mail-notification.png');
@@ -1014,7 +1027,7 @@ var Mail = {
 							Mail.Cache.addMessage(Mail.State.currentAccountId,
 								Mail.State.currentFolderId,
 								message);
-								loadMessageSuccess(message);
+							loadMessageSuccess(message);
 						}
 					},
 					onError: function(jqXHR, textStatus) {
