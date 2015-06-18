@@ -28,7 +28,7 @@ use OCA\Mail\Controller\MessagesController;
  *
  * @author Christoph Wurst
  */
-class messagescontrollertest extends \Test\TestCase {
+class MessagesControllerTest extends \Test\TestCase {
 
 	private $appName;
 	private $request;
@@ -107,17 +107,22 @@ class messagescontrollertest extends \Test\TestCase {
 			->with($this->equalTo($messageId), $this->equalTo(true))
 			->will($this->returnValue($this->message));
 
-		$response = $this->controller->getHtmlBody($accountId, base64_encode($folderId), $messageId);
+		$expectedResponse = new \OCA\Mail\Http\HtmlResponse(null);
+		$expectedResponse->cacheFor(3600);
+		$expectedResponse->addHeader('Pragma', 'cache');
+		if(class_exists('\OCP\AppFramework\Http\ContentSecurityPolicy')) {
+			$policy = new \OCP\AppFramework\Http\ContentSecurityPolicy();
+			$policy->allowEvalScript(false);
+			$policy->disallowScriptDomain('\'self\'');
+			$policy->disallowConnectDomain('\'self\'');
+			$policy->disallowFontDomain('\'self\'');
+			$policy->disallowMediaDomain('\'self\'');
+			$expectedResponse->setContentSecurityPolicy($policy);
+		}
 
-		$this->assertInstanceOf('\OCA\Mail\Http\HtmlResponse', $response);
-		$headers = $response->getHeaders();
-		// Check for header existense
-		$this->assertTrue(array_key_exists('Cache-Control', $headers));
-		$this->assertTrue(array_key_exists('Pragma', $headers));
+		$actualResponse = $this->controller->getHtmlBody($accountId, base64_encode($folderId), $messageId);
 
-		// Check header values
-		$this->assertSame($headers['Cache-Control'], 'max-age=3600, must-revalidate');
-		$this->assertSame($headers['Pragma'], 'cache');
+		$this->assertEquals($expectedResponse, $actualResponse);
 	}
 
 }
