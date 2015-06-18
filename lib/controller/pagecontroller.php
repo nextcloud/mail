@@ -24,6 +24,7 @@ namespace OCA\Mail\Controller;
 
 use OCP\AppFramework\Controller;
 use OCP\AppFramework\Http\TemplateResponse;
+use OCP\IRequest;
 
 class PageController extends Controller {
 
@@ -37,7 +38,16 @@ class PageController extends Controller {
 	 */
 	private $currentUserId;
 
-	public function __construct($appName, $request, $mailAccountMapper, $currentUserId){
+	/**
+	 * @param string $appName
+	 * @param \OCP\IRequest $request
+	 * @param $mailAccountMapper
+	 * @param $currentUserId
+	 */
+	public function __construct($appName,
+								IRequest $request,
+								$mailAccountMapper,
+								$currentUserId) {
 		parent::__construct($appName, $request);
 		$this->mailAccountMapper = $mailAccountMapper;
 		$this->currentUserId = $currentUserId;

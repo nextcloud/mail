@@ -80,6 +80,18 @@ class AccountsController extends Controller {
 	/** @var ICrypto */
 	private $crypto;
 
+	/**
+	 * @param string $appName
+	 * @param \OCP\IRequest $request
+	 * @param $mailAccountMapper
+	 * @param $currentUserId
+	 * @param $userFolder
+	 * @param $contactsIntegration
+	 * @param $autoConfig
+	 * @param ILogger $logger
+	 * @param IL10N $l10n
+	 * @param ICrypto $crypto
+	 */
 	public function __construct($appName,
 		$request,
 		$mailAccountMapper,
@@ -87,9 +99,9 @@ class AccountsController extends Controller {
 		$userFolder,
 		$contactsIntegration,
 		$autoConfig,
-		$logger,
-		$l10n,
-		$crypto
+		ILogger $logger,
+		IL10N $l10n,
+		ICrypto $crypto
 	) {
 		parent::__construct($appName, $request);
 		$this->mapper = $mailAccountMapper;
@@ -144,6 +156,9 @@ class AccountsController extends Controller {
 
 	/**
 	 * @NoAdminRequired
+	 *
+	 * @param string $accountId
+	 * @return JSONResponse
 	 */
 	public function destroy($accountId) {
 		try {
@@ -162,8 +177,7 @@ class AccountsController extends Controller {
 	 * @param bool $autoDetect
 	 * @return JSONResponse
 	 */
-	public function create($autoDetect)
-	{
+	public function create($autoDetect) {
 		try {
 			if ($autoDetect) {
 				$this->logger->info('setting up auto detected account');

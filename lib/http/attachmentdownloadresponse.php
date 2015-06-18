@@ -25,7 +25,7 @@ namespace OCA\Mail\Http;
 use OCP\AppFramework\Http\DownloadResponse;
 
 class AttachmentDownloadResponse extends DownloadResponse {
-
+	/** @var string  */
 	private $content;
 
 	/**
@@ -39,7 +39,6 @@ class AttachmentDownloadResponse extends DownloadResponse {
 		parent::__construct($filename, $contentType);
 		$this->content = $content;
 	}
-
 
 	/**
 	 * Simply sets the headers and returns the file contents

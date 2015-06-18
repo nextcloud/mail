@@ -15,9 +15,12 @@ namespace OCA\Mail\Http;
 use OCP\AppFramework\Http\Response;
 
 class HtmlResponse extends Response {
-
+	/** @var string */
 	private $content;
 
+	/**
+	 * @param string $content
+	 */
 	public function __construct($content) {
 		$this->content = $content;
 	}

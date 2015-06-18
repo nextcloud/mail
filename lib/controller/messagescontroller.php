@@ -320,7 +320,10 @@ class MessagesController extends Controller {
 	}
 
 	/**
-	 * @param integer $id
+	 * @param string $accountId
+	 * @param string $folderId
+	 * @param string $id
+	 * @return string
 	 */
 	private function buildHtmlBodyUrl($accountId, $folderId, $id) {
 		$htmlBodyUrl = \OC::$server->getURLGenerator()->linkToRoute('mail.messages.getHtmlBody', [

@@ -37,6 +37,7 @@ class AutoConfig {
 	/**
 	 * @param Logger $logger
 	 * @param string $userId
+	 * @param ICrypto $crypto
 	 */
 	public function __construct(Logger $logger, $userId, ICrypto $crypto) {
 		$this->logger = $logger;
@@ -84,7 +85,19 @@ class AutoConfig {
 		return null;
 	}
 
-	private function testSmtp(MailAccount $account, $host, $users, $password, $withHostPrefix = false) {
+	/**
+	 * @param MailAccount $account
+	 * @param $host
+	 * @param $users
+	 * @param $password
+	 * @param bool $withHostPrefix
+	 * @return null|MailAccount
+	 */
+	private function testSmtp(MailAccount $account,
+							  $host,
+							  $users,
+							  $password,
+							  $withHostPrefix = false) {
 		if (!is_array($users)) {
 			$users = [$users];
 		}
@@ -230,6 +243,11 @@ class AutoConfig {
 		return $mx_records;
 	}
 
+	/**
+	 * @param string $domain
+	 * @param bool $tryMx
+	 * @return array
+	 */
 	protected function queryMozillaIspDb($domain, $tryMx=true) {
 		if (strpos($domain, '@') !== false) {
 			list(,$domain) = explode('@', $domain);

@@ -126,22 +126,33 @@ class Mailbox {
 		return $messages;
 	}
 
+	/**
+	 * @return array
+	 */
 	public function attributes() {
 		return $this->attributes;
 	}
 
 	/**
-	 * @param $messageId
+	 * @param string $messageId
+	 * @param bool $loadHtmlMessageBody
 	 * @return Message
 	 */
 	public function getMessage($messageId, $loadHtmlMessageBody = false) {
 		return new Message($this->conn, $this->mailBox, $messageId, null, $loadHtmlMessageBody);
 	}
 
+	/**
+	 * @param int $flags
+	 * @return array
+	 */
 	public function getStatus($flags = \Horde_Imap_Client::STATUS_ALL) {
 		return $this->conn->status($this->mailBox, $flags);
 	}
 
+	/**
+	 * @return int
+	 */
 	public function getTotalMessages() {
 		$status = $this->getStatus(\Horde_Imap_Client::STATUS_MESSAGES);
 		return (int) $status['messages'];
@@ -179,10 +190,16 @@ class Mailbox {
 		return null;
 	}
 
+	/**
+	 * @return string
+	 */
 	public function getSpecialRole() {
 		return $this->specialRole;
 	}
 
+	/**
+	 * @return string
+	 */
 	public function getDisplayName() {
 		return $this->displayName;
 	}
@@ -371,12 +388,20 @@ class Mailbox {
 		$this->conn->store($this->mailBox, $options);
 	}
 
+	/**
+	 * @param $fromUid
+	 * @param $toUid
+	 * @return array
+	 */
 	public function getMessagesSince($fromUid, $toUid) {
 		$query = new Horde_Imap_Client_Search_Query();
 		$query->ids(new Horde_Imap_Client_Ids("$fromUid:$toUid"));
 		return $this->getMessages(-1, -1, $query);
 	}
 
+	/**
+	 * @return Horde_Imap_Client_Mailbox
+	 */
 	public function getHordeMailBox() {
 		return $this->mailBox;
 	}

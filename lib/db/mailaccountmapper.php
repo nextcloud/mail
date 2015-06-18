@@ -27,6 +27,9 @@ use OCP\IDb;
 
 class MailAccountMapper extends Mapper {
 
+	/**
+	 * @param IDb $db
+	 */
 	public function __construct(IDb $db) {
 		parent::__construct($db, 'mail_accounts');
 	}
