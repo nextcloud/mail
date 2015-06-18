@@ -136,8 +136,15 @@ $(function() {
 	}
 
 	$(document).on('keypress', '.reply-message-body', function(event) {
-		// check for ctrl+enter
-		if (event.keyCode === 13 && event.ctrlKey) {
+		// Define which objects to check for the event properties.
+		// (Window object provides fallback for IE8 and lower.)
+		event = event || window.event;
+		var key = event.keyCode || event.which;
+		// If enter and control keys are pressed:
+		// (Key 13 and 10 set for compatibility across different operating systems.)
+		if ((key === 13 || key === 10) && event.ctrlKey) {
+			// If the new message is completely filled, and ready to be sent:
+			// Send the reply.
 			var sendBtnState = $('.reply-message-send').attr('disabled');
 			if (sendBtnState === undefined) {
 				sendReply();
