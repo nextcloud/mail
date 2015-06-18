@@ -859,6 +859,9 @@ var Mail = {
 			Mail.State.composeView.attachments.reset();
 			Mail.State.composeView.render();
 
+			// set 'from' dropdown to current account
+			$('.mail_account').val(Mail.State.currentAccountId);
+
 			// focus 'to' field automatically on clicking New message button
 			$('#to').focus();
 			if (!_.isUndefined(data.currentTarget) && !_.isUndefined($(data.currentTarget).data().email)) {
