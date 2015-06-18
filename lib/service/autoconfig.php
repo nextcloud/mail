@@ -13,6 +13,7 @@
 namespace OCA\Mail\Service;
 
 use Exception;
+use Horde_Mail_Transport_Smtphorde;
 use OCA\Mail\Account;
 use OCA\Mail\Db\MailAccount;
 use OCP\Security\ICrypto;
@@ -207,7 +208,9 @@ class AutoConfig {
 
 						$a = new Account($account);
 						$smtp = $a->createTransport();
-						$smtp->getSMTPObject();
+						if ($smtp instanceof Horde_Mail_Transport_Smtphorde) {
+							$smtp->getSMTPObject();
+						}
 
 						break;
 					} catch(\PEAR_Exception $ex) {
