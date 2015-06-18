@@ -1334,13 +1334,18 @@ $(document).ready(function() {
 
 	// Listens to key strokes, and executes a function based on the key combinations.
 	$(document).keyup(function(event){
-
+		// Define which objects to check for the event properties.
+		// (Window object provides fallback for IE8 and lower.)
+		event = event || window.event;
 		var key = event.keyCode || event.which;
+		// If the client is currently viewing a message:
 		if (Mail.State.currentMessageId) {
 			switch (key) {
+			// If delete key is pressed:
 			case 46:
-				// Delete key
+				// If not composing a reply:
 				if (!$('#to, #cc, .reply-message-body').is(':focus')) {
+					// Mimic a client clicking the delete button for the currently active message.
 					$('.mail_message_summary.active .icon-delete.action.delete').click();
 				}
 				break;

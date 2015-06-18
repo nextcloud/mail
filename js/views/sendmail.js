@@ -48,11 +48,16 @@ views.SendMail = Backbone.View.extend({
 	},
 
 	handleKeyPress: function(event) {
+		// Define which objects to check for the event properties.
+		// (Window object provides fallback for IE8 and lower.)
+		event = event || window.event;
 		var key = event.keyCode || event.which;
-		var sendBtnState = $('#new-message-send').attr('disabled');
-
-		// check for ctrl+enter
-		if (key === 13 && event.ctrlKey) {
+		// If enter and control keys are pressed:
+		// (Key 13 and 10 set for compatibility across different operating systems.)
+		if ((key === 13 || key === 10) && event.ctrlKey) {
+			// If the new message is completely filled, and ready to be sent:
+			// Send the new message.
+			var sendBtnState = $('#new-message-send').attr('disabled');
 			if (sendBtnState === undefined) {
 				this.sendMail();
 			}
