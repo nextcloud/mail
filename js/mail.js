@@ -123,7 +123,7 @@ var Mail = {
 			var storage = $.localStorage;
 			_.each(storage.get('messages'), function(account, accountId) {
 				var isActive = _.any(activeAccounts, function(a) {
-					return a === parseInt(accountId);
+					return a === parseInt(accountId, 10);
 				});
 				if (!isActive) {
 					// Account does not exist anymore -> remove it
@@ -833,7 +833,7 @@ var Mail = {
 			Mail.State.composeView.render();
 
 			// set 'from' dropdown to current account
-			$('.mail_account').val(currentAccountId);
+			$('.mail_account').val(Mail.State.currentAccountId);
 
 			// focus 'to' field automatically on clicking New message button
 			$('#to').focus();
@@ -1014,7 +1014,7 @@ var Mail = {
 							Mail.Cache.addMessage(Mail.State.currentAccountId,
 								Mail.State.currentFolderId,
 								message);
-								loadMessageSuccess(message);
+							loadMessageSuccess(message);
 						}
 					},
 					onError: function(jqXHR, textStatus) {
