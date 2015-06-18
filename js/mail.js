@@ -1,4 +1,4 @@
-/* global Handlebars, Marionette, Notification, relative_modified_date, formatDate, humanFileSize, views, OC, _ */
+/* global Handlebars, Marionette, Notification, relative_modified_date, formatDate, humanFileSize, views, OC, _, md5 */
 
 if (_.isUndefined(OC.Notification.showTemporary)) {
 
@@ -123,7 +123,7 @@ var Mail = {
 			var storage = $.localStorage;
 			_.each(storage.get('messages'), function(account, accountId) {
 				var isActive = _.any(activeAccounts, function(a) {
-					return a === parseInt(accountId);
+					return a === parseInt(accountId, 10);
 				});
 				if (!isActive) {
 					// Account does not exist anymore -> remove it
@@ -434,9 +434,12 @@ var Mail = {
 		var composerVisible = false;
 
 		this.renderSettings = function() {
+			var accounts = _.filter(Mail.State.accounts, function(item) {
+				return item.accountId !== -1;
+			});
 			var source   = $("#mail-settings-template").html();
 			var template = Handlebars.compile(source);
-			var html = template(Mail.State.accounts);
+			var html = template(accounts);
 			$('#app-settings-content').html(html);
 		};
 
@@ -482,8 +485,15 @@ var Mail = {
 				return humanFileSize(size);
 			});
 
-			Handlebars.registerHelper("printAddressList", function(addressList) {
-				var currentAddress = _.find(Mail.State.accounts, function(item) {
+			Handlebars.registerHelper('accountColor', function (account) {
+				var hash = md5(account),
+					maxRange = parseInt('ffffffffffffffffffffffffffffffff', 16),
+					hue = parseInt(hash, 16) / maxRange * 256;
+				return new Handlebars.SafeString('hsl(' + hue + ', 90%, 65%)');
+			});
+
+			Handlebars.registerHelper("printAddressList", function (addressList) {
+				var currentAddress = _.find(Mail.State.accounts, function (item) {
 					return item.accountId === Mail.State.currentAccountId;
 				});
 
@@ -718,11 +728,12 @@ var Mail = {
 								Mail.UI.addMessages(jsondata);
 
 								// Fetch first 10 messages in background
-								_.each(jsondata.slice(0, 10), function(message) {
+								var first10 = Mail.State.messageView.collection.first(10);
+								_.each(first10, function (message) {
 									Mail.BackGround.messageFetcher.push(message.id);
 								});
 
-								var messageId = jsondata[0].id;
+								var messageId = Mail.State.messageView.collection.first().get('id');
 								Mail.UI.loadMessage(messageId);
 								// Show 'Load More' button if there are
 								// more messages than the pagination limit

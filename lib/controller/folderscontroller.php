@@ -23,6 +23,7 @@
 namespace OCA\Mail\Controller;
 
 use OCA\Mail\Account;
+use OCA\Mail\Service\AccountService;
 use OCP\AppFramework\Controller;
 use OCP\AppFramework\Db\DoesNotExistException;
 use OCP\AppFramework\Http\JSONResponse;
@@ -30,10 +31,8 @@ use OCP\AppFramework\Http;
 
 class FoldersController extends Controller {
 
-	/**
-	 * @var \OCA\Mail\Db\MailAccountMapper
-	 */
-	private $mapper;
+	/** @var AccountService */
+	private $accountService;
 
 	/**
 	 * @var string
@@ -46,9 +45,9 @@ class FoldersController extends Controller {
 	 * @param $mailAccountMapper
 	 * @param $currentUserId
 	 */
-	public function __construct($appName, $request, $mailAccountMapper, $currentUserId){
+	public function __construct($appName, $request, $accountService, $currentUserId){
 		parent::__construct($appName, $request);
-		$this->mapper = $mailAccountMapper;
+		$this->accountService = $accountService;
 		$this->currentUserId = $currentUserId;
 	}
 
@@ -58,8 +57,7 @@ class FoldersController extends Controller {
 	 */
 	public function index() {
 		$account = $this->getAccount();
-		$m = new Account($account);
-		$json = $m->getListArray();
+		$json = $account->getListArray();
 
 		$folders = array_filter($json['folders'], function($folder){
 			return is_null($folder['parent']);
@@ -168,8 +166,7 @@ class FoldersController extends Controller {
 				$query[$folderId] = $folder;
 			}
 			$account = $this->getAccount();
-			$m = new Account($account);
-			$mailBoxes = $m->getChangedMailboxes($query);
+			$mailBoxes = $account->getChangedMailboxes($query);
 
 			return new JSONResponse($mailBoxes);
 		} catch (\Horde_Imap_Client_Exception $e) {
@@ -184,9 +181,8 @@ class FoldersController extends Controller {
 	/**
 	 * TODO: private functions below have to be removed from controller -> imap service to be build
 	 */
-	private function getAccount()
-	{
+	private function getAccount() {
 		$accountId = $this->params('accountId');
-		return $this->mapper->find($this->currentUserId, $accountId);
+		return $this->accountService->find($this->currentUserId, $accountId);
 	}
 }

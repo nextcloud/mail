@@ -16,6 +16,7 @@ use OCA\Mail\Controller\FoldersController;
 use OCA\Mail\Controller\MessagesController;
 use OCA\Mail\Controller\ProxyController;
 use OCA\Mail\Db\MailAccountMapper;
+use OCA\Mail\Service\AccountService;
 use OCA\Mail\Service\AutoConfig;
 use OCA\Mail\Service\ContactsIntegration;
 use OCA\Mail\Service\Logger;
@@ -43,12 +44,20 @@ class Application extends App {
 			);
 		});
 
+		$container->registerService('AccountService', function($c) {
+			/** @var IAppContainer $c */
+			return new AccountService(
+				$c->query('MailAccountMapper'),
+				$c->getServer()->getL10N('mail')
+			);
+		});
+
 		$container->registerService('AccountsController', function($c) {
 			/** @var IAppContainer $c */
 			return new AccountsController(
 				$c->query('AppName'),
 				$c->query('Request'),
-				$c->query('MailAccountMapper'),
+				$c->query('AccountService'),
 				$c->query('UserId'),
 				$c->getServer()->getUserFolder(),
 				$c->query('ContactsIntegration'),
@@ -64,7 +73,7 @@ class Application extends App {
 			return new FoldersController(
 				$c->query('AppName'),
 				$c->query('Request'),
-				$c->query('MailAccountMapper'),
+				$c->query('AccountService'),
 				$c->query('UserId')
 			);
 		});
@@ -74,7 +83,7 @@ class Application extends App {
 			return new MessagesController(
 				$c->query('AppName'),
 				$c->query('Request'),
-				$c->query('MailAccountMapper'),
+				$c->query('AccountService'),
 				$c->query('UserId'),
 				$c->getServer()->getUserFolder(),
 				$c->query('ContactsIntegration'),

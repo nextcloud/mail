@@ -16,7 +16,9 @@ use Horde_Imap_Client;
 use OCA\Mail\Db\MailAccountMapper;
 use OCA\Mail\Http\AttachmentDownloadResponse;
 use OCA\Mail\Http\HtmlResponse;
+use OCA\Mail\Service\AccountService;
 use OCA\Mail\Service\ContactsIntegration;
+use OCA\Mail\Service\IMailBox;
 use OCP\AppFramework\Controller;
 use OCP\AppFramework\Db\DoesNotExistException;
 use OCP\AppFramework\Http\ContentSecurityPolicy;
@@ -26,10 +28,8 @@ use OCP\IL10N;
 
 class MessagesController extends Controller {
 
-	/**
-	 * @var \OCA\Mail\Db\MailAccountMapper
-	 */
-	private $mapper;
+	/** @var AccountService */
+	private $accountService;
 
 	/**
 	 * @var string
@@ -68,14 +68,14 @@ class MessagesController extends Controller {
 	 */
 	public function __construct($appName,
 								$request,
-								MailAccountMapper $mapper,
+								AccountService $accountService,
 								$currentUserId,
 								$userFolder,
 								$contactsIntegration,
 								$logger,
 								$l10n) {
 		parent::__construct($appName, $request);
-		$this->mapper = $mapper;
+		$this->accountService = $accountService;
 		$this->currentUserId = $currentUserId;
 		$this->userFolder = $userFolder;
 		$this->contactsIntegration = $contactsIntegration;
@@ -125,7 +125,7 @@ class MessagesController extends Controller {
 	 * @NoAdminRequired
 	 * @NoCSRFRequired
 	 *
-	 * @param int $id
+	 * @param mixed $id
 	 * @return JSONResponse
 	 */
 	public function show($id) {
@@ -160,7 +160,7 @@ class MessagesController extends Controller {
 	/**
 	 * @NoAdminRequired
 	 *
-	 * @param int $messageId
+	 * @param string $messageId
 	 * @return JSONResponse
 	 */
 	public function getHtmlBody($messageId) {
@@ -194,7 +194,7 @@ class MessagesController extends Controller {
 	 * @NoAdminRequired
 	 * @NoCSRFRequired
 	 *
-	 * @param int $messageId
+	 * @param string $messageId
 	 * @param string $attachmentId
 	 * @return AttachmentDownloadResponse
 	 */
@@ -213,7 +213,7 @@ class MessagesController extends Controller {
 	 * @NoAdminRequired
 	 * @NoCSRFRequired
 	 *
-	 * @param int $messageId
+	 * @param string $messageId
 	 * @param string $attachmentId
 	 * @param string $targetPath
 	 * @return JSONResponse
@@ -252,7 +252,7 @@ class MessagesController extends Controller {
 	/**
 	 * @NoAdminRequired
 	 *
-	 * @param int $messageId
+	 * @param string $messageId
 	 * @param boolean $starred
 	 * @return JSONResponse
 	 */
@@ -267,14 +267,13 @@ class MessagesController extends Controller {
 	/**
 	 * @NoAdminRequired
 	 *
-	 * @param int $id
+	 * @param string $id
 	 * @return JSONResponse
 	 */
 	public function destroy($id) {
 		try {
 			$account = $this->getAccount();
-			$m = new \OCA\Mail\Account($account);
-			$m->deleteMessage(base64_decode($this->params('folderId')), $id);
+			$account->deleteMessage(base64_decode($this->params('folderId')), $id);
 			return new JSONResponse();
 
 		} catch (DoesNotExistException $e) {
@@ -283,34 +282,33 @@ class MessagesController extends Controller {
 	}
 
 	/**
-	 * TODO: private functions below have to be removed from controller -> imap service to be build
+	 * @return \OCA\Mail\Service\IAccount
 	 */
 	private function getAccount() {
 		$accountId = $this->params('accountId');
-		return $this->mapper->find($this->currentUserId, $accountId);
+		return $this->accountService->find($this->currentUserId, $accountId);
 	}
 
 	/**
-	 * @return \OCA\Mail\Mailbox
+	 * @return IMailBox
 	 */
 	private function getFolder() {
 		$account = $this->getAccount();
-		$m = new \OCA\Mail\Account($account);
 		$folderId = base64_decode($this->params('folderId'));
-		return $m->getMailbox($folderId);
+		return $account->getMailbox($folderId);
 	}
 
 	/**
-	 * @param integer $id
+	 * @param string $messageId
 	 * @param $accountId
 	 * @param $folderId
 	 * @return callable
 	 */
-	private function enrichDownloadUrl($accountId, $folderId, $id, $attachment) {
+	private function enrichDownloadUrl($accountId, $folderId, $messageId, $attachment) {
 		$downloadUrl = \OCP\Util::linkToRoute('mail.messages.downloadAttachment', [
 			'accountId' => $accountId,
 			'folderId' => $folderId,
-			'messageId' => $id,
+			'messageId' => $messageId,
 			'attachmentId' => $attachment['id'],
 		]);
 		$downloadUrl = \OC::$server->getURLGenerator()->getAbsoluteURL($downloadUrl);
@@ -322,14 +320,14 @@ class MessagesController extends Controller {
 	/**
 	 * @param string $accountId
 	 * @param string $folderId
-	 * @param string $id
+	 * @param string $messageId
 	 * @return string
 	 */
-	private function buildHtmlBodyUrl($accountId, $folderId, $id) {
+	private function buildHtmlBodyUrl($accountId, $folderId, $messageId) {
 		$htmlBodyUrl = \OC::$server->getURLGenerator()->linkToRoute('mail.messages.getHtmlBody', [
 			'accountId' => $accountId,
 			'folderId' => $folderId,
-			'messageId' => $id,
+			'messageId' => $messageId,
 			'requesttoken' => \OCP\Util::callRegister(),
 		]);
 		return \OC::$server->getURLGenerator()->getAbsoluteURL($htmlBodyUrl);

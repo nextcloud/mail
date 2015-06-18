@@ -37,12 +37,18 @@ script('mail', 'jquery-visibility');
 	</li>
 </script>
 <script id="mail-account-template" type="text/x-handlebars-template">
+	{{#if email}}
+	<div class="mail-account-color" style="background-color: {{accountColor email}}"></div>
+	{{/if}}
 	<h2 class="mail-account-email" title="{{email}}">{{email}}</h2>
 	<ul id="mail_folders" class="mail_folders with-icon" data-account_id="{{id}}">
 	</ul>
 </script>
 <script id="mail-messages-template" type="text/x-handlebars-template">
 	<div class="mail_message_summary {{#if flags.unseen}}unseen{{/if}} {{#if active}}active{{/if}}" data-message-id="{{id}}">
+		{{#if accountMail}}
+		<div class="mail-message-account-color" style="background-color: {{accountColor accountMail}}"></div>
+		{{/if}}
 		<div class="mail-message-header">
 			<div class="sender-image">
 				{{#if senderImage}}

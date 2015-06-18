@@ -29,6 +29,7 @@ use Horde_Mime_Part;
 use Horde_Mail_Rfc822_Address;
 use OCA\Mail\Account;
 use OCA\Mail\Db\MailAccount;
+use OCA\Mail\Service\AccountService;
 use OCA\Mail\Service\AutoConfig;
 use OCA\Mail\Service\ContactsIntegration;
 use OCP\AppFramework\Controller;
@@ -42,10 +43,9 @@ use OCP\ILogger;
 use OCP\Security\ICrypto;
 
 class AccountsController extends Controller {
-	/**
-	 * @var \OCA\Mail\Db\MailAccountMapper
-	 */
-	private $mapper;
+
+	/** @var AccountService */
+	private $accountService;
 
 	/**
 	 * @var string
@@ -94,7 +94,7 @@ class AccountsController extends Controller {
 	 */
 	public function __construct($appName,
 		$request,
-		$mailAccountMapper,
+		$accountService,
 		$currentUserId,
 		$userFolder,
 		$contactsIntegration,
@@ -104,7 +104,7 @@ class AccountsController extends Controller {
 		ICrypto $crypto
 	) {
 		parent::__construct($appName, $request);
-		$this->mapper = $mailAccountMapper;
+		$this->accountService = $accountService;
 		$this->currentUserId = $currentUserId;
 		$this->userFolder = $userFolder;
 		$this->contactsIntegration = $contactsIntegration;
@@ -119,11 +119,11 @@ class AccountsController extends Controller {
 	 * @NoCSRFRequired
 	 */
 	public function index() {
-		$mailAccounts = $this->mapper->findByUserId($this->currentUserId);
+		$mailAccounts = $this->accountService->findByUserId($this->currentUserId);
 
 		$json = [];
 		foreach ($mailAccounts as $mailAccount) {
-			$json[] = $mailAccount->toJson();
+			$json[] = $mailAccount->getConfiguration();
 		}
 
 		return new JSONResponse($json);
@@ -137,9 +137,9 @@ class AccountsController extends Controller {
 	 */
 	public function show($accountId) {
 		try {
-			$account = $this->mapper->find($this->currentUserId, $accountId);
+			$account = $this->accountService->find($this->currentUserId, $accountId);
 
-			return new JSONResponse($account->toJson());
+			return new JSONResponse($account->getConfiguration());
 		} catch (DoesNotExistException $e) {
 			return new JSONResponse([], 404);
 		}
@@ -162,8 +162,7 @@ class AccountsController extends Controller {
 	 */
 	public function destroy($accountId) {
 		try {
-			$mailAccount = $this->mapper->find($this->currentUserId, $accountId);
-			$this->mapper->delete($mailAccount);
+			$this->accountService->delete($this->currentUserId, $accountId);
 
 			return new JSONResponse();
 		} catch (DoesNotExistException $e) {
@@ -212,7 +211,7 @@ class AccountsController extends Controller {
 			}
 
 			if ($newAccount) {
-				$this->mapper->save($newAccount);
+				$this->accountService->save($newAccount);
 				$this->logger->debug("account created " . $newAccount->getId());
 				return new JSONResponse(
 					['data' => ['id' => $newAccount->getId()]],
@@ -246,8 +245,13 @@ class AccountsController extends Controller {
 		$bcc = $this->params('bcc');
 		$draftUID = $this->params('draftUID');
 
-		$dbAccount = $this->mapper->find($this->currentUserId, $accountId);
-		$account = new Account($dbAccount);
+		$account = $this->accountService->find($this->currentUserId, $accountId);
+		if (!$account instanceof Account) {
+			return new JSONResponse(
+				array('message' => 'Invalid account'),
+				Http::STATUS_BAD_REQUEST
+			);
+		}
 
 		// get sender data
 		$headers = [];
@@ -367,8 +371,13 @@ class AccountsController extends Controller {
 			$this->logger->info("Updating draft <$uid> in account <$accountId>");
 		}
 
-		$dbAccount = $this->mapper->find($this->currentUserId, $accountId);
-		$account = new Account($dbAccount);
+		$account = $this->accountService->find($this->currentUserId, $accountId);
+		if (!$account instanceof Account) {
+			return new JSONResponse(
+				array('message' => 'Invalid account'),
+				Http::STATUS_BAD_REQUEST
+			);
+		}
 
 		// get sender data
 		$headers = [];

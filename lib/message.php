@@ -35,6 +35,9 @@ class Message {
 	 */
 	private $attachmentsToIgnore = ['signature.asc', 'smime.p7s'];
 
+	/** @var string */
+	private $uid;
+
 	/**
 	 * @param \Horde_Imap_Client_Socket|null $conn
 	 * @param \Horde_Imap_Client_Mailbox $mailBox
@@ -89,7 +92,18 @@ class Message {
 	 * @return int
 	 */
 	public function getUid() {
+		if (!is_null($this->uid)) {
+			return $this->uid;
+		}
 		return $this->fetch->getUid();
+	}
+
+	public function setUid($uid) {
+		$this->uid = $uid;
+		$this->attachments = array_map(function($attachment) use ($uid) {
+			$attachment['messageId'] = $uid;
+			return $attachment;
+		}, $this->attachments);
 	}
 
 	/**
