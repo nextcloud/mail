@@ -58,7 +58,7 @@ class UnifiedMailbox implements IMailBox {
 		});
 
 		// sort by time
-		usort($messages, function($a, $b) {
+		usort($allMessages, function($a, $b) {
 			return $a['dateInt'] < $b['dateInt'];
 		});
 
