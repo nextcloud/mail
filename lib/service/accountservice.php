@@ -3,7 +3,6 @@
 namespace OCA\Mail\Service;
 
 use OCA\Mail\Account;
-use OCA\Mail\Db\MailAccount;
 use OCA\Mail\Db\MailAccountMapper;
 use OCP\IL10N;
 

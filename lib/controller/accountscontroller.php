@@ -83,12 +83,12 @@ class AccountsController extends Controller {
 	/**
 	 * @param string $appName
 	 * @param \OCP\IRequest $request
-	 * @param $mailAccountMapper
+	 * @param $accountService
 	 * @param $currentUserId
 	 * @param $userFolder
 	 * @param $contactsIntegration
 	 * @param $autoConfig
-	 * @param ILogger $logger
+	 * @param $logger
 	 * @param IL10N $l10n
 	 * @param ICrypto $crypto
 	 */
@@ -99,7 +99,7 @@ class AccountsController extends Controller {
 		$userFolder,
 		$contactsIntegration,
 		$autoConfig,
-		ILogger $logger,
+		$logger,
 		IL10N $l10n,
 		ICrypto $crypto
 	) {
@@ -117,6 +117,8 @@ class AccountsController extends Controller {
 	/**
 	 * @NoAdminRequired
 	 * @NoCSRFRequired
+	 *
+	 * @return JSONResponse
 	 */
 	public function index() {
 		$mailAccounts = $this->accountService->findByUserId($this->currentUserId);
@@ -173,20 +175,46 @@ class AccountsController extends Controller {
 	/**
 	 * @NoAdminRequired
 	 *
-	 * @param bool $autoDetect
+	 * @param string $accountName
+	 * @param string $emailAddress
+	 * @param string $password
+	 * @param string $imapHost
+	 * @param int    $imapPort
+	 * @param string $imapSslMode
+	 * @param string $imapUser
+	 * @param string $imapPassword
+	 * @param string $smtpHost
+	 * @param int    $smtpPort
+	 * @param string $smtpSslMode
+	 * @param string $smtpUser
+	 * @param string $smtpPassword
+	 * @param bool   $autoDetect
 	 * @return JSONResponse
 	 */
-	public function create($autoDetect) {
+	public function create($accountName, $emailAddress, $password,
+		$imapHost, $imapPort, $imapSslMode, $imapUser, $imapPassword,
+		$smtpHost, $smtpPort, $smtpSslMode, $smtpUser, $smtpPassword,
+		$autoDetect) {
 		try {
 			if ($autoDetect) {
 				$this->logger->info('setting up auto detected account');
-				$name = $this->params('accountName');
-				$email = $this->params('emailAddress');
-				$password = $this->params('password');
-				$newAccount = $this->autoConfig->createAutoDetected($email, $password, $name);
+				$newAccount = $this->autoConfig->createAutoDetected($emailAddress, $password, $accountName);
 			} else {
 				$this->logger->info('Setting up manually configured account');
-				$newAccount = new MailAccount($this->getParams());
+				$newAccount = new MailAccount([
+					'accountName'  => $accountName,
+					'emailAddress' => $emailAddress,
+					'imapHost'     => $imapHost,
+					'imapPort'     => $imapPort,
+					'imapSslMode'  => $imapSslMode,
+					'imapUser'     => $imapUser,
+					'imapPassword' => $imapPassword,
+					'smtpHost'     => $smtpHost,
+					'smtpPort'     => $smtpPort,
+					'smtpSslMode'  => $smtpSslMode,
+					'smtpUser'     => $smtpUser,
+					'smtpPassword' => $smtpPassword
+				]);
 				$newAccount->setUserId($this->currentUserId);
 				$newAccount->setInboundPassword(
 					$this->crypto->encrypt(
@@ -233,18 +261,20 @@ class AccountsController extends Controller {
 	/**
 	 * @NoAdminRequired
 	 *
-	 * @param int $accountId
+	 * @param int      $accountId
+	 * @param string   $folderId
+	 * @param string   $subject
+	 * @param string   $body
+	 * @param string   $to
+	 * @param string   $cc
+	 * @param string   $bcc
+	 * @param int|bool $draftUID
+	 * @param int      $messageId
+	 * @param mixed    $attachments
 	 * @return JSONResponse
 	 */
-	public function send($accountId) {
-
-		$subject = $this->params('subject');
-		$body = $this->params('body');
-		$to = $this->params('to');
-		$cc = $this->params('cc');
-		$bcc = $this->params('bcc');
-		$draftUID = $this->params('draftUID');
-
+	public function send($accountId, $folderId, $subject, $body, $to, $cc,
+		$bcc, $draftUID, $messageId, $attachments) {
 		$account = $this->accountService->find($this->currentUserId, $accountId);
 		if (!$account instanceof Account) {
 			return new JSONResponse(
@@ -268,8 +298,7 @@ class AccountsController extends Controller {
 		}
 
 		// in reply to handling
-		$folderId = base64_decode($this->params('folderId'));
-		$messageId = $this->params('messageId');
+		$folderId = base64_decode($folderId);
 		$mailbox = null;
 		if (!is_null($folderId) && !is_null($messageId)) {
 			$mailbox = $account->getMailbox($folderId);
@@ -295,7 +324,6 @@ class AccountsController extends Controller {
 		$mail->addHeaders($headers);
 		$mail->setBody($body);
 
-		$attachments = $this->params('attachments');
 		if (is_array($attachments)) {
 			foreach($attachments as $attachment) {
 				$fileName = $attachment['fileName'];
@@ -353,17 +381,17 @@ class AccountsController extends Controller {
 
 	/**
 	 * @NoAdminRequired
-	 *
-	 * @param int $accountId
+	 * 
+	 * @param int      $accountId
+	 * @param string   $subject
+	 * @param string   $body
+	 * @param string   $to
+	 * @param string   $cc
+	 * @param string   $bcc
+	 * @param int|null $uid
 	 * @return JSONResponse
 	 */
-	public function draft($accountId) {
-		$subject = $this->params('subject');
-		$body = $this->params('body');
-		$to = $this->params('to');
-		$cc = $this->params('cc');
-		$bcc = $this->params('bcc');
-		$uid = $this->params('uid');
+	public function draft($accountId, $subject, $body, $to, $cc, $bcc, $uid) {
 
 		if (!is_null($uid)) {
 			$this->logger->info("Saving a new draft in accout <$accountId>");
@@ -442,7 +470,7 @@ class AccountsController extends Controller {
 	 * @return array
 	 */
 	public function autoComplete($term) {
-		return $this->contactsIntegration->getMatchingRecipient( $term );
+		return $this->contactsIntegration->getMatchingRecipient($term);
 	}
 
 }
