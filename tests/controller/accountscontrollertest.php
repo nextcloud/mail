@@ -22,7 +22,9 @@
  */
 
 use OCA\Mail\Controller\AccountsController;
+use OC\AppFramework\Http;
 use OCP\AppFramework\Http\JSONResponse;
+use OCP\AppFramework\Http\Response;
 
 class AccountsControllerTest extends \Test\TestCase {
 
@@ -131,4 +133,96 @@ class AccountsControllerTest extends \Test\TestCase {
 		$this->assertEquals($expectedResponse, $response);
 	}
 	
+	public function testDestroy() {
+		$this->accountsService->expects($this->once())
+			->method('delete')
+			->with($this->equalTo($this->userId), $this->equalTo($this->accountId));
+
+		$response = $this->controller->destroy($this->accountId);
+
+		$expectedResponse = new JSONResponse();
+		$this->assertEquals($expectedResponse, $response);
+	}
+
+	public function testDestroyDoesNotExist() {
+		$this->accountsService->expects($this->once())
+			->method('delete')
+			->with($this->equalTo($this->userId), $this->equalTo($this->accountId))
+			->will($this->throwException(new \OCP\AppFramework\Db\DoesNotExistException('test')));
+
+		$response = $this->controller->destroy($this->accountId);
+
+		$expectedResponse = new JSONResponse();
+		$this->assertEquals($expectedResponse, $response);
+	}
+
+	public function testCreateAutoDetectSuccess() {
+		$email = 'john@example.com';
+		$password = '123456';
+		$accountName = 'John Doe';
+
+		$this->account->expects($this->exactly(2))
+			->method('getId')
+			->will($this->returnValue(135));
+		$this->autoConfig->expects($this->once())
+			->method('createAutoDetected')
+			->with($this->equalTo($email),
+				$this->equalTo($password),
+				$this->equalTo($accountName))
+			->will($this->returnValue($this->account));
+		$this->accountsService->expects($this->once())
+			->method('save')
+			->with($this->equalTo($this->account));
+
+		$response = $this->controller->create($accountName, $email, $password,
+			null, null, null, null, null,
+			null, null, null, null, null,
+			true);
+
+		$expectedResponse = new JSONResponse([
+		    'data' => [
+			'id' => 135,
+		    ],
+		], Http::STATUS_CREATED);
+		$this->assertEquals($expectedResponse, $response);
+	}
+
+	public function testCreateAutoDetectFailure() {
+		$email = 'john@example.com';
+		$password = '123456';
+		$accountName = 'John Doe';
+
+		$this->autoConfig->expects($this->once())
+			->method('createAutoDetected')
+			->with($this->equalTo($email),
+				$this->equalTo($password),
+				$this->equalTo($accountName))
+			->will($this->returnValue(null));
+		$this->l10n->expects($this->once())
+			->method('t')
+			->will($this->returnValue('fail'));
+
+		$response = $this->controller->create($accountName, $email, $password,
+			null, null, null, null, null,
+			null, null, null, null, null,
+			true);
+
+		$expectedResponse = new JSONResponse([
+		    'message' => 'fail',
+		], Http::STATUS_BAD_REQUEST);
+		$this->assertEquals($expectedResponse, $response);
+	}
+
+	public function testAutoComplete() {
+		$this->contactsIntegration->expects($this->once())
+			->method('getMatchingRecipient')
+			->with($this->equalTo('search term'))
+			->will($this->returnValue('test'));
+
+		$response = $this->controller->autoComplete('search term');
+
+		$expectedResponse = 'test';
+		$this->assertEquals($expectedResponse, $response);
+	}
+
 }
