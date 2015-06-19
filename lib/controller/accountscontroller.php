@@ -88,7 +88,7 @@ class AccountsController extends Controller {
 	 * @param $userFolder
 	 * @param $contactsIntegration
 	 * @param $autoConfig
-	 * @param ILogger $logger
+	 * @param $logger
 	 * @param IL10N $l10n
 	 * @param ICrypto $crypto
 	 */
@@ -99,7 +99,7 @@ class AccountsController extends Controller {
 		$userFolder,
 		$contactsIntegration,
 		$autoConfig,
-		ILogger $logger,
+		$logger,
 		IL10N $l10n,
 		ICrypto $crypto
 	) {
