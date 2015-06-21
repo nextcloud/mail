@@ -538,7 +538,7 @@ var Mail = {
 			});
 
 			Handlebars.registerHelper("ifHasCC", function (cc, ccList, options) {
-				if (!_.isUndefined(cc) || !_.isUndefined(ccList)) {
+				if (!_.isUndefined(cc) || (!_.isUndefined(ccList) && ccList.length > 0)) {
 					return options.fn(this);
 				} else {
 					return options.inverse(this);
@@ -546,7 +546,7 @@ var Mail = {
 			});
 
 			Handlebars.registerHelper("unlessHasCC", function (cc, ccList, options) {
-				if (_.isUndefined(cc) && _.isUndefined(ccList)) {
+				if (_.isUndefined(cc) && (_.isUndefined(ccList) || ccList.length === 0)) {
 					return options.fn(this);
 				} else {
 					return options.inverse(this);
