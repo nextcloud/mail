@@ -426,11 +426,72 @@ var Mail = {
 				// Save xhr to allow aborting unneded requests
 				Mail.State.messageLoading = xhr;
 			}
+		},
+		sendMessage: function(accountId, message, options) {
+			var defaultOptions = {
+				success: function() {},
+				error: function() {},
+				complete: function() {},
+				draftUID: null
+			};
+			_.defaults(options, defaultOptions);
+			var url = OC.generateUrl('/apps/mail/accounts/{accountId}/send', {accountId: accountId});
+			var data = {
+				type: 'POST',
+				success: options.success,
+				error: options.error,
+				complete: options.complete,
+				data: {
+					'to': message.to,
+					'cc': message.cc,
+					'bcc': message.bcc,
+					'subject': message.subject,
+					'body': message.body,
+					'attachments': message.attachments,
+					'draftUID' : options.draftUID
+				}
+			};
+			$.ajax(url, data);
+		},
+		saveDraft: function(accountId, message, options) {
+			var defaultOptions = {
+				success: function() {},
+				error: function() {},
+				complete: function() {},
+				draftUID: null
+			};
+			_.defaults(options, defaultOptions);
+			var url = OC.generateUrl('/apps/mail/accounts/{accountId}/draft', {accountId: accountId});
+			var data = {
+				type: 'POST',
+				success: function(data) {
+					if (options.draftUID !== null) {
+						// update UID in message list
+						var message = Mail.UI.messageView.collection.findWhere({id: options.draftUID});
+						if (message) {
+							message.set({id: data.uid});
+							Mail.UI.messageView.collection.set([message], {remove: false});
+						}
+					}
+					options.success(data);
+				},
+				error: options.error,
+				complete: options.complete,
+				data: {
+					'to': message.to,
+					'cc': message.cc,
+					'bcc': message.bcc,
+					'subject': message.subject,
+					'body': message.body,
+					'uid': options.draftUID
+				}
+			};
+			$.ajax(url, data);
 		}
 	},
 	UI: (function() {
 		var messageView = null;
-		var composeView = null;
+		var composer = null;
 		var composerVisible = false;
 
 		this.renderSettings = function() {
@@ -659,7 +720,7 @@ var Mail = {
 		};
 
 		this.hideMenu = function() {
-			$('#new-message').addClass('hidden');
+			$('.message-composer').addClass('hidden');
 			if (Mail.State.accounts.length === 0) {
 				$('#app-navigation').hide();
 				$('#app-navigation-toggle').css('background-image', 'none');
@@ -667,7 +728,7 @@ var Mail = {
 		};
 
 		this.showMenu = function() {
-			$('#new-message').removeClass('hidden');
+			$('.message-composer').removeClass('hidden');
 			$('#app-navigation').show();
 			$('#app-navigation-toggle').css('background-image', '');
 		};
@@ -826,7 +887,7 @@ var Mail = {
 		};
 
 		this.openComposer = function(data) {
-			Mail.UI.composerVisible = true;
+			composerVisible = true;
 			$('.tipsy').remove();
 			$('#mail_new_message').prop('disabled', true);
 			$('#mail-message').removeClass('hidden-mobile');
@@ -839,30 +900,31 @@ var Mail = {
 				$('#mail_message').removeClass('icon-loading');
 			}
 
-			if (Mail.State.composeView === null) {
-				// setup sendmail view
-				Mail.State.composeView = new views.SendMail({
+			if (composer === null) {
+				// setup composer view
+				composer = new views.Composer({
 					el: $('#mail-message'),
-					aliases: Mail.State.accounts,
-					data: data
+					onSubmit: Mail.Communication.sendMessage,
+					onDraft: Mail.Communication.saveDraft,
+					aliases: Mail.State.accounts
 				});
-
-				Mail.State.composeView.sentCallback = function() {};
 			} else {
-				Mail.State.composeView.data = data;
-				Mail.State.composeView.hasData = false;
-				Mail.State.composeView.hasUnsavedChanges = false;
+				composer.data = data;
+				composer.hasData = false;
+				composer.hasUnsavedChanges = false;
 			}
 
 			if (data && data.hasHtmlBody) {
 				Mail.UI.showError(t('mail', 'Opening HTML drafts is not supported yet.'));
 			}
 
-			Mail.State.composeView.attachments.reset();
-			Mail.State.composeView.render();
+			composer.render({
+				data: data
+			});
 
 			// set 'from' dropdown to current account
-			$('.mail_account').val(Mail.State.currentAccountId);
+			// TODO: fix selector conflicts
+			$('.mail-account').val(Mail.State.currentAccountId);
 
 			// focus 'to' field automatically on clicking New message button
 			$('#to').focus();
@@ -901,7 +963,7 @@ var Mail = {
 
 			Mail.UI.Events.onComposerLeave();
 
-			if (!options.force && $('#new-message').length) {
+			if (!options.force && $('.message-composer').length) {
 				return;
 			}
 			// Abort previous loading requests
@@ -1094,22 +1156,6 @@ var Mail = {
 			$('#mail_new_message').hide();
 		};
 
-		this.toggleSendButton = function() {
-			if (($('#to').val() !== '') && (($('#subject').val() !== '') || ($('#new-message-body').val() !== ''))) {
-				$('#new-message-send').removeAttr('disabled');
-			} else {
-				$('#new-message-send').attr('disabled', true);
-			}
-		};
-
-		this.toggleReplyButton = function() {
-			if (($('.reply-message-fields #to').val() !== '') && ($('.reply-message-body').val() !== '')) {
-				$('.reply-message-send').removeAttr('disabled');
-			} else {
-				$('.reply-message-send').attr('disabled', true);
-			}
-		};
-
 		this.toggleManualSetup = function() {
 			$('#mail-setup-manual').slideToggle();
 			$('#mail-imap-host').focus();
@@ -1132,10 +1178,9 @@ var Mail = {
 		this.Events = {
 			onComposerLeave: function() {
 				// Trigger only once
-				if (Mail.UI.composerVisible === true) {
-					Mail.UI.composerVisible = false;
+				if (composerVisible === true) {
+					composerVisible = false;
 
-					var composer = Mail.State.composeView;
 					if (composer && composer.hasData === true) {
 						if (composer.hasUnsavedChanges === true) {
 							composer.saveDraft(function() {
@@ -1169,22 +1214,6 @@ var Mail = {
 				},
 				set: function(mv) {
 					messageView = mv;
-				}
-			},
-			composeView: {
-				get: function() {
-					return composeView;
-				},
-				set: function(cv) {
-					composeView = cv;
-				}
-			},
-			composerVisible: {
-				get: function() {
-					return composerVisible;
-				},
-				set: function(state) {
-					composerVisible = state;
 				}
 			}
 		});
@@ -1315,13 +1344,6 @@ $(document).ready(function() {
 	// new mail message button handling
 	$(document).on('click', '#mail_new_message', Mail.UI.openComposer);
 
-	// disable send/reply buttons unless recipient and either subject or message body is filled
-	$(document).on('change input paste keyup', '#to', Mail.UI.toggleSendButton);
-	$(document).on('change input paste keyup', '#subject', Mail.UI.toggleSendButton);
-	$(document).on('change input paste keyup', '#new-message-body', Mail.UI.toggleSendButton);
-	$(document).on('change input paste keyup', '.reply-message-fields #to', Mail.UI.toggleReplyButton);
-	$(document).on('change input paste keyup', '.reply-message-body', Mail.UI.toggleReplyButton);
-
 	/**
 	* Detects pasted text by browser plugins, and other software.
 	* Check for changes in message bodies every second.
@@ -1331,7 +1353,7 @@ $(document).ready(function() {
 		return function() {
 
 			// Define which elements hold the message body.
-			var MessageBody = $('#new-message-body');
+			var MessageBody = $('.message-body');
 
 			/**
 			 * If the message body is displayed and has content:
@@ -1345,7 +1367,6 @@ $(document).ready(function() {
 				var OldMessageBody, NewMessageBody = MessageBody.val();
 				if (NewMessageBody !== OldMessageBody) {
 					MessageBody.trigger('autosize.resize');
-					Mail.UI.toggleSendButton();
 					OldMessageBody = NewMessageBody;
 				}
 			}
@@ -1390,7 +1411,8 @@ $(document).ready(function() {
 			// If delete key is pressed:
 			case 46:
 				// If not composing a reply:
-				if (!$('#to, #cc, .reply-message-body').is(':focus')) {
+				// TODO: fix selector conflicts
+				if (!$('.to, .cc, .reply-message-body').is(':focus')) {
 					// Mimic a client clicking the delete button for the currently active message.
 					$('.mail_message_summary.active .icon-delete.action.delete').click();
 				}

@@ -56,9 +56,10 @@ $(function() {
 	function getReplyMessage() {
 		var message = {};
 
+		// TODO: fix selector conflicts
 		var replyMessageBody = $('.reply-message-body');
-		var to = $('.reply-message-fields #to');
-		var cc = $('.reply-message-fields #cc');
+		var to = $('.reply-message-fields .to');
+		var cc = $('.reply-message-fields .cc');
 		message.body = replyMessageBody.val();
 		message.to = to.val();
 		message.cc = cc.val();
@@ -94,8 +95,8 @@ $(function() {
 		replyMessageBody.prop('disabled', true);
 		replyMessageSend.prop('disabled', true);
 		replyMessageSend.val(t('mail', 'Sending …'));
-		var to = $('.reply-message-fields #to');
-		var cc = $('.reply-message-fields #cc');
+		var to = $('.reply-message-fields .to');
+		var cc = $('.reply-message-fields .cc');
 		var messageId = Mail.State.currentMessageId;
 
 		to.prop('disabled', true);
@@ -110,8 +111,8 @@ $(function() {
 				replyMessageBody.prop('disabled', false);
 				replyMessageSend.prop('disabled', false);
 				replyMessageSend.val(t('mail', 'Reply'));
-				$('.reply-message-fields #to').prop('disabled', false);
-				$('.reply-message-fields #cc').prop('disabled', false);
+				$('.reply-message-fields .to').prop('disabled', false);
+				$('.reply-message-fields .cc').prop('disabled', false);
 			},
 			data:{
 				to: to.val(),
@@ -152,20 +153,9 @@ $(function() {
 		}
 	});
 
-	$(document).on('keyup', '.reply-message-body, #to, #cc', saveReplyLocally);
+	// TODO: fix selector conflicts
+	$(document).on('keyup', '.reply-message-body, .to, .cc', saveReplyLocally);
 
 	$(document).on('click', '.reply-message-send', sendReply);
 
-	// cc/bcc toggling
-	$(document).on('click', '#new-message-cc-bcc-toggle', function() {
-		$('#new-message-cc-bcc').slideToggle();
-		$('#new-message-cc-bcc #cc').focus();
-		$('#new-message-cc-bcc-toggle').fadeOut();
-	});
-
-	$(document).on('click', '#reply-message-cc-bcc-toggle', function() {
-		$('#reply-message-cc-bcc').slideToggle();
-		$('#reply-message-cc-bcc #cc').focus();
-		$('#reply-message-cc-bcc-toggle').fadeOut();
-	});
 });

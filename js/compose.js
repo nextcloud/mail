@@ -24,18 +24,19 @@ var Mail = {
 						$('#accountManager').html(html);
 					}
 
-					// setup sendmail view
-					var view = new views.SendMail({
+					// setup composer view
+					var view = new views.Composer({
 						el: $('#app-content'),
+						onSent: function() {
+							// TODO: fix selector conflicts
+							$('#nav-buttons').removeClass('hidden');
+							$('.mail-account').slideUp();
+							$('.composer-fields').slideUp();
+							$('#new-message-attachments').slideUp();
+						},
 						aliases: Mail.State.accounts
 					});
 
-					view.sentCallback = function() {
-						$('#nav-buttons').removeClass('hidden');
-						$('.mail_account').slideUp();
-						$('#new-message-fields').slideUp();
-						$('#new-message-attachments').slideUp();
-					};
 					// And render it
 					view.render();
 
@@ -57,6 +58,7 @@ var Mail = {
 		},
 
 		hideMenu:function() {
+			// TODO: fix selector conflicts
 			var menu = $('#new-message');
 			menu.addClass('hidden');
 		}
@@ -77,9 +79,10 @@ $(document).ready(function() {
 		window.history.back();
 	});
 
-	if ($('#cc').attr('value') || $('#bcc').attr('value')) {
-		$('#new-message-cc-bcc').show();
-		$('#new-message-cc-bcc-toggle').hide();
+	// TODO: fix selector conflicts
+	if ($('.cc').attr('value') || $('.bcc').attr('value')) {
+		$('.composer-cc-bcc').show();
+		$('.composer-cc-bcc-toggle').hide();
 	}
 
 });

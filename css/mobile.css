@@ -50,7 +50,7 @@
 }
 
 /* make sure text fields occupy full width */
-#new-message-fields,
+.composer-fields,
 .reply-message-fields {
 	width: 100%;
 }

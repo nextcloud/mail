@@ -4,7 +4,7 @@
 	top: 50%;
 }
 
-.mail_account {
+.mail-account {
 	width: 100%;
 }
 
@@ -344,73 +344,72 @@
 	text-align: left;
 }
 
-#new-message {
+.message-composer {
 	margin: 10px;
 	z-index: 100;
 }
-#new-message-fields,
+.composer-fields,
 .reply-message-fields {
 	position: relative;
 }
-#to,
-#cc,
-#bcc,
-#subject,
-#new-message-body,
+input.to,
+input.cc,
+input.bcc,
+input.subject,
+textarea.message-body,
 .reply-message-body {
 	width: 100%;
 }
 
 /* border and radius style rules to be replaced by grouptop, groupbottom etc
 	once https://github.com/owncloud/core/pull/9847 is merged and backported */
-#to {
+input.to {
 	margin: 0;
 	padding-right: 60px; /* for cc-bcc-toggle */
 	border-bottom-left-radius: 0;
 	border-bottom-right-radius: 0;
 }
 
-#new-message-cc-bcc,
+.composer-cc-bcc,
 #reply-message-cc-bcc {
 	position: relative;
 }
-#to-label,
-#cc-label,
-#bcc-label {
+label.to-label,
+label.cc-label,
+label.bcc-label {
 	position: absolute;
 	left: 0;
 	top: 0;
 	padding: 6px;
 	cursor: text;
 }
-#bcc-label {
+label.bcc-label {
 	top: initial;
 	bottom: 0;
 }
-#to,
-#cc,
-#bcc {
+input.to,
+input.cc,
+input.bcc {
 	padding-left: 30px;
 }
 
-#new-message-cc-bcc-toggle,
+.composer-cc-bcc-toggle,
 #reply-message-cc-bcc-toggle {
 	position: absolute;
 	right: 0;
-	/*top: 0;*/
 	padding: 6px;
 }
-#new-message-cc-bcc {
+.composer-cc-bcc {
 	display: none;
 }
-#subject,
-#cc,
-#bcc {
+input.subject,
+input.cc,
+input.bcc {
 	margin: 0;
 	border-top: none;
 	border-radius: 0;
 }
-#new-message-body,
+textarea.message-body,
 .reply-message-body {
 	margin: 0;
 	border-top: none;
@@ -419,10 +418,10 @@
 	height: 100px;
 	resize: none;
 }
-#new-message-body {
+textarea.message-body {
 	height: 300px;
 }
-#new-message-send,
+input.submit-message,
 .reply-message-send {
 	position: absolute;
 	bottom: 5px;

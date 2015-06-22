@@ -205,31 +205,31 @@ script('mail', 'jquery-visibility');
 	<p class="app-settings-hint"><?php print_unescaped($l->t('Looking to encrypt your emails? Install the <a href="https://www.mailvelope.com/" target="_blank">Mailvelope browser extension</a>!')); ?></p>
 </div>
 </script>
-<script id="new-message-template" type="text/x-handlebars-template">
-	<div id="new-message">
-		<select class="mail_account">
+<script id="mail-composer" type="text/x-handlebars-template">
+	<div class="message-composer">
+		<select class="mail-account">
 			{{#each aliases}}
 			<option value="{{accountId}}"><?php p($l->t('from')); ?> {{name}} &lt;{{emailAddress}}&gt;</option>
 			{{/each}}
 		</select>
-		<div id="new-message-fields">
-			<a href="#" id="new-message-cc-bcc-toggle"
+		<div class="composer-fields">
+			<a href="#" class="composer-cc-bcc-toggle"
 				class="transparency"><?php p($l->t('+ cc/bcc')); ?></a>
-			<input type="text" name="to" id="to" value="{{to}}" class="recipient-autocomplete" />
-			<label id="to-label" for="to" class="transparency"><?php p($l->t('to')); ?></label>
-			<div id="new-message-cc-bcc">
-				<input type="text" name="cc" id="cc" value="{{cc}}" class="recipient-autocomplete" />
-				<label id="cc-label" for="cc" class="transparency"><?php p($l->t('cc')); ?></label>
-				<input type="text" name="bcc" id="bcc" value="{{bcc}}" class="recipient-autocomplete" />
-				<label id="bcc-label" for="bcc" class="transparency"><?php p($l->t('bcc')); ?></label>
+			<input type="text" name="to" value="{{to}}" class="to recipient-autocomplete" />
+			<label class="to-label" for="to" class="transparency"><?php p($l->t('to')); ?></label>
+			<div class="composer-cc-bcc">
+				<input type="text" name="cc" value="{{cc}}" class="cc recipient-autocomplete" />
+				<label for="cc" class="cc-label transparency"><?php p($l->t('cc')); ?></label>
+				<input type="text" name="bcc" value="{{bcc}}" class="bcc recipient-autocomplete" />
+				<label for="bcc" class="bcc-label transparency"><?php p($l->t('bcc')); ?></label>
 			</div>
-			<input type="text" name="subject" id="subject" value="{{subject}}"
+			<input type="text" name="subject" value="{{subject}}" class="subject"
 				placeholder="<?php p($l->t('Subject')); ?>" />
-			<textarea name="body" id="new-message-body"
+			<textarea name="body" class="message-body"
 				placeholder="<?php p($l->t('Message …')); ?>">{{message}}</textarea>
-			<input id="new-message-send" class="send primary" type="submit" value="<?php p($l->t('Send')) ?>" disabled>
+			<input class="submit-message send primary" type="submit" value="<?php p($l->t('Send')) ?>" disabled>
 		</div>
-		<div id="new-message-attachments">
+		<div class="new-message-attachments">
 		</div>
 	</div>
 </script>
