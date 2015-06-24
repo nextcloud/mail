@@ -567,8 +567,10 @@ var Mail = {
 				var url = window.location.protocol + '//' +
 					window.location.host +
 					OC.generateUrl('apps/mail/compose?uri=%s');
-				window.navigator
-					.registerProtocolHandler("mailto", url, "ownCloud Mail");
+				try {
+					window.navigator
+						.registerProtocolHandler("mailto", url, "ownCloud Mail");
+				} catch (e) {}
 			}
 
 			// setup messages view
