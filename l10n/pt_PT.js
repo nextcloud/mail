@@ -3,7 +3,9 @@ OC.L10N.register(
     {
     "Mail" : "Correio",
     "Error while loading the accounts." : "Erro a carregar as contas.",
+    "_%n new message in {folderName} \nfrom {from}_::_%n new messages in {folderName} \nfrom {from}_" : ["%n nova mensagem na pasta {folderName} \nenviada por {from}","%n novas mensagems na pasta {folderName}\nenviadas por {from}"],
     "you" : "Você",
+    "Send message to {email}" : "Enviar mensagem para {email}",
     "Error while loading the selected account." : "Erro a carregar a conta seleccionada.",
     "Error while loading messages." : "Erro durante o carregamento das mensagens.",
     "Choose a folder to store the attachment in" : "Escolha uma pasta para guardar o anexo",
@@ -53,7 +55,7 @@ OC.L10N.register(
     "Open Mail App" : "Abrir Aplicação de Correio",
     "Back to website" : "Voltar ao sítio da Web",
     "Error loading message" : "Erro ao carregar a mensagem",
-    "Download attachment" : "Transfira o anexo",
+    "Download attachment" : "Descarregar anexo",
     "Save to Files" : "Guardado em Ficheiros",
     "Save all to Files" : "Guardar tudo em Ficheiros",
     "+ cc" : "+ cc",

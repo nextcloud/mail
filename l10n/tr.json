@@ -3,6 +3,7 @@
     "Error while loading the accounts." : "Hesaplar yüklenirken hata.",
     "_%n new message in {folderName} \nfrom {from}_::_%n new messages in {folderName} \nfrom {from}_" : ["{folderName} içerisinde %n yeni ileti\nkimden: {from}","{folderName} içerisinde %n yeni ileti\nkimden: {from}"],
     "you" : "siz",
+    "Send message to {email}" : "{email} adresine ileti gönder",
     "Error while loading the selected account." : "Seçili hesap yüklenirken hata.",
     "Error while loading messages." : "İletiler yüklenirken hata.",
     "Choose a folder to store the attachment in" : "Ekin saklanmasını istediğiniz bir klasör seçin",

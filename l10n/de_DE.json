@@ -3,6 +3,7 @@
     "Error while loading the accounts." : "Fehler beim Laden der Konten.",
     "_%n new message in {folderName} \nfrom {from}_::_%n new messages in {folderName} \nfrom {from}_" : ["%n neue Nachricht in {folderName} \nvon {from}","%n neue Nachrichten in {folderName} \nvon {from}"],
     "you" : "Sie",
+    "Send message to {email}" : "Nachricht an {email} senden",
     "Error while loading the selected account." : "Fehler beim Laden des ausgewählten Kontos.",
     "Error while loading messages." : "Fehler beim Laden der Nachrichten.",
     "Choose a folder to store the attachment in" : "Ordner zum Speichern des Anhangs auswählen",
