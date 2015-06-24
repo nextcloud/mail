@@ -432,6 +432,9 @@ var Mail = {
 				success: function() {},
 				error: function() {},
 				complete: function() {},
+				accountId: null,
+				folderId: null,
+				messageId: null,
 				draftUID: null
 			};
 			_.defaults(options, defaultOptions);
@@ -442,13 +445,14 @@ var Mail = {
 				error: options.error,
 				complete: options.complete,
 				data: {
-					'to': message.to,
-					'cc': message.cc,
-					'bcc': message.bcc,
-					'subject': message.subject,
-					'body': message.body,
-					'attachments': message.attachments,
-					'draftUID' : options.draftUID
+					to: message.to,
+					cc: message.cc,
+					bcc: message.bcc,
+					subject: message.subject,
+					body: message.body,
+					attachments: message.attachments,
+					accountId: options.accountId,
+					draftUID : options.draftUID
 				}
 			};
 			$.ajax(url, data);
@@ -458,6 +462,9 @@ var Mail = {
 				success: function() {},
 				error: function() {},
 				complete: function() {},
+				accountId: null,
+				folderId: null,
+				messageId: null,
 				draftUID: null
 			};
 			_.defaults(options, defaultOptions);
@@ -478,12 +485,16 @@ var Mail = {
 				error: options.error,
 				complete: options.complete,
 				data: {
-					'to': message.to,
-					'cc': message.cc,
-					'bcc': message.bcc,
-					'subject': message.subject,
-					'body': message.body,
-					'uid': options.draftUID
+					to: message.to,
+					cc: message.cc,
+					bcc: message.bcc,
+					subject: message.subject,
+					body: message.body,
+					attachments: message.attachments,
+					accountId: options.accountId,
+					folderId: options.folderId,
+					messageId: options.messageId,
+					uid : options.draftUID
 				}
 			};
 			$.ajax(url, data);
@@ -912,6 +923,7 @@ var Mail = {
 				composer.data = data;
 				composer.hasData = false;
 				composer.hasUnsavedChanges = false;
+				composer.delegateEvents();
 			}
 
 			if (data && data.hasHtmlBody) {
@@ -934,19 +946,6 @@ var Mail = {
 			}
 
 			Mail.UI.setMessageActive(null);
-		};
-
-		this.loadDraft = function(messageId) {
-			var storage = $.localStorage;
-			var draftId = 'draft' +
-				'.' + Mail.State.currentAccountId.toString() +
-				'.' + Mail.State.currentFolderId.toString() +
-				'.' + messageId.toString();
-			if (storage.isSet(draftId)) {
-				return storage.get(draftId);
-			} else {
-				return null;
-			}
 		};
 
 		this.loadMessage = function(messageId, options) {
@@ -998,24 +997,23 @@ var Mail = {
 
 			var self = this;
 			var loadMessageSuccess = function(message) {
-				// load local storage draft
-				var draft = self.loadDraft(messageId);
-				if (draft) {
-					message.replyCc = draft.cc;
-					message.replyBcc = draft.bcc;
-					message.replyBody = draft.body;
-				} else {
-					// Add body content to inline reply (text mails)
-					if (!message.hasHtmlBody) {
-						var date = new Date(message.dateIso);
-						var minutes = date.getMinutes();
+				var reply = {
+					replyToList: message.replyToList,
+					replyCc: message.ReplyCc,
+					replyCcList: message.replyCcList,
+					body: ''
+				};
 
-						message.replyBody = '\n\n\n\n' +
-							message.from + ' – ' +
-							$.datepicker.formatDate('D, d. MM yy ', date) +
-							date.getHours() + ':' + (minutes < 10 ? '0' : '') + minutes + '\n> ' +
-							$(message.body).text().replace(/\n/g, '\n> ');
-					}
+				// Add body content to inline reply (text mails)
+				if (!message.hasHtmlBody) {
+					var date = new Date(message.dateIso);
+					var minutes = date.getMinutes();
+
+					reply.body = '\n\n\n\n' +
+						message.from + ' – ' +
+						$.datepicker.formatDate('D, d. MM yy ', date) +
+						date.getHours() + ':' + (minutes < 10 ? '0' : '') + minutes + '\n> ' +
+						$(message.body).text().replace(/\n/g, '\n> ');
 				}
 
 				// Render the message body
@@ -1025,6 +1023,25 @@ var Mail = {
 				mailBody
 					.html(html)
 					.removeClass('icon-loading');
+
+				// Temporarily disable new-message composer events
+				if (composer) {
+					composer.undelegateEvents();
+				}
+
+				// setup reply composer view
+				var replyComposer = new views.Composer({
+					el: $('#reply-composer'),
+					type: 'reply',
+					onSubmit: Mail.Communication.sendMessage,
+					onDraft: Mail.Communication.saveDraft,
+					accountId: Mail.State.currentAccountId,
+					folderId: Mail.State.currentFolderId,
+					messageId: messageId
+				});
+				replyComposer.render({
+					data: reply
+				});
 
 				Mail.UI.messageView.setMessageFlag(messageId, 'unseen', false);
 
@@ -1066,26 +1083,9 @@ var Mail = {
 					var text = jQuery($(this).contents().find('body').html().replace(/<br>/g, '\n')).text();
 					if (!draft) {
 						var date = new Date(message.dateIso);
-						var minutes = date.getMinutes();
-
-						$('.reply-message-body').first().text(
-							'\n\n\n' +
-							message.from + ' – ' +
-							$.datepicker.formatDate('D, d. MM yy ', date) +
-							date.getHours() + ':' + (minutes < 10 ? '0' : '') + minutes + '\n> ' +
-							text.replace(/\n/g, '\n> ')
-						);
+						replyComposer.setReplyBody(message.from, date, text);
 					}
 
-				});
-
-				$('textarea').autosize({append: '"\n\n"'});
-				// dirty workaround to set reply message body to the default size
-				$('.reply-message-body').css('height', '');
-
-				// Expand reply message body on click
-				$('.reply-message-body').click(function() {
-					$('.reply-message-body').trigger('autosize.resize');
 				});
 			};
 
@@ -1411,8 +1411,7 @@ $(document).ready(function() {
 			// If delete key is pressed:
 			case 46:
 				// If not composing a reply:
-				// TODO: fix selector conflicts
-				if (!$('.to, .cc, .reply-message-body').is(':focus')) {
+				if (!$('.to, .cc, .message-body').is(':focus')) {
 					// Mimic a client clicking the delete button for the currently active message.
 					$('.mail_message_summary.active .icon-delete.action.delete').click();
 				}

@@ -145,43 +145,7 @@ script('mail', 'jquery-visibility');
 			</p>
 			{{/if}}
 		</div>
-
-		<div class="reply-message-fields">
-			<a href="#" id="reply-message-cc-bcc-toggle"
-				{{#ifHasCC replyCc replyCcList}}
-				class="hidden"
-				{{/ifHasCC}}
-				class="transparency"><?php p($l->t('+ cc')); ?></a>
-
-			<input type="text" name="to" id="to" class="recipient-autocomplete"
-				value="{{printAddressListPlain replyToList}}"/>
-			<label id="to-label" for="to" class="transparency"><?php p($l->t('to')); ?></label>
-
-			<div id="reply-message-cc-bcc"
-			{{#unlessHasCC replyCc replyCcList}}
-			class="hidden"
-			{{/unlessHasCC}}
-			>
-				<input type="text" name="cc" id="cc" class="recipient-autocomplete"
-					{{#if replyCc}}
-					value="{{replyCc}}"
-					{{else}}
-					value="{{printAddressListPlain replyCcList}}"
-					{{/if}} />
-				<label id="cc-label" for="cc" class="transparency"><?php p($l->t('cc')); ?></label>
-				<!--
-				<input type="text" name="bcc" id="bcc" value="{{replyBcc}}" class="recipient-autocomplete" />
-				<label id="bcc-label" for="bcc" class="transparency"><?php p($l->t('bcc')); ?></label>
-				-->
-		</div>
-
-		<textarea name="body" class="reply-message-body"
-			placeholder="<?php p($l->t('Reply …')); ?>">{{replyBody}}</textarea>
-		<input class="reply-message-send primary" type="submit" value="<?php p($l->t('Reply')) ?>" disabled>
-	</div>
-	<div class="reply-message-more">
-		<!--<a href="#" class="reply-message-forward transparency"><?php p($l->t('Forward')) ?></a>-->
-		<!-- TODO: add attachment picker -->
+		<div id="reply-composer"></div>
 	</div>
 </script>
 <script id="mail-attachment-template" type="text/x-handlebars-template">
@@ -207,27 +171,53 @@ script('mail', 'jquery-visibility');
 </script>
 <script id="mail-composer" type="text/x-handlebars-template">
 	<div class="message-composer">
+		{{#unless isReply}}
 		<select class="mail-account">
 			{{#each aliases}}
 			<option value="{{accountId}}"><?php p($l->t('from')); ?> {{name}} &lt;{{emailAddress}}&gt;</option>
 			{{/each}}
 		</select>
+		{{/unless}}
 		<div class="composer-fields">
-			<a href="#" class="composer-cc-bcc-toggle"
-				class="transparency"><?php p($l->t('+ cc/bcc')); ?></a>
-			<input type="text" name="to" value="{{to}}" class="to recipient-autocomplete" />
+			<a href="#" class="composer-cc-bcc-toggle transparency 
+                                {{#ifHasCC replyCc replyCcList}}
+				hidden
+				{{/ifHasCC}}"><?php p($l->t('+ cc/bcc')); ?></a>
+			<input type="text" name="to"
+                            {{#if replyToList}}
+                            value="{{printAddressListPlain replyToList}}"
+                            {{else}}
+                            value="{{to}}"
+                            {{/if}}
+                            class="to recipient-autocomplete" />
 			<label class="to-label" for="to" class="transparency"><?php p($l->t('to')); ?></label>
-			<div class="composer-cc-bcc">
-				<input type="text" name="cc" value="{{cc}}" class="cc recipient-autocomplete" />
+			<div class="composer-cc-bcc
+                            {{#unlessHasCC replyCc replyCcList}}
+                            hidden
+                            {{/unlessHasCC}}">
+				<input type="text" name="cc"
+                                    {{#if replyCc}}
+                                    value="{{replyCc}}"
+                                    {{else}}
+                                        {{#if replyCcList}}
+                                        value="{{printAddressListPlain replyCcList}}"
+                                        {{else}}
+                                        value="{{cc}}"
+                                        {{/if}}
+                                    {{/if}}
+                                    class="cc recipient-autocomplete" />
 				<label for="cc" class="cc-label transparency"><?php p($l->t('cc')); ?></label>
 				<input type="text" name="bcc" value="{{bcc}}" class="bcc recipient-autocomplete" />
 				<label for="bcc" class="bcc-label transparency"><?php p($l->t('bcc')); ?></label>
 			</div>
+			{{#unless isReply}}
 			<input type="text" name="subject" value="{{subject}}" class="subject"
 				placeholder="<?php p($l->t('Subject')); ?>" />
-			<textarea name="body" class="message-body"
+			{{/unless}}
+			<textarea name="body" class="message-body
+						{{#if isReply}} reply{{/if}}"
 				placeholder="<?php p($l->t('Message …')); ?>">{{message}}</textarea>
-			<input class="submit-message send primary" type="submit" value="<?php p($l->t('Send')) ?>" disabled>
+			<input class="submit-message send primary" type="submit" value="{{submitButtonTitle}}" disabled>
 		</div>
 		<div class="new-message-attachments">
 		</div>

@@ -382,18 +382,18 @@ class AccountsController extends Controller {
 	/**
 	 * @NoAdminRequired
 	 * 
-	 * @param int      $accountId
-	 * @param string   $subject
-	 * @param string   $body
-	 * @param string   $to
-	 * @param string   $cc
-	 * @param string   $bcc
-	 * @param int|null $uid
+	 * @param int $accountId
+	 * @param string $subject
+	 * @param string $body
+	 * @param string $to
+	 * @param string $cc
+	 * @param string $bcc
+	 * @param int $uid
 	 * @return JSONResponse
 	 */
 	public function draft($accountId, $subject, $body, $to, $cc, $bcc, $uid) {
 
-		if (!is_null($uid)) {
+		if (is_null($uid)) {
 			$this->logger->info("Saving a new draft in accout <$accountId>");
 		} else {
 			$this->logger->info("Updating draft <$uid> in account <$accountId>");

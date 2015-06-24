@@ -348,16 +348,14 @@
 	margin: 10px;
 	z-index: 100;
 }
-.composer-fields,
-.reply-message-fields {
+.composer-fields {
 	position: relative;
 }
 input.to,
 input.cc,
 input.bcc,
 input.subject,
-textarea.message-body,
-.reply-message-body {
+textarea.message-body {
 	width: 100%;
 }
 
@@ -370,8 +368,7 @@ input.to {
 	border-bottom-right-radius: 0;
 }
 
-.composer-cc-bcc,
-#reply-message-cc-bcc {
+.composer-cc-bcc {
 	position: relative;
 }
 label.to-label,
@@ -393,14 +390,10 @@ input.bcc {
 	padding-left: 30px;
 }
 
-.composer-cc-bcc-toggle,
-#reply-message-cc-bcc-toggle {
+.composer-cc-bcc-toggle {
 	position: absolute;
 	right: 0;
 	padding: 6px;
-}
-.composer-cc-bcc {
-	display: none;
 }
 input.subject,
 input.cc,
@@ -409,20 +402,18 @@ input.bcc {
 	border-top: none;
 	border-radius: 0;
 }
-textarea.message-body,
-.reply-message-body {
+textarea.message-body {
 	margin: 0;
 	border-top: none;
 	border-top-left-radius: 0;
 	border-top-right-radius: 0;
-	height: 100px;
+	height: 300px;
 	resize: none;
 }
-textarea.message-body {
-	height: 300px;
+textarea.reply {
+	height: 100px;
 }
-input.submit-message,
-.reply-message-send {
+input.submit-message {
 	position: absolute;
 	bottom: 5px;
 	right: 0;

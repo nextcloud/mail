@@ -51,9 +51,6 @@
 
 /* make sure text fields occupy full width */
 .composer-fields,
-.reply-message-fields {
-	width: 100%;
-}
 
 /* position attachment picker below message fields */
 #new-message-attachments {
