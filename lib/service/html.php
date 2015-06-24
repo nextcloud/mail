@@ -14,87 +14,11 @@ namespace OCA\Mail\Service;
 
 use HTMLPurifier;
 use HTMLPurifier_Config;
-use HTMLPurifier_URIFilter;
-use OCP\Util;
-
-class HTMLPurifier_URIFilter_TransformURLScheme extends HTMLPurifier_URIFilter {
-	public $name = 'TransformURLScheme';
-	public $post = true;
-
-	/**
-	 * Transformator which will rewrite all HTTPS and HTTP urls to
-	 * @param \HTMLPurifier_URI $uri
-	 * @param HTMLPurifier_Config $config
-	 * @param \HTMLPurifier_Context $context
-	 * @return bool
-	 */
-	public function filter(&$uri, $config, $context) {
-		/** @var \HTMLPurifier_Context $context */
-		/** @var \HTMLPurifier_Config $config */
-
-		// Only HTTPS and HTTP urls should get rewritten
-		if ($uri->scheme !== 'https' && $uri->scheme !== 'http') {
-			return true;
-		}
-
-		$originalURL = urlencode($uri->scheme.'://'.$uri->host.$uri->path);
-		if($uri->query !== null) {
-			$originalURL = $originalURL.urlencode('?'.$uri->query);
-		}
-
-		// Get the HTML attribute
-		$element = $context->get('CurrentAttr');
-
-		// If element is of type "href" it is most likely a link that should get redirected
-		// otherwise it's an element that we send through our proxy
-		if($element === 'href') {
-			$uri = new \HTMLPurifier_URI(
-				Util::getServerProtocol(),
-				null,
-				Util::getServerHost(),
-				null,
-				\OC::$server->getURLGenerator()->linkToRoute( 'mail.proxy.redirect' ),
-				'src='.$originalURL,
-				null);
-		} else {
-			$uri = new \HTMLPurifier_URI(
-				Util::getServerProtocol(),
-				null,
-				Util::getServerHost(),
-				null,
-				\OC::$server->getURLGenerator()->linkToRoute( 'mail.proxy.proxy' ),
-				'src='.$originalURL.'&requesttoken='.\OC::$server->getSession()->get('requesttoken'),
-				null);
-		}
-
-		return true;
-	}
-}
+use HTMLPurifier_URISchemeRegistry;
+use OCA\Mail\Service\HtmlPurify\CidURIScheme;
+use OCA\Mail\Service\HtmlPurify\TransformURLScheme;
 
 class Html {
-
-	/**
-	 * @var HTMLPurifier
-	 */
-	private $purifier;
-
-	public function __construct() {
-		$config = HTMLPurifier_Config::createDefault();
-
-		// Append target="_blank" to all link (a) elements
-		$config->set('HTML.TargetBlank', true);
-
-		// Disable the cache since ownCloud has no really appcache
-		// TODO: Fix this - requires https://github.com/owncloud/core/issues/10767 to be fixed
-		$config->set('Cache.DefinitionImpl', null);
-
-		// Rewrite URL for redirection and proxying of content
-		$uri = $config->getDefinition('URI');
-
-		$uri->addFilter(new HTMLPurifier_URIFilter_TransformURLScheme(), $config);
-
-		$this->purifier = new HTMLPurifier($config);
-	}
 
 	/**
 	 * @param string $data
@@ -126,8 +50,28 @@ class Html {
 		];
 	}
 
-	public function sanitizeHtmlMailBody($mailBody) {
-		return $this->purifier->purify($mailBody);
+	public function sanitizeHtmlMailBody($mailBody, array $messageParameters, \Closure $mapCidToAttachmentId) {
+		$config = HTMLPurifier_Config::createDefault();
+
+		// Append target="_blank" to all link (a) elements
+		$config->set('HTML.TargetBlank', true);
+
+		// allow cid, http and ftp
+		$config->set('URI.AllowedSchemes', ['cid' => true, 'http' => true, 'https' => true, 'ftp' => true, 'mailto' => true]);
+
+		// Disable the cache since ownCloud has no really appcache
+		// TODO: Fix this - requires https://github.com/owncloud/core/issues/10767 to be fixed
+		$config->set('Cache.DefinitionImpl', null);
+
+		// Rewrite URL for redirection and proxying of content
+		$uri = $config->getDefinition('URI');
+		$uri->addFilter(new TransformURLScheme($messageParameters, $mapCidToAttachmentId), $config);
+
+		HTMLPurifier_URISchemeRegistry::instance()->register('cid', new CidURIScheme());
+
+		$purifier = new HTMLPurifier($config);
+
+		return $purifier->purify($mailBody);
 	}
 
 }

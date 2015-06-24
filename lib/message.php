@@ -332,7 +332,8 @@ class Message {
 				'messageId' => $this->messageId,
 				'fileName' => $filename,
 				'mime' => $p->getType(),
-				'size' => $p->getBytes()
+				'size' => $p->getBytes(),
+				'cid' => $p->getContentId()
 			];
 			return;
 		}
@@ -425,8 +426,12 @@ class Message {
 	/**
 	 * @return string
 	 */
-	public function getHtmlBody() {
-		return $this->htmlService->sanitizeHtmlMailBody($this->htmlMessage);
+	public function getHtmlBody($accountId, $folderId, $messageId, $attachments) {
+		return $this->htmlService->sanitizeHtmlMailBody($this->htmlMessage, [
+			'accountId' => $accountId,
+			'folderId' => $folderId,
+			'messageId' => $messageId,
+		], $attachments);
 	}
 
 	/**
