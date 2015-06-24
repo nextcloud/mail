@@ -84,7 +84,7 @@ This requires a valid memcache to be configured
 ```
 
 ### Use php-mail for mail sending
-You can use the php mail function to send mails:
+You can use the php mail function to send mails. This is needed for some webhosters (1&1 (1und1)):
 ```php
 'app.mail.transport' => 'php-mail'
 ```
