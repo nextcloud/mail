@@ -175,6 +175,9 @@ class MessagesController extends Controller {
 					return $a['cid'] === $cid;
 				});
 				$match = array_shift($match);
+				if (is_null($match)) {
+					return null;
+				}
 				return $match['id'];
 			});
 

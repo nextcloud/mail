@@ -50,7 +50,11 @@ class TransformURLScheme extends HTMLPurifier_URIFilter {
 		}
 
 		if ($uri->scheme === 'cid') {
-			$this->messageParameters['attachmentId'] = $this->mapCidToAttachmentId->__invoke($uri->path);
+			$attachmentId = $this->mapCidToAttachmentId->__invoke($uri->path);
+			if (is_null($attachmentId)) {
+				return true;
+			}
+			$this->messageParameters['attachmentId'] = $attachmentId;
 
 			$imgUrl = \OC::$server->getURLGenerator()->linkToRouteAbsolute('mail.messages.downloadAttachment', $this->messageParameters);
 			$parser = new HTMLPurifier_URIParser();
