@@ -53,89 +53,6 @@ $(function() {
 		}
 	});
 
-	function getReplyMessage() {
-		var message = {};
-
-		// TODO: fix selector conflicts
-		var replyMessageBody = $('.reply-message-body');
-		var to = $('.reply-message-fields .to');
-		var cc = $('.reply-message-fields .cc');
-		message.body = replyMessageBody.val();
-		message.to = to.val();
-		message.cc = cc.val();
-
-		return message;
-	}
-
-	function saveReplyLocally() {
-		if (Mail.State.currentMessageId === null) {
-			// new message
-			return;
-		}
-		var storage = $.localStorage;
-		storage.set('draft' +
-			'.' + Mail.State.currentAccountId.toString() +
-			'.' + Mail.State.currentFolderId.toString() +
-			'.' + Mail.State.currentMessageId.toString(),
-			getReplyMessage());
-	}
-
-	function sendReply() {
-		//
-		// TODO:
-		//  - input validation
-		//  - feedback on success
-		//  - undo lie - very important
-		//
-
-		// loading feedback: show spinner and disable elements
-		var replyMessageBody = $('.reply-message-body');
-		var replyMessageSend = $('.reply-message-send');
-		replyMessageBody.addClass('icon-loading');
-		replyMessageBody.prop('disabled', true);
-		replyMessageSend.prop('disabled', true);
-		replyMessageSend.val(t('mail', 'Sending …'));
-		var to = $('.reply-message-fields .to');
-		var cc = $('.reply-message-fields .cc');
-		var messageId = Mail.State.currentMessageId;
-
-		to.prop('disabled', true);
-		cc.prop('disabled', true);
-
-		$.ajax({
-			url:OC.generateUrl('/apps/mail/accounts/{accountId}/send', {accountId: Mail.State.currentAccountId}),
-			beforeSend:function() {
-			},
-			complete:function() {
-				replyMessageBody.removeClass('icon-loading');
-				replyMessageBody.prop('disabled', false);
-				replyMessageSend.prop('disabled', false);
-				replyMessageSend.val(t('mail', 'Reply'));
-				$('.reply-message-fields .to').prop('disabled', false);
-				$('.reply-message-fields .cc').prop('disabled', false);
-			},
-			data:{
-				to: to.val(),
-				cc: cc.val(),
-				folderId: Mail.State.currentFolderId,
-				messageId: messageId,
-				body:replyMessageBody.val()
-			},
-			type: 'POST',
-			success:function() {
-				Mail.UI.messageView.setMessageFlag(messageId, 'answered', true);
-				OC.Notification.showTemporary(t('mail', 'Message sent!'));
-
-				// close reply
-				replyMessageBody.val('');
-				replyMessageBody.trigger('autosize.resize');
-			},
-			error: function() {
-				Mail.UI.showError(t('mail', 'Error sending the reply.'));
-			}
-		});
-	}
-
 	$(document).on('keypress', '.reply-message-body', function(event) {
 		// Define which objects to check for the event properties.
 		// (Window object provides fallback for IE8 and lower.)
@@ -152,10 +69,5 @@ $(function() {
 			}
 		}
 	});
-
-	// TODO: fix selector conflicts
-	$(document).on('keyup', '.reply-message-body, .to, .cc', saveReplyLocally);
-
-	$(document).on('click', '.reply-message-send', sendReply);
 
 });

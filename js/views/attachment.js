@@ -1,4 +1,4 @@
-/* global Backbone */
+/* global Backbone, OC */
 
 var views = {};
 

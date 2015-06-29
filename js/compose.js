@@ -1,4 +1,4 @@
-/* global Handlebars, views */
+/* global Handlebars, views, OC */
 var Mail = {
 	State:{
 		accounts: null
@@ -9,24 +9,91 @@ var Mail = {
 			$.ajax(OC.generateUrl('apps/mail/accounts'), {
 				data:{},
 				type:'GET',
-				success:function(jsondata) {
-					Mail.State.accounts = jsondata;
+				success:function(accounts) {
+					Mail.State.accounts = accounts;
 
 					// don't try to load accounts if there are none
-					if (jsondata.length === 0) {
+					if (accounts.length === 0) {
 						return;
 					}
 					// only show account switcher when there are multiple
-					if (jsondata.length > 1) {
+					if (accounts.length > 1) {
 						var source   = $('#mail-account-manager').html();
 						var template = Handlebars.compile(source);
-						var html = template(jsondata);
+						var html = template(accounts);
 						$('#accountManager').html(html);
 					}
 
 					// setup composer view
 					var view = new views.Composer({
 						el: $('#app-content'),
+						onSubmit: function(accountId, message, options) {
+							/**
+							 * ATTENTION: this is a copy of mail.js Mail.Communication.sendMessage
+							 */
+							var defaultOptions = {
+								success: function() {},
+								error: function() {},
+								complete: function() {},
+								accountId: null,
+								folderId: null,
+								messageId: null,
+								draftUID: null
+							};
+							_.defaults(options, defaultOptions);
+							var url = OC.generateUrl('/apps/mail/accounts/{accountId}/send', {accountId: accountId});
+							var data = {
+								type: 'POST',
+								success: options.success,
+								error: options.error,
+								complete: options.complete,
+								data: {
+									to: message.to,
+									cc: message.cc,
+									bcc: message.bcc,
+									subject: message.subject,
+									body: message.body,
+									attachments: message.attachments,
+									accountId: options.accountId,
+									draftUID : options.draftUID
+								}
+							};
+							$.ajax(url, data);
+						},
+						onDraft: function(accountId, message, options) {
+							var defaultOptions = {
+								success: function() {},
+								error: function() {},
+								complete: function() {},
+								accountId: null,
+								folderId: null,
+								messageId: null,
+								draftUID: null
+							};
+							_.defaults(options, defaultOptions);
+							var url = OC.generateUrl('/apps/mail/accounts/{accountId}/draft', {accountId: accountId});
+							var data = {
+								type: 'POST',
+								success: function(data) {
+									options.success(data);
+								},
+								error: options.error,
+								complete: options.complete,
+								data: {
+									to: message.to,
+									cc: message.cc,
+									bcc: message.bcc,
+									subject: message.subject,
+									body: message.body,
+									attachments: message.attachments,
+									accountId: options.accountId,
+									folderId: options.folderId,
+									messageId: options.messageId,
+									uid : options.draftUID
+								}
+							};
+							$.ajax(url, data);
+						},
 						onSent: function() {
 							// TODO: fix selector conflicts
 							$('#nav-buttons').removeClass('hidden');
@@ -38,10 +105,11 @@ var Mail = {
 					});
 
 					// And render it
-					view.render();
-
-					$('textarea').autosize({append:'"\n\n"'});
-
+					view.render({
+						data: {
+							to: $('#app').data('mailto')
+						}
+					});
 				},
 				error: function() {
 					Mail.UI.showError(t('mail', 'Error while loading the accounts.'));

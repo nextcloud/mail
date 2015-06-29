@@ -93,6 +93,7 @@ views.Composer = Backbone.View.extend({
 	},
 
 	render: function(options) {
+		options = options || {};
 		var defaultOptions = {
 			data: {
 				to: '',

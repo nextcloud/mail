@@ -7,45 +7,60 @@
 </script>
 
 <script id="mail-attachment-template" type="text/x-handlebars-template">
-	<span>{{displayName}}</span>
-	<div class="new-message-attachments-action svg icon-delete" data-attachment-id="{{id}}"></div>
+	<span>{{displayName}}</span><div class="new-message-attachments-action svg icon-delete"></div>
 </script>
 
-<script id="new-message-template" type="text/x-handlebars-template">
-	<div id="new-message">
-		<select class="mail_account">
+<script id="mail-composer" type="text/x-handlebars-template">
+	<div class="message-composer">
+		{{#unless isReply}}
+		<select class="mail-account">
 			{{#each aliases}}
 			<option value="{{accountId}}"><?php p($l->t('from')); ?> {{name}} &lt;{{emailAddress}}&gt;</option>
 			{{/each}}
 		</select>
-
-		<div id="new-message-fields">
-			<a href="#" id="new-message-cc-bcc-toggle"
-				class="transparency"><?php p($l->t('+ cc/bcc')); ?></a>
-			<input type="text" name="to" id="to" class="recipient-autocomplete"
-				value="<?php p($_['mailto']) ?>"/>
-			<label id="to-label" for="to" class="transparency"><?php p($l->t('to')); ?></label>
-
-			<div id="new-message-cc-bcc">
-				<input type="text" name="cc" id="cc" class="recipient-autocomplete"
-					value="<?php p($_['cc']) ?>"/>
-				<label id="cc-label" for="cc" class="transparency"><?php p($l->t('cc')); ?></label>
-				<input type="text" name="bcc" id="bcc" class="recipient-autocomplete"
-					value="<?php p($_['bcc']) ?>"/>
-				<label id="bcc-label" for="bcc" class="transparency"><?php p($l->t('bcc')); ?></label>
+		{{/unless}}
+		<div class="composer-fields">
+			<a href="#" class="composer-cc-bcc-toggle transparency 
+                                {{#ifHasCC replyCc replyCcList}}
+				hidden
+				{{/ifHasCC}}"><?php p($l->t('+ cc/bcc')); ?></a>
+			<input type="text" name="to"p($_['mailto'])
+                            {{#if replyToList}}
+                            value="{{printAddressListPlain replyToList}}"
+                            {{else}}
+                            value="{{to}}"
+                            {{/if}}
+                            class="to recipient-autocomplete" />
+			<label class="to-label" for="to" class="transparency"><?php p($l->t('to')); ?></label>
+			<div class="composer-cc-bcc
+                            {{#unlessHasCC replyCc replyCcList}}
+                            hidden
+                            {{/unlessHasCC}}">
+				<input type="text" name="cc"
+                                    {{#if replyCc}}
+                                    value="{{replyCc}}"
+                                    {{else}}
+                                        {{#if replyCcList}}
+                                        value="{{printAddressListPlain replyCcList}}"
+                                        {{else}}
+                                        value="{{cc}}"
+                                        {{/if}}
+                                    {{/if}}
+                                    class="cc recipient-autocomplete" />
+				<label for="cc" class="cc-label transparency"><?php p($l->t('cc')); ?></label>
+				<input type="text" name="bcc" value="{{bcc}}" class="bcc recipient-autocomplete" />
+				<label for="bcc" class="bcc-label transparency"><?php p($l->t('bcc')); ?></label>
 			</div>
-
-			<input type="text" name="subject" id="subject"
-				placeholder="<?php p($l->t('Subject')); ?>"
-				value="<?php p($_['subject']) ?>"/>
-			<textarea name="body" id="new-message-body"
-				placeholder="<?php p($l->t('Message …')); ?>"></textarea>
-			<input id="new-message-send" class="send primary" type="submit" value="<?php p($l->t('Send')) ?>">
-		</div>
-
-		<div id="new-message-attachments">
-			<ul></ul>
-			<input type="button" id="mail_new_attachment" value="<?php p($l->t('Add attachment from Files')); ?>">
+			{{#unless isReply}}
+			<input type="text" name="subject" value="{{subject}}" class="subject"
+				placeholder="<?php p($l->t('Subject')); ?>" />
+			{{/unless}}
+			<textarea name="body" class="message-body
+						{{#if isReply}} reply{{/if}}"
+				placeholder="<?php p($l->t('Message …')); ?>">{{message}}</textarea>
+			<input class="submit-message send primary" type="submit" value="{{submitButtonTitle}}" disabled>
+			<div class="new-message-attachments">
+			</div>
 		</div>
 		<div id="nav-buttons" class="hidden">
 			<input type="button" id="nav-to-mail" value="<?php p($l->t('Open Mail App')); ?>">
@@ -53,8 +68,12 @@
 		</div>
 	</div>
 </script>
+<script id="mail-attachments-template" type="text/x-handlebars-template">
+	<ul></ul>
+	<input type="button" id="mail_new_attachment" value="<?php p($l->t('Add attachment from Files')); ?>">
+</script>
 
-<div id="app">
+<div id="app" data-mailto="<?php p($_['mailto']) ?>">
 	<div id="app-content" class="compose">
 	</div>
 </div>
