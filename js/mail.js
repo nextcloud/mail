@@ -1,4 +1,4 @@
-/* global Handlebars, Marionette, Notification, relative_modified_date, formatDate, humanFileSize, views, OC, _, md5 */
+/* global Handlebars, Marionette, Notification, views, OC, _ */
 
 if (_.isUndefined(OC.Notification.showTemporary)) {
 
@@ -433,8 +433,6 @@ var Mail = {
 				error: function() {},
 				complete: function() {},
 				accountId: null,
-				folderId: null,
-				messageId: null,
 				draftUID: null
 			};
 			_.defaults(options, defaultOptions);
@@ -459,6 +457,8 @@ var Mail = {
 					body: message.body,
 					attachments: message.attachments,
 					accountId: options.accountId,
+					folderId: options.folderId,
+					messageId: options.messageId,
 					draftUID : options.draftUID
 				}
 			};
@@ -886,7 +886,7 @@ var Mail = {
 
 			Mail.UI.Events.onComposerLeave();
 
-			if (!options.force && $('.message-composer').length) {
+			if (!options.force && composerVisible) {
 				return;
 			}
 			// Abort previous loading requests

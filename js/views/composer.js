@@ -264,7 +264,7 @@ views.Composer = Backbone.View.extend({
 
 		// send the mail
 		var _this = this;
-		this.submitCallback(this.accountId, this.getMessage(), {
+		var options = {
 			accountId: this.accountId,
 			draftUID: this.draftUID,
 			success: function () {
@@ -308,7 +308,14 @@ views.Composer = Backbone.View.extend({
 				newMessageSend.prop('disabled', false);
 				newMessageSend.val(t('mail', 'Send'));
 			}
-		});
+		};
+
+		if (this.isReply()) {
+			options.messageId = this.messageId;
+			options.folderId = this.folderId;
+		}
+
+		this.submitCallback(this.accountId, this.getMessage(), options);
 		return false;
 	},
 

@@ -1,4 +1,4 @@
-/* global Mail, Handlebars, _ */
+/* global Mail, Handlebars, _, relative_modified_date, formatDate, md5, humanFileSize */
 
 /**
  * ownCloud - Mail
