@@ -23,6 +23,7 @@
 namespace OCA\Mail\Controller;
 
 use Horde_Imap_Client;
+use Horde_Mail_Transport_Smtphorde;
 use Horde_Mime_Headers_Date;
 use Horde_Mime_Mail;
 use Horde_Mime_Part;
@@ -47,34 +48,22 @@ class AccountsController extends Controller {
 	/** @var AccountService */
 	private $accountService;
 
-	/**
-	 * @var string
-	 */
+	/** @var string */
 	private $currentUserId;
 
-	/**
-	 * @var ContactsIntegration
-	 */
+	/** @var ContactsIntegration */
 	private $contactsIntegration;
 
-	/**
-	 * @var AutoConfig
-	 */
+	/** @var AutoConfig */
 	private $autoConfig;
 
-	/**
-	 * @var \OCP\Files\Folder
-	 */
+	/** @var \OCP\Files\Folder */
 	private $userFolder;
 
-	/**
-	 * @var ILogger
-	 */
+	/** @var ILogger */
 	private $logger;
 
-	/**
-	 * @var IL10N
-	 */
+	/** @var IL10N */
 	private $l10n;
 
 	/** @var ICrypto */
@@ -228,14 +217,8 @@ class AccountsController extends Controller {
 				);
 
 				$a = new Account($newAccount);
-				// connect to imap
-				$this->logger->debug('Connecting to imap');
-				$a->getImapConnection();
-
-				// connect to smtp
-				$this->logger->debug('Connecting to smtp');
-				$smtp = $a->createTransport();
-				$smtp->getSMTPObject();
+				$this->logger->debug('Connecting to account {account}', ['account' => $newAccount->getEmail()]);
+				$a->testConnectivity();
 			}
 
 			if ($newAccount) {

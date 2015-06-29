@@ -14,6 +14,8 @@ use Horde_Imap_Client_Ids;
 use Horde_Imap_Client_Mailbox;
 use Horde_Imap_Client_Socket;
 use Horde_Imap_Client;
+use Horde_Mail_Transport;
+use Horde_Mail_Transport_Mail;
 use Horde_Mail_Transport_Smtphorde;
 use OCA\Mail\Cache\Cache;
 use OCA\Mail\Db\MailAccount;
@@ -25,19 +27,13 @@ use OCP\Security\ICrypto;
 
 class Account implements IAccount {
 
-	/**
-	 * @var MailAccount
-	 */
+	/** @var MailAccount */
 	private $account;
 
-	/**
-	 *  @var Mailbox[]|null
-	 */
+	/** @var Mailbox[]|null */
 	private $mailboxes;
 
-	/**
-	 * @var Horde_Imap_Client_Socket
-	 */
+	/** @var Horde_Imap_Client_Socket */
 	private $client;
 
 	/** @var ICrypto */
@@ -129,7 +125,6 @@ class Account implements IAccount {
 		$conn->createMailbox($mailBox);
 		$this->mailboxes = null;
 
-//		$mailBox = \Horde_Imap_Client_Mailbox::get($mailBox, false)->utf7imap;
 		return $this->getMailbox($mailBox);
 	}
 
@@ -238,9 +233,14 @@ class Account implements IAccount {
 	}
 
 	/**
-	 * @return Horde_Mail_Transport_Smtphorde
+	 * @return Horde_Mail_Transport
 	 */
 	public function createTransport() {
+		$transport = $this->config->getSystemValue('app.mail.transport', 'smtp');
+		if ($transport === 'php-mail') {
+			return new Horde_Mail_Transport_Mail();
+		}
+
 		$password = $this->account->getOutboundPassword();
 		$password = $this->crypto->decrypt($password);
 		$params = [
@@ -284,7 +284,7 @@ class Account implements IAccount {
 	 * @return Mailbox The best candidate for the "drafts" inbox
 	 */
 	public function getDraftsFolder() {
-		// check for existense
+		// check for existence
 		$draftsFolder = $this->getSpecialFolder('drafts', true);
 		if (count($draftsFolder) === 0) {
 			// drafts folder does not exist - let's create one
@@ -621,6 +621,17 @@ class Account implements IAccount {
 	 */
 	public function getEmail() {
 		return $this->account->getEmail();
+	}
+
+	public function testConnectivity() {
+		// connect to imap
+		$this->getImapConnection();
+
+		// connect to smtp
+		$smtp = $this->createTransport();
+		if ($smtp instanceof Horde_Mail_Transport_Smtphorde) {
+			$smtp->getSMTPObject();
+		}
 	}
 }
 
