@@ -123,7 +123,7 @@ class AccountsController extends Controller {
 	/**
 	 * @NoAdminRequired
 	 *
-	 * @param $accountId
+	 * @param int $accountId
 	 * @return JSONResponse
 	 */
 	public function show($accountId) {
@@ -148,7 +148,7 @@ class AccountsController extends Controller {
 	/**
 	 * @NoAdminRequired
 	 *
-	 * @param string $accountId
+	 * @param int $accountId
 	 * @return JSONResponse
 	 */
 	public function destroy($accountId) {
@@ -168,16 +168,16 @@ class AccountsController extends Controller {
 	 * @param string $emailAddress
 	 * @param string $password
 	 * @param string $imapHost
-	 * @param int    $imapPort
+	 * @param int $imapPort
 	 * @param string $imapSslMode
 	 * @param string $imapUser
 	 * @param string $imapPassword
 	 * @param string $smtpHost
-	 * @param int    $smtpPort
+	 * @param int $smtpPort
 	 * @param string $smtpSslMode
 	 * @param string $smtpUser
 	 * @param string $smtpPassword
-	 * @param bool   $autoDetect
+	 * @param bool $autoDetect
 	 * @return JSONResponse
 	 */
 	public function create($accountName, $emailAddress, $password,
@@ -244,16 +244,16 @@ class AccountsController extends Controller {
 	/**
 	 * @NoAdminRequired
 	 *
-	 * @param int      $accountId
-	 * @param string   $folderId
-	 * @param string   $subject
-	 * @param string   $body
-	 * @param string   $to
-	 * @param string   $cc
-	 * @param string   $bcc
-	 * @param int|bool $draftUID
-	 * @param int      $messageId
-	 * @param mixed    $attachments
+	 * @param int $accountId
+	 * @param string $folderId
+	 * @param string $subject
+	 * @param string $body
+	 * @param string $to
+	 * @param string $cc
+	 * @param string $bcc
+	 * @param int $draftUID
+	 * @param int $messageId
+	 * @param mixed $attachments
 	 * @return JSONResponse
 	 */
 	public function send($accountId, $folderId, $subject, $body, $to, $cc,
@@ -365,13 +365,13 @@ class AccountsController extends Controller {
 	/**
 	 * @NoAdminRequired
 	 * 
-	 * @param int      $accountId
-	 * @param string   $subject
-	 * @param string   $body
-	 * @param string   $to
-	 * @param string   $cc
-	 * @param string   $bcc
-	 * @param int|null $uid
+	 * @param int $accountId
+	 * @param string $subject
+	 * @param string $body
+	 * @param string $to
+	 * @param string $cc
+	 * @param string $bcc
+	 * @param int $uid
 	 * @return JSONResponse
 	 */
 	public function draft($accountId, $subject, $body, $to, $cc, $bcc, $uid) {
