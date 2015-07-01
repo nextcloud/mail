@@ -129,4 +129,17 @@ class UnifiedAccount implements IAccount {
 	public function getId() {
 		return UnifiedAccount::ID;
 	}
+
+	/**
+	 * @param $messageId
+	 * @return array
+	 */
+	public function resolve($messageId) {
+		$data = json_decode(base64_decode($messageId), true);
+		$account = $this->accountService->find($this->userId, $data[0]);
+		$inbox = $account->getInbox();
+		$messageId = $data[1];
+
+		return [$account, base64_encode($inbox->getFolderId()), $messageId];
+	}
 }
