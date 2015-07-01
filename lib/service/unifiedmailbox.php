@@ -62,7 +62,7 @@ class UnifiedMailbox implements IMailBox {
 			return $a['dateInt'] < $b['dateInt'];
 		});
 
-		if (count >= 0) {
+		if ($count >= 0) {
 			$allMessages = array_slice($allMessages, 0, $count);
 		}
 
