@@ -12,6 +12,7 @@
 
 namespace OCA\Mail\Service;
 
+use Closure;
 use HTMLPurifier;
 use HTMLPurifier_Config;
 use HTMLPurifier_URISchemeRegistry;
@@ -50,7 +51,7 @@ class Html {
 		];
 	}
 
-	public function sanitizeHtmlMailBody($mailBody, array $messageParameters, \Closure $mapCidToAttachmentId) {
+	public function sanitizeHtmlMailBody($mailBody, array $messageParameters, Closure $mapCidToAttachmentId) {
 		$config = HTMLPurifier_Config::createDefault();
 
 		// Append target="_blank" to all link (a) elements
