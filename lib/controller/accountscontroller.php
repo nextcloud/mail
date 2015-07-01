@@ -263,7 +263,12 @@ class AccountsController extends Controller {
 		if ($account instanceof UnifiedAccount) {
 			list($account, $folderId, $messageId) = $account->resolve($messageId);
 		}
-
+		if (!$account instanceof Account) {
+			return new JSONResponse(
+				['message' => 'Invalid account'],
+				Http::STATUS_BAD_REQUEST
+			);
+		}
 		// get sender data
 		$headers = [];
 		/** @var Account $account */
