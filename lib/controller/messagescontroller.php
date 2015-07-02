@@ -13,7 +13,6 @@
 namespace OCA\Mail\Controller;
 
 use Horde_Imap_Client;
-use OCA\Mail\Db\MailAccountMapper;
 use OCA\Mail\Http\AttachmentDownloadResponse;
 use OCA\Mail\Http\HtmlResponse;
 use OCA\Mail\Service\AccountService;
@@ -59,7 +58,7 @@ class MessagesController extends Controller {
 	/**
 	 * @param string $appName
 	 * @param \OCP\IRequest $request
-	 * @param MailAccountMapper $mapper
+	 * @param AccountService $accountService
 	 * @param $currentUserId
 	 * @param $userFolder
 	 * @param $contactsIntegration
@@ -87,15 +86,16 @@ class MessagesController extends Controller {
 	 * @NoAdminRequired
 	 * @NoCSRFRequired
 	 *
+	 * @param int $accountId
+	 * @param string $folderId
 	 * @param int $from
 	 * @param int $to
 	 * @param string $filter
 	 * @return JSONResponse
 	 */
-	public function index($from=0, $to=20, $filter=null) {
-		$mailBox = $this->getFolder();
+	public function index($accountId, $folderId, $from=0, $to=20, $filter=null) {
+		$mailBox = $this->getFolder($accountId, $folderId);
 
-		$folderId = $mailBox->getFolderId();
 		$this->logger->debug("loading messages $from to $to of folder <$folderId>");
 
 		$json = $mailBox->getMessages($from, $to-$from+1, $filter);
@@ -125,15 +125,14 @@ class MessagesController extends Controller {
 	 * @NoAdminRequired
 	 * @NoCSRFRequired
 	 *
+	 * @param int $accountId
+	 * @param string $folderId
 	 * @param mixed $id
 	 * @return JSONResponse
 	 */
-	public function show($id) {
-		$accountId = $this->params('accountId');
-		$folderId = $this->params('folderId');
-		$mailBox = $this->getFolder();
-
-		$account = $this->getAccount();
+	public function show($accountId, $folderId, $id) {
+		$mailBox = $this->getFolder($accountId, $folderId);
+		$account = $this->getAccount($accountId);
 		try {
 			$m = $mailBox->getMessage($id);
 		} catch (DoesNotExistException $ex) {
@@ -161,12 +160,14 @@ class MessagesController extends Controller {
 	 * @NoAdminRequired
 	 * @NoCSRFRequired
 	 *
+	 * @param int $accountId
+	 * @param string $folderId
 	 * @param string $messageId
-	 * @return JSONResponse
+	 * @return \OCA\Mail\Http\HtmlResponse
 	 */
-	public function getHtmlBody($messageId) {
+	public function getHtmlBody($accountId, $folderId, $messageId) {
 		try {
-			$mailBox = $this->getFolder();
+			$mailBox = $this->getFolder($accountId, $folderId);
 
 			$m = $mailBox->getMessage($messageId, true);
 			$html = $m->getHtmlBody();
@@ -185,6 +186,10 @@ class MessagesController extends Controller {
 				$htmlResponse->setContentSecurityPolicy($policy);
 			}
 
+			// Enable caching
+			$htmlResponse->cacheFor(60 * 60);
+			$htmlResponse->addHeader('Pragma', 'cache');
+
 			return $htmlResponse;
 		} catch(\Exception $ex) {
 			return new TemplateResponse($this->appName, 'error', ['message' => $ex->getMessage()], 'none');
@@ -195,12 +200,14 @@ class MessagesController extends Controller {
 	 * @NoAdminRequired
 	 * @NoCSRFRequired
 	 *
+	 * @param int $accountId
+	 * @param string folderId
 	 * @param string $messageId
 	 * @param string $attachmentId
 	 * @return AttachmentDownloadResponse
 	 */
-	public function downloadAttachment($messageId, $attachmentId) {
-		$mailBox = $this->getFolder();
+	public function downloadAttachment($accountId, $folderId, $messageId, $attachmentId) {
+		$mailBox = $this->getFolder($accountId, $folderId);
 
 		$attachment = $mailBox->getAttachment($messageId, $attachmentId);
 
@@ -214,13 +221,15 @@ class MessagesController extends Controller {
 	 * @NoAdminRequired
 	 * @NoCSRFRequired
 	 *
+	 * @param int $accountId
+	 * @param string $folderId
 	 * @param string $messageId
 	 * @param string $attachmentId
 	 * @param string $targetPath
 	 * @return JSONResponse
 	 */
-	public function saveAttachment($messageId, $attachmentId, $targetPath) {
-		$mailBox = $this->getFolder();
+	public function saveAttachment($accountId, $folderId, $messageId, $attachmentId, $targetPath) {
+		$mailBox = $this->getFolder($accountId, $folderId);
 
 		$attachmentIds = [$attachmentId];
 		if($attachmentId === 0) {
@@ -253,12 +262,14 @@ class MessagesController extends Controller {
 	/**
 	 * @NoAdminRequired
 	 *
+	 * @param int $accountId
+	 * @param string $folderId
 	 * @param string $messageId
 	 * @param boolean $starred
 	 * @return JSONResponse
 	 */
-	public function toggleStar($messageId, $starred) {
-		$mailBox = $this->getFolder();
+	public function toggleStar($accountId, $folderId, $messageId, $starred) {
+		$mailBox = $this->getFolder($accountId, $folderId);
 
 		$mailBox->setMessageFlag($messageId, Horde_Imap_Client::FLAG_FLAGGED, !$starred);
 
@@ -268,13 +279,15 @@ class MessagesController extends Controller {
 	/**
 	 * @NoAdminRequired
 	 *
+	 * @param int $accountId
+	 * @param string $folderId
 	 * @param string $id
 	 * @return JSONResponse
 	 */
-	public function destroy($id) {
+	public function destroy($accountId, $folderId, $id) {
 		try {
-			$account = $this->getAccount();
-			$account->deleteMessage(base64_decode($this->params('folderId')), $id);
+			$account = $this->getAccount($accountId);
+			$account->deleteMessage(base64_decode($folderId), $id);
 			return new JSONResponse();
 
 		} catch (DoesNotExistException $e) {
@@ -283,20 +296,21 @@ class MessagesController extends Controller {
 	}
 
 	/**
+	 * @param int $accountId
 	 * @return \OCA\Mail\Service\IAccount
 	 */
-	private function getAccount() {
-		$accountId = $this->params('accountId');
+	private function getAccount($accountId) {
 		return $this->accountService->find($this->currentUserId, $accountId);
 	}
 
 	/**
+	 * @param int $accountId
+	 * @param string $folderId
 	 * @return IMailBox
 	 */
-	private function getFolder() {
-		$account = $this->getAccount();
-		$folderId = base64_decode($this->params('folderId'));
-		return $account->getMailbox($folderId);
+	private function getFolder($accountId, $folderId) {
+		$account = $this->getAccount($accountId);
+		return $account->getMailbox(base64_decode($folderId));
 	}
 
 	/**
