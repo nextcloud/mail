@@ -22,6 +22,7 @@
 
 namespace OCA\Mail;
 
+use Closure;
 use Horde_Imap_Client;
 use Horde_Imap_Client_Data_Fetch;
 use OCA\Mail\Service\Html;
@@ -332,7 +333,8 @@ class Message {
 				'messageId' => $this->messageId,
 				'fileName' => $filename,
 				'mime' => $p->getType(),
-				'size' => $p->getBytes()
+				'size' => $p->getBytes(),
+				'cid' => $p->getContentId()
 			];
 			return;
 		}
@@ -423,10 +425,18 @@ class Message {
 	}
 
 	/**
+	 * @param int     $accountId
+	 * @param string  $folderId
+	 * @param int     $messageId
+	 * @param Closure $attachments
 	 * @return string
 	 */
-	public function getHtmlBody() {
-		return $this->htmlService->sanitizeHtmlMailBody($this->htmlMessage);
+	public function getHtmlBody($accountId, $folderId, $messageId, Closure $attachments) {
+		return $this->htmlService->sanitizeHtmlMailBody($this->htmlMessage, [
+			'accountId' => $accountId,
+			'folderId' => $folderId,
+			'messageId' => $messageId,
+		], $attachments);
 	}
 
 	/**

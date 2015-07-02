@@ -59,7 +59,7 @@ class MessageTest extends \PHPUnit_Framework_TestCase {
 
 
 		$message = new \OCA\Mail\Message($conn, 'INBOX', 123, null, true);
-		$htmlBody = $message->getHtmlBody();
+		$htmlBody = $message->getHtmlBody(0, 0, 123, function() {return null;});
 		$this->assertTrue(strlen($htmlBody) > 1000);
 
 		$plainTextBody = $message->getPlainBody();
