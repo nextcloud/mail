@@ -3,6 +3,7 @@ OC.L10N.register(
     {
     "Mail" : "E-mail",
     "Error while loading the accounts." : "Fout tijdens het laden van de accounts.",
+    "{from}\n{subject}" : "{from}\n{subject}",
     "_%n new message in {folderName} \nfrom {from}_::_%n new messages in {folderName} \nfrom {from}_" : ["%n nieuw bericht in {folderName} \nvan {from}","%n nieuwe berichten in {folderName} \nvan {from}"],
     "you" : "je",
     "Send message to {email}" : "Versturen bericht naar {email}",
@@ -45,6 +46,7 @@ OC.L10N.register(
     "Auto detect failed. Please use manual mode." : "Automatisch vaststellen mislukt. Gebruik handmatige modus.",
     "Delete permanently" : "Definitief verwijderen",
     "& others" : "& anderen",
+    "All inboxes" : "Alle inbakjes",
     "from" : "van",
     "+ cc/bcc" : "+ cc/bcc",
     "to" : "naar",

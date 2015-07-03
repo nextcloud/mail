@@ -1,6 +1,7 @@
 { "translations": {
     "Mail" : "จดหมาย",
     "Error while loading the accounts." : "ข้อผิดพลาดในขณะที่โหลดบัญชี",
+    "{from}\n{subject}" : "{from}\n{subject}",
     "_%n new message in {folderName} \nfrom {from}_::_%n new messages in {folderName} \nfrom {from}_" : ["มี %n ข้อความใหม่ใน {folderName}\nจาก {from}"],
     "you" : "คุณ",
     "Send message to {email}" : "ส่งข้อความไปยัง {email}",
@@ -43,6 +44,7 @@
     "Auto detect failed. Please use manual mode." : "ตรวจจับอัตโนมัติล้มเหลว กรุณาใช้โหมดควบคุมด้วยตนเอง",
     "Delete permanently" : "ลบแบบถาวร",
     "& others" : "และอื่นๆ",
+    "All inboxes" : "กล่องจดหมายทั้งหมด",
     "from" : "จาก",
     "+ cc/bcc" : "+ สำเนาถึง/สำเนาลับ",
     "to" : "ถึง",

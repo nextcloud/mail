@@ -1,6 +1,7 @@
 { "translations": {
     "Mail" : "Correo electrónico",
     "Error while loading the accounts." : "Error al cargar las cuentas.",
+    "{from}\n{subject}" : "{from}\n{subject}",
     "_%n new message in {folderName} \nfrom {from}_::_%n new messages in {folderName} \nfrom {from}_" : ["%n mensaje nuevo en {folderName} \nde {from}","%n mensajes nuevos en {folderName} \nde {from}"],
     "you" : "usted",
     "Send message to {email}" : "Enviar mensaje a {email}",
@@ -43,6 +44,7 @@
     "Auto detect failed. Please use manual mode." : "La autodetección falló. Use el modo manual.",
     "Delete permanently" : "Eliminar permanentemente",
     "& others" : "y otros",
+    "All inboxes" : "Todas las bandejas de entrada",
     "from" : "desde",
     "+ cc/bcc" : "+ cc/bcc",
     "to" : "para",

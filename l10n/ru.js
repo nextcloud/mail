@@ -3,6 +3,7 @@ OC.L10N.register(
     {
     "Mail" : "Почта",
     "Error while loading the accounts." : "Ошибка при загрузке учётных записей",
+    "{from}\n{subject}" : "{from}\n{subject}",
     "_%n new message in {folderName} \nfrom {from}_::_%n new messages in {folderName} \nfrom {from}_" : ["%n новое сообщение в {folderName} \nот {from}","%n новых сообщения в {folderName} \nот {from}","%n новых сообщения в {folderName} \nот {from}","%n новых сообщений в {folderName} \nот {from}"],
     "you" : "вы",
     "Send message to {email}" : "Отправить сообщения на {email}",
@@ -45,6 +46,7 @@ OC.L10N.register(
     "Auto detect failed. Please use manual mode." : "Не удалось определить настройки автоматически. Воспользуйтесь ручным режимом.",
     "Delete permanently" : "Удалить окончательно",
     "& others" : "и другие",
+    "All inboxes" : "Все входящие",
     "from" : "от",
     "+ cc/bcc" : "+ Копия/Скрытая копия",
     "to" : "к",

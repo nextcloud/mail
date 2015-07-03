@@ -1,8 +1,10 @@
 { "translations": {
     "Mail" : "Pošta",
     "Error while loading the accounts." : "Chyba při načítání účtů.",
+    "{from}\n{subject}" : "{from}\n{subject}",
     "_%n new message in {folderName} \nfrom {from}_::_%n new messages in {folderName} \nfrom {from}_" : ["%n nová zpráva v {folderName} \nod {from}","%n nové zprávy v {folderName} \nod {from}","%n nových zpráv v {folderName} \nod {from}"],
     "you" : "vy",
+    "Send message to {email}" : "Poslat email na {email}",
     "Error while loading the selected account." : "Chyba během načítání vybraného účtu.",
     "Error while loading messages." : "Chyba během načítání zpráv.",
     "Choose a folder to store the attachment in" : "Vyber adresář pro uložení přílohy",
@@ -42,6 +44,7 @@
     "Auto detect failed. Please use manual mode." : "Autodetekce selhala. Použijte prosím ruční nastavení.",
     "Delete permanently" : "Trvale odstranit",
     "& others" : "a další",
+    "All inboxes" : "Všechny schránky",
     "from" : "od",
     "+ cc/bcc" : "+cc/bcc",
     "to" : "do",

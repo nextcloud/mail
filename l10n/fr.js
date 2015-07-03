@@ -3,6 +3,7 @@ OC.L10N.register(
     {
     "Mail" : "Mail",
     "Error while loading the accounts." : "Erreur lors du chargement des comptes.",
+    "{from}\n{subject}" : "{from}\n{subject}",
     "_%n new message in {folderName} \nfrom {from}_::_%n new messages in {folderName} \nfrom {from}_" : ["%n nouveau message dans {folderName}\nde {from}","%n nouveaux messages dans {folderName}\nde {from}"],
     "you" : "vous",
     "Send message to {email}" : "Envoyer un mail à {email}",
@@ -45,6 +46,7 @@ OC.L10N.register(
     "Auto detect failed. Please use manual mode." : "L'auto-détection a échoué. Veuillez utiliser le mode manuel.",
     "Delete permanently" : "Supprimer définitivement",
     "& others" : "et d'autres",
+    "All inboxes" : "Toutes les boîtes de réception",
     "from" : "de",
     "+ cc/bcc" : "+ cc/cci",
     "to" : "à",
@@ -89,7 +91,7 @@ OC.L10N.register(
     "Forwarding you to %s - click here if you are not automatically redirected within the next few seconds." : "Vous allez être redirigé vers %s - Cliquez ici si vous n'êtes pas redirigé dans les secondes qui suivent.",
     "Redirect Warning" : "Avertissement de redirection",
     "The previous page is sending you to %s." : "La page précédente vous envoie vers %s.",
-    "If you do not want to visit that page, you can return to <a href=\"%s\">the mail app</a>." : "Si vous ne désirez pas visiter cette page, vous pouvez retourner vers <a href=\"%s\">l'application Mail</a>",
+    "If you do not want to visit that page, you can return to <a href=\"%s\">the mail app</a>." : "Si vous ne désirez pas visiter cette page, vous pouvez retourner à <a href=\"%s\">l'application Mail</a>",
     "Click here to visit the website." : "Cliquez ici pour visiter le site."
 },
 "nplurals=2; plural=(n > 1);");

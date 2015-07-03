@@ -3,6 +3,7 @@ OC.L10N.register(
     {
     "Mail" : "Αλληλογραφία",
     "Error while loading the accounts." : "Σφάλμα κατά τη φόρτωση των λογαριασμών.",
+    "{from}\n{subject}" : "{from}\n{subject}",
     "_%n new message in {folderName} \nfrom {from}_::_%n new messages in {folderName} \nfrom {from}_" : ["%n νέο μήνυμα σε {folderName}\nαπό {from}","%n νέα μηνύματα σε {folderName}\nαπό {from}"],
     "you" : "εσείς",
     "Send message to {email}" : "Αποστολή μηνύματος σε {email}",
@@ -45,6 +46,7 @@ OC.L10N.register(
     "Auto detect failed. Please use manual mode." : " Η αυτόματη ανίχνευση απέτυχε. Παρακαλούμε χρησιμοποιήστε τη χειροκίνητη λειτουργία.",
     "Delete permanently" : "Μόνιμη διαγραφή",
     "& others" : "& άλλοι",
+    "All inboxes" : "Όλα τα εισερχόμενα",
     "from" : "από",
     "+ cc/bcc" : "+ cc/bcc",
     "to" : "προς",

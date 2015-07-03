@@ -3,6 +3,7 @@ OC.L10N.register(
     {
     "Mail" : "Mail",
     "Error while loading the accounts." : "Fejl under indlæsning af konti.",
+    "{from}\n{subject}" : "{fra}\n{emne}",
     "_%n new message in {folderName} \nfrom {from}_::_%n new messages in {folderName} \nfrom {from}_" : ["%n ny besked i {folderName}\nfra {from}","%n nye beskeder i {folderName}\nfra {from}"],
     "you" : "dig",
     "Send message to {email}" : "Send besked til {email}",
@@ -45,6 +46,7 @@ OC.L10N.register(
     "Auto detect failed. Please use manual mode." : "Fejl ved autodetektion. Anvend venligst manuel opsætning",
     "Delete permanently" : "Slet permanent",
     "& others" : "& andre",
+    "All inboxes" : "Alle indbakker",
     "from" : "fra",
     "+ cc/bcc" : "+ cc/bcc",
     "to" : "til",

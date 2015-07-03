@@ -45,6 +45,7 @@ OC.L10N.register(
     "Auto detect failed. Please use manual mode." : "Automaattinen havaitseminen epäonnistui. Käytä manuaalitilaa.",
     "Delete permanently" : "Poista pysyvästi",
     "& others" : "& muut",
+    "All inboxes" : "Kaikki saapuneiden laatikot",
     "from" : "Syöte:",
     "to" : "- ",
     "Subject" : "Aihe",

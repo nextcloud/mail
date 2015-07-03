@@ -3,6 +3,7 @@ OC.L10N.register(
     {
     "Mail" : "Повідомлення",
     "Error while loading the accounts." : "Помилка завантаження облікового запису",
+    "{from}\n{subject}" : "{from}\n{subject}",
     "_%n new message in {folderName} \nfrom {from}_::_%n new messages in {folderName} \nfrom {from}_" : ["%n нове повідомлення у {folderName}\nвід {from}","%n нових повідомлень у {folderName}\nвід {from}","%n нових повідомлень у {folderName}\nвід {from}"],
     "you" : "ви",
     "Error while loading the selected account." : "Помилка завантаження обраного облікового запису.",

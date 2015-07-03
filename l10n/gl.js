@@ -3,6 +3,7 @@ OC.L10N.register(
     {
     "Mail" : "Correo",
     "Error while loading the accounts." : "Produciuse un erro mentres cargaba as contas.",
+    "{from}\n{subject}" : "{from}\n{subject}",
     "_%n new message in {folderName} \nfrom {from}_::_%n new messages in {folderName} \nfrom {from}_" : ["%n mensaxe nova en {folderName} \nde {from}","%n mensaxes novas en {folderName} \nde {from}"],
     "you" : "vostede",
     "Send message to {email}" : "Enviar mensaxe a {email}",
@@ -45,6 +46,7 @@ OC.L10N.register(
     "Auto detect failed. Please use manual mode." : "Fallou o modo de detección automática. empregue o modo manual.",
     "Delete permanently" : "Eliminar permanentemente",
     "& others" : "E outros",
+    "All inboxes" : "Todas as bandexas de entrada",
     "from" : "desde",
     "+ cc/bcc" : "+ cc/cco",
     "to" : "ata",
