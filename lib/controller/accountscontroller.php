@@ -33,6 +33,7 @@ use OCA\Mail\Db\MailAccount;
 use OCA\Mail\Service\AccountService;
 use OCA\Mail\Service\AutoConfig;
 use OCA\Mail\Service\ContactsIntegration;
+use OCA\Mail\Service\UnifiedAccount;
 use OCP\AppFramework\Controller;
 use OCP\AppFramework\Db\DoesNotExistException;
 use OCP\AppFramework\Http\JSONResponse;
@@ -252,22 +253,25 @@ class AccountsController extends Controller {
 	 * @param string $cc
 	 * @param string $bcc
 	 * @param int $draftUID
-	 * @param int $messageId
+	 * @param string $messageId
 	 * @param mixed $attachments
 	 * @return JSONResponse
 	 */
 	public function send($accountId, $folderId, $subject, $body, $to, $cc,
 		$bcc, $draftUID, $messageId, $attachments) {
 		$account = $this->accountService->find($this->currentUserId, $accountId);
+		if ($account instanceof UnifiedAccount) {
+			list($account, $folderId, $messageId) = $account->resolve($messageId);
+		}
 		if (!$account instanceof Account) {
 			return new JSONResponse(
-				array('message' => 'Invalid account'),
+				['message' => 'Invalid account'],
 				Http::STATUS_BAD_REQUEST
 			);
 		}
-
 		// get sender data
 		$headers = [];
+		/** @var Account $account */
 		$from = new Horde_Mail_Rfc822_Address($account->getEMailAddress());
 		$from->personal = $account->getName();
 		$headers['From']= $from;
