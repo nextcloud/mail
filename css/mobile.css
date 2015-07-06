@@ -50,10 +50,7 @@
 }
 
 /* make sure text fields occupy full width */
-#new-message-fields,
-.reply-message-fields {
-	width: 100%;
-}
+.composer-fields,
 
 /* position attachment picker below message fields */
 #new-message-attachments {

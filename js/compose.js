@@ -1,4 +1,4 @@
-/* global Handlebars, views */
+/* global Handlebars, views, OC */
 var Mail = {
 	State:{
 		accounts: null
@@ -9,38 +9,107 @@ var Mail = {
 			$.ajax(OC.generateUrl('apps/mail/accounts'), {
 				data:{},
 				type:'GET',
-				success:function(jsondata) {
-					Mail.State.accounts = jsondata;
+				success:function(accounts) {
+					Mail.State.accounts = accounts;
 
 					// don't try to load accounts if there are none
-					if (jsondata.length === 0) {
+					if (accounts.length === 0) {
 						return;
 					}
 					// only show account switcher when there are multiple
-					if (jsondata.length > 1) {
+					if (accounts.length > 1) {
 						var source   = $('#mail-account-manager').html();
 						var template = Handlebars.compile(source);
-						var html = template(jsondata);
+						var html = template(accounts);
 						$('#accountManager').html(html);
 					}
 
-					// setup sendmail view
-					var view = new views.SendMail({
+					// setup composer view
+					var view = new views.Composer({
 						el: $('#app-content'),
+						onSubmit: function(accountId, message, options) {
+							/**
+							 * ATTENTION: this is a copy of mail.js Mail.Communication.sendMessage
+							 */
+							var defaultOptions = {
+								success: function() {},
+								error: function() {},
+								complete: function() {},
+								accountId: null,
+								folderId: null,
+								messageId: null,
+								draftUID: null
+							};
+							_.defaults(options, defaultOptions);
+							var url = OC.generateUrl('/apps/mail/accounts/{accountId}/send', {accountId: accountId});
+							var data = {
+								type: 'POST',
+								success: options.success,
+								error: options.error,
+								complete: options.complete,
+								data: {
+									to: message.to,
+									cc: message.cc,
+									bcc: message.bcc,
+									subject: message.subject,
+									body: message.body,
+									attachments: message.attachments,
+									accountId: options.accountId,
+									draftUID : options.draftUID
+								}
+							};
+							$.ajax(url, data);
+						},
+						onDraft: function(accountId, message, options) {
+							var defaultOptions = {
+								success: function() {},
+								error: function() {},
+								complete: function() {},
+								accountId: null,
+								folderId: null,
+								messageId: null,
+								draftUID: null
+							};
+							_.defaults(options, defaultOptions);
+							var url = OC.generateUrl('/apps/mail/accounts/{accountId}/draft', {accountId: accountId});
+							var data = {
+								type: 'POST',
+								success: function(data) {
+									options.success(data);
+								},
+								error: options.error,
+								complete: options.complete,
+								data: {
+									to: message.to,
+									cc: message.cc,
+									bcc: message.bcc,
+									subject: message.subject,
+									body: message.body,
+									attachments: message.attachments,
+									accountId: options.accountId,
+									folderId: options.folderId,
+									messageId: options.messageId,
+									uid : options.draftUID
+								}
+							};
+							$.ajax(url, data);
+						},
+						onSent: function() {
+							// TODO: fix selector conflicts
+							$('#nav-buttons').removeClass('hidden');
+							$('.mail-account').slideUp();
+							$('.composer-fields').slideUp();
+							$('#new-message-attachments').slideUp();
+						},
 						aliases: Mail.State.accounts
 					});
 
-					view.sentCallback = function() {
-						$('#nav-buttons').removeClass('hidden');
-						$('.mail_account').slideUp();
-						$('#new-message-fields').slideUp();
-						$('#new-message-attachments').slideUp();
-					};
 					// And render it
-					view.render();
-
-					$('textarea').autosize({append:'"\n\n"'});
-
+					view.render({
+						data: {
+							to: $('#app').data('mailto')
+						}
+					});
 				},
 				error: function() {
 					Mail.UI.showError(t('mail', 'Error while loading the accounts.'));
@@ -57,6 +126,7 @@ var Mail = {
 		},
 
 		hideMenu:function() {
+			// TODO: fix selector conflicts
 			var menu = $('#new-message');
 			menu.addClass('hidden');
 		}
@@ -77,9 +147,10 @@ $(document).ready(function() {
 		window.history.back();
 	});
 
-	if ($('#cc').attr('value') || $('#bcc').attr('value')) {
-		$('#new-message-cc-bcc').show();
-		$('#new-message-cc-bcc-toggle').hide();
+	// TODO: fix selector conflicts
+	if ($('.cc').attr('value') || $('.bcc').attr('value')) {
+		$('.composer-cc-bcc').show();
+		$('.composer-cc-bcc-toggle').hide();
 	}
 
 });

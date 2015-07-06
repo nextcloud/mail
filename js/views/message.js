@@ -5,10 +5,6 @@ var views = views || {};
 $('.action.delete').tipsy({gravity:'e', live:true});
 $('.tipsy-mailto').tipsy({gravity:'n', live:true});
 
-views.DetailedMessage = Backbone.Marionette.ItemView.extend({
-	template: "#mail-message-template"
-});
-
 views.Message = Backbone.Marionette.ItemView.extend({
 
 	template: "#mail-messages-template",

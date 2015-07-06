@@ -380,7 +380,7 @@ class AccountsController extends Controller {
 	 */
 	public function draft($accountId, $subject, $body, $to, $cc, $bcc, $uid) {
 
-		if (!is_null($uid)) {
+		if (is_null($uid)) {
 			$this->logger->info("Saving a new draft in accout <$accountId>");
 		} else {
 			$this->logger->info("Updating draft <$uid> in account <$accountId>");

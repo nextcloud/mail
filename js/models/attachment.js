@@ -1,4 +1,4 @@
-/* global Backbone */
+/* global Backbone, _ */
 var models = {};
 
 models.Attachment = Backbone.Model.extend({

@@ -372,7 +372,7 @@ class Account implements IAccount {
 				array('create' => $createTrash, 'move' => true, 'ids' => $hordeMessageIds));
 
 			\OC::$server->getLogger()->info("Message moved to trash: {message} from mailbox {mailbox}",
-				array('message' => $messageId, 'mailbox' => $sourceFolderId));
+				array('message' => $messageId, 'mailbox' => $sourceFolderId, 'app' => 'mail'));
 		}
 	}
 
