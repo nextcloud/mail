@@ -872,6 +872,12 @@ var Mail = {
 			Mail.UI.setMessageActive(null);
 		};
 
+		this.htmlToText = function (html) {
+			var tmp = document.createElement('div');
+			tmp.innerHTML = html;
+			return tmp.textContent || tmp.innerText || '';
+		};
+
 		this.loadMessage = function(messageId, options) {
 			options = options || {};
 			var defaultOptions = {
@@ -932,12 +938,13 @@ var Mail = {
 				if (!message.hasHtmlBody) {
 					var date = new Date(message.dateIso);
 					var minutes = date.getMinutes();
+					var text = Mail.UI.htmlToText(message.body);
 
 					reply.body = '\n\n\n\n' +
 						message.from + ' – ' +
 						$.datepicker.formatDate('D, d. MM yy ', date) +
 						date.getHours() + ':' + (minutes < 10 ? '0' : '') + minutes + '\n> ' +
-						$(message.body).text().replace(/\n/g, '\n> ');
+						text.replace(/\n/g, '\n> ');
 				}
 
 				// Render the message body
@@ -1003,8 +1010,8 @@ var Mail = {
 					$('iframe').parent().removeClass('icon-loading');
 
 					// Add body content to inline reply (html mails)
-					// TODO better html handling, should be fine for the moment!
-					var text = jQuery($(this).contents().find('body').html().replace(/<br>/g, '\n')).text();
+					var text = $(this).contents().find('body').html();
+					text = Mail.UI.htmlToText(text);
 					if (!draft) {
 						var date = new Date(message.dateIso);
 						replyComposer.setReplyBody(message.from, date, text);
