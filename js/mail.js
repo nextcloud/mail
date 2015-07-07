@@ -873,9 +873,9 @@ var Mail = {
 		};
 
 		this.htmlToText = function (html) {
-			var tmp = document.createElement("DIV");
+			var tmp = document.createElement('div');
 			tmp.innerHTML = html;
-			return tmp.textContent || tmp.innerText || "";
+			return tmp.textContent || tmp.innerText || '';
 		};
 
 		this.loadMessage = function(messageId, options) {
