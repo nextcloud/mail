@@ -23,7 +23,6 @@
 namespace OCA\Mail\Controller;
 
 use Horde_Imap_Client;
-use Horde_Mail_Transport_Smtphorde;
 use Horde_Mime_Headers_Date;
 use Horde_Mime_Mail;
 use Horde_Mime_Part;
@@ -341,7 +340,9 @@ class AccountsController extends Controller {
 
 			// save the message in the sent folder
 			$sentFolder = $account->getSentFolder();
-			$raw = stream_get_contents($mail->getRaw());
+			/** @var resource $raw */
+			$raw = $mail->getRaw();
+			$raw = stream_get_contents($raw);
 			$sentFolder->saveMessage($raw, [
 				Horde_Imap_Client::FLAG_SEEN
 			]);
@@ -376,17 +377,21 @@ class AccountsController extends Controller {
 	 * @param string $cc
 	 * @param string $bcc
 	 * @param int $uid
+	 * @param string $messageId
 	 * @return JSONResponse
 	 */
-	public function draft($accountId, $subject, $body, $to, $cc, $bcc, $uid) {
+	public function draft($accountId, $subject, $body, $to, $cc, $bcc, $uid, $messageId) {
 
 		if (is_null($uid)) {
-			$this->logger->info("Saving a new draft in accout <$accountId>");
+			$this->logger->info("Saving a new draft in account <$accountId>");
 		} else {
 			$this->logger->info("Updating draft <$uid> in account <$accountId>");
 		}
 
 		$account = $this->accountService->find($this->currentUserId, $accountId);
+		if ($account instanceof UnifiedAccount) {
+			list($account) = $account->resolve($messageId);
+		}
 		if (!$account instanceof Account) {
 			return new JSONResponse(
 				array('message' => 'Invalid account'),
@@ -424,7 +429,9 @@ class AccountsController extends Controller {
 		try {
 			// save the message in the drafts folder
 			$draftsFolder = $account->getDraftsFolder();
-			$raw = stream_get_contents($mail->getRaw());
+			/** @var resource $raw */
+			$raw = $mail->getRaw();
+			$raw = stream_get_contents($raw);
 			$newUid = $draftsFolder->saveDraft($raw);
 
 			// delete old version if one exists
