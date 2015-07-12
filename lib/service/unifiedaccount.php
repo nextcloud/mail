@@ -7,6 +7,7 @@ use OCP\IL10N;
 class UnifiedAccount implements IAccount {
 
 	const ID = -1;
+	const INBOX_ID = 'all-inboxes';
 
 	/** @var AccountService */
 	private $accountService;
@@ -51,22 +52,28 @@ class UnifiedAccount implements IAccount {
 
 	private function buildInbox() {
 		$displayName = (string)$this->l10n->t('All inboxes');
-		$id = 'all-inboxes';
 
 		$allAccounts = $this->accountService->findByUserId($this->userId);
-		$unreadCounts = array_map(function($account) {
+
+		$uidValidity = [];
+		$uidNext = [];
+		$unseen = 0;
+
+		foreach($allAccounts as $account) {
 			/** @var IAccount $account */
 			$inbox = $account->getInbox();
 			if (is_null($inbox)) {
-				return 0;
+				continue;
 			}
-			$status = $inbox->getStatus();
-			return isset($status['unseen']) ? $status['unseen'] : 0;
-		}, $allAccounts);
 
-		$unseen = array_sum($unreadCounts);
+			$status = $inbox->getStatus();
+			$unseen += isset($status['unseen']) ? $status['unseen'] : 0;
+			$uidValidity[$account->getId()] = isset($status['uidvalidity']) ? $status['uidvalidity'] : 0;
+			$uidNext[$account->getId()] = isset($status['uidnext']) ? $status['uidnext'] : 0;
+		}
+
 		return [
-			'id' => base64_encode($id),
+			'id' => base64_encode(self::INBOX_ID),
 			'parent' => null,
 			'name' => $displayName,
 			'specialRole' => 'inbox',
@@ -75,8 +82,8 @@ class UnifiedAccount implements IAccount {
 			'isEmpty' => false,
 			'accountId' => UnifiedAccount::ID,
 			'noSelect' => false,
-			'uidvalidity' => 0,
-			'uidnext' => 0,
+			'uidvalidity' => $uidValidity,
+			'uidnext' => $uidNext,
 			'delimiter' => '.'
 		];	}
 
@@ -113,7 +120,32 @@ class UnifiedAccount implements IAccount {
 	 * @return array
 	 */
 	public function getChangedMailboxes($query) {
-		return [];
+		$accounts = $this->accountService->findByUserId($this->userId);
+		$changedBoxes = [];
+
+		foreach($accounts as $account) {
+			/** @var IAccount $account */
+			if ($account->getId() === UnifiedAccount::ID) {
+				continue;
+			}
+			$inbox = $account->getInbox();
+			$inboxName = $inbox->getFolderId();
+			$changes = $account->getChangedMailboxes([$inboxName => [
+				'uidvalidity' => $query[self::INBOX_ID]['uidvalidity'][$account->getId()],
+				'uidnext' => $query[self::INBOX_ID]['uidnext'][$account->getId()],
+			]]);
+			if (!isset($changes[$inboxName])) {
+				continue;
+			}
+			if (!isset($changedBoxes[self::INBOX_ID])) {
+				$changedBoxes[self::INBOX_ID] = $this->buildInbox();
+				$changedBoxes[self::INBOX_ID]['messages'] = [];
+				$changedBoxes[self::INBOX_ID]['newUnReadCounter'] = 0;
+			}
+			$changedBoxes[self::INBOX_ID]['messages'] = array_merge($changedBoxes[self::INBOX_ID]['messages'], $changes[$inboxName]['messages']);
+			$changedBoxes[self::INBOX_ID]['newUnReadCounter'] += $changes[$inboxName]['newUnReadCounter'];
+		}
+		return $changedBoxes;
 	}
 
 	/**
