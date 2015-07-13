@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#composer-lock-the-lock-file",
         "This file is @generated automatically"
     ],
-    "hash": "3ccef71612d9da9bbf61e02fa4a546a2",
+    "hash": "f2176a911d5c0fbd477e86944e0206b3",
     "packages": [
         {
             "name": "ezyang/htmlpurifier",
@@ -50,6 +50,51 @@
                 "html"
             ],
             "time": "2013-11-30 08:25:19"
+        },
+        {
+            "name": "kwi/urllinker",
+            "version": "dev-default",
+            "source": {
+                "type": "hg",
+                "url": "https://bitbucket.org/kwi/urllinker",
+                "reference": "b5e097f03963454b4e8f32581265c8e57c3409e6"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://bitbucket.org/kwi/urllinker/get/b5e097f03963454b4e8f32581265c8e57c3409e6.zip",
+                "reference": "b5e097f03963454b4e8f32581265c8e57c3409e6",
+                "shasum": ""
+            },
+            "require": {
+                "php": ">=5.3"
+            },
+            "type": "library",
+            "autoload": {
+                "psr-4": {
+                    "Kwi\\": "lib"
+                },
+                "files": [
+                    "UrlLinker.php"
+                ]
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "CC0-1.0"
+            ],
+            "authors": [
+                {
+                    "name": "Søren Løvborg",
+                    "role": "Developer"
+                },
+                {
+                    "name": "Dawid Nowak",
+                    "email": "code@dnowak.pl",
+                    "role": "Developer"
+                }
+            ],
+            "description": "Autolink URLs in text or html",
+            "homepage": "http://www.kwi.dk/projects/php/UrlLinker/",
+            "time": "2014-12-28 23:05:00"
         },
         {
             "name": "pear-pear.horde.org/Horde_Crypt_Blowfish",
@@ -702,7 +747,8 @@
         "pear-pear.horde.org/horde_text_filter": 0,
         "pear-pear.horde.org/horde_text_flowed": 0,
         "pear-pear.horde.org/horde_util": 0,
-        "pear-pear.horde.org/horde_smtp": 0
+        "pear-pear.horde.org/horde_smtp": 0,
+        "kwi/urllinker": 20
     },
     "prefer-stable": false,
     "prefer-lowest": false,
