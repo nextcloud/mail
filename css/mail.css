@@ -348,6 +348,9 @@
 	margin: 10px;
 	z-index: 100;
 }
+#reply-composer .message-composer {
+	margin: 0;
+}
 .composer-fields {
 	position: relative;
 }
