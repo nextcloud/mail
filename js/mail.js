@@ -173,6 +173,12 @@ var Mail = {
 					storage.remove(MessageCache.getMessagePath(accountId, folderId, message.id));
 				});
 			},
+			addMessages: function(accountId, folderId, messages) {
+				var _this = this;
+				_.each(messages, function(message) {
+					_this.addMessage(accountId, folderId, message);
+				});
+			},
 			removeMessage: function(accountId, folderId, messageId) {
 				var storage = $.localStorage;
 				var message = this.getMessage(accountId, folderId, messageId);
@@ -349,15 +355,9 @@ var Mail = {
 					var messages = queue;
 					queue = [];
 
-					_.each(messages, function(messageId) {
-						if (!Mail.Cache.getMessage(accountId, folderId, messageId)) {
-							Mail.Communication.fetchMessage(accountId, folderId, messageId, {
-								backgroundMode: true,
-								onSuccess: function(message) {
-									// Add the fetched message to cache
-									Mail.Cache.addMessage(accountId, folderId, message);
-								}
-							});
+					Mail.Communication.fetchMessages(accountId, folderId, messages, {
+						onSuccess: function(messages) {
+							Mail.Cache.addMessages(accountId, folderId, messages);
 						}
 					});
 				}
@@ -438,8 +438,8 @@ var Mail = {
 			_.defaults(options, defaults);
 
 			// Load cached version if available
-			var message = Mail.Cache.getMessage(Mail.State.currentAccountId,
-				Mail.State.currentFolderId,
+			var message = Mail.Cache.getMessage(accountId,
+				folderId,
 				messageId);
 			if (message) {
 				options.onSuccess(message);
@@ -461,6 +461,39 @@ var Mail = {
 			if (!options.backgroundMode) {
 				// Save xhr to allow aborting unneded requests
 				Mail.State.messageLoading = xhr;
+			}
+		}
+		function fetchMessages(accountId, folderId, messageIds, options) {
+			options = options || {};
+			var defaults = {
+				onSuccess: function() {},
+				onError: function() {}
+			};
+			_.defaults(options, defaults);
+
+			var cachedMessages = [];
+			var uncachedIds = [];
+			_.each(messageIds, function(messageId) {
+				var message = Mail.Cache.getMessage(accountId, folderId, messageId);
+				if (message) {
+					cachedMessages.push(message);
+				} else {
+					uncachedIds.push(messageId);
+				}
+			});
+
+			if (uncachedIds.length > 0) {
+				var Ids = uncachedIds.join(',');
+				var url = OC.generateUrl('apps/mail/accounts/{accountId}/folders/{folderId}/messages?ids={ids}', {
+					accountId: accountId,
+					folderId: folderId,
+					ids: Ids
+				});
+				$.ajax(url, {
+					type: 'GET',
+					success: options.onSuccess,
+					error: options.onError
+				});
 			}
 		}
 		function sendMessage(accountId, message, options) {
@@ -598,6 +631,7 @@ var Mail = {
 		return {
 			get: get,
 			fetchMessage: fetchMessage,
+			fetchMessages: fetchMessages,
 			fetchMessageList: fetchMessageList,
 			sendMessage: sendMessage,
 			saveDraft: saveDraft
@@ -847,7 +881,6 @@ var Mail = {
 							// TODO: replace with horde sync once it's implemented
 							Mail.State.messageView.loadNew();
 						}
-
 					},
 					onError: function(error, textStatus) {
 						if (textStatus !== 'abort') {
