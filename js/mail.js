@@ -847,7 +847,7 @@ var Mail = {
 							// TODO: replace with horde sync once it's implemented
 							Mail.State.messageView.loadNew();
 						}
-						
+
 					},
 					onError: function(error, textStatus) {
 						if (textStatus !== 'abort') {
@@ -959,13 +959,18 @@ var Mail = {
 
 			// set 'from' dropdown to current account
 			// TODO: fix selector conflicts
-			$('.mail-account').val(Mail.State.currentAccountId);
+			if (Mail.State.currentAccountId !== -1) {
+				$('.mail-account').val(Mail.State.currentAccountId);
+			}
 
 			// focus 'to' field automatically on clicking New message button
-			$('#to').focus();
+			var toInput = composer.el.find('input.to');
+			toInput.focus();
+
 			if (!_.isUndefined(data.currentTarget) && !_.isUndefined($(data.currentTarget).data().email)) {
 				var to = '"' + $(data.currentTarget).data().label + '" <' + $(data.currentTarget).data().email + '>';
-				$('#to').val(to);
+				toInput.val(to);
+				composer.el.find('input.subject').focus();
 			}
 
 			Mail.UI.setMessageActive(null);
