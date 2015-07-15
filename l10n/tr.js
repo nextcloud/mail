@@ -3,6 +3,7 @@ OC.L10N.register(
     {
     "Mail" : "Posta",
     "Error while loading the accounts." : "Hesaplar yüklenirken hata.",
+    "{from}\n{subject}" : "{from}\n{subject}",
     "_%n new message in {folderName} \nfrom {from}_::_%n new messages in {folderName} \nfrom {from}_" : ["{folderName} içerisinde %n yeni ileti\nkimden: {from}","{folderName} içerisinde %n yeni ileti\nkimden: {from}"],
     "Error while loading the selected account." : "Seçili hesap yüklenirken hata.",
     "Error while loading messages." : "İletiler yüklenirken hata.",
@@ -44,6 +45,7 @@ OC.L10N.register(
     "Auto detect failed. Please use manual mode." : "Otomatik sınama başarısız. Lütfen el kipini kullanın.",
     "Delete permanently" : "Kalıcı olarak sil",
     "& others" : "ve diğerleri",
+    "All inboxes" : "Tüm gelen kutuları",
     "from" : "kimden",
     "+ cc/bcc" : "+ cc/bcc",
     "to" : "alıcı",

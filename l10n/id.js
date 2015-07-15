@@ -3,6 +3,7 @@ OC.L10N.register(
     {
     "Mail" : "Email",
     "Error while loading the accounts." : "Terjadi kesalahan saat memuat akun.",
+    "{from}\n{subject}" : "{from}\n{subject}",
     "_%n new message in {folderName} \nfrom {from}_::_%n new messages in {folderName} \nfrom {from}_" : ["%n pesan baru di {folderName} \ndari {from}"],
     "Error while loading the selected account." : "Terjadi kesalahan saat memuat akun terpilih.",
     "Error while loading messages." : "Terjadi kesalahan saat memuat pesan.",
@@ -25,6 +26,7 @@ OC.L10N.register(
     "Sending …" : "Mengirim ...",
     "Message sent!" : "Kirim pesan!",
     "you" : "Anda",
+    "Send message to {email}" : "Kirim pesan ke {email}",
     "Message could not be starred. Please try again." : "Pesan tidak dapat dibintangi. Silakan coba lagi.",
     "Error while deleting message." : "Terjadi kesalahan saat menghapus pesan.",
     "Checking mail …" : "Memeriksa email ...",
@@ -43,6 +45,7 @@ OC.L10N.register(
     "Auto detect failed. Please use manual mode." : "Deteksi otomatis gagal. Mohon gunakan modus manual.",
     "Delete permanently" : "Hapus secara permanen",
     "& others" : "& lainnya",
+    "All inboxes" : "Semua kotak masuk",
     "from" : "dari",
     "+ cc/bcc" : "+ cc/bcc",
     "to" : "untuk",
