@@ -12,6 +12,9 @@ class UnifiedAccount implements IAccount {
 	/** @var AccountService */
 	private $accountService;
 
+	/** @var string */
+	private $userId;
+
 	/** @var IL10N */
 	private $l10n;
 
@@ -85,7 +88,8 @@ class UnifiedAccount implements IAccount {
 			'uidvalidity' => $uidValidity,
 			'uidnext' => $uidNext,
 			'delimiter' => '.'
-		];	}
+		];
+	}
 
 	/**
 	 * @param $folderId
@@ -99,7 +103,16 @@ class UnifiedAccount implements IAccount {
 	 * @return string
 	 */
 	public function getEmail() {
-		return '';
+		$allAccounts = $this->accountService->findByUserId($this->userId);
+		$addressesList = new \Horde_Mail_Rfc822_List();
+		foreach ($allAccounts as $account) {
+			$inbox = $account->getInbox();
+			if (is_null($inbox)) {
+				continue;
+			}
+			$addressesList->add($account->getEmail());
+		}
+		return $addressesList;
 	}
 
 	/**
