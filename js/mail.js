@@ -943,7 +943,9 @@ var Mail = {
 
 			// set 'from' dropdown to current account
 			// TODO: fix selector conflicts
-			$('.mail-account').val(Mail.State.currentAccountId);
+			if (Mail.State.currentAccountId !== -1) {
+				$('.mail-account').val(Mail.State.currentAccountId);
+			}
 
 			// focus 'to' field automatically on clicking New message button
 			var toInput = composer.el.find('input.to');
