@@ -15,8 +15,11 @@ namespace OCA\Mail\Service;
 use Closure;
 use HTMLPurifier;
 use HTMLPurifier_Config;
+use HTMLPurifier_HTMLDefinition;
 use HTMLPurifier_URISchemeRegistry;
+use Kwi\UrlLinker;
 use OCA\Mail\Service\HtmlPurify\CidURIScheme;
+use OCA\Mail\Service\HtmlPurify\TransformNoReferrer;
 use OCA\Mail\Service\HtmlPurify\TransformURLScheme;
 
 class Html {
@@ -26,9 +29,28 @@ class Html {
 	 * @return string
 	 */
 	public function convertLinks($data) {
-		$regex = "/(ht|f)tp(s?)\:\/\/[a-zA-Z0-9\-\._]+(\:[0-9]+)?(\/[^!*';\"@&+$,?#\ \]]*)*(\?[^!*';:\=\"@&+$,?#\ \]]+=[^!*';:\"\=@&$?#\ \]()]+(&[^!*';:\=@&+$,?#\ \]]+=[^!*';:\"\=@&$?#\ \]()]*)*)?(\#\!?[^!*';\"@&$,?#\ \]]*)?/";
-		$data = preg_replace($regex, "<a href=\"\\0\" target=\"_blank\" rel=\"noreferrer\">\\0</a>", $data);
-		return $data;
+		$linker = new UrlLinker(true, false);
+		$data = $linker->linkUrlsAndEscapeHtml($data);
+
+		$config = HTMLPurifier_Config::createDefault();
+
+		// Append target="_blank" to all link (a) elements
+		$config->set('HTML.TargetBlank', true);
+
+		// allow cid, http and ftp
+		$config->set('URI.AllowedSchemes', ['http' => true, 'https' => true, 'ftp' => true, 'mailto' => true]);
+
+		// Disable the cache since ownCloud has no really appcache
+		// TODO: Fix this - requires https://github.com/owncloud/core/issues/10767 to be fixed
+		$config->set('Cache.DefinitionImpl', null);
+
+		/** @var HTMLPurifier_HTMLDefinition $uri */
+		$uri = $config->getDefinition('HTML');
+		$uri->info_attr_transform_post['noreferrer'] = new TransformNoReferrer();
+
+		$purifier = new HTMLPurifier($config);
+
+		return $purifier->purify($data);
 	}
 
 	/**
