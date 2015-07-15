@@ -831,7 +831,7 @@ var Mail = {
 							// TODO: replace with horde sync once it's implemented
 							Mail.State.messageView.loadNew();
 						}
-						
+
 					},
 					onError: function(error, textStatus) {
 						if (textStatus !== 'abort') {
@@ -948,9 +948,11 @@ var Mail = {
 			// focus 'to' field automatically on clicking New message button
 			var toInput = composer.el.find('input.to');
 			toInput.focus();
+
 			if (!_.isUndefined(data.currentTarget) && !_.isUndefined($(data.currentTarget).data().email)) {
 				var to = '"' + $(data.currentTarget).data().label + '" <' + $(data.currentTarget).data().email + '>';
 				toInput.val(to);
+				composer.el.find('input.subject').focus();
 			}
 
 			Mail.UI.setMessageActive(null);
