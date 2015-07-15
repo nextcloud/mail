@@ -91,9 +91,15 @@ class MessagesController extends Controller {
 	 * @param int $from
 	 * @param int $to
 	 * @param string $filter
+	 * @param array $ids
 	 * @return JSONResponse
 	 */
-	public function index($accountId, $folderId, $from=0, $to=20, $filter=null) {
+	public function index($accountId, $folderId, $from=0, $to=20, $filter=null, $ids=null) {
+		if (!is_null($ids)) {
+			$ids = explode(',', $ids);
+
+			return $this->loadMultiple($accountId, $folderId, $ids);
+		}
 		$mailBox = $this->getFolder($accountId, $folderId);
 
 		$this->logger->debug("loading messages $from to $to of folder <$folderId>");
@@ -138,20 +144,7 @@ class MessagesController extends Controller {
 		} catch (DoesNotExistException $ex) {
 			return new JSONResponse([], 404);
 		}
-		$json = $m->getFullMessage($account->getEmail(), $mailBox->getSpecialRole());
-		$json['senderImage'] = $this->contactsIntegration->getPhoto($m->getFromEmail());
-		if (isset($json['hasHtmlBody'])){
-			$json['htmlBodyUrl'] = $this->buildHtmlBodyUrl($accountId, $folderId, $id);
-		}
-
-		if (isset($json['attachment'])) {
-			$json['attachment'] = $this->enrichDownloadUrl($accountId, $folderId, $id, $json['attachment']);
-		}
-		if (isset($json['attachments'])) {
-			$json['attachments'] = array_map(function($a) use ($accountId, $folderId, $id) {
-				return $this->enrichDownloadUrl($accountId, $folderId, $id, $a);
-			}, $json['attachments']);
-		}
+		$json = $this->enhanceMessage($accountId, $folderId, $id, $m, $account, $mailBox);
 
 		return new JSONResponse($json);
 	}
@@ -210,7 +203,7 @@ class MessagesController extends Controller {
 	 * @NoCSRFRequired
 	 *
 	 * @param int $accountId
-	 * @param string folderId
+	 * @param string $folderId
 	 * @param string $messageId
 	 * @param string $attachmentId
 	 * @return AttachmentDownloadResponse
@@ -354,6 +347,50 @@ class MessagesController extends Controller {
 			'messageId' => $messageId,
 		]);
 		return \OC::$server->getURLGenerator()->getAbsoluteURL($htmlBodyUrl);
+	}
+
+	private function loadMultiple($accountId, $folderId, $ids) {
+		$mailBox = $this->getFolder($accountId, $folderId);
+		$account = $this->getAccount($accountId);
+		$messages = array_map(function($id) use ($accountId, $folderId, $account, $mailBox){
+			try {
+				$m = $mailBox->getMessage($id);
+				$json = $this->enhanceMessage($accountId, $folderId, $id, $m, $account, $mailBox);
+				return $json;
+			} catch (DoesNotExistException $ex) {
+				return null;
+			}
+		}, $ids);
+
+		return $messages;
+	}
+
+	/**
+	 * @param $accountId
+	 * @param $folderId
+	 * @param $id
+	 * @param $m
+	 * @param $account
+	 * @param $mailBox
+	 * @return mixed
+	 */
+	private function enhanceMessage($accountId, $folderId, $id, $m, $account, $mailBox) {
+		$json = $m->getFullMessage($account->getEmail(), $mailBox->getSpecialRole());
+		$json['senderImage'] = $this->contactsIntegration->getPhoto($m->getFromEmail());
+		if (isset($json['hasHtmlBody'])) {
+			$json['htmlBodyUrl'] = $this->buildHtmlBodyUrl($accountId, $folderId, $id);
+		}
+
+		if (isset($json['attachment'])) {
+			$json['attachment'] = $this->enrichDownloadUrl($accountId, $folderId, $id, $json['attachment']);
+		}
+		if (isset($json['attachments'])) {
+			$json['attachments'] = array_map(function ($a) use ($accountId, $folderId, $id) {
+				return $this->enrichDownloadUrl($accountId, $folderId, $id, $a);
+			}, $json['attachments']);
+			return $json;
+		}
+		return $json;
 	}
 
 }
