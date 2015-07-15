@@ -617,7 +617,7 @@ class Account implements IAccount {
 	}
 
 	/**
-	 * @return string
+	 * @return string|Horde_Mail_Rfc822_List
 	 */
 	public function getEmail() {
 		return $this->account->getEmail();
