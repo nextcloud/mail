@@ -946,10 +946,11 @@ var Mail = {
 			$('.mail-account').val(Mail.State.currentAccountId);
 
 			// focus 'to' field automatically on clicking New message button
-			$('#to').focus();
+			var toInput = composer.el.find('input.to');
+			toInput.focus();
 			if (!_.isUndefined(data.currentTarget) && !_.isUndefined($(data.currentTarget).data().email)) {
 				var to = '"' + $(data.currentTarget).data().label + '" <' + $(data.currentTarget).data().email + '>';
-				$('#to').val(to);
+				toInput.val(to);
 			}
 
 			Mail.UI.setMessageActive(null);
