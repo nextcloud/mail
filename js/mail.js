@@ -173,6 +173,22 @@ var Mail = {
 					storage.remove(MessageCache.getMessagePath(accountId, folderId, message.id));
 				});
 			},
+			removeMessage: function(accountId, folderId, messageId) {
+				var storage = $.localStorage;
+				var message = this.getMessage(accountId, folderId, messageId);
+				if (message) {
+					// message exists in cache -> remove it
+					storage.remove(MessageCache.getMessagePath(accountId, folderId, messageId));
+					var messageList = this.getMessageList(accountId, folderId);
+					if (messageList) {
+						// message list is cached -> remove message from it
+						var newList = _.filter(messageList, function(message) {
+							return message.id !== messageId;
+						});
+						this.addMessageList(accountId, folderId, newList);
+					}
+				}
+			},
 			getMessageList: function(accountId, folderId) {
 				var storage = $.localStorage;
 				var path = FolderCache.getFolderPath(accountId, folderId);
