@@ -286,7 +286,9 @@ views.Composer = Backbone.View.extend({
 				_this.attachments.reset();
 				if (_this.draftUID !== null) {
 					// the sent message was a draft
-					Mail.UI.messageView.collection.remove({id: _this.draftUID});
+					if (!_.isUndefined(Mail.UI.messageView)) {
+						Mail.UI.messageView.collection.remove({id: _this.draftUID});
+					}
 					_this.draftUID = null;
 				}
 			},
