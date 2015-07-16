@@ -146,6 +146,7 @@ script('mail', 'jquery-visibility');
 			{{/if}}
 		</div>
 		<div id="reply-composer"></div>
+		<input type="button" id="forward-button" value="<?php p($l->t('Forward')); ?>">
 	</div>
 </script>
 <script id="mail-attachment-template" type="text/x-handlebars-template">
