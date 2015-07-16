@@ -1,4 +1,4 @@
-/* global Mail, Handlebars, _, relative_modified_date, formatDate, md5, humanFileSize */
+/* global Mail, Handlebars, _, relative_modified_date, formatDate, md5, humanFileSize, getScrollBarWidth */
 
 /**
  * ownCloud - Mail
@@ -93,4 +93,23 @@ $(document).ready(function() {
 			return options.inverse(this);
 		}
 	});
+
+	// adjust controls/header bar width
+	window.adjustControlsWidth = function() {
+		if($('#mail-message-header').length) {
+			var controlsWidth;
+			if($(window).width() > 768) {
+				controlsWidth =
+					$('#content').width() -
+					$('#app-navigation').width() -
+					$('#mail_messages').width() -
+					getScrollBarWidth();
+			}
+			$('#mail-message-header').css('width', controlsWidth);
+			$('#mail-message-header').css('min-width', controlsWidth);
+		}
+	};
+
+	$(window).resize(_.debounce(window.adjustControlsWidth, 250));
+
 });
