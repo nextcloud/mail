@@ -511,36 +511,72 @@ var Mail = {
 				draftUID: null
 			};
 			_.defaults(options, defaultOptions);
-			var url = OC.generateUrl('/apps/mail/accounts/{accountId}/draft', {accountId: accountId});
-			var data = {
-				type: 'POST',
-				success: function(data) {
-					if (options.draftUID !== null) {
-						// update UID in message list
-						var message = Mail.UI.messageView.collection.findWhere({id: options.draftUID});
-						if (message) {
-							message.set({id: data.uid});
-							Mail.UI.messageView.collection.set([message], {remove: false});
-						}
-					}
-					options.success(data);
-				},
-				error: options.error,
-				complete: options.complete,
-				data: {
-					to: message.to,
-					cc: message.cc,
-					bcc: message.bcc,
-					subject: message.subject,
-					body: message.body,
-					attachments: message.attachments,
-					accountId: options.accountId,
-					folderId: options.folderId,
-					messageId: options.messageId,
-					uid : options.draftUID
+
+			// TODO: replace by Backbone model method
+			function undefinedOrEmptyString(prop) {
+				return prop === undefined || prop === '';
+			}
+			var emptyMessage = true;
+			var propertiesToCheck = ['to', 'cc', 'bcc', 'subject', 'body'];
+			_.each(propertiesToCheck, function(property) {
+				if (!undefinedOrEmptyString(message[property])) {
+					emptyMessage = false;
 				}
-			};
-			$.ajax(url, data);
+			});
+			// END TODO
+
+			if (emptyMessage) {
+				if (options.draftUID !== null) {
+					// Message is empty + previous draft exists -> delete it
+
+					var account = Mail.State.folderView.collection.findWhere({id: accountId});
+					var draftsFolder = account.attributes.specialFolders.drafts;
+
+					var deleteUrl =
+						OC.generateUrl('apps/mail/accounts/{accountId}/folders/{folderId}/messages/{messageId}', {
+						accountId: accountId,
+						folderId: draftsFolder,
+						messageId: options.draftUID
+					});
+					$.ajax(deleteUrl, {
+						type: 'DELETE'
+					});
+				}
+				options.success({
+					uid: null
+				});
+			} else {
+				var url = OC.generateUrl('/apps/mail/accounts/{accountId}/draft', {accountId: accountId});
+				var data = {
+					type: 'POST',
+					success: function(data) {
+						if (options.draftUID !== null) {
+							// update UID in message list
+							var message = Mail.UI.messageView.collection.findWhere({id: options.draftUID});
+							if (message) {
+								message.set({id: data.uid});
+								Mail.UI.messageView.collection.set([message], {remove: false});
+							}
+						}
+						options.success(data);
+					},
+					error: options.error,
+					complete: options.complete,
+					data: {
+						to: message.to,
+						cc: message.cc,
+						bcc: message.bcc,
+						subject: message.subject,
+						body: message.body,
+						attachments: message.attachments,
+						accountId: options.accountId,
+						folderId: options.folderId,
+						messageId: options.messageId,
+						uid : options.draftUID
+					}
+				};
+				$.ajax(url, data);
+			}
 		}
 		function fetchMessageList(accountId, folderId, options) {
 			options = options || {};

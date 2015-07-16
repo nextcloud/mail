@@ -294,13 +294,16 @@ class MessagesController extends Controller {
 	 * @return JSONResponse
 	 */
 	public function destroy($accountId, $folderId, $id) {
+		$this->logger->debug("deleting message <$id> of folder <$folderId>, account <$accountId>");
 		try {
 			$account = $this->getAccount($accountId);
 			$account->deleteMessage(base64_decode($folderId), $id);
 			return new JSONResponse();
 
 		} catch (DoesNotExistException $e) {
-			return new JSONResponse();
+			$this->logger->error("could not delete message <$id> of folder <$folderId>, "
+				. "account <$accountId> because it does not exist");
+			return new JSONResponse([], 404);
 		}
 	}
 
