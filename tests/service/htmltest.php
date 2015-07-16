@@ -31,6 +31,7 @@ class HtmlTest extends \PHPUnit_Framework_TestCase {
 	public function linkDetectionProvider() {
 		return [
 			['abc', 'abc'],
+			['&lt;&gt;', '&lt;&gt;'],
 			['<a href="http://google.com" rel="noreferrer" target="_blank">google.com</a>', 'http://google.com'],
 			['<a href="https://google.com" rel="noreferrer" target="_blank">google.com</a>', 'https://google.com'],
 			['<a href="ftp://google.com" rel="noreferrer" target="_blank">google.com</a>', 'ftp://google.com'],
