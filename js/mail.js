@@ -1,4 +1,4 @@
-/* global Handlebars, Marionette, Notification, views, OC, _ */
+/* global Handlebars, Marionette, Notification, views, OC, _, adjustControlsWidth */
 
 if (_.isUndefined(OC.Notification.showTemporary)) {
 
@@ -1073,6 +1073,7 @@ var Mail = {
 				mailBody
 					.html(html)
 					.removeClass('icon-loading');
+				adjustControlsWidth();
 
 				// Temporarily disable new-message composer events
 				if (composer) {
