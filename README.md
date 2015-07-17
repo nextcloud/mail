@@ -45,6 +45,34 @@ Past contributors: [Jakob Sack](https://github.com/jakobsack), [Bart Visscher](h
 If you’d like to join, just go through the [issue list](https://github.com/owncloud/mail/issues) and fix some. :) We’re also in [#owncloud-mail on freenode IRC](https://webchat.freenode.net/?channels=owncloud-mail).
 
 
+## Troubleshooting
+
+### Gmail
+
+If you can not access your Gmail account use https://accounts.google.com/DisplayUnlockCaptcha to unlock your account.
+
+### Outlook.com
+
+If you can not access your Outlook.com account try to enable the 'Two-Factor Verification' (https://account.live.com/proofs/Manage) and setup an app password (https://account.live.com/proofs/AppPassword), which you then use for the ownCloud Mail app.
+
+### Dovecot IMAP
+
+If your Dovecot IMAP server prefixes all folders with `INBOX`, ownCloud Mail does not work correcty. 
+
+Check `/etc/dovecot/dovecot.conf`:
+
+```
+namespace inbox {
+        separator = .
+        # All folders prefixed
+        # prefix = INBOX.
+        prefix =
+        inbox = yes
+        type = private
+}
+```
+
+
 ## Developer setup info
 
 Just clone this repo into your apps directory ([ownCloud core installation needed](https://doc.owncloud.org/server/8.1/developer_manual/general/devenv.html)). Additionally you need Composer to install dependencies – run this from inside the mail folder:
