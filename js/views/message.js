@@ -272,7 +272,7 @@ views.Messages = Backbone.Marionette.CompositeView.extend({
 			{
 				from: from,
 				to: from + 20,
-				query: this.filterCriteria ? this.filterCriteria.text : null,
+				filter: this.filterCriteria ? this.filterCriteria.text : null,
 				force: true,
 				// Replace cached message list on reload
 				replace: reload,
