@@ -45,7 +45,7 @@ var Mail = {
 		var currentAccountId = null;
 		var currentMessageId = null;
 		var currentMessageSubject = null;
-		var currentMessageBody = ''; 
+		var currentMessageBody = '';
 		var messagesLoading = null;
 		var messageLoading = null;
 
@@ -995,13 +995,13 @@ var Mail = {
 		};
 
 		this.openForwardComposer = function() {
-			var header = '-------- ' +
+			var header = '\n\n\n\n-------- ' +
 				t('mail', 'Forwarded message') +
 				" --------\n";
 
 			// TODO: find a better way to get the current message body
 			var data = {
-				subject: 'FWD: ' + Mail.State.currentMessageSubject,
+				subject: 'Fwd: ' + Mail.State.currentMessageSubject,
 				body: header + Mail.State.currentMessageBody.replace(/<br \/>/g, "\n")
 			};
 
@@ -1186,7 +1186,7 @@ var Mail = {
 
 					// Safe current mesages's content for later use (forward)
 					Mail.State.currentMessageBody = text;
-					
+
 					// Show forward button
 					$('#forward-button').show();
 				});
