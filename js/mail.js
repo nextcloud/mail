@@ -546,6 +546,7 @@ var Mail = {
 			options = options || {};
 			var defaults = {
 				cache: false,
+				replace: false, // Replace cached folder list
 				force: false,
 				onSuccess: function() {},
 				onError: function() {},
@@ -581,7 +582,7 @@ var Mail = {
 						filter: options.filter
 					},
 					success: function(messages) {
-						if (options.cache) {
+						if (options.replace || options.cache) {
 							Mail.Cache.addMessageList(accountId, folderId, messages);
 						}
 						options.onSuccess(messages, false);
