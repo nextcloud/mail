@@ -442,13 +442,12 @@ input.submit-message {
 }
 
 .star {
-	width: 22px;
-	height: 22px;
+	padding: 20px;
 	background-size: 16px;
 	display: inline-block;
 	position: absolute;
-	left: 25px;
-	top: 37px;
+	left: 16px;
+	top: 28px;
 	z-index: 10;
 }
 /* only show star on hover of row */
