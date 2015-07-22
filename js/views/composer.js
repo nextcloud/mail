@@ -84,7 +84,7 @@ views.Composer = Backbone.View.extend({
 			this.aliases = _.filter(options.aliases, function(item) {
 				return item.accountId !== -1;
 			});
-			this.accountId = this.aliases[0].accountId;
+			this.accountId = options.accountId || this.aliases[0].accountId;
 		} else {
 			this.accountId = options.accountId;
 			this.folderId = options.folderId;

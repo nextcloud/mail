@@ -44,6 +44,8 @@ var Mail = {
 		var currentFolderId = null;
 		var currentAccountId = null;
 		var currentMessageId = null;
+		var currentMessageSubject = null;
+		var currentMessageBody = '';
 		var messagesLoading = null;
 		var messageLoading = null;
 
@@ -82,6 +84,22 @@ var Mail = {
 				},
 				set: function(newId) {
 					currentMessageId = newId;
+				}
+			},
+			currentMessageSubject: {
+				get: function() {
+					return currentMessageSubject;
+				},
+				set: function(subject) {
+					currentMessageSubject = subject;
+				}
+			},
+			currentMessageBody: {
+				get: function() {
+					return currentMessageBody;
+				},
+				set: function(body) {
+					currentMessageBody = body;
 				}
 			},
 			messagesLoading: {
@@ -1013,6 +1031,24 @@ var Mail = {
 			Mail.UI.setMessageActive(null);
 		};
 
+		this.openForwardComposer = function() {
+			var header = '\n\n\n\n-------- ' +
+				t('mail', 'Forwarded message') +
+				" --------\n";
+
+			// TODO: find a better way to get the current message body
+			var data = {
+				subject: 'Fwd: ' + Mail.State.currentMessageSubject,
+				body: header + Mail.State.currentMessageBody.replace(/<br \/>/g, "\n")
+			};
+
+			if (Mail.State.currentAccountId !== -1) {
+				data.accountId = Mail.State.currentAccountId;
+			}
+
+			this.openComposer(data);
+		};
+
 		this.htmlToText = function (html) {
 			var breakToken = '__break_token__';
 			// Preserve line breaks
@@ -1077,6 +1113,7 @@ var Mail = {
 
 			// Set current Message as active
 			Mail.UI.setMessageActive(messageId);
+			Mail.State.currentMessageBody = '';
 
 			// Fade out the message composer
 			$('#mail_new_message').prop('disabled', false);
@@ -1102,6 +1139,12 @@ var Mail = {
 						date.getHours() + ':' + (minutes < 10 ? '0' : '') + minutes + '\n> ' +
 						text.replace(/\n/g, '\n> ');
 				}
+
+				// Save current messages's content for later use (forward)
+				if (!message.hasHtmlBody) {
+					Mail.State.currentMessageBody = message.body;
+				}
+				Mail.State.currentMessageSubject = message.subject;
 
 				// Render the message body
 				var source = $("#mail-message-template").html();
@@ -1130,6 +1173,11 @@ var Mail = {
 				replyComposer.render({
 					data: reply
 				});
+
+				// Hide forward button until the message has finished loading
+				if (message.hasHtmlBody) {
+					$('#forward-button').hide();
+				}
 
 				Mail.UI.messageView.setMessageFlag(messageId, 'unseen', false);
 
@@ -1174,6 +1222,11 @@ var Mail = {
 						replyComposer.setReplyBody(message.from, date, text);
 					}
 
+					// Safe current mesages's content for later use (forward)
+					Mail.State.currentMessageBody = text;
+
+					// Show forward button
+					$('#forward-button').show();
 				});
 			};
 
@@ -1460,6 +1513,10 @@ $(document).ready(function() {
 			}
 		};
 	})(), 1000);
+
+	$(document).on('click', '#forward-button', function() {
+		Mail.UI.openForwardComposer();
+	});
 
 	$(document).on('click', '#mail-message .attachment-save-to-cloud', function(event) {
 		event.stopPropagation();
