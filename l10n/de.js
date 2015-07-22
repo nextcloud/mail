@@ -3,6 +3,7 @@ OC.L10N.register(
     {
     "Mail" : "Mail",
     "Error while loading the accounts." : "Fehler beim Laden der Konten.",
+    "{from}\n{subject}" : "{from}\n{subject}",
     "_%n new message in {folderName} \nfrom {from}_::_%n new messages in {folderName} \nfrom {from}_" : ["%n neue Nachricht in {folderName} \nvon {from}","%n neue Nachrichten in {folderName} \nvon {from}"],
     "Error while loading the selected account." : "Fehler beim Laden des ausgewählten Kontos.",
     "Error while loading messages." : "Fehler beim Laden der Nachrichten.",
@@ -44,6 +45,7 @@ OC.L10N.register(
     "Auto detect failed. Please use manual mode." : "Automatische Erkennung fehlgeschlagen. Bitte nutze den manuellen Modus.",
     "Delete permanently" : "Endgültig löschen",
     "& others" : "& weitere",
+    "All inboxes" : "Alle Posteingänge",
     "from" : "von",
     "+ cc/bcc" : "+ CC/BCC",
     "to" : "an",
