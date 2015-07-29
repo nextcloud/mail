@@ -274,13 +274,20 @@ class MessagesController extends Controller {
 	 * @param int $accountId
 	 * @param string $folderId
 	 * @param string $messageId
-	 * @param boolean $starred
+	 * @param array $flags
 	 * @return JSONResponse
 	 */
-	public function toggleStar($accountId, $folderId, $messageId, $starred) {
+	public function setFlags($accountId, $folderId, $messageId, $flags) {
 		$mailBox = $this->getFolder($accountId, $folderId);
 
-		$mailBox->setMessageFlag($messageId, Horde_Imap_Client::FLAG_FLAGGED, !$starred);
+		foreach($flags as $flag => $value) {
+			$value = filter_var($value, FILTER_VALIDATE_BOOLEAN);
+			if ($flag === 'unseen') {
+				$flag = 'seen';
+				$value = !$value;
+			}
+			$mailBox->setMessageFlag($messageId, '\\'.$flag, $value);
+		}
 
 		return new JSONResponse();
 	}

@@ -281,7 +281,8 @@ class Message {
 		$headers[] = 'content-type';
 
 		$fetch_query->headers('imp', $headers, [
-			'cache' => true
+			'cache' => true,
+			'peek'  => true
 		]);
 
 		// $list is an array of Horde_Imap_Client_Data_Fetch objects.

@@ -39,9 +39,7 @@ views.Message = Backbone.Marionette.ItemView.extend({
 	toggleMessageStar: function(event) {
 		event.stopPropagation();
 
-		var messageId = this.model.id;
 		var starred = this.model.get('flags').get('flagged');
-		var thisModel = this.model;
 
 		// directly change star state in the interface for quick feedback
 		if(starred) {
@@ -53,26 +51,10 @@ views.Message = Backbone.Marionette.ItemView.extend({
 				.removeClass('icon-star')
 				.addClass('icon-starred');
 		}
-
-		$.ajax(
-			OC.generateUrl('apps/mail/accounts/{accountId}/folders/{folderId}/messages/{messageId}/toggleStar',
-			{
-				accountId: Mail.State.currentAccountId,
-				folderId: Mail.State.currentFolderId,
-				messageId: messageId
-			}), {
-				data: {
-					starred: starred
-				},
-				type:'POST',
-				success: function () {
-					thisModel.get('flags').set('flagged', !starred);
-				},
-				error: function() {
-					Mail.UI.showError(t('mail', 'Message could not be starred. Please try again.'));
-					thisModel.get('flags').set('flagged', starred);
-				}
-			});
+		this.model.flagMessage(
+			'flagged',
+			!starred
+		);
 	},
 
 	openMessage: function(event) {
@@ -193,9 +175,7 @@ views.Messages = Backbone.Marionette.CompositeView.extend({
 	setMessageFlag: function(messageId, flag, val) {
 		var message = this.collection.get(messageId);
 		if (message) {
-			message
-				.get('flags')
-				.set(flag, val);
+			message.flagMessage(flag, val);
 		}
 	},
 
