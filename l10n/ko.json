@@ -1,6 +1,7 @@
 { "translations": {
     "Mail" : "메일",
     "Error while loading the accounts." : "계정을 불러오는 중 오류가 발생하였습니다.",
+    "{from}\n{subject}" : "{from}\n{subject}",
     "_%n new message in {folderName} \nfrom {from}_::_%n new messages in {folderName} \nfrom {from}_" : ["{folderName}에 {from} 님이 보낸 \n새 메시지 %n개"],
     "Error while loading the selected account." : "선택한 계정을 불러오는 중 오류가 발생하였습니다.",
     "Error while loading messages." : "메시지를 불러오는 중 오류가 발생하였습니다.",
@@ -23,6 +24,7 @@
     "Sending …" : "보내는 중...",
     "Message sent!" : "메시지를 보냈습니다!",
     "you" : "나",
+    "Send message to {email}" : "{email}(으)로 이메일 보내기",
     "Message could not be starred. Please try again." : "메시지에 별표를 붙일 수 없습니다. 다시 시도해 주십시오.",
     "Error while deleting message." : "메시지를 삭제하는 중 오류가 발생하였습니다.",
     "Checking mail …" : "메일 확인 중...",
@@ -41,6 +43,7 @@
     "Auto detect failed. Please use manual mode." : "자동 감지가 실패하였습니다. 수동 모드를 사용하십시오.",
     "Delete permanently" : "영구히 삭제",
     "& others" : "및 그 외",
+    "All inboxes" : "모든 받은 편지함",
     "from" : "보낸 사람",
     "+ cc/bcc" : "+ 참조/숨은 참조",
     "to" : "받는 사람",
