@@ -323,7 +323,10 @@ var Mail = {
 								// send notification
 								if (f.newUnReadCounter > 0) {
 									Mail.UI.changeFavicon(OC.filePath('mail', 'img', 'favicon-notification.png'));
-									Mail.BackGround.showMailNotification(localAccount.get('email'), f);
+									// only show one notification
+									if (Mail.State.accounts.length === 1 || a.accountId === -1) {
+										Mail.BackGround.showMailNotification(localAccount.get('email'), f);
+									}
 								}
 
 								// update folder status
