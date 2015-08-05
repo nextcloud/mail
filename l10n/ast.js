@@ -51,6 +51,7 @@ OC.L10N.register(
     "Download attachment" : "Descargar axuntu",
     "Save to Files" : "Guardar en Ficheros",
     "Save all to Files" : "Guardar too en Ficheros",
+    "Forward" : "Reunviar",
     "Delete" : "Desaniciar",
     "No messages in this folder!" : "¡Nun hai mensaxes nesta carpeta!",
     "Connect your mail account" : "Coneuta la to cuenta de corréu",

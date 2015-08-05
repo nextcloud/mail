@@ -55,6 +55,7 @@ OC.L10N.register(
     "Download attachment" : "Stiahnuť prílohu",
     "Save to Files" : "Uložiť do súborov",
     "Save all to Files" : "Uložiť všetko do Súborov",
+    "Forward" : "Preposlať",
     "Delete" : "Zmazať",
     "Add mail account" : "Pridať mailový účet",
     "No messages in this folder!" : "V priečinku nie sú žiadne správy!",

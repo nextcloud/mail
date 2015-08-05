@@ -58,6 +58,7 @@ OC.L10N.register(
     "Download attachment" : "Преузми прилог",
     "Save to Files" : "Сачувај у фајлове",
     "Save all to Files" : "Сачувај све у фајлове",
+    "Forward" : "Проследи",
     "Delete" : "Обриши",
     "Add mail account" : "Додај налог",
     "Looking to encrypt your emails? Install the <a href=\"https://www.mailvelope.com/\" target=\"_blank\">Mailvelope browser extension</a>!" : "Желите да шифрујете пошту? Инсталирајте <a href=\"https://www.mailvelope.com/\" target=\"_blank\">Mailvelope проширење прегледача</a>!",

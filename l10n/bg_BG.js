@@ -51,6 +51,7 @@ OC.L10N.register(
     "Download attachment" : "Изтегли прикачения файл",
     "Save to Files" : "Запази във Файлове",
     "Save all to Files" : "Запази всички във Файлове",
+    "Forward" : "Препрати",
     "Delete" : "Изтриване",
     "No messages in this folder!" : "Няма съобщение в тази папка!",
     "New message" : "Ново Съобщение",

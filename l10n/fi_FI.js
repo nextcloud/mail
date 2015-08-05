@@ -3,6 +3,7 @@ OC.L10N.register(
     {
     "Mail" : "Sähköposti",
     "Error while loading the accounts." : "Virhe tilejä ladatessa.",
+    "{from}\n{subject}" : "{from}\n{subject}",
     "_%n new message in {folderName} \nfrom {from}_::_%n new messages in {folderName} \nfrom {from}_" : ["%n uusi viesti kansiossa {folderName},\nlähettäjä {from}","%n uutta viestiä kansiossa {folderName},\nlähettäjä {from}"],
     "Error while loading the selected account." : "Virhe ladatessa valittua tiliä.",
     "Error while loading messages." : "Virhe viestejä ladatessa.",
@@ -12,6 +13,7 @@ OC.L10N.register(
     "Error while saving attachments to Files." : "Virhe tallennettaessa liitteitä tiedostoihin.",
     "Error while saving attachment to Files." : "Virhe tallennettaessa liitettä tiedostoihin.",
     "Opening HTML drafts is not supported yet." : "HTML-luonnosten avaaminen ei ole vielä tuettu ominaisuus.",
+    "Forwarded message" : "Edelleenlähetetty viesti",
     "Error while loading the selected message." : "Virhe ladatessa valittua viestiä.",
     "Draft saved!" : "Luonnos tallennettu!",
     "Connecting …" : "Yhdistetään…",
@@ -56,6 +58,7 @@ OC.L10N.register(
     "Download attachment" : "Lataa liite",
     "Save to Files" : "Tallenna tiedostosovellukseen",
     "Save all to Files" : "Tallenna kaikki tiedostosovellukseen",
+    "Forward" : "Välitä",
     "Delete" : "Poista",
     "Add mail account" : "Lisää sähköpostitili",
     "Looking to encrypt your emails? Install the <a href=\"https://www.mailvelope.com/\" target=\"_blank\">Mailvelope browser extension</a>!" : "Aiotko salata sähköpostisi? Asenna <a href=\"https://www.mailvelope.com/\" target=\"_blank\">Mailvelope-selainlaajennus</a>!",

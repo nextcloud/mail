@@ -60,6 +60,7 @@ OC.L10N.register(
     "Download attachment" : "Unduh lampiran",
     "Save to Files" : "Simpan ke Berkas",
     "Save all to Files" : "Simpan semua ke Berkas",
+    "Forward" : "Teruskan",
     "Delete" : "Hapus",
     "Add mail account" : "Tambah akun email",
     "Looking to encrypt your emails? Install the <a href=\"https://www.mailvelope.com/\" target=\"_blank\">Mailvelope browser extension</a>!" : "Ingin mengenkripsi email Anda? Instal <a href=\"https://www.mailvelope.com/\" target=\"_blank\">ekstensi peramban Mailvelope</a>!",

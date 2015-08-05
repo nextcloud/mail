@@ -60,6 +60,7 @@ OC.L10N.register(
     "Download attachment" : "Last ned vedlegg",
     "Save to Files" : "Lagre i Filer",
     "Save all to Files" : "Lagre alle til Filer",
+    "Forward" : "Videresend",
     "Delete" : "Slett",
     "Add mail account" : "Legg til epost-konto",
     "Looking to encrypt your emails? Install the <a href=\"https://www.mailvelope.com/\" target=\"_blank\">Mailvelope browser extension</a>!" : "Ønsker du å kryptere e-postene dine? Installer <a href=\"https://www.mailvelope.com/\" target=\"_blank\">Mailvelope nettleser-utvidelse</a>!",

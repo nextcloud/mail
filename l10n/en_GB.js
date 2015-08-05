@@ -57,6 +57,7 @@ OC.L10N.register(
     "Download attachment" : "Download attachment",
     "Save to Files" : "Save to Files",
     "Save all to Files" : "Save all to Files",
+    "Forward" : "Forward",
     "Delete" : "Delete",
     "Add mail account" : "Add mail account",
     "Looking to encrypt your emails? Install the <a href=\"https://www.mailvelope.com/\" target=\"_blank\">Mailvelope browser extension</a>!" : "Looking to encrypt your emails? Install the <a href=\"https://www.mailvelope.com/\" target=\"_blank\">Mailvelope browser extension</a>!",

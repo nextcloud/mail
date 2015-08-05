@@ -60,6 +60,7 @@ OC.L10N.register(
     "Download attachment" : "Eki indir",
     "Save to Files" : "Dosyalara Kaydet",
     "Save all to Files" : "Tümünü Dosyalara Kaydet",
+    "Forward" : "İlet",
     "Delete" : "Sil",
     "Add mail account" : "Posta hesabı ekle",
     "Looking to encrypt your emails? Install the <a href=\"https://www.mailvelope.com/\" target=\"_blank\">Mailvelope browser extension</a>!" : "E-postalarınızı şifrelemek mi istiyorsunuz? <a href=\"https://www.mailvelope.com/\" target=\"_blank\">Mailvelope tarayıcı uzantısını</a> yükleyin!",

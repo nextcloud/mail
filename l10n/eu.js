@@ -50,6 +50,7 @@ OC.L10N.register(
     "Download attachment" : "Deskargatu eranskina",
     "Save to Files" : "Gorde Fitxategiak-en",
     "Save all to Files" : "Gorde dena Fitxategiak-en",
+    "Forward" : "Birbidali",
     "Delete" : "Ezabatu",
     "No messages in this folder!" : "Ez dago mezurik karpeta honetan!",
     "Connect your mail account" : "Zure posta kontua konektatu",

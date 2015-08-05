@@ -60,6 +60,7 @@ OC.L10N.register(
     "Download attachment" : "Скачать вложение",
     "Save to Files" : "Сохранить в Файлы",
     "Save all to Files" : "Сохранить всё в Файлы",
+    "Forward" : "Переслать",
     "Delete" : "Удалить",
     "Add mail account" : "Добавить почтовую учетную запись",
     "Looking to encrypt your emails? Install the <a href=\"https://www.mailvelope.com/\" target=\"_blank\">Mailvelope browser extension</a>!" : "Хотите зашифровать свою почту? Установите <a href=\"https://www.mailvelope.com/\" target=\"_blank\">расширение для браузера Mailvelope</a>!",

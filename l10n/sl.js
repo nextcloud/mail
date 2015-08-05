@@ -57,6 +57,7 @@ OC.L10N.register(
     "Download attachment" : "Prejmi prilogo",
     "Save to Files" : "Shrani v mapo datotek",
     "Save all to Files" : "Shrani vse v mapo datotek",
+    "Forward" : "Posreduj",
     "Delete" : "Izbriši",
     "Add mail account" : "Dodaj poštni račun",
     "No search results for {{searchTerm}}" : "Ni zadetkov iskanja za {{searchTerm}}",

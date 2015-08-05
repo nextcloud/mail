@@ -51,6 +51,7 @@ OC.L10N.register(
     "Download attachment" : "Əlavəni endir",
     "Save to Files" : "Fayllarda saxla",
     "Save all to Files" : "Hər şeyi fayllarda saxla",
+    "Forward" : "Yönləndir",
     "Delete" : "Sil",
     "No messages in this folder!" : "Bu qovluqda heç bir mesaj yoxdur!",
     "Connect your mail account" : "Mail hesabınızı qoşun",
