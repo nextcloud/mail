@@ -1,4 +1,5 @@
-/* global Mail */
+/* global Mail, OC */
+
 $(document).ready(function() {
 
 	// delete account in settings
@@ -12,6 +13,9 @@ $(document).ready(function() {
 			data: {accountId:accountId},
 			type: 'DELETE',
 			success: function() {
+				// Delete cached message lists
+				Mail.Cache.removeAccount(accountId);
+
 				// reload the complete page
 				// TODO should only reload the app nav/content
 				window.location.reload();

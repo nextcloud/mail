@@ -123,8 +123,11 @@ var Mail = {
 	})(),
 	Cache: (function () {
 		var MessageCache = {
+			getAccountPath: function(accountId) {
+				return ['messages', accountId.toString()].join('.');
+			},
 			getFolderPath: function(accountId, folderId) {
-				return ['messages', accountId.toString(), folderId.toString()].join('.');
+				return [this.getAccountPath(accountId), folderId.toString()].join('.');
 			},
 			getMessagePath: function(accountId, folderId, messageId) {
 				return [this.getFolderPath(accountId, folderId), messageId.toString()].join('.');
@@ -132,8 +135,11 @@ var Mail = {
 		};
 
 		var FolderCache = {
+			getAccountPath: function(accountId) {
+				return ['folders', accountId.toString()].join('.');
+			},
 			getFolderPath: function(accountId, folderId) {
-				return ['folders', accountId.toString(), folderId.toString()].join('.');
+				return [this.getAccountPath(accountId), folderId.toString()].join('.');
 			}
 		};
 
@@ -220,6 +226,28 @@ var Mail = {
 				var storage = $.localStorage;
 				var path = FolderCache.getFolderPath(accountId, folderId);
 				storage.set(path, messages);
+			},
+			removeAccount: function(accountId) {
+				// Remove cached message lists
+				var storage = $.localStorage;
+				var path = FolderCache.getAccountPath(accountId);
+				if (storage.isSet(path)) {
+					storage.remove(path);
+				}
+
+				// Remove cached messages
+				path = MessageCache.getAccountPath(accountId);
+				if (storage.isSet(path)) {
+					storage.remove(path);
+				}
+
+				// Unified inbox hack
+				if (accountId !== -1) {
+					// Make sure unified inbox cache is cleared to prevent
+					// old message showing up on the next load
+					this.removeAccount(-1);
+				}
+				// End unified inbox hack
 			}
 		};
 	})(),
