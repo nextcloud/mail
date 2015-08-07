@@ -265,7 +265,7 @@ views.Composer = Backbone.View.extend({
 		// send the mail
 		var _this = this;
 		var options = {
-			accountId: this.accountId,
+			accountId: this.$('.mail-account').find(":selected").val(),
 			draftUID: this.draftUID,
 			success: function () {
 				OC.Notification.showTemporary(t('mail', 'Message sent!'));
@@ -317,7 +317,7 @@ views.Composer = Backbone.View.extend({
 			options.folderId = this.folderId;
 		}
 
-		this.submitCallback(this.accountId, this.getMessage(), options);
+		this.submitCallback(options.accountId, this.getMessage(), options);
 		return false;
 	},
 
