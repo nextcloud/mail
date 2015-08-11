@@ -320,7 +320,7 @@ views.Composer = Backbone.View.extend({
 		if (this.isReply()) {
 			// the account-id is not available when replying from unified inbox
 			// we get the account-id by the account mail address from the message
-			if (this.accountId == -1) {
+			if (this.accountId === -1) {
 				var account = null;
  
 				var messageViewObject = Mail.State.messageView.collection.get({id: this.messageId});
