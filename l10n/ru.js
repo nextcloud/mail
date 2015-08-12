@@ -13,6 +13,7 @@ OC.L10N.register(
     "Error while saving attachments to Files." : "Ошибка сохранения вложений в Файлах.",
     "Error while saving attachment to Files." : "Ошибка сохранения вложения в Файлах.",
     "Opening HTML drafts is not supported yet." : "Работа с черновиками HTML пока не поддерживается.",
+    "Forwarded message" : "Пересланное сообщение",
     "Error while loading the selected message." : "Ошибка при загрузке выбранного сообщения.",
     "Draft saved!" : "Черновик сохранен!",
     "Connecting …" : "Соединение ...",
