@@ -333,7 +333,7 @@ views.Composer = Backbone.View.extend({
 				});
 
 				this.accountId    = account.accountId;
-				options.accountId = account.accountId; 
+				options.accountId = account.accountId;
 			} else {
 				options.messageId = this.messageId;
 				options.folderId = this.folderId;
