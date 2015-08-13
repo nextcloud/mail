@@ -262,6 +262,11 @@ views.Composer = Backbone.View.extend({
 		newMessageSend.prop('disabled', true);
 		newMessageSend.val(t('mail', 'Sending …'));
 
+		// if available get account from drop-down list
+		if (this.$('.mail-account').length > 0) {
+			this.accountId = this.$('.mail-account').find(":selected").val();
+		}
+
 		// send the mail
 		var _this = this;
 		var options = {
@@ -313,8 +318,26 @@ views.Composer = Backbone.View.extend({
 		};
 
 		if (this.isReply()) {
-			options.messageId = this.messageId;
-			options.folderId = this.folderId;
+			// the account-id is not available when replying from unified inbox
+			// we get the account-id by the account mail address from the message
+			if (this.accountId === -1) {
+				var account = null;
+ 
+				var messageViewObject = Mail.State.messageView.collection.get({id: this.messageId});
+				var accountMail = messageViewObject.attributes.accountMail;
+				Mail.State.accounts.some(function (obj) {
+					if (obj.emailAddress === accountMail) {
+						account = obj;
+						return true;
+					}
+				});
+
+				this.accountId    = account.accountId;
+				options.accountId = account.accountId;
+			} else {
+				options.messageId = this.messageId;
+				options.folderId = this.folderId;
+			}
 		}
 
 		this.submitCallback(this.accountId, this.getMessage(), options);
