@@ -370,10 +370,16 @@ var Mail = {
 									Mail.UI.messageView.collection.add(f.messages);
 								}
 
+                                                                // Save new messages to the cached message list
+								var cachedList = Mail.Cache.getMessageList(f.accountId, f.id);
+								if (cachedList) {
+									cachedList = cachedList.concat(f.messages);
+									Mail.Cache.addMessageList(f.accountId, f.id, cachedList);
+								}
+
 								Mail.State.folderView.updateTitle();
 							});
 						}
-
 					}
 				);
 			});
