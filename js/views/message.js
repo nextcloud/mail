@@ -231,7 +231,7 @@ views.Messages = Backbone.Marionette.CompositeView.extend({
 		// Add loading feedback
 		$('#load-new-mail-messages')
 			.addClass('icon-loading-small')
-			.val(t('mail', 'Checking mail …'))
+			.val(t('mail', 'Checking messages …'))
 			.prop('disabled', true);
 
 		this.loadMessages(true);
