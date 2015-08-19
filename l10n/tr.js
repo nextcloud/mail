@@ -29,7 +29,6 @@ OC.L10N.register(
     "Send message to {email}" : "{email} adresine ileti gönder",
     "Message could not be starred. Please try again." : "İleti yıldızlanamadı. Lütfen yeniden deneyin.",
     "Error while deleting message." : "İleti silinirken hata.",
-    "Checking mail …" : "Posta denetleniyor...",
     "Loading …" : "Yükleniyor...",
     "Load more …" : "Daha fazla yükle...",
     "Check messages …" : "Mesajları denetle ...",

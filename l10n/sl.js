@@ -27,7 +27,6 @@ OC.L10N.register(
     "Send message to {email}" : "Pošlji sporočilo na {email}",
     "Message could not be starred. Please try again." : "Sporočila ni mogoče označiti z zvezdico. Poskusite znova.",
     "Error while deleting message." : "Napaka med brisanjem sporočila.",
-    "Checking mail …" : "Poteka preverjanje elektronske pošte ...",
     "Loading …" : "Nalaganje ...",
     "Load more …" : "Naloži več ...",
     "Check messages …" : "Preverjanje za nova sporočila...",

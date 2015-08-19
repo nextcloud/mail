@@ -28,7 +28,6 @@ OC.L10N.register(
     "Send message to {email}" : "Пошаљи поруку на {email}",
     "Message could not be starred. Please try again." : "Порука се не може „озвездати“. Покушајте поново.",
     "Error while deleting message." : "Грешка при брисању поруке.",
-    "Checking mail …" : "Проверавам пошту...",
     "Loading …" : "Учитавам...",
     "Load more …" : "Учитај још...",
     "Check messages …" : "Провери поруке…",

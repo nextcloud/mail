@@ -28,7 +28,6 @@
     "Send message to {email}" : "{email}(으)로 이메일 보내기",
     "Message could not be starred. Please try again." : "메시지에 별표를 붙일 수 없습니다. 다시 시도해 주십시오.",
     "Error while deleting message." : "메시지를 삭제하는 중 오류가 발생하였습니다.",
-    "Checking mail …" : "메일 확인 중...",
     "Loading …" : "불러오는 중...",
     "Load more …" : "더 가져오기...",
     "Check messages …" : "메시지 확인 중...",

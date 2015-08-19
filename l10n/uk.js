@@ -28,7 +28,6 @@ OC.L10N.register(
     "you" : "ви",
     "Message could not be starred. Please try again." : "Не вдалося відмітити повідомлення. Будь ласка, спробуйте ще раз.",
     "Error while deleting message." : "Помилка видалення повідомлення.",
-    "Checking mail …" : "Перевірка пошту ...",
     "Loading …" : "Завантаження...",
     "Load more …" : "Завантажити ще ...",
     "Check messages …" : "Перевірити повідомлення ...",

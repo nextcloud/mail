@@ -28,7 +28,6 @@
     "Send message to {email}" : "ส่งข้อความไปยัง {email}",
     "Message could not be starred. Please try again." : "ไม่สามารถเริ่มต้นข้อความ โปรดลองอีกครั้ง",
     "Error while deleting message." : "ข้อผิดพลาดขณะลบข้อความ",
-    "Checking mail …" : "การตรวจสอบอีเมล ...",
     "Loading …" : "กำลังโหลด ...",
     "Load more …" : "โหลดเพิ่มเติม ...",
     "Check messages …" : "ตรวจสอบข้อความ ...",

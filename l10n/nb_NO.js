@@ -29,7 +29,6 @@ OC.L10N.register(
     "Send message to {email}" : "Send melding til {email}",
     "Message could not be starred. Please try again." : "Klarte ikke å merke melding. Prøv igjen.",
     "Error while deleting message." : "Feil ved sletting av melding.",
-    "Checking mail …" : "Sjekker e-post …",
     "Loading …" : "Laster...",
     "Load more …" : "Last mer ...",
     "Check messages …" : "Sjekk meldinger ...",

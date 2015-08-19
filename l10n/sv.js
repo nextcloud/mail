@@ -26,7 +26,6 @@ OC.L10N.register(
     "you" : "du",
     "Message could not be starred. Please try again." : "Meddelande kan inte starta. Försök igen.",
     "Error while deleting message." : "Fel vid radering av  meddelande.",
-    "Checking mail …" : "Kontrollerar e-post ...",
     "Loading …" : "Laddar ...",
     "Load more …" : "Ladda mer ...",
     "Check messages …" : "Kontrollera meddelanden ...",

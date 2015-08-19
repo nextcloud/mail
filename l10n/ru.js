@@ -30,7 +30,6 @@ OC.L10N.register(
     "Send message to {email}" : "Отправить сообщения на {email}",
     "Message could not be starred. Please try again." : "Не удалось пометить сообщение. Попробуйте снова.",
     "Error while deleting message." : "Ошибка при удалении сообщения.",
-    "Checking mail …" : "Проверка почты ...",
     "Loading …" : "Идёт загрузка ...",
     "Load more …" : "Загрузить больше ...",
     "Check messages …" : "Проверяем сообщения ...",

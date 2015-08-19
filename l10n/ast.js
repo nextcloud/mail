@@ -23,7 +23,6 @@ OC.L10N.register(
     "you" : "tu",
     "Message could not be starred. Please try again." : "El mensaxe nun se puede marcar como favoritu. Inténtalo más tarde.",
     "Error while deleting message." : "Fallu desaniciando'l mensaxe",
-    "Checking mail …" : "Comprobando'l corréu...",
     "Loading …" : "Cargando ...",
     "Load more …" : "Cargar más …",
     "Inbox" : "Bandexa d'entrada",

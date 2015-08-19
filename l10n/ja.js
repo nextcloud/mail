@@ -30,7 +30,6 @@ OC.L10N.register(
     "Send message to {email}" : "{email} にメッセージを送信",
     "Message could not be starred. Please try again." : "メッセージにスターをつけられませんでした。再試行してください。",
     "Error while deleting message." : "メッセージ削除中にエラーが発生",
-    "Checking mail …" : "メール確認中...",
     "Loading …" : "読込中...",
     "Load more …" : "読込中 …",
     "Check messages …" : "メッセージをチェック…",

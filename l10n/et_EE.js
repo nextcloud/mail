@@ -30,7 +30,6 @@ OC.L10N.register(
     "Send message to {email}" : "Saada kiri aadressile {email}",
     "Message could not be starred. Please try again." : "Sõnumit ei õnnestunud tärniga märkida. Palun proovi uuesti.",
     "Error while deleting message." : "Tõrge sõnumi kustutamisel.",
-    "Checking mail …" : "Uute kirjade kontrollimine ...",
     "Loading …" : "Laadimine ...",
     "Load more …" : "Laadi rohkem ...",
     "Check messages …" : "Kontrolli sõnumeid ...",

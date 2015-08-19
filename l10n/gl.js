@@ -30,7 +30,6 @@ OC.L10N.register(
     "Send message to {email}" : "Enviar mensaxe a {email}",
     "Message could not be starred. Please try again." : "A mensaxe non foi destacada. Ténteo de novo.",
     "Error while deleting message." : "Produciuse un erro ao eliminar a mensaxe.",
-    "Checking mail …" : "Comprobando o correo ...",
     "Loading …" : "Cargando ...",
     "Load more …" : "Cargar máis ...",
     "Check messages …" : "Comprobar mensaxes ...",

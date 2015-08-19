@@ -25,7 +25,6 @@ OC.L10N.register(
     "you" : "vy",
     "Message could not be starred. Please try again." : "Správa nemohla byť označená hviezdičkou. Skúste to znovu.",
     "Error while deleting message." : "Chyba pri mazaní správy.",
-    "Checking mail …" : "Kontrolujem email ...",
     "Loading …" : "Načítavam...",
     "Load more …" : "Načítať ďalšie ...",
     "Check messages …" : "Kontrolujem správy ...",

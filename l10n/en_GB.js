@@ -27,7 +27,6 @@ OC.L10N.register(
     "you" : "you",
     "Message could not be starred. Please try again." : "Message could not be starred. Please try again.",
     "Error while deleting message." : "Error whilst deleting message.",
-    "Checking mail …" : "Checking mail…",
     "Loading …" : "Loading…",
     "Load more …" : "Load more…",
     "Check messages …" : "Check messages …",

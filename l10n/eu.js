@@ -22,7 +22,6 @@ OC.L10N.register(
     "Sending …" : "Bidaltzen...",
     "you" : "zu",
     "Error while deleting message." : "Errorea mezua ezabatzean.",
-    "Checking mail …" : "Postari dagoen begiratzen ...",
     "Loading …" : "Kargatzen ...",
     "Load more …" : "Kargatu gehiago...",
     "Inbox" : "Sarrera ontzia",
