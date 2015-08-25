@@ -50,7 +50,7 @@ script('mail', 'jquery-visibility');
 		<div class="mail-message-account-color" style="background-color: {{accountColor accountMail}}"></div>
 		{{/if}}
 		<div class="mail-message-header">
-			<div class="sender-image">
+			<div class="sender-image avatardiv">
 				{{#if senderImage}}
 				<img src="{{senderImage}}" width="32px" height="32px" />
 				{{else}}
@@ -180,7 +180,7 @@ script('mail', 'jquery-visibility');
 		</select>
 		{{/unless}}
 		<div class="composer-fields">
-			<a href="#" class="composer-cc-bcc-toggle transparency 
+			<a href="#" class="composer-cc-bcc-toggle transparency
                                 {{#ifHasCC replyCc replyCcList}}
 				hidden
 				{{/ifHasCC}}"><?php p($l->t('+ cc/bcc')); ?></a>
