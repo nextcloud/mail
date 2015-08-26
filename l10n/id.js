@@ -30,6 +30,7 @@ OC.L10N.register(
     "Send message to {email}" : "Kirim pesan ke {email}",
     "Message could not be starred. Please try again." : "Pesan tidak dapat dibintangi. Silakan coba lagi.",
     "Error while deleting message." : "Terjadi kesalahan saat menghapus pesan.",
+    "Checking messages …" : "Memeriksa pasan ...",
     "Loading …" : "Memuat ...",
     "Load more …" : "Muat lebih banyak ...",
     "Check messages …" : "Periksa pesan ...",

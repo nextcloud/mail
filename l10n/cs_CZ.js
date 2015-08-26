@@ -30,6 +30,7 @@ OC.L10N.register(
     "Send message to {email}" : "Poslat email na {email}",
     "Message could not be starred. Please try again." : "Zpráva nemohla být označena hvězdičkou. Zkuste to prosím znovu.",
     "Error while deleting message." : "Chyba při mazání zprávy.",
+    "Checking messages …" : "Kontrola zpráv ...",
     "Loading …" : "Načítání ...",
     "Load more …" : "Načíst další ...",
     "Check messages …" : "Zkontrolovat zprávy ...",

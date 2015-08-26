@@ -28,6 +28,7 @@
     "Send message to {email}" : "Envoyer un mail à {email}",
     "Message could not be starred. Please try again." : "Le message n'a pu être placé parmi les favoris. Veuillez essayer à nouveau.",
     "Error while deleting message." : "Erreur lors de la suppression du message.",
+    "Checking messages …" : "Relève du courrier...",
     "Loading …" : "Chargement ...",
     "Load more …" : "Charger plus ...",
     "Check messages …" : "Relever le courrier",

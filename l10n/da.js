@@ -30,6 +30,7 @@ OC.L10N.register(
     "Send message to {email}" : "Send besked til {email}",
     "Message could not be starred. Please try again." : "Beskeden kunne ikke sternemarkeres. Forsøg venligst igen.",
     "Error while deleting message." : "Fejl under sletning af besked.",
+    "Checking messages …" : "Tjek efter beskeder...",
     "Loading …" : "Indlæser...",
     "Load more …" : "Indlæs flere ...",
     "Check messages …" : "Tjek efter beskeder...",

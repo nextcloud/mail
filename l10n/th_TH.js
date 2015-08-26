@@ -30,6 +30,7 @@ OC.L10N.register(
     "Send message to {email}" : "ส่งข้อความไปยัง {email}",
     "Message could not be starred. Please try again." : "ไม่สามารถเริ่มต้นข้อความ โปรดลองอีกครั้ง",
     "Error while deleting message." : "ข้อผิดพลาดขณะลบข้อความ",
+    "Checking messages …" : "กำลังตรวจสอบข้อความ ...",
     "Loading …" : "กำลังโหลด ...",
     "Load more …" : "โหลดเพิ่มเติม ...",
     "Check messages …" : "ตรวจสอบข้อความ ...",

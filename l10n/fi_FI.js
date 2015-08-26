@@ -30,6 +30,7 @@ OC.L10N.register(
     "Send message to {email}" : "Lähetä viesti osoitteeseen {email}",
     "Message could not be starred. Please try again." : "Tähden lisääminen viestille epäonnistui. Yritä uudelleen.",
     "Error while deleting message." : "Virhe viestiä poistaessa.",
+    "Checking messages …" : "Tarkistetaan viestejä…",
     "Loading …" : "Ladataan…",
     "Load more …" : "Lataa lisää…",
     "Check messages …" : "Tarkista viestit…",

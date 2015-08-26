@@ -30,6 +30,7 @@ OC.L10N.register(
     "Send message to {email}" : "Enviar mensaje a {email}",
     "Message could not be starred. Please try again." : "El mensaje no se pudo marcar como favorito. Vuelva a intentarlo.",
     "Error while deleting message." : "Error al eliminar el mensaje.",
+    "Checking messages …" : "Comprobando mensajes ...",
     "Loading …" : "Cargando...",
     "Load more …" : "Cargar más...",
     "Check messages …" : "Comprobar mensajes...",

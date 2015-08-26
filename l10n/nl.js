@@ -30,6 +30,7 @@ OC.L10N.register(
     "Send message to {email}" : "Versturen bericht naar {email}",
     "Message could not be starred. Please try again." : "Bericht kon niet als gemarkeerd worden. Probeer het opnieuw.",
     "Error while deleting message." : "Fout bij verwijderen berichtn",
+    "Checking messages …" : "Controleren berichten ...",
     "Loading …" : "Laden...",
     "Load more …" : "Laad meer ...",
     "Check messages …" : "Controleren berichten ...",

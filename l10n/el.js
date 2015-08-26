@@ -30,6 +30,7 @@ OC.L10N.register(
     "Send message to {email}" : "Αποστολή μηνύματος σε {email}",
     "Message could not be starred. Please try again." : "Το μήνυμα δεν ήταν εφικτό να επισημανθεί με αστέρι. Παρακαλώ προσπαθήστε ξανά.",
     "Error while deleting message." : "Σφάλμα κατά τη διαγραφή του μηνύματος",
+    "Checking messages …" : "Έλεγχος μηνυμάτων ...",
     "Loading …" : "Φόρτωση ...",
     "Load more …" : "Φόρτωση περισσότερων...",
     "Check messages …" : "Έλεγχος μηνυμάτων ...",
