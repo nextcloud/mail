@@ -1216,6 +1216,7 @@ var Mail = {
 					$('#forward-button').hide();
 				}
 
+//				Mail.UI.messageView.flagMessage(messageId, 'seen', true);
 				Mail.UI.messageView.setMessageFlag(messageId, 'unseen', false);
 
 				// HTML mail rendering

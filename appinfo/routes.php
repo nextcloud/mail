@@ -28,9 +28,9 @@ $app->registerRoutes($this,
 				'url' => '/accounts/{accountId}/folders/{folderId}/messages/{messageId}/html',
 				'verb' => 'GET'],
 			[
-				'name' => 'messages#toggleStar',
-				'url' => '/accounts/{accountId}/folders/{folderId}/messages/{messageId}/toggleStar',
-				'verb' => 'POST'],
+				'name' => 'messages#setFlags',
+				'url' => '/accounts/{accountId}/folders/{folderId}/messages/{messageId}/flags',
+				'verb' => 'PUT'],
 			[
 				'name' => 'proxy#redirect',
 				'url' => '/redirect',

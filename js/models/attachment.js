@@ -1,4 +1,4 @@
-/* global Backbone, _ */
+/* global Backbone, Mail, _ */
 var models = {};
 
 models.Attachment = Backbone.Model.extend({
@@ -50,7 +50,34 @@ models.Message = Backbone.Model.extend({
 			data.id = this.cid;
 		}
 		return data;
+	},
+
+	flagMessage: function(flag, value) {
+		var messageId = this.id;
+		var thisModel = this;
+		thisModel.get('flags').set(flag, value);
+
+		var flags = [flag, value];
+		$.ajax(
+			OC.generateUrl('apps/mail/accounts/{accountId}/folders/{folderId}/messages/{messageId}/flags',
+				{
+					accountId: Mail.State.currentAccountId,
+					folderId: Mail.State.currentFolderId,
+					messageId: messageId
+				}), {
+				data: {
+					flags: _.object([flags])
+				},
+				type:'PUT',
+				success: function () {
+				},
+				error: function() {
+					Mail.UI.showError(t('mail', 'Message could not be starred. Please try again.'));
+					thisModel.get('flags').set(flag, !value);
+				}
+			});
 	}
+
 });
 
 models.MessageList = Backbone.Collection.extend({
