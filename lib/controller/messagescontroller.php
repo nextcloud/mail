@@ -153,6 +153,10 @@ class MessagesController extends Controller {
 			}, $json['attachments']);
 		}
 
+		// Add accountId, folderId for unified inbox replies
+		$json['accountId'] = $accountId;
+		$json['folderId'] = $folderId;
+
 		return new JSONResponse($json);
 	}
 

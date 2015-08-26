@@ -1203,9 +1203,9 @@ var Mail = {
 					type: 'reply',
 					onSubmit: Mail.Communication.sendMessage,
 					onDraft: Mail.Communication.saveDraft,
-					accountId: Mail.State.currentAccountId,
-					folderId: Mail.State.currentFolderId,
-					messageId: messageId
+					accountId: message.accountId,
+					folderId: message.folderId,
+					messageId: message.id
 				});
 				replyComposer.render({
 					data: reply
