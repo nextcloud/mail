@@ -91,7 +91,9 @@ views.Message = Backbone.Marionette.ItemView.extend({
 			}
 			// manually trigger mouseover event for current mouse position
 			// in order to create a tipsy for the next message if needed
-			$(document.elementFromPoint(event.clientX, event.clientY)).trigger('mouseover');
+			if(event.clientX) {
+			       $(document.elementFromPoint(event.clientX, event.clientY)).trigger('mouseover');
+			}
 		});
 
 		// really delete the message
