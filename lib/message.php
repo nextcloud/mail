@@ -45,18 +45,20 @@ class Message {
 	 * @param integer $messageId
 	 * @param \Horde_Imap_Client_Data_Fetch|null $fetch
 	 * @param boolean $loadHtmlMessage
+	 * @param Html|null $htmlService
 	 */
 	public function __construct($conn, $mailBox, $messageId, $fetch=null,
-		$loadHtmlMessage=false) {
+		$loadHtmlMessage=false, $htmlService = null) {
 		$this->conn = $conn;
 		$this->mailBox = $mailBox;
 		$this->messageId = $messageId;
 		$this->loadHtmlMessage = $loadHtmlMessage;
 
-		// TODO: inject ???
-//		$cacheDir = \OC::$server->getUserFolder() . '/mail/html-cache';
-//		$this->htmlService = new Html($cacheDir);
-		$this->htmlService = new Html();
+		$this->htmlService = $htmlService;
+		if (is_null($htmlService)) {
+			$urlGenerator = \OC::$server->getURLGenerator();
+			$this->htmlService = new Html($urlGenerator);
+		}
 
 		if ($fetch === null) {
 			$this->loadMessageBodies();

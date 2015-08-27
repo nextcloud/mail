@@ -45,6 +45,18 @@ class MessageTest extends \PHPUnit_Framework_TestCase {
 			->setMethods(['fetch'])
 			->getMock();
 
+		$urlGenerator = $this->getMockBuilder('\OCP\IURLGenerator')
+			->disableOriginalConstructor()
+			->getMock();
+
+		//linkToRoute 'mail.proxy.proxy'
+		$urlGenerator->expects($this->any())
+			->method('linkToRoute')
+			->will($this->returnCallback(function ($url) {
+				return "https://docs.example.com/server/go.php?to=$url";
+			}));
+		$htmlService = new \OCA\Mail\Service\Html($urlGenerator);
+
 		// mock first fetch
 		$firstFetch = new Horde_Imap_Client_Data_Fetch();
 		$firstPart = Horde_Mime_Part::parseMessage(file_get_contents(__DIR__ . '/data/mail-message-123.txt'), ['level' => 1]);
@@ -58,7 +70,7 @@ class MessageTest extends \PHPUnit_Framework_TestCase {
 			->willReturn($firstResult);
 
 
-		$message = new \OCA\Mail\Message($conn, 'INBOX', 123, null, true);
+		$message = new \OCA\Mail\Message($conn, 'INBOX', 123, null, true, $htmlService);
 		$htmlBody = $message->getHtmlBody(0, 0, 123, function() {return null;});
 		$this->assertTrue(strlen($htmlBody) > 1000);
 

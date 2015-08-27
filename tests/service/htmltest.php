@@ -23,7 +23,8 @@ class HtmlTest extends \PHPUnit_Framework_TestCase {
 	 * @param $text
 	 */
 	public function testLinkDetection($expected, $text){
-		$html = new Html();
+		$urlGenerator = \OC::$server->getURLGenerator();
+		$html = new Html($urlGenerator);
 		$withLinks = $html->convertLinks($text);
 		$this->assertSame($expected, $withLinks);
     }
@@ -55,18 +56,18 @@ class HtmlTest extends \PHPUnit_Framework_TestCase {
 	 * @param $text
 	 */
 	public function testParseMailBody($expectedBody, $expectedSignature, $text){
-
-		$html = new Html();
+		$urlGenerator = \OC::$server->getURLGenerator();
+		$html = new Html($urlGenerator);
 		list($b, $s) = $html->parseMailBody($text);
 		$this->assertSame($expectedBody, $b);
 		$this->assertSame($expectedSignature, $s);
 	}
 
 	public function parseMailBodyProvider() {
-		return array(
-			array('abc', null, 'abc'),
-			array('abc', 'def', "abc-- \r\ndef"),
-			array("abc-- \r\ndef", 'ghi', "abc-- \r\ndef-- \r\nghi"),
-		);
+		return [
+			['abc', null, 'abc'],
+			['abc', 'def', "abc-- \r\ndef"],
+			["abc-- \r\ndef", 'ghi', "abc-- \r\ndef-- \r\nghi"],
+		];
 	}
 }
