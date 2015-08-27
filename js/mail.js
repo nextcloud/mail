@@ -1205,7 +1205,7 @@ var Mail = {
 					onDraft: Mail.Communication.saveDraft,
 					accountId: message.accountId,
 					folderId: message.folderId,
-					messageId: message.id
+					messageId: message.messageId
 				});
 				replyComposer.render({
 					data: reply

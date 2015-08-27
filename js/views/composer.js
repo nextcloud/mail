@@ -270,7 +270,6 @@ views.Composer = Backbone.View.extend({
 		// send the mail
 		var _this = this;
 		var options = {
-			accountId: this.accountId,
 			draftUID: this.draftUID,
 			success: function () {
 				OC.Notification.showTemporary(t('mail', 'Message sent!'));
