@@ -17,20 +17,25 @@ use HTMLPurifier_Context;
 use HTMLPurifier_URI;
 use HTMLPurifier_URIFilter;
 use HTMLPurifier_URIParser;
+use OCP\IURLGenerator;
 use OCP\Util;
 
 class TransformURLScheme extends HTMLPurifier_URIFilter {
 	public $name = 'TransformURLScheme';
 	public $post = true;
 
+	/** @var IURLGenerator */
+	private $urlGenerator;
+
 	/**
 	 * @var \Closure
 	 */
 	private $mapCidToAttachmentId;
 
-	public function __construct($messageParameters, \Closure $mapCidToAttachmentId) {
+	public function __construct($messageParameters, \Closure $mapCidToAttachmentId, IURLGenerator $urlGenerator) {
 		$this->messageParameters = $messageParameters;
 		$this->mapCidToAttachmentId = $mapCidToAttachmentId;
+		$this->urlGenerator = $urlGenerator;
 	}
 
 	/**
@@ -56,7 +61,7 @@ class TransformURLScheme extends HTMLPurifier_URIFilter {
 			}
 			$this->messageParameters['attachmentId'] = $attachmentId;
 
-			$imgUrl = \OC::$server->getURLGenerator()->linkToRouteAbsolute('mail.messages.downloadAttachment', $this->messageParameters);
+			$imgUrl = $this->urlGenerator->linkToRouteAbsolute('mail.messages.downloadAttachment', $this->messageParameters);
 			$parser = new HTMLPurifier_URIParser();
 			$uri = $parser->parse($imgUrl);
 		}
@@ -86,7 +91,7 @@ class TransformURLScheme extends HTMLPurifier_URIFilter {
 				null,
 				Util::getServerHost(),
 				null,
-				\OC::$server->getURLGenerator()->linkToRoute('mail.proxy.redirect'),
+				$this->urlGenerator->linkToRoute('mail.proxy.redirect'),
 				'src=' . $originalURL,
 				null);
 			return $uri;
@@ -96,7 +101,7 @@ class TransformURLScheme extends HTMLPurifier_URIFilter {
 				null,
 				Util::getServerHost(),
 				null,
-				\OC::$server->getURLGenerator()->linkToRoute('mail.proxy.proxy'),
+				$this->urlGenerator->linkToRoute('mail.proxy.proxy'),
 				'src=' . $originalURL . '&requesttoken=' . \OC::$server->getSession()->get('requesttoken'),
 				null);
 			return $uri;

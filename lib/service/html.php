@@ -21,8 +21,16 @@ use Kwi\UrlLinker;
 use OCA\Mail\Service\HtmlPurify\CidURIScheme;
 use OCA\Mail\Service\HtmlPurify\TransformNoReferrer;
 use OCA\Mail\Service\HtmlPurify\TransformURLScheme;
+use OCP\IURLGenerator;
 
 class Html {
+
+	/** @var IURLGenerator */
+	private $urlGenerator;
+
+	public function __construct(IURLGenerator $urlGenerator) {
+		$this->urlGenerator = $urlGenerator;
+	}
 
 	/**
 	 * @param string $data
@@ -88,7 +96,7 @@ class Html {
 
 		// Rewrite URL for redirection and proxying of content
 		$uri = $config->getDefinition('URI');
-		$uri->addFilter(new TransformURLScheme($messageParameters, $mapCidToAttachmentId), $config);
+		$uri->addFilter(new TransformURLScheme($messageParameters, $mapCidToAttachmentId, $this->urlGenerator), $config);
 
 		HTMLPurifier_URISchemeRegistry::instance()->register('cid', new CidURIScheme());
 
