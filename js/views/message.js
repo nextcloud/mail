@@ -30,10 +30,13 @@ views.Message = Backbone.Marionette.ItemView.extend({
 		this.setElement(this.$el);
 
 		var displayName = this.model.get('from');
-		_.each(this.$el.find('.avatar'), function(a) {
-			$(a).height('32px');
-			$(a).imageplaceholder(displayName, displayName);
-		});
+		// Don't show any placeholder if 'from' isn't set
+		if (!displayName) {
+			_.each(this.$el.find('.avatar'), function (a) {
+				$(a).height('32px');
+				$(a).imageplaceholder(displayName, displayName);
+			});
+		}
 	},
 
 	toggleMessageStar: function(event) {
