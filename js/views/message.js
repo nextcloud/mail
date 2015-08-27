@@ -2,9 +2,6 @@
 
 var views = views || {};
 
-$('.action.delete').tipsy({gravity:'e', live:true});
-$('.tipsy-mailto').tipsy({gravity:'n', live:true});
-
 views.Message = Backbone.Marionette.ItemView.extend({
 
 	template: "#mail-messages-template",
@@ -37,6 +34,8 @@ views.Message = Backbone.Marionette.ItemView.extend({
 				$(a).imageplaceholder(displayName, displayName);
 			});
 		}
+		
+		$('.action.delete').tipsy({gravity:'e', live:true});
 	},
 
 	toggleMessageStar: function(event) {
