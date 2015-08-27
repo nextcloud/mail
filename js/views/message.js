@@ -31,7 +31,7 @@ views.Message = Backbone.Marionette.ItemView.extend({
 
 		var displayName = this.model.get('from');
 		// Don't show any placeholder if 'from' isn't set
-		if (!displayName) {
+		if (displayName) {
 			_.each(this.$el.find('.avatar'), function (a) {
 				$(a).height('32px');
 				$(a).imageplaceholder(displayName, displayName);
