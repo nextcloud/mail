@@ -270,7 +270,6 @@ views.Composer = Backbone.View.extend({
 		// send the mail
 		var _this = this;
 		var options = {
-			accountId: this.accountId,
 			draftUID: this.draftUID,
 			success: function () {
 				OC.Notification.showTemporary(t('mail', 'Message sent!'));
@@ -298,8 +297,15 @@ views.Composer = Backbone.View.extend({
 				}
 			},
 			error: function (jqXHR) {
+				var error = '';
+				if (jqXHR.status === 500) {
+					error = t('mail', 'Server error');
+				} else {
+					var resp = JSON.parse(jqXHR.responseText);
+					error = resp.message;
+				}
 				newMessageSend.prop('disabled', false);
-				OC.Notification.showTemporary(jqXHR.responseJSON.message);
+				OC.Notification.showTemporary(error);
 			},
 			complete: function() {
 				// remove loading feedback
@@ -318,26 +324,8 @@ views.Composer = Backbone.View.extend({
 		};
 
 		if (this.isReply()) {
-			// the account-id is not available when replying from unified inbox
-			// we get the account-id by the account mail address from the message
-			if (this.accountId === -1) {
-				var account = null;
- 
-				var messageViewObject = Mail.State.messageView.collection.get({id: this.messageId});
-				var accountMail = messageViewObject.attributes.accountMail;
-				Mail.State.accounts.some(function (obj) {
-					if (obj.emailAddress === accountMail) {
-						account = obj;
-						return true;
-					}
-				});
-
-				this.accountId    = account.accountId;
-				options.accountId = account.accountId;
-			} else {
-				options.messageId = this.messageId;
-				options.folderId = this.folderId;
-			}
+			options.messageId = this.messageId;
+			options.folderId = this.folderId;
 		}
 
 		this.submitCallback(this.accountId, this.getMessage(), options);

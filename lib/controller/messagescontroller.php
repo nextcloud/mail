@@ -18,6 +18,7 @@ use OCA\Mail\Http\HtmlResponse;
 use OCA\Mail\Service\AccountService;
 use OCA\Mail\Service\ContactsIntegration;
 use OCA\Mail\Service\IMailBox;
+use OCA\Mail\Service\UnifiedAccount;
 use OCP\AppFramework\Controller;
 use OCP\AppFramework\Db\DoesNotExistException;
 use OCP\AppFramework\Http\ContentSecurityPolicy;
@@ -152,6 +153,20 @@ class MessagesController extends Controller {
 				return $this->enrichDownloadUrl($accountId, $folderId, $id, $a);
 			}, $json['attachments']);
 		}
+
+		// Unified inbox hack
+		$messageId = $id;
+		if ($accountId === UnifiedAccount::ID) {
+			// Add accountId, folderId for unified inbox replies
+			list($accountId, $messageId) = json_decode(base64_decode($id));
+			$account = $this->getAccount($accountId);
+			$inbox = $account->getInbox();
+			$folderId = base64_encode($inbox->getFolderId());
+		}
+		$json['messageId'] = $messageId;
+		$json['accountId'] = $accountId;
+		$json['folderId'] = $folderId;
+		// End unified inbox hack
 
 		return new JSONResponse($json);
 	}
