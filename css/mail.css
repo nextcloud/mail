@@ -300,7 +300,7 @@
 	right: 0;
 	padding: 20px;
 	-ms-filter: "progid:DXImageTransform.Microsoft.Alpha(Opacity=25)";
-	opacity: .25;
+	opacity: .15;
 }
 #mail_messages .action.delete:hover,
 #mail_messages .action.delete:focus {
@@ -448,7 +448,7 @@ input.submit-message {
 .star.icon-star {
 	display: none;
 	-ms-filter: "progid:DXImageTransform.Microsoft.Alpha(Opacity=50)";
-	opacity: .5;
+	opacity: .3;
 }
 .star.icon-star:hover,
 .star.icon-star:focus {
