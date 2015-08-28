@@ -22,7 +22,7 @@
 
 namespace OCA\Mail\Controller;
 
-use OCA\Mail\Account;
+use OCP\IRequest;
 use OCA\Mail\Service\AccountService;
 use OCP\AppFramework\Controller;
 use OCP\AppFramework\Db\DoesNotExistException;
@@ -42,10 +42,10 @@ class FoldersController extends Controller {
 	/**
 	 * @param string $appName
 	 * @param \OCP\IRequest $request
-	 * @param $mailAccountMapper
+	 * @param $accountService
 	 * @param $currentUserId
 	 */
-	public function __construct($appName, $request, $accountService, $currentUserId){
+	public function __construct($appName, IRequest $request, AccountService $accountService, $currentUserId) {
 		parent::__construct($appName, $request);
 		$this->accountService = $accountService;
 		$this->currentUserId = $currentUserId;
@@ -54,9 +54,10 @@ class FoldersController extends Controller {
 	/**
 	 * @NoAdminRequired
 	 * @NoCSRFRequired
+	 * @param int $accountId
 	 */
-	public function index() {
-		$account = $this->getAccount();
+	public function index($accountId) {
+		$account = $this->accountService->find($this->currentUserId, $accountId);
 		$json = $account->getListArray();
 
 		$folders = array_filter($json['folders'], function($folder){
@@ -79,7 +80,6 @@ class FoldersController extends Controller {
 		}
 
 		$json['folders'] = array_values($folders);
-
 		return new JSONResponse($json);
 	}
 
@@ -104,13 +104,13 @@ class FoldersController extends Controller {
 
 	/**
 	 * @NoAdminRequired
+	 * @param int $accountId
 	 * @param string $folderId
 	 * @return JSONResponse
 	 */
-	public function destroy($folderId) {
+	public function destroy($accountId, $folderId) {
 		try {
-			$account = $this->getAccount();
-			$account = new Account($account);
+			$account = $this->accountService->find($this->currentUserId, $accountId);
 			$imap = $account->getImapConnection();
 			$imap->deleteMailbox($folderId);
 
@@ -122,12 +122,12 @@ class FoldersController extends Controller {
 
 	/**
 	 * @NoAdminRequired
+	 * @param int $accountId
+	 * @param string $mailbox
 	 */
-	public function create() {
+	public function create($accountId, $mailbox) {
 		try {
-			$mailbox = $this->params('mailbox');
-			$account = $this->getAccount();
-			$account = new Account($account);
+			$account = $this->accountService->find($this->currentUserId, $accountId);
 			$imap = $account->getImapConnection();
 
 			// TODO: read http://tools.ietf.org/html/rfc6154
@@ -148,10 +148,11 @@ class FoldersController extends Controller {
 
 	/**
 	 * @NoAdminRequired
+	 * @param $accountId
 	 * @param $folders
 	 * @return JSONResponse
 	 */
-	public function detectChanges($folders) {
+	public function detectChanges($accountId, $folders) {
 		try {
 			$query = [];
 			foreach($folders as $folder) {
@@ -165,7 +166,7 @@ class FoldersController extends Controller {
 				}
 				$query[$folderId] = $folder;
 			}
-			$account = $this->getAccount();
+			$account = $this->accountService->find($this->currentUserId, $accountId);
 			$mailBoxes = $account->getChangedMailboxes($query);
 
 			return new JSONResponse($mailBoxes);
@@ -176,13 +177,5 @@ class FoldersController extends Controller {
 		} catch (DoesNotExistException $e) {
 			return new JSONResponse();
 		}
-	}
-
-	/**
-	 * TODO: private functions below have to be removed from controller -> imap service to be build
-	 */
-	private function getAccount() {
-		$accountId = $this->params('accountId');
-		return $this->accountService->find($this->currentUserId, $accountId);
 	}
 }

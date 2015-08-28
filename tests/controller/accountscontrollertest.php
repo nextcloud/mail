@@ -24,7 +24,6 @@
 use OCA\Mail\Controller\AccountsController;
 use OC\AppFramework\Http;
 use OCP\AppFramework\Http\JSONResponse;
-use OCP\AppFramework\Http\Response;
 
 class AccountsControllerTest extends \Test\TestCase {
 
