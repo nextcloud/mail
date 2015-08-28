@@ -124,6 +124,8 @@ views.Composer = Backbone.View.extend({
 			replyCc: options.data.replyCc,
 			replyCcList: options.data.replyCcList
 		});
+		
+		$('.tipsy-mailto').tipsy({gravity:'n', live:true});
 
 		this.$el.html(html);
 
