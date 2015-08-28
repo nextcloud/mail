@@ -3,7 +3,7 @@
 	<id>mail</id>
 	<name>Mail</name>
 	<description>Easy to use email client which connects to your mail server via IMAP and SMTP.</description>
-	<version>0.2.0</version>
+	<version>0.3-alpha</version>
 	<licence>AGPL</licence>
 	<author>Thomas Müller, Jan-Christoph Borchardt, Christoph Wurst, Lukas Reschke, Thomas Imbreckx, Steffen Lindner, Robin McCorkell, Clement Wong &amp; many more …</author>
 	<documentation>
