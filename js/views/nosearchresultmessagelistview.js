@@ -14,14 +14,13 @@ define(function(require) {
 	var Marionette = require('marionette');
 
 	return Marionette.ItemView.extend({
-		tagName: 'li',
-		template: '#mail-attachment-template',
-		events: {
-			'click .icon-delete': 'removeAttachment'
+		initialize: function(options) {
+			this.model.set('searchTerm', options.filterCriteria.text || "");
 		},
-		removeAttachment: function() {
-			this.model.collection.remove(this.model);
+		template: "#no-search-results-message-list-template",
+		onRender: function() {
+			this.$('#load-more-mail-messages').hide();
 		}
-
 	});
 });
+

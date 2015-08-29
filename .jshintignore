@@ -1,4 +1,5 @@
 node_modules
+js/node_modules
 l10n
 vendor
 /* Static 3rd party */
