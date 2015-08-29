@@ -34,13 +34,20 @@ class TransformImageSrc extends HTMLPurifier_AttrTransform {
 	 * @return array
 	 */
 	public function transform($attr, $config, $context) {
-		if ( $context->get('CurrentToken')->name !== 'img' ||
+		if ($context->get('CurrentToken')->name !== 'img' ||
 			!isset($attr['src'])) {
 			return $attr;
 		}
 
-		$url = $this->parser->parse($attr['src']);
+		// Block tracking pixels
+		if (isset($attr['width']) && isset($attr['height']) &&
+			(int)$attr['width'] < 5 && (int)$attr['height'] < 5){
+			$attr['src'] = 'data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAABmJLR0QA/wD/AP+gvaeTAAAADUlEQVQI12NgYGBgAAAABQABXvMqOgAAAABJRU5ErkJggg==';
+			return $attr;
+		}
 
+		// Do not block tracking pixels
+		$url = $this->parser->parse($attr['src']);
 		if ($url->host === Util::getServerHostName() && $url->path === $this->urlGenerator->linkToRoute('mail.proxy.proxy')) {
 			$attr['data-original-src'] = $attr['src'];
 			$attr['src'] = Util::imagePath('mail', 'blocked-image.png');
