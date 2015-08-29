@@ -23,6 +23,7 @@ use OCA\Mail\Service\HtmlPurify\TransformImageSrc;
 use OCA\Mail\Service\HtmlPurify\TransformNoReferrer;
 use OCA\Mail\Service\HtmlPurify\TransformURLScheme;
 use OCP\IURLGenerator;
+use OCP\Util;
 
 class Html {
 
@@ -48,6 +49,7 @@ class Html {
 
 		// allow cid, http and ftp
 		$config->set('URI.AllowedSchemes', ['http' => true, 'https' => true, 'ftp' => true, 'mailto' => true]);
+		$config->set('URI.Host', Util::getServerHostName());
 
 		// Disable the cache since ownCloud has no really appcache
 		// TODO: Fix this - requires https://github.com/owncloud/core/issues/10767 to be fixed
@@ -90,6 +92,7 @@ class Html {
 
 		// allow cid, http and ftp
 		$config->set('URI.AllowedSchemes', ['cid' => true, 'http' => true, 'https' => true, 'ftp' => true, 'mailto' => true]);
+		$config->set('URI.Host', Util::getServerHostName());
 
 		// Disable the cache since ownCloud has no really appcache
 		// TODO: Fix this - requires https://github.com/owncloud/core/issues/10767 to be fixed
@@ -97,7 +100,7 @@ class Html {
 
 		// Rewrite URL for redirection and proxying of content
 		$html = $config->getDefinition('HTML');
-		$html->info_attr_transform_post['imagesrc'] = new TransformImageSrc();
+		$html->info_attr_transform_post['imagesrc'] = new TransformImageSrc($this->urlGenerator);
 
 		$uri = $config->getDefinition('URI');
 		$uri->addFilter(new TransformURLScheme($messageParameters, $mapCidToAttachmentId, $this->urlGenerator), $config);
