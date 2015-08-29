@@ -19,6 +19,7 @@ use HTMLPurifier_HTMLDefinition;
 use HTMLPurifier_URISchemeRegistry;
 use Kwi\UrlLinker;
 use OCA\Mail\Service\HtmlPurify\CidURIScheme;
+use OCA\Mail\Service\HtmlPurify\TransformImageSrc;
 use OCA\Mail\Service\HtmlPurify\TransformNoReferrer;
 use OCA\Mail\Service\HtmlPurify\TransformURLScheme;
 use OCP\IURLGenerator;
@@ -95,6 +96,9 @@ class Html {
 		$config->set('Cache.DefinitionImpl', null);
 
 		// Rewrite URL for redirection and proxying of content
+		$html = $config->getDefinition('HTML');
+		$html->info_attr_transform_post['imagesrc'] = new TransformImageSrc();
+
 		$uri = $config->getDefinition('URI');
 		$uri->addFilter(new TransformURLScheme($messageParameters, $mapCidToAttachmentId, $this->urlGenerator), $config);
 
