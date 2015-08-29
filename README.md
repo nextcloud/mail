@@ -80,6 +80,11 @@ Just clone this repo into your apps directory ([ownCloud core installation neede
 curl -sS https://getcomposer.org/installer | php
 php composer.phar install
 ```
+Furthermore you need to fetch some npm packages:
+```bash
+cd js
+npm install
+```
 
 ### Resetting the app
 Connect to your database and run the following commands (`oc_` is the default table prefix):
