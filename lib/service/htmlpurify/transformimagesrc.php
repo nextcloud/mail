@@ -42,11 +42,12 @@ class TransformImageSrc extends HTMLPurifier_AttrTransform {
 		// Block tracking pixels
 		if (isset($attr['width']) && isset($attr['height']) &&
 			(int)$attr['width'] < 5 && (int)$attr['height'] < 5){
+			// Replace with a transparent png in case it's important for the layout
 			$attr['src'] = 'data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAABmJLR0QA/wD/AP+gvaeTAAAADUlEQVQI12NgYGBgAAAABQABXvMqOgAAAABJRU5ErkJggg==';
 			return $attr;
 		}
 
-		// Do not block tracking pixels
+		// Do not block images attached to the email
 		$url = $this->parser->parse($attr['src']);
 		if ($url->host === Util::getServerHostName() && $url->path === $this->urlGenerator->linkToRoute('mail.proxy.proxy')) {
 			$attr['data-original-src'] = $attr['src'];
