@@ -216,4 +216,12 @@ define(function(require) {
 			}
 		}
 	});
+
+	// Show the images if wanted
+	$(document).on('click', '#show-images-button', function(){
+		$('#show-images-text').hide();
+		$('iframe').contents().find('img[data-original-src]').each(function(){
+			$(this).attr('src',$(this).attr('data-original-src'));
+		});
+	});
 });

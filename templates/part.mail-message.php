@@ -16,6 +16,10 @@
 	<div class="mail-message-body">
 		<div id="mail-content">
 			{{#if hasHtmlBody}}
+			<div id="show-images-text">
+				<?php p($l->t('The images have been blocked to protect your privacy.')); ?>
+				<button id="show-images-button"><?php p($l->t('Show images from this sender')); ?></button>
+			</div>
 			<div class="icon-loading">
 				<iframe src="{{htmlBodyUrl}}" seamless>
 				</iframe>
