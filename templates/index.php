@@ -1,6 +1,8 @@
 <?php
 script('mail', 'jquery.storageapi');
 script('mail', 'jquery-visibility');
+script('mail', 'node_modules/requirejs/require');
+script('mail', 'require_config');
 ?>
 <script id="mail-folder-template" type="text/x-handlebars-template">
 	<li data-folder_id="{{id}}" data-no_select="{{noSelect}}"

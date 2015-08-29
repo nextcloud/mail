@@ -11,17 +11,13 @@
 define(function(require) {
 	'use strict';
 
-	var Marionette = require('marionette');
+	var Backbone = require('backbone'),
+		Message = require('models/message');
 
-	return Marionette.ItemView.extend({
-		tagName: 'li',
-		template: '#mail-attachment-template',
-		events: {
-			'click .icon-delete': 'removeAttachment'
-		},
-		removeAttachment: function() {
-			this.model.collection.remove(this.model);
+	return Backbone.Collection.extend({
+		model: Message,
+		comparator: function(message) {
+			return message.get('dateInt') * -1;
 		}
-
 	});
 });
