@@ -10,10 +10,13 @@
  * @copyright Christoph Wurst 2015
  */
 
-require(['domReady', 'app'], function(document, Mail) {
-	console.log('init');
+define(function(require) {
+	'use strict';
+
+	var document = require('domready'),
+		Mail = require('app');
+
 	Mail.UI.initializeInterface();
-	console.log('init finished');
 
 	// auto detect button handling
 	$('#auto_detect_account').click(function(event) {

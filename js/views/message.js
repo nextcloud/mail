@@ -112,7 +112,8 @@ define(function(require) {
 				data: {},
 				type: 'DELETE',
 				success: function() {
-					require('app').Cache.removeMessage(require('app').State.currentAccountId, require('app').State.currentFolderId, thisModel.id);
+					var app = require('app');
+					app.Cache.removeMessage(app.State.currentAccountId, app.State.currentFolderId, thisModel.id);
 				},
 				error: function() {
 					require('app').UI.showError(t('mail', 'Error while deleting message.'));

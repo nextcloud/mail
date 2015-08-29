@@ -32,6 +32,8 @@ before_install:
 before_script:
   - cd apps/mail
   - npm install --deps
+  - cd js
+  - npm install --deps
 
 script:
   # Test lint

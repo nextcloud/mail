@@ -21,6 +21,7 @@
 		"expect": true,
 		"describe": true,
 		"define": true,
+		"require": true,
 		"beforeEach": true,
 		"afterEach": true,
 		"fakeServer": true,

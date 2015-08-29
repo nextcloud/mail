@@ -1,3 +1,5 @@
+/* global relative_modified_date, formatDate, md5, humanFileSize, getScrollBarWidth */
+
 /**
  * ownCloud - Mail
  *

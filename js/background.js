@@ -15,6 +15,7 @@ define(function(require) {
 
 	var OC = require('OC');
 
+	/*jshint maxparams: 6 */
 	return {
 		showNotification: function(title, body, tag, icon, accountId, folderId) {
 			// notifications not supported -> go away

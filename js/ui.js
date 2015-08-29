@@ -1,4 +1,4 @@
-/* global Notification */
+/* global Notification, adjustControlsWidth */
 
 /**
  * ownCloud - Mail
@@ -123,10 +123,11 @@ define(function(require) {
 		$('#folders').removeClass('hidden');
 		$('#mail-setup').addClass('hidden');
 
-		require('app').UI.clearMessages();
+		var app = require('app');
+		app.UI.clearMessages();
 		$('#app-navigation').addClass('icon-loading');
 
-		require('app').Communication.get(OC.generateUrl('apps/mail/accounts/{accountId}/folders', {accountId: accountId}), {
+		app.Communication.get(OC.generateUrl('apps/mail/accounts/{accountId}/folders', {accountId: accountId}), {
 			success: function(jsondata) {
 				$('#app-navigation').removeClass('icon-loading');
 				require('app').State.folderView.collection.add(jsondata);
@@ -273,9 +274,10 @@ define(function(require) {
 				},
 				onError: function(error, textStatus) {
 					if (textStatus !== 'abort') {
+						var app = require('app');
 						// Set the old folder as being active
-						require('app').UI.setFolderActive(require('app').State.currentAccountId, require('app').State.currentFolderId);
-						require('app').UI.showError(t('mail', 'Error while loading messages.'));
+						app.UI.setFolderActive(app.State.currentAccountId, app.State.currentFolderId);
+						app.UI.showError(t('mail', 'Error while loading messages.'));
 					}
 				},
 				cache: true

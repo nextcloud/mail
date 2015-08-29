@@ -89,7 +89,7 @@ define(function(require) {
 			/**
 			 * Attachments sub-view
 			 */
-			this.attachments = new Attachments;
+			this.attachments = new Attachments();
 
 			if (!this.isReply()) {
 				this.aliases = _.filter(options.aliases, function(item) {

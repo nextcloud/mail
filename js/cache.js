@@ -148,5 +148,5 @@ define(function(require) {
 				// End unified inbox hack
 			}
 		};
-	})()
+	})();
 });

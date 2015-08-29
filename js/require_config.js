@@ -10,38 +10,40 @@
  * @copyright Christoph Wurst 2015
  */
 
-'use strict';
+(function() {
+	'use strict';
 
-requirejs.config({
-	baseUrl: './../../../apps/mail/js',
-	paths: {
-		/**
-		 * Application
-		 */
-		app: 'mail',
-		marionette: 'backbone.marionette',
-		handlebars: 'handlebars-v1.3.0',
-		/**
-		 * Libraries
-		 */
-		domReady: 'node_modules/domready/ready.min',
-		//jquery: '../../../core/vendor/jquery/jquery.min',
-		storage: 'jquery.storageapi',
-		underscore: '../../../core/vendor/underscore/underscore'
-	},
-	shim: {
-		// TODO: remove once min-oc-version is 8.0
-		handlebars: {
-			exports: 'Handlebars'
+	requirejs.config({
+		baseUrl: './../../../apps/mail/js',
+		paths: {
+			/**
+			 * Application
+			 */
+			app: 'mail',
+			marionette: 'backbone.marionette',
+			handlebars: 'handlebars-v1.3.0',
+			/**
+			 * Libraries
+			 */
+			domReady: 'node_modules/domready/ready.min',
+			//jquery: '../../../core/vendor/jquery/jquery.min',
+			storage: 'jquery.storageapi',
+			underscore: '../../../core/vendor/underscore/underscore'
 		},
-		// END TODO
-		jquery: {
-			exports: '$'
+		shim: {
+			// TODO: remove once min-oc-version is 8.0
+			handlebars: {
+				exports: 'Handlebars'
+			},
+			// END TODO
+			jquery: {
+				exports: '$'
+			}
 		}
-	}
-});
+	});
 
-require([
-	'init',
-	'notification'
-]);
+	require([
+		'init',
+		'notification'
+	]);
+})();
