@@ -62,7 +62,6 @@ class PageController extends Controller {
 	public function index() {
 
 		\OCP\Util::addScript('mail','jquery.autosize');
-		\OCP\Util::addScript('mail','settings');
 		\OCP\Util::addStyle('mail','mail');
 		\OCP\Util::addStyle('mail','mobile');
 

@@ -22,6 +22,7 @@ define(function(require) {
 		ComposerView = require('views/composer');
 	
 	require('views/helper');
+	require('settings');
 
 	var view = {};
 

@@ -1,6 +1,16 @@
-/* global Mail, OC */
+/**
+ * ownCloud - Mail
+ *
+ * This file is licensed under the Affero General Public License version 3 or
+ * later. See the COPYING file.
+ *
+ * @author Christoph Wurst <christoph@winzerhof-wurst.at>
+ * @copyright Christoph Wurst 2015
+ */
 
-$(document).ready(function() {
+
+define(function(require) {
+	'use strict';
 
 	// delete account in settings
 	$(document).on('click', '.mailaccount-list .action.delete', function() {
@@ -10,11 +20,11 @@ $(document).ready(function() {
 		var accountId = $(this).parent().parent().data('account-id');
 
 		$.ajax(OC.generateUrl('/apps/mail/accounts/{accountId}'), {
-			data: {accountId:accountId},
+			data: {accountId: accountId},
 			type: 'DELETE',
 			success: function() {
 				// Delete cached message lists
-				Mail.Cache.removeAccount(accountId);
+				require('app').Cache.removeAccount(accountId);
 
 				// reload the complete page
 				// TODO should only reload the app nav/content
@@ -27,7 +37,7 @@ $(document).ready(function() {
 		});
 	});
 	$(document).on('click', '#new_mail_account', function() {
-		Mail.UI.addAccount();
+		require('app').UI.addAccount();
 	});
 
 });
