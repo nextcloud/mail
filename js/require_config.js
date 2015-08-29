@@ -13,7 +13,7 @@
 'use strict';
 
 requirejs.config({
-	baseUrl: '/apps/mail/js',
+	baseUrl: './../../../apps/mail/js',
 	paths: {
 		/**
 		 * Application
