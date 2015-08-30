@@ -1,6 +1,6 @@
 {
   "name": "mail",
-  "version": "0.0.1",
+  "version": "0.3.0",
   "description": "Mail app for ownCloud",
   "main": "index.js",
   "directories": {
@@ -19,7 +19,7 @@
     "mail"
   ],
   "author": "Thomas Müller and others",
-  "license": "AGPL",
+  "license": "AGPL-3.0",
   "bugs": {
     "url": "https://github.com/owncloud/mail/issues"
   },
