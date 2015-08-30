@@ -3,6 +3,7 @@
     "fileExtensions": [".js", "jscs"],
 
     "requireParenthesesAroundIIFE": true,
+    "disallowMultipleVarDecl": false,
     "maximumLineLength": 120,
     "validateLineBreaks": "LF",
     "validateIndentation": "\t",
@@ -27,7 +28,7 @@
     ],
 
     "jsDoc": {
-        "checkAnnotations": "closurecompiler",
+        "checkAnnotations": "jsdoc3",
         "checkParamNames": true,
         "requireParamTypes": true,
         "checkRedundantParams": true,
