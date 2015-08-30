@@ -1,7 +1,7 @@
 <?php
 style('mail','mail');
 style('mail','mobile');
-script('mail','vendor/autosize/dist/autosize');
+script('mail','vendor/autosize/jquery.autosize');
 script('mail', 'send-mail');
 ?>
 
