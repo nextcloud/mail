@@ -14,7 +14,7 @@
     "tests"
   ],
   "dependencies": {
-    "autosize": "jquery-autosize#~3.0.8",
+    "autosize": "jquery-autosize#1.18.9",
     "backbone": "1.1.2",
     "backbone.marionette": "~2.4.2",
     "domready": "~1.0.8",
