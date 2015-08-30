@@ -44,7 +44,7 @@ define(function(require) {
 			}, 5000);
 		},
 		showMailNotification: function(email, folder) {
-			if (Notification.permission === "granted" && folder.messages.length > 0) {
+			if (Notification.permission === 'granted' && folder.messages.length > 0) {
 				var from = _.map(folder.messages, function(m) {
 					return m.from;
 				});
@@ -89,8 +89,8 @@ define(function(require) {
 				$.ajax(
 					OC.generateUrl('apps/mail/accounts/{accountId}/folders/detectChanges', {accountId: a.accountId}), {
 					data: JSON.stringify({folders: folders.toJSON()}),
-					contentType: "application/json; charset=utf-8",
-					dataType: "json",
+					contentType: 'application/json; charset=utf-8',
+					dataType: 'json',
 					type: 'POST',
 					success: function(jsondata) {
 						_.each(jsondata, function(f) {
