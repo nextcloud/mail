@@ -20,14 +20,13 @@
 			 * Application
 			 */
 			app: 'mail',
-			marionette: 'backbone.marionette',
-			handlebars: 'handlebars-v1.3.0',
 			/**
 			 * Libraries
 			 */
-			domReady: 'node_modules/domready/ready.min',
-			//jquery: '../../../core/vendor/jquery/jquery.min',
-			storage: 'jquery.storageapi',
+			backbone: 'vendor/backbone/backbone',
+			domReady: 'vendor/domready/ready.min',
+			handlebars: 'vendor/handlebars/handlebars',
+			marionette: 'vendor/backbone.marionette/lib/backbone.marionette',
 			underscore: '../../../core/vendor/underscore/underscore'
 		},
 		shim: {

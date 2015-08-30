@@ -1,7 +1,10 @@
 <?php
-script('mail', 'jquery.storageapi');
-script('mail', 'jquery-visibility');
-script('mail', 'node_modules/requirejs/require');
+style('mail','mail');
+style('mail','mobile');
+script('mail','vendor/autosize/dist/autosize');
+script('mail', 'vendor/jQuery-Storage-API/jquery.storageapi');
+script('mail', 'vendor/jquery-visibility/jquery-visibility');
+script('mail', 'vendor/requirejs/require');
 script('mail', 'require_config');
 ?>
 

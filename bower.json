@@ -1,0 +1,27 @@
+{
+  "name": "Mail",
+  "version": "0.2.0",
+  "description": "ownCloud Mail App",
+  "main": "mail.js",
+  "license": "AGPLv3",
+  "homepage": "https://github.com/owncloud/mail",
+  "ignore": [
+    "**/.*",
+    "node_modules",
+    "bower_components",
+    "core/vendor",
+    "test",
+    "tests"
+  ],
+  "dependencies": {
+    "autosize": "jquery-autosize#~3.0.8",
+    "backbone": "1.1.2",
+    "backbone.marionette": "~2.4.2",
+    "domready": "~1.0.8",
+    "handlebars": "~3.0.3",
+    "jQuery-Storage-API": "julien-maurel/jQuery-Storage-API#~1.7.4",
+    "jquery-visibility": "~1.0.11",
+    "requirejs": "~2.1.20",
+    "underscore": "~1.8.3"
+  }
+}

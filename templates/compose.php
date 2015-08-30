@@ -1,3 +1,10 @@
+<?php
+style('mail','mail');
+style('mail','mobile');
+script('mail','vendor/autosize/dist/autosize');
+script('mail', 'send-mail');
+?>
+
 <script id="mail-account-manager" type="text/x-handlebars-template">
 	<select class="mail_account">
 		{{#each this}}
