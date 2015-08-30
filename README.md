@@ -75,15 +75,14 @@ namespace inbox {
 
 ## Developer setup info
 
-Just clone this repo into your apps directory ([ownCloud core installation needed](https://doc.owncloud.org/server/8.1/developer_manual/general/devenv.html)). Additionally you need Composer to install dependencies – run this from inside the mail folder:
+Just clone this repo into your apps directory ([ownCloud core installation needed](https://doc.owncloud.org/server/8.1/developer_manual/general/devenv.html)). Additionally you need Composer to install PHP dependencies – run this from inside the mail folder:
 ```bash
 curl -sS https://getcomposer.org/installer | php
 php composer.phar install
 ```
-Furthermore you need to fetch some npm packages:
+Furthermore, to fetch all JavaScript dependencies using [Bower](http://bower.io/#install-bower) run
 ```bash
-cd js
-npm install
+bower install
 ```
 
 ### Resetting the app
