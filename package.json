@@ -7,7 +7,8 @@
     "test": "tests"
   },
   "scripts": {
-    "test": "./node_modules/.bin/jshint . && ./node_modules/.bin/jsxhint ."
+    "test": "./node_modules/.bin/jshint . && ./node_modules/.bin/jsxhint .",
+    "bower_deps": "./node_modules/.bin/bower install"
   },
   "repository": {
     "type": "git",
@@ -28,6 +29,7 @@
     "grunt-jscs": "^1.8.0",
     "jscs-jsdoc": "^1.0.1",
     "jshint": "^2.7.0",
-    "jsxhint": "^0.14.0"
+    "jsxhint": "^0.14.0",
+    "bower": "^1.5.2"
   }
 }

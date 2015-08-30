@@ -80,9 +80,10 @@ Just clone this repo into your apps directory ([ownCloud core installation neede
 curl -sS https://getcomposer.org/installer | php
 php composer.phar install
 ```
-Furthermore, to fetch all JavaScript dependencies using [Bower](http://bower.io/#install-bower) run
+Furthermore, to fetch all JavaScript dependencies using [Npm](https://www.npmjs.com/) run
 ```bash
-bower install
+npm install
+npm run-script bower_deps
 ```
 
 ### Resetting the app
