@@ -11,8 +11,8 @@
 define(function(require) {
 	'use strict';
 
-	var Backbone = require('backbone'),
-		FolderView = require('views/folder');
+	var Backbone = require('backbone');
+	var FolderView = require('views/folder');
 
 	return Backbone.Marionette.CompositeView.extend({
 		collection: null,

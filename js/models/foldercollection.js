@@ -11,8 +11,8 @@
 define(function(require) {
 	'use strict';
 
-	var Backbone = require('backbone'),
-		Folder = require('models/folder');
+	var Backbone = require('backbone');
+	var Folder = require('models/folder');
 
 	return Backbone.Collection.extend({
 		model: Folder

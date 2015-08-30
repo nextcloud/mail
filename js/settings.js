@@ -8,7 +8,6 @@
  * @copyright Christoph Wurst 2015
  */
 
-
 define(function(require) {
 	'use strict';
 

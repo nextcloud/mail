@@ -11,8 +11,8 @@
 define(function(require) {
 	'use strict';
 
-	var Backbone = require('backbone'),
-		Account = require('models/account');
+	var Backbone = require('backbone');
+	var Account = require('models/account');
 
 	return Backbone.Collection.extend({
 		model: Account,

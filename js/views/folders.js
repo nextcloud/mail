@@ -13,9 +13,9 @@
 define(function(require) {
 	'use strict';
 
-	var Marionette = require('marionette'),
-		AccountView = require('views/account'),
-		AccountCollection = require('models/accountcollection');
+	var Marionette = require('marionette');
+	var AccountView = require('views/account');
+	var AccountCollection = require('models/accountcollection');
 
 	return Marionette.CollectionView.extend({
 		// The collection will be kept here
@@ -77,10 +77,14 @@ define(function(require) {
 
 			if (unread > 0) {
 				window.document.title = name + ' (' + unread + ')' +
+					// jscs:disable requireCamelCaseOrUpperCaseIdentifiers
 					activeEmail + ' - Mail - ' + oc_defaults.title;
+					// jscs:enable requireCamelCaseOrUpperCaseIdentifiers
 			} else {
 				window.document.title = name + activeEmail +
+				// jscs:disable requireCamelCaseOrUpperCaseIdentifiers
 					' - Mail - ' + oc_defaults.title;
+				// jscs:enable requireCamelCaseOrUpperCaseIdentifiers
 			}
 		}
 

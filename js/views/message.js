@@ -1,5 +1,5 @@
 /**
- * ownCloud - require('app')
+ * ownCloud  Mail
  *
  * This file is licensed under the Affero General Public License version 3 or
  * later. See the COPYING file.
@@ -8,22 +8,25 @@
  * @copyright Christoph Wurst 2015
  */
 
+/*
+
+ */
 define(function(require) {
 	'use strict';
 
-	var Marionette = require('marionette'),
-		OC = require('OC');
+	var Marionette = require('marionette');
+	var OC = require('OC');
 
 	return Marionette.ItemView.extend({
-		template: "#mail-messages-template",
+		template: '#mail-messages-template',
 		ui: {
 			iconDelete: '.action.delete',
 			star: '.star'
 		},
 		events: {
-			"click .action.delete": "deleteMessage",
-			"click .mail-message-header": "openMessage",
-			"click .star": "toggleMessageStar"
+			'click .action.delete': 'deleteMessage',
+			'click .mail-message-header': 'openMessage',
+			'click .star': 'toggleMessageStar'
 		},
 		onRender: function() {
 			// Get rid of that pesky wrapping-div.

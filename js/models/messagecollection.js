@@ -11,8 +11,8 @@
 define(function(require) {
 	'use strict';
 
-	var Backbone = require('backbone'),
-		Message = require('models/message');
+	var Backbone = require('backbone');
+	var Message = require('models/message');
 
 	return Backbone.Collection.extend({
 		model: Message,

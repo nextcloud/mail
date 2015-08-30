@@ -11,8 +11,8 @@
 define(function(require) {
 	'use strict';
 
-	var $ = require('jquery'),
-		OC = require('OC');
+	var $ = require('jquery');
+	var OC = require('OC');
 
 	return (function() {
 		var messageListXhr = null;
@@ -22,8 +22,8 @@ define(function(require) {
 				ttl: 60000,
 				cache: true,
 				key: url
-			},
-			allOptions = options || {};
+			};
+			var allOptions = options || {};
 			_.defaults(allOptions, defaultOptions);
 
 			// don't cache for the time being

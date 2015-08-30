@@ -11,12 +11,12 @@
 define(function(require) {
 	'use strict';
 
-	var Backbone = require('backbone'),
-		Handlebars = require('handlebars'),
-		$ = require('jquery'),
-		OC = require('OC'),
-		Attachments = require('models/attachments'),
-		AttachmentsView = require('views/attachments');
+	var Backbone = require('backbone');
+	var Handlebars = require('handlebars');
+	var $ = require('jquery');
+	var OC = require('OC');
+	var Attachments = require('models/attachments');
+	var AttachmentsView = require('views/attachments');
 
 	return Backbone.View.extend({
 		type: 'new',
@@ -34,25 +34,25 @@ define(function(require) {
 		hasData: false,
 		autosized: false,
 		events: {
-			"click .submit-message": "submitMessage",
-			"keypress .message-body": "handleKeyPress",
-			"input  .to": "onInputChanged",
-			"paste  .to": "onInputChanged",
-			"keyup  .to": "onInputChanged",
-			"input  .cc": "onInputChanged",
-			"paste  .cc": "onInputChanged",
-			"keyup  .cc": "onInputChanged",
-			"input  .bcc": "onInputChanged",
-			"paste  .bcc": "onInputChanged",
-			"keyup  .bcc": "onInputChanged",
-			"input  .subject": "onInputChanged",
-			"paste  .subject": "onInputChanged",
-			"keyup  .subject": "onInputChanged",
-			"input  .message-body": "onInputChanged",
-			"paste  .message-body": "onInputChanged",
-			"keyup  .message-body": "onInputChanged",
+			'click .submit-message': 'submitMessage',
+			'keypress .message-body': 'handleKeyPress',
+			'input  .to': 'onInputChanged',
+			'paste  .to': 'onInputChanged',
+			'keyup  .to': 'onInputChanged',
+			'input  .cc': 'onInputChanged',
+			'paste  .cc': 'onInputChanged',
+			'keyup  .cc': 'onInputChanged',
+			'input  .bcc': 'onInputChanged',
+			'paste  .bcc': 'onInputChanged',
+			'keyup  .bcc': 'onInputChanged',
+			'input  .subject': 'onInputChanged',
+			'paste  .subject': 'onInputChanged',
+			'keyup  .subject': 'onInputChanged',
+			'input  .message-body': 'onInputChanged',
+			'paste  .message-body': 'onInputChanged',
+			'keyup  .message-body': 'onInputChanged',
 			// CC/BCC toggle
-			"click .composer-cc-bcc-toggle": "ccBccToggle"
+			'click .composer-cc-bcc-toggle': 'ccBccToggle'
 		},
 		initialize: function(options) {
 			var defaultOptions = {
@@ -114,7 +114,7 @@ define(function(require) {
 			};
 			_.defaults(options, defaultOptions);
 
-			var source = $("#mail-composer").html();
+			var source = $('#mail-composer').html();
 			var template = Handlebars.compile(source);
 
 			this.attachments.reset();
@@ -161,7 +161,7 @@ define(function(require) {
 		setAutoSize: function(state) {
 			if (state === true) {
 				if (!this.autosized) {
-					this.$('textarea').autosize({append: '"\n\n"'});
+					this.$('textarea').autosize({append: '\n\n'});
 					this.autosized = true;
 				}
 				this.$('.message-body').trigger('autosize.resize');
@@ -267,7 +267,7 @@ define(function(require) {
 
 			// if available get account from drop-down list
 			if (this.$('.mail-account').length > 0) {
-				this.accountId = this.$('.mail-account').find(":selected").val();
+				this.accountId = this.$('.mail-account').find(':selected').val();
 			}
 
 			// send the mail

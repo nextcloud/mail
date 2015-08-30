@@ -13,8 +13,8 @@
 define(function(require) {
 	'use strict';
 
-	var document = require('domready'),
-		Mail = require('app');
+	var document = require('domready');
+	var Mail = require('app');
 
 	Mail.UI.initializeInterface();
 
@@ -157,7 +157,8 @@ define(function(require) {
 			 * Prepare the new message body content for future processing.
 			 */
 			if (MessageBody.val()) {
-				var OldMessageBody, NewMessageBody = MessageBody.val();
+				var OldMessageBody = MessageBody.val();
+				var NewMessageBody = MessageBody.val();
 				if (NewMessageBody !== OldMessageBody) {
 					MessageBody.trigger('autosize.resize');
 					OldMessageBody = NewMessageBody;
@@ -207,21 +208,13 @@ define(function(require) {
 			switch (key) {
 				// If delete key is pressed:
 				case 46:
-					// If not composing a reply and message list is visible:
-					if (!$('.to, .cc, .message-body').is(':focus') && $('#mail_messages').is(':visible')) {
+					// If not composing a reply:
+					if (!$('.to, .cc, .message-body').is(':focus')) {
 						// Mimic a client clicking the delete button for the currently active message.
 						$('.mail_message_summary.active .icon-delete.action.delete').click();
 					}
 					break;
 			}
 		}
-	});
-
-	// Show the images if wanted
-	$(document).on('click', '#show-images-button', function(){
-		$('#show-images-text').hide();
-		$('iframe').contents().find('img[data-original-src]').each(function(){
-			$(this).attr('src',$(this).attr('data-original-src'));
-		});
 	});
 });

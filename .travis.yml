@@ -32,8 +32,8 @@ before_install:
 before_script:
   - cd apps/mail
   - npm install --deps
-  - cd js
-  - npm install --deps
+  - npm run-script bower_deps
+  - ./node_modules/.bin/grunt
   - cd ..
 
 script:
