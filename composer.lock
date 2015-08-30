@@ -94,14 +94,14 @@
             ],
             "description": "Autolink URLs in text or html",
             "homepage": "http://www.kwi.dk/projects/php/UrlLinker/",
-            "time": "2014-12-28 23:05:00"
+            "time": "2014-12-28 22:05:00"
         },
         {
             "name": "pear-pear.horde.org/Horde_Crypt_Blowfish",
-            "version": "1.0.3",
+            "version": "1.1.0",
             "dist": {
                 "type": "file",
-                "url": "http://pear.horde.org/get/Horde_Crypt_Blowfish-1.0.3.tgz",
+                "url": "http://pear.horde.org/get/Horde_Crypt_Blowfish-1.1.0.tgz",
                 "reference": null,
                 "shasum": null
             },
@@ -111,7 +111,7 @@
                 "php": "<6.0.0.0"
             },
             "replace": {
-                "pear-horde/horde_crypt_blowfish": "== 1.0.3.0"
+                "pear-horde/horde_crypt_blowfish": "== 1.1.0.0"
             },
             "type": "pear-library",
             "autoload": {
@@ -129,10 +129,10 @@
         },
         {
             "name": "pear-pear.horde.org/Horde_Date",
-            "version": "2.0.13",
+            "version": "2.1.1",
             "dist": {
                 "type": "file",
-                "url": "http://pear.horde.org/get/Horde_Date-2.0.13.tgz",
+                "url": "http://pear.horde.org/get/Horde_Date-2.1.1.tgz",
                 "reference": null,
                 "shasum": null
             },
@@ -143,7 +143,7 @@
                 "php": "<6.0.0.0"
             },
             "replace": {
-                "pear-horde/horde_date": "== 2.0.13.0"
+                "pear-horde/horde_date": "== 2.1.1.0"
             },
             "type": "pear-library",
             "autoload": {
@@ -161,10 +161,10 @@
         },
         {
             "name": "pear-pear.horde.org/Horde_Exception",
-            "version": "2.0.5",
+            "version": "2.0.6",
             "dist": {
                 "type": "file",
-                "url": "http://pear.horde.org/get/Horde_Exception-2.0.5.tgz",
+                "url": "http://pear.horde.org/get/Horde_Exception-2.0.6.tgz",
                 "reference": null,
                 "shasum": null
             },
@@ -173,7 +173,7 @@
                 "php": "<6.0.0.0"
             },
             "replace": {
-                "pear-horde/horde_exception": "== 2.0.5.0"
+                "pear-horde/horde_exception": "== 2.0.6.0"
             },
             "type": "pear-library",
             "autoload": {
@@ -191,19 +191,20 @@
         },
         {
             "name": "pear-pear.horde.org/Horde_Idna",
-            "version": "1.0.2",
+            "version": "1.0.3",
             "dist": {
                 "type": "file",
-                "url": "http://pear.horde.org/get/Horde_Idna-1.0.2.tgz",
+                "url": "http://pear.horde.org/get/Horde_Idna-1.0.3.tgz",
                 "reference": null,
                 "shasum": null
             },
             "require": {
                 "pear-pear.horde.org/horde_exception": "<3.0.0.0",
+                "pear-pear.horde.org/horde_util": "<3.0.0.0",
                 "php": "<6.0.0.0"
             },
             "replace": {
-                "pear-horde/horde_idna": "== 1.0.2.0"
+                "pear-horde/horde_idna": "== 1.0.3.0"
             },
             "type": "pear-library",
             "autoload": {
@@ -221,10 +222,10 @@
         },
         {
             "name": "pear-pear.horde.org/Horde_Imap_Client",
-            "version": "2.28.0",
+            "version": "2.29.1",
             "dist": {
                 "type": "file",
-                "url": "http://pear.horde.org/get/Horde_Imap_Client-2.28.0.tgz",
+                "url": "http://pear.horde.org/get/Horde_Imap_Client-2.29.1.tgz",
                 "reference": null,
                 "shasum": null
             },
@@ -243,7 +244,7 @@
                 "php": "<6.0.0.0"
             },
             "replace": {
-                "pear-horde/horde_imap_client": "== 2.28.0.0"
+                "pear-horde/horde_imap_client": "== 2.29.1.0"
             },
             "type": "pear-library",
             "autoload": {
@@ -261,20 +262,21 @@
         },
         {
             "name": "pear-pear.horde.org/Horde_ListHeaders",
-            "version": "1.2.1",
+            "version": "1.2.2",
             "dist": {
                 "type": "file",
-                "url": "http://pear.horde.org/get/Horde_ListHeaders-1.2.1.tgz",
+                "url": "http://pear.horde.org/get/Horde_ListHeaders-1.2.2.tgz",
                 "reference": null,
                 "shasum": null
             },
             "require": {
                 "pear-pear.horde.org/horde_mail": "<3.0.0.0",
                 "pear-pear.horde.org/horde_translation": "<3.0.0.0",
+                "pear-pear.horde.org/horde_util": "<3.0.0.0",
                 "php": "<6.0.0.0"
             },
             "replace": {
-                "pear-horde/horde_listheaders": "== 1.2.1.0"
+                "pear-horde/horde_listheaders": "== 1.2.2.0"
             },
             "type": "pear-library",
             "autoload": {
@@ -292,10 +294,10 @@
         },
         {
             "name": "pear-pear.horde.org/Horde_Mail",
-            "version": "2.6.1",
+            "version": "2.6.2",
             "dist": {
                 "type": "file",
-                "url": "http://pear.horde.org/get/Horde_Mail-2.6.1.tgz",
+                "url": "http://pear.horde.org/get/Horde_Mail-2.6.2.tgz",
                 "reference": null,
                 "shasum": null
             },
@@ -309,7 +311,7 @@
                 "php": "<6.0.0.0"
             },
             "replace": {
-                "pear-horde/horde_mail": "== 2.6.1.0"
+                "pear-horde/horde_mail": "== 2.6.2.0"
             },
             "type": "pear-library",
             "autoload": {
@@ -327,10 +329,10 @@
         },
         {
             "name": "pear-pear.horde.org/Horde_Mime",
-            "version": "2.8.1",
+            "version": "2.9.1",
             "dist": {
                 "type": "file",
-                "url": "http://pear.horde.org/get/Horde_Mime-2.8.1.tgz",
+                "url": "http://pear.horde.org/get/Horde_Mime-2.9.1.tgz",
                 "reference": null,
                 "shasum": null
             },
@@ -347,7 +349,7 @@
                 "php": "<6.0.0.0"
             },
             "replace": {
-                "pear-horde/horde_mime": "== 2.8.1.0"
+                "pear-horde/horde_mime": "== 2.9.1.0"
             },
             "type": "pear-library",
             "autoload": {
@@ -422,17 +424,14 @@
             "include-path": [
                 "/"
             ],
-            "license": [
-                "LGPL-2.1"
-            ],
             "description": "An API for encrypting and decrypting small pieces of data with the use of a shared key."
         },
         {
             "name": "pear-pear.horde.org/Horde_Smtp",
-            "version": "1.9.0",
+            "version": "1.9.1",
             "dist": {
                 "type": "file",
-                "url": "http://pear.horde.org/get/Horde_Smtp-1.9.0.tgz",
+                "url": "http://pear.horde.org/get/Horde_Smtp-1.9.1.tgz",
                 "reference": null,
                 "shasum": null
             },
@@ -442,10 +441,11 @@
                 "pear-pear.horde.org/horde_socket_client": "<3.0.0.0",
                 "pear-pear.horde.org/horde_support": "<3.0.0.0",
                 "pear-pear.horde.org/horde_translation": "<3.0.0.0",
+                "pear-pear.horde.org/horde_util": "<3.0.0.0",
                 "php": "<6.0.0.0"
             },
             "replace": {
-                "pear-horde/horde_smtp": "== 1.9.0.0"
+                "pear-horde/horde_smtp": "== 1.9.1.0"
             },
             "type": "pear-library",
             "autoload": {
@@ -516,9 +516,6 @@
             "include-path": [
                 "/"
             ],
-            "license": [
-                "LGPL-2.1"
-            ],
             "description": "An object-oriented interface to assist in creating and storing PHP stream resources, and to provide utility methods to access and manipulate the stream contents."
         },
         {
@@ -581,20 +578,21 @@
         },
         {
             "name": "pear-pear.horde.org/Horde_Support",
-            "version": "2.1.2",
+            "version": "2.1.4",
             "dist": {
                 "type": "file",
-                "url": "http://pear.horde.org/get/Horde_Support-2.1.2.tgz",
+                "url": "http://pear.horde.org/get/Horde_Support-2.1.4.tgz",
                 "reference": null,
                 "shasum": null
             },
             "require": {
                 "pear-pear.horde.org/horde_exception": "<3.0.0.0",
                 "pear-pear.horde.org/horde_stream_wrapper": "<3.0.0.0",
+                "pear-pear.horde.org/horde_util": "<3.0.0.0",
                 "php": "<6.0.0.0"
             },
             "replace": {
-                "pear-horde/horde_support": "== 2.1.2.0"
+                "pear-horde/horde_support": "== 2.1.4.0"
             },
             "type": "pear-library",
             "autoload": {
@@ -612,10 +610,10 @@
         },
         {
             "name": "pear-pear.horde.org/Horde_Text_Filter",
-            "version": "2.3.0",
+            "version": "2.3.2",
             "dist": {
                 "type": "file",
-                "url": "http://pear.horde.org/get/Horde_Text_Filter-2.3.0.tgz",
+                "url": "http://pear.horde.org/get/Horde_Text_Filter-2.3.2.tgz",
                 "reference": null,
                 "shasum": null
             },
@@ -626,7 +624,7 @@
                 "php": "<6.0.0.0"
             },
             "replace": {
-                "pear-horde/horde_text_filter": "== 2.3.0.0"
+                "pear-horde/horde_text_filter": "== 2.3.2.0"
             },
             "type": "pear-library",
             "autoload": {
@@ -696,17 +694,14 @@
             "include-path": [
                 "/"
             ],
-            "license": [
-                "LGPL-2.1"
-            ],
             "description": "Translation wrappers."
         },
         {
             "name": "pear-pear.horde.org/Horde_Util",
-            "version": "2.5.5",
+            "version": "2.5.6",
             "dist": {
                 "type": "file",
-                "url": "http://pear.horde.org/get/Horde_Util-2.5.5.tgz",
+                "url": "http://pear.horde.org/get/Horde_Util-2.5.6.tgz",
                 "reference": null,
                 "shasum": null
             },
@@ -715,7 +710,7 @@
                 "php": "<6.0.0.0"
             },
             "replace": {
-                "pear-horde/horde_util": "== 2.5.5.0"
+                "pear-horde/horde_util": "== 2.5.6.0"
             },
             "type": "pear-library",
             "autoload": {
