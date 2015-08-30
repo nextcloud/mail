@@ -249,6 +249,10 @@
 	background-color: #f8f8f8;
 }
 
+.mail_message_summary * {
+	cursor: pointer;
+}
+
 .sender-image {
 	display: inline-block;
 	position: absolute;
