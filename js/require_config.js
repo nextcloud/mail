@@ -24,7 +24,7 @@
 			 * Libraries
 			 */
 			backbone: 'vendor/backbone/backbone',
-			domReady: 'vendor/domready/ready.min',
+			domready: 'vendor/domready/ready.min',
 			handlebars: 'vendor/handlebars/handlebars',
 			marionette: 'vendor/backbone.marionette/lib/backbone.marionette',
 			underscore: '../../../core/vendor/underscore/underscore'
