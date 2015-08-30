@@ -72,7 +72,7 @@ define(function(require) {
 				activeEmail = ' - ' + activeAccount.get('email');
 			}
 			var activeFolder = this.getFolderById();
-			var unread = activeFolder.unseen;
+			var unread = activeFolder.unseen || activeFolder.get('unseen');
 			var name = activeFolder.name || activeFolder.get('name');
 
 			if (unread > 0) {
