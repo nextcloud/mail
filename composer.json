@@ -21,5 +21,16 @@
 		"pear-pear.horde.org/Horde_Smtp": "^1.5.0@stable",
 		"ezyang/htmlpurifier": "4.6.0",
 		"kwi/urllinker": "dev-default"
-	}
+	},
+
+    "scripts": {
+        "post-install-cmd": [
+            "npm install",
+			"npm run-script bower_deps"
+        ],
+        "post-update-cmd": [
+            "npm install",
+			"npm run-script bower_deps"
+        ]
+    }
 }
