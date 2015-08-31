@@ -31,7 +31,7 @@ define(function(require) {
 			var accountId = this.model.get('accountId');
 			var folderId = $(e.currentTarget).parent().data('folder_id');
 			var noSelect = $(e.currentTarget).parent().data('no_select');
-			require('app').UI.loadFolder(accountId, folderId, noSelect);
+			require('app').trigger('folder:load', accountId, folderId, noSelect);
 		},
 		onRender: function() {
 			// Get rid of that pesky wrapping-div.

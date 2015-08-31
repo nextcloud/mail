@@ -68,7 +68,7 @@ define(function(require) {
 			type: 'POST',
 			success: function() {
 				// reload accounts
-				Mail.UI.loadAccounts();
+				Mail.trigger('accounts:load');
 			},
 			error: function(jqXHR, textStatus, errorThrown) {
 				switch (jqXHR.status) {
