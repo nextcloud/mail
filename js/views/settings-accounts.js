@@ -12,17 +12,15 @@ define(function(require) {
 	'use strict';
 
 	var Marionette = require('marionette');
+	var AccountView = require('views/settings-account');
 
-	var Mail = Marionette.Application.extend({
-		
+	return Marionette.CollectionView.extend({
+		tagName: 'ul',
+		className: 'mailaccount-list',
+		childView: AccountView,
+		filter: function(account) {
+			// Don't show unified inbox
+			return account.get('accountId') !== -1;
+		}
 	});
-
-	Mail.BackGround = require('background');
-	Mail.Communication = require('communication');
-	Mail.Cache = require('cache');
-	Mail.Search = require('search');
-	Mail.State = require('state');
-	Mail.UI = require('ui');
-
-	return Mail;
 });
