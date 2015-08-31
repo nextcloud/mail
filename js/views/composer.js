@@ -24,7 +24,7 @@ define(function(require) {
 		submitCallback: null,
 		sentCallback: null,
 		draftCallback: null,
-		aliases: null,
+		accounts: null,
 		accountId: null,
 		folderId: null,
 		messageId: null,
@@ -92,10 +92,8 @@ define(function(require) {
 			this.attachments = new Attachments();
 
 			if (!this.isReply()) {
-				this.aliases = _.filter(options.aliases, function(item) {
-					return item.accountId !== -1;
-				});
-				this.accountId = options.accountId || this.aliases[0].accountId;
+				this.accounts = options.accounts;
+				this.accountId = options.accountId || this.accounts.at(0).get('accountId');
 			} else {
 				this.accountId = options.accountId;
 				this.folderId = options.folderId;
@@ -119,9 +117,19 @@ define(function(require) {
 
 			this.attachments.reset();
 
+			var accounts = null;
+			if (this.accounts) {
+				accounts = this.accounts.map(function(account) {
+					return account.toJSON();
+				});
+				accounts = _.filter(accounts, function(account) {
+					return account.accountId !== -1;
+				});
+			}
+
 			// Render handlebars template
 			var html = template({
-				aliases: this.aliases,
+				aliases: accounts,
 				isReply: this.isReply(),
 				to: options.data.to,
 				cc: options.data.cc,

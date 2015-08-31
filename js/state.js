@@ -11,9 +11,11 @@
 define(function(require) {
 	'use strict';
 
+	var AccountCollection = require('models/accountcollection');
+
 	var state = {};
 
-	var accounts = null;
+	var accounts = new AccountCollection();
 	var currentFolderId = null;
 	var currentAccountId = null;
 	var currentMessageId = null;

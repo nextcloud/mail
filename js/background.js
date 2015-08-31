@@ -83,12 +83,13 @@ define(function(require) {
 	}
 
 	function checkForNotifications() {
-		_.each(require('app').State.accounts, function(a) {
-			var localAccount = require('app').State.folderView.collection.get(a.accountId);
+		require('app').State.accounts.each(function(account) {
+			var localAccount = require('app').State.folderView.collection.get(account.get('accountId'));
 			var folders = localAccount.get('folders');
 
 			$.ajax(
-				OC.generateUrl('apps/mail/accounts/{accountId}/folders/detectChanges', {accountId: a.accountId}), {
+				OC.generateUrl('apps/mail/accounts/{accountId}/folders/detectChanges', {
+					accountId: account.get('accountId')}), {
 				data: JSON.stringify({folders: folders.toJSON()}),
 				contentType: 'application/json; charset=utf-8',
 				dataType: 'json',
@@ -99,7 +100,7 @@ define(function(require) {
 						if (f.newUnReadCounter > 0) {
 							require('app').UI.changeFavicon(OC.filePath('mail', 'img', 'favicon-notification.png'));
 							// only show one notification
-							if (require('app').State.accounts.length === 1 || a.accountId === -1) {
+							if (require('app').State.accounts.length === 1 || account.get('accountId') === -1) {
 								require('app').BackGround.showMailNotification(localAccount.get('email'), f);
 							}
 						}
