@@ -528,6 +528,10 @@ input.submit-message {
 	width: 100%;
 }
 
+#show-images-text {
+	display: none;
+}
+
 #mail-content a,
 .mail-signature a {
 	color: #07d;

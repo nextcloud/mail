@@ -20,7 +20,7 @@ define(function(require) {
 		MessagesView = require('views/messages'),
 		FoldersView = require('views/folders'),
 		ComposerView = require('views/composer');
-	
+
 	require('views/helper');
 	require('settings');
 
@@ -582,6 +582,19 @@ define(function(require) {
 				});
 				// Remove spinner when loading finished
 				$('iframe').parent().removeClass('icon-loading');
+
+				// Does the html mail have blocked images?
+				var hasBlockedImages = false;
+				if ($(this).contents().find('[data-original-src]').length) {
+					hasBlockedImages = true;
+				}
+
+				// Show/hide button to load images
+				if (hasBlockedImages) {
+					$('#show-images-text').show();
+				} else {
+					$('#show-images-text').hide();
+				}
 
 				// Add body content to inline reply (html mails)
 				var text = $(this).contents().find('body').html();
