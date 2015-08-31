@@ -1,6 +1,6 @@
 {
   "name": "Mail",
-  "version": "0.2.0",
+  "version": "0.3.0",
   "description": "ownCloud Mail App",
   "main": "mail.js",
   "license": "AGPLv3",
