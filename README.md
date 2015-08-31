@@ -6,7 +6,7 @@
 [![Code Coverage](https://scrutinizer-ci.com/g/owncloud/mail/badges/coverage.png?b=master)](https://scrutinizer-ci.com/g/owncloud/mail/?branch=master)
 [![Dependency Status](https://www.versioneye.com/user/projects/54e50fadd1ec5734f400078a/badge.svg?style=flat)](https://www.versioneye.com/user/projects/54e50fadd1ec5734f400078a)
 
-**An email app for [ownCloud](https://owncloud.org) (minimum version 7.0.4 & PHP 5.4). At the moment it is a basic IMAP client and in heavy development.** (A possibility for the future would be to also have it be a dedicated email server. But that would always be optional, require additional dependencies and is out of scope for now.)
+**An email app for [ownCloud](https://owncloud.org) (minimum version 7.0.4 & PHP 5.4).** 
 
 ![](https://raw.githubusercontent.com/owncloud/screenshots/master/mail/mail.png)
 
@@ -14,19 +14,16 @@
 ## Why is this so awesome?
 
 * :rocket: **Integration with other ownCloud apps!** Currently Contacts & Files – more to come.
-* :+1: **You can use multiple mail accounts!** Personal and company account? No problem.
+* :inbox_tray: **Multiple mail accounts!** Personal and company account? No problem, and a nice unified inbox.
 * :lock: **Send & receive encrypted emails!** Using the great [Mailvelope](https://mailvelope.com) browser extension.
 * :see_no_evil: **We’re not reinventing the wheel!** Based on the great [Horde](http://horde.org) libraries.
 
-And in the works for [version 0.2](https://github.com/owncloud/mail/milestones/0.2):
-* :books: [Proper grouping of message threads](https://github.com/owncloud/mail/issues/21)
+And in the works for the [coming versions](https://github.com/owncloud/mail/milestones/):
+* :books: [Proper grouping of message threads](https://github.com/owncloud/mail/issues/21) 
 * :zap: [Caching to make everything faster](https://github.com/owncloud/mail/issues/480)
-* :paperclip: [Even better attachment support](https://github.com/owncloud/mail/issues/462)
-* :date: [Calendar integration](https://github.com/owncloud/mail/issues/79)
-* :inbox_tray: [Unified inbox](https://github.com/owncloud/mail/issues/120)
-* :package: [Folder management & moving mails](https://github.com/owncloud/mail/issues/411)
-* :iphone: [Support for small mobile screens](https://github.com/owncloud/mail/issues/457)
-
+* :paperclip: [Even better attachment support](https://github.com/owncloud/mail/issues/462) 
+* :date: [Calendar integration](https://github.com/owncloud/mail/issues/79) 
+* :package: [Folder management & moving mails](https://github.com/owncloud/mail/issues/411) 
 
 ## Installation
 
