@@ -198,7 +198,7 @@ define(function(require) {
 		});
 
 		setInterval(require('app').BackGround.checkForNotifications, 5 * 60 * 1000);
-		view.loadAccounts();
+		require('app').trigger('accounts:load');
 	}
 
 	function loadFoldersForAccount(accountId, firstAccountId) {
@@ -220,7 +220,7 @@ define(function(require) {
 				if (jsondata.id === firstAccountId) {
 					var folderId = jsondata.folders[0].id;
 
-					loadFolder(accountId, folderId, false);
+					require('app').trigger('folder:load', accountId, folderId, false);
 
 					// Save current folder
 					setFolderActive(accountId, folderId);

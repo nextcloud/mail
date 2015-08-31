@@ -35,7 +35,7 @@ define(function(require) {
 			}
 		);
 		notification.onclick = function() {
-			require('app').UI.loadFolder(accountId, folderId, false);
+			require('app').trigger('folder:load', accountId, folderId, false);
 			window.focus();
 		};
 		setTimeout(function() {

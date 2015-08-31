@@ -13,11 +13,13 @@ define(function(require) {
 
 	var Backbone = require('backbone');
 	var FolderCollection = require('models/foldercollection');
+	var OC = require('OC');
 
 	return Backbone.Model.extend({
 		defaults: {
 			folders: []
 		},
+		url: OC.generateUrl('apps/mail/accounts'),
 		initialize: function() {
 			this.set('folders', new FolderCollection(this.get('folders')));
 		},
