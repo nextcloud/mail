@@ -1,15 +1,6 @@
 <script id="mail-settings-template" type="text/x-handlebars-template">
 	<div id="mailsettings">
-		<ul class="mailaccount-list">
-			{{#each this}}
-			<li id="mail-account-{{accountId}}" data-account-id="{{accountId}}">
-				<span class="mail-account-name">{{emailAddress}}</span>
-				<span class="actions">
-					<a class="icon-delete delete action"
-						title="<?php p($l->t('Delete')); ?>"></a>
-				</span>
-			</li>
-			{{/each}}
+		<ul id="settings-accounts" class="mailaccount-list">
 		</ul>
 		<input id="new_mail_account" type="submit" value="<?php p($l->t('Add mail account')); ?>" class="new-button">
 

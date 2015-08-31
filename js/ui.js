@@ -20,6 +20,8 @@ define(function(require) {
 	var MessagesView = require('views/messages');
 	var FoldersView = require('views/folders');
 	var ComposerView = require('views/composer');
+	var AccountsCollection = require('models/accountcollection');
+	var SettingsAccountsView = require('views/settings-accounts');
 
 	require('views/helper');
 	require('settings');
@@ -75,11 +77,17 @@ define(function(require) {
 	function loadAccounts() {
 		require('app').Communication.get(OC.generateUrl('apps/mail/accounts'), {
 			success: function(accounts) {
+				var accountsCollection = new AccountsCollection(accounts);
 				require('app').State.accounts = accounts;
 				renderSettings();
 				if (accounts.length === 0) {
 					addAccount();
 				} else {
+					var view = new SettingsAccountsView({
+						el: '#settings-accounts',
+						collection: accountsCollection
+					});
+					view.render();
 					var firstAccountId = accounts[0].accountId;
 					_.each(accounts, function(a) {
 						loadFoldersForAccount(a.accountId, firstAccountId);
