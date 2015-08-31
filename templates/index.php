@@ -149,5 +149,6 @@ script('mail', 'require_config');
 <?php print_unescaped($this->inc('part.mail-message')); ?>
 <?php print_unescaped($this->inc('part.mail-messages')); ?>
 <?php print_unescaped($this->inc('part.mail-settings')); ?>
+<?php print_unescaped($this->inc('part.mail-settings-account')); ?>
 <?php print_unescaped($this->inc('part.message-list')); ?>
 <?php print_unescaped($this->inc('part.no-search-results-message-list')); ?>
