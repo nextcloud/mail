@@ -13,13 +13,13 @@
 define(function(require) {
 	'use strict';
 
-	var $ = require('jquery'),
-		Handlebars = require('handlebars'),
-		Marionette = require('marionette'),
-		OC = require('OC'),
-		MessagesView = require('views/messages'),
-		FoldersView = require('views/folders'),
-		ComposerView = require('views/composer');
+	var $ = require('jquery');
+	var Handlebars = require('handlebars');
+	var Marionette = require('marionette');
+	var OC = require('OC');
+	var MessagesView = require('views/messages');
+	var FoldersView = require('views/folders');
+	var ComposerView = require('views/composer');
 
 	require('views/helper');
 	require('settings');
@@ -34,7 +34,7 @@ define(function(require) {
 		var accounts = _.filter(require('app').State.accounts, function(item) {
 			return item.accountId !== -1;
 		});
-		var source = $("#mail-settings-template").html();
+		var source = $('#mail-settings-template').html();
 		var template = Handlebars.compile(source);
 		var html = template(accounts);
 		$('#app-settings-content').html(html);
@@ -73,8 +73,8 @@ define(function(require) {
 		Marionette.TemplateCache.prototype.compileTemplate = function(rawTemplate) {
 			return Handlebars.compile(rawTemplate);
 		};
-		Marionette.ItemView.prototype.modelEvents = {"change": "render"};
-		Marionette.CompositeView.prototype.modelEvents = {"change": "render"};
+		Marionette.ItemView.prototype.modelEvents = {'change': 'render'};
+		Marionette.CompositeView.prototype.modelEvents = {'change': 'render'};
 
 		// ask to handle all mailto: links
 		if (window.navigator.registerProtocolHandler) {
@@ -83,7 +83,7 @@ define(function(require) {
 				OC.generateUrl('apps/mail/compose?uri=%s');
 			try {
 				window.navigator
-					.registerProtocolHandler("mailto", url, "ownCloud Mail");
+					.registerProtocolHandler('mailto', url, 'ownCloud Mail');
 			} catch (e) {
 			}
 		}
@@ -291,7 +291,7 @@ define(function(require) {
 			function(path) {
 				// Loading feedback
 				var saveToFilesBtnSelector = '.attachment-save-to-cloud';
-				if (typeof attachmentId !== "undefined") {
+				if (typeof attachmentId !== 'undefined') {
 					saveToFilesBtnSelector = 'li[data-attachment-id="' +
 						attachmentId + '"] ' + saveToFilesBtnSelector;
 				}
@@ -316,14 +316,14 @@ define(function(require) {
 					},
 					type: 'POST',
 					success: function() {
-						if (typeof attachmentId === "undefined") {
+						if (typeof attachmentId === 'undefined') {
 							require('app').UI.showError(t('mail', 'Attachments saved to Files.'));
 						} else {
 							require('app').UI.showError(t('mail', 'Attachment saved to Files.'));
 						}
 					},
 					error: function() {
-						if (typeof attachmentId === "undefined") {
+						if (typeof attachmentId === 'undefined') {
 							require('app').UI.showError(t('mail', 'Error while saving attachments to Files.'));
 						} else {
 							require('app').UI.showError(t('mail', 'Error while saving attachment to Files.'));
@@ -403,12 +403,12 @@ define(function(require) {
 	view.openForwardComposer = function() {
 		var header = '\n\n\n\n-------- ' +
 			t('mail', 'Forwarded message') +
-			" --------\n";
+			' --------\n';
 
 		// TODO: find a better way to get the current message body
 		var data = {
 			subject: 'Fwd: ' + require('app').State.currentMessageSubject,
-			body: header + require('app').State.currentMessageBody.replace(/<br \/>/g, "\n")
+			body: header + require('app').State.currentMessageBody.replace(/<br \/>/g, '\n')
 		};
 
 		if (require('app').State.currentAccountId !== -1) {
@@ -435,7 +435,7 @@ define(function(require) {
 		var text = tmp.text();
 
 		// Finally, replace tokens with line breaks
-		text = text.replace(new RegExp(breakToken, 'g'), "\n");
+		text = text.replace(new RegExp(breakToken, 'g'), '\n');
 		return text;
 	};
 
@@ -487,7 +487,7 @@ define(function(require) {
 		// Fade out the message composer
 		$('#mail_new_message').prop('disabled', false);
 
-		var self = this;
+		var _this = this;
 		var loadMessageSuccess = function(message) {
 			var reply = {
 				replyToList: message.replyToList,
@@ -516,7 +516,7 @@ define(function(require) {
 			require('app').State.currentMessageSubject = message.subject;
 
 			// Render the message body
-			var source = $("#mail-message-template").html();
+			var source = $('#mail-message-template').html();
 			var template = Handlebars.compile(source);
 			var html = template(message);
 			mailBody
@@ -560,7 +560,7 @@ define(function(require) {
 					'font-weight': 'normal',
 					'font-size': '.8em',
 					'line-height': '1.6em',
-					'font-family': "'Open Sans', Frutiger, Calibri, 'Myriad Pro', Myriad, sans-serif",
+					'font-family': '"Open Sans", Frutiger, Calibri, "Myriad Pro", Myriad, sans-serif',
 					'color': '#000'
 				});
 				// Fix font when different font is forced
@@ -613,7 +613,7 @@ define(function(require) {
 		};
 
 		var loadDraftSuccess = function(data) {
-			self.openComposer(data);
+			_this.openComposer(data);
 		};
 
 		require('app').Communication.fetchMessage(

@@ -11,10 +11,10 @@
 define(function(require) {
 	'use strict';
 
-	var Backbone = require('backbone'),
-		MessageCollection = require('models/messagecollection'),
-		MessageView = require('views/message'),
-		NoSearchResultMessageListView = require('views/nosearchresultmessagelistview');
+	var Backbone = require('backbone');
+	var MessageCollection = require('models/messagecollection');
+	var MessageView = require('views/message');
+	var NoSearchResultMessageListView = require('views/nosearchresultmessagelistview');
 
 	return Backbone.Marionette.CompositeView.extend({
 		collection: null,
@@ -22,11 +22,11 @@ define(function(require) {
 		childViewContainer: '#mail-message-list',
 		currentMessageId: null,
 		events: {
-			"click #load-new-mail-messages": "loadNew",
-			"click #load-more-mail-messages": "loadMore"
+			'click #load-new-mail-messages': 'loadNew',
+			'click #load-more-mail-messages': 'loadMore'
 		},
 		filterCriteria: null,
-		template: "#message-list-template",
+		template: '#message-list-template',
 		initialize: function() {
 			this.collection = new MessageCollection();
 			this.collection.on('change:flags', this.changeFlags, this);
@@ -116,7 +116,7 @@ define(function(require) {
 				.val(t('mail', 'Loading …'))
 				.prop('disabled', true);
 
-			var self = this;
+			var _this = this;
 			require('app').Communication.fetchMessageList(
 				require('app').State.currentAccountId,
 				require('app').State.currentFolderId,
@@ -129,10 +129,10 @@ define(function(require) {
 					replace: reload,
 					onSuccess: function(jsondata) {
 						if (reload) {
-							self.collection.reset();
+							_this.collection.reset();
 						}
 						// Add messages
-						self.collection.add(jsondata);
+						_this.collection.add(jsondata);
 
 						$('#app-content').removeClass('icon-loading');
 

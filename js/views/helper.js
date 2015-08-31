@@ -15,29 +15,31 @@ define(function(require) {
 
 	var Handlebars = require('handlebars');
 
-	Handlebars.registerHelper("relativeModifiedDate", function(dateInt) {
+	Handlebars.registerHelper('relativeModifiedDate', function(dateInt) {
 		var lastModified = new Date(dateInt * 1000);
 		var lastModifiedTime = Math.round(lastModified.getTime() / 1000);
+		// jscs:disable requireCamelCaseOrUpperCaseIdentifiers
 		return relative_modified_date(lastModifiedTime);
+		// jscs:enable requireCamelCaseOrUpperCaseIdentifiers
 	});
 
-	Handlebars.registerHelper("formatDate", function(dateInt) {
+	Handlebars.registerHelper('formatDate', function(dateInt) {
 		var lastModified = new Date(dateInt * 1000);
 		return formatDate(lastModified);
 	});
 
-	Handlebars.registerHelper("humanFileSize", function(size) {
+	Handlebars.registerHelper('humanFileSize', function(size) {
 		return humanFileSize(size);
 	});
 
 	Handlebars.registerHelper('accountColor', function(account) {
-		var hash = md5(account),
-			maxRange = parseInt('ffffffffffffffffffffffffffffffff', 16),
-			hue = parseInt(hash, 16) / maxRange * 256;
+		var hash = md5(account);
+		var maxRange = parseInt('ffffffffffffffffffffffffffffffff', 16);
+		var hue = parseInt(hash, 16) / maxRange * 256;
 		return new Handlebars.SafeString('hsl(' + hue + ', 90%, 65%)');
 	});
 
-	Handlebars.registerHelper("printAddressList", function(addressList) {
+	Handlebars.registerHelper('printAddressList', function(addressList) {
 		var currentAddress = _.find(require('app').State.accounts, function(item) {
 			return item.accountId === require('app').State.currentAccountId;
 		});
@@ -55,22 +57,22 @@ define(function(require) {
 				label = t('mail', 'you');
 			}
 			var title = t('mail', 'Send message to {email}', {email: email});
-			memo += '<span class="tipsy-mailto" title="' + title + '">';
-			memo += '<a class="link-mailto" data-email="' + email + '" data-label="' + label + '">';
+			memo += '<span class="tipsy-mailto" title="' + title + '>';
+			memo += '<a class="link-mailto" data-email="" + email + "" data-label="" + label + "">';
 			memo += label + '</a></span>';
 			return memo;
-		}, "");
+		}, '');
 		return new Handlebars.SafeString(str);
 	});
 
-	Handlebars.registerHelper("printAddressListPlain", function(addressList) {
+	Handlebars.registerHelper('printAddressListPlain', function(addressList) {
 		var str = _.reduce(addressList, function(memo, value, index) {
 			if (index !== 0) {
 				memo += ', ';
 			}
 			var label = value.label
 				.replace(/(^"|"$)/g, '')
-				.replace(/(^'|'$)/g, '');
+				.replace(/(^"|"$)/g, '');
 			label = Handlebars.Utils.escapeExpression(label);
 			var email = Handlebars.Utils.escapeExpression(value.email);
 			if (label === email) {
@@ -78,11 +80,11 @@ define(function(require) {
 			} else {
 				return memo + '"' + label + '" <' + email + '>';
 			}
-		}, "");
+		}, '');
 		return str;
 	});
 
-	Handlebars.registerHelper("ifHasCC", function(cc, ccList, options) {
+	Handlebars.registerHelper('ifHasCC', function(cc, ccList, options) {
 		if (!_.isUndefined(cc) || (!_.isUndefined(ccList) && ccList.length > 0)) {
 			return options.fn(this);
 		} else {
@@ -90,7 +92,7 @@ define(function(require) {
 		}
 	});
 
-	Handlebars.registerHelper("unlessHasCC", function(cc, ccList, options) {
+	Handlebars.registerHelper('unlessHasCC', function(cc, ccList, options) {
 		if (_.isUndefined(cc) && (_.isUndefined(ccList) || ccList.length === 0)) {
 			return options.fn(this);
 		} else {
@@ -102,17 +104,17 @@ define(function(require) {
 	//TODO: remove once OC 8.0 support has been dropped
 	window.getScrollBarWidth = window.getScrollBarWidth || function() {
 		var inner = document.createElement('p');
-		inner.style.width = "100%";
-		inner.style.height = "200px";
+		inner.style.width = '100%';
+		inner.style.height = '200px';
 
 		var outer = document.createElement('div');
-		outer.style.position = "absolute";
-		outer.style.top = "0px";
-		outer.style.left = "0px";
-		outer.style.visibility = "hidden";
-		outer.style.width = "200px";
-		outer.style.height = "150px";
-		outer.style.overflow = "hidden";
+		outer.style.position = 'absolute';
+		outer.style.top = '0px';
+		outer.style.left = '0px';
+		outer.style.visibility = 'hidden';
+		outer.style.width = '200px';
+		outer.style.height = '150px';
+		outer.style.overflow = 'hidden';
 		outer.appendChild(inner);
 
 		document.body.appendChild(outer);

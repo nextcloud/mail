@@ -3,7 +3,7 @@
     "fileExtensions": [".js", "jscs"],
 
     "requireParenthesesAroundIIFE": true,
-    "disallowMultipleVarDecl": false,
+    "disallowMultipleVarDecl": "strict",
     "maximumLineLength": 120,
     "validateLineBreaks": "LF",
     "validateIndentation": "\t",
@@ -11,7 +11,7 @@
     "disallowKeywords": ["with"],
     "disallowSpacesInsideObjectBrackets": null,
     "disallowImplicitTypeConversion": ["string"],
-
+    "requireCamelCaseOrUpperCaseIdentifiers": "ignoreProperties",
     "safeContextKeyword": "_this",
 
     "excludeFiles": [
@@ -19,24 +19,7 @@
         "vendor/",
         ".git/",
         "l10n/",
-        "js/backbone.js",
-        "js/handlebars-v1.3.0.js",
-        "js/backbone.marionette.js",
-        "js/jquery.autosize.js",
-        "js/jquery.storageapi.js",
-        "js/jquery-visibility.js"
-    ],
+        "js/vendor/"
+    ]
 
-    "jsDoc": {
-        "checkAnnotations": "jsdoc3",
-        "checkParamNames": true,
-        "requireParamTypes": true,
-        "checkRedundantParams": true,
-        "checkReturnTypes": true,
-        "checkRedundantReturns": true,
-        "requireReturnTypes": true,
-        "checkTypes": "capitalizedNativeCase",
-        "checkRedundantAccess": true,
-        "requireNewlineAfterDescription": true
-    }
 }

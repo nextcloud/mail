@@ -11,8 +11,8 @@
 define(function(require) {
 	'use strict';
 
-	var Backbone = require('backbone'),
-		Attachment = require('models/attachment');
+	var Backbone = require('backbone');
+	var Attachment = require('models/attachment');
 
 	return Backbone.Collection.extend({
 		model: Attachment

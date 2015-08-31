@@ -11,10 +11,10 @@
 define(function(require) {
 	'use strict';
 
-	var Backbone = require('backbone'),
-		$ = require('jquery'),
-		OC = require('OC'),
-		MessageFlags = require('models/messageflags');
+	var Backbone = require('backbone');
+	var $ = require('jquery');
+	var OC = require('OC');
+	var MessageFlags = require('models/messageflags');
 
 	return Backbone.Model.extend({
 		defaults: {
@@ -41,8 +41,8 @@ define(function(require) {
 		},
 		flagMessage: function(flag, value) {
 			var messageId = this.id;
-			var thisModel = this;
-			thisModel.get('flags').set(flag, value);
+			var _this = this;
+			_this.get('flags').set(flag, value);
 
 			var flags = [flag, value];
 			$.ajax(
@@ -60,7 +60,7 @@ define(function(require) {
 				},
 				error: function() {
 					require('app').UI.showError(t('mail', 'Message could not be starred. Please try again.'));
-					thisModel.get('flags').set(flag, !value);
+					_this.get('flags').set(flag, !value);
 				}
 			});
 		}

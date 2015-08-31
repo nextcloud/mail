@@ -11,9 +11,9 @@
 define(function(require) {
 	'use strict';
 
-	var Backbone = require('backbone'),
-		OC = require('OC'),
-		AttachmentView = require('views/attachment');
+	var Backbone = require('backbone');
+	var OC = require('OC');
+	var AttachmentView = require('views/attachment');
 
 	return Backbone.Marionette.CompositeView.extend({
 		collection: null,

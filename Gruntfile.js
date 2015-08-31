@@ -9,19 +9,23 @@
  * @author Christoph Wurst <christoph@winzerhof-wurst.at>
  * @copyright Christoph Wurst 2015
  */
-module.exports = function (grunt) {
+module.exports = function(grunt) {
 	// Project configuration.
 	grunt.initConfig({
+		jshint: {
+			options: {
+				jshintrc: '.jshintrc'
+			},
+			all: ['Gruntfile.js', 'js/*.js', 'js/models/*.js', 'js/views/*.js']
+		},
 		jscs: {
-        		src: 'js/*.js',
+			src: '<%= jshint.all %>',
 			options: {
 				config: '.jscsrc',
 				verbose: true
 			}
-		},
-		jshint: {
-			jshintrc: '.jshintrc'
 		}
+
 	});
 
 	// jscs

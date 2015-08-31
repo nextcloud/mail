@@ -15,9 +15,9 @@ define(function(require) {
 
 	return Marionette.ItemView.extend({
 		initialize: function(options) {
-			this.model.set('searchTerm', options.filterCriteria.text || "");
+			this.model.set('searchTerm', options.filterCriteria.text || '');
 		},
-		template: "#no-search-results-message-list-template",
+		template: '#no-search-results-message-list-template',
 		onRender: function() {
 			this.$('#load-more-mail-messages').hide();
 		}
