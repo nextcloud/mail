@@ -11,7 +11,11 @@
 define(function(require) {
 	'use strict';
 
-	var Mail = {};
+	var Marionette = require('marionette');
+
+	var Mail = Marionette.Application.extend({
+		
+	});
 
 	Mail.BackGround = require('background');
 	Mail.Communication = require('communication');
