@@ -11,17 +11,21 @@
 define(function(require) {
 	'use strict';
 
+	var timeoutID = null;
+	function attach(search) {
+		search.setFilter('mail', require('app').Search.filter);
+	}
+
+	function filter(query) {
+		window.clearTimeout(timeoutID);
+		timeoutID = window.setTimeout(function() {
+			require('app').UI.messageView.filterCurrentMailbox(query);
+		}, 500);
+		$('#searchresults').hide();
+	}
+
 	return {
-		timeoutID: null,
-		attach: function(search) {
-			search.setFilter('mail', require('app').Search.filter);
-		},
-		filter: function(query) {
-			window.clearTimeout(require('app').Search.timeoutID);
-			require('app').Search.timeoutID = window.setTimeout(function() {
-				require('app').UI.messageView.filterCurrentMailbox(query);
-			}, 500);
-			$('#searchresults').hide();
-		}
+		attach: attach,
+		filter: filter
 	};
 });
