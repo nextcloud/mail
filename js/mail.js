@@ -14,7 +14,7 @@ define(function(require) {
 	var Marionette = require('marionette');
 
 	var Mail = Marionette.Application.extend({
-		
+
 	});
 
 	Mail.BackGround = require('background');
