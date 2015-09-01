@@ -12,6 +12,8 @@ define(function(require) {
 	'use strict';
 
 	var Marionette = require('marionette');
+	var AccountController = require('controller/accountcontroller');
+	var AccountService = require('service/accountservice');
 
 	var Mail = new Marionette.Application();
 
@@ -30,7 +32,7 @@ define(function(require) {
 	 */
 	// Account
 	Mail.on('accounts:load', function() {
-		Mail.UI.loadAccounts();
+		Mail.Controller.accountController.loadAccounts();
 	});
 	// Folder
 	Mail.on('folder:load', function(accountId, folderId, noSelect) {
@@ -40,6 +42,27 @@ define(function(require) {
 	Mail.on('message:load', function(accountId, folderId, messageId, options) {
 		//FIXME: don't rely on global state vars
 		Mail.UI.loadMessage(messageId, options);
+	});
+
+	/**
+	 * Set up controllers
+	 */
+	Mail.Controller = {};
+	// Account
+	Mail.Controller.accountController = AccountController;
+
+	/**
+	 * Set up services
+	 */
+	Mail.Service = {};
+	// Account
+	Mail.Service.accountService = AccountService;
+
+	/*
+	 * Set up request/response handler
+	 */
+	Mail.reqres.setHandler('account:entities', function() {
+		return Mail.Service.accountService.getAccountEntities();
 	});
 
 	return Mail;
