@@ -24,16 +24,28 @@ module.exports = function(grunt) {
 				config: '.jscsrc',
 				verbose: true
 			}
+		},
+		karma: {
+			unit: {
+				configFile: 'karma.conf.js',
+				autoWatch: true
+			},
+			continuous: {
+				configFile: 'karma.conf.js',
+				browsers: ['PhantomJS'],
+				singleRun: true,
+			}
 		}
-
 	});
-
 	// jscs
 	grunt.loadNpmTasks('grunt-jscs');
 
 	// jshint
 	grunt.loadNpmTasks('grunt-contrib-jshint');
 
+	// Karma unit tests
+	grunt.loadNpmTasks('grunt-karma');
+
 	// Default task
-	grunt.registerTask('default', ['jscs', 'jshint']);
+	grunt.registerTask('default', ['jscs', 'jshint', 'karma:continuous']);
 };
