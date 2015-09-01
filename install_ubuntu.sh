@@ -1,7 +1,7 @@
 #!/bin/bash
 
 # install node.js
-sudo apt-get install nodejs-legacy -y
+sudo apt-get install nodejs-legacy npm -y
 
 # get composer
 curl -sS https://getcomposer.org/installer | php
