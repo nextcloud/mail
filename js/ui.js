@@ -20,8 +20,6 @@ define(function(require) {
 	var MessagesView = require('views/messages');
 	var FoldersView = require('views/folders');
 	var ComposerView = require('views/composer');
-	var AccountsCollection = require('models/accountcollection');
-	var SettingsAccountsView = require('views/settings-accounts');
 
 	require('views/helper');
 	require('settings');
@@ -71,34 +69,6 @@ define(function(require) {
 
 	function changeFavicon(src) {
 		$('link[rel="shortcut icon"]').attr('href', src);
-	}
-
-	function loadAccounts() {
-		require('app').Communication.get(OC.generateUrl('apps/mail/accounts'), {
-			success: function(data) {
-				var accounts = new AccountsCollection(data);
-				require('app').State.accounts = accounts;
-				renderSettings();
-				if (accounts.length === 0) {
-					addAccount();
-				} else {
-					var view = new SettingsAccountsView({
-						el: '#settings-accounts',
-						collection: accounts
-					});
-					view.render();
-					var firstAccountId = accounts.at(0).get('accountId');
-					accounts.each(function(a) {
-						loadFoldersForAccount(a.get('accountId'), firstAccountId);
-					});
-				}
-				require('app').Cache.cleanUp(accounts);
-			},
-			error: function() {
-				showError(t('mail', 'Error while loading the accounts.'));
-			},
-			ttl: 'no'
-		});
 	}
 
 	function initializeInterface() {
@@ -782,9 +752,10 @@ define(function(require) {
 	}
 
 	var view = {
+		renderSettings: renderSettings,
 		changeFavicon: changeFavicon,
-		loadAccounts: loadAccounts,
 		initializeInterface: initializeInterface,
+		loadFoldersForAccount: loadFoldersForAccount,
 		showError: showError,
 		hideMenu: hideMenu,
 		showMenu: showMenu,
