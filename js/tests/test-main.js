@@ -19,7 +19,8 @@ require.config({
 		backbone: 'vendor/backbone/backbone',
 		domready: 'vendor/domready/ready.min',
 		handlebars: 'vendor/handlebars/handlebars',
-		marionette: 'vendor/backbone.marionette/lib/backbone.marionette'
+		marionette: 'vendor/backbone.marionette/lib/backbone.marionette',
+		OC: 'tests/mocks/OC'
 	},
 	shim: {
 		handlebars: {

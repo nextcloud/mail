@@ -33,11 +33,13 @@ before_script:
   - cd apps/mail
   - npm install --deps
   - npm run-script bower_deps
-  - ./node_modules/.bin/grunt
 
 script:
   # Test lint
   - find . -name \*.php -not -path './vendor/*' -exec php -l "{}" \;
+
+  # Run js unit tests
+  - grunt
 
   # Run phpunit tests
   - cd tests
