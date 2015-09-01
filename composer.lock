@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#composer-lock-the-lock-file",
         "This file is @generated automatically"
     ],
-    "hash": "f2176a911d5c0fbd477e86944e0206b3",
+    "hash": "5279104794dcac01d4cc7c7bd22b2128",
     "packages": [
         {
             "name": "ezyang/htmlpurifier",
@@ -94,7 +94,7 @@
             ],
             "description": "Autolink URLs in text or html",
             "homepage": "http://www.kwi.dk/projects/php/UrlLinker/",
-            "time": "2014-12-28 22:05:00"
+            "time": "2014-12-28 23:05:00"
         },
         {
             "name": "pear-pear.horde.org/Horde_Crypt_Blowfish",
@@ -424,6 +424,9 @@
             "include-path": [
                 "/"
             ],
+            "license": [
+                "LGPL-2.1"
+            ],
             "description": "An API for encrypting and decrypting small pieces of data with the use of a shared key."
         },
         {
@@ -515,6 +518,9 @@
             },
             "include-path": [
                 "/"
+            ],
+            "license": [
+                "LGPL-2.1"
             ],
             "description": "An object-oriented interface to assist in creating and storing PHP stream resources, and to provide utility methods to access and manipulate the stream contents."
         },
@@ -693,6 +699,9 @@
             },
             "include-path": [
                 "/"
+            ],
+            "license": [
+                "LGPL-2.1"
             ],
             "description": "Translation wrappers."
         },
