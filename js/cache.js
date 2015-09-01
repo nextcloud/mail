@@ -36,8 +36,8 @@ define(function(require) {
 	};
 
 	function cleanUp(accounts) {
-		var activeAccounts = _.map(accounts, function(account) {
-			return account.accountId;
+		var activeAccounts = accounts.map(function(account) {
+			return account.get('accountId');
 		});
 		_.each(storage.get('messages'), function(account, accountId) {
 			var isActive = _.any(activeAccounts, function(a) {

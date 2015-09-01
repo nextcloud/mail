@@ -61,12 +61,11 @@ define(function(require) {
 	};
 
 	function renderSettings() {
-		var accounts = _.filter(require('app').State.accounts, function(item) {
-			return item.accountId !== -1;
-		});
+		// TODO: create marionette layouview and include the settings-account-view
+		// there
 		var source = $('#mail-settings-template').html();
 		var template = Handlebars.compile(source);
-		var html = template(accounts);
+		var html = template();
 		$('#app-settings-content').html(html);
 	}
 
@@ -76,8 +75,8 @@ define(function(require) {
 
 	function loadAccounts() {
 		require('app').Communication.get(OC.generateUrl('apps/mail/accounts'), {
-			success: function(accounts) {
-				var accountsCollection = new AccountsCollection(accounts);
+			success: function(data) {
+				var accounts = new AccountsCollection(data);
 				require('app').State.accounts = accounts;
 				renderSettings();
 				if (accounts.length === 0) {
@@ -85,12 +84,12 @@ define(function(require) {
 				} else {
 					var view = new SettingsAccountsView({
 						el: '#settings-accounts',
-						collection: accountsCollection
+						collection: accounts
 					});
 					view.render();
-					var firstAccountId = accounts[0].accountId;
-					_.each(accounts, function(a) {
-						loadFoldersForAccount(a.accountId, firstAccountId);
+					var firstAccountId = accounts.at(0).get('accountId');
+					accounts.each(function(a) {
+						loadFoldersForAccount(a.get('accountId'), firstAccountId);
 					});
 				}
 				require('app').Cache.cleanUp(accounts);
@@ -449,7 +448,7 @@ define(function(require) {
 				el: $('#mail-message'),
 				onSubmit: require('app').Communication.sendMessage,
 				onDraft: require('app').Communication.saveDraft,
-				aliases: require('app').State.accounts
+				accounts: require('app').State.accounts
 			});
 		} else {
 			composer.data = data;
@@ -727,8 +726,8 @@ define(function(require) {
 		messageView.clearFilter();
 
 		// disable all other folders for all accounts
-		_.each(require('app').State.accounts, function(account) {
-			var localAccount = require('app').State.folderView.collection.get(account.accountId);
+		require('app').State.accounts.each(function(account) {
+			var localAccount = require('app').State.folderView.collection.get(account.get('accountId'));
 			if (_.isUndefined(localAccount)) {
 				return;
 			}
