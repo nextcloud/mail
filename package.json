@@ -25,12 +25,23 @@
   },
   "homepage": "https://github.com/owncloud/mail",
   "devDependencies": {
+    "bower": "^1.5.2",
     "grunt-cli": "^0.1.13",
     "grunt-contrib-jshint": "^0.11.2",
     "grunt-jscs": "^1.8.0",
+    "jasmine-core": "^2.3.4",
     "jscs-jsdoc": "^1.0.1",
     "jshint": "^2.7.0",
     "jsxhint": "^0.14.0",
-    "bower": "^1.5.2"
+    "karma": "^0.13.9",
+    "karma-jasmine": "^0.3.6",
+    "karma-phantomjs-launcher": "^0.2.1",
+    "karma-requirejs": "^0.2.2",
+    "phantomjs": "^1.9.18",
+    "requirejs": "^2.1.20"
+  },
+  "dependencies": {
+    "karma-cli": "^0.1.0",
+    "phantomjs": "^1.9.18"
   }
 }
