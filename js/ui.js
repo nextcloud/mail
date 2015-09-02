@@ -58,15 +58,6 @@ define(function(require) {
 		}
 	};
 
-	function renderSettings() {
-		// TODO: create marionette layouview and include the settings-account-view
-		// there
-		var source = $('#mail-settings-template').html();
-		var template = Handlebars.compile(source);
-		var html = template();
-		$('#app-settings-content').html(html);
-	}
-
 	function changeFavicon(src) {
 		$('link[rel="shortcut icon"]').attr('href', src);
 	}
@@ -752,7 +743,6 @@ define(function(require) {
 	}
 
 	var view = {
-		renderSettings: renderSettings,
 		changeFavicon: changeFavicon,
 		initializeInterface: initializeInterface,
 		loadFoldersForAccount: loadFoldersForAccount,

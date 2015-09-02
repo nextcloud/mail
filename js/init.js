@@ -16,6 +16,11 @@ define(function(require) {
 	var document = require('domready');
 	var Mail = require('app');
 
+	/**
+	 * Start the application
+	 */
+	Mail.start();
+
 	Mail.UI.initializeInterface();
 
 	// auto detect button handling
