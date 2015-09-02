@@ -23,7 +23,7 @@ define(function(require) {
 			} else {
 				var firstAccountId = accounts.at(0).get('accountId');
 				accounts.each(function(a) {
-					UI.loadFoldersForAccount(a.get('accountId'), firstAccountId);
+					require('app').trigger('folder:init', a.get('accountId'), firstAccountId);
 				});
 			}
 		});
