@@ -143,7 +143,6 @@ script('mail', 'require_config');
 
 <?php print_unescaped($this->inc('part.mail-account')); ?>
 <?php print_unescaped($this->inc('part.mail-attachment')); ?>
-<?php print_unescaped($this->inc('part.mail-attachments')); ?>
 <?php print_unescaped($this->inc('part.mail-composer')); ?>
 <?php print_unescaped($this->inc('part.mail-folder')); ?>
 <?php print_unescaped($this->inc('part.mail-message')); ?>
