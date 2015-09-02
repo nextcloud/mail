@@ -1,4 +1,11 @@
 /* global Handlebars, views, OC */
+
+/* This was a copy of composer.js for mailto links, see:
+*
+* TODO: https://github.com/owncloud/mail/issues/1020
+*
+* */
+
 var Mail = {
 	State:{
 		accounts: null
