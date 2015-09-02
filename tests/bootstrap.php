@@ -5,7 +5,7 @@ define('PHPUNIT_RUN', 1);
 require_once __DIR__.'/../../../lib/base.php';
 require_once __DIR__.'/../vendor/autoload.php';
 
-if (version_compare(implode('.', \OCP\Util::getVersion()), '8.2', '<=')) {
+if (version_compare(implode('.', \OCP\Util::getVersion()), '8.1', '<=')) {
 	\OC::$loader->addValidRoot(OC::$SERVERROOT . '/tests');
 }
 
