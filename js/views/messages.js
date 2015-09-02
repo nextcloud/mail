@@ -12,21 +12,23 @@ define(function(require) {
 	'use strict';
 
 	var Backbone = require('backbone');
+	var Handlebars = require('handlebars');
 	var MessageCollection = require('models/messagecollection');
 	var MessageView = require('views/message');
+	var MessageListTemplate = require('text!templates/message-list.html');
 	var NoSearchResultMessageListView = require('views/nosearchresultmessagelistview');
 
 	return Backbone.Marionette.CompositeView.extend({
 		collection: null,
 		childView: MessageView,
 		childViewContainer: '#mail-message-list',
+		template: Handlebars.compile(MessageListTemplate),
 		currentMessageId: null,
 		events: {
 			'click #load-new-mail-messages': 'loadNew',
 			'click #load-more-mail-messages': 'loadMore'
 		},
 		filterCriteria: null,
-		template: '#message-list-template',
 		initialize: function() {
 			this.collection = new MessageCollection();
 			this.collection.on('change:flags', this.changeFlags, this);

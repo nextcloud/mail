@@ -11,14 +11,14 @@
 define(function(require) {
 	'use strict';
 
-	var Marionette = require('marionette');
-	var $ = require('jquery');
 	var Handlebars = require('handlebars');
+	var Marionette = require('marionette');
 	var SettingsAccountsView = require('views/settings-accounts');
+	var SettingsTemplate = require('text!templates/settings.html');
 
 	return Marionette.LayoutView.extend({
 		accounts: null,
-		template: Handlebars.compile($('#mail-settings-template').html()),
+		template: Handlebars.compile(SettingsTemplate),
 		regions: {
 			accountsList: '#settings-accounts'
 		},

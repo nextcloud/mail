@@ -12,12 +12,14 @@ define(function(require) {
 	'use strict';
 
 	var Backbone = require('backbone');
+	var Handlebars = require('handlebars');
 	var FolderView = require('views/folder');
+	var AccountTemplate = require('text!templates/account.html');
 
 	return Backbone.Marionette.CompositeView.extend({
 		collection: null,
 		model: null,
-		template: '#mail-account-template',
+		template: Handlebars.compile(AccountTemplate),
 		childView: FolderView,
 		childViewContainer: '#mail_folders',
 		initialize: function(options) {

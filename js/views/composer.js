@@ -17,6 +17,7 @@ define(function(require) {
 	var OC = require('OC');
 	var Attachments = require('models/attachments');
 	var AttachmentsView = require('views/attachments');
+	var ComposerTemplate = require('text!templates/composer.html');
 
 	return Backbone.View.extend({
 		type: 'new',
@@ -112,8 +113,7 @@ define(function(require) {
 			};
 			_.defaults(options, defaultOptions);
 
-			var source = $('#mail-composer').html();
-			var template = Handlebars.compile(source);
+			var template = Handlebars.compile(ComposerTemplate);
 
 			this.attachments.reset();
 
