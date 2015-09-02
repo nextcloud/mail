@@ -17,10 +17,15 @@ define(function(require) {
 		tagName: 'li',
 		template: '#mail-attachment-template',
 		events: {
-			'click .icon-delete': 'removeAttachment'
+			'click .icon-delete': 'removeAttachment',
+			'click #mail-new-attachment-local': 'addAttachmentLocal'
 		},
 		removeAttachment: function() {
 			this.model.collection.remove(this.model);
+		},
+
+		addAttachmentLocal: function() {
+			console.log('test');
 		}
 
 	});

@@ -100,6 +100,10 @@ define(function(require) {
 		}
 	});
 
+	Handlebars.registerHelper('t', function(text) {
+		return t('mail', text);
+	});
+
 	//duplicate getScrollBarWidth function from core js.js
 	//TODO: remove once OC 8.0 support has been dropped
 	window.getScrollBarWidth = window.getScrollBarWidth || function() {

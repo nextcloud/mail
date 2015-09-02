@@ -27,7 +27,8 @@
 			domready: 'vendor/domready/ready.min',
 			handlebars: 'vendor/handlebars/handlebars',
 			marionette: 'vendor/backbone.marionette/lib/backbone.marionette',
-			underscore: '../../../core/vendor/underscore/underscore'
+			underscore: '../../../core/vendor/underscore/underscore',
+			text: 'vendor/text/text'
 		},
 		shim: {
 			// TODO: remove once min-oc-version is 8.0

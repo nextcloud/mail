@@ -9,12 +9,15 @@
  */
 
 define(['models/account'], function(Account) {
-	describe("test tests", function() {
-		it("should pass", function() {
+
+	describe('test tests', function() {
+		it('should pass', function() {
 			expect(1).toEqual(1);
 		});
-		it("should also pass", function() {
+
+		it('should also pass', function() {
 			expect(2).toEqual(2);
 		});
 	});
+
 });
