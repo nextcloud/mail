@@ -14,6 +14,8 @@ define(function(require) {
 	var Marionette = require('marionette');
 	var AccountController = require('controller/accountcontroller');
 	var AccountService = require('service/accountservice');
+	var AppView = require('views/app');
+	var SettingsView = require('views/settings');
 
 	var Mail = new Marionette.Application();
 
@@ -26,6 +28,11 @@ define(function(require) {
 	Mail.Search = require('search');
 	Mail.State = require('state');
 	Mail.UI = require('ui');
+
+	/**
+	 * Set up view
+	 */
+	Mail.view = new AppView();
 
 	/*
 	 * Set up event handler
@@ -63,6 +70,13 @@ define(function(require) {
 	 */
 	Mail.reqres.setHandler('account:entities', function() {
 		return Mail.Service.accountService.getAccountEntities();
+	});
+
+	Mail.on('before:start', function() {
+		// Render settings menu
+		Mail.view.settings.show(new SettingsView({
+			accounts: Mail.State.accounts
+		}));
 	});
 
 	return Mail;
