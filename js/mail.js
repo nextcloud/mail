@@ -13,7 +13,9 @@ define(function(require) {
 
 	var Marionette = require('marionette');
 	var AccountController = require('controller/accountcontroller');
+	var FolderController = require('controller/foldercontroller');
 	var AccountService = require('service/accountservice');
+	var FolderService = require('service/folderservice');
 	var AppView = require('views/app');
 	var SettingsView = require('views/settings');
 
@@ -37,15 +39,15 @@ define(function(require) {
 	/*
 	 * Set up event handler
 	 */
-	// Account
 	Mail.on('accounts:load', function() {
 		Mail.Controller.accountController.loadAccounts();
 	});
-	// Folder
+	Mail.on('folder:init', function(accountId, activeId) {
+		Mail.Controller.folderController.loadFolder(accountId, activeId);
+	});
 	Mail.on('folder:load', function(accountId, folderId, noSelect) {
 		Mail.UI.loadFolder(accountId, folderId, noSelect);
 	});
-	// Message
 	Mail.on('message:load', function(accountId, folderId, messageId, options) {
 		//FIXME: don't rely on global state vars
 		Mail.UI.loadMessage(messageId, options);
@@ -55,21 +57,24 @@ define(function(require) {
 	 * Set up controllers
 	 */
 	Mail.Controller = {};
-	// Account
 	Mail.Controller.accountController = AccountController;
+	Mail.Controller.folderController = FolderController;
 
 	/**
 	 * Set up services
 	 */
 	Mail.Service = {};
-	// Account
 	Mail.Service.accountService = AccountService;
+	Mail.Service.folderService = FolderService;
 
 	/*
 	 * Set up request/response handler
 	 */
 	Mail.reqres.setHandler('account:entities', function() {
 		return Mail.Service.accountService.getAccountEntities();
+	});
+	Mail.reqres.setHandler('folder:entities', function(accountId) {
+		return Mail.Service.folderService.getFolderEntities(accountId);
 	});
 
 	Mail.on('before:start', function() {

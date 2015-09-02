@@ -18,8 +18,8 @@ define(function(require) {
 	return Backbone.Collection.extend({
 		model: Account,
 		url: OC.generateUrl('apps/mail/accounts'),
-		comparator: function(folder) {
-			return folder.get('id');
+		comparator: function(account) {
+			return account.get('id');
 		}
 	});
 });

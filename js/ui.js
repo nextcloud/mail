@@ -161,43 +161,6 @@ define(function(require) {
 		require('app').trigger('accounts:load');
 	}
 
-	function loadFoldersForAccount(accountId, firstAccountId) {
-		$('#mail_messages').removeClass('hidden').addClass('icon-loading');
-		$('#mail-message').removeClass('hidden').addClass('icon-loading');
-		$('#mail_new_message').removeClass('hidden');
-		$('#folders').removeClass('hidden');
-		$('#mail-setup').addClass('hidden');
-
-		var app = require('app');
-		clearMessages();
-		$('#app-navigation').addClass('icon-loading');
-
-		app.Communication.get(OC.generateUrl('apps/mail/accounts/{accountId}/folders', {accountId: accountId}), {
-			success: function(jsondata) {
-				$('#app-navigation').removeClass('icon-loading');
-				require('app').State.folderView.collection.add(jsondata);
-
-				if (jsondata.id === firstAccountId) {
-					var folderId = jsondata.folders[0].id;
-
-					require('app').trigger('folder:load', accountId, folderId, false);
-
-					// Save current folder
-					setFolderActive(accountId, folderId);
-					require('app').State.currentAccountId = accountId;
-					require('app').State.currentFolderId = folderId;
-
-					// Start fetching messages in background
-					require('app').BackGround.messageFetcher.start();
-				}
-			},
-			error: function() {
-				showError(t('mail', 'Error while loading the selected account.'));
-			},
-			ttl: 'no'
-		});
-	}
-
 	function showError(message) {
 		OC.Notification.showTemporary(message);
 		$('#app-navigation')
@@ -745,8 +708,8 @@ define(function(require) {
 	var view = {
 		changeFavicon: changeFavicon,
 		initializeInterface: initializeInterface,
-		loadFoldersForAccount: loadFoldersForAccount,
 		showError: showError,
+		clearMessages: clearMessages,
 		hideMenu: hideMenu,
 		showMenu: showMenu,
 		addMessages: addMessages,
