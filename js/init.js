@@ -229,5 +229,8 @@ define(function(require) {
 		$('iframe').contents().find('img[data-original-src]').each(function() {
 			$(this).attr('src', $(this).attr('data-original-src'));
 		});
+		$('iframe').contents().find('[data-original-style]').each(function() {
+			$(this).attr('style', $(this).attr('data-original-style'));
+		});
 	});
 });
