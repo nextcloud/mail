@@ -40,7 +40,7 @@ class TranslationExtractor {
 	
 	private function extract($directory) {
 		$strings = [];
-		$iterator = new DirectoryIterator($this->directory);
+		$iterator = new DirectoryIterator($directory);
 		foreach ($iterator as $node) {
 			if ($node->isDot()) {
 				continue;
@@ -52,14 +52,14 @@ class TranslationExtractor {
 				$strings = array_merge($strings, $s);
 			}
 		}
-		return $strings;
+		return array_unique(array_values($strings));
 	}
 	
 	public function run() {
 		$strings = $this->extract($this->directory);
 		$export = '';
 		foreach ($strings as $s) {
-			$export .= 't(\'' . $s . '\');';
+			$export .= 't(\'' . $s . '\');' . PHP_EOL;
 		}
 		file_put_contents('translations.js', $export);
 	}

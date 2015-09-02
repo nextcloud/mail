@@ -1,1 +1,14 @@
 t('Add attachment from Files');
+t('Add mail account');
+t('Delete');
+t('to');
+t('cc');
+t('The images have been blocked to protect your privacy.');
+t('Show images from this sender');
+t('Download attachment');
+t('Save to Files');
+t('Save all to Files');
+t('Forward');
+t('from');
+t('bcc');
+t('Subject');
