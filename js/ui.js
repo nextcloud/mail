@@ -560,7 +560,7 @@ define(function(require) {
 			require('app').State.currentMessageSubject = message.subject;
 
 			// Render the message body
-			var source = $('#mail-message-template').html();
+			var source = require('text!templates/message.html');
 			var template = Handlebars.compile(source);
 			var html = template(message);
 			mailBody

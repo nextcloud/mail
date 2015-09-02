@@ -15,7 +15,7 @@ define(function(require) {
 	var OC = require('OC');
 	var Handlebars = require('handlebars');
 	var AttachmentView = require('views/attachment');
-	var AttachmentsTemplate = require('text!templates/part.mail-attachments.html');
+	var AttachmentsTemplate = require('text!templates/attachments.html');
 
 	return Backbone.Marionette.CompositeView.extend({
 		collection: null,

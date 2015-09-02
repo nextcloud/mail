@@ -11,11 +11,13 @@
 define(function(require) {
 	'use strict';
 
+	var Handlebars = require('handlebars');
 	var Marionette = require('marionette');
 	var OC = require('OC');
+	var MessageTemplate = require('text!templates/message-list-item.html');
 
 	return Marionette.ItemView.extend({
-		template: '#mail-messages-template',
+		template: Handlebars.compile(MessageTemplate),
 		ui: {
 			iconDelete: '.action.delete',
 			star: '.star'

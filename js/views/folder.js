@@ -12,9 +12,11 @@ define(function(require) {
 	'use strict';
 
 	var Backbone = require('backbone');
+	var Handlebars = require('handlebars');
+	var FolderTemplate = require('text!templates/folder.html');
 
 	return Backbone.Marionette.ItemView.extend({
-		template: '#mail-folder-template',
+		template: Handlebars.compile(FolderTemplate),
 		events: {
 			'click .collapse': 'collapseFolder',
 			'click .folder': 'loadFolder'

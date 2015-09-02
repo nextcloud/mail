@@ -11,16 +11,18 @@
 define(function(require) {
 	'use strict';
 
+	var Handlebars = require('handlebars');
 	var Marionette = require('marionette');
 	var $ = require('jquery');
 	var OC = require('OC');
+	var SettingsAccountTemplate = require('text!templates/settings-account.html');
 
 	return Marionette.ItemView.extend({
 		tagName: 'li',
 		id: function() {
 			return 'mail-account-' + this.model.get('accountId');
 		},
-		template: '#mail-settings-account',
+		template: Handlebars.compile(SettingsAccountTemplate),
 		events: {
 			'click .delete.action': 'onDelete'
 		},

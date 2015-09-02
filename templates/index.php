@@ -140,14 +140,3 @@ script('mail', 'require_config');
 		<div id="mail-message" class="icon-loading hidden-mobile"></div>
 	</div>
 </div>
-
-<?php print_unescaped($this->inc('part.mail-account')); ?>
-<?php print_unescaped($this->inc('part.mail-attachment')); ?>
-<?php print_unescaped($this->inc('part.mail-composer')); ?>
-<?php print_unescaped($this->inc('part.mail-folder')); ?>
-<?php print_unescaped($this->inc('part.mail-message')); ?>
-<?php print_unescaped($this->inc('part.mail-messages')); ?>
-<?php print_unescaped($this->inc('part.mail-settings')); ?>
-<?php print_unescaped($this->inc('part.mail-settings-account')); ?>
-<?php print_unescaped($this->inc('part.message-list')); ?>
-<?php print_unescaped($this->inc('part.no-search-results-message-list')); ?>

@@ -11,11 +11,13 @@
 define(function(require) {
 	'use strict';
 
+	var Handlebars = require('handlebars');
 	var Marionette = require('marionette');
+	var AttachmentTemplate = require('text!templates/attachment.html');
 
 	return Marionette.ItemView.extend({
 		tagName: 'li',
-		template: '#mail-attachment-template',
+		template: Handlebars.compile(AttachmentTemplate),
 		events: {
 			'click .icon-delete': 'removeAttachment',
 			'click #mail-new-attachment-local': 'addAttachmentLocal'

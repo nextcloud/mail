@@ -11,13 +11,16 @@
 define(function(require) {
 	'use strict';
 
+	var Handlebars = require('handlebars');
 	var Marionette = require('marionette');
+	var NoSearchResultMessageListViewTemplate
+		= require('text!templates/no-search-results-message-list.html');
 
 	return Marionette.ItemView.extend({
 		initialize: function(options) {
 			this.model.set('searchTerm', options.filterCriteria.text || '');
 		},
-		template: '#no-search-results-message-list-template',
+		template: Handlebars.compile(NoSearchResultMessageListViewTemplate),
 		onRender: function() {
 			this.$('#load-more-mail-messages').hide();
 		}

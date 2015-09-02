@@ -87,6 +87,5 @@ define(function(require) {
 				// jscs:enable requireCamelCaseOrUpperCaseIdentifiers
 			}
 		}
-
 	});
 });
