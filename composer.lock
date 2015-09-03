@@ -4,20 +4,20 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#composer-lock-the-lock-file",
         "This file is @generated automatically"
     ],
-    "hash": "5279104794dcac01d4cc7c7bd22b2128",
+    "hash": "abc904cf0bfbbcace698244c44173904",
     "packages": [
         {
             "name": "ezyang/htmlpurifier",
-            "version": "v4.6.0",
+            "version": "v4.7.0",
             "source": {
                 "type": "git",
                 "url": "https://github.com/ezyang/htmlpurifier.git",
-                "reference": "6f389f0f25b90d0b495308efcfa073981177f0fd"
+                "reference": "ae1828d955112356f7677c465f94f7deb7d27a40"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/ezyang/htmlpurifier/zipball/6f389f0f25b90d0b495308efcfa073981177f0fd",
-                "reference": "6f389f0f25b90d0b495308efcfa073981177f0fd",
+                "url": "https://api.github.com/repos/ezyang/htmlpurifier/zipball/ae1828d955112356f7677c465f94f7deb7d27a40",
+                "reference": "ae1828d955112356f7677c465f94f7deb7d27a40",
                 "shasum": ""
             },
             "require": {
@@ -40,8 +40,7 @@
                 {
                     "name": "Edward Z. Yang",
                     "email": "admin@htmlpurifier.org",
-                    "homepage": "http://ezyang.com",
-                    "role": "Developer"
+                    "homepage": "http://ezyang.com"
                 }
             ],
             "description": "Standards compliant HTML filter written in PHP",
@@ -49,7 +48,7 @@
             "keywords": [
                 "html"
             ],
-            "time": "2013-11-30 08:25:19"
+            "time": "2015-08-05 01:03:42"
         },
         {
             "name": "kwi/urllinker",
@@ -222,10 +221,10 @@
         },
         {
             "name": "pear-pear.horde.org/Horde_Imap_Client",
-            "version": "2.29.1",
+            "version": "2.29.2",
             "dist": {
                 "type": "file",
-                "url": "http://pear.horde.org/get/Horde_Imap_Client-2.29.1.tgz",
+                "url": "http://pear.horde.org/get/Horde_Imap_Client-2.29.2.tgz",
                 "reference": null,
                 "shasum": null
             },
@@ -244,7 +243,7 @@
                 "php": "<6.0.0.0"
             },
             "replace": {
-                "pear-horde/horde_imap_client": "== 2.29.1.0"
+                "pear-horde/horde_imap_client": "== 2.29.2.0"
             },
             "type": "pear-library",
             "autoload": {
@@ -329,10 +328,10 @@
         },
         {
             "name": "pear-pear.horde.org/Horde_Mime",
-            "version": "2.9.1",
+            "version": "2.9.2",
             "dist": {
                 "type": "file",
-                "url": "http://pear.horde.org/get/Horde_Mime-2.9.1.tgz",
+                "url": "http://pear.horde.org/get/Horde_Mime-2.9.2.tgz",
                 "reference": null,
                 "shasum": null
             },
@@ -349,7 +348,7 @@
                 "php": "<6.0.0.0"
             },
             "replace": {
-                "pear-horde/horde_mime": "== 2.9.1.0"
+                "pear-horde/horde_mime": "== 2.9.2.0"
             },
             "type": "pear-library",
             "autoload": {
