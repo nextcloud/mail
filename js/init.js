@@ -98,7 +98,7 @@ define(function(require) {
 					.val(t('mail', 'Connect'));
 				$('#connect-loading').hide();
 
-				Mail.UI.showMenu();
+				Mail.trigger('ui:menu:show');
 			}
 		});
 	});

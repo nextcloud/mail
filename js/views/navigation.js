@@ -12,23 +12,18 @@ define(function(require) {
 	'use strict';
 
 	var Marionette = require('marionette');
-	var $ = require('jquery');
-	var NavigationView = require('views/navigation');
 
 	return Marionette.LayoutView.extend({
-		el: $('#app'),
+		el: $('#app-navigation'),
 		regions: {
-			navigation: '#app-navigation',
-			content: '#app-content'
+			accounts: '#app-navigation-accounts',
+			settings: '#app-settings-content'
 		},
 		initialize: function() {
 			this.bindUIElements();
 		},
 		render: function() {
 			// This view doesn't need rendering
-		},
-		onBeforeShow: function() {
-			this.showChildView('navigation', new NavigationView());
 		}
 	});
 });

@@ -24,23 +24,21 @@ if ($debug) {
 	<div id="app-navigation" class="icon-loading">
 		<ul>
 			<li id="mail-new-message-fixed">
-			<input type="button" id="mail_new_message" class="icon-add"
-				value="<?php p($l->t('New message')); ?>" style="display: none">
+				<input type="button" id="mail_new_message" class="icon-add"
+				       value="<?php p($l->t('New message')); ?>" style="display: none">
 			</li>
-			<li id="mail-new-message-list">
-				<div id="folders"></div>
-			</li>
+			<li id="app-navigation-accounts"></li>
 		</ul>
 		<div id="app-settings">
 			<div id="app-settings-header">
 				<button class="settings-button"
 					data-apps-slide-toggle="#app-settings-content"></button>
 			</div>
-			<div id="app-settings-content"> </div>
+			<div id="app-settings-content"></div>
 		</div>
 	</div>
 	<div id="app-content">
-		<div id="mail_messages" class="icon-loading">
+		<div id="mail_messages">
 		</div>
 		<form id="mail-setup" class="hidden" method="post">
 			<div class="hidden-visually">
