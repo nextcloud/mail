@@ -88,7 +88,7 @@ define(function(require) {
 			// Add loading feedback
 			$('#load-new-mail-messages')
 				.addClass('icon-loading-small')
-				.val(t('mail', 'Checking messages …'))
+				.val(t('mail', 'Checking messages'))
 				.prop('disabled', true);
 
 			this.loadMessages(true);
@@ -154,7 +154,7 @@ define(function(require) {
 							.prop('disabled', false);
 						$('#load-new-mail-messages')
 							.removeClass('icon-loading-small')
-							.val(t('mail', 'Check messages …'))
+							.val(t('mail', 'Check messages'))
 							.prop('disabled', false);
 					}
 				});
