@@ -9,15 +9,16 @@ module.exports = function(config) {
 
 		// list of files / patterns to load in the browser
 		files: [
-			'../../core/vendor/underscore/underscore.js',
-			'../../core/vendor/jquery/jquery.min.js',
+			'js/vendor/jquery/dist/jquery.js',
 			{pattern: 'js/*/*.js', included: false},
 			{pattern: 'js/*.js', included: false},
 			{pattern: 'js/templates/*.html', included: false},
 			{pattern: 'js/vendor/backbone/backbone.js', included: false},
-			{pattern: 'js/vendor/handlebars/handlebars.js', included: false},
 			{pattern: 'js/vendor/backbone.marionette/lib/backbone.marionette.js', included: false},
+			{pattern: 'js/vendor/jquery/dist/jquery.js', included: false},
+			{pattern: 'js/vendor/handlebars/handlebars.js', included: false},
 			{pattern: 'js/vendor/text/text.js', included: false},
+			{pattern: 'js/vendor/underscore/underscore.js', included: false},
 			{pattern: 'js/tests/mocks/*.js', included: false},
 			{pattern: 'js/tests/*.js', included: false},
 			'js/tests/test-main.js'
