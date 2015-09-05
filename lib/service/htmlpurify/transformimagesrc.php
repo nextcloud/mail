@@ -44,6 +44,7 @@ class TransformImageSrc extends HTMLPurifier_AttrTransform {
 			(int)$attr['width'] < 5 && (int)$attr['height'] < 5){
 			// Replace with a transparent png in case it's important for the layout
 			$attr['src'] = 'data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAABmJLR0QA/wD/AP+gvaeTAAAADUlEQVQI12NgYGBgAAAABQABXvMqOgAAAABJRU5ErkJggg==';
+			$attr['style'] = 'display: none;'.$attr['style']; // the space is important for jquery!
 			return $attr;
 		}
 
@@ -52,6 +53,7 @@ class TransformImageSrc extends HTMLPurifier_AttrTransform {
 		if ($url->host === Util::getServerHostName() && $url->path === $this->urlGenerator->linkToRoute('mail.proxy.proxy')) {
 			$attr['data-original-src'] = $attr['src'];
 			$attr['src'] = Util::imagePath('mail', 'blocked-image.png');
+			$attr['style'] = 'display:none;'.$attr['style'];
 		}
 		return $attr;
 	}
