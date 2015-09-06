@@ -223,7 +223,7 @@
 #load-more-mail-messages {
 	display: none;
 	margin: 10px auto;
-	padding: 10px 10px 6px;
+	padding: 10px;
 }
 #load-more-mail-messages {
 	margin-bottom: 250px;
@@ -329,16 +329,16 @@
 	width: 241px !important;
 	z-index: 1;
 	padding-bottom: 12px;
-	background-color: rgba(245, 245, 245, .75);
+	background-color: rgba(255, 255, 255, .75);
 }
 #mail-new-message-list {
-	margin-top: 50px;
+	margin-top: 36px;
 }
 #mail_new_message {
 	width: 92%;
 	padding: 10px;
 	padding-left: 34px;
-	margin: 12px 10px 0;
+	margin: 10px 10px 0;
 	background-position: 10px center;
 	text-align: left;
 }
