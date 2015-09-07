@@ -228,6 +228,7 @@ define(function(require) {
 		$('#show-images-text').hide();
 		$('iframe').contents().find('img[data-original-src]').each(function() {
 			$(this).attr('src', $(this).attr('data-original-src'));
+			$(this).show();
 		});
 	});
 });
