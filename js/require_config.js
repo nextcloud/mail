@@ -17,10 +17,6 @@
 		baseUrl: './../../../apps/mail/js',
 		paths: {
 			/**
-			 * Application
-			 */
-			app: 'mail',
-			/**
 			 * Libraries
 			 */
 			backbone: 'vendor/backbone/backbone',

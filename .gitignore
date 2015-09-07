@@ -10,3 +10,6 @@ tests/clover.xml
 
 # Node.js modules
 node_modules/
+
+# optimized JS files
+js/mail.min.js

@@ -19,6 +19,8 @@ define(function(require) {
 	var AppView = require('views/app');
 	var SettingsView = require('views/settings');
 
+	require('notification');
+
 	var Mail = new Marionette.Application();
 
 	/*

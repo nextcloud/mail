@@ -5,7 +5,8 @@ script('mail','vendor/autosize/jquery.autosize');
 script('mail', 'vendor/jQuery-Storage-API/jquery.storageapi');
 script('mail', 'vendor/jquery-visibility/jquery-visibility');
 script('mail', 'vendor/requirejs/require');
-script('mail', 'require_config');
+//script('mail', 'require_config');
+script('mail', 'mail.min');
 ?>
 
 <div id="app">
@@ -140,3 +141,6 @@ script('mail', 'require_config');
 		<div id="mail-message" class="icon-loading hidden-mobile"></div>
 	</div>
 </div>
+<script type="text/javascript">
+	alert(1);
+</script>
