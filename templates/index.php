@@ -1,12 +1,23 @@
 <?php
+
+// TODO: remove DEBUG constant check once minimum oc
+// core version >= 8.2, see https://github.com/owncloud/core/pull/18510
+$debug = (defined('DEBUG') && DEBUG)
+	|| \OC::$server->getSystemConfig()->getValue('debug', false);
+
 style('mail','mail');
 style('mail','mobile');
 script('mail','vendor/autosize/jquery.autosize');
 script('mail', 'vendor/jQuery-Storage-API/jquery.storageapi');
 script('mail', 'vendor/jquery-visibility/jquery-visibility');
 script('mail', 'vendor/requirejs/require');
-//script('mail', 'require_config');
-script('mail', 'mail.min');
+if ($debug) {
+	// Load JS dependencies asynchronously as specified in require_config.js
+	script('mail', 'require_config');
+} else {
+	// Load optimzed requirejs dependencies in one single file
+	script('mail', 'mail.min');
+}
 ?>
 
 <div id="app">
@@ -141,6 +152,3 @@ script('mail', 'mail.min');
 		<div id="mail-message" class="icon-loading hidden-mobile"></div>
 	</div>
 </div>
-<script type="text/javascript">
-	alert(1);
-</script>

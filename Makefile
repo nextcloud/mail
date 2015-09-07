@@ -12,6 +12,17 @@ all: dist
 clean:
 	rm -rf $(build_dir)
 
+dist: install-npm-deps install-bower-deps optimize-js
+
+install-npm-deps: package.json
+	npm install
+
+install-bower-deps: bower.json install-npm-deps
+	./node_modules/bower/bin/bower install
+
+optimize-js:
+	./node_modules/requirejs/bin/r.js -o build.js
+
 update-composer:
 	rm -f composer.lock
 	git rm -r vendor

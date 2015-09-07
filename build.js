@@ -10,10 +10,8 @@
 
 ({
 	baseUrl: 'js',
-	paths: {
-		
-	},
 	mainConfigFile: 'js/require_config.js',
-	name: 'app',
-	out: 'js/mail.min.js'
+	name: 'init',
+	out: 'js/mail.min.js',
+	insertRequire: ['init']
 })
