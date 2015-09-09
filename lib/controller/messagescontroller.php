@@ -356,7 +356,22 @@ class MessagesController extends Controller {
 		$downloadUrl = \OC::$server->getURLGenerator()->getAbsoluteURL($downloadUrl);
 		$attachment['downloadUrl'] = $downloadUrl;
 		$attachment['mimeUrl'] = \OC_Helper::mimetypeIcon($attachment['mime']);
+
+		if ($this->attachmentIsImage($attachment)) {
+			$attachment['isImage'] = true;
+		}
 		return $attachment;
+	}
+
+	/**
+	 * @param $attachment
+	 *
+	 * Determines if the content of this attachment is an image
+	 */
+	private function attachmentIsImage($attachment) {
+		return in_array($attachment['mime'], array('image/jpeg',
+			'image/png',
+			'image/gif'));
 	}
 
 	/**
