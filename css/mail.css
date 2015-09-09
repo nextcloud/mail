@@ -583,6 +583,9 @@ input.submit-message {
 	float: left;
 	display: inline-block;
 }
+.mail-attached-image {
+	margin-bottom: 32px;
+}
 /* show icon + text for Download all button
 	as well as when there is only one attachment */
 .attachments-save-to-cloud,

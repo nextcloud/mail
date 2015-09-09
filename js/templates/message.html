@@ -51,7 +51,7 @@
 		{{#if attachments}}
 		<ul>
 			{{#each attachments}}
-			<li class="mail-message-attachment" data-message-id="{{messageId}}" data-attachment-id="{{id}}" data-attachment-mime="{{mime}}">
+			<li class="mail-message-attachment {{#if isImage}}mail-attached-image{{/if}}" data-message-id="{{messageId}}" data-attachment-id="{{id}}" data-attachment-mime="{{mime}}">
 				{{#if isImage}}
 					<img src="{{downloadUrl}}">
 					<br>

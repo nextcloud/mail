@@ -428,6 +428,17 @@ class MessagesController extends Controller {
 			$json['attachments'] = array_map(function ($a) use ($accountId, $folderId, $id) {
 				return $this->enrichDownloadUrl($accountId, $folderId, $id, $a);
 			}, $json['attachments']);
+
+			// show images first
+			usort($json['attachments'], function($a, $b) {
+				if (isset($a['isImage']) && !isset($b['isImage'])) {
+					return -1;
+				} elseif (!isset($a['isImage']) && isset($b['isImage'])) {
+					return 1;
+				} else {
+					Util::naturalSortCompare($a['fileName'], $b['fileName']);
+				}
+			});
 			return $json;
 		}
 		return $json;
