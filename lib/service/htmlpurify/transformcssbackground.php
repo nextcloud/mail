@@ -60,12 +60,12 @@ class TransformCSSBackground extends HTMLPurifier_AttrTransform {
 
 		// Reassemble style
 		$cssAttributes = array_map($func, $cssAttributes);
-		$new_style = implode(';', $cssAttributes);
+		$newStyle = implode(';', $cssAttributes);
 
 		// Replace style if required
-		if ($new_style !== $attr['style']) {
+		if ($newStyle !== $attr['style']) {
 			$attr['data-original-style'] = $attr['style'];
-			$attr['style'] = $new_style;
+			$attr['style'] = $newStyle;
 		}
 
 		return $attr;
