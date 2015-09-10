@@ -11,11 +11,12 @@ all: dist
 
 clean:
 	rm -rf $(build_dir)
+	rm -rf node_modules
 
 dist: install-npm-deps install-bower-deps optimize-js
 
 install-npm-deps: package.json
-	npm install
+	npm install --production
 
 install-bower-deps: bower.json install-npm-deps
 	./node_modules/bower/bin/bower install
