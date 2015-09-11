@@ -1,4 +1,14 @@
 <?php
+ /**
+ * ownCloud - Mail app
+ *
+ * @author Jakob Sack
+ * @copyright 2015 Jakob Sack jakob@owncloud.org
+ *
+ * You should have received a copy of the GNU Affero General Public
+ * License along with this library.  If not, see <http://www.gnu.org/licenses/>.
+ *
+ */
 
 namespace OCA\Mail\Service\HtmlPurify;
 use HTMLPurifier_AttrTransform;
