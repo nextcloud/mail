@@ -25,7 +25,6 @@
   },
   "homepage": "https://github.com/owncloud/mail",
   "devDependencies": {
-    "bower": "^1.5.2",
     "grunt-cli": "^0.1.13",
     "grunt-contrib-jshint": "^0.11.2",
     "grunt-jscs": "^1.8.0",
@@ -42,5 +41,7 @@
     "phantomjs": "^1.9.18"
   },
   "dependencies": {
+    "bower": "^1.5.2",
+    "requirejs": "^2.1.20"
   }
 }
