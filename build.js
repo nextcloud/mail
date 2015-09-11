@@ -13,5 +13,8 @@
 	mainConfigFile: 'js/require_config.js',
 	name: 'init',
 	out: 'js/mail.min.js',
-	insertRequire: ['init']
+	insertRequire: [
+		'init',
+		'notification'
+	]
 })
