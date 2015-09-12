@@ -83,6 +83,16 @@ php composer.phar install
 ```
 Debian/Ubuntu people, just execute `install_ubuntu.sh`
 
+### Nightly builds
+
+Instead of setting everything up manually, you can just [download the nightly builds](https://en0ch.se/index.php/s/3v5J3XXeQCCp73p) instead. These builds are updated every 12 hours - 00:00 UTC+0200 (12:00 AM) and 12:00 UTC+0200 (12:00 PM), and are pre-configured with all the needed dependencies.
+
+1. Download
+2. Extract the zip archive to 'path-to-owncloud/apps'
+3. Navigate to »Apps«, choose the category »Productivity«, find the Mail app and enable it.
+
+The nightly builds are provided by [Daniel Hansson](https://github.com/enoch85)
+
 ### Resetting the app
 Connect to your database and run the following commands (`oc_` is the default table prefix):
 ```sql
