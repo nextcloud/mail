@@ -55,6 +55,11 @@ define(function(require) {
 			// Resize iframe
 			var iframe = $('#mail-content iframe');
 			iframe.height(iframe.contents().find('html').height() + 20);
+
+			// resize width of attached images
+			$('.mail-message-attachments .mail-attached-image').each(function() {
+				$(this).css('max-width', $('.mail-message-body').width());
+			});
 		}
 	};
 
@@ -554,6 +559,14 @@ define(function(require) {
 			if (message.hasHtmlBody) {
 				$('#forward-button').hide();
 			}
+
+			// Set max width for attached images
+			$('.mail-message-attachments img.mail-attached-image').each(function() {
+				$(this).css({
+					'max-width': $('.mail-message-body').width(),
+					'height': 'auto'
+				});
+			});
 
 			messageView.setMessageFlag(messageId, 'unseen', false);
 

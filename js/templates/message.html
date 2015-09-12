@@ -38,7 +38,7 @@
 		<ul>
 			<li class="mail-message-attachment mail-message-attachment-single" data-message-id="{{attachment.messageId}}" data-attachment-id="{{attachment.id}}" data-attachment-mime="{{attachment.mime}}">
 				{{#if attachment.isImage}}
-					<img src="{{attachment.downloadUrl}}">
+					<img class="mail-attached-image" src="{{attachment.downloadUrl}}">
 					<br>
 				{{/if}}
 				<img class="attachment-icon" src="{{attachment.mimeUrl}}" />
@@ -51,9 +51,9 @@
 		{{#if attachments}}
 		<ul>
 			{{#each attachments}}
-			<li class="mail-message-attachment {{#if isImage}}mail-attached-image{{/if}}" data-message-id="{{messageId}}" data-attachment-id="{{id}}" data-attachment-mime="{{mime}}">
+			<li class="mail-message-attachment {{#if isImage}}mail-message-attachment-image{{/if}}" data-message-id="{{messageId}}" data-attachment-id="{{id}}" data-attachment-mime="{{mime}}">
 				{{#if isImage}}
-					<img src="{{downloadUrl}}">
+					<img class="mail-attached-image" src="{{downloadUrl}}">
 					<br>
 				{{/if}}
 				<a class="button icon-download attachment-download" href="{{downloadUrl}}" title="{{ t 'Download attachment' }}"></a>

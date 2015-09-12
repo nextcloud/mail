@@ -576,15 +576,15 @@ input.submit-message {
 	overflow: hidden;
 	text-overflow: ellipsis;
 }
+.mail-message-attachment-image {
+	margin-bottom: 32px;
+}
 .attachment-save-to-cloud,
 .attachment-download {
 	height: 32px;
 	min-width: 32px;
 	float: left;
 	display: inline-block;
-}
-.mail-attached-image {
-	margin-bottom: 32px;
 }
 /* show icon + text for Download all button
 	as well as when there is only one attachment */
