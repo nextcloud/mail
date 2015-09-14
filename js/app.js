@@ -18,6 +18,7 @@ define(function(require) {
 	var FolderService = require('service/folderservice');
 	var AppView = require('views/app');
 	var SettingsView = require('views/settings');
+	var NavigationView = require('views/navigation');
 
 	require('notification');
 
@@ -54,6 +55,12 @@ define(function(require) {
 		//FIXME: don't rely on global state vars
 		Mail.UI.loadMessage(messageId, options);
 	});
+	Mail.on('ui:menu:show', function() {
+		Mail.UI.showMenu();
+	});
+	Mail.on('ui:menu:hide', function() {
+		Mail.UI.hideMenu();
+	});
 
 	/**
 	 * Set up controllers
@@ -81,7 +88,8 @@ define(function(require) {
 
 	Mail.on('before:start', function() {
 		// Render settings menu
-		Mail.view.settings.show(new SettingsView({
+		this.view.navigation = new NavigationView();
+		this.view.navigation.settings.show(new SettingsView({
 			accounts: Mail.State.accounts
 		}));
 	});

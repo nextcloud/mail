@@ -18,7 +18,7 @@ define(function(require) {
 	var Marionette = require('marionette');
 	var OC = require('OC');
 	var MessagesView = require('views/messages');
-	var FoldersView = require('views/folders');
+	var NavigationAccountsView = require('views/navigation-accounts');
 	var ComposerView = require('views/composer');
 
 	require('views/helper');
@@ -91,13 +91,12 @@ define(function(require) {
 		messageView.render();
 
 		// setup folder view
-		require('app').State.folderView = new FoldersView({
-			el: $('#folders')
-		});
-		require('app').State.folderView.render();
+		var foldersView = new NavigationAccountsView();
+		require('app').State.folderView = foldersView;
+		require('app').view.navigation.accounts.show(foldersView);
 
-		require('app').State.folderView.listenTo(messageView, 'change:unseen',
-			require('app').State.folderView.changeUnseen);
+		foldersView.listenTo(messageView, 'change:unseen',
+			foldersView.changeUnseen);
 
 		// request permissions
 		if (typeof Notification !== 'undefined') {
@@ -679,7 +678,7 @@ define(function(require) {
 		$('#mail_new_message').addClass('hidden');
 		$('#app-navigation').removeClass('icon-loading');
 
-		hideMenu();
+		require('app').trigger('ui:menu:hide');
 
 		$('#mail-setup').removeClass('hidden');
 		// don't show New Message button on Add account screen

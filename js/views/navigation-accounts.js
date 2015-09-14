@@ -18,7 +18,6 @@ define(function(require) {
 	var AccountCollection = require('models/accountcollection');
 
 	return Marionette.CollectionView.extend({
-		// The collection will be kept here
 		collection: null,
 		childView: AccountView,
 		initialize: function() {
@@ -44,7 +43,6 @@ define(function(require) {
 					k += delimiter;
 				}
 				k += p;
-
 				var folders = activeFolder.folders || activeFolder.get('folders');
 				activeFolder = folders.filter(function(f) {
 					return f.id === btoa(k);
@@ -74,15 +72,14 @@ define(function(require) {
 			var activeFolder = this.getFolderById();
 			var unread = activeFolder.unseen || activeFolder.get('unseen');
 			var name = activeFolder.name || activeFolder.get('name');
-
 			if (unread > 0) {
 				window.document.title = name + ' (' + unread + ')' +
 					// jscs:disable requireCamelCaseOrUpperCaseIdentifiers
 					activeEmail + ' - Mail - ' + oc_defaults.title;
-					// jscs:enable requireCamelCaseOrUpperCaseIdentifiers
+				// jscs:enable requireCamelCaseOrUpperCaseIdentifiers
 			} else {
 				window.document.title = name + activeEmail +
-				// jscs:disable requireCamelCaseOrUpperCaseIdentifiers
+					// jscs:disable requireCamelCaseOrUpperCaseIdentifiers
 					' - Mail - ' + oc_defaults.title;
 				// jscs:enable requireCamelCaseOrUpperCaseIdentifiers
 			}
