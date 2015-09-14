@@ -230,5 +230,8 @@ define(function(require) {
 			$(this).attr('src', $(this).attr('data-original-src'));
 			$(this).show();
 		});
+		$('iframe').contents().find('[data-original-style]').each(function() {
+			$(this).attr('style', $(this).attr('data-original-style'));
+		});
 	});
 });

@@ -17,17 +17,13 @@
 		baseUrl: './../../../apps/mail/js',
 		paths: {
 			/**
-			 * Application
-			 */
-			app: 'mail',
-			/**
 			 * Libraries
 			 */
 			backbone: 'vendor/backbone/backbone',
 			domready: 'vendor/domready/ready.min',
 			handlebars: 'vendor/handlebars/handlebars',
 			marionette: 'vendor/backbone.marionette/lib/backbone.marionette',
-			underscore: '../../../core/vendor/underscore/underscore',
+			underscore: 'vendor/underscore/underscore',
 			text: 'vendor/text/text'
 		},
 		shim: {

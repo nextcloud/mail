@@ -7,28 +7,58 @@ appstore_dir=$(build_dir)/appstore
 source_dir=$(build_dir)/source
 package_name=$(app_name)
 
-all: dist
+all: appstore
 
 clean:
 	rm -rf $(build_dir)
+	rm -rf node_modules
+	rm -rf js/vendor
+
+composer.phar:
+	curl -sS https://getcomposer.org/installer | php
+
+install-deps: install-composer-deps install-npm-deps install-bower-deps
+
+install-composer-deps: composer.phar
+	php composer.phar install
+
+install-npm-deps: package.json
+	npm install --production
+
+install-bower-deps: bower.json install-npm-deps
+	./node_modules/bower/bin/bower install
+
+optimize-js: install-deps
+	./node_modules/requirejs/bin/r.js -o build.js
 
 update-composer:
 	rm -f composer.lock
 	git rm -r vendor
 	composer install --prefer-dist
 
-appstore: clean
+appstore: clean install-deps optimize-js
 	mkdir -p $(appstore_dir)
 	tar cvzf $(appstore_dir)/$(package_name).tar.gz $(project_dir) \
 	--exclude-vcs \
 	--exclude=$(project_dir)/build \
 	--exclude=$(project_dir)/build/artifacts \
-	--exclude=$(project_dir)/js/node_modules \
-	--exclude=$(project_dir)/js/.bowerrc \
+	--exclude=$(project_dir)/node_modules \
+	--exclude=$(project_dir)/.bowerrc \
+	--exclude=$(project_dir)/.jscsrc \
 	--exclude=$(project_dir)/.jshintrc \
 	--exclude=$(project_dir)/.jshintignore \
 	--exclude=$(project_dir)/.travis.yml \
 	--exclude=$(project_dir)/.scrutinizer.yml \
+	--exclude=$(project_dir)/build.js \
+	--exclude=$(project_dir)/composer.json \
+	--exclude=$(project_dir)/composer.lock \
+	--exclude=$(project_dir)/composer.phar \
+	--exclude=$(project_dir)/Gruntfile.js \
+	--exclude=$(project_dir)/install_ubuntu.sh \
+	--exclude=$(project_dir)/karma.conf.js \
+	--exclude=$(project_dir)/package.json \
+	--exclude=$(project_dir)/translation-extractor.php \
+	--exclude=$(project_dir)/translations.js \
 	--exclude=$(project_dir)/phpunit*xml \
 	--exclude=$(project_dir)/Makefile \
 	--exclude=$(project_dir)/tests \

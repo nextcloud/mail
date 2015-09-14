@@ -605,7 +605,7 @@ define(function(require) {
 
 				// Does the html mail have blocked images?
 				var hasBlockedImages = false;
-				if ($(this).contents().find('[data-original-src]').length) {
+				if ($(this).contents().find('[data-original-src],[data-original-style]').length) {
 					hasBlockedImages = true;
 				}
 

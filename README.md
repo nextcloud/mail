@@ -38,9 +38,9 @@ If you experience any issues or have enhancement suggestions you can report them
 
 ## Maintainers
 
-Active: [Thomas Müller](https://github.com/DeepDiver1975), [Jan-Christoph Borchardt](https://github.com/jancborchardt), [Christoph Wurst](https://github.com/ChristophWurst), [Lukas Reschke](https://github.com/LukasReschke), [Thomas Imbreckx](https://github.com/zinks-), [Steffen Lindner](https://github.com/Gomez), [Robin McCorkell](https://github.com/Xenopathic), [Clement Wong](https://github.com/clementhk), [Colm O’Neill](https://github.com/colmoneill), [Alexander Weidinger](https://github.com/irgendwie), [Hendrik Leppelsack](https://github.com/Henni) & [Plato Leung](https://github.com/PoPoutdoor)
+Active: [Thomas Müller](https://github.com/DeepDiver1975), [Jan-Christoph Borchardt](https://github.com/jancborchardt), [Christoph Wurst](https://github.com/ChristophWurst), [Lukas Reschke](https://github.com/LukasReschke), [Thomas Imbreckx](https://github.com/zinks-), [Steffen Lindner](https://github.com/Gomez), [Robin McCorkell](https://github.com/Xenopathic), [Clement Wong](https://github.com/clementhk), [Colm O’Neill](https://github.com/colmoneill), [Alexander Weidinger](https://github.com/irgendwie), [Hendrik Leppelsack](https://github.com/Henni), [Plato Leung](https://github.com/PoPoutdoor) & [Jakob Sack](https://github.com/jakobsack)
 
-Past contributors: [Jakob Sack](https://github.com/jakobsack), [Bart Visscher](https://github.com/bartv2), [Sebastian Schmid](https://github.com/sebastian-schmid)
+Past contributors: [Bart Visscher](https://github.com/bartv2), [Sebastian Schmid](https://github.com/sebastian-schmid)
 
 If you’d like to join, just go through the [issue list](https://github.com/owncloud/mail/issues) and fix some. :) We’re also in [#owncloud-mail on freenode IRC](https://webchat.freenode.net/?channels=owncloud-mail).
 
@@ -82,6 +82,16 @@ curl -sS https://getcomposer.org/installer | php
 php composer.phar install
 ```
 Debian/Ubuntu people, just execute `install_ubuntu.sh`
+
+### Nightly builds
+
+Instead of setting everything up manually, you can just [download the nightly builds](https://en0ch.se/index.php/s/3v5J3XXeQCCp73p) instead. These builds are updated every 12 hours - 00:00 (12:00 AM) and 12:00 (12:00 PM) UTC+0200, and are pre-configured with all the needed dependencies.
+
+1. Download
+2. Extract the tar archive to 'path-to-owncloud/apps'
+3. Navigate to »Apps«, choose the category »Productivity«, find the Mail app and enable it.
+
+The nightly builds are provided by [Daniel Hansson](https://github.com/enoch85)
 
 ### Resetting the app
 Connect to your database and run the following commands (`oc_` is the default table prefix):
