@@ -45,6 +45,11 @@ class TransformCSSBackground extends HTMLPurifier_AttrTransform {
 		$cssAttributes = explode(';', $attr['style']);
 
 		$func = function($cssAttribute) {
+			if (preg_match('/\S/', $cssAttribute) === 0) {
+				// empty or whitespace
+				return '';
+			}
+
 			list($name, $value) = explode(':', $cssAttribute, 2);
 			if(strpos($name, 'background') !== false &&
 				strpos($value, 'url(') !== false) {
