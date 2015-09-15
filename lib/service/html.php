@@ -20,6 +20,7 @@ use HTMLPurifier_URISchemeRegistry;
 use Kwi\UrlLinker;
 use OCA\Mail\Service\HtmlPurify\CidURIScheme;
 use OCA\Mail\Service\HtmlPurify\TransformCSSBackground;
+use OCA\Mail\Service\HtmlPurify\TransformHTMLLinks;
 use OCA\Mail\Service\HtmlPurify\TransformImageSrc;
 use OCA\Mail\Service\HtmlPurify\TransformNoReferrer;
 use OCA\Mail\Service\HtmlPurify\TransformURLScheme;
@@ -103,6 +104,7 @@ class Html {
 		$html = $config->getDefinition('HTML');
 		$html->info_attr_transform_post['imagesrc'] = new TransformImageSrc($this->urlGenerator);
 		$html->info_attr_transform_post['cssbackground'] = new TransformCSSBackground($this->urlGenerator);
+		$html->info_attr_transform_post['htmllinks'] = new TransformHTMLLinks();
 
 		$uri = $config->getDefinition('URI');
 		$uri->addFilter(new TransformURLScheme($messageParameters, $mapCidToAttachmentId, $this->urlGenerator), $config);
