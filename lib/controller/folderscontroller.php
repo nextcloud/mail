@@ -116,7 +116,7 @@ class FoldersController extends Controller {
 
 			return new JSONResponse();
 		} catch (DoesNotExistException $e) {
-			return new JSONResponse();
+			return new JSONResponse(null, 404);
 		}
 	}
 
@@ -133,10 +133,11 @@ class FoldersController extends Controller {
 			// TODO: read http://tools.ietf.org/html/rfc6154
 			$imap->createMailbox($mailbox);
 
-			$newFolderId = $mailbox;
-			return new JSONResponse(
-				['data' => ['id' => $newFolderId]],
-				Http::STATUS_CREATED);
+			return new JSONResponse([
+				'data' => [
+					'id' => $mailbox
+				]
+				], Http::STATUS_CREATED);
 		} catch (\Horde_Imap_Client_Exception $e) {
 			$response = new JSONResponse();
 			$response->setStatus(Http::STATUS_INTERNAL_SERVER_ERROR);
