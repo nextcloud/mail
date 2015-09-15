@@ -12,7 +12,6 @@
 
 namespace OCA\Mail\Controller;
 
-use Horde_Imap_Client;
 use OCA\Mail\Http\AttachmentDownloadResponse;
 use OCA\Mail\Http\HtmlResponse;
 use OCA\Mail\Service\AccountService;
@@ -21,6 +20,7 @@ use OCA\Mail\Service\IMailBox;
 use OCA\Mail\Service\UnifiedAccount;
 use OCP\AppFramework\Controller;
 use OCP\AppFramework\Db\DoesNotExistException;
+use OCP\AppFramework\Http;
 use OCP\AppFramework\Http\ContentSecurityPolicy;
 use OCP\AppFramework\Http\JSONResponse;
 use OCP\AppFramework\Http\TemplateResponse;
@@ -249,13 +249,17 @@ class MessagesController extends Controller {
 	public function saveAttachment($accountId, $folderId, $messageId, $attachmentId, $targetPath) {
 		$mailBox = $this->getFolder($accountId, $folderId);
 
-		$attachmentIds = [$attachmentId];
+		$attachmentIds = [];
 		if($attachmentId === 0) {
+			// Save all attachments
 			$m = $mailBox->getMessage($messageId);
 			$attachmentIds = array_map(function($a){
 				return $a['id'];
 			}, $m->attachments);
+		} else {
+			$attachmentIds = [$attachmentId];
 		}
+
 		foreach($attachmentIds as $attachmentId) {
 			$attachment = $mailBox->getAttachment($messageId, $attachmentId);
 
@@ -319,7 +323,7 @@ class MessagesController extends Controller {
 		} catch (DoesNotExistException $e) {
 			$this->logger->error("could not delete message <$id> of folder <$folderId>, "
 				. "account <$accountId> because it does not exist");
-			return new JSONResponse([], 404);
+			return new JSONResponse([], Http::STATUS_NOT_FOUND);
 		}
 	}
 
