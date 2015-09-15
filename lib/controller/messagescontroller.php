@@ -25,6 +25,7 @@ use OCP\AppFramework\Http\ContentSecurityPolicy;
 use OCP\AppFramework\Http\JSONResponse;
 use OCP\AppFramework\Http\TemplateResponse;
 use OCP\IL10N;
+use OCP\Util;
 
 class MessagesController extends Controller {
 
@@ -356,7 +357,22 @@ class MessagesController extends Controller {
 		$downloadUrl = \OC::$server->getURLGenerator()->getAbsoluteURL($downloadUrl);
 		$attachment['downloadUrl'] = $downloadUrl;
 		$attachment['mimeUrl'] = \OC_Helper::mimetypeIcon($attachment['mime']);
+
+		if ($this->attachmentIsImage($attachment)) {
+			$attachment['isImage'] = true;
+		}
 		return $attachment;
+	}
+
+	/**
+	 * @param $attachment
+	 *
+	 * Determines if the content of this attachment is an image
+	 */
+	private function attachmentIsImage($attachment) {
+		return in_array($attachment['mime'], array('image/jpeg',
+			'image/png',
+			'image/gif'));
 	}
 
 	/**
@@ -413,6 +429,17 @@ class MessagesController extends Controller {
 			$json['attachments'] = array_map(function ($a) use ($accountId, $folderId, $id) {
 				return $this->enrichDownloadUrl($accountId, $folderId, $id, $a);
 			}, $json['attachments']);
+
+			// show images first
+			usort($json['attachments'], function($a, $b) {
+				if (isset($a['isImage']) && !isset($b['isImage'])) {
+					return -1;
+				} elseif (!isset($a['isImage']) && isset($b['isImage'])) {
+					return 1;
+				} else {
+					Util::naturalSortCompare($a['fileName'], $b['fileName']);
+				}
+			});
 			return $json;
 		}
 		return $json;

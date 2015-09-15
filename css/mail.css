@@ -576,6 +576,9 @@ input.submit-message {
 	overflow: hidden;
 	text-overflow: ellipsis;
 }
+.mail-message-attachment-image {
+	margin-bottom: 32px;
+}
 .attachment-save-to-cloud,
 .attachment-download {
 	height: 32px;
