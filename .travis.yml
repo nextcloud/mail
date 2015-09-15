@@ -20,6 +20,12 @@ branches:
     - master
     - /^stable\d+(\.\d+)?$/
 
+cache:
+  directories:
+    - $HOME/.composer/cache/files
+    - $HOME/.npm
+    - $HOME/.cache/bower
+
 before_install:
   - composer self-update
   - composer install
