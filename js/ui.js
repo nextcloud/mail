@@ -595,9 +595,7 @@ define(function(require) {
 				$(this).height($(this).contents().find('html').height() + 20);
 				// Grey out previous replies
 				$(this).contents().find('blockquote').css({
-					'-ms-filter': '"progid:DXImageTransform.Microsoft.Alpha(Opacity=50)"',
-					'filter': 'alpha(opacity=50)',
-					'opacity': '.5'
+					'color': '#888'
 				});
 				// Remove spinner when loading finished
 				$('iframe').parent().removeClass('icon-loading');
