@@ -416,10 +416,8 @@ textarea.reply {
 	height: 100px;
 }
 input.submit-message {
-	position: absolute;
-	bottom: 5px;
-	right: 0;
-	margin: 0 !important;
+	float: right;
+	margin-right: 0;
 }
 #reply-msg {
 	float: left;
