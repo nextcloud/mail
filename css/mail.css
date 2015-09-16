@@ -165,6 +165,9 @@
 	text-overflow: ellipsis;
 	white-space: nowrap;
 }
+.mail-account-email:first-child {
+	padding-top: 50px;
+}
 
 .mail-account-color {
 	display: inline-block;
