@@ -22,14 +22,19 @@ install-deps: install-composer-deps install-npm-deps install-bower-deps
 install-composer-deps: composer.phar
 	php composer.phar install
 
-install-npm-deps: package.json
+install-npm-deps:
 	npm install --production
+
+install-npm-deps-dev:
+	npm install --deps
 
 install-bower-deps: bower.json install-npm-deps
 	./node_modules/bower/bin/bower install
 
 optimize-js: install-deps
 	./node_modules/requirejs/bin/r.js -o build.js
+
+dev-setup: install-composer-deps install-npm-deps-dev install-bower-deps
 
 update-composer:
 	rm -f composer.lock
