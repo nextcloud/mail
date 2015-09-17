@@ -5,6 +5,9 @@
  * @author Sebastian Schmid
  * @copyright 2013 Sebastian Schmid mail@sebastian-schmid.de
  *
+ * @author Christoph Wurst <christoph@winzerhof-wurst.at>
+ * @copyright Christoph Wurst 2015
+ *
  * This library is free software; you can redistribute it and/or
  * modify it under the terms of the GNU AFFERO GENERAL PUBLIC LICENSE
  * License as published by the Free Software Foundation; either
@@ -29,6 +32,8 @@ use Horde_Mime_Part;
 use Horde_Mail_Rfc822_Address;
 use OCA\Mail\Account;
 use OCA\Mail\Db\MailAccount;
+use OCA\Mail\Model\Message;
+use OCA\Mail\Model\ReplyMessage;
 use OCA\Mail\Service\AccountService;
 use OCA\Mail\Service\AutoConfig;
 use OCA\Mail\Service\ContactsIntegration;
@@ -268,47 +273,40 @@ class AccountsController extends Controller {
 				Http::STATUS_BAD_REQUEST
 			);
 		}
-		// get sender data
-		$headers = [];
-		/** @var Account $account */
-		$from = new Horde_Mail_Rfc822_Address($account->getEMailAddress());
-		$from->personal = $account->getName();
-		$headers['From']= $from;
-		$headers['Subject'] = $subject;
 
-		if (trim($cc) !== '') {
-			$headers['Cc'] = trim($cc);
-		}
-		if (trim($bcc) !== '') {
-			$headers['Bcc'] = trim($bcc);
-		}
-
-		// in reply to handling
-		$folderId = base64_decode($folderId);
 		$mailbox = null;
 		if (!is_null($folderId) && !is_null($messageId)) {
-			$mailbox = $account->getMailbox($folderId);
-			$message = $mailbox->getMessage($messageId);
+			// Reply
+			$message = $account->newReplyMessage();
+
+			$mailbox = $account->getMailbox(base64_decode($folderId));
+			$repliedMessage = $mailbox->getMessage($messageId);
 
 			if (is_null($subject)) {
-				// prevent 'Re: Re:' stacking
-				if(strcasecmp(substr($message->getSubject(), 0, 4), 'Re: ') === 0) {
-					$headers['Subject'] = $message->getSubject();
-				} else {
-					$headers['Subject'] = 'Re: ' . $message->getSubject();
-				}
+				// No subject set – use the original one
+				$message->setSubject($repliedMessage->getSubject());
+			} else {
+				$message->setSubject($subject);
 			}
-			$headers['In-Reply-To'] = $message->getMessageId();
-			if (is_null($to)) {
-				$to = $message->getToEmail();
-			}
-		}
-		$headers['To'] = $to;
 
-		// build mime body
-		$mail = new Horde_Mime_Mail();
-		$mail->addHeaders($headers);
-		$mail->setBody($body);
+			if (is_null($to)) {
+				$message->setTo($repliedMessage->getToList());
+			} else {
+				$message->setTo(Message::parseAddressList($to));
+			}
+
+			$message->setRepliedMessage($repliedMessage);
+		} else {
+			// New message
+			$message = $account->newMessage();
+			$message->setTo(Message::parseAddressList($to));
+			$message->setSubject($subject ? : '');
+		}
+
+		$message->setFrom($account->getEMailAddress());
+		$message->setCC(Message::parseAddressList($cc));
+		$message->setBcc(Message::parseAddressList($bcc));
+		$message->setContent($body);
 
 		if (is_array($attachments)) {
 			foreach($attachments as $attachment) {
@@ -316,45 +314,18 @@ class AccountsController extends Controller {
 				if ($this->userFolder->nodeExists($fileName)) {
 					$f = $this->userFolder->get($fileName);
 					if ($f instanceof File) {
-						$a = new \Horde_Mime_Part();
-						$a->setCharset('us-ascii');
-						$a->setDisposition('attachment');
-						$a->setName($f->getName());
-						$a->setContents($f->getContent());
-						$a->setType($f->getMimeType());
-						$mail->addMimePart($a);
+						$message->addAttachmentFromFiles($f);
 					}
 				}
 			}
 		}
 
-		// create transport and send
 		try {
-			$transport = $account->createTransport();
-			$mail->send($transport);
+			$account->sendMessage($message, $draftUID);
 
 			// in case of reply we flag the message as answered
-			if ($mailbox) {
+			if ($message instanceof ReplyMessage) {
 				$mailbox->setMessageFlag($messageId, Horde_Imap_Client::FLAG_ANSWERED, true);
-			}
-
-			// save the message in the sent folder
-			$sentFolder = $account->getSentFolder();
-			/** @var resource $raw */
-			$raw = $mail->getRaw();
-			$raw = stream_get_contents($raw);
-			$sentFolder->saveMessage($raw, [
-				Horde_Imap_Client::FLAG_SEEN
-			]);
-
-			// delete draft message
-			if (!is_null($draftUID)) {
-				$draftsFolder = $account->getDraftsFolder();
-				$folderId = $draftsFolder->getFolderId();
-				$this->logger->debug("deleting sent draft <$draftUID> in folder <$folderId>");
-				$draftsFolder->setMessageFlag($draftUID, \Horde_Imap_Client::FLAG_DELETED, true);
-				$account->deleteDraft($draftUID);
-				$this->logger->debug("sent draft <$draftUID> deleted");
 			}
 		} catch (\Horde_Exception $ex) {
 			$this->logger->error('Sending mail failed: ' . $ex->getMessage());

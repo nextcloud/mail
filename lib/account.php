@@ -1,7 +1,9 @@
 <?php
+
 /**
  * Copyright (c) 2012 Bart Visscher <bartv@thisnet.nl>
  * Copyright (c) 2014 Thomas Müller <deepdiver@owncloud.com>
+ * Copyright (c) 2015 Christoph Wurst <christoph@winzerhof-wurst.at>
  *
  * This file is licensed under the Affero General Public License version 3 or
  * later.
@@ -14,11 +16,16 @@ use Horde_Imap_Client_Ids;
 use Horde_Imap_Client_Mailbox;
 use Horde_Imap_Client_Socket;
 use Horde_Imap_Client;
+use Horde_Mail_Rfc822_Address;
 use Horde_Mail_Transport;
 use Horde_Mail_Transport_Mail;
 use Horde_Mail_Transport_Smtphorde;
+use Horde_Mime_Mail;
 use OCA\Mail\Cache\Cache;
 use OCA\Mail\Db\MailAccount;
+use OCA\Mail\Model\IMessage;
+use OCA\Mail\Model\Message;
+use OCA\Mail\Model\ReplyMessage;
 use OCA\Mail\Service\IAccount;
 use OCA\Mail\Service\IMailBox;
 use OCP\IConfig;
@@ -108,7 +115,6 @@ class Account implements IAccount {
 								->create(md5($this->getId() . $this->getEMailAddress()))
 						))];
 				}
-
 			}
 			$this->client = new \Horde_Imap_Client_Socket($params);
 			$this->client->login();
@@ -126,6 +132,57 @@ class Account implements IAccount {
 		$this->mailboxes = null;
 
 		return $this->getMailbox($mailBox);
+	}
+
+	/**
+	 * Send a new message or reply to an existing message
+	 *
+	 * @param IMessage $message
+	 * @param int|null $draftUID
+	 */
+	public function sendMessage(IMessage $message, $draftUID) {
+		// build mime body
+		$from = new Horde_Mail_Rfc822_Address($message->getFrom());
+		$from->personal = $this->getName();
+		$headers = [
+			'From' => $from,
+			'To' => $message->getToList(),
+			'Cc' => $message->getCCList(),
+			'Bcc' => $message->getBCCList(),
+			'Subject' => $message->getSubject(),
+		];
+
+		if (!is_null($message->getRepliedMessage())) {
+			$headers['In-Reply-To'] = $message->getRepliedMessage()->getMessageId();
+		}
+
+		$mail = new Horde_Mime_Mail();
+		$mail->addHeaders($headers);
+		$mail->setBody($message->getContent());
+
+		// Append attachments
+		foreach ($message->getAttachments() as $attachment) {
+			$mail->addMimePart($attachment);
+		}
+
+		// Send the message
+		$transport = $this->createTransport();
+		$mail->send($transport);
+
+		// Save the message in the sent folder
+		$sentFolder = $this->getSentFolder();
+		/** @var resource $raw */
+		$raw = stream_get_contents($mail->getRaw());
+		$sentFolder->saveMessage($raw, [
+			Horde_Imap_Client::FLAG_SEEN
+		]);
+
+		// Delete draft if one exists
+		if (!is_null($draftUID)) {
+			$draftsFolder = $this->getDraftsFolder();
+			$draftsFolder->setMessageFlag($draftUID, Horde_Imap_Client::FLAG_DELETED, true);
+			$this->deleteDraft($draftUID);
+		}
 	}
 
 	/**
@@ -149,12 +206,13 @@ class Account implements IAccount {
 	 * @param string $pattern Pattern to match mailboxes against. All by default.
 	 * @return Mailbox[]
 	 */
-	protected function listMailboxes($pattern='*') {
+	protected function listMailboxes($pattern = '*') {
 		// open the imap connection
 		$conn = $this->getImapConnection();
 
 		// if successful -> get all folders of that account
-		$mailBoxes = $conn->listMailboxes($pattern, Horde_Imap_Client::MBOX_ALL, [
+		$mailBoxes = $conn->listMailboxes($pattern, Horde_Imap_Client::MBOX_ALL,
+			[
 			'delimiter' => true,
 			'attributes' => true,
 			'special_use' => true,
@@ -163,9 +221,11 @@ class Account implements IAccount {
 
 		$mailboxes = [];
 		foreach ($mailBoxes as $mailbox) {
-			$mailboxes[] = new Mailbox($conn, $mailbox['mailbox'], $mailbox['attributes'], $mailbox['delimiter']);
+			$mailboxes[] = new Mailbox($conn, $mailbox['mailbox'],
+				$mailbox['attributes'], $mailbox['delimiter']);
 			if ($mailbox['mailbox']->utf8 === 'INBOX') {
-				$mailboxes[] = new SearchMailbox($conn, $mailbox['mailbox'], $mailbox['attributes'], $mailbox['delimiter']);
+				$mailboxes[] = new SearchMailbox($conn, $mailbox['mailbox'],
+					$mailbox['attributes'], $mailbox['delimiter']);
 			}
 		}
 
@@ -224,9 +284,9 @@ class Account implements IAccount {
 		}
 		$delimiter = reset($folders)['delimiter'];
 		return [
-			'id'             => $this->getId(),
-			'email'          => $this->getEMailAddress(),
-			'folders'        => array_values($folders),
+			'id' => $this->getId(),
+			'email' => $this->getEMailAddress(),
+			'folders' => array_values($folders),
 			'specialFolders' => $this->getSpecialFoldersIds(),
 			'delimiter' => $delimiter,
 		];
@@ -277,7 +337,7 @@ class Account implements IAccount {
 		}
 		return $specialFoldersIds;
 	}
-	
+
 	/**
 	 * Get the "drafts" mailbox
 	 *
@@ -290,7 +350,7 @@ class Account implements IAccount {
 			// drafts folder does not exist - let's create one
 			$conn = $this->getImapConnection();
 			// TODO: also search for translated drafts mailboxes
-			$conn->createMailbox('Drafts',[
+			$conn->createMailbox('Drafts', [
 				'special_use' => ['drafts'],
 			]);
 			return $this->guessBestMailBox($this->listMailboxes('Drafts'));
@@ -298,12 +358,11 @@ class Account implements IAccount {
 		return $draftsFolder[0];
 	}
 
-
 	/**
 	 * @return IMailBox
 	 */
 	public function getInbox() {
-		$folders =  $this->getSpecialFolder('inbox', false);
+		$folders = $this->getSpecialFolder('inbox', false);
 		return count($folders) > 0 ? $folders[0] : null;
 	}
 
@@ -349,7 +408,7 @@ class Account implements IAccount {
 				/**
 				 * @var Mailbox $box
 				 */
-				return (stripos($box->getDisplayName(), 'trash') !== FALSE);
+				return (stripos($box->getDisplayName(), 'trash') !== false);
 			});
 			if (!empty($trashes)) {
 				$trashId = array_values($trashes);
@@ -515,7 +574,7 @@ class Account implements IAccount {
 
 			if ($roleA === null && $roleB !== null) {
 				return 1;
-			} elseif ($roleA !== null && $roleB === null){
+			} elseif ($roleA !== null && $roleB === null) {
 				return -1;
 			} elseif ($roleA !== null && $roleB !== null) {
 				if ($roleA === $roleB) {
@@ -553,7 +612,7 @@ class Account implements IAccount {
 		$imp = $this->getImapConnection();
 		$allBoxes = $this->getMailboxes();
 		$allBoxesMap = [];
-		foreach($allBoxes as $mb) {
+		foreach ($allBoxes as $mb) {
 			$allBoxesMap[$mb->getFolderId()] = $mb;
 		}
 
@@ -566,7 +625,7 @@ class Account implements IAccount {
 
 		// filter for changed mailboxes
 		$changedBoxes = [];
-		foreach($status as $folderId => $s) {
+		foreach ($status as $folderId => $s) {
 			$uidValidity = $query[$folderId]['uidvalidity'];
 			$uidNext = $query[$folderId]['uidnext'];
 
@@ -633,5 +692,23 @@ class Account implements IAccount {
 			$smtp->getSMTPObject();
 		}
 	}
-}
 
+	/**
+	 * Factory method for creating new messages
+	 *
+	 * @return OCA\Mail\Model\IMessage
+	 */
+	public function newMessage() {
+		return new Message();
+	}
+
+	/**
+	 * Factory method for creating new reply messages
+	 *
+	 * @return OCA\Mail\Model\ReplyMessage
+	 */
+	public function newReplyMessage() {
+		return new ReplyMessage();
+	}
+
+}

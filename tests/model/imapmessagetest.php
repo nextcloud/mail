@@ -1,5 +1,8 @@
 <?php
- /**
+
+namespace OCA\Mail\Tests\Model;
+
+/**
  * ownCloud
  *
  * @author Thomas Müller
@@ -9,12 +12,16 @@
  * License along with this library.  If not, see <http://www.gnu.org/licenses/>.
  *
  */
+use Horde_Imap_Client_Data_Fetch;
+use Horde_Imap_Client_Fetch_Results;
+use Horde_Mime_Part;
+use OCA\Mail\Model\IMAPMessage;
 
-class MessageTest extends \PHPUnit_Framework_TestCase {
+class ImapMessageTest extends \PHPUnit_Framework_TestCase {
 
 	public function testNoFrom() {
 		$data = new Horde_Imap_Client_Data_Fetch();
-		$m = new \OCA\Mail\Message(null, 'INBOX', 123, $data);
+		$m = new IMAPMessage(null, 'INBOX', 123, $data);
 
 		$this->assertNull($m->getFrom());
 		$this->assertNull($m->getFromEmail());
@@ -26,7 +33,7 @@ class MessageTest extends \PHPUnit_Framework_TestCase {
 			'to' => 'a@b.org, tom@example.org, b@example.org',
 			'cc' => 'a@b.org, tom@example.org, a@example.org'
 		));
-		$message = new \OCA\Mail\Message(null, 'INBOX', 123, $data);
+		$message = new IMAPMessage(null, 'INBOX', 123, $data);
 
 		$cc = $message->getReplyCcList('a@b.org');
 		$this->assertTrue(is_array($cc));
@@ -59,7 +66,7 @@ class MessageTest extends \PHPUnit_Framework_TestCase {
 
 		// mock first fetch
 		$firstFetch = new Horde_Imap_Client_Data_Fetch();
-		$firstPart = Horde_Mime_Part::parseMessage(file_get_contents(__DIR__ . '/data/mail-message-123.txt'), ['level' => 1]);
+		$firstPart = Horde_Mime_Part::parseMessage(file_get_contents(__DIR__ . '/../data/mail-message-123.txt'), ['level' => 1]);
 		$firstFetch->setStructure($firstPart);
 		$firstFetch->setBodyPart(1, $firstPart->getPart(1)->getContents());
 		$firstFetch->setBodyPart(2, $firstPart->getPart(2)->getContents());
@@ -70,7 +77,7 @@ class MessageTest extends \PHPUnit_Framework_TestCase {
 			->willReturn($firstResult);
 
 
-		$message = new \OCA\Mail\Message($conn, 'INBOX', 123, null, true, $htmlService);
+		$message = new IMAPMessage($conn, 'INBOX', 123, null, true, $htmlService);
 		$htmlBody = $message->getHtmlBody(0, 0, 123, function() {return null;});
 		$this->assertTrue(strlen($htmlBody) > 1000);
 

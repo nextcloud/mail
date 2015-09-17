@@ -2,8 +2,10 @@
 
 namespace OCA\Mail\Service;
 
+use OCA\Mail\Model\IMessage;
 
 interface IAccount {
+
 	/**
 	 * @return array
 	 */
@@ -27,6 +29,13 @@ interface IAccount {
 	public function getEmail();
 
 	/**
+	 * @param IMessage $message
+	 * @param int|null $draftUID
+	 * @return IMessage
+	 */
+	public function sendMessage(IMessage $message, $draftUID);
+
+	/**
 	 * @param string $folderId
 	 * @param int $messageId
 	 */
@@ -47,5 +56,4 @@ interface IAccount {
 	 * @return int
 	 */
 	public function getId();
-
 }

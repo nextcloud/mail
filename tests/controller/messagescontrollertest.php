@@ -84,7 +84,7 @@ class MessagesControllerTest extends \Test\TestCase {
 		$this->mailbox = $this->getMockBuilder('\OCA\Mail\Mailbox')
 			->disableOriginalConstructor()
 			->getMock();
-		$this->message = $this->getMockBuilder('\OCA\Mail\Message')
+		$this->message = $this->getMockBuilder('\OCA\Mail\Model\IMAPMessage')
 			->disableOriginalConstructor()
 			->getMock();
 	}
