@@ -1,4 +1,5 @@
 <?php
+
 /**
  * ownCloud - Mail app
  *
@@ -22,9 +23,11 @@
 
 namespace OCA\Mail\Controller;
 
+use Exception;
+use OCP\IHelper;
 use OCP\IRequest;
-use \OCP\IURLGenerator;
-use \OCP\Util;
+use OCP\ISession;
+use OCP\IURLGenerator;
 use OCP\AppFramework\Controller;
 use OCP\AppFramework\Http\TemplateResponse;
 use OCA\Mail\Http\ProxyDownloadResponse;
@@ -42,6 +45,21 @@ class ProxyController extends Controller {
 	private $session;
 
 	/**
+	 * @var \OCP\IHelper
+	 */
+	private $helper;
+
+	/**
+	 * @var string
+	 */
+	private $referrer;
+
+	/**
+	 * @var string
+	 */
+	private $hostname;
+
+	/**
 	 * @param string $appName
 	 * @param \OCP\IRequest $request
 	 * @param IURLGenerator $urlGenerator
@@ -50,52 +68,56 @@ class ProxyController extends Controller {
 	public function __construct($appName,
 								IRequest $request,
 								IURLGenerator $urlGenerator,
-								\OCP\ISession $session) {
+								ISession $session,
+								IHelper $helper,
+								$referrer,
+								$hostname) {
 		parent::__construct($appName, $request);
 		$this->urlGenerator = $urlGenerator;
 		$this->session = $session;
+		$this->helper = $helper;
+		$this->referrer = $referrer;
+		$this->hostname = $hostname;
 	}
 
 	/**
 	 * @NoAdminRequired
 	 * @NoCSRFRequired
 	 *
+	 * @param string $src
+	 *
 	 * @throws \Exception If the URL is not valid.
 	 * @return TemplateResponse
 	 */
-	public function redirect() {
-		$templateName = 'redirect';
-
-		$route = 'mail.page.index';
-		$mailURL = $this->urlGenerator->linkToRoute($route);
-		$url = $this->request->getParam('src');
+	public function redirect($src) {
 		$authorizedRedirect = false;
 
-		if (strpos($url, 'http://') !== 0 && strpos($url, 'https://') !== 0) {
-			throw new \Exception('URL is not valid.', 1);
+		if (strpos($src, 'http://') !== 0 && strpos($src, 'https://') !== 0) {
+			throw new Exception('URL is not valid.', 1);
 		}
 
 		// If the request has a referrer from this domain redirect the user without interaction
 		// this is there to prevent an open redirector.
 		// Since we can't prevent the referrer from being added with a HTTP only header we rely on an
 		// additional JS file here.
-		if(parse_url($_SERVER['HTTP_REFERER'], PHP_URL_HOST) === Util::getServerHostName()) {
-			Util::addScript('mail', 'autoredirect');
+		if (parse_url($this->referrer, PHP_URL_HOST) === $this->hostname) {
 			$authorizedRedirect = true;
 		}
 
 		$params = [
 			'authorizedRedirect' => $authorizedRedirect,
-			'url' => $url,
-			'urlHost' => parse_url($url, PHP_URL_HOST),
-			'mailURL' => $mailURL,
+			'url' => $src,
+			'urlHost' => parse_url($src, PHP_URL_HOST),
+			'mailURL' => $this->urlGenerator->linkToRoute('mail.page.index'),
 		];
-		return new TemplateResponse($this->appName, $templateName, $params, 'guest');
+		return new TemplateResponse($this->appName, 'redirect', $params, 'guest');
 	}
 
 	/**
 	 * @NoAdminRequired
 	 * @NoCSRFRequired
+	 *
+	 * @param string $src
 	 *
 	 * TODO: Cache the proxied content to prevent unnecessary requests from the oC server
 	 *       The caching should also already happen in a cronjob so that the sender of the
@@ -103,12 +125,12 @@ class ProxyController extends Controller {
 	 *
 	 * @return ProxyDownloadResponse
 	 */
-	public function proxy() {
+	public function proxy($src) {
 		// close the session to allow parallel downloads
 		$this->session->close();
 
-		$resourceURL = $this->request->getParam('src');
-		$content =  \OC::$server->getHelper()->getUrlContent($resourceURL);
-		return new ProxyDownloadResponse($content, $resourceURL, 'application/octet-stream');
+		$content = $this->helper->getUrlContent($src);
+		return new ProxyDownloadResponse($content, $src, 'application/octet-stream');
 	}
+
 }

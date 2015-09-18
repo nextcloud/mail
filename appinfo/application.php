@@ -98,7 +98,10 @@ class Application extends App {
 				$c->query('AppName'),
 				$c->query('Request'),
 				$c->query('ServerContainer')->getURLGenerator(),
-				$c->query('ServerContainer')->getSession()
+				$c->query('ServerContainer')->getSession(),
+				$c->getServer()->getHelper(),
+				isset($_SERVER['HTTP_REFERER']) ? : null,
+				\OCP\Util::getServerHostName()
 			);
 		});
 
