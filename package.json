@@ -42,6 +42,7 @@
   },
   "dependencies": {
     "bower": "^1.5.2",
+    "grunt": "^0.4.5",
     "requirejs": "^2.1.20"
   }
 }
