@@ -3,6 +3,7 @@
 namespace OCA\Mail\Service;
 
 use OCP\IL10N;
+use OCA\Mail\Model\IMessage;
 
 class UnifiedAccount implements IAccount {
 
@@ -113,6 +114,14 @@ class UnifiedAccount implements IAccount {
 			$addressesList->add($account->getEmail());
 		}
 		return $addressesList;
+	}
+
+	/**
+	 * @param IMessage $message
+	 * @param int|null $draftUID
+	 */
+	public function sendMessage(IMessage $message, $draftUID) {
+		throw new Exception('Not implemented');
 	}
 
 	/**

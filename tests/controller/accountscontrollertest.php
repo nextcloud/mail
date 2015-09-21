@@ -20,8 +20,8 @@
  * License along with this library.  If not, see <http://www.gnu.org/licenses/>.
  *
  */
-
 use OCA\Mail\Controller\AccountsController;
+use OCA\Mail\Model\Message;
 use OC\AppFramework\Http;
 use OCP\AppFramework\Http\JSONResponse;
 
@@ -29,7 +29,7 @@ class AccountsControllerTest extends \Test\TestCase {
 
 	private $appName;
 	private $request;
-	private $accountsService;
+	private $accountService;
 	private $userId;
 	private $userFolder;
 	private $contactsIntegration;
@@ -40,6 +40,7 @@ class AccountsControllerTest extends \Test\TestCase {
 	private $controller;
 	private $accountId;
 	private $account;
+	private $unifiedAccount;
 
 	protected function setUp() {
 		parent::setUp();
@@ -48,11 +49,13 @@ class AccountsControllerTest extends \Test\TestCase {
 		$this->request = $this->getMockBuilder('\OCP\IRequest')
 			->disableOriginalConstructor()
 			->getMock();
-		$this->accountsService = $this->getMockBuilder('\OCA\Mail\Service\AccountService')
+		$this->accountService = $this->getMockBuilder('\OCA\Mail\Service\AccountService')
 			->disableOriginalConstructor()
 			->getMock();
 		$this->userId = 'manfred';
-		$this->userFolder = '/tmp/';
+		$this->userFolder = $this->getMockBuilder('\OCP\Files\Folder')
+			->disableOriginalConstructor()
+			->getMock();
 		$this->contactsIntegration = $this->getMockBuilder('OCA\Mail\Service\ContactsIntegration')
 			->disableOriginalConstructor()
 			->getMock();
@@ -69,18 +72,15 @@ class AccountsControllerTest extends \Test\TestCase {
 			->disableOriginalConstructor()
 			->getMock();
 
-		$this->controller = new AccountsController($this->appName,
-			$this->request,
-			$this->accountsService,
-			$this->userId,
-			$this->userFolder,
-			$this->contactsIntegration,
-			$this->autoConfig,
-			$this->logger,
-			$this->l10n,
+		$this->controller = new AccountsController($this->appName, $this->request,
+			$this->accountService, $this->userId, $this->userFolder,
+			$this->contactsIntegration, $this->autoConfig, $this->logger, $this->l10n,
 			$this->crypto);
 
-		$this->account = $this->getMockBuilder('\OCA\Mail\Service\IAccount')
+		$this->account = $this->getMockBuilder('\OCA\Mail\Account')
+			->disableOriginalConstructor()
+			->getMock();
+		$this->unifiedAccount = $this->getMockBuilder('\OCA\Mail\Service\UnifiedAccount')
 			->disableOriginalConstructor()
 			->getMock();
 		$this->accountId = 123;
@@ -90,7 +90,7 @@ class AccountsControllerTest extends \Test\TestCase {
 		$this->account->expects($this->once())
 			->method('getConfiguration')
 			->will($this->returnValue('conf'));
-		$this->accountsService->expects($this->once())
+		$this->accountService->expects($this->once())
 			->method('findByUserId')
 			->with($this->equalTo($this->userId))
 			->will($this->returnValue([$this->account]));
@@ -102,7 +102,7 @@ class AccountsControllerTest extends \Test\TestCase {
 	}
 
 	public function testShow() {
-		$this->accountsService->expects($this->once())
+		$this->accountService->expects($this->once())
 			->method('find')
 			->with($this->equalTo($this->userId), $this->equalTo($this->accountId))
 			->will($this->returnValue($this->account));
@@ -117,7 +117,7 @@ class AccountsControllerTest extends \Test\TestCase {
 	}
 
 	public function testShowDoesNotExist() {
-		$this->accountsService->expects($this->once())
+		$this->accountService->expects($this->once())
 			->method('find')
 			->with($this->equalTo($this->userId), $this->equalTo($this->accountId))
 			->will($this->returnValue($this->account));
@@ -131,9 +131,9 @@ class AccountsControllerTest extends \Test\TestCase {
 		$expectedResponse->setStatus(404);
 		$this->assertEquals($expectedResponse, $response);
 	}
-	
+
 	public function testDestroy() {
-		$this->accountsService->expects($this->once())
+		$this->accountService->expects($this->once())
 			->method('delete')
 			->with($this->equalTo($this->userId), $this->equalTo($this->accountId));
 
@@ -144,7 +144,7 @@ class AccountsControllerTest extends \Test\TestCase {
 	}
 
 	public function testDestroyDoesNotExist() {
-		$this->accountsService->expects($this->once())
+		$this->accountService->expects($this->once())
 			->method('delete')
 			->with($this->equalTo($this->userId), $this->equalTo($this->accountId))
 			->will($this->throwException(new \OCP\AppFramework\Db\DoesNotExistException('test')));
@@ -169,7 +169,7 @@ class AccountsControllerTest extends \Test\TestCase {
 				$this->equalTo($password),
 				$this->equalTo($accountName))
 			->will($this->returnValue($this->account));
-		$this->accountsService->expects($this->once())
+		$this->accountService->expects($this->once())
 			->method('save')
 			->with($this->equalTo($this->account));
 
@@ -210,6 +210,121 @@ class AccountsControllerTest extends \Test\TestCase {
 		    'message' => 'fail',
 		], Http::STATUS_BAD_REQUEST);
 		$this->assertEquals($expectedResponse, $response);
+	}
+
+	public function newMessageDataProvider() {
+		return [
+			[false, false],
+			[true, false],
+			[false, true],
+			[true, true],
+		];
+	}
+
+	/**
+	 * @dataProvider newMessageDataProvider
+	 */
+	public function testSend($isUnifiedInbox, $isReply) {
+		$account = $isUnifiedInbox ? $this->unifiedAccount : $this->account;
+		$folderId = base64_encode('My folder');
+		$subject = 'Hello';
+		$body = 'Hi!';
+		$from = 'test@example.com';
+		$to = 'user1@example.com';
+		$cc = '"user2" <user2@example.com>, user3@example.com';
+		$bcc = 'user4@example.com';
+		$draftUID = 45;
+		$messageId = $isReply ? 123 : null;
+		$attachmentName = 'kitten.png';
+		$attachments = [
+			[
+				'fileName' => $attachmentName
+			],
+		];
+
+		$this->accountService->expects($this->once())
+			->method('find')
+			->with($this->userId, $this->accountId)
+			->will($this->returnValue($account));
+		if ($isUnifiedInbox) {
+			$this->unifiedAccount->expects($this->once())
+				->method('resolve')
+				->with($messageId)
+				->will($this->returnValue([$this->account, $folderId, $messageId]));
+		}
+
+		if ($isReply) {
+			$message = $this->getMockBuilder('OCA\Mail\Model\ReplyMessage')
+				->disableOriginalConstructor()
+				->getMock();
+			$this->account->expects($this->once())
+				->method('newReplyMessage')
+				->will($this->returnValue($message));
+			$mailbox = $this->getMockBuilder('OCA\Mail\Service\IMailBox')
+				->disableOriginalConstructor()
+				->getMock();
+			$this->account->expects($this->once())
+				->method('getMailbox')
+				->with(base64_decode($folderId))
+				->will($this->returnValue($mailbox));
+			$reply = new Message();
+			$mailbox->expects($this->once())
+				->method('getMessage')
+				->with($messageId)
+				->will($this->returnValue($reply));
+			$message->expects($this->once())
+				->method('setRepliedMessage')
+				->with($reply);
+		} else {
+			$message = $this->getMockBuilder('OCA\Mail\Model\Message')
+				->disableOriginalConstructor()
+				->getMock();
+			$this->account->expects($this->once())
+				->method('newMessage')
+				->will($this->returnValue($message));
+		}
+
+		$message->expects($this->once())
+			->method('setTo')
+			->with(Message::parseAddressList($to));
+		$message->expects($this->once())
+			->method('setSubject')
+			->with($subject);
+		$message->expects($this->once())
+			->method('setFrom')
+			->with($from);
+		$message->expects($this->once())
+			->method('setCC')
+			->with(Message::parseAddressList($cc));
+		$message->expects($this->once())
+			->method('setBcc')
+			->with(Message::parseAddressList($bcc));
+		$message->expects($this->once())
+			->method('setContent')
+			->with($body);
+		$this->account->expects($this->once())
+			->method('getEMailAddress')
+			->will($this->returnValue($from));
+		$this->account->expects($this->once())
+			->method('sendMessage')
+			->with($message, $draftUID);
+		$this->userFolder->expects($this->at(0))
+			->method('nodeExists')
+			->with($attachmentName)
+			->will($this->returnValue(true));
+		$file = $this->getMockBuilder('OCP\Files\File')
+			->disableOriginalConstructor()
+			->getMock();
+		$this->userFolder->expects($this->once())
+			->method('get')
+			->with($attachmentName)
+			->will($this->returnValue($file));
+
+		$expected = new JSONResponse();
+		$actual = $this->controller->send($this->accountId, $folderId, $subject,
+			$body, $to, $cc, $bcc, $draftUID, $messageId, $attachments);
+
+		$this->assertEquals($expected, $actual);
 	}
 
 	public function testAutoComplete() {

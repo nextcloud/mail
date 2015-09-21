@@ -13,6 +13,7 @@ use Horde_Imap_Client_Ids;
 use Horde_Imap_Client_Mailbox;
 use Horde_Imap_Client_Search_Query;
 use Horde_Imap_Client_Socket;
+use OCA\Mail\Model\IMAPMessage;
 use OCA\Mail\Service\IMailBox;
 
 class Mailbox implements IMailBox {
@@ -114,7 +115,7 @@ class Mailbox implements IMailBox {
 		$messages = [];
 		foreach ($headers->ids() as $message_id) {
 			$header = $headers[$message_id];
-			$message = new Message($this->conn, $this->mailBox, $message_id, $header);
+			$message = new IMAPMessage($this->conn, $this->mailBox, $message_id, $header);
 			$messages[] = $message->getListArray();
 		}
 		ob_get_clean();
@@ -137,10 +138,10 @@ class Mailbox implements IMailBox {
 	/**
 	 * @param string $messageId
 	 * @param bool $loadHtmlMessageBody
-	 * @return Message
+	 * @return IMAPMessage
 	 */
 	public function getMessage($messageId, $loadHtmlMessageBody = false) {
-		return new Message($this->conn, $this->mailBox, $messageId, null, $loadHtmlMessageBody);
+		return new IMAPMessage($this->conn, $this->mailBox, $messageId, null, $loadHtmlMessageBody);
 	}
 
 	/**

@@ -1,9 +1,15 @@
 <?php
+
+namespace OCA\Mail\Model;
+
 /**
  * ownCloud - Mail app
  *
  * @author Thomas Müller
  * @copyright 2012, 2013 Thomas Müller thomas.mueller@tmit.eu
+ *
+ * @author Christoph Wurst <christoph@winzerhof-wurst.at>
+ * @copyright Christoph Wurst 2015
  *
  * This library is free software; you can redistribute it and/or
  * modify it under the terms of the GNU AFFERO GENERAL PUBLIC LICENSE
@@ -20,16 +26,16 @@
  *
  */
 
-namespace OCA\Mail;
-
 use Closure;
+use Exception;
 use Horde_Imap_Client;
 use Horde_Imap_Client_Data_Fetch;
+use OCP\Files\File;
 use OCA\Mail\Service\Html;
 use OCP\AppFramework\Db\DoesNotExistException;
 use OCP\Util;
 
-class Message {
+class IMAPMessage implements IMessage {
 
 	/**
 	 * @var string[]
@@ -126,6 +132,14 @@ class Message {
 	}
 
 	/**
+	 * @param array $flags
+	 */
+	public function setFlags(array $flags) {
+		// TODO: implement
+		throw new Exception('Not implemented');
+	}
+
+	/**
 	 * @return \Horde_Imap_Client_Data_Envelope
 	 */
 	public function getEnvelope() {
@@ -148,6 +162,14 @@ class Message {
 		$e = $this->getEnvelope();
 		$from = $e->from[0];
 		return $from ? $from->label : null;
+	}
+
+	/**
+	 * @param string $from
+	 * @throws Exception
+	 */
+	public function setFrom($from) {
+		throw new Exception('IMAP message is immutable');
 	}
 
 	/**
@@ -174,6 +196,14 @@ class Message {
 	}
 
 	/**
+	 * @param string[] $to
+	 * @throws Exception
+	 */
+	public function setTo(array $to) {
+		throw new Exception('IMAP message is immutable');
+	}
+
+	/**
 	 * @return array
 	 */
 	public function getToList() {
@@ -186,9 +216,17 @@ class Message {
 		return $this->convertAddressList($e->cc);
 	}
 
-	public function getBCList() {
+	public function setCC(array $cc) {
+		throw new Exception('IMAP message is immutable');
+	}
+
+	public function getBCCList() {
 		$e = $this->getEnvelope();
 		return $this->convertAddressList($e->bcc);
+	}
+
+	public function setBcc(array $bcc) {
+		throw new Exception('IMAP message is immutable');
 	}
 
 	public function getReplyToList() {
@@ -196,9 +234,13 @@ class Message {
 		return $this->convertAddressList($e->from);
 	}
 
-	// on reply, fill cc with everyone from to and cc except yourself
+	public function setReplyTo(array $replyTo) {
+		throw new Exception('IMAP message is immutable');
+	}
 
 	/**
+	 * on reply, fill cc with everyone from to and cc except yourself
+	 *
 	 * @param string $ownMail
 	 */
 	public function getReplyCcList($ownMail) {
@@ -211,6 +253,11 @@ class Message {
 		return $this->convertAddressList($list);
 	}
 
+	/**
+	 * Get the ID if available
+	 *
+	 * @return int|null
+	 */
 	public function getMessageId() {
 		$e = $this->getEnvelope();
 		return $e->message_id;
@@ -222,6 +269,14 @@ class Message {
 	public function getSubject() {
 		$e = $this->getEnvelope();
 		return $e->subject;
+	}
+
+	/**
+	 * @param string $subject
+	 * @throws Exception
+	 */
+	public function setSubject($subject) {
+		throw new Exception('IMAP message is immutable');
 	}
 
 	/**
@@ -537,6 +592,42 @@ class Message {
 			];
 		}
 		return $list;
+	}
+
+	public function getContent() {
+		return $this->getPlainBody();
+	}
+
+	public function setContent($content) {
+		throw new Exception('IMAP message is immutable');
+	}
+
+	/**
+	 * @return array
+	 */
+	public function getAttachments() {
+		throw new Exception('not implemented');
+	}
+
+	/**
+	 * @param File $file
+	 */
+	public function addAttachmentFromFiles(File $file) {
+		throw new Exception('IMAP message is immutable');
+	}
+
+	/**
+	 * @return IMessage
+	 */
+	public function getRepliedMessage() {
+		throw new Exception('not implemented');
+	}
+
+	/**
+	 * @param IMessage $message
+	 */
+	public function setRepliedMessage(IMessage $message) {
+		throw new Exception('not implemented');
 	}
 
 }
