@@ -21,7 +21,11 @@
  *
  */
 
+use OCP\AppFramework\Db\DoesNotExistException;
+use OCP\AppFramework\Http;
+use OCP\AppFramework\Http\JSONResponse;
 use OCA\Mail\Controller\MessagesController;
+use OCA\Mail\Http\AttachmentDownloadResponse;
 
 /**
  * Tests for lib/controller/messagescontroller
@@ -42,6 +46,7 @@ class MessagesControllerTest extends \Test\TestCase {
 	private $account;
 	private $mailbox;
 	private $message;
+	private $attachment;
 
 	protected function setUp() {
 		parent::setUp();
@@ -54,7 +59,9 @@ class MessagesControllerTest extends \Test\TestCase {
 			->disableOriginalConstructor()
 			->getMock();
 		$this->userId = 'john';
-		$this->userFolder = '/tmp/';
+		$this->userFolder = $this->getMockBuilder('\OCP\Files\Folder')
+			->disableOriginalConstructor()
+			->getMock();
 		$this->request = $this->getMockBuilder('\OC\AppFramework\Http\Request')
 			->disableOriginalConstructor()
 			->getMock();
@@ -87,6 +94,21 @@ class MessagesControllerTest extends \Test\TestCase {
 		$this->message = $this->getMockBuilder('\OCA\Mail\Message')
 			->disableOriginalConstructor()
 			->getMock();
+		$this->attachment = $this->getMockBuilder('\OCA\Mail\Attachment')
+			->disableOriginalConstructor()
+			->getMock();
+	}
+
+	public function testIndex() {
+		// TODO: write test
+	}
+
+	public function testShow() {
+		// TODO: write test
+	}
+
+	public function testShowMessageNotFound() {
+		// TODO: write test
 	}
 
 	public function testGetHtmlBody() {
@@ -123,6 +145,263 @@ class MessagesControllerTest extends \Test\TestCase {
 		$actualResponse = $this->controller->getHtmlBody($accountId, base64_encode($folderId), $messageId);
 
 		$this->assertEquals($expectedResponse, $actualResponse);
+	}
+
+	public function testDownloadAttachment() {
+		$accountId = 17;
+		$folderId = base64_encode('my folder');
+		$messageId = 123;
+		$attachmentId = 3;
+
+		// Attachment data
+		$contents = 'abcdef';
+		$name = 'cat.jpg';
+		$type = 'image/jpg';
+
+		$this->accountService->expects($this->once())
+			->method('find')
+			->with($this->equalTo($this->userId), $this->equalTo($accountId))
+			->will($this->returnValue($this->account));
+		$this->account->expects($this->once())
+			->method('getMailbox')
+			->with(base64_decode($folderId))
+			->will($this->returnValue($this->mailbox));
+		$this->mailbox->expects($this->once())
+			->method('getAttachment')
+			->with($messageId, $attachmentId)
+			->will($this->returnValue($this->attachment));
+		$this->attachment->expects($this->once())
+			->method('getContents')
+			->will($this->returnValue($contents));
+		$this->attachment->expects($this->once())
+			->method('getName')
+			->will($this->returnValue($name));
+		$this->attachment->expects($this->once())
+			->method('getType')
+			->will($this->returnValue($type));
+
+		$expected = new AttachmentDownloadResponse($contents, $name, $type);
+		$response = $this->controller->downloadAttachment($accountId, $folderId,
+			$messageId, $attachmentId);
+
+		$this->assertEquals($expected, $response);
+	}
+
+	public function testSaveSingleAttachment() {
+		$accountId = 17;
+		$folderId = base64_encode('my folder');
+		$messageId = 123;
+		$attachmentId = 3;
+		$targetPath = 'Downloads';
+
+		$this->accountService->expects($this->once())
+			->method('find')
+			->with($this->equalTo($this->userId), $this->equalTo($accountId))
+			->will($this->returnValue($this->account));
+		$this->account->expects($this->once())
+			->method('getMailbox')
+			->with(base64_decode($folderId))
+			->will($this->returnValue($this->mailbox));
+		$this->mailbox->expects($this->once())
+			->method('getAttachment')
+			->with($messageId, $attachmentId)
+			->will($this->returnValue($this->attachment));
+		$this->attachment->expects($this->once())
+			->method('getName')
+			->with()
+			->will($this->returnValue('cat.jpg'));
+		$this->userFolder->expects($this->once())
+			->method('nodeExists')
+			->with("Downloads/cat.jpg")
+			->will($this->returnValue(false));
+		$file = $this->getMockBuilder('\OCP\Files\File')
+			->disableOriginalConstructor()
+			->getMock();
+		$this->userFolder->expects($this->once())
+			->method('newFile')
+			->with("Downloads/cat.jpg")
+			->will($this->returnValue($file));
+		$file->expects($this->once())
+			->method('putContent')
+			->with('abcdefg');
+		$this->attachment->expects($this->once())
+			->method('getContents')
+			->will($this->returnValue('abcdefg'));
+
+		$expected = new JSONResponse();
+		$response = $this->controller->saveAttachment($accountId, $folderId,
+			$messageId, $attachmentId, $targetPath);
+
+		$this->assertEquals($expected, $response);
+	}
+
+	public function testSaveAllAttachments() {
+		$accountId = 17;
+		$folderId = base64_encode('my folder');
+		$messageId = 123;
+		$attachmentId = 3;
+		$targetPath = 'Downloads';
+
+		$this->accountService->expects($this->once())
+			->method('find')
+			->with($this->equalTo($this->userId), $this->equalTo($accountId))
+			->will($this->returnValue($this->account));
+		$this->account->expects($this->once())
+			->method('getMailbox')
+			->with(base64_decode($folderId))
+			->will($this->returnValue($this->mailbox));
+		$this->mailbox->expects($this->once())
+			->method('getMessage')
+			->with($messageId)
+			->will($this->returnValue($this->message));
+		$this->message->attachments = [
+			[
+				'id' => $attachmentId
+			]
+		];
+
+		$this->mailbox->expects($this->once())
+			->method('getAttachment')
+			->with($messageId, $attachmentId)
+			->will($this->returnValue($this->attachment));
+		$this->attachment->expects($this->once())
+			->method('getName')
+			->with()
+			->will($this->returnValue('cat.jpg'));
+		$this->userFolder->expects($this->once())
+			->method('nodeExists')
+			->with("Downloads/cat.jpg")
+			->will($this->returnValue(false));
+		$file = $this->getMockBuilder('\OCP\Files\File')
+			->disableOriginalConstructor()
+			->getMock();
+		$this->userFolder->expects($this->once())
+			->method('newFile')
+			->with("Downloads/cat.jpg")
+			->will($this->returnValue($file));
+		$file->expects($this->once())
+			->method('putContent')
+			->with('abcdefg');
+		$this->attachment->expects($this->once())
+			->method('getContents')
+			->will($this->returnValue('abcdefg'));
+
+		$expected = new JSONResponse();
+		$response = $this->controller->saveAttachment($accountId, $folderId,
+			$messageId, 0, $targetPath);
+
+		$this->assertEquals($expected, $response);
+	}
+
+	public function testSetFlagsUnseen() {
+		$accountId = 17;
+		$folderId = base64_encode('my folder');
+		$messageId = 123;
+		$flags = [
+			'unseen' => false
+		];
+
+		$this->accountService->expects($this->once())
+			->method('find')
+			->with($this->equalTo($this->userId), $this->equalTo($accountId))
+			->will($this->returnValue($this->account));
+		$this->account->expects($this->once())
+			->method('getMailbox')
+			->with(base64_decode($folderId))
+			->will($this->returnValue($this->mailbox));
+		$this->mailbox->expects($this->once())
+			->method('setMessageFlag')
+			->with($messageId, '\\seen', true);
+
+		$expected = new JSONResponse();
+		$response = $this->controller->setFlags($accountId, $folderId, $messageId,
+			$flags);
+
+		$this->assertEquals($expected, $response);
+	}
+
+	public function testSetFlagsFlagged() {
+		$accountId = 17;
+		$folderId = base64_encode('my folder');
+		$messageId = 123;
+		$flags = [
+			'flagged' => true
+		];
+
+		$this->accountService->expects($this->once())
+			->method('find')
+			->with($this->equalTo($this->userId), $this->equalTo($accountId))
+			->will($this->returnValue($this->account));
+		$this->account->expects($this->once())
+			->method('getMailbox')
+			->with(base64_decode($folderId))
+			->will($this->returnValue($this->mailbox));
+		$this->mailbox->expects($this->once())
+			->method('setMessageFlag')
+			->with($messageId, '\\flagged', true);
+
+		$expected = new JSONResponse();
+		$response = $this->controller->setFlags($accountId, $folderId, $messageId,
+			$flags);
+
+		$this->assertEquals($expected, $response);
+	}
+
+	public function testDestroy() {
+		$accountId = 17;
+		$folderId = base64_encode('my folder');
+		$messageId = 123;
+
+		$this->accountService->expects($this->once())
+			->method('find')
+			->with($this->equalTo($this->userId), $this->equalTo($accountId))
+			->will($this->returnValue($this->account));
+
+		$this->account->expects($this->once())
+			->method('deleteMessage')
+			->with(base64_decode($folderId), $messageId);
+
+		$expected = new JSONResponse();
+		$result = $this->controller->destroy($accountId, $folderId, $messageId);
+
+		$this->assertEquals($expected, $result);
+	}
+
+	public function testDestroyWithAccountNotFound() {
+		$accountId = 17;
+		$folderId = base64_encode('my folder');
+		$messageId = 123;
+
+		$this->accountService->expects($this->once())
+			->method('find')
+			->with($this->equalTo($this->userId), $this->equalTo($accountId))
+			->will($this->throwException(new DoesNotExistException('')));
+
+		$expected = new JSONResponse([], Http::STATUS_NOT_FOUND);
+		$result = $this->controller->destroy($accountId, $folderId, $messageId);
+
+		$this->assertEquals($expected, $result);
+	}
+
+	public function testDestroyWithFolderOrMessageNotFound() {
+		$accountId = 17;
+		$folderId = base64_encode('my folder');
+		$messageId = 123;
+
+		$this->accountService->expects($this->once())
+			->method('find')
+			->with($this->equalTo($this->userId), $this->equalTo($accountId))
+			->will($this->returnValue($this->account));
+
+		$this->account->expects($this->once())
+			->method('deleteMessage')
+			->with(base64_decode($folderId), $messageId)
+			->will($this->throwException(new DoesNotExistException('')));
+
+		$expected = new JSONResponse([], Http::STATUS_NOT_FOUND);
+		$result = $this->controller->destroy($accountId, $folderId, $messageId);
+
+		$this->assertEquals($expected, $result);
 	}
 
 }
