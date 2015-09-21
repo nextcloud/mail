@@ -79,9 +79,7 @@ class PageController extends Controller {
 	 * @return TemplateResponse renders the compose page
 	 */
 	public function compose($uri) {
-
 		$parts = parse_url($uri);
-
 		$params = ['mailto' => $parts['path']];
 		if (isset($parts['query'])) {
 			$parts = explode('&', $parts['query']);
