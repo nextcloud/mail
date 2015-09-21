@@ -21,6 +21,8 @@
  *
  */
 use OC\AppFramework\Http;
+use OCP\AppFramework\Db\DoesNotExistException;
+use OCP\AppFramework\Http\JSONResponse;
 use OCA\Mail\Controller\FoldersController;
 
 class FoldersControllerTest extends PHPUnit_Framework_TestCase {
@@ -42,7 +44,7 @@ class FoldersControllerTest extends PHPUnit_Framework_TestCase {
 
 	public function folderDataProvider() {
 		$files = [
-		    'folders_german',
+			'folders_german',
 		];
 		// Add directory prefix to tests/data
 		$data = array_map(function ($file) {
@@ -52,10 +54,10 @@ class FoldersControllerTest extends PHPUnit_Framework_TestCase {
 
 		// Add empty account = no folders
 		array_push($data, [
-		    [
-			'folders' => [
+			[
+				'folders' => [
+				],
 			],
-		    ],
 		]);
 
 		return $data;
@@ -113,6 +115,91 @@ class FoldersControllerTest extends PHPUnit_Framework_TestCase {
 			->with($folderId);
 
 		$this->controller->destroy($accountId, $folderId);
+	}
+
+	public function testDestroyAccountNotFound() {
+		$accountId = 28;
+		$folderId = 'my folder';
+		$this->accountService->expects($this->once())
+			->method('find')
+			->with($this->userId, $accountId)
+			->will($this->throwException(new DoesNotExistException('folder not found')));
+
+		$response = $this->controller->destroy($accountId, $folderId);
+		$expected = new JSONResponse(null, 404);
+
+		$this->assertEquals($expected, $response);
+	}
+
+	public function testDestroyFolderNotFound() {
+		// TODO: write test
+	}
+
+	public function testCreate() {
+		$accountId = 13;
+		$folderId = 'new folder';
+		$account = $this->getMockBuilder('OCA\Mail\Account')
+			->disableOriginalConstructor()
+			->getMock();
+		$this->accountService->expects($this->once())
+			->method('find')
+			->with($this->userId, $accountId)
+			->will($this->returnValue($account));
+		$imapConnection = $this->getMockBuilder('Horde_Imap_Client_Socket')
+			->disableOriginalConstructor()
+			->getMock();
+		$account->expects($this->once())
+			->method('getImapConnection')
+			->will($this->returnValue($imapConnection));
+		$imapConnection->expects($this->once())
+			->method('createMailbox')
+			->with($folderId);
+
+		$response = $this->controller->create($accountId, $folderId);
+
+		$expected = new JSONResponse([
+			'data' => [
+				'id' => $folderId
+			]
+			], Http::STATUS_CREATED);
+
+		$this->assertEquals($expected, $response);
+	}
+
+	public function testCreateWithError() {
+		$accountId = 13;
+		$folderId = 'new folder';
+		$account = $this->getMockBuilder('OCA\Mail\Account')
+			->disableOriginalConstructor()
+			->getMock();
+		$this->accountService->expects($this->once())
+			->method('find')
+			->with($this->userId, $accountId)
+			->will($this->returnValue($account));
+		$imapConnection = $this->getMockBuilder('Horde_Imap_Client_Socket')
+			->disableOriginalConstructor()
+			->getMock();
+		$account->expects($this->once())
+			->method('getImapConnection')
+			->will($this->returnValue($imapConnection));
+		$imapConnection->expects($this->once())
+			->method('createMailbox')
+			->with($folderId)
+			->will($this->throwException(new \Horde_Imap_Client_Exception()));
+
+		$response = $this->controller->create($accountId, $folderId);
+
+		$expected = new JSONResponse([], Http::STATUS_INTERNAL_SERVER_ERROR);
+
+		$this->assertEquals($expected, $response);
+	}
+
+	public function testCreateSubFolder() {
+		// TODO: write test
+	}
+
+	public function testDetectChanges() {
+		// TODO: write test
 	}
 
 }
