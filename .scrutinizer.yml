@@ -1,9 +1,6 @@
 filter:
     excluded_paths:
         - 'vendor/*'
-        - 'js/jquery*'
-        - 'js/handlebars*'
-        - 'js/backbone*'
         - 'l10n/*'
 
 imports:
@@ -12,4 +9,4 @@ imports:
 
 tools:
     external_code_coverage:
-        timeout: 3600 # Timeout in seconds. 60 minutes
+        timeout: 7200 # Timeout in seconds. 120 minutes
