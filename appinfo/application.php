@@ -17,7 +17,14 @@ use OCA\Mail\Controller\MessagesController;
 use OCA\Mail\Controller\ProxyController;
 use OCA\Mail\Db\MailAccountMapper;
 use OCA\Mail\Service\AccountService;
-use OCA\Mail\Service\AutoConfig;
+use OCA\Mail\Service\AutoConfig\AutoConfig;
+use OCA\Mail\Service\AutoConfig\ImapConnectivityTester;
+use OCA\Mail\Service\AutoConfig\ImapConnector;
+use OCA\Mail\Service\AutoConfig\ImapServerDetector;
+use OCA\Mail\Service\AutoConfig\MozillaIspDb;
+use OCA\Mail\Service\AutoConfig\MxRecord;
+use OCA\Mail\Service\AutoConfig\SmtpConnectivityTester;
+use OCA\Mail\Service\AutoConfig\SmtpServerDetector;
 use OCA\Mail\Service\ContactsIntegration;
 use OCA\Mail\Service\Logger;
 use \OCP\AppFramework\App;
@@ -121,14 +128,78 @@ class Application extends App {
 			return new ContactsIntegration($c->getServer()->getContactsManager());
 		});
 
+		$container->registerService('ImapConnectivityTester', function($c) {
+			/** @var IAppContainer $c */
+			return new ImapConnectivityTester(
+				$c->query('ImapConnector'),
+				$c->query('Logger'),
+				$c->query('UserId')
+			);
+		});
+
+		$container->registerService('ImapConnector', function($c) {
+			/** @var IAppContainer $c */
+			return new ImapConnector(
+				$c->getServer()->getCrypto(),
+				$c->query('Logger'),
+				$c->query('UserId')
+			);
+		});
+
+		$container->registerService('ImapServerDetector', function($c) {
+			/** @var IAppContainer $c */
+			return new ImapServerDetector(
+				$c->query('MxRecord'),
+				$c->query('ImapConnectivityTester')
+			);
+		});
+
+		$container->registerService('SmtpConnectivityTester', function($c) {
+			/** @var IAppContainer $c */
+			return new SmtpConnectivityTester(
+				$c->getServer()->getCrypto(),
+				$c->query('Logger'),
+				$c->query('UserId')
+			);
+		});
+
+		$container->registerService('SmtpServerDetector', function($c) {
+			$transport = $c->getServer()->getConfig()->getSystemValue('app.mail.transport', 'smtp');
+			/** @var IAppContainer $c */
+			return new SmtpServerDetector(
+				$c->query('MxRecord'),
+				$c->query('SmtpConnectivityTester'),
+				$transport === 'smtp'
+			);
+		});
+
+		$container->registerService('MozillaIspDb', function($c) {
+			/** @var IAppContainer $c */
+			return new MozillaIspDb(
+				$c->query('Logger')
+			);
+		});
+
+		$container->registerService('MxRecord', function($c) {
+			/** @var IAppContainer $c */
+			return new MxRecord(
+				$c->query('Logger')
+			);
+		});
+
 		$container->registerService('AutoConfig', function ($c) {
 			/** @var IAppContainer $c */
-			$transport = $c->getServer()->getConfig()->getSystemValue('app.mail.transport', 'smtp');
 			return new AutoConfig(
 				$c->query('Logger'),
 				$c->query('UserId'),
-				$c->getServer()->getCrypto(),
-				$transport === 'smtp'
+				$c->query('MozillaIspDb'),
+				$c->query('MxRecord'),
+				$c->query('ImapConnectivityTester'),
+				$c->query('ImapServerDetector'),
+				$c->query('SmtpConnectivityTester'),
+				$c->query('SmtpServerDetector'),
+				$c->query('ImapConnector'),
+				$c->getServer()->getCrypto()
 			);
 		});
 

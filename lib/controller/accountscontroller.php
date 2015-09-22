@@ -35,7 +35,7 @@ use OCA\Mail\Db\MailAccount;
 use OCA\Mail\Model\Message;
 use OCA\Mail\Model\ReplyMessage;
 use OCA\Mail\Service\AccountService;
-use OCA\Mail\Service\AutoConfig;
+use OCA\Mail\Service\AutoConfig\AutoConfig;
 use OCA\Mail\Service\ContactsIntegration;
 use OCA\Mail\Service\UnifiedAccount;
 use OCP\AppFramework\Controller;
