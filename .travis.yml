@@ -10,6 +10,7 @@ php:
 env:
   global:
     - CORE_BRANCH=master
+    - TEST_JS=FALSE
     - secure: AaTeRG3kL/LeMOcMgul08EUBM7Kdtrkz9EAGPauKdxXbxggP0j5SxN8ciYxc8CiVni0CYJofW07YjG6tXqhvHeMINHx8Q+5KUUfiLwNrLgl1sMkh7vPR9EA5Z1Y8Nz4N1Qt7zxpqWKPHUsjUNFWxP2TPHEq2FEOGeKbsI7GOYas=
     - secure: S5agbWaWSLgbujsVhZB9WkCAM0ris8uh9hPnspYw48bolkMhknJ7JxOWGV4rOcJ52kdOgifFRE9XYi65RFLL8zuaZDBU2zFoXO3fpatziYEiIWnxVrkogw1pnh/FeRnrUld+QDykFyUcfSGdFRw5R5FuZHrxe+Q5bHfiEjh4hlE=
   matrix:
@@ -33,19 +34,19 @@ before_install:
   - bash ./before_install.sh mail $CORE_BRANCH $DB
   - cd ../core
   - php occ app:enable mail
-  - npm install -g npm@latest
+  - sh -c "if [ '$TEST_JS' = 'TRUE' ]; then npm install -g npm@latest; fi"
 
 before_script:
   - cd apps/mail
-  - npm install --deps
-  - npm run-script bower_deps
+  - sh -c "if [ '$TEST_JS' = 'TRUE' ]; then npm install --deps; fi"
+  - sh -c "if [ '$TEST_JS' = 'TRUE' ]; then npm run-script bower_deps; fi"
 
 script:
   # Test lint
   - find . -name \*.php -not -path './vendor/*' -exec php -l "{}" \;
 
   # Run js unit tests
-  - grunt
+  - sh -c "if [ '$TEST_JS' = 'TRUE' ]; then grunt; fi"
 
   # Run phpunit tests
   - cd tests
@@ -57,7 +58,7 @@ script:
 matrix:
   include:
     - php: 5.4
-      env: DB=mysql
+      env: "DB=mysql TEST_JS=TRUE"
     - php: 5.4
       env: DB=pgsql
     - php: 5.4
