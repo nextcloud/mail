@@ -352,7 +352,6 @@ class AccountsController extends Controller {
 	 * @return JSONResponse
 	 */
 	public function draft($accountId, $subject, $body, $to, $cc, $bcc, $uid, $messageId) {
-
 		if (is_null($uid)) {
 			$this->logger->info("Saving a new draft in account <$accountId>");
 		} else {
@@ -370,49 +369,17 @@ class AccountsController extends Controller {
 			);
 		}
 
-		// get sender data
-		$headers = [];
-		$from = new Horde_Mail_Rfc822_Address($account->getEMailAddress());
-		$from->personal = $account->getName();
-		$headers['From']= $from;
-		$headers['Subject'] = $subject;
-
-		if (trim($cc) !== '') {
-			$headers['Cc'] = trim($cc);
-		}
-		if (trim($bcc) !== '') {
-			$headers['Bcc'] = trim($bcc);
-		}
-
-		$headers['To'] = $to;
-		$headers['Date'] = Horde_Mime_Headers_Date::create();
-
-		// build mime body
-		$mail = new Horde_Mime_Mail();
-		$mail->addHeaders($headers);
-		$bodyPart = new Horde_Mime_Part();
-		$bodyPart->appendContents($body, [
-			'encoding' => \Horde_Mime_Part::ENCODE_8BIT
-		]);
-		$mail->setBasePart($bodyPart);
+		$message = $account->newMessage();
+		$message->setTo(Message::parseAddressList($to));
+		$message->setSubject($subject ? : '');
+		$message->setFrom($account->getEMailAddress());
+		$message->setCC(Message::parseAddressList($cc));
+		$message->setBcc(Message::parseAddressList($bcc));
+		$message->setContent($body);
 
 		// create transport and save message
 		try {
-			// save the message in the drafts folder
-			$draftsFolder = $account->getDraftsFolder();
-			/** @var resource $raw */
-			$raw = $mail->getRaw();
-			$raw = stream_get_contents($raw);
-			$newUid = $draftsFolder->saveDraft($raw);
-
-			// delete old version if one exists
-			if (!is_null($uid)) {
-				$folderId = $draftsFolder->getFolderId();
-				$this->logger->debug("deleting outdated draft <$uid> in folder <$folderId>");
-				$draftsFolder->setMessageFlag($uid, \Horde_Imap_Client::FLAG_DELETED, true);
-				$account->deleteDraft($uid);
-				$this->logger->debug("draft <$uid> deleted");
-			}
+			$newUID = $account->saveDraft($message, $uid);
 		} catch (\Horde_Exception $ex) {
 			$this->logger->error('Saving draft failed: ' . $ex->getMessage());
 			return new JSONResponse(
@@ -423,10 +390,9 @@ class AccountsController extends Controller {
 			);
 		}
 
-		return new JSONResponse(
-			[
-				'uid' => $newUid
-			]);
+		return new JSONResponse([
+			'uid' => $newUID
+		]);
 	}
 
 	/**
