@@ -13,3 +13,6 @@ node_modules/
 
 # optimized JS files
 js/mail.min.js
+
+# packaged app
+build/
