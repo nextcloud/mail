@@ -94,13 +94,13 @@ class Logger implements ILogger {
 	 * @inheritdoc
 	 */
 	public function log($level, $message, array $context = array()) {
-		$this->logger->log($level, $message, $context);
+		$this->logger->log($level, $message, $this->context);
 	}
 
 	/**
 	 * @inheritdoc
 	 */
 	public function logException(\Exception $exception, array $context = array()) {
-		$this->logger->logException($exception, $context);
+		$this->logger->logException($exception, $this->context);
 	}
 }
