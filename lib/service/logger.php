@@ -96,4 +96,11 @@ class Logger implements ILogger {
 	public function log($level, $message, array $context = array()) {
 		$this->logger->log($level, $message, $context);
 	}
+
+	/**
+	 * @inheritdoc
+	 */
+	public function logException(\Exception $exception, array $context = array()) {
+		$this->logger->logException($exception, $context);
+	}
 }
