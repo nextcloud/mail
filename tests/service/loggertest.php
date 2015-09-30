@@ -32,7 +32,6 @@ class LoggerTest extends \PHPUnit_Framework_TestCase {
 			['notice'],
 			['info'],
 			['debug'],
-			['log'],
 			['logException', new \Exception()],
 		];
 	}
