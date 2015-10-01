@@ -48,7 +48,7 @@ class SmtpServerDetector {
 		/*
 		 * Try to get the mx record for the email address
 		 */
-		$mxHosts = $this->getMxRecord($host);
+		$mxHosts = $this->mxRecord->query($host);
 		if ($mxHosts) {
 			foreach ($mxHosts as $mxHost) {
 				$result = $this->smtpConnectivityTester->test($account, $mxHost,
