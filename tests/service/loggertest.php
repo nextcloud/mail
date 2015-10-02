@@ -23,7 +23,8 @@ class LoggerTest extends \PHPUnit_Framework_TestCase {
     }
 
 	public function providesLoggerMethods() {
-		return [
+
+		$methods = [
 			['alert'],
 			['warning'],
 			['emergency'],
@@ -32,7 +33,11 @@ class LoggerTest extends \PHPUnit_Framework_TestCase {
 			['notice'],
 			['info'],
 			['debug'],
-			['logException', new \Exception()],
 		];
+		if (version_compare(implode('.', \OCP\Util::getVersion()), '8.2', '>=')) {
+			$methods[]= ['logException', new \Exception()];
+		}
+
+		return $methods;
 	}
 }
