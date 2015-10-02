@@ -213,8 +213,12 @@ define(function(require) {
 			switch (key) {
 				// If delete key is pressed:
 				case 46:
-					// If not composing a reply:
-					if (!$('.to, .cc, .message-body').is(':focus')) {
+					// If not composing a reply
+					// and message list is visible (not being in a settings dialog)
+					// and if searchbox is not focused
+					if (!$('.to, .cc, .message-body').is(':focus') &&
+							$('#mail_messages').is(':visible') &&
+							!$('#searchbox').is(':focus')) {
 						// Mimic a client clicking the delete button for the currently active message.
 						$('.mail_message_summary.active .icon-delete.action.delete').click();
 					}
