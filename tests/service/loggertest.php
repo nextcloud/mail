@@ -8,22 +8,23 @@ class LoggerTest extends \PHPUnit_Framework_TestCase {
 	 * @dataProvider providesLoggerMethods
 	 * @param $method
 	 */
-	public function testLoggerMethod($method) {
+	public function testLoggerMethod($method, $param = '1') {
 
 		$baseLogger = $this->getMock('\OCP\ILogger');
 		$baseLogger->expects($this->once())
 			->method($method)
 			->with(
-				$this->equalTo('1'),
+				$this->equalTo($param),
 				$this->equalTo(['app' => 'mail'])
 			);
 
 		$logger = new \OCA\Mail\Service\Logger('mail', $baseLogger);
-		$logger->$method("1");
+		$logger->$method($param);
     }
 
 	public function providesLoggerMethods() {
-		return [
+
+		$methods = [
 			['alert'],
 			['warning'],
 			['emergency'],
@@ -33,5 +34,10 @@ class LoggerTest extends \PHPUnit_Framework_TestCase {
 			['info'],
 			['debug'],
 		];
+		if (version_compare(implode('.', \OCP\Util::getVersion()), '8.2', '>=')) {
+			$methods[]= ['logException', new \Exception()];
+		}
+
+		return $methods;
 	}
 }
