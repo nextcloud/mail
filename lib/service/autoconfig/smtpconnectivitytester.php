@@ -12,6 +12,7 @@ namespace OCA\Mail\Service\AutoConfig;
  * @copyright Christoph Wurst 2015
  */
 use OCP\Security\ICrypto;
+use OCA\Mail\Account;
 use OCA\Mail\Db\MailAccount;
 use OCA\Mail\Service\Logger;
 
