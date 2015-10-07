@@ -31,9 +31,15 @@ interface IAccount {
 	/**
 	 * @param IMessage $message
 	 * @param int|null $draftUID
-	 * @return IMessage
 	 */
 	public function sendMessage(IMessage $message, $draftUID);
+
+	/**
+	 * @param IMessage $message
+	 * @param int|null $previousUID
+	 * @return int
+	 */
+	public function saveDraft(IMessage $message, $previousUID);
 
 	/**
 	 * @param string $folderId

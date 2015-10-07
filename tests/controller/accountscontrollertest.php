@@ -327,6 +327,82 @@ class AccountsControllerTest extends \Test\TestCase {
 		$this->assertEquals($expected, $actual);
 	}
 
+	public function draftDataProvider() {
+		return [
+			[false, false],
+			[true, true],
+			[true, false],
+			[true, true],
+		];
+	}
+
+	/**
+	 * @dataProvider newMessageDataProvider
+	 */
+	public function testDraft($isUnifiedInbox, $withPreviousDraft) {
+		$account = $isUnifiedInbox ? $this->unifiedAccount : $this->account;
+		$subject = 'Hello';
+		$body = 'Hi!';
+		$from = 'test@example.com';
+		$to = 'user1@example.com';
+		$cc = '"user2" <user2@example.com>, user3@example.com';
+		$bcc = 'user4@example.com';
+		$messageId = 123;
+		$uid = $withPreviousDraft ? 123 : null;
+		$newUID = 124;
+
+		$this->accountService->expects($this->once())
+			->method('find')
+			->with($this->userId, $this->accountId)
+			->will($this->returnValue($account));
+		if ($isUnifiedInbox) {
+			$this->unifiedAccount->expects($this->once())
+				->method('resolve')
+				->with($messageId)
+				->will($this->returnValue([$this->account]));
+		}
+
+		$message = $this->getMockBuilder('OCA\Mail\Model\Message')
+			->disableOriginalConstructor()
+			->getMock();
+		$this->account->expects($this->once())
+			->method('newMessage')
+			->will($this->returnValue($message));
+		$message->expects($this->once())
+			->method('setTo')
+			->with(Message::parseAddressList($to));
+		$message->expects($this->once())
+			->method('setSubject')
+			->with($subject);
+		$message->expects($this->once())
+			->method('setFrom')
+			->with($from);
+		$message->expects($this->once())
+			->method('setCC')
+			->with(Message::parseAddressList($cc));
+		$message->expects($this->once())
+			->method('setBcc')
+			->with(Message::parseAddressList($bcc));
+		$message->expects($this->once())
+			->method('setContent')
+			->with($body);
+		$this->account->expects($this->once())
+			->method('getEMailAddress')
+			->will($this->returnValue($from));
+		$this->account->expects($this->once())
+			->method('saveDraft')
+			->with($message, $uid)
+			->will($this->returnValue($newUID));
+
+		$expected = new JSONResponse([
+			'uid' => $newUID,
+		]);
+		$actual = $this->controller->draft($this->accountId, $subject, $body, $to,
+			$cc, $bcc, $uid, $messageId);
+
+		$this->assertEquals($expected, $actual);
+	}
+
 	public function testAutoComplete() {
 		$this->contactsIntegration->expects($this->once())
 			->method('getMatchingRecipient')

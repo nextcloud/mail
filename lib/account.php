@@ -186,6 +186,45 @@ class Account implements IAccount {
 	}
 
 	/**
+	 * @param IMessage $message
+	 * @param int|null $previousUID
+	 * @return int
+	 */
+	public function saveDraft(IMessage $message, $previousUID) {
+		// build mime body
+		$from = new Horde_Mail_Rfc822_Address($message->getFrom());
+		$from->personal = $this->getName();
+		$headers = [
+			'From' => $from,
+			'To' => $message->getToList(),
+			'Cc' => $message->getCCList(),
+			'Bcc' => $message->getBCCList(),
+			'Subject' => $message->getSubject(),
+			'Date' => Horde_Mime_Headers_Date::create(),
+		];
+
+		$mail = new Horde_Mime_Mail();
+		$mail->addHeaders($headers);
+		$mail->setBody($message->getContent());
+
+		// create transport and save message
+		// save the message in the drafts folder
+		$draftsFolder = $this->getDraftsFolder();
+		/** @var resource $raw */
+		$raw = $mail->getRaw();
+		$newUid = $draftsFolder->saveDraft(stream_get_contents($raw));
+
+		// delete old version if one exists
+		if (!is_null($previousUID)) {
+			$draftsFolder->setMessageFlag($previousUID, \Horde_Imap_Client::FLAG_DELETED,
+				true);
+			$this->deleteDraft($previousUID);
+		}
+
+		return $newUid;
+	}
+
+	/**
 	 * @param string $mailBox
 	 */
 	public function deleteMailbox($mailBox) {
