@@ -59,7 +59,7 @@ class AccountsControllerTest extends \Test\TestCase {
 		$this->contactsIntegration = $this->getMockBuilder('OCA\Mail\Service\ContactsIntegration')
 			->disableOriginalConstructor()
 			->getMock();
-		$this->autoConfig = $this->getMockBuilder('\OCA\Mail\Service\AutoConfig')
+		$this->autoConfig = $this->getMockBuilder('\OCA\Mail\Service\AutoConfig\AutoConfig')
 			->disableOriginalConstructor()
 			->getMock();
 		$this->logger = $this->getMockBuilder('\OCA\Mail\Service\Logger')
