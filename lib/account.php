@@ -20,6 +20,7 @@ use Horde_Mail_Rfc822_Address;
 use Horde_Mail_Transport;
 use Horde_Mail_Transport_Mail;
 use Horde_Mail_Transport_Smtphorde;
+use Horde_Mime_Headers_Date;
 use Horde_Mime_Mail;
 use OCA\Mail\Cache\Cache;
 use OCA\Mail\Db\MailAccount;
