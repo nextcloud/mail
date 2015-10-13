@@ -41,9 +41,10 @@ class ImapMessageTest extends \PHPUnit_Framework_TestCase {
 		$cc = array_map(function($item) {
 			return $item['email'];
 		}, $cc);
-		$this->assertTrue(in_array('tom@example.org', $cc));
-		$this->assertTrue(in_array('a@example.org', $cc));
-		$this->assertTrue(in_array('b@example.org', $cc));
+
+		$this->assertContains('tom@example.org', $cc);
+		$this->assertContains('a@example.org', $cc);
+		$this->assertContains('b@example.org', $cc);
 	}
 
 	public function testIconvHtmlMessage() {

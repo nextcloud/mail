@@ -13,6 +13,7 @@ namespace OCA\Mail\Tests\Model;
  */
 use Test\TestCase;
 use Horde_Mime_Part;
+use Horde_Mail_Rfc822_List;
 use OCA\Mail\Model\Message;
 
 class MessageTest extends TestCase {
@@ -68,9 +69,11 @@ class MessageTest extends TestCase {
 	 * @dataProvider addressListDataProvider
 	 */
 	public function testParseAddressList($list, $expected) {
-		$actual = Message::parseAddressList($list);
+		$result = Message::parseAddressList($list);
 
-		$this->assertEquals($expected, $actual);
+		foreach ($expected as $exp) {
+			$this->assertTrue($result->contains($exp));
+		}
 	}
 
 	public function testFlags() {
@@ -93,14 +96,15 @@ class MessageTest extends TestCase {
 	}
 
 	public function testTo() {
-		$to = [
+		$expected = [
 			'alice@example.com',
-			'bob@example.com',
+			'Bob <bob@example.com>',
 		];
+		$to = Message::parseAddressList($expected);
 
 		$this->message->setTo($to);
 
-		$this->assertSame($to, $this->message->getToList());
+		$this->assertEquals($expected, $this->message->getToList());
 		$this->assertEquals($to[0], $this->message->getTo());
 	}
 
@@ -110,14 +114,15 @@ class MessageTest extends TestCase {
 	}
 
 	public function testCC() {
-		$cc = [
+		$expected = [
 			'alice@example.com',
-			'bob@example.com',
+			'Bob <bob@example.com>',
 		];
+		$cc = Message::parseAddressList($expected);
 
 		$this->message->setCC($cc);
 
-		$this->assertSame($cc, $this->message->getCCList());
+		$this->assertEquals($expected, $this->message->getCCList());
 	}
 
 	public function testEmptyCC() {
@@ -125,14 +130,15 @@ class MessageTest extends TestCase {
 	}
 
 	public function testBCC() {
-		$bcc = [
+		$expected = [
 			'alice@example.com',
-			'bob@example.com',
+			'Bob <bob@example.com>',
 		];
+		$bcc = Message::parseAddressList($expected);
 
 		$this->message->setBCC($bcc);
 
-		$this->assertSame($bcc, $this->message->getBCCList());
+		$this->assertEquals($expected, $this->message->getBCCList());
 	}
 
 	public function testEmptyBCC() {
