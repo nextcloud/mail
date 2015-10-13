@@ -28,7 +28,7 @@ cache:
 
 before_install:
   - composer self-update
-  - composer install
+  - make install-composer-deps
   - wget https://raw.githubusercontent.com/owncloud/administration/master/travis-ci/before_install.sh
   - bash ./before_install.sh mail $CORE_BRANCH $DB
   - cd ../core
@@ -37,8 +37,7 @@ before_install:
 
 before_script:
   - cd apps/mail
-  - sh -c "if [ '$TEST_JS' = 'TRUE' ]; then npm install --deps; fi"
-  - sh -c "if [ '$TEST_JS' = 'TRUE' ]; then npm run-script bower_deps; fi"
+  - sh -c "if [ '$TEST_JS' = 'TRUE' ]; then make dev-setup; fi"
 
 script:
   # Test lint
