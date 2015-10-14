@@ -37,70 +37,71 @@ class Logger implements ILogger {
 	/**
 	 * @inheritdoc
 	 */
-	public function emergency($message, array $context = array()) {
-		$this->logger->emergency($message, $this->context);
+	public function emergency($message, array $context = []) {
+		$this->logger->emergency($message, array_merge($this->context, $context));
 	}
 
 	/**
 	 * @inheritdoc
 	 */
-	public function alert($message, array $context = array()) {
-		$this->logger->alert($message, $this->context);
+	public function alert($message, array $context = []) {
+		$this->logger->alert($message, array_merge($this->context, $context));
 	}
 
 	/**
 	 * @inheritdoc
 	 */
-	public function critical($message, array $context = array()) {
-		$this->logger->critical($message, $this->context);
+	public function critical($message, array $context = []) {
+		$this->logger->critical($message, array_merge($this->context, $context));
 	}
 
 	/**
 	 * @inheritdoc
 	 */
-	public function error($message, array $context = array()) {
-		$this->logger->error($message, $this->context);
+	public function error($message, array $context = []) {
+		$this->logger->error($message, array_merge($this->context, $context));
 	}
 
 	/**
 	 * @inheritdoc
 	 */
-	public function warning($message, array $context = array()) {
-		$this->logger->warning($message, $this->context);
+	public function warning($message, array $context = []) {
+		$this->logger->warning($message, array_merge($this->context, $context));
 	}
 
 	/**
 	 * @inheritdoc
 	 */
-	public function notice($message, array $context = array()) {
-		$this->logger->notice($message, $this->context);
+	public function notice($message, array $context = []) {
+		$this->logger->notice($message, array_merge($this->context, $context));
 	}
 
 	/**
 	 * @inheritdoc
 	 */
-	public function info($message, array $context = array()) {
-		$this->logger->info($message, $this->context);
+	public function info($message, array $context = []) {
+		$this->logger->info($message, array_merge($this->context, $context));
 	}
 
 	/**
 	 * @inheritdoc
 	 */
-	public function debug($message, array $context = array()) {
-		$this->logger->debug($message, $this->context);
+	public function debug($message, array $context = []) {
+		$this->logger->debug($message, array_merge($this->context, $context));
 	}
 
 	/**
 	 * @inheritdoc
 	 */
 	public function log($level, $message, array $context = array()) {
-		$this->logger->log($level, $message, $this->context);
+		$this->logger->log($level, $message, array_merge($this->context, $context));
 	}
 
 	/**
 	 * @inheritdoc
 	 */
 	public function logException(\Exception $exception, array $context = array()) {
-		$this->logger->logException($exception, $this->context);
+		$this->logger->logException($exception, array_merge($this->context, $context));
 	}
+
 }

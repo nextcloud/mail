@@ -2,6 +2,8 @@
 
 namespace OCA\Mail\Tests\Service;
 
+use OCA\Mail\Service\Logger;
+
 class LoggerTest extends \PHPUnit_Framework_TestCase {
 
 	/**
@@ -15,11 +17,13 @@ class LoggerTest extends \PHPUnit_Framework_TestCase {
 			->method($method)
 			->with(
 				$this->equalTo($param),
-				$this->equalTo(['app' => 'mail'])
-			);
+				$this->equalTo([
+					'app' => 'mail',
+					'key' => 'value',
+				]));
 
 		$logger = new \OCA\Mail\Service\Logger('mail', $baseLogger);
-		$logger->$method($param);
+		$logger->$method($param, ['key' => 'value']);
     }
 
 	public function providesLoggerMethods() {
@@ -40,4 +44,5 @@ class LoggerTest extends \PHPUnit_Framework_TestCase {
 
 		return $methods;
 	}
+
 }
