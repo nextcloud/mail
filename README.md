@@ -72,13 +72,14 @@ namespace inbox {
 
 ## Developer setup info
 
-Just clone this repo into your apps directory ([ownCloud core installation needed](https://doc.owncloud.org/server/8.1/developer_manual/general/devenv.html)). Additionally you need Composer to install PHP dependencies and npm to get the Javascript dependencies – run this from inside the mail folder:
+Just clone this repo into your apps directory ([ownCloud core installation needed](https://doc.owncloud.org/server/8.2/developer_manual/general/devenv.html)). Additionally,  [npm](https://docs.npmjs.com/getting-started/installing-node) is needed for installing JavaScript dependencies. On Debian and Ubuntu Systems it can be installed with the following command:
 ```bash
 sudo install node nodejs-legacy
-curl -sS https://getcomposer.org/installer | php
-php composer.phar install
 ```
-Debian/Ubuntu people, just execute `install_ubuntu.sh`
+Once npm is installed, PHP and JavaScript dependencies can be installed by running
+```bash
+make optimize-js
+```
 
 ### Nightly builds
 
