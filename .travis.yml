@@ -65,6 +65,8 @@ matrix:
     - php: 5.4
       env: "DB=mysql CORE_BRANCH=stable8.1"
     - php: 5.4
+      env: "DB=mysql CORE_BRANCH=stable8.2"
+    - php: 5.4
       env: "DB=mysql CORE_BRANCH=stable7"
 
   allow_failures:
