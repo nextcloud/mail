@@ -30,12 +30,15 @@ use Closure;
 use Exception;
 use Horde_Imap_Client;
 use Horde_Imap_Client_Data_Fetch;
+use Horde_Mail_Rfc822_List;
 use OCP\Files\File;
 use OCA\Mail\Service\Html;
 use OCP\AppFramework\Db\DoesNotExistException;
 use OCP\Util;
 
 class IMAPMessage implements IMessage {
+
+	use ConvertAddresses;
 
 	/**
 	 * @var string[]
@@ -196,36 +199,48 @@ class IMAPMessage implements IMessage {
 	}
 
 	/**
-	 * @param string[] $to
+	 * @param Horde_Mail_Rfc822_List $to
 	 * @throws Exception
 	 */
-	public function setTo(array $to) {
+	public function setTo(Horde_Mail_Rfc822_List $to) {
 		throw new Exception('IMAP message is immutable');
 	}
 
 	/**
 	 * @return array
 	 */
-	public function getToList() {
+	public function getToList($assoc = false) {
 		$e = $this->getEnvelope();
-		return $this->convertAddressList($e->to);
+		if ($assoc) {
+			return $this->convertAddressList($e->to);
+		} else {
+			return $this->hordeListToStringArray($e->to);
+		}
 	}
 
-	public function getCCList() {
+	public function getCCList($assoc = false) {
 		$e = $this->getEnvelope();
-		return $this->convertAddressList($e->cc);
+		if ($assoc) {
+			return $this->convertAddressList($e->cc);
+		} else {
+			return $this->hordeListToStringArray($e->cc);
+		}
 	}
 
-	public function setCC(array $cc) {
+	public function setCC(Horde_Mail_Rfc822_List $cc) {
 		throw new Exception('IMAP message is immutable');
 	}
 
-	public function getBCCList() {
+	public function getBCCList($assoc = false) {
 		$e = $this->getEnvelope();
-		return $this->convertAddressList($e->bcc);
+		if ($assoc) {
+			return $this->convertAddressList($e->bcc);
+		} else {
+			return $this->hordeListToStringArray($e->bcc);
+		}
 	}
 
-	public function setBcc(array $bcc) {
+	public function setBcc(Horde_Mail_Rfc822_List $bcc) {
 		throw new Exception('IMAP message is immutable');
 	}
 
@@ -454,10 +469,10 @@ class IMAPMessage implements IMessage {
 		}
 
 		if ($specialRole === 'sent') {
-			$data['replyToList'] = $this->getToList();
-			$data['replyCcList'] = $this->getCCList();
+			$data['replyToList'] = $this->getToList(true);
+			$data['replyCcList'] = $this->getCCList(true);
 		} else {
-			$data['replyToList'] = $this->getReplyToList();
+			$data['replyToList'] = $this->getReplyToList(true);
 			$data['replyCcList'] = $this->getReplyCcList($ownMail);
 		}
 		return $data;
@@ -471,14 +486,14 @@ class IMAPMessage implements IMessage {
 		$data['fromList'] = $this->getFromList();
 		$data['to'] = $this->getTo();
 		$data['toEmail'] = $this->getToEmail();
-		$data['toList'] = $this->getToList();
+		$data['toList'] = $this->getToList(true);
 		$data['subject'] = $this->getSubject();
 		$data['date'] = Util::formatDate($this->getSentDate()->format('U'));
 		$data['size'] = Util::humanFileSize($this->getSize());
 		$data['flags'] = $this->getFlags();
 		$data['dateInt'] = $this->getSentDate()->getTimestamp();
 		$data['dateIso'] = $this->getSentDate()->format('c');
-		$data['ccList'] = $this->getCCList();
+		$data['ccList'] = $this->getCCList(true);
 		return $data;
 	}
 
@@ -577,21 +592,6 @@ class IMAPMessage implements IMessage {
 
 		$data = iconv($p->getCharset(), 'utf-8//IGNORE', $data);
 		return $data;
-	}
-
-	/**
-	 * @param \Horde_Imap_Client_Data_Envelope $envelope
-	 * @return array
-	 */
-	private function convertAddressList($envelope) {
-		$list = [];
-		foreach ($envelope as $t) {
-			$list[] = [
-				'label' => $t->label,
-				'email' => $t->bare_address
-			];
-		}
-		return $list;
 	}
 
 	public function getContent() {

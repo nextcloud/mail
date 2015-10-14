@@ -17,6 +17,8 @@ use OCP\Files\File;
 
 class Message implements IMessage {
 
+	use ConvertAddresses;
+
 	/**
 	 * @var string
 	 */
@@ -29,19 +31,19 @@ class Message implements IMessage {
 
 	/**
 	 *
-	 * @var string[]
+	 * @var Horde_Mail_Rfc822_List
 	 */
-	private $to = [];
+	private $to;
 
 	/**
-	 * @var string[]
+	 * @var Horde_Mail_Rfc822_List
 	 */
-	private $cc = [];
+	private $cc;
 
 	/**
-	 * @var string[]
+	 * @var Horde_Mail_Rfc822_List
 	 */
-	private $bcc = [];
+	private $bcc;
 
 	/**
 	 * @var IMessage
@@ -65,15 +67,16 @@ class Message implements IMessage {
 
 	/**
 	 * @param string $list
-	 * @return string[]
+	 * @return Horde_Mail_Rfc822_List
 	 */
 	public static function parseAddressList($list) {
-		$hordeList = new Horde_Mail_Rfc822_List($list);
-		$addresses = [];
-		foreach ($hordeList as $address) {
-			$addresses[] = $address->bare_address;
-		}
-		return $addresses;
+		return new Horde_Mail_Rfc822_List($list);
+	}
+
+	public function __construct() {
+		$this->to = new Horde_Mail_Rfc822_List();
+		$this->cc = new Horde_Mail_Rfc822_List();
+		$this->bcc = new Horde_Mail_Rfc822_List();
 	}
 
 	/**
@@ -119,51 +122,68 @@ class Message implements IMessage {
 	 * @return string
 	 */
 	public function getTo() {
-		if (count($this->to) > 0) {
-			return $this->to[0];
+		if ($this->to->count() > 0) {
+			return $this->to->first()->writeAddress();
 		}
 		return null;
 	}
 
 	/**
-	 * @param string[] $to
+	 * @param Horde_Mail_Rfc822_List $to
 	 */
-	public function setTo(array $to) {
+	public function setTo(Horde_Mail_Rfc822_List $to) {
+		error_log('to');
+		error_log(print_r($to, true));
 		$this->to = $to;
 	}
 
 	/**
+	 * @param bool $assoc
 	 * @return string[]
 	 */
-	public function getToList() {
-		return $this->to;
+	public function getToList($assoc = false) {
+		if ($assoc) {
+			return $this->hordeListToAssocArray($this->to);
+		} else {
+			return $this->hordeListToStringArray($this->to);
+		}
 	}
 
 	/**
-	 * @return string[]
+	 * @param bool $assoc
+	 * @return Horde_Mail_Rfc822_List
 	 */
-	public function getCCList() {
-		return $this->cc;
+	public function getCCList($assoc = false) {
+		if ($assoc) {
+			return $this->hordeListToAssocArray($this->cc);
+		} else {
+			return $this->hordeListToStringArray($this->cc);
+		}
 	}
 
 	/**
-	 * @param string[] $cc
+	 * @param Horde_Mail_Rfc822_List $cc
 	 */
-	public function setCC(array $cc) {
+	public function setCC(Horde_Mail_Rfc822_List $cc) {
 		$this->cc = $cc;
 	}
 
 	/**
-	 * @return string[]
+	 * @param bool $assoc
+	 * @return Horde_Mail_Rfc822_List
 	 */
-	public function getBCCList() {
-		return $this->bcc;
+	public function getBCCList($assoc = false) {
+		if ($assoc) {
+			return $this->hordeListToAssocArray($this->bcc);
+		} else {
+			return $this->hordeListToStringArray($this->bcc);
+		}
 	}
 
 	/**
-	 * @param array $bcc
+	 * @param Horde_Mail_Rfc822_List $bcc
 	 */
-	public function setBcc(array $bcc) {
+	public function setBcc(Horde_Mail_Rfc822_List $bcc) {
 		$this->bcc = $bcc;
 	}
 

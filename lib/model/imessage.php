@@ -2,6 +2,7 @@
 
 namespace OCA\Mail\Model;
 
+use Horde_Mail_Rfc822_List;
 use OCP\Files\File;
 
 /**
@@ -50,34 +51,37 @@ interface IMessage {
 	public function getTo();
 
 	/**
-	 * @param string[] $to
+	 * @param Horde_Mail_Rfc822_List $to
 	 */
-	public function setTo(array $to);
+	public function setTo(Horde_Mail_Rfc822_List $to);
 
 	/**
+	 * @param bool $assoc
 	 * @return string[]
 	 */
-	public function getToList();
+	public function getToList($assoc = false);
 
 	/**
+	 * @param bool $assoc
 	 * @return string[]
 	 */
-	public function getCCList();
+	public function getCCList($assoc = false);
 
 	/**
-	 * @param array $cc
+	 * @param Horde_Mail_Rfc822_List $cc
 	 */
-	public function setCC(array $cc);
+	public function setCC(Horde_Mail_Rfc822_List $cc);
 
 	/**
+	 * @param bool $assoc
 	 * @return string[]
 	 */
-	public function getBCCList();
+	public function getBCCList($assoc = false);
 
 	/**
-	 * @param array $bcc
+	 * @param Horde_Mail_Rfc822_List $bcc
 	 */
-	public function setBcc(array $bcc);
+	public function setBcc(Horde_Mail_Rfc822_List $bcc);
 
 	/**
 	 * @return IMessage

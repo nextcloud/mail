@@ -26,10 +26,6 @@
 namespace OCA\Mail\Controller;
 
 use Horde_Imap_Client;
-use Horde_Mime_Headers_Date;
-use Horde_Mime_Mail;
-use Horde_Mime_Part;
-use Horde_Mail_Rfc822_Address;
 use OCA\Mail\Account;
 use OCA\Mail\Db\MailAccount;
 use OCA\Mail\Model\Message;
@@ -290,7 +286,7 @@ class AccountsController extends Controller {
 			}
 
 			if (is_null($to)) {
-				$message->setTo($repliedMessage->getToList());
+				$message->setTo(Message::parseAddressList($repliedMessage->getToList()));
 			} else {
 				$message->setTo(Message::parseAddressList($to));
 			}
