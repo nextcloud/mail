@@ -482,7 +482,7 @@ class Account implements IAccount {
 	public function deleteDraft($messageId) {
 		$draftsFolder = $this->getDraftsFolder();
 		
-		$draftsMailBox = new \Horde_Imap_Client_Mailbox($draftsFolder->getFolderId(), true);
+		$draftsMailBox = new \Horde_Imap_Client_Mailbox($draftsFolder->getFolderId(), false);
 		$this->getImapConnection()->expunge($draftsMailBox);
 	}
 
