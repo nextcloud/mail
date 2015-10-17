@@ -132,8 +132,6 @@ class Message implements IMessage {
 	 * @param Horde_Mail_Rfc822_List $to
 	 */
 	public function setTo(Horde_Mail_Rfc822_List $to) {
-		error_log('to');
-		error_log(print_r($to, true));
 		$this->to = $to;
 	}
 
