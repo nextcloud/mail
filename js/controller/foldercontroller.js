@@ -22,7 +22,7 @@ define(function(require) {
 		$('#mail-message').removeClass('hidden').addClass('icon-loading');
 		$('#mail_new_message').removeClass('hidden');
 		$('#folders').removeClass('hidden');
-		$('#mail-setup').addClass('hidden');
+		$('#setup').addClass('hidden');
 
 		UI.clearMessages();
 		$('#app-navigation').addClass('icon-loading');

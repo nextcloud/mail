@@ -10,7 +10,7 @@
 
 
 /* SETUP */
-#mail-setup {
+#setup {
 	z-index: 1001;
 	width: 250px;
 	top: 15%;
@@ -18,19 +18,19 @@
 	margin: 0 auto;
 	padding-top: 30px;
 }
-#mail-setup h2 {
+#setup h2 {
 	text-align: center;
 	position: relative;
 	width: 300%;
 	left: -100%;
 	margin-bottom: 20px;
 }
-#mail-setup input {
+#setup input {
 	width: 100%;
 	box-sizing: border-box;
 }
 
-#mail-setup-manual-toggle {
+#setup .toggle-manual-mode {
 	background-position: right;
 	padding-right: 16px;
 	margin-left: 6px;
@@ -38,30 +38,20 @@
 	opacity: .3;
 }
 
-#mail-imap-ssl,
-#mail-smtp-ssl {
+#setup-imap-ssl,
+#setup-smtp-ssl {
 	float: right;
 	margin: -3px -3px -52px 0;
 	z-index: 100;
 }
-#mail-imap-ssl label,
-#mail-smtp-ssl label {
+#setup-imap-ssl label,
+#setup-smtp-ssl label {
 	opacity: .4;
 }
 
 .connect {
 	margin: 0;
 }
-#connect-loading {
-	position: absolute;
-	top: 204px;
-	left: 0;
-	right: 0;
-	margin-left: auto;
-	margin-right: auto;
-}
-
-
 
 
 /* app navigation */
