@@ -74,7 +74,7 @@ namespace inbox {
 
 Just clone this repo into your apps directory ([ownCloud core installation needed](https://doc.owncloud.org/server/8.2/developer_manual/general/devenv.html)). Additionally,  [npm](https://docs.npmjs.com/getting-started/installing-node) is needed for installing JavaScript dependencies. On Debian and Ubuntu Systems it can be installed with the following command:
 ```bash
-sudo install node nodejs-legacy
+sudo apt-get install nodejs-legacy npm
 ```
 Once npm is installed, PHP and JavaScript dependencies can be installed by running
 ```bash
