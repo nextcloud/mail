@@ -20,6 +20,10 @@ if ($debug) {
 }
 ?>
 
+<div id="user-displayname"
+     style="display: none"><?php p(\OCP\User::getDisplayName(\OCP\User::getUser())); ?></div>
+<div id="user-email"
+     style="display: none"><?php p(\OCP\Config::getUserValue(\OCP\User::getUser(), 'settings', 'email', '')); ?></div>
 <div id="app">
 	<div id="app-navigation" class="icon-loading">
 		<ul>

@@ -96,7 +96,10 @@ define(function(require) {
 		this.view.navigation.settings.show(new SettingsView({
 			accounts: Mail.State.accounts
 		}));
-		this.view.setup.show(new SetupView());
+		this.view.setup.show(new SetupView({
+			displayName: $('#user-displayname').text(),
+			email: $('#user-email').text()
+		}));
 	});
 
 	return Mail;

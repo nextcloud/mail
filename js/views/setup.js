@@ -12,12 +12,15 @@ define(function(require) {
 	'use strict';
 
 	var $ = require('jquery');
+	var _ = require('underscore');
 	var Marionette = require('marionette');
 	var Handlebars = require('handlebars');
 	var SetupTemplate = require('text!templates/setup.html');
 
 	return Marionette.ItemView.extend({
 		template: Handlebars.compile(SetupTemplate),
+		displayName: '',
+		email: '',
 		manualMode: false,
 		loading: false,
 		ui: {
@@ -38,7 +41,8 @@ define(function(require) {
 			'smtpPort': 'input[name="smtp-port"]',
 			'smtpUser': 'input[name="smtp-user"]',
 			'smtpPassword': 'input[name="smtp-password"]',
-			'submitButton': 'input[type=submit]'
+			'submitButton': 'input[type=submit]',
+			'iconLoading': '#connect-loading'
 		},
 		events: {
 			'click @ui.submitButton': 'onSubmit',
@@ -47,8 +51,19 @@ define(function(require) {
 			'change @ui.imapSslMode': 'onImapSslModeChange',
 			'change @ui.smtpSslMode': 'onSmtpSslModeChange'
 		},
+		initialize: function(options) {
+			_.defaults(options, {
+				displayName: '',
+				email: ''
+			});
+			this.displayName = options.displayName;
+			this.email = options.email;
+		},
 		onShow: function() {
 			this.ui.manualInputs.hide();
+			this.ui.iconLoading.hide();
+			this.ui.accountName.val(this.displayName);
+			this.ui.mailAddress.val(this.email);
 		},
 		toggleManualMode: function(e) {
 			e.stopPropagation();
@@ -76,7 +91,8 @@ define(function(require) {
 			var Mail = require('app');
 
 			this.ui.inputs.prop('disabled', true);
-			this.ui.submitButton.val(t('mail', 'Connecting …'));
+			this.ui.submitButton.val(t('mail', 'Connecting'));
+			this.ui.iconLoading.fadeIn();
 
 			var emailAddress = this.ui.mailAddress.val();
 			var accountName = this.ui.accountName.val();
@@ -124,6 +140,7 @@ define(function(require) {
 			var _this = this;
 			$.when(creatingAccount).always(function() {
 				_this.loading = false;
+				_this.ui.iconLoading.hide();
 				_this.ui.inputs.prop('disabled', false);
 				_this.ui.submitButton.val(t('mail', 'Connect'));
 

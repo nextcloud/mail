@@ -49,10 +49,15 @@
 	opacity: .4;
 }
 
-.connect {
-	margin: 0;
+#connect-loading {
+	position: absolute;
+	top: 206px;
+	left: 0;
+	right: 0;
+	margin-left: auto;
+	margin-right: auto;
+	height: 30px;
 }
-
 
 /* app navigation */
 
