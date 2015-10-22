@@ -58,7 +58,7 @@ define(function(require) {
 			}
 			var title = t('mail', 'Send message to {email}', {email: email});
 			memo += '<span class="tipsy-mailto" title="' + title + '">';
-			memo += '<a class="link-mailto" data-email="" + email + "" data-label="" + label + "">';
+			memo += '<a class="link-mailto" data-email="' + email + '" data-label="' + label + '">';
 			memo += label + '</a></span>';
 			return memo;
 		}, '');
