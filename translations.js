@@ -1,6 +1,9 @@
 t('Add attachment from Files');
 t('Add mail account');
+t('Check messages');
+t('Load more');
 t('Delete');
+t('No search results for');
 t('to');
 t('cc');
 t('The images have been blocked to protect your privacy.');
