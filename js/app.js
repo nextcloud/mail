@@ -19,6 +19,7 @@ define(function(require) {
 	var AppView = require('views/app');
 	var SettingsView = require('views/settings');
 	var NavigationView = require('views/navigation');
+	var SetupView = require('views/setup');
 
 	require('notification');
 
@@ -79,6 +80,9 @@ define(function(require) {
 	/*
 	 * Set up request/response handler
 	 */
+	Mail.reqres.setHandler('account:create', function(config) {
+		return Mail.Service.accountService.createAccount(config);
+	});
 	Mail.reqres.setHandler('account:entities', function() {
 		return Mail.Service.accountService.getAccountEntities();
 	});
@@ -91,6 +95,10 @@ define(function(require) {
 		this.view.navigation = new NavigationView();
 		this.view.navigation.settings.show(new SettingsView({
 			accounts: Mail.State.accounts
+		}));
+		this.view.setup.show(new SetupView({
+			displayName: $('#user-displayname').text(),
+			email: $('#user-email').text()
 		}));
 	});
 

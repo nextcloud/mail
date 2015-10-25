@@ -226,7 +226,7 @@ define(function(require) {
 			.fadeIn();
 		$('#mail-message').removeClass('hidden');
 		$('#folders').removeClass('hidden');
-		$('#mail-setup').addClass('hidden');
+		$('#setup').addClass('hidden');
 
 		$('#load-new-mail-messages').hide();
 		$('#load-more-mail-messages').hide();
@@ -691,24 +691,9 @@ define(function(require) {
 
 		require('app').trigger('ui:menu:hide');
 
-		$('#mail-setup').removeClass('hidden');
+		$('#setup').removeClass('hidden');
 		// don't show New Message button on Add account screen
 		$('#mail_new_message').hide();
-	}
-
-	function toggleManualSetup() {
-		$('#mail-setup-manual').slideToggle();
-		$('#mail-imap-host').focus();
-		if ($('#mail-address').parent().prop('class') === 'groupmiddle') {
-			$('#mail-password').slideToggle(function() {
-				$('#mail-address').parent()
-					.removeClass('groupmiddle').addClass('groupbottom');
-			});
-		} else {
-			$('#mail-password').slideToggle();
-			$('#mail-address').parent()
-				.removeClass('groupbottom').addClass('groupmiddle');
-		}
 	}
 
 	function showDraftSavedNotification() {
@@ -730,8 +715,7 @@ define(function(require) {
 		loadMessage: loadMessage,
 		setFolderActive: setFolderActive,
 		setMessageActive: setMessageActive,
-		addAccount: addAccount,
-		toggleManualSetup: toggleManualSetup
+		addAccount: addAccount
 	};
 
 	Object.defineProperties(view, {
