@@ -129,6 +129,7 @@ define(function(require) {
 			var creatingAccount = require('app').request('account:create', config);
 
 			$.when(creatingAccount).done(function() {
+				Mail.trigger('ui:menu:show');
 				// reload accounts
 				Mail.trigger('accounts:load');
 			});
@@ -143,8 +144,6 @@ define(function(require) {
 				_this.ui.iconLoading.hide();
 				_this.ui.inputs.prop('disabled', false);
 				_this.ui.submitButton.val(t('mail', 'Connect'));
-
-				Mail.trigger('ui:menu:show');
 			});
 		},
 		onImapSslModeChange: function() {
