@@ -11,6 +11,7 @@ script('mail','vendor/autosize/jquery.autosize');
 script('mail', 'vendor/jQuery-Storage-API/jquery.storageapi');
 script('mail', 'vendor/jquery-visibility/jquery-visibility');
 script('mail', 'vendor/requirejs/require');
+script('mail','searchproxy');
 if ($debug) {
 	// Load JS dependencies asynchronously as specified in require_config.js
 	script('mail', 'require_config');

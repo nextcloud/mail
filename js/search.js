@@ -12,9 +12,6 @@ define(function(require) {
 	'use strict';
 
 	var timeoutID = null;
-	function attach(search) {
-		search.setFilter('mail', require('app').Search.filter);
-	}
 
 	function filter(query) {
 		window.clearTimeout(timeoutID);
@@ -25,7 +22,6 @@ define(function(require) {
 	}
 
 	return {
-		attach: attach,
 		filter: filter
 	};
 });
