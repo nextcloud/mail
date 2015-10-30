@@ -1,4 +1,4 @@
-/* global Notification, adjustControlsWidth */
+/* global Notification, adjustControlsWidth, SearchProxy */
 
 /**
  * ownCloud - Mail
@@ -108,9 +108,8 @@ define(function(require) {
 			Notification.requestPermission();
 		}
 
-		if (!_.isUndefined(OC.Plugins)) {
-			OC.Plugins.register('OCA.Search', require('app').Search);
-		}
+		// Register actual filter method
+		SearchProxy.setFilter(require('app').Search.filter);
 
 		function split(val) {
 			return val.split(/,\s*/);
