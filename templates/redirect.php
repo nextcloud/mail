@@ -13,11 +13,11 @@
 	</div>
 <?php else: ?>
 	<div class="error">
-		<legend><strong><?php p($l->t('Redirect Warning'));?></strong></legend>
-		<p><?php p($l->t('The previous page is sending you to %s.', array($_['urlHost']))); ?></p>
+		<legend><strong><?php p($l->t('Redirect warning'));?></strong></legend>
+		<p><?php p($l->t('The previous page is sending you to %s', array($_['urlHost']))); ?></p>
 		<p><?php print_unescaped($l->t('If you do not want to visit that page, you can return to <a href="%s">the mail app</a>.', array($_['mailURL']))); ?></p>
 
 		<br/>
-		<a href="<?php p($_['url']) ?>" class="button" rel="noreferrer" id="redirectLink"><?php p($l->t('Click here to visit the website.'));?></a>
+		<a href="<?php p($_['url']) ?>" class="button" rel="noreferrer" id="redirectLink"><?php p($l->t('Continue to %s', array($_['urlHost']))); ?></a>
 	</div>
 <?php endif; ?>
