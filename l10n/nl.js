@@ -33,6 +33,7 @@ OC.L10N.register(
     "Load more …" : "Laad meer ...",
     "Check messages" : "Controleren op berichten",
     "Error while deleting account." : "Fout bij verwijderen account.",
+    "Connecting" : "Verbinden",
     "Connect" : "Verbinden",
     "Inbox" : "Inbakje",
     "Sent" : "Verzonden",
@@ -60,9 +61,6 @@ OC.L10N.register(
     "Error loading message" : "Fout bij laden bericht",
     "New message" : "Nieuw bericht",
     "Forwarding you to %s - click here if you are not automatically redirected within the next few seconds." : "U wordt doorgezet naar %s - klik hier als u niet binnen enkele seconden automatisch wordt doorgestuurd.",
-    "Redirect Warning" : "Omleidingswaarschuwing",
-    "The previous page is sending you to %s." : "De vorige pagina stuurt u naar %s",
-    "If you do not want to visit that page, you can return to <a href=\"%s\">the mail app</a>." : "Als u die pagina niet wilt bezoeken, kunt u teruggaan naar <a href=\"%s\">de e-mail app</a>.",
-    "Click here to visit the website." : "Klik hier om de website te bezoeken."
+    "If you do not want to visit that page, you can return to <a href=\"%s\">the mail app</a>." : "Als u die pagina niet wilt bezoeken, kunt u teruggaan naar <a href=\"%s\">de e-mail app</a>."
 },
 "nplurals=2; plural=(n != 1);");

@@ -56,9 +56,6 @@
     "Error loading message" : "Produciuse un erro ao cargar a mensaxe",
     "New message" : "Mensaxe nova",
     "Forwarding you to %s - click here if you are not automatically redirected within the next few seconds." : "Dirixíndoo a %s - prema aquí se non é redirixido automaticamente nuns segundos.",
-    "Redirect Warning" : "Aviso de redireccionamento",
-    "The previous page is sending you to %s." : "Estalle a enviar a páxina anterior a %s.",
-    "If you do not want to visit that page, you can return to <a href=\"%s\">the mail app</a>." : "Se non quere visitar esa páxina, pode regresar á <a href=\"%s\">aplicación de correo</a>.",
-    "Click here to visit the website." : "Prema aquí para visitar o sitio web."
+    "If you do not want to visit that page, you can return to <a href=\"%s\">the mail app</a>." : "Se non quere visitar esa páxina, pode regresar á <a href=\"%s\">aplicación de correo</a>."
 },"pluralForm" :"nplurals=2; plural=(n != 1);"
 }

@@ -33,6 +33,7 @@ OC.L10N.register(
     "Load more …" : "Lataa lisää…",
     "Check messages" : "Tarkista viestit",
     "Error while deleting account." : "Virhe tiliä poistaessa.",
+    "Connecting" : "Yhdistetään",
     "Connect" : "Yhdistä",
     "Inbox" : "Saapuneet",
     "Sent" : "Lähetetty",
@@ -57,9 +58,6 @@ OC.L10N.register(
     "Error loading message" : "Virhe viestiä ladatessa",
     "New message" : "Uusi viesti",
     "Forwarding you to %s - click here if you are not automatically redirected within the next few seconds." : "Ohjataan edelleen kohteeseen %s - napsauta tästä, jos uudelleenohjaus ei tapahdu muutaman sekunnin kuluessa.",
-    "Redirect Warning" : "Varoitus uudelleenohjauksesta",
-    "The previous page is sending you to %s." : "Edellinen sivu pyrkii lähettämään sinut sivulle %s.",
-    "If you do not want to visit that page, you can return to <a href=\"%s\">the mail app</a>." : "Jos et halua päätyä kyseiselle sivulle, voit palata <a href=\"%s\">sähköpostisovellukseen</a>.",
-    "Click here to visit the website." : "Napsauta tästä siirtyäksesi verkkosivulle."
+    "If you do not want to visit that page, you can return to <a href=\"%s\">the mail app</a>." : "Jos et halua päätyä kyseiselle sivulle, voit palata <a href=\"%s\">sähköpostisovellukseen</a>."
 },
 "nplurals=2; plural=(n != 1);");

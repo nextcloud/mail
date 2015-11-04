@@ -33,6 +33,7 @@ OC.L10N.register(
     "Load more …" : "Načíst další ...",
     "Check messages" : "Zkontrolovat zprávy",
     "Error while deleting account." : "Chyba při mazání účtu.",
+    "Connecting" : "Připojování",
     "Connect" : "Připojit",
     "Inbox" : "Doručená",
     "Sent" : "Odeslaná",
@@ -60,9 +61,6 @@ OC.L10N.register(
     "Error loading message" : "Chyba načtení zprávy",
     "New message" : "Nová zpráva",
     "Forwarding you to %s - click here if you are not automatically redirected within the next few seconds." : "Přesměrovávám na %s - klikněte sem, pokud nebudete automaticky přesměrováni během několika následujících sekund.",
-    "Redirect Warning" : "Upozornění na přesměrování",
-    "The previous page is sending you to %s." : "Předchozí stránka vás přesměrovává na %s.",
-    "If you do not want to visit that page, you can return to <a href=\"%s\">the mail app</a>." : "Pokud nechcete tuto stránku navštívit, vraťte se do <a href=\"%s\">emailové aplikace</a>.",
-    "Click here to visit the website." : "Klikněte sem pro otevření webové stránky."
+    "If you do not want to visit that page, you can return to <a href=\"%s\">the mail app</a>." : "Pokud nechcete tuto stránku navštívit, vraťte se do <a href=\"%s\">emailové aplikace</a>."
 },
 "nplurals=3; plural=(n==1) ? 0 : (n>=2 && n<=4) ? 1 : 2;");

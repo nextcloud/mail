@@ -33,6 +33,7 @@ OC.L10N.register(
     "Load more …" : "โหลดเพิ่มเติม ...",
     "Check messages" : "ตรวจสอบข้อความ",
     "Error while deleting account." : "ข้อผิดพลาดขณะลบบัญชี",
+    "Connecting" : "กำลังเชื่อมต่อ",
     "Connect" : "เชื่อมต่อ",
     "Inbox" : "กล่องขาเข้า",
     "Sent" : "ส่ง",
@@ -60,9 +61,6 @@ OC.L10N.register(
     "Error loading message" : "กิดข้อผิดพลาดในการโหลด",
     "New message" : "ข้อความใหม่",
     "Forwarding you to %s - click here if you are not automatically redirected within the next few seconds." : "กำลังส่งต่อคุณไปยัง %s - คลิกที่นี่ถ้าคุณไม่ได้เปลี่ยนเส้นทางโดยอัตโนมัติภายในไม่กี่วินาทีถัดไป",
-    "Redirect Warning" : "คำเตือนการเปลี่ยนเส้นทาง",
-    "The previous page is sending you to %s." : "หน้าก่อนหน้านี้กำลังส่งคุณไปยัง %s",
-    "If you do not want to visit that page, you can return to <a href=\"%s\">the mail app</a>." : "หากคุณไม่ต้องการที่จะเยี่ยมชมหน้าเว็บ คุณสามารถย้อนกลับไปที่ <a href=\"%s\">>แอพอีเมล</a>",
-    "Click here to visit the website." : "คลิกที่นี่เพื่อเยี่ยมชมเว็บไซต์"
+    "If you do not want to visit that page, you can return to <a href=\"%s\">the mail app</a>." : "หากคุณไม่ต้องการที่จะเยี่ยมชมหน้าเว็บ คุณสามารถย้อนกลับไปที่ <a href=\"%s\">>แอพอีเมล</a>"
 },
 "nplurals=1; plural=0;");

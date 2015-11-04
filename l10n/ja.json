@@ -31,6 +31,7 @@
     "Load more …" : "読込中 …",
     "Check messages" : "メッセージを確認",
     "Error while deleting account." : "アカウント削除エラー",
+    "Connecting" : "接続中",
     "Connect" : "接続",
     "Inbox" : "受信箱",
     "Sent" : "送信",
@@ -58,9 +59,6 @@
     "Error loading message" : "メッセージ読み込みエラー",
     "New message" : "新しいメッセージ",
     "Forwarding you to %s - click here if you are not automatically redirected within the next few seconds." : "%s  へリダイレクトします。数秒後に自動転送されなかったらクリックしてください。",
-    "Redirect Warning" : "リダイレクト警告",
-    "The previous page is sending you to %s." : "前のページを%sに送信しています。",
-    "If you do not want to visit that page, you can return to <a href=\"%s\">the mail app</a>." : "ページを開きたくない場合は、<a href=\"%s\">メールアプリ</a> に戻ることができます。",
-    "Click here to visit the website." : "ウェブサイトを開く場合はここをクリックしてください。"
+    "If you do not want to visit that page, you can return to <a href=\"%s\">the mail app</a>." : "ページを開きたくない場合は、<a href=\"%s\">メールアプリ</a> に戻ることができます。"
 },"pluralForm" :"nplurals=1; plural=0;"
 }

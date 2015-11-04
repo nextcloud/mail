@@ -56,9 +56,6 @@
     "Error loading message" : "Tõrge kirja laadimisel",
     "New message" : "Uussõnum",
     "Forwarding you to %s - click here if you are not automatically redirected within the next few seconds." : "Edasi saamine %s-le - kliki siia kui sind ei suunata automaatselt mõne järgmise sekundi jooksul edasi.",
-    "Redirect Warning" : "Edasisuunamise hoiatus",
-    "The previous page is sending you to %s." : "Eelmine lehekülg suunab sind %s.",
-    "If you do not want to visit that page, you can return to <a href=\"%s\">the mail app</a>." : "Kui Sa ei soovi seda lehekülge vaadata, siis liigu tagasi <a href=\"%s\">e-maili rakendisse</a>.",
-    "Click here to visit the website." : "Kodulehe külastamiseks klõpsa siia."
+    "If you do not want to visit that page, you can return to <a href=\"%s\">the mail app</a>." : "Kui Sa ei soovi seda lehekülge vaadata, siis liigu tagasi <a href=\"%s\">e-maili rakendisse</a>."
 },"pluralForm" :"nplurals=2; plural=(n != 1);"
 }

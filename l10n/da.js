@@ -33,6 +33,7 @@ OC.L10N.register(
     "Load more …" : "Indlæs flere ...",
     "Check messages" : "Henter beskeder",
     "Error while deleting account." : "Fejl under sletning af kontoen.",
+    "Connecting" : "Tilslutter",
     "Connect" : "Tilslut",
     "Inbox" : "Indbakke",
     "Sent" : "Sent",
@@ -60,9 +61,6 @@ OC.L10N.register(
     "Error loading message" : "Fejl under indlæsning af besked",
     "New message" : "Ny besked",
     "Forwarding you to %s - click here if you are not automatically redirected within the next few seconds." : "Viderestiller dig til %s - klik her hvis du ikke bliver viderestillet automatisk inden for få sekunder.",
-    "Redirect Warning" : "Advarsel om viderestilling",
-    "The previous page is sending you to %s." : "Den foregående side sender dig til %s.",
-    "If you do not want to visit that page, you can return to <a href=\"%s\">the mail app</a>." : "Hvis du ikke ønsker at besøge denne side, så kan du gå tilbage til <a href=\"%s\">postprogrammet</a>.",
-    "Click here to visit the website." : "Klik her for at besøge webstedet."
+    "If you do not want to visit that page, you can return to <a href=\"%s\">the mail app</a>." : "Hvis du ikke ønsker at besøge denne side, så kan du gå tilbage til <a href=\"%s\">postprogrammet</a>."
 },
 "nplurals=2; plural=(n != 1);");

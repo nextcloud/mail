@@ -58,9 +58,6 @@
     "Error loading message" : "Грешка при учитавању поруке",
     "New message" : "Нова порука",
     "Forwarding you to %s - click here if you are not automatically redirected within the next few seconds." : "Преусмеравање на %s — кликните овде ако нисте аутоматски преусмерени у року неколико секунди.",
-    "Redirect Warning" : "Упозорење о преусмеравању",
-    "The previous page is sending you to %s." : "Претходна страница вас шаље на %s.",
-    "If you do not want to visit that page, you can return to <a href=\"%s\">the mail app</a>." : "Ако не желите да посетите ту страницу, можете да се вратите на <a href=\"%s\">апликацију е-поште</a>.",
-    "Click here to visit the website." : "Кликните овде да посетите вебсајт."
+    "If you do not want to visit that page, you can return to <a href=\"%s\">the mail app</a>." : "Ако не желите да посетите ту страницу, можете да се вратите на <a href=\"%s\">апликацију е-поште</a>."
 },"pluralForm" :"nplurals=3; plural=(n%10==1 && n%100!=11 ? 0 : n%10>=2 && n%10<=4 && (n%100<10 || n%100>=20) ? 1 : 2);"
 }

@@ -60,9 +60,6 @@ OC.L10N.register(
     "Error loading message" : "Hiba történt az üzenet betöltése közben",
     "New message" : "Új üzenet",
     "Forwarding you to %s - click here if you are not automatically redirected within the next few seconds." : "Átirányítunk ide: %s - kattints ide, ha az átirányítás nem sikerülne a következő pár másodpercben.",
-    "Redirect Warning" : "Átirányítás figyelmeztetés",
-    "The previous page is sending you to %s." : "Az előző oldal ide fog küldeni: %s.",
-    "If you do not want to visit that page, you can return to <a href=\"%s\">the mail app</a>." : "Ha nem szeretnéd megnyitni azt az oldalt, akkor visszatérhetsz a <a href=\"%s\">levelező alkalmazáshoz</a>.",
-    "Click here to visit the website." : "Kattints ide a weboldal megnyitásához."
+    "If you do not want to visit that page, you can return to <a href=\"%s\">the mail app</a>." : "Ha nem szeretnéd megnyitni azt az oldalt, akkor visszatérhetsz a <a href=\"%s\">levelező alkalmazáshoz</a>."
 },
 "nplurals=2; plural=(n != 1);");

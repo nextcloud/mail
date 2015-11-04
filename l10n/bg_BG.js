@@ -48,9 +48,6 @@ OC.L10N.register(
     "Error loading message" : "Грешка при зареждане съобщението",
     "New message" : "Ново Съобщение",
     "Forwarding you to %s - click here if you are not automatically redirected within the next few seconds." : "Препращане към %s - натисни тук ако не си автоматично препратен в следващите няколко секунди.",
-    "Redirect Warning" : "Предупреждение за Пренасочване",
-    "The previous page is sending you to %s." : "Предходната страница те праща към %s.",
-    "If you do not want to visit that page, you can return to <a href=\"%s\">the mail app</a>." : "Ако не искаш да посетиш тази страници можеш да се върнеш към <a href=\"%s\">пощата</a>.",
-    "Click here to visit the website." : "Натисни тук, за да посетиш интернет страницата."
+    "If you do not want to visit that page, you can return to <a href=\"%s\">the mail app</a>." : "Ако не искаш да посетиш тази страници можеш да се върнеш към <a href=\"%s\">пощата</a>."
 },
 "nplurals=2; plural=(n != 1);");

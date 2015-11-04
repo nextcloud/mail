@@ -33,6 +33,7 @@ OC.L10N.register(
     "Load more …" : "Cargar mai ...",
     "Check messages" : "Relevar lo corrièr",
     "Error while deleting account." : "Error al moment de la supression del compte.",
+    "Connecting" : "Connexion",
     "Connect" : "Connectar",
     "Inbox" : "Bóstia de recepcion",
     "Sent" : "Mandats",
@@ -60,9 +61,6 @@ OC.L10N.register(
     "Error loading message" : "Error al moment del cargament del messatge",
     "New message" : "Novèl message",
     "Forwarding you to %s - click here if you are not automatically redirected within the next few seconds." : "Anatz èsser redirigit cap a %s - Clicatz aicí se sètz pas redirigit dins las segondas que seguisson.",
-    "Redirect Warning" : "Avertiment de redireccion",
-    "The previous page is sending you to %s." : "La pagina precedenta vos manda cap a %s.",
-    "If you do not want to visit that page, you can return to <a href=\"%s\">the mail app</a>." : "Se desiratz pas visitar aquesta pagina, podètz tornar a <a href=\"%s\">l'aplicacion Mail</a>",
-    "Click here to visit the website." : "Clicatz aicí per visitar lo site."
+    "If you do not want to visit that page, you can return to <a href=\"%s\">the mail app</a>." : "Se desiratz pas visitar aquesta pagina, podètz tornar a <a href=\"%s\">l'aplicacion Mail</a>"
 },
 "nplurals=2; plural=(n > 1);");

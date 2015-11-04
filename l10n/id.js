@@ -33,6 +33,7 @@ OC.L10N.register(
     "Load more …" : "Muat lebih banyak ...",
     "Check messages" : "Periksa pesan",
     "Error while deleting account." : "Terjadi kesalahan saat menghapus akun.",
+    "Connecting" : "Menyambungkan",
     "Connect" : "Sambungkan",
     "Inbox" : "Kotak masuk",
     "Sent" : "Kirim",
@@ -60,9 +61,6 @@ OC.L10N.register(
     "Error loading message" : "Terjadi kesalahan saat memuat pesan",
     "New message" : "Pesan baru",
     "Forwarding you to %s - click here if you are not automatically redirected within the next few seconds." : "Meneruskan Anda ke %s - klik disini jika Anda tidak secara otomatis dialihkan dalam beberapa detik kemudian.",
-    "Redirect Warning" : "Peringatan Pengalihan",
-    "The previous page is sending you to %s." : "Halaman sebelumnya mengirim Anda ke %s.",
-    "If you do not want to visit that page, you can return to <a href=\"%s\">the mail app</a>." : "Jika Anda tidak ingin mengunjungi halaman ini, Anda dapat kembali ke <a href=\"%s\">apl email</a>.",
-    "Click here to visit the website." : "Klik disini untuk mengunjungi situs web."
+    "If you do not want to visit that page, you can return to <a href=\"%s\">the mail app</a>." : "Jika Anda tidak ingin mengunjungi halaman ini, Anda dapat kembali ke <a href=\"%s\">apl email</a>."
 },
 "nplurals=1; plural=0;");

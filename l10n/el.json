@@ -31,6 +31,7 @@
     "Load more …" : "Φόρτωση περισσότερων...",
     "Check messages" : "Έλεγχος μηνυμάτων",
     "Error while deleting account." : "Σφάλμα κατά τη διαγραφή λογαριασμού.",
+    "Connecting" : "Σύνδεση",
     "Connect" : "Σύνδεση",
     "Inbox" : "Εισερχόμενα",
     "Sent" : "Απεστάλη",
@@ -58,9 +59,6 @@
     "Error loading message" : "Μήνυμα σφάλματος φόρτωσης",
     "New message" : "Νέο μήνυμα",
     "Forwarding you to %s - click here if you are not automatically redirected within the next few seconds." : "Προωθείστε στο %s - κάντε κλικ εδώ αν δεν ανακατευθυνθείτε αυτόματα μέσα στα επόμενα λίγα δευτερόλεπτα.",
-    "Redirect Warning" : "Ανακατεύθυνση προειδοποίησης",
-    "The previous page is sending you to %s." : "Η προηγούμενη ιστοσελίδα σας στέλνει στο %s.",
-    "If you do not want to visit that page, you can return to <a href=\"%s\">the mail app</a>." : "Αν δεν επιθυμείτε να επισκεφτείτε αυτή την ιστοσελίδα, μπορείτε να επιστρέψετε στην <a href=\"%s\">εφαρμογή ταχυδρομείου</a>.",
-    "Click here to visit the website." : "Πατήστε εδώ για να επισκευτήτε την ιστοσελίδα."
+    "If you do not want to visit that page, you can return to <a href=\"%s\">the mail app</a>." : "Αν δεν επιθυμείτε να επισκεφτείτε αυτή την ιστοσελίδα, μπορείτε να επιστρέψετε στην <a href=\"%s\">εφαρμογή ταχυδρομείου</a>."
 },"pluralForm" :"nplurals=2; plural=(n != 1);"
 }

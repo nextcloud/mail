@@ -54,9 +54,6 @@ OC.L10N.register(
     "Error loading message" : "Error loading message",
     "New message" : "New message",
     "Forwarding you to %s - click here if you are not automatically redirected within the next few seconds." : "Forwarding you to %s - click here if you are not automatically redirected within the next few seconds.",
-    "Redirect Warning" : "Redirect Warning",
-    "The previous page is sending you to %s." : "The previous page is sending you to %s.",
-    "If you do not want to visit that page, you can return to <a href=\"%s\">the mail app</a>." : "If you do not want to visit that page, you can return to <a href=\"%s\">the mail app</a>.",
-    "Click here to visit the website." : "Click here to visit the website."
+    "If you do not want to visit that page, you can return to <a href=\"%s\">the mail app</a>." : "If you do not want to visit that page, you can return to <a href=\"%s\">the mail app</a>."
 },
 "nplurals=2; plural=(n != 1);");

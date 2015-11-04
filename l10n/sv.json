@@ -57,9 +57,6 @@
     "Error loading message" : "Fel vid laddning av meddelande",
     "New message" : "Nytt meddelande",
     "Forwarding you to %s - click here if you are not automatically redirected within the next few seconds." : "Vidarbofordrar dig till %s - klicka här om du inte automatiskt omdirigeras inom några sekunder.",
-    "Redirect Warning" : "Omdirigeringsvarning",
-    "The previous page is sending you to %s." : "Föregående sida skickar dig till %s.",
-    "If you do not want to visit that page, you can return to <a href=\"%s\">the mail app</a>." : "Om du inte vill besöka den sidan kan du återvända till <a href=\"%s\">mail appen</a>.",
-    "Click here to visit the website." : "Klicka här för att besöka webbplatsen."
+    "If you do not want to visit that page, you can return to <a href=\"%s\">the mail app</a>." : "Om du inte vill besöka den sidan kan du återvända till <a href=\"%s\">mail appen</a>."
 },"pluralForm" :"nplurals=2; plural=(n != 1);"
 }

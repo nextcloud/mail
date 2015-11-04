@@ -54,9 +54,6 @@
     "Error loading message" : "Chyba načítavania správy",
     "New message" : "Nová správa",
     "Forwarding you to %s - click here if you are not automatically redirected within the next few seconds." : "Presmerovávam na %s - kliknite sem, ak nebudete automaticky presmerovaní behom niekoľkých sekúnd.",
-    "Redirect Warning" : "Upozornenie na presmerovanie",
-    "The previous page is sending you to %s." : "Predošlá stránka vás posiela na %s.",
-    "If you do not want to visit that page, you can return to <a href=\"%s\">the mail app</a>." : "Ak túto stránku nechcete navštíviť, môžete sa vrátiť do <a href=\"%s\">aplikácie poštového klienta</a>.",
-    "Click here to visit the website." : "Kliknite pre zobrazenie webstránky."
+    "If you do not want to visit that page, you can return to <a href=\"%s\">the mail app</a>." : "Ak túto stránku nechcete navštíviť, môžete sa vrátiť do <a href=\"%s\">aplikácie poštového klienta</a>."
 },"pluralForm" :"nplurals=3; plural=(n==1) ? 0 : (n>=2 && n<=4) ? 1 : 2;"
 }

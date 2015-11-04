@@ -33,6 +33,7 @@ OC.L10N.register(
     "Load more …" : "Ngarkoni më tepër …",
     "Check messages" : "Kontrollo mesazhe",
     "Error while deleting account." : "Gabim gjatë fshirjes së llogarisë.",
+    "Connecting" : "Po lidhet",
     "Connect" : "Lidhu",
     "Inbox" : "Të marrë",
     "Sent" : "Të dërguar",
@@ -60,9 +61,6 @@ OC.L10N.register(
     "Error loading message" : "Gabim në ngarkimin e kartelës",
     "New message" : "Mesazh i ri",
     "Forwarding you to %s - click here if you are not automatically redirected within the next few seconds." : "Po përcilleni te %s - klikoni këtu nëse s’ridrejtoheni vetvetiu brenda pak sekondash në vijim.",
-    "Redirect Warning" : "Sinjalizim Ridrejtimi",
-    "The previous page is sending you to %s." : "Faqja e mëparshme po ju shpie te %s.",
-    "If you do not want to visit that page, you can return to <a href=\"%s\">the mail app</a>." : "Nëse s’doni ta vizitoni atë faqe, mund të riktheheni te <a href=\"%s\">aplikacioni i email-eve</a>.",
-    "Click here to visit the website." : "Klikoni këtu që të vizitoni sajtin."
+    "If you do not want to visit that page, you can return to <a href=\"%s\">the mail app</a>." : "Nëse s’doni ta vizitoni atë faqe, mund të riktheheni te <a href=\"%s\">aplikacioni i email-eve</a>."
 },
 "nplurals=2; plural=(n != 1);");

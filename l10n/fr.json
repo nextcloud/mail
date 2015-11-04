@@ -31,6 +31,7 @@
     "Load more …" : "Charger plus ...",
     "Check messages" : "Relever le courrier",
     "Error while deleting account." : "Erreur lors de la suppression du compte.",
+    "Connecting" : "Connexion ...",
     "Connect" : "Connecter",
     "Inbox" : "Boîte de réception",
     "Sent" : "Envoyés",
@@ -58,9 +59,6 @@
     "Error loading message" : "Erreur lors du chargement du message",
     "New message" : "Nouveau message",
     "Forwarding you to %s - click here if you are not automatically redirected within the next few seconds." : "Vous allez être redirigé vers %s - Cliquez ici si vous n'êtes pas redirigé dans les secondes qui suivent.",
-    "Redirect Warning" : "Avertissement de redirection",
-    "The previous page is sending you to %s." : "La page précédente vous envoie vers %s.",
-    "If you do not want to visit that page, you can return to <a href=\"%s\">the mail app</a>." : "Si vous ne désirez pas visiter cette page, vous pouvez retourner à <a href=\"%s\">l'application Mail</a>",
-    "Click here to visit the website." : "Cliquez ici pour visiter le site."
+    "If you do not want to visit that page, you can return to <a href=\"%s\">the mail app</a>." : "Si vous ne désirez pas visiter cette page, vous pouvez retourner à <a href=\"%s\">l'application Mail</a>"
 },"pluralForm" :"nplurals=2; plural=(n > 1);"
 }

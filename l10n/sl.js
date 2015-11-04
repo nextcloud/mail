@@ -54,9 +54,6 @@ OC.L10N.register(
     "Error loading message" : "Napaka nalaganja sporočila",
     "New message" : "Novo sporočilo",
     "Forwarding you to %s - click here if you are not automatically redirected within the next few seconds." : "Poteka preusmeritev na %s - v kolikor preusmeritev ni izvedena samodejno, kliknite tu.",
-    "Redirect Warning" : "Opozorilo preusmeritve",
-    "The previous page is sending you to %s." : "Prej obiskana stran zahteva preusmeritev na %s.",
-    "If you do not want to visit that page, you can return to <a href=\"%s\">the mail app</a>." : "Če en želite obiskati te strani, se lahko vrnete na stran <a href=\"%s\">programa spletne pošte</a>.",
-    "Click here to visit the website." : "Kliknite za obisk spletne strani."
+    "If you do not want to visit that page, you can return to <a href=\"%s\">the mail app</a>." : "Če en želite obiskati te strani, se lahko vrnete na stran <a href=\"%s\">programa spletne pošte</a>."
 },
 "nplurals=4; plural=(n%100==1 ? 0 : n%100==2 ? 1 : n%100==3 || n%100==4 ? 2 : 3);");

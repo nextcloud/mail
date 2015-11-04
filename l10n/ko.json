@@ -58,9 +58,6 @@
     "Error loading message" : "메시지 불러오기 오류",
     "New message" : "새 메시지",
     "Forwarding you to %s - click here if you are not automatically redirected within the next few seconds." : "%s(으)로 이동합니다. 잠시 후 자동으로 이동하지 않으면 여기를 누르십시오.",
-    "Redirect Warning" : "넘겨주기 경고",
-    "The previous page is sending you to %s." : "이전 페이지에서 %s(으)로 이동하려고 합니다.",
-    "If you do not want to visit that page, you can return to <a href=\"%s\">the mail app</a>." : "이 페이지를 방문하지 않으려면 <a href=\"%s\">메일 앱</a>으로 돌아갈 수 있습니다.",
-    "Click here to visit the website." : "웹 사이트를 방문하려면 누르십시오."
+    "If you do not want to visit that page, you can return to <a href=\"%s\">the mail app</a>." : "이 페이지를 방문하지 않으려면 <a href=\"%s\">메일 앱</a>으로 돌아갈 수 있습니다."
 },"pluralForm" :"nplurals=1; plural=0;"
 }

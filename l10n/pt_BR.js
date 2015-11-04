@@ -33,6 +33,7 @@ OC.L10N.register(
     "Load more …" : "Carregar mais ...",
     "Check messages" : "Verificar mensagens",
     "Error while deleting account." : "Erro enquanto eliminava uma conta.",
+    "Connecting" : "Conectando",
     "Connect" : "Conectar",
     "Inbox" : "Caixa de Entrada",
     "Sent" : "Enviar",
@@ -60,9 +61,6 @@ OC.L10N.register(
     "Error loading message" : "Erro carregando mensagem",
     "New message" : "Nova mensagem",
     "Forwarding you to %s - click here if you are not automatically redirected within the next few seconds." : "Encaminhando para %s - clique aqui se você não for redirecionado automaticamente dentro dos próximos segundos.",
-    "Redirect Warning" : "Redirecionar Aviso",
-    "The previous page is sending you to %s." : "A página anterior está lhe enviando para %s.",
-    "If you do not want to visit that page, you can return to <a href=\"%s\">the mail app</a>." : "Se você não quiser visitar essa página, você pode retornar para <a href=\"%s\"> o aplicativo de email </a>.",
-    "Click here to visit the website." : "Clique aqui para visitar o site."
+    "If you do not want to visit that page, you can return to <a href=\"%s\">the mail app</a>." : "Se você não quiser visitar essa página, você pode retornar para <a href=\"%s\"> o aplicativo de email </a>."
 },
 "nplurals=2; plural=(n > 1);");
