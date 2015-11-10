@@ -13,7 +13,7 @@
 	</div>
 <?php else: ?>
 	<div class="error">
-		<legend><strong><?php p($l->t('Redirect warning'));?></strong></legend>
+		<h2><?php p($l->t('Redirect warning'));?></h2>
 		<p><?php p($l->t('The previous page is sending you to %s', array($_['urlHost']))); ?></p>
 		<p><?php print_unescaped($l->t('If you do not want to visit that page, you can return to <a href="%s">the mail app</a>.', array($_['mailURL']))); ?></p>
 
