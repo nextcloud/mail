@@ -59,6 +59,9 @@
     "Error loading message" : "Fout bij laden bericht",
     "New message" : "Nieuw bericht",
     "Forwarding you to %s - click here if you are not automatically redirected within the next few seconds." : "U wordt doorgezet naar %s - klik hier als u niet binnen enkele seconden automatisch wordt doorgestuurd.",
-    "If you do not want to visit that page, you can return to <a href=\"%s\">the mail app</a>." : "Als u die pagina niet wilt bezoeken, kunt u teruggaan naar <a href=\"%s\">de e-mail app</a>."
+    "Redirect warning" : "Omleidingswaarschuwing",
+    "The previous page is sending you to %s" : "De vorige pagina stuurt u naar %s",
+    "If you do not want to visit that page, you can return to <a href=\"%s\">the mail app</a>." : "Als u die pagina niet wilt bezoeken, kunt u teruggaan naar <a href=\"%s\">de e-mail app</a>.",
+    "Continue to %s" : "Verder naar %s"
 },"pluralForm" :"nplurals=2; plural=(n != 1);"
 }

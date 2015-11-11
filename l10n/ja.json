@@ -59,6 +59,9 @@
     "Error loading message" : "メッセージ読み込みエラー",
     "New message" : "新しいメッセージ",
     "Forwarding you to %s - click here if you are not automatically redirected within the next few seconds." : "%s  へリダイレクトします。数秒後に自動転送されなかったらクリックしてください。",
-    "If you do not want to visit that page, you can return to <a href=\"%s\">the mail app</a>." : "ページを開きたくない場合は、<a href=\"%s\">メールアプリ</a> に戻ることができます。"
+    "Redirect warning" : "リダイレクトの警告",
+    "The previous page is sending you to %s" : "前のページから %s にリダイレクトしようとしています。",
+    "If you do not want to visit that page, you can return to <a href=\"%s\">the mail app</a>." : "ページを開きたくない場合は、<a href=\"%s\">メールアプリ</a> に戻ることができます。",
+    "Continue to %s" : "%s にリダイレクトする"
 },"pluralForm" :"nplurals=1; plural=0;"
 }

@@ -61,6 +61,9 @@ OC.L10N.register(
     "Error loading message" : "Erreur lors du chargement du message",
     "New message" : "Nouveau message",
     "Forwarding you to %s - click here if you are not automatically redirected within the next few seconds." : "Vous allez être redirigé vers %s - Cliquez ici si vous n'êtes pas redirigé dans les secondes qui suivent.",
-    "If you do not want to visit that page, you can return to <a href=\"%s\">the mail app</a>." : "Si vous ne désirez pas visiter cette page, vous pouvez retourner à <a href=\"%s\">l'application Mail</a>"
+    "Redirect warning" : "Avertissement de redirection",
+    "The previous page is sending you to %s" : "La page précédente vous envoie vers %s.",
+    "If you do not want to visit that page, you can return to <a href=\"%s\">the mail app</a>." : "Si vous ne désirez pas visiter cette page, vous pouvez retourner à <a href=\"%s\">l'application Mail</a>",
+    "Continue to %s" : "Continuer vers %s"
 },
 "nplurals=2; plural=(n > 1);");

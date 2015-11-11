@@ -61,6 +61,9 @@ OC.L10N.register(
     "Error loading message" : "กิดข้อผิดพลาดในการโหลด",
     "New message" : "ข้อความใหม่",
     "Forwarding you to %s - click here if you are not automatically redirected within the next few seconds." : "กำลังส่งต่อคุณไปยัง %s - คลิกที่นี่ถ้าคุณไม่ได้เปลี่ยนเส้นทางโดยอัตโนมัติภายในไม่กี่วินาทีถัดไป",
-    "If you do not want to visit that page, you can return to <a href=\"%s\">the mail app</a>." : "หากคุณไม่ต้องการที่จะเยี่ยมชมหน้าเว็บ คุณสามารถย้อนกลับไปที่ <a href=\"%s\">>แอพอีเมล</a>"
+    "Redirect warning" : "คำเตือนการเปลี่ยนเส้นทาง",
+    "The previous page is sending you to %s" : "หน้าก่อนหน้านี้กำลังส่งคุณไปยัง %s",
+    "If you do not want to visit that page, you can return to <a href=\"%s\">the mail app</a>." : "หากคุณไม่ต้องการที่จะเยี่ยมชมหน้าเว็บ คุณสามารถย้อนกลับไปที่ <a href=\"%s\">>แอพอีเมล</a>",
+    "Continue to %s" : "ดำเนินการต่อไปที่ %s"
 },
 "nplurals=1; plural=0;");

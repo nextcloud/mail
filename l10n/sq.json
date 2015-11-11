@@ -59,6 +59,9 @@
     "Error loading message" : "Gabim në ngarkimin e kartelës",
     "New message" : "Mesazh i ri",
     "Forwarding you to %s - click here if you are not automatically redirected within the next few seconds." : "Po përcilleni te %s - klikoni këtu nëse s’ridrejtoheni vetvetiu brenda pak sekondash në vijim.",
-    "If you do not want to visit that page, you can return to <a href=\"%s\">the mail app</a>." : "Nëse s’doni ta vizitoni atë faqe, mund të riktheheni te <a href=\"%s\">aplikacioni i email-eve</a>."
+    "Redirect warning" : "Sinjalizim ridrejtimi",
+    "The previous page is sending you to %s" : "Faqja e mëparshme po ju dërgon te %s",
+    "If you do not want to visit that page, you can return to <a href=\"%s\">the mail app</a>." : "Nëse s’doni ta vizitoni atë faqe, mund të riktheheni te <a href=\"%s\">aplikacioni i email-eve</a>.",
+    "Continue to %s" : "Vazhdo te %s"
 },"pluralForm" :"nplurals=2; plural=(n != 1);"
 }

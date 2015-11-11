@@ -36,13 +36,13 @@ OC.L10N.register(
     "Connecting" : "Σύνδεση",
     "Connect" : "Σύνδεση",
     "Inbox" : "Εισερχόμενα",
-    "Sent" : "Απεστάλη",
+    "Sent" : "Απεσταλμένα",
     "Drafts" : "Πρόχειρα",
     "Archive" : "Αρχείο",
-    "Trash" : "Στα απορρίμματα",
+    "Trash" : "Κάδος",
     "Junk" : "Ανεπιθύμητα",
-    "All" : "Όλες",
-    "Favorites" : "Αγαπημένες",
+    "All" : "Όλα",
+    "Favorites" : "Αγαπημένα",
     "Creating account failed: " : "Η δημιουργία λογαριασμού απέτυχε:",
     "Auto detect failed. Please use manual mode." : " Η αυτόματη ανίχνευση απέτυχε. Παρακαλούμε χρησιμοποιήστε τη χειροκίνητη λειτουργία.",
     "Delete permanently" : "Μόνιμη διαγραφή",
@@ -61,6 +61,9 @@ OC.L10N.register(
     "Error loading message" : "Μήνυμα σφάλματος φόρτωσης",
     "New message" : "Νέο μήνυμα",
     "Forwarding you to %s - click here if you are not automatically redirected within the next few seconds." : "Προωθείστε στο %s - κάντε κλικ εδώ αν δεν ανακατευθυνθείτε αυτόματα μέσα στα επόμενα λίγα δευτερόλεπτα.",
-    "If you do not want to visit that page, you can return to <a href=\"%s\">the mail app</a>." : "Αν δεν επιθυμείτε να επισκεφτείτε αυτή την ιστοσελίδα, μπορείτε να επιστρέψετε στην <a href=\"%s\">εφαρμογή ταχυδρομείου</a>."
+    "Redirect warning" : "Προειδοποίηση ανακατεύθυνσης",
+    "The previous page is sending you to %s" : "Η προηγούμενη σελίδα σας στέλνει στο %s",
+    "If you do not want to visit that page, you can return to <a href=\"%s\">the mail app</a>." : "Αν δεν επιθυμείτε να επισκεφτείτε αυτή την ιστοσελίδα, μπορείτε να επιστρέψετε στην <a href=\"%s\">εφαρμογή ταχυδρομείου</a>.",
+    "Continue to %s" : "Συνέχεια στο %s"
 },
 "nplurals=2; plural=(n != 1);");
