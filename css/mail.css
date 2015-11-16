@@ -156,6 +156,8 @@
 	opacity: .5;
 	padding: 20px 0 10px 25px;
 	width: 90%;
+	margin: initial;
+	font-size: 100%;
 	overflow: hidden;
 	text-overflow: ellipsis;
 	white-space: nowrap;
@@ -673,7 +675,8 @@ input.submit-message {
 
 #emptycontent h2,
 .emptycontent h2 {
-	font-size: 22px;
+	font-size: 20px;
+	font-weight: 600;
 	margin-bottom: 10px;
 }
 #emptycontent [class^="icon-"],
