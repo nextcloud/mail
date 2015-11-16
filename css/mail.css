@@ -156,6 +156,8 @@
 	opacity: .5;
 	padding: 20px 0 10px 25px;
 	width: 90%;
+	margin: initial;
+	font-size: 100%;
 	overflow: hidden;
 	text-overflow: ellipsis;
 	white-space: nowrap;
