@@ -58,6 +58,11 @@ class MessagesController extends Controller {
 	private $l10n;
 
 	/**
+	 * @var IAccount[]
+	 */
+	private $accounts;
+
+	/**
 	 * @param string $appName
 	 * @param \OCP\IRequest $request
 	 * @param AccountService $accountService
@@ -129,23 +134,11 @@ class MessagesController extends Controller {
 		return new JSONResponse($json);
 	}
 
-	/**
-	 * @NoAdminRequired
-	 * @NoCSRFRequired
-	 *
-	 * @param int $accountId
-	 * @param string $folderId
-	 * @param mixed $id
-	 * @return JSONResponse
-	 */
-	public function show($accountId, $folderId, $id) {
-		$mailBox = $this->getFolder($accountId, $folderId);
+	private function loadMessage($accountId, $folderId, $id) {
 		$account = $this->getAccount($accountId);
-		try {
-			$m = $mailBox->getMessage($id);
-		} catch (DoesNotExistException $ex) {
-			return new JSONResponse([], 404);
-		}
+		$mailBox = $account->getMailbox(base64_decode($folderId));
+		$m = $mailBox->getMessage($id);
+
 		$json = $this->enhanceMessage($accountId, $folderId, $id, $m, $account, $mailBox);
 
 		// Unified inbox hack
@@ -162,6 +155,24 @@ class MessagesController extends Controller {
 		$json['folderId'] = $folderId;
 		// End unified inbox hack
 
+		return $json;
+	}
+
+	/**
+	 * @NoAdminRequired
+	 * @NoCSRFRequired
+	 *
+	 * @param int $accountId
+	 * @param string $folderId
+	 * @param mixed $id
+	 * @return JSONResponse
+	 */
+	public function show($accountId, $folderId, $id) {
+		try {
+			$json = $this->loadMessage($accountId, $folderId, $id);
+		} catch (DoesNotExistException $ex) {
+			return new JSONResponse([], 404);
+		}
 		return new JSONResponse($json);
 	}
 
@@ -332,7 +343,10 @@ class MessagesController extends Controller {
 	 * @return \OCA\Mail\Service\IAccount
 	 */
 	private function getAccount($accountId) {
-		return $this->accountService->find($this->currentUserId, $accountId);
+		if (!array_key_exists($accountId, $this->accounts)) {
+			$this->accounts[$accountId] = $this->accountService->find($this->currentUserId, $accountId);
+		}
+		return $this->accounts[$accountId];
 	}
 
 	/**
@@ -395,13 +409,9 @@ class MessagesController extends Controller {
 	}
 
 	private function loadMultiple($accountId, $folderId, $ids) {
-		$mailBox = $this->getFolder($accountId, $folderId);
-		$account = $this->getAccount($accountId);
-		$messages = array_map(function($id) use ($accountId, $folderId, $account, $mailBox){
+		$messages = array_map(function($id) use ($accountId, $folderId){
 			try {
-				$m = $mailBox->getMessage($id);
-				$json = $this->enhanceMessage($accountId, $folderId, $id, $m, $account, $mailBox);
-				return $json;
+				return $this->loadMessage($accountId, $folderId, $id);
 			} catch (DoesNotExistException $ex) {
 				return null;
 			}
