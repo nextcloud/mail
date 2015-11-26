@@ -60,7 +60,7 @@ class MessagesController extends Controller {
 	/**
 	 * @var IAccount[]
 	 */
-	private $accounts;
+	private $accounts = [];
 
 	/**
 	 * @param string $appName
