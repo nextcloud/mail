@@ -1,4 +1,5 @@
 <?php
+
 /**
  * ownCloud - Mail app
  *
@@ -23,8 +24,11 @@
 namespace OCA\Mail\Controller;
 
 use OCP\AppFramework\Controller;
+use OCP\AppFramework\Http\RedirectResponse;
 use OCP\AppFramework\Http\TemplateResponse;
 use OCP\IRequest;
+use OCP\IURLGenerator;
+use OCA\Mail\Db\MailAccountMapper;
 
 class PageController extends Controller {
 
@@ -32,6 +36,11 @@ class PageController extends Controller {
 	 * @var \OCA\Mail\Db\MailAccountMapper
 	 */
 	private $mailAccountMapper;
+
+	/**
+	 * @var IURLGenerator
+	 */
+	private $urlGenerator;
 
 	/**
 	 * @var string
@@ -44,12 +53,12 @@ class PageController extends Controller {
 	 * @param $mailAccountMapper
 	 * @param $currentUserId
 	 */
-	public function __construct($appName,
-								IRequest $request,
-								$mailAccountMapper,
-								$currentUserId) {
+	public function __construct($appName, IRequest $request,
+		MailAccountMapper $mailAccountMapper, IURLGenerator $urlGenerator,
+		$currentUserId) {
 		parent::__construct($appName, $request);
 		$this->mailAccountMapper = $mailAccountMapper;
+		$this->urlGenerator = $urlGenerator;
 		$this->currentUserId = $currentUserId;
 	}
 
@@ -83,19 +92,20 @@ class PageController extends Controller {
 		$params = ['mailto' => $parts['path']];
 		if (isset($parts['query'])) {
 			$parts = explode('&', $parts['query']);
-			foreach($parts as $part) {
+			foreach ($parts as $part) {
 				$pair = explode('=', $part, 2);
 				$params[strtolower($pair[0])] = urldecode($pair[1]);
 			}
 		}
-		$params = array_merge([
-			'mailto' => '',
-			'cc' => '',
-			'bcc' => '',
-			'subject' => '',
-			'body' => ''
-		], $params);
 
-		return new TemplateResponse($this->appName, 'compose', $params);
+		array_walk($params, function (&$value, $key) {
+			$value = "$key=" . urlencode($value);
+		});
+
+		$hashParams = '#' . implode('&', $params);
+
+		$baseUrl = $this->urlGenerator->linkToRoute("mail.page.index");
+		return new RedirectResponse($baseUrl . $hashParams);
 	}
+
 }

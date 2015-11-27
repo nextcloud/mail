@@ -36,6 +36,9 @@ define(function(require) {
 
 				require('app').trigger('folder:load', accountId, folderId, false);
 
+				// Open composer if 'mailto' url-param is set
+				// TODO: implement
+
 				// Save current folder
 				UI.setFolderActive(accountId, folderId);
 				require('app').State.currentAccountId = accountId;
