@@ -27,7 +27,7 @@ OC.L10N.register(
     "Server error" : "Serverfout",
     "you" : "je",
     "Send message to {email}" : "Versturen bericht naar {email}",
-    "Error while deleting message." : "Fout bij verwijderen berichtn",
+    "Error while deleting message." : "Fout bij verwijderen bericht.",
     "Checking messages" : "Controleren op berichten",
     "Loading …" : "Laden...",
     "Load more …" : "Laad meer ...",
