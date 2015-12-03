@@ -351,6 +351,11 @@ define(function(require) {
 			//  - undo lie - very important
 			//
 
+			// if available get account from drop-down list
+			if (this.$('.mail-account').length > 0) {
+				this.accountId = this.$('.mail-account').find(':selected').val();
+			}
+
 			// send the mail
 			var _this = this;
 			this.draftCallback(this.accountId, this.getMessage(), {

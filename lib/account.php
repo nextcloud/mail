@@ -22,6 +22,7 @@ use Horde_Mail_Transport_Mail;
 use Horde_Mail_Transport_Smtphorde;
 use Horde_Mime_Headers_Date;
 use Horde_Mime_Mail;
+use Horde_Mime_Part;
 use OCA\Mail\Cache\Cache;
 use OCA\Mail\Db\MailAccount;
 use OCA\Mail\Model\IMessage;
@@ -206,7 +207,10 @@ class Account implements IAccount {
 
 		$mail = new Horde_Mime_Mail();
 		$mail->addHeaders($headers);
-		$mail->setBody($message->getContent());
+		$body = new Horde_Mime_Part();
+		$body->setType('text/plain');
+		$body->setContents($message->getContent());
+		$mail->setBasePart($body);
 
 		// create transport and save message
 		// save the message in the drafts folder
