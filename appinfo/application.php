@@ -47,6 +47,7 @@ class Application extends App {
 				$c->query('AppName'),
 				$c->query('Request'),
 				$c->query('MailAccountMapper'),
+				$c->query('ServerContainer')->getURLGenerator(),
 				$c->query('UserId')
 			);
 		});
