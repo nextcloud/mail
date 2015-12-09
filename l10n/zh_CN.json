@@ -1,6 +1,7 @@
 { "translations": {
     "Mail" : "电邮",
     "{from}\n{subject}" : "{from}\n{subject}",
+    "_%n new message in {folderName} \nfrom {from}_::_%n new messages in {folderName} \nfrom {from}_" : ["发自{from}的%n份电邮保存在{folderName}中"],
     "Error while loading the accounts." : "载入账户时出错。",
     "Error while loading the selected account." : "指定账户载入时出错。",
     "Unknown error" : "未知错误",
