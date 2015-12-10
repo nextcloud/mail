@@ -16,3 +16,5 @@ js/mail.min.js
 
 # packaged app
 build/
+
+translations.js
