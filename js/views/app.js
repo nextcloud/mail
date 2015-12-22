@@ -13,6 +13,7 @@ define(function(require) {
 
 	var Marionette = require('marionette');
 	var $ = require('jquery');
+	var OC = require('OC');
 
 	return Marionette.LayoutView.extend({
 		el: $('#app'),
@@ -22,11 +23,18 @@ define(function(require) {
 			setup: '#setup'
 		},
                 events: {
-                    'click #mail_new_message': 'onNewMessageClick'
+			'click #mail_new_message': 'onNewMessageClick'
                 },
 		initialize: function() {
-			console.log(this.$('#mail_new_message'));
 			this.bindUIElements();
+
+			// Hide notification favicon when switching back from
+			// another browser tab
+			$(document).on('show', this.onDocumentShow);
+		},
+		onDocumentShow: function(e) {
+			e.preventDefault();
+			require('app').UI.changeFavicon(OC.filePath('mail', 'img', 'favicon.png'));
 		},
                 onNewMessageClick: function(e) {
 			e.preventDefault();

@@ -83,10 +83,6 @@ define(function(require) {
 		$('#mail-message').addClass('hidden-mobile');
 	});
 
-	$(document).on('show', function() {
-		Mail.UI.changeFavicon(OC.filePath('mail', 'img', 'favicon.png'));
-	});
-
 	// Listens to key strokes, and executes a function based on the key combinations.
 	$(document).keyup(function(event) {
 		// Define which objects to check for the event properties.
