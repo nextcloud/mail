@@ -53,10 +53,12 @@ define(function(require) {
 		};
 	})(), 1000);
 
+	// TODO: create marionette view and encapsulate events
 	$(document).on('click', '#forward-button', function() {
 		Mail.UI.openForwardComposer();
 	});
 
+	// TODO: create marionette view and encapsulate events
 	$(document).on('click', '#mail-message .attachment-save-to-cloud', function(event) {
 		event.stopPropagation();
 		var messageId = $(this).parent().data('messageId');
@@ -64,6 +66,7 @@ define(function(require) {
 		Mail.UI.saveAttachment(messageId, attachmentId);
 	});
 
+	// TODO: create marionette view and encapsulate events
 	$(document).on('click', '#mail-message .attachments-save-to-cloud', function(event) {
 		event.stopPropagation();
 		var messageId = $(this).data('messageId');
@@ -74,6 +77,7 @@ define(function(require) {
 		Mail.UI.openComposer(event);
 	});
 
+	// TODO: create marionette view and encapsulate events
 	// close message when close button is tapped on mobile
 	$(document).on('click', '#mail-message-close', function() {
 		$('#mail-message').addClass('hidden-mobile');
@@ -108,6 +112,7 @@ define(function(require) {
 		}
 	});
 
+	// TODO: create marionette view and encapsulate events
 	// Show the images if wanted
 	$(document).on('click', '#show-images-button', function() {
 		$('#show-images-text').hide();
