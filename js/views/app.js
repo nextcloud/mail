@@ -21,9 +21,17 @@ define(function(require) {
 			content: '#app-content',
 			setup: '#setup'
 		},
+                events: {
+                    'click #mail_new_message': 'onNewMessageClick'
+                },
 		initialize: function() {
+			console.log(this.$('#mail_new_message'));
 			this.bindUIElements();
 		},
+                onNewMessageClick: function(e) {
+			e.preventDefault();
+			require('app').UI.openComposer();
+                },
 		render: function() {
 			// This view doesn't need rendering
 		}

@@ -23,8 +23,6 @@ define(function(require) {
 
 	Mail.UI.initializeInterface();
 
-	$(document).on('click', '#mail_new_message', Mail.UI.openComposer);
-
 	/**
 	 * Detects pasted text by browser plugins, and other software.
 	 * Check for changes in message bodies every second.
