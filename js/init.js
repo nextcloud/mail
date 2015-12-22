@@ -83,31 +83,6 @@ define(function(require) {
 		$('#mail-message').addClass('hidden-mobile');
 	});
 
-	// Listens to key strokes, and executes a function based on the key combinations.
-	$(document).keyup(function(event) {
-		// Define which objects to check for the event properties.
-		// (Window object provides fallback for IE8 and lower.)
-		event = event || window.event;
-		var key = event.keyCode || event.which;
-		// If the client is currently viewing a message:
-		if (Mail.State.currentMessageId) {
-			switch (key) {
-				// If delete key is pressed:
-				case 46:
-					// If not composing a reply
-					// and message list is visible (not being in a settings dialog)
-					// and if searchbox is not focused
-					if (!$('.to, .cc, .message-body').is(':focus') &&
-							$('#mail_messages').is(':visible') &&
-							!$('#searchbox').is(':focus')) {
-						// Mimic a client clicking the delete button for the currently active message.
-						$('.mail_message_summary.active .icon-delete.action.delete').click();
-					}
-					break;
-			}
-		}
-	});
-
 	// TODO: create marionette view and encapsulate events
 	// Show the images if wanted
 	$(document).on('click', '#show-images-button', function() {
