@@ -314,7 +314,7 @@ class Mailbox implements IMailBox {
 			'drafts'  => ['draft', 'drafts'],
 			'archive' => ['archive', 'archives'],
 			'trash'   => ['deleted messages', 'trash'],
-			'junk'    => ['junk', 'spam'],
+			'junk'    => ['junk', 'spam', 'bulk mail'],
 		];
 
 		$lowercaseExplode = explode($this->delimiter, $this->getFolderId(), 2);
