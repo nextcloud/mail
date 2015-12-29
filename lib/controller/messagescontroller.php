@@ -16,6 +16,7 @@ use OCA\Mail\Http\AttachmentDownloadResponse;
 use OCA\Mail\Http\HtmlResponse;
 use OCA\Mail\Service\AccountService;
 use OCA\Mail\Service\ContactsIntegration;
+use OCA\Mail\Service\IAccount;
 use OCA\Mail\Service\IMailBox;
 use OCA\Mail\Service\UnifiedAccount;
 use OCP\AppFramework\Controller;
@@ -425,11 +426,11 @@ class MessagesController extends Controller {
 	 * @param $folderId
 	 * @param $id
 	 * @param $m
-	 * @param $account
+	 * @param IAccount $account
 	 * @param $mailBox
 	 * @return mixed
 	 */
-	private function enhanceMessage($accountId, $folderId, $id, $m, $account, $mailBox) {
+	private function enhanceMessage($accountId, $folderId, $id, $m, IAccount $account, $mailBox) {
 		$json = $m->getFullMessage($account->getEmail(), $mailBox->getSpecialRole());
 		$json['senderImage'] = $this->contactsIntegration->getPhoto($m->getFromEmail());
 		if (isset($json['hasHtmlBody'])) {
