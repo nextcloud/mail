@@ -13,7 +13,6 @@ namespace OCA\Mail\Tests\Model;
  */
 use Test\TestCase;
 use Horde_Mime_Part;
-use Horde_Mail_Rfc822_List;
 use OCA\Mail\Model\Message;
 
 class MessageTest extends TestCase {
