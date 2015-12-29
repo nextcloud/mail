@@ -113,7 +113,10 @@ class Html {
 
 		$purifier = new HTMLPurifier($config);
 
-		return $purifier->purify($mailBody);
+		$result = $purifier->purify($mailBody);
+		// eat xml parse errors within HTMLPurifier
+		libxml_clear_errors();
+		return $result;
 	}
 
 }

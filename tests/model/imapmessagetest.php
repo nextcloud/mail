@@ -16,8 +16,9 @@ use Horde_Imap_Client_Data_Fetch;
 use Horde_Imap_Client_Fetch_Results;
 use Horde_Mime_Part;
 use OCA\Mail\Model\IMAPMessage;
+use Test\TestCase;
 
-class ImapMessageTest extends \PHPUnit_Framework_TestCase {
+class ImapMessageTest extends TestCase {
 
 	public function testNoFrom() {
 		$data = new Horde_Imap_Client_Data_Fetch();
