@@ -28,9 +28,12 @@ OC.L10N.register(
     "you" : "sina",
     "Send message to {email}" : "Saada kiri aadressile {email}",
     "Error while deleting message." : "Tõrge sõnumi kustutamisel.",
+    "Checking messages" : "Sõnumite kontrollimine",
     "Loading …" : "Laadimine ...",
     "Load more …" : "Laadi rohkem ...",
+    "Check messages" : "Kontrolli sõnumeid",
     "Error while deleting account." : "Tõrge konto kustutamisel.",
+    "Connecting" : "Ühendamine",
     "Connect" : "Ühenda",
     "Inbox" : "Saaabuvad",
     "Sent" : "Saadetud",
@@ -58,6 +61,7 @@ OC.L10N.register(
     "Error loading message" : "Tõrge kirja laadimisel",
     "New message" : "Uussõnum",
     "Forwarding you to %s - click here if you are not automatically redirected within the next few seconds." : "Edasi saamine %s-le - kliki siia kui sind ei suunata automaatselt mõne järgmise sekundi jooksul edasi.",
+    "Redirect warning" : "Ümbersuunamise hoiatus",
     "If you do not want to visit that page, you can return to <a href=\"%s\">the mail app</a>." : "Kui Sa ei soovi seda lehekülge vaadata, siis liigu tagasi <a href=\"%s\">e-maili rakendisse</a>."
 },
 "nplurals=2; plural=(n != 1);");
