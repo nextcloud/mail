@@ -39,9 +39,6 @@ class Account implements IAccount {
 	/** @var MailAccount */
 	private $account;
 
-	/** @var Horde_Imap_Client_Mailbox */
-	private $mailbox;
-
 	/** @var Mailbox[]|null */
 	private $mailboxes;
 
@@ -284,18 +281,14 @@ class Account implements IAccount {
 	 * @return \OCA\Mail\Mailbox
 	 */
 	public function getMailbox($folderId) {
-		if ($this->mailbox === null) {
-			$conn = $this->getImapConnection();
-			$parts = explode('/', $folderId);
-			if (count($parts) > 1 && $parts[1] === 'FLAGGED') {
-				$mailbox = new Horde_Imap_Client_Mailbox($parts[0]);
-				return new SearchMailbox($conn, $mailbox, []);
-			}
-			$mailbox = new Horde_Imap_Client_Mailbox($folderId);
-			$this->mailbox = new Mailbox($conn, $mailbox, []);
+		$conn = $this->getImapConnection();
+		$parts = explode('/', $folderId);
+		if (count($parts) > 1 && $parts[1] === 'FLAGGED') {
+			$mailbox = new Horde_Imap_Client_Mailbox($parts[0]);
+			return new SearchMailbox($conn, $mailbox, []);
 		}
-
-		return $this->mailbox;
+		$mailbox = new Horde_Imap_Client_Mailbox($folderId);
+		return new Mailbox($conn, $mailbox, []);
 	}
 
 	/**
