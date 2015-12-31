@@ -19,6 +19,9 @@ class UnifiedAccount implements IAccount {
 	/** @var IL10N */
 	private $l10n;
 
+	/** @var Horde_Mail_Rfc822_List */
+	private $email;
+
 	/**
 	 * @param AccountService $accountService
 	 * @param string $userId
@@ -104,16 +107,19 @@ class UnifiedAccount implements IAccount {
 	 * @return string
 	 */
 	public function getEmail() {
-		$allAccounts = $this->accountService->findByUserId($this->userId);
-		$addressesList = new \Horde_Mail_Rfc822_List();
-		foreach ($allAccounts as $account) {
-			$inbox = $account->getInbox();
-			if (is_null($inbox)) {
-				continue;
+		if ($this->email === null) {
+			$allAccounts = $this->accountService->findByUserId($this->userId);
+			$addressesList = new \Horde_Mail_Rfc822_List();
+			foreach ($allAccounts as $account) {
+				$inbox = $account->getInbox();
+				if (is_null($inbox)) {
+					continue;
+				}
+				$addressesList->add($account->getEmail());
 			}
-			$addressesList->add($account->getEmail());
+			$this->email = $addressesList;
 		}
-		return $addressesList;
+		return $this->email;
 	}
 
 	/**
