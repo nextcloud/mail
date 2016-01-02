@@ -25,6 +25,7 @@ use OCP\AppFramework\Http;
 use OCP\AppFramework\Http\ContentSecurityPolicy;
 use OCP\AppFramework\Http\JSONResponse;
 use OCP\AppFramework\Http\TemplateResponse;
+use OCP\Files\IMimeTypeDetector;
 use OCP\IL10N;
 use OCP\Util;
 
@@ -59,6 +60,11 @@ class MessagesController extends Controller {
 	private $l10n;
 
 	/**
+	 * @var IMimeTypeDetector
+	 */
+	private $mimeTypeDetector;
+
+	/**
 	 * @var IAccount[]
 	 */
 	private $accounts = [];
@@ -72,6 +78,7 @@ class MessagesController extends Controller {
 	 * @param $contactsIntegration
 	 * @param $logger
 	 * @param $l10n
+	 * @param IMimeTypeDetector $mimeTypeDetector
 	 */
 	public function __construct($appName,
 								$request,
@@ -80,7 +87,8 @@ class MessagesController extends Controller {
 								$userFolder,
 								$contactsIntegration,
 								$logger,
-								$l10n) {
+								$l10n,
+								IMimeTypeDetector $mimeTypeDetector) {
 		parent::__construct($appName, $request);
 		$this->accountService = $accountService;
 		$this->currentUserId = $currentUserId;
@@ -88,6 +96,7 @@ class MessagesController extends Controller {
 		$this->contactsIntegration = $contactsIntegration;
 		$this->logger = $logger;
 		$this->l10n = $l10n;
+		$this->mimeTypeDetector = $mimeTypeDetector;
 	}
 
 	/**
@@ -375,7 +384,7 @@ class MessagesController extends Controller {
 		]);
 		$downloadUrl = \OC::$server->getURLGenerator()->getAbsoluteURL($downloadUrl);
 		$attachment['downloadUrl'] = $downloadUrl;
-		$attachment['mimeUrl'] = \OC_Helper::mimetypeIcon($attachment['mime']);
+		$attachment['mimeUrl'] = $this->mimeTypeDetector->mimeTypeIcon($attachment['mime']);
 
 		if ($this->attachmentIsImage($attachment)) {
 			$attachment['isImage'] = true;
