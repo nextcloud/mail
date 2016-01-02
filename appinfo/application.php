@@ -97,7 +97,7 @@ class Application extends App {
 				$c->query('ContactsIntegration'),
 				$c->query('Logger'),
 				$c->getServer()->getL10N('mail'),
-				$c->query('IMimeTypeDetector')
+				$c->query('\OCP\Files\IMimeTypeDetector')
 			);
 		});
 
