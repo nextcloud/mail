@@ -28,7 +28,7 @@ If your issue appears to be a bug, and hasn't been reported, open a new issue.
 
 Help us to maximize the effort we can spend fixing issues and adding new features, by not reporting duplicate issues.
 
-[template]: https://raw.github.com/owncloud/core/master/issue_template.md
+[template]: https://raw.github.com/owncloud/mail/master/issue_template.md
 [mailinglist]: https://mail.kde.org/mailman/listinfo/owncloud
 [forum]: http://forum.owncloud.org/
 [irc]: https://webchat.freenode.net/?channels=owncloud-mail
