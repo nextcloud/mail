@@ -33,6 +33,7 @@ OC.L10N.register(
     "Load more …" : "Загрузить больше ...",
     "Check messages" : "Проверить сообщения",
     "Error while deleting account." : "Ошибка при удалении учётной записи.",
+    "Connecting" : "Соединение",
     "Connect" : "Соединить",
     "Inbox" : "Входящие",
     "Sent" : "Отправленные",
@@ -60,6 +61,9 @@ OC.L10N.register(
     "Error loading message" : "Ошибка при загрузке сообщения",
     "New message" : "Новое сообщение",
     "Forwarding you to %s - click here if you are not automatically redirected within the next few seconds." : "Перенаправляем вас на %s - если вы не будете автоматически перенаправлены в течение следующих нескольких секунд, то нажмите здесь.",
-    "If you do not want to visit that page, you can return to <a href=\"%s\">the mail app</a>." : "Если вы не хотите посещать ту страницу, вы можете вернуться к <a href=\"%s\">почтовому приложению</a>."
+    "Redirect warning" : "Предупреждение о перенаправлении",
+    "The previous page is sending you to %s" : "Предыдущая страница отправляет вас %s",
+    "If you do not want to visit that page, you can return to <a href=\"%s\">the mail app</a>." : "Если вы не хотите посещать ту страницу, вы можете вернуться к <a href=\"%s\">почтовому приложению</a>.",
+    "Continue to %s" : "Продолжать %s"
 },
 "nplurals=4; plural=(n%10==1 && n%100!=11 ? 0 : n%10>=2 && n%10<=4 && (n%100<12 || n%100>14) ? 1 : n%10==0 || (n%10>=5 && n%10<=9) || (n%100>=11 && n%100<=14)? 2 : 3);");
