@@ -1,7 +1,7 @@
 @media only screen and (max-width: 768px) {
 
 /* full width for message list on mobile */
-#mail_messages {
+#mail-messages {
 	width: 100%;
 }
 
@@ -64,10 +64,10 @@
 	display: none;
 }
 /* more space for sender accordingly */
-.mail_message_summary_from {
+.mail-message-summary-from {
 	width: 80%;
 }
-.mail_message_summary_subject {
+.mail-message-summary-subject {
 	width: 80%;
 }
 

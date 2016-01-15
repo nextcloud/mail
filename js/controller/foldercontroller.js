@@ -70,7 +70,7 @@ define(function(require) {
 		var UI = require('app').UI;
 
 		// TODO: create loading-view
-		$('#mail_messages').removeClass('hidden').addClass('icon-loading');
+		$('#mail-messages').removeClass('hidden').addClass('icon-loading');
 		$('#mail-message').removeClass('hidden').addClass('icon-loading');
 		$('#mail_new_message').removeClass('hidden');
 		$('#folders').removeClass('hidden');

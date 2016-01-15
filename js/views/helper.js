@@ -144,7 +144,7 @@ define(function(require) {
 				controlsWidth =
 					$('#content').width() -
 					$('#app-navigation').width() -
-					$('#mail_messages').width() -
+					$('#mail-messages').width() -
 					getScrollBarWidth();
 			}
 			$('#mail-message-header').css('width', controlsWidth);

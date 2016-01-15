@@ -91,7 +91,7 @@ define(function(require) {
 
 		// setup messages view
 		messageView = new MessagesView({
-			el: $('#mail_messages')
+			el: $('#mail-messages')
 		});
 		messageView.render();
 
@@ -216,7 +216,7 @@ define(function(require) {
 		// Set folder active
 		setFolderActive(accountId, folderId);
 		clearMessages();
-		$('#mail_messages')
+		$('#mail-messages')
 			.removeClass('hidden')
 			.addClass('icon-loading')
 			.removeClass('hidden');
@@ -237,7 +237,7 @@ define(function(require) {
 			require('app').State.currentAccountId = accountId;
 			require('app').State.currentFolderId = folderId;
 			setMessageActive(null);
-			$('#mail_messages').removeClass('icon-loading');
+			$('#mail-messages').removeClass('icon-loading');
 			require('app').State.currentlyLoading = null;
 		} else {
 			require('app').Communication.fetchMessageList(accountId, folderId, {
@@ -246,7 +246,7 @@ define(function(require) {
 					require('app').State.currentAccountId = accountId;
 					require('app').State.currentFolderId = folderId;
 					setMessageActive(null);
-					$('#mail_messages').removeClass('icon-loading');
+					$('#mail-messages').removeClass('icon-loading');
 
 					// Fade out the message composer
 					$('#mail_new_message').prop('disabled', false);
