@@ -55,10 +55,10 @@ define(function(require) {
 					// and message list is visible (not being in a settings dialog)
 					// and if searchbox is not focused
 					if (!$('.to, .cc, .message-body').is(':focus') &&
-						$('#mail_messages').is(':visible') &&
+						$('#mail-messages').is(':visible') &&
 						!$('#searchbox').is(':focus')) {
 						// Mimic a client clicking the delete button for the currently active message.
-						$('.mail_message_summary.active .icon-delete.action.delete').click();
+						$('.mail-message-summary.active .icon-delete.action.delete').click();
 					}
 				}
 			}
