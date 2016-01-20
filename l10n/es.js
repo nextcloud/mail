@@ -39,7 +39,7 @@ OC.L10N.register(
     "Sent" : "Enviado",
     "Drafts" : "Borradores",
     "Archive" : "Archivados",
-    "Trash" : "Basura",
+    "Trash" : "Papelera",
     "Junk" : "Basura",
     "All" : "Todos",
     "Favorites" : "Favoritos",
