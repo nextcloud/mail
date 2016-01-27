@@ -59,9 +59,9 @@
     "Error loading message" : "İleti yüklenirken hata",
     "New message" : "Yeni mesaj",
     "Forwarding you to %s - click here if you are not automatically redirected within the next few seconds." : "%s sayfasına yönlendiriliyorsunuz - birkaç saniye içinde yönlendirilmezseniz, buraya tıklayın.",
-    "Redirect warning" : "Yönlendirme Uyarısı",
+    "Redirect warning" : "Yönlendirme uyarısı",
     "The previous page is sending you to %s" : "Önceki sayfa sizi %s sayfasına yönlendiriyor.",
     "If you do not want to visit that page, you can return to <a href=\"%s\">the mail app</a>." : "Bu sayfayı ziyaret etmek istemiyorsanız, <a href=\"%s\">posta uygulamasına</a> geri dönebilirsiniz.",
-    "Continue to %s" : "%s e devam"
+    "Continue to %s" : "%s sayfasına devam et"
 },"pluralForm" :"nplurals=2; plural=(n > 1);"
 }
