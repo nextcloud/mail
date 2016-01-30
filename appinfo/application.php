@@ -96,8 +96,7 @@ class Application extends App {
 				$c->getServer()->getUserFolder(),
 				$c->query('ContactsIntegration'),
 				$c->query('Logger'),
-				$c->getServer()->getL10N('mail'),
-				$c->getServer()->getMimeTypeDetector()
+				$c->getServer()->getL10N('mail')
 			);
 		});
 

@@ -25,7 +25,6 @@ use OCP\AppFramework\Http;
 use OCP\AppFramework\Http\ContentSecurityPolicy;
 use OCP\AppFramework\Http\JSONResponse;
 use OCP\AppFramework\Http\TemplateResponse;
-use OCP\Files\IMimeTypeDetector;
 use OCP\IL10N;
 use OCP\Util;
 
@@ -60,11 +59,6 @@ class MessagesController extends Controller {
 	private $l10n;
 
 	/**
-	 * @var IMimeTypeDetector
-	 */
-	private $mimeTypeDetector;
-
-	/**
 	 * @var IAccount[]
 	 */
 	private $accounts = [];
@@ -78,7 +72,6 @@ class MessagesController extends Controller {
 	 * @param $contactsIntegration
 	 * @param $logger
 	 * @param $l10n
-	 * @param IMimeTypeDetector $mimeTypeDetector
 	 */
 	public function __construct($appName,
 								$request,
@@ -87,8 +80,7 @@ class MessagesController extends Controller {
 								$userFolder,
 								$contactsIntegration,
 								$logger,
-								$l10n,
-								IMimeTypeDetector $mimeTypeDetector) {
+								$l10n) {
 		parent::__construct($appName, $request);
 		$this->accountService = $accountService;
 		$this->currentUserId = $currentUserId;
@@ -96,7 +88,6 @@ class MessagesController extends Controller {
 		$this->contactsIntegration = $contactsIntegration;
 		$this->logger = $logger;
 		$this->l10n = $l10n;
-		$this->mimeTypeDetector = $mimeTypeDetector;
 	}
 
 	/**
@@ -384,7 +375,7 @@ class MessagesController extends Controller {
 		]);
 		$downloadUrl = \OC::$server->getURLGenerator()->getAbsoluteURL($downloadUrl);
 		$attachment['downloadUrl'] = $downloadUrl;
-		$attachment['mimeUrl'] = $this->mimeTypeDetector->mimeTypeIcon($attachment['mime']);
+		$attachment['mimeUrl'] = $this->mimeTypeIcon($attachment['mime']);
 
 		if ($this->attachmentIsImage($attachment)) {
 			$attachment['isImage'] = true;
@@ -467,6 +458,24 @@ class MessagesController extends Controller {
 			return $json;
 		}
 		return $json;
+	}
+
+	/**
+	 * Get path to the icon of a file type
+	 *
+	 * @todo Inject IMimeTypeDetector once core 8.2+ is supported
+	 *
+	 * @param string $mimeType the MIME type
+	 */
+	private function mimeTypeIcon($mimeType) {
+		$ocVersion = \OC::$server->getConfig()->getSystemValue('version', '0.0.0');
+		if (version_compare($ocVersion, '8.2.0', '<')) {
+			// Version-hack for 8.1 and lower
+			return \OC_Helper::mimetypeIcon($mimeType);
+		}
+		/* @var IMimeTypeDetector */
+		$mimeTypeDetector = \OC::$server->getMimeTypeDetector();
+		return $mimeTypeDetector->mimeTypeIcon($mimeType);
 	}
 
 }
