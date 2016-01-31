@@ -3,7 +3,7 @@
 // TODO: remove DEBUG constant check once minimum oc
 // core version >= 8.2, see https://github.com/owncloud/core/pull/18510
 $debug = (defined('DEBUG') && DEBUG)
-	|| \OC::$server->getSystemConfig()->getValue('debug', false);
+	|| \OC::$server->getConfig()->getSystemValue('debug', false);
 
 style('mail','mail');
 style('mail','mobile');
