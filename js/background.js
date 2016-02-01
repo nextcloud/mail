@@ -78,13 +78,13 @@ define(function(require) {
 			// If it's okay let's create a notification
 			var tag = 'not-' + folder.accountId + '-' + folder.name;
 			var icon = OC.filePath('mail', 'img', 'mail-notification.png');
-			require('app').BackGround.showNotification(email, body, tag, icon, folder.accountId, folder.id);
+			showNotification(email, body, tag, icon, folder.accountId, folder.id);
 		}
 	}
 
 	function checkForNotifications() {
-		require('app').State.accounts.each(function(account) {
-			var localAccount = require('app').State.folderView.collection.get(account.get('accountId'));
+		require('state').accounts.each(function(account) {
+			var localAccount = require('state').folderView.collection.get(account.get('accountId'));
 			var folders = localAccount.get('folders');
 
 			$.ajax(
@@ -98,10 +98,10 @@ define(function(require) {
 					_.each(jsondata, function(f) {
 						// send notification
 						if (f.newUnReadCounter > 0) {
-							require('app').UI.changeFavicon(OC.filePath('mail', 'img', 'favicon-notification.png'));
+							require('ui').changeFavicon(OC.filePath('mail', 'img', 'favicon-notification.png'));
 							// only show one notification
-							if (require('app').State.accounts.length === 1 || account.get('accountId') === -1) {
-								require('app').BackGround.showMailNotification(localAccount.get('email'), f);
+							if (require('state').accounts.length === 1 || account.get('accountId') === -1) {
+								showMailNotification(localAccount.get('email'), f);
 							}
 						}
 
@@ -113,19 +113,19 @@ define(function(require) {
 						localFolder.set('total', f.total);
 
 						// reload if current selected folder has changed
-						if (require('app').State.currentAccountId === f.accountId &&
-							require('app').State.currentFolderId === f.id) {
-							require('app').UI.messageView.collection.add(f.messages);
+						if (require('state').currentAccountId === f.accountId &&
+							require('state').currentFolderId === f.id) {
+							require('ui').messageView.collection.add(f.messages);
 						}
 
 						// Save new messages to the cached message list
-						var cachedList = require('app').Cache.getMessageList(f.accountId, f.id);
+						var cachedList = require('cache').getMessageList(f.accountId, f.id);
 						if (cachedList) {
 							cachedList = cachedList.concat(f.messages);
-							require('app').Cache.addMessageList(f.accountId, f.id, cachedList);
+							require('cache').addMessageList(f.accountId, f.id, cachedList);
 						}
 
-						require('app').State.folderView.updateTitle();
+						require('state').folderView.updateTitle();
 					});
 				}
 			}
@@ -151,9 +151,9 @@ define(function(require) {
 				var messages = queue;
 				queue = [];
 
-				require('app').Communication.fetchMessages(accountId, folderId, messages, {
+				require('communication').fetchMessages(accountId, folderId, messages, {
 					onSuccess: function(messages) {
-						require('app').Cache.addMessages(accountId, folderId, messages);
+						require('cache').addMessages(accountId, folderId, messages);
 					}
 				});
 			}
@@ -161,8 +161,8 @@ define(function(require) {
 
 		return {
 			start: function() {
-				accountId = require('app').State.currentAccountId;
-				folderId = require('app').State.currentFolderId;
+				accountId = require('state').currentAccountId;
+				folderId = require('state').currentFolderId;
 				timer = setInterval(fetch, pollIntervall);
 			},
 			restart: function() {

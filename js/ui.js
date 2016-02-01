@@ -47,7 +47,7 @@ define(function(require) {
 		},
 		onFolderChanged: function() {
 			// Stop background message fetcher of previous folder
-			require('app').BackGround.messageFetcher.restart();
+			require('background').messageFetcher.restart();
 			// hide message detail view on mobile
 			$('#mail-message').addClass('hidden-mobile');
 		},
@@ -97,7 +97,7 @@ define(function(require) {
 
 		// setup folder view
 		var foldersView = new NavigationAccountsView();
-		require('app').State.folderView = foldersView;
+		require('state').folderView = foldersView;
 		require('app').view.navigation.accounts.show(foldersView);
 
 		foldersView.listenTo(messageView, 'change:unseen',
@@ -109,7 +109,7 @@ define(function(require) {
 		}
 
 		// Register actual filter method
-		SearchProxy.setFilter(require('app').Search.filter);
+		SearchProxy.setFilter(require('search').filter);
 
 		function split(val) {
 			return val.split(/,\s*/);
@@ -160,7 +160,7 @@ define(function(require) {
 			}
 		});
 
-		setInterval(require('app').BackGround.checkForNotifications, 5 * 60 * 1000);
+		setInterval(require('background').checkForNotifications, 5 * 60 * 1000);
 		require('app').trigger('accounts:load');
 	}
 
@@ -187,7 +187,7 @@ define(function(require) {
 
 	function hideMenu() {
 		$('.message-composer').addClass('hidden');
-		if (require('app').State.accounts.length === 0) {
+		if (require('state').accounts.length === 0) {
 			$('#app-navigation').hide();
 			$('#app-navigation-toggle').css('background-image', 'none');
 		}
@@ -206,11 +206,11 @@ define(function(require) {
 	function loadFolder(accountId, folderId, noSelect) {
 		Events.onComposerLeave();
 
-		if (require('app').State.messagesLoading !== null) {
-			require('app').State.messagesLoading.abort();
+		if (require('state').messagesLoading !== null) {
+			require('state').messagesLoading.abort();
 		}
-		if (require('app').State.messageLoading !== null) {
-			require('app').State.messageLoading.abort();
+		if (require('state').messageLoading !== null) {
+			require('state').messageLoading.abort();
 		}
 
 		// Set folder active
@@ -234,17 +234,17 @@ define(function(require) {
 		if (noSelect) {
 			$('#emptycontent').show();
 			$('#mail-message').removeClass('icon-loading');
-			require('app').State.currentAccountId = accountId;
-			require('app').State.currentFolderId = folderId;
+			require('state').currentAccountId = accountId;
+			require('state').currentFolderId = folderId;
 			setMessageActive(null);
 			$('#mail-messages').removeClass('icon-loading');
-			require('app').State.currentlyLoading = null;
+			require('state').currentlyLoading = null;
 		} else {
-			require('app').Communication.fetchMessageList(accountId, folderId, {
+			require('communication').fetchMessageList(accountId, folderId, {
 				onSuccess: function(messages, cached) {
-					require('app').State.currentlyLoading = null;
-					require('app').State.currentAccountId = accountId;
-					require('app').State.currentFolderId = folderId;
+					require('state').currentlyLoading = null;
+					require('state').currentAccountId = accountId;
+					require('state').currentFolderId = folderId;
 					setMessageActive(null);
 					$('#mail-messages').removeClass('icon-loading');
 
@@ -256,7 +256,7 @@ define(function(require) {
 
 						// Fetch first 10 messages in background
 						_.each(messages.slice(0, 10), function(message) {
-							require('app').BackGround.messageFetcher.push(message.id);
+							require('background').messageFetcher.push(message.id);
 						});
 
 						var messageId = messages[0].id;
@@ -317,8 +317,8 @@ define(function(require) {
 						'folders/{folderId}/messages/{messageId}/' +
 						'attachment/{attachmentId}',
 						{
-							accountId: require('app').State.currentAccountId,
-							folderId: require('app').State.currentFolderId,
+							accountId: require('state').currentAccountId,
+							folderId: require('state').currentFolderId,
 							messageId: messageId,
 							attachmentId: attachmentId
 						}), {
@@ -362,8 +362,8 @@ define(function(require) {
 		$('#mail-message').removeClass('hidden-mobile');
 
 		// Abort message loads
-		if (require('app').State.messageLoading !== null) {
-			require('app').State.messageLoading.abort();
+		if (require('state').messageLoading !== null) {
+			require('state').messageLoading.abort();
 			$('iframe').parent().removeClass('icon-loading');
 			$('#mail-message').removeClass('icon-loading');
 			$('#mail_message').removeClass('icon-loading');
@@ -373,9 +373,9 @@ define(function(require) {
 			// setup composer view
 			composer = new ComposerView({
 				el: $('#mail-message'),
-				onSubmit: require('app').Communication.sendMessage,
-				onDraft: require('app').Communication.saveDraft,
-				accounts: require('app').State.accounts
+				onSubmit: require('communication').sendMessage,
+				onDraft: require('communication').saveDraft,
+				accounts: require('state').accounts
 			});
 		} else {
 			composer.data = data;
@@ -394,8 +394,8 @@ define(function(require) {
 
 		// set 'from' dropdown to current account
 		// TODO: fix selector conflicts
-		if (require('app').State.currentAccountId !== -1) {
-			$('.mail-account').val(require('app').State.currentAccountId);
+		if (require('state').currentAccountId !== -1) {
+			$('.mail-account').val(require('state').currentAccountId);
 		}
 
 		// focus 'to' field automatically on clicking New message button
@@ -418,12 +418,12 @@ define(function(require) {
 
 		// TODO: find a better way to get the current message body
 		var data = {
-			subject: 'Fwd: ' + require('app').State.currentMessageSubject,
-			body: header + require('app').State.currentMessageBody.replace(/<br \/>/g, '\n')
+			subject: 'Fwd: ' + require('state').currentMessageSubject,
+			body: header + require('state').currentMessageBody.replace(/<br \/>/g, '\n')
 		};
 
-		if (require('app').State.currentAccountId !== -1) {
-			data.accountId = require('app').State.currentAccountId;
+		if (require('state').currentAccountId !== -1) {
+			data.accountId = require('state').currentAccountId;
 		}
 
 		openComposer(data);
@@ -458,7 +458,7 @@ define(function(require) {
 		_.defaults(options, defaultOptions);
 
 		// Do not reload email when clicking same again
-		if (require('app').State.currentMessageId === messageId) {
+		if (require('state').currentMessageId === messageId) {
 			return;
 		}
 
@@ -468,20 +468,20 @@ define(function(require) {
 			return;
 		}
 		// Abort previous loading requests
-		if (require('app').State.messageLoading !== null) {
-			require('app').State.messageLoading.abort();
+		if (require('state').messageLoading !== null) {
+			require('state').messageLoading.abort();
 		}
 
 		// check if message is a draft
-		var accountId = require('app').State.currentAccountId;
-		var account = require('app').State.folderView.collection.findWhere({id: accountId});
+		var accountId = require('state').currentAccountId;
+		var account = require('state').folderView.collection.findWhere({id: accountId});
 		var draftsFolder = account.attributes.specialFolders.drafts;
-		var draft = draftsFolder === require('app').State.currentFolderId;
+		var draft = draftsFolder === require('state').currentFolderId;
 
 		// close email first
 		// Check if message is open
-		if (require('app').State.currentMessageId !== null) {
-			var lastMessageId = require('app').State.currentMessageId;
+		if (require('state').currentMessageId !== null) {
+			var lastMessageId = require('state').currentMessageId;
 			setMessageActive(null);
 			if (lastMessageId === messageId) {
 				return;
@@ -493,7 +493,7 @@ define(function(require) {
 
 		// Set current Message as active
 		setMessageActive(messageId);
-		require('app').State.currentMessageBody = '';
+		require('state').currentMessageBody = '';
 
 		// Fade out the message composer
 		$('#mail_new_message').prop('disabled', false);
@@ -521,9 +521,9 @@ define(function(require) {
 
 			// Save current messages's content for later use (forward)
 			if (!message.hasHtmlBody) {
-				require('app').State.currentMessageBody = message.body;
+				require('state').currentMessageBody = message.body;
 			}
-			require('app').State.currentMessageSubject = message.subject;
+			require('state').currentMessageSubject = message.subject;
 
 			// Render the message body
 			var source = require('text!templates/message.html');
@@ -543,8 +543,8 @@ define(function(require) {
 			var replyComposer = new ComposerView({
 				el: $('#reply-composer'),
 				type: 'reply',
-				onSubmit: require('app').Communication.sendMessage,
-				onDraft: require('app').Communication.saveDraft,
+				onSubmit: require('communication').sendMessage,
+				onDraft: require('communication').saveDraft,
 				accountId: message.accountId,
 				folderId: message.folderId,
 				messageId: message.messageId
@@ -621,7 +621,7 @@ define(function(require) {
 				}
 
 				// Safe current mesages's content for later use (forward)
-				require('app').State.currentMessageBody = text;
+				require('state').currentMessageBody = text;
 
 				// Show forward button
 				$('#forward-button').show();
@@ -632,17 +632,17 @@ define(function(require) {
 			openComposer(data);
 		};
 
-		require('app').Communication.fetchMessage(
-			require('app').State.currentAccountId,
-			require('app').State.currentFolderId,
+		require('communication').fetchMessage(
+			require('state').currentAccountId,
+			require('state').currentFolderId,
 			messageId,
 			{
 				onSuccess: function(message) {
 					if (draft) {
 						loadDraftSuccess(message);
 					} else {
-						require('app').Cache.addMessage(require('app').State.currentAccountId,
-							require('app').State.currentFolderId,
+						require('cache').addMessage(require('state').currentAccountId,
+							require('state').currentFolderId,
 							message);
 						loadMessageSuccess(message);
 					}
@@ -659,8 +659,8 @@ define(function(require) {
 		messageView.clearFilter();
 
 		// disable all other folders for all accounts
-		require('app').State.accounts.each(function(account) {
-			var localAccount = require('app').State.folderView.collection.get(account.get('accountId'));
+		require('state').accounts.each(function(account) {
+			var localAccount = require('state').folderView.collection.get(account.get('accountId'));
 			if (_.isUndefined(localAccount)) {
 				return;
 			}
@@ -670,14 +670,14 @@ define(function(require) {
 			});
 		});
 
-		require('app').State.folderView.getFolderById(accountId, folderId)
+		require('state').folderView.getFolderById(accountId, folderId)
 			.set('active', true);
 	}
 
 	function setMessageActive(messageId) {
 		messageView.setActiveMessage(messageId);
-		require('app').State.currentMessageId = messageId;
-		require('app').State.folderView.updateTitle();
+		require('state').currentMessageId = messageId;
+		require('state').folderView.updateTitle();
 	}
 
 	function addAccount() {

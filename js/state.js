@@ -49,7 +49,7 @@ define(function(require) {
 				var oldId = currentFolderId;
 				currentFolderId = newId;
 				if (newId !== oldId) {
-					require('app').UI.Events.onFolderChanged();
+					require('ui').Events.onFolderChanged();
 				}
 			}
 		},

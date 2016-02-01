@@ -42,9 +42,9 @@ define(function(require) {
 	function getAccountEntities() {
 		var defer = $.Deferred();
 
-		require('app').State.accounts.fetch({
+		require('state').accounts.fetch({
 			success: function(accounts) {
-				require('app').Cache.cleanUp(accounts);
+				require('cache').cleanUp(accounts);
 				defer.resolve(accounts);
 			},
 			error: function() {

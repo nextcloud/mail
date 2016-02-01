@@ -48,8 +48,8 @@ define(function(require) {
 			$.ajax(
 				OC.generateUrl('apps/mail/accounts/{accountId}/folders/{folderId}/messages/{messageId}/flags',
 					{
-						accountId: require('app').State.currentAccountId,
-						folderId: require('app').State.currentFolderId,
+						accountId: require('state').currentAccountId,
+						folderId: require('state').currentFolderId,
 						messageId: messageId
 					}), {
 				data: {
@@ -59,7 +59,7 @@ define(function(require) {
 				success: function() {
 				},
 				error: function() {
-					require('app').UI.showError(t('mail', 'Message could not be starred. Please try again.'));
+					require('ui').showError(t('mail', 'Message could not be starred. Please try again.'));
 					_this.get('flags').set(flag, !value);
 				}
 			});

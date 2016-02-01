@@ -16,7 +16,7 @@ define(function(require) {
 	function filter(query) {
 		window.clearTimeout(timeoutID);
 		timeoutID = window.setTimeout(function() {
-			require('app').UI.messageView.filterCurrentMailbox(query);
+			require('ui').messageView.filterCurrentMailbox(query);
 		}, 500);
 		$('#searchresults').hide();
 	}

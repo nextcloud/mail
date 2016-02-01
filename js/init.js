@@ -12,14 +12,13 @@ define(function(require) {
 	'use strict';
 
 	var document = require('domready');
-	var Mail = require('app');
 
 	/**
 	 * Start the application
 	 */
-	Mail.start();
+	require('app').start();
 
-	Mail.UI.initializeInterface();
+	require('ui').initializeInterface();
 
 	/**
 	 * Detects pasted text by browser plugins, and other software.
@@ -53,7 +52,7 @@ define(function(require) {
 
 	// TODO: create marionette view and encapsulate events
 	$(document).on('click', '#forward-button', function() {
-		Mail.UI.openForwardComposer();
+		require('ui').openForwardComposer();
 	});
 
 	// TODO: create marionette view and encapsulate events
@@ -61,18 +60,18 @@ define(function(require) {
 		event.stopPropagation();
 		var messageId = $(this).parent().data('messageId');
 		var attachmentId = $(this).parent().data('attachmentId');
-		Mail.UI.saveAttachment(messageId, attachmentId);
+		require('ui').saveAttachment(messageId, attachmentId);
 	});
 
 	// TODO: create marionette view and encapsulate events
 	$(document).on('click', '#mail-message .attachments-save-to-cloud', function(event) {
 		event.stopPropagation();
 		var messageId = $(this).data('messageId');
-		Mail.UI.saveAttachment(messageId);
+		require('ui').saveAttachment(messageId);
 	});
 
 	$(document).on('click', '.link-mailto', function(event) {
-		Mail.UI.openComposer(event);
+		require('ui').openComposer(event);
 	});
 
 	// TODO: create marionette view and encapsulate events

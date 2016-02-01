@@ -62,12 +62,12 @@ define(function(require) {
 		});
 
 		window.location.hash = '';
-		require('app').UI.openComposer(composerOptions);
+		require('ui').openComposer(composerOptions);
 	}
 
 	function loadFolder(accountId, activeId) {
 		var fetchingFolders = require('app').request('folder:entities', accountId);
-		var UI = require('app').UI;
+		var UI = require('ui');
 
 		// TODO: create loading-view
 		$('#mail-messages').removeClass('hidden').addClass('icon-loading');
@@ -81,7 +81,7 @@ define(function(require) {
 
 		$.when(fetchingFolders).done(function(accountFolders) {
 			$('#app-navigation').removeClass('icon-loading');
-			require('app').State.folderView.collection.add(accountFolders);
+			require('state').folderView.collection.add(accountFolders);
 
 			if (accountId === activeId) {
 				var folderId = accountFolders.folders[0].id;
@@ -93,11 +93,11 @@ define(function(require) {
 
 				// Save current folder
 				UI.setFolderActive(accountId, folderId);
-				require('app').State.currentAccountId = accountId;
-				require('app').State.currentFolderId = folderId;
+				require('state').currentAccountId = accountId;
+				require('state').currentFolderId = folderId;
 
 				// Start fetching messages in background
-				require('app').BackGround.messageFetcher.start();
+				require('background').messageFetcher.start();
 			}
 		});
 		$.when(fetchingFolders).fail(function() {
