@@ -43,7 +43,7 @@ if ($debug) {
 		</div>
 	</div>
 	<div id="app-content">
-		<div id="mail_messages"></div>
+		<div id="mail-messages"></div>
 		<div id="setup" class="hidden" ></div>
 		<div id="mail-message" class="icon-loading hidden-mobile"></div>
 	</div>

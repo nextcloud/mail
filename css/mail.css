@@ -140,14 +140,14 @@
 /* STOP: should be done in core/apps.css */
 
 #emptycontent,
-#mail_messages #emptycontent.emptycontent-search {
+#mail-messages #emptycontent.emptycontent-search {
 	position: static;
 	margin-top: 2em;
 }
-#mail_messages #emptycontent.emptycontent-search h2 {
+#mail-messages #emptycontent.emptycontent-search h2 {
 	line-height: 150%;
 }
-#mail_messages #emptycontent {
+#mail-messages #emptycontent {
 	position: absolute;
 }
 
@@ -213,7 +213,7 @@
 
 /* app content*/
 
-#mail_messages {
+#mail-messages {
 	width: 30%;
 	height: 100%;
 	overflow-x: hidden;
@@ -239,17 +239,17 @@
 	height: 68px;
 }
 
-.mail_message_summary {
+.mail-message-summary {
 	border-top: 1px solid #eee;
 	position: relative;
 }
-.mail_message_summary:hover,
-.mail_message_summary:focus,
-.mail_message_summary.active {
+.mail-message-summary:hover,
+.mail-message-summary:focus,
+.mail-message-summary.active {
 	background-color: #f8f8f8;
 }
 
-.mail_message_summary * {
+.mail-message-summary * {
 	cursor: pointer;
 }
 
@@ -260,8 +260,8 @@
 	padding-left: 10px;
 }
 
-.mail_message_summary_from,
-.mail_message_summary_subject,
+.mail-message-summary-from,
+.mail-message-summary-subject,
 .date {
 	display: inline-block;
 	padding: 12px;
@@ -270,14 +270,14 @@
 	text-overflow: ellipsis;
 }
 
-.mail_message_summary_from {
+.mail-message-summary-from {
 	width: 55%;
 	margin-left: 37px;
 	padding-bottom: 0;
 	opacity: .5;
 }
 
-.mail_message_summary_subject {
+.mail-message-summary-subject {
 	padding-top: 0;
 	width: 75%;
 	margin-left: 37px;
@@ -292,13 +292,13 @@
 	opacity: .5;
 }
 
-.mail_message_summary.unseen .mail_message_summary_from,
-.mail_message_summary.unseen .mail_message_summary_subject,
-.mail_message_summary.unseen .date {
+.mail-message-summary.unseen .mail-message-summary-from,
+.mail-message-summary.unseen .mail-message-summary-subject,
+.mail-message-summary.unseen .date {
 	font-weight: bold;
 }
 
-#mail_messages .action.delete {
+#mail-messages .action.delete {
 	position: absolute;
 	bottom: 0;
 	right: 0;
@@ -306,8 +306,8 @@
 	-ms-filter: "progid:DXImageTransform.Microsoft.Alpha(Opacity=25)";
 	opacity: .15;
 }
-#mail_messages .action.delete:hover,
-#mail_messages .action.delete:focus {
+#mail-messages .action.delete:hover,
+#mail-messages .action.delete:focus {
 	-ms-filter: "progid:DXImageTransform.Microsoft.Alpha(Opacity=50)";
 	opacity: .5;
 }
@@ -457,9 +457,9 @@ input.submit-message {
 	-ms-filter: "progid:DXImageTransform.Microsoft.Alpha(Opacity=100)";
 	opacity: 1;
 }
-.mail_message_summary.active .star.icon-star,
-.mail_message_summary:hover .star.icon-star,
-.mail_message_summary:focus .star.icon-star {
+.mail-message-summary.active .star.icon-star,
+.mail-message-summary:hover .star.icon-star,
+.mail-message-summary:focus .star.icon-star {
 	display: inline-block;
 }
 
@@ -471,7 +471,7 @@ input.submit-message {
 	-ms-filter: "progid:DXImageTransform.Microsoft.Alpha(Opacity=50)";
 	opacity: .5;
 }
-.icon-reply ~ .mail_message_summary_subject {
+.icon-reply ~ .mail-message-summary-subject {
 	margin-left: 57px;
 	width: 65%;
 }
