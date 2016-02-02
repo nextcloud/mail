@@ -87,6 +87,8 @@ define(function(require) {
 
 			this.$el.addClass('transparency').slideUp(function() {
 				$('.tipsy').remove();
+				$('.tooltip').remove();
+
 				var thisModelCollection = thisModel.collection;
 				var index = thisModelCollection.indexOf(thisModel);
 				var nextMessage = thisModelCollection.at(index - 1);
