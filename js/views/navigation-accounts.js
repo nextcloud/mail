@@ -31,22 +31,14 @@ define(function(require) {
 			if (!_.isUndefined(activeFolder)) {
 				return activeFolder;
 			}
-
-			// bad hack to navigate down the tree ...
 			var delimiter = activeAccount.get('delimiter');
-			folderId = atob(folderId);
-			activeFolder = activeAccount;
-			var parts = folderId.split(delimiter);
-			var k = '';
-			_.each(parts, function(p) {
-				if (k.length > 0) {
-					k += delimiter;
+
+			var firstPart = atob(folderId).split(delimiter)[0];
+			activeFolder = activeAccount.get('folders').get(btoa(firstPart));
+			activeFolder.attributes.folders.forEach(function(folder) {
+				if (folder.id === folderId) {
+					activeFolder = folder;
 				}
-				k += p;
-				var folders = activeFolder.folders || activeFolder.get('folders');
-				activeFolder = folders.filter(function(f) {
-					return f.id === btoa(k);
-				}).shift();
 			});
 			return activeFolder;
 		},
