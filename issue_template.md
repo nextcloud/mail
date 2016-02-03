@@ -1,4 +1,4 @@
-## ownCloud Core
+## ownCloud Mail
 
 ### Steps to reproduce
 1.
@@ -10,6 +10,20 @@ Tell us what should happen
 
 ### Actual behaviour
 Tell us what happens instead
+
+**OwnCloud Mail version:** (see ownCloud apps admin page)
+
+**Mailserver or service:** (e.g. Outlook, Yahoo, Gmail, Exchange,...)
+
+**Transport security - IMAP:** (None, SSL, TLS, STARTTLS) 
+
+**Transport security - SMTP:** (None, SSL, TLS, STARTTLS)
+
+**Number of accounts:**
+
+**ownCloud Mail version build date:** (only if you are using a Nightly Build)
+
+## ownCloud Core
 
 ### Server configuration
 **Operating system**:
@@ -74,15 +88,3 @@ a) The javascript console log
 b) The network log 
 c) ...
 ```
-
-## ownCloud Mail
-
-**Mailserver or Service:** (e.g. Outlook, Yahoo, Gmail, Exchange,...)
-
-**Transport Security - IMAP:** (None, SSL, TLS, STARTTLS) 
-
-**Transport Security - SMTP:** (None, SSL, TLS, STARTTLS)
-
-**Number of Accounts:**
-
-**ownCloud Mail Version Build Date:** (only if you are using a Nightly Build)
