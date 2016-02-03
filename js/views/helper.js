@@ -40,8 +40,8 @@ define(function(require) {
 	});
 
 	Handlebars.registerHelper('printAddressList', function(addressList) {
-		var currentAddress = require('app').State.accounts.find(function(item) {
-			return item.get('accountId') === require('app').State.currentAccountId;
+		var currentAddress = require('state').accounts.find(function(item) {
+			return item.get('accountId') === require('state').currentAccountId;
 		});
 
 		var str = _.reduce(addressList, function(memo, value, index) {

@@ -12,7 +12,7 @@ define(function(require) {
 	'use strict';
 
 	$(document).on('click', '#new_mail_account', function() {
-		require('app').UI.addAccount();
+		require('ui').addAccount();
 	});
 
 });

@@ -15,7 +15,7 @@ define(function(require) {
 
 	function loadAccounts() {
 		var fetchingAccounts = require('app').request('account:entities');
-		var UI = require('app').UI;
+		var UI = require('ui');
 
 		$.when(fetchingAccounts).done(function(accounts) {
 			if (accounts.length === 0) {

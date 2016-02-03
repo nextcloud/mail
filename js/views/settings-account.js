@@ -37,7 +37,7 @@ define(function(require) {
 				type: 'DELETE',
 				success: function() {
 					// Delete cached message lists
-					require('app').Cache.removeAccount(accountId);
+					require('cache').removeAccount(accountId);
 
 					// reload the complete page
 					// TODO should only reload the app nav/content

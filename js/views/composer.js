@@ -301,8 +301,8 @@ define(function(require) {
 					_this.attachments.reset();
 					if (_this.draftUID !== null) {
 						// the sent message was a draft
-						if (!_.isUndefined(require('app').UI.messageView)) {
-							require('app').UI.messageView.collection.remove({id: _this.draftUID});
+						if (!_.isUndefined(require('ui').messageView)) {
+							require('ui').messageView.collection.remove({id: _this.draftUID});
 						}
 						_this.draftUID = null;
 					}

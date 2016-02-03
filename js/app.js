@@ -25,15 +25,8 @@ define(function(require) {
 
 	var Mail = new Marionette.Application();
 
-	/*
-	 * Set up modules
-	 */
-	Mail.BackGround = require('background');
-	Mail.Communication = require('communication');
-	Mail.Cache = require('cache');
-	Mail.Search = require('search');
-	Mail.State = require('state');
-	Mail.UI = require('ui');
+	var State = require('state');
+	var UI = require('ui');
 
 	/**
 	 * Set up view
@@ -50,17 +43,17 @@ define(function(require) {
 		Mail.Controller.folderController.loadFolder(accountId, activeId);
 	});
 	Mail.on('folder:load', function(accountId, folderId, noSelect) {
-		Mail.UI.loadFolder(accountId, folderId, noSelect);
+		UI.loadFolder(accountId, folderId, noSelect);
 	});
 	Mail.on('message:load', function(accountId, folderId, messageId, options) {
 		//FIXME: don't rely on global state vars
-		Mail.UI.loadMessage(messageId, options);
+		UI.loadMessage(messageId, options);
 	});
 	Mail.on('ui:menu:show', function() {
-		Mail.UI.showMenu();
+		UI.showMenu();
 	});
 	Mail.on('ui:menu:hide', function() {
-		Mail.UI.hideMenu();
+		UI.hideMenu();
 	});
 
 	/**
@@ -94,7 +87,7 @@ define(function(require) {
 		// Render settings menu
 		this.view.navigation = new NavigationView();
 		this.view.navigation.settings.show(new SettingsView({
-			accounts: Mail.State.accounts
+			accounts: State.accounts
 		}));
 		this.view.setup.show(new SetupView({
 			displayName: $('#user-displayname').text(),

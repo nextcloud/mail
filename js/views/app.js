@@ -40,7 +40,7 @@ define(function(require) {
 		},
 		onDocumentShow: function(e) {
 			e.preventDefault();
-			require('app').UI.changeFavicon(OC.filePath('mail', 'img', 'favicon.png'));
+			require('ui').changeFavicon(OC.filePath('mail', 'img', 'favicon.png'));
 		},
 		onKeyUp: function(e) {
 			// Define which objects to check for the event properties.
@@ -48,7 +48,7 @@ define(function(require) {
 			e = e || window.e;
 			var key = e.keyCode || e.which;
 			// If the client is currently viewing a message:
-			if (require('app').State.currentMessageId) {
+			if (require('state').currentMessageId) {
 				if (key === 46) {
 					// If delete key is pressed:
 					// If not composing a reply
@@ -65,7 +65,7 @@ define(function(require) {
 		},
 		onNewMessageClick: function(e) {
 			e.preventDefault();
-			require('app').UI.openComposer();
+			require('ui').openComposer();
 		},
 		render: function() {
 			// This view doesn't need rendering

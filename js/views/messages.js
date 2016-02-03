@@ -79,10 +79,10 @@ define(function(require) {
 
 		},
 		loadNew: function() {
-			if (!require('app').State.currentAccountId) {
+			if (!require('state').currentAccountId) {
 				return;
 			}
-			if (!require('app').State.currentFolderId) {
+			if (!require('state').currentFolderId) {
 				return;
 			}
 			// Add loading feedback
@@ -119,9 +119,9 @@ define(function(require) {
 				.prop('disabled', true);
 
 			var _this = this;
-			require('app').Communication.fetchMessageList(
-				require('app').State.currentAccountId,
-				require('app').State.currentFolderId,
+			require('communication').fetchMessageList(
+				require('state').currentAccountId,
+				require('state').currentFolderId,
 				{
 					from: from,
 					to: from + 20,
@@ -138,13 +138,13 @@ define(function(require) {
 
 						$('#app-content').removeClass('icon-loading');
 
-						require('app').UI.setMessageActive(require('app').State.currentMessageId);
+						require('ui').setMessageActive(require('state').currentMessageId);
 					},
 					onError: function() {
-						require('app').UI.showError(t('mail', 'Error while loading messages.'));
+						require('ui').showError(t('mail', 'Error while loading messages.'));
 						// Set the old folder as being active
-						require('app').UI.setFolderActive(require('app').State.currentAccountId,
-							require('app').State.currentFolderId);
+						require('ui').setFolderActive(require('state').currentAccountId,
+							require('state').currentFolderId);
 					},
 					onComplete: function() {
 						// Remove loading feedback again

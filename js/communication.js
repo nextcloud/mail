@@ -69,7 +69,7 @@ define(function(require) {
 		_.defaults(options, defaults);
 
 		// Load cached version if available
-		var message = require('app').Cache.getMessage(accountId,
+		var message = require('cache').getMessage(accountId,
 			folderId,
 			messageId);
 		if (message) {
@@ -91,7 +91,7 @@ define(function(require) {
 		});
 		if (!options.backgroundMode) {
 			// Save xhr to allow aborting unneded requests
-			require('app').State.messageLoading = xhr;
+			require('state').messageLoading = xhr;
 		}
 	}
 
@@ -108,7 +108,7 @@ define(function(require) {
 		var cachedMessages = [];
 		var uncachedIds = [];
 		_.each(messageIds, function(messageId) {
-			var message = require('app').Cache.getMessage(accountId, folderId, messageId);
+			var message = require('cache').getMessage(accountId, folderId, messageId);
 			if (message) {
 				cachedMessages.push(message);
 			} else {
@@ -149,7 +149,7 @@ define(function(require) {
 			success: function(data) {
 				if (!_.isNull(options.messageId)) {
 					// Reply -> flag message as replied
-					require('app').UI.messageView.setMessageFlag(options.messageId, 'answered', true);
+					require('ui').messageView.setMessageFlag(options.messageId, 'answered', true);
 				}
 
 				options.success(data);
@@ -204,7 +204,7 @@ define(function(require) {
 			if (options.draftUID !== null) {
 				// Message is empty + previous draft exists -> delete it
 
-				var account = require('app').State.folderView.collection.findWhere({id: accountId});
+				var account = require('state').folderView.collection.findWhere({id: accountId});
 				var draftsFolder = account.attributes.specialFolders.drafts;
 
 				var deleteUrl =
@@ -227,10 +227,10 @@ define(function(require) {
 				success: function(data) {
 					if (options.draftUID !== null) {
 						// update UID in message list
-						var message = require('app').UI.messageView.collection.findWhere({id: options.draftUID});
+						var message = require('ui').messageView.collection.findWhere({id: options.draftUID});
 						if (message) {
 							message.set({id: data.uid});
-							require('app').UI.messageView.collection.set([message], {remove: false});
+							require('ui').messageView.collection.set([message], {remove: false});
 						}
 					}
 					options.success(data);
@@ -276,7 +276,7 @@ define(function(require) {
 
 		if (options.cache) {
 			// Load cached version if available
-			var messageList = require('app').Cache.getMessageList(accountId, folderId);
+			var messageList = require('cache').getMessageList(accountId, folderId);
 			if (!options.force && messageList) {
 				options.onSuccess(messageList, true);
 				options.onComplete();
@@ -298,7 +298,7 @@ define(function(require) {
 				},
 				success: function(messages) {
 					if (options.replace || options.cache) {
-						require('app').Cache.addMessageList(accountId, folderId, messages);
+						require('cache').addMessageList(accountId, folderId, messages);
 					}
 					options.onSuccess(messages, false);
 				},

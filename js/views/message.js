@@ -70,8 +70,8 @@ define(function(require) {
 		openMessage: function(event) {
 			event.stopPropagation();
 			$('#mail-message').removeClass('hidden-mobile');
-			var accountId = require('app').State.currentAccountId;
-			var folderId = require('app').State.currentFolderId;
+			var accountId = require('state').currentAccountId;
+			var folderId = require('state').currentFolderId;
 			var messageId = this.model.id; //TODO: backbone property
 			require('app').trigger('message:load', accountId, folderId, messageId, {
 				force: true
@@ -96,10 +96,10 @@ define(function(require) {
 					nextMessage = thisModelCollection.at(index + 1);
 				}
 				thisModelCollection.remove(thisModel);
-				if (require('app').State.currentMessageId === thisModel.id) {
+				if (require('state').currentMessageId === thisModel.id) {
 					if (nextMessage) {
-						var accountId = require('app').State.currentAccountId;
-						var folderId = require('app').State.currentFolderId;
+						var accountId = require('state').currentAccountId;
+						var folderId = require('state').currentFolderId;
 						var messageId = nextMessage.id; //TODO: backbone property
 						require('app').trigger('message:load', accountId, folderId, messageId);
 					}
@@ -115,8 +115,8 @@ define(function(require) {
 			$.ajax(
 				OC.generateUrl('apps/mail/accounts/{accountId}/folders/{folderId}/messages/{messageId}',
 					{
-						accountId: require('app').State.currentAccountId,
-						folderId: require('app').State.currentFolderId,
+						accountId: require('state').currentAccountId,
+						folderId: require('state').currentFolderId,
 						messageId: thisModel.id
 					}), {
 				data: {},
@@ -126,7 +126,7 @@ define(function(require) {
 					app.Cache.removeMessage(app.State.currentAccountId, app.State.currentFolderId, thisModel.id);
 				},
 				error: function() {
-					require('app').UI.showError(t('mail', 'Error while deleting message.'));
+					require('ui').showError(t('mail', 'Error while deleting message.'));
 				}
 			});
 		}

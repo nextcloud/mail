@@ -24,8 +24,8 @@ define(function(require) {
 			this.collection = new AccountCollection();
 		},
 		getFolderById: function(accountId, folderId) {
-			var activeAccount = accountId || require('app').State.currentAccountId;
-			folderId = folderId || require('app').State.currentFolderId;
+			var activeAccount = accountId || require('state').currentAccountId;
+			folderId = folderId || require('state').currentFolderId;
 			activeAccount = this.collection.get(activeAccount);
 			var activeFolder = activeAccount.get('folders').get(folderId);
 			if (!_.isUndefined(activeFolder)) {
@@ -56,8 +56,8 @@ define(function(require) {
 		},
 		updateTitle: function() {
 			var activeEmail = '';
-			if (require('app').State.currentAccountId !== -1) {
-				var activeAccount = require('app').State.currentAccountId;
+			if (require('state').currentAccountId !== -1) {
+				var activeAccount = require('state').currentAccountId;
 				activeAccount = this.collection.get(activeAccount);
 				activeEmail = ' - ' + activeAccount.get('email');
 			}
