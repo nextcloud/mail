@@ -16,32 +16,37 @@ use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Input\InputArgument;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\OutputInterface;
+use OCP\Security\ICrypto;
 use OCA\Mail\Db\MailAccount;
 use OCA\Mail\Service\AccountService;
 
 class CreateAccount extends Command {
 
-	const ARGUMENT_USER_ID = 'user_id';
+	const ARGUMENT_USER_ID = 'user-id';
 	const ARGUMENT_NAME = 'name';
 	const ARGUMENT_EMAIL = 'email';
-	const ARGUMENT_IMAP_HOST = 'imap_host';
-	const ARGUMENT_IMAP_PORT = 'imap_port';
-	const ARGUMENT_IMAP_SSL_MODE = 'imap_ssl_mode';
-	const ARGUMENT_IMAP_USER = 'imap_user';
-	const ARGUMENT_IMAP_PASSWORD = 'imap_password';
-	const ARGUMENT_SMTP_HOST = 'smtp_host';
-	const ARGUMENT_SMTP_PORT = 'smtp_port';
-	const ARGUMENT_SMTP_SSL_MODE = 'smtp_ssl_mode';
-	const ARGUMENT_SMTP_USER = 'smtp_user';
-	const ARGUMENT_SMTP_PASSWORD = 'smtp_password';
+	const ARGUMENT_IMAP_HOST = 'imap-host';
+	const ARGUMENT_IMAP_PORT = 'imap-port';
+	const ARGUMENT_IMAP_SSL_MODE = 'imap-ssl-mode';
+	const ARGUMENT_IMAP_USER = 'imap-user';
+	const ARGUMENT_IMAP_PASSWORD = 'imap-password';
+	const ARGUMENT_SMTP_HOST = 'smtp-host';
+	const ARGUMENT_SMTP_PORT = 'smtp-port';
+	const ARGUMENT_SMTP_SSL_MODE = 'smtp-ssl-mode';
+	const ARGUMENT_SMTP_USER = 'smtp-user';
+	const ARGUMENT_SMTP_PASSWORD = 'smtp-password';
 
 	/** @var AccountService */
 	private $accountService;
 
-	public function __construct(AccountService $service) {
+	/** @var \OCP\Security\ICrypto */
+	private $crypto;
+
+	public function __construct(AccountService $service, ICrypto $crypto) {
 		parent::__construct();
 
 		$this->accountService = $service;
+		$this->crypto = $crypto;
 	}
 
 	protected function configure() {
@@ -90,17 +95,17 @@ class CreateAccount extends Command {
 		$account->setInboundPort($imapPort);
 		$account->setInboundSslMode($imapSslMode);
 		$account->setInboundUser($imapUser);
-		$account->setInboundPassword($imapPassword);
+		$account->setInboundPassword($this->crypto->encrypt($imapPassword));
 
 		$account->setOutboundHost($smtpHost);
 		$account->setOutboundPort($smtpPort);
 		$account->setOutboundSslMode($smtpSslMode);
 		$account->setOutboundUser($smtpUser);
-		$account->setOutboundPassword($smtpPassword);
+		$account->setOutboundPassword($this->crypto->encrypt($smtpPassword));
 
 		$this->accountService->save($account);
 
-		$output->writeln("<info>Account $email created");
+		$output->writeln("<info>Account $email created</info>");
 	}
 
 }

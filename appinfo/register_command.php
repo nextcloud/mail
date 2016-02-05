@@ -9,10 +9,10 @@
  * @author Christoph Wurst <christoph@winzerhof-wurst.at>
  * @copyright Christoph Wurst 2016
  */
-
-use OC;
 use OCA\Mail\Command\CreateAccount;
 
 $accountService = OC::$server->query('OCA\Mail\Service\AccountService');
+$crypto = OC::$server->getCrypto();
+
 /** @var Symfony\Component\Console\Application $application */
-$application->add(new CreateAccount($accountService));
+$application->add(new CreateAccount($accountService, $crypto));
