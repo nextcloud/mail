@@ -285,10 +285,10 @@ define(function(require) {
 				},
 				onError: function(error, textStatus) {
 					if (textStatus !== 'abort') {
-						var app = require('app');
+						var state = require('state');
 						// Set the old folder as being active
-						app.UI.setFolderActive(app.State.currentAccountId, app.State.currentFolderId);
-						app.UI.showError(t('mail', 'Error while loading messages.'));
+						setFolderActive(state.currentAccountId, state.currentFolderId);
+						showError(t('mail', 'Error while loading messages.'));
 					}
 				},
 				cache: true
