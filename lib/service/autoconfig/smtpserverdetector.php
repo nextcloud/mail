@@ -25,8 +25,8 @@ class SmtpServerDetector {
 	private $testSmtp;
 
 	/**
-	 * @param \OCA\Mail\Service\AutoConfig\MxRecord $mxRecord
-	 * @param \OCA\Mail\Service\AutoConfig\SmtpConnectivityTester $smtpTester
+	 * @param MxRecord $mxRecord
+	 * @param SmtpConnectivityTester $smtpTester
 	 * @param bool $testSmtp
 	 */
 	public function __construct(MxRecord $mxRecord,

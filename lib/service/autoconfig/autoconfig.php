@@ -56,22 +56,22 @@ class AutoConfig {
 	 * 
 	 * @param Logger $logger
 	 * @param string $userId
-	 * @param \OCA\Mail\Service\AutoConfig\MozillaIspDb $mozillaIspDb
-	 * @param \OCA\Mail\Service\AutoConfig\MxRecord $mxRecord
-	 * @param \OCA\Mail\Service\AutoConfig\ImapConnectivityTester $imapTester
-	 * @param \OCA\Mail\Service\AutoConfig\ImapServerDetector $imapDetector
-	 * @param \OCA\Mail\Service\AutoConfig\SmtpConnectivityTester $smtpTester
-	 * @param \OCA\Mail\Service\AutoConfig\SmtpServerDetector $smtpDetector
-	 * @param \OCA\Mail\Service\AutoConfig\ImapConnector $imapConnector
+	 * @param MozillaIspDb $mozillaIspDb
+	 * @param MxRecord $mxRecord
+	 * @param ImapConnectivityTester $imapTester
+	 * @param ImapServerDetector $imapDetector
+	 * @param SmtpConnectivityTester $smtpTester
+	 * @param SmtpServerDetector $smtpDetector
+	 * @param ImapConnector $imapConnector
 	 * @param ICrypto $crypto
 	 */
-	public function __construct(Logger $logger, $userId,
+	public function __construct(Logger $logger, $UserId,
 		MozillaIspDb $mozillaIspDb, MxRecord $mxRecord,
 		ImapConnectivityTester $imapTester, ImapServerDetector $imapDetector,
 		SmtpConnectivityTester $smtpTester, SmtpServerDetector $smtpDetector,
 		ImapConnector $imapConnector, ICrypto $crypto) {
 		$this->logger = $logger;
-		$this->userId = $userId;
+		$this->userId = $UserId;
 		$this->crypto = $crypto;
 		$this->mozillaIspDb = $mozillaIspDb;
 		$this->mxRecord = $mxRecord;

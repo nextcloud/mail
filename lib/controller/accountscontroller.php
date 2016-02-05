@@ -33,6 +33,7 @@ use OCA\Mail\Model\ReplyMessage;
 use OCA\Mail\Service\AccountService;
 use OCA\Mail\Service\AutoConfig\AutoConfig;
 use OCA\Mail\Service\ContactsIntegration;
+use OCA\Mail\Service\Logger;
 use OCA\Mail\Service\UnifiedAccount;
 use OCP\AppFramework\Controller;
 use OCP\AppFramework\Db\DoesNotExistException;
@@ -42,6 +43,7 @@ use OCP\AppFramework\Http;
 use OCP\Files\File;
 use OCP\IL10N;
 use OCP\ILogger;
+use OCP\IRequest;
 use OCP\Security\ICrypto;
 
 class AccountsController extends Controller {
@@ -72,30 +74,30 @@ class AccountsController extends Controller {
 
 	/**
 	 * @param string $appName
-	 * @param \OCP\IRequest $request
-	 * @param $accountService
-	 * @param $currentUserId
+	 * @param IRequest $request
+	 * @param AccountService $accountService
+	 * @param $UserId
 	 * @param $userFolder
-	 * @param $contactsIntegration
-	 * @param $autoConfig
-	 * @param $logger
+	 * @param ContactsIntegration $contactsIntegration
+	 * @param AutoConfig $autoConfig
+	 * @param Logger $logger
 	 * @param IL10N $l10n
 	 * @param ICrypto $crypto
 	 */
 	public function __construct($appName,
-		$request,
-		$accountService,
-		$currentUserId,
+		IRequest $request,
+		AccountService $accountService,
+		$UserId,
 		$userFolder,
-		$contactsIntegration,
-		$autoConfig,
-		$logger,
+		ContactsIntegration $contactsIntegration,
+		AutoConfig $autoConfig,
+		Logger $logger,
 		IL10N $l10n,
 		ICrypto $crypto
 	) {
 		parent::__construct($appName, $request);
 		$this->accountService = $accountService;
-		$this->currentUserId = $currentUserId;
+		$this->currentUserId = $UserId;
 		$this->userFolder = $userFolder;
 		$this->contactsIntegration = $contactsIntegration;
 		$this->autoConfig = $autoConfig;
