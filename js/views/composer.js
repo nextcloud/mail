@@ -15,6 +15,7 @@ define(function(require) {
 	var Handlebars = require('handlebars');
 	var $ = require('jquery');
 	var OC = require('OC');
+	var Radio = require('radio');
 	var Attachments = require('models/attachments');
 	var AttachmentsView = require('views/attachments');
 	var ComposerTemplate = require('text!templates/composer.html');
@@ -302,8 +303,8 @@ define(function(require) {
 					_this.attachments.reset();
 					if (_this.draftUID !== null) {
 						// the sent message was a draft
-						if (!_.isUndefined(require('ui').messageView)) {
-							require('ui').messageView.collection.remove({id: _this.draftUID});
+						if (!_.isUndefined(Radio.ui.request('messagesview:collection'))) {
+							Radio.ui.request('messagesview:collection').remove({id: _this.draftUID});
 						}
 						_this.draftUID = null;
 					}
@@ -414,7 +415,7 @@ define(function(require) {
 				}).autocomplete({
 					source: function(request, response) {
 						$.getJSON(
-							OC.generateUrl('/apps/mail/accounts/autoComplete'),
+							OC.generateUrl('/apps/mail/autoComplete'),
 							{
 								term: extractLast(request.term)
 							}, response);

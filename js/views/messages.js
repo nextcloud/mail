@@ -35,10 +35,15 @@ define(function(require) {
 			this.collection = new MessageCollection();
 			this.collection.on('change:flags', this.changeFlags, this);
 
+			var _this = this;
+			Radio.ui.reply('messagesview:collection', function() {
+				return _this.collection;
+			});
 			this.listenTo(Radio.ui, 'messagesview:messages:update', this.loadNew);
 			this.listenTo(Radio.ui, 'messagesview:messages:reset', this.reset);
-			this.listenTo(Radio.ui, 'messagesview:messages:add', this.addMessage);
+			this.listenTo(Radio.ui, 'messagesview:messages:add', this.addMessages);
 			this.listenTo(Radio.ui, 'messagesview:messageflag:set', this.setMessageFlag);
+			this.listenTo(Radio.ui, 'messagesview:filter', this.filterCurrentMailbox);
 			this.listenTo(Radio.ui, 'messagesview:filter:clear', this.clearFilter);
 			this.listenTo(Radio.ui, 'messagesview:message:setactive', this.setActiveMessage);
 		},
@@ -172,7 +177,7 @@ define(function(require) {
 					}
 				});
 		},
-		addMessage: function(data) {
+		addMessages: function(data) {
 			this.collection.add(data);
 		},
 		reset: function() {

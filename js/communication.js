@@ -13,6 +13,7 @@ define(function(require) {
 
 	var $ = require('jquery');
 	var OC = require('OC');
+	var Radio = require('radio');
 
 	var messageListXhr = null;
 
@@ -149,7 +150,7 @@ define(function(require) {
 			success: function(data) {
 				if (!_.isNull(options.messageId)) {
 					// Reply -> flag message as replied
-					require('ui').messageView.setMessageFlag(options.messageId, 'answered', true);
+					Radio.ui.trigger('messagesview:messageflag:set', options.messageId, 'answered', true);
 				}
 
 				options.success(data);
@@ -227,10 +228,11 @@ define(function(require) {
 				success: function(data) {
 					if (options.draftUID !== null) {
 						// update UID in message list
-						var message = require('ui').messageView.collection.findWhere({id: options.draftUID});
+						var collection = Radio.ui.request('messagesview:collection');
+						var message = collection.findWhere({id: options.draftUID});
 						if (message) {
 							message.set({id: data.uid});
-							require('ui').messageView.collection.set([message], {remove: false});
+							collection.set([message], {remove: false});
 						}
 					}
 					options.success(data);

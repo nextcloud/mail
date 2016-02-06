@@ -131,8 +131,7 @@ define(function(require) {
 							// reload if current selected folder has changed
 							if (require('state').currentAccountId === f.accountId &&
 								require('state').currentFolderId === f.id) {
-								require(
-									'ui').messageView.collection.add(
+								Radio.ui.request('messagesview:collection').add(
 									f.messages);
 							}
 

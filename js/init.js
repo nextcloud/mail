@@ -17,12 +17,14 @@ define(function(require) {
 	var OC = require('OC');
 	var Marionette = require('marionette');
 	var Handlebars = require('handlebars');
+	var Mail = require('app');
 
 	setUpMarionette();
 	registerProtocolHandler();
 	requestNotificationPermissions();
 	setUpSearch();
 
+	Mail.start();
 	require('ui').initializeInterface();
 
 	function setUpMarionette() {
