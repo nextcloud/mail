@@ -15,6 +15,7 @@ define(function(require) {
 	var _ = require('underscore');
 	var Marionette = require('marionette');
 	var Handlebars = require('handlebars');
+	var Radio = require('radio');
 	var SetupTemplate = require('text!templates/setup.html');
 
 	return Marionette.ItemView.extend({
@@ -126,12 +127,12 @@ define(function(require) {
 			}
 
 			this.loading = true;
-			var creatingAccount = require('app').request('account:create', config);
+			var creatingAccount = Radio.account.request('create', config);
 
 			$.when(creatingAccount).done(function() {
-				Mail.trigger('ui:menu:show');
+				Radio.ui.trigger('menu:show');
 				// reload accounts
-				Mail.trigger('accounts:load');
+				Radio.account.trigger('load');
 			});
 
 			$.when(creatingAccount).fail(function(error) {

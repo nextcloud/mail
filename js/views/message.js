@@ -14,6 +14,7 @@ define(function(require) {
 	var Handlebars = require('handlebars');
 	var Marionette = require('marionette');
 	var OC = require('OC');
+	var Radio = require('radio');
 	var MessageTemplate = require('text!templates/message-list-item.html');
 
 	return Marionette.ItemView.extend({
@@ -73,7 +74,7 @@ define(function(require) {
 			var accountId = require('state').currentAccountId;
 			var folderId = require('state').currentFolderId;
 			var messageId = this.model.id; //TODO: backbone property
-			require('app').trigger('message:load', accountId, folderId, messageId, {
+			Radio.ui.trigger('message:load', accountId, folderId, messageId, {
 				force: true
 			});
 		},
@@ -101,7 +102,7 @@ define(function(require) {
 						var accountId = require('state').currentAccountId;
 						var folderId = require('state').currentFolderId;
 						var messageId = nextMessage.id; //TODO: backbone property
-						require('app').trigger('message:load', accountId, folderId, messageId);
+						Radio.ui.trigger('message:load', accountId, folderId, messageId);
 					}
 				}
 				// manually trigger mouseover event for current mouse position

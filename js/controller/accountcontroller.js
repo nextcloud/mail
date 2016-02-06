@@ -12,9 +12,12 @@ define(function(require) {
 	'use strict';
 
 	var $ = require('jquery');
+	var Radio = require('radio');
+
+	Radio.account.on('load', loadAccounts);
 
 	function loadAccounts() {
-		var fetchingAccounts = require('app').request('account:entities');
+		var fetchingAccounts = Radio.account.request('entities');
 		var UI = require('ui');
 
 		$.when(fetchingAccounts).done(function(accounts) {
@@ -23,7 +26,7 @@ define(function(require) {
 			} else {
 				var firstAccountId = accounts.at(0).get('accountId');
 				accounts.each(function(a) {
-					require('app').trigger('folder:init', a.get('accountId'), firstAccountId);
+					Radio.folder.trigger('init', a.get('accountId'), firstAccountId);
 				});
 			}
 		});

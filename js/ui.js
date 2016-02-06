@@ -17,12 +17,21 @@ define(function(require) {
 	var Handlebars = require('handlebars');
 	var Marionette = require('marionette');
 	var OC = require('OC');
+	var Radio = require('radio');
 	var MessagesView = require('views/messages');
 	var NavigationAccountsView = require('views/navigation-accounts');
 	var ComposerView = require('views/composer');
 
 	require('views/helper');
 	require('settings');
+
+	Radio.ui.on('menu:show', showMenu);
+	Radio.ui.on('menu:hide', hideMenu);
+	Radio.ui.on('folder:load', loadFolder);
+	Radio.ui.on('message:load', function(accountId, folderId, messageId, options) {
+		//FIXME: don't rely on global state vars
+		loadMessage(messageId, options);
+	});
 
 	var messageView = null;
 	var composer = null;
@@ -161,7 +170,7 @@ define(function(require) {
 		});
 
 		setInterval(require('background').checkForNotifications, 5 * 60 * 1000);
-		require('app').trigger('accounts:load');
+		Radio.account.trigger('load');
 	}
 
 	function showError(message) {
@@ -688,7 +697,7 @@ define(function(require) {
 		$('#mail_new_message').addClass('hidden');
 		$('#app-navigation').removeClass('icon-loading');
 
-		require('app').trigger('ui:menu:hide');
+		Radio.ui.trigger('menu:hide');
 
 		$('#setup').removeClass('hidden');
 		// don't show New Message button on Add account screen

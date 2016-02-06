@@ -20,6 +20,7 @@
 			 * Libraries
 			 */
 			backbone: 'vendor/backbone/backbone',
+			'backbone.radio': 'vendor/backbone.radio/build/backbone.radio',
 			domready: 'vendor/domready/ready.min',
 			handlebars: 'vendor/handlebars/handlebars',
 			marionette: 'vendor/backbone.marionette/lib/backbone.marionette',

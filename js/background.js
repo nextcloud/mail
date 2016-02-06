@@ -14,6 +14,7 @@ define(function(require) {
 	'use strict';
 
 	var OC = require('OC');
+	var Radio = require('radio');
 
 	/*jshint maxparams: 6 */
 	function showNotification(title, body, tag, icon, accountId, folderId) {
@@ -35,7 +36,7 @@ define(function(require) {
 			}
 		);
 		notification.onclick = function() {
-			require('app').trigger('folder:load', accountId, folderId, false);
+			Radio.ui.trigger('folder:load', accountId, folderId, false);
 			window.focus();
 		};
 		setTimeout(function() {

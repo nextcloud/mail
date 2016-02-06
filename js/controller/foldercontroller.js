@@ -13,6 +13,9 @@ define(function(require) {
 
 	var $ = require('jquery');
 	var _ = require('underscore');
+	var Radio = require('radio');
+
+	Radio.folder.on('init', loadFolder);
 
 	function urldecode(str) {
 		return decodeURIComponent((str + '').replace(/\+/g, '%20'));
@@ -66,7 +69,7 @@ define(function(require) {
 	}
 
 	function loadFolder(accountId, activeId) {
-		var fetchingFolders = require('app').request('folder:entities', accountId);
+		var fetchingFolders = Radio.folder.request('entities', accountId);
 		var UI = require('ui');
 
 		// TODO: create loading-view
@@ -86,7 +89,7 @@ define(function(require) {
 			if (accountId === activeId) {
 				var folderId = accountFolders.folders[0].id;
 
-				require('app').trigger('folder:load', accountId, folderId, false);
+				Radio.ui.trigger('folder:load', accountId, folderId, false);
 
 				// Open composer if 'mailto' url-param is set
 				handleMailTo();
