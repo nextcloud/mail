@@ -40,6 +40,7 @@
 	});
 
 	require([
+		'app',
 		'init',
 		'notification'
 	]);

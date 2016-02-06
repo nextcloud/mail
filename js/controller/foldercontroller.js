@@ -70,7 +70,6 @@ define(function(require) {
 
 	function loadFolder(accountId, activeId) {
 		var fetchingFolders = Radio.folder.request('entities', accountId);
-		var UI = require('ui');
 
 		// TODO: create loading-view
 		$('#mail-messages').removeClass('hidden').addClass('icon-loading');
@@ -79,7 +78,7 @@ define(function(require) {
 		$('#folders').removeClass('hidden');
 		$('#setup').addClass('hidden');
 
-		UI.clearMessages();
+		Radio.ui.trigger('messagesview:messages:reset');
 		$('#app-navigation').addClass('icon-loading');
 
 		$.when(fetchingFolders).done(function(accountFolders) {
@@ -95,7 +94,7 @@ define(function(require) {
 				handleMailTo();
 
 				// Save current folder
-				UI.setFolderActive(accountId, folderId);
+				Radio.folder.trigger('setactive', accountId, folderId);
 				require('state').currentAccountId = accountId;
 				require('state').currentFolderId = folderId;
 

@@ -13,15 +13,20 @@
 define(function(require) {
 	'use strict';
 
+	var $ = require('jquery');
 	var Marionette = require('marionette');
 	var AccountView = require('views/account');
 	var AccountCollection = require('models/accountcollection');
+	var Radio = require('radio');
 
 	return Marionette.CollectionView.extend({
 		collection: null,
 		childView: AccountView,
 		initialize: function() {
 			this.collection = new AccountCollection();
+
+			this.listenTo(Radio.ui, 'folder:changed', this.onFolderChanged);
+			this.listenTo(Radio.folder, 'setactive', this.setFolderActive);
 		},
 		getFolderById: function(accountId, folderId) {
 			var activeAccount = accountId || require('state').currentAccountId;
@@ -75,6 +80,31 @@ define(function(require) {
 					' - Mail - ' + oc_defaults.title;
 				// jscs:enable requireCamelCaseOrUpperCaseIdentifiers
 			}
+		},
+		setFolderActive: function(accountId, folderId) {
+			Radio.ui.trigger('messagesview:filter:clear');
+
+			// disable all other folders for all accounts
+			require('state').accounts.each(function(account) {
+				var localAccount = require('state').folderView.collection.get(account.get('accountId'));
+				if (_.isUndefined(localAccount)) {
+					return;
+				}
+				var folders = localAccount.get('folders');
+				_.each(folders.models, function(folder) {
+					folders.get(folder).set('active', false);
+				});
+			});
+
+			require('state').folderView.getFolderById(accountId, folderId)
+				.set('active', true);
+		},
+		onFolderChanged: function() {
+			// Stop background message fetcher of previous folder
+			require('background').messageFetcher.restart();
+			// hide message detail view on mobile
+			// TODO: find better place for this
+			$('#mail-message').addClass('hidden-mobile');
 		}
 	});
 });

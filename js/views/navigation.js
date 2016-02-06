@@ -23,16 +23,20 @@ define(function(require) {
 		initialize: function() {
 			this.bindUIElements();
 
+			this.listenTo(Radio.ui, 'navigation:show', this.show);
 			this.listenTo(Radio.ui, 'navigation:hide', this.hide);
 		},
 		render: function() {
 			// This view doesn't need rendering
 		},
+		show: function() {
+			this.$el.show();
+			$('#app-navigation-toggle').css('background-image', '');
+		},
 		hide: function() {
 			// TODO: move if or rename function
 			if (require('state').accounts.length === 0) {
 				this.$el.hide();
-				// TODO: move
 				$('#app-navigation-toggle').css('background-image', 'none');
 			}
 		}

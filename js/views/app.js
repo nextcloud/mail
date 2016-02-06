@@ -36,6 +36,7 @@ define(function(require) {
 
 			// Global event handlers:
 			this.listenTo(Radio.notification, 'favicon:change', this.changeFavicon);
+			this.listenTo(Radio.ui, 'notification:show', this.showNotification);
 			this.listenTo(Radio.ui, 'error:show', this.showError);
 			this.listenTo(Radio.ui, 'content:hide', this.hideContent);
 
@@ -117,6 +118,9 @@ define(function(require) {
 		},
 		changeFavicon: function(src) {
 			$('link[rel="shortcut icon"]').attr('href', src);
+		},
+		showNotification: function(message) {
+			OC.Notification.showTemporary(message);
 		},
 		showError: function(message) {
 			OC.Notification.showTemporary(message);

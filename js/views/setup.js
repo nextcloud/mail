@@ -130,7 +130,7 @@ define(function(require) {
 			var creatingAccount = Radio.account.request('create', config);
 
 			$.when(creatingAccount).done(function() {
-				Radio.ui.trigger('menu:show');
+				Radio.ui.trigger('navigation:show');
 				// reload accounts
 				Radio.account.trigger('load');
 			});

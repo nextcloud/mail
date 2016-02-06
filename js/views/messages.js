@@ -11,6 +11,7 @@
 define(function(require) {
 	'use strict';
 
+	var $ = require('jquery');
 	var Backbone = require('backbone');
 	var Handlebars = require('handlebars');
 	var Radio = require('radio');
@@ -85,6 +86,9 @@ define(function(require) {
 				}
 			}
 
+			require('state').currentMessageId = messageId;
+			require('state').folderView.updateTitle();
+
 		},
 		loadNew: function() {
 			if (!require('state').currentAccountId) {
@@ -146,13 +150,14 @@ define(function(require) {
 
 						$('#app-content').removeClass('icon-loading');
 
-						require('ui').setMessageActive(require('state').currentMessageId);
+						Radio.ui.trigger('messagesview:message:setactive', require('state').currentMessageId);
 					},
 					onError: function() {
 						Radio.ui.trigger('error:show', t('mail', 'Error while loading messages.'));
 						// Set the old folder as being active
-						require('ui').setFolderActive(require('state').currentAccountId,
-							require('state').currentFolderId);
+						var accountId = require('state').currentAccountId;
+						var folderId = require('state').currentFolderId;
+						Radio.folder.trigger('setactive', accountId, folderId);
 					},
 					onComplete: function() {
 						// Remove loading feedback again
@@ -172,6 +177,13 @@ define(function(require) {
 		},
 		reset: function() {
 			this.collection.reset();
+
+			$('#messages-loading').fadeIn();
+
+			// TODO: add event
+			$('#mail-message')
+				.html('')
+				.addClass('icon-loading');
 		}
 	});
 });
