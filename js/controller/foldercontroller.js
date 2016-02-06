@@ -104,7 +104,7 @@ define(function(require) {
 			}
 		});
 		$.when(fetchingFolders).fail(function() {
-			UI.showError(t('mail', 'Error while loading the selected account.'));
+			Radio.ui.trigger('error:show', t('mail', 'Error while loading the selected account.'));
 		});
 	}
 

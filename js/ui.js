@@ -23,10 +23,8 @@ define(function(require) {
 	var ComposerView = require('views/composer');
 
 	require('views/helper');
-	require('settings');
 
 	Radio.ui.on('menu:show', showMenu);
-	Radio.ui.on('menu:hide', hideMenu);
 	Radio.ui.on('folder:load', loadFolder);
 	Radio.ui.on('message:load', function(accountId, folderId, messageId, options) {
 		//FIXME: don't rely on global state vars
@@ -73,10 +71,6 @@ define(function(require) {
 		$('.mail-message-attachments .mail-attached-image').each(function() {
 			$(this).css('max-width', $('.mail-message-body').width());
 		});
-	}
-
-	function changeFavicon(src) {
-		$('link[rel="shortcut icon"]').attr('href', src);
 	}
 
 	function initializeInterface() {
@@ -176,18 +170,6 @@ define(function(require) {
 		Radio.account.trigger('load');
 	}
 
-	function showError(message) {
-		OC.Notification.showTemporary(message);
-		$('#app-navigation')
-			.removeClass('icon-loading');
-		$('#app-content')
-			.removeClass('icon-loading');
-		$('#mail-message')
-			.removeClass('icon-loading');
-		$('#mail_message')
-			.removeClass('icon-loading');
-	}
-
 	function clearMessages() {
 		messageView.collection.reset();
 		$('#messages-loading').fadeIn();
@@ -197,16 +179,7 @@ define(function(require) {
 			.addClass('icon-loading');
 	}
 
-	function hideMenu() {
-		$('.message-composer').addClass('hidden');
-		if (require('state').accounts.length === 0) {
-			$('#app-navigation').hide();
-			$('#app-navigation-toggle').css('background-image', 'none');
-		}
-	}
-
 	function showMenu() {
-		$('.message-composer').removeClass('hidden');
 		$('#app-navigation').show();
 		$('#app-navigation-toggle').css('background-image', '');
 	}
@@ -300,7 +273,7 @@ define(function(require) {
 						var state = require('state');
 						// Set the old folder as being active
 						setFolderActive(state.currentAccountId, state.currentFolderId);
-						showError(t('mail', 'Error while loading messages.'));
+						Radio.ui.trigger('error:show', t('mail', 'Error while loading messages.'));
 					}
 				},
 				cache: true
@@ -692,32 +665,13 @@ define(function(require) {
 		require('state').folderView.updateTitle();
 	}
 
-	function addAccount() {
-		Radio.ui.trigger('composer:leave');
-
-		$('#mail-messages').addClass('hidden');
-		$('#mail-message').addClass('hidden');
-		$('#mail_new_message').addClass('hidden');
-		$('#app-navigation').removeClass('icon-loading');
-
-		Radio.ui.trigger('menu:hide');
-
-		$('#setup').removeClass('hidden');
-		// don't show New Message button on Add account screen
-		$('#mail_new_message').hide();
-	}
-
 	function showDraftSavedNotification() {
 		OC.Notification.showTemporary(t('mail', 'Draft saved!'));
 	}
 
 	var view = {
-		changeFavicon: changeFavicon,
 		initializeInterface: initializeInterface,
-		showError: showError,
 		clearMessages: clearMessages,
-		hideMenu: hideMenu,
-		showMenu: showMenu,
 		addMessages: addMessages,
 		loadFolder: loadFolder,
 		saveAttachment: saveAttachment,
@@ -725,8 +679,7 @@ define(function(require) {
 		openForwardComposer: openForwardComposer,
 		loadMessage: loadMessage,
 		setFolderActive: setFolderActive,
-		setMessageActive: setMessageActive,
-		addAccount: addAccount
+		setMessageActive: setMessageActive
 	};
 
 	Object.defineProperties(view, {

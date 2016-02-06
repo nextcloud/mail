@@ -12,6 +12,7 @@ define(function(require) {
 	'use strict';
 
 	var Marionette = require('marionette');
+	var Radio = require('radio');
 
 	return Marionette.LayoutView.extend({
 		el: $('#app-navigation'),
@@ -21,9 +22,19 @@ define(function(require) {
 		},
 		initialize: function() {
 			this.bindUIElements();
+
+			this.listenTo(Radio.ui, 'navigation:hide', this.hide);
 		},
 		render: function() {
 			// This view doesn't need rendering
+		},
+		hide: function() {
+			// TODO: move if or rename function
+			if (require('state').accounts.length === 0) {
+				this.$el.hide();
+				// TODO: move
+				$('#app-navigation-toggle').css('background-image', 'none');
+			}
 		}
 	});
 });

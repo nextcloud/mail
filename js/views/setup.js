@@ -59,6 +59,8 @@ define(function(require) {
 			});
 			this.displayName = options.displayName;
 			this.email = options.email;
+
+			this.listenTo(Radio.ui, 'setup:show', this.show);
 		},
 		onShow: function() {
 			this.ui.manualInputs.hide();
@@ -88,8 +90,6 @@ define(function(require) {
 		onSubmit: function(e) {
 			e.preventDefault();
 			e.stopPropagation();
-
-			var Mail = require('app');
 
 			this.ui.inputs.prop('disabled', true);
 			this.ui.submitButton.val(t('mail', 'Connecting'));
@@ -136,7 +136,7 @@ define(function(require) {
 			});
 
 			$.when(creatingAccount).fail(function(error) {
-				Mail.UI.showError(error);
+				Radio.ui.trigger('error:show', error);
 			});
 
 			var _this = this;
@@ -175,6 +175,9 @@ define(function(require) {
 					this.ui.smtpPort.val(smtpDefaultSecurePort);
 					break;
 			}
+		},
+		show: function() {
+			this.$el.closest('#setup').removeClass('hidden');
 		}
 	});
 });

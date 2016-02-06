@@ -99,7 +99,7 @@ define(function(require) {
 					_.each(jsondata, function(f) {
 						// send notification
 						if (f.newUnReadCounter > 0) {
-							require('ui').changeFavicon(OC.filePath('mail', 'img', 'favicon-notification.png'));
+							Radio.notification.trigger('favicon:change', OC.filePath('mail', 'img', 'favicon-notification.png'));
 							// only show one notification
 							if (require('state').accounts.length === 1 || account.get('accountId') === -1) {
 								showMailNotification(localAccount.get('email'), f);

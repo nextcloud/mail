@@ -14,6 +14,7 @@ define(function(require) {
 	var Radio = require('backbone.radio');
 
 	var uiChannel = Radio.channel('ui');
+	var notificationChannel = Radio.channel('notification');
 	var stateChannel = Radio.channel('state');
 	var accountChannel = Radio.channel('account');
 	var folderChannel = Radio.channel('folder');
@@ -21,6 +22,7 @@ define(function(require) {
 
 	var channels = {
 		ui: uiChannel,
+		notification: notificationChannel,
 		state: stateChannel,
 		account: accountChannel,
 		folder: folderChannel,

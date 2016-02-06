@@ -13,6 +13,7 @@ define(function(require) {
 
 	var Backbone = require('backbone');
 	var Handlebars = require('handlebars');
+	var Radio = require('radio');
 	var MessageCollection = require('models/messagecollection');
 	var MessageView = require('views/message');
 	var MessageListTemplate = require('text!templates/message-list.html');
@@ -141,7 +142,7 @@ define(function(require) {
 						require('ui').setMessageActive(require('state').currentMessageId);
 					},
 					onError: function() {
-						require('ui').showError(t('mail', 'Error while loading messages.'));
+						Radio.ui.trigger('error:show', t('mail', 'Error while loading messages.'));
 						// Set the old folder as being active
 						require('ui').setFolderActive(require('state').currentAccountId,
 							require('state').currentFolderId);

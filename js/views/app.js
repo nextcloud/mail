@@ -14,14 +14,9 @@ define(function(require) {
 	var Marionette = require('marionette');
 	var $ = require('jquery');
 	var OC = require('OC');
+	var Radio = require('radio');
 
-	// Load controllers/services
-	require('controller/accountcontroller');
-	require('controller/foldercontroller');
-	require('service/accountservice');
-	require('service/folderservice');
-
-	return Marionette.LayoutView.extend({
+	var AppView = Marionette.LayoutView.extend({
 		el: $('#app'),
 		regions: {
 			navigation: '#app-navigation',
@@ -35,6 +30,9 @@ define(function(require) {
 			this.bindUIElements();
 
 			// Global event handlers:
+			this.listenTo(Radio.notification, 'favicon:change', this.changeFavicon);
+			this.listenTo(Radio.ui, 'error:show', this.showError);
+			this.listenTo(Radio.ui, 'content:hide', this.hideContent);
 
 			// Hide notification favicon when switching back from
 			// another browser tab
@@ -46,7 +44,7 @@ define(function(require) {
 		},
 		onDocumentShow: function(e) {
 			e.preventDefault();
-			require('ui').changeFavicon(OC.filePath('mail', 'img', 'favicon.png'));
+			Radio.notification.trigger('favicon:change', OC.filePath('mail', 'img', 'favicon.png'));
 		},
 		onKeyUp: function(e) {
 			// Define which objects to check for the event properties.
@@ -75,6 +73,28 @@ define(function(require) {
 		},
 		render: function() {
 			// This view doesn't need rendering
+		},
+		changeFavicon: function(src) {
+			$('link[rel="shortcut icon"]').attr('href', src);
+		},
+		showError: function(message) {
+			OC.Notification.showTemporary(message);
+			$('#app-navigation')
+				.removeClass('icon-loading');
+			$('#app-content')
+				.removeClass('icon-loading');
+			$('#mail-message')
+				.removeClass('icon-loading');
+			$('#mail_message')
+				.removeClass('icon-loading');
+		},
+		hideContent: function() {
+			$('#mail-messages').addClass('hidden');
+			$('#mail-message').addClass('hidden');
+			$('#mail_new_message').addClass('hidden');
+			$('#app-navigation').removeClass('icon-loading');
 		}
 	});
+
+	return AppView;
 });

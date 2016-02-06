@@ -17,6 +17,11 @@ define(function(require) {
 	var NavigationView = require('views/navigation');
 	var SetupView = require('views/setup');
 
+	// Load controllers/services
+	require('controller/accountcontroller');
+	require('controller/foldercontroller');
+	require('service/accountservice');
+	require('service/folderservice');
 	require('notification');
 
 	var Mail = new Marionette.Application();
