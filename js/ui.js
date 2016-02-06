@@ -32,45 +32,48 @@ define(function(require) {
 		//FIXME: don't rely on global state vars
 		loadMessage(messageId, options);
 	});
+	Radio.ui.on('composer:leave', onComposerLeave);
+	Radio.ui.on('folder:changed', onFolderChanged);
+	Radio.ui.on('window:resize', onWindowResize);
 
 	var messageView = null;
 	var composer = null;
 	var composerVisible = false;
 
-	var Events = {
-		onComposerLeave: function() {
-			// Trigger only once
-			if (composerVisible === true) {
-				composerVisible = false;
+	function onComposerLeave() {
+		// Trigger only once
+		if (composerVisible === true) {
+			composerVisible = false;
 
-				if (composer && composer.hasData === true) {
-					if (composer.hasUnsavedChanges === true) {
-						composer.saveDraft(function() {
-							showDraftSavedNotification();
-						});
-					} else {
+			if (composer && composer.hasData === true) {
+				if (composer.hasUnsavedChanges === true) {
+					composer.saveDraft(function() {
 						showDraftSavedNotification();
-					}
+					});
+				} else {
+					showDraftSavedNotification();
 				}
 			}
-		},
-		onFolderChanged: function() {
-			// Stop background message fetcher of previous folder
-			require('background').messageFetcher.restart();
-			// hide message detail view on mobile
-			$('#mail-message').addClass('hidden-mobile');
-		},
-		onWindowResize: function() {
-			// Resize iframe
-			var iframe = $('#mail-content iframe');
-			iframe.height(iframe.contents().find('html').height() + 20);
-
-			// resize width of attached images
-			$('.mail-message-attachments .mail-attached-image').each(function() {
-				$(this).css('max-width', $('.mail-message-body').width());
-			});
 		}
-	};
+	}
+
+	function onFolderChanged() {
+		// Stop background message fetcher of previous folder
+		require('background').messageFetcher.restart();
+		// hide message detail view on mobile
+		$('#mail-message').addClass('hidden-mobile');
+	}
+
+	function onWindowResize() {
+		// Resize iframe
+		var iframe = $('#mail-content iframe');
+		iframe.height(iframe.contents().find('html').height() + 20);
+
+		// resize width of attached images
+		$('.mail-message-attachments .mail-attached-image').each(function() {
+			$(this).css('max-width', $('.mail-message-body').width());
+		});
+	}
 
 	function changeFavicon(src) {
 		$('link[rel="shortcut icon"]').attr('href', src);
@@ -78,7 +81,7 @@ define(function(require) {
 
 	function initializeInterface() {
 		// Register UI events
-		window.addEventListener('resize', Events.onWindowResize);
+		window.addEventListener('resize', Radio.ui.on('window:resize'));
 
 		Marionette.TemplateCache.prototype.compileTemplate = function(rawTemplate) {
 			return Handlebars.compile(rawTemplate);
@@ -213,7 +216,7 @@ define(function(require) {
 	}
 
 	function loadFolder(accountId, folderId, noSelect) {
-		Events.onComposerLeave();
+		Radio.ui.trigger('composer:leave');
 
 		if (require('state').messagesLoading !== null) {
 			require('state').messagesLoading.abort();
@@ -471,7 +474,7 @@ define(function(require) {
 			return;
 		}
 
-		Events.onComposerLeave();
+		Radio.ui.trigger('composer:leave');
 
 		if (!options.force && composerVisible) {
 			return;
@@ -690,7 +693,7 @@ define(function(require) {
 	}
 
 	function addAccount() {
-		Events.onComposerLeave();
+		Radio.ui.trigger('composer:leave');
 
 		$('#mail-messages').addClass('hidden');
 		$('#mail-message').addClass('hidden');
@@ -727,11 +730,6 @@ define(function(require) {
 	};
 
 	Object.defineProperties(view, {
-		Events: {
-			get: function() {
-				return Events;
-			}
-		},
 		messageView: {
 			get: function() {
 				return messageView;

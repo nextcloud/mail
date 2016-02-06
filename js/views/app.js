@@ -15,6 +15,12 @@ define(function(require) {
 	var $ = require('jquery');
 	var OC = require('OC');
 
+	// Load controllers/services
+	require('controller/accountcontroller');
+	require('controller/foldercontroller');
+	require('service/accountservice');
+	require('service/folderservice');
+
 	return Marionette.LayoutView.extend({
 		el: $('#app'),
 		regions: {

@@ -11,6 +11,7 @@
 define(function(require) {
 	'use strict';
 
+	var Radio = require('radio');
 	var AccountCollection = require('models/accountcollection');
 
 	var state = {};
@@ -49,7 +50,7 @@ define(function(require) {
 				var oldId = currentFolderId;
 				currentFolderId = newId;
 				if (newId !== oldId) {
-					require('ui').Events.onFolderChanged();
+					Radio.ui.trigger('folder:changed');
 				}
 			}
 		},
