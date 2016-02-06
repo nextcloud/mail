@@ -41,14 +41,14 @@ class FoldersController extends Controller {
 
 	/**
 	 * @param string $appName
-	 * @param \OCP\IRequest $request
-	 * @param $accountService
-	 * @param $currentUserId
+	 * @param IRequest $request
+	 * @param AccountService $accountService
+	 * @param $UserId
 	 */
-	public function __construct($appName, IRequest $request, AccountService $accountService, $currentUserId) {
+	public function __construct($appName, IRequest $request, AccountService $accountService, $UserId) {
 		parent::__construct($appName, $request);
 		$this->accountService = $accountService;
-		$this->currentUserId = $currentUserId;
+		$this->currentUserId = $UserId;
 	}
 
 	/**

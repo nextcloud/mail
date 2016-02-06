@@ -18,6 +18,7 @@ use OCA\Mail\Service\AccountService;
 use OCA\Mail\Service\ContactsIntegration;
 use OCA\Mail\Service\IAccount;
 use OCA\Mail\Service\IMailBox;
+use OCA\Mail\Service\Logger;
 use OCA\Mail\Service\UnifiedAccount;
 use OCP\AppFramework\Controller;
 use OCP\AppFramework\Db\DoesNotExistException;
@@ -26,6 +27,7 @@ use OCP\AppFramework\Http\ContentSecurityPolicy;
 use OCP\AppFramework\Http\JSONResponse;
 use OCP\AppFramework\Http\TemplateResponse;
 use OCP\IL10N;
+use OCP\IRequest;
 use OCP\Util;
 
 class MessagesController extends Controller {
@@ -65,25 +67,25 @@ class MessagesController extends Controller {
 
 	/**
 	 * @param string $appName
-	 * @param \OCP\IRequest $request
+	 * @param IRequest $request
 	 * @param AccountService $accountService
-	 * @param $currentUserId
+	 * @param $UserId
 	 * @param $userFolder
-	 * @param $contactsIntegration
-	 * @param $logger
-	 * @param $l10n
+	 * @param ContactsIntegration $contactsIntegration
+	 * @param Logger $logger
+	 * @param IL10N $l10n
 	 */
 	public function __construct($appName,
-								$request,
+								IRequest $request,
 								AccountService $accountService,
-								$currentUserId,
+								$UserId,
 								$userFolder,
-								$contactsIntegration,
-								$logger,
-								$l10n) {
+								ContactsIntegration $contactsIntegration,
+								Logger $logger,
+								IL10N $l10n) {
 		parent::__construct($appName, $request);
 		$this->accountService = $accountService;
-		$this->currentUserId = $currentUserId;
+		$this->currentUserId = $UserId;
 		$this->userFolder = $userFolder;
 		$this->contactsIntegration = $contactsIntegration;
 		$this->logger = $logger;

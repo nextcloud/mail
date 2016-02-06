@@ -24,7 +24,7 @@ class ContactsIntegration {
 	/**
 	 * @param IManager $contactsManager
 	 */
-	public function __construct($contactsManager) {
+	public function __construct(IManager $contactsManager) {
 		$this->contactsManager = $contactsManager;
 	}
 	

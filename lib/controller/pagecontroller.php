@@ -51,15 +51,15 @@ class PageController extends Controller {
 	 * @param string $appName
 	 * @param \OCP\IRequest $request
 	 * @param $mailAccountMapper
-	 * @param $currentUserId
+	 * @param $UserId
 	 */
 	public function __construct($appName, IRequest $request,
 		MailAccountMapper $mailAccountMapper, IURLGenerator $urlGenerator,
-		$currentUserId) {
+		$UserId) {
 		parent::__construct($appName, $request);
 		$this->mailAccountMapper = $mailAccountMapper;
 		$this->urlGenerator = $urlGenerator;
-		$this->currentUserId = $currentUserId;
+		$this->currentUserId = $UserId;
 	}
 
 	/**
