@@ -33,6 +33,13 @@ define(function(require) {
 		initialize: function() {
 			this.collection = new MessageCollection();
 			this.collection.on('change:flags', this.changeFlags, this);
+
+			this.listenTo(Radio.ui, 'messagesview:messages:update', this.loadNew);
+			this.listenTo(Radio.ui, 'messagesview:messages:reset', this.reset);
+			this.listenTo(Radio.ui, 'messagesview:messages:add', this.addMessage);
+			this.listenTo(Radio.ui, 'messagesview:messageflag:set', this.setMessageFlag);
+			this.listenTo(Radio.ui, 'messagesview:filter:clear', this.clearFilter);
+			this.listenTo(Radio.ui, 'messagesview:message:setactive', this.setActiveMessage);
 		},
 		getEmptyView: function() {
 			if (this.filterCriteria) {
@@ -159,6 +166,12 @@ define(function(require) {
 							.prop('disabled', false);
 					}
 				});
+		},
+		addMessage: function(data) {
+			this.collection.add(data);
+		},
+		reset: function() {
+			this.collection.reset();
 		}
 	});
 });

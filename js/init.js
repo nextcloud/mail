@@ -1,3 +1,5 @@
+/* global Notification, SearchProxy */
+
 /**
  * ownCloud - Mail
  *
@@ -12,13 +14,48 @@ define(function(require) {
 	'use strict';
 
 	var document = require('domready');
+	var OC = require('OC');
+	var Marionette = require('marionette');
+	var Handlebars = require('handlebars');
 
-	/**
-	 * Start the application
-	 */
-	require('app').start();
+	setUpMarionette();
+	registerProtocolHandler();
+	requestNotificationPermissions();
+	setUpSearch();
 
 	require('ui').initializeInterface();
+
+	function setUpMarionette() {
+		Marionette.TemplateCache.prototype.compileTemplate = function(rawTemplate) {
+			return Handlebars.compile(rawTemplate);
+		};
+		Marionette.ItemView.prototype.modelEvents = {'change': 'render'};
+		Marionette.CompositeView.prototype.modelEvents = {'change': 'render'};
+	}
+
+	function registerProtocolHandler() {
+		if (window.navigator.registerProtocolHandler) {
+			var url = window.location.protocol + '//' +
+				window.location.host +
+				OC.generateUrl('apps/mail/compose?uri=%s');
+			try {
+				window.navigator
+					.registerProtocolHandler('mailto', url, 'ownCloud Mail');
+			} catch (e) {
+			}
+		}
+	}
+
+	function requestNotificationPermissions() {
+		// request permissions
+		if (typeof Notification !== 'undefined') {
+			Notification.requestPermission();
+		}
+	}
+
+	function setUpSearch() {
+		SearchProxy.setFilter(require('search').filter);
+	}
 
 	/**
 	 * Detects pasted text by browser plugins, and other software.

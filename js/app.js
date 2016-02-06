@@ -13,9 +13,6 @@ define(function(require) {
 
 	var Marionette = require('marionette');
 	var AppView = require('views/app');
-	var SettingsView = require('views/settings');
-	var NavigationView = require('views/navigation');
-	var SetupView = require('views/setup');
 
 	// Load controllers/services
 	require('controller/accountcontroller');
@@ -26,24 +23,7 @@ define(function(require) {
 
 	var Mail = new Marionette.Application();
 
-	var State = require('state');
-
-	/**
-	 * Set up view
-	 */
 	Mail.view = new AppView();
-
-	Mail.on('before:start', function() {
-		// Render settings menu
-		this.view.navigation = new NavigationView();
-		this.view.navigation.settings.show(new SettingsView({
-			accounts: State.accounts
-		}));
-		this.view.setup.show(new SetupView({
-			displayName: $('#user-displayname').text(),
-			email: $('#user-email').text()
-		}));
-	});
 
 	return Mail;
 });

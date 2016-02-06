@@ -15,6 +15,11 @@ define(function(require) {
 	var $ = require('jquery');
 	var OC = require('OC');
 	var Radio = require('radio');
+	var MessagesView = require('views/messages');
+	var NavigationAccountsView = require('views/navigation-accounts');
+	var SettingsView = require('views/settings');
+	var NavigationView = require('views/navigation');
+	var SetupView = require('views/setup');
 
 	var AppView = Marionette.LayoutView.extend({
 		el: $('#app'),
@@ -41,6 +46,32 @@ define(function(require) {
 			// Listens to key strokes, and executes a function based
 			// on the key combinations.
 			$(document).keyup(this.onKeyUp);
+
+			window.addEventListener('resize', this.onWindowResize);
+
+			// Render settings menu
+			this.navigation = new NavigationView();
+			this.navigation.settings.show(new SettingsView({
+				accounts: require('state').accounts
+			}));
+			this.setup.show(new SetupView({
+				displayName: $('#user-displayname').text(),
+				email: $('#user-email').text()
+			}));
+
+			// setup messages view
+			var messageView = new MessagesView({
+				el: $('#mail-messages')
+			});
+			messageView.render();
+
+			// setup folder view
+			var accountsView = new NavigationAccountsView();
+			require('state').folderView = accountsView;
+			this.navigation.accounts.show(accountsView);
+
+			accountsView.listenTo(messageView, 'change:unseen',
+				accountsView.changeUnseen);
 		},
 		onDocumentShow: function(e) {
 			e.preventDefault();
@@ -70,6 +101,16 @@ define(function(require) {
 		onNewMessageClick: function(e) {
 			e.preventDefault();
 			require('ui').openComposer();
+		},
+		onWindowResize: function() {
+			// Resize iframe
+			var iframe = $('#mail-content iframe');
+			iframe.height(iframe.contents().find('html').height() + 20);
+
+			// resize width of attached images
+			$('.mail-message-attachments .mail-attached-image').each(function() {
+				$(this).css('max-width', $('.mail-message-body').width());
+			});
 		},
 		render: function() {
 			// This view doesn't need rendering
