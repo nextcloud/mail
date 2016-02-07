@@ -14,6 +14,12 @@ namespace OCA\Mail\Db;
 
 use OCP\AppFramework\Db\Entity;
 
+/**
+ * @method null setUserId(string $userId)
+ * @method string getUserId()
+ * @method null setEmail(string $email)
+ * @method string getEmail()
+ */
 class CollectedAddress extends Entity {
 
 	protected $userId;

@@ -48,6 +48,7 @@ use OCA\Mail\Db\MailAccount;
 use OCA\Mail\Model\IMessage;
 use OCA\Mail\Model\Message;
 use OCA\Mail\Model\ReplyMessage;
+use OCA\Mail\Service\AutoCompletion\AddressCollector;
 use OCA\Mail\Service\IAccount;
 use OCA\Mail\Service\IMailBox;
 use OCP\IConfig;
@@ -74,6 +75,9 @@ class Account implements IAccount {
 	/** @var ICacheFactory */
 	private $memcacheFactory;
 
+	/** @var AddressCollector */
+	private $addressCollector;
+
 	/**
 	 * @param MailAccount $account
 	 */
@@ -83,6 +87,7 @@ class Account implements IAccount {
 		$this->crypto = \OC::$server->getCrypto();
 		$this->config = \OC::$server->getConfig();
 		$this->memcacheFactory = \OC::$server->getMemcacheFactory();
+		$this->addressCollector = \OC::$server->query('OCA\Mail\Service\AutoCompletion\AddressCollector');
 	}
 
 	/**
@@ -205,6 +210,10 @@ class Account implements IAccount {
 			$draftsFolder->setMessageFlag($draftUID, Horde_Imap_Client::FLAG_DELETED, true);
 			$this->deleteDraft($draftUID);
 		}
+
+		// Collect mail addresses
+		$addresses = array_merge($message->getToList(), $message->getCCList(), $message->getBCCList());
+		$this->addressCollector->addAddresses($addresses);
 	}
 
 	/**

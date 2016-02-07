@@ -40,4 +40,13 @@ class CollectedAddressMapper extends Mapper {
 		return $this->findEntities($sql, $params);
 	}
 
+	public function exists($userId, $email) {
+		$sql = 'SELECT * FROM *PREFIX*mail_collected_addresses WHERE `user_id` = ? AND `email` = ?';
+		$params = [
+			$userId,
+			$email
+		];
+		return count($this->findEntities($sql, $params)) > 0;
+	}
+
 }

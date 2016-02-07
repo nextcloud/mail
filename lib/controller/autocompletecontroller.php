@@ -21,9 +21,6 @@ class AutoCompleteController extends Controller {
 	/** @var AutoCompleteService */
 	private $service;
 
-	/** @var string */
-	private $UserId;
-
 	/**
 	 * @param string $appName
 	 * @param IRequest $request
@@ -31,10 +28,9 @@ class AutoCompleteController extends Controller {
 	 * @param string $UserId
 	 */
 	public function __construct($appName, IRequest $request,
-		AutoCompleteService $service, $UserId) {
+		AutoCompleteService $service) {
 		parent::__construct($appName, $request);
 		$this->service = $service;
-		$this->UserId = $UserId;
 	}
 
 	/**
@@ -43,7 +39,7 @@ class AutoCompleteController extends Controller {
 	 * @return array
 	 */
 	public function index($term) {
-		return $this->service->findMathes($term, $this->UserId);
+		return $this->service->findMathes($term);
 	}
 
 }

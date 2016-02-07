@@ -27,9 +27,9 @@ class AutoCompleteService {
 		$this->addressCollector = $ac;
 	}
 
-	public function findMathes($term, $UserId) {
+	public function findMathes($term) {
 		$recipientsFromContacts = $this->contactsIntegration->getMatchingRecipient($term);
-		$fromCollector = $this->addressCollector->searchAddress($term, $UserId);
+		$fromCollector = $this->addressCollector->searchAddress($term);
 
 		// Convert collected addresses into same format as CI creates
 		$recipientsFromCollector = array_map(function ($address) {
