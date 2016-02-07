@@ -13,13 +13,23 @@
 namespace OCA\Mail\Service\AutoCompletion;
 
 use Horde_Mail_Rfc822_Address;
+use OCA\Mail\Db\CollectedAddressMapper;
 use OCA\Mail\Service\Logger;
 
 class AddressCollector {
 
+	/** @var CollectedAddressMapper */
+	private $mapper;
+
+	/** @var Logger */
 	private $logger;
 
-	public function __construct(Logger $logger) {
+	/**
+	 * @param CollectedAddressMapper $mapper
+	 * @param Logger $logger
+	 */
+	public function __construct(CollectedAddressMapper $mapper, Logger $logger) {
+		$this->mapper = $mapper;
 		$this->logger = $logger;
 	}
 
@@ -39,10 +49,13 @@ class AddressCollector {
 	 * Find and return all known and matching email addresses
 	 *
 	 * @param Horde_Mail_Rfc822_Address[] $term
+	 * @param string $UserId
 	 */
-	public function searchAddress($term) {
+	public function searchAddress($term, $UserId) {
 		$this->logger->debug("searching for collected address <$term>");
-		return [];
+		$result = $this->mapper->findMatching($UserId, $term);
+		$this->logger->debug("found " . count($result) . " matches in collected addresses");
+		return $result;
 	}
 
 }

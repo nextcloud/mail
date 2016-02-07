@@ -32,7 +32,7 @@ class CollectedAddressMapper extends Mapper {
 	 * @return CollectedAddress[]
 	 */
 	public function findMatching($userId, $query) {
-		$sql = 'SELECT * FROM *PREFIX*mail_collected_addresses WHERE user_id = ? AND WHERE email ILIKE \'*?*\'';
+		$sql = 'SELECT * FROM *PREFIX*mail_collected_addresses WHERE `user_id` = ? AND `email` ILIKE ?';
 		$params = [
 			$userId,
 			$query

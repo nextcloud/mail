@@ -27,13 +27,20 @@ class AutoCompleteService {
 		$this->addressCollector = $ac;
 	}
 
-	public function findMathes($term) {
-		$result = [];
+	public function findMathes($term, $UserId) {
+		$recipientsFromContacts = $this->contactsIntegration->getMatchingRecipient($term);
+		$fromCollector = $this->addressCollector->searchAddress($term, $UserId);
 
-		$fromContacts = $this->contactsIntegration->getMatchingRecipient($term);
-		$fromCollector = $this->addressCollector->searchAddress($term);
+		// Convert collected addresses into same format as CI creates
+		$recipientsFromCollector = array_map(function ($address) {
+			return [
+				'id' => $address->getId(),
+				'label' => $address->getEmail(),
+				'value' => $address->getEmail(),
+			];
+		}, $fromCollector);
 
-		return $fromContacts;
+		return array_merge($recipientsFromContacts, $recipientsFromCollector);
 	}
 
 }
