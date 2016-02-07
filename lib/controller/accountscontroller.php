@@ -32,7 +32,6 @@ use OCA\Mail\Model\Message;
 use OCA\Mail\Model\ReplyMessage;
 use OCA\Mail\Service\AccountService;
 use OCA\Mail\Service\AutoConfig\AutoConfig;
-use OCA\Mail\Service\ContactsIntegration;
 use OCA\Mail\Service\Logger;
 use OCA\Mail\Service\UnifiedAccount;
 use OCP\AppFramework\Controller;
@@ -53,9 +52,6 @@ class AccountsController extends Controller {
 
 	/** @var string */
 	private $currentUserId;
-
-	/** @var ContactsIntegration */
-	private $contactsIntegration;
 
 	/** @var AutoConfig */
 	private $autoConfig;
@@ -78,7 +74,6 @@ class AccountsController extends Controller {
 	 * @param AccountService $accountService
 	 * @param $UserId
 	 * @param $userFolder
-	 * @param ContactsIntegration $contactsIntegration
 	 * @param AutoConfig $autoConfig
 	 * @param Logger $logger
 	 * @param IL10N $l10n
@@ -89,7 +84,6 @@ class AccountsController extends Controller {
 		AccountService $accountService,
 		$UserId,
 		$userFolder,
-		ContactsIntegration $contactsIntegration,
 		AutoConfig $autoConfig,
 		Logger $logger,
 		IL10N $l10n,
@@ -99,7 +93,6 @@ class AccountsController extends Controller {
 		$this->accountService = $accountService;
 		$this->currentUserId = $UserId;
 		$this->userFolder = $userFolder;
-		$this->contactsIntegration = $contactsIntegration;
 		$this->autoConfig = $autoConfig;
 		$this->logger = $logger;
 		$this->l10n = $l10n;
@@ -391,15 +384,6 @@ class AccountsController extends Controller {
 		return new JSONResponse([
 			'uid' => $newUID
 		]);
-	}
-
-	/**
-	 * @NoAdminRequired
-	 * @param string $term
-	 * @return array
-	 */
-	public function autoComplete($term) {
-		return $this->contactsIntegration->getMatchingRecipient($term);
 	}
 
 }
