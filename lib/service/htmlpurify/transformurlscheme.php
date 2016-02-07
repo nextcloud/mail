@@ -1,4 +1,5 @@
 <?php
+
 /**
  * @author Thomas Müller <thomas.mueller@tmit.eu>
  *
@@ -26,8 +27,10 @@ use HTMLPurifier_URIFilter;
 use HTMLPurifier_URIParser;
 use OCP\IRequest;
 use OCP\IURLGenerator;
+use OCP\Util;
 
 class TransformURLScheme extends HTMLPurifier_URIFilter {
+
 	public $name = 'TransformURLScheme';
 	public $post = true;
 
@@ -60,7 +63,6 @@ class TransformURLScheme extends HTMLPurifier_URIFilter {
 	public function filter(&$uri, $config, $context) {
 		/** @var \HTMLPurifier_Context $context */
 		/** @var \HTMLPurifier_Config $config */
-
 		// Only HTTPS and HTTP urls should get rewritten
 		if ($uri->scheme === 'https' || $uri->scheme === 'http') {
 			$uri = $this->filterHttp($uri, $context);
@@ -73,7 +75,8 @@ class TransformURLScheme extends HTMLPurifier_URIFilter {
 			}
 			$this->messageParameters['attachmentId'] = $attachmentId;
 
-			$imgUrl = $this->urlGenerator->linkToRouteAbsolute('mail.messages.downloadAttachment', $this->messageParameters);
+			$imgUrl = $this->urlGenerator->linkToRouteAbsolute('mail.messages.downloadAttachment',
+				$this->messageParameters);
 			$parser = new HTMLPurifier_URIParser();
 			$uri = $parser->parse($imgUrl);
 		}
@@ -99,24 +102,42 @@ class TransformURLScheme extends HTMLPurifier_URIFilter {
 		// otherwise it's an element that we send through our proxy
 		if ($element === 'href') {
 			$uri = new \HTMLPurifier_URI(
-				$this->request->getServerProtocol(),
-				null,
-				$this->request->getServerHost(),
-				null,
+				$this->getServerProtocol(), null, $this->getServerHost(), null,
 				$this->urlGenerator->linkToRoute('mail.proxy.redirect'),
-				'src=' . $originalURL,
-				null);
+				'src=' . $originalURL, null);
 			return $uri;
 		} else {
 			$uri = new \HTMLPurifier_URI(
-				$this->request->getServerProtocol(),
-				null,
-				$this->request->getServerHost(),
-				null,
+				$this->getServerProtocol(), null, $this->getServerHost(), null,
 				$this->urlGenerator->linkToRoute('mail.proxy.proxy'),
 				'src=' . $originalURL . '&requesttoken=' . \OC::$server->getSession()->get('requesttoken'),
 				null);
 			return $uri;
 		}
 	}
+
+	/**
+	 * @todo remove version-hack once core 8.1+ is supported
+	 * @return string
+	 */
+	private function getServerProtocol() {
+		$ocVersion = \OC::$server->getConfig()->getSystemValue('version', '0.0.0');
+		if (version_compare($ocVersion, '8.2.0', '<')) {
+			return Util::getServerProtocol();
+		}
+		return $this->request->getServerProtocol();
+	}
+
+	/**
+	 * @todo remove version-hack once core 8.1+ is supported
+	 * @return string
+	 */
+	private function getServerHost() {
+		$ocVersion = \OC::$server->getConfig()->getSystemValue('version', '0.0.0');
+		if (version_compare($ocVersion, '8.2.0', '<')) {
+			return Util::getServerHost();
+		}
+		return $this->request->getServerHost();
+	}
+
 }
