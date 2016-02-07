@@ -17,4 +17,7 @@ js/mail.min.js
 # packaged app
 build/
 
+# NetBeans project
+nbproject/
+
 translations.js
