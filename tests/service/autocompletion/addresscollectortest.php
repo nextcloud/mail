@@ -71,12 +71,6 @@ class AddressCollectorTest extends PHPUnit_Framework_TestCase {
 		$addresses = [
 			'user@example.com',
 		];
-		$data = array_map(function($address) {
-			$ca = new CollectedAddress();
-			$ca->setEmail($address);
-			$ca->setUserId($this->userId);
-			return $ca;
-		}, $addresses);
 
 		$this->mapper->expects($this->at(0))
 			->method('exists')
