@@ -150,7 +150,7 @@
 			<index>
 				<name>mail_collected_addr_email_index</name>
 				<field>
-					<name>user_id</name>
+					<name>email</name>
 					<sorting>ascending</sorting>
 				</field>
 			</index>
