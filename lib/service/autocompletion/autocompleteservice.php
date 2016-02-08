@@ -27,7 +27,7 @@ class AutoCompleteService {
 		$this->addressCollector = $ac;
 	}
 
-	public function findMathes($term) {
+	public function findMatches($term) {
 		$recipientsFromContacts = $this->contactsIntegration->getMatchingRecipient($term);
 		$fromCollector = $this->addressCollector->searchAddress($term);
 

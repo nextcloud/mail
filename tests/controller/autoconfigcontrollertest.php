@@ -1,0 +1,56 @@
+<?php
+
+/**
+ * @author Christoph Wurst <christoph@winzerhof-wurst.at>
+ *
+ * ownCloud - Mail app
+ *
+ * This library is free software; you can redistribute it and/or
+ * modify it under the terms of the GNU AFFERO GENERAL PUBLIC LICENSE
+ * License as published by the Free Software Foundation; either
+ * version 3 of the License, or any later version.
+ *
+ * This library is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU AFFERO GENERAL PUBLIC LICENSE for more details.
+ *
+ * You should have received a copy of the GNU Lesser General Public
+ * License along with this library.  If not, see <http://www.gnu.org/licenses/>.
+ *
+ */
+use PHPUnit_Framework_TestCase;
+use OCA\Mail\Controller\AutoCompleteController;
+
+class AutoConfigControllerTest extends PHPUnit_Framework_TestCase {
+
+	private $request;
+	private $service;
+	private $controller;
+
+	protected function setUp() {
+		parent::setUp();
+
+		$this->request = $this->getMock('OCP\IRequest');
+		$this->service = $this->getMockBuilder('OCA\Mail\Service\AutoCompletion\AutoCompleteService')
+			->disableOriginalConstructor()
+			->getMock();
+		$this->controller = new AutoCompleteController('mail', $this->request,
+			$this->service);
+	}
+
+	public function testAutoComplete() {
+		$term = 'john d';
+		$result = 'johne doe';
+
+		$this->service->expects($this->once())
+			->method('findMatches')
+			->with($this->equalTo($term))
+			->will($this->returnValue($result));
+
+		$response = $this->controller->index($term);
+
+		$this->assertEquals($result, $response);
+	}
+
+}

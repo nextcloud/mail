@@ -29,7 +29,6 @@ class AccountsControllerTest extends \Test\TestCase {
 	private $accountService;
 	private $userId;
 	private $userFolder;
-	private $contactsIntegration;
 	private $autoConfig;
 	private $logger;
 	private $l10n;
@@ -53,9 +52,6 @@ class AccountsControllerTest extends \Test\TestCase {
 		$this->userFolder = $this->getMockBuilder('\OCP\Files\Folder')
 			->disableOriginalConstructor()
 			->getMock();
-		$this->contactsIntegration = $this->getMockBuilder('OCA\Mail\Service\ContactsIntegration')
-			->disableOriginalConstructor()
-			->getMock();
 		$this->autoConfig = $this->getMockBuilder('\OCA\Mail\Service\AutoConfig\AutoConfig')
 			->disableOriginalConstructor()
 			->getMock();
@@ -70,9 +66,8 @@ class AccountsControllerTest extends \Test\TestCase {
 			->getMock();
 
 		$this->controller = new AccountsController($this->appName, $this->request,
-			$this->accountService, $this->userId, $this->userFolder,
-			$this->contactsIntegration, $this->autoConfig, $this->logger, $this->l10n,
-			$this->crypto);
+			$this->accountService, $this->userId, $this->userFolder, $this->autoConfig,
+			$this->logger, $this->l10n, $this->crypto);
 
 		$this->account = $this->getMockBuilder('\OCA\Mail\Account')
 			->disableOriginalConstructor()
@@ -162,24 +157,21 @@ class AccountsControllerTest extends \Test\TestCase {
 			->will($this->returnValue(135));
 		$this->autoConfig->expects($this->once())
 			->method('createAutoDetected')
-			->with($this->equalTo($email),
-				$this->equalTo($password),
+			->with($this->equalTo($email), $this->equalTo($password),
 				$this->equalTo($accountName))
 			->will($this->returnValue($this->account));
 		$this->accountService->expects($this->once())
 			->method('save')
 			->with($this->equalTo($this->account));
 
-		$response = $this->controller->create($accountName, $email, $password,
-			null, null, null, null, null,
-			null, null, null, null, null,
-			true);
+		$response = $this->controller->create($accountName, $email, $password, null,
+			null, null, null, null, null, null, null, null, null, true);
 
 		$expectedResponse = new JSONResponse([
-		    'data' => [
-			'id' => 135,
-		    ],
-		], Http::STATUS_CREATED);
+			'data' => [
+				'id' => 135,
+			],
+			], Http::STATUS_CREATED);
 		$this->assertEquals($expectedResponse, $response);
 	}
 
@@ -190,22 +182,19 @@ class AccountsControllerTest extends \Test\TestCase {
 
 		$this->autoConfig->expects($this->once())
 			->method('createAutoDetected')
-			->with($this->equalTo($email),
-				$this->equalTo($password),
+			->with($this->equalTo($email), $this->equalTo($password),
 				$this->equalTo($accountName))
 			->will($this->returnValue(null));
 		$this->l10n->expects($this->once())
 			->method('t')
 			->will($this->returnValue('fail'));
 
-		$response = $this->controller->create($accountName, $email, $password,
-			null, null, null, null, null,
-			null, null, null, null, null,
-			true);
+		$response = $this->controller->create($accountName, $email, $password, null,
+			null, null, null, null, null, null, null, null, null, true);
 
 		$expectedResponse = new JSONResponse([
-		    'message' => 'fail',
-		], Http::STATUS_BAD_REQUEST);
+			'message' => 'fail',
+			], Http::STATUS_BAD_REQUEST);
 		$this->assertEquals($expectedResponse, $response);
 	}
 
@@ -398,18 +387,6 @@ class AccountsControllerTest extends \Test\TestCase {
 			$cc, $bcc, $uid, $messageId);
 
 		$this->assertEquals($expected, $actual);
-	}
-
-	public function testAutoComplete() {
-		$this->contactsIntegration->expects($this->once())
-			->method('getMatchingRecipient')
-			->with($this->equalTo('search term'))
-			->will($this->returnValue('test'));
-
-		$response = $this->controller->autoComplete('search term');
-
-		$expectedResponse = 'test';
-		$this->assertEquals($expectedResponse, $response);
 	}
 
 }

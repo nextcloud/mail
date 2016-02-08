@@ -39,7 +39,7 @@ class AutoCompleteController extends Controller {
 	 * @return array
 	 */
 	public function index($term) {
-		return $this->service->findMathes($term);
+		return $this->service->findMatches($term);
 	}
 
 }
