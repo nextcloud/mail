@@ -21,11 +21,11 @@
 
 namespace OCA\Mail\Tests\Db;
 
-use PHPUnit_Framework_TestCase;
+use Test\TestCase;
 use OCA\Mail\Db\CollectedAddressMapper;
 use OCA\Mail\Db\CollectedAddress;
 
-class CollectedAddressMapperTest extends PHPUnit_Framework_TestCase {
+class CollectedAddressMapperTest extends TestCase {
 
 	/** @var OCP\IDBConnection */
 	private $db;
@@ -88,9 +88,8 @@ class CollectedAddressMapperTest extends PHPUnit_Framework_TestCase {
 		$this->assertCount(count($result), $matches);
 		$i = 0;
 		foreach ($matches as $match) {
-			error_log($match->getEmail());
 			$this->assertInstanceOf('\OCA\Mail\Db\CollectedAddress', $match);
-			$this->assertEquals($result[$i], $match->getEmail());
+			$this->assertTrue(in_array($match->getEmail(), $result));
 			$this->assertEquals($this->userId, $match->getUserId());
 			$i++;
 		}

@@ -19,10 +19,10 @@
  * License along with this library.  If not, see <http://www.gnu.org/licenses/>.
  *
  */
-use PHPUnit_Framework_TestCase;
+use Test\TestCase;
 use OCA\Mail\Controller\AutoCompleteController;
 
-class AutoConfigControllerTest extends PHPUnit_Framework_TestCase {
+class AutoConfigControllerTest extends TestCase {
 
 	private $request;
 	private $service;
