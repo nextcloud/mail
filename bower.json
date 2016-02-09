@@ -15,8 +15,8 @@
   ],
   "dependencies": {
     "autosize": "jquery-autosize#1.18.9",
-    "backbone": "1.1.2",
-    "backbone.marionette": "~2.4.2",
+    "backbone": "^1.2.3",
+    "backbone.marionette": "^2.4.4",
     "domready": "~1.0.8",
     "handlebars": "~3.0.3",
     "jquery": "~2.1.4",
