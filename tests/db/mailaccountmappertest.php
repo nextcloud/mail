@@ -1,14 +1,20 @@
 <?php
 /**
+ * @author Thomas Müller <thomas.mueller@tmit.eu>
+ *
  * ownCloud - Mail
  *
- * @author Sebastian Schmid
- * @copyright 2013 Sebastian Schmid mail@sebastian-schmid.de
- * @author Thomas Müller
- * @copyright 2014 Thomas Müller deepdiver@owncloud.com
+ * This code is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU Affero General Public License, version 3,
+ * as published by the Free Software Foundation.
  *
- * You should have received a copy of the GNU Affero General Public
- * License along with this library.  If not, see <http://www.gnu.org/licenses/>.
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
+ * GNU Affero General Public License for more details.
+ *
+ * You should have received a copy of the GNU Affero General Public License, version 3,
+ * along with this program.  If not, see <http://www.gnu.org/licenses/>
  *
  */
 

@@ -1,13 +1,33 @@
 <?php
-
 /**
- * Copyright (c) 2012 Bart Visscher <bartv@thisnet.nl>
- * Copyright (c) 2014 Thomas Müller <deepdiver@owncloud.com>
- * Copyright (c) 2015 Christoph Wurst <christoph@winzerhof-wurst.at>
+ * @author Alexander Weidinger <alexwegoo@gmail.com>
+ * @author Christian Nöding <christian@noeding-online.de>
+ * @author Christoph Wurst <christoph@winzerhof-wurst.at>
+ * @author Christoph Wurst <ChristophWurst@users.noreply.github.com>
+ * @author Christoph Wurst <wurst.christoph@gmail.com>
+ * @author Clement Wong <mail@clement.hk>
+ * @author Lukas Reschke <lukas@owncloud.com>
+ * @author Robin McCorkell <rmccorkell@karoshi.org.uk>
+ * @author Scrutinizer Auto-Fixer <auto-fixer@scrutinizer-ci.com>
+ * @author Thomas Imbreckx <zinks@iozero.be>
+ * @author Thomas I <thomas@oatr.be>
+ * @author Thomas Mueller <thomas.mueller@tmit.eu>
+ * @author Thomas Müller <thomas.mueller@tmit.eu>
  *
- * This file is licensed under the Affero General Public License version 3 or
- * later.
- * See the COPYING-README file.
+ * ownCloud - Mail
+ *
+ * This code is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU Affero General Public License, version 3,
+ * as published by the Free Software Foundation.
+ *
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
+ * GNU Affero General Public License for more details.
+ *
+ * You should have received a copy of the GNU Affero General Public License, version 3,
+ * along with this program.  If not, see <http://www.gnu.org/licenses/>
+ *
  */
 
 namespace OCA\Mail;
