@@ -20,6 +20,10 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>
  *
  */
+?>
+<?php /** @var array $_ */?>
+<?php if (isset($_['authorizedRedirect']) && ($_['authorizedRedirect'])): ?>
+	<?php script('mail', 'autoredirect'); ?>
 	<div class="error" style="text-align: center;">
 		<img src="<?php p(\OCP\Util::imagePath('core', 'loading-dark.gif'));?>"
 			style="margin: 0 auto;" />
