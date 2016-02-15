@@ -90,7 +90,8 @@ class IMAPMessage implements IMessage {
 		$this->htmlService = $htmlService;
 		if (is_null($htmlService)) {
 			$urlGenerator = \OC::$server->getURLGenerator();
-			$this->htmlService = new Html($urlGenerator);
+			$request = \OC::$server->getRequest();
+			$this->htmlService = new Html($urlGenerator, $request);
 		}
 
 		if ($fetch === null) {

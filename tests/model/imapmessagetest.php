@@ -75,6 +75,9 @@ class ImapMessageTest extends TestCase {
 		$urlGenerator = $this->getMockBuilder('\OCP\IURLGenerator')
 			->disableOriginalConstructor()
 			->getMock();
+		$request = $this->getMockBuilder('\OCP\IRequest')
+			->disableOriginalConstructor()
+			->getMock();
 
 		//linkToRoute 'mail.proxy.proxy'
 		$urlGenerator->expects($this->any())
@@ -82,7 +85,7 @@ class ImapMessageTest extends TestCase {
 			->will($this->returnCallback(function ($url) {
 				return "https://docs.example.com/server/go.php?to=$url";
 			}));
-		$htmlService = new \OCA\Mail\Service\Html($urlGenerator);
+		$htmlService = new \OCA\Mail\Service\Html($urlGenerator, $request);
 
 		// mock first fetch
 		$firstFetch = new Horde_Imap_Client_Data_Fetch();
