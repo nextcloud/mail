@@ -13,14 +13,14 @@
 namespace OCA\Mail\Db;
 
 use OCP\AppFramework\Db\Mapper;
-use OCP\IDBConnection;
+use OCP\IDb;
 
 class CollectedAddressMapper extends Mapper {
 
 	/**
-	 * @param IDBConnection $db
+	 * @param IDb $db
 	 */
-	public function __construct(IDBConnection $db) {
+	public function __construct(IDb $db) {
 		parent::__construct($db, 'mail_collected_addresses');
 	}
 

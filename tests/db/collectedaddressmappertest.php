@@ -21,6 +21,7 @@
 
 namespace OCA\Mail\Tests\Db;
 
+use OC\AppFramework\Db\Db;
 use Test\TestCase;
 use OCA\Mail\Db\CollectedAddressMapper;
 use OCA\Mail\Db\CollectedAddress;
@@ -48,7 +49,7 @@ class CollectedAddressMapperTest extends TestCase {
 		parent::setUp();
 
 		$this->db = \OC::$server->getDatabaseConnection();
-		$this->mapper = new CollectedAddressMapper($this->db);
+		$this->mapper = new CollectedAddressMapper(new Db($this->db));
 
 		$this->address1 = new CollectedAddress();
 		$this->address1->setEmail('user1@example.com');
