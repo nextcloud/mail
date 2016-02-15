@@ -25,13 +25,23 @@ use Test\TestCase;
 use OCA\Mail\Db\CollectedAddressMapper;
 use OCA\Mail\Db\CollectedAddress;
 
+/**
+ * Class CollectedAddressMapperTest
+ *
+ * @group DB
+ *
+ * @package OCA\Mail\Tests\Db
+ */
 class CollectedAddressMapperTest extends TestCase {
 
-	/** @var OCP\IDBConnection */
+	/** @var \OCP\IDBConnection */
 	private $db;
 	private $userId = 'testuser';
+	/** @var CollectedAddressMapper */
 	private $mapper;
+	/** @var CollectedAddress */
 	private $address1;
+	/** @var CollectedAddress */
 	private $address2;
 
 	protected function setUp() {
@@ -55,12 +65,12 @@ class CollectedAddressMapperTest extends TestCase {
 			$this->address1->getEmail(),
 			$this->address1->getUserId(),
 		]);
-		$this->address1->setId($this->db->lastInsertId());
+		$this->address1->setId($this->db->lastInsertId('PREFIX*mail_collected_addresses'));
 		$stmt->execute([
 			$this->address2->getEmail(),
 			$this->address2->getUserId(),
 		]);
-		$this->address2->setId($this->db->lastInsertId());
+		$this->address2->setId($this->db->lastInsertId('PREFIX*mail_collected_addresses'));
 	}
 
 	protected function tearDown() {
@@ -68,8 +78,12 @@ class CollectedAddressMapperTest extends TestCase {
 
 		$sql = 'DELETE FROM *PREFIX*mail_collected_addresses WHERE `id` = ?';
 		$stmt = $this->db->prepare($sql);
-		$stmt->execute([$this->address1->getId()]);
-		$stmt->execute([$this->address2->getId()]);
+		if (!empty($this->address1)) {
+			$stmt->execute([$this->address1->getId()]);
+		}
+		if (!empty($this->address2)) {
+			$stmt->execute([$this->address2->getId()]);
+		}
 	}
 
 	public function matchingData() {
