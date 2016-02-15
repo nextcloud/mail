@@ -31,6 +31,7 @@ use OCA\Mail\Db\MailAccount;
 use OCA\Mail\Model\Message;
 use OCA\Mail\Model\ReplyMessage;
 use OCA\Mail\Service\AccountService;
+use OCA\Mail\Service\AutoCompletion\AddressCollector;
 use OCA\Mail\Service\AutoConfig\AutoConfig;
 use OCA\Mail\Service\Logger;
 use OCA\Mail\Service\UnifiedAccount;
@@ -68,6 +69,9 @@ class AccountsController extends Controller {
 	/** @var ICrypto */
 	private $crypto;
 
+	/** @var AddressCollector  */
+	private $addressCollector;
+
 	/**
 	 * @param string $appName
 	 * @param IRequest $request
@@ -87,7 +91,8 @@ class AccountsController extends Controller {
 		AutoConfig $autoConfig,
 		Logger $logger,
 		IL10N $l10n,
-		ICrypto $crypto
+		ICrypto $crypto,
+		AddressCollector $addressCollector
 	) {
 		parent::__construct($appName, $request);
 		$this->accountService = $accountService;
@@ -97,6 +102,7 @@ class AccountsController extends Controller {
 		$this->logger = $logger;
 		$this->l10n = $l10n;
 		$this->crypto = $crypto;
+		$this->addressCollector = $addressCollector;
 	}
 
 	/**
@@ -318,6 +324,10 @@ class AccountsController extends Controller {
 			if ($message instanceof ReplyMessage) {
 				$mailbox->setMessageFlag($messageId, Horde_Imap_Client::FLAG_ANSWERED, true);
 			}
+
+			// Collect mail addresses
+			$addresses = array_merge($message->getToList(), $message->getCCList(), $message->getBCCList());
+			$this->addressCollector->addAddresses($addresses);
 		} catch (\Horde_Exception $ex) {
 			$this->logger->error('Sending mail failed: ' . $ex->getMessage());
 			return new JSONResponse(

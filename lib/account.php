@@ -75,9 +75,6 @@ class Account implements IAccount {
 	/** @var ICacheFactory */
 	private $memcacheFactory;
 
-	/** @var AddressCollector */
-	private $addressCollector;
-
 	/**
 	 * @param MailAccount $account
 	 */
@@ -87,7 +84,6 @@ class Account implements IAccount {
 		$this->crypto = \OC::$server->getCrypto();
 		$this->config = \OC::$server->getConfig();
 		$this->memcacheFactory = \OC::$server->getMemcacheFactory();
-		$this->addressCollector = \OC::$server->query('OCA\Mail\Service\AutoCompletion\AddressCollector');
 	}
 
 	/**
@@ -210,10 +206,6 @@ class Account implements IAccount {
 			$draftsFolder->setMessageFlag($draftUID, Horde_Imap_Client::FLAG_DELETED, true);
 			$this->deleteDraft($draftUID);
 		}
-
-		// Collect mail addresses
-		$addresses = array_merge($message->getToList(), $message->getCCList(), $message->getBCCList());
-		$this->addressCollector->addAddresses($addresses);
 	}
 
 	/**
@@ -769,7 +761,7 @@ class Account implements IAccount {
 	/**
 	 * Factory method for creating new messages
 	 *
-	 * @return OCA\Mail\Model\IMessage
+	 * @return IMessage
 	 */
 	public function newMessage() {
 		return new Message();
@@ -778,7 +770,7 @@ class Account implements IAccount {
 	/**
 	 * Factory method for creating new reply messages
 	 *
-	 * @return OCA\Mail\Model\ReplyMessage
+	 * @return ReplyMessage
 	 */
 	public function newReplyMessage() {
 		return new ReplyMessage();

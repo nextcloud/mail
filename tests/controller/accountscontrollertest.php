@@ -64,10 +64,13 @@ class AccountsControllerTest extends \Test\TestCase {
 		$this->crypto = $this->getMockBuilder('\OCP\Security\ICrypto')
 			->disableOriginalConstructor()
 			->getMock();
+		$this->collector = $this->getMockBuilder('\OCA\Mail\Service\AutoCompletion\AddressCollector')
+			->disableOriginalConstructor()
+			->getMock();
 
 		$this->controller = new AccountsController($this->appName, $this->request,
 			$this->accountService, $this->userId, $this->userFolder, $this->autoConfig,
-			$this->logger, $this->l10n, $this->crypto);
+			$this->logger, $this->l10n, $this->crypto, $this->collector);
 
 		$this->account = $this->getMockBuilder('\OCA\Mail\Account')
 			->disableOriginalConstructor()
@@ -288,6 +291,16 @@ class AccountsControllerTest extends \Test\TestCase {
 		$message->expects($this->once())
 			->method('setContent')
 			->with($body);
+		$message->expects($this->once())
+			->method('getToList')
+			->willReturn([]);
+		$message->expects($this->once())
+			->method('getCCList')
+			->willReturn([]);
+		$message->expects($this->once())
+			->method('getBCCList')
+			->willReturn([]);
+
 		$this->account->expects($this->once())
 			->method('getEMailAddress')
 			->will($this->returnValue($from));
