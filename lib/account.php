@@ -48,6 +48,7 @@ use OCA\Mail\Db\MailAccount;
 use OCA\Mail\Model\IMessage;
 use OCA\Mail\Model\Message;
 use OCA\Mail\Model\ReplyMessage;
+use OCA\Mail\Service\AutoCompletion\AddressCollector;
 use OCA\Mail\Service\IAccount;
 use OCA\Mail\Service\IMailBox;
 use OCP\IConfig;
@@ -760,7 +761,7 @@ class Account implements IAccount {
 	/**
 	 * Factory method for creating new messages
 	 *
-	 * @return OCA\Mail\Model\IMessage
+	 * @return IMessage
 	 */
 	public function newMessage() {
 		return new Message();
@@ -769,7 +770,7 @@ class Account implements IAccount {
 	/**
 	 * Factory method for creating new reply messages
 	 *
-	 * @return OCA\Mail\Model\ReplyMessage
+	 * @return ReplyMessage
 	 */
 	public function newReplyMessage() {
 		return new ReplyMessage();
