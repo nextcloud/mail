@@ -115,7 +115,7 @@ class Message implements IMessage {
 	}
 
 	/**
-	 * @param array $flags
+	 * @param string[] $flags
 	 */
 	public function setFlags(array $flags) {
 		$this->flags = $flags;
@@ -245,7 +245,7 @@ class Message implements IMessage {
 	}
 
 	/**
-	 * @return Horde_Mime_Part[]
+	 * @return File[]
 	 */
 	public function getAttachments() {
 		return $this->attachments;

@@ -85,8 +85,8 @@ class TransformURLScheme extends HTMLPurifier_URIFilter {
 	}
 
 	/**
-	 * @param $uri
-	 * @param $context
+	 * @param HTMLPurifier_URI $uri
+	 * @param \HTMLPurifier_Context $context
 	 * @return HTMLPurifier_URI
 	 */
 	private function filterHttp(&$uri, $context) {

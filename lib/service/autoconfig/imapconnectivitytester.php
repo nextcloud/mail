@@ -46,7 +46,7 @@ class ImapConnectivityTester extends ConnectivityTester {
 	 * @param $users
 	 * @param $password
 	 * @param $name
-	 * @return null|MailAccount
+	 * @return \OCA\Mail\Db\MailAccount|null
 	 */
 	public function test($email, $host, $users, $password, $name) {
 		if (!is_array($users)) {
