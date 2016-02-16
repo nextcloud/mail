@@ -39,34 +39,23 @@ abstract class AbstractTest extends \PHPUnit_Framework_TestCase {
 	private static $createdMailboxes = [];
 
 	public static function setUpBeforeClass() {
-		if (false === \getenv('EMAIL_USER')) {
-			throw new \PHPUnit_Framework_SkippedTestError(
-				'Please set environment variable EMAIL_USER before running functional tests'
-			);
-		}
-
-		if (false === \getenv('EMAIL_PASSWORD')) {
-			throw new \PHPUnit_Framework_SkippedTestError(
-				'Please set environment variable EMAIL_PASSWORD before running functional tests'
-			);
-		}
-		$user = \getenv('EMAIL_USER');
-		$password = \getenv('EMAIL_PASSWORD');
+		$user = 'user@domain.tld';
+		$password = 'mypassword';
 		$password = \OC::$server->getCrypto()->encrypt($password);
 		$a = new MailAccount();
 		$a->setId(-1);
 		$a->setName('ownCloudMail');
-		$a->setInboundHost('imap.gmail.com');
+		$a->setInboundHost('localhost');
 		$a->setInboundPort(993);
 		$a->setInboundUser($user);
 		$a->setInboundPassword($password);
 		$a->setInboundSslMode('ssl');
 		$a->setEmail($user);
-		$a->setOutboundHost('smtp.gmail.com');
+		$a->setOutboundHost('localhost');
 		$a->setOutboundPort(465);
 		$a->setOutboundUser($user);
 		$a->setOutboundPassword($password);
-		$a->setOutboundSslMode('ssl');
+		$a->setOutboundSslMode('none');
 
 		self::$account = new Account($a);
 		self::$account->getImapConnection();
