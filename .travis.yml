@@ -22,6 +22,7 @@ env:
   global:
     - CORE_BRANCH=master
     - TEST_JS=FALSE
+    - PHP_COVERAGE=FALSE
   matrix:
     - DB=sqlite
 
@@ -63,6 +64,8 @@ before_script:
   - cd apps/mail
   - sh -c "if [ '$TEST_JS' = 'TRUE' ]; then make dev-setup; fi"
   - make add-imap-account
+    # Disable xdebug if it's not needed
+  - if [[ "$PHP_COVERAGE" = "FALSE" ]]; then phpenv config-rm xdebug.ini; fi
 
 script:
   # Test lint
@@ -76,14 +79,14 @@ script:
   - phpunit --configuration phpunit.xml
 
   # Create coverage report
-  - sh -c "wget https://scrutinizer-ci.com/ocular.phar"
-  - sh -c "php ocular.phar code-coverage:upload --format=php-clover clover.xml"
+  - if [[ "$PHP_COVERAGE" = "TRUE" ]]; then wget https://scrutinizer-ci.com/ocular.phar; fi
+  - if [[ "$PHP_COVERAGE" = "TRUE" ]]; then php ocular.phar code-coverage:upload --format=php-clover clover.xml; fi
 matrix:
   include:
     - php: 5.4
       env: "DB=mysql TEST_JS=TRUE"
     - php: 5.4
-      env: DB=pgsql
+      env: "DB=pgsql PHP_COVERAGE=TRUE"
     - php: 5.4
       env: "DB=mysql CORE_BRANCH=stable8"
     - php: 5.4
