@@ -14,8 +14,14 @@ define(function(require) {
 	var Marionette = require('marionette');
 	var $ = require('jquery');
 	var OC = require('OC');
+	var Radio = require('radio');
+	var MessagesView = require('views/messages');
+	var NavigationAccountsView = require('views/navigation-accounts');
+	var SettingsView = require('views/settings');
+	var NavigationView = require('views/navigation');
+	var SetupView = require('views/setup');
 
-	return Marionette.LayoutView.extend({
+	var AppView = Marionette.LayoutView.extend({
 		el: $('#app'),
 		regions: {
 			navigation: '#app-navigation',
@@ -29,6 +35,10 @@ define(function(require) {
 			this.bindUIElements();
 
 			// Global event handlers:
+			this.listenTo(Radio.notification, 'favicon:change', this.changeFavicon);
+			this.listenTo(Radio.ui, 'notification:show', this.showNotification);
+			this.listenTo(Radio.ui, 'error:show', this.showError);
+			this.listenTo(Radio.ui, 'content:hide', this.hideContent);
 
 			// Hide notification favicon when switching back from
 			// another browser tab
@@ -37,10 +47,36 @@ define(function(require) {
 			// Listens to key strokes, and executes a function based
 			// on the key combinations.
 			$(document).keyup(this.onKeyUp);
+
+			window.addEventListener('resize', this.onWindowResize);
+
+			// Render settings menu
+			this.navigation = new NavigationView();
+			this.navigation.settings.show(new SettingsView({
+				accounts: require('state').accounts
+			}));
+			this.setup.show(new SetupView({
+				displayName: $('#user-displayname').text(),
+				email: $('#user-email').text()
+			}));
+
+			// setup messages view
+			var messageView = new MessagesView({
+				el: $('#mail-messages')
+			});
+			messageView.render();
+
+			// setup folder view
+			var accountsView = new NavigationAccountsView();
+			require('state').folderView = accountsView;
+			this.navigation.accounts.show(accountsView);
+
+			accountsView.listenTo(messageView, 'change:unseen',
+				accountsView.changeUnseen);
 		},
 		onDocumentShow: function(e) {
 			e.preventDefault();
-			require('ui').changeFavicon(OC.filePath('mail', 'img', 'favicon.png'));
+			Radio.notification.trigger('favicon:change', OC.filePath('mail', 'img', 'favicon.png'));
 		},
 		onKeyUp: function(e) {
 			// Define which objects to check for the event properties.
@@ -67,8 +103,43 @@ define(function(require) {
 			e.preventDefault();
 			require('ui').openComposer();
 		},
+		onWindowResize: function() {
+			// Resize iframe
+			var iframe = $('#mail-content iframe');
+			iframe.height(iframe.contents().find('html').height() + 20);
+
+			// resize width of attached images
+			$('.mail-message-attachments .mail-attached-image').each(function() {
+				$(this).css('max-width', $('.mail-message-body').width());
+			});
+		},
 		render: function() {
 			// This view doesn't need rendering
+		},
+		changeFavicon: function(src) {
+			$('link[rel="shortcut icon"]').attr('href', src);
+		},
+		showNotification: function(message) {
+			OC.Notification.showTemporary(message);
+		},
+		showError: function(message) {
+			OC.Notification.showTemporary(message);
+			$('#app-navigation')
+				.removeClass('icon-loading');
+			$('#app-content')
+				.removeClass('icon-loading');
+			$('#mail-message')
+				.removeClass('icon-loading');
+			$('#mail_message')
+				.removeClass('icon-loading');
+		},
+		hideContent: function() {
+			$('#mail-messages').addClass('hidden');
+			$('#mail-message').addClass('hidden');
+			$('#mail_new_message').addClass('hidden');
+			$('#app-navigation').removeClass('icon-loading');
 		}
 	});
+
+	return AppView;
 });

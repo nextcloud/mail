@@ -15,6 +15,7 @@ define(function(require) {
 	var Handlebars = require('handlebars');
 	var $ = require('jquery');
 	var OC = require('OC');
+	var Radio = require('radio');
 	var Attachments = require('models/attachments');
 	var AttachmentsView = require('views/attachments');
 	var ComposerTemplate = require('text!templates/composer.html');
@@ -52,6 +53,7 @@ define(function(require) {
 			'input  .message-body': 'onInputChanged',
 			'paste  .message-body': 'onInputChanged',
 			'keyup  .message-body': 'onInputChanged',
+			'focus  .recipient-autocomplete': 'onAutoComplete',
 			// CC/BCC toggle
 			'click .composer-cc-bcc-toggle': 'ccBccToggle'
 		},
@@ -301,8 +303,8 @@ define(function(require) {
 					_this.attachments.reset();
 					if (_this.draftUID !== null) {
 						// the sent message was a draft
-						if (!_.isUndefined(require('ui').messageView)) {
-							require('ui').messageView.collection.remove({id: _this.draftUID});
+						if (!_.isUndefined(Radio.ui.request('messagesview:collection'))) {
+							Radio.ui.request('messagesview:collection').remove({id: _this.draftUID});
 						}
 						_this.draftUID = null;
 					}
@@ -392,6 +394,55 @@ define(function(require) {
 			this.$('.message-body').click(function() {
 				_this.setAutoSize(true);
 			});
+		},
+		autoComplete: function(e) {
+			console.log(e);
+			function split(val) {
+				return val.split(/,\s*/);
+			}
+
+			function extractLast(term) {
+				return split(term).pop();
+			}
+			if (!$(this).data('autocomplete')) { // If the autocomplete wasn't called yet:
+				// don't navigate away from the field on tab when selecting an item
+				$(this).bind('keydown', function(event) {
+					if (event.keyCode === $.ui.keyCode.TAB &&
+						typeof $(this).data('autocomplete') !== 'undefined' &&
+						$(this).data('autocomplete').menu.active) {
+						event.preventDefault();
+					}
+				}).autocomplete({
+					source: function(request, response) {
+						$.getJSON(
+							OC.generateUrl('/apps/mail/autoComplete'),
+							{
+								term: extractLast(request.term)
+							}, response);
+					},
+					search: function() {
+						// custom minLength
+						var term = extractLast(this.value);
+						return term.length >= 2;
+
+					},
+					focus: function() {
+						// prevent value inserted on focus
+						return false;
+					},
+					select: function(event, ui) {
+						var terms = split(this.value);
+						// remove the current input
+						terms.pop();
+						// add the selected item
+						terms.push(ui.item.value);
+						// add placeholder to get the comma-and-space at the end
+						terms.push('');
+						this.value = terms.join(', ');
+						return false;
+					}
+				});
+			}
 		}
 	});
 

@@ -1,4 +1,4 @@
-/* global Notification, adjustControlsWidth, SearchProxy */
+/* global adjustControlsWidth */
 
 /**
  * ownCloud - Mail
@@ -13,198 +13,51 @@
 define(function(require) {
 	'use strict';
 
+	var _ = require('underscore');
 	var $ = require('jquery');
 	var Handlebars = require('handlebars');
-	var Marionette = require('marionette');
 	var OC = require('OC');
-	var MessagesView = require('views/messages');
-	var NavigationAccountsView = require('views/navigation-accounts');
+	var Radio = require('radio');
 	var ComposerView = require('views/composer');
+	var HtmlHelper = require('util/htmlhelper');
 
 	require('views/helper');
-	require('settings');
 
-	var messageView = null;
+	Radio.ui.on('folder:load', loadFolder);
+	Radio.ui.on('message:load', function(accountId, folderId, messageId,
+		options) {
+		//FIXME: don't rely on global state vars
+		loadMessage(messageId, options);
+	});
+	Radio.ui.on('composer:leave', onComposerLeave);
+
 	var composer = null;
 	var composerVisible = false;
 
-	var Events = {
-		onComposerLeave: function() {
-			// Trigger only once
-			if (composerVisible === true) {
-				composerVisible = false;
+	function onComposerLeave() {
+		// Trigger only once
+		if (composerVisible === true) {
+			composerVisible = false;
 
-				if (composer && composer.hasData === true) {
-					if (composer.hasUnsavedChanges === true) {
-						composer.saveDraft(function() {
-							showDraftSavedNotification();
-						});
-					} else {
-						showDraftSavedNotification();
-					}
+			if (composer && composer.hasData === true) {
+				if (composer.hasUnsavedChanges === true) {
+					composer.saveDraft(function() {
+						Radio.ui.trigger('notification:show', t('mail', 'Draft saved!'));
+					});
+				} else {
+					Radio.ui.trigger('notification:show', t('mail', 'Draft saved!'));
 				}
 			}
-		},
-		onFolderChanged: function() {
-			// Stop background message fetcher of previous folder
-			require('background').messageFetcher.restart();
-			// hide message detail view on mobile
-			$('#mail-message').addClass('hidden-mobile');
-		},
-		onWindowResize: function() {
-			// Resize iframe
-			var iframe = $('#mail-content iframe');
-			iframe.height(iframe.contents().find('html').height() + 20);
-
-			// resize width of attached images
-			$('.mail-message-attachments .mail-attached-image').each(function() {
-				$(this).css('max-width', $('.mail-message-body').width());
-			});
 		}
-	};
-
-	function changeFavicon(src) {
-		$('link[rel="shortcut icon"]').attr('href', src);
 	}
 
 	function initializeInterface() {
-		// Register UI events
-		window.addEventListener('resize', Events.onWindowResize);
-
-		Marionette.TemplateCache.prototype.compileTemplate = function(rawTemplate) {
-			return Handlebars.compile(rawTemplate);
-		};
-		Marionette.ItemView.prototype.modelEvents = {'change': 'render'};
-		Marionette.CompositeView.prototype.modelEvents = {'change': 'render'};
-
-		// ask to handle all mailto: links
-		if (window.navigator.registerProtocolHandler) {
-			var url = window.location.protocol + '//' +
-				window.location.host +
-				OC.generateUrl('apps/mail/compose?uri=%s');
-			try {
-				window.navigator
-					.registerProtocolHandler('mailto', url, 'ownCloud Mail');
-			} catch (e) {
-			}
-		}
-
-		// setup messages view
-		messageView = new MessagesView({
-			el: $('#mail-messages')
-		});
-		messageView.render();
-
-		// setup folder view
-		var foldersView = new NavigationAccountsView();
-		require('state').folderView = foldersView;
-		require('app').view.navigation.accounts.show(foldersView);
-
-		foldersView.listenTo(messageView, 'change:unseen',
-			foldersView.changeUnseen);
-
-		// request permissions
-		if (typeof Notification !== 'undefined') {
-			Notification.requestPermission();
-		}
-
-		// Register actual filter method
-		SearchProxy.setFilter(require('search').filter);
-
-		function split(val) {
-			return val.split(/,\s*/);
-		}
-
-		function extractLast(term) {
-			return split(term).pop();
-		}
-		$(document).on('focus', '.recipient-autocomplete', function() {
-			if (!$(this).data('autocomplete')) { // If the autocomplete wasn't called yet:
-				// don't navigate away from the field on tab when selecting an item
-				$(this).bind('keydown', function(event) {
-					if (event.keyCode === $.ui.keyCode.TAB &&
-						typeof $(this).data('autocomplete') !== 'undefined' &&
-						$(this).data('autocomplete').menu.active) {
-						event.preventDefault();
-					}
-				}).autocomplete({
-					source: function(request, response) {
-						$.getJSON(
-							OC.generateUrl('/apps/mail/autoComplete'),
-							{
-								term: extractLast(request.term)
-							}, response);
-					},
-					search: function() {
-						// custom minLength
-						var term = extractLast(this.value);
-						return term.length >= 2;
-
-					},
-					focus: function() {
-						// prevent value inserted on focus
-						return false;
-					},
-					select: function(event, ui) {
-						var terms = split(this.value);
-						// remove the current input
-						terms.pop();
-						// add the selected item
-						terms.push(ui.item.value);
-						// add placeholder to get the comma-and-space at the end
-						terms.push('');
-						this.value = terms.join(', ');
-						return false;
-					}
-				});
-			}
-		});
-
 		setInterval(require('background').checkForNotifications, 5 * 60 * 1000);
-		require('app').trigger('accounts:load');
-	}
-
-	function showError(message) {
-		OC.Notification.showTemporary(message);
-		$('#app-navigation')
-			.removeClass('icon-loading');
-		$('#app-content')
-			.removeClass('icon-loading');
-		$('#mail-message')
-			.removeClass('icon-loading');
-		$('#mail_message')
-			.removeClass('icon-loading');
-	}
-
-	function clearMessages() {
-		messageView.collection.reset();
-		$('#messages-loading').fadeIn();
-
-		$('#mail-message')
-			.html('')
-			.addClass('icon-loading');
-	}
-
-	function hideMenu() {
-		$('.message-composer').addClass('hidden');
-		if (require('state').accounts.length === 0) {
-			$('#app-navigation').hide();
-			$('#app-navigation-toggle').css('background-image', 'none');
-		}
-	}
-
-	function showMenu() {
-		$('.message-composer').removeClass('hidden');
-		$('#app-navigation').show();
-		$('#app-navigation-toggle').css('background-image', '');
-	}
-
-	function addMessages(data) {
-		messageView.collection.add(data);
+		Radio.account.trigger('load');
 	}
 
 	function loadFolder(accountId, folderId, noSelect) {
-		Events.onComposerLeave();
+		Radio.ui.trigger('composer:leave');
 
 		if (require('state').messagesLoading !== null) {
 			require('state').messagesLoading.abort();
@@ -214,8 +67,8 @@ define(function(require) {
 		}
 
 		// Set folder active
-		setFolderActive(accountId, folderId);
-		clearMessages();
+		Radio.folder.trigger('setactive', accountId, folderId);
+		Radio.ui.trigger('messagesview:messages:reset');
 		$('#mail-messages')
 			.removeClass('hidden')
 			.addClass('icon-loading')
@@ -236,7 +89,7 @@ define(function(require) {
 			$('#mail-message').removeClass('icon-loading');
 			require('state').currentAccountId = accountId;
 			require('state').currentFolderId = folderId;
-			setMessageActive(null);
+			Radio.ui.trigger('messagesview:message:setactive', null);
 			$('#mail-messages').removeClass('icon-loading');
 			require('state').currentlyLoading = null;
 		} else {
@@ -245,17 +98,18 @@ define(function(require) {
 					require('state').currentlyLoading = null;
 					require('state').currentAccountId = accountId;
 					require('state').currentFolderId = folderId;
-					setMessageActive(null);
+					Radio.ui.trigger('messagesview:message:setactive', null);
 					$('#mail-messages').removeClass('icon-loading');
 
 					// Fade out the message composer
 					$('#mail_new_message').prop('disabled', false);
 
 					if (messages.length > 0) {
-						addMessages(messages);
+						Radio.ui.trigger('messagesview:messages:add', messages);
 
 						// Fetch first 10 messages in background
-						_.each(messages.slice(0, 10), function(message) {
+						_.each(messages.slice(0, 10), function(
+							message) {
 							require('background').messageFetcher.push(message.id);
 						});
 
@@ -280,15 +134,15 @@ define(function(require) {
 					if (cached) {
 						// Trigger folder update
 						// TODO: replace with horde sync once it's implemented
-						messageView.loadNew();
+						Radio.ui.trigger('messagesview:messages:update');
 					}
 				},
 				onError: function(error, textStatus) {
 					if (textStatus !== 'abort') {
-						var state = require('state');
 						// Set the old folder as being active
-						setFolderActive(state.currentAccountId, state.currentFolderId);
-						showError(t('mail', 'Error while loading messages.'));
+						var folderId = require('state').currentFolderId;
+						Radio.folder.trigger('setactive', accountId, folderId);
+						Radio.ui.trigger('error:show', t('mail', 'Error while loading messages.'));
 					}
 				},
 				cache: true
@@ -328,16 +182,16 @@ define(function(require) {
 					type: 'POST',
 					success: function() {
 						if (typeof attachmentId === 'undefined') {
-							showError(t('mail', 'Attachments saved to Files.'));
+							Radio.ui.trigger('error:show', t('mail', 'Attachments saved to Files.'));
 						} else {
-							showError(t('mail', 'Attachment saved to Files.'));
+							Radio.ui.trigger('error:show', t('mail', 'Attachment saved to Files.'));
 						}
 					},
 					error: function() {
 						if (typeof attachmentId === 'undefined') {
-							showError(t('mail', 'Error while saving attachments to Files.'));
+							Radio.ui.trigger('error:show', t('mail', 'Error while saving attachments to Files.'));
 						} else {
-							showError(t('mail', 'Error while saving attachment to Files.'));
+							Radio.ui.trigger('error:show', t('mail', 'Error while saving attachment to Files.'));
 						}
 					},
 					complete: function() {
@@ -385,7 +239,7 @@ define(function(require) {
 		}
 
 		if (data && data.hasHtmlBody) {
-			showError(t('mail', 'Opening HTML drafts is not supported yet.'));
+			Radio.ui.trigger('error:show', t('mail', 'Opening HTML drafts is not supported yet.'));
 		}
 
 		composer.render({
@@ -402,13 +256,15 @@ define(function(require) {
 		var toInput = composer.el.find('input.to');
 		toInput.focus();
 
-		if (!_.isUndefined(data.currentTarget) && !_.isUndefined($(data.currentTarget).data().email)) {
-			var to = '"' + $(data.currentTarget).data().label + '" <' + $(data.currentTarget).data().email + '>';
+		if (!_.isUndefined(data.currentTarget) && !_.isUndefined($(data.currentTarget).
+			data().email)) {
+			var to = '"' + $(data.currentTarget).
+				data().label + '" <' + $(data.currentTarget).data().email + '>';
 			toInput.val(to);
 			composer.el.find('input.subject').focus();
 		}
 
-		setMessageActive(null);
+		Radio.ui.trigger('messagesview:message:setactive', null);
 	}
 
 	function openForwardComposer() {
@@ -429,27 +285,6 @@ define(function(require) {
 		openComposer(data);
 	}
 
-	function htmlToText(html) {
-		var breakToken = '__break_token__';
-		// Preserve line breaks
-		html = html.replace(/<br>/g, breakToken);
-		html = html.replace(/<br\/>/g, breakToken);
-
-		// Add <br> break after each closing div, p, li to preserve visual
-		// line breaks for replies
-		html = html.replace(/<\/div>/g, '</div>' + breakToken);
-		html = html.replace(/<\/p>/g, '</p>' + breakToken);
-		html = html.replace(/<\/li>/g, '</li>' + breakToken);
-
-		var tmp = $('<div>');
-		tmp.html(html);
-		var text = tmp.text();
-
-		// Finally, replace tokens with line breaks
-		text = text.replace(new RegExp(breakToken, 'g'), '\n');
-		return text;
-	}
-
 	function loadMessage(messageId, options) {
 		options = options || {};
 		var defaultOptions = {
@@ -462,7 +297,7 @@ define(function(require) {
 			return;
 		}
 
-		Events.onComposerLeave();
+		Radio.ui.trigger('composer:leave');
 
 		if (!options.force && composerVisible) {
 			return;
@@ -482,7 +317,7 @@ define(function(require) {
 		// Check if message is open
 		if (require('state').currentMessageId !== null) {
 			var lastMessageId = require('state').currentMessageId;
-			setMessageActive(null);
+			Radio.ui.trigger('messagesview:message:setactive', null);
 			if (lastMessageId === messageId) {
 				return;
 			}
@@ -492,7 +327,7 @@ define(function(require) {
 		mailBody.html('').addClass('icon-loading');
 
 		// Set current Message as active
-		setMessageActive(messageId);
+		Radio.ui.trigger('messagesview:message:setactive', messageId);
 		require('state').currentMessageBody = '';
 
 		// Fade out the message composer
@@ -510,7 +345,7 @@ define(function(require) {
 			if (!message.hasHtmlBody) {
 				var date = new Date(message.dateIso);
 				var minutes = date.getMinutes();
-				var text = htmlToText(message.body);
+				var text = HtmlHelper.htmlToText(message.body);
 
 				reply.body = '\n\n\n\n' +
 					message.from + ' – ' +
@@ -566,7 +401,7 @@ define(function(require) {
 				});
 			});
 
-			messageView.setMessageFlag(messageId, 'unseen', false);
+			Radio.ui.trigger('messagesview:messageflag:set', messageId, 'unseen', false);
 
 			// HTML mail rendering
 			$('iframe').load(function() {
@@ -601,7 +436,8 @@ define(function(require) {
 
 				// Does the html mail have blocked images?
 				var hasBlockedImages = false;
-				if ($(this).contents().find('[data-original-src],[data-original-style]').length) {
+				if ($(this).contents().
+					find('[data-original-src],[data-original-style]').length) {
 					hasBlockedImages = true;
 				}
 
@@ -614,7 +450,7 @@ define(function(require) {
 
 				// Add body content to inline reply (html mails)
 				var text = $(this).contents().find('body').html();
-				text = htmlToText(text);
+				text = HtmlHelper.htmlToText(text);
 				if (!draft) {
 					var date = new Date(message.dateIso);
 					replyComposer.setReplyBody(message.from, date, text);
@@ -649,89 +485,20 @@ define(function(require) {
 				},
 				onError: function(jqXHR, textStatus) {
 					if (textStatus !== 'abort') {
-						showError(t('mail', 'Error while loading the selected message.'));
+						Radio.ui.trigger('error:show', t('mail', 'Error while loading the selected message.'));
 					}
 				}
 			});
 	}
 
-	function setFolderActive(accountId, folderId) {
-		messageView.clearFilter();
-
-		// disable all other folders for all accounts
-		require('state').accounts.each(function(account) {
-			var localAccount = require('state').folderView.collection.get(account.get('accountId'));
-			if (_.isUndefined(localAccount)) {
-				return;
-			}
-			var folders = localAccount.get('folders');
-			_.each(folders.models, function(folder) {
-				folders.get(folder).set('active', false);
-			});
-		});
-
-		require('state').folderView.getFolderById(accountId, folderId)
-			.set('active', true);
-	}
-
-	function setMessageActive(messageId) {
-		messageView.setActiveMessage(messageId);
-		require('state').currentMessageId = messageId;
-		require('state').folderView.updateTitle();
-	}
-
-	function addAccount() {
-		Events.onComposerLeave();
-
-		$('#mail-messages').addClass('hidden');
-		$('#mail-message').addClass('hidden');
-		$('#mail_new_message').addClass('hidden');
-		$('#app-navigation').removeClass('icon-loading');
-
-		require('app').trigger('ui:menu:hide');
-
-		$('#setup').removeClass('hidden');
-		// don't show New Message button on Add account screen
-		$('#mail_new_message').hide();
-	}
-
-	function showDraftSavedNotification() {
-		OC.Notification.showTemporary(t('mail', 'Draft saved!'));
-	}
-
 	var view = {
-		changeFavicon: changeFavicon,
 		initializeInterface: initializeInterface,
-		showError: showError,
-		clearMessages: clearMessages,
-		hideMenu: hideMenu,
-		showMenu: showMenu,
-		addMessages: addMessages,
 		loadFolder: loadFolder,
 		saveAttachment: saveAttachment,
 		openComposer: openComposer,
 		openForwardComposer: openForwardComposer,
-		loadMessage: loadMessage,
-		setFolderActive: setFolderActive,
-		setMessageActive: setMessageActive,
-		addAccount: addAccount
+		loadMessage: loadMessage
 	};
-
-	Object.defineProperties(view, {
-		Events: {
-			get: function() {
-				return Events;
-			}
-		},
-		messageView: {
-			get: function() {
-				return messageView;
-			},
-			set: function(mv) {
-				messageView = mv;
-			}
-		}
-	});
 
 	return view;
 });

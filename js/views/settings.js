@@ -13,6 +13,7 @@ define(function(require) {
 
 	var Handlebars = require('handlebars');
 	var Marionette = require('marionette');
+	var Radio = require('radio');
 	var SettingsAccountsView = require('views/settings-accounts');
 	var SettingsTemplate = require('text!templates/settings.html');
 
@@ -22,6 +23,9 @@ define(function(require) {
 		regions: {
 			accountsList: '#settings-accounts'
 		},
+		events: {
+			'click #new_mail_account': 'addAccount'
+		},
 		initialize: function(options) {
 			this.accounts = options.accounts;
 		},
@@ -29,6 +33,9 @@ define(function(require) {
 			this.accountsList.show(new SettingsAccountsView({
 				collection: this.accounts
 			}));
+		},
+		addAccount: function() {
+			Radio.account.trigger('add');
 		}
 	});
 });

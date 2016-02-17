@@ -11,8 +11,10 @@
 define(function(require) {
 	'use strict';
 
+	var $ = require('jquery');
 	var Backbone = require('backbone');
 	var Handlebars = require('handlebars');
+	var Radio = require('radio');
 	var MessageCollection = require('models/messagecollection');
 	var MessageView = require('views/message');
 	var MessageListTemplate = require('text!templates/message-list.html');
@@ -32,6 +34,18 @@ define(function(require) {
 		initialize: function() {
 			this.collection = new MessageCollection();
 			this.collection.on('change:flags', this.changeFlags, this);
+
+			var _this = this;
+			Radio.ui.reply('messagesview:collection', function() {
+				return _this.collection;
+			});
+			this.listenTo(Radio.ui, 'messagesview:messages:update', this.loadNew);
+			this.listenTo(Radio.ui, 'messagesview:messages:reset', this.reset);
+			this.listenTo(Radio.ui, 'messagesview:messages:add', this.addMessages);
+			this.listenTo(Radio.ui, 'messagesview:messageflag:set', this.setMessageFlag);
+			this.listenTo(Radio.ui, 'messagesview:filter', this.filterCurrentMailbox);
+			this.listenTo(Radio.ui, 'messagesview:filter:clear', this.clearFilter);
+			this.listenTo(Radio.ui, 'messagesview:message:setactive', this.setActiveMessage);
 		},
 		getEmptyView: function() {
 			if (this.filterCriteria) {
@@ -76,6 +90,9 @@ define(function(require) {
 					message.set('active', true);
 				}
 			}
+
+			require('state').currentMessageId = messageId;
+			require('state').folderView.updateTitle();
 
 		},
 		loadNew: function() {
@@ -138,13 +155,14 @@ define(function(require) {
 
 						$('#app-content').removeClass('icon-loading');
 
-						require('ui').setMessageActive(require('state').currentMessageId);
+						Radio.ui.trigger('messagesview:message:setactive', require('state').currentMessageId);
 					},
 					onError: function() {
-						require('ui').showError(t('mail', 'Error while loading messages.'));
+						Radio.ui.trigger('error:show', t('mail', 'Error while loading messages.'));
 						// Set the old folder as being active
-						require('ui').setFolderActive(require('state').currentAccountId,
-							require('state').currentFolderId);
+						var accountId = require('state').currentAccountId;
+						var folderId = require('state').currentFolderId;
+						Radio.folder.trigger('setactive', accountId, folderId);
 					},
 					onComplete: function() {
 						// Remove loading feedback again
@@ -158,6 +176,19 @@ define(function(require) {
 							.prop('disabled', false);
 					}
 				});
+		},
+		addMessages: function(data) {
+			this.collection.add(data);
+		},
+		reset: function() {
+			this.collection.reset();
+
+			$('#messages-loading').fadeIn();
+
+			// TODO: add event
+			$('#mail-message')
+				.html('')
+				.addClass('icon-loading');
 		}
 	});
 });

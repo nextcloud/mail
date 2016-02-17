@@ -13,6 +13,9 @@ define(function(require) {
 
 	var $ = require('jquery');
 	var _ = require('underscore');
+	var Radio = require('radio');
+
+	Radio.folder.on('init', loadFolder);
 
 	function urldecode(str) {
 		return decodeURIComponent((str + '').replace(/\+/g, '%20'));
@@ -66,8 +69,7 @@ define(function(require) {
 	}
 
 	function loadFolder(accountId, activeId) {
-		var fetchingFolders = require('app').request('folder:entities', accountId);
-		var UI = require('ui');
+		var fetchingFolders = Radio.folder.request('entities', accountId);
 
 		// TODO: create loading-view
 		$('#mail-messages').removeClass('hidden').addClass('icon-loading');
@@ -76,7 +78,7 @@ define(function(require) {
 		$('#folders').removeClass('hidden');
 		$('#setup').addClass('hidden');
 
-		UI.clearMessages();
+		Radio.ui.trigger('messagesview:messages:reset');
 		$('#app-navigation').addClass('icon-loading');
 
 		$.when(fetchingFolders).done(function(accountFolders) {
@@ -86,13 +88,13 @@ define(function(require) {
 			if (accountId === activeId) {
 				var folderId = accountFolders.folders[0].id;
 
-				require('app').trigger('folder:load', accountId, folderId, false);
+				Radio.ui.trigger('folder:load', accountId, folderId, false);
 
 				// Open composer if 'mailto' url-param is set
 				handleMailTo();
 
 				// Save current folder
-				UI.setFolderActive(accountId, folderId);
+				Radio.folder.trigger('setactive', accountId, folderId);
 				require('state').currentAccountId = accountId;
 				require('state').currentFolderId = folderId;
 
@@ -101,7 +103,7 @@ define(function(require) {
 			}
 		});
 		$.when(fetchingFolders).fail(function() {
-			UI.showError(t('mail', 'Error while loading the selected account.'));
+			Radio.ui.trigger('error:show', t('mail', 'Error while loading the selected account.'));
 		});
 	}
 

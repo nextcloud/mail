@@ -13,6 +13,10 @@ define(function(require) {
 
 	var $ = require('jquery');
 	var OC = require('OC');
+	var Radio = require('radio');
+
+	Radio.account.reply('create', createAccount);
+	Radio.account.reply('entities', getAccountEntities);
 
 	function createAccount(config) {
 		var defer = $.Deferred();

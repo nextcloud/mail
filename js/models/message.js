@@ -14,6 +14,7 @@ define(function(require) {
 	var Backbone = require('backbone');
 	var $ = require('jquery');
 	var OC = require('OC');
+	var Radio = require('radio');
 	var MessageFlags = require('models/messageflags');
 
 	return Backbone.Model.extend({
@@ -59,7 +60,7 @@ define(function(require) {
 				success: function() {
 				},
 				error: function() {
-					require('ui').showError(t('mail', 'Message could not be starred. Please try again.'));
+					Radio.ui.trigger('error:show', t('mail', 'Message could not be starred. Please try again.'));
 					_this.get('flags').set(flag, !value);
 				}
 			});

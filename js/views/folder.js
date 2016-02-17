@@ -13,6 +13,7 @@ define(function(require) {
 
 	var Backbone = require('backbone');
 	var Handlebars = require('handlebars');
+	var Radio = require('radio');
 	var FolderTemplate = require('text!templates/folder.html');
 
 	return Backbone.Marionette.ItemView.extend({
@@ -33,7 +34,7 @@ define(function(require) {
 			var accountId = this.model.get('accountId');
 			var folderId = $(e.currentTarget).parent().data('folder_id');
 			var noSelect = $(e.currentTarget).parent().data('no_select');
-			require('app').trigger('folder:load', accountId, folderId, noSelect);
+			Radio.ui.trigger('folder:load', accountId, folderId, noSelect);
 		},
 		onRender: function() {
 			// Get rid of that pesky wrapping-div.

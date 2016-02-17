@@ -11,12 +11,13 @@
 define(function(require) {
 	'use strict';
 
+	var Radio = require('radio');
 	var timeoutID = null;
 
 	function filter(query) {
 		window.clearTimeout(timeoutID);
 		timeoutID = window.setTimeout(function() {
-			require('ui').messageView.filterCurrentMailbox(query);
+			Radio.ui.trigger('messagesview:filter', query);
 		}, 500);
 		$('#searchresults').hide();
 	}

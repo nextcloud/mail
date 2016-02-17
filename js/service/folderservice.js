@@ -13,6 +13,9 @@ define(function(require) {
 
 	var $ = require('jquery');
 	var OC = require('OC');
+	var Radio = require('radio');
+
+	Radio.folder.reply('entities', getFolderEntities);
 
 	function getFolderEntities(accountId) {
 		var defer = $.Deferred();
