@@ -683,7 +683,7 @@ define(function(require) {
 	function addAccount() {
 		Events.onComposerLeave();
 
-		$('#mail_messages').addClass('hidden');
+		$('#mail-messages').addClass('hidden');
 		$('#mail-message').addClass('hidden');
 		$('#mail_new_message').addClass('hidden');
 		$('#app-navigation').removeClass('icon-loading');
