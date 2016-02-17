@@ -85,7 +85,7 @@ class MessagesController extends Controller {
 	 * @param string $appName
 	 * @param IRequest $request
 	 * @param AccountService $accountService
-	 * @param $UserId
+	 * @param string $UserId
 	 * @param $userFolder
 	 * @param ContactsIntegration $contactsIntegration
 	 * @param Logger $logger
@@ -427,6 +427,10 @@ class MessagesController extends Controller {
 		return \OC::$server->getURLGenerator()->getAbsoluteURL($htmlBodyUrl);
 	}
 
+	/**
+	 * @param integer $accountId
+	 * @param string $folderId
+	 */
 	private function loadMultiple($accountId, $folderId, $ids) {
 		$messages = array_map(function($id) use ($accountId, $folderId){
 			try {
@@ -445,7 +449,7 @@ class MessagesController extends Controller {
 	 * @param $id
 	 * @param $m
 	 * @param IAccount $account
-	 * @param $mailBox
+	 * @param IMailBox $mailBox
 	 * @return mixed
 	 */
 	private function enhanceMessage($accountId, $folderId, $id, $m, IAccount $account, $mailBox) {

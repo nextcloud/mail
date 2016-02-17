@@ -25,6 +25,9 @@ use OCA\Mail\Message;
 
 class UnifiedMailbox implements IMailBox {
 
+	/**
+	 * @param string $userId
+	 */
 	public function __construct(AccountService $accountService, $userId) {
 		$this->accountService = $accountService;
 		$this->userId = $userId;

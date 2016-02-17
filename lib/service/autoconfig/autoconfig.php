@@ -60,7 +60,7 @@ class AutoConfig {
 	/**
 	 * 
 	 * @param Logger $logger
-	 * @param string $userId
+	 * @param string $UserId
 	 * @param MozillaIspDb $mozillaIspDb
 	 * @param MxRecord $mxRecord
 	 * @param ImapConnectivityTester $imapTester
@@ -88,10 +88,10 @@ class AutoConfig {
 	}
 
 	/**
-	 * @param $email
-	 * @param $password
-	 * @param $name
-	 * @return MailAccount|null
+	 * @param string $email
+	 * @param string $password
+	 * @param string $name
+	 * @return null|MailAccount
 	 */
 	public function createAutoDetected($email, $password, $name) {
 
@@ -178,7 +178,7 @@ class AutoConfig {
 	 * @param $email
 	 * @param $password
 	 * @param $name
-	 * @return MailAccount|null
+	 * @return null|MailAccount
 	 */
 	private function detectImapAndSmtp($email, $password, $name) {
 		$account = $this->imapServerDetector->detect($email, $password, $name);

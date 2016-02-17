@@ -223,7 +223,7 @@ class UnifiedAccount implements IAccount {
 	}
 
 	/**
-	 * @param $messageId
+	 * @param string $messageId
 	 * @return array
 	 */
 	public function resolve($messageId) {

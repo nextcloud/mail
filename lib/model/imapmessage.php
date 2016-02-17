@@ -232,7 +232,7 @@ class IMAPMessage implements IMessage {
 	}
 
 	/**
-	 * @return array
+	 * @return string
 	 */
 	public function getToList($assoc = false) {
 		$e = $this->getEnvelope();
