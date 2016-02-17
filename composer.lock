@@ -4,8 +4,8 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#composer-lock-the-lock-file",
         "This file is @generated automatically"
     ],
-    "hash": "e6c2da5dfbb8ce15987f6945fbaeca81",
-    "content-hash": "1783b888b9432ce6344476c368a0b4ae",
+    "hash": "1019e5ae1ba9e28992eaa4d96cfb4243",
+    "content-hash": "91929e085e52464bf01c5b7a2713b6cd",
     "packages": [
         {
             "name": "ezyang/htmlpurifier",
@@ -94,7 +94,7 @@
             ],
             "description": "Autolink URLs in text or html",
             "homepage": "http://www.kwi.dk/projects/php/UrlLinker/",
-            "time": "2014-12-28 22:05:00"
+            "time": "2014-12-28 23:05:00"
         },
         {
             "name": "pear-pear.horde.org/Horde_Crypt_Blowfish",
@@ -367,20 +367,20 @@
         },
         {
             "name": "pear-pear.horde.org/Horde_Nls",
-            "version": "2.1.0",
+            "version": "2.1.1",
             "dist": {
                 "type": "file",
-                "url": "http://pear.horde.org/get/Horde_Nls-2.1.0.tgz",
+                "url": "http://pear.horde.org/get/Horde_Nls-2.1.1.tgz",
                 "reference": null,
                 "shasum": null
             },
             "require": {
                 "pear-pear.horde.org/horde_translation": "<3.0.0.0",
                 "pear-pear.horde.org/horde_util": "<3.0.0.0",
-                "php": "<6.0.0.0"
+                "php": "<8.0.0.0"
             },
             "replace": {
-                "pear-horde/horde_nls": "== 2.1.0.0"
+                "pear-horde/horde_nls": "== 2.1.1.0"
             },
             "type": "pear-library",
             "autoload": {
@@ -466,19 +466,19 @@
         },
         {
             "name": "pear-pear.horde.org/Horde_Socket_Client",
-            "version": "2.1.0",
+            "version": "2.1.1",
             "dist": {
                 "type": "file",
-                "url": "http://pear.horde.org/get/Horde_Socket_Client-2.1.0.tgz",
+                "url": "http://pear.horde.org/get/Horde_Socket_Client-2.1.1.tgz",
                 "reference": null,
                 "shasum": null
             },
             "require": {
                 "pear-pear.horde.org/horde_exception": "<3.0.0.0",
-                "php": "<6.0.0.0"
+                "php": "<8.0.0.0"
             },
             "replace": {
-                "pear-horde/horde_socket_client": "== 2.1.0.0"
+                "pear-horde/horde_socket_client": "== 2.1.1.0"
             },
             "type": "pear-library",
             "autoload": {

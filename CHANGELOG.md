@@ -14,6 +14,9 @@ New:
 * Address collector - Addresses of sent mails will be used for auto-completion
   [#1276](https://github.com/owncloud/mail/pull/1276) @ChristophWurst
 
+* PHP 7 support
+  [#1300](https://github.com/owncloud/mail/pull/1300) @ChristophWurst
+
 Fixes:
 
 * 
