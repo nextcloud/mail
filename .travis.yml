@@ -1,4 +1,5 @@
-sudo: false
+sudo: required
+dist: trusty
 language: php
 php:
   - 5.4
@@ -6,12 +7,22 @@ php:
   - 5.6
   - 7
 
+addons:
+  apt:
+    packages:
+    - mysql-server-5.6
+    - mysql-client-core-5.6
+    - mysql-client-5.6
+
+services:
+  - docker
+  - postgresql
+
 env:
   global:
     - CORE_BRANCH=master
     - TEST_JS=FALSE
-    - secure: AaTeRG3kL/LeMOcMgul08EUBM7Kdtrkz9EAGPauKdxXbxggP0j5SxN8ciYxc8CiVni0CYJofW07YjG6tXqhvHeMINHx8Q+5KUUfiLwNrLgl1sMkh7vPR9EA5Z1Y8Nz4N1Qt7zxpqWKPHUsjUNFWxP2TPHEq2FEOGeKbsI7GOYas=
-    - secure: S5agbWaWSLgbujsVhZB9WkCAM0ris8uh9hPnspYw48bolkMhknJ7JxOWGV4rOcJ52kdOgifFRE9XYi65RFLL8zuaZDBU2zFoXO3fpatziYEiIWnxVrkogw1pnh/FeRnrUld+QDykFyUcfSGdFRw5R5FuZHrxe+Q5bHfiEjh4hlE=
+    - PHP_COVERAGE=FALSE
   matrix:
     - DB=sqlite
 
@@ -27,8 +38,22 @@ cache:
     - $HOME/.cache/bower
 
 before_install:
+    # No 'travis' mysql on trusty beta -> create it
+  - mysql -u root -e "CREATE USER 'travis'@'localhost'"
+  - mysql -u root -e "GRANT ALL ON *.* TO 'travis'@'localhost';"
+
+    # Get old phpunit that supports php 5.4
+  - sh -c "if [ '$TRAVIS_PHP_VERSION' = '5.4' ]; then curl -s -o $HOME/.phpenv/versions/5.4/bin/phpunit https://phar.phpunit.de/phpunit-4.8.9.phar; fi"
+  - sh -c "if [ '$TRAVIS_PHP_VERSION' = '5.4' ]; then chmod +x $HOME/.phpenv/versions/5.4/bin/phpunit; fi"
+
+    # Install dependencies
   - composer self-update
   - make install-composer-deps
+
+    # Pull and start imap docker
+  - make start-imap-docker
+
+    # Core setup
   - wget https://raw.githubusercontent.com/owncloud/administration/master/travis-ci/before_install.sh
   - bash ./before_install.sh mail $CORE_BRANCH $DB
   - cd ../core
@@ -38,6 +63,9 @@ before_install:
 before_script:
   - cd apps/mail
   - sh -c "if [ '$TEST_JS' = 'TRUE' ]; then make dev-setup; fi"
+  - make add-imap-account
+    # Disable xdebug if it's not needed
+  - if [[ "$PHP_COVERAGE" = "FALSE" ]]; then phpenv config-rm xdebug.ini; fi
 
 script:
   # Test lint
@@ -51,14 +79,14 @@ script:
   - phpunit --configuration phpunit.xml
 
   # Create coverage report
-  - sh -c "wget https://scrutinizer-ci.com/ocular.phar"
-  - sh -c "php ocular.phar code-coverage:upload --format=php-clover clover.xml"
+  - if [[ "$PHP_COVERAGE" = "TRUE" ]]; then wget https://scrutinizer-ci.com/ocular.phar; fi
+  - if [[ "$PHP_COVERAGE" = "TRUE" ]]; then php ocular.phar code-coverage:upload --format=php-clover clover.xml; fi
 matrix:
   include:
     - php: 5.4
       env: "DB=mysql TEST_JS=TRUE"
     - php: 5.4
-      env: DB=pgsql
+      env: "DB=pgsql PHP_COVERAGE=TRUE"
     - php: 5.4
       env: "DB=mysql CORE_BRANCH=stable8"
     - php: 5.4

@@ -6,6 +6,9 @@ build_dir=$(CURDIR)/build/artifacts
 appstore_dir=$(build_dir)/appstore
 source_dir=$(build_dir)/source
 package_name=$(app_name)
+docker_image=christophwurst/owncloud-mail-test-docker
+mail_user=user@domain.tld
+mail_pwd=mypassword
 
 all: appstore
 
@@ -35,6 +38,15 @@ optimize-js: install-npm-deps install-bower-deps
 	./node_modules/requirejs/bin/r.js -o build.js
 
 dev-setup: install-composer-deps install-npm-deps-dev install-bower-deps
+
+start-imap-docker:
+	docker pull $(docker_image)
+	docker run --name="ocimaptest" -d \
+	-p 2525:25 -p 587:587 -p 993:993 \
+	-e POSTFIX_HOSTNAME=mail.domain.tld $(docker_image)
+
+add-imap-account:
+	docker exec -it ocimaptest /opt/bin/useradd $(mail_user) $(mail_pwd)
 
 update-composer:
 	rm -f composer.lock
