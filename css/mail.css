@@ -570,6 +570,13 @@ input.submit-message {
 	overflow-y: auto;
 	overflow-x: hidden;
 }
+.mail-message-container {
+	position: absolute;
+	top: 0px;
+	right: 0px;
+	bottom: 0px;
+	left: 0px;
+}
 
 
 .new-message-attachments-action {

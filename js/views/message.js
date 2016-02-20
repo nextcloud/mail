@@ -1,3 +1,5 @@
+/* global adjustControlsWidth */
+
 /**
  * ownCloud - Mail
  *
@@ -13,6 +15,7 @@ define(function(require) {
 
 	var Marionette = require('marionette');
 	var Handlebars = require('handlebars');
+	var _ = require('underscore');
 	var $ = require('jquery');
 	var HtmlHelper = require('util/htmlhelper');
 	var ComposerView = require('views/composer');
@@ -20,6 +23,7 @@ define(function(require) {
 
 	return Marionette.LayoutView.extend({
 		template: Handlebars.compile(MessageTemplate),
+		className: 'mail-message-container',
 		message: null,
 		reply: null,
 		ui: {
@@ -29,7 +33,7 @@ define(function(require) {
 			replyComposer: '#reply-composer'
 		},
 		events: {
-			'load': '@ui.messageIframe'
+			'load @ui.messageIframe': 'onIframeLoad'
 		},
 		initialize: function(options) {
 			this.message = options.model;
@@ -68,8 +72,7 @@ define(function(require) {
 			}
 		},
 		onIframeLoad: function() {
-			alert('IFRAME LOAD');
-			/*// Expand height to not have two scrollbars
+			// Expand height to not have two scrollbars
 			this.ui.messageIframe.height(this.ui.messageIframe.contents().find('html').height() + 20);
 			// Fix styling
 			this.ui.messageIframe.contents().find('body').css({
@@ -115,18 +118,20 @@ define(function(require) {
 			// Add body content to inline reply (html mails)
 			var text = this.ui.messageIframe.contents().find('body').html();
 			text = HtmlHelper.htmlToText(text);
-			if (!draft) {
+			/*if (!draft) {
 				var date = new Date(message.dateIso);
 				replyComposer.setReplyBody(message.from, date, text);
-			}
+			}*/
 
 			// Safe current mesages's content for later use (forward)
 			require('state').currentMessageBody = text;
 
 			// Show forward button
-			this.$('#forward-button').show();*/
+			this.$('#forward-button').show();
 		},
 		onShow: function() {
+			this.ui.messageIframe.on('load', _.bind(this.onIframeLoad, this));
+
 			// Set max width for attached images
 			var _this = this;
 			this.$('.mail-message-attachments img.mail-attached-image').each(function() {

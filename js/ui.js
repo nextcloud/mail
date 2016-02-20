@@ -1,5 +1,3 @@
-/* global adjustControlsWidth */
-
 /**
  * ownCloud - Mail
  *
