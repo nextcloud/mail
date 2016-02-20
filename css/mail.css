@@ -4,6 +4,12 @@
 	top: 50%;
 }
 
+.container {
+	position: relative;
+	width: 100%;
+	height: 100%;
+}
+
 .mail-account {
 	width: 100%;
 }

@@ -25,16 +25,15 @@
  */
 // TODO: remove DEBUG constant check once minimum oc
 // core version >= 8.2, see https://github.com/owncloud/core/pull/18510
-$debug = (defined('DEBUG') && DEBUG)
-	|| \OC::$server->getConfig()->getSystemValue('debug', false);
+$debug = (defined('DEBUG') && DEBUG) || \OC::$server->getConfig()->getSystemValue('debug', false);
 
-style('mail','mail');
-style('mail','mobile');
-script('mail','vendor/autosize/jquery.autosize');
+style('mail', 'mail');
+style('mail', 'mobile');
+script('mail', 'vendor/autosize/jquery.autosize');
 script('mail', 'vendor/jQuery-Storage-API/jquery.storageapi');
 script('mail', 'vendor/jquery-visibility/jquery-visibility');
 script('mail', 'vendor/requirejs/require');
-script('mail','searchproxy');
+script('mail', 'searchproxy');
 if ($debug) {
 	// Load JS dependencies asynchronously as specified in require_config.js
 	script('mail', 'require_config');
@@ -65,9 +64,5 @@ if ($debug) {
 			<div id="app-settings-content"></div>
 		</div>
 	</div>
-	<div id="app-content">
-		<div id="mail-messages"></div>
-		<div id="setup" class="hidden" ></div>
-		<div id="mail-message" class="icon-loading hidden-mobile"></div>
-	</div>
+	<div id="app-content"></div>
 </div>

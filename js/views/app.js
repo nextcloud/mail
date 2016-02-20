@@ -15,7 +15,7 @@ define(function(require) {
 	var $ = require('jquery');
 	var OC = require('OC');
 	var Radio = require('radio');
-	var MessagesView = require('views/messages');
+	var MessageContentView = require('views/messagecontent');
 	var NavigationAccountsView = require('views/navigation-accounts');
 	var SettingsView = require('views/settings');
 	var NavigationView = require('views/navigation');
@@ -23,6 +23,8 @@ define(function(require) {
 
 	var AppView = Marionette.LayoutView.extend({
 		el: $('#app'),
+		accountsView: null,
+		messageContentView: null,
 		regions: {
 			navigation: '#app-navigation',
 			content: '#app-content',
@@ -55,24 +57,13 @@ define(function(require) {
 			this.navigation.settings.show(new SettingsView({
 				accounts: require('state').accounts
 			}));
-			this.setup.show(new SetupView({
-				displayName: $('#user-displayname').text(),
-				email: $('#user-email').text()
-			}));
-
-			// setup messages view
-			var messageView = new MessagesView({
-				el: $('#mail-messages')
-			});
-			messageView.render();
 
 			// setup folder view
-			var accountsView = new NavigationAccountsView();
-			require('state').folderView = accountsView;
-			this.navigation.accounts.show(accountsView);
+			this.accountsView = new NavigationAccountsView();
+			require('state').folderView = this.accountsView;
+			this.navigation.accounts.show(this.accountsView);
 
-			accountsView.listenTo(messageView, 'change:unseen',
-				accountsView.changeUnseen);
+			this.showMessageContent();
 		},
 		onDocumentShow: function(e) {
 			e.preventDefault();
@@ -132,6 +123,21 @@ define(function(require) {
 				.removeClass('icon-loading');
 			$('#mail_message')
 				.removeClass('icon-loading');
+		},
+		showSetup: function() {
+			this.content.show(new SetupView({
+				displayName: $('#user-displayname').text(),
+				email: $('#user-email').text()
+			}));
+		},
+		showMessageContent: function() {
+			if (this.messageContentView === null) {
+				this.messageContentView = new MessageContentView();
+				var accountsView = this.accountsView;
+				this.accountsView.listenTo(this.messageContentView.messages, 'change:unseen',
+					accountsView.changeUnseen);
+			}
+			this.content.show(this.messageContentView);
 		},
 		hideContent: function() {
 			$('#mail-messages').addClass('hidden');

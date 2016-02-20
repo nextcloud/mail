@@ -16,13 +16,13 @@ define(function(require) {
 	var Handlebars = require('handlebars');
 	var Radio = require('radio');
 	var MessageCollection = require('models/messagecollection');
-	var MessageView = require('views/message');
+	var MessagesItemView = require('views/messagesitem');
 	var MessageListTemplate = require('text!templates/message-list.html');
 	var NoSearchResultMessageListView = require('views/nosearchresultmessagelistview');
 
 	return Backbone.Marionette.CompositeView.extend({
 		collection: null,
-		childView: MessageView,
+		childView: MessagesItemView,
 		childViewContainer: '#mail-message-list',
 		template: Handlebars.compile(MessageListTemplate),
 		currentMessageId: null,

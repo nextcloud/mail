@@ -15,11 +15,9 @@ define(function(require) {
 
 	var _ = require('underscore');
 	var $ = require('jquery');
-	var Handlebars = require('handlebars');
 	var OC = require('OC');
 	var Radio = require('radio');
 	var ComposerView = require('views/composer');
-	var HtmlHelper = require('util/htmlhelper');
 
 	require('views/helper');
 
@@ -30,6 +28,11 @@ define(function(require) {
 		loadMessage(messageId, options);
 	});
 	Radio.ui.on('composer:leave', onComposerLeave);
+	Radio.ui.on('composer:events:undelegate', function() {
+		if (composer) {
+			composer.undelegateEvents();
+		}
+	});
 
 	var composer = null;
 	var composerVisible = false;
@@ -323,8 +326,7 @@ define(function(require) {
 			}
 		}
 
-		var mailBody = $('#mail-message');
-		mailBody.html('').addClass('icon-loading');
+		Radio.ui.trigger('message:loading');
 
 		// Set current Message as active
 		Radio.ui.trigger('messagesview:message:setactive', messageId);
@@ -332,137 +334,6 @@ define(function(require) {
 
 		// Fade out the message composer
 		$('#mail_new_message').prop('disabled', false);
-
-		var loadMessageSuccess = function(message) {
-			var reply = {
-				replyToList: message.replyToList,
-				replyCc: message.ReplyCc,
-				replyCcList: message.replyCcList,
-				body: ''
-			};
-
-			// Add body content to inline reply (text mails)
-			if (!message.hasHtmlBody) {
-				var date = new Date(message.dateIso);
-				var minutes = date.getMinutes();
-				var text = HtmlHelper.htmlToText(message.body);
-
-				reply.body = '\n\n\n\n' +
-					message.from + ' – ' +
-					$.datepicker.formatDate('D, d. MM yy ', date) +
-					date.getHours() + ':' + (minutes < 10 ? '0' : '') + minutes + '\n> ' +
-					text.replace(/\n/g, '\n> ');
-			}
-
-			// Save current messages's content for later use (forward)
-			if (!message.hasHtmlBody) {
-				require('state').currentMessageBody = message.body;
-			}
-			require('state').currentMessageSubject = message.subject;
-
-			// Render the message body
-			var source = require('text!templates/message.html');
-			var template = Handlebars.compile(source);
-			var html = template(message);
-			mailBody
-				.html(html)
-				.removeClass('icon-loading');
-			adjustControlsWidth();
-
-			// Temporarily disable new-message composer events
-			if (composer) {
-				composer.undelegateEvents();
-			}
-
-			// setup reply composer view
-			var replyComposer = new ComposerView({
-				el: $('#reply-composer'),
-				type: 'reply',
-				onSubmit: require('communication').sendMessage,
-				onDraft: require('communication').saveDraft,
-				accountId: message.accountId,
-				folderId: message.folderId,
-				messageId: message.messageId
-			});
-			replyComposer.render({
-				data: reply
-			});
-
-			// Hide forward button until the message has finished loading
-			if (message.hasHtmlBody) {
-				$('#forward-button').hide();
-			}
-
-			// Set max width for attached images
-			$('.mail-message-attachments img.mail-attached-image').each(function() {
-				$(this).css({
-					'max-width': $('.mail-message-body').width(),
-					'height': 'auto'
-				});
-			});
-
-			Radio.ui.trigger('messagesview:messageflag:set', messageId, 'unseen', false);
-
-			// HTML mail rendering
-			$('iframe').load(function() {
-				// Expand height to not have two scrollbars
-				$(this).height($(this).contents().find('html').height() + 20);
-				// Fix styling
-				$(this).contents().find('body').css({
-					'margin': '0',
-					'font-weight': 'normal',
-					'font-size': '.8em',
-					'line-height': '1.6em',
-					'font-family': '"Open Sans", Frutiger, Calibri, "Myriad Pro", Myriad, sans-serif',
-					'color': '#000'
-				});
-				// Fix font when different font is forced
-				$(this).contents().find('font').prop({
-					'face': 'Open Sans',
-					'color': '#000'
-				});
-				$(this).contents().find('.moz-text-flowed').css({
-					'font-family': 'inherit',
-					'font-size': 'inherit'
-				});
-				// Expand height again after rendering to account for new size
-				$(this).height($(this).contents().find('html').height() + 20);
-				// Grey out previous replies
-				$(this).contents().find('blockquote').css({
-					'color': '#888'
-				});
-				// Remove spinner when loading finished
-				$('iframe').parent().removeClass('icon-loading');
-
-				// Does the html mail have blocked images?
-				var hasBlockedImages = false;
-				if ($(this).contents().
-					find('[data-original-src],[data-original-style]').length) {
-					hasBlockedImages = true;
-				}
-
-				// Show/hide button to load images
-				if (hasBlockedImages) {
-					$('#show-images-text').show();
-				} else {
-					$('#show-images-text').hide();
-				}
-
-				// Add body content to inline reply (html mails)
-				var text = $(this).contents().find('body').html();
-				text = HtmlHelper.htmlToText(text);
-				if (!draft) {
-					var date = new Date(message.dateIso);
-					replyComposer.setReplyBody(message.from, date, text);
-				}
-
-				// Safe current mesages's content for later use (forward)
-				require('state').currentMessageBody = text;
-
-				// Show forward button
-				$('#forward-button').show();
-			});
-		};
 
 		var loadDraftSuccess = function(data) {
 			openComposer(data);
@@ -480,7 +351,7 @@ define(function(require) {
 						require('cache').addMessage(require('state').currentAccountId,
 							require('state').currentFolderId,
 							message);
-						loadMessageSuccess(message);
+						Radio.ui.trigger('message:show', message);
 					}
 				},
 				onError: function(jqXHR, textStatus) {
