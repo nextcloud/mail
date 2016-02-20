@@ -32,9 +32,6 @@ define(function(require) {
 		regions: {
 			replyComposer: '#reply-composer'
 		},
-		events: {
-			'load @ui.messageIframe': 'onIframeLoad'
-		},
 		initialize: function(options) {
 			this.message = options.model;
 			this.reply = {
@@ -93,7 +90,7 @@ define(function(require) {
 				'font-size': 'inherit'
 			});
 			// Expand height again after rendering to account for new size
-			this.ui.messageIframe.height($(this).contents().find('html').height() + 20);
+			this.ui.messageIframe.height(this.ui.messageIframe.contents().find('html').height() + 20);
 			// Grey out previous replies
 			this.ui.messageIframe.contents().find('blockquote').css({
 				'color': '#888'
@@ -118,10 +115,8 @@ define(function(require) {
 			// Add body content to inline reply (html mails)
 			var text = this.ui.messageIframe.contents().find('body').html();
 			text = HtmlHelper.htmlToText(text);
-			/*if (!draft) {
-				var date = new Date(message.dateIso);
-				replyComposer.setReplyBody(message.from, date, text);
-			}*/
+			var date = new Date(this.message.get('dateIso'));
+			this.replyComposer.currentView.setReplyBody(this.message.get('from'), date, text);
 
 			// Safe current mesages's content for later use (forward)
 			require('state').currentMessageBody = text;

@@ -184,11 +184,6 @@ define(function(require) {
 			this.collection.reset();
 
 			$('#messages-loading').fadeIn();
-
-			// TODO: add event
-			$('#mail-message')
-				.html('')
-				.addClass('icon-loading');
 		}
 	});
 });
