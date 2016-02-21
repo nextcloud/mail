@@ -5,7 +5,7 @@
  * later. See the COPYING file.
  *
  * @author Christoph Wurst <christoph@winzerhof-wurst.at>
- * @copyright Christoph Wurst 2015
+ * @copyright Christoph Wurst 2016
  */
 
 define(function(require) {
@@ -18,9 +18,7 @@ define(function(require) {
 	Radio.account.on('load', loadAccounts);
 
 	function addAccount() {
-		// Todo: render SetupView into #app-content
 		Radio.ui.trigger('composer:leave');
-		Radio.ui.trigger('content:hide');
 		Radio.ui.trigger('navigation:hide');
 		Radio.ui.trigger('setup:show');
 	}

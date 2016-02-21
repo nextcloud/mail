@@ -5,7 +5,7 @@
  * later. See the COPYING file.
  *
  * @author Christoph Wurst <christoph@winzerhof-wurst.at>
- * @copyright Christoph Wurst 2015
+ * @copyright Christoph Wurst 2016
  */
 
 define(function(require) {
@@ -21,10 +21,15 @@ define(function(require) {
 	var NavigationView = require('views/navigation');
 	var SetupView = require('views/setup');
 
+	var ContentType = Object.freeze({
+		MESSAGE_CONTENT: 0,
+		SETUP: 1
+	});
+
 	var AppView = Marionette.LayoutView.extend({
 		el: $('#app'),
 		accountsView: null,
-		messageContentView: null,
+		activeContent: null,
 		regions: {
 			navigation: '#app-navigation',
 			content: '#app-content',
@@ -40,7 +45,8 @@ define(function(require) {
 			this.listenTo(Radio.notification, 'favicon:change', this.changeFavicon);
 			this.listenTo(Radio.ui, 'notification:show', this.showNotification);
 			this.listenTo(Radio.ui, 'error:show', this.showError);
-			this.listenTo(Radio.ui, 'content:hide', this.hideContent);
+			this.listenTo(Radio.ui, 'setup:show', this.showSetup);
+			this.listenTo(Radio.ui, 'messagecontent:show', this.showMessageContent);
 
 			// Hide notification favicon when switching back from
 			// another browser tab
@@ -125,25 +131,25 @@ define(function(require) {
 				.removeClass('icon-loading');
 		},
 		showSetup: function() {
-			this.content.show(new SetupView({
-				displayName: $('#user-displayname').text(),
-				email: $('#user-email').text()
-			}));
+			if (this.activeContent !== ContentType.SETUP) {
+				this.activeContent = ContentType.SETUP;
+
+				this.content.show(new SetupView({
+					displayName: $('#user-displayname').text(),
+					email: $('#user-email').text()
+				}));
+			}
 		},
 		showMessageContent: function() {
-			if (this.messageContentView === null) {
-				this.messageContentView = new MessageContentView();
+			if (this.accountsView !== ContentType.MESSAGE_CONTENT) {
+				this.activeContent = ContentType.MESSAGE_CONTENT;
+
+				var messageContentView = new MessageContentView();
 				var accountsView = this.accountsView;
-				this.accountsView.listenTo(this.messageContentView.messages, 'change:unseen',
+				this.accountsView.listenTo(messageContentView.messages, 'change:unseen',
 					accountsView.changeUnseen);
+				this.content.show(messageContentView);
 			}
-			this.content.show(this.messageContentView);
-		},
-		hideContent: function() {
-			$('#mail-messages').addClass('hidden');
-			$('#mail-message').addClass('hidden');
-			$('#mail_new_message').addClass('hidden');
-			$('#app-navigation').removeClass('icon-loading');
 		}
 	});
 

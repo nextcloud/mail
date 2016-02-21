@@ -5,7 +5,7 @@
  * later. See the COPYING file.
  *
  * @author Christoph Wurst <christoph@winzerhof-wurst.at>
- * @copyright Christoph Wurst 2015
+ * @copyright Christoph Wurst 2016
  */
 
 define(function(require) {
@@ -59,6 +59,7 @@ define(function(require) {
 
 	function loadFolder(accountId, folderId, noSelect) {
 		Radio.ui.trigger('composer:leave');
+		Radio.ui.trigger('messagecontent:show');
 
 		if (require('state').messagesLoading !== null) {
 			require('state').messagesLoading.abort();
@@ -71,19 +72,13 @@ define(function(require) {
 		Radio.folder.trigger('setactive', accountId, folderId);
 		Radio.ui.trigger('messagesview:messages:reset');
 		$('#mail-messages')
-			.removeClass('hidden')
-			.addClass('icon-loading')
-			.removeClass('hidden');
+			.addClass('icon-loading');
 		$('#mail_new_message')
 			.removeClass('hidden')
 			.fadeIn();
-		$('#mail-message').removeClass('hidden');
-		$('#folders').removeClass('hidden');
-		$('#setup').addClass('hidden');
 
 		$('#load-new-mail-messages').hide();
 		$('#load-more-mail-messages').hide();
-		$('#emptycontent').hide();
 
 		if (noSelect) {
 			$('#emptycontent').show();
