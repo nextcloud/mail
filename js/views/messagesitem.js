@@ -11,6 +11,7 @@
 define(function(require) {
 	'use strict';
 
+	var $ = require('jquery');
 	var Handlebars = require('handlebars');
 	var Marionette = require('marionette');
 	var OC = require('OC');
@@ -71,10 +72,10 @@ define(function(require) {
 		openMessage: function(event) {
 			event.stopPropagation();
 			$('#mail-message').removeClass('hidden-mobile');
-			var accountId = require('state').currentAccountId;
+			var account = require('state').currentAccount;
 			var folderId = require('state').currentFolderId;
 			var messageId = this.model.id; //TODO: backbone property
-			Radio.ui.trigger('message:load', accountId, folderId, messageId, {
+			Radio.ui.trigger('message:load', account, folderId, messageId, {
 				force: true
 			});
 		},
@@ -99,10 +100,10 @@ define(function(require) {
 				thisModelCollection.remove(thisModel);
 				if (require('state').currentMessageId === thisModel.id) {
 					if (nextMessage) {
-						var accountId = require('state').currentAccountId;
+						var account = require('state').currentAccount;
 						var folderId = require('state').currentFolderId;
 						var messageId = nextMessage.id; //TODO: backbone property
-						Radio.ui.trigger('message:load', accountId, folderId, messageId);
+						Radio.ui.trigger('message:load', account, folderId, messageId);
 					}
 				}
 				// manually trigger mouseover event for current mouse position
@@ -116,7 +117,7 @@ define(function(require) {
 			$.ajax(
 				OC.generateUrl('apps/mail/accounts/{accountId}/folders/{folderId}/messages/{messageId}',
 					{
-						accountId: require('state').currentAccountId,
+						accountId: require('state').currentAccount.get('accountId'),
 						folderId: require('state').currentFolderId,
 						messageId: thisModel.id
 					}), {
@@ -125,7 +126,7 @@ define(function(require) {
 				success: function() {
 					var cache = require('cache');
 					var state = require('state');
-					cache.removeMessage(state.currentAccountId, state.currentFolderId, thisModel.id);
+					cache.removeMessage(state.currentAccount, state.currentFolderId, thisModel.id);
 				},
 				error: function() {
 					Radio.ui.trigger('error:show', t('mail', 'Error while deleting message.'));

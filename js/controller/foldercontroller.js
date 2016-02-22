@@ -14,6 +14,7 @@ define(function(require) {
 	var $ = require('jquery');
 	var _ = require('underscore');
 	var Radio = require('radio');
+	var FolderService = require('service/folderservice');
 
 	Radio.folder.on('init', loadFolder);
 
@@ -65,11 +66,11 @@ define(function(require) {
 		});
 
 		window.location.hash = '';
-		require('ui').openComposer(composerOptions);
+		Radio.ui.trigger('composer:show', composerOptions);
 	}
 
-	function loadFolder(accountId, activeId) {
-		var fetchingFolders = Radio.folder.request('entities', accountId);
+	function loadFolder(account, active) {
+		var fetchingFolders = FolderService.getFolderEntities(account);
 
 		// TODO: create loading-view
 		$('#mail-messages').addClass('icon-loading');
@@ -83,17 +84,17 @@ define(function(require) {
 			$('#app-navigation').removeClass('icon-loading');
 			require('state').folderView.collection.add(accountFolders);
 
-			if (accountId === activeId) {
+			if (account === active) {
 				var folderId = accountFolders.folders[0].id;
 
-				Radio.ui.trigger('folder:load', accountId, folderId, false);
+				Radio.ui.trigger('folder:show', account, folderId, false);
 
 				// Open composer if 'mailto' url-param is set
 				handleMailTo();
 
 				// Save current folder
-				Radio.folder.trigger('setactive', accountId, folderId);
-				require('state').currentAccountId = accountId;
+				Radio.folder.trigger('setactive', account, folderId);
+				require('state').currentAccount = account;
 				require('state').currentFolderId = folderId;
 
 				// Start fetching messages in background

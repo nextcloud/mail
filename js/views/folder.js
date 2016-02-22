@@ -11,6 +11,7 @@
 define(function(require) {
 	'use strict';
 
+	var $ = require('jquery');
 	var Backbone = require('backbone');
 	var Handlebars = require('handlebars');
 	var Radio = require('radio');
@@ -31,10 +32,11 @@ define(function(require) {
 		},
 		loadFolder: function(e) {
 			e.preventDefault();
-			var accountId = this.model.get('accountId');
+			// TODO: account should be property of folder
+			var account = require('state').accounts.get(this.model.get('accountId'));
 			var folderId = $(e.currentTarget).parent().data('folder_id');
 			var noSelect = $(e.currentTarget).parent().data('no_select');
-			Radio.ui.trigger('folder:load', accountId, folderId, noSelect);
+			Radio.ui.trigger('folder:show', account, folderId, noSelect);
 		},
 		onRender: function() {
 			// Get rid of that pesky wrapping-div.

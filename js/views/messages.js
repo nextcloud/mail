@@ -96,7 +96,7 @@ define(function(require) {
 
 		},
 		loadNew: function() {
-			if (!require('state').currentAccountId) {
+			if (!require('state').currentAccount) {
 				return;
 			}
 			if (!require('state').currentFolderId) {
@@ -137,7 +137,7 @@ define(function(require) {
 
 			var _this = this;
 			require('communication').fetchMessageList(
-				require('state').currentAccountId,
+				require('state').currentAccount,
 				require('state').currentFolderId,
 				{
 					from: from,
@@ -160,9 +160,9 @@ define(function(require) {
 					onError: function() {
 						Radio.ui.trigger('error:show', t('mail', 'Error while loading messages.'));
 						// Set the old folder as being active
-						var accountId = require('state').currentAccountId;
+						var account = require('state').currentAccount;
 						var folderId = require('state').currentFolderId;
-						Radio.folder.trigger('setactive', accountId, folderId);
+						Radio.folder.trigger('setactive', account, folderId);
 					},
 					onComplete: function() {
 						// Remove loading feedback again

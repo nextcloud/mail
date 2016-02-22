@@ -18,7 +18,7 @@ define(function(require) {
 
 	var accounts = new AccountCollection();
 	var currentFolderId = null;
-	var currentAccountId = null;
+	var currentAccount = null;
 	var currentMessageId = null;
 	var currentMessageSubject = null;
 	var currentMessageBody = '';
@@ -34,12 +34,12 @@ define(function(require) {
 				accounts = acc;
 			}
 		},
-		currentAccountId: {
+		currentAccount: {
 			get: function() {
-				return currentAccountId;
+				return currentAccount;
 			},
-			set: function(newId) {
-				currentAccountId = newId;
+			set: function(account) {
+				currentAccount = account;
 			}
 		},
 		currentFolderId: {

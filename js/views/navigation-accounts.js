@@ -28,10 +28,9 @@ define(function(require) {
 			this.listenTo(Radio.ui, 'folder:changed', this.onFolderChanged);
 			this.listenTo(Radio.folder, 'setactive', this.setFolderActive);
 		},
-		getFolderById: function(accountId, folderId) {
-			var activeAccount = accountId || require('state').currentAccountId;
+		getFolderById: function(account, folderId) {
+			var activeAccount = account || require('state').currentAccount;
 			folderId = folderId || require('state').currentFolderId;
-			activeAccount = this.collection.get(activeAccount);
 			var activeFolder = activeAccount.get('folders').get(folderId);
 			if (!_.isUndefined(activeFolder)) {
 				return activeFolder;
@@ -48,7 +47,7 @@ define(function(require) {
 			return activeFolder;
 		},
 		changeUnseen: function(model, unseen) {
-			// TODO: currentFolderId and currentAccountId should be an attribute of this view
+			// TODO: currentFolderId and currentAccount should be an attribute of this view
 			var activeFolder = this.getFolderById();
 			if (unseen) {
 				activeFolder.set('unseen', activeFolder.get('unseen') + 1);
@@ -61,9 +60,8 @@ define(function(require) {
 		},
 		updateTitle: function() {
 			var activeEmail = '';
-			if (require('state').currentAccountId !== -1) {
-				var activeAccount = require('state').currentAccountId;
-				activeAccount = this.collection.get(activeAccount);
+			if (require('state').currentAccount.get('accountId') !== -1) {
+				var activeAccount = require('state').currentAccount;
 				activeEmail = ' - ' + activeAccount.get('email');
 			}
 			var activeFolder = this.getFolderById();
@@ -81,12 +79,12 @@ define(function(require) {
 				// jscs:enable requireCamelCaseOrUpperCaseIdentifiers
 			}
 		},
-		setFolderActive: function(accountId, folderId) {
+		setFolderActive: function(account, folderId) {
 			Radio.ui.trigger('messagesview:filter:clear');
 
 			// disable all other folders for all accounts
-			require('state').accounts.each(function(account) {
-				var localAccount = require('state').folderView.collection.get(account.get('accountId'));
+			require('state').accounts.each(function(acnt) {
+				var localAccount = require('state').folderView.collection.get(acnt.get('accountId'));
 				if (_.isUndefined(localAccount)) {
 					return;
 				}
@@ -96,7 +94,7 @@ define(function(require) {
 				});
 			});
 
-			require('state').folderView.getFolderById(accountId, folderId)
+			require('state').folderView.getFolderById(account, folderId)
 				.set('active', true);
 		},
 		onFolderChanged: function() {

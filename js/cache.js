@@ -13,25 +13,26 @@ define(function(require) {
 
 	var $ = require('jquery');
 	var storage = $.localStorage;
+	var Account = require('models/account');
 
 	var MessageCache = {
-		getAccountPath: function(accountId) {
-			return ['messages', accountId.toString()].join('.');
+		getAccountPath: function(account) {
+			return ['messages', account.get('accountId').toString()].join('.');
 		},
-		getFolderPath: function(accountId, folderId) {
-			return [this.getAccountPath(accountId), folderId.toString()].join('.');
+		getFolderPath: function(account, folderId) {
+			return [this.getAccountPath(account), folderId.toString()].join('.');
 		},
-		getMessagePath: function(accountId, folderId, messageId) {
-			return [this.getFolderPath(accountId, folderId), messageId.toString()].join('.');
+		getMessagePath: function(account, folderId, messageId) {
+			return [this.getFolderPath(account, folderId), messageId.toString()].join('.');
 		}
 	};
 
 	var FolderCache = {
-		getAccountPath: function(accountId) {
-			return ['folders', accountId.toString()].join('.');
+		getAccountPath: function(account) {
+			return ['folders', account.get('accountId').toString()].join('.');
 		},
-		getFolderPath: function(accountId, folderId) {
-			return [this.getAccountPath(accountId), folderId.toString()].join('.');
+		getFolderPath: function(account, folderId) {
+			return [this.getAccountPath(account), folderId.toString()].join('.');
 		}
 	};
 
@@ -50,25 +51,25 @@ define(function(require) {
 		});
 	}
 
-	function getFolderMessages(accountId, folderId) {
-		var path = MessageCache.getFolderPath(accountId, folderId);
+	function getFolderMessages(account, folderId) {
+		var path = MessageCache.getFolderPath(account, folderId);
 		return storage.isSet(path) ? storage.get(path) : null;
 	}
 
-	function getMessage(accountId, folderId, messageId) {
-		var path = MessageCache.getMessagePath(accountId, folderId, messageId);
+	function getMessage(account, folderId, messageId) {
+		var path = MessageCache.getMessagePath(account, folderId, messageId);
 		if (storage.isSet(path)) {
 			var message = storage.get(path);
 			// Update the timestamp
-			addMessage(accountId, folderId, message);
+			addMessage(account, folderId, message);
 			return message;
 		} else {
 			return null;
 		}
 	}
 
-	function addMessage(accountId, folderId, message) {
-		var path = MessageCache.getMessagePath(accountId, folderId, message.id);
+	function addMessage(account, folderId, message) {
+		var path = MessageCache.getMessagePath(account, folderId, message.id);
 		// Add timestamp for later cleanup
 		message.timestamp = Date.now();
 
@@ -76,7 +77,7 @@ define(function(require) {
 		storage.set(path, message);
 
 		// Remove old messages (keep 20 most recently loaded)
-		var messages = $.map(getFolderMessages(accountId, folderId), function(value) {
+		var messages = $.map(getFolderMessages(account, folderId), function(value) {
 			return [value];
 		});
 		messages.sort(function(m1, m2) {
@@ -84,34 +85,34 @@ define(function(require) {
 		});
 		var oldMessages = messages.slice(20, messages.length);
 		_.each(oldMessages, function(message) {
-			storage.remove(MessageCache.getMessagePath(accountId, folderId, message.id));
+			storage.remove(MessageCache.getMessagePath(account, folderId, message.id));
 		});
 	}
 
-	function addMessages(accountId, folderId, messages) {
+	function addMessages(account, folderId, messages) {
 		_.each(messages, function(message) {
-			addMessage(accountId, folderId, message);
+			addMessage(account, folderId, message);
 		});
 	}
 
-	function removeMessage(accountId, folderId, messageId) {
-		var message = getMessage(accountId, folderId, messageId);
+	function removeMessage(account, folderId, messageId) {
+		var message = getMessage(account, folderId, messageId);
 		if (message) {
 			// message exists in cache -> remove it
-			storage.remove(MessageCache.getMessagePath(accountId, folderId, messageId));
+			storage.remove(MessageCache.getMessagePath(account, folderId, messageId));
 		}
-		var messageList = getMessageList(accountId, folderId);
+		var messageList = getMessageList(account, folderId);
 		if (messageList) {
 			// message list is cached -> remove message from it
 			var newList = _.filter(messageList, function(message) {
 				return message.id !== messageId;
 			});
-			addMessageList(accountId, folderId, newList);
+			addMessageList(account, folderId, newList);
 		}
 	}
 
-	function getMessageList(accountId, folderId) {
-		var path = FolderCache.getFolderPath(accountId, folderId);
+	function getMessageList(account, folderId) {
+		var path = FolderCache.getFolderPath(account, folderId);
 		if (storage.isSet(path)) {
 			return storage.get(path);
 		} else {
@@ -119,36 +120,35 @@ define(function(require) {
 		}
 	}
 
-	function addMessageList(accountId, folderId, messages) {
-		var path = FolderCache.getFolderPath(accountId, folderId);
+	function addMessageList(account, folderId, messages) {
+		var path = FolderCache.getFolderPath(account, folderId);
 		storage.set(path, messages);
 	}
 
-	function removeAccount(accountId) {
+	function removeAccount(account) {
 		// Remove cached message lists
-		var path = FolderCache.getAccountPath(accountId);
+		var path = FolderCache.getAccountPath(account);
 		if (storage.isSet(path)) {
 			storage.remove(path);
 		}
 
 		// Remove cached messages
-		path = MessageCache.getAccountPath(accountId);
+		path = MessageCache.getAccountPath(account);
 		if (storage.isSet(path)) {
 			storage.remove(path);
 		}
 
 		// Unified inbox hack
-		if (accountId !== -1) {
+		if (account.get('accountId') !== -1) {
 			// Make sure unified inbox cache is cleared to prevent
 			// old message showing up on the next load
-			removeAccount(-1);
+			removeAccount(new Account({accountId: -1}));
 		}
 		// End unified inbox hack
 	}
 
 	return {
 		cleanUp: cleanUp,
-		getFolderMessages: getFolderMessages,
 		getMessage: getMessage,
 		addMessage: addMessage,
 		addMessages: addMessages,

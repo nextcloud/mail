@@ -27,7 +27,7 @@ define(function(require) {
 		sentCallback: null,
 		draftCallback: null,
 		accounts: null,
-		accountId: null,
+		account: null,
 		folderId: null,
 		messageId: null,
 		draftInterval: 1500,
@@ -66,7 +66,7 @@ define(function(require) {
 				},
 				onSent: function() {
 				},
-				accountId: null,
+				account: null,
 				folderId: null,
 				messageId: null
 			};
@@ -98,9 +98,9 @@ define(function(require) {
 
 			if (!this.isReply()) {
 				this.accounts = options.accounts;
-				this.accountId = options.accountId || this.accounts.at(0).get('accountId');
+				this.account = options.account || this.accounts.at(0);
 			} else {
-				this.accountId = options.accountId;
+				this.account = options.account;
 				this.folderId = options.folderId;
 				this.messageId = options.messageId;
 			}
@@ -207,9 +207,6 @@ define(function(require) {
 				_this.saveDraft();
 			}, this.draftInterval);
 		},
-		changeAlias: function(event) {
-			this.accountId = parseInt(this.$(event.target).val(), 10);
-		},
 		handleKeyPress: function(event) {
 			// Define which objects to check for the event properties.
 			// (Window object provides fallback for IE8 and lower.)
@@ -279,7 +276,7 @@ define(function(require) {
 
 			// if available get account from drop-down list
 			if (this.$('.mail-account').length > 0) {
-				this.accountId = this.$('.mail-account').find(':selected').val();
+				this.account = this.accounts.get(this.$('.mail-account').find(':selected').val());
 			}
 
 			// send the mail
@@ -343,7 +340,7 @@ define(function(require) {
 				options.folderId = this.folderId;
 			}
 
-			this.submitCallback(this.accountId, this.getMessage(), options);
+			this.submitCallback(this.account, this.getMessage(), options);
 			return false;
 		},
 		saveDraft: function(onSuccess) {
@@ -357,13 +354,13 @@ define(function(require) {
 
 			// if available get account from drop-down list
 			if (this.$('.mail-account').length > 0) {
-				this.accountId = this.$('.mail-account').find(':selected').val();
+				this.account = this.accounts.get(this.$('.mail-account').find(':selected').val());
 			}
 
 			// send the mail
 			var _this = this;
-			this.draftCallback(this.accountId, this.getMessage(), {
-				accountId: this.accountId,
+			this.draftCallback(this.account, this.getMessage(), {
+				account: this.account,
 				folderId: this.folderId,
 				messageId: this.messageId,
 				draftUID: this.draftUID,
@@ -397,8 +394,16 @@ define(function(require) {
 				_this.setAutoSize(true);
 			});
 		},
-		autoComplete: function(e) {
-			console.log(e);
+		focusTo: function() {
+			this.$el.find('input.to').focus();
+		},
+		setTo: function(value) {
+			this.$el.find('input.to').val(value);
+		},
+		focusSubject: function() {
+			this.$el.find('input.subject').focus();
+		},
+		autoComplete: function() {
 			function split(val) {
 				return val.split(/,\s*/);
 			}
