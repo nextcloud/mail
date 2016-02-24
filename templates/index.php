@@ -30,7 +30,7 @@ $debug = (defined('DEBUG') && DEBUG) || \OC::$server->getConfig()->getSystemValu
 style('mail', 'mail');
 style('mail', 'mobile');
 script('mail', 'vendor/autosize/jquery.autosize');
-script('mail', 'vendor/jQuery-Storage-API/jquery.storageapi');
+script('mail', 'vendor/jquery-storage-api/jquery.storageapi');
 script('mail', 'vendor/jquery-visibility/jquery-visibility');
 script('mail', 'vendor/requirejs/require');
 script('mail', 'searchproxy');
