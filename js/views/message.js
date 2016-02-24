@@ -1,5 +1,7 @@
+/* global adjustControlsWidth */
+
 /**
- * ownCloud  Mail
+ * ownCloud - Mail
  *
  * This file is licensed under the Affero General Public License version 3 or
  * later. See the COPYING file.
@@ -11,125 +13,141 @@
 define(function(require) {
 	'use strict';
 
-	var Handlebars = require('handlebars');
 	var Marionette = require('marionette');
-	var OC = require('OC');
-	var Radio = require('radio');
-	var MessageTemplate = require('text!templates/message-list-item.html');
+	var Handlebars = require('handlebars');
+	var _ = require('underscore');
+	var $ = require('jquery');
+	var HtmlHelper = require('util/htmlhelper');
+	var ComposerView = require('views/composer');
+	var MessageTemplate = require('text!templates/message.html');
 
-	return Marionette.ItemView.extend({
+	return Marionette.LayoutView.extend({
 		template: Handlebars.compile(MessageTemplate),
+		className: 'mail-message-container',
+		message: null,
+		reply: null,
 		ui: {
-			iconDelete: '.action.delete',
-			star: '.star'
+			messageIframe: 'iframe'
 		},
-		events: {
-			'click .action.delete': 'deleteMessage',
-			'click .mail-message-header': 'openMessage',
-			'click .star': 'toggleMessageStar'
+		regions: {
+			replyComposer: '#reply-composer'
 		},
-		onRender: function() {
-			// Get rid of that pesky wrapping-div.
-			// Assumes 1 child element present in template.
-			this.$el = this.$el.children();
-			// Unwrap the element to prevent infinitely
-			// nesting elements during re-render.
-			this.$el.unwrap();
-			this.setElement(this.$el);
+		initialize: function(options) {
+			this.message = options.model;
+			this.reply = {
+				replyToList: this.message.get('replyToList'),
+				replyCc: this.message.get('replyCc'),
+				replyCcList: this.message.get('replyCcList'),
+				body: ''
+			};
 
-			var displayName = this.model.get('from');
-			// Don't show any placeholder if 'from' isn't set
-			if (displayName) {
-				_.each(this.$el.find('.avatar'), function(a) {
-					$(a).height('32px');
-					$(a).imageplaceholder(displayName, displayName);
-				});
+			// Add body content to inline reply (text mails)
+			if (!this.message.get('hasHtmlBody')) {
+				var date = new Date(this.message.get('dateIso'));
+				var minutes = date.getMinutes();
+				var text = HtmlHelper.htmlToText(this.message.get('body'));
+
+				this.reply.body = '\n\n\n\n' +
+					this.message.get('from') + ' – ' +
+					$.datepicker.formatDate('D, d. MM yy ', date) +
+					date.getHours() + ':' + (minutes < 10 ? '0' : '') + minutes + '\n> ' +
+					text.replace(/\n/g, '\n> ');
 			}
 
-			$('.action.delete').tipsy({gravity: 'e', live: true});
+			// Save current messages's content for later use (forward)
+			if (!this.message.get('hasHtmlBody')) {
+				require('state').currentMessageBody = this.message.get('body');
+			}
+			require('state').currentMessageSubject = this.message.get('subject');
+
+			// Render the message body
+			adjustControlsWidth();
+
+			// Hide forward button until the message has finished loading
+			if (this.message.get('hasHtmlBody')) {
+				$('#forward-button').hide();
+			}
 		},
-		toggleMessageStar: function(event) {
-			event.stopPropagation();
+		onIframeLoad: function() {
+			// Expand height to not have two scrollbars
+			this.ui.messageIframe.height(this.ui.messageIframe.contents().find('html').height() + 20);
+			// Fix styling
+			this.ui.messageIframe.contents().find('body').css({
+				'margin': '0',
+				'font-weight': 'normal',
+				'font-size': '.8em',
+				'line-height': '1.6em',
+				'font-family': '"Open Sans", Frutiger, Calibri, "Myriad Pro", Myriad, sans-serif',
+				'color': '#000'
+			});
+			// Fix font when different font is forced
+			this.ui.messageIframe.contents().find('font').prop({
+				'face': 'Open Sans',
+				'color': '#000'
+			});
+			this.ui.messageIframe.contents().find('.moz-text-flowed').css({
+				'font-family': 'inherit',
+				'font-size': 'inherit'
+			});
+			// Expand height again after rendering to account for new size
+			this.ui.messageIframe.height(this.ui.messageIframe.contents().find('html').height() + 20);
+			// Grey out previous replies
+			this.ui.messageIframe.contents().find('blockquote').css({
+				'color': '#888'
+			});
+			// Remove spinner when loading finished
+			this.ui.messageIframe.parent().removeClass('icon-loading');
 
-			var starred = this.model.get('flags').get('flagged');
+			// Does the html mail have blocked images?
+			var hasBlockedImages = false;
+			if (this.ui.messageIframe.contents().
+				find('[data-original-src],[data-original-style]').length) {
+				hasBlockedImages = true;
+			}
 
-			// directly change star state in the interface for quick feedback
-			if (starred) {
-				this.ui.star
-					.removeClass('icon-starred')
-					.addClass('icon-star');
+			// Show/hide button to load images
+			if (hasBlockedImages) {
+				$('#show-images-text').show();
 			} else {
-				this.ui.star
-					.removeClass('icon-star')
-					.addClass('icon-starred');
+				$('#show-images-text').hide();
 			}
-			this.model.flagMessage(
-				'flagged',
-				!starred
-				);
+
+			// Add body content to inline reply (html mails)
+			var text = this.ui.messageIframe.contents().find('body').html();
+			text = HtmlHelper.htmlToText(text);
+			var date = new Date(this.message.get('dateIso'));
+			this.replyComposer.currentView.setReplyBody(this.message.get('from'), date, text);
+
+			// Safe current mesages's content for later use (forward)
+			require('state').currentMessageBody = text;
+
+			// Show forward button
+			this.$('#forward-button').show();
 		},
-		openMessage: function(event) {
-			event.stopPropagation();
-			$('#mail-message').removeClass('hidden-mobile');
-			var accountId = require('state').currentAccountId;
-			var folderId = require('state').currentFolderId;
-			var messageId = this.model.id; //TODO: backbone property
-			Radio.ui.trigger('message:load', accountId, folderId, messageId, {
-				force: true
-			});
-		},
-		deleteMessage: function(event) {
-			event.stopPropagation();
-			var thisModel = this.model;
-			this.ui.iconDelete.removeClass('icon-delete').addClass('icon-loading');
-			$('.tipsy').remove();
+		onShow: function() {
+			this.ui.messageIframe.on('load', _.bind(this.onIframeLoad, this));
 
-			thisModel.get('flags').set('unseen', false);
-
-			this.$el.addClass('transparency').slideUp(function() {
-				$('.tipsy').remove();
-				$('.tooltip').remove();
-
-				var thisModelCollection = thisModel.collection;
-				var index = thisModelCollection.indexOf(thisModel);
-				var nextMessage = thisModelCollection.at(index - 1);
-				if (!nextMessage) {
-					nextMessage = thisModelCollection.at(index + 1);
-				}
-				thisModelCollection.remove(thisModel);
-				if (require('state').currentMessageId === thisModel.id) {
-					if (nextMessage) {
-						var accountId = require('state').currentAccountId;
-						var folderId = require('state').currentFolderId;
-						var messageId = nextMessage.id; //TODO: backbone property
-						Radio.ui.trigger('message:load', accountId, folderId, messageId);
-					}
-				}
-				// manually trigger mouseover event for current mouse position
-				// in order to create a tipsy for the next message if needed
-				if (event.clientX) {
-					$(document.elementFromPoint(event.clientX, event.clientY)).trigger('mouseover');
-				}
+			// Set max width for attached images
+			var _this = this;
+			this.$('.mail-message-attachments img.mail-attached-image').each(function() {
+				$(this).css({
+					'max-width': _this.$('.mail-message-body').width(),
+					'height': 'auto'
+				});
 			});
 
-			// really delete the message
-			$.ajax(
-				OC.generateUrl('apps/mail/accounts/{accountId}/folders/{folderId}/messages/{messageId}',
-					{
-						accountId: require('state').currentAccountId,
-						folderId: require('state').currentFolderId,
-						messageId: thisModel.id
-					}), {
-				data: {},
-				type: 'DELETE',
-				success: function() {
-					var cache = require('cache');
-					var state = require('state');
-					cache.removeMessage(state.currentAccountId, state.currentFolderId, thisModel.id);
-				},
-				error: function() {
-					Radio.ui.trigger('error:show', t('mail', 'Error while deleting message.'));
-				}
+			// setup reply composer view
+			this.replyComposer.show(new ComposerView({
+				//el: this.$('#reply-composer'),
+				type: 'reply',
+				onSubmit: require('communication').sendMessage,
+				onDraft: require('communication').saveDraft,
+				accountId: this.message.get('accountId'),
+				folderId: this.message.get('folderId'),
+				messageId: this.message.get('messageId')
+			}));
+			this.replyComposer.currentView.render({
+				data: this.reply
 			});
 		}
 	});

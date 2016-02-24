@@ -5,7 +5,7 @@
  * later. See the COPYING file.
  *
  * @author Christoph Wurst <christoph@winzerhof-wurst.at>
- * @copyright Christoph Wurst 2015
+ * @copyright Christoph Wurst 2016
  */
 
 define(function(require) {
@@ -72,11 +72,9 @@ define(function(require) {
 		var fetchingFolders = Radio.folder.request('entities', accountId);
 
 		// TODO: create loading-view
-		$('#mail-messages').removeClass('hidden').addClass('icon-loading');
-		$('#mail-message').removeClass('hidden').addClass('icon-loading');
+		$('#mail-messages').addClass('icon-loading');
+		$('#mail-message').addClass('icon-loading');
 		$('#mail_new_message').removeClass('hidden');
-		$('#folders').removeClass('hidden');
-		$('#setup').addClass('hidden');
 
 		Radio.ui.trigger('messagesview:messages:reset');
 		$('#app-navigation').addClass('icon-loading');

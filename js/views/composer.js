@@ -80,7 +80,9 @@ define(function(require) {
 			/**
 			 * Containing element
 			 */
-			this.el = options.el;
+			if (options.el) {
+				this.el = options.el;
+			}
 
 			/**
 			 * Callback functions
