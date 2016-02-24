@@ -13,15 +13,19 @@ define(function(require) {
 
 	var Marionette = require('marionette');
 	var Radio = require('radio');
+	var NewMessageView = require('views/newmessage');
 
 	return Marionette.LayoutView.extend({
 		el: $('#app-navigation'),
 		regions: {
+			newMessage: '#mail-new-message-fixed',
 			accounts: '#app-navigation-accounts',
 			settings: '#app-settings-content'
 		},
 		initialize: function() {
 			this.bindUIElements();
+
+			this.newMessage.show(new NewMessageView());
 
 			this.listenTo(Radio.ui, 'navigation:show', this.show);
 			this.listenTo(Radio.ui, 'navigation:hide', this.hide);

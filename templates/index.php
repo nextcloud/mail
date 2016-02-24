@@ -50,10 +50,7 @@ if ($debug) {
 <div id="app">
 	<div id="app-navigation" class="icon-loading">
 		<ul>
-			<li id="mail-new-message-fixed">
-				<input type="button" id="mail_new_message" class="icon-add"
-				       value="<?php p($l->t('New message')); ?>" style="display: none">
-			</li>
+			<li id="mail-new-message-fixed"></li>
 			<li id="app-navigation-accounts"></li>
 		</ul>
 		<div id="app-settings">

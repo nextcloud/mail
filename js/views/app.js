@@ -35,9 +35,6 @@ define(function(require) {
 			content: '#app-content',
 			setup: '#setup'
 		},
-		events: {
-			'click #mail_new_message': 'onNewMessageClick'
-		},
 		initialize: function() {
 			this.bindUIElements();
 
@@ -95,10 +92,6 @@ define(function(require) {
 					}
 				}
 			}
-		},
-		onNewMessageClick: function(e) {
-			e.preventDefault();
-			Radio.ui.trigger('composer:show');
 		},
 		onWindowResize: function() {
 			// Resize iframe
