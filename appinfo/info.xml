@@ -12,7 +12,7 @@
 	</documentation>
 	<dependencies>
 		<owncloud min-version="8.0" max-version="9.0" />
-		<php min-version="5.4" max-version="5.6" />
+		<php min-version="5.4" max-version="7.0" />
 	</dependencies>
 	<ocsid>169914</ocsid>
 </info>

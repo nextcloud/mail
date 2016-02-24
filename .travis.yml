@@ -94,6 +94,4 @@ matrix:
     - php: 5.4
       env: "DB=mysql CORE_BRANCH=stable8.2"
 
-  allow_failures:
-    - php: 7
   fast_finish: true
