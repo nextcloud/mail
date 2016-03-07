@@ -59,17 +59,5 @@
 	width: 100%;
 }
 
-/* do not display date in message list because there is too little space */
-.date {
-	display: none;
-}
-/* more space for sender accordingly */
-.mail-message-summary-from {
-	width: 80%;
-}
-.mail-message-summary-subject {
-	width: 80%;
-}
-
 /* end of media query */
 }
