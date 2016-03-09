@@ -21,6 +21,7 @@ define(function(require) {
 	return Marionette.ItemView.extend({
 		template: Handlebars.compile(SetupTemplate),
 		id: 'setup',
+		firstToggle: true,
 		displayName: '',
 		email: '',
 		manualMode: false,
@@ -75,10 +76,25 @@ define(function(require) {
 			this.ui.imapHost.focus();
 
 			if (this.manualMode) {
+				if (this.firstToggle) {
+					// Manual mode opened for the first time
+					// -> copy email, password for imap&smtp
+					var email = this.ui.mailAddress.val();
+					var password = this.ui.mailPassword.val();
+					this.ui.imapUser.val(email);
+					this.ui.imapPassword.val(password);
+					this.ui.smtpUser.val(email);
+					this.ui.smtpPassword.val(password);
+					this.firstToggle = false;
+				}
+
 				var _this = this;
 				this.ui.mailPassword.slideToggle(function() {
 					_this.ui.mailAddress.parent()
 						.removeClass('groupmiddle').addClass('groupbottom');
+
+					// Focus imap host input
+					_this.ui.imapHost.focus();
 				});
 			} else {
 				this.ui.mailPassword.slideToggle();
