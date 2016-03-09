@@ -17,14 +17,14 @@
     "autosize": "jquery-autosize#1.18.9",
     "backbone": "^1.2.3",
     "backbone.marionette": "^2.4.4",
-    "domready": "~1.0.8",
-    "handlebars": "~3.0.3",
-    "jquery": "~2.1.4",
-    "jQuery-Storage-API": "julien-maurel/jQuery-Storage-API#~1.7.4",
+    "backbone.radio": "^1.0.2",
+    "domReady": "^2.0.1",
+    "handlebars": "^4.0.5",
+    "jquery": "^2.2.1",
+    "jquery-storage-api": "jQuery-Storage-API#^1.8.1",
     "jquery-visibility": "~1.0.11",
     "requirejs": "~2.1.20",
-    "text": "requirejs-text#~2.0.14",
-    "underscore": "~1.8.3",
-    "backbone.radio": "^1.0.2"
+    "text": "^2.0.14",
+    "underscore": "~1.8.3"
   }
 }
