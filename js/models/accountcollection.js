@@ -15,11 +15,16 @@ define(function(require) {
 	var Account = require('models/account');
 	var OC = require('OC');
 
-	return Backbone.Collection.extend({
+	/**
+	 * @class AccountCollection
+	 */
+	var AccountCollection = Backbone.Collection.extend({
 		model: Account,
 		url: OC.generateUrl('apps/mail/accounts'),
 		comparator: function(account) {
 			return account.get('id');
 		}
 	});
+
+	return AccountCollection;
 });

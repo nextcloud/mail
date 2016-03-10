@@ -14,7 +14,12 @@ define(function(require) {
 	var Backbone = require('backbone');
 	var Attachment = require('models/attachment');
 
-	return Backbone.Collection.extend({
+	/**
+	 * @class AttachmentCollection
+	 */
+	var AttachmentCollection = Backbone.Collection.extend({
 		model: Attachment
 	});
+
+	return AttachmentCollection;
 });

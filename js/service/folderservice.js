@@ -5,7 +5,7 @@
  * later. See the COPYING file.
  *
  * @author Christoph Wurst <christoph@winzerhof-wurst.at>
- * @copyright Christoph Wurst 2015
+ * @copyright Christoph Wurst 2015, 2016
  */
 
 define(function(require) {
@@ -14,6 +14,10 @@ define(function(require) {
 	var $ = require('jquery');
 	var OC = require('OC');
 
+	/**
+	 * @param {Account} account
+	 * @returns {Promise}
+	 */
 	function getFolderEntities(account) {
 		var defer = $.Deferred();
 
@@ -34,7 +38,7 @@ define(function(require) {
 				}
 			}
 
-			defer.resolve(data);
+			defer.resolve(account.get('folders'));
 		});
 
 		promise.fail(function() {

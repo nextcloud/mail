@@ -13,9 +13,14 @@ define(function(require) {
 
 	var Backbone = require('backbone');
 
-	return Backbone.Model.extend({
+	/**
+	 * @class MessageFlags
+	 */
+	var MessageFlags = Backbone.Model.extend({
 		defaults: {
 			answered: false
 		}
 	});
+
+	return MessageFlags;
 });

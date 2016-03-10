@@ -34,9 +34,9 @@ define(function(require) {
 			e.preventDefault();
 			// TODO: account should be property of folder
 			var account = require('state').accounts.get(this.model.get('accountId'));
-			var folderId = $(e.currentTarget).parent().data('folder_id');
+			var folder = this.model;
 			var noSelect = $(e.currentTarget).parent().data('no_select');
-			Radio.ui.trigger('folder:show', account, folderId, noSelect);
+			Radio.ui.trigger('folder:show', account, folder, noSelect);
 		},
 		onRender: function() {
 			// Get rid of that pesky wrapping-div.

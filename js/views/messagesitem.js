@@ -73,9 +73,9 @@ define(function(require) {
 			event.stopPropagation();
 			$('#mail-message').removeClass('hidden-mobile');
 			var account = require('state').currentAccount;
-			var folderId = require('state').currentFolderId;
+			var folder = require('state').currentFolder;
 			var messageId = this.model.id; //TODO: backbone property
-			Radio.ui.trigger('message:load', account, folderId, messageId, {
+			Radio.ui.trigger('message:load', account, folder, messageId, {
 				force: true
 			});
 		},
@@ -101,9 +101,9 @@ define(function(require) {
 				if (require('state').currentMessageId === thisModel.id) {
 					if (nextMessage) {
 						var account = require('state').currentAccount;
-						var folderId = require('state').currentFolderId;
+						var folder = require('state').currentFolder;
 						var messageId = nextMessage.id; //TODO: backbone property
-						Radio.ui.trigger('message:load', account, folderId, messageId);
+						Radio.ui.trigger('message:load', account, folder, messageId);
 					}
 				}
 				// manually trigger mouseover event for current mouse position
@@ -118,7 +118,7 @@ define(function(require) {
 				OC.generateUrl('apps/mail/accounts/{accountId}/folders/{folderId}/messages/{messageId}',
 					{
 						accountId: require('state').currentAccount.get('accountId'),
-						folderId: require('state').currentFolderId,
+						folderId: require('state').currentFolder.get('id'),
 						messageId: thisModel.id
 					}), {
 				data: {},
@@ -126,7 +126,7 @@ define(function(require) {
 				success: function() {
 					var cache = require('cache');
 					var state = require('state');
-					cache.removeMessage(state.currentAccount, state.currentFolderId, thisModel.id);
+					cache.removeMessage(state.currentAccount, state.currentFolder, thisModel.id);
 				},
 				error: function() {
 					Radio.ui.trigger('error:show', t('mail', 'Error while deleting message.'));

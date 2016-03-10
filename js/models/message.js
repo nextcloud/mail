@@ -17,7 +17,10 @@ define(function(require) {
 	var Radio = require('radio');
 	var MessageFlags = require('models/messageflags');
 
-	return Backbone.Model.extend({
+	/**
+	 * @class Message
+	 */
+	var Message = Backbone.Model.extend({
 		defaults: {
 			flags: [],
 			active: false
@@ -50,7 +53,7 @@ define(function(require) {
 				OC.generateUrl('apps/mail/accounts/{accountId}/folders/{folderId}/messages/{messageId}/flags',
 					{
 						accountId: require('state').currentAccount.get('accountId'),
-						folderId: require('state').currentFolderId,
+						folderId: require('state').currentFolder.get('id'),
 						messageId: messageId
 					}), {
 				data: {
@@ -65,6 +68,7 @@ define(function(require) {
 				}
 			});
 		}
-
 	});
+
+	return Message;
 });

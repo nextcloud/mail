@@ -15,7 +15,10 @@ define(function(require) {
 	var FolderCollection = require('models/foldercollection');
 	var OC = require('OC');
 
-	return Backbone.Model.extend({
+	/**
+	 * @class Account
+	 */
+	var Account = Backbone.Model.extend({
 		defaults: {
 			folders: []
 		},
@@ -35,4 +38,6 @@ define(function(require) {
 			return data;
 		}
 	});
+
+	return Account;
 });

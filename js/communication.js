@@ -11,6 +11,7 @@
 define(function(require) {
 	'use strict';
 
+	var _ = require('underscore');
 	var $ = require('jquery');
 	var OC = require('OC');
 	var Radio = require('radio');
@@ -58,7 +59,14 @@ define(function(require) {
 		});
 	}
 
-	function fetchMessage(account, folderId, messageId, options) {
+	/**
+	 * @param {Account} account
+	 * @param {Folder} folder
+	 * @param {number} messageId
+	 * @param {object} options
+	 * @returns {undefined}
+	 */
+	function fetchMessage(account, folder, messageId, options) {
 		options = options || {};
 		var defaults = {
 			onSuccess: function() {
@@ -71,7 +79,7 @@ define(function(require) {
 
 		// Load cached version if available
 		var message = require('cache').getMessage(account,
-			folderId,
+			folder,
 			messageId);
 		if (message) {
 			options.onSuccess(message);
@@ -82,7 +90,7 @@ define(function(require) {
 			OC.generateUrl('apps/mail/accounts/{accountId}/folders/{folderId}/messages/{messageId}',
 				{
 					accountId: account.get('accountId'),
-					folderId: folderId,
+					folderId: folder.get('id'),
 					messageId: messageId
 				}), {
 			data: {},
@@ -96,7 +104,14 @@ define(function(require) {
 		}
 	}
 
-	function fetchMessages(account, folderId, messageIds, options) {
+	/**
+	 * @param {Account} account
+	 * @param {Folder} folder
+	 * @param {array} messageIds
+	 * @param {object} options
+	 * @returns {undefined}
+	 */
+	function fetchMessages(account, folder, messageIds, options) {
 		options = options || {};
 		var defaults = {
 			onSuccess: function() {
@@ -109,7 +124,7 @@ define(function(require) {
 		var cachedMessages = [];
 		var uncachedIds = [];
 		_.each(messageIds, function(messageId) {
-			var message = require('cache').getMessage(account, folderId, messageId);
+			var message = require('cache').getMessage(account, folder, messageId);
 			if (message) {
 				cachedMessages.push(message);
 			} else {
@@ -121,7 +136,7 @@ define(function(require) {
 			var Ids = uncachedIds.join(',');
 			var url = OC.generateUrl('apps/mail/accounts/{accountId}/folders/{folderId}/messages?ids={ids}', {
 				accountId: account.get('accountId'),
-				folderId: folderId,
+				folderId: folder.get('id'),
 				ids: Ids
 			});
 			$.ajax(url, {
@@ -132,6 +147,12 @@ define(function(require) {
 		}
 	}
 
+	/**
+	 * @param {Account} account
+	 * @param {object} message
+	 * @param {object} options
+	 * @returns {undefined}
+	 */
 	function sendMessage(account, message, options) {
 		var defaultOptions = {
 			success: function() {
@@ -174,6 +195,12 @@ define(function(require) {
 		$.ajax(url, data);
 	}
 
+	/**
+	 * @param {Account} account
+	 * @param {object} message
+	 * @param {object} options
+	 * @returns {undefined}
+	 */
 	function saveDraft(account, message, options) {
 		var defaultOptions = {
 			success: function() {
@@ -255,7 +282,13 @@ define(function(require) {
 		}
 	}
 
-	function fetchMessageList(account, folderId, options) {
+	/**
+	 * @param {Account} account
+	 * @param {Folder} folder
+	 * @param {object} options
+	 * @returns {undefined}
+	 */
+	function fetchMessageList(account, folder, options) {
 		options = options || {};
 		var defaults = {
 			cache: false,
@@ -277,7 +310,7 @@ define(function(require) {
 
 		if (options.cache) {
 			// Load cached version if available
-			var messageList = require('cache').getMessageList(account, folderId);
+			var messageList = require('cache').getMessageList(account, folder);
 			if (!options.force && messageList) {
 				options.onSuccess(messageList, true);
 				options.onComplete();
@@ -288,7 +321,7 @@ define(function(require) {
 		var url = OC.generateUrl('apps/mail/accounts/{accountId}/folders/{folderId}/messages',
 			{
 				accountId: account.get('accountId'),
-				folderId: folderId
+				folderId: folder.get('id')
 			});
 		messageListXhr = $.ajax(url,
 			{
@@ -299,7 +332,7 @@ define(function(require) {
 				},
 				success: function(messages) {
 					if (options.replace || options.cache) {
-						require('cache').addMessageList(account, folderId, messages);
+						require('cache').addMessageList(account, folder, messages);
 					}
 					options.onSuccess(messages, false);
 				},

@@ -5,7 +5,7 @@
  * later. See the COPYING file.
  *
  * @author Christoph Wurst <christoph@winzerhof-wurst.at>
- * @copyright Christoph Wurst 2015
+ * @copyright Christoph Wurst 2015, 2016
  */
 
 define(function(require) {
@@ -14,7 +14,12 @@ define(function(require) {
 	var Backbone = require('backbone');
 	var Folder = require('models/folder');
 
-	return Backbone.Collection.extend({
+	/**
+	 * @class FolderCollection
+	 */
+	var FolderCollection = Backbone.Collection.extend({
 		model: Folder
 	});
+
+	return FolderCollection;
 });

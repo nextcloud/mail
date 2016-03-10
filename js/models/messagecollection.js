@@ -14,10 +14,15 @@ define(function(require) {
 	var Backbone = require('backbone');
 	var Message = require('models/message');
 
-	return Backbone.Collection.extend({
+	/**
+	 * @class MessageCollection
+	 */
+	var MessageCollection = Backbone.Collection.extend({
 		model: Message,
 		comparator: function(message) {
 			return message.get('dateInt') * -1;
 		}
 	});
+
+	return MessageCollection;
 });
