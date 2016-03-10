@@ -17,6 +17,7 @@ define(function(require) {
 	var OC = require('OC');
 	var Marionette = require('marionette');
 	var Handlebars = require('handlebars');
+	var Radio = require('radio');
 	var Mail = require('app');
 
 	setUpMarionette();
@@ -25,7 +26,7 @@ define(function(require) {
 	setUpSearch();
 
 	Mail.start();
-	require('ui').initializeInterface();
+	Radio.account.trigger('load');
 
 	function setUpMarionette() {
 		Marionette.TemplateCache.prototype.compileTemplate = function(rawTemplate) {
@@ -110,7 +111,7 @@ define(function(require) {
 	});
 
 	$(document).on('click', '.link-mailto', function(event) {
-		require('ui').openComposer(event);
+		Radio.ui.trigger('composer:show', event);
 	});
 
 	// TODO: create marionette view and encapsulate events

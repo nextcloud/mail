@@ -49,7 +49,7 @@ define(function(require) {
 			$.ajax(
 				OC.generateUrl('apps/mail/accounts/{accountId}/folders/{folderId}/messages/{messageId}/flags',
 					{
-						accountId: require('state').currentAccountId,
+						accountId: require('state').currentAccount.get('accountId'),
 						folderId: require('state').currentFolderId,
 						messageId: messageId
 					}), {

@@ -40,9 +40,7 @@ define(function(require) {
 	});
 
 	Handlebars.registerHelper('printAddressList', function(addressList) {
-		var currentAddress = require('state').accounts.find(function(item) {
-			return item.get('accountId') === require('state').currentAccountId;
-		});
+		var currentAccount = require('state').currentAccount;
 
 		var str = _.reduce(addressList, function(memo, value, index) {
 			if (index !== 0) {
@@ -53,7 +51,7 @@ define(function(require) {
 				.replace(/(^'|'$)/g, '');
 			label = Handlebars.Utils.escapeExpression(label);
 			var email = Handlebars.Utils.escapeExpression(value.email);
-			if (currentAddress && email === currentAddress.get('emailAddress')) {
+			if (currentAccount && email === currentAccount.get('emailAddress')) {
 				label = t('mail', 'you');
 			}
 			var title = t('mail', 'Send message to {email}', {email: email});

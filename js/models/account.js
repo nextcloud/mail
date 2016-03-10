@@ -19,6 +19,7 @@ define(function(require) {
 		defaults: {
 			folders: []
 		},
+		idAttribute: 'accountId',
 		url: OC.generateUrl('apps/mail/accounts'),
 		initialize: function() {
 			this.set('folders', new FolderCollection(this.get('folders')));

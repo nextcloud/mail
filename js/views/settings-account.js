@@ -30,14 +30,14 @@ define(function(require) {
 			e.stopPropagation();
 			this.$el.removeClass('icon-delete').addClass('icon-loading-small');
 
-			var accountId = this.model.get('accountId');
+			var account = this.model;
 
 			$.ajax(OC.generateUrl('/apps/mail/accounts/{accountId}'), {
-				data: {accountId: accountId},
+				data: {accountId: account.get('accountId')},
 				type: 'DELETE',
 				success: function() {
 					// Delete cached message lists
-					require('cache').removeAccount(accountId);
+					require('cache').removeAccount(account);
 
 					// reload the complete page
 					// TODO should only reload the app nav/content

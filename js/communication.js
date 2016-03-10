@@ -58,7 +58,7 @@ define(function(require) {
 		});
 	}
 
-	function fetchMessage(accountId, folderId, messageId, options) {
+	function fetchMessage(account, folderId, messageId, options) {
 		options = options || {};
 		var defaults = {
 			onSuccess: function() {
@@ -70,7 +70,7 @@ define(function(require) {
 		_.defaults(options, defaults);
 
 		// Load cached version if available
-		var message = require('cache').getMessage(accountId,
+		var message = require('cache').getMessage(account,
 			folderId,
 			messageId);
 		if (message) {
@@ -81,7 +81,7 @@ define(function(require) {
 		var xhr = $.ajax(
 			OC.generateUrl('apps/mail/accounts/{accountId}/folders/{folderId}/messages/{messageId}',
 				{
-					accountId: accountId,
+					accountId: account.get('accountId'),
 					folderId: folderId,
 					messageId: messageId
 				}), {
@@ -96,7 +96,7 @@ define(function(require) {
 		}
 	}
 
-	function fetchMessages(accountId, folderId, messageIds, options) {
+	function fetchMessages(account, folderId, messageIds, options) {
 		options = options || {};
 		var defaults = {
 			onSuccess: function() {
@@ -109,7 +109,7 @@ define(function(require) {
 		var cachedMessages = [];
 		var uncachedIds = [];
 		_.each(messageIds, function(messageId) {
-			var message = require('cache').getMessage(accountId, folderId, messageId);
+			var message = require('cache').getMessage(account, folderId, messageId);
 			if (message) {
 				cachedMessages.push(message);
 			} else {
@@ -120,7 +120,7 @@ define(function(require) {
 		if (uncachedIds.length > 0) {
 			var Ids = uncachedIds.join(',');
 			var url = OC.generateUrl('apps/mail/accounts/{accountId}/folders/{folderId}/messages?ids={ids}', {
-				accountId: accountId,
+				accountId: account.get('accountId'),
 				folderId: folderId,
 				ids: Ids
 			});
@@ -132,7 +132,7 @@ define(function(require) {
 		}
 	}
 
-	function sendMessage(accountId, message, options) {
+	function sendMessage(account, message, options) {
 		var defaultOptions = {
 			success: function() {
 			},
@@ -144,7 +144,9 @@ define(function(require) {
 			draftUID: null
 		};
 		_.defaults(options, defaultOptions);
-		var url = OC.generateUrl('/apps/mail/accounts/{accountId}/send', {accountId: accountId});
+		var url = OC.generateUrl('/apps/mail/accounts/{id}/send', {
+			id: account.get('id')
+		});
 		var data = {
 			type: 'POST',
 			success: function(data) {
@@ -164,7 +166,6 @@ define(function(require) {
 				subject: message.subject,
 				body: message.body,
 				attachments: message.attachments,
-				accountId: options.accountId,
 				folderId: options.folderId,
 				messageId: options.messageId,
 				draftUID: options.draftUID
@@ -173,7 +174,7 @@ define(function(require) {
 		$.ajax(url, data);
 	}
 
-	function saveDraft(accountId, message, options) {
+	function saveDraft(account, message, options) {
 		var defaultOptions = {
 			success: function() {
 			},
@@ -204,13 +205,10 @@ define(function(require) {
 		if (emptyMessage) {
 			if (options.draftUID !== null) {
 				// Message is empty + previous draft exists -> delete it
-
-				var account = require('state').folderView.collection.findWhere({id: accountId});
-				var draftsFolder = account.attributes.specialFolders.drafts;
-
+				var draftsFolder = account.get('specialFolders').drafts;
 				var deleteUrl =
 					OC.generateUrl('apps/mail/accounts/{accountId}/folders/{folderId}/messages/{messageId}', {
-						accountId: accountId,
+						accountId: account.get('accountId'),
 						folderId: draftsFolder,
 						messageId: options.draftUID
 					});
@@ -222,7 +220,9 @@ define(function(require) {
 				uid: null
 			});
 		} else {
-			var url = OC.generateUrl('/apps/mail/accounts/{accountId}/draft', {accountId: accountId});
+			var url = OC.generateUrl('/apps/mail/accounts/{id}/draft', {
+				id: account.get('accountId')
+			});
 			var data = {
 				type: 'POST',
 				success: function(data) {
@@ -246,7 +246,6 @@ define(function(require) {
 					subject: message.subject,
 					body: message.body,
 					attachments: message.attachments,
-					accountId: options.accountId,
 					folderId: options.folderId,
 					messageId: options.messageId,
 					uid: options.draftUID
@@ -256,7 +255,7 @@ define(function(require) {
 		}
 	}
 
-	function fetchMessageList(accountId, folderId, options) {
+	function fetchMessageList(account, folderId, options) {
 		options = options || {};
 		var defaults = {
 			cache: false,
@@ -278,7 +277,7 @@ define(function(require) {
 
 		if (options.cache) {
 			// Load cached version if available
-			var messageList = require('cache').getMessageList(accountId, folderId);
+			var messageList = require('cache').getMessageList(account, folderId);
 			if (!options.force && messageList) {
 				options.onSuccess(messageList, true);
 				options.onComplete();
@@ -288,7 +287,7 @@ define(function(require) {
 
 		var url = OC.generateUrl('apps/mail/accounts/{accountId}/folders/{folderId}/messages',
 			{
-				accountId: accountId,
+				accountId: account.get('accountId'),
 				folderId: folderId
 			});
 		messageListXhr = $.ajax(url,
@@ -300,7 +299,7 @@ define(function(require) {
 				},
 				success: function(messages) {
 					if (options.replace || options.cache) {
-						require('cache').addMessageList(accountId, folderId, messages);
+						require('cache').addMessageList(account, folderId, messages);
 					}
 					options.onSuccess(messages, false);
 				},

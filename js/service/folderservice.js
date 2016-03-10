@@ -13,21 +13,27 @@ define(function(require) {
 
 	var $ = require('jquery');
 	var OC = require('OC');
-	var Radio = require('radio');
 
-	Radio.folder.reply('entities', getFolderEntities);
-
-	function getFolderEntities(accountId) {
+	function getFolderEntities(account) {
 		var defer = $.Deferred();
 
-		var url = OC.generateUrl('apps/mail/accounts/{accountId}/folders',
+		var url = OC.generateUrl('apps/mail/accounts/{id}/folders',
 			{
-				accountId: accountId
+				id: account.get('accountId')
 			});
 
 		var promise = $.get(url);
 
 		promise.done(function(data) {
+			for (var prop in data) {
+				if (prop === 'folders') {
+					account.get('folders').reset();
+					account.get('folders').add(data.folders);
+				} else {
+					account.set(prop, data[prop]);
+				}
+			}
+
 			defer.resolve(data);
 		});
 

@@ -13,6 +13,7 @@ define(function(require) {
 
 	var $ = require('jquery');
 	var Radio = require('radio');
+	var UPDATE_INTERVAL = 5 * 60 * 1000; // 5 minutes
 
 	Radio.account.on('add', addAccount);
 	Radio.account.on('load', loadAccounts);
@@ -23,19 +24,26 @@ define(function(require) {
 		Radio.ui.trigger('setup:show');
 	}
 
+	function startBackgroundChecks(accounts) {
+		setInterval((function(accounts) {
+			require('background').checkForNotifications(accounts);
+		}(accounts)), UPDATE_INTERVAL);
+	}
+
 	function loadAccounts() {
 		var fetchingAccounts = Radio.account.request('entities');
-		var UI = require('ui');
 
 		$.when(fetchingAccounts).done(function(accounts) {
 			if (accounts.length === 0) {
 				addAccount();
 			} else {
-				var firstAccountId = accounts.at(0).get('accountId');
-				accounts.each(function(a) {
-					Radio.folder.trigger('init', a.get('accountId'), firstAccountId);
+				var firstAccount = accounts.at(0);
+				accounts.each(function(account) {
+					Radio.folder.trigger('init', account, firstAccount);
 				});
 			}
+
+			startBackgroundChecks(accounts);
 		});
 		$.when(fetchingAccounts).fail(function() {
 			Radio.ui.trigger('error:show', t('mail', 'Error while loading the accounts.'));

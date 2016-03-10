@@ -98,7 +98,7 @@ define(function(require) {
 		},
 		onNewMessageClick: function(e) {
 			e.preventDefault();
-			require('ui').openComposer();
+			Radio.ui.trigger('composer:show');
 		},
 		onWindowResize: function() {
 			// Resize iframe
