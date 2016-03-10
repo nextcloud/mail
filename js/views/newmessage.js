@@ -26,12 +26,23 @@ define(function(require) {
 
 	return Marionette.LayoutView.extend({
 		template: Handlebars.compile(NewMessageTemplate),
+		accounts: null,
+		ui: {
+			input: 'input'
+		},
 		events: {
 			'click input': 'onClick'
 		},
 		initialize: function(options) {
-			console.log(arguments);
-			//this.listenTo(options.accounts, 'change', this.render);
+			this.accounts = options.accounts;
+			this.listenTo(options.accounts, 'add', this.onAccountsChanged);
+		},
+		onAccountsChanged: function() {
+			if (this.accounts.size === 0) {
+				this.ui.input.hide();
+			} else {
+				this.ui.input.show();
+			}
 		},
 		onClick: function(e) {
 			e.preventDefault();

@@ -56,7 +56,9 @@ define(function(require) {
 			window.addEventListener('resize', this.onWindowResize);
 
 			// Render settings menu
-			this.navigation = new NavigationView();
+			this.navigation = new NavigationView({
+				accounts: require('state').accounts
+			});
 			this.navigation.settings.show(new SettingsView({
 				accounts: require('state').accounts
 			}));
@@ -114,14 +116,10 @@ define(function(require) {
 		},
 		showError: function(message) {
 			OC.Notification.showTemporary(message);
-			$('#app-navigation')
-				.removeClass('icon-loading');
-			$('#app-content')
-				.removeClass('icon-loading');
-			$('#mail-message')
-				.removeClass('icon-loading');
-			$('#mail_message')
-				.removeClass('icon-loading');
+			$('#app-navigation').removeClass('icon-loading');
+			$('#app-content').removeClass('icon-loading');
+			$('#mail-message').removeClass('icon-loading');
+			$('#mail_message').removeClass('icon-loading');
 		},
 		showSetup: function() {
 			if (this.activeContent !== ContentType.SETUP) {
@@ -134,7 +132,7 @@ define(function(require) {
 			}
 		},
 		showMessageContent: function() {
-			if (this.accountsView !== ContentType.MESSAGE_CONTENT) {
+			if (this.activeContent !== ContentType.MESSAGE_CONTENT) {
 				this.activeContent = ContentType.MESSAGE_CONTENT;
 
 				var messageContentView = new MessageContentView();

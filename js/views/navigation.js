@@ -11,6 +11,7 @@
 define(function(require) {
 	'use strict';
 
+	var $ = require('jquery');
 	var Marionette = require('marionette');
 	var Radio = require('radio');
 	var NewMessageView = require('views/newmessage');
@@ -22,10 +23,12 @@ define(function(require) {
 			accounts: '#app-navigation-accounts',
 			settings: '#app-settings-content'
 		},
-		initialize: function() {
+		initialize: function(options) {
 			this.bindUIElements();
 
-			this.newMessage.show(new NewMessageView());
+			this.newMessage.show(new NewMessageView({
+				accounts: options.accounts
+			}));
 
 			this.listenTo(Radio.ui, 'navigation:show', this.show);
 			this.listenTo(Radio.ui, 'navigation:hide', this.hide);
