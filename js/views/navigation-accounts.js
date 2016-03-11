@@ -13,6 +13,7 @@
 define(function(require) {
 	'use strict';
 
+	var _ = require('underscore');
 	var $ = require('jquery');
 	var Marionette = require('marionette');
 	var AccountView = require('views/account');
@@ -90,7 +91,7 @@ define(function(require) {
 					return;
 				}
 				var folders = localAccount.get('folders');
-				folders.models.each(function(folder) {
+				_.each(folders.models, function(folder) {
 					folders.get(folder).set('active', false);
 				});
 			});

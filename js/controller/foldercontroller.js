@@ -87,10 +87,9 @@ define(function(require) {
 
 		$.when(fetchingFolders).done(function(accountFolders) {
 			$('#app-navigation').removeClass('icon-loading');
-			require('state').folderView.collection.add(accountFolders);
 
 			if (account === active) {
-				var folder = accountFolders.folders[0].id;
+				var folder = accountFolders.at(0);
 
 				Radio.ui.trigger('folder:show', account, folder, false);
 
