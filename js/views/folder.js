@@ -5,7 +5,7 @@
  * later. See the COPYING file.
  *
  * @author Christoph Wurst <christoph@winzerhof-wurst.at>
- * @copyright Christoph Wurst 2015
+ * @copyright Christoph Wurst 2015, 2016
  */
 
 define(function(require) {
@@ -23,9 +23,6 @@ define(function(require) {
 			'click .collapse': 'collapseFolder',
 			'click .folder': 'loadFolder'
 		},
-		initialize: function(options) {
-			this.model = options.model;
-		},
 		collapseFolder: function(e) {
 			e.preventDefault();
 			this.model.toggleOpen();
@@ -34,7 +31,13 @@ define(function(require) {
 			e.preventDefault();
 			// TODO: account should be property of folder
 			var account = require('state').accounts.get(this.model.get('accountId'));
-			var folder = this.model;
+			var folderId = $(e.currentTarget).parent().data('folder_id');
+			var folder = null;
+			if (folderId === this.model.get('id')) {
+				folder = this.model;
+			} else {
+				folder = this.model.get('folders').get(folderId);
+			}
 			var noSelect = $(e.currentTarget).parent().data('no_select');
 			Radio.ui.trigger('folder:show', account, folder, noSelect);
 		},
