@@ -2,85 +2,68 @@ sudo: required
 dist: trusty
 language: php
 php:
-  - 5.4
-  - 5.5
-  - 5.6
-  - 7
-
+- 5.4
+- 5.5
+- 5.6
+- 7
 addons:
   apt:
     packages:
     - mysql-server-5.6
     - mysql-client-core-5.6
     - mysql-client-5.6
-
 services:
-  - docker
-  - postgresql
-
+- docker
+- postgresql
 env:
   global:
-    - CORE_BRANCH=master
-    - TEST_JS=FALSE
-    - PHP_COVERAGE=FALSE
+  - CORE_BRANCH=master
+  - TEST_JS=FALSE
+  - PHP_COVERAGE=FALSE
   matrix:
-    - DB=sqlite
-
+  - DB=sqlite
 branches:
   only:
-    - master
-    - /^stable\d+(\.\d+)?$/
-
+  - master
+  - "/^stable\\d+(\\.\\d+)?$/"
+  - /^v\d++(\.\d+)?+(\.\d+)?+(\.\d+)?$/
 cache:
   directories:
-    - $HOME/.composer/cache/files
-    - $HOME/.npm
-    - $HOME/.cache/bower
-
+  - "$HOME/.composer/cache/files"
+  - "$HOME/.npm"
+  - "$HOME/.cache/bower"
 before_install:
-    # No 'travis' mysql on trusty beta -> create it
-  - mysql -u root -e "CREATE USER 'travis'@'localhost'"
-  - mysql -u root -e "GRANT ALL ON *.* TO 'travis'@'localhost';"
-
-    # Get old phpunit that supports php 5.4
-  - sh -c "if [ '$TRAVIS_PHP_VERSION' = '5.4' ]; then curl -s -o $HOME/.phpenv/versions/5.4/bin/phpunit https://phar.phpunit.de/phpunit-4.8.9.phar; fi"
-  - sh -c "if [ '$TRAVIS_PHP_VERSION' = '5.4' ]; then chmod +x $HOME/.phpenv/versions/5.4/bin/phpunit; fi"
-
-    # Install dependencies
-  - composer self-update
-  - make install-composer-deps
-
-    # Pull and start imap docker
-  - make start-imap-docker
-
-    # Core setup
-  - wget https://raw.githubusercontent.com/owncloud/administration/master/travis-ci/before_install.sh
-  - bash ./before_install.sh mail $CORE_BRANCH $DB
-  - cd ../core
-  - php occ app:enable mail
-  - sh -c "if [ '$TEST_JS' = 'TRUE' ]; then npm install -g npm@latest; fi"
-
+- mysql -u root -e "CREATE USER 'travis'@'localhost'"
+- mysql -u root -e "GRANT ALL ON *.* TO 'travis'@'localhost';"
+- sh -c "if [ '$TRAVIS_PHP_VERSION' = '5.4' ]; then curl -s -o $HOME/.phpenv/versions/5.4/bin/phpunit
+  https://phar.phpunit.de/phpunit-4.8.9.phar; fi"
+- sh -c "if [ '$TRAVIS_PHP_VERSION' = '5.4' ]; then chmod +x $HOME/.phpenv/versions/5.4/bin/phpunit;
+  fi"
+- composer self-update
+- make install-composer-deps
+- make start-imap-docker
+- wget https://raw.githubusercontent.com/owncloud/administration/master/travis-ci/before_install.sh
+- bash ./before_install.sh mail $CORE_BRANCH $DB
+- cd ../core
+- php occ app:enable mail
+- sh -c "if [ '$TEST_JS' = 'TRUE' ]; then npm install -g npm@latest; fi"
 before_script:
-  - cd apps/mail
-  - sh -c "if [ '$TEST_JS' = 'TRUE' ]; then make dev-setup; fi"
-  - make add-imap-account
-    # Disable xdebug if it's not needed
-  - if [[ "$PHP_COVERAGE" = "FALSE" ]]; then phpenv config-rm xdebug.ini; fi
-
+- cd apps/mail
+- sh -c "if [ '$TEST_JS' = 'TRUE' ]; then make dev-setup; fi"
+- make add-imap-account
+- if [[ "$PHP_COVERAGE" = "FALSE" ]]; then phpenv config-rm xdebug.ini; fi
 script:
-  # Test lint
-  - find . -name \*.php -not -path './vendor/*' -exec php -l "{}" \;
+- find . -name \*.php -not -path './vendor/*' -exec php -l "{}" \;
+- sh -c "if [ '$TEST_JS' = 'TRUE' ]; then grunt; fi"
+- cd tests
+- phpunit --configuration phpunit.xml
+- if [[ "$PHP_COVERAGE" = "TRUE" ]]; then wget https://scrutinizer-ci.com/ocular.phar;
+  fi
+- if [[ "$PHP_COVERAGE" = "TRUE" ]]; then php ocular.phar code-coverage:upload --format=php-clover
+  clover.xml; fi
+- cd ..
+- make appstore
 
-  # Run js unit tests
-  - sh -c "if [ '$TEST_JS' = 'TRUE' ]; then grunt; fi"
-
-  # Run phpunit tests
-  - cd tests
-  - phpunit --configuration phpunit.xml
-
-  # Create coverage report
-  - if [[ "$PHP_COVERAGE" = "TRUE" ]]; then wget https://scrutinizer-ci.com/ocular.phar; fi
-  - if [[ "$PHP_COVERAGE" = "TRUE" ]]; then php ocular.phar code-coverage:upload --format=php-clover clover.xml; fi
 matrix:
   include:
     - php: 5.4
@@ -97,3 +80,13 @@ matrix:
       env: "DB=mysql CORE_BRANCH=stable9"
 
   fast_finish: true
+deploy:
+  provider: releases
+  api_key:
+    secure: RKgFQyJcLVoj6+mJSuUfaaECaVjTJRhRTgsNrPL1OIVHKo5dRVhXVSEeHOfApZhp3tZbQiGb2jzK0IDcayOmd2uzOi7wJY01PqwLv/l0FqAgO+LSx6N0shRCTAFTIWy6/Ls0oNFRmmvyfLa0IXi3wQFuXNu5v1qwnWzL2Sm1gHI=
+  file: build/artifacts/appstore/mail.tar.gz
+  skip_cleanup: true
+  on:
+    repo: owncloud/mail
+    tags: true
+    php: 5.6
