@@ -17,8 +17,8 @@ define(function(require) {
 	var state = {};
 
 	var accounts = new AccountCollection();
-	var currentFolderId = null;
 	var currentAccount = null;
+	var currentFolder = null;
 	var currentMessageId = null;
 	var currentMessageSubject = null;
 	var currentMessageBody = '';
@@ -42,14 +42,14 @@ define(function(require) {
 				currentAccount = account;
 			}
 		},
-		currentFolderId: {
+		currentFolder: {
 			get: function() {
-				return currentFolderId;
+				return currentFolder;
 			},
-			set: function(newId) {
-				var oldId = currentFolderId;
-				currentFolderId = newId;
-				if (newId !== oldId) {
+			set: function(newFolder) {
+				var oldFolder = currentFolder;
+				currentFolder = newFolder;
+				if (newFolder !== oldFolder) {
 					Radio.ui.trigger('folder:changed');
 				}
 			}

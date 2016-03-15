@@ -19,7 +19,7 @@ define(function(require) {
 	require('views/helper');
 
 	Radio.ui.on('folder:show', loadFolder);
-	Radio.ui.on('message:load', function(account, folderId, messageId,
+	Radio.ui.on('message:load', function(account, folder, messageId,
 		options) {
 		//FIXME: don't rely on global state vars
 		loadMessage(account, messageId, options);
@@ -27,7 +27,13 @@ define(function(require) {
 
 	var composerVisible = false;
 
-	function loadFolder(account, folderId, noSelect) {
+	/**
+	 * @param {Account} account
+	 * @param {Folder} folder
+	 * @param {boolean} noSelect
+	 * @returns {undefined}
+	 */
+	function loadFolder(account, folder, noSelect) {
 		Radio.ui.trigger('composer:leave');
 		Radio.ui.trigger('messagecontent:show');
 
@@ -39,7 +45,7 @@ define(function(require) {
 		}
 
 		// Set folder active
-		Radio.folder.trigger('setactive', account, folderId);
+		Radio.folder.trigger('setactive', account, folder);
 		Radio.ui.trigger('messagesview:messages:reset');
 		$('#mail-messages')
 			.addClass('icon-loading');
@@ -54,16 +60,16 @@ define(function(require) {
 			$('#emptycontent').show();
 			$('#mail-message').removeClass('icon-loading');
 			require('state').currentAccount = account;
-			require('state').currentFolderId = folderId;
+			require('state').currentFolder = folder;
 			Radio.ui.trigger('messagesview:message:setactive', null);
 			$('#mail-messages').removeClass('icon-loading');
 			require('state').currentlyLoading = null;
 		} else {
-			require('communication').fetchMessageList(account, folderId, {
+			require('communication').fetchMessageList(account, folder, {
 				onSuccess: function(messages, cached) {
 					require('state').currentlyLoading = null;
 					require('state').currentAccount = account;
-					require('state').currentFolderId = folderId;
+					require('state').currentFolder = folder;
 					Radio.ui.trigger('messagesview:message:setactive', null);
 					$('#mail-messages').removeClass('icon-loading');
 
@@ -106,8 +112,8 @@ define(function(require) {
 				onError: function(error, textStatus) {
 					if (textStatus !== 'abort') {
 						// Set the old folder as being active
-						var folderId = require('state').currentFolderId;
-						Radio.folder.trigger('setactive', account, folderId);
+						var folder = require('state').currentFolder;
+						Radio.folder.trigger('setactive', account, folder);
 						Radio.ui.trigger('error:show', t('mail', 'Error while loading messages.'));
 					}
 				},
@@ -116,6 +122,11 @@ define(function(require) {
 		}
 	}
 
+	/**
+	 * @param {number} messageId
+	 * @param {number} attachmentId
+	 * @returns {undefined}
+	 */
 	function saveAttachment(messageId, attachmentId) {
 		OC.dialogs.filepicker(
 			t('mail', 'Choose a folder to store the attachment in'),
@@ -138,7 +149,7 @@ define(function(require) {
 						'attachment/{attachmentId}',
 						{
 							accountId: require('state').currentAccount.get('accountId'),
-							folderId: require('state').currentFolderId,
+							folderId: require('state').currentFolder.get('id'),
 							messageId: messageId,
 							attachmentId: attachmentId
 						}), {
@@ -175,6 +186,9 @@ define(function(require) {
 			);
 	}
 
+	/**
+	 * @returns {undefined}
+	 */
 	function openForwardComposer() {
 		var header = '\n\n\n\n-------- ' +
 			t('mail', 'Forwarded message') +
@@ -193,6 +207,12 @@ define(function(require) {
 		Radio.ui.trigger('composer:show', data);
 	}
 
+	/**
+	 * @param {Account} account
+	 * @param {number} messageId
+	 * @param {object} options
+	 * @returns {undefined}
+	 */
 	function loadMessage(account, messageId, options) {
 		options = options || {};
 		var defaultOptions = {
@@ -217,7 +237,7 @@ define(function(require) {
 
 		// check if message is a draft
 		var draftsFolder = account.get('specialFolders').drafts;
-		var draft = draftsFolder === require('state').currentFolderId;
+		var draft = draftsFolder === require('state').currentFolder.get('id');
 
 		// close email first
 		// Check if message is open
@@ -240,7 +260,7 @@ define(function(require) {
 
 		require('communication').fetchMessage(
 			require('state').currentAccount,
-			require('state').currentFolderId,
+			require('state').currentFolder,
 			messageId,
 			{
 				onSuccess: function(message) {
@@ -248,7 +268,7 @@ define(function(require) {
 						Radio.ui.trigger('composer:show', message);
 					} else {
 						require('cache').addMessage(require('state').currentAccount,
-							require('state').currentFolderId,
+							require('state').currentFolder,
 							message);
 						Radio.ui.trigger('message:show', message);
 					}
@@ -261,11 +281,9 @@ define(function(require) {
 			});
 	}
 
-	var view = {
+	return {
 		saveAttachment: saveAttachment,
 		openForwardComposer: openForwardComposer,
 		loadMessage: loadMessage
 	};
-
-	return view;
 });

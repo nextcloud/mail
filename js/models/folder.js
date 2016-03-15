@@ -13,7 +13,10 @@ define(function(require) {
 
 	var Backbone = require('backbone');
 
-	return Backbone.Model.extend({
+	/**
+	 * @class Folder
+	 */
+	var Folder = Backbone.Model.extend({
 		defaults: {
 			open: false,
 			folders: []
@@ -36,4 +39,6 @@ define(function(require) {
 			return data;
 		}
 	});
+
+	return Folder;
 });

@@ -13,6 +13,7 @@
 define(function(require) {
 	'use strict';
 
+	var _ = require('underscore');
 	var $ = require('jquery');
 	var OC = require('OC');
 	var Cache = require('cache');
@@ -20,7 +21,7 @@ define(function(require) {
 	var State = require('state');
 
 	/*jshint maxparams: 6 */
-	function showNotification(title, body, tag, icon, account, folderId) {
+	function showNotification(title, body, tag, icon, account, folder) {
 		// notifications not supported -> go away
 		if (typeof Notification === 'undefined') {
 			return;
@@ -39,7 +40,7 @@ define(function(require) {
 			}
 		);
 		notification.onclick = function() {
-			Radio.ui.trigger('folder:show', account, folderId, false);
+			Radio.ui.trigger('folder:show', account, folder, false);
 			window.focus();
 		};
 		setTimeout(function() {
@@ -126,7 +127,7 @@ define(function(require) {
 
 						// reload if current selected folder has changed
 						if (State.currentAccount === changedAccount &&
-							State.currentFolderId === changes.id) {
+							State.currentFolder.get('id') === changes.id) {
 							Radio.ui.request('messagesview:collection').
 								add(changes.messages);
 						}
@@ -152,7 +153,7 @@ define(function(require) {
 	 */
 	function MessageFetcher() {
 		var account = null;
-		var folderId = null;
+		var folder = null;
 		var pollIntervall = 3 * 1000;
 		var queue = [];
 		var timer = null;
@@ -164,11 +165,11 @@ define(function(require) {
 				queue = [];
 
 				require('communication').fetchMessages(
-					account, folderId, messages, {
+					account, folder, messages, {
 						onSuccess: function(messages) {
 							require('cache').addMessages(
 								account,
-								folderId, messages);
+								folder, messages);
 						}
 					});
 			}
@@ -177,7 +178,7 @@ define(function(require) {
 		return {
 			start: function() {
 				account = State.currentAccount;
-				folderId = State.currentFolderId;
+				folder = State.currentFolder;
 				timer = setInterval(fetch, pollIntervall);
 			},
 			restart: function() {

@@ -11,31 +11,60 @@
 define(function(require) {
 	'use strict';
 
+	var _ = require('underscore');
 	var $ = require('jquery');
 	var storage = $.localStorage;
 	var Account = require('models/account');
 
 	var MessageCache = {
+		/**
+		 * @param {Account} account
+		 * @returns {string}
+		 */
 		getAccountPath: function(account) {
 			return ['messages', account.get('accountId').toString()].join('.');
 		},
-		getFolderPath: function(account, folderId) {
-			return [this.getAccountPath(account), folderId.toString()].join('.');
+		/**
+		 * @param {Account} account
+		 * @param {Folder} folder
+		 * @returns {string}
+		 */
+		getFolderPath: function(account, folder) {
+			return [this.getAccountPath(account), folder.get('id').toString()].join('.');
 		},
-		getMessagePath: function(account, folderId, messageId) {
-			return [this.getFolderPath(account, folderId), messageId.toString()].join('.');
+		/**
+		 * @param {Account} account
+		 * @param {Folder} folder
+		 * @param {number} messageId
+		 * @returns {string}
+		 */
+		getMessagePath: function(account, folder, messageId) {
+			return [this.getFolderPath(account, folder), messageId.toString()].join('.');
 		}
 	};
 
 	var FolderCache = {
+		/**
+		 * @param {Account} account
+		 * @returns {string}
+		 */
 		getAccountPath: function(account) {
 			return ['folders', account.get('accountId').toString()].join('.');
 		},
-		getFolderPath: function(account, folderId) {
-			return [this.getAccountPath(account), folderId.toString()].join('.');
+		/**
+		 * @param {Account} account
+		 * @param {Folder} folder
+		 * @returns {string}
+		 */
+		getFolderPath: function(account, folder) {
+			return [this.getAccountPath(account), folder.get('id').toString()].join('.');
 		}
 	};
 
+	/**
+	 * @param {AccountsCollection} accounts
+	 * @returns {undefined}
+	 */
 	function cleanUp(accounts) {
 		var activeAccounts = accounts.map(function(account) {
 			return account.get('accountId');
@@ -51,25 +80,42 @@ define(function(require) {
 		});
 	}
 
-	function getFolderMessages(account, folderId) {
-		var path = MessageCache.getFolderPath(account, folderId);
+	/**
+	 * @param {Account} account
+	 * @param {Folder} folder
+	 * @returns {unresolved}
+	 */
+	function getFolderMessages(account, folder) {
+		var path = MessageCache.getFolderPath(account, folder);
 		return storage.isSet(path) ? storage.get(path) : null;
 	}
 
-	function getMessage(account, folderId, messageId) {
-		var path = MessageCache.getMessagePath(account, folderId, messageId);
+	/**
+	 * @param {Account} account
+	 * @param {Folder} folder
+	 * @param {Message} messageId
+	 * @returns {unresolved}
+	 */
+	function getMessage(account, folder, messageId) {
+		var path = MessageCache.getMessagePath(account, folder, messageId);
 		if (storage.isSet(path)) {
 			var message = storage.get(path);
 			// Update the timestamp
-			addMessage(account, folderId, message);
+			addMessage(account, folder, message);
 			return message;
 		} else {
 			return null;
 		}
 	}
 
-	function addMessage(account, folderId, message) {
-		var path = MessageCache.getMessagePath(account, folderId, message.id);
+	/**
+	 * @param {Account} account
+	 * @param {Folder} folder
+	 * @param {Message} message
+	 * @returns {undefined}
+	 */
+	function addMessage(account, folder, message) {
+		var path = MessageCache.getMessagePath(account, folder, message.id);
 		// Add timestamp for later cleanup
 		message.timestamp = Date.now();
 
@@ -77,7 +123,7 @@ define(function(require) {
 		storage.set(path, message);
 
 		// Remove old messages (keep 20 most recently loaded)
-		var messages = $.map(getFolderMessages(account, folderId), function(value) {
+		var messages = $.map(getFolderMessages(account, folder), function(value) {
 			return [value];
 		});
 		messages.sort(function(m1, m2) {
@@ -85,34 +131,51 @@ define(function(require) {
 		});
 		var oldMessages = messages.slice(20, messages.length);
 		_.each(oldMessages, function(message) {
-			storage.remove(MessageCache.getMessagePath(account, folderId, message.id));
+			storage.remove(MessageCache.getMessagePath(account, folder, message.id));
 		});
 	}
 
-	function addMessages(account, folderId, messages) {
+	/**
+	 * @param {Account} account
+	 * @param {Folder} folder
+	 * @param {Message} messages
+	 * @returns {undefined}
+	 */
+	function addMessages(account, folder, messages) {
 		_.each(messages, function(message) {
-			addMessage(account, folderId, message);
+			addMessage(account, folder, message);
 		});
 	}
 
-	function removeMessage(account, folderId, messageId) {
-		var message = getMessage(account, folderId, messageId);
+	/**
+	 * @param {Account} account
+	 * @param {Folder} folder
+	 * @param {number} messageId
+	 * @returns {undefined}
+	 */
+	function removeMessage(account, folder, messageId) {
+		var message = getMessage(account, folder, messageId);
 		if (message) {
 			// message exists in cache -> remove it
-			storage.remove(MessageCache.getMessagePath(account, folderId, messageId));
+			storage.remove(MessageCache.getMessagePath(account, folder, messageId));
 		}
-		var messageList = getMessageList(account, folderId);
+		var messageList = getMessageList(account, folder);
 		if (messageList) {
 			// message list is cached -> remove message from it
 			var newList = _.filter(messageList, function(message) {
 				return message.id !== messageId;
 			});
-			addMessageList(account, folderId, newList);
+			addMessageList(account, folder, newList);
 		}
 	}
 
-	function getMessageList(account, folderId) {
-		var path = FolderCache.getFolderPath(account, folderId);
+	/**
+	 * @param {Account} account
+	 * @param {Folder} folder
+	 * @returns {unresolved}
+	 */
+	function getMessageList(account, folder) {
+		var path = FolderCache.getFolderPath(account, folder);
 		if (storage.isSet(path)) {
 			return storage.get(path);
 		} else {
@@ -120,11 +183,21 @@ define(function(require) {
 		}
 	}
 
-	function addMessageList(account, folderId, messages) {
-		var path = FolderCache.getFolderPath(account, folderId);
+	/**
+	 * @param {Account} account
+	 * @param {Folder} folder
+	 * @param {type} messages
+	 * @returns {undefined}
+	 */
+	function addMessageList(account, folder, messages) {
+		var path = FolderCache.getFolderPath(account, folder);
 		storage.set(path, messages);
 	}
 
+	/**
+	 * @param {Account} account
+	 * @returns {undefined}
+	 */
 	function removeAccount(account) {
 		// Remove cached message lists
 		var path = FolderCache.getAccountPath(account);

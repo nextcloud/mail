@@ -13,7 +13,10 @@ define(function(require) {
 
 	var Backbone = require('backbone');
 
-	return Backbone.Model.extend({
+	/**
+	 * @class Attachment
+	 */
+	var Attachment = Backbone.Model.extend({
 		initialize: function() {
 			this.set('id', _.uniqueId());
 
@@ -25,4 +28,6 @@ define(function(require) {
 			this.set('displayName', s);
 		}
 	});
+
+	return Attachment;
 });
