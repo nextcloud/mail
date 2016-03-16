@@ -247,11 +247,17 @@ define(function(require) {
 
 			return message;
 		},
-		submitMessageWrapperInside: function() {
+		submitMessageWrapperInside: function(){
+
+			// http://stackoverflow.com/questions/487073/check-if-element-is-visible-after-scrolling
+			if (isScrolledIntoView($('.message-composer'))) {
+				alert("Seee");
+			}
 
 			$('#mail-message').animate({
 				scrollTop: $('#reply-composer').offset().top
 			}, 1000);
+			this.$('.submit-message-wrapper-inside').hide();
 			// This function is needed because $('.message-body').focus does not focus the first line
 			setCaretToPos($('.message-body')[0], 0);
 
@@ -270,6 +276,20 @@ define(function(require) {
 
 			function setCaretToPos(input, pos) {
 				setSelectionRange(input, pos, pos);
+			}
+
+			function isScrolledIntoView(elem)
+			{
+				var $elem = $(elem);
+				var $window = $(window);
+
+				var docViewTop = $window.scrollTop();
+				var docViewBottom = docViewTop + $window.height();
+
+				var elemTop = $elem.offset().top;
+				var elemBottom = elemTop + $elem.height();
+
+				return ((elemBottom <= docViewBottom) && (elemTop >= docViewTop));
 			}
 
 		},
