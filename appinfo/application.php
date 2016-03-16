@@ -29,8 +29,13 @@ class Application extends App {
 		parent::__construct('mail', $urlParams);
 
 		$container = $this->getContainer();
+
 		$transport = $container->getServer()->getConfig()->getSystemValue('app.mail.transport', 'smtp');
 		$testSmtp = $transport === 'smtp';
+
+		$container->registerService('OCP\ISession', function ($c) {
+			return $c->getServer()->getSession();
+		});
 
 		$user = $container->query("UserId");
 		$container->registerParameter("appName", "mail");
