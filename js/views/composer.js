@@ -37,6 +37,7 @@ define(function(require) {
 		autosized: false,
 		events: {
 			'click .submit-message': 'submitMessage',
+			'click .submit-message-wrapper-inside': 'submitMessageWrapperInside',
 			'keypress .message-body': 'handleKeyPress',
 			'input  .to': 'onInputChanged',
 			'paste  .to': 'onInputChanged',
@@ -245,6 +246,32 @@ define(function(require) {
 			message.attachments = this.attachments.toJSON();
 
 			return message;
+		},
+		submitMessageWrapperInside: function() {
+
+			$('#mail-message').animate({
+				scrollTop: $('#reply-composer').offset().top
+			}, 1000);
+			// This function is needed because $('.message-body').focus does not focus the first line
+			setCaretToPos($('.message-body')[0], 0);
+
+			function setSelectionRange(input, selectionStart, selectionEnd) {
+				if (input.setSelectionRange) {
+					input.focus();
+					input.setSelectionRange(selectionStart, selectionEnd);
+				} else if (input.createTextRange) {
+					var range = input.createTextRange();
+					range.collapse(true);
+					range.moveEnd('character', selectionEnd);
+					range.moveStart('character', selectionStart);
+					range.select();
+				}
+			}
+
+			function setCaretToPos(input, pos) {
+				setSelectionRange(input, pos, pos);
+			}
+
 		},
 		submitMessage: function() {
 			clearTimeout(this.draftTimer);
