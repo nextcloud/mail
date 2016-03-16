@@ -1,4 +1,5 @@
 <?php
+
 /**
  * @author Christoph Wurst <christoph@winzerhof-wurst.at>
  * @author Lukas Reschke <lukas@owncloud.com>
@@ -24,7 +25,6 @@
 namespace OCA\Mail\Controller;
 
 use Exception;
-use OCP\IHelper;
 use OCP\IRequest;
 use OCP\ISession;
 use OCP\IURLGenerator;
@@ -45,11 +45,6 @@ class ProxyController extends Controller {
 	private $session;
 
 	/**
-	 * @var \OCP\IHelper
-	 */
-	private $helper;
-
-	/**
 	 * @var string
 	 */
 	private $referrer;
@@ -65,17 +60,11 @@ class ProxyController extends Controller {
 	 * @param IURLGenerator $urlGenerator
 	 * @param \OCP\ISession $session
 	 */
-	public function __construct($appName,
-								IRequest $request,
-								IURLGenerator $urlGenerator,
-								ISession $session,
-								IHelper $helper,
-								$referrer,
-								$hostname) {
+	public function __construct($appName, IRequest $request,
+		IURLGenerator $urlGenerator, ISession $session, $referrer, $hostname) {
 		parent::__construct($appName, $request);
 		$this->urlGenerator = $urlGenerator;
 		$this->session = $session;
-		$this->helper = $helper;
 		$this->referrer = $referrer;
 		$this->hostname = $hostname;
 	}
@@ -129,8 +118,25 @@ class ProxyController extends Controller {
 		// close the session to allow parallel downloads
 		$this->session->close();
 
-		$content = $this->helper->getUrlContent($src);
+		$content = $this->getUrlContent($src);
 		return new ProxyDownloadResponse($content, $src, 'application/octet-stream');
+	}
+
+	/**
+	 * Version hack for \OCP\IHelper
+	 *
+	 * @todo remove version-hack once core 8.1+ is supported
+	 *
+	 * @param type $src
+	 * @return type
+	 */
+	private function getUrlContent($src) {
+		$ocVersion = \OC::$server->getConfig()->getSystemValue('version', '0.0.0');
+		if (version_compare($ocVersion, '8.2.0', '<')) {
+			return \OC::$server->getHTTPClientService()->newClient()->get($src);
+		} else {
+			return \OC::$server->getHelper()->getUrlContent($src);
+		}
 	}
 
 }
