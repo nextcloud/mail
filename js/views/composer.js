@@ -28,7 +28,7 @@ define(function(require) {
 		draftCallback: null,
 		accounts: null,
 		account: null,
-		folderId: null,
+		folder: null,
 		messageId: null,
 		draftInterval: 1500,
 		draftTimer: null,
@@ -102,7 +102,7 @@ define(function(require) {
 				this.account = options.account || this.accounts.at(0);
 			} else {
 				this.account = options.account;
-				this.folderId = options.folderId;
+				this.folder = options.folder;
 				this.messageId = options.messageId;
 			}
 		},
@@ -247,51 +247,41 @@ define(function(require) {
 
 			return message;
 		},
-		submitMessageWrapperInside: function(){
-
+		submitMessageWrapperInside: function(e) {
 			// http://stackoverflow.com/questions/487073/check-if-element-is-visible-after-scrolling
-			if (isScrolledIntoView($('.message-composer'))) {
-				alert("Seee");
+			if (this._isVisible(this.$el)) {
+				this.$('.submit-message').click();
+			} else {
+				$('#mail-message').animate({
+					scrollTop: this.$el.offset().top
+				}, 1000);
+				this.$('.submit-message-wrapper-inside').hide();
+				// This function is needed because $('.message-body').focus does not focus the first line
+				this._setCaretToPos(this.$('.message-body')[0], 0);
 			}
-
-			$('#mail-message').animate({
-				scrollTop: $('#reply-composer').offset().top
-			}, 1000);
-			this.$('.submit-message-wrapper-inside').hide();
-			// This function is needed because $('.message-body').focus does not focus the first line
-			setCaretToPos($('.message-body')[0], 0);
-
-			function setSelectionRange(input, selectionStart, selectionEnd) {
-				if (input.setSelectionRange) {
-					input.focus();
-					input.setSelectionRange(selectionStart, selectionEnd);
-				} else if (input.createTextRange) {
-					var range = input.createTextRange();
-					range.collapse(true);
-					range.moveEnd('character', selectionEnd);
-					range.moveStart('character', selectionStart);
-					range.select();
-				}
+		},
+		_setSelectionRange: function(input, selectionStart, selectionEnd) {
+			if (input.setSelectionRange) {
+				input.focus();
+				input.setSelectionRange(selectionStart, selectionEnd);
+			} else if (input.createTextRange) {
+				var range = input.createTextRange();
+				range.collapse(true);
+				range.moveEnd('character', selectionEnd);
+				range.moveStart('character', selectionStart);
+				range.select();
 			}
+		},
+		_setCaretToPos: function(input, pos) {
+			this._setSelectionRange(input, pos, pos);
+		},
+		_isVisible: function() {
+			var $elem = this.$el;
+			var $window = $(window);
+			var docViewTop = $window.scrollTop();
+			var elemTop = $elem.offset().top;
 
-			function setCaretToPos(input, pos) {
-				setSelectionRange(input, pos, pos);
-			}
-
-			function isScrolledIntoView(elem)
-			{
-				var $elem = $(elem);
-				var $window = $(window);
-
-				var docViewTop = $window.scrollTop();
-				var docViewBottom = docViewTop + $window.height();
-
-				var elemTop = $elem.offset().top;
-				var elemBottom = elemTop + $elem.height();
-
-				return ((elemBottom <= docViewBottom) && (elemTop >= docViewTop));
-			}
-
+			return elemTop >= docViewTop;
 		},
 		submitMessage: function() {
 			clearTimeout(this.draftTimer);
@@ -323,7 +313,8 @@ define(function(require) {
 
 			// if available get account from drop-down list
 			if (this.$('.mail-account').length > 0) {
-				this.account = this.accounts.get(this.$('.mail-account').find(':selected').val());
+				this.account = this.accounts.get(this.$('.mail-account').
+					find(':selected').val());
 			}
 
 			// send the mail
@@ -350,7 +341,8 @@ define(function(require) {
 					if (_this.draftUID !== null) {
 						// the sent message was a draft
 						if (!_.isUndefined(Radio.ui.request('messagesview:collection'))) {
-							Radio.ui.request('messagesview:collection').remove({id: _this.draftUID});
+							Radio.ui.request('messagesview:collection').
+								remove({id: _this.draftUID});
 						}
 						_this.draftUID = null;
 					}
@@ -374,7 +366,8 @@ define(function(require) {
 					cc.prop('disabled', false);
 					bcc.prop('disabled', false);
 					subject.prop('disabled', false);
-					_this.$('.new-message-attachments-action').css('display', 'inline-block');
+					_this.$('.new-message-attachments-action').
+						css('display', 'inline-block');
 					_this.$('#mail_new_attachment').prop('disabled', false);
 					newMessageBody.prop('disabled', false);
 					newMessageSend.prop('disabled', false);
@@ -384,7 +377,7 @@ define(function(require) {
 
 			if (this.isReply()) {
 				options.messageId = this.messageId;
-				options.folderId = this.folderId;
+				options.folder = this.folder;
 			}
 
 			this.submitCallback(this.account, this.getMessage(), options);
@@ -401,14 +394,14 @@ define(function(require) {
 
 			// if available get account from drop-down list
 			if (this.$('.mail-account').length > 0) {
-				this.account = this.accounts.get(this.$('.mail-account').find(':selected').val());
+				this.account = this.accounts.get(this.$('.mail-account').
+					find(':selected').val());
 			}
 
 			// send the mail
 			var _this = this;
 			this.draftCallback(this.account, this.getMessage(), {
-				account: this.account,
-				folderId: this.folderId,
+				folder: this.folder,
 				messageId: this.messageId,
 				draftUID: this.draftUID,
 				success: function(data) {
@@ -458,7 +451,8 @@ define(function(require) {
 			function extractLast(term) {
 				return split(term).pop();
 			}
-			if (!$(this).data('autocomplete')) { // If the autocomplete wasn't called yet:
+			if (!$(this).
+				data('autocomplete')) { // If the autocomplete wasn't called yet:
 				// don't navigate away from the field on tab when selecting an item
 				$(this).bind('keydown', function(event) {
 					if (event.keyCode === $.ui.keyCode.TAB &&

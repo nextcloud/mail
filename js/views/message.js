@@ -136,14 +136,20 @@ define(function(require) {
 				});
 			});
 
+			// TODO: add folder/account reference to message
+			var account = require('state').accounts.get(this.message.get('accountId'));
+			console.log(account);
+			var folder = account.get('folders').get(this.message.get('folderId'));
+
 			// setup reply composer view
+			
 			this.replyComposer.show(new ComposerView({
 				//el: this.$('#reply-composer'),
 				type: 'reply',
 				onSubmit: require('communication').sendMessage,
 				onDraft: require('communication').saveDraft,
-				accountId: this.message.get('accountId'),
-				folderId: this.message.get('folderId'),
+				account: account,
+				folder: folder,
 				messageId: this.message.get('messageId')
 			}));
 			this.replyComposer.currentView.render({
