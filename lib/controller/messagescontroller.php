@@ -146,14 +146,7 @@ class MessagesController extends Controller {
 				}
 			}
 
-			$image = $ci->getPhoto($j['fromEmail']);
-			if (substr($image, 0, 4) === "http") {
-				$j['senderImage'] = $image;
-			} else {
-				// ignore contacts >= 1.0 binary images
-				// TODO: fix
-				$j['senderImage'] = null;
-			}
+			$j['senderImage'] = $ci->getPhoto($j['fromEmail']);
 			return $j;
 		}, $json);
 
