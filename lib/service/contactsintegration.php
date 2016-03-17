@@ -1,4 +1,5 @@
 <?php
+
 /**
  * @author Christoph Wurst <christoph@winzerhof-wurst.at>
  * @author Thomas Müller <thomas.mueller@tmit.eu>
@@ -24,7 +25,7 @@ namespace OCA\Mail\Service;
 use OCP\Contacts\IManager;
 
 class ContactsIntegration {
-	
+
 	/**
 	 * @var IManager
 	 */
@@ -36,7 +37,7 @@ class ContactsIntegration {
 	public function __construct(IManager $contactsManager) {
 		$this->contactsManager = $contactsManager;
 	}
-	
+
 	/**
 	 * Extracts all matching contacts with email address and name
 	 *
@@ -64,7 +65,8 @@ class ContactsIntegration {
 			// loop through all email addresses of this contact
 			foreach ($email as $e) {
 				$displayName = "\"$fn\" <$e>";
-				$receivers[] = ['id'    => $id,
+				$receivers[] = [
+					'id' => $id,
 					'label' => $displayName,
 					'value' => $displayName
 				];
@@ -80,12 +82,20 @@ class ContactsIntegration {
 	 */
 	public function getPhoto($email) {
 		$result = $this->contactsManager->search($email, ['EMAIL']);
+		$uriPrefix = 'VALUE=uri:';
 		if (count($result) > 0) {
 			if (isset($result[0]['PHOTO'])) {
 				$s = $result[0]['PHOTO'];
-				return substr($s, strpos($s, 'http'));
+				if (substr($s, 0, strlen($uriPrefix)) === $uriPrefix) {
+					return substr($s, strpos($s, 'http'));
+				} else {
+					// ignore contacts >= 1.0 binary images
+					// TODO: fix
+					return null;
+				}
 			}
 		}
 		return null;
 	}
+
 }
