@@ -133,10 +133,10 @@ define(function(require) {
 						}
 
 						// Save new messages to the cached message list
-						var cachedList = Cache.getMessageList(changedAccount, changes.id);
+						var cachedList = Cache.getMessageList(changedAccount, localFolder);
 						if (cachedList) {
 							cachedList = cachedList.concat(changes.messages);
-							Cache.addMessageList(changedAccount, changes.id, cachedList);
+							Cache.addMessageList(changedAccount, localFolder, cachedList);
 						}
 
 						State.folderView.updateTitle();
