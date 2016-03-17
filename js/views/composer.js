@@ -5,7 +5,7 @@
  * later. See the COPYING file.
  *
  * @author Christoph Wurst <christoph@winzerhof-wurst.at>
- * @copyright Christoph Wurst 2015
+ * @copyright Christoph Wurst 2016
  */
 
 define(function(require) {
@@ -28,7 +28,7 @@ define(function(require) {
 		draftCallback: null,
 		accounts: null,
 		account: null,
-		folder: null,
+		folderId: null,
 		messageId: null,
 		draftInterval: 1500,
 		draftTimer: null,
@@ -102,7 +102,7 @@ define(function(require) {
 				this.account = options.account || this.accounts.at(0);
 			} else {
 				this.account = options.account;
-				this.folder = options.folder;
+				this.folderId = options.folderId;
 				this.messageId = options.messageId;
 			}
 		},
@@ -249,7 +249,7 @@ define(function(require) {
 		},
 		submitMessageWrapperInside: function(e) {
 			// http://stackoverflow.com/questions/487073/check-if-element-is-visible-after-scrolling
-			if (this._isVisible(this.$el)) {
+			if (this._isVisible()) {
 				this.$('.submit-message').click();
 			} else {
 				$('#mail-message').animate({
@@ -279,9 +279,10 @@ define(function(require) {
 			var $elem = this.$el;
 			var $window = $(window);
 			var docViewTop = $window.scrollTop();
+			var docViewBottom = docViewTop + $window.height();
 			var elemTop = $elem.offset().top;
 
-			return elemTop >= docViewTop;
+			return elemTop <= docViewBottom;
 		},
 		submitMessage: function() {
 			clearTimeout(this.draftTimer);
@@ -377,7 +378,7 @@ define(function(require) {
 
 			if (this.isReply()) {
 				options.messageId = this.messageId;
-				options.folder = this.folder;
+				options.folder = this.account.get('folders').get(this.folderId);
 			}
 
 			this.submitCallback(this.account, this.getMessage(), options);
@@ -401,7 +402,7 @@ define(function(require) {
 			// send the mail
 			var _this = this;
 			this.draftCallback(this.account, this.getMessage(), {
-				folder: this.folder,
+				folder: this.account.get('folders').get(this.folderId),
 				messageId: this.messageId,
 				draftUID: this.draftUID,
 				success: function(data) {
