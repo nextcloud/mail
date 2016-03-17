@@ -161,7 +161,6 @@ define(function(require) {
 			},
 			complete: function() {
 			},
-			accountId: null,
 			draftUID: null
 		};
 		_.defaults(options, defaultOptions);
@@ -187,7 +186,7 @@ define(function(require) {
 				subject: message.subject,
 				body: message.body,
 				attachments: message.attachments,
-				folderId: options.folderId,
+				folderId: options.folder ? options.folder.get('id') : null,
 				messageId: options.messageId,
 				draftUID: options.draftUID
 			}
@@ -209,8 +208,7 @@ define(function(require) {
 			},
 			complete: function() {
 			},
-			accountId: null,
-			folderId: null,
+			folder: null,
 			messageId: null,
 			draftUID: null
 		};
@@ -273,7 +271,7 @@ define(function(require) {
 					subject: message.subject,
 					body: message.body,
 					attachments: message.attachments,
-					folderId: options.folderId,
+					folderId: options.folder ? options.folder.get('id') : null,
 					messageId: options.messageId,
 					uid: options.draftUID
 				}

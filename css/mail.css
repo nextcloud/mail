@@ -421,9 +421,25 @@ textarea.message-body {
 textarea.reply {
 	height: 100px;
 }
-input.submit-message {
-	float: right;
-	margin-right: 0;
+input.submit-message,
+.submit-message-wrapper {
+	position: fixed;
+	bottom: 10px;
+	right: 15px;
+}
+.submit-message-wrapper {
+	position: fixed;
+	height: 36px;
+	width: 60px;
+}
+
+.submit-message-wrapper-inside {
+	position: absolute;
+	left: 0;
+	right: 0;
+	top: 0;
+	bottom: 0;
+	z-index: 100;
 }
 #reply-msg {
 	float: left;

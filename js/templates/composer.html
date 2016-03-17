@@ -46,7 +46,10 @@
 					{{#if isReply}} reply{{/if}}"
 			placeholder="{{ t 'Message …' }}">{{message}}</textarea>
 	</div>
-	<input class="submit-message send primary" type="submit" value="{{submitButtonTitle}}" disabled>
+	<div class='submit-message-wrapper'>
+		<input class="submit-message send primary" type="submit" value="{{submitButtonTitle}}" disabled>
+		<div class='submit-message-wrapper-inside' ></div>
+	</div>
 	<div class="new-message-attachments">
 	</div>
 </div>

@@ -7,7 +7,7 @@
  * later. See the COPYING file.
  *
  * @author Christoph Wurst <christoph@winzerhof-wurst.at>
- * @copyright Christoph Wurst 2015
+ * @copyright Christoph Wurst 2016
  */
 
 define(function(require) {
@@ -136,14 +136,19 @@ define(function(require) {
 				});
 			});
 
+			// TODO: add folder/account reference to message
+			var account = require('state').accounts.get(this.message.get('accountId'));
+			var folderId = this.message.get('folderId');
+
 			// setup reply composer view
+			
 			this.replyComposer.show(new ComposerView({
 				//el: this.$('#reply-composer'),
 				type: 'reply',
 				onSubmit: require('communication').sendMessage,
 				onDraft: require('communication').saveDraft,
-				accountId: this.message.get('accountId'),
-				folderId: this.message.get('folderId'),
+				account: account,
+				folderId: folderId,
 				messageId: this.message.get('messageId')
 			}));
 			this.replyComposer.currentView.render({
