@@ -10,8 +10,10 @@
  * @copyright Christoph Wurst 2016
  */
 use OCA\Mail\Command\CreateAccount;
+use OCA\Mail\AppInfo\Application;
 
-$accountService = OC::$server->query('OCA\Mail\Service\AccountService');
+$app = new Application();
+$accountService = $app->getContainer()->query('OCA\Mail\Service\AccountService');
 $crypto = OC::$server->getCrypto();
 
 /** @var Symfony\Component\Console\Application $application */
