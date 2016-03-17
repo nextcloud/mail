@@ -82,10 +82,11 @@ class ContactsIntegration {
 	 */
 	public function getPhoto($email) {
 		$result = $this->contactsManager->search($email, ['EMAIL']);
+		$uriPrefix = 'VALUE=uri:';
 		if (count($result) > 0) {
 			if (isset($result[0]['PHOTO'])) {
 				$s = $result[0]['PHOTO'];
-				if (substr($s, 0, 4) === "http") {
+				if (substr($s, 0, strlen($uriPrefix)) === $uriPrefix) {
 					return substr($s, strpos($s, 'http'));
 				} else {
 					// ignore contacts >= 1.0 binary images
