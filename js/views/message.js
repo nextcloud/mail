@@ -141,7 +141,6 @@ define(function(require) {
 			var folderId = this.message.get('folderId');
 
 			// setup reply composer view
-			
 			this.replyComposer.show(new ComposerView({
 				//el: this.$('#reply-composer'),
 				type: 'reply',
