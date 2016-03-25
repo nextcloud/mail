@@ -247,7 +247,7 @@ define(function(require) {
 
 			return message;
 		},
-		submitMessageWrapperInside: function(e) {
+		submitMessageWrapperInside: function() {
 			// http://stackoverflow.com/questions/487073/check-if-element-is-visible-after-scrolling
 			if (this._isVisible()) {
 				this.$('.submit-message').click();
