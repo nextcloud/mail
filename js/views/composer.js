@@ -62,6 +62,9 @@ define(function(require) {
 		draftUID: null,
 		hasData: false,
 		autosized: false,
+		regions: {
+			attachmentsRegion: '.new-message-attachments'
+		},
 		events: {
 			'click .submit-message': 'submitMessage',
 			'click .submit-message-wrapper-inside': 'submitMessageWrapperInside',
@@ -145,13 +148,9 @@ define(function(require) {
 			}
 		},
 		onRender: function() {
-			var view = new AttachmentsView({
-				el: $('.new-message-attachments'),
+			this.attachmentsRegion.show(new AttachmentsView({
 				collection: this.attachments
-			});
-
-			// And render it
-			view.render();
+			}));
 
 			$('.tipsy-mailto').tipsy({gravity: 'n', live: true});
 
