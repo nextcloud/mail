@@ -81,7 +81,8 @@ define(function(require) {
 			this.message.show(new ComposerView({
 				onSubmit: require('communication').sendMessage,
 				onDraft: require('communication').saveDraft,
-				accounts: require('state').accounts
+				accounts: require('state').accounts,
+				data: data
 			}));
 			this.detailView = DetailView.COMPOSER;
 			this.composer = this.message.currentView;
@@ -89,11 +90,6 @@ define(function(require) {
 			if (data && data.hasHtmlBody) {
 				Radio.ui.trigger('error:show', t('mail', 'Opening HTML drafts is not supported yet.'));
 			}
-
-			// TODO: pass data when initializing
-			this.composer.render({
-				data: data
-			});
 
 			// set 'from' dropdown to current account
 			// TODO: fix selector conflicts
