@@ -11,7 +11,7 @@
 define(function(require) {
 	'use strict';
 
-	var Backbone = require('backbone');
+	var Marionette = require('marionette');
 	var Handlebars = require('handlebars');
 	var $ = require('jquery');
 	var OC = require('OC');
@@ -20,7 +20,7 @@ define(function(require) {
 	var AttachmentsView = require('views/attachments');
 	var ComposerTemplate = require('text!templates/composer.html');
 
-	return Backbone.View.extend({
+	return Marionette.LayoutView.extend({
 		type: 'new',
 		attachments: null,
 		submitCallback: null,

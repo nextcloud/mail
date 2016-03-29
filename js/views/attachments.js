@@ -11,13 +11,13 @@
 define(function(require) {
 	'use strict';
 
-	var Backbone = require('backbone');
+	var Marionette = require('marionette');
 	var OC = require('OC');
 	var Handlebars = require('handlebars');
 	var AttachmentView = require('views/attachment');
 	var AttachmentsTemplate = require('text!templates/attachments.html');
 
-	return Backbone.Marionette.CompositeView.extend({
+	return Marionette.CompositeView.extend({
 		collection: null,
 		childView: AttachmentView,
 		childViewContainer: 'ul',
