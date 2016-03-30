@@ -148,11 +148,9 @@ define(function(require) {
 				onDraft: require('communication').saveDraft,
 				account: account,
 				folderId: folderId,
-				messageId: this.message.get('messageId')
-			}));
-			this.replyComposer.currentView.render({
+				messageId: this.message.get('messageId'),
 				data: this.reply
-			});
+			}));
 		}
 	});
 });

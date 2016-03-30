@@ -11,7 +11,7 @@
 define(function(require) {
 	'use strict';
 
-	var Backbone = require('backbone');
+	var Marionette = require('marionette');
 	var Handlebars = require('handlebars');
 	var $ = require('jquery');
 	var OC = require('OC');
@@ -20,8 +20,35 @@ define(function(require) {
 	var AttachmentsView = require('views/attachments');
 	var ComposerTemplate = require('text!templates/composer.html');
 
-	return Backbone.View.extend({
+	return Marionette.LayoutView.extend({
+		template: Handlebars.compile(ComposerTemplate),
+		templateHelpers: function() {
+			var accounts = null;
+			if (this.accounts) {
+				accounts = this.accounts.map(function(account) {
+					return account.toJSON();
+				});
+				accounts = _.filter(accounts, function(account) {
+					return account.accountId !== -1;
+				});
+			}
+
+			return {
+				aliases: accounts,
+				isReply: this.isReply(),
+				to: this.data.to,
+				cc: this.data.cc,
+				subject: this.data.subject,
+				message: this.data.body,
+				submitButtonTitle: this.isReply() ? t('mail', 'Reply') : t('mail', 'Send'),
+				// Reply data
+				replyToList: this.data.replyToList,
+				replyCc: this.data.replyCc,
+				replyCcList: this.data.replyCcList
+			};
+		},
 		type: 'new',
+		data: null,
 		attachments: null,
 		submitCallback: null,
 		sentCallback: null,
@@ -35,6 +62,9 @@ define(function(require) {
 		draftUID: null,
 		hasData: false,
 		autosized: false,
+		regions: {
+			attachmentsRegion: '.new-message-attachments'
+		},
 		events: {
 			'click .submit-message': 'submitMessage',
 			'click .submit-message-wrapper-inside': 'submitMessageWrapperInside',
@@ -69,7 +99,13 @@ define(function(require) {
 				},
 				account: null,
 				folderId: null,
-				messageId: null
+				messageId: null,
+				data: {
+					to: '',
+					cc: '',
+					subject: '',
+					body: ''
+				}
 			};
 			_.defaults(options, defaultOptions);
 
@@ -97,6 +133,11 @@ define(function(require) {
 			 */
 			this.attachments = new Attachments();
 
+			/**
+			 * Data for replies
+			 */
+			this.data = options.data;
+
 			if (!this.isReply()) {
 				this.accounts = options.accounts;
 				this.account = options.account || this.accounts.at(0);
@@ -106,58 +147,12 @@ define(function(require) {
 				this.messageId = options.messageId;
 			}
 		},
-		render: function(options) {
-			options = options || {};
-			var defaultOptions = {
-				data: {
-					to: '',
-					cc: '',
-					subject: '',
-					body: ''
-				}
-			};
-			_.defaults(options, defaultOptions);
-
-			var template = Handlebars.compile(ComposerTemplate);
-
-			this.attachments.reset();
-
-			var accounts = null;
-			if (this.accounts) {
-				accounts = this.accounts.map(function(account) {
-					return account.toJSON();
-				});
-				accounts = _.filter(accounts, function(account) {
-					return account.accountId !== -1;
-				});
-			}
-
-			// Render handlebars template
-			var html = template({
-				aliases: accounts,
-				isReply: this.isReply(),
-				to: options.data.to,
-				cc: options.data.cc,
-				subject: options.data.subject,
-				message: options.data.body,
-				submitButtonTitle: this.isReply() ? t('mail', 'Reply') : t('mail', 'Send'),
-				// Reply data
-				replyToList: options.data.replyToList,
-				replyCc: options.data.replyCc,
-				replyCcList: options.data.replyCcList
-			});
+		onRender: function() {
+			this.attachmentsRegion.show(new AttachmentsView({
+				collection: this.attachments
+			}));
 
 			$('.tipsy-mailto').tipsy({gravity: 'n', live: true});
-
-			this.$el.html(html);
-
-			var view = new AttachmentsView({
-				el: $('.new-message-attachments'),
-				collection: this.attachments
-			});
-
-			// And render it
-			view.render();
 
 			if (this.isReply()) {
 				// Expand reply message body on click
@@ -168,8 +163,6 @@ define(function(require) {
 			} else {
 				this.setAutoSize(true);
 			}
-
-			return this;
 		},
 		setAutoSize: function(state) {
 			if (state === true) {
