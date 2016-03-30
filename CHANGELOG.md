@@ -1,7 +1,10 @@
 # Changelog
 
+## 0.4.1
+ * Fix js error when adding attachments
+   [#1378](https://github.com/owncloud/mail/pull/1378) @ChristophWurst
 
-## 0.4 (unreleased)
+## 0.4
 
 New:
 
