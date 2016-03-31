@@ -80,6 +80,7 @@ sudo apt-get install nodejs-legacy npm
 ```
 Once npm is installed, PHP and JavaScript dependencies can be installed by running
 ```bash
+make install-composer-deps
 make optimize-js
 ```
 
