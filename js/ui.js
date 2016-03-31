@@ -49,9 +49,6 @@ define(function(require) {
 		Radio.ui.trigger('messagesview:messages:reset');
 		$('#mail-messages')
 			.addClass('icon-loading');
-		$('#mail_new_message')
-			.removeClass('hidden')
-			.fadeIn();
 
 		$('#load-new-mail-messages').hide();
 		$('#load-more-mail-messages').hide();

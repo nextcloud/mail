@@ -5,7 +5,7 @@
  * later. See the COPYING file.
  *
  * @author Christoph Wurst <christoph@winzerhof-wurst.at>
- * @copyright Christoph Wurst 2015
+ * @copyright Christoph Wurst 2015, 2016
  */
 
 define(function(require) {
@@ -13,6 +13,7 @@ define(function(require) {
 
 	var Marionette = require('marionette');
 	var AppView = require('views/app');
+	var Radio = require('radio');
 
 	// Load controllers/services
 	require('controller/accountcontroller');
@@ -22,6 +23,10 @@ define(function(require) {
 	require('notification');
 
 	var Mail = new Marionette.Application();
+
+	Mail.on('start', function() {
+		Radio.account.trigger('load');
+	});
 
 	Mail.view = new AppView();
 

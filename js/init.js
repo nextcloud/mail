@@ -26,7 +26,6 @@ define(function(require) {
 	setUpSearch();
 
 	Mail.start();
-	Radio.account.trigger('load');
 
 	function setUpMarionette() {
 		Marionette.TemplateCache.prototype.compileTemplate = function(rawTemplate) {

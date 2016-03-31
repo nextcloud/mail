@@ -80,7 +80,6 @@ define(function(require) {
 		// TODO: create loading-view
 		$('#mail-messages').addClass('icon-loading');
 		$('#mail-message').addClass('icon-loading');
-		$('#mail_new_message').removeClass('hidden');
 
 		Radio.ui.trigger('messagesview:messages:reset');
 		$('#app-navigation').addClass('icon-loading');
