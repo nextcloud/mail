@@ -22,6 +22,7 @@ define(function(require) {
 
 	var Marionette = require('marionette');
 	var Handlebars = require('handlebars');
+	var Radio = require('radio');
 	var NewMessageTemplate = require('text!templates/newmessage.html');
 
 	return Marionette.LayoutView.extend({
@@ -46,7 +47,7 @@ define(function(require) {
 		},
 		onClick: function(e) {
 			e.preventDefault();
-			require('ui').openComposer();
+			Radio.ui.trigger('composer:show', e);
 		}
 	});
 });
