@@ -148,7 +148,6 @@
 #emptycontent,
 #mail-messages #emptycontent.emptycontent-search {
 	position: static;
-	margin-top: 2em;
 }
 #mail-messages #emptycontent.emptycontent-search h2 {
 	line-height: 150%;
@@ -705,7 +704,6 @@ input.submit-message,
 #emptycontent h2,
 .emptycontent h2 {
 	font-size: 20px;
-	font-weight: 600;
 	margin-bottom: 10px;
 }
 #emptycontent [class^="icon-"],
