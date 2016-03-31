@@ -1,5 +1,3 @@
-## ownCloud Mail
-
 ### Steps to reproduce
 1.
 2.
@@ -11,7 +9,9 @@ Tell us what should happen
 ### Actual behaviour
 Tell us what happens instead
 
-**OwnCloud Mail version:** (see ownCloud apps admin page)
+### ownCloud Mail
+
+**ownCloud Mail version:** (see ownCloud apps admin page)
 
 **Mailserver or service:** (e.g. Outlook, Yahoo, Gmail, Exchange,...)
 
@@ -23,9 +23,10 @@ Tell us what happens instead
 
 **ownCloud Mail version build date:** (only if you are using a Nightly Build)
 
-## ownCloud Core
 
-### Server configuration
+### ownCloud Core
+
+#### Server configuration
 **Operating system**:
 
 **Web server:**
@@ -59,28 +60,28 @@ Insert your config.php content here
 (Without the database password, passwordsalt and secret)
 ```
 
-### Client configuration
+#### Client configuration
 **Browser:**
 
 **Operating system:**
 
-### Logs
-#### Web server error log
+#### Logs
+##### Web server error log
 ```
 Insert your webserver log here
 ```
 
-#### ownCloud log (data/owncloud.log)
+##### ownCloud log (data/owncloud.log)
 ```
 Insert your ownCloud log here
 ```
 
-#### Horde log (data/horde.log)
+##### Horde log (data/horde.log)
 ```
 Insert your horde log here, see https://github.com/owncloud/mail#debug-mode
 ```
 
-#### Browser log
+##### Browser log
 ```
 Insert your browser log here, this could for example include:
 
