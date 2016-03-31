@@ -48,10 +48,9 @@ start-imap-docker:
 add-imap-account:
 	docker exec -it ocimaptest /opt/bin/useradd $(mail_user) $(mail_pwd)
 
-update-composer:
+update-composer: composer.phar
 	rm -f composer.lock
-	git rm -r vendor
-	composer install --prefer-dist
+	php composer.phar install --prefer-dist
 
 appstore: clean install-deps optimize-js
 	mkdir -p $(appstore_dir)
