@@ -437,7 +437,8 @@ define(function(require) {
 		focusSubject: function() {
 			this.$el.find('input.subject').focus();
 		},
-		autoComplete: function() {
+		onAutoComplete: function(e) {
+			var elem = $(e.target);
 			function split(val) {
 				return val.split(/,\s*/);
 			}
@@ -445,13 +446,13 @@ define(function(require) {
 			function extractLast(term) {
 				return split(term).pop();
 			}
-			if (!$(this).
-				data('autocomplete')) { // If the autocomplete wasn't called yet:
+			if (!elem.data('autocomplete')) {
+				// If the autocomplete wasn't called yet:
 				// don't navigate away from the field on tab when selecting an item
-				$(this).bind('keydown', function(event) {
+				elem.bind('keydown', function(event) {
 					if (event.keyCode === $.ui.keyCode.TAB &&
-						typeof $(this).data('autocomplete') !== 'undefined' &&
-						$(this).data('autocomplete').menu.active) {
+						typeof elem.data('autocomplete') !== 'undefined' &&
+						elem.data('autocomplete').menu.active) {
 						event.preventDefault();
 					}
 				}).autocomplete({

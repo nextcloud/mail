@@ -1,5 +1,9 @@
 # Changelog
 
+## 0.4.2
+ * Fix autocompletion (regression)
+   [#1394](https://github.com/owncloud/mail/pull/1394) @ChristophWurst
+
 ## 0.4.1
  * Fix js error when adding attachments
    [#1378](https://github.com/owncloud/mail/pull/1378) @ChristophWurst
