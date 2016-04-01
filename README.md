@@ -112,9 +112,14 @@ localStorage.clear();
 Certain advanced or experimental features need to be specifically enabled in your `config.php`:
 
 ### Debug mode
-You can enable IMAP backend logging. A horde.log will appear in the same directory as your owncloud.log.
+You can enable IMAP and SMTP backend logging. A horde_imap.log for IMAP and horde_smtp.log for SMTP will appear in the same directory as your owncloud.log.
+#### IMAP logging:
 ```php
 'app.mail.imaplog.enabled' => true
+```
+#### SMTP logging:
+```php
+'app.mail.smtplog.enabled' => true
 ```
 
 ### Server-side caching

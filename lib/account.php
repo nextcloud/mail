@@ -128,7 +128,7 @@ class Account implements IAccount {
 				'timeout' => 20,
 			];
 			if ($this->config->getSystemValue('app.mail.imaplog.enabled', false)) {
-				$params['debug'] = $this->config->getSystemValue('datadirectory') . '/horde.log';
+				$params['debug'] = $this->config->getSystemValue('datadirectory') . '/horde_imap.log';
 			}
 			if ($this->config->getSystemValue('app.mail.server-side-cache.enabled', false)) {
 				if ($this->memcacheFactory->isAvailable()) {
@@ -376,6 +376,9 @@ class Account implements IAccount {
 			'secure' => $this->convertSslMode($this->account->getOutboundSslMode()),
 			'timeout' => 2
 		];
+		if ($this->config->getSystemValue('app.mail.smtplog.enabled', false)) {
+			$params['debug'] = $this->config->getSystemValue('datadirectory') . '/horde_smtp.log';
+		}
 		return new Horde_Mail_Transport_Smtphorde($params);
 	}
 
