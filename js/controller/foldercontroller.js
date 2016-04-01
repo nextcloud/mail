@@ -77,10 +77,6 @@ define(function(require) {
 	function loadFolder(account, active) {
 		var fetchingFolders = FolderService.getFolderEntities(account);
 
-		// TODO: create loading-view
-		$('#mail-messages').addClass('icon-loading');
-		$('#mail-message').addClass('icon-loading');
-
 		Radio.ui.trigger('messagesview:messages:reset');
 		$('#app-navigation').addClass('icon-loading');
 

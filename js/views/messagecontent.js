@@ -20,6 +20,7 @@ define(function(require) {
 	var ComposerView = require('views/composer');
 	var MessageView = require('views/message');
 	var MessagesView = require('views/messages');
+	var LoadingView = require('views/loadingview');
 	var MessageContentTemplate = require('text!templates/messagecontent.html');
 
 	var DetailView = Object.freeze({
@@ -49,7 +50,7 @@ define(function(require) {
 			});
 			// END TODO
 
-			//TODO: this.listenTo(Radio.ui, 'message:loading', this.onMessageLoading);
+			this.listenTo(Radio.ui, 'message:loading', this.onMessageLoading);
 		},
 		onShow: function() {
 			this.messages.show(new MessagesView());
@@ -73,7 +74,6 @@ define(function(require) {
 			if (require('state').messageLoading !== null) {
 				require('state').messageLoading.abort();
 				$('iframe').parent().removeClass('icon-loading');
-				$('#mail-message').removeClass('icon-loading');
 				$('#mail_message').removeClass('icon-loading');
 			}
 
@@ -127,6 +127,9 @@ define(function(require) {
 					}
 				}
 			}
+		},
+		onMessageLoading: function() {
+			this.message.show(new LoadingView());
 		}
 	});
 });

@@ -19,11 +19,6 @@ define(function(require) {
 	require('views/helper');
 
 	Radio.ui.on('folder:show', loadFolder);
-	Radio.ui.on('message:load', function(account, folder, messageId,
-		options) {
-		//FIXME: don't rely on global state vars
-		loadMessage(account, messageId, options);
-	});
 
 	var composerVisible = false;
 
@@ -35,7 +30,6 @@ define(function(require) {
 	 */
 	function loadFolder(account, folder, noSelect) {
 		Radio.ui.trigger('composer:leave');
-		Radio.ui.trigger('messagecontent:show');
 
 		if (require('state').messagesLoading !== null) {
 			require('state').messagesLoading.abort();
@@ -46,29 +40,26 @@ define(function(require) {
 
 		// Set folder active
 		Radio.folder.trigger('setactive', account, folder);
+		Radio.ui.trigger('content:loading');
 		Radio.ui.trigger('messagesview:messages:reset');
-		$('#mail-messages')
-			.addClass('icon-loading');
 
 		$('#load-new-mail-messages').hide();
 		$('#load-more-mail-messages').hide();
 
 		if (noSelect) {
 			$('#emptycontent').show();
-			$('#mail-message').removeClass('icon-loading');
 			require('state').currentAccount = account;
 			require('state').currentFolder = folder;
 			Radio.ui.trigger('messagesview:message:setactive', null);
-			$('#mail-messages').removeClass('icon-loading');
 			require('state').currentlyLoading = null;
 		} else {
 			require('communication').fetchMessageList(account, folder, {
 				onSuccess: function(messages, cached) {
+					Radio.ui.trigger('messagecontent:show');
 					require('state').currentlyLoading = null;
 					require('state').currentAccount = account;
 					require('state').currentFolder = folder;
 					Radio.ui.trigger('messagesview:message:setactive', null);
-					$('#mail-messages').removeClass('icon-loading');
 
 					// Fade out the message composer
 					$('#mail_new_message').prop('disabled', false);
@@ -83,7 +74,7 @@ define(function(require) {
 						});
 
 						var messageId = messages[0].id;
-						loadMessage(account, messageId);
+						Radio.message.trigger('load', account, folder, messageId);
 						// Show 'Load More' button if there are
 						// more messages than the pagination limit
 						if (messages.length > 20) {
@@ -93,7 +84,6 @@ define(function(require) {
 						}
 					} else {
 						$('#emptycontent').show();
-						$('#mail-message').removeClass('icon-loading');
 					}
 					$('#load-new-mail-messages')
 						.fadeIn()
@@ -204,83 +194,13 @@ define(function(require) {
 		Radio.ui.trigger('composer:show', data);
 	}
 
-	/**
-	 * @param {Account} account
-	 * @param {number} messageId
-	 * @param {object} options
-	 * @returns {undefined}
-	 */
-	function loadMessage(account, messageId, options) {
-		options = options || {};
-		var defaultOptions = {
-			force: false
-		};
-		_.defaults(options, defaultOptions);
-
-		// Do not reload email when clicking same again
-		if (require('state').currentMessageId === messageId) {
-			return;
-		}
-
-		Radio.ui.trigger('composer:leave');
-
-		if (!options.force && composerVisible) {
-			return;
-		}
-		// Abort previous loading requests
-		if (require('state').messageLoading !== null) {
-			require('state').messageLoading.abort();
-		}
-
-		// check if message is a draft
-		var draftsFolder = account.get('specialFolders').drafts;
-		var draft = draftsFolder === require('state').currentFolder.get('id');
-
-		// close email first
-		// Check if message is open
-		if (require('state').currentMessageId !== null) {
-			var lastMessageId = require('state').currentMessageId;
-			Radio.ui.trigger('messagesview:message:setactive', null);
-			if (lastMessageId === messageId) {
-				return;
-			}
-		}
-
-		Radio.ui.trigger('message:loading');
-
-		// Set current Message as active
-		Radio.ui.trigger('messagesview:message:setactive', messageId);
-		require('state').currentMessageBody = '';
-
-		// Fade out the message composer
-		$('#mail_new_message').prop('disabled', false);
-
-		require('communication').fetchMessage(
-			require('state').currentAccount,
-			require('state').currentFolder,
-			messageId,
-			{
-				onSuccess: function(message) {
-					if (draft) {
-						Radio.ui.trigger('composer:show', message);
-					} else {
-						require('cache').addMessage(require('state').currentAccount,
-							require('state').currentFolder,
-							message);
-						Radio.ui.trigger('message:show', message);
-					}
-				},
-				onError: function(jqXHR, textStatus) {
-					if (textStatus !== 'abort') {
-						Radio.ui.trigger('error:show', t('mail', 'Error while loading the selected message.'));
-					}
-				}
-			});
+	function isComposerVisible() {
+		return composerVisible;
 	}
 
 	return {
 		saveAttachment: saveAttachment,
 		openForwardComposer: openForwardComposer,
-		loadMessage: loadMessage
+		isComposerVisible: isComposerVisible
 	};
 });

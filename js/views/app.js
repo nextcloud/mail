@@ -18,10 +18,12 @@ define(function(require) {
 	var MessageContentView = require('views/messagecontent');
 	var NavigationAccountsView = require('views/navigation-accounts');
 	var SettingsView = require('views/settings');
+	var LoadingView = require('views/loadingview');
 	var NavigationView = require('views/navigation');
 	var SetupView = require('views/setup');
 
 	var ContentType = Object.freeze({
+		LOADING: -1,
 		MESSAGE_CONTENT: 0,
 		SETUP: 1
 	});
@@ -44,6 +46,7 @@ define(function(require) {
 			this.listenTo(Radio.ui, 'error:show', this.showError);
 			this.listenTo(Radio.ui, 'setup:show', this.showSetup);
 			this.listenTo(Radio.ui, 'messagecontent:show', this.showMessageContent);
+			this.listenTo(Radio.ui, 'content:loading', this.showContentLoading);
 
 			// Hide notification favicon when switching back from
 			// another browser tab
@@ -118,7 +121,6 @@ define(function(require) {
 			OC.Notification.showTemporary(message);
 			$('#app-navigation').removeClass('icon-loading');
 			$('#app-content').removeClass('icon-loading');
-			$('#mail-message').removeClass('icon-loading');
 			$('#mail_message').removeClass('icon-loading');
 		},
 		showSetup: function() {
@@ -140,6 +142,12 @@ define(function(require) {
 				this.accountsView.listenTo(messageContentView.messages, 'change:unseen',
 					accountsView.changeUnseen);
 				this.content.show(messageContentView);
+			}
+		},
+		showContentLoading: function() {
+			if (this.activeContent !== ContentType.LOADING) {
+				this.activeContent = ContentType.LOADING;
+				this.content.show(new LoadingView());
 			}
 		}
 	});
