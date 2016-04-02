@@ -86,6 +86,9 @@ define(function(require) {
 			$('.tipsy').remove();
 
 			thisModel.get('flags').set('unseen', false);
+			var folder = require('state').currentFolder;
+			var count = folder.get('total');
+			folder.set('total', count - 1);
 
 			this.$el.addClass('transparency').slideUp(function() {
 				$('.tipsy').remove();
