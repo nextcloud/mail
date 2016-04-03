@@ -3,6 +3,8 @@
 ## 0.4.2
  * Fix autocompletion (regression)
    [#1394](https://github.com/owncloud/mail/pull/1394) @ChristophWurst
+ * Fix show total email count for drafts folder
+   [#1396](https://github.com/owncloud/mail/pull/1396) @tahaalibra
 
 ## 0.4.1
  * Fix js error when adding attachments

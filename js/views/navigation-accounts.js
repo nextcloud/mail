@@ -62,11 +62,16 @@ define(function(require) {
 				activeEmail = ' - ' + activeAccount.get('email');
 			}
 			var activeFolder = require('state').currentFolder;
-			var unread = activeFolder.unseen || activeFolder.get('unseen');
 			var name = activeFolder.name || activeFolder.get('name');
-			if (unread > 0) {
-				window.document.title = name + ' (' + unread + ')' +
-					// jscs:disable requireCamelCaseOrUpperCaseIdentifiers
+			var count = 0;
+			if (name === 'Drafts') {
+				count = activeFolder.total || activeFolder.get('total');
+			} else {
+				count = activeFolder.unseen || activeFolder.get('unseen');
+			}
+			if (count > 0) {
+				window.document.title = name + ' (' + count + ')' +
+						// jscs:disable requireCamelCaseOrUpperCaseIdentifiers
 					activeEmail + ' - Mail - ' + oc_defaults.title;
 				// jscs:enable requireCamelCaseOrUpperCaseIdentifiers
 			} else {

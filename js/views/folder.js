@@ -19,6 +19,17 @@ define(function(require) {
 
 	return Backbone.Marionette.ItemView.extend({
 		template: Handlebars.compile(FolderTemplate),
+		templateHelpers: function() {
+			var count = null;
+			if (this.model.get('specialRole') === 'drafts') {
+				count = this.model.get('total');
+			} else {
+				count = this.model.get('unseen');
+			}
+			return {
+				count: count
+			};
+		},
 		events: {
 			'click .collapse': 'collapseFolder',
 			'click .folder': 'loadFolder'

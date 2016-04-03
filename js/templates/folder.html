@@ -9,8 +9,8 @@
 	{{#if folders}}<button class="collapse"></button>{{/if}}
 	<a class="folder {{#if specialRole}} icon-{{specialRole}} svg{{/if}}">
 		{{name}}
-		{{#if unseen}}
-		<span class="utils">{{unseen}}</span>
+		{{#if count}}
+		<span class="utils">{{count}}</span>
 		{{/if}}
 	</a>
 	<ul>
@@ -23,8 +23,8 @@
 			<a class="folder
 				{{#if specialRole}} icon-{{specialRole}} svg{{/if}}">
 				{{name}}
-				{{#if unseen}}
-				<span class="utils">{{unseen}}</span>
+				{{#if count}}
+				<span class="utils">{{count}}</span>
 				{{/if}}
 			</a>
 			{{/each}}
