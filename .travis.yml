@@ -84,13 +84,3 @@ matrix:
       env: "DB=mysql CORE_BRANCH=stable9"
 
   fast_finish: true
-deploy:
-  provider: releases
-  api_key:
-    secure: RKgFQyJcLVoj6+mJSuUfaaECaVjTJRhRTgsNrPL1OIVHKo5dRVhXVSEeHOfApZhp3tZbQiGb2jzK0IDcayOmd2uzOi7wJY01PqwLv/l0FqAgO+LSx6N0shRCTAFTIWy6/Ls0oNFRmmvyfLa0IXi3wQFuXNu5v1qwnWzL2Sm1gHI=
-  file: build/artifacts/appstore/mail.tar.gz
-  skip_cleanup: true
-  on:
-    repo: owncloud/mail
-    tags: true
-    php: 5.6
