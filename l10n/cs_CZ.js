@@ -49,7 +49,6 @@ OC.L10N.register(
     "& others" : "a další",
     "All inboxes" : "Všechny schránky",
     "Error loading message" : "Chyba načtení zprávy",
-    "New message" : "Nová zpráva",
     "Forwarding you to %s - click here if you are not automatically redirected within the next few seconds." : "Přesměrovávám na %s - klikněte sem, pokud nebudete automaticky přesměrováni během několika následujících sekund.",
     "Redirect warning" : "Upozornění na přesměrování",
     "The previous page is sending you to %s" : "Předchozí stránka vás přesměrovává na %s",

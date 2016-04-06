@@ -49,7 +49,6 @@ OC.L10N.register(
     "& others" : "& anderen",
     "All inboxes" : "Alle inbakjes",
     "Error loading message" : "Fout bij laden bericht",
-    "New message" : "Nieuw bericht",
     "Forwarding you to %s - click here if you are not automatically redirected within the next few seconds." : "U wordt doorgezet naar %s - klik hier als u niet binnen enkele seconden automatisch wordt doorgestuurd.",
     "Redirect warning" : "Omleidingswaarschuwing",
     "The previous page is sending you to %s" : "De vorige pagina stuurt u naar %s",

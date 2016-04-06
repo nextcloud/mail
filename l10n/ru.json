@@ -47,7 +47,6 @@
     "& others" : "и другие",
     "All inboxes" : "Все входящие",
     "Error loading message" : "Ошибка при загрузке сообщения",
-    "New message" : "Новое сообщение",
     "Forwarding you to %s - click here if you are not automatically redirected within the next few seconds." : "Перенаправляем вас на %s - если вы не будете автоматически перенаправлены в течение следующих нескольких секунд, то нажмите здесь.",
     "Redirect warning" : "Предупреждение о перенаправлении",
     "The previous page is sending you to %s" : "Предыдущая страница отправляет вас %s",

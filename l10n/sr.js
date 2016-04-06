@@ -49,7 +49,6 @@ OC.L10N.register(
     "& others" : "и осталих",
     "All inboxes" : "Сва сандучета",
     "Error loading message" : "Грешка при учитавању поруке",
-    "New message" : "Нова порука",
     "Forwarding you to %s - click here if you are not automatically redirected within the next few seconds." : "Преусмеравање на %s — кликните овде ако нисте аутоматски преусмерени у року неколико секунди.",
     "Redirect warning" : "Упозорење о преусмеравању",
     "The previous page is sending you to %s" : "Претходна страница вас шаље на %s",

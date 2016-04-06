@@ -49,7 +49,6 @@ OC.L10N.register(
     "& others" : "และอื่นๆ",
     "All inboxes" : "กล่องจดหมายทั้งหมด",
     "Error loading message" : "กิดข้อผิดพลาดในการโหลด",
-    "New message" : "ข้อความใหม่",
     "Forwarding you to %s - click here if you are not automatically redirected within the next few seconds." : "กำลังส่งต่อคุณไปยัง %s - คลิกที่นี่ถ้าคุณไม่ได้เปลี่ยนเส้นทางโดยอัตโนมัติภายในไม่กี่วินาทีถัดไป",
     "Redirect warning" : "คำเตือนการเปลี่ยนเส้นทาง",
     "The previous page is sending you to %s" : "หน้าก่อนหน้านี้กำลังส่งคุณไปยัง %s",

@@ -44,7 +44,6 @@ OC.L10N.register(
     "Delete permanently" : "Zmazať  natrvalo",
     "& others" : "& iné",
     "Error loading message" : "Chyba načítavania správy",
-    "New message" : "Nová správa",
     "Forwarding you to %s - click here if you are not automatically redirected within the next few seconds." : "Presmerovávam na %s - kliknite sem, ak nebudete automaticky presmerovaní behom niekoľkých sekúnd.",
     "If you do not want to visit that page, you can return to <a href=\"%s\">the mail app</a>." : "Ak túto stránku nechcete navštíviť, môžete sa vrátiť do <a href=\"%s\">aplikácie poštového klienta</a>."
 },

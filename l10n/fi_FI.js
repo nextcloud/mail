@@ -49,7 +49,6 @@ OC.L10N.register(
     "& others" : "& muut",
     "All inboxes" : "Kaikki saapuneiden laatikot",
     "Error loading message" : "Virhe viestiä ladatessa",
-    "New message" : "Uusi viesti",
     "Forwarding you to %s - click here if you are not automatically redirected within the next few seconds." : "Ohjataan edelleen kohteeseen %s - napsauta tästä, jos uudelleenohjaus ei tapahdu muutaman sekunnin kuluessa.",
     "Redirect warning" : "Varoitus uudelleenohjauksesta",
     "The previous page is sending you to %s" : "Edellinen sivu lähettää sinut osoitteeseen %s",

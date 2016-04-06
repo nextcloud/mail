@@ -49,7 +49,6 @@ OC.L10N.register(
     "& others" : "та інші",
     "All inboxes" : "Всі вхідні",
     "Error loading message" : "Помилка завантаження повідомлення.",
-    "New message" : "Нове повідомлення",
     "Forwarding you to %s - click here if you are not automatically redirected within the next few seconds." : "Перенаправлення вас на %s - натисніть тут, якщо ви не будете автоматично перенаправлені в найближчі кілька секунд.",
     "Redirect warning" : "Попередження перенаправлення",
     "The previous page is sending you to %s" : "Попередня сторінка була надіслана вам за %s",

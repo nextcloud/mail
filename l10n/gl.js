@@ -46,7 +46,6 @@ OC.L10N.register(
     "& others" : "E outros",
     "All inboxes" : "Todas as bandexas de entrada",
     "Error loading message" : "Produciuse un erro ao cargar a mensaxe",
-    "New message" : "Mensaxe nova",
     "Forwarding you to %s - click here if you are not automatically redirected within the next few seconds." : "Dirixíndoo a %s - prema aquí se non é redirixido automaticamente nuns segundos.",
     "If you do not want to visit that page, you can return to <a href=\"%s\">the mail app</a>." : "Se non quere visitar esa páxina, pode regresar á <a href=\"%s\">aplicación de correo</a>."
 },

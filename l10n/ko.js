@@ -49,7 +49,6 @@ OC.L10N.register(
     "& others" : "및 그 외",
     "All inboxes" : "모든 받은 편지함",
     "Error loading message" : "메시지 불러오기 오류",
-    "New message" : "새 메시지",
     "Forwarding you to %s - click here if you are not automatically redirected within the next few seconds." : "%s(으)로 이동합니다. 잠시 후 자동으로 이동하지 않으면 여기를 누르십시오.",
     "Redirect warning" : "리디렉션 경고",
     "The previous page is sending you to %s" : "이전 페이지에서 %s(으)로 이동하려고 합니다",

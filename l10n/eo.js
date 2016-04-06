@@ -41,7 +41,6 @@ OC.L10N.register(
     "& others" : "kaj aliaj",
     "All inboxes" : "Ĉiuj enirkestoj",
     "Error loading message" : "Eraris ŝargo de mesaĝo",
-    "New message" : "Nova mesaĝo",
     "Continue to %s" : "Daŭri al %s"
 },
 "nplurals=2; plural=(n != 1);");

@@ -49,7 +49,6 @@ OC.L10N.register(
     "& others" : "& të tjerë",
     "All inboxes" : "Krejt kutitë e postës",
     "Error loading message" : "Gabim në ngarkimin e kartelës",
-    "New message" : "Mesazh i ri",
     "Forwarding you to %s - click here if you are not automatically redirected within the next few seconds." : "Po përcilleni te %s - klikoni këtu nëse s’ridrejtoheni vetvetiu brenda pak sekondash në vijim.",
     "Redirect warning" : "Sinjalizim ridrejtimi",
     "The previous page is sending you to %s" : "Faqja e mëparshme po ju dërgon te %s",

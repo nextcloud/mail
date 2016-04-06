@@ -49,7 +49,6 @@ OC.L10N.register(
     "& others" : "& others",
     "All inboxes" : "All inboxes",
     "Error loading message" : "Error loading message",
-    "New message" : "New message",
     "Forwarding you to %s - click here if you are not automatically redirected within the next few seconds." : "Forwarding you to %s - click here if you are not automatically redirected within the next few seconds.",
     "Redirect warning" : "Redirect warning",
     "The previous page is sending you to %s" : "The previous page is sending you to %s",

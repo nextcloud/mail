@@ -49,7 +49,6 @@ OC.L10N.register(
     "& others" : "& andra",
     "All inboxes" : "alla inkorgar",
     "Error loading message" : "Fel vid inläsning av meddelande",
-    "New message" : "Nytt meddelande",
     "Forwarding you to %s - click here if you are not automatically redirected within the next few seconds." : "Vidarbofordrar dig till %s - klicka här om du inte automatiskt omdirigeras inom några sekunder.",
     "Redirect warning" : "Omdirigeringsvarning",
     "The previous page is sending you to %s" : "Föregående sida skickar dig vidare till %s",

@@ -47,7 +47,6 @@
     "& others" : "& andre",
     "All inboxes" : "Alle indbakker",
     "Error loading message" : "Fejl under indlæsning af besked",
-    "New message" : "Ny besked",
     "Forwarding you to %s - click here if you are not automatically redirected within the next few seconds." : "Viderestiller dig til %s - klik her hvis du ikke bliver viderestillet automatisk inden for få sekunder.",
     "If you do not want to visit that page, you can return to <a href=\"%s\">the mail app</a>." : "Hvis du ikke ønsker at besøge denne side, så kan du gå tilbage til <a href=\"%s\">postprogrammet</a>."
 },"pluralForm" :"nplurals=2; plural=(n != 1);"

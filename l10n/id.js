@@ -49,7 +49,6 @@ OC.L10N.register(
     "& others" : "& lainnya",
     "All inboxes" : "Semua kotak masuk",
     "Error loading message" : "Terjadi kesalahan saat memuat pesan",
-    "New message" : "Pesan baru",
     "Forwarding you to %s - click here if you are not automatically redirected within the next few seconds." : "Meneruskan Anda ke %s - klik disini jika Anda tidak secara otomatis dialihkan dalam beberapa detik kemudian.",
     "If you do not want to visit that page, you can return to <a href=\"%s\">the mail app</a>." : "Jika Anda tidak ingin mengunjungi halaman ini, Anda dapat kembali ke <a href=\"%s\">apl email</a>."
 },

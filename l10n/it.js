@@ -49,7 +49,6 @@ OC.L10N.register(
     "& others" : "e altri",
     "All inboxes" : "Tutte le caselle di posta",
     "Error loading message" : "Errore durante il caricamento del messaggio",
-    "New message" : "Nuovo messaggio",
     "Forwarding you to %s - click here if you are not automatically redirected within the next few seconds." : "Stai per essere inoltrato a %s - fai clic qui se la redirezione automatica non avviene entro pochi secondi.",
     "Redirect warning" : "Avviso di redirezione",
     "The previous page is sending you to %s" : "La pagina precedente ti sta inviando su %s",

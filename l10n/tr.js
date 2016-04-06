@@ -49,7 +49,6 @@ OC.L10N.register(
     "& others" : "ve diğerleri",
     "All inboxes" : "Tüm gelen kutuları",
     "Error loading message" : "İleti yüklenirken hata",
-    "New message" : "Yeni mesaj",
     "Forwarding you to %s - click here if you are not automatically redirected within the next few seconds." : "%s sayfasına yönlendiriliyorsunuz - birkaç saniye içinde yönlendirilmezseniz, buraya tıklayın.",
     "Redirect warning" : "Yönlendirme uyarısı",
     "The previous page is sending you to %s" : "Önceki sayfa sizi %s sayfasına yönlendiriyor.",

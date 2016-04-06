@@ -49,7 +49,6 @@ OC.L10N.register(
     "& others" : "和其他人",
     "All inboxes" : "所有郵件",
     "Error loading message" : "載入訊息錯誤",
-    "New message" : "新訊息",
     "Forwarding you to %s - click here if you are not automatically redirected within the next few seconds." : "將您重導向至 %s ，若數秒後沒有重新導向，點擊此處",
     "Redirect warning" : "重導向警告",
     "The previous page is sending you to %s" : "前一個頁面將您重導向至 %s",

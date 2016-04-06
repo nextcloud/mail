@@ -49,7 +49,6 @@ OC.L10N.register(
     "& others" : "& אחרים",
     "All inboxes" : "כל תיבות דואר נכנס",
     "Error loading message" : "שגיאה בהעלאת הודעה",
-    "New message" : "הודעה חדשה",
     "Forwarding you to %s - click here if you are not automatically redirected within the next few seconds." : "מעביר אותך אל %s - יש ללחוץ כאן אם ההעברה לא מתבצעת באופן אוטומטי בשניות הקרובות.",
     "Redirect warning" : "שגיאת הפניה",
     "The previous page is sending you to %s" : "הדף הקודם שולח אותך אל %s",

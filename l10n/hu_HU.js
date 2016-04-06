@@ -49,7 +49,6 @@ OC.L10N.register(
     "& others" : "és mások",
     "All inboxes" : "Minden bejövő",
     "Error loading message" : "Hiba történt az üzenet betöltése közben",
-    "New message" : "Új üzenet",
     "Forwarding you to %s - click here if you are not automatically redirected within the next few seconds." : "Átirányítjuk ide: %s - kattintson ide, ha az átirányítás nem sikerülne a következő pár másodpercben.",
     "Redirect warning" : "Átirányítás figyelmeztetés",
     "The previous page is sending you to %s" : "Az előző oldal ide fog küldeni: %s",

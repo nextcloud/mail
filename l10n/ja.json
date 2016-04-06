@@ -47,7 +47,6 @@
     "& others" : "& その他",
     "All inboxes" : "すべての受信トレイ",
     "Error loading message" : "メッセージ読み込みエラー",
-    "New message" : "新しいメッセージ",
     "Forwarding you to %s - click here if you are not automatically redirected within the next few seconds." : "%s  へリダイレクトします。数秒後に自動転送されなかったらクリックしてください。",
     "Redirect warning" : "リダイレクトの警告",
     "The previous page is sending you to %s" : "前のページから %s にリダイレクトしようとしています。",

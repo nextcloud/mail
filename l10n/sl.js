@@ -49,7 +49,6 @@ OC.L10N.register(
     "& others" : "in drugo",
     "All inboxes" : "Vsi predali",
     "Error loading message" : "Napaka nalaganja sporočila",
-    "New message" : "Novo sporočilo",
     "Forwarding you to %s - click here if you are not automatically redirected within the next few seconds." : "Poteka preusmeritev na %s - v kolikor preusmeritev ni izvedena samodejno, kliknite tu.",
     "Redirect warning" : "Opozorilo preusmeritve",
     "The previous page is sending you to %s" : "Predhodno obiskana stran zahteva preusmeritev na %s.",

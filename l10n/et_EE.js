@@ -49,7 +49,6 @@ OC.L10N.register(
     "& others" : "& muud",
     "All inboxes" : "Kõik postkastid",
     "Error loading message" : "Tõrge kirja laadimisel",
-    "New message" : "Uussõnum",
     "Forwarding you to %s - click here if you are not automatically redirected within the next few seconds." : "Edasi saamine %s-le - kliki siia kui sind ei suunata automaatselt mõne järgmise sekundi jooksul edasi.",
     "Redirect warning" : "Ümbersuunamise hoiatus",
     "If you do not want to visit that page, you can return to <a href=\"%s\">the mail app</a>." : "Kui Sa ei soovi seda lehekülge vaadata, siis liigu tagasi <a href=\"%s\">e-maili rakendisse</a>."
