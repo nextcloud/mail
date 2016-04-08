@@ -88,6 +88,7 @@ class MozillaIspDb {
 				$provider = [];
 			}
 		}
+		return $provider;
 	}
 
 }
