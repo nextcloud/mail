@@ -16,8 +16,6 @@ define(function(require) {
 	var Radio = require('radio');
 	var FolderService = require('service/folderservice');
 
-	Radio.folder.on('init', loadFolder);
-
 	function urldecode(str) {
 		return decodeURIComponent((str + '').replace(/\+/g, '%20'));
 	}
@@ -81,8 +79,6 @@ define(function(require) {
 		$('#app-navigation').addClass('icon-loading');
 
 		$.when(fetchingFolders).done(function(accountFolders) {
-			$('#app-navigation').removeClass('icon-loading');
-
 			if (account === active) {
 				var folder = accountFolders.at(0);
 
@@ -95,14 +91,13 @@ define(function(require) {
 				Radio.folder.trigger('setactive', account, folder);
 				require('state').currentAccount = account;
 				require('state').currentFolder = folder;
-
-				// Start fetching messages in background
-				require('background').messageFetcher.start();
 			}
 		});
 		$.when(fetchingFolders).fail(function() {
 			Radio.ui.trigger('error:show', t('mail', 'Error while loading the selected account.'));
 		});
+
+		return fetchingFolders.promise();
 	}
 
 	return {
