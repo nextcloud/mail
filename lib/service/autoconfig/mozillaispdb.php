@@ -23,29 +23,18 @@ use OCA\Mail\Service\Logger;
 
 class MozillaIspDb {
 
-	/**
-	 * @var string
-	 */
-	private $baseUrl = 'https://autoconfig.thunderbird.net/v1.1/';
 	private $logger;
+	private $urls = array(
+		'https://autoconfig.{DOMAIN}/mail/config-v1.1.xml',
+		'https://{DOMAIN}/.well-known/autoconfig/mail/config-v1.1.xml',
+		'https://autoconfig.thunderbird.net/v1.1/{DOMAIN}',
+	);
 
 	public function __construct(Logger $logger) {
 		$this->logger = $logger;
 	}
 
-	/**
-	 * @param string $domain
-	 * @return array
-	 */
-	public function query($domain, $tryMx = true) {
-		$this->logger->debug("MozillaIsbDb: querying <$domain>");
-		if (strpos($domain, '@') !== false) {
-			// TODO: use horde mail address parsing instead
-			list(, $domain) = explode('@', $domain);
-		}
-
-		$url = $this->baseUrl . $domain;
-
+	private function queryUrl($url) {
 		try {
 			$xml = @simplexml_load_file($url);
 			if (!is_object($xml) || !$xml->emailProvider) {
@@ -77,15 +66,38 @@ class MozillaIspDb {
 		} catch (Exception $e) {
 			// ignore own not-found exception or xml parsing exceptions
 			unset($e);
+			$provider = [];
+		}
+		return $provider;
+	}
 
-			if ($tryMx && ($dns = dns_get_record($domain, DNS_MX))) {
-				$domain = $dns[0]['target'];
-				if (!($provider = $this->query($domain, false))) {
-					list(, $domain) = explode('.', $domain, 2);
-					$provider = $this->query($domain, false);
-				}
-			} else {
-				$provider = [];
+	/**
+	 * @param string $domain
+	 * @return array
+	 */
+	public function query($domain, $tryMx = true) {
+		$this->logger->debug("MozillaIsbDb: querying <$domain>");
+		if (strpos($domain, '@') !== false) {
+			// TODO: use horde mail address parsing instead
+			list(, $domain) = explode('@', $domain);
+		}
+
+		$provider = [];
+		foreach ($this->urls as $url) {
+			$url = str_replace("{DOMAIN}", $domain, $url);
+			$this->logger->debug("MozillaIsbDb: querying <$domain> via <$url>");
+
+			$provider = $this->queryUrl($url);
+			if (!empty($provider)) {
+				return $provider;
+			}
+		}
+
+		if ($tryMx && ($dns = dns_get_record($domain, DNS_MX))) {
+			$domain = $dns[0]['target'];
+			if (!($provider = $this->query($domain, false))) {
+				list(, $domain) = explode('.', $domain, 2);
+				$provider = $this->query($domain, false);
 			}
 		}
 		return $provider;
