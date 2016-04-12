@@ -7,7 +7,6 @@
 	<licence>AGPL</licence>
 	<author>Thomas Müller, Jan-Christoph Borchardt, Christoph Wurst, Lukas Reschke, Thomas Imbreckx, Steffen Lindner, Robin McCorkell, Clement Wong &amp; many more …</author>
 	<documentation>
-		<user>https://github.com/owncloud/mail/wiki</user>
 		<admin>https://github.com/owncloud/mail#readme</admin>
 	</documentation>
 	<dependencies>
