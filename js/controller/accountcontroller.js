@@ -12,6 +12,7 @@ define(function(require) {
 	'use strict';
 
 	var $ = require('jquery');
+	var FolderController = require('controller/foldercontroller');
 	var Radio = require('radio');
 	var UPDATE_INTERVAL = 5 * 60 * 1000; // 5 minutes
 
@@ -32,14 +33,22 @@ define(function(require) {
 
 	function loadAccounts() {
 		var fetchingAccounts = Radio.account.request('entities');
+		Radio.ui.trigger('content:loading');
 
 		$.when(fetchingAccounts).done(function(accounts) {
 			if (accounts.length === 0) {
 				addAccount();
 			} else {
 				var firstAccount = accounts.at(0);
-				accounts.each(function(account) {
-					Radio.folder.trigger('init', account, firstAccount);
+				var loadingAccounts = accounts.map(function(account) {
+					return FolderController.loadFolder(account, firstAccount);
+				});
+				$.when.apply($, loadingAccounts).done(function() {
+					$('#app-navigation').removeClass('icon-loading');
+					Radio.ui.trigger('messagecontent:show');
+
+					// Start fetching messages in background
+					require('background').messageFetcher.start();
 				});
 			}
 

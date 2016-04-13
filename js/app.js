@@ -18,6 +18,7 @@ define(function(require) {
 	// Load controllers/services
 	require('controller/accountcontroller');
 	require('controller/foldercontroller');
+	require('controller/messagecontroller');
 	require('service/accountservice');
 	require('service/folderservice');
 	require('notification');
