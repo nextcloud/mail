@@ -1,4 +1,5 @@
 <?php
+
 /**
  * @author Christoph Wurst <christoph@winzerhof-wurst.at>
  * @author Thomas Müller <thomas.mueller@tmit.eu>
@@ -25,7 +26,13 @@ use \OCP\AppFramework\App;
 
 class Application extends App {
 
-	public function __construct (array $urlParams=array()) {
+	public static $ispUrls = [
+	    'https://autoconfig.{DOMAIN}/mail/config-v1.1.xml',
+	    'https://{DOMAIN}/.well-known/autoconfig/mail/config-v1.1.xml',
+	    'https://autoconfig.thunderbird.net/v1.1/{DOMAIN}',
+	];
+
+	public function __construct(array $urlParams = []) {
 		parent::__construct('mail', $urlParams);
 
 		$container = $this->getContainer();
@@ -43,6 +50,7 @@ class Application extends App {
 		$container->registerParameter("testSmtp", $testSmtp);
 		$container->registerParameter("referrer", isset($_SERVER['HTTP_REFERER']) ? : null);
 		$container->registerParameter("hostname", \OCP\Util::getServerHostName());
+		$container->registerParameter('ispUrls', self::$ispUrls);
 	}
 
 }

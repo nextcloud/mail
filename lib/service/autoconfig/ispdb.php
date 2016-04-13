@@ -23,15 +23,16 @@ use OCA\Mail\Service\Logger;
 
 class IspDb {
 
+	/** @var Logger */
 	private $logger;
-	private $urls = array(
-		'https://autoconfig.{DOMAIN}/mail/config-v1.1.xml',
-		'https://{DOMAIN}/.well-known/autoconfig/mail/config-v1.1.xml',
-		'https://autoconfig.thunderbird.net/v1.1/{DOMAIN}',
-	);
 
-	public function __construct(Logger $logger) {
+	/**
+	 * @param Logger $logger
+	 * @param string[] $ispUrls
+	 */
+	public function __construct(Logger $logger, $ispUrls) {
 		$this->logger = $logger;
+		$this->urls = $ispUrls;
 	}
 
 	private function queryUrl($url) {

@@ -21,27 +21,26 @@
 
 namespace OCA\Mail\Tests\Service\Autoconfig;
 
+use OCA\Mail\AppInfo\Application;
 use OCA\Mail\Service\AutoConfig\IspDb;
 use PHPUnit_Framework_TestCase;
 
 class IspDbtest extends PHPUnit_Framework_TestCase {
 
-	private $ispDb;
+	private $logger;
 
 	protected function setUp() {
 		parent::setUp();
 
-		$logger = $this->getMockBuilder('\OCA\Mail\Service\Logger')
+		$this->logger = $this->getMockBuilder('\OCA\Mail\Service\Logger')
 			->disableOriginalConstructor()
 			->getMock();
-		$this->ispDb = new IspDb($logger);
 	}
 
 	public function queryData() {
 		return [
-		    ['gmail.com'],
-		    ['outlook.com'],
-		    ['yahoo.de'],
+			['gmail.com'],
+			['outlook.com'],
 		];
 	}
 
@@ -50,10 +49,35 @@ class IspDbtest extends PHPUnit_Framework_TestCase {
 	 *
 	 * @param string $domain
 	 */
-	public function testQueryGmail($domain) {
-		$result = $this->ispDb->query($domain);
-
+	public function testQueryRealServers($domain) {
+		$ispDb = new IspDb($this->logger, Application::$ispUrls);
+		$result = $ispDb->query($domain);
 		$this->assertContainsIspData($result);
+	}
+
+	public function fakeAutoconfigData() {
+		return [
+			['freenet.de', true],
+			//['example.com', false], //should it fail?
+		];
+	}
+
+	/**
+	 * @dataProvider fakeAutoconfigData
+	 */
+	public function testQueryFakeAutoconfig($domain, $shouldSucceed) {
+		$urls = [
+			dirname(__FILE__) . '/../../resources/autoconfig-freenet.xml',
+		];
+		$ispDb = new IspDb($this->logger, $urls);
+
+		$result = $ispDb->query($domain);
+
+		if ($shouldSucceed) {
+			$this->assertContainsIspData($result);
+		} else {
+			$this->assertEmpty($result);
+		}
 	}
 
 	private function assertContainsIspData($data) {
