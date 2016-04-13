@@ -16,39 +16,32 @@ define(function(require) {
 	var Radio = require('radio');
 	var UPDATE_INTERVAL = 5 * 60 * 1000; // 5 minutes
 
-	Radio.account.on('add', addAccount);
 	Radio.account.on('load', loadAccounts);
 
-	function addAccount() {
-		Radio.ui.trigger('composer:leave');
-		Radio.ui.trigger('navigation:hide');
-		Radio.ui.trigger('setup:show');
-	}
-
 	function startBackgroundChecks(accounts) {
-		setInterval((function(accounts) {
+		setInterval(function(accounts) {
 			require('background').checkForNotifications(accounts);
-		}(accounts)), UPDATE_INTERVAL);
+		}, UPDATE_INTERVAL);
 	}
 
+	/**
+	 * Load all accounts
+	 *
+	 * @returns {Promise}
+	 */
 	function loadAccounts() {
+		var defer = $.Deferred();
 		var fetchingAccounts = Radio.account.request('entities');
-		Radio.ui.trigger('content:loading');
 
 		$.when(fetchingAccounts).done(function(accounts) {
 			if (accounts.length === 0) {
 				addAccount();
 			} else {
-				var firstAccount = accounts.at(0);
 				var loadingAccounts = accounts.map(function(account) {
-					return FolderController.loadFolder(account, firstAccount);
+					return FolderController.loadFolder(account);
 				});
 				$.when.apply($, loadingAccounts).done(function() {
-					$('#app-navigation').removeClass('icon-loading');
-					Radio.ui.trigger('messagecontent:show');
-
-					// Start fetching messages in background
-					require('background').messageFetcher.start();
+					defer.resolve(accounts);
 				});
 			}
 
@@ -57,6 +50,8 @@ define(function(require) {
 		$.when(fetchingAccounts).fail(function() {
 			Radio.ui.trigger('error:show', t('mail', 'Error while loading the accounts.'));
 		});
+		
+		return defer.promise();
 	}
 
 	return {

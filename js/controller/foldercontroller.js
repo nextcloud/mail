@@ -16,83 +16,18 @@ define(function(require) {
 	var Radio = require('radio');
 	var FolderService = require('service/folderservice');
 
-	function urldecode(str) {
-		return decodeURIComponent((str + '').replace(/\+/g, '%20'));
-	}
-
-	/**
-	 * Handle mailto links
-	 *
-	 * @returns {undefined}
-	 */
-	function handleMailTo() {
-		var hash = window.location.hash;
-		if (hash === '' || hash === '#') {
-			// Nothing to do
-			return;
-		}
-
-		// Remove leading #
-		hash = hash.substr(1);
-
-		var composerOptions = {};
-		var params = hash.split('&');
-
-		_.each(params, function(param) {
-			param = param.split('=');
-			var key = param[0];
-			var value = urldecode(param[1]);
-
-			switch (key) {
-				case 'mailto':
-				case 'to':
-					composerOptions.to = value;
-					break;
-				case 'cc':
-					composerOptions.cc = value;
-					break;
-				case 'bcc':
-					composerOptions.bcc = value;
-					break;
-				case 'subject':
-					composerOptions.subject = value;
-					break;
-				case 'body':
-					composerOptions.body = value;
-					break;
-			}
-		});
-
-		window.location.hash = '';
-		Radio.ui.trigger('composer:show', composerOptions);
-	}
+	Radio.ui.on('folder:show', loadFolderMessages);
 
 	/**
 	 * @param {Account} account
-	 * @param {Account} active
 	 * @returns {undefined}
 	 */
-	function loadFolder(account, active) {
+	function loadFolders(account) {
 		var fetchingFolders = FolderService.getFolderEntities(account);
 
 		Radio.ui.trigger('messagesview:messages:reset');
 		$('#app-navigation').addClass('icon-loading');
 
-		$.when(fetchingFolders).done(function(accountFolders) {
-			if (account === active) {
-				var folder = accountFolders.at(0);
-
-				Radio.ui.trigger('folder:show', account, folder, false);
-
-				// Open composer if 'mailto' url-param is set
-				handleMailTo();
-
-				// Save current folder
-				Radio.folder.trigger('setactive', account, folder);
-				require('state').currentAccount = account;
-				require('state').currentFolder = folder;
-			}
-		});
 		$.when(fetchingFolders).fail(function() {
 			Radio.ui.trigger('error:show', t('mail', 'Error while loading the selected account.'));
 		});
@@ -100,7 +35,109 @@ define(function(require) {
 		return fetchingFolders.promise();
 	}
 
+	/**
+	 * @param {Account} account
+	 * @param {Folder} folder
+	 * @param {boolean} noSelect
+	 * @returns {undefined}
+	 */
+	function loadFolderMessages(account, folder, noSelect) {
+		Radio.ui.trigger('composer:leave');
+
+		if (require('state').messagesLoading !== null) {
+			require('state').messagesLoading.abort();
+		}
+		if (require('state').messageLoading !== null) {
+			require('state').messageLoading.abort();
+		}
+
+		// Set folder active
+		Radio.folder.trigger('setactive', account, folder);
+		Radio.ui.trigger('content:loading');
+		Radio.ui.trigger('messagesview:messages:reset');
+
+		$('#load-new-mail-messages').hide();
+		$('#load-more-mail-messages').hide();
+
+		if (noSelect) {
+			$('#emptycontent').show();
+			require('state').currentAccount = account;
+			require('state').currentFolder = folder;
+			Radio.ui.trigger('messagesview:message:setactive', null);
+			require('state').currentlyLoading = null;
+		} else {
+			require('communication').fetchMessageList(account, folder, {
+				onSuccess: function(messages, cached) {
+					Radio.ui.trigger('messagecontent:show');
+					require('state').currentlyLoading = null;
+					require('state').currentAccount = account;
+					require('state').currentFolder = folder;
+					Radio.ui.trigger('messagesview:message:setactive', null);
+
+					// Fade out the message composer
+					$('#mail_new_message').prop('disabled', false);
+
+					if (messages.length > 0) {
+						Radio.ui.trigger('messagesview:messages:add', messages);
+
+						// Fetch first 10 messages in background
+						_.each(messages.slice(0, 10), function(
+							message) {
+							require('background').messageFetcher.push(message.id);
+						});
+
+						var messageId = messages[0].id;
+						Radio.message.trigger('load', account, folder, messageId);
+						// Show 'Load More' button if there are
+						// more messages than the pagination limit
+						if (messages.length > 20) {
+							$('#load-more-mail-messages')
+								.fadeIn()
+								.css('display', 'block');
+						}
+					} else {
+						$('#emptycontent').show();
+					}
+					$('#load-new-mail-messages')
+						.fadeIn()
+						.css('display', 'block')
+						.prop('disabled', false);
+
+					if (cached) {
+						// Trigger folder update
+						// TODO: replace with horde sync once it's implemented
+						Radio.ui.trigger('messagesview:messages:update');
+					}
+				},
+				onError: function(error, textStatus) {
+					if (textStatus !== 'abort') {
+						// Set the old folder as being active
+						var folder = require('state').currentFolder;
+						Radio.folder.trigger('setactive', account, folder);
+						Radio.ui.trigger('error:show', t('mail', 'Error while loading messages.'));
+					}
+				},
+				cache: true
+			});
+		}
+	}
+
+	/**
+	 * @param {Account} account
+	 * @param {Folder} folder
+	 * @returns {Promise}
+	 */
+	function showFolder(account, folder) {
+		loadFolderMessages(account, folder, false);
+
+		// Save current folder
+		Radio.folder.trigger('setactive', account, folder);
+		require('state').currentAccount = account;
+		require('state').currentFolder = folder;
+	}
+
 	return {
-		loadFolder: loadFolder
+		loadFolder: loadFolders,
+		showFolder: showFolder
 	};
 });
