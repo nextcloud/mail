@@ -21,7 +21,7 @@ namespace OCA\Mail\Service\AutoConfig;
 
 use OCA\Mail\Service\Logger;
 
-class MozillaIspDb {
+class IspDb {
 
 	private $logger;
 	private $urls = array(
@@ -76,7 +76,7 @@ class MozillaIspDb {
 	 * @return array
 	 */
 	public function query($domain, $tryMx = true) {
-		$this->logger->debug("MozillaIsbDb: querying <$domain>");
+		$this->logger->debug("IsbDb: querying <$domain>");
 		if (strpos($domain, '@') !== false) {
 			// TODO: use horde mail address parsing instead
 			list(, $domain) = explode('@', $domain);
@@ -85,7 +85,7 @@ class MozillaIspDb {
 		$provider = [];
 		foreach ($this->urls as $url) {
 			$url = str_replace("{DOMAIN}", $domain, $url);
-			$this->logger->debug("MozillaIsbDb: querying <$domain> via <$url>");
+			$this->logger->debug("IsbDb: querying <$domain> via <$url>");
 
 			$provider = $this->queryUrl($url);
 			if (!empty($provider)) {

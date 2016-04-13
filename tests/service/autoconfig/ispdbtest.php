@@ -21,12 +21,12 @@
 
 namespace OCA\Mail\Tests\Service\Autoconfig;
 
-use OCA\Mail\Service\AutoConfig\MozillaIspDb;
+use OCA\Mail\Service\AutoConfig\IspDb;
 use PHPUnit_Framework_TestCase;
 
-class MozillaIspDbtest extends PHPUnit_Framework_TestCase {
+class IspDbtest extends PHPUnit_Framework_TestCase {
 
-	private $mozillaIspDb;
+	private $ispDb;
 
 	protected function setUp() {
 		parent::setUp();
@@ -34,7 +34,7 @@ class MozillaIspDbtest extends PHPUnit_Framework_TestCase {
 		$logger = $this->getMockBuilder('\OCA\Mail\Service\Logger')
 			->disableOriginalConstructor()
 			->getMock();
-		$this->mozillaIspDb = new MozillaIspDb($logger);
+		$this->ispDb = new IspDb($logger);
 	}
 
 	public function queryData() {
@@ -51,7 +51,7 @@ class MozillaIspDbtest extends PHPUnit_Framework_TestCase {
 	 * @param string $domain
 	 */
 	public function testQueryGmail($domain) {
-		$result = $this->mozillaIspDb->query($domain);
+		$result = $this->ispDb->query($domain);
 
 		$this->assertContainsIspData($result);
 	}
