@@ -37,7 +37,8 @@ class IspDb {
 	private function queryUrl($url) {
 		try {
 			$xml = @simplexml_load_file($url);
-			if (!is_object($xml) || !$xml->emailProvider) {
+			if (libxml_get_last_error() !== False || !is_object($xml) || !$xml->emailProvider) {
+				libxml_clear_errors();
 				return [];
 			}
 			$provider = [
