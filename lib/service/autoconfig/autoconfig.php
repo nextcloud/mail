@@ -36,8 +36,8 @@ class AutoConfig {
 	/** @var ICrypto */
 	private $crypto;
 
-	/** @var MozillaIspDb */
-	private $mozillaIspDb;
+	/** @var IspDb */
+	private $ispDb;
 
 	/** @var MxRecord */
 	private $mxRecord;
@@ -61,7 +61,7 @@ class AutoConfig {
 	 * 
 	 * @param Logger $logger
 	 * @param string $UserId
-	 * @param MozillaIspDb $mozillaIspDb
+	 * @param IspDb $ispDb
 	 * @param MxRecord $mxRecord
 	 * @param ImapConnectivityTester $imapTester
 	 * @param ImapServerDetector $imapDetector
@@ -71,14 +71,14 @@ class AutoConfig {
 	 * @param ICrypto $crypto
 	 */
 	public function __construct(Logger $logger, $UserId,
-		MozillaIspDb $mozillaIspDb, MxRecord $mxRecord,
+		IspDb $ispDb, MxRecord $mxRecord,
 		ImapConnectivityTester $imapTester, ImapServerDetector $imapDetector,
 		SmtpConnectivityTester $smtpTester, SmtpServerDetector $smtpDetector,
 		ImapConnector $imapConnector, ICrypto $crypto) {
 		$this->logger = $logger;
 		$this->userId = $UserId;
 		$this->crypto = $crypto;
-		$this->mozillaIspDb = $mozillaIspDb;
+		$this->ispDb = $ispDb;
 		$this->mxRecord = $mxRecord;
 		$this->imapConnectivityTester = $imapTester;
 		$this->imapServerDetector = $imapDetector;
@@ -99,7 +99,7 @@ class AutoConfig {
 		// TODO: use horde libs for email address parsing
 		list(, $host) = explode("@", $email);
 
-		$ispdb = $this->mozillaIspDb->query($host);
+		$ispdb = $this->ispDb->query($host);
 		if (!empty($ispdb)) {
 			$account = null;
 			if (isset($ispdb['imap'])) {
