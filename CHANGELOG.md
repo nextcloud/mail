@@ -1,5 +1,9 @@
 # Changelog
 
+## 0.4.3
+ * Improved autoconfig
+   [#1407](https://github.com/owncloud/mail/pull/1407) @Scheirle
+
 ## 0.4.2
  * Fix autocompletion (regression)
    [#1394](https://github.com/owncloud/mail/pull/1394) @ChristophWurst
