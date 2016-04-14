@@ -22,15 +22,10 @@
 
 namespace OCA\Mail\AppInfo;
 
-use \OCP\AppFramework\App;
+use OCP\AppFramework\App;
+use OCP\Util;
 
 class Application extends App {
-
-	public static $ispUrls = [
-	    'https://autoconfig.{DOMAIN}/mail/config-v1.1.xml',
-	    'https://{DOMAIN}/.well-known/autoconfig/mail/config-v1.1.xml',
-	    'https://autoconfig.thunderbird.net/v1.1/{DOMAIN}',
-	];
 
 	public function __construct(array $urlParams = []) {
 		parent::__construct('mail', $urlParams);
@@ -49,8 +44,7 @@ class Application extends App {
 		$container->registerParameter("userFolder", $container->getServer()->getUserFolder($user));
 		$container->registerParameter("testSmtp", $testSmtp);
 		$container->registerParameter("referrer", isset($_SERVER['HTTP_REFERER']) ? : null);
-		$container->registerParameter("hostname", \OCP\Util::getServerHostName());
-		$container->registerParameter('ispUrls', self::$ispUrls);
+		$container->registerParameter("hostname", Util::getServerHostName());
 	}
 
 }

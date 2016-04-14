@@ -21,11 +21,10 @@
 
 namespace OCA\Mail\Tests\Service\Autoconfig;
 
-use OCA\Mail\AppInfo\Application;
 use OCA\Mail\Service\AutoConfig\IspDb;
-use PHPUnit_Framework_TestCase;
+use Test\TestCase;
 
-class IspDbtest extends PHPUnit_Framework_TestCase {
+class IspDbtest extends TestCase {
 
 	private $logger;
 
@@ -50,7 +49,7 @@ class IspDbtest extends PHPUnit_Framework_TestCase {
 	 * @param string $domain
 	 */
 	public function testQueryRealServers($domain) {
-		$ispDb = new IspDb($this->logger, Application::$ispUrls);
+		$ispDb = new IspDb($this->logger);
 		$result = $ispDb->query($domain);
 		$this->assertContainsIspData($result);
 	}
@@ -69,7 +68,7 @@ class IspDbtest extends PHPUnit_Framework_TestCase {
 		$urls = [
 			dirname(__FILE__) . '/../../resources/autoconfig-freenet.xml',
 		];
-		$ispDb = new IspDb($this->logger, $urls);
+		$ispDb = $this->getIspDbMock($urls);
 
 		$result = $ispDb->query($domain);
 
@@ -80,6 +79,20 @@ class IspDbtest extends PHPUnit_Framework_TestCase {
 		}
 	}
 
+	private function getIspDbMock($urls) {
+		$mock = $this->getMockBuilder('\OCA\Mail\Service\AutoConfig\IspDb')
+			->setMethods(['getUrls'])
+			->setConstructorArgs([$this->logger])
+			->getMock();
+		$mock->expects($this->once())
+			->method('getUrls')
+			->will($this->returnValue($urls));
+		return $mock;
+	}
+
+	/**
+	 * @todo check actual values
+	 */
 	private function assertContainsIspData($data) {
 		$this->assertArrayHasKey('imap', $data);
 		$this->assertTrue(count($data['imap']) >= 1, 'no isp imap data returned');
