@@ -19,6 +19,7 @@ define(function(require) {
 	var accountChannel = Radio.channel('account');
 	var folderChannel = Radio.channel('folder');
 	var messageChannel = Radio.channel('message');
+	var navigationChannel = Radio.channel('navigation');
 
 	var channels = {
 		ui: uiChannel,
@@ -26,7 +27,8 @@ define(function(require) {
 		state: stateChannel,
 		account: accountChannel,
 		folder: folderChannel,
-		message: messageChannel
+		message: messageChannel,
+		navigation: navigationChannel
 	};
 
 	// Log all events to the console

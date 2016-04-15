@@ -13,6 +13,7 @@ define(function(require) {
 
 	var Handlebars = require('handlebars');
 	var Marionette = require('marionette');
+	var OC = require('OC');
 	var Radio = require('radio');
 	var SettingsAccountsView = require('views/settings-accounts');
 	var SettingsTemplate = require('text!templates/settings.html');
@@ -20,6 +21,11 @@ define(function(require) {
 	return Marionette.LayoutView.extend({
 		accounts: null,
 		template: Handlebars.compile(SettingsTemplate),
+		templateHelpers: function() {
+			return {
+				addAccountUrl: OC.generateUrl('apps/mail/#setup')
+			};
+		},
 		regions: {
 			accountsList: '#settings-accounts'
 		},
@@ -34,8 +40,9 @@ define(function(require) {
 				collection: this.accounts
 			}));
 		},
-		addAccount: function() {
-			Radio.account.trigger('add');
+		addAccount: function(e) {
+			e.preventDefault();
+			Radio.navigation.trigger('setup');
 		}
 	});
 });

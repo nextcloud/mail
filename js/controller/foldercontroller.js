@@ -16,8 +16,6 @@ define(function(require) {
 	var Radio = require('radio');
 	var FolderService = require('service/folderservice');
 
-	Radio.ui.on('folder:show', loadFolderMessages);
-
 	/**
 	 * @param {Account} account
 	 * @returns {undefined}
