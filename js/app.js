@@ -23,6 +23,7 @@ define(function(require) {
 	require('controller/messagecontroller');
 	require('service/accountservice');
 	require('service/folderservice');
+	require('service/messageservice');
 	require('notification');
 
 	var Mail = Marionette.Application.extend({

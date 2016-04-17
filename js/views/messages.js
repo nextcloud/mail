@@ -136,7 +136,7 @@ define(function(require) {
 				.prop('disabled', true);
 
 			var _this = this;
-			require('communication').fetchMessageList(
+			var loadingMessages = Radio.message.request('entities',
 				require('state').currentAccount,
 				require('state').currentFolder,
 				{
@@ -145,37 +145,40 @@ define(function(require) {
 					filter: this.filterCriteria ? this.filterCriteria.text : null,
 					force: true,
 					// Replace cached message list on reload
-					replace: reload,
-					onSuccess: function(jsondata) {
-						if (reload) {
-							_this.collection.reset();
-						}
-						// Add messages
-						_this.collection.add(jsondata);
-
-						$('#app-content').removeClass('icon-loading');
-
-						Radio.ui.trigger('messagesview:message:setactive', require('state').currentMessageId);
-					},
-					onError: function() {
-						Radio.ui.trigger('error:show', t('mail', 'Error while loading messages.'));
-						// Set the old folder as being active
-						var account = require('state').currentAccount;
-						var folder = require('state').currentFolder;
-						Radio.folder.trigger('setactive', account, folder);
-					},
-					onComplete: function() {
-						// Remove loading feedback again
-						$('#load-more-mail-messages')
-							.removeClass('icon-loading-small')
-							.val(t('mail', 'Load more …'))
-							.prop('disabled', false);
-						$('#load-new-mail-messages')
-							.removeClass('icon-loading-small')
-							.val(t('mail', 'Check messages'))
-							.prop('disabled', false);
-					}
+					replace: reload
 				});
+
+			$.when(loadingMessages).done(function(jsondata) {
+				if (reload) {
+					_this.collection.reset();
+				}
+				// Add messages
+				_this.collection.add(jsondata);
+
+				$('#app-content').removeClass('icon-loading');
+
+				Radio.ui.trigger('messagesview:message:setactive', require('state').currentMessageId);
+			});
+
+			$.when(loadingMessages).fail(function() {
+				Radio.ui.trigger('error:show', t('mail', 'Error while loading messages.'));
+				// Set the old folder as being active
+				var account = require('state').currentAccount;
+				var folder = require('state').currentFolder;
+				Radio.folder.trigger('setactive', account, folder);
+			});
+
+			$.when(loadingMessages).always(function() {
+				// Remove loading feedback again
+				$('#load-more-mail-messages')
+					.removeClass('icon-loading-small')
+					.val(t('mail', 'Load more …'))
+					.prop('disabled', false);
+				$('#load-new-mail-messages')
+					.removeClass('icon-loading-small')
+					.val(t('mail', 'Check messages'))
+					.prop('disabled', false);
+			});
 		},
 		addMessages: function(data) {
 			this.collection.add(data);

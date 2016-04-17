@@ -16,8 +16,6 @@ define(function(require) {
 	var OC = require('OC');
 	var Radio = require('radio');
 
-	var messageListXhr = null;
-
 	function get(url, options) {
 		var defaultOptions = {
 			ttl: 60000,
@@ -280,74 +278,10 @@ define(function(require) {
 		}
 	}
 
-	/**
-	 * @param {Account} account
-	 * @param {Folder} folder
-	 * @param {object} options
-	 * @returns {undefined}
-	 */
-	function fetchMessageList(account, folder, options) {
-		options = options || {};
-		var defaults = {
-			cache: false,
-			replace: false, // Replace cached folder list
-			force: false,
-			onSuccess: function() {
-			},
-			onError: function() {
-			},
-			onComplete: function() {
-			}
-		};
-		_.defaults(options, defaults);
-
-		// Abort previous requests
-		if (messageListXhr !== null) {
-			messageListXhr.abort();
-		}
-
-		if (options.cache) {
-			// Load cached version if available
-			var messageList = require('cache').getMessageList(account, folder);
-			if (!options.force && messageList) {
-				options.onSuccess(messageList, true);
-				options.onComplete();
-				return;
-			}
-		}
-
-		var url = OC.generateUrl('apps/mail/accounts/{accountId}/folders/{folderId}/messages',
-			{
-				accountId: account.get('accountId'),
-				folderId: folder.get('id')
-			});
-		messageListXhr = $.ajax(url,
-			{
-				data: {
-					from: options.from,
-					to: options.to,
-					filter: options.filter
-				},
-				success: function(messages) {
-					if (options.replace || options.cache) {
-						require('cache').addMessageList(account, folder, messages);
-					}
-					options.onSuccess(messages, false);
-				},
-				error: function(error, status) {
-					if (status !== 'abort') {
-						options.onError(error);
-					}
-				},
-				complete: options.onComplete
-			});
-	}
-
 	return {
 		get: get,
 		fetchMessage: fetchMessage,
 		fetchMessages: fetchMessages,
-		fetchMessageList: fetchMessageList,
 		sendMessage: sendMessage,
 		saveDraft: saveDraft
 	};
