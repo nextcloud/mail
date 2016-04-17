@@ -5,7 +5,7 @@
 	<description>Easy to use email client which connects to your mail server via IMAP and SMTP.</description>
 	<version>0.4.3</version>
 	<licence>AGPL</licence>
-	<author>Thomas Müller, Jan-Christoph Borchardt, Christoph Wurst, Lukas Reschke, Thomas Imbreckx, Steffen Lindner, Robin McCorkell, Clement Wong &amp; many more …</author>
+	<author>Thomas Müller, Jan-Christoph Borchardt, Christoph Wurst, Steffen Lindner, Lukas Reschke, Thomas Imbreckx, Robin McCorkell, Clement Wong &amp; many more …</author>
 	<documentation>
 		<admin>https://github.com/owncloud/mail#readme</admin>
 	</documentation>
