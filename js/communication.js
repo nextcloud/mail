@@ -16,92 +16,6 @@ define(function(require) {
 	var OC = require('OC');
 	var Radio = require('radio');
 
-	function get(url, options) {
-		var defaultOptions = {
-			ttl: 60000,
-			cache: true,
-			key: url
-		};
-		var allOptions = options || {};
-		_.defaults(allOptions, defaultOptions);
-
-		// don't cache for the time being
-		allOptions.cache = false;
-		if (allOptions.cache) {
-			var cache = $.initNamespaceStorage(allOptions.key).localStorage;
-			var ttl = cache.get('ttl');
-			if (ttl && ttl < Date.now()) {
-				cache.removeAll();
-			}
-			var item = cache.get('data');
-			if (item) {
-				options.success(item);
-				return;
-			}
-		}
-		return $.ajax(url, {
-			data: {},
-			type: 'GET',
-			error: function(xhr, textStatus) {
-				options.error(textStatus);
-			},
-			success: function(data) {
-				if (allOptions.cache) {
-					cache.set('data', data);
-					if (typeof allOptions.ttl === 'number') {
-						cache.set('ttl', Date.now() + allOptions.ttl);
-					}
-				}
-				options.success(data);
-			}
-		});
-	}
-
-	/**
-	 * @param {Account} account
-	 * @param {Folder} folder
-	 * @param {number} messageId
-	 * @param {object} options
-	 * @returns {undefined}
-	 */
-	function fetchMessage(account, folder, messageId, options) {
-		options = options || {};
-		var defaults = {
-			onSuccess: function() {
-			},
-			onError: function() {
-			},
-			backgroundMode: false
-		};
-		_.defaults(options, defaults);
-
-		// Load cached version if available
-		var message = require('cache').getMessage(account,
-			folder,
-			messageId);
-		if (message) {
-			options.onSuccess(message);
-			return;
-		}
-
-		var xhr = $.ajax(
-			OC.generateUrl('apps/mail/accounts/{accountId}/folders/{folderId}/messages/{messageId}',
-				{
-					accountId: account.get('accountId'),
-					folderId: folder.get('id'),
-					messageId: messageId
-				}), {
-			data: {},
-			type: 'GET',
-			success: options.onSuccess,
-			error: options.onError
-		});
-		if (!options.backgroundMode) {
-			// Save xhr to allow aborting unneded requests
-			require('state').messageLoading = xhr;
-		}
-	}
-
 	/**
 	 * @param {Account} account
 	 * @param {Folder} folder
@@ -279,8 +193,6 @@ define(function(require) {
 	}
 
 	return {
-		get: get,
-		fetchMessage: fetchMessage,
 		fetchMessages: fetchMessages,
 		sendMessage: sendMessage,
 		saveDraft: saveDraft

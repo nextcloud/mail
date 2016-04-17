@@ -26,12 +26,13 @@ define(function(require) {
 	var messageListXhr = null;
 
 	Radio.message.reply('entities', getMessageEntities);
+	Radio.message.reply('entity', getMessageEntity);
 
 	/**
 	 * @param {Account} account
 	 * @param {Folder} folder
 	 * @param {object} options
-	 * @returns {undefined}
+	 * @returns {Promise}
 	 */
 	function getMessageEntities(account, folder, options) {
 		options = options || {};
@@ -41,7 +42,6 @@ define(function(require) {
 			force: false
 		};
 		_.defaults(options, defaults);
-
 
 		// Abort previous requests
 		if (messageListXhr !== null) {
@@ -84,6 +84,55 @@ define(function(require) {
 					}
 				}
 			});
+
+		return defer.promise();
+	}
+
+	/**
+	 * @param {Account} account
+	 * @param {Folder} folder
+	 * @param {number} messageId
+	 * @param {object} options
+	 * @returns {Promise}
+	 */
+	function getMessageEntity(account, folder, messageId, options) {
+		options = options || {};
+		var defaults = {
+			backgroundMode: false
+		};
+		_.defaults(options, defaults);
+
+		var defer = $.Deferred();
+
+		// Load cached version if available
+		var message = require('cache').getMessage(account,
+			folder,
+			messageId);
+		if (message) {
+			defer.resolve(message);
+			return defer.promise();
+		}
+
+		var url = OC.generateUrl('apps/mail/accounts/{accountId}/folders/{folderId}/messages/{messageId}', {
+			accountId: account.get('accountId'),
+			folderId: folder.get('id'),
+			messageId: messageId
+		});
+		var xhr = $.ajax(url, {
+			type: 'GET',
+			success: function(message) {
+				defer.resolve(message);
+			},
+			error: function(jqXHR, textStatus) {
+				if (textStatus !== 'abort') {
+					defer.reject();
+				}
+			}
+		});
+		if (!options.backgroundMode) {
+			// Save xhr to allow aborting unneeded requests
+			require('state').messageLoading = xhr;
+		}
 
 		return defer.promise();
 	}
