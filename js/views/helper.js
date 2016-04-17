@@ -34,9 +34,14 @@ define(function(require) {
 
 	Handlebars.registerHelper('accountColor', function(account) {
 		var hash = md5(account);
-		var maxRange = parseInt('ffffffffffffffffffffffffffffffff', 16);
-		var hue = parseInt(hash, 16) / maxRange * 256;
-		return new Handlebars.SafeString('hsl(' + hue + ', 90%, 65%)');
+		if (typeof hash.toHsl === 'function') {
+			var hsl = hash.toHsl();
+			return new Handlebars.SafeString('hsl(' + hsl[0] + ', ' + hsl[1] + '%, ' + hsl[2] + '%)');
+		} else {
+			var maxRange = parseInt('ffffffffffffffffffffffffffffffff', 16);
+			var hue = parseInt(hash, 16) / maxRange * 256;
+			return new Handlebars.SafeString('hsl(' + hue + ', 90%, 65%)');
+		}
 	});
 
 	Handlebars.registerHelper('printAddressList', function(addressList) {
