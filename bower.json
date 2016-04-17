@@ -17,13 +17,13 @@
     "autosize": "jquery-autosize#1.18.9",
     "backbone": "1.1.2",
     "backbone.marionette": "^2.4.4",
-    "backbone.radio": "^1.0.2",
+    "backbone.radio": "^1.0.4",
     "domReady": "^2.0.1",
     "handlebars": "^4.0.5",
-    "jquery": "^2.2.1",
+    "jquery": "2.2.3",
     "jquery-storage-api": "jQuery-Storage-API#^1.8.1",
     "jquery-visibility": "~1.0.11",
-    "requirejs": "~2.1.20",
+    "requirejs": "2.2.0",
     "text": "^2.0.14",
     "underscore": "~1.8.3"
   }
