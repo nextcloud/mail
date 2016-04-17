@@ -20,6 +20,7 @@ env:
   - CORE_BRANCH=master
   - TEST_JS=FALSE
   - PHP_COVERAGE=FALSE
+  - PACKAGE=FALSE
   matrix:
   - DB=sqlite
 branches:
@@ -66,7 +67,7 @@ script:
 - if [[ "$PHP_COVERAGE" = "TRUE" ]]; then php ocular.phar code-coverage:upload --format=php-clover
   clover.xml; fi
 - cd ..
-- make appstore
+- if [[ "$PACKAGE" = "TRUE" ]]; then make appstore; fi
 
 matrix:
   include:
@@ -75,7 +76,7 @@ matrix:
     - php: 5.4
       env: "DB=pgsql PHP_COVERAGE=TRUE"
     - php: 5.4
-      env: "DB=mysql CORE_BRANCH=stable8"
+      env: "DB=mysql CORE_BRANCH=stable8 PACKAGE=TRUE"
     - php: 5.4
       env: "DB=mysql CORE_BRANCH=stable8.1"
     - php: 5.4
