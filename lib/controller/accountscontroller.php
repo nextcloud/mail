@@ -25,6 +25,8 @@
 
 namespace OCA\Mail\Controller;
 
+use Exception;
+use Horde_Exception;
 use Horde_Imap_Client;
 use OCA\Mail\Account;
 use OCA\Mail\Db\MailAccount;
@@ -37,10 +39,11 @@ use OCA\Mail\Service\Logger;
 use OCA\Mail\Service\UnifiedAccount;
 use OCP\AppFramework\Controller;
 use OCP\AppFramework\Db\DoesNotExistException;
+use OCP\AppFramework\Http;
 use OCP\AppFramework\Http\JSONResponse;
 use OCP\AppFramework\Http\Response;
-use OCP\AppFramework\Http;
 use OCP\Files\File;
+use OCP\Files\Folder;
 use OCP\IL10N;
 use OCP\ILogger;
 use OCP\IRequest;
@@ -57,7 +60,7 @@ class AccountsController extends Controller {
 	/** @var AutoConfig */
 	private $autoConfig;
 
-	/** @var \OCP\Files\Folder */
+	/** @var Folder */
 	private $userFolder;
 
 	/** @var ILogger */
@@ -326,9 +329,13 @@ class AccountsController extends Controller {
 			}
 
 			// Collect mail addresses
-			$addresses = array_merge($message->getToList(), $message->getCCList(), $message->getBCCList());
-			$this->addressCollector->addAddresses($addresses);
-		} catch (\Horde_Exception $ex) {
+			try {
+				$addresses = array_merge($message->getToList(), $message->getCCList(), $message->getBCCList());
+				$this->addressCollector->addAddresses($addresses);
+			} catch (Exception $e) {
+				$this->logger->error("Error while collecting mail addresses: " . $e->getMessage());
+			}
+		} catch (Horde_Exception $ex) {
 			$this->logger->error('Sending mail failed: ' . $ex->getMessage());
 			return new JSONResponse(
 				array('message' => $ex->getMessage()),
@@ -381,7 +388,7 @@ class AccountsController extends Controller {
 		// create transport and save message
 		try {
 			$newUID = $account->saveDraft($message, $uid);
-		} catch (\Horde_Exception $ex) {
+		} catch (Horde_Exception $ex) {
 			$this->logger->error('Saving draft failed: ' . $ex->getMessage());
 			return new JSONResponse(
 				[
