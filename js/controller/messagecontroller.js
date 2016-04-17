@@ -80,26 +80,24 @@ define(function(require) {
 		// Fade out the message composer
 		$('#mail_new_message').prop('disabled', false);
 
-		require('communication').fetchMessage(
+		var fetchingMessage = Radio.message.request('entity',
 			require('state').currentAccount,
 			require('state').currentFolder,
-			messageId,
-			{
-				onSuccess: function(message) {
-					if (draft) {
-						Radio.ui.trigger('composer:show', message);
-					} else {
-						require('cache').addMessage(require('state').currentAccount,
-							require('state').currentFolder,
-							message);
-						Radio.ui.trigger('message:show', message);
-					}
-				},
-				onError: function(jqXHR, textStatus) {
-					if (textStatus !== 'abort') {
-						Radio.ui.trigger('error:show', t('mail', 'Error while loading the selected message.'));
-					}
-				}
-			});
+			messageId);
+
+		$.when(fetchingMessage).done(function(message) {
+			if (draft) {
+				Radio.ui.trigger('composer:show', message);
+			} else {
+				// TODO: ideally this should be handled in messageservice.js
+				require('cache').addMessage(require('state').currentAccount,
+					require('state').currentFolder,
+					message);
+				Radio.ui.trigger('message:show', message);
+			}
+		});
+		$.when(fetchingMessage).fail(function() {
+			Radio.ui.trigger('error:show', t('mail', 'Error while loading the selected message.'));
+		});
 	}
 });

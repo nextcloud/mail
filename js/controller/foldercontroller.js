@@ -66,58 +66,58 @@ define(function(require) {
 			Radio.ui.trigger('messagesview:message:setactive', null);
 			require('state').currentlyLoading = null;
 		} else {
-			require('communication').fetchMessageList(account, folder, {
-				onSuccess: function(messages, cached) {
-					Radio.ui.trigger('messagecontent:show');
-					require('state').currentlyLoading = null;
-					require('state').currentAccount = account;
-					require('state').currentFolder = folder;
-					Radio.ui.trigger('messagesview:message:setactive', null);
-
-					// Fade out the message composer
-					$('#mail_new_message').prop('disabled', false);
-
-					if (messages.length > 0) {
-						Radio.ui.trigger('messagesview:messages:add', messages);
-
-						// Fetch first 10 messages in background
-						_.each(messages.slice(0, 10), function(
-							message) {
-							require('background').messageFetcher.push(message.id);
-						});
-
-						var messageId = messages[0].id;
-						Radio.message.trigger('load', account, folder, messageId);
-						// Show 'Load More' button if there are
-						// more messages than the pagination limit
-						if (messages.length > 20) {
-							$('#load-more-mail-messages')
-								.fadeIn()
-								.css('display', 'block');
-						}
-					} else {
-						$('#emptycontent').show();
-					}
-					$('#load-new-mail-messages')
-						.fadeIn()
-						.css('display', 'block')
-						.prop('disabled', false);
-
-					if (cached) {
-						// Trigger folder update
-						// TODO: replace with horde sync once it's implemented
-						Radio.ui.trigger('messagesview:messages:update');
-					}
-				},
-				onError: function(error, textStatus) {
-					if (textStatus !== 'abort') {
-						// Set the old folder as being active
-						var folder = require('state').currentFolder;
-						Radio.folder.trigger('setactive', account, folder);
-						Radio.ui.trigger('error:show', t('mail', 'Error while loading messages.'));
-					}
-				},
+			var loadingMessages = Radio.message.request('entities', account, folder, {
 				cache: true
+			});
+
+			$.when(loadingMessages).done(function(messages, cached) {
+				Radio.ui.trigger('messagecontent:show');
+				require('state').currentlyLoading = null;
+				require('state').currentAccount = account;
+				require('state').currentFolder = folder;
+				Radio.ui.trigger('messagesview:message:setactive', null);
+
+				// Fade out the message composer
+				$('#mail_new_message').prop('disabled', false);
+
+				if (messages.length > 0) {
+					Radio.ui.trigger('messagesview:messages:add', messages);
+
+					// Fetch first 10 messages in background
+					_.each(messages.slice(0, 10), function(
+						message) {
+						require('background').messageFetcher.push(message.id);
+					});
+
+					var messageId = messages[0].id;
+					Radio.message.trigger('load', account, folder, messageId);
+					// Show 'Load More' button if there are
+					// more messages than the pagination limit
+					if (messages.length > 20) {
+						$('#load-more-mail-messages')
+							.fadeIn()
+							.css('display', 'block');
+					}
+				} else {
+					$('#emptycontent').show();
+				}
+				$('#load-new-mail-messages')
+					.fadeIn()
+					.css('display', 'block')
+					.prop('disabled', false);
+
+				if (cached) {
+					// Trigger folder update
+					// TODO: replace with horde sync once it's implemented
+					Radio.ui.trigger('messagesview:messages:update');
+				}
+			});
+
+			$.when(loadingMessages).fail(function(error) {
+				// Set the old folder as being active
+				var folder = require('state').currentFolder;
+				Radio.folder.trigger('setactive', account, folder);
+				Radio.ui.trigger('error:show', t('mail', 'Error while loading messages.'));
 			});
 		}
 	}
