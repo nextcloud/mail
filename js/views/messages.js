@@ -1,11 +1,20 @@
 /**
+ * @author Christoph Wurst <christoph@winzerhof-wurst.at>
+ *
  * ownCloud - Mail
  *
- * This file is licensed under the Affero General Public License version 3 or
- * later. See the COPYING file.
+ * This code is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU Affero General Public License, version 3,
+ * as published by the Free Software Foundation.
  *
- * @author Christoph Wurst <christoph@winzerhof-wurst.at>
- * @copyright Christoph Wurst 2015
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
+ * GNU Affero General Public License for more details.
+ *
+ * You should have received a copy of the GNU Affero General Public License, version 3,
+ * along with this program.  If not, see <http://www.gnu.org/licenses/>
+ *
  */
 
 define(function(require) {
@@ -22,13 +31,15 @@ define(function(require) {
 
 	return Backbone.Marionette.CompositeView.extend({
 		collection: null,
+		$scrollContainer: undefined,
 		childView: MessagesItemView,
 		childViewContainer: '#mail-message-list',
 		template: Handlebars.compile(MessageListTemplate),
 		currentMessageId: null,
+		loadingMore: false,
 		events: {
 			'click #load-new-mail-messages': 'loadNew',
-			'click #load-more-mail-messages': 'loadMore'
+			'click #load-more-mail-messages': 'loadMore',
 		},
 		filterCriteria: null,
 		initialize: function() {
@@ -47,6 +58,10 @@ define(function(require) {
 			this.listenTo(Radio.ui, 'messagesview:filter:clear', this.clearFilter);
 			this.listenTo(Radio.ui, 'messagesview:message:setactive', this.setActiveMessage);
 		},
+		onShow: function() {
+			this.$scrollContainer = this.$el.parent();
+			this.$scrollContainer.scroll(_.bind(this.onScroll, this));
+		},
 		getEmptyView: function() {
 			if (this.filterCriteria) {
 				return NoSearchResultMessageListView;
@@ -58,9 +73,6 @@ define(function(require) {
 		changeFlags: function(model) {
 			var unseen = model.get('flags').get('unseen');
 			var prevUnseen = model.get('flags')._previousAttributes.unseen;
-			//if(_.isUndefined(model._previousAttributes.flags.unseen)) {
-			//	prevUnseen = model._previousAttributes.flags.get('unseen');
-			//}
 			if (unseen !== prevUnseen) {
 				this.trigger('change:unseen', model, unseen);
 			}
@@ -113,6 +125,16 @@ define(function(require) {
 		loadMore: function() {
 			this.loadMessages(false);
 		},
+		onScroll: function() {
+			if (this.loadingMore === true) {
+				// Ignore events until loading has finished
+				return;
+			}
+			if ((this.$scrollContainer.scrollTop() + this.$scrollContainer.height()) > (this.$el.height() - 150)) {
+				this.loadingMore = true;
+				this.loadMessages(false);
+			}
+		},
 		filterCurrentMailbox: function(query) {
 			this.filterCriteria = {
 				text: query
@@ -154,9 +176,6 @@ define(function(require) {
 				}
 				// Add messages
 				_this.collection.add(jsondata);
-
-				$('#app-content').removeClass('icon-loading');
-
 				Radio.ui.trigger('messagesview:message:setactive', require('state').currentMessageId);
 			});
 
@@ -178,6 +197,7 @@ define(function(require) {
 					.removeClass('icon-loading-small')
 					.val(t('mail', 'Check messages'))
 					.prop('disabled', false);
+				_this.loadingMore = false;
 			});
 		},
 		addMessages: function(data) {
