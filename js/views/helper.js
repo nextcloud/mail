@@ -36,7 +36,8 @@ define(function(require) {
 		var hash = md5(account);
 		if (typeof hash.toHsl === 'function') {
 			var hsl = hash.toHsl();
-			return new Handlebars.SafeString('hsl(' + hsl[0] + ', ' + hsl[1] + '%, ' + hsl[2] + '%)');
+			var hue = Math.round(hsl[0]/40)*40;
+			return new Handlebars.SafeString('hsl(' + hue + ', ' + hsl[1] + '%, ' + hsl[2] + '%)');
 		} else {
 			var maxRange = parseInt('ffffffffffffffffffffffffffffffff', 16);
 			var hue = parseInt(hash, 16) / maxRange * 256;
