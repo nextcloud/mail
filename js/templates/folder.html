@@ -7,7 +7,9 @@
 	{{#if open}} open{{/if}}
 	">
 	{{#if folders}}<button class="collapse"></button>{{/if}}
-	<a class="folder {{#if specialRole}} icon-{{specialRole}} svg{{/if}}">
+	<a class="folder {{#if specialRole}}
+	   icon-{{specialRole}} svg{{/if}}"
+	   href="{{url}}">
 		{{name}}
 		{{#if count}}
 		<span class="utils">{{count}}</span>

@@ -1,22 +1,33 @@
 /**
+ * @author Christoph Wurst <christoph@winzerhof-wurst.at>
+ *
  * ownCloud - Mail
  *
- * This file is licensed under the Affero General Public License version 3 or
- * later. See the COPYING file.
+ * This code is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU Affero General Public License, version 3,
+ * as published by the Free Software Foundation.
  *
- * @author Christoph Wurst <christoph@winzerhof-wurst.at>
- * @copyright Christoph Wurst 2015, 2016
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
+ * GNU Affero General Public License for more details.
+ *
+ * You should have received a copy of the GNU Affero General Public License, version 3,
+ * along with this program.  If not, see <http://www.gnu.org/licenses/>
+ *
  */
 
 define(function(require) {
 	'use strict';
 
 	var $ = require('jquery');
+	var Backbone = require('backbone');
 	var Marionette = require('marionette');
 	var AppView = require('views/app');
-	var AccountController = require('controller/accountcontroller');
-	var FolderController = require('./controller/foldercontroller');
 	var Radio = require('radio');
+	var Router = require('router');
+	var AccountController = require('controller/accountcontroller');
+	var RouteController = require('routecontroller');
 
 	// Load controllers/services
 	require('controller/foldercontroller');
@@ -26,93 +37,27 @@ define(function(require) {
 	require('service/messageservice');
 	require('notification');
 
-	var Mail = Marionette.Application.extend({
-		initialize: function() {
-			this.listenTo(Radio.account, 'add', this.addAccount);
-		},
-		/**
-		 * Handle mailto links
-		 *
-		 * @returns {boolean} whether the composer has been shown
-		 */
-		handleMailto: function() {
-			var hash = window.location.hash;
-			if (hash === '' || hash === '#') {
-				// Nothing to do
-				return false;
-			}
-
-			// Remove leading #
-			hash = hash.substr(1);
-
-			var composerOptions = {};
-			var params = hash.split('&');
-
-			_.each(params, function(param) {
-				param = param.split('=');
-				var key = param[0];
-				var value = param[1];
-				value = decodeURIComponent((value).replace(/\+/g, '%20'));
-
-				switch (key) {
-					case 'mailto':
-					case 'to':
-						composerOptions.to = value;
-						break;
-					case 'cc':
-						composerOptions.cc = value;
-						break;
-					case 'bcc':
-						composerOptions.bcc = value;
-						break;
-					case 'subject':
-						composerOptions.subject = value;
-						break;
-					case 'body':
-						composerOptions.body = value;
-						break;
-				}
-			});
-
-			window.location.hash = '';
-			Radio.ui.trigger('composer:show', composerOptions);
-			return true;
-		},
-		addAccount: function() {
-			Radio.ui.trigger('composer:leave');
-			Radio.ui.trigger('navigation:hide');
-			Radio.ui.trigger('setup:show');
-		}
-	});
+	var Mail = Marionette.Application.extend();
 
 	Mail = new Mail();
 
 	Mail.on('start', function() {
+		this.view = new AppView();
+
 		Radio.ui.trigger('content:loading');
 
-		var loadingAccounts = AccountController.loadAccounts();
-		var _this = this;
-		$.when(loadingAccounts).done(function(accounts) {
+		$.when(AccountController.loadAccounts()).done(function(accounts) {
 			$('#app-navigation').removeClass('icon-loading');
-
-			if (accounts.isEmpty()) {
-				_this.addAccount();
-			} else {
-				if (!_this.handleMailto()) {
-					Radio.ui.trigger('messagecontent:show');
-				}
-
-				var firstAccount = accounts.at(0);
-				var firstFolder = firstAccount.get('folders').at(0);
-				FolderController.showFolder(firstAccount, firstFolder);
-			}
 
 			// Start fetching messages in background
 			require('background').messageFetcher.start();
+
+			this.router = new Router({
+				controller: new RouteController(accounts)
+			});
+			Backbone.history.start();
 		});
 	});
-
-	Mail.view = new AppView();
 
 	return Mail;
 });

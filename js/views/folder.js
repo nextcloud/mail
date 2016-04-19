@@ -14,6 +14,7 @@ define(function(require) {
 	var $ = require('jquery');
 	var Backbone = require('backbone');
 	var Handlebars = require('handlebars');
+	var OC = require('OC');
 	var Radio = require('radio');
 	var FolderTemplate = require('text!templates/folder.html');
 
@@ -26,8 +27,16 @@ define(function(require) {
 			} else {
 				count = this.model.get('unseen');
 			}
+
+			var url = OC.generateUrl('apps/mail/#accounts/{accountId}/folders/{folderId}', {
+				// TODO: account should be property of folder
+				accountId: this.model.get('accountId'),
+				folderId: this.model.get('id')
+			});
+
 			return {
-				count: count
+				count: count,
+				url: url
 			};
 		},
 		events: {
@@ -50,7 +59,7 @@ define(function(require) {
 				folder = this.model.get('folders').get(folderId);
 			}
 			var noSelect = $(e.currentTarget).parent().data('no_select');
-			Radio.ui.trigger('folder:show', account, folder, noSelect);
+			Radio.navigation.trigger('folder', account.get('accountId'), folder.get('id'), noSelect);
 		},
 		onRender: function() {
 			// Get rid of that pesky wrapping-div.

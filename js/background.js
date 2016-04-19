@@ -40,7 +40,7 @@ define(function(require) {
 			}
 		);
 		notification.onclick = function() {
-			Radio.ui.trigger('folder:show', account, folder, false);
+			Radio.navigation.trigger('folder', account.get('accountId'), folder.get('id'), false);
 			window.focus();
 		};
 		setTimeout(function() {

@@ -65,7 +65,7 @@ class PageControllerTest extends TestCase {
 		$address = 'user@example.com';
 		$uri = "mailto:$address";
 
-		$expected = new RedirectResponse('#mailto=' . urlencode($address));
+		$expected = new RedirectResponse('#mailto?to=' . urlencode($address));
 
 		$response = $this->controller->compose($uri);
 
@@ -77,7 +77,7 @@ class PageControllerTest extends TestCase {
 		$subject = 'hello there';
 		$uri = "mailto:$address?subject=$subject";
 
-		$expected = new RedirectResponse('#mailto=' . urlencode($address)
+		$expected = new RedirectResponse('#mailto?to=' . urlencode($address)
 			. '&subject=' . urlencode($subject));
 
 		$response = $this->controller->compose($uri);
@@ -90,7 +90,7 @@ class PageControllerTest extends TestCase {
 		$cc = 'other@example.com';
 		$uri = "mailto:$address?cc=$cc";
 
-		$expected = new RedirectResponse('#mailto=' . urlencode($address)
+		$expected = new RedirectResponse('#mailto?to=' . urlencode($address)
 			. '&cc=' . urlencode($cc));
 
 		$response = $this->controller->compose($uri);
@@ -103,7 +103,7 @@ class PageControllerTest extends TestCase {
 		$bcc = 'blind@example.com';
 		$uri = "mailto:$address?bcc=$bcc";
 
-		$expected = new RedirectResponse('#mailto=' . urlencode($address)
+		$expected = new RedirectResponse('#mailto?to=' . urlencode($address)
 			. '&bcc=' . urlencode($bcc));
 
 		$response = $this->controller->compose($uri);
@@ -116,7 +116,7 @@ class PageControllerTest extends TestCase {
 		$body = 'Hi!\nWhat\'s up?\nAnother line';
 		$uri = "mailto:$address?body=$body";
 
-		$expected = new RedirectResponse('#mailto=' . urlencode($address)
+		$expected = new RedirectResponse('#mailto?to=' . urlencode($address)
 			. '&body=' . urlencode($body));
 
 		$response = $this->controller->compose($uri);

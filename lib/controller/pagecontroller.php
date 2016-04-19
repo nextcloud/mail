@@ -1,4 +1,5 @@
 <?php
+
 /**
  * @author Christoph Wurst <christoph@winzerhof-wurst.at>
  * @author Lukas Reschke <lukas@owncloud.com>
@@ -53,9 +54,7 @@ class PageController extends Controller {
 	 * @param $mailAccountMapper
 	 * @param $UserId
 	 */
-	public function __construct($appName, IRequest $request,
-		MailAccountMapper $mailAccountMapper, IURLGenerator $urlGenerator,
-		$UserId) {
+	public function __construct($appName, IRequest $request, MailAccountMapper $mailAccountMapper, IURLGenerator $urlGenerator, $UserId) {
 		parent::__construct($appName, $request);
 		$this->mailAccountMapper = $mailAccountMapper;
 		$this->urlGenerator = $urlGenerator;
@@ -89,7 +88,7 @@ class PageController extends Controller {
 	 */
 	public function compose($uri) {
 		$parts = parse_url($uri);
-		$params = ['mailto' => $parts['path']];
+		$params = ['to' => $parts['path']];
 		if (isset($parts['query'])) {
 			$parts = explode('&', $parts['query']);
 			foreach ($parts as $part) {
@@ -102,7 +101,7 @@ class PageController extends Controller {
 			$value = "$key=" . urlencode($value);
 		});
 
-		$hashParams = '#' . implode('&', $params);
+		$hashParams = '#mailto?' . implode('&', $params);
 
 		$baseUrl = $this->urlGenerator->linkToRoute("mail.page.index");
 		return new RedirectResponse($baseUrl . $hashParams);

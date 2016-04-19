@@ -19,7 +19,7 @@ define(function(require) {
 	Radio.account.on('load', loadAccounts);
 
 	function startBackgroundChecks(accounts) {
-		setInterval(function(accounts) {
+		setInterval(function() {
 			require('background').checkForNotifications(accounts);
 		}, UPDATE_INTERVAL);
 	}
