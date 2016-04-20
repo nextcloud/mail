@@ -34,13 +34,14 @@ define(function(require) {
 
 	Handlebars.registerHelper('accountColor', function(account) {
 		var hash = md5(account);
+		var hue = null;
 		if (typeof hash.toHsl === 'function') {
 			var hsl = hash.toHsl();
-			var hue = Math.round(hsl[0]/40)*40;
+			hue = Math.round(hsl[0] / 40) * 40;
 			return new Handlebars.SafeString('hsl(' + hue + ', ' + hsl[1] + '%, ' + hsl[2] + '%)');
 		} else {
 			var maxRange = parseInt('ffffffffffffffffffffffffffffffff', 16);
-			var hue = parseInt(hash, 16) / maxRange * 256;
+			hue = parseInt(hash, 16) / maxRange * 256;
 			return new Handlebars.SafeString('hsl(' + hue + ', 90%, 65%)');
 		}
 	});
