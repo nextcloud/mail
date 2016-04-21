@@ -45,7 +45,6 @@ use OCP\AppFramework\Http\Response;
 use OCP\Files\File;
 use OCP\Files\Folder;
 use OCP\IL10N;
-use OCP\ILogger;
 use OCP\IRequest;
 use OCP\Security\ICrypto;
 
@@ -63,7 +62,7 @@ class AccountsController extends Controller {
 	/** @var Folder */
 	private $userFolder;
 
-	/** @var ILogger */
+	/** @var Logger */
 	private $logger;
 
 	/** @var IL10N */
@@ -233,7 +232,7 @@ class AccountsController extends Controller {
 					['data' => ['id' => $newAccount->getId()]],
 					Http::STATUS_CREATED);
 			}
-		} catch (\Exception $ex) {
+		} catch (Exception $ex) {
 			$this->logger->error('Creating account failed: ' . $ex->getMessage());
 			return new JSONResponse(
 				array('message' => $this->l10n->t('Creating account failed: ') . $ex->getMessage()),
