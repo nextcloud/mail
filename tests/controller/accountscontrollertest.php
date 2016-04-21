@@ -33,6 +33,7 @@ class AccountsControllerTest extends \Test\TestCase {
 	private $logger;
 	private $l10n;
 	private $crypto;
+	private $collector;
 	private $controller;
 	private $accountId;
 	private $account;
@@ -203,17 +204,17 @@ class AccountsControllerTest extends \Test\TestCase {
 
 	public function newMessageDataProvider() {
 		return [
-			[false, false],
-			[true, false],
-			[false, true],
-			[true, true],
+			[false, false, false],
+			[true, false, false],
+			[false, true, false],
+			[true, true, true],
 		];
 	}
 
 	/**
 	 * @dataProvider newMessageDataProvider
 	 */
-	public function testSend($isUnifiedInbox, $isReply) {
+	public function testSend($isUnifiedInbox, $isReply, $addressCollectorError) {
 		$account = $isUnifiedInbox ? $this->unifiedAccount : $this->account;
 		$folderId = base64_encode('My folder');
 		$subject = 'Hello';
@@ -318,6 +319,14 @@ class AccountsControllerTest extends \Test\TestCase {
 			->method('get')
 			->with($attachmentName)
 			->will($this->returnValue($file));
+		if ($addressCollectorError) {
+			$this->collector->expects($this->once())
+				->method('addAddresses')
+				->will($this->throwException(new \Exception('some error')));
+		} else {
+			$this->collector->expects($this->once())
+				->method('addAddresses');
+		}
 
 		$expected = new JSONResponse();
 		$actual = $this->controller->send($this->accountId, $folderId, $subject,

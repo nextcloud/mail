@@ -138,7 +138,7 @@
 				<name>email</name>
 				<type>text</type>
 				<notnull>true</notnull>
-				<length>64</length>
+				<length>256</length>
 			</field>
 			<index>
 				<name>mail_collected_addr_userid_index</name>
