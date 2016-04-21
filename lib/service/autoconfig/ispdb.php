@@ -1,4 +1,5 @@
 <?php
+
 /**
  * @author Christoph Wurst <christoph@winzerhof-wurst.at>
  *
@@ -17,19 +18,30 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>
  *
  */
+
 namespace OCA\Mail\Service\AutoConfig;
 
+use Exception;
 use OCA\Mail\Service\Logger;
 
 class IspDb {
 
+	/** @var Logger */
 	private $logger;
-	private $urls = array(
-		'https://autoconfig.{DOMAIN}/mail/config-v1.1.xml',
-		'https://{DOMAIN}/.well-known/autoconfig/mail/config-v1.1.xml',
-		'https://autoconfig.thunderbird.net/v1.1/{DOMAIN}',
-	);
 
+	/** @var string[] */
+	public function getUrls() {
+		return [
+			'https://autoconfig.{DOMAIN}/mail/config-v1.1.xml',
+			'https://{DOMAIN}/.well-known/autoconfig/mail/config-v1.1.xml',
+			'https://autoconfig.thunderbird.net/v1.1/{DOMAIN}',
+		];
+	}
+
+	/**
+	 * @param Logger $logger
+	 * @param string[] $ispUrls
+	 */
 	public function __construct(Logger $logger) {
 		$this->logger = $logger;
 	}
@@ -84,7 +96,7 @@ class IspDb {
 		}
 
 		$provider = [];
-		foreach ($this->urls as $url) {
+		foreach ($this->getUrls() as $url) {
 			$url = str_replace("{DOMAIN}", $domain, $url);
 			$this->logger->debug("IsbDb: querying <$domain> via <$url>");
 

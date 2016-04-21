@@ -22,26 +22,24 @@
 namespace OCA\Mail\Tests\Service\Autoconfig;
 
 use OCA\Mail\Service\AutoConfig\IspDb;
-use PHPUnit_Framework_TestCase;
+use Test\TestCase;
 
-class IspDbtest extends PHPUnit_Framework_TestCase {
+class IspDbtest extends TestCase {
 
-	private $ispDb;
+	private $logger;
 
 	protected function setUp() {
 		parent::setUp();
 
-		$logger = $this->getMockBuilder('\OCA\Mail\Service\Logger')
+		$this->logger = $this->getMockBuilder('\OCA\Mail\Service\Logger')
 			->disableOriginalConstructor()
 			->getMock();
-		$this->ispDb = new IspDb($logger);
 	}
 
 	public function queryData() {
 		return [
-		    ['gmail.com'],
-		    ['outlook.com'],
-		    ['yahoo.de'],
+			['gmail.com'],
+			['outlook.com'],
 		];
 	}
 
@@ -50,12 +48,51 @@ class IspDbtest extends PHPUnit_Framework_TestCase {
 	 *
 	 * @param string $domain
 	 */
-	public function testQueryGmail($domain) {
-		$result = $this->ispDb->query($domain);
-
+	public function testQueryRealServers($domain) {
+		$ispDb = new IspDb($this->logger);
+		$result = $ispDb->query($domain);
 		$this->assertContainsIspData($result);
 	}
 
+	public function fakeAutoconfigData() {
+		return [
+			['freenet.de', true],
+			//['example.com', false], //should it fail?
+		];
+	}
+
+	/**
+	 * @dataProvider fakeAutoconfigData
+	 */
+	public function testQueryFakeAutoconfig($domain, $shouldSucceed) {
+		$urls = [
+			dirname(__FILE__) . '/../../resources/autoconfig-freenet.xml',
+		];
+		$ispDb = $this->getIspDbMock($urls);
+
+		$result = $ispDb->query($domain);
+
+		if ($shouldSucceed) {
+			$this->assertContainsIspData($result);
+		} else {
+			$this->assertEmpty($result);
+		}
+	}
+
+	private function getIspDbMock($urls) {
+		$mock = $this->getMockBuilder('\OCA\Mail\Service\AutoConfig\IspDb')
+			->setMethods(['getUrls'])
+			->setConstructorArgs([$this->logger])
+			->getMock();
+		$mock->expects($this->once())
+			->method('getUrls')
+			->will($this->returnValue($urls));
+		return $mock;
+	}
+
+	/**
+	 * @todo check actual values
+	 */
 	private function assertContainsIspData($data) {
 		$this->assertArrayHasKey('imap', $data);
 		$this->assertTrue(count($data['imap']) >= 1, 'no isp imap data returned');

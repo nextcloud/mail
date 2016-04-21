@@ -1,4 +1,5 @@
 <?php
+
 /**
  * @author Christoph Wurst <christoph@winzerhof-wurst.at>
  * @author Thomas Müller <thomas.mueller@tmit.eu>
@@ -21,11 +22,12 @@
 
 namespace OCA\Mail\AppInfo;
 
-use \OCP\AppFramework\App;
+use OCP\AppFramework\App;
+use OCP\Util;
 
 class Application extends App {
 
-	public function __construct (array $urlParams=array()) {
+	public function __construct(array $urlParams = []) {
 		parent::__construct('mail', $urlParams);
 
 		$container = $this->getContainer();
@@ -42,7 +44,7 @@ class Application extends App {
 		$container->registerParameter("userFolder", $container->getServer()->getUserFolder($user));
 		$container->registerParameter("testSmtp", $testSmtp);
 		$container->registerParameter("referrer", isset($_SERVER['HTTP_REFERER']) ? : null);
-		$container->registerParameter("hostname", \OCP\Util::getServerHostName());
+		$container->registerParameter("hostname", Util::getServerHostName());
 	}
 
 }
