@@ -24,7 +24,7 @@ namespace OCA\Mail\Service;
 
 use OCP\ILogger;
 
-class Logger implements ILogger {
+class Logger {
 
 	/** @var array */
 	private $context;
@@ -103,14 +103,14 @@ class Logger implements ILogger {
 	/**
 	 * @inheritdoc
 	 */
-	public function log($level, $message, array $context = array()) {
+	public function log($level, $message, array $context = []) {
 		$this->logger->log($level, $message, array_merge($this->context, $context));
 	}
 
 	/**
 	 * @inheritdoc
 	 */
-	public function logException(\Exception $exception, array $context = array()) {
+	public function logException($exception, array $context = []) {
 		$this->logger->logException($exception, array_merge($this->context, $context));
 	}
 
