@@ -11,6 +11,7 @@
 define(function(require) {
 	'use strict';
 
+	var document = require('domready');
 	var Marionette = require('marionette');
 	var $ = require('jquery');
 	var OC = require('OC');
@@ -21,6 +22,9 @@ define(function(require) {
 	var LoadingView = require('views/loadingview');
 	var NavigationView = require('views/navigation');
 	var SetupView = require('views/setup');
+
+	// Load handlebars helper
+	require('views/helper');
 
 	var ContentType = Object.freeze({
 		LOADING: -1,
@@ -57,6 +61,49 @@ define(function(require) {
 			$(document).keyup(this.onKeyUp);
 
 			window.addEventListener('resize', this.onWindowResize);
+
+			// TODO: create marionette view and encapsulate events
+			$(document).on('click', '#forward-button', function() {
+				Radio.message.trigger('forward');
+			});
+
+			// TODO: create marionette view and encapsulate events
+			$(document).on('click', '#mail-message .attachment-save-to-cloud', function(event) {
+				event.stopPropagation();
+				var messageId = $(this).parent().data('messageId');
+				var attachmentId = $(this).parent().data('attachmentId');
+				Radio.message.trigger('attachment:save', messageId, attachmentId);
+			});
+
+			// TODO: create marionette view and encapsulate events
+			$(document).on('click', '#mail-message .attachments-save-to-cloud', function(event) {
+				event.stopPropagation();
+				var messageId = $(this).data('messageId');
+				Radio.message.trigger('attachment:save', messageId);
+			});
+
+			$(document).on('click', '.link-mailto', function(event) {
+				Radio.ui.trigger('composer:show', event);
+			});
+
+			// TODO: create marionette view and encapsulate events
+			// close message when close button is tapped on mobile
+			$(document).on('click', '#mail-message-close', function() {
+				$('#mail-message').addClass('hidden-mobile');
+			});
+
+			// TODO: create marionette view and encapsulate events
+			// Show the images if wanted
+			$(document).on('click', '#show-images-button', function() {
+				$('#show-images-text').hide();
+				$('iframe').contents().find('img[data-original-src]').each(function() {
+					$(this).attr('src', $(this).attr('data-original-src'));
+					$(this).show();
+				});
+				$('iframe').contents().find('[data-original-style]').each(function() {
+					$(this).attr('style', $(this).attr('data-original-style'));
+				});
+			});
 
 			// Render settings menu
 			this.navigation = new NavigationView({
