@@ -2,6 +2,22 @@
 <div class="mail-account-color" style="background-color: {{accountColor email}}"></div>
 {{/if}}
 <h2 class="mail-account-email" title="{{email}}">{{email}}</h2>
+
+{{#if hasMenu}}
+<div class="app-navigation-entry-utils">
+	<ul>
+		<li class="app-navigation-entry-utils-menu-button svg"><button></button></li>
+	</ul>
+</div>
+
+<div class="app-navigation-entry-menu">
+	<ul>
+		<li><button class="icon-delete svg" title="delete"></button></li>
+	</ul>
+</div>
+{{/if}}
+
+
 <ul id="mail_folders" class="mail_folders with-icon" data-account_id="{{id}}">
 </ul>
 {{#unless isUnifiedInbox}}
