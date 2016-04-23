@@ -48,8 +48,19 @@ class IspDb {
 
 	private function queryUrl($url) {
 		try {
-			$xml = @simplexml_load_file($url);
-			if (libxml_get_last_error() !== False || !is_object($xml) || !$xml->emailProvider) {
+			$content = @file_get_contents($url, false, stream_context_create([
+				'http' => [
+					'timeout' => 7
+				]
+			]));
+			if ($content !== false) {
+				$xml = @simplexml_load_string($content);
+			} else {
+				$this->logger->debug("IsbDb: <$url> request timed out");
+				return [];
+			}
+
+			if (libxml_get_last_error() !== false || !is_object($xml) || !$xml->emailProvider) {
 				libxml_clear_errors();
 				return [];
 			}
