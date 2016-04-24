@@ -617,14 +617,29 @@ input.submit-message,
 .mail-message-attachments .attachments > div {
 	position: relative;
 	display: inline-block;
-	width: calc(25% - 12px);
+	/*width: calc(50% - 8px);*/
 	border: 1px solid #f5f5f5;
 	margin: 5px;
 	padding: 6px;
 }
+@media only screen and (max-width: 768px) {
+	.mail-message-attachments .attachments > div {
+		width: calc(100% - 5px);
+	}
+}
+@media only screen and (min-width: 769px) and (max-width: 1400px) {
+	.mail-message-attachments .attachments > div {
+		width: calc(50% - 10px);
+	}
+}
+@media only screen and (min-width: 1401px) {
+	.mail-message-attachments .attachments > div {
+		width: calc(33% - 12px);
+	}
+}
 .mail-message-attachments .mail-attached-image {
 	max-width: 100%;
-	max-height: 100px;
+	max-height: 120px;
 }
 .attachment-save-to-cloud,
 .attachment-download {
