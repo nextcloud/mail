@@ -33,6 +33,11 @@ define(function(require) {
 		 * @lends Marionette.CompositeView
 		 */
 		template: Handlebars.compile(AttachmentsTemplate),
+		templateHelpers: function() {
+			return {
+				moreThanOne: this.collection.length > 1
+			};
+		},
 		childView: AttachmentView,
 		childViewContainer: '.attachments'
 	});

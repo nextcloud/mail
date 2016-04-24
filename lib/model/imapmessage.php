@@ -486,12 +486,7 @@ class IMAPMessage implements IMessage {
 			$data['signature'] = $signature;
 		}
 
-		if (count($this->attachments) === 1) {
-			$data['attachment'] = $this->attachments[0];
-		}
-		if (count($this->attachments) > 1) {
-			$data['attachments'] = $this->attachments;
-		}
+		$data['attachments'] = $this->attachments;
 
 		if ($specialRole === 'sent') {
 			$data['replyToList'] = $this->getToList(true);
