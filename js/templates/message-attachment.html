@@ -1,0 +1,8 @@
+{{#if isImage}}
+<img class="mail-attached-image" src="{{downloadUrl}}">
+<br>
+{{/if}}
+<img class="attachment-icon" src="{{mimeUrl}}" />
+<span class="attachment-name">{{fileName}} <span class="attachment-size">({{humanFileSize size}})</span></span>
+<a class="button icon-download attachment-download" href="{{downloadUrl}}" title="{{ t 'Download attachment' }}"></a>
+<button class="icon-folder attachment-save-to-cloud" title="{{ t 'Save to Files' }}"></button>

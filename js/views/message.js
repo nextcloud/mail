@@ -17,8 +17,10 @@ define(function(require) {
 	var Handlebars = require('handlebars');
 	var _ = require('underscore');
 	var $ = require('jquery');
+	var Attachments = require('models/attachments');
 	var HtmlHelper = require('util/htmlhelper');
 	var ComposerView = require('views/composer');
+	var MessageAttachmentsView = require('views/messageattachments');
 	var MessageTemplate = require('text!templates/message.html');
 
 	return Marionette.LayoutView.extend({
@@ -30,7 +32,8 @@ define(function(require) {
 			messageIframe: 'iframe'
 		},
 		regions: {
-			replyComposer: '#reply-composer'
+			replyComposer: '#reply-composer',
+			attachments: '.mail-message-attachments'
 		},
 		initialize: function(options) {
 			this.message = options.model;
@@ -127,18 +130,13 @@ define(function(require) {
 		onShow: function() {
 			this.ui.messageIframe.on('load', _.bind(this.onIframeLoad, this));
 
-			// Set max width for attached images
-			var _this = this;
-			this.$('.mail-message-attachments img.mail-attached-image').each(function() {
-				$(this).css({
-					'max-width': _this.$('.mail-message-body').width(),
-					'height': 'auto'
-				});
-			});
-
 			// TODO: add folder/account reference to message
 			var account = require('state').accounts.get(this.message.get('accountId'));
 			var folderId = this.message.get('folderId');
+
+			this.attachments.show(new MessageAttachmentsView({
+				collection: new Attachments(this.message.get('attachments'))
+			}));
 
 			// setup reply composer view
 			this.replyComposer.show(new ComposerView({

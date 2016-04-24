@@ -149,11 +149,6 @@ define(function(require) {
 			// Resize iframe
 			var iframe = $('#mail-content iframe');
 			iframe.height(iframe.contents().find('html').height() + 20);
-
-			// resize width of attached images
-			$('.mail-message-attachments .mail-attached-image').each(function() {
-				$(this).css('max-width', $('.mail-message-body').width());
-			});
 		},
 		render: function() {
 			// This view doesn't need rendering

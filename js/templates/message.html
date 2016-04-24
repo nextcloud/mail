@@ -33,41 +33,7 @@
 	</div>
 	{{/if}}
 
-	<div class="mail-message-attachments">
-		{{#if attachment}}
-		<ul>
-			<li class="mail-message-attachment mail-message-attachment-single" data-message-id="{{attachment.messageId}}" data-attachment-id="{{attachment.id}}" data-attachment-mime="{{attachment.mime}}">
-				{{#if attachment.isImage}}
-					<img class="mail-attached-image" src="{{attachment.downloadUrl}}">
-					<br>
-				{{/if}}
-				<img class="attachment-icon" src="{{attachment.mimeUrl}}" />
-				{{attachment.fileName}} <span class="attachment-size">({{humanFileSize attachment.size}})</span><br/>
-				<a class="button icon-download attachment-download" href="{{attachment.downloadUrl}}">{{ t 'Download attachment' }}</a>
-				<button class="icon-folder attachment-save-to-cloud">{{ t 'Save to Files' }}</button>
-			</li>
-		</ul>
-		{{/if}}
-		{{#if attachments}}
-		<ul>
-			{{#each attachments}}
-			<li class="mail-message-attachment {{#if isImage}}mail-message-attachment-image{{/if}}" data-message-id="{{messageId}}" data-attachment-id="{{id}}" data-attachment-mime="{{mime}}">
-				{{#if isImage}}
-					<img class="mail-attached-image" src="{{downloadUrl}}">
-					<br>
-				{{/if}}
-				<a class="button icon-download attachment-download" href="{{downloadUrl}}" title="{{ t 'Download attachment' }}"></a>
-				<button class="icon-folder attachment-save-to-cloud" title="{{ t 'Save to Files' }}"></button>
-				<img class="attachment-icon" src="{{mimeUrl}}" />
-				{{fileName}} <span class="attachment-size">({{humanFileSize size}})</span>
-			</li>
-			{{/each}}
-		</ul>
-		<p>
-			<button data-message-id="{{id}}" class="icon-folder attachments-save-to-cloud">{{ t 'Save all to Files' }}</button>
-		</p>
-		{{/if}}
-	</div>
+	<div class="mail-message-attachments"></div>
 	<div id="reply-composer"></div>
 	<input type="button" id="forward-button" value="{{ t 'Forward' }}">
 </div>
