@@ -218,7 +218,8 @@ define(function(require) {
 			}
 			return true;
 		},
-		ccBccToggle: function() {
+		ccBccToggle: function(e) {
+			e.preventDefault();
 			this.$('.composer-cc-bcc').slideToggle();
 			this.$('.composer-cc-bcc .cc').focus();
 			this.$('.composer-cc-bcc-toggle').fadeOut();
