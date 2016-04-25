@@ -14,6 +14,7 @@ define(function(require) {
 	var Marionette = require('marionette');
 	var Handlebars = require('handlebars');
 	var $ = require('jquery');
+	var _ = require('underscore');
 	var OC = require('OC');
 	var Radio = require('radio');
 	var Attachments = require('models/attachments');
@@ -50,9 +51,6 @@ define(function(require) {
 		type: 'new',
 		data: null,
 		attachments: null,
-		submitCallback: null,
-		sentCallback: null,
-		draftCallback: null,
 		accounts: null,
 		account: null,
 		folderId: null,
@@ -91,12 +89,6 @@ define(function(require) {
 		initialize: function(options) {
 			var defaultOptions = {
 				type: 'new',
-				onSubmit: function() {
-				},
-				onDraft: function() {
-				},
-				onSent: function() {
-				},
 				account: null,
 				folderId: null,
 				messageId: null,
@@ -120,13 +112,6 @@ define(function(require) {
 			if (options.el) {
 				this.el = options.el;
 			}
-
-			/**
-			 * Callback functions
-			 */
-			this.submitCallback = options.onSubmit;
-			this.draftCallback = options.onDraft;
-			this.sentCallback = options.onSent;
 
 			/**
 			 * Attachments sub-view
@@ -315,59 +300,7 @@ define(function(require) {
 			// send the mail
 			var _this = this;
 			var options = {
-				draftUID: this.draftUID,
-				success: function() {
-					OC.Notification.showTemporary(t('mail', 'Message sent!'));
-
-					// close composer
-					if (_this.sentCallback !== null) {
-						_this.sentCallback();
-					} else {
-						_this.$('.message-composer').slideUp();
-					}
-					_this.$('#mail_new_message').prop('disabled', false);
-					to.val('');
-					cc.val('');
-					bcc.val('');
-					subject.val('');
-					newMessageBody.val('');
-					newMessageBody.trigger('autosize.resize');
-					_this.attachments.reset();
-					if (_this.draftUID !== null) {
-						// the sent message was a draft
-						if (!_.isUndefined(Radio.ui.request('messagesview:collection'))) {
-							Radio.ui.request('messagesview:collection').
-								remove({id: _this.draftUID});
-						}
-						_this.draftUID = null;
-					}
-				},
-				error: function(jqXHR) {
-					var error = '';
-					if (jqXHR.status === 500) {
-						error = t('mail', 'Server error');
-					} else {
-						var resp = JSON.parse(jqXHR.responseText);
-						error = resp.message;
-					}
-					newMessageSend.prop('disabled', false);
-					OC.Notification.showTemporary(error);
-				},
-				complete: function() {
-					// remove loading feedback
-					newMessageBody.removeClass('icon-loading');
-					_this.$('.mail-account').prop('disabled', false);
-					to.prop('disabled', false);
-					cc.prop('disabled', false);
-					bcc.prop('disabled', false);
-					subject.prop('disabled', false);
-					_this.$('.new-message-attachments-action').
-						css('display', 'inline-block');
-					_this.$('#mail_new_attachment').prop('disabled', false);
-					newMessageBody.prop('disabled', false);
-					newMessageSend.prop('disabled', false);
-					newMessageSend.val(t('mail', 'Send'));
-				}
+				draftUID: this.draftUID
 			};
 
 			if (this.isReply()) {
@@ -375,7 +308,53 @@ define(function(require) {
 				options.folder = this.account.get('folders').get(this.folderId);
 			}
 
-			this.submitCallback(this.account, this.getMessage(), options);
+			var sendingMessage = Radio.message.request('send', this.account, this.getMessage(), options);
+			$.when(sendingMessage).done(function() {
+				OC.Notification.showTemporary(t('mail', 'Message sent!'));
+
+				_this.$('#mail_new_message').prop('disabled', false);
+				to.val('');
+				cc.val('');
+				bcc.val('');
+				subject.val('');
+				newMessageBody.val('');
+				newMessageBody.trigger('autosize.resize');
+				_this.attachments.reset();
+				if (_this.draftUID !== null) {
+					// the sent message was a draft
+					if (!_.isUndefined(Radio.ui.request('messagesview:collection'))) {
+						Radio.ui.request('messagesview:collection').
+							remove({id: _this.draftUID});
+					}
+					_this.draftUID = null;
+				}
+			});
+			$.when(sendingMessage).fail(function(jqXHR) {
+				var error = '';
+				if (jqXHR.status === 500) {
+					error = t('mail', 'Server error');
+				} else {
+					var resp = JSON.parse(jqXHR.responseText);
+					error = resp.message;
+				}
+				newMessageSend.prop('disabled', false);
+				OC.Notification.showTemporary(error);
+			});
+			$.when(sendingMessage).always(function() {
+				// remove loading feedback
+				newMessageBody.removeClass('icon-loading');
+				_this.$('.mail-account').prop('disabled', false);
+				to.prop('disabled', false);
+				cc.prop('disabled', false);
+				bcc.prop('disabled', false);
+				subject.prop('disabled', false);
+				_this.$('.new-message-attachments-action').
+					css('display', 'inline-block');
+				_this.$('#mail_new_attachment').prop('disabled', false);
+				newMessageBody.prop('disabled', false);
+				newMessageSend.prop('disabled', false);
+				newMessageSend.val(t('mail', 'Send'));
+			});
 			return false;
 		},
 		saveDraft: function(onSuccess) {
@@ -395,19 +374,19 @@ define(function(require) {
 
 			// send the mail
 			var _this = this;
-			this.draftCallback(this.account, this.getMessage(), {
+			var savingDraft = Radio.message.request('draft', this.account, this.getMessage(), {
 				folder: this.account.get('folders').get(this.folderId),
 				messageId: this.messageId,
-				draftUID: this.draftUID,
-				success: function(data) {
-					if (_.isFunction(onSuccess)) {
-						onSuccess();
-					}
-					_this.draftUID = data.uid;
-				},
-				error: function() {
-					// TODO: show error
+				draftUID: this.draftUID
+			});
+			$.when(savingDraft).done(function(data) {
+				if (_.isFunction(onSuccess)) {
+					onSuccess();
 				}
+				_this.draftUID = data.uid;
+			});
+			$.when(savingDraft).fail(function() {
+				// TODO: show error
 			});
 			return false;
 		},

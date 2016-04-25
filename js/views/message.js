@@ -144,8 +144,6 @@ define(function(require) {
 			this.replyComposer.show(new ComposerView({
 				//el: this.$('#reply-composer'),
 				type: 'reply',
-				onSubmit: require('communication').sendMessage,
-				onDraft: require('communication').saveDraft,
 				account: account,
 				folderId: folderId,
 				messageId: this.message.get('messageId'),

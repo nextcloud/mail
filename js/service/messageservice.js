@@ -21,12 +21,16 @@ define(function(require) {
 	'use strict';
 
 	var $ = require('jquery');
+	var _ = require('underscore');
 	var OC = require('OC');
 	var Radio = require('radio');
 	var messageListXhr = null;
 
 	Radio.message.reply('entities', getMessageEntities);
 	Radio.message.reply('entity', getMessageEntity);
+	Radio.message.reply('bodies', fetchMessageBodies);
+	Radio.message.reply('send', sendMessage);
+	Radio.message.reply('draft', saveDraft);
 
 	/**
 	 * @param {Account} account
@@ -135,5 +139,177 @@ define(function(require) {
 		}
 
 		return defer.promise();
+	}
+
+	/**
+	 * @param {Account} account
+	 * @param {Folder} folder
+	 * @param {array} messageIds
+	 * @returns {undefined}
+	 */
+	function fetchMessageBodies(account, folder, messageIds) {
+		var defer = $.Deferred();
+
+		var cachedMessages = [];
+		var uncachedIds = [];
+		_.each(messageIds, function(messageId) {
+			var message = require('cache').getMessage(account, folder, messageId);
+			if (message) {
+				cachedMessages.push(message);
+			} else {
+				uncachedIds.push(messageId);
+			}
+		});
+
+		if (uncachedIds.length > 0) {
+			var Ids = uncachedIds.join(',');
+			var url = OC.generateUrl('apps/mail/accounts/{accountId}/folders/{folderId}/messages?ids={ids}', {
+				accountId: account.get('accountId'),
+				folderId: folder.get('id'),
+				ids: Ids
+			});
+			$.ajax(url, {
+				type: 'GET',
+				success: function(data) {
+					defer.resolve(data);
+				},
+				error: function() {
+					defer.reject();
+				}
+			});
+		}
+
+		return defer.promise();
+	}
+
+	/**
+	 * @param {Account} account
+	 * @param {object} message
+	 * @param {object} options
+	 * @returns {undefined}
+	 */
+	function sendMessage(account, message, options) {
+		var defer = $.Deferred();
+
+		var defaultOptions = {
+			draftUID: null
+		};
+		_.defaults(options, defaultOptions);
+		var url = OC.generateUrl('/apps/mail/accounts/{id}/send', {
+			id: account.get('id')
+		});
+		var data = {
+			type: 'POST',
+			success: function(data) {
+				if (!_.isNull(options.messageId)) {
+					// Reply -> flag message as replied
+					Radio.ui.trigger('messagesview:messageflag:set', options.messageId, 'answered', true);
+				}
+
+				defer.resolve(data);
+			},
+			error: function() {
+				defer.reject();
+			},
+			data: {
+				to: message.to,
+				cc: message.cc,
+				bcc: message.bcc,
+				subject: message.subject,
+				body: message.body,
+				attachments: message.attachments,
+				folderId: options.folder ? options.folder.get('id') : null,
+				messageId: options.messageId,
+				draftUID: options.draftUID
+			}
+		};
+		$.ajax(url, data);
+
+		return defer.promise();
+	}
+
+	/**
+	 * @param {Account} account
+	 * @param {object} message
+	 * @param {object} options
+	 * @returns {undefined}
+	 */
+	function saveDraft(account, message, options) {
+		var defer = $.Deferred();
+
+		var defaultOptions = {
+			folder: null,
+			messageId: null,
+			draftUID: null
+		};
+		_.defaults(options, defaultOptions);
+
+		// TODO: replace by Backbone model method
+		function undefinedOrEmptyString(prop) {
+			return prop === undefined || prop === '';
+		}
+		var emptyMessage = true;
+		var propertiesToCheck = ['to', 'cc', 'bcc', 'subject', 'body'];
+		_.each(propertiesToCheck, function(property) {
+			if (!undefinedOrEmptyString(message[property])) {
+				emptyMessage = false;
+			}
+		});
+		// END TODO
+
+		if (emptyMessage) {
+			if (options.draftUID !== null) {
+				// Message is empty + previous draft exists -> delete it
+				var draftsFolder = account.get('specialFolders').drafts;
+				var deleteUrl =
+					OC.generateUrl('apps/mail/accounts/{accountId}/folders/{folderId}/messages/{messageId}', {
+						accountId: account.get('accountId'),
+						folderId: draftsFolder,
+						messageId: options.draftUID
+					});
+				$.ajax(deleteUrl, {
+					type: 'DELETE'
+				});
+			}
+			options.success({
+				uid: null
+			});
+		} else {
+			var url = OC.generateUrl('/apps/mail/accounts/{id}/draft', {
+				id: account.get('accountId')
+			});
+			var data = {
+				type: 'POST',
+				success: function(data) {
+					if (options.draftUID !== null) {
+						// update UID in message list
+						var collection = Radio.ui.request('messagesview:collection');
+						var message = collection.findWhere({id: options.draftUID});
+						if (message) {
+							message.set({id: data.uid});
+							collection.set([message], {remove: false});
+						}
+					}
+					defer.resolve(arguments);
+				},
+				error: function() {
+					defer.reject(arguments);
+				},
+				data: {
+					to: message.to,
+					cc: message.cc,
+					bcc: message.bcc,
+					subject: message.subject,
+					body: message.body,
+					attachments: message.attachments,
+					folderId: options.folder ? options.folder.get('id') : null,
+					messageId: options.messageId,
+					uid: options.draftUID
+				}
+			};
+			$.ajax(url, data);
+
+			return defer.promise();
+		}
 	}
 });
