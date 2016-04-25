@@ -4,3 +4,6 @@
 <h2 class="mail-account-email" title="{{email}}">{{email}}</h2>
 <ul id="mail_folders" class="mail_folders with-icon" data-account_id="{{id}}">
 </ul>
+{{#unless isUnifiedInbox}}
+<span class="account-toggle-collapse">{{toggleCollapseMessage}}</span>
+{{/unless}}

@@ -170,6 +170,16 @@
 .mail-account-email:first-child {
 	padding-top: 50px;
 }
+.account-toggle-collapse {
+	display: block;
+	margin-top: 10px;
+	margin-left: 43px;
+	opacity: .2;
+	cursor: pointer;
+}
+.account-toggle-collapse:hover {
+	opacity: .5;
+}
 
 .mail-account-color {
 	display: inline-block;
