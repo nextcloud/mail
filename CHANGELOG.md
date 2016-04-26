@@ -3,6 +3,12 @@
 ## 0.4.3
  * Improved autoconfig
    [#1407](https://github.com/owncloud/mail/pull/1407) @Scheirle
+ * Better color generator for accounts
+   [#1428](https://github.com/owncloud/mail/pull/1425) @skjnldsv
+ * Load next messages automatically when reaching end of the list
+   [#499](https://github.com/owncloud/mail/pull/1432) @ChristophWurst
+ * Fix bug with address collector (Data too long for column)
+   [#1421](https://github.com/owncloud/mail/pull/1433) @ChristophWurst
 
 ## 0.4.2
  * Fix autocompletion (regression)
