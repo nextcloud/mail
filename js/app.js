@@ -28,6 +28,7 @@ define(function(require) {
 	var Marionette = require('marionette');
 	var OC = require('OC');
 	var AppView = require('views/app');
+	var Cache = require('cache');
 	var Radio = require('radio');
 	var Router = require('router');
 	var AccountController = require('controller/accountcontroller');
@@ -76,6 +77,7 @@ define(function(require) {
 
 	Mail.on('start', function() {
 		this.view = new AppView();
+		Cache.init();
 
 		Radio.ui.trigger('content:loading');
 

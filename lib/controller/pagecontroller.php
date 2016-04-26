@@ -24,17 +24,19 @@
 
 namespace OCA\Mail\Controller;
 
+use OCA\Mail\Db\MailAccountMapper;
 use OCP\AppFramework\Controller;
+use OCP\AppFramework\Http\ContentSecurityPolicy;
 use OCP\AppFramework\Http\RedirectResponse;
 use OCP\AppFramework\Http\TemplateResponse;
+use OCP\IConfig;
 use OCP\IRequest;
 use OCP\IURLGenerator;
-use OCA\Mail\Db\MailAccountMapper;
 
 class PageController extends Controller {
 
 	/**
-	 * @var \OCA\Mail\Db\MailAccountMapper
+	 * @var MailAccountMapper
 	 */
 	private $mailAccountMapper;
 
@@ -44,20 +46,27 @@ class PageController extends Controller {
 	private $urlGenerator;
 
 	/**
+	 * @var IConfig
+	 */
+	private $config;
+
+	/**
 	 * @var string
 	 */
 	private $currentUserId;
 
 	/**
 	 * @param string $appName
-	 * @param \OCP\IRequest $request
+	 * @param IRequest $request
 	 * @param $mailAccountMapper
+	 * @param IConfig $config
 	 * @param $UserId
 	 */
-	public function __construct($appName, IRequest $request, MailAccountMapper $mailAccountMapper, IURLGenerator $urlGenerator, $UserId) {
+	public function __construct($appName, IRequest $request, MailAccountMapper $mailAccountMapper, IURLGenerator $urlGenerator, IConfig $config, $UserId) {
 		parent::__construct($appName, $request);
 		$this->mailAccountMapper = $mailAccountMapper;
 		$this->urlGenerator = $urlGenerator;
+		$this->config = $config;
 		$this->currentUserId = $UserId;
 	}
 
@@ -68,10 +77,16 @@ class PageController extends Controller {
 	 * @return TemplateResponse renders the index page
 	 */
 	public function index() {
-		$response = new TemplateResponse($this->appName, 'index', []);
+		// TODO: remove DEBUG constant check once minimum oc
+		// core version >= 8.2, see https://github.com/owncloud/core/pull/18510
+		$response = new TemplateResponse($this->appName, 'index', [
+			'debug' => (defined('DEBUG') && DEBUG) || $this->config->getSystemValue('debug', false),
+			'app-version' => $this->config->getAppValue('mail', 'installed_version'),
+		]);
+
 		// set csp rules for ownCloud 8.1
 		if (class_exists('OCP\AppFramework\Http\ContentSecurityPolicy')) {
-			$csp = new \OCP\AppFramework\Http\ContentSecurityPolicy();
+			$csp = new ContentSecurityPolicy();
 			$csp->addAllowedFrameDomain('\'self\'');
 			$response->setContentSecurityPolicy($csp);
 		}

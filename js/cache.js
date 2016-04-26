@@ -5,7 +5,7 @@
  * later. See the COPYING file.
  *
  * @author Christoph Wurst <christoph@winzerhof-wurst.at>
- * @copyright Christoph Wurst 2015
+ * @copyright Christoph Wurst 2015, 2016
  */
 
 define(function(require) {
@@ -60,6 +60,22 @@ define(function(require) {
 			return [this.getAccountPath(account), folder.get('id').toString()].join('.');
 		}
 	};
+
+	function init() {
+		console.log('initializing cache…');
+		var installedVersion = $('#config-installed-version').val();
+		if (storage.isSet('mail-app-version')) {
+			var cachedVersion = storage.get('mail-app-version');
+			if (cachedVersion !== installedVersion) {
+				console.log('clearing cache because app version has changed');
+				storage.removeAll();
+			}
+		} else {
+			// Could be an old version -> clear data
+			storage.removeAll();
+		}
+		storage.set('mail-app-version', installedVersion);
+	}
 
 	/**
 	 * @param {AccountsCollection} accounts
@@ -221,6 +237,7 @@ define(function(require) {
 	}
 
 	return {
+		init: init,
 		cleanUp: cleanUp,
 		getMessage: getMessage,
 		addMessage: addMessage,
