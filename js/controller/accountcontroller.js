@@ -35,7 +35,8 @@ define(function(require) {
 
 		$.when(fetchingAccounts).done(function(accounts) {
 			if (accounts.length === 0) {
-				addAccount();
+				defer.resolve(accounts);
+				Radio.navigation.trigger('setup');
 			} else {
 				var loadingAccounts = accounts.map(function(account) {
 					return FolderController.loadFolder(account);
