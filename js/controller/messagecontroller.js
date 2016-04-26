@@ -22,12 +22,14 @@ define(function(require) {
 
 	var $ = require('jquery');
 	var _ = require('underscore');
+	var OC = require('OC');
 	var Radio = require('radio');
 
 	Radio.message.on('load', function(account, folder, messageId, options) {
 		//FIXME: don't rely on global state vars
 		load(account, messageId, options);
 	});
+	Radio.message.on('forward', openForwardComposer);
 
 	/**
 	 * @param {Account} account
@@ -49,7 +51,8 @@ define(function(require) {
 
 		Radio.ui.trigger('composer:leave');
 
-		if (!options.force && require('ui').isComposerVisible()) {
+		// TODO: expression is useless?
+		if (!options.force && false) {
 			return;
 		}
 		// Abort previous loading requests
@@ -99,5 +102,90 @@ define(function(require) {
 		$.when(fetchingMessage).fail(function() {
 			Radio.ui.trigger('error:show', t('mail', 'Error while loading the selected message.'));
 		});
+	}
+
+	/**
+	 * @returns {undefined}
+	 */
+	function openForwardComposer() {
+		var header = '\n\n\n\n-------- ' +
+			t('mail', 'Forwarded message') +
+			' --------\n';
+
+		// TODO: find a better way to get the current message body
+		var data = {
+			subject: 'Fwd: ' + require('state').currentMessageSubject,
+			body: header + require('state').currentMessageBody.replace(/<br \/>/g, '\n')
+		};
+
+		if (require('state').currentAccount.get('accountId') !== -1) {
+			data.accountId = require('state').currentAccount.get('accountId');
+		}
+
+		Radio.ui.trigger('composer:show', data);
+	}
+
+	/**
+	 * @param {number} messageId
+	 * @param {number} attachmentId
+	 * @returns {undefined}
+	 */
+	function saveAttachment(messageId, attachmentId) {
+		OC.dialogs.filepicker(
+			t('mail', 'Choose a folder to store the attachment in'),
+			function(path) {
+				// Loading feedback
+				var saveToFilesBtnSelector = '.attachment-save-to-cloud';
+				if (typeof attachmentId !== 'undefined') {
+					saveToFilesBtnSelector = 'li[data-attachment-id="' +
+						attachmentId + '"] ' + saveToFilesBtnSelector;
+				}
+				$(saveToFilesBtnSelector)
+					.removeClass('icon-folder')
+					.addClass('icon-loading-small')
+					.prop('disabled', true);
+
+				$.ajax(
+					OC.generateUrl(
+						'apps/mail/accounts/{accountId}/' +
+						'folders/{folderId}/messages/{messageId}/' +
+						'attachment/{attachmentId}',
+						{
+							accountId: require('state').currentAccount.get('accountId'),
+							folderId: require('state').currentFolder.get('id'),
+							messageId: messageId,
+							attachmentId: attachmentId
+						}), {
+					data: {
+						targetPath: path
+					},
+					type: 'POST',
+					success: function() {
+						if (typeof attachmentId === 'undefined') {
+							Radio.ui.trigger('error:show', t('mail', 'Attachments saved to Files.'));
+						} else {
+							Radio.ui.trigger('error:show', t('mail', 'Attachment saved to Files.'));
+						}
+					},
+					error: function() {
+						if (typeof attachmentId === 'undefined') {
+							Radio.ui.trigger('error:show', t('mail', 'Error while saving attachments to Files.'));
+						} else {
+							Radio.ui.trigger('error:show', t('mail', 'Error while saving attachment to Files.'));
+						}
+					},
+					complete: function() {
+						// Remove loading feedback again
+						$('.attachment-save-to-cloud')
+							.removeClass('icon-loading-small')
+							.addClass('icon-folder')
+							.prop('disabled', false);
+					}
+				});
+			},
+			false,
+			'httpd/unix-directory',
+			true
+			);
 	}
 });

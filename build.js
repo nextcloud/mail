@@ -11,11 +11,10 @@
 ({
 	baseUrl: 'js',
 	mainConfigFile: 'js/require_config.js',
-	name: 'init',
+	name: 'app',
 	out: 'js/mail.min.js',
 	insertRequire: [
 		'app',
-		'init',
 		'notification'
 	]
 })

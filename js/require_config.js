@@ -41,7 +41,6 @@
 
 	require([
 		'app',
-		'init',
 		'notification'
 	]);
 })();
