@@ -7,7 +7,7 @@
  * later. See the COPYING file.
  *
  * @author Christoph Wurst <christoph@winzerhof-wurst.at>
- * @copyright Christoph Wurst 2015
+ * @copyright Christoph Wurst 2015, 2016
  */
 
 define(function(require) {
@@ -164,14 +164,10 @@ define(function(require) {
 				var messages = queue;
 				queue = [];
 
-				require('communication').fetchMessages(
-					account, folder, messages, {
-						onSuccess: function(messages) {
-							require('cache').addMessages(
-								account,
-								folder, messages);
-						}
-					});
+				var fetchingMessageBodies = Radio.message.request('bodies', account, folder, messages);
+				$.when(fetchingMessageBodies).done(function(messages) {
+					require('cache').addMessages(account, folder, messages);
+				});
 			}
 		}
 

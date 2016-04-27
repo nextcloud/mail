@@ -88,8 +88,6 @@ define(function(require) {
 
 			// setup composer view
 			this.message.show(new ComposerView({
-				onSubmit: require('communication').sendMessage,
-				onDraft: require('communication').saveDraft,
 				accounts: require('state').accounts,
 				data: data
 			}));
