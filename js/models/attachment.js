@@ -5,20 +5,23 @@
  * later. See the COPYING file.
  *
  * @author Christoph Wurst <christoph@winzerhof-wurst.at>
- * @copyright Christoph Wurst 2015
+ * @copyright Christoph Wurst 2015, 2016
  */
 
 define(function(require) {
 	'use strict';
 
 	var Backbone = require('backbone');
+	var _ = require('underscore');
 
 	/**
 	 * @class Attachment
 	 */
 	var Attachment = Backbone.Model.extend({
 		initialize: function() {
-			this.set('id', _.uniqueId());
+			if (_.isUndefined(this.get('id'))) {
+				this.set('id', _.uniqueId());
+			}
 
 			var s = this.get('fileName');
 			if (s.charAt(0) === '/') {

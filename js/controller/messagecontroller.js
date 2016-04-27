@@ -126,66 +126,54 @@ define(function(require) {
 	}
 
 	/**
+	 * @param {Account} account
+	 * @param {Folder} folder
 	 * @param {number} messageId
 	 * @param {number} attachmentId
-	 * @returns {undefined}
+	 * @returns {Promise}
 	 */
-	function saveAttachment(messageId, attachmentId) {
+	function saveAttachmentToFiles(account, folder, messageId, attachmentId) {
+		var defer = $.Deferred();
+		var saveAll = _.isUndefined(attachmentId);
+
 		OC.dialogs.filepicker(
 			t('mail', 'Choose a folder to store the attachment in'),
 			function(path) {
-				// Loading feedback
-				var saveToFilesBtnSelector = '.attachment-save-to-cloud';
-				if (typeof attachmentId !== 'undefined') {
-					saveToFilesBtnSelector = 'li[data-attachment-id="' +
-						attachmentId + '"] ' + saveToFilesBtnSelector;
-				}
-				$(saveToFilesBtnSelector)
-					.removeClass('icon-folder')
-					.addClass('icon-loading-small')
-					.prop('disabled', true);
-
-				$.ajax(
-					OC.generateUrl(
-						'apps/mail/accounts/{accountId}/' +
-						'folders/{folderId}/messages/{messageId}/' +
-						'attachment/{attachmentId}',
-						{
-							accountId: require('state').currentAccount.get('accountId'),
-							folderId: require('state').currentFolder.get('id'),
-							messageId: messageId,
-							attachmentId: attachmentId
-						}), {
-					data: {
-						targetPath: path
-					},
-					type: 'POST',
-					success: function() {
-						if (typeof attachmentId === 'undefined') {
-							Radio.ui.trigger('error:show', t('mail', 'Attachments saved to Files.'));
-						} else {
-							Radio.ui.trigger('error:show', t('mail', 'Attachment saved to Files.'));
-						}
-					},
-					error: function() {
-						if (typeof attachmentId === 'undefined') {
-							Radio.ui.trigger('error:show', t('mail', 'Error while saving attachments to Files.'));
-						} else {
-							Radio.ui.trigger('error:show', t('mail', 'Error while saving attachment to Files.'));
-						}
-					},
-					complete: function() {
-						// Remove loading feedback again
-						$('.attachment-save-to-cloud')
-							.removeClass('icon-loading-small')
-							.addClass('icon-folder')
-							.prop('disabled', false);
+				var savingToFiles = Radio.message.request('save:cloud', account,
+					folder, messageId, attachmentId, path);
+				$.when(savingToFiles).done(function() {
+					if (saveAll) {
+						Radio.ui.trigger('error:show', t('mail', 'Attachments saved to Files.'));
+					} else {
+						Radio.ui.trigger('error:show', t('mail', 'Attachment saved to Files.'));
 					}
+					defer.resolve();
 				});
-			},
-			false,
-			'httpd/unix-directory',
-			true
-			);
+				$.when(savingToFiles).fail(function() {
+					if (saveAll) {
+						Radio.ui.trigger('error:show', t('mail', 'Error while saving attachments to Files.'));
+					} else {
+						Radio.ui.trigger('error:show', t('mail', 'Error while saving attachment to Files.'));
+					}
+					defer.reject();
+				});
+			}, false, 'httpd/unix-directory', true);
+
+		return defer.promise();
 	}
+
+	/**
+	 * @param {Account} account
+	 * @param {Folder} folder
+	 * @param {number} messageId
+	 * @returns {Promise}
+	 */
+	function saveAttachmentsToFiles(account, folder, messageId) {
+		return saveAttachmentToFiles(account, folder, messageId);
+	}
+
+	return {
+		saveAttachmentToFiles: saveAttachmentToFiles,
+		saveAttachmentsToFiles: saveAttachmentsToFiles
+	};
 });

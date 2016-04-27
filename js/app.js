@@ -37,6 +37,7 @@ define(function(require) {
 	require('controller/foldercontroller');
 	require('controller/messagecontroller');
 	require('service/accountservice');
+	require('service/attachmentservice');
 	require('service/folderservice');
 	require('service/messageservice');
 	require('notification');

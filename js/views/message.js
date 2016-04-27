@@ -135,7 +135,8 @@ define(function(require) {
 			var folderId = this.message.get('folderId');
 
 			this.attachments.show(new MessageAttachmentsView({
-				collection: new Attachments(this.message.get('attachments'))
+				collection: new Attachments(this.message.get('attachments')),
+				message: this.model
 			}));
 
 			// setup reply composer view

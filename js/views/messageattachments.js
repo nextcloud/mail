@@ -20,8 +20,10 @@
 define(function(require) {
 	'use strict';
 
+	var $ = require('jquery');
 	var Handlebars = require('handlebars');
 	var Marionette = require('marionette');
+	var MessageController = require('controller/messagecontroller');
 	var AttachmentView = require('views/messageattachment');
 	var AttachmentsTemplate = require('text!templates/message-attachments.html');
 
@@ -33,13 +35,45 @@ define(function(require) {
 		 * @lends Marionette.CompositeView
 		 */
 		template: Handlebars.compile(AttachmentsTemplate),
+		ui: {
+			'saveAllToCloud': '.attachments-save-to-cloud'
+		},
+		events: {
+			'click @ui.saveAllToCloud': '_onSaveAllToCloud'
+		},
 		templateHelpers: function() {
 			return {
 				moreThanOne: this.collection.length > 1
 			};
 		},
 		childView: AttachmentView,
-		childViewContainer: '.attachments'
+		childViewContainer: '.attachments',
+		initialize: function(options) {
+			this.message = options.message;
+		},
+		_onSaveAllToCloud: function(e) {
+			e.preventDefault();
+
+			// TODO: 'message' should be a property of this attachment model
+			// TODO: 'folder' should be a property of the message model and so on
+			var account = require('state').currentAccount;
+			var folder = require('state').currentFolder;
+			var messageId = this.message.get('id');
+			var saving = MessageController.saveAttachmentsToFiles(account, folder, messageId);
+
+			// Loading feedback
+			this.ui.saveAllToCloud.removeClass('icon-folder')
+				.addClass('icon-loading-small')
+				.prop('disabled', true);
+
+			var _this = this;
+			$.when(saving).always(function() {
+				// Remove loading feedback again
+				_this.ui.saveAllToCloud.addClass('icon-folder')
+					.removeClass('icon-loading-small')
+					.prop('disabled', false);
+			});
+		}
 	});
 
 	return MessageAttachmentsView;
