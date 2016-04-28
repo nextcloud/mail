@@ -24,6 +24,21 @@
 	margin: 0 auto;
 	padding-top: 30px;
 }
+@media only screen and (max-height: 400px) {
+	#setup #emptycontent {
+		margin-top: 0px;
+	}
+}
+@media only screen and (min-height: 401px) and (max-height: 600px) {
+	#setup #emptycontent {
+		margin-top: 2vh;
+	}
+}
+@media only screen and (min-height: 601px) {
+	#setup #emptycontent {
+		margin-top: 10vh;
+	}
+}
 #setup h2 {
 	text-align: center;
 	position: relative;

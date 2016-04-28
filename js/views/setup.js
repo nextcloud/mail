@@ -15,6 +15,7 @@ define(function(require) {
 	var _ = require('underscore');
 	var Marionette = require('marionette');
 	var Handlebars = require('handlebars');
+	var AccountController = require('controller/accountcontroller');
 	var Radio = require('radio');
 	var SetupTemplate = require('text!templates/setup.html');
 
@@ -147,7 +148,15 @@ define(function(require) {
 			$.when(creatingAccount).done(function() {
 				Radio.ui.trigger('navigation:show');
 				// reload accounts
-				Radio.account.trigger('load');
+				$.when(AccountController.loadAccounts()).done(function(accounts) {
+					$('#app-navigation').removeClass('icon-loading');
+
+					// Let's assume there's at least one account after a successful
+					// setup, so let's show the first one (could be the unified inbox)
+					var firstAccount = accounts.first();
+					var firstFolder = accounts.first();
+					Radio.navigation.trigger('folder', firstAccount.get('accountId'), firstFolder.get('id'));
+				});
 			});
 
 			$.when(creatingAccount).fail(function(error) {
