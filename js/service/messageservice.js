@@ -290,10 +290,10 @@ define(function(require) {
 							collection.set([message], {remove: false});
 						}
 					}
-					defer.resolve(arguments);
+					defer.resolve(data);
 				},
 				error: function() {
-					defer.reject(arguments);
+					defer.reject();
 				},
 				data: {
 					to: message.to,

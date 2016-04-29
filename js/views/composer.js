@@ -126,6 +126,7 @@ define(function(require) {
 			if (!this.isReply()) {
 				this.accounts = options.accounts;
 				this.account = options.account || this.accounts.at(0);
+				this.draftUID = options.data.id;
 			} else {
 				this.account = options.account;
 				this.folderId = options.folderId;
