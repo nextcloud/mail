@@ -79,6 +79,7 @@ appstore: clean install-deps optimize-js
 	--exclude=$(project_dir)/phpunit*xml \
 	--exclude=$(project_dir)/Makefile \
 	--exclude=$(project_dir)/tests \
+	--exclude=$(project_dir)/js/tests \
 	--exclude=$(project_dir)/l10n/.tx \
 	--exclude=$(project_dir)/l10n/no-php \
 	--exclude=$(project_dir)/vendor/bin \
