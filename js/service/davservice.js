@@ -24,11 +24,13 @@ define(function(require) {
 	var $ = require('jquery');
 	var Backbone = require('backbone');
 	var dav = require('davclient');
+	var ical = require('ical');
 	var OC = require('OC');
 	var Radio = require('radio');
 	var Calendar = require('models/dav/calendar');
 
 	Radio.dav.reply('calendars', getUserCalendars);
+	Radio.dav.reply('calendar:import', importCalendarEvent);
 
 	var client = new dav.Client({
 		baseUrl: OC.linkToRemote('dav/calendars'),
@@ -94,6 +96,7 @@ define(function(require) {
 				if (getResponseCodeFromHTTPResponse(cal.propStat[0].status) === 200) {
 					var properties = getCalendarData(cal.propStat[0].properties);
 					if (properties && properties.components.vevent) {
+						properties.url = cal.href;
 						calendars.push(new Calendar(properties));
 					}
 				}
@@ -101,6 +104,95 @@ define(function(require) {
 			defer.resolve(calendars);
 		}, function() {
 			defer.reject();
+		});
+
+		return defer.promise();
+	}
+
+	function getRandomString() {
+		var str = '';
+		for (var i = 0; i < 7; i++) {
+			str += Math.random().toString(36).substring(7);
+		}
+		return str;
+	}
+
+	function createICalElement() {
+		var root = new ical.Component(['vcalendar', [], []]);
+
+		root.updatePropertyWithValue('prodid', '-//ownCloud Mail');
+
+		return root;
+	}
+
+	function splitCalendar(data) {
+		var timezones = [];
+		var allObjects = {};
+		var jCal = ical.parse(data);
+		var components = new ical.Component(jCal);
+
+		var vtimezones = components.getAllSubcomponents('vtimezone');
+		_.each(vtimezones, function(vtimezone) {
+			timezones.push(vtimezone);
+		});
+
+		var componentNames = ['vevent', 'vjournal', 'vtodo'];
+		_.each(componentNames, function(componentName) {
+			var vobjects = components.getAllSubcomponents(componentName);
+			allObjects[componentName] = {};
+
+			_.each(vobjects, function(vobject) {
+				var uid = vobject.getFirstPropertyValue('uid');
+				allObjects[componentName][uid] = allObjects[componentName][uid] || [];
+				allObjects[componentName][uid].push(vobject);
+			});
+		});
+
+		var split = [];
+		_.each(componentNames, function(componentName) {
+			split[componentName] = [];
+			_.each(allObjects[componentName], function(objects) {
+				var component = createICalElement();
+				_.each(timezones, function(timezone) {
+					component.addSubcomponent(timezone);
+				});
+				_.each(objects, function(object) {
+					component.addSubcomponent(object);
+				});
+				split[componentName].push(component.toString());
+			});
+		});
+
+		return {
+			name: components.getFirstPropertyValue('x-wr-calname'),
+			color: components.getFirstPropertyValue('x-apple-calendar-color'),
+			split: split
+		};
+	}
+
+	function importCalendarEvent(url, data) {
+		var defer = $.Deferred();
+		var xhrs = [];
+
+		var file = splitCalendar(data);
+
+		var componentNames = ['vevent', 'vjournal', 'vtodo'];
+		_.each(componentNames, function(componentName) {
+			_.each(file.split[componentName], function(component) {
+				xhrs.push($.ajax({
+					url: url + getRandomString(),
+					method: 'PUT',
+					contentType: 'text/calendar; charset=utf-8',
+					data: component,
+					error: function() {
+						defer.reject();
+					}
+				}));
+			});
+		});
+
+		$.when.apply($, xhrs).done(function() {
+			defer.resolve();
 		});
 
 		return defer.promise();

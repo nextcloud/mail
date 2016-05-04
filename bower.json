@@ -27,6 +27,7 @@
     "text": "^2.0.14",
     "underscore": "~1.8.3",
     "davclient.js": "git@github.com:evert/davclient.js.git",
-    "es6-promise": "^3.2.1"
+    "es6-promise": "^3.2.1",
+    "ical.js": "^1.2.1"
   }
 }

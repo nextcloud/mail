@@ -52,7 +52,7 @@ define(function(require) {
 				var $target = $(e.target);
 				if ($target.hasClass('select-calendar')) {
 					var url = $target.data('calendar-url');
-					alert(url);
+					this._uploadToCalendar(url);
 					return;
 				}
 
@@ -72,40 +72,28 @@ define(function(require) {
 
 			// Loading feedback
 			this.ui.saveToCloudButton.removeClass('icon-folder')
-				.addClass('icon-loading-small')
-				.prop('disabled', true);
+					.addClass('icon-loading-small')
+					.prop('disabled', true);
 
 			var _this = this;
 			$.when(saving).always(function() {
 				// Remove loading feedback again
 				_this.ui.saveToCloudButton.addClass('icon-folder')
-					.removeClass('icon-loading-small')
-					.prop('disabled', false);
+						.removeClass('icon-loading-small')
+						.prop('disabled', false);
 			});
 		},
 		_onImportCalendarEvent: function(e) {
 			e.preventDefault();
 
 			this.ui.importCalendarEventButton
-				.removeClass('icon-add')
-				.addClass('icon-loading-small');
+					.removeClass('icon-add')
+					.addClass('icon-loading-small');
 
-			var url = this.model.get('downloadUrl');
-			var downloadingAttachment = Radio.message.request('attachment:download', url);
 			var fetchingCalendars = Radio.dav.request('calendars');
 
 			var _this = this;
-			$.when(downloadingAttachment.fail(function() {
-				Radio.ui.trigger('error:show', t('Error while downloading calendar event'));
-			}));
-			$.when(fetchingCalendars, downloadingAttachment).always(function() {
-				_this.ui.importCalendarEventButton
-					.removeClass('icon-loading-small')
-					.addClass('icon-add');
-			});
-
-			$.when(fetchingCalendars, downloadingAttachment).
-				done(function(calendars, ics) {
+			$.when(fetchingCalendars).done(function(calendars) {
 				_this.ui.attachmentImportPopover.removeClass('hidden');
 				var calendarsView = new CalendarsPopoverView({
 					collection: calendars
@@ -113,8 +101,47 @@ define(function(require) {
 				calendarsView.render();
 				_this.ui.attachmentImportPopover.html(calendarsView.$el);
 			});
+			$.when(fetchingCalendars).always(function() {
+				_this.ui.importCalendarEventButton
+						.removeClass('icon-loading-small')
+						.addClass('icon-add');
+			});
+		},
+		_uploadToCalendar: function(url) {
+			this._closeImportPopover();
+			this.ui.importCalendarEventButton
+					.removeClass('icon-add')
+					.addClass('icon-loading-small');
+
+			var downloadUrl = this.model.get('downloadUrl');
+			var downloadingAttachment = Radio.message.request('attachment:download', downloadUrl);
+
+			var _this = this;
+			$.when(downloadingAttachment).done(function(content) {
+
+				var importingCalendarEvent = Radio.dav.request('calendar:import', url, content);
+
+				$.when(importingCalendarEvent).fail(function() {
+					Radio.ui.trigger('error:show', t('mail', 'Error while importing the calendar event'));
+				});
+				$.when(importingCalendarEvent).always(function() {
+					_this.ui.importCalendarEventButton
+							.removeClass('icon-loading-small')
+							.addClass('icon-add');
+				});
+			});
+			$.when(downloadingAttachment.fail(function() {
+				Radio.ui.trigger('error:show', t('mail', 'Error while downloading calendar event'));
+				_this.ui.importCalendarEventButton
+						.removeClass('icon-loading-small')
+						.addClass('icon-add');
+			}));
 		},
 		_closeImportPopover: function(e) {
+			if (_.isUndefined(e)) {
+				this.ui.attachmentImportPopover.addClass('hidden');
+				return;
+			}
 			var $target = $(e.target);
 			if (this.$el.find($target).length === 0) {
 				this.ui.attachmentImportPopover.addClass('hidden');

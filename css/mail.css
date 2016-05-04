@@ -680,12 +680,11 @@ input.submit-message,
 	right: 79px;
 }
 .attachment-import-popover {
-	right: -17px;
+	right: 42px;
 	top: 56px;
 }
 .attachment-import-popover::after {
-	left: 30px;
-	right: initial;
+	right: 32px;
 }
 /* show icon + text for Download all button
 	as well as when there is only one attachment */
