@@ -663,7 +663,8 @@ input.submit-message,
 	max-height: 120px;
 }
 .attachment-save-to-cloud,
-.attachment-download {
+.attachment-download,
+.attachment-import {
 	position: absolute;
 	height: 32px;
 	width: 32px;
@@ -674,6 +675,9 @@ input.submit-message,
 }
 .attachment-download {
 	right: 41px;
+}
+.attachment-import {
+	right: 79px;
 }
 /* show icon + text for Download all button
 	as well as when there is only one attachment */

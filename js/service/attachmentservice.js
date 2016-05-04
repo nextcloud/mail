@@ -25,6 +25,7 @@ define(function(require) {
 	var Radio = require('radio');
 
 	Radio.message.reply('save:cloud', saveToFiles);
+	Radio.message.reply('attachment:download', downloadAttachment);
 
 	/**
 	 * @param {Account} account
@@ -60,6 +61,21 @@ define(function(require) {
 		};
 
 		$.ajax(url, options);
+		return defer.promise();
+	}
+
+	function downloadAttachment(url) {
+		var defer = $.Deferred();
+
+		$.ajax(url, {
+			success: function(data) {
+				defer.resolve(data);
+			},
+			error: function() {
+				defer.reject();
+			}
+		});
+
 		return defer.promise();
 	}
 
