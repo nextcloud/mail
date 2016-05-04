@@ -77,11 +77,14 @@ class PageController extends Controller {
 	 * @return TemplateResponse renders the index page
 	 */
 	public function index() {
+		$coreVersion = $this->config->getSystemValue('version', '0.0.0');
+		$hasDavSupport = (int) version_compare($coreVersion, '9.0.0', '>=');
 		// TODO: remove DEBUG constant check once minimum oc
 		// core version >= 8.2, see https://github.com/owncloud/core/pull/18510
 		$response = new TemplateResponse($this->appName, 'index', [
 			'debug' => (defined('DEBUG') && DEBUG) || $this->config->getSystemValue('debug', false),
 			'app-version' => $this->config->getAppValue('mail', 'installed_version'),
+			'has-dav-support' => $hasDavSupport,
 		]);
 
 		// set csp rules for ownCloud 8.1

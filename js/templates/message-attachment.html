@@ -5,7 +5,9 @@
 <img class="attachment-icon" src="{{mimeUrl}}" />
 <span class="attachment-name" title="{{fileName}} ({{humanFileSize size}})">{{fileName}} <span class="attachment-size">({{humanFileSize size}})</span></span>
 {{#if isCalendarEvent}}
+{{#if hasDavSupport}}
 <button class="button icon-add attachment-import calendar" title="{{ t 'Import into calendar' }}"></button>
+{{/if}}
 {{/if}}
 <button class="button icon-download attachment-download" title="{{ t 'Download attachment' }}"></button>
 <button class="icon-folder attachment-save-to-cloud" title="{{ t 'Save to Files' }}"></button>
