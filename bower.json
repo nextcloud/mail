@@ -25,6 +25,8 @@
     "jquery-visibility": "~1.0.11",
     "requirejs": "2.2.0",
     "text": "^2.0.14",
-    "underscore": "~1.8.3"
+    "underscore": "~1.8.3",
+    "davclient.js": "git@github.com:evert/davclient.js.git",
+    "es6-promise": "^3.2.1"
   }
 }

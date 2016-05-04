@@ -21,11 +21,16 @@
 			 */
 			backbone: 'vendor/backbone/backbone',
 			'backbone.radio': 'vendor/backbone.radio/build/backbone.radio',
+			davclient: 'vendor/davclient.js/lib/client',
 			domready: 'vendor/domReady/domReady',
+			'es6-promise': 'vendor/es6-promise/es6-promise.min',
 			handlebars: 'vendor/handlebars/handlebars',
 			marionette: 'vendor/backbone.marionette/lib/backbone.marionette',
 			underscore: 'vendor/underscore/underscore',
 			text: 'vendor/text/text'
+			},
+			davclient: {
+				exports: 'dav'
 		}
 	});
 

@@ -25,6 +25,7 @@ define(function(require) {
 	var Marionette = require('marionette');
 	var Radio = require('radio');
 	var MessageController = require('controller/messagecontroller');
+	var CalendarsPopoverView = require('views/calendarspopoverview');
 	var MessageAttachmentTemplate = require('text!templates/message-attachment.html');
 
 	/**
@@ -35,15 +36,26 @@ define(function(require) {
 		ui: {
 			'downloadButton': '.attachment-download',
 			'saveToCloudButton': '.attachment-save-to-cloud',
-			'importCalendarEventButton': '.attachment-import.calendar'
+			'importCalendarEventButton': '.attachment-import.calendar',
+			'attachmentImportPopover': '.attachment-import-popover'
 		},
 		events: {
-			'click': '_onDownload',
+			'click': '_onClick',
 			'click @ui.saveToCloudButton': '_onSaveToCloud',
 			'click @ui.importCalendarEventButton': '_onImportCalendarEvent'
 		},
-		_onDownload: function(e) {
+		initialize: function() {
+			this.listenTo(Radio.ui, 'document:click', this._closeImportPopover);
+		},
+		_onClick: function(e) {
 			if (!e.isDefaultPrevented()) {
+				var $target = $(e.target);
+				if ($target.hasClass('select-calendar')) {
+					var url = $target.data('calendar-url');
+					alert(url);
+					return;
+				}
+
 				e.preventDefault();
 				window.location = this.model.get('downloadUrl');
 			}
@@ -79,21 +91,34 @@ define(function(require) {
 				.addClass('icon-loading-small');
 
 			var url = this.model.get('downloadUrl');
-			var downloading = Radio.message.request('attachment:download', url);
+			var downloadingAttachment = Radio.message.request('attachment:download', url);
+			var fetchingCalendars = Radio.dav.request('calendars');
 
 			var _this = this;
-			$.when(downloading).done(function(data) {
-				console.log(data);
-			});
-			$.when(downloading.fail(function() {
+			$.when(downloadingAttachment.fail(function() {
 				Radio.ui.trigger('error:show', t('Error while downloading calendar event'));
 			}));
-			$.when(downloading).always(function() {
+			$.when(fetchingCalendars, downloadingAttachment).always(function() {
 				_this.ui.importCalendarEventButton
 					.removeClass('icon-loading-small')
 					.addClass('icon-add');
 			});
 
+			$.when(fetchingCalendars, downloadingAttachment).
+				done(function(calendars, ics) {
+				_this.ui.attachmentImportPopover.removeClass('hidden');
+				var calendarsView = new CalendarsPopoverView({
+					collection: calendars
+				});
+				calendarsView.render();
+				_this.ui.attachmentImportPopover.html(calendarsView.$el);
+			});
+		},
+		_closeImportPopover: function(e) {
+			var $target = $(e.target);
+			if (this.$el.find($target).length === 0) {
+				this.ui.attachmentImportPopover.addClass('hidden');
+			}
 		}
 	});
 
