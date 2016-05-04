@@ -629,20 +629,49 @@ input.submit-message,
 .mail-message-attachments {
 	margin-bottom: 20px;
 }
-.mail-message-attachment {
-	white-space: nowrap;
-	overflow: hidden;
-	text-overflow: ellipsis;
+.mail-message-attachments .attachments > div {
+	position: relative;
+	display: inline-block;
+	border: 1px solid #f5f5f5;
+	margin: 5px;
+	padding: 6px;
 }
-.mail-message-attachment-image {
-	margin-bottom: 32px;
+.mail-message-attachments .attachments > div:hover,
+.mail-message-attachments .attachments > div span:hover {
+	background-color: #f8f8f8;
+	cursor: pointer;
+}
+@media only screen and (max-width: 768px) {
+	.mail-message-attachments .attachments > div {
+		width: calc(100% - 5px);
+	}
+}
+@media only screen and (min-width: 769px) and (max-width: 1400px) {
+	.mail-message-attachments .attachments > div {
+		width: calc(50% - 10px);
+	}
+}
+@media only screen and (min-width: 1401px) {
+	.mail-message-attachments .attachments > div {
+		width: calc(33% - 12px);
+	}
+}
+.mail-message-attachments .mail-attached-image {
+	max-width: 100%;
+	max-height: 120px;
 }
 .attachment-save-to-cloud,
 .attachment-download {
+	position: absolute;
 	height: 32px;
-	min-width: 32px;
-	float: left;
-	display: inline-block;
+	width: 32px;
+	bottom: 3px;
+}
+.attachment-save-to-cloud {
+	right: 3px;
+}
+.attachment-download {
+	right: 41px;
 }
 /* show icon + text for Download all button
 	as well as when there is only one attachment */
@@ -652,6 +681,14 @@ input.submit-message,
 .mail-message-attachment-single .attachment-download {
 	background-position: 9px center;
 	padding-left: 32px;
+}
+.attachment-name {
+	display: inline-block;
+	width: calc(100% - 110px);
+	white-space: nowrap;
+	overflow: hidden;
+	text-overflow: ellipsis;
+	vertical-align: middle;
 }
 /* show attachment size less prominent */
 .attachment-size {

@@ -272,7 +272,7 @@ class MessagesController extends Controller {
 	 * @param int $accountId
 	 * @param string $folderId
 	 * @param string $messageId
-	 * @param string $attachmentId
+	 * @param int $attachmentId
 	 * @param string $targetPath
 	 * @return JSONResponse
 	 */
@@ -459,9 +459,6 @@ class MessagesController extends Controller {
 			$json['htmlBodyUrl'] = $this->buildHtmlBodyUrl($accountId, $folderId, $id);
 		}
 
-		if (isset($json['attachment'])) {
-			$json['attachment'] = $this->enrichDownloadUrl($accountId, $folderId, $id, $json['attachment']);
-		}
 		if (isset($json['attachments'])) {
 			$json['attachments'] = array_map(function ($a) use ($accountId, $folderId, $id) {
 				return $this->enrichDownloadUrl($accountId, $folderId, $id, $a);

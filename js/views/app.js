@@ -67,21 +67,6 @@ define(function(require) {
 				Radio.message.trigger('forward');
 			});
 
-			// TODO: create marionette view and encapsulate events
-			$(document).on('click', '#mail-message .attachment-save-to-cloud', function(event) {
-				event.stopPropagation();
-				var messageId = $(this).parent().data('messageId');
-				var attachmentId = $(this).parent().data('attachmentId');
-				Radio.message.trigger('attachment:save', messageId, attachmentId);
-			});
-
-			// TODO: create marionette view and encapsulate events
-			$(document).on('click', '#mail-message .attachments-save-to-cloud', function(event) {
-				event.stopPropagation();
-				var messageId = $(this).data('messageId');
-				Radio.message.trigger('attachment:save', messageId);
-			});
-
 			$(document).on('click', '.link-mailto', function(event) {
 				Radio.ui.trigger('composer:show', event);
 			});
@@ -149,11 +134,6 @@ define(function(require) {
 			// Resize iframe
 			var iframe = $('#mail-content iframe');
 			iframe.height(iframe.contents().find('html').height() + 20);
-
-			// resize width of attached images
-			$('.mail-message-attachments .mail-attached-image').each(function() {
-				$(this).css('max-width', $('.mail-message-body').width());
-			});
 		},
 		render: function() {
 			// This view doesn't need rendering
