@@ -1,4 +1,5 @@
 <?php
+
 /**
  * @author Christoph Wurst <christoph@winzerhof-wurst.at>
  *
@@ -29,6 +30,7 @@ class PageControllerTest extends TestCase {
 	private $userId;
 	private $mailAccountMapper;
 	private $urlGenerator;
+	private $config;
 	private $controller;
 
 	protected function setUp() {
@@ -36,19 +38,29 @@ class PageControllerTest extends TestCase {
 
 		$this->appName = 'mail';
 		$this->userId = 'george';
-		$this->request = $this->getMockBuilder('\OCP\IRequest')
-			->disableOriginalConstructor()
-			->getMock();
+		$this->request = $this->getMock('\OCP\IRequest');
 		$this->mailAccountMapper = $this->getMockBuilder('OCA\Mail\Db\MailAccountMapper')
 			->disableOriginalConstructor()
 			->getMock();
 		$this->urlGenerator = $this->getMock('OCP\IURLGenerator');
-		$this->controller = new PageController($this->appName, $this->request,
-			$this->mailAccountMapper, $this->urlGenerator, $this->userId);
+		$this->config = $this->getMock('OCP\IConfig');
+		$this->controller = new PageController($this->appName, $this->request, $this->mailAccountMapper, $this->urlGenerator, $this->config, $this->userId);
 	}
 
 	public function testIndex() {
-		$expected = new TemplateResponse($this->appName, 'index', []);
+		$this->config->expects($this->once())
+			->method('getSystemValue')
+			->with('debug', false)
+			->will($this->returnValue(true));
+		$this->config->expects($this->once())
+			->method('getAppValue')
+			->with('mail', 'installed_version')
+			->will($this->returnValue('1.2.3'));
+
+		$expected = new TemplateResponse($this->appName, 'index', [
+			'debug' => true,
+			'app-version' => '1.2.3'
+		]);
 		// set csp rules for ownCloud 8.1
 		if (class_exists('OCP\AppFramework\Http\ContentSecurityPolicy')) {
 			$csp = new \OCP\AppFramework\Http\ContentSecurityPolicy();
