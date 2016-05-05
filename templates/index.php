@@ -48,8 +48,8 @@ if ($_['debug']) {
      style="display: none"><?php p(\OCP\Config::getUserValue(\OCP\User::getUser(), 'settings', 'email', '')); ?></div>
 <div id="app">
 	<div id="app-navigation" class="icon-loading">
+		<div id="mail-new-message-fixed"></div>
 		<ul>
-			<li id="mail-new-message-fixed"></li>
 			<li id="app-navigation-accounts"></li>
 		</ul>
 		<div id="app-settings">
