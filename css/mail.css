@@ -129,7 +129,7 @@
 }
 
 #app-navigation > ul {
-	padding-bottom: 80px; /* scroll hack because of #settings fixed */
+	height: calc(100% - 65px);
 }
 #app-navigation ul {
 	overflow-x: hidden;
