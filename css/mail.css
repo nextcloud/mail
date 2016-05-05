@@ -84,8 +84,7 @@
 
 /* fix scrolling */
 #app-navigation {
-	overflow-y: auto;
-	overflow-x: hidden;
+	overflow: hidden;
 }
 
 #app-navigation .utils {
@@ -129,6 +128,9 @@
 	opacity: .3;
 }
 
+#app-navigation > ul {
+	padding-bottom: 80px; /* scroll hack because of #settings fixed */
+}
 #app-navigation ul {
 	overflow-x: hidden;
 }
@@ -183,7 +185,7 @@
 	white-space: nowrap;
 }
 .mail-account-email:first-child {
-	padding-top: 50px;
+	display: none;
 }
 .account-toggle-collapse {
 	display: block;
@@ -355,22 +357,22 @@
 
 /* editor */
 #mail-new-message-fixed {
-	position: fixed !important;
-	width: 241px !important;
 	z-index: 1;
 	padding-bottom: 12px;
 	background-color: rgba(255, 255, 255, .75);
+	padding: 10px;
+	position: relative;
 }
 #mail-new-message-list {
 	margin-top: 36px;
 }
 #mail_new_message {
-	width: 92%;
+	width: 100%;
 	padding: 10px;
 	padding-left: 34px;
-	margin: 10px 10px 0;
 	background-position: 10px center;
 	text-align: left;
+	margin: 0;
 }
 
 .message-composer {
