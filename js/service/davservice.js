@@ -59,14 +59,37 @@ define(function(require) {
 		return parseInt(t.split(' ')[1]);
 	}
 
+	function getACLFromResponse(properties) {
+		var canWrite = false;
+		var acl = properties['{DAV:}acl'];
+		if (acl) {
+			for (var k = 0; k < acl.length; k++) {
+				var href = acl[k].getElementsByTagNameNS('DAV:', 'href');
+				if (href.length === 0) {
+					continue;
+				}
+				href = href[0].textContent;
+				var writeNode = acl[k].getElementsByTagNameNS('DAV:', 'write');
+				if (writeNode.length > 0) {
+					canWrite = true;
+				}
+			}
+		}
+		properties.canWrite = canWrite;
+	}
+	;
+
 	function getCalendarData(properties) {
+		getACLFromResponse(properties);
+
 		var data = {
 			displayname: properties['{DAV:}displayname'],
 			color: properties['{http://apple.com/ns/ical/}calendar-color'],
 			order: properties['{http://apple.com/ns/ical/}calendar-order'],
 			components: {
 				vevent: false
-			}
+			},
+			writable: properties.canWrite
 		};
 
 		var components = properties['{urn:ietf:params:xml:ns:caldav}supported-calendar-component-set'] || [];
@@ -95,7 +118,7 @@ define(function(require) {
 				}
 				if (getResponseCodeFromHTTPResponse(cal.propStat[0].status) === 200) {
 					var properties = getCalendarData(cal.propStat[0].properties);
-					if (properties && properties.components.vevent) {
+					if (properties && properties.components.vevent && properties.writable === true) {
 						properties.url = cal.href;
 						calendars.push(new Calendar(properties));
 					}

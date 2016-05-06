@@ -697,7 +697,7 @@ input.submit-message,
 }
 .attachment-name {
 	display: inline-block;
-	width: calc(100% - 110px);
+	width: calc(100% - 148px);
 	white-space: nowrap;
 	overflow: hidden;
 	text-overflow: ellipsis;

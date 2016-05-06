@@ -99,12 +99,16 @@ define(function(require) {
 
 			var _this = this;
 			$.when(fetchingCalendars).done(function(calendars) {
-				_this.ui.attachmentImportPopover.removeClass('hidden');
-				var calendarsView = new CalendarsPopoverView({
-					collection: calendars
-				});
-				calendarsView.render();
-				_this.ui.attachmentImportPopover.html(calendarsView.$el);
+				if (calendars.length > 0) {
+					_this.ui.attachmentImportPopover.removeClass('hidden');
+					var calendarsView = new CalendarsPopoverView({
+						collection: calendars
+					});
+					calendarsView.render();
+					_this.ui.attachmentImportPopover.html(calendarsView.$el);
+				} else {
+					Radio.ui.trigger('error:show', t('mail', 'No writable calendars found'));
+				}
 			});
 			$.when(fetchingCalendars).always(function() {
 				_this.ui.importCalendarEventButton
