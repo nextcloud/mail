@@ -14,7 +14,7 @@
 
 ## Why is this so awesome?
 
-* :rocket: **Integration with other ownCloud apps!** Currently Contacts & Files – more to come.
+* :rocket: **Integration with other ownCloud apps!** Currently Contacts, Calendar & Files – more to come.
 * :inbox_tray: **Multiple mail accounts!** Personal and company account? No problem, and a nice unified inbox.
 * :lock: **Send & receive encrypted emails!** Using the great [Mailvelope](https://mailvelope.com) browser extension.
 * :see_no_evil: **We’re not reinventing the wheel!** Based on the great [Horde](http://horde.org) libraries.
@@ -23,7 +23,6 @@ And in the works for the [coming versions](https://github.com/owncloud/mail/mile
 * :books: [Proper grouping of message threads](https://github.com/owncloud/mail/issues/21) 
 * :zap: [Caching to make everything faster](https://github.com/owncloud/mail/issues/480)
 * :paperclip: [Even better attachment support](https://github.com/owncloud/mail/issues/462) 
-* :date: [Calendar integration](https://github.com/owncloud/mail/issues/79) 
 * :package: [Folder management & moving mails](https://github.com/owncloud/mail/issues/411) 
 
 ## Installation

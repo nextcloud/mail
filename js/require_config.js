@@ -29,12 +29,14 @@
 			marionette: 'vendor/backbone.marionette/lib/backbone.marionette',
 			underscore: 'vendor/underscore/underscore',
 			text: 'vendor/text/text'
-			},
+		},
+		shim: {
 			davclient: {
 				exports: 'dav'
 			},
 			ical: {
 				exports: 'ICAL'
+			}
 		}
 	});
 
