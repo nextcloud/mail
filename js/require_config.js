@@ -7,7 +7,7 @@
  * later. See the COPYING file.
  *
  * @author Christoph Wurst <christoph@winzerhof-wurst.at>
- * @copyright Christoph Wurst 2015
+ * @copyright Christoph Wurst 2015, 2016
  */
 
 (function() {
@@ -26,16 +26,6 @@
 			marionette: 'vendor/backbone.marionette/lib/backbone.marionette',
 			underscore: 'vendor/underscore/underscore',
 			text: 'vendor/text/text'
-		},
-		shim: {
-			// TODO: remove once min-oc-version is 8.0
-			handlebars: {
-				exports: 'Handlebars'
-			},
-			// END TODO
-			jquery: {
-				exports: '$'
-			}
 		}
 	});
 
