@@ -24,14 +24,6 @@ require.config({
 		OC: 'tests/mocks/OC',
 		text: 'vendor/text/text'
 	},
-	shim: {
-		handlebars: {
-			exports: 'Handlebars'
-		},
-		jquery: {
-			exports: '$'
-		}
-	},
 	// dynamically load all test files
 	deps: allTestFiles,
 	// we have to kickoff jasmine, as it is asynchronous
