@@ -23,7 +23,6 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>
  *
  */
-
 style('mail', 'mail');
 style('mail', 'mobile');
 script('mail', 'vendor/autosize/jquery.autosize');
@@ -55,10 +54,16 @@ if ($_['debug']) {
 		<div id="app-settings">
 			<div id="app-settings-header">
 				<button class="settings-button"
-					data-apps-slide-toggle="#app-settings-content"></button>
+						data-apps-slide-toggle="#app-settings-content"></button>
 			</div>
 			<div id="app-settings-content"></div>
 		</div>
 	</div>
-	<div id="app-content"></div>
+	<div id="app-content">
+		<!-- This additional container div is only needed to make core's snapper toggle button work -->
+		<div class="mail-content container">
+			<!-- placeholder until Marionette has started, will be replaced by a LoadingView -->
+			<div class="container icon-loading"></div>
+		</div>
+	</div>
 </div>
