@@ -190,7 +190,7 @@ class Account implements IAccount {
 
 		// Send the message
 		$transport = $this->createTransport();
-		$mail->send($transport);
+		$mail->send($transport, false, false);
 
 		// Save the message in the sent folder
 		$sentFolder = $this->getSentFolder();
