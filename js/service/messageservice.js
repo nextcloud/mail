@@ -208,8 +208,8 @@ define(function(require) {
 
 				defer.resolve(data);
 			},
-			error: function() {
-				defer.reject();
+			error: function(xhr) {
+				defer.reject(xhr);
 			},
 			data: {
 				to: message.to,
