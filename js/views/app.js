@@ -38,7 +38,7 @@ define(function(require) {
 		activeContent: null,
 		regions: {
 			navigation: '#app-navigation',
-			content: '#app-content',
+			content: '#app-content .mail-content',
 			setup: '#setup'
 		},
 		initialize: function() {
@@ -147,7 +147,6 @@ define(function(require) {
 		showError: function(message) {
 			OC.Notification.showTemporary(message);
 			$('#app-navigation').removeClass('icon-loading');
-			$('#app-content').removeClass('icon-loading');
 			$('#mail_message').removeClass('icon-loading');
 		},
 		showSetup: function() {
