@@ -397,6 +397,8 @@ class MessagesController extends Controller {
 
 		if ($this->attachmentIsImage($attachment)) {
 			$attachment['isImage'] = true;
+		} else if ($this->attachmentIsCalendarEvent($attachment)) {
+			$attachment['isCalendarEvent'] = true;
 		}
 		return $attachment;
 	}
@@ -405,11 +407,24 @@ class MessagesController extends Controller {
 	 * @param $attachment
 	 *
 	 * Determines if the content of this attachment is an image
+	 *
+	 * @return boolean
 	 */
 	private function attachmentIsImage($attachment) {
-		return in_array($attachment['mime'], array('image/jpeg',
+		return in_array(
+			$attachment['mime'], [
+			'image/jpeg',
 			'image/png',
-			'image/gif'));
+			'image/gif'
+		]);
+	}
+
+	/**
+	 * @param type $attachment
+	 * @return boolean
+	 */
+	private function attachmentIsCalendarEvent($attachment) {
+		return $attachment['mime'] === 'text/calendar';
 	}
 
 	/**

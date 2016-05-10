@@ -62,6 +62,10 @@ define(function(require) {
 
 			window.addEventListener('resize', this.onWindowResize);
 
+			$(document).on('click', function(e) {
+				Radio.ui.trigger('document:click', e);
+			});
+
 			// TODO: create marionette view and encapsulate events
 			$(document).on('click', '#forward-button', function() {
 				Radio.message.trigger('forward');

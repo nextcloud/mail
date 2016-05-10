@@ -663,7 +663,8 @@ input.submit-message,
 	max-height: 120px;
 }
 .attachment-save-to-cloud,
-.attachment-download {
+.attachment-download,
+.attachment-import {
 	position: absolute;
 	height: 32px;
 	width: 32px;
@@ -674,6 +675,16 @@ input.submit-message,
 }
 .attachment-download {
 	right: 41px;
+}
+.attachment-import {
+	right: 79px;
+}
+.attachment-import-popover {
+	right: 42px;
+	top: 56px;
+}
+.attachment-import-popover::after {
+	right: 32px;
 }
 /* show icon + text for Download all button
 	as well as when there is only one attachment */
@@ -686,7 +697,7 @@ input.submit-message,
 }
 .attachment-name {
 	display: inline-block;
-	width: calc(100% - 110px);
+	width: calc(100% - 148px);
 	white-space: nowrap;
 	overflow: hidden;
 	text-overflow: ellipsis;

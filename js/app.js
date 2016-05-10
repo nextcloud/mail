@@ -22,6 +22,9 @@
 define(function(require) {
 	'use strict';
 
+	// Enable ES6 promise polyfill
+	require('es6-promise').polyfill();
+
 	var $ = require('jquery');
 	var Backbone = require('backbone');
 	var Handlebars = require('handlebars');
@@ -39,6 +42,7 @@ define(function(require) {
 	require('controller/messagecontroller');
 	require('service/accountservice');
 	require('service/attachmentservice');
+	require('service/davservice');
 	require('service/folderservice');
 	require('service/messageservice');
 	require('notification');
@@ -77,6 +81,8 @@ define(function(require) {
 	Mail = new Mail();
 
 	Mail.on('start', function() {
+		this.hasDavSupport = $('#has-dav-support').val() === '1';
+
 		this.view = new AppView();
 		Cache.init();
 

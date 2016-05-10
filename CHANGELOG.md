@@ -3,6 +3,10 @@ All notable changes to this project will be documented in this file.
 
 ## 0.4.5 – UNRELEASED
 
+### Added
+- Ability to import ics attachments into the calendar
+  [#1473](https://github.com/owncloud/mail/pull/1473) @ChristophWurst
+
 ### Fixed
 - Bring back menu toggle button for mobile
   [#1483](https://github.com/owncloud/mail/pull/1483) @ChristophWurst

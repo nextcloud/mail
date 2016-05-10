@@ -21,11 +21,22 @@
 			 */
 			backbone: 'vendor/backbone/backbone',
 			'backbone.radio': 'vendor/backbone.radio/build/backbone.radio',
+			davclient: 'vendor/davclient.js/lib/client',
 			domready: 'vendor/domReady/domReady',
+			'es6-promise': 'vendor/es6-promise/es6-promise.min',
 			handlebars: 'vendor/handlebars/handlebars',
+			ical: 'vendor/ical.js/build/ical.min',
 			marionette: 'vendor/backbone.marionette/lib/backbone.marionette',
 			underscore: 'vendor/underscore/underscore',
 			text: 'vendor/text/text'
+		},
+		shim: {
+			davclient: {
+				exports: 'dav'
+			},
+			ical: {
+				exports: 'ICAL'
+			}
 		}
 	});
 

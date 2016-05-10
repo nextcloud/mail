@@ -13,22 +13,24 @@ define(function(require) {
 
 	var Radio = require('backbone.radio');
 
-	var uiChannel = Radio.channel('ui');
-	var notificationChannel = Radio.channel('notification');
-	var stateChannel = Radio.channel('state');
 	var accountChannel = Radio.channel('account');
 	var folderChannel = Radio.channel('folder');
+	var davChannel = Radio.channel('dav');
 	var messageChannel = Radio.channel('message');
 	var navigationChannel = Radio.channel('navigation');
+	var notificationChannel = Radio.channel('notification');
+	var stateChannel = Radio.channel('state');
+	var uiChannel = Radio.channel('ui');
 
 	var channels = {
-		ui: uiChannel,
-		notification: notificationChannel,
-		state: stateChannel,
 		account: accountChannel,
+		dav: davChannel,
 		folder: folderChannel,
 		message: messageChannel,
-		navigation: navigationChannel
+		navigation: navigationChannel,
+		notification: notificationChannel,
+		state: stateChannel,
+		ui: uiChannel
 	};
 
 	// Log all events to the console
