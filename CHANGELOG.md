@@ -12,6 +12,8 @@ All notable changes to this project will be documented in this file.
   [#1483](https://github.com/owncloud/mail/pull/1483) @ChristophWurst
 - Don't send messages in flowed text format
   [#1482](https://github.com/owncloud/mail/pull/1482) @ChristophWurst
+- Show first folder of an account incase of invalid folder id
+  [#1471] (https://github.com/owncloud/mail/pull/1471) @tahaalibra
 
 ## 0.4.4 – 2016-05-06
 

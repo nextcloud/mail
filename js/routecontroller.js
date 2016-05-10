@@ -108,9 +108,8 @@ define(function(require) {
 
 			var folder = account.get('folders').get(folderId);
 			if (_.isUndefined(folder)) {
-				// TODO: show first folder of this account
-				_this.default();
-				return;
+				folder = account.get('folders').at(0);
+				this._navigate('accounts/' + accountId + '/folders/' + folder.get('id'));
 			}
 			FolderController.showFolder(account, folder, noSelect);
 		},
