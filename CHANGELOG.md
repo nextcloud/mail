@@ -6,6 +6,8 @@ All notable changes to this project will be documented in this file.
 ### Fixed
 - Bring back menu toggle button for mobile
   [#1483](https://github.com/owncloud/mail/pull/1483) @ChristophWurst
+- Don't send messages in flowed text format
+  [#1482](https://github.com/owncloud/mail/pull/1482) @ChristophWurst
 
 ## 0.4.4 – 2016-05-06
 
