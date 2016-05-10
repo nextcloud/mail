@@ -31,6 +31,8 @@
 namespace OCA\Mail;
 
 use Horde_Imap_Client;
+use Horde_Imap_Client_Exception;
+use Horde_Imap_Client_Fetch_Query;
 use Horde_Imap_Client_Ids;
 use Horde_Imap_Client_Mailbox;
 use Horde_Imap_Client_Search_Query;
@@ -88,7 +90,7 @@ class Mailbox implements IMailBox {
 		$this->makeDisplayName();
 	}
 
-	public function getMessages($from = 0, $count = 2, $filter = '') {
+	private function getSearchIds($from, $count, $filter) {
 		if ($filter instanceof Horde_Imap_Client_Search_Query) {
 			$query = $filter;
 		} else {
@@ -105,11 +107,40 @@ class Mailbox implements IMailBox {
 		if ($from >= 0 && $count >= 0) {
 			$ids = array_slice($ids, $from, $count);
 		}
-		$ids = new \Horde_Imap_Client_Ids($ids, false);
+		return new \Horde_Imap_Client_Ids($ids, false);
+	}
+
+	private function getFetchIds($from, $count) {
+		$q = new Horde_Imap_Client_Fetch_Query();
+		$q->uid();
+		$q->imapDate();
+		// FIXME: $q->headers('DATE', ['DATE']); could be a better option than the INTERNALDATE
+
+		$result = $this->conn->fetch($this->mailBox, $q);
+		$uidMap = [];
+		foreach ($result as $r) {
+			$uidMap[$r->getUid()] = $r->getImapDate()->getTimeStamp();
+		}
+		// sort by time
+		uasort($uidMap, function($a, $b) {
+			return $a < $b;
+		});
+		if ($from >= 0 && $count >= 0) {
+			$uidMap = array_slice($uidMap, $from, $count, true);
+		}
+		return new \Horde_Imap_Client_Ids(array_keys($uidMap), false);
+	}
+
+	public function getMessages($from = 0, $count = 2, $filter = '') {
+		if (is_null($filter) || $filter === '') {
+			$ids = $this->getFetchIds($from, $count);
+		} else {
+			$ids = $this->getSearchIds($from, $count, $filter);
+		}
 
 		$headers = [];
 
-		$fetch_query = new \Horde_Imap_Client_Fetch_Query();
+		$fetch_query = new Horde_Imap_Client_Fetch_Query();
 		$fetch_query->envelope();
 		$fetch_query->flags();
 		$fetch_query->size();
@@ -266,7 +297,7 @@ class Mailbox implements IMailBox {
 				'uidnext' => $status['uidnext'],
 				'delimiter' => $this->delimiter
 			];
-		} catch (\Horde_Imap_Client_Exception $e) {
+		} catch (Horde_Imap_Client_Exception $e) {
 			return [
 				'id' => base64_encode($this->getFolderId()),
 				'parent' => null,
