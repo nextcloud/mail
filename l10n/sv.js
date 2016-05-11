@@ -17,6 +17,7 @@ OC.L10N.register(
     "Message could not be starred. Please try again." : "Meddelandet kunde inte stjärnmärkas. Försök igen.",
     "Unknown error" : "Okänt fel",
     "Error while creating an account: " : "Ett fel inträffade när ett konto skulle skapas:",
+    "Show all folders" : "Visa alla kataloger",
     "Choose a file to add as attachment" : "Välj en fil att lägga som bilaga",
     "Reply" : "Svara",
     "Send" : "Skicka",
