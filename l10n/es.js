@@ -27,6 +27,9 @@ OC.L10N.register(
     "Server error" : "Error en servidor",
     "you" : "usted",
     "Send message to {email}" : "Enviar mensaje a {email}",
+    "No writable calendars found" : "No se han encontrado calendarios con permiso de escritura",
+    "Error while importing the calendar event" : "Error al importar el evento de calendario",
+    "Error while downloading calendar event" : "Error al descargar el evento de calendario",
     "Opening HTML drafts is not supported yet." : "Apertura de borradores HTML aun no está soportado.",
     "Draft saved!" : "¡Borrador guardado!",
     "Checking messages" : "Comprobando mensajes",
@@ -54,7 +57,7 @@ OC.L10N.register(
     "Forwarding you to %s - click here if you are not automatically redirected within the next few seconds." : "Redireccionando a %s; haga clic aquí si no es redireccionado automáticamente en unos segundos.",
     "Redirect warning" : "Redireccionar la advertencia",
     "The previous page is sending you to %s" : "La página anterior le está enviando a %s",
-    "If you do not want to visit that page, you can return to <a href=\"%s\">the mail app</a>." : "Si no desea visitar esa página, puede regresar a <a href=\"%s\">la aplicación de correo</a>.",
+    "If you do not want to visit that page, you can return to <a href=\"%s\">the mail app</a>." : "Si no desea visitar esa página, puede volver a <a href=\"%s\">la aplicación de correo</a>.",
     "Continue to %s" : "Continuar a %s"
 },
 "nplurals=2; plural=(n != 1);");
