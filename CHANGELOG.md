@@ -10,6 +10,8 @@ All notable changes to this project will be documented in this file.
 ### Fixed
 - Bring back menu toggle button for mobile
   [#1483](https://github.com/owncloud/mail/pull/1483) @ChristophWurst
+- Narrow address collector column width to 255 for compatibility with MySql/InnoDB
+  [#1484](https://github.com/owncloud/mail/pull/1484) @drfuture
 - Don't send messages in flowed text format
   [#1482](https://github.com/owncloud/mail/pull/1482) @ChristophWurst
 - Show first folder of an account incase of invalid folder id
