@@ -1,6 +1,6 @@
 {
   "name": "mail",
-  "version": "0.4.4",
+  "version": "0.5.0",
   "description": "Mail app for ownCloud",
   "main": "index.js",
   "directories": {
