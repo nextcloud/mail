@@ -1,7 +1,13 @@
 # Changelog
 All notable changes to this project will be documented in this file.
 
-## 0.4.5 – UNRELEASED
+## 0.5.1 – unreleased
+
+### Added
+
+### Fixed
+
+## 0.5.0 – 2016-05-28
 
 ### Added
 - Ability to import ics attachments into the calendar
