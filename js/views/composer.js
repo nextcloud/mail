@@ -306,7 +306,7 @@ define(function(require) {
 
 			if (this.isReply()) {
 				options.messageId = this.messageId;
-				options.folder = this.account.get('folders').get(this.folderId);
+				options.folder = this.account.getFolderById(this.folderId);
 			}
 
 			var sendingMessage = Radio.message.request('send', this.account, this.getMessage(), options);
@@ -376,7 +376,7 @@ define(function(require) {
 			// send the mail
 			var _this = this;
 			var savingDraft = Radio.message.request('draft', this.account, this.getMessage(), {
-				folder: this.account.get('folders').get(this.folderId),
+				folder: this.account.getFolderById(this.folderId),
 				messageId: this.messageId,
 				draftUID: this.draftUID
 			});

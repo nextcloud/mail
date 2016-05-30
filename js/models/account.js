@@ -27,6 +27,41 @@ define(function(require) {
 		initialize: function() {
 			this.set('folders', new FolderCollection(this.get('folders')));
 		},
+		_getFolderByIdRecursively: function(folder, folderId) {
+			if (!folder) {
+				return null;
+			}
+
+			if (folder.get('id') === folderId) {
+				return folder;
+			}
+
+			var subFolders = folder.get('folders');
+			if (!subFolders) {
+				return null;
+			}
+			for (var i = 0; i < subFolders.length; i++) {
+				var subFolder = this._getFolderByIdRecursively(subFolders.at(i), folderId);
+				if (subFolder) {
+					return subFolder;
+				}
+			}
+
+			return null;
+		},
+		getFolderById: function(folderId) {
+			var folders = this.get('folders');
+			if (!folders) {
+				return null;
+			}
+			for (var i = 0; i < folders.length; i++) {
+				var result = this._getFolderByIdRecursively(folders.at(i), folderId);
+				if (result) {
+					return result;
+				}
+			}
+			return null;
+		},
 		toJSON: function() {
 			var data = Backbone.Model.prototype.toJSON.call(this);
 			if (data.folders && data.folders.toJSON) {

@@ -102,13 +102,15 @@ define(function(require) {
 			var account = this.accounts.get(accountId);
 			if (_.isUndefined(account)) {
 				// Unknown account id -> redirect
+				Radio.ui.trigger('error:show', t('mail', 'Invalid account'));
 				_this.default();
 				return;
 			}
 
-			var folder = account.get('folders').get(folderId);
+			var folder = account.getFolderById(folderId);
 			if (_.isUndefined(folder)) {
 				folder = account.get('folders').at(0);
+				Radio.ui.trigger('error:show', t('mail', 'Invalid folder'));
 				this._navigate('accounts/' + accountId + '/folders/' + folder.get('id'));
 			}
 			FolderController.showFolder(account, folder, noSelect);
