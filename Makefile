@@ -60,6 +60,8 @@ appstore: clean install-deps optimize-js
 	--exclude=$(project_dir)/build/artifacts \
 	--exclude=$(project_dir)/node_modules \
 	--exclude=$(project_dir)/.bowerrc \
+	--exclude=$(project_dir)/.gitattributes \
+	--exclude=$(project_dir)/.gitignore \
 	--exclude=$(project_dir)/.jscsrc \
 	--exclude=$(project_dir)/.jshintrc \
 	--exclude=$(project_dir)/.jshintignore \
