@@ -19,16 +19,17 @@
 		{{#each folders}}
 		<li data-folder_id="{{id}}"
 			class="
-	{{#if unseen}}unread{{/if}}
-	{{#if specialRole}} special-{{specialRole}}{{/if}}
-	">
+			{{#if unseen}}unread{{/if}}
+			{{#if specialRole}} special-{{specialRole}}{{/if}}
+			">
 			<a class="folder
-				{{#if specialRole}} icon-{{specialRole}} svg{{/if}}">
+			   {{#if specialRole}} icon-{{specialRole}} svg{{/if}}">
 				{{name}}
 				{{#if count}}
 				<span class="utils">{{count}}</span>
 				{{/if}}
 			</a>
-			{{/each}}
+		</li>
+		{{/each}}
 	</ul>
 </li>

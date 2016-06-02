@@ -15,7 +15,6 @@ define(function(require) {
 	var Marionette = require('marionette');
 	var OC = require('OC');
 	var Radio = require('radio');
-	var SettingsAccountsView = require('views/settings-accounts');
 	var SettingsTemplate = require('text!templates/settings.html');
 
 	return Marionette.LayoutView.extend({
@@ -31,14 +30,6 @@ define(function(require) {
 		},
 		events: {
 			'click #new_mail_account': 'addAccount'
-		},
-		initialize: function(options) {
-			this.accounts = options.accounts;
-		},
-		onShow: function() {
-			this.accountsList.show(new SettingsAccountsView({
-				collection: this.accounts
-			}));
 		},
 		addAccount: function(e) {
 			e.preventDefault();
