@@ -1,11 +1,13 @@
 # Changelog
 All notable changes to this project will be documented in this file.
 
-## 0.5.1 – unreleased
+## 0.5.2 - unreleased
 
-### Added
+## 0.5.1 – 2016-05-30
 
 ### Fixed
+- Sub-folders can not be selected
+  [#1505](https://github.com/owncloud/mail/pull/1505) @ChristophWurst
 
 ## 0.5.0 – 2016-05-28
 
