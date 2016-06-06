@@ -65,14 +65,6 @@ define(function(require) {
 		toggleCollapse: function() {
 			this.collapsed = !this.collapsed;
 			this.render();
-			this.listenTo(Radio.ui, 'document:click', function(event) {
-				var target = $(event.target);
-				if (!this.$el.is(target.closest('.navigation-account'))) {
-					// Click was not triggered by this element -> close menu
-					this.menuShown = false;
-					this.toggleMenuClass();
-				}
-			});
 		},
 		toggleMenu: function(e) {
 			e.preventDefault();
@@ -104,6 +96,17 @@ define(function(require) {
 					OC.Notification.show(t('mail', 'Error while deleting account.'));
 				}
 			});
+		},
+		onShow: function() {
+			this.listenTo(Radio.ui, 'document:click', function(event) {
+				var target = $(event.target);
+				if (!this.$el.is(target.closest('.navigation-account'))) {
+					// Click was not triggered by this element -> close menu
+					this.menuShown = false;
+					this.toggleMenuClass();
+				}
+			});
 		}
+
 	});
 });

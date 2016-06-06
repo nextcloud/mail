@@ -3,6 +3,10 @@ All notable changes to this project will be documented in this file.
 
 ## 0.5.2 - unreleased
 
+### Fixed
+- Close popover on clicking somewhere else
+  [#1521](https://github.com/owncloud/mail/pull/1521) @tahaalibra
+
 ## 0.5.1 – 2016-05-30
 
 ### Fixed
