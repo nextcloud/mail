@@ -30,7 +30,8 @@ define(function(require) {
 			'': 'default',
 			'accounts/:accountId/folders/:folderId': 'showFolder',
 			'mailto(?:params)': 'mailTo',
-			'setup': 'showSetup'
+			'setup': 'showSetup',
+			'accounts/:accountId/settings': 'showAccountSettings'
 		}
 	});
 

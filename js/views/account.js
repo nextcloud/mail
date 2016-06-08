@@ -21,7 +21,7 @@ define(function(require) {
 	var SHOW_COLLAPSED = Object.seal([
 		'inbox',
 		'flagged',
-		'drafts',
+		'drafts'
 	]);
 
 	return Backbone.Marionette.CompositeView.extend({
@@ -41,12 +41,14 @@ define(function(require) {
 			'click .account-toggle-collapse': 'toggleCollapse',
 			'click .app-navigation-entry-utils-menu-button button': 'toggleMenu',
 			'click @ui.deleteButton': 'onDelete',
+			'click @ui.settingsButton': 'showAccountSettings',
 			'click @ui.email': 'onClick'
 		},
 		ui: {
 			'email': '.mail-account-email',
 			'menu': 'div.app-navigation-entry-menu',
-			'deleteButton': 'button[class^="icon-delete"]'
+			'deleteButton': 'button[class^="icon-delete"]',
+			'settingsButton': 'button[class^="icon-rename"]'
 		},
 		// 'active' is needed to show the dotdotdot menu
 		className: 'navigation-account',
@@ -116,7 +118,11 @@ define(function(require) {
 					this.toggleMenuClass();
 				}
 			});
-		}
+		},
+		showAccountSettings: function(e) {
+			this.toggleMenu(e);
+			Radio.navigation.trigger('accountsettings', this.model.get('accountId'));
 
+		}
 	});
 });

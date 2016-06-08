@@ -55,6 +55,7 @@ use OCA\Mail\Service\IMailBox;
 use OCP\IConfig;
 use OCP\ICacheFactory;
 use OCP\Security\ICrypto;
+use OCA\Mail\Db\Alias;
 
 class Account implements IAccount {
 
@@ -76,6 +77,9 @@ class Account implements IAccount {
 	/** @var ICacheFactory */
 	private $memcacheFactory;
 
+	/** @var Alias */
+	private $alias;
+
 	/**
 	 * @param MailAccount $account
 	 */
@@ -85,6 +89,7 @@ class Account implements IAccount {
 		$this->crypto = \OC::$server->getCrypto();
 		$this->config = \OC::$server->getConfig();
 		$this->memcacheFactory = \OC::$server->getMemcacheFactory();
+		$this->alias = null;
 	}
 
 	/**
@@ -95,10 +100,19 @@ class Account implements IAccount {
 	}
 
 	/**
+	 * @param Alias $alias
+	 * @return void
+	 */
+	public function setAlias($alias) {
+		$this->alias = new Alias();
+		$this->alias = $alias;
+	}
+
+	/**
 	 * @return string
 	 */
 	public function getName() {
-		return $this->account->getName();
+		return $this->alias ? $this->alias->getName() : $this->account->getName();
 	}
 
 	/**

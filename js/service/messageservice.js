@@ -231,7 +231,8 @@ define(function(require) {
 		var defer = $.Deferred();
 
 		var defaultOptions = {
-			draftUID: null
+			draftUID: null,
+			aliasId: null
 		};
 		_.defaults(options, defaultOptions);
 		var url = OC.generateUrl('/apps/mail/accounts/{id}/send', {
@@ -259,7 +260,8 @@ define(function(require) {
 				attachments: message.attachments,
 				folderId: options.folder ? options.folder.get('id') : null,
 				messageId: options.messageId,
-				draftUID: options.draftUID
+				draftUID: options.draftUID,
+				aliasId: options.aliasId
 			}
 		};
 		$.ajax(url, data);

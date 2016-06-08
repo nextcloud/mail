@@ -24,6 +24,7 @@ define(function(require) {
 	var LoadingView = require('views/loadingview');
 	var NavigationView = require('views/navigation');
 	var SetupView = require('views/setup');
+	var AccountSettingsView = require('views/accountsettings');
 
 	// Load handlebars helper
 	require('views/helper');
@@ -31,7 +32,8 @@ define(function(require) {
 	var ContentType = Object.freeze({
 		LOADING: -1,
 		FOLDER_CONTENT: 0,
-		SETUP: 1
+		SETUP: 1,
+		ACCOUNT_SETTINGS: 2
 	});
 
 	var AppView = Marionette.LayoutView.extend({
@@ -54,6 +56,7 @@ define(function(require) {
 			this.listenTo(Radio.ui, 'foldercontent:show', this.showFolderContent);
 			this.listenTo(Radio.ui, 'content:loading', this.showContentLoading);
 			this.listenTo(Radio.ui, 'title:update', this.updateTitle);
+			this.listenTo(Radio.ui, 'accountsettings:show', this.showAccountSettings);
 
 			// Hide notification favicon when switching back from
 			// another browser tab
@@ -197,6 +200,15 @@ define(function(require) {
 				// jscs:enable requireCamelCaseOrUpperCaseIdentifiers
 			}
 		},
+		showAccountSettings: function(account) {
+			if (this.activeContent !== ContentType.ACCOUNT_SETTINGS) {
+				this.activeContent = ContentType.ACCOUNT_SETTINGS;
+
+				this.content.show(new AccountSettingsView({
+					account: account
+				}));
+			}
+		}
 	});
 
 	return AppView;

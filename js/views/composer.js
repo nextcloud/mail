@@ -24,18 +24,16 @@ define(function(require) {
 	return Marionette.LayoutView.extend({
 		template: Handlebars.compile(ComposerTemplate),
 		templateHelpers: function() {
-			var accounts = null;
+			var aliases = null;
 			if (this.accounts) {
-				accounts = this.accounts.map(function(account) {
-					return account.toJSON();
-				});
-				accounts = _.filter(accounts, function(account) {
-					return account.accountId !== -1;
+				aliases = this.buildAliases();
+				aliases = _.filter(aliases, function(alias) {
+					return alias.accountId !== -1;
 				});
 			}
 
 			return {
-				aliases: accounts,
+				aliases: aliases,
 				isReply: this.isReply(),
 				to: this.data.to,
 				cc: this.data.cc,
@@ -52,6 +50,7 @@ define(function(require) {
 		data: null,
 		attachments: null,
 		accounts: null,
+		aliases: null,
 		account: null,
 		folder: null,
 		messageId: null,
@@ -90,7 +89,6 @@ define(function(require) {
 			var defaultOptions = {
 				type: 'new',
 				account: null,
-				folderId: null,
 				messageId: null,
 				data: {
 					to: '',
@@ -129,6 +127,7 @@ define(function(require) {
 				this.draftUID = options.data.id;
 			} else {
 				this.account = options.account;
+				this.accounts = options.accounts;
 				this.folder = options.folder;
 				this.messageId = options.messageId;
 			}
@@ -291,17 +290,20 @@ define(function(require) {
 			newMessageBody.prop('disabled', true);
 			newMessageSend.prop('disabled', true);
 			newMessageSend.val(t('mail', 'Sending …'));
+			var alias = null;
 
 			// if available get account from drop-down list
 			if (this.$('.mail-account').length > 0) {
-				this.account = this.accounts.get(this.$('.mail-account').
-					find(':selected').val());
+				alias = this.findAliasById(this.$('.mail-account').
+				find(':selected').val());
+				this.account = this.accounts.get(alias.accountId);
 			}
 
 			// send the mail
 			var _this = this;
 			var options = {
-				draftUID: this.draftUID
+				draftUID: this.draftUID,
+				aliasId: alias.aliasId
 			};
 
 			if (this.isReply()) {
@@ -369,8 +371,9 @@ define(function(require) {
 
 			// if available get account from drop-down list
 			if (this.$('.mail-account').length > 0) {
-				this.account = this.accounts.get(this.$('.mail-account').
-					find(':selected').val());
+				var alias = this.findAliasById(this.$('.mail-account').
+				find(':selected').val());
+				this.account = this.accounts.get(alias.accountId);
 			}
 
 			// send the mail
@@ -467,6 +470,63 @@ define(function(require) {
 					}
 				});
 			}
+		},
+		buildAliases: function() {
+			var aliases = [];
+			var id = 1;
+
+			this.accounts.forEach(function(account) {
+				var json = account.toJSON();
+				// add Primary email address
+				aliases.push({
+					id: id++,
+					accountId: json.accountId,
+					aliasId: null,
+					emailAddress: json.emailAddress,
+					name: json.name
+				});
+				// add Aliases email adresses
+				for (var x in json.aliases) {
+					aliases.push({
+						id: id++,
+						accountId: json.aliases[x].accountId,
+						aliasId: json.aliases[x].id,
+						emailAddress: json.aliases[x].alias,
+						name: json.aliases[x].name
+					});
+				}
+			});
+			this.aliases = aliases;
+			return aliases;
+		},
+		findAliasById: function(id) {
+			return _.find(this.aliases, function(alias) { return parseInt(alias.id)  === parseInt(id); });
+		},
+		defaultMailSelect: function() {
+			var alias = null;
+			if (!this.isReply()) {
+				if (require('state').currentAccount.get('accountId') !== -1) {
+					alias =  _.find(this.aliases, function(alias) {
+						return alias.emailAddress  === require('state').currentAccount.get('email');
+					});
+				} else {
+					var firstAccount = this.accounts.filter(function(account) {
+						return account.get('accountId') !== -1;
+					})[0];
+					alias = _.find(this.aliases, function(alias) {
+						return alias.emailAddress  === firstAccount.get('emailAddress');
+					});
+				}
+			} else {
+				var toEmail = this.data.toEmail;
+				alias =  _.find(this.aliases, function(alias) {	return alias.emailAddress  === toEmail;	});
+			}
+			if (alias) {
+				$('.mail-account').val(alias.id);
+			}
+		},
+		onShow: function() {
+			this.defaultMailSelect();
 		}
 	});
 

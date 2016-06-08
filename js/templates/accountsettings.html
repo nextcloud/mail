@@ -1,0 +1,13 @@
+<div class="section" id="account-info">
+	<h2>{{ t 'Account Settings' }} - {{ email }}</h2>
+</div>
+
+<div class="section" id="aliases">
+	<h2>{{ t 'Aliases' }}</h2>
+	<div id="aliases-list"></div>
+	<form name="aliasForm" method="post">
+		<input type="text" name="alias" id="alias" placeholder="{{ t 'Alias' }}">
+		<input type="text" name="alias-name" id="alias-name" placeholder="{{ t 'Display Name' }}">
+		<input type="submit" value="{{ t 'Save' }}">
+	</form>
+</div>

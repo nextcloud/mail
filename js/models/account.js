@@ -13,6 +13,7 @@ define(function(require) {
 
 	var Backbone = require('backbone');
 	var FolderCollection = require('models/foldercollection');
+	var AliasesCollection = require('models/aliasescollection');
 	var OC = require('OC');
 
 	/**
@@ -20,12 +21,14 @@ define(function(require) {
 	 */
 	var Account = Backbone.Model.extend({
 		defaults: {
-			folders: []
+			folders: [],
+			aliases: []
 		},
 		idAttribute: 'accountId',
 		url: OC.generateUrl('apps/mail/accounts'),
 		initialize: function() {
 			this.set('folders', new FolderCollection(this.get('folders')));
+			this.set('aliases', new AliasesCollection(this.get('aliases')));
 		},
 		_getFolderByIdRecursively: function(folder, folderId) {
 			if (!folder) {
@@ -66,6 +69,9 @@ define(function(require) {
 			var data = Backbone.Model.prototype.toJSON.call(this);
 			if (data.folders && data.folders.toJSON) {
 				data.folders = data.folders.toJSON();
+			}
+			if (data.aliases && data.aliases.toJSON) {
+				data.aliases = data.aliases.toJSON();
 			}
 			if (!data.id) {
 				data.id = this.cid;

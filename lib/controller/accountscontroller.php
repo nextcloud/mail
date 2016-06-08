@@ -48,6 +48,7 @@ use OCP\Files\Folder;
 use OCP\IL10N;
 use OCP\IRequest;
 use OCP\Security\ICrypto;
+use OCA\Mail\Service\AliasesService;
 
 class AccountsController extends Controller {
 
@@ -75,6 +76,9 @@ class AccountsController extends Controller {
 	/** @var AddressCollector  */
 	private $addressCollector;
 
+	/** @var AliasesService  */
+	private $aliasesService;
+
 	/**
 	 * @param string $appName
 	 * @param IRequest $request
@@ -95,7 +99,8 @@ class AccountsController extends Controller {
 		Logger $logger,
 		IL10N $l10n,
 		ICrypto $crypto,
-		AddressCollector $addressCollector
+		AddressCollector $addressCollector,
+		AliasesService $aliasesService
 	) {
 		parent::__construct($appName, $request);
 		$this->accountService = $accountService;
@@ -106,6 +111,7 @@ class AccountsController extends Controller {
 		$this->l10n = $l10n;
 		$this->crypto = $crypto;
 		$this->addressCollector = $addressCollector;
+		$this->aliasesService = $aliasesService;
 	}
 
 	/**
@@ -119,9 +125,10 @@ class AccountsController extends Controller {
 
 		$json = [];
 		foreach ($mailAccounts as $mailAccount) {
-			$json[] = $mailAccount->getConfiguration();
+			$conf = $mailAccount->getConfiguration();
+			$conf['aliases'] = $this->aliasesService->findAll($conf['accountId'], $this->currentUserId);
+			$json[] = $conf;
 		}
-
 		return new JSONResponse($json);
 	}
 
@@ -262,8 +269,9 @@ class AccountsController extends Controller {
 	 * @return JSONResponse
 	 */
 	public function send($accountId, $folderId, $subject, $body, $to, $cc,
-		$bcc, $draftUID, $messageId, $attachments) {
+		$bcc, $draftUID, $messageId, $attachments, $aliasId) {
 		$account = $this->accountService->find($this->currentUserId, $accountId);
+		$alias = $aliasId ? $this->aliasesService->find($aliasId, $this->currentUserId) : null;
 		if ($account instanceof UnifiedAccount) {
 			list($account, $folderId, $messageId) = $account->resolve($messageId);
 		}
@@ -303,7 +311,8 @@ class AccountsController extends Controller {
 			$message->setSubject($subject ? : '');
 		}
 
-		$message->setFrom($account->getEMailAddress());
+		$account->setAlias($alias);
+		$message->setFrom($alias ? $alias->alias : $account->getEMailAddress());
 		$message->setCC(Message::parseAddressList($cc));
 		$message->setBcc(Message::parseAddressList($bcc));
 		$message->setContent($body);

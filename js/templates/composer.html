@@ -1,11 +1,9 @@
 <div class="message-composer">
-	{{#unless isReply}}
 	<select class="mail-account">
 		{{#each aliases}}
-		<option value="{{accountId}}">{{ t 'from' }} {{name}} &lt;{{emailAddress}}&gt;</option>
+		<option value="{{id}}">{{ t 'from' }} {{name}} &lt;{{emailAddress}}&gt;</option>
 		{{/each}}
 	</select>
-	{{/unless}}
 	<div class="composer-fields">
 		<a href="#" class="composer-cc-bcc-toggle transparency
 			{{#ifHasCC replyCc replyCcList}}
