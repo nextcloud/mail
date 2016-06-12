@@ -1,7 +1,4 @@
 {
-	"config": {
-		"secure-http": false
-	},
 	"repositories": [
 		{
 			"type": "pear",
