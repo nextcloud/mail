@@ -13,6 +13,8 @@
     "Error while saving attachments to Files." : "添付ファイルの保存中にエラーが発生しました。",
     "Error while saving attachment to Files." : "添付ファイルの保存中にエラーが発生しました。",
     "Message could not be starred. Please try again." : "メッセージにスターをつけられませんでした。再試行してください。",
+    "Invalid account" : "無効なアカウント",
+    "Invalid folder" : "無効なフォルダ",
     "Unknown error" : "不明なエラー",
     "Error while creating an account: " : "アカウント作成エラー:",
     "Show all folders" : "すべてのフォルダーを表示",

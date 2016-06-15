@@ -15,6 +15,8 @@ OC.L10N.register(
     "Error while saving attachments to Files." : "Fout bij opslaan bijlagen in Bestanden.",
     "Error while saving attachment to Files." : "Fout bij opslaan bijlage in Bestanden.",
     "Message could not be starred. Please try again." : "Bericht kon niet als gemarkeerd worden. Probeer het opnieuw.",
+    "Invalid account" : "Ongeldig account",
+    "Invalid folder" : "Ongeldige map",
     "Unknown error" : "Onbekende fout",
     "Error while creating an account: " : "Fout bij het creëren van een account.",
     "Show all folders" : "Laat alle mappen zien",

@@ -15,6 +15,8 @@ OC.L10N.register(
     "Error while saving attachments to Files." : "Error whilst saving attachments to Files.",
     "Error while saving attachment to Files." : "Error whilst saving attachment to Files.",
     "Message could not be starred. Please try again." : "Message could not be starred. Please try again.",
+    "Invalid account" : "Invalid account",
+    "Invalid folder" : "Invalid folder",
     "Unknown error" : "Unknown error",
     "Error while creating an account: " : "Error whilst creating an account: ",
     "Show all folders" : "Show all folders",

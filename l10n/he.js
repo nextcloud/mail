@@ -15,6 +15,8 @@ OC.L10N.register(
     "Error while saving attachments to Files." : "שגיאה בזמן שמירת קבצים מצורפים לקטגוריית קבצים.",
     "Error while saving attachment to Files." : "שגיאה בזמן שמירת קובץ מצורף לקטגוריית קבצים.",
     "Message could not be starred. Please try again." : "לא ניתן לסמן הודעה עם כוכב. יש לנסות שוב.",
+    "Invalid account" : "חשבון לא חוקי",
+    "Invalid folder" : "תיקייה לא חוקית",
     "Unknown error" : "שגיאה בלתי ידועה",
     "Error while creating an account: " : "שגיאה בזמן יצירת חשבון:",
     "Show all folders" : "הצגת כל התיקיות",
