@@ -52,7 +52,7 @@ define(function(require) {
 		getFolderById: function(folderId) {
 			var folders = this.get('folders');
 			if (!folders) {
-				return null;
+				return undefined;
 			}
 			for (var i = 0; i < folders.length; i++) {
 				var result = this._getFolderByIdRecursively(folders.at(i), folderId);
@@ -60,7 +60,7 @@ define(function(require) {
 					return result;
 				}
 			}
-			return null;
+			return undefined;
 		},
 		toJSON: function() {
 			var data = Backbone.Model.prototype.toJSON.call(this);
