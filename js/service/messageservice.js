@@ -26,6 +26,8 @@ define(function(require) {
 	var Radio = require('radio');
 	var messageListXhr = null;
 
+	var MessageCollection = require('models/messagecollection');
+
 	Radio.message.reply('entities', getMessageEntities);
 	Radio.message.reply('entity', getMessageEntity);
 	Radio.message.reply('bodies', fetchMessageBodies);
@@ -80,7 +82,7 @@ define(function(require) {
 					if (options.replace || options.cache) {
 						require('cache').addMessageList(account, folder, messages);
 					}
-					defer.resolve(messages, false);
+					defer.resolve(new MessageCollection(messages), false);
 				},
 				error: function(error, status) {
 					if (status !== 'abort') {

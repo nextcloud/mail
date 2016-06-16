@@ -74,8 +74,7 @@ define(function(require) {
 			$('#mail-message').removeClass('hidden-mobile');
 			var account = require('state').currentAccount;
 			var folder = require('state').currentFolder;
-			var messageId = this.model.id; //TODO: backbone property
-			Radio.message.trigger('load', account, folder, messageId, {
+			Radio.message.trigger('load', account, folder, this.model, {
 				force: true
 			});
 		},
@@ -105,8 +104,7 @@ define(function(require) {
 					if (nextMessage) {
 						var account = require('state').currentAccount;
 						var folder = require('state').currentFolder;
-						var messageId = nextMessage.id; //TODO: backbone property
-						Radio.message.trigger('load', account, folder, messageId);
+						Radio.message.trigger('load', account, folder, nextMessage);
 					}
 				}
 				// manually trigger mouseover event for current mouse position

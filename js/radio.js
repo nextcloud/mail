@@ -33,11 +33,6 @@ define(function(require) {
 		ui: uiChannel
 	};
 
-	// Log all events to the console
-	for (var channelName in channels) {
-		Radio.tuneIn(channelName);
-	}
-
 	return channels;
 });
 

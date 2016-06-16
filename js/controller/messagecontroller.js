@@ -25,19 +25,19 @@ define(function(require) {
 	var OC = require('OC');
 	var Radio = require('radio');
 
-	Radio.message.on('load', function(account, folder, messageId, options) {
+	Radio.message.on('load', function(account, folder, message, options) {
 		//FIXME: don't rely on global state vars
-		load(account, messageId, options);
+		load(account, message, options);
 	});
 	Radio.message.on('forward', openForwardComposer);
 
 	/**
 	 * @param {Account} account
-	 * @param {number} messageId
+	 * @param {Message} message
 	 * @param {object} options
 	 * @returns {undefined}
 	 */
-	function load(account, messageId, options) {
+	function load(account, message, options) {
 		options = options || {};
 		var defaultOptions = {
 			force: false
@@ -45,7 +45,7 @@ define(function(require) {
 		_.defaults(options, defaultOptions);
 
 		// Do not reload email when clicking same again
-		if (require('state').currentMessageId === messageId) {
+		if (require('state').currentMessageId === message.get('id')) {
 			return;
 		}
 
@@ -69,7 +69,7 @@ define(function(require) {
 		if (require('state').currentMessageId !== null) {
 			var lastMessageId = require('state').currentMessageId;
 			Radio.ui.trigger('messagesview:message:setactive', null);
-			if (lastMessageId === messageId) {
+			if (lastMessageId === message.get('id')) {
 				return;
 			}
 		}
@@ -77,7 +77,7 @@ define(function(require) {
 		Radio.ui.trigger('message:loading');
 
 		// Set current Message as active
-		Radio.ui.trigger('messagesview:message:setactive', messageId);
+		Radio.ui.trigger('messagesview:message:setactive', message.get('id'));
 		require('state').currentMessageBody = '';
 
 		// Fade out the message composer
@@ -86,7 +86,7 @@ define(function(require) {
 		var fetchingMessage = Radio.message.request('entity',
 			require('state').currentAccount,
 			require('state').currentFolder,
-			messageId);
+			message.get('id'));
 
 		$.when(fetchingMessage).done(function(message) {
 			if (draft) {

@@ -194,8 +194,12 @@ define(function(require) {
 				_this.loadingMore = false;
 			});
 		},
-		addMessages: function(data) {
-			this.collection.add(data);
+		addMessages: function(message) {
+			var _this = this;
+			// TODO: merge?
+			message.each(function(msg) {
+				_this.collection.add(msg);
+			})
 		},
 		reset: function() {
 			this.collection.reset();

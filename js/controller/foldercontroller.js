@@ -93,11 +93,10 @@ define(function(require) {
 					// Fetch first 10 messages in background
 					_.each(messages.slice(0, 10), function(
 						message) {
-						require('background').messageFetcher.push(message.id);
+						require('background').messageFetcher.push(message.get('id'));
 					});
 
-					var messageId = messages[0].id;
-					Radio.message.trigger('load', account, folder, messageId);
+					Radio.message.trigger('load', account, folder, messages.first());
 					// Show 'Load More' button if there are
 					// more messages than the pagination limit
 					if (messages.length > 20) {
