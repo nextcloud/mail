@@ -6,8 +6,10 @@ All notable changes to this project will be documented in this file.
 ### Fixed
 - Close popover on clicking somewhere else
   [#1521](https://github.com/owncloud/mail/pull/1521) @tahaalibra
-- fix email length in the database
+- Fix email length in the database
   [#1518](https://github.com/owncloud/mail/pull/1518) @tahaalibra
+- Fix setup error 'folder is null'
+  [#1532](https://github.com/owncloud/mail/pull/1532) @Gomez
 
 ## 0.5.1 – 2016-05-30
 

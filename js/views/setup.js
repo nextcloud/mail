@@ -154,7 +154,7 @@ define(function(require) {
 					// Let's assume there's at least one account after a successful
 					// setup, so let's show the first one (could be the unified inbox)
 					var firstAccount = accounts.first();
-					var firstFolder = accounts.first();
+					var firstFolder = firstAccount.get('folders').first();
 					Radio.navigation.trigger('folder', firstAccount.get('accountId'), firstFolder.get('id'));
 				});
 			});
