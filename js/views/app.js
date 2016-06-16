@@ -16,7 +16,7 @@ define(function(require) {
 	var $ = require('jquery');
 	var OC = require('OC');
 	var Radio = require('radio');
-	var MessageContentView = require('views/messagecontent');
+	var FolderContentView = require('views/foldercontent');
 	var NavigationAccountsView = require('views/navigation-accounts');
 	var SettingsView = require('views/settings');
 	var LoadingView = require('views/loadingview');
@@ -28,7 +28,7 @@ define(function(require) {
 
 	var ContentType = Object.freeze({
 		LOADING: -1,
-		MESSAGE_CONTENT: 0,
+		FOLDER_CONTENT: 0,
 		SETUP: 1
 	});
 
@@ -49,7 +49,7 @@ define(function(require) {
 			this.listenTo(Radio.ui, 'notification:show', this.showNotification);
 			this.listenTo(Radio.ui, 'error:show', this.showError);
 			this.listenTo(Radio.ui, 'setup:show', this.showSetup);
-			this.listenTo(Radio.ui, 'messagecontent:show', this.showMessageContent);
+			this.listenTo(Radio.ui, 'foldercontent:show', this.showFolderContent);
 			this.listenTo(Radio.ui, 'content:loading', this.showContentLoading);
 
 			// Hide notification favicon when switching back from
@@ -107,7 +107,8 @@ define(function(require) {
 			require('state').folderView = this.accountsView;
 			this.navigation.accounts.show(this.accountsView);
 
-			this.showMessageContent();
+			// TODO: which account/folder?
+			this.showFolderContent();
 		},
 		onDocumentClick: function(event) {
 			Radio.ui.trigger('document:click', event);
@@ -166,11 +167,14 @@ define(function(require) {
 				}));
 			}
 		},
-		showMessageContent: function() {
-			if (this.activeContent !== ContentType.MESSAGE_CONTENT) {
-				this.activeContent = ContentType.MESSAGE_CONTENT;
+		showFolderContent: function(account, folder) {
+			if (this.activeContent !== ContentType.FOLDER_CONTENT) {
+				this.activeContent = ContentType.FOLDER_CONTENT;
 
-				var messageContentView = new MessageContentView();
+				var messageContentView = new FolderContentView({
+					account: account,
+					folder: folder
+				});
 				var accountsView = this.accountsView;
 				this.accountsView.listenTo(messageContentView.messages, 'change:unseen',
 					accountsView.changeUnseen);

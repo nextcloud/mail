@@ -78,7 +78,7 @@ define(function(require) {
 			});
 
 			$.when(loadingMessages).done(function(messages, cached) {
-				Radio.ui.trigger('messagecontent:show');
+				Radio.ui.trigger('foldercontent:show', account, folder);
 				require('state').currentlyLoading = null;
 				require('state').currentAccount = account;
 				require('state').currentFolder = folder;
