@@ -1,8 +1,11 @@
 # Changelog
 All notable changes to this project will be documented in this file.
 
-## 0.5.2 - unreleased
+## 0.5.2 – 2016-06-16
 
+### Added
+- Enhanced client-side paging algorithm for IMAP servers without SORT
+  [#1486](https://github.com/owncloud/mail/pull/1486) @ChristophWurst
 ### Fixed
 - Close popover on clicking somewhere else
   [#1521](https://github.com/owncloud/mail/pull/1521) @tahaalibra
