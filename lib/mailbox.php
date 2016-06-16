@@ -114,7 +114,6 @@ class Mailbox implements IMailBox {
 		$q = new Horde_Imap_Client_Fetch_Query();
 		$q->uid();
 		$q->imapDate();
-		// FIXME: $q->headers('DATE', ['DATE']); could be a better option than the INTERNALDATE
 
 		$result = $this->conn->fetch($this->mailBox, $q);
 		$uidMap = [];
@@ -132,7 +131,7 @@ class Mailbox implements IMailBox {
 	}
 
 	public function getMessages($from = 0, $count = 2, $filter = '') {
-		if (is_null($filter) || $filter === '') {
+		if (!$this->conn->capability->query('SORT') && (is_null($filter) || $filter === '')) {
 			$ids = $this->getFetchIds($from, $count);
 		} else {
 			$ids = $this->getSearchIds($from, $count, $filter);
