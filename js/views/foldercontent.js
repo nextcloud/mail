@@ -74,7 +74,11 @@ define(function(require) {
 			Radio.ui.trigger('composer:events:undelegate');
 
 			var messageModel = new Backbone.Model(message);
-			this.message.show(new MessageView({model: messageModel}));
+			this.message.show(new MessageView({
+				account: this.account,
+				folder: this.folder,
+				model: messageModel
+			}));
 			this.detailView = DetailView.MESSAGE;
 
 			Radio.ui.trigger('messagesview:messageflag:set', message.id, 'unseen', false);
@@ -105,8 +109,8 @@ define(function(require) {
 
 			// set 'from' dropdown to current account
 			// TODO: fix selector conflicts
-			if (require('state').currentAccount.get('accountId') !== -1) {
-				$('.mail-account').val(require('state').currentAccount.get('accountId'));
+			if (this.account.get('accountId') !== -1) {
+				$('.mail-account').val(this.account.get('accountId'));
 			}
 
 			// focus 'to' field automatically on clicking New message button

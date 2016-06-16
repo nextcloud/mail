@@ -60,7 +60,11 @@ define(function(require) {
 			// Load cached version if available
 			var messageList = require('cache').getMessageList(account, folder);
 			if (!options.force && messageList) {
-				defer.resolve(messageList, true);
+				var collection = folder.get('messages');
+				_.each(messageList, function(msg) {
+					collection.add(msg);
+				});
+				defer.resolve(collection, true);
 				return defer.promise();
 			}
 		}
@@ -71,6 +75,7 @@ define(function(require) {
 				folderId: folder.get('id')
 			});
 
+		// TODO: folder.get('messages').fetch()
 		messageListXhr = $.ajax(url,
 			{
 				data: {
@@ -82,7 +87,12 @@ define(function(require) {
 					if (options.replace || options.cache) {
 						require('cache').addMessageList(account, folder, messages);
 					}
-					defer.resolve(new MessageCollection(messages), false);
+					var collection = folder.get('messages');
+					collection.reset();
+					_.each(messages, function(msg) {
+						collection.add(msg);
+					});
+					defer.resolve(collection, false);
 				},
 				error: function(error, status) {
 					if (status !== 'abort') {

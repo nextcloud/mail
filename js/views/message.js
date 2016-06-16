@@ -28,6 +28,8 @@ define(function(require) {
 		className: 'mail-message-container',
 		message: null,
 		reply: null,
+		account: null,
+		folder: null,
 		ui: {
 			messageIframe: 'iframe'
 		},
@@ -36,7 +38,10 @@ define(function(require) {
 			attachments: '.mail-message-attachments'
 		},
 		initialize: function(options) {
+			this.account = options.account;
+			this.folder = options.folder;
 			this.message = options.model;
+
 			this.reply = {
 				replyToList: this.message.get('replyToList'),
 				replyCc: this.message.get('replyCc'),
@@ -130,10 +135,6 @@ define(function(require) {
 		onShow: function() {
 			this.ui.messageIframe.on('load', _.bind(this.onIframeLoad, this));
 
-			// TODO: add folder/account reference to message
-			var account = require('state').accounts.get(this.message.get('accountId'));
-			var folderId = this.message.get('folderId');
-
 			this.attachments.show(new MessageAttachmentsView({
 				collection: new Attachments(this.message.get('attachments')),
 				message: this.model
@@ -143,8 +144,8 @@ define(function(require) {
 			this.replyComposer.show(new ComposerView({
 				//el: this.$('#reply-composer'),
 				type: 'reply',
-				account: account,
-				folderId: folderId,
+				account: this.account,
+				folder: this.folder,
 				messageId: this.message.get('messageId'),
 				data: this.reply
 			}));

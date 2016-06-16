@@ -53,7 +53,7 @@ define(function(require) {
 		attachments: null,
 		accounts: null,
 		account: null,
-		folderId: null,
+		folder: null,
 		messageId: null,
 		draftInterval: 1500,
 		draftTimer: null,
@@ -129,7 +129,7 @@ define(function(require) {
 				this.draftUID = options.data.id;
 			} else {
 				this.account = options.account;
-				this.folderId = options.folderId;
+				this.folder = options.folder;
 				this.messageId = options.messageId;
 			}
 		},
@@ -306,7 +306,7 @@ define(function(require) {
 
 			if (this.isReply()) {
 				options.messageId = this.messageId;
-				options.folder = this.account.getFolderById(this.folderId);
+				options.folder = this.folder;
 			}
 
 			var sendingMessage = Radio.message.request('send', this.account, this.getMessage(), options);
@@ -376,7 +376,7 @@ define(function(require) {
 			// send the mail
 			var _this = this;
 			var savingDraft = Radio.message.request('draft', this.account, this.getMessage(), {
-				folder: this.account.getFolderById(this.folderId),
+				folder: this.folder,
 				messageId: this.messageId,
 				draftUID: this.draftUID
 			});
