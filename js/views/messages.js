@@ -168,11 +168,6 @@ define(function(require) {
 				});
 
 			$.when(loadingMessages).done(function(jsondata) {
-				if (reload) {
-					_this.collection.reset();
-				}
-				// Add messages
-				_this.collection.add(jsondata);
 				Radio.ui.trigger('messagesview:message:setactive', require('state').currentMessageId);
 			});
 
