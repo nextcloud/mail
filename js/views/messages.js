@@ -152,10 +152,7 @@ define(function(require) {
 				from = 0;
 			}
 			// Add loading feedback
-			$('#load-more-mail-messages')
-				.addClass('icon-loading-small')
-				.val(t('mail', 'Loading …'))
-				.prop('disabled', true);
+			$('#load-more-mail-messages').addClass('icon-loading');
 
 			var _this = this;
 			var loadingMessages = Radio.message.request('entities',
@@ -189,10 +186,7 @@ define(function(require) {
 
 			$.when(loadingMessages).always(function() {
 				// Remove loading feedback again
-				$('#load-more-mail-messages')
-					.removeClass('icon-loading-small')
-					.val(t('mail', 'Load more …'))
-					.prop('disabled', false);
+				$('#load-more-mail-messages').removeClass('icon-loading');
 				$('#load-new-mail-messages')
 					.removeClass('icon-loading-small')
 					.val(t('mail', 'Check messages'))
