@@ -36,8 +36,6 @@ OC.L10N.register(
     "Opening HTML drafts is not supported yet." : "Odpiranje osnutkov sporočil v zapisu HTML še ni podprto.",
     "Draft saved!" : "Osnutek sporočila je shranjen!",
     "Checking messages" : "Poteka preverjanje za nova sporočila",
-    "Loading …" : "Nalaganje ...",
-    "Load more …" : "Naloži več ...",
     "Check messages" : "Preveri za sporočila",
     "Error while deleting message." : "Napaka med brisanjem sporočila.",
     "Connecting" : "Poteka vzpostavljanje povezave ...",

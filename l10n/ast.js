@@ -29,8 +29,6 @@ OC.L10N.register(
     "Opening HTML drafts is not supported yet." : "Abrir borradores de HTML ainda nun ta soportáu",
     "Draft saved!" : "¡Borrador salváu!",
     "Checking messages" : "Comprobando mensaxes",
-    "Loading …" : "Cargando ...",
-    "Load more …" : "Cargar más …",
     "Check messages" : "Comprueba mensaxes",
     "Error while deleting message." : "Fallu desaniciando'l mensaxe",
     "Connecting" : "Coneutando",

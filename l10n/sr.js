@@ -29,8 +29,6 @@ OC.L10N.register(
     "Opening HTML drafts is not supported yet." : "Отварање ХТМЛ нацрта још није подржано.",
     "Draft saved!" : "Нацрт сачуван!",
     "Checking messages" : "Проверавам поруке",
-    "Loading …" : "Учитавам...",
-    "Load more …" : "Учитај још...",
     "Check messages" : "Провери поруке",
     "Error while deleting message." : "Грешка при брисању поруке.",
     "Connecting" : "Повезујем се",

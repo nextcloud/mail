@@ -29,8 +29,6 @@ OC.L10N.register(
     "Opening HTML drafts is not supported yet." : "目前尚未支援開啟 HTML 草稿",
     "Draft saved!" : "草稿已儲存！",
     "Checking messages" : "檢查訊息…",
-    "Loading …" : "載入…",
-    "Load more …" : "載入更多…",
     "Check messages" : "檢查訊息",
     "Error while deleting message." : "刪除訊息時發生錯誤",
     "Connecting" : "連線中",

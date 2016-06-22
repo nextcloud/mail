@@ -36,8 +36,6 @@ OC.L10N.register(
     "Opening HTML drafts is not supported yet." : "HTML-luonnosten avaaminen ei ole vielä tuettu ominaisuus.",
     "Draft saved!" : "Luonnos tallennettu!",
     "Checking messages" : "Tarkistetaan viestejä",
-    "Loading …" : "Ladataan…",
-    "Load more …" : "Lataa lisää…",
     "Check messages" : "Tarkista viestit",
     "Error while deleting message." : "Virhe viestiä poistaessa.",
     "Connecting" : "Yhdistetään",

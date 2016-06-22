@@ -36,8 +36,6 @@ OC.L10N.register(
     "Opening HTML drafts is not supported yet." : "Das Öffnen von HTML-Entwürfen wird noch nicht unterstützt.",
     "Draft saved!" : "Entwurf gespeichert!",
     "Checking messages" : "Nachrichten überprüfen",
-    "Loading …" : "Laden…",
-    "Load more …" : "Weitere laden…",
     "Check messages" : "Nachrichten überprüfen",
     "Error while deleting message." : "Fehler beim Löschen der Nachricht.",
     "Connecting" : "Verbinde",

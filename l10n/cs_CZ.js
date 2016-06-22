@@ -36,8 +36,6 @@ OC.L10N.register(
     "Opening HTML drafts is not supported yet." : "Otevírání HTML konceptů ještě není podporováno.",
     "Draft saved!" : "Koncept uložen!",
     "Checking messages" : "Kontrola zpráv",
-    "Loading …" : "Načítání ...",
-    "Load more …" : "Načíst další ...",
     "Check messages" : "Zkontrolovat zprávy",
     "Error while deleting message." : "Chyba při mazání zprávy.",
     "Connecting" : "Připojování",

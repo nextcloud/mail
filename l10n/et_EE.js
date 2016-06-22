@@ -29,8 +29,6 @@ OC.L10N.register(
     "Opening HTML drafts is not supported yet." : "HTML mustandite avamine pole veel toetatud.",
     "Draft saved!" : "Mustand on salvestatud!",
     "Checking messages" : "Sõnumite kontrollimine",
-    "Loading …" : "Laadimine ...",
-    "Load more …" : "Laadi rohkem ...",
     "Check messages" : "Kontrolli sõnumeid",
     "Error while deleting message." : "Tõrge sõnumi kustutamisel.",
     "Connecting" : "Ühendamine",

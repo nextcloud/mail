@@ -36,8 +36,6 @@ OC.L10N.register(
     "Opening HTML drafts is not supported yet." : "L'apertura delle bozze HTML non è ancora supportata.",
     "Draft saved!" : "Bozza salvata!",
     "Checking messages" : "Controllo dei messaggi",
-    "Loading …" : "Caricamento in corso...",
-    "Load more …" : "Carica altro...",
     "Check messages" : "Controlla i messaggi",
     "Error while deleting message." : "Errore durante l'eliminazione del messaggio.",
     "Connecting" : "Connessione in corso",

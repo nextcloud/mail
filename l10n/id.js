@@ -29,8 +29,6 @@ OC.L10N.register(
     "Opening HTML drafts is not supported yet." : "Membuka draf HTML masih belum didukung.",
     "Draft saved!" : "Draf disimpan!",
     "Checking messages" : "Memeriksa pesan",
-    "Loading …" : "Memuat ...",
-    "Load more …" : "Muat lebih banyak ...",
     "Check messages" : "Periksa pesan",
     "Error while deleting message." : "Terjadi kesalahan saat menghapus pesan.",
     "Connecting" : "Menyambungkan",

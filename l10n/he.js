@@ -36,8 +36,6 @@ OC.L10N.register(
     "Opening HTML drafts is not supported yet." : "פתיחת טיוטות HTML לא נתמך עדיין.",
     "Draft saved!" : "טיוטה נשמרה!",
     "Checking messages" : "הודעות בבדיקה",
-    "Loading …" : "בטעינה …",
-    "Load more …" : "המשך טעינה ...",
     "Check messages" : "לבדוק הודעות",
     "Error while deleting message." : "שגיאה בזמן מחיקת הודעה.",
     "Connecting" : "מתחבר",

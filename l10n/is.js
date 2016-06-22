@@ -29,8 +29,6 @@ OC.L10N.register(
     "Opening HTML drafts is not supported yet." : "Ekki er hægt að opna HTML-drög - ennþá.",
     "Draft saved!" : "Drög vistuð!",
     "Checking messages" : "Athuga með skilaboð",
-    "Loading …" : "Hleð inn …",
-    "Load more …" : "Hlaða inn fleiri…",
     "Check messages" : "Athuga með ný skilaboð",
     "Error while deleting message." : "Villa kom upp við að eyða skilaboðum.",
     "Connecting" : "Tengist",

@@ -36,8 +36,6 @@ OC.L10N.register(
     "Opening HTML drafts is not supported yet." : "Hapja e skicave HTML nuk mbulohet ende.",
     "Draft saved!" : "Skica u ruajt!",
     "Checking messages" : "Po kontrollohen mesazhet",
-    "Loading …" : "Po ngarkohet …",
-    "Load more …" : "Ngarkoni më tepër …",
     "Check messages" : "Kontrollo mesazhe",
     "Error while deleting message." : "Gabim gjatë fshirjes së mesazhit.",
     "Connecting" : "Po lidhet",

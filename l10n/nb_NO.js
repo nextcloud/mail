@@ -29,8 +29,6 @@ OC.L10N.register(
     "Opening HTML drafts is not supported yet." : "Åpning av HTML-kladd er ikke støttet ennå.",
     "Draft saved!" : "Kladd lagret!",
     "Checking messages" : "Sjekker meldinger",
-    "Loading …" : "Laster...",
-    "Load more …" : "Last mer ...",
     "Check messages" : "Sjekk meldinger",
     "Error while deleting message." : "Feil ved sletting av melding.",
     "Connecting" : "Kobler til",

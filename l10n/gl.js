@@ -28,8 +28,6 @@ OC.L10N.register(
     "Send message to {email}" : "Enviar mensaxe a {email}",
     "Opening HTML drafts is not supported yet." : "Aínda non é posíbel abrir borradores HTML.",
     "Draft saved!" : "Gardouse o borrador!",
-    "Loading …" : "Cargando ...",
-    "Load more …" : "Cargar máis ...",
     "Error while deleting message." : "Produciuse un erro ao eliminar a mensaxe.",
     "Connect" : "Conectar",
     "Inbox" : "Bandexa de entrada",

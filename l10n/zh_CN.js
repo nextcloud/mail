@@ -34,8 +34,6 @@ OC.L10N.register(
     "Opening HTML drafts is not supported yet." : "暂时未能打开HTML格式的草稿，请见谅。",
     "Draft saved!" : "草稿已保存！",
     "Checking messages" : "正在检查邮件",
-    "Loading …" : "加载中...",
-    "Load more …" : "加载更多…",
     "Check messages" : "检查邮件",
     "Error while deleting message." : "删除邮件时出错。",
     "Connecting" : "正在连接",

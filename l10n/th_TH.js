@@ -31,8 +31,6 @@ OC.L10N.register(
     "Opening HTML drafts is not supported yet." : "เปิดแบบร่าง HTML ยังไม่รองรับในตอนนี้",
     "Draft saved!" : "แบบร่างถูกบันทึก!",
     "Checking messages" : "กำลังตรวจสอบข้อความ",
-    "Loading …" : "กำลังโหลด ...",
-    "Load more …" : "โหลดเพิ่มเติม ...",
     "Check messages" : "ตรวจสอบข้อความ",
     "Error while deleting message." : "ข้อผิดพลาดขณะลบข้อความ",
     "Connecting" : "กำลังเชื่อมต่อ",

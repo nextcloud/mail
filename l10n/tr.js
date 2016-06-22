@@ -29,8 +29,6 @@ OC.L10N.register(
     "Opening HTML drafts is not supported yet." : "HTML taslaklarını açmak henüz desteklenmiyor.",
     "Draft saved!" : "Taslak kaydedildi!",
     "Checking messages" : "İletiler kontrol ediliyor",
-    "Loading …" : "Yükleniyor...",
-    "Load more …" : "Daha fazla yükle...",
     "Check messages" : "İletileri denetle",
     "Error while deleting message." : "İleti silinirken hata.",
     "Connecting" : "Bağlanıyor",

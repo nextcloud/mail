@@ -36,8 +36,6 @@ OC.L10N.register(
     "Opening HTML drafts is not supported yet." : "Работа с черновиками HTML пока не поддерживается.",
     "Draft saved!" : "Черновик сохранен!",
     "Checking messages" : "Проверка сообщений",
-    "Loading …" : "Идёт загрузка ...",
-    "Load more …" : "Загрузить больше ...",
     "Check messages" : "Проверить сообщения",
     "Error while deleting message." : "Ошибка при удалении сообщения.",
     "Connecting" : "Соединение",

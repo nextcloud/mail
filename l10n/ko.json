@@ -27,8 +27,6 @@
     "Opening HTML drafts is not supported yet." : "HTML 임시 보관 메시지를 여는 것은 지원되지 않습니다.",
     "Draft saved!" : "임시 보관함에 저장했습니다!",
     "Checking messages" : "메시지 확인 중",
-    "Loading …" : "불러오는 중...",
-    "Load more …" : "더 가져오기...",
     "Check messages" : "메시지 확인",
     "Error while deleting message." : "메시지를 삭제하는 중 오류가 발생했습니다.",
     "Connecting" : "연결 중",

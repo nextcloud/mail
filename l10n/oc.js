@@ -29,8 +29,6 @@ OC.L10N.register(
     "Opening HTML drafts is not supported yet." : "La dobertura de borrolhons al format HTML es pas presa en carga pel moment.",
     "Draft saved!" : "Borrolhon salvat!",
     "Checking messages" : "Relèva del corrièr",
-    "Loading …" : "Cargament ...",
-    "Load more …" : "Cargar mai ...",
     "Check messages" : "Relevar lo corrièr",
     "Error while deleting message." : "Error al moment de la supression del messatge.",
     "Connecting" : "Connexion",

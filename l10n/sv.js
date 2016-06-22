@@ -30,8 +30,6 @@ OC.L10N.register(
     "Opening HTML drafts is not supported yet." : "Att öppna HTML-utkast stöds inte än.",
     "Draft saved!" : "Utkast sparat!",
     "Checking messages" : "kontrollerar meddelanden",
-    "Loading …" : "Läser in ...",
-    "Load more …" : "Läs in mer ...",
     "Check messages" : "kontrollera meddelanden",
     "Error while deleting message." : "Fel vid radering av  meddelande.",
     "Connecting" : "Ansluter",

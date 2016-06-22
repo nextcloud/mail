@@ -29,8 +29,6 @@ OC.L10N.register(
     "Opening HTML drafts is not supported yet." : "Το άνοιγμα HTML προχείρων  δεν υποστηρίζεται ακόμη.",
     "Draft saved!" : "Το πρόχειρο αποθηκεύτηκε!",
     "Checking messages" : "Γίνεται έλεγχος μηνυμάτων",
-    "Loading …" : "Φόρτωση ...",
-    "Load more …" : "Φόρτωση περισσότερων...",
     "Check messages" : "Έλεγχος μηνυμάτων",
     "Error while deleting message." : "Σφάλμα κατά τη διαγραφή του μηνύματος",
     "Connecting" : "Σύνδεση",

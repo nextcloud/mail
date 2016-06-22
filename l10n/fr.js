@@ -36,8 +36,6 @@ OC.L10N.register(
     "Opening HTML drafts is not supported yet." : "L'ouverture de brouillons au format HTML n'est pas prise en charge pour le moment.",
     "Draft saved!" : "Brouillon sauvegardé!",
     "Checking messages" : "Relève du courrier",
-    "Loading …" : "Chargement ...",
-    "Load more …" : "Charger plus ...",
     "Check messages" : "Relever le courrier",
     "Error while deleting message." : "Erreur lors de la suppression du message.",
     "Connecting" : "Connexion ...",

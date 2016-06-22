@@ -29,8 +29,6 @@ OC.L10N.register(
     "Opening HTML drafts is not supported yet." : "Відкриті HTML чернетки поки не підтримуються.",
     "Draft saved!" : "Чернетку збережено!",
     "Checking messages" : "Перевірка повідомлень",
-    "Loading …" : "Завантаження...",
-    "Load more …" : "Завантажити ще ...",
     "Check messages" : "Перевірити повідомлення",
     "Error while deleting message." : "Помилка видалення повідомлення.",
     "Connecting" : "Підключення",

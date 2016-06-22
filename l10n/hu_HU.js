@@ -29,8 +29,6 @@ OC.L10N.register(
     "Opening HTML drafts is not supported yet." : "A HTML vázlatok megnyitása még nem támogatott.",
     "Draft saved!" : "Vázlat mentve.",
     "Checking messages" : "Üzenetek ellenőrzése",
-    "Loading …" : "Betöltés ...",
-    "Load more …" : "Még több betöltése ...",
     "Check messages" : "Üzenetek ellenőrzése",
     "Error while deleting message." : "Hiba történt az üzenet törlése közben.",
     "Connecting" : "Csatlakozás",
