@@ -67,7 +67,9 @@ define(function(require) {
 			this.listenTo(Radio.ui, 'message:loading', this.onMessageLoading);
 		},
 		onShow: function() {
-			this.messages.show(new MessagesView());
+			this.messages.show(new MessagesView({
+				collection: this.folder.get('messages')
+			}));
 		},
 		onShowMessage: function(message) {
 			// Temporarily disable new-message composer events

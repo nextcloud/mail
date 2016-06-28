@@ -106,9 +106,6 @@ define(function(require) {
 			this.accountsView = new NavigationAccountsView();
 			require('state').folderView = this.accountsView;
 			this.navigation.accounts.show(this.accountsView);
-
-			// TODO: which account/folder?
-			this.showFolderContent();
 		},
 		onDocumentClick: function(event) {
 			Radio.ui.trigger('document:click', event);

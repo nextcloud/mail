@@ -26,8 +26,6 @@ define(function(require) {
 	var Radio = require('radio');
 	var messageListXhr = null;
 
-	var MessageCollection = require('models/messagecollection');
-
 	Radio.message.reply('entities', getMessageEntities);
 	Radio.message.reply('entity', getMessageEntity);
 	Radio.message.reply('bodies', fetchMessageBodies);

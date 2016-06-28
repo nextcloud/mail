@@ -57,17 +57,17 @@ define(function(require) {
 			// directly change star state in the interface for quick feedback
 			if (starred) {
 				this.ui.star
-					.removeClass('icon-starred')
-					.addClass('icon-star');
+						.removeClass('icon-starred')
+						.addClass('icon-star');
 			} else {
 				this.ui.star
-					.removeClass('icon-star')
-					.addClass('icon-starred');
+						.removeClass('icon-star')
+						.addClass('icon-starred');
 			}
 			this.model.flagMessage(
-				'flagged',
-				!starred
-				);
+					'flagged',
+					!starred
+					);
 		},
 		openMessage: function(event) {
 			event.stopPropagation();
@@ -116,12 +116,12 @@ define(function(require) {
 
 			// really delete the message
 			$.ajax(
-				OC.generateUrl('apps/mail/accounts/{accountId}/folders/{folderId}/messages/{messageId}',
-					{
-						accountId: require('state').currentAccount.get('accountId'),
-						folderId: require('state').currentFolder.get('id'),
-						messageId: thisModel.id
-					}), {
+					OC.generateUrl('apps/mail/accounts/{accountId}/folders/{folderId}/messages/{messageId}',
+							{
+								accountId: require('state').currentAccount.get('accountId'),
+								folderId: require('state').currentFolder.get('id'),
+								messageId: thisModel.id
+							}), {
 				data: {},
 				type: 'DELETE',
 				success: function() {

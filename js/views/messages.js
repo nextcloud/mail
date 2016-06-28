@@ -43,8 +43,7 @@ define(function(require) {
 		},
 		filterCriteria: null,
 		initialize: function() {
-			this.collection = new MessageCollection();
-			this.collection.on('change:flags', this.changeFlags, this);
+			this.listenTo(this.collection, 'change:flags', this.changeFlags);
 
 			var _this = this;
 			Radio.ui.reply('messagesview:collection', function() {
