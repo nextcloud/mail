@@ -24,7 +24,6 @@ define(function(require) {
 	var Backbone = require('backbone');
 	var Handlebars = require('handlebars');
 	var Radio = require('radio');
-	var MessageCollection = require('models/messagecollection');
 	var MessagesItemView = require('views/messagesitem');
 	var MessageListTemplate = require('text!templates/message-list.html');
 	var NoSearchResultMessageListView = require('views/nosearchresultmessagelistview');
@@ -166,7 +165,7 @@ define(function(require) {
 					replace: reload
 				});
 
-			$.when(loadingMessages).done(function(jsondata) {
+			$.when(loadingMessages).done(function() {
 				Radio.ui.trigger('messagesview:message:setactive', require('state').currentMessageId);
 			});
 
@@ -193,7 +192,7 @@ define(function(require) {
 			// TODO: merge?
 			message.each(function(msg) {
 				_this.collection.add(msg);
-			})
+			});
 		},
 		reset: function() {
 			this.collection.reset();
