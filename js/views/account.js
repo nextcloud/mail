@@ -40,9 +40,11 @@ define(function(require) {
 		events: {
 			'click .account-toggle-collapse': 'toggleCollapse',
 			'click .app-navigation-entry-utils-menu-button button': 'toggleMenu',
-			'click @ui.deleteButton': 'onDelete'
+			'click @ui.deleteButton': 'onDelete',
+			'click @ui.email': 'onClick'
 		},
 		ui: {
+			'email': '.mail-account-email',
 			'menu': 'div.app-navigation-entry-menu',
 			'deleteButton': 'button[class^="icon-delete"]'
 		},
@@ -96,6 +98,12 @@ define(function(require) {
 					OC.Notification.show(t('mail', 'Error while deleting account.'));
 				}
 			});
+		},
+		onClick: function(e) {
+			e.preventDefault();
+			if (this.model.get('folders').length > 0) {
+				Radio.navigation.trigger('folder', this.model.get('accountId'), this.model.get('folders').first().get('id'));
+			}
 		},
 		onShow: function() {
 			this.listenTo(Radio.ui, 'document:click', function(event) {
