@@ -15,6 +15,8 @@ OC.L10N.register(
     "Error while saving attachments to Files." : "Erro enquanto guardava os anexos para Ficheiros.",
     "Error while saving attachment to Files." : "Erro enquanto guardava o anexo para Ficheiros.",
     "Message could not be starred. Please try again." : "Não foi possível classificar a mensagem. Por favor, tente de novo.",
+    "Invalid account" : "Conta inválida",
+    "Invalid folder" : "Pasta inválida",
     "Unknown error" : "Erro desconhecido",
     "Error while creating an account: " : "Erro durante a criação da conta:",
     "Show all folders" : "Mostrar todas as pastas",
