@@ -16,13 +16,27 @@ require.config({
 	// Karma serves files under /base, which is the basePath from your config file
 	baseUrl: '/base/js',
 	paths: {
+		/**
+		 * Libraries
+		 */
 		backbone: 'vendor/backbone/backbone',
-		domready: 'vendor/domready/ready.min',
+		'backbone.radio': 'vendor/backbone.radio/build/backbone.radio',
+		davclient: 'vendor/davclient.js/lib/client',
+		domready: 'vendor/domReady/domReady',
+		'es6-promise': 'vendor/es6-promise/es6-promise.min',
 		handlebars: 'vendor/handlebars/handlebars',
+		ical: 'vendor/ical.js/build/ical.min',
 		marionette: 'vendor/backbone.marionette/lib/backbone.marionette',
 		underscore: 'vendor/underscore/underscore',
-		OC: 'tests/mocks/OC',
 		text: 'vendor/text/text'
+	},
+	shim: {
+		davclient: {
+			exports: 'dav'
+		},
+		ical: {
+			exports: 'ICAL'
+		}
 	},
 	// dynamically load all test files
 	deps: allTestFiles,
