@@ -1,4 +1,5 @@
 <?php
+
 /**
  * @author Christoph Wurst <christoph@winzerhof-wurst.at>
  * @author Clement Wong <mail@clement.hk>
@@ -6,7 +7,6 @@
  * @author Lukas Reschke <lukas@owncloud.com>
  * @author matiasdelellis <mati86dl@gmail.com>
  * @author Robin McCorkell <rmccorkell@karoshi.org.uk>
- * @author Scrutinizer Auto-Fixer <auto-fixer@scrutinizer-ci.com>
  * @author Thomas Imbreckx <zinks@iozero.be>
  * @author Thomas I <thomas@oatr.be>
  * @author Thomas Mueller <thomas.mueller@tmit.eu>

@@ -1,8 +1,8 @@
 <?php
+
 /**
  * @author Christoph Wurst <christoph@winzerhof-wurst.at>
- * @author Robin McCorkell <rmccorkell@karoshi.org.uk>
- * @author Scrutinizer Auto-Fixer <auto-fixer@scrutinizer-ci.com>
+ * @author Christoph Wurst <wurst.christoph@gmail.com>
  * @author Thomas Müller <thomas.mueller@tmit.eu>
  *
  * ownCloud - Mail

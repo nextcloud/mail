@@ -1,4 +1,5 @@
 <?php
+
 /**
  * @author Alexander Weidinger <alexwegoo@gmail.com>
  * @author Christoph Wurst <christoph@winzerhof-wurst.at>
@@ -6,7 +7,6 @@
  * @author Jakob Sack <jakob@owncloud.org>
  * @author Jan-Christoph Borchardt <hey@jancborchardt.net>
  * @author Lukas Reschke <lukas@owncloud.com>
- * @author Scrutinizer Auto-Fixer <auto-fixer@scrutinizer-ci.com>
  * @author Thomas Imbreckx <zinks@iozero.be>
  * @author Thomas Müller <thomas.mueller@tmit.eu>
  *

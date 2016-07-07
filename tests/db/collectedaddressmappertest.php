@@ -2,6 +2,7 @@
 
 /**
  * @author Christoph Wurst <christoph@winzerhof-wurst.at>
+ * @author Thomas Müller <thomas.mueller@tmit.eu>
  *
  * ownCloud - Mail
  *

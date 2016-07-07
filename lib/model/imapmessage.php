@@ -1,11 +1,11 @@
 <?php
+
 /**
  * @author Alexander Weidinger <alexwegoo@gmail.com>
  * @author Christoph Wurst <christoph@winzerhof-wurst.at>
  * @author Christoph Wurst <wurst.christoph@gmail.com>
  * @author Jan-Christoph Borchardt <hey@jancborchardt.net>
  * @author Robin McCorkell <rmccorkell@karoshi.org.uk>
- * @author Scrutinizer Auto-Fixer <auto-fixer@scrutinizer-ci.com>
  * @author Thomas Mueller <thomas.mueller@tmit.eu>
  * @author Thomas Müller <thomas.mueller@tmit.eu>
  *

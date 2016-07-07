@@ -1,6 +1,8 @@
 <?php
+
 /**
  * @author Christoph Wurst <christoph@winzerhof-wurst.at>
+ * @author Jan-Christoph Borchardt <hey@jancborchardt.net>
  * @author Thomas Imbreckx <zinks@iozero.be>
  * @author Thomas Müller <thomas.mueller@tmit.eu>
  *

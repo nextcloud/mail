@@ -1,4 +1,5 @@
 <?php
+
 /**
  * @author Lukas Reschke <lukas@statuscode.ch>
  * @author Thomas Müller <thomas.mueller@tmit.eu>
