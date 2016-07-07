@@ -102,7 +102,9 @@ define(function(require) {
 		onClick: function(e) {
 			e.preventDefault();
 			if (this.model.get('folders').length > 0) {
-				Radio.navigation.trigger('folder', this.model.get('accountId'), this.model.get('folders').first().get('id'));
+				var accountId = this.model.get('accountId');
+				var folderId = this.model.get('folders').first().get('id');
+				Radio.navigation.trigger('folder', accountId, folderId);
 			}
 		},
 		onShow: function() {
