@@ -30,7 +30,7 @@ define(function(require) {
 	var MessageView = require('views/message');
 	var MessagesView = require('views/messages');
 	var LoadingView = require('views/loadingview');
-	var MessageContentTemplate = require('text!templates/messagecontent.html');
+	var MessageContentTemplate = require('text!templates/foldercontent.html');
 
 	var DetailView = Object.freeze({
 		MESSAGE: 1,
@@ -41,12 +41,17 @@ define(function(require) {
 		template: Handlebars.compile(MessageContentTemplate),
 		className: 'container',
 		detailView: null,
+		account: null,
+		folder: null,
 		composer: null,
 		regions: {
 			messages: '#mail-messages',
 			message: '#mail-message'
 		},
-		initialize: function() {
+		initialize: function(options) {
+			this.account = options.account;
+			this.folder = options.folder;
+
 			this.listenTo(Radio.ui, 'message:show', this.onShowMessage);
 			this.listenTo(Radio.ui, 'composer:show', this.onShowComposer);
 			this.listenTo(Radio.ui, 'composer:leave', this.onComposerLeave);
@@ -62,14 +67,20 @@ define(function(require) {
 			this.listenTo(Radio.ui, 'message:loading', this.onMessageLoading);
 		},
 		onShow: function() {
-			this.messages.show(new MessagesView());
+			this.messages.show(new MessagesView({
+				collection: this.folder.get('messages')
+			}));
 		},
 		onShowMessage: function(message) {
 			// Temporarily disable new-message composer events
 			Radio.ui.trigger('composer:events:undelegate');
 
 			var messageModel = new Backbone.Model(message);
-			this.message.show(new MessageView({model: messageModel}));
+			this.message.show(new MessageView({
+				account: this.account,
+				folder: this.folder,
+				model: messageModel
+			}));
 			this.detailView = DetailView.MESSAGE;
 
 			Radio.ui.trigger('messagesview:messageflag:set', message.id, 'unseen', false);
@@ -100,8 +111,8 @@ define(function(require) {
 
 			// set 'from' dropdown to current account
 			// TODO: fix selector conflicts
-			if (require('state').currentAccount.get('accountId') !== -1) {
-				$('.mail-account').val(require('state').currentAccount.get('accountId'));
+			if (this.account.get('accountId') !== -1) {
+				$('.mail-account').val(this.account.get('accountId'));
 			}
 
 			// focus 'to' field automatically on clicking New message button
@@ -110,7 +121,8 @@ define(function(require) {
 			if (data && !_.isUndefined(data.currentTarget) && !_.isUndefined($(data.currentTarget).
 				data().email)) {
 				var to = '"' + $(data.currentTarget).
-					data().label + '" <' + $(data.currentTarget).data().email + '>';
+					data().label + '" <' + $(data.currentTarget).
+					data().email + '>';
 				this.composer.setTo(to);
 				this.composer.focusSubject();
 			}

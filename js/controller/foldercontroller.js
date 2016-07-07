@@ -78,7 +78,7 @@ define(function(require) {
 			});
 
 			$.when(loadingMessages).done(function(messages, cached) {
-				Radio.ui.trigger('messagecontent:show');
+				Radio.ui.trigger('foldercontent:show', account, folder);
 				require('state').currentlyLoading = null;
 				require('state').currentAccount = account;
 				require('state').currentFolder = folder;
@@ -93,11 +93,10 @@ define(function(require) {
 					// Fetch first 10 messages in background
 					_.each(messages.slice(0, 10), function(
 						message) {
-						require('background').messageFetcher.push(message.id);
+						require('background').messageFetcher.push(message.get('id'));
 					});
 
-					var messageId = messages[0].id;
-					Radio.message.trigger('load', account, folder, messageId);
+					Radio.message.trigger('load', account, folder, messages.first());
 					// Show 'Load More' button if there are
 					// more messages than the pagination limit
 					if (messages.length > 20) {

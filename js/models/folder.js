@@ -19,11 +19,14 @@ define(function(require) {
 	var Folder = Backbone.Model.extend({
 		defaults: {
 			open: false,
-			folders: []
+			folders: [],
+			messages: []
 		},
 		initialize: function() {
 			var FolderCollection = require('models/foldercollection');
+			var MessageCollection = require('models/messagecollection');
 			this.set('folders', new FolderCollection(this.get('folders')));
+			this.set('messages', new MessageCollection(this.get('messages')));
 		},
 		toggleOpen: function() {
 			this.set({open: !this.get('open')});

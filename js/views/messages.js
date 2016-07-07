@@ -24,7 +24,6 @@ define(function(require) {
 	var Backbone = require('backbone');
 	var Handlebars = require('handlebars');
 	var Radio = require('radio');
-	var MessageCollection = require('models/messagecollection');
 	var MessagesItemView = require('views/messagesitem');
 	var MessageListTemplate = require('text!templates/message-list.html');
 	var NoSearchResultMessageListView = require('views/nosearchresultmessagelistview');
@@ -43,8 +42,7 @@ define(function(require) {
 		},
 		filterCriteria: null,
 		initialize: function() {
-			this.collection = new MessageCollection();
-			this.collection.on('change:flags', this.changeFlags, this);
+			this.listenTo(this.collection, 'change:flags', this.changeFlags);
 
 			var _this = this;
 			Radio.ui.reply('messagesview:collection', function() {
@@ -167,12 +165,7 @@ define(function(require) {
 					replace: reload
 				});
 
-			$.when(loadingMessages).done(function(jsondata) {
-				if (reload) {
-					_this.collection.reset();
-				}
-				// Add messages
-				_this.collection.add(jsondata);
+			$.when(loadingMessages).done(function() {
 				Radio.ui.trigger('messagesview:message:setactive', require('state').currentMessageId);
 			});
 
@@ -194,8 +187,12 @@ define(function(require) {
 				_this.loadingMore = false;
 			});
 		},
-		addMessages: function(data) {
-			this.collection.add(data);
+		addMessages: function(message) {
+			var _this = this;
+			// TODO: merge?
+			message.each(function(msg) {
+				_this.collection.add(msg);
+			});
 		},
 		reset: function() {
 			this.collection.reset();

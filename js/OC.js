@@ -1,5 +1,3 @@
-/* global OC */
-
 /**
  * ownCloud - Mail
  *
@@ -13,6 +11,6 @@
 define(function() {
 	'use strict';
 
-	return OC;
+	return window.OC || {};
 });
 
