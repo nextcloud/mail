@@ -152,9 +152,22 @@ define(function(require) {
 			this.message.show(new LoadingView());
 		},
 		onKeyUp: function(key) {
-			if (key === 46) {
-				// Mimic a client clicking the delete button for the currently active message.
-				$('.mail-message-summary.active .icon-delete.action.delete').click();
+			console.log(key);
+			switch (key) {
+				case 46:
+					// Mimic a client clicking the delete button for the currently active message.
+					$('.mail-message-summary.active .icon-delete.action.delete').
+						click();
+					break;
+				case 74:
+					// 'j' -> next message
+					Radio.message.trigger('messagesview:message:next');
+					console.log('j');
+					break;
+				case 75:
+					// 'k' -> previous message
+					Radio.message.trigger('messagesview:message:prev');
+					break;
 			}
 		}
 	});
