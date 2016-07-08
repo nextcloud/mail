@@ -11,27 +11,25 @@
 define(function(require) {
 	'use strict';
 
+	var _ = require('underscore');
 	var Radio = require('backbone.radio');
 
-	var accountChannel = Radio.channel('account');
-	var folderChannel = Radio.channel('folder');
-	var davChannel = Radio.channel('dav');
-	var messageChannel = Radio.channel('message');
-	var navigationChannel = Radio.channel('navigation');
-	var notificationChannel = Radio.channel('notification');
-	var stateChannel = Radio.channel('state');
-	var uiChannel = Radio.channel('ui');
+	var channelNames = [
+		'account',
+		'folder',
+		'dav',
+		'message',
+		'navigation',
+		'notification',
+		'state',
+		'ui',
+		'keyboard'
+	];
 
-	var channels = {
-		account: accountChannel,
-		dav: davChannel,
-		folder: folderChannel,
-		message: messageChannel,
-		navigation: navigationChannel,
-		notification: notificationChannel,
-		state: stateChannel,
-		ui: uiChannel
-	};
+	var channels = {};
+	_.each(channelNames, function(channelName) {
+		channels[channelName] = Radio.channel(channelName);
+	});
 
 	return channels;
 });
