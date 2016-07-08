@@ -151,21 +151,23 @@ define(function(require) {
 		onMessageLoading: function() {
 			this.message.show(new LoadingView());
 		},
-		onKeyUp: function(key) {
-			console.log(key);
+		onKeyUp: function(event, key) {
 			switch (key) {
 				case 46:
 					// Mimic a client clicking the delete button for the currently active message.
 					$('.mail-message-summary.active .icon-delete.action.delete').
 						click();
 					break;
+				case 39:
 				case 74:
-					// 'j' -> next message
+					// right arrow or 'j' -> next message
+					event.preventDefault();
 					Radio.message.trigger('messagesview:message:next');
-					console.log('j');
 					break;
+				case 37:
 				case 75:
-					// 'k' -> previous message
+					// left arrow or 'k' -> previous message
+					event.preventDefault();
 					Radio.message.trigger('messagesview:message:prev');
 					break;
 			}

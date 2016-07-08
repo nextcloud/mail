@@ -119,9 +119,9 @@ define(function(require) {
 			var key = e.keyCode || e.which;
 
 			// Trigger the event only if no input or textarea is focused
-			if ($('input:focus').length === 0
-				&& $('textarea:focus').length === 0) {
-				Radio.keyboard.trigger('keyup', key);
+			if ($('input:focus').length === 0 &&
+				$('textarea:focus').length === 0) {
+				Radio.keyboard.trigger('keyup', e, key);
 			}
 		},
 		onWindowResize: function() {
