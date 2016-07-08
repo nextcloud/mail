@@ -1,4 +1,5 @@
 <?php
+
 /**
  * @author Christoph Wurst <christoph@winzerhof-wurst.at>
  * @author Steffen Lindner <mail@steffen-lindner.de>

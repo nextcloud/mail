@@ -1,4 +1,5 @@
 <?php
+
 /**
  * @author Jakob Sack <jakob@owncloud.org>
  *

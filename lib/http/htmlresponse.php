@@ -1,4 +1,5 @@
 <?php
+
 /**
  * @author Christoph Wurst <wurst.christoph@gmail.com>
  * @author Lukas Reschke <lukas@owncloud.com>

@@ -1,7 +1,9 @@
 <?php
 
 /**
+ * @author Bernhard Scheirle <bernhard+git@scheirle.de>
  * @author Christoph Wurst <christoph@winzerhof-wurst.at>
+ * @author Scheirle <bernhard+git@scheirle.de>
  *
  * ownCloud - Mail
  *

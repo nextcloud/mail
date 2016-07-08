@@ -1,4 +1,5 @@
 <?php
+
 /**
  * @author Alexander Weidinger <alexwegoo@gmail.com>
  * @author Christian Nöding <christian@noeding-online.de>
@@ -6,9 +7,9 @@
  * @author Christoph Wurst <ChristophWurst@users.noreply.github.com>
  * @author Christoph Wurst <wurst.christoph@gmail.com>
  * @author Clement Wong <mail@clement.hk>
+ * @author gouglhupf <dr.gouglhupf@gmail.com>
  * @author Lukas Reschke <lukas@owncloud.com>
  * @author Robin McCorkell <rmccorkell@karoshi.org.uk>
- * @author Scrutinizer Auto-Fixer <auto-fixer@scrutinizer-ci.com>
  * @author Thomas Imbreckx <zinks@iozero.be>
  * @author Thomas I <thomas@oatr.be>
  * @author Thomas Mueller <thomas.mueller@tmit.eu>
