@@ -5,21 +5,25 @@
  * later. See the COPYING file.
  *
  * @author Christoph Wurst <christoph@winzerhof-wurst.at>
- * @copyright Christoph Wurst 2015
+ * @copyright Christoph Wurst 2015, 2016
  */
 
 define(function(require) {
 	'use strict';
 
+	var _ = require('underscore');
 	var Radio = require('radio');
-	var timeoutID = null;
+	var lastQuery = '';
+
+	var debouncedFilter = _.debounce(function debouncedFilterFn(query) {
+		Radio.ui.trigger('messagesview:filter', query);
+	}, 1000);
 
 	function filter(query) {
-		window.clearTimeout(timeoutID);
-		timeoutID = window.setTimeout(function() {
-			Radio.ui.trigger('messagesview:filter', query);
-		}, 500);
-		$('#searchresults').hide();
+		if (query !== lastQuery) {
+			lastQuery = query;
+			debouncedFilter(query);
+		}
 	}
 
 	return {
