@@ -147,6 +147,7 @@ define(function(require) {
 
 			$.when(creatingAccount).done(function() {
 				Radio.ui.trigger('navigation:show');
+				Radio.ui.trigger('content:loading');
 				// reload accounts
 				$.when(AccountController.loadAccounts()).done(function(accounts) {
 					$('#app-navigation').removeClass('icon-loading');
