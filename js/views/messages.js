@@ -49,7 +49,6 @@ define(function(require) {
 				return _this.collection;
 			});
 			this.listenTo(Radio.ui, 'messagesview:messages:update', this.loadNew);
-			this.listenTo(Radio.ui, 'messagesview:messages:reset', this.reset);
 			this.listenTo(Radio.ui, 'messagesview:messages:add', this.addMessages);
 			this.listenTo(Radio.ui, 'messagesview:messageflag:set', this.setMessageFlag);
 			this.listenTo(Radio.ui, 'messagesview:filter', this.filterCurrentMailbox);
@@ -193,11 +192,6 @@ define(function(require) {
 			message.each(function(msg) {
 				_this.collection.add(msg);
 			});
-		},
-		reset: function() {
-			this.collection.reset();
-
-			$('#messages-loading').fadeIn();
 		}
 	});
 });

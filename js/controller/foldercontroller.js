@@ -32,7 +32,6 @@ define(function(require) {
 	function loadFolders(account) {
 		var fetchingFolders = FolderService.getFolderEntities(account);
 
-		Radio.ui.trigger('messagesview:messages:reset');
 		$('#app-navigation').addClass('icon-loading');
 
 		$.when(fetchingFolders).fail(function() {
@@ -61,7 +60,6 @@ define(function(require) {
 		// Set folder active
 		Radio.folder.trigger('setactive', account, folder);
 		Radio.ui.trigger('content:loading');
-		Radio.ui.trigger('messagesview:messages:reset');
 
 		$('#load-new-mail-messages').hide();
 		$('#load-more-mail-messages').hide();
