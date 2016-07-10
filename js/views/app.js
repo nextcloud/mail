@@ -116,23 +116,12 @@ define(function(require) {
 		},
 		onKeyUp: function(e) {
 			// Define which objects to check for the event properties.
-			// (Window object provides fallback for IE8 and lower.)
-			e = e || window.e;
 			var key = e.keyCode || e.which;
-			// If the client is currently viewing a message:
-			if (require('state').currentMessageId) {
-				if (key === 46) {
-					// If delete key is pressed:
-					// If not composing a reply
-					// and message list is visible (not being in a settings dialog)
-					// and if searchbox is not focused
-					if (!$('.to, .cc, .message-body').is(':focus') &&
-						$('#mail-messages').is(':visible') &&
-						!$('#searchbox').is(':focus')) {
-						// Mimic a client clicking the delete button for the currently active message.
-						$('.mail-message-summary.active .icon-delete.action.delete').click();
-					}
-				}
+
+			// Trigger the event only if no input or textarea is focused
+			if ($('input:focus').length === 0 &&
+				$('textarea:focus').length === 0) {
+				Radio.keyboard.trigger('keyup', e, key);
 			}
 		},
 		onWindowResize: function() {

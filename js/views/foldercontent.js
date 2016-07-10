@@ -55,6 +55,7 @@ define(function(require) {
 			this.listenTo(Radio.ui, 'message:show', this.onShowMessage);
 			this.listenTo(Radio.ui, 'composer:show', this.onShowComposer);
 			this.listenTo(Radio.ui, 'composer:leave', this.onComposerLeave);
+			this.listenTo(Radio.keyboard, 'keyup', this.onKeyUp);
 
 			// TODO: check whether this code is still needed
 			this.listenTo(Radio.ui, 'composer:events:undelegate', function() {
@@ -149,6 +150,27 @@ define(function(require) {
 		},
 		onMessageLoading: function() {
 			this.message.show(new LoadingView());
+		},
+		onKeyUp: function(event, key) {
+			switch (key) {
+				case 46:
+					// Mimic a client clicking the delete button for the currently active message.
+					$('.mail-message-summary.active .icon-delete.action.delete').
+						click();
+					break;
+				case 39:
+				case 74:
+					// right arrow or 'j' -> next message
+					event.preventDefault();
+					Radio.message.trigger('messagesview:message:next');
+					break;
+				case 37:
+				case 75:
+					// left arrow or 'k' -> previous message
+					event.preventDefault();
+					Radio.message.trigger('messagesview:message:prev');
+					break;
+			}
 		}
 	});
 });

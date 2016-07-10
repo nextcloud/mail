@@ -54,6 +54,8 @@ define(function(require) {
 			this.listenTo(Radio.ui, 'messagesview:filter', this.filterCurrentMailbox);
 			this.listenTo(Radio.ui, 'messagesview:filter:clear', this.clearFilter);
 			this.listenTo(Radio.ui, 'messagesview:message:setactive', this.setActiveMessage);
+			this.listenTo(Radio.message, 'messagesview:message:next', this.selectNextMessage);
+			this.listenTo(Radio.message, 'messagesview:message:prev', this.selectPreviousMessage);
 		},
 		onShow: function() {
 			this.$scrollContainer = this.$el.parent();
@@ -103,6 +105,54 @@ define(function(require) {
 			require('state').currentMessageId = messageId;
 			require('state').folderView.updateTitle();
 
+		},
+		selectNextMessage: function() {
+			if (this.currentMessageId === null) {
+				return;
+			}
+
+			var message = this.collection.get(this.currentMessageId);
+			if (message === null) {
+				return;
+			}
+
+			if (this.collection.indexOf(message) === (this.collection.length - 1)) {
+				// Last message, nothing to do
+				return;
+			}
+
+			var nextMessage = this.collection.at(this.collection.indexOf(message) + 1);
+			if (nextMessage) {
+				var account = require('state').currentAccount;
+				var folder = require('state').currentFolder;
+				Radio.message.trigger('load', account, folder, nextMessage, {
+					force: true
+				});
+			}
+		},
+		selectPreviousMessage: function() {
+			if (this.currentMessageId === null) {
+				return;
+			}
+
+			var message = this.collection.get(this.currentMessageId);
+			if (message === null) {
+				return;
+			}
+
+			if (this.collection.indexOf(message) === 0) {
+				// First message, nothing to do
+				return;
+			}
+
+			var previousMessage = this.collection.at(this.collection.indexOf(message) - 1);
+			if (previousMessage) {
+				var account = require('state').currentAccount;
+				var folder = require('state').currentFolder;
+				Radio.message.trigger('load', account, folder, previousMessage, {
+					force: true
+				});
+			}
 		},
 		loadNew: function() {
 			if (!require('state').currentAccount) {
