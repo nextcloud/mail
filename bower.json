@@ -1,5 +1,5 @@
 {
-  "name": "Mail",
+  "name": "mail",
   "version": "0.5.3",
   "description": "ownCloud Mail App",
   "main": "mail.js",
