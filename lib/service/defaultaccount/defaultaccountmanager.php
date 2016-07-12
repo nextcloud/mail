@@ -69,7 +69,7 @@ class DefaultAccountManager {
 	}
 
 	/**
-	 * @return array
+	 * @return Config|null
 	 */
 	private function getConfig() {
 		$config = $this->config->getSystemValue('app.mail.accounts.default', null);
