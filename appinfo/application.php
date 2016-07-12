@@ -22,6 +22,7 @@
 
 namespace OCA\Mail\AppInfo;
 
+use OC;
 use OCP\AppFramework\App;
 use OCP\Util;
 
@@ -30,6 +31,11 @@ class Application extends App {
 	public function __construct(array $urlParams = []) {
 		parent::__construct('mail', $urlParams);
 
+		$this->initializeAppContainer();
+		$this->registerHooks();
+	}
+
+	public function initializeAppContainer() {
 		$container = $this->getContainer();
 
 		$transport = $container->getServer()->getConfig()->getSystemValue('app.mail.transport', 'smtp');
@@ -45,6 +51,27 @@ class Application extends App {
 		$container->registerParameter("testSmtp", $testSmtp);
 		$container->registerParameter("referrer", isset($_SERVER['HTTP_REFERER']) ? : null);
 		$container->registerParameter("hostname", Util::getServerHostName());
+	}
+
+	public function registerHooks() {
+		Util::connectHook('OC_User', 'post_login', $this, 'handleLoginHook');
+	}
+
+	public function handleLoginHook($params) {
+		if (!isset($params['password'])) {
+			return;
+		}
+		$password = $params['password'];
+
+		$container = $this->getContainer();
+		/* @var $defaultAccountManager \OCA\Mail\Service\DefaultAccount\DefaultAccountManager */
+		$defaultAccountManager = $container->query('\OCA\Mail\Service\DefaultAccount\DefaultAccountManager');
+
+		if (!$defaultAccountManager->defaultConfigAvailable()) {
+			return;
+		}
+
+		$defaultAccountManager->saveLoginPassword($password);
 	}
 
 }
