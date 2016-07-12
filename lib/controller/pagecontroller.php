@@ -25,6 +25,7 @@
 namespace OCA\Mail\Controller;
 
 use OCA\Mail\Db\MailAccountMapper;
+use OCA\Mail\Service\DefaultAccount\DefaultAccountManager;
 use OCP\AppFramework\Controller;
 use OCP\AppFramework\Http\ContentSecurityPolicy;
 use OCP\AppFramework\Http\RedirectResponse;
@@ -34,6 +35,11 @@ use OCP\IRequest;
 use OCP\IURLGenerator;
 
 class PageController extends Controller {
+
+	/**
+	 * @var DefaultAccountManager
+	 */
+	private $defaultAccountManager;
 
 	/**
 	 * @var MailAccountMapper
@@ -62,11 +68,14 @@ class PageController extends Controller {
 	 * @param IConfig $config
 	 * @param $UserId
 	 */
-	public function __construct($appName, IRequest $request, MailAccountMapper $mailAccountMapper, IURLGenerator $urlGenerator, IConfig $config, $UserId) {
+	public function __construct($appName, IRequest $request,
+		MailAccountMapper $mailAccountMapper, IURLGenerator $urlGenerator,
+		IConfig $config, DefaultAccountManager $defaultAccountManager, $UserId) {
 		parent::__construct($appName, $request);
 		$this->mailAccountMapper = $mailAccountMapper;
 		$this->urlGenerator = $urlGenerator;
 		$this->config = $config;
+		$this->defaultAccountManager = $defaultAccountManager;
 		$this->currentUserId = $UserId;
 	}
 
@@ -77,7 +86,7 @@ class PageController extends Controller {
 	 * @return TemplateResponse renders the index page
 	 */
 	public function index() {
-
+		$this->defaultAccountManager->createOrUpdateDefaultAccount();
 
 		$coreVersion = $this->config->getSystemValue('version', '0.0.0');
 		$hasDavSupport = (int) version_compare($coreVersion, '9.0.0', '>=');

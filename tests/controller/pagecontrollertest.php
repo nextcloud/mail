@@ -31,6 +31,7 @@ class PageControllerTest extends TestCase {
 	private $mailAccountMapper;
 	private $urlGenerator;
 	private $config;
+	private $defaultAccountManager;
 	private $controller;
 
 	protected function setUp() {
@@ -44,10 +45,17 @@ class PageControllerTest extends TestCase {
 			->getMock();
 		$this->urlGenerator = $this->getMock('OCP\IURLGenerator');
 		$this->config = $this->getMock('OCP\IConfig');
-		$this->controller = new PageController($this->appName, $this->request, $this->mailAccountMapper, $this->urlGenerator, $this->config, $this->userId);
+		$this->defaultAccountManager = $this->getMockBuilder('OCA\Mail\Service\DefaultAccount\DefaultAccountManager')
+			->disableOriginalConstructor()
+			->getMock();
+		$this->controller = new PageController($this->appName, $this->request, $this->mailAccountMapper,
+			$this->urlGenerator, $this->config, $this->defaultAccountManager, $this->userId);
 	}
 
 	public function testIndex() {
+		$this->defaultAccountManager->expects($this->once())
+			->method('createOrUpdateDefaultAccount');
+
 		$this->config->expects($this->at(0))
 			->method('getSystemValue')
 			->with('version', '0.0.0')
