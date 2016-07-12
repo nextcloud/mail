@@ -77,6 +77,8 @@ class PageController extends Controller {
 	 * @return TemplateResponse renders the index page
 	 */
 	public function index() {
+
+
 		$coreVersion = $this->config->getSystemValue('version', '0.0.0');
 		$hasDavSupport = (int) version_compare($coreVersion, '9.0.0', '>=');
 		// TODO: remove DEBUG constant check once minimum oc

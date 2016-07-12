@@ -48,16 +48,6 @@ class DefaultAccountManager {
 	}
 
 	/**
-	 * Check whether the admin configured default account settings for creating
-	 * a default account
-	 *
-	 * @return boolean
-	 */
-	public function defaultConfigAvailable() {
-		return !is_null($this->getConfig());
-	}
-
-	/**
 	 * @return array
 	 */
 	private function getConfig() {

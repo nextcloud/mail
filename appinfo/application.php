@@ -67,10 +67,6 @@ class Application extends App {
 		/* @var $defaultAccountManager \OCA\Mail\Service\DefaultAccount\DefaultAccountManager */
 		$defaultAccountManager = $container->query('\OCA\Mail\Service\DefaultAccount\DefaultAccountManager');
 
-		if (!$defaultAccountManager->defaultConfigAvailable()) {
-			return;
-		}
-
 		$defaultAccountManager->saveLoginPassword($password);
 	}
 
