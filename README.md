@@ -97,6 +97,7 @@ Connect to your database and run the following commands (`oc_` is the default ta
 ```sql
 DELETE FROM oc_appconfig WHERE appid = 'mail';
 DROP TABLE oc_mail_accounts;
+DROP TABLE oc_mail_collected_addresses;
 ```
 
 Go to ownCloud Mail in the browser and run this from the developer console to clear the cache:
