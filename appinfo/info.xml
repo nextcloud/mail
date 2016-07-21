@@ -10,7 +10,7 @@
 		<admin>https://github.com/owncloud/mail#readme</admin>
 	</documentation>
 	<dependencies>
-		<owncloud min-version="8.0" max-version="9.1" />
+		<owncloud min-version="8.0" max-version="9.2" />
 		<php min-version="5.4" max-version="7.0" />
 	</dependencies>
 	<ocsid>169914</ocsid>
