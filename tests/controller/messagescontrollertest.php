@@ -46,6 +46,7 @@ class MessagesControllerTest extends \Test\TestCase {
 	private $mailbox;
 	private $message;
 	private $attachment;
+	private $mimeTypeDetector;
 
 	protected function setUp() {
 		parent::setUp();
@@ -73,6 +74,7 @@ class MessagesControllerTest extends \Test\TestCase {
 		$this->l10n = $this->getMockBuilder('\OCP\IL10N')
 			->disableOriginalConstructor()
 			->getMock();
+		$this->mimeTypeDetector = $this->getMock('OCP\Files\IMimeTypeDetector');
 
 		$this->controller = new MessagesController(
 			$this->appName,
@@ -82,7 +84,8 @@ class MessagesControllerTest extends \Test\TestCase {
 			$this->userFolder,
 			$this->contactIntegration,
 			$this->logger,
-			$this->l10n);
+			$this->l10n,
+			$this->mimeTypeDetector);
 
 		$this->account = $this->getMockBuilder('\OCA\Mail\Account')
 			->disableOriginalConstructor()

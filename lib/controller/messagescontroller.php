@@ -28,6 +28,7 @@
 
 namespace OCA\Mail\Controller;
 
+use OC;
 use OCA\Mail\Http\AttachmentDownloadResponse;
 use OCA\Mail\Http\HtmlResponse;
 use OCA\Mail\Service\AccountService;
@@ -42,6 +43,8 @@ use OCP\AppFramework\Http;
 use OCP\AppFramework\Http\ContentSecurityPolicy;
 use OCP\AppFramework\Http\JSONResponse;
 use OCP\AppFramework\Http\TemplateResponse;
+use OCP\Files\Folder;
+use OCP\Files\IMimeTypeDetector;
 use OCP\IL10N;
 use OCP\IRequest;
 use OCP\Util;
@@ -51,34 +54,25 @@ class MessagesController extends Controller {
 	/** @var AccountService */
 	private $accountService;
 
-	/**
-	 * @var string
-	 */
+	/** @var string */
 	private $currentUserId;
 
-	/**
-	 * @var ContactsIntegration
-	 */
+	/** @var ContactsIntegration */
 	private $contactsIntegration;
 
-	/**
-	 * @var \OCA\Mail\Service\Logger
-	 */
+	/** @var Logger */
 	private $logger;
 
-	/**
-	 * @var \OCP\Files\Folder
-	 */
+	/** @var Folder */
 	private $userFolder;
 
-	/**
-	 * @var IL10N
-	 */
+	/** @var IMimeTypeDetector */
+	private $mimeTypeDetector;
+
+	/** @var IL10N */
 	private $l10n;
 
-	/**
-	 * @var IAccount[]
-	 */
+	/** @var IAccount[] */
 	private $accounts = [];
 
 	/**
@@ -90,6 +84,7 @@ class MessagesController extends Controller {
 	 * @param ContactsIntegration $contactsIntegration
 	 * @param Logger $logger
 	 * @param IL10N $l10n
+	 * @param IMimeTypeDetector $mimeTypeDetector
 	 */
 	public function __construct($appName,
 								IRequest $request,
@@ -98,7 +93,8 @@ class MessagesController extends Controller {
 								$userFolder,
 								ContactsIntegration $contactsIntegration,
 								Logger $logger,
-								IL10N $l10n) {
+								IL10N $l10n,
+								IMimeTypeDetector $mimeTypeDetector) {
 		parent::__construct($appName, $request);
 		$this->accountService = $accountService;
 		$this->currentUserId = $UserId;
@@ -106,6 +102,7 @@ class MessagesController extends Controller {
 		$this->contactsIntegration = $contactsIntegration;
 		$this->logger = $logger;
 		$this->l10n = $l10n;
+		$this->mimeTypeDetector = $mimeTypeDetector;
 	}
 
 	/**
@@ -202,7 +199,7 @@ class MessagesController extends Controller {
 	 * @param int $accountId
 	 * @param string $folderId
 	 * @param string $messageId
-	 * @return \OCA\Mail\Http\HtmlResponse
+	 * @return HtmlResponse|TemplateResponse
 	 */
 	public function getHtmlBody($accountId, $folderId, $messageId) {
 		try {
@@ -223,16 +220,13 @@ class MessagesController extends Controller {
 			$htmlResponse = new HtmlResponse($html);
 
 			// Harden the default security policy
-			// FIXME: Remove once ownCloud 8.1 is a requirement for the mail app
-			if(class_exists('\OCP\AppFramework\Http\ContentSecurityPolicy')) {
-				$policy = new ContentSecurityPolicy();
-				$policy->allowEvalScript(false);
-				$policy->disallowScriptDomain('\'self\'');
-				$policy->disallowConnectDomain('\'self\'');
-				$policy->disallowFontDomain('\'self\'');
-				$policy->disallowMediaDomain('\'self\'');
-				$htmlResponse->setContentSecurityPolicy($policy);
-			}
+			$policy = new ContentSecurityPolicy();
+			$policy->allowEvalScript(false);
+			$policy->disallowScriptDomain('\'self\'');
+			$policy->disallowConnectDomain('\'self\'');
+			$policy->disallowFontDomain('\'self\'');
+			$policy->disallowMediaDomain('\'self\'');
+			$htmlResponse->setContentSecurityPolicy($policy);
 
 			// Enable caching
 			$htmlResponse->cacheFor(60 * 60);
@@ -359,7 +353,7 @@ class MessagesController extends Controller {
 
 	/**
 	 * @param int $accountId
-	 * @return \OCA\Mail\Service\IAccount
+	 * @return IAccount
 	 */
 	private function getAccount($accountId) {
 		if (!array_key_exists($accountId, $this->accounts)) {
@@ -385,15 +379,15 @@ class MessagesController extends Controller {
 	 * @return callable
 	 */
 	private function enrichDownloadUrl($accountId, $folderId, $messageId, $attachment) {
-		$downloadUrl = \OCP\Util::linkToRoute('mail.messages.downloadAttachment', [
+		$downloadUrl = Util::linkToRoute('mail.messages.downloadAttachment', [
 			'accountId' => $accountId,
 			'folderId' => $folderId,
 			'messageId' => $messageId,
 			'attachmentId' => $attachment['id'],
 		]);
-		$downloadUrl = \OC::$server->getURLGenerator()->getAbsoluteURL($downloadUrl);
+		$downloadUrl = OC::$server->getURLGenerator()->getAbsoluteURL($downloadUrl);
 		$attachment['downloadUrl'] = $downloadUrl;
-		$attachment['mimeUrl'] = $this->mimeTypeIcon($attachment['mime']);
+		$attachment['mimeUrl'] = $this->mimeTypeDetector->mimeTypeIcon($attachment['mime']);
 
 		if ($this->attachmentIsImage($attachment)) {
 			$attachment['isImage'] = true;
@@ -434,12 +428,12 @@ class MessagesController extends Controller {
 	 * @return string
 	 */
 	private function buildHtmlBodyUrl($accountId, $folderId, $messageId) {
-		$htmlBodyUrl = \OC::$server->getURLGenerator()->linkToRoute('mail.messages.getHtmlBody', [
+		$htmlBodyUrl = OC::$server->getURLGenerator()->linkToRoute('mail.messages.getHtmlBody', [
 			'accountId' => $accountId,
 			'folderId' => $folderId,
 			'messageId' => $messageId,
 		]);
-		return \OC::$server->getURLGenerator()->getAbsoluteURL($htmlBodyUrl);
+		return OC::$server->getURLGenerator()->getAbsoluteURL($htmlBodyUrl);
 	}
 
 	/**
@@ -492,24 +486,6 @@ class MessagesController extends Controller {
 			return $json;
 		}
 		return $json;
-	}
-
-	/**
-	 * Get path to the icon of a file type
-	 *
-	 * @todo Inject IMimeTypeDetector once core 8.2+ is supported
-	 *
-	 * @param string $mimeType the MIME type
-	 */
-	private function mimeTypeIcon($mimeType) {
-		$ocVersion = \OC::$server->getConfig()->getSystemValue('version', '0.0.0');
-		if (version_compare($ocVersion, '8.2.0', '<')) {
-			// Version-hack for 8.1 and lower
-			return \OC_Helper::mimetypeIcon($mimeType);
-		}
-		/* @var IMimeTypeDetector */
-		$mimeTypeDetector = \OC::$server->getMimeTypeDetector();
-		return $mimeTypeDetector->mimeTypeIcon($mimeType);
 	}
 
 }

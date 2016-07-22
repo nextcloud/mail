@@ -31,6 +31,8 @@ class ProxyControllerTest extends TestCase {
 	private $session;
 	private $controller;
 	private $hostname;
+	private $clientService;
+	private $client;
 
 	protected function setUp() {
 		parent::setUp();
@@ -45,6 +47,11 @@ class ProxyControllerTest extends TestCase {
 		$this->session = $this->getMockBuilder('\OCP\ISession')
 			->disableOriginalConstructor()
 			->getMock();
+		$this->clientService = $this->getMock('\OCP\Http\Client\IClientService');
+		$this->client = $this->getMock('\OCP\Http\Client\IClient');
+		$this->clientService->expects($this->any())
+			->method('getClient')
+			->will($this->returnValue($this->client));
 		$this->hostname = 'example.com';
 	}
 
@@ -78,7 +85,7 @@ class ProxyControllerTest extends TestCase {
 			->with('mail.page.index')
 			->will($this->returnValue('mail-route'));
 		$this->controller = new ProxyController($this->appName, $this->request,
-			$this->urlGenerator, $this->session, $url, 'example.com');
+			$this->urlGenerator, $this->session, $this->clientService, $url, 'example.com');
 
 		$expected = new TemplateResponse($this->appName, 'redirect',
 			[

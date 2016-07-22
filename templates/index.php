@@ -40,7 +40,6 @@ if ($_['debug']) {
 ?>
 
 <input type="hidden" id="config-installed-version" value="<?php p($_['app-version']); ?>">
-<input type="hidden" id="has-dav-support" value="<?php p($_['has-dav-support']); ?>">
 
 <div id="user-displayname"
      style="display: none"><?php p(\OCP\User::getDisplayName(\OCP\User::getUser())); ?></div>

@@ -103,42 +103,18 @@ class TransformURLScheme extends HTMLPurifier_URIFilter {
 		// otherwise it's an element that we send through our proxy
 		if ($element === 'href') {
 			$uri = new \HTMLPurifier_URI(
-				$this->getServerProtocol(), null, $this->getServerHost(), null,
+				$this->request->getServerProtocol(), null, $this->request->getServerHost(), null,
 				$this->urlGenerator->linkToRoute('mail.proxy.redirect'),
 				'src=' . $originalURL, null);
 			return $uri;
 		} else {
 			$uri = new \HTMLPurifier_URI(
-				$this->getServerProtocol(), null, $this->getServerHost(), null,
+				$this->request->getServerProtocol(), null, $this->request->getServerHost(), null,
 				$this->urlGenerator->linkToRoute('mail.proxy.proxy'),
 				'src=' . $originalURL . '&requesttoken=' . \OC::$server->getSession()->get('requesttoken'),
 				null);
 			return $uri;
 		}
-	}
-
-	/**
-	 * @todo remove version-hack once core 8.1+ is supported
-	 * @return string
-	 */
-	private function getServerProtocol() {
-		$ocVersion = \OC::$server->getConfig()->getSystemValue('version', '0.0.0');
-		if (version_compare($ocVersion, '8.2.0', '<')) {
-			return Util::getServerProtocol();
-		}
-		return $this->request->getServerProtocol();
-	}
-
-	/**
-	 * @todo remove version-hack once core 8.1+ is supported
-	 * @return string
-	 */
-	private function getServerHost() {
-		$ocVersion = \OC::$server->getConfig()->getSystemValue('version', '0.0.0');
-		if (version_compare($ocVersion, '8.2.0', '<')) {
-			return Util::getServerHost();
-		}
-		return $this->request->getServerHost();
 	}
 
 }

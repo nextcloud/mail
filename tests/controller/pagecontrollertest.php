@@ -48,11 +48,7 @@ class PageControllerTest extends TestCase {
 	}
 
 	public function testIndex() {
-		$this->config->expects($this->at(0))
-			->method('getSystemValue')
-			->with('version', '0.0.0')
-			->will($this->returnValue('8.2.0'));
-		$this->config->expects($this->at(1))
+		$this->config->expects($this->once())
 			->method('getSystemValue')
 			->with('debug', false)
 			->will($this->returnValue(true));
@@ -64,7 +60,6 @@ class PageControllerTest extends TestCase {
 		$expected = new TemplateResponse($this->appName, 'index', [
 			'debug' => true,
 			'app-version' => '1.2.3',
-			'has-dav-support' => 0,
 		]);
 		// set csp rules for ownCloud 8.1
 		if (class_exists('OCP\AppFramework\Http\ContentSecurityPolicy')) {
