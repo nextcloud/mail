@@ -76,13 +76,7 @@ matrix:
     - php: 5.4
       env: "DB=pgsql PHP_COVERAGE=TRUE"
     - php: 5.4
-      env: "DB=mysql CORE_BRANCH=stable8 PACKAGE=TRUE"
-    - php: 5.4
-      env: "DB=mysql CORE_BRANCH=stable8.1"
-    - php: 5.4
-      env: "DB=mysql CORE_BRANCH=stable8.2"
-    - php: 5.4
-      env: "DB=mysql CORE_BRANCH=stable9"
+      env: "DB=mysql CORE_BRANCH=stable9 PACKAGE=TRUE"
     - php: 5.4
       env: "DB=mysql CORE_BRANCH=stable9.1"
 
