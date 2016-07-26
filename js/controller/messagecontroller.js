@@ -173,18 +173,22 @@ define(function(require) {
 		message.get('flags').set(flag, value);
 
 		// Update folder counter
-		// TODO: drafts folder
-		// TODO: update page title
 		if (flag === 'unseen') {
 			var unseen = Math.max(0, prevUnseen + (value ? 1 : -1));
 			folder.set('unseen', unseen);
 		}
 
+		// Update the folder to reflect the new unread count
+		Radio.ui.trigger('title:update');
+
 		var flaggingMessage = Radio.message.request('flag', account, folder, message, flag, value);
 		$.when(flaggingMessage).fail(function() {
 			Radio.ui.trigger('error:show', t('mail', 'Message flag could not be set.'));
+
+			// Restore previous state
 			message.get('flags').set(flag, !value);
 			folder.set('unseen', prevUnseen);
+			Radio.ui.trigger('title:update');
 		});
 	}
 

@@ -139,7 +139,7 @@ define(function(require) {
 							Cache.addMessageList(changedAccount, localFolder, cachedList);
 						}
 
-						State.folderView.updateTitle();
+						Radio.ui.trigger('title:update');
 					});
 				}
 			});

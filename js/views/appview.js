@@ -1,3 +1,5 @@
+/* global oc_defaults */
+
 /**
  * ownCloud - Mail
  *
@@ -51,6 +53,7 @@ define(function(require) {
 			this.listenTo(Radio.ui, 'setup:show', this.showSetup);
 			this.listenTo(Radio.ui, 'foldercontent:show', this.showFolderContent);
 			this.listenTo(Radio.ui, 'content:loading', this.showContentLoading);
+			this.listenTo(Radio.ui, 'title:update', this.updateTitle);
 
 			// Hide notification favicon when switching back from
 			// another browser tab
@@ -168,7 +171,34 @@ define(function(require) {
 				this.activeContent = ContentType.LOADING;
 				this.content.show(new LoadingView());
 			}
-		}
+		},
+		updateTitle: function() {
+			var activeEmail = '';
+			if (require('state').currentAccount.get('accountId') !== -1) {
+				var activeAccount = require('state').currentAccount;
+				activeEmail = ' - ' + activeAccount.get('email');
+			}
+			var activeFolder = require('state').currentFolder;
+			var name = activeFolder.name || activeFolder.get('name');
+			var count = 0;
+			// TODO: use specialUse instead, otherwise this won't work with localized drafts folders
+			if (name === 'Drafts') {
+				count = activeFolder.total || activeFolder.get('total');
+			} else {
+				count = activeFolder.unseen || activeFolder.get('unseen');
+			}
+			if (count > 0) {
+				window.document.title = name + ' (' + count + ')' +
+						// jscs:disable requireCamelCaseOrUpperCaseIdentifiers
+					activeEmail + ' - Mail - ' + oc_defaults.title;
+				// jscs:enable requireCamelCaseOrUpperCaseIdentifiers
+			} else {
+				window.document.title = name + activeEmail +
+					// jscs:disable requireCamelCaseOrUpperCaseIdentifiers
+					' - Mail - ' + oc_defaults.title;
+				// jscs:enable requireCamelCaseOrUpperCaseIdentifiers
+			}
+		},
 	});
 
 	return AppView;

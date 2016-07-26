@@ -98,7 +98,7 @@ define(function(require) {
 			}
 
 			require('state').currentMessageId = messageId;
-			require('state').folderView.updateTitle();
+			Radio.ui.trigger('title:update');
 
 		},
 		selectNextMessage: function() {
