@@ -36,23 +36,6 @@ define(function(require) {
 			this.listenTo(Radio.folder, 'setactive', this.setFolderActive);
 		},
 		/**
-		 * @param {Account} model
-		 * @param {boolean} unseen
-		 * @returns {undefined}
-		 */
-		changeUnseen: function(model, unseen) {
-			// TODO: currentFolderId and currentAccount should be an attribute of this view
-			var activeFolder = require('state').currentFolder;
-			if (unseen) {
-				activeFolder.set('unseen', activeFolder.get('unseen') + 1);
-			} else {
-				if (activeFolder.get('unseen') > 0) {
-					activeFolder.set('unseen', activeFolder.get('unseen') - 1);
-				}
-			}
-			this.updateTitle();
-		},
-		/**
 		 * @returns {undefined}
 		 */
 		updateTitle: function() {

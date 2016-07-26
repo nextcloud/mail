@@ -5,13 +5,14 @@
  * later. See the COPYING file.
  *
  * @author Christoph Wurst <christoph@winzerhof-wurst.at>
- * @copyright Christoph Wurst 2015
+ * @copyright Christoph Wurst 2015, 2016
  */
 
 define(function(require) {
 	'use strict';
 
 	var $ = require('jquery');
+	var _ = require('underscore');
 	var Handlebars = require('handlebars');
 	var Marionette = require('marionette');
 	var OC = require('OC');
@@ -64,10 +65,12 @@ define(function(require) {
 						.removeClass('icon-star')
 						.addClass('icon-starred');
 			}
-			this.model.flagMessage(
-					'flagged',
-					!starred
-					);
+
+			// TODO: globals are bad :-/
+			var account = require('state').currentAccount;
+			var folder = require('state').currentFolder;
+
+			Radio.message.trigger('flag', account, folder, this.model, 'flagged', !starred);
 		},
 		openMessage: function(event) {
 			event.stopPropagation();

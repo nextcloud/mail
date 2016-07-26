@@ -157,14 +157,10 @@ define(function(require) {
 			if (this.activeContent !== ContentType.FOLDER_CONTENT) {
 				this.activeContent = ContentType.FOLDER_CONTENT;
 
-				var messageContentView = new FolderContentView({
+				this.content.show(new FolderContentView({
 					account: account,
 					folder: folder
-				});
-				var accountsView = this.accountsView;
-				this.accountsView.listenTo(messageContentView.messages, 'change:unseen',
-					accountsView.changeUnseen);
-				this.content.show(messageContentView);
+				}));
 			}
 		},
 		showContentLoading: function() {

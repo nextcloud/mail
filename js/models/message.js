@@ -12,9 +12,6 @@ define(function(require) {
 	'use strict';
 
 	var Backbone = require('backbone');
-	var $ = require('jquery');
-	var OC = require('OC');
-	var Radio = require('radio');
 	var MessageFlags = require('models/messageflags');
 
 	/**
@@ -42,31 +39,6 @@ define(function(require) {
 				data.id = this.cid;
 			}
 			return data;
-		},
-		flagMessage: function(flag, value) {
-			var messageId = this.id;
-			var _this = this;
-			_this.get('flags').set(flag, value);
-
-			var flags = [flag, value];
-			$.ajax(
-				OC.generateUrl('apps/mail/accounts/{accountId}/folders/{folderId}/messages/{messageId}/flags',
-					{
-						accountId: require('state').currentAccount.get('accountId'),
-						folderId: require('state').currentFolder.get('id'),
-						messageId: messageId
-					}), {
-				data: {
-					flags: _.object([flags])
-				},
-				type: 'PUT',
-				success: function() {
-				},
-				error: function() {
-					Radio.ui.trigger('error:show', t('mail', 'Message could not be starred. Please try again.'));
-					_this.get('flags').set(flag, !value);
-				}
-			});
 		}
 	});
 

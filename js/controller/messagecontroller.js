@@ -30,6 +30,7 @@ define(function(require) {
 		load(account, message, options);
 	});
 	Radio.message.on('forward', openForwardComposer);
+	Radio.message.on('flag', flagMessage);
 
 	/**
 	 * @param {Account} account
@@ -160,6 +161,31 @@ define(function(require) {
 			}, false, 'httpd/unix-directory', true);
 
 		return defer.promise();
+	}
+
+	function flagMessage(account, folder, message, flag, value) {
+		var prevUnseen = folder.get('unseen');
+
+		if (message.get('flags').get(flag) === value) {
+			// Nothing to do
+			return;
+		}
+		message.get('flags').set(flag, value);
+
+		// Update folder counter
+		// TODO: drafts folder
+		// TODO: update page title
+		if (flag === 'unseen') {
+			var unseen = Math.max(0, prevUnseen + (value ? 1 : -1));
+			folder.set('unseen', unseen);
+		}
+
+		var flaggingMessage = Radio.message.request('flag', account, folder, message, flag, value);
+		$.when(flaggingMessage).fail(function() {
+			Radio.ui.trigger('error:show', t('mail', 'Message flag could not be set.'));
+			message.get('flags').set(flag, !value);
+			folder.set('unseen', prevUnseen);
+		});
 	}
 
 	/**
