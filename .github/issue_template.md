@@ -49,6 +49,7 @@ from within your ownCloud installation folder
 
 **The content of config/config.php:**
 
+<details>
 ```
 If you have access to your command line run e.g.:
 sudo -u www-data php occ config:list system
@@ -59,6 +60,7 @@ or
 Insert your config.php content here
 (Without the database password, passwordsalt and secret)
 ```
+</details>
 
 #### Client configuration
 **Browser:**
@@ -72,21 +74,28 @@ Insert your webserver log here
 ```
 
 ##### ownCloud log (data/owncloud.log)
+<details>
 ```
 Insert your ownCloud log here
 ```
+</details>
 
 ##### Horde IMAP log (data/horde_imap.log)
+<details>
 ```
 Insert your horde IMAP log here, see https://github.com/owncloud/mail#debug-mode
 ```
+</details>
 
 ##### Horde SMTP log (data/horde_smtp.log)
+<details>
 ```
 Insert your horde SMTP log here, see https://github.com/owncloud/mail#debug-mode
 ```
+</details>
 
 ##### Browser log
+<details>
 ```
 Insert your browser log here, this could for example include:
 
@@ -94,3 +103,4 @@ a) The javascript console log
 b) The network log 
 c) ...
 ```
+</details>
