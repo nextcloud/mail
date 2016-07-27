@@ -29,6 +29,7 @@ define(function(require) {
 	Radio.message.reply('entities', getMessageEntities);
 	Radio.message.reply('entity', getMessageEntity);
 	Radio.message.reply('bodies', fetchMessageBodies);
+	Radio.message.reply('flag', flagMessage);
 	Radio.message.reply('send', sendMessage);
 	Radio.message.reply('draft', saveDraft);
 
@@ -188,6 +189,32 @@ define(function(require) {
 				}
 			});
 		}
+
+		return defer.promise();
+	}
+
+	function flagMessage(account, folder, message, flag, value) {
+		var defer = $.Deferred();
+
+		var flags = [flag, value];
+		var url = OC.generateUrl('apps/mail/accounts/{accountId}/folders/{folderId}/messages/{messageId}/flags',
+			{
+				accountId: account.get('accountId'),
+				folderId: folder.get('id'),
+				messageId: message.id
+			});
+		$.ajax(url, {
+			type: 'PUT',
+			data: {
+				flags: _.object([flags])
+			},
+			success: function() {
+				defer.resolve();
+			},
+			error: function() {
+				defer.reject();
+			}
+		});
 
 		return defer.promise();
 	}

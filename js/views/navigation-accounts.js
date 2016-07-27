@@ -1,5 +1,3 @@
-/* global oc_defaults */
-
 /**
  * ownCloud - Mail
  *
@@ -34,52 +32,6 @@ define(function(require) {
 
 			this.listenTo(Radio.ui, 'folder:changed', this.onFolderChanged);
 			this.listenTo(Radio.folder, 'setactive', this.setFolderActive);
-		},
-		/**
-		 * @param {Account} model
-		 * @param {boolean} unseen
-		 * @returns {undefined}
-		 */
-		changeUnseen: function(model, unseen) {
-			// TODO: currentFolderId and currentAccount should be an attribute of this view
-			var activeFolder = require('state').currentFolder;
-			if (unseen) {
-				activeFolder.set('unseen', activeFolder.get('unseen') + 1);
-			} else {
-				if (activeFolder.get('unseen') > 0) {
-					activeFolder.set('unseen', activeFolder.get('unseen') - 1);
-				}
-			}
-			this.updateTitle();
-		},
-		/**
-		 * @returns {undefined}
-		 */
-		updateTitle: function() {
-			var activeEmail = '';
-			if (require('state').currentAccount.get('accountId') !== -1) {
-				var activeAccount = require('state').currentAccount;
-				activeEmail = ' - ' + activeAccount.get('email');
-			}
-			var activeFolder = require('state').currentFolder;
-			var name = activeFolder.name || activeFolder.get('name');
-			var count = 0;
-			if (name === 'Drafts') {
-				count = activeFolder.total || activeFolder.get('total');
-			} else {
-				count = activeFolder.unseen || activeFolder.get('unseen');
-			}
-			if (count > 0) {
-				window.document.title = name + ' (' + count + ')' +
-						// jscs:disable requireCamelCaseOrUpperCaseIdentifiers
-					activeEmail + ' - Mail - ' + oc_defaults.title;
-				// jscs:enable requireCamelCaseOrUpperCaseIdentifiers
-			} else {
-				window.document.title = name + activeEmail +
-					// jscs:disable requireCamelCaseOrUpperCaseIdentifiers
-					' - Mail - ' + oc_defaults.title;
-				// jscs:enable requireCamelCaseOrUpperCaseIdentifiers
-			}
 		},
 		/**
 		 * @param {Account} account

@@ -30,7 +30,7 @@ define(function(require) {
 	var Handlebars = require('handlebars');
 	var Marionette = require('marionette');
 	var OC = require('OC');
-	var AppView = require('views/app');
+	var AppView = require('views/appview');
 	var Cache = require('cache');
 	var Radio = require('radio');
 	var Router = require('router');

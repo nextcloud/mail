@@ -24,11 +24,6 @@ define(function(require) {
 		},
 		removeAttachment: function() {
 			this.model.collection.remove(this.model);
-		},
-
-		addAttachmentLocal: function() {
-			console.log('test');
 		}
-
 	});
 });

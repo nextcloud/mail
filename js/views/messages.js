@@ -42,8 +42,6 @@ define(function(require) {
 		},
 		filterCriteria: null,
 		initialize: function() {
-			this.listenTo(this.collection, 'change:flags', this.changeFlags);
-
 			var _this = this;
 			Radio.ui.reply('messagesview:collection', function() {
 				return _this.collection;
@@ -69,17 +67,14 @@ define(function(require) {
 		emptyViewOptions: function() {
 			return {filterCriteria: this.filterCriteria};
 		},
-		changeFlags: function(model) {
-			var unseen = model.get('flags').get('unseen');
-			var prevUnseen = model.get('flags')._previousAttributes.unseen;
-			if (unseen !== prevUnseen) {
-				this.trigger('change:unseen', model, unseen);
-			}
-		},
 		setMessageFlag: function(messageId, flag, val) {
 			var message = this.collection.get(messageId);
 			if (message) {
-				message.flagMessage(flag, val);
+				// TODO: globals are bad :-/
+				var account = require('state').currentAccount;
+				var folder = require('state').currentFolder;
+
+				Radio.message.trigger('flag', account, folder, message, flag, val);
 			}
 		},
 		setActiveMessage: function(messageId) {
@@ -103,7 +98,7 @@ define(function(require) {
 			}
 
 			require('state').currentMessageId = messageId;
-			require('state').folderView.updateTitle();
+			Radio.ui.trigger('title:update');
 
 		},
 		selectNextMessage: function() {
