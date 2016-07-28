@@ -197,12 +197,14 @@ define(function(require) {
 			}
 			// Add loading feedback
 			$('#load-more-mail-messages').addClass('icon-loading-small');
-			$('#mail-message-list-loading').css('opacity', 0)
-				.slideDown('slow')
-				.animate(
-					{ opacity: 1 },
-					{ queue: false, duration: 'slow' }
-				);
+			if (reload) {
+				$('#mail-message-list-loading').css('opacity', 0)
+					.slideDown('slow')
+					.animate(
+						{ opacity: 1 },
+						{ queue: false, duration: 'slow' }
+					);
+			}
 
 			var _this = this;
 			var loadingMessages = Radio.message.request('entities',
@@ -231,13 +233,15 @@ define(function(require) {
 
 			$.when(loadingMessages).always(function() {
 				// Remove loading feedback again
-				$('#mail-message-list-loading').css('opacity', 1)
-					.slideUp('slow')
-					.animate(
-						{ opacity: 0 },
-						{ queue: false, duration: 'slow' }
-					);
 				$('#load-more-mail-messages').removeClass('icon-loading-small');
+				if (reload) {
+					$('#mail-message-list-loading').css('opacity', 1)
+						.slideUp('slow')
+						.animate(
+							{ opacity: 0 },
+							{ queue: false, duration: 'slow' }
+						);
+				}
 				_this.loadingMore = false;
 				// Reload scrolls the list to the top, hence a unwanted
 				// scroll event is fired, which we want to ignore
