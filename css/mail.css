@@ -573,8 +573,11 @@ input.submit-message,
 	position: fixed;
 	height: 90px;
 	width: 50%;
-	background-color: rgba(255,255,255,.9);
 	z-index: 100;
+	background: -webkit-linear-gradient(rgba(255,255,255,.97), rgba(255,255,255,.9) 80%, rgba(255,255,255,0));
+	background: -o-linear-gradient(rgba(255,255,255,.97), rgba(255,255,255,.9) 80%, rgba(255,255,255,0));
+	background: -moz-linear-gradient(rgba(255,255,255,.97), rgba(255,255,255,.9) 80%, rgba(255,255,255,0));
+	background: linear-gradient(rgba(255,255,255,.97), rgba(255,255,255,.9) 80%, rgba(255,255,255,0));
 }
 
 #mail-message-header h2,
