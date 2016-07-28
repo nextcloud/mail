@@ -265,6 +265,9 @@
 	width: 22%;
 	height: 40px;
 	z-index: 1;
+	background: -moz-radial-gradient(top, ellipse cover, rgba(255,255,255,1), rgba(255,255,255,0) 70%);
+	background: -webkit-radial-gradient(top, ellipse cover, rgba(255,255,255,1),rgba(255,255,255,0) 70%);
+	background: radial-gradient(ellipse at top, rgba(255,255,255,.9),rgba(255,255,255,0) 70%);
 }
 #load-more-mail-messages {
 	display: none;
