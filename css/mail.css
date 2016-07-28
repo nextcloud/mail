@@ -254,12 +254,18 @@
 /* app content*/
 
 #mail-messages {
+	position: relative;
 	width: 30%;
 	height: 100%;
 	overflow-x: hidden;
 	overflow-y: auto;
 }
-#load-new-mail-messages,
+#mail-message-list-loading {
+	position: fixed;
+	width: 22%;
+	height: 40px;
+	z-index: 1;
+}
 #load-more-mail-messages {
 	display: none;
 	margin: 10px auto;
@@ -270,7 +276,6 @@
 	margin-bottom: 200px;
 }
 /* TODO: put this in core icons.css as general rule for buttons with icons */
-#load-new-mail-messages.icon-loading-small,
 #load-more-mail-messages.icon-loading-small {
 	padding-left: 32px;
 	background-position: 9px center;

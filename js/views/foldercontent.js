@@ -28,7 +28,7 @@ define(function(require) {
 	var Radio = require('radio');
 	var ComposerView = require('views/composer');
 	var MessageView = require('views/message');
-	var MessagesView = require('views/messages');
+	var MessagesView = require('views/messagesview');
 	var LoadingView = require('views/loadingview');
 	var MessageContentTemplate = require('text!templates/foldercontent.html');
 
@@ -169,6 +169,11 @@ define(function(require) {
 					// left arrow or 'k' -> previous message
 					event.preventDefault();
 					Radio.message.trigger('messagesview:message:prev');
+					break;
+				case 82:
+					// 'r' -> refresh list of messages
+					event.preventDefault();
+					Radio.ui.trigger('messagesview:messages:update');
 					break;
 			}
 		}
