@@ -92,24 +92,25 @@ define(function(require) {
 			var count = folder.get('total');
 			folder.set('total', count - 1);
 
+			var thisModelCollection = thisModel.collection;
+			var index = thisModelCollection.indexOf(thisModel);
+			var nextMessage = thisModelCollection.at(index - 1);
+			if (!nextMessage) {
+				nextMessage = thisModelCollection.at(index + 1);
+			}
+			if (require('state').currentMessageId === thisModel.id) {
+				if (nextMessage) {
+					var nextAccount = require('state').currentAccount;
+					var nextFolder = require('state').currentFolder;
+					Radio.message.trigger('load', nextAccount, nextFolder, nextMessage);
+				}
+			}
+
 			this.$el.addClass('transparency').slideUp(function() {
 				$('.tipsy').remove();
 				$('.tooltip').remove();
-
-				var thisModelCollection = thisModel.collection;
-				var index = thisModelCollection.indexOf(thisModel);
-				var nextMessage = thisModelCollection.at(index - 1);
-				if (!nextMessage) {
-					nextMessage = thisModelCollection.at(index + 1);
-				}
 				thisModelCollection.remove(thisModel);
-				if (require('state').currentMessageId === thisModel.id) {
-					if (nextMessage) {
-						var account = require('state').currentAccount;
-						var folder = require('state').currentFolder;
-						Radio.message.trigger('load', account, folder, nextMessage);
-					}
-				}
+
 				// manually trigger mouseover event for current mouse position
 				// in order to create a tipsy for the next message if needed
 				if (event.clientX) {
