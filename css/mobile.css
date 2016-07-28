@@ -5,6 +5,11 @@
 	width: 100%;
 }
 
+/* correctly center loading icon on mobile */
+#mail-message-list-loading {
+	width: 100%;
+}
+
 /* overlay message detail on top of message list */
 #mail-message {
 	z-index: 100;

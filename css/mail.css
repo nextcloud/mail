@@ -254,15 +254,17 @@
 /* app content*/
 
 #mail-messages {
+	position: relative;
 	width: 30%;
 	height: 100%;
 	overflow-x: hidden;
 	overflow-y: auto;
 }
 #mail-message-list-loading {
-	position: absolute;
-	width: 100%;
+	position: fixed;
+	width: 22%;
 	height: 40px;
+	z-index: 1;
 }
 #load-more-mail-messages {
 	display: none;

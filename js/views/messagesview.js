@@ -30,7 +30,6 @@ define(function(require) {
 
 	return Backbone.Marionette.CompositeView.extend({
 		collection: null,
-		className: 'container',
 		$scrollContainer: undefined,
 		childView: MessagesItemView,
 		childViewContainer: '#mail-message-list',
@@ -192,8 +191,13 @@ define(function(require) {
 				from = 0;
 			}
 			// Add loading feedback
-			$('#mail-message-list-loading').fadeIn();
 			$('#load-more-mail-messages').addClass('icon-loading');
+			$('#mail-message-list-loading').css('opacity', 0)
+				.slideDown('slow')
+				.animate(
+					{ opacity: 1 },
+					{ queue: false, duration: 'slow' }
+				);
 
 			var _this = this;
 			var loadingMessages = Radio.message.request('entities',
@@ -222,7 +226,12 @@ define(function(require) {
 
 			$.when(loadingMessages).always(function() {
 				// Remove loading feedback again
-				$('#mail-message-list-loading').fadeOut();
+				$('#mail-message-list-loading').css('opacity', 1)
+					.slideUp('slow')
+					.animate(
+						{ opacity: 0 },
+						{ queue: false, duration: 'slow' }
+					);
 				$('#load-more-mail-messages').removeClass('icon-loading');
 				_this.loadingMessages = false;
 			});
