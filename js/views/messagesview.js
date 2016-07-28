@@ -30,23 +30,20 @@ define(function(require) {
 
 	return Backbone.Marionette.CompositeView.extend({
 		collection: null,
+		className: 'container',
 		$scrollContainer: undefined,
 		childView: MessagesItemView,
 		childViewContainer: '#mail-message-list',
 		template: Handlebars.compile(MessageListTemplate),
 		currentMessageId: null,
 		loadingMore: false,
-		events: {
-			'click #load-new-mail-messages': 'loadNew',
-			'click #load-more-mail-messages': 'loadMore',
-		},
 		filterCriteria: null,
 		initialize: function() {
 			var _this = this;
 			Radio.ui.reply('messagesview:collection', function() {
 				return _this.collection;
 			});
-			this.listenTo(Radio.ui, 'messagesview:messages:update', this.loadNew);
+			this.listenTo(Radio.ui, 'messagesview:messages:update', this.refresh);
 			this.listenTo(Radio.ui, 'messagesview:messages:add', this.addMessages);
 			this.listenTo(Radio.ui, 'messagesview:messageflag:set', this.setMessageFlag);
 			this.listenTo(Radio.ui, 'messagesview:filter', this.filterCurrentMailbox);
@@ -149,19 +146,13 @@ define(function(require) {
 				});
 			}
 		},
-		loadNew: function() {
+		refresh: function() {
 			if (!require('state').currentAccount) {
 				return;
 			}
 			if (!require('state').currentFolder) {
 				return;
 			}
-			// Add loading feedback
-			$('#load-new-mail-messages')
-				.addClass('icon-loading-small')
-				.val(t('mail', 'Checking messages'))
-				.prop('disabled', true);
-
 			this.loadMessages(true);
 		},
 		loadMore: function() {
@@ -172,16 +163,23 @@ define(function(require) {
 				// Ignore events until loading has finished
 				return;
 			}
+			if (this.$scrollContainer.scrollTop() === 0) {
+				// Scrolled to top -> refresh
+				this.loadMessages(true);
+				return;
+			}
 			if ((this.$scrollContainer.scrollTop() + this.$scrollContainer.height()) > (this.$el.height() - 150)) {
+				// Scrolled all the way down -> load more
 				this.loadingMore = true;
 				this.loadMessages(false);
+				return;
 			}
 		},
 		filterCurrentMailbox: function(query) {
 			this.filterCriteria = {
 				text: query
 			};
-			this.loadNew();
+			this.loadMessages(true);
 		},
 		clearFilter: function() {
 			$('#searchbox').val('');
@@ -194,6 +192,7 @@ define(function(require) {
 				from = 0;
 			}
 			// Add loading feedback
+			$('#mail-message-list-loading').fadeIn();
 			$('#load-more-mail-messages').addClass('icon-loading');
 
 			var _this = this;
@@ -223,12 +222,9 @@ define(function(require) {
 
 			$.when(loadingMessages).always(function() {
 				// Remove loading feedback again
+				$('#mail-message-list-loading').fadeOut();
 				$('#load-more-mail-messages').removeClass('icon-loading');
-				$('#load-new-mail-messages')
-					.removeClass('icon-loading-small')
-					.val(t('mail', 'Check messages'))
-					.prop('disabled', false);
-				_this.loadingMore = false;
+				_this.loadingMessages = false;
 			});
 		},
 		addMessages: function(message) {
