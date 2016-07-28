@@ -84,7 +84,7 @@ define(function(require) {
 		deleteMessage: function(event) {
 			event.stopPropagation();
 			var thisModel = this.model;
-			this.ui.iconDelete.removeClass('icon-delete').addClass('icon-loading');
+			this.ui.iconDelete.removeClass('icon-delete').addClass('icon-loading-small');
 			$('.tipsy').remove();
 
 			thisModel.get('flags').set('unseen', false);
