@@ -87,7 +87,9 @@ define(function(require) {
 						require('cache').addMessageList(account, folder, messages);
 					}
 					var collection = folder.get('messages');
-					collection.reset();
+					if (options.replace) {
+						collection.reset();
+					}
 					_.each(messages, function(msg) {
 						collection.add(msg);
 					});
