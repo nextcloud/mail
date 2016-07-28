@@ -36,6 +36,7 @@ define(function(require) {
 		template: Handlebars.compile(MessageListTemplate),
 		currentMessageId: null,
 		loadingMore: false,
+		reloaded: false,
 		filterCriteria: null,
 		initialize: function() {
 			var _this = this;
@@ -158,6 +159,10 @@ define(function(require) {
 			this.loadMessages(false);
 		},
 		onScroll: function() {
+			if (this.reloaded) {
+				this.reloaded = false;
+				return;
+			}
 			if (this.loadingMore === true) {
 				// Ignore events until loading has finished
 				return;
@@ -233,7 +238,10 @@ define(function(require) {
 						{ queue: false, duration: 'slow' }
 					);
 				$('#load-more-mail-messages').removeClass('icon-loading-small');
-				_this.loadingMessages = false;
+				_this.loadingMore = false;
+				// Reload scrolls the list to the top, hence a unwanted
+				// scroll event is fired, which we want to ignore
+				_this.reloaded = reload;
 			});
 		},
 		addMessages: function(message) {

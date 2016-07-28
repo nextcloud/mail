@@ -157,14 +157,12 @@ define(function(require) {
 			}
 		},
 		showFolderContent: function(account, folder) {
-			if (this.activeContent !== ContentType.FOLDER_CONTENT) {
-				this.activeContent = ContentType.FOLDER_CONTENT;
+			this.activeContent = ContentType.FOLDER_CONTENT;
 
-				this.content.show(new FolderContentView({
-					account: account,
-					folder: folder
-				}));
-			}
+			this.content.show(new FolderContentView({
+				account: account,
+				folder: folder
+			}));
 		},
 		showContentLoading: function() {
 			if (this.activeContent !== ContentType.LOADING) {
