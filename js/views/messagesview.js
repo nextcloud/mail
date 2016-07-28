@@ -191,7 +191,7 @@ define(function(require) {
 				from = 0;
 			}
 			// Add loading feedback
-			$('#load-more-mail-messages').addClass('icon-loading');
+			$('#load-more-mail-messages').addClass('icon-loading-small');
 			$('#mail-message-list-loading').css('opacity', 0)
 				.slideDown('slow')
 				.animate(
@@ -232,7 +232,7 @@ define(function(require) {
 						{ opacity: 0 },
 						{ queue: false, duration: 'slow' }
 					);
-				$('#load-more-mail-messages').removeClass('icon-loading');
+				$('#load-more-mail-messages').removeClass('icon-loading-small');
 				_this.loadingMessages = false;
 			});
 		},
