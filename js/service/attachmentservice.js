@@ -20,12 +20,14 @@
 define(function(require) {
 	'use strict';
 
+	var _ = require('underscore');
 	var $ = require('jquery');
 	var OC = require('OC');
 	var Radio = require('radio');
 
 	Radio.message.reply('save:cloud', saveToFiles);
 	Radio.message.reply('attachment:download', downloadAttachment);
+	Radio.attachment.reply('upload:local', uploadLocalAttachment);
 
 	/**
 	 * @param {Account} account
@@ -74,6 +76,34 @@ define(function(require) {
 			error: function() {
 				defer.reject();
 			}
+		});
+
+		return defer.promise();
+	}
+
+	function uploadLocalAttachment(file, progressCallback) {
+		var defer = $.Deferred();
+		var fd = new FormData();
+		fd.append('attachment', file);
+
+		var url = OC.generateUrl('/apps/mail/attachments');
+		$.ajax({
+			url: url,
+			type: 'POST',
+			xhr: function() {
+				var customXhr = $.ajaxSettings.xhr();
+				if (customXhr.upload && _.isFunction(progressCallback)) {
+					customXhr.upload.addEventListener('progress', progressCallback, false);
+				}
+				return customXhr;
+			},
+			data: fd,
+			processData: false,
+			contentType: false,
+		}).done(function(data) {
+			defer.resolve(data.id);
+		}).fail(function() {
+			defer.reject();
 		});
 
 		return defer.promise();

@@ -32,7 +32,7 @@ define(['views/attachments', 'handlebars'], function(AttachmentView, Handlebars)
 				this.AttachmentView.render();
 
 				expect(this.AttachmentView.el.innerHTML)
-					.toContain('<ul></ul>\n<input type="button" id="mail_new_attachment" value="translation">');
+					.toContain('<ul></ul>\n<input type="button" id="add-cloud-attachment" value="translation">');
 			});
 
 		});

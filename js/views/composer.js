@@ -287,7 +287,7 @@ define(function(require) {
 			bcc.prop('disabled', true);
 			subject.prop('disabled', true);
 			this.$('.new-message-attachments-action').css('display', 'none');
-			this.$('#mail_new_attachment').prop('disabled', true);
+			this.$('#add-cloud-attachment').prop('disabled', true);
 			newMessageBody.prop('disabled', true);
 			newMessageSend.prop('disabled', true);
 			newMessageSend.val(t('mail', 'Sending …'));
@@ -351,7 +351,7 @@ define(function(require) {
 				subject.prop('disabled', false);
 				_this.$('.new-message-attachments-action').
 					css('display', 'inline-block');
-				_this.$('#mail_new_attachment').prop('disabled', false);
+				_this.$('#add-cloud-attachment').prop('disabled', false);
 				newMessageBody.prop('disabled', false);
 				newMessageSend.prop('disabled', false);
 				newMessageSend.val(t('mail', 'Send'));
