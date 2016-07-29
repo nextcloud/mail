@@ -19,7 +19,7 @@ define(function(require) {
 	var accounts = new AccountCollection();
 	var currentAccount = null;
 	var currentFolder = null;
-	var currentMessageId = null;
+	var currentMessage = null;
 	var currentMessageSubject = null;
 	var currentMessageBody = '';
 	var messagesLoading = null;
@@ -54,12 +54,12 @@ define(function(require) {
 				}
 			}
 		},
-		currentMessageId: {
+		currentMessage: {
 			get: function() {
-				return currentMessageId;
+				return currentMessage;
 			},
-			set: function(newId) {
-				currentMessageId = newId;
+			set: function(newMessage) {
+				currentMessage = newMessage;
 			}
 		},
 		currentMessageSubject: {

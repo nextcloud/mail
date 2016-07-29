@@ -46,7 +46,7 @@ define(function(require) {
 		_.defaults(options, defaultOptions);
 
 		// Do not reload email when clicking same again
-		if (require('state').currentMessageId === message.get('id')) {
+		if (require('state').currentMessage && require('state').currentMessage.get('id') === message.get('id')) {
 			return;
 		}
 
@@ -67,10 +67,10 @@ define(function(require) {
 
 		// close email first
 		// Check if message is open
-		if (require('state').currentMessageId !== null) {
-			var lastMessageId = require('state').currentMessageId;
+		if (require('state').currentMessage !== null) {
+			var lastMessage = require('state').currentMessage;
 			Radio.ui.trigger('messagesview:message:setactive', null);
-			if (lastMessageId === message.get('id')) {
+			if (lastMessage.get('id') === message.get('id')) {
 				return;
 			}
 		}
@@ -78,7 +78,7 @@ define(function(require) {
 		Radio.ui.trigger('message:loading');
 
 		// Set current Message as active
-		Radio.ui.trigger('messagesview:message:setactive', message.get('id'));
+		Radio.ui.trigger('messagesview:message:setactive', message);
 		require('state').currentMessageBody = '';
 
 		// Fade out the message composer

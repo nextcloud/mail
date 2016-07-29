@@ -98,7 +98,7 @@ define(function(require) {
 			if (!nextMessage) {
 				nextMessage = thisModelCollection.at(index + 1);
 			}
-			if (require('state').currentMessageId === thisModel.id) {
+			if (require('state').currentMessage && require('state').currentMessage.get('id') === thisModel.id) {
 				if (nextMessage) {
 					var nextAccount = require('state').currentAccount;
 					var nextFolder = require('state').currentFolder;
