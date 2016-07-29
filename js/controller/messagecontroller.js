@@ -78,7 +78,7 @@ define(function(require) {
 		Radio.ui.trigger('message:loading');
 
 		// Set current Message as active
-		Radio.ui.trigger('messagesview:message:setactive', message.get('id'));
+		Radio.ui.trigger('messagesview:message:setactive', message);
 		require('state').currentMessageBody = '';
 
 		// Fade out the message composer
