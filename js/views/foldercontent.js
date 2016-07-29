@@ -152,6 +152,8 @@ define(function(require) {
 			this.message.show(new LoadingView());
 		},
 		onKeyUp: function(event, key) {
+			var message;
+			var state;
 			switch (key) {
 				case 46:
 					// Mimic a client clicking the delete button for the currently active message.
@@ -173,6 +175,24 @@ define(function(require) {
 					// 'r' -> refresh list of messages
 					event.preventDefault();
 					Radio.ui.trigger('messagesview:messages:update');
+					break;
+				case 83:
+					// 's' -> toggle star
+					event.preventDefault();
+					message = require('state').currentMessage;
+					if (message) {
+						state = message.get('flags').get('flagged');
+						Radio.message.trigger('flag', this.account, this.folder, message, 'flagged', !state);
+					}
+					break;
+				case 85:
+					// 'u' -> toggle unread
+					event.preventDefault();
+					message = require('state').currentMessage;
+					if (message) {
+						state = message.get('flags').get('unseen');
+						Radio.message.trigger('flag', this.account, this.folder, message, 'unseen', !state);
+					}
 					break;
 			}
 		}
