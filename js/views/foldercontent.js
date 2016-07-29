@@ -155,8 +155,7 @@ define(function(require) {
 			switch (key) {
 				case 46:
 					// Mimic a client clicking the delete button for the currently active message.
-					$('.mail-message-summary.active .icon-delete.action.delete').
-						click();
+					$('.mail-message-summary.active .icon-delete.action.delete').click();
 					break;
 				case 39:
 				case 74:
