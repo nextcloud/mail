@@ -34,7 +34,7 @@ define(function(require) {
 		childView: MessagesItemView,
 		childViewContainer: '#mail-message-list',
 		template: Handlebars.compile(MessageListTemplate),
-		currentMessageId: null,
+		currentMessage: null,
 		loadingMore: false,
 		reloaded: false,
 		filterCriteria: null,
@@ -74,36 +74,38 @@ define(function(require) {
 				Radio.message.trigger('flag', account, folder, message, flag, val);
 			}
 		},
-		setActiveMessage: function(messageId) {
-			// Set active class for current message and remove it from old one
-
-			var message = null;
-			if (this.currentMessageId !== null) {
-				message = this.collection.get(this.currentMessageId);
-				if (message) {
-					message.set('active', false);
+		/**
+		 * Set active class for current message and remove it from old one
+		 *
+		 * @param {Message} message
+		 */
+		setActiveMessage: function(message) {
+			var oldMessage = null;
+			if (this.currentMessage !== null) {
+				// TODO: make sure objects exist only once and compare references instead
+				oldMessage = this.collection.get(this.currentMessage.get('id'));
+				if (oldMessage) {
+					oldMessage.set('active', false);
 				}
 			}
 
-			this.currentMessageId = messageId;
-
-			if (messageId !== null) {
-				message = this.collection.get(this.currentMessageId);
+			this.currentMessage = message;
+			if (message !== null) {
+				message = this.collection.get(this.currentMessage);
 				if (message) {
 					message.set('active', true);
 				}
 			}
 
-			require('state').currentMessageId = messageId;
+			require('state').currentMessage = message;
 			Radio.ui.trigger('title:update');
-
 		},
 		selectNextMessage: function() {
-			if (this.currentMessageId === null) {
+			if (this.currentMessage === null) {
 				return;
 			}
 
-			var message = this.collection.get(this.currentMessageId);
+			var message = this.collection.get(this.currentMessage);
 			if (message === null) {
 				return;
 			}
@@ -123,11 +125,11 @@ define(function(require) {
 			}
 		},
 		selectPreviousMessage: function() {
-			if (this.currentMessageId === null) {
+			if (this.currentMessage === null) {
 				return;
 			}
 
-			var message = this.collection.get(this.currentMessageId);
+			var message = this.collection.get(this.currentMessage);
 			if (message === null) {
 				return;
 			}
@@ -218,7 +220,7 @@ define(function(require) {
 				});
 
 			$.when(loadingMessages).done(function() {
-				Radio.ui.trigger('messagesview:message:setactive', require('state').currentMessageId);
+				Radio.ui.trigger('messagesview:message:setactive', require('state').currentMessage);
 			});
 
 			$.when(loadingMessages).fail(function() {
