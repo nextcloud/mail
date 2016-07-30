@@ -38,6 +38,9 @@ define(function(require) {
 		loadingMore: false,
 		reloaded: false,
 		filterCriteria: null,
+		events: {
+			'wheel': 'wheel',
+		},
 		initialize: function() {
 			var _this = this;
 			Radio.ui.reply('messagesview:collection', function() {
@@ -55,6 +58,9 @@ define(function(require) {
 		onShow: function() {
 			this.$scrollContainer = this.$el.parent();
 			this.$scrollContainer.scroll(_.bind(this.onScroll, this));
+		},
+		wheel: function() {
+			this.onScroll();
 		},
 		getEmptyView: function() {
 			if (this.filterCriteria) {
