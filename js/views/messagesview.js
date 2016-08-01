@@ -39,7 +39,7 @@ define(function(require) {
 		reloaded: false,
 		filterCriteria: null,
 		events: {
-			'wheel': 'wheel',
+			'wheel': 'onScroll',
 		},
 		initialize: function() {
 			var _this = this;
@@ -58,9 +58,6 @@ define(function(require) {
 		onShow: function() {
 			this.$scrollContainer = this.$el.parent();
 			this.$scrollContainer.scroll(_.bind(this.onScroll, this));
-		},
-		wheel: function() {
-			this.onScroll();
 		},
 		getEmptyView: function() {
 			if (this.filterCriteria) {
@@ -177,6 +174,7 @@ define(function(require) {
 			}
 			if (this.$scrollContainer.scrollTop() === 0) {
 				// Scrolled to top -> refresh
+				this.loadingMore = true;
 				this.loadMessages(true);
 				return;
 			}
@@ -246,11 +244,17 @@ define(function(require) {
 					$('#mail-message-list-loading').css('opacity', 1)
 						.slideUp('slow')
 						.animate(
-							{ opacity: 0 },
-							{ queue: false, duration: 'slow' }
-						);
+							{
+								opacity: 0
+							},
+							{
+								queue: false,
+								duration: 'slow',
+								complete: function() {
+									_this.loadingMore = false;
+								},
+							});
 				}
-				_this.loadingMore = false;
 				// Reload scrolls the list to the top, hence a unwanted
 				// scroll event is fired, which we want to ignore
 				_this.reloaded = reload;
