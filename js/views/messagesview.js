@@ -38,6 +38,9 @@ define(function(require) {
 		loadingMore: false,
 		reloaded: false,
 		filterCriteria: null,
+		events: {
+			'wheel': 'onScroll',
+		},
 		initialize: function() {
 			var _this = this;
 			Radio.ui.reply('messagesview:collection', function() {
@@ -171,6 +174,7 @@ define(function(require) {
 			}
 			if (this.$scrollContainer.scrollTop() === 0) {
 				// Scrolled to top -> refresh
+				this.loadingMore = true;
 				this.loadMessages(true);
 				return;
 			}
@@ -240,11 +244,17 @@ define(function(require) {
 					$('#mail-message-list-loading').css('opacity', 1)
 						.slideUp('slow')
 						.animate(
-							{ opacity: 0 },
-							{ queue: false, duration: 'slow' }
-						);
+							{
+								opacity: 0
+							},
+							{
+								queue: false,
+								duration: 'slow',
+								complete: function() {
+									_this.loadingMore = false;
+								},
+							});
 				}
-				_this.loadingMore = false;
 				// Reload scrolls the list to the top, hence a unwanted
 				// scroll event is fired, which we want to ignore
 				_this.reloaded = reload;
