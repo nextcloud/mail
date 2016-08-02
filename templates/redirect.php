@@ -25,8 +25,8 @@
 <?php if (isset($_['authorizedRedirect']) && ($_['authorizedRedirect'])): ?>
 	<?php script('mail', 'autoredirect'); ?>
 	<div class="error" style="text-align: center;">
-		<img src="<?php p(\OCP\Util::imagePath('core', 'loading-dark.gif'));?>"
-			style="margin: 0 auto;" />
+		<div class="icon-loading"
+		     style="margin: 0 auto;"></div>
 		<p>
 			<a href="<?php p($_['url']) ?>" rel="noreferrer" id="redirectLink"
 				style="color: #fff !important;">
