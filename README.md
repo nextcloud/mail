@@ -35,12 +35,9 @@ If you experience any issues or have enhancement suggestions you can report them
 
 ## Maintainers
 
-Active: [Thomas Müller](https://github.com/DeepDiver1975), [Jan-Christoph Borchardt](https://github.com/jancborchardt), [Christoph Wurst](https://github.com/ChristophWurst), [Steffen Lindner](https://github.com/Gomez), [Lukas Reschke](https://github.com/LukasReschke), [Thomas Imbreckx](https://github.com/zinks-), [Robin McCorkell](https://github.com/Xenopathic), [Clement Wong](https://github.com/clementhk), [Colm O’Neill](https://github.com/colmoneill), [Alexander Weidinger](https://github.com/irgendwie), [Hendrik Leppelsack](https://github.com/Henni), [Plato Leung](https://github.com/PoPoutdoor) & [Jakob Sack](https://github.com/jakobsack)
-
-Past contributors: [Bart Visscher](https://github.com/bartv2), [Sebastian Schmid](https://github.com/sebastian-schmid)
+[Christoph Wurst](https://github.com/ChristophWurst), [Thomas Müller](https://github.com/DeepDiver1975), [Jan-Christoph Borchardt](https://github.com/jancborchardt), [Steffen Lindner](https://github.com/Gomez) [and many more](https://github.com/owncloud/mail/graphs/contributors)
 
 If you’d like to join, just go through the [issue list](https://github.com/owncloud/mail/issues) and fix some. :) We’re also in [#owncloud-mail on freenode IRC](https://webchat.freenode.net/?channels=owncloud-mail).
-
 
 ## Troubleshooting
 
