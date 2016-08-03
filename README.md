@@ -1,4 +1,4 @@
-# ownCloud Mail
+# Mail
 
 [![Build Status](https://travis-ci.org/owncloud/mail.svg?branch=master)](https://travis-ci.org/owncloud/mail)
 [![Scrutinizer Code Quality](https://scrutinizer-ci.com/g/owncloud/mail/badges/quality-score.png?b=master)](https://scrutinizer-ci.com/g/owncloud/mail/?branch=master)
@@ -7,7 +7,7 @@
 [![JS Dependency Status](https://www.versioneye.com/user/projects/567bd06ba7c90e003500033f/badge.svg?style=flat)](https://www.versioneye.com/user/projects/567bd06ba7c90e003500033f)
 [![Bountysource](https://img.shields.io/bountysource/team/owncloud/activity.svg)](https://www.bountysource.com/teams/owncloud/issues?tracker_ids=216487)
 
-**An email app for [ownCloud](https://owncloud.org) (minimum version 8.0 & PHP 5.4).** 
+**An email app for [ownCloud](https://owncloud.org) and [Nextcloud](https://nextcloud.com)**
 
 ![](https://raw.githubusercontent.com/owncloud/screenshots/master/mail/mail.png)
 
