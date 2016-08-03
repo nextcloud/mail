@@ -38,7 +38,6 @@ define(function(require) {
 			attachments: '.mail-message-attachments'
 		},
 		initialize: function(options) {
-			var _this = this;
 			this.account = options.account;
 			this.folder = options.folder;
 			this.message = options.model;
@@ -46,11 +45,7 @@ define(function(require) {
 				replyToList: this.message.get('replyToList'),
 				replyCc: this.message.get('replyCc'),
 				toEmail: this.message.get('toEmail'),
-				replyCcList: _.filter(
-					this.message.get('replyCcList'),
-					function(replyCcList) {
-						return replyCcList !== _this.message.get('toEmail');
-					}),
+				replyCcList: this.message.get('replyCcList'),
 				body: ''
 			};
 
