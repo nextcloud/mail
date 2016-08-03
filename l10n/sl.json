@@ -12,7 +12,6 @@
     "Attachment saved to Files." : "Priloga je shranjena med datoteke.",
     "Error while saving attachments to Files." : "Prišlo je do napake med shranjevanjem datoteke v mapo.",
     "Error while saving attachment to Files." : "Prišlo je do napake med shranjevanjem datotek v mapo.",
-    "Message could not be starred. Please try again." : "Sporočila ni mogoče označiti z zvezdico. Poskusite znova.",
     "Invalid account" : "Neveljaven račun",
     "Invalid folder" : "Neveljavna mapa",
     "Unknown error" : "Neznana napaka",
@@ -33,8 +32,6 @@
     "No writable calendars found" : "Ni najdenih zapisljivih koledarjev.",
     "Error while importing the calendar event" : "Napaka med uvažanjem dogodka koledarja",
     "Error while downloading calendar event" : "Napaka med prejemanjem dogodka koledarja",
-    "Checking messages" : "Poteka preverjanje za nova sporočila",
-    "Check messages" : "Preveri za sporočila",
     "Error while deleting message." : "Napaka med brisanjem sporočila.",
     "Connecting" : "Poteka vzpostavljanje povezave ...",
     "Connect" : "Poveži",
@@ -53,9 +50,6 @@
     "All inboxes" : "Vsi predali",
     "Error loading message" : "Napaka nalaganja sporočila",
     "Forwarding you to %s - click here if you are not automatically redirected within the next few seconds." : "Poteka preusmeritev na %s - v kolikor preusmeritev ni izvedena samodejno, kliknite tu.",
-    "Redirect warning" : "Opozorilo preusmeritve",
-    "The previous page is sending you to %s" : "Predhodno obiskana stran zahteva preusmeritev na %s.",
-    "If you do not want to visit that page, you can return to <a href=\"%s\">the mail app</a>." : "Če en želite obiskati te strani, se lahko vrnete na stran <a href=\"%s\">programa spletne pošte</a>.",
     "Continue to %s" : "Nadaljuj na %s"
 },"pluralForm" :"nplurals=4; plural=(n%100==1 ? 0 : n%100==2 ? 1 : n%100==3 || n%100==4 ? 2 : 3);"
 }

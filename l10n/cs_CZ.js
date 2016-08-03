@@ -14,7 +14,6 @@ OC.L10N.register(
     "Attachment saved to Files." : "Příloha uložena do Souborů.",
     "Error while saving attachments to Files." : "Chyba při ukládání příloh do Souborů.",
     "Error while saving attachment to Files." : "Chyba při ukládání přílohy do Souborů.",
-    "Message could not be starred. Please try again." : "Zpráva nemohla být označena hvězdičkou. Zkuste to prosím znovu.",
     "Invalid account" : "Neplatný účet",
     "Invalid folder" : "Neplatný adresář",
     "Unknown error" : "Neznámá chyba",
@@ -35,8 +34,6 @@ OC.L10N.register(
     "No writable calendars found" : "Nebyly nalezeny žádné zapisovatelné kalendáře",
     "Error while importing the calendar event" : "Chyba při importu události kalendáře",
     "Error while downloading calendar event" : "Chyba při stahování události kalendáře",
-    "Checking messages" : "Kontrola zpráv",
-    "Check messages" : "Zkontrolovat zprávy",
     "Error while deleting message." : "Chyba při mazání zprávy.",
     "Connecting" : "Připojování",
     "Connect" : "Připojit",
@@ -55,9 +52,6 @@ OC.L10N.register(
     "All inboxes" : "Všechny schránky",
     "Error loading message" : "Chyba načtení zprávy",
     "Forwarding you to %s - click here if you are not automatically redirected within the next few seconds." : "Přesměrovávám na %s - klikněte sem, pokud nebudete automaticky přesměrováni během několika následujících sekund.",
-    "Redirect warning" : "Upozornění na přesměrování",
-    "The previous page is sending you to %s" : "Předchozí stránka vás přesměrovává na %s",
-    "If you do not want to visit that page, you can return to <a href=\"%s\">the mail app</a>." : "Pokud nechcete tuto stránku navštívit, vraťte se do <a href=\"%s\">emailové aplikace</a>.",
     "Continue to %s" : "Pokračovat na %s"
 },
 "nplurals=3; plural=(n==1) ? 0 : (n>=2 && n<=4) ? 1 : 2;");

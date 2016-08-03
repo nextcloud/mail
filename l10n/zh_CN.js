@@ -14,7 +14,6 @@ OC.L10N.register(
     "Attachment saved to Files." : "附件已保存。",
     "Error while saving attachments to Files." : "保存附件时发生错误。",
     "Error while saving attachment to Files." : "保存附件时发生错误。",
-    "Message could not be starred. Please try again." : "无法加注星标，请重试。",
     "Unknown error" : "未知错误",
     "Error while creating an account: " : "创建账户时出错：",
     "Show all folders" : "显示全部文件夹",
@@ -33,8 +32,6 @@ OC.L10N.register(
     "No writable calendars found" : "未找到可写的日历",
     "Error while importing the calendar event" : "导入日历事件错误",
     "Error while downloading calendar event" : "下载日历事件错误",
-    "Checking messages" : "正在检查邮件",
-    "Check messages" : "检查邮件",
     "Error while deleting message." : "删除邮件时出错。",
     "Connecting" : "正在连接",
     "Connect" : "连接",
@@ -53,9 +50,6 @@ OC.L10N.register(
     "All inboxes" : "所有目录",
     "Error loading message" : "载入电邮时发生错误",
     "Forwarding you to %s - click here if you are not automatically redirected within the next few seconds." : "正在跳转至%s，如果无法成功跳转，请点击这里。",
-    "Redirect warning" : "跳转提示",
-    "The previous page is sending you to %s" : "之前的页面把你带到了 %s",
-    "If you do not want to visit that page, you can return to <a href=\"%s\">the mail app</a>." : "如不您不想访问该页面，请返回<a href=\"%s\">邮件系统</a>。",
     "Continue to %s" : "继续 %s"
 },
 "nplurals=1; plural=0;");

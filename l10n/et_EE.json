@@ -12,7 +12,6 @@
     "Attachment saved to Files." : "Manus on salvestatud failidesse.",
     "Error while saving attachments to Files." : "Viga manuste salvestamisel failidesse.",
     "Error while saving attachment to Files." : "Viga manuse salvestamisel failidesse.",
-    "Message could not be starred. Please try again." : "Sõnumit ei õnnestunud tärniga märkida. Palun proovi uuesti.",
     "Unknown error" : "Tundmatu viga",
     "Error while creating an account: " : "Tõrge konto loomisel:",
     "Error while deleting account." : "Tõrge konto kustutamisel.",
@@ -26,8 +25,6 @@
     "Draft saved!" : "Mustand on salvestatud!",
     "you" : "sina",
     "Send message to {email}" : "Saada kiri aadressile {email}",
-    "Checking messages" : "Sõnumite kontrollimine",
-    "Check messages" : "Kontrolli sõnumeid",
     "Error while deleting message." : "Tõrge sõnumi kustutamisel.",
     "Connecting" : "Ühendamine",
     "Connect" : "Ühenda",
@@ -45,8 +42,6 @@
     "& others" : "& muud",
     "All inboxes" : "Kõik postkastid",
     "Error loading message" : "Tõrge kirja laadimisel",
-    "Forwarding you to %s - click here if you are not automatically redirected within the next few seconds." : "Edasi saamine %s-le - kliki siia kui sind ei suunata automaatselt mõne järgmise sekundi jooksul edasi.",
-    "Redirect warning" : "Ümbersuunamise hoiatus",
-    "If you do not want to visit that page, you can return to <a href=\"%s\">the mail app</a>." : "Kui Sa ei soovi seda lehekülge vaadata, siis liigu tagasi <a href=\"%s\">e-maili rakendisse</a>."
+    "Forwarding you to %s - click here if you are not automatically redirected within the next few seconds." : "Edasi saamine %s-le - kliki siia kui sind ei suunata automaatselt mõne järgmise sekundi jooksul edasi."
 },"pluralForm" :"nplurals=2; plural=(n != 1);"
 }

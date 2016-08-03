@@ -14,7 +14,6 @@ OC.L10N.register(
     "Attachment saved to Files." : "Bijlage opgeslagen in Bestanden.",
     "Error while saving attachments to Files." : "Fout bij opslaan bijlagen in Bestanden.",
     "Error while saving attachment to Files." : "Fout bij opslaan bijlage in Bestanden.",
-    "Message could not be starred. Please try again." : "Bericht kon niet als gemarkeerd worden. Probeer het opnieuw.",
     "Invalid account" : "Ongeldig account",
     "Invalid folder" : "Ongeldige map",
     "Unknown error" : "Onbekende fout",
@@ -35,8 +34,6 @@ OC.L10N.register(
     "No writable calendars found" : "Geen beschijfbare agenda's gevonden",
     "Error while importing the calendar event" : "Fout bij importeren agenda-afspraak",
     "Error while downloading calendar event" : "Fout bij downloaden agenda-afspraak",
-    "Checking messages" : "Controleren op berichten",
-    "Check messages" : "Controleren op berichten",
     "Error while deleting message." : "Fout bij verwijderen bericht.",
     "Connecting" : "Verbinden",
     "Connect" : "Verbinden",
@@ -55,9 +52,6 @@ OC.L10N.register(
     "All inboxes" : "Alle inbakjes",
     "Error loading message" : "Fout bij laden bericht",
     "Forwarding you to %s - click here if you are not automatically redirected within the next few seconds." : "U wordt doorgezet naar %s - klik hier als u niet binnen enkele seconden automatisch wordt doorgestuurd.",
-    "Redirect warning" : "Omleidingswaarschuwing",
-    "The previous page is sending you to %s" : "De vorige pagina stuurt u naar %s",
-    "If you do not want to visit that page, you can return to <a href=\"%s\">the mail app</a>." : "Als u die pagina niet wilt bezoeken, kunt u teruggaan naar <a href=\"%s\">de e-mail app</a>.",
     "Continue to %s" : "Verder naar %s"
 },
 "nplurals=2; plural=(n != 1);");

@@ -14,7 +14,6 @@ OC.L10N.register(
     "Attachment saved to Files." : "Vedhæftning blev gemt i Filer.",
     "Error while saving attachments to Files." : "Fejl under lagring af vedhæftninger i Filer.",
     "Error while saving attachment to Files." : "Fejl under lagring af vedhæftninger i Filer.",
-    "Message could not be starred. Please try again." : "Beskeden kunne ikke sternemarkeres. Forsøg venligst igen.",
     "Invalid account" : "Ugyldig konto",
     "Invalid folder" : "Ugyldig mappe",
     "Unknown error" : "Ukendt fejl",
@@ -35,8 +34,6 @@ OC.L10N.register(
     "No writable calendars found" : "Ingen skrivbare kalendre fundet",
     "Error while importing the calendar event" : "Fejl ved import af kalender begivenhed",
     "Error while downloading calendar event" : "Fejl ved hentning af kalender begivenhed",
-    "Checking messages" : "Henter beskeder",
-    "Check messages" : "Henter beskeder",
     "Error while deleting message." : "Fejl under sletning af besked.",
     "Connecting" : "Tilslutter",
     "Connect" : "Tilslut",
@@ -55,9 +52,6 @@ OC.L10N.register(
     "All inboxes" : "Alle indbakker",
     "Error loading message" : "Fejl under indlæsning af besked",
     "Forwarding you to %s - click here if you are not automatically redirected within the next few seconds." : "Viderestiller dig til %s - klik her hvis du ikke bliver viderestillet automatisk inden for få sekunder.",
-    "Redirect warning" : "Advarsel om viderestilling",
-    "The previous page is sending you to %s" : "Den foregående side sender dig til %s.",
-    "If you do not want to visit that page, you can return to <a href=\"%s\">the mail app</a>." : "Hvis du ikke ønsker at besøge denne side, så kan du gå tilbage til <a href=\"%s\">postprogrammet</a>.",
     "Continue to %s" : "Videre til %s"
 },
 "nplurals=2; plural=(n != 1);");

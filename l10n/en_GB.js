@@ -14,7 +14,6 @@ OC.L10N.register(
     "Attachment saved to Files." : "Attachment saved to Files.",
     "Error while saving attachments to Files." : "Error whilst saving attachments to Files.",
     "Error while saving attachment to Files." : "Error whilst saving attachment to Files.",
-    "Message could not be starred. Please try again." : "Message could not be starred. Please try again.",
     "Invalid account" : "Invalid account",
     "Invalid folder" : "Invalid folder",
     "Unknown error" : "Unknown error",
@@ -35,8 +34,6 @@ OC.L10N.register(
     "No writable calendars found" : "No writable calendars found",
     "Error while importing the calendar event" : "Error whilst importing the calendar event",
     "Error while downloading calendar event" : "Error whilst downloading calendar event",
-    "Checking messages" : "Checking messages",
-    "Check messages" : "Check messages",
     "Error while deleting message." : "Error whilst deleting message.",
     "Connecting" : "Connecting",
     "Connect" : "Connect",
@@ -55,9 +52,6 @@ OC.L10N.register(
     "All inboxes" : "All inboxes",
     "Error loading message" : "Error loading message",
     "Forwarding you to %s - click here if you are not automatically redirected within the next few seconds." : "Forwarding you to %s - click here if you are not automatically redirected within the next few seconds.",
-    "Redirect warning" : "Redirect warning",
-    "The previous page is sending you to %s" : "The previous page is sending you to %s",
-    "If you do not want to visit that page, you can return to <a href=\"%s\">the mail app</a>." : "If you do not want to visit that page, you can return to <a href=\"%s\">the mail app</a>.",
     "Continue to %s" : "Continue to %s"
 },
 "nplurals=2; plural=(n != 1);");

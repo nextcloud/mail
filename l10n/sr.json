@@ -12,7 +12,6 @@
     "Attachment saved to Files." : "Прилог сачуван у фајловима.",
     "Error while saving attachments to Files." : "Грешка при упису прилога у фајлове.",
     "Error while saving attachment to Files." : "Грешка при упису прилога у фајлове.",
-    "Message could not be starred. Please try again." : "Порука се не може „озвездати“. Покушајте поново.",
     "Unknown error" : "Непозната грешка",
     "Error while creating an account: " : "Грешка при прављењу налога:",
     "Error while deleting account." : "Грешка при брисању налога.",
@@ -26,8 +25,6 @@
     "Draft saved!" : "Нацрт сачуван!",
     "you" : "ви",
     "Send message to {email}" : "Пошаљи поруку на {email}",
-    "Checking messages" : "Проверавам поруке",
-    "Check messages" : "Провери поруке",
     "Error while deleting message." : "Грешка при брисању поруке.",
     "Connecting" : "Повезујем се",
     "Connect" : "Повежи се",
@@ -46,9 +43,6 @@
     "All inboxes" : "Сва сандучета",
     "Error loading message" : "Грешка при учитавању поруке",
     "Forwarding you to %s - click here if you are not automatically redirected within the next few seconds." : "Преусмеравање на %s — кликните овде ако нисте аутоматски преусмерени у року неколико секунди.",
-    "Redirect warning" : "Упозорење о преусмеравању",
-    "The previous page is sending you to %s" : "Претходна страница вас шаље на %s",
-    "If you do not want to visit that page, you can return to <a href=\"%s\">the mail app</a>." : "Ако не желите да посетите ту страницу, можете да се вратите на <a href=\"%s\">апликацију е-поште</a>.",
     "Continue to %s" : "Настави на %s"
 },"pluralForm" :"nplurals=3; plural=(n%10==1 && n%100!=11 ? 0 : n%10>=2 && n%10<=4 && (n%100<10 || n%100>=20) ? 1 : 2);"
 }

@@ -14,7 +14,6 @@ OC.L10N.register(
     "Attachment saved to Files." : "สิ่งที่แนบมาถูกบันทึกไว้ในไฟล์",
     "Error while saving attachments to Files." : "ข้อผิดพลาดขณะกำลังบันทึกสิ่งที่แนบไปยังไฟล์",
     "Error while saving attachment to Files." : "ข้อผิดพลาดขณะกำลังบันทึกสิ่งที่แนบไปยังไฟล์",
-    "Message could not be starred. Please try again." : "ไม่สามารถเริ่มต้นข้อความ โปรดลองอีกครั้ง",
     "Invalid account" : "บัญชีไม่ถูกต้อง",
     "Invalid folder" : "โฟลเดอร์ไม่ถูกต้อง",
     "Unknown error" : "ข้อผิดพลาดที่ไม่ทราบสาเหตุ",
@@ -35,8 +34,6 @@ OC.L10N.register(
     "No writable calendars found" : "ไม่พบปฏิทินที่สามารถเขียนได้",
     "Error while importing the calendar event" : "ข้อผิดพลาดขณะนำเข้ากิจกรรมในปฏิทิน",
     "Error while downloading calendar event" : "ข้อผิดพลาดขณะดาวน์โหลดเหตุการณ์ปฏิทิน",
-    "Checking messages" : "กำลังตรวจสอบข้อความ",
-    "Check messages" : "ตรวจสอบข้อความ",
     "Error while deleting message." : "ข้อผิดพลาดขณะลบข้อความ",
     "Connecting" : "กำลังเชื่อมต่อ",
     "Connect" : "เชื่อมต่อ",
@@ -55,9 +52,6 @@ OC.L10N.register(
     "All inboxes" : "กล่องจดหมายทั้งหมด",
     "Error loading message" : "กิดข้อผิดพลาดในการโหลด",
     "Forwarding you to %s - click here if you are not automatically redirected within the next few seconds." : "กำลังส่งต่อคุณไปยัง %s - คลิกที่นี่ถ้าคุณไม่ได้เปลี่ยนเส้นทางโดยอัตโนมัติภายในไม่กี่วินาทีถัดไป",
-    "Redirect warning" : "คำเตือนการเปลี่ยนเส้นทาง",
-    "The previous page is sending you to %s" : "หน้าก่อนหน้านี้กำลังส่งคุณไปยัง %s",
-    "If you do not want to visit that page, you can return to <a href=\"%s\">the mail app</a>." : "หากคุณไม่ต้องการที่จะเยี่ยมชมหน้าเว็บ คุณสามารถย้อนกลับไปที่ <a href=\"%s\">>แอพอีเมล</a>",
     "Continue to %s" : "ดำเนินการต่อไปที่ %s"
 },
 "nplurals=1; plural=0;");

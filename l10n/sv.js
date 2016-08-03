@@ -14,7 +14,6 @@ OC.L10N.register(
     "Attachment saved to Files." : "Bilagan har sparats till filer.",
     "Error while saving attachments to Files." : "Ett fel uppstod när bilagorna sparades till filer.",
     "Error while saving attachment to Files." : "Ett fel uppstod när bilagan sparades till filer.",
-    "Message could not be starred. Please try again." : "Meddelandet kunde inte stjärnmärkas. Försök igen.",
     "Invalid account" : "Felaktigt konto",
     "Invalid folder" : "Felaktig mapp",
     "Unknown error" : "Okänt fel",
@@ -35,8 +34,6 @@ OC.L10N.register(
     "No writable calendars found" : "Inga skrivbara kalendrar hittade",
     "Error while importing the calendar event" : "Fel vid import av kalenderhändelse",
     "Error while downloading calendar event" : "Fel vid nedladdning av kalenderhändelse",
-    "Checking messages" : "kontrollerar meddelanden",
-    "Check messages" : "kontrollera meddelanden",
     "Error while deleting message." : "Fel vid radering av  meddelande.",
     "Connecting" : "Ansluter",
     "Connect" : "Anslut",
@@ -55,9 +52,6 @@ OC.L10N.register(
     "All inboxes" : "alla inkorgar",
     "Error loading message" : "Fel vid inläsning av meddelande",
     "Forwarding you to %s - click here if you are not automatically redirected within the next few seconds." : "Vidarbofordrar dig till %s - klicka här om du inte automatiskt omdirigeras inom några sekunder.",
-    "Redirect warning" : "Omdirigeringsvarning",
-    "The previous page is sending you to %s" : "Föregående sida skickar dig vidare till %s",
-    "If you do not want to visit that page, you can return to <a href=\"%s\">the mail app</a>." : "Om du inte vill besöka den sidan kan du återvända till <a href=\"%s\">mail appen</a>.",
     "Continue to %s" : "Fortsätt till %s"
 },
 "nplurals=2; plural=(n != 1);");

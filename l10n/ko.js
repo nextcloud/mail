@@ -14,7 +14,6 @@ OC.L10N.register(
     "Attachment saved to Files." : "첨부 파일이 클라우드에 저장되었습니다.",
     "Error while saving attachments to Files." : "첨부 파일을 클라우드에 저장하는 중 오류가 발생했습니다.",
     "Error while saving attachment to Files." : "첨부 파일을 클라우드에 저장하는 중 오류가 발생했습니다.",
-    "Message could not be starred. Please try again." : "메시지에 별표를 붙일 수 없습니다. 다시 시도해 주십시오.",
     "Unknown error" : "알 수 없는 오류",
     "Error while creating an account: " : "계정을 만드는 중 오류 발생: ",
     "Error while deleting account." : "계정을 삭제하는 중 오류가 발생했습니다.",
@@ -28,8 +27,6 @@ OC.L10N.register(
     "Draft saved!" : "임시 보관함에 저장했습니다!",
     "you" : "나",
     "Send message to {email}" : "{email}(으)로 이메일 보내기",
-    "Checking messages" : "메시지 확인 중",
-    "Check messages" : "메시지 확인",
     "Error while deleting message." : "메시지를 삭제하는 중 오류가 발생했습니다.",
     "Connecting" : "연결 중",
     "Connect" : "연결",
@@ -48,9 +45,6 @@ OC.L10N.register(
     "All inboxes" : "모든 받은 편지함",
     "Error loading message" : "메시지 불러오기 오류",
     "Forwarding you to %s - click here if you are not automatically redirected within the next few seconds." : "%s(으)로 이동합니다. 잠시 후 자동으로 이동하지 않으면 여기를 누르십시오.",
-    "Redirect warning" : "리디렉션 경고",
-    "The previous page is sending you to %s" : "이전 페이지에서 %s(으)로 이동하려고 합니다",
-    "If you do not want to visit that page, you can return to <a href=\"%s\">the mail app</a>." : "이 페이지를 방문하지 않으려면 <a href=\"%s\">메일 앱</a>으로 돌아갈 수 있습니다.",
     "Continue to %s" : "%s(으)로 이동"
 },
 "nplurals=1; plural=0;");

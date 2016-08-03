@@ -14,7 +14,6 @@ OC.L10N.register(
     "Attachment saved to Files." : "Melléklet mentve a Fájlokba.",
     "Error while saving attachments to Files." : "Hiba történt a mellékletek Fájlokba mentése közben.",
     "Error while saving attachment to Files." : "Hiba történt a melléklet Fájlokba mentése közben.",
-    "Message could not be starred. Please try again." : "Az üzenet nem csillagozható. Kérlek, próbáld újra!",
     "Unknown error" : "Ismeretlen hiba",
     "Error while creating an account: " : "Hiba történt a fiók létrehozásakor:",
     "Error while deleting account." : "Hiba történt a fiók törlése közben.",
@@ -28,8 +27,6 @@ OC.L10N.register(
     "Draft saved!" : "Vázlat mentve.",
     "you" : "Ön",
     "Send message to {email}" : "Üzenet küldés ide: {email}",
-    "Checking messages" : "Üzenetek ellenőrzése",
-    "Check messages" : "Üzenetek ellenőrzése",
     "Error while deleting message." : "Hiba történt az üzenet törlése közben.",
     "Connecting" : "Csatlakozás",
     "Connect" : "Csatlakozás",
@@ -48,9 +45,6 @@ OC.L10N.register(
     "All inboxes" : "Minden bejövő",
     "Error loading message" : "Hiba történt az üzenet betöltése közben",
     "Forwarding you to %s - click here if you are not automatically redirected within the next few seconds." : "Átirányítjuk ide: %s - kattintson ide, ha az átirányítás nem sikerülne a következő pár másodpercben.",
-    "Redirect warning" : "Átirányítás figyelmeztetés",
-    "The previous page is sending you to %s" : "Az előző oldal ide fog küldeni: %s",
-    "If you do not want to visit that page, you can return to <a href=\"%s\">the mail app</a>." : "Ha nem szeretné megnyitni azt az oldalt, akkor visszatérhet a <a href=\"%s\">posta alkalmazáshoz</a>.",
     "Continue to %s" : "Folytatás ide: %s"
 },
 "nplurals=2; plural=(n != 1);");

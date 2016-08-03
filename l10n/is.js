@@ -14,7 +14,6 @@ OC.L10N.register(
     "Attachment saved to Files." : "Viðhengi vistað í skjalamöppu.",
     "Error while saving attachments to Files." : "Villa við að vista viðhengi í skjalamöppu.",
     "Error while saving attachment to Files." : "Villa við að vista viðhengi í skjalamöppu.",
-    "Message could not be starred. Please try again." : "Ekki tókst að stjörnumerkja skilaboð. Reyndu aftur síðar.",
     "Invalid account" : "Ógildur aðgangur",
     "Invalid folder" : "Ógild mappa",
     "Unknown error" : "Óþekkt villa",
@@ -35,8 +34,6 @@ OC.L10N.register(
     "No writable calendars found" : "Engin skrifanleg dagatöl fundust",
     "Error while importing the calendar event" : "Villa kom upp við að flytja inn dagatalsatburðinn",
     "Error while downloading calendar event" : "Villa kom upp við að sækja dagatalsatburð",
-    "Checking messages" : "Athuga með skilaboð",
-    "Check messages" : "Athuga með ný skilaboð",
     "Error while deleting message." : "Villa kom upp við að eyða skilaboðum.",
     "Connecting" : "Tengist",
     "Connect" : "Tengjast",
@@ -55,9 +52,6 @@ OC.L10N.register(
     "All inboxes" : "Öll innhólf",
     "Error loading message" : "Villa við hleðslu á skilaboðum",
     "Forwarding you to %s - click here if you are not automatically redirected within the next few seconds." : "Áframsendi þig til %s - smelltu hér ef þér er ekki beint áfram innan nokkurra sekúndna.",
-    "Redirect warning" : "Aðvörun vegna endurbeiningar",
-    "The previous page is sending you to %s" : "Fyrri síða er að senda þig á %s",
-    "If you do not want to visit that page, you can return to <a href=\"%s\">the mail app</a>." : "Ef þú vilt ekki fara á þá síðu, geturðu farið til baka í <a href=\"%s\">póstforritið</a>.",
     "Continue to %s" : "Halda áfram í %s"
 },
 "nplurals=2; plural=(n % 10 != 1 || n % 100 == 11);");

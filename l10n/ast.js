@@ -14,7 +14,6 @@ OC.L10N.register(
     "Attachment saved to Files." : "Ficheru axuntu guardáu en Ficheros.",
     "Error while saving attachments to Files." : "Fallu al guardar los ficheros axuntos en Ficheros.",
     "Error while saving attachment to Files." : "Fallu al guardar el ficheru axuntu en Ficheros.",
-    "Message could not be starred. Please try again." : "El mensaxe nun se puede marcar como favoritu. Inténtalo más tarde.",
     "Invalid account" : "Cuenta non válida",
     "Invalid folder" : "Carpeta non válida",
     "Unknown error" : "Fallu desconocíu",
@@ -35,8 +34,6 @@ OC.L10N.register(
     "No writable calendars found" : "Nun s'atoparon calendarios pa escribir",
     "Error while importing the calendar event" : "Fallu mientres importaben los eventos del calendariu",
     "Error while downloading calendar event" : "Fallu mientres descargaben los eventos del calendariu",
-    "Checking messages" : "Comprobando mensaxes",
-    "Check messages" : "Comprueba mensaxes",
     "Error while deleting message." : "Fallu desaniciando'l mensaxe",
     "Connecting" : "Coneutando",
     "Connect" : "Coneutar",
@@ -55,9 +52,6 @@ OC.L10N.register(
     "All inboxes" : "Toles bandexes d'entrada",
     "Error loading message" : "Fallu cargando mensaxe",
     "Forwarding you to %s - click here if you are not automatically redirected within the next few seconds." : "Redirixéndote a %s - calca equí si nun te redirixe automáticamente nunos segundos.",
-    "Redirect warning" : "Avisu de redireición",
-    "The previous page is sending you to %s" : "La páxina anterior ta dirixiéndote a %s",
-    "If you do not want to visit that page, you can return to <a href=\"%s\">the mail app</a>." : "Si nun quies dir a esta páxina, pues volver a <a href=\"%s\">l'aplicación de corréu</a>.",
     "Continue to %s" : "Continúa a %s"
 },
 "nplurals=2; plural=(n != 1);");

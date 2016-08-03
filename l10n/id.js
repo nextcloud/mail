@@ -14,7 +14,6 @@ OC.L10N.register(
     "Attachment saved to Files." : "Lampiran disimpan pada Berkas.",
     "Error while saving attachments to Files." : "Terjadi kesalahan saat menyimpan lampiran pada Berkas.",
     "Error while saving attachment to Files." : "Terjadi kesalahan saat menyimpan lampiran pada Berkas.",
-    "Message could not be starred. Please try again." : "Pesan tidak dapat dibintangi. Silakan coba lagi.",
     "Unknown error" : "Kesalahan tidak diketahui",
     "Error while creating an account: " : "Terjadi kesalahan saat memuat sebuah akun:",
     "Error while deleting account." : "Terjadi kesalahan saat menghapus akun.",
@@ -28,8 +27,6 @@ OC.L10N.register(
     "Draft saved!" : "Draf disimpan!",
     "you" : "Anda",
     "Send message to {email}" : "Kirim pesan ke {email}",
-    "Checking messages" : "Memeriksa pesan",
-    "Check messages" : "Periksa pesan",
     "Error while deleting message." : "Terjadi kesalahan saat menghapus pesan.",
     "Connecting" : "Menyambungkan",
     "Connect" : "Sambungkan",
@@ -47,7 +44,6 @@ OC.L10N.register(
     "& others" : "& lainnya",
     "All inboxes" : "Semua kotak masuk",
     "Error loading message" : "Terjadi kesalahan saat memuat pesan",
-    "Forwarding you to %s - click here if you are not automatically redirected within the next few seconds." : "Meneruskan Anda ke %s - klik disini jika Anda tidak secara otomatis dialihkan dalam beberapa detik kemudian.",
-    "If you do not want to visit that page, you can return to <a href=\"%s\">the mail app</a>." : "Jika Anda tidak ingin mengunjungi halaman ini, Anda dapat kembali ke <a href=\"%s\">apl email</a>."
+    "Forwarding you to %s - click here if you are not automatically redirected within the next few seconds." : "Meneruskan Anda ke %s - klik disini jika Anda tidak secara otomatis dialihkan dalam beberapa detik kemudian."
 },
 "nplurals=1; plural=0;");

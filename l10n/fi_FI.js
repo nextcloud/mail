@@ -14,7 +14,6 @@ OC.L10N.register(
     "Attachment saved to Files." : "Liite tallennettu tiedostoihin.",
     "Error while saving attachments to Files." : "Virhe tallennettaessa liitteitä tiedostoihin.",
     "Error while saving attachment to Files." : "Virhe tallennettaessa liitettä tiedostoihin.",
-    "Message could not be starred. Please try again." : "Tähden lisääminen viestille epäonnistui. Yritä uudelleen.",
     "Invalid account" : "Virheellinen tili",
     "Invalid folder" : "Virheellinen kansio",
     "Unknown error" : "Tuntematon virhe",
@@ -35,8 +34,6 @@ OC.L10N.register(
     "No writable calendars found" : "Kirjoitusoikeudella olevia kalentereita ei löytynyt",
     "Error while importing the calendar event" : "Virhe kalenteritapahtumaa tuotaessa",
     "Error while downloading calendar event" : "Virhe kalenteritapahtumaa ladatessa",
-    "Checking messages" : "Tarkistetaan viestejä",
-    "Check messages" : "Tarkista viestit",
     "Error while deleting message." : "Virhe viestiä poistaessa.",
     "Connecting" : "Yhdistetään",
     "Connect" : "Yhdistä",
@@ -55,9 +52,6 @@ OC.L10N.register(
     "All inboxes" : "Kaikki saapuneiden laatikot",
     "Error loading message" : "Virhe viestiä ladatessa",
     "Forwarding you to %s - click here if you are not automatically redirected within the next few seconds." : "Ohjataan edelleen kohteeseen %s - napsauta tästä, jos uudelleenohjaus ei tapahdu muutaman sekunnin kuluessa.",
-    "Redirect warning" : "Varoitus uudelleenohjauksesta",
-    "The previous page is sending you to %s" : "Edellinen sivu lähettää sinut osoitteeseen %s",
-    "If you do not want to visit that page, you can return to <a href=\"%s\">the mail app</a>." : "Jos et halua päätyä kyseiselle sivulle, voit palata <a href=\"%s\">sähköpostisovellukseen</a>.",
     "Continue to %s" : "Jatka sivulle %s"
 },
 "nplurals=2; plural=(n != 1);");

@@ -14,7 +14,6 @@ OC.L10N.register(
     "Attachment saved to Files." : "添付ファイルを保存しました。",
     "Error while saving attachments to Files." : "添付ファイルの保存中にエラーが発生しました。",
     "Error while saving attachment to Files." : "添付ファイルの保存中にエラーが発生しました。",
-    "Message could not be starred. Please try again." : "メッセージにスターをつけられませんでした。再試行してください。",
     "Invalid account" : "無効なアカウント",
     "Invalid folder" : "無効なフォルダ",
     "Unknown error" : "不明なエラー",
@@ -35,8 +34,6 @@ OC.L10N.register(
     "No writable calendars found" : "書き込み可能なカレンダーが見つかりません",
     "Error while importing the calendar event" : "カレンダーイベントインポート中のエラー",
     "Error while downloading calendar event" : "カレンダーイベントダウンロード中のエラー",
-    "Checking messages" : "メッセージを確認中",
-    "Check messages" : "メッセージを確認",
     "Error while deleting message." : "メッセージ削除中にエラーが発生",
     "Connecting" : "接続中",
     "Connect" : "接続",
@@ -55,9 +52,6 @@ OC.L10N.register(
     "All inboxes" : "すべての受信トレイ",
     "Error loading message" : "メッセージ読み込みエラー",
     "Forwarding you to %s - click here if you are not automatically redirected within the next few seconds." : "%s  へリダイレクトします。数秒後に自動転送されなかったらクリックしてください。",
-    "Redirect warning" : "リダイレクトの警告",
-    "The previous page is sending you to %s" : "前のページから %s にリダイレクトしようとしています。",
-    "If you do not want to visit that page, you can return to <a href=\"%s\">the mail app</a>." : "ページを開きたくない場合は、<a href=\"%s\">メールアプリ</a> に戻ることができます。",
     "Continue to %s" : "%s にリダイレクトする"
 },
 "nplurals=1; plural=0;");

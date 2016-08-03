@@ -14,7 +14,6 @@ OC.L10N.register(
     "Attachment saved to Files." : "קובץ מצורף נשמר לקטגוריית קבצים.",
     "Error while saving attachments to Files." : "שגיאה בזמן שמירת קבצים מצורפים לקטגוריית קבצים.",
     "Error while saving attachment to Files." : "שגיאה בזמן שמירת קובץ מצורף לקטגוריית קבצים.",
-    "Message could not be starred. Please try again." : "לא ניתן לסמן הודעה עם כוכב. יש לנסות שוב.",
     "Invalid account" : "חשבון לא חוקי",
     "Invalid folder" : "תיקייה לא חוקית",
     "Unknown error" : "שגיאה בלתי ידועה",
@@ -35,8 +34,6 @@ OC.L10N.register(
     "No writable calendars found" : "לא נמצאו יומנים ברי כתיבה",
     "Error while importing the calendar event" : "שגיאה בזמן יבוא של אירוע היומן",
     "Error while downloading calendar event" : "שגיאה בזמן הורדת אירוע יומן",
-    "Checking messages" : "הודעות בבדיקה",
-    "Check messages" : "לבדוק הודעות",
     "Error while deleting message." : "שגיאה בזמן מחיקת הודעה.",
     "Connecting" : "מתחבר",
     "Connect" : "התחברות",
@@ -55,9 +52,6 @@ OC.L10N.register(
     "All inboxes" : "כל תיבות דואר נכנס",
     "Error loading message" : "שגיאה בהעלאת הודעה",
     "Forwarding you to %s - click here if you are not automatically redirected within the next few seconds." : "מעביר אותך אל %s - יש ללחוץ כאן אם ההעברה לא מתבצעת באופן אוטומטי בשניות הקרובות.",
-    "Redirect warning" : "שגיאת הפניה",
-    "The previous page is sending you to %s" : "הדף הקודם שולח אותך אל %s",
-    "If you do not want to visit that page, you can return to <a href=\"%s\">the mail app</a>." : "אם אינך רוצה לבקר בדף זה, ניתן לחזור אל <a href=\"%s\">אפליקציית הדואר</a>.",
     "Continue to %s" : "ממשיך אל %s"
 },
 "nplurals=2; plural=(n != 1);");

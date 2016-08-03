@@ -14,7 +14,6 @@ OC.L10N.register(
     "Attachment saved to Files." : "Pèça junta enregistrada dins los Fichièrs.",
     "Error while saving attachments to Files." : "Error al moment de l'enregistrament de las pèças juntas dins los Fichièrs.",
     "Error while saving attachment to Files." : "Error al moment de l'enregistrament de la pèça junta dins los Fichièrs.",
-    "Message could not be starred. Please try again." : "Lo messatge a pas pogut èsser plaçat demest los favorits. Ensajatz tornamai.",
     "Unknown error" : "Error desconeguda",
     "Error while creating an account: " : "Error al moment de la creacion del compte :",
     "Error while deleting account." : "Error al moment de la supression del compte.",
@@ -28,8 +27,6 @@ OC.L10N.register(
     "Draft saved!" : "Borrolhon salvat!",
     "you" : "vos",
     "Send message to {email}" : "Mandar un mail a {email}",
-    "Checking messages" : "Relèva del corrièr",
-    "Check messages" : "Relevar lo corrièr",
     "Error while deleting message." : "Error al moment de la supression del messatge.",
     "Connecting" : "Connexion",
     "Connect" : "Connectar",
@@ -48,9 +45,6 @@ OC.L10N.register(
     "All inboxes" : "Totas las bóstias",
     "Error loading message" : "Error al moment del cargament del messatge",
     "Forwarding you to %s - click here if you are not automatically redirected within the next few seconds." : "Anatz èsser redirigit cap a %s - Clicatz aicí se sètz pas redirigit dins las segondas que seguisson.",
-    "Redirect warning" : "Avertiment de redireccion",
-    "The previous page is sending you to %s" : "La pagina precedenta vos manda cap a %s.",
-    "If you do not want to visit that page, you can return to <a href=\"%s\">the mail app</a>." : "Se desiratz pas visitar aquesta pagina, podètz tornar a <a href=\"%s\">l'aplicacion Mail</a>",
     "Continue to %s" : "Contunhar cap a %s"
 },
 "nplurals=2; plural=(n > 1);");

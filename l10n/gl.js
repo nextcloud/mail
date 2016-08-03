@@ -14,7 +14,6 @@ OC.L10N.register(
     "Attachment saved to Files." : "Anexo gardado en Ficheiros.",
     "Error while saving attachments to Files." : "Produciuse un erro ao gardar os anexos en Ficheiros.",
     "Error while saving attachment to Files." : "Produciuse un erro ao gardar o anexo en Ficheiros.",
-    "Message could not be starred. Please try again." : "A mensaxe non foi destacada. Ténteo de novo.",
     "Unknown error" : "Produciuse un erro descoñecido",
     "Error while creating an account: " : "produciuse un erro mentres creaba unha conta:",
     "Error while deleting account." : "Produciuse un erro ao eliminar a conta.",
@@ -44,7 +43,6 @@ OC.L10N.register(
     "& others" : "E outros",
     "All inboxes" : "Todas as bandexas de entrada",
     "Error loading message" : "Produciuse un erro ao cargar a mensaxe",
-    "Forwarding you to %s - click here if you are not automatically redirected within the next few seconds." : "Dirixíndoo a %s - prema aquí se non é redirixido automaticamente nuns segundos.",
-    "If you do not want to visit that page, you can return to <a href=\"%s\">the mail app</a>." : "Se non quere visitar esa páxina, pode regresar á <a href=\"%s\">aplicación de correo</a>."
+    "Forwarding you to %s - click here if you are not automatically redirected within the next few seconds." : "Dirixíndoo a %s - prema aquí se non é redirixido automaticamente nuns segundos."
 },
 "nplurals=2; plural=(n != 1);");

@@ -14,7 +14,6 @@ OC.L10N.register(
     "Attachment saved to Files." : "Anexo guardado para Ficheiros.",
     "Error while saving attachments to Files." : "Erro enquanto guardava os anexos para Ficheiros.",
     "Error while saving attachment to Files." : "Erro enquanto guardava o anexo para Ficheiros.",
-    "Message could not be starred. Please try again." : "Não foi possível classificar a mensagem. Por favor, tente de novo.",
     "Invalid account" : "Conta inválida",
     "Invalid folder" : "Pasta inválida",
     "Unknown error" : "Erro desconhecido",
@@ -35,8 +34,6 @@ OC.L10N.register(
     "No writable calendars found" : "Não foram encontrados calendários graváveis",
     "Error while importing the calendar event" : "Erro durante a importação de evento de calendário",
     "Error while downloading calendar event" : "Erro durante a transferência de evento de calendário",
-    "Checking messages" : "A verificar as mensagens",
-    "Check messages" : "Verificar mensagens",
     "Error while deleting message." : "Erro durante a eliminação da mensagem.",
     "Connecting" : "A ligar",
     "Connect" : "Ligar",
@@ -55,9 +52,6 @@ OC.L10N.register(
     "All inboxes" : "Todas as caixas de entrada",
     "Error loading message" : "Erro ao carregar a mensagem",
     "Forwarding you to %s - click here if you are not automatically redirected within the next few seconds." : "A reencaminhá-lo para %s - clique aqui se não for redirecionado automaticamente dentro de alguns segundos.",
-    "Redirect warning" : "Aviso de redirecionamento",
-    "The previous page is sending you to %s" : "A página anterior está a encaminhá-lo para %s",
-    "If you do not want to visit that page, you can return to <a href=\"%s\">the mail app</a>." : "Se não desejar visitar essa página, pode voltar para a <a href=\"%s\">aplicação de correio</a>.",
     "Continue to %s" : "Continuar para %s"
 },
 "nplurals=2; plural=(n != 1);");

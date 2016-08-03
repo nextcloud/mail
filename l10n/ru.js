@@ -14,7 +14,6 @@ OC.L10N.register(
     "Attachment saved to Files." : "Вложение сохранено в Файлах",
     "Error while saving attachments to Files." : "Ошибка сохранения вложений в Файлах.",
     "Error while saving attachment to Files." : "Ошибка сохранения вложения в Файлах.",
-    "Message could not be starred. Please try again." : "Не удалось пометить сообщение. Попробуйте снова.",
     "Invalid account" : "Неверная учётная запись",
     "Invalid folder" : "Неверная папка",
     "Unknown error" : "Неизвестная ошибка",
@@ -35,8 +34,6 @@ OC.L10N.register(
     "No writable calendars found" : "Календари доступные для записи не найдены",
     "Error while importing the calendar event" : "Ошибка при импорте календарного события",
     "Error while downloading calendar event" : "Ошибка при скачивании календарного события",
-    "Checking messages" : "Проверка сообщений",
-    "Check messages" : "Проверить сообщения",
     "Error while deleting message." : "Ошибка при удалении сообщения.",
     "Connecting" : "Соединение",
     "Connect" : "Соединить",
@@ -55,9 +52,6 @@ OC.L10N.register(
     "All inboxes" : "Все входящие",
     "Error loading message" : "Ошибка при загрузке сообщения",
     "Forwarding you to %s - click here if you are not automatically redirected within the next few seconds." : "Перенаправляем вас на %s - если вы не будете автоматически перенаправлены в течение следующих нескольких секунд, то нажмите здесь.",
-    "Redirect warning" : "Предупреждение о перенаправлении",
-    "The previous page is sending you to %s" : "Предыдущая страница отправляет вас %s",
-    "If you do not want to visit that page, you can return to <a href=\"%s\">the mail app</a>." : "Если вы не хотите посещать ту страницу, вы можете вернуться к <a href=\"%s\">почтовому приложению</a>.",
     "Continue to %s" : "Продолжать %s"
 },
 "nplurals=4; plural=(n%10==1 && n%100!=11 ? 0 : n%10>=2 && n%10<=4 && (n%100<12 || n%100>14) ? 1 : n%10==0 || (n%10>=5 && n%10<=9) || (n%100>=11 && n%100<=14)? 2 : 3);");
