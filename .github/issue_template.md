@@ -9,9 +9,9 @@ Tell us what should happen
 ### Actual behaviour
 Tell us what happens instead
 
-### ownCloud Mail
+### Mail app
 
-**ownCloud Mail version:** (see ownCloud apps admin page)
+**Mail app version:** (see apps admin page)
 
 **Mailserver or service:** (e.g. Outlook, Yahoo, Gmail, Exchange,...)
 
@@ -21,12 +21,10 @@ Tell us what happens instead
 
 **Number of accounts:**
 
-**ownCloud Mail version build date:** (only if you are using a Nightly Build)
+**Mail app version build date:** (only if you are using a Nightly Build)
 
 
-### ownCloud Core
-
-#### Server configuration
+### Server configuration
 **Operating system**:
 
 **Web server:**
@@ -35,16 +33,16 @@ Tell us what happens instead
 
 **PHP version:**
 
-**ownCloud version:** (see ownCloud admin page)
+**Version:** (see admin page)
 
-**Updated from an older ownCloud or fresh install:**
+**Updated from an older version or fresh install:**
 
 **List of activated apps:**
 
 ```
 If you have access to your command line run e.g.:
 sudo -u www-data php occ app:list
-from within your ownCloud installation folder
+from within your server installation folder
 ```
 
 **The content of config/config.php:**
@@ -53,7 +51,7 @@ from within your ownCloud installation folder
 ```
 If you have access to your command line run e.g.:
 sudo -u www-data php occ config:list system
-from within your ownCloud installation folder
+from within your server installation folder
 
 or 
 
@@ -73,10 +71,10 @@ Insert your config.php content here
 Insert your webserver log here
 ```
 
-##### ownCloud log (data/owncloud.log)
+##### Server log (data/owncloud.log or data/nextcloud.log)
 <details>
 ```
-Insert your ownCloud log here
+Insert your server log here
 ```
 </details>
 
