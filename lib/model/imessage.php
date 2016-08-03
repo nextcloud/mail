@@ -23,15 +23,6 @@ namespace OCA\Mail\Model;
 use Horde_Mail_Rfc822_List;
 use OCP\Files\File;
 
-/**
- * ownCloud - Mail
- *
- * This file is licensed under the Affero General Public License version 3 or
- * later. See the COPYING file.
- *
- * @author Christoph Wurst <christoph@winzerhof-wurst.at>
- * @copyright Christoph Wurst 2015
- */
 interface IMessage {
 
 	/**
