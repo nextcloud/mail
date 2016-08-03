@@ -15,7 +15,7 @@ node_modules/
 js/mail.min.js
 
 # packaged app
-build/
+build/artifacts
 
 # NetBeans project
 nbproject/

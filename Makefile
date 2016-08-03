@@ -35,7 +35,7 @@ install-bower-deps: bower.json install-npm-deps
 	./node_modules/bower/bin/bower install
 
 optimize-js: install-npm-deps install-bower-deps
-	./node_modules/requirejs/bin/r.js -o build.js
+	./node_modules/requirejs/bin/r.js -o build/build.js
 
 dev-setup: install-composer-deps install-npm-deps-dev install-bower-deps
 
