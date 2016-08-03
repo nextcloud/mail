@@ -57,6 +57,7 @@ appstore: clean install-deps optimize-js
 	tar cvzf $(appstore_dir)/$(package_name).tar.gz $(project_dir) \
 	--exclude-vcs \
 	--exclude=$(project_dir)/build \
+	--exclude=$(project_dir)/.github \
 	--exclude=$(project_dir)/build/artifacts \
 	--exclude=$(project_dir)/node_modules \
 	--exclude=$(project_dir)/.bowerrc \
@@ -68,7 +69,6 @@ appstore: clean install-deps optimize-js
 	--exclude=$(project_dir)/.travis.yml \
 	--exclude=$(project_dir)/.scrutinizer.yml \
         --exclude=$(project_dir)/bower.json \
-	--exclude=$(project_dir)/build.js \
         --exclude=$(project_dir)/CONTRIBUTING.md \
 	--exclude=$(project_dir)/composer.json \
 	--exclude=$(project_dir)/composer.lock \
