@@ -1,7 +1,7 @@
 /* global relative_modified_date, formatDate, md5, humanFileSize, getScrollBarWidth */
 
 /**
- * ownCloud - Mail
+ * Mail
  *
  * This file is licensed under the Affero General Public License version 3 or
  * later. See the COPYING file.
