@@ -104,7 +104,7 @@ class ProxyControllerTest extends TestCase {
 	 */
 	public function testRedirectInvalidUrl() {
 		$this->controller = new ProxyController($this->appName, $this->request,
-			$this->urlGenerator, $this->session, '', '');
+			$this->urlGenerator, $this->session, $this->clientService, '', '');
 		$this->controller->redirect('ftp://example.com');
 	}
 
@@ -124,7 +124,7 @@ class ProxyControllerTest extends TestCase {
 		$expected = new ProxyDownloadResponse($content, $src,
 			'application/octet-stream');
 		$this->controller = new ProxyController($this->appName, $this->request,
-			$this->urlGenerator, $this->session, '', '');
+			$this->urlGenerator, $this->session, $this->clientService, '', '');
 		$response = $this->controller->proxy($src);
 
 		$this->assertEquals($expected, $response);
