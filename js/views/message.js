@@ -146,7 +146,7 @@ define(function(require) {
 				type: 'reply',
 				account: this.account,
 				folder: this.folder,
-				messageId: this.message.get('messageId'),
+				messageId: this.message.get('id'),
 				data: this.reply
 			}));
 		}
