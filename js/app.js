@@ -64,7 +64,7 @@ define(function(require) {
 					OC.generateUrl('apps/mail/compose?uri=%s');
 				try {
 					window.navigator
-						.registerProtocolHandler('mailto', url, 'ownCloud Mail');
+						.registerProtocolHandler('mailto', url, OC.theme.name + ' Mail');
 				} catch (e) {
 				}
 			}

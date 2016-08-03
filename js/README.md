@@ -19,7 +19,7 @@ is disabled, this compressed file is then used.
 
 ## Coding guidelines
 
-Generally, any code contributed to this repository should comply with the general [ownCloud coding style guidelines](https://doc.owncloud.org/server/9.0/developer_manual/general/codingguidelines.html).
+Generally, any code contributed to this repository should comply with the general [ownCloud coding style guidelines](https://doc.owncloud.org/server/9.1/developer_manual/general/codingguidelines.html).
 
 Currently we use several frameworks and their extensions. Namely, this app is build with jQuery, Underscore.js, Backbone.js and Backbone Marionette. Additionally, Require.js is used for loading module dependencies (code and template).
 

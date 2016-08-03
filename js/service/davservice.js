@@ -143,7 +143,7 @@ define(function(require) {
 	function createICalElement() {
 		var root = new ical.Component(['vcalendar', [], []]);
 
-		root.updatePropertyWithValue('prodid', '-//ownCloud Mail');
+		root.updatePropertyWithValue('prodid', '-//' + OC.theme.name + ' Mail');
 
 		return root;
 	}

@@ -1,7 +1,7 @@
 {
   "name": "mail",
   "version": "0.5.3",
-  "description": "Mail app for ownCloud",
+  "description": "Mail App",
   "main": "index.js",
   "directories": {
     "test": "tests"
@@ -15,7 +15,6 @@
     "url": "https://github.com/owncloud/mail.git"
   },
   "keywords": [
-    "ownCloud",
     "mail"
   ],
   "author": "Thomas Müller and others",

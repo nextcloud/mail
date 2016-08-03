@@ -44,7 +44,7 @@ abstract class AbstractTest extends \PHPUnit_Framework_TestCase {
 		$password = \OC::$server->getCrypto()->encrypt($password);
 		$a = new MailAccount();
 		$a->setId(-1);
-		$a->setName('ownCloudMail');
+		$a->setName('Mail');
 		$a->setInboundHost('localhost');
 		$a->setInboundPort(993);
 		$a->setInboundUser($user);

@@ -21,16 +21,6 @@
  */
 namespace OCA\Mail\Tests\Model;
 
-/**
- * ownCloud
- *
- * @author Thomas Müller
- * @copyright 2014 Thomas Müller deepdiver@owncloud.com
- *
- * You should have received a copy of the GNU Affero General Public
- * License along with this library.  If not, see <http://www.gnu.org/licenses/>.
- *
- */
 use Horde_Imap_Client_Data_Fetch;
 use Horde_Imap_Client_Fetch_Results;
 use Horde_Mime_Part;
