@@ -245,6 +245,8 @@ define(function(require) {
 									_this.loadingMore = false;
 								},
 							});
+				} else {
+					_this.loadingMore = false;
 				}
 				// Reload scrolls the list to the top, hence a unwanted
 				// scroll event is fired, which we want to ignore

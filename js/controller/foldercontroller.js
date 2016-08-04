@@ -96,6 +96,10 @@ define(function(require) {
 					});
 
 					Radio.message.trigger('load', account, folder, messages.first());
+
+					$('#load-more-mail-messages')
+						.fadeIn()
+						.css('display', 'block');
 				}
 
 				if (cached) {
@@ -105,7 +109,7 @@ define(function(require) {
 				}
 			});
 
-			$.when(loadingMessages).fail(function(error) {
+			$.when(loadingMessages).fail(function() {
 				// Set the old folder as being active
 				var folder = require('state').currentFolder;
 				Radio.folder.trigger('setactive', account, folder);
