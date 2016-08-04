@@ -25,46 +25,45 @@
 namespace OCA\Mail\Controller;
 
 use Exception;
+use OC;
+use OCA\Mail\Http\ProxyDownloadResponse;
+use OCP\AppFramework\Controller;
+use OCP\AppFramework\Http\TemplateResponse;
+use OCP\Http\Client\IClientService;
 use OCP\IRequest;
 use OCP\ISession;
 use OCP\IURLGenerator;
-use OCP\AppFramework\Controller;
-use OCP\AppFramework\Http\TemplateResponse;
-use OCA\Mail\Http\ProxyDownloadResponse;
 
 class ProxyController extends Controller {
 
-	/**
-	 * @var \OCP\IURLGenerator
-	 */
+	/** @var IURLGenerator */
 	private $urlGenerator;
 
-	/**
-	 * @var \OCP\ISession
-	 */
+	/** @var ISession */
 	private $session;
 
-	/**
-	 * @var string
-	 */
+	/** @var IClientService */
+	private $clientService;
+
+	/** @var string */
 	private $referrer;
 
-	/**
-	 * @var string
-	 */
+	/** @var string */
 	private $hostname;
 
 	/**
 	 * @param string $appName
-	 * @param \OCP\IRequest $request
+	 * @param IRequest $request
 	 * @param IURLGenerator $urlGenerator
-	 * @param \OCP\ISession $session
+	 * @param ISession $session
+	 * @param IClientService $clientService
 	 */
 	public function __construct($appName, IRequest $request,
-		IURLGenerator $urlGenerator, ISession $session, $referrer, $hostname) {
+		IURLGenerator $urlGenerator, ISession $session,	IClientService $clientService, $referrer, $hostname) {
 		parent::__construct($appName, $request);
 		$this->urlGenerator = $urlGenerator;
 		$this->session = $session;
+		$this->clientService = $clientService;
 		$this->referrer = $referrer;
 		$this->hostname = $hostname;
 	}
@@ -118,25 +117,9 @@ class ProxyController extends Controller {
 		// close the session to allow parallel downloads
 		$this->session->close();
 
-		$content = $this->getUrlContent($src);
+		$client = $this->clientService->newClient();
+		$content = $client->get($src);
 		return new ProxyDownloadResponse($content, $src, 'application/octet-stream');
-	}
-
-	/**
-	 * Version hack for \OCP\IHelper
-	 *
-	 * @todo remove version-hack once core 8.1+ is supported
-	 *
-	 * @param type $src
-	 * @return type
-	 */
-	private function getUrlContent($src) {
-		$ocVersion = \OC::$server->getConfig()->getSystemValue('version', '0.0.0');
-		if (version_compare($ocVersion, '8.2.0', '<')) {
-			return \OC::$server->getHTTPClientService()->newClient()->get($src);
-		} else {
-			return \OC::$server->getHelper()->getUrlContent($src);
-		}
 	}
 
 }

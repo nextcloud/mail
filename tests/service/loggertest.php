@@ -19,11 +19,14 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>
  *
  */
+
 namespace OCA\Mail\Tests\Service;
 
+use Exception;
 use OCA\Mail\Service\Logger;
+use Test\TestCase;
 
-class LoggerTest extends \PHPUnit_Framework_TestCase {
+class LoggerTest extends TestCase {
 
 	/**
 	 * @dataProvider providesLoggerMethods
@@ -35,19 +38,17 @@ class LoggerTest extends \PHPUnit_Framework_TestCase {
 		$baseLogger->expects($this->once())
 			->method($method)
 			->with(
-				$this->equalTo($param),
-				$this->equalTo([
+				$this->equalTo($param), $this->equalTo([
 					'app' => 'mail',
 					'key' => 'value',
-				]));
+		]));
 
-		$logger = new \OCA\Mail\Service\Logger('mail', $baseLogger);
+		$logger = new Logger('mail', $baseLogger);
 		$logger->$method($param, ['key' => 'value']);
-    }
+	}
 
 	public function providesLoggerMethods() {
-
-		$methods = [
+		return [
 			['alert'],
 			['warning'],
 			['emergency'],
@@ -56,12 +57,8 @@ class LoggerTest extends \PHPUnit_Framework_TestCase {
 			['notice'],
 			['info'],
 			['debug'],
+			['logException', new Exception()],
 		];
-		if (version_compare(implode('.', \OCP\Util::getVersion()), '8.2', '>=')) {
-			$methods[]= ['logException', new \Exception()];
-		}
-
-		return $methods;
 	}
 
 }

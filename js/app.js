@@ -83,8 +83,6 @@ define(function(require) {
 	Mail = new Mail();
 
 	Mail.on('start', function() {
-		this.hasDavSupport = $('#has-dav-support').val() === '1';
-
 		this.view = new AppView();
 		Cache.init();
 

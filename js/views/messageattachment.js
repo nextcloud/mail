@@ -44,11 +44,6 @@ define(function(require) {
 			'click @ui.saveToCloudButton': '_onSaveToCloud',
 			'click @ui.importCalendarEventButton': '_onImportCalendarEvent'
 		},
-		templateHelpers: function() {
-			return {
-				hasDavSupport: require('app').hasDavSupport
-			};
-		},
 		initialize: function() {
 			this.listenTo(Radio.ui, 'document:click', this._closeImportPopover);
 		},
