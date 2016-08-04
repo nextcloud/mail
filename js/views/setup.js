@@ -160,13 +160,10 @@ define(function(require) {
 				});
 			});
 
-			$.when(creatingAccount).fail(function(error) {
-				Radio.ui.trigger('error:show', error);
-			});
-
 			var _this = this;
-			$.when(creatingAccount).always(function() {
+			$.when(creatingAccount).fail(function(error) {
 				_this.loading = false;
+				Radio.ui.trigger('error:show', error);
 				_this.ui.iconLoading.hide();
 				_this.ui.inputs.prop('disabled', false);
 				_this.ui.submitButton.val(t('mail', 'Connect'));
