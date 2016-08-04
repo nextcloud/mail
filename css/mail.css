@@ -4,6 +4,13 @@
 	top: 50%;
 }
 
+.loading-with-text > h2 {
+	position: absolute;
+	top: calc(50% + 35px);
+	width: 100%;
+	text-align: center;
+}
+
 .container {
 	position: relative;
 	width: 100%;

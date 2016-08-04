@@ -59,7 +59,6 @@ define(function(require) {
 
 		// Set folder active
 		Radio.folder.trigger('setactive', account, folder);
-		Radio.ui.trigger('content:loading');
 
 		$('#load-more-mail-messages').hide();
 
@@ -118,6 +117,8 @@ define(function(require) {
 		}
 	}
 
+	var loadFolderMessagesDebounced = _.debounce(loadFolderMessages, 1000);
+
 	/**
 	 * @param {Account} account
 	 * @param {Folder} folder
@@ -125,6 +126,7 @@ define(function(require) {
 	 */
 	function showFolder(account, folder) {
 		Radio.ui.trigger('search:set', '');
+		Radio.ui.trigger('content:loading');
 		loadFolderMessages(account, folder, false);
 
 		// Save current folder
@@ -144,12 +146,10 @@ define(function(require) {
 		Radio.ui.trigger('search:set', query);
 
 		Radio.ui.trigger('composer:leave');
-		loadFolderMessages(account, folder, false, query);
-
-		// Save current folder
-		Radio.folder.trigger('setactive', account, folder);
-		require('state').currentAccount = account;
-		require('state').currentFolder = folder;
+		Radio.ui.trigger('content:loading', t('mail', 'Searching for {query}', {
+			query: query
+		}));
+		loadFolderMessagesDebounced(account, folder, false, query);
 	}
 
 	return {

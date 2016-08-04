@@ -168,11 +168,11 @@ define(function(require) {
 				folder: folder
 			}));
 		},
-		showContentLoading: function() {
-			if (this.activeContent !== ContentType.LOADING) {
-				this.activeContent = ContentType.LOADING;
-				this.content.show(new LoadingView());
-			}
+		showContentLoading: function(text) {
+			this.activeContent = ContentType.LOADING;
+			this.content.show(new LoadingView({
+				text: text
+			}));
 		},
 		updateTitle: function() {
 			var activeEmail = '';

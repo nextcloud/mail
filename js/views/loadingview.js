@@ -20,14 +20,25 @@
 define(function(require) {
 	'use strict';
 
+	var Handlebars = require('handlebars');
 	var Marionette = require('marionette');
+	var LoadingTemplate = require('text!templates/loading.html');
 
 	/**
 	 * @class LoadingView
 	 */
 	var LoadingView = Marionette.ItemView.extend({
-		template: false,
-		className: 'icon-loading container'
+		template: Handlebars.compile(LoadingTemplate),
+		templateHelpers: function() {
+			return {
+				hint: this.hint
+			};
+		},
+		className: 'icon-loading container loading-with-text',
+		hint: '',
+		initialize: function(options) {
+			this.hint = options.text || '';
+		}
 	});
 
 	return LoadingView;
