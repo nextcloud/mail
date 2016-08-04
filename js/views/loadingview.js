@@ -34,7 +34,7 @@ define(function(require) {
 				hint: this.hint
 			};
 		},
-		className: 'icon-loading container loading-with-text',
+		className: 'container',
 		hint: '',
 		initialize: function(options) {
 			this.hint = options.text || '';
