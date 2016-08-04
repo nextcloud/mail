@@ -23,6 +23,7 @@ use OCA\Mail\Controller\AccountsController;
 use OCA\Mail\Model\Message;
 use OC\AppFramework\Http;
 use OCP\AppFramework\Http\JSONResponse;
+use OCA\Mail\Service\AliasesService;
 
 class AccountsControllerTest extends \Test\TestCase {
 
@@ -40,6 +41,7 @@ class AccountsControllerTest extends \Test\TestCase {
 	private $accountId;
 	private $account;
 	private $unifiedAccount;
+	private $aliasesService;
 
 	protected function setUp() {
 		parent::setUp();
@@ -70,10 +72,13 @@ class AccountsControllerTest extends \Test\TestCase {
 		$this->collector = $this->getMockBuilder('\OCA\Mail\Service\AutoCompletion\AddressCollector')
 			->disableOriginalConstructor()
 			->getMock();
+		$this->aliasesService = $this->getMockBuilder('\OCA\Mail\Service\AliasesService')
+			->disableOriginalConstructor()
+			->getMock();
 
 		$this->controller = new AccountsController($this->appName, $this->request,
 			$this->accountService, $this->userId, $this->userFolder, $this->autoConfig,
-			$this->logger, $this->l10n, $this->crypto, $this->collector);
+			$this->logger, $this->l10n, $this->crypto, $this->collector, $this->aliasesService);
 
 		$this->account = $this->getMockBuilder('\OCA\Mail\Account')
 			->disableOriginalConstructor()
@@ -87,15 +92,26 @@ class AccountsControllerTest extends \Test\TestCase {
 	public function testIndex() {
 		$this->account->expects($this->once())
 			->method('getConfiguration')
-			->will($this->returnValue('conf'));
+			->will($this->returnValue([
+				'accountId' => 123,
+			]));
 		$this->accountService->expects($this->once())
 			->method('findByUserId')
 			->with($this->equalTo($this->userId))
 			->will($this->returnValue([$this->account]));
+		$this->aliasesService->expects($this->any())
+			->method('findAll')
+			->with($this->equalTo($this->accountId), $this->equalTo($this->userId))
+			->will($this->returnValue('aliases'));
 
 		$response = $this->controller->index();
 
-		$expectedResponse = new JSONResponse(['conf']);
+		$expectedResponse = new JSONResponse([
+			[
+				'accountId' => 123,
+				'aliases' => 'aliases'
+			]
+		]);
 		$this->assertEquals($expectedResponse, $response);
 	}
 
@@ -233,6 +249,7 @@ class AccountsControllerTest extends \Test\TestCase {
 				'fileName' => $attachmentName
 			],
 		];
+		$aliasId = null;
 
 		$this->accountService->expects($this->once())
 			->method('find')
@@ -332,7 +349,7 @@ class AccountsControllerTest extends \Test\TestCase {
 
 		$expected = new JSONResponse();
 		$actual = $this->controller->send($this->accountId, $folderId, $subject,
-			$body, $to, $cc, $bcc, $draftUID, $messageId, $attachments);
+			$body, $to, $cc, $bcc, $draftUID, $messageId, $attachments, $aliasId);
 
 		$this->assertEquals($expected, $actual);
 	}

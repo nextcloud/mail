@@ -110,12 +110,6 @@ define(function(require) {
 				Radio.ui.trigger('error:show', t('mail', 'Opening HTML drafts is not supported yet.'));
 			}
 
-			// set 'from' dropdown to current account
-			// TODO: fix selector conflicts
-			if (this.account.get('accountId') !== -1) {
-				$('.mail-account').val(this.account.get('accountId'));
-			}
-
 			// focus 'to' field automatically on clicking New message button
 			this.composer.focusTo();
 

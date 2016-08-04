@@ -39,6 +39,7 @@ define(function(require) {
 
 			Radio.navigation.on('folder', _.bind(this.showFolder, this));
 			Radio.navigation.on('setup', _.bind(this.showSetup, this));
+			Radio.navigation.on('accountsettings', _.bind(this.showAccountSettings, this));
 		},
 		_navigate: function(route, options) {
 			options = options || {};
@@ -123,6 +124,19 @@ define(function(require) {
 			Radio.ui.trigger('composer:leave');
 			Radio.ui.trigger('navigation:hide');
 			Radio.ui.trigger('setup:show');
+		},
+		showAccountSettings: function(accountId) {
+			this._navigate('accounts/' +  accountId + '/settings');
+			var account = this.accounts.get(accountId);
+			if (_.isUndefined(account)) {
+				// Unknown account id -> redirect
+				Radio.ui.trigger('error:show', t('mail', 'Invalid account'));
+				this.default();
+				return;
+			}
+			Radio.ui.trigger('composer:leave');
+			Radio.ui.trigger('navigation:hide');
+			Radio.ui.trigger('accountsettings:show', account);
 		}
 	};
 

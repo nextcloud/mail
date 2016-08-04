@@ -41,10 +41,10 @@ define(function(require) {
 			this.account = options.account;
 			this.folder = options.folder;
 			this.message = options.model;
-
 			this.reply = {
 				replyToList: this.message.get('replyToList'),
 				replyCc: this.message.get('replyCc'),
+				toEmail: this.message.get('toEmail'),
 				replyCcList: this.message.get('replyCcList'),
 				body: ''
 			};
@@ -142,8 +142,8 @@ define(function(require) {
 
 			// setup reply composer view
 			this.replyComposer.show(new ComposerView({
-				//el: this.$('#reply-composer'),
 				type: 'reply',
+				accounts: require('state').accounts,
 				account: this.account,
 				folder: this.folder,
 				messageId: this.message.get('id'),

@@ -58,7 +58,9 @@ define(function(require) {
 				.replace(/(^'|'$)/g, '');
 			label = Handlebars.Utils.escapeExpression(label);
 			var email = Handlebars.Utils.escapeExpression(value.email);
-			if (currentAccount && email === currentAccount.get('emailAddress')) {
+
+			if (currentAccount && (email === currentAccount.get('emailAddress') ||
+				_.find(currentAccount.get('aliases').toJSON(), function(alias) { return alias.alias  === email; }))) {
 				label = t('mail', 'you');
 			}
 			var title = t('mail', 'Send message to {email}', {email: email});
