@@ -1,7 +1,7 @@
 {
   "name": "mail",
   "version": "0.5.3",
-  "description": "Mail App",
+  "description": "Mail app",
   "main": "index.js",
   "directories": {
     "test": "tests"
@@ -17,7 +17,7 @@
   "keywords": [
     "mail"
   ],
-  "author": "Thomas Müller and others",
+  "author": "Christoph Wurst, Thomas Müller, Jan-Christoph Borchardt, Steffen Lindner and many more …",
   "license": "AGPL-3.0",
   "bugs": {
     "url": "https://github.com/owncloud/mail/issues"
