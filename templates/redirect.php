@@ -21,26 +21,31 @@
  *
  */
 ?>
-<?php /** @var array $_ */?>
+<?php /** @var array $_ */ ?>
 <?php if (isset($_['authorizedRedirect']) && ($_['authorizedRedirect'])): ?>
 	<?php script('mail', 'autoredirect'); ?>
 	<div class="error" style="text-align: center;">
-		<img src="<?php p(\OCP\Util::imagePath('core', 'loading-dark.gif'));?>"
-			style="margin: 0 auto;" />
+		<div class="icon-loading-dark"
+		     style="height: 60px;"></div>
 		<p>
 			<a href="<?php p($_['url']) ?>" rel="noreferrer" id="redirectLink"
-				style="color: #fff !important;">
-				<?php p($l->t('Forwarding you to %s - click here if you are not automatically redirected within the next few seconds.', array($_['urlHost'])));?>
+			   style="font-weight: 300 !important">
+				<h2><?php p($l->t('Forwarding to %s', array($_['urlHost']))); ?></h2>
+				<?php p($l->t('Click here if you are not automatically redirected within the next few seconds.')); ?>
 			</a>
 		</p>
 	</div>
 <?php else: ?>
 	<div class="error">
-		<h2><?php p($l->t('Redirect'));?></h2>
+		<h2><?php p($l->t('Redirect')); ?></h2>
 		<p><?php p($l->t('The link leads to %s', array($_['urlHost']))); ?></p>
-		<p><?php print_unescaped($l->t('If you don’t want to visit that page, you can return to <a href="%s">Mail</a>.', array($_['mailURL']))); ?></p>
+		<p><?php print_unescaped($l->t('If you don’t want to visit that page, you can return to <a href="%s">Mail</a>.',
+			array($_['mailURL'])));
+	?></p>
 
 		<br/>
-		<a href="<?php p($_['url']) ?>" class="button" rel="noreferrer" id="redirectLink"><?php p($l->t('Continue to %s', array($_['urlHost']))); ?></a>
+		<a href="<?php p($_['url']) ?>" class="button" rel="noreferrer" id="redirectLink"><?php p($l->t('Continue to %s',
+				array($_['urlHost'])));
+		?></a>
 	</div>
 <?php endif; ?>
