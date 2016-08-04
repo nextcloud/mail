@@ -1,7 +1,7 @@
 /**
  * @author Christoph Wurst <christoph@winzerhof-wurst.at>
  *
- * ownCloud - Mail
+ * Mail
  *
  * This code is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Affero General Public License, version 3,
@@ -143,7 +143,7 @@ define(function(require) {
 	function createICalElement() {
 		var root = new ical.Component(['vcalendar', [], []]);
 
-		root.updatePropertyWithValue('prodid', '-//ownCloud Mail');
+		root.updatePropertyWithValue('prodid', '-//' + OC.theme.name + ' Mail');
 
 		return root;
 	}

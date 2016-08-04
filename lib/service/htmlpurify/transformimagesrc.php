@@ -4,7 +4,7 @@
  * @author Jakob Sack <jakob@owncloud.org>
  * @author Jakob Sack <mail@jakobsack.de>
  *
- * ownCloud - Mail
+ * Mail
  *
  * This code is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Affero General Public License, version 3,

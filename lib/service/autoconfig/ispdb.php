@@ -5,7 +5,7 @@
  * @author Christoph Wurst <christoph@winzerhof-wurst.at>
  * @author Scheirle <bernhard+git@scheirle.de>
  *
- * ownCloud - Mail
+ * Mail
  *
  * This code is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Affero General Public License, version 3,

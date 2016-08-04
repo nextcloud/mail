@@ -5,7 +5,7 @@
  * @author Christoph Wurst <wurst.christoph@gmail.com>
  * @author Thomas Müller <thomas.mueller@tmit.eu>
  *
- * ownCloud - Mail
+ * Mail
  *
  * This code is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Affero General Public License, version 3,
@@ -44,7 +44,7 @@ abstract class AbstractTest extends \PHPUnit_Framework_TestCase {
 		$password = \OC::$server->getCrypto()->encrypt($password);
 		$a = new MailAccount();
 		$a->setId(-1);
-		$a->setName('ownCloudMail');
+		$a->setName('Mail');
 		$a->setInboundHost('localhost');
 		$a->setInboundPort(993);
 		$a->setInboundUser($user);

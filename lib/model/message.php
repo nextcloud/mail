@@ -3,7 +3,7 @@
 /**
  * @author Christoph Wurst <christoph@winzerhof-wurst.at>
  *
- * ownCloud - Mail
+ * Mail
  *
  * This code is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Affero General Public License, version 3,
@@ -20,15 +20,6 @@
  */
 namespace OCA\Mail\Model;
 
-/**
- * ownCloud - Mail
- *
- * This file is licensed under the Affero General Public License version 3 or
- * later. See the COPYING file.
- *
- * @author Christoph Wurst <christoph@winzerhof-wurst.at>
- * @copyright Christoph Wurst 2015
- */
 use Horde_Mail_Rfc822_List;
 use Horde_Mime_Part;
 use OCP\Files\File;
