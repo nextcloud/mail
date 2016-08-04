@@ -312,7 +312,7 @@ define(function(require) {
 					type: 'DELETE'
 				});
 			}
-			options.success({
+			defer.resolve({
 				uid: null
 			});
 		} else {
@@ -349,8 +349,7 @@ define(function(require) {
 				}
 			};
 			$.ajax(url, data);
-
-			return defer.promise();
 		}
+		return defer.promise();
 	}
 });
