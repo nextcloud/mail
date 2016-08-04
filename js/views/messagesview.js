@@ -35,12 +35,15 @@ define(function(require) {
 		childViewContainer: '#mail-message-list',
 		template: Handlebars.compile(MessageListTemplate),
 		currentMessage: null,
+		searchQuery: null,
 		loadingMore: false,
 		reloaded: false,
 		events: {
 			'wheel': 'onScroll',
 		},
-		initialize: function() {
+		initialize: function(options) {
+			this.searchQuery = options.searchQuery;
+
 			var _this = this;
 			Radio.ui.reply('messagesview:collection', function() {
 				return _this.collection;
@@ -212,6 +215,7 @@ define(function(require) {
 					from: from,
 					to: from + 20,
 					force: true,
+					filter: this.searchQuery || '',
 					// Replace cached message list on reload
 					replace: reload
 				});

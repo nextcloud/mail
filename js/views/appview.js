@@ -160,13 +160,14 @@ define(function(require) {
 				}));
 			}
 		},
-		showFolderContent: function(account, folder) {
+		showFolderContent: function(account, folder, options) {
 			this.activeContent = ContentType.FOLDER_CONTENT;
 
-			this.content.show(new FolderContentView({
-				account: account,
-				folder: folder
-			}));
+			// Merge account, folder into a single options object
+			options.account = account;
+			options.folder = folder;
+
+			this.content.show(new FolderContentView(options));
 		},
 		showContentLoading: function(text) {
 			this.activeContent = ContentType.LOADING;
