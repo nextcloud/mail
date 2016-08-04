@@ -5,7 +5,7 @@
  * later. See the COPYING file.
  *
  * @author Christoph Wurst <christoph@winzerhof-wurst.at>
- * @copyright Christoph Wurst 2015
+ * @copyright Christoph Wurst 2015, 2016
  */
 
 define(function(require) {
@@ -18,16 +18,9 @@ define(function(require) {
 
 	return Marionette.ItemView.extend({
 		initialize: function(options) {
-			if (options.filterCriteria && options.filterCriteria.text) {
-				this.model.set('searchTerm', options.filterCriteria.text);
-			} else {
-				this.model.set('searchTerm', '');
-			}
+			this.model.set('searchTerm', options.searchQuery);
 		},
-		template: Handlebars.compile(NoSearchResultMessageListViewTemplate),
-		onRender: function() {
-			this.$('#load-more-mail-messages').hide();
-		}
+		template: Handlebars.compile(NoSearchResultMessageListViewTemplate)
 	});
 });
 

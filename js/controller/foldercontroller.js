@@ -106,7 +106,7 @@ define(function(require) {
 				if (cached) {
 					// Trigger folder update
 					// TODO: replace with horde sync once it's implemented
-					//Radio.ui.trigger('messagesview:messages:update');
+					Radio.ui.trigger('messagesview:messages:update');
 				}
 			});
 

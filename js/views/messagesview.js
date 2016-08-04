@@ -27,6 +27,7 @@ define(function(require) {
 	var MessagesItemView = require('views/messagesitem');
 	var MessageListTemplate = require('text!templates/message-list.html');
 	var EmptyFolderView = require('views/emptyfolderview');
+	var NoSearchResultView = require('views/nosearchresultmessagelistview');
 
 	return Backbone.Marionette.CompositeView.extend({
 		collection: null,
@@ -61,10 +62,16 @@ define(function(require) {
 			this.$scrollContainer.scroll(_.bind(this.onScroll, this));
 		},
 		getEmptyView: function() {
-			return EmptyFolderView;
+			if (this.searchQuery && this.searchQuery !== '') {
+				return NoSearchResultView;
+			} else {
+				return EmptyFolderView;
+			}
 		},
 		emptyViewOptions: function() {
-			return {filterCriteria: this.filterCriteria};
+			return {
+				searchQuery: this.searchQuery
+			};
 		},
 		setMessageFlag: function(messageId, flag, val) {
 			var message = this.collection.get(messageId);
