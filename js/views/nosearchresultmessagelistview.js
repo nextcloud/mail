@@ -18,7 +18,11 @@ define(function(require) {
 
 	return Marionette.ItemView.extend({
 		initialize: function(options) {
-			this.model.set('searchTerm', options.filterCriteria.text || '');
+			if (options.filterCriteria && options.filterCriteria.text) {
+				this.model.set('searchTerm', options.filterCriteria.text);
+			} else {
+				this.model.set('searchTerm', '');
+			}
 		},
 		template: Handlebars.compile(NoSearchResultMessageListViewTemplate),
 		onRender: function() {

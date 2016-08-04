@@ -47,7 +47,7 @@ define(function(require) {
 	 * @param {boolean} noSelect
 	 * @returns {undefined}
 	 */
-	function loadFolderMessages(account, folder, noSelect) {
+	function loadFolderMessages(account, folder, noSelect, searchQuery) {
 		Radio.ui.trigger('composer:leave');
 
 		if (require('state').messagesLoading !== null) {
@@ -71,7 +71,9 @@ define(function(require) {
 			require('state').currentlyLoading = null;
 		} else {
 			var loadingMessages = Radio.message.request('entities', account, folder, {
-				cache: true
+				cache: true,
+				filter: searchQuery,
+				replace: true
 			});
 
 			$.when(loadingMessages).done(function(messages, cached) {
@@ -84,9 +86,9 @@ define(function(require) {
 				// Fade out the message composer
 				$('#mail_new_message').prop('disabled', false);
 
-				if (messages.length > 0) {
-					Radio.ui.trigger('messagesview:messages:add', messages);
+				Radio.ui.trigger('messagesview:messages:add', messages);
 
+				if (messages.length > 0) {
 					// Fetch first 10 messages in background
 					_.each(messages.slice(0, 10), function(
 						message) {
@@ -94,21 +96,12 @@ define(function(require) {
 					});
 
 					Radio.message.trigger('load', account, folder, messages.first());
-					// Show 'Load More' button if there are
-					// more messages than the pagination limit
-					if (messages.length > 20) {
-						$('#load-more-mail-messages')
-							.fadeIn()
-							.css('display', 'block');
-					}
-				} else {
-					$('#emptycontent').show();
 				}
 
 				if (cached) {
 					// Trigger folder update
 					// TODO: replace with horde sync once it's implemented
-					Radio.ui.trigger('messagesview:messages:update');
+					//Radio.ui.trigger('messagesview:messages:update');
 				}
 			});
 
@@ -127,7 +120,27 @@ define(function(require) {
 	 * @returns {Promise}
 	 */
 	function showFolder(account, folder) {
+		Radio.ui.trigger('search:set', '');
 		loadFolderMessages(account, folder, false);
+
+		// Save current folder
+		Radio.folder.trigger('setactive', account, folder);
+		require('state').currentAccount = account;
+		require('state').currentFolder = folder;
+	}
+
+	/**
+	 * @param {Account} account
+	 * @param {Folder} folder
+	 * @param {string} query
+	 * @returns {Promise}
+	 */
+	function searchFolder(account, folder, query) {
+		// If this was triggered by a URL change, we set the search input manually
+		Radio.ui.trigger('search:set', query);
+
+		Radio.ui.trigger('composer:leave');
+		loadFolderMessages(account, folder, false, query);
 
 		// Save current folder
 		Radio.folder.trigger('setactive', account, folder);
@@ -137,6 +150,7 @@ define(function(require) {
 
 	return {
 		loadFolder: loadFolders,
-		showFolder: showFolder
+		showFolder: showFolder,
+		searchFolder: searchFolder
 	};
 });

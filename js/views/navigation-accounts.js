@@ -39,8 +39,6 @@ define(function(require) {
 		 * @returns {undefined}
 		 */
 		setFolderActive: function(account, folder) {
-			Radio.ui.trigger('messagesview:filter:clear');
-
 			// disable all other folders for all accounts
 			require('state').accounts.each(function(acnt) {
 				var localAccount = require('state').folderView.collection.get(acnt.get('accountId'));

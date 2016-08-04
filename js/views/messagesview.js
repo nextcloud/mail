@@ -26,7 +26,7 @@ define(function(require) {
 	var Radio = require('radio');
 	var MessagesItemView = require('views/messagesitem');
 	var MessageListTemplate = require('text!templates/message-list.html');
-	var NoSearchResultMessageListView = require('views/nosearchresultmessagelistview');
+	var EmptyFolderView = require('views/emptyfolderview');
 
 	return Backbone.Marionette.CompositeView.extend({
 		collection: null,
@@ -37,7 +37,6 @@ define(function(require) {
 		currentMessage: null,
 		loadingMore: false,
 		reloaded: false,
-		filterCriteria: null,
 		events: {
 			'wheel': 'onScroll',
 		},
@@ -50,7 +49,6 @@ define(function(require) {
 			this.listenTo(Radio.ui, 'messagesview:messages:add', this.addMessages);
 			this.listenTo(Radio.ui, 'messagesview:messageflag:set', this.setMessageFlag);
 			this.listenTo(Radio.ui, 'messagesview:filter', this.filterCurrentMailbox);
-			this.listenTo(Radio.ui, 'messagesview:filter:clear', this.clearFilter);
 			this.listenTo(Radio.ui, 'messagesview:message:setactive', this.setActiveMessage);
 			this.listenTo(Radio.message, 'messagesview:message:next', this.selectNextMessage);
 			this.listenTo(Radio.message, 'messagesview:message:prev', this.selectPreviousMessage);
@@ -60,9 +58,7 @@ define(function(require) {
 			this.$scrollContainer.scroll(_.bind(this.onScroll, this));
 		},
 		getEmptyView: function() {
-			if (this.filterCriteria) {
-				return NoSearchResultMessageListView;
-			}
+			return EmptyFolderView;
 		},
 		emptyViewOptions: function() {
 			return {filterCriteria: this.filterCriteria};
@@ -191,10 +187,6 @@ define(function(require) {
 			};
 			this.loadMessages(true);
 		},
-		clearFilter: function() {
-			$('#searchbox').val('');
-			this.filterCriteria = null;
-		},
 		loadMessages: function(reload) {
 			reload = reload || false;
 			var from = this.collection.size();
@@ -219,7 +211,6 @@ define(function(require) {
 				{
 					from: from,
 					to: from + 20,
-					filter: this.filterCriteria ? this.filterCriteria.text : null,
 					force: true,
 					// Replace cached message list on reload
 					replace: reload

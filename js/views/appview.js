@@ -57,6 +57,7 @@ define(function(require) {
 			this.listenTo(Radio.ui, 'content:loading', this.showContentLoading);
 			this.listenTo(Radio.ui, 'title:update', this.updateTitle);
 			this.listenTo(Radio.ui, 'accountsettings:show', this.showAccountSettings);
+			this.listenTo(Radio.ui, 'search:set', this.setSearchQuery);
 
 			// Hide notification favicon when switching back from
 			// another browser tab
@@ -208,6 +209,10 @@ define(function(require) {
 					account: account
 				}));
 			}
+		},
+		setSearchQuery: function(val) {
+			val = val || '';
+			$('#searchbox').val(val);
 		}
 	});
 
