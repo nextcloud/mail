@@ -23,7 +23,7 @@ define(function(require) {
 			accounts: '#app-navigation-accounts',
 			settings: '#app-settings-content'
 		},
-		initialize: function(options) {
+		initialize: function() {
 			this.bindUIElements();
 
 			this.listenTo(Radio.ui, 'navigation:show', this.show);
