@@ -57,6 +57,7 @@ define(function(require) {
 			this.listenTo(Radio.ui, 'content:loading', this.showContentLoading);
 			this.listenTo(Radio.ui, 'title:update', this.updateTitle);
 			this.listenTo(Radio.ui, 'accountsettings:show', this.showAccountSettings);
+			this.listenTo(Radio.ui, 'search:set', this.setSearchQuery);
 
 			// Hide notification favicon when switching back from
 			// another browser tab
@@ -159,19 +160,20 @@ define(function(require) {
 				}));
 			}
 		},
-		showFolderContent: function(account, folder) {
+		showFolderContent: function(account, folder, options) {
 			this.activeContent = ContentType.FOLDER_CONTENT;
 
-			this.content.show(new FolderContentView({
-				account: account,
-				folder: folder
-			}));
+			// Merge account, folder into a single options object
+			options.account = account;
+			options.folder = folder;
+
+			this.content.show(new FolderContentView(options));
 		},
-		showContentLoading: function() {
-			if (this.activeContent !== ContentType.LOADING) {
-				this.activeContent = ContentType.LOADING;
-				this.content.show(new LoadingView());
-			}
+		showContentLoading: function(text) {
+			this.activeContent = ContentType.LOADING;
+			this.content.show(new LoadingView({
+				text: text
+			}));
 		},
 		updateTitle: function() {
 			var activeEmail = '';
@@ -208,6 +210,10 @@ define(function(require) {
 					account: account
 				}));
 			}
+		},
+		setSearchQuery: function(val) {
+			val = val || '';
+			$('#searchbox').val(val);
 		}
 	});
 

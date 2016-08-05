@@ -26,7 +26,8 @@ define(function(require) {
 	var Radio = require('radio');
 	var MessagesItemView = require('views/messagesitem');
 	var MessageListTemplate = require('text!templates/message-list.html');
-	var NoSearchResultMessageListView = require('views/nosearchresultmessagelistview');
+	var EmptyFolderView = require('views/emptyfolderview');
+	var NoSearchResultView = require('views/nosearchresultmessagelistview');
 
 	return Backbone.Marionette.CompositeView.extend({
 		collection: null,
@@ -35,13 +36,15 @@ define(function(require) {
 		childViewContainer: '#mail-message-list',
 		template: Handlebars.compile(MessageListTemplate),
 		currentMessage: null,
+		searchQuery: null,
 		loadingMore: false,
 		reloaded: false,
-		filterCriteria: null,
 		events: {
 			'wheel': 'onScroll',
 		},
-		initialize: function() {
+		initialize: function(options) {
+			this.searchQuery = options.searchQuery;
+
 			var _this = this;
 			Radio.ui.reply('messagesview:collection', function() {
 				return _this.collection;
@@ -50,7 +53,6 @@ define(function(require) {
 			this.listenTo(Radio.ui, 'messagesview:messages:add', this.addMessages);
 			this.listenTo(Radio.ui, 'messagesview:messageflag:set', this.setMessageFlag);
 			this.listenTo(Radio.ui, 'messagesview:filter', this.filterCurrentMailbox);
-			this.listenTo(Radio.ui, 'messagesview:filter:clear', this.clearFilter);
 			this.listenTo(Radio.ui, 'messagesview:message:setactive', this.setActiveMessage);
 			this.listenTo(Radio.message, 'messagesview:message:next', this.selectNextMessage);
 			this.listenTo(Radio.message, 'messagesview:message:prev', this.selectPreviousMessage);
@@ -60,12 +62,16 @@ define(function(require) {
 			this.$scrollContainer.scroll(_.bind(this.onScroll, this));
 		},
 		getEmptyView: function() {
-			if (this.filterCriteria) {
-				return NoSearchResultMessageListView;
+			if (this.searchQuery && this.searchQuery !== '') {
+				return NoSearchResultView;
+			} else {
+				return EmptyFolderView;
 			}
 		},
 		emptyViewOptions: function() {
-			return {filterCriteria: this.filterCriteria};
+			return {
+				searchQuery: this.searchQuery
+			};
 		},
 		setMessageFlag: function(messageId, flag, val) {
 			var message = this.collection.get(messageId);
@@ -191,10 +197,6 @@ define(function(require) {
 			};
 			this.loadMessages(true);
 		},
-		clearFilter: function() {
-			$('#searchbox').val('');
-			this.filterCriteria = null;
-		},
 		loadMessages: function(reload) {
 			reload = reload || false;
 			var from = this.collection.size();
@@ -219,8 +221,8 @@ define(function(require) {
 				{
 					from: from,
 					to: from + 20,
-					filter: this.filterCriteria ? this.filterCriteria.text : null,
 					force: true,
+					filter: this.searchQuery || '',
 					// Replace cached message list on reload
 					replace: reload
 				});
@@ -254,6 +256,8 @@ define(function(require) {
 									_this.loadingMore = false;
 								},
 							});
+				} else {
+					_this.loadingMore = false;
 				}
 				// Reload scrolls the list to the top, hence a unwanted
 				// scroll event is fired, which we want to ignore

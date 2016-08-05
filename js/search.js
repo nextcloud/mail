@@ -11,18 +11,18 @@
 define(function(require) {
 	'use strict';
 
-	var _ = require('underscore');
 	var Radio = require('radio');
 	var lastQuery = '';
-
-	var debouncedFilter = _.debounce(function debouncedFilterFn(query) {
-		Radio.ui.trigger('messagesview:filter', query);
-	}, 1000);
 
 	function filter(query) {
 		if (query !== lastQuery) {
 			lastQuery = query;
-			debouncedFilter(query);
+
+			if (require('state').currentAccount && require('state').currentFolder) {
+				var accountId = require('state').currentAccount.get('accountId');
+				var folderId = require('state').currentFolder.get('id');
+				Radio.navigation.trigger('search', accountId, folderId, query);
+			}
 		}
 	}
 

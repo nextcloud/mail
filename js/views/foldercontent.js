@@ -43,6 +43,7 @@ define(function(require) {
 		detailView: null,
 		account: null,
 		folder: null,
+		searchQuery: null,
 		composer: null,
 		regions: {
 			messages: '#mail-messages',
@@ -51,6 +52,7 @@ define(function(require) {
 		initialize: function(options) {
 			this.account = options.account;
 			this.folder = options.folder;
+			this.searchQuery = options.searchQuery;
 
 			this.listenTo(Radio.ui, 'message:show', this.onShowMessage);
 			this.listenTo(Radio.ui, 'composer:show', this.onShowComposer);
@@ -69,7 +71,8 @@ define(function(require) {
 		},
 		onShow: function() {
 			this.messages.show(new MessagesView({
-				collection: this.folder.get('messages')
+				collection: this.folder.get('messages'),
+				searchQuery: this.searchQuery
 			}));
 		},
 		onShowMessage: function(message) {

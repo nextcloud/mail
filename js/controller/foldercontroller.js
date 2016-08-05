@@ -47,7 +47,7 @@ define(function(require) {
 	 * @param {boolean} noSelect
 	 * @returns {undefined}
 	 */
-	function loadFolderMessages(account, folder, noSelect) {
+	function loadFolderMessages(account, folder, noSelect, searchQuery) {
 		Radio.ui.trigger('composer:leave');
 
 		if (require('state').messagesLoading !== null) {
@@ -59,7 +59,6 @@ define(function(require) {
 
 		// Set folder active
 		Radio.folder.trigger('setactive', account, folder);
-		Radio.ui.trigger('content:loading');
 
 		$('#load-more-mail-messages').hide();
 
@@ -71,11 +70,15 @@ define(function(require) {
 			require('state').currentlyLoading = null;
 		} else {
 			var loadingMessages = Radio.message.request('entities', account, folder, {
-				cache: true
+				cache: true,
+				filter: searchQuery,
+				replace: true
 			});
 
 			$.when(loadingMessages).done(function(messages, cached) {
-				Radio.ui.trigger('foldercontent:show', account, folder);
+				Radio.ui.trigger('foldercontent:show', account, folder, {
+					searchQuery: searchQuery
+				});
 				require('state').currentlyLoading = null;
 				require('state').currentAccount = account;
 				require('state').currentFolder = folder;
@@ -84,9 +87,9 @@ define(function(require) {
 				// Fade out the message composer
 				$('#mail_new_message').prop('disabled', false);
 
-				if (messages.length > 0) {
-					Radio.ui.trigger('messagesview:messages:add', messages);
+				Radio.ui.trigger('messagesview:messages:add', messages);
 
+				if (messages.length > 0) {
 					// Fetch first 10 messages in background
 					_.each(messages.slice(0, 10), function(
 						message) {
@@ -94,15 +97,10 @@ define(function(require) {
 					});
 
 					Radio.message.trigger('load', account, folder, messages.first());
-					// Show 'Load More' button if there are
-					// more messages than the pagination limit
-					if (messages.length > 20) {
-						$('#load-more-mail-messages')
-							.fadeIn()
-							.css('display', 'block');
-					}
-				} else {
-					$('#emptycontent').show();
+
+					$('#load-more-mail-messages')
+						.fadeIn()
+						.css('display', 'block');
 				}
 
 				if (cached) {
@@ -112,7 +110,7 @@ define(function(require) {
 				}
 			});
 
-			$.when(loadingMessages).fail(function(error) {
+			$.when(loadingMessages).fail(function() {
 				// Set the old folder as being active
 				var folder = require('state').currentFolder;
 				Radio.folder.trigger('setactive', account, folder);
@@ -121,12 +119,16 @@ define(function(require) {
 		}
 	}
 
+	var loadFolderMessagesDebounced = _.debounce(loadFolderMessages, 1000);
+
 	/**
 	 * @param {Account} account
 	 * @param {Folder} folder
 	 * @returns {Promise}
 	 */
 	function showFolder(account, folder) {
+		Radio.ui.trigger('search:set', '');
+		Radio.ui.trigger('content:loading');
 		loadFolderMessages(account, folder, false);
 
 		// Save current folder
@@ -135,8 +137,26 @@ define(function(require) {
 		require('state').currentFolder = folder;
 	}
 
+	/**
+	 * @param {Account} account
+	 * @param {Folder} folder
+	 * @param {string} query
+	 * @returns {Promise}
+	 */
+	function searchFolder(account, folder, query) {
+		// If this was triggered by a URL change, we set the search input manually
+		Radio.ui.trigger('search:set', query);
+
+		Radio.ui.trigger('composer:leave');
+		Radio.ui.trigger('content:loading', t('mail', 'Searching for {query}', {
+			query: query
+		}));
+		loadFolderMessagesDebounced(account, folder, false, query);
+	}
+
 	return {
 		loadFolder: loadFolders,
-		showFolder: showFolder
+		showFolder: showFolder,
+		searchFolder: searchFolder
 	};
 });

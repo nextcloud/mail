@@ -4,6 +4,14 @@
 	top: 50%;
 }
 
+.emptycontent {
+	padding-top: 30vh;
+	margin-top: 0px;
+}
+.emptycontent > h2 {
+	padding-top: 20px;
+}
+
 .container {
 	position: relative;
 	width: 100%;

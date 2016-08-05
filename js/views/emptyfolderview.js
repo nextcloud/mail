@@ -18,23 +18,16 @@
  */
 
 define(function(require) {
-	'use strict';
+	'strict';
 
+	var Handlebars = require('handlebars');
 	var Marionette = require('marionette');
+	var EmptyMessagesTemplate = require('text!templates/empty-folder.html');
 
-	/**
-	 * @class Router
-	 */
-	var Router = Marionette.AppRouter.extend({
-		appRoutes: {
-			'': 'default',
-			'accounts/:accountId/folders/:folderId': 'showFolder',
-			'accounts/:accountId/folders/:folderId/search/:query': 'searchFolder',
-			'mailto(?:params)': 'mailTo',
-			'setup': 'showSetup',
-			'accounts/:accountId/settings': 'showAccountSettings'
-		}
+	var EmptyMessagesView = Marionette.ItemView.extend({
+		id: 'emptycontent',
+		template: Handlebars.compile(EmptyMessagesTemplate)
 	});
 
-	return Router;
+	return EmptyMessagesView;
 });

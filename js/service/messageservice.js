@@ -44,9 +44,15 @@ define(function(require) {
 		var defaults = {
 			cache: false,
 			replace: false, // Replace cached folder list
-			force: false
+			force: false,
+			filter: ''
 		};
 		_.defaults(options, defaults);
+
+		// Do not cache search queries
+		if (options.filter !== '') {
+			options.cache = false;
+		}
 
 		// Abort previous requests
 		if (messageListXhr !== null) {

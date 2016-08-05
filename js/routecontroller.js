@@ -38,6 +38,7 @@ define(function(require) {
 			this.accounts = accounts;
 
 			Radio.navigation.on('folder', _.bind(this.showFolder, this));
+			Radio.navigation.on('search', _.bind(this.searchFolder, this));
 			Radio.navigation.on('setup', _.bind(this.showSetup, this));
 			Radio.navigation.on('accountsettings', _.bind(this.showAccountSettings, this));
 		},
@@ -115,6 +116,29 @@ define(function(require) {
 				this._navigate('accounts/' + accountId + '/folders/' + folder.get('id'));
 			}
 			FolderController.showFolder(account, folder, noSelect);
+		},
+		searchFolder: function(accountId, folderId, query) {
+			if (!query || query === '') {
+				this.showFolder(accountId, folderId);
+				return;
+			}
+
+			this._navigate('accounts/' + accountId + '/folders/' + folderId + '/search/' + query);
+			var account = this.accounts.get(accountId);
+			if (_.isUndefined(account)) {
+				// Unknown account id -> redirect
+				Radio.ui.trigger('error:show', t('mail', 'Invalid account'));
+				this.default();
+				return;
+			}
+
+			var folder = account.getFolderById(folderId);
+			if (_.isUndefined(folder)) {
+				folder = account.get('folders').at(0);
+				Radio.ui.trigger('error:show', t('mail', 'Invalid folder'));
+				this._navigate('accounts/' + accountId + '/folders/' + folder.get('id'));
+			}
+			FolderController.searchFolder(account, folder, query);
 		},
 		mailTo: function(params) {
 			this._handleMailto(params);
