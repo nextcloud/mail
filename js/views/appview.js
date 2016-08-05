@@ -110,8 +110,9 @@ define(function(require) {
 			this.navigation.settings.show(new SettingsView());
 
 			// setup folder view
-			this.accountsView = new NavigationAccountsView();
-			require('state').folderView = this.accountsView;
+			this.accountsView = new NavigationAccountsView({
+				collection: require('state').accounts
+			});
 			this.navigation.accounts.show(this.accountsView);
 		},
 		onDocumentClick: function(event) {
