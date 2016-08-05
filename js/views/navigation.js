@@ -5,7 +5,7 @@
  * later. See the COPYING file.
  *
  * @author Christoph Wurst <christoph@winzerhof-wurst.at>
- * @copyright Christoph Wurst 2015
+ * @copyright Christoph Wurst 2015, 2016
  */
 
 define(function(require) {
@@ -26,12 +26,9 @@ define(function(require) {
 		initialize: function(options) {
 			this.bindUIElements();
 
-			this.newMessage.show(new NewMessageView({
-				accounts: options.accounts
-			}));
-
 			this.listenTo(Radio.ui, 'navigation:show', this.show);
 			this.listenTo(Radio.ui, 'navigation:hide', this.hide);
+			this.listenTo(Radio.ui, 'navigation:newmessage:show', this.onShowNewMessage);
 		},
 		render: function() {
 			// This view doesn't need rendering
@@ -46,6 +43,12 @@ define(function(require) {
 				this.$el.hide();
 				$('#app-navigation-toggle').css('background-image', 'none');
 			}
+		},
+		onShowNewMessage: function() {
+			console.log(this.options.accounts);
+			this.newMessage.show(new NewMessageView({
+				accounts: this.options.accounts
+			}));
 		}
 	});
 });

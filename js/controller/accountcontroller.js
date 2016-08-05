@@ -33,10 +33,15 @@ define(function(require) {
 		var defer = $.Deferred();
 		var fetchingAccounts = Radio.account.request('entities');
 
+		// Do not show sidebar content until everything has been loaded
+		Radio.ui.trigger('sidebar:loading');
+
 		$.when(fetchingAccounts).done(function(accounts) {
 			if (accounts.length === 0) {
 				defer.resolve(accounts);
 				Radio.navigation.trigger('setup');
+
+				Radio.ui.trigger('sidebar:accounts');
 			} else {
 				var loadingAccounts = accounts.map(function(account) {
 					require('state').accounts.add(account);
@@ -45,12 +50,20 @@ define(function(require) {
 				$.when.apply($, loadingAccounts).done(function() {
 					defer.resolve(accounts);
 				});
+				$.when.apply($, loadingAccounts).always(function() {
+					// Show accounts regardless of the result of
+					// loading the folders
+					Radio.ui.trigger('sidebar:accounts');
+				});
 			}
 
 			startBackgroundChecks(accounts);
 		});
 		$.when(fetchingAccounts).fail(function() {
 			Radio.ui.trigger('error:show', t('mail', 'Error while loading the accounts.'));
+
+			// Show the accounts vie (again) on error to allow user to delete their failing accounts
+			Radio.ui.trigger('sidebar:accounts');
 		});
 		
 		return defer.promise();

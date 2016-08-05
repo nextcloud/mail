@@ -38,6 +38,10 @@ define(function(require) {
 			this.accounts = options.accounts;
 			this.listenTo(options.accounts, 'add', this.onAccountsChanged);
 		},
+		onShow: function() {
+			// Set the approriate ui state
+			this.onAccountsChanged();
+		},
 		onAccountsChanged: function() {
 			if (this.accounts.size === 0) {
 				this.ui.input.hide();

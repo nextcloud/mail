@@ -32,8 +32,6 @@ define(function(require) {
 	function loadFolders(account) {
 		var fetchingFolders = FolderService.getFolderEntities(account);
 
-		$('#app-navigation').addClass('icon-loading');
-
 		$.when(fetchingFolders).fail(function() {
 			Radio.ui.trigger('error:show', t('mail', 'Error while loading the selected account.'));
 		});

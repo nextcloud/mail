@@ -58,6 +58,8 @@ define(function(require) {
 			this.listenTo(Radio.ui, 'title:update', this.updateTitle);
 			this.listenTo(Radio.ui, 'accountsettings:show', this.showAccountSettings);
 			this.listenTo(Radio.ui, 'search:set', this.setSearchQuery);
+			this.listenTo(Radio.ui, 'sidebar:loading', this.showSidebarLoading);
+			this.listenTo(Radio.ui, 'sidebar:accounts', this.showSidebarAccounts);
 
 			// Hide notification favicon when switching back from
 			// another browser tab
@@ -108,12 +110,6 @@ define(function(require) {
 				accounts: require('state').accounts
 			});
 			this.navigation.settings.show(new SettingsView());
-
-			// setup folder view
-			this.accountsView = new NavigationAccountsView({
-				collection: require('state').accounts
-			});
-			this.navigation.accounts.show(this.accountsView);
 		},
 		onDocumentClick: function(event) {
 			Radio.ui.trigger('document:click', event);
@@ -148,7 +144,6 @@ define(function(require) {
 		},
 		showError: function(message) {
 			OC.Notification.showTemporary(message);
-			$('#app-navigation').removeClass('icon-loading');
 			$('#mail_message').removeClass('icon-loading');
 		},
 		showSetup: function() {
@@ -215,6 +210,19 @@ define(function(require) {
 		setSearchQuery: function(val) {
 			val = val || '';
 			$('#searchbox').val(val);
+		}
+		showSidebarLoading: function() {
+			$('#app-navigation').addClass('icon-loading');
+			this.navigation.accounts.reset();
+		},
+		showSidebarAccounts: function() {
+			$('#app-navigation').removeClass('icon-loading');
+			// setup folder view
+			this.navigation.accounts.show(new NavigationAccountsView({
+				collection: require('state').accounts
+			}));
+			// Also show the 'New message' button
+			Radio.ui.trigger('navigation:newmessage:show');
 		}
 	});
 
