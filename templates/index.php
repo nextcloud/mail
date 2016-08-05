@@ -40,6 +40,7 @@ if ($_['debug']) {
 ?>
 
 <input type="hidden" id="config-installed-version" value="<?php p($_['app-version']); ?>">
+<input type="hidden" id="serialized-accounts" value="<?php p($_['accounts']); ?>">
 
 <div id="user-displayname"
      style="display: none"><?php p(\OCP\User::getDisplayName(\OCP\User::getUser())); ?></div>
