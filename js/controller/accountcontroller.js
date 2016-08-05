@@ -39,6 +39,7 @@ define(function(require) {
 				Radio.navigation.trigger('setup');
 			} else {
 				var loadingAccounts = accounts.map(function(account) {
+					require('state').folderView.collection.add(account);
 					return FolderController.loadFolder(account);
 				});
 				$.when.apply($, loadingAccounts).done(function() {

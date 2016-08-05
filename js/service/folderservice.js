@@ -37,15 +37,13 @@ define(function(require) {
 					account.set(prop, data[prop]);
 				}
 			}
-
-			require('state').folderView.collection.add(account);
 			defer.resolve(account.get('folders'));
 		});
 
 		promise.fail(function() {
 			defer.reject();
 		});
-		// TODO: handle account fetching error
+
 		return defer.promise();
 	}
 
