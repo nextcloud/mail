@@ -9,10 +9,10 @@
  */
 
 ({
-	baseUrl: 'js',
-	mainConfigFile: 'js/require_config.js',
+	baseUrl: '../js',
+	mainConfigFile: '../js/require_config.js',
 	name: 'app',
-	out: 'js/mail.min.js',
+	out: '../js/mail.min.js',
 	insertRequire: [
 		'app',
 		'notification'
