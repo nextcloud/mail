@@ -45,7 +45,6 @@ define(function(require) {
 			}
 		},
 		onShowNewMessage: function() {
-			console.log(this.options.accounts);
 			this.newMessage.show(new NewMessageView({
 				accounts: this.options.accounts
 			}));

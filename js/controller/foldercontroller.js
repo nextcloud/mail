@@ -153,7 +153,7 @@ define(function(require) {
 	}
 
 	return {
-		loadFolder: loadFolders,
+		loadAccountFolders: loadFolders,
 		showFolder: showFolder,
 		searchFolder: searchFolder
 	};

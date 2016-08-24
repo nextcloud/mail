@@ -44,8 +44,7 @@ define(function(require) {
 				Radio.ui.trigger('sidebar:accounts');
 			} else {
 				var loadingAccounts = accounts.map(function(account) {
-					require('state').accounts.add(account);
-					return FolderController.loadFolder(account);
+					return FolderController.loadAccountFolders(account);
 				});
 				$.when.apply($, loadingAccounts).done(function() {
 					defer.resolve(accounts);
