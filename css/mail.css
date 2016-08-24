@@ -672,8 +672,9 @@ input.submit-message,
 	position: relative;
 	display: inline-block;
 	border: 1px solid #f5f5f5;
-	margin: 5px;
-	padding: 6px;
+	border-radius: 3px;
+	margin: 0 10px 10px 0;
+	padding: 5px;
 }
 .mail-message-attachments .attachments > div:hover,
 .mail-message-attachments .attachments > div span:hover {
@@ -705,20 +706,24 @@ input.submit-message,
 	position: absolute;
 	height: 32px;
 	width: 32px;
-	bottom: 3px;
+	margin: 0;
+	bottom: 0;
+	background-color: transparent;
+	border-color: transparent;
 }
 .attachment-save-to-cloud {
-	right: 3px;
+	right: 0;
 }
 .attachment-download {
-	right: 41px;
+	right: 32px;
+	opacity: .6;
 }
 .attachment-import {
-	right: 79px;
+	right: 64px;
 }
 .attachment-import-popover {
-	right: 42px;
-	top: 56px;
+	right: 32px;
+	top: 42px;
 }
 .attachment-import-popover::after {
 	right: 32px;
@@ -734,7 +739,7 @@ input.submit-message,
 }
 .attachment-name {
 	display: inline-block;
-	width: calc(100% - 148px);
+	width: calc(100% - 108px);
 	white-space: nowrap;
 	overflow: hidden;
 	text-overflow: ellipsis;
