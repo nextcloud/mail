@@ -2,19 +2,23 @@ sudo: required
 dist: trusty
 language: php
 php:
-- 5.4
-- 5.5
-- 5.6
-- 7
+  - 5.4
+  - 5.5
+  - 5.6
+  - 7
+
 addons:
   apt:
     packages:
     - mysql-server-5.6
     - mysql-client-core-5.6
     - mysql-client-5.6
+    - php5-pgsql
+
 services:
-- docker
-- postgresql
+  - docker
+  - postgresql
+
 env:
   global:
   - CORE_BRANCH=master
@@ -23,61 +27,84 @@ env:
   - PACKAGE=FALSE
   matrix:
   - DB=sqlite
+
 branches:
   only:
   - master
   - "/^stable\\d+(\\.\\d+)?$/"
   - /^v\d++(\.\d+)?+(\.\d+)?+(\.\d+)?$/
+
 cache:
   directories:
   - "$HOME/.composer/cache/files"
   - "$HOME/.npm"
   - "$HOME/.cache/bower"
+
 before_install:
-- mysql -u root -e "CREATE USER 'travis'@'localhost'"
-- mysql -u root -e "GRANT ALL ON *.* TO 'travis'@'localhost';"
-- sh -c "if [ '$TRAVIS_PHP_VERSION' = '5.4' ]; then curl -s -o $HOME/.phpenv/versions/5.4/bin/phpunit
-  https://phar.phpunit.de/phpunit-4.8.9.phar; fi"
-- sh -c "if [ '$TRAVIS_PHP_VERSION' = '5.4' ]; then chmod +x $HOME/.phpenv/versions/5.4/bin/phpunit;
-  fi"
-- composer self-update
-- make install-composer-deps
-- make start-imap-docker
-- wget https://raw.githubusercontent.com/owncloud/administration/master/travis-ci/before_install.sh
-- bash ./before_install.sh mail $CORE_BRANCH $DB
-- cd ../core
+  - php --info
 
-  # Enable app twice to check occ errors of registered commands
-- php occ app:enable mail
-- php occ app:enable mail
+  # Set up DB
+  - if [[ "$DB" == 'pgsql' ]]; then createuser -U travis -s oc_autotest; fi
+  - if [[ "$DB" == 'mysql' ]]; then mysql -u root -e 'create database oc_autotest;'; fi
+  - if [[ "$DB" == 'mysql' ]]; then mysql -u root -e "CREATE USER 'oc_autotest'@'localhost' IDENTIFIED BY '';"; fi
+  - if [[ "$DB" == 'mysql' ]]; then mysql -u root -e "GRANT ALL ON oc_autotest.* TO 'oc_autotest'@'localhost';"; fi
 
-- sh -c "if [ '$TEST_JS' = 'TRUE' ]; then npm install -g npm@latest; fi"
+  - sh -c "if [ '$TRAVIS_PHP_VERSION' = '5.4' ]; then curl -s -o $HOME/.phpenv/versions/5.4/bin/phpunit
+    https://phar.phpunit.de/phpunit-4.8.9.phar; fi"
+  - sh -c "if [ '$TRAVIS_PHP_VERSION' = '5.4' ]; then chmod +x $HOME/.phpenv/versions/5.4/bin/phpunit;
+    fi"
+  - composer self-update
+  - make install-composer-deps
+  - make start-imap-docker
+  - cd ..
+  - git clone https://github.com/owncloud/core.git --recursive --depth 1 -b $CORE_BRANCH core
+  - mv mail core/apps/
+
 before_script:
-- cd apps/mail
-- sh -c "if [ '$TEST_JS' = 'TRUE' ]; then make dev-setup; fi"
-- make add-imap-account
-- if [[ "$PHP_COVERAGE" = "FALSE" ]]; then phpenv config-rm xdebug.ini; fi
+  # Set up core
+  - php -f core/occ maintenance:install --database-name oc_autotest --database-user oc_autotest --admin-user admin --admin-pass admin --database $DB --database-pass=''
+
+  # Set up app
+  - php -f core/occ app:enable mail
+  # Enable app twice to check occ errors of registered commands
+  - php -f core/occ app:enable mail
+  - cd core/apps/mail
+  - sh -c "if [ '$TEST_JS' = 'TRUE' ]; then npm install -g npm@latest; fi"
+  - sh -c "if [ '$TEST_JS' = 'TRUE' ]; then make dev-setup; fi"
+
+  # Prepare IMAP test docker
+  - make add-imap-account
+
+  # XDebug is only needed if we report coverage -> speeds up other builds
+  - if [[ "$PHP_COVERAGE" = "FALSE" ]]; then phpenv config-rm xdebug.ini; fi
+
 script:
-- find . -name \*.php -not -path './vendor/*' -exec php -l "{}" \;
-- sh -c "if [ '$TEST_JS' = 'TRUE' ]; then grunt; fi"
-- cd tests
-- phpunit --configuration phpunit.xml
-- if [[ "$PHP_COVERAGE" = "TRUE" ]]; then wget https://scrutinizer-ci.com/ocular.phar;
-  fi
-- if [[ "$PHP_COVERAGE" = "TRUE" ]]; then php ocular.phar code-coverage:upload --format=php-clover
-  clover.xml; fi
-- cd ..
-- if [[ "$PACKAGE" = "TRUE" ]]; then make appstore; fi
+  # Check PHP syntax errors
+  - find . -name \*.php -not -path './vendor/*' -exec php -l "{}" \;
+
+  # Run JS tests
+  - sh -c "if [ '$TEST_JS' = 'TRUE' ]; then grunt; fi"
+
+  # Run PHP tests
+  - cd tests
+  - phpunit --configuration phpunit.xml
+  - if [[ "$PHP_COVERAGE" = "TRUE" ]]; then wget https://scrutinizer-ci.com/ocular.phar;
+    fi
+  - if [[ "$PHP_COVERAGE" = "TRUE" ]]; then php ocular.phar code-coverage:upload --format=php-clover
+    clover.xml; fi
+
+  # Test packaging
+  - cd ..
+  - if [[ "$PACKAGE" = "TRUE" ]]; then make appstore; fi
 
 matrix:
   include:
     - php: 5.4
       env: "DB=mysql TEST_JS=TRUE"
-    - php: 5.4
+    - php: 7
       env: "DB=pgsql PHP_COVERAGE=TRUE"
     - php: 5.4
       env: "DB=mysql CORE_BRANCH=stable9 PACKAGE=TRUE"
     - php: 5.4
       env: "DB=mysql CORE_BRANCH=stable9.1"
-
   fast_finish: true
