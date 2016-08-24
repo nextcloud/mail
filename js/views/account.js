@@ -11,8 +11,8 @@
 define(function(require) {
 	'use strict';
 
-	var Backbone = require('backbone');
 	var Handlebars = require('handlebars');
+	var Marionette = require('marionette');
 	var OC = require('OC');
 	var Radio = require('radio');
 	var FolderView = require('views/folder');
@@ -24,7 +24,7 @@ define(function(require) {
 		'drafts'
 	]);
 
-	return Backbone.Marionette.CompositeView.extend({
+	return Marionette.CompositeView.extend({
 		collection: null,
 		model: null,
 		template: Handlebars.compile(AccountTemplate),
@@ -33,7 +33,8 @@ define(function(require) {
 			return {
 				isUnifiedInbox: this.model.get('accountId') === -1,
 				toggleCollapseMessage: toggleCollapseMessage,
-				hasMenu: this.model.get('accountId') !== -1
+				hasMenu: this.model.get('accountId') !== -1,
+				hasFolders: this.collection.length > 0
 			};
 		},
 		collapsed: true,

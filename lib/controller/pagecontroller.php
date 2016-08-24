@@ -24,7 +24,8 @@
 
 namespace OCA\Mail\Controller;
 
-use OCA\Mail\Db\MailAccountMapper;
+use OCA\Mail\Service\AccountService;
+use OCA\Mail\Service\AliasesService;
 use OCP\AppFramework\Controller;
 use OCP\AppFramework\Http\ContentSecurityPolicy;
 use OCP\AppFramework\Http\RedirectResponse;
@@ -35,38 +36,38 @@ use OCP\IURLGenerator;
 
 class PageController extends Controller {
 
-	/**
-	 * @var MailAccountMapper
-	 */
-	private $mailAccountMapper;
-
-	/**
-	 * @var IURLGenerator
-	 */
+	/** @var IURLGenerator */
 	private $urlGenerator;
 
-	/**
-	 * @var IConfig
-	 */
+	/** @var IConfig */
 	private $config;
 
-	/**
-	 * @var string
-	 */
+	/** @var AccountService */
+	private $accountService;
+
+	/** @var AliasesService */
+	private $aliasesService;
+
+	/** @var string */
 	private $currentUserId;
 
 	/**
 	 * @param string $appName
 	 * @param IRequest $request
-	 * @param $mailAccountMapper
+	 * @param IURLGenerator $urlGenerator
 	 * @param IConfig $config
-	 * @param $UserId
+	 * @param AccountService $accountService
+	 * @param AliasesService $aliasesService
+	 * @param string $UserId
 	 */
-	public function __construct($appName, IRequest $request, MailAccountMapper $mailAccountMapper, IURLGenerator $urlGenerator, IConfig $config, $UserId) {
+	public function __construct($appName, IRequest $request,
+		IURLGenerator $urlGenerator, IConfig $config, AccountService $accountService,
+		AliasesService $aliasesService, $UserId) {
 		parent::__construct($appName, $request);
-		$this->mailAccountMapper = $mailAccountMapper;
 		$this->urlGenerator = $urlGenerator;
 		$this->config = $config;
+		$this->accountService = $accountService;
+		$this->aliasesService = $aliasesService;
 		$this->currentUserId = $UserId;
 	}
 
@@ -77,9 +78,20 @@ class PageController extends Controller {
 	 * @return TemplateResponse renders the index page
 	 */
 	public function index() {
+		$mailAccounts = $this->accountService->findByUserId($this->currentUserId);
+
+		$accountsJson = [];
+		foreach ($mailAccounts as $mailAccount) {
+			$conf = $mailAccount->getConfiguration();
+			$conf['aliases'] = $this->aliasesService->findAll($conf['accountId'],
+				$this->currentUserId);
+			$accountsJson[] = $conf;
+		}
+
 		$response = new TemplateResponse($this->appName, 'index', [
 			'debug' => $this->config->getSystemValue('debug', false),
 			'app-version' => $this->config->getAppValue('mail', 'installed_version'),
+			'accounts' => base64_encode(json_encode($accountsJson)),
 		]);
 
 		// set csp rules for ownCloud 8.1
@@ -110,7 +122,8 @@ class PageController extends Controller {
 			}
 		}
 
-		array_walk($params, function (&$value, $key) {
+		array_walk($params,
+			function (&$value, $key) {
 			$value = "$key=" . urlencode($value);
 		});
 

@@ -150,8 +150,6 @@ define(function(require) {
 				Radio.ui.trigger('content:loading');
 				// reload accounts
 				$.when(AccountController.loadAccounts()).done(function(accounts) {
-					$('#app-navigation').removeClass('icon-loading');
-
 					// Let's assume there's at least one account after a successful
 					// setup, so let's show the first one (could be the unified inbox)
 					var firstAccount = accounts.first();

@@ -93,8 +93,6 @@ define(function(require) {
 		this.setUpSearch();
 
 		$.when(AccountController.loadAccounts()).done(function(accounts) {
-			$('#app-navigation').removeClass('icon-loading');
-
 			// Start fetching messages in background
 			require('background').messageFetcher.start();
 
