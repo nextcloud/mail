@@ -210,7 +210,7 @@ define(function(require) {
 		setSearchQuery: function(val) {
 			val = val || '';
 			$('#searchbox').val(val);
-		}
+		},
 		showSidebarLoading: function() {
 			$('#app-navigation').addClass('icon-loading');
 			this.navigation.accounts.reset();
