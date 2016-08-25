@@ -39,6 +39,10 @@
 			}
 		}
 	});
+	// avoid optimization errors
+	requirejs.config({
+		baseUrl: OC.linkTo('mail', 'js')
+	});
 
 	require([
 		'app',
