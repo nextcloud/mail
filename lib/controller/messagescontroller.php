@@ -393,7 +393,7 @@ class MessagesController extends Controller {
 			'messageId' => $messageId,
 			'attachmentId' => $attachment['id'],
 		]);
-		$downloadUrl = OC::$server->getURLGenerator()->getAbsoluteURL($downloadUrl);
+		$downloadUrl = $this->urlGenerator->getAbsoluteURL($downloadUrl);
 		$attachment['downloadUrl'] = $downloadUrl;
 		$attachment['mimeUrl'] = $this->mimeTypeDetector->mimeTypeIcon($attachment['mime']);
 
@@ -436,12 +436,12 @@ class MessagesController extends Controller {
 	 * @return string
 	 */
 	private function buildHtmlBodyUrl($accountId, $folderId, $messageId) {
-		$htmlBodyUrl = OC::$server->getURLGenerator()->linkToRoute('mail.messages.getHtmlBody', [
+		$htmlBodyUrl = $this->urlGenerator->linkToRoute('mail.messages.getHtmlBody', [
 			'accountId' => $accountId,
 			'folderId' => $folderId,
 			'messageId' => $messageId,
 		]);
-		return OC::$server->getURLGenerator()->getAbsoluteURL($htmlBodyUrl);
+		return $this->urlGenerator->getAbsoluteURL($htmlBodyUrl);
 	}
 
 	/**
