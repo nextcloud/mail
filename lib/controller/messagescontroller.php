@@ -47,9 +47,11 @@ use OCP\Files\Folder;
 use OCP\Files\IMimeTypeDetector;
 use OCP\IL10N;
 use OCP\IRequest;
+use OCP\IURLGenerator;
 use OCP\Util;
 
 class MessagesController extends Controller {
+
 
 	/** @var AccountService */
 	private $accountService;
@@ -72,6 +74,9 @@ class MessagesController extends Controller {
 	/** @var IL10N */
 	private $l10n;
 
+	/** @var IURLGenerator */
+	private $urlGenerator;
+
 	/** @var IAccount[] */
 	private $accounts = [];
 
@@ -85,6 +90,7 @@ class MessagesController extends Controller {
 	 * @param Logger $logger
 	 * @param IL10N $l10n
 	 * @param IMimeTypeDetector $mimeTypeDetector
+	 * @param IURLGenerator $urlGenerator
 	 */
 	public function __construct($appName,
 								IRequest $request,
@@ -94,7 +100,8 @@ class MessagesController extends Controller {
 								ContactsIntegration $contactsIntegration,
 								Logger $logger,
 								IL10N $l10n,
-								IMimeTypeDetector $mimeTypeDetector) {
+								IMimeTypeDetector $mimeTypeDetector,
+								IURLGenerator $urlGenerator) {
 		parent::__construct($appName, $request);
 		$this->accountService = $accountService;
 		$this->currentUserId = $UserId;
@@ -103,6 +110,7 @@ class MessagesController extends Controller {
 		$this->logger = $logger;
 		$this->l10n = $l10n;
 		$this->mimeTypeDetector = $mimeTypeDetector;
+		$this->urlGenerator = $urlGenerator;
 	}
 
 	/**
@@ -379,7 +387,7 @@ class MessagesController extends Controller {
 	 * @return callable
 	 */
 	private function enrichDownloadUrl($accountId, $folderId, $messageId, $attachment) {
-		$downloadUrl = Util::linkToRoute('mail.messages.downloadAttachment', [
+		$downloadUrl = $this->urlGenerator->linkToRoute('mail.messages.downloadAttachment', [
 			'accountId' => $accountId,
 			'folderId' => $folderId,
 			'messageId' => $messageId,
