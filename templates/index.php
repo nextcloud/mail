@@ -43,9 +43,9 @@ if ($_['debug']) {
 <input type="hidden" id="serialized-accounts" value="<?php p($_['accounts']); ?>">
 
 <div id="user-displayname"
-     style="display: none"><?php p(\OCP\User::getDisplayName(\OCP\User::getUser())); ?></div>
+     style="display: none"><?php p($_['prefill_displayName']); ?></div>
 <div id="user-email"
-     style="display: none"><?php p(\OCP\Config::getUserValue(\OCP\User::getUser(), 'settings', 'email', '')); ?></div>
+     style="display: none"><?php p($_['prefill_email']); ?></div>
 <div id="app">
 	<div id="app-navigation" class="icon-loading">
 		<div id="mail-new-message-fixed"></div>
