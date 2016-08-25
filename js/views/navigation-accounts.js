@@ -55,8 +55,6 @@ define(function(require) {
 		 * @returns {undefined}
 		 */
 		onFolderChanged: function() {
-			// Stop background message fetcher of previous folder
-			require('background').messageFetcher.restart();
 			// hide message detail view on mobile
 			// TODO: find better place for this
 			$('#mail-message').addClass('hidden-mobile');
