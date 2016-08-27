@@ -90,7 +90,7 @@ define(function(require) {
 			Radio.ui.trigger('messagesview:messageflag:set', message.id, 'unseen', false);
 		},
 		onShowComposer: function(data) {
-			$('.tipsy').remove();
+			$('.tooltip').remove();
 			$('#mail_new_message').prop('disabled', true);
 			$('#mail-message').removeClass('hidden-mobile');
 

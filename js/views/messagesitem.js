@@ -48,7 +48,7 @@ define(function(require) {
 				});
 			}
 
-			$('.action.delete').tipsy({gravity: 'e', live: true});
+			$('.action.delete').tooltip({gravity: 'e', live: true});
 		},
 		toggleMessageStar: function(event) {
 			event.stopPropagation();
@@ -85,7 +85,7 @@ define(function(require) {
 			event.stopPropagation();
 			var thisModel = this.model;
 			this.ui.iconDelete.removeClass('icon-delete').addClass('icon-loading-small');
-			$('.tipsy').remove();
+			$('.tooltip').remove();
 
 			thisModel.get('flags').set('unseen', false);
 			var folder = require('state').currentFolder;
@@ -107,12 +107,11 @@ define(function(require) {
 			}
 
 			this.$el.addClass('transparency').slideUp(function() {
-				$('.tipsy').remove();
 				$('.tooltip').remove();
 				thisModelCollection.remove(thisModel);
 
 				// manually trigger mouseover event for current mouse position
-				// in order to create a tipsy for the next message if needed
+				// in order to create a tooltip for the next message if needed
 				if (event.clientX) {
 					$(document.elementFromPoint(event.clientX, event.clientY)).trigger('mouseover');
 				}
