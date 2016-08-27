@@ -135,8 +135,10 @@ define(function(require) {
 		})(), 1000);
 	});
 
-	_.delay(function() {
+	$(function() {
+		// Start app when the page is ready
 		Mail.start();
 	});
+
 	return Mail;
 });
