@@ -18,10 +18,11 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>
  *
  */
+use OCA\Mail\Controller\PageController;
+use OCP\AppFramework\Http\ContentSecurityPolicy;
 use OCP\AppFramework\Http\RedirectResponse;
 use OCP\AppFramework\Http\TemplateResponse;
 use Test\TestCase;
-use OCA\Mail\Controller\PageController;
 
 class PageControllerTest extends TestCase {
 
@@ -34,24 +35,26 @@ class PageControllerTest extends TestCase {
 	private $controller;
 	private $accountService;
 	private $aliasesService;
+	private $userSession;
 
 	protected function setUp() {
 		parent::setUp();
 
 		$this->appName = 'mail';
 		$this->userId = 'george';
-		$this->request = $this->getMock('\OCP\IRequest');
-		$this->urlGenerator = $this->getMock('OCP\IURLGenerator');
-		$this->config = $this->getMock('OCP\IConfig');
+		$this->request = $this->getMockBuilder('\OCP\IRequest')->getMock();
+		$this->urlGenerator = $this->getMockBuilder('OCP\IURLGenerator')->getMock();
+		$this->config = $this->getMockBuilder('OCP\IConfig')->getMock();
 		$this->accountService = $this->getMockBuilder('OCA\Mail\Service\AccountService')
 			->disableOriginalConstructor()
 			->getMock();
 		$this->aliasesService = $this->getMockBuilder('\OCA\Mail\Service\AliasesService')
 			->disableOriginalConstructor()
 			->getMock();
+		$this->userSession = $this->getMockBuilder('OCP\IUserSession')->getMock();
 		$this->controller = new PageController($this->appName, $this->request,
 			$this->urlGenerator, $this->config, $this->accountService,
-			$this->aliasesService, $this->userId);
+			$this->aliasesService, $this->userId, $this->userSession);
 	}
 
 	public function testIndex() {
@@ -62,25 +65,25 @@ class PageControllerTest extends TestCase {
 			->method('findByUserId')
 			->with($this->userId)
 			->will($this->returnValue([
-				$account1,
-				$account2,
-			]));
+					$account1,
+					$account2,
+		]));
 		$account1->expects($this->once())
 			->method('getConfiguration')
 			->will($this->returnValue([
-				'accountId' => 1,
-			]));
+					'accountId' => 1,
+		]));
 		$account2->expects($this->once())
 			->method('getConfiguration')
 			->will($this->returnValue([
-				'accountId' => 2,
-			]));
+					'accountId' => 2,
+		]));
 		$this->aliasesService->expects($this->exactly(2))
 			->method('findAll')
 			->will($this->returnValueMap([
-				[1, $this->userId, ['a11', 'a12']],
-				[2, $this->userId, ['a21', 'a22']],
-			]));
+					[1, $this->userId, ['a11', 'a12']],
+					[2, $this->userId, ['a21', 'a22']],
+		]));
 		$accountsJson = [
 			[
 				'accountId' => 1,
@@ -98,6 +101,10 @@ class PageControllerTest extends TestCase {
 			],
 		];
 
+		$user = $this->getMockBuilder('\OCP\IUser')->getMock();
+		$this->userSession->expects($this->once())
+			->method('getUser')
+			->will($this->returnValue($user));
 		$this->config->expects($this->once())
 			->method('getSystemValue')
 			->with('debug', false)
@@ -106,16 +113,27 @@ class PageControllerTest extends TestCase {
 			->method('getAppValue')
 			->with('mail', 'installed_version')
 			->will($this->returnValue('1.2.3'));
+		$user->expects($this->once())
+			->method('getDisplayName')
+			->will($this->returnValue('Jane Doe'));
+		$user->expects($this->once())
+			->method('getUID')
+			->will($this->returnValue('jane'));
+		$this->config->expects($this->once())
+			->method('getUserValue')
+			->with($this->equalTo('jane'), $this->equalTo('settings'), $this->equalTo('email'), $this->equalTo(''))
+			->will($this->returnValue('jane@doe.cz'));
 
-		$expected = new TemplateResponse($this->appName, 'index',
-			[
+		$expected = new TemplateResponse($this->appName, 'index', [
 			'debug' => true,
 			'app-version' => '1.2.3',
 			'accounts' => base64_encode(json_encode($accountsJson)),
+			'prefill_displayName' => 'Jane Doe',
+			'prefill_email' => 'jane@doe.cz',
 		]);
 		// set csp rules for ownCloud 8.1
 		if (class_exists('OCP\AppFramework\Http\ContentSecurityPolicy')) {
-			$csp = new \OCP\AppFramework\Http\ContentSecurityPolicy();
+			$csp = new ContentSecurityPolicy();
 			$csp->addAllowedFrameDomain('\'self\'');
 			$expected->setContentSecurityPolicy($csp);
 		}

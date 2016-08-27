@@ -33,6 +33,7 @@ use OCP\AppFramework\Http\TemplateResponse;
 use OCP\IConfig;
 use OCP\IRequest;
 use OCP\IURLGenerator;
+use OCP\IUserSession;
 
 class PageController extends Controller {
 
@@ -51,6 +52,9 @@ class PageController extends Controller {
 	/** @var string */
 	private $currentUserId;
 
+	/** @var IUserSession */
+	private $userSession;
+
 	/**
 	 * @param string $appName
 	 * @param IRequest $request
@@ -62,13 +66,14 @@ class PageController extends Controller {
 	 */
 	public function __construct($appName, IRequest $request,
 		IURLGenerator $urlGenerator, IConfig $config, AccountService $accountService,
-		AliasesService $aliasesService, $UserId) {
+		AliasesService $aliasesService, $UserId, IUserSession $userSession) {
 		parent::__construct($appName, $request);
 		$this->urlGenerator = $urlGenerator;
 		$this->config = $config;
 		$this->accountService = $accountService;
 		$this->aliasesService = $aliasesService;
 		$this->currentUserId = $UserId;
+		$this->userSession = $userSession;
 	}
 
 	/**
@@ -83,15 +88,17 @@ class PageController extends Controller {
 		$accountsJson = [];
 		foreach ($mailAccounts as $mailAccount) {
 			$conf = $mailAccount->getConfiguration();
-			$conf['aliases'] = $this->aliasesService->findAll($conf['accountId'],
-				$this->currentUserId);
+			$conf['aliases'] = $this->aliasesService->findAll($conf['accountId'], $this->currentUserId);
 			$accountsJson[] = $conf;
 		}
 
+		$user = $this->userSession->getUser();
 		$response = new TemplateResponse($this->appName, 'index', [
 			'debug' => $this->config->getSystemValue('debug', false),
 			'app-version' => $this->config->getAppValue('mail', 'installed_version'),
 			'accounts' => base64_encode(json_encode($accountsJson)),
+			'prefill_displayName' => $user->getDisplayName(),
+			'prefill_email' => $this->config->getUserValue($user->getUID(), 'settings', 'email', ''),
 		]);
 
 		// set csp rules for ownCloud 8.1
@@ -122,8 +129,7 @@ class PageController extends Controller {
 			}
 		}
 
-		array_walk($params,
-			function (&$value, $key) {
+		array_walk($params, function (&$value, $key) {
 			$value = "$key=" . urlencode($value);
 		});
 
