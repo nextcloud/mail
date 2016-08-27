@@ -63,7 +63,7 @@ class TransformImageSrc extends HTMLPurifier_AttrTransform {
 		if (isset($attr['width']) && isset($attr['height']) &&
 			(int)$attr['width'] < 5 && (int)$attr['height'] < 5){
 			// Replace with a transparent png in case it's important for the layout
-			$attr['src'] = Util::imagePath('mail', 'blocked-image.png');
+			$attr['src'] = $this->urlGenerator->imagePath('mail', 'blocked-image.png');
 			$attr = $this->setDisplayNone($attr);
 			return $attr;
 		}
@@ -72,7 +72,7 @@ class TransformImageSrc extends HTMLPurifier_AttrTransform {
 		$url = $this->parser->parse($attr['src']);
 		if ($url->host === Util::getServerHostName() && $url->path === $this->urlGenerator->linkToRoute('mail.proxy.proxy')) {
 			$attr['data-original-src'] = $attr['src'];
-			$attr['src'] = Util::imagePath('mail', 'blocked-image.png');
+			$attr['src'] = $this->urlGenerator->imagePath('mail', 'blocked-image.png');
 			$attr = $this->setDisplayNone($attr);
 		}
 		return $attr;

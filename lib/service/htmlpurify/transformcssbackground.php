@@ -65,7 +65,7 @@ class TransformCSSBackground extends HTMLPurifier_AttrTransform {
 				strpos($value, 'url(') !== false) {
 				// Replace image URL
 				$value = preg_replace('/url\("?http.*\)/i',
-					'url('.Util::imagePath('mail', 'blocked-image.png').')',
+					'url(' . $this->urlGenerator->imagePath('mail', 'blocked-image.png') . ')',
 					$value);
 				return $name.':'.$value;
 			} else {
