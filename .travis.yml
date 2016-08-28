@@ -57,7 +57,7 @@ before_install:
   - make install-composer-deps
   - make start-imap-docker
   - cd ..
-  - git clone https://github.com/owncloud/core.git --recursive --depth 1 -b $CORE_BRANCH core
+  - git clone https://github.com/nextcloud/server.git --recursive --depth 1 -b $CORE_BRANCH core
   - mv mail core/apps/
 
 before_script:

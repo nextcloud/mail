@@ -945,7 +945,7 @@ notfoundexception.php
  0 fixed results
 
 
-owncloud.php
+nextcloud.php
  0 new results
  0 fixed results
 
@@ -1060,7 +1060,7 @@ google.php
  0 fixed results
 
 
-owncloud.php
+nextcloud.php
  0 new results
  0 fixed results
 
@@ -1135,7 +1135,7 @@ mountconfig.php
  0 fixed results
 
 
-owncloudfunctions.php
+nextcloudfunctions.php
  0 new results
  0 fixed results
 
@@ -4335,7 +4335,7 @@ errorlog.php
  0 fixed results
 
 
-owncloud.php
+nextcloud.php
  0 new results
  0 fixed results
 

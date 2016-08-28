@@ -1,8 +1,7 @@
 # JavaScript Development
 
 All source files are stored inside this directory or subdirectories of it. With the help of [requirejs](http://www.requirejs.org/)
-any .js and .html template file is loaded into the browser asynchronously if needed. Make sure you have 
-[debug mode](https://doc.owncloud.org/server/8.2/developer_manual/general/devenv.html#enabling-debug-mode) enabled in your development
+any .js and .html template file is loaded into the browser asynchronously if needed. Make sure you have debug mode enabled in your development
 setup because this loads source files instead of the compressed one.
 
 ## Optimizing file loading for production use
@@ -14,8 +13,7 @@ be easily executed with the Makefile in the root of this repository. Simply run
 make optimize-js
 ```
 inside the project's root directory. This combines and compresses all used JavaScript source files and HTML template
-files into one file: ``js/mail.min.js``. If [debug mode](https://doc.owncloud.org/server/8.2/developer_manual/general/devenv.html#enabling-debug-mode)
-is disabled, this compressed file is then used.
+files into one file: ``js/mail.min.js``. If debug mode is disabled, this compressed file is then used.
 
 ## Coding guidelines
 

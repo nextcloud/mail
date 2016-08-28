@@ -71,7 +71,7 @@ Insert your config.php content here
 Insert your webserver log here
 ```
 
-##### Server log (data/owncloud.log or data/nextcloud.log)
+##### Server log (data/nextcloud.log)
 <details>
 ```
 Insert your server log here
@@ -81,14 +81,14 @@ Insert your server log here
 ##### Horde IMAP log (data/horde_imap.log)
 <details>
 ```
-Insert your horde IMAP log here, see https://github.com/owncloud/mail#debug-mode
+Insert your horde IMAP log here, see https://github.com/nextcloud/mail#debug-mode
 ```
 </details>
 
 ##### Horde SMTP log (data/horde_smtp.log)
 <details>
 ```
-Insert your horde SMTP log here, see https://github.com/owncloud/mail#debug-mode
+Insert your horde SMTP log here, see https://github.com/nextcloud/mail#debug-mode
 ```
 </details>
 

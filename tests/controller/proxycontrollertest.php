@@ -58,11 +58,11 @@ class ProxyControllerTest extends TestCase {
 	public function redirectDataProvider() {
 		return [
 			[
-				'http://owncloud.org',
+				'http://nextcloud.com',
 				false
 			],
 			[
-				'https://owncloud.org',
+				'https://nextcloud.com',
 				false
 			],
 			[

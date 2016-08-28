@@ -15,7 +15,7 @@ If your issue appears to be a bug, and hasn't been reported, open a new issue.
 
 Help us to maximize the effort we can spend fixing issues and adding new features, by not reporting duplicate issues.
 
-[template]: https://raw.github.com/owncloud/mail/master/.github/issue_template.md
+[template]: https://raw.github.com/nextcloud/mail/master/.github/issue_template.md
 
 ## Contributing to Source Code
 
@@ -24,4 +24,4 @@ Thanks for wanting to contribute source code to the Mail app. That's great!
 ## Translations
 Please submit translations via [Transifex][transifex].
 
-[transifex]: https://www.transifex.com/projects/p/owncloud/
+[transifex]: https://www.transifex.com/projects/p/nextcloud/

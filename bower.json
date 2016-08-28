@@ -4,7 +4,7 @@
   "description": "Mail app",
   "main": "mail.js",
   "license": "AGPLv3",
-  "homepage": "https://github.com/owncloud/mail",
+  "homepage": "https://github.com/nextcloud/mail",
   "ignore": [
     "**/.*",
     "node_modules",

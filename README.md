@@ -1,43 +1,42 @@
 # Mail
 
-[![Build Status](https://travis-ci.org/owncloud/mail.svg?branch=master)](https://travis-ci.org/owncloud/mail)
-[![Scrutinizer Code Quality](https://scrutinizer-ci.com/g/owncloud/mail/badges/quality-score.png?b=master)](https://scrutinizer-ci.com/g/owncloud/mail/?branch=master)
-[![Code Coverage](https://scrutinizer-ci.com/g/owncloud/mail/badges/coverage.png?b=master)](https://scrutinizer-ci.com/g/owncloud/mail/?branch=master)
+[![Build Status](https://travis-ci.org/nextcloud/mail.svg?branch=master)](https://travis-ci.org/nextcloud/mail)
+[![Scrutinizer Code Quality](https://scrutinizer-ci.com/g/nextcloud/mail/badges/quality-score.png?b=master)](https://scrutinizer-ci.com/g/nextcloud/mail/?branch=master)
+[![Code Coverage](https://scrutinizer-ci.com/g/nextcloud/mail/badges/coverage.png?b=master)](https://scrutinizer-ci.com/g/nextcloud/mail/?branch=master)
 [![PHP Dependency Status](https://www.versioneye.com/user/projects/54e50fadd1ec5734f400078a/badge.svg?style=flat)](https://www.versioneye.com/user/projects/54e50fadd1ec5734f400078a)
 [![JS Dependency Status](https://www.versioneye.com/user/projects/567bd06ba7c90e003500033f/badge.svg?style=flat)](https://www.versioneye.com/user/projects/567bd06ba7c90e003500033f)
-[![Bountysource](https://img.shields.io/bountysource/team/owncloud/activity.svg)](https://www.bountysource.com/teams/owncloud/issues?tracker_ids=216487)
 
-**An email app for [ownCloud](https://owncloud.org) and [Nextcloud](https://nextcloud.com)**
+**An email app for [Nextcloud](https://nextcloud.com)**
 
-![](https://raw.githubusercontent.com/owncloud/screenshots/master/mail/mail.png)
+![](screenshots/mail.png)
 
 
 ## Why is this so awesome?
 
-* :rocket: **Integration with other ownCloud apps!** Currently Contacts, Calendar & Files – more to come.
+* :rocket: **Integration with other Nextcloud apps!** Currently Contacts, Calendar & Files – more to come.
 * :inbox_tray: **Multiple mail accounts!** Personal and company account? No problem, and a nice unified inbox.
 * :lock: **Send & receive encrypted emails!** Using the great [Mailvelope](https://mailvelope.com) browser extension.
 * :see_no_evil: **We’re not reinventing the wheel!** Based on the great [Horde](http://horde.org) libraries.
 
-And in the works for the [coming versions](https://github.com/owncloud/mail/milestones/):
-* :books: [Proper grouping of message threads](https://github.com/owncloud/mail/issues/21) 
-* :zap: [Caching to make everything faster](https://github.com/owncloud/mail/issues/480)
-* :paperclip: [Even better attachment support](https://github.com/owncloud/mail/issues/462) 
-* :package: [Folder management & moving mails](https://github.com/owncloud/mail/issues/411) 
+And in the works for the [coming versions](https://github.com/nextcloud/mail/milestones/):
+* :books: Proper grouping of message threads
+* :zap: Caching to make everything faster
+* :paperclip: Even better attachment support
+* :package: Folder management & moving mails
 
 ## Installation
 
-In your ownCloud, simply navigate to »Apps«, choose the category »Productivity«, find the Mail app and enable it.
+In your Nextcloud, simply navigate to »Apps«, choose the category »Productivity«, find the Mail app and enable it.
 Then open the Mail app from the app menu. Put in your email account credentials and off you go!
 
-If you experience any issues or have enhancement suggestions you can report them in our [issue tracker](https://github.com/owncloud/mail/issues). Please follow the [issue template](https://raw.githubusercontent.com/owncloud/mail/master/issue_template.md) so we get the info we need to be able to debug and fix the problem. Thanks!
+If you experience any issues or have enhancement suggestions you can report them in our [issue tracker](https://github.com/nextcloud/mail/issues). Please follow the [issue template](https://raw.githubusercontent.com/nextcloud/mail/master/issue_template.md) so we get the info we need to be able to debug and fix the problem. Thanks!
 
 
 ## Maintainers
 
-[Christoph Wurst](https://github.com/ChristophWurst), [Thomas Müller](https://github.com/DeepDiver1975), [Jan-Christoph Borchardt](https://github.com/jancborchardt), [Steffen Lindner](https://github.com/Gomez) [and many more](https://github.com/owncloud/mail/graphs/contributors)
+[Christoph Wurst](https://github.com/ChristophWurst), [Thomas Müller](https://github.com/DeepDiver1975), [Jan-Christoph Borchardt](https://github.com/jancborchardt), [Steffen Lindner](https://github.com/Gomez) [and many more](https://github.com/nextcloud/mail/graphs/contributors)
 
-If you’d like to join, just go through the [issue list](https://github.com/owncloud/mail/issues) and fix some. :) We’re also in [#owncloud-mail on freenode IRC](https://webchat.freenode.net/?channels=owncloud-mail).
+If you’d like to join, just go through the [issue list](https://github.com/nextcloud/mail/issues) and fix some. :) We’re also in [#nextcloud-mail on freenode IRC](https://webchat.freenode.net/?channels=nextcloud-mail).
 
 ## Troubleshooting
 
@@ -47,11 +46,11 @@ If you can not access your Gmail account use https://accounts.google.com/Display
 
 ### Outlook.com
 
-If you can not access your Outlook.com account try to enable the 'Two-Factor Verification' (https://account.live.com/proofs/Manage) and setup an app password (https://account.live.com/proofs/AppPassword), which you then use for the ownCloud Mail app.
+If you can not access your Outlook.com account try to enable the 'Two-Factor Verification' (https://account.live.com/proofs/Manage) and setup an app password (https://account.live.com/proofs/AppPassword), which you then use for the Nextcloud Mail app.
 
 ### Dovecot IMAP
 
-If your Dovecot IMAP server prefixes all folders with `INBOX`, ownCloud Mail does not work correcty. 
+If your Dovecot IMAP server prefixes all folders with `INBOX`, Nextcloud Mail does not work correctly.
 
 Check `/etc/dovecot/dovecot.conf`:
 
@@ -69,7 +68,7 @@ namespace inbox {
 
 ## Developer setup info
 
-Just clone this repo into your apps directory ([ownCloud core installation needed](https://doc.owncloud.org/server/8.2/developer_manual/general/devenv.html)). Additionally,  [npm](https://docs.npmjs.com/getting-started/installing-node) is needed for installing JavaScript dependencies. On Debian and Ubuntu Systems it can be installed with the following command:
+Just clone this repo into your apps directory (Nextcloud server installation needed). Additionally,  [npm](https://docs.npmjs.com/getting-started/installing-node) is needed for installing JavaScript dependencies. On Debian and Ubuntu Systems it can be installed with the following command:
 ```bash
 sudo apt-get install nodejs-legacy npm
 ```
@@ -84,7 +83,7 @@ make optimize-js
 Instead of setting everything up manually, you can just [download the nightly builds](https://en0ch.se/index.php/s/3v5J3XXeQCCp73p) instead. These builds are updated every 12 hours - 00:00 (12:00 AM) and 12:00 (12:00 PM) UTC+0200, and are pre-configured with all the needed dependencies.
 
 1. Download
-2. Extract the tar archive to 'path-to-owncloud/apps'
+2. Extract the tar archive to 'path-to-nextcloud/apps'
 3. Navigate to »Apps«, choose the category »Productivity«, find the Mail app and enable it.
 
 The nightly builds are provided by [Daniel Hansson](https://github.com/enoch85)
@@ -97,7 +96,7 @@ DROP TABLE oc_mail_accounts;
 DROP TABLE oc_mail_collected_addresses;
 ```
 
-Go to ownCloud Mail in the browser and run this from the developer console to clear the cache:
+Go to Nextcloud Mail in the browser and run this from the developer console to clear the cache:
 ```
 localStorage.clear();
 ```
@@ -108,7 +107,7 @@ localStorage.clear();
 Certain advanced or experimental features need to be specifically enabled in your `config.php`:
 
 ### Debug mode
-You can enable IMAP and SMTP backend logging. A horde_imap.log for IMAP and horde_smtp.log for SMTP will appear in the same directory as your owncloud.log.
+You can enable IMAP and SMTP backend logging. A horde_imap.log for IMAP and horde_smtp.log for SMTP will appear in the same directory as your nextcloud.log.
 #### IMAP logging:
 ```php
 'app.mail.imaplog.enabled' => true
@@ -119,7 +118,7 @@ You can enable IMAP and SMTP backend logging. A horde_imap.log for IMAP and hord
 ```
 
 ### Server-side caching
-Mailbox messages and accounts can be cached on the ownCloud server to reduce mail server load:
+Mailbox messages and accounts can be cached on the Nextcloud server to reduce mail server load:
 This requires a valid memcache to be configured
 ```php
 'app.mail.server-side-cache.enabled' => true
