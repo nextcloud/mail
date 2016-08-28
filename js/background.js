@@ -19,6 +19,7 @@ define(function(require) {
 	var Cache = require('cache');
 	var Radio = require('radio');
 	var State = require('state');
+	var MessageCollection = require('models/messagecollection');
 
 	/*jshint maxparams: 6 */
 	function showNotification(title, body, tag, icon, account, folder) {
@@ -119,6 +120,7 @@ define(function(require) {
 
 						// update folder status
 						var changedAccount = accounts.get(changes.accountId);
+						var changedFolder = changedAccount.getFolderById(changes.id);
 						var localFolder = folders.get(changes.id);
 						localFolder.set('uidvalidity', changes.uidvalidity);
 						localFolder.set('uidnext', changes.uidnext);
@@ -128,8 +130,9 @@ define(function(require) {
 						// reload if current selected folder has changed
 						if (State.currentAccount === changedAccount &&
 							State.currentFolder.get('id') === changes.id) {
-							Radio.ui.request('messagesview:collection').
-								add(changes.messages);
+							Radio.ui.request('messagesview:collection').add(changes.messages);
+							var messages = new MessageCollection(changes.messages).slice(0);
+							Radio.message.trigger('fetch:bodies', changedAccount, changedFolder, messages);
 						}
 
 						// Save new messages to the cached message list
@@ -145,56 +148,8 @@ define(function(require) {
 			});
 		});
 	}
-	/**
-	 * Fetch message of the current account/folder in background
-	 *
-	 * Uses a queue where message IDs are stored and fetched periodically
-	 * The message is only fetched if it's not already cached
-	 */
-	function MessageFetcher() {
-		var account = null;
-		var folder = null;
-		var pollIntervall = 3 * 1000;
-		var queue = [];
-		var timer = null;
-
-		function fetch() {
-			if (queue.length > 0) {
-				// Empty waiting queue
-				var messages = queue;
-				queue = [];
-
-				var fetchingMessageBodies = Radio.message.request('bodies', account, folder, messages);
-				$.when(fetchingMessageBodies).done(function(messages) {
-					require('cache').addMessages(account, folder, messages);
-				});
-			}
-		}
-
-		return {
-			start: function() {
-				account = State.currentAccount;
-				folder = State.currentFolder;
-				timer = setInterval(fetch, pollIntervall);
-			},
-			restart: function() {
-				// Stop previous fetcher
-				clearInterval(timer);
-
-				// Clear waiting queue
-				queue.length = 0;
-
-				// Start again
-				this.start();
-			},
-			push: function(message) {
-				queue.push(message);
-			}
-		};
-	}
 
 	return {
-		messageFetcher: new MessageFetcher(),
 		checkForNotifications: checkForNotifications,
 		showNotification: showNotification,
 		showMailNotification: showMailNotification

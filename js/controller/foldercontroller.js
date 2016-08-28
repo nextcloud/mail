@@ -25,6 +25,8 @@ define(function(require) {
 	var Radio = require('radio');
 	var FolderService = require('service/folderservice');
 
+	Radio.message.on('fetch:bodies', fetchBodies);
+
 	/**
 	 * @param {Account} account
 	 * @returns {undefined}
@@ -89,10 +91,7 @@ define(function(require) {
 
 				if (messages.length > 0) {
 					// Fetch first 10 messages in background
-					_.each(messages.slice(0, 10), function(
-						message) {
-						require('background').messageFetcher.push(message.get('id'));
-					});
+					Radio.message.trigger('fetch:bodies', account, folder, messages.slice(0, 10));
 
 					Radio.message.trigger('load', account, folder, messages.first());
 
@@ -150,6 +149,28 @@ define(function(require) {
 			query: query
 		}));
 		loadFolderMessagesDebounced(account, folder, false, query);
+	}
+
+	/**
+	 * Fetch and cache messages in the background
+	 *
+	 * The message is only fetched if it has not been cached already
+	 *
+	 * @param {Account} account
+	 * @param {Folder} folder
+	 * @param {Message[]} messages
+	 * @returns {undefined}
+	 */
+	function fetchBodies(account, folder, messages) {
+		if (messages.length > 0) {
+			var ids = _.map(messages, function(message) {
+				return message.get('id');
+			});
+			var fetchingMessageBodies = Radio.message.request('bodies', account, folder, ids);
+			$.when(fetchingMessageBodies).done(function(messages) {
+				require('cache').addMessages(account, folder, messages);
+			});
+		}
 	}
 
 	return {

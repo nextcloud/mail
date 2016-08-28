@@ -93,9 +93,6 @@ define(function(require) {
 		this.setUpSearch();
 
 		$.when(AccountController.loadAccounts()).done(function(accounts) {
-			// Start fetching messages in background
-			require('background').messageFetcher.start();
-
 			this.router = new Router({
 				controller: new RouteController(accounts)
 			});
