@@ -137,7 +137,7 @@ define(function(require) {
 				collection: this.attachments
 			}));
 
-			$('.tooltip-mailto').tooltip({gravity: 'n', live: true});
+			$('.tooltip-mailto').tooltip({placement: 'bottom'});
 
 			if (this.isReply()) {
 				// Expand reply message body on click

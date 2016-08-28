@@ -48,7 +48,7 @@ define(function(require) {
 				});
 			}
 
-			$('.action.delete').tooltip({gravity: 'e', live: true});
+			$('.action.delete').tooltip({placement: 'left'});
 		},
 		toggleMessageStar: function(event) {
 			event.stopPropagation();
