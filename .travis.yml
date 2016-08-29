@@ -57,7 +57,7 @@ before_install:
   - make install-composer-deps
   - make start-imap-docker
   - cd ..
-  - git clone https://github.com/owncloud/core.git --recursive --depth 1 -b $CORE_BRANCH core
+  - git clone https://github.com/nextcloud/server.git --recursive --depth 1 -b $CORE_BRANCH core
   - mv mail core/apps/
 
 before_script:
@@ -106,5 +106,5 @@ matrix:
     - php: 5.4
       env: "DB=mysql CORE_BRANCH=stable9 PACKAGE=TRUE"
     - php: 5.4
-      env: "DB=mysql CORE_BRANCH=stable9.1"
+      env: "DB=mysql CORE_BRANCH=stable10"
   fast_finish: true

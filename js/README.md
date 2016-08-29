@@ -1,8 +1,7 @@
 # JavaScript Development
 
 All source files are stored inside this directory or subdirectories of it. With the help of [requirejs](http://www.requirejs.org/)
-any .js and .html template file is loaded into the browser asynchronously if needed. Make sure you have 
-[debug mode](https://doc.owncloud.org/server/8.2/developer_manual/general/devenv.html#enabling-debug-mode) enabled in your development
+any .js and .html template file is loaded into the browser asynchronously if needed. Make sure you have debug mode enabled in your development
 setup because this loads source files instead of the compressed one.
 
 ## Optimizing file loading for production use
@@ -14,12 +13,11 @@ be easily executed with the Makefile in the root of this repository. Simply run
 make optimize-js
 ```
 inside the project's root directory. This combines and compresses all used JavaScript source files and HTML template
-files into one file: ``js/mail.min.js``. If [debug mode](https://doc.owncloud.org/server/8.2/developer_manual/general/devenv.html#enabling-debug-mode)
-is disabled, this compressed file is then used.
+files into one file: ``js/mail.min.js``. If debug mode is disabled, this compressed file is then used.
 
 ## Coding guidelines
 
-Generally, any code contributed to this repository should comply with the general [ownCloud coding style guidelines](https://doc.owncloud.org/server/9.1/developer_manual/general/codingguidelines.html).
+Generally, any code contributed to this repository should comply with the general [Nextcloud coding style guidelines](https://docs.nextcloud.com/server/10/developer_manual/general/codingguidelines.html).
 
 Currently we use several frameworks and their extensions. Namely, this app is build with jQuery, Underscore.js, Backbone.js and Backbone Marionette. Additionally, Require.js is used for loading module dependencies (code and template).
 
