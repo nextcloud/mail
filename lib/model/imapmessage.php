@@ -484,7 +484,7 @@ class IMAPMessage implements IMessage {
 		$data['toEmail'] = $this->getToEmail();
 		$data['toList'] = $this->getToList(true);
 		$data['subject'] = $this->getSubject();
-		$data['date'] = \OC::$server->query('DateTimeFormatter')->formatDate($this->getSentDate()->format('U'));
+		$data['date'] = \OC::$server->getDateTimeFormatter()->formatDate($this->getSentDate()->format('U'));
 		$data['size'] = Util::humanFileSize($this->getSize());
 		$data['flags'] = $this->getFlags();
 		$data['dateInt'] = $this->getSentDate()->getTimestamp();
