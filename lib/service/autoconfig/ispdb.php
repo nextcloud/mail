@@ -74,7 +74,7 @@ class IspDb {
 					continue;
 				}
 				foreach ($server->attributes() as $name => $value) {
-					if ($name == 'type') {
+					if ($name === 'type') {
 						$type = (string) $value;
 					}
 				}

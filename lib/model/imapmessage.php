@@ -375,13 +375,13 @@ class IMAPMessage implements IMessage {
 
 		// debugging below
 		$structure_type = $structure->getPrimaryType();
-		if ($structure_type == 'multipart') {
+		if ($structure_type === 'multipart') {
 			$i = 1;
 			foreach($structure->getParts() as $p) {
 				$this->getPart($p, $i++);
 			}
 		} else {
-			if ($structure->findBody() != null) {
+			if (!is_null($structure->findBody())) {
 				// get the body from the server
 				$partId = $structure->findBody();
 				$this->getPart($structure->getPart($partId), $partId);
@@ -439,7 +439,7 @@ class IMAPMessage implements IMessage {
 		// but AOL uses type 1 (multipart), which is not handled here.
 		// There are no PHP functions to parse embedded messages,
 		// so this just appends the raw source to the main message.
-		if ($p[0]=='message') {
+		if ($p[0] === 'message') {
 			$data = $this->loadBodyData($p, $partNo);
 			$this->plainMessage .= trim($data) ."\n\n";
 		}
@@ -484,7 +484,7 @@ class IMAPMessage implements IMessage {
 		$data['toEmail'] = $this->getToEmail();
 		$data['toList'] = $this->getToList(true);
 		$data['subject'] = $this->getSubject();
-		$data['date'] = Util::formatDate($this->getSentDate()->format('U'));
+		$data['date'] = \OC::$server->getDateTimeFormatter()->formatDate($this->getSentDate()->format('U'));
 		$data['size'] = Util::humanFileSize($this->getSize());
 		$data['flags'] = $this->getFlags();
 		$data['dateInt'] = $this->getSentDate()->getTimestamp();
