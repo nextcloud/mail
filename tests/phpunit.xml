@@ -11,7 +11,7 @@
 	<!-- filters for code coverage -->
 	<filter>
 		<whitelist>
-			<directory suffix=".php">../mail</directory>
+			<directory suffix=".php">../</directory>
 			<exclude>
 				<directory suffix=".php">../mail/l10n</directory>
 				<directory suffix=".php">../mail/tests</directory>
