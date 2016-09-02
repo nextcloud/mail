@@ -80,6 +80,9 @@ script:
   # Check PHP syntax errors
   - find . -name \*.php -not -path './vendor/*' -exec php -l "{}" \;
 
+  # Run server's app code checker
+  - php ../../occ app:check-code mail
+
   # Run JS tests
   - sh -c "if [ '$TEST_JS' = 'TRUE' ]; then grunt; fi"
 
