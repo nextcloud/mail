@@ -280,7 +280,7 @@ class Cache extends Horde_Imap_Client_Cache_Backend
 
 		foreach (array_unique($deleted) as $slice) {
 			/* Get rid of slice if less than 10% of capacity. */
-			if (($slice != $slicemap['i']) &&
+			if (($slice !== $slicemap['i']) &&
 				($slice_uids = array_keys($slicemap['s'], $slice)) &&
 				($this->_params['slicesize'] * 0.1) > count($slice_uids)) {
 				$this->_toUpdate($mailbox, 'add', $slice_uids);
@@ -398,7 +398,7 @@ class Cache extends Horde_Imap_Client_Cache_Backend
 				unset($ptr['s'][$val]);
 			}
 
-			if ($slice == $ptr['i']) {
+			if ($slice === $ptr['i']) {
 				$ptr['c'] = 0;
 			}
 		}
@@ -427,7 +427,7 @@ class Cache extends Horde_Imap_Client_Cache_Backend
 				$ptr['d']['uidvalid'] = $uidvalid;
 				return;
 			} elseif (!is_null($uidvalid) &&
-				($ptr['d']['uidvalid'] != $uidvalid)) {
+				($ptr['d']['uidvalid'] !== $uidvalid)) {
 				$this->_deleteMailbox($mailbox);
 			} else {
 				return;
@@ -463,7 +463,7 @@ class Cache extends Horde_Imap_Client_Cache_Backend
 			);
 		}
 
-		$this->_update[$mailbox][$type] = ($type == 'slicemap')
+		$this->_update[$mailbox][$type] = ($type === 'slicemap')
 			? $data
 			: array_merge($this->_update[$mailbox][$type], $data);
 	}
