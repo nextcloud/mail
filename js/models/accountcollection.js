@@ -5,7 +5,7 @@
  * later. See the COPYING file.
  *
  * @author Christoph Wurst <christoph@winzerhof-wurst.at>
- * @copyright Christoph Wurst 2015
+ * @copyright Christoph Wurst 2015, 2016
  */
 
 define(function(require) {
@@ -22,7 +22,7 @@ define(function(require) {
 		model: Account,
 		url: OC.generateUrl('apps/mail/accounts'),
 		comparator: function(account) {
-			return account.get('id');
+			return account.get('accountId');
 		}
 	});
 
