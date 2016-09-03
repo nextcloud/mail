@@ -77,7 +77,6 @@ appstore: clean install-deps optimize-js
 	--exclude=$(project_dir)/issue_template.md \
 	--exclude=$(project_dir)/karma.conf.js \
 	--exclude=$(project_dir)/package.json \
-	--exclude=$(project_dir)/translation-extractor.php \
 	--exclude=$(project_dir)/phpunit*xml \
 	--exclude=$(project_dir)/Makefile \
 	--exclude=$(project_dir)/tests \
