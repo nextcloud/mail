@@ -32,7 +32,6 @@ class ProxyControllerTest extends TestCase {
 	private $controller;
 	private $hostname;
 	private $clientService;
-	private $client;
 
 	protected function setUp() {
 		parent::setUp();
@@ -48,10 +47,6 @@ class ProxyControllerTest extends TestCase {
 			->disableOriginalConstructor()
 			->getMock();
 		$this->clientService = $this->getMockBuilder('\OCP\Http\Client\IClientService')->getMock();
-		$this->client = $this->getMockBuilder('\OCP\Http\Client\IClient')->getMock();
-		$this->clientService->expects($this->any())
-			->method('getClient')
-			->will($this->returnValue($this->client));
 		$this->hostname = 'example.com';
 	}
 
@@ -85,7 +80,8 @@ class ProxyControllerTest extends TestCase {
 			->with('mail.page.index')
 			->will($this->returnValue('mail-route'));
 		$this->controller = new ProxyController($this->appName, $this->request,
-			$this->urlGenerator, $this->session, $this->clientService, $url, 'example.com');
+			$this->urlGenerator, $this->session, $this->clientService, $url,
+			'example.com');
 
 		$expected = new TemplateResponse($this->appName, 'redirect',
 			[
@@ -109,15 +105,17 @@ class ProxyControllerTest extends TestCase {
 	}
 
 	public function testProxy() {
-		throw new PHPUnit_Framework_SkippedTestError("Test skipped because version hack in ProxyController::getUrlContents is not mockable");
-
 		$src = 'http://example.com';
 		$content = '🐵🐵🐵';
 
 		$this->session->expects($this->once())
 			->method('close');
-		$this->helper->expects($this->once())
-			->method('getUrlContent')
+		$client = $this->getMockBuilder('\OCP\Http\Client\IClient')->getMock();
+		$this->clientService->expects($this->once())
+			->method('newClient')
+			->will($this->returnValue($client));
+		$client->expects($this->once())
+			->method('get')
 			->with($src)
 			->will($this->returnValue($content));
 
