@@ -74,7 +74,6 @@ class AddressCollector {
 	 * Find and return all known and matching email addresses
 	 *
 	 * @param Horde_Mail_Rfc822_Address[] $term
-	 * @param string $UserId
 	 */
 	public function searchAddress($term) {
 		$this->logger->debug("searching for collected address <$term>");

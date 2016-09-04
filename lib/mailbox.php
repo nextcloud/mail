@@ -90,6 +90,11 @@ class Mailbox implements IMailBox {
 		$this->makeDisplayName();
 	}
 
+	/**
+	 * @param integer $from
+	 * @param integer $count
+	 * @param string $filter
+	 */
 	private function getSearchIds($from, $count, $filter) {
 		if ($filter instanceof Horde_Imap_Client_Search_Query) {
 			$query = $filter;
@@ -110,6 +115,10 @@ class Mailbox implements IMailBox {
 		return new \Horde_Imap_Client_Ids($ids, false);
 	}
 
+	/**
+	 * @param integer $from
+	 * @param integer $count
+	 */
 	private function getFetchIds($from, $count) {
 		$q = new Horde_Imap_Client_Fetch_Query();
 		$q->uid();
