@@ -28,7 +28,6 @@
 
 namespace OCA\Mail\Controller;
 
-use OC;
 use OCA\Mail\Http\AttachmentDownloadResponse;
 use OCA\Mail\Http\HtmlResponse;
 use OCA\Mail\Service\AccountService;
@@ -158,6 +157,10 @@ class MessagesController extends Controller {
 		return new JSONResponse($json);
 	}
 
+	/**
+	 * @param integer $accountId
+	 * @param string $folderId
+	 */
 	private function loadMessage($accountId, $folderId, $id) {
 		$account = $this->getAccount($accountId);
 		$mailBox = $account->getMailbox(base64_decode($folderId));

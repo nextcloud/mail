@@ -49,7 +49,6 @@ use OCA\Mail\Db\MailAccount;
 use OCA\Mail\Model\IMessage;
 use OCA\Mail\Model\Message;
 use OCA\Mail\Model\ReplyMessage;
-use OCA\Mail\Service\AutoCompletion\AddressCollector;
 use OCA\Mail\Service\IAccount;
 use OCA\Mail\Service\IMailBox;
 use OCP\IConfig;
@@ -442,7 +441,7 @@ class Account implements IAccount {
 	}
 
 	/**
-	 * @return IMailBox
+	 * @return Mailbox|null
 	 */
 	public function getInbox() {
 		$folders = $this->getSpecialFolder('inbox', false);

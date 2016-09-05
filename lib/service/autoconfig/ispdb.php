@@ -42,12 +42,14 @@ class IspDb {
 
 	/**
 	 * @param Logger $logger
-	 * @param string[] $ispUrls
 	 */
 	public function __construct(Logger $logger) {
 		$this->logger = $logger;
 	}
 
+	/**
+	 * @param string $url
+	 */
 	private function queryUrl($url) {
 		try {
 			$content = @file_get_contents($url, false, stream_context_create([

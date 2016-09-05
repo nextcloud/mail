@@ -38,7 +38,7 @@ class AliasesService {
 	}
 
 	/**
-	 * @param $e
+	 * @param Exception $e
 	 * @throws NotFoundException
 	 */
 	private function handleException ($e) {
@@ -62,7 +62,7 @@ class AliasesService {
 	/**
 	 * @param int $aliasId
 	 * @param String $currentUserId
-	 * @return Alias
+	 * @return Alias[]
 	 */
 	public function find($aliasId, $currentUserId) {
 		return $this->mapper->find($aliasId, $currentUserId);

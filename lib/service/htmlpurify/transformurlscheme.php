@@ -28,7 +28,6 @@ use HTMLPurifier_URIFilter;
 use HTMLPurifier_URIParser;
 use OCP\IRequest;
 use OCP\IURLGenerator;
-use OCP\Util;
 
 class TransformURLScheme extends HTMLPurifier_URIFilter {
 

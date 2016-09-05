@@ -177,9 +177,9 @@ class AutoConfig {
 	}
 
 	/**
-	 * @param $email
-	 * @param $password
-	 * @param $name
+	 * @param string $email
+	 * @param string $password
+	 * @param string $name
 	 * @return null|MailAccount
 	 */
 	private function detectImapAndSmtp($email, $password, $name) {
