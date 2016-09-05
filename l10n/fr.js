@@ -14,6 +14,7 @@ OC.L10N.register(
     "Attachment saved to Files." : "Pièce jointe enregistrée dans les Fichiers.",
     "Error while saving attachments to Files." : "Erreur lors de l'enregistrement des pièces jointes dans les Fichiers.",
     "Error while saving attachment to Files." : "Erreur lors de l'enregistrement de la pièce jointe dans les Fichiers.",
+    "Message flag could not be set." : "Le drapeau n'a pas été ajouté sur le message.",
     "Invalid account" : "Compte invalide",
     "Invalid folder" : "Dossier invalide",
     "Unknown error" : "Erreur inconnue",
@@ -51,7 +52,9 @@ OC.L10N.register(
     "& others" : "et d'autres",
     "All inboxes" : "Toutes les boîtes",
     "Error loading message" : "Erreur lors du chargement du message",
-    "Forwarding you to %s - click here if you are not automatically redirected within the next few seconds." : "Vous allez être redirigé vers %s - Cliquez ici si vous n'êtes pas redirigé dans les secondes qui suivent.",
+    "Redirect" : "Redirection",
+    "The link leads to %s" : "Le lien dirige vers %s",
+    "If you don’t want to visit that page, you can return to <a href=\"%s\">Mail</a>." : "Si vous ne désirez pas visiter cette page, vous pouvez retourner aux <a href=\"%s\">Mails</a>.",
     "Continue to %s" : "Continuer vers %s"
 },
 "nplurals=2; plural=(n > 1);");

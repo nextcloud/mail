@@ -12,8 +12,9 @@
     "Attachment saved to Files." : "添付ファイルを保存しました。",
     "Error while saving attachments to Files." : "添付ファイルの保存中にエラーが発生しました。",
     "Error while saving attachment to Files." : "添付ファイルの保存中にエラーが発生しました。",
+    "Message flag could not be set." : "メッセージフラッグが設定できませんでした。",
     "Invalid account" : "無効なアカウント",
-    "Invalid folder" : "無効なフォルダ",
+    "Invalid folder" : "無効なフォルダー",
     "Unknown error" : "不明なエラー",
     "Error while creating an account: " : "アカウント作成エラー:",
     "Show all folders" : "すべてのフォルダーを表示",
@@ -49,7 +50,8 @@
     "& others" : "& その他",
     "All inboxes" : "すべての受信トレイ",
     "Error loading message" : "メッセージ読み込みエラー",
-    "Forwarding you to %s - click here if you are not automatically redirected within the next few seconds." : "%s  へリダイレクトします。数秒後に自動転送されなかったらクリックしてください。",
+    "Redirect" : "リダイレクト",
+    "If you don’t want to visit that page, you can return to <a href=\"%s\">Mail</a>." : "ページを開きたくない場合は、<a href=\"%s\">メール</a> に戻ることができます。",
     "Continue to %s" : "%s にリダイレクトする"
 },"pluralForm" :"nplurals=1; plural=0;"
 }

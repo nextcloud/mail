@@ -12,6 +12,7 @@
     "Attachment saved to Files." : "Allegato salvato in File.",
     "Error while saving attachments to Files." : "Errore durante il salvataggio degli allegati in File.",
     "Error while saving attachment to Files." : "Errore durante il salvataggio dell'allegato in File.",
+    "Message flag could not be set." : "Il contrassegno del messaggio non può essere impostato.",
     "Invalid account" : "Account non valido",
     "Invalid folder" : "Cartella non valida",
     "Unknown error" : "Errore sconosciuto",
@@ -49,7 +50,9 @@
     "& others" : "e altri",
     "All inboxes" : "Tutte le caselle di posta",
     "Error loading message" : "Errore durante il caricamento del messaggio",
-    "Forwarding you to %s - click here if you are not automatically redirected within the next few seconds." : "Stai per essere inoltrato a %s - fai clic qui se la redirezione automatica non avviene entro pochi secondi.",
+    "Redirect" : "Redirigi",
+    "The link leads to %s" : "Il collegamento conduce a %s",
+    "If you don’t want to visit that page, you can return to <a href=\"%s\">Mail</a>." : "Se non vuoi visitare tale pagina, puoi tornare all'<a href=\"%s\">applicazione di posta</a>.",
     "Continue to %s" : "Continua su %s"
 },"pluralForm" :"nplurals=2; plural=(n != 1);"
 }

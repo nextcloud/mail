@@ -14,6 +14,7 @@ OC.L10N.register(
     "Attachment saved to Files." : "Vedhæftning blev gemt i Filer.",
     "Error while saving attachments to Files." : "Fejl under lagring af vedhæftninger i Filer.",
     "Error while saving attachment to Files." : "Fejl under lagring af vedhæftninger i Filer.",
+    "Message flag could not be set." : "Beskedflaget kunne ikke sættes.",
     "Invalid account" : "Ugyldig konto",
     "Invalid folder" : "Ugyldig mappe",
     "Unknown error" : "Ukendt fejl",
@@ -51,7 +52,9 @@ OC.L10N.register(
     "& others" : "& andre",
     "All inboxes" : "Alle indbakker",
     "Error loading message" : "Fejl under indlæsning af besked",
-    "Forwarding you to %s - click here if you are not automatically redirected within the next few seconds." : "Viderestiller dig til %s - klik her hvis du ikke bliver viderestillet automatisk inden for få sekunder.",
+    "Redirect" : "Omdiriger",
+    "The link leads to %s" : "Linket fører til %s",
+    "If you don’t want to visit that page, you can return to <a href=\"%s\">Mail</a>." : "Hvis du ikke ønsker at besøge denne side, kan du vende tilbage til <a href=\"%s\">Mail</a>.",
     "Continue to %s" : "Videre til %s"
 },
 "nplurals=2; plural=(n != 1);");

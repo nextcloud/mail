@@ -51,7 +51,7 @@ OC.L10N.register(
     "& others" : "e outros",
     "All inboxes" : "Todas as caixas de entrada",
     "Error loading message" : "Erro ao carregar a mensagem",
-    "Forwarding you to %s - click here if you are not automatically redirected within the next few seconds." : "A reencaminhá-lo para %s - clique aqui se não for redirecionado automaticamente dentro de alguns segundos.",
+    "Redirect" : "Redirecionar",
     "Continue to %s" : "Continuar para %s"
 },
 "nplurals=2; plural=(n != 1);");

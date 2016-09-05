@@ -12,6 +12,7 @@
     "Attachment saved to Files." : "Bashkëngjitjet u ruajtën te Kartela.",
     "Error while saving attachments to Files." : "Gabim teksa ruheshin bashkëngjitje te Kartela.",
     "Error while saving attachment to Files." : "Gabim teksa ruheshin bashkëngjitje te Kartela.",
+    "Message flag could not be set." : "Mesazhit s’iu vu dot shenjë.",
     "Invalid account" : "Llogari e pavlefshme",
     "Invalid folder" : "Dosje e pavlefshme",
     "Unknown error" : "Gabim i panjohur",
@@ -49,7 +50,9 @@
     "& others" : "& të tjerë",
     "All inboxes" : "Krejt kutitë e postës",
     "Error loading message" : "Gabim në ngarkimin e kartelës",
-    "Forwarding you to %s - click here if you are not automatically redirected within the next few seconds." : "Po përcilleni te %s - klikoni këtu nëse s’ridrejtoheni vetvetiu brenda pak sekondash në vijim.",
+    "Redirect" : "Ridrejtoje",
+    "The link leads to %s" : "Lidhja shpie te %s",
+    "If you don’t want to visit that page, you can return to <a href=\"%s\">Mail</a>." : "Nëse s’doni ta vizitoni atë faqe, mund të ktheheni te <a href=\"%s\">Posta</a>.",
     "Continue to %s" : "Vazhdo te %s"
 },"pluralForm" :"nplurals=2; plural=(n != 1);"
 }

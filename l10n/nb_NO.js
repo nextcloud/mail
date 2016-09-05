@@ -51,7 +51,6 @@ OC.L10N.register(
     "& others" : "& andre",
     "All inboxes" : "Alle innbokser",
     "Error loading message" : "Feil ved innlasting av melding",
-    "Forwarding you to %s - click here if you are not automatically redirected within the next few seconds." : "Viderekobler deg til %s - klikk her hvis du ikke blir videresendt automatisk i løpet av noen sekunder.",
     "Continue to %s" : "Fortsett til %s"
 },
 "nplurals=2; plural=(n != 1);");

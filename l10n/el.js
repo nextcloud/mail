@@ -47,7 +47,6 @@ OC.L10N.register(
     "& others" : "& άλλοι",
     "All inboxes" : "Όλα τα εισερχόμενα",
     "Error loading message" : "Μήνυμα σφάλματος φόρτωσης",
-    "Forwarding you to %s - click here if you are not automatically redirected within the next few seconds." : "Προωθείστε στο %s - κάντε κλικ εδώ αν δεν ανακατευθυνθείτε αυτόματα μέσα στα επόμενα λίγα δευτερόλεπτα.",
     "Continue to %s" : "Συνέχεια στο %s"
 },
 "nplurals=2; plural=(n != 1);");

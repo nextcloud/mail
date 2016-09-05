@@ -51,7 +51,6 @@ OC.L10N.register(
     "& others" : "& andra",
     "All inboxes" : "alla inkorgar",
     "Error loading message" : "Fel vid inläsning av meddelande",
-    "Forwarding you to %s - click here if you are not automatically redirected within the next few seconds." : "Vidarbofordrar dig till %s - klicka här om du inte automatiskt omdirigeras inom några sekunder.",
     "Continue to %s" : "Fortsätt till %s"
 },
 "nplurals=2; plural=(n != 1);");

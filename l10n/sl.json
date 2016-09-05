@@ -12,6 +12,7 @@
     "Attachment saved to Files." : "Priloga je shranjena med datoteke.",
     "Error while saving attachments to Files." : "Prišlo je do napake med shranjevanjem datoteke v mapo.",
     "Error while saving attachment to Files." : "Prišlo je do napake med shranjevanjem datotek v mapo.",
+    "Message flag could not be set." : "Zastavice sporočila ni mogoče nastavit.",
     "Invalid account" : "Neveljaven račun",
     "Invalid folder" : "Neveljavna mapa",
     "Unknown error" : "Neznana napaka",
@@ -49,7 +50,9 @@
     "& others" : "in drugo",
     "All inboxes" : "Vsi predali",
     "Error loading message" : "Napaka nalaganja sporočila",
-    "Forwarding you to %s - click here if you are not automatically redirected within the next few seconds." : "Poteka preusmeritev na %s - v kolikor preusmeritev ni izvedena samodejno, kliknite tu.",
+    "Redirect" : "Preusmeri",
+    "The link leads to %s" : "Povezava vodi na %s",
+    "If you don’t want to visit that page, you can return to <a href=\"%s\">Mail</a>." : "Če ne želite obiskati te strani, se lahko vrnete na <a href=\"%s\">pošto</a>.",
     "Continue to %s" : "Nadaljuj na %s"
 },"pluralForm" :"nplurals=4; plural=(n%100==1 ? 0 : n%100==2 ? 1 : n%100==3 || n%100==4 ? 2 : 3);"
 }

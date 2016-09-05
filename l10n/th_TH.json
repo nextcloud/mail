@@ -12,6 +12,7 @@
     "Attachment saved to Files." : "สิ่งที่แนบมาถูกบันทึกไว้ในไฟล์",
     "Error while saving attachments to Files." : "ข้อผิดพลาดขณะกำลังบันทึกสิ่งที่แนบไปยังไฟล์",
     "Error while saving attachment to Files." : "ข้อผิดพลาดขณะกำลังบันทึกสิ่งที่แนบไปยังไฟล์",
+    "Message flag could not be set." : "ไม่สามารถตั้งค่าสถานะของข้อความ",
     "Invalid account" : "บัญชีไม่ถูกต้อง",
     "Invalid folder" : "โฟลเดอร์ไม่ถูกต้อง",
     "Unknown error" : "ข้อผิดพลาดที่ไม่ทราบสาเหตุ",
@@ -49,7 +50,9 @@
     "& others" : "และอื่นๆ",
     "All inboxes" : "กล่องจดหมายทั้งหมด",
     "Error loading message" : "กิดข้อผิดพลาดในการโหลด",
-    "Forwarding you to %s - click here if you are not automatically redirected within the next few seconds." : "กำลังส่งต่อคุณไปยัง %s - คลิกที่นี่ถ้าคุณไม่ได้เปลี่ยนเส้นทางโดยอัตโนมัติภายในไม่กี่วินาทีถัดไป",
+    "Redirect" : "เปลี่ยนเส้นทาง",
+    "The link leads to %s" : "ลิงค์ที่จะนำไปยัง %s",
+    "If you don’t want to visit that page, you can return to <a href=\"%s\">Mail</a>." : "หากคุณไม่ต้องการเข้าชมหน้านั้นคุณสามารถกลับไปที่หน้า <a href=\"%s\">จดหมาย</a>",
     "Continue to %s" : "ดำเนินการต่อไปที่ %s"
 },"pluralForm" :"nplurals=1; plural=0;"
 }

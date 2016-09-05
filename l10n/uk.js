@@ -47,7 +47,6 @@ OC.L10N.register(
     "& others" : "та інші",
     "All inboxes" : "Всі вхідні",
     "Error loading message" : "Помилка завантаження повідомлення.",
-    "Forwarding you to %s - click here if you are not automatically redirected within the next few seconds." : "Перенаправлення вас на %s - натисніть тут, якщо ви не будете автоматично перенаправлені в найближчі кілька секунд.",
     "Continue to %s" : "Подовження за %s"
 },
 "nplurals=3; plural=(n%10==1 && n%100!=11 ? 0 : n%10>=2 && n%10<=4 && (n%100<10 || n%100>=20) ? 1 : 2);");

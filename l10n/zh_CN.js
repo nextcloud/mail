@@ -49,7 +49,6 @@ OC.L10N.register(
     "& others" : "和其他",
     "All inboxes" : "所有目录",
     "Error loading message" : "载入电邮时发生错误",
-    "Forwarding you to %s - click here if you are not automatically redirected within the next few seconds." : "正在跳转至%s，如果无法成功跳转，请点击这里。",
     "Continue to %s" : "继续 %s"
 },
 "nplurals=1; plural=0;");

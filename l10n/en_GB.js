@@ -14,6 +14,7 @@ OC.L10N.register(
     "Attachment saved to Files." : "Attachment saved to Files.",
     "Error while saving attachments to Files." : "Error whilst saving attachments to Files.",
     "Error while saving attachment to Files." : "Error whilst saving attachment to Files.",
+    "Message flag could not be set." : "Message flag could not be set.",
     "Invalid account" : "Invalid account",
     "Invalid folder" : "Invalid folder",
     "Unknown error" : "Unknown error",
@@ -51,7 +52,9 @@ OC.L10N.register(
     "& others" : "& others",
     "All inboxes" : "All inboxes",
     "Error loading message" : "Error loading message",
-    "Forwarding you to %s - click here if you are not automatically redirected within the next few seconds." : "Forwarding you to %s - click here if you are not automatically redirected within the next few seconds.",
+    "Redirect" : "Redirect",
+    "The link leads to %s" : "The link leads to %s",
+    "If you don’t want to visit that page, you can return to <a href=\"%s\">Mail</a>." : "If you don’t want to visit that page, you can return to <a href=\"%s\">Mail</a>.",
     "Continue to %s" : "Continue to %s"
 },
 "nplurals=2; plural=(n != 1);");

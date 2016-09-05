@@ -14,6 +14,7 @@ OC.L10N.register(
     "Attachment saved to Files." : "Bijlage opgeslagen in Bestanden.",
     "Error while saving attachments to Files." : "Fout bij opslaan bijlagen in Bestanden.",
     "Error while saving attachment to Files." : "Fout bij opslaan bijlage in Bestanden.",
+    "Message flag could not be set." : "Bericht kon niet als gemarkeerd worden.",
     "Invalid account" : "Ongeldig account",
     "Invalid folder" : "Ongeldige map",
     "Unknown error" : "Onbekende fout",
@@ -51,7 +52,9 @@ OC.L10N.register(
     "& others" : "& anderen",
     "All inboxes" : "Alle inbakjes",
     "Error loading message" : "Fout bij laden bericht",
-    "Forwarding you to %s - click here if you are not automatically redirected within the next few seconds." : "U wordt doorgezet naar %s - klik hier als u niet binnen enkele seconden automatisch wordt doorgestuurd.",
+    "Redirect" : "Omleiden",
+    "The link leads to %s" : "De link verwijst naar %s",
+    "If you don’t want to visit that page, you can return to <a href=\"%s\">Mail</a>." : "Als u die pagina niet wilt bezoeken, kunt u teruggaan naar <a href=\"%s\">E-mail</a>.",
     "Continue to %s" : "Verder naar %s"
 },
 "nplurals=2; plural=(n != 1);");

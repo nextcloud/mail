@@ -51,7 +51,9 @@ OC.L10N.register(
     "& others" : "& muut",
     "All inboxes" : "Kaikki saapuneiden laatikot",
     "Error loading message" : "Virhe viestiä ladatessa",
-    "Forwarding you to %s - click here if you are not automatically redirected within the next few seconds." : "Ohjataan edelleen kohteeseen %s - napsauta tästä, jos uudelleenohjaus ei tapahdu muutaman sekunnin kuluessa.",
+    "Redirect" : "Uudelleenohjaus",
+    "The link leads to %s" : "Tämä linkki johtaa kohteeseen %s",
+    "If you don’t want to visit that page, you can return to <a href=\"%s\">Mail</a>." : "Jos et halua vierailla kyseisellä sivulla, voit palata <a href=\"%s\">sähköpostiin</a>.",
     "Continue to %s" : "Jatka sivulle %s"
 },
 "nplurals=2; plural=(n != 1);");

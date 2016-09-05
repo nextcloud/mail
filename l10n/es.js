@@ -14,6 +14,7 @@ OC.L10N.register(
     "Attachment saved to Files." : "Archivo adjunto guardado en Archivos.",
     "Error while saving attachments to Files." : "Error al guardar archivos adjuntos en Archivos.",
     "Error while saving attachment to Files." : "Error al guardar archivo adjunto en Archivos.",
+    "Message flag could not be set." : "No se pudo marcar el mensaje. ",
     "Invalid account" : "cuenta inválida",
     "Invalid folder" : "Carpeta inválida",
     "Unknown error" : "Error desconocido",
@@ -51,7 +52,9 @@ OC.L10N.register(
     "& others" : "y otros",
     "All inboxes" : "Todas las bandejas de entrada",
     "Error loading message" : "Error al cargar el mensaje",
-    "Forwarding you to %s - click here if you are not automatically redirected within the next few seconds." : "Redireccionando a %s; haga clic aquí si no es redireccionado automáticamente en unos segundos.",
+    "Redirect" : "Redireccionar",
+    "The link leads to %s" : "El enlace conduce a %s",
+    "If you don’t want to visit that page, you can return to <a href=\"%s\">Mail</a>." : "Si no desea visitar aquella página, puede volver a <a href=\"%s\">Correo</a>.",
     "Continue to %s" : "Continuar a %s"
 },
 "nplurals=2; plural=(n != 1);");

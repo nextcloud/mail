@@ -14,6 +14,7 @@ OC.L10N.register(
     "Attachment saved to Files." : "Příloha uložena do Souborů.",
     "Error while saving attachments to Files." : "Chyba při ukládání příloh do Souborů.",
     "Error while saving attachment to Files." : "Chyba při ukládání přílohy do Souborů.",
+    "Message flag could not be set." : "Značka zpráva nemohla být nastavena.",
     "Invalid account" : "Neplatný účet",
     "Invalid folder" : "Neplatný adresář",
     "Unknown error" : "Neznámá chyba",
@@ -51,7 +52,9 @@ OC.L10N.register(
     "& others" : "a další",
     "All inboxes" : "Všechny schránky",
     "Error loading message" : "Chyba načtení zprávy",
-    "Forwarding you to %s - click here if you are not automatically redirected within the next few seconds." : "Přesměrovávám na %s - klikněte sem, pokud nebudete automaticky přesměrováni během několika následujících sekund.",
+    "Redirect" : "Přesměrovat",
+    "The link leads to %s" : "Odkaz vede na %s",
+    "If you don’t want to visit that page, you can return to <a href=\"%s\">Mail</a>." : "Pokud nechcete tuto stránku navštívit, můžete se vrátit do <a href=\"%s\">emailu</a>.",
     "Continue to %s" : "Pokračovat na %s"
 },
 "nplurals=3; plural=(n==1) ? 0 : (n>=2 && n<=4) ? 1 : 2;");

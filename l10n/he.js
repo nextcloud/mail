@@ -14,6 +14,7 @@ OC.L10N.register(
     "Attachment saved to Files." : "קובץ מצורף נשמר לקטגוריית קבצים.",
     "Error while saving attachments to Files." : "שגיאה בזמן שמירת קבצים מצורפים לקטגוריית קבצים.",
     "Error while saving attachment to Files." : "שגיאה בזמן שמירת קובץ מצורף לקטגוריית קבצים.",
+    "Message flag could not be set." : "לא ניתן היה להגדיר דגל להודעה",
     "Invalid account" : "חשבון לא חוקי",
     "Invalid folder" : "תיקייה לא חוקית",
     "Unknown error" : "שגיאה בלתי ידועה",
@@ -51,7 +52,9 @@ OC.L10N.register(
     "& others" : "& אחרים",
     "All inboxes" : "כל תיבות דואר נכנס",
     "Error loading message" : "שגיאה בהעלאת הודעה",
-    "Forwarding you to %s - click here if you are not automatically redirected within the next few seconds." : "מעביר אותך אל %s - יש ללחוץ כאן אם ההעברה לא מתבצעת באופן אוטומטי בשניות הקרובות.",
+    "Redirect" : "הפנייה",
+    "The link leads to %s" : "הקישור מוביל אל %s",
+    "If you don’t want to visit that page, you can return to <a href=\"%s\">Mail</a>." : "אם אינך רוצה לבקר בדף זה, ניתן לחזור אל <a href=\"%s\">הדואר</a>.",
     "Continue to %s" : "ממשיך אל %s"
 },
 "nplurals=2; plural=(n != 1);");

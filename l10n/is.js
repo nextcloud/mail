@@ -51,7 +51,6 @@ OC.L10N.register(
     "& others" : "og aðrir",
     "All inboxes" : "Öll innhólf",
     "Error loading message" : "Villa við hleðslu á skilaboðum",
-    "Forwarding you to %s - click here if you are not automatically redirected within the next few seconds." : "Áframsendi þig til %s - smelltu hér ef þér er ekki beint áfram innan nokkurra sekúndna.",
     "Continue to %s" : "Halda áfram í %s"
 },
 "nplurals=2; plural=(n % 10 != 1 || n % 100 == 11);");

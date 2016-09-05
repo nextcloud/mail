@@ -12,6 +12,7 @@
     "Attachment saved to Files." : "Ek Dosyalara kaydedildi.",
     "Error while saving attachments to Files." : "Ekler Dosyalara kaydedilirken hata.",
     "Error while saving attachment to Files." : "Ek Dosyalara kaydedilirken hata.",
+    "Message flag could not be set." : "Mesaj etiketi atanamadı.",
     "Invalid account" : "Geçersiz hesap",
     "Invalid folder" : "Geçersiz klasör",
     "Unknown error" : "Bilinmeyen hata",
@@ -49,7 +50,9 @@
     "& others" : "ve diğerleri",
     "All inboxes" : "Tüm gelen kutuları",
     "Error loading message" : "İleti yüklenirken hata",
-    "Forwarding you to %s - click here if you are not automatically redirected within the next few seconds." : "%s sayfasına yönlendiriliyorsunuz - birkaç saniye içinde yönlendirilmezseniz, buraya tıklayın.",
+    "Redirect" : "Yönlendir",
+    "The link leads to %s" : "Bağlantı %s adresini işaret ediyor",
+    "If you don’t want to visit that page, you can return to <a href=\"%s\">Mail</a>." : "Bu sayfayı ziyaret etmek istemiyorsanız, <a href=\"%s\">posta uygulamasına</a> geri dönebilirsiniz.",
     "Continue to %s" : "%s sayfasına devam et"
 },"pluralForm" :"nplurals=2; plural=(n > 1);"
 }

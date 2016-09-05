@@ -14,6 +14,7 @@ OC.L10N.register(
     "Attachment saved to Files." : "Ficheru axuntu guardáu en Ficheros.",
     "Error while saving attachments to Files." : "Fallu al guardar los ficheros axuntos en Ficheros.",
     "Error while saving attachment to Files." : "Fallu al guardar el ficheru axuntu en Ficheros.",
+    "Message flag could not be set." : "Nun pudo afitase la etiqueta del mensaxe",
     "Invalid account" : "Cuenta non válida",
     "Invalid folder" : "Carpeta non válida",
     "Unknown error" : "Fallu desconocíu",
@@ -51,7 +52,9 @@ OC.L10N.register(
     "& others" : "& otros",
     "All inboxes" : "Toles bandexes d'entrada",
     "Error loading message" : "Fallu cargando mensaxe",
-    "Forwarding you to %s - click here if you are not automatically redirected within the next few seconds." : "Redirixéndote a %s - calca equí si nun te redirixe automáticamente nunos segundos.",
+    "Redirect" : "Redirixir",
+    "The link leads to %s" : "L'enllace conduz a %s",
+    "If you don’t want to visit that page, you can return to <a href=\"%s\">Mail</a>." : "Si nun quies dir a esta páxina, pues volver a <a href=\"%s\">Mail</a>.",
     "Continue to %s" : "Continúa a %s"
 },
 "nplurals=2; plural=(n != 1);");

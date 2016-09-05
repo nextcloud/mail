@@ -51,7 +51,6 @@ OC.L10N.register(
     "& others" : "& inni",
     "All inboxes" : "Wszystkie skrzynki odbiorcze",
     "Error loading message" : "Błąd podczas ładowania wiadomości",
-    "Forwarding you to %s - click here if you are not automatically redirected within the next few seconds." : "Przekierowuję do %s - kliknij tutaj, jeśli nie nastąpi automatyczne przekierowanie w ciągu kilku sekund.",
     "Continue to %s" : "Kontynuuj do %s"
 },
 "nplurals=3; plural=(n==1 ? 0 : n%10>=2 && n%10<=4 && (n%100<10 || n%100>=20) ? 1 : 2);");
