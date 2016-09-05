@@ -68,7 +68,7 @@ class TranslationExtractor {
 		$strings = $this->extract($this->directory);
 		$export = '';
 		foreach ($strings as $s) {
-			$export .= 't(\'' . $s . '\');' . PHP_EOL;
+			$export .= 't(\'mail\', \'' . $s . '\');' . PHP_EOL;
 		}
 		file_put_contents('translations.js', $export);
 	}
