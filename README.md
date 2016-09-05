@@ -68,11 +68,9 @@ namespace inbox {
 
 ## Developer setup info
 
-Just clone this repo into your apps directory (Nextcloud server installation needed). Additionally,  [npm](https://docs.npmjs.com/getting-started/installing-node) is needed for installing JavaScript dependencies. On Debian and Ubuntu Systems it can be installed with the following command:
-```bash
-sudo apt-get install nodejs-legacy npm
-```
-Once npm is installed, PHP and JavaScript dependencies can be installed by running
+Just clone this repo into your apps directory (Nextcloud server installation needed). Additionally,  [nodejs and npm](https://nodejs.org/en/download/package-manager/) are needed for installing JavaScript dependencies.
+
+Once node and npm are installed, PHP and JavaScript dependencies can be installed by running
 ```bash
 make install-composer-deps
 make optimize-js
