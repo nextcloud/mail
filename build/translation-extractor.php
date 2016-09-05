@@ -74,5 +74,5 @@ class TranslationExtractor {
 	}
 }
 
-$te = new TranslationExtractor(dirname(__FILE__) . '/js/templates');
+$te = new TranslationExtractor(dirname(__FILE__) . '/../js/templates');
 $te->run();
