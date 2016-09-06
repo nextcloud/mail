@@ -50,13 +50,6 @@ define(function(require) {
 	function loadFolderMessages(account, folder, noSelect, searchQuery) {
 		Radio.ui.trigger('composer:leave');
 
-		if (require('state').messagesLoading !== null) {
-			require('state').messagesLoading.abort();
-		}
-		if (require('state').messageLoading !== null) {
-			require('state').messageLoading.abort();
-		}
-
 		// Set folder active
 		Radio.folder.trigger('setactive', account, folder);
 
@@ -71,8 +64,7 @@ define(function(require) {
 		} else {
 			var loadingMessages = Radio.message.request('entities', account, folder, {
 				cache: true,
-				filter: searchQuery,
-				replace: true
+				filter: searchQuery
 			});
 
 			$.when(loadingMessages).done(function(messages, cached) {
@@ -91,7 +83,7 @@ define(function(require) {
 
 				if (messages.length > 0) {
 					// Fetch first 10 messages in background
-					Radio.message.trigger('fetch:bodies', account, folder, messages.slice(0, 10));
+					// Radio.message.trigger('fetch:bodies', account, folder, messages.slice(0, 10));
 
 					Radio.message.trigger('load', account, folder, messages.first());
 
@@ -168,7 +160,7 @@ define(function(require) {
 			});
 			var fetchingMessageBodies = Radio.message.request('bodies', account, folder, ids);
 			$.when(fetchingMessageBodies).done(function(messages) {
-				require('cache').addMessages(account, folder, messages);
+				// TODO: merge attributes
 			});
 		}
 	}

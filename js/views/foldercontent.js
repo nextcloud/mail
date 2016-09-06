@@ -79,11 +79,10 @@ define(function(require) {
 			// Temporarily disable new-message composer events
 			Radio.ui.trigger('composer:events:undelegate');
 
-			var messageModel = new Backbone.Model(message);
 			this.message.show(new MessageView({
 				account: this.account,
 				folder: this.folder,
-				model: messageModel
+				model: message
 			}));
 			this.detailView = DetailView.MESSAGE;
 
@@ -93,13 +92,6 @@ define(function(require) {
 			$('.tooltip').remove();
 			$('#mail_new_message').prop('disabled', true);
 			$('#mail-message').removeClass('hidden-mobile');
-
-			// Abort message loads
-			if (require('state').messageLoading !== null) {
-				require('state').messageLoading.abort();
-				$('iframe').parent().removeClass('icon-loading');
-				$('#mail_message').removeClass('icon-loading');
-			}
 
 			// setup composer view
 			this.message.show(new ComposerView({

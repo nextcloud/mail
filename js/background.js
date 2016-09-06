@@ -16,7 +16,6 @@ define(function(require) {
 	var _ = require('underscore');
 	var $ = require('jquery');
 	var OC = require('OC');
-	var Cache = require('cache');
 	var Radio = require('radio');
 	var State = require('state');
 	var MessageCollection = require('models/messagecollection');
@@ -131,15 +130,8 @@ define(function(require) {
 						if (State.currentAccount === changedAccount &&
 							State.currentFolder.get('id') === changes.id) {
 							Radio.ui.request('messagesview:collection').add(changes.messages);
-							var messages = new MessageCollection(changes.messages).slice(0);
-							Radio.message.trigger('fetch:bodies', changedAccount, changedFolder, messages);
-						}
-
-						// Save new messages to the cached message list
-						var cachedList = Cache.getMessageList(changedAccount, localFolder);
-						if (cachedList) {
-							cachedList = cachedList.concat(changes.messages);
-							Cache.addMessageList(changedAccount, localFolder, cachedList);
+							// var messages = new MessageCollection(changes.messages).slice(0);
+							// Radio.message.trigger('fetch:bodies', changedAccount, changedFolder, messages);
 						}
 
 						Radio.ui.trigger('title:update');

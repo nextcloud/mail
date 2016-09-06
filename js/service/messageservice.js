@@ -24,7 +24,6 @@ define(function(require) {
 	var _ = require('underscore');
 	var OC = require('OC');
 	var Radio = require('radio');
-	var messageListXhr = null;
 
 	Radio.message.reply('entities', getMessageEntities);
 	Radio.message.reply('entity', getMessageEntity);
@@ -43,37 +42,15 @@ define(function(require) {
 		options = options || {};
 		var defaults = {
 			cache: false,
-			replace: false, // Replace cached folder list
 			force: false,
 			filter: ''
 		};
 		_.defaults(options, defaults);
 
-		// Do not cache search queries
-		if (options.filter !== '') {
-			options.cache = false;
-		}
-
-		// Abort previous requests
-		if (messageListXhr !== null) {
-			messageListXhr.abort();
-		}
-
 		var defer = $.Deferred();
-
-		if (options.cache) {
-			// Load cached version if available
-			var messageList = require('cache').getMessageList(account, folder);
-			if (!options.force && messageList) {
-				var collection = folder.get('messages');
-				_.each(messageList, function(msg) {
-					collection.add(msg);
-				});
-				defer.resolve(collection, true);
-				return defer.promise();
-			}
+		if (folder.get('messagesLoaded')) {
+			return defer.resolve(folder.get('messages'), true);
 		}
-
 		var url = OC.generateUrl('apps/mail/accounts/{accountId}/folders/{folderId}/messages',
 			{
 				accountId: account.get('accountId'),
@@ -81,7 +58,7 @@ define(function(require) {
 			});
 
 		// TODO: folder.get('messages').fetch()
-		messageListXhr = $.ajax(url,
+		$.ajax(url,
 			{
 				data: {
 					from: options.from,
@@ -89,16 +66,13 @@ define(function(require) {
 					filter: options.filter
 				},
 				success: function(messages) {
-					if (options.replace || options.cache) {
-						require('cache').addMessageList(account, folder, messages);
-					}
 					var collection = folder.get('messages');
-					if (options.replace) {
-						collection.reset();
-					}
 					_.each(messages, function(msg) {
-						collection.add(msg);
+						collection.add(msg, {
+							merge: true
+						});
 					});
+					folder.set('messagesLoaded', true);
 					defer.resolve(collection, false);
 				},
 				error: function(error, status) {
@@ -114,36 +88,32 @@ define(function(require) {
 	/**
 	 * @param {Account} account
 	 * @param {Folder} folder
-	 * @param {number} messageId
+	 * @param {Message} messageId
 	 * @param {object} options
 	 * @returns {Promise}
 	 */
-	function getMessageEntity(account, folder, messageId, options) {
+	function getMessageEntity(account, folder, message, options) {
 		options = options || {};
-		var defaults = {
-			backgroundMode: false
-		};
-		_.defaults(options, defaults);
 
 		var defer = $.Deferred();
-
-		// Load cached version if available
-		var message = require('cache').getMessage(account,
-			folder,
-			messageId);
-		if (message) {
-			defer.resolve(message);
-			return defer.promise();
+		
+		if (message.get('hasDetails')) {
+			return message;
 		}
 
 		var url = OC.generateUrl('apps/mail/accounts/{accountId}/folders/{folderId}/messages/{messageId}', {
 			accountId: account.get('accountId'),
 			folderId: folder.get('id'),
-			messageId: messageId
+			messageId: message.get('id')
 		});
-		var xhr = $.ajax(url, {
+		$.ajax(url, {
 			type: 'GET',
-			success: function(message) {
+			success: function(messageDetails) {
+				// do not override nested Backbone model 'flags'
+				delete messageDetails.flags;
+
+				message.set(messageDetails);
+				message.set('hasDetails', true);
 				defer.resolve(message);
 			},
 			error: function(jqXHR, textStatus) {
@@ -152,10 +122,6 @@ define(function(require) {
 				}
 			}
 		});
-		if (!options.backgroundMode) {
-			// Save xhr to allow aborting unneeded requests
-			require('state').messageLoading = xhr;
-		}
 
 		return defer.promise();
 	}
@@ -169,13 +135,14 @@ define(function(require) {
 	function fetchMessageBodies(account, folder, messageIds) {
 		var defer = $.Deferred();
 
-		var cachedMessages = [];
 		var uncachedIds = [];
 		_.each(messageIds, function(messageId) {
-			var message = require('cache').getMessage(account, folder, messageId);
-			if (message) {
-				cachedMessages.push(message);
-			} else {
+			var message = folder.get('messages').get(messageId);
+			if (!message) {
+				// Weird, shouldn't have happened, but let's ignore this one
+				return;
+			}
+			if (!message.get('hasDetails')) {
 				uncachedIds.push(messageId);
 			}
 		});
@@ -190,6 +157,7 @@ define(function(require) {
 			$.ajax(url, {
 				type: 'GET',
 				success: function(data) {
+					// TODO: merge attributes
 					defer.resolve(data);
 				},
 				error: function() {

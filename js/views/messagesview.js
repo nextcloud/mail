@@ -222,9 +222,7 @@ define(function(require) {
 					from: from,
 					to: from + 20,
 					force: true,
-					filter: this.searchQuery || '',
-					// Replace cached message list on reload
-					replace: reload
+					filter: this.searchQuery || ''
 				});
 
 			$.when(loadingMessages).done(function() {

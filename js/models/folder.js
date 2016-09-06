@@ -20,7 +20,8 @@ define(function(require) {
 		defaults: {
 			open: false,
 			folders: [],
-			messages: []
+			messages: [],
+			messagesLoaded: false
 		},
 		initialize: function() {
 			var FolderCollection = require('models/foldercollection');

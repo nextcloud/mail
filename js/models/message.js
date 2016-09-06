@@ -20,7 +20,8 @@ define(function(require) {
 	var Message = Backbone.Model.extend({
 		defaults: {
 			flags: [],
-			active: false
+			active: false,
+			hasDetails: false,
 		},
 		initialize: function() {
 			this.set('flags', new MessageFlags(this.get('flags')));

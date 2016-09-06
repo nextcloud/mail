@@ -62,7 +62,6 @@ define(function(require) {
 		} else {
 			accounts.fetch({
 				success: function(accounts) {
-					require('cache').cleanUp(accounts);
 					defer.resolve(accounts);
 				},
 				error: function() {

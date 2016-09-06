@@ -90,9 +90,6 @@ define(function(require) {
 				data: {accountId: account.get('accountId')},
 				type: 'DELETE',
 				success: function() {
-					// Delete cached message lists
-					require('cache').removeAccount(account);
-
 					// reload the complete page
 					// TODO should only reload the app nav/content
 					window.location.reload();

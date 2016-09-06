@@ -127,11 +127,6 @@ define(function(require) {
 							}), {
 				data: {},
 				type: 'DELETE',
-				success: function() {
-					var cache = require('cache');
-					var state = require('state');
-					cache.removeMessage(state.currentAccount, state.currentFolder, thisModel.id);
-				},
 				error: function() {
 					Radio.ui.trigger('error:show', t('mail', 'Error while deleting message.'));
 				}
