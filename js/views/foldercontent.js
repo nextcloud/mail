@@ -145,8 +145,10 @@ define(function(require) {
 				}
 			}
 		},
-		onMessageLoading: function() {
-			this.message.show(new LoadingView());
+		onMessageLoading: function(text) {
+			this.message.show(new LoadingView({
+				text: text
+			}));
 		},
 		onKeyUp: function(event, key) {
 			var message;
