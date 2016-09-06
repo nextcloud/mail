@@ -144,7 +144,7 @@ class Account implements IAccount {
 			if ($this->config->getSystemValue('app.mail.imaplog.enabled', false)) {
 				$params['debug'] = $this->config->getSystemValue('datadirectory') . '/horde_imap.log';
 			}
-			if ($this->config->getSystemValue('app.mail.server-side-cache.enabled', false)) {
+			if ($this->config->getSystemValue('app.mail.server-side-cache.enabled', true)) {
 				if ($this->memcacheFactory->isAvailable()) {
 					$params['cache'] = [
 						'backend' => new Cache(array(

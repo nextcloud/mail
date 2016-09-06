@@ -110,13 +110,6 @@ You can enable IMAP and SMTP backend logging. A horde_imap.log for IMAP and hord
 'app.mail.smtplog.enabled' => true
 ```
 
-### Server-side caching
-Mailbox messages and accounts can be cached on the Nextcloud server to reduce mail server load:
-This requires a valid memcache to be configured
-```php
-'app.mail.server-side-cache.enabled' => true
-```
-
 ### Use php-mail for mail sending
 You can use the php mail function to send mails. This is needed for some webhosters (1&1 (1und1)):
 ```php
