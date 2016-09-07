@@ -18,6 +18,8 @@ define(function(require) {
 	var OC = require('OC');
 	var Radio = require('radio');
 	var State = require('state');
+	var Message = require('models/message');
+	var MessageCollection = require('models/messagecollection');
 
 	/*jshint maxparams: 6 */
 	function showNotification(title, body, tag, icon, account, folder) {
@@ -125,12 +127,16 @@ define(function(require) {
 						localFolder.set('unseen', changes.unseen);
 						localFolder.set('total', changes.total);
 
+						var messages = _.map(changes.messages, function(messageData) {
+							return new Message(messageData);
+						});
+						changedFolder.get('messages').add(messages);
+
 						// reload if current selected folder has changed
 						if (State.currentAccount === changedAccount &&
 							State.currentFolder.get('id') === changes.id) {
 							Radio.ui.request('messagesview:collection').add(changes.messages);
-							// var messages = new MessageCollection(changes.messages).slice(0);
-							// Radio.message.trigger('fetch:bodies', changedAccount, changedFolder, messages);
+							Radio.message.trigger('fetch:bodies', changedAccount, changedFolder, new MessageCollection(messages));
 						}
 
 						Radio.ui.trigger('title:update');

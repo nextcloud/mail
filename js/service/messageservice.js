@@ -130,11 +130,7 @@ define(function(require) {
 		$.ajax(url, {
 			type: 'GET',
 			success: function(messageDetails) {
-				// do not override nested Backbone model 'flags'
-				delete messageDetails.flags;
-
-				message.set(messageDetails);
-				message.set('hasDetails', true);
+				addDetailsToMessage(message, messageDetails);
 				defer.resolve(message);
 			},
 			error: function(jqXHR, textStatus) {
@@ -147,24 +143,27 @@ define(function(require) {
 		return defer.promise();
 	}
 
+	function addDetailsToMessage(message, data) {
+		// do not override nested Backbone model 'flags'
+		delete data.flags;
+
+		message.set(data);
+		message.set('hasDetails', true);
+	}
+
 	/**
 	 * @param {Account} account
 	 * @param {Folder} folder
-	 * @param {array} messageIds
-	 * @returns {undefined}
+	 * @param {MessageCollection} messages
+	 * @returns {Promise}
 	 */
-	function fetchMessageBodies(account, folder, messageIds) {
+	function fetchMessageBodies(account, folder, messages) {
 		var defer = $.Deferred();
 
 		var uncachedIds = [];
-		_.each(messageIds, function(messageId) {
-			var message = folder.get('messages').get(messageId);
-			if (!message) {
-				// Weird, shouldn't have happened, but let's ignore this one
-				return;
-			}
+		messages.forEach(function(message) {
 			if (!message.get('hasDetails')) {
-				uncachedIds.push(messageId);
+				uncachedIds.push(message.get('id'));
 			}
 		});
 
@@ -178,7 +177,10 @@ define(function(require) {
 			$.ajax(url, {
 				type: 'GET',
 				success: function(data) {
-					// TODO: merge attributes
+					_.each(data, function(msg) {
+						var message = messages.get(msg.id);
+						addDetailsToMessage(message, msg);
+					});
 					defer.resolve(data);
 				},
 				error: function() {

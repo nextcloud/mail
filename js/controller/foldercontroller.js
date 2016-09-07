@@ -155,13 +155,7 @@ define(function(require) {
 	 */
 	function fetchBodies(account, folder, messages) {
 		if (messages.length > 0) {
-			var ids = _.map(messages, function(message) {
-				return message.get('id');
-			});
-			var fetchingMessageBodies = Radio.message.request('bodies', account, folder, ids);
-			$.when(fetchingMessageBodies).done(function(messages) {
-				// TODO: merge attributes
-			});
+			Radio.message.request('bodies', account, folder, messages);
 		}
 	}
 
