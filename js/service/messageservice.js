@@ -130,7 +130,8 @@ define(function(require) {
 		$.ajax(url, {
 			type: 'GET',
 			success: function(messageDetails) {
-				addDetailsToMessage(message, messageDetails);
+				message.set(messageDetails);
+				message.set('hasDetails', true);
 				defer.resolve(message);
 			},
 			error: function(jqXHR, textStatus) {
@@ -141,14 +142,6 @@ define(function(require) {
 		});
 
 		return defer.promise();
-	}
-
-	function addDetailsToMessage(message, data) {
-		// do not override nested Backbone model 'flags'
-		delete data.flags;
-
-		message.set(data);
-		message.set('hasDetails', true);
 	}
 
 	/**
@@ -179,7 +172,8 @@ define(function(require) {
 				success: function(data) {
 					_.each(data, function(msg) {
 						var message = messages.get(msg.id);
-						addDetailsToMessage(message, msg);
+						message.set(msg);
+						message.set('hasDetails', true);
 					});
 					defer.resolve(data);
 				},

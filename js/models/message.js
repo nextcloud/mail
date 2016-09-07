@@ -25,11 +25,17 @@ define(function(require) {
 		},
 		initialize: function() {
 			this.set('flags', new MessageFlags(this.get('flags')));
+			this.on('change:flags', this._mergeFlags);
 			this.listenTo(this.get('flags'), 'change', this._transformEvent);
 		},
 		_transformEvent: function() {
 			this.trigger('change');
 			this.trigger('change:flags', this);
+		},
+		_mergeFlags: function(model, value) {
+			var oldFlags = this.previousAttributes()['flags'];
+			oldFlags.set(value); // Merge changes
+			this.set('flags', oldFlags);
 		},
 		toJSON: function() {
 			var data = Backbone.Model.prototype.toJSON.call(this);
