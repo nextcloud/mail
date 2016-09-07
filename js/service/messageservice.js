@@ -66,11 +66,17 @@ define(function(require) {
 				},
 				success: function(messages) {
 					var collection = folder.get('messages');
+					var messageIds = [];
 					_.each(messages, function(msg) {
+						messageIds.push(msg.id);
 						collection.add(msg, {
 							merge: true
 						});
 					});
+					if (options.from === 0) {
+						// Reloading
+						cleanUpCollection(collection, messageIds);
+					}
 					folder.set('messagesLoaded', true);
 					defer.resolve(collection, false);
 				},
@@ -84,6 +90,22 @@ define(function(require) {
 		return defer.promise();
 	}
 
+	function cleanUpCollection(collection, ids) {
+		var toRemove = [];
+		collection.forEach(function(message) {
+			if (ids.indexOf(message.get('id')) === -1) {
+				// Message was removed, so le't remove it
+				// from the client collection too
+				// TODO: use Backbone+horde sync and don't
+				// discard the data
+				toRemove.push(message.get('id'));
+			}
+		});
+		_.each(toRemove, function(id) {
+			collection.remove(id);
+		});
+	}
+
 	/**
 	 * @param {Account} account
 	 * @param {Folder} folder
@@ -95,7 +117,7 @@ define(function(require) {
 		options = options || {};
 
 		var defer = $.Deferred();
-		
+
 		if (message.get('hasDetails')) {
 			return message;
 		}
