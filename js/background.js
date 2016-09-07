@@ -18,7 +18,6 @@ define(function(require) {
 	var OC = require('OC');
 	var Radio = require('radio');
 	var State = require('state');
-	var MessageCollection = require('models/messagecollection');
 
 	/*jshint maxparams: 6 */
 	function showNotification(title, body, tag, icon, account, folder) {

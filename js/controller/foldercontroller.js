@@ -63,8 +63,8 @@ define(function(require) {
 			require('state').currentlyLoading = null;
 		} else {
 			var loadingMessages = Radio.message.request('entities', account, folder, {
-				cache: true,
-				filter: searchQuery
+				filter: searchQuery,
+				cache: true
 			});
 
 			$.when(loadingMessages).done(function(messages, cached) {

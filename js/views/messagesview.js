@@ -221,7 +221,7 @@ define(function(require) {
 				{
 					from: from,
 					to: from + 20,
-					force: true,
+					cache: false,
 					filter: this.searchQuery || ''
 				});
 

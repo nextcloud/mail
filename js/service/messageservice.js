@@ -41,14 +41,13 @@ define(function(require) {
 	function getMessageEntities(account, folder, options) {
 		options = options || {};
 		var defaults = {
-			cache: false,
-			force: false,
-			filter: ''
+			filter: '',
+			cache: false // Do *not* returned a cached version immediately
 		};
 		_.defaults(options, defaults);
 
 		var defer = $.Deferred();
-		if (folder.get('messagesLoaded')) {
+		if (options.cache && folder.get('messagesLoaded')) {
 			return defer.resolve(folder.get('messages'), true);
 		}
 		var url = OC.generateUrl('apps/mail/accounts/{accountId}/folders/{folderId}/messages',
