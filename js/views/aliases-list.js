@@ -34,6 +34,9 @@ define(function(require) {
 		events: {
 			'click @ui.deleteButton': 'deleteAlias'
 		},
+		modelEvents: {
+			'change': 'render'
+		},
 		initialize: function(options) {
 			this.model = options.model;
 		},

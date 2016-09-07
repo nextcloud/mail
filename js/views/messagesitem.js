@@ -30,6 +30,9 @@ define(function(require) {
 			'click .mail-message-header': 'openMessage',
 			'click .star': 'toggleMessageStar'
 		},
+		modelEvents: {
+			'change': 'render'
+		},
 		onRender: function() {
 			// Get rid of that pesky wrapping-div.
 			// Assumes 1 child element present in template.

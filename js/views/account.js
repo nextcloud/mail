@@ -45,6 +45,9 @@ define(function(require) {
 			'click @ui.settingsButton': 'showAccountSettings',
 			'click @ui.email': 'onClick'
 		},
+		modelEvents: {
+			'change': 'render'
+		},
 		ui: {
 			'email': '.mail-account-email',
 			'menu': 'div.app-navigation-entry-menu',

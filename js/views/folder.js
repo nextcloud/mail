@@ -43,6 +43,9 @@ define(function(require) {
 			'click .collapse': 'collapseFolder',
 			'click .folder': 'loadFolder'
 		},
+		modelEvents: {
+			'change': 'render'
+		},
 		collapseFolder: function(e) {
 			e.preventDefault();
 			this.model.toggleOpen();
