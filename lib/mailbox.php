@@ -11,6 +11,7 @@
  * @author Thomas I <thomas@oatr.be>
  * @author Thomas Mueller <thomas.mueller@tmit.eu>
  * @author Thomas Müller <thomas.mueller@tmit.eu>
+ * @author Maximilian Zellhofer <max.zellhofer@gmail.com>
  *
  * Mail
  *
