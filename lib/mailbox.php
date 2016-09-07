@@ -11,6 +11,7 @@
  * @author Thomas I <thomas@oatr.be>
  * @author Thomas Mueller <thomas.mueller@tmit.eu>
  * @author Thomas Müller <thomas.mueller@tmit.eu>
+ * @author Maximilian Zellhofer <max.zellhofer@gmail.com>
  *
  * Mail
  *
@@ -107,7 +108,16 @@ class Mailbox implements IMailBox {
 		if ($this->getSpecialRole() !== 'trash') {
 			$query->flag(Horde_Imap_Client::FLAG_DELETED, false);
 		}
-		$result = $this->conn->search($this->mailBox, $query, ['sort' => [Horde_Imap_Client::SORT_DATE]]);
+
+		try {
+			$result = $this->conn->search($this->mailBox, $query, ['sort' => [Horde_Imap_Client::SORT_DATE]]);
+		} catch (Horde_Imap_Client_Exception $e) {
+			// maybe the server's advertisment of SORT was a fake
+			// see https://github.com/nextcloud/mail/issues/50
+			// try again without SORT
+			return $this->getFetchIds($from, $count);
+		}
+
 		$ids = array_reverse($result['match']->ids);
 		if ($from >= 0 && $count >= 0) {
 			$ids = array_slice($ids, $from, $count);
