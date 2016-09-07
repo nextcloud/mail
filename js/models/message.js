@@ -36,16 +36,6 @@ define(function(require) {
 			var oldFlags = this.previousAttributes()['flags'];
 			oldFlags.set(value, {silent: true}); // Merge changes
 			this.set('flags', oldFlags);
-		},
-		toJSON: function() {
-			var data = Backbone.Model.prototype.toJSON.call(this);
-			if (data.flags && data.flags.toJSON) {
-				data.flags = data.flags.toJSON();
-			}
-			if (!data.id) {
-				data.id = this.cid;
-			}
-			return data;
 		}
 	});
 

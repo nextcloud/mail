@@ -33,13 +33,9 @@ define(function(require) {
 			this.set({open: !this.get('open')});
 		},
 		toJSON: function() {
-			var data = Backbone.Model.prototype.toJSON.call(this);
-			if (data.folders && data.folders.toJSON) {
-				data.folders = data.folders.toJSON();
-			}
-			if (!data.id) {
-				data.id = this.cid;
-			}
+			var data = _.clone(this.attributes);
+			delete data.folders;
+			delete data.messages;
 			return data;
 		}
 	});
