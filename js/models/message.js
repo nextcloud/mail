@@ -34,7 +34,7 @@ define(function(require) {
 		},
 		_mergeFlags: function(model, value) {
 			var oldFlags = this.previousAttributes()['flags'];
-			oldFlags.set(value); // Merge changes
+			oldFlags.set(value, {silent: true}); // Merge changes
 			this.set('flags', oldFlags);
 		},
 		toJSON: function() {
