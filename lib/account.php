@@ -139,7 +139,7 @@ class Account implements IAccount {
 				'hostspec' => $host,
 				'port' => $port,
 				'secure' => $ssl_mode,
-				'timeout' => 20,
+				'timeout' => $this->config->getSystemValue('app.mail.imap.timeout', 20),
 			];
 			if ($this->config->getSystemValue('app.mail.imaplog.enabled', false)) {
 				$params['debug'] = $this->config->getSystemValue('datadirectory') . '/horde_imap.log';
@@ -388,7 +388,7 @@ class Account implements IAccount {
 			'port' => $this->account->getOutboundPort(),
 			'username' => $this->account->getOutboundUser(),
 			'secure' => $this->convertSslMode($this->account->getOutboundSslMode()),
-			'timeout' => 2
+			'timeout' => $this->config->getSystemValue('app.mail.smtp.timeout', 2)
 		];
 		if ($this->config->getSystemValue('app.mail.smtplog.enabled', false)) {
 			$params['debug'] = $this->config->getSystemValue('datadirectory') . '/horde_smtp.log';
