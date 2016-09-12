@@ -110,6 +110,17 @@ You can enable IMAP and SMTP backend logging. A horde_imap.log for IMAP and hord
 'app.mail.smtplog.enabled' => true
 ```
 
+### Timeouts:
+Depending on your mail host, it may be necessary to increase your IMAP and/or SMTP timeout settings. Currently IMAP defaults to 20 seconds and SMTP defaults to 2 seconds. They can be changed with.
+
+#### IMAP timeout:
+```php
+'app.mail.imap.timeout' => 20
+```
+#### SMTP timeout:
+```php
+'app.mail.smtp.timeout' => 2
+```
 ### Use php-mail for mail sending
 You can use the php mail function to send mails. This is needed for some webhosters (1&1 (1und1)):
 ```php
