@@ -29,10 +29,12 @@ define(function(require) {
 	var ComposerView = require('views/composer');
 	var MessageView = require('views/message');
 	var MessagesView = require('views/messagesview');
+	var ErrorView = require('views/errorview');
 	var LoadingView = require('views/loadingview');
 	var MessageContentTemplate = require('text!templates/foldercontent.html');
 
 	var DetailView = Object.freeze({
+		ERROR: -2,
 		MESSAGE: 1,
 		COMPOSER: 2
 	});
@@ -55,6 +57,7 @@ define(function(require) {
 			this.searchQuery = options.searchQuery;
 
 			this.listenTo(Radio.ui, 'message:show', this.onShowMessage);
+			this.listenTo(Radio.ui, 'message:error', this.onShowError);
 			this.listenTo(Radio.ui, 'composer:show', this.onShowComposer);
 			this.listenTo(Radio.ui, 'composer:leave', this.onComposerLeave);
 			this.listenTo(Radio.keyboard, 'keyup', this.onKeyUp);
@@ -88,6 +91,12 @@ define(function(require) {
 			this.detailView = DetailView.MESSAGE;
 
 			Radio.ui.trigger('messagesview:messageflag:set', message.id, 'unseen', false);
+		},
+		onShowError: function(errorMessage) {
+			this.message.show(new ErrorView({
+				text: errorMessage
+			}));
+			this.detailView = DetailView.ERROR;
 		},
 		onShowComposer: function(data) {
 			$('.tooltip').remove();

@@ -24,6 +24,7 @@ define(function(require) {
 	var _ = require('underscore');
 	var Radio = require('radio');
 	var FolderService = require('service/folderservice');
+	var ErrorMessageFactory = require('util/errormessagefactory');
 
 	Radio.message.on('fetch:bodies', fetchBodies);
 
@@ -45,6 +46,7 @@ define(function(require) {
 	 * @param {Account} account
 	 * @param {Folder} folder
 	 * @param {boolean} noSelect
+	 * @param {string} searchQuery
 	 * @returns {undefined}
 	 */
 	function loadFolderMessages(account, folder, noSelect, searchQuery) {
@@ -108,10 +110,15 @@ define(function(require) {
 			});
 
 			$.when(loadingMessages).fail(function() {
+				var icon;
+				if (folder.get('specialRole')) {
+					icon = 'icon-' + folder.get('specialRole');
+				}
+				Radio.ui.trigger('content:error', ErrorMessageFactory.getRandomFolderErrorMessage(folder), icon);
+
 				// Set the old folder as being active
-				var folder = require('state').currentFolder;
-				Radio.folder.trigger('setactive', account, folder);
-				Radio.ui.trigger('error:show', t('mail', 'Error while loading messages.'));
+				var oldFolder = require('state').currentFolder;
+				Radio.folder.trigger('setactive', account, oldFolder);
 			});
 		}
 	}

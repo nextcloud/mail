@@ -49,7 +49,9 @@ define(function(require) {
 				});
 			});
 
-			folder.set('active', true);
+			if (folder) {
+				folder.set('active', true);
+			}
 		},
 		/**
 		 * @returns {undefined}
