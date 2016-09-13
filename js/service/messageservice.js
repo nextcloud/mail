@@ -384,6 +384,9 @@ define(function(require) {
 				defer.resolve();
 			},
 			error: function() {
+				// Add the message to the collection again
+				folder.addMessage(message);
+
 				defer.reject();
 			}
 		});

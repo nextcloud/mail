@@ -123,6 +123,10 @@ define(function(require) {
 			$.when(deleting).fail(function() {
 				// TODO: move to controller
 				Radio.ui.trigger('error:show', t('mail', 'Error while deleting message.'));
+
+				// Restore counter
+				count = folder.get('total');
+				folder.set('total', count + 1);
 			});
 		}
 	});

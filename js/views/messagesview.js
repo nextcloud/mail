@@ -21,6 +21,7 @@ define(function(require) {
 	'use strict';
 
 	var $ = require('jquery');
+	var _ = require('underscore');
 	var Backbone = require('backbone');
 	var Handlebars = require('handlebars');
 	var Radio = require('radio');
@@ -40,7 +41,10 @@ define(function(require) {
 		loadingMore: false,
 		reloaded: false,
 		events: {
-			'wheel': 'onScroll',
+			wheel: 'onScroll'
+		},
+		collectionEvents: {
+			update: 'render'
 		},
 		initialize: function(options) {
 			this.searchQuery = options.searchQuery;
