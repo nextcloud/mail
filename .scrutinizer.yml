@@ -1,8 +1,11 @@
 filter:
     excluded_paths:
+        - 'build/*'
         - 'vendor/*'
         - 'l10n/*'
         - 'tests/'
+        - 'js/vendor/*'
+        - 'js/tests/*'
 
 imports:
     - javascript
