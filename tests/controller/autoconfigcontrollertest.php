@@ -30,7 +30,7 @@ class AutoConfigControllerTest extends TestCase {
 	protected function setUp() {
 		parent::setUp();
 
-		$this->request = $this->getMock('OCP\IRequest');
+		$this->request = $this->getMockBuilder('OCP\IRequest')->getMock();
 		$this->service = $this->getMockBuilder('OCA\Mail\Service\AutoCompletion\AutoCompleteService')
 			->disableOriginalConstructor()
 			->getMock();

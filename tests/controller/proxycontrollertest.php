@@ -47,8 +47,8 @@ class ProxyControllerTest extends TestCase {
 		$this->session = $this->getMockBuilder('\OCP\ISession')
 			->disableOriginalConstructor()
 			->getMock();
-		$this->clientService = $this->getMock('\OCP\Http\Client\IClientService');
-		$this->client = $this->getMock('\OCP\Http\Client\IClient');
+		$this->clientService = $this->getMockBuilder('\OCP\Http\Client\IClientService')->getMock();
+		$this->client = $this->getMockBuilder('\OCP\Http\Client\IClient')->getMock();
 		$this->clientService->expects($this->any())
 			->method('getClient')
 			->will($this->returnValue($this->client));
