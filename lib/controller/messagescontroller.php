@@ -464,8 +464,8 @@ class MessagesController extends Controller {
 	}
 
 	/**
-	 * @param $accountId
-	 * @param $folderId
+	 * @param integer $accountId
+	 * @param string $folderId
 	 * @param $id
 	 * @param $m
 	 * @param IAccount $account
