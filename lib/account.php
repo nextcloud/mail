@@ -50,7 +50,6 @@ use OCA\Mail\Model\IMessage;
 use OCA\Mail\Model\Message;
 use OCA\Mail\Model\ReplyMessage;
 use OCA\Mail\Service\IAccount;
-use OCA\Mail\Service\IMailBox;
 use OCP\IConfig;
 use OCP\ICacheFactory;
 use OCP\Security\ICrypto;
