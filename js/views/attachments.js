@@ -25,6 +25,9 @@ define(function(require) {
 		events: {
 			'click #mail_new_attachment': 'addAttachment'
 		},
+		modelEvents: {
+			'change': 'render'
+		},
 		initialize: function(options) {
 			this.collection = options.collection;
 		},

@@ -52,15 +52,6 @@ define(function(require) {
 
 		Radio.ui.trigger('composer:leave');
 
-		// TODO: expression is useless?
-		if (!options.force && false) {
-			return;
-		}
-		// Abort previous loading requests
-		if (require('state').messageLoading !== null) {
-			require('state').messageLoading.abort();
-		}
-
 		// check if message is a draft
 		var draftsFolder = account.get('specialFolders').drafts;
 		var draft = draftsFolder === require('state').currentFolder.get('id');
@@ -87,16 +78,12 @@ define(function(require) {
 		var fetchingMessage = Radio.message.request('entity',
 			require('state').currentAccount,
 			require('state').currentFolder,
-			message.get('id'));
+			message);
 
 		$.when(fetchingMessage).done(function(message) {
 			if (draft) {
 				Radio.ui.trigger('composer:show', message);
 			} else {
-				// TODO: ideally this should be handled in messageservice.js
-				require('cache').addMessage(require('state').currentAccount,
-					require('state').currentFolder,
-					message);
 				Radio.ui.trigger('message:show', message);
 			}
 		});

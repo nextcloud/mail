@@ -20,25 +20,22 @@ define(function(require) {
 	var Message = Backbone.Model.extend({
 		defaults: {
 			flags: [],
-			active: false
+			active: false,
+			hasDetails: false,
 		},
 		initialize: function() {
 			this.set('flags', new MessageFlags(this.get('flags')));
+			this.on('change:flags', this._mergeFlags);
 			this.listenTo(this.get('flags'), 'change', this._transformEvent);
 		},
 		_transformEvent: function() {
 			this.trigger('change');
 			this.trigger('change:flags', this);
 		},
-		toJSON: function() {
-			var data = Backbone.Model.prototype.toJSON.call(this);
-			if (data.flags && data.flags.toJSON) {
-				data.flags = data.flags.toJSON();
-			}
-			if (!data.id) {
-				data.id = this.cid;
-			}
-			return data;
+		_mergeFlags: function(model, value) {
+			var oldFlags = this.previousAttributes()['flags'];
+			oldFlags.set(value, {silent: true}); // Merge changes
+			this.set('flags', oldFlags);
 		}
 	});
 

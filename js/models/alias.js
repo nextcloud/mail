@@ -5,6 +5,7 @@
  * later. See the COPYING file.
  *
  * @author Tahaa Karim <tahaalibra@gmail.com>
+ * @author Christoph WUrst <christoph@winzerhof-wurst.at>
  * @copyright Tahaa Karim 2016
  */
 
@@ -16,23 +17,7 @@ define(function(require) {
 	/**
 	 * @class Alias
 	 */
-	var Alias = Backbone.Model.extend({
-		defaults: {
-		},
-		initialize: function() {
-
-		},
-		toJSON: function() {
-			var data = Backbone.Model.prototype.toJSON.call(this);
-			if (data.alias && data.alias.toJSON) {
-				data.alias = data.alias.toJSON();
-			}
-			if (!data.id) {
-				data.id = this.cid;
-			}
-			return data;
-		}
-	});
+	var Alias = Backbone.Model.extend({});
 
 	return Alias;
 });

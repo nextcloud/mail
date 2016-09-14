@@ -24,7 +24,6 @@ define(function(require) {
 	var _ = require('underscore');
 	var OC = require('OC');
 	var Radio = require('radio');
-	var messageListXhr = null;
 
 	Radio.message.reply('entities', getMessageEntities);
 	Radio.message.reply('entity', getMessageEntity);
@@ -42,38 +41,15 @@ define(function(require) {
 	function getMessageEntities(account, folder, options) {
 		options = options || {};
 		var defaults = {
-			cache: false,
-			replace: false, // Replace cached folder list
-			force: false,
-			filter: ''
+			filter: '',
+			cache: false // Do *not* returned a cached version immediately
 		};
 		_.defaults(options, defaults);
 
-		// Do not cache search queries
-		if (options.filter !== '') {
-			options.cache = false;
-		}
-
-		// Abort previous requests
-		if (messageListXhr !== null) {
-			messageListXhr.abort();
-		}
-
 		var defer = $.Deferred();
-
-		if (options.cache) {
-			// Load cached version if available
-			var messageList = require('cache').getMessageList(account, folder);
-			if (!options.force && messageList) {
-				var collection = folder.get('messages');
-				_.each(messageList, function(msg) {
-					collection.add(msg);
-				});
-				defer.resolve(collection, true);
-				return defer.promise();
-			}
+		if (options.cache && folder.get('messagesLoaded')) {
+			return defer.resolve(folder.get('messages'), true);
 		}
-
 		var url = OC.generateUrl('apps/mail/accounts/{accountId}/folders/{folderId}/messages',
 			{
 				accountId: account.get('accountId'),
@@ -81,7 +57,7 @@ define(function(require) {
 			});
 
 		// TODO: folder.get('messages').fetch()
-		messageListXhr = $.ajax(url,
+		$.ajax(url,
 			{
 				data: {
 					from: options.from,
@@ -89,16 +65,19 @@ define(function(require) {
 					filter: options.filter
 				},
 				success: function(messages) {
-					if (options.replace || options.cache) {
-						require('cache').addMessageList(account, folder, messages);
-					}
 					var collection = folder.get('messages');
-					if (options.replace) {
-						collection.reset();
-					}
+					var messageIds = [];
 					_.each(messages, function(msg) {
-						collection.add(msg);
+						messageIds.push(msg.id);
+						collection.add(msg, {
+							merge: true
+						});
 					});
+					if (options.from === 0) {
+						// Reloading
+						cleanUpCollection(collection, messageIds);
+					}
+					folder.set('messagesLoaded', true);
 					defer.resolve(collection, false);
 				},
 				error: function(error, status) {
@@ -111,39 +90,48 @@ define(function(require) {
 		return defer.promise();
 	}
 
+	function cleanUpCollection(collection, ids) {
+		var toRemove = [];
+		collection.forEach(function(message) {
+			if (ids.indexOf(message.get('id')) === -1) {
+				// Message was removed, so le't remove it
+				// from the client collection too
+				// TODO: use Backbone+horde sync and don't
+				// discard the data
+				toRemove.push(message.get('id'));
+			}
+		});
+		_.each(toRemove, function(id) {
+			collection.remove(id);
+		});
+	}
+
 	/**
 	 * @param {Account} account
 	 * @param {Folder} folder
-	 * @param {number} messageId
+	 * @param {Message} messageId
 	 * @param {object} options
 	 * @returns {Promise}
 	 */
-	function getMessageEntity(account, folder, messageId, options) {
+	function getMessageEntity(account, folder, message, options) {
 		options = options || {};
-		var defaults = {
-			backgroundMode: false
-		};
-		_.defaults(options, defaults);
 
 		var defer = $.Deferred();
 
-		// Load cached version if available
-		var message = require('cache').getMessage(account,
-			folder,
-			messageId);
-		if (message) {
-			defer.resolve(message);
-			return defer.promise();
+		if (message.get('hasDetails')) {
+			return message;
 		}
 
 		var url = OC.generateUrl('apps/mail/accounts/{accountId}/folders/{folderId}/messages/{messageId}', {
 			accountId: account.get('accountId'),
 			folderId: folder.get('id'),
-			messageId: messageId
+			messageId: message.get('id')
 		});
-		var xhr = $.ajax(url, {
+		$.ajax(url, {
 			type: 'GET',
-			success: function(message) {
+			success: function(messageDetails) {
+				message.set(messageDetails);
+				message.set('hasDetails', true);
 				defer.resolve(message);
 			},
 			error: function(jqXHR, textStatus) {
@@ -152,10 +140,6 @@ define(function(require) {
 				}
 			}
 		});
-		if (!options.backgroundMode) {
-			// Save xhr to allow aborting unneeded requests
-			require('state').messageLoading = xhr;
-		}
 
 		return defer.promise();
 	}
@@ -163,20 +147,16 @@ define(function(require) {
 	/**
 	 * @param {Account} account
 	 * @param {Folder} folder
-	 * @param {array} messageIds
-	 * @returns {undefined}
+	 * @param {MessageCollection} messages
+	 * @returns {Promise}
 	 */
-	function fetchMessageBodies(account, folder, messageIds) {
+	function fetchMessageBodies(account, folder, messages) {
 		var defer = $.Deferred();
 
-		var cachedMessages = [];
 		var uncachedIds = [];
-		_.each(messageIds, function(messageId) {
-			var message = require('cache').getMessage(account, folder, messageId);
-			if (message) {
-				cachedMessages.push(message);
-			} else {
-				uncachedIds.push(messageId);
+		messages.forEach(function(message) {
+			if (!message.get('hasDetails')) {
+				uncachedIds.push(message.get('id'));
 			}
 		});
 
@@ -190,6 +170,11 @@ define(function(require) {
 			$.ajax(url, {
 				type: 'GET',
 				success: function(data) {
+					_.each(data, function(msg) {
+						var message = messages.get(msg.id);
+						message.set(msg);
+						message.set('hasDetails', true);
+					});
 					defer.resolve(data);
 				},
 				error: function() {

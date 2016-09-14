@@ -29,10 +29,10 @@ define(function(require) {
 		template: Handlebars.compile(NewMessageTemplate),
 		accounts: null,
 		ui: {
-			input: 'input'
+			button: 'button'
 		},
 		events: {
-			'click input': 'onClick'
+			'click button': 'onClick'
 		},
 		initialize: function(options) {
 			this.accounts = options.accounts;
@@ -44,9 +44,9 @@ define(function(require) {
 		},
 		onAccountsChanged: function() {
 			if (this.accounts.size === 0) {
-				this.ui.input.hide();
+				this.ui.button.hide();
 			} else {
-				this.ui.input.show();
+				this.ui.button.show();
 			}
 		},
 		onClick: function(e) {

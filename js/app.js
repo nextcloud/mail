@@ -31,7 +31,6 @@ define(function(require) {
 	var Marionette = require('marionette');
 	var OC = require('OC');
 	var AppView = require('views/appview');
-	var Cache = require('cache');
 	var Radio = require('radio');
 	var Router = require('router');
 	var AccountController = require('controller/accountcontroller');
@@ -53,8 +52,6 @@ define(function(require) {
 	Marionette.TemplateCache.prototype.compileTemplate = function(rawTemplate) {
 		return Handlebars.compile(rawTemplate);
 	};
-	Marionette.ItemView.prototype.modelEvents = {change: 'render'};
-	Marionette.CompositeView.prototype.modelEvents = {change: 'render'};
 
 	var Mail = Marionette.Application.extend({
 		registerProtocolHandler: function() {
@@ -84,8 +81,6 @@ define(function(require) {
 
 	Mail.on('start', function() {
 		this.view = new AppView();
-		Cache.init();
-
 		Radio.ui.trigger('content:loading');
 
 		this.registerProtocolHandler();

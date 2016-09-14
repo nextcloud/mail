@@ -64,19 +64,6 @@ define(function(require) {
 				}
 			}
 			return undefined;
-		},
-		toJSON: function() {
-			var data = Backbone.Model.prototype.toJSON.call(this);
-			if (data.folders && data.folders.toJSON) {
-				data.folders = data.folders.toJSON();
-			}
-			if (data.aliases && data.aliases.toJSON) {
-				data.aliases = data.aliases.toJSON();
-			}
-			if (!data.id) {
-				data.id = this.cid;
-			}
-			return data;
 		}
 	});
 
