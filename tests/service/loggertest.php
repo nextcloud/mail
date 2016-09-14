@@ -34,7 +34,7 @@ class LoggerTest extends TestCase {
 	 */
 	public function testLoggerMethod($method, $param = '1') {
 
-		$baseLogger = $this->getMock('\OCP\ILogger');
+		$baseLogger = $this->getMockBuilder('\OCP\ILogger')->getMock();
 		$baseLogger->expects($this->once())
 			->method($method)
 			->with(

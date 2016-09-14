@@ -51,7 +51,7 @@ class CreateAccountTest extends PHPUnit_Framework_TestCase {
 		$this->service = $this->getMockBuilder('\OCA\Mail\Service\AccountService')
 			->disableOriginalConstructor()
 			->getMock();
-		$this->crypto = $this->getMock('\OCP\Security\ICrypto');
+		$this->crypto = $this->getMockBuilder('\OCP\Security\ICrypto')->getMock();
 
 		$this->command = new CreateAccount($this->service, $this->crypto);
 	}

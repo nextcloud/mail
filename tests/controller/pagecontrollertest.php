@@ -58,8 +58,8 @@ class PageControllerTest extends TestCase {
 	}
 
 	public function testIndex() {
-		$account1 = $this->getMock('OCA\Mail\Service\IAccount');
-		$account2 = $this->getMock('OCA\Mail\Service\IAccount');
+		$account1 = $this->getMockBuilder('OCA\Mail\Service\IAccount')->getMock();
+		$account2 = $this->getMockBuilder('OCA\Mail\Service\IAccount')->getMock();
 
 		$this->accountService->expects($this->once())
 			->method('findByUserId')
