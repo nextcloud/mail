@@ -125,7 +125,9 @@ define(function(require) {
 	 */
 	function showFolder(account, folder) {
 		Radio.ui.trigger('search:set', '');
-		Radio.ui.trigger('content:loading');
+		Radio.ui.trigger('content:loading', t('mail', 'Loading {folder}', {
+			folder: folder.get('name')
+		}));
 		loadFolderMessages(account, folder, false);
 
 		// Save current folder
