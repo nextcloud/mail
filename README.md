@@ -3,8 +3,6 @@
 [![Build Status](https://travis-ci.org/nextcloud/mail.svg?branch=master)](https://travis-ci.org/nextcloud/mail)
 [![Scrutinizer Code Quality](https://scrutinizer-ci.com/g/nextcloud/mail/badges/quality-score.png?b=master)](https://scrutinizer-ci.com/g/nextcloud/mail/?branch=master)
 [![Code Coverage](https://scrutinizer-ci.com/g/nextcloud/mail/badges/coverage.png?b=master)](https://scrutinizer-ci.com/g/nextcloud/mail/?branch=master)
-[![PHP Dependency Status](https://www.versioneye.com/user/projects/54e50fadd1ec5734f400078a/badge.svg?style=flat)](https://www.versioneye.com/user/projects/54e50fadd1ec5734f400078a)
-[![JS Dependency Status](https://www.versioneye.com/user/projects/567bd06ba7c90e003500033f/badge.svg?style=flat)](https://www.versioneye.com/user/projects/567bd06ba7c90e003500033f)
 
 **An email app for [Nextcloud](https://nextcloud.com)**
 
