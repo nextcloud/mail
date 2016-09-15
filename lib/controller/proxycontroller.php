@@ -25,7 +25,6 @@
 namespace OCA\Mail\Controller;
 
 use Exception;
-use OC;
 use OCA\Mail\Http\ProxyDownloadResponse;
 use OCP\AppFramework\Controller;
 use OCP\AppFramework\Http\TemplateResponse;
