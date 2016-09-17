@@ -16,7 +16,6 @@ module.exports = function(config) {
 			{pattern: 'js/vendor/backbone/backbone.js', included: false},
 			{pattern: 'js/vendor/backbone.marionette/lib/backbone.marionette.js', included: false},
 			{pattern: 'js/vendor/backbone.radio/build/backbone.radio.js', included: false},
-			{pattern: 'js/vendor/jquery/dist/jquery.js', included: false},
 			{pattern: 'js/vendor/handlebars/handlebars.js', included: false},
 			{pattern: 'js/vendor/text/text.js', included: false},
 			{pattern: 'js/vendor/underscore/underscore.js', included: false},
