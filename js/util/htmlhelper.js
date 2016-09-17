@@ -19,9 +19,9 @@ define(function() {
 
 		// Add <br> break after each closing div, p, li to preserve visual
 		// line breaks for replies
-		html = html.replace(/<\/div>/g, '</div>' + breakToken);
-		html = html.replace(/<\/p>/g, '</p>' + breakToken);
-		html = html.replace(/<\/li>/g, '</li>' + breakToken);
+		html = html.replace(/(<\/div>)([^$]?)/g, '\$1' + breakToken + '\$2');
+		html = html.replace(/(<\/p>)([^$]?)/g, '\$1' + breakToken + '\$2');
+		html = html.replace(/(<\/li>)([^$]?)/g, '\$1' + breakToken + '\$2');
 
 		var tmp = $('<div>');
 		tmp.html(html);
@@ -29,7 +29,7 @@ define(function() {
 
 		// Finally, replace tokens with line breaks
 		text = text.replace(new RegExp(breakToken, 'g'), '\n');
-		return text;
+		return text.trim();
 	}
 
 	return {
