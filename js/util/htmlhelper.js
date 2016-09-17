@@ -19,8 +19,8 @@ define(function() {
 
 		// Add <br> break after each closing div, p, li to preserve visual
 		// line breaks for replies
-		html = html.replace(/<\/div>/g, '</div>' + breakToken);
-		html = html.replace(/<\/p>/g, '</p>' + breakToken);
+		html = html.replace(/<\/div>^$/g, '</div>' + breakToken);
+		html = html.replace(/<\/p>^$/g, '</p>' + breakToken);
 		html = html.replace(/<\/li>/g, '</li>' + breakToken);
 
 		var tmp = $('<div>');
