@@ -23,14 +23,18 @@ define(['util/htmlhelper'], function(helper) {
 			it('converts the HTML correctly', function() {
 				expect(helper.htmlToText('<div>hello</div>')).toEqual('hello');
 				expect(helper.htmlToText('<div>hello</div><div>World</div>'))
-					.toEqual('helloWorld');
+					.toEqual('hello\nWorld');
 
 				expect(helper.htmlToText('<p>hello</p>'))
 					.toEqual('hello');
 
-				// TODO: more regex hackery needed to remove the trailing line break here
 				expect(helper.htmlToText('<ul><li>one</li><li>two</li><li>three</li></ul>'))
-					.toEqual('one\ntwo\nthree\n');
+					.toEqual('one\ntwo\nthree');
+
+				expect(helper.htmlToText('<html>'
+				+ '<body><p>Hello!</p><p>this <i>is</i> <b>some</b> random <strong>text</strong></p></body>'
+				+ '</html>'))
+					.toEqual('Hello!\nthis is some random text');
 			});
 		});
 	});
