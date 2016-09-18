@@ -247,9 +247,9 @@ define(function(require) {
 		var data = {
 			type: 'POST',
 			success: function(data) {
-				if (!_.isNull(options.messageId)) {
+				if (!!options.repliedMessage) {
 					// Reply -> flag message as replied
-					Radio.ui.trigger('messagesview:messageflag:set', options.messageId, 'answered', true);
+					Radio.ui.trigger('messagesview:messageflag:set', options.repliedMessage.get('id'), 'answered', true);
 				}
 
 				defer.resolve(data);
@@ -264,8 +264,8 @@ define(function(require) {
 				subject: message.subject,
 				body: message.body,
 				attachments: message.attachments,
-				folderId: options.folder ? options.folder.get('id') : null,
-				messageId: options.messageId,
+				folderId: options.repliedMessage ? options.repliedMessage.get('folderId') : undefined,
+				messageId: options.repliedMessage ? options.repliedMessage.get('messageId') : undefined,
 				draftUID: options.draftUID,
 				aliasId: options.aliasId
 			}
@@ -350,7 +350,7 @@ define(function(require) {
 					body: message.body,
 					attachments: message.attachments,
 					folderId: options.folder ? options.folder.get('id') : null,
-					messageId: options.messageId,
+					messageId: options.repliedMessage.get('id'),
 					uid: options.draftUID
 				}
 			};
