@@ -146,7 +146,7 @@ define(function(require) {
 				accounts: require('state').accounts,
 				account: this.account,
 				folder: this.folder,
-				messageId: this.message.get('id'),
+				repliedMessage: this.message,
 				data: this.reply
 			}));
 		}

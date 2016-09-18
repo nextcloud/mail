@@ -53,7 +53,7 @@ define(function(require) {
 		aliases: null,
 		account: null,
 		folder: null,
-		messageId: null,
+		repliedMessage: null,
 		draftInterval: 1500,
 		draftTimer: null,
 		draftUID: null,
@@ -89,7 +89,7 @@ define(function(require) {
 			var defaultOptions = {
 				type: 'new',
 				account: null,
-				messageId: null,
+				repliedMessage: null,
 				data: {
 					to: '',
 					cc: '',
@@ -129,7 +129,7 @@ define(function(require) {
 				this.account = options.account;
 				this.accounts = options.accounts;
 				this.folder = options.folder;
-				this.messageId = options.messageId;
+				this.repliedMessage = options.repliedMessage;
 			}
 		},
 		onRender: function() {
@@ -307,7 +307,7 @@ define(function(require) {
 			};
 
 			if (this.isReply()) {
-				options.messageId = this.messageId;
+				options.repliedMessage = this.repliedMessage;
 				options.folder = this.folder;
 			}
 
@@ -380,7 +380,7 @@ define(function(require) {
 			var _this = this;
 			var savingDraft = Radio.message.request('draft', this.account, this.getMessage(), {
 				folder: this.folder,
-				messageId: this.messageId,
+				repliedMessage: this.repliedMessage,
 				draftUID: this.draftUID
 			});
 			$.when(savingDraft).done(function(data) {
