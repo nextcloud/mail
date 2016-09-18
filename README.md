@@ -35,7 +35,7 @@ If you experience any issues or have enhancement suggestions you can report them
 
 [Christoph Wurst](https://github.com/ChristophWurst), [Thomas Müller](https://github.com/DeepDiver1975), [Jan-Christoph Borchardt](https://github.com/jancborchardt), [Steffen Lindner](https://github.com/Gomez) [and many more](https://github.com/nextcloud/mail/graphs/contributors)
 
-If you’d like to join, just go through the [issue list](https://github.com/nextcloud/mail/issues) and fix some. :) We’re also in [#nextcloud-mail on freenode IRC](https://webchat.freenode.net/?channels=nextcloud-mail).
+If you’d like to join, just go through the [issue list](https://github.com/nextcloud/mail/issues) and fix some. :)
 
 ## Troubleshooting
 
