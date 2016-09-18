@@ -43,3 +43,12 @@ require.config({
 	// we have to kickoff jasmine, as it is asynchronous
 	callback: window.__karma__.start
 });
+
+// Define Mock for modules that do not exist while testing
+define('OC', [], function() {
+	return {
+		generateUrl: function(url) {
+			return url;
+		}
+	}
+});
