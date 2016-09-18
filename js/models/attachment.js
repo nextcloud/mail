@@ -24,6 +24,11 @@ define(function(require) {
 			}
 
 			var s = this.get('fileName');
+
+			if (_.isUndefined(s)) {
+				return;
+			}
+
 			if (s.charAt(0) === '/') {
 				s = s.substr(1);
 			}

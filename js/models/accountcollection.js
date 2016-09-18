@@ -20,7 +20,9 @@ define(function(require) {
 	 */
 	var AccountCollection = Backbone.Collection.extend({
 		model: Account,
-		url: OC.generateUrl('apps/mail/accounts'),
+		url: function() {
+			return OC.generateUrl('apps/mail/accounts');
+		},
 		comparator: function(account) {
 			return account.get('accountId');
 		}
