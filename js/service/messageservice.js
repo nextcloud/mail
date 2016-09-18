@@ -265,7 +265,7 @@ define(function(require) {
 				body: message.body,
 				attachments: message.attachments,
 				folderId: options.repliedMessage ? options.repliedMessage.get('folderId') : undefined,
-				messageId: options.repliedMessage ? options.repliedMessage.get('id') : undefined,
+				messageId: options.repliedMessage ? options.repliedMessage.get('messageId') : undefined,
 				draftUID: options.draftUID,
 				aliasId: options.aliasId
 			}
