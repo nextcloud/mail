@@ -25,7 +25,9 @@ define(function(require) {
 			aliases: []
 		},
 		idAttribute: 'accountId',
-		url: OC.generateUrl('apps/mail/accounts'),
+		url: function() {
+			return OC.generateUrl('apps/mail/accounts');
+		},
 		initialize: function() {
 			this.set('folders', new FolderCollection(this.get('folders')));
 			this.set('aliases', new AliasesCollection(this.get('aliases')));
