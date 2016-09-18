@@ -21,6 +21,7 @@ define(function(require) {
 	var FolderContentView = require('views/foldercontent');
 	var NavigationAccountsView = require('views/navigation-accounts');
 	var SettingsView = require('views/settings');
+	var ErrorView = require('views/errorview');
 	var LoadingView = require('views/loadingview');
 	var NavigationView = require('views/navigation');
 	var SetupView = require('views/setup');
@@ -30,6 +31,7 @@ define(function(require) {
 	require('views/helper');
 
 	var ContentType = Object.freeze({
+		ERROR: -2,
 		LOADING: -1,
 		FOLDER_CONTENT: 0,
 		SETUP: 1,
@@ -54,6 +56,7 @@ define(function(require) {
 			this.listenTo(Radio.ui, 'error:show', this.showError);
 			this.listenTo(Radio.ui, 'setup:show', this.showSetup);
 			this.listenTo(Radio.ui, 'foldercontent:show', this.showFolderContent);
+			this.listenTo(Radio.ui, 'content:error', this.showContentError);
 			this.listenTo(Radio.ui, 'content:loading', this.showContentLoading);
 			this.listenTo(Radio.ui, 'title:update', this.updateTitle);
 			this.listenTo(Radio.ui, 'accountsettings:show', this.showAccountSettings);
@@ -164,6 +167,13 @@ define(function(require) {
 			options.folder = folder;
 
 			this.content.show(new FolderContentView(options));
+		},
+		showContentError: function(text, icon) {
+			this.activeContent = ContentType.ERROR;
+			this.content.show(new ErrorView({
+				text: text,
+				icon: icon
+			}));
 		},
 		showContentLoading: function(text) {
 			this.activeContent = ContentType.LOADING;

@@ -24,6 +24,7 @@ define(function(require) {
 	var _ = require('underscore');
 	var OC = require('OC');
 	var Radio = require('radio');
+	var ErrorMessageFactory = require('util/errormessagefactory');
 
 	Radio.message.on('load', function(account, folder, message, options) {
 		//FIXME: don't rely on global state vars
@@ -101,7 +102,7 @@ define(function(require) {
 			}
 		});
 		$.when(fetchingMessage).fail(function() {
-			Radio.ui.trigger('error:show', t('mail', 'Error while loading the selected message.'));
+			Radio.ui.trigger('message:error', ErrorMessageFactory.getRandomMessageErrorMessage());
 		});
 	}
 
