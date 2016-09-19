@@ -65,7 +65,7 @@ define(function(require) {
 			this.$scrollContainer = this.$el.parent();
 			this.$scrollContainer.scroll(_.bind(this.onScroll, this));
 		},
-		getEmptyView: function() {
+		emptyView: function() {
 			if (this.searchQuery && this.searchQuery !== '') {
 				return NoSearchResultView;
 			} else {
