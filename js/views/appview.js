@@ -220,11 +220,14 @@ define(function(require) {
 		},
 		showSidebarLoading: function() {
 			$('#app-navigation').addClass('icon-loading');
-			this.navigation.accounts.reset();
+			if (this.navigation.getChildView('accounts')) {
+				this.navigation.getChildView('accounts').reset();
+			}
 		},
 		showSidebarAccounts: function() {
 			$('#app-navigation').removeClass('icon-loading');
 			// setup folder view
+			console.log(123);
 			this.navigation.showChildView('accounts', new NavigationAccountsView({
 				collection: require('state').accounts
 			}));
