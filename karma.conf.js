@@ -10,15 +10,10 @@ module.exports = function(config) {
 		// list of files / patterns to load in the browser
 		files: [
 			'js/vendor/jquery/dist/jquery.js',
-			{pattern: 'js/*/*.js', included: false},
+			{pattern: 'js/**/*.js', included: false},
 			{pattern: 'js/*.js', included: false},
 			{pattern: 'js/templates/*.html', included: false},
-			{pattern: 'js/vendor/backbone/backbone.js', included: false},
-			{pattern: 'js/vendor/backbone.marionette/lib/backbone.marionette.js', included: false},
-			{pattern: 'js/vendor/backbone.radio/build/backbone.radio.js', included: false},
-			{pattern: 'js/vendor/handlebars/handlebars.js', included: false},
-			{pattern: 'js/vendor/text/text.js', included: false},
-			{pattern: 'js/vendor/underscore/underscore.js', included: false},
+			{pattern: 'js/vendor/**/*.js', included: false},
 			{pattern: 'js/tests/*.js', included: false},
 			'js/tests/test-main.js'
 		],
@@ -31,11 +26,16 @@ module.exports = function(config) {
 		// preprocess matching files before serving them to the browser
 		// available preprocessors: https://npmjs.org/browse/keyword/karma-preprocessor
 		preprocessors: {
+			'js/**[!vendor]/*[!spec].js': ['coverage']
 		},
 		// test results reporter to use
 		// possible values: 'dots', 'progress'
 		// available reporters: https://npmjs.org/browse/keyword/karma-reporter
-		reporters: ['progress'],
+		reporters: ['progress', 'coverage'],
+		coverageReporter: {
+			type: 'text-summary',
+			dir: 'coverage/'
+		},
 		// web server port
 		port: 9876,
 		// enable / disable colors in the output (reporters and logs)

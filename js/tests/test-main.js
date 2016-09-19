@@ -1,4 +1,5 @@
 var allTestFiles = [];
+var allModules = [];
 var TEST_REGEXP = /(spec|test)\.js$/i;
 
 // Get a list of all the test files to include
@@ -8,9 +9,45 @@ Object.keys(window.__karma__.files).forEach(function(file) {
 		// If you require sub-dependencies of test files to be loaded as-is (requiring file extension)
 		// then do not normalize the paths
 		var normalizedTestModule = file.replace(/^\/base\/js\/|\.js$/g, '');
-		allTestFiles.push(normalizedTestModule);
+		if (normalizedTestModule.substring(0, 'tests'.length) === 'tests') {
+			allTestFiles.push(normalizedTestModule);
+		}
+	} else {
+		var excluded = ['OC', 'autoredirect', 'searchproxy', 'app'];
+		var normalizedModule = file.replace(/^\/base\/js\/|\.js$/g, '');
+		if (normalizedModule.substring(0, '/base/js/'.length) === '/base/js/') {
+			normalizedModule = normalizedModule.substring('/base/js/'.length);
+		}
+		if (normalizedModule.substring(0, 'vendor'.length) === 'vendor') {
+			return;
+		}
+		if (normalizedModule.substring(0, 'templates'.length) === 'templates') {
+			return;
+		}
+		if (normalizedModule.substring(0, '/base/node_modules'.length) === '/base/node_modules') {
+			return;
+		}
+		if (excluded.indexOf(normalizedModule) !== -1) {
+			return;
+		}
+		allModules.push(normalizedModule);
 	}
 });
+
+
+OC = {
+	Notification: {
+		showTemporary: function() {
+
+		}
+	},
+	generateUrl: function(url) {
+		return url;
+	},
+	linkToRemote: function() {
+
+	}
+};
 
 require.config({
 	// Karma serves files under /base, which is the basePath from your config file
@@ -39,16 +76,7 @@ require.config({
 		}
 	},
 	// dynamically load all test files
-	deps: allTestFiles,
+	deps: allTestFiles.concat(allModules),
 	// we have to kickoff jasmine, as it is asynchronous
 	callback: window.__karma__.start
-});
-
-// Define Mock for modules that do not exist while testing
-define('OC', [], function() {
-	return {
-		generateUrl: function(url) {
-			return url;
-		}
-	}
 });
