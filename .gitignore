@@ -21,3 +21,6 @@ build/artifacts
 nbproject/
 
 translations.js
+
+# JS coverage
+coverage/

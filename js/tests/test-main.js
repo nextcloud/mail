@@ -8,9 +8,26 @@ Object.keys(window.__karma__.files).forEach(function(file) {
 		// If you require sub-dependencies of test files to be loaded as-is (requiring file extension)
 		// then do not normalize the paths
 		var normalizedTestModule = file.replace(/^\/base\/js\/|\.js$/g, '');
-		allTestFiles.push(normalizedTestModule);
+		if (normalizedTestModule.substring(0, 'tests'.length) === 'tests') {
+			allTestFiles.push(normalizedTestModule);
+		}
 	}
 });
+
+
+OC = {
+	Notification: {
+		showTemporary: function() {
+
+		}
+	},
+	generateUrl: function(url) {
+		return url;
+	},
+	linkToRemote: function() {
+
+	}
+};
 
 require.config({
 	// Karma serves files under /base, which is the basePath from your config file
@@ -42,13 +59,4 @@ require.config({
 	deps: allTestFiles,
 	// we have to kickoff jasmine, as it is asynchronous
 	callback: window.__karma__.start
-});
-
-// Define Mock for modules that do not exist while testing
-define('OC', [], function() {
-	return {
-		generateUrl: function(url) {
-			return url;
-		}
-	}
 });
