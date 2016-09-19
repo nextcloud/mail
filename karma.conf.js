@@ -19,7 +19,6 @@ module.exports = function(config) {
 			{pattern: 'js/vendor/handlebars/handlebars.js', included: false},
 			{pattern: 'js/vendor/text/text.js', included: false},
 			{pattern: 'js/vendor/underscore/underscore.js', included: false},
-			{pattern: 'js/tests/mocks/*.js', included: false},
 			{pattern: 'js/tests/*.js', included: false},
 			'js/tests/test-main.js'
 		],
