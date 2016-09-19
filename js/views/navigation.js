@@ -17,7 +17,7 @@ define(function(require) {
 	var NewMessageView = require('views/newmessage');
 
 	return Marionette.LayoutView.extend({
-		el: $('#app-navigation'),
+		el: '#app-navigation',
 		regions: {
 			newMessage: '#mail-new-message-fixed',
 			accounts: '#app-navigation-accounts',

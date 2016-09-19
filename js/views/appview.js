@@ -39,7 +39,7 @@ define(function(require) {
 	});
 
 	var AppView = Marionette.LayoutView.extend({
-		el: $('#app'),
+		el: '#app',
 		accountsView: null,
 		activeContent: null,
 		regions: {
