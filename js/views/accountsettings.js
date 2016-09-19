@@ -18,7 +18,7 @@ define(function(require) {
 	var AliasesView = require('views/aliases');
 	var Radio = require('radio');
 
-	return Marionette.LayoutView.extend({
+	return Marionette.View.extend({
 		template: Handlebars.compile(AccountSettingsTemplate),
 		templateHelpers: function() {
 			var aliases = this.aliases;

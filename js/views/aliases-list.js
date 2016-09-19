@@ -17,7 +17,7 @@ define(function(require) {
 	var AliasesListTemplate = require('text!templates/aliases-list.html');
 	var Radio = require('radio');
 
-	return Marionette.ItemView.extend({
+	return Marionette.View.extend({
 		collection: null,
 		model: null,
 		tagName: 'tr',

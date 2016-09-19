@@ -21,7 +21,7 @@ define(function(require) {
 	var AttachmentsView = require('views/attachments');
 	var ComposerTemplate = require('text!templates/composer.html');
 
-	return Marionette.LayoutView.extend({
+	return Marionette.View.extend({
 		template: Handlebars.compile(ComposerTemplate),
 		templateHelpers: function() {
 			var aliases = null;

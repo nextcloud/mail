@@ -38,7 +38,7 @@ define(function(require) {
 		ACCOUNT_SETTINGS: 2
 	});
 
-	var AppView = Marionette.LayoutView.extend({
+	var AppView = Marionette.View.extend({
 		el: '#app',
 		accountsView: null,
 		activeContent: null,

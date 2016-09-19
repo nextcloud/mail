@@ -23,7 +23,7 @@ define(function(require) {
 	var MessageAttachmentsView = require('views/messageattachments');
 	var MessageTemplate = require('text!templates/message.html');
 
-	return Marionette.LayoutView.extend({
+	return Marionette.View.extend({
 		template: Handlebars.compile(MessageTemplate),
 		className: 'mail-message-container',
 		message: null,

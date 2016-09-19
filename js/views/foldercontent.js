@@ -39,7 +39,7 @@ define(function(require) {
 		COMPOSER: 2
 	});
 
-	return Marionette.LayoutView.extend({
+	return Marionette.View.extend({
 		template: Handlebars.compile(MessageContentTemplate),
 		className: 'container',
 		detailView: null,

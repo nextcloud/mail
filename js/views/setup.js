@@ -19,7 +19,7 @@ define(function(require) {
 	var Radio = require('radio');
 	var SetupTemplate = require('text!templates/setup.html');
 
-	return Marionette.ItemView.extend({
+	return Marionette.View.extend({
 		template: Handlebars.compile(SetupTemplate),
 		id: 'setup',
 		firstToggle: true,

@@ -16,7 +16,7 @@ define(function(require) {
 	var Radio = require('radio');
 	var NewMessageView = require('views/newmessage');
 
-	return Marionette.LayoutView.extend({
+	return Marionette.View.extend({
 		el: '#app-navigation',
 		regions: {
 			newMessage: '#mail-new-message-fixed',

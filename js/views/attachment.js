@@ -15,7 +15,7 @@ define(function(require) {
 	var Marionette = require('marionette');
 	var AttachmentTemplate = require('text!templates/attachment.html');
 
-	return Marionette.ItemView.extend({
+	return Marionette.View.extend({
 		tagName: 'li',
 		template: Handlebars.compile(AttachmentTemplate),
 		events: {

@@ -25,7 +25,7 @@ define(function(require) {
 	var Radio = require('radio');
 	var NewMessageTemplate = require('text!templates/newmessage.html');
 
-	return Marionette.LayoutView.extend({
+	return Marionette.View.extend({
 		template: Handlebars.compile(NewMessageTemplate),
 		accounts: null,
 		ui: {

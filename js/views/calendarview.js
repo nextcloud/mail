@@ -24,7 +24,7 @@ define(function(require) {
 	var Handlebars = require('handlebars');
 	var CalendarTemplate = require('text!templates/calendar.html');
 
-	return Marionette.ItemView.extend({
+	return Marionette.View.extend({
 		template: Handlebars.compile(CalendarTemplate),
 		tagName: 'li'
 	});

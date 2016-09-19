@@ -24,7 +24,7 @@ define(function(require) {
 	var Marionette = require('marionette');
 	var ErrorTemplate = require('text!templates/error.html');
 
-	var ErrorView = Marionette.ItemView.extend({
+	var ErrorView = Marionette.View.extend({
 		id: 'emptycontent',
 		className: 'container',
 		template: Handlebars.compile(ErrorTemplate),

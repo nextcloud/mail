@@ -18,7 +18,7 @@ define(function(require) {
 	var Radio = require('radio');
 	var MessageTemplate = require('text!templates/message-list-item.html');
 
-	return Marionette.ItemView.extend({
+	return Marionette.View.extend({
 		template: Handlebars.compile(MessageTemplate),
 		ui: {
 			iconDelete: '.action.delete',

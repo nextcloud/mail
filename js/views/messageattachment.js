@@ -31,7 +31,7 @@ define(function(require) {
 	/**
 	 * @class MessageAttachmentView
 	 */
-	var MessageAttachmentView = Marionette.ItemView.extend({
+	var MessageAttachmentView = Marionette.View.extend({
 		template: Handlebars.compile(MessageAttachmentTemplate),
 		ui: {
 			'downloadButton': '.attachment-download',
