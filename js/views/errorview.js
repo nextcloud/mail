@@ -28,7 +28,7 @@ define(function(require) {
 		id: 'emptycontent',
 		className: 'container',
 		template: Handlebars.compile(ErrorTemplate),
-		templateHelpers: function() {
+		templateContext: function() {
 			return {
 				text: this.text,
 				icon: this.icon

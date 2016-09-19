@@ -29,7 +29,7 @@ define(function(require) {
 		collection: null,
 		model: null,
 		template: Handlebars.compile(AccountTemplate),
-		templateHelpers: function() {
+		templateContext: function() {
 			var toggleCollapseMessage = this.collapsed ? t('mail', 'Show all folders') : t('mail', 'Collapse folders');
 			return {
 				isUnifiedInbox: this.model.get('accountId') === -1,

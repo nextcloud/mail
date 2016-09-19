@@ -20,7 +20,7 @@ define(function(require) {
 
 	return Marionette.View.extend({
 		template: Handlebars.compile(AccountSettingsTemplate),
-		templateHelpers: function() {
+		templateContext: function() {
 			var aliases = this.aliases;
 			return {
 				aliases: aliases,

@@ -20,7 +20,7 @@ define(function(require) {
 
 	return Backbone.Marionette.View.extend({
 		template: Handlebars.compile(FolderTemplate),
-		templateHelpers: function() {
+		templateContext: function() {
 			var count = null;
 			if (this.model.get('specialRole') === 'drafts') {
 				count = this.model.get('total');

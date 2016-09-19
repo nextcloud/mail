@@ -23,7 +23,7 @@ define(function(require) {
 		tagName: 'tr',
 		childViewContainer: 'tbody',
 		template: Handlebars.compile(AliasesListTemplate),
-		templateHelpers: function() {
+		templateContext: function() {
 			return {
 				aliases: this.model.toJSON()
 			};

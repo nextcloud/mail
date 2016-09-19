@@ -20,7 +20,7 @@ define(function(require) {
 	return Marionette.View.extend({
 		accounts: null,
 		template: Handlebars.compile(SettingsTemplate),
-		templateHelpers: function() {
+		templateContext: function() {
 			return {
 				addAccountUrl: OC.generateUrl('apps/mail/#setup')
 			};

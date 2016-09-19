@@ -41,7 +41,7 @@ define(function(require) {
 		events: {
 			'click @ui.saveAllToCloud': '_onSaveAllToCloud'
 		},
-		templateHelpers: function() {
+		templateContext: function() {
 			return {
 				moreThanOne: this.collection.length > 1
 			};
