@@ -117,7 +117,8 @@ class ProxyController extends Controller {
 		$this->session->close();
 
 		$client = $this->clientService->newClient();
-		$content = $client->get($src);
+		$response = $client->get($src);
+		$content = $response->getBody();
 		return new ProxyDownloadResponse($content, $src, 'application/octet-stream');
 	}
 

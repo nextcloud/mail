@@ -106,6 +106,7 @@ class ProxyControllerTest extends TestCase {
 
 	public function testProxy() {
 		$src = 'http://example.com';
+		$httpResponse = $this->getMockBuilder('\OCP\Http\Client\IResponse')->getMock();
 		$content = '🐵🐵🐵';
 
 		$this->session->expects($this->once())
@@ -117,6 +118,9 @@ class ProxyControllerTest extends TestCase {
 		$client->expects($this->once())
 			->method('get')
 			->with($src)
+			->will($this->returnValue($httpResponse));
+		$httpResponse->expects($this->once())
+			->method('getBody')
 			->will($this->returnValue($content));
 
 		$expected = new ProxyDownloadResponse($content, $src,
