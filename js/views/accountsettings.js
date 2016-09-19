@@ -72,7 +72,7 @@ define(function(require) {
 			});
 
 		},
-		onShow: function() {
+		onRender: function() {
 			this.showAliases();
 		},
 		showAliases: function() {

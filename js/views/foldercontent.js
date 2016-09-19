@@ -72,7 +72,7 @@ define(function(require) {
 
 			this.listenTo(Radio.ui, 'message:loading', this.onMessageLoading);
 		},
-		onShow: function() {
+		onRender: function() {
 			this.messages.show(new MessagesView({
 				collection: this.folder.messages,
 				searchQuery: this.searchQuery

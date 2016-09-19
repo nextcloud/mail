@@ -111,7 +111,7 @@ define(function(require) {
 				Radio.navigation.trigger('folder', accountId, folderId);
 			}
 		},
-		onShow: function() {
+		onRender: function() {
 			this.listenTo(Radio.ui, 'document:click', function(event) {
 				var target = $(event.target);
 				if (!this.$el.is(target.closest('.navigation-account'))) {

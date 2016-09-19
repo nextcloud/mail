@@ -132,7 +132,7 @@ define(function(require) {
 			// Show forward button
 			this.$('#forward-button').show();
 		},
-		onShow: function() {
+		onRender: function() {
 			this.ui.messageIframe.on('load', _.bind(this.onIframeLoad, this));
 
 			this.attachments.show(new MessageAttachmentsView({

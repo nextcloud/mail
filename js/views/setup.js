@@ -63,7 +63,7 @@ define(function(require) {
 			this.displayName = options.displayName;
 			this.email = options.email;
 		},
-		onShow: function() {
+		onRender: function() {
 			this.ui.manualInputs.hide();
 			this.ui.iconLoading.hide();
 			this.ui.accountName.val(this.displayName);

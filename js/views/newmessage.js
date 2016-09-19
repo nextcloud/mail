@@ -38,7 +38,7 @@ define(function(require) {
 			this.accounts = options.accounts;
 			this.listenTo(options.accounts, 'add', this.onAccountsChanged);
 		},
-		onShow: function() {
+		onRender: function() {
 			// Set the approriate ui state
 			this.onAccountsChanged();
 		},
