@@ -100,7 +100,7 @@ script:
   - if [[ "$PACKAGE" = "TRUE" ]]; then make appstore; fi
 
 after_success:
-  - codecov --root /home/travis/build/nextcloud/core/apps/mail/
+  - codecov --root /home/travis/build/nextcloud/core/apps/mail/js
 
 matrix:
   include:
