@@ -39,6 +39,7 @@ cache:
   - "$HOME/.cache/bower"
 
 before_install:
+  - pip install --user codecov
   - php --info
 
   # Set up DB
@@ -97,6 +98,9 @@ script:
   # Test packaging
   - cd ..
   - if [[ "$PACKAGE" = "TRUE" ]]; then make appstore; fi
+
+after_success:
+  - codecov --root /home/travis/build/nextcloud/core/apps/mail/
 
 matrix:
   include:
