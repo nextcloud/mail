@@ -8,7 +8,8 @@
   },
   "scripts": {
     "test": "./node_modules/.bin/jshint . && ./node_modules/.bin/jsxhint .",
-    "bower_deps": "./node_modules/.bin/bower install"
+    "bower_deps": "./node_modules/.bin/bower install",
+    "report-coverage": "codecov"
   },
   "repository": {
     "type": "git",
@@ -37,6 +38,7 @@
     "karma-jasmine": "^1.0.2",
     "karma-phantomjs-launcher": "^1.0.2",
     "karma-requirejs": "^1.1.0",
+    "karma-coverage": "^1.1.1",
     "phantomjs-prebuilt": "^2.1.12"
   },
   "dependencies": {
