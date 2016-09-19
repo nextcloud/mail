@@ -1,5 +1,4 @@
 var allTestFiles = [];
-var allModules = [];
 var TEST_REGEXP = /(spec|test)\.js$/i;
 
 // Get a list of all the test files to include
@@ -12,25 +11,6 @@ Object.keys(window.__karma__.files).forEach(function(file) {
 		if (normalizedTestModule.substring(0, 'tests'.length) === 'tests') {
 			allTestFiles.push(normalizedTestModule);
 		}
-	} else {
-		var excluded = ['OC', 'autoredirect', 'searchproxy', 'app'];
-		var normalizedModule = file.replace(/^\/base\/js\/|\.js$/g, '');
-		if (normalizedModule.substring(0, '/base/js/'.length) === '/base/js/') {
-			normalizedModule = normalizedModule.substring('/base/js/'.length);
-		}
-		if (normalizedModule.substring(0, 'vendor'.length) === 'vendor') {
-			return;
-		}
-		if (normalizedModule.substring(0, 'templates'.length) === 'templates') {
-			return;
-		}
-		if (normalizedModule.substring(0, '/base/node_modules'.length) === '/base/node_modules') {
-			return;
-		}
-		if (excluded.indexOf(normalizedModule) !== -1) {
-			return;
-		}
-		allModules.push(normalizedModule);
 	}
 });
 
@@ -76,7 +56,7 @@ require.config({
 		}
 	},
 	// dynamically load all test files
-	deps: allTestFiles.concat(allModules),
+	deps: allTestFiles,
 	// we have to kickoff jasmine, as it is asynchronous
 	callback: window.__karma__.start
 });
