@@ -45,7 +45,7 @@ define(function(require) {
 			}
 		},
 		onShowNewMessage: function() {
-			this.newMessage.show(new NewMessageView({
+			this.showChildView('newMessage', new NewMessageView({
 				accounts: this.options.accounts
 			}));
 		}

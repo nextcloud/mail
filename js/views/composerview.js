@@ -133,7 +133,7 @@ define(function(require) {
 			}
 		},
 		onRender: function() {
-			this.attachmentsRegion.show(new AttachmentsView({
+			this.showChildView('attachmentsRegion', new AttachmentsView({
 				collection: this.attachments
 			}));
 

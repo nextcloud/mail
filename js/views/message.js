@@ -135,13 +135,13 @@ define(function(require) {
 		onRender: function() {
 			this.ui.messageIframe.on('load', _.bind(this.onIframeLoad, this));
 
-			this.attachments.show(new MessageAttachmentsView({
+			this.showChildView('attachments', new MessageAttachmentsView({
 				collection: new Attachments(this.message.get('attachments')),
 				message: this.model
 			}));
 
 			// setup reply composer view
-			this.replyComposer.show(new ComposerView({
+			this.showChildView('replyComposer', new ComposerView({
 				type: 'reply',
 				accounts: require('state').accounts,
 				account: this.account,

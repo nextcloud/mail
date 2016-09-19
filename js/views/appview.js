@@ -43,7 +43,6 @@ define(function(require) {
 		accountsView: null,
 		activeContent: null,
 		regions: {
-			navigation: '#app-navigation',
 			content: '#app-content .mail-content',
 			setup: '#setup'
 		},
@@ -112,7 +111,7 @@ define(function(require) {
 			this.navigation = new NavigationView({
 				accounts: require('state').accounts
 			});
-			this.navigation.settings.show(new SettingsView());
+			this.navigation.showChildView('settings', new SettingsView());
 		},
 		onDocumentClick: function(event) {
 			Radio.ui.trigger('document:click', event);
@@ -153,7 +152,7 @@ define(function(require) {
 			if (this.activeContent !== ContentType.SETUP) {
 				this.activeContent = ContentType.SETUP;
 
-				this.content.show(new SetupView({
+				this.showChildView('content', new SetupView({
 					displayName: $('#user-displayname').text(),
 					email: $('#user-email').text()
 				}));
@@ -166,18 +165,18 @@ define(function(require) {
 			options.account = account;
 			options.folder = folder;
 
-			this.content.show(new FolderContentView(options));
+			this.showChildView('content', new FolderContentView(options));
 		},
 		showContentError: function(text, icon) {
 			this.activeContent = ContentType.ERROR;
-			this.content.show(new ErrorView({
+			this.showChildView('content', new ErrorView({
 				text: text,
 				icon: icon
 			}));
 		},
 		showContentLoading: function(text) {
 			this.activeContent = ContentType.LOADING;
-			this.content.show(new LoadingView({
+			this.showChildView('content', new LoadingView({
 				text: text
 			}));
 		},
@@ -211,7 +210,7 @@ define(function(require) {
 		showAccountSettings: function(account) {
 			this.activeContent = ContentType.ACCOUNT_SETTINGS;
 
-			this.content.show(new AccountSettingsView({
+			this.showChildView('content', new AccountSettingsView({
 				account: account
 			}));
 		},
@@ -226,7 +225,7 @@ define(function(require) {
 		showSidebarAccounts: function() {
 			$('#app-navigation').removeClass('icon-loading');
 			// setup folder view
-			this.navigation.accounts.show(new NavigationAccountsView({
+			this.navigation.showChildView('accounts', new NavigationAccountsView({
 				collection: require('state').accounts
 			}));
 			// Also show the 'New message' button

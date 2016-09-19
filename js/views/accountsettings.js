@@ -76,7 +76,7 @@ define(function(require) {
 			this.showAliases();
 		},
 		showAliases: function() {
-			this.aliasesRegion.show(new AliasesView({
+			this.showChildView('aliasesRegion', new AliasesView({
 				currentAccount: this.currentAccount
 			}));
 		}
