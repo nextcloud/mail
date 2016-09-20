@@ -46,6 +46,10 @@ $app->registerRoutes($this,
 				'url' => '/accounts/{accountId}/folders/{folderId}/messages/{messageId}/flags',
 				'verb' => 'PUT'],
 			[
+				'name' => 'messages#move',
+				'url' => '/accounts/{accountId}/folders/{folderId}/messages/{id}/move',
+				'verb' => 'POST'],
+			[
 				'name' => 'proxy#redirect',
 				'url' => '/redirect',
 				'verb' => 'GET'],
