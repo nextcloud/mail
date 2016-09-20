@@ -65,11 +65,10 @@ define(function(require) {
 			// Load cached version if available
 			var messageList = require('cache').getMessageList(account, folder);
 			if (!options.force && messageList) {
-				var collection = folder.get('messages');
 				_.each(messageList, function(msg) {
-					collection.add(msg);
+					folder.addMessage(msg);
 				});
-				defer.resolve(collection, true);
+				defer.resolve(folder.messages, true);
 				return defer.promise();
 			}
 		}
@@ -80,7 +79,7 @@ define(function(require) {
 				folderId: folder.get('id')
 			});
 
-		// TODO: folder.get('messages').fetch()
+		// TODO: folder.messages.fetch()
 		messageListXhr = $.ajax(url,
 			{
 				data: {
@@ -92,12 +91,12 @@ define(function(require) {
 					if (options.replace || options.cache) {
 						require('cache').addMessageList(account, folder, messages);
 					}
-					var collection = folder.get('messages');
+					var collection = folder.messages;
 					if (options.replace) {
 						collection.reset();
 					}
 					_.each(messages, function(msg) {
-						collection.add(msg);
+						folder.addMessage(msg);
 					});
 					defer.resolve(collection, false);
 				},

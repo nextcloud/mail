@@ -74,7 +74,7 @@ define(function(require) {
 		},
 		onShow: function() {
 			this.messages.show(new MessagesView({
-				collection: this.folder.get('messages'),
+				collection: this.folder.messages,
 				searchQuery: this.searchQuery
 			}));
 		},
