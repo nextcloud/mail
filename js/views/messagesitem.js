@@ -50,6 +50,22 @@ define(function(require) {
 				});
 			}
 
+			var _this = this;
+			this.$el.draggable({
+				appendTo: '#content-wrapper',
+				helper: function() {
+					var el = $('<div class="icon-mail"></div>');
+					el.data('folderId', require('state').currentFolder.get('id'));
+					el.data('messageId', _this.model.get('id'));
+					return el;
+				},
+				cursorAt: {
+					top: -5,
+					left: -5
+				},
+				revert: true
+			});
+
 			$('.action.delete').tooltip({placement: 'left'});
 		},
 		toggleMessageStar: function(event) {
@@ -131,6 +147,9 @@ define(function(require) {
 				count = folder.get('total');
 				folder.set('total', count + 1);
 			});
+		},
+		onDrag: function(event) {
+			console.log(event);
 		}
 	});
 });
