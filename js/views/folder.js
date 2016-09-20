@@ -56,7 +56,7 @@ define(function(require) {
 			if (folderId === this.model.get('id')) {
 				folder = this.model;
 			} else {
-				folder = this.model.get('folders').get(folderId);
+				folder = this.model.folders.get(folderId);
 			}
 			var noSelect = $(e.currentTarget).parent().data('no_select');
 			Radio.navigation.trigger('folder', account.get('accountId'), folder.get('id'), noSelect);

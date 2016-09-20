@@ -20,35 +20,43 @@
 define(['models/account',
 	'models/foldercollection',
 	'models/aliasescollection',
-	'OC'],
-	function(Account, FolderCollection, AliasCollection, OC) {
-		describe('Account test', function() {
-			var account;
+	'models/folder',
+	'OC'
+], function(Account, FolderCollection, AliasCollection, Folder, OC) {
+	describe('Account test', function() {
+		var account;
 
-			beforeEach(function() {
-				account = new Account();
-			});
+		beforeEach(function() {
+			account = new Account();
+		});
 
-			it('has collections as default attributes', function() {
-				var folders = account.get('folders');
-				var aliases = account.get('aliases');
+		it('has collections as default attributes', function() {
+			var folders = account.folders;
+			var aliases = account.get('aliases');
 
-				expect(folders instanceof FolderCollection).toBe(true);
-				expect(aliases instanceof AliasCollection).toBe(true);
-			});
+			expect(folders instanceof FolderCollection).toBe(true);
+			expect(aliases instanceof AliasCollection).toBe(true);
+		});
 
-			it('uses accountId as id attribute', function() {
-				expect(account.idAttribute).toBe('accountId');
-			});
+		it('uses accountId as id attribute', function() {
+			expect(account.idAttribute).toBe('accountId');
+		});
 
-			it('has the correct URL', function() {
-				spyOn(OC, 'generateUrl').and.returnValue('index.php/apps/mail/accounts');
+		it('has the correct URL', function() {
+			spyOn(OC, 'generateUrl').and.returnValue('index.php/apps/mail/accounts');
 
-				var url = account.url();
+			var url = account.url();
 
-				expect(url).toBe('index.php/apps/mail/accounts');
-			});
+			expect(url).toBe('index.php/apps/mail/accounts');
+		});
 
+		it('adds folders to its collection', function() {
+			var folder = new Folder();
 
+			account.addFolder(folder);
+
+			expect(account.folders.length).toBe(1);
+			expect(folder.account).toBe(account);
 		});
 	});
+});

@@ -21,7 +21,6 @@ define(function(require) {
 	 */
 	var Account = Backbone.Model.extend({
 		defaults: {
-			folders: [],
 			aliases: []
 		},
 		idAttribute: 'accountId',
@@ -29,7 +28,7 @@ define(function(require) {
 			return OC.generateUrl('apps/mail/accounts');
 		},
 		initialize: function() {
-			this.set('folders', new FolderCollection(this.get('folders')));
+			this.folders = new FolderCollection();
 			this.set('aliases', new AliasesCollection(this.get('aliases')));
 		},
 		_getFolderByIdRecursively: function(folder, folderId) {
@@ -41,7 +40,7 @@ define(function(require) {
 				return folder;
 			}
 
-			var subFolders = folder.get('folders');
+			var subFolders = folder.folders;
 			if (!subFolders) {
 				return null;
 			}
@@ -54,13 +53,20 @@ define(function(require) {
 
 			return null;
 		},
+		/**
+		 * @param {Folder} folder
+		 * @returns {undefined}
+		 */
+		addFolder: function(folder) {
+			folder = this.folders.add(folder);
+			folder.account = this;
+		},
 		getFolderById: function(folderId) {
-			var folders = this.get('folders');
-			if (!folders) {
+			if (!this.folders) {
 				return undefined;
 			}
-			for (var i = 0; i < folders.length; i++) {
-				var result = this._getFolderByIdRecursively(folders.at(i), folderId);
+			for (var i = 0; i < this.folders.length; i++) {
+				var result = this._getFolderByIdRecursively(this.folders.at(i), folderId);
 				if (result) {
 					return result;
 				}

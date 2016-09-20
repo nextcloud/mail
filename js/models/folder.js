@@ -18,14 +18,17 @@ define(function(require) {
 	 */
 	var Folder = Backbone.Model.extend({
 		messages: undefined,
+		account: undefined,
+		folder: undefined,
+		folders: undefined,
 		defaults: {
 			open: false,
-			folders: []
+			folders: [],
 		},
 		initialize: function() {
 			var FolderCollection = require('models/foldercollection');
 			var MessageCollection = require('models/messagecollection');
-			this.set('folders', new FolderCollection(this.get('folders')));
+			this.folders = new FolderCollection(this.get('folders') || []);
 			this.messages = new MessageCollection();
 		},
 		toggleOpen: function() {
@@ -36,8 +39,16 @@ define(function(require) {
 		 * @returns {undefined}
 		 */
 		addMessage: function(message) {
-			message.folder = this;
 			this.messages.add(message);
+			message.folder = this;
+		},
+		/**
+		 * @param {Folder} folder
+		 * @returns {undefined}
+		 */
+		addFolder: function(folder) {
+			folder = this.folder.add(folder);
+			folder.account = this.account;
 		},
 		toJSON: function() {
 			var data = Backbone.Model.prototype.toJSON.call(this);

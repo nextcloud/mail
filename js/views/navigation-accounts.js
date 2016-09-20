@@ -43,7 +43,7 @@ define(function(require) {
 				if (_.isUndefined(localAccount)) {
 					return;
 				}
-				var folders = localAccount.get('folders');
+				var folders = localAccount.folders;
 				_.each(folders.models, function(folder) {
 					folders.get(folder).set('active', false);
 				});
