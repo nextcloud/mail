@@ -86,9 +86,13 @@ define(function(require) {
 				data: {
 					from: options.from,
 					to: options.to,
-					filter: options.filter
+					filter: options.filter,
+					syncToken: folder.get('syncToken'),
+					syncUIDs: folder.get('messages').pluck('id')
 				},
-				success: function(messages) {
+				success: function(data) {
+					var messages = data.messages;
+
 					if (options.replace || options.cache) {
 						require('cache').addMessageList(account, folder, messages);
 					}
@@ -99,6 +103,8 @@ define(function(require) {
 					_.each(messages, function(msg) {
 						collection.add(msg);
 					});
+
+					folder.set('syncToken', data.syncToken);
 					defer.resolve(collection, false);
 				},
 				error: function(error, status) {
