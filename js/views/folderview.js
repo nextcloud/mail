@@ -94,6 +94,15 @@ define(function(require) {
 			}));
 
 			this.updateElClasses();
+
+			this.$el.droppable({
+				drop: _.bind(function(event, ui) {
+					var account = require('state').currentAccount;
+					var sourceFolder = account.getFolderById(ui.helper.data('folderId'));
+					var message = sourceFolder.get('messages').get(ui.helper.data('messageId'));
+					Radio.message.trigger('move', account, sourceFolder, message, account, this.model);
+				}, this)
+			});
 		}
 	});
 });
