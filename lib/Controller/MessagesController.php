@@ -28,6 +28,7 @@
 
 namespace OCA\Mail\Controller;
 
+use OCA\Mail\Exception\ServiceException;
 use OCA\Mail\Http\AttachmentDownloadResponse;
 use OCA\Mail\Http\HtmlResponse;
 use OCA\Mail\Service\AccountService;
@@ -201,6 +202,28 @@ class MessagesController extends Controller {
 			return new JSONResponse([], 404);
 		}
 		return new JSONResponse($json);
+	}
+
+	/**
+	 * @NoAdminRequired
+	 * @NoCSRFRequired
+	 *
+	 * @param int $accountId
+	 * @param string $folderId
+	 * @param int $id
+	 * @param int $destAccountId
+	 * @param string $destFolderId
+	 * @return JSONResponse
+	 */
+	public function move($accountId, $folderId, $id, $destAccountId, $destFolderId) {
+		try {
+			$this->accountService->moveMessage($accountId, $folderId, $id, $destAccountId, $destFolderId, $this->currentUserId);
+		} catch (ServiceException $ex) {
+			return new JSONResponse([
+				'error' => $ex->getMessage(),
+			], 500);
+		}
+		return new JSONResponse();
 	}
 
 	/**

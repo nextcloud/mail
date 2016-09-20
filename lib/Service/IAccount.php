@@ -62,6 +62,13 @@ interface IAccount extends JsonSerializable {
 	public function deleteMessage($folderId, $messageId);
 
 	/**
+	 * @param string $sourceFolderId
+	 * @param int $messageId
+	 * @param string $destFolderId
+	 */
+	public function moveMessage($sourceFolderId, $messageId, $destFolderId);
+
+	/**
 	 * @param string[] $query
 	 * @return array
 	 */

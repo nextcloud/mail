@@ -21,8 +21,11 @@
  */
 namespace OCA\Mail\Service;
 
-use OCP\IL10N;
+use Exception;
+use Horde_Mail_Rfc822_List;
+use OCA\Mail\Exception\ServiceException;
 use OCA\Mail\Model\IMessage;
+use OCP\IL10N;
 
 class UnifiedAccount implements IAccount {
 
@@ -126,7 +129,7 @@ class UnifiedAccount implements IAccount {
 	public function getEmail() {
 		if ($this->email === null) {
 			$allAccounts = $this->accountService->findByUserId($this->userId);
-			$addressesList = new \Horde_Mail_Rfc822_List();
+			$addressesList = new Horde_Mail_Rfc822_List();
 			foreach ($allAccounts as $account) {
 				$inbox = $account->getInbox();
 				if (is_null($inbox)) {
@@ -167,6 +170,10 @@ class UnifiedAccount implements IAccount {
 		$messageId = $data[1];
 
 		$account->deleteMessage($inbox->getFolderId(), $messageId);
+	}
+
+	public function moveMessage($sourceFolderId, $messageId, $destFolderId) {
+		throw new ServiceException('Not implemented');
 	}
 
 	/**
