@@ -8,15 +8,11 @@
  * @copyright Christoph Wurst 2015
  */
 
-define(['views/attachments', 'handlebars'], function(AttachmentView, Handlebars) {
+define(['views/attachments', 'views/helper'], function(AttachmentView) {
 
 	describe('AttachmentsView test', function() {
 
 		beforeEach(function() {
-			Handlebars.registerHelper('t', function() {
-				return 'translation';
-			});
-
 			$('body').append('<div id="#mail-attachments-template"></div>');
 			this.AttachmentView = new AttachmentView({});
 		});
@@ -32,7 +28,7 @@ define(['views/attachments', 'handlebars'], function(AttachmentView, Handlebars)
 				this.AttachmentView.render();
 
 				expect(this.AttachmentView.el.innerHTML)
-					.toContain('<ul></ul>\n<input type="button" id="mail_new_attachment" value="translation">');
+					.toContain('<ul></ul>\n<input type="button" id="mail_new_attachment" value="Add attachment from Files">');
 			});
 
 		});
