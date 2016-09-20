@@ -101,7 +101,8 @@ define(function(require) {
 					var sourceFolder = account.getFolderById(ui.helper.data('folderId'));
 					var message = sourceFolder.get('messages').get(ui.helper.data('messageId'));
 					Radio.message.trigger('move', account, sourceFolder, message, account, this.model);
-				}, this)
+				}, this),
+				hoverClass: 'ui-droppable-active'
 			});
 		}
 	});
