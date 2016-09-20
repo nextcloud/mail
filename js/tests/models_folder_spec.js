@@ -18,18 +18,42 @@
  */
 
 define([
-	'models/foldercollection',
-	'models/folder'
-], function(FolderCollection, Folder) {
-	describe('FolderCollection', function() {
-		var collection;
+	'models/folder',
+	'models/messagecollection',
+	'models/message'
+], function(Folder, MessageCollection, Message) {
+	describe('Folder', function() {
+		var folder;
 
 		beforeEach(function() {
-			collection = new FolderCollection();
+			folder = new Folder();
 		});
 
-		it('contains folders', function() {
-			expect(collection.model).toBe(Folder);
+		it('has messages', function() {
+			expect(folder.messages instanceof MessageCollection).toBe(true);
+		});
+
+		it('toggles open', function() {
+			expect(folder.get('open')).toBe(false);
+
+			folder.toggleOpen();
+
+			expect(folder.get('open')).toBe(true);
+
+			folder.toggleOpen();
+
+			expect(folder.get('open')).toBe(false);
+		});
+
+		it('assigns itself to added messages', function() {
+			var message = new Message();
+
+			expect(folder.messages.length).toBe(0);
+
+			folder.addMessage(message);
+
+			expect(folder.messages.length).toBe(1);
+			expect(message.folder).toBe(folder);
 		});
 	});
 });
