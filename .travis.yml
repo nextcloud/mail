@@ -100,12 +100,10 @@ script:
 
 matrix:
   include:
-    - php: 7.0
+    - php: 5.4
       env: "DB=mysql TEST_JS=TRUE"
+    - php: 5.5
+      env: "DB=mysql CORE_BRANCH=stable10 PACKAGE=TRUE"
     - php: 7.0
       env: "DB=pgsql PHP_COVERAGE=TRUE"
-    - php: 5.4
-      env: "DB=mysql CORE_BRANCH=stable9 PACKAGE=TRUE"
-    - php: 5.5
-      env: "DB=mysql CORE_BRANCH=stable10"
   fast_finish: true
