@@ -76,6 +76,16 @@ make install-composer-deps
 make optimize-js
 ```
 
+### Nightly builds
+
+Instead of setting everything up manually, you can just [download the nightly builds](http://ftp.portknox.net/mail/) instead. These builds are updated every 24 hours, and are pre-configured with all the needed dependencies.
+
+1. Download
+2. Extract the tar archive to 'path-to-nextcloud/apps'
+3. Navigate to »Apps«, choose the category »Productivity«, find the Mail app and enable it.
+
+The nightly builds are provided by [Portknox.net](https://portknox.net)
+
 ### Resetting the app
 Connect to your database and run the following commands (`oc_` is the default table prefix):
 ```sql
