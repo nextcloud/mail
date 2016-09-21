@@ -1,6 +1,41 @@
 # Changelog
 All notable changes to this project will be documented in this file.
 
+## 0.6.0 – 2016-09-20
+### Added
+- Alias support
+  [#1523](https://github.com/owncloud/mail/pull/1523) @tahaalibra
+- New incoming messages are prefetched
+  [#1631](https://github.com/owncloud/mail/pull/1631) @ChristophWurst
+- Custom app folder support
+  [#1627](https://github.com/owncloud/mail/pull/1627) @juliushaertl
+- Improved search
+  [#1609](https://github.com/owncloud/mail/pull/1609) @ChristophWurst
+- Scroll to refresh
+  [#1595](https://github.com/owncloud/mail/pull/1593) @ChristophWurst
+- Shortcuts to star and mark messages as unread
+  [#1590](https://github.com/owncloud/mail/pull/1590) @ChristophWurst
+- Shortcuts to select previous/next messsage
+  [#1557](https://github.com/owncloud/mail/pull/1557) @ChristophWurst
+
+## Changed
+- Minimum server is Nextcloud 10/ownCloud 9.1
+  [#84](https://github.com/nextcloud/mail/pull/84) @ChristophWurst
+- Use session storage instead of local storage for client-side cache
+  [#1612](https://github.com/owncloud/mail/pull/1612) @ChristophWurst
+- When deleting the current message, the next one is selected immediatelly
+  [#1585](https://github.com/owncloud/mail/pull/1585) @ChristophWurst
+
+## Fixed
+- Client error while composing a new message
+  [#1609](https://github.com/owncloud/mail/pull/1609) @ChristophWurst
+- Delay app start until page has finished loading
+  [#1634](https://github.com/owncloud/mail/pull/1634) @ChristophWurst
+- Auto-redirection of HTML mail links
+  [#1603](https://github.com/owncloud/mail/pull/1603) @ChristophWurst
+- Update folder counters when reading/deleting messages
+  [#1585](https://github.com/owncloud/mail/pull/1585)
+
 ## 0.5.2 – 2016-06-16
 
 ### Added
