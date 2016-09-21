@@ -38,18 +38,21 @@ define(function(require) {
 		ui: {
 			'form': 'form',
 			'alias': 'input[name="alias"]',
-			'submitButton': 'input[type=submit]',
+			'submitAliasButton': 'input[name="submit-alias"]',
 			'aliasName' : 'input[name="alias-name"]',
 			'imapHost' : 'input[name="imap-host"]',
 			'imapUser' : 'input[name="imap-user"]',
 			'imapPort' : 'input[name="imap-port"]',
+			'imapPassword' : 'input[name="imap-password"]',
 			'smtpHost' : 'input[name="smtp-host"]',
 			'smtpUser' : 'input[name="smtp-user"]',
-			'smtpPort' : 'input[name="smtp-port"]'
+			'smtpPort' : 'input[name="smtp-port"]',
+			'smtpPassword' : 'input[name="smtp-password"]',
+			'submitAccountButton': 'input[name="submit-account-settings"]',
 		},
 		events: {
-			'click @ui.submitButton': 'onSubmit',
-			'submit @ui.form': 'onSubmit'
+			'click @ui.submitAliasButton': 'onAliasSubmit',
+			'click @ui.submitAccountSettingsButton': 'onAccountSubmit'
 		},
 		regions: {
 			aliasesRegion : '#aliases-list'
@@ -57,7 +60,33 @@ define(function(require) {
 		initialize: function(options) {
 			this.currentAccount = options.account;
 		},
-		onSubmit: function(e) {
+
+		onAccountSubmit: function(e){
+			e.preventDefault();
+			var config = {
+				'imapHost': this.ui.imapHost.val(),
+				'imapUser': this.ui.imapUser.val(),
+				'imapPort': this.ui.imapPort.val(),
+				'imapPasswort': this.ui.imapPasswort.val(),
+				'smtpHost': this.ui.smtpHost.val(),
+				'smtpUser': this.ui.smtpUser.val(),
+				'smtpPort': this.ui.smtpPort.val(),
+				'smtpPasswort': this.ui.smtpPasswort.val(),
+			};
+			this.ui.submitAccountSettingsButton.val('Saving');
+			var _this = this;
+			
+			var savingAccount = Radio.account.request('edit', config);
+			$.when(savingAccount).done(function(data) {
+				_this.currentAccount.get('aliases').add(data);
+			});
+
+			$.when(savingAlias).always(function() {
+				_this.ui.submitAccountSettingsButton.val('Save');
+			});
+
+		},
+		onAliasSubmit: function(e) {
 			e.preventDefault();
 			var alias = {
 				'alias': this.ui.alias.val(),
@@ -65,8 +94,8 @@ define(function(require) {
 			};
 			this.ui.alias.prop('disabled', true);
 			this.ui.aliasName.prop('disabled', true);
-			this.ui.submitButton.val('Saving');
-			this.ui.submitButton.prop('disabled', true);
+			this.ui.submitAliasButton.val('Saving');
+			this.ui.submitAliasButton.prop('disabled', true);
 			var _this = this;
 
 			var savingAlias = Radio.aliases.request('save:alias', this.currentAccount, alias);
@@ -79,8 +108,8 @@ define(function(require) {
 				_this.ui.aliasName.val('');
 				_this.ui.alias.prop('disabled', false);
 				_this.ui.aliasName.prop('disabled', false);
-				_this.ui.submitButton.prop('disabled', false);
-				_this.ui.submitButton.val('Save');
+				_this.ui.submitAliasButton.prop('disabled', false);
+				_this.ui.submitAliasButton.val('Save');
 			});
 
 		},
