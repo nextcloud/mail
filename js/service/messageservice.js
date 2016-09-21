@@ -349,7 +349,7 @@ define(function(require) {
 					body: message.body,
 					attachments: message.attachments,
 					folderId: options.folder ? options.folder.get('id') : null,
-					messageId: options.repliedMessage.get('id'),
+					messageId: options.repliedMessage ? options.repliedMessage.get('id') : null,
 					uid: options.draftUID
 				}
 			};
