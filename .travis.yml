@@ -23,6 +23,7 @@ env:
   - TEST_JS=FALSE
   - PHP_COVERAGE=FALSE
   - PACKAGE=FALSE
+  - NIGHTLY=FALSE
   matrix:
   - DB=sqlite
 
@@ -98,6 +99,9 @@ script:
   # Test packaging
   - cd ..
   - if [[ "$PACKAGE" = "TRUE" ]]; then make appstore; fi
+
+  # Upload the nightly to ftp server
+  - if [[ "$NIGHTLY" = "TRUE" ]]; then curl --ftp-create-dirs -T build/artifacts/appstore/mail.tar.gz -u $FTP_LOGIN:$FTP_PW ftp://ftp.portknox.net/htdocs/mail/mail.tar.gz; fi
 
 matrix:
   include:
