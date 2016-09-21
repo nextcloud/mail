@@ -30,7 +30,10 @@ define(function(require) {
 		initialize: function() {
 			var FolderCollection = require('models/foldercollection');
 			var MessageCollection = require('models/messagecollection');
+			this.account = this.get('account');
+			this.unset('account');
 			this.folders = new FolderCollection(this.get('folders') || []);
+			this.unset('folders');
 			this.messages = new MessageCollection();
 		},
 		toggleOpen: function() {
@@ -41,8 +44,8 @@ define(function(require) {
 		 * @returns {undefined}
 		 */
 		addMessage: function(message) {
-			this.messages.add(message);
 			message.folder = this;
+			this.messages.add(message);
 		},
 		/**
 		 * @param {Array<Message>} message
