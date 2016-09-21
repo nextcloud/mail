@@ -95,17 +95,20 @@ define(function(require) {
 
 			this.updateElClasses();
 
-			var dropScope = 'folder-' + this.model.account.get('accountId');
-			this.$el.droppable({
-				scope: dropScope,
-				drop: _.bind(function(event, ui) {
-					var account = require('state').currentAccount;
-					var sourceFolder = account.getFolderById(ui.helper.data('folderId'));
-					var message = sourceFolder.messages.get(ui.helper.data('messageId'));
-					Radio.message.trigger('move', account, sourceFolder, message, account, this.model);
-				}, this),
-				hoverClass: 'ui-droppable-active'
-			});
+			// Make non search fodler folders droppable
+			if (!(/\/FLAGGED$/.test(atob(this.model.get('id'))))) {
+				var dropScope = 'folder-' + this.model.account.get('accountId');
+				this.$el.droppable({
+					scope: dropScope,
+					drop: _.bind(function(event, ui) {
+						var account = require('state').currentAccount;
+						var sourceFolder = account.getFolderById(ui.helper.data('folderId'));
+						var message = sourceFolder.messages.get(ui.helper.data('messageId'));
+						Radio.message.trigger('move', account, sourceFolder, message, account, this.model);
+					}, this),
+					hoverClass: 'ui-droppable-active'
+				});
+			}
 		}
 	});
 });

@@ -242,8 +242,7 @@ define(function(require) {
 					replace: reload
 				});
 
-			$.when(loadingMessages).done(function(a) {
-				console.log(a);
+			$.when(loadingMessages).done(function() {
 				Radio.ui.trigger('messagesview:message:setactive', require('state').currentMessage);
 			});
 
