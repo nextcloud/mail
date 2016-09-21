@@ -53,7 +53,7 @@ class AccountTest extends AbstractTest {
 	public function testListMailBoxes($name) {
 		$name = uniqid($name);
 		$this->createMailBox($name);
-		$mailBoxes = $this->getTestAccount()->getListArray();
+		$mailBoxes = $this->getTestAccount()->jsonSerialize();
 		$this->assertInternalType('array', $mailBoxes);
 
 		$m = array_filter($mailBoxes['folders'], function($item) use ($name) {

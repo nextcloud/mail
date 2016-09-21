@@ -209,13 +209,11 @@ define(function(require) {
 			}
 		},
 		showAccountSettings: function(account) {
-			if (this.activeContent !== ContentType.ACCOUNT_SETTINGS) {
-				this.activeContent = ContentType.ACCOUNT_SETTINGS;
+			this.activeContent = ContentType.ACCOUNT_SETTINGS;
 
-				this.content.show(new AccountSettingsView({
-					account: account
-				}));
-			}
+			this.content.show(new AccountSettingsView({
+				account: account
+			}));
 		},
 		setSearchQuery: function(val) {
 			val = val || '';

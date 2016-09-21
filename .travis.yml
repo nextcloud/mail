@@ -101,7 +101,7 @@ script:
   - if [[ "$PACKAGE" = "TRUE" ]]; then make appstore; fi
 
   # Upload the nightly to ftp server
-  - if [[ "$NIGHTLY" = "TRUE" ]]; then curl --ftp-create-dirs -T build/artifacts/appstore/mail.tar.gz -u $FTP_LOGIN:$FTP_PW ftp://ftp.portknox.net/htdocs/mail/mail.tar.gz; fi
+  - if [[ "$NIGHTLY" = "TRUE" ]]; then curl --ftp-create-dirs -T build/artifacts/appstore/mail.tar.gz -u $FTP_LOGIN:$FTP_PW ftp://ftp.portknox.net/htdocs/mail/nextcloud_mail_nightly_build_$(date +%Y-%m-%d).tar.gz; fi
 
 matrix:
   include:

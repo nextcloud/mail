@@ -74,7 +74,7 @@ class FoldersControllerTest extends PHPUnit_Framework_TestCase {
 			->with($this->userId, $accountId)
 			->will($this->returnValue($account));
 		$account->expects($this->once())
-			->method('getListArray')
+			->method('jsonSerialize')
 			->will($this->returnValue($data));
 
 		$this->controller->index($accountId);

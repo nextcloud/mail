@@ -29,14 +29,23 @@ namespace OCA\Mail\Model;
 use Closure;
 use Exception;
 use Horde_Imap_Client;
+use Horde_Imap_Client_Data_Envelope;
 use Horde_Imap_Client_Data_Fetch;
+use Horde_Imap_Client_DateTime;
+use Horde_Imap_Client_Fetch_Query;
+use Horde_Imap_Client_Ids;
+use Horde_Imap_Client_Mailbox;
+use Horde_Imap_Client_Socket;
 use Horde_Mail_Rfc822_List;
-use OCP\Files\File;
+use Horde_Mime_Part;
+use JsonSerializable;
+use OC;
 use OCA\Mail\Service\Html;
 use OCP\AppFramework\Db\DoesNotExistException;
+use OCP\Files\File;
 use OCP\Util;
 
-class IMAPMessage implements IMessage {
+class IMAPMessage implements IMessage, JsonSerializable {
 
 	use ConvertAddresses;
 
@@ -49,8 +58,8 @@ class IMAPMessage implements IMessage {
 	private $uid;
 
 	/**
-	 * @param \Horde_Imap_Client_Socket|null $conn
-	 * @param \Horde_Imap_Client_Mailbox $mailBox
+	 * @param Horde_Imap_Client_Socket|null $conn
+	 * @param Horde_Imap_Client_Mailbox $mailBox
 	 * @param integer $messageId
 	 * @param \Horde_Imap_Client_Data_Fetch|null $fetch
 	 * @param boolean $loadHtmlMessage
@@ -65,8 +74,8 @@ class IMAPMessage implements IMessage {
 
 		$this->htmlService = $htmlService;
 		if (is_null($htmlService)) {
-			$urlGenerator = \OC::$server->getURLGenerator();
-			$request = \OC::$server->getRequest();
+			$urlGenerator = OC::$server->getURLGenerator();
+			$request = OC::$server->getRequest();
 			$this->htmlService = new Html($urlGenerator, $request);
 		}
 
@@ -86,12 +95,12 @@ class IMAPMessage implements IMessage {
 	private $hasHtmlMessage = false;
 
 	/**
-	 * @var \Horde_Imap_Client_Socket
+	 * @var Horde_Imap_Client_Socket
 	 */
 	private $conn;
 
 	/**
-	 * @var \Horde_Imap_Client_Mailbox
+	 * @var Horde_Imap_Client_Mailbox
 	 */
 	private $mailBox;
 	private $messageId;
@@ -144,7 +153,7 @@ class IMAPMessage implements IMessage {
 	}
 
 	/**
-	 * @return \Horde_Imap_Client_Data_Envelope
+	 * @return Horde_Imap_Client_Data_Envelope
 	 */
 	public function getEnvelope() {
 		return $this->fetch->getEnvelope();
@@ -296,7 +305,7 @@ class IMAPMessage implements IMessage {
 	}
 
 	/**
-	 * @return \Horde_Imap_Client_DateTime
+	 * @return Horde_Imap_Client_DateTime
 	 */
 	public function getSentDate() {
 		return $this->fetch->getImapDate();
@@ -307,13 +316,13 @@ class IMAPMessage implements IMessage {
 	}
 
 	/**
-	 * @param \Horde_Mime_Part $part
+	 * @param Horde_Mime_Part $part
 	 * @return bool
 	 */
 	private function hasAttachments($part) {
 		foreach($part->getParts() as $p) {
 			/**
-			 * @var \Horde_Mime_Part $p
+			 * @var Horde_Mime_Part $p
 			 */
 			$filename = $p->getName();
 
@@ -339,7 +348,7 @@ class IMAPMessage implements IMessage {
 	private function loadMessageBodies() {
 		$headers = [];
 
-		$fetch_query = new \Horde_Imap_Client_Fetch_Query();
+		$fetch_query = new Horde_Imap_Client_Fetch_Query();
 		$fetch_query->envelope();
 		$fetch_query->structure();
 		$fetch_query->flags();
@@ -359,7 +368,7 @@ class IMAPMessage implements IMessage {
 		]);
 
 		// $list is an array of Horde_Imap_Client_Data_Fetch objects.
-		$ids = new \Horde_Imap_Client_Ids($this->messageId);
+		$ids = new Horde_Imap_Client_Ids($this->messageId);
 		$headers = $this->conn->fetch($this->mailBox, $fetch_query, ['ids' => $ids]);
 		/** @var $fetch \Horde_Imap_Client_Data_Fetch */
 		$fetch = $headers[$this->messageId];
@@ -452,7 +461,7 @@ class IMAPMessage implements IMessage {
 	public function getFullMessage($ownMail, $specialRole=null) {
 		$mailBody = $this->plainMessage;
 
-		$data = $this->getListArray();
+		$data = $this->jsonSerialize();
 		if ($this->hasHtmlMessage) {
 			$data['hasHtmlBody'] = true;
 		} else {
@@ -474,23 +483,23 @@ class IMAPMessage implements IMessage {
 		return $data;
 	}
 
-	public function getListArray() {
-		$data = [];
-		$data['id'] = $this->getUid();
-		$data['from'] = $this->getFrom();
-		$data['fromEmail'] = $this->getFromEmail();
-		$data['fromList'] = $this->getFromList();
-		$data['to'] = $this->getTo();
-		$data['toEmail'] = $this->getToEmail();
-		$data['toList'] = $this->getToList(true);
-		$data['subject'] = $this->getSubject();
-		$data['date'] = \OC::$server->getDateTimeFormatter()->formatDate($this->getSentDate()->format('U'));
-		$data['size'] = Util::humanFileSize($this->getSize());
-		$data['flags'] = $this->getFlags();
-		$data['dateInt'] = $this->getSentDate()->getTimestamp();
-		$data['dateIso'] = $this->getSentDate()->format('c');
-		$data['ccList'] = $this->getCCList(true);
-		return $data;
+	public function jsonSerialize() {
+		return [
+			'id' => $this->getUid(),
+			'from' => $this->getFrom(),
+			'fromEmail' => $this->getFromEmail(),
+			'fromList' => $this->getFromList(),
+			'to' => $this->getTo(),
+			'toEmail' => $this->getToEmail(),
+			'toList' => $this->getToList(true),
+			'subject' => $this->getSubject(),
+			'date' => OC::$server->getDateTimeFormatter()->formatDate($this->getSentDate()->format('U')),
+			'size' => Util::humanFileSize($this->getSize()),
+			'flags' => $this->getFlags(),
+			'dateInt' => $this->getSentDate()->getTimestamp(),
+			'dateIso' => $this->getSentDate()->format('c'),
+			'ccList' => $this->getCCList(true),
+		];
 	}
 
 	/**
@@ -516,7 +525,7 @@ class IMAPMessage implements IMessage {
 	}
 
 	/**
-	 * @param \Horde_Mime_Part $part
+	 * @param Horde_Mime_Part $part
 	 * @param int $partNo
 	 */
 	private function handleMultiPartMessage($part, $partNo) {
@@ -528,7 +537,7 @@ class IMAPMessage implements IMessage {
 	}
 
 	/**
-	 * @param \Horde_Mime_Part $p
+	 * @param Horde_Mime_Part $p
 	 * @param int $partNo
 	 */
 	private function handleTextMessage($p, $partNo) {
@@ -538,7 +547,7 @@ class IMAPMessage implements IMessage {
 	}
 
 	/**
-	 * @param \Horde_Mime_Part $p
+	 * @param Horde_Mime_Part $p
 	 * @param int $partNo
 	 */
 	private function handleHtmlMessage($p, $partNo) {
@@ -550,7 +559,7 @@ class IMAPMessage implements IMessage {
 	}
 
 	/**
-	 * @param \Horde_Mime_Part $p
+	 * @param Horde_Mime_Part $p
 	 * @param int $partNo
 	 * @return string
 	 * @throws DoesNotExistException
@@ -558,8 +567,8 @@ class IMAPMessage implements IMessage {
 	 */
 	private function loadBodyData($p, $partNo) {
 		// DECODE DATA
-		$fetch_query = new \Horde_Imap_Client_Fetch_Query();
-		$ids = new \Horde_Imap_Client_Ids($this->messageId);
+		$fetch_query = new Horde_Imap_Client_Fetch_Query();
+		$ids = new Horde_Imap_Client_Ids($this->messageId);
 
 		$fetch_query->bodyPart($partNo, [
 		    'peek' => true

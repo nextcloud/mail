@@ -63,14 +63,12 @@ class UnifiedAccount implements IAccount {
 
 	/**
 	 * @return array
-	 * TODO: function name is :hankey:
 	 */
-	public function getListArray() {
-		$inbox = $this->buildInbox();
+	public function jsonSerialize() {
 		return [
 			'id'             => UnifiedAccount::ID,
 			'email'          => '',
-			'folders'        => [$inbox],
+			'folders'        => [$this->buildInbox()],
 			'specialFolders' => [],
 			'delimiter' => '.',
 		];
