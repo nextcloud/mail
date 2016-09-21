@@ -89,8 +89,6 @@ define(function(require) {
 				// Fade out the message composer
 				$('#mail_new_message').prop('disabled', false);
 
-				Radio.ui.trigger('messagesview:messages:add', messages);
-
 				if (messages.length > 0) {
 					// Fetch first 10 messages in background
 					Radio.message.trigger('fetch:bodies', account, folder, messages.slice(0, 10));

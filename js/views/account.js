@@ -58,7 +58,7 @@ define(function(require) {
 		menuShown: false,
 		initialize: function(options) {
 			this.model = options.model;
-			this.collection = this.model.get('folders');
+			this.collection = this.model.folders;
 		},
 		filter: function(child) {
 			if (!this.collapsed) {
@@ -104,9 +104,9 @@ define(function(require) {
 		},
 		onClick: function(e) {
 			e.preventDefault();
-			if (this.model.get('folders').length > 0) {
+			if (this.model.folders.length > 0) {
 				var accountId = this.model.get('accountId');
-				var folderId = this.model.get('folders').first().get('id');
+				var folderId = this.model.folders.first().get('id');
 				Radio.navigation.trigger('folder', accountId, folderId);
 			}
 		},

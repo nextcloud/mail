@@ -91,7 +91,7 @@ define(function(require) {
 
 	function checkForNotifications(accounts) {
 		accounts.each(function(account) {
-			var folders = account.get('folders');
+			var folders = account.folders;
 
 			var url = OC.generateUrl('apps/mail/accounts/{id}/folders/detectChanges',
 				{
@@ -130,7 +130,9 @@ define(function(require) {
 						// reload if current selected folder has changed
 						if (State.currentAccount === changedAccount &&
 							State.currentFolder.get('id') === changes.id) {
-							Radio.ui.request('messagesview:collection').add(changes.messages);
+							_.each(changes.messages, function(msg) {
+								State.currentFolder.addMessages(msg);
+							});
 							var messages = new MessageCollection(changes.messages).slice(0);
 							Radio.message.trigger('fetch:bodies', changedAccount, changedFolder, messages);
 						}

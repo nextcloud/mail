@@ -95,7 +95,7 @@ define(function(require) {
 
 			// Show first folder of first account
 			var firstAccount = this.accounts.at(0);
-			var firstFolder = firstAccount.get('folders').at(0);
+			var firstFolder = firstAccount.folders.at(0);
 			_this.showFolder(firstAccount.get('accountId'), firstFolder.get('id'));
 		},
 		showFolder: function(accountId, folderId, noSelect) {
@@ -111,7 +111,7 @@ define(function(require) {
 
 			var folder = account.getFolderById(folderId);
 			if (_.isUndefined(folder)) {
-				folder = account.get('folders').at(0);
+				folder = account.folders.at(0);
 				Radio.ui.trigger('error:show', t('mail', 'Invalid folder'));
 				this._navigate('accounts/' + accountId + '/folders/' + folder.get('id'));
 			}
@@ -134,7 +134,7 @@ define(function(require) {
 
 			var folder = account.getFolderById(folderId);
 			if (_.isUndefined(folder)) {
-				folder = account.get('folders').at(0);
+				folder = account.folders.at(0);
 				Radio.ui.trigger('error:show', t('mail', 'Invalid folder'));
 				this._navigate('accounts/' + accountId + '/folders/' + folder.get('id'));
 			}

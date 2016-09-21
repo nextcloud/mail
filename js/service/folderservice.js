@@ -31,13 +31,13 @@ define(function(require) {
 		promise.done(function(data) {
 			for (var prop in data) {
 				if (prop === 'folders') {
-					account.get('folders').reset();
-					account.get('folders').add(data.folders);
+					account.folders.reset();
+					account.addFolder(data.folders);
 				} else {
 					account.set(prop, data[prop]);
 				}
 			}
-			defer.resolve(account.get('folders'));
+			defer.resolve(account.folders);
 		});
 
 		promise.fail(function() {

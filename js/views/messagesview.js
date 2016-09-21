@@ -50,7 +50,6 @@ define(function(require) {
 				return _this.collection;
 			});
 			this.listenTo(Radio.ui, 'messagesview:messages:update', this.refresh);
-			this.listenTo(Radio.ui, 'messagesview:messages:add', this.addMessages);
 			this.listenTo(Radio.ui, 'messagesview:messageflag:set', this.setMessageFlag);
 			this.listenTo(Radio.ui, 'messagesview:filter', this.filterCurrentMailbox);
 			this.listenTo(Radio.ui, 'messagesview:message:setactive', this.setActiveMessage);
@@ -262,13 +261,6 @@ define(function(require) {
 				// Reload scrolls the list to the top, hence a unwanted
 				// scroll event is fired, which we want to ignore
 				_this.reloaded = reload;
-			});
-		},
-		addMessages: function(message) {
-			var _this = this;
-			// TODO: merge?
-			message.each(function(msg) {
-				_this.collection.add(msg);
 			});
 		}
 	});
