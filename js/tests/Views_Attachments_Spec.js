@@ -8,29 +8,25 @@
  * @copyright Christoph Wurst 2015
  */
 
-define(['views/attachments', 'views/helper'], function(AttachmentView) {
+define(['views/attachments', 'views/helper'], function (AttachmentView) {
 
-	describe('AttachmentsView test', function() {
+	describe('AttachmentsView', function () {
 
-		beforeEach(function() {
+		beforeEach(function () {
 			$('body').append('<div id="#mail-attachments-template"></div>');
 			this.AttachmentView = new AttachmentView({});
 		});
 
-		afterEach(function() {
+		afterEach(function () {
 			this.AttachmentView.remove();
 			$('#mail-attachments-template').remove();
 		});
 
-		describe('Rendering', function() {
+		it('produces the correct HTML', function () {
+			this.AttachmentView.render();
 
-			it('produces the correct HTML', function() {
-				this.AttachmentView.render();
-
-				expect(this.AttachmentView.el.innerHTML)
-					.toContain('<ul></ul>\n<input type="button" id="mail_new_attachment" value="Add attachment from Files">');
-			});
-
+			expect(this.AttachmentView.el.innerHTML)
+				.toContain('<ul></ul>\n<input type="button" id="mail_new_attachment" value="Add attachment from Files">');
 		});
 
 	});
