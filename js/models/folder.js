@@ -33,6 +33,9 @@ define(function(require) {
 			this.account = this.get('account');
 			this.unset('account');
 			this.folders = new FolderCollection(this.get('folders') || []);
+			this.folders.forEach(_.bind(function(folder) {
+				folder.account = this.account;
+			}, this));
 			this.unset('folders');
 			this.messages = new MessageCollection();
 		},
@@ -62,14 +65,11 @@ define(function(require) {
 		 * @returns {undefined}
 		 */
 		addFolder: function(folder) {
-			folder = this.folder.add(folder);
+			folder = this.folders.add(folder);
 			folder.account = this.account;
 		},
 		toJSON: function() {
 			var data = Backbone.Model.prototype.toJSON.call(this);
-			if (data.folders && data.folders.toJSON) {
-				data.folders = data.folders.toJSON();
-			}
 			if (!data.id) {
 				data.id = this.cid;
 			}

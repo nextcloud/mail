@@ -35,9 +35,12 @@ define(function(require) {
 				folderId: this.model.get('id')
 			});
 
+			var folders = this.model.folders.length > 0 ? this.model.folders.toJSON() : undefined;
+
 			return {
 				count: count,
-				url: url
+				url: url,
+				folders: folders
 			};
 		},
 		events: {
