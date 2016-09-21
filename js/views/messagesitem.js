@@ -68,7 +68,7 @@ define(function(require) {
 					top: -5,
 					left: -5
 				},
-				revert: true
+				revert: 'invalid'
 			});
 
 			$('.action.delete').tooltip({placement: 'left'});
