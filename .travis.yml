@@ -101,7 +101,7 @@ script:
 matrix:
   include:
     - php: 5.4
-      env: "DB=mysql TEST_JS=TRUE"
+      env: "DB=mysql CORE_BRANCH=stable10 TEST_JS=TRUE"
     - php: 5.5
       env: "DB=mysql CORE_BRANCH=stable10 PACKAGE=TRUE"
     - php: 7.0
