@@ -23,7 +23,7 @@ define(function(require) {
 		url: function() {
 			return OC.generateUrl('apps/mail/accounts');
 		},
-		comparator: function(account) {
+		comparator: function(account) {			
 			return account.get('accountId');
 		}
 	});

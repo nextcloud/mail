@@ -2,6 +2,80 @@
 	<h2>{{ t 'Account Settings' }} - {{ email }}</h2>
 </div>
 
+<div class="section" id="account">
+	<h2>{{ t 'Account' }}</h2>
+	<form name="accountForm" method="post">
+		<div class="manual-inputs">
+			<p class="grouptop">
+				<input type="text"
+				       name="imap-host"
+				       placeholder="{{ t 'IMAP Host' }}"
+				       value="{{ imapHost }}" />
+			</p>
+			<p class="groupmiddle" id="account-imap-ssl">
+				<input type="number"
+				name="imap-port"
+				placeholder="{{ t 'IMAP Port' }}"
+				value="{{imapPort}}" />
+				<select id="account-imap-ssl-mode"
+					name="imap-sslmode"
+					title="{{ t 'IMAP security' }}">
+					<option value="none">{{ t 'None' }}</option>
+					<option value="ssl">{{ t 'SSL/TLS' }}</option>
+					<option value="tls">{{ t 'STARTTLS' }}</option>
+				</select>
+			</p>
+			<p class="groupmiddle">
+				<input type="text"
+				       name="imap-user"
+				       placeholder="{{ t 'IMAP User' }}"
+				       value="{{ imapUser }}" />
+			</p>
+			<p class="groupbottom">
+				<input type="password"
+				       name="imap-password"
+				       placeholder="{{ t 'IMAP Password' }}"
+				       value=""
+				       required />
+			</p>
+			<p class="grouptop">
+				<input type="text"
+				       name="smtp-host"
+				       placeholder="{{ t 'SMTP Host' }}"
+				       value="{{ smtpHost }}" />
+			</p>
+			<p class="groupmiddle" id="account-smtp-ssl">
+				<select id="account-smtp-ssl-mode"
+					name="mail-smtp-sslmode"
+					title="{{ t 'SMTP security' }}">
+					<option value="none">{{ t 'None' }}</option>
+					<option value="ssl">{{ t 'SSL/TLS' }}</option>
+					<option value="tls">{{ t 'STARTTLS' }}</option>
+				</select>
+			</p>
+			<p class="groupmiddle">
+				<input type="number"
+				       name="smtp-port"
+				       placeholder="{{ t 'SMTP Port' }}"
+				       value="{{smtpPort}}" />
+			</p>
+			<p class="groupmiddle">
+				<input type="text"
+				       name="smtp-user"
+				       placeholder="{{ t 'SMTP User' }}"
+				       value="{{smtpUser}}" />
+			</p>
+			<p class="groupbottom">
+				<input type="password"
+				       name="smtp-password"
+				       placeholder="{{ t 'SMTP Password' }}" value=""
+				       required />
+			</p>
+		</div>
+		<input type="submit" value="{{ t 'Save' }}">
+	</form>
+</div>
+
 <div class="section" id="aliases">
 	<h2>{{ t 'Aliases' }}</h2>
 	<div id="aliases-list"></div>

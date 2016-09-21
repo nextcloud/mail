@@ -24,7 +24,13 @@ define(function(require) {
 			var aliases = this.aliases;
 			return {
 				aliases: aliases,
-				email: this.currentAccount.get('email')
+				email: this.currentAccount.get('email'),
+				imapHost: this.currentAccount.get('imapHost'),
+				imapUser: this.currentAccount.get('imapUser'),
+				imapPort: this.currentAccount.get('imapPort'),
+				smtpHost: this.currentAccount.get('smtpHost'),
+				smtpUser: this.currentAccount.get('smtpUser'),
+				smtpPort: this.currentAccount.get('smtpPort')
 			};
 		},
 		currentAccount: null,
@@ -33,7 +39,13 @@ define(function(require) {
 			'form': 'form',
 			'alias': 'input[name="alias"]',
 			'submitButton': 'input[type=submit]',
-			'aliasName' : 'input[name="alias-name"]'
+			'aliasName' : 'input[name="alias-name"]',
+			'imapHost' : 'input[name="imap-host"]',
+			'imapUser' : 'input[name="imap-user"]',
+			'imapPort' : 'input[name="imap-port"]',
+			'smtpHost' : 'input[name="smtp-host"]',
+			'smtpUser' : 'input[name="smtp-user"]',
+			'smtpPort' : 'input[name="smtp-port"]'
 		},
 		events: {
 			'click @ui.submitButton': 'onSubmit',
