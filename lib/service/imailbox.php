@@ -21,6 +21,7 @@
  */
 namespace OCA\Mail\Service;
 
+use Horde_Imap_Client_Search_Query;
 use OCA\Mail\Attachment;
 use OCA\Mail\Message;
 
@@ -34,7 +35,7 @@ interface IMailBox {
 	/**
 	 * @param int $from
 	 * @param int $count
-	 * @param string|\Horde_Imap_Client_Search_Query $filter
+	 * @param string|Horde_Imap_Client_Search_Query $filter
 	 * @return array
 	 */
 	public function getMessages($from, $count, $filter);

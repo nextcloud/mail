@@ -288,7 +288,7 @@ class Mailbox implements IMailBox {
 	 * @param integer $accountId
 	 * @return array
 	 */
-	public function getListArray($accountId, $status = null) {
+	public function serialize($accountId, $status = null) {
 		$displayName = $this->getDisplayName();
 		try {
 			if (is_null($status)) {

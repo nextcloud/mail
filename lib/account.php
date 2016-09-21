@@ -360,7 +360,7 @@ class Account implements IAccount {
 		$status = $this->getImapConnection()->status($mailBoxNames);
 		foreach ($mailBoxes as $mailbox) {
 			$s = isset($status[$mailbox->getFolderId()]) ? $status[$mailbox->getFolderId()] : null;
-			$folders[] = $mailbox->getListArray($this->getId(), $s);
+			$folders[] = $mailbox->serialize($this->getId(), $s);
 		}
 		$delimiter = reset($folders)['delimiter'];
 		return [
@@ -725,7 +725,7 @@ class Account implements IAccount {
 					$newMessages = $m->getMessagesSince($uidNext, $s['uidnext']);
 					// only trigger updates in case new messages are actually available
 					if (!empty($newMessages)) {
-						$changedBoxes[$folderId] = $m->getListArray($this->getId(), $s);
+						$changedBoxes[$folderId] = $m->serialize($this->getId(), $s);
 						$changedBoxes[$folderId]['messages'] = $newMessages;
 						$newUnreadMessages = array_filter($newMessages, function($m) {
 							return $m['flags']['unseen'];

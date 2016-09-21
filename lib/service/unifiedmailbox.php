@@ -153,4 +153,5 @@ class UnifiedMailbox implements IMailBox {
 		$messageId = $data[1];
 		return array($inbox, $messageId, $account);
 	}
+
 }
