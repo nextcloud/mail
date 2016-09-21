@@ -59,7 +59,7 @@ class FoldersController extends Controller {
 	 */
 	public function index($accountId) {
 		$account = $this->accountService->find($this->currentUserId, $accountId);
-		$json = $account->getListArray();
+		$json = $account->jsonSerialize();
 
 		$folders = array_filter($json['folders'], function($folder){
 			return is_null($folder['parent']);

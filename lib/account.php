@@ -33,27 +33,30 @@
 
 namespace OCA\Mail;
 
+use Horde_Imap_Client;
+use Horde_Imap_Client_Exception;
 use Horde_Imap_Client_Ids;
 use Horde_Imap_Client_Mailbox;
 use Horde_Imap_Client_Socket;
-use Horde_Imap_Client;
 use Horde_Mail_Rfc822_Address;
+use Horde_Mail_Rfc822_List;
 use Horde_Mail_Transport;
 use Horde_Mail_Transport_Mail;
 use Horde_Mail_Transport_Smtphorde;
 use Horde_Mime_Headers_Date;
 use Horde_Mime_Mail;
 use Horde_Mime_Part;
+use OC;
 use OCA\Mail\Cache\Cache;
+use OCA\Mail\Db\Alias;
 use OCA\Mail\Db\MailAccount;
 use OCA\Mail\Model\IMessage;
 use OCA\Mail\Model\Message;
 use OCA\Mail\Model\ReplyMessage;
 use OCA\Mail\Service\IAccount;
-use OCP\IConfig;
 use OCP\ICacheFactory;
+use OCP\IConfig;
 use OCP\Security\ICrypto;
-use OCA\Mail\Db\Alias;
 
 class Account implements IAccount {
 
@@ -84,9 +87,9 @@ class Account implements IAccount {
 	public function __construct(MailAccount $account) {
 		$this->account = $account;
 		$this->mailboxes = null;
-		$this->crypto = \OC::$server->getCrypto();
-		$this->config = \OC::$server->getConfig();
-		$this->memcacheFactory = \OC::$server->getMemcacheFactory();
+		$this->crypto = OC::$server->getCrypto();
+		$this->config = OC::$server->getConfig();
+		$this->memcacheFactory = OC::$server->getMemcacheFactory();
 		$this->alias = null;
 	}
 
@@ -312,7 +315,7 @@ class Account implements IAccount {
 
 	/**
 	 * @param string $folderId
-	 * @return \OCA\Mail\Mailbox
+	 * @return Mailbox
 	 */
 	public function getMailbox($folderId) {
 		$conn = $this->getImapConnection();
@@ -343,8 +346,7 @@ class Account implements IAccount {
 	/**
 	 * @return array
 	 */
-	public function getListArray() {
-
+	public function jsonSerialize() {
 		$folders = [];
 		$mailBoxes = $this->getMailboxes();
 		$mailBoxNames = array_map(function($mb) {
@@ -358,7 +360,7 @@ class Account implements IAccount {
 		$status = $this->getImapConnection()->status($mailBoxNames);
 		foreach ($mailBoxes as $mailbox) {
 			$s = isset($status[$mailbox->getFolderId()]) ? $status[$mailbox->getFolderId()] : null;
-			$folders[] = $mailbox->getListArray($this->getId(), $s);
+			$folders[] = $mailbox->serialize($this->getId(), $s);
 		}
 		$delimiter = reset($folders)['delimiter'];
 		return [
@@ -505,13 +507,13 @@ class Account implements IAccount {
 			$this->getImapConnection()->expunge($hordeSourceMailBox,
 				array('ids' => $hordeMessageIds, 'delete' => true));
 
-			\OC::$server->getLogger()->info("Message expunged: {message} from mailbox {mailbox}",
+			OC::$server->getLogger()->info("Message expunged: {message} from mailbox {mailbox}",
 				array('message' => $messageId, 'mailbox' => $sourceFolderId));
 		} else {
 			$this->getImapConnection()->copy($hordeSourceMailBox, $hordeTrashMailBox,
 				array('create' => $createTrash, 'move' => true, 'ids' => $hordeMessageIds));
 
-			\OC::$server->getLogger()->info("Message moved to trash: {message} from mailbox {mailbox}",
+			OC::$server->getLogger()->info("Message moved to trash: {message} from mailbox {mailbox}",
 				array('message' => $messageId, 'mailbox' => $sourceFolderId, 'app' => 'mail'));
 		}
 	}
@@ -586,7 +588,7 @@ class Account implements IAccount {
 	 */
 	protected function localizeSpecialMailboxes() {
 
-		$l = \OC::$server->getL10N('mail');
+		$l = OC::$server->getL10N('mail');
 		$map = [
 			// TRANSLATORS: translated mail box name
 			'inbox'   => $l->t('Inbox'),
@@ -723,7 +725,7 @@ class Account implements IAccount {
 					$newMessages = $m->getMessagesSince($uidNext, $s['uidnext']);
 					// only trigger updates in case new messages are actually available
 					if (!empty($newMessages)) {
-						$changedBoxes[$folderId] = $m->getListArray($this->getId(), $s);
+						$changedBoxes[$folderId] = $m->serialize($this->getId(), $s);
 						$changedBoxes[$folderId]['messages'] = $newMessages;
 						$newUnreadMessages = array_filter($newMessages, function($m) {
 							return $m['flags']['unseen'];
@@ -738,7 +740,7 @@ class Account implements IAccount {
 	}
 
 	/**
-	 * @throws \Horde_Imap_Client_Exception
+	 * @throws Horde_Imap_Client_Exception
 	 */
 	public function reconnect() {
 		$this->mailboxes = null;

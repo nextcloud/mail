@@ -187,7 +187,7 @@ class Mailbox implements IMailBox {
 		foreach ($headers->ids() as $message_id) {
 			$header = $headers[$message_id];
 			$message = new IMAPMessage($this->conn, $this->mailBox, $message_id, $header);
-			$messages[] = $message->getListArray();
+			$messages[] = $message->jsonSerialize();
 		}
 		ob_get_clean();
 
@@ -288,7 +288,7 @@ class Mailbox implements IMailBox {
 	 * @param integer $accountId
 	 * @return array
 	 */
-	public function getListArray($accountId, $status = null) {
+	public function serialize($accountId, $status = null) {
 		$displayName = $this->getDisplayName();
 		try {
 			if (is_null($status)) {
