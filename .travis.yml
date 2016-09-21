@@ -23,6 +23,9 @@ env:
   - TEST_JS=FALSE
   - PHP_COVERAGE=FALSE
   - PACKAGE=FALSE
+  - NIGHTLY=FALSE
+  - secure: Vn7keHV0uFIO0BEIYCJntCwfdolcs7lPWk66mdZXPy53Mgn6prVA2EP9pSUIeMcelXpyhsBPaevDCS5uPMUQ+4LGAbzFh2/xnUL2EsUmidhPF2q+pmyn957JAafMLOY2odvgwnUNvSPizF3NzaeAvBGLtkscUyFizy3klmq6pQuheLvUMKL+bts5fPd3+Dw9fPEz/+MchRr5tudrfpqBBiX0eeolx18je/dI7OUlduakbbjeeiSvvm3ygdKYV2iHP6cYXwvNBPlUj0+ewNxSvnW/zHI5L9vjXIrDWTyFDXzPzQBjRLbl4OyvSKJrxjXGrb/kezxIrCssK9EjZyIo9tffcLJNZIOvZF7y8Eto1AFIonrRYwjvuZCFuXona0CVMBOO6/TBxkfu+21f53HiFVuE7uE3gKItIbDxW9t4NX66ZAuPiAr5pqj7fptJJ+LzgeRs/vM9MS1GmLp4f4DnQoyDeodc+F7zPN14/Og7m9/Yua5qzUgaPnBNg0NzE1PtZOjPWqZq1UQf7ohZQf5p1Kps3f8mkOHdoNXQX77E8Od6anQdzYj4PUkXzswwl7GFDd7C2JyCy4d20TGS29IklToRO5kgZwMU1sMHNTLcelOO69F67LkEow2zKOG1iXKVcY6pDXWiCMZzCPFOK8qPlkRxmwVECj5zTARVLkt/SWg=
+  - secure: aUsm/fHNYQ+7e4t36nFguzDyPw1jwnrLyZDKPkmZc3y5NJIGFVTK9iv2IRA5R2atu+R67siL92jAqyL6oLoASpqIpMX8Txg9sBnNSu1flZjKYO0wnNYfg6g3gMGymwwU799bLb69lcTgFmCGhVLrhMcSk7j3uym/UH3bt75nl3dER+Frq1JK73LDrpZmpXcwuhqxq77dhv2C9zyPDd2J8ZBfZjIkDKzL80e6PRXTJIh5MRQ6U74MnWAHCBNtyrSUEtYZu4eVWGvGr0O7DRubTgVgi1JgYLFlFnRGVSKrWZ2VJhU2Rkj3LDGiozyTDEYjcdfraEMOMw38iZKwuugWObmvlAK8ykLOtqqIxsymIQr/798kdgFOsvYjbb3+LhFN6HfR4KV35+WmbK4V0tL/sVtVum8kNXKv9JGPcQ6ZI4g2OBp5bvZpNSvvbW+7Hp03FWRWSSW3Br4sZ4r4h5McP6ngaYZJww3Nl6/wvE0kASodCXkX+gGen6bxAUVwQFi4GnINdOpI6IxU5wJnyUEHWPorgkvp4OzS8pvn5asRIfsFo8/hnOTN1pX9Bdud8V7k7KaWwSMVonsEtA+2VgKQgI8/qt4gK7ThhUXYJekzMkWO7OnCxfBPi9/IS6n297DGsTYW6adRy/dWvZ5CbEE3bQk0ubR7hSz6K36lCt1+kRQ=
   matrix:
   - DB=sqlite
 
@@ -98,6 +101,9 @@ script:
   # Test packaging
   - cd ..
   - if [[ "$PACKAGE" = "TRUE" ]]; then make appstore; fi
+
+  # Upload the nightly to ftp server
+  - if [[ "$NIGHTLY" = "TRUE" ]]; then curl --ftp-create-dirs -T build/artifacts/appstore/mail.tar.gz -u $FTP_LOGIN:$FTP_PW ftp://ftp.portknox.net/htdocs/mail/mail.tar.gz; fi
 
 matrix:
   include:
