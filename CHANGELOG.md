@@ -17,6 +17,7 @@ All notable changes to this project will be documented in this file.
   [#1590](https://github.com/owncloud/mail/pull/1590) @ChristophWurst
 - Shortcuts to select previous/next messsage
   [#1557](https://github.com/owncloud/mail/pull/1557) @ChristophWurst
+
 ## Changed
 - Minimum server is Nextcloud 10/ownCloud 9.1
   [#84](https://github.com/nextcloud/mail/pull/84) @ChristophWurst
@@ -24,6 +25,7 @@ All notable changes to this project will be documented in this file.
   [#1612](https://github.com/owncloud/mail/pull/1612) @ChristophWurst
 - When deleting the current message, the next one is selected immediatelly
   [#1585](https://github.com/owncloud/mail/pull/1585) @ChristophWurst
+
 ## Fixed
 - Client error while composing a new message
   [#1609](https://github.com/owncloud/mail/pull/1609) @ChristophWurst
