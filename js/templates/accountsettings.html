@@ -35,8 +35,7 @@
 				<input type="password"
 				       name="imap-password"
 				       placeholder="{{ t 'IMAP Password' }}"
-				       value=""
-				       required />
+				       value=""/>
 			</p>
 			<p class="grouptop">
 				<input type="text"
@@ -68,11 +67,10 @@
 			<p class="groupbottom">
 				<input type="password"
 				       name="smtp-password"
-				       placeholder="{{ t 'SMTP Password' }}" value=""
-				       required />
+				       placeholder="{{ t 'SMTP Password' }}" value=""/>
 			</p>
 		</div>
-		<input type="submit" value="{{ t 'Save' }}">
+		<input type="submit" name="submit-account-settings" value="{{ t 'Save' }}">
 	</form>
 </div>
 
@@ -82,6 +80,6 @@
 	<form name="aliasForm" method="post">
 		<input type="text" name="alias" id="alias" placeholder="{{ t 'Mail address' }}">
 		<input type="text" name="alias-name" id="alias-name" placeholder="{{ t 'Display Name' }}">
-		<input type="submit" value="{{ t 'Save' }}">
+		<input type="submit" name="submit-alias" value="{{ t 'Save' }}">
 	</form>
 </div>
