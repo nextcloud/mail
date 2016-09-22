@@ -75,8 +75,8 @@ define(function(require) {
 			};
 			this.ui.submitAccountSettingsButton.val('Saving');
 			var _this = this;
-			
-			var savingAccount = Radio.account.request('edit', config);
+
+			var savingAccount = Radio.account.request('edit', this.currentAccount, config);
 			$.when(savingAccount).done(function(data) {
 				_this.currentAccount.get('aliases').add(data);
 			});

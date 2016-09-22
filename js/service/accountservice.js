@@ -44,10 +44,14 @@ define(function(require) {
 		return defer.promise();
 	}
 
-	function editAccount(config) {
+	function editAccount(account, config) {
 		var defer = $.Deferred();
 
-		$.ajax(OC.generateUrl('apps/mail/accounts'), {
+		var url = OC.generateUrl('/apps/mail/accounts/{id}', {
+			id: account.get('accountId')
+		});
+
+		$.ajax(url, {
 			data: config,
 			type: 'POST',
 			success: function() {
