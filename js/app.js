@@ -47,7 +47,6 @@ define(function(require) {
 	require('service/folderservice');
 	require('service/messageservice');
 	require('service/aliasesservice');
-	require('notification');
 
 	// Set marionette defaults
 	Marionette.TemplateCache.prototype.compileTemplate = function(rawTemplate) {
