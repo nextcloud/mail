@@ -63,6 +63,7 @@ define(function(require) {
 
 		onAccountSubmit: function(e){
 			e.preventDefault();
+			e.stopPropagation();
 			var config = {
 				'imapHost': this.ui.imapHost.val(),
 				'imapUser': this.ui.imapUser.val(),
@@ -75,13 +76,11 @@ define(function(require) {
 			};
 			this.ui.submitAccountSettingsButton.val('Saving');
 			var _this = this;
-
 			var savingAccount = Radio.account.request('edit', this.currentAccount, config);
-			$.when(savingAccount).done(function(data) {
-				_this.currentAccount.get('aliases').add(data);
-			});
+			//$.when(savingAccount).done(function(data) {
+			//});
 
-			$.when(savingAlias).always(function() {
+			$.when(savingAccount).always(function() {
 				_this.ui.submitAccountSettingsButton.val('Save');
 			});
 
