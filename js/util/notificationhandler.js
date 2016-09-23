@@ -27,6 +27,13 @@ define(function(require) {
 	var Radio = require('radio');
 
 	Radio.ui.on('notification:mail:show', showMailNotification);
+	Radio.ui.on('notification:request', requestNotification);
+
+	function requestNotification() {
+		if (typeof Notification !== 'undefined') {
+			Notification.requestPermission();
+		}
+	}
 
 	/*jshint maxparams: 6 */
 	function showNotification(title, body, tag, icon, account, folder) {

@@ -33,6 +33,9 @@ define([
 				// Hack to get ref to notification object
 				notification = this;
 			};
+			mock.requestPermission = function() {
+
+			};
 			mock.prototype = {
 				getTitle: function() {
 					return this.title;
@@ -56,6 +59,15 @@ define([
 		afterEach(function() {
 			window.Notification = originalNotification;
 			jasmine.clock().uninstall();
+		});
+
+		it('requests notification permissions', function() {
+			window.Notification = getNotificationMock();
+			spyOn(window.Notification, 'requestPermission');
+
+			Radio.ui.trigger('notification:request');
+
+			expect(window.Notification.requestPermission).toHaveBeenCalled();
 		});
 
 		it('should do nothing if notifications are not supported by the browser', function() {

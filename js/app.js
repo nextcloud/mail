@@ -1,4 +1,4 @@
-/* global Notification, SearchProxy */
+/* global SearchProxy */
 
 /**
  * @author Christoph Wurst <christoph@winzerhof-wurst.at>
@@ -70,10 +70,7 @@ define(function(require) {
 			}
 		},
 		requestNotificationPermissions: function() {
-			// request permissions
-			if (typeof Notification !== 'undefined') {
-				Notification.requestPermission();
-			}
+			Radio.ui.trigger('notification:request');
 		},
 		setUpSearch: function() {
 			SearchProxy.setFilter(require('search').filter);
