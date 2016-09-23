@@ -91,6 +91,7 @@ Connect to your database and run the following commands (`oc_` is the default ta
 ```sql
 DELETE FROM oc_appconfig WHERE appid = 'mail';
 DROP TABLE oc_mail_accounts;
+DROP TABLE oc_mail_aliases;
 DROP TABLE oc_mail_collected_addresses;
 ```
 
