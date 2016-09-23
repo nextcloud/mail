@@ -129,6 +129,7 @@ class AccountsController extends Controller {
 			$conf['aliases'] = $this->aliasesService->findAll($conf['accountId'], $this->currentUserId);
 			$json[] = $conf;
 		}
+
 		return new JSONResponse($json);
 	}
 
@@ -150,11 +151,20 @@ class AccountsController extends Controller {
 
 	/**
 	 * @NoAdminRequired
+	 *
+	 * @param int $accountId
+	 * @return JSONResponse
 	 */
-	public function update() {
+	public function edit($accountId) {
 		$response = new Response();
 		$response->setStatus(Http::STATUS_NOT_IMPLEMENTED);
-		return $response;
+		try {
+			$account = $this->accountService->find($this->currentUserId, $accountId);
+
+			return new JSONResponse($account->getConfiguration());
+		} catch (DoesNotExistException $e) {
+			return new JSONResponse([], 404);
+		}
 	}
 
 	/**
@@ -357,7 +367,7 @@ class AccountsController extends Controller {
 
 	/**
 	 * @NoAdminRequired
-	 * 
+	 *
 	 * @param int $accountId
 	 * @param string $subject
 	 * @param string $body

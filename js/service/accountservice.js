@@ -47,10 +47,9 @@ define(function(require) {
 	function editAccount(account, config) {
 		var defer = $.Deferred();
 
-		var url = OC.generateUrl('/apps/mail/accounts/{id}', {
+		var url = OC.generateUrl('apps/mail/accounts/{id}', {
 			id: account.get('accountId')
 		});
-
 		$.ajax(url, {
 			data: config,
 			type: 'POST',
