@@ -9,6 +9,7 @@ OC.L10N.register(
     "Saving Aliases Failed." : "Echec de la sauvergarde des Alias.",
     "Deleting Aliases Failed." : "Échec de la suppression des Alias.",
     "Error while loading the selected account." : "Erreur lors du chargement du compte sélectionné.",
+    "Loading {folder}" : "Chargement de {folder}",
     "Searching for {query}" : "Recherche pour {query}",
     "Forwarded message" : "Message transféré",
     "Choose a folder to store the attachment in" : "Choisissez le dossier dans lequel enregistrer la pièce jointe",
