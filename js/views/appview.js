@@ -227,7 +227,6 @@ define(function(require) {
 		showSidebarAccounts: function() {
 			$('#app-navigation').removeClass('icon-loading');
 			// setup folder view
-			console.log(123);
 			this.navigation.showChildView('accounts', new NavigationAccountsView({
 				collection: require('state').accounts
 			}));

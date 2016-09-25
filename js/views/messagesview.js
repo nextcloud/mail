@@ -20,6 +20,7 @@
 define(function(require) {
 	'use strict';
 
+	var _ = require('underscore');
 	var $ = require('jquery');
 	var _ = require('underscore');
 	var Backbone = require('backbone');
@@ -51,6 +52,7 @@ define(function(require) {
 			this.searchQuery = options.searchQuery;
 
 			var _this = this;
+			this.on('dom:refresh', this._bindScrollEvents);
 			Radio.ui.reply('messagesview:collection', function() {
 				return _this.collection;
 			});
@@ -61,7 +63,7 @@ define(function(require) {
 			this.listenTo(Radio.message, 'messagesview:message:next', this.selectNextMessage);
 			this.listenTo(Radio.message, 'messagesview:message:prev', this.selectPreviousMessage);
 		},
-		onRender: function() {
+		_bindScrollEvents: function() {
 			this.$scrollContainer = this.$el.parent();
 			this.$scrollContainer.scroll(_.bind(this.onScroll, this));
 		},
