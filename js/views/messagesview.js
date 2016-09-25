@@ -22,7 +22,6 @@ define(function(require) {
 
 	var _ = require('underscore');
 	var $ = require('jquery');
-	var _ = require('underscore');
 	var Backbone = require('backbone');
 	var Handlebars = require('handlebars');
 	var Radio = require('radio');

@@ -148,6 +148,8 @@ define(function(require) {
 			} else {
 				this.setAutoSize(true);
 			}
+
+			this.defaultMailSelect();
 		},
 		setAutoSize: function(state) {
 			if (state === true) {
@@ -561,9 +563,6 @@ define(function(require) {
 			if (alias) {
 				$('.mail-account').val(alias.id);
 			}
-		},
-		onRender: function() {
-			this.defaultMailSelect();
 		}
 	});
 
