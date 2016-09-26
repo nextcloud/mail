@@ -26,7 +26,7 @@ define(function(require) {
 	var Marionette = require('marionette');
 	var Handlebars = require('handlebars');
 	var Radio = require('radio');
-	var ComposerView = require('views/composer');
+	var ComposerView = require('views/composerview');
 	var MessageView = require('views/message');
 	var MessagesView = require('views/messagesview');
 	var ErrorView = require('views/errorview');

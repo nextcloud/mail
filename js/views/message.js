@@ -19,7 +19,7 @@ define(function(require) {
 	var $ = require('jquery');
 	var Attachments = require('models/attachments');
 	var HtmlHelper = require('util/htmlhelper');
-	var ComposerView = require('views/composer');
+	var ComposerView = require('views/composerview');
 	var MessageAttachmentsView = require('views/messageattachments');
 	var MessageTemplate = require('text!templates/message.html');
 
