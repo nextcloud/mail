@@ -15,7 +15,6 @@ define(function(require) {
 	var _ = require('underscore');
 	var Handlebars = require('handlebars');
 	var Marionette = require('marionette');
-	var OC = require('OC');
 	var Radio = require('radio');
 	var MessageTemplate = require('text!templates/message-list-item.html');
 
@@ -118,23 +117,16 @@ define(function(require) {
 			});
 
 			// really delete the message
-			$.ajax(
-					OC.generateUrl('apps/mail/accounts/{accountId}/folders/{folderId}/messages/{messageId}',
-							{
-								accountId: require('state').currentAccount.get('accountId'),
-								folderId: require('state').currentFolder.get('id'),
-								messageId: thisModel.id
-							}), {
-				data: {},
-				type: 'DELETE',
-				success: function() {
-					var cache = require('cache');
-					var state = require('state');
-					cache.removeMessage(state.currentAccount, state.currentFolder, thisModel.id);
-				},
-				error: function() {
-					Radio.ui.trigger('error:show', t('mail', 'Error while deleting message.'));
-				}
+			var account = require('state').currentAccount;
+			var deleting = Radio.message.request('delete', account, folder, this.model);
+
+			$.when(deleting).fail(function() {
+				// TODO: move to controller
+				Radio.ui.trigger('error:show', t('mail', 'Error while deleting message.'));
+
+				// Restore counter
+				count = folder.get('total');
+				folder.set('total', count + 1);
 			});
 		}
 	});
