@@ -57,7 +57,8 @@ define(function(require) {
 				}
 
 				e.preventDefault();
-				window.location = this.model.get('downloadUrl');
+				window.open(this.model.get('downloadUrl'));
+				window.focus();
 			}
 		},
 		_onSaveToCloud: function(e) {
