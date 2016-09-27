@@ -34,7 +34,7 @@ If you experience any issues or have enhancement suggestions you can report them
 
 ## Maintainers
 
-[Christoph Wurst](https://github.com/ChristophWurst), [Thomas Müller](https://github.com/DeepDiver1975), [Jan-Christoph Borchardt](https://github.com/jancborchardt), [Steffen Lindner](https://github.com/Gomez) [and many more](https://github.com/nextcloud/mail/graphs/contributors)
+[Christoph Wurst](https://github.com/ChristophWurst), [Jan-Christoph Borchardt](https://github.com/jancborchardt), [Steffen Lindner](https://github.com/Gomez) [and many more](https://github.com/nextcloud/mail/graphs/contributors)
 
 If you’d like to join, just go through the [issue list](https://github.com/nextcloud/mail/issues) and fix some. :)
 
