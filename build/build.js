@@ -14,7 +14,6 @@
 	name: 'app',
 	out: '../js/mail.min.js',
 	insertRequire: [
-		'app',
-		'notification'
+		'init',
 	]
 })
