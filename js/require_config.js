@@ -45,7 +45,6 @@
 	});
 
 	require([
-		'app',
-		'notification'
+		'app'
 	]);
 })();
