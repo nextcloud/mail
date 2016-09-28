@@ -36,6 +36,18 @@ OC = {
 	}
 };
 
+SearchProxy = {
+	attach: function(search) {
+
+	},
+	filterProxy: function(query) {
+
+	},
+	setFilter: function(newFilter) {
+
+	}
+};
+
 // jQuery module stubs
 $.fn.tooltip = function() {
 

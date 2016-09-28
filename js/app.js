@@ -129,10 +129,5 @@ define(function(require) {
 		})(), 1000);
 	});
 
-	$(function() {
-		// Start app when the page is ready
-		Mail.start();
-	});
-
 	return Mail;
 });

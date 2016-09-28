@@ -23,15 +23,16 @@ define([
 	'radio',
 ], function(AccountService, OC, Radio) {
 
-	beforeEach(function() {
-		jasmine.Ajax.install();
-	});
-
-	afterEach(function() {
-		jasmine.Ajax.uninstall();
-	});
-
 	describe('AccountService', function() {
+
+		beforeEach(function() {
+			jasmine.Ajax.install();
+		});
+
+		afterEach(function() {
+			jasmine.Ajax.uninstall();
+		});
+
 		it('creates a new account on the server', function() {
 			spyOn(OC, 'generateUrl').and.returnValue('index.php/apps/mail/accounts');
 
