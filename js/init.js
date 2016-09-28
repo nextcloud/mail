@@ -22,7 +22,7 @@ define(function(require) {
 
 	$(function() {
 		// Start app when the page is ready
-		console.log('starting Mail…');
+		console.log('Starting Mail …');
 		App.start();
 	});
 });
