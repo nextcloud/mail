@@ -22,8 +22,6 @@ define(function(require) {
 	var currentMessage = null;
 	var currentMessageSubject = null;
 	var currentMessageBody = '';
-	var messagesLoading = null;
-	var messageLoading = null;
 
 	Object.defineProperties(state, {
 		accounts: {
@@ -76,22 +74,6 @@ define(function(require) {
 			},
 			set: function(body) {
 				currentMessageBody = body;
-			}
-		},
-		messagesLoading: {
-			get: function() {
-				return messagesLoading;
-			},
-			set: function(loading) {
-				messagesLoading = loading;
-			}
-		},
-		messageLoading: {
-			get: function() {
-				return messageLoading;
-			},
-			set: function(loading) {
-				messageLoading = loading;
 			}
 		}
 	});

@@ -24,7 +24,6 @@ define(function(require) {
 	var _ = require('underscore');
 	var OC = require('OC');
 	var Radio = require('radio');
-	var messageListXhr = null;
 
 	Radio.message.reply('entities', getMessageEntities);
 	Radio.message.reply('entity', getMessageEntity);
@@ -55,23 +54,11 @@ define(function(require) {
 			options.cache = false;
 		}
 
-		// Abort previous requests
-		if (messageListXhr !== null) {
-			messageListXhr.abort();
-		}
-
 		var defer = $.Deferred();
 
-		if (options.cache) {
-			// Load cached version if available
-			var messageList = require('cache').getMessageList(account, folder);
-			if (!options.force && messageList) {
-				_.each(messageList, function(msg) {
-					folder.addMessage(msg);
-				});
-				defer.resolve(folder.messages, true);
-				return defer.promise();
-			}
+		if (options.cache && folder.get('messagesLoaded')) {
+			defer.resolve(folder.messages, true);
+			return defer.promise();
 		}
 
 		var url = OC.generateUrl('apps/mail/accounts/{accountId}/folders/{folderId}/messages',
@@ -81,7 +68,7 @@ define(function(require) {
 			});
 
 		// TODO: folder.messages.fetch()
-		messageListXhr = $.ajax(url,
+		$.ajax(url,
 			{
 				data: {
 					from: options.from,
@@ -89,9 +76,6 @@ define(function(require) {
 					filter: options.filter
 				},
 				success: function(messages) {
-					if (options.replace || options.cache) {
-						require('cache').addMessageList(account, folder, messages);
-					}
 					var collection = folder.messages;
 					if (options.replace) {
 						collection.reset();
@@ -99,6 +83,7 @@ define(function(require) {
 					_.each(messages, function(msg) {
 						folder.addMessage(msg);
 					});
+					folder.set('messagesLoaded', true);
 					defer.resolve(collection, false);
 				},
 				error: function(error, status) {
@@ -141,7 +126,7 @@ define(function(require) {
 			folderId: folder.get('id'),
 			messageId: messageId
 		});
-		var xhr = $.ajax(url, {
+		$.ajax(url, {
 			type: 'GET',
 			success: function(message) {
 				defer.resolve(message);
@@ -152,10 +137,6 @@ define(function(require) {
 				}
 			}
 		});
-		if (!options.backgroundMode) {
-			// Save xhr to allow aborting unneeded requests
-			require('state').messageLoading = xhr;
-		}
 
 		return defer.promise();
 	}

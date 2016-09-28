@@ -57,10 +57,6 @@ define(function(require) {
 		if (!options.force && false) {
 			return;
 		}
-		// Abort previous loading requests
-		if (require('state').messageLoading !== null) {
-			require('state').messageLoading.abort();
-		}
 
 		// check if message is a draft
 		var draftsFolder = account.get('specialFolders').drafts;

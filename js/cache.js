@@ -243,8 +243,6 @@ define(function(require) {
 		addMessage: addMessage,
 		addMessages: addMessages,
 		removeMessage: removeMessage,
-		getMessageList: getMessageList,
-		addMessageList: addMessageList,
 		removeAccount: removeAccount
 	};
 });
