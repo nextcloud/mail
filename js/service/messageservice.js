@@ -32,6 +32,7 @@ define(function(require) {
 	Radio.message.reply('flag', flagMessage);
 	Radio.message.reply('send', sendMessage);
 	Radio.message.reply('draft', saveDraft);
+	Radio.message.reply('delete', deleteMessage);
 
 	/**
 	 * @param {Account} account
@@ -349,12 +350,47 @@ define(function(require) {
 					body: message.body,
 					attachments: message.attachments,
 					folderId: options.folder ? options.folder.get('id') : null,
-					messageId: options.repliedMessage.get('id'),
+					messageId: options.repliedMessage ? options.repliedMessage.get('id') : null,
 					uid: options.draftUID
 				}
 			};
 			$.ajax(url, data);
 		}
+		return defer.promise();
+	}
+
+	/**
+	 * @param {Account} account
+	 * @param {Folder} folder
+	 * @param {Message} message
+	 * @returns {Deferred}
+	 */
+	function deleteMessage(account, folder, message) {
+		var defer = $.Deferred();
+
+		var url = OC.generateUrl('apps/mail/accounts/{accountId}/folders/{folderId}/messages/{messageId}', {
+			accountId: require('state').currentAccount.get('accountId'),
+			folderId: require('state').currentFolder.get('id'),
+			messageId: message.get('id')
+		});
+		$.ajax(url, {
+			data: {},
+			type: 'DELETE',
+			success: function() {
+				var cache = require('cache');
+				var state = require('state');
+				cache.removeMessage(state.currentAccount, state.currentFolder, message.get('id'));
+
+				defer.resolve();
+			},
+			error: function() {
+				// Add the message to the collection again
+				folder.addMessage(message);
+
+				defer.reject();
+			}
+		});
+
 		return defer.promise();
 	}
 });

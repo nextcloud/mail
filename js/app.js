@@ -47,7 +47,6 @@ define(function(require) {
 	require('service/folderservice');
 	require('service/messageservice');
 	require('service/aliasesservice');
-	require('notification');
 
 	// Set marionette defaults
 	Marionette.TemplateCache.prototype.compileTemplate = function(rawTemplate) {
@@ -128,11 +127,6 @@ define(function(require) {
 				}
 			};
 		})(), 1000);
-	});
-
-	$(function() {
-		// Start app when the page is ready
-		Mail.start();
 	});
 
 	return Mail;

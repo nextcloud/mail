@@ -69,7 +69,7 @@ OC.L10N.register(
     "The link leads to %s" : "A hivatkozás ide mutat: %s",
     "If you don’t want to visit that page, you can return to <a href=\"%s\">Mail</a>." : "Ha nem akarod megnyitni azt az oldalt, akkor térj vissza a <a href=\"%s\">Levelekhez</a>",
     "Continue to %s" : "Folytatás ide: %s",
-    "Settings" : "Settings",
+    "Settings" : "Beállítások",
     "Delete account" : "Fiók törlése",
     "Account Settings" : "Fiók beállítások",
     "Aliases" : "Álnevek",

@@ -36,6 +36,27 @@ OC = {
 	}
 };
 
+SearchProxy = {
+	attach: function(search) {
+
+	},
+	filterProxy: function(query) {
+
+	},
+	setFilter: function(newFilter) {
+
+	}
+};
+
+// jQuery module stubs
+$.fn.tooltip = function() {
+
+};
+
+$.fn.autosize = function() {
+
+};
+
 require.config({
 	// Karma serves files under /base, which is the basePath from your config file
 	baseUrl: '/base/js',

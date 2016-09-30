@@ -36,7 +36,7 @@ OC.L10N.register(
     "Send" : "Send",
     "Sending …" : "Sender ...",
     "Message sent!" : "Melding sendt!",
-    "Server error" : "Serverfeil",
+    "Server error" : "Tjenerfeil",
     "An unknown error occurred" : "En ukjent feil oppstod",
     "Opening HTML drafts is not supported yet." : "Åpning av HTML-kladd er ikke støttet ennå.",
     "Draft saved!" : "Kladd lagret!",

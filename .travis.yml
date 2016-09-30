@@ -101,16 +101,14 @@ script:
   - if [[ "$PACKAGE" = "TRUE" ]]; then make appstore; fi
 
   # Upload the nightly to ftp server
-  - if [[ "$NIGHTLY" = "TRUE" ]]; then curl --ftp-create-dirs -T build/artifacts/appstore/mail.tar.gz -u $FTP_LOGIN:$FTP_PW ftp://ftp.portknox.net/htdocs/mail/nextcloud_mail_nightly_build_$(date +%Y-%m-%d).tar.gz; fi
+  - if [[ "$NIGHTLY" = "TRUE" ]]; then curl --ftp-create-dirs -T build/artifacts/appstore/mail.tar.gz -u $FTP_LOGIN:$FTP_PW ftp://144.76.174.90/htdocs/mail/nextcloud_mail_nightly_build_$(date +%Y-%m-%d).tar.gz; fi
 
 matrix:
   include:
-    - php: 7.0
-      env: "DB=mysql TEST_JS=TRUE"
+    - php: 5.4
+      env: "DB=mysql CORE_BRANCH=stable10 TEST_JS=TRUE"
+    - php: 5.5
+      env: "DB=mysql CORE_BRANCH=stable10 PACKAGE=TRUE"
     - php: 7.0
       env: "DB=pgsql PHP_COVERAGE=TRUE"
-    - php: 5.4
-      env: "DB=mysql CORE_BRANCH=stable9 PACKAGE=TRUE"
-    - php: 5.5
-      env: "DB=mysql CORE_BRANCH=stable10"
   fast_finish: true

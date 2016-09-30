@@ -3,14 +3,14 @@
 	<id>mail</id>
 	<name>Mail</name>
 	<description>Easy to use email client which connects to your mail server via IMAP and SMTP.</description>
-	<version>0.5.4</version>
+	<version>0.6.0</version>
 	<licence>AGPL</licence>
 	<author>Christoph Wurst, Thomas Müller, Jan-Christoph Borchardt, Steffen Lindner &amp; many more …</author>
 	<documentation>
 		<admin>https://github.com/nextcloud/mail#readme</admin>
 	</documentation>
 	<dependencies>
-		<owncloud min-version="9.0" max-version="9.2" />
+		<owncloud min-version="9.1" max-version="9.2" />
 		<php min-version="5.4" max-version="7.0" />
 	</dependencies>
 	<ocsid>169914</ocsid>
