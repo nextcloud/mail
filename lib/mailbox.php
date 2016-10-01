@@ -223,6 +223,16 @@ class Mailbox implements IMailBox {
 		return $this->conn->status($this->mailBox, $flags);
 	}
 
+	public function getSyncToken() {
+		return $this->conn->getSyncToken($this->mailBox);
+	}
+
+	public function sync($syncToken, array $ids = []) {
+		return $this->conn->sync($this->mailBox, $syncToken, [
+			'ids' => new Horde_Imap_Client_ids($ids),
+		]);
+	}
+
 	/**
 	 * @return int
 	 */

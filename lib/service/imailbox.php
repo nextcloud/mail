@@ -70,4 +70,15 @@ interface IMailBox {
 	 */
 	public function getStatus();
 
+	/**
+	 * @return string
+	 */
+	public function getSyncToken();
+
+	/**
+	 * @param string $syncToken
+	 * @param int[]|string[]
+	 */
+	public function sync($syncToken, array $ids = []);
+
 }

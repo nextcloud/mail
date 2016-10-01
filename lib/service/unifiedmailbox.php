@@ -142,6 +142,14 @@ class UnifiedMailbox implements IMailBox {
 		return [];
 	}
 
+	public function getSyncToken() {
+		throw 'Unified inbox sucks';
+	}
+
+	public function sync($syncToken, array $ids = []) {
+		throw 'Unified inbox sucks';
+	}
+
 	/**
 	 * @param string $messageId
 	 * @return array

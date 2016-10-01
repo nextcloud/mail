@@ -122,9 +122,10 @@ class MessagesController extends Controller {
 	 * @param int $to
 	 * @param string $filter
 	 * @param array $ids
+	 * @param string $syncToken
 	 * @return JSONResponse
 	 */
-	public function index($accountId, $folderId, $from=0, $to=20, $filter=null, $ids=null) {
+	public function index($accountId, $folderId, $from=0, $to=20, $filter=null, $ids=null, $syncToken = '', $syncUIDs = []) {
 		if (!is_null($ids)) {
 			$ids = explode(',', $ids);
 
@@ -134,7 +135,15 @@ class MessagesController extends Controller {
 
 		$this->logger->debug("loading messages $from to $to of folder <$folderId>");
 
+		$syncToken = 'VTQ4OSxWMTQyODU5OTExNSxNMTU0';
+		error_log(print_r($syncUIDs, true));
+		/* @var $x \Horde_Imap_Client_Data_Sync */
+		$x = $mailBox->sync($syncToken, $syncUIDs);
+		error_log(print_r($x->vanisheduids, true));
+		error_log(print_r($x, true));
+
 		$json = $mailBox->getMessages($from, $to-$from+1, $filter);
+		$syncToken = $mailBox->getSyncToken();
 
 		$ci = $this->contactsIntegration;
 		$json = array_map(function($j) use ($ci, $mailBox) {
@@ -154,7 +163,10 @@ class MessagesController extends Controller {
 			return $j;
 		}, $json);
 
-		return new JSONResponse($json);
+		return new JSONResponse([
+			'messages' => $json,
+			'syncToken' => $syncToken,
+		]);
 	}
 
 	/**
