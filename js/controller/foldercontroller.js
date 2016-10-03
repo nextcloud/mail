@@ -52,13 +52,6 @@ define(function(require) {
 	function loadFolderMessages(account, folder, noSelect, searchQuery) {
 		Radio.ui.trigger('composer:leave');
 
-		if (require('state').messagesLoading !== null) {
-			require('state').messagesLoading.abort();
-		}
-		if (require('state').messageLoading !== null) {
-			require('state').messageLoading.abort();
-		}
-
 		// Set folder active
 		Radio.folder.trigger('setactive', account, folder);
 

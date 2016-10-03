@@ -103,13 +103,6 @@ define(function(require) {
 			$('#mail_new_message').prop('disabled', true);
 			$('#mail-message').removeClass('hidden-mobile');
 
-			// Abort message loads
-			if (require('state').messageLoading !== null) {
-				require('state').messageLoading.abort();
-				$('iframe').parent().removeClass('icon-loading');
-				$('#mail_message').removeClass('icon-loading');
-			}
-
 			// setup composer view
 			this.message.show(new ComposerView({
 				accounts: require('state').accounts,
