@@ -45,7 +45,7 @@ define([
 			expect(folder.get('open')).toBe(false);
 		});
 
-		it('assigns itself to added messages', function() {
+		it('assigns itself to an added message', function() {
 			var message = new Message();
 
 			expect(folder.messages.length).toBe(0);
@@ -54,6 +54,18 @@ define([
 
 			expect(folder.messages.length).toBe(1);
 			expect(message.folder).toBe(folder);
+		});
+
+		it('assigns itself to added messages', function() {
+			var messages = [{}, {}];
+
+			expect(folder.messages.length).toBe(0);
+
+			folder.addMessages(messages);
+
+			expect(folder.messages.length).toBe(2);
+			expect(folder.messages.at(0).folder).toBe(folder);
+			expect(folder.messages.at(1).folder).toBe(folder);
 		});
 	});
 });

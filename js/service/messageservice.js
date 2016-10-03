@@ -80,9 +80,7 @@ define(function(require) {
 					if (options.replace) {
 						collection.reset();
 					}
-					_.each(messages, function(msg) {
-						folder.addMessage(msg);
-					});
+					folder.addMessages(messages);
 					folder.set('messagesLoaded', true);
 					defer.resolve(collection, false);
 				},
