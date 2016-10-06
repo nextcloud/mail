@@ -41,7 +41,8 @@ define(function(require) {
 		loadingMore: false,
 		reloaded: false,
 		events: {
-			wheel: 'onScroll'
+			DOMMouseScroll: 'onWheel',
+			mousewheel: 'onWheel'
 		},
 		collectionEvents: {
 			update: 'render'
@@ -192,6 +193,15 @@ define(function(require) {
 				this.loadingMore = true;
 				this.loadMessages(false);
 				return;
+			}
+		},
+		onWheel: function(event) {
+			if (event.originalEvent.wheelDelta && event.originalEvent.wheelDelta > 0) {
+				// Scrolling up in non-FF browsers
+				this.onScroll();
+			} else if (event.originalEvent.detail && event.originalEvent.detail < 0) {
+				// Scrolling up in FF
+				this.onScroll();
 			}
 		},
 		filterCurrentMailbox: function(query) {
