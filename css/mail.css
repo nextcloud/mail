@@ -470,6 +470,9 @@ input.bcc {
 	border-top: none;
 	border-radius: 0;
 }
+.mail-recipient-autocomplete .avatar {
+	display: inline-block;
+}
 textarea.message-body {
 	margin: 0;
 	border-top: none;

@@ -468,7 +468,32 @@ define(function(require) {
 						this.value = terms.join(', ');
 						return false;
 					}
-				});
+				}).data('ui-autocomplete')._renderItem = function ($ul, item) {
+					var $item = $('<li/>');
+					var $row = $('<a/>');
+
+					$row.addClass('mail-recipient-autocomplete');
+
+					if (item.photo && item.photo !== null) {
+						var $avatar = $('<img/>');
+						$avatar.addClass('avatar');
+						$avatar.height('32px');
+						$avatar.width('32px');
+						$avatar.attr('src', item.photo);
+						$row.append($avatar);
+					} else {
+						var $placeholder = $('<div/>');
+						$placeholder.imageplaceholder(item.value);
+						$placeholder.addClass('avatar');
+						$row.append($placeholder);
+					}
+
+					$row.append($('<span>').html(item.value));
+
+					$item.append($row);
+					$item.appendTo($ul);
+					return $item;
+				};
 			}
 		},
 		buildAliases: function() {
