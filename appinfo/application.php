@@ -39,9 +39,11 @@ class Application extends App {
 			return $c->getServer()->getSession();
 		});
 
-		$user = $container->query("UserId");
 		$container->registerParameter("appName", "mail");
-		$container->registerParameter("userFolder", $container->getServer()->getUserFolder($user));
+		$container->registerService("userFolder", function ($c) use ($container) {
+			$user = $container->query("UserId");
+			return $container->getServer()->getUserFolder($user);
+		});
 		$container->registerParameter("testSmtp", $testSmtp);
 		$container->registerParameter("referrer", isset($_SERVER['HTTP_REFERER']) ? $_SERVER['HTTP_REFERER'] : null);
 		$container->registerParameter("hostname", Util::getServerHostName());
