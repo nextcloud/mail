@@ -389,6 +389,16 @@
 	right: -10px;
 }
 
+/* autocomplete list */
+.ui-autocomplete .ui-menu-item a.mail-recipient-autocomplete {
+	display: flex;
+	align-content: center;
+	align-items: center;
+}
+.ui-autocomplete .ui-menu-item a.mail-recipient-autocomplete span {
+	margin-left: 10px;
+}
+
 /* editor */
 #mail-new-message-fixed {
 	z-index: 111; /* navigation menu is 110 ;-) */
@@ -469,9 +479,6 @@ input.bcc {
 	margin: 0;
 	border-top: none;
 	border-radius: 0;
-}
-.mail-recipient-autocomplete .avatar {
-	display: inline-block;
 }
 textarea.message-body {
 	margin: 0;
