@@ -78,6 +78,11 @@ before_script:
   - if [[ "$PHP_COVERAGE" = "FALSE" ]]; then phpenv config-rm xdebug.ini; fi
 
 script:
+  # Check info.xml schema validity
+  - wget https://apps.nextcloud.com/schema/apps/info.xsd
+  - xmllint appinfo/info.xml --schema info.xsd --noout
+  - rm info.xsd
+
   # Check PHP syntax errors
   - find . -name \*.php -not -path './vendor/*' -exec php -l "{}" \;
 
