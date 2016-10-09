@@ -392,7 +392,6 @@
 /* editor */
 #mail-new-message-fixed {
 	z-index: 111; /* navigation menu is 110 ;-) */
-	background-color: rgba(255, 255, 255, .75);
 	padding: 10px;
 	position: relative;
 }
