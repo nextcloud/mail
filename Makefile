@@ -66,10 +66,11 @@ appstore: clean install-deps optimize-js
 	--exclude=$(project_dir)/.jscsrc \
 	--exclude=$(project_dir)/.jshintrc \
 	--exclude=$(project_dir)/.jshintignore \
+	--exclude=$(project_dir)/.lgtm \
 	--exclude=$(project_dir)/.travis.yml \
 	--exclude=$(project_dir)/.scrutinizer.yml \
-        --exclude=$(project_dir)/bower.json \
-        --exclude=$(project_dir)/CONTRIBUTING.md \
+	--exclude=$(project_dir)/bower.json \
+	--exclude=$(project_dir)/CONTRIBUTING.md \
 	--exclude=$(project_dir)/composer.json \
 	--exclude=$(project_dir)/composer.lock \
 	--exclude=$(project_dir)/composer.phar \
