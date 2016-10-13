@@ -488,7 +488,7 @@ define(function(require) {
 						$row.append($placeholder);
 					}
 
-					$row.append($('<span>').html(item.value));
+					$row.append($('<span>').text(item.value));
 
 					$item.append($row);
 					$item.appendTo($ul);
