@@ -140,6 +140,12 @@
 				<notnull>true</notnull>
 				<length>255</length>
 			</field>
+			<field>
+				<name>display_name</name>
+				<type>text</type>
+				<notnull>false</notnull>
+				<length>255</length>
+			</field>
 			<index>
 				<name>mail_collected_addr_userid_index</name>
 				<field>

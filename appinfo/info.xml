@@ -5,7 +5,7 @@
 	<name>Mail</name>
 	<summary>IMAP web client</summary>
 	<description>Easy to use email client which connects to your mail server via IMAP and SMTP.</description>
-	<version>0.6.0</version>
+	<version>0.6.1</version>
 	<licence>agpl</licence>
 	<author>Christoph Wurst</author>
 	<author>Jan-Christoph Borchardt</author>
@@ -25,5 +25,10 @@
 		<owncloud min-version="9.1" max-version="9.2" />
 		<nextcloud min-version="9.1" max-version="11" />
 	</dependencies>
+	<repair-steps>
+		<post-migration>
+			<step>OCA\Mail\Migration\FixCollectedAddresses</step>
+		</post-migration>
+	</repair-steps>
 	<ocsid>169914</ocsid>
 </info>

@@ -28,10 +28,13 @@ use OCP\AppFramework\Db\Entity;
  * @method string getUserId()
  * @method null setEmail(string $email)
  * @method string getEmail()
+ * @method null setDisplayName(string $displayName)
+ * @method string getDisplayName()
  */
 class CollectedAddress extends Entity {
 
 	protected $userId;
 	protected $email;
+	protected $displayName;
 
 }
