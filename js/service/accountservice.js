@@ -16,7 +16,7 @@ define(function(require) {
 	var Radio = require('radio');
 
 	Radio.account.reply('create', createAccount);
-	Radio.account.reply('edit', editAccount);
+	Radio.account.reply('update', editAccount);
 	Radio.account.reply('entities', getAccountEntities);
 
 	function createAccount(config) {
@@ -46,13 +46,13 @@ define(function(require) {
 
 	function editAccount(account, config) {
 		var defer = $.Deferred();
-
-		var url = OC.generateUrl('apps/mail/accounts/{id}', {
+		var url = OC.generateUrl('apps/mail/accounts/{id}/update', {
 			id: account.get('accountId')
 		});
+		console.log(url);
 		$.ajax(url, {
 			data: config,
-			type: 'POST',
+			type: 'PUT',
 			success: function() {
 				defer.resolve();
 			},
