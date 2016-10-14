@@ -52,7 +52,7 @@ class ContactsIntegration {
 		$result = $this->contactsManager->search($term, ['FN', 'EMAIL']);
 		$receivers = [];
 		foreach ($result as $r) {
-			$id = $r['id'];
+			$id = $r['UID'];
 			$fn = $r['FN'];
 			if (!isset($r['EMAIL'])) {
 				continue;
