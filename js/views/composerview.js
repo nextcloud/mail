@@ -479,7 +479,7 @@ define(function(require) {
 
 					$row.addClass('mail-recipient-autocomplete');
 
-					if (prevUID == item['id']) {
+					if (prevUID === item['id']) {
 						var $placeholder = $('<div/>');
 						$placeholder.addClass('avatar');
 						$row.append($placeholder);
