@@ -46,10 +46,11 @@ define(function(require) {
 
 	function editAccount(account, config) {
 		var defer = $.Deferred();
-		var url = OC.generateUrl('apps/mail/accounts/{id}/update', {
+		var url = OC.generateUrl('apps/mail/accounts/{id}', {
 			id: account.get('accountId')
 		});
 		console.log(url);
+		config.accountId=account.get('accountId');
 		$.ajax(url, {
 			data: config,
 			type: 'PUT',
