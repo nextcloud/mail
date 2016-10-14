@@ -155,12 +155,38 @@ class AccountsController extends Controller {
 	 * @param int $accountId
 	 * @return JSONResponse
 	 */
-	public function update($accountId) {
+	public function update($accountId, $password,
+		$imapHost, $imapPort, $imapSslMode, $imapUser, $imapPassword,
+		$smtpHost, $smtpPort, $smtpSslMode, $smtpUser, $smtpPassword) {
 		$response = new Response();
 		try {
-			$account = $this->accountService->find($this->currentUserId, $accountId);
+			$accountDB = $this->accountService->find($this->currentUserId, $accountId);
 
-			return new JSONResponse($account->getConfiguration());
+			$account = $accountDB->getMailAccount();
+
+			$account->setInboundHost($imapHost);
+			$account->setInboundPort($imapPort);
+			$account->setInboundSslMode($imapSslMode);
+			$account->setInboundUser($imapUser);
+			if($imapPassword !== ''){
+				$account->setInboundPassword(
+					$this->crypto->encrypt($imapPassword)
+				);
+			}
+
+			$account->setOutboundHost($smtpHost);
+			$account->setOutboundPort($smtpPort);
+			$account->setOutboundSslMode($smtpSslMode);
+			$account->setOutboundUser($smtpUser);
+
+			if($smtpPassword !== ''){
+				$account->setOutboundPassword(
+					$this->crypto->encrypt($smtpPassword)
+				);
+			}
+
+			$this->accountService->save($account);
+			return new JSONResponse($accountDB->getConfiguration());
 		} catch (DoesNotExistException $e) {
 			return new JSONResponse([], 404);
 		}

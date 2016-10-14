@@ -28,9 +28,11 @@ define(function(require) {
 				imapHost: this.currentAccount.get('imapHost'),
 				imapUser: this.currentAccount.get('imapUser'),
 				imapPort: this.currentAccount.get('imapPort'),
+				imapSslMode: this.currentAccount.get('imapSslMode'),
 				smtpHost: this.currentAccount.get('smtpHost'),
 				smtpUser: this.currentAccount.get('smtpUser'),
-				smtpPort: this.currentAccount.get('smtpPort')
+				smtpPort: this.currentAccount.get('smtpPort'),
+				smtpSslMode: this.currentAccount.get('smtpSslMode')
 			};
 		},
 		currentAccount: null,
@@ -43,16 +45,20 @@ define(function(require) {
 			'imapHost' : 'input[name="imap-host"]',
 			'imapUser' : 'input[name="imap-user"]',
 			'imapPort' : 'input[name="imap-port"]',
+			'imapSslMode': '#account-imap-ssl-mode',
 			'imapPassword' : 'input[name="imap-password"]',
 			'smtpHost' : 'input[name="smtp-host"]',
 			'smtpUser' : 'input[name="smtp-user"]',
 			'smtpPort' : 'input[name="smtp-port"]',
+			'smtpSslMode': '#account-smtp-ssl-mode',
 			'smtpPassword' : 'input[name="smtp-password"]',
 			'submitAccountButton': 'input[name="submit-account-settings"]',
 		},
 		events: {
 			'click @ui.submitAliasButton': 'onAliasSubmit',
-			'click @ui.submitAccountButton': 'onAccountSubmit'
+			'click @ui.submitAccountButton': 'onAccountSubmit',
+			'change @ui.imapSslMode': 'onImapSslModeChange',
+			'change @ui.smtpSslMode': 'onSmtpSslModeChange'
 		},
 		regions: {
 			aliasesRegion : '#aliases-list'
@@ -68,10 +74,12 @@ define(function(require) {
 				'imapHost': this.ui.imapHost.val(),
 				'imapUser': this.ui.imapUser.val(),
 				'imapPort': this.ui.imapPort.val(),
+				'imapSslMode': this.ui.imapSslMode.val(),
 				'imapPassword': this.ui.imapPassword.val(),
 				'smtpHost': this.ui.smtpHost.val(),
 				'smtpUser': this.ui.smtpUser.val(),
 				'smtpPort': this.ui.smtpPort.val(),
+				'smtpSslMode': this.ui.smtpSslMode.val(),
 				'smtpPassword': this.ui.smtpPassword.val(),
 			};
 			this.ui.submitAccountButton.val('Saving');
@@ -81,7 +89,7 @@ define(function(require) {
 			//});
 
 			$.when(savingAccount).always(function() {
-				_this.ui.submitAccountButton.val('Save');
+				_this.ui.submitAccountButton.val('Saved');
 			});
 
 		},
@@ -119,6 +127,35 @@ define(function(require) {
 			this.aliasesRegion.show(new AliasesView({
 				currentAccount: this.currentAccount
 			}));
+		},
+		onImapSslModeChange: function() {
+			// set standard port for the selected IMAP & SMTP security
+			var imapDefaultPort = 143;
+			var imapDefaultSecurePort = 993;
+
+			switch (this.ui.imapSslMode.val()) {
+				case 'none':
+				case 'tls':
+					this.ui.imapPort.val(imapDefaultPort);
+					break;
+				case 'ssl':
+					this.ui.imapPort.val(imapDefaultSecurePort);
+					break;
+			}
+		},
+		onSmtpSslModeChange: function() {
+			var smtpDefaultPort = 587;
+			var smtpDefaultSecurePort = 465;
+
+			switch (this.ui.smtpSslMode.val()) {
+				case 'none':
+				case 'tls':
+					this.ui.smtpPort.val(smtpDefaultPort);
+					break;
+				case 'ssl':
+					this.ui.smtpPort.val(smtpDefaultSecurePort);
+					break;
+			}
 		}
 	});
 });

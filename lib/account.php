@@ -124,6 +124,13 @@ class Account implements IAccount {
 	}
 
 	/**
+	 * @return MailAccount
+	 */
+	public function getMailAccount(){
+		 return $this->account;
+	}
+
+	/**
 	 * @return Horde_Imap_Client_Socket
 	 */
 	public function getImapConnection() {
@@ -519,12 +526,12 @@ class Account implements IAccount {
 	}
 
 	/**
-	 * 
+	 *
 	 * @param int $messageId
 	 */
 	public function deleteDraft($messageId) {
 		$draftsFolder = $this->getDraftsFolder();
-		
+
 		$draftsMailBox = new \Horde_Imap_Client_Mailbox($draftsFolder->getFolderId(), false);
 		$this->getImapConnection()->expunge($draftsMailBox);
 	}
