@@ -155,9 +155,8 @@ class AccountsController extends Controller {
 	 * @param int $accountId
 	 * @return JSONResponse
 	 */
-	public function edit($accountId) {
+	public function update($accountId) {
 		$response = new Response();
-		$response->setStatus(Http::STATUS_NOT_IMPLEMENTED);
 		try {
 			$account = $this->accountService->find($this->currentUserId, $accountId);
 

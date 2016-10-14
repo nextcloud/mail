@@ -52,7 +52,7 @@ define(function(require) {
 		},
 		events: {
 			'click @ui.submitAliasButton': 'onAliasSubmit',
-			'click @ui.submitAccountSettingsButton': 'onAccountSubmit'
+			'click @ui.submitAccountButton': 'onAccountSubmit'
 		},
 		regions: {
 			aliasesRegion : '#aliases-list'
@@ -68,20 +68,20 @@ define(function(require) {
 				'imapHost': this.ui.imapHost.val(),
 				'imapUser': this.ui.imapUser.val(),
 				'imapPort': this.ui.imapPort.val(),
-				'imapPasswort': this.ui.imapPasswort.val(),
+				'imapPassword': this.ui.imapPassword.val(),
 				'smtpHost': this.ui.smtpHost.val(),
 				'smtpUser': this.ui.smtpUser.val(),
 				'smtpPort': this.ui.smtpPort.val(),
-				'smtpPasswort': this.ui.smtpPasswort.val(),
+				'smtpPassword': this.ui.smtpPassword.val(),
 			};
-			this.ui.submitAccountSettingsButton.val('Saving');
+			this.ui.submitAccountButton.val('Saving');
 			var _this = this;
-			var savingAccount = Radio.account.request('edit', this.currentAccount, config);
+			var savingAccount = Radio.account.request('update', this.currentAccount, config);
 			//$.when(savingAccount).done(function(data) {
 			//});
 
 			$.when(savingAccount).always(function() {
-				_this.ui.submitAccountSettingsButton.val('Save');
+				_this.ui.submitAccountButton.val('Save');
 			});
 
 		},
