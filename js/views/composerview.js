@@ -473,14 +473,15 @@ define(function(require) {
 						this.value = terms.join(', ');
 						return false;
 					}
-				}).data('ui-autocomplete')._renderItem = function ($ul, item) {
+				}).data('ui-autocomplete')._renderItem = function($ul, item) {
 					var $item = $('<li/>');
 					var $row = $('<a/>');
 
 					$row.addClass('mail-recipient-autocomplete');
 
-					if (prevUID === item['id']) {
-						var $placeholder = $('<div/>');
+					var $placeholder;
+					if (prevUID === item.id) {
+						$placeholder = $('<div/>');
 						$placeholder.addClass('avatar');
 						$row.append($placeholder);
 					} else if (item.photo && item.photo !== null) {
@@ -491,13 +492,13 @@ define(function(require) {
 						$avatar.attr('src', item.photo);
 						$row.append($avatar);
 					} else {
-						var $placeholder = $('<div/>');
+						$placeholder = $('<div/>');
 						$placeholder.imageplaceholder(item.value);
 						$placeholder.addClass('avatar');
 						$row.append($placeholder);
 					}
 
-					prevUID = item['id'];
+					prevUID = item.id;
 
 					$row.append($('<span>').text(item.value));
 
