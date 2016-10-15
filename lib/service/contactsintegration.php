@@ -52,7 +52,7 @@ class ContactsIntegration {
 		$result = $this->contactsManager->search($term, ['FN', 'EMAIL']);
 		$receivers = [];
 		foreach ($result as $r) {
-			$id = $r['id'];
+			$id = $r['UID'];
 			$fn = $r['FN'];
 			if (!isset($r['EMAIL'])) {
 				continue;
@@ -61,6 +61,7 @@ class ContactsIntegration {
 			if (!is_array($email)) {
 				$email = [$email];
 			}
+			$photo = isset($r['PHOTO']) ? $this->getPhotoUri($r['PHOTO']) : null;
 
 			// loop through all email addresses of this contact
 			foreach ($email as $e) {
@@ -68,7 +69,8 @@ class ContactsIntegration {
 				$receivers[] = [
 					'id' => $id,
 					'label' => $displayName,
-					'value' => $displayName
+					'value' => $displayName,
+					'photo' => $photo,
 				];
 			}
 		}
@@ -82,20 +84,23 @@ class ContactsIntegration {
 	 */
 	public function getPhoto($email) {
 		$result = $this->contactsManager->search($email, ['EMAIL']);
-		$uriPrefix = 'VALUE=uri:';
 		if (count($result) > 0) {
 			if (isset($result[0]['PHOTO'])) {
-				$s = $result[0]['PHOTO'];
-				if (substr($s, 0, strlen($uriPrefix)) === $uriPrefix) {
-					return substr($s, strpos($s, 'http'));
-				} else {
-					// ignore contacts >= 1.0 binary images
-					// TODO: fix
-					return null;
-				}
+				return $this->getPhotoUri($result[0]['PHOTO']);
 			}
 		}
 		return null;
+	}
+
+	private function getPhotoUri($raw) {
+		$uriPrefix = 'VALUE=uri:';
+		if (substr($raw, 0, strlen($uriPrefix)) === $uriPrefix) {
+			return substr($raw, strpos($raw, 'http'));
+		} else {
+			// ignore contacts >= 1.0 binary images
+			// TODO: fix
+			return null;
+		}
 	}
 
 }

@@ -53,13 +53,13 @@ class ContactsIntegrationTest extends TestCase {
 		$searchResult = [
 			[
 				// Simple match
-				'id' => 1,
+				'UID' => 1,
 				'FN' => 'Jonathan Frakes',
 				'EMAIL' => 'jonathan@frakes.com',
 			],
 			[
 				// Array of addresses
-				'id' => 2,
+				'UID' => 2,
 				'FN' => 'John Doe',
 				'EMAIL' => [
 					'john@doe.info',
@@ -67,8 +67,8 @@ class ContactsIntegrationTest extends TestCase {
 				],
 			],
 			[
-				// Johann Struass II didn't have a email address ;-)
-				'id' => 3,
+				// Johann Strauss II didn't have a email address ;-)
+				'UID' => 3,
 				'FN' => 'Johann Strauss II',
 			]
 		];
@@ -86,16 +86,19 @@ class ContactsIntegrationTest extends TestCase {
 				'id' => 1,
 				'label' => '"Jonathan Frakes" <jonathan@frakes.com>',
 				'value' => '"Jonathan Frakes" <jonathan@frakes.com>',
+				'photo' => null,
 			],
 			[
 				'id' => 2,
 				'label' => '"John Doe" <john@doe.info>',
 				'value' => '"John Doe" <john@doe.info>',
+				'photo' => null,
 			],
 			[
 				'id' => 2,
 				'label' => '"John Doe" <doe@john.info>',
 				'value' => '"John Doe" <doe@john.info>',
+				'photo' => null,
 			],
 		];
 		$actual = $this->contactsIntegration->getMatchingRecipient($term);

@@ -433,6 +433,8 @@ define(function(require) {
 			if (!elem.data('autocomplete')) {
 				// If the autocomplete wasn't called yet:
 				// don't navigate away from the field on tab when selecting an item
+				var prevUID = false;
+
 				elem.bind('keydown', function(event) {
 					if (event.keyCode === $.ui.keyCode.TAB &&
 						typeof elem.data('autocomplete') !== 'undefined' &&
@@ -451,7 +453,10 @@ define(function(require) {
 						// custom minLength
 						var term = extractLast(this.value);
 						return term.length >= 2;
-
+					},
+					response: function() {
+						// Reset prevUid
+						prevUID = false;
 					},
 					focus: function() {
 						// prevent value inserted on focus
@@ -468,7 +473,39 @@ define(function(require) {
 						this.value = terms.join(', ');
 						return false;
 					}
-				});
+				}).data('ui-autocomplete')._renderItem = function($ul, item) {
+					var $item = $('<li/>');
+					var $row = $('<a/>');
+
+					$row.addClass('mail-recipient-autocomplete');
+
+					var $placeholder;
+					if (prevUID === item.id) {
+						$placeholder = $('<div/>');
+						$placeholder.addClass('avatar');
+						$row.append($placeholder);
+					} else if (item.photo && item.photo !== null) {
+						var $avatar = $('<img/>');
+						$avatar.addClass('avatar');
+						$avatar.height('32px');
+						$avatar.width('32px');
+						$avatar.attr('src', item.photo);
+						$row.append($avatar);
+					} else {
+						$placeholder = $('<div/>');
+						$placeholder.imageplaceholder(item.value);
+						$placeholder.addClass('avatar');
+						$row.append($placeholder);
+					}
+
+					prevUID = item.id;
+
+					$row.append($('<span>').text(item.value));
+
+					$item.append($row);
+					$item.appendTo($ul);
+					return $item;
+				};
 			}
 		},
 		buildAliases: function() {
