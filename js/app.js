@@ -27,7 +27,6 @@ define(function(require) {
 
 	var $ = require('jquery');
 	var Backbone = require('backbone');
-	var Handlebars = require('handlebars');
 	var Marionette = require('marionette');
 	var OC = require('OC');
 	var AppView = require('views/appview');
@@ -48,13 +47,6 @@ define(function(require) {
 	require('service/messageservice');
 	require('service/aliasesservice');
 	require('util/notificationhandler');
-
-	// Set marionette defaults
-	Marionette.TemplateCache.prototype.compileTemplate = function(rawTemplate) {
-		return Handlebars.compile(rawTemplate);
-	};
-	Marionette.ItemView.prototype.modelEvents = {change: 'render'};
-	Marionette.CompositeView.prototype.modelEvents = {change: 'render'};
 
 	var Mail = Marionette.Application.extend({
 		registerProtocolHandler: function() {
