@@ -62,14 +62,14 @@ define(function(require) {
 			var saving = MessageController.saveAttachmentsToFiles(account, folder, messageId);
 
 			// Loading feedback
-			this.ui.saveAllToCloud.removeClass('icon-folder')
+			this.getUI('saveAllToCloud').removeClass('icon-folder')
 				.addClass('icon-loading-small')
 				.prop('disabled', true);
 
 			var _this = this;
 			$.when(saving).always(function() {
 				// Remove loading feedback again
-				_this.ui.saveAllToCloud.addClass('icon-folder')
+				_this.getUI('saveAllToCloud').addClass('icon-folder')
 					.removeClass('icon-loading-small')
 					.prop('disabled', false);
 			});

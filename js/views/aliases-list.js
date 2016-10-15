@@ -42,16 +42,16 @@ define(function(require) {
 			var currentAccount = require('state').accounts.get(this.model.get('accountId'));
 			var _this = this;
 			var deletingAlias = Radio.aliases.request('delete:alias', currentAccount, this.model.get('id'));
-			this.ui.deleteButton.prop('disabled', true);
-			this.ui.deleteButton.attr('class', 'icon-loading-small');
+			this.getUI('deleteButton').prop('disabled', true);
+			this.getUI('deleteButton').attr('class', 'icon-loading-small');
 			$.when(deletingAlias).done(function() {
 				currentAccount.get('aliases').remove(_this.model);
 			});
 			$.when(deletingAlias).always(function() {
 				var aliases = currentAccount.get('aliases');
 				if (aliases.get(_this.model)) {
-					_this.ui.deleteButton.attr('class', 'icon-delete');
-					_this.ui.deleteButton.prop('disabled', false);
+					_this.getUI('deleteButton').attr('class', 'icon-delete');
+					_this.getUI('deleteButton').prop('disabled', false);
 				}
 			});
 		}

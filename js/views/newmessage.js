@@ -44,9 +44,9 @@ define(function(require) {
 		},
 		onAccountsChanged: function() {
 			if (this.accounts.size === 0) {
-				this.ui.button.hide();
+				this.getUI('button').hide();
 			} else {
-				this.ui.button.show();
+				this.getUI('button').show();
 			}
 		},
 		onClick: function(e) {

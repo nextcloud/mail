@@ -64,42 +64,42 @@ define(function(require) {
 			this.email = options.email;
 		},
 		onRender: function() {
-			this.ui.manualInputs.hide();
-			this.ui.iconLoading.hide();
-			this.ui.accountName.val(this.displayName);
-			this.ui.mailAddress.val(this.email);
+			this.getUI('manualInputs').hide();
+			this.getUI('iconLoadin').hide();
+			this.getUI('accountName').val(this.displayName);
+			this.getUI('mailAddress').val(this.email);
 		},
 		toggleManualMode: function(e) {
 			e.stopPropagation();
 			this.manualMode = !this.manualMode;
 
-			this.ui.manualInputs.slideToggle();
-			this.ui.imapHost.focus();
+			this.getUI('manualInputs').slideToggle();
+			this.getUI('imapHost').focus();
 
 			if (this.manualMode) {
 				if (this.firstToggle) {
 					// Manual mode opened for the first time
 					// -> copy email, password for imap&smtp
-					var email = this.ui.mailAddress.val();
-					var password = this.ui.mailPassword.val();
-					this.ui.imapUser.val(email);
-					this.ui.imapPassword.val(password);
-					this.ui.smtpUser.val(email);
-					this.ui.smtpPassword.val(password);
+					var email = this.getUI('mailAddress').val();
+					var password = this.getUI('mailPassword').val();
+					this.getUI('imapUser').val(email);
+					this.getUI('imapPassword').val(password);
+					this.getUI('smtpUser').val(email);
+					this.getUI('smtpPassword').val(password);
 					this.firstToggle = false;
 				}
 
 				var _this = this;
-				this.ui.mailPassword.slideToggle(function() {
-					_this.ui.mailAddress.parent()
+				this.getUI('mailPassword').slideToggle(function() {
+					_this.getUI('mailAddress').parent()
 						.removeClass('groupmiddle').addClass('groupbottom');
 
 					// Focus imap host input
-					_this.ui.imapHost.focus();
+					_this.getUI('imapHost').focus();
 				});
 			} else {
-				this.ui.mailPassword.slideToggle();
-				this.ui.mailAddress.parent()
+				this.getUI('mailPassword').slideToggle();
+				this.getUI('mailAddress').parent()
 					.removeClass('groupbottom').addClass('groupmiddle');
 			}
 		},
@@ -107,13 +107,13 @@ define(function(require) {
 			e.preventDefault();
 			e.stopPropagation();
 
-			this.ui.inputs.prop('disabled', true);
-			this.ui.submitButton.val(t('mail', 'Connecting'));
-			this.ui.iconLoading.fadeIn();
+			this.getUI('inputs').prop('disabled', true);
+			this.getUI('submitButton').val(t('mail', 'Connecting'));
+			this.getUI('iconLoading').fadeIn();
 
-			var emailAddress = this.ui.mailAddress.val();
-			var accountName = this.ui.accountName.val();
-			var password = this.ui.mailPassword.val();
+			var emailAddress = this.getUI('mailAddress').val();
+			var accountName = this.getUI('accountName').val();
+			var password = this.getUI('mailPassword').val();
 
 			var config = {
 				accountName: accountName,
@@ -128,16 +128,16 @@ define(function(require) {
 					accountName: accountName,
 					emailAddress: emailAddress,
 					password: password,
-					imapHost: this.ui.imapHost.val(),
-					imapPort: this.ui.imapPort.val(),
-					imapSslMode: this.ui.imapSslMode.val(),
-					imapUser: this.ui.imapUser.val(),
-					imapPassword: this.ui.imapPassword.val(),
-					smtpHost: this.ui.smtpHost.val(),
-					smtpPort: this.ui.smtpPort.val(),
-					smtpSslMode: this.ui.smtpSslMode.val(),
-					smtpUser: this.ui.smtpUser.val(),
-					smtpPassword: this.ui.smtpPassword.val(),
+					imapHost: this.getUI('imapHost').val(),
+					imapPort: this.getUI('imapPort').val(),
+					imapSslMode: this.getUI('imapSslMode').val(),
+					imapUser: this.getUI('imapUser').val(),
+					imapPassword: this.getUI('imapPassword').val(),
+					smtpHost: this.getUI('smtpHost').val(),
+					smtpPort: this.getUI('smtpPort').val(),
+					smtpSslMode: this.getUI('smtpSslMode').val(),
+					smtpUser: this.getUI('smtpUser').val(),
+					smtpPassword: this.getUI('smtpPassword').val(),
 					autoDetect: false
 				};
 			}
@@ -162,9 +162,9 @@ define(function(require) {
 			$.when(creatingAccount).fail(function(error) {
 				_this.loading = false;
 				Radio.ui.trigger('error:show', error);
-				_this.ui.iconLoading.hide();
-				_this.ui.inputs.prop('disabled', false);
-				_this.ui.submitButton.val(t('mail', 'Connect'));
+				_this.getUI('iconLoading').hide();
+				_this.getUI('inputs').prop('disabled', false);
+				_this.getUI('submitButton').val(t('mail', 'Connect'));
 			});
 		},
 		onImapSslModeChange: function() {
@@ -172,13 +172,13 @@ define(function(require) {
 			var imapDefaultPort = 143;
 			var imapDefaultSecurePort = 993;
 
-			switch (this.ui.imapSslMode.val()) {
+			switch (this.getUI('imapSslMode').val()) {
 				case 'none':
 				case 'tls':
-					this.ui.imapPort.val(imapDefaultPort);
+					this.getUI('imapPort').val(imapDefaultPort);
 					break;
 				case 'ssl':
-					this.ui.imapPort.val(imapDefaultSecurePort);
+					this.getUI('imapPort').val(imapDefaultSecurePort);
 					break;
 			}
 		},
@@ -186,13 +186,13 @@ define(function(require) {
 			var smtpDefaultPort = 587;
 			var smtpDefaultSecurePort = 465;
 
-			switch (this.ui.smtpSslMode.val()) {
+			switch (this.getUI('smtpSslMode').val()) {
 				case 'none':
 				case 'tls':
-					this.ui.smtpPort.val(smtpDefaultPort);
+					this.getUI('smtpPort').val(smtpDefaultPort);
 					break;
 				case 'ssl':
-					this.ui.smtpPort.val(smtpDefaultSecurePort);
+					this.getUI('smtpPort').val(smtpDefaultSecurePort);
 					break;
 			}
 		}

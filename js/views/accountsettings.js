@@ -48,13 +48,13 @@ define(function(require) {
 		onSubmit: function(e) {
 			e.preventDefault();
 			var alias = {
-				'alias': this.ui.alias.val(),
-				'name': this.ui.aliasName.val()
+				'alias': this.getUI('alias').val(),
+				'name': this.getUI('aliasName').val()
 			};
-			this.ui.alias.prop('disabled', true);
-			this.ui.aliasName.prop('disabled', true);
-			this.ui.submitButton.val('Saving');
-			this.ui.submitButton.prop('disabled', true);
+			this.getUI('alias').prop('disabled', true);
+			this.getUI('aliasName').prop('disabled', true);
+			this.getUI('submitButton').val('Saving');
+			this.getUI('submitButton').prop('disabled', true);
 			var _this = this;
 
 			var savingAlias = Radio.aliases.request('save:alias', this.currentAccount, alias);
@@ -63,12 +63,12 @@ define(function(require) {
 			});
 
 			$.when(savingAlias).always(function() {
-				_this.ui.alias.val('');
-				_this.ui.aliasName.val('');
-				_this.ui.alias.prop('disabled', false);
-				_this.ui.aliasName.prop('disabled', false);
-				_this.ui.submitButton.prop('disabled', false);
-				_this.ui.submitButton.val('Save');
+				_this.getUI('alias').val('');
+				_this.getUI('aliasName').val('');
+				_this.getUI('alias').prop('disabled', false);
+				_this.getUI('aliasName').prop('disabled', false);
+				_this.getUI('submitButton').prop('disabled', false);
+				_this.getUI('submitButton').val('Save');
 			});
 
 		},

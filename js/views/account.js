@@ -78,12 +78,12 @@ define(function(require) {
 			this.toggleMenuClass();
 		},
 		toggleMenuClass: function() {
-			this.ui.menu.toggleClass('open', this.menuShown);
+			this.getUI('menu').toggleClass('open', this.menuShown);
 		},
 		onDelete: function(e) {
 			e.stopPropagation();
 
-			this.ui.deleteButton.removeClass('icon-delete').addClass('icon-loading-small');
+			this.getUI('deleteButton').removeClass('icon-delete').addClass('icon-loading-small');
 
 			var account = this.model;
 

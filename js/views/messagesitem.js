@@ -59,11 +59,11 @@ define(function(require) {
 
 			// directly change star state in the interface for quick feedback
 			if (starred) {
-				this.ui.star
+				this.getUI('star')
 						.removeClass('icon-starred')
 						.addClass('icon-star');
 			} else {
-				this.ui.star
+				this.getUI('star')
 						.removeClass('icon-star')
 						.addClass('icon-starred');
 			}
@@ -86,7 +86,7 @@ define(function(require) {
 		deleteMessage: function(event) {
 			event.stopPropagation();
 			var thisModel = this.model;
-			this.ui.iconDelete.removeClass('icon-delete').addClass('icon-loading-small');
+			this.getUI('iconDelete').removeClass('icon-delete').addClass('icon-loading-small');
 			$('.tooltip').remove();
 
 			thisModel.get('flags').set('unseen', false);
