@@ -2,8 +2,6 @@ OC.L10N.register(
     "mail",
     {
     "Mail" : "Posta",
-    "{from}\n{subject}" : "{from}\n{subject}",
-    "_%n new message in {folderName} \nfrom {from}_::_%n new messages in {folderName} \nfrom {from}_" : ["%n nuovo messaggio in {folderName} \nda {from}","%n nuovi messaggi in {folderName} \nda {from}"],
     "Error while loading the accounts." : "Errore durante il caricamento degli account.",
     "Fetching Aliases Failed." : "Recupero alias non riuscito.",
     "Saving Aliases Failed." : "Salvataggio alias non riuscito.",
@@ -28,6 +26,8 @@ OC.L10N.register(
     "We couldn’t load your message" : "Impossibile caricare il tuo messaggio",
     "Unable to load the desired message" : "Impossibile caricare messaggio desiderato",
     "There was a problem loading the message" : "Si è verificato un problema durante il caricamento del messaggio",
+    "{from}\n{subject}" : "{from}\n{subject}",
+    "_%n new message in {folderName} \nfrom {from}_::_%n new messages in {folderName} \nfrom {from}_" : ["%n nuovo messaggio in {folderName} \nda {from}","%n nuovi messaggi in {folderName} \nda {from}"],
     "Show all folders" : "Mostra tutte le cartelle",
     "Collapse folders" : "Contrai le cartelle",
     "Error while deleting account." : "Errore durante l'eliminazione dell'account.",

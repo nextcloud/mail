@@ -2,8 +2,6 @@ OC.L10N.register(
     "mail",
     {
     "Mail" : "Почта",
-    "{from}\n{subject}" : "{from}\n{subject}",
-    "_%n new message in {folderName} \nfrom {from}_::_%n new messages in {folderName} \nfrom {from}_" : ["%n новое сообщение в {folderName} \nот {from}","%n новых сообщения в {folderName} \nот {from}","%n новых сообщений в {folderName} \nот {from}","%n новых сообщений в {folderName} \nот {from}"],
     "Error while loading the accounts." : "Ошибка при загрузке учётных записей",
     "Fetching Aliases Failed." : "Ошибка при извлечении псевдонима",
     "Saving Aliases Failed." : "Ошибка при сохранении псевдонма",
@@ -28,6 +26,8 @@ OC.L10N.register(
     "We couldn’t load your message" : "Мы не смогли загрузить сообщение",
     "Unable to load the desired message" : "Невозможно загрузить данное сообщение",
     "There was a problem loading the message" : "Проблемы при загрузке сообщения",
+    "{from}\n{subject}" : "{from}\n{subject}",
+    "_%n new message in {folderName} \nfrom {from}_::_%n new messages in {folderName} \nfrom {from}_" : ["%n новое сообщение в {folderName} \nот {from}","%n новых сообщения в {folderName} \nот {from}","%n новых сообщений в {folderName} \nот {from}","%n новых сообщений в {folderName} \nот {from}"],
     "Show all folders" : "Показать все папки",
     "Collapse folders" : "Свернуть папки",
     "Error while deleting account." : "Ошибка при удалении учётной записи.",

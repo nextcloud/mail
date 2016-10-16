@@ -1,7 +1,5 @@
 { "translations": {
     "Mail" : "E-mail",
-    "{from}\n{subject}" : "{from}\n{subject}",
-    "_%n new message in {folderName} \nfrom {from}_::_%n new messages in {folderName} \nfrom {from}_" : ["%n nieuw bericht in {folderName} \nvan {from}","%n nieuwe berichten in {folderName} \nvan {from}"],
     "Error while loading the accounts." : "Fout tijdens het laden van de accounts.",
     "Fetching Aliases Failed." : "Ophalen Aliassen mislukt.",
     "Saving Aliases Failed." : "Bewaren Aliassen mislukt.",
@@ -26,6 +24,8 @@
     "We couldn’t load your message" : "Bericht kon niet worden geladen",
     "Unable to load the desired message" : "Gewenste bericht kon niet worden geladen",
     "There was a problem loading the message" : "Het laden van het bericht was problematisch",
+    "{from}\n{subject}" : "{from}\n{subject}",
+    "_%n new message in {folderName} \nfrom {from}_::_%n new messages in {folderName} \nfrom {from}_" : ["%n nieuw bericht in {folderName} \nvan {from}","%n nieuwe berichten in {folderName} \nvan {from}"],
     "Show all folders" : "Laat alle mappen zien",
     "Collapse folders" : "Mappen inklappen",
     "Error while deleting account." : "Fout bij verwijderen account.",

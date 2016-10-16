@@ -2,8 +2,6 @@ OC.L10N.register(
     "mail",
     {
     "Mail" : "Αλληλογραφία",
-    "{from}\n{subject}" : "{from}\n{subject}",
-    "_%n new message in {folderName} \nfrom {from}_::_%n new messages in {folderName} \nfrom {from}_" : ["%n νέο μήνυμα σε {folderName}\nαπό {from}","%n νέα μηνύματα σε {folderName}\nαπό {from}"],
     "Error while loading the accounts." : "Σφάλμα κατά τη φόρτωση των λογαριασμών.",
     "Fetching Aliases Failed." : "Αποτυχία λήψης ψευδωνύμων.",
     "Saving Aliases Failed." : "Αποτυχία αποθήκευσης ψευδωνύμων.",
@@ -21,6 +19,8 @@ OC.L10N.register(
     "Invalid folder" : "Μη έγκυρος φάκελος",
     "Unknown error" : "Άγνωστο σφάλμα",
     "Error while creating an account: " : "Σφάλμα κατά τη δημιουργία λογαριασμού:",
+    "{from}\n{subject}" : "{from}\n{subject}",
+    "_%n new message in {folderName} \nfrom {from}_::_%n new messages in {folderName} \nfrom {from}_" : ["%n νέο μήνυμα σε {folderName}\nαπό {from}","%n νέα μηνύματα σε {folderName}\nαπό {from}"],
     "Show all folders" : "Εμφάνιση όλων των φακέλων",
     "Collapse folders" : "Σύμπτυξη φακέλων",
     "Error while deleting account." : "Σφάλμα κατά τη διαγραφή λογαριασμού.",

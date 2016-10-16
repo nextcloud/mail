@@ -2,8 +2,6 @@ OC.L10N.register(
     "mail",
     {
     "Mail" : "Mail",
-    "{from}\n{subject}" : "{fra}\n{emne}",
-    "_%n new message in {folderName} \nfrom {from}_::_%n new messages in {folderName} \nfrom {from}_" : ["%n ny besked i {folderName}\nfra {from}","%n nye beskeder i {folderName}\nfra {from}"],
     "Error while loading the accounts." : "Fejl under indlæsning af konti.",
     "Fetching Aliases Failed." : "Hentning af aliases mislykkedes.",
     "Saving Aliases Failed." : "Gemning af aliases misiykkedes.",
@@ -28,6 +26,8 @@ OC.L10N.register(
     "We couldn’t load your message" : "Vi kunne ikke hente din besked",
     "Unable to load the desired message" : "Ude af stand til at hente den ønskede mesked",
     "There was a problem loading the message" : "Der var et problem med at beskeden",
+    "{from}\n{subject}" : "{fra}\n{emne}",
+    "_%n new message in {folderName} \nfrom {from}_::_%n new messages in {folderName} \nfrom {from}_" : ["%n ny besked i {folderName}\nfra {from}","%n nye beskeder i {folderName}\nfra {from}"],
     "Show all folders" : "Vis all mappe",
     "Collapse folders" : "Fold mapper sammen",
     "Error while deleting account." : "Fejl under sletning af kontoen.",

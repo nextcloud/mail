@@ -1,7 +1,5 @@
 { "translations": {
     "Mail" : "E-post",
-    "{from}\n{subject}" : "{from}\n{subject}",
-    "_%n new message in {folderName} \nfrom {from}_::_%n new messages in {folderName} \nfrom {from}_" : ["%n ny melding i {folderName} \nfra {from}","%n nye meldinger i {folderName} \nfra {from}"],
     "Error while loading the accounts." : "Feil ved innlasting av kontoene.",
     "Fetching Aliases Failed." : "Henting av aliaser feilet.",
     "Saving Aliases Failed." : "Lagring av aliaser feilet.",
@@ -26,6 +24,8 @@
     "We couldn’t load your message" : "Vi kunne ikke laste meldingen din",
     "Unable to load the desired message" : "Kan ikke laste ønsket melding",
     "There was a problem loading the message" : "Det oppstod et problem under lasting av meldingen",
+    "{from}\n{subject}" : "{from}\n{subject}",
+    "_%n new message in {folderName} \nfrom {from}_::_%n new messages in {folderName} \nfrom {from}_" : ["%n ny melding i {folderName} \nfra {from}","%n nye meldinger i {folderName} \nfra {from}"],
     "Show all folders" : "Vis alle mapper",
     "Collapse folders" : "Skjul mapper",
     "Error while deleting account." : "Feil ved sletting av konto.",

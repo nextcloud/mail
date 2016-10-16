@@ -1,7 +1,5 @@
 { "translations": {
     "Mail" : "Correo electrónico",
-    "{from}\n{subject}" : "{from}\n{subject}",
-    "_%n new message in {folderName} \nfrom {from}_::_%n new messages in {folderName} \nfrom {from}_" : ["%n mensaje nuevo en {folderName} \nde {from}","%n mensajes nuevos en {folderName} \nde {from}"],
     "Error while loading the accounts." : "Error al cargar las cuentas.",
     "Saving Aliases Failed." : "Guardado de los Alias fallidos.",
     "Deleting Aliases Failed." : "Borrado de los alias ha fallado.",
@@ -24,6 +22,8 @@
     "There was a problem loading {tag}{name}{endtag}" : "Hubo un problema cargando {tag}{name}{endtag}",
     "We couldn’t load your message" : "No podemos cargar tu mensaje",
     "There was a problem loading the message" : "Ha habido un problema al cargar el mensaje",
+    "{from}\n{subject}" : "{from}\n{subject}",
+    "_%n new message in {folderName} \nfrom {from}_::_%n new messages in {folderName} \nfrom {from}_" : ["%n mensaje nuevo en {folderName} \nde {from}","%n mensajes nuevos en {folderName} \nde {from}"],
     "Show all folders" : "Mostrar todas las carpetas",
     "Collapse folders" : "Plegar carpetas",
     "Error while deleting account." : "Error al eliminar la cuenta.",
