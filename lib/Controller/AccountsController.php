@@ -244,13 +244,13 @@ class AccountsController extends Controller {
 			$this->logger->error('Creating account failed: ' . $ex->getMessage());
 			return new JSONResponse(
 				array('message' => $this->l10n->t('Creating account failed: ') . $ex->getMessage()),
-				HTTP::STATUS_BAD_REQUEST);
+				Http::STATUS_BAD_REQUEST);
 		}
 
 		$this->logger->info('Auto detect failed');
 		return new JSONResponse(
 			array('message' => $this->l10n->t('Auto detect failed. Please use manual mode.')),
-			HTTP::STATUS_BAD_REQUEST);
+			Http::STATUS_BAD_REQUEST);
 	}
 
 	/**

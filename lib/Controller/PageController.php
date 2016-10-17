@@ -116,7 +116,7 @@ class PageController extends Controller {
 	 * @NoCSRFRequired
 	 *
 	 * @param string $uri
-	 * @return TemplateResponse renders the compose page
+	 * @return RedirectResponse
 	 */
 	public function compose($uri) {
 		$parts = parse_url($uri);

@@ -123,7 +123,7 @@ interface IMessage {
 	public function setContent($content);
 
 	/**
-	 * @return Horde_Mime_Part[]
+	 * @return \Horde_Mime_Part[]
 	 */
 	public function getAttachments();
 
