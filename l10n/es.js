@@ -71,6 +71,7 @@ OC.L10N.register(
     "Delete account" : "Eliminar cuenta",
     "Account Settings" : "Ajustes de la Cuenta",
     "Mail address" : "Dirección de correo electrónico",
+    "Display Name" : "Nombre a Mostrar",
     "Save" : "Guardar",
     "from" : "desde",
     "to" : "para",
