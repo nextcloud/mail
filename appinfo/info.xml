@@ -7,10 +7,10 @@
 	<description>Easy to use email client which connects to your mail server via IMAP and SMTP.</description>
 	<version>0.6.0</version>
 	<licence>agpl</licence>
-	<namespace>Mail</namespace>
 	<author>Christoph Wurst</author>
 	<author>Jan-Christoph Borchardt</author>
 	<author>Steffen Lindner</author>
+	<namespace>Mail</namespace>
 	<documentation>
 		<admin>https://github.com/nextcloud/mail#readme</admin>
 	</documentation>
