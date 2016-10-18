@@ -28,7 +28,7 @@ use OCA\Mail\Service\Logger;
 class ImapConnector {
 
 	/**
-	 * @var Crypto
+	 * @var ICrypto
 	 */
 	private $crypto;
 
@@ -45,7 +45,7 @@ class ImapConnector {
 	/**
 	 * @param ICrypto $crypto
 	 * @param Logger $logger
-	 * @param type $UserId
+	 * @param string $UserId
 	 */
 	public function __construct(ICrypto $crypto, Logger $logger, $UserId) {
 		$this->crypto = $crypto;

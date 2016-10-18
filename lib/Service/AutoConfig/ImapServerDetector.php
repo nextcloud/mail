@@ -20,6 +20,8 @@
  */
 namespace OCA\Mail\Service\AutoConfig;
 
+use OCA\Mail\Db\MailAccount;
+
 class ImapServerDetector {
 
 	/** @var MxRecord */

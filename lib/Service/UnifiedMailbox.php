@@ -22,11 +22,17 @@
 namespace OCA\Mail\Service;
 
 use OCA\Mail\Attachment;
-use OCA\Mail\Message;
+use OCA\Mail\Model\IMessage;
 
 class UnifiedMailbox implements IMailBox {
 
+	/** @var AccountService */
+	protected $accountService;
+	/** @var string */
+	protected $userId;
+
 	/**
+	 * @param AccountService $accountService
 	 * @param string $userId
 	 */
 	public function __construct(AccountService $accountService, $userId) {
@@ -38,7 +44,7 @@ class UnifiedMailbox implements IMailBox {
 	 * @return string
 	 */
 	public function getFolderId() {
-		// TODO: Implement getFolderId() method.
+		return null;
 	}
 
 	/**
@@ -100,13 +106,13 @@ class UnifiedMailbox implements IMailBox {
 
 	/**
 	 * @param string $messageId
-	 * @return Message
+	 * @return IMessage
 	 */
 	public function getMessage($messageId, $loadHtmlMessageBody = false) {
 		/** @var IMailBox $inbox */
 		/** @var IAccount $account */
 		list($inbox, $messageId, $account) = $this->resolve($messageId);
-		/** @var Message $message */
+		/** @var IMessage $message */
 		$message = $inbox->getMessage($messageId, $loadHtmlMessageBody);
 		$message->setUid(base64_encode(json_encode([$account->getId(), $message->getUid()])));
 

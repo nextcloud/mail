@@ -23,7 +23,7 @@ namespace OCA\Mail\Service;
 
 use Horde_Imap_Client_Search_Query;
 use OCA\Mail\Attachment;
-use OCA\Mail\Message;
+use OCA\Mail\Model\IMessage;
 
 interface IMailBox {
 
@@ -47,7 +47,7 @@ interface IMailBox {
 
 	/**
 	 * @param int $id
-	 * @return Message
+	 * @return IMessage
 	 */
 	public function getMessage($id);
 
