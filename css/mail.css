@@ -20,6 +20,10 @@
 
 .mail-account {
 	width: 100%;
+	height: 44px;
+	padding-left: 30px;
+	background-color: transparent;
+	border: none;
 }
 
 
@@ -398,6 +402,12 @@
 .ui-autocomplete .ui-menu-item a.mail-recipient-autocomplete span {
 	margin-left: 10px;
 }
+.ui-autocomplete {
+	padding-left: 16px !important;
+	border-radius: 0 !important;
+	border-left: none;
+	border-right: none;
+}
 
 /* editor */
 #mail-new-message-fixed {
@@ -419,9 +429,8 @@
 }
 
 .message-composer {
-	margin: 10px;
+	margin: 0;
 	z-index: 100;
-	max-width: 700px;
 }
 #reply-composer .message-composer {
 	margin: 0;
@@ -436,14 +445,40 @@ input.subject,
 textarea.message-body {
 	width: 100%;
 }
-
-/* border and radius style rules to be replaced by grouptop, groupbottom etc
-	once https://github.com/owncloud/core/pull/9847 is merged and backported */
-input.to {
+input.to,
+input.cc,
+input.bcc,
+input.subject,
+textarea.message-body {
+	padding: 12px;
+	padding-left: 64px;
+	border: 1px solid #eee;
+	border-right: none;
+	border-left: none;
+	border-radius: 0;
 	margin: 0;
+}
+input.to {
 	padding-right: 60px; /* for cc-bcc-toggle */
-	border-bottom-left-radius: 0;
-	border-bottom-right-radius: 0;
+}
+input.cc,
+input.bcc,
+input.subject,
+textarea.message-body {
+	border-top: none;
+}
+input.subject {
+	font-size: 20px;
+	font-weight: 300;
+}
+input.subject,
+textarea.message-body {
+	padding-left: 30px;
+}
+textarea.message-body {
+	min-height: 300px;
+	resize: none;
+	padding-right: 25%;
 }
 
 .composer-cc-bcc {
@@ -455,38 +490,19 @@ label.bcc-label {
 	position: absolute;
 	left: 0;
 	top: 0;
-	padding: 6px;
+	padding: 12px;
+	padding-left: 30px;
 	cursor: text;
+	opacity: .5;
 }
 label.bcc-label {
 	top: initial;
 	bottom: 0;
 }
-input.to,
-input.cc,
-input.bcc {
-	padding-left: 30px;
-}
-
 .composer-cc-bcc-toggle {
 	position: absolute;
 	right: 0;
-	padding: 6px;
-}
-input.subject,
-input.cc,
-input.bcc {
-	margin: 0;
-	border-top: none;
-	border-radius: 0;
-}
-textarea.message-body {
-	margin: 0;
-	border-top: none;
-	border-top-left-radius: 0;
-	border-top-right-radius: 0;
-	min-height: 300px;
-	resize: none;
+	padding: 12px;
 }
 textarea.reply {
 	min-height: 100px;
@@ -513,6 +529,17 @@ input.submit-message,
 }
 #reply-msg {
 	float: left;
+}
+
+/* extra button styles */
+.submit-message.send,
+#mail_new_attachment,
+#forward-button {
+	padding: 12px;
+}
+.new-message-attachments,
+#forward-button {
+	margin-left: 30px;
 }
 
 .unread {
@@ -590,6 +617,10 @@ input.submit-message,
 
 /* message display */
 
+.mail-message-body {
+	margin-bottom: 100px;
+}
+
 #mail-message-header {
 	position: fixed;
 	height: 90px;
@@ -614,8 +645,12 @@ input.submit-message,
 	display: none;
 }
 
-.mail-message-body {
+#mail-content,
+.mail-message-attachments {
 	margin: 100px 10px 50px 30px;
+}
+.mail-message-attachments {
+	margin-top: 10px;
 }
 #mail-content iframe {
 	width: 100%;
@@ -667,12 +702,14 @@ input.submit-message,
 	left: 0px;
 }
 
-
+.new-message-attachments li {
+	padding: 10px;
+}
 .new-message-attachments-action {
 	display: inline-block;
-	width: 24px;
-	height: 24px;
-	vertical-align: bottom
+	vertical-align: middle;
+	padding: 22px;
+	opacity: .5;
 }
 
 .mail-message-attachments {
