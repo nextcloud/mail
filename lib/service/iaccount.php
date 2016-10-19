@@ -43,6 +43,11 @@ interface IAccount extends JsonSerializable {
 	public function getEmail();
 
 	/**
+	 * @return MailAccount
+	 */
+	public function getMailAccount();
+
+	/**
 	 * @param IMessage $message
 	 * @param int|null $draftUID
 	 */

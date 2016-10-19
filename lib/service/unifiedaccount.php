@@ -140,6 +140,13 @@ class UnifiedAccount implements IAccount {
 	}
 
 	/**
+	 * @return MailAccount
+	 */
+	public function getMailAccount(){
+		throw new Exception('Not implemented');
+	}
+
+	/**
 	 * @param IMessage $message
 	 * @param int|null $draftUID
 	 */

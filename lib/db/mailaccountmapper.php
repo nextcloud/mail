@@ -63,7 +63,8 @@ class MailAccountMapper extends Mapper {
 	}
 
 	/**
-	 * Saves an User Account into the database
+	 * Saves an User Account into the database or update if accountId does not
+	 * exists
 	 * @param MailAccount $account
 	 * @return MailAccount
 	 */
