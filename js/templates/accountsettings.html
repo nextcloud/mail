@@ -17,9 +17,9 @@
 				<select id="account-imap-ssl-mode"
 					name="imap-sslmode"
 					title="{{ t 'IMAP security' }}">
-					<option value="none">{{ t 'None' }}</option>
-					<option value="ssl">{{ t 'SSL/TLS' }}</option>
-					<option value="tls">{{ t 'STARTTLS' }}</option>
+					<option value="none" {{#ifSslMode imapSslMode 'none'}}selected{{/ifSslMode}}>{{ t 'None' }}</option>
+					<option value="ssl" {{#ifSslMode imapSslMode 'ssl'}}selected{{/ifSslMode}}>{{ t 'SSL/TLS' }}</option>
+					<option value="tls" {{#ifSslMode imapSslMode 'tls'}}selected{{/ifSslMode}}>{{ t 'STARTTLS' }}</option>
 				</select>
 			</p>
 		  <p class="groupmiddle">
@@ -50,9 +50,9 @@
 				<select id="account-smtp-ssl-mode"
 					name="mail-smtp-sslmode"
 					title="{{ t 'SMTP security' }}">
-					<option value="none">{{ t 'None' }}</option>
-					<option value="ssl">{{ t 'SSL/TLS' }}</option>
-					<option value="tls">{{ t 'STARTTLS' }}</option>
+					<option value="none" {{#ifSslMode smtpSslMode 'none'}}selected{{/ifSslMode}}>{{ t 'None' }}</option>
+					<option value="ssl" {{#ifSslMode smtpSslMode 'ssl'}}selected{{/ifSslMode}}>{{ t 'SSL/TLS' }}</option>
+					<option value="tls" {{#ifSslMode smtpSslMode 'tls'}}selected{{/ifSslMode}}>{{ t 'STARTTLS' }}</option>
 				</select>
 			</p>
 			<p class="groupmiddle">

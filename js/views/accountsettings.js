@@ -18,6 +18,14 @@ define(function(require) {
 	var AliasesView = require('views/aliases');
 	var Radio = require('radio');
 
+  // needed for the templateEngine to define which option should be selected
+	Handlebars.registerHelper('ifSslMode', function(v1, v2, options) {
+	  if(v1 === v2) {
+	    return options.fn(this);
+	  }
+	  return options.inverse(this);
+	});
+
 	return Marionette.LayoutView.extend({
 		template: Handlebars.compile(AccountSettingsTemplate),
 		templateHelpers: function() {
