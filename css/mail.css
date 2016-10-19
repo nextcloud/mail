@@ -28,13 +28,17 @@
 
 
 /* SETUP */
-#setup {
+
+#account, #setup {
 	z-index: 1001;
 	width: 250px;
 	top: 15%;
 	padding-bottom: 50px;
-	margin: 0 auto;
 	padding-top: 30px;
+}
+
+#setup {
+	margin: 0 auto;
 }
 @media only screen and (max-height: 400px) {
 	#setup #emptycontent {
@@ -51,14 +55,16 @@
 		margin-top: 10vh;
 	}
 }
-#setup h2 {
+#setup h2,
+#account h2 {
 	text-align: center;
 	position: relative;
 	width: 300%;
 	left: -100%;
 	margin-bottom: 20px;
 }
-#setup input {
+#setup input,
+#account input {
 	width: 100%;
 	box-sizing: border-box;
 }
@@ -72,13 +78,17 @@
 }
 
 #setup-imap-ssl,
-#setup-smtp-ssl {
+#setup-smtp-ssl,
+#account-imap-ssl,
+#account-smtp-ssl {
 	float: right;
 	margin: -3px -3px -52px 0;
 	z-index: 100;
 }
 #setup-imap-ssl label,
-#setup-smtp-ssl label {
+#setup-smtp-ssl label,
+#account-imap-ssl label,
+#account-smtp-ssl label {
 	opacity: .4;
 }
 
