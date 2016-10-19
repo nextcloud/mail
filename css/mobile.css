@@ -50,18 +50,14 @@
 	width: initial;
 	height: 100px;
 }
-.mail-message-body {
-	margin: 0 10px 50px 30px;
+
+textarea.message-body {
+	padding-right: 12px;
 }
 
-/* make sure text fields occupy full width */
-.composer-fields,
-
-/* position attachment picker below message fields */
-#new-message-attachments {
-	position: relative;
-	margin: 0;
-	width: 100%;
+#mail-content,
+.mail-message-attachments {
+	margin: 0 10px 50px 30px;
 }
 
 /* end of media query */
