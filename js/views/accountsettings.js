@@ -18,12 +18,12 @@ define(function(require) {
 	var AliasesView = require('views/aliases');
 	var Radio = require('radio');
 
-  // needed for the templateEngine to define which option should be selected
+	// needed for the templateEngine to define which option should be selected
 	Handlebars.registerHelper('ifSslMode', function(v1, v2, options) {
-	  if(v1 === v2) {
-	    return options.fn(this);
-	  }
-	  return options.inverse(this);
+		if (v1 === v2) {
+			return options.fn(this);
+		}
+		return options.inverse(this);
 	});
 
 	return Marionette.LayoutView.extend({
@@ -75,7 +75,7 @@ define(function(require) {
 			this.currentAccount = options.account;
 		},
 
-		onAccountSubmit: function(e){
+		onAccountSubmit: function(e) {
 			e.preventDefault();
 			e.stopPropagation();
 			var config = {
