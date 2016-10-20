@@ -56,7 +56,7 @@ Speed up your Mail experience by using keyboard shortcuts.
 
 | Action        | Shortcut                 |
 | ------------- | ------------------------ |
-| Newer message | **K** or **←Left Arrow** |
+| Newer message | **K** or **Left Arrow** |
 | Older message | **J** or **Right Arrow** |
 
 ## Maintainers
