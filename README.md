@@ -31,6 +31,33 @@ Then open the Mail app from the app menu. Put in your email account credentials 
 
 If you experience any issues or have enhancement suggestions you can report them in our [issue tracker](https://github.com/nextcloud/mail/issues). Please follow the [issue template](https://raw.githubusercontent.com/nextcloud/mail/master/issue_template.md) so we get the info we need to be able to debug and fix the problem. Thanks!
 
+## Usage
+
+### Keyboard shortcuts for Mail
+
+Speed up your Mail experience by using keyboard shortcuts.
+
+#### Compose
+
+| Action | Shortcut                           |
+| ------ | ---------------------------------- |
+| Send   | <kbd>Ctrl</kbd> + <kbd>Enter</kbd> |
+
+#### Actions
+
+| Action        | Shortcut       |
+| ------------- | -------------- |
+| Refresh       | <kbd>R</kbd>   |
+| Toggle star   | <kbd>S</kbd>   |
+| Delete        | <kbd>Del</kbd> |
+| Toggle unread | <kbd>U</kbd>   |
+
+##### Navigation
+
+| Action        | Shortcut                     |
+| ------------- | ---------------------------- |
+| Newer message | <kbd>K</kbd> or <kbd>←</kbd> |
+| Older message | <kbd>J</kbd> or <kbd>→</kbd> |
 
 ## Maintainers
 
