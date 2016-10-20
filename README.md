@@ -39,25 +39,25 @@ Speed up your Mail experience by using keyboard shortcuts.
 
 #### Compose
 
-| Action | Shortcut         |
-| ------ | ---------------- |
-| Send   | **Ctrl + Enter** |
+| Action | Shortcut                           |
+| ------ | ---------------------------------- |
+| Send   | <kbd>Ctrl</kbd> + <kbd>Enter</kbd> |
 
 #### Actions
 
-| Action | Shortcut       |
-| ------ | -------------- |
-| Refresh       | **R**   |
-| Toggle star   | **S**   |
-| Delete        | **Del** |
-| Toggle unread | **U**   |
+| Action        | Shortcut       |
+| ------------- | -------------- |
+| Refresh       | <kbd>R</kbd>   |
+| Toggle star   | <kbd>S</kbd>   |
+| Delete        | <kbd>Del</kbd> |
+| Toggle unread | <kbd>U</kbd>   |
 
 ##### Navigation
 
-| Action        | Shortcut                 |
-| ------------- | ------------------------ |
-| Newer message | **K** or **Left Arrow** |
-| Older message | **J** or **Right Arrow** |
+| Action        | Shortcut                     |
+| ------------- | ---------------------------- |
+| Newer message | <kbd>K</kbd> or <kbd>←</kbd> |
+| Older message | <kbd>J</kbd> or <kbd>→</kbd> |
 
 ## Maintainers
 
