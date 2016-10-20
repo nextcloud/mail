@@ -873,3 +873,38 @@ input.submit-message,
 	-ms-filter: "progid:DXImageTransform.Microsoft.Alpha(Opacity=40)";
 	opacity: .4;
 }
+
+#app-shortcuts {
+}
+
+#app-shortcuts table {
+    border-collapse: collapse;
+    width: 100%;
+    white-space: normal;
+}
+
+#app-shortcuts tr:first-child {
+    background-color: #f5f5f5;
+}
+
+#app-shortcuts th,
+#app-shortcuts td {
+    padding: 10px;
+}
+
+#app-shortcuts td {
+    padding-right: 15px;
+}
+
+#app-shortcuts th {
+    font-weight: bold;
+}
+
+#app-shortcuts th:first-child,
+#app-shortcuts td:first-child {
+    text-align: right;
+    font-weight: bold;
+    width: 140px;
+    -moz-box-sizing: content-box;
+    box-sizing: content-box;
+}
