@@ -29,7 +29,7 @@ define(function(require) {
 			accountsList: '#settings-accounts'
 		},
 		events: {
-			'click #new_mail_account': 'addAccount'
+			'click #new-mail-account': 'addAccount'
 		},
 		addAccount: function(e) {
 			e.preventDefault();
