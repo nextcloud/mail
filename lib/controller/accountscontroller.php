@@ -129,6 +129,7 @@ class AccountsController extends Controller {
 			$conf['aliases'] = $this->aliasesService->findAll($conf['accountId'], $this->currentUserId);
 			$json[] = $conf;
 		}
+
 		return new JSONResponse($json);
 	}
 
@@ -150,11 +151,45 @@ class AccountsController extends Controller {
 
 	/**
 	 * @NoAdminRequired
+	 *
+	 * @param int $accountId
+	 * @return JSONResponse
 	 */
-	public function update() {
+	public function update($accountId, $password,
+		$imapHost, $imapPort, $imapSslMode, $imapUser, $imapPassword,
+		$smtpHost, $smtpPort, $smtpSslMode, $smtpUser, $smtpPassword) {
 		$response = new Response();
-		$response->setStatus(Http::STATUS_NOT_IMPLEMENTED);
-		return $response;
+		try {
+			$accountDB = $this->accountService->find($this->currentUserId, $accountId);
+
+			$account = $accountDB->getMailAccount();
+
+			$account->setInboundHost($imapHost);
+			$account->setInboundPort($imapPort);
+			$account->setInboundSslMode($imapSslMode);
+			$account->setInboundUser($imapUser);
+			if($imapPassword !== ''){
+				$account->setInboundPassword(
+					$this->crypto->encrypt($imapPassword)
+				);
+			}
+
+			$account->setOutboundHost($smtpHost);
+			$account->setOutboundPort($smtpPort);
+			$account->setOutboundSslMode($smtpSslMode);
+			$account->setOutboundUser($smtpUser);
+
+			if($smtpPassword !== ''){
+				$account->setOutboundPassword(
+					$this->crypto->encrypt($smtpPassword)
+				);
+			}
+
+			$this->accountService->save($account);
+			return new JSONResponse($accountDB->getConfiguration());
+		} catch (DoesNotExistException $e) {
+			return new JSONResponse([], 404);
+		}
 	}
 
 	/**
@@ -357,7 +392,7 @@ class AccountsController extends Controller {
 
 	/**
 	 * @NoAdminRequired
-	 * 
+	 *
 	 * @param int $accountId
 	 * @param string $subject
 	 * @param string $body
