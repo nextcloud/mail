@@ -7,6 +7,7 @@
 		>
 	<testsuite name='Mail app tests'>
 		<directory suffix='test.php'>.</directory>
+		<directory suffix='Test.php'>.</directory>
 	</testsuite>
 	<!-- filters for code coverage -->
 	<filter>
