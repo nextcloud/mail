@@ -10,7 +10,7 @@
  * @copyright Christoph Wurst 2015, 2016
  */
 
-(function() {
+(function(OC) {
 	'use strict';
 
 	requirejs.config({
@@ -44,7 +44,19 @@
 		baseUrl: OC.linkTo('mail', 'js')
 	});
 
+	requirejs.createNode = function(config) {
+		var node = config.xhtml ?
+			document.createElementNS('http://www.w3.org/1999/xhtml', 'html:script') :
+			document.createElement('script');
+		node.type = config.scriptType || 'text/javascript';
+		node.charset = 'utf-8';
+		node.async = true;
+
+		node.setAttribute('nonce', btoa(OC.requestToken));
+		return node;
+	};
+
 	require([
 		'init'
 	]);
-})();
+})(OC);
