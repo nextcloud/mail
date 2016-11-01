@@ -10,6 +10,7 @@
 	<author>Christoph Wurst</author>
 	<author>Jan-Christoph Borchardt</author>
 	<author>Steffen Lindner</author>
+	<namespace>Mail</namespace>
 	<documentation>
 		<admin>https://github.com/nextcloud/mail#readme</admin>
 	</documentation>

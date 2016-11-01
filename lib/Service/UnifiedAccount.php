@@ -38,7 +38,7 @@ class UnifiedAccount implements IAccount {
 	/** @var IL10N */
 	private $l10n;
 
-	/** @var Horde_Mail_Rfc822_List */
+	/** @var \Horde_Mail_Rfc822_List */
 	private $email;
 
 	/**
