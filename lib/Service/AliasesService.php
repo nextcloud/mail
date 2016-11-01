@@ -1,4 +1,5 @@
 <?php
+
 /**
  * @author Tahaa Karim <tahaalibra@gmail.com>
  *
@@ -17,17 +18,15 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>
  *
  */
+
 namespace OCA\Mail\Service;
 
-use Exception;
 use OCA\Mail\Db\Alias;
 use OCA\Mail\Db\AliasMapper;
-use OCP\AppFramework\Db\DoesNotExistException;
-use OCP\AppFramework\Db\MultipleObjectsReturnedException;
 
 class AliasesService {
 
-	/** @var \OCA\Mail\Db\AliasMapper */
+	/** @var AliasMapper */
 	private $mapper;
 
 	/**
@@ -35,19 +34,6 @@ class AliasesService {
 	 */
 	public function __construct(AliasMapper $mapper) {
 		$this->mapper = $mapper;
-	}
-
-	/**
-	 * @param Exception $e
-	 * @throws NotFoundException
-	 */
-	private function handleException ($e) {
-		if ($e instanceof DoesNotExistException ||
-			$e instanceof MultipleObjectsReturnedException) {
-			throw new NotFoundException($e->getMessage());
-		} else {
-			throw $e;
-		}
 	}
 
 	/**
@@ -75,29 +61,22 @@ class AliasesService {
 	 * @return Alias
 	 */
 	public function create($accountId, $alias, $aliasName) {
-		try {
-			$aliasEntity = new Alias();
-			$aliasEntity->setAccountId($accountId);
-			$aliasEntity->setAlias($alias);
-			$aliasEntity->setName($aliasName);
-			return $this->mapper->insert($aliasEntity);
-		} catch(Exception $e){
-			$this->handleException($e);
-		}
+		$aliasEntity = new Alias();
+		$aliasEntity->setAccountId($accountId);
+		$aliasEntity->setAlias($alias);
+		$aliasEntity->setName($aliasName);
+		return $this->mapper->insert($aliasEntity);
 	}
 
 	/**
 	 * @param int $aliasId
 	 * @param String $currentUserId
-	 * @return \OCA\Mail\Db\Alias
+	 * @return Alias
 	 */
 	public function delete($aliasId, $currentUserId) {
-		try {
-			$alias = $this->mapper->find($aliasId, $currentUserId);
-			$this->mapper->delete($alias);
-			return $alias;
-		} catch(Exception $e) {
-			$this->handleException($e);
-		}
+		$alias = $this->mapper->find($aliasId, $currentUserId);
+		$this->mapper->delete($alias);
+		return $alias;
 	}
+
 }
