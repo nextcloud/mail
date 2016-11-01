@@ -38,7 +38,7 @@ class FixCollectedAddresses implements IRepairStep {
 	}
 
 	public function getName() {
-		return 'Sanitize and migrate collected mail addresses';
+		return 'Purify and migrate collected mail addresses';
 	}
 
 	public function run(IOutput $output) {
@@ -50,7 +50,7 @@ class FixCollectedAddresses implements IRepairStep {
 			$maxId = null;
 			foreach ($chunk as $address) {
 				/* @var $address CollectedAddress */
-				$maxId = $address->id;
+				$maxId = $address->getId();
 				$this->fixAddress($address, $output);
 			}
 
@@ -75,7 +75,7 @@ class FixCollectedAddresses implements IRepairStep {
 			$address->setEmail($hordeAddress->bare_address);
 			$this->mapper->update($address);
 		} catch (Horde_Mail_Exception $ex) {
-			$output->warning('removed invalid address <' . $address->getEmail() . '>\n');
+			$output->warning('removed invalid address <' . $address->getEmail() . '>');
 			// Invalid address, let's delete it to prevent further errors
 			$this->mapper->delete($address);
 		}

@@ -67,7 +67,7 @@ class CollectedAddressMapper extends Mapper {
 			->from($this->getTableName());
 		$result = $qb->execute();
 
-		$count = $result->fetchColumn(0);
+		$count = (int) $result->fetchColumn(0);
 		$result->closeCursor();
 		return $count;
 	}
