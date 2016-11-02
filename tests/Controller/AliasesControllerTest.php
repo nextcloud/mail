@@ -19,8 +19,11 @@
  *
  */
 
+namespace OCA\Mail\Tests\Controller;
+
 use OCA\Mail\Controller\AliasesController;
 use OCP\AppFramework\Http\JSONResponse;
+use PHPUnit_Framework_TestCase;
 
 class AliasesControllerTest extends PHPUnit_Framework_TestCase {
 	private $controller;

@@ -19,10 +19,13 @@
  *
  */
 
+namespace OCA\Mail\Tests\Controller;
+
 use OCA\Mail\Controller\PageController;
 use OCP\AppFramework\Http\ContentSecurityPolicy;
 use OCP\AppFramework\Http\RedirectResponse;
 use OCP\AppFramework\Http\TemplateResponse;
+use PHPUnit_Framework_TestCase;
 
 class PageControllerTest extends PHPUnit_Framework_TestCase {
 

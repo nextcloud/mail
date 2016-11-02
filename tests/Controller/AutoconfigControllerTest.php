@@ -19,7 +19,10 @@
  *
  */
 
+namespace OCA\Mail\Tests\Controller;
+
 use OCA\Mail\Controller\AutoCompleteController;
+use PHPUnit_Framework_TestCase;
 
 class AutoConfigControllerTest extends PHPUnit_Framework_TestCase {
 

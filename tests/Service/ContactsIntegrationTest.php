@@ -19,7 +19,10 @@
  *
  */
 
+namespace OCA\Mail\Tests\Service;
+
 use OCA\Mail\Service\ContactsIntegration;
+use PHPUnit_Framework_TestCase;
 
 class ContactsIntegrationTest extends PHPUnit_Framework_TestCase {
 

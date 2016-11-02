@@ -1,5 +1,6 @@
 <?php
 
+
 /**
  * @author Christoph Wurst <christoph@winzerhof-wurst.at>
  * @author Thomas Müller <thomas.mueller@tmit.eu>
@@ -20,11 +21,15 @@
  *
  */
 
-use OC\AppFramework\Http;
+namespace OCA\Mail\Tests\Controller;
+
+use Exception;
 use OCA\Mail\Controller\AccountsController;
 use OCA\Mail\Model\Message;
 use OCP\AppFramework\Db\DoesNotExistException;
+use OCP\AppFramework\Http;
 use OCP\AppFramework\Http\JSONResponse;
+use PHPUnit_Framework_TestCase;
 
 class AccountsControllerTest extends PHPUnit_Framework_TestCase {
 

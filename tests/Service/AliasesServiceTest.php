@@ -19,8 +19,11 @@
  *
  */
 
+namespace OCA\Mail\Tests\Service;
+
 use OCA\Mail\Db\Alias;
 use OCA\Mail\Service\AliasesService;
+use PHPUnit_Framework_TestCase;
 
 class AliasesServiceTest extends PHPUnit_Framework_TestCase {
 
@@ -28,6 +31,7 @@ class AliasesServiceTest extends PHPUnit_Framework_TestCase {
 	private $user = 'herbert';
 	private $mapper;
 	private $alias;
+
 	protected function setUp() {
 		parent::setUp();
 
@@ -86,16 +90,16 @@ class AliasesServiceTest extends PHPUnit_Framework_TestCase {
 
 		$this->assertEquals(
 			[
-				'accountId' => $aliasEntity->getAccountId(),
-				'name' => $aliasEntity->getName(),
-				'alias' => $aliasEntity->getAlias(),
-				'id' => $aliasEntity->getId()
+			'accountId' => $aliasEntity->getAccountId(),
+			'name' => $aliasEntity->getName(),
+			'alias' => $aliasEntity->getAlias(),
+			'id' => $aliasEntity->getId()
 			],
 			[
-				'accountId' => $result->getAccountId(),
-				'name' => $result->getName(),
-				'alias' => $result->getAlias(),
-				'id' => $result->getId()
+			'accountId' => $result->getAccountId(),
+			'name' => $result->getName(),
+			'alias' => $result->getAlias(),
+			'id' => $result->getId()
 			]
 		);
 	}
@@ -112,4 +116,5 @@ class AliasesServiceTest extends PHPUnit_Framework_TestCase {
 
 		$this->service->delete($aliasId, $this->user);
 	}
+
 }

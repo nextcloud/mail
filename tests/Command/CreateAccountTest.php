@@ -21,8 +21,8 @@
 
 namespace OCA\Mail\Tests\Command;
 
-use PHPUnit_Framework_TestCase;
 use OCA\Mail\Command\CreateAccount;
+use PHPUnit_Framework_TestCase;
 
 class CreateAccountTest extends PHPUnit_Framework_TestCase {
 

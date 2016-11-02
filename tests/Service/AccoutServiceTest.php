@@ -19,9 +19,12 @@
  *
  */
 
+namespace OCA\Mail\Tests\Service;
+
 use OCA\Mail\Account;
 use OCA\Mail\Db\MailAccount;
 use OCA\Mail\Service\AccountService;
+use PHPUnit_Framework_TestCase;
 
 class AccountServiceTest extends PHPUnit_Framework_TestCase {
 

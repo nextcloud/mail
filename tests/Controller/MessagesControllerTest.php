@@ -20,6 +20,8 @@
  *
  */
 
+namespace OCA\Mail\Tests\Controller;
+
 use OCA\Mail\Controller\MessagesController;
 use OCA\Mail\Http\AttachmentDownloadResponse;
 use OCA\Mail\Http\HtmlResponse;
@@ -27,6 +29,7 @@ use OCP\AppFramework\Db\DoesNotExistException;
 use OCP\AppFramework\Http;
 use OCP\AppFramework\Http\ContentSecurityPolicy;
 use OCP\AppFramework\Http\JSONResponse;
+use PHPUnit_Framework_TestCase;
 
 class MessagesControllerTest extends PHPUnit_Framework_TestCase {
 

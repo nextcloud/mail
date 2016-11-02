@@ -19,10 +19,14 @@
  *
  */
 
-use OC\AppFramework\Http;
+namespace OCA\Mail\Tests\Controller;
+
+use Horde_Imap_Client_Exception;
 use OCA\Mail\Controller\FoldersController;
 use OCP\AppFramework\Db\DoesNotExistException;
+use OCP\AppFramework\Http;
 use OCP\AppFramework\Http\JSONResponse;
+use PHPUnit_Framework_TestCase;
 
 class FoldersControllerTest extends PHPUnit_Framework_TestCase {
 
@@ -38,7 +42,8 @@ class FoldersControllerTest extends PHPUnit_Framework_TestCase {
 		$this->accountService = $this->getMockBuilder('OCA\Mail\Service\AccountService')
 			->disableOriginalConstructor()
 			->getMock();
-		$this->controller = new FoldersController($this->appName, $this->request, $this->accountService, $this->userId);
+		$this->controller = new FoldersController($this->appName, $this->request,
+			$this->accountService, $this->userId);
 	}
 
 	public function folderDataProvider() {
@@ -53,7 +58,7 @@ class FoldersControllerTest extends PHPUnit_Framework_TestCase {
 
 		// Add empty account = no folders
 		array_push($data, [
-			[
+				[
 				'folders' => [
 				],
 			],
