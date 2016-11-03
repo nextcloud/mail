@@ -21,7 +21,8 @@ define(function(require) {
 	var SHOW_COLLAPSED = Object.seal([
 		'inbox',
 		'flagged',
-		'drafts'
+		'drafts',
+		'sent'
 	]);
 
 	return Marionette.CompositeView.extend({
