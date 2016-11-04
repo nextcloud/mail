@@ -67,8 +67,9 @@ class AddressCollector {
 			} catch (Horde_Mail_Exception $ex) {
 				// Ignore it
 				$this->logger->debug("<$address> is not a valid RFC822 mail address");
+				return;
 			}
-			if (!$this->mapper->exists($this->userId, $address)) {
+			if (!$this->mapper->exists($this->userId, $hordeAddress->bare_address)) {
 				$this->logger->debug("saving new address <$address>");
 
 				$entity = new CollectedAddress();

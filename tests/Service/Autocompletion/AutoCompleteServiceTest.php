@@ -21,8 +21,9 @@
 
 namespace OCA\Mail\Tests\Service\Autocompletion;
 
-use PHPUnit_Framework_TestCase;
+use OCA\Mail\Db\CollectedAddress;
 use OCA\Mail\Service\AutoCompletion\AutoCompleteService;
+use PHPUnit_Framework_TestCase;
 
 class AutoCompleteServiceTest extends PHPUnit_Framework_TestCase {
 
@@ -48,12 +49,13 @@ class AutoCompleteServiceTest extends PHPUnit_Framework_TestCase {
 		$term = 'jo';
 
 		$contactsResult = [
-			['id' => 12, 'label' => 'john doe', 'value' => 'john doe'],
-			['id' => 13, 'label' => 'joe doe', 'value' => 'joe doe'],
+			['id' => 12, 'label' => '"john doe" <john@doe.cz>', 'value' => '"john doe" <john@doe.cz>'],
+			['id' => 13, 'label' => '"joe doe" <joe@doe.se>', 'value' => '"joe doe" <joe@doe.se>'],
 		];
-		$john = new \OCA\Mail\Db\CollectedAddress();
+		$john = new CollectedAddress();
 		$john->setId(1234);
 		$john->setEmail('john@doe.com');
+		$john->setDisplayName('John Doe');
 		$john->setUserId('testuser');
 		$collectedResult = [
 			$john,
@@ -71,9 +73,9 @@ class AutoCompleteServiceTest extends PHPUnit_Framework_TestCase {
 		$response = $this->service->findMatches($term);
 
 		$expected = [
-			['id' => 12, 'label' => 'john doe', 'value' => 'john doe'],
-			['id' => 13, 'label' => 'joe doe', 'value' => 'joe doe'],
-			['id' => 1234, 'label' => 'john@doe.com', 'value' => 'john@doe.com'],
+			['id' => 12, 'label' => '"john doe" <john@doe.cz>', 'value' => '"john doe" <john@doe.cz>'],
+			['id' => 13, 'label' => '"joe doe" <joe@doe.se>', 'value' => '"joe doe" <joe@doe.se>'],
+			['id' => 1234, 'label' => 'John Doe', 'value' => '"John Doe" <john@doe.com>'],
 		];
 		$this->assertEquals($expected, $response);
 	}

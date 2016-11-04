@@ -42,36 +42,37 @@ class AddressCollectorTest extends PHPUnit_Framework_TestCase {
 			->disableOriginalConstructor()
 			->getMock();
 
-		$this->collector = new AddressCollector($this->mapper, $this->userId,
-			$this->logger);
+		$this->collector = new AddressCollector($this->mapper, $this->userId, $this->logger);
 	}
 
 	public function testAddAddresses() {
 		$addresses = [
-			'user@example.com',
-			'example@user.com',
+			'"User" <user@example.com>',
+			'Example <example@user.com>',
 		];
-		$data = array_map(function($address) {
-			$ca = new CollectedAddress();
-			$ca->setEmail($address);
-			$ca->setUserId($this->userId);
-			return $ca;
-		}, $addresses);
+		$address1 = new CollectedAddress();
+		$address1->setDisplayName('User');
+		$address1->setEmail('user@example.com');
+		$address1->setUserId($this->userId);
+		$address2 = new CollectedAddress();
+		$address2->setDisplayName('Example');
+		$address2->setEmail('example@user.com');
+		$address2->setUserId($this->userId);
 
 		$this->mapper->expects($this->at(0))
 			->method('exists')
-			->with($this->userId, $addresses[0])
+			->with($this->userId, 'user@example.com')
 			->will($this->returnValue(false));
 		$this->mapper->expects($this->at(1))
 			->method('insert')
-			->with($data[0]);
+			->with($address1);
 		$this->mapper->expects($this->at(2))
 			->method('exists')
-			->with($this->userId, $addresses[1])
+			->with($this->userId, 'example@user.com')
 			->will($this->returnValue(false));
 		$this->mapper->expects($this->at(3))
 			->method('insert')
-			->with($data[1]);
+			->with($address2);
 
 		$this->collector->addAddresses($addresses);
 	}
@@ -101,7 +102,7 @@ class AddressCollectorTest extends PHPUnit_Framework_TestCase {
 			->will($this->returnValue($mapperResult));
 
 		$result = $this->collector->searchAddress($term);
-		
+
 		$this->assertequals($mapperResult, $result);
 	}
 
