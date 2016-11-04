@@ -96,7 +96,7 @@ OC.L10N.register(
     "Name" : "Nom",
     "Mail Address" : "Adresse mail",
     "Password" : "Mot de passe",
-    "Manual configuration" : "Manuel de configuration",
+    "Manual configuration" : "Configuration manuelle",
     "IMAP Host" : "Hôte IMAP",
     "IMAP security" : "Sécurité IMAP",
     "None" : "Aucun",
