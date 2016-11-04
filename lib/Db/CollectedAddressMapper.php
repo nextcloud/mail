@@ -43,9 +43,10 @@ class CollectedAddressMapper extends Mapper {
 	 * @return CollectedAddress[]
 	 */
 	public function findMatching($userId, $query) {
-		$sql = 'SELECT * FROM *PREFIX*mail_collected_addresses WHERE `user_id` = ? AND `email` ILIKE ?';
+		$sql = 'SELECT * FROM *PREFIX*mail_collected_addresses WHERE `user_id` = ? AND (`email` ILIKE ? OR `display_name` ILIKE ?)';
 		$params = [
 			$userId,
+			'%' . $query . '%',
 			'%' . $query . '%',
 		];
 		return $this->findEntities($sql, $params);

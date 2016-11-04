@@ -70,7 +70,7 @@ class AddressCollector {
 			}
 			if (!$this->mapper->exists($this->userId, $address)) {
 				$this->logger->debug("saving new address <$address>");
-				
+
 				$entity = new CollectedAddress();
 				$entity->setUserId($this->userId);
 				$entity->setDisplayName($hordeAddress->label);
@@ -83,7 +83,7 @@ class AddressCollector {
 	/**
 	 * Find and return all known and matching email addresses
 	 *
-	 * @param Horde_Mail_Rfc822_Address[] $term
+	 * @param string $term
 	 */
 	public function searchAddress($term) {
 		$this->logger->debug("searching for collected address <$term>");
