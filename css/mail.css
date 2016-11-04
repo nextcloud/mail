@@ -282,11 +282,8 @@
 	background: radial-gradient(ellipse at top, rgba(255,255,255,.9),rgba(255,255,255,0) 70%);
 }
 #load-more-mail-messages {
-	display: none;
 	margin: 10px auto;
 	padding: 10px;
-}
-#load-more-mail-messages {
 	margin-top: 50px;
 	margin-bottom: 200px;
 }

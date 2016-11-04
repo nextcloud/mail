@@ -218,7 +218,6 @@ define(function(require) {
 				from = 0;
 			}
 			// Add loading feedback
-			$('#load-more-mail-messages').addClass('icon-loading-small');
 			if (reload) {
 				$('#mail-message-list-loading').css('opacity', 0)
 					.slideDown('slow')
@@ -226,6 +225,8 @@ define(function(require) {
 						{ opacity: 1 },
 						{ queue: false, duration: 'slow' }
 					);
+			} else {
+				this.$('#load-more-mail-messages').addClass('icon-loading-small');
 			}
 
 			var _this = this;
@@ -255,7 +256,7 @@ define(function(require) {
 
 			$.when(loadingMessages).always(function() {
 				// Remove loading feedback again
-				$('#load-more-mail-messages').removeClass('icon-loading-small');
+				_this.$('#load-more-mail-messages').removeClass('icon-loading-small');
 				if (reload) {
 					$('#mail-message-list-loading').css('opacity', 1)
 						.slideUp('slow')
