@@ -222,8 +222,8 @@ define(function(require) {
 				$('#mail-message-list-loading').css('opacity', 0)
 					.slideDown('slow')
 					.animate(
-						{ opacity: 1 },
-						{ queue: false, duration: 'slow' }
+						{opacity: 1},
+						{queue: false, duration: 'slow'}
 					);
 			} else {
 				this.$('#load-more-mail-messages').addClass('icon-loading-small');
@@ -278,6 +278,21 @@ define(function(require) {
 				// scroll event is fired, which we want to ignore
 				_this.reloaded = reload;
 			});
+		},
+		onBeforeRender() {
+			// FF jump scrolls when we load more mesages. This stores the scroll
+			// position before the element is re-rendered and restores it afterwards
+			if (this.$scrollContainer) {
+				this._prevScrollTop = this.$scrollContainer.scrollTop();
+			}
+		},
+		onRender: function() {
+			// see onBeforeRender
+			if (this.$scrollContainer) {
+				if (this._prevScrollTop) {
+					this.$scrollContainer.scrollTop(this._prevScrollTop);
+				}
+			}
 		}
 	});
 });
