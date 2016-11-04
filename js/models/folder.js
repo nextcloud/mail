@@ -11,6 +11,7 @@
 define(function(require) {
 	'use strict';
 
+	var _ = require('underscore');
 	var Backbone = require('backbone');
 
 	/**
@@ -42,6 +43,16 @@ define(function(require) {
 		addMessage: function(message) {
 			this.messages.add(message);
 			message.folder = this;
+		},
+		/**
+		 * @param {Array<Message>} message
+		 * @returns {undefined}
+		 */
+		addMessages: function(messages) {
+			messages = this.messages.add(messages);
+			_.each(messages, function(msg) {
+				msg.folder = this;
+			}, this);
 		},
 		/**
 		 * @param {Folder} folder

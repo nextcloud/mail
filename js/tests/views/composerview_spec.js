@@ -21,8 +21,9 @@
 
 define([
 	'views/composerview',
-	'models/accountcollection'
-], function(ComposerView, AccountCollection) {
+	'models/accountcollection',
+	'state'
+], function(ComposerView, AccountCollection, State) {
 	describe('ComposerView', function() {
 		var accounts;
 
@@ -49,6 +50,8 @@ define([
 					]
 				}
 			]);
+
+			State.currentAccount = accounts.first();
 		});
 
 		it('creates a view to composer a new message', function() {

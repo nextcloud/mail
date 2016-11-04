@@ -39,7 +39,7 @@ define(function(require) {
 		COMPOSER: 2
 	});
 
-	return Marionette.LayoutView.extend({
+	return Marionette.View.extend({
 		template: Handlebars.compile(MessageContentTemplate),
 		className: 'container',
 		detailView: null,
@@ -72,8 +72,8 @@ define(function(require) {
 
 			this.listenTo(Radio.ui, 'message:loading', this.onMessageLoading);
 		},
-		onShow: function() {
-			this.messages.show(new MessagesView({
+		onRender: function() {
+			this.showChildView('messages', new MessagesView({
 				collection: this.folder.messages,
 				searchQuery: this.searchQuery
 			}));
@@ -83,7 +83,7 @@ define(function(require) {
 			Radio.ui.trigger('composer:events:undelegate');
 
 			var messageModel = new Backbone.Model(message);
-			this.message.show(new MessageView({
+			this.showChildView('message', new MessageView({
 				account: this.account,
 				folder: this.folder,
 				model: messageModel
@@ -93,7 +93,7 @@ define(function(require) {
 			Radio.ui.trigger('messagesview:messageflag:set', message.id, 'unseen', false);
 		},
 		onShowError: function(errorMessage) {
-			this.message.show(new ErrorView({
+			this.showChildView('message', new ErrorView({
 				text: errorMessage
 			}));
 			this.detailView = DetailView.ERROR;
@@ -104,12 +104,12 @@ define(function(require) {
 			$('#mail-message').removeClass('hidden-mobile');
 
 			// setup composer view
-			this.message.show(new ComposerView({
+			this.showChildView('message', new ComposerView({
 				accounts: require('state').accounts,
 				data: data
 			}));
 			this.detailView = DetailView.COMPOSER;
-			this.composer = this.message.currentView;
+			this.composer = this.getChildView('message');
 
 			if (data && data.hasHtmlBody) {
 				Radio.ui.trigger('error:show', t('mail', 'Opening HTML drafts is not supported yet.'));
@@ -148,7 +148,7 @@ define(function(require) {
 			}
 		},
 		onMessageLoading: function(text) {
-			this.message.show(new LoadingView({
+			this.showChildView('message', new LoadingView({
 				text: text
 			}));
 		},

@@ -16,7 +16,7 @@ define(function(require) {
 	var NoSearchResultMessageListViewTemplate
 		= require('text!templates/no-search-results-message-list.html');
 
-	return Marionette.ItemView.extend({
+	return Marionette.View.extend({
 		initialize: function(options) {
 			this.model.set('searchTerm', options.searchQuery);
 		},

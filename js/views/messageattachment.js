@@ -31,7 +31,7 @@ define(function(require) {
 	/**
 	 * @class MessageAttachmentView
 	 */
-	var MessageAttachmentView = Marionette.ItemView.extend({
+	var MessageAttachmentView = Marionette.View.extend({
 		template: Handlebars.compile(MessageAttachmentTemplate),
 		ui: {
 			'downloadButton': '.attachment-download',
@@ -72,14 +72,14 @@ define(function(require) {
 			var saving = MessageController.saveAttachmentToFiles(account, folder, messageId, attachmentId);
 
 			// Loading feedback
-			this.ui.saveToCloudButton.removeClass('icon-folder')
+			this.getUI('saveToCloudButton').removeClass('icon-folder')
 					.addClass('icon-loading-small')
 					.prop('disabled', true);
 
 			var _this = this;
 			$.when(saving).always(function() {
 				// Remove loading feedback again
-				_this.ui.saveToCloudButton.addClass('icon-folder')
+				_this.getUI('saveToCloudButton').addClass('icon-folder')
 						.removeClass('icon-loading-small')
 						.prop('disabled', false);
 			});
@@ -87,7 +87,7 @@ define(function(require) {
 		_onImportCalendarEvent: function(e) {
 			e.preventDefault();
 
-			this.ui.importCalendarEventButton
+			this.getUI('importCalendarEventButton')
 					.removeClass('icon-add')
 					.addClass('icon-loading-small');
 
@@ -96,25 +96,25 @@ define(function(require) {
 			var _this = this;
 			$.when(fetchingCalendars).done(function(calendars) {
 				if (calendars.length > 0) {
-					_this.ui.attachmentImportPopover.removeClass('hidden');
+					_this.getUI('attachmentImportPopover').removeClass('hidden');
 					var calendarsView = new CalendarsPopoverView({
 						collection: calendars
 					});
 					calendarsView.render();
-					_this.ui.attachmentImportPopover.html(calendarsView.$el);
+					_this.getUI('attachmentImportPopover').html(calendarsView.$el);
 				} else {
 					Radio.ui.trigger('error:show', t('mail', 'No writable calendars found'));
 				}
 			});
 			$.when(fetchingCalendars).always(function() {
-				_this.ui.importCalendarEventButton
+				_this.getUI('importCalendarEventButton')
 						.removeClass('icon-loading-small')
 						.addClass('icon-add');
 			});
 		},
 		_uploadToCalendar: function(url) {
 			this._closeImportPopover();
-			this.ui.importCalendarEventButton
+			this.getUI('importCalendarEventButton')
 					.removeClass('icon-add')
 					.addClass('icon-loading-small');
 
@@ -130,26 +130,26 @@ define(function(require) {
 					Radio.ui.trigger('error:show', t('mail', 'Error while importing the calendar event'));
 				});
 				$.when(importingCalendarEvent).always(function() {
-					_this.ui.importCalendarEventButton
+					_this.getUI('importCalendarEventButton')
 							.removeClass('icon-loading-small')
 							.addClass('icon-add');
 				});
 			});
 			$.when(downloadingAttachment.fail(function() {
 				Radio.ui.trigger('error:show', t('mail', 'Error while downloading calendar event'));
-				_this.ui.importCalendarEventButton
+				_this.getUI('importCalendarEventButton')
 						.removeClass('icon-loading-small')
 						.addClass('icon-add');
 			}));
 		},
 		_closeImportPopover: function(e) {
 			if (_.isUndefined(e)) {
-				this.ui.attachmentImportPopover.addClass('hidden');
+				this.getUI('attachmentImportPopover').addClass('hidden');
 				return;
 			}
 			var $target = $(e.target);
 			if (this.$el.find($target).length === 0) {
-				this.ui.attachmentImportPopover.addClass('hidden');
+				this.getUI('attachmentImportPopover').addClass('hidden');
 			}
 		}
 	});

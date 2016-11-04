@@ -18,9 +18,9 @@ define(function(require) {
 	var Radio = require('radio');
 	var FolderTemplate = require('text!templates/folder.html');
 
-	return Backbone.Marionette.ItemView.extend({
+	return Backbone.Marionette.View.extend({
 		template: Handlebars.compile(FolderTemplate),
-		templateHelpers: function() {
+		templateContext: function() {
 			var count = null;
 			if (this.model.get('specialRole') === 'drafts') {
 				count = this.model.get('total');

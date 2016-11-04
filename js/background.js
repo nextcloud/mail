@@ -59,9 +59,7 @@ define(function(require) {
 						// reload if current selected folder has changed
 						if (State.currentAccount === changedAccount &&
 							State.currentFolder.get('id') === changes.id) {
-							_.each(changes.messages, function(msg) {
-								State.currentFolder.addMessage(msg);
-							});
+							State.currentFolder.addMessages(changes.messages);
 							var messages = new MessageCollection(changes.messages).slice(0);
 							Radio.message.trigger('fetch:bodies', changedAccount, changedFolder, messages);
 						}

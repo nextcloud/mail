@@ -20,8 +20,8 @@
 define(function(require) {
 	'use strict';
 
-	var $ = require('jquery');
 	var _ = require('underscore');
+	var $ = require('jquery');
 	var Backbone = require('backbone');
 	var Handlebars = require('handlebars');
 	var Radio = require('radio');
@@ -51,6 +51,7 @@ define(function(require) {
 			this.searchQuery = options.searchQuery;
 
 			var _this = this;
+			this.on('dom:refresh', this._bindScrollEvents);
 			Radio.ui.reply('messagesview:collection', function() {
 				return _this.collection;
 			});
@@ -61,11 +62,11 @@ define(function(require) {
 			this.listenTo(Radio.message, 'messagesview:message:next', this.selectNextMessage);
 			this.listenTo(Radio.message, 'messagesview:message:prev', this.selectPreviousMessage);
 		},
-		onShow: function() {
+		_bindScrollEvents: function() {
 			this.$scrollContainer = this.$el.parent();
 			this.$scrollContainer.scroll(_.bind(this.onScroll, this));
 		},
-		getEmptyView: function() {
+		emptyView: function() {
 			if (this.searchQuery && this.searchQuery !== '') {
 				return NoSearchResultView;
 			} else {
@@ -217,14 +218,15 @@ define(function(require) {
 				from = 0;
 			}
 			// Add loading feedback
-			$('#load-more-mail-messages').addClass('icon-loading-small');
 			if (reload) {
 				$('#mail-message-list-loading').css('opacity', 0)
 					.slideDown('slow')
 					.animate(
-						{ opacity: 1 },
-						{ queue: false, duration: 'slow' }
+						{opacity: 1},
+						{queue: false, duration: 'slow'}
 					);
+			} else {
+				this.$('#load-more-mail-messages').addClass('icon-loading-small');
 			}
 
 			var _this = this;
@@ -254,7 +256,7 @@ define(function(require) {
 
 			$.when(loadingMessages).always(function() {
 				// Remove loading feedback again
-				$('#load-more-mail-messages').removeClass('icon-loading-small');
+				_this.$('#load-more-mail-messages').removeClass('icon-loading-small');
 				if (reload) {
 					$('#mail-message-list-loading').css('opacity', 1)
 						.slideUp('slow')
@@ -276,6 +278,21 @@ define(function(require) {
 				// scroll event is fired, which we want to ignore
 				_this.reloaded = reload;
 			});
+		},
+		onBeforeRender: function() {
+			// FF jump scrolls when we load more mesages. This stores the scroll
+			// position before the element is re-rendered and restores it afterwards
+			if (this.$scrollContainer) {
+				this._prevScrollTop = this.$scrollContainer.scrollTop();
+			}
+		},
+		onRender: function() {
+			// see onBeforeRender
+			if (this.$scrollContainer) {
+				if (this._prevScrollTop) {
+					this.$scrollContainer.scrollTop(this._prevScrollTop);
+				}
+			}
 		}
 	});
 });

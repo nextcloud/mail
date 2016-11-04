@@ -55,8 +55,6 @@ define(function(require) {
 		// Set folder active
 		Radio.folder.trigger('setactive', account, folder);
 
-		$('#load-more-mail-messages').hide();
-
 		if (noSelect) {
 			$('#emptycontent').show();
 			require('state').currentAccount = account;
@@ -87,10 +85,6 @@ define(function(require) {
 					Radio.message.trigger('fetch:bodies', account, folder, messages.slice(0, 10));
 
 					Radio.message.trigger('load', account, folder, messages.first());
-
-					$('#load-more-mail-messages')
-						.fadeIn()
-						.css('display', 'block');
 				}
 
 				if (cached) {

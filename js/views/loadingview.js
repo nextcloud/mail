@@ -27,9 +27,9 @@ define(function(require) {
 	/**
 	 * @class LoadingView
 	 */
-	var LoadingView = Marionette.ItemView.extend({
+	var LoadingView = Marionette.View.extend({
 		template: Handlebars.compile(LoadingTemplate),
-		templateHelpers: function() {
+		templateContext: function() {
 			return {
 				hint: this.hint
 			};

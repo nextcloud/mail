@@ -21,9 +21,9 @@ define(function(require) {
 	var AttachmentsView = require('views/attachments');
 	var ComposerTemplate = require('text!templates/composer.html');
 
-	return Marionette.LayoutView.extend({
+	return Marionette.View.extend({
 		template: Handlebars.compile(ComposerTemplate),
-		templateHelpers: function() {
+		templateContext: function() {
 			var aliases = null;
 			if (this.accounts) {
 				aliases = this.buildAliases();
@@ -133,7 +133,7 @@ define(function(require) {
 			}
 		},
 		onRender: function() {
-			this.attachmentsRegion.show(new AttachmentsView({
+			this.showChildView('attachmentsRegion', new AttachmentsView({
 				collection: this.attachments
 			}));
 
@@ -148,6 +148,8 @@ define(function(require) {
 			} else {
 				this.setAutoSize(true);
 			}
+
+			this.defaultMailSelect();
 		},
 		setAutoSize: function(state) {
 			if (state === true) {
@@ -561,9 +563,6 @@ define(function(require) {
 			if (alias) {
 				$('.mail-account').val(alias.id);
 			}
-		},
-		onShow: function() {
-			this.defaultMailSelect();
 		}
 	});
 

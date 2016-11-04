@@ -17,10 +17,10 @@ define(function(require) {
 	var Radio = require('radio');
 	var SettingsTemplate = require('text!templates/settings.html');
 
-	return Marionette.LayoutView.extend({
+	return Marionette.View.extend({
 		accounts: null,
 		template: Handlebars.compile(SettingsTemplate),
-		templateHelpers: function() {
+		templateContext: function() {
 			return {
 				addAccountUrl: OC.generateUrl('apps/mail/#setup')
 			};

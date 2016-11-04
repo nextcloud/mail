@@ -29,7 +29,7 @@ define(function(require) {
 		collection: null,
 		model: null,
 		template: Handlebars.compile(AccountTemplate),
-		templateHelpers: function() {
+		templateContext: function() {
 			var toggleCollapseMessage = this.collapsed ? t('mail', 'Show all folders') : t('mail', 'Collapse folders');
 			return {
 				isUnifiedInbox: this.model.get('accountId') === -1,
@@ -78,12 +78,12 @@ define(function(require) {
 			this.toggleMenuClass();
 		},
 		toggleMenuClass: function() {
-			this.ui.menu.toggleClass('open', this.menuShown);
+			this.getUI('menu').toggleClass('open', this.menuShown);
 		},
 		onDelete: function(e) {
 			e.stopPropagation();
 
-			this.ui.deleteButton.removeClass('icon-delete').addClass('icon-loading-small');
+			this.getUI('deleteButton').removeClass('icon-delete').addClass('icon-loading-small');
 
 			var account = this.model;
 
@@ -111,7 +111,7 @@ define(function(require) {
 				Radio.navigation.trigger('folder', accountId, folderId);
 			}
 		},
-		onShow: function() {
+		onRender: function() {
 			this.listenTo(Radio.ui, 'document:click', function(event) {
 				var target = $(event.target);
 				if (!this.$el.is(target.closest('.navigation-account'))) {

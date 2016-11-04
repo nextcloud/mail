@@ -24,7 +24,7 @@ define(function(require) {
 	var Marionette = require('marionette');
 	var EmptyMessagesTemplate = require('text!templates/empty-folder.html');
 
-	var EmptyMessagesView = Marionette.ItemView.extend({
+	var EmptyMessagesView = Marionette.View.extend({
 		id: 'emptycontent',
 		template: Handlebars.compile(EmptyMessagesTemplate)
 	});

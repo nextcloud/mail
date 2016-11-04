@@ -25,7 +25,7 @@ define(function(require) {
 	var Radio = require('radio');
 	var NewMessageTemplate = require('text!templates/newmessage.html');
 
-	return Marionette.LayoutView.extend({
+	return Marionette.View.extend({
 		template: Handlebars.compile(NewMessageTemplate),
 		accounts: null,
 		ui: {
@@ -38,15 +38,15 @@ define(function(require) {
 			this.accounts = options.accounts;
 			this.listenTo(options.accounts, 'add', this.onAccountsChanged);
 		},
-		onShow: function() {
+		onRender: function() {
 			// Set the approriate ui state
 			this.onAccountsChanged();
 		},
 		onAccountsChanged: function() {
 			if (this.accounts.size === 0) {
-				this.ui.button.hide();
+				this.getUI('button').hide();
 			} else {
-				this.ui.button.show();
+				this.getUI('button').show();
 			}
 		},
 		onClick: function(e) {

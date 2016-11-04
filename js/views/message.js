@@ -23,7 +23,7 @@ define(function(require) {
 	var MessageAttachmentsView = require('views/messageattachments');
 	var MessageTemplate = require('text!templates/message.html');
 
-	return Marionette.LayoutView.extend({
+	return Marionette.View.extend({
 		template: Handlebars.compile(MessageTemplate),
 		className: 'mail-message-container',
 		message: null,
@@ -78,9 +78,9 @@ define(function(require) {
 		},
 		onIframeLoad: function() {
 			// Expand height to not have two scrollbars
-			this.ui.messageIframe.height(this.ui.messageIframe.contents().find('html').height() + 20);
+			this.getUI('messageIframe').height(this.getUI('messageIframe').contents().find('html').height() + 20);
 			// Fix styling
-			this.ui.messageIframe.contents().find('body').css({
+			this.getUI('messageIframe').contents().find('body').css({
 				'margin': '0',
 				'font-weight': 'normal',
 				'font-size': '.8em',
@@ -89,26 +89,26 @@ define(function(require) {
 				'color': '#000'
 			});
 			// Fix font when different font is forced
-			this.ui.messageIframe.contents().find('font').prop({
+			this.getUI('messageIframe').contents().find('font').prop({
 				'face': 'Open Sans',
 				'color': '#000'
 			});
-			this.ui.messageIframe.contents().find('.moz-text-flowed').css({
+			this.getUI('messageIframe').contents().find('.moz-text-flowed').css({
 				'font-family': 'inherit',
 				'font-size': 'inherit'
 			});
 			// Expand height again after rendering to account for new size
-			this.ui.messageIframe.height(this.ui.messageIframe.contents().find('html').height() + 20);
+			this.getUI('messageIframe').height(this.getUI('messageIframe').contents().find('html').height() + 20);
 			// Grey out previous replies
-			this.ui.messageIframe.contents().find('blockquote').css({
+			this.getUI('messageIframe').contents().find('blockquote').css({
 				'color': '#888'
 			});
 			// Remove spinner when loading finished
-			this.ui.messageIframe.parent().removeClass('icon-loading');
+			this.getUI('messageIframe').parent().removeClass('icon-loading');
 
 			// Does the html mail have blocked images?
 			var hasBlockedImages = false;
-			if (this.ui.messageIframe.contents().
+			if (this.getUI('messageIframe').contents().
 				find('[data-original-src],[data-original-style]').length) {
 				hasBlockedImages = true;
 			}
@@ -121,7 +121,7 @@ define(function(require) {
 			}
 
 			// Add body content to inline reply (html mails)
-			var text = this.ui.messageIframe.contents().find('body').html();
+			var text = this.getUI('messageIframe').contents().find('body').html();
 			text = HtmlHelper.htmlToText(text);
 			var date = new Date(this.message.get('dateIso'));
 			this.replyComposer.currentView.setReplyBody(this.message.get('from'), date, text);
@@ -132,16 +132,16 @@ define(function(require) {
 			// Show forward button
 			this.$('#forward-button').show();
 		},
-		onShow: function() {
-			this.ui.messageIframe.on('load', _.bind(this.onIframeLoad, this));
+		onRender: function() {
+			this.getUI('messageIframe').on('load', _.bind(this.onIframeLoad, this));
 
-			this.attachments.show(new MessageAttachmentsView({
+			this.showChildView('attachments', new MessageAttachmentsView({
 				collection: new Attachments(this.message.get('attachments')),
 				message: this.model
 			}));
 
 			// setup reply composer view
-			this.replyComposer.show(new ComposerView({
+			this.showChildView('replyComposer', new ComposerView({
 				type: 'reply',
 				accounts: require('state').accounts,
 				account: this.account,
