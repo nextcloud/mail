@@ -279,7 +279,7 @@ define(function(require) {
 				_this.reloaded = reload;
 			});
 		},
-		onBeforeRender() {
+		onBeforeRender: function() {
 			// FF jump scrolls when we load more mesages. This stores the scroll
 			// position before the element is re-rendered and restores it afterwards
 			if (this.$scrollContainer) {
