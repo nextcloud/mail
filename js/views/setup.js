@@ -65,7 +65,7 @@ define(function(require) {
 		},
 		onRender: function() {
 			this.getUI('manualInputs').hide();
-			this.getUI('iconLoadin').hide();
+			this.getUI('iconLoading').hide();
 			this.getUI('accountName').val(this.displayName);
 			this.getUI('mailAddress').val(this.email);
 		},
