@@ -64,8 +64,8 @@ class TransformURLScheme extends HTMLPurifier_URIFilter {
 		/** @var \HTMLPurifier_Context $context */
 		/** @var \HTMLPurifier_Config $config */
 		// Only HTTPS and HTTP urls should get rewritten
-		if ($uri->scheme === 'https' || $uri->scheme === 'http') {
-			$uri = $this->filterHttp($uri, $context);
+		if ($uri->scheme === 'https' || $uri->scheme === 'http' || $uri->scheme === 'ftp') {
+			$uri = $this->filterHttpFtp($uri, $context);
 		}
 
 		if ($uri->scheme === 'cid') {
@@ -89,7 +89,7 @@ class TransformURLScheme extends HTMLPurifier_URIFilter {
 	 * @param \HTMLPurifier_Context $context
 	 * @return HTMLPurifier_URI
 	 */
-	private function filterHttp(&$uri, $context) {
+	private function filterHttpFtp(&$uri, $context) {
 		$originalURL = urlencode($uri->scheme . '://' . $uri->host . $uri->path);
 		if ($uri->query !== null) {
 			$originalURL = $originalURL . urlencode('?' . $uri->query);

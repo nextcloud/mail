@@ -71,7 +71,11 @@ class ProxyControllerTest extends PHPUnit_Framework_TestCase {
 			[
 				'https://example.com',
 				true
-			]
+			],
+			[
+				'ftp://example.com',
+				true
+			],
 		];
 	}
 
@@ -105,7 +109,7 @@ class ProxyControllerTest extends PHPUnit_Framework_TestCase {
 	public function testRedirectInvalidUrl() {
 		$this->controller = new ProxyController($this->appName, $this->request,
 			$this->urlGenerator, $this->session, $this->clientService, '', '');
-		$this->controller->redirect('ftp://example.com');
+		$this->controller->redirect('ftps://example.com');
 	}
 
 	public function testProxy() {
