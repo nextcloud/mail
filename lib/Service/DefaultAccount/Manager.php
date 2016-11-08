@@ -24,7 +24,7 @@ namespace OCA\Mail\Service\DefaultAccount;
 use OCA\Mail\Db\MailAccount;
 use OCA\Mail\Service\Logger;
 use OCP\Authentication\Exceptions\CredentialsUnavailableException;
-use OCP\Authentication\LoginCredentials\IStore as ICredentialStore;
+use OCP\Authentication\LoginCredentials\IStore;
 use OCP\IConfig;
 use OCP\IUserSession;
 use OCP\Security\ICrypto;
@@ -36,7 +36,7 @@ class Manager {
 	/** @var IConfig */
 	private $config;
 
-	/** @var ICredentialStore */
+	/** @var IStore */
 	private $credentialStore;
 
 	/** @var Logger */
@@ -50,12 +50,12 @@ class Manager {
 
 	/**
 	 * @param IConfig $config
-	 * @param ICredentialStore $credentialStore
+	 * @param IStore $credentialStore
 	 * @param Logger $logger
 	 * @param IUserSession $userSession
 	 * @param ICrypto $crypto
 	 */
-	public function __construct(IConfig $config, ICredentialStore $credentialStore,
+	public function __construct(IConfig $config, IStore $credentialStore,
 		Logger $logger, IUserSession $userSession, ICrypto $crypto) {
 		$this->config = $config;
 		$this->logger = $logger;
@@ -95,6 +95,7 @@ class Manager {
 		}
 
 		$user = $this->userSession->getUser();
+		$password = $this->crypto->encrypt($credentials->getPassword());
 		$this->logger->info('building default account for user ' . $user->getUID());
 
 		$account = new MailAccount();
@@ -107,13 +108,13 @@ class Manager {
 		$account->setInboundHost($config->getImapHost());
 		$account->setInboundPort($config->getImapPort());
 		$account->setInboundSslMode($config->getImapSslMode());
-		$account->setInboundPassword($credentials->getPassword());
+		$account->setInboundPassword($password);
 
 		$account->setOutboundUser($config->buildSmtpUser($user));
 		$account->setOutboundHost($config->getSmtpHost());
 		$account->setOutboundPort($config->getSmtpPort());
 		$account->setOutboundSslMode($config->getSmtpSslMode());
-		$account->setOutboundPassword($credentials->getPassword());
+		$account->setOutboundPassword($password);
 
 		return $account;
 	}
