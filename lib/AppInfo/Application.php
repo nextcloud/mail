@@ -34,7 +34,6 @@ class Application extends App {
 		parent::__construct('mail', $urlParams);
 
 		$this->initializeAppContainer();
-		$this->registerHooks();
 	}
 
 	public function initializeAppContainer() {
@@ -56,23 +55,6 @@ class Application extends App {
 		$container->registerParameter("testSmtp", $testSmtp);
 		$container->registerParameter("referrer", isset($_SERVER['HTTP_REFERER']) ? : null);
 		$container->registerParameter("hostname", Util::getServerHostName());
-	}
-
-	public function registerHooks() {
-		Util::connectHook('OC_User', 'post_login', $this, 'handleLoginHook');
-	}
-
-	public function handleLoginHook($params) {
-		if (!isset($params['password'])) {
-			return;
-		}
-		$password = $params['password'];
-
-		$container = $this->getContainer();
-		/* @var $defaultAccountManager \OCA\Mail\Service\DefaultAccount\Manager */
-		$defaultAccountManager = $container->query('\OCA\Mail\Service\DefaultAccount\Manager');
-
-		$defaultAccountManager->saveLoginPassword($password);
 	}
 
 }

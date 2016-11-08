@@ -27,7 +27,7 @@ use OCA\Mail\Account;
 use OCA\Mail\Db\MailAccount;
 use OCA\Mail\Db\MailAccountMapper;
 use OCA\Mail\Exception\ServiceException;
-use OCA\Mail\Service\DefaultAccount\Manager as DefaultAccountManager;
+use OCA\Mail\Service\DefaultAccount\Manager;
 use OCP\IL10N;
 
 class AccountService {
@@ -45,14 +45,14 @@ class AccountService {
 	/** @var IL10N */
 	private $l10n;
 
-	/** @var DefaultAccountManager */
+	/** @var Manager */
 	private $defaultAccountManager;
 
 	/**
 	 * @param MailAccountMapper $mapper
 	 */
 	public function __construct(MailAccountMapper $mapper, IL10N $l10n,
-		DefaultAccountManager $defaultAccountManager) {
+		Manager $defaultAccountManager) {
 		$this->mapper = $mapper;
 		$this->l10n = $l10n;
 		$this->defaultAccountManager = $defaultAccountManager;
@@ -97,7 +97,7 @@ class AccountService {
 		if ((int) $accountId === UnifiedAccount::ID) {
 			return $this->buildUnifiedAccount($currentUserId);
 		}
-		if ((int) $accountId === DefaultAccountManager::ACCOUNT_ID) {
+		if ((int) $accountId === Manager::ACCOUNT_ID) {
 			$defaultAccount = $this->defaultAccountManager->getDefaultAccount();
 			if (is_null($defaultAccount)) {
 				throw new Exception('Default account config missing');
@@ -131,7 +131,7 @@ class AccountService {
 		if ((int) $accountId === UnifiedAccount::ID) {
 			return;
 		}
-		if ((int) $accountId === DefaultAccountManager::ACCOUNT_ID) {
+		if ((int) $accountId === Manager::ACCOUNT_ID) {
 			return;
 		}
 		$mailAccount = $this->mapper->find($currentUserId, $accountId);

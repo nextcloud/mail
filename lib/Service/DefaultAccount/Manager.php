@@ -23,20 +23,21 @@ namespace OCA\Mail\Service\DefaultAccount;
 
 use OCA\Mail\Db\MailAccount;
 use OCA\Mail\Service\Logger;
+use OCP\Authentication\Exceptions\CredentialsUnavailableException;
+use OCP\Authentication\LoginCredentials\IStore as ICredentialStore;
 use OCP\IConfig;
-use OCP\ISession;
 use OCP\IUserSession;
 use OCP\Security\ICrypto;
 
-class DefaultAccountManager {
+class Manager {
 
 	const ACCOUNT_ID = -2;
 
 	/** @var IConfig */
 	private $config;
 
-	/** @var ISession */
-	private $session;
+	/** @var ICredentialStore */
+	private $credentialStore;
 
 	/** @var Logger */
 	private $logger;
@@ -49,18 +50,18 @@ class DefaultAccountManager {
 
 	/**
 	 * @param IConfig $config
-	 * @param ISession $session
+	 * @param ICredentialStore $credentialStore
 	 * @param Logger $logger
 	 * @param IUserSession $userSession
 	 * @param ICrypto $crypto
 	 */
-	public function __construct(IConfig $config, ISession $session, Logger $logger,
-		IUserSession $userSession, ICrypto $crypto) {
+	public function __construct(IConfig $config, ICredentialStore $credentialStore,
+		Logger $logger, IUserSession $userSession, ICrypto $crypto) {
 		$this->config = $config;
-		$this->session = $session;
 		$this->logger = $logger;
 		$this->userSession = $userSession;
 		$this->crypto = $crypto;
+		$this->credentialStore = $credentialStore;
 	}
 
 	/**
@@ -79,16 +80,6 @@ class DefaultAccountManager {
 	}
 
 	/**
-	 * Save the login password to the session to create a default account in a
-	 * sub-sequent request
-	 *
-	 * @param string $password
-	 */
-	public function saveLoginPassword($password) {
-		$this->session->set('mail_default_account_password', $password);
-	}
-
-	/**
 	 * @return MailAccount|null
 	 */
 	public function getDefaultAccount() {
@@ -96,10 +87,15 @@ class DefaultAccountManager {
 		if (is_null($config)) {
 			return null;
 		}
+		try {
+			$credentials = $this->credentialStore->getLoginCredentials();
+		} catch (CredentialsUnavailableException $ex) {
+			$this->logger->debug('login credentials not available for default account');
+			return null;
+		}
 
 		$user = $this->userSession->getUser();
 		$this->logger->info('building default account for user ' . $user->getUID());
-		$password = $this->crypto->encrypt($this->session->get('mail_default_account_password'));
 
 		$account = new MailAccount();
 		$account->setId(self::ACCOUNT_ID);
@@ -111,14 +107,14 @@ class DefaultAccountManager {
 		$account->setInboundHost($config->getImapHost());
 		$account->setInboundPort($config->getImapPort());
 		$account->setInboundSslMode($config->getImapSslMode());
-		$account->setInboundPassword($password);
+		$account->setInboundPassword($credentials->getPassword());
 
 		$account->setOutboundUser($config->buildSmtpUser($user));
 		$account->setOutboundHost($config->getSmtpHost());
 		$account->setOutboundPort($config->getSmtpPort());
 		$account->setOutboundSslMode($config->getSmtpSslMode());
-		$account->setOutboundPassword($password);
-		
+		$account->setOutboundPassword($credentials->getPassword());
+
 		return $account;
 	}
 
