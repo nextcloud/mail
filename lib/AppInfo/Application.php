@@ -69,8 +69,8 @@ class Application extends App {
 		$password = $params['password'];
 
 		$container = $this->getContainer();
-		/* @var $defaultAccountManager \OCA\Mail\Service\DefaultAccount\DefaultAccountManager */
-		$defaultAccountManager = $container->query('\OCA\Mail\Service\DefaultAccount\DefaultAccountManager');
+		/* @var $defaultAccountManager \OCA\Mail\Service\DefaultAccount\Manager */
+		$defaultAccountManager = $container->query('\OCA\Mail\Service\DefaultAccount\Manager');
 
 		$defaultAccountManager->saveLoginPassword($password);
 	}
