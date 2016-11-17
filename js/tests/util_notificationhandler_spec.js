@@ -92,22 +92,5 @@ define([
 			expect(Radio.navigation.trigger).not.toHaveBeenCalled();
 			expect(notification.onclick).not.toBe(undefined);
 		});
-
-		it('should close the notification after 5 seconds', function() {
-			window.Notification = getNotificationMock();
-			spyOn(Radio.navigation, 'trigger');
-
-			NotificationHandler.showNotification('a', 'b');
-
-			// A new notification should have been created
-			expect(notification).not.toBe(undefined);
-
-			spyOn(notification, 'close');
-			expect(notification.close).not.toHaveBeenCalled();
-			jasmine.clock().tick(2000);
-			expect(notification.close).not.toHaveBeenCalled();
-			jasmine.clock().tick(3100);
-			expect(notification.close).toHaveBeenCalled();
-		});
 	});
 });

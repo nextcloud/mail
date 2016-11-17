@@ -58,9 +58,6 @@ define(function(require) {
 			Radio.navigation.trigger('folder', account.get('accountId'), folder.get('id'), false);
 			window.focus();
 		};
-		setTimeout(function() {
-			notification.close();
-		}, 5000);
 	}
 
 	function showMailNotification(email, folder) {
