@@ -1,35 +1,12 @@
-<li data-folder_id="{{id}}" data-no_select="{{noSelect}}"
-	class="
-	{{#if unseen}}unread{{/if}}
-	{{#if active}} active{{/if}}
-	{{#if specialRole}} special-{{specialRole}}{{/if}}
-	{{#if folders}} collapsible{{/if}}
-	{{#if open}} open{{/if}}
-	">
-	{{#if folders}}<button class="collapse"></button>{{/if}}
-	<a class="folder {{#if specialRole}}
-	   icon-{{specialRole}} svg{{/if}}"
-	   href="{{url}}">
-		{{name}}
-		{{#if count}}
-		<span class="utils">{{count}}</span>
-		{{/if}}
-	</a>
-	<ul>
-		{{#each folders}}
-		<li data-folder_id="{{id}}"
-			class="
-			{{#if unseen}}unread{{/if}}
-			{{#if specialRole}} special-{{specialRole}}{{/if}}
-			">
-			<a class="folder
-			   {{#if specialRole}} icon-{{specialRole}} svg{{/if}}">
-				{{name}}
-				{{#if count}}
-				<span class="utils">{{count}}</span>
-				{{/if}}
-			</a>
-		</li>
-		{{/each}}
-	</ul>
-</li>
+{{#if folders}}
+<button class="collapse"></button>
+{{/if}}
+<a class="folder {{#if specialRole}}
+   icon-{{specialRole}} svg{{/if}}"
+   href="{{url}}">
+	{{name}}
+	{{#if count}}
+	<span class="utils">{{count}}</span>
+	{{/if}}
+</a>
+<div class="folders"></div>

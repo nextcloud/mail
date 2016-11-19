@@ -11,14 +11,39 @@
 define(function(require) {
 	'use strict';
 
-	var $ = require('jquery');
-	var Backbone = require('backbone');
+	var _ = require('underscore');
+	var Marionette = require('marionette');
 	var Handlebars = require('handlebars');
 	var OC = require('OC');
 	var Radio = require('radio');
 	var FolderTemplate = require('text!templates/folder.html');
 
-	return Backbone.Marionette.View.extend({
+	return Marionette.View.extend({
+		tagName: 'li',
+		updateElClasses: function() {
+			var classes = [];
+			if (this.model.get('unseen')) {
+				classes.push('unseen');
+			}
+			if (this.model.get('active')) {
+				classes.push('active');
+			}
+			if (this.model.get('specialRole')) {
+				classes.push('special-' + this.model.get('specialRole'));
+			}
+			if (this.model.folders.length > 0) {
+				classes.push('collapsible');
+			}
+			if (this.model.get('open')) {
+				classes.push('open');
+			}
+			// .removeClass() does not work, https://bugs.jqueryui.com/ticket/9015
+			this.$el.prop('class', '');
+			var _this = this;
+			_.each(classes, function(clazz) {
+				_this.$el.addClass(clazz);
+			});
+		},
 		template: Handlebars.compile(FolderTemplate),
 		templateContext: function() {
 			var count = null;
@@ -39,6 +64,9 @@ define(function(require) {
 				url: url
 			};
 		},
+		regions: {
+			folders: '.folders'
+		},
 		events: {
 			'click .collapse': 'collapseFolder',
 			'click .folder': 'loadFolder'
@@ -54,24 +82,18 @@ define(function(require) {
 			e.preventDefault();
 			// TODO: account should be property of folder
 			var account = require('state').accounts.get(this.model.get('accountId'));
-			var folderId = $(e.currentTarget).parent().data('folder_id');
-			var folder = null;
-			if (folderId === this.model.get('id')) {
-				folder = this.model;
-			} else {
-				folder = this.model.folders.get(folderId);
-			}
-			var noSelect = $(e.currentTarget).parent().data('no_select');
+			var folder = this.model;
+			var noSelect = this.model.get('noSelect');
 			Radio.navigation.trigger('folder', account.get('accountId'), folder.get('id'), noSelect);
 		},
 		onRender: function() {
-			// Get rid of that pesky wrapping-div.
-			// Assumes 1 child element present in template.
-			this.$el = this.$el.children();
-			// Unwrap the element to prevent infinitely
-			// nesting elements during re-render.
-			this.$el.unwrap();
-			this.setElement(this.$el);
+			var FolderListView = require('views/folderlistview');
+
+			this.showChildView('folders', new FolderListView({
+				collection: this.model.folders
+			}));
+
+			this.updateElClasses();
 		}
 	});
 });

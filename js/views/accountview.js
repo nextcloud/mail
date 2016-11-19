@@ -15,19 +15,10 @@ define(function(require) {
 	var Marionette = require('marionette');
 	var OC = require('OC');
 	var Radio = require('radio');
-	var FolderView = require('views/folder');
+	var FolderListView = require('views/folderlistview');
 	var AccountTemplate = require('text!templates/account.html');
 
-	var SHOW_COLLAPSED = Object.seal([
-		'inbox',
-		'flagged',
-		'drafts',
-		'sent'
-	]);
-
-	return Marionette.CompositeView.extend({
-		collection: null,
-		model: null,
+	return Marionette.View.extend({
 		template: Handlebars.compile(AccountTemplate),
 		templateContext: function() {
 			var toggleCollapseMessage = this.collapsed ? t('mail', 'Show all folders') : t('mail', 'Collapse folders');
@@ -35,10 +26,9 @@ define(function(require) {
 				isUnifiedInbox: this.model.get('accountId') === -1,
 				toggleCollapseMessage: toggleCollapseMessage,
 				hasMenu: this.model.get('accountId') !== -1,
-				hasFolders: this.collection.length > 0
+				hasFolders: this.model.folders.length > 0
 			};
 		},
-		collapsed: true,
 		events: {
 			'click .account-toggle-collapse': 'toggleCollapse',
 			'click .app-navigation-entry-utils-menu-button button': 'toggleMenu',
@@ -46,27 +36,20 @@ define(function(require) {
 			'click @ui.settingsButton': 'showAccountSettings',
 			'click @ui.email': 'onClick'
 		},
-		ui: {
-			'email': '.mail-account-email',
-			'menu': 'div.app-navigation-entry-menu',
-			'deleteButton': 'button[class^="icon-delete"]',
-			'settingsButton': 'button[class^="icon-rename"]'
+		regions: {
+			folders: '.folders'
 		},
-		// 'active' is needed to show the dotdotdot menu
+		ui: {
+			email: '.mail-account-email',
+			menu: 'div.app-navigation-entry-menu',
+			deleteButton: 'button[class^="icon-delete"]',
+			settingsButton: 'button[class^="icon-rename"]'
+		},
 		className: 'navigation-account',
-		childView: FolderView,
-		childViewContainer: '#mail_folders',
 		menuShown: false,
+		collapsed: true,
 		initialize: function(options) {
 			this.model = options.model;
-			this.collection = this.model.folders;
-		},
-		filter: function(child) {
-			if (!this.collapsed) {
-				return true;
-			}
-			var specialRole = child.get('specialRole');
-			return SHOW_COLLAPSED.indexOf(specialRole) !== -1;
 		},
 		toggleCollapse: function() {
 			this.collapsed = !this.collapsed;
@@ -120,6 +103,11 @@ define(function(require) {
 					this.toggleMenuClass();
 				}
 			});
+
+			this.showChildView('folders', new FolderListView({
+				collection: this.model.folders,
+				collapsed: this.collapsed
+			}));
 		},
 		showAccountSettings: function(e) {
 			this.toggleMenu(e);
