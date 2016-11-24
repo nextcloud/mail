@@ -29,6 +29,7 @@ define(function(require) {
 	Radio.message.reply('entity', getMessageEntity);
 	Radio.message.reply('bodies', fetchMessageBodies);
 	Radio.message.reply('flag', flagMessage);
+	Radio.message.reply('move', moveMessage);
 	Radio.message.reply('send', sendMessage);
 	Radio.message.reply('draft', saveDraft);
 	Radio.message.reply('delete', deleteMessage);
@@ -194,6 +195,40 @@ define(function(require) {
 			type: 'PUT',
 			data: {
 				flags: _.object([flags])
+			},
+			success: function() {
+				defer.resolve();
+			},
+			error: function() {
+				defer.reject();
+			}
+		});
+
+		return defer.promise();
+	}
+
+	/**
+	 * @param {Account} sourceAccount
+	 * @param {Folder} sourceFolder
+	 * @param {Message} message
+	 * @param {Account} destAccount
+	 * @param {Folder} destFolder
+	 * @returns {Deferred}
+	 */
+	function moveMessage(sourceAccount, sourceFolder, message, destAccount,
+		destFolder) {
+		var defer = $.Deferred();
+
+		var url = OC.generateUrl('apps/mail/accounts/{accountId}/folders/{folderId}/messages/{messageId}/move', {
+			accountId: sourceAccount.get('accountId'),
+			folderId: sourceFolder.get('id'),
+			messageId: message.get('id')
+		});
+		$.ajax(url, {
+			type: 'POST',
+			data: {
+				destAccountId: destAccount.get('accountId'),
+				destFolderId: destFolder.get('id')
 			},
 			success: function() {
 				defer.resolve();

@@ -58,8 +58,8 @@ define(function(require) {
 		 * @returns {undefined}
 		 */
 		addFolder: function(folder) {
-			folder = this.folders.add(folder);
 			folder.account = this;
+			this.folders.add(folder);
 		},
 		getFolderById: function(folderId) {
 			if (!this.folders) {

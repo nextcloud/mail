@@ -18,12 +18,18 @@ define(function(require) {
 	 * @class Message
 	 */
 	var Message = Backbone.Model.extend({
+		folder: undefined,
 		defaults: {
 			flags: [],
 			active: false
 		},
 		initialize: function() {
 			this.set('flags', new MessageFlags(this.get('flags')));
+			if (this.get('folder')) {
+				// Folder should be a simple property
+				this.folder = this.get('folder');
+				this.unset('folder');
+			}
 			this.listenTo(this.get('flags'), 'change', this._transformEvent);
 		},
 		_transformEvent: function() {

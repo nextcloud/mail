@@ -15,7 +15,7 @@ define(function(require) {
 	var Marionette = require('marionette');
 	var OC = require('OC');
 	var Radio = require('radio');
-	var FolderView = require('views/folder');
+	var FolderView = require('views/folderview');
 	var AccountTemplate = require('text!templates/account.html');
 
 	var SHOW_COLLAPSED = Object.seal([

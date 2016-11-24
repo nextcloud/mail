@@ -12,6 +12,7 @@ define(function(require) {
 	'use strict';
 
 	var $ = require('jquery');
+	var _ = require('underscore');
 	var Backbone = require('backbone');
 	var Handlebars = require('handlebars');
 	var OC = require('OC');
@@ -34,9 +35,12 @@ define(function(require) {
 				folderId: this.model.get('id')
 			});
 
+			var folders = this.model.folders.length > 0 ? this.model.folders.toJSON() : undefined;
+
 			return {
 				count: count,
-				url: url
+				url: url,
+				folders: folders
 			};
 		},
 		events: {
@@ -72,6 +76,21 @@ define(function(require) {
 			// nesting elements during re-render.
 			this.$el.unwrap();
 			this.setElement(this.$el);
+
+			// Make non search fodler folders droppable
+			if (!(/\/FLAGGED$/.test(atob(this.model.get('id'))))) {
+				var dropScope = 'folder-' + this.model.account.get('accountId');
+				this.$el.droppable({
+					scope: dropScope,
+					drop: _.bind(function(event, ui) {
+						var account = require('state').currentAccount;
+						var sourceFolder = account.getFolderById(ui.helper.data('folderId'));
+						var message = sourceFolder.messages.get(ui.helper.data('messageId'));
+						Radio.message.trigger('move', account, sourceFolder, message, account, this.model);
+					}, this),
+					hoverClass: 'ui-droppable-active'
+				});
+			}
 		}
 	});
 });

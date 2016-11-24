@@ -23,12 +23,14 @@ namespace OCA\Mail\Service;
 
 use Exception;
 use OCA\Mail\Account;
+use OCA\Mail\Db\MailAccount;
 use OCA\Mail\Db\MailAccountMapper;
+use OCA\Mail\Exception\ServiceException;
 use OCP\IL10N;
 
 class AccountService {
 
-	/** @var \OCA\Mail\Db\MailAccountMapper */
+	/** @var MailAccountMapper */
 	private $mapper;
 
 	/**
@@ -90,6 +92,23 @@ class AccountService {
 		return new Account($this->mapper->find($currentUserId, $accountId));
 	}
 
+	private function moveMessageOnSameAccount(IAccount $account, $sourceFolderId,
+		$destFolderId, $messageId) {
+		$account->moveMessage(base64_decode($sourceFolderId), $messageId, base64_decode($destFolderId));
+	}
+
+	public function moveMessage($accountId, $folderId, $id, $destAccountId,
+		$destFolderId, $userId) {
+		$sourceAccount = $this->find($userId, $accountId);
+		$destAccount = $this->find($userId, $destAccountId);
+
+		if ($sourceAccount->getId() === $destAccount->getId()) {
+			$this->moveMessageOnSameAccount($sourceAccount, $folderId, $destFolderId, $id);
+		} else {
+			throw new ServiceException('It is not possible to move across accounts yet');
+		}
+	}
+
 	/**
 	 * @param int $accountId
 	 */
@@ -103,7 +122,7 @@ class AccountService {
 
 	/**
 	 * @param $newAccount
-	 * @return \OCA\Mail\Db\MailAccount
+	 * @return MailAccount
 	 */
 	public function save($newAccount) {
 		return $this->mapper->save($newAccount);

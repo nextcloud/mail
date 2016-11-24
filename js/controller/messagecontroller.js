@@ -32,6 +32,7 @@ define(function(require) {
 	});
 	Radio.message.on('forward', openForwardComposer);
 	Radio.message.on('flag', flagMessage);
+	Radio.message.on('move', moveMessage);
 
 	/**
 	 * @param {Account} account
@@ -186,6 +187,28 @@ define(function(require) {
 			message.get('flags').set(flag, !value);
 			folder.set('unseen', prevUnseen);
 			Radio.ui.trigger('title:update');
+		});
+	}
+
+	function moveMessage(sourceAccount, sourceFolder, message, destAccount,
+		destFolder) {
+		if (sourceAccount.get('accountId') === destAccount.get('accountId')
+			&& sourceFolder.get('id') === destFolder.get('id')) {
+			// Nothing to move
+			return;
+		}
+
+		var moving = Radio.message.request('move', sourceAccount, sourceFolder, message, destAccount, destFolder);
+
+		sourceFolder.messages.remove(message);
+		destFolder.addMessage(message);
+
+		$.when(moving).done(function() {
+			// TODO: update counters
+		});
+		$.when(moving).fail(function() {
+			Radio.ui.trigger('error:show', t('mail', 'Could not move message.'));
+			sourceFolder.addMessage(message);
 		});
 	}
 
