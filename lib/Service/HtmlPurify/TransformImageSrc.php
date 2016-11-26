@@ -21,11 +21,10 @@
  */
 
 namespace OCA\Mail\Service\HtmlPurify;
+
 use HTMLPurifier_AttrTransform;
 use HTMLPurifier_Config;
 use HTMLPurifier_Context;
-use HTMLPurifier_URI;
-use HTMLPurifier_URIFilter;
 use HTMLPurifier_URIParser;
 use OCP\IURLGenerator;
 use OCP\Util;
@@ -34,6 +33,7 @@ use OCP\Util;
  * Adds copies src to data-src on all img tags.
  */
 class TransformImageSrc extends HTMLPurifier_AttrTransform {
+
 	/**
 	* @type HTMLPurifier_URIParser
 	*/
