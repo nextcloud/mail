@@ -22,7 +22,7 @@ define(function(require) {
 
 	var _ = require('underscore');
 	var $ = require('jquery');
-	var Backbone = require('backbone');
+	var Marionette = require('marionette');
 	var Handlebars = require('handlebars');
 	var Radio = require('radio');
 	var MessagesItemView = require('views/messagesitem');
@@ -30,7 +30,7 @@ define(function(require) {
 	var EmptyFolderView = require('views/emptyfolderview');
 	var NoSearchResultView = require('views/nosearchresultmessagelistview');
 
-	return Backbone.Marionette.CompositeView.extend({
+	return Marionette.CompositeView.extend({
 		collection: null,
 		$scrollContainer: undefined,
 		childView: MessagesItemView,
@@ -43,9 +43,6 @@ define(function(require) {
 		events: {
 			DOMMouseScroll: 'onWheel',
 			mousewheel: 'onWheel'
-		},
-		collectionEvents: {
-			update: 'render'
 		},
 		initialize: function(options) {
 			this.searchQuery = options.searchQuery;
@@ -248,10 +245,6 @@ define(function(require) {
 
 			$.when(loadingMessages).fail(function() {
 				Radio.ui.trigger('error:show', t('mail', 'Error while loading messages.'));
-				// Set the old folder as being active
-				var account = require('state').currentAccount;
-				var folder = require('state').currentFolder;
-				Radio.folder.trigger('setactive', account, folder);
 			});
 
 			$.when(loadingMessages).always(function() {

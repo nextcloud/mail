@@ -27,7 +27,7 @@ define(function(require) {
 	var Handlebars = require('handlebars');
 	var Radio = require('radio');
 	var ComposerView = require('views/composerview');
-	var MessageView = require('views/message');
+	var MessageView = require('views/messageview');
 	var MessagesView = require('views/messagesview');
 	var ErrorView = require('views/errorview');
 	var LoadingView = require('views/loadingview');

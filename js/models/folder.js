@@ -55,10 +55,10 @@ define(function(require) {
 		 * @returns {undefined}
 		 */
 		addMessages: function(messages) {
-			messages = this.messages.add(messages);
-			_.each(messages, function(msg) {
-				msg.folder = this;
-			}, this);
+			var _this = this;
+			_.each(messages, function(message) {
+				_this.addMessage(message);
+			});
 		},
 		/**
 		 * @param {Folder} folder
