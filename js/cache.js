@@ -140,7 +140,7 @@ define(function(require) {
 	 */
 	function removeAccount(account) {
 		// Remove cached messages
-		path = MessageCache.getAccountPath(account);
+		var path = MessageCache.getAccountPath(account);
 		if (storage.isSet(path)) {
 			storage.remove(path);
 		}
