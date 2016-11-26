@@ -14,7 +14,7 @@ define(function(require) {
 	var _ = require('underscore');
 	var $ = require('jquery');
 	var Marionette = require('marionette');
-	var AccountView = require('views/account');
+	var AccountView = require('views/accountview');
 	var Radio = require('radio');
 
 	/**
