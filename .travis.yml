@@ -16,6 +16,7 @@ addons:
 
 services:
   - docker
+  - mysql
   - postgresql
 
 env:
