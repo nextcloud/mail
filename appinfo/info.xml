@@ -1,17 +1,29 @@
 <?xml version="1.0"?>
-<info>
+<info xmlns:xsi= "http://www.w3.org/2001/XMLSchema-instance"
+      xsi:noNamespaceSchemaLocation="https://apps.nextcloud.com/schema/apps/info.xsd">
 	<id>mail</id>
 	<name>Mail</name>
+	<summary>IMAP web client</summary>
 	<description>Easy to use email client which connects to your mail server via IMAP and SMTP.</description>
-	<version>0.6.0</version>
-	<licence>AGPL</licence>
-	<author>Christoph Wurst, Thomas Müller, Jan-Christoph Borchardt, Steffen Lindner &amp; many more …</author>
+	<version>0.6.1</version>
+	<licence>agpl</licence>
+	<author>Christoph Wurst</author>
+	<author>Jan-Christoph Borchardt</author>
+	<author>Steffen Lindner</author>
+	<namespace>Mail</namespace>
 	<documentation>
 		<admin>https://github.com/nextcloud/mail#readme</admin>
 	</documentation>
+	<category>social</category>
+	<category>office</category>
+	<website>https://github.com/nextcloud/mail#readme</website>
+	<bugs>https://github.com/nextcloud/mail/issues</bugs>
+	<repository type="git">https://github.com/nextcloud/mail.git</repository>
+	<screenshot>https://raw.githubusercontent.com/nextcloud/mail/74e94da16618b32ee0834e57bbfc83ff7334f709/screenshots/mail.png</screenshot>
 	<dependencies>
-		<owncloud min-version="9.1" max-version="9.2" />
 		<php min-version="5.4" max-version="7.0" />
+		<owncloud min-version="9.1" max-version="9.2" />
+		<nextcloud min-version="9.1" max-version="11" />
 	</dependencies>
 	<ocsid>169914</ocsid>
 </info>
