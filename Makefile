@@ -5,7 +5,9 @@ project_dir=$(CURDIR)/../$(app_name)
 build_dir=$(CURDIR)/build/artifacts
 appstore_dir=$(build_dir)/appstore
 source_dir=$(build_dir)/source
+sign_dir=$(build_dir)/sign
 package_name=$(app_name)
+cert_dir=$(HOME)/.nextcloud/certificates
 docker_image=christophwurst/owncloud-mail-test-docker
 mail_user=user@domain.tld
 mail_pwd=mypassword
@@ -53,56 +55,69 @@ update-composer: composer.phar
 	php composer.phar install --prefer-dist
 
 appstore: clean install-deps optimize-js
-	mkdir -p $(appstore_dir)
-	tar cvzf $(appstore_dir)/$(package_name).tar.gz $(project_dir) \
-	--exclude-vcs \
-	--exclude=$(project_dir)/build \
-	--exclude=$(project_dir)/.github \
-	--exclude=$(project_dir)/build/artifacts \
-	--exclude=$(project_dir)/node_modules \
-	--exclude=$(project_dir)/.bowerrc \
-	--exclude=$(project_dir)/.gitattributes \
-	--exclude=$(project_dir)/.gitignore \
-	--exclude=$(project_dir)/.jscsrc \
-	--exclude=$(project_dir)/.jshintrc \
-	--exclude=$(project_dir)/.jshintignore \
-	--exclude=$(project_dir)/.lgtm \
-	--exclude=$(project_dir)/.travis.yml \
-	--exclude=$(project_dir)/.scrutinizer.yml \
-	--exclude=$(project_dir)/bower.json \
-	--exclude=$(project_dir)/CONTRIBUTING.md \
-	--exclude=$(project_dir)/composer.json \
-	--exclude=$(project_dir)/composer.lock \
-	--exclude=$(project_dir)/composer.phar \
-	--exclude=$(project_dir)/Gruntfile.js \
-	--exclude=$(project_dir)/issue_template.md \
-	--exclude=$(project_dir)/karma.conf.js \
-	--exclude=$(project_dir)/package.json \
-	--exclude=$(project_dir)/phpunit*xml \
-	--exclude=$(project_dir)/Makefile \
-	--exclude=$(project_dir)/tests \
-	--exclude=$(project_dir)/js/tests \
-	--exclude=$(project_dir)/l10n/.tx \
-	--exclude=$(project_dir)/l10n/no-php \
-	--exclude=$(project_dir)/vendor/bin \
-	--exclude=$(project_dir)/vendor/ezyang/htmlpurifier/.gitattributes \
-	--exclude=$(project_dir)/vendor/ezyang/htmlpurifier/Doxyfile \
-	--exclude=$(project_dir)/vendor/ezyang/htmlpurifier/FOCUS \
-	--exclude=$(project_dir)/vendor/ezyang/htmlpurifier/INSTALL* \
-	--exclude=$(project_dir)/vendor/ezyang/htmlpurifier/NEWS \
-	--exclude=$(project_dir)/vendor/ezyang/htmlpurifier/phpdoc.ini \
-	--exclude=$(project_dir)/vendor/ezyang/htmlpurifier/README \
-	--exclude=$(project_dir)/vendor/ezyang/htmlpurifier/TODO \
-	--exclude=$(project_dir)/vendor/ezyang/htmlpurifier/VERSION \
-	--exclude=$(project_dir)/vendor/ezyang/htmlpurifier/WHATSNEW \
-	--exclude=$(project_dir)/vendor/ezyang/htmlpurifier/WYSIWYG \
-	--exclude=$(project_dir)/vendor/ezyang/htmlpurifier/art \
-	--exclude=$(project_dir)/vendor/ezyang/htmlpurifier/benchmarks \
-	--exclude=$(project_dir)/vendor/ezyang/htmlpurifier/configdoc \
-	--exclude=$(project_dir)/vendor/ezyang/htmlpurifier/docs \
-	--exclude=$(project_dir)/vendor/ezyang/htmlpurifier/extras \
-	--exclude=$(project_dir)/vendor/ezyang/htmlpurifier/maintenance \
-	--exclude=$(project_dir)/vendor/ezyang/htmlpurifier/plugins \
-	--exclude=$(project_dir)/vendor/ezyang/htmlpurifier/smoketests \
-	--exclude=$(project_dir)/vendor/ezyang/htmlpurifier/tests 
+	mkdir -p $(sign_dir)
+	rsync -a \
+	--exclude=.git \
+	--exclude=.github \
+	--exclude=node_modules \
+	--exclude=.bowerrc \
+	--exclude=.gitattributes \
+	--exclude=.gitignore \
+	--exclude=.jscsrc \
+	--exclude=.jshintrc \
+	--exclude=.jshintignore \
+	--exclude=.lgtm \
+	--exclude=.travis.yml \
+	--exclude=.scrutinizer.yml \
+	--exclude=build \
+	--exclude=bower.json \
+	--exclude=CONTRIBUTING.md \
+	--exclude=composer.json \
+	--exclude=composer.lock \
+	--exclude=composer.phar \
+	--exclude=Gruntfile.js \
+	--exclude=issue_template.md \
+	--exclude=karma.conf.js \
+	--exclude=package.json \
+	--exclude=phpunit*xml \
+	--exclude=Makefile \
+	--exclude=tests \
+	--exclude=js/tests \
+	--exclude=l10n/.tx \
+	--exclude=l10n/no-php \
+	--exclude=vendor/bin \
+	--exclude=vendor/ezyang/htmlpurifier/.gitattributes \
+	--exclude=vendor/ezyang/htmlpurifier/Doxyfile \
+	--exclude=vendor/ezyang/htmlpurifier/FOCUS \
+	--exclude=vendor/ezyang/htmlpurifier/INSTALL* \
+	--exclude=vendor/ezyang/htmlpurifier/NEWS \
+	--exclude=vendor/ezyang/htmlpurifier/phpdoc.ini \
+	--exclude=vendor/ezyang/htmlpurifier/README \
+	--exclude=vendor/ezyang/htmlpurifier/TODO \
+	--exclude=vendor/ezyang/htmlpurifier/VERSION \
+	--exclude=vendor/ezyang/htmlpurifier/WHATSNEW \
+	--exclude=vendor/ezyang/htmlpurifier/WYSIWYG \
+	--exclude=vendor/ezyang/htmlpurifier/art \
+	--exclude=vendor/ezyang/htmlpurifier/benchmarks \
+	--exclude=vendor/ezyang/htmlpurifier/configdoc \
+	--exclude=vendor/ezyang/htmlpurifier/docs \
+	--exclude=vendor/ezyang/htmlpurifier/extras \
+	--exclude=vendor/ezyang/htmlpurifier/maintenance \
+	--exclude=vendor/ezyang/htmlpurifier/plugins \
+	--exclude=vendor/ezyang/htmlpurifier/smoketests \
+	--exclude=vendor/ezyang/htmlpurifier/tests \
+	$(project_dir) $(sign_dir)
+	@if [ -f $(cert_dir)/$(app_name).key ]; then \
+		echo "Signing app files…"; \
+		php ../../occ integrity:sign-app \
+			--privateKey=$(cert_dir)/$(app_name).key\
+			--certificate=$(cert_dir)/$(app_name).crt\
+			--path=$(sign_dir)/$(app_name); \
+	fi
+	tar -czf $(build_dir)/$(app_name).tar.gz \
+		-C $(sign_dir) $(app_name)
+	@if [ -f $(cert_dir)/$(app_name).key ]; then \
+		echo "Signing package…"; \
+		openssl dgst -sha512 -sign $(cert_dir)/$(app_name).key $(build_dir)/$(app_name).tar.gz | openssl base64; \
+	fi
 
