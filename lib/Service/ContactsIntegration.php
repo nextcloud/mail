@@ -65,11 +65,10 @@ class ContactsIntegration {
 
 			// loop through all email addresses of this contact
 			foreach ($email as $e) {
-				$displayName = "\"$fn\" <$e>";
 				$receivers[] = [
 					'id' => $id,
-					'label' => $displayName,
-					'value' => $displayName,
+					'label' => "$fn ($e)",
+					'value' => "\"$fn\" <$e>",
 					'photo' => $photo,
 				];
 			}

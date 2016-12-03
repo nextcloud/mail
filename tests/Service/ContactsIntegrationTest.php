@@ -87,19 +87,19 @@ class ContactsIntegrationTest extends PHPUnit_Framework_TestCase {
 		$expected = [
 			[
 				'id' => 1,
-				'label' => '"Jonathan Frakes" <jonathan@frakes.com>',
+				'label' => 'Jonathan Frakes (jonathan@frakes.com)',
 				'value' => '"Jonathan Frakes" <jonathan@frakes.com>',
 				'photo' => null,
 			],
 			[
 				'id' => 2,
-				'label' => '"John Doe" <john@doe.info>',
+				'label' => 'John Doe (john@doe.info)',
 				'value' => '"John Doe" <john@doe.info>',
 				'photo' => null,
 			],
 			[
 				'id' => 2,
-				'label' => '"John Doe" <doe@john.info>',
+				'label' => 'John Doe (doe@john.info)',
 				'value' => '"John Doe" <doe@john.info>',
 				'photo' => null,
 			],
