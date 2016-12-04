@@ -1,0 +1,38 @@
+{
+	"name": "jquery-visibility",
+	"version": "1.0.11",
+	"main": "jquery-visibility.js",
+	"description": "Page visibility shim for jQuery.",
+	"keywords": [
+		"page",
+		"visibility",
+		"visible",
+		"jquery-plugin",
+		"ecosystem:jquery"
+	],
+	"homepage": "http://mths.be/visibility",
+	"repository": {
+		"type": "git",
+		"url": "https://github.com/mathiasbynens/jquery-visibility.git"
+	},
+	"dependencies": {
+		"jquery": "*"
+	},
+	"authors": [
+		{
+			"name": "Mathias Bynens",
+			"homepage": "https://mathiasbynens.be"
+		},
+		{
+			"name": "Jan Paepke",
+			"homepage": "http://www.janpaepke.de"
+		}
+	],
+	"ignore": [
+		"src",
+		"**/.*",
+		"gulpfile.js",
+		"*.html"
+	],
+	"license": "MIT"
+}

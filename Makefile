@@ -17,12 +17,11 @@ all: appstore
 clean:
 	rm -rf $(build_dir)
 	rm -rf node_modules
-	rm -rf js/vendor
 
 composer.phar:
 	curl -sS https://getcomposer.org/installer | php
 
-install-deps: install-composer-deps install-npm-deps install-bower-deps
+install-deps: install-composer-deps install-npm-deps
 
 install-composer-deps: composer.phar
 	php composer.phar install
@@ -33,13 +32,10 @@ install-npm-deps:
 install-npm-deps-dev:
 	npm install --deps
 
-install-bower-deps: bower.json install-npm-deps
-	./node_modules/bower/bin/bower install
-
-optimize-js: install-npm-deps install-bower-deps
+optimize-js: install-npm-deps
 	./node_modules/requirejs/bin/r.js -o build/build.js
 
-dev-setup: install-composer-deps install-npm-deps-dev install-bower-deps
+dev-setup: install-composer-deps install-npm-deps-dev
 
 start-imap-docker:
 	docker pull $(docker_image)

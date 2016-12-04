@@ -1,0 +1,43 @@
+{
+  "name": "ical.js",
+  "version": "1.2.2",
+  "homepage": "https://github.com/mozilla-comm/ical.js",
+  "authors": [
+    "Philipp Kewisch <mozilla@kewis.ch>",
+    "Github Contributors (https://github.com/mozilla-comm/ical.js/graphs/contributors)"
+  ],
+  "description": "Javascript parser for ics (rfc5545) and vcard (rfc6350) data",
+  "main": "build/ical.js",
+  "moduleType": [
+    "globals",
+    "node"
+  ],
+  "keywords": [
+    "calendar",
+    "iCalendar",
+    "jCal",
+    "vCard",
+    "jCard",
+    "parser"
+  ],
+  "license": "MPL-2.0",
+  "ignore": [
+    "**/.*",
+    "node_modules",
+    "bower_components",
+    "test",
+    "tools",
+    "zoneinfo",
+    "coverage",
+    "junk"
+  ],
+  "_release": "1.2.2",
+  "_resolution": {
+    "type": "version",
+    "tag": "v1.2.2",
+    "commit": "a4e882f941ddca2e81373d93c53256017ce04011"
+  },
+  "_source": "https://github.com/mozilla-comm/ical.js.git",
+  "_target": "^1.2.1",
+  "_originalSource": "ical.js"
+}
