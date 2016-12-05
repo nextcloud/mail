@@ -1,6 +1,10 @@
 # Changelog
 All notable changes to this project will be documented in this file.
 
+## 0.6.1 – 2016-12-05
+### Added
+- Nextcloud 11 and apps.nextcloud.com support
+
 ## 0.6.0 – 2016-09-20
 ### Added
 - Alias support
