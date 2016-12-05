@@ -21,6 +21,7 @@
 
 namespace OCA\Mail\Service\AutoCompletion;
 
+use OCA\Mail\Db\CollectedAddress;
 use OCA\Mail\Service\ContactsIntegration;
 
 class AutoCompleteService {
@@ -41,11 +42,11 @@ class AutoCompleteService {
 		$fromCollector = $this->addressCollector->searchAddress($term);
 
 		// Convert collected addresses into same format as CI creates
-		$recipientsFromCollector = array_map(function ($address) {
+		$recipientsFromCollector = array_map(function (CollectedAddress $address) {
 			return [
 				'id' => $address->getId(),
-				'label' => $address->getEmail(),
-				'value' => $address->getEmail(),
+				'label' => $address->getDisplayName(),
+				'value' => '"' . $address->getDisplayName() . '" <' . $address->getEmail() . '>',
 			];
 		}, $fromCollector);
 

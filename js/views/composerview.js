@@ -495,14 +495,14 @@ define(function(require) {
 						$row.append($avatar);
 					} else {
 						$placeholder = $('<div/>');
-						$placeholder.imageplaceholder(item.value);
+						$placeholder.imageplaceholder(item.label || item.value);
 						$placeholder.addClass('avatar');
 						$row.append($placeholder);
 					}
 
 					prevUID = item.id;
 
-					$row.append($('<span>').text(item.value));
+					$row.append($('<span>').text(item.label || item.value));
 
 					$item.append($row);
 					$item.appendTo($ul);

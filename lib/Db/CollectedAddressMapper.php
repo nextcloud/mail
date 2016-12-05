@@ -23,6 +23,7 @@
 namespace OCA\Mail\Db;
 
 use OCP\AppFramework\Db\Mapper;
+use OCP\DB\QueryBuilder\IQueryBuilder;
 use OCP\IDb;
 
 class CollectedAddressMapper extends Mapper {
@@ -42,9 +43,10 @@ class CollectedAddressMapper extends Mapper {
 	 * @return CollectedAddress[]
 	 */
 	public function findMatching($userId, $query) {
-		$sql = 'SELECT * FROM *PREFIX*mail_collected_addresses WHERE `user_id` = ? AND `email` ILIKE ?';
+		$sql = 'SELECT * FROM *PREFIX*mail_collected_addresses WHERE `user_id` = ? AND (`email` ILIKE ? OR `display_name` ILIKE ?)';
 		$params = [
 			$userId,
+			'%' . $query . '%',
 			'%' . $query . '%',
 		];
 		return $this->findEntities($sql, $params);
@@ -57,6 +59,42 @@ class CollectedAddressMapper extends Mapper {
 			$email
 		];
 		return count($this->findEntities($sql, $params)) > 0;
+	}
+
+	public function getTotal() {
+		/* @var $qb IQueryBuilder */
+		$qb = $this->db->getQueryBuilder();
+		$qb->select($qb->createFunction('COUNT(*)'))
+			->from($this->getTableName());
+		$result = $qb->execute();
+
+		$count = (int) $result->fetchColumn(0);
+		$result->closeCursor();
+		return $count;
+	}
+
+	/**
+	 * @param int|null $minId
+	 */
+	public function getChunk($minId = null) {
+		/* @var $qb IQueryBuilder */
+		$qb = $this->db->getQueryBuilder();
+		$query = $qb->select('*')
+			->from($this->getTableName())
+			->orderBy('id')
+			->setMaxResults(100);
+		if (!is_null($minId)) {
+			$query = $query->where($qb->expr()->gte('id',
+					$qb->createNamedParameter($minId)));
+		}
+
+		$result = $qb->execute();
+		$rows = $result->fetchAll();
+		$result->closeCursor();
+
+		return array_map(function(array $data) {
+			return CollectedAddress::fromRow($data);
+		}, $rows);
 	}
 
 }

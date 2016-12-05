@@ -21,6 +21,7 @@
 
 namespace OCA\Mail\Service\AutoCompletion;
 
+use Horde_Mail_Exception;
 use Horde_Mail_Rfc822_Address;
 use OCA\Mail\Db\CollectedAddress;
 use OCA\Mail\Db\CollectedAddressMapper;
@@ -58,13 +59,23 @@ class AddressCollector {
 	public function addAddresses($addresses) {
 		$this->logger->debug("collecting " . count($addresses) . " email addresses");
 		foreach ($addresses as $address) {
-			
-			if (!$this->mapper->exists($this->userId, $address)) {
+			try {
+				$hordeAddress = new Horde_Mail_Rfc822_Address($address);
+				if (!$hordeAddress->valid) {
+					throw new Horde_Mail_Exception();
+				}
+			} catch (Horde_Mail_Exception $ex) {
+				// Ignore it
+				$this->logger->debug("<$address> is not a valid RFC822 mail address");
+				return;
+			}
+			if (!$this->mapper->exists($this->userId, $hordeAddress->bare_address)) {
 				$this->logger->debug("saving new address <$address>");
-				
+
 				$entity = new CollectedAddress();
 				$entity->setUserId($this->userId);
-				$entity->setEmail($address);
+				$entity->setDisplayName($hordeAddress->label);
+				$entity->setEmail($hordeAddress->bare_address);
 				$this->mapper->insert($entity);
 			}
 		}
@@ -73,7 +84,7 @@ class AddressCollector {
 	/**
 	 * Find and return all known and matching email addresses
 	 *
-	 * @param Horde_Mail_Rfc822_Address[] $term
+	 * @param string $term
 	 */
 	public function searchAddress($term) {
 		$this->logger->debug("searching for collected address <$term>");
