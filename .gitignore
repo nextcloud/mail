@@ -1,6 +1,10 @@
 # Composer
 composer.phar
-vendor/
+/vendor/
+
+# Unnecessary bower dependency files
+/js/vendor/jquery/src/*
+/js/vendor/ical.js/samples/*
 
 # Mac OS
 .DS_Store

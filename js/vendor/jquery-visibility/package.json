@@ -1,0 +1,52 @@
+{
+  "name": "jquery-visibility",
+  "version": "1.0.11",
+  "description": "Page visibility shim for jQuery.",
+  "keywords": [
+    "page",
+    "visibility",
+    "visible",
+    "jquery-plugin",
+    "ecosystem:jquery"
+  ],
+  "main": "jquery-visibility.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified.\" && exit 1",
+    "start": "open demo.html"
+  },
+  "homepage": "http://mths.be/visibility",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/mathiasbynens/jquery-visibility.git"
+  },
+  "author": "Mathias Bynens @mathias (https://mathiasbynens.be)",
+  "contributors": [
+    {
+      "name": "Jan Paepke",
+      "email": "e-mail@janpaepke.de",
+      "homepage": "http://janpaepke.de"
+    }
+  ],
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/mathiasbynens/jquery-visibility/issues"
+  },
+  "dependencies": {
+    "jquery": "*"
+  },
+  "devDependencies": {
+    "gulp": "^3.8.11",
+    "gulp-concat-util": "^0.5.2",
+    "gulp-jshint": "^1.10.0",
+    "gulp-json-editor": "^2.2.1",
+    "gulp-plumber": "^1.0.0",
+    "gulp-rename": "^1.2.2",
+    "gulp-replace-task": "^0.1.0",
+    "gulp-size": "^1.2.1",
+    "gulp-uglify": "^1.1.0",
+    "gulp-util": "^3.0.4",
+    "jshint-stylish": "^1.0.1",
+    "semver": "^4.3.3",
+    "yargs": "^3.7.0"
+  }
+}
