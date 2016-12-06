@@ -100,7 +100,7 @@
 }
 
 #app-navigation .utils {
-	padding: 0 7px;
+	padding: 0 16px;
 }
 
 /* do not display empty folders in the sidebar */
@@ -378,10 +378,13 @@
 /* override core values to work with custom html */
 #app-navigation .app-navigation-entry-utils {
 	top: 9px;
-	right: -12px;
 }
 #app-navigation .app-navigation-entry-menu {
-	right: -10px;
+	right: 12px;
+}
+#app-navigation .app-navigation-entry-utils-menu-button button {
+	margin: 0;
+	width: 100%;
 }
 
 /* autocomplete list */
