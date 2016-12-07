@@ -99,10 +99,13 @@ define(function(require) {
 
 			var thisModelCollection = thisModel.collection;
 			var index = thisModelCollection.indexOf(thisModel);
-			var nextMessage = thisModelCollection.at(index - 1);
-			if (!nextMessage) {
-				nextMessage = thisModelCollection.at(index + 1);
+			// Select previous or first
+			if (index === 0) {
+				index = 1;
+			} else {
+				index = index - 1;
 			}
+			var nextMessage = thisModelCollection.at(index);
 			if (require('state').currentMessage && require('state').currentMessage.get('id') === thisModel.id) {
 				if (nextMessage) {
 					var nextAccount = require('state').currentAccount;
