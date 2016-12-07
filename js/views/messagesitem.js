@@ -32,6 +32,9 @@ define(function(require) {
 		modelEvents: {
 			change: 'render'
 		},
+		serializeModel: function() {
+			return this.model.toJSON();
+		},
 		onRender: function() {
 			// Get rid of that pesky wrapping-div.
 			// Assumes 1 child element present in template.
