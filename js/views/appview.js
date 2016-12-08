@@ -221,7 +221,7 @@ define(function(require) {
 		showSidebarLoading: function() {
 			$('#app-navigation').addClass('icon-loading');
 			if (this.navigation.getChildView('accounts')) {
-				this.navigation.getChildView('accounts').reset();
+				this.navigation.detachChildView('accounts');
 			}
 		},
 		showSidebarAccounts: function() {
