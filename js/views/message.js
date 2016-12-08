@@ -124,7 +124,7 @@ define(function(require) {
 			var text = this.getUI('messageIframe').contents().find('body').html();
 			text = HtmlHelper.htmlToText(text);
 			var date = new Date(this.message.get('dateIso'));
-			this.replyComposer.currentView.setReplyBody(this.message.get('from'), date, text);
+			this.getChildView('replyComposer').setReplyBody(this.message.get('from'), date, text);
 
 			// Safe current mesages's content for later use (forward)
 			require('state').currentMessageBody = text;
