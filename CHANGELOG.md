@@ -1,7 +1,7 @@
 # Changelog
 All notable changes to this project will be documented in this file.
 
-## 0.6.2 – 2016-12-10
+## 0.6.2 – 2016-12-12
 ### Added
 - Various autocompletion enhancements
 - Support for CSP nonces
