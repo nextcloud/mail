@@ -1,7 +1,35 @@
 # Changelog
 All notable changes to this project will be documented in this file.
 
-## 0.6.0 – 2016-10-10
+## 0.6.2 – 2016-12-12
+### Added
+- Various autocompletion enhancements
+- Support for CSP nonces
+- Many small enhancements in the user interface
+- Updated info.xml for the new app store
+- Timestamps are updated automatically
+
+### Changed
+- Sent folder is now shown in the collapsed folder list
+- PSR-4 naming of source files
+- The mail notification is not closed after 5sec anymore
+- Collected mail addresses are now sanitized and split into name and address
+- Update to Marionette 3
+- Removed client-side message list cache
+- Updated documentation (developer, shortcuts)
+- Messages that cannot be deleted are added back to the list
+
+### Fixed
+- FTP url filtering in HTML mails
+- Noopener attribute for external links
+- Downloading attachments does no longer abort other connections
+
+## 0.6.1 – 2016-12-05
+### Added
+- Nextcloud 11 compatibility
+  [#196](https://github.com/nextcloud/mail/pull/196) @MorrisJobke
+
+## 0.6.0 – 2016-09-20
 ### Added
 - Alias support
   [#1523](https://github.com/owncloud/mail/pull/1523) @tahaalibra
