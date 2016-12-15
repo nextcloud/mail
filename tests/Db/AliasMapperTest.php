@@ -21,18 +21,23 @@
 
 namespace OCA\Mail\Db;
 
-use OC;
-use OC\AppFramework\Db\Db;
-use OC\DB\Connection;
-use PHPUnit_Framework_TestCase;
+use OCP\IDBConnection;
+use Test\TestCase;
 
-class AliasMapperTest extends PHPUnit_Framework_TestCase {
+/**
+ * Class AliasMapperTest
+ *
+ * @group DB
+ *
+ * @package OCA\Mail\Db
+ */
+class AliasMapperTest extends TestCase {
 	/**
 	 * @var AliasMapper
 	 */
 	private $mapper;
 	/**
-	 * @var Connection
+	 * @var IDBConnection
 	 */
 	private $db;
 	/**
@@ -43,8 +48,8 @@ class AliasMapperTest extends PHPUnit_Framework_TestCase {
 	 * Initialize Mapper
 	 */
 	public function setup(){
-		$db = OC::$server->getDatabaseConnection();
-		$this->db = new Db($db);
+		parent::setUp();
+		$this->db = \OC::$server->getDatabaseConnection();
 		$this->mapper = new AliasMapper($this->db);
 	}
 
