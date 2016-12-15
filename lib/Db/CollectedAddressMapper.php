@@ -24,14 +24,14 @@ namespace OCA\Mail\Db;
 
 use OCP\AppFramework\Db\Mapper;
 use OCP\DB\QueryBuilder\IQueryBuilder;
-use OCP\IDb;
+use OCP\IDBConnection;
 
 class CollectedAddressMapper extends Mapper {
 
 	/**
-	 * @param IDb $db
+	 * @param IDBConnection $db
 	 */
-	public function __construct(IDb $db) {
+	public function __construct(IDBConnection $db) {
 		parent::__construct($db, 'mail_collected_addresses');
 	}
 

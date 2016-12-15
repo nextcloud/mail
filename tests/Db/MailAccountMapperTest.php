@@ -21,12 +21,18 @@
 
 namespace OCA\Mail\Db;
 
-use OC;
-use OC\AppFramework\Db\Db;
-use OC\DB\Connection;
-use PHPUnit_Framework_TestCase;
 
-class MailAccountMapperTest extends PHPUnit_Framework_TestCase {
+use OCP\IDBConnection;
+use Test\TestCase;
+
+/**
+ * Class MailAccountMapperTest
+ *
+ * @group DB
+ *
+ * @package OCA\Mail\Db
+ */
+class MailAccountMapperTest extends TestCase {
 
 	/**
 	 * @var MailAccountMapper
@@ -34,7 +40,7 @@ class MailAccountMapperTest extends PHPUnit_Framework_TestCase {
 	private $mapper;
 
 	/**
-	 * @var Connection
+	 * @var IDBConnection
 	 */
 	private $db;
 
@@ -47,8 +53,8 @@ class MailAccountMapperTest extends PHPUnit_Framework_TestCase {
 	 * Initialize Mapper
 	 */
 	public function setup(){
-		$db = OC::$server->getDatabaseConnection();
-		$this->db = new Db($db);
+		parent::setUp();
+		$this->db = \OC::$server->getDatabaseConnection();
 		$this->mapper = new MailAccountMapper($this->db);
 
 		$this->account = new MailAccount();
