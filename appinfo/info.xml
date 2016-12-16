@@ -21,9 +21,8 @@
 	<repository type="git">https://github.com/nextcloud/mail.git</repository>
 	<screenshot>https://raw.githubusercontent.com/nextcloud/mail/74e94da16618b32ee0834e57bbfc83ff7334f709/screenshots/mail.png</screenshot>
 	<dependencies>
-		<php min-version="5.4" max-version="7.0" />
-		<owncloud min-version="9.1" max-version="9.2" />
-		<nextcloud min-version="9.1" max-version="12" />
+		<php min-version="5.6" max-version="7.1" />
+		<nextcloud min-version="11" max-version="12" />
 	</dependencies>
 	<repair-steps>
 		<post-migration>
