@@ -26,7 +26,7 @@
 	border: none;
 }
 
-.mail_folders > .ui-droppable-active {
+.folders .ui-droppable-active {
 	background-color: rgb(240, 240, 240);
 }
 
