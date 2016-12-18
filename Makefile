@@ -1,7 +1,7 @@
 # Makefile for building the project
 
 app_name=mail
-project_dir=$(CURDIR)/../$(app_name)
+project_dir=$(CURDIR)
 build_dir=$(CURDIR)/build/artifacts
 appstore_dir=$(build_dir)/appstore
 source_dir=$(build_dir)/source
@@ -55,7 +55,7 @@ appstore: clean install-deps optimize-js
 	rsync -a \
 	--exclude=bower.json \
 	--exclude=.bowerrc \
-	--exclude=build \
+	--exclude=/build \
 	--exclude=composer.json \
 	--exclude=composer.lock \
 	--exclude=composer.phar \
@@ -77,7 +77,7 @@ appstore: clean install-deps optimize-js
 	--exclude=.lgtm \
 	--exclude=Makefile \
 	--exclude=nbproject \
-	--exclude=node_modules \
+	--exclude=/node_modules \
 	--exclude=package.json \
 	--exclude=phpunit*xml \
 	--exclude=screenshots \
@@ -105,7 +105,7 @@ appstore: clean install-deps optimize-js
 	--exclude=vendor/ezyang/htmlpurifier/VERSION \
 	--exclude=vendor/ezyang/htmlpurifier/WHATSNEW \
 	--exclude=vendor/ezyang/htmlpurifier/WYSIWYG \
-	$(project_dir) $(sign_dir)
+	$(project_dir)/ $(sign_dir)/$(app_name)
 	@if [ -f $(cert_dir)/$(app_name).key ]; then \
 		echo "Signing app files…"; \
 		php ../../occ integrity:sign-app \
