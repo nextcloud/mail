@@ -30,7 +30,13 @@ define(function(require) {
 		initialize: function() {
 			var FolderCollection = require('models/foldercollection');
 			var MessageCollection = require('models/messagecollection');
+			this.account = this.get('account');
+			this.unset('account');
 			this.folders = new FolderCollection(this.get('folders') || []);
+			this.folders.forEach(_.bind(function(folder) {
+				folder.account = this.account;
+			}, this));
+			this.unset('folders');
 			this.messages = new MessageCollection();
 		},
 		toggleOpen: function() {
@@ -41,32 +47,29 @@ define(function(require) {
 		 * @returns {undefined}
 		 */
 		addMessage: function(message) {
-			this.messages.add(message);
 			message.folder = this;
+			this.messages.add(message);
 		},
 		/**
 		 * @param {Array<Message>} message
 		 * @returns {undefined}
 		 */
 		addMessages: function(messages) {
-			messages = this.messages.add(messages);
-			_.each(messages, function(msg) {
-				msg.folder = this;
-			}, this);
+			var _this = this;
+			_.each(messages, function(message) {
+				_this.addMessage(message);
+			});
 		},
 		/**
 		 * @param {Folder} folder
 		 * @returns {undefined}
 		 */
 		addFolder: function(folder) {
-			folder = this.folder.add(folder);
+			folder = this.folders.add(folder);
 			folder.account = this.account;
 		},
 		toJSON: function() {
 			var data = Backbone.Model.prototype.toJSON.call(this);
-			if (data.folders && data.folders.toJSON) {
-				data.folders = data.folders.toJSON();
-			}
 			if (!data.id) {
 				data.id = this.cid;
 			}

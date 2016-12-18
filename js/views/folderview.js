@@ -59,9 +59,12 @@ define(function(require) {
 				folderId: this.model.get('id')
 			});
 
+			var folders = this.model.folders.length > 0 ? this.model.folders.toJSON() : undefined;
+
 			return {
 				count: count,
-				url: url
+				url: url,
+				folders: folders
 			};
 		},
 		regions: {
@@ -94,6 +97,22 @@ define(function(require) {
 			}));
 
 			this.updateElClasses();
+
+			// Make non search fodler folders droppable
+			if (!(/\/FLAGGED$/.test(atob(this.model.get('id'))))) {
+				var dropScope = 'folder-' + this.model.account.get('accountId');
+				this.$el.droppable({
+					scope: dropScope,
+					greedy: true,
+					drop: _.bind(function(event, ui) {
+						var account = require('state').currentAccount;
+						var sourceFolder = account.getFolderById(ui.helper.data('folderId'));
+						var message = sourceFolder.messages.get(ui.helper.data('messageId'));
+						Radio.message.trigger('move', account, sourceFolder, message, account, this.model);
+					}, this),
+					hoverClass: 'ui-droppable-active'
+				});
+			}
 		}
 	});
 });

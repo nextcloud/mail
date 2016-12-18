@@ -12,6 +12,7 @@ define(function(require) {
 	'use strict';
 
 	var $ = require('jquery');
+	var _ = require('underscore');
 	var OC = require('OC');
 
 	/**
@@ -32,7 +33,7 @@ define(function(require) {
 			for (var prop in data) {
 				if (prop === 'folders') {
 					account.folders.reset();
-					account.addFolder(data.folders);
+					_.each(data.folders, account.addFolder, account);
 				} else {
 					account.set(prop, data[prop]);
 				}

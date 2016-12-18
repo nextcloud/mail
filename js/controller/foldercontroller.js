@@ -68,7 +68,7 @@ define(function(require) {
 				replace: true
 			});
 
-			$.when(loadingMessages).done(function(messages, cached) {
+			$.when(loadingMessages).done(function(messages) {
 				Radio.ui.trigger('foldercontent:show', account, folder, {
 					searchQuery: searchQuery
 				});
@@ -85,12 +85,6 @@ define(function(require) {
 					Radio.message.trigger('fetch:bodies', account, folder, messages.slice(0, 10));
 
 					Radio.message.trigger('load', account, folder, messages.first());
-				}
-
-				if (cached) {
-					// Trigger folder update
-					// TODO: replace with horde sync once it's implemented
-					Radio.ui.trigger('messagesview:messages:update');
 				}
 			});
 

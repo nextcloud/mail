@@ -53,6 +53,24 @@ define(function(require) {
 				});
 			}
 
+			var _this = this;
+			var dragScope = 'folder-' + this.model.folder.account.get('accountId');
+			this.$el.draggable({
+				appendTo: '#content-wrapper',
+				scope: dragScope,
+				helper: function() {
+					var el = $('<div class="icon-mail"></div>');
+					el.data('folderId', require('state').currentFolder.get('id'));
+					el.data('messageId', _this.model.get('id'));
+					return el;
+				},
+				cursorAt: {
+					top: -5,
+					left: -5
+				},
+				revert: 'invalid'
+			});
+
 			$('.action.delete').tooltip({placement: 'left'});
 		},
 		toggleMessageStar: function(event) {

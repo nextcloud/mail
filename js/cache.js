@@ -43,24 +43,6 @@ define(function(require) {
 		}
 	};
 
-	var FolderCache = {
-		/**
-		 * @param {Account} account
-		 * @returns {string}
-		 */
-		getAccountPath: function(account) {
-			return ['folders', account.get('accountId').toString()].join('.');
-		},
-		/**
-		 * @param {Account} account
-		 * @param {Folder} folder
-		 * @returns {string}
-		 */
-		getFolderPath: function(account, folder) {
-			return [this.getAccountPath(account), folder.get('id').toString()].join('.');
-		}
-	};
-
 	function init() {
 		console.log('initializing cache…');
 		var installedVersion = $('#config-installed-version').val();
@@ -99,16 +81,6 @@ define(function(require) {
 	/**
 	 * @param {Account} account
 	 * @param {Folder} folder
-	 * @returns {unresolved}
-	 */
-	function getFolderMessages(account, folder) {
-		var path = MessageCache.getFolderPath(account, folder);
-		return storage.isSet(path) ? storage.get(path) : null;
-	}
-
-	/**
-	 * @param {Account} account
-	 * @param {Folder} folder
 	 * @param {Message} messageId
 	 * @returns {unresolved}
 	 */
@@ -132,23 +104,8 @@ define(function(require) {
 	 */
 	function addMessage(account, folder, message) {
 		var path = MessageCache.getMessagePath(account, folder, message.id);
-		// Add timestamp for later cleanup
-		message.timestamp = Date.now();
-
 		// Save the message to local storage
 		storage.set(path, message);
-
-		// Remove old messages (keep 20 most recently loaded)
-		var messages = $.map(getFolderMessages(account, folder), function(value) {
-			return [value];
-		});
-		messages.sort(function(m1, m2) {
-			return m2.timestamp - m1.timestamp;
-		});
-		var oldMessages = messages.slice(20, messages.length);
-		_.each(oldMessages, function(message) {
-			storage.remove(MessageCache.getMessagePath(account, folder, message.id));
-		});
 	}
 
 	/**
@@ -175,39 +132,6 @@ define(function(require) {
 			// message exists in cache -> remove it
 			storage.remove(MessageCache.getMessagePath(account, folder, messageId));
 		}
-		var messageList = getMessageList(account, folder);
-		if (messageList) {
-			// message list is cached -> remove message from it
-			var newList = _.filter(messageList, function(message) {
-				return message.id !== messageId;
-			});
-			addMessageList(account, folder, newList);
-		}
-	}
-
-	/**
-	 * @param {Account} account
-	 * @param {Folder} folder
-	 * @returns {unresolved}
-	 */
-	function getMessageList(account, folder) {
-		var path = FolderCache.getFolderPath(account, folder);
-		if (storage.isSet(path)) {
-			return storage.get(path);
-		} else {
-			return null;
-		}
-	}
-
-	/**
-	 * @param {Account} account
-	 * @param {Folder} folder
-	 * @param {type} messages
-	 * @returns {undefined}
-	 */
-	function addMessageList(account, folder, messages) {
-		var path = FolderCache.getFolderPath(account, folder);
-		storage.set(path, messages);
 	}
 
 	/**
@@ -215,14 +139,8 @@ define(function(require) {
 	 * @returns {undefined}
 	 */
 	function removeAccount(account) {
-		// Remove cached message lists
-		var path = FolderCache.getAccountPath(account);
-		if (storage.isSet(path)) {
-			storage.remove(path);
-		}
-
 		// Remove cached messages
-		path = MessageCache.getAccountPath(account);
+		var path = MessageCache.getAccountPath(account);
 		if (storage.isSet(path)) {
 			storage.remove(path);
 		}
