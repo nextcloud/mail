@@ -16,6 +16,7 @@ OC.L10N.register(
     "Error while saving attachments to Files." : "Fehler beim Speichern der Anhänge unter Dateien.",
     "Error while saving attachment to Files." : "Fehler beim Speichern des Anhangs unter Dateien.",
     "Message flag could not be set." : "Nachrichten-Kennzeichnung konnte nicht gesetzt werden.",
+    "Could not move message." : "Nachricht konnte nicht verschoben werden.",
     "Invalid account" : "Ungültiges Nutzerkonto",
     "Invalid folder" : "Ungültiger Ordner",
     "Unknown error" : "Unbekannter Fehler",
