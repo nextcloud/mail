@@ -16,6 +16,7 @@ OC.L10N.register(
     "Error while saving attachments to Files." : "Erreur lors de l'enregistrement des pièces jointes dans les Fichiers.",
     "Error while saving attachment to Files." : "Erreur lors de l'enregistrement de la pièce jointe dans les Fichiers.",
     "Message flag could not be set." : "Le drapeau n'a pas été ajouté sur le message.",
+    "Could not move message." : "Impossible de déplacer le message.",
     "Invalid account" : "Compte invalide",
     "Invalid folder" : "Dossier invalide",
     "Unknown error" : "Erreur inconnue",

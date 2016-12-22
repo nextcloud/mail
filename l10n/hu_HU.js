@@ -16,6 +16,7 @@ OC.L10N.register(
     "Error while saving attachments to Files." : "Hiba történt a mellékletek Fájlokba mentése közben.",
     "Error while saving attachment to Files." : "Hiba történt a melléklet Fájlokba mentése közben.",
     "Message flag could not be set." : "Üzenet zászló nem állítható be.",
+    "Could not move message." : "Nem lehet áthelyezni az üzenetet",
     "Invalid account" : "Érvénytelen fiók",
     "Invalid folder" : "Érvénytelen mappa",
     "Unknown error" : "Ismeretlen hiba",

@@ -16,6 +16,7 @@ OC.L10N.register(
     "Error while saving attachments to Files." : "Errore durante il salvataggio degli allegati in File.",
     "Error while saving attachment to Files." : "Errore durante il salvataggio dell'allegato in File.",
     "Message flag could not be set." : "Il contrassegno del messaggio non può essere impostato.",
+    "Could not move message." : "Impossibile spostare il messaggio.",
     "Invalid account" : "Account non valido",
     "Invalid folder" : "Cartella non valida",
     "Unknown error" : "Errore sconosciuto",
