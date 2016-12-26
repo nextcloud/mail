@@ -14,6 +14,7 @@
     "Error while saving attachments to Files." : "Fout bij opslaan bijlagen in Bestanden.",
     "Error while saving attachment to Files." : "Fout bij opslaan bijlage in Bestanden.",
     "Message flag could not be set." : "Bericht kon niet als gemarkeerd worden.",
+    "Could not move message." : "Kon bericht niet verplaatsen",
     "Invalid account" : "Ongeldig account",
     "Invalid folder" : "Ongeldige map",
     "Unknown error" : "Onbekende fout",

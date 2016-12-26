@@ -16,6 +16,7 @@ OC.L10N.register(
     "Error while saving attachments to Files." : "Erro enquanto salvava compartilhamentos em Arquivos.",
     "Error while saving attachment to Files." : "Erro enquanto salvava compartilhamentos em Arquivos.",
     "Message flag could not be set." : "Marcação da mensagem não pôde ser definida.",
+    "Could not move message." : "Não foi possível mover a mensagem.",
     "Invalid account" : "Conta inválida",
     "Invalid folder" : "Pasta inválida",
     "Unknown error" : "Erro desconhecido",
