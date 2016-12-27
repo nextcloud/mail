@@ -428,6 +428,7 @@
 
 .message-composer {
 	margin: 0;
+	margin-bottom: 10px; /* line up with the send button */
 	z-index: 100;
 }
 #reply-composer .message-composer {
