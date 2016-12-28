@@ -3,7 +3,6 @@
 ![Downloads](https://img.shields.io/github/downloads/nextcloud/mail/total.svg)
 [![Build Status](https://travis-ci.org/nextcloud/mail.svg?branch=master)](https://travis-ci.org/nextcloud/mail)
 [![Scrutinizer Code Quality](https://scrutinizer-ci.com/g/nextcloud/mail/badges/quality-score.png?b=master)](https://scrutinizer-ci.com/g/nextcloud/mail/?branch=master)
-[![Dependency Status](https://www.versioneye.com/user/projects/585d8b612e129e0047a7fc6e/badge.svg?style=flat-square)](https://www.versioneye.com/user/projects/585d8b612e129e0047a7fc6e)
 [![PHP Coverage](https://scrutinizer-ci.com/g/nextcloud/mail/badges/coverage.png?b=master)](https://scrutinizer-ci.com/g/nextcloud/mail/?branch=master)
 [![JavaScript Coverage](https://coveralls.io/repos/github/nextcloud/mail/badge.svg)](https://coveralls.io/github/nextcloud/mail)
 [![Bountysource](https://img.shields.io/bountysource/team/nextcloud/activity.svg?maxAge=2592000)](https://www.bountysource.com/teams/nextcloud/issues?tracker_ids=44154351)
