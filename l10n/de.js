@@ -1,7 +1,7 @@
 OC.L10N.register(
     "mail",
     {
-    "Mail" : "Mail",
+    "Mail" : "E-Mail",
     "Error while loading the accounts." : "Fehler beim Laden der Konten.",
     "Fetching Aliases Failed." : "Abfragen der Aliasse fehlgeschlagen.",
     "Saving Aliases Failed." : "Speichern der Aliasse fehlgeschlagen.",
@@ -10,7 +10,7 @@ OC.L10N.register(
     "Loading {folder}" : "Lade {folder}",
     "Searching for {query}" : "Suche nach {query}",
     "Forwarded message" : "Weitergeleitete Nachricht",
-    "Choose a folder to store the attachment in" : "Ordner zum Anhang speichern auswählen",
+    "Choose a folder to store the attachment in" : "Ordner zum Speichern des Anhangs auswählen",
     "Attachments saved to Files." : "Anhänge unter Dateien gespeichert.",
     "Attachment saved to Files." : "Anhang unter Dateien gespeichert.",
     "Error while saving attachments to Files." : "Fehler beim Speichern der Anhänge unter Dateien.",
