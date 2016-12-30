@@ -14,6 +14,7 @@
     "Error while saving attachments to Files." : "Ошибка сохранения вложений в Файлах.",
     "Error while saving attachment to Files." : "Ошибка сохранения вложения в Файлах.",
     "Message flag could not be set." : "Не удалось установить флажок сообщения.",
+    "Could not move message." : "Невозможно переместить сообщение",
     "Invalid account" : "Неверная учётная запись",
     "Invalid folder" : "Неверный каталог",
     "Unknown error" : "Неизвестная ошибка",
