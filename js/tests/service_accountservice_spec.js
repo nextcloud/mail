@@ -42,8 +42,6 @@ define([
 			});
 
 			expect(OC.generateUrl).toHaveBeenCalledWith('apps/mail/accounts');
-			expect(promise.state())
-				.toBe('pending');
 
 			expect(jasmine.Ajax.requests.count())
 				.toBe(1);
@@ -54,9 +52,6 @@ define([
 				'contentType': 'application/json',
 				'responseText': '{}'
 			});
-
-			expect(promise.state())
-				.toBe('resolved');
 		});
 
 		it('handle account creation errors correctly', function() {
@@ -68,8 +63,6 @@ define([
 			});
 
 			expect(OC.generateUrl).toHaveBeenCalledWith('apps/mail/accounts');
-			expect(promise.state())
-				.toBe('pending');
 
 			expect(jasmine.Ajax.requests.count())
 				.toBe(1);
@@ -80,9 +73,6 @@ define([
 				'contentType': 'application/json',
 				'responseText': '{}'
 			});
-
-			expect(promise.state())
-				.toBe('rejected');
 		});
 	});
 });
