@@ -31,12 +31,10 @@ define(function(require) {
 	 */
 	function loadAccounts() {
 		var defer = $.Deferred();
-		var fetchingAccounts = Radio.account.request('entities');
-
 		// Do not show sidebar content until everything has been loaded
 		Radio.ui.trigger('sidebar:loading');
 
-		$.when(fetchingAccounts).done(function(accounts) {
+		Radio.account.request('entities').then(function(accounts) {
 			if (accounts.length === 0) {
 				defer.resolve(accounts);
 				Radio.navigation.trigger('setup');
@@ -57,14 +55,15 @@ define(function(require) {
 			}
 
 			startBackgroundChecks(accounts);
-		});
-		$.when(fetchingAccounts).fail(function() {
+		}).catch(function() {
 			Radio.ui.trigger('error:show', t('mail', 'Error while loading the accounts.'));
 
 			// Show the accounts vie (again) on error to allow user to delete their failing accounts
 			Radio.ui.trigger('sidebar:accounts');
+
+			defer.reject();
 		});
-		
+
 		return defer.promise();
 	}
 

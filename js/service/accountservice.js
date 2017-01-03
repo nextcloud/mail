@@ -42,38 +42,36 @@ define(function(require) {
 	}
 
 	function getAccountEntities() {
-		var defer = $.Deferred();
 		var $serialized = $('#serialized-accounts');
 		var accounts = require('state').accounts;
 
-		if ($serialized.val() !== '') {
-			var serialized = $serialized.val();
-			var serialzedAccounts = JSON.parse(atob(serialized));
+		return new Promise(function(resolve, reject) {
+			if ($serialized.val() !== '') {
+				var serialized = $serialized.val();
+				var serialzedAccounts = JSON.parse(atob(serialized));
 
-			accounts.reset();
-			for (var i = 0; i < serialzedAccounts.length; i++) {
-				accounts.add(serialzedAccounts[i]);
-			}
-			defer.resolve(accounts);
-
-			$serialized.val('');
-		} else {
-			accounts.fetch({
-				success: function(accounts) {
-					require('cache').cleanUp(accounts);
-					defer.resolve(accounts);
-				},
-				error: function() {
-					defer.reject();
+				accounts.reset();
+				for (var i = 0; i < serialzedAccounts.length; i++) {
+					accounts.add(serialzedAccounts[i]);
 				}
-			});
-		}
+				resolve(accounts);
 
-		return defer.promise();
+				$serialized.val('');
+			} else {
+				accounts.fetch({
+					success: function(accounts) {
+						require('cache').cleanUp(accounts);
+						resolve(accounts);
+					},
+					error: function() {
+						reject();
+					}
+				});
+			}
+		});
 	}
 
 	return {
-		createAccount: createAccount,
-		getAccountEntities: getAccountEntities
+		createAccount: createAccount
 	};
 });
