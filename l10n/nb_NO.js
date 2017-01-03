@@ -16,6 +16,7 @@ OC.L10N.register(
     "Error while saving attachments to Files." : "Feil ved lagring av vedleggene i Filer.",
     "Error while saving attachment to Files." : "Feil ved lagring av vedlegget i Filer.",
     "Message flag could not be set." : "Meldingsflagget kunne ikke settes.",
+    "Could not move message." : "Kunne ikke flytte melding.",
     "Invalid account" : "Ugyldig konto",
     "Invalid folder" : "Ugyldig mappe",
     "Unknown error" : "Ukjent feil",
