@@ -93,6 +93,10 @@ class Account implements IAccount {
 		$this->alias = null;
 	}
 
+	public function getMailAccount() {
+		return $this->account;
+	}
+
 	/**
 	 * @return int
 	 */

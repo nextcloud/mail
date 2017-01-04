@@ -5,12 +5,13 @@
  * later. See the COPYING file.
  *
  * @author Christoph Wurst <christoph@winzerhof-wurst.at>
- * @copyright Christoph Wurst 2015
+ * @copyright Christoph Wurst 2015, 2017
  */
 
 define(function(require) {
 	'use strict';
 
+	var _ = require('underscore');
 	var Backbone = require('backbone');
 	var FolderCollection = require('models/foldercollection');
 	var AliasesCollection = require('models/aliasescollection');
@@ -73,6 +74,17 @@ define(function(require) {
 				}
 			}
 			return undefined;
+		},
+		getSpecialFolder: function() {
+			if (!this.folders) {
+				return undefined;
+			}
+			return _.find(this.folders, function(folder) {
+				// TODO: handle special folders in subfolder properly
+				if (folder.get('specialRole') === 'draft') {
+					return true;
+				}
+			});
 		},
 		toJSON: function() {
 			var data = Backbone.Model.prototype.toJSON.call(this);

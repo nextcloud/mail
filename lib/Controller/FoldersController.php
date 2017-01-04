@@ -23,65 +23,57 @@
 
 namespace OCA\Mail\Controller;
 
-use OCP\IRequest;
+use Horde_Imap_Client_Exception;
+use OCA\Mail\Contracts\IMailManager;
 use OCA\Mail\Service\AccountService;
 use OCP\AppFramework\Controller;
 use OCP\AppFramework\Db\DoesNotExistException;
-use OCP\AppFramework\Http\JSONResponse;
 use OCP\AppFramework\Http;
+use OCP\AppFramework\Http\JSONResponse;
+use OCP\IRequest;
 
 class FoldersController extends Controller {
 
 	/** @var AccountService */
 	private $accountService;
 
-	/**
-	 * @var string
-	 */
+	/** @var string */
 	private $currentUserId;
 
+	/**  @var IMailManager */
+	private $mailManager;
+
 	/**
-	 * @param string $appName
+	 * @param type $appName
 	 * @param IRequest $request
 	 * @param AccountService $accountService
-	 * @param $UserId
+	 * @param string $UserId
+	 * @param IMailManager $mailManager
 	 */
-	public function __construct($appName, IRequest $request, AccountService $accountService, $UserId) {
+	public function __construct($appName, IRequest $request,
+		AccountService $accountService, $UserId, IMailManager $mailManager) {
 		parent::__construct($appName, $request);
 		$this->accountService = $accountService;
 		$this->currentUserId = $UserId;
+		$this->mailManager = $mailManager;
 	}
 
 	/**
 	 * @NoAdminRequired
 	 * @NoCSRFRequired
 	 * @param int $accountId
+	 * @return JSONResponse
 	 */
 	public function index($accountId) {
 		$account = $this->accountService->find($this->currentUserId, $accountId);
-		$json = $account->jsonSerialize();
 
-		$folders = array_filter($json['folders'], function($folder){
-			return is_null($folder['parent']);
-		});
-		foreach($json['folders'] as $folder) {
-			if (is_null($folder['parent'])) {
-				continue;
-			}
-			$parentId = $folder['parent'];
-			foreach($folders as &$parent) {
-				if($parent['id'] === $parentId) {
-					if (!isset($parent['folders'])) {
-						$parent['folders'] = [];
-					}
-					$parent['folders'][] = $folder;
-					break;
-				}
-			}
-		}
-
-		$json['folders'] = array_values($folders);
-		return new JSONResponse($json);
+		$folders = $this->mailManager->getFolders($account);
+		return [
+			'id' => $accountId,
+			'email' => $account->getEmail(),
+			'folders' => $folders,
+			'delimiter' => reset($folders)->getDelimiter(),
+		];
 	}
 
 	/**
@@ -139,7 +131,7 @@ class FoldersController extends Controller {
 					'id' => $mailbox
 				]
 				], Http::STATUS_CREATED);
-		} catch (\Horde_Imap_Client_Exception $e) {
+		} catch (Horde_Imap_Client_Exception $e) {
 			$response = new JSONResponse();
 			$response->setStatus(Http::STATUS_INTERNAL_SERVER_ERROR);
 			return $response;
@@ -157,7 +149,7 @@ class FoldersController extends Controller {
 	public function detectChanges($accountId, $folders) {
 		try {
 			$query = [];
-			foreach($folders as $folder) {
+			foreach ($folders as $folder) {
 				$folderId = base64_decode($folder['id']);
 				$parts = explode('/', $folderId);
 				if (count($parts) > 1 && $parts[1] === 'FLAGGED') {
@@ -172,7 +164,7 @@ class FoldersController extends Controller {
 			$mailBoxes = $account->getChangedMailboxes($query);
 
 			return new JSONResponse($mailBoxes);
-		} catch (\Horde_Imap_Client_Exception $e) {
+		} catch (Horde_Imap_Client_Exception $e) {
 			$response = new JSONResponse();
 			$response->setStatus(Http::STATUS_INTERNAL_SERVER_ERROR);
 			return $response;
@@ -180,4 +172,5 @@ class FoldersController extends Controller {
 			return new JSONResponse();
 		}
 	}
+
 }

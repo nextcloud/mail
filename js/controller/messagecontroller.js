@@ -60,8 +60,7 @@ define(function(require) {
 		}
 
 		// check if message is a draft
-		var draftsFolder = account.get('specialFolders').drafts;
-		var draft = draftsFolder === require('state').currentFolder.get('id');
+		var draft = require('state').currentFolder.get('specialRole') === 'drafts';
 
 		// close email first
 		// Check if message is open

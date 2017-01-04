@@ -281,7 +281,7 @@ define(function(require) {
 		if (emptyMessage) {
 			if (options.draftUID !== null) {
 				// Message is empty + previous draft exists -> delete it
-				var draftsFolder = account.get('specialFolders').drafts;
+				var draftsFolder = account.getSpecialFolder('draft');
 				var deleteUrl =
 					OC.generateUrl('apps/mail/accounts/{accountId}/folders/{folderId}/messages/{messageId}', {
 						accountId: account.get('accountId'),
