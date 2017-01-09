@@ -1,7 +1,7 @@
 OC.L10N.register(
     "mail",
     {
-    "Mail" : "Mail",
+    "Mail" : "E-post",
     "Error while loading the accounts." : "Fel vid inläsning av konton.",
     "Fetching Aliases Failed." : "Hämtning av Alias ​​misslyckades.",
     "Saving Aliases Failed." : "Sparande av Alias misslyckades.",
