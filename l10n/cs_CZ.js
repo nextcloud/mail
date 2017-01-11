@@ -16,6 +16,7 @@ OC.L10N.register(
     "Error while saving attachments to Files." : "Chyba při ukládání příloh do Souborů.",
     "Error while saving attachment to Files." : "Chyba při ukládání přílohy do Souborů.",
     "Message flag could not be set." : "Značka zpráva nemohla být nastavena.",
+    "Could not move message." : "Nelze přesunout zprávu.",
     "Invalid account" : "Neplatný účet",
     "Invalid folder" : "Neplatný adresář",
     "Unknown error" : "Neznámá chyba",
