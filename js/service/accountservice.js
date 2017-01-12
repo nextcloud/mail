@@ -1,3 +1,5 @@
+/* global Promise */
+
 /**
  * Mail
  *
@@ -17,6 +19,7 @@ define(function(require) {
 
 	Radio.account.reply('create', createAccount);
 	Radio.account.reply('entities', getAccountEntities);
+	Radio.account.reply('delete', deleteAccount);
 
 	function createAccount(config) {
 		return new Promise(function(resolve, reject) {
@@ -68,6 +71,23 @@ define(function(require) {
 					}
 				});
 			}
+		});
+	}
+
+	/**
+	 * @param {Account} account
+	 * @returns {Promise}
+	 */
+	function deleteAccount(account) {
+		var url = OC.generateUrl('/apps/mail/accounts/{accountId}', {
+			accountId: account.get('accountId')
+		});
+
+		return Promise.resolve($.ajax(url, {
+			type: 'DELETE'
+		})).then(function() {
+			// Delete cached message lists
+			require('cache').removeAccount(account);
 		});
 	}
 
