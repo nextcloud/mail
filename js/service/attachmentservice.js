@@ -1,3 +1,5 @@
+/* global Promise */
+
 /**
  * @author Christoph Wurst <christoph@winzerhof-wurst.at>
  *
@@ -36,7 +38,6 @@ define(function(require) {
 	 * @returns {Promise}
 	 */
 	function saveToFiles(account, folder, messageId, attachmentId, path) {
-		var defer = $.Deferred();
 		var url = OC.generateUrl(
 			'apps/mail/accounts/{accountId}/' +
 			'folders/{folderId}/messages/{messageId}/' +
@@ -52,31 +53,17 @@ define(function(require) {
 				targetPath: path
 			},
 			type: 'POST',
-			success: function() {
-				defer.resolve();
-			},
-			error: function() {
-				defer.reject();
-			}
 		};
 
-		$.ajax(url, options);
-		return defer.promise();
+		return Promise.resolve($.ajax(url, options));
 	}
 
+	/**
+	 * @param {string} url
+	 * @returns {Promise}
+	 */
 	function downloadAttachment(url) {
-		var defer = $.Deferred();
-
-		$.ajax(url, {
-			success: function(data) {
-				defer.resolve(data);
-			},
-			error: function() {
-				defer.reject();
-			}
-		});
-
-		return defer.promise();
+		return Promise.resolve($.ajax(url));
 	}
 
 });
