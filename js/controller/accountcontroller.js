@@ -1,3 +1,5 @@
+/* global Promise */
+
 /**
  * Mail
  *
@@ -5,7 +7,7 @@
  * later. See the COPYING file.
  *
  * @author Christoph Wurst <christoph@winzerhof-wurst.at>
- * @copyright Christoph Wurst 2016
+ * @copyright Christoph Wurst 2016, 2017
  */
 
 define(function(require) {
@@ -27,7 +29,7 @@ define(function(require) {
 	/**
 	 * Load all accounts
 	 *
-	 * @returns {Promise}
+	 * @returns {Deferred}
 	 */
 	function loadAccounts() {
 		var defer = $.Deferred();
@@ -41,21 +43,22 @@ define(function(require) {
 
 				Radio.ui.trigger('sidebar:accounts');
 			} else {
-				var loadingAccounts = accounts.map(function(account) {
+				Promise.all(accounts.map(function(account) {
 					return FolderController.loadAccountFolders(account);
-				});
-				$.when.apply($, loadingAccounts).done(function() {
-					defer.resolve(accounts);
-				});
-				$.when.apply($, loadingAccounts).always(function() {
-					// Show accounts regardless of the result of
-					// loading the folders
-					Radio.ui.trigger('sidebar:accounts');
-				});
+				}))
+					.then(function() {
+						defer.resolve(accounts);
+					}, console.error.bind(this))
+					.then(function() {
+						// Show accounts regardless of the result of
+						// loading the folders
+						Radio.ui.trigger('sidebar:accounts');
+					});
 			}
 
 			startBackgroundChecks(accounts);
-		}).catch(function() {
+		}).catch(function(e) {
+			console.error(e);
 			Radio.ui.trigger('error:show', t('mail', 'Error while loading the accounts.'));
 
 			// Show the accounts vie (again) on error to allow user to delete their failing accounts

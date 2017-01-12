@@ -1,3 +1,5 @@
+/* global Promise */
+
 /**
  * Mail
  *
@@ -5,7 +7,7 @@
  * later. See the COPYING file.
  *
  * @author Christoph Wurst <christoph@winzerhof-wurst.at>
- * @copyright Christoph Wurst 2015, 2016
+ * @copyright Christoph Wurst 2015, 2016, 2017
  */
 
 define(function(require) {
@@ -14,41 +16,30 @@ define(function(require) {
 	var $ = require('jquery');
 	var _ = require('underscore');
 	var OC = require('OC');
+	var Radio = require('radio');
+
+	Radio.folder.reply('entities', getFolderEntities);
 
 	/**
 	 * @param {Account} account
 	 * @returns {Promise}
 	 */
 	function getFolderEntities(account) {
-		var defer = $.Deferred();
+		var url = OC.generateUrl('apps/mail/accounts/{id}/folders', {
+			id: account.get('accountId')
+		});
 
-		var url = OC.generateUrl('apps/mail/accounts/{id}/folders',
-			{
-				id: account.get('accountId')
-			});
-
-		var promise = $.get(url);
-
-		promise.done(function(data) {
-			for (var prop in data) {
-				if (prop === 'folders') {
-					account.folders.reset();
-					_.each(data.folders, account.addFolder, account);
-				} else {
-					account.set(prop, data[prop]);
+		return Promise.resolve($.get(url))
+			.then(function(data) {
+				for (var prop in data) {
+					if (prop === 'folders') {
+						account.folders.reset();
+						_.each(data.folders, account.addFolder, account);
+					} else {
+						account.set(prop, data[prop]);
+					}
 				}
-			}
-			defer.resolve(account.folders);
-		});
-
-		promise.fail(function() {
-			defer.reject();
-		});
-
-		return defer.promise();
+				return account.folders;
+			});
 	}
-
-	return {
-		getFolderEntities: getFolderEntities
-	};
 });
