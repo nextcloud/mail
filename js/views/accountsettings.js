@@ -11,7 +11,6 @@
 define(function(require) {
 	'use strict';
 
-	var $ = require('jquery');
 	var Marionette = require('marionette');
 	var Handlebars = require('handlebars');
 	var AccountSettingsTemplate = require('text!templates/accountsettings.html');
