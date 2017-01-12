@@ -39,7 +39,6 @@ define(function(require) {
 	// Load controllers/services
 	require('controller/foldercontroller');
 	require('controller/messagecontroller');
-	require('controller/aliasescontroller');
 	require('service/accountservice');
 	require('service/attachmentservice');
 	require('service/davservice');
