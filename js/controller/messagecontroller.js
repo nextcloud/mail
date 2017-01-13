@@ -194,18 +194,16 @@ define(function(require) {
 			return;
 		}
 
-		var moving = Radio.message.request('move', sourceAccount, sourceFolder, message, destAccount, destFolder);
-
 		sourceFolder.messages.remove(message);
 		destFolder.addMessage(message);
 
-		$.when(moving).done(function() {
-			// TODO: update counters
-		});
-		$.when(moving).fail(function() {
-			Radio.ui.trigger('error:show', t('mail', 'Could not move message.'));
-			sourceFolder.addMessage(message);
-		});
+		Radio.message.request('move', sourceAccount, sourceFolder, message, destAccount, destFolder).
+			then(function() {
+				// TODO: update counters
+			}, function() {
+				Radio.ui.trigger('error:show', t('mail', 'Could not move message.'));
+				sourceFolder.addMessage(message);
+			});
 	}
 
 	/**

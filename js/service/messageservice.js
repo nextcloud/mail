@@ -200,32 +200,23 @@ define(function(require) {
 	 * @param {Message} message
 	 * @param {Account} destAccount
 	 * @param {Folder} destFolder
-	 * @returns {Deferred}
+	 * @returns {Promise}
 	 */
 	function moveMessage(sourceAccount, sourceFolder, message, destAccount,
 		destFolder) {
-		var defer = $.Deferred();
 
 		var url = OC.generateUrl('apps/mail/accounts/{accountId}/folders/{folderId}/messages/{messageId}/move', {
 			accountId: sourceAccount.get('accountId'),
 			folderId: sourceFolder.get('id'),
 			messageId: message.get('id')
 		});
-		$.ajax(url, {
+		return Promise.resolve($.ajax(url, {
 			type: 'POST',
 			data: {
 				destAccountId: destAccount.get('accountId'),
 				destFolderId: destFolder.get('id')
-			},
-			success: function() {
-				defer.resolve();
-			},
-			error: function() {
-				defer.reject();
 			}
-		});
-
-		return defer.promise();
+		}));
 	}
 
 	/**
