@@ -175,15 +175,15 @@ define(function(require) {
 		// Update the folder to reflect the new unread count
 		Radio.ui.trigger('title:update');
 
-		var flaggingMessage = Radio.message.request('flag', account, folder, message, flag, value);
-		$.when(flaggingMessage).fail(function() {
-			Radio.ui.trigger('error:show', t('mail', 'Message flag could not be set.'));
+		Radio.message.request('flag', account, folder, message, flag, value).
+			catch(function() {
+				Radio.ui.trigger('error:show', t('mail', 'Message flag could not be set.'));
 
-			// Restore previous state
-			message.get('flags').set(flag, !value);
-			folder.set('unseen', prevUnseen);
-			Radio.ui.trigger('title:update');
-		});
+				// Restore previous state
+				message.get('flags').set(flag, !value);
+				folder.set('unseen', prevUnseen);
+				Radio.ui.trigger('title:update');
+			});
 	}
 
 	function moveMessage(sourceAccount, sourceFolder, message, destAccount,

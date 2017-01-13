@@ -171,30 +171,27 @@ define(function(require) {
 		});
 	}
 
+	/**
+	 * @param {Account} account
+	 * @param {Folder} folder
+	 * @param {Message} message
+	 * @param {string} flag
+	 * @param {boolean} value
+	 * @returns {Promise}
+	 */
 	function flagMessage(account, folder, message, flag, value) {
-		var defer = $.Deferred();
-
 		var flags = [flag, value];
-		var url = OC.generateUrl('apps/mail/accounts/{accountId}/folders/{folderId}/messages/{messageId}/flags',
-			{
-				accountId: account.get('accountId'),
-				folderId: folder.get('id'),
-				messageId: message.id
-			});
-		$.ajax(url, {
+		var url = OC.generateUrl('apps/mail/accounts/{accountId}/folders/{folderId}/messages/{messageId}/flags', {
+			accountId: account.get('accountId'),
+			folderId: folder.get('id'),
+			messageId: message.id
+		});
+		return Promise.resolve($.ajax(url, {
 			type: 'PUT',
 			data: {
 				flags: _.object([flags])
-			},
-			success: function() {
-				defer.resolve();
-			},
-			error: function() {
-				defer.reject();
 			}
-		});
-
-		return defer.promise();
+		}));
 	}
 
 	/**
