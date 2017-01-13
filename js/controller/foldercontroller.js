@@ -23,23 +23,19 @@ define(function(require) {
 	var $ = require('jquery');
 	var _ = require('underscore');
 	var Radio = require('radio');
-	var FolderService = require('service/folderservice');
 	var ErrorMessageFactory = require('util/errormessagefactory');
 
 	Radio.message.on('fetch:bodies', fetchBodies);
 
 	/**
 	 * @param {Account} account
-	 * @returns {undefined}
+	 * @returns {Promise}
 	 */
 	function loadFolders(account) {
-		var fetchingFolders = FolderService.getFolderEntities(account);
-
-		$.when(fetchingFolders).fail(function() {
-			Radio.ui.trigger('error:show', t('mail', 'Error while loading the selected account.'));
-		});
-
-		return fetchingFolders.promise();
+		return Radio.folder.request('entities', account)
+			.catch(function() {
+				Radio.ui.trigger('error:show', t('mail', 'Error while loading the selected account.'));
+			});
 	}
 
 	/**
