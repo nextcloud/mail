@@ -1,3 +1,5 @@
+/* global Promise */
+
 /**
  * @author Tahaa Karim <tahaalibra@gmail.com>
  *
@@ -24,53 +26,16 @@ define(function(require) {
 	var OC = require('OC');
 	var Radio = require('radio');
 
-	Radio.aliases.reply('entities', getAliasesEntities);
 	Radio.aliases.reply('save', saveAlias);
 	Radio.aliases.reply('delete', deleteAlias);
 
 	/**
 	 * @param {Account} account
+	 * @param alias
 	 * @returns {Promise}
 	 */
-	function getAliasesEntities(account) {
-		var defer = $.Deferred();
-
-		var url = OC.generateUrl('/apps/mail/accounts/{id}/aliases', {
-			id: account.get('accountId')
-		});
-		var data = {
-			type: 'GET',
-			success: function(data) {
-			},
-			error: function(xhr) {
-
-			},
-			data: {
-				accountId: account.get('accountId')
-			}
-		};
-		var promise =  $.ajax(url, data);
-
-		promise.done(function(data) {
-			defer.resolve(data);
-		});
-
-		promise.fail(function() {
-			defer.reject();
-		});
-
-		return defer.promise();
-	}
-
-	/**
-	 * @param {Account} account
-	 * @param alias
-	 * @returns {undefined}
-	 */
 	function saveAlias(account, alias) {
-		var defer = $.Deferred();
-
-		var url = OC.generateUrl('/apps/mail/accounts/{id}/aliases', {
+		var url = OC.generateUrl('/apps/mail/accounts/{id}/folders', {
 			id: account.get('accountId')
 		});
 		var data = {
@@ -81,27 +46,15 @@ define(function(require) {
 				aliasName: alias.name
 			}
 		};
-		var promise =  $.ajax(url, data);
-
-		promise.done(function(data) {
-			defer.resolve(data);
-		});
-
-		promise.fail(function() {
-			defer.reject();
-		});
-
-		return defer.promise();
+		return Promise.resolve($.ajax(url, data));
 	}
 
 	/**
 	 * @param {Account} account
 	 * @param aliasId
-	 * @returns {undefined}
+	 * @returns {Promise}
 	 */
 	function deleteAlias(account, aliasId) {
-		var defer = $.Deferred();
-
 		var url = OC.generateUrl('/apps/mail/accounts/{id}/aliases/{aliasId}', {
 			id: account.get('accountId'),
 			aliasId: aliasId
@@ -109,17 +62,7 @@ define(function(require) {
 		var data = {
 			type: 'DELETE'
 		};
-		var promise =  $.ajax(url, data);
-
-		promise.done(function(data) {
-			defer.resolve();
-		});
-
-		promise.fail(function() {
-			defer.reject();
-		});
-
-		return defer.promise();
+		return Promise.resolve($.ajax(url, data));
 	}
 
 });

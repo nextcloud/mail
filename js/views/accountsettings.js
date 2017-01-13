@@ -11,7 +11,6 @@
 define(function(require) {
 	'use strict';
 
-	var $ = require('jquery');
 	var Marionette = require('marionette');
 	var Handlebars = require('handlebars');
 	var AccountSettingsTemplate = require('text!templates/accountsettings.html');
@@ -33,14 +32,14 @@ define(function(require) {
 			'form': 'form',
 			'alias': 'input[name="alias"]',
 			'submitButton': 'input[type=submit]',
-			'aliasName' : 'input[name="alias-name"]'
+			'aliasName': 'input[name="alias-name"]'
 		},
 		events: {
 			'click @ui.submitButton': 'onSubmit',
 			'submit @ui.form': 'onSubmit'
 		},
 		regions: {
-			aliasesRegion : '#aliases-list'
+			aliasesRegion: '#aliases-list'
 		},
 		initialize: function(options) {
 			this.currentAccount = options.account;
@@ -48,8 +47,8 @@ define(function(require) {
 		onSubmit: function(e) {
 			e.preventDefault();
 			var alias = {
-				'alias': this.getUI('alias').val(),
-				'name': this.getUI('aliasName').val()
+				alias: this.getUI('alias').val(),
+				name: this.getUI('aliasName').val()
 			};
 			this.getUI('alias').prop('disabled', true);
 			this.getUI('aliasName').prop('disabled', true);
@@ -57,20 +56,18 @@ define(function(require) {
 			this.getUI('submitButton').prop('disabled', true);
 			var _this = this;
 
-			var savingAlias = Radio.aliases.request('save:alias', this.currentAccount, alias);
-			$.when(savingAlias).done(function(data) {
-				_this.currentAccount.get('aliases').add(data);
-			});
-
-			$.when(savingAlias).always(function() {
-				_this.getUI('alias').val('');
-				_this.getUI('aliasName').val('');
-				_this.getUI('alias').prop('disabled', false);
-				_this.getUI('aliasName').prop('disabled', false);
-				_this.getUI('submitButton').prop('disabled', false);
-				_this.getUI('submitButton').val('Save');
-			});
-
+			Radio.aliases.request('save', this.currentAccount, alias)
+				.then(function(data) {
+					_this.currentAccount.get('aliases').add(data);
+				}, console.error.bind(this))
+				.then(function() {
+					_this.getUI('alias').val('');
+					_this.getUI('aliasName').val('');
+					_this.getUI('alias').prop('disabled', false);
+					_this.getUI('aliasName').prop('disabled', false);
+					_this.getUI('submitButton').prop('disabled', false);
+					_this.getUI('submitButton').val('Save');
+				});
 		},
 		onRender: function() {
 			this.showAliases();

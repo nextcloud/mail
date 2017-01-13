@@ -11,7 +11,6 @@
 define(function(require) {
 	'use strict';
 
-	var $ = require('jquery');
 	var Marionette = require('marionette');
 	var Handlebars = require('handlebars');
 	var AliasesListTemplate = require('text!templates/aliases-list.html');
@@ -29,7 +28,7 @@ define(function(require) {
 			};
 		},
 		ui: {
-			'deleteButton' : 'button'
+			deleteButton: 'button'
 		},
 		events: {
 			'click @ui.deleteButton': 'deleteAlias'
@@ -41,19 +40,16 @@ define(function(require) {
 			event.stopPropagation();
 			var currentAccount = require('state').accounts.get(this.model.get('accountId'));
 			var _this = this;
-			var deletingAlias = Radio.aliases.request('delete:alias', currentAccount, this.model.get('id'));
 			this.getUI('deleteButton').prop('disabled', true);
 			this.getUI('deleteButton').attr('class', 'icon-loading-small');
-			$.when(deletingAlias).done(function() {
-				currentAccount.get('aliases').remove(_this.model);
-			});
-			$.when(deletingAlias).always(function() {
-				var aliases = currentAccount.get('aliases');
-				if (aliases.get(_this.model)) {
+			Radio.aliases.request('delete', currentAccount, this.model.get('id'))
+				.then(function() {
+					currentAccount.get('aliases').remove(_this.model);
+				}, console.error.bind(this))
+				.then(function() {
 					_this.getUI('deleteButton').attr('class', 'icon-delete');
 					_this.getUI('deleteButton').prop('disabled', false);
-				}
-			});
+				});
 		}
 
 	});
