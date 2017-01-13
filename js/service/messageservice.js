@@ -106,36 +106,34 @@ define(function(require) {
 			backgroundMode: false
 		};
 		_.defaults(options, defaults);
-
-		var defer = $.Deferred();
-
-		// Load cached version if available
-		var message = require('cache').getMessage(account,
-			folder,
-			messageId);
-		if (message) {
-			defer.resolve(message);
-			return defer.promise();
-		}
-
 		var url = OC.generateUrl('apps/mail/accounts/{accountId}/folders/{folderId}/messages/{messageId}', {
 			accountId: account.get('accountId'),
 			folderId: folder.get('id'),
 			messageId: messageId
 		});
-		$.ajax(url, {
-			type: 'GET',
-			success: function(message) {
-				defer.resolve(message);
-			},
-			error: function(jqXHR, textStatus) {
-				if (textStatus !== 'abort') {
-					defer.reject();
-				}
-			}
-		});
 
-		return defer.promise();
+		return new Promise(function(resolve, reject) {
+			// Load cached version if available
+			var message = require('cache').getMessage(account,
+				folder,
+				messageId);
+			if (message) {
+				resolve(message);
+				return;
+			}
+
+			$.ajax(url, {
+				type: 'GET',
+				success: function(message) {
+					resolve(message);
+				},
+				error: function(jqXHR, textStatus) {
+					if (textStatus !== 'abort') {
+						reject();
+					}
+				}
+			});
+		});
 	}
 
 	/**

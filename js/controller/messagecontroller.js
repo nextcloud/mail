@@ -82,12 +82,10 @@ define(function(require) {
 		// Fade out the message composer
 		$('#mail_new_message').prop('disabled', false);
 
-		var fetchingMessage = Radio.message.request('entity',
+		Radio.message.request('entity',
 			require('state').currentAccount,
 			require('state').currentFolder,
-			message.get('id'));
-
-		$.when(fetchingMessage).done(function(message) {
+			message.get('id')).then(function(message) {
 			if (draft) {
 				Radio.ui.trigger('composer:show', message);
 			} else {
@@ -97,8 +95,7 @@ define(function(require) {
 					message);
 				Radio.ui.trigger('message:show', message);
 			}
-		});
-		$.when(fetchingMessage).fail(function() {
+		}, function() {
 			Radio.ui.trigger('message:error', ErrorMessageFactory.getRandomMessageErrorMessage());
 		});
 	}
