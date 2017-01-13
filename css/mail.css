@@ -147,7 +147,7 @@
 #app-navigation > ul {
 	height: calc(100% - 65px);
 }
-#app-navigation ul {
+#app-navigation > ul {
 	overflow-x: hidden;
 }
 
@@ -381,14 +381,7 @@
 
 /* override core values to work with custom html */
 #app-navigation .app-navigation-entry-utils {
-	top: 9px;
-}
-#app-navigation .app-navigation-entry-menu {
-	right: 12px;
-}
-#app-navigation .app-navigation-entry-utils-menu-button button {
-	margin: 0;
-	width: 100%;
+	top: 7px;
 }
 
 /* autocomplete list */
