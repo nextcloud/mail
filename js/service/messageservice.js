@@ -1,3 +1,5 @@
+/* global Promise */
+
 /**
  * @author Christoph Wurst <christoph@winzerhof-wurst.at>
  *
@@ -55,22 +57,19 @@ define(function(require) {
 			options.cache = false;
 		}
 
-		var defer = $.Deferred();
+		return new Promise(function(resolve, reject) {
+			if (options.cache && folder.get('messagesLoaded')) {
+				resolve(folder.messages, true);
+				return;
+			}
 
-		if (options.cache && folder.get('messagesLoaded')) {
-			defer.resolve(folder.messages, true);
-			return defer.promise();
-		}
-
-		var url = OC.generateUrl('apps/mail/accounts/{accountId}/folders/{folderId}/messages',
-			{
+			var url = OC.generateUrl('apps/mail/accounts/{accountId}/folders/{folderId}/messages', {
 				accountId: account.get('accountId'),
 				folderId: folder.get('id')
 			});
 
-		// TODO: folder.messages.fetch()
-		$.ajax(url,
-			{
+			// TODO: folder.messages.fetch()
+			return Promise.resolve($.ajax(url, {
 				data: {
 					from: options.from,
 					to: options.to,
@@ -83,16 +82,15 @@ define(function(require) {
 					}
 					folder.addMessages(messages);
 					folder.set('messagesLoaded', true);
-					defer.resolve(collection, false);
+					resolve(collection, false);
 				},
 				error: function(error, status) {
 					if (status !== 'abort') {
-						defer.reject(error);
+						reject(error);
 					}
 				}
-			});
-
-		return defer.promise();
+			}));
+		});
 	}
 
 	/**
