@@ -146,10 +146,10 @@ define(function(require) {
 			var ids = _.map(messages, function(message) {
 				return message.get('id');
 			});
-			var fetchingMessageBodies = Radio.message.request('bodies', account, folder, ids);
-			$.when(fetchingMessageBodies).done(function(messages) {
+			Radio.message.request('bodies', account, folder, ids).
+				then(function(messages) {
 				require('cache').addMessages(account, folder, messages);
-			});
+			}, console.error.bind(this));
 		}
 	}
 

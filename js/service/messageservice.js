@@ -140,13 +140,12 @@ define(function(require) {
 	 * @param {Account} account
 	 * @param {Folder} folder
 	 * @param {array} messageIds
-	 * @returns {undefined}
+	 * @returns {Promise}
 	 */
 	function fetchMessageBodies(account, folder, messageIds) {
-		var defer = $.Deferred();
-
 		var cachedMessages = [];
 		var uncachedIds = [];
+
 		_.each(messageIds, function(messageId) {
 			var message = require('cache').getMessage(account, folder, messageId);
 			if (message) {
@@ -156,25 +155,20 @@ define(function(require) {
 			}
 		});
 
-		if (uncachedIds.length > 0) {
-			var Ids = uncachedIds.join(',');
-			var url = OC.generateUrl('apps/mail/accounts/{accountId}/folders/{folderId}/messages?ids={ids}', {
-				accountId: account.get('accountId'),
-				folderId: folder.get('id'),
-				ids: Ids
-			});
-			$.ajax(url, {
-				type: 'GET',
-				success: function(data) {
-					defer.resolve(data);
-				},
-				error: function() {
-					defer.reject();
-				}
-			});
-		}
-
-		return defer.promise();
+		return new Promise(function(resolve, reject) {
+			if (uncachedIds.length > 0) {
+				var Ids = uncachedIds.join(',');
+				var url = OC.generateUrl('apps/mail/accounts/{accountId}/folders/{folderId}/messages?ids={ids}', {
+					accountId: account.get('accountId'),
+					folderId: folder.get('id'),
+					ids: Ids
+				});
+				return Promise.resolve($.ajax(url, {
+					type: 'GET'
+				}));
+			}
+			reject();
+		});
 	}
 
 	function flagMessage(account, folder, message, flag, value) {
