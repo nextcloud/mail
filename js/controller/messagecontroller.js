@@ -129,7 +129,7 @@ define(function(require) {
 	 * @param {Folder} folder
 	 * @param {number} messageId
 	 * @param {number} attachmentId
-	 * @returns {Promise}
+	 * @returns {Deferred}
 	 */
 	function saveAttachmentToFiles(account, folder, messageId, attachmentId) {
 		var defer = $.Deferred();
@@ -138,24 +138,23 @@ define(function(require) {
 		OC.dialogs.filepicker(
 			t('mail', 'Choose a folder to store the attachment in'),
 			function(path) {
-				var savingToFiles = Radio.message.request('save:cloud', account,
-					folder, messageId, attachmentId, path);
-				$.when(savingToFiles).done(function() {
-					if (saveAll) {
-						Radio.ui.trigger('error:show', t('mail', 'Attachments saved to Files.'));
-					} else {
-						Radio.ui.trigger('error:show', t('mail', 'Attachment saved to Files.'));
-					}
-					defer.resolve();
-				});
-				$.when(savingToFiles).fail(function() {
-					if (saveAll) {
-						Radio.ui.trigger('error:show', t('mail', 'Error while saving attachments to Files.'));
-					} else {
-						Radio.ui.trigger('error:show', t('mail', 'Error while saving attachment to Files.'));
-					}
-					defer.reject();
-				});
+				Radio.message.request('save:cloud', account,
+					folder, messageId, attachmentId, path)
+					.then(function() {
+						if (saveAll) {
+							Radio.ui.trigger('error:show', t('mail', 'Attachments saved to Files.'));
+						} else {
+							Radio.ui.trigger('error:show', t('mail', 'Attachment saved to Files.'));
+						}
+						defer.resolve();
+					}, function() {
+						if (saveAll) {
+							Radio.ui.trigger('error:show', t('mail', 'Error while saving attachments to Files.'));
+						} else {
+							Radio.ui.trigger('error:show', t('mail', 'Error while saving attachment to Files.'));
+						}
+						defer.reject();
+					});
 			}, false, 'httpd/unix-directory', true);
 
 		return defer.promise();
