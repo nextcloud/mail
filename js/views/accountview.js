@@ -70,20 +70,12 @@ define(function(require) {
 
 			var account = this.model;
 
-			$.ajax(OC.generateUrl('/apps/mail/accounts/{accountId}'), {
-				data: {accountId: account.get('accountId')},
-				type: 'DELETE',
-				success: function() {
-					// Delete cached message lists
-					require('cache').removeAccount(account);
-
-					// reload the complete page
-					// TODO should only reload the app nav/content
-					window.location.reload();
-				},
-				error: function() {
-					OC.Notification.show(t('mail', 'Error while deleting account.'));
-				}
+			Radio.account.request('delete', account).then(function() {
+				// reload the complete page
+				// TODO should only reload the app nav/content
+				window.location.reload();
+			}, function() {
+				OC.Notification.show(t('mail', 'Error while deleting account.'));
 			});
 		},
 		onClick: function(e) {

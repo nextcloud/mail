@@ -171,7 +171,7 @@ class AccountsControllerTest extends PHPUnit_Framework_TestCase {
 
 		$response = $this->controller->destroy($this->accountId);
 
-		$expectedResponse = new JSONResponse();
+		$expectedResponse = new JSONResponse([], Http::STATUS_NOT_FOUND);
 		$this->assertEquals($expectedResponse, $response);
 	}
 

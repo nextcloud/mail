@@ -34,6 +34,7 @@ use OCA\Mail\Db\MailAccount;
 use OCA\Mail\Model\Message;
 use OCA\Mail\Model\ReplyMessage;
 use OCA\Mail\Service\AccountService;
+use OCA\Mail\Service\AliasesService;
 use OCA\Mail\Service\AutoCompletion\AddressCollector;
 use OCA\Mail\Service\AutoConfig\AutoConfig;
 use OCA\Mail\Service\Logger;
@@ -48,7 +49,6 @@ use OCP\Files\Folder;
 use OCP\IL10N;
 use OCP\IRequest;
 use OCP\Security\ICrypto;
-use OCA\Mail\Service\AliasesService;
 
 class AccountsController extends Controller {
 
@@ -160,16 +160,15 @@ class AccountsController extends Controller {
 	/**
 	 * @NoAdminRequired
 	 *
-	 * @param int $accountId
+	 * @param int $id
 	 * @return JSONResponse
 	 */
-	public function destroy($accountId) {
+	public function destroy($id) {
 		try {
-			$this->accountService->delete($this->currentUserId, $accountId);
-
+			$this->accountService->delete($this->currentUserId, $id);
 			return new JSONResponse();
 		} catch (DoesNotExistException $e) {
-			return new JSONResponse();
+			return new JSONResponse([], Http::STATUS_NOT_FOUND);
 		}
 	}
 
