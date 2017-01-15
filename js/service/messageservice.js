@@ -223,11 +223,9 @@ define(function(require) {
 	 * @param {Account} account
 	 * @param {object} message
 	 * @param {object} options
-	 * @returns {undefined}
+	 * @returns {Promise}
 	 */
 	function sendMessage(account, message, options) {
-		var defer = $.Deferred();
-
 		var defaultOptions = {
 			draftUID: null,
 			aliasId: null
@@ -236,19 +234,8 @@ define(function(require) {
 		var url = OC.generateUrl('/apps/mail/accounts/{id}/send', {
 			id: account.get('id')
 		});
-		var data = {
+		return Promise.resolve($.ajax(url, {
 			type: 'POST',
-			success: function(data) {
-				if (!!options.repliedMessage) {
-					// Reply -> flag message as replied
-					Radio.ui.trigger('messagesview:messageflag:set', options.repliedMessage.get('id'), 'answered', true);
-				}
-
-				defer.resolve(data);
-			},
-			error: function(xhr) {
-				defer.reject(xhr);
-			},
 			data: {
 				to: message.to,
 				cc: message.cc,
@@ -261,10 +248,7 @@ define(function(require) {
 				draftUID: options.draftUID,
 				aliasId: options.aliasId
 			}
-		};
-		$.ajax(url, data);
-
-		return defer.promise();
+		}));
 	}
 
 	/**
