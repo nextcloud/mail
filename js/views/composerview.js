@@ -318,7 +318,10 @@ define(function(require) {
 
 				if (!!options.repliedMessage) {
 					// Reply -> flag message as replied
-					Radio.ui.trigger('messagesview:messageflag:set', options.repliedMessage.get('id'), 'answered', true);
+					Radio.ui.trigger('messagesview:messageflag:set',
+						options.repliedMessage.get('id'),
+						'answered',
+						true);
 				}
 
 				_this.$('#mail_new_message').prop('disabled', false);
