@@ -1,4 +1,4 @@
-/* global Promise */
+/* global Promise, Promsie */
 
 /**
  * @author Christoph Wurst <christoph@winzerhof-wurst.at>
@@ -255,11 +255,9 @@ define(function(require) {
 	 * @param {Account} account
 	 * @param {object} message
 	 * @param {object} options
-	 * @returns {undefined}
+	 * @returns {Promise}
 	 */
 	function saveDraft(account, message, options) {
-		var defer = $.Deferred();
-
 		var defaultOptions = {
 			folder: null,
 			messageId: null,
@@ -290,49 +288,32 @@ define(function(require) {
 						folderId: draftsFolder,
 						messageId: options.draftUID
 					});
-				$.ajax(deleteUrl, {
+				return Promise.resolve($.ajax(deleteUrl, {
 					type: 'DELETE'
-				});
+				}));
 			}
-			defer.resolve({
+			return Promise.resolve({
 				uid: null
 			});
-		} else {
-			var url = OC.generateUrl('/apps/mail/accounts/{id}/draft', {
-				id: account.get('accountId')
-			});
-			var data = {
-				type: 'POST',
-				success: function(data) {
-					if (options.draftUID !== null) {
-						// update UID in message list
-						var collection = Radio.ui.request('messagesview:collection');
-						var message = collection.findWhere({id: options.draftUID});
-						if (message) {
-							message.set({id: data.uid});
-							collection.set([message], {remove: false});
-						}
-					}
-					defer.resolve(data);
-				},
-				error: function() {
-					defer.reject();
-				},
-				data: {
-					to: message.to,
-					cc: message.cc,
-					bcc: message.bcc,
-					subject: message.subject,
-					body: message.body,
-					attachments: message.attachments,
-					folderId: options.folder ? options.folder.get('id') : null,
-					messageId: options.repliedMessage ? options.repliedMessage.get('id') : null,
-					uid: options.draftUID
-				}
-			};
-			$.ajax(url, data);
 		}
-		return defer.promise();
+
+		var url = OC.generateUrl('/apps/mail/accounts/{id}/draft', {
+			id: account.get('accountId')
+		});
+		return Promsie.resolve($.ajax(url, {
+			type: 'POST',
+			data: {
+				to: message.to,
+				cc: message.cc,
+				bcc: message.bcc,
+				subject: message.subject,
+				body: message.body,
+				attachments: message.attachments,
+				folderId: options.folder ? options.folder.get('id') : null,
+				messageId: options.repliedMessage ? options.repliedMessage.get('id') : null,
+				uid: options.draftUID
+			}
+		}));
 	}
 
 	/**

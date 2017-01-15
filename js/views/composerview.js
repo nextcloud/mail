@@ -382,20 +382,26 @@ define(function(require) {
 
 			// send the mail
 			var _this = this;
-			var savingDraft = Radio.message.request('draft', this.account, this.getMessage(), {
+			Radio.message.request('draft', this.account, this.getMessage(), {
 				folder: this.folder,
 				repliedMessage: this.repliedMessage,
 				draftUID: this.draftUID
-			});
-			$.when(savingDraft).done(function(data) {
+			}).then(function(data) {
 				if (_.isFunction(onSuccess)) {
 					onSuccess();
 				}
+
+				if (this.draftUID !== null) {
+					// update UID in message list
+					var collection = Radio.ui.request('messagesview:collection');
+					var message = collection.findWhere({id: this.draftUID});
+					if (message) {
+						message.set({id: data.uid});
+						collection.set([message], {remove: false});
+					}
+				}
 				_this.draftUID = data.uid;
-			});
-			$.when(savingDraft).fail(function() {
-				// TODO: show error
-			});
+			}, console.error.bind(this));
 			return false;
 		},
 		setReplyBody: function(from, date, text) {
