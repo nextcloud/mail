@@ -320,34 +320,16 @@ define(function(require) {
 	 * @param {Account} account
 	 * @param {Folder} folder
 	 * @param {Message} message
-	 * @returns {Deferred}
+	 * @returns {Promise}
 	 */
 	function deleteMessage(account, folder, message) {
-		var defer = $.Deferred();
-
 		var url = OC.generateUrl('apps/mail/accounts/{accountId}/folders/{folderId}/messages/{messageId}', {
-			accountId: require('state').currentAccount.get('accountId'),
-			folderId: require('state').currentFolder.get('id'),
+			accountId: account.get('accountId'),
+			folderId: folder.get('id'),
 			messageId: message.get('id')
 		});
-		$.ajax(url, {
-			data: {},
-			type: 'DELETE',
-			success: function() {
-				var cache = require('cache');
-				var state = require('state');
-				cache.removeMessage(state.currentAccount, state.currentFolder, message.get('id'));
-
-				defer.resolve();
-			},
-			error: function() {
-				// Add the message to the collection again
-				folder.addMessage(message);
-
-				defer.reject();
-			}
-		});
-
-		return defer.promise();
+		return Promise.resolve($.ajax(url, {
+			type: 'DELETE'
+		}));
 	}
 });
