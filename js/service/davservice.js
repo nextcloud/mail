@@ -103,12 +103,14 @@ define(function(require) {
 		return data;
 	}
 
+	/**
+	 * @returns {unresolved}
+	 */
 	function getUserCalendars() {
-		var defer = $.Deferred();
 		var url = OC.linkToRemote('dav/calendars') + '/' + OC.currentUser + '/';
 
-		client.propFind(url, props, 1, {
-			'requesttoken': OC.requestToken
+		return client.propFind(url, props, 1, {
+			requesttoken: OC.requestToken
 		}).then(function(data) {
 			var calendars = new Backbone.Collection();
 
@@ -124,12 +126,9 @@ define(function(require) {
 					}
 				}
 			});
-			defer.resolve(calendars);
-		}, function() {
-			defer.reject();
-		});
 
-		return defer.promise();
+			return calendars;
+		});
 	}
 
 	function getRandomString() {

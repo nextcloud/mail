@@ -90,10 +90,8 @@ define(function(require) {
 				.removeClass('icon-add')
 				.addClass('icon-loading-small');
 
-			var fetchingCalendars = Radio.dav.request('calendars');
-
 			var _this = this;
-			$.when(fetchingCalendars).done(function(calendars) {
+			Radio.dav.request('calendars').then(function(calendars) {
 				if (calendars.length > 0) {
 					_this.getUI('attachmentImportPopover').removeClass('hidden');
 					var calendarsView = new CalendarsPopoverView({
@@ -104,8 +102,7 @@ define(function(require) {
 				} else {
 					Radio.ui.trigger('error:show', t('mail', 'No writable calendars found'));
 				}
-			});
-			$.when(fetchingCalendars).always(function() {
+			}).catch(console.error.bind(this)).then(function() {
 				_this.getUI('importCalendarEventButton')
 					.removeClass('icon-loading-small')
 					.addClass('icon-add');
