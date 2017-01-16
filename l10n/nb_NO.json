@@ -1,9 +1,6 @@
 { "translations": {
     "Mail" : "E-post",
     "Error while loading the accounts." : "Feil ved innlasting av kontoene.",
-    "Fetching Aliases Failed." : "Henting av aliaser feilet.",
-    "Saving Aliases Failed." : "Lagring av aliaser feilet.",
-    "Deleting Aliases Failed." : "Sletting av aliaser feilet.",
     "Error while loading the selected account." : "Feil ved lasting av den valgte kontoen.",
     "Loading {folder}" : "Laster {folder}",
     "Searching for {query}" : "Søker etter {query}",

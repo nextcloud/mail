@@ -3,9 +3,6 @@ OC.L10N.register(
     {
     "Mail" : "Pošta",
     "Error while loading the accounts." : "Chyba při načítání účtů.",
-    "Fetching Aliases Failed." : "Získávání aliasů se nezdařilo.",
-    "Saving Aliases Failed." : "Ukládání aliasů se nezdařilo.",
-    "Deleting Aliases Failed." : "Mazání aliasů se nezdařilo.",
     "Error while loading the selected account." : "Chyba během načítání vybraného účtu.",
     "Loading {folder}" : "Načítá se {folder}",
     "Searching for {query}" : "Hledání pro {query}",

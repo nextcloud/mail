@@ -3,9 +3,6 @@ OC.L10N.register(
     {
     "Mail" : "Correo electrónico",
     "Error while loading the accounts." : "Error al cargar las cuentas.",
-    "Fetching Aliases Failed." : "La obtención de los Alias ha fallado.",
-    "Saving Aliases Failed." : "Guardado de los Alias fallidos.",
-    "Deleting Aliases Failed." : "Borrado de los alias ha fallado.",
     "Error while loading the selected account." : "Error al cargar la cuenta seleccionada.",
     "Loading {folder}" : "Cargando {folder}",
     "Searching for {query}" : "Buscando por (consulta)",

@@ -3,9 +3,6 @@ OC.L10N.register(
     {
     "Mail" : "Posta",
     "Error while loading the accounts." : "Gabim gjatë ngarkimit të llogarive.",
-    "Fetching Aliases Failed." : "Ngarkimi i Emërtimeve Dështoi.",
-    "Saving Aliases Failed." : "Ruajtja e Emërtimit Dështoi",
-    "Deleting Aliases Failed." : "Fshirja e Emërtimit Dështoi.",
     "Error while loading the selected account." : "Gabim gjatë ngarkimit të llogarisë së përzgjedhur.",
     "Loading {folder}" : "Po ngarkohet {folder}",
     "Searching for {query}" : "Duke kërkuar për {query}",

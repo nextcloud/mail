@@ -3,9 +3,6 @@ OC.L10N.register(
     {
     "Mail" : "Mail",
     "Error while loading the accounts." : "Fejl under indlæsning af konti.",
-    "Fetching Aliases Failed." : "Hentning af aliases mislykkedes.",
-    "Saving Aliases Failed." : "Gemning af aliases misiykkedes.",
-    "Deleting Aliases Failed." : "Sletning af aliases mislykkedes.",
     "Error while loading the selected account." : "Der opstod en fejl under læsningen af den valgte konto.",
     "Loading {folder}" : "Henter {folder}",
     "Searching for {query}" : "Leder efter {query}",

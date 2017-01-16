@@ -1,9 +1,6 @@
 { "translations": {
     "Mail" : "Почта",
     "Error while loading the accounts." : "Ошибка при загрузке учётных записей",
-    "Fetching Aliases Failed." : "Ошибка при извлечении псевдонима",
-    "Saving Aliases Failed." : "Ошибка при сохранении псевдонма",
-    "Deleting Aliases Failed." : "Ошибка при удалении псевдонима",
     "Error while loading the selected account." : "Ошибка загрузки выбранного аккаунта.",
     "Loading {folder}" : "Загрузка {folder}",
     "Searching for {query}" : "Поиск {query}",

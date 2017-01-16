@@ -3,9 +3,6 @@ OC.L10N.register(
     {
     "Mail" : "E-mail",
     "Error while loading the accounts." : "Fout tijdens het laden van de accounts.",
-    "Fetching Aliases Failed." : "Ophalen Aliassen mislukt.",
-    "Saving Aliases Failed." : "Bewaren Aliassen mislukt.",
-    "Deleting Aliases Failed." : "Verwijderen Aliassen mislukt.",
     "Error while loading the selected account." : "Fout tijdens het laden van het gekozen account.",
     "Loading {folder}" : "Laden {folder}",
     "Searching for {query}" : "Zoeken naar {query}",

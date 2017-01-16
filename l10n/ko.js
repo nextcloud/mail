@@ -3,9 +3,6 @@ OC.L10N.register(
     {
     "Mail" : "메일",
     "Error while loading the accounts." : "계정을 불러오는 중 오류가 발생했습니다.",
-    "Fetching Aliases Failed." : "별칭 가져오기 오류",
-    "Saving Aliases Failed." : "별칭 저장 오류",
-    "Deleting Aliases Failed." : "별칭 삭제 오류",
     "Error while loading the selected account." : "선택한 계정을 불러오는 중 오류가 발생했습니다.",
     "Loading {folder}" : "{folder} 불러오는 중...",
     "Searching for {query}" : "{query} 검색",

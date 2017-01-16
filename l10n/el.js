@@ -3,9 +3,6 @@ OC.L10N.register(
     {
     "Mail" : "Αλληλογραφία",
     "Error while loading the accounts." : "Σφάλμα κατά τη φόρτωση των λογαριασμών.",
-    "Fetching Aliases Failed." : "Αποτυχία λήψης ψευδωνύμων.",
-    "Saving Aliases Failed." : "Αποτυχία αποθήκευσης ψευδωνύμων.",
-    "Deleting Aliases Failed." : "Αποτυχία διαγραφής ψευδωνύμων.",
     "Error while loading the selected account." : "Σφάλμα κατά τη φόρτωση του επιλεγμένου λογαριασμού.",
     "Searching for {query}" : "Αναζήτηση για {query}",
     "Forwarded message" : "Προωθημένο μήνυμα",

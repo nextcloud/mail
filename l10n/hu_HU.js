@@ -3,9 +3,6 @@ OC.L10N.register(
     {
     "Mail" : "Levelezés",
     "Error while loading the accounts." : "Hiba történt a fiókok betöltése közben.",
-    "Fetching Aliases Failed." : "Álnevek betöltése sikertelen.",
-    "Saving Aliases Failed." : "Álnevek mentése sikertelen.",
-    "Deleting Aliases Failed." : "Álnevek törlése sikertelen.",
     "Error while loading the selected account." : "Hiba történt a kiválasztott fiók betöltése közben.",
     "Loading {folder}" : "Betöltés: {folder}",
     "Searching for {query}" : "Keresés: {query}",
