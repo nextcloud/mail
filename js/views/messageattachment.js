@@ -93,7 +93,7 @@ define(function(require) {
 			var _this = this;
 			Radio.dav.request('calendars').then(function(calendars) {
 				if (calendars.length > 0) {
-					_this.getUI('attachmentImportPopover').removeClass('hidden');
+					_this.getUI('attachmentImportPopover').addClass('open');
 					var calendarsView = new CalendarsPopoverView({
 						collection: calendars
 					});
@@ -133,12 +133,12 @@ define(function(require) {
 		},
 		_closeImportPopover: function(e) {
 			if (_.isUndefined(e)) {
-				this.getUI('attachmentImportPopover').addClass('hidden');
+				this.getUI('attachmentImportPopover').removeClass('open');
 				return;
 			}
 			var $target = $(e.target);
 			if (this.$el.find($target).length === 0) {
-				this.getUI('attachmentImportPopover').addClass('hidden');
+				this.getUI('attachmentImportPopover').removeClass('open');
 			}
 		}
 	});
