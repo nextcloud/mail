@@ -227,27 +227,20 @@ define(function(require) {
 			}
 
 			var _this = this;
-			var loadingMessages = Radio.message.request('entities',
-				require('state').currentAccount,
-				require('state').currentFolder,
-				{
-					from: from,
-					to: from + 20,
-					force: true,
-					filter: this.searchQuery || '',
-					// Replace cached message list on reload
-					replace: reload
-				});
-
-			$.when(loadingMessages).done(function() {
+			var account = require('state').currentAccount;
+			var folder = require('state').currentFolder;
+			Radio.message.request('entities', account, folder, {
+				from: from,
+				to: from + 20,
+				force: true,
+				filter: this.searchQuery || '',
+				// Replace cached message list on reload
+				replace: reload
+			}).then(function() {
 				Radio.ui.trigger('messagesview:message:setactive', require('state').currentMessage);
-			});
-
-			$.when(loadingMessages).fail(function() {
+			}, function() {
 				Radio.ui.trigger('error:show', t('mail', 'Error while loading messages.'));
-			});
-
-			$.when(loadingMessages).always(function() {
+			}).then(function() {
 				// Remove loading feedback again
 				_this.$('#load-more-mail-messages').removeClass('icon-loading-small');
 				if (reload) {

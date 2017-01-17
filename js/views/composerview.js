@@ -297,7 +297,7 @@ define(function(require) {
 			// if available get account from drop-down list
 			if (this.$('.mail-account').length > 0) {
 				alias = this.findAliasById(this.$('.mail-account').
-				find(':selected').val());
+					find(':selected').val());
 				this.account = this.accounts.get(alias.accountId);
 			}
 
@@ -313,9 +313,16 @@ define(function(require) {
 				options.folder = this.folder;
 			}
 
-			var sendingMessage = Radio.message.request('send', this.account, this.getMessage(), options);
-			$.when(sendingMessage).done(function() {
+			Radio.message.request('send', this.account, this.getMessage(), options).then(function() {
 				OC.Notification.showTemporary(t('mail', 'Message sent!'));
+
+				if (!!options.repliedMessage) {
+					// Reply -> flag message as replied
+					Radio.ui.trigger('messagesview:messageflag:set',
+						options.repliedMessage.get('id'),
+						'answered',
+						true);
+				}
 
 				_this.$('#mail_new_message').prop('disabled', false);
 				to.val('');
@@ -333,8 +340,7 @@ define(function(require) {
 					}
 					_this.draftUID = null;
 				}
-			});
-			$.when(sendingMessage).fail(function(jqXHR) {
+			}, function(jqXHR) {
 				var error = '';
 				if (jqXHR.status === 500) {
 					error = t('mail', 'Server error');
@@ -344,8 +350,7 @@ define(function(require) {
 				}
 				newMessageSend.prop('disabled', false);
 				OC.Notification.showTemporary(error);
-			});
-			$.when(sendingMessage).always(function() {
+			}).then(function() {
 				// remove loading feedback
 				newMessageBody.removeClass('icon-loading');
 				_this.$('.mail-account').prop('disabled', false);
@@ -374,26 +379,32 @@ define(function(require) {
 			// if available get account from drop-down list
 			if (this.$('.mail-account').length > 0) {
 				var alias = this.findAliasById(this.$('.mail-account').
-				find(':selected').val());
+					find(':selected').val());
 				this.account = this.accounts.get(alias.accountId);
 			}
 
 			// send the mail
 			var _this = this;
-			var savingDraft = Radio.message.request('draft', this.account, this.getMessage(), {
+			Radio.message.request('draft', this.account, this.getMessage(), {
 				folder: this.folder,
 				repliedMessage: this.repliedMessage,
 				draftUID: this.draftUID
-			});
-			$.when(savingDraft).done(function(data) {
+			}).then(function(data) {
 				if (_.isFunction(onSuccess)) {
 					onSuccess();
 				}
+
+				if (this.draftUID !== null) {
+					// update UID in message list
+					var collection = Radio.ui.request('messagesview:collection');
+					var message = collection.findWhere({id: this.draftUID});
+					if (message) {
+						message.set({id: data.uid});
+						collection.set([message], {remove: false});
+					}
+				}
 				_this.draftUID = data.uid;
-			});
-			$.when(savingDraft).fail(function() {
-				// TODO: show error
-			});
+			}, console.error.bind(this));
 			return false;
 		},
 		setReplyBody: function(from, date, text) {
@@ -475,7 +486,9 @@ define(function(require) {
 						this.value = terms.join(', ');
 						return false;
 					}
-				}).data('ui-autocomplete')._renderItem = function($ul, item) {
+				}).
+					data('ui-autocomplete')._renderItem = function(
+					$ul, item) {
 					var $item = $('<li/>');
 					var $row = $('<a/>');
 
@@ -539,26 +552,31 @@ define(function(require) {
 			return aliases;
 		},
 		findAliasById: function(id) {
-			return _.find(this.aliases, function(alias) { return parseInt(alias.id)  === parseInt(id); });
+			return _.find(this.aliases, function(alias) {
+				return parseInt(alias.id) === parseInt(id);
+			});
 		},
 		defaultMailSelect: function() {
 			var alias = null;
 			if (!this.isReply()) {
 				if (require('state').currentAccount.get('accountId') !== -1) {
-					alias =  _.find(this.aliases, function(alias) {
-						return alias.emailAddress  === require('state').currentAccount.get('email');
+					alias = _.find(this.aliases, function(alias) {
+						return alias.emailAddress === require('state').currentAccount.get('email');
 					});
 				} else {
-					var firstAccount = this.accounts.filter(function(account) {
+					var firstAccount = this.accounts.filter(function(
+						account) {
 						return account.get('accountId') !== -1;
 					})[0];
 					alias = _.find(this.aliases, function(alias) {
-						return alias.emailAddress  === firstAccount.get('emailAddress');
+						return alias.emailAddress === firstAccount.get('emailAddress');
 					});
 				}
 			} else {
 				var toEmail = this.data.toEmail;
-				alias =  _.find(this.aliases, function(alias) {	return alias.emailAddress  === toEmail;	});
+				alias = _.find(this.aliases, function(alias) {
+					return alias.emailAddress === toEmail;
+				});
 			}
 			if (alias) {
 				$('.mail-account').val(alias.id);

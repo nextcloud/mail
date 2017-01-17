@@ -82,12 +82,10 @@ define(function(require) {
 		// Fade out the message composer
 		$('#mail_new_message').prop('disabled', false);
 
-		var fetchingMessage = Radio.message.request('entity',
+		Radio.message.request('entity',
 			require('state').currentAccount,
 			require('state').currentFolder,
-			message.get('id'));
-
-		$.when(fetchingMessage).done(function(message) {
+			message.get('id')).then(function(message) {
 			if (draft) {
 				Radio.ui.trigger('composer:show', message);
 			} else {
@@ -97,8 +95,7 @@ define(function(require) {
 					message);
 				Radio.ui.trigger('message:show', message);
 			}
-		});
-		$.when(fetchingMessage).fail(function() {
+		}, function() {
 			Radio.ui.trigger('message:error', ErrorMessageFactory.getRandomMessageErrorMessage());
 		});
 	}
@@ -176,15 +173,15 @@ define(function(require) {
 		// Update the folder to reflect the new unread count
 		Radio.ui.trigger('title:update');
 
-		var flaggingMessage = Radio.message.request('flag', account, folder, message, flag, value);
-		$.when(flaggingMessage).fail(function() {
-			Radio.ui.trigger('error:show', t('mail', 'Message flag could not be set.'));
+		Radio.message.request('flag', account, folder, message, flag, value).
+			catch(function() {
+				Radio.ui.trigger('error:show', t('mail', 'Message flag could not be set.'));
 
-			// Restore previous state
-			message.get('flags').set(flag, !value);
-			folder.set('unseen', prevUnseen);
-			Radio.ui.trigger('title:update');
-		});
+				// Restore previous state
+				message.get('flags').set(flag, !value);
+				folder.set('unseen', prevUnseen);
+				Radio.ui.trigger('title:update');
+			});
 	}
 
 	function moveMessage(sourceAccount, sourceFolder, message, destAccount,
@@ -195,18 +192,16 @@ define(function(require) {
 			return;
 		}
 
-		var moving = Radio.message.request('move', sourceAccount, sourceFolder, message, destAccount, destFolder);
-
 		sourceFolder.messages.remove(message);
 		destFolder.addMessage(message);
 
-		$.when(moving).done(function() {
-			// TODO: update counters
-		});
-		$.when(moving).fail(function() {
-			Radio.ui.trigger('error:show', t('mail', 'Could not move message.'));
-			sourceFolder.addMessage(message);
-		});
+		Radio.message.request('move', sourceAccount, sourceFolder, message, destAccount, destFolder).
+			then(function() {
+				// TODO: update counters
+			}, function() {
+				Radio.ui.trigger('error:show', t('mail', 'Could not move message.'));
+				sourceFolder.addMessage(message);
+			});
 	}
 
 	/**

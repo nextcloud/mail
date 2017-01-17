@@ -58,13 +58,11 @@ define(function(require) {
 			Radio.ui.trigger('messagesview:message:setactive', null);
 			require('state').currentlyLoading = null;
 		} else {
-			var loadingMessages = Radio.message.request('entities', account, folder, {
+			Radio.message.request('entities', account, folder, {
 				cache: true,
 				filter: searchQuery,
 				replace: true
-			});
-
-			$.when(loadingMessages).done(function(messages) {
+			}).then(function(messages) {
 				Radio.ui.trigger('foldercontent:show', account, folder, {
 					searchQuery: searchQuery
 				});
@@ -82,9 +80,7 @@ define(function(require) {
 
 					Radio.message.trigger('load', account, folder, messages.first());
 				}
-			});
-
-			$.when(loadingMessages).fail(function() {
+			}, function() {
 				var icon;
 				if (folder.get('specialRole')) {
 					icon = 'icon-' + folder.get('specialRole');
@@ -150,10 +146,10 @@ define(function(require) {
 			var ids = _.map(messages, function(message) {
 				return message.get('id');
 			});
-			var fetchingMessageBodies = Radio.message.request('bodies', account, folder, ids);
-			$.when(fetchingMessageBodies).done(function(messages) {
+			Radio.message.request('bodies', account, folder, ids).
+				then(function(messages) {
 				require('cache').addMessages(account, folder, messages);
-			});
+			}, console.error.bind(this));
 		}
 	}
 
