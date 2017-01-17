@@ -20,7 +20,6 @@
 define(function(require) {
 	'use strict';
 
-	var $ = require('jquery');
 	var Handlebars = require('handlebars');
 	var Marionette = require('marionette');
 	var MessageController = require('controller/messagecontroller');
