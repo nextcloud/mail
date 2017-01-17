@@ -1,3 +1,5 @@
+/* global Promise */
+
 /**
  * @author Christoph Wurst <christoph@winzerhof-wurst.at>
  *
@@ -103,12 +105,14 @@ define(function(require) {
 		return data;
 	}
 
+	/**
+	 * @returns {Promise}
+	 */
 	function getUserCalendars() {
-		var defer = $.Deferred();
 		var url = OC.linkToRemote('dav/calendars') + '/' + OC.currentUser + '/';
 
-		client.propFind(url, props, 1, {
-			'requesttoken': OC.requestToken
+		return client.propFind(url, props, 1, {
+			requesttoken: OC.requestToken
 		}).then(function(data) {
 			var calendars = new Backbone.Collection();
 
@@ -124,12 +128,9 @@ define(function(require) {
 					}
 				}
 			});
-			defer.resolve(calendars);
-		}, function() {
-			defer.reject();
-		});
 
-		return defer.promise();
+			return calendars;
+		});
 	}
 
 	function getRandomString() {
@@ -193,31 +194,28 @@ define(function(require) {
 		};
 	}
 
+	/**
+	 * @param {string} url
+	 * @param {object} data
+	 * @returns {Promise}
+	 */
 	function importCalendarEvent(url, data) {
-		var defer = $.Deferred();
-		var xhrs = [];
+		var promises = [];
 
 		var file = splitCalendar(data);
 
 		var componentNames = ['vevent', 'vjournal', 'vtodo'];
 		_.each(componentNames, function(componentName) {
 			_.each(file.split[componentName], function(component) {
-				xhrs.push($.ajax({
+				promises.push(Promise.resolve($.ajax({
 					url: url + getRandomString(),
 					method: 'PUT',
 					contentType: 'text/calendar; charset=utf-8',
-					data: component,
-					error: function() {
-						defer.reject();
-					}
-				}));
+					data: component
+				})));
 			});
 		});
 
-		$.when.apply($, xhrs).done(function() {
-			defer.resolve();
-		});
-
-		return defer.promise();
+		return Promise.all(promises);
 	}
 });

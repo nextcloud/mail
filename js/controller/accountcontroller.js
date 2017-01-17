@@ -13,12 +13,9 @@
 define(function(require) {
 	'use strict';
 
-	var $ = require('jquery');
 	var FolderController = require('controller/foldercontroller');
 	var Radio = require('radio');
 	var UPDATE_INTERVAL = 5 * 60 * 1000; // 5 minutes
-
-	Radio.account.on('load', loadAccounts);
 
 	function startBackgroundChecks(accounts) {
 		setInterval(function() {
@@ -29,45 +26,37 @@ define(function(require) {
 	/**
 	 * Load all accounts
 	 *
-	 * @returns {Deferred}
+	 * @returns {Promise}
 	 */
 	function loadAccounts() {
-		var defer = $.Deferred();
 		// Do not show sidebar content until everything has been loaded
 		Radio.ui.trigger('sidebar:loading');
 
-		Radio.account.request('entities').then(function(accounts) {
+		return Radio.account.request('entities').then(function(accounts) {
 			if (accounts.length === 0) {
-				defer.resolve(accounts);
 				Radio.navigation.trigger('setup');
-
 				Radio.ui.trigger('sidebar:accounts');
-			} else {
-				Promise.all(accounts.map(function(account) {
-					return FolderController.loadAccountFolders(account);
-				}))
-					.then(function() {
-						defer.resolve(accounts);
-					}, console.error.bind(this))
-					.then(function() {
-						// Show accounts regardless of the result of
-						// loading the folders
-						Radio.ui.trigger('sidebar:accounts');
-					});
+				return Promise.resolve(accounts);
 			}
 
+			return Promise.all(accounts.map(function(account) {
+				return FolderController.loadAccountFolders(account);
+			})).then(function() {
+				return accounts;
+			});
+		}).then(function(accounts) {
 			startBackgroundChecks(accounts);
-		}).catch(function(e) {
+			return accounts;
+		}, function(e) {
 			console.error(e);
 			Radio.ui.trigger('error:show', t('mail', 'Error while loading the accounts.'));
-
-			// Show the accounts vie (again) on error to allow user to delete their failing accounts
+		}).then(function(accounts) {
+			// Show accounts regardless of the result of
+			// loading the folders
 			Radio.ui.trigger('sidebar:accounts');
 
-			defer.reject();
+			return accounts;
 		});
-
-		return defer.promise();
 	}
 
 	return {

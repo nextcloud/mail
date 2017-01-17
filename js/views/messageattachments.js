@@ -20,7 +20,6 @@
 define(function(require) {
 	'use strict';
 
-	var $ = require('jquery');
 	var Handlebars = require('handlebars');
 	var Marionette = require('marionette');
 	var MessageController = require('controller/messagecontroller');
@@ -59,15 +58,14 @@ define(function(require) {
 			var account = require('state').currentAccount;
 			var folder = require('state').currentFolder;
 			var messageId = this.message.get('id');
-			var saving = MessageController.saveAttachmentsToFiles(account, folder, messageId);
-
 			// Loading feedback
 			this.getUI('saveAllToCloud').removeClass('icon-folder')
 				.addClass('icon-loading-small')
 				.prop('disabled', true);
 
 			var _this = this;
-			$.when(saving).always(function() {
+			MessageController.saveAttachmentsToFiles(account, folder, messageId)
+				.catch(console.error.bind(this)).then(function() {
 				// Remove loading feedback again
 				_this.getUI('saveAllToCloud').addClass('icon-folder')
 					.removeClass('icon-loading-small')

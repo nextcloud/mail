@@ -64,13 +64,16 @@ define([
 		});
 
 		it('starts', function() {
-			var accountsDeferred = $.Deferred();
+			var resolve;
+			var accountsPromise = new Promise(function(res) {
+				resolve = res;
+			});
 
 			spyOn(Cache, 'init');
 			spyOn(Radio.ui, 'trigger');
 			spyOn(Backbone.history, 'start');
 			spyOn(AccountController, 'loadAccounts').and.callFake(function() {
-				return accountsDeferred.promise();
+				return accountsPromise;
 			});
 
 			// No ajax calls so far
@@ -89,9 +92,13 @@ define([
 					email: 'jane@doe.se'
 				}
 			]);
-			accountsDeferred.resolve(accounts);
+			resolve(accounts);
 
-			expect(Backbone.history.start).toHaveBeenCalled();
+			accountsPromise.then(function() {
+				// The promise is resolved asynchronously, so we have to use the
+				// promise here too
+				expect(Backbone.history.start).toHaveBeenCalled();
+			});
 		});
 	});
 });

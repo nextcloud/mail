@@ -11,7 +11,6 @@
 define(function(require) {
 	'use strict';
 
-	var $ = require('jquery');
 	var _ = require('underscore');
 	var Marionette = require('marionette');
 	var Handlebars = require('handlebars');
@@ -148,13 +147,13 @@ define(function(require) {
 				Radio.ui.trigger('navigation:show');
 				Radio.ui.trigger('content:loading');
 				// reload accounts
-				$.when(AccountController.loadAccounts()).done(function(accounts) {
-					// Let's assume there's at least one account after a successful
-					// setup, so let's show the first one (could be the unified inbox)
-					var firstAccount = accounts.first();
-					var firstFolder = firstAccount.folders.first();
-					Radio.navigation.trigger('folder', firstAccount.get('accountId'), firstFolder.get('id'));
-				});
+				return AccountController.loadAccounts();
+			}).then(function(accounts) {
+				// Let's assume there's at least one account after a successful
+				// setup, so let's show the first one (could be the unified inbox)
+				var firstAccount = accounts.first();
+				var firstFolder = firstAccount.folders.first();
+				Radio.navigation.trigger('folder', firstAccount.get('accountId'), firstFolder.get('id'));
 			}).catch(function(error) {
 				_this.loading = false;
 				Radio.ui.trigger('error:show', error);
