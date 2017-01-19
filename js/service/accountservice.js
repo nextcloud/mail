@@ -44,33 +44,43 @@ define(function(require) {
 		});
 	}
 
-	function getAccountEntities() {
+	/**
+	 * @private
+	 * @returns {Promise}
+	 */
+	function loadAccountData() {
 		var $serialized = $('#serialized-accounts');
 		var accounts = require('state').accounts;
 
-		return new Promise(function(resolve, reject) {
-			if ($serialized.val() !== '') {
-				var serialized = $serialized.val();
-				var serialzedAccounts = JSON.parse(atob(serialized));
+		if ($serialized.val() !== '') {
+			var serialized = $serialized.val();
+			var serialzedAccounts = JSON.parse(atob(serialized));
 
-				accounts.reset();
-				for (var i = 0; i < serialzedAccounts.length; i++) {
-					accounts.add(serialzedAccounts[i]);
-				}
-				resolve(accounts);
+			accounts.reset();
+			for (var i = 0; i < serialzedAccounts.length; i++) {
+				accounts.add(serialzedAccounts[i]);
+			}
+			$serialized.val('');
+			return Promise.resolve(accounts);
+		}
 
-				$serialized.val('');
-			} else {
-				accounts.fetch({
-					success: function(accounts) {
-						require('cache').cleanUp(accounts);
-						resolve(accounts);
-					},
-					error: function() {
-						reject();
-					}
+		return Promise.resolve(accounts.fetch());
+	}
+
+	function getAccountEntities() {
+		return loadAccountData().then(function(accounts) {
+			require('cache').cleanUp(accounts);
+
+			// TODO: accounts.length > 1
+			if (true) {
+				accounts.add({
+					accountId: -1
+				}, {
+					at: 0
 				});
 			}
+
+			return accounts;
 		});
 	}
 
