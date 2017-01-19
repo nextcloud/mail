@@ -71,8 +71,7 @@ define(function(require) {
 		return loadAccountData().then(function(accounts) {
 			require('cache').cleanUp(accounts);
 
-			// TODO: accounts.length > 1
-			if (true) {
+			if (accounts.length > 1) {
 				accounts.add({
 					accountId: -1
 				}, {
