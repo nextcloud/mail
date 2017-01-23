@@ -21,7 +21,8 @@ define(function(require) {
 	 */
 	var Account = Backbone.Model.extend({
 		defaults: {
-			aliases: []
+			aliases: [],
+			specialFolders: []
 		},
 		idAttribute: 'accountId',
 		url: function() {

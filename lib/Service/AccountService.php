@@ -61,10 +61,6 @@ class AccountService {
 			$accounts = array_map(function($a) {
 				return new Account($a);
 			}, $accounts);
-			if (count($accounts) > 1) {
-				$unifiedAccount = $this->buildUnifiedAccount($currentUserId);
-				$accounts = array_merge([$unifiedAccount], $accounts);
-			}
 			$this->accounts = $accounts;
 		}
 

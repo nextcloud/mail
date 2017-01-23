@@ -20,6 +20,20 @@ define(function(require) {
 
 	Radio.folder.reply('entities', getFolderEntities);
 
+	function buildUnifiedInbox(account) {
+		account.addFolder({
+			id: btoa('all-inboxes'),
+			name: t('mail', 'All inboxes'),
+			specialRole: 'inbox',
+			isEmpty: false,
+			accountId: -1,
+			noSelect: false,
+			delimiter: '.'
+		});
+
+		return Promise.resolve(account.folders);
+	}
+
 	/**
 	 * @param {Account} account
 	 * @returns {Promise}
@@ -28,6 +42,10 @@ define(function(require) {
 		var url = OC.generateUrl('apps/mail/accounts/{id}/folders', {
 			id: account.get('accountId')
 		});
+
+		if (account.id === -1) {
+			return buildUnifiedInbox(account);
+		}
 
 		return Promise.resolve($.get(url))
 			.then(function(data) {

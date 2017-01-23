@@ -57,35 +57,18 @@ class AccountServiceTest extends PHPUnit_Framework_TestCase {
 		$this->mapper->expects($this->once())
 			->method('findByUserId')
 			->with($this->user)
-			->will($this->returnValue([$this->account1]));
-
-		$expected = [
-			new Account($this->account1)
-		];
-		$actual = $this->service->findByUserId($this->user);
-
-		$this->assertEquals($expected, $actual);
-	}
-
-	public function testFindByUserIdUnifiedInbox() {
-		$this->mapper->expects($this->once())
-			->method('findByUserId')
-			->with($this->user)
 			->will($this->returnValue([
 					$this->account1,
 					$this->account2,
 		]));
 
 		$expected = [
-			null,
 			new Account($this->account1),
 			new Account($this->account2),
 		];
 		$actual = $this->service->findByUserId($this->user);
 
-		$this->assertCount(3, $actual);
-		$this->assertEquals($expected[1], $actual[1]);
-		$this->assertEquals($expected[2], $actual[2]);
+		$this->assertEquals($expected, $actual);
 	}
 
 	public function testFind() {
