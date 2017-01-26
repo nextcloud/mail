@@ -46,7 +46,8 @@ class FolderMapperTest extends TestCase {
 		$client = $this->createMock(Horde_Imap_Client_Socket::class);
 		$client->expects($this->once())
 			->method('listMailboxes')
-			->with($this->equalTo('*'), $this->equalTo(Horde_Imap_Client::MBOX_ALL), $this->equalTo([
+			->with($this->equalTo('*'), $this->equalTo(Horde_Imap_Client::MBOX_ALL),
+				$this->equalTo([
 					'delimiter' => true,
 					'attributes' => true,
 					'special_use' => true,
@@ -63,7 +64,8 @@ class FolderMapperTest extends TestCase {
 		$client = $this->createMock(Horde_Imap_Client_Socket::class);
 		$client->expects($this->once())
 			->method('listMailboxes')
-			->with($this->equalTo('*'), $this->equalTo(Horde_Imap_Client::MBOX_ALL), $this->equalTo([
+			->with($this->equalTo('*'), $this->equalTo(Horde_Imap_Client::MBOX_ALL),
+				$this->equalTo([
 					'delimiter' => true,
 					'attributes' => true,
 					'special_use' => true,
@@ -223,6 +225,10 @@ class FolderMapperTest extends TestCase {
 			->with($this->equalTo('sent'));
 
 		$this->mapper->detectFolderSpecialUse($folders);
+	}
+
+	public function testSortFolders() {
+		// TODO
 	}
 
 }

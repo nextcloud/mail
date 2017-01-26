@@ -81,7 +81,8 @@ class FolderNameTranslator {
 	public function translate(Folder $folder) {
 		$translations = $this->buildTranslations();
 		// TODO: only list "best" one per type? e.g. only one inbox
-		$specialUse = count($folder->getSpecialUse()) > 0 ? reset($folder->getSpecialUse()) : null;
+		$specialUses = $folder->getSpecialUse();
+		$specialUse = count($specialUses) > 0 ? reset($specialUses) : null;
 		if (!is_null($specialUse) && isset($translations[$specialUse])) {
 			$folder->setDisplayName($translations[$specialUse]);
 		} else {
