@@ -25,6 +25,7 @@ use Horde_Imap_Client;
 use Horde_Imap_Client_Socket;
 use OCA\Mail\Account;
 use OCA\Mail\Folder;
+use OCA\Mail\SearchMailbox;
 
 class FolderMapper {
 
@@ -34,17 +35,21 @@ class FolderMapper {
 	 * @param string $pattern
 	 * @return Folder
 	 */
-	public function getFolders(Account $account, Horde_Imap_Client_Socket $client,
-		$pattern = '*') {
+	public function getFolders(Account $account, Horde_Imap_Client_Socket $client, $pattern = '*') {
 		$mailboxes = $client->listMailboxes($pattern, Horde_Imap_Client::MBOX_ALL, [
 			'delimiter' => true,
 			'attributes' => true,
 			'special_use' => true,
 		]);
 
-		return array_map(function($mailbox) use ($account) {
-			return new Folder($account, $mailbox['mailbox'], $mailbox['attributes'], $mailbox['delimiter']);
-		}, $mailboxes);
+		$folders = [];
+		foreach ($mailboxes as $mailbox) {
+			$folders[] = new Folder($account, $mailbox['mailbox'], $mailbox['attributes'], $mailbox['delimiter']);
+			if ($mailbox['mailbox']->utf8 === 'INBOX') {
+				$folders[] = new SearchMailbox($client, $mailbox['mailbox'], $mailbox['attributes'], $mailbox['delimiter']);
+			}
+		}
+		return $folders;
 	}
 
 	/**

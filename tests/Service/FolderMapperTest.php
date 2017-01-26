@@ -26,6 +26,7 @@ use Horde_Imap_Client_Mailbox;
 use Horde_Imap_Client_Socket;
 use OCA\Mail\Account;
 use OCA\Mail\Folder;
+use OCA\Mail\SearchMailbox;
 use OCA\Mail\Service\FolderMapper;
 use Test\TestCase;
 
@@ -83,6 +84,7 @@ class FolderMapperTest extends TestCase {
 		]);
 		$expected = [
 			new Folder($account, new Horde_Imap_Client_Mailbox('INBOX'), [], '.'),
+			new SearchMailbox($client, new Horde_Imap_Client_Mailbox('INBOX'), [], '.'),
 			new Folder($account, new Horde_Imap_Client_Mailbox('Sent'), ['\sent'], '.'),
 		];
 
