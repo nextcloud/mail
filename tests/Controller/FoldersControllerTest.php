@@ -33,9 +33,9 @@ use OCP\AppFramework\Http;
 use OCP\AppFramework\Http\JSONResponse;
 use OCP\IRequest;
 use PHPUnit_Framework_MockObject_MockObject;
-use PHPUnit_Framework_TestCase;
+use Test\TestCase;
 
-class FoldersControllerTest extends PHPUnit_Framework_TestCase {
+class FoldersControllerTest extends TestCase {
 
 	/** @var string */
 	private $appName = 'mail';
