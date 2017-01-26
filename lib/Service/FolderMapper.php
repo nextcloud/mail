@@ -25,7 +25,7 @@ use Horde_Imap_Client;
 use Horde_Imap_Client_Socket;
 use OCA\Mail\Account;
 use OCA\Mail\Folder;
-use OCA\Mail\SearchMailbox;
+use OCA\Mail\SearchFolder;
 
 class FolderMapper {
 
@@ -46,7 +46,7 @@ class FolderMapper {
 		foreach ($mailboxes as $mailbox) {
 			$folders[] = new Folder($account, $mailbox['mailbox'], $mailbox['attributes'], $mailbox['delimiter']);
 			if ($mailbox['mailbox']->utf8 === 'INBOX') {
-				$folders[] = new SearchMailbox($client, $mailbox['mailbox'], $mailbox['attributes'], $mailbox['delimiter']);
+				$folders[] = new SearchFolder($account, $mailbox['mailbox'], $mailbox['attributes'], $mailbox['delimiter']);
 			}
 		}
 		return $folders;
@@ -97,12 +97,11 @@ class FolderMapper {
 	 * @param Folder[] $folders
 	 * @param Horde_Imap_Client_Socket $client
 	 */
-	public function getFoldersStatus(array $folders,
-		Horde_Imap_Client_Socket $client) {
+	public function getFoldersStatus(array $folders, Horde_Imap_Client_Socket $client) {
 		$mailboxes = array_map(function(Folder $folder) {
 			return $folder->getMailbox();
 		}, array_filter($folders, function(Folder $folder) {
-				return !in_array('\noselect', $folder->getAttributes());
+				return $folder->isSearchable();
 			}));
 
 		$status = $client->status($mailboxes);
@@ -114,6 +113,9 @@ class FolderMapper {
 		}
 	}
 
+	/**
+	 * @param Folder[] $folders
+	 */
 	public function detectFolderSpecialUse(array $folders) {
 		foreach ($folders as $folder) {
 			$this->detectSpecialUse($folder);

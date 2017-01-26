@@ -139,6 +139,13 @@ class Folder implements JsonSerializable {
 	}
 
 	/**
+	 * @return boolean
+	 */
+	public function isSearchable() {
+		return !in_array('\noselect', $this->getAttributes());
+	}
+
+	/**
 	 * @return array
 	 */
 	public function jsonSerialize() {

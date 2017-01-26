@@ -26,7 +26,7 @@ use Horde_Imap_Client_Mailbox;
 use Horde_Imap_Client_Socket;
 use OCA\Mail\Account;
 use OCA\Mail\Folder;
-use OCA\Mail\SearchMailbox;
+use OCA\Mail\SearchFolder;
 use OCA\Mail\Service\FolderMapper;
 use Test\TestCase;
 
@@ -84,7 +84,7 @@ class FolderMapperTest extends TestCase {
 		]);
 		$expected = [
 			new Folder($account, new Horde_Imap_Client_Mailbox('INBOX'), [], '.'),
-			new SearchMailbox($client, new Horde_Imap_Client_Mailbox('INBOX'), [], '.'),
+			new SearchFolder($account, new Horde_Imap_Client_Mailbox('INBOX'), [], '.'),
 			new Folder($account, new Horde_Imap_Client_Mailbox('Sent'), ['\sent'], '.'),
 		];
 
@@ -123,8 +123,8 @@ class FolderMapperTest extends TestCase {
 			->method('getMailbox')
 			->willReturn('folder1');
 		$folders[0]->expects($this->once())
-			->method('getAttributes')
-			->willReturn([]);
+			->method('isSearchable')
+			->willReturn(true);
 		$client->expects($this->once())
 			->method('status')
 			->with($this->equalTo(['folder1']))
@@ -148,8 +148,8 @@ class FolderMapperTest extends TestCase {
 			->method('getMailbox')
 			->willReturn('folder1');
 		$folders[0]->expects($this->once())
-			->method('getAttributes')
-			->willReturn([]);
+			->method('isSearchable')
+			->willReturn(true);
 		$client->expects($this->once())
 			->method('status')
 			->with($this->equalTo(['folder1']))
@@ -162,7 +162,7 @@ class FolderMapperTest extends TestCase {
 		$this->mapper->getFoldersStatus($folders, $client);
 	}
 
-	public function testGetFoldersStatusNoSelect() {
+	public function testGetFoldersStatusNotSearchable() {
 		$folders = [
 			$this->createMock(Folder::class),
 		];
@@ -171,10 +171,8 @@ class FolderMapperTest extends TestCase {
 			->method('getMailbox')
 			->willReturn('folder1');
 		$folders[0]->expects($this->once())
-			->method('getAttributes')
-			->willReturn([
-				'\noselect'
-		]);
+			->method('isSearchable')
+			->willReturn(false);
 		$client->expects($this->once())
 			->method('status')
 			->with($this->equalTo([]))
