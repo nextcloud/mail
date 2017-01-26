@@ -23,6 +23,9 @@
  */
 namespace OCA\Mail\Tests\Imap;
 
+/**
+ * @group IMAP
+ */
 class AccountTest extends AbstractTest {
 
 	/**
