@@ -259,7 +259,7 @@ class FolderMapperTest extends TestCase {
 
 		$this->mapper->sortFolders($folders);
 
-		// Expected order: Inbox, Drafts, Sent1, Sent2, other
+		// Expected order: Inbox, Drafts, Sent1, Sent2, other 1, other 2
 		$this->assertSame($folder2, $folders[0]);
 		$this->assertSame($folder1, $folders[1]);
 		$this->assertSame($folder6, $folders[2]);
