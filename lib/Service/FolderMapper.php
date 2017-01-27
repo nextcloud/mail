@@ -190,7 +190,7 @@ class FolderMapper {
 	 * @param Folder[] $folders
 	 * @return Folder[]
 	 */
-	public function sortFolders(array $folders) {
+	public function sortFolders(array &$folders) {
 		usort($folders, function(Folder $f1, Folder $f2) {
 			$specialUse1 = $f1->getSpecialUse();
 			$specialUse2 = $f2->getSpecialUse();
@@ -229,7 +229,6 @@ class FolderMapper {
 			// we get here if $roleA === null && $roleB === null
 			return strcasecmp($f1->getDisplayName(), $f2->getDisplayName());
 		});
-		return $folders;
 	}
 
 }
