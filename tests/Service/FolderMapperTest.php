@@ -228,7 +228,61 @@ class FolderMapperTest extends TestCase {
 	}
 
 	public function testSortFolders() {
-		// TODO
+		$folder1 = $this->createMock(Folder::class);
+		$folder1->expects($this->any())
+			->method('getSpecialUse')
+			->willReturn(['drafts']);
+		$folder1->expects($this->any())
+			->method('getDisplayName')
+			->willReturn('Entwürfe');
+		$folder2 = $this->createMock(Folder::class);
+		$folder2->expects($this->any())
+			->method('getSpecialUse')
+			->willReturn(['inbox']);
+		$folder2->expects($this->any())
+			->method('getDisplayName')
+			->willReturn('Eingang');
+		$folder3 = $this->createMock(Folder::class);
+		$folder3->expects($this->any())
+			->method('getDisplayName')
+			->willReturn('Other 2');
+		$folder4 = $this->createMock(Folder::class);
+		$folder4->expects($this->any())
+			->method('getDisplayName')
+			->willReturn('Other 1');
+		$folder5 = $this->createMock(Folder::class);
+		$folder5->expects($this->any())
+			->method('getSpecialUse')
+			->willReturn(['sent']);
+		$folder5->expects($this->any())
+			->method('getDisplayName')
+			->willReturn('Gesendete Elemente');
+		$folder6 = $this->createMock(Folder::class);
+		$folder6->expects($this->any())
+			->method('getSpecialUse')
+			->willReturn(['sent']);
+		$folder6->expects($this->any())
+			->method('getDisplayName')
+			->willReturn('Gesendet');
+
+		$folders = [
+			$folder1,
+			$folder2,
+			$folder3,
+			$folder4,
+			$folder5,
+			$folder6,
+		];
+
+		$this->mapper->sortFolders($folders);
+
+		// Expected order: Inbox, Drafts, Sent1, Sent2, other
+		$this->assertSame($folder2, $folders[0]);
+		$this->assertSame($folder1, $folders[1]);
+		$this->assertSame($folder6, $folders[2]);
+		$this->assertSame($folder5, $folders[3]);
+		$this->assertSame($folder4, $folders[4]);
+		$this->assertSame($folder3, $folders[5]);
 	}
 
 }

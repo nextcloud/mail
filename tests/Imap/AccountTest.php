@@ -53,22 +53,6 @@ class AccountTest extends AbstractTest {
 	 * @dataProvider providesMailBoxNames
 	 * @param $name
 	 */
-	public function testListMailBoxes($name) {
-		$name = uniqid($name);
-		$this->createMailBox($name);
-		$mailBoxes = $this->getTestAccount()->jsonSerialize();
-		$this->assertInternalType('array', $mailBoxes);
-
-		$m = array_filter($mailBoxes['folders'], function($item) use ($name) {
-			return $item['name'] === $name;
-		});
-		$this->assertTrue(count($m) === 1);
-	}
-
-	/**
-	 * @dataProvider providesMailBoxNames
-	 * @param $name
-	 */
 	public function testListMessages($name) {
 		$name = uniqid($name);
 		$newMailBox = parent::createMailBox($name);

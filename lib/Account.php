@@ -351,29 +351,7 @@ class Account implements IAccount {
 	 * @return array
 	 */
 	public function jsonSerialize() {
-		$folders = [];
-		$mailBoxes = $this->getMailboxes();
-		$mailBoxNames = array_map(function($mb) {
-			/** @var Mailbox $mb */
-			return $mb->getFolderId();
-		}, array_filter($mailBoxes, function($mb) {
-			/** @var Mailbox $mb */
-			return (!$mb instanceof SearchMailbox) && (!in_array('\noselect', $mb->attributes()));
-		}));
-
-		$status = $this->getImapConnection()->status($mailBoxNames);
-		foreach ($mailBoxes as $mailbox) {
-			$s = isset($status[$mailbox->getFolderId()]) ? $status[$mailbox->getFolderId()] : null;
-			$folders[] = $mailbox->serialize($this->getId(), $s);
-		}
-		$delimiter = reset($folders)['delimiter'];
-		return [
-			'id' => $this->getId(),
-			'email' => $this->getEMailAddress(),
-			'folders' => array_values($folders),
-			'specialFolders' => $this->getSpecialFoldersIds(),
-			'delimiter' => $delimiter,
-		];
+		throw new Exception('Not implemented');
 	}
 
 	/**
