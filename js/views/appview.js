@@ -24,7 +24,7 @@ define(function(require) {
 	var ErrorView = require('views/errorview');
 	var LoadingView = require('views/loadingview');
 	var NavigationView = require('views/navigation');
-	var SetupView = require('views/setup');
+	var SetupView = require('views/setupview');
 	var AccountSettingsView = require('views/accountsettings');
 
 	// Load handlebars helper
@@ -153,8 +153,10 @@ define(function(require) {
 				this.activeContent = ContentType.SETUP;
 
 				this.showChildView('content', new SetupView({
-					displayName: $('#user-displayname').text(),
-					email: $('#user-email').text()
+					config: {
+						displayName: $('#user-displayname').text(),
+						email: $('#user-email').text()
+					}
 				}));
 			}
 		},
