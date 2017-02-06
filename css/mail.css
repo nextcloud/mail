@@ -502,8 +502,9 @@ textarea.reply {
 input.submit-message,
 .submit-message-wrapper {
 	position: fixed;
-	bottom: 10px;
-	right: 15px;
+	z-index: 101;
+	top: 40px;
+	right: 35px;
 }
 .submit-message-wrapper {
 	position: fixed;
