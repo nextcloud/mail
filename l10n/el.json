@@ -11,6 +11,7 @@
     "Error while saving attachments to Files." : "Σφάλμα κατά την αποθήκευση των συνημμένων στα Έγγραφα.",
     "Error while saving attachment to Files." : "Σφάλμα κατά την αποθήκευση του συνημμένου στα Έγγραφα.",
     "Message flag could not be set." : "Δεν μπορεί να οριστεί η σημαία για το μήνυμα.",
+    "Could not move message." : "Αδυναμία μετακίνησης μηνύματος",
     "Invalid account" : "Μη έγκυρος λογαριασμός",
     "Invalid folder" : "Μη έγκυρος φάκελος",
     "Unknown error" : "Άγνωστο σφάλμα",
