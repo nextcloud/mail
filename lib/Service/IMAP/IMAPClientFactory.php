@@ -43,8 +43,7 @@ class IMAPClientFactory {
 	 * @param IConfig $config
 	 * @param ICacheFactory $cacheFactory
 	 */
-	public function __construct(ICrypto $crypto, IConfig $config,
-		ICacheFactory $cacheFactory) {
+	public function __construct(ICrypto $crypto, IConfig $config, ICacheFactory $cacheFactory) {
 		$this->crypto = $crypto;
 		$this->config = $config;
 		$this->cacheFactory = $cacheFactory;
@@ -73,12 +72,12 @@ class IMAPClientFactory {
 			'secure' => $sslMode,
 			'timeout' => (int) $this->config->getSystemValue('app.mail.imap.timeout', 20),
 		];
-		/* if ($this->cacheFactory->isAvailable()) {
-		  $params['cache'] = [
-		  'backend' => new Cache(array(
-		  'cacheob' => $this->cacheFactory->create(md5($account->getId() . $account->getEMailAddress()))
-		  ))];
-		  } */
+		if ($this->cacheFactory->isAvailable()) {
+			$params['cache'] = [
+				'backend' => new Cache([
+					'cacheob' => $this->cacheFactory->create(md5($account->getId())),
+			])];
+		}
 		return new Horde_Imap_Client_Socket($params);
 	}
 
