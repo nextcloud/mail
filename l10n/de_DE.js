@@ -93,7 +93,7 @@ OC.L10N.register(
     "SMTP User" : "SMTP Benutzer",
     "SMTP Password" : "SMTP Passwort",
     "from" : "von",
-    "to" : "An",
+    "to" : "an",
     "cc" : "cc",
     "bcc" : "bcc",
     "Subject" : "Betreff",

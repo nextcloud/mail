@@ -13,6 +13,7 @@ OC.L10N.register(
     "Error while saving attachments to Files." : "Błąd podczas zapisu załączników do plików.",
     "Error while saving attachment to Files." : "Błąd podczas zapisu załącznika do plików.",
     "Message flag could not be set." : "Nie można oznaczyć wiadomości.",
+    "Could not move message." : "Nie można przenieść wiadomości.",
     "Invalid account" : "Nieprawidłowe konto",
     "Invalid folder" : "Nieprawidłowy folder",
     "Unknown error" : "Nieznany błąd",
