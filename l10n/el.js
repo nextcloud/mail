@@ -4,7 +4,7 @@ OC.L10N.register(
     "Mail" : "Αλληλογραφία",
     "Error while loading the accounts." : "Σφάλμα κατά τη φόρτωση των λογαριασμών.",
     "Error while loading the selected account." : "Σφάλμα κατά τη φόρτωση του επιλεγμένου λογαριασμού.",
-    "Loading {folder}" : "Φόρτωση {φακέλου}",
+    "Loading {folder}" : "Φόρτωση {folder}",
     "Searching for {query}" : "Αναζήτηση για {query}",
     "Forwarded message" : "Προωθημένο μήνυμα",
     "Choose a folder to store the attachment in" : "Επιλέξτε ένα φάκελο για να αποθηκεύσετε τα συννημένα",
