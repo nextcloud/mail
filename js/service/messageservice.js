@@ -1,4 +1,4 @@
-/* global Promise, Promsie */
+/* global Promise */
 
 /**
  * @author Christoph Wurst <christoph@winzerhof-wurst.at>
@@ -300,7 +300,7 @@ define(function(require) {
 		var url = OC.generateUrl('/apps/mail/accounts/{id}/draft', {
 			id: account.get('accountId')
 		});
-		return Promsie.resolve($.ajax(url, {
+		return Promise.resolve($.ajax(url, {
 			type: 'POST',
 			data: {
 				to: message.to,
