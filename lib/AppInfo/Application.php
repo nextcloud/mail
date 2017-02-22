@@ -22,6 +22,8 @@
 
 namespace OCA\Mail\AppInfo;
 
+use OCA\Mail\Contracts\IMailManager;
+use OCA\Mail\Service\MailManager;
 use OCP\AppFramework\App;
 use OCP\Util;
 
@@ -35,6 +37,7 @@ class Application extends App {
 		$transport = $container->getServer()->getConfig()->getSystemValue('app.mail.transport', 'smtp');
 		$testSmtp = $transport === 'smtp';
 
+		$container->registerAlias(IMailManager::class, MailManager::class);
 		$container->registerService('OCP\ISession', function ($c) {
 			return $c->getServer()->getSession();
 		});

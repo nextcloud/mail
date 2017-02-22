@@ -30,6 +30,9 @@ use OCA\Mail\Db\MailAccount;
 use OCA\Mail\Mailbox;
 use PHPUnit_Framework_TestCase;
 
+/**
+ * @group IMAP
+ */
 abstract class AbstractTest extends PHPUnit_Framework_TestCase {
 
 	/** @var Account */

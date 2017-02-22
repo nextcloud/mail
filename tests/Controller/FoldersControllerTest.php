@@ -22,70 +22,78 @@
 namespace OCA\Mail\Tests\Controller;
 
 use Horde_Imap_Client_Exception;
+use Horde_Imap_Client_Socket;
+use OCA\Mail\Account;
+use OCA\Mail\Contracts\IMailManager;
 use OCA\Mail\Controller\FoldersController;
+use OCA\Mail\Folder;
+use OCA\Mail\Service\AccountService;
 use OCP\AppFramework\Db\DoesNotExistException;
 use OCP\AppFramework\Http;
 use OCP\AppFramework\Http\JSONResponse;
-use PHPUnit_Framework_TestCase;
+use OCP\IRequest;
+use PHPUnit_Framework_MockObject_MockObject;
+use Test\TestCase;
 
-class FoldersControllerTest extends PHPUnit_Framework_TestCase {
+class FoldersControllerTest extends TestCase {
 
-	private $controller;
+	/** @var string */
 	private $appName = 'mail';
+
+	/** @var IRequest|PHPUnit_Framework_MockObject_MockObject */
 	private $request;
+
+	/** @var AccountService|PHPUnit_Framework_MockObject_MockObject */
 	private $accountService;
+
+	/** @var string */
 	private $userId = 'john';
 
+	/** @var IMailManager|PHPUnit_Framework_MockObject_MockObject */
+	private $mailManager;
+
+	/** @var FoldersController */
+	private $controller;
+
 	public function setUp() {
-		$this->request = $this->getMockBuilder('OCP\IRequest')
-			->getMock();
-		$this->accountService = $this->getMockBuilder('OCA\Mail\Service\AccountService')
-			->disableOriginalConstructor()
-			->getMock();
-		$this->controller = new FoldersController($this->appName, $this->request,
-			$this->accountService, $this->userId);
+		$this->request = $this->createMock(IRequest::class);
+		$this->accountService = $this->createMock(AccountService::class);
+		$this->mailManager = $this->createMock(IMailManager::class);
+		$this->controller = new FoldersController($this->appName, $this->request, $this->accountService, $this->userId, $this->mailManager);
 	}
 
-	public function folderDataProvider() {
-		$files = [
-			'folders_german',
-		];
-		// Add directory prefix to tests/data
-		$data = array_map(function ($file) {
-			$path = dirname(__FILE__) . '/../data/' . $file . '.json';
-			return [json_decode(file_get_contents($path), true)];
-		}, $files);
-
-		// Add empty account = no folders
-		array_push($data, [
-				[
-				'folders' => [
-				],
-			],
-		]);
-
-		return $data;
-	}
-
-	/**
-	 * @dataProvider folderDataProvider
-	 */
-	public function testIndex($data) {
-		$account = $this->getMockBuilder('OCA\Mail\Account')
-			->disableOriginalConstructor()
-			->getMock();
+	public function testIndex() {
+		$account = $this->createMock(Account::class);
+		$folder = $this->createMock(Folder::class);
 		$accountId = 28;
 		$this->accountService->expects($this->once())
 			->method('find')
-			->with($this->userId, $accountId)
-			->will($this->returnValue($account));
+			->with($this->equalTo($this->userId), $this->equalTo($accountId))
+			->willReturn($account);
+		$this->mailManager->expects($this->once())
+			->method('getFolders')
+			->with($this->equalTo($account))
+			->willReturn([
+				$folder
+		]);
 		$account->expects($this->once())
-			->method('jsonSerialize')
-			->will($this->returnValue($data));
+			->method('getEmail')
+			->willReturn('user@example.com');
+		$folder->expects($this->once())
+			->method('getDelimiter')
+			->willReturn('.');
 
-		$this->controller->index($accountId);
+		$result = $this->controller->index($accountId);
 
-		//TODO: check result
+		$expected = [
+			'id' => 28,
+			'email' => 'user@example.com',
+			'folders' => [
+				$folder,
+			],
+			'delimiter' => '.',
+		];
+		$this->assertEquals($expected, $result);
 	}
 
 	public function testShow() {
@@ -101,16 +109,12 @@ class FoldersControllerTest extends PHPUnit_Framework_TestCase {
 	public function testDestroy() {
 		$accountId = 28;
 		$folderId = 'my folder';
-		$account = $this->getMockBuilder('OCA\Mail\Account')
-			->disableOriginalConstructor()
-			->getMock();
+		$account = $this->createMock(Account::class);
 		$this->accountService->expects($this->once())
 			->method('find')
 			->with($this->userId, $accountId)
 			->will($this->returnValue($account));
-		$imapConnection = $this->getMockBuilder('Horde_Imap_Client_Socket')
-			->disableOriginalConstructor()
-			->getMock();
+		$imapConnection = $this->createMock(Horde_Imap_Client_Socket::class);
 		$account->expects($this->once())
 			->method('getImapConnection')
 			->will($this->returnValue($imapConnection));
@@ -142,16 +146,12 @@ class FoldersControllerTest extends PHPUnit_Framework_TestCase {
 	public function testCreate() {
 		$accountId = 13;
 		$folderId = 'new folder';
-		$account = $this->getMockBuilder('OCA\Mail\Account')
-			->disableOriginalConstructor()
-			->getMock();
+		$account = $this->createMock(Account::class);
 		$this->accountService->expects($this->once())
 			->method('find')
 			->with($this->userId, $accountId)
 			->will($this->returnValue($account));
-		$imapConnection = $this->getMockBuilder('Horde_Imap_Client_Socket')
-			->disableOriginalConstructor()
-			->getMock();
+		$imapConnection = $this->createMock(Horde_Imap_Client_Socket::class);
 		$account->expects($this->once())
 			->method('getImapConnection')
 			->will($this->returnValue($imapConnection));
@@ -173,16 +173,12 @@ class FoldersControllerTest extends PHPUnit_Framework_TestCase {
 	public function testCreateWithError() {
 		$accountId = 13;
 		$folderId = 'new folder';
-		$account = $this->getMockBuilder('OCA\Mail\Account')
-			->disableOriginalConstructor()
-			->getMock();
+		$account = $this->createMock(Account::class);
 		$this->accountService->expects($this->once())
 			->method('find')
 			->with($this->userId, $accountId)
 			->will($this->returnValue($account));
-		$imapConnection = $this->getMockBuilder('Horde_Imap_Client_Socket')
-			->disableOriginalConstructor()
-			->getMock();
+		$imapConnection = $this->createMock(Horde_Imap_Client_Socket::class);
 		$account->expects($this->once())
 			->method('getImapConnection')
 			->will($this->returnValue($imapConnection));
