@@ -19,20 +19,20 @@
  *
  */
 
-namespace OCA\Mail\Tests\Service\IMAP;
+namespace OCA\Mail\Tests\IMAP;
 
 use Horde_Imap_Client_Socket;
 use OC;
 use OCA\Mail\Account;
 use OCA\Mail\Db\MailAccount;
-use OCA\Mail\Service\IMAP\IMAPClientFactory;
+use OCA\Mail\IMAP\IMAPClientFactory;
 use OCP\ICacheFactory;
 use OCP\IConfig;
 use OCP\Security\ICrypto;
 use PHPUnit_Framework_MockObject_MockObject;
-use Test\TestCase;
+use PHPUnit_Framework_TestCase;
 
-class IMAPClientFactoryTest extends TestCase {
+class IMAPClientFactoryTest extends PHPUnit_Framework_TestCase {
 
 	/** @var ICrypto|PHPUnit_Framework_MockObject_MockObject */
 	private $crypto;
@@ -77,7 +77,7 @@ class IMAPClientFactoryTest extends TestCase {
 			->method('decrypt')
 			->with($account->getMailAccount()->getInboundPassword())
 			->willReturn('mypassword');
-		
+
 		$client = $this->factory->getClient($account);
 
 		$this->assertInstanceOf(Horde_Imap_Client_Socket::class, $client);
@@ -89,7 +89,7 @@ class IMAPClientFactoryTest extends TestCase {
 			->method('decrypt')
 			->with($account->getMailAccount()->getInboundPassword())
 			->willReturn('mypassword');
-		
+
 		$client = $this->factory->getClient($account);
 		$client->login();
 	}

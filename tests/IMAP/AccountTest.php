@@ -21,7 +21,7 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>
  *
  */
-namespace OCA\Mail\Tests\Imap;
+namespace OCA\Mail\Tests\IMAP;
 
 /**
  * @group IMAP
