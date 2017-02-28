@@ -594,10 +594,8 @@ class IMAPMessage implements IMessage, JsonSerializable {
 		$data = $fetch->getBodyPart($partNo);
 
 		$p->setContents($data);
-		$data = $p->getContents();
-
-		$data = iconv($p->getCharset(), 'utf-8', $data);
-		return $data;
+		
+		return mb_convert_encoding($p->getContents(), 'UTF-8', $p->getCharset());
 	}
 
 	public function getContent() {
