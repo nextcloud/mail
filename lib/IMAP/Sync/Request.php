@@ -19,25 +19,39 @@
  *
  */
 
-namespace OCA\Mail\Contracts;
+namespace OCA\Mail\IMAP\Sync;
 
-use OCA\Mail\Account;
-use OCA\Mail\Folder;
-use OCA\Mail\IMAP\Sync\Request as SyncRequest;
-use OCA\Mail\IMAP\Sync\Response as SyncResponse;
+class Request {
 
-interface IMailManager {
+	/** @var string */
+	private $mailbox;
 
-	/**
-	 * @param Account $account
-	 * @return Folder[]
-	 */
-	public function getFolders(Account $account);
+	/** @var string */
+	private $syncToken;
 
 	/**
-	 * @param Account
-	 * @param SyncRequest $syncRequest
-	 * @return SyncResponse
+	 * @param string $mailbox
+	 * @param string $syncToken
 	 */
-	public function syncMessages(Account $account, SyncRequest $syncRequest);
+	public function __construct($mailbox, $syncToken) {
+		$this->mailbox = $mailbox;
+		$this->syncToken = $syncToken;
+	}
+
+	/**
+	 * Get the mailbox name
+	 *
+	 * @return string
+	 */
+	public function getMailbox() {
+		return $this->mailbox;
+	}
+
+	/**
+	 * @return string the Horde sync token
+	 */
+	public function getToken() {
+		return $this->syncToken;
+	}
+
 }

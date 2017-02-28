@@ -19,25 +19,37 @@
  *
  */
 
-namespace OCA\Mail\Contracts;
+namespace OCA\Mail\Tests\IMAP\Sync;
 
-use OCA\Mail\Account;
-use OCA\Mail\Folder;
-use OCA\Mail\IMAP\Sync\Request as SyncRequest;
-use OCA\Mail\IMAP\Sync\Response as SyncResponse;
+use OCA\Mail\IMAP\Sync\Request;
+use PHPUnit_Framework_TestCase;
 
-interface IMailManager {
+class RequestTest extends PHPUnit_Framework_TestCase {
 
-	/**
-	 * @param Account $account
-	 * @return Folder[]
-	 */
-	public function getFolders(Account $account);
+	/** @var string */
+	private $mailbox;
 
-	/**
-	 * @param Account
-	 * @param SyncRequest $syncRequest
-	 * @return SyncResponse
-	 */
-	public function syncMessages(Account $account, SyncRequest $syncRequest);
+	/** @var string */
+	private $syncToken;
+
+	/** @var Request */
+	private $request;
+
+	protected function setUp() {
+		parent::setUp();
+
+		$this->mailbox = 'inbox';
+		$this->syncToken = 'ab123';
+
+		$this->request = new Request($this->mailbox, $this->syncToken);
+	}
+
+	public function testGetMailbox() {
+		$this->assertEquals($this->mailbox, $this->request->getMailbox());
+	}
+
+	public function testGetSyncToken() {
+		$this->assertEquals($this->syncToken, $this->request->getToken());
+	}
+
 }

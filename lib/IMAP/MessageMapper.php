@@ -19,25 +19,23 @@
  *
  */
 
-namespace OCA\Mail\Contracts;
+namespace OCA\Mail\IMAP;
 
-use OCA\Mail\Account;
+use Exception;
+use Horde_Imap_Client_Base;
 use OCA\Mail\Folder;
-use OCA\Mail\IMAP\Sync\Request as SyncRequest;
-use OCA\Mail\IMAP\Sync\Response as SyncResponse;
+use OCA\Mail\Model\IMAPMessage;
 
-interface IMailManager {
-
-	/**
-	 * @param Account $account
-	 * @return Folder[]
-	 */
-	public function getFolders(Account $account);
+class MessageMapper {
 
 	/**
-	 * @param Account
-	 * @param SyncRequest $syncRequest
-	 * @return SyncResponse
+	 * @param Horde_Imap_Client_Base $imapClient
+	 * @param Folder $mailbox
+	 * @param array $ids
+	 * @return IMAPMessage[]
 	 */
-	public function syncMessages(Account $account, SyncRequest $syncRequest);
+	public function findByIds(Horde_Imap_Client_Base $imapClient, $mailbox, array $ids) {
+		throw new Exception('not implemented');
+	}
+
 }

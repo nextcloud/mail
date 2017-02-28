@@ -19,25 +19,29 @@
  *
  */
 
-namespace OCA\Mail\Contracts;
+namespace OCA\Mail\Tests\IMAP\Sync;
 
-use OCA\Mail\Account;
-use OCA\Mail\Folder;
-use OCA\Mail\IMAP\Sync\Request as SyncRequest;
-use OCA\Mail\IMAP\Sync\Response as SyncResponse;
+use OCA\Mail\IMAP\Sync\Response;
+use PHPUnit_Framework_TestCase;
 
-interface IMailManager {
+class ResponseTest extends PHPUnit_Framework_TestCase {
 
-	/**
-	 * @param Account $account
-	 * @return Folder[]
-	 */
-	public function getFolders(Account $account);
+	public function testJsonSerialize() {
+		$newMessages = [];
+		$changedMessages = [];
+		$vanishedMessages = [];
+		$syncToken = 'bc4564';
+		$response = new Response($syncToken, $newMessages, $changedMessages, $vanishedMessages);
+		$expected = [
+			'newMessages' => [],
+			'changedMessages' => [],
+			'vanishedMessages' => [],
+			'token' => $syncToken,
+		];
 
-	/**
-	 * @param Account
-	 * @param SyncRequest $syncRequest
-	 * @return SyncResponse
-	 */
-	public function syncMessages(Account $account, SyncRequest $syncRequest);
+		$json = $response->jsonSerialize();
+
+		$this->assertEquals($expected, $json);
+	}
+
 }
