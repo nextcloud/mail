@@ -21,8 +21,10 @@
 
 namespace OCA\Mail\IMAP;
 
-use Exception;
 use Horde_Imap_Client_Base;
+use Horde_Imap_Client_Data_Fetch;
+use Horde_Imap_Client_Fetch_Query;
+use Horde_Imap_Client_Ids;
 use OCA\Mail\Folder;
 use OCA\Mail\Model\IMAPMessage;
 
@@ -35,7 +37,30 @@ class MessageMapper {
 	 * @return IMAPMessage[]
 	 */
 	public function findByIds(Horde_Imap_Client_Base $imapClient, $mailbox, array $ids) {
-		throw new Exception('not implemented');
+		$query = new Horde_Imap_Client_Fetch_Query();
+		$query->envelope();
+		$query->flags();
+		$query->size();
+		$query->uid();
+		$query->imapDate();
+		$query->structure();
+		$query->headers('imp', [
+			'importance',
+			'list-post',
+			'x-priority',
+			'content-type',
+			], [
+			'cache' => true,
+			'peek' => true,
+		]);
+
+		$fetchResults = $imapClient->fetch($mailbox, $query, [
+			'ids' => new Horde_Imap_Client_Ids($ids),
+		]);
+
+		return array_map(function(Horde_Imap_Client_Data_Fetch $fetchResult) use ($imapClient, $mailbox) {
+			return new IMAPMessage($imapClient, $mailbox, $fetchResult->getUid(), $fetchResult);
+		}, $fetchResults->getIterator());
 	}
 
 }
