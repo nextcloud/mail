@@ -21,6 +21,7 @@
 
 namespace OCA\Mail\IMAP\Sync;
 
+use Horde_Imap_Client;
 use Horde_Imap_Client_Base;
 use Horde_Imap_Client_Ids;
 use Horde_Imap_Client_Mailbox;
@@ -47,9 +48,7 @@ class Synchronizer {
 	 */
 	public function sync(Horde_Imap_Client_Base $imapClient, Request $request) {
 		$mailbox = new Horde_Imap_Client_Mailbox($request->getMailbox());
-		$ids = new Horde_Imap_Client_Ids([
-			528,
-		]);
+		$ids = new Horde_Imap_Client_Ids($request->getUids());
 		$hordeSync = $imapClient->sync($mailbox, $request->getToken(), [
 			'ids' => $ids
 		]);

@@ -235,7 +235,6 @@ class MessagesController extends Controller {
 
 	/**
 	 * @NoAdminRequired
-	 * @NoCSRFRequired
 	 *
 	 * @param int $accountId
 	 * @param string $folderId
@@ -253,7 +252,6 @@ class MessagesController extends Controller {
 
 	/**
 	 * @NoAdminRequired
-	 * @NoCSRFRequired
 	 *
 	 * @param int $accountId
 	 * @param string $folderId
@@ -275,7 +273,6 @@ class MessagesController extends Controller {
 
 	/**
 	 * @NoAdminRequired
-	 * @NoCSRFRequired
 	 *
 	 * @param int $accountId
 	 * @param string $folderId

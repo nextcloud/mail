@@ -142,9 +142,22 @@ define(function(require) {
 
 		return Promise.resolve($.ajax(url, {
 			data: {
-				syncToken: folder.get('syncToken')
+				syncToken: folder.get('syncToken'),
+				uids: folder.messages.pluck('id')
 			}
-		}));
+		})).then(function(syncResp) {
+			folder.set('syncToken', syncResp.token);
+			folder.addMessages(syncResp.newMessages);
+			_.each(syncResp.changedMessages, function(msg) {
+				var existing = folder.messages.get(msg.id);
+				if (existing) {
+					existing.set(msg);
+				}
+			});
+			_.each(syncResp.vanishedMessages, function(id) {
+				folder.messages.remove(id);
+			});
+		});
 	}
 
 	/**

@@ -254,6 +254,10 @@ define(function(require) {
 			var account = require('state').currentAccount;
 			var folder = require('state').currentFolder;
 			return Radio.message.request('sync', account, folder)
+				.catch(function(e) {
+					console.error(e);
+					Radio.ui.trigger('error:show', t('mail', 'Error while refreshing messages.'));
+				})
 				.then(function() {
 					$('#mail-message-list-loading').css('opacity', 1)
 						.slideUp('slow')

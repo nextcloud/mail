@@ -29,13 +29,18 @@ class Request {
 	/** @var string */
 	private $syncToken;
 
+	/** @var array */
+	private $uids;
+
 	/**
 	 * @param string $mailbox
 	 * @param string $syncToken
+	 * @param int $uids
 	 */
-	public function __construct($mailbox, $syncToken) {
+	public function __construct($mailbox, $syncToken, array $uids) {
 		$this->mailbox = $mailbox;
 		$this->syncToken = $syncToken;
+		$this->uids = $uids;
 	}
 
 	/**
@@ -52,6 +57,15 @@ class Request {
 	 */
 	public function getToken() {
 		return $this->syncToken;
+	}
+
+	/**
+	 * Get an array of known uids on the client-side
+	 *
+	 * @return int[]
+	 */
+	public function getUids() {
+		return $this->uids;
 	}
 
 }
