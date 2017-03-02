@@ -22,6 +22,8 @@
 namespace OCA\Mail\IMAP\Sync;
 
 use Horde_Imap_Client_Base;
+use Horde_Imap_Client_Ids;
+use Horde_Imap_Client_Mailbox;
 use OCA\Mail\IMAP\MessageMapper;
 use OCA\Mail\IMAP\Sync\Request;
 use OCA\Mail\IMAP\Sync\Response;
@@ -44,7 +46,13 @@ class Synchronizer {
 	 * @return Response
 	 */
 	public function sync(Horde_Imap_Client_Base $imapClient, Request $request) {
-		$hordeSync = $imapClient->sync($request->getMailbox(), $request->getToken());
+		$mailbox = new Horde_Imap_Client_Mailbox($request->getMailbox());
+		$ids = new Horde_Imap_Client_Ids([
+			528,
+		]);
+		$hordeSync = $imapClient->sync($mailbox, $request->getToken(), [
+			'ids' => $ids
+		]);
 
 		$newMessages = $this->messageMapper->findByIds($imapClient, $request->getMailbox(), $hordeSync->newmsgsuids->ids);
 		$changedMessages = $this->messageMapper->findByIds($imapClient, $request->getMailbox(), $hordeSync->flagsuids->ids);

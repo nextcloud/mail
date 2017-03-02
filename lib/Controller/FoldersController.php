@@ -31,6 +31,7 @@ use OCP\AppFramework\Db\DoesNotExistException;
 use OCP\AppFramework\Http;
 use OCP\AppFramework\Http\JSONResponse;
 use OCP\IRequest;
+use OCA\Mail\IMAP\Sync\Request as SyncRequest;
 
 class FoldersController extends Controller {
 
@@ -44,14 +45,14 @@ class FoldersController extends Controller {
 	private $mailManager;
 
 	/**
-	 * @param type $appName
+	 * @param string $appName
 	 * @param IRequest $request
 	 * @param AccountService $accountService
 	 * @param string $UserId
 	 * @param IMailManager $mailManager
 	 */
-	public function __construct($appName, IRequest $request,
-		AccountService $accountService, $UserId, IMailManager $mailManager) {
+	public function __construct($appName, IRequest $request, AccountService $accountService, $UserId,
+		IMailManager $mailManager) {
 		parent::__construct($appName, $request);
 		$this->accountService = $accountService;
 		$this->currentUserId = $UserId;
@@ -74,6 +75,19 @@ class FoldersController extends Controller {
 			'folders' => $folders,
 			'delimiter' => reset($folders)->getDelimiter(),
 		];
+	}
+
+	/**
+	 * @NoAdminRequired
+	 * @NoCSRFRequired
+	 * @param int $accountId
+	 * @param string $folderId
+	 * @param string $syncToken
+	 * @return JSONResponse
+	 */
+	public function sync($accountId, $folderId, $syncToken) {
+		$account = $this->accountService->find($this->currentUserId, $accountId);
+		return $this->mailManager->syncMessages($account, new SyncRequest(base64_decode($folderId), $syncToken));
 	}
 
 	/**

@@ -39,7 +39,13 @@ define(function(require) {
 		currentMessage: null,
 		searchQuery: null,
 		loadingMore: false,
-		reloaded: false,
+
+		/**
+		 * @private
+		 * @type {bool}
+		 */
+		_reloaded: false,
+
 		events: {
 			DOMMouseScroll: 'onWheel',
 			mousewheel: 'onWheel'
@@ -166,14 +172,11 @@ define(function(require) {
 			if (!require('state').currentFolder) {
 				return;
 			}
-			this.loadMessages(true);
-		},
-		loadMore: function() {
-			this.loadMessages(false);
+			this._syncMessages();
 		},
 		onScroll: function() {
-			if (this.reloaded) {
-				this.reloaded = false;
+			if (this._reloaded) {
+				this._reloaded = false;
 				return;
 			}
 			if (this.loadingMore === true) {
@@ -183,13 +186,13 @@ define(function(require) {
 			if (this.$scrollContainer.scrollTop() === 0) {
 				// Scrolled to top -> refresh
 				this.loadingMore = true;
-				this.loadMessages(true);
+				this._syncMessages();
 				return;
 			}
 			if ((this.$scrollContainer.scrollTop() + this.$scrollContainer.height()) > (this.$el.height() - 150)) {
 				// Scrolled all the way down -> load more
 				this.loadingMore = true;
-				this.loadMessages(false);
+				this._loadNextMessages();
 				return;
 			}
 		},
@@ -206,44 +209,78 @@ define(function(require) {
 			this.filterCriteria = {
 				text: query
 			};
-			this.loadMessages(true);
+			this._syncMessages();
 		},
-		loadMessages: function(reload) {
-			reload = reload || false;
-			var from = this.collection.size();
-			if (reload) {
-				from = 0;
-			}
-			// Add loading feedback
-			if (reload) {
-				$('#mail-message-list-loading').css('opacity', 0)
-					.slideDown('slow')
-					.animate(
-						{opacity: 1},
-						{queue: false, duration: 'slow'}
-					);
-			} else {
-				this.$('#load-more-mail-messages').addClass('icon-loading-small');
-			}
 
-			var _this = this;
+		/**
+		 * @private
+		 * @returns {Promise}
+		 */
+		_loadMessages: function() {
+			// Add loading feedback
+			this.$('#load-more-mail-messages').addClass('icon-loading-small');
+
 			var account = require('state').currentAccount;
 			var folder = require('state').currentFolder;
-			Radio.message.request('entities', account, folder, {
-				from: from,
-				to: from + 20,
-				force: true,
-				filter: this.searchQuery || '',
-				// Replace cached message list on reload
-				replace: reload
+			return Radio.message.request('entities', account, folder, {
+				filter: this.searchQuery || ''
 			}).then(function() {
 				Radio.ui.trigger('messagesview:message:setactive', require('state').currentMessage);
 			}, function() {
 				Radio.ui.trigger('error:show', t('mail', 'Error while loading messages.'));
 			}).then(function() {
 				// Remove loading feedback again
-				_this.$('#load-more-mail-messages').removeClass('icon-loading-small');
-				if (reload) {
+				this.$('#load-more-mail-messages').removeClass('icon-loading-small');
+				this.loadingMore = false;
+				// Reload scrolls the list to the top, hence a unwanted
+				// scroll event is fired, which we want to ignore
+				this._reloaded = false;
+			}.bind(this));
+		},
+
+		/**
+		 * @private
+		 * @returns {Promise}
+		 */
+		_loadNextMessages: function() {
+			// Add loading feedback
+			this.$('#load-more-mail-messages').addClass('icon-loading-small');
+
+			var account = require('state').currentAccount;
+			var folder = require('state').currentFolder;
+			return Radio.message.request('entities', account, folder, {
+				filter: this.searchQuery || ''
+			}).then(function() {
+				Radio.ui.trigger('messagesview:message:setactive', require('state').currentMessage);
+			}, function() {
+				Radio.ui.trigger('error:show', t('mail', 'Error while loading messages.'));
+			}).then(function() {
+				// Remove loading feedback again
+				this.$('#load-more-mail-messages').removeClass('icon-loading-small');
+				this.loadingMore = false;
+				// Reload scrolls the list to the top, hence a unwanted
+				// scroll event is fired, which we want to ignore
+				this._reloaded = false;
+			}.bind(this));
+		},
+
+		/**
+		 * @private
+		 * @returns {Promise}
+		 */
+		_syncMessages: function() {
+			// Loading feedback
+			$('#mail-message-list-loading').css('opacity', 0)
+				.slideDown('slow')
+				.animate(
+					{opacity: 1},
+					{queue: false, duration: 'slow'}
+				);
+
+			var account = require('state').currentAccount;
+			var folder = require('state').currentFolder;
+			return Radio.message.request('sync', account, folder)
+				.then(function() {
 					$('#mail-message-list-loading').css('opacity', 1)
 						.slideUp('slow')
 						.animate(
@@ -254,17 +291,13 @@ define(function(require) {
 								queue: false,
 								duration: 'slow',
 								complete: function() {
-									_this.loadingMore = false;
-								},
+									this.loadingMore = false;
+								}.bind(this)
 							});
-				} else {
-					_this.loadingMore = false;
-				}
-				// Reload scrolls the list to the top, hence a unwanted
-				// scroll event is fired, which we want to ignore
-				_this.reloaded = reload;
-			});
+					this._reloaded = true;
+				}.bind(this), console.error.bind(this));
 		},
+
 		onBeforeRender: function() {
 			// FF jump scrolls when we load more mesages. This stores the scroll
 			// position before the element is re-rendered and restores it afterwards

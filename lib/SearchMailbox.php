@@ -43,19 +43,18 @@ class SearchMailbox extends Mailbox {
 	}
 
 	/**
-	 * @param int $from
-	 * @param int $count
-	 * @param string $filter
-	 * @return mixed
+	 * @param string|Horde_Imap_Client_Search_Query $filter
+	 * @param int $cursorId last known ID on the client
+	 * @return array
 	 */
-	public function getMessages($from = 0, $count = 2, $filter = '') {
+	public function getMessages($filter = null, $cursorId = null) {
 		$query = new Horde_Imap_Client_Search_Query();
 		$query->flag('FLAGGED');
 		if ($filter) {
 			$query->text($filter, false);
 		}
 
-		return parent::getMessages($from, $count, $query);
+		return parent::getMessages($query, $cursorId);
 	}
 
 	/**

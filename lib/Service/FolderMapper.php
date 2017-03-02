@@ -36,7 +36,8 @@ class FolderMapper {
 	 * @return Folder
 	 */
 	public function getFolders(Account $account, Horde_Imap_Client_Socket $client, $pattern = '*') {
-		$mailboxes = $client->listMailboxes($pattern, Horde_Imap_Client::MBOX_ALL, [
+		$mailboxes = $client->listMailboxes($pattern, Horde_Imap_Client::MBOX_ALL,
+			[
 			'delimiter' => true,
 			'attributes' => true,
 			'special_use' => true,
@@ -44,7 +45,9 @@ class FolderMapper {
 
 		$folders = [];
 		foreach ($mailboxes as $mailbox) {
-			$folders[] = new Folder($account, $mailbox['mailbox'], $mailbox['attributes'], $mailbox['delimiter']);
+			$folder = new Folder($account, $mailbox['mailbox'], $mailbox['attributes'], $mailbox['delimiter']);
+			$folder->setSyncToken($client->getSyncToken($folder->getMailbox()));
+			$folders[] = $folder;
 			if ($mailbox['mailbox']->utf8 === 'INBOX') {
 				$folders[] = new SearchFolder($account, $mailbox['mailbox'], $mailbox['attributes'], $mailbox['delimiter']);
 			}
@@ -191,7 +194,8 @@ class FolderMapper {
 	 * @return Folder[]
 	 */
 	public function sortFolders(array &$folders) {
-		usort($folders, function(Folder $f1, Folder $f2) {
+		usort($folders,
+			function(Folder $f1, Folder $f2) {
 			$specialUse1 = $f1->getSpecialUse();
 			$specialUse2 = $f2->getSpecialUse();
 			$roleA = count($specialUse1) > 0 ? reset($specialUse1) : null;

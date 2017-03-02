@@ -28,6 +28,8 @@ define(function(require) {
 	var Radio = require('radio');
 
 	Radio.message.reply('entities', getMessageEntities);
+	Radio.message.reply('next-page', getNextMessagePage);
+	Radio.message.reply('sync', syncMessages);
 	Radio.message.reply('entity', getMessageEntity);
 	Radio.message.reply('bodies', fetchMessageBodies);
 	Radio.message.reply('flag', flagMessage);
@@ -46,8 +48,6 @@ define(function(require) {
 		options = options || {};
 		var defaults = {
 			cache: false,
-			replace: false, // Replace cached folder list
-			force: false,
 			filter: ''
 		};
 		_.defaults(options, defaults);
@@ -68,18 +68,12 @@ define(function(require) {
 				folderId: folder.get('id')
 			});
 
-			// TODO: folder.messages.fetch()
 			return Promise.resolve($.ajax(url, {
 				data: {
-					from: options.from,
-					to: options.to,
 					filter: options.filter
 				},
 				success: function(messages) {
 					var collection = folder.messages;
-					if (options.replace) {
-						collection.reset();
-					}
 					folder.addMessages(messages);
 					folder.set('messagesLoaded', true);
 					resolve(collection, false);
@@ -96,31 +90,89 @@ define(function(require) {
 	/**
 	 * @param {Account} account
 	 * @param {Folder} folder
+	 * @param {object} options
+	 * @returns {Promise}
+	 */
+	function getNextMessagePage(account, folder, options) {
+		options = options || {};
+		var defaults = {
+			filter: ''
+		};
+		_.defaults(options, defaults);
+
+		return new Promise(function(resolve, reject) {
+			var url = OC.generateUrl('apps/mail/accounts/{accountId}/folders/{folderId}/messages/page', {
+				accountId: account.get('accountId'),
+				folderId: folder.get('id')
+			});
+			var cursor = null;
+			if (!folder.messages.isEmpty()) {
+				cursor = folder.messages.last().get('id');
+			}
+
+			return Promise.resolve($.ajax(url, {
+				data: {
+					filter: options.filter,
+					cursor: cursor
+				},
+				success: function(messages) {
+					var collection = folder.messages;
+					folder.addMessages(messages);
+					folder.set('messagesLoaded', true);
+					resolve(collection, false);
+				},
+				error: function(error, status) {
+					if (status !== 'abort') {
+						reject(error);
+					}
+				}
+			}));
+		});
+	}
+
+	/**
+	 * @param {Account} account
+	 * @param {Folder} folder
+	 * @returns {Promise}
+	 */
+	function syncMessages(account, folder) {
+		var url = OC.generateUrl('apps/mail/accounts/{accountId}/folders/{folderId}/sync', {
+			accountId: account.get('accountId'),
+			folderId: folder.get('id')
+		});
+
+		return Promise.resolve($.ajax(url, {
+			data: {
+				syncToken: folder.get('syncToken')
+			}
+		}));
+	}
+
+	/**
+	 * @param {Account} account
+	 * @param {Folder} folder
 	 * @param {number} messageId
 	 * @param {object} options
 	 * @returns {Promise}
 	 */
 	function getMessageEntity(account, folder, messageId, options) {
 		options = options || {};
-		var defaults = {
-			backgroundMode: false
-		};
-		_.defaults(options, defaults);
+
 		var url = OC.generateUrl('apps/mail/accounts/{accountId}/folders/{folderId}/messages/{messageId}', {
 			accountId: account.get('accountId'),
 			folderId: folder.get('id'),
 			messageId: messageId
 		});
 
+		// Load cached version if available
+		var message = require('cache').getMessage(account,
+			folder,
+			messageId);
+		if (message) {
+			return Promise.resolve(message);
+		}
+
 		return new Promise(function(resolve, reject) {
-			// Load cached version if available
-			var message = require('cache').getMessage(account,
-				folder,
-				messageId);
-			if (message) {
-				resolve(message);
-				return;
-			}
 
 			$.ajax(url, {
 				type: 'GET',

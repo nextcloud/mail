@@ -54,13 +54,14 @@ class MessageMapper {
 			'peek' => true,
 		]);
 
-		$fetchResults = $imapClient->fetch($mailbox, $query, [
+		$fetchResults = iterator_to_array($imapClient->fetch($mailbox, $query, [
 			'ids' => new Horde_Imap_Client_Ids($ids),
-		]);
+		]));
 
+		//$it = $fetchResults->getIterator();
 		return array_map(function(Horde_Imap_Client_Data_Fetch $fetchResult) use ($imapClient, $mailbox) {
 			return new IMAPMessage($imapClient, $mailbox, $fetchResult->getUid(), $fetchResult);
-		}, $fetchResults->getIterator());
+		}, $fetchResults);
 	}
 
 }
