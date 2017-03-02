@@ -44,17 +44,17 @@ class SearchMailbox extends Mailbox {
 
 	/**
 	 * @param string|Horde_Imap_Client_Search_Query $filter
-	 * @param int $cursorId last known ID on the client
+	 * @param int $cursor time stamp of the oldest message on the client
 	 * @return array
 	 */
-	public function getMessages($filter = null, $cursorId = null) {
+	public function getMessages($filter = null, $cursor = null) {
 		$query = new Horde_Imap_Client_Search_Query();
 		$query->flag('FLAGGED');
 		if ($filter) {
 			$query->text($filter, false);
 		}
 
-		return parent::getMessages($query, $cursorId);
+		return parent::getMessages($query, $cursor);
 	}
 
 	/**

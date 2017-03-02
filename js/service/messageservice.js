@@ -101,13 +101,13 @@ define(function(require) {
 		_.defaults(options, defaults);
 
 		return new Promise(function(resolve, reject) {
-			var url = OC.generateUrl('apps/mail/accounts/{accountId}/folders/{folderId}/messages/page', {
+			var url = OC.generateUrl('apps/mail/accounts/{accountId}/folders/{folderId}/messages', {
 				accountId: account.get('accountId'),
 				folderId: folder.get('id')
 			});
 			var cursor = null;
 			if (!folder.messages.isEmpty()) {
-				cursor = folder.messages.last().get('id');
+				cursor = folder.messages.last().get('dateInt');
 			}
 
 			return Promise.resolve($.ajax(url, {
@@ -118,7 +118,6 @@ define(function(require) {
 				success: function(messages) {
 					var collection = folder.messages;
 					folder.addMessages(messages);
-					folder.set('messagesLoaded', true);
 					resolve(collection, false);
 				},
 				error: function(error, status) {

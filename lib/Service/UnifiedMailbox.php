@@ -49,12 +49,12 @@ class UnifiedMailbox implements IMailBox {
 
 	/**
 	 * @param string|Horde_Imap_Client_Search_Query $filter
-	 * @param int|null $cursorId last known ID on the client
+	 * @param int $cursor time stamp of the oldest message on the client
 	 * @return array
 	 */
-	public function getMessages($filter = null, $cursorId = null) {
+	public function getMessages($filter = null, $cursor = null) {
 		$allAccounts = $this->accountService->findByUserId($this->userId);
-		$allMessages = array_map(function($account) use ($cursorId, $filter) {
+		$allMessages = array_map(function($account) use ($cursor, $filter) {
 			/** @var IAccount $account */
 			if ($account->getId() === UnifiedAccount::ID) {
 				return [];
@@ -64,7 +64,7 @@ class UnifiedMailbox implements IMailBox {
 				return [];
 			}
 
-			$messages = $inbox->getMessages($cursorId, $filter);
+			$messages = $inbox->getMessages($cursor, $filter);
 			$messages = array_map(function($message) use ($account) {
 				$message['id'] = base64_encode(json_encode([$account->getId(), $message['id']]));
 				$message['accountMail'] = $account->getEmail();

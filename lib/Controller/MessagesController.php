@@ -134,6 +134,9 @@ class MessagesController extends Controller {
 
 		$this->logger->debug("loading messages of folder <$folderId>");
 
+		if ($cursor === '') {
+			$cursor = null;
+		}
 		$messages = $mailBox->getMessages($filter, $cursor);
 
 		$ci = $this->contactsIntegration;

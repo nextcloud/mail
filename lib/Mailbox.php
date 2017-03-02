@@ -93,8 +93,9 @@ class Mailbox implements IMailBox {
 
 	/**
 	 * @param string $filter
+	 * @param int $cursor
 	 */
-	private function getSearchIds($filter) {
+	private function getSearchIds($filter, $cursor = null) {
 		if ($filter instanceof Horde_Imap_Client_Search_Query) {
 			$query = $filter;
 		} else {
@@ -106,6 +107,7 @@ class Mailbox implements IMailBox {
 		if ($this->getSpecialRole() !== 'trash') {
 			$query->flag(Horde_Imap_Client::FLAG_DELETED, false);
 		}
+		$query->dateSearch($cursor, Horde_Imap_Client_Search_Query::DATE_SINCE);
 
 		try {
 			$result = $this->conn->search($this->mailBox, $query, [
@@ -123,7 +125,11 @@ class Mailbox implements IMailBox {
 		return array_reverse($result['match']->ids);
 	}
 
-	private function getFetchIds() {
+	/**
+	 * @param int $cursor
+	 * @return type
+	 */
+	private function getFetchIds($cursor = null) {
 		$q = new Horde_Imap_Client_Fetch_Query();
 		$q->uid();
 		$q->imapDate();
@@ -131,7 +137,10 @@ class Mailbox implements IMailBox {
 		$result = $this->conn->fetch($this->mailBox, $q);
 		$uidMap = [];
 		foreach ($result as $r) {
-			$uidMap[$r->getUid()] = $r->getImapDate()->getTimeStamp();
+			$ts = $r->getImapDate()->getTimeStamp();
+			if (is_null($cursor) || $ts < $cursor) {
+				$uidMap[$r->getUid()] = $ts;
+			}
 		}
 		// sort by time
 		uasort($uidMap, function($a, $b) {
@@ -150,19 +159,14 @@ class Mailbox implements IMailBox {
 	 * the cursorId, if given. The size of the page is limited to 20.
 	 *
 	 * @param string|Horde_Imap_Client_Search_Query $filter
-	 * @param int $cursorId last known ID on the client
+	 * @param int $cursor time stamp of the oldest message on the client
 	 * @return array
 	 */
-	public function getMessages($filter = null, $cursorId = null) {
+	public function getMessages($filter = null, $cursor = null) {
 		if (!$this->conn->capability->query('SORT') && (is_null($filter) || $filter === '')) {
-			$ids = $this->getFetchIds($cursorId);
+			$ids = $this->getFetchIds($cursor);
 		} else {
-			$ids = $this->getSearchIds($cursorId, $filter);
-		}
-		if ($cursorId) {
-			$ids = array_filter($ids, function($id) use ($cursorId) {
-				return $id > $cursorId;
-			});
+			$ids = $this->getSearchIds($filter, $cursor);
 		}
 		$page = new Horde_Imap_Client_Ids(array_slice($ids, 0, 20, true));
 
@@ -198,6 +202,11 @@ class Mailbox implements IMailBox {
 			$messages[] = $message->jsonSerialize();
 		}
 		ob_get_clean();
+
+		// sort by time
+		usort($messages, function($a, $b) {
+			return $a['dateInt'] < $b['dateInt'];
+		});
 
 		return $messages;
 	}

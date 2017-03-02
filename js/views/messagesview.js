@@ -216,39 +216,13 @@ define(function(require) {
 		 * @private
 		 * @returns {Promise}
 		 */
-		_loadMessages: function() {
-			// Add loading feedback
-			this.$('#load-more-mail-messages').addClass('icon-loading-small');
-
-			var account = require('state').currentAccount;
-			var folder = require('state').currentFolder;
-			return Radio.message.request('entities', account, folder, {
-				filter: this.searchQuery || ''
-			}).then(function() {
-				Radio.ui.trigger('messagesview:message:setactive', require('state').currentMessage);
-			}, function() {
-				Radio.ui.trigger('error:show', t('mail', 'Error while loading messages.'));
-			}).then(function() {
-				// Remove loading feedback again
-				this.$('#load-more-mail-messages').removeClass('icon-loading-small');
-				this.loadingMore = false;
-				// Reload scrolls the list to the top, hence a unwanted
-				// scroll event is fired, which we want to ignore
-				this._reloaded = false;
-			}.bind(this));
-		},
-
-		/**
-		 * @private
-		 * @returns {Promise}
-		 */
 		_loadNextMessages: function() {
 			// Add loading feedback
 			this.$('#load-more-mail-messages').addClass('icon-loading-small');
 
 			var account = require('state').currentAccount;
 			var folder = require('state').currentFolder;
-			return Radio.message.request('entities', account, folder, {
+			return Radio.message.request('next-page', account, folder, {
 				filter: this.searchQuery || ''
 			}).then(function() {
 				Radio.ui.trigger('messagesview:message:setactive', require('state').currentMessage);
@@ -261,7 +235,7 @@ define(function(require) {
 				// Reload scrolls the list to the top, hence a unwanted
 				// scroll event is fired, which we want to ignore
 				this._reloaded = false;
-			}.bind(this));
+			}.bind(this), console.error.bind(this));
 		},
 
 		/**
