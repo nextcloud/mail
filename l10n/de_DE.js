@@ -72,7 +72,7 @@ OC.L10N.register(
     "New message" : "Neue Nachricht",
     "Account Settings" : "Konto-Einstellungen",
     "Aliases" : "Aliase",
-    "Mail address" : "E-Mail Adresse",
+    "Mail address" : "E-Mail-Adresse",
     "Display Name" : "Anzeigename",
     "Save" : "Speichern",
     "Connect your mail account" : "Verbinde Dein E-Mail-Konto",
