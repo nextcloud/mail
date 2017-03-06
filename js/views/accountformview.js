@@ -21,21 +21,28 @@ define(function(require) {
 	 */
 	return Marionette.View.extend({
 
+		/** @type {string} */
 		id: 'account-form',
 
+		/** @type {Function} */
 		template: Handlebars.compile(AccountFormTemplate),
 
+		/**
+		 * @returns {object}
+		 */
 		templateContext: function() {
 			return {
 				config: this._config
 			};
 		},
 
+		/** @type {boolean} */
 		firstToggle: true,
 
 		/** @type {object} */
 		_config: '',
 
+		/** @type{boolean} */
 		manualMode: false,
 
 		ui: {

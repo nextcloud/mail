@@ -20,11 +20,13 @@
 define(function(require) {
 	'use strict';
 
+	var _ = require('underscore');
 	var Handlebars = require('handlebars');
 	var Marionette = require('marionette');
 	var Radio = require('radio');
 	var AccountController = require('controller/accountcontroller');
 	var AccountFormView = require('views/accountformview');
+	var ErrorView = require('views/errorview');
 	var LoadingView = require('views/loadingview');
 	var SetupTemplate = require('text!templates/setup.html');
 
@@ -33,21 +35,34 @@ define(function(require) {
 	 */
 	return Marionette.View.extend({
 
+		/** @type {string} */
 		className: 'container',
 
+		/** @type {Function} */
 		template: Handlebars.compile(SetupTemplate),
 
 		/** @type {boolean} */
 		_loading: false,
 
+		/** @type {boolean} */
+		_error: undefined,
+
+		/** @type {Object} */
 		_config: undefined,
 
 		regions: {
 			content: '.setup-content'
 		},
 
+		/**
+		 * @returns {undefined}
+		 */
 		onRender: function() {
-			if (this._loading) {
+			if (!_.isUndefined(this._error)) {
+				this.showChildView('content', new ErrorView({
+					text: this._error
+				}));
+			} else if (this._loading) {
 				// Rendering the first time
 				this.showChildView('content', new LoadingView({
 					text: t('mail', 'Setting up your account')
@@ -60,12 +75,18 @@ define(function(require) {
 			}
 		},
 
+		/**
+		 * @private
+		 * @param {Object} config
+		 * @returns {Promise}
+		 */
 		onChildviewFormSubmit: function(config) {
+			var _this = this;
 			this._loading = true;
 			this._config = config;
 			this.render();
 
-			Radio.account.request('create', config).then(function() {
+			return Radio.account.request('create', config).then(function() {
 				Radio.ui.trigger('navigation:show');
 				Radio.ui.trigger('content:loading');
 				// reload accounts
@@ -77,12 +98,19 @@ define(function(require) {
 				var firstFolder = firstAccount.folders.first();
 				Radio.navigation.trigger('folder', firstAccount.get('accountId'), firstFolder.get('id'));
 			}).catch(function(error) {
-				Radio.ui.trigger('error:show', error);
-
-				// Show form again
-				this._loading = false;
-				this.render();
-			}.bind(this));
+				// Show error view for a few seconds
+				_this._loading = false;
+				_this._error = error;
+				_this.render();
+				return new Promise(function(resolve) {
+					setTimeout(function() {
+						// Show form again
+						_this._error = undefined;
+						_this.render();
+						resolve();
+					}, 1500);
+				});
+			});
 		}
 
 	});

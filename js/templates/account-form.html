@@ -15,21 +15,21 @@
 			<input type="text"
 			       name="account-name"
 			       placeholder="{{ t 'Name' }}"
-			       value=""
+			       value="{{ config.accountName }}"
 			       autofocus />
 		</p>
 		<p class="groupmiddle">
 			<input type="email"
 			       name="mail-address"
 			       placeholder="{{ t 'Mail Address' }}"
-			       value=""
+			       value="{{ config.emailAddress }}"
 			       required />
 		</p>
 		<p class="groupbottom">
 			<input type="password"
 			       name="mail-password"
 			       placeholder="{{ t 'Password' }}"
-			       value=""
+			       value="{{ config.password }}"
 			       required />
 		</p>
 
@@ -40,7 +40,7 @@
 				<input type="text"
 				       name="imap-host"
 				       placeholder="{{ t 'IMAP Host' }}"
-				       value="" />
+				       value="{{ config.imapHost }}" />
 			</p>
 			<p class="groupmiddle" id="setup-imap-ssl">
 				<select id="setup-imap-ssl-mode"
@@ -61,20 +61,20 @@
 				<input type="text"
 				       name="imap-user"
 				       placeholder="{{ t 'IMAP User' }}"
-				       value="" />
+				       value="{{ config.imapUser }}" />
 			</p>
 			<p class="groupbottom">
 				<input type="password"
 				       name="imap-password"
 				       placeholder="{{ t 'IMAP Password' }}"
-				       value=""
+				       value="{{ config.imapPassword }}"
 				       required />
 			</p>
 			<p class="grouptop">
 				<input type="text"
 				       name="smtp-host"
 				       placeholder="{{ t 'SMTP Host' }}"
-				       value="" />
+				       value="{{ config.smtpHost }}" />
 			</p>
 			<p class="groupmiddle" id="setup-smtp-ssl">
 				<select id="setup-smtp-ssl-mode"
@@ -95,12 +95,13 @@
 				<input type="text"
 				       name="smtp-user"
 				       placeholder="{{ t 'SMTP User' }}"
-				       value="" />
+				       value="{{ config.smtpUser }}" />
 			</p>
 			<p class="groupbottom">
 				<input type="password"
 				       name="smtp-password"
-				       placeholder="{{ t 'SMTP Password' }}" value=""
+				       placeholder="{{ t 'SMTP Password' }}"
+				       value="{{ config.smtpPassword }}"
 				       required />
 			</p>
 		</div>
