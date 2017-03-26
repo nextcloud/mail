@@ -65,7 +65,6 @@ define(function(require) {
 	 * @returns {Promise}
 	 */
 	function syncFolder(folder) {
-		console.log('SYNC', folder);
 		var allAccounts = require('state').accounts;
 
 		if (folder.account.get('isUnified')) {
