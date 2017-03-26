@@ -91,8 +91,8 @@ define(function(require) {
 			// Flatten nested array
 			return acc.concat(f);
 		}, []).map(function(otherInbox) {
-			return getFolderMessages(otherInbox, options).
-				then(function(messages) {
+			return getFolderMessages(otherInbox, options)
+				.then(function(messages) {
 					console.log('loaded ' + messages.length + 'messages', messages);
 					folder.addMessages(messages.models);
 				});
@@ -109,10 +109,8 @@ define(function(require) {
 		options = options || {};
 
 		if (account.get('isUnified')) {
-			console.log('UNIFIED');
 			return getUnifiedFolderMessages(folder, options);
 		} else {
-			console.log('not unified :-/');
 			return getFolderMessages(folder, options);
 		}
 	}
