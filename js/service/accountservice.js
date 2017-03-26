@@ -22,26 +22,22 @@ define(function(require) {
 	Radio.account.reply('delete', deleteAccount);
 
 	function createAccount(config) {
-		return new Promise(function(resolve, reject) {
-			$.ajax(OC.generateUrl('apps/mail/accounts'), {
-				data: config,
-				type: 'POST',
-				success: function() {
-					resolve();
-				},
-				error: function(jqXHR, textStatus, errorThrown) {
-					switch (jqXHR.status) {
-						case 400:
-							var response = JSON.parse(jqXHR.responseText);
-							reject(response.message);
-							break;
-						default:
-							var error = errorThrown || textStatus || t('mail', 'Unknown error');
-							reject(t('mail', 'Error while creating an account: ' + error));
-					}
+		var url = OC.generateUrl('apps/mail/accounts');
+		return new Promise($.ajax(url, {
+			data: config,
+			type: 'POST',
+			error: function(jqXHR, textStatus, errorThrown) {
+				switch (jqXHR.status) {
+					case 400:
+						var response = JSON.parse(jqXHR.responseText);
+						throw new Error(response.message);
+						break;
+					default:
+						var error = errorThrown || textStatus || t('mail', 'Unknown error');
+						throw new Error(t('mail', 'Error while creating an account: ' + error));
 				}
-			});
-		});
+			}
+		}));
 	}
 
 	/**
