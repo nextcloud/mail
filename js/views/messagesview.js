@@ -251,9 +251,8 @@ define(function(require) {
 					{queue: false, duration: 'slow'}
 				);
 
-			var account = require('state').currentAccount;
 			var folder = require('state').currentFolder;
-			return Radio.message.request('sync', account, folder)
+			return Radio.message.request('sync', folder)
 				.catch(function(e) {
 					console.error(e);
 					Radio.ui.trigger('error:show', t('mail', 'Error while refreshing messages.'));

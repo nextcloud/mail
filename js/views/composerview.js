@@ -394,10 +394,10 @@ define(function(require) {
 					onSuccess();
 				}
 
-				if (this.draftUID !== null) {
+				if (_this.draftUID !== null) {
 					// update UID in message list
 					var collection = Radio.ui.request('messagesview:collection');
-					var message = collection.findWhere({id: this.draftUID});
+					var message = collection.findWhere({id: _this.draftUID});
 					if (message) {
 						message.set({id: data.uid});
 						collection.set([message], {remove: false});

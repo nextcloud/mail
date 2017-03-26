@@ -19,7 +19,7 @@ window.t = function(app, text) {
 		throw new 'wrong app used to for translation';
 	}
 	return text;
-}
+};
 
 
 OC = {
@@ -28,8 +28,15 @@ OC = {
 
 		}
 	},
-	generateUrl: function(url) {
-		return url;
+	generateUrl: function(url, params) {
+		var props = [];
+		for (var prop in params) {
+			props.push(prop);
+		}
+		return '/base/' + props.reduce(function(url, paramName) {
+			var param = params[paramName];
+			return url.replace('{' + paramName + '}', param);
+		}, url);
 	},
 	linkToRemote: function() {
 

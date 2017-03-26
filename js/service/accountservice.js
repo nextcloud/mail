@@ -67,13 +67,17 @@ define(function(require) {
 		return Promise.resolve(accounts.fetch());
 	}
 
+	/**
+	 * @returns {Promise}
+	 */
 	function getAccountEntities() {
 		return loadAccountData().then(function(accounts) {
 			require('cache').cleanUp(accounts);
 
 			if (accounts.length > 1) {
 				accounts.add({
-					accountId: -1
+					accountId: -1,
+					isUnified: true
 				}, {
 					at: 0
 				});

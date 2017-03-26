@@ -80,7 +80,8 @@ define(function(require) {
 
 					Radio.message.trigger('load', account, folder, messages.first());
 				}
-			}, function() {
+			}, function(error) {
+				console.error('error while loading messages: ', error);
 				var icon;
 				if (folder.get('specialRole')) {
 					icon = 'icon-' + folder.get('specialRole');
@@ -90,7 +91,7 @@ define(function(require) {
 				// Set the old folder as being active
 				var oldFolder = require('state').currentFolder;
 				Radio.folder.trigger('setactive', account, oldFolder);
-			});
+			}).catch(console.error.bind(this));
 		}
 	}
 

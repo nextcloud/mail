@@ -42,11 +42,12 @@
     "karma-jasmine-ajax": "^0.1.13",
     "karma-phantomjs-launcher": "^1.0.4",
     "karma-requirejs": "^1.1.0",
-    "phantomjs-prebuilt": "^2.1.12"
+    "karma-sinon": "^1.0.5",
+    "phantomjs-prebuilt": "^2.1.12",
+    "sinon": "^2.1.0"
   },
   "dependencies": {
     "bower": "^1.5.2",
-    "grunt": "^1.0.1",
     "requirejs": "^2.1.20"
   }
 }

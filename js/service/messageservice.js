@@ -29,7 +29,6 @@ define(function(require) {
 
 	Radio.message.reply('entities', getMessageEntities);
 	Radio.message.reply('next-page', getNextMessagePage);
-	Radio.message.reply('sync', syncMessages);
 	Radio.message.reply('entity', getMessageEntity);
 	Radio.message.reply('bodies', fetchMessageBodies);
 	Radio.message.reply('flag', flagMessage);
@@ -38,14 +37,7 @@ define(function(require) {
 	Radio.message.reply('draft', saveDraft);
 	Radio.message.reply('delete', deleteMessage);
 
-	/**
-	 * @param {Account} account
-	 * @param {Folder} folder
-	 * @param {object} options
-	 * @returns {Promise}
-	 */
-	function getMessageEntities(account, folder, options) {
-		options = options || {};
+	function getFolderMessages(folder, options) {
 		var defaults = {
 			cache: false,
 			filter: ''
@@ -56,35 +48,73 @@ define(function(require) {
 		if (options.filter !== '') {
 			options.cache = false;
 		}
+		if (options.cache && folder.get('messagesLoaded')) {
+			return Promise.resolve(folder.messages, true);
+		}
 
-		return new Promise(function(resolve, reject) {
-			if (options.cache && folder.get('messagesLoaded')) {
-				resolve(folder.messages, true);
-				return;
-			}
-
-			var url = OC.generateUrl('apps/mail/accounts/{accountId}/folders/{folderId}/messages', {
-				accountId: account.get('accountId'),
-				folderId: folder.get('id')
-			});
-
-			return Promise.resolve($.ajax(url, {
-				data: {
-					filter: options.filter
-				},
-				success: function(messages) {
-					var collection = folder.messages;
-					folder.addMessages(messages);
-					folder.set('messagesLoaded', true);
-					resolve(collection, false);
-				},
-				error: function(error, status) {
-					if (status !== 'abort') {
-						reject(error);
-					}
-				}
-			}));
+		var url = OC.generateUrl('apps/mail/accounts/{accountId}/folders/{folderId}/messages', {
+			accountId: folder.account.get('accountId'),
+			folderId: folder.get('id')
 		});
+
+		return Promise.resolve($.ajax(url, {
+			data: {
+				filter: options.filter
+			},
+			error: function(error, status) {
+				if (status !== 'abort') {
+					console.error('error loading messages', error);
+					throw new Error(error);
+				}
+			}
+		})).then(function(messages) {
+			console.log('messages', messages);
+			var collection = folder.messages;
+			folder.addMessages(messages);
+			folder.set('messagesLoaded', true);
+			return collection;
+		});
+	}
+
+	function getUnifiedFolderMessages(folder, options) {
+		var allAccounts = require('state').accounts;
+		// Fetch and merge other accounts
+		return Promise.all(allAccounts.filter(function(acc) {
+			// Select other accounts
+			return acc.id !== folder.account.id;
+		}).map(function(acc) {
+			// Select its inboxes
+			return acc.folders.filter(function(f) {
+				return f.get('specialRole') === 'inbox';
+			});
+		}).reduce(function(acc, f) {
+			// Flatten nested array
+			return acc.concat(f);
+		}, []).map(function(otherInbox) {
+			return getFolderMessages(otherInbox, options).
+				then(function(messages) {
+					console.log('loaded ' + messages.length + 'messages', messages);
+					folder.addMessages(messages.models);
+				});
+		}));
+	}
+
+	/**
+	 * @param {Account} account
+	 * @param {Folder} folder
+	 * @param {object} options
+	 * @returns {Promise}
+	 */
+	function getMessageEntities(account, folder, options) {
+		options = options || {};
+
+		if (account.get('isUnified')) {
+			console.log('UNIFIED');
+			return getUnifiedFolderMessages(folder, options);
+		} else {
+			console.log('not unified :-/');
+			return getFolderMessages(folder, options);
+		}
 	}
 
 	/**
@@ -132,37 +162,6 @@ define(function(require) {
 	/**
 	 * @param {Account} account
 	 * @param {Folder} folder
-	 * @returns {Promise}
-	 */
-	function syncMessages(account, folder) {
-		var url = OC.generateUrl('apps/mail/accounts/{accountId}/folders/{folderId}/sync', {
-			accountId: account.get('accountId'),
-			folderId: folder.get('id')
-		});
-
-		return Promise.resolve($.ajax(url, {
-			data: {
-				syncToken: folder.get('syncToken'),
-				uids: folder.messages.pluck('id')
-			}
-		})).then(function(syncResp) {
-			folder.set('syncToken', syncResp.token);
-			folder.addMessages(syncResp.newMessages);
-			_.each(syncResp.changedMessages, function(msg) {
-				var existing = folder.messages.get(msg.id);
-				if (existing) {
-					existing.set(msg);
-				}
-			});
-			_.each(syncResp.vanishedMessages, function(id) {
-				folder.messages.remove(id);
-			});
-		});
-	}
-
-	/**
-	 * @param {Account} account
-	 * @param {Folder} folder
 	 * @param {number} messageId
 	 * @param {object} options
 	 * @returns {Promise}
@@ -185,15 +184,12 @@ define(function(require) {
 		}
 
 		return new Promise(function(resolve, reject) {
-
-			$.ajax(url, {
+			return $.ajax(url, {
 				type: 'GET',
-				success: function(message) {
-					resolve(message);
-				},
 				error: function(jqXHR, textStatus) {
 					if (textStatus !== 'abort') {
-						reject();
+						console.error('error loading messages', jqXHR);
+						throw new Error(jqXHR);
 					}
 				}
 			});
