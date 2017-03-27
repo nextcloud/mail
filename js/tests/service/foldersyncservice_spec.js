@@ -1,4 +1,4 @@
-/* global sinon */
+/* global sinon, expect */
 
 /**
  * @author Christoph Wurst <christoph@winzerhof-wurst.at>
@@ -48,7 +48,8 @@ define([
 			});
 			var folder = new Folder({
 				id: 'SU5CT1g=',
-				syncToken: 'oldToken'
+				syncToken: 'oldToken',
+				account: account
 			});
 			folder.addMessage(new Message({
 				id: 123
@@ -56,8 +57,6 @@ define([
 			folder.addMessage(new Message({
 				id: 124
 			}));
-
-			folder.account = account;
 
 			var syncing = FolderSyncService.syncFolder(folder);
 
@@ -94,7 +93,8 @@ define([
 			});
 			var folder = new Folder({
 				id: 'SU5CT1g=',
-				syncToken: 'oldToken'
+				syncToken: 'oldToken',
+				account: account
 			});
 			folder.addMessage(new Message({
 				id: 123
@@ -102,8 +102,6 @@ define([
 			folder.addMessage(new Message({
 				id: 124
 			}));
-
-			folder.account = account;
 
 			var syncing = FolderSyncService.syncFolder(folder);
 
@@ -140,7 +138,8 @@ define([
 			});
 			var folder = new Folder({
 				id: 'SU5CT1g=',
-				syncToken: 'oldToken'
+				syncToken: 'oldToken',
+				account: account
 			});
 			folder.addMessage(new Message({
 				id: 123,
@@ -149,8 +148,6 @@ define([
 			folder.addMessage(new Message({
 				id: 124
 			}));
-
-			folder.account = account;
 
 			var syncing = FolderSyncService.syncFolder(folder);
 
@@ -189,7 +186,8 @@ define([
 			});
 			var folder = new Folder({
 				id: 'SU5CT1g=',
-				syncToken: 'oldToken'
+				syncToken: 'oldToken',
+				account: account
 			});
 			folder.addMessage(new Message({
 				id: 123,
@@ -198,8 +196,6 @@ define([
 			folder.addMessage(new Message({
 				id: 124
 			}));
-
-			folder.account = account;
 
 			var syncing = FolderSyncService.syncFolder(folder);
 
@@ -231,13 +227,12 @@ define([
 		it('syncs the unified inbox, even if no accounts are configured', function(
 			done) {
 			var account = new Account({
-				id: 321,
+				accountId: -1,
 				isUnified: true
 			});
 			var folder = new Folder({
-
+				account: account
 			});
-			folder.account = account;
 
 			var syncing = FolderSyncService.syncFolder(folder);
 			expect(server.requests.length).toBe(0);
@@ -251,7 +246,7 @@ define([
 				isUnified: true
 			});
 			var folder = new Folder({
-
+				account: account
 			});
 			var acc1 = new Account({
 				accountId: 1
@@ -280,13 +275,13 @@ define([
 			// Add some messages
 			folder21.addMessage(new Message({
 				id: 234,
-				subject: 'old sub'
+				subject: 'old sub',
+				account: acc2
 			}));
 			folder22.addMessage(new Message({
-				id: 345
+				id: 345,
+				account: acc2
 			}));
-
-			folder.account = account;
 
 			var syncing = FolderSyncService.syncFolder(folder);
 			expect(server.requests.length).toBe(3);
@@ -345,8 +340,7 @@ define([
 				// New message saved to first inbox
 				expect(folder11.messages.pluck('id')).toEqual([123]);
 				// Update applied in second inbox
-				expect(folder21.messages.get(234).
-					get('subject')).toEqual('new sub');
+				expect(folder21.messages.get(234).get('subject')).toEqual('new sub');
 				// Vanished messag in third inbox is removed
 				expect(folder22.messages.pluck('id')).toEqual([]);
 

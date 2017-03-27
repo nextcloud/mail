@@ -52,6 +52,10 @@ define(function(require) {
 				var existing = folder.messages.get(msg.id);
 				if (existing) {
 					existing.set(msg);
+				} else {
+					// TODO: remove once we're confident this
+					// condition never occurs
+					throw new Error('non-existing message whily syncing');
 				}
 			});
 			_.each(syncResp.vanishedMessages, function(id) {

@@ -1,4 +1,4 @@
-/* global Promise */
+/* global Promise, Infinity */
 
 /**
  * @author Christoph Wurst <christoph@winzerhof-wurst.at>
@@ -68,7 +68,6 @@ define(function(require) {
 				}
 			}
 		})).then(function(messages) {
-			console.log('messages', messages);
 			var collection = folder.messages;
 			folder.addMessages(messages);
 			folder.set('messagesLoaded', true);
@@ -85,7 +84,7 @@ define(function(require) {
 		}).map(function(acc) {
 			// Select its inboxes
 			return acc.folders.filter(function(f) {
-				return f.get('specialRole') === 'inbox';
+				return f.get('specialUse') === 'inbox';
 			});
 		}).reduce(function(acc, f) {
 			// Flatten nested array
@@ -93,10 +92,16 @@ define(function(require) {
 		}, []).map(function(otherInbox) {
 			return getFolderMessages(otherInbox, options)
 				.then(function(messages) {
-					console.log('loaded ' + messages.length + 'messages', messages);
 					folder.addMessages(messages.models);
 				});
-		}));
+		})).then(function() {
+			// Truncate after 20 messages
+			// TODO: there might be a more efficient/convenient
+			// Backbone.Collection or underscore helper function
+			var top20 = folder.messages.slice(0, 20);
+			folder.messages.reset();
+			folder.addMessages(top20);
+		});
 	}
 
 	/**
@@ -115,6 +120,63 @@ define(function(require) {
 		}
 	}
 
+	function getNextUnifiedMessagePage(unifiedFolder, options) {
+		var allAccounts = require('state').accounts;
+		var cursor = Infinity;
+		if (!unifiedFolder.messages.isEmpty()) {
+			cursor = unifiedFolder.messages.last().get('dateInt');
+		}
+
+		var individualAccounts = allAccounts.filter(function(account) {
+			// Only non-unified accounts
+			return !account.get('isUnified');
+		});
+
+		// Load data from folders where we do not have enough data
+		return Promise.all(individualAccounts.map(function(account) {
+			return Promise.all(account.folders.filter(function(folder) {
+				// Only consider inboxes
+				// TODO: generalize for other combined mailboxes
+				return folder.get('specialUse') === 'inbox';
+			}).filter(function(folder) {
+				// Only fetch mailboxes that do not have enough data
+				return folder.messages.filter(function(message) {
+					return message.get('dateInt') < cursor;
+				}).length < 21;
+			}).map(function(folder) {
+				return getNextMessagePage(folder.account, folder, options);
+			}));
+		})).then(function() {
+			var allMessagesPage = individualAccounts.map(function(account) {
+				return account.folders.filter(function(folder) {
+					// Only consider inboxes
+					// TODO: generalize for other combined mailboxes
+					return folder.get('specialUse') === 'inbox';
+				}).map(function(folder) {
+					var messages = folder.messages.filter(function(message) {
+						return message.get('dateInt') < cursor;
+					});
+					// Take all but the last message (acts as cursor)
+					return messages.slice(0, messages.length - 2);
+				}).reduce(function(all, messages) {
+					return all.concat(messages);
+				}, []);
+			}).reduce(function(all, messages) {
+				return all.concat(messages);
+			}, []);
+
+			var nextPage = allMessagesPage.sort(function(message) {
+				return message.get('dateInt') * -1;
+			}).slice(0, 20);
+
+			nextPage.forEach(function(msg) {
+				msg.set('unifiedId', unifiedFolder.messages.getUnifiedId(msg));
+			});
+
+			unifiedFolder.addMessages(nextPage, unifiedFolder);
+		});
+	}
+
 	/**
 	 * @param {Account} account
 	 * @param {Folder} folder
@@ -128,7 +190,9 @@ define(function(require) {
 		};
 		_.defaults(options, defaults);
 
-		return new Promise(function(resolve, reject) {
+		if (account.get('isUnified')) {
+			return getNextUnifiedMessagePage(folder, options);
+		} else {
 			var url = OC.generateUrl('apps/mail/accounts/{accountId}/folders/{folderId}/messages', {
 				accountId: account.get('accountId'),
 				folderId: folder.get('id')
@@ -138,23 +202,26 @@ define(function(require) {
 				cursor = folder.messages.last().get('dateInt');
 			}
 
-			return Promise.resolve($.ajax(url, {
-				data: {
-					filter: options.filter,
-					cursor: cursor
-				},
-				success: function(messages) {
-					var collection = folder.messages;
-					folder.addMessages(messages);
-					resolve(collection, false);
-				},
-				error: function(error, status) {
-					if (status !== 'abort') {
-						reject(error);
+			return new Promise(function(resolve, reject) {
+				$.ajax(url, {
+					method: 'GET',
+					data: {
+						filter: options.filter,
+						cursor: cursor
+					},
+					success: resolve,
+					error: function(error, status) {
+						if (status !== 'abort') {
+							reject(error);
+						}
 					}
-				}
-			}));
-		});
+				});
+			}).then(function(messages) {
+				var collection = folder.messages;
+				folder.addMessages(messages);
+				return collection;
+			});
+		}
 	}
 
 	/**
@@ -390,4 +457,8 @@ define(function(require) {
 			type: 'DELETE'
 		}));
 	}
+
+	return {
+		getNextMessagePage: getNextMessagePage
+	};
 });
