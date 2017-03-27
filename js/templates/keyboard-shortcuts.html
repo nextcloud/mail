@@ -1,27 +1,41 @@
 <div id="app-shortcuts">
-	<table>
 
-		<tbody>
-		<tr>
-			<th>{{ t 'Keyboard shortcut' }}</th>
-			<th>{{ t 'Description'}}</th>
-		</tr>
-		<tr>
-			<td>n / j / right</td>
-			<td>{{t 'Next mail'}}</td>
-		</tr>
-		<tr>
-			<td>p / k / left</td>
-			<td>{{ t 'Previous mail' }}</td>
-		</tr>
-		<tr>
-			<td>s / l</td>
-			<td>{{ t 'Favorite mail toggle'  }}</td>
-		</tr>
+	<h2>Keyboard shortcuts</h2>
 
-		</tbody>
+	<p>Speed up your Mail experience by using keyboard shortcuts.</p>
 
-
-	</table>
+	<div>
+		<div class="one-colspan" colspan="2">Compose</div>
+	</div>
+	<div>
+		<span> {{ t 'Send' }}</span>
+		<span><kbd>Ctrl</kbd> + <kbd>Enter</kbd></span>
+	</div>
+	<div>
+		<div class="one-colspan" colspan="2">Actions</div>
+	</div>
+	<div>
+		<span>{{t 'Refresh'}}</span>
+		<span><kbd>R</kbd></span>
+	</div>
+	<div>
+		<span>{{ t 'Toggle star' }}</span>
+		<span><kbd>S</kbd></span>
+	</div>
+	<div>
+		<span>{{ t 'Delete' }}</span>
+		<span><kbd>Del</kbd></span>
+	</div>
+	<div>
+		<span>{{ t 'Toggle unread' }}</span>
+		<span><kbd>U</kbd></span>
+	</div>
+	<div>
+		<div class="one-colspan" colspan="2">Navigation</div>
+	</div>
+	<div>
+		<span>{{t 'Older message'}}</span>
+		<span><kbd>J</kbd> or <kbd>→</kbd></span>
+	</div>
 
 </div>
