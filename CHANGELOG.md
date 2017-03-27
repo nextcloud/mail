@@ -1,6 +1,15 @@
 # Changelog
 All notable changes to this project will be documented in this file.
 
+## 0.6.3 – not yet released
+### Added
+- Add helper view for keyboard shortcuts
+  [#91](https://github.com/nextcloud/mail/pull/91) @Gomez 
+
+### Changed
+
+### Fixed
+
 ## 0.6.2 – 2016-12-12
 ### Added
 - Various autocompletion enhancements
