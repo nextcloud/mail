@@ -875,12 +875,7 @@ input.submit-message,
 }
 
 #app-shortcuts {
-}
-
-#app-shortcuts table {
-    border-collapse: collapse;
-    width: 100%;
-    white-space: normal;
+	margin: 10px;
 }
 
 #app-shortcuts div {
@@ -888,16 +883,17 @@ input.submit-message,
 	padding-right: 15px;
 }
 
-#app-shortcuts div:first-child {
-    text-align: right;
-    font-weight: bold;
-    width: 140px;
-    -moz-box-sizing: content-box;
-    box-sizing: content-box;
+#app-shortcuts .shortcut-row {
+	margin-left: 20px;
+}
+
+#app-shortcuts .shortcut-row .desc{
+	margin-right:10px;
 }
 
 #app-shortcuts div.one-colspan {
 	text-align: left;
+	font-weight: bold;
 }
 
 kbd {
