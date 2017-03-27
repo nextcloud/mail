@@ -75,15 +75,15 @@
 	opacity: .3;
 }
 
-#account-form-imap-ssl,
-#account-form-smtp-ssl {
-	float: right;
-	margin: -3px -3px -52px 0;
+#setup-imap-ssl-mode,
+#setup-smtp-ssl-mode {
+	position: absolute;
+	top: 0;
+	right: 0;
+	margin: 0;
+	background-color: transparent;
+	border: none;
 	z-index: 100;
-}
-#account-form-imap-ssl label,
-#account-form-smtp-ssl label {
-	opacity: .4;
 }
 
 #connect-loading {
