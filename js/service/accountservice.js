@@ -24,7 +24,7 @@ define(function(require) {
 	function createAccount(config) {
 		return new Promise(function(resolve, reject) {
 			setTimeout(function() {
-				reject(t('mail', 'Error while creating an account: '));
+				reject(t('mail', 'Error while creating the account: '));
 			}, 500);
 			return;
 			$.ajax(OC.generateUrl('apps/mail/accounts'), {
@@ -41,7 +41,7 @@ define(function(require) {
 							break;
 						default:
 							var error = errorThrown || textStatus || t('mail', 'Unknown error');
-							reject(t('mail', 'Error while creating an account: ' + error));
+							reject(t('mail', 'Error while creating the account: ' + error));
 					}
 				}
 			});
