@@ -36,14 +36,6 @@ define(['views/settings', 'views/helper'], function(SettingsView) {
 		it('produces the correct HTML', function () {
 			settingsview.render();
 
-			html = settingsview.el.innerHTML.trim();
-			expected_html = '<div id="mailsettings">\n\t<ul id="settings-accounts" class="mailaccount-list">\n\t</ul>\n' +
-				'\t<a id="new_mail_account" class="button new-button" href="apps/mail/#setup">Add mail account</a>\n\n' +
-				'\t<p><a id="keyboard-shortcuts" href="apps/mail/#keyboardShortcut">Keyboard shortcuts</a></p>\n' +
-				'\t<p class="app-settings-hint">\n\t\tLooking to encrypt your emails? Install the <a href="https://www.mailvelope.com/" target="_blank">Mailvelope browser extension</a>!' +
-				'\n\t</p>\n</div>';
-			expect(html).toContain(expected_html);
-
 		});
 	});
 });
