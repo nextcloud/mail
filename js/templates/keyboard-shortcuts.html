@@ -1,41 +1,44 @@
-<div id="app-shortcuts">
+<div id="app-shortcuts" class="section">
 
-	<h2>Keyboard shortcuts</h2>
+	<h2>{{t 'Keyboard shortcuts'}}</h2>
 
-	<p>Speed up your Mail experience by using keyboard shortcuts.</p>
+	<p>{{t 'Speed up your Mail experience with these quick shortcuts.'}}</p>
 
-	<div>
-		<div class="one-colspan" colspan="2">Compose</div>
-	</div>
-	<div class="shortcut-row">
-		<span class="desc"> {{ t 'Send' }}</span>
-		<span><kbd>Ctrl</kbd> + <kbd>Enter</kbd></span>
-	</div>
-	<div>
-		<div class="one-colspan" colspan="2">Actions</div>
-	</div>
-	<div class="shortcut-row">
-		<span class="desc">{{t 'Refresh'}}</span>
-		<span><kbd>R</kbd></span>
-	</div>
-	<div class="shortcut-row">
-		<span class="desc">{{ t 'Toggle star' }}</span>
-		<span><kbd>S</kbd></span>
-	</div>
-	<div class="shortcut-row">
-		<span class="desc">{{ t 'Delete' }}</span>
-		<span><kbd>Del</kbd></span>
-	</div>
-	<div class="shortcut-row">
-		<span class="desc">{{ t 'Toggle unread' }}</span>
-		<span><kbd>U</kbd></span>
-	</div>
-	<div>
-		<div class="one-colspan" colspan="2">Navigation</div>
-	</div>
-	<div class="shortcut-row">
-		<span class="desc">{{t 'Older message'}}</span>
-		<span><kbd>J</kbd> or <kbd>→</kbd></span>
-	</div>
+	<dl>
+		<div>
+			<dt><kbd>K</kbd> or <kbd>←</kbd></dt>
+			<dd>{{t 'Newer message'}}</dd>
+		</div>
+		<div>
+			<dt><kbd>J</kbd> or <kbd>→</kbd></dt>
+			<dd>{{t 'Older message'}}</dd>
+		</div>
+
+		<div>
+			<dt><kbd>S</kbd></dt>
+			<dd>{{ t 'Toggle star' }}</dd>
+		</div>
+		<div>
+			<dt><kbd>U</kbd></dt>
+			<dd>{{ t 'Toggle unread' }}</dd>
+		</div>
+		<div>
+			<dt><kbd>Del</kbd></dt>
+			<dd>{{ t 'Delete' }}</dd>
+		</div>
+
+		<div>
+			<dt><kbd>Ctrl</kbd> + <kbd>F</kbd></dt>
+			<dd>{{ t 'Search' }}</dd>
+		</div>
+		<div>
+			<dt><kbd>Ctrl</kbd> + <kbd>Enter</kbd></dt>
+			<dd>{{ t 'Send' }}</dd>
+		</div>
+		<div>
+			<dt><kbd>R</kbd></dt>
+			<dd>{{t 'Refresh'}}</dd>
+		</div>
+	</dl>
 
 </div>
