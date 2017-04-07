@@ -41,6 +41,7 @@ OC.L10N.register(
     "Draft saved!" : "¡Borrador guardado!",
     "you" : "usted",
     "Send message to {email}" : "Enviar mensaje a {email}",
+    "No writable calendars found" : "No se encontraron calendarios editables",
     "Error while importing the calendar event" : "Se presentó un error al importar el evento del calendario",
     "Error while downloading calendar event" : "Se presentó un error al descargar el evento del calendario",
     "Error while deleting message." : "Se presentó un error al borrar el mensaje.",
