@@ -100,7 +100,7 @@ OC.L10N.register(
     "Save all to Files" : "Sla alles op in Bestanden",
     "Add mail account" : "Voeg e-mail account toe",
     "No search results for" : "Geen resultaten gevonden voor",
-    "The images have been blocked to protect your privacy." : "De afbeeldingen zijn geblokkeerd om uw privacy te beschermen",
+    "The images have been blocked to protect your privacy." : "De afbeeldingen zijn geblokkeerd om jouw privacy te beschermen",
     "Show images from this sender" : "Laat afbeeldingen zien van deze afzender",
     "Forward" : "Doorsturen",
     "Add attachment from Files" : "Voeg bijlage toe uit bestanden",

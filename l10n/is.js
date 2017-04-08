@@ -2,7 +2,7 @@ OC.L10N.register(
     "mail",
     {
     "Mail" : "Póstur",
-    "Error while loading the accounts." : "Gat ekki lesið inn notendaaðganga..",
+    "Error while loading the accounts." : "Gat ekki lesið inn notandaaðganga..",
     "Error while loading the selected account." : "Villa við að lesa inn valinn notandaaðgang.",
     "Loading {folder}" : "Hleð inn {folder}",
     "Searching for {query}" : "Leita að {query}",
