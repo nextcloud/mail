@@ -225,6 +225,13 @@
 	left: 15px;
 	top: -12px;
 }
+/* color dot position fix for Safari */
+@media not all and (min-resolution:.001dpcm) { @media
+{
+.mail-account-color {
+        top: 2px;
+}
+}}
 
 .mail-message-account-color {
 	position: absolute;
