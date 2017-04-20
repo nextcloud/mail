@@ -27,7 +27,7 @@
     "_%n new message in {folderName} \nfrom {from}_::_%n new messages in {folderName} \nfrom {from}_" : ["%n nova mensagem em {folderName}\nde {from}","%n novas mensagens em {folderName}\nde {from}"],
     "Show all folders" : "Mostrar todas as pastas",
     "Collapse folders" : "Esconder as pastas",
-    "Error while deleting account." : "Erro enquanto excluia uma conta.",
+    "Error while deleting account." : "Erro enquanto excluia a conta.",
     "Choose a file to add as attachment" : "Escolha um arquivo para adicionar como anexo",
     "Reply" : "Responder",
     "Send" : "Enviar",
