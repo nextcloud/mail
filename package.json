@@ -32,7 +32,7 @@
     "grunt-karma": "^0.12.1",
     "istanbul": "^0.4.5",
     "jasmine-ajax": "^3.2.0",
-    "jasmine-core": "^2.5.2",
+    "jasmine-core": "~2.5.2",
     "jscs-jsdoc": "^1.0.1",
     "jshint": "^2.7.0",
     "jsxhint": "^0.14.0",
