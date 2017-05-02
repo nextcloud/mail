@@ -1,6 +1,18 @@
 # Changelog
 All notable changes to this project will be documented in this file.
 
+## 0.6.5 – unreleased
+- TODO
+
+## 0.6.4 – 2017-05-02
+### Fixed
+- NC12 incompatibility (usage of deprecated interface)
+
+## 0.6.3 – 2017-04-25
+### Added
+- php7.1 support
+- Nextcloud 12 support
+
 ## 0.6.2 – 2016-12-12
 ### Added
 - Various autocompletion enhancements
