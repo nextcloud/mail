@@ -5,7 +5,7 @@
 	<name>Mail</name>
 	<summary>IMAP web client</summary>
 	<description>Easy to use email client which connects to your mail server via IMAP and SMTP.</description>
-	<version>0.6.4</version>
+	<version>0.6.5</version>
 	<licence>agpl</licence>
 	<author>Christoph Wurst</author>
 	<author>Jan-Christoph Borchardt</author>
