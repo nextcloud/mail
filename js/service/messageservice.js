@@ -249,12 +249,13 @@ define(function(require) {
 		}
 
 		return new Promise(function(resolve, reject) {
-			return $.ajax(url, {
+			$.ajax(url, {
 				type: 'GET',
+				success: resolve,
 				error: function(jqXHR, textStatus) {
+					console.error('error loading message', jqXHR);
 					if (textStatus !== 'abort') {
-						console.error('error loading messages', jqXHR);
-						throw new Error(jqXHR);
+						reject(jqXHR);
 					}
 				}
 			});
