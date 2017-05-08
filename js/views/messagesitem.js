@@ -60,7 +60,7 @@ define(function(require) {
 				scope: dragScope,
 				helper: function() {
 					var el = $('<div class="icon-mail"></div>');
-					el.data('folderId', require('state').currentFolder.get('id'));
+					el.data('folderId', _this.model.folder.get('id'));
 					el.data('messageId', _this.model.get('id'));
 					return el;
 				},
@@ -89,17 +89,15 @@ define(function(require) {
 						.addClass('icon-starred');
 			}
 
-			// TODO: globals are bad :-/
-			var account = require('state').currentAccount;
-			var folder = require('state').currentFolder;
-
+			var folder = this.model.folder;
+			var account = folder.account;
 			Radio.message.trigger('flag', account, folder, this.model, 'flagged', !starred);
 		},
 		openMessage: function(event) {
 			event.stopPropagation();
 			$('#mail-message').removeClass('hidden-mobile');
-			var account = require('state').currentAccount;
-			var folder = require('state').currentFolder;
+			var folder = this.model.folder;
+			var account = folder.account;
 			Radio.message.trigger('load', account, folder, this.model, {
 				force: true
 			});
@@ -111,7 +109,8 @@ define(function(require) {
 			$('.tooltip').remove();
 
 			thisModel.get('flags').set('unseen', false);
-			var folder = require('state').currentFolder;
+			var folder = this.model.folder;
+			var account = folder.account;
 			var count = folder.get('total');
 			folder.set('total', count - 1);
 
@@ -126,9 +125,7 @@ define(function(require) {
 			var nextMessage = thisModelCollection.at(index);
 			if (require('state').currentMessage && require('state').currentMessage.get('id') === thisModel.id) {
 				if (nextMessage) {
-					var nextAccount = require('state').currentAccount;
-					var nextFolder = require('state').currentFolder;
-					Radio.message.trigger('load', nextAccount, nextFolder, nextMessage);
+					Radio.message.trigger('load', account, folderf, nextMessage);
 				}
 			}
 
@@ -144,7 +141,6 @@ define(function(require) {
 			});
 
 			// really delete the message
-			var account = require('state').currentAccount;
 			Radio.message.request('delete', account, folder, this.model).catch(function() {
 				// TODO: move to controller
 				Radio.ui.trigger('error:show', t('mail', 'Error while deleting message.'));

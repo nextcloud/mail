@@ -189,7 +189,7 @@ define(function(require) {
 			var activeFolder = require('state').currentFolder;
 			var name = activeFolder.name || activeFolder.get('name');
 			var count = 0;
-			// TODO: use specialUse instead, otherwise this won't work with localized drafts folders
+			// TODO: use specialRole instead, otherwise this won't work with localized drafts folders
 			if (name === 'Drafts') {
 				count = activeFolder.total || activeFolder.get('total');
 			} else {

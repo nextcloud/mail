@@ -84,7 +84,7 @@ define(function(require) {
 		}).map(function(acc) {
 			// Select its inboxes
 			return acc.folders.filter(function(f) {
-				return f.get('specialUse') === 'inbox';
+				return f.get('specialRole') === 'inbox';
 			});
 		}).reduce(function(acc, f) {
 			// Flatten nested array
@@ -101,6 +101,7 @@ define(function(require) {
 			var top20 = folder.messages.slice(0, 20);
 			folder.messages.reset();
 			folder.addMessages(top20);
+			return folder.messages;
 		});
 	}
 
@@ -137,7 +138,7 @@ define(function(require) {
 			return Promise.all(account.folders.filter(function(folder) {
 				// Only consider inboxes
 				// TODO: generalize for other combined mailboxes
-				return folder.get('specialUse') === 'inbox';
+				return folder.get('specialRole') === 'inbox';
 			}).filter(function(folder) {
 				// Only fetch mailboxes that do not have enough data
 				return folder.messages.filter(function(message) {
@@ -151,7 +152,7 @@ define(function(require) {
 				return account.folders.filter(function(folder) {
 					// Only consider inboxes
 					// TODO: generalize for other combined mailboxes
-					return folder.get('specialUse') === 'inbox';
+					return folder.get('specialRole') === 'inbox';
 				}).map(function(folder) {
 					var messages = folder.messages.filter(function(message) {
 						return message.get('dateInt') < cursor;

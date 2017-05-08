@@ -77,8 +77,8 @@ define(function(require) {
 				if (messages.length > 0) {
 					// Fetch first 10 messages in background
 					Radio.message.trigger('fetch:bodies', account, folder, messages.slice(0, 10));
-
-					Radio.message.trigger('load', account, folder, messages.first());
+					var message = messages.first();
+					Radio.message.trigger('load', message.folder.account, message.folder, message);
 				}
 			}, function(error) {
 				console.error('error while loading messages: ', error);

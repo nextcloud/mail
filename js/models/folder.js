@@ -40,10 +40,6 @@ define(function(require) {
 			}, this));
 			this.unset('folders');
 			if (this.account && this.account.get('isUnified') === true) {
-				if (this.account.id != -1) {
-					console.error(this.account);
-					throw new Error('what?');
-				}
 				this.messages = new UnifiedMessageCollection();
 			} else {
 				this.messages = new MessageCollection();
@@ -59,7 +55,10 @@ define(function(require) {
 		 * @returns {undefined}
 		 */
 		addMessage: function(message) {
-			message.folder = this;
+			if (this.account.id !== -1) {
+				// Non-unified folder messages should keep their source folder
+				message.folder = this;
+			}
 			this.messages.add(message);
 		},
 

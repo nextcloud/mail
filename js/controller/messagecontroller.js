@@ -26,21 +26,19 @@ define(function(require) {
 	var Radio = require('radio');
 	var ErrorMessageFactory = require('util/errormessagefactory');
 
-	Radio.message.on('load', function(account, folder, message, options) {
-		//FIXME: don't rely on global state vars
-		load(account, message, options);
-	});
+	Radio.message.on('load', load);
 	Radio.message.on('forward', openForwardComposer);
 	Radio.message.on('flag', flagMessage);
 	Radio.message.on('move', moveMessage);
 
 	/**
 	 * @param {Account} account
+	 * @param {Folder} folder
 	 * @param {Message} message
 	 * @param {object} options
 	 * @returns {undefined}
 	 */
-	function load(account, message, options) {
+	function load(account, folder, message, options) {
 		options = options || {};
 		var defaultOptions = {
 			force: false
@@ -81,17 +79,12 @@ define(function(require) {
 		// Fade out the message composer
 		$('#mail_new_message').prop('disabled', false);
 
-		Radio.message.request('entity',
-			require('state').currentAccount,
-			require('state').currentFolder,
-			message.get('id')).then(function(message) {
+		Radio.message.request('entity', account, folder, message.get('id')).then(function(message) {
 			if (draft) {
 				Radio.ui.trigger('composer:show', message);
 			} else {
 				// TODO: ideally this should be handled in messageservice.js
-				require('cache').addMessage(require('state').currentAccount,
-					require('state').currentFolder,
-					message);
+				require('cache').addMessage(account, folder, message);
 				Radio.ui.trigger('message:show', message);
 			}
 		}, function() {

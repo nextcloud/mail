@@ -51,7 +51,7 @@ define([
 			});
 			var unifiedInbox = new Folder({
 				id: 'inbox',
-				specialUse: 'inbox',
+				specialRole: 'inbox',
 				account: unifiedAccount
 			});
 			unifiedAccount.addFolder(unifiedInbox);
@@ -63,7 +63,7 @@ define([
 				});
 				var inbox = new Folder({
 					id: 'inbox',
-					specialUse: 'inbox',
+					specialRole: 'inbox',
 					account: account
 				});
 				var otherFolder = new Folder({
