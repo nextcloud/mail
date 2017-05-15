@@ -31,6 +31,7 @@
 
 namespace OCA\Mail;
 
+use DateTime;
 use Horde_Imap_Client;
 use Horde_Imap_Client_Exception;
 use Horde_Imap_Client_Fetch_Query;
@@ -92,7 +93,7 @@ class Mailbox implements IMailBox {
 	}
 
 	/**
-	 * @param string $filter
+	 * @param string|Horde_Imap_Client_Search_Query $filter
 	 * @param int $cursor
 	 */
 	private function getSearchIds($filter, $cursor = null) {
@@ -108,7 +109,7 @@ class Mailbox implements IMailBox {
 			$query->flag(Horde_Imap_Client::FLAG_DELETED, false);
 		}
 		if (!is_null($cursor)) {
-			$query->dateSearch($cursor, Horde_Imap_Client_Search_Query::DATE_SINCE);
+			$query->dateSearch(DateTime::createFromFormat("U", $cursor), Horde_Imap_Client_Search_Query::DATE_BEFORE);
 		}
 
 		try {
