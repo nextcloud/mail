@@ -161,51 +161,6 @@ class MessagesController extends Controller {
 	}
 
 	/**
-	 * @NoAdminRequired
-	 * @NoCSRFRequired
-	 *
-	 * @param int $accountId
-	 * @param string $folderId
-	 * @param int $from
-	 * @param int $to
-	 * @param string $filter
-	 * @param array $ids
-	 * @return JSONResponse
-	 */
-	public function nextPage($accountId, $folderId, $from=0, $to=20, $filter=null, $ids=null) {
-		if (!is_null($ids)) {
-			$ids = explode(',', $ids);
-
-			return $this->loadMultiple($accountId, $folderId, $ids);
-		}
-		$mailBox = $this->getFolder($accountId, $folderId);
-
-		$this->logger->debug("loading messages $from to $to of folder <$folderId>");
-
-		$json = $mailBox->getMessages($from, $to-$from+1, $filter);
-
-		$ci = $this->contactsIntegration;
-		$json = array_map(function($j) use ($ci, $mailBox) {
-			if ($mailBox->getSpecialRole() === 'trash') {
-				$j['delete'] = (string)$this->l10n->t('Delete permanently');
-			}
-
-			if ($mailBox->getSpecialRole() === 'sent') {
-				$j['fromEmail'] = $j['toEmail'];
-				$j['from'] = $j['to'];
-				if((count($j['toList']) > 1) || (count($j['ccList']) > 0)) {
-					$j['from'] .= ' ' . $this->l10n->t('& others');
-				}
-			}
-
-			$j['senderImage'] = $ci->getPhoto($j['fromEmail']);
-			return $j;
-		}, $json);
-
-		return new JSONResponse($json);
-	}
-
-	/**
 	 * @param integer $accountId
 	 * @param string $folderId
 	 */

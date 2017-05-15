@@ -50,11 +50,6 @@ $app->registerRoutes($this,
 			'verb' => 'GET'
 		],
 		[
-			'name' => 'messages#nextPage',
-			'url' => '/accounts/{accountId}/folders/{folderId}/messages/{messageId}/page',
-			'verb' => 'GET'
-		],
-		[
 			'name' => 'messages#downloadAttachment',
 			'url' => '/accounts/{accountId}/folders/{folderId}/messages/{messageId}/attachment/{attachmentId}',
 			'verb' => 'GET'
