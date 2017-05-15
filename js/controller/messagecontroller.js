@@ -147,7 +147,9 @@ define(function(require) {
 		});
 	}
 
-	function flagMessage(account, folder, message, flag, value) {
+	function flagMessage(message, flag, value) {
+		var folder = message.folder;
+		var account = folder.account;
 		var prevUnseen = folder.get('unseen');
 
 		if (message.get('flags').get(flag) === value) {

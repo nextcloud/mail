@@ -84,11 +84,10 @@ define(function(require) {
 		setMessageFlag: function(messageId, flag, val) {
 			var message = this.collection.get(messageId);
 			if (message) {
-				// TODO: globals are bad :-/
-				var account = require('state').currentAccount;
-				var folder = require('state').currentFolder;
+				var folder = message.folder;
+				var account = folder.account;
 
-				Radio.message.trigger('flag', account, folder, message, flag, val);
+				Radio.message.trigger('flag', message, flag, val);
 			}
 		},
 		/**

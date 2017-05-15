@@ -183,7 +183,7 @@ define(function(require) {
 					message = require('state').currentMessage;
 					if (message) {
 						state = message.get('flags').get('flagged');
-						Radio.message.trigger('flag', this.account, this.folder, message, 'flagged', !state);
+						Radio.message.trigger('flag', message, 'flagged', !state);
 					}
 					break;
 				case 85:
@@ -192,7 +192,7 @@ define(function(require) {
 					message = require('state').currentMessage;
 					if (message) {
 						state = message.get('flags').get('unseen');
-						Radio.message.trigger('flag', this.account, this.folder, message, 'unseen', !state);
+						Radio.message.trigger('flag', message, 'unseen', !state);
 					}
 					break;
 			}
