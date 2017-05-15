@@ -96,21 +96,13 @@ define(function(require) {
 		 * @param {Message} message
 		 */
 		setActiveMessage: function(message) {
-			var oldMessage = null;
 			if (this.currentMessage !== null) {
-				// TODO: make sure objects exist only once and compare references instead
-				oldMessage = this.collection.get(this.currentMessage.get('id'));
-				if (oldMessage) {
-					oldMessage.set('active', false);
-				}
+				this.currentMessage.set('active', false);
 			}
 
 			this.currentMessage = message;
 			if (message !== null) {
-				message = this.collection.get(this.currentMessage);
-				if (message) {
-					message.set('active', true);
-				}
+				message.set('active', true);
 			}
 
 			require('state').currentMessage = message;
