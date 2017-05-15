@@ -107,7 +107,9 @@ class Mailbox implements IMailBox {
 		if ($this->getSpecialRole() !== 'trash') {
 			$query->flag(Horde_Imap_Client::FLAG_DELETED, false);
 		}
-		$query->dateSearch($cursor, Horde_Imap_Client_Search_Query::DATE_SINCE);
+		if (!is_null($cursor)) {
+			$query->dateSearch($cursor, Horde_Imap_Client_Search_Query::DATE_SINCE);
+		}
 
 		try {
 			$result = $this->conn->search($this->mailBox, $query, [
@@ -119,7 +121,7 @@ class Mailbox implements IMailBox {
 			// maybe the server's advertisment of SORT was a fake
 			// see https://github.com/nextcloud/mail/issues/50
 			// try again without SORT
-			return $this->getFetchIds();
+			return $this->getFetchIds($cursor);
 		}
 
 		return array_reverse($result['match']->ids);
