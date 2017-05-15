@@ -49,7 +49,9 @@ class FolderMapper {
 			$folder->setSyncToken($client->getSyncToken($folder->getMailbox()));
 			$folders[] = $folder;
 			if ($mailbox['mailbox']->utf8 === 'INBOX') {
-				$folders[] = new SearchFolder($account, $mailbox['mailbox'], $mailbox['attributes'], $mailbox['delimiter']);
+				$searchFolder = new SearchFolder($account, $mailbox['mailbox'], $mailbox['attributes'], $mailbox['delimiter']);
+				$searchFolder->setSyncToken($client->getSyncToken($folder->getMailbox()));
+				$folders[] = $searchFolder;
 			}
 		}
 		return $folders;

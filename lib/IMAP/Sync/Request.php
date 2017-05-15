@@ -49,6 +49,11 @@ class Request {
 	 * @return string
 	 */
 	public function getMailbox() {
+		// TODO: this is kinda hacky
+		$parts = explode('/', $this->mailbox);
+		if (count($parts) > 1 && $parts[count($parts) - 1] === 'FLAGGED') {
+			return implode('/', array_slice($parts, 0, count($parts) - 1));
+		}
 		return $this->mailbox;
 	}
 
