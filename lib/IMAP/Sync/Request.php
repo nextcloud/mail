@@ -58,6 +58,14 @@ class Request {
 	}
 
 	/**
+	 * @return bool
+	 */
+	public function isFlaggedMailbox() {
+		// TODO: this is kinda hacky
+		return $this->mailbox !== $this->getMailbox();
+	}
+
+	/**
 	 * @return string the Horde sync token
 	 */
 	public function getToken() {

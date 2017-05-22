@@ -21,24 +21,28 @@
 
 namespace OCA\Mail\IMAP\Sync;
 
-use Horde_Imap_Client;
 use Horde_Imap_Client_Base;
 use Horde_Imap_Client_Ids;
 use Horde_Imap_Client_Mailbox;
-use OCA\Mail\IMAP\MessageMapper;
 use OCA\Mail\IMAP\Sync\Request;
 use OCA\Mail\IMAP\Sync\Response;
 
 class Synchronizer {
 
-	/** @var MessageMapper */
-	private $messageMapper;
+	/** @var ISyncStrategy */
+	private $simpleSync;
+
+	/** @var ISyncStrategy */
+	private $favSync;
 
 	/**
-	 * @param MessageMapper $messageMapper
+	 * @param SimpleMailboxSync $simpleSync
+	 * @param FavouritesMailboxSync $favSync
 	 */
-	public function __construct(MessageMapper $messageMapper) {
-		$this->messageMapper = $messageMapper;
+	public function __construct(SimpleMailboxSync $simpleSync,
+		FavouritesMailboxSync $favSync) {
+		$this->simpleSync = $simpleSync;
+		$this->favSync = $favSync;
 	}
 
 	/**
@@ -53,12 +57,25 @@ class Synchronizer {
 			'ids' => $ids
 		]);
 
-		$newMessages = $this->messageMapper->findByIds($imapClient, $request->getMailbox(), $hordeSync->newmsgsuids->ids);
-		$changedMessages = $this->messageMapper->findByIds($imapClient, $request->getMailbox(), $hordeSync->flagsuids->ids);
-		$vanishedMessages = $hordeSync->vanisheduids->ids;
+		$syncStrategy = $this->getSyncStrategy($request);
+		$newMessages = $syncStrategy->getNewMessages($imapClient, $request, $hordeSync);
+		$changedMessages = $syncStrategy->getChangedMessages($imapClient, $request, $hordeSync);
+		$vanishedMessages = $syncStrategy->getVanishedMessages($imapClient, $request, $hordeSync);
 
 		$newSyncToken = $imapClient->getSyncToken($request->getMailbox());
 		return new Response($newSyncToken, $newMessages, $changedMessages, $vanishedMessages);
+	}
+
+	/**
+	 * @param Request $request
+	 * @return ISyncStrategy
+	 */
+	private function getSyncStrategy(Request $request) {
+		if ($request->isFlaggedMailbox()) {
+			return $this->favSync;
+		} else {
+			return $this->simpleSync;
+		}
 	}
 
 }
