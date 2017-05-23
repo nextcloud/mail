@@ -154,6 +154,7 @@ class FolderTest extends TestCase {
 			'delimiter' => '.',
 			'folders' => [['subdir data']],
 			'specialRole' => 'sent',
+			'syncToken' => null,
 		];
 		$this->assertEquals($expected, $this->folder->jsonSerialize());
 	}

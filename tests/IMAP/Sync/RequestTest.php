@@ -41,7 +41,7 @@ class RequestTest extends PHPUnit_Framework_TestCase {
 		$this->mailbox = 'inbox';
 		$this->syncToken = 'ab123';
 
-		$this->request = new Request($this->mailbox, $this->syncToken);
+		$this->request = new Request($this->mailbox, $this->syncToken, []);
 	}
 
 	public function testGetMailbox() {

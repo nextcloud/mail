@@ -24,17 +24,22 @@ namespace OCA\Mail\Tests\IMAP\Sync;
 use Horde_Imap_Client_Base;
 use Horde_Imap_Client_Data_Sync;
 use Horde_Imap_Client_Ids;
-use OCA\Mail\IMAP\MessageMapper;
+use Horde_Imap_Client_Mailbox;
+use OCA\Mail\IMAP\Sync\FavouritesMailboxSync;
 use OCA\Mail\IMAP\Sync\Request;
 use OCA\Mail\IMAP\Sync\Response;
+use OCA\Mail\IMAP\Sync\SimpleMailboxSync;
 use OCA\Mail\IMAP\Sync\Synchronizer;
 use PHPUnit_Framework_MockObject_MockObject;
 use PHPUnit_Framework_TestCase;
 
 class SynchronizerTest extends PHPUnit_Framework_TestCase {
 
-	/** @var MessageMapper|PHPUnit_Framework_MockObject_MockObject */
-	private $messageMapper;
+	/** @var SimpleMailboxSync|PHPUnit_Framework_MockObject_MockObject */
+	private $simpleSync;
+
+	/** @var FavouritesMailboxSync|PHPUnit_Framework_MockObject_MockObject */
+	private $favSync;
 
 	/** @var Synchronizer */
 	private $synchronizer;
@@ -42,18 +47,25 @@ class SynchronizerTest extends PHPUnit_Framework_TestCase {
 	protected function setUp() {
 		parent::setUp();
 
-		$this->messageMapper = $this->createMock(MessageMapper::class);
+		$this->simpleSync = $this->createMock(SimpleMailboxSync::class);
+		$this->favSync = $this->createMock(FavouritesMailboxSync::class);
 
-		$this->synchronizer = new Synchronizer($this->messageMapper);
+		$this->synchronizer = new Synchronizer($this->simpleSync, $this->favSync);
 	}
 
-	private function getHordeMessageIdMock(array $ids) {
-		$hordeIds = $this->createMock(Horde_Imap_Client_Ids::class);
-		$hordeIds->ids = $ids;
-		return $hordeIds;
+	public function syncData() {
+		return [
+			[false],
+			[true],
+		];
 	}
 
-	public function testSync() {
+	/**
+	 * @dataProvider syncData
+	 */
+	public function testSync($flagged) {
+		$sync = $flagged ? $this->favSync : $this->simpleSync;
+
 		$imapClient = $this->createMock(Horde_Imap_Client_Base::class);
 		$request = $this->createMock(Request::class);
 		$request->expects($this->any())
@@ -65,18 +77,26 @@ class SynchronizerTest extends PHPUnit_Framework_TestCase {
 		$hordeSync = $this->createMock(Horde_Imap_Client_Data_Sync::class);
 		$imapClient->expects($this->once())
 			->method('sync')
-			->with($this->equalTo('inbox'), $this->equalTo('123456'))
+			->with($this->equalTo(new Horde_Imap_Client_Mailbox('inbox')), $this->equalTo('123456'))
 			->willReturn($hordeSync);
+		$request->expects($this->once())
+			->method('isFlaggedMailbox')
+			->willReturn($flagged);
 		$newMessages = [];
 		$changedMessages = [];
 		$vanishedMessages = [4, 5];
-		$hordeSync->newmsgsuids = $this->getHordeMessageIdMock($newMessages);
-		$hordeSync->flagsuids = $this->getHordeMessageIdMock($changedMessages);
-		$hordeSync->vanisheduids = $this->getHordeMessageIdMock($vanishedMessages);
-		$this->messageMapper->expects($this->exactly(2))
-			->method('findByIds')
-			->with($imapClient, $this->equalTo('inbox'), $this->equalTo([]))
-			->willReturn([]);
+		$sync->expects($this->once())
+			->method('getNewMessages')
+			->with($imapClient, $request, $hordeSync)
+			->willReturn($newMessages);
+		$sync->expects($this->once())
+			->method('getChangedMessages')
+			->with($imapClient, $request, $hordeSync)
+			->willReturn($changedMessages);
+		$sync->expects($this->once())
+			->method('getVanishedMessages')
+			->with($imapClient, $request, $hordeSync)
+			->willReturn($vanishedMessages);
 		$imapClient->expects($this->once())
 			->method('getSyncToken')
 			->with($this->equalTo('inbox'))

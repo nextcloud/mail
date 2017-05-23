@@ -44,15 +44,14 @@ class MessageMapperTest extends PHPUnit_Framework_TestCase {
 		$mailbox = 'inbox';
 		$ids = [1, 3];
 
-		$fetchResults = $this->createMock(Horde_Imap_Client_Fetch_Results::class);
+		$fetchResults = new Horde_Imap_Client_Fetch_Results();
 		$fetchResult1 = $this->createMock(Horde_Imap_Client_Data_Fetch::class);
 		$fetchResult2 = $this->createMock(Horde_Imap_Client_Data_Fetch::class);
 		$imapClient->expects($this->once())
 			->method('fetch')
 			->willReturn($fetchResults);
-		$fetchResults->expects($this->once())
-			->method('getIterator')
-			->willReturn([$fetchResult1, $fetchResult2]);
+		$fetchResults[0] = $fetchResult1;
+		$fetchResults[1] = $fetchResult2;
 		$fetchResult1->expects($this->once())
 			->method('getUid')
 			->willReturn(1);

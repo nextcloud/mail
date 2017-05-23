@@ -15,13 +15,6 @@ define(function(require) {
 
 	var FolderController = require('controller/foldercontroller');
 	var Radio = require('radio');
-	var UPDATE_INTERVAL = 5 * 60 * 1000; // 5 minutes
-
-	function startBackgroundChecks(accounts) {
-		setInterval(function() {
-			require('background').checkForNotifications(accounts);
-		}, UPDATE_INTERVAL);
-	}
 
 	/**
 	 * Load all accounts
@@ -45,17 +38,14 @@ define(function(require) {
 				return accounts;
 			});
 		}).then(function(accounts) {
-			startBackgroundChecks(accounts);
-			return accounts;
-		}, function(e) {
-			console.error(e);
-			Radio.ui.trigger('error:show', t('mail', 'Error while loading the accounts.'));
-		}).then(function(accounts) {
 			// Show accounts regardless of the result of
 			// loading the folders
 			Radio.ui.trigger('sidebar:accounts');
 
 			return accounts;
+		}, function(e) {
+			console.error(e);
+			Radio.ui.trigger('error:show', t('mail', 'Error while loading the accounts.'));
 		});
 	}
 

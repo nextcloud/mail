@@ -84,11 +84,6 @@ $app->registerRoutes($this,
 			'url' => '/proxy',
 			'verb' => 'GET'
 		],
-		[
-			'name' => 'folders#detectChanges',
-			'url' => '/accounts/{accountId}/folders/detectChanges',
-			'verb' => 'POST'
-		],
 	],
 	'resources' => [
 		'autoComplete' => ['url' => '/autoComplete'],

@@ -36,7 +36,8 @@ class MessageMapper {
 	 * @param array $ids
 	 * @return IMAPMessage[]
 	 */
-	public function findByIds(Horde_Imap_Client_Base $imapClient, $mailbox, array $ids) {
+	public function findByIds(Horde_Imap_Client_Base $imapClient, $mailbox,
+		array $ids) {
 		$query = new Horde_Imap_Client_Fetch_Query();
 		$query->envelope();
 		$query->flags();
@@ -55,8 +56,8 @@ class MessageMapper {
 		]);
 
 		$fetchResults = iterator_to_array($imapClient->fetch($mailbox, $query, [
-			'ids' => new Horde_Imap_Client_Ids($ids),
-		]), false);
+				'ids' => new Horde_Imap_Client_Ids($ids),
+			]), false);
 
 		return array_map(function(Horde_Imap_Client_Data_Fetch $fetchResult) use ($imapClient, $mailbox) {
 			return new IMAPMessage($imapClient, $mailbox, $fetchResult->getUid(), $fetchResult);
