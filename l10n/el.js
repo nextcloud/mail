@@ -20,6 +20,8 @@ OC.L10N.register(
     "Error while creating an account: " : "Σφάλμα κατά τη δημιουργία λογαριασμού:",
     "All inboxes" : "Όλα τα εισερχόμενα",
     "Could not load {tag}{name}{endtag}" : "Αδυναμία φόρτωσης {tag}{name}{endtag}",
+    "We couldn’t load {tag}{name}{endtag}" : "Αδύνατη φόρτωση {tag}{name}{endtag}",
+    "There was a problem loading {tag}{name}{endtag}" : "Παρουσιάστηκε πρόβλημα φόρτωσης {tag}{name}{endtag}",
     "We couldn’t load your message" : "Δεν μπόρεσε να φορτωθεί το μήνυμά σας",
     "There was a problem loading the message" : "Υπήρξε πρόβλημα φόρτωσης του μηνύματος",
     "{from}\n{subject}" : "{from}\n{subject}",
