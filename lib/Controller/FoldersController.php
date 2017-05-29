@@ -86,10 +86,10 @@ class FoldersController extends Controller {
 	 * @param int[] $uids
 	 * @return JSONResponse
 	 */
-	public function sync($accountId, $folderId, $syncToken, $uids) {
+	public function sync($accountId, $folderId, $syncToken, $uids = []) {
 		$account = $this->accountService->find($this->currentUserId, $accountId);
 
-		if (empty($accountId) || empty($folderId) || empty($syncToken) || empty($uids) || !is_array($uids)) {
+		if (empty($accountId) || empty($folderId) || empty($syncToken) || !is_array($uids)) {
 			return new JSONResponse(null, Http::STATUS_BAD_REQUEST);
 		}
 

@@ -66,9 +66,10 @@ define(function(require) {
 					var id = unifiedFolder.messages.getUnifiedId(folder.messages.get(msg.id));
 					var message = unifiedFolder.messages.get(id);
 					if (!message) {
-						throw 'Changed message missing in unified inbox';
+						console.info('Changed message missing in unified inbox');
+					} else {
+						message.set(msg);
 					}
-					message.set(msg);
 				}
 			});
 			_.each(syncResp.vanishedMessages, function(id) {
