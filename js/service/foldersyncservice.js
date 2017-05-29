@@ -34,7 +34,7 @@ define(function(require) {
 	 * @param {Folder} folder
 	 * @returns {Promise}
 	 */
-	function syncSingleFolder(folder) {
+	function syncSingleFolder(folder, unifiedFolder) {
 		var url = OC.generateUrl('/apps/mail/accounts/{accountId}/folders/{folderId}/sync', {
 			accountId: folder.account.get('accountId'),
 			folderId: folder.get('id')
@@ -47,7 +47,11 @@ define(function(require) {
 			}
 		})).then(function(syncResp) {
 			folder.set('syncToken', syncResp.token);
-			folder.addMessages(syncResp.newMessages);
+
+			var newMessages = folder.addMessages(syncResp.newMessages);
+			if (unifiedFolder) {
+				unifiedFolder.addMessages(newMessages);
+			}
 			_.each(syncResp.changedMessages, function(msg) {
 				var existing = folder.messages.get(msg.id);
 				if (existing) {
@@ -55,10 +59,24 @@ define(function(require) {
 				} else {
 					// TODO: remove once we're confident this
 					// condition never occurs
-					throw new Error('non-existing message whily syncing');
+					throw new Error('non-existing message while syncing');
+				}
+
+				if (unifiedFolder) {
+					var id = unifiedFolder.messages.getUnifiedId(folder.messages.get(msg.id));
+					var message = unifiedFolder.messages.get(id);
+					if (!message) {
+						throw 'Changed message missing in unified inbox';
+					}
+					message.set(msg);
 				}
 			});
 			_.each(syncResp.vanishedMessages, function(id) {
+				if (unifiedFolder) {
+					var unifiedInboxId = unifiedFolder.messages.getUnifiedId(folder.messages.get(id));
+					unifiedFolder.messages.remove(unifiedInboxId);
+				}
+
 				folder.messages.remove(id);
 			});
 		});
@@ -72,6 +90,7 @@ define(function(require) {
 		var allAccounts = require('state').accounts;
 
 		if (folder.account.get('isUnified')) {
+			var unifiedFolder = folder;
 			// Sync other accounts
 			return Promise.all(allAccounts.filter(function(acc) {
 				// Select other accounts
@@ -84,8 +103,15 @@ define(function(require) {
 			}).reduce(function(acc, f) {
 				// Flatten nested array
 				return acc.concat(f);
-			}, []).map(syncSingleFolder));
+			}, []).map(function(folder) {
+				return syncSingleFolder(folder, unifiedFolder);
+			}));
 		} else {
+			var unifiedAccount = allAccounts.get(-1);
+			if (unifiedAccount) {
+				var unifiedFolder = unifiedAccount.folders.first();
+				return syncSingleFolder(folder, unifiedFolder);
+			}
 			return syncSingleFolder(folder);
 		}
 	}

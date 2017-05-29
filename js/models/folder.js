@@ -59,7 +59,11 @@ define(function(require) {
 				// Non-unified folder messages should keep their source folder
 				message.folder = this;
 			}
-			this.messages.add(message);
+			message = this.messages.add(message);
+			if (this.account.id === -1) {
+				message.set('unifiedId', this.messages.getUnifiedId(message));
+			}
+			return message;
 		},
 
 		/**
@@ -68,9 +72,7 @@ define(function(require) {
 		 */
 		addMessages: function(messages) {
 			var _this = this;
-			_.each(messages, function(message) {
-				_this.addMessage(message);
-			});
+			return _.map(messages, _this.addMessage, this);
 		},
 
 		/**

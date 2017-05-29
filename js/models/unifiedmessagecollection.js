@@ -11,7 +11,6 @@
 define(function(require) {
 	'use strict';
 
-	var _ = require('underscore');
 	var MessageCollection = require('models/messagecollection');
 
 	/**
@@ -19,8 +18,8 @@ define(function(require) {
 	 */
 	var UnifiedMessageCollection = MessageCollection.extend({
 
-		modelId: function(xattrs) {
-			return xattrs.unifiedId;
+		modelId: function(attrs) {
+			return attrs.unifiedId;
 		},
 
 		getUnifiedId: function(message) {
