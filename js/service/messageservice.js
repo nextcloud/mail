@@ -68,9 +68,18 @@ define(function(require) {
 				}
 			}
 		})).then(function(messages) {
+			var isSearching = options.filter !== '';
 			var collection = folder.messages;
+
+			if (isSearching) {
+				// Get rid of other messages
+				collection.reset();
+			} else {
+				folder.set('messagesLoaded', true);
+			}
+
 			folder.addMessages(messages);
-			folder.set('messagesLoaded', true);
+
 			return collection;
 		});
 	}
