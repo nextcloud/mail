@@ -35,9 +35,9 @@ class FolderMapper {
 	 * @param string $pattern
 	 * @return Folder
 	 */
-	public function getFolders(Account $account, Horde_Imap_Client_Socket $client, $pattern = '*') {
-		$mailboxes = $client->listMailboxes($pattern, Horde_Imap_Client::MBOX_ALL,
-			[
+	public function getFolders(Account $account, Horde_Imap_Client_Socket $client,
+		$pattern = '*') {
+		$mailboxes = $client->listMailboxes($pattern, Horde_Imap_Client::MBOX_ALL, [
 			'delimiter' => true,
 			'attributes' => true,
 			'special_use' => true,
@@ -46,11 +46,17 @@ class FolderMapper {
 		$folders = [];
 		foreach ($mailboxes as $mailbox) {
 			$folder = new Folder($account, $mailbox['mailbox'], $mailbox['attributes'], $mailbox['delimiter']);
-			$folder->setSyncToken($client->getSyncToken($folder->getMailbox()));
+
+			if ($folder->isSearchable()) {
+				$folder->setSyncToken($client->getSyncToken($folder->getMailbox()));
+			}
+
 			$folders[] = $folder;
 			if ($mailbox['mailbox']->utf8 === 'INBOX') {
 				$searchFolder = new SearchFolder($account, $mailbox['mailbox'], $mailbox['attributes'], $mailbox['delimiter']);
-				$searchFolder->setSyncToken($client->getSyncToken($folder->getMailbox()));
+				if ($searchFolder->isSearchable()) {
+					$searchFolder->setSyncToken($client->getSyncToken($folder->getMailbox()));
+				}
 				$folders[] = $searchFolder;
 			}
 		}
@@ -102,7 +108,8 @@ class FolderMapper {
 	 * @param Folder[] $folders
 	 * @param Horde_Imap_Client_Socket $client
 	 */
-	public function getFoldersStatus(array $folders, Horde_Imap_Client_Socket $client) {
+	public function getFoldersStatus(array $folders,
+		Horde_Imap_Client_Socket $client) {
 		$mailboxes = array_map(function(Folder $folder) {
 			return $folder->getMailbox();
 		}, array_filter($folders, function(Folder $folder) {
@@ -196,8 +203,7 @@ class FolderMapper {
 	 * @return Folder[]
 	 */
 	public function sortFolders(array &$folders) {
-		usort($folders,
-			function(Folder $f1, Folder $f2) {
+		usort($folders, function(Folder $f1, Folder $f2) {
 			$specialUse1 = $f1->getSpecialUse();
 			$specialUse2 = $f2->getSpecialUse();
 			$roleA = count($specialUse1) > 0 ? reset($specialUse1) : null;
