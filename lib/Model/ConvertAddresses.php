@@ -71,7 +71,9 @@ trait ConvertAddresses {
 	protected function convertAddressList($envelope) {
 		$list = [];
 		foreach ($envelope as $t) {
-			$list[] = $this->hordeToAssoc($t);
+			if ($t instanceof Horde_Mail_Rfc822_Address) {
+				$list[] = $this->hordeToAssoc($t);
+			}
 		}
 		return $list;
 	}
