@@ -30,7 +30,7 @@ class Config {
 	/**
 	 * @param array $data
 	 */
-	public function __construct($data) {
+	public function __construct(array $data) {
 		$this->data = $data;
 	}
 
@@ -117,7 +117,6 @@ class Config {
 		if (!is_null($user->getEMailAddress())) {
 			$original = str_replace('%EMAIL%', $user->getEMailAddress(), $original);
 		}
-
 		return $original;
 	}
 
