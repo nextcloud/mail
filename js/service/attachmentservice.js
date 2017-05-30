@@ -31,6 +31,8 @@ define(function(require) {
 	Radio.message.reply('save:cloud', saveToFiles);
 	Radio.message.reply('attachment:download', downloadAttachment);
 	Radio.attachment.reply('upload:local', uploadLocalAttachment);
+	Radio.attachment.reply('upload:abort', abortLocalAttachment);
+	Radio.attachment.reply('upload:finished', uploadLocalAttachmentFinished);
 
 	/**
 	 * @param {Account} account
@@ -87,6 +89,11 @@ define(function(require) {
 			type: 'POST',
 			xhr: function() {
 				var customXhr = $.ajaxSettings.xhr();
+				// save the xhr into the model in order to :
+				//  - distinguish upload and nextcloud file attachments
+				//  - keep the upload status for later use
+				localAttachmentModel.set('uploadRequest', customXhr);
+				// and start the request
 				if (customXhr.upload && _.isFunction(progressCallback)) {
 					customXhr.upload.addEventListener(
 						'progress',
@@ -99,12 +106,46 @@ define(function(require) {
 			processData: false,
 			contentType: false,
 		}).done(function(data) {
-			defer.resolve(data.id);
+			defer.resolve(localAttachmentModel, data.id);
 		}).fail(function(err) {
-			defer.reject();
+			defer.reject(localAttachmentModel);
 		});
 
 		return defer.promise();
 	}
+
+	/**
+	 * This method is called when a local attachment upload should be aborted.
+	 * If there is no upload ongoing, this method has no effect.
+	 *
+	 * @param {function} localAttachmentModel
+	 */
+	function abortLocalAttachment(localAttachmentModel) {
+		var uploadRequest = localAttachmentModel.get('uploadRequest');
+		if (uploadRequest && uploadRequest.readyState < 4) {
+			uploadRequest.abort();
+		}
+	}
+
+	/**
+	 * This method is called when a local attachment upload has
+	 * successfully finished. The server returned the db attachment id.
+	 *
+	 * @param {function} localAttachmentModel
+	 * @param {number} filedId
+	 */
+	function uploadLocalAttachmentFinished(localAttachmentModel, fileId) {
+		if (fileId === undefined || localAttachmentModel.get('progress') < 1) {
+			localAttachmentModel.set('uploadStatus', 2);  // error
+		}
+		else {
+			/* If we have a file id (file successfully uploaded), we saved it */
+			localAttachmentModel.set('id', fileId);
+			localAttachmentModel.set('uploadStatus', 3);  // success
+		}
+		// we are done with the request, just get rid of it!
+		localAttachmentModel.unset('uploadRequest');
+	}
+
 
 });

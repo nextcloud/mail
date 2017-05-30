@@ -33,11 +33,15 @@ define(function(require) {
 		events: {
 			'click #add-cloud-attachment': 'addCloudAttachment',
 			'click #add-local-attachment': 'addLocalAttachment',
-			'change @ui.fileInput': 'onAttachmentsChanged'
+			'change @ui.fileInput': 'onLocalAttachmentsChanged'
 		},
 		initialize: function(options) {
 			this.collection = options.collection;
 		},
+
+		/**
+		 * Click on 'Add from Files'
+		 */
 		addCloudAttachment: function() {
 			var title = t('mail', 'Choose a file to add as attachment');
 			OC.dialogs.filepicker(title, _.bind(this.onCloudFileSelected, this));
@@ -47,33 +51,45 @@ define(function(require) {
 				fileName: path
 			});
 		},
+
+		/**
+		 * Click on 'Add Attachment'
+		 */
 		addLocalAttachment: function() {
 			/* reset the fileInput value to allow sending the same file several */
 			/* times. e.g. if the previous upload failed. */
 			this.ui.fileInput.val('');
 			this.ui.fileInput.click();
 		},
-		onAttachmentsChanged: function(event) {
+		onLocalAttachmentsChanged: function(event) {
 			var files = event.target.files;
-			var _this = this;
 			for (var i = 0; i < files.length; i++) {
 				var file = files[i];
+				this.uploadLocalAttachment(file);
+			}
+		},
 
+		uploadLocalAttachment: function(file) {
 				// TODO check file size?
 				var attachment = new LocalAttachment({
 					fileName: file.name
 				});
 
 				var uploading = Radio.attachment.request(
-					'upload:local',	file, attachment);
-				$.when(uploading).fail(function() {
-					Radio.ui.trigger(
-						'error:show',
-						t('mail', 'An error occurred while uploading an attachment'));
+					'upload:local',	file, attachment
+				);
+				$.when(uploading).fail(function(attachment) {
+					Radio.attachment.request('upload:finished', attachment);
+					var errorMsg = t('mail',
+						'An error occurred while uploading {fname}', {fname: file.name}
+					);
+					Radio.ui.trigger('error:show', errorMsg);
+				});
+				$.when(uploading).done(function(attachment, fileId) {
+					Radio.attachment.request('upload:finished', attachment, fileId);
 				});
 
-				_this.collection.add(attachment);
-			}
+				this.collection.add(attachment);
 		}
 	});
 });

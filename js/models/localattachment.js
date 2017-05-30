@@ -25,15 +25,16 @@ define(function(require) {
 
 	var LocalAttachment = Attachment.extend({
 		defaults: {
-			progress: 0
+			progress: 0,
+			uploadStatus: 0  /* 0=pending, 1=ongoing, 2=error, 3=success */
 		},
-		initialize: function(options) {
+		initialize: function() {
 			Attachment.prototype.initialize.call(this);
 		},
 		onProgress: function(evt) {
-			console.log('callback', evt);
 			if (evt.lengthComputable) {
-				this.set('progress', evt.loaded / evt.total)
+				this.set('uploadStatus', 1);
+				this.set('progress', evt.loaded / evt.total);
 			}
 		}
 	});

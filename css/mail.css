@@ -801,13 +801,24 @@ input.submit-message,
 	vertical-align: middle;
 }
 
-#fileupload {
-	display: none;
+/* attachment filenames */
+.new-message-attachment-name {
+	display:inline-block;
+}
+/* Colour the filename with a different color during attachment upload */
+.new-message-attachment-name.upload-ongoing {
+	color: #0082c9;
+}
+/* Colour the filename in red if the attachment upload failed */
+.new-message-attachment-name.upload-warning {
+	color: #d2322d;
+}
+/* Red ProgressBar for failed attachment uploads */
+.new-message-attachment-name.upload-warning .ui-progressbar-value {
+	border: 1px solid #e9322d;
+	background: #e9322d;
 }
 
-#mail-new-attachment-local {
-	display: inline;
-}
 
 /* compose (handling mailto links) */
 
