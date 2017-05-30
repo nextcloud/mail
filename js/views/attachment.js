@@ -5,6 +5,7 @@
  * later. See the COPYING file.
  *
  * @author Christoph Wurst <christoph@winzerhof-wurst.at>
+ * @author Luc Calaresu <dev@calaresu.com>
  * @copyright Christoph Wurst 2015
  */
 
@@ -19,11 +20,15 @@ define(function(require) {
 		tagName: 'li',
 		template: Handlebars.compile(AttachmentTemplate),
 		events: {
-			'click .icon-delete': 'removeAttachment',
-			'click #mail-new-attachment-local': 'addAttachmentLocal'
+			'click .icon-delete': 'removeAttachment'
+		},
+		modelEvents: {
+			'change:progress': 'onProgress'
 		},
 		removeAttachment: function() {
 			this.model.collection.remove(this.model);
+		},
+		onProgress: function() {
 		}
 	});
 });

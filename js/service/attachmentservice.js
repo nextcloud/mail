@@ -2,6 +2,7 @@
 
 /**
  * @author Christoph Wurst <christoph@winzerhof-wurst.at>
+ * @author Luc Calaresu <dev@calaresu.com>
  *
  * Mail
  *
@@ -22,12 +23,14 @@
 define(function(require) {
 	'use strict';
 
+	var _ = require('underscore');
 	var $ = require('jquery');
 	var OC = require('OC');
 	var Radio = require('radio');
 
 	Radio.message.reply('save:cloud', saveToFiles);
 	Radio.message.reply('attachment:download', downloadAttachment);
+	Radio.attachment.reply('upload:local', uploadLocalAttachment);
 
 	/**
 	 * @param {Account} account
@@ -64,6 +67,44 @@ define(function(require) {
 	 */
 	function downloadAttachment(url) {
 		return Promise.resolve($.ajax(url));
+	}
+
+	/**
+	 * @param {File} file
+	 * @param {function} localAttachmentModel
+	 * @returns {Promise}
+	 */
+	function uploadLocalAttachment(file, localAttachmentModel) {
+		var defer = $.Deferred();
+		var fd = new FormData();
+		fd.append('attachment', file);
+
+		var progressCallback = localAttachmentModel.onProgress;
+
+		var url = OC.generateUrl('/apps/mail/attachments');
+		$.ajax({
+			url: url,
+			type: 'POST',
+			xhr: function() {
+				var customXhr = $.ajaxSettings.xhr();
+				if (customXhr.upload && _.isFunction(progressCallback)) {
+					customXhr.upload.addEventListener(
+						'progress',
+						progressCallback.bind(localAttachmentModel),
+						false);
+				}
+				return customXhr;
+			},
+			data: fd,
+			processData: false,
+			contentType: false,
+		}).done(function(data) {
+			defer.resolve(data.id);
+		}).fail(function(err) {
+			defer.reject();
+		});
+
+		return defer.promise();
 	}
 
 });
