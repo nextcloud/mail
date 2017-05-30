@@ -36,7 +36,7 @@ class Application extends App {
 		$this->initializeAppContainer();
 	}
 
-	public function initializeAppContainer() {
+	private function initializeAppContainer() {
 		$container = $this->getContainer();
 
 		$transport = $container->getServer()->getConfig()->getSystemValue('app.mail.transport', 'smtp');
