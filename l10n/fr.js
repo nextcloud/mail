@@ -97,7 +97,7 @@ OC.L10N.register(
     "cc" : "cc",
     "bcc" : "bcc",
     "Subject" : "Sujet",
-    "Save all to Files" : "Enregistrer tout dans les Fichier",
+    "Save all to Files" : "Enregistrer tout dans les Fichiers",
     "Add mail account" : "Ajouter un compte mail",
     "No search results for" : "Aucun résultats pour",
     "The images have been blocked to protect your privacy." : "Les images ont été bloquées pour protéger votre vie privée.",
