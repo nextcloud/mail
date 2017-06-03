@@ -40,8 +40,8 @@ class UploadedFile {
 		$this->fileData = $fileData;
 		// move the php tmp file to a nextcloud temporary folder
 		$tmp_folder = \OC::$server->getTempManager()->getTemporaryFolder();
-		$this->$oc_tmp_path = $tmp_folder.$fileData['name'];
-		move_uploaded_file($file['tmp_name'], $this->$oc_tmp_path);
+		$this->oc_tmp_path = $tmp_folder.$fileData['name'];
+		move_uploaded_file($fileData['tmp_name'], $this->oc_tmp_path);
 	}
 
 	/**
@@ -55,7 +55,7 @@ class UploadedFile {
 	 * @return string
 	 */
 	public function getPath() {
-		return $this->$oc_tmp_path;
+		return $this->oc_tmp_path;
 	}
 
 }

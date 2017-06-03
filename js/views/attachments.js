@@ -70,26 +70,26 @@ define(function(require) {
 		},
 
 		uploadLocalAttachment: function(file) {
-				// TODO check file size?
-				var attachment = new LocalAttachment({
-					fileName: file.name
-				});
+			// TODO check file size?
+			var attachment = new LocalAttachment({
+				fileName: file.name
+			});
 
-				var uploading = Radio.attachment.request(
-					'upload:local',	file, attachment
+			var uploading = Radio.attachment.request(
+				'upload:local',	file, attachment
+			);
+			$.when(uploading).fail(function(attachment) {
+				Radio.attachment.request('upload:finished', attachment);
+				var errorMsg = t('mail',
+					'An error occurred while uploading {fname}', {fname: file.name}
 				);
-				$.when(uploading).fail(function(attachment) {
-					Radio.attachment.request('upload:finished', attachment);
-					var errorMsg = t('mail',
-						'An error occurred while uploading {fname}', {fname: file.name}
-					);
-					Radio.ui.trigger('error:show', errorMsg);
-				});
-				$.when(uploading).done(function(attachment, fileId) {
-					Radio.attachment.request('upload:finished', attachment, fileId);
-				});
+				Radio.ui.trigger('error:show', errorMsg);
+			});
+			$.when(uploading).done(function(attachment, fileId) {
+				Radio.attachment.request('upload:finished', attachment, fileId);
+			});
 
-				this.collection.add(attachment);
+			this.collection.add(attachment);
 		}
 	});
 });
