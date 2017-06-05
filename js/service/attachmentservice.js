@@ -104,10 +104,14 @@ define(function(require) {
 				},
 				data: fd,
 				processData: false,
-				contentType: false,
-				success: resolve,
-				error: reject
-			});
+				contentType: false
+			})
+			.done(function(data) {
+				resolve(data.id);
+			})
+			.fail(function(err) {
+				reject();
+			});;
 		});
 	}
 
@@ -132,18 +136,23 @@ define(function(require) {
 	 * @param {function} localAttachmentModel
 	 * @param {number} filedId
 	 */
-	function uploadLocalAttachmentFinished(localAttachmentModel, retJson) {
-		if (retJson === undefined || localAttachmentModel.get('progress') < 1) {
+	function uploadLocalAttachmentFinished(localAttachmentModel, fileId) {
+		if (fileId === undefined || localAttachmentModel.get('progress') < 1) {
 			localAttachmentModel.set('uploadStatus', 2);  // error
 		}
 		else {
 			/* If we have a file id (file successfully uploaded), we saved it */
-			localAttachmentModel.set('id', retJson.id);
+			localAttachmentModel.set('id', fileId);
 			localAttachmentModel.set('uploadStatus', 3);  // success
 		}
 		// we are done with the request, just get rid of it!
 		localAttachmentModel.unset('uploadRequest');
 	}
 
+
+	return {
+		uploadLocalAttachment: uploadLocalAttachment,
+		uploadLocalAttachmentFinished: uploadLocalAttachmentFinished
+	};
 
 });
