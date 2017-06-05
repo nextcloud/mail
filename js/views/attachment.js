@@ -21,7 +21,7 @@ define(function(require) {
 		tagName: 'li',
 		template: Handlebars.compile(AttachmentTemplate),
 		ui: {
-			attachmentName: ".new-message-attachment-name"
+			attachmentName: '.new-message-attachment-name'
 		},
 		events: {
 			'click .icon-delete': 'removeAttachment'
@@ -67,7 +67,7 @@ define(function(require) {
 		 * Triggered when the attachment upload status has changed
 		 */
 		onUploadStatus: function() {
-			switch(this.model.get('uploadStatus')) {
+			switch (this.model.get('uploadStatus')) {
 				case 1:     // uploading
 					this.ui.attachmentName.addClass('upload-ongoing');
 					break;
