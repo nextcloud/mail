@@ -644,7 +644,9 @@ input.submit-message,
 #mail-message-close {
 	display: none;
 }
-
+#mail-content {
+	padding: 15px 15px 15px 15px;
+}
 #mail-content,
 .mail-message-attachments {
 	margin: 100px 10px 50px 30px;
