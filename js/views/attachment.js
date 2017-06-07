@@ -16,6 +16,8 @@ define(function(require) {
 	var Marionette = require('marionette');
 	var Radio = require('radio');
 	var AttachmentTemplate = require('text!templates/attachment.html');
+	// we need jquery-ui for showing the progress bar on upload
+	require('jquery-ui');
 
 	return Marionette.View.extend({
 		tagName: 'li',
@@ -51,7 +53,6 @@ define(function(require) {
 			/* If we are trying to delete a still-uploading attachment, */
 			/* we have to abort the request first */
 			Radio.attachment.request('upload:abort', this.model);
-			this.model.collection.remove(this.model);
 		},
 
 		/**
@@ -79,7 +80,9 @@ define(function(require) {
 					break;
 				case 3:     // success
 					/* remove the 'ongoing' class  */
-					this.ui.attachmentName.removeClass('upload-ongoing');
+					this.ui.attachmentName
+						.removeClass('upload-ongoing')
+						.removeClass('upload-warning');
 					/* If everything went well, we just fade out the progressbar */
 					this.ui.attachmentName.find('.ui-progressbar-value').fadeOut();
 					break;

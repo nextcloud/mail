@@ -122,6 +122,7 @@ define(function(require) {
 		if (uploadRequest && uploadRequest.readyState < 4) {
 			uploadRequest.abort();
 		}
+		localAttachmentModel.collection.remove(localAttachmentModel);
 	}
 
 	/**

@@ -28,7 +28,8 @@
 			ical: 'vendor/ical.js/build/ical.min',
 			marionette: 'vendor/backbone.marionette/lib/backbone.marionette',
 			underscore: 'vendor/underscore/underscore',
-			text: 'vendor/text/text'
+			text: 'vendor/text/text',
+			'jquery-ui': 'vendor/jquery-ui/ui/minified/jquery-ui.custom.min'
 		},
 		shim: {
 			davclient: {
