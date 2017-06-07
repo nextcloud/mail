@@ -75,19 +75,17 @@ define(function(require) {
 				fileName: file.name
 			});
 
-			var uploading = Radio.attachment.request(
-				'upload:local',	file, attachment
-			);
-			$.when(uploading).fail(function(attachment) {
-				Radio.attachment.request('upload:finished', attachment);
-				var errorMsg = t('mail',
-					'An error occurred while uploading {fname}', {fname: file.name}
-				);
-				Radio.ui.trigger('error:show', errorMsg);
-			});
-			$.when(uploading).done(function(attachment, fileId) {
-				Radio.attachment.request('upload:finished', attachment, fileId);
-			});
+			Radio.attachment.request('upload:local', file, attachment)
+				.then(function(ret) {
+					Radio.attachment.request('upload:finished', attachment, ret);
+				})
+				.catch(function() {
+					Radio.attachment.request('upload:finished', attachment);
+					var errorMsg = t('mail',
+						'An error occurred while uploading {fname}', {fname: file.name}
+					);
+					Radio.ui.trigger('error:show', errorMsg);
+				});
 
 			this.collection.add(attachment);
 		}

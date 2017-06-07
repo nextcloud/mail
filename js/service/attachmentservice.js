@@ -77,41 +77,38 @@ define(function(require) {
 	 * @returns {Promise}
 	 */
 	function uploadLocalAttachment(file, localAttachmentModel) {
-		var defer = $.Deferred();
 		var fd = new FormData();
 		fd.append('attachment', file);
 
 		var progressCallback = localAttachmentModel.onProgress;
-
 		var url = OC.generateUrl('/apps/mail/attachments');
-		$.ajax({
-			url: url,
-			type: 'POST',
-			xhr: function() {
-				var customXhr = $.ajaxSettings.xhr();
-				// save the xhr into the model in order to :
-				//  - distinguish upload and nextcloud file attachments
-				//  - keep the upload status for later use
-				localAttachmentModel.set('uploadRequest', customXhr);
-				// and start the request
-				if (customXhr.upload && _.isFunction(progressCallback)) {
-					customXhr.upload.addEventListener(
-						'progress',
-						progressCallback.bind(localAttachmentModel),
-						false);
-				}
-				return customXhr;
-			},
-			data: fd,
-			processData: false,
-			contentType: false,
-		}).done(function(data) {
-			defer.resolve(localAttachmentModel, data.id);
-		}).fail(function(err) {
-			defer.reject(localAttachmentModel);
-		});
 
-		return defer.promise();
+		return new Promise(function(resolve, reject) {
+			$.ajax({
+				url: url,
+				type: 'POST',
+				xhr: function() {
+					var customXhr = $.ajaxSettings.xhr();
+					// save the xhr into the model in order to :
+					//  - distinguish upload and nextcloud file attachments
+					//  - keep the upload status for later use
+					localAttachmentModel.set('uploadRequest', customXhr);
+					// and start the request
+					if (customXhr.upload && _.isFunction(progressCallback)) {
+						customXhr.upload.addEventListener(
+							'progress',
+							progressCallback.bind(localAttachmentModel),
+							false);
+					}
+					return customXhr;
+				},
+				data: fd,
+				processData: false,
+				contentType: false,
+				success: resolve,
+				error: reject
+			});
+		});
 	}
 
 	/**
@@ -134,13 +131,13 @@ define(function(require) {
 	 * @param {function} localAttachmentModel
 	 * @param {number} filedId
 	 */
-	function uploadLocalAttachmentFinished(localAttachmentModel, fileId) {
-		if (fileId === undefined || localAttachmentModel.get('progress') < 1) {
+	function uploadLocalAttachmentFinished(localAttachmentModel, retJson) {
+		if (retJson === undefined || localAttachmentModel.get('progress') < 1) {
 			localAttachmentModel.set('uploadStatus', 2);  // error
 		}
 		else {
 			/* If we have a file id (file successfully uploaded), we saved it */
-			localAttachmentModel.set('id', fileId);
+			localAttachmentModel.set('id', retJson.id);
 			localAttachmentModel.set('uploadStatus', 3);  // success
 		}
 		// we are done with the request, just get rid of it!
