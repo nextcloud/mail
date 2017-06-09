@@ -2,7 +2,7 @@ OC.L10N.register(
     "mail",
     {
     "Mail" : "E-mail",
-    "Error while loading the accounts." : "Erro no carregamento das contas.",
+    "Error while loading the accounts." : "Erro ao carregar as contas.",
     "Error while loading the selected account." : "Erro carregando a conta selecionada",
     "Loading {folder}" : "Carregando {folder}",
     "Searching for {query}" : "Pesquisando por {query}",
