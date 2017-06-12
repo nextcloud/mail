@@ -81,8 +81,8 @@ define(function(require) {
 		initialize: function(options) {
 			_.defaults(options, {
 				config: {
-					displayName: '',
-					email: ''
+					accountName: '',
+					emailAddress: ''
 				}
 			});
 			this._config = options.config;

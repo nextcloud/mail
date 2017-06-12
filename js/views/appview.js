@@ -149,16 +149,14 @@ define(function(require) {
 			$('#mail_message').removeClass('icon-loading');
 		},
 		showSetup: function() {
-			if (this.activeContent !== ContentType.SETUP) {
-				this.activeContent = ContentType.SETUP;
+			this.activeContent = ContentType.SETUP;
 
-				this.showChildView('content', new SetupView({
-					config: {
-						displayName: $('#user-displayname').text(),
-						email: $('#user-email').text()
-					}
-				}));
-			}
+			this.showChildView('content', new SetupView({
+				config: {
+					accountName: $('#user-displayname').text(),
+					emailAddress: $('#user-email').text()
+				}
+			}));
 		},
 		showFolderContent: function(account, folder, options) {
 			this.activeContent = ContentType.FOLDER_CONTENT;
@@ -199,7 +197,7 @@ define(function(require) {
 			}
 			if (count > 0) {
 				window.document.title = name + ' (' + count + ')' +
-						// jscs:disable requireCamelCaseOrUpperCaseIdentifiers
+					// jscs:disable requireCamelCaseOrUpperCaseIdentifiers
 					activeEmail + ' - Mail - ' + oc_defaults.title;
 				// jscs:enable requireCamelCaseOrUpperCaseIdentifiers
 			} else {

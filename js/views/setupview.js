@@ -1,3 +1,5 @@
+/* global Promise */
+
 /**
  * @author Christoph Wurst <christoph@winzerhof-wurst.at>
  *
@@ -52,6 +54,10 @@ define(function(require) {
 
 		regions: {
 			content: '.setup-content'
+		},
+
+		initialize: function(options) {
+			this._config = options.config;
 		},
 
 		/**
