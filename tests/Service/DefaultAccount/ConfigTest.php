@@ -32,8 +32,11 @@ class ConfigTest extends PHPUnit_Framework_TestCase {
 		$config = new Config([
 			'email' => '%USERID%@domain.se',
 		]);
-		$user->expects($this->any())
-			->method('getEmailAddress')
+		$user->expects($this->exactly(2))
+			->method('getUID')
+			->willReturn('test');
+		$user->expects($this->exactly(2))
+			->method('getEMailAddress')
 			->willReturn('user@domain.se');
 
 		$this->assertEquals('test@domain.se', $config->buildEmail($user));
@@ -44,11 +47,11 @@ class ConfigTest extends PHPUnit_Framework_TestCase {
 		$config = new Config([
 			'email' => '%EMAIL%',
 		]);
-		$user->expects($this->any())
+		$user->expects($this->exactly(2))
 			->method('getUID')
 			->willReturn('user');
 		$user->expects($this->any())
-			->method('getEmailAddress')
+			->method('getEMailAddress')
 			->willReturn('user@domain.se');
 
 		$this->assertEquals('user@domain.se', $config->buildEmail($user));
@@ -75,9 +78,12 @@ class ConfigTest extends PHPUnit_Framework_TestCase {
 		$config = new Config([
 			'imapUser' => '%USERID%@domain.se',
 		]);
-		$user->expects($this->any())
-			->method('getEmailAddress')
-			->willReturn('user@domain.se');
+		$user->expects($this->exactly(2))
+			->method('getUID')
+			->willReturn('test');
+		$user->expects($this->once())
+			->method('getEMailAddress')
+			->willReturn(null);
 
 		$this->assertEquals('test@domain.se', $config->buildImapUser($user));
 	}
@@ -87,11 +93,11 @@ class ConfigTest extends PHPUnit_Framework_TestCase {
 		$config = new Config([
 			'imapUser' => '%EMAIL%',
 		]);
-		$user->expects($this->any())
+		$user->expects($this->exactly(2))
 			->method('getUID')
 			->willReturn('user');
 		$user->expects($this->any())
-			->method('getEmailAddress')
+			->method('getEMailAddress')
 			->willReturn('user@domain.se');
 
 		$this->assertEquals('user@domain.se', $config->buildImapUser($user));
@@ -126,9 +132,12 @@ class ConfigTest extends PHPUnit_Framework_TestCase {
 		$config = new Config([
 			'smtpUser' => '%USERID%@domain.se',
 		]);
-		$user->expects($this->any())
-			->method('getEmailAddress')
-			->willReturn('user@domain.se');
+		$user->expects($this->exactly(2))
+			->method('getUID')
+			->willReturn('test');
+		$user->expects($this->once())
+			->method('getEMailAddress')
+			->willReturn(null);
 
 		$this->assertEquals('test@domain.se', $config->buildSmtpUser($user));
 	}
@@ -140,9 +149,9 @@ class ConfigTest extends PHPUnit_Framework_TestCase {
 		]);
 		$user->expects($this->any())
 			->method('getUID')
-			->willReturn('user');
+			->willReturn(null);
 		$user->expects($this->any())
-			->method('getEmailAddress')
+			->method('getEMailAddress')
 			->willReturn('user@domain.se');
 
 		$this->assertEquals('user@domain.se', $config->buildSmtpUser($user));

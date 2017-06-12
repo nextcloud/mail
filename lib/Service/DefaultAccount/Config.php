@@ -113,7 +113,9 @@ class Config {
 	 * @return string
 	 */
 	private function buildUserEmail($original, IUser $user) {
-		$original = str_replace('%USERID%', $user->getUID(), $original);
+		if (!is_null($user->getUID())) {
+			$original = str_replace('%USERID%', $user->getUID(), $original);
+		}
 		if (!is_null($user->getEMailAddress())) {
 			$original = str_replace('%EMAIL%', $user->getEMailAddress(), $original);
 		}
