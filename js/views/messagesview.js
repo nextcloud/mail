@@ -84,9 +84,6 @@ define(function(require) {
 		setMessageFlag: function(messageId, flag, val) {
 			var message = this.collection.get(messageId);
 			if (message) {
-				var folder = message.folder;
-				var account = folder.account;
-
 				Radio.message.trigger('flag', message, flag, val);
 			}
 		},
