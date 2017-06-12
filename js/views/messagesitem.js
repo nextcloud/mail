@@ -106,7 +106,6 @@ define(function(require) {
 			this.getUI('iconDelete').removeClass('icon-delete').addClass('icon-loading-small');
 			$('.tooltip').remove();
 
-			thisModel.get('flags').set('unseen', false);
 			var folder = this.model.folder;
 			var account = folder.account;
 			var count = folder.get('total');
