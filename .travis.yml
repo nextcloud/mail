@@ -43,20 +43,12 @@ cache:
 before_install:
   - php --info
 
-  # Download phpunit 5.7
-  - wget https://phar.phpunit.de/phpunit-5.7.phar -O phpunit
-  - chmod u+x phpunit
-
   # Set up DB
   - if [[ "$DB" == 'pgsql' ]]; then createuser -U travis -s oc_autotest; fi
   - if [[ "$DB" == 'mysql' ]]; then mysql -u root -e 'create database oc_autotest;'; fi
   - if [[ "$DB" == 'mysql' ]]; then mysql -u root -e "CREATE USER 'oc_autotest'@'localhost' IDENTIFIED BY '';"; fi
   - if [[ "$DB" == 'mysql' ]]; then mysql -u root -e "GRANT ALL ON oc_autotest.* TO 'oc_autotest'@'localhost';"; fi
 
-  - sh -c "if [ '$TRAVIS_PHP_VERSION' = '5.4' ]; then curl -s -o $HOME/.phpenv/versions/5.4/bin/phpunit
-    https://phar.phpunit.de/phpunit-4.8.9.phar; fi"
-  - sh -c "if [ '$TRAVIS_PHP_VERSION' = '5.4' ]; then chmod +x $HOME/.phpenv/versions/5.4/bin/phpunit;
-    fi"
   - composer self-update
   - make install-composer-deps
   - make start-imap-docker
@@ -101,7 +93,7 @@ script:
 
   # Run PHP tests
   - cd tests
-  - ../phpunit --configuration phpunit.xml
+  - ../vendor/phpunit/phpunit/phpunit --configuration phpunit.xml
   - if [[ "$PHP_COVERAGE" = "TRUE" ]]; then wget https://scrutinizer-ci.com/ocular.phar;
     fi
   - if [[ "$PHP_COVERAGE" = "TRUE" ]]; then php ocular.phar code-coverage:upload --format=php-clover
