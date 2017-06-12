@@ -1,5 +1,3 @@
-/* global Promise */
-
 /**
  * @author Christoph Wurst <christoph@winzerhof-wurst.at>
  *
