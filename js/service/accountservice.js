@@ -23,10 +23,6 @@ define(function(require) {
 
 	function createAccount(config) {
 		return new Promise(function(resolve, reject) {
-			setTimeout(function() {
-				reject(t('mail', 'Error while creating the account: '));
-			}, 500);
-			return;
 			$.ajax(OC.generateUrl('apps/mail/accounts'), {
 				data: config,
 				type: 'POST',

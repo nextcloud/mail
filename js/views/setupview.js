@@ -66,7 +66,8 @@ define(function(require) {
 		onRender: function() {
 			if (!_.isUndefined(this._error)) {
 				this.showChildView('content', new ErrorView({
-					text: this._error
+					text: this._error,
+					canRetry: true
 				}));
 			} else if (this._loading) {
 				// Rendering the first time
@@ -104,19 +105,18 @@ define(function(require) {
 				var firstFolder = firstAccount.folders.first();
 				Radio.navigation.trigger('folder', firstAccount.get('accountId'), firstFolder.get('id'));
 			}).catch(function(error) {
+				console.error('could not create account:', error);
 				// Show error view for a few seconds
 				_this._loading = false;
 				_this._error = error;
 				_this.render();
-				return new Promise(function(resolve) {
-					setTimeout(function() {
-						// Show form again
-						_this._error = undefined;
-						_this.render();
-						resolve();
-					}, 1500);
-				});
-			});
+			}).catch(console.error.bind(this));
+		},
+
+		onChildviewRetry: function() {
+			this._loading = false;
+			this._error = undefined;
+			this.render();
 		}
 
 	});
