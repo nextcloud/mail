@@ -52,7 +52,7 @@ class Application extends App {
 			return $container->getServer()->getUserFolder($user);
 		});
 		$container->registerParameter("testSmtp", $testSmtp);
-		$container->registerParameter("referrer", isset($_SERVER['HTTP_REFERER']) ?: null);
+		$container->registerParameter("referrer", isset($_SERVER['HTTP_REFERER']) ? $_SERVER['HTTP_REFERER'] : null);
 		$container->registerParameter("hostname", Util::getServerHostName());
 	}
 
