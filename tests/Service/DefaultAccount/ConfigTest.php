@@ -73,6 +73,14 @@ class ConfigTest extends PHPUnit_Framework_TestCase {
 		$this->assertEquals(993, $config->getImapPort());
 	}
 
+	public function testGetImapSslMode() {
+		$config = new Config([
+			'imapSslMode' => 'ssl',
+		]);
+
+		$this->assertEquals('ssl', $config->getImapSslMode());
+	}
+
 	public function testBuildImapUserWithUserId() {
 		$user = $this->createMock(IUser::class);
 		$config = new Config([
@@ -88,7 +96,7 @@ class ConfigTest extends PHPUnit_Framework_TestCase {
 		$this->assertEquals('test@domain.se', $config->buildImapUser($user));
 	}
 
-	public function testBuilldImapUserWithEmailPlaceholder() {
+	public function testBuildImapUserWithEmailPlaceholder() {
 		$user = $this->createMock(IUser::class);
 		$config = new Config([
 			'imapUser' => '%EMAIL%',
@@ -103,12 +111,27 @@ class ConfigTest extends PHPUnit_Framework_TestCase {
 		$this->assertEquals('user@domain.se', $config->buildImapUser($user));
 	}
 
-	public function testGetImapSslMode() {
+	public function testBuildImapUserFromDefaultEmail() {
+		$user = $this->createMock(IUser::class);
 		$config = new Config([
-			'imapSslMode' => 'ssl',
+			'email' => '%EMAIL%',
+		]);
+		$user->expects($this->exactly(2))
+			->method('getUID')
+			->willReturn('user');
+		$user->expects($this->exactly(2))
+			->method('getEMailAddress')
+			->willReturn('user@domain.se');
+
+		$this->assertEquals('user@domain.se', $config->buildImapUser($user));
+	}
+
+	public function testGetSmtpSslMode() {
+		$config = new Config([
+			'smtpSslMode' => 'tls',
 		]);
 
-		$this->assertEquals('ssl', $config->getImapSslMode());
+		$this->assertEquals('tls', $config->getSmtpSslMode());
 	}
 
 	public function testGetSmtpHost() {
@@ -155,6 +178,21 @@ class ConfigTest extends PHPUnit_Framework_TestCase {
 			->willReturn('user@domain.se');
 
 		$this->assertEquals('user@domain.se', $config->buildSmtpUser($user));
+	}
+
+	public function testBuildSmtpUserFromDefaultEmail() {
+		$user = $this->createMock(IUser::class);
+		$config = new Config([
+			'email' => '%EMAIL%',
+		]);
+		$user->expects($this->exactly(2))
+			->method('getUID')
+			->willReturn('user');
+		$user->expects($this->exactly(2))
+			->method('getEMailAddress')
+			->willReturn('user@domain.se');
+
+		$this->assertEquals('user@domain.se', $config->buildImapUser($user));
 	}
 
 }

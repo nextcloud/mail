@@ -22,7 +22,6 @@
 
 namespace OCA\Mail\AppInfo;
 
-use OC;
 use OCA\Mail\Contracts\IMailManager;
 use OCA\Mail\Service\MailManager;
 use OCP\AppFramework\App;
@@ -53,7 +52,7 @@ class Application extends App {
 			return $container->getServer()->getUserFolder($user);
 		});
 		$container->registerParameter("testSmtp", $testSmtp);
-		$container->registerParameter("referrer", isset($_SERVER['HTTP_REFERER']) ? : null);
+		$container->registerParameter("referrer", isset($_SERVER['HTTP_REFERER']) ?: null);
 		$container->registerParameter("hostname", Util::getServerHostName());
 	}
 

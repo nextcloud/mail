@@ -62,16 +62,6 @@ class MailAccountMapper extends Mapper {
 		return $this->findEntities($sql, $params);
 	}
 
-	public function findByEmail($email, $userId) {
-		$sql = 'SELECT * FROM ' . $this->getTableName() . ' WHERE user_id = ? and email = ?';
-		$params = [
-			$userId,
-			$email,
-		];
-
-		return $this->findEntities($sql, $params);
-	}
-
 	/**
 	 * Saves an User Account into the database
 	 * @param MailAccount $account
