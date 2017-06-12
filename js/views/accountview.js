@@ -41,9 +41,9 @@ define(function(require) {
 		},
 		ui: {
 			email: '.mail-account-email',
-			menu: 'div.app-navigation-entry-menu',
-			deleteButton: 'button[class^="icon-delete"]',
-			settingsButton: 'button[class^="icon-rename"]'
+			menu: '.app-navigation-entry-menu',
+			settingsButton: '.action-settings',
+			deleteButton: '.action-delete'
 		},
 		className: 'navigation-account',
 		menuShown: false,
@@ -66,7 +66,7 @@ define(function(require) {
 		onDelete: function(e) {
 			e.stopPropagation();
 
-			this.getUI('deleteButton').removeClass('icon-delete').addClass('icon-loading-small');
+			this.getUI('deleteButton').find('.icon-delete').removeClass('icon-delete').addClass('icon-loading-small');
 
 			var account = this.model;
 
