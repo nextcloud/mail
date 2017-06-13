@@ -61,7 +61,7 @@ define([
 			expect(view.$el.html()).toContain('Setting up your account');
 		});
 
-		it('show the form again after an error occurred', function(done) {
+		it('shows the form again after an error occurred', function(done) {
 			spyOn(Radio.account, 'request').and.returnValue(loadingPromise);
 			spyOn(Radio.ui, 'trigger');
 			var config = {
@@ -80,12 +80,17 @@ define([
 			// Reject loading promise -> show error view
 			rejectPromise('Some error');
 			triggerFormSubmit(config).then(function() {
+				expect(view.$el.html()).toContain('Try again');
+
+				// Click 'Try again'
+				view.$el.find('button').click();
+
 				expect(Radio.account.request).toHaveBeenCalledWith('create', config);
 				expect(view.$el.html()).toContain('Connect your mail account');
 				expect(view.$el.html()).toContain('User');
 				expect(view.$el.html()).toContain('user@example.com');
 				expect(view.$el.html()).toContain('123456');
-				
+
 				expect(view.$el.html()).toContain('imap.example.com');
 				expect(view.$el.html()).toContain('iuser@example.com');
 				expect(view.$el.html()).toContain('i1234');
