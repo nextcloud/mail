@@ -64,7 +64,17 @@ define(function(require) {
 			return Promise.resolve(accounts);
 		}
 
-		return Promise.resolve(accounts.fetch());
+		return new Promise(function(resolve, reject) {
+			accounts.fetch({
+				success: function() {
+					// fetch resolves the Promise with the raw data returned by
+					// the ajax call. Since we want the Backbone models, we have
+					// to 'convert' the response here.
+					resolve(accounts);
+				},
+				error: reject
+			});
+		});
 	}
 
 	function getAccountEntities() {
