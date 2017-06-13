@@ -26,7 +26,8 @@ define(function(require) {
 				isUnifiedInbox: this.model.get('accountId') === -1,
 				toggleCollapseMessage: toggleCollapseMessage,
 				hasMenu: this.model.get('accountId') !== -1,
-				hasFolders: this.model.folders.length > 0
+				hasFolders: this.model.folders.length > 0,
+				isDeletable: this.model.get('accountId') !== -2,
 			};
 		},
 		events: {

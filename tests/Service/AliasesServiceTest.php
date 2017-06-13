@@ -22,25 +22,31 @@
 namespace OCA\Mail\Tests\Service;
 
 use OCA\Mail\Db\Alias;
+use OCA\Mail\Db\AliasMapper;
 use OCA\Mail\Service\AliasesService;
+use OCA\Mail\Service\DefaultAccount\Manager;
+use PHPUnit_Framework_MockObject_MockObject;
 use PHPUnit_Framework_TestCase;
 
 class AliasesServiceTest extends PHPUnit_Framework_TestCase {
 
+	/** @var AliasesService|PHPUnit_Framework_MockObject_MockObject */
 	private $service;
+
+	/** @var string */
 	private $user = 'herbert';
+
+	/** @var AliasMapper|PHPUnit_Framework_MockObject_MockObject */
 	private $mapper;
+
+	/** @var Alias|PHPUnit_Framework_MockObject_MockObject */
 	private $alias;
 
 	protected function setUp() {
 		parent::setUp();
 
-		$this->mapper = $this->getMockBuilder('OCA\Mail\Db\AliasMapper')
-			->disableOriginalConstructor()
-			->getMock();
-		$this->alias = $this->getMockBuilder('OCA\Mail\Db\Alias')
-			->disableOriginalConstructor()
-			->getMock();
+		$this->mapper = $this->createMock(AliasMapper::class);
+		$this->alias = $this->createMock(Alias::class);
 
 		$this->service = new AliasesService($this->mapper);
 	}
@@ -94,8 +100,7 @@ class AliasesServiceTest extends PHPUnit_Framework_TestCase {
 			'name' => $aliasEntity->getName(),
 			'alias' => $aliasEntity->getAlias(),
 			'id' => $aliasEntity->getId()
-			],
-			[
+			], [
 			'accountId' => $result->getAccountId(),
 			'name' => $result->getName(),
 			'alias' => $result->getAlias(),
