@@ -42,9 +42,6 @@ define(function(require) {
 		/** @type {object} */
 		_config: '',
 
-		/** @type{boolean} */
-		manualMode: false,
-
 		ui: {
 			form: 'form',
 			inputs: 'input, select',
@@ -79,20 +76,30 @@ define(function(require) {
 		 * @returns {undefined}
 		 */
 		initialize: function(options) {
-			_.defaults(options, {
-				config: {
-					accountName: '',
-					emailAddress: ''
-				}
+			this._config = _.defaults(options.config || {}, {
+				accountName: '',
+				emailAddress: '',
+				autoDetect: true,
+				imapPort: 993,
+				imapSslMode: 'ssl',
+				smtpPort: 587,
+				smtpSslMode: 'tls'
 			});
-			this._config = options.config;
 		},
 
 		/**
 		 * @returns {undefined}
 		 */
 		onRender: function() {
-			this.getUI('manualInputs').hide();
+			if (this._config.autoDetect) {
+				this.getUI('mailPassword').show();
+				this.getUI('manualInputs').hide();
+			} else {
+				this.getUI('mailPassword').hide();
+			}
+
+			this.getUI('imapSslMode').find('[value="' + this._config.imapSslMode + '"]').attr({'selected': 'selected'});
+			this.getUI('smtpSslMode').find('[value="' + this._config.smtpSslMode + '"]').attr({'selected': 'selected'});
 		},
 
 		/**
@@ -101,12 +108,12 @@ define(function(require) {
 		 */
 		toggleManualMode: function(e) {
 			e.stopPropagation();
-			this.manualMode = !this.manualMode;
+			this._config.autoDetect = !this._config.autoDetect;
 
 			this.getUI('manualInputs').slideToggle();
 			this.getUI('imapHost').focus();
 
-			if (this.manualMode) {
+			if (!this._config.autoDetect) {
 				if (this.firstToggle) {
 					// Manual mode opened for the first time
 					// -> copy email, password for imap&smtp
@@ -154,7 +161,7 @@ define(function(require) {
 			};
 
 			// if manual setup is open, use manual values
-			if (this.manualMode) {
+			if (!this._config.autoDetect) {
 				config = {
 					accountName: accountName,
 					emailAddress: emailAddress,
