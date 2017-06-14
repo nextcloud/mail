@@ -10,7 +10,7 @@ OC.L10N.register(
     "Choose a folder to store the attachment in" : "Escolha uma pasta para armazenar os anexos",
     "Attachments saved to Files." : "Anexo salvos em Arquivos.",
     "Attachment saved to Files." : "Anexo salvo em Arquivos.",
-    "Error while saving attachments to Files." : "Erro salvando anexos em Arquivos.",
+    "Error while saving attachments to Files." : "Erro ao salvar anexos em Arquivos.",
     "Error while saving attachment to Files." : "Erro ao salvar anexos em Arquivos.",
     "Message flag could not be set." : "Marcação da mensagem não pôde ser definida.",
     "Could not move message." : "Não foi possível mover a mensagem.",
@@ -103,7 +103,7 @@ OC.L10N.register(
     "The images have been blocked to protect your privacy." : "As imagens foram bloqueadas para proteger sua privacidade",
     "Show images from this sender" : "Mostre imagens desse remetente",
     "Forward" : "Encaminhar",
-    "Add attachment from Files" : "Adicionar anexos de arquivos",
+    "Add attachment from Files" : "Adicionar anexos desde arquivos",
     "Import into calendar" : "Importar para o calendário",
     "Download attachment" : "Baixar anexo",
     "Save to Files" : "Salvar para arquivos"
