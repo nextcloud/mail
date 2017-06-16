@@ -84,7 +84,7 @@ OC.L10N.register(
     "IMAP security" : "Segurança IMAP",
     "None" : "Não",
     "STARTTLS" : "STARTTLS",
-    "IMAP Port" : "Porta IMAP",
+    "IMAP Port" : "Porto IMAP",
     "IMAP User" : "Usuário IMAP",
     "IMAP Password" : "Senha IMAP",
     "SMTP Host" : "Host SMTP",
