@@ -90,7 +90,12 @@ define(function(require) {
 			}));
 			this.detailView = DetailView.MESSAGE;
 
-			Radio.ui.trigger('messagesview:messageflag:set', message.id, 'unseen', false);
+			// The message is not "shown" on mobile when calling onShowMessage()
+			// in that case, we do not mark it as read
+			var isMobile = $(window).width() < 768;
+			if (isMobile === false) {
+				Radio.ui.trigger('messagesview:messageflag:set', message.id, 'unseen', false);
+			}
 		},
 		onShowError: function(errorMessage) {
 			this.showChildView('message', new ErrorView({
