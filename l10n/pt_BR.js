@@ -89,7 +89,7 @@ OC.L10N.register(
     "IMAP Password" : "Senha IMAP",
     "SMTP Host" : "Host SMTP",
     "SMTP security" : "Segurança SMTP",
-    "SMTP Port" : "Porta SMTP",
+    "SMTP Port" : "Porto SMTP",
     "SMTP User" : "Usuário SMTP",
     "SMTP Password" : "Senha SMTP",
     "from" : "de",
