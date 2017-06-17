@@ -89,9 +89,11 @@ define(function(require) {
 				model: messageModel
 			}));
 			this.detailView = DetailView.MESSAGE;
-
-			// The message is not "shown" on mobile when calling onShowMessage()
-			// in that case, we do not mark it as read
+			this.markMessageAsRead(message);
+		},
+		markMessageAsRead: function(message) {
+			// The message is not actually displayed on mobile when calling onShowMessage()
+			// on mobiles then, we shall not mark the email as read until the user opened it
 			var isMobile = $(window).width() < 768;
 			if (isMobile === false) {
 				Radio.ui.trigger('messagesview:messageflag:set', message.id, 'unseen', false);
