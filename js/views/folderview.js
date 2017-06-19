@@ -19,7 +19,9 @@ define(function(require) {
 	var FolderTemplate = require('text!templates/folder.html');
 
 	return Marionette.View.extend({
+
 		tagName: 'li',
+
 		updateElClasses: function() {
 			var classes = [];
 			if (this.model.get('unseen')) {
@@ -44,7 +46,9 @@ define(function(require) {
 				_this.$el.addClass(clazz);
 			});
 		},
+
 		template: Handlebars.compile(FolderTemplate),
+
 		templateContext: function() {
 			var count = null;
 			if (this.model.get('specialRole') === 'drafts') {
@@ -67,20 +71,25 @@ define(function(require) {
 				folders: folders
 			};
 		},
+
 		regions: {
 			folders: '.folders'
 		},
+
 		events: {
 			'click .collapse': 'collapseFolder',
 			'click .folder': 'loadFolder'
 		},
+
 		modelEvents: {
 			change: 'render'
 		},
+
 		collapseFolder: function(e) {
 			e.preventDefault();
 			this.model.toggleOpen();
 		},
+
 		loadFolder: function(e) {
 			e.preventDefault();
 			// TODO: account should be property of folder
@@ -89,6 +98,7 @@ define(function(require) {
 			var noSelect = this.model.get('noSelect');
 			Radio.navigation.trigger('folder', account.get('accountId'), folder.get('id'), noSelect);
 		},
+
 		onRender: function() {
 			var FolderListView = require('views/folderlistview');
 
@@ -98,7 +108,7 @@ define(function(require) {
 
 			this.updateElClasses();
 
-			// Make non search fodler folders droppable
+			// Make non search folder folders droppable
 			if (!(/\/FLAGGED$/.test(atob(this.model.get('id'))))) {
 				var dropScope = 'folder-' + this.model.account.get('accountId');
 				this.$el.droppable({

@@ -1,5 +1,7 @@
+/* global expect */
+
 /**
- * @author Steffen Lindner <mail@steffen-lidnner.de>
+ * @author Steffen Lindner <mail@steffen-lindner.de>
  *
  * Mail
  *
@@ -33,10 +35,9 @@ define(['views/errorview'], function(ErrorView) {
 			it('produces the correct HTML', function () {
 				errorview.render();
 
-				html = errorview.el.innerHTML.trim();
-				expected_html = '<div class="">\n\t<div class="icon-mail"></div>\n\t<h2>An unknown error occurred</h2>\n</div>';
+				var html = errorview.el.innerHTML.trim();
+				var expected_html = '<div class="">\n\t<div class="icon-mail"></div>\n\t<h2>An unknown error occurred</h2>\n</div>';
 				expect(html).toContain(expected_html);
-
 			});
 		});
 	});
