@@ -240,119 +240,191 @@ define([
 			syncing.then(done).catch(done.fail);
 		});
 
-		it('syncs the unified inbox', function(done) {
-			var account = new Account({
-				accountId: -1,
-				isUnified: true
-			});
-			var folder = new Folder({
-				account: account
-			});
-			var acc1 = new Account({
-				accountId: 1
-			});
-			var folder11 = new Folder({
-				id: 'inbox11',
-				specialRole: 'inbox'
-			});
-			var folder12 = new Folder({
-				specialRole: 'sent'
-			});
-			var acc2 = new Account({
-				accountId: 2
-			});
-			var folder21 = new Folder({
-				id: 'inbox21',
-				specialRole: 'inbox'
-			});
-			var folder22 = new Folder({
-				id: 'inbox22',
-				specialRole: 'inbox'
-			});
-			account.addFolder(folder);
-			acc1.addFolder(folder11);
-			acc1.addFolder(folder12);
-			acc2.addFolder(folder21);
-			acc2.addFolder(folder22);
-			State.accounts.add(account);
-			State.accounts.add(acc1);
-			State.accounts.add(acc2);
-			// Add some messages
-			var message211 = new Message({
-				id: 234,
-				subject: 'old sub',
-				account: acc2
-			});
-			folder21.addMessage(message211);
-			folder.addMessage(folder21.messages.get(234));
-			var message221 = new Message({
-				id: 345,
-				account: acc2
-			});
-			folder22.addMessage(message221);
-			folder.addMessage(folder22.messages.get(345));
+		describe('unified inbox with two accounts and three inboxes', function() {
+			var account, acc1, acc2;
+			var folder, folder11, folder12, folder21, folder22;
 
-			var syncing = FolderSyncService.syncFolder(folder);
-			expect(server.requests.length).toBe(3);
+			beforeEach(function() {
+				account = new Account({
+					accountId: -1,
+					isUnified: true
+				});
+				folder = new Folder({
+					account: account
+				});
+				acc1 = new Account({
+					accountId: 1
+				});
+				folder11 = new Folder({
+					id: 'inbox11',
+					specialRole: 'inbox'
+				});
+				folder12 = new Folder({
+					specialRole: 'sent'
+				});
+				acc2 = new Account({
+					accountId: 2
+				});
+				folder21 = new Folder({
+					id: 'inbox21',
+					specialRole: 'inbox'
+				});
+				folder22 = new Folder({
+					id: 'inbox22',
+					specialRole: 'inbox'
+				});
+				account.addFolder(folder);
+				acc1.addFolder(folder11);
+				acc1.addFolder(folder12);
+				acc2.addFolder(folder21);
+				acc2.addFolder(folder22);
+				State.accounts.add(account);
+				State.accounts.add(acc1);
+				State.accounts.add(acc2);
+			});
 
-			server.requests[0].respond(
-				200,
-				{
-					'Content-Type': 'application/json'
-				},
-				JSON.stringify({
-					token: 'newToken',
-					newMessages: [
-						{
-							id: 123
-						}
-					],
-					changedMessages: [],
-					vanishedMessages: []
-				})
-				);
-			server.requests[1].respond(
-				200,
-				{
-					'Content-Type': 'application/json'
-				},
-				JSON.stringify({
-					token: 'newToken',
-					newMessages: [],
-					changedMessages: [
-						{
-							id: 234,
-							subject: 'new sub'
-						}
-					],
-					vanishedMessages: []
-				})
-				);
-			server.requests[2].respond(
-				200,
-				{
-					'Content-Type': 'application/json'
-				},
-				JSON.stringify({
-					token: 'newToken',
-					newMessages: [],
-					changedMessages: [],
-					vanishedMessages: [
-						345
-					]
-				})
-				);
+			it('syncs all changes', function(done) {
+				// Add some messages
+				var message211 = new Message({
+					id: 234,
+					subject: 'old sub',
+					account: acc2
+				});
+				folder21.addMessage(message211);
+				folder.addMessage(folder21.messages.get(234));
+				var message221 = new Message({
+					id: 345,
+					account: acc2
+				});
+				folder22.addMessage(message221);
+				folder.addMessage(folder22.messages.get(345));
 
-			syncing.then(function() {
-				// New message saved to first inbox
-				expect(folder11.messages.pluck('id')).toEqual([123]);
-				// Update applied in second inbox
-				expect(folder21.messages.get(234).get('subject')).toEqual('new sub');
-				// Vanished message in third inbox is removed
-				expect(folder22.messages.pluck('id')).toEqual([]);
+				var syncing = FolderSyncService.syncFolder(folder);
+				expect(server.requests.length).toBe(3);
 
-				done();
-			}).catch(done.fail);
+				server.requests[0].respond(
+					200,
+					{
+						'Content-Type': 'application/json'
+					},
+					JSON.stringify({
+						token: 'newToken',
+						newMessages: [
+							{
+								id: 123
+							}
+						],
+						changedMessages: [],
+						vanishedMessages: []
+					})
+					);
+				server.requests[1].respond(
+					200,
+					{
+						'Content-Type': 'application/json'
+					},
+					JSON.stringify({
+						token: 'newToken',
+						newMessages: [],
+						changedMessages: [
+							{
+								id: 234,
+								subject: 'new sub'
+							}
+						],
+						vanishedMessages: []
+					})
+					);
+				server.requests[2].respond(
+					200,
+					{
+						'Content-Type': 'application/json'
+					},
+					JSON.stringify({
+						token: 'newToken',
+						newMessages: [],
+						changedMessages: [],
+						vanishedMessages: [
+							345
+						]
+					})
+					);
+
+				syncing.then(function() {
+					// New message saved to first inbox
+					expect(folder11.messages.pluck('id')).toEqual([123]);
+					// Update applied in second inbox
+					expect(folder21.messages.get(234).get('subject')).toEqual('new sub');
+					// Vanished message in third inbox is removed
+					expect(folder22.messages.pluck('id')).toEqual([]);
+
+					done();
+				}).catch(done.fail);
+			});
+
+			it('removes vanished messages', function(done) {
+				// Add some messages
+				var message211 = new Message({
+					id: 234,
+					subject: 'Message 1',
+					account: acc2
+				});
+				folder21.addMessage(message211);
+				folder.addMessage(message211);
+
+				// Check initial state
+				expect(folder21.messages.pluck('id')).toEqual([234]);
+				expect(folder.messages.pluck('id')).toEqual([234]);
+
+				var syncing = FolderSyncService.syncFolder(folder);
+				expect(server.requests.length).toBe(3);
+
+				server.requests[0].respond(
+					200,
+					{
+						'Content-Type': 'application/json'
+					},
+					JSON.stringify({
+						token: 'newToken',
+						newMessages: [],
+						changedMessages: [],
+						vanishedMessages: []
+					}));
+				server.requests[1].respond(
+					200,
+					{
+						'Content-Type': 'application/json'
+					},
+					JSON.stringify({
+						token: 'newToken',
+						newMessages: [],
+						changedMessages: [],
+						vanishedMessages: [
+							234
+						]
+					}));
+				server.requests[2].respond(
+					200,
+					{
+						'Content-Type': 'application/json'
+					},
+					JSON.stringify({
+						token: 'newToken',
+						newMessages: [],
+						changedMessages: [],
+						vanishedMessages: []
+					}));
+
+				syncing.then(function() {
+					// Vanished message in third inbox is removed
+					expect(folder22.messages.pluck('id')).toEqual([]);
+
+					// Message was also removed from the unified folder
+					expect(folder.messages.pluck('id')).toEqual([]);
+
+					done();
+				}).catch(done.fail);
+			});
 		});
 
 		it('syncs the unified inbox when an individual one changes', function(done) {

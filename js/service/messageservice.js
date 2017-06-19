@@ -74,6 +74,7 @@ define(function(require) {
 			if (isSearching) {
 				// Get rid of other messages
 				collection.reset();
+				folder.set('messagesLoaded', false);
 			} else {
 				folder.set('messagesLoaded', true);
 			}
