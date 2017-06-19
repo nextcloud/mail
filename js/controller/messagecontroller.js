@@ -79,13 +79,13 @@ define(function(require) {
 		// Fade out the message composer
 		$('#mail_new_message').prop('disabled', false);
 
-		Radio.message.request('entity', account, folder, message.get('id')).then(function(message) {
+		Radio.message.request('entity', account, folder, message.get('id')).then(function(messageBody) {
 			if (draft) {
-				Radio.ui.trigger('composer:show', message);
+				Radio.ui.trigger('composer:show', messageBody);
 			} else {
 				// TODO: ideally this should be handled in messageservice.js
-				require('cache').addMessage(account, folder, message);
-				Radio.ui.trigger('message:show', message);
+				require('cache').addMessage(account, folder, messageBody);
+				Radio.ui.trigger('message:show', message, messageBody);
 			}
 		}, function() {
 			Radio.ui.trigger('message:error', ErrorMessageFactory.getRandomMessageErrorMessage());

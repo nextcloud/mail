@@ -59,7 +59,6 @@ define(function(require) {
 				return _this.collection;
 			});
 			this.listenTo(Radio.ui, 'messagesview:messages:update', this.refresh);
-			this.listenTo(Radio.ui, 'messagesview:messageflag:set', this.setMessageFlag);
 			this.listenTo(Radio.ui, 'messagesview:filter', this.filterCurrentMailbox);
 			this.listenTo(Radio.ui, 'messagesview:message:setactive', this.setActiveMessage);
 			this.listenTo(Radio.message, 'messagesview:message:next', this.selectNextMessage);
@@ -80,12 +79,6 @@ define(function(require) {
 			return {
 				searchQuery: this.searchQuery
 			};
-		},
-		setMessageFlag: function(messageId, flag, val) {
-			var message = this.collection.get(messageId);
-			if (message) {
-				Radio.message.trigger('flag', message, flag, val);
-			}
 		},
 		/**
 		 * Set active class for current message and remove it from old one
@@ -122,8 +115,8 @@ define(function(require) {
 
 			var nextMessage = this.collection.at(this.collection.indexOf(message) + 1);
 			if (nextMessage) {
-				var account = require('state').currentAccount;
-				var folder = require('state').currentFolder;
+				var folder = nextMessage.folder;
+				var account = folder.account;
 				Radio.message.trigger('load', account, folder, nextMessage, {
 					force: true
 				});
@@ -146,8 +139,8 @@ define(function(require) {
 
 			var previousMessage = this.collection.at(this.collection.indexOf(message) - 1);
 			if (previousMessage) {
-				var account = require('state').currentAccount;
-				var folder = require('state').currentFolder;
+				var folder = previousMessage.folder;
+				var account = folder.account;
 				Radio.message.trigger('load', account, folder, previousMessage, {
 					force: true
 				});

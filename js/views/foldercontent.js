@@ -78,11 +78,11 @@ define(function(require) {
 				searchQuery: this.searchQuery
 			}));
 		},
-		onShowMessage: function(message) {
+		onShowMessage: function(message, body) {
 			// Temporarily disable new-message composer events
 			Radio.ui.trigger('composer:events:undelegate');
 
-			var messageModel = new Backbone.Model(message);
+			var messageModel = new Backbone.Model(body);
 			this.showChildView('message', new MessageView({
 				account: this.account,
 				folder: this.folder,
@@ -90,7 +90,7 @@ define(function(require) {
 			}));
 			this.detailView = DetailView.MESSAGE;
 
-			Radio.ui.trigger('messagesview:messageflag:set', message.id, 'unseen', false);
+			Radio.message.trigger('flag', message, 'unseen', false);
 		},
 		onShowError: function(errorMessage) {
 			this.showChildView('message', new ErrorView({

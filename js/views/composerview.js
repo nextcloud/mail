@@ -318,8 +318,8 @@ define(function(require) {
 
 				if (!!options.repliedMessage) {
 					// Reply -> flag message as replied
-					Radio.ui.trigger('messagesview:messageflag:set',
-						options.repliedMessage.get('id'),
+					Radio.message.trigger('flag',
+						options.repliedMessage,
 						'answered',
 						true);
 				}
