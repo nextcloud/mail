@@ -56,6 +56,7 @@ class FoldersControllerTest extends TestCase {
 	private $controller;
 
 	public function setUp() {
+		parent::setUp();
 		$this->request = $this->createMock(IRequest::class);
 		$this->accountService = $this->createMock(AccountService::class);
 		$this->mailManager = $this->createMock(IMailManager::class);

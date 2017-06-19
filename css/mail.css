@@ -225,6 +225,13 @@
 	left: 15px;
 	top: -12px;
 }
+/* color dot position fix for Safari */
+@media not all and (min-resolution:.001dpcm) { @media
+{
+.mail-account-color {
+        top: 2px;
+}
+}}
 
 .mail-message-account-color {
 	position: absolute;
@@ -269,6 +276,7 @@
 	height: 100%;
 	overflow-x: hidden;
 	overflow-y: auto;
+	border-right: 1px solid #ebebeb;
 }
 #mail-message-list-loading {
 	position: fixed;
@@ -318,7 +326,7 @@
 
 .mail-message-summary-from,
 .mail-message-summary-subject,
-.date {
+.mail-message-summary .date {
 	display: inline-block;
 	padding: 12px;
 	white-space: nowrap;
@@ -339,7 +347,7 @@
 	margin-left: 37px;
 }
 
-.date {
+.mail-message-summary .date {
 	position: absolute;
 	right: 0;
 	top: 0;
@@ -844,32 +852,4 @@ input.submit-message,
 }
 .icon-trash {
 	background-image: url('../img/trash.svg');
-}
-
-/* ownCloud 7 compatibility */
-
-.hidden-visually {
-	position: absolute;
-	left:-10000px;
-	top: auto;
-	width: 1px;
-	height: 1px;
-	overflow: hidden;
-}
-
-#emptycontent h2,
-.emptycontent h2 {
-	font-size: 20px;
-	margin-bottom: 10px;
-}
-#emptycontent [class^="icon-"],
-.emptycontent [class^="icon-"],
-#emptycontent [class*=" icon-"],
-.emptycontent [class*=" icon-"] {
-	background-size: 64px;
-	height: 64px;
-	width: 64px;
-	margin: 0 auto 15px;
-	-ms-filter: "progid:DXImageTransform.Microsoft.Alpha(Opacity=40)";
-	opacity: .4;
 }

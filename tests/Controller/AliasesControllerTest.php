@@ -36,6 +36,7 @@ class AliasesControllerTest extends PHPUnit_Framework_TestCase {
 	private $alias;
 
 	public function setUp() {
+		parent::setUp();
 		$this->request = $this->getMockBuilder('OCP\IRequest')
 			->getMock();
 		$this->aliasService = $this->getMockBuilder('OCA\Mail\Service\AliasesService')

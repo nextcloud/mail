@@ -26,6 +26,14 @@ class ReplyMessage extends Message {
 		// prevent 'Re: Re:' stacking
 		if (strcasecmp(substr($subject, 0, 4), 'Re: ') === 0) {
 			parent::setSubject($subject);
+		} else if (strcasecmp(substr($subject, 0, 4), 'Aw: ') === 0) {
+			parent::setSubject($subject);
+		} else if (strcasecmp(substr($subject, 0, 4), 'Wg: ') === 0) {
+			parent::setSubject($subject);
+		} else if (strcasecmp(substr($subject, 0, 4), 'Fw: ') === 0) {
+			parent::setSubject($subject);
+		} else if (strcasecmp(substr($subject, 0, 5), 'Fwd: ') === 0) {
+			parent::setSubject($subject);
 		} else {
 			parent::setSubject("Re: $subject");
 		}

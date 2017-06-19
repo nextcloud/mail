@@ -61,13 +61,13 @@ OC.L10N.register(
     "Delete permanently" : "Trwale usuń",
     "& others" : "& inni",
     "Error loading message" : "Błąd podczas ładowania wiadomości",
+    "Settings" : "Ustawienia",
     "Forwarding to %s" : "Prześlij do %s",
     "Click here if you are not automatically redirected within the next few seconds." : "Kliknij tutaj, jeśli nie są automatycznie przekierowywane w ciągu kilku sekund.",
     "Redirect" : "Przekieruj",
     "The link leads to %s" : "Link prowadzi do %s",
     "If you don’t want to visit that page, you can return to <a href=\"%s\">Mail</a>." : "Jeśli nie chcesz odwiedzić tej strony, możesz powrócić do <a href=\"%s\">Poczty</a>.",
     "Continue to %s" : "Kontynuuj do %s",
-    "Settings" : "Ustawienia",
     "Delete account" : "Usuń konto",
     "New message" : "Nowa wiadomość",
     "Account Settings" : "Ustawienia konta",
@@ -108,4 +108,4 @@ OC.L10N.register(
     "Download attachment" : "Pobierz załącznik",
     "Save to Files" : "Zapisz do plików"
 },
-"nplurals=4; plural=(n==1 ? 0 : (n%10>=2 && n%10<=4) && (n%100<12 || n%100>=14) ? 1 : n!=1 && (n%10>=0 && n%10<=1) || (n%10>=5 && n%10<=9) || (n%100>=12 && n%100<=14) ? 2 : 3);");
+"nplurals=4; plural=(n==1 ? 0 : (n%10>=2 && n%10<=4) && (n%100<12 || n%100>14) ? 1 : n!=1 && (n%10>=0 && n%10<=1) || (n%10>=5 && n%10<=9) || (n%100>=12 && n%100<=14) ? 2 : 3);");

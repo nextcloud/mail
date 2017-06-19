@@ -19,6 +19,7 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>
  *
  */
+
 namespace OCA\Mail\Service;
 
 use Exception;
@@ -26,6 +27,7 @@ use OCA\Mail\Account;
 use OCA\Mail\Db\MailAccount;
 use OCA\Mail\Db\MailAccountMapper;
 use OCA\Mail\Exception\ServiceException;
+use OCA\Mail\Service\DefaultAccount\Manager;
 use OCP\IL10N;
 
 class AccountService {
@@ -43,12 +45,17 @@ class AccountService {
 	/** @var IL10N */
 	private $l10n;
 
+	/** @var Manager */
+	private $defaultAccountManager;
+
 	/**
 	 * @param MailAccountMapper $mapper
 	 */
-	public function __construct(MailAccountMapper $mapper, IL10N $l10n) {
+	public function __construct(MailAccountMapper $mapper, IL10N $l10n,
+		Manager $defaultAccountManager) {
 		$this->mapper = $mapper;
 		$this->l10n = $l10n;
+		$this->defaultAccountManager = $defaultAccountManager;
 	}
 
 	/**
@@ -57,10 +64,15 @@ class AccountService {
 	 */
 	public function findByUserId($currentUserId) {
 		if ($this->accounts === null) {
-			$accounts = $this->mapper->findByUserId($currentUserId);
 			$accounts = array_map(function($a) {
 				return new Account($a);
-			}, $accounts);
+			}, $this->mapper->findByUserId($currentUserId));
+
+			$defaultAccount = $this->defaultAccountManager->getDefaultAccount();
+			if (!is_null($defaultAccount)) {
+				$accounts[] = new Account($defaultAccount);
+			}
+
 			$this->accounts = $accounts;
 		}
 
@@ -82,8 +94,15 @@ class AccountService {
 			throw new Exception("Invalid account id <$accountId>");
 		}
 
-		if ((int)$accountId === UnifiedAccount::ID) {
+		if ((int) $accountId === UnifiedAccount::ID) {
 			return $this->buildUnifiedAccount($currentUserId);
+		}
+		if ((int) $accountId === Manager::ACCOUNT_ID) {
+			$defaultAccount = $this->defaultAccountManager->getDefaultAccount();
+			if (is_null($defaultAccount)) {
+				throw new Exception('Default account config missing');
+			}
+			return new Account($defaultAccount);
 		}
 		return new Account($this->mapper->find($currentUserId, $accountId));
 	}
@@ -109,7 +128,10 @@ class AccountService {
 	 * @param int $accountId
 	 */
 	public function delete($currentUserId, $accountId) {
-		if ((int)$accountId === UnifiedAccount::ID) {
+		if ((int) $accountId === UnifiedAccount::ID) {
+			return;
+		}
+		if ((int) $accountId === Manager::ACCOUNT_ID) {
 			return;
 		}
 		$mailAccount = $this->mapper->find($currentUserId, $accountId);
@@ -127,4 +149,5 @@ class AccountService {
 	private function buildUnifiedAccount($userId) {
 		return new UnifiedAccount($this, $userId, $this->l10n);
 	}
+
 }
