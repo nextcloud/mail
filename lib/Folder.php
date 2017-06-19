@@ -159,8 +159,8 @@ class Folder implements JsonSerializable {
 			'name' => $this->getDisplayName(),
 			'specialRole' => null, // TODO
 			'unseen' => $this->status['unseen'],
-			'total' => $this->status['messages'],
-			'isEmpty' => 0 >= (int) $this->status['messages'],
+			'total' => isset($this->status['messages']) ? (int) $this->status['messages'] : 0,
+			'isEmpty' => isset($this->status['messages']) ? 0 >= (int) $this->status['messages'] : true,
 			'noSelect' => in_array('\noselect', $this->attributes),
 			'attributes' => $this->attributes,
 			'delimiter' => $this->delimiter,
