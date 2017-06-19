@@ -23,7 +23,7 @@ define(function(require) {
 		templateContext: function() {
 			return {
 				addAccountUrl: OC.generateUrl('apps/mail/#setup'),
-				keyboardShortcutUrl: OC.generateUrl('apps/mail/#keyboardShortcut')
+				keyboardShortcutUrl: OC.generateUrl('apps/mail/#shortcuts')
 			};
 		},
 		regions: {

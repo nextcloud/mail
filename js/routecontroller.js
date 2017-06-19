@@ -151,6 +151,7 @@ define(function(require) {
 			Radio.ui.trigger('setup:show');
 		},
 		showKeyboardShortcuts: function() {
+			this._navigate('shortcuts');
 			Radio.ui.trigger('composer:leave');
 			Radio.ui.trigger('keyboardShortcuts:show');
 		},
