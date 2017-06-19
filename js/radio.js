@@ -30,7 +30,8 @@ define(function(require) {
 	var channels = {};
 	_.each(channelNames, function(channelName) {
 		channels[channelName] = Radio.channel(channelName);
-		Radio.tuneIn(channelName);
+		// Uncomment the following line for debugging
+		// Radio.tuneIn(channelName);
 	});
 
 	return channels;

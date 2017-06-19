@@ -55,7 +55,13 @@ define(function(require) {
 			_.each(syncResp.changedMessages, function(msg) {
 				var existing = folder.messages.get(msg.id);
 				if (existing) {
+					var flags = {};
+					if (msg.flags && _.isObject(msg.flags)) {
+						flags = msg.flags;
+						delete msg.flags;
+					}
 					existing.set(msg);
+					existing.get('flags').set(flags);
 				} else {
 					// TODO: remove once we're confident this
 					// condition never occurs
