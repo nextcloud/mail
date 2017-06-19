@@ -32,6 +32,10 @@ class Application extends App {
 	public function __construct(array $urlParams = []) {
 		parent::__construct('mail', $urlParams);
 
+		$this->initializeAppContainer();
+	}
+
+	private function initializeAppContainer() {
 		$container = $this->getContainer();
 
 		$transport = $container->getServer()->getConfig()->getSystemValue('app.mail.transport', 'smtp');

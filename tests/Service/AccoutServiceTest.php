@@ -23,34 +23,46 @@ namespace OCA\Mail\Tests\Service;
 
 use OCA\Mail\Account;
 use OCA\Mail\Db\MailAccount;
+use OCA\Mail\Db\MailAccountMapper;
 use OCA\Mail\Service\AccountService;
+use OCA\Mail\Service\DefaultAccount\Manager;
+use OCP\IL10N;
+use PHPUnit_Framework_MockObject_MockObject;
 use PHPUnit_Framework_TestCase;
 
 class AccountServiceTest extends PHPUnit_Framework_TestCase {
 
+	/** @var string */
 	private $user = 'herbert';
+
+	/** @var MailAccountMapper|PHPUnit_Framework_MockObject_MockObject */
 	private $mapper;
+
+	/** @var IL10N|PHPUnit_Framework_MockObject_MockObject */
 	private $l10n;
+
+	/** @var AccountService|PHPUnit_Framework_MockObject_MockObject */
 	private $service;
+
+	/** @var MailAccount|PHPUnit_Framework_MockObject_MockObject */
 	private $account1;
+
+	/** @var MailAccount|PHPUnit_Framework_MockObject_MockObject */
 	private $account2;
+
+	/** @var Manager|PHPUnit_Framework_MockObject_MockObject */
+	private $defaultAccountManager;
 
 	protected function setUp() {
 		parent::setUp();
 
-		$this->mapper = $this->getMockBuilder('OCA\Mail\Db\MailAccountMapper')
-			->disableOriginalConstructor()
-			->getMock();
-		$this->l10n = $this->getMockBuilder('\OCP\IL10N')
-			->disableOriginalConstructor()
-			->getMock();
-		$this->service = new AccountService($this->mapper, $this->l10n);
-		$this->account1 = $this->getMockBuilder('OCA\Mail\Db\MailAccount')
-			->disableOriginalConstructor()
-			->getMock();
-		$this->account2 = $this->getMockBuilder('OCA\Mail\Db\MailAccount')
-			->disableOriginalConstructor()
-			->getMock();
+		$this->mapper = $this->createMock(MailAccountMapper::class);
+		$this->l10n = $this->createMock(IL10N::class);
+		$this->defaultAccountManager = $this->createMock(Manager::class);
+		$this->service = new AccountService($this->mapper, $this->l10n, $this->defaultAccountManager);
+
+		$this->account1 = $this->createMock(MailAccount::class);
+		$this->account2 = $this->createMock(MailAccount::class);
 	}
 
 	public function testFindByUserId() {
