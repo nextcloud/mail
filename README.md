@@ -38,27 +38,16 @@ If you experience any issues or have enhancement suggestions you can report them
 
 Speed up your Mail experience by using keyboard shortcuts.
 
-#### Compose
-
-| Action | Shortcut                           |
-| ------ | ---------------------------------- |
-| Send   | <kbd>Ctrl</kbd> + <kbd>Enter</kbd> |
-
-#### Actions
-
-| Action        | Shortcut       |
-| ------------- | -------------- |
-| Refresh       | <kbd>R</kbd>   |
-| Toggle star   | <kbd>S</kbd>   |
-| Delete        | <kbd>Del</kbd> |
-| Toggle unread | <kbd>U</kbd>   |
-
-##### Navigation
-
-| Action        | Shortcut                     |
-| ------------- | ---------------------------- |
-| Newer message | <kbd>K</kbd> or <kbd>←</kbd> |
-| Older message | <kbd>J</kbd> or <kbd>→</kbd> |
+| Action        | Shortcut                           |
+| ------------- | ---------------------------------- |
+| Newer message | <kbd>K</kbd> or <kbd>←</kbd>       |
+| Older message | <kbd>J</kbd> or <kbd>→</kbd>       |
+| Toggle star   | <kbd>S</kbd>                       |
+| Toggle unread | <kbd>U</kbd>                       |
+| Delete        | <kbd>Del</kbd>                     |
+| Search        | <kbd>Ctrl</kbd> + <kbd>F</kbd>     |
+| Send          | <kbd>Ctrl</kbd> + <kbd>Enter</kbd> |
+| Refresh       | <kbd>R</kbd>                       |
 
 ## Maintainers
 

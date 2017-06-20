@@ -1,5 +1,5 @@
 /**
- * @author Christoph Wurst <christoph@winzerhof-wurst.at>
+ * @author Steffen Lindner <mail@steffen-lindner.de>
  *
  * Mail
  *
@@ -17,25 +17,20 @@
  *
  */
 
-define(function(require) {
-	'use strict';
 
-	var Marionette = require('marionette');
+define(['views/keyboardshortcuts', 'views/helper'], function(KeyboardShortcutsView) {
 
-	/**
-	 * @class Router
-	 */
-	var Router = Marionette.AppRouter.extend({
-		appRoutes: {
-			'': 'default',
-			'accounts/:accountId/folders/:folderId': 'showFolder',
-			'accounts/:accountId/folders/:folderId/search/:query': 'searchFolder',
-			'mailto(?:params)': 'mailTo',
-			'setup': 'showSetup',
-			'shortcuts': 'showKeyboardShortcuts',
-			'accounts/:accountId/settings': 'showAccountSettings'
-		}
+	describe('KeyboardShortcutsView', function () {
+
+		var keyboardshortcutsview;
+
+		beforeEach(function () {
+			keyboardshortcutsview = new KeyboardShortcutsView({});
+		});
+
+		it('produces the correct HTML', function () {
+			keyboardshortcutsview.render();
+
+		});
 	});
-
-	return Router;
 });

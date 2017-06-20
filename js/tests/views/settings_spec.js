@@ -1,5 +1,5 @@
 /**
- * @author Christoph Wurst <christoph@winzerhof-wurst.at>
+ * @author Steffen Lindner <mail@steffen-lindner.de>
  *
  * Mail
  *
@@ -17,25 +17,25 @@
  *
  */
 
-define(function(require) {
-	'use strict';
 
-	var Marionette = require('marionette');
+define(['views/settings', 'views/helper'], function(SettingsView) {
 
-	/**
-	 * @class Router
-	 */
-	var Router = Marionette.AppRouter.extend({
-		appRoutes: {
-			'': 'default',
-			'accounts/:accountId/folders/:folderId': 'showFolder',
-			'accounts/:accountId/folders/:folderId/search/:query': 'searchFolder',
-			'mailto(?:params)': 'mailTo',
-			'setup': 'showSetup',
-			'shortcuts': 'showKeyboardShortcuts',
-			'accounts/:accountId/settings': 'showAccountSettings'
-		}
+	describe('SettingsView', function () {
+
+		var settingsview;
+
+		beforeEach(function () {
+			settingsview = new SettingsView({});
+		});
+
+		it('has the account and shortcut functions', function () {
+			    expect(typeof settingsview.showKeyboardShortcuts).toBe("function");
+			    expect(typeof settingsview.addAccount).toBe("function")
+		});
+
+		it('produces the correct HTML', function () {
+			settingsview.render();
+
+		});
 	});
-
-	return Router;
 });
