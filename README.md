@@ -27,7 +27,7 @@ And in the works for the [coming versions](https://github.com/nextcloud/mail/mil
 
 ## Installation
 
-In your Nextcloud, simply navigate to »Apps«, choose the category »Productivity«, find the Mail app and enable it.
+In your Nextcloud, simply navigate to »Apps«, choose the category »Social & Communication«, find the Mail app and enable it.
 Then open the Mail app from the app menu. Put in your email account credentials and off you go!
 
 If you experience any issues or have enhancement suggestions you can report them in our [issue tracker](https://github.com/nextcloud/mail/issues). Please follow the [issue template](https://raw.githubusercontent.com/nextcloud/mail/master/issue_template.md) so we get the info we need to be able to debug and fix the problem. Thanks!
