@@ -142,6 +142,7 @@
 #app-navigation .collapse {
 	display: inline-block !important;
 	opacity: .3;
+	z-index: 1;
 }
 
 #app-navigation > ul {
