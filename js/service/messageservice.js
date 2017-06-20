@@ -79,6 +79,9 @@ define(function(require) {
 				folder.set('messagesLoaded', true);
 			}
 
+			_.forEach(messages, function(msg) {
+				msg.accountMail = folder.account.get('email');
+			});
 			folder.addMessages(messages);
 
 			return collection;

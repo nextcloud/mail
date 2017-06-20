@@ -33,7 +33,9 @@ define(function(require) {
 			change: 'render'
 		},
 		serializeModel: function() {
-			return this.model.toJSON();
+			var json = this.model.toJSON();
+			json.isUnified = require('state').currentAccount.get('isUnified');
+			return json;
 		},
 		onRender: function() {
 			// Get rid of that pesky wrapping-div.
