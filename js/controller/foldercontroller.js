@@ -107,12 +107,14 @@ define(function(require) {
 		Radio.ui.trigger('content:loading', t('mail', 'Loading {folder}', {
 			folder: folder.get('name')
 		}));
-		loadFolderMessages(account, folder, false);
+		_.defer(function() {
+			loadFolderMessages(account, folder, false);
 
-		// Save current folder
-		Radio.folder.trigger('setactive', account, folder);
-		require('state').currentAccount = account;
-		require('state').currentFolder = folder;
+			// Save current folder
+			Radio.folder.trigger('setactive', account, folder);
+			require('state').currentAccount = account;
+			require('state').currentFolder = folder;
+		});
 	}
 
 	/**
@@ -129,7 +131,9 @@ define(function(require) {
 		Radio.ui.trigger('content:loading', t('mail', 'Searching for {query}', {
 			query: query
 		}));
-		loadFolderMessagesDebounced(account, folder, false, query);
+		_.defer(function() {
+			loadFolderMessagesDebounced(account, folder, false, query);
+		});
 	}
 
 	/**
