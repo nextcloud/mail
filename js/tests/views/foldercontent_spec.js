@@ -47,7 +47,7 @@ define(['views/foldercontent',
 		beforeEach(function () {
 			// just make the screen small
 			$('body').css('width', '600px');
-	    $(window).trigger('resize');
+			$(window).trigger('resize');
 			view.render();
 			view.bindUIElements();
 		});
@@ -67,7 +67,7 @@ define(['views/foldercontent',
 		beforeEach(function () {
 			// just make the screen "bigger" than a mobile phone
 			$('body').css('width', '1024px');
-	    $(window).trigger('resize');
+			$(window).trigger('resize');
 			view.render();
 			view.bindUIElements();
 		});
