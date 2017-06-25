@@ -93,6 +93,7 @@ OC.L10N.register(
     "SMTP User" : "Utilisateur SMTP",
     "SMTP Password" : "Mot de passe SMTP",
     "Keyboard shortcuts" : "Raccourcis clavier",
+    "Speed up your Mail experience with these quick shortcuts." : "Accélérez votre expérience Mail avec ces raccourcis rapides.",
     "Newer message" : "Message plus récent",
     "Older message" : "Message plus ancien",
     "Delete" : "Supprimer",
