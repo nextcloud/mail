@@ -25,18 +25,39 @@ define(function(require) {
 	var ErrorTemplate = require('text!templates/error.html');
 
 	var ErrorView = Marionette.View.extend({
+
 		id: 'emptycontent',
+
 		className: 'container',
+
 		template: Handlebars.compile(ErrorTemplate),
+
+		_text: undefined,
+
+		_icon: undefined,
+
+		_canRetry: undefined,
+
+		events: {
+			'click .retry': '_onRetry'
+		},
+
 		templateContext: function() {
 			return {
-				text: this.text,
-				icon: this.icon
+				text: this._text,
+				icon: this._icon,
+				canRetry: this._canRetry
 			};
 		},
+
 		initialize: function(options) {
-			this.text = options.text || t('mail', 'An unknown error occurred');
-			this.icon = options.icon || 'icon-mail';
+			this._text = options.text || t('mail', 'An unknown error occurred');
+			this._icon = options.icon || 'icon-mail';
+			this._canRetry = options.canRetry || false;
+		},
+
+		_onRetry: function() {
+			this.triggerMethod('retry');
 		}
 	});
 

@@ -1,5 +1,3 @@
-/* global expect */
-
 /**
  * @author Steffen Lindner <mail@steffen-lindner.de>
  *
@@ -20,25 +18,24 @@
  */
 
 
-define(['views/errorview'], function(ErrorView) {
+define(['views/settings', 'views/helper'], function(SettingsView) {
 
-	describe('ErrorView', function () {
+	describe('SettingsView', function () {
 
-		var errorview;
+		var settingsview;
 
 		beforeEach(function () {
-			errorview = new ErrorView({});
+			settingsview = new SettingsView({});
 		});
 
-		describe('Rendering', function () {
+		it('has the account and shortcut functions', function () {
+			    expect(typeof settingsview.showKeyboardShortcuts).toBe("function");
+			    expect(typeof settingsview.addAccount).toBe("function")
+		});
 
-			it('produces the correct HTML', function () {
-				errorview.render();
+		it('produces the correct HTML', function () {
+			settingsview.render();
 
-				var html = errorview.el.innerHTML.trim();
-				var expected_html = '<div class="">\n\t<div class="icon-mail"></div>\n\t<h2>An unknown error occurred</h2>\n</div>';
-				expect(html).toContain(expected_html);
-			});
 		});
 	});
 });

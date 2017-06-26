@@ -16,7 +16,7 @@ Object.keys(window.__karma__.files).forEach(function(file) {
 
 window.t = function(app, text) {
 	if (app !== 'mail') {
-		throw new 'wrong app used to for translation';
+		throw 'wrong app used to for translation';
 	}
 	return text;
 };
@@ -61,6 +61,10 @@ $.fn.tooltip = function() {
 };
 
 $.fn.autosize = function() {
+
+};
+
+$.fn.droppable = function() {
 
 };
 

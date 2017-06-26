@@ -35,7 +35,7 @@ define(function(require) {
 							break;
 						default:
 							var error = errorThrown || textStatus || t('mail', 'Unknown error');
-							reject(t('mail', 'Error while creating an account: ' + error));
+							reject(t('mail', 'Error while creating the account: ' + error));
 					}
 				}
 			});

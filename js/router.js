@@ -32,6 +32,7 @@ define(function(require) {
 			'accounts/:accountId/folders/:folderId/search/:query': 'searchFolder',
 			'mailto(?:params)': 'mailTo',
 			'setup': 'showSetup',
+			'shortcuts': 'showKeyboardShortcuts',
 			'accounts/:accountId/settings': 'showAccountSettings'
 		}
 	});

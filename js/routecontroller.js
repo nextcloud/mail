@@ -41,6 +41,7 @@ define(function(require) {
 			Radio.navigation.on('search', _.bind(this.searchFolder, this));
 			Radio.navigation.on('setup', _.bind(this.showSetup, this));
 			Radio.navigation.on('accountsettings', _.bind(this.showAccountSettings, this));
+			Radio.navigation.on('keyboardshortcuts', _.bind(this.showKeyboardShortcuts, this));
 		},
 		_navigate: function(route, options) {
 			options = options || {};
@@ -148,6 +149,11 @@ define(function(require) {
 			Radio.ui.trigger('composer:leave');
 			Radio.ui.trigger('navigation:hide');
 			Radio.ui.trigger('setup:show');
+		},
+		showKeyboardShortcuts: function() {
+			this._navigate('shortcuts');
+			Radio.ui.trigger('composer:leave');
+			Radio.ui.trigger('keyboardShortcuts:show');
 		},
 		showAccountSettings: function(accountId) {
 			this._navigate('accounts/' +  accountId + '/settings');

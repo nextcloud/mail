@@ -24,8 +24,9 @@ define(function(require) {
 	var ErrorView = require('views/errorview');
 	var LoadingView = require('views/loadingview');
 	var NavigationView = require('views/navigation');
-	var SetupView = require('views/setup');
+	var SetupView = require('views/setupview');
 	var AccountSettingsView = require('views/accountsettings');
+	var KeyboardShortcutView = require('views/keyboardshortcuts');
 
 	// Load handlebars helper
 	require('views/helper');
@@ -35,7 +36,8 @@ define(function(require) {
 		LOADING: -1,
 		FOLDER_CONTENT: 0,
 		SETUP: 1,
-		ACCOUNT_SETTINGS: 2
+		ACCOUNT_SETTINGS: 2,
+		KEYBOARD_SHORTCUTS: 3
 	});
 
 	var AppView = Marionette.View.extend({
@@ -62,6 +64,7 @@ define(function(require) {
 			this.listenTo(Radio.ui, 'search:set', this.setSearchQuery);
 			this.listenTo(Radio.ui, 'sidebar:loading', this.showSidebarLoading);
 			this.listenTo(Radio.ui, 'sidebar:accounts', this.showSidebarAccounts);
+			this.listenTo(Radio.ui, 'keyboardShortcuts:show', this.showKeyboardShortcuts);
 
 			// Hide notification favicon when switching back from
 			// another browser tab
@@ -149,14 +152,18 @@ define(function(require) {
 			$('#mail_message').removeClass('icon-loading');
 		},
 		showSetup: function() {
-			if (this.activeContent !== ContentType.SETUP) {
-				this.activeContent = ContentType.SETUP;
+			this.activeContent = ContentType.SETUP;
 
-				this.showChildView('content', new SetupView({
-					displayName: $('#user-displayname').text(),
-					email: $('#user-email').text()
-				}));
-			}
+			this.showChildView('content', new SetupView({
+				config: {
+					accountName: $('#user-displayname').text(),
+					emailAddress: $('#user-email').text()
+				}
+			}));
+		},
+		showKeyboardShortcuts: function() {
+			this.activeContent = ContentType.KEYBOARD_SHORTCUTS;
+			this.showChildView('content', new KeyboardShortcutView({}));
 		},
 		showFolderContent: function(account, folder, options) {
 			this.activeContent = ContentType.FOLDER_CONTENT;
@@ -197,7 +204,7 @@ define(function(require) {
 			}
 			if (count > 0) {
 				window.document.title = name + ' (' + count + ')' +
-						// jscs:disable requireCamelCaseOrUpperCaseIdentifiers
+					// jscs:disable requireCamelCaseOrUpperCaseIdentifiers
 					activeEmail + ' - Mail - ' + oc_defaults.title;
 				// jscs:enable requireCamelCaseOrUpperCaseIdentifiers
 			} else {

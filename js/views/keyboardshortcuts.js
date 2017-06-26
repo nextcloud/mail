@@ -1,5 +1,3 @@
-/* global expect */
-
 /**
  * @author Steffen Lindner <mail@steffen-lindner.de>
  *
@@ -19,26 +17,17 @@
  *
  */
 
+define(function(require) {
+	'strict';
 
-define(['views/errorview'], function(ErrorView) {
+	var Handlebars = require('handlebars');
+	var Marionette = require('marionette');
+	var KeyboardShortcutTemplate = require('text!templates/keyboard-shortcuts.html');
 
-	describe('ErrorView', function () {
-
-		var errorview;
-
-		beforeEach(function () {
-			errorview = new ErrorView({});
-		});
-
-		describe('Rendering', function () {
-
-			it('produces the correct HTML', function () {
-				errorview.render();
-
-				var html = errorview.el.innerHTML.trim();
-				var expected_html = '<div class="">\n\t<div class="icon-mail"></div>\n\t<h2>An unknown error occurred</h2>\n</div>';
-				expect(html).toContain(expected_html);
-			});
-		});
+	var KeyboardShortcutView = Marionette.View.extend({
+		id: 'keyboardshortcut',
+		template: Handlebars.compile(KeyboardShortcutTemplate)
 	});
+
+	return KeyboardShortcutView;
 });
