@@ -23,6 +23,7 @@ namespace OCA\Mail\Service\IMAP;
 
 use Horde_Imap_Client_Socket;
 use OCA\Mail\Account;
+use OCA\Mail\Cache\Cache;
 use OCP\ICacheFactory;
 use OCP\IConfig;
 use OCP\Security\ICrypto;
