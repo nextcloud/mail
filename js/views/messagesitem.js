@@ -98,6 +98,8 @@ define(function(require) {
 		openMessage: function(event) {
 			event.stopPropagation();
 			$('#mail-message').removeClass('hidden-mobile');
+			// make sure message is marked as read when clicked on it
+			Radio.ui.trigger('messagesview:messageflag:set', this.model.id, 'unseen', false);
 			var account = require('state').currentAccount;
 			var folder = require('state').currentFolder;
 			Radio.message.trigger('load', account, folder, this.model, {
