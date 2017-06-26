@@ -5,7 +5,7 @@
  * later. See the COPYING file.
  *
  * @author Christoph Wurst <christoph@winzerhof-wurst.at>
- * @copyright Christoph Wurst 2016
+ * @copyright Christoph Wurst 2016, 2017
  */
 
 define(function(require) {
@@ -14,39 +14,55 @@ define(function(require) {
 	var _ = require('underscore');
 	var Marionette = require('marionette');
 	var Handlebars = require('handlebars');
-	var AccountController = require('controller/accountcontroller');
-	var Radio = require('radio');
-	var SetupTemplate = require('text!templates/setup.html');
+	var AccountFormTemplate = require('text!templates/account-form.html');
 
+	/**
+	 * @class AccountFormView
+	 */
 	return Marionette.View.extend({
-		template: Handlebars.compile(SetupTemplate),
-		id: 'setup',
-		firstToggle: true,
-		displayName: '',
-		email: '',
-		manualMode: false,
-		loading: false,
-		ui: {
-			'form': 'form',
-			'inputs': 'input, select',
-			'toggleManualMode': '.toggle-manual-mode',
-			'accountName': 'input[name="account-name"]',
-			'mailAddress': 'input[name="mail-address"]',
-			'mailPassword': 'input[name="mail-password"]',
-			'manualInputs': '.manual-inputs',
-			'imapHost': 'input[name="imap-host"]',
-			'imapPort': 'input[name="imap-port"]',
-			'imapSslMode': '#setup-imap-ssl-mode',
-			'imapUser': 'input[name="imap-user"]',
-			'imapPassword': 'input[name="imap-password"]',
-			'smtpHost': 'input[name="smtp-host"]',
-			'smtpSslMode': '#setup-smtp-ssl-mode',
-			'smtpPort': 'input[name="smtp-port"]',
-			'smtpUser': 'input[name="smtp-user"]',
-			'smtpPassword': 'input[name="smtp-password"]',
-			'submitButton': 'input[type=submit]',
-			'iconLoading': '#connect-loading'
+
+		/** @type {string} */
+		id: 'account-form',
+
+		/** @type {Function} */
+		template: Handlebars.compile(AccountFormTemplate),
+
+		/**
+		 * @returns {object}
+		 */
+		templateContext: function() {
+			return {
+				config: this._config
+			};
 		},
+
+		/** @type {boolean} */
+		firstToggle: true,
+
+		/** @type {object} */
+		_config: '',
+
+		ui: {
+			form: 'form',
+			inputs: 'input, select',
+			toggleManualMode: '.toggle-manual-mode',
+			accountName: 'input[name="account-name"]',
+			mailAddress: 'input[name="mail-address"]',
+			mailPassword: 'input[name="mail-password"]',
+			manualInputs: '.manual-inputs',
+			imapHost: 'input[name="imap-host"]',
+			imapPort: 'input[name="imap-port"]',
+			imapSslMode: '#setup-imap-ssl-mode',
+			imapUser: 'input[name="imap-user"]',
+			imapPassword: 'input[name="imap-password"]',
+			smtpHost: 'input[name="smtp-host"]',
+			smtpSslMode: '#setup-smtp-ssl-mode',
+			smtpPort: 'input[name="smtp-port"]',
+			smtpUser: 'input[name="smtp-user"]',
+			smtpPassword: 'input[name="smtp-password"]',
+			submitButton: 'input[type=submit]'
+		},
+
 		events: {
 			'click @ui.submitButton': 'onSubmit',
 			'submit @ui.form': 'onSubmit',
@@ -54,28 +70,50 @@ define(function(require) {
 			'change @ui.imapSslMode': 'onImapSslModeChange',
 			'change @ui.smtpSslMode': 'onSmtpSslModeChange'
 		},
+
+		/**
+		 * @param {object} options
+		 * @returns {undefined}
+		 */
 		initialize: function(options) {
-			_.defaults(options, {
-				displayName: '',
-				email: ''
+			this._config = _.defaults(options.config || {}, {
+				accountName: '',
+				emailAddress: '',
+				autoDetect: true,
+				imapPort: 993,
+				imapSslMode: 'ssl',
+				smtpPort: 587,
+				smtpSslMode: 'tls'
 			});
-			this.displayName = options.displayName;
-			this.email = options.email;
 		},
+
+		/**
+		 * @returns {undefined}
+		 */
 		onRender: function() {
-			this.getUI('manualInputs').hide();
-			this.getUI('iconLoading').hide();
-			this.getUI('accountName').val(this.displayName);
-			this.getUI('mailAddress').val(this.email);
+			if (this._config.autoDetect) {
+				this.getUI('mailPassword').show();
+				this.getUI('manualInputs').hide();
+			} else {
+				this.getUI('mailPassword').hide();
+			}
+
+			this.getUI('imapSslMode').find('[value="' + this._config.imapSslMode + '"]').attr({'selected': 'selected'});
+			this.getUI('smtpSslMode').find('[value="' + this._config.smtpSslMode + '"]').attr({'selected': 'selected'});
 		},
+
+		/**
+		 * @param {Event} e
+		 * @returns {undefined}
+		 */
 		toggleManualMode: function(e) {
 			e.stopPropagation();
-			this.manualMode = !this.manualMode;
+			this._config.autoDetect = !this._config.autoDetect;
 
 			this.getUI('manualInputs').slideToggle();
 			this.getUI('imapHost').focus();
 
-			if (this.manualMode) {
+			if (!this._config.autoDetect) {
 				if (this.firstToggle) {
 					// Manual mode opened for the first time
 					// -> copy email, password for imap&smtp
@@ -102,13 +140,14 @@ define(function(require) {
 					.removeClass('groupbottom').addClass('groupmiddle');
 			}
 		},
+
+		/**
+		 * @param {type} e
+		 * @returns {undefined}
+		 */
 		onSubmit: function(e) {
 			e.preventDefault();
 			e.stopPropagation();
-
-			this.getUI('inputs').prop('disabled', true);
-			this.getUI('submitButton').val(t('mail', 'Connecting'));
-			this.getUI('iconLoading').fadeIn();
 
 			var emailAddress = this.getUI('mailAddress').val();
 			var accountName = this.getUI('accountName').val();
@@ -122,7 +161,7 @@ define(function(require) {
 			};
 
 			// if manual setup is open, use manual values
-			if (this.manualMode) {
+			if (!this._config.autoDetect) {
 				config = {
 					accountName: accountName,
 					emailAddress: emailAddress,
@@ -141,27 +180,12 @@ define(function(require) {
 				};
 			}
 
-			this.loading = true;
-			var _this = this;
-			Radio.account.request('create', config).then(function() {
-				Radio.ui.trigger('navigation:show');
-				Radio.ui.trigger('content:loading');
-				// reload accounts
-				return AccountController.loadAccounts();
-			}).then(function(accounts) {
-				// Let's assume there's at least one account after a successful
-				// setup, so let's show the first one (could be the unified inbox)
-				var firstAccount = accounts.first();
-				var firstFolder = firstAccount.folders.first();
-				Radio.navigation.trigger('folder', firstAccount.get('accountId'), firstFolder.get('id'));
-			}).catch(function(error) {
-				_this.loading = false;
-				Radio.ui.trigger('error:show', error);
-				_this.getUI('iconLoading').hide();
-				_this.getUI('inputs').prop('disabled', false);
-				_this.getUI('submitButton').val(t('mail', 'Connect'));
-			});
+			this.triggerMethod('form:submit', config);
 		},
+
+		/**
+		 * @returns {undefined}
+		 */
 		onImapSslModeChange: function() {
 			// set standard port for the selected IMAP & SMTP security
 			var imapDefaultPort = 143;
@@ -177,6 +201,10 @@ define(function(require) {
 					break;
 			}
 		},
+
+		/**
+		 * @returns {undefined}
+		 */
 		onSmtpSslModeChange: function() {
 			var smtpDefaultPort = 587;
 			var smtpDefaultSecurePort = 465;

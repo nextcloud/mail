@@ -31,8 +31,8 @@
 }
 
 
-/* SETUP */
-#setup {
+/* ACCOUNT FORM */
+#account-form {
 	z-index: 1001;
 	width: 250px;
 	top: 15%;
@@ -41,33 +41,33 @@
 	padding-top: 30px;
 }
 @media only screen and (max-height: 400px) {
-	#setup #emptycontent {
+	#account-form #emptycontent {
 		margin-top: 0px;
 	}
 }
 @media only screen and (min-height: 401px) and (max-height: 600px) {
-	#setup #emptycontent {
+	#account-form #emptycontent {
 		margin-top: 2vh;
 	}
 }
 @media only screen and (min-height: 601px) {
-	#setup #emptycontent {
+	#account-form #emptycontent {
 		margin-top: 10vh;
 	}
 }
-#setup h2 {
+#account-form h2 {
 	text-align: center;
 	position: relative;
 	width: 300%;
 	left: -100%;
 	margin-bottom: 20px;
 }
-#setup input {
+#account-form input {
 	width: 100%;
 	box-sizing: border-box;
 }
 
-#setup .toggle-manual-mode {
+#account-form .toggle-manual-mode {
 	background-position: right;
 	padding-right: 16px;
 	margin-left: 6px;
@@ -75,15 +75,15 @@
 	opacity: .3;
 }
 
-#setup-imap-ssl,
-#setup-smtp-ssl {
-	float: right;
-	margin: -3px -3px -52px 0;
+#setup-imap-ssl-mode,
+#setup-smtp-ssl-mode {
+	position: absolute;
+	top: 0;
+	right: 0;
+	margin: 0;
+	background-color: transparent;
+	border: none;
 	z-index: 100;
-}
-#setup-imap-ssl label,
-#setup-smtp-ssl label {
-	opacity: .4;
 }
 
 #connect-loading {

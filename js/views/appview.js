@@ -24,7 +24,7 @@ define(function(require) {
 	var ErrorView = require('views/errorview');
 	var LoadingView = require('views/loadingview');
 	var NavigationView = require('views/navigation');
-	var SetupView = require('views/setup');
+	var SetupView = require('views/setupview');
 	var AccountSettingsView = require('views/accountsettings');
 	var KeyboardShortcutView = require('views/keyboardshortcuts');
 
@@ -152,14 +152,14 @@ define(function(require) {
 			$('#mail_message').removeClass('icon-loading');
 		},
 		showSetup: function() {
-			if (this.activeContent !== ContentType.SETUP) {
-				this.activeContent = ContentType.SETUP;
+			this.activeContent = ContentType.SETUP;
 
-				this.showChildView('content', new SetupView({
-					displayName: $('#user-displayname').text(),
-					email: $('#user-email').text()
-				}));
-			}
+			this.showChildView('content', new SetupView({
+				config: {
+					accountName: $('#user-displayname').text(),
+					emailAddress: $('#user-email').text()
+				}
+			}));
 		},
 		showKeyboardShortcuts: function() {
 			this.activeContent = ContentType.KEYBOARD_SHORTCUTS;
@@ -204,7 +204,7 @@ define(function(require) {
 			}
 			if (count > 0) {
 				window.document.title = name + ' (' + count + ')' +
-						// jscs:disable requireCamelCaseOrUpperCaseIdentifiers
+					// jscs:disable requireCamelCaseOrUpperCaseIdentifiers
 					activeEmail + ' - Mail - ' + oc_defaults.title;
 				// jscs:enable requireCamelCaseOrUpperCaseIdentifiers
 			} else {
