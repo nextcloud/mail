@@ -45,6 +45,7 @@ OC.L10N.register(
     "Error while downloading calendar event" : "Erreur pendant le téléchargement de l'évènement du calendrier",
     "Error while deleting message." : "Erreur lors de la suppression du message.",
     "Error while loading messages." : "Erreur lors du chargement des messages.",
+    "Setting up your account" : "Paramétrage de votre compte",
     "Inbox" : "Boîte de réception",
     "Sent" : "Envoyés",
     "Drafts" : "Brouillons",
