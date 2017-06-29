@@ -15,6 +15,7 @@
     "Invalid account" : "Llogari e pavlefshme",
     "Invalid folder" : "Dosje e pavlefshme",
     "Unknown error" : "Gabim i panjohur",
+    "Error while creating the account: " : "Problem gjatë krijimit të llogarisë:",
     "All inboxes" : "Krejt kutitë e postës",
     "Could not load {tag}{name}{endtag}" : "Nuk mund të ngarkohej {tag}{name}{endtag}",
     "We couldn’t load {tag}{name}{endtag}" : "Ne nuk mund të ngarkonim {tag}{name}{endtag}",
