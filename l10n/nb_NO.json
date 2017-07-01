@@ -64,6 +64,7 @@
     "If you don’t want to visit that page, you can return to <a href=\"%s\">Mail</a>." : "Hvis du ikke ønsker å besøke den siden, kan du returnere til <a href=\"%s\">E-post</a>.",
     "Continue to %s" : "Fortsett til %s",
     "Delete account" : "Slett konto",
+    "Try again" : "Prøv igjen",
     "New message" : "Ny melding",
     "Account Settings" : "Kontoinnstillinger",
     "Aliases" : "Aliaser",
