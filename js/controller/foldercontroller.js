@@ -41,18 +41,17 @@ define(function(require) {
 	/**
 	 * @param {Account} account
 	 * @param {Folder} folder
-	 * @param {boolean} noSelect
 	 * @param {string} searchQuery
 	 * @returns {undefined}
 	 */
-	function loadFolderMessages(account, folder, noSelect, searchQuery) {
+	function loadFolderMessages(account, folder, searchQuery) {
 		Radio.ui.trigger('composer:leave');
 
 		// Set folder active
 		Radio.folder.trigger('setactive', account, folder);
 
-		if (noSelect) {
-			$('#emptycontent').show();
+		if (folder.get('noSelect')) {
+			Radio.ui.trigger('content:error', t('mail', 'Can not load this folder.'));
 			require('state').currentAccount = account;
 			require('state').currentFolder = folder;
 			Radio.ui.trigger('messagesview:message:setactive', null);
@@ -106,7 +105,7 @@ define(function(require) {
 		Radio.ui.trigger('content:loading', t('mail', 'Loading {folder}', {
 			folder: folder.get('name')
 		}));
-		loadFolderMessages(account, folder, false);
+		loadFolderMessages(account, folder);
 
 		// Save current folder
 		Radio.folder.trigger('setactive', account, folder);
@@ -128,7 +127,7 @@ define(function(require) {
 		Radio.ui.trigger('content:loading', t('mail', 'Searching for {query}', {
 			query: query
 		}));
-		loadFolderMessagesDebounced(account, folder, false, query);
+		loadFolderMessagesDebounced(account, folder, query);
 	}
 
 	/**

@@ -41,6 +41,7 @@ define(function(require) {
 			Radio.navigation.on('search', _.bind(this.searchFolder, this));
 			Radio.navigation.on('setup', _.bind(this.showSetup, this));
 			Radio.navigation.on('accountsettings', _.bind(this.showAccountSettings, this));
+			Radio.navigation.on('keyboardshortcuts', _.bind(this.showKeyboardShortcuts, this));
 		},
 		_navigate: function(route, options) {
 			options = options || {};
@@ -98,7 +99,7 @@ define(function(require) {
 			var firstFolder = firstAccount.folders.at(0);
 			_this.showFolder(firstAccount.get('accountId'), firstFolder.get('id'));
 		},
-		showFolder: function(accountId, folderId, noSelect) {
+		showFolder: function(accountId, folderId) {
 			this._navigate('accounts/' + accountId + '/folders/' + folderId);
 			var _this = this;
 			var account = this.accounts.get(accountId);
@@ -115,7 +116,7 @@ define(function(require) {
 				Radio.ui.trigger('error:show', t('mail', 'Invalid folder'));
 				this._navigate('accounts/' + accountId + '/folders/' + folder.get('id'));
 			}
-			FolderController.showFolder(account, folder, noSelect);
+			FolderController.showFolder(account, folder);
 		},
 		searchFolder: function(accountId, folderId, query) {
 			if (!query || query === '') {
@@ -148,6 +149,11 @@ define(function(require) {
 			Radio.ui.trigger('composer:leave');
 			Radio.ui.trigger('navigation:hide');
 			Radio.ui.trigger('setup:show');
+		},
+		showKeyboardShortcuts: function() {
+			this._navigate('shortcuts');
+			Radio.ui.trigger('composer:leave');
+			Radio.ui.trigger('keyboardShortcuts:show');
 		},
 		showAccountSettings: function(accountId) {
 			this._navigate('accounts/' +  accountId + '/settings');

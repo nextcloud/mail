@@ -15,7 +15,6 @@
     "Invalid account" : "Nieprawidłowe konto",
     "Invalid folder" : "Nieprawidłowy folder",
     "Unknown error" : "Nieznany błąd",
-    "Error while creating an account: " : "Błąd podczas tworzenia konta:",
     "All inboxes" : "Wszystkie skrzynki odbiorcze",
     "Could not load {tag}{name}{endtag}" : "Nie można załadować {tag}{name}{endtag}",
     "We couldn’t load {tag}{name}{endtag}" : "Nie możemy załadować {tag}{name}{endtag}",
@@ -44,8 +43,6 @@
     "Error while downloading calendar event" : "Wystąpił błąd podczas pobierania zdarzenia z kalendarza",
     "Error while deleting message." : "Błąd podczas usuwania wiadomości.",
     "Error while loading messages." : "Błąd podczas ładowania wiadomości.",
-    "Connecting" : "Łączę ",
-    "Connect" : "Połącz",
     "Inbox" : "Odbiorcza",
     "Sent" : "Wysłane",
     "Drafts" : "Szkice",
@@ -73,6 +70,13 @@
     "Mail address" : "Adres mailowy",
     "Display Name" : "Wyświetlana nazwa",
     "Save" : "Zapisz",
+    "Keyboard shortcuts" : "Skróty klawiaturowe",
+    "Newer message" : "Nowsza wiadomość",
+    "Older message" : "Starsza wiadomość",
+    "Toggle unread" : "Oznacz jako nieprzeczytane",
+    "Delete" : "Usuń",
+    "Search" : "Szukaj",
+    "Refresh" : "Odśwież",
     "Connect your mail account" : "Podłącz konto pocztowe",
     "Name" : "Nazwa",
     "Mail Address" : "Adres mailowy",
@@ -90,6 +94,7 @@
     "SMTP Port" : "Port SMTP",
     "SMTP User" : "Użytkownik SMTP",
     "SMTP Password" : "Hasło SMTP",
+    "Connect" : "Połącz",
     "from" : "od",
     "to" : "do",
     "cc" : "cc",
@@ -105,5 +110,5 @@
     "Import into calendar" : "Importuj do kalendarza",
     "Download attachment" : "Pobierz załącznik",
     "Save to Files" : "Zapisz do plików"
-},"pluralForm" :"nplurals=4; plural=(n==1 ? 0 : (n%10>=2 && n%10<=4) && (n%100<12 || n%100>=14) ? 1 : n!=1 && (n%10>=0 && n%10<=1) || (n%10>=5 && n%10<=9) || (n%100>=12 && n%100<=14) ? 2 : 3);"
+},"pluralForm" :"nplurals=4; plural=(n==1 ? 0 : (n%10>=2 && n%10<=4) && (n%100<12 || n%100>14) ? 1 : n!=1 && (n%10>=0 && n%10<=1) || (n%10>=5 && n%10<=9) || (n%100>=12 && n%100<=14) ? 2 : 3);"
 }
