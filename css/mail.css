@@ -30,6 +30,9 @@
 	background-color: rgb(240, 240, 240);
 }
 
+.folder.no-select {
+	cursor: not-allowed;
+}
 
 /* ACCOUNT FORM */
 #account-form {

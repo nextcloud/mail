@@ -1,9 +1,10 @@
 {{#if folders}}
 <button class="collapse"></button>
 {{/if}}
-<a class="folder {{#if specialRole}}
-   icon-{{specialRole}} svg{{/if}}"
-   href="{{url}}">
+<a class="folder
+	{{#if specialRole}} icon-{{specialRole}} svg{{/if}}
+	{{#if noSelect}} no-select {{/if}}"
+   href="{{#if noSelect}}#{{else}}{{url}}{{/if}}">
 	{{name}}
 	{{#if count}}
 	<span class="utils">{{count}}</span>

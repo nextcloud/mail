@@ -95,8 +95,13 @@ define(function(require) {
 			// TODO: account should be property of folder
 			var account = require('state').accounts.get(this.model.get('accountId'));
 			var folder = this.model;
-			var noSelect = this.model.get('noSelect');
-			Radio.navigation.trigger('folder', account.get('accountId'), folder.get('id'), noSelect);
+
+			if (folder.get('noSelect')) {
+				console.info('ignoring \'loadFolder\' event for noSelect folder');
+				return;
+			}
+
+			Radio.navigation.trigger('folder', account.get('accountId'), folder.get('id'));
 		},
 
 		onRender: function() {
