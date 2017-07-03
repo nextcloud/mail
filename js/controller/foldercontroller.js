@@ -214,15 +214,21 @@ define(function(require) {
 			folder.set('total', Math.max(0, folder.get('total')));
 		});
 
-		var thisModelCollection = message.collection;
-		var index = thisModelCollection.indexOf(message);
+		var searchCollection = currentFolder.messages;
+		var index = searchCollection.indexOf(message);
 		// Select previous or first
 		if (index === 0) {
 			index = 1;
 		} else {
 			index = index - 1;
 		}
-		var nextMessage = thisModelCollection.at(index);
+		var nextMessage = searchCollection.at(index);
+
+		// Remove message
+		applyOnFolders(folders, function(folder) {
+			folder.messages.remove(message);
+		});
+
 		if (require('state').currentMessage && require('state').currentMessage.get('id') === message.id) {
 			if (nextMessage) {
 				Radio.message.trigger('load', message.folder.account, message.folder, nextMessage);
@@ -230,12 +236,6 @@ define(function(require) {
 		}
 
 		return Radio.message.request('delete', message)
-			.then(function() {
-				applyOnFolders(folders, function(folder) {
-					// Remove message
-					folder.messages.remove(message);
-				});
-			})
 			.catch(function(err) {
 				console.error(err);
 
