@@ -99,7 +99,7 @@ define(function(require) {
 			var firstFolder = firstAccount.folders.at(0);
 			_this.showFolder(firstAccount.get('accountId'), firstFolder.get('id'));
 		},
-		showFolder: function(accountId, folderId, noSelect) {
+		showFolder: function(accountId, folderId) {
 			this._navigate('accounts/' + accountId + '/folders/' + folderId);
 			var _this = this;
 			var account = this.accounts.get(accountId);
@@ -116,7 +116,7 @@ define(function(require) {
 				Radio.ui.trigger('error:show', t('mail', 'Invalid folder'));
 				this._navigate('accounts/' + accountId + '/folders/' + folder.get('id'));
 			}
-			FolderController.showFolder(account, folder, noSelect);
+			FolderController.showFolder(account, folder);
 		},
 		searchFolder: function(accountId, folderId, query) {
 			if (!query || query === '') {
