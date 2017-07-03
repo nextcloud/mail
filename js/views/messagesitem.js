@@ -5,7 +5,7 @@
  * later. See the COPYING file.
  *
  * @author Christoph Wurst <christoph@winzerhof-wurst.at>
- * @copyright Christoph Wurst 2015, 2016
+ * @copyright Christoph Wurst 2017
  */
 
 define(function(require) {
@@ -83,12 +83,12 @@ define(function(require) {
 			// directly change star state in the interface for quick feedback
 			if (starred) {
 				this.getUI('star')
-						.removeClass('icon-starred')
-						.addClass('icon-star');
+					.removeClass('icon-starred')
+					.addClass('icon-star');
 			} else {
 				this.getUI('star')
-						.removeClass('icon-star')
-						.addClass('icon-starred');
+					.removeClass('icon-star')
+					.addClass('icon-starred');
 			}
 
 			Radio.message.trigger('flag', this.model, 'flagged', !starred);
@@ -97,59 +97,29 @@ define(function(require) {
 			event.stopPropagation();
 			$('#mail-message').removeClass('hidden-mobile');
 			// make sure message is marked as read when clicked on it
-			Radio.message.trigger('flag', this.message, 'unseen', false);
-			Radio.message.trigger('load', account, folder, this.model, {
+			Radio.message.trigger('flag', this.model, 'unseen', false);
+			Radio.message.trigger('load', this.model.folder.account, this.model.folder, this.model, {
 				force: true
 			});
 		},
 		deleteMessage: function(event) {
 			event.stopPropagation();
-			var thisModel = this.model;
+			var message = this.model;
+
 			this.getUI('iconDelete').removeClass('icon-delete').addClass('icon-loading-small');
 			$('.tooltip').remove();
 
-			var folder = this.model.folder;
-			var account = folder.account;
-			var count = folder.get('total');
-			folder.set('total', count - 1);
-
-			var thisModelCollection = thisModel.collection;
-			var index = thisModelCollection.indexOf(thisModel);
-			// Select previous or first
-			if (index === 0) {
-				index = 1;
-			} else {
-				index = index - 1;
-			}
-			var nextMessage = thisModelCollection.at(index);
-			if (require('state').currentMessage && require('state').currentMessage.get('id') === thisModel.id) {
-				if (nextMessage) {
-					Radio.message.trigger('load', account, folder, nextMessage);
-				}
-			}
-
 			this.$el.addClass('transparency').slideUp(function() {
 				$('.tooltip').remove();
-				thisModelCollection.remove(thisModel);
+
+				// really delete the message
+				Radio.folder.request('message:delete', message, require('state').currentFolder);
 
 				// manually trigger mouseover event for current mouse position
 				// in order to create a tooltip for the next message if needed
 				if (event.clientX) {
 					$(document.elementFromPoint(event.clientX, event.clientY)).trigger('mouseover');
 				}
-			});
-
-			// really delete the message
-			Radio.message.request('delete', account, folder, this.model).catch(function() {
-				// TODO: move to controller
-				Radio.ui.trigger('error:show', t('mail', 'Error while deleting message.'));
-
-				// Restore counter
-				count = folder.get('total');
-				folder.set('total', count + 1);
-
-				// Add the message to the collection again
-				folder.addMessage(this.model);
 			});
 		}
 	});

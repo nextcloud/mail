@@ -457,15 +457,13 @@ define(function(require) {
 	}
 
 	/**
-	 * @param {Account} account
-	 * @param {Folder} folder
 	 * @param {Message} message
 	 * @returns {Promise}
 	 */
-	function deleteMessage(account, folder, message) {
+	function deleteMessage(message) {
 		var url = OC.generateUrl('apps/mail/accounts/{accountId}/folders/{folderId}/messages/{messageId}', {
-			accountId: account.get('accountId'),
-			folderId: folder.get('id'),
+			accountId: message.folder.account.get('accountId'),
+			folderId: message.folder.get('id'),
 			messageId: message.get('id')
 		});
 		return Promise.resolve($.ajax(url, {
