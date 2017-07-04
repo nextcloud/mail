@@ -11,7 +11,7 @@
  */
 
 define([
-	'views/attachments',
+	'views/attachmentsview',
 	'jquery'
 ], function(AttachmentView, $) {
 

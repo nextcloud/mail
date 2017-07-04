@@ -5,7 +5,7 @@
  * later. See the COPYING file.
  *
  * @author Christoph Wurst <christoph@winzerhof-wurst.at>
- * @copyright Christoph Wurst 2016
+ * @copyright Christoph Wurst 2017
  */
 
 define(function(require) {
@@ -18,7 +18,7 @@ define(function(require) {
 	var OC = require('OC');
 	var Radio = require('radio');
 	var Attachments = require('models/attachments');
-	var AttachmentsView = require('views/attachments');
+	var AttachmentsView = require('views/attachmentsview');
 	var ComposerTemplate = require('text!templates/composer.html');
 
 	return Marionette.View.extend({

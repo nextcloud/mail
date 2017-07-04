@@ -17,7 +17,7 @@ define(function(require) {
 	var OC = require('OC');
 	var Handlebars = require('handlebars');
 	var Radio = require('radio');
-	var AttachmentView = require('views/attachment');
+	var AttachmentView = require('views/attachmentview');
 	var AttachmentsTemplate = require('text!templates/attachments.html');
 	var LocalAttachment = require('models/localattachment');
 
