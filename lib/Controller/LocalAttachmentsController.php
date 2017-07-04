@@ -23,7 +23,6 @@
 namespace OCA\Mail\Controller;
 
 use OCA\Mail\Contracts\IAttachmentService;
-use OCA\Mail\Service\Attachment\AttachmentService;
 use OCA\Mail\Service\Attachment\UploadedFile;
 use OCP\AppFramework\Controller;
 use OCP\AppFramework\Http;
@@ -32,7 +31,7 @@ use OCP\IRequest;
 
 class LocalAttachmentsController extends Controller {
 
-	/** @var AttachmentService */
+	/** @var IAttachmentService */
 	private $attachmentService;
 
 	/** @var string */

@@ -77,7 +77,7 @@ class AttachmentStorage {
 		}
 
 		try {
-			$fileContent = file_get_contents($tmpPath);
+			$fileContent = @file_get_contents($tmpPath);
 		} catch (Throwable $ex) {
 			$fileContent = false;
 		}
