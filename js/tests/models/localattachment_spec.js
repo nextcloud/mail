@@ -1,3 +1,5 @@
+/* global expect */
+
 /**
  * @author Luc Calaresu <dev@calaresu.com>
  *
@@ -20,6 +22,7 @@
 define([
 	'models/localattachment'
 ], function(LocalAttachment) {
+
 	/* LocalAttachment derivates from Attachment */
 	/* We just test the specifics since Attachment is already tested */
 	describe('LocalAttachment', function() {
@@ -37,11 +40,11 @@ define([
 		it('updates its attributes on upload progress', function() {
 			attachment = new LocalAttachment();
 			/* simulate a call to 'onProgress' with some example values */
-			progressEvent = {
+			var progressEvent = {
 				lengthComputable: true,
 				loaded: 500,
 				total: 1000
-			}
+			};
 			attachment.onProgress(progressEvent);
 
 			/* we expect the status to be 'ONGOING' and the value 0.5 (=500/1000) */
@@ -51,11 +54,11 @@ define([
 
 		it('does not update its attributes if progress is not computable', function() {
 			/* simulate a call to 'onProgress' with some example values */
-			progressEvent = {
+			var progressEvent = {
 				lengthComputable: false,
 				loaded: 1000,
 				total: 1000
-			}
+			};
 			attachment.onProgress(progressEvent);
 
 			/* we expect the status to be 'ONGOING' and the value 0.5 (=500/1000) */

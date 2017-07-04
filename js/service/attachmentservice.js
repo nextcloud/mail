@@ -57,7 +57,7 @@ define(function(require) {
 			data: {
 				targetPath: path
 			},
-			type: 'POST',
+			type: 'POST'
 		};
 
 		return Promise.resolve($.ajax(url, options));
@@ -73,45 +73,39 @@ define(function(require) {
 
 	/**
 	 * @param {File} file
-	 * @param {function} localAttachmentModel
+	 * @param {LocalAttachment} localAttachment
 	 * @returns {Promise}
 	 */
-	function uploadLocalAttachment(file, localAttachmentModel) {
+	function uploadLocalAttachment(file, localAttachment) {
 		var fd = new FormData();
 		fd.append('attachment', file);
 
-		var progressCallback = localAttachmentModel.onProgress;
+		var progressCallback = localAttachment.onProgress;
 		var url = OC.generateUrl('/apps/mail/attachments');
 
-		return new Promise(function(resolve, reject) {
-			$.ajax({
-				url: url,
-				type: 'POST',
-				xhr: function() {
-					var customXhr = $.ajaxSettings.xhr();
-					// save the xhr into the model in order to :
-					//  - distinguish upload and nextcloud file attachments
-					//  - keep the upload status for later use
-					localAttachmentModel.set('uploadRequest', customXhr);
-					// and start the request
-					if (customXhr.upload && _.isFunction(progressCallback)) {
-						customXhr.upload.addEventListener(
-							'progress',
-							progressCallback.bind(localAttachmentModel),
-							false);
-					}
-					return customXhr;
-				},
-				data: fd,
-				processData: false,
-				contentType: false
-			})
-			.done(function(data) {
-				resolve(data.id);
-			})
-			.fail(function(err) {
-				reject();
-			});;
+		return Promise.resolve($.ajax({
+			url: url,
+			type: 'POST',
+			xhr: function() {
+				var customXhr = $.ajaxSettings.xhr();
+				// save the xhr into the model in order to :
+				//  - distinguish upload and nextcloud file attachments
+				//  - keep the upload status for later use
+				localAttachment.set('uploadRequest', customXhr);
+				// and start the request
+				if (customXhr.upload && _.isFunction(progressCallback)) {
+					customXhr.upload.addEventListener(
+						'progress',
+						progressCallback.bind(localAttachment),
+						false);
+				}
+				return customXhr;
+			},
+			data: fd,
+			processData: false,
+			contentType: false
+		})).then(function(data) {
+			return data.id;
 		});
 	}
 
@@ -119,34 +113,33 @@ define(function(require) {
 	 * This method is called when a local attachment upload should be aborted.
 	 * If there is no upload ongoing, this method has no effect.
 	 *
-	 * @param {function} localAttachmentModel
+	 * @param {LocalAttachment} localAttachment
 	 */
-	function abortLocalAttachment(localAttachmentModel) {
-		var uploadRequest = localAttachmentModel.get('uploadRequest');
+	function abortLocalAttachment(localAttachment) {
+		var uploadRequest = localAttachment.get('uploadRequest');
 		if (uploadRequest && uploadRequest.readyState < 4) {
 			uploadRequest.abort();
 		}
-		localAttachmentModel.collection.remove(localAttachmentModel);
+		localAttachment.collection.remove(localAttachment);
 	}
 
 	/**
 	 * This method is called when a local attachment upload has
 	 * successfully finished. The server returned the db attachment id.
 	 *
-	 * @param {function} localAttachmentModel
-	 * @param {number} filedId
+	 * @param {LocalAttachment} localAttachment
+	 * @param {number} fileId
 	 */
-	function uploadLocalAttachmentFinished(localAttachmentModel, fileId) {
-		if (fileId === undefined || localAttachmentModel.get('progress') < 1) {
-			localAttachmentModel.set('uploadStatus', 2);  // error
-		}
-		else {
+	function uploadLocalAttachmentFinished(localAttachment, fileId) {
+		if (fileId === undefined || localAttachment.get('progress') < 1) {
+			localAttachment.set('uploadStatus', 2);  // error
+		} else {
 			/* If we have a file id (file successfully uploaded), we saved it */
-			localAttachmentModel.set('id', fileId);
-			localAttachmentModel.set('uploadStatus', 3);  // success
+			localAttachment.set('id', fileId);
+			localAttachment.set('uploadStatus', 3);  // success
 		}
 		// we are done with the request, just get rid of it!
-		localAttachmentModel.unset('uploadRequest');
+		localAttachment.unset('uploadRequest');
 	}
 
 

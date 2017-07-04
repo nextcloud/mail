@@ -1,12 +1,12 @@
- /**
-  * Mail
-  *
-  * This file is licensed under the Affero General Public License version 3 or
-  * later. See the COPYING file.
-  *
-  * @author Christoph Wurst <christoph@winzerhof-wurst.at>
-  * @author Luc Calaresu <dev@calaresu.com>
-  */
+/**
+ * Mail
+ *
+ * This file is licensed under the Affero General Public License version 3 or
+ * later. See the COPYING file.
+ *
+ * @author Christoph Wurst <christoph@winzerhof-wurst.at>
+ * @author Luc Calaresu <dev@calaresu.com>
+ */
 
 define(function(require) {
 	'use strict';
@@ -14,13 +14,16 @@ define(function(require) {
 	var Attachment = require('models/attachment');
 
 	var LocalAttachment = Attachment.extend({
+
 		defaults: {
 			progress: 0,
 			uploadStatus: 0  /* 0=pending, 1=ongoing, 2=error, 3=success */
 		},
-		initialize: function() {
-			Attachment.prototype.initialize.call(this);
-		},
+
+		/**
+		 * @param {Event} evt
+		 * @returns {undefined}
+		 */
 		onProgress: function(evt) {
 			if (evt.lengthComputable) {
 				this.set('uploadStatus', 1);

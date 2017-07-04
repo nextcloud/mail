@@ -1,3 +1,5 @@
+/* global expect */
+
 /**
  * @author Christoph Wurst <christoph@winzerhof-wurst.at>
  *
