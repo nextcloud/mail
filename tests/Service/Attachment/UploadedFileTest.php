@@ -48,7 +48,7 @@ class UploadedFileTest extends PHPUnit_Framework_TestCase {
 
 	public function testGetTempPath() {
 		$file = new UploadedFile([
-			'tmp_path' => '/tmp/path',
+			'tmp_name' => '/tmp/path',
 		]);
 
 		$this->assertEquals('/tmp/path', $file->getTempPath());

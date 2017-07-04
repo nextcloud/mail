@@ -60,7 +60,7 @@ class AttachmentService implements IAttachmentService {
 
 		$persisted = $this->mapper->insert($attachment);
 		try {
-			$this->storage->save($userId, $persisted, $file);
+			$this->storage->save($userId, $persisted->id, $file);
 		} catch (UploadException $ex) {
 			// Clean-up
 			$this->mapper->delete($persisted);

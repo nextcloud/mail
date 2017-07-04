@@ -71,7 +71,7 @@ class AttachmentServiceTest extends PHPUnit_Framework_TestCase {
 			->willReturn($persistedAttachment);
 		$this->storage->expects($this->once())
 			->method('save')
-			->with($this->equalTo($userId), $this->equalTo($persistedAttachment), $this->equalTo($uploadedFile))
+			->with($this->equalTo($userId), $this->equalTo(123), $this->equalTo($uploadedFile))
 			->willThrowException(new UploadException());
 		$this->mapper->expects($this->once())
 			->method('delete')
@@ -102,7 +102,7 @@ class AttachmentServiceTest extends PHPUnit_Framework_TestCase {
 			->willReturn($persistedAttachment);
 		$this->storage->expects($this->once())
 			->method('save')
-			->with($this->equalTo($userId), $this->equalTo($persistedAttachment), $this->equalTo($uploadedFile));
+			->with($this->equalTo($userId), $this->equalTo(123), $this->equalTo($uploadedFile));
 
 		$this->service->addFile($userId, $uploadedFile);
 	}

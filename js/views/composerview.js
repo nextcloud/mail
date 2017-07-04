@@ -404,7 +404,7 @@ define(function(require) {
 					onSuccess();
 				}
 
-				if (this.draftUID !== null) {
+				if (_this.draftUID !== null) {
 					// update UID in message list
 					var collection = Radio.ui.request('messagesview:collection');
 					var message = collection.findWhere({id: this.draftUID});

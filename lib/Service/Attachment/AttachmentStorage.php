@@ -73,7 +73,7 @@ class AttachmentStorage {
 		$file = $folder->newFile($attachmentId);
 		$tmpPath = $uploadedFile->getTempPath();
 		if (is_null($tmpPath)) {
-			throw new UploadException('tmp_path of uploaded file is null');
+			throw new UploadException('tmp_name of uploaded file is null');
 		}
 
 		try {
