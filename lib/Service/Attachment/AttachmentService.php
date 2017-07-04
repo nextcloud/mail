@@ -22,35 +22,50 @@
 
 namespace OCA\Mail\Service\Attachment;
 
+use OCA\Mail\Contracts\IAttachmentService;
 use OCA\Mail\Db\LocalAttachment;
 use OCA\Mail\Db\LocalAttachmentMapper;
+use OCA\Mail\Exception\AttachmentNotFoundException;
+use OCA\Mail\Exception\UploadException;
 use OCP\AppFramework\Db\DoesNotExistException;
-use OCP\AppFramework\Utility\ITimeFactory;
 
-class AttachmentService {
+class AttachmentService implements IAttachmentService {
 
 	/** @var LocalAttachmentMapper */
 	private $mapper;
 
+	/** @var AttachmentStorage */
+	private $storage;
+
 	/**
 	 * @param LocalAttachmentMapper $mapper
+	 * @param AttachmentStorage $storage
 	 */
-	public function __construct(LocalAttachmentMapper $mapper) {
+	public function __construct(LocalAttachmentMapper $mapper,
+		AttachmentStorage $storage) {
 		$this->mapper = $mapper;
+		$this->storage = $storage;
 	}
 
 	/**
 	 * @param string $userId
 	 * @param UploadedFile $file
 	 * @return LocalAttachment
+	 * @throws UploadException
 	 */
 	public function addFile($userId, UploadedFile $file) {
 		$attachment = new LocalAttachment();
 		$attachment->setUserId($userId);
 		$attachment->setFileName($file->getFileName());
-		$attachment->setFilePath($file->getPath());
 
-		$this->mapper->insert($attachment);
+		$persisted = $this->mapper->insert($attachment);
+		try {
+			$this->storage->save($userId, $persisted, $file);
+		} catch (UploadException $ex) {
+			// Clean-up
+			$this->mapper->delete($persisted);
+			throw $ex;
+		}
 
 		return $attachment;
 	}
@@ -78,6 +93,7 @@ class AttachmentService {
 		} catch (DoesNotExistException $ex) {
 			// Nothing to do then
 		}
+		$this->storage->delete($userId, $id);
 	}
 
 }

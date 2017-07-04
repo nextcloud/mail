@@ -2,7 +2,6 @@
 
 /**
  * @author Christoph Wurst <christoph@winzerhof-wurst.at>
- * @author Luc Calaresu <dev@calaresu.com>
  *
  * Mail
  *
@@ -20,10 +19,8 @@
  *
  */
 
-namespace OCA\Mail\Service\Attachment;
+namespace OCA\Mail\Exception;
 
-use Exception;
-
-class AttachmentNotFoundException extends Exception {
+class UploadException extends ServiceException {
 
 }

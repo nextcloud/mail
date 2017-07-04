@@ -2,7 +2,6 @@
 
 /**
  * @author Christoph Wurst <christoph@winzerhof-wurst.at>
- * @author Luc Calaresu <dev@calaresu.com>
  *
  * Mail
  *
@@ -20,35 +19,8 @@
  *
  */
 
-namespace OCA\Mail\Db;
+namespace OCA\Mail\Exception;
 
-use JsonSerializable;
-use OCP\AppFramework\Db\Entity;
-
-/**
- * @method string getUserId()
- * @method void setUserId(string $userId)
- * @method string getFileName()
- * @method void setFileName(string $fileName)
- * @method int getCreatedAt()
- * @method void setCreatedAt(int $createdAt)
- */
-class LocalAttachment extends Entity implements JsonSerializable {
-
-	/** @var string */
-	protected $userId;
-
-	/** @var string */
-	protected $fileName;
-
-	/** @var mixed */
-	protected $createdAt;
-
-	public function jsonSerialize() {
-		return [
-			'id' => $this->id,
-			'fileName' => $this->fileName,
-		];
-	}
+class AttachmentNotFoundException extends ServiceException {
 
 }

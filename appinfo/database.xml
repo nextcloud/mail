@@ -222,11 +222,6 @@
 				<length>255</length>
 			</field>
 			<field>
-				<name>file_path</name>
-				<type>clob</type>
-				<notnull>true</notnull>
-			</field>
-			<field>
 				<name>created_at</name>
 				<type>integer</type>
 				<default>0</default>

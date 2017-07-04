@@ -22,16 +22,18 @@
 
 namespace OCA\Mail\Controller;
 
-use OCP\IRequest;
+use OCA\Mail\Contracts\IAttachmentService;
 use OCA\Mail\Service\Attachment\AttachmentService;
 use OCA\Mail\Service\Attachment\UploadedFile;
 use OCP\AppFramework\Controller;
+use OCP\AppFramework\Http;
 use OCP\AppFramework\Http\JSONResponse;
+use OCP\IRequest;
 
 class LocalAttachmentsController extends Controller {
 
 	/** @var AttachmentService */
-	private $service;
+	private $attachmentService;
 
 	/** @var string */
 	private $userId;
@@ -39,13 +41,13 @@ class LocalAttachmentsController extends Controller {
 	/**
 	 * @param string $appName
 	 * @param IRequest $request
-	 * @param AttachmentService $service,
+	 * @param IAttachmentService $attachmentService
 	 * @param string $UserId
 	 */
 	public function __construct($appName, IRequest $request,
-		AttachmentService $service, $UserId) {
+		IAttachmentService $attachmentService, $UserId) {
 		parent::__construct($appName, $request);
-		$this->service = $service;
+		$this->attachmentService = $attachmentService;
 		$this->userId = $UserId;
 	}
 
@@ -57,10 +59,14 @@ class LocalAttachmentsController extends Controller {
 	public function create() {
 		$file = $this->request->getUploadedFile('attachment');
 
-		$uploadedFile = new UploadedFile($file);
-		$attachment = $this->service->addFile($this->userId, $uploadedFile);
+		if (is_null($file)) {
+			return new JSONResponse(null, Http::STATUS_BAD_REQUEST);
+		}
 
-		return $attachment;
+		$uploadedFile = new UploadedFile($file);
+		$attachment = $this->attachmentService->addFile($this->userId, $uploadedFile);
+
+		return new JSONResponse($attachment, Http::STATUS_CREATED);
 	}
 
 }

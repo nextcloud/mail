@@ -22,6 +22,7 @@
 
 namespace OCA\Mail\Db;
 
+use OCP\AppFramework\Db\DoesNotExistException;
 use OCP\AppFramework\Db\Mapper;
 use OCP\IDBConnection;
 
@@ -35,6 +36,7 @@ class LocalAttachmentMapper extends Mapper {
 	}
 
 	/**
+	 * @throws DoesNotExistException
 	 * @param int $userId
 	 * @param int $id
 	 * @return LocalAttachment

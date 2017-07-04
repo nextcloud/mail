@@ -2,7 +2,6 @@
 
 /**
  * @author Christoph Wurst <christoph@winzerhof-wurst.at>
- * @author Luc Calaresu <dev@calaresu.com>
  *
  * Mail
  *
@@ -20,32 +19,39 @@
  *
  */
 
-namespace OCA\Mail\Service\Attachment;
+namespace OCA\Mail\Contracts;
 
-class UploadedFile {
+use OCA\Mail\Db\LocalAttachment;
+use OCA\Mail\Exception\AttachmentNotFoundException;
+use OCA\Mail\Service\Attachment\UploadedFile;
 
-	/** @var array */
-	private $fileData;
-
-	/**
-	 * @param array $fileData
-	 */
-	public function __construct(array $fileData) {
-		$this->fileData = $fileData;
-	}
+interface IAttachmentService {
 
 	/**
-	 * @return string|null
+	 * Save an uploaded file
+	 *
+	 * @param string $userId
+	 * @param UploadedFile $file
+	 * @return LocalAttachment
 	 */
-	public function getFileName() {
-		return isset($this->fileData['name']) ? $this->fileData['name'] : null;
-	}
+	public function addFile($userId, UploadedFile $file);
 
 	/**
-	 * @return string|null
+	 * Try to get an attachment by id
+	 *
+	 * @throws AttachmentNotFoundException
+	 * @param string $userId
+	 * @param int $id
+	 * @return LocalAttachment
 	 */
-	public function getTempPath() {
-		return isset($this->fileData['tmp_path']) ? $this->fileData['tmp_path'] : null;
-	}
+	public function getAttachment($userId, $id);
 
+	/**
+	 * Delete an attachment if it exists
+	 *
+	 * @param string $userId
+	 * @param int $id
+	 * @return LocalAttachment
+	 */
+	public function deleteAttachment($userId, $id);
 }
