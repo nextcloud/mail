@@ -56,6 +56,8 @@ class ProxyController extends Controller {
 	 * @param IURLGenerator $urlGenerator
 	 * @param ISession $session
 	 * @param IClientService $clientService
+	 * @param string $referrer
+	 * @param string $hostname
 	 */
 	public function __construct($appName, IRequest $request,
 		IURLGenerator $urlGenerator, ISession $session,	IClientService $clientService, $referrer, $hostname) {
