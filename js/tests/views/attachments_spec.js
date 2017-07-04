@@ -32,7 +32,7 @@ define([
 		it('produces the correct HTML', function() {
 			view.render();
 
-			expect(this.AttachmentView.el.innerHTML)
+			expect(view.el.innerHTML)
 				.toContain('<ul></ul>\n\
 <button type="button" id="add-local-attachment" style="display: inline-block;">\n\
   <span class="icon-upload"></span> Add attachment\n\
