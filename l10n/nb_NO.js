@@ -4,6 +4,7 @@ OC.L10N.register(
     "Mail" : "E-post",
     "Error while loading the accounts." : "Feil ved innlasting av kontoene.",
     "Error while loading the selected account." : "Feil ved lasting av den valgte kontoen.",
+    "Can not load this folder." : "Kan ikke laste denne mappen.",
     "Loading {folder}" : "Laster {folder}",
     "Searching for {query}" : "Søker etter {query}",
     "Forwarded message" : "Videresendt melding",
