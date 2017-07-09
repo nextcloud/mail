@@ -4,6 +4,7 @@ OC.L10N.register(
     "Mail" : "Correo",
     "Error while loading the accounts." : "Se presentó un error al cargar las cuentas.",
     "Error while loading the selected account." : "Se presentó un error al cargar la cuenta seleccionada. ",
+    "Can not load this folder." : "No se puede cargar esta carpeta.",
     "Loading {folder}" : "Cargando {folder}",
     "Searching for {query}" : "Buscando a {query}",
     "Forwarded message" : "mensaje reenviado",
