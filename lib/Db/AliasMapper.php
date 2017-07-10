@@ -27,7 +27,7 @@ class AliasMapper extends Mapper {
 	/**
 	 * @param int $aliasId
 	 * @param string $currentUserId
-	 * @return Alias[]
+	 * @return Alias
 	 */
 	public function find($aliasId, $currentUserId) {
 		$sql = 'select *PREFIX*mail_aliases.* from *PREFIX*mail_aliases join *PREFIX*mail_accounts on *PREFIX*mail_aliases.account_id = *PREFIX*mail_accounts.id where *PREFIX*mail_accounts.user_id = ? and *PREFIX*mail_aliases.id=?';
