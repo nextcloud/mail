@@ -263,14 +263,6 @@ class AccountsController extends Controller {
 		$aliasId) {
 		$account = $this->accountService->find($this->currentUserId, $accountId);
 		$alias = $aliasId ? $this->aliasesService->find($aliasId, $this->currentUserId) : null;
-		if ($account instanceof UnifiedAccount) {
-			list($account, $folderId, $messageId) = $account->resolve($messageId);
-		}
-		if (!$account instanceof Account) {
-			return new JSONResponse(
-				['message' => 'Invalid account'], Http::STATUS_BAD_REQUEST
-			);
-		}
 
 		$messageData = NewMessageData::fromRequest($account, $to, $cc, $bcc, $subject, $body, $attachments);
 		$repliedMessageData = new RepliedMessageData($account, $folderId, $messageId);
