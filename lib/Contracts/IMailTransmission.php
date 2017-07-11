@@ -27,5 +27,13 @@ use OCA\Mail\Model\RepliedMessageData;
 
 interface IMailTransmission {
 
+	/**
+	 * Send a new message or reply to an existing one
+	 *
+	 * @param NewMessageData $message
+	 * @param RepliedMessageData $reply
+	 * @param Alias|null $alias
+	 * @param int|null $draftUID
+	 */
 	public function sendMessage(NewMessageData $message, RepliedMessageData $reply, Alias $alias = null, $draftUID = null);
 }

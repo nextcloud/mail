@@ -44,12 +44,25 @@ class MailTransmission implements IMailTransmission {
 	/** @var Folder */
 	private $userFolder;
 
+	/**
+	 * @param AddressCollector $addressCollector
+	 * @param Folder $userFolder
+	 * @param Logger $logger
+	 */
 	public function __construct(AddressCollector $addressCollector, $userFolder, Logger $logger) {
 		$this->addressCollector = $addressCollector;
 		$this->userFolder = $userFolder;
 		$this->logger = $logger;
 	}
 
+	/**
+	 * Send a new message or reply to an existing one
+	 *
+	 * @param NewMessageData $message
+	 * @param RepliedMessageData $reply
+	 * @param Alias|null $alias
+	 * @param int|null $draftUID
+	 */
 	public function sendMessage(NewMessageData $messageData, RepliedMessageData $replyData, Alias $alias = null,
 		$draftUID = null) {
 		$account = $messageData->getAccount();
