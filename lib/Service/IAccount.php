@@ -69,12 +69,6 @@ interface IAccount extends JsonSerializable {
 	public function moveMessage($sourceFolderId, $messageId, $destFolderId);
 
 	/**
-	 * @param string[] $query
-	 * @return array
-	 */
-	public function getChangedMailboxes($query);
-
-	/**
 	 * @return IMailBox
 	 */
 	public function getInbox();
