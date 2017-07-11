@@ -677,58 +677,6 @@ class Account implements IAccount {
 	}
 
 	/**
-	 * @param $query
-	 * @return array
-	 */
-	public function getChangedMailboxes($query) {
-		$imp = $this->getImapConnection();
-		$allBoxes = $this->getMailboxes();
-		$allBoxesMap = [];
-		foreach ($allBoxes as $mb) {
-			$allBoxesMap[$mb->getFolderId()] = $mb;
-		}
-
-		// filter non existing mailboxes
-		$mailBoxNames = array_filter(array_keys($query), function($folderId) use ($allBoxesMap) {
-			return isset($allBoxesMap[$folderId]);
-		});
-
-		$status = $imp->status($mailBoxNames);
-
-		// filter for changed mailboxes
-		$changedBoxes = [];
-		foreach ($status as $folderId => $s) {
-			$uidValidity = $query[$folderId]['uidvalidity'];
-			$uidNext = $query[$folderId]['uidnext'];
-
-			if ($uidNext === $s['uidnext'] &&
-				$uidValidity === $s['uidvalidity']) {
-				continue;
-			}
-			// get unread messages
-			if (isset($allBoxesMap[$folderId])) {
-				/** @var Mailbox $m */
-				$m = $allBoxesMap[$folderId];
-				$role = $m->getSpecialRole();
-				if (is_null($role) || $role === 'inbox') {
-					$newMessages = $m->getMessagesSince($uidNext, $s['uidnext']);
-					// only trigger updates in case new messages are actually available
-					if (!empty($newMessages)) {
-						$changedBoxes[$folderId] = $m->serialize($this->getId(), $s);
-						$changedBoxes[$folderId]['messages'] = $newMessages;
-						$newUnreadMessages = array_filter($newMessages, function($m) {
-							return $m['flags']['unseen'];
-						});
-						$changedBoxes[$folderId]['newUnReadCounter'] = count($newUnreadMessages);
-					}
-				}
-			}
-		}
-
-		return $changedBoxes;
-	}
-
-	/**
 	 * @throws Horde_Imap_Client_Exception
 	 */
 	public function reconnect() {

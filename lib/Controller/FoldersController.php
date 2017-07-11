@@ -140,37 +140,4 @@ class FoldersController extends Controller {
 		}
 	}
 
-	/**
-	 * @NoAdminRequired
-	 * @param $accountId
-	 * @param $folders
-	 * @return JSONResponse
-	 */
-	public function detectChanges($accountId, $folders) {
-		try {
-			$query = [];
-			foreach ($folders as $folder) {
-				$folderId = base64_decode($folder['id']);
-				$parts = explode('/', $folderId);
-				if (count($parts) > 1 && $parts[1] === 'FLAGGED') {
-					continue;
-				}
-				if (isset($folder['error'])) {
-					continue;
-				}
-				$query[$folderId] = $folder;
-			}
-			$account = $this->accountService->find($this->currentUserId, $accountId);
-			$mailBoxes = $account->getChangedMailboxes($query);
-
-			return new JSONResponse($mailBoxes);
-		} catch (Horde_Imap_Client_Exception $e) {
-			$response = new JSONResponse();
-			$response->setStatus(Http::STATUS_INTERNAL_SERVER_ERROR);
-			return $response;
-		} catch (DoesNotExistException $e) {
-			return new JSONResponse();
-		}
-	}
-
 }
