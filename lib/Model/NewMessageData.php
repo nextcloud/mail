@@ -23,7 +23,6 @@ namespace OCA\Mail\Model;
 
 use Horde_Mail_Rfc822_List;
 use OCA\Mail\Account;
-use OCA\Mail\Service\IAccount;
 
 /**
  * Simple data class that wraps the request data of a new message or reply
@@ -71,10 +70,20 @@ class NewMessageData {
 		$this->attachments = $attachments;
 	}
 
-	public static function fromRequest(IAccount $account, $to, $cc, $bcc, $subject, $body, $attachments) {
-		$toArray = is_null($to) ? [] : Message::parseAddressList($to);
-		$ccArray = is_null($cc) ? [] : Message::parseAddressList($cc);
-		$bccArray = is_null($bcc) ? [] : Message::parseAddressList($bcc);
+	/**
+	 * @param Account $account
+	 * @param string|null $to
+	 * @param string|null $cc
+	 * @param string|null $bcc
+	 * @param string $subject
+	 * @param string $body
+	 * @param array|null $attachments
+	 * @return NewMessageData
+	 */
+	public static function fromRequest(Account $account, $to, $cc, $bcc, $subject, $body, $attachments) {
+		$toArray = is_null($to) ? new Horde_Mail_Rfc822_List() : Message::parseAddressList($to);
+		$ccArray = is_null($cc) ? new Horde_Mail_Rfc822_List() : Message::parseAddressList($cc);
+		$bccArray = is_null($bcc) ? new Horde_Mail_Rfc822_List() : Message::parseAddressList($bcc);
 		$attchmentsArray = is_null($attachments) ? [] : $attachments;
 
 		return new NewMessageData($account, $toArray, $ccArray, $bccArray, $subject, $body, $attchmentsArray);

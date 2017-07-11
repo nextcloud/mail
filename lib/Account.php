@@ -105,11 +105,10 @@ class Account implements IAccount {
 	}
 
 	/**
-	 * @param Alias $alias
+	 * @param Alias|null $alias
 	 * @return void
 	 */
 	public function setAlias($alias) {
-		$this->alias = new Alias();
 		$this->alias = $alias;
 	}
 
