@@ -66,7 +66,7 @@ OC.L10N.register(
     "Click here if you are not automatically redirected within the next few seconds." : "Haga click aqui si no es redireccionado automáticamente dentro de los siguietes segundos. ",
     "Redirect" : "Redireccionar",
     "The link leads to %s" : "La liga lleva a %s",
-    "If you don’t want to visit that page, you can return to <a href=\"%s\">Mail</a>." : "Si no desea visitar esa página, puede regresar a <a href=\"%s\">Correo</a>.",
+    "If you don’t want to visit that page, you can return to <a href=\"%s\">Mail</a>." : "Si no quieres visitar esa página, puedes regresar a <a href=\"%s\">Correo</a>.",
     "Continue to %s" : "Continuar a %s",
     "Delete account" : "Borrar cuenta",
     "Try again" : "Reintentar",
