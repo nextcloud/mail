@@ -43,7 +43,7 @@ OC.L10N.register(
     "you" : "siz",
     "Send message to {email}" : "{email} adresine ileti gönder",
     "No writable calendars found" : "Yazılabilecek bir takvim bulunamadı",
-    "Error while importing the calendar event" : "Takvim etkinliği alınırken bir sorun çıktı",
+    "Error while importing the calendar event" : "Takvim etkinliği içe aktarılırken sorun çıktı",
     "Error while downloading calendar event" : "Takvim etkinliği indirilirken sorun çıktı",
     "Error while deleting message." : "İleti silinirken sorun çıktı.",
     "Error while loading messages." : "İletiler yüklenirken sorun çıktı.",
@@ -115,7 +115,7 @@ OC.L10N.register(
     "Show images from this sender" : "Bu gönderenden gelen görseller görüntülensin",
     "Forward" : "İlet",
     "Add attachment from Files" : "Dosyalardan ek dosya ekle",
-    "Import into calendar" : "Şu takvime al",
+    "Import into calendar" : "Şu takvimin içine aktar",
     "Download attachment" : "Ek dosyayı indir",
     "Save to Files" : "Dosyalara Kaydet"
 },
