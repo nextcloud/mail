@@ -52,7 +52,7 @@ OC.L10N.register(
     "Archive" : "Arkivë",
     "Trash" : "Hedhurina",
     "Junk" : "Të pavlera",
-    "All" : "Krejt",
+    "All" : "Të gjithë",
     "Favorites" : "Të parapëlqyer",
     "Creating account failed: " : "Krijimi i llogarisë dështoi: ",
     "Auto detect failed. Please use manual mode." : "Vetëzbulimi dështoi. Ju lutemi, përdorni metodën dorazi.",
