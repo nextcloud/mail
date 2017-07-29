@@ -4,6 +4,7 @@ OC.L10N.register(
     "Mail" : "Posta",
     "Error while loading the accounts." : "Gabim gjatë ngarkimit të llogarive.",
     "Error while loading the selected account." : "Gabim gjatë ngarkimit të llogarisë së përzgjedhur.",
+    "Can not load this folder." : "Nuk mund të ngarkohet kjo dosje.",
     "Loading {folder}" : "Po ngarkohet {folder}",
     "Searching for {query}" : "Duke kërkuar për {query}",
     "Forwarded message" : "Mesazhi u përcoll",
