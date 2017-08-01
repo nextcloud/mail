@@ -589,7 +589,7 @@ define(function(require) {
 				});
 			}
 			if (alias) {
-				$('.mail-account').val(alias.id);
+				this.$('.mail-account').val(alias.id);
 			}
 		},
 		/**

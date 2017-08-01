@@ -28,14 +28,14 @@ namespace OCA\Mail\Controller;
 
 use Exception;
 use Horde_Exception;
-use Horde_Imap_Client;
 use OCA\Mail\Account;
+use OCA\Mail\Contracts\IMailTransmission;
 use OCA\Mail\Db\MailAccount;
 use OCA\Mail\Model\Message;
-use OCA\Mail\Model\ReplyMessage;
+use OCA\Mail\Model\NewMessageData;
+use OCA\Mail\Model\RepliedMessageData;
 use OCA\Mail\Service\AccountService;
 use OCA\Mail\Service\AliasesService;
-use OCA\Mail\Service\AutoCompletion\AddressCollector;
 use OCA\Mail\Service\AutoConfig\AutoConfig;
 use OCA\Mail\Service\Logger;
 use OCA\Mail\Service\UnifiedAccount;
@@ -44,8 +44,6 @@ use OCP\AppFramework\Db\DoesNotExistException;
 use OCP\AppFramework\Http;
 use OCP\AppFramework\Http\JSONResponse;
 use OCP\AppFramework\Http\Response;
-use OCP\Files\File;
-use OCP\Files\Folder;
 use OCP\IL10N;
 use OCP\IRequest;
 use OCP\Security\ICrypto;
@@ -61,9 +59,6 @@ class AccountsController extends Controller {
 	/** @var AutoConfig */
 	private $autoConfig;
 
-	/** @var Folder */
-	private $userFolder;
-
 	/** @var Logger */
 	private $logger;
 
@@ -73,18 +68,17 @@ class AccountsController extends Controller {
 	/** @var ICrypto */
 	private $crypto;
 
-	/** @var AddressCollector  */
-	private $addressCollector;
-
 	/** @var AliasesService  */
 	private $aliasesService;
+
+	/** @var IMailTransmission */
+	private $mailTransmission;
 
 	/**
 	 * @param string $appName
 	 * @param IRequest $request
 	 * @param AccountService $accountService
 	 * @param $UserId
-	 * @param $userFolder
 	 * @param AutoConfig $autoConfig
 	 * @param Logger $logger
 	 * @param IL10N $l10n
@@ -94,24 +88,22 @@ class AccountsController extends Controller {
 		IRequest $request,
 		AccountService $accountService,
 		$UserId,
-		$userFolder,
 		AutoConfig $autoConfig,
 		Logger $logger,
 		IL10N $l10n,
 		ICrypto $crypto,
-		AddressCollector $addressCollector,
-		AliasesService $aliasesService
+		AliasesService $aliasesService,
+		IMailTransmission $mailTransmission
 	) {
 		parent::__construct($appName, $request);
 		$this->accountService = $accountService;
 		$this->currentUserId = $UserId;
-		$this->userFolder = $userFolder;
 		$this->autoConfig = $autoConfig;
 		$this->logger = $logger;
 		$this->l10n = $l10n;
 		$this->crypto = $crypto;
-		$this->addressCollector = $addressCollector;
 		$this->aliasesService = $aliasesService;
+		$this->mailTransmission = $mailTransmission;
 	}
 
 	/**
@@ -263,91 +255,25 @@ class AccountsController extends Controller {
 	 * @param string $cc
 	 * @param string $bcc
 	 * @param int $draftUID
-	 * @param string $messageId
+	 * @param int $messageId
 	 * @param mixed $attachments
 	 * @return JSONResponse
 	 */
-	public function send($accountId, $folderId, $subject, $body, $to, $cc,
-		$bcc, $draftUID, $messageId, $attachments, $aliasId) {
+	public function send($accountId, $folderId, $subject, $body, $to, $cc, $bcc, $draftUID, $messageId, $attachments,
+		$aliasId) {
 		$account = $this->accountService->find($this->currentUserId, $accountId);
 		$alias = $aliasId ? $this->aliasesService->find($aliasId, $this->currentUserId) : null;
-		if ($account instanceof UnifiedAccount) {
-			list($account, $folderId, $messageId) = $account->resolve($messageId);
-		}
-		if (!$account instanceof Account) {
-			return new JSONResponse(
-				['message' => 'Invalid account'],
-				Http::STATUS_BAD_REQUEST
-			);
-		}
 
-		$mailbox = null;
-		if (!is_null($folderId) && !is_null($messageId)) {
-			// Reply
-			$message = $account->newReplyMessage();
-
-			$mailbox = $account->getMailbox(base64_decode($folderId));
-			$repliedMessage = $mailbox->getMessage($messageId);
-
-			if (is_null($subject)) {
-				// No subject set – use the original one
-				$message->setSubject($repliedMessage->getSubject());
-			} else {
-				$message->setSubject($subject);
-			}
-
-			if (is_null($to)) {
-				$message->setTo(Message::parseAddressList($repliedMessage->getToList()));
-			} else {
-				$message->setTo(Message::parseAddressList($to));
-			}
-
-			$message->setRepliedMessage($repliedMessage);
-		} else {
-			// New message
-			$message = $account->newMessage();
-			$message->setTo(Message::parseAddressList($to));
-			$message->setSubject($subject ? : '');
-		}
-
-		$account->setAlias($alias);
-		$message->setFrom($alias ? $alias->alias : $account->getEMailAddress());
-		$message->setCC(Message::parseAddressList($cc));
-		$message->setBcc(Message::parseAddressList($bcc));
-		$message->setContent($body);
-
-		if (is_array($attachments)) {
-			foreach($attachments as $attachment) {
-				$fileName = $attachment['fileName'];
-				if ($this->userFolder->nodeExists($fileName)) {
-					$f = $this->userFolder->get($fileName);
-					if ($f instanceof File) {
-						$message->addAttachmentFromFiles($f);
-					}
-				}
-			}
-		}
+		$messageData = NewMessageData::fromRequest($account, $to, $cc, $bcc, $subject, $body, $attachments);
+		$repliedMessageData = new RepliedMessageData($account, $folderId, $messageId);
 
 		try {
-			$account->sendMessage($message, $draftUID);
-
-			// in case of reply we flag the message as answered
-			if ($message instanceof ReplyMessage) {
-				$mailbox->setMessageFlag($messageId, Horde_Imap_Client::FLAG_ANSWERED, true);
-			}
-
-			// Collect mail addresses
-			try {
-				$addresses = array_merge($message->getToList(), $message->getCCList(), $message->getBCCList());
-				$this->addressCollector->addAddresses($addresses);
-			} catch (Exception $e) {
-				$this->logger->error("Error while collecting mail addresses: " . $e->getMessage());
-			}
+			$this->mailTransmission->sendMessage($messageData, $repliedMessageData, $alias, $draftUID);
 		} catch (Horde_Exception $ex) {
 			$this->logger->error('Sending mail failed: ' . $ex->getMessage());
-			return new JSONResponse(
-				array('message' => $ex->getMessage()),
-				Http::STATUS_INTERNAL_SERVER_ERROR
+			return new JSONResponse([
+				'message' => $ex->getMessage()
+				], Http::STATUS_INTERNAL_SERVER_ERROR
 			);
 		}
 

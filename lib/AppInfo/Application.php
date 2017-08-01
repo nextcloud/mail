@@ -24,8 +24,10 @@ namespace OCA\Mail\AppInfo;
 
 use OCA\Mail\Contracts\IAttachmentService;
 use OCA\Mail\Contracts\IMailManager;
+use OCA\Mail\Contracts\IMailTransmission;
 use OCA\Mail\Service\Attachment\AttachmentService;
 use OCA\Mail\Service\MailManager;
+use OCA\Mail\Service\MailTransmission;
 use OCP\AppFramework\App;
 use OCP\Util;
 
@@ -45,6 +47,7 @@ class Application extends App {
 
 		$container->registerAlias(IMailManager::class, MailManager::class);
 		$container->registerAlias(IAttachmentService::class, AttachmentService::class);
+		$container->registerAlias(IMailTransmission::class, MailTransmission::class);
 		$container->registerService('OCP\ISession', function ($c) {
 			return $c->getServer()->getSession();
 		});
