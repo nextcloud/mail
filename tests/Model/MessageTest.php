@@ -208,7 +208,7 @@ class MessageTest extends PHPUnit_Framework_TestCase {
 		$expected->setType($mimeType);
 
 		$this->message->addAttachmentFromFiles($file);
-		$actual = $this->message->getAttachments();
+		$actual = $this->message->getCloudAttachments();
 
 		$this->assertCount(1, $actual);
 		//$this->assertEquals($expected, $actual[0]);

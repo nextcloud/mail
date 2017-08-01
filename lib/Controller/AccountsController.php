@@ -268,7 +268,7 @@ class AccountsController extends Controller {
 		$repliedMessageData = new RepliedMessageData($account, $folderId, $messageId);
 
 		try {
-			$this->mailTransmission->sendMessage($messageData, $repliedMessageData, $alias, $draftUID);
+			$this->mailTransmission->sendMessage($this->currentUserId, $messageData, $repliedMessageData, $alias, $draftUID);
 		} catch (Horde_Exception $ex) {
 			$this->logger->error('Sending mail failed: ' . $ex->getMessage());
 			return new JSONResponse([

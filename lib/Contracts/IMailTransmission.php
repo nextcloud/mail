@@ -30,10 +30,12 @@ interface IMailTransmission {
 	/**
 	 * Send a new message or reply to an existing one
 	 *
+	 * @param string $userId
 	 * @param NewMessageData $message
 	 * @param RepliedMessageData $reply
 	 * @param Alias|null $alias
 	 * @param int|null $draftUID
 	 */
-	public function sendMessage(NewMessageData $message, RepliedMessageData $reply, Alias $alias = null, $draftUID = null);
+	public function sendMessage($userId, NewMessageData $message,
+		RepliedMessageData $reply, Alias $alias = null, $draftUID = null);
 }

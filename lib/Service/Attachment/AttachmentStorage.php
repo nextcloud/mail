@@ -21,10 +21,12 @@
 
 namespace OCA\Mail\Service\Attachment;
 
+use OCA\Mail\Exception\AttachmentNotFoundException;
 use OCA\Mail\Exception\UploadException;
 use OCP\Files\IAppData;
 use OCP\Files\NotFoundException;
 use OCP\Files\NotPermittedException;
+use OCP\Files\SimpleFS\ISimpleFile;
 use OCP\Files\SimpleFS\ISimpleFolder;
 use Throwable;
 
@@ -42,20 +44,19 @@ class AttachmentStorage {
 
 	/**
 	 * @param string $userId
-	 * @param IAppData $appData
 	 * @return ISimpleFolder
 	 * @throws NotPermittedException
 	 */
-	private function getAttachmentFolder($userId, IAppData $appData) {
+	private function getAttachmentFolder($userId) {
 		$folderName = implode('_', [
 			'mail',
 			$userId
 		]);
 
 		try {
-			return $appData->getFolder($folderName);
+			return $this->appData->getFolder($folderName);
 		} catch (NotFoundException $ex) {
-			return $appData->newFolder($folderName);
+			return $this->appData->newFolder($folderName);
 		}
 	}
 
@@ -68,7 +69,7 @@ class AttachmentStorage {
 	 * @throws UploadException
 	 */
 	public function save($userId, $attachmentId, UploadedFile $uploadedFile) {
-		$folder = $this->getAttachmentFolder($userId, $this->appData);
+		$folder = $this->getAttachmentFolder($userId);
 
 		$file = $folder->newFile($attachmentId);
 		$tmpPath = $uploadedFile->getTempPath();
@@ -86,6 +87,22 @@ class AttachmentStorage {
 			throw new UploadException('could not read uploaded file');
 		}
 		$file->putContent($fileContent);
+	}
+
+	/**
+	 * @param string $userId
+	 * @param int $attachmentId
+	 * @return ISimpleFile
+	 * @throws AttachmentNotFoundException
+	 */
+	public function retrieve($userId, $attachmentId) {
+		$folder = $this->getAttachmentFolder($userId);
+
+		try {
+			return $folder->getFile($attachmentId);
+		} catch (NotFoundException $ex) {
+			throw new AttachmentNotFoundException();
+		}
 	}
 
 	public function delete($userId, $attachmentId) {

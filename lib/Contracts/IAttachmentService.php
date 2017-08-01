@@ -42,7 +42,7 @@ interface IAttachmentService {
 	 * @throws AttachmentNotFoundException
 	 * @param string $userId
 	 * @param int $id
-	 * @return LocalAttachment
+	 * @return array of LocalAttachment and ISimpleFile
 	 */
 	public function getAttachment($userId, $id);
 

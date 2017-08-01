@@ -17,7 +17,8 @@ define(function(require) {
 
 		defaults: {
 			progress: 0,
-			uploadStatus: 0  /* 0=pending, 1=ongoing, 2=error, 3=success */
+			uploadStatus: 0,  /* 0=pending, 1=ongoing, 2=error, 3=success */
+			isLocal: true
 		},
 
 		/**

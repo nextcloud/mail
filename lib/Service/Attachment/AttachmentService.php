@@ -72,11 +72,14 @@ class AttachmentService implements IAttachmentService {
 
 	/**
 	 * @param string $userId
-	 * @param int $id
+	 * @param array $id
+	 * @return array of LocalAttachment and ISimpleFile
 	 */
 	public function getAttachment($userId, $id) {
 		try {
-			return $this->mapper->find($userId, $id);
+			$attachment = $this->mapper->find($userId, $id);
+			$file = $this->storage->retrieve($userId, $id);
+			return [$attachment, $file];
 		} catch (DoesNotExistException $ex) {
 			throw new AttachmentNotFoundException();
 		}
