@@ -52,6 +52,7 @@ class MailTransmission implements IMailTransmission {
 	/**
 	 * @param AddressCollector $addressCollector
 	 * @param Folder $userFolder
+	 * @param IAttachmentService $attachmentService
 	 * @param Logger $logger
 	 */
 	public function __construct(AddressCollector $addressCollector, $userFolder,
@@ -99,6 +100,7 @@ class MailTransmission implements IMailTransmission {
 
 	/**
 	 * @param Account $account
+	 * @param NewMessageData $messageData
 	 * @param RepliedMessageData $replyData
 	 * @return IMessage
 	 */
