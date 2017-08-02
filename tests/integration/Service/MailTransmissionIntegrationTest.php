@@ -32,35 +32,35 @@ use PHPUnit_Framework_TestCase;
 
 class MailTransmissionIntegrationTest extends PHPUnit_Framework_TestCase {
 
-	/** @var ICrypto */
-	private $crypo;
-	
+	/** @var Account */
+	private $account;
+
 	/** @var IMailTransmission */
 	private $transmission;
 
 	protected function setUp() {
 		parent::setUp();
 
-		$this->crypo = OC::$server->getCrypto();
+		$crypo = OC::$server->getCrypto();
+		$this->account = new Account(MailAccount::fromParams([
+				'email' => 'user@domain.tld',
+				'inboundHost' => 'localhost',
+				'inboundPort' => '993',
+				'inboundSslMode' => 'ssl',
+				'inboundUser' => 'user@domain.tld',
+				'inboundPassword' => $crypo->encrypt('mypassword'),
+				'outboundHost' => 'localhost',
+				'outboundPort' => '2525',
+				'outboundSslMode' => 'none',
+				'outboundUser' => 'user@domain.tld',
+				'outboundPassword' => $crypo->encrypt('mypassword'),
+		]));
 		$this->transmission = OC::$server->query(IMailTransmission::class);
 	}
 
 	public function testSendMail() {
-		$account = new Account(MailAccount::fromParams([
-			'email' => 'user@domain.tld',
-			'inboundHost' => 'localhost',
-			'inboundPort' => '993',
-			'inboundSslMode' => 'none',
-			'inboundUser' => 'user@domain.tld',
-			'inboundPassword' => $this->crypo->encrypt('mypassword'),
-			'outboundHost' => 'smtp.mailtrap.io',
-			'outboundPort' => '25',
-			'outboundSslMode' => 'none',
-			'outboundUser' => 'xxx',
-			'outboundPassword' => $this->crypo->encrypt('xxx'),
-		]));
-		$message = NewMessageData::fromRequest($account, 'recipient@domain.com', null, null, 'greetings', 'hello there', []);
-		$reply = new RepliedMessageData($account, null, null);
+		$message = NewMessageData::fromRequest($this->account, 'recipient@domain.com', null, null, 'greetings', 'hello there', []);
+		$reply = new RepliedMessageData($this->account, null, null);
 		$this->transmission->sendMessage($message, $reply);
 	}
 
