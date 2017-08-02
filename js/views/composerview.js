@@ -396,9 +396,9 @@ define(function(require) {
 			// send the mail
 			var _this = this;
 			Radio.message.request('draft', this.account, this.getMessage(), {
-				folder: this.folder,
-				repliedMessage: this.repliedMessage,
-				draftUID: this.draftUID
+				folder: _this.folder,
+				repliedMessage: _this.repliedMessage,
+				draftUID: _this.draftUID
 			}).then(function(data) {
 				if (_.isFunction(onSuccess)) {
 					onSuccess();
@@ -407,7 +407,7 @@ define(function(require) {
 				if (_this.draftUID !== null) {
 					// update UID in message list
 					var collection = Radio.ui.request('messagesview:collection');
-					var message = collection.findWhere({id: this.draftUID});
+					var message = collection.findWhere({id: _this.draftUID});
 					if (message) {
 						message.set({id: data.uid});
 						collection.set([message], {remove: false});
