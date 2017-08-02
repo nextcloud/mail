@@ -40,10 +40,13 @@ use Horde_Mail_Rfc822_List;
 use Horde_Mime_Part;
 use JsonSerializable;
 use OC;
+use OCA\Mail\Db\LocalAttachment;
 use OCA\Mail\Service\Html;
 use OCP\AppFramework\Db\DoesNotExistException;
 use OCP\Files\File;
+use OCP\Files\SimpleFS\ISimpleFile;
 use OCP\Util;
+use function mb_convert_encoding;
 
 class IMAPMessage implements IMessage, JsonSerializable {
 
@@ -611,7 +614,14 @@ class IMAPMessage implements IMessage, JsonSerializable {
 	/**
 	 * @return array
 	 */
-	public function getAttachments() {
+	public function getCloudAttachments() {
+		throw new Exception('not implemented');
+	}
+
+	/**
+	 * @return int[]
+	 */
+	public function getLocalAttachments() {
 		throw new Exception('not implemented');
 	}
 
@@ -619,6 +629,14 @@ class IMAPMessage implements IMessage, JsonSerializable {
 	 * @param File $file
 	 */
 	public function addAttachmentFromFiles(File $file) {
+		throw new Exception('IMAP message is immutable');
+	}
+
+	/**
+	 * @param LocalAttachment $attachment
+	 * @param ISimpleFile $file
+	 */
+	public function addLocalAttachment(LocalAttachment $attachment, ISimpleFile $file) {
 		throw new Exception('IMAP message is immutable');
 	}
 

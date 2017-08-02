@@ -24,6 +24,7 @@ namespace OCA\Mail\Tests\Service;
 use Horde_Imap_Client;
 use OC\Files\Node\File;
 use OCA\Mail\Account;
+use OCA\Mail\Contracts\IAttachmentService;
 use OCA\Mail\Db\Alias;
 use OCA\Mail\Mailbox;
 use OCA\Mail\Model\IMessage;
@@ -45,6 +46,9 @@ class MailTransmissionTest extends PHPUnit_Framework_TestCase {
 	/** @var Folder|PHPUnit_Framework_MockObject_MockObject */
 	private $userFolder;
 
+	/** @var IAttachmentService|PHPUnit_Framework_MockObject_MockObject */
+	private $attachmentService;
+
 	/** @var Logger|PHPUnit_Framework_MockObject_MockObject */
 	private $logger;
 
@@ -56,9 +60,10 @@ class MailTransmissionTest extends PHPUnit_Framework_TestCase {
 
 		$this->addressCollector = $this->createMock(AddressCollector::class);
 		$this->userFolder = $this->createMock(Folder::class);
+		$this->attachmentService = $this->createMock(IAttachmentService::class);
 		$this->logger = $this->createMock(Logger::class);
 
-		$this->transmission = new MailTransmission($this->addressCollector, $this->userFolder, $this->logger);
+		$this->transmission = new MailTransmission($this->addressCollector, $this->userFolder, $this->attachmentService, $this->logger);
 	}
 
 	public function testSendNewMessage() {
@@ -73,7 +78,7 @@ class MailTransmissionTest extends PHPUnit_Framework_TestCase {
 			->method('sendMessage')
 			->with($message, null);
 
-		$this->transmission->sendMessage($messageData, $replyData);
+		$this->transmission->sendMessage('garfield', $messageData, $replyData);
 	}
 
 	public function testSendMessageAndDeleteDraft() {
@@ -88,7 +93,7 @@ class MailTransmissionTest extends PHPUnit_Framework_TestCase {
 			->method('sendMessage')
 			->with($message, 123);
 
-		$this->transmission->sendMessage($messageData, $replyData, null, 123);
+		$this->transmission->sendMessage('garfield', $messageData, $replyData, null, 123);
 	}
 
 	public function testSendMessageFromAlias() {
@@ -111,7 +116,7 @@ class MailTransmissionTest extends PHPUnit_Framework_TestCase {
 			->method('setFrom')
 			->with($this->equalTo('a@d.com'));
 
-		$this->transmission->sendMessage($messageData, $replyData, $alias);
+		$this->transmission->sendMessage('garfield', $messageData, $replyData, $alias);
 	}
 
 	public function testSendNewMessageWithCloudAttachments() {
@@ -149,7 +154,7 @@ class MailTransmissionTest extends PHPUnit_Framework_TestCase {
 			->method('addAttachmentFromFiles')
 			->with($node);
 
-		$this->transmission->sendMessage($messageData, $replyData);
+		$this->transmission->sendMessage('garfield', $messageData, $replyData);
 	}
 
 	public function testReplyToAnExistingMessage() {
@@ -182,7 +187,7 @@ class MailTransmissionTest extends PHPUnit_Framework_TestCase {
 			->method('setMessageFlag')
 			->with($repliedMessageId, Horde_Imap_Client::FLAG_ANSWERED, true);
 
-		$this->transmission->sendMessage($messageData, $replyData);
+		$this->transmission->sendMessage('garfield', $messageData, $replyData);
 	}
 
 }

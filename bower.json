@@ -28,6 +28,7 @@
     "jquery": "2.2.3",
     "jquery-storage-api": "julien-maurel/jQuery-Storage-API#~1.7.4",
     "jquery-visibility": "~1.0.11",
+    "jquery-ui": "1.10.0",
     "requirejs": "^2.3.3",
     "text": "^2.0.14",
     "underscore": "~1.8.3"

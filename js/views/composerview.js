@@ -5,7 +5,7 @@
  * later. See the COPYING file.
  *
  * @author Christoph Wurst <christoph@winzerhof-wurst.at>
- * @copyright Christoph Wurst 2016
+ * @copyright Christoph Wurst 2017
  */
 
 define(function(require) {
@@ -18,7 +18,7 @@ define(function(require) {
 	var OC = require('OC');
 	var Radio = require('radio');
 	var Attachments = require('models/attachments');
-	var AttachmentsView = require('views/attachments');
+	var AttachmentsView = require('views/attachmentsview');
 	var ComposerTemplate = require('text!templates/composer.html');
 
 	return Marionette.View.extend({
@@ -115,6 +115,7 @@ define(function(require) {
 			 * Attachments sub-view
 			 */
 			this.attachments = new Attachments();
+			this.bindAttachments();
 
 			/**
 			 * Data for replies
@@ -166,6 +167,11 @@ define(function(require) {
 				this.autosized = false;
 			}
 		},
+		bindAttachments: function() {
+			// when the attachment list changed (add, remove, change), we make sure
+			// to update the 'Send' button
+			this.attachments.bind('all', this.onInputChanged.bind(this));
+		},
 		isReply: function() {
 			return this.type === 'reply';
 		},
@@ -174,7 +180,9 @@ define(function(require) {
 			var to = this.$('.to').val();
 			var subject = this.$('.subject').val();
 			var body = this.$('.message-body').val();
-			if (to !== '' || subject !== '' || body !== '') {
+			// if some attachments are not valid, we disable the 'send' button
+			var attachmentsValid = this.checkAllAttachmentsValid();
+			if ((to !== '' || subject !== '' || body !== '') && attachmentsValid) {
 				this.$('.submit-message').removeAttr('disabled');
 			} else {
 				this.$('.submit-message').attr('disabled', true);
@@ -288,7 +296,8 @@ define(function(require) {
 			bcc.prop('disabled', true);
 			subject.prop('disabled', true);
 			this.$('.new-message-attachments-action').css('display', 'none');
-			this.$('#mail_new_attachment').prop('disabled', true);
+			this.$('#add-cloud-attachment').prop('disabled', true);
+			this.$('#add-local-attachment').prop('disabled', true);
 			newMessageBody.prop('disabled', true);
 			newMessageSend.prop('disabled', true);
 			newMessageSend.val(t('mail', 'Sending …'));
@@ -360,7 +369,8 @@ define(function(require) {
 				subject.prop('disabled', false);
 				_this.$('.new-message-attachments-action').
 					css('display', 'inline-block');
-				_this.$('#mail_new_attachment').prop('disabled', false);
+				_this.$('#add-cloud-attachment').prop('disabled', false);
+				_this.$('#add-local-attachment').prop('disabled', false);
 				newMessageBody.prop('disabled', false);
 				newMessageSend.prop('disabled', false);
 				newMessageSend.val(t('mail', 'Send'));
@@ -394,7 +404,7 @@ define(function(require) {
 					onSuccess();
 				}
 
-				if (this.draftUID !== null) {
+				if (_this.draftUID !== null) {
 					// update UID in message list
 					var collection = Radio.ui.request('messagesview:collection');
 					var message = collection.findWhere({id: this.draftUID});
@@ -581,6 +591,30 @@ define(function(require) {
 			if (alias) {
 				this.$('.mail-account').val(alias.id);
 			}
+		},
+		/**
+		 * Checke that all attachments are valid.
+		 * If there is some LocalAttachments stil pending, ongoing or that failed,
+		 * This method will return false.
+		 * If there is no LocalAttachments, or if they are are all sent,
+		 * this method will return true.
+		 * @return {boolean} all attachments valid
+		 */
+		checkAllAttachmentsValid: function() {
+			var allAttachmentsValid = true;
+			var len = this.attachments.length;
+			for (var i = 0; i < len; i++) {
+				/* We check all the attachments here */
+				var attachment = this.attachments.models[i];
+				var uploadStatus = attachment.get('uploadStatus');
+				var isLocalUpload = (uploadStatus !== undefined);
+				/* If at least one attachment is a local upload and */
+				/* not a success (==3), we disable the send button */
+				if (isLocalUpload && uploadStatus < 3) {
+					allAttachmentsValid = false;
+				}
+			}
+			return allAttachmentsValid;
 		}
 	});
 

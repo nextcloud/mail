@@ -245,7 +245,7 @@ class AccountsControllerTest extends PHPUnit_Framework_TestCase {
 		$replyData = new RepliedMessageData($account, null, null);
 		$this->transmission->expects($this->once())
 			->method('sendMessage')
-			->with($messageData, $replyData, null, null);
+			->with($this->userId, $messageData, $replyData, null, null);
 		$expected = new JSONResponse();
 
 		$resp = $this->controller->send(13, null, 'sub', 'bod', 'to@d.com', '', '', null, null, [], null);
@@ -262,7 +262,7 @@ class AccountsControllerTest extends PHPUnit_Framework_TestCase {
 		$replyData = new RepliedMessageData($account, null, null);
 		$this->transmission->expects($this->once())
 			->method('sendMessage')
-			->with($messageData, $replyData, null, null)
+			->with($this->userId, $messageData, $replyData, null, null)
 			->willThrowException(new \Horde_Exception('error'));
 		$expected = new JSONResponse(['message' => 'error'], 500);
 
@@ -282,7 +282,7 @@ class AccountsControllerTest extends PHPUnit_Framework_TestCase {
 		$replyData = new RepliedMessageData($account, $folderId, $messageId);
 		$this->transmission->expects($this->once())
 			->method('sendMessage')
-			->with($messageData, $replyData, null, null);
+			->with($this->userId, $messageData, $replyData, null, null);
 		$expected = new JSONResponse();
 
 		$resp = $this->controller->send(13, $folderId, 'sub', 'bod', 'to@d.com', '', '', null, $messageId, [], null);
@@ -299,10 +299,9 @@ class AccountsControllerTest extends PHPUnit_Framework_TestCase {
 		];
 	}
 
-	/**
-	 * @dataProvider newMessageDataProvider
-	 */
-	public function testDraft($isUnifiedInbox, $withPreviousDraft) {
+	public function testDraft() {
+		$isUnifiedInbox = true;
+		$withPreviousDraft = true;
 		$account = $isUnifiedInbox ? $this->unifiedAccount : $this->account;
 		$subject = 'Hello';
 		$body = 'Hi!';

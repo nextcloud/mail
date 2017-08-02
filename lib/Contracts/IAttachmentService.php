@@ -21,21 +21,37 @@
 
 namespace OCA\Mail\Contracts;
 
-use OCA\Mail\Db\Alias;
-use OCA\Mail\Model\NewMessageData;
-use OCA\Mail\Model\RepliedMessageData;
+use OCA\Mail\Db\LocalAttachment;
+use OCA\Mail\Exception\AttachmentNotFoundException;
+use OCA\Mail\Service\Attachment\UploadedFile;
 
-interface IMailTransmission {
+interface IAttachmentService {
 
 	/**
-	 * Send a new message or reply to an existing one
+	 * Save an uploaded file
 	 *
 	 * @param string $userId
-	 * @param NewMessageData $message
-	 * @param RepliedMessageData $reply
-	 * @param Alias|null $alias
-	 * @param int|null $draftUID
+	 * @param UploadedFile $file
+	 * @return LocalAttachment
 	 */
-	public function sendMessage($userId, NewMessageData $message,
-		RepliedMessageData $reply, Alias $alias = null, $draftUID = null);
+	public function addFile($userId, UploadedFile $file);
+
+	/**
+	 * Try to get an attachment by id
+	 *
+	 * @throws AttachmentNotFoundException
+	 * @param string $userId
+	 * @param int $id
+	 * @return array of LocalAttachment and ISimpleFile
+	 */
+	public function getAttachment($userId, $id);
+
+	/**
+	 * Delete an attachment if it exists
+	 *
+	 * @param string $userId
+	 * @param int $id
+	 * @return LocalAttachment
+	 */
+	public function deleteAttachment($userId, $id);
 }

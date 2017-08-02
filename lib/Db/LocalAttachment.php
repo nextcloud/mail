@@ -1,7 +1,8 @@
-/* global expect */
+<?php
 
 /**
  * @author Christoph Wurst <christoph@winzerhof-wurst.at>
+ * @author Luc Calaresu <dev@calaresu.com>
  *
  * Mail
  *
@@ -19,19 +20,35 @@
  *
  */
 
-define([
-	'models/attachments',
-	'models/attachment'
-], function(Attachents, Attachment) {
-	describe('Attachments', function() {
-		var attachments;
+namespace OCA\Mail\Db;
 
-		beforeEach(function() {
-			attachments = new Attachents();
-		});
+use JsonSerializable;
+use OCP\AppFramework\Db\Entity;
 
-		it('contains attachments', function() {
-			expect(attachments.model).toBe(Attachment);
-		});
-	});
-});
+/**
+ * @method string getUserId()
+ * @method void setUserId(string $userId)
+ * @method string getFileName()
+ * @method void setFileName(string $fileName)
+ * @method int getCreatedAt()
+ * @method void setCreatedAt(int $createdAt)
+ */
+class LocalAttachment extends Entity implements JsonSerializable {
+
+	/** @var string */
+	protected $userId;
+
+	/** @var string */
+	protected $fileName;
+
+	/** @var mixed */
+	protected $createdAt;
+
+	public function jsonSerialize() {
+		return [
+			'id' => $this->id,
+			'fileName' => $this->fileName,
+		];
+	}
+
+}

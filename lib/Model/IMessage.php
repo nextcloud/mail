@@ -21,7 +21,9 @@
 namespace OCA\Mail\Model;
 
 use Horde_Mail_Rfc822_List;
+use OCA\Mail\Db\LocalAttachment;
 use OCP\Files\File;
+use OCP\Files\SimpleFS\ISimpleFile;
 
 interface IMessage {
 
@@ -123,12 +125,23 @@ interface IMessage {
 	public function setContent($content);
 
 	/**
-	 * @return \Horde_Mime_Part[]
+	 * @return File[]
 	 */
-	public function getAttachments();
+	public function getCloudAttachments();
+
+	/**
+	 * @return int[]
+	 */
+	public function getLocalAttachments();
 
 	/**
 	 * @param File $fileName
 	 */
 	public function addAttachmentFromFiles(File $fileName);
+
+	/**
+	 * @param LocalAttachment $attachment
+	 * @param ISimpleFile $file
+	 */
+	public function addLocalAttachment(LocalAttachment $attachment, ISimpleFile $file);
 }

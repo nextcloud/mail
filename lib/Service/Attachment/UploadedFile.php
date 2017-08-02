@@ -1,7 +1,8 @@
-/* global expect */
+<?php
 
 /**
  * @author Christoph Wurst <christoph@winzerhof-wurst.at>
+ * @author Luc Calaresu <dev@calaresu.com>
  *
  * Mail
  *
@@ -19,19 +20,32 @@
  *
  */
 
-define([
-	'models/attachments',
-	'models/attachment'
-], function(Attachents, Attachment) {
-	describe('Attachments', function() {
-		var attachments;
+namespace OCA\Mail\Service\Attachment;
 
-		beforeEach(function() {
-			attachments = new Attachents();
-		});
+class UploadedFile {
 
-		it('contains attachments', function() {
-			expect(attachments.model).toBe(Attachment);
-		});
-	});
-});
+	/** @var array */
+	private $fileData;
+
+	/**
+	 * @param array $fileData
+	 */
+	public function __construct(array $fileData) {
+		$this->fileData = $fileData;
+	}
+
+	/**
+	 * @return string|null
+	 */
+	public function getFileName() {
+		return isset($this->fileData['name']) ? $this->fileData['name'] : null;
+	}
+
+	/**
+	 * @return string|null
+	 */
+	public function getTempPath() {
+		return isset($this->fileData['tmp_name']) ? $this->fileData['tmp_name'] : null;
+	}
+
+}

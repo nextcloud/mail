@@ -1,4 +1,4 @@
-/* global expect */
+<?php
 
 /**
  * @author Christoph Wurst <christoph@winzerhof-wurst.at>
@@ -19,19 +19,8 @@
  *
  */
 
-define([
-	'models/attachments',
-	'models/attachment'
-], function(Attachents, Attachment) {
-	describe('Attachments', function() {
-		var attachments;
+namespace OCA\Mail\Exception;
 
-		beforeEach(function() {
-			attachments = new Attachents();
-		});
+class UploadException extends ServiceException {
 
-		it('contains attachments', function() {
-			expect(attachments.model).toBe(Attachment);
-		});
-	});
-});
+}
