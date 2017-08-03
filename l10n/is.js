@@ -114,7 +114,6 @@ OC.L10N.register(
     "The images have been blocked to protect your privacy." : "Lokað hefur verið á myndir til að vernda einkalíf þitt.",
     "Show images from this sender" : "Birta myndir frá þessum sendanda",
     "Forward" : "Áframsenda",
-    "Add attachment from Files" : "Bæta við viðhengi úr skrám",
     "Import into calendar" : "Flytja inn dagatal",
     "Download attachment" : "Sækja viðhengi",
     "Save to Files" : "Vista í skrár"

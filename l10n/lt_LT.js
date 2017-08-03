@@ -114,7 +114,6 @@ OC.L10N.register(
     "The images have been blocked to protect your privacy." : "Tam, kad būtų apsaugotas jūsų privatumas, paveikslai buvo užblokuoti.",
     "Show images from this sender" : "Rodyti paveikslus nuo šio siuntėjo",
     "Forward" : "Persiųsti",
-    "Add attachment from Files" : "Pridėti priedą iš Failų",
     "Import into calendar" : "Importuoti į kalendorių",
     "Download attachment" : "Atsisiųsti priedą",
     "Save to Files" : "Įrašyti į Failus"

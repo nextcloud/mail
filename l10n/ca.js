@@ -114,7 +114,6 @@ OC.L10N.register(
     "The images have been blocked to protect your privacy." : "S'han bloquejat les imatges per protegir la teva privacitat.",
     "Show images from this sender" : "Mostra imatges d'aquest remitent",
     "Forward" : "Respondre",
-    "Add attachment from Files" : "Afegeix adjunt des de Fitxers",
     "Import into calendar" : "Importar al calendari",
     "Download attachment" : "Descarrega l'adjunt",
     "Save to Files" : "Desa els fitxers"

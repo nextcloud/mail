@@ -109,7 +109,6 @@ OC.L10N.register(
     "The images have been blocked to protect your privacy." : "A személyes adataid védelme érdekében a képeket letiltottuk.",
     "Show images from this sender" : "Képek megjelenítése ettől a feladótól",
     "Forward" : "Továbbítás",
-    "Add attachment from Files" : "Melléklet hozzáadása a Fájlokból",
     "Import into calendar" : "Betöltés a naptárba",
     "Download attachment" : "Melléklet letöltése",
     "Save to Files" : "Metés a Fájlokba"

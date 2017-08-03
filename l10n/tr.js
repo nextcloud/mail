@@ -114,7 +114,6 @@ OC.L10N.register(
     "The images have been blocked to protect your privacy." : "Gizliliğinizi korumak için görsellerin görüntülenmesi engellendi.",
     "Show images from this sender" : "Bu gönderenden gelen görseller görüntülensin",
     "Forward" : "İlet",
-    "Add attachment from Files" : "Dosyalardan ek dosya ekle",
     "Import into calendar" : "Şu takvimin içine aktar",
     "Download attachment" : "Ek dosyayı indir",
     "Save to Files" : "Dosyalara Kaydet"

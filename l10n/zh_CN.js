@@ -114,7 +114,6 @@ OC.L10N.register(
     "The images have been blocked to protect your privacy." : "图片已被禁用，以包混您的隐私。",
     "Show images from this sender" : "显示此发件人的图片",
     "Forward" : "转发",
-    "Add attachment from Files" : "从“文件”添加附件",
     "Import into calendar" : "导入到日历",
     "Download attachment" : "下载附件",
     "Save to Files" : "保存到“文件”"
