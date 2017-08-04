@@ -32,6 +32,7 @@ OC.L10N.register(
     "Collapse folders" : "Klasörleri daralt",
     "Error while deleting account." : "Hesap silinirken sorun çıktı.",
     "Choose a file to add as attachment" : "Eklenecek ek dosyasını seçin",
+    "An error occurred while uploading {fname}" : "{fname} yüklenirken bir sorun çıktı",
     "Reply" : "Yanıtla",
     "Send" : "Gönder",
     "Sending …" : "Gönderiliyor...",
@@ -114,6 +115,8 @@ OC.L10N.register(
     "The images have been blocked to protect your privacy." : "Gizliliğinizi korumak için görsellerin görüntülenmesi engellendi.",
     "Show images from this sender" : "Bu gönderenden gelen görseller görüntülensin",
     "Forward" : "İlet",
+    "Add attachment" : "Dosya ekle",
+    "Add from Files" : "Dosyalardan ekle",
     "Import into calendar" : "Şu takvimin içine aktar",
     "Download attachment" : "Ek dosyayı indir",
     "Save to Files" : "Dosyalara Kaydet"

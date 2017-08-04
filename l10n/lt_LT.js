@@ -32,6 +32,7 @@ OC.L10N.register(
     "Collapse folders" : "Suskleisti aplankus",
     "Error while deleting account." : "Klaida, ištrinant paskyrą.",
     "Choose a file to add as attachment" : "Pasirinkite failą, kurį prisegsite prie laiško",
+    "An error occurred while uploading {fname}" : "Įkeliant {fname}, įvyko klaida",
     "Reply" : "Atsakyti",
     "Send" : "Siųsti",
     "Sending …" : "Siunčiama …",
@@ -114,6 +115,8 @@ OC.L10N.register(
     "The images have been blocked to protect your privacy." : "Tam, kad būtų apsaugotas jūsų privatumas, paveikslai buvo užblokuoti.",
     "Show images from this sender" : "Rodyti paveikslus nuo šio siuntėjo",
     "Forward" : "Persiųsti",
+    "Add attachment" : "Pridėti priedą",
+    "Add from Files" : "Pridėti iš Failų",
     "Import into calendar" : "Importuoti į kalendorių",
     "Download attachment" : "Atsisiųsti priedą",
     "Save to Files" : "Įrašyti į Failus"
