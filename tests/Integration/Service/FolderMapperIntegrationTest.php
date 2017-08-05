@@ -23,8 +23,8 @@ namespace OCA\Mail\Tests\Integration\Service;
 
 use Horde_Imap_Client_Socket;
 use OCA\Mail\Account;
+use OCA\Mail\Folder;
 use OCA\Mail\Service\FolderMapper;
-use OCP\Files\Folder;
 use PHPUnit_Framework_TestCase;
 
 class FolderMapperIntegrationTest extends PHPUnit_Framework_TestCase {
