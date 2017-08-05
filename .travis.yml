@@ -52,6 +52,7 @@ before_install:
   - composer self-update
   - make install-composer-deps
   - make start-imap-docker
+  - make start-smtp-docker
   - cd ..
   - git clone https://github.com/nextcloud/server.git --recursive --depth 1 -b $CORE_BRANCH core
   - mv mail core/apps/
