@@ -32,6 +32,7 @@ OC.L10N.register(
     "Collapse folders" : "Replier les dossiers",
     "Error while deleting account." : "Erreur lors de la suppression du compte.",
     "Choose a file to add as attachment" : "Choisissez un fichier à joindre au message",
+    "An error occurred while uploading {fname}" : "Une erreur est survenue lors du téléversement de la pièce-jointe {fname}",
     "Reply" : "Répondre",
     "Send" : "Envoyer",
     "Sending …" : "Envoi…",
@@ -114,6 +115,8 @@ OC.L10N.register(
     "The images have been blocked to protect your privacy." : "Les images ont été bloquées pour protéger votre vie privée.",
     "Show images from this sender" : "Voir les images de cet expéditeur",
     "Forward" : "Faire suivre",
+    "Add attachment" : "Ajouter une pièce-jointe",
+    "Add from Files" : "Ajouter depuis Fichiers",
     "Import into calendar" : "Importer dans le calendrier",
     "Download attachment" : "Télécharger les pièces jointes",
     "Save to Files" : "Enregistrer dans Fichiers"

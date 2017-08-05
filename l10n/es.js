@@ -32,6 +32,7 @@ OC.L10N.register(
     "Collapse folders" : "Plegar carpetas",
     "Error while deleting account." : "Error al eliminar la cuenta.",
     "Choose a file to add as attachment" : "Escoja un archivo para adjuntar",
+    "An error occurred while uploading {fname}" : "Ha ocurrido un error al cargar {fname}",
     "Reply" : "Responder",
     "Send" : "Enviar",
     "Sending …" : "Enviando ...",
@@ -114,6 +115,8 @@ OC.L10N.register(
     "The images have been blocked to protect your privacy." : "Las imágenes han sido bloqueadas para proteger tu privacidad.",
     "Show images from this sender" : "Mostrar imágenes de este remitente",
     "Forward" : "Reenviar",
+    "Add attachment" : "Añadir adjunto",
+    "Add from Files" : "Añadir desde Archivos",
     "Import into calendar" : "Importar dentro del calendario",
     "Download attachment" : "Descargar adjunto",
     "Save to Files" : "Guardar en Archivos"
