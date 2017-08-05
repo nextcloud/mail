@@ -19,7 +19,7 @@
  *
  */
 
-namespace OCA\Mail\Tests\Service;
+namespace OCA\Mail\Tests\Integration\Service;
 
 use OC;
 use OCA\Mail\Account;
@@ -27,10 +27,9 @@ use OCA\Mail\Contracts\IMailTransmission;
 use OCA\Mail\Db\MailAccount;
 use OCA\Mail\Model\NewMessageData;
 use OCA\Mail\Model\RepliedMessageData;
-use OCP\Security\ICrypto;
-use PHPUnit_Framework_TestCase;
+use OCA\Mail\Tests\Integration\TestCase;
 
-class MailTransmissionIntegrationTest extends PHPUnit_Framework_TestCase {
+class MailTransmissionIntegrationTest extends TestCase {
 
 	/** @var Account */
 	private $account;
@@ -61,7 +60,7 @@ class MailTransmissionIntegrationTest extends PHPUnit_Framework_TestCase {
 	public function testSendMail() {
 		$message = NewMessageData::fromRequest($this->account, 'recipient@domain.com', null, null, 'greetings', 'hello there', []);
 		$reply = new RepliedMessageData($this->account, null, null);
-		$this->transmission->sendMessage($message, $reply);
+		$this->transmission->sendMessage('ferdinand', $message, $reply);
 	}
 
 }
