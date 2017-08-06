@@ -32,6 +32,7 @@ OC.L10N.register(
     "Collapse folders" : "Свернуть каталоги",
     "Error while deleting account." : "Ошибка при удалении учётной записи.",
     "Choose a file to add as attachment" : "Выбрать файл для вложения",
+    "An error occurred while uploading {fname}" : "При загрузке {fname} произошла ошибка",
     "Reply" : "Ответ",
     "Send" : "Отправить",
     "Sending …" : "Отправляется ...",
@@ -114,6 +115,8 @@ OC.L10N.register(
     "The images have been blocked to protect your privacy." : "Изображения были заблокированы для защиты вашей частной жизни.",
     "Show images from this sender" : "Показать изображения от этого отправителя",
     "Forward" : "Вперед",
+    "Add attachment" : "Добавить вложение",
+    "Add from Files" : "Добавить из файлов",
     "Import into calendar" : "Импортировать в календарь",
     "Download attachment" : "Скачать вложение",
     "Save to Files" : "Сохранить в файлы"
