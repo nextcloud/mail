@@ -15,6 +15,7 @@
 			<directory suffix=".php">../</directory>
 			<exclude>
 				<directory suffix=".php">../mail/l10n</directory>
+				<directory suffix=".php">../mail/templates</directory>
 				<directory suffix=".php">../mail/tests</directory>
 			</exclude>
 		</whitelist>
@@ -24,4 +25,3 @@
 		<log type="coverage-clover" target="./clover.xml"/>
 	</logging>
 </phpunit>
-
