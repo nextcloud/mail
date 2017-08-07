@@ -46,9 +46,15 @@ class SmtpServerDetector {
 		$this->testSmtp = $testSmtp;
 	}
 
+	/**
+	 * @param MailAccount $account
+	 * @param string $email
+	 * @param string $password
+	 * @return bool
+	 */
 	public function detect(MailAccount $account, $email, $password) {
 		if ($this->testSmtp === false) {
-			return;
+			return true;
 		}
 
 		// splitting the email address into user and host part
@@ -61,20 +67,18 @@ class SmtpServerDetector {
 		$mxHosts = $this->mxRecord->query($host);
 		if ($mxHosts) {
 			foreach ($mxHosts as $mxHost) {
-				$result = $this->smtpConnectivityTester->test($account, $mxHost,
-					[$user, $email], $password);
+				$result = $this->smtpConnectivityTester->test($account, $mxHost, [$user, $email], $password);
 				if ($result) {
-					return;
+					return true;
 				}
 			}
 		}
 
 		/*
-		 * IMAP login with full email address as user
+		 * SMTP login with full email address as user
 		 * works for a lot of providers (e.g. Google Mail)
 		 */
-		$this->smtpConnectivityTester->test($account, $host, [$user, $email],
-			$password, true);
+		return $this->smtpConnectivityTester->test($account, $host, [$user, $email], $password, true);
 	}
 
 }

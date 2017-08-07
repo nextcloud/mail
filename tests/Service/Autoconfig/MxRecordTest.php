@@ -19,39 +19,35 @@
  *
  */
 
-namespace OCA\Mail\Service\AutoConfig;
+namespace OCA\Mail\Tests\Service\Autoconfig;
 
+use OCA\Mail\Service\AutoConfig\MxRecord;
 use OCA\Mail\Service\Logger;
+use PHPUnit_Framework_TestCase;
 
-class ConnectivityTester {
+class MxRecordTest extends PHPUnit_Framework_TestCase {
 
-	const CONNECTION_TIMEOUT = 5;
+	/** @var MxRecord */
+	private $record;
 
-	/** @var Logger */
-	protected $logger;
+	protected function setUp() {
+		parent::setUp();
 
-	/**
-	 * @param Logger $logger
-	 */
-	public function __construct(Logger $logger) {
-		$this->logger = $logger;
+		$logger = $this->createMock(Logger::class);
+		$this->record = new MxRecord($logger);
 	}
 
-	/**
-	 * @param string $url
-	 * @param integer $port
-	 * @return bool
-	 */
-	public function canConnect($url, $port) {
-		$this->logger->debug("attempting to connect to <$url> on port <$port>");
-		$fp = @fsockopen($url, $port, $error, $errorstr, self::CONNECTION_TIMEOUT);
-		if (is_resource($fp)) {
-			fclose($fp);
-			$this->logger->debug("connection to <$url> on port <$port> established");
-			return true;
-		}
-		$this->logger->debug("cannot connect to <$url> on port <$port>");
-		return false;
+	public function testQuery() {
+		$records = $this->record->query('nextcloud.com');
+
+		$this->assertInternalType('array', $records);
+		$this->assertNotEmpty($records);
+	}
+
+	public function testQueryNoRecord() {
+		$records = $this->record->query('example.com');
+
+		$this->assertFalse($records);
 	}
 
 }
