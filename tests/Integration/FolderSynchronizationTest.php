@@ -79,4 +79,53 @@ class FolderSynchronizationTest extends TestCase {
 		$this->assertCount(0, $syncJson['vanishedMessages']);
 	}
 
+	public function testSyncChangedMessage() {
+		// First, put a message into the mailbox
+		$account = $this->createTestAccount();
+		$mailbox = 'INBOX';
+		$message = $this->getMessageBuilder()
+			->from('ralph@buffington@domain.tld')
+			->to('user@domain.tld')
+			->finish();
+		$id = $this->saveMessage($mailbox, $message);
+		// Second, retrieve a sync token
+		$syncToken = $this->getMailboxSyncToken($mailbox);
+		// Third, flag it
+		$this->flagMessage($mailbox, $id);
+
+		$sync = $this->foldersController->sync($account->getId(), base64_encode($mailbox), $syncToken, [
+			$id
+		]);
+		$syncJson = $sync->jsonSerialize();
+
+		$this->assertCount(0, $syncJson['newMessages']);
+		$this->assertCount(1, $syncJson['changedMessages']);
+		$this->assertCount(0, $syncJson['vanishedMessages']);
+	}
+
+	public function testSyncVanishedMessage() {
+		// First, put a message into the mailbox
+		$account = $this->createTestAccount();
+		$mailbox = 'INBOX';
+		$message = $this->getMessageBuilder()
+			->from('ralph@buffington@domain.tld')
+			->to('user@domain.tld')
+			->finish();
+		$id = $this->saveMessage($mailbox, $message);
+		// Second, retrieve a sync token
+		$syncToken = $this->getMailboxSyncToken($mailbox);
+		// Third, remove it again
+		$this->deleteMessage($mailbox, $id);
+
+		$sync = $this->foldersController->sync($account->getId(), base64_encode($mailbox), $syncToken, [
+			$id
+		]);
+		$syncJson = $sync->jsonSerialize();
+
+		$this->assertCount(0, $syncJson['newMessages']);
+		// TODO: deleted messages are flagged as changed? could be a testing-only issue
+		// $this->assertCount(0, $syncJson['changedMessages']);
+		$this->assertCount(1, $syncJson['vanishedMessages']);
+	}
+
 }
