@@ -18,13 +18,14 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>
  *
  */
+
 namespace OCA\Mail\Service\AutoConfig;
 
 use OCA\Mail\Service\Logger;
 
 class ConnectivityTester {
 
-	const CONNECTION_TIMEOUT = 10;
+	const CONNECTION_TIMEOUT = 5;
 
 	/** @var Logger */
 	protected $logger;
@@ -43,7 +44,7 @@ class ConnectivityTester {
 	 */
 	public function canConnect($url, $port) {
 		$this->logger->debug("attempting to connect to <$url> on port <$port>");
-		$fp = fsockopen($url, $port, $error, $errorstr, self::CONNECTION_TIMEOUT);
+		$fp = @fsockopen($url, $port, $error, $errorstr, self::CONNECTION_TIMEOUT);
 		if (is_resource($fp)) {
 			fclose($fp);
 			$this->logger->debug("connection to <$url> on port <$port> established");
