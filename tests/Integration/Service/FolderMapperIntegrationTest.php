@@ -19,15 +19,15 @@
  *
  */
 
-namespace OCA\Mail\Tests\Service;
+namespace OCA\Mail\Tests\Integration\Service;
 
 use Horde_Imap_Client_Socket;
 use OCA\Mail\Account;
 use OCA\Mail\Folder;
 use OCA\Mail\Service\FolderMapper;
-use Test\TestCase;
+use PHPUnit_Framework_TestCase;
 
-class FolderMapperIntegrationTest extends TestCase {
+class FolderMapperIntegrationTest extends PHPUnit_Framework_TestCase {
 
 	/** @var FolderMapper */
 	private $mapper;
