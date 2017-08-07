@@ -22,15 +22,16 @@ namespace OCA\Mail\Service\AutoConfig;
 
 use OCA\Mail\Service\Logger;
 
-abstract class ConnectivityTester {
+class ConnectivityTester {
 
 	const CONNECTION_TIMEOUT = 10;
 
-	/**
-	 * @var Logger
-	 */
+	/** @var Logger */
 	protected $logger;
 
+	/**
+	 * @param Logger $logger
+	 */
 	public function __construct(Logger $logger) {
 		$this->logger = $logger;
 	}
@@ -40,7 +41,7 @@ abstract class ConnectivityTester {
 	 * @param integer $port
 	 * @return bool
 	 */
-	protected function canConnect($url, $port) {
+	public function canConnect($url, $port) {
 		$this->logger->debug("attempting to connect to <$url> on port <$port>");
 		$fp = fsockopen($url, $port, $error, $errorstr, self::CONNECTION_TIMEOUT);
 		if (is_resource($fp)) {
