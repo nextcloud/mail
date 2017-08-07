@@ -18,61 +18,48 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>
  *
  */
+
 namespace OCA\Mail\Model;
 
 use Horde_Mail_Rfc822_List;
 use Horde_Mime_Part;
+use OCA\Mail\Db\LocalAttachment;
 use OCP\Files\File;
+use OCP\Files\SimpleFS\ISimpleFile;
 
 class Message implements IMessage {
 
 	use ConvertAddresses;
 
-	/**
-	 * @var string
-	 */
+	/** @var string */
 	private $subject = '';
 
-	/**
-	 * @var string
-	 */
+	/** @var string */
 	private $from = '';
 
-	/**
-	 *
-	 * @var Horde_Mail_Rfc822_List
-	 */
+	/** @var Horde_Mail_Rfc822_List */
 	private $to;
 
-	/**
-	 * @var Horde_Mail_Rfc822_List
-	 */
+	/** @var Horde_Mail_Rfc822_List */
 	private $cc;
 
-	/**
-	 * @var Horde_Mail_Rfc822_List
-	 */
+	/** @var Horde_Mail_Rfc822_List */
 	private $bcc;
 
-	/**
-	 * @var IMessage
-	 */
+	/** @var IMessage */
 	private $repliedMessage = null;
 
-	/**
-	 * @var array
-	 */
+	/** @var array */
 	private $flags = [];
 
-	/**
-	 * @var string
-	 */
+	/** @var string */
 	private $content = '';
 
-	/**
-	 * @var File[]
-	 */
-	private $attachments = [];
+	/** @var File[] */
+	private $cloudAttachments = [];
+
+	/** @var int[] */
+	private $localAttachments = [];
 
 	/**
 	 * @param string $list
@@ -239,8 +226,15 @@ class Message implements IMessage {
 	/**
 	 * @return File[]
 	 */
-	public function getAttachments() {
-		return $this->attachments;
+	public function getCloudAttachments() {
+		return $this->cloudAttachments;
+	}
+
+	/**
+	 * @return int[]
+	 */
+	public function getLocalAttachments() {
+		return $this->localAttachments;
 	}
 
 	/**
@@ -253,7 +247,22 @@ class Message implements IMessage {
 		$part->setName($file->getName());
 		$part->setContents($file->getContent());
 		$part->setType($file->getMimeType());
-		$this->attachments[] = $part;
+		$this->cloudAttachments[] = $part;
+	}
+
+	/**
+	 * @param LocalAttachment $attachment
+	 * @param ISimpleFile $file
+	 */
+	public function addLocalAttachment(LocalAttachment $attachment,
+		ISimpleFile $file) {
+		$part = new Horde_Mime_Part();
+		$part->setCharset('us-ascii');
+		$part->setDisposition('attachment');
+		$part->setName($attachment->getFileName());
+		$part->setContents($file->getContent());
+		$part->setType($file->getMimeType());
+		$this->localAttachments[] = $part;
 	}
 
 }

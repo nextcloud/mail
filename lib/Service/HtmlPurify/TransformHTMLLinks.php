@@ -53,7 +53,7 @@ class TransformHTMLLinks extends HTMLPurifier_AttrTransform {
 
 		// XXX Kind of inefficient
 		$attr['target'] = '_blank';
-		$attr['rel'] = 'noopener noreferrer';
+		$attr['rel'] = 'noopener';
 
 		return $attr;
 	}

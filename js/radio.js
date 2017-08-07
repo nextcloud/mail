@@ -16,6 +16,7 @@ define(function(require) {
 
 	var channelNames = [
 		'account',
+		'attachment',
 		'folder',
 		'dav',
 		'message',

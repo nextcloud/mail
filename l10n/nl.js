@@ -4,6 +4,7 @@ OC.L10N.register(
     "Mail" : "E-mail",
     "Error while loading the accounts." : "Fout tijdens het laden van de accounts.",
     "Error while loading the selected account." : "Fout tijdens het laden van het gekozen account.",
+    "Can not load this folder." : "Kan deze map niet laden.",
     "Loading {folder}" : "Laden {folder}",
     "Searching for {query}" : "Zoeken naar {query}",
     "Forwarded message" : "Doorgestuurd bericht",
@@ -113,7 +114,6 @@ OC.L10N.register(
     "The images have been blocked to protect your privacy." : "De afbeeldingen zijn geblokkeerd om jouw privacy te beschermen",
     "Show images from this sender" : "Laat afbeeldingen zien van deze afzender",
     "Forward" : "Doorsturen",
-    "Add attachment from Files" : "Voeg bijlage toe uit bestanden",
     "Import into calendar" : "Toevoegen aan agenda",
     "Download attachment" : "Download bijlage",
     "Save to Files" : "Opslaan in Bestanden"
