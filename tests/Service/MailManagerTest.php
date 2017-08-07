@@ -24,9 +24,9 @@ namespace OCA\Mail\Tests\Service;
 use Horde_Imap_Client_Socket;
 use OCA\Mail\Account;
 use OCA\Mail\IMAP\IMAPClientFactory;
+use OCA\Mail\Service\FolderMapper;
 use OCA\Mail\Service\FolderNameTranslator;
 use OCA\Mail\Service\MailManager;
-use OCA\News\Db\FolderMapper;
 use OCP\Files\Folder;
 use Test\TestCase;
 
