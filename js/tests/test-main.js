@@ -68,6 +68,14 @@ $.fn.droppable = function() {
 
 };
 
+formatDate = function(arg) {
+	return arg;
+};
+
+relative_modified_date = function(arg) {
+	return arg;
+};
+
 require.config({
 	// Karma serves files under /base, which is the basePath from your config file
 	baseUrl: '/base/js',
