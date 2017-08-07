@@ -86,6 +86,7 @@ define(function(require) {
 			this.showChildView('message', new MessageView({
 				account: this.account,
 				folder: this.folder,
+				message: message,
 				model: messageModel
 			}));
 			this.detailView = DetailView.MESSAGE;

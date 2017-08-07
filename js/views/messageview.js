@@ -27,6 +27,7 @@ define(function(require) {
 		template: Handlebars.compile(MessageTemplate),
 		className: 'mail-message-container',
 		message: null,
+		messageBody: null,
 		reply: null,
 		account: null,
 		folder: null,
@@ -40,39 +41,40 @@ define(function(require) {
 		initialize: function(options) {
 			this.account = options.account;
 			this.folder = options.folder;
-			this.message = options.model;
+			this.message = options.message;
+			this.messageBody = options.model;
 			this.reply = {
-				replyToList: this.message.get('replyToList'),
-				replyCc: this.message.get('replyCc'),
-				toEmail: this.message.get('toEmail'),
-				replyCcList: this.message.get('replyCcList'),
+				replyToList: this.messageBody.get('replyToList'),
+				replyCc: this.messageBody.get('replyCc'),
+				toEmail: this.messageBody.get('toEmail'),
+				replyCcList: this.messageBody.get('replyCcList'),
 				body: ''
 			};
 
 			// Add body content to inline reply (text mails)
-			if (!this.message.get('hasHtmlBody')) {
-				var date = new Date(this.message.get('dateIso'));
+			if (!this.messageBody.get('hasHtmlBody')) {
+				var date = new Date(this.messageBody.get('dateIso'));
 				var minutes = date.getMinutes();
-				var text = HtmlHelper.htmlToText(this.message.get('body'));
+				var text = HtmlHelper.htmlToText(this.messageBody.get('body'));
 
 				this.reply.body = '\n\n\n\n' +
-					this.message.get('from') + ' – ' +
+					this.messageBody.get('from') + ' – ' +
 					$.datepicker.formatDate('D, d. MM yy ', date) +
 					date.getHours() + ':' + (minutes < 10 ? '0' : '') + minutes + '\n> ' +
 					text.replace(/\n/g, '\n> ');
 			}
 
 			// Save current messages's content for later use (forward)
-			if (!this.message.get('hasHtmlBody')) {
-				require('state').currentMessageBody = this.message.get('body');
+			if (!this.messageBody.get('hasHtmlBody')) {
+				require('state').currentMessageBody = this.messageBody.get('body');
 			}
-			require('state').currentMessageSubject = this.message.get('subject');
+			require('state').currentMessageSubject = this.messageBody.get('subject');
 
 			// Render the message body
 			adjustControlsWidth();
 
 			// Hide forward button until the message has finished loading
-			if (this.message.get('hasHtmlBody')) {
+			if (this.messageBody.get('hasHtmlBody')) {
 				$('#forward-button').hide();
 			}
 		},
@@ -123,8 +125,8 @@ define(function(require) {
 			// Add body content to inline reply (html mails)
 			var text = this.getUI('messageIframe').contents().find('body').html();
 			text = HtmlHelper.htmlToText(text);
-			var date = new Date(this.message.get('dateIso'));
-			this.getChildView('replyComposer').setReplyBody(this.message.get('from'), date, text);
+			var date = new Date(this.messageBody.get('dateIso'));
+			this.getChildView('replyComposer').setReplyBody(this.messageBody.get('from'), date, text);
 
 			// Safe current mesages's content for later use (forward)
 			require('state').currentMessageBody = text;
@@ -136,7 +138,7 @@ define(function(require) {
 			this.getUI('messageIframe').on('load', _.bind(this.onIframeLoad, this));
 
 			this.showChildView('attachments', new MessageAttachmentsView({
-				collection: new Attachments(this.message.get('attachments')),
+				collection: new Attachments(this.messageBody.get('attachments')),
 				message: this.model
 			}));
 
