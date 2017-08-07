@@ -25,13 +25,14 @@ namespace OCA\Mail\Controller;
 
 use Horde_Imap_Client_Exception;
 use OCA\Mail\Contracts\IMailManager;
+use OCA\Mail\IMAP\Sync\Request as SyncRequest;
+use OCA\Mail\IMAP\Sync\Response as SyncResponse;
 use OCA\Mail\Service\AccountService;
 use OCP\AppFramework\Controller;
 use OCP\AppFramework\Db\DoesNotExistException;
 use OCP\AppFramework\Http;
 use OCP\AppFramework\Http\JSONResponse;
 use OCP\IRequest;
-use OCA\Mail\IMAP\Sync\Request as SyncRequest;
 
 class FoldersController extends Controller {
 
@@ -84,7 +85,7 @@ class FoldersController extends Controller {
 	 * @param string $folderId
 	 * @param string $syncToken
 	 * @param int[] $uids
-	 * @return JSONResponse
+	 * @return SyncResponse
 	 */
 	public function sync($accountId, $folderId, $syncToken, $uids = []) {
 		$account = $this->accountService->find($this->currentUserId, $accountId);

@@ -140,10 +140,10 @@ class AccountService {
 	}
 
 	/**
-	 * @param $newAccount
+	 * @param MailAccount $newAccount
 	 * @return MailAccount
 	 */
-	public function save($newAccount) {
+	public function save(MailAccount $newAccount) {
 		return $this->mapper->save($newAccount);
 	}
 

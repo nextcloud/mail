@@ -21,7 +21,6 @@
 
 namespace OCA\Mail\IMAP\Sync;
 
-use Exception;
 use JsonSerializable;
 use OCA\Mail\Model\IMAPMessage;
 

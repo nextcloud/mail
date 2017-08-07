@@ -143,6 +143,12 @@ trait ImapTest {
 		]);
 	}
 
+	public function getMailboxSyncToken($mailbox) {
+		$client = $this->getTestClient();
+
+		return $client->getSyncToken($mailbox);
+	}
+
 	/**
 	 * @param Horde_Imap_Client_Socket $client
 	 * @param string $mailbox
