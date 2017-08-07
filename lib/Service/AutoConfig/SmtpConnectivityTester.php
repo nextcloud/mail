@@ -21,31 +21,37 @@
 
 namespace OCA\Mail\Service\AutoConfig;
 
-use OCP\Security\ICrypto;
+use Exception;
 use OCA\Mail\Account;
 use OCA\Mail\Db\MailAccount;
 use OCA\Mail\Service\Logger;
+use OCP\Security\ICrypto;
 
-class SmtpConnectivityTester extends ConnectivityTester {
+class SmtpConnectivityTester {
 
-	/**
-	 * @var ICrypto
-	 */
+	/** @var ConnectivityTester */
+	private $connectivityTester;
+
+	/** @var ICrypto */
 	private $crypto;
 
-	/**
-	 * @var string
-	 */
+	/** @var Logger */
+	private $logger;
+
+	/** @var string */
 	private $userId;
 
 	/**
+	 * @param ConnectivityTester $connectivityTester
 	 * @param ICrypto $crypto
 	 * @param Logger $logger
 	 * @param string $UserId
 	 */
-	public function __construct(ICrypto $crypto, Logger $logger, $UserId) {
-		parent::__construct($logger);
+	public function __construct(ConnectivityTester $connectivityTester,
+		ICrypto $crypto, Logger $logger, $UserId) {
+		$this->connectivityTester = $connectivityTester;
 		$this->crypto = $crypto;
+		$this->logger = $logger;
 		$this->userId = $UserId;
 	}
 
@@ -76,7 +82,7 @@ class SmtpConnectivityTester extends ConnectivityTester {
 				continue;
 			}
 			foreach ($ports as $port) {
-				if (!$this->canConnect($url, $port)) {
+				if (!$this->connectivityTester->canConnect($url, $port)) {
 					continue;
 				}
 				foreach ($protocols as $protocol) {
@@ -89,14 +95,11 @@ class SmtpConnectivityTester extends ConnectivityTester {
 							$account->setOutboundPassword($password);
 							$account->setOutboundSslMode($protocol);
 
-							$a = new Account($account);
-							$smtp = $a->createTransport();
-							$smtp->getSMTPObject();
+							$this->testStmtpConnection($account);
 
 							$this->logger->info("Test-Account-Successful: $this->userId, $url, $port, $user, $protocol");
-
 							return true;
-						} catch (\Exception $e) {
+						} catch (Exception $e) {
 							$error = $e->getMessage();
 							$this->logger->info("Test-Account-Failed: $this->userId, $url, $port, $user, $protocol -> $error");
 						}
@@ -105,6 +108,16 @@ class SmtpConnectivityTester extends ConnectivityTester {
 			}
 		}
 		return false;
+	}
+
+	/**
+	 * @param MailAccount $mailAccount
+	 * @throws Exception
+	 */
+	protected function testStmtpConnection(MailAccount $mailAccount) {
+		$a = new Account($mailAccount);
+		$smtp = $a->createTransport();
+		$smtp->getSMTPObject();
 	}
 
 }
