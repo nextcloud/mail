@@ -3,14 +3,32 @@ All notable changes to this project will be documented in this file.
 
 ## 0.7.0 – unreleased
 ### Added
-- Add helper view for keyboard shortcuts
+- Helper view for keyboard shortcuts
   [#91](https://github.com/nextcloud/mail/pull/91) @Gomez 
+- Generic moving of messages (drag and drop)
+- Account menu labels
+- Support for a automatically generated default account
+- Better loading/error/retry views
+- Local attachment support
 
 ### Changed
-- TODO
+- php5.6 to php 7.1 are supported
+- No longer stack Aw, Wg, Fwd
+- App store now lists the app in 'Social & Communication'
 
 ### Fixed
-- TODO
+- Use IDBConnection instead of removed IDb
+- Missing files in release package
+- Loading messages with undisclosed recipients
+- Problems with UTF8 encoding
+- Account color dot on Safari
+- Database column width for long passwords
+- Error when adding a new account
+- Undefined index warning
+- Do not show 'noSelect' folders
+- Selected account when composing a reply
+- Remove noreferrer from HTML messages
+- Some issues with drafts
 
 ## 0.6.4 – 2017-05-02
 ### Fixed
