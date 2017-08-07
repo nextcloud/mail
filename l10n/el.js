@@ -114,7 +114,8 @@ OC.L10N.register(
     "The images have been blocked to protect your privacy." : "Οι εικόνες έχουν αποκλειστεί για να προστατευθεί η ιδιωτικότητά σας.",
     "Show images from this sender" : "Εμφάνιση εικόνων από αυτόν τον αποστολέα",
     "Forward" : "Προώθηση",
-    "Add attachment from Files" : "Προσθήκη συνημμένου από τα Αρχεία",
+    "Add attachment" : "Προσθήκη συνημμένου",
+    "Add from Files" : "Προσθήκη από τα Αρχεία",
     "Import into calendar" : "Εισαγωγή στο ημερολόγιο",
     "Download attachment" : "Λήψη συνημμένου",
     "Save to Files" : "Αποθήκευση στα Αρχεία"

@@ -32,6 +32,7 @@ OC.L10N.register(
     "Collapse folders" : "Fella möppur saman",
     "Error while deleting account." : "Villa kom upp við að eyða aðgangi.",
     "Choose a file to add as attachment" : "Veldu skrá til að setja sem viðhengi",
+    "An error occurred while uploading {fname}" : "Villa kom upp við að senda inn {fname}",
     "Reply" : "Svara",
     "Send" : "Senda",
     "Sending …" : "Sendi ...",
@@ -114,7 +115,8 @@ OC.L10N.register(
     "The images have been blocked to protect your privacy." : "Lokað hefur verið á myndir til að vernda einkalíf þitt.",
     "Show images from this sender" : "Birta myndir frá þessum sendanda",
     "Forward" : "Áframsenda",
-    "Add attachment from Files" : "Bæta við viðhengi úr skrám",
+    "Add attachment" : "Bæta við viðhengi",
+    "Add from Files" : "Bæta við úr skrám",
     "Import into calendar" : "Flytja inn dagatal",
     "Download attachment" : "Sækja viðhengi",
     "Save to Files" : "Vista í skrár"

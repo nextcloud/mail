@@ -101,7 +101,6 @@ OC.L10N.register(
     "The images have been blocked to protect your privacy." : "Attēli tiek bloķēti, lai aizsargātu jūsu konfidencialitāti.",
     "Show images from this sender" : "Rādīt attēlus no šī sūtītāja",
     "Forward" : "Pārsūtīt",
-    "Add attachment from Files" : "Pievienot pielikumu no failiem",
     "Import into calendar" : "Importēt kalendārā",
     "Download attachment" : "Lejupielādēt pielikumu",
     "Save to Files" : "Saglabāt failus"

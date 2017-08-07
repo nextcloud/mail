@@ -97,7 +97,6 @@ OC.L10N.register(
     "The images have been blocked to protect your privacy." : "Slike su blokirane u svrhu zaštite privatnosti.",
     "Show images from this sender" : "Prikaži slike od ovog pošaljioca",
     "Forward" : "Proslijedi",
-    "Add attachment from Files" : "Dodaj prilog iz Datoteka",
     "Import into calendar" : "Dodaj u kalendar",
     "Download attachment" : "Preuzmi prilog",
     "Save to Files" : "Spremi u Datoteke"
