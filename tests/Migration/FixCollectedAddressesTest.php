@@ -1,11 +1,5 @@
 <?php
 
-use OCA\Mail\Db\CollectedAddress;
-use OCA\Mail\Db\CollectedAddressMapper;
-use OCA\Mail\Migration\FixCollectedAddresses;
-use OCP\Migration\IOutput;
-use Test\TestCase;
-
 /**
  * @author Christoph Wurst <christoph@winzerhof-wurst.at>
  *
@@ -25,10 +19,18 @@ use Test\TestCase;
  *
  */
 
+namespace OCA\Mail\Tests\Migration;
+
+use OCA\Mail\Db\CollectedAddress;
+use OCA\Mail\Db\CollectedAddressMapper;
+use OCA\Mail\Migration\FixCollectedAddresses;
+use OCP\Migration\IOutput;
+use PHPUnit_Framework_TestCase;
+
 /**
  * @group DB
  */
-class FixCollectedAddressesTest extends TestCase {
+class FixCollectedAddressesTest extends PHPUnit_Framework_TestCase {
 
 	/** @var CollectedAddressMapper */
 	private $mapper;
@@ -42,11 +44,8 @@ class FixCollectedAddressesTest extends TestCase {
 	protected function setUp() {
 		parent::setUp();
 
-		$this->mapper = $this->getMockBuilder('OCA\Mail\Db\CollectedAddressMapper')
-			->disableOriginalConstructor()
-			->getMock();
-		$this->output = $this->getMockBuilder('OCP\Migration\IOutput')
-			->getMock();
+		$this->mapper = $this->createMock(CollectedAddressMapper::class);
+		$this->output = $this->createMock(IOutput::class);
 		$this->repairStep = new FixCollectedAddresses($this->mapper);
 	}
 
@@ -63,14 +62,14 @@ class FixCollectedAddressesTest extends TestCase {
 		$this->mapper->expects($this->exactly(2))
 			->method('getChunk')
 			->will($this->returnValueMap([
-			[
-				null, [
-					$address1,
-					$address2,
-				]],
-			[
-				201, []]
-			]));
+					[
+						null, [
+							$address1,
+							$address2,
+						]],
+					[
+						201, []]
+		]));
 		$this->mapper->expects($this->never())
 			->method('update');
 
@@ -90,20 +89,20 @@ class FixCollectedAddressesTest extends TestCase {
 		$this->mapper->expects($this->exactly(2))
 			->method('getChunk')
 			->will($this->returnValueMap([
-			[
-				null, [
-					$address1,
-					$address2,
-				]],
-			[
-				201, []]
-			]));
+					[
+						null, [
+							$address1,
+							$address2,
+						]],
+					[
+						201, []]
+		]));
 		$this->mapper->expects($this->once())
 			->method('update')
 			->with($address1);
 
 		$this->repairStep->run($this->output);
-		
+
 		$this->assertEquals('user1@domain1.com', $address1->getEmail());
 		$this->assertEquals('User 1', $address1->getDisplayName());
 	}
@@ -121,14 +120,14 @@ class FixCollectedAddressesTest extends TestCase {
 		$this->mapper->expects($this->exactly(2))
 			->method('getChunk')
 			->will($this->returnValueMap([
-			[
-				null, [
-					$address1,
-					$address2,
-				]],
-			[
-				201, []]
-			]));
+					[
+						null, [
+							$address1,
+							$address2,
+						]],
+					[
+						201, []]
+		]));
 		$this->mapper->expects($this->once())
 			->method('delete')
 			->with($address1);

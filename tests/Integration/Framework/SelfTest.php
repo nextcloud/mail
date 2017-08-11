@@ -31,11 +31,11 @@ class SelfTest extends TestCase {
 	use ImapTest;
 
 	public function testResetAccount() {
-		$this->assertCount(5, $this->getMailboxes());
+		$this->assertCount(4, $this->getMailboxes());
 		$this->createImapMailbox('folder1');
-		$this->assertCount(6, $this->getMailboxes());
-		$this->resetImapAccount();
 		$this->assertCount(5, $this->getMailboxes());
+		$this->resetImapAccount();
+		$this->assertCount(4, $this->getMailboxes());
 	}
 
 	public function testMessageCapabilities() {

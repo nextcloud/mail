@@ -36,7 +36,6 @@ trait ImapTest {
 
 	/** @var array<string> */
 	private $defaultMailboxes = [
-		'Drafts',
 		'INBOX',
 		'Junk',
 		'Sent',
