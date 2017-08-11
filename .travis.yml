@@ -75,6 +75,9 @@ before_script:
   # XDebug is only needed if we report coverage -> speeds up other builds
   - if [[ "$PHP_COVERAGE" = "FALSE" ]]; then phpenv config-rm xdebug.ini; fi
 
+  # Print running docker images, just to verify they did not crash
+  - docker ps
+
 script:
   # Check info.xml schema validity
   - wget https://apps.nextcloud.com/schema/apps/info.xsd
