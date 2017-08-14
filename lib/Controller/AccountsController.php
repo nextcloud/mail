@@ -321,6 +321,7 @@ class AccountsController extends Controller {
 
 		// create transport and save message
 		try {
+			/* @var $account Account */
 			$newUID = $account->saveDraft($message, $uid);
 		} catch (Horde_Exception $ex) {
 			$this->logger->error('Saving draft failed: ' . $ex->getMessage());
