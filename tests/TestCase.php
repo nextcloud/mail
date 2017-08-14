@@ -19,20 +19,10 @@
  *
  */
 
-namespace OCA\Mail\Tests\Integration;
+namespace OCA\Mail\Tests;
 
-use OCA\Mail\Tests\Integration\Framework\ImapTest;
-use OCA\Mail\Tests\TestCase as Base;
+use PHPUnit_Framework_TestCase;
 
-class TestCase extends Base {
-
-	protected function setUp() {
-		parent::setUp();
-
-		// If it's an IMAP test, we reset the test account automatically
-		if (in_array(ImapTest::class, class_uses($this))) {
-			$this->resetImapAccount();
-		}
-	}
+abstract class TestCase extends PHPUnit_Framework_TestCase {
 
 }
