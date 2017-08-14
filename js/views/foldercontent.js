@@ -179,6 +179,11 @@ define(function(require) {
 					event.preventDefault();
 					Radio.message.trigger('messagesview:message:prev');
 					break;
+				case 67:
+					// 'c' -> show new message composer
+					event.preventDefault();
+					Radio.ui.trigger('composer:show');
+					break;
 				case 82:
 					// 'r' -> refresh list of messages
 					event.preventDefault();
