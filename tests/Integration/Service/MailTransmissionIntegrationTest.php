@@ -23,16 +23,31 @@ namespace OCA\Mail\Tests\Integration\Service;
 
 use OC;
 use OCA\Mail\Account;
+use OCA\Mail\Contracts\IAttachmentService;
 use OCA\Mail\Contracts\IMailTransmission;
 use OCA\Mail\Db\MailAccount;
 use OCA\Mail\Model\NewMessageData;
 use OCA\Mail\Model\RepliedMessageData;
+use OCA\Mail\Service\Attachment\UploadedFile;
+use OCA\Mail\Service\AutoCompletion\AddressCollector;
+use OCA\Mail\Service\Logger;
+use OCA\Mail\Service\MailTransmission;
+use OCA\Mail\Tests\Integration\Framework\TestUser;
 use OCA\Mail\Tests\Integration\TestCase;
+use OCP\IUser;
 
 class MailTransmissionIntegrationTest extends TestCase {
 
+	use TestUser;
+
 	/** @var Account */
 	private $account;
+
+	/** @var IUser */
+	private $user;
+
+	/** @var IAttachmentService */
+	private $attachmentService;
 
 	/** @var IMailTransmission */
 	private $transmission;
@@ -54,13 +69,45 @@ class MailTransmissionIntegrationTest extends TestCase {
 				'outboundUser' => 'user@domain.tld',
 				'outboundPassword' => $crypo->encrypt('mypassword'),
 		]));
-		$this->transmission = OC::$server->query(IMailTransmission::class);
+		$this->attachmentService = OC::$server->query(IAttachmentService::class);
+		$this->user = $this->createTestUser();
+		$userFolder = \OC::$server->getUserFolder($this->user->getUID());
+		$this->transmission = new MailTransmission(OC::$server->query(AddressCollector::class), $userFolder, $this->attachmentService, OC::$server->query(Logger::class));
 	}
 
 	public function testSendMail() {
 		$message = NewMessageData::fromRequest($this->account, 'recipient@domain.com', null, null, 'greetings', 'hello there', []);
 		$reply = new RepliedMessageData($this->account, null, null);
 		$this->transmission->sendMessage('ferdinand', $message, $reply);
+	}
+
+	public function testSendMailWithLocalAttachment() {
+		$file = new UploadedFile([
+			'name' => 'text.txt',
+			'tmp_name' => dirname(__FILE__) . '/../../data/mail-message-123.txt',
+		]);
+		$this->attachmentService->addFile('gerald', $file);
+		$message = NewMessageData::fromRequest($this->account, 'recipient@domain.com', null, null, 'greetings', 'hello there', [
+				[
+					'isLocal' => 'true',
+					'id' => 13,
+				],
+		]);
+		$reply = new RepliedMessageData($this->account, null, null);
+		$this->transmission->sendMessage('gerald', $message, $reply);
+	}
+
+	public function testSendMailWithCloudAttachment() {
+		$userFolder = OC::$server->getUserFolder($this->user->getUID());
+		$userFolder->newFile('text.txt');
+		$message = NewMessageData::fromRequest($this->account, 'recipient@domain.com', null, null, 'greetings', 'hello there', [
+				[
+					'isLocal' => false,
+					'fileName' => 'text.txt',
+				],
+		]);
+		$reply = new RepliedMessageData($this->account, null, null);
+		$this->transmission->sendMessage($this->user->getUID(), $message, $reply);
 	}
 
 }
