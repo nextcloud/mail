@@ -79,6 +79,7 @@ OC.L10N.register(
     "Save" : "Salva",
     "Keyboard shortcuts" : "Scorciatoie da tastiera",
     "Speed up your Mail experience with these quick shortcuts." : "Velocizza la tua esperienza di posta elettronica con queste scorciatoie.",
+    "Compose new message" : "Componi nuovo messaggio",
     "Newer message" : "Messaggio più recente",
     "Older message" : "Messaggio più datato",
     "Toggle star" : "Commuta stella",

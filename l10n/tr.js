@@ -79,6 +79,7 @@ OC.L10N.register(
     "Save" : "Kaydet",
     "Keyboard shortcuts" : "Tuş takımı kısayolları",
     "Speed up your Mail experience with these quick shortcuts." : "Kısayol tuşlarını kullanarak e-posta deneyiminizi hızlandırabilirsiniz.",
+    "Compose new message" : "Yeni ileti gönder",
     "Newer message" : "Daha yeni ileti",
     "Older message" : "Daha eski ileti",
     "Toggle star" : "Yıldızı değiştir",
