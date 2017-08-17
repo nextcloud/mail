@@ -79,6 +79,7 @@ OC.L10N.register(
     "Save" : "Sauvegarder",
     "Keyboard shortcuts" : "Raccourcis clavier",
     "Speed up your Mail experience with these quick shortcuts." : "Accélérez votre expérience Mail avec ces raccourcis rapides.",
+    "Compose new message" : "Rédigez un nouveau message",
     "Newer message" : "Message plus récent",
     "Older message" : "Message plus ancien",
     "Toggle star" : "Épingler / Désépingler",
