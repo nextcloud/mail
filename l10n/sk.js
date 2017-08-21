@@ -32,6 +32,7 @@ OC.L10N.register(
     "Collapse folders" : "Zvinúť priečinky",
     "Error while deleting account." : "Chyba pri mazaní účtu.",
     "Choose a file to add as attachment" : "Zvoľte súbor, ktorý chcete pridať ako prílohu.",
+    "An error occurred while uploading {fname}" : "Počas nahrávania {fname} sa vyskytla chyba",
     "Reply" : "Odpoveď",
     "Send" : "Odoslať",
     "Sending …" : "Odosielam ...",
@@ -114,6 +115,8 @@ OC.L10N.register(
     "The images have been blocked to protect your privacy." : "Obrázky boli zablokované pre ochranu Vášho súkromia.",
     "Show images from this sender" : "Zobraziť obrázky od tohoto odosielateľa",
     "Forward" : "Preposlať",
+    "Add attachment" : "Pridať prílohu",
+    "Add from Files" : "Pridať zo Súborov",
     "Import into calendar" : "Importovať do kalendára",
     "Download attachment" : "Stiahnuť prílohu",
     "Save to Files" : "Uložiť do Súborov"

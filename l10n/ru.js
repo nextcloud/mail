@@ -79,6 +79,7 @@ OC.L10N.register(
     "Save" : "Сохранить",
     "Keyboard shortcuts" : "Горячие клавиши",
     "Speed up your Mail experience with these quick shortcuts." : "Ускорьте работу с почтой использованием этих сочетаний клавиш.",
+    "Compose new message" : "Создать новое сообщение",
     "Newer message" : "Новейшее сообщение",
     "Older message" : "Старейшее сообщение",
     "Toggle star" : "Переключить отметку звёздочкой",

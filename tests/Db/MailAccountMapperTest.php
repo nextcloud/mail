@@ -21,9 +21,9 @@
 
 namespace OCA\Mail\Db;
 
-
+use OC;
+use OCA\Mail\Tests\TestCase;
 use OCP\IDBConnection;
-use Test\TestCase;
 
 /**
  * Class MailAccountMapperTest
@@ -54,7 +54,7 @@ class MailAccountMapperTest extends TestCase {
 	 */
 	public function setup(){
 		parent::setUp();
-		$this->db = \OC::$server->getDatabaseConnection();
+		$this->db = OC::$server->getDatabaseConnection();
 		$this->mapper = new MailAccountMapper($this->db);
 
 		$this->account = new MailAccount();

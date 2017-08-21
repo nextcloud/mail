@@ -27,8 +27,8 @@ use OCA\Mail\IMAP\IMAPClientFactory;
 use OCA\Mail\Service\FolderMapper;
 use OCA\Mail\Service\FolderNameTranslator;
 use OCA\Mail\Service\MailManager;
+use OCA\Mail\Tests\TestCase;
 use OCP\Files\Folder;
-use Test\TestCase;
 
 class MailManagerTest extends TestCase {
 

@@ -143,23 +143,6 @@ class UnifiedAccount implements IAccount {
 	}
 
 	/**
-	 * @param IMessage $message
-	 * @param int|null $draftUID
-	 */
-	public function sendMessage(IMessage $message, $draftUID) {
-		throw new Exception('Not implemented');
-	}
-
-	/**
-	 * @param IMessage $message
-	 * @param int|null $previousUID
-	 * @return int
-	 */
-	public function saveDraft(IMessage $message, $previousUID) {
-		throw new Exception('Not implemented');
-	}
-
-	/**
 	 * @param string $folderId
 	 * @param string $messageId
 	 */

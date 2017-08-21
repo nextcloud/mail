@@ -66,7 +66,7 @@ class MailTransmission implements IMailTransmission {
 	/**
 	 * Send a new message or reply to an existing one
 	 *
-	 * @param srting $userId
+	 * @param string $userId
 	 * @param NewMessageData $messageData
 	 * @param RepliedMessageData $replyData
 	 * @param Alias|null $alias

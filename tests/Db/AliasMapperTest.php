@@ -21,8 +21,9 @@
 
 namespace OCA\Mail\Db;
 
+use OC;
+use OCA\Mail\Tests\TestCase;
 use OCP\IDBConnection;
-use Test\TestCase;
 
 /**
  * Class AliasMapperTest
@@ -32,28 +33,26 @@ use Test\TestCase;
  * @package OCA\Mail\Db
  */
 class AliasMapperTest extends TestCase {
-	/**
-	 * @var AliasMapper
-	 */
+
+	/** @var AliasMapper */
 	private $mapper;
-	/**
-	 * @var IDBConnection
-	 */
+
+	/** @var IDBConnection */
 	private $db;
-	/**
-	 * @var Alias
-	 */
+
+	/** @var Alias */
 	private $alias;
+
 	/**
 	 * Initialize Mapper
 	 */
-	public function setup(){
+	public function setup() {
 		parent::setUp();
-		$this->db = \OC::$server->getDatabaseConnection();
+		$this->db = OC::$server->getDatabaseConnection();
 		$this->mapper = new AliasMapper($this->db);
 	}
 
-	public function testFind(){
+	public function testFind() {
 		$accountMapper = new MailAccountMapper($this->db);
 		$account = new MailAccount();
 		$account->setName('Peter Parker');
@@ -81,19 +80,19 @@ class AliasMapperTest extends TestCase {
 
 		$this->assertEquals(
 			[
-				'accountId' => $this->alias->getAccountId(),
-				'name' => $this->alias->getName(),
-				'alias' => $this->alias->getAlias(),
-				'id' => $this->alias->getId()
-			],
-			[
-				'accountId' => $result->getAccountId(),
-				'name' => $result->getName(),
-				'alias' => $result->getAlias(),
-				'id' => $result->getId()
+			'accountId' => $this->alias->getAccountId(),
+			'name' => $this->alias->getName(),
+			'alias' => $this->alias->getAlias(),
+			'id' => $this->alias->getId()
+			], [
+			'accountId' => $result->getAccountId(),
+			'name' => $result->getName(),
+			'alias' => $result->getAlias(),
+			'id' => $result->getId()
 			]
 		);
 	}
+
 	protected function tearDown() {
 		parent::tearDown();
 
@@ -108,4 +107,5 @@ class AliasMapperTest extends TestCase {
 			$stmt->execute(['user12345']);
 		}
 	}
+
 }

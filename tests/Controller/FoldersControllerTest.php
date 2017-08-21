@@ -28,12 +28,12 @@ use OCA\Mail\Contracts\IMailManager;
 use OCA\Mail\Controller\FoldersController;
 use OCA\Mail\Folder;
 use OCA\Mail\Service\AccountService;
+use OCA\Mail\Tests\TestCase;
 use OCP\AppFramework\Db\DoesNotExistException;
 use OCP\AppFramework\Http;
 use OCP\AppFramework\Http\JSONResponse;
 use OCP\IRequest;
 use PHPUnit_Framework_MockObject_MockObject;
-use Test\TestCase;
 
 class FoldersControllerTest extends TestCase {
 

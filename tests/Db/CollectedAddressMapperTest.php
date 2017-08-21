@@ -22,9 +22,11 @@
 
 namespace OCA\Mail\Tests\Db;
 
-use OCA\Mail\Db\CollectedAddressMapper;
+use OC;
 use OCA\Mail\Db\CollectedAddress;
-use Test\TestCase;
+use OCA\Mail\Db\CollectedAddressMapper;
+use OCA\Mail\Tests\TestCase;
+use OCP\IDBConnection;
 
 /**
  * Class CollectedAddressMapperTest
@@ -35,8 +37,10 @@ use Test\TestCase;
  */
 class CollectedAddressMapperTest extends TestCase {
 
-	/** @var \OCP\IDBConnection */
+	/** @var IDBConnection */
 	private $db;
+
+	/** @var string */
 	private $userId = 'testuser';
 
 	/** @var CollectedAddressMapper */
@@ -54,7 +58,7 @@ class CollectedAddressMapperTest extends TestCase {
 	protected function setUp() {
 		parent::setUp();
 
-		$this->db = \OC::$server->getDatabaseConnection();
+		$this->db = OC::$server->getDatabaseConnection();
 		$this->mapper = new CollectedAddressMapper($this->db);
 
 		$this->address1 = new CollectedAddress();
@@ -119,8 +123,8 @@ class CollectedAddressMapperTest extends TestCase {
 
 	public function matchingData() {
 		return [
-				['user1@example.com', ['user1@example.com']],
-				['examp', ['user1@example.com', 'user2@example.com']],
+			['user1@example.com', ['user1@example.com']],
+			['examp', ['user1@example.com', 'user2@example.com']],
 		];
 	}
 
@@ -142,8 +146,8 @@ class CollectedAddressMapperTest extends TestCase {
 
 	public function existsData() {
 		return [
-				['user1@example.com', true],
-				['user3@example.com', false],
+			['user1@example.com', true],
+			['user3@example.com', false],
 		];
 	}
 

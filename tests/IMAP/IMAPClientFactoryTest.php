@@ -26,13 +26,13 @@ use OC;
 use OCA\Mail\Account;
 use OCA\Mail\Db\MailAccount;
 use OCA\Mail\IMAP\IMAPClientFactory;
+use OCA\Mail\Tests\TestCase;
 use OCP\ICacheFactory;
 use OCP\IConfig;
 use OCP\Security\ICrypto;
 use PHPUnit_Framework_MockObject_MockObject;
-use PHPUnit_Framework_TestCase;
 
-class IMAPClientFactoryTest extends PHPUnit_Framework_TestCase {
+class IMAPClientFactoryTest extends TestCase {
 
 	/** @var ICrypto|PHPUnit_Framework_MockObject_MockObject */
 	private $crypto;
