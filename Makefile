@@ -8,7 +8,7 @@ source_dir=$(build_dir)/source
 sign_dir=$(build_dir)/sign
 package_name=$(app_name)
 cert_dir=$(HOME)/.nextcloud/certificates
-docker_image=christophwurst/owncloud-mail-test-docker
+docker_image=christophwurst/nextcloud-mail-test-docker
 mail_user=user@domain.tld
 mail_pwd=mypassword
 
