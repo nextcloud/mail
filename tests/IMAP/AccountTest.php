@@ -21,7 +21,8 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>
  *
  */
-namespace OCA\Mail\Tests\Imap;
+
+namespace OCA\Mail\Tests\IMAP;
 
 /**
  * @group IMAP
@@ -69,35 +70,4 @@ class AccountTest extends AbstractTest {
 		$this->assertEquals(1, count($messages));
 	}
 
-	/**
-	 * @dataProvider providesMailBoxNames
-	 * @param $name
-	 */
-	public function testGetChangedMailboxes($name) {
-		$name = uniqid($name);
-		$newMailBox = parent::createMailBox($name);
-		$status = $newMailBox->getStatus();
-		$changedMailBoxes = $this->getTestAccount()->getChangedMailboxes([
-			$newMailBox->getFolderId() => [ 'uidvalidity' => $status['uidvalidity'], 'uidnext' => $status['uidnext'] ]
-		]);
-
-		$this->assertEquals(0, count($changedMailBoxes));
-
-		$this->createTestMessage($newMailBox);
-
-		$changedMailBoxes = $this->getTestAccount()->getChangedMailboxes([
-			$newMailBox->getFolderId() => [ 'uidvalidity' => $status['uidvalidity'], 'uidnext' => $status['uidnext'] ]
-		]);
-
-		$this->assertEquals(1, count($changedMailBoxes));
-		$this->assertEquals(1, count($changedMailBoxes[$newMailBox->getFolderId()]['messages']));
-	}
-
-	public function testGetChangedMailboxesForNotExisting() {
-		$changedMailBoxes = $this->getTestAccount()->getChangedMailboxes([
-			'you-dont-know-me' => ['uidvalidity' => 0, 'uidnext' => 0]
-		]);
-
-		$this->assertEquals(0, count($changedMailBoxes));
-	}
 }

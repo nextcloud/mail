@@ -31,10 +31,11 @@ define(['views/messagesitem',
 		var model;
 
 		beforeEach(function () {
-			// on local attachment, we use the LocalAttachment model
 			model = new Message({
 				id: 22
 			});
+			model.folder = new Folder();
+			model.folder.account = new Account();
 			view = new MessagesItem({
 				model: model
 			});
@@ -56,8 +57,8 @@ define(['views/messagesitem',
 
 				expect(event.stopPropagation).toHaveBeenCalled();
 				// check message is marked as read
-				expect(Radio.ui.trigger).toHaveBeenCalledWith(
-					'messagesview:messageflag:set', model.id, 'unseen', false
+				expect(Radio.message.trigger).toHaveBeenCalledWith(
+					'flag', model, 'unseen', false
 				);
 				// check message has been opened
 				expect(Radio.message.trigger).toHaveBeenCalled();
@@ -81,8 +82,8 @@ define(['views/messagesitem',
 
 				expect(event.stopPropagation).toHaveBeenCalled();
 				// check message is marked as read
-				expect(Radio.ui.trigger).toHaveBeenCalledWith(
-					'messagesview:messageflag:set', model.id, 'unseen', false
+				expect(Radio.message.trigger).toHaveBeenCalledWith(
+					'flag', model, 'unseen', false
 				);
 				// check message has been opened
 				expect(Radio.message.trigger).toHaveBeenCalled();

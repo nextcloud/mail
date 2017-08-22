@@ -22,9 +22,11 @@
 
 namespace OCA\Mail\Tests\Controller;
 
+use Horde_Exception;
 use OCA\Mail\Account;
 use OCA\Mail\Contracts\IMailTransmission;
 use OCA\Mail\Controller\AccountsController;
+use OCA\Mail\Db\MailAccount;
 use OCA\Mail\Model\Message;
 use OCA\Mail\Model\NewMessageData;
 use OCA\Mail\Model\RepliedMessageData;
@@ -192,16 +194,18 @@ class AccountsControllerTest extends PHPUnit_Framework_TestCase {
 		$password = '123456';
 		$accountName = 'John Doe';
 
-		$this->account->expects($this->exactly(2))
-			->method('getId')
+		$account = $this->createMock(MailAccount::class);
+		$account->expects($this->exactly(2))
+			->method('__call')
+			->with('getId')
 			->will($this->returnValue(135));
 		$this->autoConfig->expects($this->once())
 			->method('createAutoDetected')
 			->with($this->equalTo($email), $this->equalTo($password), $this->equalTo($accountName))
-			->will($this->returnValue($this->account));
+			->will($this->returnValue($account));
 		$this->accountService->expects($this->once())
 			->method('save')
-			->with($this->equalTo($this->account));
+			->with($this->equalTo($account));
 
 		$response = $this->controller->create($accountName, $email, $password, null, null, null, null, null, null, null, null,
 			null, null, true);
@@ -263,7 +267,7 @@ class AccountsControllerTest extends PHPUnit_Framework_TestCase {
 		$this->transmission->expects($this->once())
 			->method('sendMessage')
 			->with($this->userId, $messageData, $replyData, null, null)
-			->willThrowException(new \Horde_Exception('error'));
+			->willThrowException(new Horde_Exception('error'));
 		$expected = new JSONResponse(['message' => 'error'], 500);
 
 		$resp = $this->controller->send(13, null, 'sub', 'bod', 'to@d.com', '', '', null, null, [], null);

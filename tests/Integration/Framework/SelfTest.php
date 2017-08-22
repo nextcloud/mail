@@ -47,8 +47,9 @@ class SelfTest extends TestCase {
 			->finish();
 
 		$this->assertMessageCount(0, 'INBOX');
-		$this->saveMessage('INBOX', $message);
+		$id = $this->saveMessage('INBOX', $message);
 		$this->assertMessageCount(1, 'INBOX');
+		$this->assertInternalType('int', $id);
 	}
 
 }

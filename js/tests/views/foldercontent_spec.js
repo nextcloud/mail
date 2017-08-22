@@ -36,6 +36,7 @@ define(['views/foldercontent',
 			account: account
 		});
 		message = new Message();
+		folder.addMessage(message);
 		view = new FolderContent({
 			account: account,
 			folder: folder,
@@ -57,9 +58,9 @@ define(['views/foldercontent',
 		});
 
 		it ('should not mark first email as read on folder view', function() {
-			spyOn(Radio.ui, 'trigger');
+			spyOn(Radio.message, 'trigger');
 			view.markMessageAsRead(message);
-			expect(Radio.ui.trigger).not.toHaveBeenCalled();
+			expect(Radio.message.trigger).not.toHaveBeenCalled();
 		});
 	});
 
@@ -77,10 +78,10 @@ define(['views/foldercontent',
 		});
 
 		it ('should mark first email as read on folder view', function() {
-			spyOn(Radio.ui, 'trigger');
+			spyOn(Radio.message, 'trigger');
 			view.markMessageAsRead(message);
-			expect(Radio.ui.trigger).toHaveBeenCalledWith(
-				'messagesview:messageflag:set', message.id, 'unseen', false
+			expect(Radio.message.trigger).toHaveBeenCalledWith(
+				'flag', message, 'unseen', false
 			);
 		});
 	});

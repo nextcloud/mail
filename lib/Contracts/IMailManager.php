@@ -22,8 +22,22 @@
 namespace OCA\Mail\Contracts;
 
 use OCA\Mail\Account;
+use OCA\Mail\Folder;
+use OCA\Mail\IMAP\Sync\Request as SyncRequest;
+use OCA\Mail\IMAP\Sync\Response as SyncResponse;
 
 interface IMailManager {
 
+	/**
+	 * @param Account $account
+	 * @return Folder[]
+	 */
 	public function getFolders(Account $account);
+
+	/**
+	 * @param Account
+	 * @param SyncRequest $syncRequest
+	 * @return SyncResponse
+	 */
+	public function syncMessages(Account $account, SyncRequest $syncRequest);
 }

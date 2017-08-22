@@ -732,15 +732,6 @@ class Account implements IAccount {
 	}
 
 	/**
-	 * @throws Horde_Imap_Client_Exception
-	 */
-	public function reconnect() {
-		$this->mailboxes = null;
-		if ($this->client) {
-			$this->client->close();
-			$this->client = null;
-		}
-		$this->getImapConnection();
 	}
 
 	/**
