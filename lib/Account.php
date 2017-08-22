@@ -354,7 +354,7 @@ class Account implements IAccount {
 	 * @return array
 	 */
 	public function jsonSerialize() {
-		throw new Exception('Not implemented');
+		return $this->account->toJson();
 	}
 
 	/**
@@ -741,13 +741,6 @@ class Account implements IAccount {
 			$this->client = null;
 		}
 		$this->getImapConnection();
-	}
-
-	/**
-	 * @return array
-	 */
-	public function getConfiguration() {
-		return $this->account->toJson();
 	}
 
 	/**

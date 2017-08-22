@@ -117,7 +117,7 @@ class AccountsController extends Controller {
 
 		$json = [];
 		foreach ($mailAccounts as $mailAccount) {
-			$conf = $mailAccount->getConfiguration();
+			$conf = $mailAccount->jsonSerialize();
 			$conf['aliases'] = $this->aliasesService->findAll($conf['accountId'], $this->currentUserId);
 			$json[] = $conf;
 		}
@@ -134,7 +134,7 @@ class AccountsController extends Controller {
 		try {
 			$account = $this->accountService->find($this->currentUserId, $accountId);
 
-			return new JSONResponse($account->getConfiguration());
+			return new JSONResponse($account->jsonSerialize());
 		} catch (DoesNotExistException $e) {
 			return new JSONResponse([], 404);
 		}

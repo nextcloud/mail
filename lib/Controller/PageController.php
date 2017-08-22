@@ -87,7 +87,7 @@ class PageController extends Controller {
 
 		$accountsJson = [];
 		foreach ($mailAccounts as $mailAccount) {
-			$conf = $mailAccount->getConfiguration();
+			$conf = $mailAccount->jsonSerialize();
 			$conf['aliases'] = $this->aliasesService->findAll($conf['accountId'], $this->currentUserId);
 			$accountsJson[] = $conf;
 		}
