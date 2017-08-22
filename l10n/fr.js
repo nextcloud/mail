@@ -106,7 +106,7 @@ OC.L10N.register(
     "SMTP Password" : "Mot de passe SMTP",
     "Connect" : "Connecter",
     "from" : "de",
-    "to" : "à",
+    "to" : "vers",
     "cc" : "cc",
     "bcc" : "bcc",
     "Subject" : "Sujet",
