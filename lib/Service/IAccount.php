@@ -26,11 +26,6 @@ use JsonSerializable;
 interface IAccount extends JsonSerializable {
 
 	/**
-	 * @return array
-	 */
-	public function getConfiguration();
-
-	/**
 	 * @param $folderId
 	 * @return IMailbox
 	 */
