@@ -19,7 +19,7 @@ window.t = function(app, text) {
 		throw 'wrong app used to for translation';
 	}
 	return text;
-}
+};
 
 
 OC = {
@@ -28,8 +28,15 @@ OC = {
 
 		}
 	},
-	generateUrl: function(url) {
-		return url;
+	generateUrl: function(url, params) {
+		var props = [];
+		for (var prop in params) {
+			props.push(prop);
+		}
+		return '/base/' + props.reduce(function(url, paramName) {
+			var param = params[paramName];
+			return url.replace('{' + paramName + '}', param);
+		}, url);
 	},
 	linkToRemote: function() {
 
@@ -59,6 +66,14 @@ $.fn.autosize = function() {
 
 $.fn.droppable = function() {
 
+};
+
+formatDate = function(arg) {
+	return arg;
+};
+
+relative_modified_date = function(arg) {
+	return arg;
 };
 
 require.config({

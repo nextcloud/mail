@@ -190,7 +190,6 @@ class UnifiedAccount implements IAccount {
 			foreach ($changes[$inboxName]['messages'] as &$message) {
 				$id = base64_encode(json_encode([$account->getId(), $message['id']]));
 				$message['id'] = $id;
-				$message['accountMail'] = $account->getEmail();
 			}
 			$changedBoxes[self::INBOX_ID]['messages'] = array_merge($changedBoxes[self::INBOX_ID]['messages'], $changes[$inboxName]['messages']);
 			$changedBoxes[self::INBOX_ID]['newUnReadCounter'] += $changes[$inboxName]['newUnReadCounter'];

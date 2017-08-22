@@ -50,6 +50,7 @@ class AccountService {
 
 	/**
 	 * @param MailAccountMapper $mapper
+	 * @param IL10N $l10n
 	 */
 	public function __construct(MailAccountMapper $mapper, IL10N $l10n,
 		Manager $defaultAccountManager) {
@@ -139,10 +140,10 @@ class AccountService {
 	}
 
 	/**
-	 * @param $newAccount
+	 * @param MailAccount $newAccount
 	 * @return MailAccount
 	 */
-	public function save($newAccount) {
+	public function save(MailAccount $newAccount) {
 		return $this->mapper->save($newAccount);
 	}
 

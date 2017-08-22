@@ -25,6 +25,8 @@ namespace OCA\Mail\Controller;
 
 use Horde_Imap_Client_Exception;
 use OCA\Mail\Contracts\IMailManager;
+use OCA\Mail\IMAP\Sync\Request as SyncRequest;
+use OCA\Mail\IMAP\Sync\Response as SyncResponse;
 use OCA\Mail\Service\AccountService;
 use OCP\AppFramework\Controller;
 use OCP\AppFramework\Db\DoesNotExistException;
@@ -44,7 +46,7 @@ class FoldersController extends Controller {
 	private $mailManager;
 
 	/**
-	 * @param type $appName
+	 * @param string $appName
 	 * @param IRequest $request
 	 * @param AccountService $accountService
 	 * @param string $UserId
@@ -74,6 +76,25 @@ class FoldersController extends Controller {
 			'folders' => $folders,
 			'delimiter' => reset($folders)->getDelimiter(),
 		];
+	}
+
+	/**
+	 * @NoAdminRequired
+	 * @NoCSRFRequired
+	 * @param int $accountId
+	 * @param string $folderId
+	 * @param string $syncToken
+	 * @param int[] $uids
+	 * @return SyncResponse
+	 */
+	public function sync($accountId, $folderId, $syncToken, $uids = []) {
+		$account = $this->accountService->find($this->currentUserId, $accountId);
+
+		if (empty($accountId) || empty($folderId) || empty($syncToken) || !is_array($uids)) {
+			return new JSONResponse(null, Http::STATUS_BAD_REQUEST);
+		}
+
+		return $this->mailManager->syncMessages($account, new SyncRequest(base64_decode($folderId), $syncToken, $uids));
 	}
 
 	/**
@@ -131,39 +152,6 @@ class FoldersController extends Controller {
 					'id' => $mailbox
 				]
 				], Http::STATUS_CREATED);
-		} catch (Horde_Imap_Client_Exception $e) {
-			$response = new JSONResponse();
-			$response->setStatus(Http::STATUS_INTERNAL_SERVER_ERROR);
-			return $response;
-		} catch (DoesNotExistException $e) {
-			return new JSONResponse();
-		}
-	}
-
-	/**
-	 * @NoAdminRequired
-	 * @param $accountId
-	 * @param $folders
-	 * @return JSONResponse
-	 */
-	public function detectChanges($accountId, $folders) {
-		try {
-			$query = [];
-			foreach ($folders as $folder) {
-				$folderId = base64_decode($folder['id']);
-				$parts = explode('/', $folderId);
-				if (count($parts) > 1 && $parts[1] === 'FLAGGED') {
-					continue;
-				}
-				if (isset($folder['error'])) {
-					continue;
-				}
-				$query[$folderId] = $folder;
-			}
-			$account = $this->accountService->find($this->currentUserId, $accountId);
-			$mailBoxes = $account->getChangedMailboxes($query);
-
-			return new JSONResponse($mailBoxes);
 		} catch (Horde_Imap_Client_Exception $e) {
 			$response = new JSONResponse();
 			$response->setStatus(Http::STATUS_INTERNAL_SERVER_ERROR);

@@ -23,23 +23,29 @@ namespace OCA\Mail\Tests\Service;
 
 use Horde_Imap_Client_Socket;
 use OCA\Mail\Account;
+use OCA\Mail\IMAP\IMAPClientFactory;
+use OCA\Mail\IMAP\Sync\Request;
+use OCA\Mail\IMAP\Sync\Synchronizer;
 use OCA\Mail\Service\FolderMapper;
 use OCA\Mail\Service\FolderNameTranslator;
-use OCA\Mail\Service\IMAP\IMAPClientFactory;
 use OCA\Mail\Service\MailManager;
 use OCA\Mail\Tests\TestCase;
 use OCP\Files\Folder;
+use PHPUnit_Framework_TestCase;
 
 class MailManagerTest extends TestCase {
 
-	/** @var IMAPClientFactory */
+	/** @var IMAPClientFactory|PHPUnit_Framework_TestCase */
 	private $imapClientFactory;
 
-	/** @var FolderMapper */
+	/** @var FolderMapper|PHPUnit_Framework_TestCase */
 	private $folderMapper;
 
-	/** @var FolderNameTranslator */
+	/** @var FolderNameTranslator|PHPUnit_Framework_TestCase */
 	private $translator;
+
+	/** @var Synchronizer|PHPUnit_Framework_TestCase */
+	private $sync;
 
 	/** @varr MailManager */
 	private $manager;
@@ -50,8 +56,9 @@ class MailManagerTest extends TestCase {
 		$this->imapClientFactory = $this->createMock(IMAPClientFactory::class);
 		$this->folderMapper = $this->createMock(FolderMapper::class);
 		$this->translator = $this->createMock(FolderNameTranslator::class);
+		$this->sync = $this->createMock(Synchronizer::class);
 
-		$this->manager = new MailManager($this->imapClientFactory, $this->folderMapper, $this->translator);
+		$this->manager = new MailManager($this->imapClientFactory, $this->folderMapper, $this->translator, $this->sync);
 	}
 
 	public function testGetFolders() {
@@ -86,6 +93,20 @@ class MailManagerTest extends TestCase {
 			->with($this->equalTo($folders));
 
 		$this->manager->getFolders($account);
+	}
+
+	public function testSync() {
+		$account = $this->createMock(Account::class);
+		$syncRequest = $this->createMock(Request::class);
+		$client = $this->createMock(Horde_Imap_Client_Socket::class);
+		$this->imapClientFactory->expects($this->once())
+			->method('getClient')
+			->willReturn($client);
+		$this->sync->expects($this->once())
+			->method('sync')
+			->with($client, $syncRequest);
+
+		$this->manager->syncMessages($account, $syncRequest);
 	}
 
 }

@@ -78,14 +78,15 @@ define(function(require) {
 				searchQuery: this.searchQuery
 			}));
 		},
-		onShowMessage: function(message) {
+		onShowMessage: function(message, body) {
 			// Temporarily disable new-message composer events
 			Radio.ui.trigger('composer:events:undelegate');
 
-			var messageModel = new Backbone.Model(message);
+			var messageModel = new Backbone.Model(body);
 			this.showChildView('message', new MessageView({
 				account: this.account,
 				folder: this.folder,
+				message: message,
 				model: messageModel
 			}));
 			this.detailView = DetailView.MESSAGE;
@@ -96,7 +97,7 @@ define(function(require) {
 			// on mobiles then, we shall not mark the email as read until the user opened it
 			var isMobile = $(window).width() < 768;
 			if (isMobile === false) {
-				Radio.ui.trigger('messagesview:messageflag:set', message.id, 'unseen', false);
+				Radio.message.trigger('flag', message, 'unseen', false);
 			}
 		},
 		onShowError: function(errorMessage) {
@@ -195,7 +196,7 @@ define(function(require) {
 					message = require('state').currentMessage;
 					if (message) {
 						state = message.get('flags').get('flagged');
-						Radio.message.trigger('flag', this.account, this.folder, message, 'flagged', !state);
+						Radio.message.trigger('flag', message, 'flagged', !state);
 					}
 					break;
 				case 85:
@@ -204,7 +205,7 @@ define(function(require) {
 					message = require('state').currentMessage;
 					if (message) {
 						state = message.get('flags').get('unseen');
-						Radio.message.trigger('flag', this.account, this.folder, message, 'unseen', !state);
+						Radio.message.trigger('flag', message, 'unseen', !state);
 					}
 					break;
 			}

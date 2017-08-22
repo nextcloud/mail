@@ -48,14 +48,13 @@ class UnifiedMailbox implements IMailBox {
 	}
 
 	/**
-	 * @param int $from
-	 * @param int $count
-	 * @param string|\Horde_Imap_Client_Search_Query $filter
+	 * @param string|Horde_Imap_Client_Search_Query $filter
+	 * @param int $cursor time stamp of the oldest message on the client
 	 * @return array
 	 */
-	public function getMessages($from, $count, $filter) {
+	public function getMessages($filter = null, $cursor = null) {
 		$allAccounts = $this->accountService->findByUserId($this->userId);
-		$allMessages = array_map(function($account) use ($from, $count, $filter) {
+		$allMessages = array_map(function($account) use ($cursor, $filter) {
 			/** @var IAccount $account */
 			if ($account->getId() === UnifiedAccount::ID) {
 				return [];
@@ -65,17 +64,16 @@ class UnifiedMailbox implements IMailBox {
 				return [];
 			}
 
-			$messages = $inbox->getMessages($from, $count, $filter);
+			$messages = $inbox->getMessages($cursor, $filter);
 			$messages = array_map(function($message) use ($account) {
 				$message['id'] = base64_encode(json_encode([$account->getId(), $message['id']]));
-				$message['accountMail'] = $account->getEmail();
 				return $message;
 			}, $messages);
 
 			return $messages;
 		}, $allAccounts);
 
-		$allMessages = array_reduce($allMessages, function($a, $b) {
+		return array_reduce($allMessages, function($a, $b) {
 			if (is_null($a)) {
 				return $b;
 			}
@@ -84,17 +82,6 @@ class UnifiedMailbox implements IMailBox {
 			}
 			return array_merge($a, $b);
 		});
-
-		// sort by time
-		usort($allMessages, function($a, $b) {
-			return $a['dateInt'] < $b['dateInt'];
-		});
-
-		if ($count >= 0) {
-			$allMessages = array_slice($allMessages, 0, $count);
-		}
-
-		return $allMessages;
 	}
 
 	/**
