@@ -35,7 +35,8 @@ class FolderMapper {
 	 * @param string $pattern
 	 * @return Folder
 	 */
-	public function getFolders(Account $account, Horde_Imap_Client_Socket $client, $pattern = '*') {
+	public function getFolders(Account $account, Horde_Imap_Client_Socket $client,
+		$pattern = '*') {
 		$mailboxes = $client->listMailboxes($pattern, Horde_Imap_Client::MBOX_ALL, [
 			'delimiter' => true,
 			'attributes' => true,
@@ -44,9 +45,19 @@ class FolderMapper {
 
 		$folders = [];
 		foreach ($mailboxes as $mailbox) {
-			$folders[] = new Folder($account, $mailbox['mailbox'], $mailbox['attributes'], $mailbox['delimiter']);
+			$folder = new Folder($account, $mailbox['mailbox'], $mailbox['attributes'], $mailbox['delimiter']);
+
+			if ($folder->isSearchable()) {
+				$folder->setSyncToken($client->getSyncToken($folder->getMailbox()));
+			}
+
+			$folders[] = $folder;
 			if ($mailbox['mailbox']->utf8 === 'INBOX') {
-				$folders[] = new SearchFolder($account, $mailbox['mailbox'], $mailbox['attributes'], $mailbox['delimiter']);
+				$searchFolder = new SearchFolder($account, $mailbox['mailbox'], $mailbox['attributes'], $mailbox['delimiter']);
+				if ($searchFolder->isSearchable()) {
+					$searchFolder->setSyncToken($client->getSyncToken($folder->getMailbox()));
+				}
+				$folders[] = $searchFolder;
 			}
 		}
 		return $folders;
@@ -97,7 +108,8 @@ class FolderMapper {
 	 * @param Folder[] $folders
 	 * @param Horde_Imap_Client_Socket $client
 	 */
-	public function getFoldersStatus(array $folders, Horde_Imap_Client_Socket $client) {
+	public function getFoldersStatus(array $folders,
+		Horde_Imap_Client_Socket $client) {
 		$mailboxes = array_map(function(Folder $folder) {
 			return $folder->getMailbox();
 		}, array_filter($folders, function(Folder $folder) {

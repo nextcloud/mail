@@ -24,7 +24,6 @@ namespace OCA\Mail\Tests;
 use Horde_Imap_Client_Mailbox;
 use OCA\Mail\Account;
 use OCA\Mail\SearchFolder;
-use Test\TestCase;
 
 class SearchFolderTest extends TestCase {
 

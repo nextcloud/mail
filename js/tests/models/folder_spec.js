@@ -1,3 +1,5 @@
+/* global expect */
+
 /**
  * @author Christoph Wurst <christoph@winzerhof-wurst.at>
  *
@@ -19,14 +21,18 @@
 
 define([
 	'models/folder',
+	'models/account',
 	'models/messagecollection',
 	'models/message'
-], function(Folder, MessageCollection, Message) {
+], function(Folder, Account, MessageCollection, Message) {
 	describe('Folder', function() {
+		var account;
 		var folder;
 
 		beforeEach(function() {
+			account = new Account();
 			folder = new Folder();
+			account.addFolder(folder);
 		});
 
 		it('has messages', function() {

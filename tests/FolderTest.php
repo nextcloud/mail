@@ -25,7 +25,6 @@ use Horde_Imap_Client_Mailbox;
 use OCA\Mail\Account;
 use OCA\Mail\Folder;
 use PHPUnit_Framework_MockObject_MockObject;
-use Test\TestCase;
 
 class FolderTest extends TestCase {
 
@@ -154,6 +153,7 @@ class FolderTest extends TestCase {
 			'delimiter' => '.',
 			'folders' => [['subdir data']],
 			'specialRole' => 'sent',
+			'syncToken' => null,
 		];
 		$this->assertEquals($expected, $this->folder->jsonSerialize());
 	}

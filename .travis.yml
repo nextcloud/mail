@@ -52,6 +52,7 @@ before_install:
   - composer self-update
   - make install-composer-deps
   - make start-imap-docker
+  - make start-smtp-docker
   - cd ..
   - git clone https://github.com/nextcloud/server.git --recursive --depth 1 -b $CORE_BRANCH core
   - mv mail core/apps/
@@ -73,6 +74,9 @@ before_script:
 
   # XDebug is only needed if we report coverage -> speeds up other builds
   - if [[ "$PHP_COVERAGE" = "FALSE" ]]; then phpenv config-rm xdebug.ini; fi
+
+  # Print running docker images, just to verify they did not crash
+  - docker ps
 
 script:
   # Check info.xml schema validity

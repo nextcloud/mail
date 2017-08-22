@@ -18,27 +18,39 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>
  *
  */
+
 namespace OCA\Mail\Service\AutoConfig;
 
+use Horde_Imap_Client_Exception;
+use OCA\Mail\Db\MailAccount;
 use OCA\Mail\Service\Logger;
 
-class ImapConnectivityTester extends ConnectivityTester {
+class ImapConnectivityTester {
 
-	/**
-	 * @var ImapConnector
-	 */
+	/** @var ImapConnector */
 	private $imapConnector;
 
-	/**
-	 * @var string
-	 */
+	/** @var ConnectivityTester */
+	private $connectivityTester;
+
+	/** @var string */
 	private $userId;
 
-	public function __construct(ImapConnector $imapConnector, Logger $logger,
-		$UserId) {
-		parent::__construct($logger);
+	/** @var Logger */
+	private $logger;
+
+	/**
+	 * @param ImapConnector $imapConnector
+	 * @param ConnectivityTester $connectivityTester
+	 * @param string $UserId
+	 * @param Logger $logger
+	 */
+	public function __construct(ImapConnector $imapConnector,
+		ConnectivityTester $connectivityTester, $UserId, Logger $logger) {
 		$this->imapConnector = $imapConnector;
+		$this->connectivityTester = $connectivityTester;
 		$this->userId = $UserId;
+		$this->logger = $logger;
 	}
 
 	/**
@@ -47,7 +59,7 @@ class ImapConnectivityTester extends ConnectivityTester {
 	 * @param $users
 	 * @param $password
 	 * @param $name
-	 * @return \OCA\Mail\Db\MailAccount|null
+	 * @return MailAccount|null
 	 */
 	public function test($email, $host, $users, $password, $name) {
 		if (!is_array($users)) {
@@ -63,15 +75,14 @@ class ImapConnectivityTester extends ConnectivityTester {
 				continue;
 			}
 			foreach ($ports as $port) {
-				if (!$this->canConnect($url, $port)) {
+				if (!$this->connectivityTester->canConnect($url, $port)) {
 					continue;
 				}
 				foreach ($encryptionProtocols as $encryptionProtocol) {
 					foreach ($users as $user) {
 						try {
-							return $this->imapConnector->connect($email, $password, $name, $host,
-									$port, $encryptionProtocol, $user);
-						} catch (\Horde_Imap_Client_Exception $e) {
+							return $this->imapConnector->connect($email, $password, $name, $host, $port, $encryptionProtocol, $user);
+						} catch (Horde_Imap_Client_Exception $e) {
 							$error = $e->getMessage();
 							$this->logger->info("Test-Account-Failed: $this->userId, $url, $port, $user, $encryptionProtocol -> $error");
 						}

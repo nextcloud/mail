@@ -8,7 +8,7 @@ source_dir=$(build_dir)/source
 sign_dir=$(build_dir)/sign
 package_name=$(app_name)
 cert_dir=$(HOME)/.nextcloud/certificates
-docker_image=christophwurst/owncloud-mail-test-docker
+docker_image=christophwurst/nextcloud-mail-test-docker
 mail_user=user@domain.tld
 mail_pwd=mypassword
 
@@ -39,12 +39,20 @@ dev-setup: install-composer-deps install-npm-deps-dev
 
 start-imap-docker:
 	docker pull $(docker_image)
-	docker run --name="ocimaptest" -d \
-	-p 2525:25 -p 587:587 -p 993:993 \
+	docker run --name="ncimaptest" -d \
+	-p 993:993 \
 	-e POSTFIX_HOSTNAME=mail.domain.tld $(docker_image)
 
+start-smtp-docker:
+	docker pull catatnight/postfix
+	docker run --name="ncsmtptest" -d \
+	-e maildomain=domain.tld \
+	-e smtp_user=user@domain.tld:mypassword \
+	-p 2525:25 \
+	catatnight/postfix
+
 add-imap-account:
-	docker exec -it ocimaptest /opt/bin/useradd $(mail_user) $(mail_pwd)
+	docker exec -it ncimaptest /opt/bin/useradd $(mail_user) $(mail_pwd)
 
 update-composer: composer.phar
 	rm -f composer.lock

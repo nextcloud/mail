@@ -105,11 +105,10 @@ class Account implements IAccount {
 	}
 
 	/**
-	 * @param Alias $alias
+	 * @param Alias|null $alias
 	 * @return void
 	 */
 	public function setAlias($alias) {
-		$this->alias = new Alias();
 		$this->alias = $alias;
 	}
 
@@ -203,8 +202,12 @@ class Account implements IAccount {
 		$mail->addHeaders($headers);
 		$mail->setBody($message->getContent());
 
-		// Append attachments
-		foreach ($message->getAttachments() as $attachment) {
+		// Append cloud attachments
+		foreach ($message->getCloudAttachments() as $attachment) {
+			$mail->addMimePart($attachment);
+		}
+		// Append local attachments
+		foreach ($message->getLocalAttachments() as $attachment) {
 			$mail->addMimePart($attachment);
 		}
 

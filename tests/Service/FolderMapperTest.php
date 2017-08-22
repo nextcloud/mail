@@ -28,7 +28,7 @@ use OCA\Mail\Account;
 use OCA\Mail\Folder;
 use OCA\Mail\SearchFolder;
 use OCA\Mail\Service\FolderMapper;
-use Test\TestCase;
+use OCA\Mail\Tests\TestCase;
 
 class FolderMapperTest extends TestCase {
 

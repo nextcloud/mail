@@ -27,9 +27,11 @@ define(function(require) {
 			folders: [],
 			messagesLoaded: false
 		},
+
 		initialize: function() {
 			var FolderCollection = require('models/foldercollection');
 			var MessageCollection = require('models/messagecollection');
+			var UnifiedMessageCollection = require('models/unifiedmessagecollection');
 			this.account = this.get('account');
 			this.unset('account');
 			this.folders = new FolderCollection(this.get('folders') || []);
@@ -37,37 +39,52 @@ define(function(require) {
 				folder.account = this.account;
 			}, this));
 			this.unset('folders');
-			this.messages = new MessageCollection();
+			if (this.account && this.account.get('isUnified') === true) {
+				this.messages = new UnifiedMessageCollection();
+			} else {
+				this.messages = new MessageCollection();
+			}
 		},
+
 		toggleOpen: function() {
 			this.set({open: !this.get('open')});
 		},
+
 		/**
 		 * @param {Message} message
 		 * @returns {undefined}
 		 */
 		addMessage: function(message) {
-			message.folder = this;
-			this.messages.add(message);
+			if (this.account.id !== -1) {
+				// Non-unified folder messages should keep their source folder
+				message.folder = this;
+			}
+			message = this.messages.add(message);
+			if (this.account.id === -1) {
+				message.set('unifiedId', this.messages.getUnifiedId(message));
+			}
+			return message;
 		},
+
 		/**
-		 * @param {Array<Message>} message
+		 * @param {Array<Message>} messages
 		 * @returns {undefined}
 		 */
 		addMessages: function(messages) {
 			var _this = this;
-			_.each(messages, function(message) {
-				_this.addMessage(message);
-			});
+			return _.map(messages, _this.addMessage, this);
 		},
+
 		/**
 		 * @param {Folder} folder
 		 * @returns {undefined}
 		 */
+
 		addFolder: function(folder) {
 			folder = this.folders.add(folder);
 			folder.account = this.account;
 		},
+
 		toJSON: function() {
 			var data = Backbone.Model.prototype.toJSON.call(this);
 			if (!data.id) {

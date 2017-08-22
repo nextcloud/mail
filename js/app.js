@@ -43,6 +43,7 @@ define(function(require) {
 	require('service/attachmentservice');
 	require('service/davservice');
 	require('service/folderservice');
+	require('service/foldersyncservice');
 	require('service/messageservice');
 	require('service/aliasesservice');
 	require('util/notificationhandler');

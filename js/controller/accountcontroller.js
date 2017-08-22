@@ -38,14 +38,14 @@ define(function(require) {
 				return accounts;
 			});
 		}).catch(function(e) {
-			console.error(e);
-			Radio.ui.trigger('error:show', t('mail', 'Error while loading the accounts.'));
-		}).then(function(accounts) {
 			// Show accounts regardless of the result of
 			// loading the folders
 			Radio.ui.trigger('sidebar:accounts');
 
 			return accounts;
+		}, function(e) {
+			console.error(e);
+			Radio.ui.trigger('error:show', t('mail', 'Error while loading the accounts.'));
 		});
 	}
 

@@ -20,49 +20,77 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>
  *
  */
-
 $app = new \OCA\Mail\AppInfo\Application();
 $app->registerRoutes($this,
 	[
-		'routes' => [
-			['name' => 'page#index', 'url' => '/', 'verb' => 'GET'],
-			['name' => 'page#compose', 'url' => '/compose', 'verb' => 'GET'],
-			['name' => 'accounts#send', 'url' => '/accounts/{accountId}/send', 'verb' => 'POST'],
-			['name' => 'accounts#draft', 'url' => '/accounts/{accountId}/draft', 'verb' => 'POST'],
-			[
-				'name' => 'messages#downloadAttachment',
-				'url' => '/accounts/{accountId}/folders/{folderId}/messages/{messageId}/attachment/{attachmentId}',
-				'verb' => 'GET'],
-			[
-				'name' => 'messages#saveAttachment',
-				'url' => '/accounts/{accountId}/folders/{folderId}/messages/{messageId}/attachment/{attachmentId}',
-				'verb' => 'POST'],
-			[
-				'name' => 'messages#getHtmlBody',
-				'url' => '/accounts/{accountId}/folders/{folderId}/messages/{messageId}/html',
-				'verb' => 'GET'],
-			[
-				'name' => 'messages#setFlags',
-				'url' => '/accounts/{accountId}/folders/{folderId}/messages/{messageId}/flags',
-				'verb' => 'PUT'],
-			[
-				'name' => 'messages#move',
-				'url' => '/accounts/{accountId}/folders/{folderId}/messages/{id}/move',
-				'verb' => 'POST'],
-			[
-				'name' => 'proxy#redirect',
-				'url' => '/redirect',
-				'verb' => 'GET'],
-			[
-				'name' => 'proxy#proxy',
-				'url' => '/proxy',
-				'verb' => 'GET'],
+	'routes' => [
+		[
+			'name' => 'page#index',
+			'url' => '/',
+			'verb' => 'GET'
 		],
-		'resources' => [
-			'autoComplete' => ['url' => '/autoComplete'],
-			'accounts' => ['url' => '/accounts'],
-			'folders' => ['url' => '/accounts/{accountId}/folders'],
-			'messages' => ['url' => '/accounts/{accountId}/folders/{folderId}/messages'],
-			'aliases' => ['url' => '/accounts/{accountId}/aliases'],
-		]
-	]);
+		[
+			'name' => 'page#compose',
+			'url' => '/compose',
+			'verb' => 'GET'
+		],
+		[
+			'name' => 'accounts#send',
+			'url' => '/accounts/{accountId}/send',
+			'verb' => 'POST'
+		],
+		[
+			'name' => 'accounts#draft',
+			'url' => '/accounts/{accountId}/draft',
+			'verb' => 'POST'
+		],
+		[
+			'name' => 'folders#sync',
+			'url' => '/accounts/{accountId}/folders/{folderId}/sync',
+			'verb' => 'GET'
+		],
+		[
+			'name' => 'messages#downloadAttachment',
+			'url' => '/accounts/{accountId}/folders/{folderId}/messages/{messageId}/attachment/{attachmentId}',
+			'verb' => 'GET'
+		],
+		[
+			'name' => 'messages#saveAttachment',
+			'url' => '/accounts/{accountId}/folders/{folderId}/messages/{messageId}/attachment/{attachmentId}',
+			'verb' => 'POST'
+		],
+		[
+			'name' => 'messages#getHtmlBody',
+			'url' => '/accounts/{accountId}/folders/{folderId}/messages/{messageId}/html',
+			'verb' => 'GET'
+		],
+		[
+			'name' => 'messages#setFlags',
+			'url' => '/accounts/{accountId}/folders/{folderId}/messages/{messageId}/flags',
+			'verb' => 'PUT'
+		],
+		[
+			'name' => 'messages#move',
+			'url' => '/accounts/{accountId}/folders/{folderId}/messages/{id}/move',
+			'verb' => 'POST'
+		],
+		[
+			'name' => 'proxy#redirect',
+			'url' => '/redirect',
+			'verb' => 'GET'
+		],
+		[
+			'name' => 'proxy#proxy',
+			'url' => '/proxy',
+			'verb' => 'GET'
+		],
+	],
+	'resources' => [
+		'autoComplete' => ['url' => '/autoComplete'],
+		'localAttachments' => ['url' => '/attachments'],
+		'accounts' => ['url' => '/accounts'],
+		'folders' => ['url' => '/accounts/{accountId}/folders'],
+		'messages' => ['url' => '/accounts/{accountId}/folders/{folderId}/messages'],
+		'aliases' => ['url' => '/accounts/{accountId}/aliases'],
+	]
+]);

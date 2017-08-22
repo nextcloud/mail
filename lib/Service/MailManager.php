@@ -1,5 +1,6 @@
 <?php
 
+
 /**
  * @author Christoph Wurst <christoph@winzerhof-wurst.at>
  *
@@ -24,7 +25,12 @@ namespace OCA\Mail\Service;
 use OCA\Mail\Account;
 use OCA\Mail\Contracts\IMailManager;
 use OCA\Mail\Folder;
-use OCA\Mail\Service\IMAP\IMAPClientFactory;
+use OCA\Mail\IMAP\IMAPClientFactory;
+use OCA\Mail\IMAP\Sync\Request;
+use OCA\Mail\IMAP\Sync\Response;
+use OCA\Mail\IMAP\Sync\Synchronizer;
+use OCA\Mail\Service\FolderMapper;
+use OCA\Mail\Service\FolderNameTranslator;
 
 class MailManager implements IMailManager {
 
@@ -37,16 +43,21 @@ class MailManager implements IMailManager {
 	/** @var FolderNameTranslator */
 	private $folderNameTranslator;
 
+	/** @var Synchronizer */
+	private $synchronizer;
+
 	/**
 	 * @param IMAPClientFactory $imapClientFactory
 	 * @param FolderMapper $folderMapper
-	 * @param FolderNameTranslator
+	 * @param FolderNameTranslator $folderNameTranslator
+	 * @param Synchronizer $synchronizer
 	 */
-	public function __construct(IMAPClientFactory $imapClientFactory,
-		FolderMapper $folderMapper, FolderNameTranslator $folderNameTranslator) {
+	public function __construct(IMAPClientFactory $imapClientFactory, FolderMapper $folderMapper,
+		FolderNameTranslator $folderNameTranslator, Synchronizer $synchronizer) {
 		$this->imapClientFactory = $imapClientFactory;
 		$this->folderMapper = $folderMapper;
 		$this->folderNameTranslator = $folderNameTranslator;
+		$this->synchronizer = $synchronizer;
 	}
 
 	/**
@@ -62,6 +73,17 @@ class MailManager implements IMailManager {
 		$this->folderMapper->sortFolders($folders);
 		$this->folderNameTranslator->translateAll($folders);
 		return $this->folderMapper->buildFolderHierarchy($folders);
+	}
+
+	/**
+	 * @param Account $account
+	 * @param Request $syncRequest
+	 * @return Response
+	 */
+	public function syncMessages(Account $account, Request $syncRequest) {
+		$client = $this->imapClientFactory->getClient($account);
+
+		return $this->synchronizer->sync($client, $syncRequest);
 	}
 
 }

@@ -2,6 +2,7 @@
 
 /**
  * @author Christoph Wurst <christoph@winzerhof-wurst.at>
+ * @author Luc Calaresu <dev@calaresu.com>
  *
  * Mail
  *
@@ -22,12 +23,16 @@
 define(function(require) {
 	'use strict';
 
+	var _ = require('underscore');
 	var $ = require('jquery');
 	var OC = require('OC');
 	var Radio = require('radio');
 
 	Radio.message.reply('save:cloud', saveToFiles);
 	Radio.message.reply('attachment:download', downloadAttachment);
+	Radio.attachment.reply('upload:local', uploadLocalAttachment);
+	Radio.attachment.reply('upload:abort', abortLocalAttachment);
+	Radio.attachment.reply('upload:finished', uploadLocalAttachmentFinished);
 
 	/**
 	 * @param {Account} account
@@ -52,7 +57,7 @@ define(function(require) {
 			data: {
 				targetPath: path
 			},
-			type: 'POST',
+			type: 'POST'
 		};
 
 		return Promise.resolve($.ajax(url, options));
@@ -65,5 +70,82 @@ define(function(require) {
 	function downloadAttachment(url) {
 		return Promise.resolve($.ajax(url));
 	}
+
+	/**
+	 * @param {File} file
+	 * @param {LocalAttachment} localAttachment
+	 * @returns {Promise}
+	 */
+	function uploadLocalAttachment(file, localAttachment) {
+		var fd = new FormData();
+		fd.append('attachment', file);
+
+		var progressCallback = localAttachment.onProgress;
+		var url = OC.generateUrl('/apps/mail/attachments');
+
+		return Promise.resolve($.ajax({
+			url: url,
+			type: 'POST',
+			xhr: function() {
+				var customXhr = $.ajaxSettings.xhr();
+				// save the xhr into the model in order to :
+				//  - distinguish upload and nextcloud file attachments
+				//  - keep the upload status for later use
+				localAttachment.set('uploadRequest', customXhr);
+				// and start the request
+				if (customXhr.upload && _.isFunction(progressCallback)) {
+					customXhr.upload.addEventListener(
+						'progress',
+						progressCallback.bind(localAttachment),
+						false);
+				}
+				return customXhr;
+			},
+			data: fd,
+			processData: false,
+			contentType: false
+		})).then(function(data) {
+			return data.id;
+		});
+	}
+
+	/**
+	 * This method is called when a local attachment upload should be aborted.
+	 * If there is no upload ongoing, this method has no effect.
+	 *
+	 * @param {LocalAttachment} localAttachment
+	 */
+	function abortLocalAttachment(localAttachment) {
+		var uploadRequest = localAttachment.get('uploadRequest');
+		if (uploadRequest && uploadRequest.readyState < 4) {
+			uploadRequest.abort();
+		}
+		localAttachment.collection.remove(localAttachment);
+	}
+
+	/**
+	 * This method is called when a local attachment upload has
+	 * successfully finished. The server returned the db attachment id.
+	 *
+	 * @param {LocalAttachment} localAttachment
+	 * @param {number} fileId
+	 */
+	function uploadLocalAttachmentFinished(localAttachment, fileId) {
+		if (fileId === undefined || localAttachment.get('progress') < 1) {
+			localAttachment.set('uploadStatus', 2);  // error
+		} else {
+			/* If we have a file id (file successfully uploaded), we saved it */
+			localAttachment.set('id', fileId);
+			localAttachment.set('uploadStatus', 3);  // success
+		}
+		// we are done with the request, just get rid of it!
+		localAttachment.unset('uploadRequest');
+	}
+
+
+	return {
+		uploadLocalAttachment: uploadLocalAttachment,
+		uploadLocalAttachmentFinished: uploadLocalAttachmentFinished
+	};
 
 });

@@ -31,6 +31,7 @@
 
 namespace OCA\Mail;
 
+use DateTime;
 use Horde_Imap_Client;
 use Horde_Imap_Client_Exception;
 use Horde_Imap_Client_Fetch_Query;
@@ -79,7 +80,7 @@ class Mailbox implements IMailBox {
 	 * @param array $attributes
 	 * @param string $delimiter
 	 */
-	public function __construct($conn, $mailBox, $attributes, $delimiter='/') {
+	public function __construct($conn, $mailBox, $attributes, $delimiter = '/') {
 		$this->conn = $conn;
 		$this->mailBox = $mailBox;
 		$this->attributes = $attributes;
@@ -92,11 +93,10 @@ class Mailbox implements IMailBox {
 	}
 
 	/**
-	 * @param integer $from
-	 * @param integer $count
-	 * @param string $filter
+	 * @param string|Horde_Imap_Client_Search_Query $filter
+	 * @param int $cursor
 	 */
-	private function getSearchIds($from, $count, $filter) {
+	private function getSearchIds($filter, $cursor = null) {
 		if ($filter instanceof Horde_Imap_Client_Search_Query) {
 			$query = $filter;
 		} else {
@@ -108,28 +108,31 @@ class Mailbox implements IMailBox {
 		if ($this->getSpecialRole() !== 'trash') {
 			$query->flag(Horde_Imap_Client::FLAG_DELETED, false);
 		}
+		if (!is_null($cursor)) {
+			$query->dateSearch(DateTime::createFromFormat("U", $cursor), Horde_Imap_Client_Search_Query::DATE_BEFORE);
+		}
 
 		try {
-			$result = $this->conn->search($this->mailBox, $query, ['sort' => [Horde_Imap_Client::SORT_DATE]]);
+			$result = $this->conn->search($this->mailBox, $query, [
+				'sort' => [
+					Horde_Imap_Client::SORT_DATE
+				],
+			]);
 		} catch (Horde_Imap_Client_Exception $e) {
 			// maybe the server's advertisment of SORT was a fake
 			// see https://github.com/nextcloud/mail/issues/50
 			// try again without SORT
-			return $this->getFetchIds($from, $count);
+			return $this->getFetchIds($cursor);
 		}
 
-		$ids = array_reverse($result['match']->ids);
-		if ($from >= 0 && $count >= 0) {
-			$ids = array_slice($ids, $from, $count);
-		}
-		return new \Horde_Imap_Client_Ids($ids, false);
+		return array_reverse($result['match']->ids);
 	}
 
 	/**
-	 * @param integer $from
-	 * @param integer $count
+	 * @param int $cursor
+	 * @return type
 	 */
-	private function getFetchIds($from, $count) {
+	private function getFetchIds($cursor = null) {
 		$q = new Horde_Imap_Client_Fetch_Query();
 		$q->uid();
 		$q->imapDate();
@@ -137,56 +140,68 @@ class Mailbox implements IMailBox {
 		$result = $this->conn->fetch($this->mailBox, $q);
 		$uidMap = [];
 		foreach ($result as $r) {
-			$uidMap[$r->getUid()] = $r->getImapDate()->getTimeStamp();
+			$ts = $r->getImapDate()->getTimeStamp();
+			if (is_null($cursor) || $ts < $cursor) {
+				$uidMap[$r->getUid()] = $ts;
+			}
 		}
 		// sort by time
 		uasort($uidMap, function($a, $b) {
 			return $a < $b;
 		});
-		if ($from >= 0 && $count >= 0) {
-			$uidMap = array_slice($uidMap, $from, $count, true);
-		}
-		return new \Horde_Imap_Client_Ids(array_keys($uidMap), false);
+		return array_keys($uidMap);
 	}
 
-	public function getMessages($from = 0, $count = 2, $filter = '') {
+	/**
+	 * Get message page
+	 * 
+	 * Build the list of UIDs for the current page on the client side
+	 *
+	 * This is done by fetching a list of *all* UIDs and their data, sorting them
+	 * respectively and selecting the appropriate page. The page starts once UID after
+	 * the cursorId, if given. The size of the page is limited to 20.
+	 *
+	 * @param string|Horde_Imap_Client_Search_Query $filter
+	 * @param int $cursor time stamp of the oldest message on the client
+	 * @return array
+	 */
+	public function getMessages($filter = null, $cursor = null) {
 		if (!$this->conn->capability->query('SORT') && (is_null($filter) || $filter === '')) {
-			$ids = $this->getFetchIds($from, $count);
+			$ids = $this->getFetchIds($cursor);
 		} else {
-			$ids = $this->getSearchIds($from, $count, $filter);
+			$ids = $this->getSearchIds($filter, $cursor);
 		}
+		$page = new Horde_Imap_Client_Ids(array_slice($ids, 0, 20, true));
 
-		$headers = [];
+		$fetchQuery = new Horde_Imap_Client_Fetch_Query();
+		$fetchQuery->envelope();
+		$fetchQuery->flags();
+		$fetchQuery->size();
+		$fetchQuery->uid();
+		$fetchQuery->imapDate();
+		$fetchQuery->structure();
 
-		$fetch_query = new Horde_Imap_Client_Fetch_Query();
-		$fetch_query->envelope();
-		$fetch_query->flags();
-		$fetch_query->size();
-		$fetch_query->uid();
-		$fetch_query->imapDate();
-		$fetch_query->structure();
-
-		$headers = array_merge($headers, [
+		$headers = [
 			'importance',
 			'list-post',
-			'x-priority'
-		]);
-		$headers[] = 'content-type';
+			'x-priority',
+			'content-type',
+		];
 
-		$fetch_query->headers('imp', $headers, [
+		$fetchQuery->headers('imp', $headers, [
 			'cache' => true,
-			'peek'  => true
+			'peek' => true
 		]);
 
-		$options = ['ids' => $ids];
+		$options = ['ids' => $page];
 		// $list is an array of Horde_Imap_Client_Data_Fetch objects.
-		$headers = $this->conn->fetch($this->mailBox, $fetch_query, $options);
+		$fetchResult = $this->conn->fetch($this->mailBox, $fetchQuery, $options);
 
 		ob_start(); // fix for Horde warnings
 		$messages = [];
-		foreach ($headers->ids() as $message_id) {
-			$header = $headers[$message_id];
-			$message = new IMAPMessage($this->conn, $this->mailBox, $message_id, $header);
+		foreach ($fetchResult->ids() as $messageId) {
+			$header = $fetchResult[$messageId];
+			$message = new IMAPMessage($this->conn, $this->mailBox, $messageId, $header);
 			$messages[] = $message->jsonSerialize();
 		}
 		ob_get_clean();
@@ -330,6 +345,7 @@ class Mailbox implements IMailBox {
 			];
 		}
 	}
+
 	/**
 	 * Get the special use role of the mailbox
 	 *
@@ -362,13 +378,12 @@ class Mailbox implements IMailBox {
 				return strtolower($n);
 			}, $this->attributes);
 
-			foreach ($specialUseAttributes as $attr)  {
+			foreach ($specialUseAttributes as $attr) {
 				if (in_array($attr, $attributes)) {
 					$result = ltrim($attr, '\\');
 					break;
 				}
 			}
-
 		}
 
 		$this->specialRole = $result;
@@ -380,12 +395,12 @@ class Mailbox implements IMailBox {
 	protected function guessSpecialRole() {
 
 		$specialFoldersDict = [
-			'inbox'   => ['inbox'],
-			'sent'    => ['sent', 'sent items', 'sent messages', 'sent-mail', 'sentmail'],
-			'drafts'  => ['draft', 'drafts'],
+			'inbox' => ['inbox'],
+			'sent' => ['sent', 'sent items', 'sent messages', 'sent-mail', 'sentmail'],
+			'drafts' => ['draft', 'drafts'],
 			'archive' => ['archive', 'archives'],
-			'trash'   => ['deleted messages', 'trash'],
-			'junk'    => ['junk', 'spam', 'bulk mail'],
+			'trash' => ['deleted messages', 'trash'],
+			'junk' => ['junk', 'spam', 'bulk mail'],
 		];
 
 		$lowercaseExplode = explode($this->delimiter, $this->getFolderId(), 2);
@@ -432,7 +447,8 @@ class Mailbox implements IMailBox {
 	 */
 	public function saveDraft($rawBody) {
 
-		$uids = $this->conn->append($this->mailBox, [
+		$uids = $this->conn->append($this->mailBox,
+			[
 			[
 				'data' => $rawBody,
 				'flags' => [

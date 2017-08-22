@@ -33,12 +33,11 @@ interface IMailBox {
 	public function getFolderId();
 
 	/**
-	 * @param int $from
-	 * @param int $count
 	 * @param string|Horde_Imap_Client_Search_Query $filter
+	 * @param int $cursorId last known ID on the client
 	 * @return array
 	 */
-	public function getMessages($from, $count, $filter);
+	public function getMessages($filter = null, $cursorId = null);
 
 	/**
 	 * @return string

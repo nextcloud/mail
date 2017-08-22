@@ -1,3 +1,5 @@
+/* global spyOn */
+
 /**
  * @author Christoph Wurst <christoph@winzerhof-wurst.at>
  *
