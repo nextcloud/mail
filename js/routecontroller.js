@@ -82,7 +82,6 @@ define(function(require) {
 				}
 			});
 
-			this.default();
 			Radio.ui.trigger('composer:show', composerOptions);
 		},
 		default: function() {
