@@ -117,7 +117,7 @@ define(function(require) {
 			})).then(function(results) {
 				return results.reduce(function(acc, newMessages) {
 					return acc.concat(newMessages);
-				});
+				}, []);
 			});
 		} else {
 			var unifiedAccount = allAccounts.get(-1);
