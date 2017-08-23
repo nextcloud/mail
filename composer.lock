@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#composer-lock-the-lock-file",
         "This file is @generated automatically"
     ],
-    "content-hash": "8294731fdbc5cc560407d146f666d163",
+    "content-hash": "04639439ccf70c00ea32c175f690a479",
     "packages": [
         {
             "name": "ezyang/htmlpurifier",
@@ -93,7 +93,7 @@
             ],
             "description": "Autolink URLs in text or html",
             "homepage": "http://www.kwi.dk/projects/php/UrlLinker/",
-            "time": "2014-12-28 22:05:00"
+            "time": "2014-12-28T22:05:00+00:00"
         },
         {
             "name": "pear-pear.horde.org/Horde_Crypt_Blowfish",
@@ -221,10 +221,10 @@
         },
         {
             "name": "pear-pear.horde.org/Horde_Imap_Client",
-            "version": "2.29.12",
+            "version": "2.29.14",
             "dist": {
                 "type": "file",
-                "url": "https://pear.horde.org/get/Horde_Imap_Client-2.29.12.tgz",
+                "url": "https://pear.horde.org/get/Horde_Imap_Client-2.29.14.tgz",
                 "reference": null,
                 "shasum": null
             },
@@ -243,7 +243,7 @@
                 "php": "<8.0.0.0"
             },
             "replace": {
-                "pear-horde/horde_imap_client": "== 2.29.12.0"
+                "pear-horde/horde_imap_client": "== 2.29.14.0"
             },
             "type": "pear-library",
             "autoload": {
@@ -293,10 +293,10 @@
         },
         {
             "name": "pear-pear.horde.org/Horde_Mail",
-            "version": "2.6.3",
+            "version": "2.6.4",
             "dist": {
                 "type": "file",
-                "url": "https://pear.horde.org/get/Horde_Mail-2.6.3.tgz",
+                "url": "https://pear.horde.org/get/Horde_Mail-2.6.4.tgz",
                 "reference": null,
                 "shasum": null
             },
@@ -310,7 +310,7 @@
                 "php": "<8.0.0.0"
             },
             "replace": {
-                "pear-horde/horde_mail": "== 2.6.3.0"
+                "pear-horde/horde_mail": "== 2.6.4.0"
             },
             "type": "pear-library",
             "autoload": {
@@ -430,10 +430,10 @@
         },
         {
             "name": "pear-pear.horde.org/Horde_Smtp",
-            "version": "1.9.4",
+            "version": "1.9.5",
             "dist": {
                 "type": "file",
-                "url": "https://pear.horde.org/get/Horde_Smtp-1.9.4.tgz",
+                "url": "https://pear.horde.org/get/Horde_Smtp-1.9.5.tgz",
                 "reference": null,
                 "shasum": null
             },
@@ -447,7 +447,7 @@
                 "php": "<8.0.0.0"
             },
             "replace": {
-                "pear-horde/horde_smtp": "== 1.9.4.0"
+                "pear-horde/horde_smtp": "== 1.9.5.0"
             },
             "type": "pear-library",
             "autoload": {
