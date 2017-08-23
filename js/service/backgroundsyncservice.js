@@ -51,9 +51,14 @@ define(function(require) {
 	 * @returns {Promise}
 	 */
 	function sync(account) {
-		return Radio.sync.request('sync:folder', account.folders.first()).catch(function(e) {
-			console.error(e);
-		}).then(triggerNextSync);
+		return Radio.sync.request('sync:folder', account.folders.first())
+			.then(function(newMessages) {
+				Radio.ui.trigger('notification:mail:show', newMessages);
+			})
+			.catch(function(e) {
+				console.error(e);
+			})
+			.then(triggerNextSync);
 	}
 
 	return {

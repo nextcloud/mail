@@ -86,6 +86,8 @@ define(function(require) {
 
 				folder.messages.remove(id);
 			});
+
+			return newMessages;
 		});
 	}
 
@@ -112,7 +114,11 @@ define(function(require) {
 				return acc.concat(f);
 			}, []).map(function(folder) {
 				return syncSingleFolder(folder, unifiedFolder);
-			}));
+			})).then(function(results) {
+				return results.reduce(function(acc, newMessages) {
+					return acc.concat(newMessages);
+				});
+			});
 		} else {
 			var unifiedAccount = allAccounts.get(-1);
 			if (unifiedAccount) {
