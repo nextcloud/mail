@@ -151,44 +151,6 @@ class UnifiedAccount implements IAccount {
 	}
 
 	/**
-	 * @param string[] $query
-	 * @return array
-	 */
-	public function getChangedMailboxes($query) {
-		$accounts = $this->accountService->findByUserId($this->userId);
-		$changedBoxes = [];
-
-		foreach($accounts as $account) {
-			/** @var IAccount $account */
-			if ($account->getId() === UnifiedAccount::ID) {
-				continue;
-			}
-			$inbox = $account->getInbox();
-			$inboxName = $inbox->getFolderId();
-			$changes = $account->getChangedMailboxes([$inboxName => [
-				'uidvalidity' => $query[self::INBOX_ID]['uidvalidity'][$account->getId()],
-				'uidnext' => $query[self::INBOX_ID]['uidnext'][$account->getId()],
-			]]);
-			if (!isset($changes[$inboxName])) {
-				continue;
-			}
-			if (!isset($changedBoxes[self::INBOX_ID])) {
-				$changedBoxes[self::INBOX_ID] = $this->buildInbox();
-				$changedBoxes[self::INBOX_ID]['messages'] = [];
-				$changedBoxes[self::INBOX_ID]['newUnReadCounter'] = 0;
-			}
-			// Create special unified inbox message IDs
-			foreach ($changes[$inboxName]['messages'] as &$message) {
-				$id = base64_encode(json_encode([$account->getId(), $message['id']]));
-				$message['id'] = $id;
-			}
-			$changedBoxes[self::INBOX_ID]['messages'] = array_merge($changedBoxes[self::INBOX_ID]['messages'], $changes[$inboxName]['messages']);
-			$changedBoxes[self::INBOX_ID]['newUnReadCounter'] += $changes[$inboxName]['newUnReadCounter'];
-		}
-		return $changedBoxes;
-	}
-
-	/**
 	 * @return IMailBox
 	 */
 	public function getInbox() {

@@ -35,8 +35,7 @@ define(function(require) {
 		}
 	}
 
-	/*jshint maxparams: 6 */
-	function showNotification(title, body, tag, icon, account, folder) {
+	function showNotification(title, body, icon) {
 		// notifications not supported -> go away
 		if (typeof Notification === 'undefined') {
 			return;
@@ -50,20 +49,22 @@ define(function(require) {
 			title,
 			{
 				body: body,
-				tag: tag,
 				icon: icon
 			}
 		);
 		notification.onclick = function() {
-			Radio.navigation.trigger('folder', account.get('accountId'), folder.get('id'), false);
 			window.focus();
 		};
 	}
 
-	function showMailNotification(email, folder) {
-		if (Notification.permission === 'granted' && folder.messages.length > 0) {
-			var from = _.map(folder.messages, function(m) {
-				return m.from;
+	/**
+	 * @param {array<Message>} messages
+	 * @returns {undefined}
+	 */
+	function showMailNotification(messages) {
+		if (Notification.permission === 'granted' && messages.length > 0) {
+			var from = _.map(messages, function(m) {
+				return m.get('from');
 			});
 			from = _.uniq(from);
 			if (from.length > 2) {
@@ -74,9 +75,9 @@ define(function(require) {
 			}
 			// special layout if there is only 1 new message
 			var body = '';
-			if (folder.messages.length === 1) {
-				var subject = _.map(folder.messages, function(m) {
-					return m.subject;
+			if (messages.length === 1) {
+				var subject = _.map(messages, function(m) {
+					return m.get('subject');
 				});
 				body = t('mail',
 					'{from}\n{subject}', {
@@ -85,19 +86,15 @@ define(function(require) {
 					});
 			} else {
 				body = n('mail',
-					'%n new message in {folderName} \nfrom {from}',
-					'%n new messages in {folderName} \nfrom {from}',
-					folder.messages.length, {
-						folderName: folder.name,
+					'%n new message \nfrom {from}',
+					'%n new messages \nfrom {from}',
+					messages.length, {
 						from: from.join()
 					});
 			}
 			// If it's okay let's create a notification
-			var State = require('state');
-			var tag = 'not-' + folder.accountId + '-' + folder.name;
 			var icon = OC.filePath('mail', 'img', 'mail-notification.png');
-			var account = State.accounts.get(folder.accountId);
-			showNotification(email, body, tag, icon, account, folder.id);
+			showNotification(t('mail', 'Nextcloud Mail'), body, icon);
 		}
 	}
 
