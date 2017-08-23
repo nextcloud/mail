@@ -91,7 +91,7 @@ define(function(require) {
 		 * @param {AccountCollection} accounts
 		 * @returns {undefined}
 		 */
-		startBackgroundSync(accounts) {
+		startBackgroundSync: function(accounts) {
 			Radio.sync.trigger('start', accounts);
 		}
 	});
