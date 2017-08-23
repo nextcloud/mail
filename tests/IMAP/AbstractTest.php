@@ -21,7 +21,7 @@
  *
  */
 
-namespace OCA\Mail\Tests\Imap;
+namespace OCA\Mail\Tests\IMAP;
 
 use Exception;
 use OC;

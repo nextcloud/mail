@@ -20,8 +20,7 @@
 define([
 	'service/accountservice',
 	'OC',
-	'radio',
-], function(AccountService, OC, Radio) {
+], function(AccountService, OC) {
 
 	describe('AccountService', function() {
 
@@ -54,18 +53,17 @@ define([
 			});
 		});
 
-		it('handle account creation errors correctly', function() {
+		it('handle account creation errors correctly', function(done) {
 			spyOn(OC, 'generateUrl').and.returnValue('index.php/apps/mail/accounts');
 
-			var promise = AccountService.createAccount({
+			var creating = AccountService.createAccount({
 				email: 'email@example.com',
 				password: '12345'
 			});
 
 			expect(OC.generateUrl).toHaveBeenCalledWith('apps/mail/accounts');
 
-			expect(jasmine.Ajax.requests.count())
-				.toBe(1);
+			expect(jasmine.Ajax.requests.count()).toBe(1);
 			expect(jasmine.Ajax.requests.mostRecent().url)
 				.toBe('index.php/apps/mail/accounts');
 			jasmine.Ajax.requests.mostRecent().respondWith({
@@ -73,6 +71,8 @@ define([
 				'contentType': 'application/json',
 				'responseText': '{}'
 			});
+
+			creating.catch(done);
 		});
 	});
 });

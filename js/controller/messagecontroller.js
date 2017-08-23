@@ -26,21 +26,19 @@ define(function(require) {
 	var Radio = require('radio');
 	var ErrorMessageFactory = require('util/errormessagefactory');
 
-	Radio.message.on('load', function(account, folder, message, options) {
-		//FIXME: don't rely on global state vars
-		load(account, message, options);
-	});
+	Radio.message.on('load', load);
 	Radio.message.on('forward', openForwardComposer);
 	Radio.message.on('flag', flagMessage);
 	Radio.message.on('move', moveMessage);
 
 	/**
 	 * @param {Account} account
+	 * @param {Folder} folder
 	 * @param {Message} message
 	 * @param {object} options
 	 * @returns {undefined}
 	 */
-	function load(account, message, options) {
+	function load(account, folder, message, options) {
 		options = options || {};
 		var defaultOptions = {
 			force: false
@@ -81,18 +79,13 @@ define(function(require) {
 		// Fade out the message composer
 		$('#mail_new_message').prop('disabled', false);
 
-		Radio.message.request('entity',
-			require('state').currentAccount,
-			require('state').currentFolder,
-			message.get('id')).then(function(message) {
+		Radio.message.request('entity', account, folder, message.get('id')).then(function(messageBody) {
 			if (draft) {
-				Radio.ui.trigger('composer:show', message);
+				Radio.ui.trigger('composer:show', messageBody);
 			} else {
 				// TODO: ideally this should be handled in messageservice.js
-				require('cache').addMessage(require('state').currentAccount,
-					require('state').currentFolder,
-					message);
-				Radio.ui.trigger('message:show', message);
+				require('cache').addMessage(account, folder, messageBody);
+				Radio.ui.trigger('message:show', message, messageBody);
 			}
 		}, function() {
 			Radio.ui.trigger('message:error', ErrorMessageFactory.getRandomMessageErrorMessage());
@@ -154,7 +147,9 @@ define(function(require) {
 		});
 	}
 
-	function flagMessage(account, folder, message, flag, value) {
+	function flagMessage(message, flag, value) {
+		var folder = message.folder;
+		var account = folder.account;
 		var prevUnseen = folder.get('unseen');
 
 		if (message.get('flags').get(flag) === value) {

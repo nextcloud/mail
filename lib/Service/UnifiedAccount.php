@@ -58,18 +58,9 @@ class UnifiedAccount implements IAccount {
 	/**
 	 * @return array
 	 */
-	public function getConfiguration() {
-		return [
-			'accountId' => UnifiedAccount::ID,
-		];
-	}
-
-	/**
-	 * @return array
-	 */
 	public function jsonSerialize() {
 		return [
-			'id'             => UnifiedAccount::ID,
+			'accountId'             => UnifiedAccount::ID,
 			'email'          => '',
 			'folders'        => [$this->buildInbox()],
 			'specialFolders' => [],
@@ -143,23 +134,6 @@ class UnifiedAccount implements IAccount {
 	}
 
 	/**
-	 * @param IMessage $message
-	 * @param int|null $draftUID
-	 */
-	public function sendMessage(IMessage $message, $draftUID) {
-		throw new Exception('Not implemented');
-	}
-
-	/**
-	 * @param IMessage $message
-	 * @param int|null $previousUID
-	 * @return int
-	 */
-	public function saveDraft(IMessage $message, $previousUID) {
-		throw new Exception('Not implemented');
-	}
-
-	/**
 	 * @param string $folderId
 	 * @param string $messageId
 	 */
@@ -207,7 +181,6 @@ class UnifiedAccount implements IAccount {
 			foreach ($changes[$inboxName]['messages'] as &$message) {
 				$id = base64_encode(json_encode([$account->getId(), $message['id']]));
 				$message['id'] = $id;
-				$message['accountMail'] = $account->getEmail();
 			}
 			$changedBoxes[self::INBOX_ID]['messages'] = array_merge($changedBoxes[self::INBOX_ID]['messages'], $changes[$inboxName]['messages']);
 			$changedBoxes[self::INBOX_ID]['newUnReadCounter'] += $changes[$inboxName]['newUnReadCounter'];

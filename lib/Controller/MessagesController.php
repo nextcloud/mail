@@ -119,13 +119,12 @@ class MessagesController extends Controller {
 	 *
 	 * @param int $accountId
 	 * @param string $folderId
-	 * @param int $from
-	 * @param int $to
+	 * @param int $cursor
 	 * @param string $filter
 	 * @param array $ids
 	 * @return JSONResponse
 	 */
-	public function index($accountId, $folderId, $from=0, $to=20, $filter=null, $ids=null) {
+	public function index($accountId, $folderId, $cursor = null, $filter=null, $ids=null) {
 		if (!is_null($ids)) {
 			$ids = explode(',', $ids);
 
@@ -133,9 +132,12 @@ class MessagesController extends Controller {
 		}
 		$mailBox = $this->getFolder($accountId, $folderId);
 
-		$this->logger->debug("loading messages $from to $to of folder <$folderId>");
+		$this->logger->debug("loading messages of folder <$folderId>");
 
-		$json = $mailBox->getMessages($from, $to-$from+1, $filter);
+		if ($cursor === '') {
+			$cursor = null;
+		}
+		$messages = $mailBox->getMessages($filter, $cursor);
 
 		$ci = $this->contactsIntegration;
 		$json = array_map(function($j) use ($ci, $mailBox) {
@@ -153,7 +155,7 @@ class MessagesController extends Controller {
 
 			$j['senderImage'] = $ci->getPhoto($j['fromEmail']);
 			return $j;
-		}, $json);
+		}, $messages);
 
 		return new JSONResponse($json);
 	}
@@ -188,7 +190,6 @@ class MessagesController extends Controller {
 
 	/**
 	 * @NoAdminRequired
-	 * @NoCSRFRequired
 	 *
 	 * @param int $accountId
 	 * @param string $folderId
@@ -206,7 +207,6 @@ class MessagesController extends Controller {
 
 	/**
 	 * @NoAdminRequired
-	 * @NoCSRFRequired
 	 *
 	 * @param int $accountId
 	 * @param string $folderId

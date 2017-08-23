@@ -39,7 +39,7 @@ define([
 		});
 
 		/* when everything went as expected on attachment upload */
-		it('uploads a new attachment on the server', function() {
+		it('uploads a new attachment on the server', function(done) {
 			spyOn(OC, 'generateUrl').and.returnValue('index.php/apps/mail/attachments');
 
 			jasmine.Ajax.stubRequest('index.php/apps/mail/attachments').andReturn({
@@ -55,14 +55,16 @@ define([
 				.then(function(attachment, fileId) {
 					expect(jasmine.Ajax.requests.count()).toBe(1);
 					expect(jasmine.Ajax.requests.mostRecent().url).toBe('index.php/apps/mail/attachments');
+					done();
 				})
-				.catch(function(attachment) {
-					fail('Attachment upload is not supposed to fail');
+				.catch(function(error) {
+					console.error(error);
+					done.fail('Attachment upload is not supposed to fail', error);
 				});
 		});
 
 		/* when an error occurred on server side on attachment upload */
-		it('handles errors during attachment uploads', function() {
+		it('handles errors during attachment uploads', function(done) {
 			spyOn(OC, 'generateUrl').and.returnValue('index.php/apps/mail/attachments');
 
 			jasmine.Ajax.stubRequest('index.php/apps/mail/attachments').andReturn({
@@ -75,11 +77,12 @@ define([
 
 			promise
 				.then(function(attachment, fileId) {
-					fail('Attachment upload is supposed to fail');
+					done.fail('Attachment upload is supposed to fail');
 				})
 				.catch(function(attachment) {
 					expect(jasmine.Ajax.requests.count()).toBe(1);
 					expect(jasmine.Ajax.requests.mostRecent().url).toBe('index.php/apps/mail/attachments');
+					done();
 				});
 		});
 

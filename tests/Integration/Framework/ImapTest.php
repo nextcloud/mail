@@ -21,6 +21,7 @@
 
 namespace OCA\Mail\Tests\Integration\Framework;
 
+use Horde_Imap_Client;
 use Horde_Imap_Client_Fetch_Query;
 use Horde_Imap_Client_Ids;
 use Horde_Imap_Client_Socket;
@@ -35,7 +36,6 @@ trait ImapTest {
 
 	/** @var array<string> */
 	private $defaultMailboxes = [
-		'Drafts',
 		'INBOX',
 		'Junk',
 		'Sent',
@@ -114,6 +114,7 @@ trait ImapTest {
 	/**
 	 * @param string $mailbox
 	 * @param SimpleMessage $message
+	 * @return int id of the new message
 	 */
 	public function saveMessage($mailbox, SimpleMessage $message) {
 		$client = $this->getTestClient();
@@ -136,11 +137,38 @@ trait ImapTest {
 		$raw = $mail->getRaw();
 		$data = stream_get_contents($raw);
 
-		$client->append($mailbox, [
-			[
-				'data' => $data,
-			]
+		return $client->append($mailbox, [
+				[
+					'data' => $data,
+				]
+			])->ids[0];
+	}
+
+	public function flagMessage($mailbox, $id) {
+		$client = $this->getTestClient();
+
+		$client->store($mailbox, [
+			'ids' => new Horde_Imap_Client_Ids([$id]),
+			'add' => [
+				Horde_Imap_Client::FLAG_FLAGGED,
+			],
 		]);
+	}
+
+	public function deleteMessage($mailbox, $id) {
+		$client = $this->getTestClient();
+
+		$ids = new Horde_Imap_Client_Ids([$id]);
+		$client->expunge($mailbox, [
+			'ids' => $ids,
+			'delete' => true,
+		]);
+	}
+
+	public function getMailboxSyncToken($mailbox) {
+		$client = $this->getTestClient();
+
+		return $client->getSyncToken($mailbox);
 	}
 
 	/**

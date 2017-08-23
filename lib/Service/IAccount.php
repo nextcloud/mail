@@ -22,14 +22,8 @@
 namespace OCA\Mail\Service;
 
 use JsonSerializable;
-use OCA\Mail\Model\IMessage;
 
 interface IAccount extends JsonSerializable {
-
-	/**
-	 * @return array
-	 */
-	public function getConfiguration();
 
 	/**
 	 * @param $folderId
@@ -41,19 +35,6 @@ interface IAccount extends JsonSerializable {
 	 * @return string
 	 */
 	public function getEmail();
-
-	/**
-	 * @param IMessage $message
-	 * @param int|null $draftUID
-	 */
-	public function sendMessage(IMessage $message, $draftUID);
-
-	/**
-	 * @param IMessage $message
-	 * @param int|null $previousUID
-	 * @return int
-	 */
-	public function saveDraft(IMessage $message, $previousUID);
 
 	/**
 	 * @param string $folderId

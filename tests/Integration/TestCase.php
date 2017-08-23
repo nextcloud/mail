@@ -22,9 +22,9 @@
 namespace OCA\Mail\Tests\Integration;
 
 use OCA\Mail\Tests\Integration\Framework\ImapTest;
-use PHPUnit_Framework_TestCase;
+use OCA\Mail\Tests\TestCase as Base;
 
-class TestCase extends PHPUnit_Framework_TestCase {
+class TestCase extends Base {
 
 	protected function setUp() {
 		parent::setUp();

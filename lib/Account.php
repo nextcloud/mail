@@ -354,7 +354,7 @@ class Account implements IAccount {
 	 * @return array
 	 */
 	public function jsonSerialize() {
-		throw new Exception('Not implemented');
+		return $this->account->toJson();
 	}
 
 	/**
@@ -732,22 +732,6 @@ class Account implements IAccount {
 	}
 
 	/**
-	 * @throws Horde_Imap_Client_Exception
-	 */
-	public function reconnect() {
-		$this->mailboxes = null;
-		if ($this->client) {
-			$this->client->close();
-			$this->client = null;
-		}
-		$this->getImapConnection();
-	}
-
-	/**
-	 * @return array
-	 */
-	public function getConfiguration() {
-		return $this->account->toJson();
 	}
 
 	/**
