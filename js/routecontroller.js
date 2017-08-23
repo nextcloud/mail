@@ -1,3 +1,5 @@
+/* global Promise */
+
 /**
  * @author Christoph Wurst <christoph@winzerhof-wurst.at>
  *
@@ -47,10 +49,11 @@ define(function(require) {
 			options = options || {};
 			Backbone.history.navigate(route, options);
 		},
+
 		/**
 		 * Handle mailto links
 		 *
-		 * @returns {boolean} whether the composer has been shown
+		 * @returns {Promise}
 		 */
 		_handleMailto: function(params) {
 			var composerOptions = {};
@@ -82,32 +85,43 @@ define(function(require) {
 				}
 			});
 
-			this.default();
-			Radio.ui.trigger('composer:show', composerOptions);
+			return this.default(true).then(function() {
+				Radio.ui.trigger('composer:show', composerOptions);
+			}).catch(console.error.bind(this));
 		},
-		default: function() {
+
+		/**
+		 * @param {bool} showComposer
+		 * @returns {Promise}
+		 */
+		default: function(showComposer) {
 			this._navigate('');
 			var _this = this;
 			if (this.accounts.isEmpty()) {
 				// No account configured -> show setup
-				_this.showSetup();
-				return;
+				return _this.showSetup();
 			}
 
 			// Show first folder of first account
 			var firstAccount = this.accounts.at(0);
 			var firstFolder = firstAccount.folders.at(0);
-			_this.showFolder(firstAccount.get('accountId'), firstFolder.get('id'));
+			return _this.showFolder(firstAccount.get('accountId'), firstFolder.get('id'), showComposer);
 		},
-		showFolder: function(accountId, folderId) {
+
+		/**
+		 * @param {int} accountId
+		 * @param {string} folderId
+		 * @param {bool} showComposer
+		 * @returns {Promise}
+		 */
+		showFolder: function(accountId, folderId, showComposer) {
 			this._navigate('accounts/' + accountId + '/folders/' + folderId);
 			var _this = this;
 			var account = this.accounts.get(accountId);
 			if (_.isUndefined(account)) {
 				// Unknown account id -> redirect
 				Radio.ui.trigger('error:show', t('mail', 'Invalid account'));
-				_this.default();
-				return;
+				return _this.default();
 			}
 
 			var folder = account.getFolderById(folderId);
@@ -115,9 +129,11 @@ define(function(require) {
 				folder = account.folders.at(0);
 				Radio.ui.trigger('error:show', t('mail', 'Invalid folder'));
 				this._navigate('accounts/' + accountId + '/folders/' + folder.get('id'));
+				return Promise.resolve();
 			}
-			FolderController.showFolder(account, folder);
+			return FolderController.showFolder(account, folder, !showComposer);
 		},
+
 		searchFolder: function(accountId, folderId, query) {
 			if (!query || query === '') {
 				this.showFolder(accountId, folderId);
@@ -144,11 +160,16 @@ define(function(require) {
 		mailTo: function(params) {
 			this._handleMailto(params);
 		},
+
+		/**
+		 * @returns {Promise}
+		 */
 		showSetup: function() {
 			this._navigate('setup');
 			Radio.ui.trigger('composer:leave');
 			Radio.ui.trigger('navigation:hide');
 			Radio.ui.trigger('setup:show');
+			return Promise.resolve();
 		},
 		showKeyboardShortcuts: function() {
 			this._navigate('shortcuts');
@@ -156,7 +177,7 @@ define(function(require) {
 			Radio.ui.trigger('keyboardShortcuts:show');
 		},
 		showAccountSettings: function(accountId) {
-			this._navigate('accounts/' +  accountId + '/settings');
+			this._navigate('accounts/' + accountId + '/settings');
 			var account = this.accounts.get(accountId);
 			if (_.isUndefined(account)) {
 				// Unknown account id -> redirect
