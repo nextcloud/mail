@@ -233,7 +233,7 @@ define(function(require) {
 				);
 
 			var folder = require('state').currentFolder;
-			return Radio.message.request('sync', folder)
+			return Radio.sync.request('sync:folder', folder)
 				.catch(function(e) {
 					console.error(e);
 					Radio.ui.trigger('error:show', t('mail', 'Error while refreshing messages.'));

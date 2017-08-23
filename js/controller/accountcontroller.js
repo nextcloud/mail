@@ -37,7 +37,7 @@ define(function(require) {
 			})).then(function() {
 				return accounts;
 			});
-		}).catch(function(e) {
+		}).then(function(accounts) {
 			// Show accounts regardless of the result of
 			// loading the folders
 			Radio.ui.trigger('sidebar:accounts');

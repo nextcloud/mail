@@ -27,7 +27,7 @@ define(function(require) {
 	var OC = require('OC');
 	var Radio = require('radio');
 
-	Radio.message.reply('sync', syncFolder);
+	Radio.sync.reply('sync:folder', syncFolder);
 
 	/**
 	 * @private

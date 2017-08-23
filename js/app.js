@@ -40,15 +40,22 @@ define(function(require) {
 	require('controller/foldercontroller');
 	require('controller/messagecontroller');
 	require('service/accountservice');
+	require('service/aliasesservice');
 	require('service/attachmentservice');
 	require('service/davservice');
 	require('service/folderservice');
 	require('service/foldersyncservice');
 	require('service/messageservice');
-	require('service/aliasesservice');
+	require('service/backgroundsyncservice');
 	require('util/notificationhandler');
 
 	var Mail = Marionette.Application.extend({
+
+		/**
+		 * Register the mailto protocol handler
+		 *
+		 * @returns {undefined}
+		 */
 		registerProtocolHandler: function() {
 			if (window.navigator.registerProtocolHandler) {
 				var url = window.location.protocol + '//' +
@@ -61,11 +68,31 @@ define(function(require) {
 				}
 			}
 		},
+
+		/**
+		 * @returns {undefined}
+		 */
 		requestNotificationPermissions: function() {
 			Radio.ui.trigger('notification:request');
 		},
+
+		/**
+		 * Register the actual search module in the search proxy
+		 *
+		 * @returns {undefined}
+		 */
 		setUpSearch: function() {
 			SearchProxy.setFilter(require('search').filter);
+		},
+
+		/**
+		 * Start syncing accounts in the background
+		 *
+		 * @param {AccountCollection} accounts
+		 * @returns {undefined}
+		 */
+		startBackgroundSync(accounts) {
+			Radio.sync.trigger('start', accounts);
 		}
 	});
 
@@ -87,6 +114,7 @@ define(function(require) {
 				controller: new RouteController(accounts)
 			});
 			Backbone.history.start();
+			_this.startBackgroundSync(accounts);
 		});
 
 		/**
