@@ -22,14 +22,8 @@
 namespace OCA\Mail\Service;
 
 use JsonSerializable;
-use OCA\Mail\Model\IMessage;
 
 interface IAccount extends JsonSerializable {
-
-	/**
-	 * @return array
-	 */
-	public function getConfiguration();
 
 	/**
 	 * @param $folderId

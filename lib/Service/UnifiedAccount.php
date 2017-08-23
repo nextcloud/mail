@@ -58,18 +58,9 @@ class UnifiedAccount implements IAccount {
 	/**
 	 * @return array
 	 */
-	public function getConfiguration() {
-		return [
-			'accountId' => UnifiedAccount::ID,
-		];
-	}
-
-	/**
-	 * @return array
-	 */
 	public function jsonSerialize() {
 		return [
-			'id'             => UnifiedAccount::ID,
+			'accountId'             => UnifiedAccount::ID,
 			'email'          => '',
 			'folders'        => [$this->buildInbox()],
 			'specialFolders' => [],
