@@ -26,7 +26,6 @@
     "Unable to load the desired message" : "Kan ikke laste ønsket melding",
     "There was a problem loading the message" : "Det oppstod et problem under lasting av meldingen",
     "{from}\n{subject}" : "{from}\n{subject}",
-    "_%n new message in {folderName} \nfrom {from}_::_%n new messages in {folderName} \nfrom {from}_" : ["%n ny melding i {folderName} \nfra {from}","%n nye meldinger i {folderName} \nfra {from}"],
     "Show all folders" : "Vis alle mapper",
     "Collapse folders" : "Skjul mapper",
     "Error while deleting account." : "Feil ved sletting av konto.",

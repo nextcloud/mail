@@ -28,7 +28,6 @@ OC.L10N.register(
     "Unable to load the desired message" : "Požadovanú správu nie je možné načítať",
     "There was a problem loading the message" : "Nastal problém s načítaním správy",
     "{from}\n{subject}" : "{from}\n{subject}",
-    "_%n new message in {folderName} \nfrom {from}_::_%n new messages in {folderName} \nfrom {from}_" : ["%n nová spáva v {folderName} \nod {from}","%n nových spáv v {folderName} \nod {from}","%n nových spáv v {folderName} \nod {from}"],
     "Show all folders" : "Zobraziť všetky priečinky",
     "Collapse folders" : "Zvinúť priečinky",
     "Error while deleting account." : "Chyba pri mazaní účtu.",

@@ -28,7 +28,6 @@ OC.L10N.register(
     "Unable to load the desired message" : "Nuk ishte e mundur të ngarkohej mesazhi i dëshiruar",
     "There was a problem loading the message" : "Pati një problem me ngarkimin e mesazhit",
     "{from}\n{subject}" : "{nga}\n{subjekt}",
-    "_%n new message in {folderName} \nfrom {from}_::_%n new messages in {folderName} \nfrom {from}_" : ["%n mesazh i ri te {folderName} \nnga {from}","%n mesazhe të rinj te {folderName} \nnga {from}"],
     "Show all folders" : "Shfaqi krejt dosjet",
     "Collapse folders" : "Tkurri dosjet",
     "Error while deleting account." : "Gabim gjatë fshirjes së llogarisë.",

@@ -28,7 +28,6 @@ OC.L10N.register(
     "Unable to load the desired message" : "Gat ekki hlaðið inn umbeðnum skilaboðum",
     "There was a problem loading the message" : "Það kom upp vandamál við að hlaða inn skilaboðunum",
     "{from}\n{subject}" : "{from}\n{subject}",
-    "_%n new message in {folderName} \nfrom {from}_::_%n new messages in {folderName} \nfrom {from}_" : ["%n ný skilaboð í {folderName} \nfrá {from}","%n ný skilaboð í {folderName} \nfrá {from}"],
     "Show all folders" : "Birta allar möppur",
     "Collapse folders" : "Fella möppur saman",
     "Error while deleting account." : "Villa kom upp við að eyða aðgangi.",

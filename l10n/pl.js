@@ -28,7 +28,6 @@ OC.L10N.register(
     "Unable to load the desired message" : "Nie można wczytać żądaną wiadomość",
     "There was a problem loading the message" : "Wystąpił problem podczas ładowania wiadomości.",
     "{from}\n{subject}" : "{from}\n{subject}",
-    "_%n new message in {folderName} \nfrom {from}_::_%n new messages in {folderName} \nfrom {from}_" : ["%n nowa wiadomość w {folderName} \nod {from}","%n nowe wiadomości w {folderName} \nod {from}","%n nowych wiadomości w {folderName} \nod {from}","%n nowych wiadomości w {folderName} \nod {from}"],
     "Show all folders" : "Wyświetl wszystkie foldery",
     "Collapse folders" : "Zwiń foldery",
     "Error while deleting account." : "Błąd podczas usuwania konta.",

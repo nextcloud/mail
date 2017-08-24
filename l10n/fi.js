@@ -28,7 +28,6 @@ OC.L10N.register(
     "Unable to load the desired message" : "Ei voitu ladata haluttua viestiä",
     "There was a problem loading the message" : "Viestiä ladattaessa ilmeni ongelma",
     "{from}\n{subject}" : "{from}\n{subject}",
-    "_%n new message in {folderName} \nfrom {from}_::_%n new messages in {folderName} \nfrom {from}_" : ["%n uusi viesti kansiossa {folderName},\nlähettäjä {from}","%n uutta viestiä kansiossa {folderName},\nlähettäjä {from}"],
     "Show all folders" : "Näytä kaikki kansiot",
     "Collapse folders" : "Supista kansiot",
     "Error while deleting account." : "Virhe tiliä poistaessa.",

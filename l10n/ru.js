@@ -28,7 +28,6 @@ OC.L10N.register(
     "Unable to load the desired message" : "Невозможно загрузить данное сообщение",
     "There was a problem loading the message" : "Проблемы при загрузке сообщения",
     "{from}\n{subject}" : "{from}\n{subject}",
-    "_%n new message in {folderName} \nfrom {from}_::_%n new messages in {folderName} \nfrom {from}_" : ["%n новое сообщение в {folderName} \nот {from}","%n новых сообщения в {folderName} \nот {from}","%n новых сообщений в {folderName} \nот {from}","%n новых сообщений в {folderName} \nот {from}"],
     "Show all folders" : "Показать все каталоги",
     "Collapse folders" : "Свернуть каталоги",
     "Error while deleting account." : "Ошибка при удалении учётной записи.",

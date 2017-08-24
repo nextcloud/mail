@@ -26,7 +26,6 @@ OC.L10N.register(
     "Unable to load the desired message" : "Željena poruka se ne može učitati",
     "There was a problem loading the message" : "Greška pri učitavanju poruke",
     "{from}\n{subject}" : "{from}\n{subject}",
-    "_%n new message in {folderName} \nfrom {from}_::_%n new messages in {folderName} \nfrom {from}_" : ["%n nova poruka u {folderName} \nod {from}","%n nove poruke u {folderName} \nod {from}","%n novih poruka u {folderName} \nod {from}"],
     "Show all folders" : "Prikaži sve mape",
     "Collapse folders" : "Sakrij mape",
     "Error while deleting account." : "Greška pri brisanju računa.",

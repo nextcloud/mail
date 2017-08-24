@@ -26,7 +26,6 @@
     "Unable to load the desired message" : "No s'ha pogut carregar el missatge desitjat",
     "There was a problem loading the message" : "Hi ha un problema al carregar el missatge",
     "{from}\n{subject}" : "{from}\n{subject}",
-    "_%n new message in {folderName} \nfrom {from}_::_%n new messages in {folderName} \nfrom {from}_" : ["%n missatge nou a {folderName} \nde {from}","%n missatges nous a {folderName} \nde {from}"],
     "Show all folders" : "Mostra totes les carpetes",
     "Collapse folders" : "Redueix les carpetes",
     "Error while deleting account." : "Error al borrar el compte",

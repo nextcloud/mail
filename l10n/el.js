@@ -28,7 +28,6 @@ OC.L10N.register(
     "Unable to load the desired message" : "Αδυναμία φόρτωσης του προτιμώμενου μηνύματος",
     "There was a problem loading the message" : "Υπήρξε πρόβλημα φόρτωσης του μηνύματος",
     "{from}\n{subject}" : "{from}\n{subject}",
-    "_%n new message in {folderName} \nfrom {from}_::_%n new messages in {folderName} \nfrom {from}_" : ["%n νέο μήνυμα σε {folderName}\nαπό {from}","%n νέα μηνύματα στο {folderName}\nαπό {from}"],
     "Show all folders" : "Εμφάνιση όλων των φακέλων",
     "Collapse folders" : "Σύμπτυξη φακέλων",
     "Error while deleting account." : "Σφάλμα κατά τη διαγραφή λογαριασμού.",
