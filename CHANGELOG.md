@@ -1,7 +1,7 @@
 # Changelog
 All notable changes to this project will be documented in this file.
 
-## 0.7.0 – unreleased
+## 0.7.0 – 2017-08-24
 ### Added
 - Helper view for keyboard shortcuts
   [#91](https://github.com/nextcloud/mail/pull/91) @Gomez 
