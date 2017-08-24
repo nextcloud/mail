@@ -10,11 +10,13 @@ All notable changes to this project will be documented in this file.
 - Support for a automatically generated default account
 - Better loading/error/retry views
 - Local attachment support
+- Shortcut c to compose a new message
 
 ### Changed
 - php5.6 to php 7.1 are supported
 - No longer stack Aw, Wg, Fwd
 - App store now lists the app in 'Social & Communication'
+- Improved message synchronization
 
 ### Fixed
 - Use IDBConnection instead of removed IDb
