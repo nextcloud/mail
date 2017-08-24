@@ -41,6 +41,8 @@ use OCP\IRequest;
 use OCP\IURLGenerator;
 use OCP\Util;
 
+require_once __DIR__ . '/../../vendor/cerdic/css-tidy/class.csstidy.php';
+
 class Html {
 
 	/** @var IURLGenerator */
@@ -114,6 +116,8 @@ class Html {
 		$config->set('URI.AllowedSchemes', ['cid' => true, 'http' => true, 'https' => true, 'ftp' => true, 'mailto' => true]);
 		$config->set('URI.Host', Util::getServerHostName());
 
+		$config->set('Filter.ExtractStyleBlocks', true);
+
 		// Disable the cache since ownCloud has no really appcache
 		// TODO: Fix this - requires https://github.com/owncloud/core/issues/10767 to be fixed
 		$config->set('Cache.DefinitionImpl', null);
@@ -129,11 +133,22 @@ class Html {
 
 		HTMLPurifier_URISchemeRegistry::instance()->register('cid', new CidURIScheme());
 
+
 		$purifier = new HTMLPurifier($config);
 
 		$result = $purifier->purify($mailBody);
 		// eat xml parse errors within HTMLPurifier
 		libxml_clear_errors();
+
+		// Add back the style tag
+		$styles = $purifier->context->get('StyleBlocks');
+		if ($styles) {
+			$result = implode("\n", array(
+				'<style type="text/css">',
+				implode("\n", $styles),
+				'</style>',
+				$result,));
+		}
 		return $result;
 	}
 
