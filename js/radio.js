@@ -16,16 +16,17 @@ define(function(require) {
 
 	var channelNames = [
 		'account',
+		'aliases',
 		'attachment',
 		'folder',
 		'dav',
+		'keyboard',
 		'message',
 		'navigation',
 		'notification',
 		'state',
-		'ui',
-		'keyboard',
-		'aliases'
+		'sync',
+		'ui'
 	];
 
 	var channels = {};
@@ -37,4 +38,3 @@ define(function(require) {
 
 	return channels;
 });
-

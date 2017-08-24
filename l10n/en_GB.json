@@ -26,7 +26,6 @@
     "Unable to load the desired message" : "Unable to load the desired message",
     "There was a problem loading the message" : "There was a problem loading the message",
     "{from}\n{subject}" : "{from}\n{subject}",
-    "_%n new message in {folderName} \nfrom {from}_::_%n new messages in {folderName} \nfrom {from}_" : ["%n new message in {folderName} \nfrom {from}","%n new messages in {folderName} \nfrom {from}"],
     "Show all folders" : "Show all folders",
     "Collapse folders" : "Collapse folders",
     "Error while deleting account." : "Error whilst deleting account.",

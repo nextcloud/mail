@@ -28,7 +28,6 @@ OC.L10N.register(
     "Unable to load the desired message" : "Ude af stand til at hente den ønskede mesked",
     "There was a problem loading the message" : "Der var et problem med at beskeden",
     "{from}\n{subject}" : "{fra}\n{emne}",
-    "_%n new message in {folderName} \nfrom {from}_::_%n new messages in {folderName} \nfrom {from}_" : ["%n ny besked i {folderName}\nfra {from}","%n nye beskeder i {folderName}\nfra {from}"],
     "Show all folders" : "Vis all mappe",
     "Collapse folders" : "Fold mapper sammen",
     "Error while deleting account." : "Fejl under sletning af kontoen.",

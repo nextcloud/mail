@@ -128,8 +128,10 @@ define(function(require) {
 			var key = e.keyCode || e.which;
 
 			// Trigger the event only if no input or textarea is focused
+			// and the CTRL key is not pressed
 			if ($('input:focus').length === 0 &&
-				$('textarea:focus').length === 0) {
+				$('textarea:focus').length === 0 &&
+				!e.ctrlKey) {
 				Radio.keyboard.trigger('keyup', e, key);
 			}
 		},

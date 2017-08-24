@@ -28,7 +28,6 @@ OC.L10N.register(
     "Unable to load the desired message" : "Impossible de charger le message souhaité",
     "There was a problem loading the message" : "Il y a eu un problème de chargement du message",
     "{from}\n{subject}" : "{from}\n{subject}",
-    "_%n new message in {folderName} \nfrom {from}_::_%n new messages in {folderName} \nfrom {from}_" : ["%n nouveau message dans {folderName}\nde {from}","%n nouveaux messages dans {folderName}\nde {from}"],
     "Show all folders" : "Montrer tous les dossiers",
     "Collapse folders" : "Replier les dossiers",
     "Error while deleting account." : "Erreur lors de la suppression du compte.",

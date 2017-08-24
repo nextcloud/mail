@@ -28,7 +28,6 @@ OC.L10N.register(
     "Unable to load the desired message" : "无法加载想要的消息",
     "There was a problem loading the message" : "加载消息时遇到问题",
     "{from}\n{subject}" : "{from}\n{subject}",
-    "_%n new message in {folderName} \nfrom {from}_::_%n new messages in {folderName} \nfrom {from}_" : ["发自{from}的%n份电邮保存在{folderName}中"],
     "Show all folders" : "显示全部文件夹",
     "Collapse folders" : "折叠文件夹",
     "Error while deleting account." : "删除账户时出错",

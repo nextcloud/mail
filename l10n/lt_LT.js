@@ -28,7 +28,6 @@ OC.L10N.register(
     "Unable to load the desired message" : "Nepavyko parodyti laiško",
     "There was a problem loading the message" : "Bandant atidaryti laišką įvyko klaida",
     "{from}\n{subject}" : "{from}\n{subject}",
-    "_%n new message in {folderName} \nfrom {from}_::_%n new messages in {folderName} \nfrom {from}_" : ["%n naujas laiškas aplanke {folderName}\nnuo {from}","%n nauji laiškai aplanke {folderName} \nnuo {from}","%n nauji laiškai aplanke {folderName}\nnuo {from}"],
     "Show all folders" : "Rodyti visus aplankus",
     "Collapse folders" : "Suskleisti aplankus",
     "Error while deleting account." : "Klaida, ištrinant paskyrą.",

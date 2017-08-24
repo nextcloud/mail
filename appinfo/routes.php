@@ -87,7 +87,7 @@ $app->registerRoutes($this,
 	],
 	'resources' => [
 		'autoComplete' => ['url' => '/autoComplete'],
-			'localAttachments' => ['url' => '/attachments'],
+		'localAttachments' => ['url' => '/attachments'],
 		'accounts' => ['url' => '/accounts'],
 		'folders' => ['url' => '/accounts/{accountId}/folders'],
 		'messages' => ['url' => '/accounts/{accountId}/folders/{folderId}/messages'],

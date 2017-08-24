@@ -26,7 +26,6 @@
 			'es6-promise': 'vendor/es6-promise/es6-promise.min',
 			handlebars: 'vendor/handlebars/handlebars',
 			ical: 'vendor/ical.js/build/ical.min',
-			'jquery-ui': 'vendor/jquery-ui/ui/minified/jquery-ui.custom.min',
 			marionette: 'vendor/backbone.marionette/lib/backbone.marionette',
 			underscore: 'vendor/underscore/underscore',
 			text: 'vendor/text/text'

@@ -1,3 +1,5 @@
+/* global Promise */
+
 /**
  * @author Christoph Wurst <christoph@winzerhof-wurst.at>
  *
@@ -43,9 +45,11 @@ define(function(require) {
 	 * @param {Account} account
 	 * @param {Folder} folder
 	 * @param {string} searchQuery
-	 * @returns {undefined}
+	 * @param {bool} openFirstMessage
+	 * @returns {Promise}
 	 */
-	function loadFolderMessages(account, folder, searchQuery) {
+	function loadFolderMessages(account, folder, searchQuery, openFirstMessage) {
+		openFirstMessage = openFirstMessage !== false;
 		Radio.ui.trigger('composer:leave');
 
 		// Set folder active
@@ -57,8 +61,9 @@ define(function(require) {
 			require('state').currentFolder = folder;
 			Radio.ui.trigger('messagesview:message:setactive', null);
 			require('state').currentlyLoading = null;
+			return Promise.resolve();
 		} else {
-			Radio.message.request('entities', account, folder, {
+			return Radio.message.request('entities', account, folder, {
 				cache: true,
 				filter: searchQuery,
 				replace: true
@@ -77,8 +82,10 @@ define(function(require) {
 				if (messages.length > 0) {
 					// Fetch first 10 messages in background
 					Radio.message.trigger('fetch:bodies', account, folder, messages.slice(0, 10));
-					var message = messages.first();
-					Radio.message.trigger('load', message.folder.account, message.folder, message);
+					if (openFirstMessage) {
+						var message = messages.first();
+						Radio.message.trigger('load', message.folder.account, message.folder, message);
+					}
 				}
 			}, function(error) {
 				console.error('error while loading messages: ', error);
@@ -100,20 +107,27 @@ define(function(require) {
 	/**
 	 * @param {Account} account
 	 * @param {Folder} folder
+	 * @param {bool} loadFirstMessage
 	 * @returns {Promise}
 	 */
-	function showFolder(account, folder) {
+	function showFolder(account, folder, loadFirstMessage) {
+		loadFirstMessage = loadFirstMessage !== false;
 		Radio.ui.trigger('search:set', '');
 		Radio.ui.trigger('content:loading', t('mail', 'Loading {folder}', {
 			folder: folder.get('name')
 		}));
-		_.defer(function() {
-			loadFolderMessages(account, folder);
 
-			// Save current folder
-			Radio.folder.trigger('setactive', account, folder);
-			require('state').currentAccount = account;
-			require('state').currentFolder = folder;
+		return new Promise(function(resolve, reject) {
+			_.defer(function() {
+				var loading = loadFolderMessages(account, folder, undefined, loadFirstMessage);
+
+				// Save current folder
+				Radio.folder.trigger('setactive', account, folder);
+				require('state').currentAccount = account;
+				require('state').currentFolder = folder;
+
+				loading.then(resolve).catch(reject);
+			});
 		});
 	}
 

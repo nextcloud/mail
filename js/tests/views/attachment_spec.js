@@ -24,7 +24,8 @@ define([
 	'views/attachmentview',
 	'models/localattachment',
 	'models/attachment',
-	'radio'
+	'radio',
+	'jquery-ui'
 ], function(AttachmentView, LocalAttachment, Attachment, Radio) {
 
 	describe('AttachmentView', function() {

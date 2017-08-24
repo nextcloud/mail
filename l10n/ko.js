@@ -26,7 +26,6 @@ OC.L10N.register(
     "Unable to load the desired message" : "원하는 메시지를 불러올 수 없음",
     "There was a problem loading the message" : "메시지를 불러오는 중 문제가 발생했습니다",
     "{from}\n{subject}" : "{from}\n{subject}",
-    "_%n new message in {folderName} \nfrom {from}_::_%n new messages in {folderName} \nfrom {from}_" : ["{folderName}에 {from} 님이 보낸 \n새 메시지 %n개"],
     "Show all folders" : "모든 폴더 보기",
     "Collapse folders" : "폴더 접기",
     "Error while deleting account." : "계정을 삭제하는 중 오류가 발생했습니다.",
