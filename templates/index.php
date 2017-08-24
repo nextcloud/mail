@@ -49,9 +49,7 @@ if ($_['debug']) {
 <div id="app">
 	<div id="app-navigation" class="icon-loading">
 		<div id="mail-new-message-fixed"></div>
-		<ul>
-			<li id="app-navigation-accounts"></li>
-		</ul>
+		<div id="app-navigation-accounts"></div>
 		<div id="app-settings">
 			<div id="app-settings-header">
 				<button class="settings-button"
