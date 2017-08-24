@@ -16,8 +16,6 @@ define(function(require) {
 	var Marionette = require('marionette');
 	var Radio = require('radio');
 	var AttachmentTemplate = require('text!templates/attachment.html');
-	// we need jquery-ui for showing the progress bar on upload
-	require('jquery-ui');
 
 	return Marionette.View.extend({
 		tagName: 'li',
