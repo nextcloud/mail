@@ -8,7 +8,8 @@
   },
   "scripts": {
     "test": "./node_modules/.bin/jshint . && ./node_modules/.bin/jsxhint .",
-    "bower_deps": "./node_modules/.bin/bower install"
+    "bower_deps": "./node_modules/.bin/bower install",
+    "build": "./node_modules/webpack/bin/webpack.js --config js/webpack.config.js"
   },
   "repository": {
     "type": "git",
@@ -44,7 +45,9 @@
     "karma-requirejs": "^1.1.0",
     "karma-sinon": "^1.0.5",
     "phantomjs-prebuilt": "^2.1.12",
-    "sinon": "^2.1.0"
+    "raw-loader": "^0.5.1",
+    "sinon": "^2.1.0",
+    "webpack": "^3.5.5"
   },
   "dependencies": {
     "bower": "^1.5.2",
