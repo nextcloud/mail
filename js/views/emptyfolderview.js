@@ -22,7 +22,7 @@ define(function(require) {
 
 	var Handlebars = require('handlebars');
 	var Marionette = require('marionette');
-	var EmptyMessagesTemplate = require('text!templates/empty-folder.html');
+	var EmptyMessagesTemplate = require('raw-loader!templates/empty-folder.html');
 
 	var EmptyMessagesView = Marionette.View.extend({
 		id: 'emptycontent',

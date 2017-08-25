@@ -19,7 +19,7 @@ define(function(require) {
 	var Radio = require('radio');
 	var Attachments = require('models/attachments');
 	var AttachmentsView = require('views/attachmentsview');
-	var ComposerTemplate = require('text!templates/composer.html');
+	var ComposerTemplate = require('raw-loader!templates/composer.html');
 
 	return Marionette.View.extend({
 		template: Handlebars.compile(ComposerTemplate),

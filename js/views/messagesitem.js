@@ -16,7 +16,7 @@ define(function(require) {
 	var Handlebars = require('handlebars');
 	var Marionette = require('marionette');
 	var Radio = require('radio');
-	var MessageTemplate = require('text!templates/message-list-item.html');
+	var MessageTemplate = require('raw-loader!templates/message-list-item.html');
 
 	return Marionette.View.extend({
 		template: Handlebars.compile(MessageTemplate),

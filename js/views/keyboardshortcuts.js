@@ -22,7 +22,7 @@ define(function(require) {
 
 	var Handlebars = require('handlebars');
 	var Marionette = require('marionette');
-	var KeyboardShortcutTemplate = require('text!templates/keyboard-shortcuts.html');
+	var KeyboardShortcutTemplate = require('raw-loader!templates/keyboard-shortcuts.html');
 
 	var KeyboardShortcutView = Marionette.View.extend({
 		id: 'keyboardshortcut',

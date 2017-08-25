@@ -15,7 +15,7 @@ define(function(require) {
 	var Marionette = require('marionette');
 	var OC = require('OC');
 	var Radio = require('radio');
-	var SettingsTemplate = require('text!templates/settings.html');
+	var SettingsTemplate = require('raw-loader!templates/settings.html');
 
 	return Marionette.View.extend({
 		accounts: null,

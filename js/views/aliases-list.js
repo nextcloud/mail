@@ -13,7 +13,7 @@ define(function(require) {
 
 	var Marionette = require('marionette');
 	var Handlebars = require('handlebars');
-	var AliasesListTemplate = require('text!templates/aliases-list.html');
+	var AliasesListTemplate = require('raw-loader!templates/aliases-list.html');
 	var Radio = require('radio');
 
 	return Marionette.View.extend({

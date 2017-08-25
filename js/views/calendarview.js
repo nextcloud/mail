@@ -22,7 +22,7 @@ define(function(require) {
 
 	var Marionette = require('marionette');
 	var Handlebars = require('handlebars');
-	var CalendarTemplate = require('text!templates/calendar.html');
+	var CalendarTemplate = require('raw-loader!templates/calendar.html');
 
 	return Marionette.View.extend({
 		template: Handlebars.compile(CalendarTemplate),

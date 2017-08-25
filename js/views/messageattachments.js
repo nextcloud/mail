@@ -24,7 +24,7 @@ define(function(require) {
 	var Marionette = require('marionette');
 	var MessageController = require('controller/messagecontroller');
 	var AttachmentView = require('views/messageattachment');
-	var AttachmentsTemplate = require('text!templates/message-attachments.html');
+	var AttachmentsTemplate = require('raw-loader!templates/message-attachments.html');
 
 	/**
 	 * @type MessageAttachmentsView

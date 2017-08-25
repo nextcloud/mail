@@ -15,7 +15,7 @@ define(function(require) {
 	var Handlebars = require('handlebars');
 	var Marionette = require('marionette');
 	var Radio = require('radio');
-	var AttachmentTemplate = require('text!templates/attachment.html');
+	var AttachmentTemplate = require('raw-loader!templates/attachment.html');
 
 	return Marionette.View.extend({
 		tagName: 'li',

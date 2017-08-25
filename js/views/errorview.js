@@ -22,7 +22,7 @@ define(function(require) {
 
 	var Handlebars = require('handlebars');
 	var Marionette = require('marionette');
-	var ErrorTemplate = require('text!templates/error.html');
+	var ErrorTemplate = require('raw-loader!templates/error.html');
 
 	var ErrorView = Marionette.View.extend({
 

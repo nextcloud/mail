@@ -26,7 +26,7 @@ define(function(require) {
 	var Handlebars = require('handlebars');
 	var Radio = require('radio');
 	var MessagesItemView = require('views/messagesitem');
-	var MessageListTemplate = require('text!templates/message-list.html');
+	var MessageListTemplate = require('raw-loader!templates/message-list.html');
 	var EmptyFolderView = require('views/emptyfolderview');
 	var NoSearchResultView = require('views/nosearchresultmessagelistview');
 

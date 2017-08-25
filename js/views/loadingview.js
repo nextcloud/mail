@@ -22,7 +22,7 @@ define(function(require) {
 
 	var Handlebars = require('handlebars');
 	var Marionette = require('marionette');
-	var LoadingTemplate = require('text!templates/loading.html');
+	var LoadingTemplate = require('raw-loader!templates/loading.html');
 
 	/**
 	 * @class LoadingView

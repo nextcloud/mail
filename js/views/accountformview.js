@@ -14,7 +14,7 @@ define(function(require) {
 	var _ = require('underscore');
 	var Marionette = require('marionette');
 	var Handlebars = require('handlebars');
-	var AccountFormTemplate = require('text!templates/account-form.html');
+	var AccountFormTemplate = require('raw-loader!templates/account-form.html');
 
 	/**
 	 * @class AccountFormView

@@ -23,7 +23,7 @@ define(function(require) {
 	var Marionette = require('marionette');
 	var Handlebars = require('handlebars');
 	var Radio = require('radio');
-	var NewMessageTemplate = require('text!templates/newmessage.html');
+	var NewMessageTemplate = require('raw-loader!templates/newmessage.html');
 
 	return Marionette.View.extend({
 		template: Handlebars.compile(NewMessageTemplate),

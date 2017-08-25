@@ -14,7 +14,7 @@ define(function(require) {
 	var Handlebars = require('handlebars');
 	var Marionette = require('marionette');
 	var NoSearchResultMessageListViewTemplate
-		= require('text!templates/no-search-results-message-list.html');
+		= require('raw-loader!templates/no-search-results-message-list.html');
 
 	return Marionette.View.extend({
 		initialize: function(options) {
