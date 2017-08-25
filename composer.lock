@@ -87,6 +87,60 @@
             "time": "2017-06-03T02:28:16+00:00"
         },
         {
+            "name": "gravatarphp/gravatar",
+            "version": "v1.0.0",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/gravatarphp/gravatar.git",
+                "reference": "21b760c50bcdddd8e65d3a4b3981b7ec9b3d44aa"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/gravatarphp/gravatar/zipball/21b760c50bcdddd8e65d3a4b3981b7ec9b3d44aa",
+                "reference": "21b760c50bcdddd8e65d3a4b3981b7ec9b3d44aa",
+                "shasum": ""
+            },
+            "require": {
+                "php": ">=5.4"
+            },
+            "require-dev": {
+                "friendsofphp/php-cs-fixer": "^1.11",
+                "henrikbjorn/phpspec-code-coverage": "^2.0",
+                "phpspec/phpspec": "^2.5",
+                "sllh/php-cs-fixer-styleci-bridge": "^2.0"
+            },
+            "type": "library",
+            "extra": {
+                "branch-alias": {
+                    "dev-master": "1.0-dev"
+                }
+            },
+            "autoload": {
+                "psr-4": {
+                    "Gravatar\\": "src/"
+                }
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "MIT"
+            ],
+            "authors": [
+                {
+                    "name": "Márk Sági-Kazár",
+                    "email": "mark.sagikazar@gmail.com"
+                }
+            ],
+            "description": "Gravatar URL builder which is most commonly called as a Gravatar library",
+            "homepage": "http://gravatarphp.com",
+            "keywords": [
+                "avatar",
+                "gravatar",
+                "image",
+                "profile"
+            ],
+            "time": "2016-06-25T11:20:11+00:00"
+        },
+        {
             "name": "kwi/urllinker",
             "version": "dev-default",
             "source": {
@@ -129,7 +183,62 @@
             ],
             "description": "Autolink URLs in text or html",
             "homepage": "http://www.kwi.dk/projects/php/UrlLinker/",
-            "time": "2014-12-28T22:05:00+00:00"
+            "time": "2014-12-28T23:05:00+00:00"
+        },
+        {
+            "name": "mpclarkson/icon-scraper",
+            "version": "dev-master",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/mpclarkson/icon-scraper.git",
+                "reference": "48b96f54efa2ecd6773c5d66143b62facb909dd8"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/mpclarkson/icon-scraper/zipball/48b96f54efa2ecd6773c5d66143b62facb909dd8",
+                "reference": "48b96f54efa2ecd6773c5d66143b62facb909dd8",
+                "shasum": ""
+            },
+            "require": {
+                "php": ">=5.3.3"
+            },
+            "require-dev": {
+                "phpunit/phpunit": "3.7.*"
+            },
+            "type": "library",
+            "autoload": {
+                "psr-4": {
+                    "Mpclarkson\\": "src/"
+                }
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "Apache-2.0"
+            ],
+            "authors": [
+                {
+                    "name": "Chris Shiflett",
+                    "homepage": "http://shiflett.org/"
+                },
+                {
+                    "name": "Arthur Hoaro",
+                    "homepage": "http://hoa.ro"
+                },
+                {
+                    "name": "Matthew Clarkson",
+                    "homepage": "http://hilenium.com"
+                }
+            ],
+            "description": "PHP Library to get the apple-touch-icons and favicon from a website.",
+            "homepage": "https://github.com/mpclarkson/icon-scraper",
+            "keywords": [
+                "apple-touch-icon",
+                "favicon",
+                "finder",
+                "icon",
+                "scraper"
+            ],
+            "time": "2017-08-11T02:44:17+00:00"
         },
         {
             "name": "pear-pear.horde.org/Horde_Crypt_Blowfish",
@@ -2131,7 +2240,8 @@
         "pear-pear.horde.org/horde_text_flowed": 0,
         "pear-pear.horde.org/horde_util": 0,
         "pear-pear.horde.org/horde_smtp": 0,
-        "kwi/urllinker": 20
+        "kwi/urllinker": 20,
+        "mpclarkson/icon-scraper": 20
     },
     "prefer-stable": false,
     "prefer-lowest": false,

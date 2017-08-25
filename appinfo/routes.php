@@ -75,6 +75,11 @@ $app->registerRoutes($this,
 			'verb' => 'POST'
 		],
 		[
+			'name' => 'avatars#show',
+			'url' => '/avatars',
+			'verb' => 'GET'
+		],
+		[
 			'name' => 'proxy#redirect',
 			'url' => '/redirect',
 			'verb' => 'GET'
