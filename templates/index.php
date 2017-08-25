@@ -30,13 +30,7 @@ script('mail', 'vendor/jquery-storage-api/jquery.storageapi');
 script('mail', 'vendor/jquery-visibility/jquery-visibility');
 script('mail', 'vendor/requirejs/require');
 script('mail', 'searchproxy');
-if ($_['debug']) {
-	// Load JS dependencies asynchronously as specified in require_config.js
-	script('mail', 'require_config');
-} else {
-	// Load optimzed requirejs dependencies in one single file
-	script('mail', 'mail.min');
-}
+script('mail', 'build/build');
 ?>
 
 <input type="hidden" id="config-installed-version" value="<?php p($_['app-version']); ?>">

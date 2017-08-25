@@ -51,6 +51,7 @@
   },
   "dependencies": {
     "bower": "^1.5.2",
+    "exports-loader": "^0.6.4",
     "requirejs": "^2.1.20"
   }
 }
