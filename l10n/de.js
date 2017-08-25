@@ -28,6 +28,8 @@ OC.L10N.register(
     "Unable to load the desired message" : "Gewünschte Nachricht konnte nicht geladen werden",
     "There was a problem loading the message" : "Beim Laden der Nachricht trat ein Fehler auf",
     "{from}\n{subject}" : "{from}\n{subject}",
+    "_%n new message \nfrom {from}_::_%n new messages \nfrom {from}_" : ["%n neue Nachricht\nvon {from}","%n neue Nachrichten\nvon {from}"],
+    "Nextcloud Mail" : "Nextcloud Mail",
     "Show all folders" : "Alle Ordner anzeigen",
     "Collapse folders" : "Ordner einklappen",
     "Error while deleting account." : "Fehler beim Löschen des Kontos.",

@@ -28,6 +28,8 @@ OC.L10N.register(
     "Unable to load the desired message" : "İstenilen ileti yüklenemedi",
     "There was a problem loading the message" : "İleti yüklenirken bir sorun çıktı",
     "{from}\n{subject}" : "{from}\n{subject}",
+    "_%n new message \nfrom {from}_::_%n new messages \nfrom {from}_" : ["%n yeni ileti\ngönderen {from}","%n yeni ileti\ngönderen {from}"],
+    "Nextcloud Mail" : "Nextcloud Posta",
     "Show all folders" : "Tüm klasörleri görüntüle",
     "Collapse folders" : "Klasörleri daralt",
     "Error while deleting account." : "Hesap silinirken sorun çıktı.",

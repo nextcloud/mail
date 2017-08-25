@@ -26,6 +26,7 @@ OC.L10N.register(
     "Unable to load the desired message" : "Nem sikerült betölteni a kívánt üzenetet",
     "There was a problem loading the message" : "Probléma volt az üzenet betöltésével",
     "{from}\n{subject}" : "{from}\n{subject}",
+    "Nextcloud Mail" : "Nextcloud Mail",
     "Show all folders" : "Minden mappa megjelenítése",
     "Collapse folders" : "Mappák összecsukása",
     "Error while deleting account." : "Hiba történt a fiók törlése közben.",
