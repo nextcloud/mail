@@ -38,4 +38,14 @@ interface IMailTransmission {
 	 */
 	public function sendMessage($userId, NewMessageData $message,
 		RepliedMessageData $reply, Alias $alias = null, $draftUID = null);
+
+	/**
+	 * Save a message draft
+	 *
+	 * @param NewMessageData $message
+	 * @param int $draftUID
+	 * @return int
+	 * @throws ServiceException
+	 */
+	public function saveDraft(NewMessageData $message, $draftUID = null);
 }

@@ -31,14 +31,13 @@ use Horde_Exception;
 use OCA\Mail\Account;
 use OCA\Mail\Contracts\IMailTransmission;
 use OCA\Mail\Db\MailAccount;
-use OCA\Mail\Model\Message;
+use OCA\Mail\Exception\ServiceException;
 use OCA\Mail\Model\NewMessageData;
 use OCA\Mail\Model\RepliedMessageData;
 use OCA\Mail\Service\AccountService;
 use OCA\Mail\Service\AliasesService;
 use OCA\Mail\Service\AutoConfig\AutoConfig;
 use OCA\Mail\Service\Logger;
-use OCA\Mail\Service\UnifiedAccount;
 use OCP\AppFramework\Controller;
 use OCP\AppFramework\Db\DoesNotExistException;
 use OCP\AppFramework\Http;
@@ -84,15 +83,8 @@ class AccountsController extends Controller {
 	 * @param IL10N $l10n
 	 * @param ICrypto $crypto
 	 */
-	public function __construct($appName,
-		IRequest $request,
-		AccountService $accountService,
-		$UserId,
-		AutoConfig $autoConfig,
-		Logger $logger,
-		IL10N $l10n,
-		ICrypto $crypto,
-		AliasesService $aliasesService,
+	public function __construct($appName, IRequest $request, AccountService $accountService, $UserId,
+		AutoConfig $autoConfig, Logger $logger, IL10N $l10n, ICrypto $crypto, AliasesService $aliasesService,
 		IMailTransmission $mailTransmission
 	) {
 		parent::__construct($appName, $request);
@@ -183,10 +175,8 @@ class AccountsController extends Controller {
 	 * @param bool $autoDetect
 	 * @return JSONResponse
 	 */
-	public function create($accountName, $emailAddress, $password,
-		$imapHost, $imapPort, $imapSslMode, $imapUser, $imapPassword,
-		$smtpHost, $smtpPort, $smtpSslMode, $smtpUser, $smtpPassword,
-		$autoDetect) {
+	public function create($accountName, $emailAddress, $password, $imapHost, $imapPort, $imapSslMode, $imapUser,
+		$imapPassword, $smtpHost, $smtpPort, $smtpSslMode, $smtpUser, $smtpPassword, $autoDetect) {
 		try {
 			if ($autoDetect) {
 				$this->logger->info('setting up auto detected account');
@@ -194,17 +184,17 @@ class AccountsController extends Controller {
 			} else {
 				$this->logger->info('Setting up manually configured account');
 				$newAccount = new MailAccount([
-					'accountName'  => $accountName,
+					'accountName' => $accountName,
 					'emailAddress' => $emailAddress,
-					'imapHost'     => $imapHost,
-					'imapPort'     => $imapPort,
-					'imapSslMode'  => $imapSslMode,
-					'imapUser'     => $imapUser,
+					'imapHost' => $imapHost,
+					'imapPort' => $imapPort,
+					'imapSslMode' => $imapSslMode,
+					'imapUser' => $imapUser,
 					'imapPassword' => $imapPassword,
-					'smtpHost'     => $smtpHost,
-					'smtpPort'     => $smtpPort,
-					'smtpSslMode'  => $smtpSslMode,
-					'smtpUser'     => $smtpUser,
+					'smtpHost' => $smtpHost,
+					'smtpPort' => $smtpPort,
+					'smtpSslMode' => $smtpSslMode,
+					'smtpUser' => $smtpUser,
 					'smtpPassword' => $smtpPassword
 				]);
 				$newAccount->setUserId($this->currentUserId);
@@ -228,20 +218,17 @@ class AccountsController extends Controller {
 				$this->accountService->save($newAccount);
 				$this->logger->debug("account created " . $newAccount->getId());
 				return new JSONResponse(
-					['data' => ['id' => $newAccount->getId()]],
-					Http::STATUS_CREATED);
+					['data' => ['id' => $newAccount->getId()]], Http::STATUS_CREATED);
 			}
 		} catch (Exception $ex) {
 			$this->logger->error('Creating account failed: ' . $ex->getMessage());
 			return new JSONResponse(
-				array('message' => $this->l10n->t('Creating account failed: ') . $ex->getMessage()),
-				Http::STATUS_BAD_REQUEST);
+				array('message' => $this->l10n->t('Creating account failed: ') . $ex->getMessage()), Http::STATUS_BAD_REQUEST);
 		}
 
 		$this->logger->info('Auto detect failed');
 		return new JSONResponse(
-			array('message' => $this->l10n->t('Auto detect failed. Please use manual mode.')),
-			Http::STATUS_BAD_REQUEST);
+			array('message' => $this->l10n->t('Auto detect failed. Please use manual mode.')), Http::STATUS_BAD_REQUEST);
 	}
 
 	/**
@@ -301,41 +288,20 @@ class AccountsController extends Controller {
 		}
 
 		$account = $this->accountService->find($this->currentUserId, $accountId);
-		if ($account instanceof UnifiedAccount) {
-			list($account) = $account->resolve($messageId);
-		}
-		if (!$account instanceof Account) {
-			return new JSONResponse(
-				array('message' => 'Invalid account'),
-				Http::STATUS_BAD_REQUEST
-			);
-		}
+		$messageData = NewMessageData::fromRequest($account, $to, $cc, $bcc, $subject, $body, []);
 
-		$message = $account->newMessage();
-		$message->setTo(Message::parseAddressList($to));
-		$message->setSubject($subject ? : '');
-		$message->setFrom($account->getEMailAddress());
-		$message->setCC(Message::parseAddressList($cc));
-		$message->setBcc(Message::parseAddressList($bcc));
-		$message->setContent($body);
-
-		// create transport and save message
 		try {
-			/* @var $account Account */
-			$newUID = $account->saveDraft($message, $uid);
-		} catch (Horde_Exception $ex) {
+			$newUID = $this->mailTransmission->saveDraft($messageData, $messageId);
+			return new JSONResponse([
+				'uid' => $newUID,
+			]);
+		} catch (ServiceException $ex) {
 			$this->logger->error('Saving draft failed: ' . $ex->getMessage());
-			return new JSONResponse(
-				[
-					'message' => $ex->getMessage()
-				],
-				Http::STATUS_INTERNAL_SERVER_ERROR
+			return new JSONResponse([
+				'message' => $ex->getMessage()
+				], Http::STATUS_INTERNAL_SERVER_ERROR
 			);
 		}
-
-		return new JSONResponse([
-			'uid' => $newUID
-		]);
 	}
 
 }

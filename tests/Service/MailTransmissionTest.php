@@ -34,11 +34,11 @@ use OCA\Mail\Model\ReplyMessage;
 use OCA\Mail\Service\AutoCompletion\AddressCollector;
 use OCA\Mail\Service\Logger;
 use OCA\Mail\Service\MailTransmission;
+use OCA\Mail\Tests\TestCase;
 use OCP\Files\Folder;
 use PHPUnit_Framework_MockObject_MockObject;
-use PHPUnit_Framework_TestCase;
 
-class MailTransmissionTest extends PHPUnit_Framework_TestCase {
+class MailTransmissionTest extends TestCase {
 
 	/** @var AddressCollector|PHPUnit_Framework_MockObject_MockObject */
 	private $addressCollector;
@@ -63,7 +63,8 @@ class MailTransmissionTest extends PHPUnit_Framework_TestCase {
 		$this->attachmentService = $this->createMock(IAttachmentService::class);
 		$this->logger = $this->createMock(Logger::class);
 
-		$this->transmission = new MailTransmission($this->addressCollector, $this->userFolder, $this->attachmentService, $this->logger);
+		$this->transmission = new MailTransmission($this->addressCollector, $this->userFolder, $this->attachmentService,
+			$this->logger);
 	}
 
 	public function testSendNewMessage() {
@@ -188,6 +189,34 @@ class MailTransmissionTest extends PHPUnit_Framework_TestCase {
 			->with($repliedMessageId, Horde_Imap_Client::FLAG_ANSWERED, true);
 
 		$this->transmission->sendMessage('garfield', $messageData, $replyData);
+	}
+
+	public function testSaveDraft() {
+		$account = $this->createMock(Account::class);
+		$messageData = NewMessageData::fromRequest($account, 'to@d.com', '', '', 'sub', 'bod', null);
+		$message = $this->createMock(IMessage::class);
+		$account->expects($this->once())
+			->method('newMessage')
+			->willReturn($message);
+		$account->expects($this->once())
+			->method('saveDraft')
+			->with($message, null);
+
+		$this->transmission->saveDraft($messageData);
+	}
+
+	public function testSaveDraftAndReplaceOldOne() {
+		$account = $this->createMock(Account::class);
+		$messageData = NewMessageData::fromRequest($account, 'to@d.com', '', '', 'sub', 'bod', null);
+		$message = $this->createMock(IMessage::class);
+		$account->expects($this->once())
+			->method('newMessage')
+			->willReturn($message);
+		$account->expects($this->once())
+			->method('saveDraft')
+			->with($message, 123);
+
+		$this->transmission->saveDraft($messageData, 123);
 	}
 
 }
