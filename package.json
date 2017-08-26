@@ -52,6 +52,7 @@
   "dependencies": {
     "bower": "^1.5.2",
     "exports-loader": "^0.6.4",
+    "handlebars-template-loader": "^0.8.0",
     "requirejs": "^2.1.20"
   }
 }

@@ -22,11 +22,11 @@ module.exports = {
 	},
 	module: {
 		rules: [
-			{test: /\.html$/, use: 'raw-loader'},
 			{test: /davclient/, use: 'exports-loader?dav'}
 		],
 		loaders: [
-			{test: /ical/, loader: 'exports-loader?ICAL'}
+			{test: /ical/, loader: 'exports-loader?ICAL'},
+			{test: /\.html$/, loader: "handlebars-template-loader" }
 		]
 	}
 };
