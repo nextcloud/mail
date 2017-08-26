@@ -25,10 +25,6 @@
  */
 style('mail', 'mail');
 style('mail', 'mobile');
-script('mail', 'vendor/autosize/jquery.autosize');
-script('mail', 'vendor/jquery-storage-api/jquery.storageapi');
-script('mail', 'vendor/jquery-visibility/jquery-visibility');
-script('mail', 'vendor/requirejs/require');
 script('mail', 'searchproxy');
 script('mail', 'build/build');
 ?>

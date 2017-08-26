@@ -1,11 +1,14 @@
 // Karma configuration
 // Generated on Tue Sep 01 2015 13:54:51 GMT+0200 (CEST)
 
+var webpackConfig = require('./js/webpack.config.js');
+webpackConfig.entry = {};
+
 module.exports = function(config) {
 	config.set({
 		// frameworks to use
 		// available frameworks: https://npmjs.org/browse/keyword/karma-adapter
-		frameworks: ['jasmine-ajax', 'jasmine', 'requirejs', 'sinon'],
+		frameworks: ['jasmine-ajax', 'jasmine', 'sinon'],
 
 		// list of files / patterns to load in the browser
 		files: [
@@ -15,17 +18,19 @@ module.exports = function(config) {
 			{pattern: 'js/templates/*.html', included: false},
 			{pattern: 'js/vendor/**/*.js', included: false},
 			{pattern: 'js/tests/*.js', included: false},
+			'js/build/build.js',
 			'js/tests/test-main.js'
 		],
 
 		// list of files to exclude
 		exclude: [
-			'js/require_config.js',
+			'js/webpack.config.js',
 			'js/init.js'
 		],
 		// preprocess matching files before serving them to the browser
 		// available preprocessors: https://npmjs.org/browse/keyword/karma-preprocessor
 		preprocessors: {
+  			'js/build/build.js': ['webpack'],
 			'js/**[!vendor]/*[!spec].js': ['coverage']
 		},
 		// test results reporter to use
@@ -50,6 +55,6 @@ module.exports = function(config) {
 		browsers: ['PhantomJS'],
 		// Continuous Integration mode
 		// if true, Karma captures browsers, runs the tests and exits
-		singleRun: false
+		singleRun: false,
 	});
 };

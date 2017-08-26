@@ -20,13 +20,12 @@
 define(function(require) {
 	'strict';
 
-	var Handlebars = require('handlebars');
-	var Marionette = require('marionette');
-	var EmptyMessagesTemplate = require('raw-loader!templates/empty-folder.html');
+	var Marionette = require('backbone.marionette');
+	var EmptyMessagesTemplate = require('handlebars-loader!templates/empty-folder.html');
 
 	var EmptyMessagesView = Marionette.View.extend({
 		id: 'emptycontent',
-		template: Handlebars.compile(EmptyMessagesTemplate)
+		template: EmptyMessagesTemplate
 	});
 
 	return EmptyMessagesView;

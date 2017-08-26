@@ -23,15 +23,14 @@ define(function(require) {
 	var $ = require('jquery');
 	var _ = require('underscore');
 	var Backbone = require('backbone');
-	var Marionette = require('marionette');
-	var Handlebars = require('handlebars');
+	var Marionette = require('backbone.marionette');
 	var Radio = require('radio');
 	var ComposerView = require('views/composerview');
 	var MessageView = require('views/messageview');
 	var MessagesView = require('views/messagesview');
 	var ErrorView = require('views/errorview');
 	var LoadingView = require('views/loadingview');
-	var MessageContentTemplate = require('raw-loader!templates/foldercontent.html');
+	var MessageContentTemplate = require('handlebars-loader!templates/foldercontent.html');
 
 	var DetailView = Object.freeze({
 		ERROR: -2,
@@ -40,7 +39,7 @@ define(function(require) {
 	});
 
 	return Marionette.View.extend({
-		template: Handlebars.compile(MessageContentTemplate),
+		template: MessageContentTemplate,
 		className: 'container',
 		detailView: null,
 		account: null,

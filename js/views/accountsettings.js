@@ -11,14 +11,13 @@
 define(function(require) {
 	'use strict';
 
-	var Marionette = require('marionette');
-	var Handlebars = require('handlebars');
-	var AccountSettingsTemplate = require('raw-loader!templates/accountsettings.html');
+	var Marionette = require('backbone.marionette');
+	var AccountSettingsTemplate = require('handlebars-loader!templates/accountsettings.html');
 	var AliasesView = require('views/aliases');
 	var Radio = require('radio');
 
 	return Marionette.View.extend({
-		template: Handlebars.compile(AccountSettingsTemplate),
+		template: AccountSettingsTemplate,
 		templateContext: function() {
 			var aliases = this.aliases;
 			return {

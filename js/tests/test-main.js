@@ -80,7 +80,7 @@ require.config({
 	// Karma serves files under /base, which is the basePath from your config file
 	baseUrl: '/base/js',
 	paths: {
-		/**
+		/*
 		 * Libraries
 		 */
 		backbone: 'vendor/backbone/backbone',

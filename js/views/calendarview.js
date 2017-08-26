@@ -20,12 +20,11 @@
 define(function(require) {
 	'use strict';
 
-	var Marionette = require('marionette');
-	var Handlebars = require('handlebars');
-	var CalendarTemplate = require('raw-loader!templates/calendar.html');
+	var Marionette = require('backbone.marionette');
+	var CalendarTemplate = require('handlebars-loader!templates/calendar.html');
 
 	return Marionette.View.extend({
-		template: Handlebars.compile(CalendarTemplate),
+		template: CalendarTemplate,
 		tagName: 'li'
 	});
 });

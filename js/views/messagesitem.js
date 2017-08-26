@@ -13,13 +13,12 @@ define(function(require) {
 
 	var $ = require('jquery');
 	var _ = require('underscore');
-	var Handlebars = require('handlebars');
-	var Marionette = require('marionette');
+	var Marionette = require('backbone.marionette');
 	var Radio = require('radio');
-	var MessageTemplate = require('raw-loader!templates/message-list-item.html');
+	var MessageTemplate = require('handlebars-loader!templates/message-list-item.html');
 
 	return Marionette.View.extend({
-		template: Handlebars.compile(MessageTemplate),
+		template: MessageTemplate,
 		ui: {
 			iconDelete: '.action.delete',
 			star: '.star'

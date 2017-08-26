@@ -20,9 +20,8 @@
 define(function(require) {
 	'use strict';
 
-	var Handlebars = require('handlebars');
-	var Marionette = require('marionette');
-	var ErrorTemplate = require('raw-loader!templates/error.html');
+	var Marionette = require('backbone.marionette');
+	var ErrorTemplate = require('handlebars-loader!templates/error.html');
 
 	var ErrorView = Marionette.View.extend({
 
@@ -30,7 +29,7 @@ define(function(require) {
 
 		className: 'container',
 
-		template: Handlebars.compile(ErrorTemplate),
+		template: ErrorTemplate,
 
 		_text: undefined,
 

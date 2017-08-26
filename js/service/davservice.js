@@ -25,8 +25,8 @@ define(function(require) {
 	var _ = require('underscore');
 	var $ = require('jquery');
 	var Backbone = require('backbone');
-	var dav = require('davclient');
-	var ical = require('ical');
+	var dav = require('davclient.js');
+	var ical = require('ical.js');
 	var OC = require('OC');
 	var Radio = require('radio');
 	var Calendar = require('models/dav/calendar');

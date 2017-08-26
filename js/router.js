@@ -20,7 +20,7 @@
 define(function(require) {
 	'use strict';
 
-	var Marionette = require('marionette');
+	var Marionette = require('backbone.marionette');
 
 	/**
 	 * @class Router

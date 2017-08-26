@@ -14,7 +14,7 @@ define(function(require) {
 	'use strict';
 
 	var document = require('domready');
-	var Marionette = require('marionette');
+	var Marionette = require('backbone.marionette');
 	var $ = require('jquery');
 	var OC = require('OC');
 	var Radio = require('radio');

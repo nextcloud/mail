@@ -11,9 +11,8 @@
 define(function(require) {
 	'use strict';
 
-	var Marionette = require('marionette');
-	var Handlebars = require('handlebars');
-	var AliasesListTemplate = require('raw-loader!templates/aliases-list.html');
+	var Marionette = require('backbone.marionette');
+	var AliasesListTemplate = require('handlebars-loader!templates/aliases-list.html');
 	var Radio = require('radio');
 
 	return Marionette.View.extend({
@@ -21,7 +20,7 @@ define(function(require) {
 		model: null,
 		tagName: 'tr',
 		childViewContainer: 'tbody',
-		template: Handlebars.compile(AliasesListTemplate),
+		template: AliasesListTemplate,
 		templateContext: function() {
 			return {
 				aliases: this.model.toJSON()

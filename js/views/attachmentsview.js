@@ -13,19 +13,18 @@ define(function(require) {
 	'use strict';
 
 	var _ = require('underscore');
-	var Marionette = require('marionette');
+	var Marionette = require('backbone.marionette');
 	var OC = require('OC');
-	var Handlebars = require('handlebars');
 	var Radio = require('radio');
 	var AttachmentView = require('views/attachmentview');
-	var AttachmentsTemplate = require('raw-loader!templates/attachments.html');
+	var AttachmentsTemplate = require('handlebars-loader!templates/attachments.html');
 	var LocalAttachment = require('models/localattachment');
 
 	return Marionette.CompositeView.extend({
 		collection: null,
 		childView: AttachmentView,
 		childViewContainer: 'ul',
-		template: Handlebars.compile(AttachmentsTemplate),
+		template: AttachmentsTemplate,
 		ui: {
 			'fileInput': '#local-attachments'
 		},

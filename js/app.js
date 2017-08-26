@@ -27,7 +27,7 @@ define(function(require) {
 
 	var $ = require('jquery');
 	var Backbone = require('backbone');
-	var Marionette = require('marionette');
+	var Marionette = require('backbone.marionette');
 	var OC = require('OC');
 	var AppView = require('views/appview');
 	var Cache = require('cache');

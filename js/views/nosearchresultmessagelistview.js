@@ -11,16 +11,15 @@
 define(function(require) {
 	'use strict';
 
-	var Handlebars = require('handlebars');
-	var Marionette = require('marionette');
+	var Marionette = require('backbone.marionette');
 	var NoSearchResultMessageListViewTemplate
-		= require('raw-loader!templates/no-search-results-message-list.html');
+		= require('handlebars-loader!templates/no-search-results-message-list.html');
 
 	return Marionette.View.extend({
 		initialize: function(options) {
 			this.model.set('searchTerm', options.searchQuery);
 		},
-		template: Handlebars.compile(NoSearchResultMessageListViewTemplate)
+		template: NoSearchResultMessageListViewTemplate
 	});
 });
 

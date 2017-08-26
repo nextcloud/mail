@@ -20,11 +20,10 @@
 define(function(require) {
 	'use strict';
 
-	var Handlebars = require('handlebars');
-	var Marionette = require('marionette');
+	var Marionette = require('backbone.marionette');
 	var MessageController = require('controller/messagecontroller');
 	var AttachmentView = require('views/messageattachment');
-	var AttachmentsTemplate = require('raw-loader!templates/message-attachments.html');
+	var AttachmentsTemplate = require('handlebars-loader!templates/message-attachments.html');
 
 	/**
 	 * @type MessageAttachmentsView
@@ -33,7 +32,7 @@ define(function(require) {
 		/**
 		 * @lends Marionette.CompositeView
 		 */
-		template: Handlebars.compile(AttachmentsTemplate),
+		template: AttachmentsTemplate,
 		ui: {
 			'saveAllToCloud': '.attachments-save-to-cloud'
 		},
