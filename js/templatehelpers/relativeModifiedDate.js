@@ -1,5 +1,7 @@
+/* global relative_modified_date */
+
 /**
- * @author Steffen Lindner <mail@steffen-lindner.de>
+ * @author Christoph Wurst <christoph@winzerhof-wurst.at>
  *
  * Mail
  *
@@ -17,16 +19,15 @@
  *
  */
 
-define(function(require) {
-	'strict';
 
-	var Marionette = require('backbone.marionette');
-	var KeyboardShortcutTemplate = require('templates/keyboard-shortcuts.html');
+define(function() {
+	'use strict';
 
-	var KeyboardShortcutView = Marionette.View.extend({
-		id: 'keyboardshortcut',
-		template: KeyboardShortcutTemplate
-	});
-
-	return KeyboardShortcutView;
+	return function(dateInt) {
+		var lastModified = new Date(dateInt * 1000);
+		var lastModifiedTime = Math.round(lastModified.getTime() / 1000);
+		// jscs:disable requireCamelCaseOrUpperCaseIdentifiers
+		return relative_modified_date(lastModifiedTime);
+		// jscs:enable requireCamelCaseOrUpperCaseIdentifiers
+	};
 });

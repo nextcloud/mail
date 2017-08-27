@@ -1,5 +1,7 @@
+/* global md5 */
+
 /**
- * @author Steffen Lindner <mail@steffen-lindner.de>
+ * @author Christoph Wurst <christoph@winzerhof-wurst.at>
  *
  * Mail
  *
@@ -18,15 +20,21 @@
  */
 
 define(function(require) {
-	'strict';
+	'use strict';
 
-	var Marionette = require('backbone.marionette');
-	var KeyboardShortcutTemplate = require('templates/keyboard-shortcuts.html');
+	var Handlebars = require('handlebars');
 
-	var KeyboardShortcutView = Marionette.View.extend({
-		id: 'keyboardshortcut',
-		template: KeyboardShortcutTemplate
-	});
-
-	return KeyboardShortcutView;
+	return function(account) {
+		var hash = md5(account);
+		var hue = null;
+		if (typeof hash.toHsl === 'function') {
+			var hsl = hash.toHsl();
+			hue = Math.round(hsl[0] / 40) * 40;
+			return new Handlebars.SafeString('hsl(' + hue + ', ' + hsl[1] + '%, ' + hsl[2] + '%)');
+		} else {
+			var maxRange = parseInt('ffffffffffffffffffffffffffffffff', 16);
+			hue = parseInt(hash, 16) / maxRange * 256;
+			return new Handlebars.SafeString('hsl(' + hue + ', 90%, 65%)');
+		}
+	};
 });

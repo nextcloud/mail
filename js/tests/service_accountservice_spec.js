@@ -1,3 +1,5 @@
+/* global spyOn, expect */
+
 /**
  * @author Christoph Wurst <christoph@winzerhof-wurst.at>
  *
@@ -19,7 +21,7 @@
 
 define([
 	'service/accountservice',
-	'OC',
+	'OC'
 ], function(AccountService, OC) {
 
 	describe('AccountService', function() {

@@ -11,7 +11,7 @@
 define(function(require) {
 	'use strict';
 
-	var Marionette = require('marionette');
+	var Marionette = require('backbone.marionette');
 	var FolderView = require('views/folderview');
 
 	var SHOW_COLLAPSED = Object.seal([

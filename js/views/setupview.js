@@ -21,14 +21,13 @@ define(function(require) {
 	'use strict';
 
 	var _ = require('underscore');
-	var Handlebars = require('handlebars');
-	var Marionette = require('marionette');
+	var Marionette = require('backbone.marionette');
 	var Radio = require('radio');
 	var AccountController = require('controller/accountcontroller');
 	var AccountFormView = require('views/accountformview');
 	var ErrorView = require('views/errorview');
 	var LoadingView = require('views/loadingview');
-	var SetupTemplate = require('text!templates/setup.html');
+	var SetupTemplate = require('templates/setup.html');
 
 	/**
 	 * @class SetupView
@@ -39,7 +38,7 @@ define(function(require) {
 		className: 'container',
 
 		/** @type {Function} */
-		template: Handlebars.compile(SetupTemplate),
+		template: SetupTemplate,
 
 		/** @type {boolean} */
 		_loading: false,

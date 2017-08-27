@@ -13,7 +13,7 @@ define(function(require) {
 
 	var _ = require('underscore');
 	var $ = require('jquery');
-	var storage = $.sessionStorage;
+	var storage = require('js-storage').localStorage;
 	var Account = require('models/account');
 
 	var MessageCache = {

@@ -12,9 +12,8 @@ define(function(require) {
 	'use strict';
 
 	var _ = require('underscore');
-	var Marionette = require('marionette');
-	var Handlebars = require('handlebars');
-	var AccountFormTemplate = require('text!templates/account-form.html');
+	var Marionette = require('backbone.marionette');
+	var AccountFormTemplate = require('templates/account-form.html');
 
 	/**
 	 * @class AccountFormView
@@ -25,7 +24,7 @@ define(function(require) {
 		id: 'account-form',
 
 		/** @type {Function} */
-		template: Handlebars.compile(AccountFormTemplate),
+		template: AccountFormTemplate,
 
 		/**
 		 * @returns {object}

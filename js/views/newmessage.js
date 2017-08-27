@@ -20,13 +20,12 @@
 define(function(require) {
 	'use strict';
 
-	var Marionette = require('marionette');
-	var Handlebars = require('handlebars');
+	var Marionette = require('backbone.marionette');
 	var Radio = require('radio');
-	var NewMessageTemplate = require('text!templates/newmessage.html');
+	var NewMessageTemplate = require('templates/newmessage.html');
 
 	return Marionette.View.extend({
-		template: Handlebars.compile(NewMessageTemplate),
+		template: NewMessageTemplate,
 		accounts: null,
 		ui: {
 			button: '#mail_new_message'

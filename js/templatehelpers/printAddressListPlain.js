@@ -1,5 +1,5 @@
 /**
- * @author Steffen Lindner <mail@steffen-lindner.de>
+ * @author Christoph Wurst <christoph@winzerhof-wurst.at>
  *
  * Mail
  *
@@ -18,15 +18,27 @@
  */
 
 define(function(require) {
-	'strict';
+	'use strict';
 
-	var Marionette = require('backbone.marionette');
-	var KeyboardShortcutTemplate = require('templates/keyboard-shortcuts.html');
+	var _ = require('underscore');
+	var Handlebars = require('handlebars');
 
-	var KeyboardShortcutView = Marionette.View.extend({
-		id: 'keyboardshortcut',
-		template: KeyboardShortcutTemplate
-	});
-
-	return KeyboardShortcutView;
+	return function(addressList) {
+		var str = _.reduce(addressList, function(memo, value, index) {
+			if (index !== 0) {
+				memo += ', ';
+			}
+			var label = value.label
+				.replace(/(^"|"$)/g, '')
+				.replace(/(^'|'$)/g, '');
+			label = Handlebars.Utils.escapeExpression(label);
+			var email = Handlebars.Utils.escapeExpression(value.email);
+			if (label === email) {
+				return memo + email;
+			} else {
+				return memo + '"' + label + '" <' + email + '>';
+			}
+		}, '');
+		return str;
+	};
 });

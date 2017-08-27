@@ -22,11 +22,10 @@ define(function(require) {
 
 	var _ = require('underscore');
 	var $ = require('jquery');
-	var Marionette = require('marionette');
-	var Handlebars = require('handlebars');
+	var Marionette = require('backbone.marionette');
 	var Radio = require('radio');
 	var MessagesItemView = require('views/messagesitem');
-	var MessageListTemplate = require('text!templates/message-list.html');
+	var MessageListTemplate = require('templates/message-list.html');
 	var EmptyFolderView = require('views/emptyfolderview');
 	var NoSearchResultView = require('views/nosearchresultmessagelistview');
 
@@ -35,7 +34,7 @@ define(function(require) {
 		$scrollContainer: undefined,
 		childView: MessagesItemView,
 		childViewContainer: '#mail-message-list',
-		template: Handlebars.compile(MessageListTemplate),
+		template: MessageListTemplate,
 		currentMessage: null,
 		searchQuery: null,
 		loadingMore: false,

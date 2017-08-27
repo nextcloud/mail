@@ -1,33 +1,49 @@
 // Karma configuration
 // Generated on Tue Sep 01 2015 13:54:51 GMT+0200 (CEST)
 
-module.exports = function(config) {
+var webpackConfig = require('./js/webpack.config.js');
+
+module.exports = function (config) {
 	config.set({
 		// frameworks to use
 		// available frameworks: https://npmjs.org/browse/keyword/karma-adapter
-		frameworks: ['jasmine-ajax', 'jasmine', 'requirejs', 'sinon'],
+		frameworks: ['jasmine-ajax', 'jasmine', 'sinon'],
 
-		// list of files / patterns to load in the browser
 		files: [
-			'js/vendor/jquery/dist/jquery.js',
-			{pattern: 'js/**/*.js', included: false},
-			{pattern: 'js/*.js', included: false},
-			{pattern: 'js/templates/*.html', included: false},
-			{pattern: 'js/vendor/**/*.js', included: false},
-			{pattern: 'js/tests/*.js', included: false},
-			'js/tests/test-main.js'
+			{pattern: 'node_modules/jquery/dist/jquery.js', included: true},
+			{pattern: 'node_modules/underscore/underscore.js', included: true},
+			{pattern: 'js/tests/test-main.js', included: true},
+			//{pattern: 'js/**/*.js', included: false},
+			//{pattern: 'js/*.js', included: false},
+			//{pattern: 'js/templates/*.html', included: false},
+			// all files ending in "_test"
+			{pattern: 'js/tests/*_spec.js', watched: false},
+			{pattern: 'js/tests/**/*_spec.js', watched: false},
+			{pattern: 'js/build/build.js', included: true}
 		],
 
 		// list of files to exclude
 		exclude: [
-			'js/require_config.js',
+			'js/webpack.config.js',
 			'js/init.js'
 		],
 		// preprocess matching files before serving them to the browser
 		// available preprocessors: https://npmjs.org/browse/keyword/karma-preprocessor
 		preprocessors: {
-			'js/**[!vendor]/*[!spec].js': ['coverage']
+			//'js/build/build.js': ['webpack'],
+			'js/**[!vendor]/*[!spec].js': ['coverage'],
+			// add webpack as preprocessor
+			'js/tests/*_spec.js': ['webpack'],
+			'js/tests/**/*_spec.js': ['webpack']
+			//'js/build/build.js': ['webpack', 'sourcemap']
 		},
+
+		webpackMiddleware: {
+			// webpack-dev-middleware configuration
+			// i. e.
+			stats: 'errors-only'
+		},
+
 		// test results reporter to use
 		// possible values: 'dots', 'progress'
 		// available reporters: https://npmjs.org/browse/keyword/karma-reporter
@@ -50,6 +66,7 @@ module.exports = function(config) {
 		browsers: ['PhantomJS'],
 		// Continuous Integration mode
 		// if true, Karma captures browsers, runs the tests and exits
-		singleRun: false
+		singleRun: false,
+		webpack: webpackConfig
 	});
 };

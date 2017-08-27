@@ -13,13 +13,12 @@ define(function(require) {
 
 	var $ = require('jquery');
 	var _ = require('underscore');
-	var Handlebars = require('handlebars');
-	var Marionette = require('marionette');
+	var Marionette = require('backbone.marionette');
 	var Radio = require('radio');
-	var MessageTemplate = require('text!templates/message-list-item.html');
+	var MessageTemplate = require('templates/message-list-item.html');
 
 	return Marionette.View.extend({
-		template: Handlebars.compile(MessageTemplate),
+		template: MessageTemplate,
 		ui: {
 			iconDelete: '.action.delete',
 			star: '.star'
@@ -34,7 +33,7 @@ define(function(require) {
 		},
 		serializeModel: function() {
 			var json = this.model.toJSON();
-			json.isUnified = require('state').currentAccount.get('isUnified');
+			json.isUnified = require('state').currentAccount && require('state').currentAccount.get('isUnified');
 			return json;
 		},
 		onRender: function() {

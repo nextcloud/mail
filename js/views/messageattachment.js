@@ -21,18 +21,17 @@ define(function(require) {
 	'use strict';
 
 	var $ = require('jquery');
-	var Handlebars = require('handlebars');
-	var Marionette = require('marionette');
+	var Marionette = require('backbone.marionette');
 	var Radio = require('radio');
 	var MessageController = require('controller/messagecontroller');
 	var CalendarsPopoverView = require('views/calendarspopoverview');
-	var MessageAttachmentTemplate = require('text!templates/message-attachment.html');
+	var MessageAttachmentTemplate = require('templates/message-attachment.html');
 
 	/**
 	 * @class MessageAttachmentView
 	 */
 	var MessageAttachmentView = Marionette.View.extend({
-		template: Handlebars.compile(MessageAttachmentTemplate),
+		template: MessageAttachmentTemplate,
 		ui: {
 			'downloadButton': '.attachment-download',
 			'saveToCloudButton': '.attachment-save-to-cloud',

@@ -14,7 +14,7 @@ define(function(require) {
 	'use strict';
 
 	var document = require('domready');
-	var Marionette = require('marionette');
+	var Marionette = require('backbone.marionette');
 	var $ = require('jquery');
 	var OC = require('OC');
 	var Radio = require('radio');
@@ -191,6 +191,12 @@ define(function(require) {
 		},
 		updateTitle: function() {
 			var activeEmail = '';
+
+			if (!require('state').currentAccount) {
+				// Nothing to do
+				return;
+			}
+
 			if (require('state').currentAccount.get('accountId') !== -1) {
 				var activeAccount = require('state').currentAccount;
 				activeEmail = ' - ' + activeAccount.get('email');

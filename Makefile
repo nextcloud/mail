@@ -21,7 +21,7 @@ clean:
 composer.phar:
 	curl -sS https://getcomposer.org/installer | php
 
-install-deps: install-composer-deps install-npm-deps
+install-deps: install-composer-deps install-npm-deps-dev
 
 install-composer-deps: composer.phar
 	php composer.phar install
@@ -33,7 +33,7 @@ install-npm-deps-dev:
 	npm install --deps
 
 optimize-js: install-npm-deps
-	./node_modules/requirejs/bin/r.js -o build/build.js
+	./node_modules/webpack/bin/webpack.js --config js/webpack.config.js
 
 dev-setup: install-composer-deps install-npm-deps-dev
 

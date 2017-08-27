@@ -11,15 +11,14 @@
 define(function(require) {
 	'use strict';
 
-	var Handlebars = require('handlebars');
-	var Marionette = require('marionette');
+	var Marionette = require('backbone.marionette');
 	var OC = require('OC');
 	var Radio = require('radio');
 	var FolderListView = require('views/folderlistview');
-	var AccountTemplate = require('text!templates/account.html');
+	var AccountTemplate = require('templates/account.html');
 
 	return Marionette.View.extend({
-		template: Handlebars.compile(AccountTemplate),
+		template: AccountTemplate,
 		templateContext: function() {
 			var toggleCollapseMessage = this.collapsed ? t('mail', 'Show all folders') : t('mail', 'Collapse folders');
 			return {

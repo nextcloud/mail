@@ -12,14 +12,13 @@
 define(function(require) {
 	'use strict';
 
-	var Handlebars = require('handlebars');
-	var Marionette = require('marionette');
+	var Marionette = require('backbone.marionette');
 	var Radio = require('radio');
-	var AttachmentTemplate = require('text!templates/attachment.html');
+	var AttachmentTemplate = require('templates/attachment.html');
 
 	return Marionette.View.extend({
 		tagName: 'li',
-		template: Handlebars.compile(AttachmentTemplate),
+		template: AttachmentTemplate,
 		ui: {
 			attachmentName: '.new-message-attachment-name'
 		},

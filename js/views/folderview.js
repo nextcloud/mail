@@ -12,11 +12,10 @@ define(function(require) {
 	'use strict';
 
 	var _ = require('underscore');
-	var Marionette = require('marionette');
-	var Handlebars = require('handlebars');
+	var Marionette = require('backbone.marionette');
 	var OC = require('OC');
 	var Radio = require('radio');
-	var FolderTemplate = require('text!templates/folder.html');
+	var FolderTemplate = require('templates/folder.html');
 
 	return Marionette.View.extend({
 
@@ -47,7 +46,7 @@ define(function(require) {
 			});
 		},
 
-		template: Handlebars.compile(FolderTemplate),
+		template: FolderTemplate,
 
 		templateContext: function() {
 			var count = null;

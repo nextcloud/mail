@@ -11,18 +11,17 @@
 define(function(require) {
 	'use strict';
 
-	var Marionette = require('marionette');
-	var Handlebars = require('handlebars');
+	var Marionette = require('backbone.marionette');
 	var $ = require('jquery');
 	var _ = require('underscore');
 	var OC = require('OC');
 	var Radio = require('radio');
 	var Attachments = require('models/attachments');
 	var AttachmentsView = require('views/attachmentsview');
-	var ComposerTemplate = require('text!templates/composer.html');
+	var ComposerTemplate = require('templates/composer.html');
 
 	return Marionette.View.extend({
-		template: Handlebars.compile(ComposerTemplate),
+		template: ComposerTemplate,
 		templateContext: function() {
 			var aliases = null;
 			if (this.accounts) {

@@ -11,15 +11,14 @@
 define(function(require) {
 	'use strict';
 
-	var Handlebars = require('handlebars');
-	var Marionette = require('marionette');
+	var Marionette = require('backbone.marionette');
 	var OC = require('OC');
 	var Radio = require('radio');
-	var SettingsTemplate = require('text!templates/settings.html');
+	var SettingsTemplate = require('templates/settings.html');
 
 	return Marionette.View.extend({
 		accounts: null,
-		template: Handlebars.compile(SettingsTemplate),
+		template: SettingsTemplate,
 		templateContext: function() {
 			return {
 				addAccountUrl: OC.generateUrl('apps/mail/#setup'),

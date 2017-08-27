@@ -13,18 +13,17 @@
 define(function(require) {
 	'use strict';
 
-	var Marionette = require('marionette');
-	var Handlebars = require('handlebars');
+	var Marionette = require('backbone.marionette');
 	var _ = require('underscore');
 	var $ = require('jquery');
 	var Attachments = require('models/attachments');
 	var HtmlHelper = require('util/htmlhelper');
 	var ComposerView = require('views/composerview');
 	var MessageAttachmentsView = require('views/messageattachments');
-	var MessageTemplate = require('text!templates/message.html');
+	var MessageTemplate = require('templates/message.html');
 
 	return Marionette.View.extend({
-		template: Handlebars.compile(MessageTemplate),
+		template: MessageTemplate,
 		className: 'mail-message-container',
 		message: null,
 		messageBody: null,

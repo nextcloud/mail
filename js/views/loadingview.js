@@ -20,15 +20,14 @@
 define(function(require) {
 	'use strict';
 
-	var Handlebars = require('handlebars');
-	var Marionette = require('marionette');
-	var LoadingTemplate = require('text!templates/loading.html');
+	var Marionette = require('backbone.marionette');
+	var LoadingTemplate = require('templates/loading.html');
 
 	/**
 	 * @class LoadingView
 	 */
 	var LoadingView = Marionette.View.extend({
-		template: Handlebars.compile(LoadingTemplate),
+		template: LoadingTemplate,
 		templateContext: function() {
 			return {
 				hint: this.hint

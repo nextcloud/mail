@@ -1,5 +1,7 @@
+/* global formatDate */
+
 /**
- * @author Steffen Lindner <mail@steffen-lindner.de>
+ * @author Christoph Wurst <christoph@winzerhof-wurst.at>
  *
  * Mail
  *
@@ -17,16 +19,11 @@
  *
  */
 
-define(function(require) {
-	'strict';
+define(function() {
+	'use strict';
 
-	var Marionette = require('backbone.marionette');
-	var KeyboardShortcutTemplate = require('templates/keyboard-shortcuts.html');
-
-	var KeyboardShortcutView = Marionette.View.extend({
-		id: 'keyboardshortcut',
-		template: KeyboardShortcutTemplate
-	});
-
-	return KeyboardShortcutView;
+	return function(dateInt) {
+		var lastModified = new Date(dateInt * 1000);
+		return formatDate(lastModified);
+	};
 });

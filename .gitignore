@@ -16,7 +16,10 @@ tests/clover.xml
 node_modules/
 
 # optimized JS files
+# Old r.js
 js/mail.min.js
+# new webpack
+/js/build
 
 # packaged app
 build/artifacts
