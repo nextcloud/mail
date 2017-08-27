@@ -22,6 +22,7 @@
 namespace OCA\Mail\Service;
 
 use Exception;
+use Horde_Exception;
 use Horde_Imap_Client;
 use OC\Files\Node\File;
 use OCA\Mail\Account;
@@ -29,6 +30,7 @@ use OCA\Mail\Contracts\IAttachmentService;
 use OCA\Mail\Contracts\IMailTransmission;
 use OCA\Mail\Db\Alias;
 use OCA\Mail\Exception\AttachmentNotFoundException;
+use OCA\Mail\Exception\ServiceException;
 use OCA\Mail\Model\IMessage;
 use OCA\Mail\Model\NewMessageData;
 use OCA\Mail\Model\RepliedMessageData;
@@ -55,8 +57,8 @@ class MailTransmission implements IMailTransmission {
 	 * @param IAttachmentService $attachmentService
 	 * @param Logger $logger
 	 */
-	public function __construct(AddressCollector $addressCollector, $userFolder,
-		IAttachmentService $attachmentService, Logger $logger) {
+	public function __construct(AddressCollector $addressCollector, $userFolder, IAttachmentService $attachmentService,
+		Logger $logger) {
 		$this->addressCollector = $addressCollector;
 		$this->userFolder = $userFolder;
 		$this->attachmentService = $attachmentService;
@@ -72,8 +74,8 @@ class MailTransmission implements IMailTransmission {
 	 * @param Alias|null $alias
 	 * @param int|null $draftUID
 	 */
-	public function sendMessage($userId, NewMessageData $messageData,
-		RepliedMessageData $replyData, Alias $alias = null, $draftUID = null) {
+	public function sendMessage($userId, NewMessageData $messageData, RepliedMessageData $replyData, Alias $alias = null,
+		$draftUID = null) {
 		$account = $messageData->getAccount();
 
 		if ($replyData->isReply()) {
@@ -99,13 +101,36 @@ class MailTransmission implements IMailTransmission {
 	}
 
 	/**
+	 * @param NewMessageData $message
+	 * @param type $draftUID
+	 * @return type
+	 * @throws ServiceException
+	 */
+	public function saveDraft(NewMessageData $message, $draftUID = null) {
+		$account = $message->getAccount();
+		$imapMessage = $account->newMessage();
+		$imapMessage->setTo($message->getTo());
+		$imapMessage->setSubject($message->getSubject() ?: '');
+		$imapMessage->setFrom($account->getEMailAddress());
+		$imapMessage->setCC($message->getCc());
+		$imapMessage->setBcc($message->getBcc());
+		$imapMessage->setContent($message->getBody());
+
+		// create transport and save message
+		try {
+			return $account->saveDraft($imapMessage, $draftUID);
+		} catch (Horde_Exception $ex) {
+			throw new ServiceException('Could not save draft message', 0, $ex);
+		}
+	}
+
+	/**
 	 * @param Account $account
 	 * @param NewMessageData $messageData
 	 * @param RepliedMessageData $replyData
 	 * @return IMessage
 	 */
-	private function buildReplyMessage(Account $account,
-		NewMessageData $messageData, RepliedMessageData $replyData) {
+	private function buildReplyMessage(Account $account, NewMessageData $messageData, RepliedMessageData $replyData) {
 		// Reply
 		$message = $account->newReplyMessage();
 
@@ -146,8 +171,7 @@ class MailTransmission implements IMailTransmission {
 	 * @param Account $account
 	 * @param RepliedMessageData $replyData
 	 */
-	private function flagRepliedMessage(Account $account,
-		RepliedMessageData $replyData) {
+	private function flagRepliedMessage(Account $account, RepliedMessageData $replyData) {
 		$mailbox = $account->getMailbox(base64_decode($replyData->getFolderId()));
 		$mailbox->setMessageFlag($replyData->getId(), Horde_Imap_Client::FLAG_ANSWERED, true);
 	}
@@ -157,8 +181,7 @@ class MailTransmission implements IMailTransmission {
 	 * @param NewMessageData $messageData
 	 * @param IMessage $message
 	 */
-	private function handleAttachments($userId, NewMessageData $messageData,
-		IMessage $message) {
+	private function handleAttachments($userId, NewMessageData $messageData, IMessage $message) {
 		foreach ($messageData->getAttachments() as $attachment) {
 			if (isset($attachment['isLocal']) && $attachment['isLocal'] === 'true') {
 				$this->handleLocalAttachment($userId, $attachment, $message);

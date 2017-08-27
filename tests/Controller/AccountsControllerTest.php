@@ -304,9 +304,7 @@ class AccountsControllerTest extends PHPUnit_Framework_TestCase {
 	}
 
 	public function testDraft() {
-		$isUnifiedInbox = true;
 		$withPreviousDraft = true;
-		$account = $isUnifiedInbox ? $this->unifiedAccount : $this->account;
 		$subject = 'Hello';
 		$body = 'Hi!';
 		$from = 'test@example.com';
@@ -320,45 +318,10 @@ class AccountsControllerTest extends PHPUnit_Framework_TestCase {
 		$this->accountService->expects($this->once())
 			->method('find')
 			->with($this->userId, $this->accountId)
-			->will($this->returnValue($account));
-		if ($isUnifiedInbox) {
-			$this->unifiedAccount->expects($this->once())
-				->method('resolve')
-				->with($messageId)
-				->will($this->returnValue([$this->account]));
-		}
-
-		$message = $this->getMockBuilder('OCA\Mail\Model\Message')
-			->disableOriginalConstructor()
-			->getMock();
-		$this->account->expects($this->once())
-			->method('newMessage')
-			->will($this->returnValue($message));
-		$message->expects($this->once())
-			->method('setTo')
-			->with(Message::parseAddressList($to));
-		$message->expects($this->once())
-			->method('setSubject')
-			->with($subject);
-		$message->expects($this->once())
-			->method('setFrom')
-			->with($from);
-		$message->expects($this->once())
-			->method('setCC')
-			->with(Message::parseAddressList($cc));
-		$message->expects($this->once())
-			->method('setBcc')
-			->with(Message::parseAddressList($bcc));
-		$message->expects($this->once())
-			->method('setContent')
-			->with($body);
-		$this->account->expects($this->once())
-			->method('getEMailAddress')
-			->will($this->returnValue($from));
-		$this->account->expects($this->once())
+			->will($this->returnValue($this->account));
+		$this->transmission->expects($this->once())
 			->method('saveDraft')
-			->with($message, $uid)
-			->will($this->returnValue($newUID));
+			->willReturn($newUID);
 
 		$expected = new JSONResponse([
 			'uid' => $newUID,
