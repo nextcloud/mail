@@ -21,6 +21,20 @@ define(function(require) {
 		model: Message,
 		comparator: function(message) {
 			return message.get('dateInt') * -1;
+		},
+		initialize: function() {
+			this.on('add', function(message) {
+				var url = OC.generateUrl('apps/mail/avatars?email={email}', {
+					email: message.get('fromEmail')
+				});
+
+				Promise.resolve($.ajax(url)).then(function(avatar) {
+					if (avatar.source != 'none'){
+						message.set('senderImage', avatar.url);
+					}
+				});
+			});
+
 		}
 	});
 
