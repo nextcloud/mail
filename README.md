@@ -7,7 +7,7 @@
 [![JavaScript Coverage](https://coveralls.io/repos/github/nextcloud/mail/badge.svg)](https://coveralls.io/github/nextcloud/mail)
 [![Bountysource](https://img.shields.io/bountysource/team/nextcloud/activity.svg?maxAge=2592000)](https://www.bountysource.com/teams/nextcloud/issues?tracker_ids=44154351)
 
-**An email app for [Nextcloud](https://nextcloud.com)**
+**A mail app for [Nextcloud](https://nextcloud.com)**
 
 ![](screenshots/mail.png)
 
@@ -16,7 +16,7 @@
 
 * :rocket: **Integration with other Nextcloud apps!** Currently Contacts, Calendar & Files – more to come.
 * :inbox_tray: **Multiple mail accounts!** Personal and company account? No problem, and a nice unified inbox.
-* :lock: **Send & receive encrypted emails!** Using the great [Mailvelope](https://mailvelope.com) browser extension.
+* :lock: **Send & receive encrypted mails!** Using the great [Mailvelope](https://mailvelope.com) browser extension.
 * :see_no_evil: **We’re not reinventing the wheel!** Based on the great [Horde](http://horde.org) libraries.
 
 And in the works for the [coming versions](https://github.com/nextcloud/mail/milestones/):
@@ -28,9 +28,9 @@ And in the works for the [coming versions](https://github.com/nextcloud/mail/mil
 ## Installation
 
 In your Nextcloud, simply navigate to »Apps«, choose the category »Social & Communication«, find the Mail app and enable it.
-Then open the Mail app from the app menu. Put in your email account credentials and off you go!
+Then open the Mail app from the app menu. Put in your mail account credentials and off you go!
 
-If you experience any issues or have enhancement suggestions you can report them in our [issue tracker](https://github.com/nextcloud/mail/issues). Please follow the [issue template](https://raw.githubusercontent.com/nextcloud/mail/master/.github/issue_template.md) so we get the info we need to be able to debug and fix the problem. Thanks!
+If you experience any issues or have any suggestions for improvement, use the [issue tracker](https://github.com/nextcloud/mail/issues). Please follow the [issue template](https://raw.githubusercontent.com/nextcloud/mail/master/.github/issue_template.md) so we get the info needed to debug and fix the problem. Thanks!
 
 ## Usage
 
@@ -46,14 +46,14 @@ Speed up your Mail experience by using keyboard shortcuts.
 | Toggle unread | <kbd>U</kbd>                       |
 | Delete        | <kbd>Del</kbd>                     |
 | Search        | <kbd>Ctrl</kbd> + <kbd>F</kbd>     |
-| Send          | <kbd>Ctrl</kbd> + <kbd>Enter</kbd> |
+| Send          | <kbd>Ctrl</kbd> + <kbd>↵</kbd> |
 | Refresh       | <kbd>R</kbd>                       |
 
 ## Maintainers
 
 [Christoph Wurst](https://github.com/ChristophWurst), [Jan-Christoph Borchardt](https://github.com/jancborchardt), [Steffen Lindner](https://github.com/Gomez) [and many more](https://github.com/nextcloud/mail/graphs/contributors)
 
-If you’d like to join, just go through the [issue list](https://github.com/nextcloud/mail/issues) and fix some. :)
+If you’d like to join, just run through the [issue list](https://github.com/nextcloud/mail/issues) and fix some. :)
 
 ## Troubleshooting
 
@@ -63,7 +63,7 @@ If you can not access your Gmail account use https://accounts.google.com/Display
 
 ### Outlook.com
 
-If you can not access your Outlook.com account try to enable the 'Two-Factor Verification' (https://account.live.com/proofs/Manage) and setup an app password (https://account.live.com/proofs/AppPassword), which you then use for the Nextcloud Mail app.
+If you can not access your Outlook.com account try to enable the 'Two-Factor Verification' (https://account.live.com/proofs/Manage) and set up an app password (https://account.live.com/proofs/AppPassword), which you then use for the Nextcloud Mail app.
 
 ### Dovecot IMAP
 
@@ -85,9 +85,9 @@ namespace inbox {
 
 ## Developer setup info
 
-Just clone this repo into your apps directory (Nextcloud server installation needed). Additionally,  [nodejs and npm](https://nodejs.org/en/download/package-manager/) are needed for installing JavaScript dependencies.
+Just clone this repo into your apps directory (Nextcloud server installation needed). Additionally, [npm](https://www.npmjs.com/) to fetch [Node.js](https://nodejs.org/en/download/package-manager/) is needed for installing JavaScript dependencies.
 
-Once node and npm are installed, PHP and JavaScript dependencies can be installed by running
+Once npm and Node.js are installed, PHP and JavaScript dependencies can be installed by running:
 ```bash
 make install-composer-deps
 make optimize-js
@@ -119,28 +119,28 @@ Certain advanced or experimental features need to be specifically enabled in you
 
 ### Debug mode
 You can enable IMAP and SMTP backend logging. A horde_imap.log for IMAP and horde_smtp.log for SMTP will appear in the same directory as your nextcloud.log.
-#### IMAP logging:
+#### IMAP logging
 ```php
 'app.mail.imaplog.enabled' => true
 ```
-#### SMTP logging:
+#### SMTP logging
 ```php
 'app.mail.smtplog.enabled' => true
 ```
 
-### Timeouts:
-Depending on your mail host, it may be necessary to increase your IMAP and/or SMTP timeout settings. Currently IMAP defaults to 20 seconds and SMTP defaults to 2 seconds. They can be changed with.
+### Timeouts
+Depending on your mail host, it may be necessary to increase your IMAP and/or SMTP timeout threshold. Currently IMAP defaults to 20 seconds and SMTP defaults to 2 seconds. They can be changed as follows:
 
-#### IMAP timeout:
+#### IMAP timeout
 ```php
 'app.mail.imap.timeout' => 20
 ```
-#### SMTP timeout:
+#### SMTP timeout
 ```php
 'app.mail.smtp.timeout' => 2
 ```
-### Use php-mail for mail sending
-You can use the php mail function to send mails. This is needed for some webhosters (1&1 (1und1)):
+### Use php-mail for sending mail
+You can use the php-mail function to send mails. This is needed for some webhosters (1&1 (1und1)):
 ```php
 'app.mail.transport' => 'php-mail'
 ```
