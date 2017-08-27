@@ -21,7 +21,7 @@ define(function(require) {
 	'use strict';
 
 	var Marionette = require('backbone.marionette');
-	var ErrorTemplate = require('handlebars-loader!templates/error.html');
+	var ErrorTemplate = require('templates/error.html');
 
 	var ErrorView = Marionette.View.extend({
 

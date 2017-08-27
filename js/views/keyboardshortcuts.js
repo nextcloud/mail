@@ -21,7 +21,7 @@ define(function(require) {
 	'strict';
 
 	var Marionette = require('backbone.marionette');
-	var KeyboardShortcutTemplate = require('handlebars-loader!templates/keyboard-shortcuts.html');
+	var KeyboardShortcutTemplate = require('templates/keyboard-shortcuts.html');
 
 	var KeyboardShortcutView = Marionette.View.extend({
 		id: 'keyboardshortcut',

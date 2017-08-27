@@ -21,7 +21,7 @@ define(function(require) {
 	'strict';
 
 	var Marionette = require('backbone.marionette');
-	var EmptyMessagesTemplate = require('handlebars-loader!templates/empty-folder.html');
+	var EmptyMessagesTemplate = require('templates/empty-folder.html');
 
 	var EmptyMessagesView = Marionette.View.extend({
 		id: 'emptycontent',

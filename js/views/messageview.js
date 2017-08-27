@@ -20,7 +20,7 @@ define(function(require) {
 	var HtmlHelper = require('util/htmlhelper');
 	var ComposerView = require('views/composerview');
 	var MessageAttachmentsView = require('views/messageattachments');
-	var MessageTemplate = require('handlebars-loader!templates/message.html');
+	var MessageTemplate = require('templates/message.html');
 
 	return Marionette.View.extend({
 		template: MessageTemplate,

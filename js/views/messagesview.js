@@ -25,7 +25,7 @@ define(function(require) {
 	var Marionette = require('backbone.marionette');
 	var Radio = require('radio');
 	var MessagesItemView = require('views/messagesitem');
-	var MessageListTemplate = require('handlebars-loader!templates/message-list.html');
+	var MessageListTemplate = require('templates/message-list.html');
 	var EmptyFolderView = require('views/emptyfolderview');
 	var NoSearchResultView = require('views/nosearchresultmessagelistview');
 

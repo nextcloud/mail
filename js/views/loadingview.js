@@ -21,7 +21,7 @@ define(function(require) {
 	'use strict';
 
 	var Marionette = require('backbone.marionette');
-	var LoadingTemplate = require('handlebars-loader!templates/loading.html');
+	var LoadingTemplate = require('templates/loading.html');
 
 	/**
 	 * @class LoadingView

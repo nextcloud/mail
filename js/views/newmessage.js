@@ -22,7 +22,7 @@ define(function(require) {
 
 	var Marionette = require('backbone.marionette');
 	var Radio = require('radio');
-	var NewMessageTemplate = require('handlebars-loader!templates/newmessage.html');
+	var NewMessageTemplate = require('templates/newmessage.html');
 
 	return Marionette.View.extend({
 		template: NewMessageTemplate,

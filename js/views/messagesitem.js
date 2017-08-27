@@ -15,7 +15,7 @@ define(function(require) {
 	var _ = require('underscore');
 	var Marionette = require('backbone.marionette');
 	var Radio = require('radio');
-	var MessageTemplate = require('handlebars-loader!templates/message-list-item.html');
+	var MessageTemplate = require('templates/message-list-item.html');
 
 	return Marionette.View.extend({
 		template: MessageTemplate,
@@ -33,7 +33,7 @@ define(function(require) {
 		},
 		serializeModel: function() {
 			var json = this.model.toJSON();
-			json.isUnified = require('state').currentAccount.get('isUnified');
+			json.isUnified = require('state').currentAccount && require('state').currentAccount.get('isUnified');
 			return json;
 		},
 		onRender: function() {

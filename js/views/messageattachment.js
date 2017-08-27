@@ -25,7 +25,7 @@ define(function(require) {
 	var Radio = require('radio');
 	var MessageController = require('controller/messagecontroller');
 	var CalendarsPopoverView = require('views/calendarspopoverview');
-	var MessageAttachmentTemplate = require('handlebars-loader!templates/message-attachment.html');
+	var MessageAttachmentTemplate = require('templates/message-attachment.html');
 
 	/**
 	 * @class MessageAttachmentView

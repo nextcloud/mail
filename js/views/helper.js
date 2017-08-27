@@ -7,109 +7,11 @@
  * later. See the COPYING file.
  *
  * @author Christoph Wurst <christoph@winzerhof-wurst.at>
- * @copyright Christoph Wurst 2015
+ * @copyright Christoph Wurst
  */
 
 define(function(require) {
 	'use strict';
-
-	var Handlebars = require('handlebars');
-
-	Handlebars.registerHelper('relativeModifiedDate', function(dateInt) {
-		var lastModified = new Date(dateInt * 1000);
-		var lastModifiedTime = Math.round(lastModified.getTime() / 1000);
-		// jscs:disable requireCamelCaseOrUpperCaseIdentifiers
-		return relative_modified_date(lastModifiedTime);
-		// jscs:enable requireCamelCaseOrUpperCaseIdentifiers
-	});
-
-	Handlebars.registerHelper('formatDate', function(dateInt) {
-		var lastModified = new Date(dateInt * 1000);
-		return formatDate(lastModified);
-	});
-
-	Handlebars.registerHelper('humanFileSize', function(size) {
-		return humanFileSize(size);
-	});
-
-	Handlebars.registerHelper('accountColor', function(account) {
-		var hash = md5(account);
-		var hue = null;
-		if (typeof hash.toHsl === 'function') {
-			var hsl = hash.toHsl();
-			hue = Math.round(hsl[0] / 40) * 40;
-			return new Handlebars.SafeString('hsl(' + hue + ', ' + hsl[1] + '%, ' + hsl[2] + '%)');
-		} else {
-			var maxRange = parseInt('ffffffffffffffffffffffffffffffff', 16);
-			hue = parseInt(hash, 16) / maxRange * 256;
-			return new Handlebars.SafeString('hsl(' + hue + ', 90%, 65%)');
-		}
-	});
-
-	Handlebars.registerHelper('printAddressList', function(addressList) {
-		var currentAccount = require('state').currentAccount;
-
-		var str = _.reduce(addressList, function(memo, value, index) {
-			if (index !== 0) {
-				memo += ', ';
-			}
-			var label = value.label
-				.replace(/(^"|"$)/g, '')
-				.replace(/(^'|'$)/g, '');
-			label = Handlebars.Utils.escapeExpression(label);
-			var email = Handlebars.Utils.escapeExpression(value.email);
-
-			if (currentAccount && (email === currentAccount.get('emailAddress') ||
-				_.find(currentAccount.get('aliases').toJSON(), function(alias) { return alias.alias  === email; }))) {
-				label = t('mail', 'you');
-			}
-			var title = t('mail', 'Send message to {email}', {email: email});
-			memo += '<span class="tooltip-mailto" title="' + title + '">';
-			memo += '<a class="link-mailto" data-email="' + email + '" data-label="' + label + '">';
-			memo += label + '</a></span>';
-			return memo;
-		}, '');
-		return new Handlebars.SafeString(str);
-	});
-
-	Handlebars.registerHelper('printAddressListPlain', function(addressList) {
-		var str = _.reduce(addressList, function(memo, value, index) {
-			if (index !== 0) {
-				memo += ', ';
-			}
-			var label = value.label
-				.replace(/(^"|"$)/g, '')
-				.replace(/(^'|'$)/g, '');
-			label = Handlebars.Utils.escapeExpression(label);
-			var email = Handlebars.Utils.escapeExpression(value.email);
-			if (label === email) {
-				return memo + email;
-			} else {
-				return memo + '"' + label + '" <' + email + '>';
-			}
-		}, '');
-		return str;
-	});
-
-	Handlebars.registerHelper('ifHasCC', function(cc, ccList, options) {
-		if (!_.isUndefined(cc) || (!_.isUndefined(ccList) && ccList.length > 0)) {
-			return options.fn(this);
-		} else {
-			return options.inverse(this);
-		}
-	});
-
-	Handlebars.registerHelper('unlessHasCC', function(cc, ccList, options) {
-		if (_.isUndefined(cc) && (_.isUndefined(ccList) || ccList.length === 0)) {
-			return options.fn(this);
-		} else {
-			return options.inverse(this);
-		}
-	});
-
-	Handlebars.registerHelper('t', function(text) {
-		return t('mail', text);
-	});
 
 	//duplicate getScrollBarWidth function from core js.js
 	//TODO: remove once OC 8.0 support has been dropped

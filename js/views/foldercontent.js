@@ -30,7 +30,7 @@ define(function(require) {
 	var MessagesView = require('views/messagesview');
 	var ErrorView = require('views/errorview');
 	var LoadingView = require('views/loadingview');
-	var MessageContentTemplate = require('handlebars-loader!templates/foldercontent.html');
+	var MessageContentTemplate = require('templates/foldercontent.html');
 
 	var DetailView = Object.freeze({
 		ERROR: -2,

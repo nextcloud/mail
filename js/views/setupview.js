@@ -27,7 +27,7 @@ define(function(require) {
 	var AccountFormView = require('views/accountformview');
 	var ErrorView = require('views/errorview');
 	var LoadingView = require('views/loadingview');
-	var SetupTemplate = require('handlebars-loader!templates/setup.html');
+	var SetupTemplate = require('templates/setup.html');
 
 	/**
 	 * @class SetupView

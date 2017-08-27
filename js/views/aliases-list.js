@@ -12,7 +12,7 @@ define(function(require) {
 	'use strict';
 
 	var Marionette = require('backbone.marionette');
-	var AliasesListTemplate = require('handlebars-loader!templates/aliases-list.html');
+	var AliasesListTemplate = require('templates/aliases-list.html');
 	var Radio = require('radio');
 
 	return Marionette.View.extend({

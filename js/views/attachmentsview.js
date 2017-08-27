@@ -17,7 +17,7 @@ define(function(require) {
 	var OC = require('OC');
 	var Radio = require('radio');
 	var AttachmentView = require('views/attachmentview');
-	var AttachmentsTemplate = require('handlebars-loader!templates/attachments.html');
+	var AttachmentsTemplate = require('templates/attachments.html');
 	var LocalAttachment = require('models/localattachment');
 
 	return Marionette.CompositeView.extend({

@@ -13,8 +13,7 @@ define(function(require) {
 
 	var _ = require('underscore');
 	var Marionette = require('backbone.marionette');
-	var Handlebars = require('handlebars');
-	var AccountFormTemplate = require('handlebars-loader!templates/account-form.html');
+	var AccountFormTemplate = require('templates/account-form.html');
 
 	/**
 	 * @class AccountFormView

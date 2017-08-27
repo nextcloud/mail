@@ -21,7 +21,7 @@ define(function(require) {
 	'use strict';
 
 	var Marionette = require('backbone.marionette');
-	var CalendarTemplate = require('handlebars-loader!templates/calendar.html');
+	var CalendarTemplate = require('templates/calendar.html');
 
 	return Marionette.View.extend({
 		template: CalendarTemplate,

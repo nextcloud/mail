@@ -191,6 +191,12 @@ define(function(require) {
 		},
 		updateTitle: function() {
 			var activeEmail = '';
+
+			if (!require('state').currentAccount) {
+				// Nothing to do
+				return;
+			}
+
 			if (require('state').currentAccount.get('accountId') !== -1) {
 				var activeAccount = require('state').currentAccount;
 				activeEmail = ' - ' + activeAccount.get('email');

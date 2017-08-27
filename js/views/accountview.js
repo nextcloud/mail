@@ -15,7 +15,7 @@ define(function(require) {
 	var OC = require('OC');
 	var Radio = require('radio');
 	var FolderListView = require('views/folderlistview');
-	var AccountTemplate = require('handlebars-loader!templates/account.html');
+	var AccountTemplate = require('templates/account.html');
 
 	return Marionette.View.extend({
 		template: AccountTemplate,

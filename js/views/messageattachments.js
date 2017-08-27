@@ -23,7 +23,7 @@ define(function(require) {
 	var Marionette = require('backbone.marionette');
 	var MessageController = require('controller/messagecontroller');
 	var AttachmentView = require('views/messageattachment');
-	var AttachmentsTemplate = require('handlebars-loader!templates/message-attachments.html');
+	var AttachmentsTemplate = require('templates/message-attachments.html');
 
 	/**
 	 * @type MessageAttachmentsView

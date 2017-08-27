@@ -13,7 +13,7 @@ define(function(require) {
 
 	var Marionette = require('backbone.marionette');
 	var NoSearchResultMessageListViewTemplate
-		= require('handlebars-loader!templates/no-search-results-message-list.html');
+		= require('templates/no-search-results-message-list.html');
 
 	return Marionette.View.extend({
 		initialize: function(options) {

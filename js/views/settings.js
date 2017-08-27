@@ -14,7 +14,7 @@ define(function(require) {
 	var Marionette = require('backbone.marionette');
 	var OC = require('OC');
 	var Radio = require('radio');
-	var SettingsTemplate = require('handlebars-loader!templates/settings.html');
+	var SettingsTemplate = require('templates/settings.html');
 
 	return Marionette.View.extend({
 		accounts: null,

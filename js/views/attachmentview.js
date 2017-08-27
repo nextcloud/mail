@@ -14,7 +14,7 @@ define(function(require) {
 
 	var Marionette = require('backbone.marionette');
 	var Radio = require('radio');
-	var AttachmentTemplate = require('handlebars-loader!templates/attachment.html');
+	var AttachmentTemplate = require('templates/attachment.html');
 
 	return Marionette.View.extend({
 		tagName: 'li',
