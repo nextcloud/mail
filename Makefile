@@ -21,7 +21,7 @@ clean:
 composer.phar:
 	curl -sS https://getcomposer.org/installer | php
 
-install-deps: install-composer-deps install-npm-deps
+install-deps: install-composer-deps install-npm-deps-dev
 
 install-composer-deps: composer.phar
 	php composer.phar install
