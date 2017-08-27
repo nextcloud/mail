@@ -3,8 +3,6 @@
 
 var webpackConfig = require('./js/webpack.config.js');
 
-console.error(webpackConfig);
-
 module.exports = function (config) {
 	config.set({
 		// frameworks to use
