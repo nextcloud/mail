@@ -101,7 +101,7 @@ Instead of setting everything up manually, you can just [download the nightly bu
 2. Extract the tar archive to 'path-to-nextcloud/apps'
 3. Navigate to »Apps«, choose the category »Productivity«, find the Mail app and enable it.
 
-The nightly builds are provided by [PortKnox.net](https://portknox.net)
+The nightly builds are provided by [Portknox.net](https://portknox.net)
 
 ### Resetting the app
 Connect to your database and run the following commands (`oc_` is the default table prefix):
