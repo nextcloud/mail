@@ -17,6 +17,10 @@
  *
  */
 
-module.exports = function(text) {
-	return t('mail', text);
-};
+define(function() {
+	'use strict';
+
+	return function(text) {
+		return t('mail', text);
+	};
+});

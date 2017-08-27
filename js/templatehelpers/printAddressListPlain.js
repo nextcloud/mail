@@ -17,21 +17,28 @@
  *
  */
 
-module.exports = function(addressList) {
-	var str = _.reduce(addressList, function(memo, value, index) {
-		if (index !== 0) {
-			memo += ', ';
-		}
-		var label = value.label
-			.replace(/(^"|"$)/g, '')
-			.replace(/(^'|'$)/g, '');
-		label = Handlebars.Utils.escapeExpression(label);
-		var email = Handlebars.Utils.escapeExpression(value.email);
-		if (label === email) {
-			return memo + email;
-		} else {
-			return memo + '"' + label + '" <' + email + '>';
-		}
-	}, '');
-	return str;
-};
+define(function(require) {
+	'use strict';
+
+	var _ = require('underscore');
+	var Handlebars = require('handlebars');
+
+	return function(addressList) {
+		var str = _.reduce(addressList, function(memo, value, index) {
+			if (index !== 0) {
+				memo += ', ';
+			}
+			var label = value.label
+				.replace(/(^"|"$)/g, '')
+				.replace(/(^'|'$)/g, '');
+			label = Handlebars.Utils.escapeExpression(label);
+			var email = Handlebars.Utils.escapeExpression(value.email);
+			if (label === email) {
+				return memo + email;
+			} else {
+				return memo + '"' + label + '" <' + email + '>';
+			}
+		}, '');
+		return str;
+	};
+});

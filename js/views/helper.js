@@ -1,4 +1,4 @@
-/* global relative_modified_date, formatDate, md5, humanFileSize, getScrollBarWidth */
+/* global getScrollBarWidth */
 
 /**
  * Mail
@@ -12,6 +12,9 @@
 
 define(function(require) {
 	'use strict';
+
+	var $ = require('jquery');
+	var _ = require('underscore');
 
 	//duplicate getScrollBarWidth function from core js.js
 	//TODO: remove once OC 8.0 support has been dropped

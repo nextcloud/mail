@@ -17,16 +17,22 @@
  *
  */
 
-module.exports = function(account) {
-	var hash = md5(account);
-	var hue = null;
-	if (typeof hash.toHsl === 'function') {
-		var hsl = hash.toHsl();
-		hue = Math.round(hsl[0] / 40) * 40;
-		return new Handlebars.SafeString('hsl(' + hue + ', ' + hsl[1] + '%, ' + hsl[2] + '%)');
-	} else {
-		var maxRange = parseInt('ffffffffffffffffffffffffffffffff', 16);
-		hue = parseInt(hash, 16) / maxRange * 256;
-		return new Handlebars.SafeString('hsl(' + hue + ', 90%, 65%)');
-	}
-};
+define(function(require) {
+	'use strict';
+
+	var Handlebars = require('handlebars');
+
+	return function(account) {
+		var hash = md5(account);
+		var hue = null;
+		if (typeof hash.toHsl === 'function') {
+			var hsl = hash.toHsl();
+			hue = Math.round(hsl[0] / 40) * 40;
+			return new Handlebars.SafeString('hsl(' + hue + ', ' + hsl[1] + '%, ' + hsl[2] + '%)');
+		} else {
+			var maxRange = parseInt('ffffffffffffffffffffffffffffffff', 16);
+			hue = parseInt(hash, 16) / maxRange * 256;
+			return new Handlebars.SafeString('hsl(' + hue + ', 90%, 65%)');
+		}
+	};
+});

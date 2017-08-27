@@ -17,6 +17,10 @@
  *
  */
 
-module.exports = function(size) {
-	return humanFileSize(size);
-};
+define(function() {
+	'use strict';
+
+	return function(size) {
+		return humanFileSize(size);
+	};
+});

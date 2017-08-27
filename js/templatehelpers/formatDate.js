@@ -17,7 +17,11 @@
  *
  */
 
-module.exports = function(dateInt) {
-	var lastModified = new Date(dateInt * 1000);
-	return formatDate(lastModified);
-};
+define(function(require) {
+	'use strict';
+
+	return function(dateInt) {
+		var lastModified = new Date(dateInt * 1000);
+		return formatDate(lastModified);
+	};
+});

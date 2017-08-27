@@ -17,10 +17,16 @@
  *
  */
 
-module.exports = function(cc, ccList, options) {
-	if (!_.isUndefined(cc) || (!_.isUndefined(ccList) && ccList.length > 0)) {
-		return options.fn(this);
-	} else {
-		return options.inverse(this);
-	}
-};
+define(function(require) {
+	'use strict';
+
+	var _ = require('underscore');
+
+	return function(cc, ccList, options) {
+		if (!_.isUndefined(cc) || (!_.isUndefined(ccList) && ccList.length > 0)) {
+			return options.fn(this);
+		} else {
+			return options.inverse(this);
+		}
+	};
+});

@@ -17,31 +17,38 @@
  *
  */
 
-module.exports = function(addressList) {
-	var currentAccount = require('state').currentAccount;
+define(function(require) {
+	'use strict';
 
-	var str = _.reduce(addressList, function(memo, value, index) {
-		if (index !== 0) {
-			memo += ', ';
-		}
-		var label = value.label
-			.replace(/(^"|"$)/g, '')
-			.replace(/(^'|'$)/g, '');
-		label = Handlebars.Utils.escapeExpression(label);
-		var email = Handlebars.Utils.escapeExpression(value.email);
+	var _ = require('underscore');
+	var Handlebars = require('handlebars');
 
-		if (currentAccount && (email === currentAccount.get('emailAddress') ||
-			_.find(currentAccount.get('aliases').
-				toJSON(), function(alias) {
-				return alias.alias === email;
-			}))) {
-			label = t('mail', 'you');
-		}
-		var title = t('mail', 'Send message to {email}', {email: email});
-		memo += '<span class="tooltip-mailto" title="' + title + '">';
-		memo += '<a class="link-mailto" data-email="' + email + '" data-label="' + label + '">';
-		memo += label + '</a></span>';
-		return memo;
-	}, '');
-	return new Handlebars.SafeString(str);
-};
+	return function(addressList) {
+		var currentAccount = require('state').currentAccount;
+
+		var str = _.reduce(addressList, function(memo, value, index) {
+			if (index !== 0) {
+				memo += ', ';
+			}
+			var label = value.label
+				.replace(/(^"|"$)/g, '')
+				.replace(/(^'|'$)/g, '');
+			label = Handlebars.Utils.escapeExpression(label);
+			var email = Handlebars.Utils.escapeExpression(value.email);
+
+			if (currentAccount && (email === currentAccount.get('emailAddress') ||
+				_.find(currentAccount.get('aliases').
+					toJSON(), function(alias) {
+					return alias.alias === email;
+				}))) {
+				label = t('mail', 'you');
+			}
+			var title = t('mail', 'Send message to {email}', {email: email});
+			memo += '<span class="tooltip-mailto" title="' + title + '">';
+			memo += '<a class="link-mailto" data-email="' + email + '" data-label="' + label + '">';
+			memo += label + '</a></span>';
+			return memo;
+		}, '');
+		return new Handlebars.SafeString(str);
+	};
+});

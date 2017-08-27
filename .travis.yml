@@ -38,7 +38,6 @@ cache:
   directories:
   - "$HOME/.composer/cache/files"
   - "$HOME/.npm"
-  - "$HOME/.cache/bower"
 
 before_install:
   - php --info

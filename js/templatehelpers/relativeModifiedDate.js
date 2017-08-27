@@ -17,10 +17,15 @@
  *
  */
 
-module.exports = function(dateInt) {
-	var lastModified = new Date(dateInt * 1000);
-	var lastModifiedTime = Math.round(lastModified.getTime() / 1000);
-	// jscs:disable requireCamelCaseOrUpperCaseIdentifiers
-	return relative_modified_date(lastModifiedTime);
-	// jscs:enable requireCamelCaseOrUpperCaseIdentifiers
-};
+
+define(function(require) {
+	'use strict';
+
+	return function(dateInt) {
+		var lastModified = new Date(dateInt * 1000);
+		var lastModifiedTime = Math.round(lastModified.getTime() / 1000);
+		// jscs:disable requireCamelCaseOrUpperCaseIdentifiers
+		return relative_modified_date(lastModifiedTime);
+		// jscs:enable requireCamelCaseOrUpperCaseIdentifiers
+	};
+});
