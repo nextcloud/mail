@@ -1,3 +1,5 @@
+/* global formatDate */
+
 /**
  * @author Christoph Wurst <christoph@winzerhof-wurst.at>
  *
@@ -17,7 +19,7 @@
  *
  */
 
-define(function(require) {
+define(function() {
 	'use strict';
 
 	return function(dateInt) {

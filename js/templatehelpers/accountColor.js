@@ -1,3 +1,5 @@
+/* global md5 */
+
 /**
  * @author Christoph Wurst <christoph@winzerhof-wurst.at>
  *

@@ -1,3 +1,5 @@
+/* global humanFileSize */
+
 /**
  * @author Christoph Wurst <christoph@winzerhof-wurst.at>
  *
