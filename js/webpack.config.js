@@ -12,7 +12,7 @@ module.exports = {
 			'handlebars': 'handlebars/runtime.js'
 		 }
 	},
-	devtool: '#source-map',
+	devtool: 'inline-source-map',
 	module: {
 		rules: [
 			{test: /davclient/, use: 'exports-loader?dav'}

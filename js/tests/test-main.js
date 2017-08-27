@@ -75,36 +75,3 @@ formatDate = function(arg) {
 relative_modified_date = function(arg) {
 	return arg;
 };
-
-require.config({
-	// Karma serves files under /base, which is the basePath from your config file
-	baseUrl: '/base/js',
-	paths: {
-		/*
-		 * Libraries
-		 */
-		backbone: 'vendor/backbone/backbone',
-		'backbone.radio': 'vendor/backbone.radio/build/backbone.radio',
-		davclient: 'vendor/davclient.js/lib/client',
-		domready: 'vendor/domReady/domReady',
-		'es6-promise': 'vendor/es6-promise/es6-promise.min',
-		handlebars: 'vendor/handlebars/handlebars',
-		ical: 'vendor/ical.js/build/ical.min',
-		marionette: 'vendor/backbone.marionette/lib/backbone.marionette',
-		underscore: 'vendor/underscore/underscore',
-		text: 'vendor/text/text',
-		'jquery-ui': 'vendor/jquery-ui/ui/minified/jquery-ui.custom.min'
-	},
-	shim: {
-		davclient: {
-			exports: 'dav'
-		},
-		ical: {
-			exports: 'ICAL'
-		}
-	},
-	// dynamically load all test files
-	deps: allTestFiles,
-	// we have to kickoff jasmine, as it is asynchronous
-	callback: window.__karma__.start
-});
