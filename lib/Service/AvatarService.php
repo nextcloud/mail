@@ -84,6 +84,8 @@ class AvatarService {
 		$copy->setUserId($avatar->getUserId());
 		$copy->setEmail($avatar->getEmail());
 		$copy->setSource($avatar->getSource());
+		$copy->setUpdatedAt($avatar->getUpdatedAt());
+		$copy->setUrl('');
 
 		if ($avatar->getSource() === 'addressbook') {
 			$result = $this->contactsIntegration->getPhoto($avatar->getEmail());
