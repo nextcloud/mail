@@ -148,10 +148,8 @@
 	z-index: 1;
 }
 
-#app-navigation > ul {
+#app-navigation-accounts {
 	height: calc(100% - 65px);
-}
-#app-navigation > ul {
 	overflow-x: hidden;
 }
 
