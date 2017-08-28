@@ -103,7 +103,7 @@ class MailTransmission implements IMailTransmission {
 	/**
 	 * @param NewMessageData $message
 	 * @param type $draftUID
-	 * @return type
+	 * @return int
 	 * @throws ServiceException
 	 */
 	public function saveDraft(NewMessageData $message, $draftUID = null) {

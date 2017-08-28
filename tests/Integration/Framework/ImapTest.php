@@ -195,6 +195,8 @@ trait ImapTest {
 	}
 
 	/**
+	 * Assert that a mailbox has a certain number of messages in it
+	 *
 	 * @param int $number
 	 * @param string $mailbox
 	 */
@@ -203,7 +205,17 @@ trait ImapTest {
 
 		$query = new Horde_Imap_Client_Fetch_Query();
 		$query->uid();
-		$this->assertSame($number, $client->fetch($mailbox, $query)->count());
+		$this->assertSame($number, $client->fetch($mailbox, $query)->count(), "wrong number of messages in mailbox <$mailbox>");
+	}
+
+	/**
+	 * Assert that the test account has a certain mailbox
+	 *
+	 * @param string $mailbox
+	 */
+	public function assertMailboxExists($mailbox) {
+		$mailboxes = $this->getMailboxes();
+		$this->assertArrayHasKey($mailbox, $mailboxes);
 	}
 
 }
