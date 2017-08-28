@@ -22,6 +22,7 @@
 namespace OCA\Mail\Tests\Integration\Framework;
 
 use Horde_Imap_Client;
+use Horde_Imap_Client_Data_Fetch;
 use Horde_Imap_Client_Fetch_Query;
 use Horde_Imap_Client_Ids;
 use Horde_Imap_Client_Socket;
@@ -216,6 +217,23 @@ trait ImapTest {
 	public function assertMailboxExists($mailbox) {
 		$mailboxes = $this->getMailboxes();
 		$this->assertArrayHasKey($mailbox, $mailboxes);
+	}
+
+	public function assertMessageContent($mailbox, $uid, $content) {
+		$client = $this->getTestClient();
+
+		$query = new Horde_Imap_Client_Fetch_Query();
+		$query->bodyText();
+		$result = $client->fetch($mailbox, $query, [
+			'ids' => new Horde_Imap_Client_Ids([$uid]),
+		]);
+		$messages = iterator_to_array($result);
+		$this->assertCount(1, $messages);
+		/* @var $message Horde_Imap_Client_Data_Fetch */
+		$message = reset($messages);
+		$actualContent = $message->getBodyText();
+
+		$this->assertSame($content, $actualContent, 'message content does not match');
 	}
 
 }

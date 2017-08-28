@@ -113,11 +113,13 @@ class MailTransmissionIntegrationTest extends TestCase {
 
 	public function testSaveNewDraft() {
 		$message = NewMessageData::fromRequest($this->account, 'recipient@domain.com', null, null, 'greetings', 'hello there', []);
-		$this->transmission->saveDraft($message);
+		$uid = $this->transmission->saveDraft($message);
 		// There should be a new mailbox …
 		$this->assertMailboxExists('Drafts');
-		// … and it should have exactly one message
+		// … and it should have exactly one message …
 		$this->assertMessageCount(1, 'Drafts');
+		// … and the correct content
+		$this->assertMessageContent('Drafts', $uid, 'hello there');
 	}
 
 }
