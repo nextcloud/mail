@@ -34,7 +34,6 @@
 namespace OCA\Mail;
 
 use Horde_Imap_Client;
-use Horde_Imap_Client_Exception;
 use Horde_Imap_Client_Ids;
 use Horde_Imap_Client_Mailbox;
 use Horde_Imap_Client_Socket;
@@ -42,6 +41,7 @@ use Horde_Mail_Rfc822_Address;
 use Horde_Mail_Rfc822_List;
 use Horde_Mail_Transport;
 use Horde_Mail_Transport_Mail;
+use Horde_Mail_Transport_Null;
 use Horde_Mail_Transport_Smtphorde;
 use Horde_Mime_Headers_Date;
 use Horde_Mime_Mail;
@@ -217,8 +217,7 @@ class Account implements IAccount {
 
 		// Save the message in the sent folder
 		$sentFolder = $this->getSentFolder();
-		/** @var resource $raw */
-		$raw = stream_get_contents($mail->getRaw());
+		$raw = $mail->getRaw(false);
 		$sentFolder->saveMessage($raw, [
 			Horde_Imap_Client::FLAG_SEEN
 		]);
@@ -251,17 +250,15 @@ class Account implements IAccount {
 
 		$mail = new Horde_Mime_Mail();
 		$mail->addHeaders($headers);
-		$body = new Horde_Mime_Part();
-		$body->setType('text/plain');
-		$body->setContents($message->getContent());
-		$mail->setBasePart($body);
+		$mail->setBody($message->getContent());
 
-		// create transport and save message
+		// "Send" the message
+		$transport = new Horde_Mail_Transport_Null();
+		$mail->send($transport, false, false);
 		// save the message in the drafts folder
 		$draftsFolder = $this->getDraftsFolder();
-		/** @var resource $raw */
-		$raw = $mail->getRaw();
-		$newUid = $draftsFolder->saveDraft(stream_get_contents($raw));
+		$raw = $mail->getRaw(false);
+		$newUid = $draftsFolder->saveDraft($raw);
 
 		// delete old version if one exists
 		if (!is_null($previousUID)) {
