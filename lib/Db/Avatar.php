@@ -24,17 +24,23 @@ namespace OCA\Mail\Db;
 use OCP\AppFramework\Db\Entity;
 
 /**
- * @method void setAccountId(string $accountId)
- * @method string getAccountId()
- * @method void setName(string $name)
- * @method string getName()
- * @method void setAlias(string $alias)
- * @method string getAlias()
+ * @method void setUserId(string $userId)
+ * @method string getUserId()
+ * @method void setEmail(string $email)
+ * @method string getEmail()
+ * @method void setSource(string $source)
+ * @method string getSource()
+ * @method void setUrl(string $url)
+ * @method string getUrl()
+ * @method void setUpdatedAt(string $updatedAt)
+ * @method string getUpdatedAt()
  */
-class Alias extends Entity {
+class Avatar extends Entity {
 
-	public $accountId;
-	public $name;
-	public $alias;
+	public $userId;
+	public $email;
+	public $source;
+	public $url;
+	public $updatedAt;
 
 }

@@ -19,22 +19,27 @@
  *
  */
 
-namespace OCA\Mail\Db;
+namespace OCA\Mail\Service\AvatarSource;
 
-use OCP\AppFramework\Db\Entity;
+use OCA\Mail\Service\ContactsIntegration;
 
-/**
- * @method void setAccountId(string $accountId)
- * @method string getAccountId()
- * @method void setName(string $name)
- * @method string getName()
- * @method void setAlias(string $alias)
- * @method string getAlias()
- */
-class Alias extends Entity {
+class AddressbookSource {
+	/** @var ContactsIntegration */
+	private $contactsIntegration;
 
-	public $accountId;
-	public $name;
-	public $alias;
+	public function __construct(ContactsIntegration $contactsIntegration) {
+		$this->contactsIntegration = $contactsIntegration;
+	}
 
+	public function fetch($email) {
+		if ($this->contactsIntegration->getPhoto($email) === null) {
+			return null;
+		}
+
+		return [
+			'email' => $email,
+			'source' => 'addressbook',
+			'url' => ''
+		];
+	}
 }

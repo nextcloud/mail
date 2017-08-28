@@ -23,18 +23,21 @@ define(function(require) {
 			return message.get('dateInt') * -1;
 		},
 		initialize: function() {
-			this.on('add', function(message) {
-				var url = OC.generateUrl('apps/mail/avatars?email={email}', {
+			this.on('add', this._fetchAvatar);
+		},
+
+		_fetchAvatar: function(message) {
+			if (message.get('avatarInDatabase') === false) {
+				var url = OC.generateUrl('apps/mail/avatars/url?email={email}', {
 					email: message.get('fromEmail')
 				});
 
 				Promise.resolve($.ajax(url)).then(function(avatar) {
-					if (avatar.source != 'none'){
+					if (avatar.source !== 'none'){
 						message.set('senderImage', avatar.url);
 					}
-				});
-			});
-
+				}).catch(console.error.bind(this));
+			}
 		}
 	});
 

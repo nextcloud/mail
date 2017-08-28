@@ -21,20 +21,25 @@
 
 namespace OCA\Mail\Db;
 
-use OCP\AppFramework\Db\Entity;
+use OCP\AppFramework\Db\Mapper;
+use OCP\IDBConnection;
 
-/**
- * @method void setAccountId(string $accountId)
- * @method string getAccountId()
- * @method void setName(string $name)
- * @method string getName()
- * @method void setAlias(string $alias)
- * @method string getAlias()
- */
-class Alias extends Entity {
+class AvatarMapper extends Mapper {
 
-	public $accountId;
-	public $name;
-	public $alias;
+	/**
+	 * @param IDBConnection $db
+	 */
+	public function __construct(IDBConnection $db) {
+		parent::__construct($db, 'mail_avatars');
+	}
 
+	/**
+	 * @param int $email
+	 * @param string $currentUserId
+	 * @return Avatar
+	 */
+	public function find($email, $currentUserId) {
+		$sql = 'select * from *PREFIX*mail_avatars where user_id = ? and email = ?';
+		return $this->findEntities($sql, [$currentUserId, $email]);
+	}
 }

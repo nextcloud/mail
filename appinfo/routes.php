@@ -75,8 +75,13 @@ $app->registerRoutes($this,
 			'verb' => 'POST'
 		],
 		[
-			'name' => 'avatars#show',
-			'url' => '/avatars',
+			'name' => 'avatars#url',
+			'url' => '/avatars/url',
+			'verb' => 'GET'
+		],
+		[
+			'name' => 'avatars#file',
+			'url' => '/avatars/file',
 			'verb' => 'GET'
 		],
 		[

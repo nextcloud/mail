@@ -21,14 +21,13 @@
 
 namespace OCA\Mail\Controller;
 
-use Exception;
 use OCP\AppFramework\Http\Response;
-use OCP\AppFramework\Http\DataResponse;
-use OCP\AppFramework\Http;
 use OCP\AppFramework\Controller;
 use OCP\IRequest;
 use OCP\ISession;
+
 use OCA\Mail\Service\AvatarService;
+use OCA\Mail\Http\AvatarDownloadResponse;
 
 class AvatarsController extends Controller {
 
@@ -38,17 +37,22 @@ class AvatarsController extends Controller {
 	/** @var AvatarService */
 	private $avatarService;
 
+	/** @var string */
+	private $currentUserId;
+
 	/**
 	 * @param string $appName
 	 * @param IRequest $request
 	 * @param ISession $session
 	 * @param AvatarService $avatarService
 	 * @param IClientService $clientService
+	 * @param string $UserId
 	 */
-	public function __construct($appName, IRequest $request, ISession $session, AvatarService $avatarService) {
+	public function __construct($appName, IRequest $request, ISession $session, AvatarService $avatarService, $userId) {
 		parent::__construct($appName, $request);
 		$this->session = $session;
 		$this->avatarService = $avatarService;
+		$this->currentUserId = $userId;
 	}
 
 	/**
@@ -58,11 +62,20 @@ class AvatarsController extends Controller {
 	 * @param string $email
 	 * @return Response
 	 */
-	public function show($email) {
-		// close the session to allow parallel downloads
-		$this->session->close();
-
+	public function url($email) {
 		// Get the data from the service
-		return $this->avatarService->findByEmail($email);
+		return $this->avatarService->rewriteUrl($this->avatarService->fetch($email, $this->currentUserId));
+	}
+
+	/**
+	 * @NoAdminRequired
+	 * @NoCSRFRequired
+	 *
+	 * @param string $email
+	 * @return Response
+	 */
+	 public function file($email) {
+		// Return file (or fail)
+		return new AvatarDownloadResponse($this->avatarService->loadFile($email));
 	}
 }

@@ -33,6 +33,7 @@ use OCA\Mail\Http\AttachmentDownloadResponse;
 use OCA\Mail\Http\HtmlResponse;
 use OCA\Mail\Model\IMAPMessage;
 use OCA\Mail\Service\AccountService;
+use OCA\Mail\Service\AvatarService;
 use OCA\Mail\Service\ContactsIntegration;
 use OCA\Mail\Service\IAccount;
 use OCA\Mail\Service\IMailBox;
@@ -80,6 +81,9 @@ class MessagesController extends Controller {
 	/** @var IAccount[] */
 	private $accounts = [];
 
+	/** @var AvatarService */
+	private $avatarService;
+
 	/**
 	 * @param string $appName
 	 * @param IRequest $request
@@ -101,7 +105,8 @@ class MessagesController extends Controller {
 								Logger $logger,
 								IL10N $l10n,
 								IMimeTypeDetector $mimeTypeDetector,
-								IURLGenerator $urlGenerator) {
+								IURLGenerator $urlGenerator,
+								AvatarService $avatarService) {
 		parent::__construct($appName, $request);
 		$this->accountService = $accountService;
 		$this->currentUserId = $UserId;
@@ -111,6 +116,7 @@ class MessagesController extends Controller {
 		$this->l10n = $l10n;
 		$this->mimeTypeDetector = $mimeTypeDetector;
 		$this->urlGenerator = $urlGenerator;
+		$this->avatarService = $avatarService;
 	}
 
 	/**
@@ -152,7 +158,10 @@ class MessagesController extends Controller {
 				}
 			}
 
-			$j['senderImage'] = $ci->getPhoto($j['fromEmail']);
+			$avatar = $this->avatarService->loadFromCache($j['fromEmail'], $this->currentUserId);
+			$j['senderImage'] = $avatar === null ? '' : $this->avatarService->rewriteUrl($avatar)->getUrl();
+			$j['avatarInDatabase'] = $avatar !== null;
+
 			return $j;
 		}, $messages);
 
@@ -494,7 +503,11 @@ class MessagesController extends Controller {
 	 */
 	private function enhanceMessage($accountId, $folderId, $id, IMAPMessage $m, $mailBox) {
 		$json = $m->getFullMessage($mailBox->getSpecialRole());
-		$json['senderImage'] = $this->contactsIntegration->getPhoto($m->getFrom()->first()->toHorde()->bare_address);
+
+		$avatar = $this->avatarService->loadFromCache($m->getFrom()->first()->toHorde()->bare_address, $this->currentUserId);
+		$json['senderImage'] = $avatar === null ? '' : $this->avatarService->rewriteUrl($avatar)->getUrl();
+		$json['avatarInDatabase'] = $avatar !== null;
+
 		if (isset($json['hasHtmlBody'])) {
 			$json['htmlBodyUrl'] = $this->buildHtmlBodyUrl($accountId, $folderId, $id);
 		}

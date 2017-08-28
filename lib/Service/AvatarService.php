@@ -21,129 +21,127 @@
 
 namespace OCA\Mail\Service;
 
-use Exception;
+use OCA\Mail\Db\Avatar;
+use OCA\Mail\Db\AvatarMapper;
+use OCA\Mail\Service\AvatarSource\AddressbookSource;
+use OCA\Mail\Service\AvatarSource\FaviconSource;
+use OCA\Mail\Service\AvatarSource\GravatarSource;
+use OCA\Mail\Service\AvatarSource\NoneSource;
 use OCA\Mail\Service\ContactsIntegration;
-use OCP\IUserManager;
-use OCP\IAvatarManager;
+use OCA\Mail\Storage\AvatarStorage;
+
 use OCP\IURLGenerator;
-use OCP\Http\Client\IClientService;
-use Gravatar\Gravatar;
-use Mpclarkson\IconScraper\Scraper;
 
 class AvatarService {
-	/** @var IClientService */
-	private $clientService;
-
 	/** @var ContactsIntegration */
 	private $contactsIntegration;
-
-	/** @var IUserManager */
-	private $userManager;
-
-	/** @var IAvatarManager */
-	protected $avatarManager;
 
 	/** @var IURLGenerator */
 	private $urlGenerator;
 
-	public function __construct(IAvatarManager $avatarManager, ContactsIntegration $contactsIntegration, IUserManager $userManager, IURLGenerator $urlGenerator, IClientService $clientService) {
-		$this->clientService = $clientService;
+	/** @var AvatarMapper */
+	private $mapper;
+
+	/** @var AvatarStorage */
+	private $storage;
+
+	/** @var AddressbookSource */
+	private $addressbookSource;
+
+	/** @var FaviconSource */
+	private $faviconSource;
+
+	/** @var GravatarSource */
+	private $gravatarSource;
+
+	/** @var NoneSource */
+	private $noneSource;
+
+	public function __construct(AvatarMapper $avatarMapper,
+								ContactsIntegration $contactsIntegration,
+								IURLGenerator $urlGenerator,
+								AvatarStorage $avatarStorage,
+								AddressbookSource $addressbookSource,
+								FaviconSource $faviconSource,
+								GravatarSource $gravatarSource,
+								NoneSource $noneSource) {
+		$this->mapper = $avatarMapper;
 		$this->contactsIntegration = $contactsIntegration;
-		$this->userManager = $userManager;
-		$this->avatarManager = $avatarManager;
 		$this->urlGenerator = $urlGenerator;
+		$this->storage = $avatarStorage;
+		$this->addressbookSource = $addressbookSource;
+		$this->faviconSource = $faviconSource;
+		$this->gravatarSource = $gravatarSource;
+		$this->noneSource = $noneSource;
 	}
 
-	 public function findByEmail($email) {
+	public function rewriteUrl(Avatar $avatar) {
+		if ($avatar === null) {
+			return null;
+		}
+
+		$copy = new Avatar();
+		$copy->setUserId($avatar->getUserId());
+		$copy->setEmail($avatar->getEmail());
+		$copy->setSource($avatar->getSource());
+
+		if ($avatar->getSource() === 'addressbook') {
+			$result = $this->contactsIntegration->getPhoto($avatar->getEmail());
+			if ($result != null) {
+				$copy->setUrl($result);
+			}
+		}
+		elseif ($avatar->getUrl() !== '') {
+			$copy->setUrl($this->urlGenerator->linkToRoute('mail.avatars.file', [ 'email' => $avatar->getEmail() ]));
+		}
+
+		return $copy;
+	}
+
+	public function loadFile($email) {
+		return $this->storage->read($email);
+	}
+
+	public function loadFromCache($email, $userId) {
+		// Find avatars (but not older than a week
+		$result = $this->mapper->find($email, $userId);
+		if (count($result) > 0 && time() - $result[0]->getUpdatedAt() < 604800) {
+			return $result[0];
+		}
+
+		return null;
+	}
+
+	public function fetch($email, $userId) {
+		// Try to fetch old data first
+		$avatar = $this->loadFromCache($email, $userId);
+		if (!is_null($avatar)) {
+			return $avatar;
+		}
+
+		// our avatar is too old or does not exist
+		if (is_null($avatar)) {
+			$avatar = new Avatar();
+			$avatar->setUserId($userId);
+			$avatar->setEmail($email);
+		}
+
 		// 1) load the photo from the address book
-		$result = $this->findAddressbookEntry($email);
-		if(!$result) $result = $this->findGravatarEntry($email);
-		if(!$result) $result = $this->findFavicon($email);
-		if(!$result) $result = $this->emptyEntry($email);
+		$result = $this->addressbookSource->fetch($email);
+		if(!$result) $result = $this->gravatarSource->fetch($email);
+		if(!$result) $result = $this->faviconSource->fetch($email);
+		if(!$result) $result = $this->noneSource->fetch($email);
 
-		return $result;
-	}
+		$avatar->setSource($result['source']);
+		$avatar->setUrl($result['url']);
+		$avatar->setUpdatedAt(time());
 
-	private function findAddressbookEntry($email) {
-		$result = $this->contactsIntegration->getPhoto($email);
-		if ($result != null) {
-			return [
-				'email' => $email,
-				'source' => 'addressbook',
-				'url' => $result
-			];
+		if ($avatar->getId() === null) {
+			$this->mapper->insert($avatar);
+		} else {
+			$this->mapper->update($avatar);
 		}
 
-		return null;
+		return $avatar;
 	}
-
-	private function findGravatarEntry($email) {
-		$gravatar = new Gravatar(['size' => 128], true);
-		$gravatarUrl = $gravatar->avatar($email, ['d' => 404]);
-
-		$client = $this->clientService->newClient();
-		$foundGravatar = true;
-		try {
-			$response = $client->get($gravatarUrl);
-		}
-		catch (\Exception $exception) {
-			$foundGravatar = false;
-		}
-
-		if ($foundGravatar) {
-			return [
-				'email' => $email,
-				'source' => 'gravatar',
-				'url' => $this->urlGenerator->linkToRoute('mail.proxy.proxy', [ 'src' => $gravatarUrl ])
-			];
-		}
-
-		return null;
-	}
-
-	private function findFavicon($email) {
-		$lastAt = strrpos($email, '@');
-		$domain = "http://";
-		$domain .= $lastAt === false ? $email : substr($email, $lastAt + 1);
-		$scraper = new Scraper();
-		$icons = $scraper->get($domain);
-
-		if (count($icons) > 0) {
-			usort($icons, function ($a, $b) { return $b->getHeight() - $a->getHeight(); });
-
-			return [
-				'email' => $email,
-				'source' => 'favicon',
-				'url' => $this->urlGenerator->linkToRoute('mail.proxy.proxy', [ 'src' => $icons[0]->getHref()])
-			];
-		}
-
-		return null;
-	}
-
-	private function emptyEntry($email) {
-		// No avatar found. Return 204 (no content)
-		return [
-			'email' => $email,
-			'source' => 'none',
-			'url' => null
-		];
-	}
-}
-
-__halt_compiler();
-
-	public function __construct(
-		IAvatarManager $avatarManager,
-		ContactsIntegration $contactsIntegration,
-		IUserManager $userManager,
-		IURLGenerator $urlGenerator,
-		IClientService $clientService) {
-		$this->clientService = $clientService;
-		$this->contactsIntegration = $contactsIntegration;
-		$this->userManager = $userManager;
-		$this->avatarManager = $avatarManager;
-		$this->urlGenerator = $urlGenerator;
-	}
-
 }

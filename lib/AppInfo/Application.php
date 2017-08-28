@@ -28,6 +28,7 @@ use OCA\Mail\Contracts\IMailTransmission;
 use OCA\Mail\Service\Attachment\AttachmentService;
 use OCA\Mail\Service\MailManager;
 use OCA\Mail\Service\MailTransmission;
+use OCA\Mail\Storage\AvatarStorage;
 use OCP\AppFramework\App;
 use OCP\Util;
 
@@ -57,9 +58,13 @@ class Application extends App {
 			$user = $container->query("UserId");
 			return $container->getServer()->getUserFolder($user);
 		});
+
 		$container->registerParameter("testSmtp", $testSmtp);
 		$container->registerParameter("referrer", isset($_SERVER['HTTP_REFERER']) ? $_SERVER['HTTP_REFERER'] : null);
 		$container->registerParameter("hostname", Util::getServerHostName());
-	}
 
+		$container->registerService('avatarStorage', function($c) {
+			return new AvatarStorage($c->query('ServerContainer')->getUserFolder()->getParent());
+		});
+	}
 }

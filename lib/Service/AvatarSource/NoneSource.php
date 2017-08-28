@@ -19,22 +19,17 @@
  *
  */
 
-namespace OCA\Mail\Db;
+namespace OCA\Mail\Service\AvatarSource;
 
-use OCP\AppFramework\Db\Entity;
+class NoneSource {
+	public function __construct() {
+	}
 
-/**
- * @method void setAccountId(string $accountId)
- * @method string getAccountId()
- * @method void setName(string $name)
- * @method string getName()
- * @method void setAlias(string $alias)
- * @method string getAlias()
- */
-class Alias extends Entity {
-
-	public $accountId;
-	public $name;
-	public $alias;
-
+	public function fetch($email) {
+		return [
+			'email' => $email,
+			'source' => 'none',
+			'url' => ''
+		];
+	}
 }
