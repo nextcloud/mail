@@ -33,7 +33,7 @@ define(function(require) {
 				});
 
 				Promise.resolve($.ajax(url)).then(function(avatar) {
-					if (avatar.source !== 'none'){
+					if (avatar.source !== 'none') {
 						message.set('senderImage', avatar.url);
 					}
 				}).catch(console.error.bind(this));
