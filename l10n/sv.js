@@ -30,6 +30,8 @@ OC.L10N.register(
     "Unable to load the desired message" : "Kan ej ladda önskat meddelande",
     "There was a problem loading the message" : "Det blev ett problem när vi skulle ladda meddelandet",
     "{from}\n{subject}" : "{från}\n{ämne}",
+    "_%n new message \nfrom {from}_::_%n new messages \nfrom {from}_" : ["%n nytt meddelande \nfrån {from}","%n nya meddelanden \nfrån {from}"],
+    "Nextcloud Mail" : "Nextcloud Mail",
     "Show all folders" : "Visa alla kataloger",
     "Collapse folders" : "Dölj mappar",
     "Error while deleting account." : "Fel vid radering av konto.",
