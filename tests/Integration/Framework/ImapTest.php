@@ -22,6 +22,7 @@
 namespace OCA\Mail\Tests\Integration\Framework;
 
 use Horde_Imap_Client;
+use Horde_Imap_Client_Data_Fetch;
 use Horde_Imap_Client_Fetch_Query;
 use Horde_Imap_Client_Ids;
 use Horde_Imap_Client_Socket;
@@ -195,6 +196,8 @@ trait ImapTest {
 	}
 
 	/**
+	 * Assert that a mailbox has a certain number of messages in it
+	 *
 	 * @param int $number
 	 * @param string $mailbox
 	 */
@@ -203,7 +206,34 @@ trait ImapTest {
 
 		$query = new Horde_Imap_Client_Fetch_Query();
 		$query->uid();
-		$this->assertSame($number, $client->fetch($mailbox, $query)->count());
+		$this->assertSame($number, $client->fetch($mailbox, $query)->count(), "wrong number of messages in mailbox <$mailbox>");
+	}
+
+	/**
+	 * Assert that the test account has a certain mailbox
+	 *
+	 * @param string $mailbox
+	 */
+	public function assertMailboxExists($mailbox) {
+		$mailboxes = $this->getMailboxes();
+		$this->assertArrayHasKey($mailbox, $mailboxes);
+	}
+
+	public function assertMessageContent($mailbox, $uid, $content) {
+		$client = $this->getTestClient();
+
+		$query = new Horde_Imap_Client_Fetch_Query();
+		$query->bodyText();
+		$result = $client->fetch($mailbox, $query, [
+			'ids' => new Horde_Imap_Client_Ids([$uid]),
+		]);
+		$messages = iterator_to_array($result);
+		$this->assertCount(1, $messages);
+		/* @var $message Horde_Imap_Client_Data_Fetch */
+		$message = reset($messages);
+		$actualContent = $message->getBodyText();
+
+		$this->assertSame($content, $actualContent, 'message content does not match');
 	}
 
 }
