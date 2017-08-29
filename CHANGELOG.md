@@ -1,6 +1,11 @@
 # Changelog
 All notable changes to this project will be documented in this file.
 
+## 0.7.1 – 2017-08-29
+
+### Fixed
+- Drafts encoding of special characters
+
 ## 0.7.0 – 2017-08-24
 ### Added
 - Helper view for keyboard shortcuts
