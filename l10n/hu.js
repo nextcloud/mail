@@ -66,6 +66,7 @@ OC.L10N.register(
     "If you don’t want to visit that page, you can return to <a href=\"%s\">Mail</a>." : "Ha nem akarod megnyitni azt az oldalt, akkor térj vissza a <a href=\"%s\">Levelekhez</a>",
     "Continue to %s" : "Folytatás ide: %s",
     "Delete account" : "Fiók törlése",
+    "Try again" : "Próbáld újra",
     "New message" : "Új üzenet",
     "Account Settings" : "Fiók beállítások",
     "Aliases" : "Álnevek",

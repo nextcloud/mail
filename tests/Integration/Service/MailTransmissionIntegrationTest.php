@@ -32,13 +32,14 @@ use OCA\Mail\Service\Attachment\UploadedFile;
 use OCA\Mail\Service\AutoCompletion\AddressCollector;
 use OCA\Mail\Service\Logger;
 use OCA\Mail\Service\MailTransmission;
+use OCA\Mail\Tests\Integration\Framework\ImapTest;
 use OCA\Mail\Tests\Integration\Framework\TestUser;
 use OCA\Mail\Tests\Integration\TestCase;
 use OCP\IUser;
 
 class MailTransmissionIntegrationTest extends TestCase {
 
-	use TestUser;
+	use ImapTest, TestUser;
 
 	/** @var Account */
 	private $account;
@@ -71,7 +72,7 @@ class MailTransmissionIntegrationTest extends TestCase {
 		]));
 		$this->attachmentService = OC::$server->query(IAttachmentService::class);
 		$this->user = $this->createTestUser();
-		$userFolder = \OC::$server->getUserFolder($this->user->getUID());
+		$userFolder = OC::$server->getUserFolder($this->user->getUID());
 		$this->transmission = new MailTransmission(OC::$server->query(AddressCollector::class), $userFolder, $this->attachmentService, OC::$server->query(Logger::class));
 	}
 
@@ -108,6 +109,17 @@ class MailTransmissionIntegrationTest extends TestCase {
 		]);
 		$reply = new RepliedMessageData($this->account, null, null);
 		$this->transmission->sendMessage($this->user->getUID(), $message, $reply);
+	}
+
+	public function testSaveNewDraft() {
+		$message = NewMessageData::fromRequest($this->account, 'recipient@domain.com', null, null, 'greetings', 'hello there', []);
+		$uid = $this->transmission->saveDraft($message);
+		// There should be a new mailbox …
+		$this->assertMailboxExists('Drafts');
+		// … and it should have exactly one message …
+		$this->assertMessageCount(1, 'Drafts');
+		// … and the correct content
+		$this->assertMessageContent('Drafts', $uid, 'hello there');
 	}
 
 }
