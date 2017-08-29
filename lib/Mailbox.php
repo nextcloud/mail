@@ -428,15 +428,17 @@ class Mailbox implements IMailBox {
 	/**
 	 * @param string $rawBody
 	 * @param array $flags
+	 * @return array<int> UIDs
 	 */
 	public function saveMessage($rawBody, $flags = []) {
-
-		$this->conn->append($this->mailBox, [
+		$uids = $this->conn->append($this->mailBox, [
 			[
 				'data' => $rawBody,
 				'flags' => $flags
 			]
-		]);
+		])->ids;
+
+		return reset($uids);
 	}
 
 	/**

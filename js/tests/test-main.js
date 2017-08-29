@@ -60,10 +60,6 @@ $.fn.tooltip = function() {
 
 };
 
-$.fn.autosize = function() {
-
-};
-
 $.fn.droppable = function() {
 
 };

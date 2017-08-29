@@ -111,6 +111,63 @@ class MailTransmissionIntegrationTest extends TestCase {
 		$this->transmission->sendMessage($this->user->getUID(), $message, $reply);
 	}
 
+	public function testSendReply() {
+		$inbox = base64_encode('inbox');
+		$mb = $this->getMessageBuilder();
+		$originalMessage = $mb->from('from@domain.tld')
+			->to('to@domain.tld')
+			->subject('subject')
+			->subject('reply test')
+			->finish();
+		$originalUID = $this->saveMessage('inbox', $originalMessage);
+
+		$message = NewMessageData::fromRequest($this->account, 'recipient@domain.com', null, null, 'greetings', 'hello there', []);
+		$reply = new RepliedMessageData($this->account, $inbox, $originalUID);
+		$uid = $this->transmission->sendMessage('ferdinand', $message, $reply);
+
+		$this->assertMailboxExists('Sent');
+		$this->assertMessageCount(1, 'Sent');
+		$this->assertMessageSubject('Sent', $uid, 'Re: greetings');
+	}
+
+	public function testSendReplyWithoutSubject() {
+		$inbox = base64_encode('inbox');
+		$mb = $this->getMessageBuilder();
+		$originalMessage = $mb->from('from@domain.tld')
+			->to('to@domain.tld')
+			->subject('subject')
+			->subject('reply test')
+			->finish();
+		$originalUID = $this->saveMessage('inbox', $originalMessage);
+
+		$message = NewMessageData::fromRequest($this->account, 'recipient@domain.com', null, null, null, 'hello there', []);
+		$reply = new RepliedMessageData($this->account, $inbox, $originalUID);
+		$uid = $this->transmission->sendMessage('ferdinand', $message, $reply);
+
+		$this->assertMailboxExists('Sent');
+		$this->assertMessageCount(1, 'Sent');
+		$this->assertMessageSubject('Sent', $uid, 'Re: reply test');
+	}
+
+	public function testSendReplyWithoutReplySubject() {
+		$inbox = base64_encode('inbox');
+		$mb = $this->getMessageBuilder();
+		$originalMessage = $mb->from('from@domain.tld')
+			->to('to@domain.tld')
+			->subject('subject')
+			->subject('reply test')
+			->finish();
+		$originalUID = $this->saveMessage('inbox', $originalMessage);
+
+		$message = NewMessageData::fromRequest($this->account, 'recipient@domain.com', null, null, 'Re: reply test', 'hello there', []);
+		$reply = new RepliedMessageData($this->account, $inbox, $originalUID);
+		$uid = $this->transmission->sendMessage('ferdinand', $message, $reply);
+
+		$this->assertMailboxExists('Sent');
+		$this->assertMessageCount(1, 'Sent');
+		$this->assertMessageSubject('Sent', $uid, 'Re: reply test');
+	}
+
 	public function testSaveNewDraft() {
 		$message = NewMessageData::fromRequest($this->account, 'recipient@domain.com', null, null, 'greetings', 'hello there', []);
 		$uid = $this->transmission->saveDraft($message);
@@ -120,6 +177,15 @@ class MailTransmissionIntegrationTest extends TestCase {
 		$this->assertMessageCount(1, 'Drafts');
 		// … and the correct content
 		$this->assertMessageContent('Drafts', $uid, 'hello there');
+	}
+
+	public function testReplaceDraft() {
+		$message1 = NewMessageData::fromRequest($this->account, 'recipient@domain.com', null, null, 'greetings', 'hello t', []);
+		$uid = $this->transmission->saveDraft($message1);
+		$message2 = NewMessageData::fromRequest($this->account, 'recipient@domain.com', null, null, 'greetings', 'hello there', []);
+		$this->transmission->saveDraft($message2, $uid);
+
+		$this->assertMessageCount(1, 'Drafts');
 	}
 
 }

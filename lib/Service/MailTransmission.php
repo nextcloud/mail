@@ -73,6 +73,7 @@ class MailTransmission implements IMailTransmission {
 	 * @param RepliedMessageData $replyData
 	 * @param Alias|null $alias
 	 * @param int|null $draftUID
+	 * @return int message UID
 	 */
 	public function sendMessage($userId, NewMessageData $messageData, RepliedMessageData $replyData, Alias $alias = null,
 		$draftUID = null) {
@@ -91,13 +92,14 @@ class MailTransmission implements IMailTransmission {
 		$message->setContent($messageData->getBody());
 		$this->handleAttachments($userId, $messageData, $message);
 
-		$account->sendMessage($message, $draftUID);
+		$uid = $account->sendMessage($message, $draftUID);
 
 		if ($replyData->isReply()) {
 			$this->flagRepliedMessage($account, $replyData);
 		}
-
 		$this->collectMailAddresses($message);
+
+		return $uid;
 	}
 
 	/**

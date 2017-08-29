@@ -44,8 +44,8 @@ use Horde_Mail_Transport_Mail;
 use Horde_Mail_Transport_Null;
 use Horde_Mail_Transport_Smtphorde;
 use Horde_Mime_Headers_Date;
+use Horde_Mime_Headers_MessageId;
 use Horde_Mime_Mail;
-use Horde_Mime_Part;
 use OC;
 use OCA\Mail\Cache\Cache;
 use OCA\Mail\Db\Alias;
@@ -168,9 +168,9 @@ class Account implements IAccount {
 	 * @param string $mailBox
 	 * @return Mailbox
 	 */
-	public function createMailbox($mailBox) {
+	public function createMailbox($mailBox, $opts = []) {
 		$conn = $this->getImapConnection();
-		$conn->createMailbox($mailBox);
+		$conn->createMailbox($mailBox, $opts);
 		$this->mailboxes = null;
 
 		return $this->getMailbox($mailBox);
@@ -181,6 +181,7 @@ class Account implements IAccount {
 	 *
 	 * @param IMessage $message
 	 * @param int|null $draftUID
+	 * @return int message UID
 	 */
 	public function sendMessage(IMessage $message, $draftUID) {
 		// build mime body
@@ -218,7 +219,7 @@ class Account implements IAccount {
 		// Save the message in the sent folder
 		$sentFolder = $this->getSentFolder();
 		$raw = $mail->getRaw(false);
-		$sentFolder->saveMessage($raw, [
+		$uid = $sentFolder->saveMessage($raw, [
 			Horde_Imap_Client::FLAG_SEEN
 		]);
 
@@ -228,6 +229,8 @@ class Account implements IAccount {
 			$draftsFolder->setMessageFlag($draftUID, Horde_Imap_Client::FLAG_DELETED, true);
 			$this->deleteDraft($draftUID);
 		}
+
+		return $uid;
 	}
 
 	/**
@@ -251,6 +254,7 @@ class Account implements IAccount {
 		$mail = new Horde_Mime_Mail();
 		$mail->addHeaders($headers);
 		$mail->setBody($message->getContent());
+		$mail->addHeaderOb(Horde_Mime_Headers_MessageId::create());
 
 		// "Send" the message
 		$transport = new Horde_Mail_Transport_Null();
@@ -413,9 +417,8 @@ class Account implements IAccount {
 		$draftsFolder = $this->getSpecialFolder('drafts', true);
 		if (count($draftsFolder) === 0) {
 			// drafts folder does not exist - let's create one
-			$conn = $this->getImapConnection();
 			// TODO: also search for translated drafts mailboxes
-			$conn->createMailbox('Drafts', [
+			$this->createMailbox('Drafts', [
 				'special_use' => ['drafts'],
 			]);
 			return $this->guessBestMailBox($this->listMailboxes('Drafts'));
@@ -441,9 +444,8 @@ class Account implements IAccount {
 		$sentFolders = $this->getSpecialFolder('sent', true);
 		if (count($sentFolders) === 0) {
 			//sent folder does not exist - let's create one
-			$conn = $this->getImapConnection();
 			//TODO: also search for translated sent mailboxes
-			$conn->createMailbox('Sent', [
+			$this->createMailbox('Sent', [
 				'special_use' => ['sent'],
 			]);
 			return $this->guessBestMailBox($this->listMailboxes('Sent'));
