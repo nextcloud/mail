@@ -181,6 +181,7 @@ class Account implements IAccount {
 	 *
 	 * @param IMessage $message
 	 * @param int|null $draftUID
+	 * @return int message UID
 	 */
 	public function sendMessage(IMessage $message, $draftUID) {
 		// build mime body
@@ -218,7 +219,7 @@ class Account implements IAccount {
 		// Save the message in the sent folder
 		$sentFolder = $this->getSentFolder();
 		$raw = $mail->getRaw(false);
-		$sentFolder->saveMessage($raw, [
+		$uid = $sentFolder->saveMessage($raw, [
 			Horde_Imap_Client::FLAG_SEEN
 		]);
 
@@ -228,6 +229,8 @@ class Account implements IAccount {
 			$draftsFolder->setMessageFlag($draftUID, Horde_Imap_Client::FLAG_DELETED, true);
 			$this->deleteDraft($draftUID);
 		}
+
+		return $uid;
 	}
 
 	/**
