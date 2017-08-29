@@ -14,6 +14,7 @@ define(function(require) {
 	var Marionette = require('backbone.marionette');
 	var $ = require('jquery');
 	var _ = require('underscore');
+	var autosize = require('autosize');
 	var OC = require('OC');
 	var Radio = require('radio');
 	var Attachments = require('models/attachments');
@@ -154,7 +155,7 @@ define(function(require) {
 		setAutoSize: function(state) {
 			if (state === true) {
 				if (!this.autosized) {
-					this.$('textarea').autosize({append: '\n\n'});
+					autosize(this.$('textarea'), {append: '\n\n'});
 					this.autosized = true;
 				}
 				this.$('.message-body').trigger('autosize.resize');
