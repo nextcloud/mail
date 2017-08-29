@@ -102,7 +102,7 @@ class MailTransmission implements IMailTransmission {
 
 	/**
 	 * @param NewMessageData $message
-	 * @param type $draftUID
+	 * @param int $draftUID
 	 * @return int
 	 * @throws ServiceException
 	 */
