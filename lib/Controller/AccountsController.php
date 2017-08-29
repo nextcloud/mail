@@ -291,7 +291,7 @@ class AccountsController extends Controller {
 		$messageData = NewMessageData::fromRequest($account, $to, $cc, $bcc, $subject, $body, []);
 
 		try {
-			$newUID = $this->mailTransmission->saveDraft($messageData, $messageId);
+			$newUID = $this->mailTransmission->saveDraft($messageData, $uid);
 			return new JSONResponse([
 				'uid' => $newUID,
 			]);
