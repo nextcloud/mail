@@ -179,4 +179,13 @@ class MailTransmissionIntegrationTest extends TestCase {
 		$this->assertMessageContent('Drafts', $uid, 'hello there');
 	}
 
+	public function testReplaceDraft() {
+		$message1 = NewMessageData::fromRequest($this->account, 'recipient@domain.com', null, null, 'greetings', 'hello t', []);
+		$uid = $this->transmission->saveDraft($message1);
+		$message2 = NewMessageData::fromRequest($this->account, 'recipient@domain.com', null, null, 'greetings', 'hello there', []);
+		$this->transmission->saveDraft($message2, $uid);
+
+		$this->assertMessageCount(1, 'Drafts');
+	}
+
 }
