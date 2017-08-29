@@ -569,7 +569,7 @@ class IMAPMessage implements IMessage, JsonSerializable {
 	 * @throws DoesNotExistException
 	 * @throws \Exception
 	 */
-	private function loadBodyData($p, $partNo) {
+	private function loadBodyData(Horde_Mime_Part $p, $partNo) {
 		// DECODE DATA
 		$fetch_query = new Horde_Imap_Client_Fetch_Query();
 		$ids = new Horde_Imap_Client_Ids($this->messageId);
@@ -583,7 +583,7 @@ class IMAPMessage implements IMessage, JsonSerializable {
 		]);
 
 		$headers = $this->conn->fetch($this->mailBox, $fetch_query, ['ids' => $ids]);
-		/** @var $fetch \Horde_Imap_Client_Data_Fetch */
+		/* @var $fetch Horde_Imap_Client_Data_Fetch */
 		$fetch = $headers[$this->messageId];
 		if (is_null($fetch)) {
 			throw new DoesNotExistException("Mail body for this mail($this->messageId) could not be loaded");
