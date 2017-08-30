@@ -105,16 +105,17 @@ define(function(require) {
 			// Show first folder of first account
 			var firstAccount = this.accounts.at(0);
 			var firstFolder = firstAccount.folders.at(0);
-			return _this.showFolder(firstAccount.get('accountId'), firstFolder.get('id'), showComposer);
+			return _this.showFolder(firstAccount.get('accountId'), firstFolder.get('id'), showComposer, false);
 		},
 
 		/**
 		 * @param {int} accountId
 		 * @param {string} folderId
 		 * @param {bool} showComposer
+		 * @param {bool} triggerComposer Determines, if composer:show should be triggered
 		 * @returns {Promise}
 		 */
-		showFolder: function(accountId, folderId, showComposer) {
+		showFolder: function(accountId, folderId, showComposer, triggerComposer) {
 			this._navigate('accounts/' + accountId + '/folders/' + folderId);
 			var _this = this;
 			var account = this.accounts.get(accountId);
@@ -131,7 +132,7 @@ define(function(require) {
 				this._navigate('accounts/' + accountId + '/folders/' + folder.get('id'));
 				return Promise.resolve();
 			}
-			return FolderController.showFolder(account, folder, !showComposer);
+			return FolderController.showFolder(account, folder, !showComposer, triggerComposer);
 		},
 
 		searchFolder: function(accountId, folderId, query) {

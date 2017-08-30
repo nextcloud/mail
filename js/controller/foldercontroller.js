@@ -108,9 +108,10 @@ define(function(require) {
 	 * @param {Account} account
 	 * @param {Folder} folder
 	 * @param {bool} loadFirstMessage
+	 * @param {bool} triggerComposer Determines, if composer:show should be triggered
 	 * @returns {Promise}
 	 */
-	function showFolder(account, folder, loadFirstMessage) {
+	function showFolder(account, folder, loadFirstMessage, triggerComposer) {
 		loadFirstMessage = loadFirstMessage !== false;
 		Radio.ui.trigger('search:set', '');
 		Radio.ui.trigger('content:loading', t('mail', 'Loading {folder}', {
@@ -126,7 +127,14 @@ define(function(require) {
 				require('state').currentAccount = account;
 				require('state').currentFolder = folder;
 
-				loading.then(resolve).catch(reject);
+				loading
+					.then(function () {
+						if(triggerComposer) {
+							Radio.ui.trigger('composer:show');
+						}
+						resolve();
+					})
+					.catch(reject);
 			});
 		});
 	}
