@@ -19,7 +19,8 @@
 		"pear-pear.horde.org/Horde_Text_Flowed": "^2.0.3@stable",
 		"pear-pear.horde.org/Horde_Util": "^2.5.8@stable",
 		"pear-pear.horde.org/Horde_Smtp": "^1.9.5@stable",
-		"ezyang/htmlpurifier": "4.7.0",
+		"cerdic/css-tidy": "v1.5.5",
+		"ezyang/htmlpurifier": "4.9.3",
 		"kwi/urllinker": "dev-default"
 	},
 	"require-dev": {

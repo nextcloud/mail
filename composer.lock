@@ -4,24 +4,60 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#composer-lock-the-lock-file",
         "This file is @generated automatically"
     ],
-    "content-hash": "04639439ccf70c00ea32c175f690a479",
+    "content-hash": "58191087d15849c68ffc4fc6e29f5a83",
     "packages": [
         {
-            "name": "ezyang/htmlpurifier",
-            "version": "v4.7.0",
+            "name": "cerdic/css-tidy",
+            "version": "v1.5.5",
             "source": {
                 "type": "git",
-                "url": "https://github.com/ezyang/htmlpurifier.git",
-                "reference": "ae1828d955112356f7677c465f94f7deb7d27a40"
+                "url": "https://github.com/Cerdic/CSSTidy.git",
+                "reference": "b0c1bda3be5a35da44ba1ac28cc61c67d2ada465"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/ezyang/htmlpurifier/zipball/ae1828d955112356f7677c465f94f7deb7d27a40",
-                "reference": "ae1828d955112356f7677c465f94f7deb7d27a40",
+                "url": "https://api.github.com/repos/Cerdic/CSSTidy/zipball/b0c1bda3be5a35da44ba1ac28cc61c67d2ada465",
+                "reference": "b0c1bda3be5a35da44ba1ac28cc61c67d2ada465",
+                "shasum": ""
+            },
+            "type": "library",
+            "autoload": {
+                "classmap": [
+                    "."
+                ]
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "LGPL-2.1"
+            ],
+            "authors": [
+                {
+                    "name": "Cédric MORIN",
+                    "email": "changeme@mailinator.com"
+                }
+            ],
+            "description": "CSSTidy is a CSS minifier",
+            "time": "2015-11-28T21:47:43+00:00"
+        },
+        {
+            "name": "ezyang/htmlpurifier",
+            "version": "v4.9.3",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/ezyang/htmlpurifier.git",
+                "reference": "95e1bae3182efc0f3422896a3236e991049dac69"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/ezyang/htmlpurifier/zipball/95e1bae3182efc0f3422896a3236e991049dac69",
+                "reference": "95e1bae3182efc0f3422896a3236e991049dac69",
                 "shasum": ""
             },
             "require": {
                 "php": ">=5.2"
+            },
+            "require-dev": {
+                "simpletest/simpletest": "^1.1"
             },
             "type": "library",
             "autoload": {
@@ -48,7 +84,7 @@
             "keywords": [
                 "html"
             ],
-            "time": "2015-08-05T01:03:42+00:00"
+            "time": "2017-06-03T02:28:16+00:00"
         },
         {
             "name": "kwi/urllinker",
