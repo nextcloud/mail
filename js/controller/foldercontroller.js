@@ -245,7 +245,7 @@ define(function(require) {
 
 		if (require('state').currentMessage && require('state').currentMessage.get('id') === message.id) {
 			if (nextMessage) {
-				Radio.message.trigger('load', message.folder.account, message.folder, nextMessage);
+				Radio.message.trigger('load', nextMessage.folder.account, nextMessage.folder, nextMessage);
 			}
 		}
 
