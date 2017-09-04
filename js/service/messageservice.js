@@ -57,17 +57,20 @@ define(function(require) {
 			folderId: folder.get('id')
 		});
 
-		return Promise.resolve($.ajax(url, {
-			data: {
-				filter: options.filter
-			},
-			error: function(error, status) {
-				if (status !== 'abort') {
-					console.error('error loading messages', error);
-					throw new Error(error);
+		return new Promise(function(resolve, reject) {
+			$.ajax(url, {
+				data: {
+					filter: options.filter
+				},
+				success: resolve,
+				error: function(error, status) {
+					if (status !== 'abort') {
+						console.error('error loading messages', error, status);
+						reject(error);
+					}
 				}
-			}
-		})).then(function(messages) {
+			});
+		}).then(function(messages) {
 			var isSearching = options.filter !== '';
 			var collection = folder.messages;
 
