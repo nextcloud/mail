@@ -218,7 +218,7 @@ class Account implements IAccount {
 
 		// Save the message in the sent folder
 		$sentFolder = $this->getSentFolder();
-		$raw = $mail->getRaw(false);
+		$raw = stream_get_contents($mail->getRaw());
 		$uid = $sentFolder->saveMessage($raw, [
 			Horde_Imap_Client::FLAG_SEEN
 		]);
@@ -261,7 +261,7 @@ class Account implements IAccount {
 		$mail->send($transport, false, false);
 		// save the message in the drafts folder
 		$draftsFolder = $this->getDraftsFolder();
-		$raw = $mail->getRaw(false);
+		$raw = stream_get_contents($mail->getRaw());
 		$newUid = $draftsFolder->saveDraft($raw);
 
 		// delete old version if one exists
