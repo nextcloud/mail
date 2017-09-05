@@ -48,6 +48,10 @@ define(function(require) {
 		})).then(function(syncResp) {
 			folder.set('syncToken', syncResp.token);
 
+			_.forEach(syncResp.newMessages, function(msg) {
+				msg.accountMail = folder.account.get('email');
+			});
+
 			var newMessages = folder.addMessages(syncResp.newMessages);
 			if (unifiedFolder) {
 				unifiedFolder.addMessages(newMessages);
