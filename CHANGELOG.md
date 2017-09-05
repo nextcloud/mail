@@ -1,7 +1,7 @@
 # Changelog
 All notable changes to this project will be documented in this file.
 
-## 0.7.2 – 2017-09-05
+## 0.7.2 – 2017-09-06
 ### Fixed
 - Subject of replied messages
 - Navigation to next message in unified inbox
