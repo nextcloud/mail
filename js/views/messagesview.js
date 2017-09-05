@@ -85,9 +85,9 @@ define(function(require) {
 		 * @param {Message} message
 		 */
 		setActiveMessage: function(message) {
-			if (this.currentMessage !== null) {
-				this.currentMessage.set('active', false);
-			}
+			this.collection.forEach(function(message) {
+				message.set('active', false);
+			});
 
 			this.currentMessage = message;
 			if (message !== null) {
