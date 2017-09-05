@@ -46,11 +46,11 @@ define(function(require) {
 			return;
 		}
 		var notification = new Notification(
-			title,
-			{
-				body: body,
-				icon: icon
-			}
+				title,
+				{
+					body: body,
+					icon: icon
+				}
 		);
 		notification.onclick = function() {
 			window.focus();
@@ -62,40 +62,51 @@ define(function(require) {
 	 * @returns {undefined}
 	 */
 	function showMailNotification(messages) {
-		if (Notification.permission === 'granted' && messages.length > 0) {
-			var from = _.map(messages, function(m) {
-				return m.get('from');
+		if (messages.length === 0) {
+			// Ignore
+			return;
+		}
+
+		if (Notification.permission !== 'granted') {
+			// Don't show a notification
+			return;
+		}
+
+		// Update favicon to show red dot
+		Radio.notification.trigger('favicon:change', OC.filePath('mail', 'img', 'favicon-notification.svg'));
+
+		var from = _.map(messages, function(m) {
+			return m.get('from');
+		});
+		from = _.uniq(from);
+		if (from.length > 2) {
+			from = from.slice(0, 2);
+			from.push('…');
+		} else {
+			from = from.slice(0, 2);
+		}
+		// special layout if there is only 1 new message
+		var body = '';
+		if (messages.length === 1) {
+			var subject = _.map(messages, function(m) {
+				return m.get('subject');
 			});
-			from = _.uniq(from);
-			if (from.length > 2) {
-				from = from.slice(0, 2);
-				from.push('…');
-			} else {
-				from = from.slice(0, 2);
-			}
-			// special layout if there is only 1 new message
-			var body = '';
-			if (messages.length === 1) {
-				var subject = _.map(messages, function(m) {
-					return m.get('subject');
-				});
-				body = t('mail',
+			body = t('mail',
 					'{from}\n{subject}', {
 						from: from.join(),
 						subject: subject.join()
 					});
-			} else {
-				body = n('mail',
+		} else {
+			body = n('mail',
 					'%n new message \nfrom {from}',
 					'%n new messages \nfrom {from}',
 					messages.length, {
 						from: from.join()
 					});
-			}
-			// If it's okay let's create a notification
-			var icon = OC.filePath('mail', 'img', 'mail-notification.png');
-			showNotification(t('mail', 'Nextcloud Mail'), body, icon);
 		}
+		// If it's okay let's create a notification
+		var icon = OC.filePath('mail', 'img', 'mail-notification.png');
+		showNotification(t('mail', 'Nextcloud Mail'), body, icon);
 	}
 
 	return {
