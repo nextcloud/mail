@@ -102,7 +102,7 @@ define(function(require) {
 		this.view = new AppView();
 		Cache.init();
 
-		Radio.ui.trigger('content:loading');
+		Radio.ui.trigger('content:loading', t('mail', 'Loading accounts …'));
 
 		this.registerProtocolHandler();
 		this.requestNotificationPermissions();

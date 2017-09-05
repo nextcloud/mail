@@ -81,7 +81,7 @@ define([
 			Mail.start();
 
 			expect(Cache.init).toHaveBeenCalled();
-			expect(Radio.ui.trigger).toHaveBeenCalledWith('content:loading');
+			expect(Radio.ui.trigger).toHaveBeenCalledWith('content:loading', 'Loading accounts …');
 
 			var accounts = new AccountCollection([
 				{
