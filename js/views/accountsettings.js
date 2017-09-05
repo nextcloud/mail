@@ -43,6 +43,8 @@ define(function(require) {
 		initialize: function(options) {
 			this.currentAccount = options.account;
 			this.listenTo(Radio.ui, 'composer:show', this.onShowComposer);
+			// enable the new message button (for navigation between composer and settings)
+			$('#mail_new_message').prop('disabled', false);
 		},
 		onSubmit: function(e) {
 			e.preventDefault();
