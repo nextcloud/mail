@@ -2,10 +2,14 @@
 All notable changes to this project will be documented in this file.
 
 ## 0.7.2 – 2017-09-06
+### Added
+- Earlier loading feedback
 ### Fixed
 - Subject of replied messages
 - Navigation to next message in unified inbox
 - Encoding of saved messages (new, draft)
+- Account color indicator for new messages in unified inbox
+- Selection of active message
 
 ## 0.7.1 – 2017-08-31
 ### Fixed
