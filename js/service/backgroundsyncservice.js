@@ -37,7 +37,7 @@ define(function(require) {
 	function triggerNextSync() {
 		_timer = setTimeout(function() {
 			var account;
-			if (require('state').accounts.length === 0) {
+			if (require('state').accounts.length === 1) {
 				account = _accounts.first();
 			} else {
 				account = _accounts.get(-1);
