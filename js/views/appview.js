@@ -68,7 +68,7 @@ define(function(require) {
 
 			// Hide notification favicon when switching back from
 			// another browser tab
-			$(document).on('show', this.onDocumentShow);
+			$(window).focus(this.onDocumentShow.bind(this));
 
 			$(document).on('click', this.onDocumentClick);
 
@@ -120,8 +120,9 @@ define(function(require) {
 			Radio.ui.trigger('document:click', event);
 		},
 		onDocumentShow: function(e) {
+			console.error('SHOW');
 			e.preventDefault();
-			Radio.notification.trigger('favicon:change', OC.filePath('mail', 'img', 'favicon.png'));
+			this.changeFavicon(OC.filePath('mail', 'img', 'favicon.png'));
 		},
 		onKeyUp: function(e) {
 			// Define which objects to check for the event properties.
@@ -144,7 +145,7 @@ define(function(require) {
 			// This view doesn't need rendering
 		},
 		changeFavicon: function(src) {
-			$('link[rel="shortcut icon"]').attr('href', src);
+			$('link[rel="icon"]').attr('href', src);
 		},
 		showNotification: function(message) {
 			OC.Notification.showTemporary(message);
