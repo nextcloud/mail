@@ -68,7 +68,7 @@ define(function(require) {
 
 			// Hide notification favicon when switching back from
 			// another browser tab
-			$(document).on('focus', this.onDocumentShow.bind(this));
+			$(window).focus(this.onDocumentShow.bind(this));
 
 			$(document).on('click', this.onDocumentClick);
 
@@ -120,6 +120,7 @@ define(function(require) {
 			Radio.ui.trigger('document:click', event);
 		},
 		onDocumentShow: function(e) {
+			console.error('SHOW');
 			e.preventDefault();
 			this.changeFavicon(OC.filePath('mail', 'img', 'favicon.png'));
 		},
