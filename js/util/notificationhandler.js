@@ -67,13 +67,13 @@ define(function(require) {
 			return;
 		}
 
+		// Update favicon to show red dot
+		Radio.notification.trigger('favicon:change', OC.filePath('mail', 'img', 'favicon-notification.svg'));
+
 		if (Notification.permission !== 'granted') {
 			// Don't show a notification
 			return;
 		}
-
-		// Update favicon to show red dot
-		Radio.notification.trigger('favicon:change', OC.filePath('mail', 'img', 'favicon-notification.svg'));
 
 		var from = _.map(messages, function(m) {
 			return m.get('from');
