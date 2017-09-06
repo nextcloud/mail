@@ -68,7 +68,7 @@ define(function(require) {
 		}
 
 		// Update favicon to show red dot
-		Radio.notification.trigger('favicon:change', OC.filePath('mail', 'img', 'favicon-notification.svg'));
+		Radio.notification.trigger('favicon:change', OC.filePath('mail', 'img', 'favicon-notification.png'));
 
 		if (Notification.permission !== 'granted') {
 			// Don't show a notification
