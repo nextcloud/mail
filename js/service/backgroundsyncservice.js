@@ -38,6 +38,9 @@ define(function(require) {
 		_timer = setTimeout(function() {
 			var account;
 			if (require('state').accounts.length === 0) {
+				// Nothing to do right now, just re-trigger the sync event
+				triggerNextSync();
+			} else if (require('state').accounts.length === 1) {
 				account = _accounts.first();
 			} else {
 				account = _accounts.get(-1);
