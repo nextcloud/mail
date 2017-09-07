@@ -2,6 +2,7 @@ OC.L10N.register(
     "mail",
     {
     "Mail" : "E-mail",
+    "Loading accounts …" : "Laden van accounts …",
     "Error while loading the accounts." : "Fout tijdens het laden van de accounts.",
     "Error while loading the selected account." : "Fout tijdens het laden van het gekozen account.",
     "Can not load this folder." : "Kan deze map niet laden.",
@@ -30,6 +31,7 @@ OC.L10N.register(
     "Unable to load the desired message" : "Gewenste bericht kon niet worden geladen",
     "There was a problem loading the message" : "Het laden van het bericht was problematisch",
     "{from}\n{subject}" : "{from}\n{subject}",
+    "_%n new message \nfrom {from}_::_%n new messages \nfrom {from}_" : ["%n nieuw bericht \nvan {from}","%n niewe berichten \nvan {from}"],
     "Nextcloud Mail" : "Nextcloud E-mail",
     "Show all folders" : "Laat alle mappen zien",
     "Collapse folders" : "Mappen inklappen",
