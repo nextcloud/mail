@@ -120,7 +120,6 @@ define(function(require) {
 			Radio.ui.trigger('document:click', event);
 		},
 		onDocumentShow: function(e) {
-			console.error('SHOW');
 			e.preventDefault();
 			this.changeFavicon(OC.filePath('mail', 'img', 'favicon.png'));
 		},
