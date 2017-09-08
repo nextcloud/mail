@@ -2,6 +2,7 @@ OC.L10N.register(
     "mail",
     {
     "Mail" : "Почта",
+    "Loading accounts …" : "Загрузка учётных записей",
     "Error while loading the accounts." : "Ошибка загрузки учётных записей.",
     "Error while loading the selected account." : "Ошибка загрузки выбранного аккаунта.",
     "Can not load this folder." : "Невозможно загрузить эту папку.",
