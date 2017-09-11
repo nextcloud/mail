@@ -37,6 +37,8 @@ define(function(require) {
 				isReply: this.isReply(),
 				to: this.data.to,
 				cc: this.data.cc,
+				ccList: this.data.ccList,
+				bccList: this.data.bccList,
 				subject: this.data.subject,
 				message: this.data.body,
 				submitButtonTitle: this.isReply() ? t('mail', 'Reply') : t('mail', 'Send'),

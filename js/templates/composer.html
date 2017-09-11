@@ -10,7 +10,7 @@
 			hidden
 			{{/ifHasCC}}">{{ t '+ cc/bcc' }}</a>
 		<input type="text" name="to"
-		    {{#if replyToList}}
+		    {{#if isReply}}
 		    value="{{printAddressListPlain replyToList}}"
 		    {{else}}
 		    value="{{to}}"
@@ -18,22 +18,32 @@
 		    class="to recipient-autocomplete" />
 		<label class="to-label" for="to" class="transparency">{{ t 'to' }}</label>
 		<div class="composer-cc-bcc
-		    {{#unlessHasCC replyCc replyCcList}}
+		    {{#unlessHasCC}}
 		    hidden
 		    {{/unlessHasCC}}">
-			<input type="text" name="cc"
-			    {{#if replyCc}}
+			<input type="text" name="cc" class="cc recipient-autocomplete"
+			    {{#if isReply}}
 			    value="{{replyCc}}"
 			    {{else}}
-				{{#if replyCcList}}
-				value="{{printAddressListPlain replyCcList}}"
+				{{#if ccList}}
+				value="{{printAddressListPlain ccList}}"
 				{{else}}
 				value="{{cc}}"
 				{{/if}}
 			    {{/if}}
-			    class="cc recipient-autocomplete" />
+			    />
 			<label for="cc" class="cc-label transparency">{{ t 'cc' }}</label>
-			<input type="text" name="bcc" value="{{bcc}}" class="bcc recipient-autocomplete" />
+			<input type="text" name="cc" class="bcc recipient-autocomplete"
+			    {{#if isReply}}
+			    value="{{replyBcc}}"
+			    {{else}}
+				{{#if bccList}}
+				value="{{printAddressListPlain bccList}}"
+				{{else}}
+				value="{{bcc}}"
+				{{/if}}
+			    {{/if}}
+			    />
 			<label for="bcc" class="bcc-label transparency">{{ t 'bcc' }}</label>
 		</div>
 		{{#unless isReply}}
