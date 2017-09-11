@@ -117,17 +117,6 @@ DROP TABLE oc_mail_collected_addresses;
 
 Certain advanced or experimental features need to be specifically enabled in your `config.php`:
 
-### Debug mode
-You can enable IMAP and SMTP backend logging. A horde_imap.log for IMAP and horde_smtp.log for SMTP will appear in the same directory as your nextcloud.log.
-#### IMAP logging
-```php
-'app.mail.imaplog.enabled' => true
-```
-#### SMTP logging
-```php
-'app.mail.smtplog.enabled' => true
-```
-
 ### Timeouts
 Depending on your mail host, it may be necessary to increase your IMAP and/or SMTP timeout threshold. Currently IMAP defaults to 20 seconds and SMTP defaults to 2 seconds. They can be changed as follows:
 
