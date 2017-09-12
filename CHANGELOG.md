@@ -1,6 +1,12 @@
 # Changelog
 All notable changes to this project will be documented in this file.
 
+## 0.7.3 – 2017-09-12
+### Fixed
+- Notification favicon for incoming messages
+- Background sync if only one account is configured
+- Error propagation in case folders cannot be loaded
+
 ## 0.7.2 – 2017-09-06
 ### Added
 - Earlier loading feedback
