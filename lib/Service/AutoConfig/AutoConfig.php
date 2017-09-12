@@ -21,11 +21,13 @@
  */
 namespace OCA\Mail\Service\AutoConfig;
 
+use Horde_Imap_Client_Exception;
 use Horde_Mail_Transport_Smtphorde;
-use OCP\Security\ICrypto;
 use OCA\Mail\Account;
 use OCA\Mail\Db\MailAccount;
 use OCA\Mail\Service\Logger;
+use OCP\Security\ICrypto;
+use PEAR_Exception;
 
 class AutoConfig {
 
@@ -41,51 +43,25 @@ class AutoConfig {
 	/** @var IspDb */
 	private $ispDb;
 
-	/** @var MxRecord */
-	private $mxRecord;
-
-	/** @var ImapConnectivityTester */
-	private $imapConnectivityTester;
-
 	/** @var ImapServerDetector */
 	private $imapServerDetector;
 
 	/** @var ImapConnector */
 	private $imapConnector;
 
-	/** @var SmtpConnectivityTester */
-	private $smtpConnectivityTester;
-
 	/** @var SmtpServerDetector */
 	private $smtpServerDetector;
 
-	/**
-	 * 
-	 * @param Logger $logger
-	 * @param string $UserId
-	 * @param IspDb $ispDb
-	 * @param MxRecord $mxRecord
-	 * @param ImapConnectivityTester $imapTester
-	 * @param ImapServerDetector $imapDetector
-	 * @param SmtpConnectivityTester $smtpTester
-	 * @param SmtpServerDetector $smtpDetector
-	 * @param ImapConnector $imapConnector
-	 * @param ICrypto $crypto
-	 */
 	public function __construct(Logger $logger, $UserId,
-		IspDb $ispDb, MxRecord $mxRecord,
-		ImapConnectivityTester $imapTester, ImapServerDetector $imapDetector,
-		SmtpConnectivityTester $smtpTester, SmtpServerDetector $smtpDetector,
-		ImapConnector $imapConnector, ICrypto $crypto) {
+		ICrypto $crypto, IspDb $ispDb,
+		ImapServerDetector $imapDetector, ImapConnector $imapConnector,
+		SmtpServerDetector $smtpDetector) {
 		$this->logger = $logger;
 		$this->userId = $UserId;
 		$this->crypto = $crypto;
 		$this->ispDb = $ispDb;
-		$this->mxRecord = $mxRecord;
-		$this->imapConnectivityTester = $imapTester;
 		$this->imapServerDetector = $imapDetector;
 		$this->imapConnector = $imapConnector;
-		$this->smtpConnectivityTester = $smtpTester;
 		$this->smtpServerDetector = $smtpDetector;
 	}
 
@@ -127,7 +103,7 @@ class AutoConfig {
 						$account = $this->imapConnector->connect($email, $password, $name, $host,
 							$port, $encryptionProtocol, $user);
 						break;
-					} catch (\Horde_Imap_Client_Exception $e) {
+					} catch (Horde_Imap_Client_Exception $e) {
 						$error = $e->getMessage();
 						$this->logger->info("Test-Account-Failed: $this->userId, $host, $port, $user, $encryptionProtocol -> $error");
 					}
@@ -159,7 +135,7 @@ class AutoConfig {
 						}
 
 						break;
-					} catch (\PEAR_Exception $ex) {
+					} catch (PEAR_Exception $ex) {
 						$error = $ex->getMessage();
 						$this->logger->info("Test-Account-Failed(smtp): $error");
 					}
