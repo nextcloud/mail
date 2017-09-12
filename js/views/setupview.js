@@ -49,12 +49,19 @@ define(function(require) {
 		/** @type {Object} */
 		_config: undefined,
 
+		/** @type {Object} */
+		options: undefined,
+
 		regions: {
 			content: '.setup-content'
 		},
 
 		initialize: function(options) {
 			this._config = options.config;
+			this.options = options;
+			this.listenTo(Radio.ui, 'composer:show', this.onShowComposer);
+			// enable the new message button (for navigation to composer)
+			$('#mail_new_message').prop('disabled', false);
 		},
 
 		/**
@@ -114,7 +121,11 @@ define(function(require) {
 			this._loading = false;
 			this._error = undefined;
 			this.render();
+		},
+		onShowComposer: function() {
+			var accountId = this.options.account.get('id');
+			var folderId = this.options.account.folders.first().get('id');
+			Radio.navigation.trigger('folder', accountId, folderId, true, true);
 		}
-
 	});
 });

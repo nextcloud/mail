@@ -22,10 +22,23 @@ define(function(require) {
 
 	var Marionette = require('backbone.marionette');
 	var KeyboardShortcutTemplate = require('templates/keyboard-shortcuts.html');
+	var Radio = require('radio');
 
 	var KeyboardShortcutView = Marionette.View.extend({
 		id: 'keyboardshortcut',
-		template: KeyboardShortcutTemplate
+		template: KeyboardShortcutTemplate,
+		options: undefined,
+		initialize: function(options) {
+			this.options = options;
+			this.listenTo(Radio.ui, 'composer:show', this.onShowComposer);
+			// enable the new message button (for navigation to composer)
+			$('#mail_new_message').prop('disabled', false);
+		},
+		onShowComposer: function() {
+			var accountId = this.options.account.get('id');
+			var folderId = this.options.account.folders.first().get('id');
+			Radio.navigation.trigger('folder', accountId, folderId, true, true);
+		}
 	});
 
 	return KeyboardShortcutView;

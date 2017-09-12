@@ -153,19 +153,22 @@ define(function(require) {
 			OC.Notification.showTemporary(message);
 			$('#mail_message').removeClass('icon-loading');
 		},
-		showSetup: function() {
+		showSetup: function(account) {
 			this.activeContent = ContentType.SETUP;
-
 			this.showChildView('content', new SetupView({
 				config: {
 					accountName: $('#user-displayname').text(),
 					emailAddress: $('#user-email').text()
-				}
+				},
+				account: account
 			}));
 		},
-		showKeyboardShortcuts: function() {
+		showKeyboardShortcuts: function(account, folder) {
 			this.activeContent = ContentType.KEYBOARD_SHORTCUTS;
-			this.showChildView('content', new KeyboardShortcutView({}));
+			var options = {};
+			options.account = account;
+			options.folder = folder;
+			this.showChildView('content', new KeyboardShortcutView(options));
 		},
 		showFolderContent: function(account, folder, options) {
 			this.activeContent = ContentType.FOLDER_CONTENT;

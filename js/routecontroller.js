@@ -167,15 +167,23 @@ define(function(require) {
 		 */
 		showSetup: function() {
 			this._navigate('setup');
+			var account;
+			if(this.accounts && this.accounts.models) {
+				account = this.accounts.models[0]; // select first account
+			}
 			Radio.ui.trigger('composer:leave');
 			Radio.ui.trigger('navigation:hide');
-			Radio.ui.trigger('setup:show');
+			Radio.ui.trigger('setup:show', account);
 			return Promise.resolve();
 		},
 		showKeyboardShortcuts: function() {
 			this._navigate('shortcuts');
+			var account;
+			if(this.accounts && this.accounts.models) {
+				account = this.accounts.models[0]; // select first account
+			}
 			Radio.ui.trigger('composer:leave');
-			Radio.ui.trigger('keyboardShortcuts:show');
+			Radio.ui.trigger('keyboardShortcuts:show', account);
 		},
 		showAccountSettings: function(accountId) {
 			this._navigate('accounts/' + accountId + '/settings');
