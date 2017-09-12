@@ -19,6 +19,7 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>
  *
  */
+
 namespace OCA\Mail\Service\AutoConfig;
 
 use Horde_Imap_Client_Exception;
@@ -43,26 +44,29 @@ class AutoConfig {
 	/** @var IspDb */
 	private $ispDb;
 
-	/** @var ImapServerDetector */
-	private $imapServerDetector;
-
 	/** @var ImapConnector */
 	private $imapConnector;
 
-	/** @var SmtpServerDetector */
-	private $smtpServerDetector;
+	/** @var ConfigurationDetector */
+	private $configDetector;
 
+	/**
+	 * @param Logger $logger
+	 * @param string $UserId
+	 * @param ICrypto $crypto
+	 * @param IspDb $ispDb
+	 * @param ImapConnector $imapConnector
+	 * @param ConfigurationDetector $configDetector
+	 */
 	public function __construct(Logger $logger, $UserId,
-		ICrypto $crypto, IspDb $ispDb,
-		ImapServerDetector $imapDetector, ImapConnector $imapConnector,
-		SmtpServerDetector $smtpDetector) {
+		ICrypto $crypto, IspDb $ispDb, ImapConnector $imapConnector,
+		ConfigurationDetector $configDetector) {
 		$this->logger = $logger;
 		$this->userId = $UserId;
 		$this->crypto = $crypto;
 		$this->ispDb = $ispDb;
-		$this->imapServerDetector = $imapDetector;
 		$this->imapConnector = $imapConnector;
-		$this->smtpServerDetector = $smtpDetector;
+		$this->configDetector = $configDetector;
 	}
 
 	/**
@@ -72,7 +76,6 @@ class AutoConfig {
 	 * @return null|MailAccount
 	 */
 	public function createAutoDetected($email, $password, $name) {
-
 		// splitting the email address into user and host part
 		// TODO: use horde libs for email address parsing
 		list(, $host) = explode("@", $email);
@@ -144,29 +147,7 @@ class AutoConfig {
 			}
 		}
 
-		$account = $this->detectImapAndSmtp($email, $password, $name);
-		if (!is_null($account)) {
-			return $account;
-		}
-
-		return null;
-	}
-
-	/**
-	 * @param string $email
-	 * @param string $password
-	 * @param string $name
-	 * @return null|MailAccount
-	 */
-	private function detectImapAndSmtp($email, $password, $name) {
-		$account = $this->imapServerDetector->detect($email, $password, $name);
-		if (is_null($account)) {
-			return null;
-		}
-
-		$this->smtpServerDetector->detect($account, $email, $password);
-
-		return $account;
+		return $this->configDetector->detectImapAndSmtp($email, $password, $name);
 	}
 
 }
