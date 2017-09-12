@@ -166,6 +166,7 @@ class Account implements IAccount {
 
 	/**
 	 * @param string $mailBox
+	 * @param array $opts
 	 * @return Mailbox
 	 */
 	public function createMailbox($mailBox, $opts = []) {
