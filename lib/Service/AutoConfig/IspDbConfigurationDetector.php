@@ -91,7 +91,7 @@ class IspDbConfigurationDetector {
 			return null;
 		}
 
-		if ($this->detectSmtp($ispdb, $email, $password)) {
+		if ($this->detectSmtp($ispdb, $account, $email, $password)) {
 			return $account;
 		}
 
