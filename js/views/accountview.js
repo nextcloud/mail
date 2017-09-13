@@ -45,7 +45,7 @@ define(function(require) {
 			settingsButton: '.action-settings',
 			deleteButton: '.action-delete'
 		},
-		className: 'navigation-account',
+		className: 'navigation-account collapsible open',
 		menuShown: false,
 		collapsed: true,
 		initialize: function(options) {
@@ -100,6 +100,12 @@ define(function(require) {
 				collection: this.model.folders,
 				collapsed: this.collapsed
 			}));
+
+			this.$el = this.$el.children();
+			// Unwrap the element to prevent infinitely 
+			// nesting elements during re-render.
+			this.$el.unwrap();
+			this.setElement(this.$el);
 		},
 		showAccountSettings: function(e) {
 			this.toggleMenu(e);

@@ -23,6 +23,7 @@ define(function(require) {
 	return Marionette.CollectionView.extend({
 		collection: null,
 		childView: AccountView,
+		tagName: 'li',
 		/**
 		 * @returns {undefined}
 		 */

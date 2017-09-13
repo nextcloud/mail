@@ -22,7 +22,7 @@ define(function(require) {
 	]);
 
 	var FolderListView = Marionette.CollectionView.extend({
-		tagName: 'ul',
+		tagName: 'li',
 		childView: FolderView,
 		collapsed: true,
 		initialize: function(options) {
@@ -34,6 +34,13 @@ define(function(require) {
 			}
 			var specialRole = child.get('specialRole');
 			return SHOW_COLLAPSED.indexOf(specialRole) !== -1;
+		},
+		onRender: function() {
+			this.$el = this.$el.children();
+			// Unwrap the element to prevent infinitely 
+			// nesting elements during re-render.
+			this.$el.unwrap();
+			this.setElement(this.$el);
 		}
 	});
 

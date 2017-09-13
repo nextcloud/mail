@@ -1,13 +1,14 @@
-{{#if folders}}
-<button class="collapse"></button>
-{{/if}}
 <a class="folder
 	{{#if specialRole}} icon-{{specialRole}} svg{{/if}}
 	{{#if noSelect}} no-select {{/if}}"
    href="{{#if noSelect}}#{{else}}{{url}}{{/if}}">
 	{{name}}
-	{{#if count}}
-	<span class="utils">{{count}}</span>
-	{{/if}}
 </a>
-<div class="folders"></div>
+{{#if count}}
+<div class="app-navigation-entry-utils">
+	<ul>
+		<li class="app-navigation-entry-utils-counter">{{count}}</li>
+	</ul>
+</div>
+{{/if}}
+<ul class="folders"></ul>

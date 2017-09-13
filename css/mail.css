@@ -140,48 +140,6 @@
 }
 
 
-/* START: should be done in core/apps.css */
-
-#app-navigation .collapse {
-	display: inline-block !important;
-	opacity: .3;
-	z-index: 1;
-}
-
-#app-navigation-accounts {
-	height: calc(100% - 65px);
-	overflow-x: hidden;
-}
-
-#app-navigation ul ul {
-	display: block;
-}
-
-#app-navigation ul ul ul {
-	display: none;
-}
-
-#app-navigation .navigation-account {
-	position: relative;
-}
-#app-navigation .navigation-account .app-navigation-entry-utils-menu-button {
-	/* show the account menu toggle (three dots) by default */
-	display: inline-block;
-}
-
-#app-navigation ul ul li > a {
-	padding-left: 32px;
-}
-
-#app-navigation ul .collapsible.open:hover {
-	box-shadow: inset 0 0 3px #ddd;
-}
-
-#app-navigation ul .collapsible.open ul {
-	display: block;
-}
-/* STOP: should be done in core/apps.css */
-
 #emptycontent,
 #mail-messages #emptycontent.emptycontent-search {
 	position: static;
@@ -194,15 +152,8 @@
 }
 
 .mail-account-email {
-	display: inline-block;
-	opacity: .5;
-	padding: 20px 0 10px 25px;
-	width: calc(100% - 50px);
-	margin: initial;
-	font-size: 100%;
-	overflow: hidden;
-	text-overflow: ellipsis;
-	white-space: nowrap;
+	/* for icon color */
+	padding-left: 44px !important;
 }
 .mail-account-email:first-child {
 	display: none;
@@ -219,21 +170,13 @@
 }
 
 .mail-account-color {
-	display: inline-block;
+	display: block;
 	width: 14px;
 	height: 14px;
+	margin: 16px;
 	border-radius: 50%;
-	position: relative;
-	left: 15px;
-	top: -12px;
+	position: absolute;
 }
-/* color dot position fix for Safari */
-@media not all and (min-resolution:.001dpcm) { @media
-{
-.mail-account-color {
-        top: 2px;
-}
-}}
 
 .mail-message-account-color {
 	position: absolute;
@@ -387,11 +330,6 @@
 	color: #fff;
 	background-color: #d2322d;
 	padding: 3px;
-}
-
-/* override core values to work with custom html */
-#app-navigation .app-navigation-entry-utils {
-	top: 7px;
 }
 
 /* autocomplete list */
