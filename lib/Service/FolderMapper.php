@@ -45,6 +45,11 @@ class FolderMapper {
 
 		$folders = [];
 		foreach ($mailboxes as $mailbox) {
+			if ($mailbox['mailbox']->utf8 === 'dovecot.sieve') {
+				// This is a special folder that must not be shown
+				continue;
+			}
+
 			$folder = new Folder($account, $mailbox['mailbox'], $mailbox['attributes'], $mailbox['delimiter']);
 
 			if ($folder->isSearchable()) {
