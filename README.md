@@ -110,6 +110,7 @@ DELETE FROM oc_appconfig WHERE appid = 'mail';
 DROP TABLE oc_mail_accounts;
 DROP TABLE oc_mail_aliases;
 DROP TABLE oc_mail_collected_addresses;
+DROP TABLE oc_mail_attachments;
 ```
 
 
@@ -118,7 +119,7 @@ DROP TABLE oc_mail_collected_addresses;
 Certain advanced or experimental features need to be specifically enabled in your `config.php`:
 
 ### Debug mode
-You can enable IMAP and SMTP backend logging. A horde_imap.log for IMAP and horde_smtp.log for SMTP will appear in the same directory as your nextcloud.log.
+You can enable IMAP and SMTP backend logging. A horde_imap.log for IMAP and horde_smtp.log for SMTP will appear in the data directory of your Nextcloud installation.
 #### IMAP logging
 ```php
 'app.mail.imaplog.enabled' => true
