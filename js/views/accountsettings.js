@@ -42,6 +42,9 @@ define(function(require) {
 		},
 		initialize: function(options) {
 			this.currentAccount = options.account;
+			this.listenTo(Radio.ui, 'composer:show', this.onShowComposer);
+			// enable the new message button (for navigation between composer and settings)
+			$('#mail_new_message').prop('disabled', false);
 		},
 		onSubmit: function(e) {
 			e.preventDefault();
@@ -67,6 +70,11 @@ define(function(require) {
 					_this.getUI('submitButton').prop('disabled', false);
 					_this.getUI('submitButton').val('Save');
 				});
+		},
+		onShowComposer: function() {
+			var accountId = this.options.account.get('id');
+			var folderId = this.options.account.folders.first().get('id');
+			Radio.navigation.trigger('folder', accountId, folderId, true, true);
 		},
 		onRender: function() {
 			this.showAliases();
