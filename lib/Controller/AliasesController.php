@@ -51,7 +51,6 @@ class AliasesController extends Controller {
 
 	/**
 	 * @NoAdminRequired
-	 * @NoCSRFRequired
 	 * @param int $accountId
 	 * @return Alias[]
 	 */
@@ -61,7 +60,6 @@ class AliasesController extends Controller {
 
 	/**
 	 * @NoAdminRequired
-	 * @NoCSRFRequired
 	 */
 	public function show() {
 		$response = new JSONResponse();
@@ -71,7 +69,6 @@ class AliasesController extends Controller {
 
 	/**
 	 * @NoAdminRequired
-	 * @NoCSRFRequired
 	 */
 	public function update() {
 		$response = new JSONResponse();
@@ -81,7 +78,6 @@ class AliasesController extends Controller {
 
 	/**
 	 * @NoAdminRequired
-	 * @NoCSRFRequired
 	 * @param int $id
 	 * @return Alias[]
 	 */
@@ -91,7 +87,6 @@ class AliasesController extends Controller {
 
 	/**
 	 * @NoAdminRequired
-	 * @NoCSRFRequired
 	 * @param int $accountId
 	 * @param string $alias
 	 * @param string $aliasName
