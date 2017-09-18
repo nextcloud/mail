@@ -110,6 +110,7 @@ DELETE FROM oc_appconfig WHERE appid = 'mail';
 DROP TABLE oc_mail_accounts;
 DROP TABLE oc_mail_aliases;
 DROP TABLE oc_mail_collected_addresses;
+DROP TABLE oc_mail_attachments;
 ```
 
 
