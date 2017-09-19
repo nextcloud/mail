@@ -62,7 +62,6 @@ class FoldersController extends Controller {
 
 	/**
 	 * @NoAdminRequired
-	 * @NoCSRFRequired
 	 * @param int $accountId
 	 * @return JSONResponse
 	 */
@@ -80,7 +79,6 @@ class FoldersController extends Controller {
 
 	/**
 	 * @NoAdminRequired
-	 * @NoCSRFRequired
 	 * @param int $accountId
 	 * @param string $folderId
 	 * @param string $syncToken
@@ -99,7 +97,6 @@ class FoldersController extends Controller {
 
 	/**
 	 * @NoAdminRequired
-	 * @NoCSRFRequired
 	 */
 	public function show() {
 		$response = new JSONResponse();
