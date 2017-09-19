@@ -79,7 +79,7 @@ class FolderMapper {
 		}
 
 		$top = array_filter($indexedFolders, function(Folder $folder) {
-			return is_null($this->getParentId($folder));
+			return $folder instanceof SearchFolder || is_null($this->getParentId($folder));
 		});
 
 		foreach ($indexedFolders as $folder) {
