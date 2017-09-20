@@ -3,6 +3,10 @@
 		{
 			"type": "pear",
 			"url": "https://pear.horde.org"
+		},
+		{
+			"type": "vcs",
+			"url": "https://github.com/ChristophWurst/nextcloud_composer"
 		}
 	],
 	"require": {
@@ -21,7 +25,8 @@
 		"pear-pear.horde.org/Horde_Smtp": "^1.9.5@stable",
 		"cerdic/css-tidy": "v1.5.5",
 		"ezyang/htmlpurifier": "4.9.3",
-		"kwi/urllinker": "dev-default"
+		"kwi/urllinker": "dev-default",
+		"christophwurst/nextcloud": "dev-stable12"
 	},
 	"require-dev": {
 		"phpunit/phpunit": "^5.7"
