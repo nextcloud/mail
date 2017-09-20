@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#composer-lock-the-lock-file",
         "This file is @generated automatically"
     ],
-    "content-hash": "9ca7a6d0f35833b3ff1afbca19b54cbb",
+    "content-hash": "1ca19ae439144321766a08522f8d45ab",
     "packages": [
         {
             "name": "cerdic/css-tidy",
@@ -41,7 +41,7 @@
         },
         {
             "name": "christophwurst/nextcloud",
-            "version": "dev-stable12",
+            "version": "12.0.0",
             "source": {
                 "type": "git",
                 "url": "https://github.com/ChristophWurst/nextcloud_composer.git",
@@ -2131,8 +2131,7 @@
         "pear-pear.horde.org/horde_text_flowed": 0,
         "pear-pear.horde.org/horde_util": 0,
         "pear-pear.horde.org/horde_smtp": 0,
-        "kwi/urllinker": 20,
-        "christophwurst/nextcloud": 20
+        "kwi/urllinker": 20
     },
     "prefer-stable": false,
     "prefer-lowest": false,
