@@ -22,21 +22,26 @@
 namespace OCA\Mail\Tests\Service\Autoconfig;
 
 use Exception;
+use Horde_Mail_Transport_Smtphorde;
 use OCA\Mail\Db\MailAccount;
 use OCA\Mail\Service\AutoConfig\ConnectivityTester;
 use OCA\Mail\Service\AutoConfig\SmtpConnectivityTester;
 use OCA\Mail\Service\Logger;
+use OCA\Mail\SMTP\SmtpClientFactory;
 use OCP\Security\ICrypto;
 use PHPUnit_Framework_MockObject_MockObject;
 use PHPUnit_Framework_TestCase;
 
 class SmtpConnectivityTesterTest extends PHPUnit_Framework_TestCase {
 
-	/** @var ICrypto */
-	private $crypto;
-
 	/** @var ConnectivityTester|PHPUnit_Framework_MockObject_MockObject */
 	private $connectivityTester;
+
+	/** @var ICrypto|PHPUnit_Framework_MockObject_MockObject */
+	private $crypto;
+
+	/** @var SmtpClientFactory|PHPUnit_Framework_MockObject_MockObject */
+	private $clientFactory;
 
 	/** @var Logger|PHPUnit_Framework_MockObject_MockObject */
 	private $logger;
@@ -47,13 +52,11 @@ class SmtpConnectivityTesterTest extends PHPUnit_Framework_TestCase {
 	protected function setUp() {
 		parent::setUp();
 
-		$this->crypto = $this->createMock(ICrypto::class);
 		$this->connectivityTester = $this->createMock(ConnectivityTester::class);
+		$this->crypto = $this->createMock(ICrypto::class);
+		$this->clientFactory = $this->createMock(SmtpClientFactory::class);
 		$this->logger = $this->createMock(Logger::class);
-		$this->tester = $this->getMockBuilder(SmtpConnectivityTester::class)
-			->setMethods(['testStmtpConnection'])
-			->setConstructorArgs([$this->connectivityTester, $this->crypto, $this->logger, 'dave'])
-			->getMock();
+		$this->tester = new SmtpConnectivityTester($this->connectivityTester, $this->crypto, $this->clientFactory, $this->logger, 'dave');
 	}
 
 	public function testTest() {
@@ -64,8 +67,12 @@ class SmtpConnectivityTesterTest extends PHPUnit_Framework_TestCase {
 		$this->connectivityTester->expects($this->exactly(3))
 			->method('canConnect')
 			->willReturn(true);
-		$this->tester->expects($this->exactly(9))
-			->method('testStmtpConnection')
+		$transport = $this->createMock(Horde_Mail_Transport_Smtphorde::class);
+		$this->clientFactory->expects($this->exactly(9))
+			->method('create')
+			->willReturn($transport);
+		$transport->expects($this->exactly(9))
+			->method('getSMTPObject')
 			->willThrowException(new Exception());
 
 		$result = $this->tester->test($account, $host, $users, $password);

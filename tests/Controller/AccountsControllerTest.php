@@ -26,14 +26,13 @@ use Horde_Exception;
 use OCA\Mail\Account;
 use OCA\Mail\Contracts\IMailTransmission;
 use OCA\Mail\Controller\AccountsController;
-use OCA\Mail\Db\MailAccount;
-use OCA\Mail\Model\Message;
 use OCA\Mail\Model\NewMessageData;
 use OCA\Mail\Model\RepliedMessageData;
 use OCA\Mail\Service\AccountService;
 use OCA\Mail\Service\AliasesService;
 use OCA\Mail\Service\AutoConfig\AutoConfig;
 use OCA\Mail\Service\Logger;
+use OCA\Mail\Service\SetupService;
 use OCA\Mail\Service\UnifiedAccount;
 use OCP\AppFramework\Db\DoesNotExistException;
 use OCP\AppFramework\Http;
@@ -87,6 +86,9 @@ class AccountsControllerTest extends PHPUnit_Framework_TestCase {
 
 	/** @var IMailTransmission|PHPUnit_Framework_MockObject_MockObject */
 	private $transmission;
+	
+	/** @var SetupService|PHPUnit_Framework_MockObject_MockObject */
+	private $setupService;
 
 	protected function setUp() {
 		parent::setUp();
@@ -101,9 +103,10 @@ class AccountsControllerTest extends PHPUnit_Framework_TestCase {
 		$this->crypto = $this->createMock(ICrypto::class);
 		$this->aliasesService = $this->createMock(AliasesService::class);
 		$this->transmission = $this->createMock(IMailTransmission::class);
+		$this->setupService = $this->createMock(SetupService::class);
 
 		$this->controller = new AccountsController($this->appName, $this->request, $this->accountService, $this->userId,
-			$this->autoConfig, $this->logger, $this->l10n, $this->crypto, $this->aliasesService, $this->transmission);
+			$this->logger, $this->l10n, $this->crypto, $this->aliasesService, $this->transmission, $this->setupService);
 		$this->account = $this->createMock(Account::class);
 		$this->unifiedAccount = $this->createMock(UnifiedAccount::class);
 		$this->accountId = 123;
@@ -193,19 +196,14 @@ class AccountsControllerTest extends PHPUnit_Framework_TestCase {
 		$email = 'john@example.com';
 		$password = '123456';
 		$accountName = 'John Doe';
-
-		$account = $this->createMock(MailAccount::class);
-		$account->expects($this->exactly(2))
-			->method('__call')
-			->with('getId')
-			->will($this->returnValue(135));
-		$this->autoConfig->expects($this->once())
-			->method('createAutoDetected')
-			->with($this->equalTo($email), $this->equalTo($password), $this->equalTo($accountName))
-			->will($this->returnValue($account));
-		$this->accountService->expects($this->once())
-			->method('save')
-			->with($this->equalTo($account));
+		$account = $this->createMock(Account::class);
+		$this->setupService->expects($this->once())
+			->method('createNewAutoconfiguredAccount')
+			->with($accountName, $email, $password)
+			->willReturn($account);
+		$account->expects($this->once())
+			->method('getId')
+			->willReturn(135);
 
 		$response = $this->controller->create($accountName, $email, $password, null, null, null, null, null, null, null, null,
 			null, null, true);
@@ -215,6 +213,7 @@ class AccountsControllerTest extends PHPUnit_Framework_TestCase {
 				'id' => 135,
 			],
 			], Http::STATUS_CREATED);
+
 		$this->assertEquals($expectedResponse, $response);
 	}
 
@@ -223,19 +222,16 @@ class AccountsControllerTest extends PHPUnit_Framework_TestCase {
 		$password = '123456';
 		$accountName = 'John Doe';
 
-		$this->autoConfig->expects($this->once())
-			->method('createAutoDetected')
-			->with($this->equalTo($email), $this->equalTo($password), $this->equalTo($accountName))
-			->will($this->returnValue(null));
-		$this->l10n->expects($this->once())
-			->method('t')
-			->will($this->returnValue('fail'));
+		$this->setupService->expects($this->once())
+			->method('createNewAutoconfiguredAccount')
+			->with($accountName, $email, $password)
+			->willThrowException(new \Exception());
 
 		$response = $this->controller->create($accountName, $email, $password, null, null, null, null, null, null, null, null,
 			null, null, true);
 
 		$expectedResponse = new JSONResponse([
-			'message' => 'fail',
+			'message' => '',
 			], Http::STATUS_BAD_REQUEST);
 		$this->assertEquals($expectedResponse, $response);
 	}

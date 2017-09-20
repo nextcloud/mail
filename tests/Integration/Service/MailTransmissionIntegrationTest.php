@@ -32,6 +32,7 @@ use OCA\Mail\Service\Attachment\UploadedFile;
 use OCA\Mail\Service\AutoCompletion\AddressCollector;
 use OCA\Mail\Service\Logger;
 use OCA\Mail\Service\MailTransmission;
+use OCA\Mail\SMTP\SmtpClientFactory;
 use OCA\Mail\Tests\Integration\Framework\ImapTest;
 use OCA\Mail\Tests\Integration\Framework\TestUser;
 use OCA\Mail\Tests\Integration\TestCase;
@@ -39,7 +40,8 @@ use OCP\IUser;
 
 class MailTransmissionIntegrationTest extends TestCase {
 
-	use ImapTest, TestUser;
+	use ImapTest,
+     TestUser;
 
 	/** @var Account */
 	private $account;
@@ -73,7 +75,7 @@ class MailTransmissionIntegrationTest extends TestCase {
 		$this->attachmentService = OC::$server->query(IAttachmentService::class);
 		$this->user = $this->createTestUser();
 		$userFolder = OC::$server->getUserFolder($this->user->getUID());
-		$this->transmission = new MailTransmission(OC::$server->query(AddressCollector::class), $userFolder, $this->attachmentService, OC::$server->query(Logger::class));
+		$this->transmission = new MailTransmission(OC::$server->query(AddressCollector::class), $userFolder, $this->attachmentService, OC::$server->query(SmtpClientFactory::class), OC::$server->query(Logger::class));
 	}
 
 	public function testSendMail() {

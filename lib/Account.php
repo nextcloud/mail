@@ -40,7 +40,6 @@ use Horde_Imap_Client_Socket;
 use Horde_Mail_Rfc822_Address;
 use Horde_Mail_Rfc822_List;
 use Horde_Mail_Transport;
-use Horde_Mail_Transport_Mail;
 use Horde_Mail_Transport_Null;
 use Horde_Mail_Transport_Smtphorde;
 use Horde_Mime_Headers_Date;
@@ -181,10 +180,11 @@ class Account implements IAccount {
 	 * Send a new message or reply to an existing message
 	 *
 	 * @param IMessage $message
+	 * @param Horde_Mail_Transport $transport
 	 * @param int|null $draftUID
 	 * @return int message UID
 	 */
-	public function sendMessage(IMessage $message, $draftUID) {
+	public function sendMessage(IMessage $message, Horde_Mail_Transport $transport, $draftUID) {
 		// build mime body
 		$from = new Horde_Mail_Rfc822_Address($message->getFrom());
 		$from->personal = $this->getName();
@@ -214,7 +214,6 @@ class Account implements IAccount {
 		}
 
 		// Send the message
-		$transport = $this->createTransport();
 		$mail->send($transport, false, false);
 
 		// Save the message in the sent folder
@@ -357,31 +356,6 @@ class Account implements IAccount {
 	 */
 	public function jsonSerialize() {
 		return $this->account->toJson();
-	}
-
-	/**
-	 * @return Horde_Mail_Transport
-	 */
-	public function createTransport() {
-		$transport = $this->config->getSystemValue('app.mail.transport', 'smtp');
-		if ($transport === 'php-mail') {
-			return new Horde_Mail_Transport_Mail();
-		}
-
-		$password = $this->account->getOutboundPassword();
-		$password = $this->crypto->decrypt($password);
-		$params = [
-			'host' => $this->account->getOutboundHost(),
-			'password' => $password,
-			'port' => $this->account->getOutboundPort(),
-			'username' => $this->account->getOutboundUser(),
-			'secure' => $this->convertSslMode($this->account->getOutboundSslMode()),
-			'timeout' => (int) $this->config->getSystemValue('app.mail.smtp.timeout', 2)
-		];
-		if ($this->config->getSystemValue('debug', false)) {
-			$params['debug'] = $this->config->getSystemValue('datadirectory') . '/horde_smtp.log';
-		}
-		return new Horde_Mail_Transport_Smtphorde($params);
 	}
 
 	/**
@@ -680,23 +654,19 @@ class Account implements IAccount {
 	}
 
 	/**
-	}
-
-	/**
 	 * @return string|Horde_Mail_Rfc822_List
 	 */
 	public function getEmail() {
 		return $this->account->getEmail();
 	}
 
-	public function testConnectivity() {
+	public function testConnectivity(Horde_Mail_Transport $transport) {
 		// connect to imap
 		$this->getImapConnection();
 
 		// connect to smtp
-		$smtp = $this->createTransport();
-		if ($smtp instanceof Horde_Mail_Transport_Smtphorde) {
-			$smtp->getSMTPObject();
+		if ($transport instanceof Horde_Mail_Transport_Smtphorde) {
+			$transport->getSMTPObject();
 		}
 	}
 
