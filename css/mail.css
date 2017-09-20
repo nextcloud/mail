@@ -169,6 +169,8 @@
 	opacity: .5;
 }
 
+/* TODO to be deleted when lower suppported server
+   include app-navigation-entry-bullet */
 .mail-account-color {
 	display: block;
 	width: 14px;
