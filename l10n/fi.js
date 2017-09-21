@@ -2,11 +2,9 @@ OC.L10N.register(
     "mail",
     {
     "Mail" : "Sähköposti",
-    "Loading accounts …" : "Ladataan tilejä…",
     "Error while loading the accounts." : "Virhe tilejä ladatessa.",
     "Error while loading the selected account." : "Virhe ladatessa valittua tiliä.",
     "Can not load this folder." : "Tätä kansiota ei voitu ladata.",
-    "Loading {folder}" : "Ladataan kansiota {folder}",
     "Searching for {query}" : "Etsitään tuloksia haulle {query}",
     "Error while deleting message." : "Virhe viestiä poistaessa.",
     "Forwarded message" : "Edelleenlähetetty viesti",

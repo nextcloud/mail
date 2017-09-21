@@ -2,11 +2,9 @@ OC.L10N.register(
     "mail",
     {
     "Mail" : "Póstur",
-    "Loading accounts …" : "Hleð inn notendaaðgöngum...",
     "Error while loading the accounts." : "Gat ekki lesið inn notandaaðganga..",
     "Error while loading the selected account." : "Villa við að lesa inn valinn notandaaðgang.",
     "Can not load this folder." : "Gat ekki að hlaðið inn möppunni.",
-    "Loading {folder}" : "Hleð inn {folder}",
     "Searching for {query}" : "Leita að {query}",
     "Error while deleting message." : "Villa kom upp við að eyða skilaboðum.",
     "Forwarded message" : "Áframsent skeyti",

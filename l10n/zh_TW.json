@@ -1,10 +1,8 @@
 { "translations": {
     "Mail" : "電子郵件",
-    "Loading accounts …" : "少女祈禱中...",
     "Error while loading the accounts." : "載入帳號時發生錯誤",
     "Error while loading the selected account." : "載入選擇的帳號時發生錯誤",
     "Can not load this folder." : "無法加載此資料夾。",
-    "Loading {folder}" : "載入 {folder}",
     "Searching for {query}" : "於 {query} 搜尋",
     "Error while deleting message." : "刪除訊息時發生錯誤",
     "Forwarded message" : "轉寄訊息",

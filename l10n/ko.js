@@ -4,7 +4,6 @@ OC.L10N.register(
     "Mail" : "메일",
     "Error while loading the accounts." : "계정을 불러오는 중 오류가 발생했습니다.",
     "Error while loading the selected account." : "선택한 계정을 불러오는 중 오류가 발생했습니다.",
-    "Loading {folder}" : "{folder} 불러오는 중...",
     "Searching for {query}" : "{query} 검색",
     "Error while deleting message." : "메시지를 삭제하는 중 오류가 발생했습니다.",
     "Forwarded message" : "전달된 메시지",

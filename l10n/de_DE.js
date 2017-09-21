@@ -2,11 +2,9 @@ OC.L10N.register(
     "mail",
     {
     "Mail" : "E-Mail",
-    "Loading accounts …" : "Lade Konten...",
     "Error while loading the accounts." : "Fehler beim Laden der Konten.",
     "Error while loading the selected account." : "Fehler beim Laden des ausgewählten Kontos.",
     "Can not load this folder." : "Dieser Ordner kann nicht geladen werden.",
-    "Loading {folder}" : "Lade {folder}",
     "Searching for {query}" : "Suche nach {query}",
     "Error while deleting message." : "Fehler beim Löschen der Nachricht.",
     "Forwarded message" : "Weitergeleitete Nachricht",

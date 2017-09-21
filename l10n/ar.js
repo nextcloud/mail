@@ -5,7 +5,6 @@ OC.L10N.register(
     "Error while loading the accounts." : "حدث خطأ خلال تحميل الحسابات.",
     "Error while loading the selected account." : "حدث خطأ خلال تحميل الحساب المُختار.",
     "Can not load this folder." : "يتعذر تحميل هذا المجلد.",
-    "Loading {folder}" : "تحميل {folder}",
     "Searching for {query}" : "بحث عن {query}",
     "Error while deleting message." : "حدث خطأ خلال حذف الرسالة.",
     "Forwarded message" : "تمرير الرسالة",

@@ -1,10 +1,8 @@
 { "translations": {
     "Mail" : "邮件",
-    "Loading accounts …" : "正在加载账户...",
     "Error while loading the accounts." : "载入账户时出错。",
     "Error while loading the selected account." : "载入选定账户时出错。",
     "Can not load this folder." : "不能读取这个文件夹",
-    "Loading {folder}" : "正在加载 {folder}",
     "Searching for {query}" : "正在搜索 {query}",
     "Error while deleting message." : "删除消息时出错。",
     "Forwarded message" : "转发的消息",
