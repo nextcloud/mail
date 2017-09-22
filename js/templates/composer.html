@@ -13,7 +13,11 @@
 		    {{#if isReply}}
 		    value="{{printAddressListPlain replyToList}}"
 		    {{else}}
-		    value="{{to}}"
+			{{#if toList}}
+			value="{{printAddressListPlain toList}}"
+			{{else}}
+			value="{{to}}"
+			{{/if}}
 		    {{/if}}
 		    class="to recipient-autocomplete" />
 		<label class="to-label" for="to" class="transparency">{{ t 'to' }}</label>

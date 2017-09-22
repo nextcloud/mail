@@ -36,6 +36,7 @@ define(function(require) {
 				aliases: aliases,
 				isReply: this.isReply(),
 				to: this.data.to,
+				toList: this.data.toList,
 				cc: this.data.cc,
 				ccList: this.data.ccList,
 				bccList: this.data.bccList,
