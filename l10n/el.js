@@ -5,7 +5,6 @@ OC.L10N.register(
     "Error while loading the accounts." : "Σφάλμα κατά τη φόρτωση των λογαριασμών.",
     "Error while loading the selected account." : "Σφάλμα κατά τη φόρτωση του επιλεγμένου λογαριασμού.",
     "Can not load this folder." : "Αδυναμία φόρτωσης αυτού του φακέλου.",
-    "Loading {folder}" : "Φόρτωση {folder}",
     "Searching for {query}" : "Αναζήτηση για {query}",
     "Error while deleting message." : "Σφάλμα κατά τη διαγραφή του μηνύματος.",
     "Forwarded message" : "Προωθημένο μήνυμα",

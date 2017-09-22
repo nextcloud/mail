@@ -45,6 +45,11 @@ class FolderMapper {
 
 		$folders = [];
 		foreach ($mailboxes as $mailbox) {
+			if ($mailbox['mailbox']->utf8 === 'dovecot.sieve') {
+				// This is a special folder that must not be shown
+				continue;
+			}
+
 			$folder = new Folder($account, $mailbox['mailbox'], $mailbox['attributes'], $mailbox['delimiter']);
 
 			if ($folder->isSearchable()) {
@@ -74,7 +79,7 @@ class FolderMapper {
 		}
 
 		$top = array_filter($indexedFolders, function(Folder $folder) {
-			return is_null($this->getParentId($folder));
+			return $folder instanceof SearchFolder || is_null($this->getParentId($folder));
 		});
 
 		foreach ($indexedFolders as $folder) {

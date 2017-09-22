@@ -62,7 +62,6 @@ class FoldersController extends Controller {
 
 	/**
 	 * @NoAdminRequired
-	 * @NoCSRFRequired
 	 * @param int $accountId
 	 * @return JSONResponse
 	 */
@@ -80,7 +79,6 @@ class FoldersController extends Controller {
 
 	/**
 	 * @NoAdminRequired
-	 * @NoCSRFRequired
 	 * @param int $accountId
 	 * @param string $folderId
 	 * @param string $syncToken
@@ -99,7 +97,6 @@ class FoldersController extends Controller {
 
 	/**
 	 * @NoAdminRequired
-	 * @NoCSRFRequired
 	 */
 	public function show() {
 		$response = new JSONResponse();
@@ -118,47 +115,11 @@ class FoldersController extends Controller {
 
 	/**
 	 * @NoAdminRequired
-	 * @param int $accountId
-	 * @param string $folderId
-	 * @return JSONResponse
 	 */
-	public function destroy($accountId, $folderId) {
-		try {
-			$account = $this->accountService->find($this->currentUserId, $accountId);
-			$imap = $account->getImapConnection();
-			$imap->deleteMailbox($folderId);
-
-			return new JSONResponse();
-		} catch (DoesNotExistException $e) {
-			return new JSONResponse(null, 404);
-		}
-	}
-
-	/**
-	 * @NoAdminRequired
-	 * @param int $accountId
-	 * @param string $mailbox
-	 */
-	public function create($accountId, $mailbox) {
-		try {
-			$account = $this->accountService->find($this->currentUserId, $accountId);
-			$imap = $account->getImapConnection();
-
-			// TODO: read http://tools.ietf.org/html/rfc6154
-			$imap->createMailbox($mailbox);
-
-			return new JSONResponse([
-				'data' => [
-					'id' => $mailbox
-				]
-				], Http::STATUS_CREATED);
-		} catch (Horde_Imap_Client_Exception $e) {
-			$response = new JSONResponse();
-			$response->setStatus(Http::STATUS_INTERNAL_SERVER_ERROR);
-			return $response;
-		} catch (DoesNotExistException $e) {
-			return new JSONResponse();
-		}
+	public function create() {
+		$response = new JSONResponse();
+		$response->setStatus(Http::STATUS_NOT_IMPLEMENTED);
+		return $response;
 	}
 
 }

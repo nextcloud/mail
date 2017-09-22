@@ -4,7 +4,6 @@ OC.L10N.register(
     "Mail" : "E-pasts",
     "Error while loading the accounts." : "Kļūda ielādējot kontus.",
     "Error while loading the selected account." : "Kļūda ielādējot atlasīto kontu.",
-    "Loading {folder}" : "Tiek ielādēta {folder}",
     "Searching for {query}" : "Meklējot {query}",
     "Error while deleting message." : "Kļūda dzēšot vēstuli.",
     "Forwarded message" : "Pārsūtīta ziņa",

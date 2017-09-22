@@ -2,11 +2,10 @@ OC.L10N.register(
     "mail",
     {
     "Mail" : "Posta",
-    "Loading accounts …" : "Hesaplar yükleniyor...",
+    "Loading accounts" : "Hesaplar yükleniyor",
     "Error while loading the accounts." : "Hesaplar yüklenirken sorun çıktı.",
     "Error while loading the selected account." : "Seçilmiş hesap yüklenirken sorun çıktı.",
     "Can not load this folder." : "Bu klasör yüklenemedi.",
-    "Loading {folder}" : "{folder} yükleniyor",
     "Searching for {query}" : "{query} aranıyor",
     "Error while deleting message." : "İleti silinirken sorun çıktı.",
     "Forwarded message" : "İletilmiş ileti",

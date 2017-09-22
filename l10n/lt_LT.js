@@ -2,11 +2,9 @@ OC.L10N.register(
     "mail",
     {
     "Mail" : "Elektroninis paštas",
-    "Loading accounts …" : "Įkeliamos paskyros ...",
     "Error while loading the accounts." : "Klaida, įkeliant paskyras.",
     "Error while loading the selected account." : "Klaida, įkeliant pasirinktą paskyrą.",
     "Can not load this folder." : "Nepavyksta įkelti šio aplanko.",
-    "Loading {folder}" : "Įkeliama {folder}",
     "Searching for {query}" : "Ieškoma {query}",
     "Error while deleting message." : "Klaida, ištrinant laišką.",
     "Forwarded message" : "Persiųstas laiškas",

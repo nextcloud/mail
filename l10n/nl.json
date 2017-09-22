@@ -1,10 +1,8 @@
 { "translations": {
     "Mail" : "E-mail",
-    "Loading accounts …" : "Laden van accounts …",
     "Error while loading the accounts." : "Fout tijdens het laden van de accounts.",
     "Error while loading the selected account." : "Fout tijdens het laden van het gekozen account.",
     "Can not load this folder." : "Kan deze map niet laden.",
-    "Loading {folder}" : "Laden {folder}",
     "Searching for {query}" : "Zoeken naar {query}",
     "Error while deleting message." : "Fout bij verwijderen bericht.",
     "Forwarded message" : "Doorgestuurd bericht",

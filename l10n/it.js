@@ -2,11 +2,10 @@ OC.L10N.register(
     "mail",
     {
     "Mail" : "Posta",
-    "Loading accounts …" : "Caricamento account in corso...",
+    "Loading accounts" : "Caricamento account",
     "Error while loading the accounts." : "Errore durante il caricamento degli account.",
     "Error while loading the selected account." : "Errore durante il caricamento dell'account selezionato.",
     "Can not load this folder." : "Impossibile caricare questa cartella.",
-    "Loading {folder}" : "Caricamento {folder}",
     "Searching for {query}" : "Ricerca di {query}",
     "Error while deleting message." : "Errore durante l'eliminazione del messaggio.",
     "Forwarded message" : "Messaggio inoltrato",

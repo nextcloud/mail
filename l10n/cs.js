@@ -5,7 +5,6 @@ OC.L10N.register(
     "Error while loading the accounts." : "Chyba při načítání účtů.",
     "Error while loading the selected account." : "Chyba během načítání vybraného účtu.",
     "Can not load this folder." : "Tuto složku nelze načíst.",
-    "Loading {folder}" : "Načítá se {folder}",
     "Searching for {query}" : "Hledání pro {query}",
     "Error while deleting message." : "Chyba při mazání zprávy.",
     "Forwarded message" : "Přeposlaná zpráva",
@@ -113,6 +112,8 @@ OC.L10N.register(
     "The images have been blocked to protect your privacy." : "Obrázky byly zablokovány pro ochranu vašeho soukromí.",
     "Show images from this sender" : "Zobrazit obrázky od tohoto odesílatele",
     "Forward" : "Přeposlat",
+    "Add attachment" : "Přidat přílohu",
+    "Add from Files" : "Přidat ze Souborů",
     "Import into calendar" : "Importovat do kalendáře",
     "Download attachment" : "Stáhnout přílohu",
     "Save to Files" : "Uložit do Souborů"

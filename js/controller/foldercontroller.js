@@ -113,9 +113,7 @@ define(function(require) {
 	function showFolder(account, folder, loadFirstMessage) {
 		loadFirstMessage = loadFirstMessage !== false;
 		Radio.ui.trigger('search:set', '');
-		Radio.ui.trigger('content:loading', t('mail', 'Loading {folder}', {
-			folder: folder.get('name')
-		}));
+		Radio.ui.trigger('content:loading', folder.get('name'));
 
 		return new Promise(function(resolve, reject) {
 			_.defer(function() {
