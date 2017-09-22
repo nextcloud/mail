@@ -2,6 +2,7 @@ OC.L10N.register(
     "mail",
     {
     "Mail" : "Poczta",
+    "Loading accounts" : "Ładowanie kont",
     "Error while loading the accounts." : "Błąd podczas ładowania kont.",
     "Error while loading the selected account." : "Błąd podczas ładowania zaznaczonego konta.",
     "Can not load this folder." : "Nie można załadować tego folderu.",

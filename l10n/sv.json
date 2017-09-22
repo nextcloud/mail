@@ -1,5 +1,6 @@
 { "translations": {
     "Mail" : "E-post",
+    "Loading accounts" : "Laddar konton",
     "Error while loading the accounts." : "Fel vid inläsning av konton.",
     "Error while loading the selected account." : "Fel vid inläsning av valt konto.",
     "Can not load this folder." : "Kan inte ladda denna mapp.",
