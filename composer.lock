@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#composer-lock-the-lock-file",
         "This file is @generated automatically"
     ],
-    "content-hash": "1ca19ae439144321766a08522f8d45ab",
+    "content-hash": "28522020e1dcad59038ae96380ca6d6e",
     "packages": [
         {
             "name": "cerdic/css-tidy",
@@ -38,36 +38,6 @@
             ],
             "description": "CSSTidy is a CSS minifier",
             "time": "2015-11-28T21:47:43+00:00"
-        },
-        {
-            "name": "christophwurst/nextcloud",
-            "version": "12.0.0",
-            "source": {
-                "type": "git",
-                "url": "https://github.com/ChristophWurst/nextcloud_composer.git",
-                "reference": "2b85ca1531926e8475e3c40f47be28b51580fcb6"
-            },
-            "dist": {
-                "type": "zip",
-                "url": "https://api.github.com/repos/ChristophWurst/nextcloud_composer/zipball/2b85ca1531926e8475e3c40f47be28b51580fcb6",
-                "reference": "2b85ca1531926e8475e3c40f47be28b51580fcb6",
-                "shasum": ""
-            },
-            "type": "library",
-            "license": [
-                "AGPLv3"
-            ],
-            "authors": [
-                {
-                    "name": "Christoph Wurst",
-                    "email": "christoph@winzerhof-wurst.at"
-                }
-            ],
-            "description": "Composer package containing Nextcloud's public API (classes, interfaces)",
-            "support": {
-                "source": "https://github.com/ChristophWurst/nextcloud_composer/tree/master"
-            },
-            "time": "2017-09-20T09:46:46+00:00"
         },
         {
             "name": "ezyang/htmlpurifier",
@@ -802,6 +772,36 @@
         }
     ],
     "packages-dev": [
+        {
+            "name": "christophwurst/nextcloud",
+            "version": "12.0.0",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/ChristophWurst/nextcloud_composer.git",
+                "reference": "2b85ca1531926e8475e3c40f47be28b51580fcb6"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/ChristophWurst/nextcloud_composer/zipball/2b85ca1531926e8475e3c40f47be28b51580fcb6",
+                "reference": "2b85ca1531926e8475e3c40f47be28b51580fcb6",
+                "shasum": ""
+            },
+            "type": "library",
+            "license": [
+                "AGPLv3"
+            ],
+            "authors": [
+                {
+                    "name": "Christoph Wurst",
+                    "email": "christoph@winzerhof-wurst.at"
+                }
+            ],
+            "description": "Composer package containing Nextcloud's public API (classes, interfaces)",
+            "support": {
+                "source": "https://github.com/ChristophWurst/nextcloud_composer/tree/master"
+            },
+            "time": "2017-09-20T09:46:46+00:00"
+        },
         {
             "name": "doctrine/instantiator",
             "version": "1.0.5",

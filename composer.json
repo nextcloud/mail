@@ -21,10 +21,10 @@
 		"pear-pear.horde.org/Horde_Smtp": "^1.9.5@stable",
 		"cerdic/css-tidy": "v1.5.5",
 		"ezyang/htmlpurifier": "4.9.3",
-		"kwi/urllinker": "dev-default",
-		"christophwurst/nextcloud": "^12.0.0"
+		"kwi/urllinker": "dev-default"
 	},
 	"require-dev": {
+		"christophwurst/nextcloud": "^12.0.0",
 		"phpunit/phpunit": "^5.7"
 	}
 }
