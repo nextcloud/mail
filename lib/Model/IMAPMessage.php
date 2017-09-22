@@ -503,6 +503,7 @@ class IMAPMessage implements IMessage, JsonSerializable {
 			'dateMicro' => $this->getSentDate()->getTimestamp() * 1000,
 			'dateIso' => $this->getSentDate()->format('c'),
 			'ccList' => $this->getCCList(true),
+			'bccList' => $this->getBCCList(true),
 		];
 	}
 
