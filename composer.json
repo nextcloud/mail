@@ -24,6 +24,7 @@
 		"kwi/urllinker": "dev-default"
 	},
 	"require-dev": {
+		"christophwurst/nextcloud": "^12.0.0",
 		"phpunit/phpunit": "^5.7"
 	}
 }
