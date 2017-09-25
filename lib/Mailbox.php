@@ -480,17 +480,6 @@ class Mailbox implements IMailBox {
 	}
 
 	/**
-	 * @param $fromUid
-	 * @param $toUid
-	 * @return array
-	 */
-	public function getMessagesSince($fromUid, $toUid) {
-		$query = new Horde_Imap_Client_Search_Query();
-		$query->ids(new Horde_Imap_Client_Ids("$fromUid:$toUid"));
-		return $this->getMessages(-1, -1, $query);
-	}
-
-	/**
 	 * @return Horde_Imap_Client_Mailbox
 	 */
 	public function getHordeMailBox() {

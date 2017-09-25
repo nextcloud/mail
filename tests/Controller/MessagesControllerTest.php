@@ -127,7 +127,7 @@ class MessagesControllerTest extends PHPUnit_Framework_TestCase {
 			->will($this->returnValue($this->mailbox));
 		$this->mailbox->expects($this->once())
 			->method('getMessage')
-			->with($this->equalTo($messageId), $this->equalTo(true))
+			->with($this->equalTo($messageId))
 			->will($this->returnValue($this->message));
 
 		$expectedResponse = new HtmlResponse(null);

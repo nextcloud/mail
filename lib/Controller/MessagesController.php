@@ -52,7 +52,6 @@ use OCP\Util;
 
 class MessagesController extends Controller {
 
-
 	/** @var AccountService */
 	private $accountService;
 
@@ -238,7 +237,7 @@ class MessagesController extends Controller {
 		try {
 			$mailBox = $this->getFolder($accountId, $folderId);
 
-			$m = $mailBox->getMessage($messageId, true);
+			$m = $mailBox->getMessage($messageId);
 			$html = $m->getHtmlBody($accountId, $folderId, $messageId, function($cid) use ($m){
 				$match = array_filter($m->attachments, function($a) use($cid){
 					return $a['cid'] === $cid;
@@ -305,15 +304,13 @@ class MessagesController extends Controller {
 	public function saveAttachment($accountId, $folderId, $messageId, $attachmentId, $targetPath) {
 		$mailBox = $this->getFolder($accountId, $folderId);
 
-		$attachmentIds = [];
+		$attachmentIds = [$attachmentId];
 		if($attachmentId === 0) {
 			// Save all attachments
 			$m = $mailBox->getMessage($messageId);
 			$attachmentIds = array_map(function($a){
 				return $a['id'];
 			}, $m->attachments);
-		} else {
-			$attachmentIds = [$attachmentId];
 		}
 
 		foreach($attachmentIds as $attachmentId) {
