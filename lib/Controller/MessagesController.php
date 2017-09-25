@@ -31,6 +31,7 @@ namespace OCA\Mail\Controller;
 use OCA\Mail\Exception\ServiceException;
 use OCA\Mail\Http\AttachmentDownloadResponse;
 use OCA\Mail\Http\HtmlResponse;
+use OCA\Mail\Model\IMAPMessage;
 use OCA\Mail\Service\AccountService;
 use OCA\Mail\Service\ContactsIntegration;
 use OCA\Mail\Service\IAccount;
@@ -307,6 +308,7 @@ class MessagesController extends Controller {
 		$attachmentIds = [$attachmentId];
 		if($attachmentId === 0) {
 			// Save all attachments
+			/* @var $m IMAPMessage */
 			$m = $mailBox->getMessage($messageId);
 			$attachmentIds = array_map(function($a){
 				return $a['id'];
