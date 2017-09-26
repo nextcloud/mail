@@ -21,9 +21,7 @@
 
 And in the works for the [coming versions](https://github.com/nextcloud/mail/milestones/):
 * :books: Proper grouping of message threads
-* :zap: Caching to make everything faster
-* :paperclip: Even better attachment support
-* :package: Folder management & moving mails
+* :package: Folder management
 
 If you experience any issues or have any suggestions for improvement, use the [issue tracker](https://github.com/nextcloud/mail/issues). Please follow the [issue template](https://raw.githubusercontent.com/nextcloud/mail/master/.github/issue_template.md) so we get the info needed to debug and fix the problem. Thanks!
 
