@@ -351,6 +351,7 @@
 
 .mail-message-summary .date {
 	position: absolute;
+	font-size: 80%;
 	right: 0;
 	top: 0;
 	max-width: 40%;
@@ -359,8 +360,7 @@
 }
 
 .mail-message-summary.unseen .mail-message-summary-from,
-.mail-message-summary.unseen .mail-message-summary-subject,
-.mail-message-summary.unseen .date {
+.mail-message-summary.unseen .mail-message-summary-subject {
 	font-weight: bold;
 }
 
