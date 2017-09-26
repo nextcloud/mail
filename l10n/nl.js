@@ -2,6 +2,7 @@ OC.L10N.register(
     "mail",
     {
     "Mail" : "E-mail",
+    "Loading accounts" : "Accounts laden",
     "Error while loading the accounts." : "Fout tijdens het laden van de accounts.",
     "Error while loading the selected account." : "Fout tijdens het laden van het gekozen account.",
     "Can not load this folder." : "Kan deze map niet laden.",
