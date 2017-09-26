@@ -1,7 +1,5 @@
 # Nextcloud Mail User Documentation
 
-[TOC]
-
 ## Keyboard shortcuts
 
 Speed up your Mail experience by using keyboard shortcuts.

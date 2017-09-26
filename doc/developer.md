@@ -1,7 +1,5 @@
 # Nextcloud Mail Developer Documentation
 
-[TOC]
-
 ## Developer setup info
 
 Just clone this repo into your apps directory (Nextcloud server installation needed). Additionally, [npm](https://www.npmjs.com/) to fetch [Node.js](https://nodejs.org/en/download/package-manager/) is needed for installing JavaScript dependencies.

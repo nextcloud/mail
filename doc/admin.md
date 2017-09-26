@@ -1,7 +1,5 @@
 # Nextcloud Mail Admin Documentation
 
-[TOC]
-
 ## Installation
 
 In your Nextcloud, simply navigate to »Apps«, choose the category »Social & Communication«, find the Mail app and enable it.
