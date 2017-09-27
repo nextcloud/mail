@@ -21,6 +21,7 @@
 namespace OCA\Mail\Model;
 
 use Horde_Mail_Rfc822_List;
+use OCA\Mail\AddressList;
 use OCA\Mail\Db\LocalAttachment;
 use OCP\Files\File;
 use OCP\Files\SimpleFS\ISimpleFile;
@@ -47,52 +48,44 @@ interface IMessage {
 	public function setFlags(array $flags);
 
 	/**
-	 * @return string
+	 * @return AddressList
 	 */
 	public function getFrom();
 
 	/**
 	 * @param string $from
 	 */
-	public function setFrom($from);
+	public function setFrom(AddressList $from);
 
 	/**
-	 * @return string
+	 * @return AddressList
 	 */
 	public function getTo();
 
 	/**
-	 * @param Horde_Mail_Rfc822_List $to
+	 * @param AddressList $to
 	 */
-	public function setTo(Horde_Mail_Rfc822_List $to);
+	public function setTo(AddressList $to);
 
 	/**
-	 * @param bool $assoc
-	 * @return string[]
+	 * @return AddressList
 	 */
-	public function getToList($assoc = false);
+	public function getCC();
 
 	/**
-	 * @param bool $assoc
-	 * @return string[]
+	 * @param AddressList $cc
 	 */
-	public function getCCList($assoc = false);
+	public function setCC(AddressList $cc);
 
 	/**
-	 * @param Horde_Mail_Rfc822_List $cc
+	 * @return AddressList
 	 */
-	public function setCC(Horde_Mail_Rfc822_List $cc);
+	public function getBCC();
 
 	/**
-	 * @param bool $assoc
-	 * @return string[]
+	 * @param AddressList $bcc
 	 */
-	public function getBCCList($assoc = false);
-
-	/**
-	 * @param Horde_Mail_Rfc822_List $bcc
-	 */
-	public function setBcc(Horde_Mail_Rfc822_List $bcc);
+	public function setBcc(AddressList $bcc);
 
 	/**
 	 * @return IMessage

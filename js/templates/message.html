@@ -2,13 +2,11 @@
 <div id="mail-message-header" class="section">
 	<h2 title="{{subject}}">{{subject}}</h2>
 	<p class="transparency">
-		{{printAddressList fromList}}
-		{{#if toList}}
+		{{printAddressList from}}
 		{{ t 'to' }}
-		{{printAddressList toList}}
-		{{/if}}
-		{{#if ccList}}
-		({{ t 'cc' }} {{printAddressList ccList}})
+		{{printAddressList to}}
+		{{#if cc.length}}
+		({{ t 'cc' }} {{printAddressList cc}})
 		{{/if}}
 	</p>
 </div>

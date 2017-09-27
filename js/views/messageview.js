@@ -21,6 +21,7 @@ define(function(require) {
 	var ComposerView = require('views/composerview');
 	var MessageAttachmentsView = require('views/messageattachments');
 	var MessageTemplate = require('templates/message.html');
+	var ReplyBuilder = require('replybuilder');
 
 	return Marionette.View.extend({
 		template: MessageTemplate,
@@ -42,13 +43,7 @@ define(function(require) {
 			this.folder = options.folder;
 			this.message = options.message;
 			this.messageBody = options.model;
-			this.reply = {
-				replyToList: this.messageBody.get('replyToList'),
-				replyCc: this.messageBody.get('replyCc'),
-				toEmail: this.messageBody.get('toEmail'),
-				replyCcList: this.messageBody.get('replyCcList'),
-				body: ''
-			};
+			this.reply = ReplyBuilder.buildReply(this.message, this.messageBody);
 
 			// Add body content to inline reply (text mails)
 			if (!this.messageBody.get('hasHtmlBody')) {
@@ -57,10 +52,10 @@ define(function(require) {
 				var text = HtmlHelper.htmlToText(this.messageBody.get('body'));
 
 				this.reply.body = '\n\n\n\n' +
-					this.messageBody.get('from') + ' – ' +
-					$.datepicker.formatDate('D, d. MM yy ', date) +
-					date.getHours() + ':' + (minutes < 10 ? '0' : '') + minutes + '\n> ' +
-					text.replace(/\n/g, '\n> ');
+						this.messageBody.get('from') + ' – ' +
+						$.datepicker.formatDate('D, d. MM yy ', date) +
+						date.getHours() + ':' + (minutes < 10 ? '0' : '') + minutes + '\n> ' +
+						text.replace(/\n/g, '\n> ');
 			}
 
 			// Save current messages's content for later use (forward)
@@ -110,7 +105,7 @@ define(function(require) {
 			// Does the html mail have blocked images?
 			var hasBlockedImages = false;
 			if (this.getUI('messageIframe').contents().
-				find('[data-original-src],[data-original-style]').length) {
+					find('[data-original-src],[data-original-style]').length) {
 				hasBlockedImages = true;
 			}
 
@@ -125,7 +120,7 @@ define(function(require) {
 			var text = this.getUI('messageIframe').contents().find('body').html();
 			text = HtmlHelper.htmlToText(text);
 			var date = new Date(this.messageBody.get('dateIso'));
-			this.getChildView('replyComposer').setReplyBody(this.messageBody.get('from'), date, text);
+			this.getChildView('replyComposer').setReplyBody(this.messageBody.get('from')[0], date, text);
 
 			// Safe current mesages's content for later use (forward)
 			require('state').currentMessageBody = text;

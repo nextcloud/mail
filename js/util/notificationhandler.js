@@ -76,7 +76,7 @@ define(function(require) {
 		}
 
 		var from = _.map(messages, function(m) {
-			return m.get('from');
+			return m.get('from')[0].label;
 		});
 		from = _.uniq(from);
 		if (from.length > 2) {

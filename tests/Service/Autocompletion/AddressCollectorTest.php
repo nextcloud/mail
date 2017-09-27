@@ -21,9 +21,11 @@
 
 namespace OCA\Mail\Tests\Service\Autocompletion;
 
-use PHPUnit_Framework_TestCase;
+use OCA\Mail\AddressList;
 use OCA\Mail\Db\CollectedAddress;
+use OCA\Mail\Model\Message;
 use OCA\Mail\Service\AutoCompletion\AddressCollector;
+use PHPUnit_Framework_TestCase;
 
 class AddressCollectorTest extends PHPUnit_Framework_TestCase {
 
@@ -50,6 +52,7 @@ class AddressCollectorTest extends PHPUnit_Framework_TestCase {
 			'"User" <user@example.com>',
 			'Example <example@user.com>',
 		];
+		$addressList = AddressList::parse($addresses);
 		$address1 = new CollectedAddress();
 		$address1->setDisplayName('User');
 		$address1->setEmail('user@example.com');
@@ -74,13 +77,14 @@ class AddressCollectorTest extends PHPUnit_Framework_TestCase {
 			->method('insert')
 			->with($address2);
 
-		$this->collector->addAddresses($addresses);
+		$this->collector->addAddresses($addressList);
 	}
 
 	public function testAddDuplicateAddresses() {
 		$addresses = [
 			'user@example.com',
 		];
+		$addressList = AddressList::parse($addresses);
 
 		$this->mapper->expects($this->at(0))
 			->method('exists')
@@ -89,7 +93,7 @@ class AddressCollectorTest extends PHPUnit_Framework_TestCase {
 		$this->mapper->expects($this->never())
 			->method('insert');
 
-		$this->collector->addAddresses($addresses);
+		$this->collector->addAddresses($addressList);
 	}
 
 	public function testSearchAddress() {

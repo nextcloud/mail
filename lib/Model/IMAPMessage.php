@@ -24,6 +24,7 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>
  *
  */
+
 namespace OCA\Mail\Model;
 
 use Closure;
@@ -36,10 +37,10 @@ use Horde_Imap_Client_Fetch_Query;
 use Horde_Imap_Client_Ids;
 use Horde_Imap_Client_Mailbox;
 use Horde_Imap_Client_Socket;
-use Horde_Mail_Rfc822_List;
 use Horde_Mime_Part;
 use JsonSerializable;
 use OC;
+use OCA\Mail\AddressList;
 use OCA\Mail\Db\LocalAttachment;
 use OCA\Mail\Service\Html;
 use OCP\AppFramework\Db\DoesNotExistException;
@@ -68,8 +69,7 @@ class IMAPMessage implements IMessage, JsonSerializable {
 	 * @param boolean $loadHtmlMessage
 	 * @param Html|null $htmlService
 	 */
-	public function __construct($conn, $mailBox, $messageId, $fetch=null,
-		$loadHtmlMessage=false, $htmlService = null) {
+	public function __construct($conn, $mailBox, $messageId, $fetch = null, $loadHtmlMessage = false, $htmlService = null) {
 		$this->conn = $conn;
 		$this->mailBox = $mailBox;
 		$this->messageId = $messageId;
@@ -163,122 +163,60 @@ class IMAPMessage implements IMessage, JsonSerializable {
 	}
 
 	/**
-	 * @return string
-	 */
-	public function getFromEmail() {
-		$e = $this->getEnvelope();
-		$from = $e->from[0];
-		return $from ? $from->bare_address : null;
-	}
-
-	/**
-	 * @return string
+	 * @return AddressList
 	 */
 	public function getFrom() {
-		$e = $this->getEnvelope();
-		$from = $e->from[0];
-		return $from ? $from->label : null;
+		return AddressList::fromHorde($this->getEnvelope()->from);
 	}
 
 	/**
-	 * @param string $from
+	 * @param AddressList $from
 	 * @throws Exception
 	 */
-	public function setFrom($from) {
+	public function setFrom(AddressList $from) {
 		throw new Exception('IMAP message is immutable');
 	}
 
 	/**
-	 * @return array
+	 * @return AddressList
 	 */
-	public function getFromList() {
-		$e = $this->getEnvelope();
-		return $this->convertAddressList($e->from);
-	}
-
-	/**
-	 * @return string
-	 */
-	public function getToEmail() {
-		$e = $this->getEnvelope();
-		$to = $e->to[0];
-		return $to ? $to->bare_address : null;
-	}
-
 	public function getTo() {
-		$e = $this->getEnvelope();
-		$to = $e->to[0];
-		return $to ? $to->label : null;
+		return AddressList::fromHorde($this->getEnvelope()->to);
 	}
 
 	/**
-	 * @param Horde_Mail_Rfc822_List $to
-	 * @throws Exception
+	 * @param AddressList $to
 	 */
-	public function setTo(Horde_Mail_Rfc822_List $to) {
+	public function setTo(AddressList $to) {
 		throw new Exception('IMAP message is immutable');
 	}
 
 	/**
-	 * @return string
+	 * @return AddressList
 	 */
-	public function getToList($assoc = false) {
-		$e = $this->getEnvelope();
-		if ($assoc) {
-			return $this->convertAddressList($e->to);
-		} else {
-			return $this->hordeListToStringArray($e->to);
-		}
+	public function getCC() {
+		return AddressList::fromHorde($this->getEnvelope()->cc);
 	}
 
-	public function getCCList($assoc = false) {
-		$e = $this->getEnvelope();
-		if ($assoc) {
-			return $this->convertAddressList($e->cc);
-		} else {
-			return $this->hordeListToStringArray($e->cc);
-		}
-	}
-
-	public function setCC(Horde_Mail_Rfc822_List $cc) {
-		throw new Exception('IMAP message is immutable');
-	}
-
-	public function getBCCList($assoc = false) {
-		$e = $this->getEnvelope();
-		if ($assoc) {
-			return $this->convertAddressList($e->bcc);
-		} else {
-			return $this->hordeListToStringArray($e->bcc);
-		}
-	}
-
-	public function setBcc(Horde_Mail_Rfc822_List $bcc) {
-		throw new Exception('IMAP message is immutable');
-	}
-
-	public function getReplyToList() {
-		$e = $this->getEnvelope();
-		return $this->convertAddressList($e->from);
-	}
-
-	public function setReplyTo(array $replyTo) {
+	/**
+	 * @param AddressList $cc
+	 */
+	public function setCC(AddressList $cc) {
 		throw new Exception('IMAP message is immutable');
 	}
 
 	/**
-	 * on reply, fill cc with everyone from to and cc except yourself
-	 *
-	 * @param string $ownMail
+	 * @return AddressList
 	 */
-	public function getReplyCcList($ownMail) {
-		$e = $this->getEnvelope();
-		$list = new \Horde_Mail_Rfc822_List();
-		$list->add($e->to);
-		$list->add($e->cc);
-		$list->unique();
-		$list->remove($ownMail);
-		return $this->convertAddressList($list);
+	public function getBCC() {
+		return AddressList::fromHorde($this->getEnvelope()->bcc);
+	}
+
+	/**
+	 * @param AddressList $bcc
+	 */
+	public function setBcc(AddressList $bcc) {
+		throw new Exception('IMAP message is immutable');
 	}
 
 	/**
@@ -314,6 +252,9 @@ class IMAPMessage implements IMessage, JsonSerializable {
 		return $this->fetch->getImapDate();
 	}
 
+	/**
+	 * @return int
+	 */
 	public function getSize() {
 		return $this->fetch->getSize();
 	}
@@ -323,24 +264,24 @@ class IMAPMessage implements IMessage, JsonSerializable {
 	 * @return bool
 	 */
 	private function hasAttachments($part) {
-		foreach($part->getParts() as $p) {
+		foreach ($part->getParts() as $p) {
 			/**
 			 * @var Horde_Mime_Part $p
 			 */
 			$filename = $p->getName();
 
-			if(!is_null($p->getContentId())) {
+			if (!is_null($p->getContentId())) {
 				continue;
 			}
-			if(isset($filename)) {
+			if (isset($filename)) {
 				// do not show technical attachments
-				if(in_array($filename, $this->attachmentsToIgnore)) {
+				if (in_array($filename, $this->attachmentsToIgnore)) {
 					continue;
 				} else {
 					return true;
 				}
 			}
-			if($this->hasAttachments($p)) {
+			if ($this->hasAttachments($p)) {
 				return true;
 			}
 		}
@@ -367,7 +308,7 @@ class IMAPMessage implements IMessage, JsonSerializable {
 
 		$fetch_query->headers('imp', $headers, [
 			'cache' => true,
-			'peek'  => true
+			'peek' => true
 		]);
 
 		// $list is an array of Horde_Imap_Client_Data_Fetch objects.
@@ -389,7 +330,7 @@ class IMAPMessage implements IMessage, JsonSerializable {
 		$structure_type = $structure->getPrimaryType();
 		if ($structure_type === 'multipart') {
 			$i = 1;
-			foreach($structure->getParts() as $p) {
+			foreach ($structure->getParts() as $p) {
 				$this->getPart($p, $i++);
 			}
 		} else {
@@ -410,11 +351,11 @@ class IMAPMessage implements IMessage, JsonSerializable {
 		// Any part with a filename is an attachment,
 		// so an attached text file (type 0) is not mistaken as the message.
 		$filename = $p->getName();
-		if(isset($filename)) {
-			if(in_array($filename, $this->attachmentsToIgnore)) {
+		if (isset($filename)) {
+			if (in_array($filename, $this->attachmentsToIgnore)) {
 				return;
 			}
-			$this->attachments[]= [
+			$this->attachments[] = [
 				'id' => $p->getMimeId(),
 				'messageId' => $this->messageId,
 				'fileName' => $filename,
@@ -453,15 +394,15 @@ class IMAPMessage implements IMessage, JsonSerializable {
 		// so this just appends the raw source to the main message.
 		if ($p[0] === 'message') {
 			$data = $this->loadBodyData($p, $partNo);
-			$this->plainMessage .= trim($data) ."\n\n";
+			$this->plainMessage .= trim($data) . "\n\n";
 		}
 	}
 
 	/**
-	 * @param string $ownMail
 	 * @param string $specialRole
+	 * @return array
 	 */
-	public function getFullMessage($ownMail, $specialRole=null) {
+	public function getFullMessage($specialRole = null) {
 		$mailBody = $this->plainMessage;
 
 		$data = $this->jsonSerialize();
@@ -476,34 +417,26 @@ class IMAPMessage implements IMessage, JsonSerializable {
 
 		$data['attachments'] = $this->attachments;
 
-		if ($specialRole === 'sent') {
-			$data['replyToList'] = $this->getToList(true);
-			$data['replyCcList'] = $this->getCCList(true);
-		} else {
-			$data['replyToList'] = $this->getReplyToList();
-			$data['replyCcList'] = $this->getReplyCcList($ownMail);
-		}
 		return $data;
 	}
 
+	/**
+	 * @return array
+	 */
 	public function jsonSerialize() {
 		return [
 			'id' => $this->getUid(),
-			'from' => $this->getFrom(),
-			'fromEmail' => $this->getFromEmail(),
-			'fromList' => $this->getFromList(),
-			'to' => $this->getTo(),
-			'toEmail' => $this->getToEmail(),
-			'toList' => $this->getToList(true),
+			'from' => $this->getFrom()->jsonSerialize(),
+			'to' => $this->getTo()->jsonSerialize(),
+			'cc' => $this->getCC()->jsonSerialize(),
+			'bcc' => $this->getBCC()->jsonSerialize(),
+			'fromEmail' => $this->getFrom()->first()->getEmail(),
 			'subject' => $this->getSubject(),
 			'date' => OC::$server->getDateTimeFormatter()->formatDate($this->getSentDate()->format('U')),
+			'dateInt' => $this->getSentDate()->getTimestamp(),
+			'dateIso' => $this->getSentDate()->format('c'),
 			'size' => Util::humanFileSize($this->getSize()),
 			'flags' => $this->getFlags(),
-			'dateInt' => $this->getSentDate()->getTimestamp(),
-			'dateMicro' => $this->getSentDate()->getTimestamp() * 1000,
-			'dateIso' => $this->getSentDate()->format('c'),
-			'ccList' => $this->getCCList(true),
-			'bccList' => $this->getBCCList(true),
 		];
 	}
 
@@ -516,10 +449,10 @@ class IMAPMessage implements IMessage, JsonSerializable {
 	 */
 	public function getHtmlBody($accountId, $folderId, $messageId, Closure $attachments) {
 		return $this->htmlService->sanitizeHtmlMailBody($this->htmlMessage, [
-			'accountId' => $accountId,
-			'folderId' => $folderId,
-			'messageId' => $messageId,
-		], $attachments);
+				'accountId' => $accountId,
+				'folderId' => $folderId,
+				'messageId' => $messageId,
+				], $attachments);
 	}
 
 	/**
@@ -548,7 +481,7 @@ class IMAPMessage implements IMessage, JsonSerializable {
 	private function handleTextMessage($p, $partNo) {
 		$data = $this->loadBodyData($p, $partNo);
 		$data = Util::sanitizeHTML($data);
-		$this->plainMessage .= trim($data) ."\n\n";
+		$this->plainMessage .= trim($data) . "\n\n";
 	}
 
 	/**
@@ -576,11 +509,11 @@ class IMAPMessage implements IMessage, JsonSerializable {
 		$ids = new Horde_Imap_Client_Ids($this->messageId);
 
 		$fetch_query->bodyPart($partNo, [
-		    'peek' => true
+			'peek' => true
 		]);
 		$fetch_query->bodyPartSize($partNo);
 		$fetch_query->mimeHeader($partNo, [
-		    'peek' => true
+			'peek' => true
 		]);
 
 		$headers = $this->conn->fetch($this->mailBox, $fetch_query, ['ids' => $ids]);

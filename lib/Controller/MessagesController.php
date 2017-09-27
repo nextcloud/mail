@@ -144,8 +144,8 @@ class MessagesController extends Controller {
 				$j['delete'] = (string)$this->l10n->t('Delete permanently');
 			}
 
+			// This is hacky and should be done on the client-side
 			if ($mailBox->getSpecialRole() === 'sent') {
-				$j['fromEmail'] = $j['toEmail'];
 				$j['from'] = $j['to'];
 				if((count($j['toList']) > 1) || (count($j['ccList']) > 0)) {
 					$j['from'] .= ' ' . $this->l10n->t('& others');
@@ -166,9 +166,10 @@ class MessagesController extends Controller {
 	private function loadMessage($accountId, $folderId, $id) {
 		$account = $this->getAccount($accountId);
 		$mailBox = $account->getMailbox(base64_decode($folderId));
-		$m = $mailBox->getMessage($id);
+		/* @var $message IMAPMessage */
+		$message = $mailBox->getMessage($id);
 
-		$json = $this->enhanceMessage($accountId, $folderId, $id, $m, $account, $mailBox);
+		$json = $this->enhanceMessage($accountId, $folderId, $id, $message, $mailBox);
 
 		// Unified inbox hack
 		$messageId = $id;
@@ -405,8 +406,8 @@ class MessagesController extends Controller {
 
 	/**
 	 * @param string $messageId
-	 * @param $accountId
-	 * @param $folderId
+	 * @param int $accountId
+	 * @param string $folderId
 	 * @return callable
 	 */
 	private function enrichDownloadUrl($accountId, $folderId, $messageId, $attachment) {
@@ -484,17 +485,16 @@ class MessagesController extends Controller {
 	}
 
 	/**
-	 * @param integer $accountId
+	 * @param int $accountId
 	 * @param string $folderId
-	 * @param $id
-	 * @param $m
-	 * @param IAccount $account
+	 * @param int $id
+	 * @param IMAPMessage $m
 	 * @param IMailBox $mailBox
-	 * @return mixed
+	 * @return array
 	 */
-	private function enhanceMessage($accountId, $folderId, $id, $m, IAccount $account, $mailBox) {
-		$json = $m->getFullMessage($account->getEmail(), $mailBox->getSpecialRole());
-		$json['senderImage'] = $this->contactsIntegration->getPhoto($m->getFromEmail());
+	private function enhanceMessage($accountId, $folderId, $id, IMAPMessage $m, $mailBox) {
+		$json = $m->getFullMessage($mailBox->getSpecialRole());
+		$json['senderImage'] = $this->contactsIntegration->getPhoto($m->getFrom()->first()->toHorde()->bare_address);
 		if (isset($json['hasHtmlBody'])) {
 			$json['htmlBodyUrl'] = $this->buildHtmlBodyUrl($accountId, $folderId, $id);
 		}

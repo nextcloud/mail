@@ -1,4 +1,4 @@
-/* global expect */
+/* global expect, spyOn */
 
 /**
  * @author Christoph Wurst <christoph@winzerhof-wurst.at>
@@ -60,6 +60,7 @@ define([
 			var view = new ComposerView({
 				accounts: accounts
 			});
+			spyOn(view, 'saveDraft');
 
 			expect(view.type).toBe('new');
 			expect(view.isReply()).toBe(false);

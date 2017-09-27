@@ -64,6 +64,10 @@ $.fn.droppable = function() {
 
 };
 
+$.fn.imageplaceholder = function() {
+
+};
+
 formatDate = function(arg) {
 	return arg;
 };

@@ -7,7 +7,7 @@
 			{{#if senderImage}}
 			<img src="{{senderImage}}" width="32px" height="32px" />
 			{{else}}
-			<div class="avatar" data-user="{{from}}" data-size="32"></div>
+			<div class="avatar" data-user="{{sender.label}}" data-size="32"></div>
 			{{/if}}
 		</div>
 
@@ -25,7 +25,7 @@
 		<div class="icon-public icon-attachment"></div>
 		{{/if}}
 
-		<div class="mail-message-summary-from" title="{{fromEmail}}">{{from}}</div>
+		<div class="mail-message-summary-from" title="{{sender.email}}">{{sender.label}}</div>
 		<div class="mail-message-summary-subject" title="{{subject}}">
 			{{subject}}
 		</div>

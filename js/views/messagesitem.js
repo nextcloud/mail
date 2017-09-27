@@ -34,6 +34,7 @@ define(function(require) {
 		serializeModel: function() {
 			var json = this.model.toJSON();
 			json.isUnified = require('state').currentAccount && require('state').currentAccount.get('isUnified');
+			json.sender = this.model.get('from')[0];
 			return json;
 		},
 		onRender: function() {
@@ -45,7 +46,7 @@ define(function(require) {
 			this.$el.unwrap();
 			this.setElement(this.$el);
 
-			var displayName = this.model.get('from');
+			var displayName = this.model.get('from')[0].label;
 			// Don't show any placeholder if 'from' isn't set
 			if (displayName) {
 				_.each(this.$el.find('.avatar'), function(a) {
