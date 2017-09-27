@@ -88,7 +88,7 @@ class CollectedAddressMapper extends Mapper {
 					$qb->createNamedParameter($minId)));
 		}
 
-		$result = $qb->execute();
+		$result = $query->execute();
 		$rows = $result->fetchAll();
 		$result->closeCursor();
 

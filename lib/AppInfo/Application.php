@@ -53,7 +53,7 @@ class Application extends App {
 		});
 
 		$container->registerParameter("appName", "mail");
-		$container->registerService("userFolder", function ($c) use ($container) {
+		$container->registerService("userFolder", function () use ($container) {
 			$user = $container->query("UserId");
 			return $container->getServer()->getUserFolder($user);
 		});

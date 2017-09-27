@@ -1,4 +1,4 @@
-/* global Promise, Infinity */
+/* global Promise */
 
 /**
  * @author Christoph Wurst <christoph@winzerhof-wurst.at>
@@ -139,7 +139,7 @@ define(function(require) {
 
 	function getNextUnifiedMessagePage(unifiedFolder, options) {
 		var allAccounts = require('state').accounts;
-		var cursor = Infinity;
+		var cursor = Number.POSITIVE_INFINITY;
 		if (!unifiedFolder.messages.isEmpty()) {
 			cursor = unifiedFolder.messages.last().get('dateInt');
 		}

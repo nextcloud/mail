@@ -226,8 +226,6 @@ class Account implements IAccount {
 
 		// Delete draft if one exists
 		if (!is_null($draftUID)) {
-			$draftsFolder = $this->getDraftsFolder();
-			$draftsFolder->setMessageFlag($draftUID, Horde_Imap_Client::FLAG_DELETED, true);
 			$this->deleteDraft($draftUID);
 		}
 
@@ -267,8 +265,6 @@ class Account implements IAccount {
 
 		// delete old version if one exists
 		if (!is_null($previousUID)) {
-			$draftsFolder->setMessageFlag($previousUID, \Horde_Imap_Client::FLAG_DELETED,
-				true);
 			$this->deleteDraft($previousUID);
 		}
 
@@ -511,13 +507,13 @@ class Account implements IAccount {
 	}
 
 	/**
-	 * 
 	 * @param int $messageId
 	 */
-	public function deleteDraft($messageId) {
+	private function deleteDraft($messageId) {
 		$draftsFolder = $this->getDraftsFolder();
-		
-		$draftsMailBox = new \Horde_Imap_Client_Mailbox($draftsFolder->getFolderId(), false);
+		$draftsFolder->setMessageFlag($messageId, Horde_Imap_Client::FLAG_DELETED, true);
+
+		$draftsMailBox = new Horde_Imap_Client_Mailbox($draftsFolder->getFolderId(), false);
 		$this->getImapConnection()->expunge($draftsMailBox);
 	}
 

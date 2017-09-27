@@ -276,10 +276,9 @@ class AccountsController extends Controller {
 	 * @param string $cc
 	 * @param string $bcc
 	 * @param int $uid
-	 * @param string $messageId
 	 * @return JSONResponse
 	 */
-	public function draft($accountId, $subject, $body, $to, $cc, $bcc, $uid, $messageId) {
+	public function draft($accountId, $subject, $body, $to, $cc, $bcc, $uid) {
 		if (is_null($uid)) {
 			$this->logger->info("Saving a new draft in account <$accountId>");
 		} else {

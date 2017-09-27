@@ -480,7 +480,7 @@ class IMAPMessage implements IMessage, JsonSerializable {
 			$data['replyToList'] = $this->getToList(true);
 			$data['replyCcList'] = $this->getCCList(true);
 		} else {
-			$data['replyToList'] = $this->getReplyToList(true);
+			$data['replyToList'] = $this->getReplyToList();
 			$data['replyCcList'] = $this->getReplyCcList($ownMail);
 		}
 		return $data;
