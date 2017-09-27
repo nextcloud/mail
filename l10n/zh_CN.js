@@ -2,6 +2,7 @@ OC.L10N.register(
     "mail",
     {
     "Mail" : "邮件",
+    "Loading accounts" : "加载账户中",
     "Error while loading the accounts." : "载入账户时出错。",
     "Error while loading the selected account." : "载入选定账户时出错。",
     "Can not load this folder." : "不能读取这个文件夹",
