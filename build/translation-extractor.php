@@ -27,7 +27,7 @@ class TranslationExtractor {
 	}
 	
 	private function extractTranslationString($line) {
-		$regex = '/\{\{\s*t\s*[\'\"]([\w\d\s,.]*)[\'\"]\s*\}\}/';
+		$regex = '/\{\{\s*t\s*[\'\"]([\w\d\s,.!?]*)[\'\"]\s*\}\}/';
 		$matches = [];
 		preg_match_all($regex, $line, $matches);
 		$strings = [];
