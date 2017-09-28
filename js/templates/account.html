@@ -1,7 +1,7 @@
 {{#if emailAddress}}
 <div class="mail-account-color app-navigation-entry-bullet" style="background-color: {{accountColor emailAddress}}"></div>
 {{/if}}
-<a href="#" class="icon mail-account-email" title="{{emailAddress}}">{{emailAddress}}</a>
+<a href="#" class="icon mail-account-email" id="account{{accountId}}" title="{{emailAddress}}">{{emailAddress}}</a>
 
 {{#if hasMenu}}
 <div class="app-navigation-entry-utils">

@@ -47,7 +47,7 @@ define(function(require) {
 			settingsButton: '.action-settings',
 			deleteButton: '.action-delete'
 		},
-		className: 'navigation-account collapsible',
+		className: 'navigation-account',
 		menuShown: false,
 		collapsed: true,
 		initialize: function(options) {

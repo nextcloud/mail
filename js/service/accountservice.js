@@ -86,7 +86,14 @@ define(function(require) {
 			if (accounts.length > 1) {
 				accounts.add({
 					accountId: -1,
-					isUnified: true
+					isUnified: true,
+					id: btoa('all-inboxes'),
+					name: t('mail', 'All inboxes'),
+					emailAddress: t('mail', 'All inboxes'),
+					specialRole: 'inbox',
+					isEmpty: false,
+					noSelect: false,
+					delimiter: '.'
 				}, {
 					at: 0
 				});

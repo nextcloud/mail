@@ -187,6 +187,10 @@
 	z-index: 1;
 }
 
+/* hide folders on unified account */
+#account-1 + .folders {
+	display: none;
+}
 
 /* settings */
 
