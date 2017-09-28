@@ -90,7 +90,6 @@ define(function(require) {
 					id: btoa('all-inboxes'),
 					name: t('mail', 'All inboxes'),
 					emailAddress: t('mail', 'All inboxes'),
-					specialRole: 'inbox',
 					isEmpty: false,
 					noSelect: false,
 					delimiter: '.'
