@@ -117,8 +117,6 @@ OC.L10N.register(
     "The images have been blocked to protect your privacy." : "Obrazy zostały zablokowane by chronić Twoją prywatność.",
     "Show images from this sender" : "Zobacz zdjęcia od tego nadawcy",
     "Forward" : "Prześlij dalej",
-    "Add attachment" : "Dodaj załącznik",
-    "Add from Files" : "Dodaj z plików",
     "Import into calendar" : "Importuj do kalendarza",
     "Download attachment" : "Pobierz załącznik",
     "Save to Files" : "Zapisz do plików"

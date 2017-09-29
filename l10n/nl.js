@@ -118,8 +118,6 @@ OC.L10N.register(
     "The images have been blocked to protect your privacy." : "De afbeeldingen zijn geblokkeerd om jouw privacy te beschermen",
     "Show images from this sender" : "Laat afbeeldingen zien van deze afzender",
     "Forward" : "Doorsturen",
-    "Add attachment" : "Toevoegen bijlage",
-    "Add from Files" : "Toevoegen uit bestanden",
     "Import into calendar" : "Toevoegen aan agenda",
     "Download attachment" : "Download bijlage",
     "Save to Files" : "Opslaan in Bestanden"

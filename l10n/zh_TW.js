@@ -108,8 +108,6 @@ OC.L10N.register(
     "The images have been blocked to protect your privacy." : "為維護你的隱私，圖片將不會被載入。",
     "Show images from this sender" : "顯示來自此寄件者的圖片",
     "Forward" : "轉寄",
-    "Add attachment" : "新增附檔",
-    "Add from Files" : "新增自檔案",
     "Import into calendar" : "匯入日曆",
     "Download attachment" : "下載附檔",
     "Save to Files" : "存至檔案"

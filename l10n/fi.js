@@ -118,8 +118,6 @@ OC.L10N.register(
     "The images have been blocked to protect your privacy." : "Kuvat estettiin yksityisyytesi suojelemiseksi.",
     "Show images from this sender" : "Näytä kuvat tältä lähettäjältä",
     "Forward" : "Välitä",
-    "Add attachment" : "Lisää liite",
-    "Add from Files" : "Lisää tiedostosovelluksesta",
     "Import into calendar" : "Tuo kalenteriin",
     "Download attachment" : "Lataa liite",
     "Save to Files" : "Tallenna tiedostoihin"
