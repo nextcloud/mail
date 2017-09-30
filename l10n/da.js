@@ -119,6 +119,8 @@ OC.L10N.register(
     "Show images from this sender" : "Vis billeder fra denne afsender",
     "Forward" : "Videre send",
     "No messages in this folder!" : "Ingen beskeder i denne mappe!",
+    "Upload attachment" : "Upload vedhæftning",
+    "Add attachment from Files" : "Vedhæft fra filer",
     "Import into calendar" : "Importere til kalender",
     "Download attachment" : "Hent vedhæftning",
     "Save to Files" : "Gem til filer"

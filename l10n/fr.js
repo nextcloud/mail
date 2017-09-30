@@ -119,6 +119,8 @@ OC.L10N.register(
     "Show images from this sender" : "Voir les images de cet expéditeur",
     "Forward" : "Faire suivre",
     "No messages in this folder!" : "Aucun message dans ce dossier",
+    "Upload attachment" : "Téléverser les pièces jointes",
+    "Add attachment from Files" : "Ajouter des pièces jointes depuis Fichiers",
     "Import into calendar" : "Importer dans le calendrier",
     "Download attachment" : "Télécharger les pièces jointes",
     "Save to Files" : "Enregistrer dans Fichiers"

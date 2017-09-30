@@ -117,6 +117,8 @@
     "Show images from this sender" : "Bu gönderenden gelen görseller görüntülensin",
     "Forward" : "İlet",
     "No messages in this folder!" : "Bu klasörde herhangi bir ileti yok!",
+    "Upload attachment" : "Ek dosya yükle",
+    "Add attachment from Files" : "Dosyalardan ek dosya ekle",
     "Import into calendar" : "Şu takvimin içine aktar",
     "Download attachment" : "Ek dosyayı indir",
     "Save to Files" : "Dosyalara Kaydet"
