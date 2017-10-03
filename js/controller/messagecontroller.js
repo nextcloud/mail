@@ -127,8 +127,9 @@ define(function(require) {
 			OC.dialogs.filepicker(
 				t('mail', 'Choose a folder to store the attachment in'),
 				function(path) {
-					if (typeof callback == 'function')
+					if (typeof callback === 'function') {
 						callback();
+					}
 					Radio.message.request('save:cloud', account,
 						folder, messageId, attachmentId, path).then(function() {
 						if (saveAll) {
