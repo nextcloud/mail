@@ -39,7 +39,7 @@ define(function(require) {
 	 * @returns {Promise}
 	 */
 	function getFolderEntities(account) {
-		var url = OC.generateUrl('apps/mail/accounts/{id}/folders', {
+		var url = OC.generateUrl('apps/mail/api/accounts/{id}/folders', {
 			id: account.get('accountId')
 		});
 

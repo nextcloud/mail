@@ -34,40 +34,42 @@ define([
 			jasmine.Ajax.uninstall();
 		});
 
-		it('creates a new account on the server', function() {
-			spyOn(OC, 'generateUrl').and.returnValue('index.php/apps/mail/accounts');
+		it('creates a new account on the server', function(done) {
+			spyOn(OC, 'generateUrl').and.returnValue('index.php/apps/mail/api/accounts');
 
 			var promise = AccountService.createAccount({
 				email: 'email@example.com',
 				password: '12345'
 			});
 
-			expect(OC.generateUrl).toHaveBeenCalledWith('apps/mail/accounts');
+			expect(OC.generateUrl).toHaveBeenCalledWith('apps/mail/api/accounts');
 
 			expect(jasmine.Ajax.requests.count())
 				.toBe(1);
 			expect(jasmine.Ajax.requests.mostRecent().url)
-				.toBe('index.php/apps/mail/accounts');
+				.toBe('index.php/apps/mail/api/accounts');
 			jasmine.Ajax.requests.mostRecent().respondWith({
 				'status': 200,
 				'contentType': 'application/json',
 				'responseText': '{}'
 			});
+
+			promise.then(done).catch(done.fail);
 		});
 
 		it('handle account creation errors correctly', function(done) {
-			spyOn(OC, 'generateUrl').and.returnValue('index.php/apps/mail/accounts');
+			spyOn(OC, 'generateUrl').and.returnValue('index.php/apps/mail/api/accounts');
 
 			var creating = AccountService.createAccount({
 				email: 'email@example.com',
 				password: '12345'
 			});
 
-			expect(OC.generateUrl).toHaveBeenCalledWith('apps/mail/accounts');
+			expect(OC.generateUrl).toHaveBeenCalledWith('apps/mail/api/accounts');
 
 			expect(jasmine.Ajax.requests.count()).toBe(1);
 			expect(jasmine.Ajax.requests.mostRecent().url)
-				.toBe('index.php/apps/mail/accounts');
+				.toBe('index.php/apps/mail/api/accounts');
 			jasmine.Ajax.requests.mostRecent().respondWith({
 				'status': 500,
 				'contentType': 'application/json',

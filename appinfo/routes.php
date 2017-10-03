@@ -36,42 +36,42 @@ $app->registerRoutes($this,
 		],
 		[
 			'name' => 'accounts#send',
-			'url' => '/accounts/{accountId}/send',
+			'url' => '/api/accounts/{accountId}/send',
 			'verb' => 'POST'
 		],
 		[
 			'name' => 'accounts#draft',
-			'url' => '/accounts/{accountId}/draft',
+			'url' => '/api/accounts/{accountId}/draft',
 			'verb' => 'POST'
 		],
 		[
 			'name' => 'folders#sync',
-			'url' => '/accounts/{accountId}/folders/{folderId}/sync',
+			'url' => '/api/accounts/{accountId}/folders/{folderId}/sync',
 			'verb' => 'GET'
 		],
 		[
 			'name' => 'messages#downloadAttachment',
-			'url' => '/accounts/{accountId}/folders/{folderId}/messages/{messageId}/attachment/{attachmentId}',
+			'url' => '/api/accounts/{accountId}/folders/{folderId}/messages/{messageId}/attachment/{attachmentId}',
 			'verb' => 'GET'
 		],
 		[
 			'name' => 'messages#saveAttachment',
-			'url' => '/accounts/{accountId}/folders/{folderId}/messages/{messageId}/attachment/{attachmentId}',
+			'url' => '/api/accounts/{accountId}/folders/{folderId}/messages/{messageId}/attachment/{attachmentId}',
 			'verb' => 'POST'
 		],
 		[
 			'name' => 'messages#getHtmlBody',
-			'url' => '/accounts/{accountId}/folders/{folderId}/messages/{messageId}/html',
+			'url' => '/api/accounts/{accountId}/folders/{folderId}/messages/{messageId}/html',
 			'verb' => 'GET'
 		],
 		[
 			'name' => 'messages#setFlags',
-			'url' => '/accounts/{accountId}/folders/{folderId}/messages/{messageId}/flags',
+			'url' => '/api/accounts/{accountId}/folders/{folderId}/messages/{messageId}/flags',
 			'verb' => 'PUT'
 		],
 		[
 			'name' => 'messages#move',
-			'url' => '/accounts/{accountId}/folders/{folderId}/messages/{id}/move',
+			'url' => '/api/accounts/{accountId}/folders/{folderId}/messages/{id}/move',
 			'verb' => 'POST'
 		],
 		[
@@ -86,11 +86,11 @@ $app->registerRoutes($this,
 		],
 	],
 	'resources' => [
-		'autoComplete' => ['url' => '/autoComplete'],
-		'localAttachments' => ['url' => '/attachments'],
-		'accounts' => ['url' => '/accounts'],
-		'folders' => ['url' => '/accounts/{accountId}/folders'],
-		'messages' => ['url' => '/accounts/{accountId}/folders/{folderId}/messages'],
-		'aliases' => ['url' => '/accounts/{accountId}/aliases'],
+		'autoComplete' => ['url' => '/api/autoComplete'],
+		'localAttachments' => ['url' => '/api/attachments'],
+		'accounts' => ['url' => '/api/accounts'],
+		'folders' => ['url' => '/api/accounts/{accountId}/folders'],
+		'messages' => ['url' => '/api/accounts/{accountId}/folders/{folderId}/messages'],
+		'aliases' => ['url' => '/api/accounts/{accountId}/aliases'],
 	]
 ]);

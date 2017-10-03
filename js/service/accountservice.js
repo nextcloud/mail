@@ -22,7 +22,7 @@ define(function(require) {
 	Radio.account.reply('delete', deleteAccount);
 
 	function createAccount(config) {
-		var url = OC.generateUrl('apps/mail/accounts');
+		var url = OC.generateUrl('apps/mail/api/accounts');
 		return new Promise(function(resolve, reject) {
 			$.ajax(url, {
 				data: config,
@@ -101,7 +101,7 @@ define(function(require) {
 	 * @returns {Promise}
 	 */
 	function deleteAccount(account) {
-		var url = OC.generateUrl('/apps/mail/accounts/{accountId}', {
+		var url = OC.generateUrl('/apps/mail/api/accounts/{accountId}', {
 			accountId: account.get('accountId')
 		});
 

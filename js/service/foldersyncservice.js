@@ -35,7 +35,7 @@ define(function(require) {
 	 * @returns {Promise}
 	 */
 	function syncSingleFolder(folder, unifiedFolder) {
-		var url = OC.generateUrl('/apps/mail/accounts/{accountId}/folders/{folderId}/sync', {
+		var url = OC.generateUrl('/apps/mail/api/accounts/{accountId}/folders/{folderId}/sync', {
 			accountId: folder.account.get('accountId'),
 			folderId: folder.get('id')
 		});

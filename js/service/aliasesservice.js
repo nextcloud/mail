@@ -35,7 +35,7 @@ define(function(require) {
 	 * @returns {Promise}
 	 */
 	function saveAlias(account, alias) {
-		var url = OC.generateUrl('/apps/mail/accounts/{id}/aliases', {
+		var url = OC.generateUrl('/apps/mail/api/accounts/{id}/aliases', {
 			id: account.get('accountId')
 		});
 		var data = {
@@ -55,7 +55,7 @@ define(function(require) {
 	 * @returns {Promise}
 	 */
 	function deleteAlias(account, aliasId) {
-		var url = OC.generateUrl('/apps/mail/accounts/{id}/aliases/{aliasId}', {
+		var url = OC.generateUrl('/apps/mail/api/accounts/{id}/aliases/{aliasId}', {
 			id: account.get('accountId'),
 			aliasId: aliasId
 		});
