@@ -111,7 +111,7 @@ class AccountsControllerTest extends PHPUnit_Framework_TestCase {
 
 	public function testIndex() {
 		$this->account->expects($this->once())
-			->method('getConfiguration')
+			->method('jsonSerialize')
 			->will($this->returnValue([
 					'accountId' => 123,
 		]));
@@ -140,13 +140,10 @@ class AccountsControllerTest extends PHPUnit_Framework_TestCase {
 			->method('find')
 			->with($this->equalTo($this->userId), $this->equalTo($this->accountId))
 			->will($this->returnValue($this->account));
-		$this->account->expects($this->once())
-			->method('getConfiguration')
-			->will($this->returnValue('conf'));
 
 		$response = $this->controller->show($this->accountId);
 
-		$expectedResponse = new JSONResponse('conf');
+		$expectedResponse = new JSONResponse($this->account);
 		$this->assertEquals($expectedResponse, $response);
 	}
 
@@ -154,9 +151,6 @@ class AccountsControllerTest extends PHPUnit_Framework_TestCase {
 		$this->accountService->expects($this->once())
 			->method('find')
 			->with($this->equalTo($this->userId), $this->equalTo($this->accountId))
-			->will($this->returnValue($this->account));
-		$this->account->expects($this->once())
-			->method('getConfiguration')
 			->will($this->throwException(new DoesNotExistException('test123')));
 
 		$response = $this->controller->show($this->accountId);
