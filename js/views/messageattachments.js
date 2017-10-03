@@ -57,14 +57,14 @@ define(function(require) {
 			var account = require('state').currentAccount;
 			var folder = require('state').currentFolder;
 			var messageId = this.message.get('id');
-			// Loading feedback
-			this.getUI('saveAllToCloud').removeClass('icon-folder')
-				.addClass('icon-loading-small')
-				.prop('disabled', true);
 
 			var _this = this;
-			MessageController.saveAttachmentsToFiles(account, folder, messageId)
-				.catch(console.error.bind(this)).then(function() {
+			MessageController.saveAttachmentsToFiles(account, folder, messageId, function() {
+				// Loading feedback
+				_this.getUI('saveAllToCloud').removeClass('icon-folder')
+				.addClass('icon-loading-small')
+				.prop('disabled', true);
+			}).catch(console.error.bind(this)).then(function() {
 				// Remove loading feedback again
 				_this.getUI('saveAllToCloud').addClass('icon-folder')
 					.removeClass('icon-loading-small')

@@ -120,13 +120,14 @@ define(function(require) {
 	 * @param {number} attachmentId
 	 * @returns {Promise}
 	 */
-	function saveAttachmentToFiles(account, folder, messageId, attachmentId) {
+	function saveAttachmentToFiles(account, folder, messageId, attachmentId, callback) {
 		var saveAll = _.isUndefined(attachmentId);
 
 		return new Promise(function(resolve, reject) {
 			OC.dialogs.filepicker(
 				t('mail', 'Choose a folder to store the attachment in'),
 				function(path) {
+					callback();
 					Radio.message.request('save:cloud', account,
 						folder, messageId, attachmentId, path).then(function() {
 						if (saveAll) {
@@ -204,8 +205,8 @@ define(function(require) {
 	 * @param {number} messageId
 	 * @returns {Promise}
 	 */
-	function saveAttachmentsToFiles(account, folder, messageId) {
-		return saveAttachmentToFiles(account, folder, messageId);
+	function saveAttachmentsToFiles(account, folder, messageId, callback) {
+		return saveAttachmentToFiles(account, folder, messageId, null, callback);
 	}
 
 	return {

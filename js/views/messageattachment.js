@@ -68,14 +68,14 @@ define(function(require) {
 			var folder = require('state').currentFolder;
 			var messageId = this.model.get('messageId');
 			var attachmentId = this.model.get('id');
-			// Loading feedback
-			this.getUI('saveToCloudButton').removeClass('icon-folder')
-				.addClass('icon-loading-small')
-				.prop('disabled', true);
 
 			var _this = this;
-			MessageController.saveAttachmentToFiles(account, folder, messageId, attachmentId)
-				.catch(console.error.bind(this)).then(function() {
+			MessageController.saveAttachmentToFiles(account, folder, messageId, attachmentId, function() {
+				// Loading feedback
+				_this.getUI('saveToCloudButton').removeClass('icon-folder')
+				.addClass('icon-loading-small')
+				.prop('disabled', true);
+			}).catch(console.error.bind(this)).then(function() {
 				// Remove loading feedback again
 				_this.getUI('saveToCloudButton').addClass('icon-folder')
 					.removeClass('icon-loading-small')
