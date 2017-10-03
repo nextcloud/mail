@@ -125,7 +125,7 @@ class AccountsController extends Controller {
 		try {
 			$account = $this->accountService->find($this->currentUserId, $accountId);
 
-			return new JSONResponse($account->jsonSerialize());
+			return new JSONResponse($account);
 		} catch (DoesNotExistException $e) {
 			return new JSONResponse([], 404);
 		}

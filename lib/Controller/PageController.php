@@ -64,9 +64,7 @@ class PageController extends Controller {
 	 * @param AliasesService $aliasesService
 	 * @param string $UserId
 	 */
-	public function __construct($appName, IRequest $request,
-		IURLGenerator $urlGenerator, IConfig $config, AccountService $accountService,
-		AliasesService $aliasesService, $UserId, IUserSession $userSession) {
+	public function __construct($appName, IRequest $request, IURLGenerator $urlGenerator, IConfig $config, AccountService $accountService, AliasesService $aliasesService, $UserId, IUserSession $userSession) {
 		parent::__construct($appName, $request);
 		$this->urlGenerator = $urlGenerator;
 		$this->config = $config;
@@ -87,9 +85,9 @@ class PageController extends Controller {
 
 		$accountsJson = [];
 		foreach ($mailAccounts as $mailAccount) {
-			$conf = $mailAccount->jsonSerialize();
-			$conf['aliases'] = $this->aliasesService->findAll($conf['accountId'], $this->currentUserId);
-			$accountsJson[] = $conf;
+			$json = $mailAccount->jsonSerialize();
+			$json['aliases'] = $this->aliasesService->findAll($mailAccount->getId(), $this->currentUserId);
+			$accountsJson[] = $json;
 		}
 
 		$user = $this->userSession->getUser();
@@ -101,12 +99,9 @@ class PageController extends Controller {
 			'prefill_email' => $this->config->getUserValue($user->getUID(), 'settings', 'email', ''),
 		]);
 
-		// set csp rules for ownCloud 8.1
-		if (class_exists('OCP\AppFramework\Http\ContentSecurityPolicy')) {
-			$csp = new ContentSecurityPolicy();
-			$csp->addAllowedFrameDomain('\'self\'');
-			$response->setContentSecurityPolicy($csp);
-		}
+		$csp = new ContentSecurityPolicy();
+		$csp->addAllowedFrameDomain('\'self\'');
+		$response->setContentSecurityPolicy($csp);
 
 		return $response;
 	}

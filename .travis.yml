@@ -96,7 +96,7 @@ script:
 
   # Run PHP tests
   - cd tests
-  - ../vendor/phpunit/phpunit/phpunit --configuration phpunit.xml
+  - ../vendor/phpunit/phpunit/phpunit --configuration phpunit.xml --fail-on-warning
   - if [[ "$PHP_COVERAGE" = "TRUE" ]]; then wget https://scrutinizer-ci.com/ocular.phar;
     fi
   - if [[ "$PHP_COVERAGE" = "TRUE" ]]; then php ocular.phar code-coverage:upload --format=php-clover

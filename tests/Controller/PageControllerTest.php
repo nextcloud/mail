@@ -22,47 +22,66 @@
 namespace OCA\Mail\Tests\Controller;
 
 use OCA\Mail\Controller\PageController;
+use OCA\Mail\Service\AccountService;
+use OCA\Mail\Service\AliasesService;
+use OCA\Mail\Service\IAccount;
 use OCP\AppFramework\Http\ContentSecurityPolicy;
 use OCP\AppFramework\Http\RedirectResponse;
 use OCP\AppFramework\Http\TemplateResponse;
+use OCP\IConfig;
+use OCP\IRequest;
+use OCP\IURLGenerator;
+use OCP\IUser;
+use OCP\IUserSession;
+use PHPUnit_Framework_MockObject_MockObject;
 use PHPUnit_Framework_TestCase;
 
 class PageControllerTest extends PHPUnit_Framework_TestCase {
 
+	/** @var string */
 	private $appName;
+
+	/** @var IRequest|PHPUnit_Framework_MockObject_MockObject */
 	private $request;
+
+	/** @var string */
 	private $userId;
-	private $mailAccountMapper;
+
+	/** @var IURLGenerator|PHPUnit_Framework_MockObject_MockObject */
 	private $urlGenerator;
+
+	/** @var IConfig|PHPUnit_Framework_MockObject_MockObject */
 	private $config;
-	private $controller;
+
+	/** @var AccountService|PHPUnit_Framework_MockObject_MockObject */
 	private $accountService;
+
+	/** @var AliasesService|PHPUnit_Framework_MockObject_MockObject */
 	private $aliasesService;
+
+	/** @var IUserSession|PHPUnit_Framework_MockObject_MockObject */
 	private $userSession;
+
+	/** @var PageController */
+	private $controller;
 
 	protected function setUp() {
 		parent::setUp();
 
 		$this->appName = 'mail';
 		$this->userId = 'george';
-		$this->request = $this->getMockBuilder('\OCP\IRequest')->getMock();
-		$this->urlGenerator = $this->getMockBuilder('OCP\IURLGenerator')->getMock();
-		$this->config = $this->getMockBuilder('OCP\IConfig')->getMock();
-		$this->accountService = $this->getMockBuilder('OCA\Mail\Service\AccountService')
-			->disableOriginalConstructor()
-			->getMock();
-		$this->aliasesService = $this->getMockBuilder('\OCA\Mail\Service\AliasesService')
-			->disableOriginalConstructor()
-			->getMock();
-		$this->userSession = $this->getMockBuilder('OCP\IUserSession')->getMock();
-		$this->controller = new PageController($this->appName, $this->request,
-			$this->urlGenerator, $this->config, $this->accountService,
-			$this->aliasesService, $this->userId, $this->userSession);
+		$this->request = $this->createMock(IRequest::class);
+		$this->urlGenerator = $this->createMock(IURLGenerator::class);
+		$this->config = $this->createMock(IConfig::class);
+		$this->accountService = $this->createMock(AccountService::class);
+		$this->aliasesService = $this->createMock(AliasesService::class);
+		$this->userSession = $this->createMock(IUserSession::class);
+		$this->controller = new PageController($this->appName, $this->request, $this->urlGenerator, $this->config, $this->accountService, $this->aliasesService, $this->userId, $this->userSession);
 	}
 
 	public function testIndex() {
-		$account1 = $this->getMockBuilder('OCA\Mail\Service\IAccount')->getMock();
-		$account2 = $this->getMockBuilder('OCA\Mail\Service\IAccount')->getMock();
+		$account1 = $this->createMock(IAccount::class);
+		$account2 = $this->createMock(IAccount::class);
 
 		$this->accountService->expects($this->once())
 			->method('findByUserId')
@@ -72,15 +91,21 @@ class PageControllerTest extends PHPUnit_Framework_TestCase {
 					$account2,
 		]));
 		$account1->expects($this->once())
-			->method('getConfiguration')
+			->method('jsonSerialize')
 			->will($this->returnValue([
 					'accountId' => 1,
 		]));
+		$account1->expects($this->once())
+			->method('getId')
+			->will($this->returnValue(1));
 		$account2->expects($this->once())
-			->method('getConfiguration')
+			->method('jsonSerialize')
 			->will($this->returnValue([
 					'accountId' => 2,
 		]));
+		$account2->expects($this->once())
+			->method('getId')
+			->will($this->returnValue(2));
 		$this->aliasesService->expects($this->exactly(2))
 			->method('findAll')
 			->will($this->returnValueMap([
@@ -104,7 +129,7 @@ class PageControllerTest extends PHPUnit_Framework_TestCase {
 			],
 		];
 
-		$user = $this->getMockBuilder('\OCP\IUser')->getMock();
+		$user = $this->createMock(IUser::class);
 		$this->userSession->expects($this->once())
 			->method('getUser')
 			->will($this->returnValue($user));
@@ -134,12 +159,9 @@ class PageControllerTest extends PHPUnit_Framework_TestCase {
 			'prefill_displayName' => 'Jane Doe',
 			'prefill_email' => 'jane@doe.cz',
 		]);
-		// set csp rules for ownCloud 8.1
-		if (class_exists('OCP\AppFramework\Http\ContentSecurityPolicy')) {
-			$csp = new ContentSecurityPolicy();
-			$csp->addAllowedFrameDomain('\'self\'');
-			$expected->setContentSecurityPolicy($csp);
-		}
+		$csp = new ContentSecurityPolicy();
+		$csp->addAllowedFrameDomain('\'self\'');
+		$expected->setContentSecurityPolicy($csp);
 
 		$response = $this->controller->index();
 
