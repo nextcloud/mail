@@ -118,6 +118,7 @@ define(function(require) {
 	 * @param {Folder} folder
 	 * @param {number} messageId
 	 * @param {number} attachmentId
+	 * @param {function} callback
 	 * @returns {Promise}
 	 */
 	function saveAttachmentToFiles(account, folder, messageId, attachmentId, callback) {
@@ -205,6 +206,7 @@ define(function(require) {
 	 * @param {Account} account
 	 * @param {Folder} folder
 	 * @param {number} messageId
+	 * @param {function} callback
 	 * @returns {Promise}
 	 */
 	function saveAttachmentsToFiles(account, folder, messageId, callback) {
