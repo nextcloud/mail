@@ -36,7 +36,7 @@ OC.L10N.register(
     "Collapse folders" : "Ordner einklappen",
     "Error while deleting account." : "Fehler beim Löschen des Kontos.",
     "Choose a file to add as attachment" : "Wähle eine Datei, die als Anhang angefügt werden soll",
-    "An error occurred while uploading {fname}" : "Fehler beim Hochladen von  {fname} aufgetreten",
+    "An error occurred while uploading {fname}" : "Fehler aufgetreten beim Hochladen von  {fname}",
     "Reply" : "Antworten",
     "Send" : "Senden",
     "Sending …" : "Sende…",
