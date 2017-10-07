@@ -2,6 +2,7 @@ OC.L10N.register(
     "mail",
     {
     "Mail" : "Correo electrónico",
+    "Loading accounts" : "Cargando cuentas",
     "Error while loading the accounts." : "Error al cargar las cuentas.",
     "Error while loading the selected account." : "Error al cargar la cuenta seleccionada.",
     "Can not load this folder." : "No se puede cargar esta carpeta.",
@@ -117,6 +118,9 @@ OC.L10N.register(
     "The images have been blocked to protect your privacy." : "Las imágenes han sido bloqueadas para proteger tu privacidad.",
     "Show images from this sender" : "Mostrar imágenes de este remitente",
     "Forward" : "Reenviar",
+    "No messages in this folder!" : "¡No hay mensajes en esta carpeta!",
+    "Upload attachment" : "Subir adjunto",
+    "Add attachment from Files" : "Añadir adjunto desde Archivos",
     "Import into calendar" : "Importar dentro del calendario",
     "Download attachment" : "Descargar adjunto",
     "Save to Files" : "Guardar en Archivos"
