@@ -28,9 +28,7 @@ namespace OCA\Mail\Controller;
 
 use Exception;
 use Horde_Exception;
-use OCA\Mail\Account;
 use OCA\Mail\Contracts\IMailTransmission;
-use OCA\Mail\Db\MailAccount;
 use OCA\Mail\Exception\ServiceException;
 use OCA\Mail\Model\NewMessageData;
 use OCA\Mail\Model\RepliedMessageData;
@@ -38,6 +36,7 @@ use OCA\Mail\Service\AccountService;
 use OCA\Mail\Service\AliasesService;
 use OCA\Mail\Service\AutoConfig\AutoConfig;
 use OCA\Mail\Service\Logger;
+use OCA\Mail\Service\SetupService;
 use OCP\AppFramework\Controller;
 use OCP\AppFramework\Db\DoesNotExistException;
 use OCP\AppFramework\Http;
@@ -73,29 +72,30 @@ class AccountsController extends Controller {
 	/** @var IMailTransmission */
 	private $mailTransmission;
 
+	/** @var SetupService */
+	private $setup;
+
 	/**
 	 * @param string $appName
 	 * @param IRequest $request
 	 * @param AccountService $accountService
 	 * @param $UserId
-	 * @param AutoConfig $autoConfig
 	 * @param Logger $logger
 	 * @param IL10N $l10n
 	 * @param ICrypto $crypto
+	 * @param SetupService $setup
 	 */
-	public function __construct($appName, IRequest $request, AccountService $accountService, $UserId,
-		AutoConfig $autoConfig, Logger $logger, IL10N $l10n, ICrypto $crypto, AliasesService $aliasesService,
-		IMailTransmission $mailTransmission
+	public function __construct($appName, IRequest $request, AccountService $accountService, $UserId, Logger $logger, IL10N $l10n, ICrypto $crypto, AliasesService $aliasesService, IMailTransmission $mailTransmission, SetupService $setup
 	) {
 		parent::__construct($appName, $request);
 		$this->accountService = $accountService;
 		$this->currentUserId = $UserId;
-		$this->autoConfig = $autoConfig;
 		$this->logger = $logger;
 		$this->l10n = $l10n;
 		$this->crypto = $crypto;
 		$this->aliasesService = $aliasesService;
 		$this->mailTransmission = $mailTransmission;
+		$this->setup = $setup;
 	}
 
 	/**
@@ -174,60 +174,33 @@ class AccountsController extends Controller {
 	 * @param bool $autoDetect
 	 * @return JSONResponse
 	 */
-	public function create($accountName, $emailAddress, $password, $imapHost, $imapPort, $imapSslMode, $imapUser,
-		$imapPassword, $smtpHost, $smtpPort, $smtpSslMode, $smtpUser, $smtpPassword, $autoDetect) {
+	public function create($accountName, $emailAddress, $password, $imapHost, $imapPort, $imapSslMode, $imapUser, $imapPassword, $smtpHost, $smtpPort, $smtpSslMode, $smtpUser, $smtpPassword, $autoDetect) {
+		$account = null;
+		$errorMessage = null;
 		try {
 			if ($autoDetect) {
-				$this->logger->info('setting up auto detected account');
-				$newAccount = $this->autoConfig->createAutoDetected($emailAddress, $password, $accountName);
+				$account = $this->setup->createNewAutoconfiguredAccount($accountName, $emailAddress, $password);
 			} else {
-				$this->logger->info('Setting up manually configured account');
-				$newAccount = new MailAccount([
-					'accountName' => $accountName,
-					'emailAddress' => $emailAddress,
-					'imapHost' => $imapHost,
-					'imapPort' => $imapPort,
-					'imapSslMode' => $imapSslMode,
-					'imapUser' => $imapUser,
-					'imapPassword' => $imapPassword,
-					'smtpHost' => $smtpHost,
-					'smtpPort' => $smtpPort,
-					'smtpSslMode' => $smtpSslMode,
-					'smtpUser' => $smtpUser,
-					'smtpPassword' => $smtpPassword
-				]);
-				$newAccount->setUserId($this->currentUserId);
-				$newAccount->setInboundPassword(
-					$this->crypto->encrypt(
-						$newAccount->getInboundPassword()
-					)
-				);
-				$newAccount->setOutboundPassword(
-					$this->crypto->encrypt(
-						$newAccount->getOutboundPassword()
-					)
-				);
-
-				$a = new Account($newAccount);
-				$this->logger->debug('Connecting to account {account}', ['account' => $newAccount->getEmail()]);
-				$a->testConnectivity();
-			}
-
-			if ($newAccount) {
-				$this->accountService->save($newAccount);
-				$this->logger->debug("account created " . $newAccount->getId());
-				return new JSONResponse(
-					['data' => ['id' => $newAccount->getId()]], Http::STATUS_CREATED);
+				$account = $this->setup->createNewAccount($accountName, $emailAddress, $imapHost, $imapPort, $imapSslMode, $imapUser, $imapPassword, $smtpHost, $smtpPort, $smtpSslMode, $smtpUser, $smtpPassword, $this->currentUserId);
 			}
 		} catch (Exception $ex) {
-			$this->logger->error('Creating account failed: ' . $ex->getMessage());
-			return new JSONResponse(
-				array('message' => $this->l10n->t('Creating account failed: ') . $ex->getMessage()), Http::STATUS_BAD_REQUEST);
+			$errorMessage = $ex->getMessage();
 		}
 
-		$this->logger->info('Auto detect failed');
-		return new JSONResponse(
-			array('message' => $this->l10n->t('Auto detect failed. Please use manual mode.')), Http::STATUS_BAD_REQUEST);
+		if (is_null($account)) {
+			if ($autoDetect) {
+				return new JSONResponse([
+					'message' => $this->l10n->t('Auto detect failed. Please use manual mode.')
+					], Http::STATUS_BAD_REQUEST);
+			} else {
+				$this->logger->error('Creating account failed: ' . $errorMessage);
+				return new JSONResponse([
+					'message' => $this->l10n->t('Creating account failed: ') . $errorMessage
+					], Http::STATUS_BAD_REQUEST);
+			}
+		}
+
+		return new JSONResponse(['data' => ['id' => $account->getId()]], Http::STATUS_CREATED);
 	}
 
 	/**
@@ -245,8 +218,7 @@ class AccountsController extends Controller {
 	 * @param mixed $attachments
 	 * @return JSONResponse
 	 */
-	public function send($accountId, $folderId, $subject, $body, $to, $cc, $bcc, $draftUID, $messageId, $attachments,
-		$aliasId) {
+	public function send($accountId, $folderId, $subject, $body, $to, $cc, $bcc, $draftUID, $messageId, $attachments, $aliasId) {
 		$account = $this->accountService->find($this->currentUserId, $accountId);
 		$alias = $aliasId ? $this->aliasesService->find($aliasId, $this->currentUserId) : null;
 

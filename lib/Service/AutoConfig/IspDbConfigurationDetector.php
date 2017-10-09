@@ -29,6 +29,7 @@ use Horde_Mail_Exception;
 use Horde_Mail_Transport_Smtphorde;
 use OCA\Mail\Account;
 use OCA\Mail\Db\MailAccount;
+use OCA\Mail\SMTP\SmtpClientFactory;
 use OCP\Security\ICrypto;
 use OpenCloud\Common\Log\Logger;
 
@@ -51,19 +52,24 @@ class IspDbConfigurationDetector {
 	/** @var ImapConnector */
 	private $imapConnector;
 
+	/** @var SmtpClientFactory */
+	private $smtpClientFactory;
+
 	/**
 	 * @param Logger $logger
 	 * @param string $UserId
 	 * @param ICrypto $crypto
 	 * @param IspDb $ispDb
 	 * @param ImapConnector $imapConnector
+	 * @param SmtpClientFactory $smtpClientFactory
 	 */
-	public function __construct(Logger $logger, $UserId, ICrypto $crypto, IspDb $ispDb, ImapConnector $imapConnector) {
+	public function __construct(Logger $logger, $UserId, ICrypto $crypto, IspDb $ispDb, ImapConnector $imapConnector, SmtpClientFactory $smtpClientFactory) {
 		$this->logger = $logger;
 		$this->UserId = $UserId;
 		$this->ispDb = $ispDb;
 		$this->crypto = $crypto;
 		$this->imapConnector = $imapConnector;
+		$this->smtpClientFactory = $smtpClientFactory;
 	}
 
 	/**
@@ -206,7 +212,7 @@ class IspDbConfigurationDetector {
 			$account->setOutboundSslMode(strtolower($smtp['socketType']));
 
 			$a = new Account($account);
-			$transport = $a->createTransport();
+			$transport = $this->smtpClientFactory->create($a);
 			if ($transport instanceof Horde_Mail_Transport_Smtphorde) {
 				$transport->getSMTPObject();
 			}

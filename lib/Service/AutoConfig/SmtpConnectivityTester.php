@@ -25,6 +25,7 @@ use Exception;
 use OCA\Mail\Account;
 use OCA\Mail\Db\MailAccount;
 use OCA\Mail\Service\Logger;
+use OCA\Mail\SMTP\SmtpClientFactory;
 use OCP\Security\ICrypto;
 
 class SmtpConnectivityTester {
@@ -35,6 +36,9 @@ class SmtpConnectivityTester {
 	/** @var ICrypto */
 	private $crypto;
 
+	/** @var SmtpClientFactory */
+	private $clientFactory;
+
 	/** @var Logger */
 	private $logger;
 
@@ -44,13 +48,14 @@ class SmtpConnectivityTester {
 	/**
 	 * @param ConnectivityTester $connectivityTester
 	 * @param ICrypto $crypto
+	 * @param SmtpClientFactory $clientFactory
 	 * @param Logger $logger
 	 * @param string $UserId
 	 */
-	public function __construct(ConnectivityTester $connectivityTester,
-		ICrypto $crypto, Logger $logger, $UserId) {
+	public function __construct(ConnectivityTester $connectivityTester, ICrypto $crypto, SmtpClientFactory $clientFactory, Logger $logger, $UserId) {
 		$this->connectivityTester = $connectivityTester;
 		$this->crypto = $crypto;
+		$this->clientFactory = $clientFactory;
 		$this->logger = $logger;
 		$this->userId = $UserId;
 	}
@@ -63,8 +68,7 @@ class SmtpConnectivityTester {
 	 * @param bool $withHostPrefix
 	 * @return bool
 	 */
-	public function test(MailAccount $account, $host, $users, $password,
-		$withHostPrefix = false) {
+	public function test(MailAccount $account, $host, $users, $password, $withHostPrefix = false) {
 		if (!is_array($users)) {
 			$users = [$users];
 		}
@@ -115,8 +119,8 @@ class SmtpConnectivityTester {
 	 * @throws Exception
 	 */
 	protected function testStmtpConnection(MailAccount $mailAccount) {
-		$a = new Account($mailAccount);
-		$smtp = $a->createTransport();
+		$account = new Account($mailAccount);
+		$smtp = $this->clientFactory->create($account);
 		$smtp->getSMTPObject();
 	}
 
