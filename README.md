@@ -25,6 +25,16 @@ And in the works for the [coming versions](https://github.com/nextcloud/mail/mil
 
 If you experience any issues or have any suggestions for improvement, use the [issue tracker](https://github.com/nextcloud/mail/issues). Please follow the [issue template](https://raw.githubusercontent.com/nextcloud/mail/master/.github/issue_template.md) so we get the info needed to debug and fix the problem. Thanks!
 
+## Development setup
+
+Just clone this repo into your apps directory (Nextcloud server installation needed). Additionally, [npm](https://www.npmjs.com/) to fetch [Node.js](https://nodejs.org/en/download/package-manager/) is needed for installing JavaScript dependencies.
+
+Once npm and Node.js are installed, PHP and JavaScript dependencies can be installed by running:
+```bash
+make install-composer-deps
+make optimize-js
+```
+
 ## Documentation
 
 Need help? Check out our documentation. It's split into three parts.
