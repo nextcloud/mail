@@ -35,12 +35,12 @@ define([
 		});
 
 		it('uses the right URL', function() {
-			spyOn(OC, 'generateUrl').and.returnValue('index.php/apps/mail/accounts');
+			spyOn(OC, 'generateUrl').and.returnValue('index.php/apps/mail/api/accounts');
 
 			var url = collection.url();
 
 			expect(OC.generateUrl).toHaveBeenCalled();
-			expect(url).toBe('index.php/apps/mail/accounts');
+			expect(url).toBe('index.php/apps/mail/api/accounts');
 		});
 
 		it('sorts accounts by accountId', function() {

@@ -52,7 +52,7 @@ define(function(require) {
 			return Promise.resolve(folder.messages, true);
 		}
 
-		var url = OC.generateUrl('apps/mail/accounts/{accountId}/folders/{folderId}/messages', {
+		var url = OC.generateUrl('apps/mail/api/accounts/{accountId}/folders/{folderId}/messages', {
 			accountId: folder.account.get('accountId'),
 			folderId: folder.get('id')
 		});
@@ -210,7 +210,7 @@ define(function(require) {
 		if (account.get('isUnified')) {
 			return getNextUnifiedMessagePage(folder, options);
 		} else {
-			var url = OC.generateUrl('apps/mail/accounts/{accountId}/folders/{folderId}/messages', {
+			var url = OC.generateUrl('apps/mail/api/accounts/{accountId}/folders/{folderId}/messages', {
 				accountId: account.get('accountId'),
 				folderId: folder.get('id')
 			});
@@ -251,7 +251,7 @@ define(function(require) {
 	function getMessageEntity(account, folder, messageId, options) {
 		options = options || {};
 
-		var url = OC.generateUrl('apps/mail/accounts/{accountId}/folders/{folderId}/messages/{messageId}', {
+		var url = OC.generateUrl('apps/mail/api/accounts/{accountId}/folders/{folderId}/messages/{messageId}', {
 			accountId: account.get('accountId'),
 			folderId: folder.get('id'),
 			messageId: messageId
@@ -301,7 +301,7 @@ define(function(require) {
 		return new Promise(function(resolve, reject) {
 			if (uncachedIds.length > 0) {
 				var Ids = uncachedIds.join(',');
-				var url = OC.generateUrl('apps/mail/accounts/{accountId}/folders/{folderId}/messages?ids={ids}', {
+				var url = OC.generateUrl('apps/mail/api/accounts/{accountId}/folders/{folderId}/messages?ids={ids}', {
 					accountId: account.get('accountId'),
 					folderId: folder.get('id'),
 					ids: Ids
@@ -324,7 +324,7 @@ define(function(require) {
 	 */
 	function flagMessage(account, folder, message, flag, value) {
 		var flags = [flag, value];
-		var url = OC.generateUrl('apps/mail/accounts/{accountId}/folders/{folderId}/messages/{messageId}/flags', {
+		var url = OC.generateUrl('apps/mail/api/accounts/{accountId}/folders/{folderId}/messages/{messageId}/flags', {
 			accountId: account.get('accountId'),
 			folderId: folder.get('id'),
 			messageId: message.id
@@ -348,7 +348,7 @@ define(function(require) {
 	function moveMessage(sourceAccount, sourceFolder, message, destAccount,
 		destFolder) {
 
-		var url = OC.generateUrl('apps/mail/accounts/{accountId}/folders/{folderId}/messages/{messageId}/move', {
+		var url = OC.generateUrl('apps/mail/api/accounts/{accountId}/folders/{folderId}/messages/{messageId}/move', {
 			accountId: sourceAccount.get('accountId'),
 			folderId: sourceFolder.get('id'),
 			messageId: message.get('id')
@@ -374,7 +374,7 @@ define(function(require) {
 			aliasId: null
 		};
 		_.defaults(options, defaultOptions);
-		var url = OC.generateUrl('/apps/mail/accounts/{id}/send', {
+		var url = OC.generateUrl('/apps/mail/api/accounts/{id}/send', {
 			id: account.get('id')
 		});
 		return Promise.resolve($.ajax(url, {
@@ -426,7 +426,7 @@ define(function(require) {
 				// Message is empty + previous draft exists -> delete it
 				var draftsFolder = account.getSpecialFolder('draft');
 				var deleteUrl =
-					OC.generateUrl('apps/mail/accounts/{accountId}/folders/{folderId}/messages/{messageId}', {
+					OC.generateUrl('apps/mail/api/accounts/{accountId}/folders/{folderId}/messages/{messageId}', {
 						accountId: account.get('accountId'),
 						folderId: draftsFolder,
 						messageId: options.draftUID
@@ -440,7 +440,7 @@ define(function(require) {
 			});
 		}
 
-		var url = OC.generateUrl('/apps/mail/accounts/{id}/draft', {
+		var url = OC.generateUrl('/apps/mail/api/accounts/{id}/draft', {
 			id: account.get('accountId')
 		});
 		return Promise.resolve($.ajax(url, {
@@ -464,7 +464,7 @@ define(function(require) {
 	 * @returns {Promise}
 	 */
 	function deleteMessage(message) {
-		var url = OC.generateUrl('apps/mail/accounts/{accountId}/folders/{folderId}/messages/{messageId}', {
+		var url = OC.generateUrl('apps/mail/api/accounts/{accountId}/folders/{folderId}/messages/{messageId}', {
 			accountId: message.folder.account.get('accountId'),
 			folderId: message.folder.get('id'),
 			messageId: message.get('id')

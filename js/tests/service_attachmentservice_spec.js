@@ -40,21 +40,21 @@ define([
 
 		/* when everything went as expected on attachment upload */
 		it('uploads a new attachment on the server', function(done) {
-			spyOn(OC, 'generateUrl').and.returnValue('index.php/apps/mail/attachments');
+			spyOn(OC, 'generateUrl').and.returnValue('index.php/apps/mail/api/attachments');
 
-			jasmine.Ajax.stubRequest('index.php/apps/mail/attachments').andReturn({
+			jasmine.Ajax.stubRequest('index.php/apps/mail/api/attachments').andReturn({
 				status: 200,
 				contentType: 'application/json',
 				responseText: '{"id": "33", "fileName": "file.zip"}'
 			});
 
 			var promise = AttachmentService.uploadLocalAttachment(fakeFile, fakeModel);
-			expect(OC.generateUrl).toHaveBeenCalledWith('/apps/mail/attachments');
+			expect(OC.generateUrl).toHaveBeenCalledWith('/apps/mail/api/attachments');
 
 			promise
-				.then(function(attachment, fileId) {
+				.then(function() {
 					expect(jasmine.Ajax.requests.count()).toBe(1);
-					expect(jasmine.Ajax.requests.mostRecent().url).toBe('index.php/apps/mail/attachments');
+					expect(jasmine.Ajax.requests.mostRecent().url).toBe('index.php/apps/mail/api/attachments');
 					done();
 				})
 				.catch(function(error) {
@@ -65,23 +65,23 @@ define([
 
 		/* when an error occurred on server side on attachment upload */
 		it('handles errors during attachment uploads', function(done) {
-			spyOn(OC, 'generateUrl').and.returnValue('index.php/apps/mail/attachments');
+			spyOn(OC, 'generateUrl').and.returnValue('index.php/apps/mail/api/attachments');
 
-			jasmine.Ajax.stubRequest('index.php/apps/mail/attachments').andReturn({
+			jasmine.Ajax.stubRequest('index.php/apps/mail/api/attachments').andReturn({
 				status: 500,
 				contentType: 'text/plain'
 			});
 
 			var promise = AttachmentService.uploadLocalAttachment(fakeFile, fakeModel);
-			expect(OC.generateUrl).toHaveBeenCalledWith('/apps/mail/attachments');
+			expect(OC.generateUrl).toHaveBeenCalledWith('/apps/mail/api/attachments');
 
 			promise
-				.then(function(attachment, fileId) {
+				.then(function() {
 					done.fail('Attachment upload is supposed to fail');
 				})
-				.catch(function(attachment) {
+				.catch(function() {
 					expect(jasmine.Ajax.requests.count()).toBe(1);
-					expect(jasmine.Ajax.requests.mostRecent().url).toBe('index.php/apps/mail/attachments');
+					expect(jasmine.Ajax.requests.mostRecent().url).toBe('index.php/apps/mail/api/attachments');
 					done();
 				});
 		});

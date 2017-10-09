@@ -81,7 +81,7 @@ define(function(require) {
 		fd.append('attachment', file);
 
 		var progressCallback = localAttachment.onProgress;
-		var url = OC.generateUrl('/apps/mail/attachments');
+		var url = OC.generateUrl('/apps/mail/api/attachments');
 
 		return Promise.resolve($.ajax({
 			url: url,

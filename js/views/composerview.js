@@ -470,7 +470,7 @@ define(function(require) {
 				}).autocomplete({
 					source: function(request, response) {
 						$.getJSON(
-							OC.generateUrl('/apps/mail/autoComplete'),
+							OC.generateUrl('/apps/mail/api/autoComplete'),
 							{
 								term: extractLast(request.term)
 							}, response);

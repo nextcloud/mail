@@ -45,11 +45,11 @@ define(['models/account',
 		});
 
 		it('has the correct URL', function() {
-			spyOn(OC, 'generateUrl').and.returnValue('index.php/apps/mail/accounts');
+			spyOn(OC, 'generateUrl').and.returnValue('index.php/apps/mail/api/accounts');
 
 			var url = account.url();
 
-			expect(url).toBe('index.php/apps/mail/accounts');
+			expect(url).toBe('index.php/apps/mail/api/accounts');
 		});
 
 		it('adds folders to its collection', function() {
