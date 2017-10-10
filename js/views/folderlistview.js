@@ -25,6 +25,8 @@ define(function(require) {
 
 		childView: FolderView,
 
+		className: 'folders',
+
 		collapsed: true,
 
 		initialize: function(options) {

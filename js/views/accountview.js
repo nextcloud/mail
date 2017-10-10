@@ -41,7 +41,10 @@ define(function(require) {
 		},
 
 		regions: {
-			folders: '.folders'
+			folders: {
+				el: '.folders',
+				replaceElement: true
+			}
 		},
 
 		ui: {

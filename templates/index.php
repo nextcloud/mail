@@ -39,8 +39,7 @@ script('mail', 'build/build');
 <div id="app">
 	<div id="app-navigation" class="icon-loading">
 		<div id="mail-new-message-fixed"></div>
-		<ul id="app-navigation-accounts"
-		    class="with-icon"></ul>
+		<ul id="app-navigation-accounts"></ul>
 		<div id="app-settings">
 			<div id="app-settings-header">
 				<button class="settings-button"

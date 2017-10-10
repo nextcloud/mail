@@ -22,6 +22,12 @@ define(function(require) {
 	 */
 	return Marionette.CollectionView.extend({
 
+		tagName: 'ul',
+
+		id: 'app-navigation-accounts',
+
+		className: 'with-icon',
+
 		/** @type {AccountCollection} */
 		collection: null,
 

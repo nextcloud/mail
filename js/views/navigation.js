@@ -17,12 +17,18 @@ define(function(require) {
 	var NewMessageView = require('views/newmessage');
 
 	return Marionette.View.extend({
+
 		el: '#app-navigation',
+
 		regions: {
 			newMessage: '#mail-new-message-fixed',
-			accounts: '#app-navigation-accounts',
+			accounts: {
+				el: '#app-navigation-accounts',
+				replaceElement: true
+			},
 			settings: '#app-settings-content'
 		},
+
 		initialize: function() {
 			this.bindUIElements();
 
@@ -30,13 +36,16 @@ define(function(require) {
 			this.listenTo(Radio.ui, 'navigation:hide', this.hide);
 			this.listenTo(Radio.ui, 'navigation:newmessage:show', this.onShowNewMessage);
 		},
+
 		render: function() {
 			// This view doesn't need rendering
 		},
+
 		show: function() {
 			this.$el.show();
 			$('#app-navigation-toggle').css('background-image', '');
 		},
+
 		hide: function() {
 			// TODO: move if or rename function
 			if (require('state').accounts.length === 0) {
@@ -44,6 +53,7 @@ define(function(require) {
 				$('#app-navigation-toggle').css('background-image', 'none');
 			}
 		},
+
 		onShowNewMessage: function() {
 			this.showChildView('newMessage', new NewMessageView({
 				accounts: this.options.accounts
