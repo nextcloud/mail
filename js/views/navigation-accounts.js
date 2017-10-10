@@ -5,7 +5,7 @@
  * later. See the COPYING file.
  *
  * @author Christoph Wurst <christoph@winzerhof-wurst.at>
- * @copyright Christoph Wurst 2015
+ * @copyright Christoph Wurst
  */
 
 define(function(require) {
@@ -21,8 +21,13 @@ define(function(require) {
 	 * @class NavigationAccountsView
 	 */
 	return Marionette.CollectionView.extend({
+
+		/** @type {AccountCollection} */
 		collection: null,
+
+		/** @type {AccountView} */
 		childView: AccountView,
+
 		/**
 		 * @returns {undefined}
 		 */
@@ -30,6 +35,7 @@ define(function(require) {
 			this.listenTo(Radio.ui, 'folder:changed', this.onFolderChanged);
 			this.listenTo(Radio.folder, 'setactive', this.setFolderActive);
 		},
+
 		/**
 		 * @param {Account} account
 		 * @param {Folder} folder
@@ -53,6 +59,7 @@ define(function(require) {
 				folder.set('active', true);
 			}
 		},
+
 		/**
 		 * @returns {undefined}
 		 */

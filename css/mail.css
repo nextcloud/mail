@@ -115,11 +115,6 @@
 	display: none;
 }
 
-#app-navigation .special-inbox,
-#app-navigation .special-all {
-	display: block;
-}
-
 
 /* do not overlap collapse icon with special use icon */
 #app-navigation .special-inbox .collapse,
@@ -148,25 +143,12 @@
 	z-index: 1;
 }
 
-#app-navigation-accounts {
-	height: calc(100% - 65px);
-	overflow-x: hidden;
-}
-
 #app-navigation ul ul {
 	display: block;
 }
 
 #app-navigation ul ul ul {
 	display: none;
-}
-
-#app-navigation .navigation-account {
-	position: relative;
-}
-#app-navigation .navigation-account .app-navigation-entry-utils-menu-button {
-	/* show the account menu toggle (three dots) by default */
-	display: inline-block;
 }
 
 #app-navigation ul ul li > a {
@@ -219,13 +201,12 @@
 }
 
 .mail-account-color {
-	display: inline-block;
+	position: absolute;
 	width: 14px;
 	height: 14px;
 	border-radius: 50%;
-	position: relative;
 	left: 15px;
-	top: -12px;
+	top: 15px;
 }
 /* color dot position fix for Safari */
 @media not all and (min-resolution:.001dpcm) { @media
