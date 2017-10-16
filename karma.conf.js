@@ -3,6 +3,12 @@
 
 var webpackConfig = require('./js/webpack.config.js');
 
+webpackConfig.entry = './js/tests/noop_init.js';
+webpackConfig.module.rules.push({
+	test: /\.js$/,
+	exclude: /init\.js/
+});
+
 module.exports = function (config) {
 	config.set({
 		// frameworks to use

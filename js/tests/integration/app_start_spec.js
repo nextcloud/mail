@@ -1,3 +1,5 @@
+/* global expect, spyOn */
+
 /**
  * @author Christoph Wurst <christoph@winzerhof-wurst.at>
  *
@@ -25,43 +27,43 @@ define([
 	'controller/accountcontroller',
 	'models/accountcollection'
 ], function(Mail, Cache, Radio, Backbone, AccountController,
-	AccountCollection) {
+		AccountCollection) {
 	describe('App', function() {
 
 		beforeEach(function() {
 			jasmine.Ajax.install();
 			$('testcontainer').remove();
 			$('body')
-				.append('testcontainer')
-				.append(
-					'<input type="hidden" id="config-installed-version" value="0.6.1">'
-					+ '<input type="hidden" id="serialized-accounts" value="">'
-					+ '<div id="user-displayname">Jane Doe</div>'
-					+ '<div id="user-email">jane@doe.cz</div>'
-					+ '<div id="app">'
-					+ '	<div id="app-navigation" class="icon-loading">'
-					+ '		<div id="mail-new-message-fixed"></div>'
-					+ '		<div id="app-navigation-accounts"></div>'
-					+ '		<div id="app-settings">'
-					+ '			<div id="app-settings-header">'
-					+ '				<button class="settings-button" data-apps-slide-toggle="#app-settings-content"><?php p($l->t("Settings"));?></button>'
-					+ '			</div>'
-					+ '			<div id="app-settings-content"></div>'
-					+ '		</div>'
-					+ '	</div>'
-					+ '	<div id="app-content">'
-					+ '		<div class="mail-content container">'
-					+ '			<div class="container icon-loading"></div>'
-					+ '		</div>'
-					+ '	</div>'
-					+ '</div>');
+					.append('testcontainer')
+					.append(
+							'<input type="hidden" id="config-installed-version" value="0.6.1">'
+							+ '<input type="hidden" id="serialized-accounts" value="">'
+							+ '<div id="user-displayname">Jane Doe</div>'
+							+ '<div id="user-email">jane@doe.cz</div>'
+							+ '<div id="app">'
+							+ '	<div id="app-navigation" class="icon-loading">'
+							+ '		<div id="mail-new-message-fixed"></div>'
+							+ '		<div id="app-navigation-accounts"></div>'
+							+ '		<div id="app-settings">'
+							+ '			<div id="app-settings-header">'
+							+ '				<button class="settings-button" data-apps-slide-toggle="#app-settings-content"><?php p($l->t("Settings"));?></button>'
+							+ '			</div>'
+							+ '			<div id="app-settings-content"></div>'
+							+ '		</div>'
+							+ '	</div>'
+							+ '	<div id="app-content">'
+							+ '		<div class="mail-content container">'
+							+ '			<div class="container icon-loading"></div>'
+							+ '		</div>'
+							+ '	</div>'
+							+ '</div>');
 		});
 
 		afterEach(function() {
 			jasmine.Ajax.uninstall();
 		});
 
-		it('starts', function() {
+		it('starts', function(done) {
 			var resolve;
 			var accountsPromise = new Promise(function(res) {
 				resolve = res;
@@ -73,6 +75,7 @@ define([
 			spyOn(AccountController, 'loadAccounts').and.callFake(function() {
 				return accountsPromise;
 			});
+			spyOn(Mail, 'startBackgroundSync');
 
 			// No ajax calls so far
 			expect(jasmine.Ajax.requests.count()).toBe(0);
@@ -96,7 +99,7 @@ define([
 				// The promise is resolved asynchronously, so we have to use the
 				// promise here too
 				expect(Backbone.history.start).toHaveBeenCalled();
-			});
+			}).then(done).catch(done.fail);
 		});
 	});
 });
