@@ -48,7 +48,7 @@ class GravatarSource {
 
 			// Don't save 0 byte images
 			$body = $response->getBody();
-			if (strlen() === 0) {
+			if (strlen($body) === 0) {
 				return null;
 			}
 			$this->storage->save($email, $body);

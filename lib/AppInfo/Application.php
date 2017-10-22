@@ -64,7 +64,7 @@ class Application extends App {
 		$container->registerParameter("hostname", Util::getServerHostName());
 
 		$container->registerService('avatarStorage', function($c) {
-			return new AvatarStorage($c->query('ServerContainer')->getUserFolder()->getParent());
+			return new AvatarStorage();
 		});
 	}
 }

@@ -1,41 +1,37 @@
 <?php
 namespace OCA\Mail\Storage;
 
+use OCP\Files\IAppData;
+use OCP\Files\NotFoundException;
+
 class AvatarStorage {
 
 	private $storage;
 
-	public function __construct($storage) {
-		// Create the node data/$user/mail/avatars
-		if (!$storage->nodeExists('mail')) {
-			$storage->newFolder('mail');
+	public function __construct(IAppData $appData) {
+		try {
+			$this->storage = $appData->getFolder('avatars');
+		} catch (NotFoundException $e) {
+			$this->storage = $appData->newFolder('avatar');
 		}
-		$node = $storage->get('mail');
-
-		if (!$node->nodeExists('avatars')) {
-			$node->newFolder('avatars');
-		}
-
-		$this->storage = $node->get('avatars');
 	}
 
 	public function save($email, $content) {
 		// check if file exists and write to it if possible
 		$filename = $this->getFilename($email);
 
-		try {
-			$file = $this->storage->get($filename);
-		} catch(\OCP\Files\NotFoundException $e) {
+		if (!$this->storage->fileExists($filename)) {
 			$this->storage->newFile($filename);
-			$file = $this->storage->get($filename);
 		}
+
+		$file = $this->storage->getFile($filename);
 
 		// the id can be accessed by $file->getId();
 		$file->putContent($content);
 	}
 
 	public function read($email) {
-		return $this->storage->get($this->getFilename($email))->getContent();
+		return $this->storage->getFile($this->getFilename($email))->getContent();
 	}
 
 	private function getFilename($email) {
