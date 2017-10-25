@@ -105,6 +105,9 @@ define(function(require) {
 			// Show first folder of first account
 			var firstAccount = this.accounts.at(0);
 			var firstFolder = firstAccount.folders.at(0);
+			if(firstAccount.get('accountId') < 0) {
+				return _this.showFolder(firstAccount.get('accountId'), firstAccount.get('id'), showComposer);
+			}
 			return _this.showFolder(firstAccount.get('accountId'), firstFolder.get('id'), showComposer);
 		},
 
@@ -128,7 +131,7 @@ define(function(require) {
 			if (_.isUndefined(folder)) {
 				folder = account.folders.at(0);
 				Radio.ui.trigger('error:show', t('mail', 'Invalid folder'));
-				this._navigate('accounts/' + accountId + '/folders/' + folder.get('id'));
+				this._navigate('accounts/' + accountId + '/folders/' + btoa(account.get('id')));
 				return Promise.resolve();
 			}
 			return FolderController.showFolder(account, folder, !showComposer);

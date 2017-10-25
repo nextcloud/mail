@@ -32,12 +32,6 @@ define(function(require) {
 			if (this.model.get('specialRole')) {
 				classes.push('special-' + this.model.get('specialRole'));
 			}
-			if (this.model.folders.length > 0) {
-				classes.push('collapsible');
-			}
-			if (this.model.get('open')) {
-				classes.push('open');
-			}
 			// .removeClass() does not work, https://bugs.jqueryui.com/ticket/9015
 			this.$el.prop('class', '');
 			var _this = this;

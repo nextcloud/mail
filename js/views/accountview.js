@@ -19,6 +19,7 @@ define(function(require) {
 
 	return Marionette.View.extend({
 		template: AccountTemplate,
+		tagName: 'li',
 		templateContext: function() {
 			var toggleCollapseMessage = this.collapsed ? t('mail', 'Show all folders') : t('mail', 'Collapse folders');
 			return {
@@ -34,7 +35,8 @@ define(function(require) {
 			'click .app-navigation-entry-utils-menu-button button': 'toggleMenu',
 			'click @ui.deleteButton': 'onDelete',
 			'click @ui.settingsButton': 'showAccountSettings',
-			'click @ui.email': 'onClick'
+			'click @ui.email': 'onClick',
+			'click .mail-account-color' : 'render'
 		},
 		regions: {
 			folders: '.folders'

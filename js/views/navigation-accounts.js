@@ -23,6 +23,7 @@ define(function(require) {
 	return Marionette.CollectionView.extend({
 		collection: null,
 		childView: AccountView,
+		tagName: 'li',
 		/**
 		 * @returns {undefined}
 		 */
@@ -52,6 +53,13 @@ define(function(require) {
 			if (folder) {
 				folder.set('active', true);
 			}
+		},
+		onRender: function() {
+			this.$el = this.$el.children();
+			// Unwrap the element to prevent infinitely 
+			// nesting elements during re-render.
+			this.$el.unwrap();
+			this.setElement(this.$el);
 		},
 		/**
 		 * @returns {undefined}
