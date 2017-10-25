@@ -2,6 +2,7 @@ OC.L10N.register(
     "mail",
     {
     "Mail" : "Αλληλογραφία",
+    "Loading accounts" : "Γίνεται φόρτωση λογαριασμών",
     "Error while loading the accounts." : "Σφάλμα κατά τη φόρτωση των λογαριασμών.",
     "Error while loading the selected account." : "Σφάλμα κατά τη φόρτωση του επιλεγμένου λογαριασμού.",
     "Can not load this folder." : "Αδυναμία φόρτωσης αυτού του φακέλου.",
