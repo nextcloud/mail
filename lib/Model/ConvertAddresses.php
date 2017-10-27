@@ -53,18 +53,6 @@ trait ConvertAddresses {
 	}
 
 	/**
-	 * @param Horde_Mail_Rfc822_List $list
-	 * @return array
-	 */
-	protected function hordeListToAssocArray(Horde_Mail_Rfc822_List $list) {
-		$addresses = [];
-		foreach ($list as $address) {
-			$addresses[] = $this->hordeToAssoc($address);
-		}
-		return $addresses;
-	}
-
-	/**
 	 * @param Horde_Imap_Client_Data_Envelope|Horde_Mail_Rfc822_List $envelope
 	 * @return array
 	 */

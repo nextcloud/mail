@@ -22,7 +22,8 @@
 namespace OCA\Mail\Service\AutoCompletion;
 
 use Horde_Mail_Exception;
-use Horde_Mail_Rfc822_Address;
+use OCA\Mail\Address;
+use OCA\Mail\AddressList;
 use OCA\Mail\Db\CollectedAddress;
 use OCA\Mail\Db\CollectedAddressMapper;
 use OCA\Mail\Service\Logger;
@@ -31,7 +32,7 @@ class AddressCollector {
 
 	/** @var CollectedAddressMapper */
 	private $mapper;
-	
+
 	/** @var string */
 	private $userId;
 
@@ -54,30 +55,40 @@ class AddressCollector {
 	 *
 	 * Duplicates are ignored
 	 *
-	 * @param string[] $addresses
+	 * @param AddressList $addressList
 	 */
-	public function addAddresses($addresses) {
-		$this->logger->debug("collecting " . count($addresses) . " email addresses");
-		foreach ($addresses as $address) {
-			try {
-				$hordeAddress = new Horde_Mail_Rfc822_Address($address);
-				if (!$hordeAddress->valid) {
-					throw new Horde_Mail_Exception();
-				}
-			} catch (Horde_Mail_Exception $ex) {
-				// Ignore it
-				$this->logger->debug("<$address> is not a valid RFC822 mail address");
-				return;
-			}
-			if (!$this->mapper->exists($this->userId, $hordeAddress->bare_address)) {
-				$this->logger->debug("saving new address <$address>");
+	public function addAddresses(AddressList $addressList) {
+		$this->logger->debug("collecting " . count($addressList) . " email addresses");
+		foreach ($addressList->iterate() as $address) {
+			/* @var $address Address */
+			$this->saveAddress($address);
+		}
+	}
 
-				$entity = new CollectedAddress();
-				$entity->setUserId($this->userId);
-				$entity->setDisplayName($hordeAddress->label);
-				$entity->setEmail($hordeAddress->bare_address);
-				$this->mapper->insert($entity);
+	/**
+	 * @param Address $address
+	 */
+	private function saveAddress(Address $address) {
+		try {
+			$hordeAddress = $address->toHorde();
+			if (!$hordeAddress->valid) {
+				throw new Horde_Mail_Exception();
 			}
+		} catch (Horde_Mail_Exception $ex) {
+			// Ignore it
+			$this->logger->debug("<$address> is not a valid RFC822 mail address");
+			return;
+		}
+		if (!$this->mapper->exists($this->userId, $address->getEmail())) {
+			$this->logger->debug("saving new address <{$address->getEmail()}>");
+
+			$entity = new CollectedAddress();
+			$entity->setUserId($this->userId);
+			if ($address->getLabel() !== $address->getEmail()) {
+				$entity->setDisplayName($address->getLabel());
+			}
+			$entity->setEmail($address->getEmail());
+			$this->mapper->insert($entity);
 		}
 	}
 

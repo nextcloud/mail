@@ -23,6 +23,7 @@ namespace OCA\Mail\Model;
 
 use Horde_Mail_Rfc822_List;
 use OCA\Mail\Account;
+use OCA\Mail\AddressList;
 
 /**
  * Simple data class that wraps the request data of a new message or reply
@@ -32,13 +33,13 @@ class NewMessageData {
 	/** @var Account */
 	private $account;
 
-	/** @var Horde_Mail_Rfc822_List */
+	/** @var AddressList */
 	private $to;
 
-	/** @var Horde_Mail_Rfc822_List */
+	/** @var AddressList */
 	private $cc;
 
-	/** @var Horde_Mail_Rfc822_List */
+	/** @var AddressList */
 	private $bcc;
 
 	/** @var string */
@@ -52,15 +53,14 @@ class NewMessageData {
 
 	/**
 	 * @param Account $account
-	 * @param Horde_Mail_Rfc822_List $to
-	 * @param Horde_Mail_Rfc822_List $cc
-	 * @param Horde_Mail_Rfc822_List $bcc
+	 * @param AddressList $to
+	 * @param AddressList $cc
+	 * @param AddressList $bcc
 	 * @param string $subject
 	 * @param string $body
 	 * @param array $attachments
 	 */
-	public function __construct(Account $account, Horde_Mail_Rfc822_List $to, Horde_Mail_Rfc822_List $cc,
-		Horde_Mail_Rfc822_List $bcc, $subject, $body, array $attachments) {
+	public function __construct(Account $account, AddressList $to, AddressList $cc, AddressList $bcc, $subject, $body, array $attachments) {
 		$this->account = $account;
 		$this->to = $to;
 		$this->cc = $cc;
@@ -81,12 +81,12 @@ class NewMessageData {
 	 * @return NewMessageData
 	 */
 	public static function fromRequest(Account $account, $to, $cc, $bcc, $subject, $body, $attachments) {
-		$toArray = is_null($to) ? new Horde_Mail_Rfc822_List() : Message::parseAddressList($to);
-		$ccArray = is_null($cc) ? new Horde_Mail_Rfc822_List() : Message::parseAddressList($cc);
-		$bccArray = is_null($bcc) ? new Horde_Mail_Rfc822_List() : Message::parseAddressList($bcc);
+		$toList = AddressList::parse($to ?: '');
+		$ccList = AddressList::parse($cc ?: '');
+		$bccList = AddressList::parse($bcc ?: '');
 		$attchmentsArray = is_null($attachments) ? [] : $attachments;
 
-		return new NewMessageData($account, $toArray, $ccArray, $bccArray, $subject, $body, $attchmentsArray);
+		return new NewMessageData($account, $toList, $ccList, $bccList, $subject, $body, $attchmentsArray);
 	}
 
 	/**
@@ -97,21 +97,21 @@ class NewMessageData {
 	}
 
 	/**
-	 * @return Horde_Mail_Rfc822_List
+	 * @return AddressList
 	 */
 	public function getTo() {
 		return $this->to;
 	}
 
 	/**
-	 * @return Horde_Mail_Rfc822_List
+	 * @return AddressList
 	 */
 	public function getCc() {
 		return $this->cc;
 	}
 
 	/**
-	 * @return Horde_Mail_Rfc822_List
+	 * @return AddressList
 	 */
 	public function getBcc() {
 		return $this->bcc;

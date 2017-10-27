@@ -23,6 +23,7 @@ namespace OCA\Mail\Model;
 
 use Horde_Mail_Rfc822_List;
 use Horde_Mime_Part;
+use OCA\Mail\AddressList;
 use OCA\Mail\Db\LocalAttachment;
 use OCP\Files\File;
 use OCP\Files\SimpleFS\ISimpleFile;
@@ -34,16 +35,16 @@ class Message implements IMessage {
 	/** @var string */
 	private $subject = '';
 
-	/** @var string */
-	private $from = '';
+	/** @var AddressList */
+	private $from;
 
-	/** @var Horde_Mail_Rfc822_List */
+	/** @var AddressList */
 	private $to;
 
-	/** @var Horde_Mail_Rfc822_List */
+	/** @var AddressList */
 	private $cc;
 
-	/** @var Horde_Mail_Rfc822_List */
+	/** @var AddressList */
 	private $bcc;
 
 	/** @var IMessage */
@@ -61,18 +62,11 @@ class Message implements IMessage {
 	/** @var int[] */
 	private $localAttachments = [];
 
-	/**
-	 * @param string $list
-	 * @return Horde_Mail_Rfc822_List
-	 */
-	public static function parseAddressList($list) {
-		return new Horde_Mail_Rfc822_List($list);
-	}
-
 	public function __construct() {
-		$this->to = new Horde_Mail_Rfc822_List();
-		$this->cc = new Horde_Mail_Rfc822_List();
-		$this->bcc = new Horde_Mail_Rfc822_List();
+		$this->from = new AddressList();
+		$this->to = new AddressList();
+		$this->cc = new AddressList();
+		$this->bcc = new AddressList();
 	}
 
 	/**
@@ -101,83 +95,58 @@ class Message implements IMessage {
 	}
 
 	/**
-	 * @return string
+	 * @return AddressList
 	 */
 	public function getFrom() {
 		return $this->from;
 	}
 
 	/**
-	 * @param string $from
+	 * @param AddressList $from
 	 */
-	public function setFrom($from) {
+	public function setFrom(AddressList $from) {
 		$this->from = $from;
 	}
 
 	/**
-	 * @return string
+	 * @return AddressList
 	 */
 	public function getTo() {
-		if ($this->to->count() > 0) {
-			return $this->to->first()->writeAddress();
-		}
-		return null;
+		return $this->to;
 	}
 
 	/**
-	 * @param Horde_Mail_Rfc822_List $to
+	 * @param AddressList $to
 	 */
-	public function setTo(Horde_Mail_Rfc822_List $to) {
+	public function setTo(AddressList $to) {
 		$this->to = $to;
 	}
 
 	/**
-	 * @param bool $assoc
-	 * @return string[]
+	 * @return AddressList
 	 */
-	public function getToList($assoc = false) {
-		if ($assoc) {
-			return $this->hordeListToAssocArray($this->to);
-		} else {
-			return $this->hordeListToStringArray($this->to);
-		}
+	public function getCC() {
+		return $this->cc;
 	}
 
 	/**
-	 * @param bool $assoc
-	 * @return Horde_Mail_Rfc822_List
+	 * @param AddressList $cc
 	 */
-	public function getCCList($assoc = false) {
-		if ($assoc) {
-			return $this->hordeListToAssocArray($this->cc);
-		} else {
-			return $this->hordeListToStringArray($this->cc);
-		}
-	}
-
-	/**
-	 * @param Horde_Mail_Rfc822_List $cc
-	 */
-	public function setCC(Horde_Mail_Rfc822_List $cc) {
+	public function setCC(AddressList $cc) {
 		$this->cc = $cc;
 	}
 
 	/**
-	 * @param bool $assoc
-	 * @return Horde_Mail_Rfc822_List
+	 * @return AddressList
 	 */
-	public function getBCCList($assoc = false) {
-		if ($assoc) {
-			return $this->hordeListToAssocArray($this->bcc);
-		} else {
-			return $this->hordeListToStringArray($this->bcc);
-		}
+	public function getBCC() {
+		return $this->bcc;
 	}
 
 	/**
-	 * @param Horde_Mail_Rfc822_List $bcc
+	 * @param AddressList $bcc
 	 */
-	public function setBcc(Horde_Mail_Rfc822_List $bcc) {
+	public function setBcc(AddressList $bcc) {
 		$this->bcc = $bcc;
 	}
 
@@ -254,8 +223,7 @@ class Message implements IMessage {
 	 * @param LocalAttachment $attachment
 	 * @param ISimpleFile $file
 	 */
-	public function addLocalAttachment(LocalAttachment $attachment,
-		ISimpleFile $file) {
+	public function addLocalAttachment(LocalAttachment $attachment, ISimpleFile $file) {
 		$part = new Horde_Mime_Part();
 		$part->setCharset('us-ascii');
 		$part->setDisposition('attachment');

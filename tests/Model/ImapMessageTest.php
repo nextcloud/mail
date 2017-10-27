@@ -24,6 +24,7 @@ namespace OCA\Mail\Tests\Model;
 use Horde_Imap_Client_Data_Fetch;
 use Horde_Imap_Client_Fetch_Results;
 use Horde_Mime_Part;
+use OCA\Mail\AddressList;
 use OCA\Mail\Model\IMAPMessage;
 use OCA\Mail\Service\Html;
 use PHPUnit_Framework_TestCase;
@@ -34,28 +35,7 @@ class ImapMessageTest extends PHPUnit_Framework_TestCase {
 		$data = new Horde_Imap_Client_Data_Fetch();
 		$m = new IMAPMessage(null, 'INBOX', 123, $data);
 
-		$this->assertNull($m->getFrom());
-		$this->assertNull($m->getFromEmail());
-	}
-
-	public function testGetReplyCcList() {
-		$data = new Horde_Imap_Client_Data_Fetch();
-		$data->setEnvelope(array(
-			'to' => 'a@b.org, tom@example.org, b@example.org',
-			'cc' => 'a@b.org, tom@example.org, a@example.org'
-		));
-		$message = new IMAPMessage(null, 'INBOX', 123, $data);
-
-		$cc = $message->getReplyCcList('a@b.org');
-		$this->assertTrue(is_array($cc));
-		$this->assertEquals(3, count($cc));
-		$cc = array_map(function($item) {
-			return $item['email'];
-		}, $cc);
-
-		$this->assertContains('tom@example.org', $cc);
-		$this->assertContains('a@example.org', $cc);
-		$this->assertContains('b@example.org', $cc);
+		$this->assertEquals(new AddressList(), $m->getFrom());
 	}
 
 	public function testIconvHtmlMessage() {

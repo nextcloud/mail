@@ -35,7 +35,14 @@ define(['views/foldercontent',
 		folder = new Folder({
 			account: account
 		});
-		message = new Message();
+		message = new Message({
+			from: [
+				{
+					label: 'Christoph Wurst',
+					email: 'christoph@domain.tld'
+				}
+			]
+		});
 		folder.addMessage(message);
 		view = new FolderContent({
 			account: account,
