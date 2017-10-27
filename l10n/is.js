@@ -2,6 +2,7 @@ OC.L10N.register(
     "mail",
     {
     "Mail" : "Póstur",
+    "Loading accounts" : "Hleð inn notendaaðgöngum",
     "Error while loading the accounts." : "Gat ekki lesið inn notandaaðganga..",
     "Error while loading the selected account." : "Villa við að lesa inn valinn notandaaðgang.",
     "Can not load this folder." : "Gat ekki að hlaðið inn möppunni.",
@@ -117,6 +118,9 @@ OC.L10N.register(
     "The images have been blocked to protect your privacy." : "Lokað hefur verið á myndir til að vernda einkalíf þitt.",
     "Show images from this sender" : "Birta myndir frá þessum sendanda",
     "Forward" : "Áframsenda",
+    "No messages in this folder!" : "Engin skilaboð í þessari möppu!",
+    "Upload attachment" : "Senda inn viðhengi",
+    "Add attachment from Files" : "Bæta við viðhengi úr skrám",
     "Import into calendar" : "Flytja inn dagatal",
     "Download attachment" : "Sækja viðhengi",
     "Save to Files" : "Vista í skrár"
