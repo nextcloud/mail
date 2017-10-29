@@ -50,6 +50,8 @@ use OCP\IL10N;
 use OCP\IRequest;
 use OCP\IURLGenerator;
 use OCP\Util;
+use OC\Streamer;
+use OC_UTIL;
 
 class MessagesController extends Controller {
 
@@ -294,6 +296,37 @@ class MessagesController extends Controller {
 
 	/**
 	 * @NoAdminRequired
+	 * @NoCSRFRequired
+	 *
+	 * @param int $accountId
+	 * @param string $folderId
+	 * @param string $messageId
+	 */
+	public function downloadAttachments($accountId, $folderId, $messageId) {
+		$mailBox = $this->getFolder($accountId, $folderId);
+		$message = $mailBox->getMessage($messageId);
+		
+		$json = $message->getFullMessage($mailBox->getSpecialRole());
+
+		$streamer = new Streamer();
+		OC_Util::obEnd();
+		$streamer->sendHeaders("attachments");
+		
+		if (isset($json['attachments'])) {
+			foreach($json['attachments'] as $attachment){
+				$attachmentObject = $mailBox->getAttachment($messageId, $attachment['id']);
+				$fh = fopen("php://temp", 'r+');
+				fputs($fh, $attachmentObject->getContents());
+				rewind($fh);
+				$streamer->addFileFromStream($fh, $attachment['fileName'], $attachment['size'], false);
+				fclose($fh);
+			}
+		}
+		$streamer->finalize();
+	}
+
+	/**
+	 * @NoAdminRequired
 	 *
 	 * @param int $accountId
 	 * @param string $folderId
@@ -493,6 +526,15 @@ class MessagesController extends Controller {
 	 */
 	private function enhanceMessage($accountId, $folderId, $id, IMAPMessage $m, $mailBox) {
 		$json = $m->getFullMessage($mailBox->getSpecialRole());
+
+		$downloadUrl = $this->urlGenerator->linkToRoute('mail.messages.downloadAttachments', [
+			'accountId' => $accountId,
+			'folderId' => $folderId,
+			'messageId' => $id,
+		]);
+		$downloadUrl = $this->urlGenerator->getAbsoluteURL($downloadUrl);
+
+		$json['downloadAllAttachmentsUrl'] = $downloadUrl;
 
 		if (isset($json['hasHtmlBody'])) {
 			$json['htmlBodyUrl'] = $this->buildHtmlBodyUrl($accountId, $folderId, $id);

@@ -34,10 +34,12 @@ define(function(require) {
 		 */
 		template: AttachmentsTemplate,
 		ui: {
-			'saveAllToCloud': '.attachments-save-to-cloud'
+			'saveAllToCloud': '.attachments-save-to-cloud',
+			'downloadAll': '.attachments-download-all'
 		},
 		events: {
-			'click @ui.saveAllToCloud': '_onSaveAllToCloud'
+			'click @ui.saveAllToCloud': '_onSaveAllToCloud',
+			'click @ui.downloadAll': '_onDownloadAll'
 		},
 		templateContext: function() {
 			return {
@@ -70,6 +72,12 @@ define(function(require) {
 					.removeClass('icon-loading-small')
 					.prop('disabled', false);
 			});
+		},
+		_onDownloadAll: function(e) {
+			e.preventDefault();
+
+			window.open(this.message.get('downloadAllAttachmentsUrl'));
+			window.focus();
 		}
 	});
 
