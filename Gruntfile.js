@@ -17,7 +17,7 @@ module.exports = function(grunt) {
 				jshintrc: '.jshintrc'
 			},
 			all: ['Gruntfile.js', 'js/*.js', 'js/models/*.js', 'js/views/*.js',
-				'!js/mail.min.js', '!js/webpack.config.js']
+				'!js/mail.min.js', '!js/webpack.*.js']
 		},
 		jscs: {
 			src: '<%= jshint.all %>',
