@@ -33,7 +33,7 @@ install-npm-deps-dev:
 	npm install --deps
 
 optimize-js: install-npm-deps
-	./node_modules/webpack/bin/webpack.js --config js/webpack.config.js
+	./node_modules/webpack/bin/webpack.js --config js/webpack.prod.config.js
 
 dev-setup: install-composer-deps install-npm-deps-dev
 
