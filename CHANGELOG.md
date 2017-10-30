@@ -1,6 +1,19 @@
 # Changelog
 All notable changes to this project will be documented in this file.
 
+## 0.7.4 – 2017-10-30
+### Added
+- IMAP/SMTP logging enabled by default if debug mode is turned on
+- Stricter CSRF checks
+### Fixed
+- Button loading state when saving all attachments
+- Icon for 'Add from files' button
+- Handling of to/bb/bcc values
+- Favorites inbox separator
+- Loading view wording
+- Dovecot special (hidden) folders
+- HTML message layout
+
 ## 0.7.3 – 2017-09-12
 ### Fixed
 - Notification favicon for incoming messages
