@@ -49,7 +49,7 @@ before_install:
   - if [[ "$DB" == 'mysql' ]]; then mysql -u root -e "GRANT ALL ON oc_autotest.* TO 'oc_autotest'@'localhost';"; fi
 
   - composer self-update
-  - make install-composer-deps
+  - make install-composer-deps-dev
   - make start-imap-docker
   - make start-smtp-docker
   - cd ..
