@@ -22,12 +22,17 @@ define(function(require) {
 	]);
 
 	var FolderListView = Marionette.CollectionView.extend({
-		tagName: 'ul',
+
 		childView: FolderView,
+
+		className: 'folders',
+
 		collapsed: true,
+
 		initialize: function(options) {
 			this.collapsed = options.collapsed;
 		},
+
 		filter: function(child) {
 			if (!this.collapsed) {
 				return true;

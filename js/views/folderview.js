@@ -22,7 +22,9 @@ define(function(require) {
 		tagName: 'li',
 
 		updateElClasses: function() {
-			var classes = [];
+			var classes = [
+				'with-counter'
+			];
 			if (this.model.get('unseen')) {
 				classes.push('unseen');
 			}

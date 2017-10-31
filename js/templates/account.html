@@ -1,34 +1,41 @@
-{{#if emailAddress}}
-<div class="mail-account-color" style="background-color: {{accountColor emailAddress}}"></div>
-{{/if}}
-<h2 class="mail-account-email" title="{{emailAddress}}">{{emailAddress}}</h2>
-
-{{#if hasMenu}}
-<ul class="app-navigation-entry-utils">
-	<li class="app-navigation-entry-utils-menu-button svg"><button></button></li>
-</ul>
-
-<ul class="app-navigation-entry-menu popovermenu bubble menu">
-	<li>
-		<a href="#" class="menuitem action action-settings permanent" data-action="Settings">
-			<span class="icon icon-rename"></span>
-			<span>{{ t 'Settings' }}</span>
-		</a>
-	</li>
-	{{#if isDeletable}}
-    <li>
-        <a href="#" class="menuitem action action-delete permanent" data-action="Delete">
-			<span class="icon icon-delete"></span>
-			<span>{{ t 'Delete account' }}</span>
-		</a>
-    </li>
+{{#unless isUnifiedInbox}}
+<li class="{{#if hasMenu}} with-menu {{/if}}">
+	{{#if emailAddress}}
+	<div class="mail-account-color" style="background-color: {{accountColor emailAddress}}"></div>
 	{{/if}}
-</ul>
-{{/if}}
+	<a>{{emailAddress}}</a>
 
-<div class="folders with-icon"></div>
+	{{#if hasMenu}}
+	<div class="app-navigation-entry-utils">
+		<ul>
+			<li class="app-navigation-entry-utils-menu-button svg"><button></button></li>
+		</ul>
+	</div>
+	<div class="app-navigation-entry-menu">
+		<ul>
+			<li>
+				<a href="#" class="menuitem action action-settings permanent">
+					<span class="icon icon-rename"></span>
+					<span>{{ t 'Settings' }}</span>
+				</a>
+			</li>
+			{{#if isDeletable}}
+			<li>
+				<a href="#" class="menuitem action action-delete permanent">
+					<span class="icon icon-delete"></span>
+					<span>{{ t 'Delete account' }}</span>
+				</a>
+			</li>
+			{{/if}}
+		</ul>
+	</div>
+	{{/if}}
+</li>
+{{/unless}}
+
+<div class="folders"></div>
 {{#unless isUnifiedInbox}}
 {{#if hasFolders}}
-<span class="account-toggle-collapse">{{toggleCollapseMessage}}</span>
+<li class="account-toggle-collapse">{{toggleCollapseMessage}}</li>
 {{/if}}
 {{/unless}}

@@ -6,8 +6,10 @@
 	{{#if noSelect}} no-select {{/if}}"
    href="{{#if noSelect}}#{{else}}{{url}}{{/if}}">
 	{{name}}
-	{{#if count}}
-	<span class="utils">{{count}}</span>
-	{{/if}}
 </a>
+<div class="app-navigation-entry-utils">
+	<ul>
+		<li class="app-navigation-entry-utils-counter">{{count}}</li>
+	</ul>
+</div>
 <div class="folders"></div>

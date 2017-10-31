@@ -48,7 +48,7 @@ interface IMailBox {
 	 * @param int $id
 	 * @return IMessage
 	 */
-	public function getMessage($id);
+	public function getMessage($id, $loadHtmlMessageBody = false);
 
 	/**
 	 * @param int $messageId

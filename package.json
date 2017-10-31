@@ -1,6 +1,6 @@
 {
   "name": "mail",
-  "version": "0.6.5",
+  "version": "0.7.4",
   "description": "Mail app",
   "main": "index.js",
   "directories": {
@@ -55,7 +55,7 @@
     "autosize": "^4.0.0",
     "backbone": "^1.3.3",
     "backbone.babysitter": "^0.1.12",
-    "backbone.marionette": "^3.0.0",
+    "backbone.marionette": "^3.4.0",
     "backbone.radio": "^2.0.0",
     "backbone.wreqr": "^1.3.7",
     "davclient.js": "0.1.0",
