@@ -38,7 +38,7 @@ install-npm-deps-dev:
 optimize-js: install-npm-deps
 	./node_modules/webpack/bin/webpack.js --config js/webpack.prod.config.js
 
-dev-setup: install-composer-deps install-npm-deps-dev
+dev-setup: install-composer-deps-dev install-npm-deps-dev
 
 start-imap-docker:
 	docker pull $(docker_image)
