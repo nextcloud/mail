@@ -82,8 +82,6 @@ define(function(require) {
 			cc = messageBody.get('cc');
 		}
 
-		console.error(recipientType, replyingAddress, to, cc);
-
 		return {
 			to: to,
 			from: [replyingAddress],
