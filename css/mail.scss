@@ -106,6 +106,10 @@
 	display: none;
 }
 
+#app-navigation .navigation-account:not(:first-child) {
+    margin-top: 22px;
+}
+
 
 /* do not overlap collapse icon with special use icon */
 #app-navigation .special-inbox .collapse,
