@@ -808,32 +808,9 @@ input.submit-message,
 
 
 #app-navigation {
-	width: 250px;
-	height: 100%;
-	float: left;
-	box-sizing: border-box;
-	background-color: $color-main-background;
-	padding-bottom: 44px;
-	-webkit-user-select: none;
-	-moz-user-select: none;
-	-ms-user-select: none;
-	user-select: none;
-	border-right: 1px solid $color-border;
-	display: flex;
-	flex-direction: column;
-	li {
-		position: relative;
-	}
 	> ul {
-		position: relative;
-		height: 100%;
-		width: inherit;
-		overflow-x: hidden;
-		overflow-y: auto;
-		box-sizing: border-box;
-		display: flex;
-		flex-direction: column;
-		> li {
+		> .navigation-account > li,
+		> .navigation-account > .folders > li {
 			display: inline-flex;
 			flex-wrap: wrap;
 			order: 1;
@@ -931,7 +908,7 @@ input.submit-message,
 		}
 		/* Menu and submenu */
 		> li,
-		> li > ul > li {
+		> .navigation-account > .folders > li {
 			position: relative;
 			width: 100%;
 			box-sizing: border-box;
