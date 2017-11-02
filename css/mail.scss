@@ -151,38 +151,16 @@
 .mail-account-email:first-child {
 	display: none;
 }
-.account-toggle-collapse {
-	display: block;
-	margin-top: 10px;
-	margin-left: 43px;
-	opacity: .2;
-	cursor: pointer;
-}
-.account-toggle-collapse:hover {
-	opacity: .5;
-}
-
-.mail-account-color {
-	position: absolute;
-	width: 14px;
-	height: 14px;
-	border-radius: 50%;
-	left: 15px;
-	top: 15px;
-}
-/* color dot position fix for Safari */
-@media not all and (min-resolution:.001dpcm) { @media
-{
-.mail-account-color {
-        top: 2px;
-}
-}}
 
 .mail-message-account-color {
 	position: absolute;
 	width: 2px;
 	height: 69px;
 	z-index: 1;
+}
+
+.account-toggle-collapse {
+	opacity: .5;
 }
 
 
@@ -807,6 +785,9 @@ input.submit-message,
 
 
 
+
+// FIXES for core apps.scss
+
 #app-navigation {
 	> ul {
 		> .navigation-account > li,
@@ -907,7 +888,7 @@ input.submit-message,
 			}
 		}
 		/* Menu and submenu */
-		> li,
+		> .navigation-account > li,
 		> .navigation-account > .folders > li {
 			position: relative;
 			width: 100%;
@@ -943,6 +924,18 @@ input.submit-message,
 				    width: 16px;
 				    margin-left: -30px;
 				}
+			}
+
+			/* Bullet icon */
+			> .app-navigation-entry-bullet {
+				position: absolute;
+				display: block;
+				margin: 16px;
+				width: 12px;
+				height: 12px;
+				border: none;
+				border-radius: 50%;
+				cursor: pointer;
 			}
 		}
 	}
