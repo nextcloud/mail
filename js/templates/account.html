@@ -1,7 +1,7 @@
 {{#unless isUnifiedInbox}}
 <li class="{{#if hasMenu}} with-menu {{/if}}">
 	{{#if emailAddress}}
-	<div class="mail-account-color" style="background-color: {{accountColor emailAddress}}"></div>
+	<div class="app-navigation-entry-bullet" style="background-color: {{accountColor emailAddress}}"></div>
 	{{/if}}
 	<a>{{emailAddress}}</a>
 
@@ -36,6 +36,8 @@
 <div class="folders"></div>
 {{#unless isUnifiedInbox}}
 {{#if hasFolders}}
-<li class="account-toggle-collapse">{{toggleCollapseMessage}}</li>
+<li class="account-toggle-collapse">
+	<a>{{toggleCollapseMessage}}</a>
+</li>
 {{/if}}
 {{/unless}}
