@@ -101,15 +101,6 @@
 
 /* app navigation */
 
-/* fix scrolling */
-#app-navigation {
-	overflow: hidden;
-}
-
-#app-navigation .utils {
-	padding: 0 16px;
-}
-
 /* do not display empty folders in the sidebar */
 #app-navigation .empty {
 	display: none;
@@ -134,35 +125,6 @@
 	display: inline-block !important;
 }
 
-
-/* START: should be done in core/apps.css */
-
-#app-navigation .collapse {
-	display: inline-block !important;
-	opacity: .3;
-	z-index: 1;
-}
-
-#app-navigation ul ul {
-	display: block;
-}
-
-#app-navigation ul ul ul {
-	display: none;
-}
-
-#app-navigation ul ul li > a {
-	padding-left: 32px;
-}
-
-#app-navigation ul .collapsible.open:hover {
-	box-shadow: inset 0 0 3px #ddd;
-}
-
-#app-navigation ul .collapsible.open ul {
-	display: block;
-}
-/* STOP: should be done in core/apps.css */
 
 #emptycontent,
 #mail-messages #emptycontent.emptycontent-search {
@@ -368,11 +330,6 @@
 	color: #fff;
 	background-color: #d2322d;
 	padding: 3px;
-}
-
-/* override core values to work with custom html */
-#app-navigation .app-navigation-entry-utils {
-	top: 7px;
 }
 
 /* autocomplete list */
