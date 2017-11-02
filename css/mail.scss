@@ -941,6 +941,11 @@ input.submit-message,
 				border-radius: 50%;
 				cursor: pointer;
 			}
+
+			/* popover fix the flex positionning of the li parent */
+			> .app-navigation-entry-menu {
+				top: 44px;
+			}
 		}
 	}
 }
