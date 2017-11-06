@@ -40,10 +40,9 @@ class GravatarSource implements IAvatarSource {
 
 	/**
 	 * @param string $email
-	 * @param string $uid
 	 * @return string|null
 	 */
-	public function fetch($email, $uid) {
+	public function fetch($email) {
 		$gravatar = new Gravatar(['size' => 128], true);
 		$avatar = $gravatar->avatar($email, ['d' => 404], true);
 

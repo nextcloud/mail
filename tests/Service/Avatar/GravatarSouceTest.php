@@ -50,7 +50,6 @@ class GravatarSourceTest extends TestCase {
 
 	public function testFetchExisting() {
 		$email = 'hey@jancborchardt.net';
-		$uid = 'john';
 		$client = $this->createMock(IClient::class);
 		$this->clientService->expects($this->once())
 			->method('newClient')
@@ -64,14 +63,13 @@ class GravatarSourceTest extends TestCase {
 			->method('getBody')
 			->willReturn('data');
 
-		$avatar = $this->source->fetch($email, $uid);
+		$avatar = $this->source->fetch($email);
 
 		$this->assertEquals('https://secure.gravatar.com/avatar/2fd3f4d5d762955e5b603794a888fa97?size=128&d=404', $avatar);
 	}
 
 	public function testFetchHttpError() {
 		$email = 'hey@jancborchardt.net';
-		$uid = 'john';
 		$client = $this->createMock(IClient::class);
 		$this->clientService->expects($this->once())
 			->method('newClient')
@@ -81,7 +79,7 @@ class GravatarSourceTest extends TestCase {
 			->with('https://secure.gravatar.com/avatar/2fd3f4d5d762955e5b603794a888fa97?size=128&d=404')
 			->willThrowException(new Exception());
 
-		$avatar = $this->source->fetch($email, $uid);
+		$avatar = $this->source->fetch($email);
 
 		$this->assertNull($avatar);
 	}

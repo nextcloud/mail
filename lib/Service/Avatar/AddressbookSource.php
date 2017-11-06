@@ -42,10 +42,9 @@ class AddressbookSource implements IAvatarSource {
 
 	/**
 	 * @param string $email
-	 * @param string $uid
 	 * @return string|null
 	 */
-	public function fetch($email, $uid) {
+	public function fetch($email) {
 		return $this->contactsIntegration->getPhoto($email);
 	}
 

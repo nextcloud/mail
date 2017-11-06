@@ -60,15 +60,15 @@ class CompositeAvatarSourceTest extends TestCase {
 		$uid = 'john';
 		$this->addressbookSource->expects($this->once())
 			->method('fetch')
-			->with($email, $uid)
+			->with($email)
 			->willReturn(null);
 		$this->gravatarSource->expects($this->once())
 			->method('fetch')
-			->with($email, $uid)
+			->with($email)
 			->willReturn(null);
 		$this->faviconSource->expects($this->once())
 			->method('fetch')
-			->with($email, $uid)
+			->with($email)
 			->willReturn(null);
 
 		$avatar = $this->source->fetch($email, $uid);
@@ -81,11 +81,11 @@ class CompositeAvatarSourceTest extends TestCase {
 		$uid = 'john';
 		$this->addressbookSource->expects($this->once())
 			->method('fetch')
-			->with($email, $uid)
+			->with($email)
 			->willReturn(null);
 		$this->gravatarSource->expects($this->once())
 			->method('fetch')
-			->with($email, $uid)
+			->with($email)
 			->willReturn('https://gravatar.com');
 
 		$avatar = $this->source->fetch($email, $uid);

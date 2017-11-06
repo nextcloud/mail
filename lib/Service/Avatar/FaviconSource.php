@@ -46,10 +46,9 @@ class FaviconSource implements IAvatarSource {
 
 	/**
 	 * @param string $email
-	 * @param string $uid
 	 * @return string|null
 	 */
-	public function fetch($email, $uid) {
+	public function fetch($email) {
 		$horde = new Horde_Mail_Rfc822_Address($email);
 		// TODO: fall back to insecure HTTP?
 		$domain = 'https://' . $horde->host;

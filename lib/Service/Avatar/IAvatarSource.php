@@ -28,8 +28,7 @@ interface IAvatarSource {
 
 	/**
 	 * @param string $email sender email address
-	 * @param string $uid User ID
 	 * @return string|null avatar URL if one can be found
 	 */
-	public function fetch($email, $uid);
+	public function fetch($email);
 }

@@ -42,6 +42,12 @@ class AvatarService implements IAvatarService {
 	/** @var IURLGenerator */
 	private $urlGenerator;
 
+	/**
+	 * @param CompositeAvatarSource $source
+	 * @param Downloader $downloader
+	 * @param AvatarCache $cache
+	 * @param IURLGenerator $urlGenerator
+	 */
 	public function __construct(CompositeAvatarSource $source, Downloader $downloader, AvatarCache $cache, IURLGenerator $urlGenerator) {
 		$this->source = $source;
 		$this->cache = $cache;

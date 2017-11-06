@@ -33,7 +33,6 @@ use OCA\Mail\Http\AttachmentDownloadResponse;
 use OCA\Mail\Http\HtmlResponse;
 use OCA\Mail\Model\IMAPMessage;
 use OCA\Mail\Service\AccountService;
-use OCA\Mail\Service\AvatarService;
 use OCA\Mail\Service\ContactsIntegration;
 use OCA\Mail\Service\IAccount;
 use OCA\Mail\Service\IMailBox;

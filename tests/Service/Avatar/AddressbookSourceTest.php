@@ -47,24 +47,22 @@ class AddressbookSourceTest extends TestCase {
 
 	public function testFetch() {
 		$email = 'john@doe.com';
-		$uid = 'jane';
 		$this->ci->expects($this->once())
 			->method('getPhoto')
 			->willReturn('https://next.cloud/photo');
 
-		$avatar = $this->source->fetch($email, $uid);
+		$avatar = $this->source->fetch($email);
 
 		$this->assertSame('https://next.cloud/photo', $avatar);
 	}
 
 	public function testFetchNoneFound() {
 		$email = 'john@doe.com';
-		$uid = 'jane';
 		$this->ci->expects($this->once())
 			->method('getPhoto')
 			->willReturn(null);
 
-		$avatar = $this->source->fetch($email, $uid);
+		$avatar = $this->source->fetch($email);
 
 		$this->assertNull($avatar);
 	}

@@ -51,12 +51,11 @@ class CompositeAvatarSource implements IAvatarSource {
 	 * valid result.
 	 *
 	 * @param string $email
-	 * @param string $uid
 	 * @return string|null
 	 */
-	public function fetch($email, $uid) {
+	public function fetch($email) {
 		foreach ($this->sources as $source) {
-			$avatar = $source->fetch($email, $uid);
+			$avatar = $source->fetch($email);
 
 			if (is_null($avatar)) {
 				continue;

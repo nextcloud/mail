@@ -55,24 +55,22 @@ class FaviconSourceTest extends TestCase {
 
 	public function testFetchNoIconsFound() {
 		$email = 'hey@jancborchardt.net';
-		$uid = 'john';
 		$this->scraper->expects($this->once())
 			->method('get')
-			->with('jancborchardt.net')
+			->with('https://jancborchardt.net')
 			->willReturn([]);
 
-		$avatar = $this->source->fetch($email, $uid);
+		$avatar = $this->source->fetch($email);
 
 		$this->assertNull($avatar);
 	}
 
 	public function testFetchSingleIcon() {
 		$email = 'hey@jancborchardt.net';
-		$uid = 'john';
 		$icon = $this->createMock(Icon::class);
 		$this->scraper->expects($this->once())
 			->method('get')
-			->with('jancborchardt.net')
+			->with('https://jancborchardt.net')
 			->willReturn([$icon]);
 		$icon->expects($this->once())
 			->method('getHref')
@@ -90,18 +88,17 @@ class FaviconSourceTest extends TestCase {
 			->method('getBody')
 			->willReturn('data');
 
-		$avatar = $this->source->fetch($email, $uid);
+		$avatar = $this->source->fetch($email);
 
 		$this->assertSame('https://domain.tld/favicon.ico', $avatar);
 	}
 
 	public function testFetchEmptyIcon() {
 		$email = 'hey@jancborchardt.net';
-		$uid = 'john';
 		$icon = $this->createMock(Icon::class);
 		$this->scraper->expects($this->once())
 			->method('get')
-			->with('jancborchardt.net')
+			->with('https://jancborchardt.net')
 			->willReturn([$icon]);
 		$icon->expects($this->once())
 			->method('getHref')
@@ -119,7 +116,7 @@ class FaviconSourceTest extends TestCase {
 			->method('getBody')
 			->willReturn('');
 
-		$avatar = $this->source->fetch($email, $uid);
+		$avatar = $this->source->fetch($email);
 
 		$this->assertNull($avatar);
 	}
