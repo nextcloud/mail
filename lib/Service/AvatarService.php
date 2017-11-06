@@ -66,7 +66,7 @@ class AvatarService implements IAvatarService {
 			return $cachedUrl;
 		}
 
-		$url = $this->source->fetch($email, $uid);
+		$url = $this->source->fetch($email);
 		if (is_null($url)) {
 			// Cannot locate any avatar -> nothing to do here
 			return null;
@@ -81,7 +81,7 @@ class AvatarService implements IAvatarService {
 	/**
 	 * @param string $email
 	 * @param string $uid
-	 * @return mixed|null image data
+	 * @return string|null image data
 	 */
 	public function getAvatarImage($email, $uid) {
 		$url = $this->cache->getUrl($email, $uid);
