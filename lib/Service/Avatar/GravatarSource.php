@@ -1,6 +1,7 @@
 <?php
 
 /**
+ * @author Christoph Wurst <christoph@winzerhof-wurst.at>
  * @author Jakob Sack <mail@jakobsack.de>
  *
  * Mail
@@ -19,48 +20,48 @@
  *
  */
 
-namespace OCA\Mail\Service\AvatarSource;
+namespace OCA\Mail\Service\Avatar;
 
-use OCA\Mail\Storage\AvatarStorage;
+use Exception;
+use Gravatar\Gravatar;
 use OCP\Http\Client\IClientService;
 
-use Gravatar\Gravatar;
+class GravatarSource implements IAvatarSource {
 
-class GravatarSource {
 	/** @var IClientService */
 	private $clientService;
 
-	/** @var AvatarStorage */
-	private $storage;
-
-	public function __construct(IClientService $clientService, AvatarStorage $avatarStorage) {
+	/**
+	 * @param IClientService $clientService
+	 */
+	public function __construct(IClientService $clientService) {
 		$this->clientService = $clientService;
-		$this->storage = $avatarStorage;
 	}
 
-	public function fetch($email) {
-		$gravatar = (new Gravatar(['size' => 128], true))->avatar($email, ['d' => 404]);
+	/**
+	 * @param string $email
+	 * @param string $uid
+	 * @return string|null
+	 */
+	public function fetch($email, $uid) {
+		$gravatar = new Gravatar(['size' => 128], true);
+		$avatar = $gravatar->avatar($email, ['d' => 404], true);
 
 		$client = $this->clientService->newClient();
 
 		try {
-			$response = $client->get($gravatar);
-
-			// Don't save 0 byte images
-			$body = $response->getBody();
-			if (strlen($body) === 0) {
-				return null;
-			}
-			$this->storage->save($email, $body);
-
-			return [
-				'email' => $email,
-				'source' => 'gravatar',
-				'url' => $gravatar
-			];
-		}
-		catch (\Exception $exception) {
+			$response = $client->get($avatar);
+		} catch (Exception $exception) {
 			return null;
 		}
+
+		// Don't save 0 byte images
+		$body = $response->getBody();
+		if (strlen($body) === 0) {
+			return null;
+		}
+
+		return $avatar;
 	}
+
 }

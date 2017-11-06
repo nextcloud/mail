@@ -1,6 +1,7 @@
 <?php
 
 /**
+ * @author Christoph Wurst <christoph@winzerhof-wurst.at>
  * @author Jakob Sack <mail@jakobsack.de>
  *
  * Mail
@@ -21,61 +22,90 @@
 
 namespace OCA\Mail\Controller;
 
-use OCP\AppFramework\Http\Response;
-use OCP\AppFramework\Controller;
-use OCP\IRequest;
-use OCP\ISession;
-
-use OCA\Mail\Service\AvatarService;
+use OCA\Mail\Contracts\IAvatarService;
 use OCA\Mail\Http\AvatarDownloadResponse;
+use OCP\AppFramework\Controller;
+use OCP\AppFramework\Http;
+use OCP\AppFramework\Http\JSONResponse;
+use OCP\AppFramework\Http\Response;
+use OCP\IRequest;
 
 class AvatarsController extends Controller {
 
-	/** @var ISession */
-	private $session;
-
-	/** @var AvatarService */
+	/** @var IAvatarService */
 	private $avatarService;
 
 	/** @var string */
-	private $currentUserId;
+	private $uid;
 
 	/**
 	 * @param string $appName
 	 * @param IRequest $request
-	 * @param ISession $session
-	 * @param AvatarService $avatarService
-	 * @param IClientService $clientService
+	 * @param IAvatarService $avatarService
 	 * @param string $UserId
 	 */
-	public function __construct($appName, IRequest $request, ISession $session, AvatarService $avatarService, $userId) {
+	public function __construct($appName, IRequest $request, IAvatarService $avatarService, $UserId) {
 		parent::__construct($appName, $request);
-		$this->session = $session;
 		$this->avatarService = $avatarService;
-		$this->currentUserId = $userId;
+		$this->uid = $UserId;
 	}
 
 	/**
 	 * @NoAdminRequired
-	 * @NoCSRFRequired
 	 *
 	 * @param string $email
 	 * @return Response
 	 */
 	public function url($email) {
-		// Get the data from the service
-		return $this->avatarService->rewriteUrl($this->avatarService->fetch($email, $this->currentUserId));
+		if (is_null($email) || empty($email)) {
+			return new JSONResponse([], Http::STATUS_BAD_REQUEST);
+		}
+
+		$avatarUrl = $this->avatarService->getAvatarUrl($email, $this->uid);
+		if (is_null($avatarUrl)) {
+			// No avatar found
+			$response = new JSONResponse([], Http::STATUS_NOT_FOUND);
+
+			// Debounce this a bit
+			// (cache for one day)
+			$response->cacheFor(24 * 60 * 60);
+
+			return $response;
+		}
+
+		$response = new JSONResponse([
+			'url' => $avatarUrl,
+		]);
+
+		// Let the browser cache this for a week
+		$response->cacheFor(7 * 24 * 60 * 60);
+
+		return $response;
 	}
 
 	/**
 	 * @NoAdminRequired
-	 * @NoCSRFRequired
 	 *
 	 * @param string $email
 	 * @return Response
 	 */
-	 public function file($email) {
-		// Return file (or fail)
-		return new AvatarDownloadResponse($this->avatarService->loadFile($email));
+	public function image($email) {
+		if (is_null($email) || empty($email)) {
+			return new JSONResponse([], Http::STATUS_BAD_REQUEST);
+		}
+
+		$imageData = $this->avatarService->getAvatarImage($email, $this->uid);
+
+		if (is_null($imageData)) {
+			// This could happen if the cache invalidated meanwhile
+			$response = new Response();
+			$response->setStatus(Http::STATUS_NOT_FOUND);
+			// Clear cache
+			$response->cacheFor(0);
+			return $response;
+		}
+
+		return new AvatarDownloadResponse($imageData);
 	}
+
 }

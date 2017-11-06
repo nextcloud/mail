@@ -1,6 +1,7 @@
 <?php
 
 /**
+ * @author Christoph Wurst <christoph@winzerhof-wurst.at>
  * @author Jakob Sack <mail@jakobsack.de>
  *
  * Mail
@@ -19,27 +20,33 @@
  *
  */
 
-namespace OCA\Mail\Db;
+namespace OCA\Mail\Service\Avatar;
 
-use OCP\AppFramework\Db\Mapper;
-use OCP\IDBConnection;
+use OCA\Mail\Service\ContactsIntegration;
 
-class AvatarMapper extends Mapper {
+/**
+ * This class is just a think wrapper around the contacts integration to use it
+ * as avatar source
+ */
+class AddressbookSource implements IAvatarSource {
+
+	/** @var ContactsIntegration */
+	private $contactsIntegration;
 
 	/**
-	 * @param IDBConnection $db
+	 * @param ContactsIntegration $contactsIntegration
 	 */
-	public function __construct(IDBConnection $db) {
-		parent::__construct($db, 'mail_avatars');
+	public function __construct(ContactsIntegration $contactsIntegration) {
+		$this->contactsIntegration = $contactsIntegration;
 	}
 
 	/**
-	 * @param int $email
-	 * @param string $currentUserId
-	 * @return Avatar
+	 * @param string $email
+	 * @param string $uid
+	 * @return string|null
 	 */
-	public function find($email, $currentUserId) {
-		$sql = 'select * from *PREFIX*mail_avatars where user_id = ? and email = ?';
-		return $this->findEntities($sql, [$currentUserId, $email]);
+	public function fetch($email, $uid) {
+		return $this->contactsIntegration->getPhoto($email);
 	}
+
 }

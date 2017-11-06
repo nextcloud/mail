@@ -21,129 +21,82 @@
 
 namespace OCA\Mail\Service;
 
-use OCA\Mail\Db\Avatar;
-use OCA\Mail\Db\AvatarMapper;
-use OCA\Mail\Service\AvatarSource\AddressbookSource;
-use OCA\Mail\Service\AvatarSource\FaviconSource;
-use OCA\Mail\Service\AvatarSource\GravatarSource;
-use OCA\Mail\Service\AvatarSource\NoneSource;
-use OCA\Mail\Service\ContactsIntegration;
-use OCA\Mail\Storage\AvatarStorage;
-
+use OCA\Mail\Contracts\IAvatarService;
+use OCA\Mail\Service\Avatar\Cache as AvatarCache;
+use OCA\Mail\Service\Avatar\CompositeAvatarSource;
+use OCA\Mail\Service\Avatar\Downloader;
+use OCA\Mail\Service\Avatar\IAvatarSource;
 use OCP\IURLGenerator;
 
-class AvatarService {
-	/** @var ContactsIntegration */
-	private $contactsIntegration;
+class AvatarService implements IAvatarService {
+
+	/** @var AvatarCache */
+	private $cache;
+
+	/** @var Downloader */
+	private $downloader;
+
+	/** @var IAvatarSource */
+	private $source;
 
 	/** @var IURLGenerator */
 	private $urlGenerator;
 
-	/** @var AvatarMapper */
-	private $mapper;
-
-	/** @var AvatarStorage */
-	private $storage;
-
-	/** @var AddressbookSource */
-	private $addressbookSource;
-
-	/** @var FaviconSource */
-	private $faviconSource;
-
-	/** @var GravatarSource */
-	private $gravatarSource;
-
-	/** @var NoneSource */
-	private $noneSource;
-
-	public function __construct(AvatarMapper $avatarMapper,
-								ContactsIntegration $contactsIntegration,
-								IURLGenerator $urlGenerator,
-								AvatarStorage $avatarStorage,
-								AddressbookSource $addressbookSource,
-								FaviconSource $faviconSource,
-								GravatarSource $gravatarSource,
-								NoneSource $noneSource) {
-		$this->mapper = $avatarMapper;
-		$this->contactsIntegration = $contactsIntegration;
+	public function __construct(CompositeAvatarSource $source, Downloader $downloader, AvatarCache $cache, IURLGenerator $urlGenerator) {
+		$this->source = $source;
+		$this->cache = $cache;
 		$this->urlGenerator = $urlGenerator;
-		$this->storage = $avatarStorage;
-		$this->addressbookSource = $addressbookSource;
-		$this->faviconSource = $faviconSource;
-		$this->gravatarSource = $gravatarSource;
-		$this->noneSource = $noneSource;
+		$this->downloader = $downloader;
 	}
 
-	public function rewriteUrl(Avatar $avatar) {
-		if ($avatar === null) {
+	/**
+	 * @param string $email
+	 * @param string $uid
+	 * @return string|null
+	 */
+	public function getAvatarUrl($email, $uid) {
+		$cachedUrl = $this->cache->getUrl($email, $uid);
+		if (!is_null($cachedUrl)) {
+			return $cachedUrl;
+		}
+
+		$url = $this->source->fetch($email, $uid);
+		if (is_null($url)) {
+			// Cannot locate any avatar -> nothing to do here
 			return null;
 		}
 
-		$copy = new Avatar();
-		$copy->setUserId($avatar->getUserId());
-		$copy->setEmail($avatar->getEmail());
-		$copy->setSource($avatar->getSource());
-		$copy->setUpdatedAt($avatar->getUpdatedAt());
-		$copy->setUrl('');
+		// Cache for the next call
+		$this->cache->addUrl($email, $uid, $url);
 
-		if ($avatar->getSource() === 'addressbook') {
-			$result = $this->contactsIntegration->getPhoto($avatar->getEmail());
-			if ($result != null) {
-				$copy->setUrl($result);
-			}
-		}
-		elseif ($avatar->getUrl() !== '') {
-			$copy->setUrl($this->urlGenerator->linkToRoute('mail.avatars.file', [ 'email' => $avatar->getEmail() ]));
-		}
-
-		return $copy;
+		return $url;
 	}
 
-	public function loadFile($email) {
-		return $this->storage->read($email);
+	/**
+	 * @param string $email
+	 * @param string $uid
+	 * @return mixed|null image data
+	 */
+	public function getAvatarImage($email, $uid) {
+		$url = $this->cache->getUrl($email, $uid);
+		if (is_null($url)) {
+			return null;
+		}
+
+		$cachedImage = $this->cache->getImage($url, $uid);
+		if (!is_null($cachedImage)) {
+			return base64_decode($cachedImage);
+		}
+
+		$image = $this->downloader->download($url);
+		if (is_null($image)) {
+			return null;
+		}
+
+		// Cache for the next call
+		$this->cache->addImage($url, $uid, base64_encode($image));
+
+		return $image;
 	}
 
-	public function loadFromCache($email, $userId) {
-		// Find avatars (but not older than a week
-		$result = $this->mapper->find($email, $userId);
-		if (count($result) > 0 && time() - $result[0]->getUpdatedAt() < 604800) {
-			return $result[0];
-		}
-
-		return null;
-	}
-
-	public function fetch($email, $userId) {
-		// Try to fetch old data first
-		$avatar = $this->loadFromCache($email, $userId);
-		if (!is_null($avatar)) {
-			return $avatar;
-		}
-
-		// our avatar is too old or does not exist
-		if (is_null($avatar)) {
-			$avatar = new Avatar();
-			$avatar->setUserId($userId);
-			$avatar->setEmail($email);
-		}
-
-		// 1) load the photo from the address book
-		$result = $this->addressbookSource->fetch($email);
-		if(!$result) $result = $this->gravatarSource->fetch($email);
-		if(!$result) $result = $this->faviconSource->fetch($email);
-		if(!$result) $result = $this->noneSource->fetch($email);
-
-		$avatar->setSource($result['source']);
-		$avatar->setUrl($result['url']);
-		$avatar->setUpdatedAt(time());
-
-		if ($avatar->getId() === null) {
-			$this->mapper->insert($avatar);
-		} else {
-			$this->mapper->update($avatar);
-		}
-
-		return $avatar;
-	}
 }

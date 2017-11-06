@@ -81,9 +81,6 @@ class MessagesController extends Controller {
 	/** @var IAccount[] */
 	private $accounts = [];
 
-	/** @var AvatarService */
-	private $avatarService;
-
 	/**
 	 * @param string $appName
 	 * @param IRequest $request
@@ -105,8 +102,7 @@ class MessagesController extends Controller {
 								Logger $logger,
 								IL10N $l10n,
 								IMimeTypeDetector $mimeTypeDetector,
-								IURLGenerator $urlGenerator,
-								AvatarService $avatarService) {
+								IURLGenerator $urlGenerator) {
 		parent::__construct($appName, $request);
 		$this->accountService = $accountService;
 		$this->currentUserId = $UserId;
@@ -116,7 +112,6 @@ class MessagesController extends Controller {
 		$this->l10n = $l10n;
 		$this->mimeTypeDetector = $mimeTypeDetector;
 		$this->urlGenerator = $urlGenerator;
-		$this->avatarService = $avatarService;
 	}
 
 	/**
@@ -157,10 +152,6 @@ class MessagesController extends Controller {
 					$j['from'] .= ' ' . $this->l10n->t('& others');
 				}
 			}
-
-			$avatar = $this->avatarService->loadFromCache($j['fromEmail'], $this->currentUserId);
-			$j['senderImage'] = $avatar === null ? '' : $this->avatarService->rewriteUrl($avatar)->getUrl();
-			$j['avatarInDatabase'] = $avatar !== null;
 
 			return $j;
 		}, $messages);
@@ -503,10 +494,6 @@ class MessagesController extends Controller {
 	 */
 	private function enhanceMessage($accountId, $folderId, $id, IMAPMessage $m, $mailBox) {
 		$json = $m->getFullMessage($mailBox->getSpecialRole());
-
-		$avatar = $this->avatarService->loadFromCache($m->getFrom()->first()->toHorde()->bare_address, $this->currentUserId);
-		$json['senderImage'] = $avatar === null ? '' : $this->avatarService->rewriteUrl($avatar)->getUrl();
-		$json['avatarInDatabase'] = $avatar !== null;
 
 		if (isset($json['hasHtmlBody'])) {
 			$json['htmlBodyUrl'] = $this->buildHtmlBodyUrl($accountId, $folderId, $id);

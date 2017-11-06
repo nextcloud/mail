@@ -28,27 +28,20 @@ class AvatarDownloadResponse extends DownloadResponse {
 	private $content;
 
 	/**
-	 * Creates a response that prompts the user to download a file which
-	 * contains the passed string
-	 * Additionally the response will be cacheable by browsers. Since the content is
-	 * generally not sensitive content (e.g. Logos in mails) this should not be a problem.
-	 * @param IFile $content the content that should be written into the file
+	 * @param string $content
 	 */
-	public function __construct($content){
+	public function __construct($content) {
 		parent::__construct('avatar', 'application/octet-stream');
 		$this->content = $content;
 
-		$expires = new \DateTime('now + 2 hours');
-		$this->addHeader('Expires', $expires->format(\DateTime::RFC1123));
-		$this->addHeader('Cache-Control', 'private');
-		$this->addHeader('Pragma', 'cache');
+		$this->cacheFor(2 * 60 * 60);
 	}
 
 	/**
 	 * Simply sets the headers and returns the file contents
 	 * @return string the file contents
 	 */
-	public function render(){
+	public function render() {
 		return $this->content;
 	}
 

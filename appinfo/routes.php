@@ -76,12 +76,12 @@ $app->registerRoutes($this,
 		],
 		[
 			'name' => 'avatars#url',
-			'url' => '/avatars/url',
+			'url' => '/api/avatars/url/{email}',
 			'verb' => 'GET'
 		],
 		[
-			'name' => 'avatars#file',
-			'url' => '/avatars/file',
+			'name' => 'avatars#image',
+			'url' => '/api/avatars/image/{email}',
 			'verb' => 'GET'
 		],
 		[
