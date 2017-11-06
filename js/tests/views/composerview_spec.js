@@ -77,6 +77,7 @@ define([
 				folder: folder,
 				type: 'reply'
 			});
+			spyOn(view, 'saveDraft');
 
 			expect(view.type).toBe('reply');
 			expect(view.isReply()).toBe(true);
@@ -88,6 +89,7 @@ define([
 			var view = new ComposerView({
 				accounts: accounts
 			});
+			spyOn(view, 'saveDraft');
 
 			expect(view.draftUID).toBeUndefined();
 		});
@@ -96,6 +98,7 @@ define([
 			var view = new ComposerView({
 				accounts: accounts
 			});
+			spyOn(view, 'saveDraft');
 
 			var expected = [
 				{
@@ -120,6 +123,7 @@ define([
 			var view = new ComposerView({
 				accounts: accounts
 			});
+			spyOn(view, 'saveDraft');
 
 			view.render();
 
@@ -152,6 +156,7 @@ define([
 				view = new ComposerView({
 					accounts: accounts
 				});
+				spyOn(view, 'saveDraft');
 
 				view.render();
 				view.bindUIElements();
@@ -249,7 +254,7 @@ define([
 					view.attachments.add(localAttachmentA);
 					expect(view.checkAllAttachmentsValid()).toBe(false);
 				});
-			}),
+			});
 
 			describe('from Files', function () {
 				it('always consider attachments from Files as valid', function() {
@@ -263,7 +268,7 @@ define([
 					view.attachments.add(localAttachmentA);
 					expect(view.checkAllAttachmentsValid()).toBe(true);
 				});
-			})
+			});
 
 		});
 	});
