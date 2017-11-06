@@ -38,6 +38,20 @@ define(function(require) {
 			replyComposer: '#reply-composer',
 			attachments: '.mail-message-attachments'
 		},
+
+		/**
+		 * @private
+		 * @param {type} email
+		 * @returns {undefined}
+		 */
+		_formatAddress: function(address) {
+			if (address.label === address.email) {
+				return address.email;
+			}
+
+			return '"' + address.label + '" <' + address.email + '>';
+		},
+
 		initialize: function(options) {
 			this.account = options.account;
 			this.folder = options.folder;
@@ -52,7 +66,7 @@ define(function(require) {
 				var text = HtmlHelper.htmlToText(this.messageBody.get('body'));
 
 				this.reply.body = '\n\n\n\n' +
-						this.messageBody.get('from') + ' – ' +
+						this._formatAddress(this.messageBody.get('from')[0]) + ' – ' +
 						$.datepicker.formatDate('D, d. MM yy ', date) +
 						date.getHours() + ':' + (minutes < 10 ? '0' : '') + minutes + '\n> ' +
 						text.replace(/\n/g, '\n> ');
