@@ -81,11 +81,11 @@ class AvatarServiceTest extends TestCase {
 		$uid = 'john';
 		$this->cache->expects($this->once())
 			->method('getUrl')
-			->with($email, $uid)
+			->with($email)
 			->willReturn(null);
 		$this->source->expects($this->once())
 			->method('fetch')
-			->with($email, $uid)
+			->with($email)
 			->willReturn(null);
 		$this->cache->expects($this->never())
 			->method('addUrl');
@@ -100,11 +100,11 @@ class AvatarServiceTest extends TestCase {
 		$uid = 'john';
 		$this->cache->expects($this->once())
 			->method('getUrl')
-			->with($email, $uid)
+			->with($email)
 			->willReturn(null);
 		$this->source->expects($this->once())
 			->method('fetch')
-			->with($email, $uid)
+			->with($email)
 			->willReturn('https://doe.com/favicon.ico');
 		$this->cache->expects($this->once())
 			->method('addUrl')

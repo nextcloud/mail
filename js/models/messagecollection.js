@@ -27,17 +27,15 @@ define(function(require) {
 		},
 
 		_fetchAvatar: function(message) {
-			if (message.get('avatarInDatabase') === false) {
-				var url = OC.generateUrl('apps/mail/avatars/url?email={email}', {
-					email: message.get('fromEmail')
-				});
+			var url = OC.generateUrl('/apps/mail/api/avatars/url/{email}', {
+				email: message.get('fromEmail')
+			});
 
-				Promise.resolve($.ajax(url)).then(function(avatar) {
-					if (avatar.source !== 'none') {
-						message.set('senderImage', avatar.url);
-					}
-				}).catch(console.error.bind(this));
-			}
+			Promise.resolve($.ajax(url)).then(function() {
+				message.set('senderImage', OC.generateUrl('/apps/mail/api/avatars/image/{email}', {
+					email: message.get('fromEmail')
+				}));
+			}).catch(console.error.bind(this));
 		}
 	});
 

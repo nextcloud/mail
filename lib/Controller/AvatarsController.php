@@ -22,12 +22,14 @@
 
 namespace OCA\Mail\Controller;
 
+use OC;
 use OCA\Mail\Contracts\IAvatarService;
 use OCA\Mail\Http\AvatarDownloadResponse;
 use OCP\AppFramework\Controller;
 use OCP\AppFramework\Http;
 use OCP\AppFramework\Http\JSONResponse;
 use OCP\AppFramework\Http\Response;
+use OCP\Files\IMimeTypeDetector;
 use OCP\IRequest;
 
 class AvatarsController extends Controller {
@@ -38,15 +40,20 @@ class AvatarsController extends Controller {
 	/** @var string */
 	private $uid;
 
+	/** @var IMimeTypeDetector */
+	private $mimeDetector;
+
 	/**
 	 * @param string $appName
 	 * @param IRequest $request
 	 * @param IAvatarService $avatarService
+	 * @param IMimeTypeDetector $mimeDetector
 	 * @param string $UserId
 	 */
-	public function __construct($appName, IRequest $request, IAvatarService $avatarService, $UserId) {
+	public function __construct($appName, IRequest $request, IAvatarService $avatarService, IMimeTypeDetector $mimeDetector, $UserId) {
 		parent::__construct($appName, $request);
 		$this->avatarService = $avatarService;
+		$this->mimeDetector = $mimeDetector;
 		$this->uid = $UserId;
 	}
 
@@ -85,6 +92,7 @@ class AvatarsController extends Controller {
 
 	/**
 	 * @NoAdminRequired
+	 * @NoCSRFRequired
 	 *
 	 * @param string $email
 	 * @return Response
@@ -105,7 +113,11 @@ class AvatarsController extends Controller {
 			return $response;
 		}
 
-		return new AvatarDownloadResponse($imageData);
+		// TODO: limit to known MIME types
+		$mime = $this->mimeDetector->detectString($imageData);
+		$resp = new AvatarDownloadResponse($imageData);
+		$resp->addHeader('Content-Type', $mime);
+		return $resp;
 	}
 
 }

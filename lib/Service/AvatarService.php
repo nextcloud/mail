@@ -84,7 +84,7 @@ class AvatarService implements IAvatarService {
 	 * @return string|null image data
 	 */
 	public function getAvatarImage($email, $uid) {
-		$url = $this->cache->getUrl($email, $uid);
+		$url = $this->getAvatarUrl($email, $uid);
 		if (is_null($url)) {
 			return null;
 		}
