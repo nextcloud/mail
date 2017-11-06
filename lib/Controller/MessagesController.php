@@ -248,7 +248,7 @@ class MessagesController extends Controller {
 		try {
 			$mailBox = $this->getFolder($accountId, $folderId);
 
-			$m = $mailBox->getMessage($messageId);
+			$m = $mailBox->getMessage($messageId, true);
 			$html = $m->getHtmlBody($accountId, $folderId, $messageId, function($cid) use ($m){
 				$match = array_filter($m->attachments, function($a) use($cid){
 					return $a['cid'] === $cid;

@@ -21,9 +21,12 @@ clean:
 composer.phar:
 	curl -sS https://getcomposer.org/installer | php
 
-install-deps: install-composer-deps install-npm-deps-dev
+install-deps: install-composer-deps-dev install-npm-deps-dev
 
 install-composer-deps: composer.phar
+	php composer.phar install --no-dev
+
+install-composer-deps-dev: composer.phar
 	php composer.phar install
 
 install-npm-deps:
@@ -33,9 +36,9 @@ install-npm-deps-dev:
 	npm install --deps
 
 optimize-js: install-npm-deps
-	./node_modules/webpack/bin/webpack.js --config js/webpack.config.js
+	./node_modules/webpack/bin/webpack.js --config js/webpack.prod.config.js
 
-dev-setup: install-composer-deps install-npm-deps-dev
+dev-setup: install-composer-deps-dev install-npm-deps-dev
 
 start-imap-docker:
 	docker pull $(docker_image)
@@ -74,6 +77,7 @@ appstore: clean install-deps optimize-js
 	--exclude=.github \
 	--exclude=.gitignore \
 	--exclude=Gruntfile.js \
+	--exclude=.hg \
 	--exclude=issue_template.md \
 	--exclude=.jscsrc \
 	--exclude=.jshintignore \
@@ -87,6 +91,7 @@ appstore: clean install-deps optimize-js
 	--exclude=nbproject \
 	--exclude=/node_modules \
 	--exclude=package.json \
+	--exclude=.phan \
 	--exclude=phpunit*xml \
 	--exclude=screenshots \
 	--exclude=.scrutinizer.yml \

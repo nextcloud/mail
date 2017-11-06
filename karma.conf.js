@@ -1,7 +1,7 @@
 // Karma configuration
 // Generated on Tue Sep 01 2015 13:54:51 GMT+0200 (CEST)
 
-var webpackConfig = require('./js/webpack.config.js');
+var webpackConfig = require('./js/webpack.dev.config.js');
 
 webpackConfig.entry = './js/tests/noop_init.js';
 webpackConfig.module.rules.push({
@@ -30,7 +30,7 @@ module.exports = function (config) {
 
 		// list of files to exclude
 		exclude: [
-			'js/webpack.config.js',
+			'js/webpack.*.js',
 			'js/init.js'
 		],
 		// preprocess matching files before serving them to the browser

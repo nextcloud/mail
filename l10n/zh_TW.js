@@ -2,6 +2,7 @@ OC.L10N.register(
     "mail",
     {
     "Mail" : "電子郵件",
+    "Loading accounts" : "載入帳戶中",
     "Error while loading the accounts." : "載入帳號時發生錯誤",
     "Error while loading the selected account." : "載入選擇的帳號時發生錯誤",
     "Can not load this folder." : "無法加載此資料夾。",
@@ -24,6 +25,7 @@ OC.L10N.register(
     "Send message to {email}" : "送訊息給 {email}",
     "Could not load {tag}{name}{endtag}" : "無法載入 {tag}{name}{endtag}",
     "We couldn’t load {tag}{name}{endtag}" : "我們不能載入 {tag}{name}{endtag}",
+    "We couldn’t load your message" : "我們無法載入您的訊息。",
     "There was a problem loading the message" : "在載入信息時有些障礙",
     "{from}\n{subject}" : "{from}\n{subject}",
     "_%n new message \nfrom {from}_::_%n new messages \nfrom {from}_" : ["%n新訊息\n來自 {from}"],

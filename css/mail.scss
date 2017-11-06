@@ -101,23 +101,13 @@
 
 /* app navigation */
 
-/* fix scrolling */
-#app-navigation {
-	overflow: hidden;
-}
-
-#app-navigation .utils {
-	padding: 0 16px;
-}
-
 /* do not display empty folders in the sidebar */
 #app-navigation .empty {
 	display: none;
 }
 
-#app-navigation .special-inbox,
-#app-navigation .special-all {
-	display: block;
+#app-navigation .navigation-account:not(:first-child) {
+    margin-top: 22px;
 }
 
 
@@ -139,48 +129,6 @@
 	display: inline-block !important;
 }
 
-
-/* START: should be done in core/apps.css */
-
-#app-navigation .collapse {
-	display: inline-block !important;
-	opacity: .3;
-	z-index: 1;
-}
-
-#app-navigation-accounts {
-	height: calc(100% - 65px);
-	overflow-x: hidden;
-}
-
-#app-navigation ul ul {
-	display: block;
-}
-
-#app-navigation ul ul ul {
-	display: none;
-}
-
-#app-navigation .navigation-account {
-	position: relative;
-}
-#app-navigation .navigation-account .app-navigation-entry-utils-menu-button {
-	/* show the account menu toggle (three dots) by default */
-	display: inline-block;
-}
-
-#app-navigation ul ul li > a {
-	padding-left: 32px;
-}
-
-#app-navigation ul .collapsible.open:hover {
-	box-shadow: inset 0 0 3px #ddd;
-}
-
-#app-navigation ul .collapsible.open ul {
-	display: block;
-}
-/* STOP: should be done in core/apps.css */
 
 #emptycontent,
 #mail-messages #emptycontent.emptycontent-search {
@@ -207,39 +155,16 @@
 .mail-account-email:first-child {
 	display: none;
 }
-.account-toggle-collapse {
-	display: block;
-	margin-top: 10px;
-	margin-left: 43px;
-	opacity: .2;
-	cursor: pointer;
-}
-.account-toggle-collapse:hover {
-	opacity: .5;
-}
-
-.mail-account-color {
-	display: inline-block;
-	width: 14px;
-	height: 14px;
-	border-radius: 50%;
-	position: relative;
-	left: 15px;
-	top: -12px;
-}
-/* color dot position fix for Safari */
-@media not all and (min-resolution:.001dpcm) { @media
-{
-.mail-account-color {
-        top: 2px;
-}
-}}
 
 .mail-message-account-color {
 	position: absolute;
 	width: 2px;
 	height: 69px;
 	z-index: 1;
+}
+
+.account-toggle-collapse {
+	opacity: .5;
 }
 
 
@@ -387,11 +312,6 @@
 	color: #fff;
 	background-color: #d2322d;
 	padding: 3px;
-}
-
-/* override core values to work with custom html */
-#app-navigation .app-navigation-entry-utils {
-	top: 7px;
 }
 
 /* autocomplete list */
@@ -865,4 +785,167 @@ input.submit-message,
 }
 .icon-trash {
 	background-image: url('../img/trash.svg');
+}
+
+
+
+
+// FIXES for core apps.scss
+
+#app-navigation {
+	> ul {
+		> .navigation-account > li,
+		> .navigation-account > .folders > li {
+			display: inline-flex;
+			flex-wrap: wrap;
+			order: 1;
+			flex-shrink: 0;
+
+			/* Pinned-to-bottom entries */
+			&.pinned {
+				order: 2;
+				&.first-pinned {
+					margin-top: auto !important;
+				}
+			}
+
+			> a,
+			> .app-navigation-entry-deleted {
+				/* Ugly hack for overriding the main entry link */
+				padding-left: 44px !important;
+			}
+			> .app-navigation-entry-edit {
+				/* Ugly hack for overriding the main entry link */
+				/* align the input correctly with the link text
+				   44px-6px padding for the input */
+				padding-left: 38px !important;
+			}
+
+			&:focus,
+			&:hover,
+			&.active,
+			a.selected {
+				&,
+				> a {
+					opacity: 1;
+					box-shadow: inset 2px 0 $color-primary;
+				}
+			}
+
+			/* align loader */
+			&.icon-loading-small:after {
+				left: 22px;
+				top: 22px;
+			}
+
+			/* hide and animate deletion/collapse of subitems */
+			&.deleted,
+			&.collapsible:not(.open) {
+				> ul {
+					opacity: 0;
+					max-height: 0;
+					/* bezier override the hide/slow effect due to the 2000 max-height */
+					transition: max-height 1000ms cubic-bezier(0, 1, 0, 1),
+								opacity 250ms ease-in-out;
+				}
+			}
+
+			/* Second level nesting for lists */
+			> ul {
+				flex: 1 0 100%;
+				padding-left: 62px;
+				width: inherit;
+				transition: max-height 2000ms ease-in-out,
+							opacity 250ms ease-in-out;
+				max-height: 9999px;
+				opacity: 1;
+				> li {
+					display: inline-flex;
+					flex-wrap: wrap;
+					&:focus,
+					&:hover,
+					&.active,
+					a.selected {
+						&,
+						> a {
+							opacity: 1;
+						}
+					}
+
+					/* align loader */
+					&.icon-loading-small:after {
+						left: -10px;
+					}
+
+					/* Submenu fix for icon */
+					> a[class*='icon-'],
+					> a[style*='background-image'],
+					.app-navigation-entry-bullet {
+						margin-left: -32px; /* 44px padding - 12px padding */
+					}
+
+					/* Submenu fix for bullet */
+					> .app-navigation-entry-bullet {
+						left: -32px;/* 44px padding - 12px padding */
+					}
+				}
+			}
+		}
+		/* Menu and submenu */
+		> .navigation-account > li,
+		> .navigation-account > .folders > li {
+			position: relative;
+			width: 100%;
+			box-sizing: border-box;
+			/* hide icons if loading */
+			&.icon-loading-small {
+				> a,
+				> .app-navigation-entry-bullet {
+					background: none !important;
+				}
+			}
+			/* Main entry link */
+			> a {
+				background-size: 16px 16px;
+				background-position: 14px center;
+				background-repeat: no-repeat;
+				display: block;
+				justify-content: space-between;
+				line-height: 44px;
+				min-height: 44px;
+				padding: 0 12px;
+				overflow: hidden;
+				box-sizing: border-box;
+				white-space: nowrap;
+				text-overflow: ellipsis;
+				color: $color-main-text;
+				opacity: .57;
+				flex: 1 1 0;
+				z-index: 100; /* above the bullet */
+				/* TODO: forbid using img as icon in menu? */
+				&:first-child img {
+				    margin-right: 11px;
+				    width: 16px;
+				    margin-left: -30px;
+				}
+			}
+
+			/* Bullet icon */
+			> .app-navigation-entry-bullet {
+				position: absolute;
+				display: block;
+				margin: 16px;
+				width: 12px;
+				height: 12px;
+				border: none;
+				border-radius: 50%;
+				cursor: pointer;
+			}
+
+			/* popover fix the flex positionning of the li parent */
+			> .app-navigation-entry-menu {
+				top: 44px;
+			}
+		}
+	}
 }
