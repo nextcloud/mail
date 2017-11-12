@@ -28,6 +28,9 @@ OC = {
 
 		}
 	},
+	filePath: function(app, type, path) {
+		return type + '/' + path;
+	},
 	generateUrl: function(url, params) {
 		var props = [];
 		for (var prop in params) {
