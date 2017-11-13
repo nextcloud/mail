@@ -1,3 +1,5 @@
+/* global Promise */
+
 /**
  * Mail
  *

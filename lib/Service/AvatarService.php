@@ -72,6 +72,7 @@ class AvatarService implements IAvatarService {
 			return in_array($mime, [
 				'image/jpeg',
 				'image/png',
+				'image/x-icon',
 			]);
 		} else {
 			// We trust internal URLs by default
