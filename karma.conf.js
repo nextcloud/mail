@@ -19,9 +19,6 @@ module.exports = function (config) {
 			{pattern: 'node_modules/jquery/dist/jquery.js', included: true},
 			{pattern: 'node_modules/underscore/underscore.js', included: true},
 			{pattern: 'js/tests/test-main.js', included: true},
-			//{pattern: 'js/**/*.js', included: false},
-			//{pattern: 'js/*.js', included: false},
-			//{pattern: 'js/templates/*.html', included: false},
 			// all files ending in "_test"
 			{pattern: 'js/tests/*_spec.js', watched: false},
 			{pattern: 'js/tests/**/*_spec.js', watched: false},
@@ -36,12 +33,10 @@ module.exports = function (config) {
 		// preprocess matching files before serving them to the browser
 		// available preprocessors: https://npmjs.org/browse/keyword/karma-preprocessor
 		preprocessors: {
-			//'js/build/build.js': ['webpack'],
 			'js/**[!vendor]/*[!spec].js': ['coverage'],
 			// add webpack as preprocessor
 			'js/tests/*_spec.js': ['webpack'],
 			'js/tests/**/*_spec.js': ['webpack']
-			//'js/build/build.js': ['webpack', 'sourcemap']
 		},
 
 		webpackMiddleware: {
