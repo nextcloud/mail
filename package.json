@@ -44,6 +44,7 @@
     "karma-phantomjs-launcher": "^1.0.4",
     "karma-requirejs": "^1.1.0",
     "karma-sinon": "^1.0.5",
+    "karma-sourcemap-loader": "^0.3.7",
     "karma-webpack": "^2.0.4",
     "phantomjs-prebuilt": "^2.1.12",
     "raw-loader": "^0.5.1",
@@ -69,7 +70,6 @@
     "jquery-ui": "1.10.4",
     "jquery-visibility": "~1.0.11",
     "js-storage": "1.0.1",
-    "karma-sourcemap-loader": "^0.3.7",
     "requirejs": "^2.3.3",
     "underscore": "~1.8.3"
   }
