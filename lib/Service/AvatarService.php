@@ -115,7 +115,7 @@ class AvatarService implements IAvatarService {
 
 		$cachedImage = $this->cache->getImage($avatar->getUrl(), $uid);
 		if (!is_null($cachedImage)) {
-			return base64_decode($cachedImage);
+			return [$avatar, base64_decode($cachedImage)];
 		}
 
 		$image = $this->downloader->download($avatar->getUrl());

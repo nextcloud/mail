@@ -155,9 +155,9 @@ class AvatarServiceTest extends TestCase {
 			->with('https://doe.com/favicon.ico', $uid)
 			->willReturn(self::BLACK_DOT_BASE64);
 
-		$image = $this->avatarService->getAvatarImage($email, $uid);
+		$data = $this->avatarService->getAvatarImage($email, $uid);
 
-		$this->assertEquals(base64_decode(self::BLACK_DOT_BASE64), $image);
+		$this->assertEquals([$avatar, base64_decode(self::BLACK_DOT_BASE64)], $data);
 	}
 
 	public function testGetAvatarImageNoUrlCached() {
