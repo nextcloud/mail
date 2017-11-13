@@ -169,6 +169,23 @@ define([
 			assertSameAddressList(reply.cc, [dani]);
 		});
 
+		it('handles jan\'s reply to nina\'s mesage to a mailing list', function() {
+			var nina = createAddress('nina@nc.com');
+			var list = createAddress('list@nc.com');
+			var jan = createAddress('jan@nc.com');
+
+			messageBody.set('from', [nina]);
+			messageBody.set('to', [list]);
+			messageBody.set('cc', []);
+			setEmail(message, jan);
+
+			var reply = ReplyBuilder.buildReply(message, messageBody);
+
+			assertSameAddressList(reply.from, [jan]);
+			assertSameAddressList(reply.to, [nina, list]);
+			assertSameAddressList(reply.cc, []);
+		});
+
 	});
 
 });
