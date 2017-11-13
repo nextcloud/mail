@@ -22,7 +22,7 @@ module.exports = function (config) {
 			// all files ending in "_test"
 			{pattern: 'js/tests/*_spec.js', watched: false},
 			{pattern: 'js/tests/**/*_spec.js', watched: false},
-			{pattern: 'js/build/build.js', included: true}
+			{pattern: 'js/build/build.js', included: false}
 		],
 
 		// list of files to exclude
