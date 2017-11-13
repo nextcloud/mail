@@ -25,6 +25,9 @@ use OCP\AppFramework\Http\DownloadResponse;
 
 class AvatarDownloadResponse extends DownloadResponse {
 
+	use CacheHeaders;
+
+	/** @var string */
 	private $content;
 
 	/**
@@ -33,8 +36,6 @@ class AvatarDownloadResponse extends DownloadResponse {
 	public function __construct($content) {
 		parent::__construct('avatar', 'application/octet-stream');
 		$this->content = $content;
-
-		$this->cacheFor(2 * 60 * 60);
 	}
 
 	/**

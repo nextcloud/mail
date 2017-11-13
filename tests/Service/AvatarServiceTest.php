@@ -24,6 +24,8 @@
 
 namespace OCA\Mail\Tests\Service;
 
+use OCA\Mail\Service\Avatar\Avatar;
+use OCA\Mail\Service\Avatar\AvatarFactory;
 use OCA\Mail\Service\Avatar\Cache;
 use OCA\Mail\Service\Avatar\CompositeAvatarSource;
 use OCA\Mail\Service\Avatar\Downloader;
@@ -49,6 +51,9 @@ class AvatarServiceTest extends TestCase {
 	/** @var IURLGenerator|PHPUnit_Framework_MockObject_MockObject */
 	private $urlGenerator;
 
+	/** @var AvatarFactory|PHPUnit_Framework_MockObject_MockObject */
+	private $avatarFactory;
+
 	/** @var AvatarService */
 	private $avatarService;
 
@@ -59,69 +64,92 @@ class AvatarServiceTest extends TestCase {
 		$this->downloader = $this->createMock(Downloader::class);
 		$this->cache = $this->createMock(Cache::class);
 		$this->urlGenerator = $this->createMock(IURLGenerator::class);
+		$this->avatarFactory = $this->createMock(AvatarFactory::class);
 
-		$this->avatarService = new AvatarService($this->source, $this->downloader, $this->cache, $this->urlGenerator);
+		$this->avatarService = new AvatarService($this->source, $this->downloader, $this->cache, $this->urlGenerator, $this->avatarFactory);
 	}
 
 	public function testGetCachedAvatarUrl() {
 		$email = 'jane@doe.com';
 		$uid = 'john';
 		$this->cache->expects($this->once())
-			->method('getUrl')
+			->method('get')
 			->with($email, $uid)
 			->willReturn('https://doe.com/favicon.ico');
 
-		$url = $this->avatarService->getAvatarUrl($email, $uid);
+		$url = $this->avatarService->getAvatar($email, $uid);
 
 		$this->assertEquals('https://doe.com/favicon.ico', $url);
 	}
 
-	public function testGetAvatarUrlNoAvatarFound() {
+	public function testGetAvatarNoAvatarFound() {
 		$email = 'jane@doe.com';
 		$uid = 'john';
 		$this->cache->expects($this->once())
-			->method('getUrl')
+			->method('get')
 			->with($email)
 			->willReturn(null);
 		$this->source->expects($this->once())
 			->method('fetch')
-			->with($email)
+			->with($email, $this->avatarFactory)
 			->willReturn(null);
 		$this->cache->expects($this->never())
-			->method('addUrl');
+			->method('add');
 
-		$url = $this->avatarService->getAvatarUrl($email, $uid);
+		$url = $this->avatarService->getAvatar($email, $uid);
 
 		$this->assertNull($url);
 	}
 
-	public function testGetAvatarUrl() {
+	public function testGetAvatarMimeNotAllowed() {
 		$email = 'jane@doe.com';
 		$uid = 'john';
 		$this->cache->expects($this->once())
-			->method('getUrl')
+			->method('get')
+			->with($email)
+			->willReturn(null);
+		$avatar = new Avatar('http://…', 'application/xml');
+		$this->source->expects($this->once())
+			->method('fetch')
+			->with($email, $this->avatarFactory)
+			->willReturn($avatar);
+		$this->cache->expects($this->never())
+			->method('add');
+
+		$url = $this->avatarService->getAvatar($email, $uid);
+
+		$this->assertNull($url);
+	}
+
+	public function testGetAvatar() {
+		$email = 'jane@doe.com';
+		$uid = 'john';
+		$avatar = new Avatar('https://doe.com/favicon.ico', 'image/png');
+		$this->cache->expects($this->once())
+			->method('get')
 			->with($email)
 			->willReturn(null);
 		$this->source->expects($this->once())
 			->method('fetch')
-			->with($email)
-			->willReturn('https://doe.com/favicon.ico');
+			->with($email, $this->avatarFactory)
+			->willReturn($avatar);
 		$this->cache->expects($this->once())
-			->method('addUrl')
-			->with($email, $uid, 'https://doe.com/favicon.ico');
+			->method('add')
+			->with($email, $uid, $avatar);
 
-		$url = $this->avatarService->getAvatarUrl($email, $uid);
+		$actualAvatar = $this->avatarService->getAvatar($email, $uid);
 
-		$this->assertEquals('https://doe.com/favicon.ico', $url);
+		$this->assertEquals($avatar, $actualAvatar);
 	}
 
 	public function testGetCachedAvatarImage() {
 		$email = 'jane@doe.com';
 		$uid = 'john';
+		$avatar = new Avatar('https://doe.com/favicon.ico', 'image/png');
 		$this->cache->expects($this->once())
-			->method('getUrl')
+			->method('get')
 			->with($email, $uid)
-			->willReturn('https://doe.com/favicon.ico');
+			->willReturn($avatar);
 		$this->cache->expects($this->once())
 			->method('getImage')
 			->with('https://doe.com/favicon.ico', $uid)
@@ -136,7 +164,7 @@ class AvatarServiceTest extends TestCase {
 		$email = 'jane@doe.com';
 		$uid = 'john';
 		$this->cache->expects($this->once())
-			->method('getUrl')
+			->method('get')
 			->with($email, $uid)
 			->willReturn(null);
 
@@ -148,10 +176,11 @@ class AvatarServiceTest extends TestCase {
 	public function testGetAvatarImageDownloadImage() {
 		$email = 'jane@doe.com';
 		$uid = 'john';
+		$avatar = new Avatar('https://doe.com/favicon.ico', 'image/jpg');
 		$this->cache->expects($this->once())
-			->method('getUrl')
+			->method('get')
 			->with($email, $uid)
-			->willReturn('https://doe.com/favicon.ico');
+			->willReturn($avatar);
 		$this->cache->expects($this->once())
 			->method('getImage')
 			->with('https://doe.com/favicon.ico', $uid)
@@ -164,18 +193,19 @@ class AvatarServiceTest extends TestCase {
 			->method('addImage')
 			->with('https://doe.com/favicon.ico', $uid, self::BLACK_DOT_BASE64);
 
-		$image = $this->avatarService->getAvatarImage($email, $uid);
+		$data = $this->avatarService->getAvatarImage($email, $uid);
 
-		$this->assertEquals(base64_decode(self::BLACK_DOT_BASE64), $image);
+		$this->assertEquals([$avatar, base64_decode(self::BLACK_DOT_BASE64)], $data);
 	}
 
 	public function testGetAvatarImageDownloadImageFails() {
 		$email = 'jane@doe.com';
 		$uid = 'john';
+		$avatar = new Avatar('https://doe.com/favicon.ico', 'image/jpg');
 		$this->cache->expects($this->once())
-			->method('getUrl')
+			->method('get')
 			->with($email, $uid)
-			->willReturn('https://doe.com/favicon.ico');
+			->willReturn($avatar);
 		$this->cache->expects($this->once())
 			->method('getImage')
 			->with('https://doe.com/favicon.ico', $uid)

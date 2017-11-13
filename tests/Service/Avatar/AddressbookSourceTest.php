@@ -25,6 +25,8 @@
 namespace OCA\Mail\Tests\Service\Avatar;
 
 use OCA\Mail\Service\Avatar\AddressbookSource;
+use OCA\Mail\Service\Avatar\Avatar;
+use OCA\Mail\Service\Avatar\AvatarFactory;
 use OCA\Mail\Service\ContactsIntegration;
 use OCA\Mail\Tests\TestCase;
 use PHPUnit_Framework_MockObject_MockObject;
@@ -47,22 +49,29 @@ class AddressbookSourceTest extends TestCase {
 
 	public function testFetch() {
 		$email = 'john@doe.com';
+		$avatarFactory = $this->createMock(AvatarFactory::class);
 		$this->ci->expects($this->once())
 			->method('getPhoto')
 			->willReturn('https://next.cloud/photo');
+		$avatar = new Avatar('https://next.cloud/photo');
+		$avatarFactory->expects($this->once())
+			->method('createInternal')
+			->with('https://next.cloud/photo')
+			->willReturn($avatar);
 
-		$avatar = $this->source->fetch($email);
+		$actualAvatar = $this->source->fetch($email, $avatarFactory);
 
-		$this->assertSame('https://next.cloud/photo', $avatar);
+		$this->assertSame($avatar, $actualAvatar);
 	}
 
 	public function testFetchNoneFound() {
 		$email = 'john@doe.com';
+		$avatarFactory = $this->createMock(AvatarFactory::class);
 		$this->ci->expects($this->once())
 			->method('getPhoto')
 			->willReturn(null);
 
-		$avatar = $this->source->fetch($email);
+		$avatar = $this->source->fetch($email, $avatarFactory);
 
 		$this->assertNull($avatar);
 	}

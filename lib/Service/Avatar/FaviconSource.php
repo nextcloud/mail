@@ -25,6 +25,7 @@ namespace OCA\Mail\Service\Avatar;
 use Exception;
 use Horde_Mail_Rfc822_Address;
 use Mpclarkson\IconScraper\Scraper;
+use OCP\Files\IMimeTypeDetector;
 use OCP\Http\Client\IClientService;
 
 class FaviconSource implements IAvatarSource {
@@ -35,20 +36,25 @@ class FaviconSource implements IAvatarSource {
 	/** @var Scraper */
 	private $scraper;
 
+	/** @var IMimeTypeDetector */
+	private $mimeDetector;
+
 	/**
 	 * @param IClientService $clientService
 	 * @param Scraper $scraper
 	 */
-	public function __construct(IClientService $clientService, Scraper $scraper) {
+	public function __construct(IClientService $clientService, Scraper $scraper, IMimeTypeDetector $mimeDetector) {
 		$this->clientService = $clientService;
 		$this->scraper = $scraper;
+		$this->mimeDetector = $mimeDetector;
 	}
 
 	/**
-	 * @param string $email
-	 * @return string|null
+	 * @param string $email sender email address
+	 * @param AvatarFactory $factory
+	 * @return Avatar|null avatar URL if one can be found
 	 */
-	public function fetch($email) {
+	public function fetch($email, AvatarFactory $factory) {
 		$horde = new Horde_Mail_Rfc822_Address($email);
 		// TODO: fall back to insecure HTTP?
 		$domain = 'https://' . $horde->host;
@@ -77,8 +83,9 @@ class FaviconSource implements IAvatarSource {
 			if (strlen($body) === 0) {
 				continue;
 			}
+			$mime = $this->mimeDetector->detectString($body);
 
-			return $url;
+			return $factory->createExternal($url, $mime);
 		}
 
 		return null;

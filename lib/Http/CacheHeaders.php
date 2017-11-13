@@ -22,16 +22,23 @@
  *
  */
 
-namespace OCA\Mail\Service\Avatar;
+namespace OCA\Mail\Http;
 
-use OCP\Files\IMimeTypeDetector;
+use DateInterval;
+use DateTime;
+use OCP\AppFramework\Utility\ITimeFactory;
 
-interface IAvatarSource {
+trait CacheHeaders {
 
-	/**
-	 * @param string $email sender email address
-	 * @param AvatarFactory $factory
-	 * @return Avatar|null avatar URL if one can be found
-	 */
-	public function fetch($email, AvatarFactory $factory);
+	public function setCacheHeaders($cacheFor, ITimeFactory $timeFactory) {
+		$this->cacheFor(7 * 24 * 60 * 60);
+
+		$expires = new DateTime();
+		$expires->setTimestamp($timeFactory->getTime());
+		$expires->add(new DateInterval('PT' . $cacheFor . 'S'));
+		$this->addHeader('Expires', $expires->format(DateTime::RFC1123));
+
+		$this->addHeader('Pragma', 'cache');
+	}
+
 }

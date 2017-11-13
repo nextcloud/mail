@@ -39,17 +39,18 @@ class GravatarSource implements IAvatarSource {
 	}
 
 	/**
-	 * @param string $email
-	 * @return string|null
+	 * @param string $email sender email address
+	 * @param AvatarFactory $factory
+	 * @return Avatar|null avatar URL if one can be found
 	 */
-	public function fetch($email) {
+	public function fetch($email, AvatarFactory $factory) {
 		$gravatar = new Gravatar(['size' => 128], true);
-		$avatar = $gravatar->avatar($email, ['d' => 404], true);
+		$avatarUrl = $gravatar->avatar($email, ['d' => 404], true);
 
 		$client = $this->clientService->newClient();
 
 		try {
-			$response = $client->get($avatar);
+			$response = $client->get($avatarUrl);
 		} catch (Exception $exception) {
 			return null;
 		}
@@ -60,7 +61,8 @@ class GravatarSource implements IAvatarSource {
 			return null;
 		}
 
-		return $avatar;
+		// TODO: check whether it's really always a jpeg
+		return $factory->createExternal($avatarUrl, 'image/jpeg');
 	}
 
 }

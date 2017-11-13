@@ -22,6 +22,8 @@
 namespace OCA\Mail\Service;
 
 use OCA\Mail\Contracts\IAvatarService;
+use OCA\Mail\Service\Avatar\Avatar;
+use OCA\Mail\Service\Avatar\AvatarFactory;
 use OCA\Mail\Service\Avatar\Cache as AvatarCache;
 use OCA\Mail\Service\Avatar\CompositeAvatarSource;
 use OCA\Mail\Service\Avatar\Downloader;
@@ -42,67 +44,89 @@ class AvatarService implements IAvatarService {
 	/** @var IURLGenerator */
 	private $urlGenerator;
 
+	/** @var AvatarFactory */
+	private $avatarFactory;
+
 	/**
 	 * @param CompositeAvatarSource $source
 	 * @param Downloader $downloader
 	 * @param AvatarCache $cache
 	 * @param IURLGenerator $urlGenerator
+	 * @param AvatarFactory $avatarFactory
 	 */
-	public function __construct(CompositeAvatarSource $source, Downloader $downloader, AvatarCache $cache, IURLGenerator $urlGenerator) {
+	public function __construct(CompositeAvatarSource $source, Downloader $downloader, AvatarCache $cache, IURLGenerator $urlGenerator, AvatarFactory $avatarFactory) {
 		$this->source = $source;
 		$this->cache = $cache;
 		$this->urlGenerator = $urlGenerator;
 		$this->downloader = $downloader;
+		$this->avatarFactory = $avatarFactory;
+	}
+
+	/**
+	 * @param Avatar $avatar
+	 */
+	private function hasAllowedMime(Avatar $avatar) {
+		if ($avatar->isExternal()) {
+			$mime = $avatar->getMime();
+
+			return in_array($mime, [
+				'image/jpeg',
+				'image/png',
+			]);
+		} else {
+			// We trust internal URLs by default
+			return true;
+		}
 	}
 
 	/**
 	 * @param string $email
 	 * @param string $uid
-	 * @return string|null
+	 * @return Avatar|null
 	 */
-	public function getAvatarUrl($email, $uid) {
-		$cachedUrl = $this->cache->getUrl($email, $uid);
-		if (!is_null($cachedUrl)) {
-			return $cachedUrl;
+	public function getAvatar($email, $uid) {
+		$cachedAvatar = $this->cache->get($email, $uid);
+		if (!is_null($cachedAvatar)) {
+			return $cachedAvatar;
 		}
 
-		$url = $this->source->fetch($email);
-		if (is_null($url)) {
+		$avatar = $this->source->fetch($email, $this->avatarFactory);
+		if (is_null($avatar) || !$this->hasAllowedMime($avatar)) {
 			// Cannot locate any avatar -> nothing to do here
 			return null;
 		}
 
 		// Cache for the next call
-		$this->cache->addUrl($email, $uid, $url);
+		$this->cache->add($email, $uid, $avatar);
 
-		return $url;
+		return $avatar;
 	}
 
 	/**
 	 * @param string $email
 	 * @param string $uid
-	 * @return string|null image data
+	 * @return array|null image data
 	 */
 	public function getAvatarImage($email, $uid) {
-		$url = $this->getAvatarUrl($email, $uid);
-		if (is_null($url)) {
+		$avatar = $this->getAvatar($email, $uid);
+		if (is_null($avatar)) {
 			return null;
 		}
 
-		$cachedImage = $this->cache->getImage($url, $uid);
+		$cachedImage = $this->cache->getImage($avatar->getUrl(), $uid);
 		if (!is_null($cachedImage)) {
 			return base64_decode($cachedImage);
 		}
 
-		$image = $this->downloader->download($url);
+		$image = $this->downloader->download($avatar->getUrl());
 		if (is_null($image)) {
 			return null;
 		}
 
 		// Cache for the next call
-		$this->cache->addImage($url, $uid, base64_encode($image));
+		$this->cache->addImage($avatar->getUrl(), $uid, base64_encode($image));
 
-		return $image;
+		return [$avatar, $image];
 	}
 
 }

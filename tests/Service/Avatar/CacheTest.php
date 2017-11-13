@@ -24,6 +24,8 @@
 
 namespace OCA\Mail\Tests\Service\Avatar;
 
+use OCA\Mail\Service\Avatar\Avatar;
+use OCA\Mail\Service\Avatar\AvatarFactory;
 use OCA\Mail\Service\Avatar\Cache;
 use OCA\Mail\Tests\TestCase;
 use OCP\ICache;
@@ -40,6 +42,9 @@ class CacheTest extends TestCase {
 	/** @var ICache|PHPUnit_Framework_MockObject_MockObject */
 	private $cacheImpl;
 
+	/** @var AvatarFactory|PHPUnit_Framework_MockObject_MockObject */
+	private $avatarFactory;
+
 	/** @var Cache */
 	private $cache;
 
@@ -52,10 +57,11 @@ class CacheTest extends TestCase {
 			->method('create')
 			->with('mail.avatars')
 			->willReturn($this->cacheImpl);
-		$this->cache = new Cache($this->cacheFactory);
+		$this->avatarFactory = $this->createMock(AvatarFactory::class);
+		$this->cache = new Cache($this->cacheFactory, $this->avatarFactory);
 	}
 
-	public function testGetNonCachedUrl() {
+	public function testGetNonCachedAvatar() {
 		$email = 'john@doe.com';
 		$uid = 'jane';
 		$this->cacheImpl->expects($this->once())
@@ -63,32 +69,38 @@ class CacheTest extends TestCase {
 			->with(base64_encode(json_encode([$email, $uid])))
 			->willReturn(null);
 
-		$url = $this->cache->getUrl($email, $uid);
+		$cachedAvatar = $this->cache->get($email, $uid);
 
-		$this->assertNull($url);
+		$this->assertNull($cachedAvatar);
 	}
 
-	public function testGetCachedUrl() {
+	public function testGetCachedAvatar() {
 		$email = 'john@doe.com';
 		$uid = 'jane';
 		$this->cacheImpl->expects($this->once())
 			->method('get')
 			->with(base64_encode(json_encode([$email, $uid])))
-			->willReturn('https://doe.com/favicon.ico');
+			->willReturn(['isExternal' => true, 'mime' => 'image/jpeg', 'url' => 'https://…']);
+		$expected = new Avatar('https://…', 'image/jpeg');
+		$this->avatarFactory->expects($this->once())
+			->method('createExternal')
+			->with('https://…', 'image/jpeg')
+			->willReturn($expected);
 
-		$url = $this->cache->getUrl($email, $uid);
+		$cachedAvatar = $this->cache->get($email, $uid);
 
-		$this->assertEquals('https://doe.com/favicon.ico', $url);
+		$this->assertEquals($expected, $cachedAvatar);
 	}
 
-	public function testSetUrl() {
+	public function testSetAvatar() {
 		$email = 'john@doe.com';
 		$uid = 'jane';
+		$avatar = new Avatar('https://…', 'image/jpeg');
 		$this->cacheImpl->expects($this->once())
 			->method('set')
-			->with(base64_encode(json_encode([$email, $uid])), 'https://doe.com/favicon.ico', 7 * 24 * 60 * 60);
+			->with(base64_encode(json_encode([$email, $uid])), ['isExternal' => true, 'mime' => 'image/jpeg', 'url' => 'https://…'], 7 * 24 * 60 * 60);
 
-		$this->cache->addUrl($email, $uid, 'https://doe.com/favicon.ico');
+		$this->cache->add($email, $uid, $avatar);
 	}
 
 	public function testGetImage() {

@@ -24,45 +24,27 @@
 
 namespace OCA\Mail\Service\Avatar;
 
-/**
- * Composition of all avatar sources for easier usage
- */
-class CompositeAvatarSource implements IAvatarSource {
-
-	/** @var IAvatarSource[] */
-	private $sources;
+class AvatarFactory {
 
 	/**
-	 * @param AddressbookSource $addressbookSource
-	 * @param FaviconSource $faviconSource
-	 * @param GravatarSource $gravatarSource
+	 * Create a new avatar whose URL points to an internal endpoint
+	 *
+	 * @param string $url
+	 * @return Avatar
 	 */
-	public function __construct(AddressbookSource $addressbookSource, FaviconSource $faviconSource, GravatarSource $gravatarSource) {
-		// This determines the priority of known sources
-		$this->sources = [
-			$addressbookSource,
-			$gravatarSource,
-			$faviconSource,
-		];
+	public function createInternal($url) {
+		return new Avatar($url, null, false);
 	}
 
 	/**
-	 * @param string $email sender email address
-	 * @param AvatarFactory $factory
-	 * @return Avatar|null avatar URL if one can be found
+	 * Create a new avatar whose URL points to an external endpoint
+	 *
+	 * @param string $url
+	 * @param string $mime
+	 * @return Avatar
 	 */
-	public function fetch($email, AvatarFactory $factory) {
-		foreach ($this->sources as $source) {
-			$avatar = $source->fetch($email, $factory);
-
-			if (is_null($avatar)) {
-				continue;
-			}
-
-			return $avatar;
-		}
-
-		return null;
+	public function createExternal($url, $mime) {
+		return new Avatar($url, $mime);
 	}
 
 }

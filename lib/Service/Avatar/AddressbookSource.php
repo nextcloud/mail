@@ -41,11 +41,18 @@ class AddressbookSource implements IAvatarSource {
 	}
 
 	/**
-	 * @param string $email
-	 * @return string|null
+	 * @param string $email sender email address
+	 * @param AvatarFactory $factory
+	 * @return Avatar|null avatar URL if one can be found
 	 */
-	public function fetch($email) {
-		return $this->contactsIntegration->getPhoto($email);
+	public function fetch($email, AvatarFactory $factory) {
+		$url = $this->contactsIntegration->getPhoto($email);
+
+		if (is_null($url)) {
+			return null;
+		}
+
+		return $factory->createInternal($url, null);
 	}
 
 }

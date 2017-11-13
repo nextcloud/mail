@@ -27,10 +27,12 @@ namespace OCA\Mail\Tests\Controller;
 use OCA\Mail\Contracts\IAvatarService;
 use OCA\Mail\Controller\AvatarsController;
 use OCA\Mail\Http\AvatarDownloadResponse;
+use OCA\Mail\Http\JSONResponse;
+use OCA\Mail\Service\Avatar\Avatar;
 use OCA\Mail\Tests\TestCase;
 use OCP\AppFramework\Http;
-use OCP\AppFramework\Http\JSONResponse;
 use OCP\AppFramework\Http\Response;
+use OCP\AppFramework\Utility\ITimeFactory;
 use OCP\IRequest;
 use PHPUnit_Framework_MockObject_MockObject;
 
@@ -38,6 +40,9 @@ class AvatarControllerTest extends TestCase {
 
 	/** @var IAvatarService|PHPUnit_Framework_MockObject_MockObject */
 	private $avatarService;
+
+	/** @var ITimeFactory|PHPUnit_Framework_MockObject_MockObject */
+	private $timeFactory;
 
 	/** @var AvatarsController */
 	private $controller;
@@ -47,35 +52,40 @@ class AvatarControllerTest extends TestCase {
 
 		$request = $this->createMock(IRequest::class);
 		$this->avatarService = $this->createMock(IAvatarService::class);
+		$this->timeFactory = $this->createMocK(ITimeFactory::class);
+		$this->timeFactory->expects($this->any())
+			->method('getTime')
+			->willReturn(10000);
 
-		$this->controller = new AvatarsController('mail', $request, $this->avatarService, 'jane');
+		$this->controller = new AvatarsController('mail', $request, $this->avatarService, 'jane', $this->timeFactory);
 	}
 
 	public function testGetUrl() {
 		$email = 'john@doe.com';
+		$avatar = new Avatar('https://doe.com/favicon.ico');
 		$this->avatarService->expects($this->once())
-			->method('getAvatarUrl')
+			->method('getAvatar')
 			->with($email, 'jane')
-			->willReturn('https://doe.com/favicon.ico');
+			->willReturn($avatar);
 
 		$resp = $this->controller->url($email);
 
-		$expected = new JSONResponse(['url' => 'https://doe.com/favicon.ico']);
-		$expected->cacheFor(7 * 24 * 60 * 60);
+		$expected = new JSONResponse($avatar);
+		$expected->setCacheHeaders(7 * 24 * 60 * 60, $this->timeFactory);
 		$this->assertEquals($expected, $resp);
 	}
 
 	public function testGetUrlNoAvatarFound() {
 		$email = 'john@doe.com';
 		$this->avatarService->expects($this->once())
-			->method('getAvatarUrl')
+			->method('getAvatar')
 			->with($email, 'jane')
 			->willReturn(null);
 
 		$resp = $this->controller->url($email);
 
 		$expected = new JSONResponse([], Http::STATUS_NOT_FOUND);
-		$expected->cacheFor(24 * 60 * 60);
+		$expected->setCacheHeaders(24 * 60 * 60, $this->timeFactory);
 		$this->assertEquals($expected, $resp);
 	}
 
@@ -84,11 +94,13 @@ class AvatarControllerTest extends TestCase {
 		$this->avatarService->expects($this->once())
 			->method('getAvatarImage')
 			->with($email, 'jane')
-			->willReturn('data');
+			->willReturn([new Avatar('johne@doe.com', 'image/jpeg'), 'data']);
 
 		$resp = $this->controller->image($email);
 
 		$expected = new AvatarDownloadResponse('data');
+		$expected->addHeader('Content-Type', 'image/jpeg');
+		$expected->setCacheHeaders(7 * 24 * 60 * 60, $this->timeFactory);
 		$this->assertEquals($expected, $resp);
 	}
 

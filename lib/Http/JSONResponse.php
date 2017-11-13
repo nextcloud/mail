@@ -22,16 +22,11 @@
  *
  */
 
-namespace OCA\Mail\Service\Avatar;
+namespace OCA\Mail\Http;
 
-use OCP\Files\IMimeTypeDetector;
+use OCP\AppFramework\Http\JSONResponse as Base;
 
-interface IAvatarSource {
+class JSONResponse extends Base {
 
-	/**
-	 * @param string $email sender email address
-	 * @param AvatarFactory $factory
-	 * @return Avatar|null avatar URL if one can be found
-	 */
-	public function fetch($email, AvatarFactory $factory);
+	use CacheHeaders;
 }

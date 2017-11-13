@@ -22,16 +22,18 @@
  *
  */
 
-namespace OCA\Mail\Service\Avatar;
+namespace OCA\Mail\Tests\Http;
 
-use OCP\Files\IMimeTypeDetector;
+use OCA\Mail\Http\AvatarDownloadResponse;
+use OCA\Mail\Tests\TestCase;
 
-interface IAvatarSource {
+class AvatarDownloadResponseTest extends TestCase {
 
-	/**
-	 * @param string $email sender email address
-	 * @param AvatarFactory $factory
-	 * @return Avatar|null avatar URL if one can be found
-	 */
-	public function fetch($email, AvatarFactory $factory);
+	public function testResponse() {
+		$response = new AvatarDownloadResponse('data');
+
+		$this->assertEquals('application/octet-stream', $response->getHeaders()['Content-Type']);
+		$this->assertEquals('data', $response->render());
+	}
+
 }

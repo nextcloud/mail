@@ -35,11 +35,15 @@ class Cache {
 	/** @var ICache */
 	private $cache;
 
+	/** @var AvatarFactory */
+	private $avatarFactory;
+
 	/**
 	 * @param ICacheFactory $cacheFactory
 	 */
-	public function __construct(ICacheFactory $cacheFactory) {
+	public function __construct(ICacheFactory $cacheFactory, AvatarFactory $avatarFactory) {
 		$this->cache = $cacheFactory->create('mail.avatars');
+		$this->avatarFactory = $avatarFactory;
 	}
 
 	/**
@@ -62,18 +66,29 @@ class Cache {
 
 	/**
 	 * @param string $email
-	 * @return string|null avatar URL
+	 * @return Avatar|null avatar URL
 	 */
-	public function getUrl($email, $uid) {
-		return $this->cache->get($this->buildUrlKey($email, $uid));
+	public function get($email, $uid) {
+		$cached = $this->cache->get($this->buildUrlKey($email, $uid));
+
+		if (is_null($cached)) {
+			return null;
+		}
+
+		if ($cached['isExternal']) {
+			return $this->avatarFactory->createExternal($cached['url'], $cached['mime']);
+		} else {
+			return $this->avatarFactory->createInternal($cached['url'], $cached['mime']);
+		}
 	}
 
 	/**
 	 * @param string $email
-	 * @param string $url
+	 * @param string $uid
+	 * @param Avatar $avatar
 	 */
-	public function addUrl($email, $uid, $url) {
-		$this->cache->set($this->buildUrlKey($email, $uid), $url, self::CACHE_TTL);
+	public function add($email, $uid, Avatar $avatar) {
+		$this->cache->set($this->buildUrlKey($email, $uid), $avatar->jsonSerialize(), self::CACHE_TTL);
 	}
 
 	/**

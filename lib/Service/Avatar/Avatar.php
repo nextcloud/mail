@@ -24,45 +24,62 @@
 
 namespace OCA\Mail\Service\Avatar;
 
-/**
- * Composition of all avatar sources for easier usage
- */
-class CompositeAvatarSource implements IAvatarSource {
+use JsonSerializable;
 
-	/** @var IAvatarSource[] */
-	private $sources;
+class Avatar implements JsonSerializable {
+
+	/** @var string */
+	private $url;
+
+	/** @var string|null */
+	private $mime;
+
+	/** @var bool */
+	private $isExternal;
 
 	/**
-	 * @param AddressbookSource $addressbookSource
-	 * @param FaviconSource $faviconSource
-	 * @param GravatarSource $gravatarSource
+	 * @param string $url
+	 * @param string|null $mime
+	 * @param bool $isExternal
 	 */
-	public function __construct(AddressbookSource $addressbookSource, FaviconSource $faviconSource, GravatarSource $gravatarSource) {
-		// This determines the priority of known sources
-		$this->sources = [
-			$addressbookSource,
-			$gravatarSource,
-			$faviconSource,
-		];
+	public function __construct($url, $mime = null, $isExternal = true) {
+		$this->url = $url;
+		$this->mime = $mime;
+		$this->isExternal = $isExternal;
 	}
 
 	/**
-	 * @param string $email sender email address
-	 * @param AvatarFactory $factory
-	 * @return Avatar|null avatar URL if one can be found
+	 * @return string
 	 */
-	public function fetch($email, AvatarFactory $factory) {
-		foreach ($this->sources as $source) {
-			$avatar = $source->fetch($email, $factory);
+	public function getUrl() {
+		return $this->url;
+	}
 
-			if (is_null($avatar)) {
-				continue;
-			}
+	/**
+	 * Get the MIME type of this avatar
+	 *
+	 * @return string|null
+	 */
+	public function getMime() {
+		return $this->mime;
+	}
 
-			return $avatar;
-		}
+	/**
+	 * @return boolean
+	 */
+	public function isExternal() {
+		return $this->isExternal;
+	}
 
-		return null;
+	/**
+	 * @return array
+	 */
+	public function jsonSerialize() {
+		return [
+			'isExternal' => $this->isExternal,
+			'mime' => $this->mime,
+			'url' => $this->url,
+		];
 	}
 
 }

@@ -25,6 +25,8 @@
 namespace OCA\Mail\Tests\Service\Avatar;
 
 use OCA\Mail\Service\Avatar\AddressbookSource;
+use OCA\Mail\Service\Avatar\Avatar;
+use OCA\Mail\Service\Avatar\AvatarFactory;
 use OCA\Mail\Service\Avatar\CompositeAvatarSource;
 use OCA\Mail\Service\Avatar\FaviconSource;
 use OCA\Mail\Service\Avatar\GravatarSource;
@@ -57,40 +59,41 @@ class CompositeAvatarSourceTest extends TestCase {
 
 	public function testFetchNoneFound() {
 		$email = 'jane@doe.com';
-		$uid = 'john';
+		$avatarFactory = $this->createMock(AvatarFactory::class);
 		$this->addressbookSource->expects($this->once())
 			->method('fetch')
-			->with($email)
+			->with($email, $avatarFactory)
 			->willReturn(null);
 		$this->gravatarSource->expects($this->once())
 			->method('fetch')
-			->with($email)
+			->with($email, $avatarFactory)
 			->willReturn(null);
 		$this->faviconSource->expects($this->once())
 			->method('fetch')
-			->with($email)
+			->with($email, $avatarFactory)
 			->willReturn(null);
 
-		$avatar = $this->source->fetch($email, $uid);
+		$actualAvatar = $this->source->fetch($email, $avatarFactory);
 
-		$this->assertNull($avatar);
+		$this->assertNull($actualAvatar);
 	}
 
 	public function testFetchFromGravatar() {
 		$email = 'jane@doe.com';
-		$uid = 'john';
+		$avatar = new Avatar('https://gravatar.com', 'image/jpeg');
+		$avatarFactory = $this->createMock(AvatarFactory::class);
 		$this->addressbookSource->expects($this->once())
 			->method('fetch')
-			->with($email)
+			->with($email, $avatarFactory)
 			->willReturn(null);
 		$this->gravatarSource->expects($this->once())
 			->method('fetch')
-			->with($email)
-			->willReturn('https://gravatar.com');
+			->with($email, $avatarFactory)
+			->willReturn($avatar);
 
-		$avatar = $this->source->fetch($email, $uid);
+		$actualAvatar = $this->source->fetch($email, $avatarFactory);
 
-		$this->assertEquals('https://gravatar.com', $avatar);
+		$this->assertEquals($avatar, $actualAvatar);
 	}
 
 }

@@ -51,17 +51,24 @@ class AvatarServiceIntegrationTest extends TestCase {
 	}
 
 	public function testJansGravatar() {
-		$avatar = $this->service->getAvatarUrl('hey@jancborchardt.net', 'john');
-		$this->assertEquals('https://secure.gravatar.com/avatar/2fd3f4d5d762955e5b603794a888fa97?size=128&d=404', $avatar);
+		$avatar = $this->service->getAvatar('hey@jancborchardt.net', 'john');
+		$this->assertNotNull($avatar);
+		$this->assertEquals('https://secure.gravatar.com/avatar/2fd3f4d5d762955e5b603794a888fa97?size=128&d=404', $avatar->getUrl());
 		$image = $this->service->getAvatarImage('hey@jancborchardt.net', 'john');
 		$this->assertNotNull($image);
 	}
 
 	public function testJansNicknameFavicon() {
-		$avatar = $this->service->getAvatarUrl('janli@nextcloud.com', 'jane');
-		$this->assertEquals('https://nextcloud.com/media/screenshot-150x150.png?x16328', $avatar);
+		$avatar = $this->service->getAvatar('janli@nextcloud.com', 'jane');
+		$this->assertNotNull($avatar);
+		$this->assertEquals('https://nextcloud.com/media/screenshot-150x150.png?x16328', $avatar->getUrl());
 		$image = $this->service->getAvatarImage('janli@nextcloud.com', 'jane');
 		$this->assertNotNull($image);
+	}
+
+	public function testChristophsFavicon() {
+		$avatar = $this->service->getAvatar('christoph@winzerhof-wurst.at', 'jan');
+		$this->assertNull($avatar); // There is none
 	}
 
 }

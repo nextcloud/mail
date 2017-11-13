@@ -22,14 +22,13 @@
 
 namespace OCA\Mail\Controller;
 
-use OC;
 use OCA\Mail\Contracts\IAvatarService;
 use OCA\Mail\Http\AvatarDownloadResponse;
+use OCA\Mail\Http\JSONResponse;
 use OCP\AppFramework\Controller;
 use OCP\AppFramework\Http;
-use OCP\AppFramework\Http\JSONResponse;
 use OCP\AppFramework\Http\Response;
-use OCP\Files\IMimeTypeDetector;
+use OCP\AppFramework\Utility\ITimeFactory;
 use OCP\IRequest;
 
 class AvatarsController extends Controller {
@@ -40,25 +39,26 @@ class AvatarsController extends Controller {
 	/** @var string */
 	private $uid;
 
-	/** @var IMimeTypeDetector */
-	private $mimeDetector;
+	/** @var ITimeFactory */
+	private $timeFactory;
 
 	/**
 	 * @param string $appName
 	 * @param IRequest $request
 	 * @param IAvatarService $avatarService
-	 * @param IMimeTypeDetector $mimeDetector
 	 * @param string $UserId
+	 * @param ITimeFactory $timeFactory
 	 */
-	public function __construct($appName, IRequest $request, IAvatarService $avatarService, IMimeTypeDetector $mimeDetector, $UserId) {
+	public function __construct($appName, IRequest $request, IAvatarService $avatarService, $UserId, ITimeFactory $timeFactory) {
 		parent::__construct($appName, $request);
 		$this->avatarService = $avatarService;
-		$this->mimeDetector = $mimeDetector;
 		$this->uid = $UserId;
+		$this->timeFactory = $timeFactory;
 	}
 
 	/**
 	 * @NoAdminRequired
+	 * @NoCSRFRequired
 	 *
 	 * @param string $email
 	 * @return Response
@@ -68,24 +68,22 @@ class AvatarsController extends Controller {
 			return new JSONResponse([], Http::STATUS_BAD_REQUEST);
 		}
 
-		$avatarUrl = $this->avatarService->getAvatarUrl($email, $this->uid);
-		if (is_null($avatarUrl)) {
+		$avatar = $this->avatarService->getAvatar($email, $this->uid);
+		if (is_null($avatar)) {
 			// No avatar found
 			$response = new JSONResponse([], Http::STATUS_NOT_FOUND);
 
 			// Debounce this a bit
 			// (cache for one day)
-			$response->cacheFor(24 * 60 * 60);
+			$response->setCacheHeaders(24 * 60 * 60, $this->timeFactory);
 
 			return $response;
 		}
 
-		$response = new JSONResponse([
-			'url' => $avatarUrl,
-		]);
+		$response = new JSONResponse($avatar);
 
 		// Let the browser cache this for a week
-		$response->cacheFor(7 * 24 * 60 * 60);
+		$response->setCacheHeaders(7 * 24 * 60 * 60, $this->timeFactory);
 
 		return $response;
 	}
@@ -103,21 +101,28 @@ class AvatarsController extends Controller {
 		}
 
 		$imageData = $this->avatarService->getAvatarImage($email, $this->uid);
+		list($avatar, $image) = $imageData;
 
-		if (is_null($imageData)) {
+		if (is_null($imageData) || !$avatar->isExternal()) {
 			// This could happen if the cache invalidated meanwhile
-			$response = new Response();
-			$response->setStatus(Http::STATUS_NOT_FOUND);
-			// Clear cache
-			$response->cacheFor(0);
-			return $response;
+			return $this->noAvatarFoundResponse();
 		}
 
-		// TODO: limit to known MIME types
-		$mime = $this->mimeDetector->detectString($imageData);
-		$resp = new AvatarDownloadResponse($imageData);
-		$resp->addHeader('Content-Type', $mime);
+		$resp = new AvatarDownloadResponse($image);
+		$resp->addHeader('Content-Type', $avatar->getMime());
+
+		// Let the browser cache this for a week
+		$resp->setCacheHeaders(7 * 24 * 60 * 60, $this->timeFactory);
+
 		return $resp;
+	}
+
+	private function noAvatarFoundResponse() {
+		$response = new Response();
+		$response->setStatus(Http::STATUS_NOT_FOUND);
+		// Clear cache
+		$response->cacheFor(0);
+		return $response;
 	}
 
 }

@@ -33,12 +33,12 @@ interface IAvatarService {
 	 * @param string $uid
 	 * @return string|null URL, if one can be found
 	 */
-	public function getAvatarUrl($email, $uid);
+	public function getAvatar($email, $uid);
 
 	/**
 	 * @param string $email
 	 * @param string $uid
-	 * @return mixed|null image data
+	 * @return array|null image data
 	 */
 	public function getAvatarImage($email, $uid);
 }

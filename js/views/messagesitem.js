@@ -13,6 +13,7 @@ define(function(require) {
 
 	var $ = require('jquery');
 	var _ = require('underscore');
+	var OC = require('OC');
 	var Marionette = require('backbone.marionette');
 	var Radio = require('radio');
 	var MessageTemplate = require('templates/message-list-item.html');
@@ -74,7 +75,30 @@ define(function(require) {
 			});
 
 			$('.action.delete').tooltip({placement: 'left'});
+
+			this._fetchAvatar();
 		},
+
+		/**
+		 * @private
+		 * @returns {undefined}
+		 */
+		_fetchAvatar: function() {
+			var url = OC.generateUrl('/apps/mail/api/avatars/url/{email}', {
+				email: this.model.get('fromEmail')
+			});
+
+			Promise.resolve($.ajax(url)).then(function(avatar) {
+				if (avatar.isExternal) {
+					this.model.set('senderImage', OC.generateUrl('/apps/mail/api/avatars/image/{email}', {
+						email: this.model.get('fromEmail')
+					}));
+				} else {
+					this.model.set('senderImage', avatar.url);
+				}
+			}.bind(this));
+		},
+
 		toggleMessageStar: function(event) {
 			event.stopPropagation();
 
@@ -83,12 +107,12 @@ define(function(require) {
 			// directly change star state in the interface for quick feedback
 			if (starred) {
 				this.getUI('star')
-					.removeClass('icon-starred')
-					.addClass('icon-star');
+						.removeClass('icon-starred')
+						.addClass('icon-star');
 			} else {
 				this.getUI('star')
-					.removeClass('icon-star')
-					.addClass('icon-starred');
+						.removeClass('icon-star')
+						.addClass('icon-starred');
 			}
 
 			Radio.message.trigger('flag', this.model, 'flagged', !starred);

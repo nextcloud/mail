@@ -26,8 +26,11 @@ namespace OCA\Mail\Tests\Service\Avatar;
 
 use Mpclarkson\IconScraper\Icon;
 use Mpclarkson\IconScraper\Scraper;
+use OCA\Mail\Service\Avatar\Avatar;
+use OCA\Mail\Service\Avatar\AvatarFactory;
 use OCA\Mail\Service\Avatar\FaviconSource;
 use OCA\Mail\Tests\TestCase;
+use OCP\Files\IMimeTypeDetector;
 use OCP\Http\Client\IClient;
 use OCP\Http\Client\IClientService;
 use OCP\Http\Client\IResponse;
@@ -41,6 +44,9 @@ class FaviconSourceTest extends TestCase {
 	/** @var Scraper|PHPUnit_Framework_MockObject_MockObject */
 	private $scraper;
 
+	/** @var IMimeTypeDetector|PHPUnit_Framework_MockObject_MockObject */
+	private $mimeDetector;
+
 	/** @var FaviconSource */
 	private $source;
 
@@ -49,18 +55,20 @@ class FaviconSourceTest extends TestCase {
 
 		$this->clientService = $this->createMock(IClientService::class);
 		$this->scraper = $this->createMock(Scraper::class);
+		$this->mimeDetector = $this->createMock(IMimeTypeDetector::class);
 
-		$this->source = new FaviconSource($this->clientService, $this->scraper);
+		$this->source = new FaviconSource($this->clientService, $this->scraper, $this->mimeDetector);
 	}
 
 	public function testFetchNoIconsFound() {
 		$email = 'hey@jancborchardt.net';
+		$avatarFactory = $this->createMock(AvatarFactory::class);
 		$this->scraper->expects($this->once())
 			->method('get')
 			->with('https://jancborchardt.net')
 			->willReturn([]);
 
-		$avatar = $this->source->fetch($email);
+		$avatar = $this->source->fetch($email, $avatarFactory);
 
 		$this->assertNull($avatar);
 	}
@@ -68,6 +76,8 @@ class FaviconSourceTest extends TestCase {
 	public function testFetchSingleIcon() {
 		$email = 'hey@jancborchardt.net';
 		$icon = $this->createMock(Icon::class);
+		$avatarFactory = $this->createMock(AvatarFactory::class);
+		$avatar = new Avatar('https://domain.tld/favicon.ico');
 		$this->scraper->expects($this->once())
 			->method('get')
 			->with('https://jancborchardt.net')
@@ -87,15 +97,24 @@ class FaviconSourceTest extends TestCase {
 		$response->expects($this->once())
 			->method('getBody')
 			->willReturn('data');
+		$this->mimeDetector->expects($this->once())
+			->method('detectString')
+			->with('data')
+			->willReturn('image/png');
+		$avatarFactory->expects($this->once())
+			->method('createExternal')
+			->with('https://domain.tld/favicon.ico', 'image/png')
+			->willReturn($avatar);
 
-		$avatar = $this->source->fetch($email);
+		$actualAvatar = $this->source->fetch($email, $avatarFactory);
 
-		$this->assertSame('https://domain.tld/favicon.ico', $avatar);
+		$this->assertSame($avatar, $actualAvatar);
 	}
 
 	public function testFetchEmptyIcon() {
 		$email = 'hey@jancborchardt.net';
 		$icon = $this->createMock(Icon::class);
+		$avatarFactory = $this->createMock(AvatarFactory::class);
 		$this->scraper->expects($this->once())
 			->method('get')
 			->with('https://jancborchardt.net')
@@ -116,7 +135,7 @@ class FaviconSourceTest extends TestCase {
 			->method('getBody')
 			->willReturn('');
 
-		$avatar = $this->source->fetch($email);
+		$avatar = $this->source->fetch($email, $avatarFactory);
 
 		$this->assertNull($avatar);
 	}

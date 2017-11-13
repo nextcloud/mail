@@ -25,6 +25,8 @@
 namespace OCA\Mail\Tests\Service\Avatar;
 
 use Exception;
+use OCA\Mail\Service\Avatar\Avatar;
+use OCA\Mail\Service\Avatar\AvatarFactory;
 use OCA\Mail\Service\Avatar\GravatarSource;
 use OCA\Mail\Tests\TestCase;
 use OCP\Http\Client\IClient;
@@ -51,6 +53,7 @@ class GravatarSourceTest extends TestCase {
 	public function testFetchExisting() {
 		$email = 'hey@jancborchardt.net';
 		$client = $this->createMock(IClient::class);
+		$avatarFactory = $this->createMock(AvatarFactory::class);
 		$this->clientService->expects($this->once())
 			->method('newClient')
 			->willReturn($client);
@@ -62,15 +65,21 @@ class GravatarSourceTest extends TestCase {
 		$response->expects($this->once())
 			->method('getBody')
 			->willReturn('data');
+		$avatar = new Avatar('https://next.cloud/photo');
+		$avatarFactory->expects($this->once())
+			->method('createExternal')
+			->with('https://secure.gravatar.com/avatar/2fd3f4d5d762955e5b603794a888fa97?size=128&d=404')
+			->willReturn($avatar);
 
-		$avatar = $this->source->fetch($email);
+		$actualAvatar = $this->source->fetch($email, $avatarFactory);
 
-		$this->assertEquals('https://secure.gravatar.com/avatar/2fd3f4d5d762955e5b603794a888fa97?size=128&d=404', $avatar);
+		$this->assertEquals($avatar, $actualAvatar);
 	}
 
 	public function testFetchHttpError() {
 		$email = 'hey@jancborchardt.net';
 		$client = $this->createMock(IClient::class);
+		$avatarFactory = $this->createMock(AvatarFactory::class);
 		$this->clientService->expects($this->once())
 			->method('newClient')
 			->willReturn($client);
@@ -79,9 +88,9 @@ class GravatarSourceTest extends TestCase {
 			->with('https://secure.gravatar.com/avatar/2fd3f4d5d762955e5b603794a888fa97?size=128&d=404')
 			->willThrowException(new Exception());
 
-		$avatar = $this->source->fetch($email);
+		$actualAvatar = $this->source->fetch($email, $avatarFactory);
 
-		$this->assertNull($avatar);
+		$this->assertNull($actualAvatar);
 	}
 
 }
