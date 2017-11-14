@@ -951,4 +951,7 @@ input.submit-message,
 			}
 		}
 	}
+	.collapsible > .collapse {
+		z-index: 500;
+	}
 }
