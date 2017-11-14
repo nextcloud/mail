@@ -38,6 +38,7 @@ define(function(require) {
 			replyComposer: '#reply-composer',
 			attachments: '.mail-message-attachments'
 		},
+
 		initialize: function(options) {
 			this.account = options.account;
 			this.folder = options.folder;
@@ -52,7 +53,7 @@ define(function(require) {
 				var text = HtmlHelper.htmlToText(this.messageBody.get('body'));
 
 				this.reply.body = '\n\n\n\n' +
-						this.messageBody.get('from') + ' – ' +
+						this.messageBody.get('from')[0].label + ' – ' +
 						$.datepicker.formatDate('D, d. MM yy ', date) +
 						date.getHours() + ':' + (minutes < 10 ? '0' : '') + minutes + '\n> ' +
 						text.replace(/\n/g, '\n> ');
