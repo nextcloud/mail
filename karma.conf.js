@@ -22,7 +22,7 @@ module.exports = function (config) {
 			// all files ending in "_test"
 			{pattern: 'js/tests/*_spec.js', watched: false},
 			{pattern: 'js/tests/**/*_spec.js', watched: false},
-			{pattern: 'js/build/build.js', included: true}
+			{pattern: 'js/build/build.js', included: false}
 		],
 
 		// list of files to exclude
@@ -33,10 +33,10 @@ module.exports = function (config) {
 		// preprocess matching files before serving them to the browser
 		// available preprocessors: https://npmjs.org/browse/keyword/karma-preprocessor
 		preprocessors: {
-			'js/**[!vendor]/*[!spec].js': ['coverage'],
+			'js/**[!vendor]/*[!spec].js': ['coverage', 'sourcemap'],
 			// add webpack as preprocessor
-			'js/tests/*_spec.js': ['webpack'],
-			'js/tests/**/*_spec.js': ['webpack']
+			'js/tests/*_spec.js': ['webpack', 'sourcemap'],
+			'js/tests/**/*_spec.js': ['webpack', 'sourcemap']
 		},
 
 		webpackMiddleware: {
