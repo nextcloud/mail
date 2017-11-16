@@ -152,7 +152,6 @@ class MessagesController extends Controller {
 				}
 			}
 
-			$j['senderImage'] = $ci->getPhoto($j['fromEmail']);
 			return $j;
 		}, $messages);
 
@@ -494,7 +493,7 @@ class MessagesController extends Controller {
 	 */
 	private function enhanceMessage($accountId, $folderId, $id, IMAPMessage $m, $mailBox) {
 		$json = $m->getFullMessage($mailBox->getSpecialRole());
-		$json['senderImage'] = $this->contactsIntegration->getPhoto($m->getFrom()->first()->toHorde()->bare_address);
+
 		if (isset($json['hasHtmlBody'])) {
 			$json['htmlBodyUrl'] = $this->buildHtmlBodyUrl($accountId, $folderId, $id);
 		}

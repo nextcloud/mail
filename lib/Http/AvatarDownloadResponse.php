@@ -19,22 +19,31 @@
  *
  */
 
-namespace OCA\Mail\Db;
+namespace OCA\Mail\Http;
 
-use OCP\AppFramework\Db\Entity;
+use OCP\AppFramework\Http\DownloadResponse;
 
-/**
- * @method void setAccountId(string $accountId)
- * @method string getAccountId()
- * @method void setName(string $name)
- * @method string getName()
- * @method void setAlias(string $alias)
- * @method string getAlias()
- */
-class Alias extends Entity {
+class AvatarDownloadResponse extends DownloadResponse {
 
-	public $accountId;
-	public $name;
-	public $alias;
+	use CacheHeaders;
+
+	/** @var string */
+	private $content;
+
+	/**
+	 * @param string $content
+	 */
+	public function __construct($content) {
+		parent::__construct('avatar', 'application/octet-stream');
+		$this->content = $content;
+	}
+
+	/**
+	 * Simply sets the headers and returns the file contents
+	 * @return string the file contents
+	 */
+	public function render() {
+		return $this->content;
+	}
 
 }

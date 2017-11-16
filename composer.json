@@ -21,7 +21,9 @@
 		"pear-pear.horde.org/Horde_Smtp": "^1.9.5@stable",
 		"cerdic/css-tidy": "v1.5.5",
 		"ezyang/htmlpurifier": "4.9.3",
-		"kwi/urllinker": "dev-default"
+		"kwi/urllinker": "dev-default",
+		"gravatarphp/gravatar": "^1.0",
+		"mpclarkson/icon-scraper": "dev-master"
 	},
 	"require-dev": {
 		"christophwurst/nextcloud": "^12.0.0",

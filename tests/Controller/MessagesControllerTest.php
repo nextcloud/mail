@@ -48,6 +48,7 @@ class MessagesControllerTest extends PHPUnit_Framework_TestCase {
 	private $attachment;
 	private $mimeTypeDetector;
 	private $urlGenerator;
+	private $avatarService;
 
 	protected function setUp() {
 		parent::setUp();
@@ -73,6 +74,9 @@ class MessagesControllerTest extends PHPUnit_Framework_TestCase {
 		$this->l10n = $this->getMockBuilder('\OCP\IL10N')->getMock();
 		$this->mimeTypeDetector = $this->getMockBuilder('OCP\Files\IMimeTypeDetector')->getMock();
 		$this->urlGenerator = $this->getMockBuilder('\OCP\IURLGenerator')->getMock();
+		$this->avatarService = $this->getMockBuilder('\OCA\Mail\Service\AvatarService')
+			->disableOriginalConstructor()
+			->getMock();
 
 		$this->controller = new MessagesController(
 			$this->appName,
@@ -84,7 +88,8 @@ class MessagesControllerTest extends PHPUnit_Framework_TestCase {
 			$this->logger,
 			$this->l10n,
 			$this->mimeTypeDetector,
-			$this->urlGenerator);
+			$this->urlGenerator,
+			$this->avatarService);
 
 		$this->account = $this->getMockBuilder('\OCA\Mail\Account')
 			->disableOriginalConstructor()
