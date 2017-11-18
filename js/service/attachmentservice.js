@@ -44,7 +44,7 @@ define(function(require) {
 	 */
 	function saveToFiles(account, folder, messageId, attachmentId, path) {
 		var url = OC.generateUrl(
-			'apps/mail/accounts/{accountId}/' +
+			'apps/mail/api/accounts/{accountId}/' +
 			'folders/{folderId}/messages/{messageId}/' +
 			'attachment/{attachmentId}', {
 				accountId: account.get('accountId'),
