@@ -594,6 +594,7 @@ define(function(require) {
 		 * This method will return false.
 		 * If there is no LocalAttachments, or if they are are all sent,
 		 * this method will return true.
+		 *
 		 * @return {boolean} all attachments valid
 		 */
 		checkAllAttachmentsValid: function() {

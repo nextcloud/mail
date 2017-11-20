@@ -34,9 +34,6 @@ define(function(require) {
 		/** @type {AccountView} */
 		childView: AccountView,
 
-		/**
-		 * @returns {undefined}
-		 */
 		initialize: function() {
 			this.listenTo(Radio.ui, 'folder:changed', this.onFolderChanged);
 			this.listenTo(Radio.folder, 'setactive', this.setFolderActive);
@@ -45,7 +42,6 @@ define(function(require) {
 		/**
 		 * @param {Account} account
 		 * @param {Folder} folder
-		 * @returns {undefined}
 		 */
 		setFolderActive: function(account, folder) {
 			// disable all other folders for all accounts
@@ -66,9 +62,6 @@ define(function(require) {
 			}
 		},
 
-		/**
-		 * @returns {undefined}
-		 */
 		onFolderChanged: function() {
 			// hide message detail view on mobile
 			// TODO: find better place for this

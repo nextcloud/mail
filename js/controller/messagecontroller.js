@@ -36,7 +36,6 @@ define(function(require) {
 	 * @param {Folder} folder
 	 * @param {Message} message
 	 * @param {object} options
-	 * @returns {undefined}
 	 */
 	function load(account, folder, message, options) {
 		options = options || {};
@@ -92,9 +91,6 @@ define(function(require) {
 		});
 	}
 
-	/**
-	 * @returns {undefined}
-	 */
 	function openForwardComposer() {
 		var header = '\n\n\n\n-------- ' +
 			t('mail', 'Forwarded message') +

@@ -65,15 +65,11 @@ define(function(require) {
 
 		/**
 		 * @param {array} options
-		 * @returns {undefined}
 		 */
 		initialize: function(options) {
 			this.model = options.model;
 		},
 
-		/**
-		 * @returns {undefined}
-		 */
 		toggleCollapse: function() {
 			this.collapsed = !this.collapsed;
 			this.render();
@@ -81,7 +77,6 @@ define(function(require) {
 
 		/**
 		 * @param {Event} e
-		 * @returns {undefined}
 		 */
 		toggleMenu: function(e) {
 			e.preventDefault();
@@ -89,16 +84,12 @@ define(function(require) {
 			this.toggleMenuClass();
 		},
 
-		/**
-		 * @returns {undefined}
-		 */
 		toggleMenuClass: function() {
 			this.getUI('menu').toggleClass('open', this.menuShown);
 		},
 
 		/**
 		 * @param {Event} e
-		 * @returns {undefined}
 		 */
 		onDelete: function(e) {
 			e.stopPropagation();
@@ -118,7 +109,6 @@ define(function(require) {
 
 		/**
 		 * @param {Event} e
-		 * @returns {undefined}
 		 */
 		onClick: function(e) {
 			e.preventDefault();
@@ -129,9 +119,6 @@ define(function(require) {
 			}
 		},
 
-		/**
-		 * @returns {undefined}
-		 */
 		onRender: function() {
 			this.listenTo(Radio.ui, 'document:click', function(event) {
 				var target = $(event.target);
@@ -150,7 +137,6 @@ define(function(require) {
 
 		/**
 		 * @param {Event} e
-		 * @returns {undefined}
 		 */
 		showAccountSettings: function(e) {
 			this.toggleMenu(e);

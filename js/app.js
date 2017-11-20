@@ -53,8 +53,6 @@ define(function(require) {
 
 		/**
 		 * Register the mailto protocol handler
-		 *
-		 * @returns {undefined}
 		 */
 		registerProtocolHandler: function() {
 			if (window.navigator.registerProtocolHandler) {
@@ -69,17 +67,12 @@ define(function(require) {
 			}
 		},
 
-		/**
-		 * @returns {undefined}
-		 */
 		requestNotificationPermissions: function() {
 			Radio.ui.trigger('notification:request');
 		},
 
 		/**
 		 * Register the actual search module in the search proxy
-		 *
-		 * @returns {undefined}
 		 */
 		setUpSearch: function() {
 			SearchProxy.setFilter(require('search').filter);
@@ -89,7 +82,6 @@ define(function(require) {
 		 * Start syncing accounts in the background
 		 *
 		 * @param {AccountCollection} accounts
-		 * @returns {undefined}
 		 */
 		startBackgroundSync: function(accounts) {
 			Radio.sync.trigger('start', accounts);

@@ -156,7 +156,6 @@ define(function(require) {
 	 * @param {Account} account
 	 * @param {Folder} folder
 	 * @param {Message[]} messages
-	 * @returns {undefined}
 	 */
 	function fetchBodies(account, folder, messages) {
 		if (messages.length > 0) {

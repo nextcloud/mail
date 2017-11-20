@@ -52,7 +52,6 @@ define(function(require) {
 
 		/**
 		 * @param {Message} message
-		 * @returns {undefined}
 		 */
 		addMessage: function(message) {
 			if (this.account.id !== -1) {
@@ -68,7 +67,6 @@ define(function(require) {
 
 		/**
 		 * @param {Array<Message>} messages
-		 * @returns {undefined}
 		 */
 		addMessages: function(messages) {
 			var _this = this;
@@ -77,7 +75,6 @@ define(function(require) {
 
 		/**
 		 * @param {Folder} folder
-		 * @returns {undefined}
 		 */
 
 		addFolder: function(folder) {

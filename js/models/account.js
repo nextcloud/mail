@@ -58,7 +58,6 @@ define(function(require) {
 		},
 		/**
 		 * @param {Folder} folder
-		 * @returns {undefined}
 		 */
 		addFolder: function(folder) {
 			folder.account = this;

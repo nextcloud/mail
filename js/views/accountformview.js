@@ -72,7 +72,6 @@ define(function(require) {
 
 		/**
 		 * @param {object} options
-		 * @returns {undefined}
 		 */
 		initialize: function(options) {
 			this._config = _.defaults(options.config || {}, {
@@ -86,9 +85,6 @@ define(function(require) {
 			});
 		},
 
-		/**
-		 * @returns {undefined}
-		 */
 		onRender: function() {
 			if (this._config.autoDetect) {
 				this.getUI('mailPassword').show();
@@ -103,7 +99,6 @@ define(function(require) {
 
 		/**
 		 * @param {Event} e
-		 * @returns {undefined}
 		 */
 		toggleManualMode: function(e) {
 			e.stopPropagation();
@@ -142,7 +137,6 @@ define(function(require) {
 
 		/**
 		 * @param {type} e
-		 * @returns {undefined}
 		 */
 		onSubmit: function(e) {
 			e.preventDefault();
@@ -182,9 +176,6 @@ define(function(require) {
 			this.triggerMethod('form:submit', config);
 		},
 
-		/**
-		 * @returns {undefined}
-		 */
 		onImapSslModeChange: function() {
 			// set standard port for the selected IMAP & SMTP security
 			var imapDefaultPort = 143;
@@ -201,9 +192,6 @@ define(function(require) {
 			}
 		},
 
-		/**
-		 * @returns {undefined}
-		 */
 		onSmtpSslModeChange: function() {
 			var smtpDefaultPort = 587;
 			var smtpDefaultSecurePort = 465;

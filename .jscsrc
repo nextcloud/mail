@@ -19,7 +19,18 @@
         "vendor/",
         ".git/",
         "l10n/",
-        "js/vendor/"
-    ]
+    ],
 
+    "jsDoc": {
+        "checkAnnotations": {
+            "preset": "jsdoc3",
+            "extra": {
+                "copyright": true,
+                "file": true,
+                "overview": true,
+                "fileoverview": true,
+                "private": true
+            }
+        }
+    }
 }

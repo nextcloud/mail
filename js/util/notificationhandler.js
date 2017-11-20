@@ -59,7 +59,6 @@ define(function(require) {
 
 	/**
 	 * @param {array<Message>} messages
-	 * @returns {undefined}
 	 */
 	function showMailNotification(messages) {
 		if (messages.length === 0) {
