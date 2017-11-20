@@ -14,6 +14,7 @@ define(function(require) {
 	'use strict';
 
 	var $ = require('jquery');
+	require('jquery-ui/ui/widgets/draggable');
 	var _ = require('underscore');
 	var OC = require('OC');
 	var Marionette = require('backbone.marionette');
