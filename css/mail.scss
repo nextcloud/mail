@@ -795,7 +795,8 @@ input.submit-message,
 #app-navigation {
 	> ul {
 		> .navigation-account > li,
-		> .navigation-account > .folders > li {
+		> .navigation-account > .folders > li,
+		> .navigation-account > .folders > li > .folders > .folders > li {
 			display: inline-flex;
 			flex-wrap: wrap;
 			order: 1;
@@ -841,7 +842,8 @@ input.submit-message,
 			/* hide and animate deletion/collapse of subitems */
 			&.deleted,
 			&.collapsible:not(.open) {
-				> ul {
+				> ul,
+				> .folders {
 					opacity: 0;
 					max-height: 0;
 					/* bezier override the hide/slow effect due to the 2000 max-height */
@@ -893,7 +895,8 @@ input.submit-message,
 		}
 		/* Menu and submenu */
 		> .navigation-account > li,
-		> .navigation-account > .folders > li {
+		> .navigation-account > .folders > li,
+		> .navigation-account > .folders > li > .folders > .folders > li {
 			position: relative;
 			width: 100%;
 			box-sizing: border-box;
@@ -947,5 +950,8 @@ input.submit-message,
 				top: 44px;
 			}
 		}
+	}
+	.collapsible > .collapse {
+		z-index: 500;
 	}
 }

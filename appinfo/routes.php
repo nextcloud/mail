@@ -75,6 +75,16 @@ $app->registerRoutes($this,
 			'verb' => 'POST'
 		],
 		[
+			'name' => 'avatars#url',
+			'url' => '/api/avatars/url/{email}',
+			'verb' => 'GET'
+		],
+		[
+			'name' => 'avatars#image',
+			'url' => '/api/avatars/image/{email}',
+			'verb' => 'GET'
+		],
+		[
 			'name' => 'proxy#redirect',
 			'url' => '/redirect',
 			'verb' => 'GET'
