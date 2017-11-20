@@ -120,7 +120,7 @@ class IspDbConfigurationDetector {
 
 		foreach ($ispdb['imap'] as $imap) {
 			$account = $this->testImapConfiguration($imap, $email, $password, $name);
-			if (!no_null($account)) {
+			if (!is_null($account)) {
 				return $account;
 			}
 		}
