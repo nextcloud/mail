@@ -6,12 +6,13 @@
  *
  * @author Christoph Wurst <christoph@winzerhof-wurst.at>
  * @author Luc Calaresu <dev@calaresu.com>
- * @copyright Christoph Wurst 2015
+ * @copyright Christoph Wurst 2017
  */
 
 define(function(require) {
 	'use strict';
 
+	require('jquery-ui/ui/widgets/progressbar');
 	var Marionette = require('backbone.marionette');
 	var Radio = require('radio');
 	var AttachmentTemplate = require('templates/attachment.html');
