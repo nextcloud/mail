@@ -151,6 +151,41 @@ define([
 			assertSameAddressList(reply.cc, [d]);
 		});
 
+		it('handles reply of message where the recipient is in the CC', function() {
+			var ali = createAddress('ali@domain.tld');
+			var bob = createAddress('bob@domain.tld');
+			var me = createAddress('c@domain.tld');
+			var dani = createAddress('d@domain.tld');
+
+			messageBody.set('from', [ali]);
+			messageBody.set('to', [bob]);
+			messageBody.set('cc', [me, dani]);
+			setEmail(message, me);
+
+			var reply = ReplyBuilder.buildReply(message, messageBody);
+
+			assertSameAddressList(reply.from, [me]);
+			assertSameAddressList(reply.to, [ali, bob]);
+			assertSameAddressList(reply.cc, [dani]);
+		});
+
+		it('handles jan\'s reply to nina\'s mesage to a mailing list', function() {
+			var nina = createAddress('nina@nc.com');
+			var list = createAddress('list@nc.com');
+			var jan = createAddress('jan@nc.com');
+
+			messageBody.set('from', [nina]);
+			messageBody.set('to', [list]);
+			messageBody.set('cc', []);
+			setEmail(message, jan);
+
+			var reply = ReplyBuilder.buildReply(message, messageBody);
+
+			assertSameAddressList(reply.from, [jan]);
+			assertSameAddressList(reply.to, [nina, list]);
+			assertSameAddressList(reply.cc, []);
+		});
+
 	});
 
 });
