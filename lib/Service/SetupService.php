@@ -73,6 +73,9 @@ class SetupService {
 		if (is_null($mailAccount)) {
 			return null;
 		}
+
+		$this->accountService->save($mailAccount);
+
 		return new Account($mailAccount);
 	}
 
