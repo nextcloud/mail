@@ -48,6 +48,11 @@ define(function(require) {
 			replyingAddress = _.find(messageBody.get('cc'), isOwnAddress);
 			if (!_.isUndefined(replyingAddress)) {
 				recipientType = RecipientType.Cc;
+			} else {
+				replyingAddress = {
+					label: ownAddress,
+					email: ownAddress
+				};
 			}
 		}
 
@@ -58,14 +63,6 @@ define(function(require) {
 			to = messageBody.get('to').filter(isNotOwnAddress);
 			to = to.concat(messageBody.get('from'));
 
-			// Super rare case: if you write an email to yourself, your email must not be removed
-			/* if (to.length === 0 &&
-			 messageBody.get('to').length === 1 &&
-			 messageBody.get('to')[0].email === message.folder.account.get('emailAddress')) {
-			 console.error('ALA');
-			 to.push(messageBody.get('to')[0]);
-			 } */
-
 			// CC remains the same
 			cc = messageBody.get('cc');
 		} else if (recipientType === RecipientType.Cc) {
@@ -75,8 +72,9 @@ define(function(require) {
 			// All CC values are being kept except the replying address
 			cc = messageBody.get('cc').filter(isNotOwnAddress);
 		} else {
-			// Send to the sender
-			to = messageBody.get('from');
+			// Send to the same recipient and the sender -> answer all
+			to = messageBody.get('to');
+			to = to.concat(messageBody.get('from'));
 
 			// Keep CC values
 			cc = messageBody.get('cc');
@@ -84,7 +82,7 @@ define(function(require) {
 
 		return {
 			to: to,
-			from: [replyingAddress],
+			from: replyingAddress ? [replyingAddress] : [],
 			fromEmail: message.folder.account.get('emailAddress'), // TODO: alias?
 			cc: cc,
 			body: ''
