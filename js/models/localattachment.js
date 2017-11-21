@@ -23,7 +23,6 @@ define(function(require) {
 
 		/**
 		 * @param {Event} evt
-		 * @returns {undefined}
 		 */
 		onProgress: function(evt) {
 			if (evt.lengthComputable) {

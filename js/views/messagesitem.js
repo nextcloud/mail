@@ -84,7 +84,6 @@ define(function(require) {
 
 		/**
 		 * @private
-		 * @returns {undefined}
 		 */
 		_fetchAvatar: function() {
 			var url = OC.generateUrl('/apps/mail/api/avatars/url/{email}', {

@@ -7,7 +7,7 @@
  * later. See the COPYING file.
  *
  * @author Christoph Wurst <christoph@winzerhof-wurst.at>
- * @copyright Christoph Wurst 2015
+ * @copyright Christoph Wurst 2017
  */
 module.exports = function(grunt) {
 	// Project configuration.
@@ -17,13 +17,12 @@ module.exports = function(grunt) {
 				jshintrc: '.jshintrc'
 			},
 			all: ['Gruntfile.js', 'js/*.js', 'js/models/*.js', 'js/views/*.js',
-				'!js/mail.min.js', '!js/webpack.*.js']
+				'!js/build/build.js', '!js/webpack.*.js']
 		},
 		jscs: {
 			src: '<%= jshint.all %>',
 			options: {
-				config: '.jscsrc',
-				verbose: true
+				config: '.jscsrc'
 			}
 		},
 		karma: {

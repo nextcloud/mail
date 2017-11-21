@@ -57,9 +57,6 @@ define(function(require) {
 			this._config = options.config;
 		},
 
-		/**
-		 * @returns {undefined}
-		 */
 		onRender: function() {
 			if (!_.isUndefined(this._error)) {
 				this.showChildView('content', new ErrorView({

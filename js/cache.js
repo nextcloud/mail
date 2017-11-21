@@ -61,7 +61,6 @@ define(function(require) {
 
 	/**
 	 * @param {AccountsCollection} accounts
-	 * @returns {undefined}
 	 */
 	function cleanUp(accounts) {
 		var activeAccounts = accounts.map(function(account) {
@@ -82,7 +81,6 @@ define(function(require) {
 	 * @param {Account} account
 	 * @param {Folder} folder
 	 * @param {Message} messageId
-	 * @returns {unresolved}
 	 */
 	function getMessage(account, folder, messageId) {
 		var path = MessageCache.getMessagePath(account, folder, messageId);
@@ -100,7 +98,6 @@ define(function(require) {
 	 * @param {Account} account
 	 * @param {Folder} folder
 	 * @param {Message} message
-	 * @returns {undefined}
 	 */
 	function addMessage(account, folder, message) {
 		var path = MessageCache.getMessagePath(account, folder, message.id);
@@ -112,7 +109,6 @@ define(function(require) {
 	 * @param {Account} account
 	 * @param {Folder} folder
 	 * @param {Message} messages
-	 * @returns {undefined}
 	 */
 	function addMessages(account, folder, messages) {
 		_.each(messages, function(message) {
@@ -124,7 +120,6 @@ define(function(require) {
 	 * @param {Account} account
 	 * @param {Folder} folder
 	 * @param {number} messageId
-	 * @returns {undefined}
 	 */
 	function removeMessage(account, folder, messageId) {
 		var message = getMessage(account, folder, messageId);
@@ -136,7 +131,6 @@ define(function(require) {
 
 	/**
 	 * @param {Account} account
-	 * @returns {undefined}
 	 */
 	function removeAccount(account) {
 		// Remove cached messages
