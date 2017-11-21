@@ -92,6 +92,10 @@ define(function(require) {
 		},
 
 		loadFolder: function(e) {
+			if (e.isDefaultPrevented()) {
+				// Event has been handled already, e.g. by a subfolder
+				return;
+			}
 			e.preventDefault();
 			// TODO: account should be property of folder
 			var account = require('state').accounts.get(this.model.get('accountId'));
