@@ -28,6 +28,7 @@
     "Unable to load the desired message" : "Nepavyko parodyti laiško",
     "There was a problem loading the message" : "Bandant atidaryti laišką įvyko klaida",
     "{from}\n{subject}" : "{from}\n{subject}",
+    "_%n new message \nfrom {from}_::_%n new messages \nfrom {from}_" : ["%n naujas laiškas \nnuo {from}","%n nauji laiškai \nnuo {from}","%n naujų laiškų \nnuo {from}"],
     "Nextcloud Mail" : "Nextcloud el. paštas",
     "Show all folders" : "Rodyti visus aplankus",
     "Collapse folders" : "Suskleisti aplankus",
