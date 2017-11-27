@@ -1,6 +1,21 @@
 # Changelog
 All notable changes to this project will be documented in this file.
 
+## 0.7.5 – 2017-11-27
+### Added
+- Avatar from Gravatar and favicons
+- Sourcemap support to debug release erros on client-side
+### Fixed
+- Attachment download to Nextcloud files
+- Setup autoconfig issues
+- Reply to/cc field prefilling
+- Removed development log statement
+- Favorites folder appeares as subfolder of inbox
+- Folder unread counter visibility
+- Prefilled sender name in replies
+- Two security issues
+- Subfolder collapsing
+
 ## 0.7.4 – 2017-10-30
 ### Added
 - IMAP/SMTP logging enabled by default if debug mode is turned on
