@@ -32,7 +32,7 @@ exclude = [
 	"js/tests",
 	"js/util",
 	"js/views",
-	"js/*.js",
+	"js/webpack.*.js",
 	"karma.conf.js",
 	"l10n/no-php",
 	"l10n/.tx",

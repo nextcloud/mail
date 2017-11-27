@@ -86,7 +86,6 @@ appstore: clean install-deps optimize-js
 	--exclude=karma.conf.js \
 	--exclude=l10n/no-php \
 	--exclude=l10n/.tx \
-	--exclude=.lgtm \
 	--exclude=Makefile \
 	--exclude=nbproject \
 	--exclude=/node_modules \
@@ -98,26 +97,6 @@ appstore: clean install-deps optimize-js
 	--exclude=tests \
 	--exclude=.travis.yml \
 	--exclude=vendor/bin \
-	--exclude=vendor/ezyang/htmlpurifier/art \
-	--exclude=vendor/ezyang/htmlpurifier/benchmarks \
-	--exclude=vendor/ezyang/htmlpurifier/configdoc \
-	--exclude=vendor/ezyang/htmlpurifier/docs \
-	--exclude=vendor/ezyang/htmlpurifier/Doxyfile \
-	--exclude=vendor/ezyang/htmlpurifier/extras \
-	--exclude=vendor/ezyang/htmlpurifier/FOCUS \
-	--exclude=vendor/ezyang/htmlpurifier/.gitattributes \
-	--exclude=vendor/ezyang/htmlpurifier/INSTALL* \
-	--exclude=vendor/ezyang/htmlpurifier/maintenance \
-	--exclude=vendor/ezyang/htmlpurifier/NEWS \
-	--exclude=vendor/ezyang/htmlpurifier/phpdoc.ini \
-	--exclude=vendor/ezyang/htmlpurifier/plugins \
-	--exclude=vendor/ezyang/htmlpurifier/README \
-	--exclude=vendor/ezyang/htmlpurifier/smoketests \
-	--exclude=vendor/ezyang/htmlpurifier/tests \
-	--exclude=vendor/ezyang/htmlpurifier/TODO \
-	--exclude=vendor/ezyang/htmlpurifier/VERSION \
-	--exclude=vendor/ezyang/htmlpurifier/WHATSNEW \
-	--exclude=vendor/ezyang/htmlpurifier/WYSIWYG \
 	$(project_dir)/ $(sign_dir)/$(app_name)
 	@if [ -f $(cert_dir)/$(app_name).key ]; then \
 		echo "Signing app files…"; \
