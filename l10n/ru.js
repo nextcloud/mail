@@ -119,7 +119,7 @@ OC.L10N.register(
     "Show images from this sender" : "Показать изображения от этого отправителя",
     "Forward" : "Переслать",
     "No messages in this folder!" : "В этой папке нет сообщений!",
-    "Upload attachment" : "Выгрузить вложение",
+    "Upload attachment" : "Загрузить вложение",
     "Add attachment from Files" : "Выбрать вложение из файлов",
     "Import into calendar" : "Импортировать в календарь",
     "Download attachment" : "Скачать вложение",
