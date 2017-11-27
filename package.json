@@ -7,8 +7,7 @@
     "test": "tests"
   },
   "scripts": {
-    "test": "./node_modules/.bin/jshint . && ./node_modules/.bin/jsxhint .",
-    "bower_deps": "./node_modules/.bin/bower install",
+    "test": "./node_modules/karma/bin/karma start karma.conf.js --single-run",
     "build": "./node_modules/webpack/bin/webpack.js --config js/webpack.prod.config.js"
   },
   "repository": {
@@ -18,7 +17,7 @@
   "keywords": [
     "mail"
   ],
-  "author": "Christoph Wurst, Thomas Müller, Jan-Christoph Borchardt, Steffen Lindner and many more …",
+  "author": "Christoph Wurst, Jan-Christoph Borchardt, Steffen Lindner and many more …",
   "license": "AGPL-3.0",
   "bugs": {
     "url": "https://github.com/nextcloud/mail/issues"
