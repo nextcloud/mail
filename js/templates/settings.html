@@ -6,11 +6,20 @@
 	   class="button new-button"
 	   href="{{addAccountUrl}}">{{ t 'Add mail account' }}</a>
 
-	<p class="app-settings-hint">
-	<a id="keyboard-shortcuts"
-		  href="{{keyboardShortcutUrl}}">{{ t 'Keyboard shortcuts' }}</a></p>
+	<p>
+		<input class="checkbox"
+		       id="gravatar-enabled"
+		       {{#if useExternalAvatars}}checked="checked"{{/if}}
+		       type="checkbox">
+		<label for="gravatar-enabled">{{ t 'Use Gravatar and favicon avatars' }}</label>
+	</p>
 
 	<p class="app-settings-hint">
-		{{{ t 'Looking to encrypt your emails? Install the <a href="https://www.mailvelope.com/" target="_blank">Mailvelope browser extension</a>!' }}}
-	</p>
-</div>
+		<a id="keyboard-shortcuts"
+		   href="{{keyboardShortcutUrl}}">{{ t 'Keyboard shortcuts' }}</a>
+		</p>
+
+		<p class="app-settings-hint">
+			{{{ t 'Looking to encrypt your emails? Install the <a href="https://www.mailvelope.com/" target="_blank">Mailvelope browser extension</a>!' }}}
+		</p>
+	</div>

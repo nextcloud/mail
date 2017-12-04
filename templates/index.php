@@ -31,6 +31,7 @@ script('mail', 'build/build');
 
 <input type="hidden" id="config-installed-version" value="<?php p($_['app-version']); ?>">
 <input type="hidden" id="serialized-accounts" value="<?php p($_['accounts']); ?>">
+<input type="hidden" id="external-avatars" value="<?php p($_['external-avatars']); ?>">
 
 <div id="user-displayname"
      style="display: none"><?php p($_['prefill_displayName']); ?></div>
