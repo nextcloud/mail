@@ -74,12 +74,13 @@ class FolderMapper {
 	 */
 	public function buildFolderHierarchy(array $folders) {
 		$indexedFolders = [];
+		$prefixed = $this->isPrefixed($folders);
 		foreach ($folders as $folder) {
 			$indexedFolders[$folder->getMailbox()] = $folder;
 		}
 
-		$top = array_filter($indexedFolders, function(Folder $folder) {
-			return $folder instanceof SearchFolder || is_null($this->getParentId($folder));
+		$top = array_filter($indexedFolders, function(Folder $folder) use ($prefixed) {
+			return $folder instanceof SearchFolder || is_null($this->getParentId($folder, $prefixed));
 		});
 
 		foreach ($indexedFolders as $folder) {
@@ -87,7 +88,7 @@ class FolderMapper {
 				continue;
 			}
 
-			$parentId = $this->getParentId($folder);
+			$parentId = $this->getParentId($folder, $prefixed);
 			if (isset($top[$parentId])) {
 				$indexedFolders[$parentId]->addFolder($folder);
 			}
@@ -97,16 +98,31 @@ class FolderMapper {
 	}
 
 	/**
+	 * @param Folder[] $folders
+	 * @return bool
+	 */
+	private function isPrefixed(array $folders) {
+		foreach ($folders as $folder) {
+			$parts = explode($folder->getDelimiter(), $folder->getMailbox());
+			if (count($parts) > 1 && $parts[0] !== 'INBOX') {
+				return false;
+			}
+		}
+		return true;
+	}
+
+	/**
 	 * @param Folder $folder
 	 * @return string
 	 */
-	private function getParentId(Folder $folder) {
+	private function getParentId(Folder $folder, $prefixed) {
+		$topLevel = $prefixed ? 1 : 0;
 		$hierarchy = explode($folder->getDelimiter(), $folder->getMailbox());
-		if (count($hierarchy) <= 1) {
+		if (count($hierarchy) <= ($topLevel + 1)) {
 			// Top level folder
 			return null;
 		}
-		return $hierarchy[0];
+		return implode($folder->getDelimiter(), array_slice($hierarchy, 0, $topLevel + 1));
 	}
 
 	/**

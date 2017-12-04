@@ -116,6 +116,27 @@ class FolderMapperTest extends TestCase {
 		$this->assertEquals($expected, $result);
 	}
 
+	public function testBuildHierarchyWithPrefix() {
+		$account = $this->createMock(Account::class);
+		$folder1 = new Folder($account, new Horde_Imap_Client_Mailbox('INBOX.Inbox'), [], '.');
+		$folder2 = new Folder($account, new Horde_Imap_Client_Mailbox('INBOX.Archive'), [], '.');
+		$folder3 = new Folder($account, new Horde_Imap_Client_Mailbox('INBOX.Archive.Inbox'), [], '.');
+		$folders = [
+			clone $folder1,
+			clone $folder2,
+			clone $folder3,
+		];
+		$folder2->addFolder($folder3);
+		$expected = [
+			$folder1,
+			$folder2,
+		];
+
+		$result = $this->mapper->buildFolderHierarchy($folders);
+
+		$this->assertEquals($expected, $result);
+	}
+
 	public function testGetFoldersStatus() {
 		$folders = [
 			$this->createMock(Folder::class),
