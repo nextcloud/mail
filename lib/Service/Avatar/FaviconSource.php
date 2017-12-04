@@ -61,7 +61,7 @@ class FaviconSource implements IAvatarSource {
 
 		$iconUrl = $this->favicon->get($domain);
 
-		if (empty($iconUrl)) {
+		if ($iconUrl === false || empty($iconUrl)) {
 			return null;
 		}
 
