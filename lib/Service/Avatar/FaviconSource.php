@@ -23,8 +23,8 @@
 namespace OCA\Mail\Service\Avatar;
 
 use Exception;
+use Favicon\Favicon;
 use Horde_Mail_Rfc822_Address;
-use Mpclarkson\IconScraper\Scraper;
 use OCP\Files\IMimeTypeDetector;
 use OCP\Http\Client\IClientService;
 
@@ -33,19 +33,19 @@ class FaviconSource implements IAvatarSource {
 	/** @var IClientService */
 	private $clientService;
 
-	/** @var Scraper */
-	private $scraper;
+	/** @var Favicon */
+	private $favicon;
 
 	/** @var IMimeTypeDetector */
 	private $mimeDetector;
 
 	/**
 	 * @param IClientService $clientService
-	 * @param Scraper $scraper
+	 * @param Favicon $favicon
 	 */
-	public function __construct(IClientService $clientService, Scraper $scraper, IMimeTypeDetector $mimeDetector) {
+	public function __construct(IClientService $clientService, Favicon $favicon, IMimeTypeDetector $mimeDetector) {
 		$this->clientService = $clientService;
-		$this->scraper = $scraper;
+		$this->favicon = $favicon;
 		$this->mimeDetector = $mimeDetector;
 	}
 
@@ -59,36 +59,27 @@ class FaviconSource implements IAvatarSource {
 		// TODO: fall back to insecure HTTP?
 		$domain = 'https://' . $horde->host;
 
-		$icons = $this->scraper->get($domain);
+		$iconUrl = $this->favicon->get($domain);
 
-		if (empty($icons)) {
+		if (empty($iconUrl)) {
 			return null;
 		}
 
-		usort($icons, function ($a, $b) {
-			return $b->getHeight() - $a->getHeight();
-		});
-
 		$client = $this->clientService->newClient();
-		foreach ($icons as $icon) {
-			$url = $icon->getHref();
-			try {
-				$response = $client->get($url);
-			} catch (Exception $exception) {
-				continue;
-			}
-
-			// Don't save 0 byte images
-			$body = $response->getBody();
-			if (strlen($body) === 0) {
-				continue;
-			}
-			$mime = $this->mimeDetector->detectString($body);
-
-			return $factory->createExternal($url, $mime);
+		try {
+			$response = $client->get($iconUrl);
+		} catch (Exception $exception) {
+			return null;
 		}
 
-		return null;
+		// Don't save 0 byte images
+		$body = $response->getBody();
+		if (strlen($body) === 0) {
+			return null;
+		}
+		$mime = $this->mimeDetector->detectString($body);
+
+		return $factory->createExternal($iconUrl, $mime);
 	}
 
 }

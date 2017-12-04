@@ -23,7 +23,7 @@
 		"ezyang/htmlpurifier": "4.9.3",
 		"kwi/urllinker": "dev-default",
 		"gravatarphp/gravatar": "^1.0",
-		"mpclarkson/icon-scraper": "dev-master"
+		"arthurhoaro/favicon": "^1.2"
 	},
 	"require-dev": {
 		"christophwurst/nextcloud": "^12.0.0",

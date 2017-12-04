@@ -4,8 +4,58 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#composer-lock-the-lock-file",
         "This file is @generated automatically"
     ],
-    "content-hash": "101e0fa1f925af45b392e64d2e44ac4c",
+    "content-hash": "8c8329b47452f542f391e94192b3020c",
     "packages": [
+        {
+            "name": "arthurhoaro/favicon",
+            "version": "v1.2.1",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/ArthurHoaro/favicon.git",
+                "reference": "02163a16798bb024b0a413aa38400226665c1b2a"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/ArthurHoaro/favicon/zipball/02163a16798bb024b0a413aa38400226665c1b2a",
+                "reference": "02163a16798bb024b0a413aa38400226665c1b2a",
+                "shasum": ""
+            },
+            "require": {
+                "php": ">=5.3.3"
+            },
+            "require-dev": {
+                "phpunit/phpunit": "~4.8",
+                "weew/helpers-filesystem": "~1.0"
+            },
+            "type": "library",
+            "autoload": {
+                "psr-4": {
+                    "Favicon\\": "src/Favicon/"
+                }
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "Apache-2.0"
+            ],
+            "authors": [
+                {
+                    "name": "Chris Shiflett",
+                    "homepage": "http://shiflett.org/"
+                },
+                {
+                    "name": "Arthur Hoaro",
+                    "homepage": "http://hoa.ro"
+                }
+            ],
+            "description": "PHP Library used to discover favicon from given URL",
+            "homepage": "https://github.com/ArthurHoaro/favicon",
+            "keywords": [
+                "favicon",
+                "finder",
+                "icon"
+            ],
+            "time": "2017-04-23T16:00:33+00:00"
+        },
         {
             "name": "cerdic/css-tidy",
             "version": "v1.5.5",
@@ -183,7 +233,7 @@
             ],
             "description": "Autolink URLs in text or html",
             "homepage": "http://www.kwi.dk/projects/php/UrlLinker/",
-            "time": "2014-12-28T23:05:00+00:00"
+            "time": "2014-12-28T22:05:00+00:00"
         },
         {
             "name": "mpclarkson/icon-scraper",
@@ -896,7 +946,6 @@
                 "shasum": ""
             },
             "type": "library",
-            "notification-url": "https://packagist.org/downloads/",
             "license": [
                 "AGPLv3"
             ],
@@ -907,6 +956,9 @@
                 }
             ],
             "description": "Composer package containing Nextcloud's public API (classes, interfaces)",
+            "support": {
+                "source": "https://github.com/ChristophWurst/nextcloud_composer/tree/master"
+            },
             "time": "2017-09-20T09:46:46+00:00"
         },
         {
