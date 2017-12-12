@@ -22,21 +22,19 @@
  *
  */
 
-namespace OCA\Mail\Service\Avatar;
+namespace OCA\Mail\Contracts;
 
-interface IAvatarSource {
-
-	/**
-	 * Does this source query external services?
-	 *
-	 * @return bool
-	 */
-	public function isExternal();
+interface IUserPreferences {
 
 	/**
-	 * @param string $email sender email address
-	 * @param AvatarFactory $factory
-	 * @return Avatar|null avatar URL if one can be found
+	 * @param string $key
+	 * @param mixed $value
 	 */
-	public function fetch($email, AvatarFactory $factory);
+	public function setPreference($key, $value);
+
+	/**
+	 * @param string $key
+	 * @param mixed|null $default
+	 */
+	public function getPreference($key, $default = null);
 }

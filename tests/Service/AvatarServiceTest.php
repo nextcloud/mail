@@ -24,6 +24,7 @@
 
 namespace OCA\Mail\Tests\Service;
 
+use OCA\Mail\Contracts\IUserPreferences;
 use OCA\Mail\Service\Avatar\Avatar;
 use OCA\Mail\Service\Avatar\AvatarFactory;
 use OCA\Mail\Service\Avatar\Cache;
@@ -54,6 +55,9 @@ class AvatarServiceTest extends TestCase {
 	/** @var AvatarFactory|PHPUnit_Framework_MockObject_MockObject */
 	private $avatarFactory;
 
+	/** @var IUserPreferences */
+	private $preferences;
+
 	/** @var AvatarService */
 	private $avatarService;
 
@@ -65,8 +69,10 @@ class AvatarServiceTest extends TestCase {
 		$this->cache = $this->createMock(Cache::class);
 		$this->urlGenerator = $this->createMock(IURLGenerator::class);
 		$this->avatarFactory = $this->createMock(AvatarFactory::class);
+		$this->preferences = $this->createMock(IUserPreferences::class);
 
-		$this->avatarService = new AvatarService($this->source, $this->downloader, $this->cache, $this->urlGenerator, $this->avatarFactory);
+		$this->avatarService = new AvatarService($this->source, $this->downloader,
+			$this->cache, $this->urlGenerator, $this->avatarFactory, $this->preferences);
 	}
 
 	public function testGetCachedAvatarUrl() {
@@ -85,13 +91,17 @@ class AvatarServiceTest extends TestCase {
 	public function testGetAvatarNoAvatarFound() {
 		$email = 'jane@doe.com';
 		$uid = 'john';
+		$this->preferences->expects($this->once())
+			->method('getPreference')
+			->with('external-avatars', 'true')
+			->willReturn('true');
 		$this->cache->expects($this->once())
 			->method('get')
 			->with($email)
 			->willReturn(null);
 		$this->source->expects($this->once())
 			->method('fetch')
-			->with($email, $this->avatarFactory)
+			->with($email, $this->avatarFactory, true)
 			->willReturn(null);
 		$this->cache->expects($this->never())
 			->method('add');
@@ -104,6 +114,10 @@ class AvatarServiceTest extends TestCase {
 	public function testGetAvatarMimeNotAllowed() {
 		$email = 'jane@doe.com';
 		$uid = 'john';
+		$this->preferences->expects($this->once())
+			->method('getPreference')
+			->with('external-avatars', 'true')
+			->willReturn('true');
 		$this->cache->expects($this->once())
 			->method('get')
 			->with($email)
@@ -111,7 +125,7 @@ class AvatarServiceTest extends TestCase {
 		$avatar = new Avatar('http://…', 'application/xml');
 		$this->source->expects($this->once())
 			->method('fetch')
-			->with($email, $this->avatarFactory)
+			->with($email, $this->avatarFactory, true)
 			->willReturn($avatar);
 		$this->cache->expects($this->never())
 			->method('add');
@@ -121,17 +135,46 @@ class AvatarServiceTest extends TestCase {
 		$this->assertNull($url);
 	}
 
-	public function testGetAvatar() {
+	public function testGetAvatarOnlyInternalAllowed() {
 		$email = 'jane@doe.com';
 		$uid = 'john';
 		$avatar = new Avatar('https://doe.com/favicon.ico', 'image/png');
+		$this->preferences->expects($this->once())
+			->method('getPreference')
+			->with('external-avatars', 'true')
+			->willReturn('false');
 		$this->cache->expects($this->once())
 			->method('get')
 			->with($email)
 			->willReturn(null);
 		$this->source->expects($this->once())
 			->method('fetch')
-			->with($email, $this->avatarFactory)
+			->with($email, $this->avatarFactory, false)
+			->willReturn($avatar);
+		$this->cache->expects($this->once())
+			->method('add')
+			->with($email, $uid, $avatar);
+
+		$actualAvatar = $this->avatarService->getAvatar($email, $uid);
+
+		$this->assertEquals($avatar, $actualAvatar);
+	}
+
+	public function testGetAvatar() {
+		$email = 'jane@doe.com';
+		$uid = 'john';
+		$avatar = new Avatar('https://doe.com/favicon.ico', 'image/png');
+		$this->preferences->expects($this->once())
+			->method('getPreference')
+			->with('external-avatars', 'true')
+			->willReturn('true');
+		$this->cache->expects($this->once())
+			->method('get')
+			->with($email)
+			->willReturn(null);
+		$this->source->expects($this->once())
+			->method('fetch')
+			->with($email, $this->avatarFactory, true)
 			->willReturn($avatar);
 		$this->cache->expects($this->once())
 			->method('add')

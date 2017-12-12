@@ -24,6 +24,7 @@ define(function(require) {
 		'message',
 		'navigation',
 		'notification',
+		'preference',
 		'state',
 		'sync',
 		'ui'

@@ -39,6 +39,15 @@ class GravatarSource implements IAvatarSource {
 	}
 
 	/**
+	 * Does this source query external services?
+	 *
+	 * @return bool
+	 */
+	public function isExternal() {
+		return true;
+	}
+
+	/**
 	 * @param string $email sender email address
 	 * @param AvatarFactory $factory
 	 * @return Avatar|null avatar URL if one can be found
