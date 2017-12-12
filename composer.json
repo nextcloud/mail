@@ -5,6 +5,11 @@
 			"url": "https://pear.horde.org"
 		}
 	],
+	"config": {
+		"platform": {
+			"php": "5.6"
+		}
+	},
 	"require": {
 		"php": ">=5.6.0",
 		"pear-pear.horde.org/Horde_Date": "^2.4.0@stable",
@@ -23,7 +28,7 @@
 		"ezyang/htmlpurifier": "4.9.3",
 		"kwi/urllinker": "dev-default",
 		"gravatarphp/gravatar": "^1.0",
-		"mpclarkson/icon-scraper": "dev-master"
+		"arthurhoaro/favicon": "^1.2"
 	},
 	"require-dev": {
 		"christophwurst/nextcloud": "^12.0.0",
