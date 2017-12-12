@@ -1,6 +1,14 @@
 # Changelog
 All notable changes to this project will be documented in this file.
 
+## 0.7.6 – 2017-12-12
+### Added
+- Opt-out for external avatars (Gravatar, favicon)
+### Fixed
+- Icon scraper warnings
+- Undefined index bugs
+- Draft message active state in message list
+
 ## 0.7.5 – 2017-11-27
 ### Added
 - Avatar from Gravatar and favicons
