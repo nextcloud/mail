@@ -147,7 +147,7 @@ class MessagesController extends Controller {
 			// This is hacky and should be done on the client-side
 			if ($mailBox->getSpecialRole() === 'sent') {
 				$j['from'] = $j['to'];
-				if((count($j['toList']) > 1) || (count($j['ccList']) > 0)) {
+				if((count($j['to']) > 1) || (count($j['cc']) > 0)) {
 					$j['from'] .= ' ' . $this->l10n->t('& others');
 				}
 			}
