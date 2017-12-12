@@ -1,7 +1,7 @@
 # Changelog
 All notable changes to this project will be documented in this file.
 
-## 0.7.5 – 2017-12-12
+## 0.7.6 – 2017-12-12
 ### Added
 - Opt-out for external avatars (Gravatar, favicon)
 ### Fixed
