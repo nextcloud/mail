@@ -105,7 +105,8 @@ define(function(require) {
 			}));
 			this.detailView = DetailView.ERROR;
 		},
-		onShowComposer: function(data) {
+		onShowComposer: function(data, isDraft) {
+			isDraft = _.isUndefined(isDraft) ? false : isDraft;
 			$('.tooltip').remove();
 			$('#mail_new_message').prop('disabled', true);
 			$('#mail-message').removeClass('hidden-mobile');
@@ -134,7 +135,9 @@ define(function(require) {
 				this.composer.focusSubject();
 			}
 
-			Radio.ui.trigger('messagesview:message:setactive', null);
+			if (!isDraft) {
+				Radio.ui.trigger('messagesview:message:setactive', null);
+			}
 		},
 		onComposerLeave: function() {
 			// TODO: refactor 'composer:leave' as it's buggy
