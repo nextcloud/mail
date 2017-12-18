@@ -96,11 +96,12 @@ $app->registerRoutes($this,
 		],
 	],
 	'resources' => [
-		'autoComplete' => ['url' => '/api/autoComplete'],
-		'localAttachments' => ['url' => '/api/attachments'],
 		'accounts' => ['url' => '/api/accounts'],
-		'folders' => ['url' => '/api/accounts/{accountId}/folders'],
-		'messages' => ['url' => '/api/accounts/{accountId}/folders/{folderId}/messages'],
 		'aliases' => ['url' => '/api/accounts/{accountId}/aliases'],
+		'autoComplete' => ['url' => '/api/autoComplete'],
+		'folders' => ['url' => '/api/accounts/{accountId}/folders'],
+		'localAttachments' => ['url' => '/api/attachments'],
+		'messages' => ['url' => '/api/accounts/{accountId}/folders/{folderId}/messages'],
+		'preferences' => ['url' => '/api/preferences'],
 	]
 ]);

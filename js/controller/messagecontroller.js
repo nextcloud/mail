@@ -80,7 +80,7 @@ define(function(require) {
 
 		Radio.message.request('entity', account, folder, message.get('id')).then(function(messageBody) {
 			if (draft) {
-				Radio.ui.trigger('composer:show', messageBody);
+				Radio.ui.trigger('composer:show', messageBody, true);
 			} else {
 				// TODO: ideally this should be handled in messageservice.js
 				require('cache').addMessage(account, folder, messageBody);

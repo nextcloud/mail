@@ -24,6 +24,7 @@ namespace OCA\Mail\Tests\Service;
 
 use Exception;
 use OCA\Mail\Service\Logger;
+use OCP\ILogger;
 use PHPUnit_Framework_TestCase;
 
 class LoggerTest extends PHPUnit_Framework_TestCase {
@@ -34,7 +35,7 @@ class LoggerTest extends PHPUnit_Framework_TestCase {
 	 */
 	public function testLoggerMethod($method, $param = '1') {
 
-		$baseLogger = $this->getMockBuilder('\OCP\ILogger')->getMock();
+		$baseLogger = $this->getMockBuilder(ILogger::class)->getMock();
 		$baseLogger->expects($this->once())
 			->method($method)
 			->with(

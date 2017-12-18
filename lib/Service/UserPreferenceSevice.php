@@ -22,21 +22,42 @@
  *
  */
 
-namespace OCA\Mail\Service\Avatar;
+namespace OCA\Mail\Service;
 
-interface IAvatarSource {
+use OCA\Mail\Contracts\IUserPreferences;
+use OCP\IConfig;
+
+class UserPreferenceSevice implements IUserPreferences {
+
+	/** @var IConfig */
+	private $config;
+
+	/** @var string */
+	private $UserId;
 
 	/**
-	 * Does this source query external services?
-	 *
-	 * @return bool
+	 * @param IConfig $config
+	 * @param string $UserId
 	 */
-	public function isExternal();
+	public function __construct(IConfig $config, $UserId) {
+		$this->UserId = $UserId;
+		$this->config = $config;
+	}
 
 	/**
-	 * @param string $email sender email address
-	 * @param AvatarFactory $factory
-	 * @return Avatar|null avatar URL if one can be found
+	 * @param string $key
+	 * @param mixed $value
 	 */
-	public function fetch($email, AvatarFactory $factory);
+	public function setPreference($key, $value) {
+		$this->config->setUserValue($this->UserId, 'mail', $key, $value);
+	}
+
+	/**
+	 * @param string $key
+	 * @param mixed|null $default
+	 */
+	public function getPreference($key, $default = null) {
+		return $this->config->getUserValue($this->UserId, 'mail', $key, $default);
+	}
+
 }

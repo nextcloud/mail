@@ -114,6 +114,7 @@ OC.L10N.register(
     "Subject" : "Sujet",
     "Save all to Files" : "Enregistrer tout dans les Fichiers",
     "Add mail account" : "Ajouter un compte mail",
+    "Use Gravatar and favicon avatars" : "Utiliser Gravatar et des avatars de favicon",
     "No search results for" : "Aucun résultats pour",
     "The images have been blocked to protect your privacy." : "Les images ont été bloquées pour protéger votre vie privée.",
     "Show images from this sender" : "Voir les images de cet expéditeur",

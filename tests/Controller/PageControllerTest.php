@@ -21,6 +21,7 @@
 
 namespace OCA\Mail\Tests\Controller;
 
+use OCA\Mail\Contracts\IUserPreferences;
 use OCA\Mail\Controller\PageController;
 use OCA\Mail\Service\AccountService;
 use OCA\Mail\Service\AliasesService;
@@ -62,6 +63,9 @@ class PageControllerTest extends PHPUnit_Framework_TestCase {
 	/** @var IUserSession|PHPUnit_Framework_MockObject_MockObject */
 	private $userSession;
 
+	/** @var IUserPreferences|PHPUnit_Framework_MockObject_MockObject */
+	private $preferences;
+
 	/** @var PageController */
 	private $controller;
 
@@ -76,13 +80,21 @@ class PageControllerTest extends PHPUnit_Framework_TestCase {
 		$this->accountService = $this->createMock(AccountService::class);
 		$this->aliasesService = $this->createMock(AliasesService::class);
 		$this->userSession = $this->createMock(IUserSession::class);
-		$this->controller = new PageController($this->appName, $this->request, $this->urlGenerator, $this->config, $this->accountService, $this->aliasesService, $this->userId, $this->userSession);
+		$this->preferences = $this->createMock(IUserPreferences::class);
+
+		$this->controller = new PageController($this->appName, $this->request,
+			$this->urlGenerator, $this->config, $this->accountService,
+			$this->aliasesService, $this->userId, $this->userSession, $this->preferences);
 	}
 
 	public function testIndex() {
 		$account1 = $this->createMock(IAccount::class);
 		$account2 = $this->createMock(IAccount::class);
 
+		$this->preferences->expects($this->once())
+			->method('getPreference')
+			->with('external-avatars', 'true')
+			->willReturn('true');
 		$this->accountService->expects($this->once())
 			->method('findByUserId')
 			->with($this->userId)
@@ -149,11 +161,14 @@ class PageControllerTest extends PHPUnit_Framework_TestCase {
 			->will($this->returnValue('jane'));
 		$this->config->expects($this->once())
 			->method('getUserValue')
-			->with($this->equalTo('jane'), $this->equalTo('settings'), $this->equalTo('email'), $this->equalTo(''))
+			->with($this->equalTo('jane'), $this->equalTo('settings'),
+				$this->equalTo('email'), $this->equalTo(''))
 			->will($this->returnValue('jane@doe.cz'));
 
-		$expected = new TemplateResponse($this->appName, 'index', [
+		$expected = new TemplateResponse($this->appName, 'index',
+			[
 			'debug' => true,
+			'external-avatars' => 'true',
 			'app-version' => '1.2.3',
 			'accounts' => base64_encode(json_encode($accountsJson)),
 			'prefill_displayName' => 'Jane Doe',

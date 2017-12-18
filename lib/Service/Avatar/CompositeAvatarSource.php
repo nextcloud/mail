@@ -27,7 +27,7 @@ namespace OCA\Mail\Service\Avatar;
 /**
  * Composition of all avatar sources for easier usage
  */
-class CompositeAvatarSource implements IAvatarSource {
+class CompositeAvatarSource {
 
 	/** @var IAvatarSource[] */
 	private $sources;
@@ -49,10 +49,16 @@ class CompositeAvatarSource implements IAvatarSource {
 	/**
 	 * @param string $email sender email address
 	 * @param AvatarFactory $factory
+	 * @param bool $queryExternal
 	 * @return Avatar|null avatar URL if one can be found
 	 */
-	public function fetch($email, AvatarFactory $factory) {
+	public function fetch($email, AvatarFactory $factory, $queryExternal) {
 		foreach ($this->sources as $source) {
+			if (!$queryExternal && $source->isExternal()) {
+				// Skip this one
+				continue;
+			}
+
 			$avatar = $source->fetch($email, $factory);
 
 			if (is_null($avatar)) {

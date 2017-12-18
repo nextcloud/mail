@@ -22,12 +22,12 @@
 namespace OCA\Mail\Service;
 
 use OCA\Mail\Contracts\IAvatarService;
+use OCA\Mail\Contracts\IUserPreferences;
 use OCA\Mail\Service\Avatar\Avatar;
 use OCA\Mail\Service\Avatar\AvatarFactory;
 use OCA\Mail\Service\Avatar\Cache as AvatarCache;
 use OCA\Mail\Service\Avatar\CompositeAvatarSource;
 use OCA\Mail\Service\Avatar\Downloader;
-use OCA\Mail\Service\Avatar\IAvatarSource;
 use OCP\IURLGenerator;
 
 class AvatarService implements IAvatarService {
@@ -38,7 +38,7 @@ class AvatarService implements IAvatarService {
 	/** @var Downloader */
 	private $downloader;
 
-	/** @var IAvatarSource */
+	/** @var CompositeAvatarSource */
 	private $source;
 
 	/** @var IURLGenerator */
@@ -47,19 +47,33 @@ class AvatarService implements IAvatarService {
 	/** @var AvatarFactory */
 	private $avatarFactory;
 
+	/** @var IUserPreferences */
+	private $preferences;
+
 	/**
 	 * @param CompositeAvatarSource $source
 	 * @param Downloader $downloader
 	 * @param AvatarCache $cache
 	 * @param IURLGenerator $urlGenerator
 	 * @param AvatarFactory $avatarFactory
+	 * @param IUserPreferences $preferences
 	 */
-	public function __construct(CompositeAvatarSource $source, Downloader $downloader, AvatarCache $cache, IURLGenerator $urlGenerator, AvatarFactory $avatarFactory) {
+	public function __construct(CompositeAvatarSource $source,
+		Downloader $downloader, AvatarCache $cache, IURLGenerator $urlGenerator,
+		AvatarFactory $avatarFactory, IUserPreferences $preferences) {
 		$this->source = $source;
 		$this->cache = $cache;
 		$this->urlGenerator = $urlGenerator;
 		$this->downloader = $downloader;
 		$this->avatarFactory = $avatarFactory;
+		$this->preferences = $preferences;
+	}
+
+	/**
+	 * @return bool
+	 */
+	private function externalAvatarsAllowed() {
+		return $this->preferences->getPreference('external-avatars', 'true') === 'true';
 	}
 
 	/**
@@ -69,7 +83,8 @@ class AvatarService implements IAvatarService {
 		if ($avatar->isExternal()) {
 			$mime = $avatar->getMime();
 
-			return in_array($mime, [
+			return in_array($mime,
+				[
 				'image/jpeg',
 				'image/png',
 				'image/x-icon',
@@ -91,7 +106,7 @@ class AvatarService implements IAvatarService {
 			return $cachedAvatar;
 		}
 
-		$avatar = $this->source->fetch($email, $this->avatarFactory);
+		$avatar = $this->source->fetch($email, $this->avatarFactory, $this->externalAvatarsAllowed());
 		if (is_null($avatar) || !$this->hasAllowedMime($avatar)) {
 			// Cannot locate any avatar -> nothing to do here
 			return null;

@@ -24,6 +24,7 @@
 
 namespace OCA\Mail\Controller;
 
+use OCA\Mail\Contracts\IUserPreferences;
 use OCA\Mail\Service\AccountService;
 use OCA\Mail\Service\AliasesService;
 use OCP\AppFramework\Controller;
@@ -55,6 +56,9 @@ class PageController extends Controller {
 	/** @var IUserSession */
 	private $userSession;
 
+	/** @var IUserPreferences */
+	private $preferences;
+
 	/**
 	 * @param string $appName
 	 * @param IRequest $request
@@ -63,8 +67,12 @@ class PageController extends Controller {
 	 * @param AccountService $accountService
 	 * @param AliasesService $aliasesService
 	 * @param string $UserId
+	 * @param IUserPreferences
 	 */
-	public function __construct($appName, IRequest $request, IURLGenerator $urlGenerator, IConfig $config, AccountService $accountService, AliasesService $aliasesService, $UserId, IUserSession $userSession) {
+	public function __construct($appName, IRequest $request,
+		IURLGenerator $urlGenerator, IConfig $config, AccountService $accountService,
+		AliasesService $aliasesService, $UserId, IUserSession $userSession,
+		IUserPreferences $preferences) {
 		parent::__construct($appName, $request);
 		$this->urlGenerator = $urlGenerator;
 		$this->config = $config;
@@ -72,6 +80,7 @@ class PageController extends Controller {
 		$this->aliasesService = $aliasesService;
 		$this->currentUserId = $UserId;
 		$this->userSession = $userSession;
+		$this->preferences = $preferences;
 	}
 
 	/**
@@ -86,17 +95,21 @@ class PageController extends Controller {
 		$accountsJson = [];
 		foreach ($mailAccounts as $mailAccount) {
 			$json = $mailAccount->jsonSerialize();
-			$json['aliases'] = $this->aliasesService->findAll($mailAccount->getId(), $this->currentUserId);
+			$json['aliases'] = $this->aliasesService->findAll($mailAccount->getId(),
+				$this->currentUserId);
 			$accountsJson[] = $json;
 		}
 
 		$user = $this->userSession->getUser();
-		$response = new TemplateResponse($this->appName, 'index', [
+		$response = new TemplateResponse($this->appName, 'index',
+			[
 			'debug' => $this->config->getSystemValue('debug', false),
 			'app-version' => $this->config->getAppValue('mail', 'installed_version'),
 			'accounts' => base64_encode(json_encode($accountsJson)),
+			'external-avatars' => $this->preferences->getPreference('external-avatars', 'true'),
 			'prefill_displayName' => $user->getDisplayName(),
-			'prefill_email' => $this->config->getUserValue($user->getUID(), 'settings', 'email', ''),
+			'prefill_email' => $this->config->getUserValue($user->getUID(), 'settings',
+				'email', ''),
 		]);
 
 		$csp = new ContentSecurityPolicy();
@@ -124,7 +137,8 @@ class PageController extends Controller {
 			}
 		}
 
-		array_walk($params, function (&$value, $key) {
+		array_walk($params,
+			function (&$value, $key) {
 			$value = "$key=" . urlencode($value);
 		});
 

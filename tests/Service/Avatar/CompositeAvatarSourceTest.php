@@ -60,20 +60,59 @@ class CompositeAvatarSourceTest extends TestCase {
 	public function testFetchNoneFound() {
 		$email = 'jane@doe.com';
 		$avatarFactory = $this->createMock(AvatarFactory::class);
+		$this->addressbookSource->expects($this->any())
+			->method('isExternal')
+			->willReturn(false);
 		$this->addressbookSource->expects($this->once())
 			->method('fetch')
 			->with($email, $avatarFactory)
 			->willReturn(null);
+		$this->gravatarSource->expects($this->any())
+			->method('isExternal')
+			->willReturn(true);
 		$this->gravatarSource->expects($this->once())
 			->method('fetch')
 			->with($email, $avatarFactory)
 			->willReturn(null);
+		$this->faviconSource->expects($this->any())
+			->method('isExternal')
+			->willReturn(true);
 		$this->faviconSource->expects($this->once())
 			->method('fetch')
 			->with($email, $avatarFactory)
 			->willReturn(null);
 
-		$actualAvatar = $this->source->fetch($email, $avatarFactory);
+		$actualAvatar = $this->source->fetch($email, $avatarFactory, true);
+
+		$this->assertNull($actualAvatar);
+	}
+
+	public function testFetchNoneFoundQueryOnlyInternal() {
+		$email = 'jane@doe.com';
+		$avatarFactory = $this->createMock(AvatarFactory::class);
+		$this->addressbookSource->expects($this->once())
+			->method('isExternal')
+			->willReturn(false);
+		$this->addressbookSource->expects($this->once())
+			->method('fetch')
+			->with($email, $avatarFactory)
+			->willReturn(null);
+		$this->gravatarSource->expects($this->once())
+			->method('isExternal')
+			->willReturn(true);
+		$this->gravatarSource->expects($this->never())
+			->method('fetch')
+			->with($email, $avatarFactory)
+			->willReturn(null);
+		$this->faviconSource->expects($this->once())
+			->method('isExternal')
+			->willReturn(true);
+		$this->faviconSource->expects($this->never())
+			->method('fetch')
+			->with($email, $avatarFactory)
+			->willReturn(null);
+
+		$actualAvatar = $this->source->fetch($email, $avatarFactory, false);
 
 		$this->assertNull($actualAvatar);
 	}
@@ -91,7 +130,7 @@ class CompositeAvatarSourceTest extends TestCase {
 			->with($email, $avatarFactory)
 			->willReturn($avatar);
 
-		$actualAvatar = $this->source->fetch($email, $avatarFactory);
+		$actualAvatar = $this->source->fetch($email, $avatarFactory, true);
 
 		$this->assertEquals($avatar, $actualAvatar);
 	}

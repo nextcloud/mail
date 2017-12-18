@@ -42,14 +42,21 @@ define(function(require) {
 	require('service/accountservice');
 	require('service/aliasesservice');
 	require('service/attachmentservice');
+	require('service/backgroundsyncservice');
 	require('service/davservice');
 	require('service/folderservice');
 	require('service/foldersyncservice');
 	require('service/messageservice');
-	require('service/backgroundsyncservice');
+	require('service/preferenceservice');
 	require('util/notificationhandler');
 
 	var Mail = Marionette.Application.extend({
+
+		_useExternalAvatars: false,
+
+		getUseExternalAvatars: function() {
+			return this._useExternalAvatars;
+		},
 
 		/**
 		 * Register the mailto protocol handler
@@ -57,11 +64,11 @@ define(function(require) {
 		registerProtocolHandler: function() {
 			if (window.navigator.registerProtocolHandler) {
 				var url = window.location.protocol + '//' +
-					window.location.host +
-					OC.generateUrl('apps/mail/compose?uri=%s');
+						window.location.host +
+						OC.generateUrl('apps/mail/compose?uri=%s');
 				try {
 					window.navigator
-						.registerProtocolHandler('mailto', url, OC.theme.name + ' Mail');
+							.registerProtocolHandler('mailto', url, OC.theme.name + ' Mail');
 				} catch (e) {
 				}
 			}
@@ -91,6 +98,8 @@ define(function(require) {
 	Mail = new Mail();
 
 	Mail.on('start', function() {
+		this._useExternalAvatars = $('#external-avatars').val() === 'true';
+
 		this.view = new AppView();
 		Cache.init();
 
