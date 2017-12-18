@@ -20,6 +20,10 @@ define(function(require) {
 	var Attachments = require('models/attachments');
 	var AttachmentsView = require('views/attachmentsview');
 	var ComposerTemplate = require('templates/composer.html');
+	var autocomplete = require('views/autocomplete');
+	var formatDate = require('views/formatdate');
+	var imageplaceholder = require('views/imageplaceholder');
+	var tooltip = require('views/tooltip');
 
 	return Marionette.View.extend({
 		template: ComposerTemplate,
@@ -95,7 +99,7 @@ define(function(require) {
 				cc: [],
 				bcc: [],
 				subject: '',
-				body: '',
+				body: ''
 			});
 
 			/**
@@ -136,7 +140,7 @@ define(function(require) {
 				collection: this.attachments
 			}));
 
-			$('.tooltip-mailto').tooltip({placement: 'bottom'});
+			tooltip('.tooltip-mailto', {placement: 'bottom'});
 
 			if (this.isReply()) {
 				// Expand reply message body on click
@@ -198,7 +202,7 @@ define(function(require) {
 			// Define which objects to check for the event properties.
 			// (Window object provides fallback for IE8 and lower.)
 			event = event || window.event;
-			var key = event.keyCode || event.which;
+			var key = event.which;
 			// If enter and control keys are pressed:
 			// (Key 13 and 10 set for compatibility across different operating systems.)
 			if ((key === 13 || key === 10) && event.ctrlKey) {
@@ -421,7 +425,7 @@ define(function(require) {
 			this.$('.message-body').first().text(
 					'\n\n\n' +
 					from.label + ' – ' +
-					$.datepicker.formatDate('D, d. MM yy ', date) +
+					formatDate('D, d. MM yy ', date) +
 					date.getHours() + ':' + (minutes < 10 ? '0' : '') + minutes + '\n> ' +
 					text.replace(/\n/g, '\n> ')
 					);
@@ -443,7 +447,7 @@ define(function(require) {
 			this.$el.find('input.subject').focus();
 		},
 		onAutoComplete: function(e) {
-			var elem = $(e.target);
+			var $elem = $(e.target);
 			function split(val) {
 				return val.split(/,\s*/);
 			}
@@ -451,18 +455,20 @@ define(function(require) {
 			function extractLast(term) {
 				return split(term).pop();
 			}
-			if (!elem.data('autocomplete')) {
+			if (!$elem.data('autocomplete')) {
 				// If the autocomplete wasn't called yet:
 				// don't navigate away from the field on tab when selecting an item
 				var prevUID = false;
 
-				elem.bind('keydown', function(event) {
-					if (event.keyCode === $.ui.keyCode.TAB &&
-							typeof elem.data('autocomplete') !== 'undefined' &&
-							elem.data('autocomplete').menu.active) {
+				$elem.on('keydown', function(event) {
+					// 9: 'tab' key code
+					if (event.which === 9 &&
+							typeof $elem.data('autocomplete') !== 'undefined' &&
+							$elem.data('autocomplete').menu.active) {
 						event.preventDefault();
 					}
-				}).autocomplete({
+				});
+				autocomplete($elem, {
 					source: function(request, response) {
 						$.getJSON(
 								OC.generateUrl('/apps/mail/api/autoComplete'),
@@ -514,7 +520,7 @@ define(function(require) {
 						$row.append($avatar);
 					} else {
 						$placeholder = $('<div/>');
-						$placeholder.imageplaceholder(item.label || item.value);
+						imageplaceholder($placeholder, item.label || item.value);
 						$placeholder.addClass('avatar');
 						$row.append($placeholder);
 					}

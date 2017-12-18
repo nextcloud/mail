@@ -18,12 +18,13 @@
  */
 
 
-define(['views/foldercontent',
+define(['jquery',
+		'views/foldercontent',
 		'models/folder',
 		'models/account',
 		'models/message',
 		'radio'],
-	function(FolderContent, Folder, Account, Message, Radio) {
+	function($, FolderContent, Folder, Account, Message, Radio) {
 
 	var account;
 	var folder;

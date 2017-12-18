@@ -8,8 +8,10 @@
  * @copyright Christoph Wurst 2016
  */
 
-define(function() {
+define(function(require) {
 	'use strict';
+
+	var $ = require('jquery');
 
 	function htmlToText(html) {
 		var breakToken = '__break_token__';

@@ -5,12 +5,13 @@
  * later. See the COPYING file.
  *
  * @author Christoph Wurst <christoph@winzerhof-wurst.at>
- * @copyright Christoph Wurst 2015, 2016
+ * @copyright Christoph Wurst 2017
  */
 
 define(function(require) {
 	'use strict';
 
+	require('jquery-ui/ui/widgets/droppable');
 	var _ = require('underscore');
 	var Marionette = require('backbone.marionette');
 	var OC = require('OC');

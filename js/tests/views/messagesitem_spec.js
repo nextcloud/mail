@@ -1,3 +1,5 @@
+/* global expect */
+
 /**
  * @author Luc Calaresu <dev@calaresu.com>
  *
@@ -18,12 +20,13 @@
  */
 
 
-define(['views/messagesitem',
+define(['jquery',
+		'views/messagesitem',
 		'models/message',
 		'models/folder',
 		'models/account',
 		'radio'],
-	function(MessagesItem, Message, Account, Folder, Radio) {
+	function($, MessagesItem, Message, Account, Folder, Radio) {
 
 	describe('MessagesItem', function () {
 

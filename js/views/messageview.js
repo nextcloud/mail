@@ -22,6 +22,7 @@ define(function(require) {
 	var MessageAttachmentsView = require('views/messageattachments');
 	var MessageTemplate = require('templates/message.html');
 	var ReplyBuilder = require('replybuilder');
+	var formatDate = require('views/formatdate');
 
 	return Marionette.View.extend({
 		template: MessageTemplate,
@@ -54,7 +55,7 @@ define(function(require) {
 
 				this.reply.body = '\n\n\n\n' +
 						this.messageBody.get('from')[0].label + ' – ' +
-						$.datepicker.formatDate('D, d. MM yy ', date) +
+						formatDate('D, d. MM yy ', date) +
 						date.getHours() + ':' + (minutes < 10 ? '0' : '') + minutes + '\n> ' +
 						text.replace(/\n/g, '\n> ');
 			}
