@@ -114,6 +114,7 @@ OC.L10N.register(
     "Subject" : "Наслов",
     "Save all to Files" : "Сачувај све у фајлове",
     "Add mail account" : "Додај налог е-поште",
+    "Use Gravatar and favicon avatars" : "Користи Граватар и аватаре favicon-а",
     "No search results for" : "Нема резултата претраге",
     "The images have been blocked to protect your privacy." : "Слике су блокиране да заштите Вашу приватност.",
     "Show images from this sender" : "Прикажи слике од пошаљиоца",

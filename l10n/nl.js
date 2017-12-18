@@ -114,6 +114,7 @@ OC.L10N.register(
     "Subject" : "Onderwerp",
     "Save all to Files" : "Sla alles op in Bestanden",
     "Add mail account" : "Voeg e-mail account toe",
+    "Use Gravatar and favicon avatars" : "Gebruik Gravatar en favicon avatars",
     "No search results for" : "Geen resultaten gevonden voor",
     "The images have been blocked to protect your privacy." : "De afbeeldingen zijn geblokkeerd om je privacy te beschermen",
     "Show images from this sender" : "Laat afbeeldingen zien van deze afzender",
