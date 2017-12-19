@@ -14,6 +14,7 @@ define(function(require) {
 	var Marionette = require('backbone.marionette');
 	var $ = require('jquery');
 	require('jquery-ui/ui/widgets/autocomplete');
+	require('jquery-ui/ui/widgets/datepicker'); // formatDate
 	var _ = require('underscore');
 	var autosize = require('autosize');
 	var OC = require('OC');
@@ -21,7 +22,6 @@ define(function(require) {
 	var Attachments = require('models/attachments');
 	var AttachmentsView = require('views/attachmentsview');
 	var ComposerTemplate = require('templates/composer.html');
-	var formatDate = require('views/formatdate');
 	var imageplaceholder = require('views/imageplaceholder');
 	var tooltip = require('views/tooltip');
 
@@ -425,7 +425,7 @@ define(function(require) {
 			this.$('.message-body').first().text(
 					'\n\n\n' +
 					from.label + ' – ' +
-					formatDate('D, d. MM yy ', date) +
+					$.datepicker.formatDate('D, d. MM yy ', date) +
 					date.getHours() + ':' + (minutes < 10 ? '0' : '') + minutes + '\n> ' +
 					text.replace(/\n/g, '\n> ')
 					);

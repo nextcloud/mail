@@ -16,13 +16,13 @@ define(function(require) {
 	var Marionette = require('backbone.marionette');
 	var _ = require('underscore');
 	var $ = require('jquery');
+	require('jquery-ui/ui/widgets/datepicker'); // formatDate
 	var Attachments = require('models/attachments');
 	var HtmlHelper = require('util/htmlhelper');
 	var ComposerView = require('views/composerview');
 	var MessageAttachmentsView = require('views/messageattachments');
 	var MessageTemplate = require('templates/message.html');
 	var ReplyBuilder = require('replybuilder');
-	var formatDate = require('views/formatdate');
 
 	return Marionette.View.extend({
 		template: MessageTemplate,
@@ -55,7 +55,7 @@ define(function(require) {
 
 				this.reply.body = '\n\n\n\n' +
 						this.messageBody.get('from')[0].label + ' – ' +
-						formatDate('D, d. MM yy ', date) +
+						$.datepicker.formatDate('D, d. MM yy ', date) +
 						date.getHours() + ':' + (minutes < 10 ? '0' : '') + minutes + '\n> ' +
 						text.replace(/\n/g, '\n> ');
 			}
