@@ -114,6 +114,7 @@ OC.L10N.register(
     "Subject" : "Konu",
     "Save all to Files" : "Tümünü dosyalara kaydet",
     "Add mail account" : "Posta hesabi ekle",
+    "Use Gravatar and favicon avatars" : "Gravatar ve favicon avatarları kullanılsın",
     "No search results for" : "Şu aramadan bir sonuç alınamadı",
     "The images have been blocked to protect your privacy." : "Gizliliğinizi korumak için görsellerin görüntülenmesi engellendi.",
     "Show images from this sender" : "Bu gönderenden gelen görseller görüntülensin",
