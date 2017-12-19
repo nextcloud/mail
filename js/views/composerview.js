@@ -13,6 +13,7 @@ define(function(require) {
 
 	var Marionette = require('backbone.marionette');
 	var $ = require('jquery');
+	require('jquery-ui/ui/widgets/autocomplete');
 	var _ = require('underscore');
 	var autosize = require('autosize');
 	var OC = require('OC');
@@ -20,7 +21,6 @@ define(function(require) {
 	var Attachments = require('models/attachments');
 	var AttachmentsView = require('views/attachmentsview');
 	var ComposerTemplate = require('templates/composer.html');
-	var autocomplete = require('views/autocomplete');
 	var formatDate = require('views/formatdate');
 	var imageplaceholder = require('views/imageplaceholder');
 	var tooltip = require('views/tooltip');
@@ -468,7 +468,7 @@ define(function(require) {
 						event.preventDefault();
 					}
 				});
-				autocomplete($elem, {
+				$elem.autocomplete({
 					source: function(request, response) {
 						$.getJSON(
 								OC.generateUrl('/apps/mail/api/autoComplete'),
