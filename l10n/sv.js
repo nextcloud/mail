@@ -114,6 +114,7 @@ OC.L10N.register(
     "Subject" : "Ämne",
     "Save all to Files" : "Spara allt till dina filer",
     "Add mail account" : "Lägg till e-postkonto",
+    "Use Gravatar and favicon avatars" : "Använd Gravatar och favicon avatarer",
     "No search results for" : "Inga sökresultat hittades för",
     "The images have been blocked to protect your privacy." : "Bilderna har blockerats av säkerhetsskäl.",
     "Show images from this sender" : "Visa bilder från denna avsändare",
