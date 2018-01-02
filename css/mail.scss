@@ -43,6 +43,12 @@
 	margin: 0 auto;
 	padding-top: 30px;
 }
+#mail-settings {
+	#account-form {
+		margin: 0;
+		padding-top: 0;
+	}
+}
 @media only screen and (max-height: 400px) {
 	#account-form #emptycontent {
 		margin-top: 0px;

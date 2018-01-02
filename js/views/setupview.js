@@ -87,7 +87,7 @@ define(function(require) {
 			this._config = config;
 			this.render();
 
-			return Radio.account.request('create', config).then(function() {
+			return Radio.account.request('create', {config: config}).then(function() {
 				Radio.ui.trigger('navigation:show');
 				Radio.ui.trigger('content:loading');
 				// reload accounts
