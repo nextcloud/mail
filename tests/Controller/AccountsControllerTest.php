@@ -187,20 +187,23 @@ class AccountsControllerTest extends PHPUnit_Framework_TestCase {
 	}
 
 	public function testCreateAutoDetectSuccess() {
-		$email = 'john@example.com';
-		$password = '123456';
-		$accountName = 'John Doe';
+		$config = [
+			'emailAddress' => 'john@example.com',
+			'password' => '123456',
+			'accountName' => 'John Doe',
+			'autoDetect' => 'true'
+		];
+
 		$account = $this->createMock(Account::class);
 		$this->setupService->expects($this->once())
 			->method('createNewAutoconfiguredAccount')
-			->with($accountName, $email, $password)
+			->with($config['accountName'], $config['emailAddress'], $config['password'])
 			->willReturn($account);
 		$account->expects($this->once())
 			->method('getId')
 			->willReturn(135);
 
-		$response = $this->controller->create($accountName, $email, $password, null, null, null, null, null, null, null, null,
-			null, null, true);
+		$response = $this->controller->create($config);
 
 		$expectedResponse = new JSONResponse([
 			'data' => [
@@ -212,17 +215,19 @@ class AccountsControllerTest extends PHPUnit_Framework_TestCase {
 	}
 
 	public function testCreateAutoDetectFailure() {
-		$email = 'john@example.com';
-		$password = '123456';
-		$accountName = 'John Doe';
+		$config = [
+			'emailAddress' => 'john@example.com',
+			'password' => '123456',
+			'accountName' => 'John Doe',
+			'autoDetect' => 'true'
+		];
 
 		$this->setupService->expects($this->once())
 			->method('createNewAutoconfiguredAccount')
-			->with($accountName, $email, $password)
+			->with($config['accountName'], $config['emailAddress'], $config['password'])
 			->willThrowException(new \Exception());
 
-		$response = $this->controller->create($accountName, $email, $password, null, null, null, null, null, null, null, null,
-			null, null, true);
+		$response = $this->controller->create($config);
 
 		$expectedResponse = new JSONResponse([
 			'message' => '',
