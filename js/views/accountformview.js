@@ -37,7 +37,7 @@ define(function(require) {
 
 		/** @type {boolean} */
 		firstToggle: true,
-		
+
 		/** @type {boolean} */
 		settingsPage: false,
 
