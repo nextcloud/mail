@@ -102,7 +102,7 @@ define(function(require) {
 
 			this.startLoading();
 
-			return Radio.account.request('update', config).then(function(data) {
+			return Radio.account.request('update', config).then(function() {
 				var response = {status: 'success', data: {message: t('mail', 'Saved')}};
 				OC.msg.finishedSaving('#mail-settings-msg', response);
 				$('#mail-settings-loading').hide();

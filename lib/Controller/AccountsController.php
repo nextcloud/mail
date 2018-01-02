@@ -37,12 +37,10 @@ use OCA\Mail\Service\AliasesService;
 use OCA\Mail\Service\AutoConfig\AutoConfig;
 use OCA\Mail\Service\Logger;
 use OCA\Mail\Service\SetupService;
-use OCA\Mail\Db\MailAccount;
 use OCP\AppFramework\Controller;
 use OCP\AppFramework\Db\DoesNotExistException;
 use OCP\AppFramework\Http;
 use OCP\AppFramework\Http\JSONResponse;
-use OCP\AppFramework\Http\Response;
 use OCP\IL10N;
 use OCP\IRequest;
 use OCP\Security\ICrypto;
@@ -133,12 +131,11 @@ class AccountsController extends Controller {
 	}
 
 	/**
-	 * array $config
-	 * int $id
+	 * @param array $config
+	 * @param integer $id
 	 */
 	private function createAccount($config, $id = null) {
 		$account = null;
-		$errorMessage = null;
 		$autoDetect = $config['autoDetect'] === 'true';
 
 		try {
@@ -195,20 +192,7 @@ class AccountsController extends Controller {
 	/**
 	 * @NoAdminRequired
 	 *
-	 * @param string $accountName
-	 * @param string $emailAddress
-	 * @param string $password
-	 * @param string $imapHost
-	 * @param int $imapPort
-	 * @param string $imapSslMode
-	 * @param string $imapUser
-	 * @param string $imapPassword
-	 * @param string $smtpHost
-	 * @param int $smtpPort
-	 * @param string $smtpSslMode
-	 * @param string $smtpUser
-	 * @param string $smtpPassword
-	 * @param bool $autoDetect
+	 * @param array $config
 	 * @return JSONResponse
 	 */
 	public function create($config) {
