@@ -131,47 +131,52 @@ class AccountsController extends Controller {
 	}
 
 	/**
-	 * @param array $config
-	 * @param integer $id
+	 * @NoAdminRequired
+	 *
+	 * @param int $id
+	 * @param string $accountName
+	 * @param string $emailAddress
+	 * @param string $password
+	 * @param string $imapHost
+	 * @param int $imapPort
+	 * @param string $imapSslMode
+	 * @param string $imapUser
+	 * @param string $imapPassword
+	 * @param string $smtpHost
+	 * @param int $smtpPort
+	 * @param string $smtpSslMode
+	 * @param string $smtpUser
+	 * @param string $smtpPassword
+	 * @param bool $autoDetect
+	 * @return JSONResponse
 	 */
-	private function createAccount($config, $id = null) {
+	public function update($id, $accountName, $emailAddress, $password, $imapHost, $imapPort, $imapSslMode, $imapUser, $imapPassword, $smtpHost, $smtpPort, $smtpSslMode, $smtpUser, $smtpPassword, $autoDetect) {
 		$account = null;
-		$autoDetect = $config['autoDetect'] === 'true';
-
+		$errorMessage = null;
 		try {
 			if ($autoDetect) {
-				$account = $this->setup->createNewAutoconfiguredAccount($config['accountName'], $config['emailAddress'], $config['password']);
-				if (is_null($account)) {
-					throw new Exception();
-				}
+				$account = $this->setup->createNewAutoconfiguredAccount($accountName, $emailAddress, $password);
 			} else {
-				$account = $this->setup->createNewAccount($config['accountName'], $config['emailAddress'], $config['imapHost'], $config['imapPort'], $config['imapSslMode'], $config['imapUser'], $config['imapPassword'], $config['smtpHost'], $config['smtpPort'], $config['smtpSslMode'], $config['smtpUser'], $config['smtpPassword'], $this->currentUserId, $id);
+				$account = $this->setup->createNewAccount($accountName, $emailAddress, $imapHost, $imapPort, $imapSslMode, $imapUser, $imapPassword, $smtpHost, $smtpPort, $smtpSslMode, $smtpUser, $smtpPassword, $this->currentUserId, $id);
 			}
 		} catch (Exception $ex) {
+			$errorMessage = $ex->getMessage();
+		}
+
+		if (is_null($account)) {
 			if ($autoDetect) {
 				return new JSONResponse([
 					'message' => $this->l10n->t('Auto detect failed. Please use manual mode.')
 					], Http::STATUS_BAD_REQUEST);
 			} else {
-				$this->logger->error('Creating account failed: ' . $ex->getMessage());
+				$this->logger->error('Updating account failed: ' . $errorMessage);
 				return new JSONResponse([
-					'message' => $this->l10n->t('Creating account failed: ') . $ex->getMessage()
+					'message' => $this->l10n->t('Updating account failed: ') . $errorMessage
 					], Http::STATUS_BAD_REQUEST);
 			}
 		}
 
 		return new JSONResponse(['data' => ['id' => $account->getId()]], Http::STATUS_CREATED);
-	}
-
-	/**
-	 * @NoAdminRequired
-	 *
-	 * @param int $id
-	 * @param array $config
-	 * @return JSONResponse
-	 */
-	public function update($id, $config) {
-		return $this->createAccount($config, $id);
 	}
 
 	/**
@@ -192,11 +197,49 @@ class AccountsController extends Controller {
 	/**
 	 * @NoAdminRequired
 	 *
-	 * @param array $config
+	 * @param string $accountName
+	 * @param string $emailAddress
+	 * @param string $password
+	 * @param string $imapHost
+	 * @param int $imapPort
+	 * @param string $imapSslMode
+	 * @param string $imapUser
+	 * @param string $imapPassword
+	 * @param string $smtpHost
+	 * @param int $smtpPort
+	 * @param string $smtpSslMode
+	 * @param string $smtpUser
+	 * @param string $smtpPassword
+	 * @param bool $autoDetect
 	 * @return JSONResponse
 	 */
-	public function create($config) {
-		return $this->createAccount($config);
+	public function create($accountName, $emailAddress, $password, $imapHost, $imapPort, $imapSslMode, $imapUser, $imapPassword, $smtpHost, $smtpPort, $smtpSslMode, $smtpUser, $smtpPassword, $autoDetect) {
+		$account = null;
+		$errorMessage = null;
+		try {
+			if ($autoDetect) {
+				$account = $this->setup->createNewAutoconfiguredAccount($accountName, $emailAddress, $password);
+			} else {
+				$account = $this->setup->createNewAccount($accountName, $emailAddress, $imapHost, $imapPort, $imapSslMode, $imapUser, $imapPassword, $smtpHost, $smtpPort, $smtpSslMode, $smtpUser, $smtpPassword, $this->currentUserId);
+			}
+		} catch (Exception $ex) {
+			$errorMessage = $ex->getMessage();
+		}
+
+		if (is_null($account)) {
+			if ($autoDetect) {
+				return new JSONResponse([
+					'message' => $this->l10n->t('Auto detect failed. Please use manual mode.')
+					], Http::STATUS_BAD_REQUEST);
+			} else {
+				$this->logger->error('Creating account failed: ' . $errorMessage);
+				return new JSONResponse([
+					'message' => $this->l10n->t('Creating account failed: ') . $errorMessage
+					], Http::STATUS_BAD_REQUEST);
+			}
+		}
+
+		return new JSONResponse(['data' => ['id' => $account->getId()]], Http::STATUS_CREATED);
 	}
 
 	/**

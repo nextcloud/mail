@@ -126,7 +126,7 @@ define(function(require) {
 
 		return new Promise(function(resolve, reject) {
 			$.ajax(url, {
-				data: {config: config},
+				data: config,
 				type: 'PUT',
 				success: resolve,
 				error: function(jqXHR, textStatus, errorThrown) {
