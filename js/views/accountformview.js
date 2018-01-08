@@ -38,6 +38,9 @@ define(function(require) {
 		/** @type {boolean} */
 		firstToggle: true,
 
+		/** @type {boolean} */
+		settingsPage: false,
+
 		/** @type {object} */
 		_config: '',
 
@@ -59,7 +62,8 @@ define(function(require) {
 			smtpPort: 'input[name="smtp-port"]',
 			smtpUser: 'input[name="smtp-user"]',
 			smtpPassword: 'input[name="smtp-password"]',
-			submitButton: 'input[type=submit]'
+			submitButton: 'input[type=submit]',
+			emptyContent: '#emptycontent'
 		},
 
 		events: {
@@ -83,9 +87,16 @@ define(function(require) {
 				smtpPort: 587,
 				smtpSslMode: 'tls'
 			});
+
+			this.settingsPage = _.defaults(options.settingsPage, {settingsPage: false});
 		},
 
 		onRender: function() {
+			if (this.settingsPage) {
+				this.getUI('emptyContent').hide();
+				this.getUI('submitButton').val(t('mail', 'Save'));
+			}
+
 			if (this._config.autoDetect) {
 				this.getUI('mailPassword').show();
 				this.getUI('manualInputs').hide();

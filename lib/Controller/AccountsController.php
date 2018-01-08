@@ -41,7 +41,6 @@ use OCP\AppFramework\Controller;
 use OCP\AppFramework\Db\DoesNotExistException;
 use OCP\AppFramework\Http;
 use OCP\AppFramework\Http\JSONResponse;
-use OCP\AppFramework\Http\Response;
 use OCP\IL10N;
 use OCP\IRequest;
 use OCP\Security\ICrypto;
@@ -133,11 +132,51 @@ class AccountsController extends Controller {
 
 	/**
 	 * @NoAdminRequired
+	 *
+	 * @param int $id
+	 * @param string $accountName
+	 * @param string $emailAddress
+	 * @param string $password
+	 * @param string $imapHost
+	 * @param int $imapPort
+	 * @param string $imapSslMode
+	 * @param string $imapUser
+	 * @param string $imapPassword
+	 * @param string $smtpHost
+	 * @param int $smtpPort
+	 * @param string $smtpSslMode
+	 * @param string $smtpUser
+	 * @param string $smtpPassword
+	 * @param bool $autoDetect
+	 * @return JSONResponse
 	 */
-	public function update() {
-		$response = new Response();
-		$response->setStatus(Http::STATUS_NOT_IMPLEMENTED);
-		return $response;
+	public function update($id, $accountName, $emailAddress, $password, $imapHost, $imapPort, $imapSslMode, $imapUser, $imapPassword, $smtpHost, $smtpPort, $smtpSslMode, $smtpUser, $smtpPassword, $autoDetect) {
+		$account = null;
+		$errorMessage = null;
+		try {
+			if ($autoDetect) {
+				$account = $this->setup->createNewAutoconfiguredAccount($accountName, $emailAddress, $password);
+			} else {
+				$account = $this->setup->createNewAccount($accountName, $emailAddress, $imapHost, $imapPort, $imapSslMode, $imapUser, $imapPassword, $smtpHost, $smtpPort, $smtpSslMode, $smtpUser, $smtpPassword, $this->currentUserId, $id);
+			}
+		} catch (Exception $ex) {
+			$errorMessage = $ex->getMessage();
+		}
+
+		if (is_null($account)) {
+			if ($autoDetect) {
+				return new JSONResponse([
+					'message' => $this->l10n->t('Auto detect failed. Please use manual mode.')
+					], Http::STATUS_BAD_REQUEST);
+			} else {
+				$this->logger->error('Updating account failed: ' . $errorMessage);
+				return new JSONResponse([
+					'message' => $this->l10n->t('Updating account failed: ') . $errorMessage
+					], Http::STATUS_BAD_REQUEST);
+			}
+		}
+
+		return new JSONResponse(['data' => ['id' => $account->getId()]], Http::STATUS_CREATED);
 	}
 
 	/**
