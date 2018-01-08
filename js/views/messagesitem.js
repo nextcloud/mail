@@ -35,10 +35,35 @@ define(function(require) {
 		modelEvents: {
 			change: 'render'
 		},
+
+		/**
+		 * Get the sender/recipient label as string
+		 *
+		 * @returns {String}
+		 */
+		_getMessageLabel: function() {
+			var sendRec = [];
+			if (this.model.folder.get('specialRole') === 'sent') {
+				sendRec = this.model.get('to');
+			} else {
+				sendRec = this.model.get('from');
+			}
+
+			switch (sendRec.length) {
+				case 0:
+					return '-';
+				case 1:
+					return sendRec[0].label;
+				default:
+					return sendRec[0].label + ' ' + t('mail', '& others');
+			}
+		},
+
 		serializeModel: function() {
 			var json = this.model.toJSON();
 			json.isUnified = require('state').currentAccount && require('state').currentAccount.get('isUnified');
 			json.sender = this.model.get('from')[0];
+			json.label = this._getMessageLabel();
 			return json;
 		},
 		onRender: function() {
