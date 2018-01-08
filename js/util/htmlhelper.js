@@ -16,7 +16,9 @@ define(function(require) {
 	function htmlToText(html) {
 		return htmlToTextLib.fromString(html, {
 			noLinkBrackets: true,
-			ignoreImage: true
+			ignoreHref: true,
+			ignoreImage: true,
+			wordwrap: 78 // 80 minus '> ' prefix for replies
 		});
 	}
 
