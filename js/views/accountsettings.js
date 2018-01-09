@@ -13,6 +13,7 @@ define(function(require) {
 
 	var Marionette = require('backbone.marionette');
 	var AccountSettingsTemplate = require('templates/accountsettings.html');
+	var AccountFormView = require('views/accountformview');
 	var AliasesView = require('views/aliases');
 	var Radio = require('radio');
 
@@ -38,7 +39,8 @@ define(function(require) {
 			'submit @ui.form': 'onSubmit'
 		},
 		regions: {
-			aliasesRegion: '#aliases-list'
+			aliasesRegion: '#aliases-list',
+			accountRegion: '#mail-settings'
 		},
 		initialize: function(options) {
 			this.currentAccount = options.account;
@@ -70,11 +72,46 @@ define(function(require) {
 		},
 		onRender: function() {
 			this.showAliases();
+			this.showAccountSetup();
 		},
 		showAliases: function() {
 			this.showChildView('aliasesRegion', new AliasesView({
 				currentAccount: this.currentAccount
 			}));
+		},
+
+		showAccountSetup: function() {
+			this.showChildView('accountRegion', new AccountFormView({
+				config: this.currentAccount.attributes,
+				settingsPage: true
+			}));
+		},
+
+		startLoading: function() {
+			OC.msg.startSaving('#mail-settings-msg');
+			$('#mail-settings-loading').show();
+		},
+
+		/**
+		 * @private
+		 * @param {Object} account
+		 * @returns {Promise}
+		 */
+		onChildviewFormSubmit: function(config) {
+			config.accountId = this.currentAccount.get('accountId');
+
+			this.startLoading();
+
+			return Radio.account.request('update', config).then(function() {
+				var response = {status: 'success', data: {message: t('mail', 'Saved')}};
+				OC.msg.finishedSaving('#mail-settings-msg', response);
+				$('#mail-settings-loading').hide();
+			}).catch(function(error) {
+				console.error('could not update account:', error);
+				var response = {status: 'error', data: {message: error}};
+				OC.msg.finishedSaving('#mail-settings-msg', response);
+				$('#mail-settings-loading').hide();
+			}).catch(console.error.bind(this));
 		}
 	});
 });
