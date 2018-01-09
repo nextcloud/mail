@@ -230,6 +230,181 @@ class AccountsControllerTest extends PHPUnit_Framework_TestCase {
 		$this->assertEquals($expectedResponse, $response);
 	}
 
+	public function testUpdateAutoDetectSuccess() {
+		$email = 'john@example.com';
+		$password = '123456';
+		$accountName = 'John Doe';
+		$account = $this->createMock(Account::class);
+		$this->setupService->expects($this->once())
+			->method('createNewAutoconfiguredAccount')
+			->with($accountName, $email, $password)
+			->willReturn($account);
+		$account->expects($this->once())
+			->method('getId')
+			->willReturn(135);
+
+		$response = $this->controller->create($accountName, $email, $password, null, null, null, null, null, null, null, null,
+			null, null, true);
+
+		$expectedResponse = new JSONResponse([
+			'data' => [
+				'id' => 135,
+			],
+			], Http::STATUS_CREATED);
+
+		$this->assertEquals($expectedResponse, $response);
+	}
+
+	public function testUpdateAutoDetectFailure() {
+		$email = 'john@example.com';
+		$password = '123456';
+		$accountName = 'John Doe';
+
+		$this->setupService->expects($this->once())
+			->method('createNewAutoconfiguredAccount')
+			->with($accountName, $email, $password)
+			->willThrowException(new \Exception());
+
+		$response = $this->controller->create($accountName, $email, $password, null, null, null, null, null, null, null, null,
+			null, null, true);
+
+		$expectedResponse = new JSONResponse([
+			'message' => '',
+			], Http::STATUS_BAD_REQUEST);
+		$this->assertEquals($expectedResponse, $response);
+	}
+
+	public function testCreateManualSuccess() {
+		$autoDetect = false;
+		$email = 'user@domain.tld';
+		$password = 'mypassword';
+		$accountName = 'Mail';
+		$imapHost = 'localhost';
+		$imapPort = '993';
+		$imapSslMode = 'ssl';
+		$imapUser = 'user@domain.tld';
+		$imapPassword = 'mypassword';
+		$smtpHost = 'localhost';
+		$smtpPort = '465';
+		$smtpSslMode = 'none';
+		$smtpUser = 'user@domain.tld';
+		$smtpPassword = 'mypassword';
+		$account = $this->createMock(Account::class);
+		$this->setupService->expects($this->once())
+			->method('createNewAccount')
+			->with($accountName, $email, $imapHost, $imapPort, $imapSslMode, $imapUser, $imapPassword, $smtpHost, $smtpPort, $smtpSslMode, $smtpUser, $smtpPassword, $this->userId)
+			->willReturn($account);
+		$account->expects($this->once())
+			->method('getId')
+			->willReturn(135);
+
+		$response = $this->controller->create($accountName, $email, $password, $imapHost, $imapPort, $imapSslMode, $imapUser, $imapPassword, $smtpHost, $smtpPort, $smtpSslMode, $smtpUser, $smtpPassword, $autoDetect);
+
+		$expectedResponse = new JSONResponse([
+			'data' => [
+				'id' => 135,
+			],
+			], Http::STATUS_CREATED);
+
+		$this->assertEquals($expectedResponse, $response);
+	}
+
+	public function testCreateManualFailure() {
+		$autoDetect = false;
+		$email = 'user@domain.tld';
+		$password = 'mypassword';
+		$accountName = 'Mail';
+		$imapHost = 'localhost';
+		$imapPort = '993';
+		$imapSslMode = 'ssl';
+		$imapUser = 'user@domain.tld';
+		$imapPassword = 'mypassword';
+		$smtpHost = 'localhost';
+		$smtpPort = '465';
+		$smtpSslMode = 'none';
+		$smtpUser = 'user@domain.tld';
+		$smtpPassword = 'mypassword';
+		$account = $this->createMock(Account::class);
+		$this->setupService->expects($this->once())
+			->method('createNewAccount')
+			->with($accountName, $email, $imapHost, $imapPort, $imapSslMode, $imapUser, $imapPassword, $smtpHost, $smtpPort, $smtpSslMode, $smtpUser, $smtpPassword, $this->userId)
+			->willThrowException(new \Exception());
+
+		$response = $this->controller->create($accountName, $email, $password, $imapHost, $imapPort, $imapSslMode, $imapUser, $imapPassword, $smtpHost, $smtpPort, $smtpSslMode, $smtpUser, $smtpPassword, $autoDetect);
+
+		$expectedResponse = new JSONResponse([
+			'message' => '',
+			], Http::STATUS_BAD_REQUEST);
+
+		$this->assertEquals($expectedResponse, $response);
+	}
+
+	public function testUpdateManualSuccess() {
+		$autoDetect = false;
+		$id = 135;
+		$email = 'user@domain.tld';
+		$password = 'mypassword';
+		$accountName = 'Mail';
+		$imapHost = 'localhost';
+		$imapPort = '993';
+		$imapSslMode = 'ssl';
+		$imapUser = 'user@domain.tld';
+		$imapPassword = 'mypassword';
+		$smtpHost = 'localhost';
+		$smtpPort = '465';
+		$smtpSslMode = 'none';
+		$smtpUser = 'user@domain.tld';
+		$smtpPassword = 'mypassword';
+		$account = $this->createMock(Account::class);
+		$this->setupService->expects($this->once())
+			->method('createNewAccount')
+			->with($accountName, $email, $imapHost, $imapPort, $imapSslMode, $imapUser, $imapPassword, $smtpHost, $smtpPort, $smtpSslMode, $smtpUser, $smtpPassword, $this->userId, $id)
+			->willReturn($account);
+		$account->expects($this->once())
+			->method('getId')
+			->willReturn(135);
+
+		$response = $this->controller->update($id, $accountName, $email, $password, $imapHost, $imapPort, $imapSslMode, $imapUser, $imapPassword, $smtpHost, $smtpPort, $smtpSslMode, $smtpUser, $smtpPassword, $autoDetect);
+
+		$expectedResponse = new JSONResponse([
+			'data' => [
+				'id' => 135,
+			],
+			], Http::STATUS_CREATED);
+
+		$this->assertEquals($expectedResponse, $response);
+	}
+	
+	public function testUpdateManualFailure() {
+		$autoDetect = false;
+		$id = 135;
+		$email = 'user@domain.tld';
+		$password = 'mypassword';
+		$accountName = 'Mail';
+		$imapHost = 'localhost';
+		$imapPort = '993';
+		$imapSslMode = 'ssl';
+		$imapUser = 'user@domain.tld';
+		$imapPassword = 'mypassword';
+		$smtpHost = 'localhost';
+		$smtpPort = '465';
+		$smtpSslMode = 'none';
+		$smtpUser = 'user@domain.tld';
+		$smtpPassword = 'mypassword';
+		$account = $this->createMock(Account::class);
+		$this->setupService->expects($this->once())
+			->method('createNewAccount')
+			->with($accountName, $email, $imapHost, $imapPort, $imapSslMode, $imapUser, $imapPassword, $smtpHost, $smtpPort, $smtpSslMode, $smtpUser, $smtpPassword, $this->userId, $id)
+			->willThrowException(new \Exception());
+
+		$response = $this->controller->update($id, $accountName, $email, $password, $imapHost, $imapPort, $imapSslMode, $imapUser, $imapPassword, $smtpHost, $smtpPort, $smtpSslMode, $smtpUser, $smtpPassword, $autoDetect);
+
+		$expectedResponse = new JSONResponse([
+			'message' => '',
+			], Http::STATUS_BAD_REQUEST);
+		$this->assertEquals($expectedResponse, $response);
+	}
+
 	public function testSendNewMessage() {
 		$account = $this->createMock(Account::class);
 		$this->accountService->expects($this->once())

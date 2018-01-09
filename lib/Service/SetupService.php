@@ -94,9 +94,10 @@ class SetupService {
 	 * @param string $smtpPassword
 	 * @param string $uid
 	 */
-	public function createNewAccount($accountName, $emailAddress, $imapHost, $imapPort, $imapSslMode, $imapUser, $imapPassword, $smtpHost, $smtpPort, $smtpSslMode, $smtpUser, $smtpPassword, $uid) {
+	public function createNewAccount($accountName, $emailAddress, $imapHost, $imapPort, $imapSslMode, $imapUser, $imapPassword, $smtpHost, $smtpPort, $smtpSslMode, $smtpUser, $smtpPassword, $uid, $accountId = null) {
 		$this->logger->info('Setting up manually configured account');
 		$newAccount = new MailAccount([
+			'accountId' => $accountId,
 			'accountName' => $accountName,
 			'emailAddress' => $emailAddress,
 			'imapHost' => $imapHost,
@@ -125,7 +126,7 @@ class SetupService {
 			return new Account($newAccount);
 		}
 
-		return null;
+			return null;
 	}
 
 }
