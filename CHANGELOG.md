@@ -1,6 +1,11 @@
 # Changelog
 All notable changes to this project will be documented in this file.
 
+## 0.7.7 – 2018-01-10
+### Added
+- New and updated translations
+- Editable account settings
+
 ## 0.7.6 – 2017-12-12
 ### Added
 - Opt-out for external avatars (Gravatar, favicon)
