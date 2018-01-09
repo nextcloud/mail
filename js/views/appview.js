@@ -7,7 +7,7 @@
  * later. See the COPYING file.
  *
  * @author Christoph Wurst <christoph@winzerhof-wurst.at>
- * @copyright Christoph Wurst 2016
+ * @copyright Christoph Wurst 2017
  */
 
 define(function(require) {
@@ -125,7 +125,7 @@ define(function(require) {
 		},
 		onKeyUp: function(e) {
 			// Define which objects to check for the event properties.
-			var key = e.keyCode || e.which;
+			var key = e.which;
 
 			// Trigger the event only if no input or textarea is focused
 			// and the CTRL key is not pressed

@@ -20,6 +20,8 @@ define(function(require) {
 	var Marionette = require('backbone.marionette');
 	var Radio = require('radio');
 	var MessageTemplate = require('templates/message-list-item.html');
+	var imageplaceholder = require('views/imageplaceholder');
+	var tooltip = require('views/tooltip');
 
 	return Marionette.View.extend({
 		template: MessageTemplate,
@@ -55,7 +57,7 @@ define(function(require) {
 			if (displayName) {
 				_.each(this.$el.find('.avatar'), function(a) {
 					$(a).height('32px');
-					$(a).imageplaceholder(displayName, displayName);
+					imageplaceholder(a, displayName, displayName);
 				});
 			}
 
@@ -77,7 +79,7 @@ define(function(require) {
 				revert: 'invalid'
 			});
 
-			$('.action.delete').tooltip({placement: 'left'});
+			tooltip('.action.delete', {placement: 'left'});
 
 			this._fetchAvatar();
 		},

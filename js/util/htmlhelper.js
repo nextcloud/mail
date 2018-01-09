@@ -11,6 +11,8 @@
 define(function(require) {
 	'use strict';
 
+	var $ = require('jquery');
+
 	var htmlToTextLib = require('html-to-text');
 
 	function htmlToText(html) {
