@@ -1,7 +1,9 @@
 const path = require('path');
-
 module.exports = {
 	entry: './js/init.js',
+	node: {
+		fs: 'empty'
+	},
 	output: {
 		filename: 'build.js',
 		path: path.resolve(__dirname, 'build')
@@ -17,9 +19,9 @@ module.exports = {
 			{test: /davclient/, use: 'exports-loader?dav'},
 			{
 				test: /\.html$/, loader: "handlebars-loader", query: {
-				extensions: '.html',
-				helperDirs: __dirname + '/templatehelpers'
-			}
+					extensions: '.html',
+					helperDirs: __dirname + '/templatehelpers'
+				}
 			}
 		],
 		loaders: [
