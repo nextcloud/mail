@@ -1,7 +1,7 @@
 # Changelog
 All notable changes to this project will be documented in this file.
 
-## 0.7.7 – 2018-01-10
+## 0.7.7 – 2018-01-09
 ### Added
 - New and updated translations
 - Editable account settings
