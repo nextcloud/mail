@@ -22,7 +22,7 @@ define(function(require) {
 
 	var Marionette = require('backbone.marionette');
 	var MessageController = require('controller/messagecontroller');
-	var AttachmentView = require('views/messageattachment');
+	var AttachmentView = require('views/messageattachmentview');
 	var AttachmentsTemplate = require('templates/message-attachments.html');
 
 	/**
@@ -49,6 +49,16 @@ define(function(require) {
 		initialize: function(options) {
 			this.message = options.message;
 		},
+
+		viewComparator: function(a, b) {
+			if (a.get('isImage') && !b.get('isImage')) {
+				return -1;
+			} else if (!a.get('isImage') && b.get('isImage')) {
+				return 1;
+			}
+			return a.get('fileName').localeCompare(b.get('fileName'));
+		},
+
 		_onSaveAllToCloud: function(e) {
 			e.preventDefault();
 

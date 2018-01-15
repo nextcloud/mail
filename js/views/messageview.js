@@ -20,7 +20,7 @@ define(function(require) {
 	var Attachments = require('models/attachments');
 	var HtmlHelper = require('util/htmlhelper');
 	var ComposerView = require('views/composerview');
-	var MessageAttachmentsView = require('views/messageattachments');
+	var MessageAttachmentsView = require('views/messageattachmentsview');
 	var MessageTemplate = require('templates/message.html');
 	var ReplyBuilder = require('replybuilder');
 
