@@ -3,7 +3,7 @@
 
 var webpackConfig = require('./js/webpack.dev.config.js');
 
-webpackConfig.entry = './js/tests/noop_init.js';
+webpackConfig.entry = './js/tests/test_init.js';
 webpackConfig.module.rules.push({
 	test: /\.js$/,
 	exclude: /init\.js/
@@ -17,7 +17,6 @@ module.exports = function (config) {
 
 		files: [
 			{pattern: 'node_modules/jquery/dist/jquery.js', included: true},
-			{pattern: 'node_modules/underscore/underscore.js', included: true},
 			{pattern: 'js/tests/test-main.js', included: true},
 			// all files ending in "_test"
 			{pattern: 'js/tests/*_spec.js', watched: false},

@@ -18,9 +18,18 @@
  */
 
 define(function(require) {
+	var $ = require('jquery');
+	var OC = require('OC');
 	var App = require('app');
 
 	$(function() {
+		// Conigure CSRF token
+		$.ajaxSetup({
+			headers: {
+				requesttoken: OC.requestToken
+			}
+		});
+
 		// Start app when the page is ready
 		console.log('Starting Mail …');
 		App.start();

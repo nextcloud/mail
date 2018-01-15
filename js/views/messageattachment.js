@@ -21,6 +21,7 @@ define(function(require) {
 	'use strict';
 
 	var $ = require('jquery');
+	var _ = require('underscore');
 	var Marionette = require('backbone.marionette');
 	var Radio = require('radio');
 	var MessageController = require('controller/messagecontroller');

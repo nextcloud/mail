@@ -21,7 +21,6 @@ window.t = function(app, text) {
 	return text;
 };
 
-
 OC = {
 	Notification: {
 		showTemporary: function() {
