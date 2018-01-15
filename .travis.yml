@@ -22,7 +22,7 @@ services:
 
 env:
   global:
-  - CORE_BRANCH=master
+  - CORE_BRANCH=stable13
   - TEST_JS=FALSE
   - PHP_COVERAGE=FALSE
   - PACKAGE=FALSE

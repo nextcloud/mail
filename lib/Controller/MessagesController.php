@@ -131,7 +131,7 @@ class MessagesController extends Controller {
 		}
 		$messages = $mailBox->getMessages($filter, $cursor);
 
-		$json = array_map(function($j) use ($ci, $mailBox) {
+		$json = array_map(function($j) use ($mailBox) {
 			if ($mailBox->getSpecialRole() === 'trash') {
 				$j['delete'] = (string)$this->l10n->t('Delete permanently');
 			}
