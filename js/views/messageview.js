@@ -16,6 +16,7 @@ define(function(require) {
 	var Marionette = require('backbone.marionette');
 	var _ = require('underscore');
 	var $ = require('jquery');
+	require('jquery-ui/ui/widgets/datepicker'); // formatDate
 	var Attachments = require('models/attachments');
 	var HtmlHelper = require('util/htmlhelper');
 	var ComposerView = require('views/composerview');

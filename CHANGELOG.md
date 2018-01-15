@@ -1,6 +1,12 @@
 # Changelog
 All notable changes to this project will be documented in this file.
 
+## 0.7.8 – 2018-01-15
+### Fixed
+- Loading of text messages
+- HTML to text conversion for replies
+- Recipient name rendering in sent folder
+
 ## 0.7.7 – 2018-01-09
 ### Added
 - New and updated translations

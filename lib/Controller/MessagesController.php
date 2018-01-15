@@ -33,7 +33,6 @@ use OCA\Mail\Http\AttachmentDownloadResponse;
 use OCA\Mail\Http\HtmlResponse;
 use OCA\Mail\Model\IMAPMessage;
 use OCA\Mail\Service\AccountService;
-use OCA\Mail\Service\ContactsIntegration;
 use OCA\Mail\Service\IAccount;
 use OCA\Mail\Service\IMailBox;
 use OCA\Mail\Service\Logger;
@@ -59,9 +58,6 @@ class MessagesController extends Controller {
 	/** @var string */
 	private $currentUserId;
 
-	/** @var ContactsIntegration */
-	private $contactsIntegration;
-
 	/** @var Logger */
 	private $logger;
 
@@ -86,7 +82,6 @@ class MessagesController extends Controller {
 	 * @param AccountService $accountService
 	 * @param string $UserId
 	 * @param $userFolder
-	 * @param ContactsIntegration $contactsIntegration
 	 * @param Logger $logger
 	 * @param IL10N $l10n
 	 * @param IMimeTypeDetector $mimeTypeDetector
@@ -97,7 +92,6 @@ class MessagesController extends Controller {
 								AccountService $accountService,
 								$UserId,
 								$userFolder,
-								ContactsIntegration $contactsIntegration,
 								Logger $logger,
 								IL10N $l10n,
 								IMimeTypeDetector $mimeTypeDetector,
@@ -106,7 +100,6 @@ class MessagesController extends Controller {
 		$this->accountService = $accountService;
 		$this->currentUserId = $UserId;
 		$this->userFolder = $userFolder;
-		$this->contactsIntegration = $contactsIntegration;
 		$this->logger = $logger;
 		$this->l10n = $l10n;
 		$this->mimeTypeDetector = $mimeTypeDetector;
@@ -138,20 +131,10 @@ class MessagesController extends Controller {
 		}
 		$messages = $mailBox->getMessages($filter, $cursor);
 
-		$ci = $this->contactsIntegration;
 		$json = array_map(function($j) use ($ci, $mailBox) {
 			if ($mailBox->getSpecialRole() === 'trash') {
 				$j['delete'] = (string)$this->l10n->t('Delete permanently');
 			}
-
-			// This is hacky and should be done on the client-side
-			if ($mailBox->getSpecialRole() === 'sent') {
-				$j['from'] = $j['to'];
-				if((count($j['to']) > 1) || (count($j['cc']) > 0)) {
-					$j['from'] .= ' ' . $this->l10n->t('& others');
-				}
-			}
-
 			return $j;
 		}, $messages);
 

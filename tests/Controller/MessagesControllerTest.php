@@ -38,7 +38,6 @@ class MessagesControllerTest extends PHPUnit_Framework_TestCase {
 	private $accountService;
 	private $userId;
 	private $userFolder;
-	private $contactIntegration;
 	private $logger;
 	private $l10n;
 	private $controller;
@@ -65,9 +64,6 @@ class MessagesControllerTest extends PHPUnit_Framework_TestCase {
 		$this->request = $this->getMockBuilder('\OC\AppFramework\Http\Request')
 			->disableOriginalConstructor()
 			->getMock();
-		$this->contactIntegration = $this->getMockBuilder('\OCA\Mail\Service\ContactsIntegration')
-			->disableOriginalConstructor()
-			->getMock();
 		$this->logger = $this->getMockBuilder('\OCA\Mail\Service\Logger')
 			->disableOriginalConstructor()
 			->getMock();
@@ -84,7 +80,6 @@ class MessagesControllerTest extends PHPUnit_Framework_TestCase {
 			$this->accountService,
 			$this->userId,
 			$this->userFolder,
-			$this->contactIntegration,
 			$this->logger,
 			$this->l10n,
 			$this->mimeTypeDetector,

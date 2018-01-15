@@ -1,3 +1,5 @@
+/* global $ */
+
 /**
  * @copyright 2017 Christoph Wurst <christoph@winzerhof-wurst.at>
  *
@@ -20,6 +22,12 @@
  *
  */
 
-define(['app'], function() {
-	console.info('Mail initialized for testing');
+define(function() {
+	'use strict';
+
+	function imageplaceholder(elem, text) {
+		$(elem).imageplaceholder(text);
+	}
+
+	return imageplaceholder;
 });
