@@ -20,6 +20,7 @@ OC.L10N.register(
     "Invalid folder" : "Ugyldig mappe",
     "Error while creating the account: " : "Feil under opprettelse av kontoen:",
     "Unknown error" : "Ukjent feil",
+    "Error while updating the account: " : "Feil under oppdatering av kontoen:",
     "All inboxes" : "Alle innbokser",
     "you" : "du",
     "Send message to {email}" : "Send melding til {email}",
