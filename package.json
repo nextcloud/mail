@@ -46,7 +46,7 @@
     "karma-webpack": "^2.0.9",
     "phantomjs-prebuilt": "^2.1.16",
     "raw-loader": "^0.5.1",
-    "sinon": "^4.1.5",
+    "sinon": "^4.1.6",
     "webpack": "^3.10.0",
     "webpack-merge": "^4.1.1"
   },
