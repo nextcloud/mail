@@ -410,6 +410,12 @@ textarea.message-body {
 	padding-right: 25%;
 }
 
+#app .message-composer .composer-fields .noreply-box {
+	margin-top: 0;
+	background: #fdffc3;
+	padding-left: 64px;
+}
+
 .composer-cc-bcc {
 	position: relative;
 }

@@ -31,7 +31,7 @@
 			<label for="bcc" class="bcc-label transparency">{{ t 'bcc' }}</label>
 		</div>
 		{{#ifToNoreply}}
-		<div class="warning">{{ t 'This email came from a noreply@... address. Make sure to change the recipient before sending the reply.' }}</div>
+		<div class="warning noreply-box">{{ t 'Note that the mail came from a noreply address so your reply will probably not be read.' }}</div>
 		{{/ifToNoreply}}
 		{{#unless isReply}}
 		<input type="text" name="subject" value="{{subject}}" class="subject" autocomplete="off"
