@@ -45,7 +45,7 @@ define(function() {
 			t('mail', 'Could not load {tag}{name}{endtag}', {
 				name: folderName
 			}),
-			t('mail', 'Couldn\x27t load {tag}{name}{endtag}', {
+			t('mail', 'Could not load {tag}{name}{endtag}', {
 				name: folderName
 			}),
 			t('mail', 'There was a problem loading {tag}{name}{endtag}', {
@@ -64,7 +64,7 @@ define(function() {
 	 */
 	function getRandomMessageErrorMessage() {
 		var texts = [
-			t('mail', 'Couldn\x27t load your message'),
+			t('mail', 'Could not load your message'),
 			t('mail', 'Could not load the desired message'),
 			t('mail', 'Could not load the message')
 		];
