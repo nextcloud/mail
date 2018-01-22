@@ -45,7 +45,8 @@ class FolderMapper {
 
 		$folders = [];
 		foreach ($mailboxes as $mailbox) {
-			if ($mailbox['mailbox']->utf8 === 'dovecot.sieve') {
+			$dovecot_sieve_folders = array('dovecot.sieve', 'INBOX.dovecot.sieve');
+			if (in_array($mailbox['mailbox']->utf8, $dovecot_sieve_folders, true)) {
 				// This is a special folder that must not be shown
 				continue;
 			}
