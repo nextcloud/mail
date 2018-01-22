@@ -46,6 +46,11 @@ define(function(require) {
 		},
 		childView: AttachmentView,
 		childViewContainer: '.attachments',
+		childViewOptions: function() {
+			return {
+				message: this.message
+			};
+		},
 		initialize: function(options) {
 			this.message = options.message;
 		},
@@ -62,14 +67,8 @@ define(function(require) {
 		_onSaveAllToCloud: function(e) {
 			e.preventDefault();
 
-			// TODO: 'message' should be a property of this attachment model
-			// TODO: 'folder' should be a property of the message model and so on
-			var account = require('state').currentAccount;
-			var folder = require('state').currentFolder;
-			var messageId = this.message.get('id');
-
 			var _this = this;
-			MessageController.saveAttachmentsToFiles(account, folder, messageId, function() {
+			MessageController.saveAttachmentsToFiles(this.message, function() {
 				// Loading feedback
 				_this.getUI('saveAllToCloud').removeClass('icon-folder')
 				.addClass('icon-loading-small')

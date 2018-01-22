@@ -135,7 +135,7 @@ define(function(require) {
 
 			this.showChildView('attachments', new MessageAttachmentsView({
 				collection: new Attachments(this.messageBody.get('attachments')),
-				message: this.model
+				message: this.message
 			}));
 
 			// setup reply composer view
