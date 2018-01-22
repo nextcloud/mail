@@ -409,7 +409,7 @@ class MessagesController extends Controller {
 	}
 
 	/**
-	 * @param $attachment
+	 * @param array $attachment
 	 *
 	 * Determines if the content of this attachment is an image
 	 *
@@ -425,7 +425,7 @@ class MessagesController extends Controller {
 	}
 
 	/**
-	 * @param type $attachment
+	 * @param array $attachment
 	 * @return boolean
 	 */
 	private function attachmentIsCalendarEvent($attachment) {
