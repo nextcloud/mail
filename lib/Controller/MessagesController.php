@@ -48,7 +48,6 @@ use OCP\Files\IMimeTypeDetector;
 use OCP\IL10N;
 use OCP\IRequest;
 use OCP\IURLGenerator;
-use OCP\Util;
 
 class MessagesController extends Controller {
 
@@ -131,7 +130,7 @@ class MessagesController extends Controller {
 		}
 		$messages = $mailBox->getMessages($filter, $cursor);
 
-		$json = array_map(function($j) use ($ci, $mailBox) {
+		$json = array_map(function($j) use ($mailBox) {
 			if ($mailBox->getSpecialRole() === 'trash') {
 				$j['delete'] = (string)$this->l10n->t('Delete permanently');
 			}
@@ -403,16 +402,14 @@ class MessagesController extends Controller {
 		$attachment['downloadUrl'] = $downloadUrl;
 		$attachment['mimeUrl'] = $this->mimeTypeDetector->mimeTypeIcon($attachment['mime']);
 
-		if ($this->attachmentIsImage($attachment)) {
-			$attachment['isImage'] = true;
-		} else if ($this->attachmentIsCalendarEvent($attachment)) {
-			$attachment['isCalendarEvent'] = true;
-		}
+		$attachment['isImage'] = $this->attachmentIsImage($attachment);
+		$attachment['isCalendarEvent'] = $this->attachmentIsCalendarEvent($attachment);
+
 		return $attachment;
 	}
 
 	/**
-	 * @param $attachment
+	 * @param array $attachment
 	 *
 	 * Determines if the content of this attachment is an image
 	 *
@@ -428,7 +425,7 @@ class MessagesController extends Controller {
 	}
 
 	/**
-	 * @param type $attachment
+	 * @param array $attachment
 	 * @return boolean
 	 */
 	private function attachmentIsCalendarEvent($attachment) {
@@ -486,16 +483,6 @@ class MessagesController extends Controller {
 				return $this->enrichDownloadUrl($accountId, $folderId, $id, $a);
 			}, $json['attachments']);
 
-			// show images first
-			usort($json['attachments'], function($a, $b) {
-				if (isset($a['isImage']) && !isset($b['isImage'])) {
-					return -1;
-				} elseif (!isset($a['isImage']) && isset($b['isImage'])) {
-					return 1;
-				} else {
-					Util::naturalSortCompare($a['fileName'], $b['fileName']);
-				}
-			});
 			return $json;
 		}
 		return $json;

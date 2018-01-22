@@ -35,21 +35,20 @@ define(function(require) {
 	Radio.attachment.reply('upload:finished', uploadLocalAttachmentFinished);
 
 	/**
-	 * @param {Account} account
-	 * @param {Folder} folder
-	 * @param {number} messageId
+	 * @param {Message} message
 	 * @param {number} attachmentId
 	 * @param {string} path
 	 * @returns {Promise}
 	 */
-	function saveToFiles(account, folder, messageId, attachmentId, path) {
+	function saveToFiles(message, attachmentId, path) {
+		attachmentId = attachmentId || 0;
 		var url = OC.generateUrl(
 			'apps/mail/api/accounts/{accountId}/' +
 			'folders/{folderId}/messages/{messageId}/' +
 			'attachment/{attachmentId}', {
-				accountId: account.get('accountId'),
-				folderId: folder.get('id'),
-				messageId: messageId,
+				accountId: message.folder.account.get('accountId'),
+				folderId: message.folder.get('id'),
+				messageId: message.get('id'),
 				attachmentId: attachmentId
 			});
 

@@ -45,7 +45,7 @@ define(function() {
 			t('mail', 'Could not load {tag}{name}{endtag}', {
 				name: folderName
 			}),
-			t('mail', 'We couldn’t load {tag}{name}{endtag}', {
+			t('mail', 'Could not load {tag}{name}{endtag}', {
 				name: folderName
 			}),
 			t('mail', 'There was a problem loading {tag}{name}{endtag}', {
@@ -64,9 +64,9 @@ define(function() {
 	 */
 	function getRandomMessageErrorMessage() {
 		var texts = [
-			t('mail', 'We couldn’t load your message'),
-			t('mail', 'Unable to load the desired message'),
-			t('mail', 'There was a problem loading the message')
+			t('mail', 'Could not load your message'),
+			t('mail', 'Could not load the desired message'),
+			t('mail', 'Could not load the message')
 		];
 		var text = texts[Math.floor(Math.random() * texts.length)]
 		return text + ' ' + getRandomSmiley();
