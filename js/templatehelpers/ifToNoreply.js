@@ -20,20 +20,17 @@
 define(function() {
 	'use strict';
 
+	function isToNoreply(recipient) {
+		var user = recipient.email.substring(0, recipient.email.lastIndexOf('@'));
+		return ['noreply', 'no-reply'].indexOf(user) !== -1;
+	}
+
 	return function(options) {
-		var noreply = false;
+		var noreplyInTo = this.to.some(isToNoreply);
+		var noreplyInCc = this.cc.some(isToNoreply);
+		var noreplyInBcc = this.bcc.some(isToNoreply);
 
-		var isToNoreply = function(recipient){
-			var localFrom = recipient.email.substring(0, recipient.email.lastIndexOf('@'));
-			if (localFrom == 'noreply') {
-				noreply = true;
-			}
-		};
-		this.to.forEach(isToNoreply);
-		this.cc.forEach(isToNoreply);
-		this.bcc.forEach(isToNoreply);
-
-		if (noreply) {
+		if (noreplyInTo || noreplyInCc || noreplyInBcc) {
 			return options.fn(this);
 		} else {
 			return options.inverse(this);
