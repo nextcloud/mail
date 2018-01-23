@@ -320,7 +320,6 @@ define(function(require) {
 			}
 
 			// send the mail
-			var _this = this;
 			var options = {
 				draftUID: this.draftUID,
 				aliasId: alias.aliasId
@@ -331,7 +330,9 @@ define(function(require) {
 				options.folder = this.folder;
 			}
 
-			Radio.message.request('send', this.account, this.getMessage(), options).then(function() {
+			return this.draftPromise.then(function() {
+				return Radio.message.request('send', this.account, this.getMessage(), options);
+			}.bind(this)).then(function() {
 				OC.Notification.showTemporary(t('mail', 'Message sent!'));
 
 				if (!!options.repliedMessage) {
@@ -342,23 +343,23 @@ define(function(require) {
 							true);
 				}
 
-				_this.$('#mail_new_message').prop('disabled', false);
+				this.$('#mail_new_message').prop('disabled', false);
 				to.val('');
 				cc.val('');
 				bcc.val('');
 				subject.val('');
 				newMessageBody.val('');
 				newMessageBody.trigger('autosize.resize');
-				_this.attachments.reset();
-				if (_this.draftUID !== null) {
+				this.attachments.reset();
+				if (this.draftUID !== null) {
 					// the sent message was a draft
 					if (!_.isUndefined(Radio.ui.request('messagesview:collection'))) {
-						Radio.ui.request('messagesview:collection').
-								remove({id: _this.draftUID});
+						Radio.ui.request('messagesview:collection').remove({id: this.draftUID});
 					}
-					_this.draftUID = null;
+					this.draftUID = null;
 				}
-			}, function(jqXHR) {
+			}.bind(this)).catch(function(jqXHR) {
+				console.error('could not send message', jqXHR);
 				var error = '';
 				if (jqXHR.status === 500) {
 					error = t('mail', 'Server error');
@@ -368,23 +369,24 @@ define(function(require) {
 				}
 				newMessageSend.prop('disabled', false);
 				OC.Notification.showTemporary(error);
-			}).then(function() {
+			}.bind(this)).then(function() {
 				// remove loading feedback
 				newMessageBody.removeClass('icon-loading');
-				_this.$('.mail-account').prop('disabled', false);
+				this.$('.mail-account').prop('disabled', false);
 				to.prop('disabled', false);
 				cc.prop('disabled', false);
 				bcc.prop('disabled', false);
 				subject.prop('disabled', false);
-				_this.$('.new-message-attachments-action').
+				this.$('.new-message-attachments-action').
 						css('display', 'inline-block');
-				_this.$('#add-cloud-attachment').prop('disabled', false);
-				_this.$('#add-local-attachment').prop('disabled', false);
+				this.$('#add-cloud-attachment').prop('disabled', false);
+				this.$('#add-local-attachment').prop('disabled', false);
 				newMessageBody.prop('disabled', false);
 				newMessageSend.prop('disabled', false);
 				newMessageSend.val(t('mail', 'Send'));
+			}.bind(this)).catch(function(e) {
+				console.error('could not send message', e);
 			});
-			return false;
 		},
 		saveDraft: function() {
 			clearTimeout(this.draftTimer);
