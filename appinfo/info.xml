@@ -22,7 +22,7 @@
 	<screenshot>https://raw.githubusercontent.com/nextcloud/mail/74e94da16618b32ee0834e57bbfc83ff7334f709/screenshots/mail.png</screenshot>
 	<dependencies>
 		<php min-version="5.6" max-version="7.2" />
-		<nextcloud min-version="12" max-version="13" />
+		<nextcloud min-version="13" max-version="14" />
 	</dependencies>
 	<repair-steps>
 		<post-migration>
