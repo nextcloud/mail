@@ -58,6 +58,7 @@ define(function(require) {
 		draftInterval: 1500,
 		draftTimer: null,
 		draftUID: null,
+		draftPromise: null,
 		hasData: false,
 		autosized: false,
 		regions: {
@@ -134,6 +135,7 @@ define(function(require) {
 				this.folder = options.folder;
 				this.repliedMessage = options.repliedMessage;
 			}
+			this.draftPromise = Promise.resolve();
 		},
 		onRender: function() {
 			this.showChildView('attachmentsRegion', new AttachmentsView({
@@ -153,6 +155,11 @@ define(function(require) {
 			}
 
 			this.defaultMailSelect();
+		},
+		onDestroy: function() {
+			if (this.hasData) {
+				this.saveDraft();
+			}
 		},
 		setAutoSize: function(state) {
 			if (state === true) {
@@ -379,45 +386,44 @@ define(function(require) {
 			});
 			return false;
 		},
-		saveDraft: function(onSuccess) {
+		saveDraft: function() {
 			clearTimeout(this.draftTimer);
 			//
 			// TODO:
 			//  - input validation
-			//  - feedback on success
 			//  - undo lie - very important
 			//
 
-			// if available get account from drop-down list
-			if (this.$('.mail-account').length > 0) {
-				var alias = this.findAliasById(this.$('.mail-account').
-						find(':selected').val());
-				this.account = this.accounts.get(alias.accountId);
-			}
-
-			// send the mail
-			var _this = this;
-			Radio.message.request('draft', this.account, this.getMessage(), {
-				folder: _this.folder,
-				repliedMessage: _this.repliedMessage,
-				draftUID: _this.draftUID
-			}).then(function(data) {
-				if (_.isFunction(onSuccess)) {
-					onSuccess();
+			return this.draftPromise.then(function() {
+				// if available get account from drop-down list
+				if (this.$('.mail-account').length > 0) {
+					var alias = this.findAliasById(this.$('.mail-account').
+							find(':selected').val());
+					this.account = this.accounts.get(alias.accountId);
 				}
 
-				if (_this.draftUID !== null) {
+				// send the mail
+				var _this = this;
+				return Radio.message.request('draft', this.account, this.getMessage(), {
+					folder: _this.folder,
+					repliedMessage: _this.repliedMessage,
+					draftUID: _this.draftUID
+				});
+			}.bind(this)).then(function(data) {
+				console.debug('draft saved. UID=' + data.uid + ', previous UID was ' + this.draftUID);
+				if (this.draftUID !== null) {
 					// update UID in message list
 					var collection = Radio.ui.request('messagesview:collection');
-					var message = collection.findWhere({id: _this.draftUID});
+					var message = collection.findWhere({id: this.draftUID});
 					if (message) {
 						message.set({id: data.uid});
 						collection.set([message], {remove: false});
 					}
 				}
-				_this.draftUID = data.uid;
-			}, console.error.bind(this));
-			return false;
+				this.draftUID = data.uid;
+			}.bind(this)).catch(function(e) {
+				console.error('could not save draft', e);
+			});
 		},
 		setReplyBody: function(from, date, text) {
 			var minutes = date.getMinutes();

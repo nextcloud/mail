@@ -166,14 +166,12 @@ define(function(require) {
 		 */
 		showSetup: function() {
 			this._navigate('setup');
-			Radio.ui.trigger('composer:leave');
 			Radio.ui.trigger('navigation:hide');
 			Radio.ui.trigger('setup:show');
 			return Promise.resolve();
 		},
 		showKeyboardShortcuts: function() {
 			this._navigate('shortcuts');
-			Radio.ui.trigger('composer:leave');
 			Radio.ui.trigger('keyboardShortcuts:show');
 		},
 		showAccountSettings: function(accountId) {
@@ -185,7 +183,6 @@ define(function(require) {
 				this.default();
 				return;
 			}
-			Radio.ui.trigger('composer:leave');
 			Radio.ui.trigger('navigation:hide');
 			Radio.ui.trigger('accountsettings:show', account);
 		}
