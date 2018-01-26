@@ -114,6 +114,7 @@ OC.L10N.register(
     "to" : "ვის",
     "cc" : "კკ",
     "bcc" : "ბკკ",
+    "Note that the mail came from a noreply address so your reply will probably not be read." : "შენიშნეთ რომ წერილი მიღებულია \"დაუბრუნებელი\" მისამართიდან, ასე რომ თქვენი პასუხი სავარაუდოდ არ იქნება წაკითხული.",
     "Subject" : "სათაური",
     "Save all to Files" : "ყველაფრის ფაილებში შენახვა",
     "Add mail account" : "საფოსტო ანგარიშის დამატება",
