@@ -45,7 +45,16 @@ class FolderMapper {
 
 		$folders = [];
 		foreach ($mailboxes as $mailbox) {
-			if ($mailbox['mailbox']->utf8 === 'dovecot.sieve') {
+			/**
+			 * This is a temporary workaround for when the sieve folder is a subfolder of
+			 * INBOX. Once "#386 Subfolders and Dovecot" has been resolved, we can go back
+			 * to just comparing to 'dovecot.sieve'.
+			 */
+			$dovecotSieveFolders = [
+				'dovecot.sieve',
+				'INBOX.dovecot.sieve'
+			];
+			if (in_array($mailbox['mailbox']->utf8, $dovecotSieveFolders, true)) {
 				// This is a special folder that must not be shown
 				continue;
 			}
