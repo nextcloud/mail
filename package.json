@@ -1,6 +1,6 @@
 {
   "name": "mail",
-  "version": "0.7.8",
+  "version": "0.7.9",
   "description": "Mail app",
   "main": "index.js",
   "directories": {
@@ -46,7 +46,7 @@
     "karma-webpack": "^2.0.9",
     "phantomjs-prebuilt": "^2.1.16",
     "raw-loader": "^0.5.1",
-    "sinon": "^4.2.0",
+    "sinon": "^4.2.1",
     "webpack": "^3.10.0",
     "webpack-merge": "^4.1.1"
   },
@@ -59,13 +59,13 @@
     "backbone.wreqr": "^1.4.0",
     "davclient.js": "^0.1.0",
     "domready": "^1.0.8",
-    "es6-promise": "^4.2.2",
+    "es6-promise": "^4.2.4",
     "exports-loader": "^0.6.4",
     "handlebars": "^4.0.11",
     "handlebars-loader": "^1.6.0",
     "html-to-text": "^3.3.0",
     "ical.js": "^1.2.2",
-    "jquery": "^2.2.4",
+    "jquery": "^3.3.1",
     "jquery-ui": "^1.12.1",
     "jquery-visibility": "^1.0.11",
     "js-storage": "1.0.4",

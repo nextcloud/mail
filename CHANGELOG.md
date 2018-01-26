@@ -1,6 +1,12 @@
 # Changelog
 All notable changes to this project will be documented in this file.
 
+## 0.7.9 – 2018-01-23
+### Fixed
+- Undefined variable warning in nextcloud.log
+- Inconsistent spelling
+- Saving attachments to Nextcloud files
+
 ## 0.7.8 – 2018-01-15
 ### Fixed
 - Loading of text messages

@@ -54,7 +54,7 @@ class CacheTest extends TestCase {
 		$this->cacheFactory = $this->createMock(ICacheFactory::class);
 		$this->cacheImpl = $this->createMock(ICache::class);
 		$this->cacheFactory->expects($this->once())
-			->method('create')
+			->method('createDistributed')
 			->with('mail.avatars')
 			->willReturn($this->cacheImpl);
 		$this->avatarFactory = $this->createMock(AvatarFactory::class);

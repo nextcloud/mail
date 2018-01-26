@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#composer-lock-the-lock-file",
         "This file is @generated automatically"
     ],
-    "content-hash": "108c1c4a81c2fb3ce761c0e92c7822dd",
+    "content-hash": "879fb2a72c265c0ca0fe5795979acc24",
     "packages": [
         {
             "name": "arthurhoaro/favicon",
@@ -605,10 +605,10 @@
         },
         {
             "name": "pear-pear.horde.org/Horde_Socket_Client",
-            "version": "2.1.1",
+            "version": "2.1.2",
             "dist": {
                 "type": "file",
-                "url": "https://pear.horde.org/get/Horde_Socket_Client-2.1.1.tgz",
+                "url": "https://pear.horde.org/get/Horde_Socket_Client-2.1.2.tgz",
                 "reference": null,
                 "shasum": null
             },
@@ -617,7 +617,7 @@
                 "php": "<8.0.0.0"
             },
             "replace": {
-                "pear-horde/horde_socket_client": "== 2.1.1.0"
+                "pear-horde/horde_socket_client": "== 2.1.2.0"
             },
             "type": "pear-library",
             "autoload": {
@@ -694,10 +694,10 @@
         },
         {
             "name": "pear-pear.horde.org/Horde_Stream_Wrapper",
-            "version": "2.1.3",
+            "version": "2.1.4",
             "dist": {
                 "type": "file",
-                "url": "https://pear.horde.org/get/Horde_Stream_Wrapper-2.1.3.tgz",
+                "url": "https://pear.horde.org/get/Horde_Stream_Wrapper-2.1.4.tgz",
                 "reference": null,
                 "shasum": null
             },
@@ -705,7 +705,7 @@
                 "php": "<8.0.0.0"
             },
             "replace": {
-                "pear-horde/horde_stream_wrapper": "== 2.1.3.0"
+                "pear-horde/horde_stream_wrapper": "== 2.1.4.0"
             },
             "type": "pear-library",
             "autoload": {
@@ -878,16 +878,16 @@
     "packages-dev": [
         {
             "name": "christophwurst/nextcloud",
-            "version": "12.0.0",
+            "version": "13.0.0-RC1",
             "source": {
                 "type": "git",
                 "url": "https://github.com/ChristophWurst/nextcloud_composer.git",
-                "reference": "2b85ca1531926e8475e3c40f47be28b51580fcb6"
+                "reference": "9d75dddf70f4fa0fcdac952114877a0c3297e401"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/ChristophWurst/nextcloud_composer/zipball/2b85ca1531926e8475e3c40f47be28b51580fcb6",
-                "reference": "2b85ca1531926e8475e3c40f47be28b51580fcb6",
+                "url": "https://api.github.com/repos/ChristophWurst/nextcloud_composer/zipball/9d75dddf70f4fa0fcdac952114877a0c3297e401",
+                "reference": "9d75dddf70f4fa0fcdac952114877a0c3297e401",
                 "shasum": ""
             },
             "type": "library",
@@ -902,7 +902,7 @@
                 }
             ],
             "description": "Composer package containing Nextcloud's public API (classes, interfaces)",
-            "time": "2017-09-20T09:46:46+00:00"
+            "time": "2018-01-15T15:43:03+00:00"
         },
         {
             "name": "doctrine/instantiator",
@@ -2239,7 +2239,8 @@
         "pear-pear.horde.org/horde_text_flowed": 0,
         "pear-pear.horde.org/horde_util": 0,
         "pear-pear.horde.org/horde_smtp": 0,
-        "kwi/urllinker": 20
+        "kwi/urllinker": 20,
+        "christophwurst/nextcloud": 5
     },
     "prefer-stable": false,
     "prefer-lowest": false,

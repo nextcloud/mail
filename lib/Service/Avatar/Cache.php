@@ -42,7 +42,7 @@ class Cache {
 	 * @param ICacheFactory $cacheFactory
 	 */
 	public function __construct(ICacheFactory $cacheFactory, AvatarFactory $avatarFactory) {
-		$this->cache = $cacheFactory->create('mail.avatars');
+		$this->cache = $cacheFactory->createDistributed('mail.avatars');
 		$this->avatarFactory = $avatarFactory;
 	}
 
