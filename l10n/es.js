@@ -114,6 +114,7 @@ OC.L10N.register(
     "to" : "para",
     "cc" : "cc",
     "bcc" : "bcc",
+    "Note that the mail came from a noreply address so your reply will probably not be read." : "Nota: el correo viene de una dirección noreply (no responder), por lo que probablemente no será leído.",
     "Subject" : "Asunto",
     "Save all to Files" : "Guardar todo en Archivos",
     "Add mail account" : "Añadir cuenta de correo electrónico",
