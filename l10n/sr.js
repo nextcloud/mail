@@ -114,6 +114,7 @@ OC.L10N.register(
     "to" : "за",
     "cc" : "индиго копија",
     "bcc" : "невидљива индиго копија",
+    "Note that the mail came from a noreply address so your reply will probably not be read." : "Ова е-пошта је стигла са адресе на којој има \"noreply\", што значи да вероватно неће бити прочитана ако одговорите на њу.",
     "Subject" : "Наслов",
     "Save all to Files" : "Сачувај све у фајлове",
     "Add mail account" : "Додај налог е-поште",

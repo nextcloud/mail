@@ -70,6 +70,7 @@ OC.L10N.register(
     "Aliases" : "Emërtimet",
     "Mail address" : "Adresa e postës elektronike",
     "Display Name" : "Trego Emrin",
+    "Account" : "Llogari",
     "Keyboard shortcuts" : "Shkurtoret e tastierës",
     "Speed up your Mail experience with these quick shortcuts." : "Përmirësoni përvojën tuaj në Mail me këto shkurtore të shpejta.",
     "Newer message" : "Mesazhe më të reja",
@@ -108,6 +109,8 @@ OC.L10N.register(
     "The images have been blocked to protect your privacy." : "Imazhet janë bllokuar për të mbrojtur privatësinë tuaj.",
     "Show images from this sender" : "Trego imazhet nga ky dërgues",
     "Forward" : "Ridrejto",
+    "No messages in this folder!" : "Asnjë mesazh në këtë dosje!",
+    "Upload attachment" : "Ngarko bashkëngjitje",
     "Import into calendar" : "Importo në kalendar",
     "Download attachment" : "Shkarko bashkëlidhjen",
     "Save to Files" : "Ruaje te Skedarët"
