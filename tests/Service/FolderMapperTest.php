@@ -245,7 +245,7 @@ class FolderMapperTest extends TestCase {
 			->method('addSpecialUse')
 			->with($this->equalTo('sent'));
 
-		$this->mapper->detectFolderSpecialUse($folders);
+		$this->mapper->detectFolderSpecialUse($folder);
 	}
 
 	public function testSortFolders() {
