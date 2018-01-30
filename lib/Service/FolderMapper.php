@@ -110,7 +110,13 @@ class FolderMapper {
 	 * @return string
 	 */
 	private function getParentId(Folder $folder) {
-		$hierarchy = explode($folder->getDelimiter(), $folder->getMailbox());
+		$delimiter = $folder->getDelimiter();
+		if ($delimiter === '') {
+			// If no delimiter is detected, it's probably because
+			// this is a top level folder
+			return null;
+		}
+		$hierarchy = explode($delimiter, $folder->getMailbox());
 		if (count($hierarchy) <= 1) {
 			// Top level folder
 			return null;
@@ -203,8 +209,13 @@ class FolderMapper {
 			'junk' => ['junk', 'spam', 'bulk mail'],
 		];
 
-		$lowercaseExplode = explode($folder->getDelimiter(), $folder->getMailbox(), 2);
-		$lowercaseId = strtolower(array_pop($lowercaseExplode));
+		$delimiter = $folder->getDelimiter();
+		if ($delimiter === '') {
+			$lowercaseId = strtolower($folder->getMailbox());
+		} else {
+			$lowercaseExplode = explode($delimiter, $folder->getMailbox(), 2);
+			$lowercaseId = strtolower(array_pop($lowercaseExplode));
+		}
 		foreach ($specialFoldersDict as $specialRole => $specialNames) {
 			if (in_array($lowercaseId, $specialNames)) {
 				$folder->addSpecialUse($specialRole);

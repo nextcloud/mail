@@ -116,6 +116,32 @@ class FolderMapperTest extends TestCase {
 		$this->assertEquals($expected, $result);
 	}
 
+	public function testBuildHierarchyNoDelimiter() {
+		$account = $this->createMock(Account::class);
+		$folder1 = new Folder($account, new Horde_Imap_Client_Mailbox('test'), [], '');
+		$folder2 = new Folder($account, new Horde_Imap_Client_Mailbox('test.sub'), [], '');
+		$folder3 = new Folder($account, new Horde_Imap_Client_Mailbox('test.sub.sub'), [], '');
+		$folders = [
+			clone $folder1,
+			clone $folder2,
+			clone $folder3,
+		];
+		$folder1->addFolder($folder2);
+		$folder1->addFolder($folder3);
+		$expected = [
+			$folder1,
+			$folder2,
+			$folder3,
+		];
+
+		$result = $this->mapper->buildFolderHierarchy($folders);
+
+		// This is seems like the wrong result, but if a server is
+		// misbehaving in such a way that Horde is unable to infer the
+		// delimiter, it's better to present a flat tree than to show nothing
+		$this->assertEquals($expected, $result);
+	}
+
 	public function testGetFoldersStatus() {
 		$folders = [
 			$this->createMock(Folder::class),
@@ -217,6 +243,29 @@ class FolderMapperTest extends TestCase {
 		$folders[0]->expects($this->once())
 			->method('getDelimiter')
 			->willReturn('.');
+		$folders[0]->expects($this->once())
+			->method('getMailbox')
+			->willReturn('Sent');
+		$folders[0]->expects($this->once())
+			->method('addSpecialUse')
+			->with($this->equalTo('sent'));
+
+		$this->mapper->detectFolderSpecialUse($folders);
+	}
+
+	public function testGuessSpecialUseWithNoDelimiter() {
+		$folders = [
+			$this->createMock(Folder::class),
+		];
+		$folders[0]->expects($this->once())
+			->method('getAttributes')
+			->willReturn([]);
+		$folders[0]->expects($this->once())
+			->method('getSpecialUse')
+			->willReturn([]);
+		$folders[0]->expects($this->once())
+			->method('getDelimiter')
+			->willReturn('');
 		$folders[0]->expects($this->once())
 			->method('getMailbox')
 			->willReturn('Sent');
