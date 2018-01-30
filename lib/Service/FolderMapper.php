@@ -111,7 +111,9 @@ class FolderMapper {
 	 */
 	private function getParentId(Folder $folder) {
 		$delimiter = $folder->getDelimiter();
-		if ($delimiter == '') {
+		if ($delimiter === '') {
+			// If no delimiter is detected, it's probably because
+			// this is a top level folder
 			return null;
 		}
 		$hierarchy = explode($delimiter, $folder->getMailbox());
@@ -208,7 +210,7 @@ class FolderMapper {
 		];
 
 		$delimiter = $folder->getDelimiter();
-		if ($delimiter == '') {
+		if ($delimiter === '') {
 			$lowercaseId = strtolower($folder->getMailbox());
 		} else {
 			$lowercaseExplode = explode($delimiter, $folder->getMailbox(), 2);
