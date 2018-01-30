@@ -227,6 +227,27 @@ class FolderMapperTest extends TestCase {
 		$this->mapper->detectFolderSpecialUse($folders);
 	}
 
+	public function testGuessSpecialUseWithNoDelimiter() {
+		$folder = $this->createMock(Folder::class);
+		$folder->expects($this->once())
+			->method('getAttributes')
+			->willReturn([]);
+		$folder->expects($this->once())
+			->method('getSpecialUse')
+			->willReturn([]);
+		$folder->expects($this->once())
+			->method('getDelimiter')
+			->willReturn('');
+		$folder->expects($this->once())
+			->method('getMailbox')
+			->willReturn('Sent');
+		$folder->expects($this->once())
+			->method('addSpecialUse')
+			->with($this->equalTo('sent'));
+
+		$this->mapper->detectFolderSpecialUse($folders);
+	}
+
 	public function testSortFolders() {
 		$account = $this->createMock(Account::class);
 		$mailbox = $this->createMock(Horde_Imap_Client_Mailbox::class);
