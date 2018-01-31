@@ -61,7 +61,7 @@ class AvatarServiceIntegrationTest extends TestCase {
 	public function testJansNicknameFavicon() {
 		$avatar = $this->service->getAvatar('janli@nextcloud.com', 'jane');
 		$this->assertNotNull($avatar);
-		$this->assertEquals('https://nextcloud.com/media/screenshot-150x150.png?x16328', $avatar->getUrl());
+		$this->assertEquals('https://nextcloud.com/wp-content/themes/next/assets/img/common/favicon.png?x16328', $avatar->getUrl());
 		$image = $this->service->getAvatarImage('janli@nextcloud.com', 'jane');
 		$this->assertNotNull($image);
 	}

@@ -114,6 +114,7 @@ OC.L10N.register(
     "to" : "kime",
     "cc" : "kopya",
     "bcc" : "gizli kopya",
+    "Note that the mail came from a noreply address so your reply will probably not be read." : "Posta noreply adresinden gönderildiğinden yanıtınızın okunmayabileceğini unutmayın",
     "Subject" : "Konu",
     "Save all to Files" : "Tümünü dosyalara kaydet",
     "Add mail account" : "Posta hesabi ekle",
