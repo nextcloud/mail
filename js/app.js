@@ -30,7 +30,6 @@ define(function(require) {
 	var Marionette = require('backbone.marionette');
 	var OC = require('OC');
 	var AppView = require('views/appview');
-	var Cache = require('cache');
 	var Radio = require('radio');
 	var Router = require('router');
 	var AccountController = require('controller/accountcontroller');
@@ -101,7 +100,6 @@ define(function(require) {
 		this._useExternalAvatars = $('#external-avatars').val() === 'true';
 
 		this.view = new AppView();
-		Cache.init();
 
 		Radio.ui.trigger('content:loading', t('mail', 'Loading accounts'));
 
