@@ -27,6 +27,7 @@
 		"fakeServer": true,
 		"OC": true,
 		"OCA": true,
+		"Promise": true,
 		"t": true,
 		"n": true
 	}

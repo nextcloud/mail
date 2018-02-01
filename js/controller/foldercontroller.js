@@ -50,7 +50,6 @@ define(function(require) {
 	 */
 	function loadFolderMessages(account, folder, searchQuery, openFirstMessage) {
 		openFirstMessage = openFirstMessage !== false;
-		Radio.ui.trigger('composer:leave');
 
 		// Set folder active
 		Radio.folder.trigger('setactive', account, folder);
@@ -139,7 +138,6 @@ define(function(require) {
 		// If this was triggered by a URL change, we set the search input manually
 		Radio.ui.trigger('search:set', query);
 
-		Radio.ui.trigger('composer:leave');
 		Radio.ui.trigger('content:loading', t('mail', 'Searching for {query}', {
 			query: query
 		}));

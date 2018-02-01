@@ -49,8 +49,6 @@ define(function(require) {
 			return;
 		}
 
-		Radio.ui.trigger('composer:leave');
-
 		// TODO: expression is useless?
 		if (!options.force && false) {
 			return;
