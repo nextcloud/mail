@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#composer-lock-the-lock-file",
         "This file is @generated automatically"
     ],
-    "content-hash": "879fb2a72c265c0ca0fe5795979acc24",
+    "content-hash": "a07ace21152f407b17a41c814044f7d6",
     "packages": [
         {
             "name": "arthurhoaro/favicon",
@@ -878,22 +878,22 @@
     "packages-dev": [
         {
             "name": "christophwurst/nextcloud",
-            "version": "13.0.0-RC1",
+            "version": "13.0.0-RC4",
             "source": {
                 "type": "git",
                 "url": "https://github.com/ChristophWurst/nextcloud_composer.git",
-                "reference": "9d75dddf70f4fa0fcdac952114877a0c3297e401"
+                "reference": "003902c43425f54d7f97e95d43851840ac3eb1f4"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/ChristophWurst/nextcloud_composer/zipball/9d75dddf70f4fa0fcdac952114877a0c3297e401",
-                "reference": "9d75dddf70f4fa0fcdac952114877a0c3297e401",
+                "url": "https://api.github.com/repos/ChristophWurst/nextcloud_composer/zipball/003902c43425f54d7f97e95d43851840ac3eb1f4",
+                "reference": "003902c43425f54d7f97e95d43851840ac3eb1f4",
                 "shasum": ""
             },
             "type": "library",
             "notification-url": "https://packagist.org/downloads/",
             "license": [
-                "AGPLv3"
+                "AGPL-3.0-or-later"
             ],
             "authors": [
                 {
@@ -902,7 +902,7 @@
                 }
             ],
             "description": "Composer package containing Nextcloud's public API (classes, interfaces)",
-            "time": "2018-01-15T15:43:03+00:00"
+            "time": "2018-02-01T07:24:52+00:00"
         },
         {
             "name": "doctrine/instantiator",
