@@ -27,7 +27,6 @@ define(function(require) {
 	var Radio = require('radio');
 	var ErrorMessageFactory = require('util/errormessagefactory');
 
-	Radio.message.on('fetch:bodies', fetchBodies);
 	Radio.folder.reply('message:delete', deleteMessage);
 
 	/**
@@ -79,8 +78,6 @@ define(function(require) {
 				$('#mail_new_message').prop('disabled', false);
 
 				if (messages.length > 0) {
-					// Fetch first 10 messages in background
-					Radio.message.trigger('fetch:bodies', account, folder, messages.slice(0, 10));
 					if (openFirstMessage) {
 						var message = messages.first();
 						Radio.message.trigger('load', message.folder.account, message.folder, message);
@@ -144,27 +141,6 @@ define(function(require) {
 		_.defer(function() {
 			loadFolderMessagesDebounced(account, folder, query);
 		});
-	}
-
-	/**
-	 * Fetch and cache messages in the background
-	 *
-	 * The message is only fetched if it has not been cached already
-	 *
-	 * @param {Account} account
-	 * @param {Folder} folder
-	 * @param {Message[]} messages
-	 */
-	function fetchBodies(account, folder, messages) {
-		if (messages.length > 0) {
-			var ids = _.map(messages, function(message) {
-				return message.get('id');
-			});
-			Radio.message.request('bodies', account, folder, ids).
-				then(function(messages) {
-					require('cache').addMessages(account, folder, messages);
-				}, console.error.bind(this));
-		}
 	}
 
 	/**

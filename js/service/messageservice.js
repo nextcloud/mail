@@ -30,7 +30,6 @@ define(function(require) {
 	Radio.message.reply('entities', getMessageEntities);
 	Radio.message.reply('next-page', getNextMessagePage);
 	Radio.message.reply('entity', getMessageEntity);
-	Radio.message.reply('bodies', fetchMessageBodies);
 	Radio.message.reply('flag', flagMessage);
 	Radio.message.reply('move', moveMessage);
 	Radio.message.reply('send', sendMessage);
@@ -257,14 +256,6 @@ define(function(require) {
 			messageId: messageId
 		});
 
-		// Load cached version if available
-		var message = require('cache').getMessage(account,
-			folder,
-			messageId);
-		if (message) {
-			return Promise.resolve(message);
-		}
-
 		return new Promise(function(resolve, reject) {
 			$.ajax(url, {
 				type: 'GET',
@@ -276,41 +267,6 @@ define(function(require) {
 					}
 				}
 			});
-		});
-	}
-
-	/**
-	 * @param {Account} account
-	 * @param {Folder} folder
-	 * @param {array} messageIds
-	 * @returns {Promise}
-	 */
-	function fetchMessageBodies(account, folder, messageIds) {
-		var cachedMessages = [];
-		var uncachedIds = [];
-
-		_.each(messageIds, function(messageId) {
-			var message = require('cache').getMessage(account, folder, messageId);
-			if (message) {
-				cachedMessages.push(message);
-			} else {
-				uncachedIds.push(messageId);
-			}
-		});
-
-		return new Promise(function(resolve, reject) {
-			if (uncachedIds.length > 0) {
-				var Ids = uncachedIds.join(',');
-				var url = OC.generateUrl('apps/mail/api/accounts/{accountId}/folders/{folderId}/messages?ids={ids}', {
-					accountId: account.get('accountId'),
-					folderId: folder.get('id'),
-					ids: Ids
-				});
-				return Promise.resolve($.ajax(url, {
-					type: 'GET'
-				}));
-			}
-			reject();
 		});
 	}
 

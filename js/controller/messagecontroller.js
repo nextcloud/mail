@@ -80,8 +80,6 @@ define(function(require) {
 			if (draft) {
 				Radio.ui.trigger('composer:show', messageBody, true);
 			} else {
-				// TODO: ideally this should be handled in messageservice.js
-				require('cache').addMessage(account, folder, messageBody);
 				Radio.ui.trigger('message:show', message, messageBody);
 			}
 		}, function() {
