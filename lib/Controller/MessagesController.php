@@ -43,6 +43,7 @@ use OCP\AppFramework\Http;
 use OCP\AppFramework\Http\ContentSecurityPolicy;
 use OCP\AppFramework\Http\JSONResponse;
 use OCP\AppFramework\Http\TemplateResponse;
+use OCP\AppFramework\Utility\ITimeFactory;
 use OCP\Files\Folder;
 use OCP\Files\IMimeTypeDetector;
 use OCP\IL10N;
@@ -75,6 +76,9 @@ class MessagesController extends Controller {
 	/** @var IAccount[] */
 	private $accounts = [];
 
+	/** @var ITimeFactory */
+	private $timeFactory;
+
 	/**
 	 * @param string $appName
 	 * @param IRequest $request
@@ -85,6 +89,7 @@ class MessagesController extends Controller {
 	 * @param IL10N $l10n
 	 * @param IMimeTypeDetector $mimeTypeDetector
 	 * @param IURLGenerator $urlGenerator
+	 * @param ITimeFactory $timeFactory
 	 */
 	public function __construct($appName,
 								IRequest $request,
@@ -94,7 +99,8 @@ class MessagesController extends Controller {
 								Logger $logger,
 								IL10N $l10n,
 								IMimeTypeDetector $mimeTypeDetector,
-								IURLGenerator $urlGenerator) {
+								IURLGenerator $urlGenerator,
+								ITimeFactory $timeFactory) {
 		parent::__construct($appName, $request);
 		$this->accountService = $accountService;
 		$this->currentUserId = $UserId;
@@ -103,6 +109,7 @@ class MessagesController extends Controller {
 		$this->l10n = $l10n;
 		$this->mimeTypeDetector = $mimeTypeDetector;
 		$this->urlGenerator = $urlGenerator;
+		$this->timeFactory = $timeFactory;
 	}
 
 	/**
@@ -244,7 +251,7 @@ class MessagesController extends Controller {
 			$htmlResponse->setContentSecurityPolicy($policy);
 
 			// Enable caching
-			$htmlResponse->cacheFor(60 * 60);
+			$htmlResponse->setCacheHeaders(60 * 60, $this->timeFactory);
 			$htmlResponse->addHeader('Pragma', 'cache');
 
 			return $htmlResponse;
