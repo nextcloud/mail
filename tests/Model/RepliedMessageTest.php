@@ -21,21 +21,21 @@
 
 namespace OCA\Mail\Tests\Model;
 
+use OCA\Mail\Account;
 use OCA\Mail\Model\RepliedMessageData;
-use OCA\Mail\Service\IAccount;
 use PHPUnit_Framework_TestCase;
 
 class RepliedMessageTest extends PHPUnit_Framework_TestCase {
 
 	public function testGetAccount() {
-		$account = $this->createMock(IAccount::class);
+		$account = $this->createMock(Account::class);
 		$data = new RepliedMessageData($account, null, null);
 
 		$this->assertEquals($account, $data->getAccount());
 	}
 
 	public function testGetFolderId() {
-		$account = $this->createMock(IAccount::class);
+		$account = $this->createMock(Account::class);
 		$folderId = base64_encode('INBOX');
 		$data = new RepliedMessageData($account, $folderId, null);
 
@@ -43,7 +43,7 @@ class RepliedMessageTest extends PHPUnit_Framework_TestCase {
 	}
 
 	public function testGetId() {
-		$account = $this->createMock(IAccount::class);
+		$account = $this->createMock(Account::class);
 		$messageId = 12;
 		$data = new RepliedMessageData($account, null, $messageId);
 
@@ -51,7 +51,7 @@ class RepliedMessageTest extends PHPUnit_Framework_TestCase {
 	}
 
 	public function testIsReply() {
-		$account = $this->createMock(IAccount::class);
+		$account = $this->createMock(Account::class);
 		$folderId = base64_encode('INBOX');
 		$messageId = 12;
 		$data = new RepliedMessageData($account, $folderId, $messageId);
@@ -60,7 +60,7 @@ class RepliedMessageTest extends PHPUnit_Framework_TestCase {
 	}
 
 	public function testIsNoReply() {
-		$account = $this->createMock(IAccount::class);
+		$account = $this->createMock(Account::class);
 		$data = new RepliedMessageData($account, null, null);
 
 		$this->assertFalse($data->isReply());

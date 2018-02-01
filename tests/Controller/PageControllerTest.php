@@ -21,11 +21,11 @@
 
 namespace OCA\Mail\Tests\Controller;
 
+use OCA\Mail\Account;
 use OCA\Mail\Contracts\IUserPreferences;
 use OCA\Mail\Controller\PageController;
 use OCA\Mail\Service\AccountService;
 use OCA\Mail\Service\AliasesService;
-use OCA\Mail\Service\IAccount;
 use OCP\AppFramework\Http\ContentSecurityPolicy;
 use OCP\AppFramework\Http\RedirectResponse;
 use OCP\AppFramework\Http\TemplateResponse;
@@ -88,8 +88,8 @@ class PageControllerTest extends PHPUnit_Framework_TestCase {
 	}
 
 	public function testIndex() {
-		$account1 = $this->createMock(IAccount::class);
-		$account2 = $this->createMock(IAccount::class);
+		$account1 = $this->createMock(Account::class);
+		$account2 = $this->createMock(Account::class);
 
 		$this->preferences->expects($this->once())
 			->method('getPreference')

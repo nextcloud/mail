@@ -38,7 +38,7 @@ class AccountService {
 	/**
 	 * Cache accounts for multiple calls to 'findByUserId'
 	 *
-	 * @var IAccount[]
+	 * @var Account[]
 	 */
 	private $accounts;
 
@@ -61,7 +61,7 @@ class AccountService {
 
 	/**
 	 * @param string $currentUserId
-	 * @return IAccount[]
+	 * @return Account[]
 	 */
 	public function findByUserId($currentUserId) {
 		if ($this->accounts === null) {
@@ -83,7 +83,7 @@ class AccountService {
 	/**
 	 * @param $currentUserId
 	 * @param $accountId
-	 * @return IAccount
+	 * @return Account
 	 */
 	public function find($currentUserId, $accountId) {
 		if ($this->accounts !== null) {
@@ -95,9 +95,6 @@ class AccountService {
 			throw new Exception("Invalid account id <$accountId>");
 		}
 
-		if ((int) $accountId === UnifiedAccount::ID) {
-			return $this->buildUnifiedAccount($currentUserId);
-		}
 		if ((int) $accountId === Manager::ACCOUNT_ID) {
 			$defaultAccount = $this->defaultAccountManager->getDefaultAccount();
 			if (is_null($defaultAccount)) {
@@ -108,7 +105,7 @@ class AccountService {
 		return new Account($this->mapper->find($currentUserId, $accountId));
 	}
 
-	private function moveMessageOnSameAccount(IAccount $account, $sourceFolderId,
+	private function moveMessageOnSameAccount(Account $account, $sourceFolderId,
 		$destFolderId, $messageId) {
 		$account->moveMessage(base64_decode($sourceFolderId), $messageId, base64_decode($destFolderId));
 	}
@@ -129,9 +126,6 @@ class AccountService {
 	 * @param int $accountId
 	 */
 	public function delete($currentUserId, $accountId) {
-		if ((int) $accountId === UnifiedAccount::ID) {
-			return;
-		}
 		if ((int) $accountId === Manager::ACCOUNT_ID) {
 			return;
 		}
@@ -145,10 +139,6 @@ class AccountService {
 	 */
 	public function save(MailAccount $newAccount) {
 		return $this->mapper->save($newAccount);
-	}
-
-	private function buildUnifiedAccount($userId) {
-		return new UnifiedAccount($this, $userId, $this->l10n);
 	}
 
 }

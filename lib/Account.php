@@ -44,6 +44,7 @@ use Horde_Mail_Transport_Smtphorde;
 use Horde_Mime_Headers_Date;
 use Horde_Mime_Headers_MessageId;
 use Horde_Mime_Mail;
+use JsonSerializable;
 use OC;
 use OCA\Mail\Cache\Cache;
 use OCA\Mail\Db\Alias;
@@ -51,12 +52,11 @@ use OCA\Mail\Db\MailAccount;
 use OCA\Mail\Model\IMessage;
 use OCA\Mail\Model\Message;
 use OCA\Mail\Model\ReplyMessage;
-use OCA\Mail\Service\IAccount;
 use OCP\ICacheFactory;
 use OCP\IConfig;
 use OCP\Security\ICrypto;
 
-class Account implements IAccount {
+class Account implements JsonSerializable {
 
 	/** @var MailAccount */
 	private $account;
