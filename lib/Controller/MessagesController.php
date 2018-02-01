@@ -111,7 +111,6 @@ class MessagesController extends Controller {
 	 * @param string $folderId
 	 * @param int $cursor
 	 * @param string $filter
-	 * @param array $ids
 	 * @return JSONResponse
 	 */
 	public function index($accountId, $folderId, $cursor = null, $filter=null) {
