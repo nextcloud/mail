@@ -114,12 +114,7 @@ class MessagesController extends Controller {
 	 * @param array $ids
 	 * @return JSONResponse
 	 */
-	public function index($accountId, $folderId, $cursor = null, $filter=null, $ids=null) {
-		if (!is_null($ids)) {
-			$ids = explode(',', $ids);
-
-			return $this->loadMultiple($accountId, $folderId, $ids);
-		}
+	public function index($accountId, $folderId, $cursor = null, $filter=null) {
 		$mailBox = $this->getFolder($accountId, $folderId);
 
 		$this->logger->debug("loading messages of folder <$folderId>");
@@ -438,22 +433,6 @@ class MessagesController extends Controller {
 			'messageId' => $messageId,
 		]);
 		return $this->urlGenerator->getAbsoluteURL($htmlBodyUrl);
-	}
-
-	/**
-	 * @param integer $accountId
-	 * @param string $folderId
-	 */
-	private function loadMultiple($accountId, $folderId, $ids) {
-		$messages = array_map(function($id) use ($accountId, $folderId){
-			try {
-				return $this->loadMessage($accountId, $folderId, $id);
-			} catch (DoesNotExistException $ex) {
-				return null;
-			}
-		}, $ids);
-
-		return $messages;
 	}
 
 	/**
