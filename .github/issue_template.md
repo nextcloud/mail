@@ -15,13 +15,7 @@ Tell us what happens instead
 
 **Mailserver or service:** (e.g. Outlook, Yahoo, Gmail, Exchange,...)
 
-**Transport security - IMAP:** (None, SSL, TLS, STARTTLS) 
-
-**Transport security - SMTP:** (None, SSL, TLS, STARTTLS)
-
 **Number of accounts:**
-
-**Mail app version build date:** (only if you are using a Nightly Build)
 
 
 ### Server configuration
@@ -81,17 +75,17 @@ Insert your server log here
 ```
 </details>
 
-##### Horde IMAP log (data/horde_imap.log)
+##### IMAP log (data/horde_imap.log)
 <details>
 ```
-Insert your horde IMAP log here, see https://github.com/nextcloud/mail#debug-mode
+Enable debug mode and insert your horde IMAP log here, see https://docs.nextcloud.com/server/13/developer_manual/general/debugging.html#debug-mode
 ```
 </details>
 
-##### Horde SMTP log (data/horde_smtp.log)
+##### SMTP log (data/horde_smtp.log)
 <details>
 ```
-Insert your horde SMTP log here, see https://github.com/nextcloud/mail#debug-mode
+Enable debug mode and insert your horde IMAP log here, see https://docs.nextcloud.com/server/13/developer_manual/general/debugging.html#debug-mode
 ```
 </details>
 
@@ -102,6 +96,5 @@ Insert your browser log here, this could for example include:
 
 a) The javascript console log
 b) The network log 
-c) ...
 ```
 </details>
