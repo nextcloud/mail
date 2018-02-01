@@ -33,7 +33,6 @@ use OCA\Mail\Http\AttachmentDownloadResponse;
 use OCA\Mail\Http\HtmlResponse;
 use OCA\Mail\Model\IMAPMessage;
 use OCA\Mail\Service\AccountService;
-use OCA\Mail\Service\ContactsIntegration;
 use OCA\Mail\Service\IAccount;
 use OCA\Mail\Service\IMailBox;
 use OCA\Mail\Service\Logger;
@@ -49,7 +48,6 @@ use OCP\Files\IMimeTypeDetector;
 use OCP\IL10N;
 use OCP\IRequest;
 use OCP\IURLGenerator;
-use OCP\Util;
 use OC\Streamer;
 use OC_UTIL;
 
@@ -60,9 +58,6 @@ class MessagesController extends Controller {
 
 	/** @var string */
 	private $currentUserId;
-
-	/** @var ContactsIntegration */
-	private $contactsIntegration;
 
 	/** @var Logger */
 	private $logger;
@@ -88,7 +83,6 @@ class MessagesController extends Controller {
 	 * @param AccountService $accountService
 	 * @param string $UserId
 	 * @param $userFolder
-	 * @param ContactsIntegration $contactsIntegration
 	 * @param Logger $logger
 	 * @param IL10N $l10n
 	 * @param IMimeTypeDetector $mimeTypeDetector
@@ -99,7 +93,6 @@ class MessagesController extends Controller {
 								AccountService $accountService,
 								$UserId,
 								$userFolder,
-								ContactsIntegration $contactsIntegration,
 								Logger $logger,
 								IL10N $l10n,
 								IMimeTypeDetector $mimeTypeDetector,
@@ -108,7 +101,6 @@ class MessagesController extends Controller {
 		$this->accountService = $accountService;
 		$this->currentUserId = $UserId;
 		$this->userFolder = $userFolder;
-		$this->contactsIntegration = $contactsIntegration;
 		$this->logger = $logger;
 		$this->l10n = $l10n;
 		$this->mimeTypeDetector = $mimeTypeDetector;
@@ -140,20 +132,10 @@ class MessagesController extends Controller {
 		}
 		$messages = $mailBox->getMessages($filter, $cursor);
 
-		$ci = $this->contactsIntegration;
-		$json = array_map(function($j) use ($ci, $mailBox) {
+		$json = array_map(function($j) use ($mailBox) {
 			if ($mailBox->getSpecialRole() === 'trash') {
 				$j['delete'] = (string)$this->l10n->t('Delete permanently');
 			}
-
-			// This is hacky and should be done on the client-side
-			if ($mailBox->getSpecialRole() === 'sent') {
-				$j['from'] = $j['to'];
-				if((count($j['to']) > 1) || (count($j['cc']) > 0)) {
-					$j['from'] .= ' ' . $this->l10n->t('& others');
-				}
-			}
-
 			return $j;
 		}, $messages);
 
@@ -453,16 +435,14 @@ class MessagesController extends Controller {
 		$attachment['downloadUrl'] = $downloadUrl;
 		$attachment['mimeUrl'] = $this->mimeTypeDetector->mimeTypeIcon($attachment['mime']);
 
-		if ($this->attachmentIsImage($attachment)) {
-			$attachment['isImage'] = true;
-		} else if ($this->attachmentIsCalendarEvent($attachment)) {
-			$attachment['isCalendarEvent'] = true;
-		}
+		$attachment['isImage'] = $this->attachmentIsImage($attachment);
+		$attachment['isCalendarEvent'] = $this->attachmentIsCalendarEvent($attachment);
+
 		return $attachment;
 	}
 
 	/**
-	 * @param $attachment
+	 * @param array $attachment
 	 *
 	 * Determines if the content of this attachment is an image
 	 *
@@ -478,7 +458,7 @@ class MessagesController extends Controller {
 	}
 
 	/**
-	 * @param type $attachment
+	 * @param array $attachment
 	 * @return boolean
 	 */
 	private function attachmentIsCalendarEvent($attachment) {
@@ -545,16 +525,6 @@ class MessagesController extends Controller {
 				return $this->enrichDownloadUrl($accountId, $folderId, $id, $a);
 			}, $json['attachments']);
 
-			// show images first
-			usort($json['attachments'], function($a, $b) {
-				if (isset($a['isImage']) && !isset($b['isImage'])) {
-					return -1;
-				} elseif (!isset($a['isImage']) && isset($b['isImage'])) {
-					return 1;
-				} else {
-					Util::naturalSortCompare($a['fileName'], $b['fileName']);
-				}
-			});
 			return $json;
 		}
 		return $json;

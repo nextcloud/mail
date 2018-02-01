@@ -16,10 +16,11 @@ define(function(require) {
 	var Marionette = require('backbone.marionette');
 	var _ = require('underscore');
 	var $ = require('jquery');
+	require('jquery-ui/ui/widgets/datepicker'); // formatDate
 	var Attachments = require('models/attachments');
 	var HtmlHelper = require('util/htmlhelper');
 	var ComposerView = require('views/composerview');
-	var MessageAttachmentsView = require('views/messageattachments');
+	var MessageAttachmentsView = require('views/messageattachmentsview');
 	var MessageTemplate = require('templates/message.html');
 	var ReplyBuilder = require('replybuilder');
 
@@ -134,7 +135,7 @@ define(function(require) {
 
 			this.showChildView('attachments', new MessageAttachmentsView({
 				collection: new Attachments(this.messageBody.get('attachments')),
-				message: this.model
+				message: this.message
 			}));
 
 			// setup reply composer view

@@ -1,5 +1,5 @@
 /**
- * @author Christoph Wurst <christoph@winzerhof-wurst.at>
+ * @author Jakob Sack <mail@jakobsack.de>
  *
  * Mail
  *
@@ -17,21 +17,23 @@
  *
  */
 
-define(function(require) {
-	var $ = require('jquery');
-	var OC = require('OC');
-	var App = require('app');
+define(function() {
+	'use strict';
 
-	$(function() {
-		// Conigure CSRF token
-		$.ajaxSetup({
-			headers: {
-				requesttoken: OC.requestToken
-			}
-		});
+	function isToNoreply(recipient) {
+		var user = recipient.email.substring(0, recipient.email.lastIndexOf('@'));
+		return ['noreply', 'no-reply'].indexOf(user) !== -1;
+	}
 
-		// Start app when the page is ready
-		console.log('Starting Mail …');
-		App.start();
-	});
+	return function(options) {
+		var noreplyInTo = this.to.some(isToNoreply);
+		var noreplyInCc = this.cc.some(isToNoreply);
+		var noreplyInBcc = this.bcc.some(isToNoreply);
+
+		if (noreplyInTo || noreplyInCc || noreplyInBcc) {
+			return options.fn(this);
+		} else {
+			return options.inverse(this);
+		}
+	};
 });

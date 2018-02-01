@@ -43,6 +43,12 @@
 	margin: 0 auto;
 	padding-top: 30px;
 }
+#mail-settings {
+	#account-form {
+		margin: 0;
+		padding-top: 0;
+	}
+}
 @media only screen and (max-height: 400px) {
 	#account-form #emptycontent {
 		margin-top: 0px;
@@ -319,6 +325,7 @@
 	display: flex;
 	align-content: center;
 	align-items: center;
+	border: none;
 }
 .ui-autocomplete .ui-menu-item a.mail-recipient-autocomplete span {
 	margin-left: 10px;
@@ -401,6 +408,12 @@ textarea.message-body {
 	min-height: 300px;
 	resize: none;
 	padding-right: 25%;
+}
+
+#app .message-composer .composer-fields .noreply-box {
+	margin-top: 0;
+	background: #fdffc3;
+	padding-left: 64px;
 }
 
 .composer-cc-bcc {

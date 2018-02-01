@@ -24,10 +24,10 @@ composer.phar:
 install-deps: install-composer-deps-dev install-npm-deps-dev
 
 install-composer-deps: composer.phar
-	php composer.phar install --no-dev
+	php composer.phar install --no-dev -o
 
 install-composer-deps-dev: composer.phar
-	php composer.phar install
+	php composer.phar install -o
 
 install-npm-deps:
 	npm install --production
@@ -38,7 +38,7 @@ install-npm-deps-dev:
 optimize-js: install-npm-deps-dev
 	./node_modules/webpack/bin/webpack.js --config js/webpack.prod.config.js
 
-dev-setup: install-composer-deps-dev install-npm-deps-dev
+dev-setup: install-composer-deps-dev install-npm-deps-dev optimize-js
 
 start-imap-docker:
 	docker pull $(docker_image)

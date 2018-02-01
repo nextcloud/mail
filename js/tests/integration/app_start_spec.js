@@ -20,13 +20,14 @@
  */
 
 define([
+	'jquery',
 	'app',
 	'cache',
 	'radio',
 	'backbone',
 	'controller/accountcontroller',
 	'models/accountcollection'
-], function(Mail, Cache, Radio, Backbone, AccountController,
+], function($, Mail, Cache, Radio, Backbone, AccountController,
 		AccountCollection) {
 	describe('App', function() {
 

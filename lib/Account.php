@@ -152,7 +152,7 @@ class Account implements IAccount {
 					$params['cache'] = [
 						'backend' => new Cache(array(
 							'cacheob' => $this->memcacheFactory
-								->create(md5($this->getId() . $this->getEMailAddress()))
+								->createDistributed(md5($this->getId() . $this->getEMailAddress()))
 						))];
 				}
 			}

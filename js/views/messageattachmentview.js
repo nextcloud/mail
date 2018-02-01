@@ -21,6 +21,7 @@ define(function(require) {
 	'use strict';
 
 	var $ = require('jquery');
+	var _ = require('underscore');
 	var Marionette = require('backbone.marionette');
 	var Radio = require('radio');
 	var MessageController = require('controller/messagecontroller');
@@ -31,7 +32,11 @@ define(function(require) {
 	 * @class MessageAttachmentView
 	 */
 	var MessageAttachmentView = Marionette.View.extend({
+
+		message: undefined,
+
 		template: MessageAttachmentTemplate,
+
 		ui: {
 			'downloadButton': '.attachment-download',
 			'saveToCloudButton': '.attachment-save-to-cloud',
@@ -43,7 +48,8 @@ define(function(require) {
 			'click @ui.saveToCloudButton': '_onSaveToCloud',
 			'click @ui.importCalendarEventButton': '_onImportCalendarEvent'
 		},
-		initialize: function() {
+		initialize: function(options) {
+			this.message = options.message;
 			this.listenTo(Radio.ui, 'document:click', this._closeImportPopover);
 		},
 		_onClick: function(e) {
@@ -62,32 +68,26 @@ define(function(require) {
 		},
 		_onSaveToCloud: function(e) {
 			e.preventDefault();
-			// TODO: 'message' should be a property of this attachment model
-			// TODO: 'folder' should be a property of the message model and so on
-			var account = require('state').currentAccount;
-			var folder = require('state').currentFolder;
-			var messageId = this.model.get('messageId');
-			var attachmentId = this.model.get('id');
 
 			var _this = this;
-			MessageController.saveAttachmentToFiles(account, folder, messageId, attachmentId, function() {
+			MessageController.saveAttachmentToFiles(this.message, this.model.get('id'), function() {
 				// Loading feedback
 				_this.getUI('saveToCloudButton').removeClass('icon-folder')
-				.addClass('icon-loading-small')
-				.prop('disabled', true);
+						.addClass('icon-loading-small')
+						.prop('disabled', true);
 			}).catch(console.error.bind(this)).then(function() {
 				// Remove loading feedback again
 				_this.getUI('saveToCloudButton').addClass('icon-folder')
-					.removeClass('icon-loading-small')
-					.prop('disabled', false);
+						.removeClass('icon-loading-small')
+						.prop('disabled', false);
 			});
 		},
 		_onImportCalendarEvent: function(e) {
 			e.preventDefault();
 
 			this.getUI('importCalendarEventButton')
-				.removeClass('icon-add')
-				.addClass('icon-loading-small');
+					.removeClass('icon-add')
+					.addClass('icon-loading-small');
 
 			var _this = this;
 			Radio.dav.request('calendars').then(function(calendars) {
@@ -103,15 +103,15 @@ define(function(require) {
 				}
 			}).catch(console.error.bind(this)).then(function() {
 				_this.getUI('importCalendarEventButton')
-					.removeClass('icon-loading-small')
-					.addClass('icon-add');
+						.removeClass('icon-loading-small')
+						.addClass('icon-add');
 			});
 		},
 		_uploadToCalendar: function(url) {
 			this._closeImportPopover();
 			this.getUI('importCalendarEventButton')
-				.removeClass('icon-add')
-				.addClass('icon-loading-small');
+					.removeClass('icon-add')
+					.addClass('icon-loading-small');
 
 			var downloadUrl = this.model.get('downloadUrl');
 			var _this = this;
@@ -121,13 +121,13 @@ define(function(require) {
 				});
 			}).then(function() {
 				_this.getUI('importCalendarEventButton')
-					.removeClass('icon-loading-small')
-					.addClass('icon-add');
+						.removeClass('icon-loading-small')
+						.addClass('icon-add');
 			}).catch(function() {
 				Radio.ui.trigger('error:show', t('mail', 'Error while downloading calendar event'));
 				_this.getUI('importCalendarEventButton')
-					.removeClass('icon-loading-small')
-					.addClass('icon-add');
+						.removeClass('icon-loading-small')
+						.addClass('icon-add');
 			});
 		},
 		_closeImportPopover: function(e) {

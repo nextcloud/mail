@@ -31,8 +31,7 @@ Just clone this repo into your apps directory (Nextcloud server installation nee
 
 Once npm and Node.js are installed, PHP and JavaScript dependencies can be installed by running:
 ```bash
-make install-composer-deps
-make optimize-js
+make dev-setup
 ```
 
 ## Documentation

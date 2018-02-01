@@ -58,7 +58,6 @@ define(function(require) {
 			this.listenTo(Radio.ui, 'message:show', this.onShowMessage);
 			this.listenTo(Radio.ui, 'message:error', this.onShowError);
 			this.listenTo(Radio.ui, 'composer:show', this.onShowComposer);
-			this.listenTo(Radio.ui, 'composer:leave', this.onComposerLeave);
 			this.listenTo(Radio.keyboard, 'keyup', this.onKeyUp);
 
 			// TODO: check whether this code is still needed
@@ -137,24 +136,6 @@ define(function(require) {
 
 			if (!isDraft) {
 				Radio.ui.trigger('messagesview:message:setactive', null);
-			}
-		},
-		onComposerLeave: function() {
-			// TODO: refactor 'composer:leave' as it's buggy
-
-			// Trigger only once
-			if (this.detailView === DetailView.COMPOSER) {
-				this.detailView = null;
-
-				if (this.composer && this.composer.hasData === true) {
-					if (this.composer.hasUnsavedChanges === true) {
-						this.composer.saveDraft(function() {
-							Radio.ui.trigger('notification:show', t('mail', 'Draft saved!'));
-						});
-					} else {
-						Radio.ui.trigger('notification:show', t('mail', 'Draft saved!'));
-					}
-				}
 			}
 		},
 		onMessageLoading: function(text) {

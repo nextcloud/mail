@@ -13,6 +13,8 @@ define(function(require) {
 
 	var Marionette = require('backbone.marionette');
 	var $ = require('jquery');
+	require('jquery-ui/ui/widgets/autocomplete');
+	require('jquery-ui/ui/widgets/datepicker'); // formatDate
 	var _ = require('underscore');
 	var autosize = require('autosize');
 	var OC = require('OC');
@@ -20,6 +22,8 @@ define(function(require) {
 	var Attachments = require('models/attachments');
 	var AttachmentsView = require('views/attachmentsview');
 	var ComposerTemplate = require('templates/composer.html');
+	var imageplaceholder = require('views/imageplaceholder');
+	var tooltip = require('views/tooltip');
 
 	return Marionette.View.extend({
 		template: ComposerTemplate,
@@ -54,6 +58,7 @@ define(function(require) {
 		draftInterval: 1500,
 		draftTimer: null,
 		draftUID: null,
+		draftPromise: null,
 		hasData: false,
 		autosized: false,
 		regions: {
@@ -95,7 +100,7 @@ define(function(require) {
 				cc: [],
 				bcc: [],
 				subject: '',
-				body: '',
+				body: ''
 			});
 
 			/**
@@ -130,13 +135,14 @@ define(function(require) {
 				this.folder = options.folder;
 				this.repliedMessage = options.repliedMessage;
 			}
+			this.draftPromise = Promise.resolve();
 		},
 		onRender: function() {
 			this.showChildView('attachmentsRegion', new AttachmentsView({
 				collection: this.attachments
 			}));
 
-			$('.tooltip-mailto').tooltip({placement: 'bottom'});
+			tooltip('.tooltip-mailto', {placement: 'bottom'});
 
 			if (this.isReply()) {
 				// Expand reply message body on click
@@ -149,6 +155,11 @@ define(function(require) {
 			}
 
 			this.defaultMailSelect();
+		},
+		onDestroy: function() {
+			if (this.hasData) {
+				this.saveDraft();
+			}
 		},
 		setAutoSize: function(state) {
 			if (state === true) {
@@ -198,7 +209,7 @@ define(function(require) {
 			// Define which objects to check for the event properties.
 			// (Window object provides fallback for IE8 and lower.)
 			event = event || window.event;
-			var key = event.keyCode || event.which;
+			var key = event.which;
 			// If enter and control keys are pressed:
 			// (Key 13 and 10 set for compatibility across different operating systems.)
 			if ((key === 13 || key === 10) && event.ctrlKey) {
@@ -309,7 +320,6 @@ define(function(require) {
 			}
 
 			// send the mail
-			var _this = this;
 			var options = {
 				draftUID: this.draftUID,
 				aliasId: alias.aliasId
@@ -320,7 +330,9 @@ define(function(require) {
 				options.folder = this.folder;
 			}
 
-			Radio.message.request('send', this.account, this.getMessage(), options).then(function() {
+			return this.draftPromise.then(function() {
+				return Radio.message.request('send', this.account, this.getMessage(), options);
+			}.bind(this)).then(function() {
 				OC.Notification.showTemporary(t('mail', 'Message sent!'));
 
 				if (!!options.repliedMessage) {
@@ -331,23 +343,23 @@ define(function(require) {
 							true);
 				}
 
-				_this.$('#mail_new_message').prop('disabled', false);
+				this.$('#mail_new_message').prop('disabled', false);
 				to.val('');
 				cc.val('');
 				bcc.val('');
 				subject.val('');
 				newMessageBody.val('');
 				newMessageBody.trigger('autosize.resize');
-				_this.attachments.reset();
-				if (_this.draftUID !== null) {
+				this.attachments.reset();
+				if (this.draftUID !== null) {
 					// the sent message was a draft
 					if (!_.isUndefined(Radio.ui.request('messagesview:collection'))) {
-						Radio.ui.request('messagesview:collection').
-								remove({id: _this.draftUID});
+						Radio.ui.request('messagesview:collection').remove({id: this.draftUID});
 					}
-					_this.draftUID = null;
+					this.draftUID = null;
 				}
-			}, function(jqXHR) {
+			}.bind(this)).catch(function(jqXHR) {
+				console.error('could not send message', jqXHR);
 				var error = '';
 				if (jqXHR.status === 500) {
 					error = t('mail', 'Server error');
@@ -357,63 +369,63 @@ define(function(require) {
 				}
 				newMessageSend.prop('disabled', false);
 				OC.Notification.showTemporary(error);
-			}).then(function() {
+			}.bind(this)).then(function() {
 				// remove loading feedback
 				newMessageBody.removeClass('icon-loading');
-				_this.$('.mail-account').prop('disabled', false);
+				this.$('.mail-account').prop('disabled', false);
 				to.prop('disabled', false);
 				cc.prop('disabled', false);
 				bcc.prop('disabled', false);
 				subject.prop('disabled', false);
-				_this.$('.new-message-attachments-action').
+				this.$('.new-message-attachments-action').
 						css('display', 'inline-block');
-				_this.$('#add-cloud-attachment').prop('disabled', false);
-				_this.$('#add-local-attachment').prop('disabled', false);
+				this.$('#add-cloud-attachment').prop('disabled', false);
+				this.$('#add-local-attachment').prop('disabled', false);
 				newMessageBody.prop('disabled', false);
 				newMessageSend.prop('disabled', false);
 				newMessageSend.val(t('mail', 'Send'));
+			}.bind(this)).catch(function(e) {
+				console.error('could not send message', e);
 			});
-			return false;
 		},
-		saveDraft: function(onSuccess) {
+		saveDraft: function() {
 			clearTimeout(this.draftTimer);
 			//
 			// TODO:
 			//  - input validation
-			//  - feedback on success
 			//  - undo lie - very important
 			//
 
-			// if available get account from drop-down list
-			if (this.$('.mail-account').length > 0) {
-				var alias = this.findAliasById(this.$('.mail-account').
-						find(':selected').val());
-				this.account = this.accounts.get(alias.accountId);
-			}
-
-			// send the mail
-			var _this = this;
-			Radio.message.request('draft', this.account, this.getMessage(), {
-				folder: _this.folder,
-				repliedMessage: _this.repliedMessage,
-				draftUID: _this.draftUID
-			}).then(function(data) {
-				if (_.isFunction(onSuccess)) {
-					onSuccess();
+			return this.draftPromise.then(function() {
+				// if available get account from drop-down list
+				if (this.$('.mail-account').length > 0) {
+					var alias = this.findAliasById(this.$('.mail-account').
+							find(':selected').val());
+					this.account = this.accounts.get(alias.accountId);
 				}
 
-				if (_this.draftUID !== null) {
+				// send the mail
+				var _this = this;
+				return Radio.message.request('draft', this.account, this.getMessage(), {
+					folder: _this.folder,
+					repliedMessage: _this.repliedMessage,
+					draftUID: _this.draftUID
+				});
+			}.bind(this)).then(function(data) {
+				console.debug('draft saved. UID=' + data.uid + ', previous UID was ' + this.draftUID);
+				if (this.draftUID !== null) {
 					// update UID in message list
 					var collection = Radio.ui.request('messagesview:collection');
-					var message = collection.findWhere({id: _this.draftUID});
+					var message = collection.findWhere({id: this.draftUID});
 					if (message) {
 						message.set({id: data.uid});
 						collection.set([message], {remove: false});
 					}
 				}
-				_this.draftUID = data.uid;
-			}, console.error.bind(this));
-			return false;
+				this.draftUID = data.uid;
+			}.bind(this)).catch(function(e) {
+				console.error('could not save draft', e);
+			});
 		},
 		setReplyBody: function(from, date, text) {
 			var minutes = date.getMinutes();
@@ -443,7 +455,7 @@ define(function(require) {
 			this.$el.find('input.subject').focus();
 		},
 		onAutoComplete: function(e) {
-			var elem = $(e.target);
+			var $elem = $(e.target);
 			function split(val) {
 				return val.split(/,\s*/);
 			}
@@ -451,18 +463,20 @@ define(function(require) {
 			function extractLast(term) {
 				return split(term).pop();
 			}
-			if (!elem.data('autocomplete')) {
+			if (!$elem.data('autocomplete')) {
 				// If the autocomplete wasn't called yet:
 				// don't navigate away from the field on tab when selecting an item
 				var prevUID = false;
 
-				elem.bind('keydown', function(event) {
-					if (event.keyCode === $.ui.keyCode.TAB &&
-							typeof elem.data('autocomplete') !== 'undefined' &&
-							elem.data('autocomplete').menu.active) {
+				$elem.on('keydown', function(event) {
+					// 9: 'tab' key code
+					if (event.which === 9 &&
+							typeof $elem.data('autocomplete') !== 'undefined' &&
+							$elem.data('autocomplete').menu.active) {
 						event.preventDefault();
 					}
-				}).autocomplete({
+				});
+				$elem.autocomplete({
 					source: function(request, response) {
 						$.getJSON(
 								OC.generateUrl('/apps/mail/api/autoComplete'),
@@ -514,7 +528,7 @@ define(function(require) {
 						$row.append($avatar);
 					} else {
 						$placeholder = $('<div/>');
-						$placeholder.imageplaceholder(item.label || item.value);
+						imageplaceholder($placeholder, item.label || item.value);
 						$placeholder.addClass('avatar');
 						$row.append($placeholder);
 					}

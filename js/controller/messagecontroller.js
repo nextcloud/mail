@@ -49,8 +49,6 @@ define(function(require) {
 			return;
 		}
 
-		Radio.ui.trigger('composer:leave');
-
 		// TODO: expression is useless?
 		if (!options.force && false) {
 			return;
@@ -110,14 +108,12 @@ define(function(require) {
 	}
 
 	/**
-	 * @param {Account} account
-	 * @param {Folder} folder
-	 * @param {number} messageId
+	 * @param {Message} message
 	 * @param {number} attachmentId
 	 * @param {function} callback
 	 * @returns {Promise}
 	 */
-	function saveAttachmentToFiles(account, folder, messageId, attachmentId, callback) {
+	function saveAttachmentToFiles(message, attachmentId, callback) {
 		var saveAll = _.isUndefined(attachmentId);
 
 		return new Promise(function(resolve, reject) {
@@ -127,8 +123,7 @@ define(function(require) {
 					if (typeof callback === 'function') {
 						callback();
 					}
-					Radio.message.request('save:cloud', account,
-						folder, messageId, attachmentId, path).then(function() {
+					Radio.message.request('save:cloud', message, attachmentId, path).then(function() {
 						if (saveAll) {
 							Radio.ui.trigger('error:show', t('mail', 'Attachments saved to Files.'));
 						} else {
@@ -205,8 +200,8 @@ define(function(require) {
 	 * @param {function} callback
 	 * @returns {Promise}
 	 */
-	function saveAttachmentsToFiles(account, folder, messageId, callback) {
-		return saveAttachmentToFiles(account, folder, messageId, null, callback);
+	function saveAttachmentsToFiles(message, callback) {
+		return saveAttachmentToFiles(message, null, callback);
 	}
 
 	return {
