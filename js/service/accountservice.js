@@ -82,8 +82,6 @@ define(function(require) {
 	 */
 	function getAccountEntities() {
 		return loadAccountData().then(function(accounts) {
-			require('cache').cleanUp(accounts);
-
 			if (accounts.length > 1) {
 				accounts.add({
 					accountId: -1,
@@ -108,10 +106,7 @@ define(function(require) {
 
 		return Promise.resolve($.ajax(url, {
 			type: 'DELETE'
-		})).then(function() {
-			// Delete cached message lists
-			require('cache').removeAccount(account);
-		});
+		}));
 	}
 	
 	/**

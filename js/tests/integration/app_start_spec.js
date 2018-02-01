@@ -22,12 +22,11 @@
 define([
 	'jquery',
 	'app',
-	'cache',
 	'radio',
 	'backbone',
 	'controller/accountcontroller',
 	'models/accountcollection'
-], function($, Mail, Cache, Radio, Backbone, AccountController,
+], function($, Mail, Radio, Backbone, AccountController,
 		AccountCollection) {
 	describe('App', function() {
 
@@ -70,7 +69,6 @@ define([
 				resolve = res;
 			});
 
-			spyOn(Cache, 'init');
 			spyOn(Radio.ui, 'trigger');
 			spyOn(Backbone.history, 'start');
 			spyOn(AccountController, 'loadAccounts').and.callFake(function() {
@@ -84,7 +82,6 @@ define([
 			// Let's go…
 			Mail.start();
 
-			expect(Cache.init).toHaveBeenCalled();
 			expect(Radio.ui.trigger).toHaveBeenCalledWith('content:loading', 'Loading accounts');
 
 			var accounts = new AccountCollection([
