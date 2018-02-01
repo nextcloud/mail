@@ -114,6 +114,7 @@ OC.L10N.register(
     "to" : "받는 사람",
     "cc" : "참조",
     "bcc" : "숨은 참조",
+    "Note that the mail came from a noreply address so your reply will probably not be read." : "발신 전용 주소에서 보낸 이메일이기 때문에 수신자가 답장을 읽지 않을 수도 있습니다.",
     "Subject" : "제목",
     "Save all to Files" : "모두 저장",
     "Add mail account" : "메일 계정 추가",
