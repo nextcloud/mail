@@ -38,7 +38,6 @@ OC.L10N.register(
     "Server error" : "Σφάλμα διακομιστή",
     "An unknown error occurred" : "Προέκυψε ένα άγνωστο σφάλμα",
     "Opening HTML drafts is not supported yet." : "Δεν υποστηρίζεται ακόμα το άνοιγμα προχείρων HTML.",
-    "Draft saved!" : "Το πρόχειρο αποθηκεύτηκε!",
     "No writable calendars found" : "Δεν βρέθηκαν εγγράψιμα ημερολόγια",
     "Error while importing the calendar event" : "Σφάλμα κατά την εισαγωγή γεγονότος στο ημερολόγιο",
     "Error while downloading calendar event" : "Σφάλμα κατά την λήψη συμβάντος ημερολογίου",

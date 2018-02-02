@@ -46,7 +46,6 @@ OC.L10N.register(
     "Server error" : "Ошибка сервера",
     "An unknown error occurred" : "Произошла неизвестная ошибка",
     "Opening HTML drafts is not supported yet." : "Работа с черновиками HTML пока не поддерживается.",
-    "Draft saved!" : "Черновик сохранен!",
     "No writable calendars found" : "Календари доступные для записи не найдены",
     "Error while importing the calendar event" : "Ошибка при импорте календарного события",
     "Error while downloading calendar event" : "Ошибка при скачивании календарного события",

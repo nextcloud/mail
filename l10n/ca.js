@@ -40,7 +40,6 @@ OC.L10N.register(
     "Server error" : "Error del servidor",
     "An unknown error occurred" : "S\\'ha produït un error desconegut",
     "Opening HTML drafts is not supported yet." : "Encara no està permès obrir esborranys en HTML.",
-    "Draft saved!" : "Esborrany guardat!",
     "No writable calendars found" : "No s'han trobat calendaris editables",
     "Error while importing the calendar event" : "Error al importar l'esdeveniment de calendari",
     "Error while downloading calendar event" : "Error al carregar l'esdeveniment de calendari",

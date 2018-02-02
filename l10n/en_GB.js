@@ -46,7 +46,6 @@ OC.L10N.register(
     "Server error" : "Server error",
     "An unknown error occurred" : "An unknown error occurred",
     "Opening HTML drafts is not supported yet." : "Opening HTML drafts is not supported yet.",
-    "Draft saved!" : "Draft saved!",
     "No writable calendars found" : "No writable calendars found",
     "Error while importing the calendar event" : "Error whilst importing the calendar event",
     "Error while downloading calendar event" : "Error whilst downloading calendar event",

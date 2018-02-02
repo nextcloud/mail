@@ -44,7 +44,6 @@
     "Server error" : "Error en servidor",
     "An unknown error occurred" : "Un error desconocido ha ocurrido",
     "Opening HTML drafts is not supported yet." : "La apertura de borradores HTML aun no está soportada.",
-    "Draft saved!" : "¡Borrador guardado!",
     "No writable calendars found" : "No se han encontrado calendarios con permiso de escritura",
     "Error while importing the calendar event" : "Error al importar el evento de calendario",
     "Error while downloading calendar event" : "Error al descargar el evento de calendario",

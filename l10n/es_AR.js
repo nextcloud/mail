@@ -35,7 +35,6 @@ OC.L10N.register(
     "Server error" : "Se presentó un error en el servidor",
     "An unknown error occurred" : "Se presentó un error desconocido",
     "Opening HTML drafts is not supported yet." : "Abrir borradores HTML aún no está soportado.",
-    "Draft saved!" : "¡Borrador guardado!",
     "No writable calendars found" : "No se encontraron calendarios editables",
     "Error while importing the calendar event" : "Se presentó un error al importar el evento del calendario",
     "Error while downloading calendar event" : "Se presentó un error al descargar el evento del calendario",

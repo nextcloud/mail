@@ -43,7 +43,6 @@ OC.L10N.register(
     "Server error" : "伺服器錯誤",
     "An unknown error occurred" : "發生未知的錯誤",
     "Opening HTML drafts is not supported yet." : "目前尚未支援開啟 HTML 草稿",
-    "Draft saved!" : "草稿已儲存！",
     "No writable calendars found" : "查無可寫入的日曆",
     "Error while importing the calendar event" : "匯入日曆事件時發生錯誤",
     "Error while downloading calendar event" : "下載日曆事件時發生錯誤",

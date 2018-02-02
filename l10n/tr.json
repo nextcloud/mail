@@ -44,7 +44,6 @@
     "Server error" : "Sunucu sorunu",
     "An unknown error occurred" : "Bilinmeyen bir sorun çıktı",
     "Opening HTML drafts is not supported yet." : "HTML taslaklarının açılması henüz desteklenmiyor.",
-    "Draft saved!" : "Taslak kaydedildi!",
     "No writable calendars found" : "Yazılabilecek bir takvim bulunamadı",
     "Error while importing the calendar event" : "Takvim etkinliği içe aktarılırken sorun çıktı",
     "Error while downloading calendar event" : "Takvim etkinliği indirilirken sorun çıktı",

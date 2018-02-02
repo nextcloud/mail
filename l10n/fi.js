@@ -43,7 +43,6 @@ OC.L10N.register(
     "Server error" : "Palvelinvirhe",
     "An unknown error occurred" : "Tapahtui tuntematon virhe",
     "Opening HTML drafts is not supported yet." : "HTML-luonnosten avaaminen ei ole vielä tuettu ominaisuus.",
-    "Draft saved!" : "Luonnos tallennettu!",
     "No writable calendars found" : "Kirjoitusoikeudella olevia kalentereita ei löytynyt",
     "Error while importing the calendar event" : "Virhe kalenteritapahtumaa tuotaessa",
     "Error while downloading calendar event" : "Virhe kalenteritapahtumaa ladatessa",

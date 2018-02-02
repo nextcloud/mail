@@ -37,7 +37,6 @@ OC.L10N.register(
     "Server error" : "Gabim shërbyesi",
     "An unknown error occurred" : "Ndodhi një gabim i panjohur",
     "Opening HTML drafts is not supported yet." : "Hapja e skicave HTML nuk mbulohet ende.",
-    "Draft saved!" : "Skica u ruajt!",
     "No writable calendars found" : "S’u gjetën kalendarë të shkruajtshëm",
     "Error while importing the calendar event" : "Gabim gjatë importimit të veprimtarisë së kalendarit",
     "Error while downloading calendar event" : "Gabim gjatë shkarkimit të veprimtarisë së kalendarit",

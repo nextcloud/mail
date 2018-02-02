@@ -41,7 +41,6 @@ OC.L10N.register(
     "Server error" : "Serverio klaida",
     "An unknown error occurred" : "Įvyko nežinoma klaida",
     "Opening HTML drafts is not supported yet." : "HTML juodraščių atvėrimas kol kas nepalaikomas.",
-    "Draft saved!" : "Juodraštis įrašytas!",
     "No writable calendars found" : "Nerasta kalendorių redagavimui",
     "Error while importing the calendar event" : "Klaida, importuojant kalendoriaus įvykį",
     "Error while downloading calendar event" : "Klaida, atsisiunčiant kalendoriaus įvykį",

@@ -41,7 +41,6 @@ OC.L10N.register(
     "Server error" : "Chyba serveru",
     "An unknown error occurred" : "Nastala neznámá chyba",
     "Opening HTML drafts is not supported yet." : "Otevírání HTML konceptů ještě není podporováno.",
-    "Draft saved!" : "Koncept uložen!",
     "No writable calendars found" : "Nebyly nalezeny žádné zapisovatelné kalendáře",
     "Error while importing the calendar event" : "Chyba při importu události kalendáře",
     "Error while downloading calendar event" : "Chyba při stahování události kalendáře",

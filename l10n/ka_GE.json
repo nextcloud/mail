@@ -44,7 +44,6 @@
     "Server error" : "სერვერის შეცდომა",
     "An unknown error occurred" : "გამოჩნდა ამოუცნობი შეცდომა",
     "Opening HTML drafts is not supported yet." : "HTML მონახაზის გახსნა ჯერ მხარდაჭერილი არაა.",
-    "Draft saved!" : "მონახაზი შენახულია!",
     "No writable calendars found" : "ჩაწერადი კალენდრები ვერ იქნა ნაპოვნი",
     "Error while importing the calendar event" : "კალენდრის მოვლენის იმპორტირებისას წარმოიშვა შეცდომა",
     "Error while downloading calendar event" : "კალენდრის მოვლენის ჩამოტვირთვისას წარმოიშვა შეცდომა",

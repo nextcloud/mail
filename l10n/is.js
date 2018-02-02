@@ -41,7 +41,6 @@ OC.L10N.register(
     "Server error" : "Villa frá þjóni",
     "An unknown error occurred" : "Óþekkt villa kom upp",
     "Opening HTML drafts is not supported yet." : "Ekki er hægt að opna HTML-drög - ennþá.",
-    "Draft saved!" : "Drög vistuð!",
     "No writable calendars found" : "Engin skrifanleg dagatöl fundust",
     "Error while importing the calendar event" : "Villa kom upp við að flytja inn dagatalsatburðinn",
     "Error while downloading calendar event" : "Villa kom upp við að sækja dagatalsatburð",

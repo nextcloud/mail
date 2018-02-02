@@ -44,7 +44,6 @@
     "Server error" : "Szerver hiba",
     "An unknown error occurred" : "Ismeretlen hiba történt",
     "Opening HTML drafts is not supported yet." : "A HTML vázlatok megnyitása még nem támogatott.",
-    "Draft saved!" : "Vázlat mentve.",
     "No writable calendars found" : "Nem található írható naptár",
     "Error while importing the calendar event" : "Hiba a naptár esemény importálása közben",
     "Error while downloading calendar event" : "Hiba a naptár esemény letöltése közben",

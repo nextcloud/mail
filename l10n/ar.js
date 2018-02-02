@@ -40,7 +40,6 @@ OC.L10N.register(
     "Server error" : "خطا في الخادم",
     "An unknown error occurred" : "حدث خلل غير معروف",
     "Opening HTML drafts is not supported yet." : "فتح مسودات HTML غير مدعّم حاليا.",
-    "Draft saved!" : "تم حفظ المسودّة!",
     "Error while importing the calendar event" : "خلل عند استيراد أحداث التقويم",
     "Error while downloading calendar event" : "خلل عند تحميل احداث التقويم",
     "& others" : "و آخرون",

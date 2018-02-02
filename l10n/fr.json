@@ -44,7 +44,6 @@
     "Server error" : "Erreur du serveur",
     "An unknown error occurred" : "Une erreur inconnue est survenue",
     "Opening HTML drafts is not supported yet." : "L'ouverture de brouillons au format HTML n'est pas prise en charge pour le moment.",
-    "Draft saved!" : "Brouillon sauvegardé!",
     "No writable calendars found" : "Aucun calendrier modifiable n'a été trouvé",
     "Error while importing the calendar event" : "Erreur pendant l'importation de l'évènement du calendrier",
     "Error while downloading calendar event" : "Erreur pendant le téléchargement de l'évènement du calendrier",

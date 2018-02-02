@@ -40,7 +40,6 @@ OC.L10N.register(
     "Server error" : "Błąd serwera",
     "An unknown error occurred" : "Wystąpił nieznany błąd",
     "Opening HTML drafts is not supported yet." : "Otwieranie wiadomości roboczych w HTML nie jest jeszcze wspierane.",
-    "Draft saved!" : "Szkic został zapisany!",
     "No writable calendars found" : "Nie znaleziono zapisywalnych kalendarzy.",
     "Error while importing the calendar event" : "Wystąpił błąd podczas importowania zdarzenia z kalendarza",
     "Error while downloading calendar event" : "Wystąpił błąd podczas pobierania zdarzenia z kalendarza",

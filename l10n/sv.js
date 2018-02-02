@@ -41,7 +41,6 @@ OC.L10N.register(
     "Server error" : "Serverfel",
     "An unknown error occurred" : "Ett okänt fel uppstod",
     "Opening HTML drafts is not supported yet." : "Att öppna HTML-utkast stöds inte än.",
-    "Draft saved!" : "Utkast sparat!",
     "No writable calendars found" : "Inga skrivbara kalendrar hittade",
     "Error while importing the calendar event" : "Fel vid import av kalenderhändelse",
     "Error while downloading calendar event" : "Fel vid nedladdning av kalenderhändelse",

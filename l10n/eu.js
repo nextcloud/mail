@@ -41,7 +41,6 @@ OC.L10N.register(
     "Server error" : "Zerbitzari akatsa",
     "An unknown error occurred" : "Akats ezezagun bat gertatu da",
     "Opening HTML drafts is not supported yet." : "HTML zirriborroak irekitzea ez da oraindik onartzen.",
-    "Draft saved!" : "Zirriborroa gorde da!",
     "No writable calendars found" : "Ez da idazgai den egunkaririk aurkitu",
     "Error while importing the calendar event" : "Akatsa egutegiko gertakaria importatzerakoan",
     "Error while downloading calendar event" : "Akatsa egutegiko gertakaria deskargatzerakoan",

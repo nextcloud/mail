@@ -35,7 +35,6 @@ OC.L10N.register(
     "Server error" : "Servera kļūda",
     "An unknown error occurred" : "Radusies nezināma kļūda",
     "Opening HTML drafts is not supported yet." : "HTML dokumentu projektus atvēršana vēl netiek atbalstīta.",
-    "Draft saved!" : "Melnraksts saglabāts!",
     "No writable calendars found" : "Nav ierakstāmu kalendāru",
     "Error while importing the calendar event" : "Kļūda, importējot kalendāra notikumu",
     "Error while downloading calendar event" : "Kļūda ielādējot kalendāra notikumu",

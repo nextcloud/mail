@@ -44,7 +44,6 @@
     "Server error" : "Грешка на серверу",
     "An unknown error occurred" : "Десила се непозната грешка",
     "Opening HTML drafts is not supported yet." : "Отварање HTML нацрта још није подржано.",
-    "Draft saved!" : "Нацрт сачуван!",
     "No writable calendars found" : "Нема календара у који је могуће писање",
     "Error while importing the calendar event" : "Грешка приликом увоза догађаја из календара",
     "Error while downloading calendar event" : "Грешка приликом скидања догађаја из календара",

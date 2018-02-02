@@ -41,7 +41,6 @@ OC.L10N.register(
     "Server error" : "Serverfejl",
     "An unknown error occurred" : "En ukendt fejl er opstået",
     "Opening HTML drafts is not supported yet." : "Åbning af HTML-kladder understøttes endnu ikke.",
-    "Draft saved!" : "Kladde blev gemt!",
     "No writable calendars found" : "Ingen skrivbare kalendre fundet",
     "Error while importing the calendar event" : "Fejl ved import af kalender begivenhed",
     "Error while downloading calendar event" : "Fejl ved hentning af kalender begivenhed",

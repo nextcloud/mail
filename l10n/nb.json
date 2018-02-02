@@ -44,7 +44,6 @@
     "Server error" : "Tjenerfeil",
     "An unknown error occurred" : "En ukjent feil oppstod",
     "Opening HTML drafts is not supported yet." : "Åpning av HTML-kladd er ikke støttet ennå.",
-    "Draft saved!" : "Kladd lagret!",
     "No writable calendars found" : "Ingen skrivbare kalendere funnet",
     "Error while importing the calendar event" : "Feil ved importering av kalenderhendelse",
     "Error while downloading calendar event" : "Feil ved nedlasting av kalenderhendelse",
