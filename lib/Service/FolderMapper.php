@@ -68,7 +68,7 @@ class FolderMapper {
 			$folders[] = $folder;
 			if ($mailbox['mailbox']->utf8 === 'INBOX') {
 				$searchFolder = new SearchFolder($account, $mailbox['mailbox'], $mailbox['attributes'], $mailbox['delimiter']);
-				if ($searchFolder->isSearchable()) {
+				if ($folder->isSearchable()) {
 					$searchFolder->setSyncToken($client->getSyncToken($folder->getMailbox()));
 				}
 				$folders[] = $searchFolder;
