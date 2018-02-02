@@ -22,13 +22,26 @@
 
 namespace OCA\Mail\Tests\Controller;
 
+use OC\AppFramework\Http\Request;
+use OCA\Mail\Account;
+use OCA\Mail\Attachment;
 use OCA\Mail\Controller\MessagesController;
 use OCA\Mail\Http\AttachmentDownloadResponse;
 use OCA\Mail\Http\HtmlResponse;
+use OCA\Mail\Mailbox;
+use OCA\Mail\Model\IMAPMessage;
+use OCA\Mail\Service\AccountService;
+use OCA\Mail\Service\Logger;
 use OCP\AppFramework\Db\DoesNotExistException;
 use OCP\AppFramework\Http;
 use OCP\AppFramework\Http\ContentSecurityPolicy;
 use OCP\AppFramework\Http\JSONResponse;
+use OCP\AppFramework\Utility\ITimeFactory;
+use OCP\Files\Folder;
+use OCP\Files\IMimeTypeDetector;
+use OCP\IL10N;
+use OCP\IRequest;
+use OCP\IURLGenerator;
 use PHPUnit_Framework_TestCase;
 
 class MessagesControllerTest extends PHPUnit_Framework_TestCase {
@@ -47,57 +60,32 @@ class MessagesControllerTest extends PHPUnit_Framework_TestCase {
 	private $attachment;
 	private $mimeTypeDetector;
 	private $urlGenerator;
-	private $avatarService;
+	private $timeFactory;
 
 	protected function setUp() {
 		parent::setUp();
 
 		$this->appName = 'mail';
-		$this->request = $this->getMockBuilder('\OCP\IRequest')->getMock();
-		$this->accountService = $this->getMockBuilder('\OCA\Mail\Service\AccountService')
-			->disableOriginalConstructor()
-			->getMock();
+		$this->request = $this->getMockBuilder(IRequest::class)->getMock();
+		$this->accountService = $this->createMock(AccountService::class);
 		$this->userId = 'john';
-		$this->userFolder = $this->getMockBuilder('\OCP\Files\Folder')
-			->disableOriginalConstructor()
-			->getMock();
-		$this->request = $this->getMockBuilder('\OC\AppFramework\Http\Request')
-			->disableOriginalConstructor()
-			->getMock();
-		$this->logger = $this->getMockBuilder('\OCA\Mail\Service\Logger')
-			->disableOriginalConstructor()
-			->getMock();
-		$this->l10n = $this->getMockBuilder('\OCP\IL10N')->getMock();
-		$this->mimeTypeDetector = $this->getMockBuilder('OCP\Files\IMimeTypeDetector')->getMock();
-		$this->urlGenerator = $this->getMockBuilder('\OCP\IURLGenerator')->getMock();
-		$this->avatarService = $this->getMockBuilder('\OCA\Mail\Service\AvatarService')
-			->disableOriginalConstructor()
-			->getMock();
+		$this->userFolder = $this->createMock(Folder::class);
+		$this->request = $this->createMock(Request::class);
+		$this->logger = $this->createMock(Logger::class);
+		$this->l10n = $this->createMock(IL10N::class);
+		$this->mimeTypeDetector = $this->createMock(IMimeTypeDetector::class);
+		$this->urlGenerator = $this->createMock(IURLGenerator::class);
+		$this->timeFactory = $this->createMock(ITimeFactory::class);
 
 		$this->controller = new MessagesController(
-			$this->appName,
-			$this->request,
-			$this->accountService,
-			$this->userId,
-			$this->userFolder,
-			$this->logger,
-			$this->l10n,
-			$this->mimeTypeDetector,
-			$this->urlGenerator,
-			$this->avatarService);
+			$this->appName, $this->request, $this->accountService, $this->userId,
+			$this->userFolder, $this->logger, $this->l10n, $this->mimeTypeDetector,
+			$this->urlGenerator, $this->timeFactory);
 
-		$this->account = $this->getMockBuilder('\OCA\Mail\Account')
-			->disableOriginalConstructor()
-			->getMock();
-		$this->mailbox = $this->getMockBuilder('\OCA\Mail\Mailbox')
-			->disableOriginalConstructor()
-			->getMock();
-		$this->message = $this->getMockBuilder('\OCA\Mail\Model\IMAPMessage')
-			->disableOriginalConstructor()
-			->getMock();
-		$this->attachment = $this->getMockBuilder('\OCA\Mail\Attachment')
-			->disableOriginalConstructor()
-			->getMock();
+		$this->account = $this->createMock(Account::class);
+		$this->mailbox = $this->createMock(Mailbox::class);
+		$this->message = $this->createMock(IMAPMessage::class);
+		$this->attachment = $this->createMock(Attachment::class);
 	}
 
 	public function testIndex() {
@@ -129,11 +117,12 @@ class MessagesControllerTest extends PHPUnit_Framework_TestCase {
 			->method('getMessage')
 			->with($this->equalTo($messageId))
 			->will($this->returnValue($this->message));
+		$this->timeFactory->method('getTime')->willReturn(1000);
 
 		$expectedResponse = new HtmlResponse(null);
-		$expectedResponse->cacheFor(3600);
+		$expectedResponse->setCacheHeaders(3600, $this->timeFactory);
 		$expectedResponse->addHeader('Pragma', 'cache');
-		if(class_exists('\OCP\AppFramework\Http\ContentSecurityPolicy')) {
+		if (class_exists('\OCP\AppFramework\Http\ContentSecurityPolicy')) {
 			$policy = new ContentSecurityPolicy();
 			$policy->allowEvalScript(false);
 			$policy->disallowScriptDomain('\'self\'');
@@ -143,7 +132,8 @@ class MessagesControllerTest extends PHPUnit_Framework_TestCase {
 			$expectedResponse->setContentSecurityPolicy($policy);
 		}
 
-		$actualResponse = $this->controller->getHtmlBody($accountId, base64_encode($folderId), $messageId);
+		$actualResponse = $this->controller->getHtmlBody($accountId,
+			base64_encode($folderId), $messageId);
 
 		$this->assertEquals($expectedResponse, $actualResponse);
 	}
