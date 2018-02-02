@@ -33,7 +33,6 @@ use OCA\Mail\Service\AliasesService;
 use OCA\Mail\Service\AutoConfig\AutoConfig;
 use OCA\Mail\Service\Logger;
 use OCA\Mail\Service\SetupService;
-use OCA\Mail\Service\UnifiedAccount;
 use OCP\AppFramework\Db\DoesNotExistException;
 use OCP\AppFramework\Http;
 use OCP\AppFramework\Http\JSONResponse;
@@ -78,9 +77,6 @@ class AccountsControllerTest extends PHPUnit_Framework_TestCase {
 	/** @var Account|PHPUnit_Framework_MockObject_MockObject */
 	private $account;
 
-	/** @var UnifiedAccount|PHPUnit_Framework_MockObject_MockObject */
-	private $unifiedAccount;
-
 	/** @var AliasesService|PHPUnit_Framework_MockObject_MockObject */
 	private $aliasesService;
 
@@ -108,7 +104,6 @@ class AccountsControllerTest extends PHPUnit_Framework_TestCase {
 		$this->controller = new AccountsController($this->appName, $this->request, $this->accountService, $this->userId,
 			$this->logger, $this->l10n, $this->crypto, $this->aliasesService, $this->transmission, $this->setupService);
 		$this->account = $this->createMock(Account::class);
-		$this->unifiedAccount = $this->createMock(UnifiedAccount::class);
 		$this->accountId = 123;
 	}
 

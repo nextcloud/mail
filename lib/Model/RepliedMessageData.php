@@ -21,14 +21,14 @@
 
 namespace OCA\Mail\Model;
 
-use OCA\Mail\Service\IAccount;
+use OCA\Mail\Account;
 
 /**
  * An immutable DTO that holds information about a message that is replied to
  */
 class RepliedMessageData {
 
-	/** @var IAccount */
+	/** @var Account */
 	private $account;
 
 	/** @var string|null */
@@ -38,18 +38,18 @@ class RepliedMessageData {
 	private $id;
 
 	/**
-	 * @param IAccount $account
+	 * @param Account $account
 	 * @param string|null $folderId
 	 * @param int|null $id
 	 */
-	public function __construct(IAccount $account, $folderId, $id) {
+	public function __construct(Account $account, $folderId, $id) {
 		$this->account = $account;
 		$this->folderId = $folderId;
 		$this->id = $id;
 	}
 
 	/**
-	 * @return IAccount
+	 * @return Account
 	 */
 	public function getAccount() {
 		return $this->account;

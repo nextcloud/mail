@@ -28,15 +28,14 @@
 
 namespace OCA\Mail\Controller;
 
+use OCA\Mail\Account;
 use OCA\Mail\Exception\ServiceException;
 use OCA\Mail\Http\AttachmentDownloadResponse;
 use OCA\Mail\Http\HtmlResponse;
 use OCA\Mail\Model\IMAPMessage;
 use OCA\Mail\Service\AccountService;
-use OCA\Mail\Service\IAccount;
 use OCA\Mail\Service\IMailBox;
 use OCA\Mail\Service\Logger;
-use OCA\Mail\Service\UnifiedAccount;
 use OCP\AppFramework\Controller;
 use OCP\AppFramework\Db\DoesNotExistException;
 use OCP\AppFramework\Http;
@@ -72,7 +71,7 @@ class MessagesController extends Controller {
 	/** @var IURLGenerator */
 	private $urlGenerator;
 
-	/** @var IAccount[] */
+	/** @var Account[] */
 	private $accounts = [];
 
 	/**
@@ -112,15 +111,9 @@ class MessagesController extends Controller {
 	 * @param string $folderId
 	 * @param int $cursor
 	 * @param string $filter
-	 * @param array $ids
 	 * @return JSONResponse
 	 */
-	public function index($accountId, $folderId, $cursor = null, $filter=null, $ids=null) {
-		if (!is_null($ids)) {
-			$ids = explode(',', $ids);
-
-			return $this->loadMultiple($accountId, $folderId, $ids);
-		}
+	public function index($accountId, $folderId, $cursor = null, $filter=null) {
 		$mailBox = $this->getFolder($accountId, $folderId);
 
 		$this->logger->debug("loading messages of folder <$folderId>");
@@ -153,14 +146,8 @@ class MessagesController extends Controller {
 		$json = $this->enhanceMessage($accountId, $folderId, $id, $message, $mailBox);
 
 		// Unified inbox hack
+		// TODO: evalue whether this is still in use on the client side
 		$messageId = $id;
-		if ($accountId === UnifiedAccount::ID) {
-			// Add accountId, folderId for unified inbox replies
-			list($accountId, $messageId) = json_decode(base64_decode($id));
-			$account = $this->getAccount($accountId);
-			$inbox = $account->getInbox();
-			$folderId = base64_encode($inbox->getFolderId());
-		}
 		$json['messageId'] = $messageId;
 		$json['accountId'] = $accountId;
 		$json['folderId'] = $folderId;
@@ -366,7 +353,7 @@ class MessagesController extends Controller {
 
 	/**
 	 * @param int $accountId
-	 * @return IAccount
+	 * @return Account
 	 */
 	private function getAccount($accountId) {
 		if (!array_key_exists($accountId, $this->accounts)) {
@@ -445,22 +432,6 @@ class MessagesController extends Controller {
 			'messageId' => $messageId,
 		]);
 		return $this->urlGenerator->getAbsoluteURL($htmlBodyUrl);
-	}
-
-	/**
-	 * @param integer $accountId
-	 * @param string $folderId
-	 */
-	private function loadMultiple($accountId, $folderId, $ids) {
-		$messages = array_map(function($id) use ($accountId, $folderId){
-			try {
-				return $this->loadMessage($accountId, $folderId, $id);
-			} catch (DoesNotExistException $ex) {
-				return null;
-			}
-		}, $ids);
-
-		return $messages;
 	}
 
 	/**

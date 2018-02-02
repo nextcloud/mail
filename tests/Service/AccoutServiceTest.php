@@ -115,20 +115,6 @@ class AccountServiceTest extends PHPUnit_Framework_TestCase {
 		$this->service->delete($this->user, $accountId);
 	}
 
-	public function testDeleteUnifiedInbox() {
-		$accountId = -1;
-
-		$this->mapper->expects($this->never())
-			->method('find')
-			->with($this->user, $accountId)
-			->will($this->returnValue($this->account1));
-		$this->mapper->expects($this->never())
-			->method('delete')
-			->with($this->account1);
-
-		$this->service->delete($this->user, $accountId);
-	}
-
 	public function testSave() {
 		$account = new MailAccount();
 		$expected = 42;
