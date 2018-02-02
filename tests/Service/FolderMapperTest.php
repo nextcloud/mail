@@ -26,8 +26,8 @@ use Horde_Imap_Client_Mailbox;
 use Horde_Imap_Client_Socket;
 use OCA\Mail\Account;
 use OCA\Mail\Folder;
+use OCA\Mail\IMAP\FolderMapper;
 use OCA\Mail\SearchFolder;
-use OCA\Mail\Service\FolderMapper;
 use OCA\Mail\Tests\TestCase;
 
 class FolderMapperTest extends TestCase {

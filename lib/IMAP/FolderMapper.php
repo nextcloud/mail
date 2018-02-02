@@ -19,7 +19,7 @@
  *
  */
 
-namespace OCA\Mail\Service;
+namespace OCA\Mail\IMAP;
 
 use Horde_Imap_Client;
 use Horde_Imap_Client_Socket;

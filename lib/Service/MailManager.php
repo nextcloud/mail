@@ -1,6 +1,5 @@
 <?php
 
-
 /**
  * @author Christoph Wurst <christoph@winzerhof-wurst.at>
  *
@@ -25,11 +24,12 @@ namespace OCA\Mail\Service;
 use OCA\Mail\Account;
 use OCA\Mail\Contracts\IMailManager;
 use OCA\Mail\Folder;
+use OCA\Mail\IMAP\FolderMapper;
 use OCA\Mail\IMAP\IMAPClientFactory;
+use OCA\Mail\IMAP\MessageMapper;
 use OCA\Mail\IMAP\Sync\Request;
 use OCA\Mail\IMAP\Sync\Response;
 use OCA\Mail\IMAP\Sync\Synchronizer;
-use OCA\Mail\Service\FolderMapper;
 use OCA\Mail\Service\FolderNameTranslator;
 
 class MailManager implements IMailManager {
@@ -46,18 +46,24 @@ class MailManager implements IMailManager {
 	/** @var Synchronizer */
 	private $synchronizer;
 
+	/** @var MessageMapper */
+	private $messageMapper;
+
 	/**
 	 * @param IMAPClientFactory $imapClientFactory
 	 * @param FolderMapper $folderMapper
 	 * @param FolderNameTranslator $folderNameTranslator
 	 * @param Synchronizer $synchronizer
+	 * @param MessageMapper $messageMapper
 	 */
-	public function __construct(IMAPClientFactory $imapClientFactory, FolderMapper $folderMapper,
-		FolderNameTranslator $folderNameTranslator, Synchronizer $synchronizer) {
+	public function __construct(IMAPClientFactory $imapClientFactory,
+		FolderMapper $folderMapper, FolderNameTranslator $folderNameTranslator,
+		Synchronizer $synchronizer, MessageMapper $messageMapper) {
 		$this->imapClientFactory = $imapClientFactory;
 		$this->folderMapper = $folderMapper;
 		$this->folderNameTranslator = $folderNameTranslator;
 		$this->synchronizer = $synchronizer;
+		$this->messageMapper = $messageMapper;
 	}
 
 	/**
@@ -84,6 +90,37 @@ class MailManager implements IMailManager {
 		$client = $this->imapClientFactory->getClient($account);
 
 		return $this->synchronizer->sync($client, $syncRequest);
+	}
+
+	/**
+	 * @param Account $sourceAccount
+	 * @param string $sourceFolderId
+	 * @param int $messageId
+	 * @param Account $destinationAccount
+	 * @param string $destFolderId
+	 */
+	public function moveMessage(Account $sourceAccount, $sourceFolderId,
+		$messageId, Account $destinationAccount, $destFolderId) {
+
+		if ($sourceAccount->getId() === $destinationAccount->getId()) {
+			$this->moveMessageOnSameAccount($sourceAccount, $sourceFolderId,
+				$destFolderId, $messageId);
+		} else {
+			throw new ServiceException('It is not possible to move across accounts yet');
+		}
+	}
+
+	/**
+	 * @param Account $account
+	 * @param string $sourceFolderId
+	 * @param string $destFolderId
+	 * @param int $messageId
+	 */
+	private function moveMessageOnSameAccount(Account $account, $sourceFolderId,
+		$destFolderId, $messageId) {
+		$client = $this->imapClientFactory->getClient($account);
+
+		$this->messageMapper->move($client, $sourceFolderId, $messageId, $destFolderId);
 	}
 
 }

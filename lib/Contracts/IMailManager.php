@@ -40,4 +40,14 @@ interface IMailManager {
 	 * @return SyncResponse
 	 */
 	public function syncMessages(Account $account, SyncRequest $syncRequest);
+
+	/**
+	 * @param Account $sourceAccount
+	 * @param string $sourceFolderId
+	 * @param int $messageId
+	 * @param Account $destinationAccount
+	 * @param string $destFolderId
+	 */
+	public function moveMessage(Account $sourceAccount, $sourceFolderId,
+		$messageId, Account $destinationAccount, $destFolderId);
 }

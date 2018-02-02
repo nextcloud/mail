@@ -23,10 +23,11 @@ namespace OCA\Mail\Tests\Service;
 
 use Horde_Imap_Client_Socket;
 use OCA\Mail\Account;
+use OCA\Mail\IMAP\FolderMapper;
 use OCA\Mail\IMAP\IMAPClientFactory;
+use OCA\Mail\IMAP\MessageMapper;
 use OCA\Mail\IMAP\Sync\Request;
 use OCA\Mail\IMAP\Sync\Synchronizer;
-use OCA\Mail\Service\FolderMapper;
 use OCA\Mail\Service\FolderNameTranslator;
 use OCA\Mail\Service\MailManager;
 use OCA\Mail\Tests\TestCase;
@@ -40,6 +41,9 @@ class MailManagerTest extends TestCase {
 
 	/** @var FolderMapper|PHPUnit_Framework_TestCase */
 	private $folderMapper;
+
+	/** @var MessageMapper|PHPUnit_Framework_TestCase */
+	private $messageMapper;
 
 	/** @var FolderNameTranslator|PHPUnit_Framework_TestCase */
 	private $translator;
@@ -55,10 +59,12 @@ class MailManagerTest extends TestCase {
 
 		$this->imapClientFactory = $this->createMock(IMAPClientFactory::class);
 		$this->folderMapper = $this->createMock(FolderMapper::class);
+		$this->messageMapper = $this->createMock(MessageMapper::class);
 		$this->translator = $this->createMock(FolderNameTranslator::class);
 		$this->sync = $this->createMock(Synchronizer::class);
 
-		$this->manager = new MailManager($this->imapClientFactory, $this->folderMapper, $this->translator, $this->sync);
+		$this->manager = new MailManager($this->imapClientFactory,
+			$this->folderMapper, $this->translator, $this->sync, $this->messageMapper);
 	}
 
 	public function testGetFolders() {

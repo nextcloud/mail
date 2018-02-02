@@ -31,13 +31,12 @@ use OCA\Mail\Model\IMAPMessage;
 class MessageMapper {
 
 	/**
-	 * @param Horde_Imap_Client_Base $imapClient
+	 * @param Horde_Imap_Client_Base $client
 	 * @param Folder $mailbox
 	 * @param array $ids
 	 * @return IMAPMessage[]
 	 */
-	public function findByIds(Horde_Imap_Client_Base $imapClient, $mailbox,
-		array $ids) {
+	public function findByIds(Horde_Imap_Client_Base $client, $mailbox, array $ids) {
 		$query = new Horde_Imap_Client_Fetch_Query();
 		$query->envelope();
 		$query->flags();
@@ -45,7 +44,8 @@ class MessageMapper {
 		$query->uid();
 		$query->imapDate();
 		$query->structure();
-		$query->headers('imp', [
+		$query->headers('imp',
+			[
 			'importance',
 			'list-post',
 			'x-priority',
@@ -55,13 +55,28 @@ class MessageMapper {
 			'peek' => true,
 		]);
 
-		$fetchResults = iterator_to_array($imapClient->fetch($mailbox, $query, [
+		$fetchResults = iterator_to_array($client->fetch($mailbox, $query, [
 				'ids' => new Horde_Imap_Client_Ids($ids),
 			]), false);
 
-		return array_map(function(Horde_Imap_Client_Data_Fetch $fetchResult) use ($imapClient, $mailbox) {
-			return new IMAPMessage($imapClient, $mailbox, $fetchResult->getUid(), $fetchResult);
+		return array_map(function(Horde_Imap_Client_Data_Fetch $fetchResult) use ($client, $mailbox) {
+			return new IMAPMessage($client, $mailbox, $fetchResult->getUid(), $fetchResult);
 		}, $fetchResults);
+	}
+
+	/**
+	 * @param Horde_Imap_Client_Base $client
+	 * @param string $sourceFolderId
+	 * @param int $messageId
+	 * @param string $destFolderId
+	 */
+	public function move(Horde_Imap_Client_Base $client, $sourceFolderId,
+		$messageId, $destFolderId) {
+		$client->copy($sourceFolderId, $destFolderId,
+			[
+			'ids' => new \Horde_Imap_Client_Ids($messageId),
+			'move' => true,
+		]);
 	}
 
 }
