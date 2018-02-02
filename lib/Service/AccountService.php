@@ -26,7 +26,6 @@ use Exception;
 use OCA\Mail\Account;
 use OCA\Mail\Db\MailAccount;
 use OCA\Mail\Db\MailAccountMapper;
-use OCA\Mail\Exception\ServiceException;
 use OCA\Mail\Service\DefaultAccount\Manager;
 use OCP\IL10N;
 
@@ -103,23 +102,6 @@ class AccountService {
 			return new Account($defaultAccount);
 		}
 		return new Account($this->mapper->find($currentUserId, $accountId));
-	}
-
-	private function moveMessageOnSameAccount(Account $account, $sourceFolderId,
-		$destFolderId, $messageId) {
-		$account->moveMessage(base64_decode($sourceFolderId), $messageId, base64_decode($destFolderId));
-	}
-
-	public function moveMessage($accountId, $folderId, $id, $destAccountId,
-		$destFolderId, $userId) {
-		$sourceAccount = $this->find($userId, $accountId);
-		$destAccount = $this->find($userId, $destAccountId);
-
-		if ($sourceAccount->getId() === $destAccount->getId()) {
-			$this->moveMessageOnSameAccount($sourceAccount, $folderId, $destFolderId, $id);
-		} else {
-			throw new ServiceException('It is not possible to move across accounts yet');
-		}
 	}
 
 	/**

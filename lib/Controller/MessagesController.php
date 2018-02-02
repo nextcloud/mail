@@ -29,6 +29,7 @@
 namespace OCA\Mail\Controller;
 
 use OCA\Mail\Account;
+use OCA\Mail\Contracts\IMailManager;
 use OCA\Mail\Exception\ServiceException;
 use OCA\Mail\Http\AttachmentDownloadResponse;
 use OCA\Mail\Http\HtmlResponse;
@@ -53,6 +54,9 @@ class MessagesController extends Controller {
 
 	/** @var AccountService */
 	private $accountService;
+
+	/** @var IMailManager */
+	private $mailManager;
 
 	/** @var string */
 	private $currentUserId;
@@ -90,16 +94,10 @@ class MessagesController extends Controller {
 	 * @param IURLGenerator $urlGenerator
 	 * @param ITimeFactory $timeFactory
 	 */
-	public function __construct($appName,
-								IRequest $request,
-								AccountService $accountService,
-								$UserId,
-								$userFolder,
-								Logger $logger,
-								IL10N $l10n,
-								IMimeTypeDetector $mimeTypeDetector,
-								IURLGenerator $urlGenerator,
-								ITimeFactory $timeFactory) {
+	public function __construct($appName, IRequest $request,
+		AccountService $accountService, IMailManager $mailManager, $UserId,
+		$userFolder, Logger $logger, IL10N $l10n, IMimeTypeDetector $mimeTypeDetector,
+		IURLGenerator $urlGenerator, ITimeFactory $timeFactory) {
 		parent::__construct($appName, $request);
 		$this->accountService = $accountService;
 		$this->currentUserId = $UserId;
@@ -109,6 +107,7 @@ class MessagesController extends Controller {
 		$this->mimeTypeDetector = $mimeTypeDetector;
 		$this->urlGenerator = $urlGenerator;
 		$this->timeFactory = $timeFactory;
+		$this->mailManager = $mailManager;
 	}
 
 	/**
@@ -120,7 +119,7 @@ class MessagesController extends Controller {
 	 * @param string $filter
 	 * @return JSONResponse
 	 */
-	public function index($accountId, $folderId, $cursor = null, $filter=null) {
+	public function index($accountId, $folderId, $cursor = null, $filter = null) {
 		$mailBox = $this->getFolder($accountId, $folderId);
 
 		$this->logger->debug("loading messages of folder <$folderId>");
@@ -132,7 +131,7 @@ class MessagesController extends Controller {
 
 		$json = array_map(function($j) use ($mailBox) {
 			if ($mailBox->getSpecialRole() === 'trash') {
-				$j['delete'] = (string)$this->l10n->t('Delete permanently');
+				$j['delete'] = (string) $this->l10n->t('Delete permanently');
 			}
 			return $j;
 		}, $messages);
@@ -192,11 +191,15 @@ class MessagesController extends Controller {
 	 */
 	public function move($accountId, $folderId, $id, $destAccountId, $destFolderId) {
 		try {
-			$this->accountService->moveMessage($accountId, $folderId, $id, $destAccountId, $destFolderId, $this->currentUserId);
+			$srcAccount = $this->accountService->find($this->currentUserId, $accountId);
+			$dstAccount = $this->accountService->find($this->currentUserId,
+				$destAccountId);
+			$this->mailManager->moveMessage($srcAccount, base64_decode($folderId), $id,
+				$dstAccount, base64_decode($destFolderId));
 		} catch (ServiceException $ex) {
 			return new JSONResponse([
 				'error' => $ex->getMessage(),
-			], 500);
+				], 500);
 		}
 		return new JSONResponse();
 	}
@@ -215,8 +218,10 @@ class MessagesController extends Controller {
 			$mailBox = $this->getFolder($accountId, $folderId);
 
 			$m = $mailBox->getMessage($messageId, true);
-			$html = $m->getHtmlBody($accountId, $folderId, $messageId, function($cid) use ($m){
-				$match = array_filter($m->attachments, function($a) use($cid){
+			$html = $m->getHtmlBody($accountId, $folderId, $messageId,
+				function($cid) use ($m) {
+				$match = array_filter($m->attachments,
+					function($a) use($cid) {
 					return $a['cid'] === $cid;
 				});
 				$match = array_shift($match);
@@ -242,8 +247,9 @@ class MessagesController extends Controller {
 			$htmlResponse->addHeader('Pragma', 'cache');
 
 			return $htmlResponse;
-		} catch(\Exception $ex) {
-			return new TemplateResponse($this->appName, 'error', ['message' => $ex->getMessage()], 'none');
+		} catch (\Exception $ex) {
+			return new TemplateResponse($this->appName, 'error',
+				['message' => $ex->getMessage()], 'none');
 		}
 	}
 
@@ -257,15 +263,14 @@ class MessagesController extends Controller {
 	 * @param string $attachmentId
 	 * @return AttachmentDownloadResponse
 	 */
-	public function downloadAttachment($accountId, $folderId, $messageId, $attachmentId) {
+	public function downloadAttachment($accountId, $folderId, $messageId,
+		$attachmentId) {
 		$mailBox = $this->getFolder($accountId, $folderId);
 
 		$attachment = $mailBox->getAttachment($messageId, $attachmentId);
 
 		return new AttachmentDownloadResponse(
-			$attachment->getContents(),
-			$attachment->getName(),
-			$attachment->getType());
+			$attachment->getContents(), $attachment->getName(), $attachment->getType());
 	}
 
 	/**
@@ -278,20 +283,21 @@ class MessagesController extends Controller {
 	 * @param string $targetPath
 	 * @return JSONResponse
 	 */
-	public function saveAttachment($accountId, $folderId, $messageId, $attachmentId, $targetPath) {
+	public function saveAttachment($accountId, $folderId, $messageId,
+		$attachmentId, $targetPath) {
 		$mailBox = $this->getFolder($accountId, $folderId);
 
 		$attachmentIds = [$attachmentId];
-		if($attachmentId === 0) {
+		if ($attachmentId === 0) {
 			// Save all attachments
 			/* @var $m IMAPMessage */
 			$m = $mailBox->getMessage($messageId);
-			$attachmentIds = array_map(function($a){
+			$attachmentIds = array_map(function($a) {
 				return $a['id'];
 			}, $m->attachments);
 		}
 
-		foreach($attachmentIds as $attachmentId) {
+		foreach ($attachmentIds as $attachmentId) {
 			$attachment = $mailBox->getAttachment($messageId, $attachmentId);
 
 			$fileName = $attachment->getName();
@@ -300,7 +306,7 @@ class MessagesController extends Controller {
 			$fileExtension = $fileParts['extension'];
 			$fullPath = "$targetPath/$fileName.$fileExtension";
 			$counter = 2;
-			while($this->userFolder->nodeExists($fullPath)) {
+			while ($this->userFolder->nodeExists($fullPath)) {
 				$fullPath = "$targetPath/$fileName ($counter).$fileExtension";
 				$counter++;
 			}
@@ -324,13 +330,13 @@ class MessagesController extends Controller {
 	public function setFlags($accountId, $folderId, $messageId, $flags) {
 		$mailBox = $this->getFolder($accountId, $folderId);
 
-		foreach($flags as $flag => $value) {
+		foreach ($flags as $flag => $value) {
 			$value = filter_var($value, FILTER_VALIDATE_BOOLEAN);
 			if ($flag === 'unseen') {
 				$flag = 'seen';
 				$value = !$value;
 			}
-			$mailBox->setMessageFlag($messageId, '\\'.$flag, $value);
+			$mailBox->setMessageFlag($messageId, '\\' . $flag, $value);
 		}
 
 		return new JSONResponse();
@@ -350,7 +356,6 @@ class MessagesController extends Controller {
 			$account = $this->getAccount($accountId);
 			$account->deleteMessage(base64_decode($folderId), $id);
 			return new JSONResponse();
-
 		} catch (DoesNotExistException $e) {
 			$this->logger->error("could not delete message <$id> of folder <$folderId>, "
 				. "account <$accountId> because it does not exist");
@@ -364,7 +369,8 @@ class MessagesController extends Controller {
 	 */
 	private function getAccount($accountId) {
 		if (!array_key_exists($accountId, $this->accounts)) {
-			$this->accounts[$accountId] = $this->accountService->find($this->currentUserId, $accountId);
+			$this->accounts[$accountId] = $this->accountService->find($this->currentUserId,
+				$accountId);
 		}
 		return $this->accounts[$accountId];
 	}
@@ -385,8 +391,10 @@ class MessagesController extends Controller {
 	 * @param string $folderId
 	 * @return callable
 	 */
-	private function enrichDownloadUrl($accountId, $folderId, $messageId, $attachment) {
-		$downloadUrl = $this->urlGenerator->linkToRoute('mail.messages.downloadAttachment', [
+	private function enrichDownloadUrl($accountId, $folderId, $messageId,
+		$attachment) {
+		$downloadUrl = $this->urlGenerator->linkToRoute('mail.messages.downloadAttachment',
+			[
 			'accountId' => $accountId,
 			'folderId' => $folderId,
 			'messageId' => $messageId,
@@ -433,7 +441,8 @@ class MessagesController extends Controller {
 	 * @return string
 	 */
 	private function buildHtmlBodyUrl($accountId, $folderId, $messageId) {
-		$htmlBodyUrl = $this->urlGenerator->linkToRoute('mail.messages.getHtmlBody', [
+		$htmlBodyUrl = $this->urlGenerator->linkToRoute('mail.messages.getHtmlBody',
+			[
 			'accountId' => $accountId,
 			'folderId' => $folderId,
 			'messageId' => $messageId,
@@ -449,7 +458,8 @@ class MessagesController extends Controller {
 	 * @param IMailBox $mailBox
 	 * @return array
 	 */
-	private function enhanceMessage($accountId, $folderId, $id, IMAPMessage $m, $mailBox) {
+	private function enhanceMessage($accountId, $folderId, $id, IMAPMessage $m,
+		$mailBox) {
 		$json = $m->getFullMessage($mailBox->getSpecialRole());
 
 		if (isset($json['hasHtmlBody'])) {

@@ -25,6 +25,7 @@ namespace OCA\Mail\Tests\Controller;
 use OC\AppFramework\Http\Request;
 use OCA\Mail\Account;
 use OCA\Mail\Attachment;
+use OCA\Mail\Contracts\IMailManager;
 use OCA\Mail\Controller\MessagesController;
 use OCA\Mail\Http\AttachmentDownloadResponse;
 use OCA\Mail\Http\HtmlResponse;
@@ -49,6 +50,7 @@ class MessagesControllerTest extends PHPUnit_Framework_TestCase {
 	private $appName;
 	private $request;
 	private $accountService;
+	private $mailManager;
 	private $userId;
 	private $userFolder;
 	private $logger;
@@ -68,6 +70,7 @@ class MessagesControllerTest extends PHPUnit_Framework_TestCase {
 		$this->appName = 'mail';
 		$this->request = $this->getMockBuilder(IRequest::class)->getMock();
 		$this->accountService = $this->createMock(AccountService::class);
+		$this->mailManager = $this->createMock(IMailManager::class);
 		$this->userId = 'john';
 		$this->userFolder = $this->createMock(Folder::class);
 		$this->request = $this->createMock(Request::class);
@@ -78,9 +81,9 @@ class MessagesControllerTest extends PHPUnit_Framework_TestCase {
 		$this->timeFactory = $this->createMock(ITimeFactory::class);
 
 		$this->controller = new MessagesController(
-			$this->appName, $this->request, $this->accountService, $this->userId,
-			$this->userFolder, $this->logger, $this->l10n, $this->mimeTypeDetector,
-			$this->urlGenerator, $this->timeFactory);
+			$this->appName, $this->request, $this->accountService, $this->mailManager,
+			$this->userId, $this->userFolder, $this->logger, $this->l10n,
+			$this->mimeTypeDetector, $this->urlGenerator, $this->timeFactory);
 
 		$this->account = $this->createMock(Account::class);
 		$this->mailbox = $this->createMock(Mailbox::class);

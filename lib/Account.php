@@ -468,13 +468,6 @@ class Account implements JsonSerializable {
 		}
 	}
 
-	public function moveMessage($sourceFolderId, $messageId, $destFolderId) {
-		$this->getImapConnection()->copy($sourceFolderId, $destFolderId, [
-			'ids' => new \Horde_Imap_Client_Ids($messageId),
-			'move' => true,
-		]);
-	}
-
 	/**
 	 * @param int $messageId
 	 */
