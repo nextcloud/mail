@@ -22,6 +22,7 @@
 namespace OCA\Mail\Tests\Controller;
 
 use OCA\Mail\Controller\AutoCompleteController;
+use OCA\Mail\Http\JSONResponse;
 use PHPUnit_Framework_TestCase;
 
 class AutoConfigControllerTest extends PHPUnit_Framework_TestCase {
@@ -52,7 +53,7 @@ class AutoConfigControllerTest extends PHPUnit_Framework_TestCase {
 
 		$response = $this->controller->index($term);
 
-		$this->assertEquals($result, $response);
+		$this->assertEquals(new JSONResponse($result), $response);
 	}
 
 }

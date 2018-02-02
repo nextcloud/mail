@@ -23,10 +23,11 @@
 namespace OCA\Mail\Controller;
 
 use OCA\Mail\Contracts\IAttachmentService;
+use OCA\Mail\Exception\ClientException;
+use OCA\Mail\Http\JSONResponse;
 use OCA\Mail\Service\Attachment\UploadedFile;
 use OCP\AppFramework\Controller;
 use OCP\AppFramework\Http;
-use OCP\AppFramework\Http\JSONResponse;
 use OCP\IRequest;
 
 class LocalAttachmentsController extends Controller {
@@ -52,6 +53,7 @@ class LocalAttachmentsController extends Controller {
 
 	/**
 	 * @NoAdminRequired
+	 * @TrapError
 	 *
 	 * @return JSONResponse
 	 */
@@ -59,7 +61,7 @@ class LocalAttachmentsController extends Controller {
 		$file = $this->request->getUploadedFile('attachment');
 
 		if (is_null($file)) {
-			return new JSONResponse(null, Http::STATUS_BAD_REQUEST);
+			throw new ClientException('no file attached');
 		}
 
 		$uploadedFile = new UploadedFile($file);

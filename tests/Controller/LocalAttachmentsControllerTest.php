@@ -24,8 +24,9 @@ namespace OCA\Mail\Tests\Controller;
 use OCA\Mail\Contracts\IAttachmentService;
 use OCA\Mail\Controller\LocalAttachmentsController;
 use OCA\Mail\Db\LocalAttachment;
+use OCA\Mail\Exception\ClientException;
+use OCA\Mail\Http\JSONResponse;
 use OCA\Mail\Service\Attachment\UploadedFile;
-use OCP\AppFramework\Http\JSONResponse;
 use OCP\IRequest;
 use PHPUnit_Framework_MockObject_MockObject;
 use PHPUnit_Framework_TestCase;
@@ -59,11 +60,9 @@ class LocalAttachmentsControllerTest extends PHPUnit_Framework_TestCase {
 			->method('getUploadedFile')
 			->with('attachment')
 			->willReturn(null);
-		$expected = new JSONResponse(null, 400);
+		$this->expectException(ClientException::class);
 
-		$actual = $this->controller->create();
-
-		$this->assertEquals($expected, $actual);
+		$this->controller->create();
 	}
 
 	public function testCreate() {

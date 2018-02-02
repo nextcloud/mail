@@ -21,17 +21,14 @@
 
 namespace OCA\Mail\Tests\Controller;
 
-use Horde_Imap_Client_Exception;
-use Horde_Imap_Client_Socket;
 use OCA\Mail\Account;
 use OCA\Mail\Contracts\IMailManager;
 use OCA\Mail\Controller\FoldersController;
+use OCA\Mail\Exception\NotImplemented;
 use OCA\Mail\Folder;
+use OCA\Mail\Http\JSONResponse;
 use OCA\Mail\Service\AccountService;
 use OCA\Mail\Tests\TestCase;
-use OCP\AppFramework\Db\DoesNotExistException;
-use OCP\AppFramework\Http;
-use OCP\AppFramework\Http\JSONResponse;
 use OCP\IRequest;
 use PHPUnit_Framework_MockObject_MockObject;
 
@@ -86,25 +83,27 @@ class FoldersControllerTest extends TestCase {
 
 		$result = $this->controller->index($accountId);
 
-		$expected = [
+		$expected = new JSONResponse([
 			'id' => 28,
 			'email' => 'user@example.com',
 			'folders' => [
 				$folder,
 			],
 			'delimiter' => '.',
-		];
+		]);
 		$this->assertEquals($expected, $result);
 	}
 
 	public function testShow() {
-		$result = $this->controller->show();
-		$this->assertEquals(Http::STATUS_NOT_IMPLEMENTED, $result->getStatus());
+		$this->expectException(NotImplemented::class);
+
+		$this->controller->show();
 	}
 
 	public function testUpdate() {
-		$result = $this->controller->update();
-		$this->assertEquals(Http::STATUS_NOT_IMPLEMENTED, $result->getStatus());
+		$this->expectException(NotImplemented::class);
+
+		$this->controller->update();
 	}
 
 }
