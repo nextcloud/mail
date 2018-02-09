@@ -27,6 +27,8 @@ OC.L10N.register(
     "Could not load {tag}{name}{endtag}" : "Kunde inte ladda {tag}{name}{endtag}",
     "There was a problem loading {tag}{name}{endtag}" : "Det blev ett problem när vi skulle ladda {tag}{name}{endtag}",
     "Could not load your message" : "Kunde inte ladda ditt meddelande",
+    "Could not load the desired message" : "Kunde inte ladda önskat meddelande",
+    "Could not load the message" : "Kunde inte ladda meddelandet",
     "{from}\n{subject}" : "{från}\n{ämne}",
     "_%n new message \nfrom {from}_::_%n new messages \nfrom {from}_" : ["%n nytt meddelande \nfrån {from}","%n nya meddelanden \nfrån {from}"],
     "Nextcloud Mail" : "Nextcloud Mail",
