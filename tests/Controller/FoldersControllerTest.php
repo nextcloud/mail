@@ -28,7 +28,7 @@ use OCA\Mail\Contracts\IMailManager;
 use OCA\Mail\Controller\FoldersController;
 use OCA\Mail\Folder;
 use OCA\Mail\Service\AccountService;
-use OCA\Mail\Tests\TestCase;
+use ChristophWurst\Nextcloud\Testing\TestCase;
 use OCP\AppFramework\Db\DoesNotExistException;
 use OCP\AppFramework\Http;
 use OCP\AppFramework\Http\JSONResponse;

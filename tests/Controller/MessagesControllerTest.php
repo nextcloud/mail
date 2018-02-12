@@ -22,6 +22,7 @@
 
 namespace OCA\Mail\Tests\Controller;
 
+use ChristophWurst\Nextcloud\Testing\TestCase;
 use OC\AppFramework\Http\Request;
 use OCA\Mail\Account;
 use OCA\Mail\Attachment;
@@ -43,9 +44,8 @@ use OCP\Files\IMimeTypeDetector;
 use OCP\IL10N;
 use OCP\IRequest;
 use OCP\IURLGenerator;
-use PHPUnit_Framework_TestCase;
 
-class MessagesControllerTest extends PHPUnit_Framework_TestCase {
+class MessagesControllerTest extends TestCase {
 
 	private $appName;
 	private $request;

@@ -22,12 +22,12 @@
 
 namespace OCA\Mail\Tests\Service;
 
+use ChristophWurst\Nextcloud\Testing\TestCase;
 use Exception;
 use OCA\Mail\Service\Logger;
 use OCP\ILogger;
-use PHPUnit_Framework_TestCase;
 
-class LoggerTest extends PHPUnit_Framework_TestCase {
+class LoggerTest extends TestCase {
 
 	/**
 	 * @dataProvider providesLoggerMethods

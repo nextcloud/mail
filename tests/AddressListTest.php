@@ -24,6 +24,7 @@
 
 namespace OCA\Mail\Tests;
 
+use ChristophWurst\Nextcloud\Testing\TestCase;
 use Horde_Mail_Rfc822_Address;
 use Horde_Mail_Rfc822_Group;
 use Horde_Mail_Rfc822_List;

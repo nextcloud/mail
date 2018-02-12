@@ -28,7 +28,7 @@ use OCA\Mail\Db\MailAccount;
 use OCA\Mail\Service\AutoConfig\AutoConfig;
 use OCA\Mail\Service\AutoConfig\ConfigurationDetector;
 use OCA\Mail\Service\AutoConfig\IspDbConfigurationDetector;
-use OCA\Mail\Tests\TestCase;
+use ChristophWurst\Nextcloud\Testing\TestCase;
 use PHPUnit_Framework_MockObject_MockObject;
 
 class AutoConfigTest extends TestCase {

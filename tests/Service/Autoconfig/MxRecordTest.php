@@ -21,11 +21,11 @@
 
 namespace OCA\Mail\Tests\Service\Autoconfig;
 
+use ChristophWurst\Nextcloud\Testing\TestCase;
 use OCA\Mail\Service\AutoConfig\MxRecord;
 use OCA\Mail\Service\Logger;
-use PHPUnit_Framework_TestCase;
 
-class MxRecordTest extends PHPUnit_Framework_TestCase {
+class MxRecordTest extends TestCase {
 
 	/** @var MxRecord */
 	private $record;

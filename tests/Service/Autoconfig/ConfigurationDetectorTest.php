@@ -28,7 +28,7 @@ use OCA\Mail\Db\MailAccount;
 use OCA\Mail\Service\AutoConfig\ConfigurationDetector;
 use OCA\Mail\Service\AutoConfig\ImapServerDetector;
 use OCA\Mail\Service\AutoConfig\SmtpServerDetector;
-use OCA\Mail\Tests\TestCase;
+use ChristophWurst\Nextcloud\Testing\TestCase;
 use PHPUnit_Framework_MockObject_MockObject;
 
 class ConfigurationDetectorTest extends TestCase {

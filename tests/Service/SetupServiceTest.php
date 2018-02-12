@@ -31,7 +31,7 @@ use OCA\Mail\Service\AutoConfig\AutoConfig;
 use OCA\Mail\Service\Logger;
 use OCA\Mail\Service\SetupService;
 use OCA\Mail\SMTP\SmtpClientFactory;
-use OCA\Mail\Tests\TestCase;
+use ChristophWurst\Nextcloud\Testing\TestCase;
 use OCP\Security\ICrypto;
 use PHPUnit_Framework_MockObject_MockObject;
 

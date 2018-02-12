@@ -21,16 +21,16 @@
 
 namespace OCA\Mail\Tests\Migration;
 
+use ChristophWurst\Nextcloud\Testing\TestCase;
 use OCA\Mail\Db\CollectedAddress;
 use OCA\Mail\Db\CollectedAddressMapper;
 use OCA\Mail\Migration\FixCollectedAddresses;
 use OCP\Migration\IOutput;
-use PHPUnit_Framework_TestCase;
 
 /**
  * @group DB
  */
-class FixCollectedAddressesTest extends PHPUnit_Framework_TestCase {
+class FixCollectedAddressesTest extends TestCase {
 
 	/** @var CollectedAddressMapper */
 	private $mapper;

@@ -21,6 +21,7 @@
 
 namespace OCA\Mail\Tests\Integration\Service;
 
+use ChristophWurst\Nextcloud\Testing\TestUser;
 use OC;
 use OCA\Mail\Account;
 use OCA\Mail\Contracts\IAttachmentService;
@@ -34,7 +35,6 @@ use OCA\Mail\Service\Logger;
 use OCA\Mail\Service\MailTransmission;
 use OCA\Mail\SMTP\SmtpClientFactory;
 use OCA\Mail\Tests\Integration\Framework\ImapTest;
-use OCA\Mail\Tests\Integration\Framework\TestUser;
 use OCA\Mail\Tests\Integration\TestCase;
 use OCP\IUser;
 

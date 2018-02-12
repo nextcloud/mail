@@ -20,10 +20,10 @@
  */
 namespace OCA\Mail\Tests;
 
-use PHPUnit_Framework_TestCase;
+use ChristophWurst\Nextcloud\Testing\TestCase;
 use OCA\Mail\HordeTranslationHandler;
 
-class HordeTranslationHandlerTest extends PHPUnit_Framework_TestCase {
+class HordeTranslationHandlerTest extends TestCase {
 
 	private $handler;
 

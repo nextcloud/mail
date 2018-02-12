@@ -21,11 +21,11 @@
 
 namespace OCA\Mail\Tests\Service\DefaultAccount;
 
+use ChristophWurst\Nextcloud\Testing\TestCase;
 use OCA\Mail\Service\DefaultAccount\Config;
 use OCP\IUser;
-use PHPUnit_Framework_TestCase;
 
-class ConfigTest extends PHPUnit_Framework_TestCase {
+class ConfigTest extends TestCase {
 
 	public function testBuildEmailWithUserId() {
 		$user = $this->createMock(IUser::class);

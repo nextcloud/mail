@@ -24,7 +24,7 @@
 
 namespace OCA\Mail\Tests;
 
-use Horde_Mail_Rfc822_Address;
+use ChristophWurst\Nextcloud\Testing\TestCase;
 use OCA\Mail\Address;
 
 class AddressTest extends TestCase {

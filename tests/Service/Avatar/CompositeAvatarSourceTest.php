@@ -30,7 +30,7 @@ use OCA\Mail\Service\Avatar\AvatarFactory;
 use OCA\Mail\Service\Avatar\CompositeAvatarSource;
 use OCA\Mail\Service\Avatar\FaviconSource;
 use OCA\Mail\Service\Avatar\GravatarSource;
-use OCA\Mail\Tests\TestCase;
+use ChristophWurst\Nextcloud\Testing\TestCase;
 use PHPUnit_Framework_MockObject_MockObject;
 
 class CompositeAvatarSourceTest extends TestCase {

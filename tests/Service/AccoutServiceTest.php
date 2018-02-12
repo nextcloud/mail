@@ -21,6 +21,7 @@
 
 namespace OCA\Mail\Tests\Service;
 
+use ChristophWurst\Nextcloud\Testing\TestCase;
 use OCA\Mail\Account;
 use OCA\Mail\Db\MailAccount;
 use OCA\Mail\Db\MailAccountMapper;
@@ -28,9 +29,8 @@ use OCA\Mail\Service\AccountService;
 use OCA\Mail\Service\DefaultAccount\Manager;
 use OCP\IL10N;
 use PHPUnit_Framework_MockObject_MockObject;
-use PHPUnit_Framework_TestCase;
 
-class AccountServiceTest extends PHPUnit_Framework_TestCase {
+class AccountServiceTest extends TestCase {
 
 	/** @var string */
 	private $user = 'herbert';

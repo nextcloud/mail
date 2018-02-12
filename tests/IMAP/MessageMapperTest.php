@@ -21,14 +21,14 @@
 
 namespace OCA\Mail\Tests\IMAP;
 
+use ChristophWurst\Nextcloud\Testing\TestCase;
 use Horde_Imap_Client_Base;
 use Horde_Imap_Client_Data_Fetch;
 use Horde_Imap_Client_Fetch_Results;
 use OCA\Mail\IMAP\MessageMapper;
 use OCA\Mail\Model\IMAPMessage;
-use PHPUnit_Framework_TestCase;
 
-class MessageMapperTest extends PHPUnit_Framework_TestCase {
+class MessageMapperTest extends TestCase {
 
 	/** @var MessageMapper */
 	private $mapper;

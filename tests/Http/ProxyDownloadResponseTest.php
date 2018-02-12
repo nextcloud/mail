@@ -22,10 +22,10 @@
 
 namespace OCA\Mail\Tests\Http;
 
+use ChristophWurst\Nextcloud\Testing\TestCase;
 use OCA\Mail\Http\ProxyDownloadResponse;
-use PHPUnit_Framework_TestCase;
 
-class ProxyDownloadResponseTest extends PHPUnit_Framework_TestCase {
+class ProxyDownloadResponseTest extends TestCase {
 
 	/**
 	 * @dataProvider providesResponseData

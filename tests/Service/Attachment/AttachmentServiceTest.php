@@ -21,6 +21,7 @@
 
 namespace OCA\Mail\Tests\Service\Attachment;
 
+use ChristophWurst\Nextcloud\Testing\TestCase;
 use OCA\Mail\Db\LocalAttachment;
 use OCA\Mail\Db\LocalAttachmentMapper;
 use OCA\Mail\Exception\UploadException;
@@ -28,9 +29,8 @@ use OCA\Mail\Service\Attachment\AttachmentService;
 use OCA\Mail\Service\Attachment\AttachmentStorage;
 use OCA\Mail\Service\Attachment\UploadedFile;
 use PHPUnit_Framework_MockObject_MockObject;
-use PHPUnit_Framework_TestCase;
 
-class AttachmentServiceTest extends PHPUnit_Framework_TestCase {
+class AttachmentServiceTest extends TestCase {
 
 	/** @var LocalAttachmentMapper|PHPUnit_Framework_MockObject_MockObject */
 	private $mapper;

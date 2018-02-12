@@ -21,6 +21,7 @@
 
 namespace OCA\Mail\Tests\Service\Autoconfig;
 
+use ChristophWurst\Nextcloud\Testing\TestCase;
 use Horde_Imap_Client_Exception;
 use OCA\Mail\Service\AutoConfig\ConnectivityTester;
 use OCA\Mail\Service\AutoConfig\ImapConnectivityTester;
@@ -28,9 +29,8 @@ use OCA\Mail\Service\AutoConfig\ImapConnector;
 use OCA\Mail\Service\Logger;
 use OpenCloud\Common\Log\Logger as Logger2;
 use PHPUnit_Framework_MockObject_MockObject;
-use PHPUnit_Framework_TestCase;
 
-class ImapConnectivityTesterTest extends PHPUnit_Framework_TestCase {
+class ImapConnectivityTesterTest extends TestCase {
 
 	/** @var ImapConnector|PHPUnit_Framework_MockObject_MockObject */
 	private $imapConnector;

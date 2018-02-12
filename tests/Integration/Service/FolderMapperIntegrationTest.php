@@ -25,9 +25,9 @@ use Horde_Imap_Client_Socket;
 use OCA\Mail\Account;
 use OCA\Mail\Folder;
 use OCA\Mail\IMAP\FolderMapper;
-use PHPUnit_Framework_TestCase;
+use OCA\Mail\Tests\Integration\TestCase;
 
-class FolderMapperIntegrationTest extends PHPUnit_Framework_TestCase {
+class FolderMapperIntegrationTest extends TestCase {
 
 	/** @var FolderMapper */
 	private $mapper;

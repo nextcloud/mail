@@ -21,10 +21,10 @@
 
 namespace OCA\Mail\Tests\Controller;
 
+use ChristophWurst\Nextcloud\Testing\TestCase;
 use OCA\Mail\Controller\AutoCompleteController;
-use PHPUnit_Framework_TestCase;
 
-class AutoConfigControllerTest extends PHPUnit_Framework_TestCase {
+class AutoConfigControllerTest extends TestCase {
 
 	private $request;
 	private $service;

@@ -26,7 +26,7 @@ namespace OCA\Mail\Tests\Integration\Service;
 
 use OC;
 use OCA\Mail\Contracts\IAvatarService;
-use OCA\Mail\Tests\TestCase;
+use ChristophWurst\Nextcloud\Testing\TestCase;
 use OCP\ICache;
 use OCP\ICacheFactory;
 

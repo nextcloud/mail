@@ -22,11 +22,11 @@
 
 namespace OCA\Mail\Tests\Service;
 
+use ChristophWurst\Nextcloud\Testing\TestCase;
 use OC;
 use OCA\Mail\Service\Html;
-use PHPUnit_Framework_TestCase;
 
-class HtmlTest extends PHPUnit_Framework_TestCase {
+class HtmlTest extends TestCase {
 
 	/**
 	 * @dataProvider linkDetectionProvider

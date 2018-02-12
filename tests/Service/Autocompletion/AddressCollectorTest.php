@@ -21,13 +21,12 @@
 
 namespace OCA\Mail\Tests\Service\Autocompletion;
 
+use ChristophWurst\Nextcloud\Testing\TestCase;
 use OCA\Mail\AddressList;
 use OCA\Mail\Db\CollectedAddress;
-use OCA\Mail\Model\Message;
 use OCA\Mail\Service\AutoCompletion\AddressCollector;
-use PHPUnit_Framework_TestCase;
 
-class AddressCollectorTest extends PHPUnit_Framework_TestCase {
+class AddressCollectorTest extends TestCase {
 
 	private $mapper;
 	private $userId = 'testuser';

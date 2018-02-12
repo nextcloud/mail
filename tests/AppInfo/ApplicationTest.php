@@ -21,10 +21,10 @@
 
 namespace OCA\Mail\Tests\AppInfo;
 
+use ChristophWurst\Nextcloud\Testing\TestCase;
 use OCA\Mail\AppInfo\Application;
-use PHPUnit_Framework_TestCase;
 
-class ApplicationTest extends PHPUnit_Framework_TestCase {
+class ApplicationTest extends TestCase {
 
 	public function testConstrucor() {
 		// Not really a test – it's just about code coverage
