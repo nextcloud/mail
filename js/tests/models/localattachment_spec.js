@@ -53,6 +53,7 @@ define([
 		});
 
 		it('does not update its attributes if progress is not computable', function() {
+			attachment = new LocalAttachment();
 			/* simulate a call to 'onProgress' with some example values */
 			var progressEvent = {
 				lengthComputable: false,
@@ -61,9 +62,8 @@ define([
 			};
 			attachment.onProgress(progressEvent);
 
-			/* we expect the status to be 'ONGOING' and the value 0.5 (=500/1000) */
-			expect(attachment.get('progress')).toBe(0.5);
-			expect(attachment.get('uploadStatus')).toBe(1);
+			expect(attachment.get('progress')).toBe(0);
+			expect(attachment.get('uploadStatus')).toBe(0);
 		});
 	});
 });

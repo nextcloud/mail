@@ -50,7 +50,6 @@ define([
 			return mock;
 		}
 
-
 		beforeEach(function() {
 			originalNotification = window.Notification;
 			jasmine.clock().install();
@@ -59,6 +58,7 @@ define([
 		afterEach(function() {
 			window.Notification = originalNotification;
 			jasmine.clock().uninstall();
+			notification = undefined;
 		});
 
 		it('requests notification permissions', function() {
@@ -75,7 +75,6 @@ define([
 
 			NotificationHandler.showNotification('a', 'b');
 
-			// A new notification should have been created
 			expect(notification).toBe(undefined);
 		});
 
