@@ -18,6 +18,7 @@ define(function(require) {
 		'account',
 		'aliases',
 		'attachment',
+		'avatar',
 		'folder',
 		'dav',
 		'keyboard',

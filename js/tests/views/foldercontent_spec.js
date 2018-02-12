@@ -1,3 +1,5 @@
+/* global spyOn, expect */
+
 /**
  * @author Luc Calaresu <dev@calaresu.com>
  *
@@ -49,6 +51,10 @@ define(['jquery',
 			account: account,
 			folder: folder,
 			searchQuery: undefined
+		});
+
+		spyOn(Radio.avatar, 'request').and.callFake(function() {
+			return Promise.resolve(undefined);
 		});
 	});
 

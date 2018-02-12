@@ -1,5 +1,3 @@
-/* global Promise */
-
 /**
  * Mail
  *
@@ -16,7 +14,6 @@ define(function(require) {
 	var $ = require('jquery');
 	require('jquery-ui/ui/widgets/draggable');
 	var _ = require('underscore');
-	var OC = require('OC');
 	var Marionette = require('backbone.marionette');
 	var Radio = require('radio');
 	var MessageTemplate = require('templates/message-list-item.html');
@@ -113,19 +110,11 @@ define(function(require) {
 		 * @private
 		 */
 		_fetchAvatar: function() {
-			var url = OC.generateUrl('/apps/mail/api/avatars/url/{email}', {
-				email: this.model.get('fromEmail')
-			});
-
-			Promise.resolve($.ajax(url)).then(function(avatar) {
-				if (avatar.isExternal) {
-					this.model.set('senderImage', OC.generateUrl('/apps/mail/api/avatars/image/{email}', {
-						email: this.model.get('fromEmail')
-					}));
-				} else {
-					this.model.set('senderImage', avatar.url);
+			Radio.avatar.request('avatar', this.model.get('fromEmail')).then(function(url) {
+				if (url) {
+					this.model.set('senderImage', url);
 				}
-			}.bind(this));
+			}.bind(this)).catch(console.error.bind(this));
 		},
 
 		toggleMessageStar: function(event) {
