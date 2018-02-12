@@ -21,6 +21,7 @@
 
 namespace OCA\Mail\Tests\Service\Autoconfig;
 
+use ChristophWurst\Nextcloud\Testing\TestCase;
 use Horde_Imap_Client_Exception;
 use OC;
 use OCA\Mail\Db\MailAccount;
@@ -28,9 +29,8 @@ use OCA\Mail\Service\AutoConfig\ImapConnector;
 use OCA\Mail\Service\Logger;
 use OCP\Security\ICrypto;
 use PHPUnit_Framework_MockObject_MockObject;
-use PHPUnit_Framework_TestCase;
 
-class ImapConnectorTest extends PHPUnit_Framework_TestCase {
+class ImapConnectorTest extends TestCase {
 
 	/** @var ICrypto */
 	private $crypto;

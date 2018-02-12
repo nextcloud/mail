@@ -22,7 +22,8 @@
 namespace OCA\Mail\Db;
 
 use OC;
-use OCA\Mail\Tests\TestCase;
+use ChristophWurst\Nextcloud\Testing\DatabaseTransaction;
+use ChristophWurst\Nextcloud\Testing\TestCase;
 use OCP\IDBConnection;
 
 /**
@@ -34,19 +35,15 @@ use OCP\IDBConnection;
  */
 class MailAccountMapperTest extends TestCase {
 
-	/**
-	 * @var MailAccountMapper
-	 */
+	use DatabaseTransaction;
+
+	/** @var MailAccountMapper */
 	private $mapper;
 
-	/**
-	 * @var IDBConnection
-	 */
+	/** @var IDBConnection */
 	private $db;
 
-	/**
-	 * @var MailAccount
-	 */
+	/** @var MailAccount */
 	private $account;
 
 	/**
@@ -74,7 +71,6 @@ class MailAccountMapperTest extends TestCase {
 	}
 
 	public function testFind(){
-
 		/** @var MailAccount $b */
 		$b = $this->mapper->insert($this->account);
 
@@ -91,7 +87,6 @@ class MailAccountMapperTest extends TestCase {
 	}
 
 	public function testSave() {
-
 		$a = $this->account;
 
 		// test insert

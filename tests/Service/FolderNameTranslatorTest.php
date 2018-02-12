@@ -23,7 +23,7 @@ namespace OCA\Mail\Tests\Service;
 
 use OCA\Mail\Folder;
 use OCA\Mail\Service\FolderNameTranslator;
-use OCA\Mail\Tests\TestCase;
+use ChristophWurst\Nextcloud\Testing\TestCase;
 use OCP\IL10N;
 use PHPUnit_Framework_MockObject_MockObject;
 

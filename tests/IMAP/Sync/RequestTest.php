@@ -21,10 +21,10 @@
 
 namespace OCA\Mail\Tests\IMAP\Sync;
 
+use ChristophWurst\Nextcloud\Testing\TestCase;
 use OCA\Mail\IMAP\Sync\Request;
-use PHPUnit_Framework_TestCase;
 
-class RequestTest extends PHPUnit_Framework_TestCase {
+class RequestTest extends TestCase {
 
 	/** @var string */
 	private $mailbox;

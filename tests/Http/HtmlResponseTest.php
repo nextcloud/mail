@@ -22,10 +22,10 @@
 
 namespace OCA\Mail\Tests\Http;
 
+use ChristophWurst\Nextcloud\Testing\TestCase;
 use OCA\Mail\Http\HtmlResponse;
-use PHPUnit_Framework_TestCase;
 
-class HtmlResponseTest extends PHPUnit_Framework_TestCase {
+class HtmlResponseTest extends TestCase {
 
 	/**
 	 * @dataProvider providesResponseData

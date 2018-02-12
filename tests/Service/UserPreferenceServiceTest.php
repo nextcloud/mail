@@ -25,7 +25,7 @@
 namespace OCA\Mail\Tests\Service;
 
 use OCA\Mail\Service\UserPreferenceSevice;
-use OCA\Mail\Tests\TestCase;
+use ChristophWurst\Nextcloud\Testing\TestCase;
 use OCP\IConfig;
 
 class UserPreferenceServiceTest extends TestCase {

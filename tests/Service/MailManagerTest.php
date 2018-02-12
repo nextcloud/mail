@@ -21,6 +21,7 @@
 
 namespace OCA\Mail\Tests\Service;
 
+use ChristophWurst\Nextcloud\Testing\TestCase;
 use Horde_Imap_Client_Socket;
 use OCA\Mail\Account;
 use OCA\Mail\IMAP\FolderMapper;
@@ -30,25 +31,24 @@ use OCA\Mail\IMAP\Sync\Request;
 use OCA\Mail\IMAP\Sync\Synchronizer;
 use OCA\Mail\Service\FolderNameTranslator;
 use OCA\Mail\Service\MailManager;
-use OCA\Mail\Tests\TestCase;
 use OCP\Files\Folder;
-use PHPUnit_Framework_TestCase;
+use PHPUnit_Framework_MockObject_MockObject;
 
 class MailManagerTest extends TestCase {
 
-	/** @var IMAPClientFactory|PHPUnit_Framework_TestCase */
+	/** @var IMAPClientFactory|PHPUnit_Framework_MockObject_MockObject */
 	private $imapClientFactory;
 
-	/** @var FolderMapper|PHPUnit_Framework_TestCase */
+	/** @var FolderMapper|PHPUnit_Framework_MockObject_MockObject */
 	private $folderMapper;
 
-	/** @var MessageMapper|PHPUnit_Framework_TestCase */
+	/** @var MessageMapper|PHPUnit_Framework_MockObject_MockObject */
 	private $messageMapper;
 
-	/** @var FolderNameTranslator|PHPUnit_Framework_TestCase */
+	/** @var FolderNameTranslator|PHPUnit_Framework_MockObject_MockObject */
 	private $translator;
 
-	/** @var Synchronizer|PHPUnit_Framework_TestCase */
+	/** @var Synchronizer|PHPUnit_Framework_MockObject_MockObject */
 	private $sync;
 
 	/** @varr MailManager */

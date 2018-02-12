@@ -21,18 +21,20 @@
 
 namespace OCA\Mail\Tests\Service\DefaultAccount;
 
+use ChristophWurst\Nextcloud\Testing\TestCase;
+use OCA\Mail\Db\MailAccount;
 use OCA\Mail\Service\DefaultAccount\Manager;
 use OCA\Mail\Service\Logger;
 use OCP\Authentication\Exceptions\CredentialsUnavailableException;
 use OCP\Authentication\LoginCredentials\ICredentials;
 use OCP\Authentication\LoginCredentials\IStore;
 use OCP\IConfig;
+use OCP\IUser;
 use OCP\IUserSession;
 use OCP\Security\ICrypto;
 use PHPUnit_Framework_MockObject_MockObject;
-use PHPUnit_Framework_TestCase;
 
-class ManagerTest extends PHPUnit_Framework_TestCase {
+class ManagerTest extends TestCase {
 
 	/** @var IConfig|PHPUnit_Framework_MockObject_MockObject */
 	private $config;
@@ -105,7 +107,7 @@ class ManagerTest extends PHPUnit_Framework_TestCase {
 				'smtpSslMode' => 'tls',
 		]);
 		$credentials = $this->createMock(ICredentials::class);
-		$user = $this->createMock(\OCP\IUser::class);
+		$user = $this->createMock(IUser::class);
 		$this->userSession->expects($this->once())
 			->method('getUser')
 			->willReturn($user);
@@ -119,7 +121,7 @@ class ManagerTest extends PHPUnit_Framework_TestCase {
 			->method('encrypt')
 			->with($this->equalTo('123456'))
 			->willReturn('encrypted');
-		$expected = new \OCA\Mail\Db\MailAccount();
+		$expected = new MailAccount();
 		$expected->setId(Manager::ACCOUNT_ID);
 		$user->expects($this->any())
 			->method('getUID')

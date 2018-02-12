@@ -21,9 +21,9 @@
 
 namespace OCA\Mail\Db;
 
-use PHPUnit_Framework_TestCase;
+use ChristophWurst\Nextcloud\Testing\TestCase;
 
-class TestMailAccount extends PHPUnit_Framework_TestCase {
+class TestMailAccount extends TestCase {
 
 	public function testToAPI() {
 		$a = new MailAccount();

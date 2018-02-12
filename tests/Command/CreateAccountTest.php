@@ -21,10 +21,10 @@
 
 namespace OCA\Mail\Tests\Command;
 
+use ChristophWurst\Nextcloud\Testing\TestCase;
 use OCA\Mail\Command\CreateAccount;
-use PHPUnit_Framework_TestCase;
 
-class CreateAccountTest extends PHPUnit_Framework_TestCase {
+class CreateAccountTest extends TestCase {
 
 	private $service;
 	private $crypto;

@@ -25,7 +25,8 @@ namespace OCA\Mail\Tests\Db;
 use OC;
 use OCA\Mail\Db\CollectedAddress;
 use OCA\Mail\Db\CollectedAddressMapper;
-use OCA\Mail\Tests\TestCase;
+use ChristophWurst\Nextcloud\Testing\DatabaseTransaction;;
+use ChristophWurst\Nextcloud\Testing\TestCase;
 use OCP\IDBConnection;
 
 /**
@@ -36,6 +37,8 @@ use OCP\IDBConnection;
  * @package OCA\Mail\Tests\Db
  */
 class CollectedAddressMapperTest extends TestCase {
+
+	use DatabaseTransaction;
 
 	/** @var IDBConnection */
 	private $db;
@@ -103,22 +106,6 @@ class CollectedAddressMapperTest extends TestCase {
 			$this->address3->getUserId(),
 		]);
 		$this->address3->setId($this->db->lastInsertId('PREFIX*mail_collected_addresses'));
-	}
-
-	protected function tearDown() {
-		parent::tearDown();
-
-		$sql = 'DELETE FROM *PREFIX*mail_collected_addresses WHERE `id` = ?';
-		$stmt = $this->db->prepare($sql);
-		if (!empty($this->address1)) {
-			$stmt->execute([$this->address1->getId()]);
-		}
-		if (!empty($this->address2)) {
-			$stmt->execute([$this->address2->getId()]);
-		}
-		if (!empty($this->address3)) {
-			$stmt->execute([$this->address3->getId()]);
-		}
 	}
 
 	public function matchingData() {

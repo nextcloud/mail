@@ -32,7 +32,7 @@ use OCA\Mail\Service\Avatar\CompositeAvatarSource;
 use OCA\Mail\Service\Avatar\Downloader;
 use OCA\Mail\Service\Avatar\IAvatarSource;
 use OCA\Mail\Service\AvatarService;
-use OCA\Mail\Tests\TestCase;
+use ChristophWurst\Nextcloud\Testing\TestCase;
 use OCP\IURLGenerator;
 use PHPUnit_Framework_MockObject_MockObject;
 

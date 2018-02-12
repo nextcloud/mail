@@ -21,15 +21,14 @@
 
 namespace OCA\Mail\Tests\Service\Autoconfig;
 
+use ChristophWurst\Nextcloud\Testing\TestCase;
 use OCA\Mail\Service\AutoConfig\ConnectivityTester;
 use OCA\Mail\Service\Logger;
-use OpenCloud\Common\Log\Logger as Logger2;
 use PHPUnit_Framework_MockObject_MockObject;
-use PHPUnit_Framework_TestCase;
 
-class ConnectivityTesterTest extends PHPUnit_Framework_TestCase {
+class ConnectivityTesterTest extends TestCase {
 
-	/** @var Logger2|PHPUnit_Framework_MockObject_MockObject */
+	/** @var Logger|PHPUnit_Framework_MockObject_MockObject */
 	private $logger;
 
 	/** @var ConnectivityTester */

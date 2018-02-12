@@ -21,9 +21,9 @@
 
 namespace OCA\Mail\Tests\IMAP\Sync;
 
+use ChristophWurst\Nextcloud\Testing\TestCase;
 use Horde_Imap_Client_Base;
 use Horde_Imap_Client_Data_Sync;
-use Horde_Imap_Client_Ids;
 use Horde_Imap_Client_Mailbox;
 use OCA\Mail\IMAP\Sync\FavouritesMailboxSync;
 use OCA\Mail\IMAP\Sync\Request;
@@ -31,9 +31,8 @@ use OCA\Mail\IMAP\Sync\Response;
 use OCA\Mail\IMAP\Sync\SimpleMailboxSync;
 use OCA\Mail\IMAP\Sync\Synchronizer;
 use PHPUnit_Framework_MockObject_MockObject;
-use PHPUnit_Framework_TestCase;
 
-class SynchronizerTest extends PHPUnit_Framework_TestCase {
+class SynchronizerTest extends TestCase {
 
 	/** @var SimpleMailboxSync|PHPUnit_Framework_MockObject_MockObject */
 	private $simpleSync;
