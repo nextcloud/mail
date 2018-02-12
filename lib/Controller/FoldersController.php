@@ -86,7 +86,7 @@ class FoldersController extends Controller {
 	 * @param string $folderId
 	 * @param string $syncToken
 	 * @param int[] $uids
-	 * @return SyncResponse
+	 * @return JSONResponse
 	 */
 	public function sync($accountId, $folderId, $syncToken, $uids = []) {
 		$account = $this->accountService->find($this->currentUserId, $accountId);
@@ -95,7 +95,9 @@ class FoldersController extends Controller {
 			return new JSONResponse(null, Http::STATUS_BAD_REQUEST);
 		}
 
-		return $this->mailManager->syncMessages($account, new SyncRequest(base64_decode($folderId), $syncToken, $uids));
+		$syncResponse = $this->mailManager->syncMessages($account, new SyncRequest(base64_decode($folderId), $syncToken, $uids));
+
+		return new JSONResponse($syncResponse);
 	}
 
 	/**
