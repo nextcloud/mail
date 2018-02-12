@@ -21,14 +21,13 @@
 
 namespace OCA\Mail\Tests\Service;
 
+use ChristophWurst\Nextcloud\Testing\TestCase;
 use OCA\Mail\Db\Alias;
 use OCA\Mail\Db\AliasMapper;
 use OCA\Mail\Service\AliasesService;
-use OCA\Mail\Service\DefaultAccount\Manager;
 use PHPUnit_Framework_MockObject_MockObject;
-use PHPUnit_Framework_TestCase;
 
-class AliasesServiceTest extends PHPUnit_Framework_TestCase {
+class AliasesServiceTest extends TestCase {
 
 	/** @var AliasesService|PHPUnit_Framework_MockObject_MockObject */
 	private $service;

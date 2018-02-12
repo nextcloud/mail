@@ -21,6 +21,7 @@
 
 namespace OCA\Mail\Tests\Service\Attachment;
 
+use ChristophWurst\Nextcloud\Testing\TestCase;
 use OCA\Mail\Exception\UploadException;
 use OCA\Mail\Service\Attachment\AttachmentStorage;
 use OCA\Mail\Service\Attachment\UploadedFile;
@@ -30,9 +31,8 @@ use OCP\Files\NotPermittedException;
 use OCP\Files\SimpleFS\ISimpleFile;
 use OCP\Files\SimpleFS\ISimpleFolder;
 use PHPUnit_Framework_MockObject_MockObject;
-use PHPUnit_Framework_TestCase;
 
-class AttachmentStorageTest extends PHPUnit_Framework_TestCase {
+class AttachmentStorageTest extends TestCase {
 
 	private $tmpFilePath = '/tmp/nc_mail_attachment_test';
 

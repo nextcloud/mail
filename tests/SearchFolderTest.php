@@ -21,9 +21,11 @@
 
 namespace OCA\Mail\Tests;
 
+use ChristophWurst\Nextcloud\Testing\TestCase;
 use Horde_Imap_Client_Mailbox;
 use OCA\Mail\Account;
 use OCA\Mail\SearchFolder;
+use PHPUnit_Framework_MockObject_MockObject;
 
 class SearchFolderTest extends TestCase {
 

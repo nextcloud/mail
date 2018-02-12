@@ -21,12 +21,12 @@
 
 namespace OCA\Mail\Tests\Controller;
 
+use ChristophWurst\Nextcloud\Testing\TestCase;
 use OCA\Mail\Controller\AliasesController;
 use OCA\Mail\Http\JSONResponse;
 use OCP\AppFramework\Http;
-use PHPUnit_Framework_TestCase;
 
-class AliasesControllerTest extends PHPUnit_Framework_TestCase {
+class AliasesControllerTest extends TestCase {
 	private $controller;
 	private $appName = 'mail';
 	private $request;

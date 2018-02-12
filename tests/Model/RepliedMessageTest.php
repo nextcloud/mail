@@ -21,11 +21,11 @@
 
 namespace OCA\Mail\Tests\Model;
 
+use ChristophWurst\Nextcloud\Testing\TestCase;
 use OCA\Mail\Account;
 use OCA\Mail\Model\RepliedMessageData;
-use PHPUnit_Framework_TestCase;
 
-class RepliedMessageTest extends PHPUnit_Framework_TestCase {
+class RepliedMessageTest extends TestCase {
 
 	public function testGetAccount() {
 		$account = $this->createMock(Account::class);

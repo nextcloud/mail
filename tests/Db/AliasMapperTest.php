@@ -22,7 +22,8 @@
 namespace OCA\Mail\Db;
 
 use OC;
-use OCA\Mail\Tests\TestCase;
+use ChristophWurst\Nextcloud\Testing\DatabaseTransaction;
+use ChristophWurst\Nextcloud\Testing\TestCase;
 use OCP\IDBConnection;
 
 /**
@@ -33,6 +34,8 @@ use OCP\IDBConnection;
  * @package OCA\Mail\Db
  */
 class AliasMapperTest extends TestCase {
+	
+	use DatabaseTransaction;
 
 	/** @var AliasMapper */
 	private $mapper;
@@ -91,21 +94,6 @@ class AliasMapperTest extends TestCase {
 			'id' => $result->getId()
 			]
 		);
-	}
-
-	protected function tearDown() {
-		parent::tearDown();
-
-		$sql = 'DELETE FROM *PREFIX*mail_aliases WHERE `id` = ?';
-		$stmt = $this->db->prepare($sql);
-		if (!empty($this->alias)) {
-			$stmt->execute([$this->alias->getId()]);
-		}
-		$sql = 'DELETE FROM *PREFIX*mail_accounts WHERE `user_id` = ?';
-		$stmt = $this->db->prepare($sql);
-		if (!empty($this->alias)) {
-			$stmt->execute(['user12345']);
-		}
 	}
 
 }

@@ -22,6 +22,7 @@
 
 namespace OCA\Mail\Tests\Controller;
 
+use ChristophWurst\Nextcloud\Testing\TestCase;
 use Exception;
 use Horde_Exception;
 use OCA\Mail\Account;
@@ -42,9 +43,8 @@ use OCP\IL10N;
 use OCP\IRequest;
 use OCP\Security\ICrypto;
 use PHPUnit_Framework_MockObject_MockObject;
-use PHPUnit_Framework_TestCase;
 
-class AccountsControllerTest extends PHPUnit_Framework_TestCase {
+class AccountsControllerTest extends TestCase {
 
 	/** @var string */
 	private $appName;

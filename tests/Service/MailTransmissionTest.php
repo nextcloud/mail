@@ -38,7 +38,7 @@ use OCA\Mail\Service\AutoCompletion\AddressCollector;
 use OCA\Mail\Service\Logger;
 use OCA\Mail\Service\MailTransmission;
 use OCA\Mail\SMTP\SmtpClientFactory;
-use OCA\Mail\Tests\TestCase;
+use ChristophWurst\Nextcloud\Testing\TestCase;
 use OCP\Files\Folder;
 use PHPUnit_Framework_MockObject_MockObject;
 

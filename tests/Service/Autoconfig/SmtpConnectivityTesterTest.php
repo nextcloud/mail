@@ -21,6 +21,7 @@
 
 namespace OCA\Mail\Tests\Service\Autoconfig;
 
+use ChristophWurst\Nextcloud\Testing\TestCase;
 use Exception;
 use Horde_Mail_Transport_Smtphorde;
 use OCA\Mail\Db\MailAccount;
@@ -30,9 +31,8 @@ use OCA\Mail\Service\Logger;
 use OCA\Mail\SMTP\SmtpClientFactory;
 use OCP\Security\ICrypto;
 use PHPUnit_Framework_MockObject_MockObject;
-use PHPUnit_Framework_TestCase;
 
-class SmtpConnectivityTesterTest extends PHPUnit_Framework_TestCase {
+class SmtpConnectivityTesterTest extends TestCase {
 
 	/** @var ConnectivityTester|PHPUnit_Framework_MockObject_MockObject */
 	private $connectivityTester;

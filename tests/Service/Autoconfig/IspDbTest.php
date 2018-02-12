@@ -22,10 +22,10 @@
 
 namespace OCA\Mail\Tests\Service\Autoconfig;
 
+use ChristophWurst\Nextcloud\Testing\TestCase;
 use OCA\Mail\Service\AutoConfig\IspDb;
-use PHPUnit_Framework_TestCase;
 
-class IspDbtest extends PHPUnit_Framework_TestCase {
+class IspDbtest extends TestCase {
 
 	private $logger;
 

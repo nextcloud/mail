@@ -21,6 +21,7 @@
 
 namespace OCA\Mail\Tests\Controller;
 
+use ChristophWurst\Nextcloud\Testing\TestCase;
 use OCA\Mail\Contracts\IAttachmentService;
 use OCA\Mail\Controller\LocalAttachmentsController;
 use OCA\Mail\Db\LocalAttachment;
@@ -29,9 +30,8 @@ use OCA\Mail\Http\JSONResponse;
 use OCA\Mail\Service\Attachment\UploadedFile;
 use OCP\IRequest;
 use PHPUnit_Framework_MockObject_MockObject;
-use PHPUnit_Framework_TestCase;
 
-class LocalAttachmentsControllerTest extends PHPUnit_Framework_TestCase {
+class LocalAttachmentsControllerTest extends TestCase {
 
 	/** @var IRequest|PHPUnit_Framework_MockObject_MockObject */
 	private $request;

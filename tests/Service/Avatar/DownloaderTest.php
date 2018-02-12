@@ -26,7 +26,7 @@ namespace OCA\Mail\Tests\Service\Avatar;
 
 use Exception;
 use OCA\Mail\Service\Avatar\Downloader;
-use OCA\Mail\Tests\TestCase;
+use ChristophWurst\Nextcloud\Testing\TestCase;
 use OCP\Http\Client\IClient;
 use OCP\Http\Client\IClientService;
 use OCP\Http\Client\IResponse;

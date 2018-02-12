@@ -21,14 +21,14 @@
 
 namespace OCA\Mail\Tests\Service\Autoconfig;
 
+use ChristophWurst\Nextcloud\Testing\TestCase;
 use OCA\Mail\Db\MailAccount;
 use OCA\Mail\Service\AutoConfig\MxRecord;
 use OCA\Mail\Service\AutoConfig\SmtpConnectivityTester;
 use OCA\Mail\Service\AutoConfig\SmtpServerDetector;
 use PHPUnit_Framework_MockObject_MockObject;
-use PHPUnit_Framework_TestCase;
 
-class SmtpServerDetectorTest extends PHPUnit_Framework_TestCase {
+class SmtpServerDetectorTest extends TestCase {
 
 	/** @var MxRecord|PHPUnit_Framework_MockObject_MockObject */
 	private $mxRecord;

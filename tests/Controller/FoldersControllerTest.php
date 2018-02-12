@@ -28,7 +28,7 @@ use OCA\Mail\Exception\NotImplemented;
 use OCA\Mail\Folder;
 use OCA\Mail\Http\JSONResponse;
 use OCA\Mail\Service\AccountService;
-use OCA\Mail\Tests\TestCase;
+use ChristophWurst\Nextcloud\Testing\TestCase;
 use OCP\IRequest;
 use PHPUnit_Framework_MockObject_MockObject;
 

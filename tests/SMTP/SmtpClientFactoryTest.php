@@ -29,7 +29,7 @@ use Horde_Mail_Transport_Smtphorde;
 use OCA\Mail\Account;
 use OCA\Mail\Db\MailAccount;
 use OCA\Mail\SMTP\SmtpClientFactory;
-use OCA\Mail\Tests\TestCase;
+use ChristophWurst\Nextcloud\Testing\TestCase;
 use OCP\IConfig;
 use OCP\Security\ICrypto;
 use PHPUnit_Framework_MockObject_MockObject;

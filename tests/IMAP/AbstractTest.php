@@ -23,17 +23,17 @@
 
 namespace OCA\Mail\Tests\IMAP;
 
+use ChristophWurst\Nextcloud\Testing\TestCase;
 use Exception;
 use OC;
 use OCA\Mail\Account;
 use OCA\Mail\Db\MailAccount;
 use OCA\Mail\Mailbox;
-use PHPUnit_Framework_TestCase;
 
 /**
  * @group IMAP
  */
-abstract class AbstractTest extends PHPUnit_Framework_TestCase {
+abstract class AbstractTest extends TestCase {
 
 	/** @var Account */
 	private static $account;

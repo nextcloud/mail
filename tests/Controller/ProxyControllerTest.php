@@ -21,13 +21,13 @@
 
 namespace OCA\Mail\Tests\Controller;
 
+use ChristophWurst\Nextcloud\Testing\TestCase;
 use Exception;
 use OCA\Mail\Controller\ProxyController;
 use OCA\Mail\Http\ProxyDownloadResponse;
 use OCP\AppFramework\Http\TemplateResponse;
-use PHPUnit_Framework_TestCase;
 
-class ProxyControllerTest extends PHPUnit_Framework_TestCase {
+class ProxyControllerTest extends TestCase {
 
 	private $appName;
 	private $request;

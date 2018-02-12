@@ -21,13 +21,13 @@
 
 namespace OCA\Mail\Tests\Model;
 
+use ChristophWurst\Nextcloud\Testing\TestCase;
 use Horde_Mime_Part;
 use OCA\Mail\Address;
 use OCA\Mail\AddressList;
 use OCA\Mail\Model\Message;
-use PHPUnit_Framework_TestCase;
 
-class MessageTest extends PHPUnit_Framework_TestCase {
+class MessageTest extends TestCase {
 
 	protected $message;
 

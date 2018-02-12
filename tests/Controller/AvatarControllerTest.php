@@ -29,7 +29,7 @@ use OCA\Mail\Controller\AvatarsController;
 use OCA\Mail\Http\AvatarDownloadResponse;
 use OCA\Mail\Http\JSONResponse;
 use OCA\Mail\Service\Avatar\Avatar;
-use OCA\Mail\Tests\TestCase;
+use ChristophWurst\Nextcloud\Testing\TestCase;
 use OCP\AppFramework\Http;
 use OCP\AppFramework\Http\Response;
 use OCP\AppFramework\Utility\ITimeFactory;

@@ -21,11 +21,11 @@
 
 namespace OCA\Mail\Tests\Service\Autocompletion;
 
+use ChristophWurst\Nextcloud\Testing\TestCase;
 use OCA\Mail\Db\CollectedAddress;
 use OCA\Mail\Service\AutoCompletion\AutoCompleteService;
-use PHPUnit_Framework_TestCase;
 
-class AutoCompleteServiceTest extends PHPUnit_Framework_TestCase {
+class AutoCompleteServiceTest extends TestCase {
 
 	private $contactsIntegration;
 	private $addressCollector;

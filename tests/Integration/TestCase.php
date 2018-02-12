@@ -22,7 +22,7 @@
 namespace OCA\Mail\Tests\Integration;
 
 use OCA\Mail\Tests\Integration\Framework\ImapTest;
-use OCA\Mail\Tests\TestCase as Base;
+use ChristophWurst\Nextcloud\Testing\TestCase as Base;
 
 class TestCase extends Base {
 
