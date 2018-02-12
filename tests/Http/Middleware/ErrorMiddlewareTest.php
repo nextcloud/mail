@@ -24,12 +24,12 @@
 
 namespace OCA\Mail\Tests\Http\Middleware;
 
+use ChristophWurst\Nextcloud\Testing\TestCase;
 use OCA\Mail\Exception\NotImplemented;
 use OCA\Mail\Exception\ServiceException;
 use OCA\Mail\Http\JSONResponse;
 use OCA\Mail\Http\Middleware\ErrorMiddleware;
 use OCA\Mail\Service\Logger;
-use OCA\Mail\Tests\TestCase;
 use OCP\AppFramework\Controller;
 use OCP\AppFramework\Db\DoesNotExistException;
 use OCP\AppFramework\Http;
