@@ -35,7 +35,7 @@ exclude = [
 	"js/webpack.*.js",
 	"karma.conf.js",
 	"l10n/no-php",
-	"l10n/.tx",
+	".tx",
 	"Makefile",
 	"nbproject",
 	"node_modules",

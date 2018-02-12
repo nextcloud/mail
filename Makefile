@@ -85,7 +85,7 @@ appstore: clean install-deps optimize-js
 	--exclude=js/tests \
 	--exclude=karma.conf.js \
 	--exclude=l10n/no-php \
-	--exclude=l10n/.tx \
+	--exclude=.tx \
 	--exclude=Makefile \
 	--exclude=nbproject \
 	--exclude=/node_modules \
