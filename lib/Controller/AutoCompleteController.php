@@ -21,9 +21,10 @@
 
 namespace OCA\Mail\Controller;
 
+use OCA\Mail\Http\JSONResponse;
+use OCA\Mail\Service\AutoCompletion\AutoCompleteService;
 use OCP\AppFramework\Controller;
 use OCP\IRequest;
-use OCA\Mail\Service\AutoCompletion\AutoCompleteService;
 
 class AutoCompleteController extends Controller {
 
@@ -44,11 +45,13 @@ class AutoCompleteController extends Controller {
 
 	/**
 	 * @NoAdminRequired
+	 * @TrapError
+	 *
 	 * @param string $term
-	 * @return array
+	 * @return JSONResponse
 	 */
 	public function index($term) {
-		return $this->service->findMatches($term);
+		return new JSONResponse($this->service->findMatches($term));
 	}
 
 }

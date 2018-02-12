@@ -20,12 +20,13 @@
 
 namespace OCA\Mail\Controller;
 
-use OCA\Mail\Db\Alias;
-use OCP\IRequest;
+use OCA\Mail\Exception\NotImplemented;
+use OCA\Mail\Http\JSONResponse;
 use OCA\Mail\Service\AliasesService;
 use OCP\AppFramework\Controller;
-use OCP\AppFramework\Http\JSONResponse;
 use OCP\AppFramework\Http;
+use OCP\IRequest;
+use OCP\IUser;
 use OCP\IUserSession;
 
 class AliasesController extends Controller {
@@ -34,7 +35,7 @@ class AliasesController extends Controller {
 	private $aliasService;
 
 	/**
-	 * @var \OCP\IUser
+	 * @var IUser
 	 */
 	private $currentUser;
 
@@ -51,48 +52,52 @@ class AliasesController extends Controller {
 
 	/**
 	 * @NoAdminRequired
+	 * @TrapError
+	 *
 	 * @param int $accountId
-	 * @return Alias[]
+	 * @return JSONResponse
 	 */
 	public function index($accountId) {
-		return $this->aliasService->findAll($accountId, $this->currentUser->getUID());
+		return new JSONResponse($this->aliasService->findAll($accountId, $this->currentUser->getUID()));
 	}
 
 	/**
 	 * @NoAdminRequired
+	 * @TrapError
 	 */
 	public function show() {
-		$response = new JSONResponse();
-		$response->setStatus(Http::STATUS_NOT_IMPLEMENTED);
-		return $response;
+		throw new NotImplemented();
 	}
 
 	/**
 	 * @NoAdminRequired
+	 * @TrapError
 	 */
 	public function update() {
-		$response = new JSONResponse();
-		$response->setStatus(Http::STATUS_NOT_IMPLEMENTED);
-		return $response;
+		throw new NotImplemented();
 	}
 
 	/**
 	 * @NoAdminRequired
+	 * @TrapError
+	 *
 	 * @param int $id
-	 * @return Alias[]
+	 * @return JSONResponse
 	 */
 	public function destroy($id) {
-		return $this->aliasService->delete($id, $this->currentUser->getUID());
+		return new JSONResponse($this->aliasService->delete($id, $this->currentUser->getUID()));
 	}
 
 	/**
 	 * @NoAdminRequired
+	 * @TrapError
+	 *
 	 * @param int $accountId
 	 * @param string $alias
 	 * @param string $aliasName
-	 * @return Alias[]
+	 * @return JSONResponse
 	 */
 	public function create($accountId, $alias, $aliasName) {
-		return $this->aliasService->create($accountId, $alias, $aliasName);
+		return new JSONResponse($this->aliasService->create($accountId, $alias, $aliasName), Http::STATUS_CREATED);
 	}
 }

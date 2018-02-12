@@ -23,7 +23,8 @@ namespace OCA\Mail\Tests\Controller;
 
 use ChristophWurst\Nextcloud\Testing\TestCase;
 use OCA\Mail\Controller\AliasesController;
-use OCP\AppFramework\Http\JSONResponse;
+use OCA\Mail\Http\JSONResponse;
+use OCP\AppFramework\Http;
 
 class AliasesControllerTest extends TestCase {
 	private $controller;
@@ -68,9 +69,9 @@ class AliasesControllerTest extends TestCase {
 
 		$response = $this->controller->index($accountId);
 
-		$expectedResponse = [
+		$expectedResponse = new JSONResponse([
 			$this->alias
-		];
+		]);
 		$this->assertEquals($expectedResponse, $response);
 	}
 
@@ -82,7 +83,7 @@ class AliasesControllerTest extends TestCase {
 		$this->aliasService->expects($this->once())
 			->method('delete')
 			->with($this->equalTo($aliasId), $this->equalTo($this->userId))
-			->will($this->returnValue(new JSONResponse()));
+			->will($this->returnValue([]));
 
 		$response = $this->controller->destroy($aliasId);
 
@@ -106,12 +107,12 @@ class AliasesControllerTest extends TestCase {
 
 		$response = $this->controller->create($accountId, $alias, $aliasName);
 
-		$expected = [
+		$expected = new JSONResponse([
 			'accountId' => $accountId,
 			'name' => $aliasName,
 			'alias' => $alias,
 			'id' => 123
-		];
+		], Http::STATUS_CREATED);
 		$this->assertEquals($expected, $response);
 	}
 }

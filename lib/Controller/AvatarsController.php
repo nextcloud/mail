@@ -59,9 +59,10 @@ class AvatarsController extends Controller {
 	/**
 	 * @NoAdminRequired
 	 * @NoCSRFRequired
+	 * @TrapError
 	 *
 	 * @param string $email
-	 * @return Response
+	 * @return JSONResponse
 	 */
 	public function url($email) {
 		if (is_null($email) || empty($email)) {
@@ -91,6 +92,7 @@ class AvatarsController extends Controller {
 	/**
 	 * @NoAdminRequired
 	 * @NoCSRFRequired
+	 * @TrapError
 	 *
 	 * @param string $email
 	 * @return Response

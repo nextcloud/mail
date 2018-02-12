@@ -35,7 +35,6 @@ use OCA\Mail\Model\IMAPMessage;
 use OCA\Mail\Service\AccountService;
 use OCA\Mail\Service\Logger;
 use OCP\AppFramework\Db\DoesNotExistException;
-use OCP\AppFramework\Http;
 use OCP\AppFramework\Http\ContentSecurityPolicy;
 use OCP\AppFramework\Http\JSONResponse;
 use OCP\AppFramework\Utility\ITimeFactory;
@@ -365,37 +364,30 @@ class MessagesControllerTest extends TestCase {
 		$accountId = 17;
 		$folderId = base64_encode('my folder');
 		$messageId = 123;
-
 		$this->accountService->expects($this->once())
 			->method('find')
 			->with($this->equalTo($this->userId), $this->equalTo($accountId))
 			->will($this->throwException(new DoesNotExistException('')));
+		$this->expectException(DoesNotExistException::class);
 
-		$expected = new JSONResponse([], Http::STATUS_NOT_FOUND);
-		$result = $this->controller->destroy($accountId, $folderId, $messageId);
-
-		$this->assertEquals($expected, $result);
+		$this->controller->destroy($accountId, $folderId, $messageId);
 	}
 
 	public function testDestroyWithFolderOrMessageNotFound() {
 		$accountId = 17;
 		$folderId = base64_encode('my folder');
 		$messageId = 123;
-
 		$this->accountService->expects($this->once())
 			->method('find')
 			->with($this->equalTo($this->userId), $this->equalTo($accountId))
 			->will($this->returnValue($this->account));
-
 		$this->account->expects($this->once())
 			->method('deleteMessage')
 			->with(base64_decode($folderId), $messageId)
 			->will($this->throwException(new DoesNotExistException('')));
+		$this->expectException(DoesNotExistException::class);
 
-		$expected = new JSONResponse([], Http::STATUS_NOT_FOUND);
-		$result = $this->controller->destroy($accountId, $folderId, $messageId);
-
-		$this->assertEquals($expected, $result);
+		$this->controller->destroy($accountId, $folderId, $messageId);
 	}
 
 }

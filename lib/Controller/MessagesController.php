@@ -30,7 +30,6 @@ namespace OCA\Mail\Controller;
 
 use OCA\Mail\Account;
 use OCA\Mail\Contracts\IMailManager;
-use OCA\Mail\Exception\ServiceException;
 use OCA\Mail\Http\AttachmentDownloadResponse;
 use OCA\Mail\Http\HtmlResponse;
 use OCA\Mail\Model\IMAPMessage;
@@ -39,7 +38,6 @@ use OCA\Mail\Service\IMailBox;
 use OCA\Mail\Service\Logger;
 use OCP\AppFramework\Controller;
 use OCP\AppFramework\Db\DoesNotExistException;
-use OCP\AppFramework\Http;
 use OCP\AppFramework\Http\ContentSecurityPolicy;
 use OCP\AppFramework\Http\JSONResponse;
 use OCP\AppFramework\Http\TemplateResponse;
@@ -112,6 +110,7 @@ class MessagesController extends Controller {
 
 	/**
 	 * @NoAdminRequired
+	 * @TrapError
 	 *
 	 * @param int $accountId
 	 * @param string $folderId
@@ -164,6 +163,7 @@ class MessagesController extends Controller {
 
 	/**
 	 * @NoAdminRequired
+	 * @TrapError
 	 *
 	 * @param int $accountId
 	 * @param string $folderId
@@ -171,16 +171,12 @@ class MessagesController extends Controller {
 	 * @return JSONResponse
 	 */
 	public function show($accountId, $folderId, $id) {
-		try {
-			$json = $this->loadMessage($accountId, $folderId, $id);
-		} catch (DoesNotExistException $ex) {
-			return new JSONResponse([], 404);
-		}
-		return new JSONResponse($json);
+		return new JSONResponse($this->loadMessage($accountId, $folderId, $id));
 	}
 
 	/**
 	 * @NoAdminRequired
+	 * @TrapError
 	 *
 	 * @param int $accountId
 	 * @param string $folderId
@@ -190,23 +186,18 @@ class MessagesController extends Controller {
 	 * @return JSONResponse
 	 */
 	public function move($accountId, $folderId, $id, $destAccountId, $destFolderId) {
-		try {
-			$srcAccount = $this->accountService->find($this->currentUserId, $accountId);
-			$dstAccount = $this->accountService->find($this->currentUserId,
-				$destAccountId);
-			$this->mailManager->moveMessage($srcAccount, base64_decode($folderId), $id,
-				$dstAccount, base64_decode($destFolderId));
-		} catch (ServiceException $ex) {
-			return new JSONResponse([
-				'error' => $ex->getMessage(),
-				], 500);
-		}
+		$srcAccount = $this->accountService->find($this->currentUserId, $accountId);
+		$dstAccount = $this->accountService->find($this->currentUserId,
+			$destAccountId);
+		$this->mailManager->moveMessage($srcAccount, base64_decode($folderId), $id,
+			$dstAccount, base64_decode($destFolderId));
 		return new JSONResponse();
 	}
 
 	/**
 	 * @NoAdminRequired
 	 * @NoCSRFRequired
+	 * @TrapError
 	 *
 	 * @param int $accountId
 	 * @param string $folderId
@@ -256,6 +247,7 @@ class MessagesController extends Controller {
 	/**
 	 * @NoAdminRequired
 	 * @NoCSRFRequired
+	 * @TrapError
 	 *
 	 * @param int $accountId
 	 * @param string $folderId
@@ -275,6 +267,7 @@ class MessagesController extends Controller {
 
 	/**
 	 * @NoAdminRequired
+	 * @TrapError
 	 *
 	 * @param int $accountId
 	 * @param string $folderId
@@ -314,12 +307,12 @@ class MessagesController extends Controller {
 			$newFile = $this->userFolder->newFile($fullPath);
 			$newFile->putContent($attachment->getContents());
 		}
-
 		return new JSONResponse();
 	}
 
 	/**
 	 * @NoAdminRequired
+	 * @TrapError
 	 *
 	 * @param int $accountId
 	 * @param string $folderId
@@ -338,12 +331,12 @@ class MessagesController extends Controller {
 			}
 			$mailBox->setMessageFlag($messageId, '\\' . $flag, $value);
 		}
-
 		return new JSONResponse();
 	}
 
 	/**
 	 * @NoAdminRequired
+	 * @TrapError
 	 *
 	 * @param int $accountId
 	 * @param string $folderId
@@ -359,7 +352,7 @@ class MessagesController extends Controller {
 		} catch (DoesNotExistException $e) {
 			$this->logger->error("could not delete message <$id> of folder <$folderId>, "
 				. "account <$accountId> because it does not exist");
-			return new JSONResponse([], Http::STATUS_NOT_FOUND);
+			throw $e;
 		}
 	}
 

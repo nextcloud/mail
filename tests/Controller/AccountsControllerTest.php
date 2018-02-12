@@ -23,10 +23,13 @@
 namespace OCA\Mail\Tests\Controller;
 
 use ChristophWurst\Nextcloud\Testing\TestCase;
+use Exception;
 use Horde_Exception;
 use OCA\Mail\Account;
 use OCA\Mail\Contracts\IMailTransmission;
 use OCA\Mail\Controller\AccountsController;
+use OCA\Mail\Exception\ClientException;
+use OCA\Mail\Http\JSONResponse;
 use OCA\Mail\Model\NewMessageData;
 use OCA\Mail\Model\RepliedMessageData;
 use OCA\Mail\Service\AccountService;
@@ -36,7 +39,6 @@ use OCA\Mail\Service\Logger;
 use OCA\Mail\Service\SetupService;
 use OCP\AppFramework\Db\DoesNotExistException;
 use OCP\AppFramework\Http;
-use OCP\AppFramework\Http\JSONResponse;
 use OCP\IL10N;
 use OCP\IRequest;
 use OCP\Security\ICrypto;
@@ -150,12 +152,9 @@ class AccountsControllerTest extends TestCase {
 			->method('find')
 			->with($this->equalTo($this->userId), $this->equalTo($this->accountId))
 			->will($this->throwException(new DoesNotExistException('test123')));
+		$this->expectException(DoesNotExistException::class);
 
-		$response = $this->controller->show($this->accountId);
-
-		$expectedResponse = new JSONResponse([]);
-		$expectedResponse->setStatus(404);
-		$this->assertEquals($expectedResponse, $response);
+		$this->controller->show($this->accountId);
 	}
 
 	public function testDestroy() {
@@ -174,11 +173,9 @@ class AccountsControllerTest extends TestCase {
 			->method('delete')
 			->with($this->equalTo($this->userId), $this->equalTo($this->accountId))
 			->will($this->throwException(new DoesNotExistException('test')));
+		$this->expectException(DoesNotExistException::class);
 
-		$response = $this->controller->destroy($this->accountId);
-
-		$expectedResponse = new JSONResponse([], Http::STATUS_NOT_FOUND);
-		$this->assertEquals($expectedResponse, $response);
+		$this->controller->destroy($this->accountId);
 	}
 
 	public function testCreateAutoDetectSuccess() {
@@ -210,19 +207,14 @@ class AccountsControllerTest extends TestCase {
 		$email = 'john@example.com';
 		$password = '123456';
 		$accountName = 'John Doe';
-
 		$this->setupService->expects($this->once())
 			->method('createNewAutoconfiguredAccount')
 			->with($accountName, $email, $password)
 			->willThrowException(new \Exception());
+		$this->expectException(ClientException::class);
 
-		$response = $this->controller->create($accountName, $email, $password, null, null, null, null, null, null, null, null,
+		$this->controller->create($accountName, $email, $password, null, null, null, null, null, null, null, null,
 			null, null, true);
-
-		$expectedResponse = new JSONResponse([
-			'message' => '',
-			], Http::STATUS_BAD_REQUEST);
-		$this->assertEquals($expectedResponse, $response);
 	}
 
 	public function testUpdateAutoDetectSuccess() {
@@ -254,19 +246,14 @@ class AccountsControllerTest extends TestCase {
 		$email = 'john@example.com';
 		$password = '123456';
 		$accountName = 'John Doe';
-
 		$this->setupService->expects($this->once())
 			->method('createNewAutoconfiguredAccount')
 			->with($accountName, $email, $password)
-			->willThrowException(new \Exception());
+			->willThrowException(new Exception());
+		$this->expectException(ClientException::class);
 
-		$response = $this->controller->create($accountName, $email, $password, null, null, null, null, null, null, null, null,
+		$this->controller->create($accountName, $email, $password, null, null, null, null, null, null, null, null,
 			null, null, true);
-
-		$expectedResponse = new JSONResponse([
-			'message' => '',
-			], Http::STATUS_BAD_REQUEST);
-		$this->assertEquals($expectedResponse, $response);
 	}
 
 	public function testCreateManualSuccess() {
@@ -323,15 +310,10 @@ class AccountsControllerTest extends TestCase {
 		$this->setupService->expects($this->once())
 			->method('createNewAccount')
 			->with($accountName, $email, $imapHost, $imapPort, $imapSslMode, $imapUser, $imapPassword, $smtpHost, $smtpPort, $smtpSslMode, $smtpUser, $smtpPassword, $this->userId)
-			->willThrowException(new \Exception());
+			->willThrowException(new Exception());
+		$this->expectException(ClientException::class);
 
-		$response = $this->controller->create($accountName, $email, $password, $imapHost, $imapPort, $imapSslMode, $imapUser, $imapPassword, $smtpHost, $smtpPort, $smtpSslMode, $smtpUser, $smtpPassword, $autoDetect);
-
-		$expectedResponse = new JSONResponse([
-			'message' => '',
-			], Http::STATUS_BAD_REQUEST);
-
-		$this->assertEquals($expectedResponse, $response);
+		$this->controller->create($accountName, $email, $password, $imapHost, $imapPort, $imapSslMode, $imapUser, $imapPassword, $smtpHost, $smtpPort, $smtpSslMode, $smtpUser, $smtpPassword, $autoDetect);
 	}
 
 	public function testUpdateManualSuccess() {
@@ -365,7 +347,7 @@ class AccountsControllerTest extends TestCase {
 			'data' => [
 				'id' => 135,
 			],
-			], Http::STATUS_CREATED);
+			]);
 
 		$this->assertEquals($expectedResponse, $response);
 	}
@@ -390,14 +372,10 @@ class AccountsControllerTest extends TestCase {
 		$this->setupService->expects($this->once())
 			->method('createNewAccount')
 			->with($accountName, $email, $imapHost, $imapPort, $imapSslMode, $imapUser, $imapPassword, $smtpHost, $smtpPort, $smtpSslMode, $smtpUser, $smtpPassword, $this->userId, $id)
-			->willThrowException(new \Exception());
+			->willThrowException(new Exception());
+		$this->expectException(ClientException::class);
 
-		$response = $this->controller->update($id, $accountName, $email, $password, $imapHost, $imapPort, $imapSslMode, $imapUser, $imapPassword, $smtpHost, $smtpPort, $smtpSslMode, $smtpUser, $smtpPassword, $autoDetect);
-
-		$expectedResponse = new JSONResponse([
-			'message' => '',
-			], Http::STATUS_BAD_REQUEST);
-		$this->assertEquals($expectedResponse, $response);
+		$this->controller->update($id, $accountName, $email, $password, $imapHost, $imapPort, $imapSslMode, $imapUser, $imapPassword, $smtpHost, $smtpPort, $smtpSslMode, $smtpUser, $smtpPassword, $autoDetect);
 	}
 
 	public function testSendNewMessage() {
@@ -428,11 +406,9 @@ class AccountsControllerTest extends TestCase {
 			->method('sendMessage')
 			->with($this->userId, $messageData, $replyData, null, null)
 			->willThrowException(new Horde_Exception('error'));
-		$expected = new JSONResponse(['message' => 'error'], 500);
+		$this->expectException(Horde_Exception::class);
 
-		$resp = $this->controller->send(13, null, 'sub', 'bod', 'to@d.com', '', '', null, null, [], null);
-
-		$this->assertEquals($expected, $resp);
+		$this->controller->send(13, null, 'sub', 'bod', 'to@d.com', '', '', null, null, [], null);
 	}
 
 	public function testSendReply() {

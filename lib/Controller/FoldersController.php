@@ -24,12 +24,13 @@
 namespace OCA\Mail\Controller;
 
 use OCA\Mail\Contracts\IMailManager;
+use OCA\Mail\Exception\NotImplemented;
+use OCA\Mail\Http\JSONResponse;
 use OCA\Mail\IMAP\Sync\Request as SyncRequest;
 use OCA\Mail\IMAP\Sync\Response as SyncResponse;
 use OCA\Mail\Service\AccountService;
 use OCP\AppFramework\Controller;
 use OCP\AppFramework\Http;
-use OCP\AppFramework\Http\JSONResponse;
 use OCP\IRequest;
 
 class FoldersController extends Controller {
@@ -60,6 +61,8 @@ class FoldersController extends Controller {
 
 	/**
 	 * @NoAdminRequired
+	 * @TrapError
+	 *
 	 * @param int $accountId
 	 * @return JSONResponse
 	 */
@@ -67,21 +70,23 @@ class FoldersController extends Controller {
 		$account = $this->accountService->find($this->currentUserId, $accountId);
 
 		$folders = $this->mailManager->getFolders($account);
-		return [
+		return new JSONResponse([
 			'id' => $accountId,
 			'email' => $account->getEmail(),
 			'folders' => $folders,
 			'delimiter' => reset($folders)->getDelimiter(),
-		];
+		]);
 	}
 
 	/**
 	 * @NoAdminRequired
+	 * @TrapError
+	 *
 	 * @param int $accountId
 	 * @param string $folderId
 	 * @param string $syncToken
 	 * @param int[] $uids
-	 * @return SyncResponse
+	 * @return JSONResponse
 	 */
 	public function sync($accountId, $folderId, $syncToken, $uids = []) {
 		$account = $this->accountService->find($this->currentUserId, $accountId);
@@ -90,34 +95,33 @@ class FoldersController extends Controller {
 			return new JSONResponse(null, Http::STATUS_BAD_REQUEST);
 		}
 
-		return $this->mailManager->syncMessages($account, new SyncRequest(base64_decode($folderId), $syncToken, $uids));
+		$syncResponse = $this->mailManager->syncMessages($account, new SyncRequest(base64_decode($folderId), $syncToken, $uids));
+
+		return new JSONResponse($syncResponse);
 	}
 
 	/**
 	 * @NoAdminRequired
+	 * @TrapError
 	 */
 	public function show() {
-		$response = new JSONResponse();
-		$response->setStatus(Http::STATUS_NOT_IMPLEMENTED);
-		return $response;
+		throw new NotImplemented();
 	}
 
 	/**
 	 * @NoAdminRequired
+	 * @TrapError
 	 */
 	public function update() {
-		$response = new JSONResponse();
-		$response->setStatus(Http::STATUS_NOT_IMPLEMENTED);
-		return $response;
+		throw new NotImplemented();
 	}
 
 	/**
 	 * @NoAdminRequired
+	 * @TrapError
 	 */
 	public function create() {
-		$response = new JSONResponse();
-		$response->setStatus(Http::STATUS_NOT_IMPLEMENTED);
-		return $response;
+		throw new NotImplemented();
 	}
 
 }

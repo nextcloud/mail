@@ -27,6 +27,7 @@ use OCA\Mail\Contracts\IAvatarService;
 use OCA\Mail\Contracts\IMailManager;
 use OCA\Mail\Contracts\IMailTransmission;
 use OCA\Mail\Contracts\IUserPreferences;
+use OCA\Mail\Http\Middleware\ErrorMiddleware;
 use OCA\Mail\Service\Attachment\AttachmentService;
 use OCA\Mail\Service\AvatarService;
 use OCA\Mail\Service\MailManager;
@@ -67,6 +68,9 @@ class Application extends App {
 		$container->registerParameter("testSmtp", $testSmtp);
 		$container->registerParameter("referrer", isset($_SERVER['HTTP_REFERER']) ? $_SERVER['HTTP_REFERER'] : null);
 		$container->registerParameter("hostname", Util::getServerHostName());
+
+		$container->registerAlias('ErrorMiddleware', ErrorMiddleware::class);
+		$container->registerMiddleWare('ErrorMiddleware');
 	}
 
 }

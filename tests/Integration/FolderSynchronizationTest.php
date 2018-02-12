@@ -47,8 +47,8 @@ class FolderSynchronizationTest extends TestCase {
 		$mailbox = 'INBOX';
 		$syncToken = $this->getMailboxSyncToken($mailbox);
 
-		$sync = $this->foldersController->sync($account->getId(), base64_encode($mailbox), $syncToken);
-		$syncJson = $sync->jsonSerialize();
+		$jsonResponse = $this->foldersController->sync($account->getId(), base64_encode($mailbox), $syncToken);
+		$syncJson = $jsonResponse->getData()->jsonSerialize();
 
 		$this->assertArrayHasKey('newMessages', $syncJson);
 		$this->assertArrayHasKey('changedMessages', $syncJson);
@@ -71,8 +71,8 @@ class FolderSynchronizationTest extends TestCase {
 			->finish();
 		$this->saveMessage($mailbox, $message);
 
-		$sync = $this->foldersController->sync($account->getId(), base64_encode($mailbox), $syncToken);
-		$syncJson = $sync->jsonSerialize();
+		$jsonResponse = $this->foldersController->sync($account->getId(), base64_encode($mailbox), $syncToken);
+		$syncJson = $jsonResponse->getData()->jsonSerialize();
 
 		$this->assertCount(1, $syncJson['newMessages']);
 		$this->assertCount(0, $syncJson['changedMessages']);
@@ -93,10 +93,10 @@ class FolderSynchronizationTest extends TestCase {
 		// Third, flag it
 		$this->flagMessage($mailbox, $id);
 
-		$sync = $this->foldersController->sync($account->getId(), base64_encode($mailbox), $syncToken, [
+		$jsonResponse = $this->foldersController->sync($account->getId(), base64_encode($mailbox), $syncToken, [
 			$id
 		]);
-		$syncJson = $sync->jsonSerialize();
+		$syncJson = $jsonResponse->getData()->jsonSerialize();
 
 		$this->assertCount(0, $syncJson['newMessages']);
 		$this->assertCount(1, $syncJson['changedMessages']);
@@ -117,10 +117,10 @@ class FolderSynchronizationTest extends TestCase {
 		// Third, remove it again
 		$this->deleteMessage($mailbox, $id);
 
-		$sync = $this->foldersController->sync($account->getId(), base64_encode($mailbox), $syncToken, [
+		$jsonResponse = $this->foldersController->sync($account->getId(), base64_encode($mailbox), $syncToken, [
 			$id
 		]);
-		$syncJson = $sync->jsonSerialize();
+		$syncJson = $jsonResponse->getData()->jsonSerialize();
 
 		$this->assertCount(0, $syncJson['newMessages']);
 		// TODO: deleted messages are flagged as changed? could be a testing-only issue

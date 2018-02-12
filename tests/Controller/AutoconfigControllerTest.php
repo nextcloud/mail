@@ -23,6 +23,7 @@ namespace OCA\Mail\Tests\Controller;
 
 use ChristophWurst\Nextcloud\Testing\TestCase;
 use OCA\Mail\Controller\AutoCompleteController;
+use OCA\Mail\Http\JSONResponse;
 
 class AutoConfigControllerTest extends TestCase {
 
@@ -52,7 +53,7 @@ class AutoConfigControllerTest extends TestCase {
 
 		$response = $this->controller->index($term);
 
-		$this->assertEquals($result, $response);
+		$this->assertEquals(new JSONResponse($result), $response);
 	}
 
 }
