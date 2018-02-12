@@ -47,8 +47,8 @@ define(function(require) {
 		},
 
 		toggleExternalAvatars: function() {
-			var enabled = this.$('#gravatar-enabled').attr('checked') === 'checked';
-			Radio.preference.request('save', 'external-avatars', enabled ? 'true' : 'false');
+			var enabled = this.$('#gravatar-enabled').prop('checked') ? 'true' : 'false';
+			Radio.preference.request('save', 'external-avatars', enabled);
 		},
 
 		showKeyboardShortcuts: function(e) {
