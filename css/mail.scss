@@ -367,6 +367,11 @@
 .composer-fields {
 	position: relative;
 }
+.composer-bottom {
+	display: flex;
+	flex-direction: row;
+	justify-content: space-between;
+}
 input.to,
 input.cc,
 input.bcc,
@@ -442,17 +447,6 @@ label.bcc-label {
 textarea.reply {
 	min-height: 100px;
 }
-input.submit-message,
-.submit-message-wrapper {
-	position: fixed;
-	bottom: 10px;
-	right: 15px;
-}
-.submit-message-wrapper {
-	position: fixed;
-	height: 36px;
-	width: 60px;
-}
 
 .submit-message-wrapper-inside {
 	position: absolute;
@@ -466,12 +460,6 @@ input.submit-message,
 	float: left;
 }
 
-/* extra button styles */
-.submit-message.send,
-#mail_new_attachment,
-#forward-button {
-	padding: 12px;
-}
 .new-message-attachments,
 #forward-button {
 	margin-left: 30px;
@@ -557,23 +545,36 @@ input.submit-message,
 }
 
 #mail-message-header {
-	position: fixed;
-	height: 90px;
-	width: 50%;
-	z-index: 100;
-	background: -webkit-linear-gradient(rgba(255,255,255,.97), rgba(255,255,255,.9) 80%, rgba(255,255,255,0));
-	background: -o-linear-gradient(rgba(255,255,255,.97), rgba(255,255,255,.9) 80%, rgba(255,255,255,0));
-	background: -moz-linear-gradient(rgba(255,255,255,.97), rgba(255,255,255,.9) 80%, rgba(255,255,255,0));
-	background: linear-gradient(rgba(255,255,255,.97), rgba(255,255,255,.9) 80%, rgba(255,255,255,0));
+	display: flex;
+	justify-content: space-between;
+	align-items: center;
+	border-bottom: 1px solid #eee;
+}
+#mail-message-header > div:first-child {
+	flex-grow: 1;
+	margin-right: 20px;
+}
+#mail-message-header > div:first-child > h2 {
+	word-wrap: break-word;
+}
+#mail-message-header > div:last-child {
+	flex-shrink: 0;
 }
 
-#mail-message-header h2,
-#mail-message-header p {
-	white-space: nowrap;
-	overflow: hidden;
-	text-overflow: ellipsis;
-	padding-bottom: 7px;
-	margin-bottom: 0;
+.button-group > button {
+	border-radius: 0px;
+	margin-right: -1px;
+	z-index: 0;
+}
+.button-group > button:hover {
+	z-index: 1;
+}
+.button-group > button:first-child {
+	border-radius: 3px 0px 0px 3px;
+}
+
+.button-group > button:last-child {
+	border-radius: 0px 3px 3px 0px;
 }
 
 #mail-message-close {
@@ -582,7 +583,7 @@ input.submit-message,
 
 #mail-content,
 .mail-message-attachments {
-	margin: 100px 10px 50px 30px;
+	margin: 10px 10px 50px 30px;
 }
 .mail-message-attachments {
 	margin-top: 10px;
@@ -630,11 +631,8 @@ input.submit-message,
 	overflow-x: hidden;
 }
 .mail-message-container {
-	position: absolute;
-	top: 0px;
-	right: 0px;
-	bottom: 0px;
-	left: 0px;
+	display: flex;
+	flex-direction: column;
 }
 
 .new-message-attachments li {

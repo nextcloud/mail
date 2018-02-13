@@ -1,14 +1,21 @@
 <div id="mail-message-close" class="icon-close"></div>
 <div id="mail-message-header" class="section">
-	<h2 title="{{subject}}">{{subject}}</h2>
-	<p class="transparency">
-		{{printAddressList from}}
-		{{ t 'to' }}
-		{{printAddressList to}}
-		{{#if cc.length}}
-		({{ t 'cc' }} {{printAddressList cc}})
-		{{/if}}
-	</p>
+	<div>
+		<h2 title="{{subject}}">{{subject}}</h2>
+		<p class="transparency">
+			{{printAddressList from}}
+			{{ t 'to' }}
+			{{printAddressList to}}
+			{{#if cc.length}}
+			({{ t 'cc' }} {{printAddressList cc}})
+			{{/if}}
+		</p>
+	</div>
+	<div class="button-group">
+		<button>Reply</button><!--
+		--><button>Reply to all</button><!--
+		--><button>Forward</button>
+	</div>
 </div>
 <div class="mail-message-body">
 	<div id="mail-content">
@@ -33,5 +40,4 @@
 
 	<div class="mail-message-attachments"></div>
 	<div id="reply-composer"></div>
-	<input type="button" id="forward-button" value="{{ t 'Forward' }}">
 </div>
