@@ -87,7 +87,7 @@ class MailManager implements IMailManager {
 		$this->folderMapper->detectFolderSpecialUse($folders);
 		$this->folderMapper->sortFolders($folders);
 		$this->folderNameTranslator->translateAll($folders, $havePrefix);
-		return $this->folderMapper->buildFolderHierarchy($folders);
+		return $this->folderMapper->buildFolderHierarchy($folders, $havePrefix);
 	}
 
 	/**

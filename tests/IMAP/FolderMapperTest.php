@@ -19,7 +19,7 @@
  *
  */
 
-namespace OCA\Mail\Tests\Service;
+namespace OCA\Mail\Tests\IMAP;
 
 use Horde_Imap_Client;
 use Horde_Imap_Client_Mailbox;
@@ -95,7 +95,7 @@ class FolderMapperTest extends TestCase {
 		$this->assertEquals($expected, $folders);
 	}
 
-	public function testBuildHierarchy() {
+	public function testBuildHierarchyWithoutPrefix() {
 		$account = $this->createMock(Account::class);
 		$folder1 = new Folder($account, new Horde_Imap_Client_Mailbox('test'), [], '.');
 		$folder2 = new Folder($account, new Horde_Imap_Client_Mailbox('test.sub'), [], '.');
@@ -111,8 +111,33 @@ class FolderMapperTest extends TestCase {
 			$folder1,
 		];
 
-		$result = $this->mapper->buildFolderHierarchy($folders);
+		$result = $this->mapper->buildFolderHierarchy($folders, false);
 
+		$this->assertEquals($expected, $result);
+	}
+
+	public function testBuildHierarchyWithPrefix() {
+		$account = $this->createMock(Account::class);
+		$folder1 = new Folder($account, new Horde_Imap_Client_Mailbox('INBOX'), [], '.');
+		$folder2 = new Folder($account, new Horde_Imap_Client_Mailbox('INBOX.sub'), [], '.');
+		$folder3 = new Folder($account, new Horde_Imap_Client_Mailbox('INBOX.sub.sub'), [], '.');
+		$folder4 = new Folder($account, new Horde_Imap_Client_Mailbox('INBOX.sub.sub.sub'), [], '.');
+		$folders = [
+			clone $folder1,
+			clone $folder2,
+			clone $folder3,
+			clone $folder4,
+		];
+		$folder2->addFolder($folder3);
+		$folder2->addFolder($folder4);
+		$expected = [
+			$folder1,
+			$folder2,
+		];
+
+		$result = $this->mapper->buildFolderHierarchy($folders, true);
+
+		$this->assertCount(count($expected), $result);
 		$this->assertEquals($expected, $result);
 	}
 
