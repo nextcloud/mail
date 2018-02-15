@@ -81,20 +81,3 @@ If you can not access your Gmail account use https://accounts.google.com/Display
 ### Outlook.com
 
 If you can not access your Outlook.com account try to enable the 'Two-Factor Verification' (https://account.live.com/proofs/Manage) and set up an app password (https://account.live.com/proofs/AppPassword), which you then use for the Nextcloud Mail app.
-
-### Dovecot IMAP
-
-If your Dovecot IMAP server prefixes all folders with `INBOX`, Nextcloud Mail does not work correctly.
-
-Check `/etc/dovecot/dovecot.conf`:
-
-```
-namespace inbox {
-        separator = .
-        # All folders prefixed
-        # prefix = INBOX.
-        prefix =
-        inbox = yes
-        type = private
-}
-```
