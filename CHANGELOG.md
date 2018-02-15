@@ -1,6 +1,9 @@
 # Changelog
 All notable changes to this project will be documented in this file.
 
+## 0.7.10 – 2018-02-19
+- TODO
+
 ## 0.7.9 – 2018-01-23
 ### Fixed
 - Undefined variable warning in nextcloud.log
