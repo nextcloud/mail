@@ -26,6 +26,7 @@ use Horde_Imap_Client_Socket;
 use OCA\Mail\Account;
 use OCA\Mail\IMAP\FolderMapper;
 use OCA\Mail\IMAP\IMAPClientFactory;
+use OCA\Mail\IMAP\MailboxPrefixDetector;
 use OCA\Mail\IMAP\MessageMapper;
 use OCA\Mail\IMAP\Sync\Request;
 use OCA\Mail\IMAP\Sync\Synchronizer;
@@ -41,6 +42,9 @@ class MailManagerTest extends TestCase {
 
 	/** @var FolderMapper|PHPUnit_Framework_MockObject_MockObject */
 	private $folderMapper;
+
+	/** @var MailboxPrefixDetector|PHPUnit_Framework_MockObject_MockObject */
+	private $prefixDetector;
 
 	/** @var MessageMapper|PHPUnit_Framework_MockObject_MockObject */
 	private $messageMapper;
@@ -59,18 +63,22 @@ class MailManagerTest extends TestCase {
 
 		$this->imapClientFactory = $this->createMock(IMAPClientFactory::class);
 		$this->folderMapper = $this->createMock(FolderMapper::class);
+		$this->prefixDetector = $this->createMock(MailboxPrefixDetector::class);
 		$this->messageMapper = $this->createMock(MessageMapper::class);
 		$this->translator = $this->createMock(FolderNameTranslator::class);
 		$this->sync = $this->createMock(Synchronizer::class);
 
 		$this->manager = new MailManager($this->imapClientFactory,
-			$this->folderMapper, $this->translator, $this->sync, $this->messageMapper);
+			$this->folderMapper, $this->prefixDetector, $this->translator, $this->sync,
+			$this->messageMapper);
 	}
 
 	public function testGetFolders() {
 		$client = $this->createMock(Horde_Imap_Client_Socket::class);
 		$account = $this->createMock(Account::class);
-
+		$this->prefixDetector->expects($this->once())
+			->method('havePrefix')
+			->willReturn(false);
 		$this->imapClientFactory->expects($this->once())
 			->method('getClient')
 			->willReturn($client);
@@ -93,7 +101,7 @@ class MailManagerTest extends TestCase {
 			->with($this->equalTo($folders));
 		$this->translator->expects($this->once())
 			->method('translateAll')
-			->with($this->equalTo($folders));
+			->with($this->equalTo($folders), $this->equalTo(false));
 		$this->folderMapper->expects($this->once())
 			->method('buildFolderHierarchy')
 			->with($this->equalTo($folders));

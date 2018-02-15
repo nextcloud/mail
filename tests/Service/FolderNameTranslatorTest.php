@@ -21,9 +21,9 @@
 
 namespace OCA\Mail\Tests\Service;
 
+use ChristophWurst\Nextcloud\Testing\TestCase;
 use OCA\Mail\Folder;
 use OCA\Mail\Service\FolderNameTranslator;
-use ChristophWurst\Nextcloud\Testing\TestCase;
 use OCP\IL10N;
 use PHPUnit_Framework_MockObject_MockObject;
 
@@ -48,24 +48,68 @@ class FolderNameTranslatorTest extends TestCase {
 		$this->translator = new FolderNameTranslator($this->l10n);
 	}
 
-	public function testTranslateAll() {
+	public function testTranslate() {
 		$folder = $this->createMock(Folder::class);
-
+		$folder->expects($this->any())
+			->method('getDelimiter')
+			->willReturn('.');
+		$folder->expects($this->any())
+			->method('getMailbox')
+			->willReturn('Archive');
 		$folder->expects($this->once())
 			->method('getSpecialUse')
 			->willReturn([]);
+		$folder->expects($this->once())
+			->method('setDisplayName')
+			->with('Archive');
 
-		$this->translator->translateAll([$folder]);
+		$this->translator->translateAll([$folder], false);
+	}
+
+	public function testTranslatePrefixed() {
+		$folder1 = $this->createMock(Folder::class);
+		$folder2 = $this->createMock(Folder::class);
+		$folder1->expects($this->any())
+			->method('getDelimiter')
+			->willReturn('.');
+		$folder2->expects($this->any())
+			->method('getDelimiter')
+			->willReturn('.');
+		$folder1->expects($this->any())
+			->method('getMailbox')
+			->willReturn('INBOX');
+		$folder2->expects($this->any())
+			->method('getMailbox')
+			->willReturn('INBOX.Sent');
+		$folder1->expects($this->once())
+			->method('getSpecialUse')
+			->willReturn(['inbox']);
+		$folder2->expects($this->once())
+			->method('getSpecialUse')
+			->willReturn([]);
+		$folder1->expects($this->once())
+			->method('setDisplayName')
+			->with('Translated Inbox');
+		$folder2->expects($this->once())
+			->method('setDisplayName')
+			->with('Sent');
+
+		$this->translator->translateAll([$folder1, $folder2], true);
 	}
 
 	public function testTranslateSpecialUse() {
 		$folder = $this->createMock(Folder::class);
-
+		$folder->expects($this->any())
+			->method('getMailbox')
+			->willReturn('Sent');
 		$folder->expects($this->once())
 			->method('getSpecialUse')
-			->willReturn(['flagged']);
+			->willReturn(['sent']);
+		$folder->expects($this->once())
+			->method('setDisplayName')
+			->with('Translated Sent');
 
-		$this->translator->translate($folder);
+		$this->translator->translateAll([$folder], false);
 	}
 
 }
