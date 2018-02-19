@@ -1,6 +1,20 @@
 # Changelog
 All notable changes to this project will be documented in this file.
 
+## 0.7.10 – 2018-02-19
+### Added
+- Warn when sending messages or replies to a norepy address
+- Better caching for HTML messages
+### Changed
+- Compatible with Nextcloud 13 and 14
+### Fixed
+- Dovecot INBOX prefixes
+- Deprecation warning on php7.2
+- Dovecot sieve folder error
+- Concurrency issues with saving drafts and sending a message
+- Client-side errors caused to large message UIDs and session storage
+- Syncing the favorites folder
+
 ## 0.7.9 – 2018-01-23
 ### Fixed
 - Undefined variable warning in nextcloud.log
