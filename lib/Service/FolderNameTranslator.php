@@ -68,17 +68,19 @@ class FolderNameTranslator {
 
 	/**
 	 * @param Folder[] $folders
+	 * @param bool $havePrefix
 	 */
-	public function translateAll(array $folders) {
+	public function translateAll(array $folders, $havePrefix) {
 		foreach ($folders as $folder) {
-			$this->translate($folder);
+			$this->translate($folder, $havePrefix);
 		}
 	}
 
 	/**
 	 * @param Folder $folder
+	 * @param bool $hasPrefix
 	 */
-	public function translate(Folder $folder) {
+	private function translate(Folder $folder, $hasPrefix = false) {
 		$translations = $this->buildTranslations();
 		// TODO: only list "best" one per type? e.g. only one inbox
 		$specialUses = $folder->getSpecialUse();
@@ -86,7 +88,15 @@ class FolderNameTranslator {
 		if (!is_null($specialUse) && isset($translations[$specialUse])) {
 			$folder->setDisplayName($translations[$specialUse]);
 		} else {
-			$folder->setDisplayName($folder->getMailbox());
+			$mailbox = $folder->getMailbox();
+			$prefix = 'INBOX' . $folder->getDelimiter();
+			if ($hasPrefix && strpos($mailbox, $prefix) === 0) {
+				// Mailbox name starts with prefix -> remove it
+				$trimmed = substr($mailbox, strlen($prefix));
+				$folder->setDisplayName($trimmed);
+			} else {
+				$folder->setDisplayName($mailbox);
+			}
 		}
 	}
 

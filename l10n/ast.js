@@ -2,6 +2,7 @@ OC.L10N.register(
     "mail",
     {
     "Mail" : "Corréu",
+    "Loading accounts" : "Cargando cuentes",
     "Error while loading the accounts." : "Fallu entrín se carguen les cuentes.",
     "Error while loading the selected account." : "Fallu cargando la cuenta esbillada",
     "Can not load this folder." : "Nun pue cargase esta carpeta.",
@@ -24,6 +25,7 @@ OC.L10N.register(
     "Send message to {email}" : "Unviar mensaje a {email}",
     "Could not load {tag}{name}{endtag}" : "Nun pudo cargase {tag}{name}{endtag}",
     "There was a problem loading {tag}{name}{endtag}" : "Hebo un problema cargando  {tag}{name}{endtag}",
+    "Could not load your message" : "Nun pudo cargase'l to mensaxe",
     "{from}\n{subject}" : "{from}\n{subject}",
     "_%n new message \nfrom {from}_::_%n new messages \nfrom {from}_" : ["%n mensaxe nuevu \nde {from}","%n mensaxes nuevos \nde {from}"],
     "Save" : "Guardar",

@@ -79,16 +79,17 @@ class FolderMapper {
 
 	/**
 	 * @param Folder[] $folders
+	 * @param bool $havePrefix
 	 * @return Folder[]
 	 */
-	public function buildFolderHierarchy(array $folders) {
+	public function buildFolderHierarchy(array $folders, $havePrefix) {
 		$indexedFolders = [];
 		foreach ($folders as $folder) {
 			$indexedFolders[$folder->getMailbox()] = $folder;
 		}
 
-		$top = array_filter($indexedFolders, function(Folder $folder) {
-			return $folder instanceof SearchFolder || is_null($this->getParentId($folder));
+		$top = array_filter($indexedFolders, function(Folder $folder) use ($havePrefix) {
+			return $folder instanceof SearchFolder || is_null($this->getParentId($folder, $havePrefix));
 		});
 
 		foreach ($indexedFolders as $folder) {
@@ -96,7 +97,7 @@ class FolderMapper {
 				continue;
 			}
 
-			$parentId = $this->getParentId($folder);
+			$parentId = $this->getParentId($folder, $havePrefix);
 			if (isset($top[$parentId])) {
 				$indexedFolders[$parentId]->addFolder($folder);
 			}
@@ -107,15 +108,17 @@ class FolderMapper {
 
 	/**
 	 * @param Folder $folder
+	 * @param bool $hasPrefix
 	 * @return string
 	 */
-	private function getParentId(Folder $folder) {
+	private function getParentId(Folder $folder, $hasPrefix) {
+		$topLevel = $hasPrefix ? 1 : 0;
 		$hierarchy = explode($folder->getDelimiter(), $folder->getMailbox());
-		if (count($hierarchy) <= 1) {
+		if (count($hierarchy) <= ($topLevel + 1)) {
 			// Top level folder
 			return null;
 		}
-		return $hierarchy[0];
+		return $hasPrefix ? $hierarchy[0] . $folder->getDelimiter() . $hierarchy[1] : $hierarchy[0];
 	}
 
 	/**
