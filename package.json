@@ -57,6 +57,7 @@
     "backbone.marionette": "^3.5.1",
     "backbone.radio": "^2.0.0",
     "backbone.wreqr": "^1.4.0",
+    "copy-to-clipboard": "^3.0.8",
     "davclient.js": "^0.1.0",
     "domready": "^1.0.8",
     "es6-promise": "^4.2.4",
@@ -69,6 +70,7 @@
     "jquery-ui": "^1.12.1",
     "jquery-visibility": "^1.0.11",
     "js-storage": "1.0.4",
+    "nextcloud_issuetemplate_builder": "0.1.0",
     "requirejs": "^2.3.5",
     "underscore": "^1.8.3"
   }

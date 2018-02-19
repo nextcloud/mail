@@ -23,12 +23,42 @@
 define(function(require) {
 	'use strict';
 
+	var _ = require('underscore');
 	var $ = require('jquery');
 	var OC = require('OC');
-	var crashReportTemplate = require('templates/crash-report.html')
+	var IssueTemplateBuilder = require('nextcloud_issuetemplate_builder');
+	var copyToClipboard = require('copy-to-clipboard');
 
 	function isDebugMode() {
 		return $('#debug-mode').val() === 'true';
+	}
+
+	function flattenError(error) {
+		var text = '';
+		if (error.type) {
+			text += error.type + ': ';
+		}
+		text += error.message;
+		text += '\n';
+		if (error.trace) {
+			text += flattenTrace(error.trace);
+		}
+		return text;
+	}
+
+	function flattenTrace(trace) {
+		return trace.reduce(function(acc, entry) {
+			var text = '';
+			if (entry.class) {
+				text += '  at ' + entry.class + '::' + entry.function;
+			} else {
+				text += '  at ' + entry.function;
+			}
+			if (entry.file) {
+				text += '\n     ' + entry.file + ', line ' + entry.line;
+			}
+			return acc + text + '\n';
+		}, '');
 	}
 
 	function report(error) {
@@ -43,11 +73,15 @@ define(function(require) {
 		var $message = $('<span>');
 		$message.text('Error: ' + message);
 		if (debug) {
-			$message.append(' Click for more information.');
+			var builder = new IssueTemplateBuilder();
+			var template = builder.addEmptyStepsToReproduce()
+					.addExpectedActualBehaviour()
+					.addLogs('Server error', flattenError(error))
+					.render();
+
+			$message.append(' Click to copy GitHub bug report template.');
 			$message.click(function() {
-				var w = window.open();
-				var reportHTML = crashReportTemplate(error);
-				$(w.document.body).html(reportHTML);
+				copyToClipboard(template);
 			});
 		}
 		$notification.append($message);
