@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#composer-lock-the-lock-file",
         "This file is @generated automatically"
     ],
-    "content-hash": "8186427ad6d81f3c41c66d84b6ee9f9d",
+    "content-hash": "1fd587559644666e093da54796784095",
     "packages": [
         {
             "name": "arthurhoaro/favicon",
@@ -233,7 +233,7 @@
             ],
             "description": "Autolink URLs in text or html",
             "homepage": "http://www.kwi.dk/projects/php/UrlLinker/",
-            "time": "2014-12-28T22:05:00+00:00"
+            "time": "2014-12-28T23:05:00+00:00"
         },
         {
             "name": "pear-pear.horde.org/Horde_Crypt_Blowfish",
@@ -906,16 +906,16 @@
         },
         {
             "name": "christophwurst/nextcloud_testing",
-            "version": "0.2.0",
+            "version": "0.3.0",
             "source": {
                 "type": "git",
                 "url": "https://github.com/ChristophWurst/nextcloud_testing.git",
-                "reference": "380e9961fddb62c47910ba0b22390c15ea3ea3b9"
+                "reference": "9f56b4e43f2b13b40d3152277569c1c46835f3e8"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/ChristophWurst/nextcloud_testing/zipball/380e9961fddb62c47910ba0b22390c15ea3ea3b9",
-                "reference": "380e9961fddb62c47910ba0b22390c15ea3ea3b9",
+                "url": "https://api.github.com/repos/ChristophWurst/nextcloud_testing/zipball/9f56b4e43f2b13b40d3152277569c1c46835f3e8",
+                "reference": "9f56b4e43f2b13b40d3152277569c1c46835f3e8",
                 "shasum": ""
             },
             "require": {
@@ -942,7 +942,7 @@
                 }
             ],
             "description": "Simple and fast unit and integration testing framework for Nextcloud, based on PHPUnit",
-            "time": "2018-02-19T15:55:36+00:00"
+            "time": "2018-02-19T18:27:17+00:00"
         },
         {
             "name": "doctrine/instantiator",
