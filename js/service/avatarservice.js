@@ -26,7 +26,7 @@ define(function(require) {
 	'use strict';
 
 	var _ = require('underscore');
-	var $ = require('jquery');
+	var fetch = require('nextcloud_fetch');
 	var OC = require('OC');
 	var Radio = require('radio');
 
@@ -41,7 +41,13 @@ define(function(require) {
 			email: email
 		});
 
-		return Promise.resolve($.ajax(url))
+		return fetch(url)
+				.then(function(resp) {
+					if (resp.ok) {
+						return resp.json();
+					}
+					throw Error('Could not load avatar for  ' + email, resp);
+				})
 				.then(function(avatar) {
 					if (avatar.isExternal) {
 						return OC.generateUrl('/apps/mail/api/avatars/image/{email}', {

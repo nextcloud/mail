@@ -69,6 +69,7 @@
     "jquery-ui": "^1.12.1",
     "jquery-visibility": "^1.0.11",
     "js-storage": "1.0.4",
+    "nextcloud_fetch": "^1.1.0",
     "requirejs": "^2.3.5",
     "underscore": "^1.8.3"
   }
