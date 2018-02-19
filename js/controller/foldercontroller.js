@@ -24,6 +24,7 @@ define(function(require) {
 
 	var $ = require('jquery');
 	var _ = require('underscore');
+	var CrashReport = require('crashreport');
 	var Radio = require('radio');
 	var ErrorMessageFactory = require('util/errormessagefactory');
 
@@ -35,9 +36,7 @@ define(function(require) {
 	 */
 	function loadFolders(account) {
 		return Radio.folder.request('entities', account)
-			.catch(function() {
-				Radio.ui.trigger('error:show', t('mail', 'Error while loading the selected account.'));
-			});
+			.catch(CrashReport.report);
 	}
 
 	/**

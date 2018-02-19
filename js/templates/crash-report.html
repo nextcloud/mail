@@ -1,0 +1,29 @@
+<head>
+	<title>Nextcloud Mail Crash Report</title>
+</head>
+<body>
+	<h1>Nextcloud Crash Report</h1>
+	<p>
+		This is an automatically generated report of an unuexpected application
+		error. Use the information on this page to file a new ticket at
+		<a href="https://github.com/nextcloud/mail/issues/new">https://github.com/nextcloud/mail/issues/new</a>
+	</p>
+	<p>
+		<strong>Error type and code:</strong> {{type}}, code {{code}}
+	</p>
+	<p>
+		<strong>Error message:</strong> {{message}}
+	</p>
+
+	<h2>Stack Trace</h2>
+	{{#if trace}}
+	<code>
+		{{#each trace}}
+		{{@index}}: {{#if class}}{{class}}::{{/if}}{{function}}<br>
+		{{#if file}}{{file}}, line {{line}}<br>{{/if}}
+		{{/each}}
+	<code>
+	{{else}}
+	No trace available.
+	{{/if}}
+</body>

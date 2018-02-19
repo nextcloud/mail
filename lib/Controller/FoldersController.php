@@ -68,6 +68,7 @@ class FoldersController extends Controller {
 	 */
 	public function index($accountId) {
 		$account = $this->accountService->find($this->currentUserId, $accountId);
+		throw new \OCA\Mail\Exception\ServiceException('nope');
 
 		$folders = $this->mailManager->getFolders($account);
 		return new JSONResponse([

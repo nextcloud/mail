@@ -48,16 +48,22 @@ define(function(require) {
 		}
 
 		return Promise.resolve($.get(url))
-			.then(function(data) {
-				for (var prop in data) {
-					if (prop === 'folders') {
-						account.folders.reset();
-						_.each(data.folders, account.addFolder, account);
-					} else {
-						account.set(prop, data[prop]);
+				.then(function(data) {
+					for (var prop in data) {
+						if (prop === 'folders') {
+							account.folders.reset();
+							_.each(data.folders, account.addFolder, account);
+						} else {
+							account.set(prop, data[prop]);
+						}
 					}
-				}
-				return account.folders;
-			});
+					return account.folders;
+				})
+				.catch(function(xhr) {
+					if (xhr.responseJSON) {
+						throw xhr.responseJSON;
+					}
+					throw xhr;
+				});
 	}
 });
