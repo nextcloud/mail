@@ -33,6 +33,8 @@ use OCA\Mail\Service\AvatarService;
 use OCA\Mail\Service\MailManager;
 use OCA\Mail\Service\MailTransmission;
 use OCA\Mail\Service\UserPreferenceSevice;
+use OCA\Mail\Service\Group\IGroupService;
+use OCA\Mail\Service\Group\NextcloudGroupService;
 use OCP\AppFramework\App;
 use OCP\Util;
 
@@ -71,6 +73,8 @@ class Application extends App {
 
 		$container->registerAlias('ErrorMiddleware', ErrorMiddleware::class);
 		$container->registerMiddleWare('ErrorMiddleware');
+
+		$container->registerAlias(IGroupService::class, NextcloudGroupService::class);
 	}
 
 }
