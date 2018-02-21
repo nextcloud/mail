@@ -90,7 +90,18 @@ class TransformURLScheme extends HTMLPurifier_URIFilter {
 	 * @return HTMLPurifier_URI
 	 */
 	private function filterHttpFtp(&$uri, $context) {
-		$originalURL = urlencode($uri->scheme . '://' . $uri->host . $uri->path);
+		$originalURL = urlencode($uri->scheme . '://' . $uri->host);
+
+		// Add the port if it's not a default port
+		if ($uri->port !== null &&
+			!($uri->scheme === 'http' && $uri->port === 80) && 
+			!($uri->scheme === 'https' && $uri->port === 443) &&
+			!($uri->scheme === 'ftp' && $uri->port === 21)) {
+			$originalURL = $originalURL . urlencode(':' . $uri->port);
+		}
+
+		$originalURL = $originalURL . urlencode($uri->path);
+
 		if ($uri->query !== null) {
 			$originalURL = $originalURL . urlencode('?' . $uri->query);
 		}
