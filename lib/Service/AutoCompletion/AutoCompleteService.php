@@ -23,6 +23,7 @@ namespace OCA\Mail\Service\AutoCompletion;
 
 use OCA\Mail\Db\CollectedAddress;
 use OCA\Mail\Service\ContactsIntegration;
+use OCA\Mail\Service\GroupsIntegration;
 
 class AutoCompleteService {
 
@@ -32,13 +33,15 @@ class AutoCompleteService {
 	/** @var AddressCollector */
 	private $addressCollector;
 
-	public function __construct(ContactsIntegration $ci, AddressCollector $ac) {
+	public function __construct(ContactsIntegration $ci, GroupsIntegration $gi, AddressCollector $ac) {
 		$this->contactsIntegration = $ci;
+		$this->groupsIntegration = $gi;
 		$this->addressCollector = $ac;
 	}
 
 	public function findMatches($term) {
 		$recipientsFromContacts = $this->contactsIntegration->getMatchingRecipient($term);
+    $recipientGroups = $this->groupsIntegration->getMatchingGroup($term);
 		$fromCollector = $this->addressCollector->searchAddress($term);
 
 		// Convert collected addresses into same format as CI creates
@@ -50,7 +53,7 @@ class AutoCompleteService {
 			];
 		}, $fromCollector);
 
-		return array_merge($recipientsFromContacts, $recipientsFromCollector);
+		return array_merge($recipientsFromContacts, $recipientsFromCollector, $recipientGroups);
 	}
 
 }
