@@ -31,3 +31,6 @@ translations.js
 
 # JS coverage
 coverage/
+
+# vim
+*.sw*
