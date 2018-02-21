@@ -91,7 +91,7 @@ OC.L10N.register(
     "Delete" : "Löschen",
     "Search" : "Suchen",
     "Refresh" : "Aktualisieren",
-    "Connect your mail account" : "Verbinde Deine E-Mail-Konto",
+    "Connect your mail account" : "Verbinde Dein E-Mail-Konto",
     "Name" : "Name",
     "Mail Address" : "E-Mail-Adresse",
     "Password" : "Passwort",
