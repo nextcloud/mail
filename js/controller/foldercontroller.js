@@ -217,6 +217,8 @@ define(function(require) {
 		if (require('state').currentMessage && require('state').currentMessage.get('id') === message.id) {
 			if (nextMessage) {
 				Radio.message.trigger('load', nextMessage.folder.account, nextMessage.folder, nextMessage);
+			} else {
+				Radio.ui.trigger('messagesview:message:setactive', null);
 			}
 		}
 
