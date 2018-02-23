@@ -2,6 +2,7 @@
 
 /**
  * @author Christoph Wurst <christoph@winzerhof-wurst.at>
+ * @author Matthias Rella <mrella@pisys.eu>
  *
  * Mail
  *
@@ -30,6 +31,9 @@ class AutoCompleteService {
 	/** @var ContactsIntegration */
 	private $contactsIntegration;
 
+	/** @var GroupsIntegration */
+	private $groupsIntegration;
+
 	/** @var AddressCollector */
 	private $addressCollector;
 
@@ -41,7 +45,7 @@ class AutoCompleteService {
 
 	public function findMatches($term) {
 		$recipientsFromContacts = $this->contactsIntegration->getMatchingRecipient($term);
-    $recipientGroups = $this->groupsIntegration->getMatchingGroup($term);
+    $recipientGroups = $this->groupsIntegration->getMatchingGroups($term);
 		$fromCollector = $this->addressCollector->searchAddress($term);
 
 		// Convert collected addresses into same format as CI creates

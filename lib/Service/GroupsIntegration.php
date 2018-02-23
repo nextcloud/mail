@@ -1,9 +1,7 @@
 <?php
 
 /**
- * @author Christoph Wurst <christoph@winzerhof-wurst.at>
- * @author Thomas Müller <thomas.mueller@tmit.eu>
- * @author Matthias Rella <git@myrho.net>
+ * @author Matthias Rella <mrella@pisys.eu>
  *
  * Mail
  *
@@ -23,20 +21,20 @@
 
 namespace OCA\Mail\Service;
 
-use OCP\GroupInterface;
+use OCP\IGroupManager;
 
 class GroupsIntegration {
 
 	/**
-	 * @var GroupInterface
+	 * @var IGroupManager
 	 */
-	private $groupInterface;
+	private $groupManager;
 
 	/**
-	 * @param GroupInterface $groupsInterface
+	 * @param IGroupManager $groupsManager
 	 */
-	public function __construct(GroupInterface $groupInterface) {
-		$this->groupInterface = $groupInterface;
+	public function __construct(IGroupManager $groupManager) {
+		$this->groupManager = $groupManager;
 	}
 
 	/**
@@ -46,17 +44,16 @@ class GroupsIntegration {
 	 * @return array
 	 */
 	public function getMatchingGroups($term) {
-		$result = $this->groupInterface->getGroups($term);
+		$result = $this->groupManager->search($term);
 		$receivers = [];
-		foreach ($result as $id) {
+		foreach ($result as $g) {
 				$receivers[] = [
-					'id' => $id,
-					'label' => $id,
-					'value' => $id,
+					'id' => $g->getGID(),
+					'label' => $g->getDisplayName(),
+					'value' => $g->getDisplayName(),
 					'photo' => null,
 				];
-			}
-		}
+    }
 
 		return $receivers;
 	}
