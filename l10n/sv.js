@@ -80,6 +80,7 @@ OC.L10N.register(
     "Aliases" : "Alias",
     "Mail address" : "E-postadress",
     "Display Name" : "Visningsnamn",
+    "Account" : "Konto",
     "Keyboard shortcuts" : "Tangentbordsgenvägar",
     "Speed up your Mail experience with these quick shortcuts." : "Snabba upp din E-post-upplevelse med dessa genvägar.",
     "Compose new message" : "Skapa nytt meddelande",
