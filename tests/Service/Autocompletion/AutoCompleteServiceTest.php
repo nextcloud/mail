@@ -2,6 +2,7 @@
 
 /**
  * @author Christoph Wurst <christoph@winzerhof-wurst.at>
+ * @author Matthias Rella <mrella@pisys.eu>
  *
  * Mail
  *
@@ -28,6 +29,7 @@ use OCA\Mail\Service\AutoCompletion\AutoCompleteService;
 class AutoCompleteServiceTest extends TestCase {
 
 	private $contactsIntegration;
+	private $groupsIntegration;
 	private $addressCollector;
 	private $service;
 
@@ -37,11 +39,15 @@ class AutoCompleteServiceTest extends TestCase {
 		$this->contactsIntegration = $this->getMockBuilder('\OCA\Mail\Service\ContactsIntegration')
 			->disableOriginalConstructor()
 			->getMock();
+		$this->groupsIntegration = $this->getMockBuilder('\OCA\Mail\Service\GroupsIntegration')
+			->disableOriginalConstructor()
+			->getMock();
 		$this->addressCollector = $this->getMockBuilder('\OCA\Mail\Service\AutoCompletion\AddressCollector')
 			->disableOriginalConstructor()
 			->getMock();
 
 		$this->service = new AutoCompleteService($this->contactsIntegration,
+      $this->groupsIntegration,
 			$this->addressCollector);
 	}
 
@@ -61,10 +67,18 @@ class AutoCompleteServiceTest extends TestCase {
 			$john,
 		];
 
+    $groupsResult = [
+      ['id' => 20, 'label' => 'Journalists', 'value' => 'Journalists']
+    ];
+
 		$this->contactsIntegration->expects($this->once())
 			->method('getMatchingRecipient')
 			->with($term)
 			->will($this->returnValue($contactsResult));
+		$this->groupsIntegration->expects($this->once())
+			->method('getMatchingGroups')
+			->with($term)
+			->will($this->returnValue($groupsResult));
 		$this->addressCollector->expects($this->once())
 			->method('searchAddress')
 			->with($term)
@@ -76,6 +90,7 @@ class AutoCompleteServiceTest extends TestCase {
 			['id' => 12, 'label' => '"john doe" <john@doe.cz>', 'value' => '"john doe" <john@doe.cz>'],
 			['id' => 13, 'label' => '"joe doe" <joe@doe.se>', 'value' => '"joe doe" <joe@doe.se>'],
 			['id' => 1234, 'label' => 'John Doe', 'value' => '"John Doe" <john@doe.com>'],
+			['id' => 20, 'label' => 'Journalists', 'value' => 'Journalists'],
 		];
 		$this->assertEquals($expected, $response);
 	}
