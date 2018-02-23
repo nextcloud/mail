@@ -33,4 +33,4 @@ translations.js
 coverage/
 
 # vim
-*.sw*
+.*.sw?
