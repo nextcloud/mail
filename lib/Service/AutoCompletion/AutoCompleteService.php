@@ -45,7 +45,7 @@ class AutoCompleteService {
 
 	public function findMatches($term) {
 		$recipientsFromContacts = $this->contactsIntegration->getMatchingRecipient($term);
-    $recipientGroups = $this->groupsIntegration->getMatchingGroups($term);
+		$recipientGroups = $this->groupsIntegration->getMatchingGroups($term);
 		$fromCollector = $this->addressCollector->searchAddress($term);
 
 		// Convert collected addresses into same format as CI creates

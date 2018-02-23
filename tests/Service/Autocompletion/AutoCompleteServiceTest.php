@@ -47,7 +47,7 @@ class AutoCompleteServiceTest extends TestCase {
 			->getMock();
 
 		$this->service = new AutoCompleteService($this->contactsIntegration,
-      $this->groupsIntegration,
+			$this->groupsIntegration,
 			$this->addressCollector);
 	}
 
@@ -67,9 +67,9 @@ class AutoCompleteServiceTest extends TestCase {
 			$john,
 		];
 
-    $groupsResult = [
-      ['id' => 20, 'label' => 'Journalists', 'value' => 'Journalists']
-    ];
+		$groupsResult = [
+			['id' => 20, 'label' => 'Journalists', 'value' => 'Journalists']
+		];
 
 		$this->contactsIntegration->expects($this->once())
 			->method('getMatchingRecipient')

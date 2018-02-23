@@ -53,8 +53,8 @@ class GroupsIntegrationTest extends TestCase {
 	public function testGetMatchingGroups() {
 		$term = 'te'; // searching for: John Doe
 		$searchResult = [
-      $this->createTestGroup('testgroup', 'first test group'),
-      $this->createTestGroup('testgroup2', 'second test group'),
+			$this->createTestGroup('testgroup', 'first test group'),
+			$this->createTestGroup('testgroup2', 'second test group'),
 		];
 
 		$this->groupsManager->expects($this->once())
@@ -68,7 +68,7 @@ class GroupsIntegrationTest extends TestCase {
 				'label' => 'first test group',
 				'value' => 'first test group',
 				'photo' => null,
-      ],
+			],
 			[
 				'id' => 'testgroup2',
 				'label' => 'second test group',

@@ -53,7 +53,7 @@ class GroupsIntegration {
 					'value' => $g->getDisplayName(),
 					'photo' => null,
 				];
-    }
+		}
 
 		return $receivers;
 	}
