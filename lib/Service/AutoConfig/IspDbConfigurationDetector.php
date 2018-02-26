@@ -29,9 +29,9 @@ use Horde_Mail_Exception;
 use Horde_Mail_Transport_Smtphorde;
 use OCA\Mail\Account;
 use OCA\Mail\Db\MailAccount;
+use OCA\Mail\Service\Logger;
 use OCA\Mail\SMTP\SmtpClientFactory;
 use OCP\Security\ICrypto;
-use OpenCloud\Common\Log\Logger;
 
 class IspDbConfigurationDetector {
 
