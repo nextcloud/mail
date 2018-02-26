@@ -46,7 +46,7 @@ define(function(require) {
 					if (resp.ok) {
 						return resp.json();
 					}
-					throw Error('Could not load avatar for  ' + email, resp);
+					throw resp;
 				})
 				.then(function(avatar) {
 					if (avatar.isExternal) {
