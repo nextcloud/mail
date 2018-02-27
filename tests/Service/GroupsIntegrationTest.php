@@ -142,6 +142,11 @@ class GroupsIntegrationTest extends TestCase {
 				'name' => "Jimmy",
 				'email' => "jim@smith.net"
 			],
+			[
+				'id' => 'jimbo',
+				'name' => "Jimbo",
+				'email' => ""
+			],
 		];
 		$this->groupService2->expects($this->once())
 			->method('getUsers')
