@@ -23,56 +23,61 @@ namespace OCA\Mail\Tests\Service;
 
 use ChristophWurst\Nextcloud\Testing\TestCase;
 use OCA\Mail\Service\GroupsIntegration;
+use OCA\Mail\Service\Group\NextcloudGroupService;
 
 class GroupsIntegrationTest extends TestCase {
 
-	private $groupsManager;
+	private $groupService1;
+	private $groupService2;
 	private $groupsIntegration;
 
 	protected function setUp() {
 		parent::setUp();
 
-		$this->groupsManager = $this->getMockBuilder('OCP\IGroupManager')
+		$this->groupService1 = $this->getMockBuilder(NextcloudGroupService::class)
 			->disableOriginalConstructor()
 			->getMock();
-		$this->groupsIntegration = new GroupsIntegration($this->groupsManager);
+		$this->groupService2 = $this->getMockBuilder(NextcloudGroupService::class)
+			->disableOriginalConstructor()
+			->getMock();
+		$this->groupsIntegration = new GroupsIntegration($this->groupService1, $this->groupService2);
 	}
-
-	private function createTestGroup($id, $name) {
-		$mockGroup = $this->createMock('OCP\IGroup');
-		$mockGroup->expects($this->any())
-			->method('getGID')
-			->will($this->returnValue($id));
-		$mockGroup->expects($this->any())
-			->method('getDisplayName')
-			->will($this->returnValue($name));
-		return $mockGroup;
-	}
-
 
 	public function testGetMatchingGroups() {
 		$term = 'te'; // searching for: John Doe
-		$searchResult = [
-			$this->createTestGroup('testgroup', 'first test group'),
-			$this->createTestGroup('testgroup2', 'second test group'),
+		$searchResult1 = [
+			[
+				'id' => 'testgroup',
+				'name' => "first test group"
+			]
+		];
+		$searchResult2 = [
+			[
+				'id' => 'testgroup2',
+				'name' => "second test group"
+			]
 		];
 
-		$this->groupsManager->expects($this->once())
+		$this->groupService1->expects($this->once())
 			->method('search')
 			->with($term)
-			->will($this->returnValue($searchResult));
+			->will($this->returnValue($searchResult1));
+		$this->groupService2->expects($this->once())
+			->method('search')
+			->with($term)
+			->will($this->returnValue($searchResult2));
 
 		$expected = [
 			[
 				'id' => 'testgroup',
 				'label' => 'first test group',
-				'value' => 'first test group',
+				'value' => 'testgroup',
 				'photo' => null,
 			],
 			[
 				'id' => 'testgroup2',
 				'label' => 'second test group',
-				'value' => 'second test group',
+				'value' => 'testgroup2',
 				'photo' => null,
 			]
 		];

@@ -33,6 +33,8 @@ use OCA\Mail\Service\AvatarService;
 use OCA\Mail\Service\MailManager;
 use OCA\Mail\Service\MailTransmission;
 use OCA\Mail\Service\UserPreferenceSevice;
+use OCA\Mail\Service\Autocompletion\AutoCompleteService;
+use OCA\Mail\Service\GroupsIntegration;
 use OCP\AppFramework\App;
 use OCP\Util;
 
@@ -71,6 +73,10 @@ class Application extends App {
 
 		$container->registerAlias('ErrorMiddleware', ErrorMiddleware::class);
 		$container->registerMiddleWare('ErrorMiddleware');
+
+		$container->registerService('OCA\Mail\Service\GroupsIntegration', function($c) {
+			return new GroupsIntegration($c->query('OCA\Mail\Service\Group\NextcloudGroupService'));
+		});
 	}
 
 }

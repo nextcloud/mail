@@ -19,43 +19,31 @@
  *
  */
 
-namespace OCA\Mail\Service;
+namespace OCA\Mail\Service\Group;
 
-use OCA\Mail\Service\Group\IGroupService;
-
-class GroupsIntegration {
+interface IGroupService {
 
 	/**
-	 * @var IGroupService
-	 */
-	private $groupServices = [];
-
-	public function __construct(IGroupService ...$groupServices) {
-		$this->groupServices = $groupServices;
-	}
-
-	/**
-	 * Extracts all matching contacts with email address and name
+	 * Search the service's groups.
 	 *
-	 * @param string $term
-	 * @return array
+   * @param string $term
+	 * @return string
 	 */
-	public function getMatchingGroups($term) {
-		$receivers = [];
-		foreach ($this->groupServices as $gs) {
-      $result = $gs->search($term);
-			foreach($result as $g) {
-				$receivers[] = [
-					'id' => $g['id'],
-					'label' => $g['name'],
-					'value' => $g['id'],
-					'photo' => null,
-				];
-			}
-		}
+	public function search($term);
 
-		return $receivers;
-	}
+	/**
+	 * Get the group's namespace.
+	 *
+	 * @return string
+	 */
+	public function getNamespace();
 
-
+	/**
+	 * Get the group's namespace id.
+	 *
+	 * @return string
+	 */
+	public function getNamespaceId();
 }
+
+?>
