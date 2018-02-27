@@ -23,7 +23,7 @@ namespace OCA\Mail\Service\Group;
 
 use OCP\IGroupManager;
 
-class NextcloudGroupService implements IGroupService {
+class NextcloudGroupService extends AbstractGroupService {
 
 	/**
 	 * Nextcloud's group manager
@@ -31,14 +31,9 @@ class NextcloudGroupService implements IGroupService {
 	private $groupManager;
 
 	/**
-	 * Group's display namespace
+	 * Group's namespace
 	 */
 	private $namespace = "Nextcloud";
-
-	/** 
-	 * Group's namespace id
-	 */
-	private $namespaceId = "nextcloud";
 
 	public function __construct(IGroupManager $groupManager) {
 		$this->groupManager = $groupManager;
@@ -48,26 +43,32 @@ class NextcloudGroupService implements IGroupService {
 		return $this->namespace;
 	}
 
-	public function getNamespaceId() {
-		return $this->namespaceId;
-	}
-
-	/**
-	 * @param string $term
-	 * @return \OCA\Mail\Service\Group\Group[]
-	 */
 	public function search($term) {
 		$groups = $this->groupManager->search($term);
 
 		return array_map(
 			function($g) {
 				return [
-					'id' => $this->getNamespaceId() . ":" . $g->getGID(),
+					'id' => $this->getPrefix() . $g->getGID(),
 					'name' => $g->getDisplayName() . " (" . $this->getNamespace() . ")"
 				];
-      },
-      $groups
+			},
+			$groups
 		);
+	}
 
+	public function getUsers($groupId) {
+		if(!$this->groupManager->groupExists($groupId)) return [];
+		$users = $this->groupManager->get($groupId)->getUsers();
+		return array_map(
+			function($user) {
+				return [
+					'id' => $user->getUID(),
+					'name' => $user->getDisplayName(),
+					'email' => $user->getEMailAddress()
+				];
+			},
+			$users
+		);
 	}
 }

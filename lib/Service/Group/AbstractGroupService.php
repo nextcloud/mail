@@ -21,29 +21,41 @@
 
 namespace OCA\Mail\Service\Group;
 
-interface IGroupService {
+abstract class AbstractGroupService {
 
 	/**
 	 * Search the service's groups.
 	 *
-   * @param string $term
+	 * @param string $term
 	 * @return string
 	 */
-	public function search($term);
+	abstract public function search($term);
 
 	/**
 	 * Get the group's namespace.
 	 *
 	 * @return string
 	 */
-	public function getNamespace();
+	abstract public function getNamespace();
 
 	/**
-	 * Get the group's namespace id.
+	 * Get the group's users.
+	 *
+	 * @param string $groupId 
+	 * @return array with group's key-value pairs
+	 */
+	abstract public function getUsers($groupId);
+
+	/**
+	 * Get the group's namespace prefix.
+	 * Ie. appreviated namespace + delimiter.
 	 *
 	 * @return string
 	 */
-	public function getNamespaceId();
+	public function getPrefix() {
+		return strtolower($this->getNamespace()) . ":";
+	}
+
 }
 
 ?>

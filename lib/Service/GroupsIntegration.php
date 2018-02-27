@@ -21,7 +21,7 @@
 
 namespace OCA\Mail\Service;
 
-use OCA\Mail\Service\Group\IGroupService;
+use OCA\Mail\Service\Group\AbstractGroupService;
 
 class GroupsIntegration {
 
@@ -30,7 +30,7 @@ class GroupsIntegration {
 	 */
 	private $groupServices = [];
 
-	public function __construct(IGroupService ...$groupServices) {
+	public function __construct(AbstractGroupService ...$groupServices) {
 		$this->groupServices = $groupServices;
 	}
 
@@ -57,5 +57,25 @@ class GroupsIntegration {
 		return $receivers;
 	}
 
+	public function expand($recipients) {
+		return 
+			array_reduce($this->groupServices, function($carry, $service) {
+				return 
+					preg_replace_callback(
+						'/' . preg_quote($service->getPrefix()) . '[\w\d ]+/g',
+						function($matches) {
+							$members = $service->getUsers($matches[1]);
+							$addresses = [];
+							foreach($members as $m) {
+								if(empty($m['email'])) continue;
+								$addresses[] = $m['email'];
+							}
+							return $addresses;
+						},
+						$carry
+					);
+			}, $recipients );
+
+	}
 
 }
