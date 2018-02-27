@@ -17,15 +17,13 @@ module.exports = {
 	module: {
 		rules: [
 			{test: /davclient/, use: 'exports-loader?dav'},
+			{test: /ical/, use: 'exports-loader?ICAL'},
 			{
 				test: /\.html$/, loader: "handlebars-loader", query: {
 					extensions: '.html',
 					helperDirs: __dirname + '/templatehelpers'
 				}
 			}
-		],
-		loaders: [
-			{test: /ical/, loader: 'exports-loader?ICAL'}
 		]
 	}
 };
