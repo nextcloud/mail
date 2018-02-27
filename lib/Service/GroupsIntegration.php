@@ -26,7 +26,9 @@ use OCA\Mail\Service\Group\AbstractGroupService;
 class GroupsIntegration {
 
 	/**
-	 * @var IGroupService
+	 * The services to get groups from
+	 *
+	 * @var IGroupService[]
 	 */
 	private $groupServices = [];
 

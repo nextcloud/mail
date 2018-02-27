@@ -27,11 +27,15 @@ class NextcloudGroupService extends AbstractGroupService {
 
 	/**
 	 * Nextcloud's group manager
+	 *
+	 * @var IGroupManager
 	 */
 	private $groupManager;
 
 	/**
 	 * Group's namespace
+	 *
+	 * @var string
 	 */
 	private $namespace = "Nextcloud";
 
