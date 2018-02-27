@@ -43,7 +43,7 @@ class GroupsIntegration {
 	public function getMatchingGroups($term) {
 		$receivers = [];
 		foreach ($this->groupServices as $gs) {
-      $result = $gs->search($term);
+			$result = $gs->search($term);
 			foreach($result as $g) {
 				$gid = $this->servicePrefix($gs) . $g['id'];
 				$receivers[] = [
