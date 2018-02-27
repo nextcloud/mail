@@ -45,10 +45,11 @@ class GroupsIntegration {
 		foreach ($this->groupServices as $gs) {
       $result = $gs->search($term);
 			foreach($result as $g) {
+				$gid = $this->servicePrefix($gs) . $g['id'];
 				$receivers[] = [
-					'id' => $g['id'],
-					'label' => $g['name'],
-					'value' => $g['id'],
+					'id' => $gid,
+					'label' => $g['name'] . " (" . $gs->getNamespace() . ")",
+					'value' => $gid,
 					'photo' => null,
 				];
 			}
@@ -57,20 +58,38 @@ class GroupsIntegration {
 		return $receivers;
 	}
 
+	/**
+	 * Returns the prefix for the group service.
+	 *
+	 * @param AbstractGroupService $gs
+	 * @return string
+	 */
+	public function servicePrefix(AbstractGroupService $gs) {
+		return strtolower($gs->getNamespace()) . ":";
+	}
+
+	/** 
+	 * Expands a string of group names to its members email addresses.
+	 *
+	 * @param string $recipients
+	 * @return string
+	 */
 	public function expand($recipients) {
 		return 
 			array_reduce($this->groupServices, function($carry, $service) {
 				return 
 					preg_replace_callback(
-						'/' . preg_quote($service->getPrefix()) . '[\w\d ]+/g',
-						function($matches) {
+						'/' . preg_quote($this->servicePrefix($service)) . '([\w\d ]+)(,?)/',
+						function($matches) use ($service) {
+							if(empty($matches[1])) return "";
 							$members = $service->getUsers($matches[1]);
 							$addresses = [];
 							foreach($members as $m) {
 								if(empty($m['email'])) continue;
 								$addresses[] = $m['email'];
 							}
-							return $addresses;
+							return implode(',', $addresses) 
+								. (!empty($matches[2]) && !empty($addresses) ? ',' : '');
 						},
 						$carry
 					);

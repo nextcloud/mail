@@ -46,16 +46,6 @@ abstract class AbstractGroupService {
 	 */
 	abstract public function getUsers($groupId);
 
-	/**
-	 * Get the group's namespace prefix.
-	 * Ie. appreviated namespace + delimiter.
-	 *
-	 * @return string
-	 */
-	public function getPrefix() {
-		return strtolower($this->getNamespace()) . ":";
-	}
-
 }
 
 ?>

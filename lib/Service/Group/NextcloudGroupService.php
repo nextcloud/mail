@@ -49,8 +49,8 @@ class NextcloudGroupService extends AbstractGroupService {
 		return array_map(
 			function($g) {
 				return [
-					'id' => $this->getPrefix() . $g->getGID(),
-					'name' => $g->getDisplayName() . " (" . $this->getNamespace() . ")"
+					'id' => $g->getGID(),
+					'name' => $g->getDisplayName()
 				];
 			},
 			$groups
