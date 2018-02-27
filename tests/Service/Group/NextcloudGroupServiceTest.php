@@ -24,7 +24,7 @@ namespace OCA\Mail\Tests\Service\Group;
 use ChristophWurst\Nextcloud\Testing\TestCase;
 use OCA\Mail\Service\Group\NextcloudGroupService;
 
-class GroupsIntegrationTest extends TestCase {
+class NextcloudGroupServiceTest extends TestCase {
 
 	private $groupsManager;
 	private $groupService;
@@ -64,12 +64,12 @@ class GroupsIntegrationTest extends TestCase {
 
 		$expected = [
 			[
-				'id' => 'nextcloud:testgroup',
-				'name' => 'first test group (Nextcloud)',
+				'id' => 'testgroup',
+				'name' => 'first test group',
 			],
 			[
-				'id' => 'nextcloud:testgroup2',
-				'name' => 'second test group (Nextcloud)',
+				'id' => 'testgroup2',
+				'name' => 'second test group',
 			]
 		];
 		$actual = $this->groupService->search($term);

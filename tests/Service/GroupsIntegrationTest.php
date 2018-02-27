@@ -40,6 +40,12 @@ class GroupsIntegrationTest extends TestCase {
 		$this->groupService2 = $this->getMockBuilder(NextcloudGroupService::class)
 			->disableOriginalConstructor()
 			->getMock();
+		$this->groupService1->expects($this->any())
+			->method('getNamespace')
+			->willReturn('Namespace1');
+		$this->groupService2->expects($this->any())
+			->method('getNamespace')
+			->willReturn('Namespace2');
 		$this->groupsIntegration = new GroupsIntegration($this->groupService1, $this->groupService2);
 	}
 
@@ -69,21 +75,110 @@ class GroupsIntegrationTest extends TestCase {
 
 		$expected = [
 			[
-				'id' => 'testgroup',
-				'label' => 'first test group',
-				'value' => 'testgroup',
+				'id' => 'namespace1:testgroup',
+				'label' => 'first test group (Namespace1)',
+				'value' => 'namespace1:testgroup',
 				'photo' => null,
 			],
 			[
-				'id' => 'testgroup2',
-				'label' => 'second test group',
-				'value' => 'testgroup2',
+				'id' => 'namespace2:testgroup2',
+				'label' => 'second test group (Namespace2)',
+				'value' => 'namespace2:testgroup2',
 				'photo' => null,
 			]
 		];
 		$actual = $this->groupsIntegration->getMatchingGroups($term);
 
 		$this->assertEquals($expected, $actual);
+	}
+
+	public function testExpand() {
+		$recipients = "john@doe.com,namespace1:testgroup,alice@smith.net";
+		$members = [
+			[
+				'id' => 'bob',
+				'name' => "Bobby",
+				'email' => "bob@smith.net"
+			],
+			[ 
+				'id' => 'mary',
+				'name' => 'Mary',
+				'email' => 'mary@smith.net'
+			]
+		];
+		$this->groupService1->expects($this->once())
+			->method('getUsers')
+			->willReturn($members);
+
+		$expected = "john@doe.com,bob@smith.net,mary@smith.net,alice@smith.net";
+
+		$actual = $this->groupsIntegration->expand($recipients);
+
+		$this->assertEquals($expected, $actual);
+
+	}
+
+	public function testExpand2() {
+		$recipients = "john@doe.com,namespace1:testgroup,alice@smith.net,namespace2:testgroup";
+		$members = [
+			[
+				'id' => 'bob',
+				'name' => "Bobby",
+				'email' => "bob@smith.net"
+			],
+			[ 
+				'id' => 'mary',
+				'name' => 'Mary',
+				'email' => 'mary@smith.net'
+			]
+		];
+		$this->groupService1->expects($this->once())
+			->method('getUsers')
+			->willReturn($members);
+
+		$members2 = [
+			[
+				'id' => 'jim',
+				'name' => "Jimmy",
+				'email' => "jim@smith.net"
+			],
+		];
+		$this->groupService2->expects($this->once())
+			->method('getUsers')
+			->willReturn($members2);
+
+		$expected = "john@doe.com,bob@smith.net,mary@smith.net,alice@smith.net,jim@smith.net";
+
+		$actual = $this->groupsIntegration->expand($recipients);
+
+		$this->assertEquals($expected, $actual);
+
+	}
+
+	public function testExpandEmpty() {
+		$recipients = "john@doe.com,namespace1:testgroup,alice@smith.net";
+		$members = [
+		];
+		$this->groupService1->expects($this->once())
+			->method('getUsers')
+			->willReturn($members);
+
+		$expected = "john@doe.com,alice@smith.net";
+
+		$actual = $this->groupsIntegration->expand($recipients);
+
+		$this->assertEquals($expected, $actual);
+
+	}
+
+	public function testExpandWrong() {
+		$recipients = "john@doe.com,nons:testgroup,alice@smith.net";
+		$expected = "john@doe.com,nons:testgroup,alice@smith.net";
+
+		$actual = $this->groupsIntegration->expand($recipients);
+
+		$this->assertEquals($expected, $actual);
+
 	}
 
 }
