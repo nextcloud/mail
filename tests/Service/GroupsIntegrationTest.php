@@ -156,19 +156,14 @@ class GroupsIntegrationTest extends TestCase {
 	}
 
 	public function testExpandEmpty() {
+		$this->expectException(\Exception::class);
 		$recipients = "john@doe.com,namespace1:testgroup,alice@smith.net";
 		$members = [
 		];
 		$this->groupService1->expects($this->once())
 			->method('getUsers')
 			->willReturn($members);
-
-		$expected = "john@doe.com,alice@smith.net";
-
-		$actual = $this->groupsIntegration->expand($recipients);
-
-		$this->assertEquals($expected, $actual);
-
+		$this->groupsIntegration->expand($recipients);
 	}
 
 	public function testExpandWrong() {
@@ -178,6 +173,14 @@ class GroupsIntegrationTest extends TestCase {
 		$actual = $this->groupsIntegration->expand($recipients);
 
 		$this->assertEquals($expected, $actual);
+
+	}
+
+	public function testExpandWrong2() {
+		$this->expectException(\Exception::class);
+		$recipients = "john@doe.com,namespace1:nogroup,alice@smith.net";
+
+		$this->groupsIntegration->expand($recipients);
 
 	}
 

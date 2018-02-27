@@ -67,6 +67,9 @@ class GroupsIntegration {
 	 * @return string
 	 */
 	public function servicePrefix(AbstractGroupService $gs) {
+		if(empty($gs->getNamespace())) {
+			throw new \Exception('GroupService has no namespace');
+		}
 		return strtolower($gs->getNamespace()) . ":";
 	}
 
@@ -85,6 +88,9 @@ class GroupsIntegration {
 						function($matches) use ($service) {
 							if(empty($matches[1])) return "";
 							$members = $service->getUsers($matches[1]);
+							if( empty($members) ) {
+								throw new \Exception($matches[1] . " ({$service->getNamespace()}) has no members" );
+							}
 							$addresses = [];
 							foreach($members as $m) {
 								if(empty($m['email'])) continue;

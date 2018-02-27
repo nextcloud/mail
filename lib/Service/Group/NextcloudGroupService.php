@@ -62,7 +62,9 @@ class NextcloudGroupService extends AbstractGroupService {
 	}
 
 	public function getUsers($groupId) {
-		if(!$this->groupManager->groupExists($groupId)) return [];
+		if(!$this->groupManager->groupExists($groupId)) {
+			throw new \Exception("$groupId ({$this->getNamespace()}) does not exist");
+		}
 		$users = $this->groupManager->get($groupId)->getUsers();
 		return array_map(
 			function($user) {

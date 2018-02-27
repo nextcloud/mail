@@ -38,7 +38,7 @@ class NextcloudGroupServiceTest extends TestCase {
 		$this->groupService = new NextcloudGroupService($this->groupsManager);
 	}
 
-	private function createTestGroup($id, $name) {
+	private function createTestGroup($id, $name, $users = []) {
 		$mockGroup = $this->createMock('OCP\IGroup');
 		$mockGroup->expects($this->any())
 			->method('getGID')
@@ -46,7 +46,24 @@ class NextcloudGroupServiceTest extends TestCase {
 		$mockGroup->expects($this->any())
 			->method('getDisplayName')
 			->will($this->returnValue($name));
+		$mockGroup->expects($this->any())
+			->method('getUsers')
+			->willReturn($users);
 		return $mockGroup;
+	}
+
+	private function createTestUser($id, $name, $email) {
+		$mockUser = $this->createMock('OCP\IUser');
+		$mockUser->expects($this->any())
+			->method('getUID')
+			->will($this->returnValue($id));
+		$mockUser->expects($this->any())
+			->method('getDisplayName')
+			->will($this->returnValue($name));
+		$mockUser->expects($this->any())
+			->method('getEMailAddress')
+			->willReturn($email);
+		return $mockUser;
 	}
 
 
@@ -75,6 +92,52 @@ class NextcloudGroupServiceTest extends TestCase {
 		$actual = $this->groupService->search($term);
 
 		$this->assertEquals($expected, $actual);
+	}
+
+	public function testGetUsers() {
+		$users = [ 
+			$this->createTestUser('bob', 'Bobby', 'bob@smith.net'),
+			$this->createTestUser('alice', 'Alice', 'alice@smith.net')
+		];
+		$group =
+			$this->createTestGroup('testgroup', 'first test group', $users);
+
+		$this->groupsManager->expects($this->once())
+			->method('groupExists')
+			->willReturn(true);
+
+		$this->groupsManager->expects($this->once())
+			->method('get')
+			->with('testgroup')
+			->willReturn($group);
+
+		$actual = $this->groupService->getUsers('testgroup');
+
+		$expected = [
+			[
+				'id' => 'bob',
+				'name' => 'Bobby',
+				'email' => 'bob@smith.net'
+			],
+			[
+				'id' => 'alice',
+				'name' => 'Alice',
+				'email' => 'alice@smith.net'
+			]
+		];
+
+		$this->assertEquals($expected, $actual);
+
+	}
+
+	public function testGetUsersWrong() {
+		$this->expectException(\Exception::class);
+
+		$this->groupsManager->expects($this->once())
+			->method('groupExists')
+			->willReturn(false);
+
+		$this->groupService->getUsers('nogroup');
 	}
 
 }
