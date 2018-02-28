@@ -88,6 +88,20 @@ class GroupsIntegrationTest extends TestCase {
 		$this->assertEquals($expected, $actual);
 	}
 
+	public function testGetMatchingGroupsNoServices() {
+		$gi = new GroupsIntegration();
+		$actual = $gi->getMatchingGroups("a");
+		$expected = [];
+		$this->assertEquals($expected, $actual);
+	}
+
+	public function testExpandNoServices() {
+		$gi = new GroupsIntegration();
+		$actual = $gi->expand("a@b.com");
+		$expected = "a@b.com";
+		$this->assertEquals($expected, $actual);
+	}
+
 	public function testExpandNone() {
 		$recipients = "john@doe.com,alice@smith.net";
 		$members = [
