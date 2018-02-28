@@ -37,6 +37,7 @@ use OCA\Mail\Service\AliasesService;
 use OCA\Mail\Service\AutoConfig\AutoConfig;
 use OCA\Mail\Service\Logger;
 use OCA\Mail\Service\SetupService;
+use OCA\Mail\Service\GroupsIntegration;
 use OCP\AppFramework\Db\DoesNotExistException;
 use OCP\AppFramework\Http;
 use OCP\IL10N;
@@ -54,6 +55,9 @@ class AccountsControllerTest extends TestCase {
 
 	/** @var AccountService|PHPUnit_Framework_MockObject_MockObject */
 	private $accountService;
+
+	/** @var GroupsIntegration|PHPUnit_Framework_MockObject_MockObject */
+	private $groupsIntegration;
 
 	/** @var string */
 	private $userId;
@@ -94,6 +98,7 @@ class AccountsControllerTest extends TestCase {
 		$this->appName = 'mail';
 		$this->request = $this->createMock(IRequest::class);
 		$this->accountService = $this->createMock(AccountService::class);
+		$this->groupsIntegration = new GroupsIntegration();
 		$this->userId = 'manfred';
 		$this->autoConfig = $this->createMock(AutoConfig::class);
 		$this->logger = $this->createMock(Logger::class);
@@ -103,7 +108,7 @@ class AccountsControllerTest extends TestCase {
 		$this->transmission = $this->createMock(IMailTransmission::class);
 		$this->setupService = $this->createMock(SetupService::class);
 
-		$this->controller = new AccountsController($this->appName, $this->request, $this->accountService, $this->userId,
+		$this->controller = new AccountsController($this->appName, $this->request, $this->accountService, $this->groupsIntegration, $this->userId,
 			$this->logger, $this->l10n, $this->crypto, $this->aliasesService, $this->transmission, $this->setupService);
 		$this->account = $this->createMock(Account::class);
 		$this->accountId = 123;
