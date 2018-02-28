@@ -32,9 +32,7 @@ class NextcloudGroupServiceTest extends TestCase {
 	protected function setUp() {
 		parent::setUp();
 
-		$this->groupsManager = $this->getMockBuilder('OCP\IGroupManager')
-			->disableOriginalConstructor()
-			->getMock();
+		$this->groupsManager = $this->createMock('OCP\IGroupManager');
 		$this->groupService = new NextcloudGroupService($this->groupsManager);
 	}
 

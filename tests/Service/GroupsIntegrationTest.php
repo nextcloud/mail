@@ -34,12 +34,8 @@ class GroupsIntegrationTest extends TestCase {
 	protected function setUp() {
 		parent::setUp();
 
-		$this->groupService1 = $this->getMockBuilder(NextcloudGroupService::class)
-			->disableOriginalConstructor()
-			->getMock();
-		$this->groupService2 = $this->getMockBuilder(NextcloudGroupService::class)
-			->disableOriginalConstructor()
-			->getMock();
+		$this->groupService1 = $this->createMock(NextcloudGroupService::class);
+		$this->groupService2 = $this->createMock(NextcloudGroupService::class);
 		$this->groupService1->expects($this->any())
 			->method('getNamespace')
 			->willReturn('Namespace1');
