@@ -98,7 +98,10 @@ class AccountsControllerTest extends TestCase {
 		$this->appName = 'mail';
 		$this->request = $this->createMock(IRequest::class);
 		$this->accountService = $this->createMock(AccountService::class);
-		$this->groupsIntegration = new GroupsIntegration();
+		$this->groupsIntegration = $this->createMock(GroupsIntegration::class);
+		$this->groupsIntegration->expects($this->any())
+			->method('expand')
+			->will($this->returnArgument(0));
 		$this->userId = 'manfred';
 		$this->autoConfig = $this->createMock(AutoConfig::class);
 		$this->logger = $this->createMock(Logger::class);
