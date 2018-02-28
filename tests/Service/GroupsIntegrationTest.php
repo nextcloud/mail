@@ -88,6 +88,32 @@ class GroupsIntegrationTest extends TestCase {
 		$this->assertEquals($expected, $actual);
 	}
 
+	public function testExpandNone() {
+		$recipients = "john@doe.com,alice@smith.net";
+		$members = [
+			[
+				'id' => 'bob',
+				'name' => "Bobby",
+				'email' => "bob@smith.net"
+			],
+			[ 
+				'id' => 'mary',
+				'name' => 'Mary',
+				'email' => 'mary@smith.net'
+			]
+		];
+		$this->groupService1->expects($this->never())
+			->method('getUsers')
+			->willReturn($members);
+
+		$expected = $recipients;
+
+		$actual = $this->groupsIntegration->expand($recipients);
+
+		$this->assertEquals($expected, $actual);
+
+	}
+
 	public function testExpand() {
 		$recipients = "john@doe.com,namespace1:testgroup,alice@smith.net";
 		$members = [
