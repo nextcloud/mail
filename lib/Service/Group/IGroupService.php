@@ -21,7 +21,7 @@
 
 namespace OCA\Mail\Service\Group;
 
-abstract class AbstractGroupService {
+interface IGroupService {
 
 	/**
 	 * Search the service's groups.
@@ -29,14 +29,14 @@ abstract class AbstractGroupService {
 	 * @param string $term
 	 * @return string
 	 */
-	abstract public function search($term);
+	public function search($term);
 
 	/**
 	 * Get the group's namespace.
 	 *
 	 * @return string
 	 */
-	abstract public function getNamespace();
+	public function getNamespace();
 
 	/**
 	 * Get the group's users.
@@ -44,7 +44,7 @@ abstract class AbstractGroupService {
 	 * @param string $groupId 
 	 * @return array with group's key-value pairs
 	 */
-	abstract public function getUsers($groupId);
+	public function getUsers($groupId);
 
 }
 

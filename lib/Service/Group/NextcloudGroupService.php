@@ -23,7 +23,7 @@ namespace OCA\Mail\Service\Group;
 
 use OCP\IGroupManager;
 
-class NextcloudGroupService extends AbstractGroupService {
+class NextcloudGroupService implements IGroupService {
 
 	/**
 	 * Nextcloud's group manager

@@ -21,7 +21,7 @@
 
 namespace OCA\Mail\Service;
 
-use OCA\Mail\Service\Group\AbstractGroupService;
+use OCA\Mail\Service\Group\IGroupService;
 
 class GroupsIntegration {
 
@@ -32,7 +32,7 @@ class GroupsIntegration {
 	 */
 	private $groupServices = [];
 
-	public function __construct(AbstractGroupService ...$groupServices) {
+	public function __construct(IGroupService ...$groupServices) {
 		$this->groupServices = $groupServices;
 	}
 
@@ -63,10 +63,10 @@ class GroupsIntegration {
 	/**
 	 * Returns the prefix for the group service.
 	 *
-	 * @param AbstractGroupService $gs
+	 * @param IGroupService $gs
 	 * @return string
 	 */
-	public function servicePrefix(AbstractGroupService $gs) {
+	public function servicePrefix(IGroupService $gs) {
 		if(empty($gs->getNamespace())) {
 			throw new \Exception('GroupService has no namespace');
 		}
