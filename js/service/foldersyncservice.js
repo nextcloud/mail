@@ -24,6 +24,7 @@ define(function(require) {
 
 	var _ = require('underscore');
 	var $ = require('jquery');
+	var fetch = require('nextcloud_fetch');
 	var OC = require('OC');
 	var Radio = require('radio');
 
@@ -35,17 +36,20 @@ define(function(require) {
 	 * @returns {Promise}
 	 */
 	function syncSingleFolder(folder, unifiedFolder) {
-		var url = OC.generateUrl('/apps/mail/api/accounts/{accountId}/folders/{folderId}/sync', {
+		var baseUrl = OC.generateUrl('/apps/mail/api/accounts/{accountId}/folders/{folderId}/sync?syncToken={token}', {
 			accountId: folder.account.get('accountId'),
-			folderId: folder.get('id')
+			folderId: folder.get('id'),
+			token: folder.get('syncToken')
 		});
+		var separator = '&uids[]=';
+		var url = baseUrl + separator + folder.messages.pluck('id').join(separator);
 
-		return Promise.resolve($.ajax(url, {
-			data: {
-				syncToken: folder.get('syncToken'),
-				uids: folder.messages.pluck('id')
+		return fetch(url).then(function(resp) {
+			if (resp.ok) {
+				return resp.json();
 			}
-		})).then(function(syncResp) {
+			throw resp;
+		}).then(function(syncResp) {
 			folder.set('syncToken', syncResp.token);
 
 			_.forEach(syncResp.newMessages, function(msg) {

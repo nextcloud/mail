@@ -13,8 +13,8 @@
 define(function(require) {
 	'use strict';
 
-	var $ = require('jquery');
 	var _ = require('underscore');
+	var fetch = require('nextcloud_fetch');
 	var OC = require('OC');
 	var Radio = require('radio');
 
@@ -47,17 +47,23 @@ define(function(require) {
 			return buildUnifiedInbox(account);
 		}
 
-		return Promise.resolve($.get(url))
-			.then(function(data) {
-				for (var prop in data) {
-					if (prop === 'folders') {
-						account.folders.reset();
-						_.each(data.folders, account.addFolder, account);
-					} else {
-						account.set(prop, data[prop]);
+		return fetch(url)
+				.then(function(resp) {
+					if (resp.ok) {
+						return resp.json();
 					}
-				}
-				return account.folders;
-			});
+					throw Error('Could not load folders of account ' + account.get('accountId'), resp);
+				})
+				.then(function(data) {
+					for (var prop in data) {
+						if (prop === 'folders') {
+							account.folders.reset();
+							_.each(data.folders, account.addFolder, account);
+						} else {
+							account.set(prop, data[prop]);
+						}
+					}
+					return account.folders;
+				});
 	}
 });
