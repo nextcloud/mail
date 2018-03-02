@@ -5,7 +5,7 @@
 	<div class="mail-message-header">
 		<div class="sender-image avatardiv">
 			{{#if senderImage}}
-			<img class="avatar" src="{{senderImage}}" width="32px" height="32px" />
+			<img src="{{senderImage}}" width="32px" height="32px" style="object-fit: cover;"/>
 			{{else}}
 			<div class="avatar" data-user="{{sender.label}}" data-size="32"></div>
 			{{/if}}
