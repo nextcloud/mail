@@ -34,7 +34,7 @@ define(['views/emptyfolderview', 'views/helper'], function(EmptyfolderView) {
 				emptyfolderview.render();
 
 				html = emptyfolderview.el.innerHTML.trim();
-				expected_html = '<div class="icon-mail"></div>\n<h2>No messages in this folder!</h2>';
+				expected_html = '<div class="icon-mail"></div>\n<h2>No messages in this folder</h2>';
 				expect(html).toContain(expected_html);
 
 			});
