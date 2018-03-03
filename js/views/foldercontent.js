@@ -31,7 +31,8 @@ define(function(require) {
 	var ErrorView = require('views/errorview');
 	var LoadingView = require('views/loadingview');
 	var MessageContentTemplate = require('templates/foldercontent.html');
-
+	var EmptyMessageView = require('views/emptymessageview');
+	
 	var DetailView = Object.freeze({
 		ERROR: -2,
 		MESSAGE: 1,
@@ -69,6 +70,7 @@ define(function(require) {
 			// END TODO
 
 			this.listenTo(Radio.ui, 'message:loading', this.onMessageLoading);
+			this.listenTo(Radio.ui, 'message:empty', this.onMessageEmpty);	
 		},
 		onRender: function() {
 			this.showChildView('messages', new MessagesView({
@@ -142,6 +144,9 @@ define(function(require) {
 			this.showChildView('message', new LoadingView({
 				text: text
 			}));
+		},
+		onMessageEmpty: function() {
+			this.showChildView('message', new EmptyMessageView());
 		},
 		onKeyUp: function(event, key) {
 			var message;

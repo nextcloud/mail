@@ -218,7 +218,7 @@ define(function(require) {
 			if (nextMessage) {
 				Radio.message.trigger('load', nextMessage.folder.account, nextMessage.folder, nextMessage);
 			} else {
-				Radio.ui.trigger('messagesview:message:setactive', null);
+				Radio.ui.trigger('message:empty');
 			}
 		}
 
