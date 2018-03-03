@@ -122,7 +122,6 @@ OC.L10N.register(
     "The images have been blocked to protect your privacy." : "სურათები თქვენი კონფიდენციალურობის დასაცავად დაიბლოკა",
     "Show images from this sender" : "ამ გამომგზავნელისგან სურათების ჩვენება",
     "Forward" : "გადამისამართება",
-    "No messages in this folder!" : "ამ დირექტორიაში წერილები არაა",
     "Upload attachment" : "დანართის ატვირთვა",
     "Add attachment from Files" : "დანართის დამატება ფაილებიდან",
     "Import into calendar" : "იმპორტი კალენდარში",

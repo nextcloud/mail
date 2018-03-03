@@ -113,7 +113,6 @@ OC.L10N.register(
     "The images have been blocked to protect your privacy." : "Irudiak blokeatu dira zure segurtasunerako",
     "Show images from this sender" : "Bidaltzaile honen irudiak ikusi",
     "Forward" : "Birbidali",
-    "No messages in this folder!" : "Karpeta honetan ez dago mezurik",
     "Upload attachment" : "Eranskina igo",
     "Add attachment from Files" : "Eranskina gehitu fitxategitik",
     "Import into calendar" : "Egutegian inportatu",

@@ -122,7 +122,6 @@ OC.L10N.register(
     "The images have been blocked to protect your privacy." : "A személyes adataid védelme érdekében a képeket letiltottuk.",
     "Show images from this sender" : "Képek megjelenítése ettől a feladótól",
     "Forward" : "Továbbítás",
-    "No messages in this folder!" : "Nincs üzenet a mappában!",
     "Upload attachment" : "Csatolmány feltöltése",
     "Add attachment from Files" : "Csatolmány hozzáadása a Fájlok közül",
     "Import into calendar" : "Betöltés a naptárba",

@@ -113,7 +113,6 @@ OC.L10N.register(
     "The images have been blocked to protect your privacy." : "Obrázky byly zablokovány pro ochranu vašeho soukromí.",
     "Show images from this sender" : "Zobrazit obrázky od tohoto odesílatele",
     "Forward" : "Přeposlat",
-    "No messages in this folder!" : "V této složce nejsou žádné zprávy!",
     "Upload attachment" : "Nahrát přílohu",
     "Add attachment from Files" : "Přidat přílohu ze Souborů",
     "Import into calendar" : "Importovat do kalendáře",

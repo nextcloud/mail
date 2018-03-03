@@ -121,7 +121,6 @@ OC.L10N.register(
     "The images have been blocked to protect your privacy." : "Bilderna har blockerats av säkerhetsskäl.",
     "Show images from this sender" : "Visa bilder från denna avsändare",
     "Forward" : "Vidarebefodra",
-    "No messages in this folder!" : "Inga meddelanden i denna mappen!",
     "Upload attachment" : "Ladda upp bilaga",
     "Add attachment from Files" : "Lägg till bilaga från Filer",
     "Import into calendar" : "Importera till kalender",
