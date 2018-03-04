@@ -122,6 +122,7 @@ OC.L10N.register(
     "The images have been blocked to protect your privacy." : "Bildene har blitt blokkert for å beskytte privatlivet.",
     "Show images from this sender" : "Vis bilder fra denne avsenderen",
     "Forward" : "Videresend",
+    "No messages in this folder" : "Ingen meldinger i denne mappen",
     "Upload attachment" : "Last opp vedlegg",
     "Add attachment from Files" : "Legg til vedlegg fra Filer",
     "Import into calendar" : "Importer til kalender",
