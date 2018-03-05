@@ -47,7 +47,7 @@
     "phantomjs-prebuilt": "^2.1.16",
     "raw-loader": "^0.5.1",
     "sinon": "^4.4.2",
-    "webpack": "^4.0.1",
+    "webpack": "^4.1.0",
     "webpack-cli": "^2.0.9",
     "webpack-merge": "^4.1.2"
   },
