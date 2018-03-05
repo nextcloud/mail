@@ -257,6 +257,10 @@
 	padding-left: 10px;
 }
 
+.sender-image img {
+	object-fit: cover;
+}
+
 .mail-message-summary-from,
 .mail-message-summary-subject,
 .mail-message-summary .date {
