@@ -196,9 +196,13 @@ define(function(require) {
 
 		applyOnFolders(folders, function(folder) {
 			// Update total counter and prevent negative values
-			folder.set('total', Math.max(0, folder.get('total')));
-		});
+			folder.set('total', Math.max(0, folder.get('total')-1));
 
+			if(message.get('flags').get('unseen') === true) {
+				folder.set('unseen', Math.max(0, folder.get('unseen')-1));
+			}
+		});
+		
 		var searchCollection = currentFolder.messages;
 		var index = searchCollection.indexOf(message);
 		// Select previous or first
