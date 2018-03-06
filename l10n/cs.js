@@ -2,7 +2,7 @@ OC.L10N.register(
     "mail",
     {
     "Mail" : "Pošta",
-    "Loading accounts" : "Nahravání účtů",
+    "Loading accounts" : "Načítání účtů",
     "Error while loading the accounts." : "Chyba při načítání účtů.",
     "Error while loading the selected account." : "Chyba během načítání vybraného účtu.",
     "Can not load this folder." : "Tuto složku nelze načíst.",

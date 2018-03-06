@@ -122,6 +122,7 @@ OC.L10N.register(
     "The images have been blocked to protect your privacy." : "As imagens foram bloqueadas para proteger sua privacidade",
     "Show images from this sender" : "Mostre imagens desse remetente",
     "Forward" : "Encaminhar",
+    "No messages in this folder" : "Sem mensagens nesta pasta",
     "Upload attachment" : "Enviar anexo",
     "Add attachment from Files" : "Adicionar anexo a partir de arquivos",
     "Import into calendar" : "Importar para o calendário",
