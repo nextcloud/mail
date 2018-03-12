@@ -67,7 +67,7 @@
     "exports-loader": "^0.7.0",
     "handlebars": "^4.0.11",
     "handlebars-loader": "github:Waavi/handlebars-loader",
-    "html-to-text": "^3.3.0",
+    "html-to-text": "^4.0.0",
     "ical.js": "^1.2.2",
     "jquery": "^3.3.1",
     "jquery-ui": "^1.12.1",
