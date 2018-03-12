@@ -78,7 +78,7 @@ define(function(require) {
 			var builder = new IssueTemplateBuilder();
 			var template = builder.addEmptyStepsToReproduce()
 					.addExpectedActualBehaviour()
-					.addLogs('Server error', flattenError(error))
+					.addLogs('Error', flattenError(error))
 					.render();
 
 			$message.append(' Report a bug.');
