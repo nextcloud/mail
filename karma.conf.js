@@ -16,6 +16,10 @@ module.exports = function (config) {
 		frameworks: ['jasmine-ajax', 'jasmine', 'sinon'],
 
 		files: [
+			{pattern: 'node_modules/es6-object-assign/dist/object-assign.min.js', included: true},
+			{pattern: 'node_modules/string.prototype.startswith/startswith.js', included: true},
+			{pattern: 'node_modules/string.prototype.endswith/endswith.js', included: true},
+			{pattern: 'node_modules/string.prototype.repeat/repeat.js', included: true},
 			{pattern: 'node_modules/jquery/dist/jquery.js', included: true},
 			{pattern: 'js/tests/test-main.js', included: true},
 			// all files ending in "_test"

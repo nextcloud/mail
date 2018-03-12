@@ -77,3 +77,6 @@ formatDate = function(arg) {
 relative_modified_date = function(arg) {
 	return arg;
 };
+
+// es6-object-assign
+window.ObjectAssign.polyfill();
