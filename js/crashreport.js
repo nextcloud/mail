@@ -23,11 +23,9 @@
 define(function(require) {
 	'use strict';
 
-	var _ = require('underscore');
 	var $ = require('jquery');
 	var OC = require('OC');
 	var IssueTemplateBuilder = require('nextcloud_issuetemplate_builder');
-	var copyToClipboard = require('copy-to-clipboard');
 
 	function isDebugMode() {
 		return $('#debug-mode').val() === 'true';
@@ -42,6 +40,9 @@ define(function(require) {
 		text += '\n';
 		if (error.trace) {
 			text += flattenTrace(error.trace);
+		}
+		if (error.stack) {
+			text += error.stack;
 		}
 		return text;
 	}
@@ -70,7 +71,8 @@ define(function(require) {
 		var debug = isDebugMode();
 
 		var $notification = $('<div>');
-		var $message = $('<span>');
+		var $message = $('<a>');
+		var $row = null;
 		$message.text('Error: ' + message);
 		if (debug) {
 			var builder = new IssueTemplateBuilder();
@@ -79,14 +81,20 @@ define(function(require) {
 					.addLogs('Server error', flattenError(error))
 					.render();
 
-			$message.append(' Click to copy GitHub bug report template.');
+			$message.append(' Report a bug.');
+			var url = 'https://github.com/nextcloud/mail/issues/new' +
+					'?title=' + encodeURIComponent(message) +
+					'&body=' + encodeURIComponent(template);
+			$message.attr('href', url);
+			$message.attr('target', '_blank');
+			$message.attr('rel', 'noopener');
 			$message.click(function() {
-				copyToClipboard(template);
+				OC.Notification.hide($row);
 			});
 		}
 		$notification.append($message);
 
-		OC.Notification.showTemporary($notification, {
+		$row = OC.Notification.showTemporary($notification, {
 			isHTML: true
 		});
 	}

@@ -22,6 +22,7 @@ define(function(require) {
 
 	var _ = require('underscore');
 	var Marionette = require('backbone.marionette');
+	var CrashReport = require('crashreport');
 	var Radio = require('radio');
 	var AccountController = require('controller/accountcontroller');
 	var AccountFormView = require('views/accountformview');
@@ -104,7 +105,7 @@ define(function(require) {
 				_this._loading = false;
 				_this._error = error;
 				_this.render();
-			}).catch(console.error.bind(this));
+			}).catch(CrashReport.report);
 		},
 
 		onChildviewRetry: function() {

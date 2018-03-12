@@ -93,7 +93,7 @@ define(function(require) {
 				// Set the old folder as being active
 				var oldFolder = require('state').currentFolder;
 				Radio.folder.trigger('setactive', account, oldFolder);
-			}).catch(console.error.bind(this));
+			}).catch(CrashReport.report);
 		}
 	}
 

@@ -24,6 +24,7 @@ define(function(require) {
 
 	var _ = require('underscore');
 	var Backbone = require('backbone');
+	var CrashReport = require('crashreport');
 	var Radio = require('radio');
 	var FolderController = require('controller/foldercontroller');
 
@@ -87,7 +88,7 @@ define(function(require) {
 
 			return this.default(true).then(function() {
 				Radio.ui.trigger('composer:show', composerOptions);
-			}).catch(console.error.bind(this));
+			}).catch(CrashReport.report);
 		},
 
 		/**

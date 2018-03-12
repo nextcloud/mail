@@ -61,7 +61,6 @@
     "backbone.marionette": "^3.5.1",
     "backbone.radio": "^2.0.0",
     "backbone.wreqr": "^1.4.0",
-    "copy-to-clipboard": "^3.0.8",
     "davclient.js": "^0.1.0",
     "domready": "^1.0.8",
     "es6-promise": "^4.2.4",

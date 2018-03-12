@@ -15,6 +15,7 @@ define(function(require) {
 	require('jquery-ui/ui/widgets/draggable');
 	var _ = require('underscore');
 	var Marionette = require('backbone.marionette');
+	var CrashReport = require('crashreport');
 	var Radio = require('radio');
 	var MessageTemplate = require('templates/message-list-item.html');
 	var imageplaceholder = require('views/imageplaceholder');
@@ -114,7 +115,7 @@ define(function(require) {
 				if (url) {
 					this.model.set('senderImage', url);
 				}
-			}.bind(this)).catch(console.error.bind(this));
+			}.bind(this)).catch(CrashReport.report);
 		},
 
 		toggleMessageStar: function(event) {

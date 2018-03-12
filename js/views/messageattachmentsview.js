@@ -20,6 +20,7 @@
 define(function(require) {
 	'use strict';
 
+	var CrashReport = require('crashreport');
 	var Marionette = require('backbone.marionette');
 	var MessageController = require('controller/messagecontroller');
 	var AttachmentView = require('views/messageattachmentview');
@@ -73,7 +74,7 @@ define(function(require) {
 				_this.getUI('saveAllToCloud').removeClass('icon-folder')
 				.addClass('icon-loading-small')
 				.prop('disabled', true);
-			}).catch(console.error.bind(this)).then(function() {
+			}).catch(CrashReport.report).then(function() {
 				// Remove loading feedback again
 				_this.getUI('saveAllToCloud').addClass('icon-folder')
 					.removeClass('icon-loading-small')

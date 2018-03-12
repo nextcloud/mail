@@ -13,6 +13,7 @@
 define(function(require) {
 	'use strict';
 
+	var CrashReport = require('crashreport');
 	var FolderController = require('controller/foldercontroller');
 	var Radio = require('radio');
 
@@ -45,6 +46,7 @@ define(function(require) {
 			return accounts;
 		}, function(e) {
 			console.error(e);
+			CrashReport.report(e);
 			Radio.ui.trigger('error:show', t('mail', 'Error while loading the accounts.'));
 		});
 	}
