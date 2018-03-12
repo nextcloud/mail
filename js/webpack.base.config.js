@@ -23,7 +23,8 @@ module.exports = {
 					extensions: '.html',
 					helperDirs: __dirname + '/templatehelpers'
 				}
-			}
+			},
+			{ test: /\.js$/, exclude: /node_modules/, loader: "babel-loader" }
 		]
 	}
 };
