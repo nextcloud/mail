@@ -122,7 +122,7 @@ OC.L10N.register(
     "The images have been blocked to protect your privacy." : "Lokað hefur verið á myndir til að vernda einkalíf þitt.",
     "Show images from this sender" : "Birta myndir frá þessum sendanda",
     "Forward" : "Áframsenda",
-    "No messages in this folder!" : "Engin skilaboð í þessari möppu!",
+    "No messages in this folder" : "Engin skilaboð í þessari möppu",
     "Upload attachment" : "Senda inn viðhengi",
     "Add attachment from Files" : "Bæta við viðhengi úr skrám",
     "Import into calendar" : "Flytja inn dagatal",

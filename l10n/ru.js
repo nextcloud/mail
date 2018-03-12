@@ -122,7 +122,7 @@ OC.L10N.register(
     "The images have been blocked to protect your privacy." : "Изображения были заблокированы для защиты вашей частной жизни.",
     "Show images from this sender" : "Показать изображения от этого отправителя",
     "Forward" : "Переслать",
-    "No messages in this folder!" : "В этой папке нет сообщений!",
+    "No messages in this folder" : "В этой папке нет сообщений",
     "Upload attachment" : "Загрузить вложение",
     "Add attachment from Files" : "Выбрать вложение из файлов",
     "Import into calendar" : "Импортировать в календарь",

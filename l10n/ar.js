@@ -116,7 +116,6 @@ OC.L10N.register(
     "The images have been blocked to protect your privacy." : "تح حجب هذه الصورة لحماية خصوصيتك",
     "Show images from this sender" : "أظهر الصور من هذا المُرسل",
     "Forward" : "مرر",
-    "No messages in this folder!" : "هذا المجلد خالٍ مِن الرسائل !",
     "Upload attachment" : "رفع المرفقات",
     "Add attachment from Files" : "إضافة مرفقات مِن الملفات",
     "Import into calendar" : "إستيراد من التقويم",

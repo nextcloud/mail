@@ -108,7 +108,6 @@ OC.L10N.register(
     "The images have been blocked to protect your privacy." : "Imazhet janë bllokuar për të mbrojtur privatësinë tuaj.",
     "Show images from this sender" : "Trego imazhet nga ky dërgues",
     "Forward" : "Ridrejto",
-    "No messages in this folder!" : "Asnjë mesazh në këtë dosje!",
     "Upload attachment" : "Ngarko bashkëngjitje",
     "Import into calendar" : "Importo në kalendar",
     "Download attachment" : "Shkarko bashkëlidhjen",

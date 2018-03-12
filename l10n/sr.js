@@ -122,7 +122,6 @@ OC.L10N.register(
     "The images have been blocked to protect your privacy." : "Слике су блокиране да заштите Вашу приватност.",
     "Show images from this sender" : "Прикажи слике од пошаљиоца",
     "Forward" : "Проследи",
-    "No messages in this folder!" : "Нема порука у овој фасцикли!",
     "Upload attachment" : "Закачи прилог",
     "Add attachment from Files" : "Додај прилог из фајлова",
     "Import into calendar" : "Увези у календар",

@@ -7,8 +7,8 @@
     "test": "tests"
   },
   "scripts": {
-    "build": "./node_modules/webpack/bin/webpack.js --config js/webpack.prod.config.js",
-    "dev": "./node_modules/webpack/bin/webpack.js --config js/webpack.dev.config.js --watch",
+    "build": "./node_modules/webpack-cli/bin/webpack.js --mode production --config js/webpack.prod.config.js",
+    "dev": "./node_modules/webpack-cli/bin/webpack.js --mode development --config js/webpack.dev.config.js --watch",
     "test": "./node_modules/karma/bin/karma start karma.conf.js --single-run"
   },
   "repository": {
@@ -26,6 +26,7 @@
   "homepage": "https://github.com/nextcloud/mail",
   "devDependencies": {
     "coveralls": "^3.0.0",
+    "es6-object-assign": "^1.1.0",
     "grunt": "^1.0.2",
     "grunt-cli": "^1.2.0",
     "grunt-contrib-jshint": "^1.1.0",
@@ -33,7 +34,7 @@
     "grunt-karma": "^2.0.0",
     "istanbul": "^0.4.5",
     "jasmine-ajax": "^3.3.1",
-    "jasmine-core": "^3.0.0",
+    "jasmine-core": "^3.1.0",
     "jscs-jsdoc": "^2.0.0",
     "jshint": "^2.9.5",
     "karma": "^2.0.0",
@@ -43,12 +44,15 @@
     "karma-phantomjs-launcher": "^1.0.4",
     "karma-sinon": "^1.0.5",
     "karma-sourcemap-loader": "^0.3.7",
-    "karma-webpack": "^2.0.9",
-    "phantomjs-prebuilt": "^2.1.16",
+    "karma-webpack": "^2.0.13",
     "raw-loader": "^0.5.1",
-    "sinon": "^4.3.0",
-    "webpack": "^3.11.0",
-    "webpack-merge": "^4.1.1"
+    "sinon": "^4.4.2",
+    "string.prototype.endswith": "^0.2.0",
+    "string.prototype.repeat": "^0.2.0",
+    "string.prototype.startswith": "^0.2.0",
+    "webpack": "^4.1.1",
+    "webpack-cli": "^2.0.10",
+    "webpack-merge": "^4.1.2"
   },
   "dependencies": {
     "autosize": "^4.0.0",
@@ -63,8 +67,8 @@
     "es6-promise": "^4.2.4",
     "exports-loader": "^0.7.0",
     "handlebars": "^4.0.11",
-    "handlebars-loader": "^1.6.0",
-    "html-to-text": "^3.3.0",
+    "handlebars-loader": "github:Waavi/handlebars-loader",
+    "html-to-text": "^4.0.0",
     "ical.js": "^1.2.2",
     "jquery": "^3.3.1",
     "jquery-ui": "^1.12.1",

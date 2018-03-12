@@ -200,72 +200,72 @@ define([
 
 			describe('from local source (upload)', function () {
 				it('detects when all local attachments are valid', function() {
-					localAttachmentA = new LocalAttachment({
+					var localAttachmentA = new LocalAttachment({
 						fileName: 'test.zip',
 						uploadStatus: 3       // success
 					});
-					localAttachmentB = new LocalAttachment({
+					var localAttachmentB = new LocalAttachment({
 						fileName: 'test2.zip',
 						uploadStatus: 3       // success
 					});
 					view.attachments.add(localAttachmentA);
-					view.attachments.add(localAttachmentA);
+					view.attachments.add(localAttachmentB);
 					expect(view.checkAllAttachmentsValid()).toBe(true);
 				});
 
 				it('detects when at least one local attachment is pending', function() {
-					localAttachmentA = new LocalAttachment({
+					var localAttachmentA = new LocalAttachment({
 						fileName: 'test.zip',
 						uploadStatus: 0       // pending
 					});
-					localAttachmentB = new LocalAttachment({
+					var localAttachmentB = new LocalAttachment({
 						fileName: 'test2.zip',
 						uploadStatus: 3       // success
 					});
 					view.attachments.add(localAttachmentA);
-					view.attachments.add(localAttachmentA);
+					view.attachments.add(localAttachmentB);
 					expect(view.checkAllAttachmentsValid()).toBe(false);
 				});
 
 				it('detects when at least one local attachment is ongoing', function() {
-					localAttachmentA = new LocalAttachment({
+					var localAttachmentA = new LocalAttachment({
 						fileName: 'test.zip',
 						uploadStatus: 1       // ongoing
 					});
-					localAttachmentB = new LocalAttachment({
+					var localAttachmentB = new LocalAttachment({
 						fileName: 'test2.zip',
 						uploadStatus: 3       // success
 					});
 					view.attachments.add(localAttachmentA);
-					view.attachments.add(localAttachmentA);
+					view.attachments.add(localAttachmentB);
 					expect(view.checkAllAttachmentsValid()).toBe(false);
 				});
 
 				it('detects when at least one local attachment is broken', function() {
-					localAttachmentA = new LocalAttachment({
+					var localAttachmentA = new LocalAttachment({
 						fileName: 'test.zip',
 						uploadStatus: 2       // error
 					});
-					localAttachmentB = new LocalAttachment({
+					var localAttachmentB = new LocalAttachment({
 						fileName: 'test2.zip',
 						uploadStatus: 3       // success
 					});
 					view.attachments.add(localAttachmentA);
-					view.attachments.add(localAttachmentA);
+					view.attachments.add(localAttachmentB);
 					expect(view.checkAllAttachmentsValid()).toBe(false);
 				});
 			});
 
 			describe('from Files', function () {
 				it('always consider attachments from Files as valid', function() {
-					localAttachmentA = new Attachment({
+					var localAttachmentA = new Attachment({
 						fileName: 'test.zip'
 					});
-					localAttachmentB = new Attachment({
+					var localAttachmentB = new Attachment({
 						fileName: 'test2.zip'
 					});
 					view.attachments.add(localAttachmentA);
-					view.attachments.add(localAttachmentA);
+					view.attachments.add(localAttachmentB);
 					expect(view.checkAllAttachmentsValid()).toBe(true);
 				});
 			});

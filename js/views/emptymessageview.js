@@ -1,5 +1,5 @@
 /**
- * @author Steffen Lindner <mail@steffen-lidnner.de>
+ * @author Sagorika Das <sagorika1996@gmail.com>
  *
  * Mail
  *
@@ -17,27 +17,19 @@
  *
  */
 
+define(function(require) {
+	'use strict';
 
-define(['views/emptyfolderview', 'views/helper'], function(EmptyfolderView) {
+	var Marionette = require('backbone.marionette');
+	var EmptyMessageTemplate = require('templates/empty-message.html');
 
-	describe('EmptyfolderView', function () {
-
-		var emptyfolderview;
-
-		beforeEach(function () {
-			emptyfolderview = new EmptyfolderView({});
-		});
-
-		describe('Rendering', function () {
-
-			it('produces the correct HTML', function () {
-				emptyfolderview.render();
-
-				html = emptyfolderview.el.innerHTML.trim();
-				expected_html = '<div class="icon-mail"></div>\n<h2>No messages in this folder</h2>';
-				expect(html).toContain(expected_html);
-
-			});
-		});
+	/**
+	 * @class EmptyMessageView
+	 */
+	var EmptyMessageView = Marionette.View.extend({
+		template: EmptyMessageTemplate,
+		className: 'container'
 	});
+
+	return EmptyMessageView;
 });

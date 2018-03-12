@@ -25,14 +25,14 @@
 		"pear-pear.horde.org/Horde_Util": "^2.5.8@stable",
 		"pear-pear.horde.org/Horde_Smtp": "^1.9.5@stable",
 		"cerdic/css-tidy": "v1.5.6",
-		"ezyang/htmlpurifier": "4.9.3",
+		"ezyang/htmlpurifier": "4.10.0",
 		"kwi/urllinker": "dev-default",
 		"gravatarphp/gravatar": "^1.0",
 		"arthurhoaro/favicon": "^1.2"
 	},
 	"require-dev": {
 		"christophwurst/nextcloud": "13.0.0",
-		"christophwurst/nextcloud_testing": "0.1.0"
+		"christophwurst/nextcloud_testing": "0.3.0"
 	},
 	"suggest": {
 		"phan/phan": "^0.10.0"
