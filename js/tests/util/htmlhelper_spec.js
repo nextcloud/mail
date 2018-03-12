@@ -49,12 +49,12 @@ define([
 		it('does not produce large number of line breaks for nested elements', function() {
 			var html =
 					'<div>' +
-					'    <idv>' +
+					'    <div>' +
 					'        line1' +
 					'    </div>' +
 					'</div>' +
 					'<div>line2</div>';
-			var expected = 'line1 line2';
+			var expected = ' line1 line2';
 
 			var actual = HtmlHelper.htmlToText(html);
 
@@ -81,7 +81,7 @@ define([
 
 		it('converts lists to text', function() {
 			var html = '<ul><li>one</li><li>two</li><li>three</li></ul>';
-			var expected = '* one\n * two\n * three';
+			var expected = ' * one\n * two\n * three';
 
 			var actual = HtmlHelper.htmlToText(html);
 
