@@ -23,6 +23,7 @@ namespace OCA\Mail\Tests\Service\Group;
 
 use ChristophWurst\Nextcloud\Testing\TestCase;
 use OCA\Mail\Service\Group\NextcloudGroupService;
+use OCA\Mail\Exception\ServiceException;
 use OCP\IGroupManager;
 
 class NextcloudGroupServiceTest extends TestCase {
@@ -130,7 +131,7 @@ class NextcloudGroupServiceTest extends TestCase {
 	}
 
 	public function testGetUsersWrong() {
-		$this->expectException(\Exception::class);
+		$this->expectException(ServiceException::class);
 
 		$this->groupsManager->expects($this->once())
 			->method('groupExists')

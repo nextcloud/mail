@@ -22,6 +22,7 @@
 namespace OCA\Mail\Service\Group;
 
 use OCP\IGroupManager;
+use OCA\Mail\Exception\ServiceException;
 
 class NextcloudGroupService implements IGroupService {
 
@@ -63,7 +64,7 @@ class NextcloudGroupService implements IGroupService {
 
 	public function getUsers($groupId) {
 		if(!$this->groupManager->groupExists($groupId)) {
-			throw new \Exception("$groupId ({$this->getNamespace()}) does not exist");
+			throw new ServiceException("$groupId ({$this->getNamespace()}) does not exist");
 		}
 		$users = $this->groupManager->get($groupId)->getUsers();
 		return array_map(

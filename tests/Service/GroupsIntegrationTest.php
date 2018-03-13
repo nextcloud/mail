@@ -24,6 +24,7 @@ namespace OCA\Mail\Tests\Service;
 use ChristophWurst\Nextcloud\Testing\TestCase;
 use OCA\Mail\Service\GroupsIntegration;
 use OCA\Mail\Service\Group\NextcloudGroupService;
+use OCA\Mail\Exception\ServiceException;
 
 class GroupsIntegrationTest extends TestCase {
 
@@ -146,7 +147,7 @@ class GroupsIntegrationTest extends TestCase {
 	}
 
 	public function testExpandEmpty() {
-		$this->expectException(\Exception::class);
+		$this->expectException(ServiceException::class);
 		$recipients = "john@doe.com,namespace1:testgroup,alice@smith.net";
 		$members = [
 		];
@@ -167,7 +168,7 @@ class GroupsIntegrationTest extends TestCase {
 	}
 
 	public function testExpandWrong2() {
-		$this->expectException(\Exception::class);
+		$this->expectException(ServiceException::class);
 		$recipients = "john@doe.com,namespace1:nogroup,alice@smith.net";
 
 		$this->groupsIntegration->expand($recipients);

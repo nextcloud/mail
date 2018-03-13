@@ -22,6 +22,7 @@
 namespace OCA\Mail\Service;
 
 use OCA\Mail\Service\Group\IGroupService;
+use OCA\Mail\Exception\ServiceException;
 
 class GroupsIntegration {
 
@@ -68,7 +69,7 @@ class GroupsIntegration {
 	 */
 	public function servicePrefix(IGroupService $gs) {
 		if(empty($gs->getNamespace())) {
-			throw new \Exception('GroupService has no namespace');
+			throw new ServiceException('GroupService has no namespace');
 		}
 		return strtolower($gs->getNamespace()) . ":";
 	}
@@ -89,7 +90,7 @@ class GroupsIntegration {
 							if(empty($matches[1])) return "";
 							$members = $service->getUsers($matches[1]);
 							if( empty($members) ) {
-								throw new \Exception($matches[1] . " ({$service->getNamespace()}) has no members" );
+								throw new ServiceException($matches[1] . " ({$service->getNamespace()}) has no members" );
 							}
 							$addresses = [];
 							foreach($members as $m) {
