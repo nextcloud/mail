@@ -32,8 +32,8 @@ class GroupsIntegration {
 	 */
 	private $groupServices = [];
 
-	public function __construct(IGroupService ...$groupServices) {
-		$this->groupServices = $groupServices;
+	public function __construct(IGroupService $groupService) {
+		$this->groupServices[] = $groupService;
 	}
 
 	/**

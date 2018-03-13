@@ -28,21 +28,16 @@ use OCA\Mail\Service\Group\NextcloudGroupService;
 class GroupsIntegrationTest extends TestCase {
 
 	private $groupService1;
-	private $groupService2;
 	private $groupsIntegration;
 
 	protected function setUp() {
 		parent::setUp();
 
 		$this->groupService1 = $this->createMock(NextcloudGroupService::class);
-		$this->groupService2 = $this->createMock(NextcloudGroupService::class);
 		$this->groupService1->expects($this->any())
 			->method('getNamespace')
 			->willReturn('Namespace1');
-		$this->groupService2->expects($this->any())
-			->method('getNamespace')
-			->willReturn('Namespace2');
-		$this->groupsIntegration = new GroupsIntegration($this->groupService1, $this->groupService2);
+		$this->groupsIntegration = new GroupsIntegration($this->groupService1);
 	}
 
 	public function testGetMatchingGroups() {
@@ -53,21 +48,11 @@ class GroupsIntegrationTest extends TestCase {
 				'name' => "first test group"
 			]
 		];
-		$searchResult2 = [
-			[
-				'id' => 'testgroup2',
-				'name' => "second test group"
-			]
-		];
 
 		$this->groupService1->expects($this->once())
 			->method('search')
 			->with($term)
 			->will($this->returnValue($searchResult1));
-		$this->groupService2->expects($this->once())
-			->method('search')
-			->with($term)
-			->will($this->returnValue($searchResult2));
 
 		$expected = [
 			[
@@ -75,30 +60,10 @@ class GroupsIntegrationTest extends TestCase {
 				'label' => 'first test group (Namespace1)',
 				'value' => 'namespace1:testgroup',
 				'photo' => null,
-			],
-			[
-				'id' => 'namespace2:testgroup2',
-				'label' => 'second test group (Namespace2)',
-				'value' => 'namespace2:testgroup2',
-				'photo' => null,
 			]
 		];
 		$actual = $this->groupsIntegration->getMatchingGroups($term);
 
-		$this->assertEquals($expected, $actual);
-	}
-
-	public function testGetMatchingGroupsNoServices() {
-		$gi = new GroupsIntegration();
-		$actual = $gi->getMatchingGroups("a");
-		$expected = [];
-		$this->assertEquals($expected, $actual);
-	}
-
-	public function testExpandNoServices() {
-		$gi = new GroupsIntegration();
-		$actual = $gi->expand("a@b.com");
-		$expected = "a@b.com";
 		$this->assertEquals($expected, $actual);
 	}
 
@@ -155,7 +120,7 @@ class GroupsIntegrationTest extends TestCase {
 	}
 
 	public function testExpand2() {
-		$recipients = "john@doe.com,namespace1:testgroup,alice@smith.net,namespace2:testgroup";
+		$recipients = "john@doe.com,namespace1:testgroup,alice@smith.net";
 		$members = [
 			[
 				'id' => 'bob',
@@ -172,23 +137,7 @@ class GroupsIntegrationTest extends TestCase {
 			->method('getUsers')
 			->willReturn($members);
 
-		$members2 = [
-			[
-				'id' => 'jim',
-				'name' => "Jimmy",
-				'email' => "jim@smith.net"
-			],
-			[
-				'id' => 'jimbo',
-				'name' => "Jimbo",
-				'email' => ""
-			],
-		];
-		$this->groupService2->expects($this->once())
-			->method('getUsers')
-			->willReturn($members2);
-
-		$expected = "john@doe.com,bob@smith.net,mary@smith.net,alice@smith.net,jim@smith.net";
+		$expected = "john@doe.com,bob@smith.net,mary@smith.net,alice@smith.net";
 
 		$actual = $this->groupsIntegration->expand($recipients);
 
