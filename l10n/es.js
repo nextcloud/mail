@@ -58,7 +58,7 @@ OC.L10N.register(
     "Drafts" : "Borradores",
     "Archive" : "Archivados",
     "Trash" : "Papelera",
-    "Junk" : "Basura",
+    "Junk" : "Correo no deseado",
     "All" : "Todos",
     "Favorites" : "Favoritos",
     "Auto detect failed. Please use manual mode." : "La autodetección ha fallado. Usa el modo manual.",
