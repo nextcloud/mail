@@ -25,6 +25,8 @@ use ChristophWurst\Nextcloud\Testing\TestCase;
 use OCA\Mail\Service\Group\NextcloudGroupService;
 use OCA\Mail\Exception\ServiceException;
 use OCP\IGroupManager;
+use OCP\IGroup;
+use OCP\IUser;
 
 class NextcloudGroupServiceTest extends TestCase {
 
@@ -39,7 +41,7 @@ class NextcloudGroupServiceTest extends TestCase {
 	}
 
 	private function createTestGroup($id, $name, $users = []) {
-		$mockGroup = $this->createMock('OCP\IGroup');
+		$mockGroup = $this->createMock(IGroup::class);
 		$mockGroup->expects($this->any())
 			->method('getGID')
 			->will($this->returnValue($id));
@@ -53,7 +55,7 @@ class NextcloudGroupServiceTest extends TestCase {
 	}
 
 	private function createTestUser($id, $name, $email) {
-		$mockUser = $this->createMock('OCP\IUser');
+		$mockUser = $this->createMock(IUser::class);
 		$mockUser->expects($this->any())
 			->method('getUID')
 			->will($this->returnValue($id));
