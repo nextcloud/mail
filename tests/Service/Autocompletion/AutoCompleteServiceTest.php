@@ -25,6 +25,9 @@ namespace OCA\Mail\Tests\Service\Autocompletion;
 use ChristophWurst\Nextcloud\Testing\TestCase;
 use OCA\Mail\Db\CollectedAddress;
 use OCA\Mail\Service\AutoCompletion\AutoCompleteService;
+use OCA\Mail\Service\AutoCompletion\AddressCollector;
+use OCA\Mail\Service\ContactsIntegration;
+use OCA\Mail\Service\GroupsIntegration;
 
 class AutoCompleteServiceTest extends TestCase {
 
@@ -36,15 +39,9 @@ class AutoCompleteServiceTest extends TestCase {
 	protected function setUp() {
 		parent::setUp();
 
-		$this->contactsIntegration = $this->getMockBuilder('\OCA\Mail\Service\ContactsIntegration')
-			->disableOriginalConstructor()
-			->getMock();
-		$this->groupsIntegration = $this->getMockBuilder('\OCA\Mail\Service\GroupsIntegration')
-			->disableOriginalConstructor()
-			->getMock();
-		$this->addressCollector = $this->getMockBuilder('\OCA\Mail\Service\AutoCompletion\AddressCollector')
-			->disableOriginalConstructor()
-			->getMock();
+		$this->contactsIntegration = $this->createMock(ContactsIntegration::class);
+		$this->groupsIntegration = $this->createMock(GroupsIntegration::class);
+		$this->addressCollector = $this->createMock(AddressCollector::class);
 
 		$this->service = new AutoCompleteService($this->contactsIntegration,
 			$this->groupsIntegration,

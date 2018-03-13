@@ -23,6 +23,7 @@ namespace OCA\Mail\Tests\Service\Group;
 
 use ChristophWurst\Nextcloud\Testing\TestCase;
 use OCA\Mail\Service\Group\NextcloudGroupService;
+use OCP\IGroupManager;
 
 class NextcloudGroupServiceTest extends TestCase {
 
@@ -32,7 +33,7 @@ class NextcloudGroupServiceTest extends TestCase {
 	protected function setUp() {
 		parent::setUp();
 
-		$this->groupsManager = $this->createMock('OCP\IGroupManager');
+		$this->groupsManager = $this->createMock(IGroupManager::class);
 		$this->groupService = new NextcloudGroupService($this->groupsManager);
 	}
 
