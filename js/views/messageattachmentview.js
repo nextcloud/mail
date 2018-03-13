@@ -23,6 +23,7 @@ define(function(require) {
 	var $ = require('jquery');
 	var _ = require('underscore');
 	var Marionette = require('backbone.marionette');
+	var CrashReport = require('crashreport');
 	var Radio = require('radio');
 	var MessageController = require('controller/messagecontroller');
 	var CalendarsPopoverView = require('views/calendarspopoverview');
@@ -75,7 +76,7 @@ define(function(require) {
 				_this.getUI('saveToCloudButton').removeClass('icon-folder')
 						.addClass('icon-loading-small')
 						.prop('disabled', true);
-			}).catch(console.error.bind(this)).then(function() {
+			}).catch(CrashReport.report).then(function() {
 				// Remove loading feedback again
 				_this.getUI('saveToCloudButton').addClass('icon-folder')
 						.removeClass('icon-loading-small')
@@ -101,7 +102,7 @@ define(function(require) {
 				} else {
 					Radio.ui.trigger('error:show', t('mail', 'No writable calendars found'));
 				}
-			}).catch(console.error.bind(this)).then(function() {
+			}).catch(CrashReport.report).then(function() {
 				_this.getUI('importCalendarEventButton')
 						.removeClass('icon-loading-small')
 						.addClass('icon-add');

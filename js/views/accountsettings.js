@@ -11,10 +11,13 @@
 define(function(require) {
 	'use strict';
 
+	var $ = require('jquery');
 	var Marionette = require('backbone.marionette');
+	var OC = require('OC');
 	var AccountSettingsTemplate = require('templates/accountsettings.html');
 	var AccountFormView = require('views/accountformview');
 	var AliasesView = require('views/aliases');
+	var CrashReport = require('crashreport');
 	var Radio = require('radio');
 
 	return Marionette.View.extend({
@@ -60,7 +63,7 @@ define(function(require) {
 			Radio.aliases.request('save', this.currentAccount, alias)
 				.then(function(data) {
 					_this.currentAccount.get('aliases').add(data);
-				}, console.error.bind(this))
+				}, CrashReport.report)
 				.then(function() {
 					_this.getUI('alias').val('');
 					_this.getUI('aliasName').val('');
@@ -68,7 +71,7 @@ define(function(require) {
 					_this.getUI('aliasName').prop('disabled', false);
 					_this.getUI('submitButton').prop('disabled', false);
 					_this.getUI('submitButton').val('Save');
-				});
+				}).catch(CrashReport.report);
 		},
 		onRender: function() {
 			this.showAliases();
@@ -107,11 +110,12 @@ define(function(require) {
 				OC.msg.finishedSaving('#mail-settings-msg', response);
 				$('#mail-settings-loading').hide();
 			}).catch(function(error) {
+				CrashReport.report(error);
 				console.error('could not update account:', error);
 				var response = {status: 'error', data: {message: error}};
 				OC.msg.finishedSaving('#mail-settings-msg', response);
 				$('#mail-settings-loading').hide();
-			}).catch(console.error.bind(this));
+			}).catch(CrashReport.report);
 		}
 	});
 });
