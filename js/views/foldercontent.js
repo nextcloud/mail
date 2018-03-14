@@ -124,15 +124,14 @@ define(function(require) {
 				Radio.ui.trigger('error:show', t('mail', 'Opening HTML drafts is not supported yet.'));
 			}
 
-			if(!data.to.length) {
+			if (!data.to.length) {
 				// focus 'to' field automatically on clicking New message button
 				this.composer.focusTo();
-			} else if(!data.subject) {
+			} else if (!data.subject) {
 				this.composer.focusSubject();
 			} else {
 				this.composer.focusMessageBody();
 			}
-
 
 			if (data && !_.isUndefined(data.currentTarget) && !_.isUndefined($(data.currentTarget).
 				data().email)) {
