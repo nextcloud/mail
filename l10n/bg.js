@@ -4,7 +4,6 @@ OC.L10N.register(
     "Mail" : "Поща",
     "Loading accounts" : "Зареждане на акаунти",
     "Error while loading the accounts." : "Грешка при зареждането на профилите.",
-    "Error while loading the selected account." : "Грешка при зареждането на избрания профил.",
     "Can not load this folder." : "Тази папка не може да се зареди.",
     "Searching for {query}" : "Търсене на {query}",
     "Error while deleting message." : "Грешка при изтриването на съобщение.",

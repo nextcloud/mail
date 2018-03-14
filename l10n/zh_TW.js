@@ -4,7 +4,6 @@ OC.L10N.register(
     "Mail" : "電子郵件",
     "Loading accounts" : "載入帳號中",
     "Error while loading the accounts." : "載入帳號時發生錯誤",
-    "Error while loading the selected account." : "載入選擇的帳號時發生錯誤",
     "Can not load this folder." : "無法載入此收件匣",
     "Searching for {query}" : "以 {query} 搜尋",
     "Error while deleting message." : "刪除信件時發生錯誤",

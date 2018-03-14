@@ -1,7 +1,6 @@
 { "translations": {
     "Mail" : "Correio",
     "Error while loading the accounts." : "Erro durante o carregamento das contas.",
-    "Error while loading the selected account." : "Erro durante o carregamento da conta seleccionada.",
     "Error while deleting message." : "Erro durante a eliminação da mensagem.",
     "Forwarded message" : "Mensagem reencaminhada",
     "Choose a folder to store the attachment in" : "Escolha uma pasta para guardar o anexo",

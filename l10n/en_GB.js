@@ -4,7 +4,6 @@ OC.L10N.register(
     "Mail" : "Mail",
     "Loading accounts" : "Loading accounts",
     "Error while loading the accounts." : "Error whilst loading the accounts.",
-    "Error while loading the selected account." : "Error whilst loading the selected account.",
     "Can not load this folder." : "Can not load this folder.",
     "Searching for {query}" : "Searching for {query}",
     "Error while deleting message." : "Error whilst deleting message.",

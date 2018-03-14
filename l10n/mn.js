@@ -3,7 +3,6 @@ OC.L10N.register(
     {
     "Mail" : "шуудан",
     "Error while loading the accounts." : "аккаунт ачаалах үед алдаа гарлаа.",
-    "Error while loading the selected account." : "Сонгогдсон аккаунт ачаалах үед алдаа гарлаа.",
     "Forwarded message" : "дамжуулагдсан мэдээ",
     "Choose a folder to store the attachment in" : "-д хавсралт хадгалах фолдер сонгоно уу",
     "Attachments saved to Files." : "Хавсралт файлд хадгалагдсан.",

@@ -4,7 +4,6 @@ OC.L10N.register(
     "Mail" : "Posta",
     "Loading accounts" : "Caricamento account",
     "Error while loading the accounts." : "Errore durante il caricamento degli account.",
-    "Error while loading the selected account." : "Errore durante il caricamento dell'account selezionato.",
     "Can not load this folder." : "Impossibile caricare questa cartella.",
     "Searching for {query}" : "Ricerca di {query}",
     "Error while deleting message." : "Errore durante l'eliminazione del messaggio.",

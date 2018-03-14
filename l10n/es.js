@@ -4,7 +4,6 @@ OC.L10N.register(
     "Mail" : "Correo electrónico",
     "Loading accounts" : "Cargando cuentas",
     "Error while loading the accounts." : "Error al cargar las cuentas.",
-    "Error while loading the selected account." : "Error al cargar la cuenta seleccionada.",
     "Can not load this folder." : "No se puede cargar esta carpeta.",
     "Searching for {query}" : "Buscando {query}",
     "Error while deleting message." : "Error al eliminar el mensaje.",

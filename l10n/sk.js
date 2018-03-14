@@ -4,7 +4,6 @@ OC.L10N.register(
     "Mail" : "Pošta",
     "Loading accounts" : "Nahrávanie účtov",
     "Error while loading the accounts." : "Chyba pri načítaní účtov.",
-    "Error while loading the selected account." : "Chyba počas načítania zvoleného účtu.",
     "Can not load this folder." : "Nie je možné načítať túto zložku.",
     "Searching for {query}" : "Vyhľadávam {query}",
     "Error while deleting message." : "Chyba pri mazaní správy.",

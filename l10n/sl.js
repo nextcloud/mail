@@ -3,7 +3,6 @@ OC.L10N.register(
     {
     "Mail" : "Elektronska pošta",
     "Error while loading the accounts." : "Prišlo je do napake med nalaganjem računa.¸",
-    "Error while loading the selected account." : "Prišlo je do napake med nalaganjem izbranega računa.",
     "Searching for {query}" : "Iščem {query}",
     "Error while deleting message." : "Napaka med brisanjem sporočila.",
     "Forwarded message" : "Posreduj sporočilo",

@@ -4,7 +4,6 @@ OC.L10N.register(
     "Mail" : "Kirjad",
     "Loading accounts" : "Kontode laadimine",
     "Error while loading the accounts." : "Viga kontode laadimisel",
-    "Error while loading the selected account." : "Viga valitud konto laadimisel.",
     "Can not load this folder." : "Seda kausta ei saa laadida.",
     "Error while deleting message." : "Tõrge sõnumi kustutamisel.",
     "Forwarded message" : "Edastatud sõnum",

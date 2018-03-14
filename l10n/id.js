@@ -3,7 +3,6 @@ OC.L10N.register(
     {
     "Mail" : "Email",
     "Error while loading the accounts." : "Terjadi kesalahan saat memuat akun.",
-    "Error while loading the selected account." : "Terjadi kesalahan saat memuat akun terpilih.",
     "Error while deleting message." : "Terjadi kesalahan saat menghapus pesan.",
     "Forwarded message" : "Pesan Teralihkan",
     "Choose a folder to store the attachment in" : "Pilih folder untuk menyimpan lampiran didalamnya",

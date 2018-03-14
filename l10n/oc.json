@@ -1,7 +1,6 @@
 { "translations": {
     "Mail" : "Mail",
     "Error while loading the accounts." : "Error al moment del cargament dels comptes.",
-    "Error while loading the selected account." : "Error al moment del cargament del compte seleccionat.",
     "Error while deleting message." : "Error al moment de la supression del messatge.",
     "Forwarded message" : "Messatge transferit",
     "Choose a folder to store the attachment in" : "Causissètz lo dorsièr dins lo qual enregistrar la pèça junta",

@@ -2,7 +2,6 @@
     "Mail" : "ფოსტა",
     "Loading accounts" : "ანგარიშების ჩატვირთვა",
     "Error while loading the accounts." : "ანგარიშების ჩატვირთვისას წარმოიქმნა შეცდომა.",
-    "Error while loading the selected account." : "არჩეული ანგარიშების ჩატვირთვისას წარმოიშვა შეცდომა.",
     "Can not load this folder." : "ამ დირექტორიის ჩატვირთვა ვერ მოხერხდა.",
     "Searching for {query}" : "ვეძებთ {query}-ის",
     "Error while deleting message." : "წერილების გაუქმებისას წარმოიშვა შეცდომა",

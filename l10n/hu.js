@@ -4,7 +4,6 @@ OC.L10N.register(
     "Mail" : "Levelezés",
     "Loading accounts" : "Fiókok betöltése",
     "Error while loading the accounts." : "Hiba történt a fiókok betöltése közben.",
-    "Error while loading the selected account." : "Hiba történt a kiválasztott fiók betöltése közben.",
     "Can not load this folder." : "Ezt a mappát nem lehet betölteni.",
     "Searching for {query}" : "Keresés: {query}",
     "Error while deleting message." : "Hiba történt az üzenet törlése közben.",

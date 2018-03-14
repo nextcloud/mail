@@ -4,7 +4,6 @@ OC.L10N.register(
     "Mail" : "Почта",
     "Loading accounts" : "Загрузка учётных записей",
     "Error while loading the accounts." : "Ошибка загрузки учётных записей.",
-    "Error while loading the selected account." : "Ошибка загрузки выбранного аккаунта.",
     "Can not load this folder." : "Невозможно загрузить эту папку.",
     "Searching for {query}" : "Поиск {query}",
     "Error while deleting message." : "Ошибка при удалении сообщения.",

@@ -4,7 +4,6 @@ OC.L10N.register(
     "Mail" : "Posta",
     "Loading accounts" : "Kontuak kargatzen",
     "Error while loading the accounts." : "Errorea kontuak kargatzean.",
-    "Error while loading the selected account." : "Errorea hautatutako kontua kargatzean.",
     "Can not load this folder." : "Ezin da karpeta kargatu",
     "Searching for {query}" : "{query} bilatzen",
     "Error while deleting message." : "Akatsa mezua ezabatzerakoan.",

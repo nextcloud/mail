@@ -3,7 +3,6 @@ OC.L10N.register(
     {
     "Mail" : "Pošta",
     "Error while loading the accounts." : "Pogreška pri učitavanju računa.",
-    "Error while loading the selected account." : "Pogreška pri učitavanju odabranog računa.",
     "Searching for {query}" : "Tražim {query}",
     "Error while deleting message." : "Greška pri brisanju poruke.",
     "Forwarded message" : "Proslijeđena poruka",

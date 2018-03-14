@@ -4,7 +4,6 @@ OC.L10N.register(
     "Mail" : "Mail",
     "Loading accounts" : "Indlæser kontoerne...",
     "Error while loading the accounts." : "Fejl under indlæsning af konti.",
-    "Error while loading the selected account." : "Der opstod en fejl under læsningen af den valgte konto.",
     "Can not load this folder." : "Kan ikke indlæse denne mappe.",
     "Searching for {query}" : "Leder efter {query}",
     "Error while deleting message." : "Fejl under sletning af besked.",

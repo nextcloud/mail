@@ -4,7 +4,6 @@ OC.L10N.register(
     "Mail" : "Corréu",
     "Loading accounts" : "Cargando cuentes",
     "Error while loading the accounts." : "Fallu entrín se carguen les cuentes.",
-    "Error while loading the selected account." : "Fallu cargando la cuenta esbillada",
     "Can not load this folder." : "Nun pue cargase esta carpeta.",
     "Searching for {query}" : "Guetando {query}",
     "Error while deleting message." : "Fallu desaniciando'l mensaxe",

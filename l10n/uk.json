@@ -1,7 +1,6 @@
 { "translations": {
     "Mail" : "Повідомлення",
     "Error while loading the accounts." : "Помилка завантаження облікового запису",
-    "Error while loading the selected account." : "Помилка завантаження обраного облікового запису.",
     "Error while deleting message." : "Помилка видалення повідомлення.",
     "Forwarded message" : "Пререадресоване повідомлення",
     "Choose a folder to store the attachment in" : "Оберіть теку для зберігання вкладень",

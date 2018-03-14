@@ -1,7 +1,6 @@
 { "translations": {
     "Mail" : "จดหมาย",
     "Error while loading the accounts." : "ข้อผิดพลาดในขณะที่โหลดบัญชี",
-    "Error while loading the selected account." : "ข้อผิดพลาดในขณะที่โหลดบัญชีที่เลือก",
     "Error while deleting message." : "ข้อผิดพลาดขณะลบข้อความ",
     "Forwarded message" : "ส่งต่อข้อความ",
     "Choose a folder to store the attachment in" : "เลือกโฟลเดอร์ที่จะเก็บสิ่งที่แนบมาใน",

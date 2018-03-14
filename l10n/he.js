@@ -3,7 +3,6 @@ OC.L10N.register(
     {
     "Mail" : "דואר",
     "Error while loading the accounts." : "שגיאה בזמן העלאת החשבונות.",
-    "Error while loading the selected account." : "שגיאה בזמן טעינת החשבון הנבחר.",
     "Error while deleting message." : "שגיאה בזמן מחיקת הודעה.",
     "Forwarded message" : "הודעה שקודמה",
     "Choose a folder to store the attachment in" : "יש לבחור תיקייה לשמירת הקובץ המצורף",

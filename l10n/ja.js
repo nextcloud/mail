@@ -3,7 +3,6 @@ OC.L10N.register(
     {
     "Mail" : "メール",
     "Error while loading the accounts." : "アカウントの読み込みエラー",
-    "Error while loading the selected account." : "選択されたアカウントの読み込みエラー",
     "Can not load this folder." : "フォルダを読み込めません",
     "Searching for {query}" : "{query}を検索中",
     "Error while deleting message." : "メッセージ削除中にエラーが発生",

@@ -3,7 +3,6 @@ OC.L10N.register(
     {
     "Mail" : "Retpoŝto",
     "Error while loading the accounts." : "Eraris ŝargo de la kontoj.",
-    "Error while loading the selected account." : "Eraris ŝargo de la elektita konto.",
     "Error while deleting message." : "Eraris forigo de mesaĝo.",
     "Attachments saved to Files." : "Kunsendaĵoj konserviĝis en Dosierojn.",
     "Attachment saved to Files." : "Kunsendaĵo konserviĝis en Dosierojn.",
