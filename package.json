@@ -46,7 +46,7 @@
     "karma-sourcemap-loader": "^0.3.7",
     "karma-webpack": "^2.0.13",
     "raw-loader": "^0.5.1",
-    "sinon": "^4.4.5",
+    "sinon": "^4.4.6",
     "string.prototype.endswith": "^0.2.0",
     "string.prototype.repeat": "^0.2.0",
     "string.prototype.startswith": "^0.2.0",
