@@ -112,6 +112,7 @@ OC.L10N.register(
     "to" : "aan",
     "cc" : "cc",
     "bcc" : "bcc",
+    "Note that the mail came from a noreply address so your reply will probably not be read." : "Let op: het e-mailbericht kwam van een niet-antwoord adres, waardoor je antwoord vermoedelijk niet zal worden gelezen.",
     "Subject" : "Onderwerp",
     "Save all to Files" : "Sla alles op in Bestanden",
     "Add mail account" : "Voeg e-mail account toe",
