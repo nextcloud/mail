@@ -27,7 +27,7 @@ interface IGroupService {
 	 * Search the service's groups.
 	 *
 	 * @param string $term
-	 * @return string
+	 * @return array of matched groups as associative arrays
 	 */
 	public function search($term);
 
@@ -42,7 +42,7 @@ interface IGroupService {
 	 * Get the group's users.
 	 *
 	 * @param string $groupId 
-	 * @return array with group's key-value pairs
+	 * @return array with group's users as associative arrays 
 	 */
 	public function getUsers($groupId);
 
