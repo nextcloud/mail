@@ -66,7 +66,7 @@
     "es6-promise": "^4.2.4",
     "exports-loader": "^0.7.0",
     "handlebars": "^4.0.11",
-    "handlebars-loader": "github:Waavi/handlebars-loader",
+    "handlebars-loader": "^1.7.0",
     "html-to-text": "^4.0.0",
     "ical.js": "^1.2.2",
     "jquery": "^3.3.1",
