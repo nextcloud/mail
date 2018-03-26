@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#composer-lock-the-lock-file",
         "This file is @generated automatically"
     ],
-    "content-hash": "800ca26f9afc03c7035be41953335df9",
+    "content-hash": "b405d1174800beca50a0614766796124",
     "packages": [
         {
             "name": "arthurhoaro/favicon",
@@ -878,16 +878,16 @@
     "packages-dev": [
         {
             "name": "christophwurst/nextcloud",
-            "version": "13.0.0",
+            "version": "v13.0.1",
             "source": {
                 "type": "git",
                 "url": "https://github.com/ChristophWurst/nextcloud_composer.git",
-                "reference": "270b23776528608099d580c5df195a621fa5f819"
+                "reference": "a998a1f6c0d6577e5780d9d4b2837b65579de662"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/ChristophWurst/nextcloud_composer/zipball/270b23776528608099d580c5df195a621fa5f819",
-                "reference": "270b23776528608099d580c5df195a621fa5f819",
+                "url": "https://api.github.com/repos/ChristophWurst/nextcloud_composer/zipball/a998a1f6c0d6577e5780d9d4b2837b65579de662",
+                "reference": "a998a1f6c0d6577e5780d9d4b2837b65579de662",
                 "shasum": ""
             },
             "type": "library",
@@ -902,7 +902,7 @@
                 }
             ],
             "description": "Composer package containing Nextcloud's public API (classes, interfaces)",
-            "time": "2018-02-08T16:50:32+00:00"
+            "time": "2018-03-17T10:08:50+00:00"
         },
         {
             "name": "christophwurst/nextcloud_testing",
