@@ -7,6 +7,7 @@
  * @author Lukas Reschke <lukas@owncloud.com>
  * @author Robin McCorkell <rmccorkell@karoshi.org.uk>
  * @author Thomas Müller <thomas.mueller@tmit.eu>
+ * @author Matthias Rella <mrella@pisys.eu>
  *
  * Mail
  *
@@ -38,6 +39,7 @@ use OCA\Mail\Service\AccountService;
 use OCA\Mail\Service\AliasesService;
 use OCA\Mail\Service\Logger;
 use OCA\Mail\Service\SetupService;
+use OCA\Mail\Service\GroupsIntegration;
 use OCP\AppFramework\Controller;
 use OCP\AppFramework\Http;
 use OCP\IL10N;
@@ -48,6 +50,9 @@ class AccountsController extends Controller {
 
 	/** @var AccountService */
 	private $accountService;
+
+	/** @var GroupsIntegration */
+	private $groupsIntegration;
 
 	/** @var string */
 	private $currentUserId;
@@ -80,10 +85,11 @@ class AccountsController extends Controller {
 	 * @param ICrypto $crypto
 	 * @param SetupService $setup
 	 */
-	public function __construct($appName, IRequest $request, AccountService $accountService, $UserId, Logger $logger, IL10N $l10n, ICrypto $crypto, AliasesService $aliasesService, IMailTransmission $mailTransmission, SetupService $setup
+	public function __construct($appName, IRequest $request, AccountService $accountService, GroupsIntegration $groupsIntegration, $UserId, Logger $logger, IL10N $l10n, ICrypto $crypto, AliasesService $aliasesService, IMailTransmission $mailTransmission, SetupService $setup
 	) {
 		parent::__construct($appName, $request);
 		$this->accountService = $accountService;
+		$this->groupsIntegration = $groupsIntegration;
 		$this->currentUserId = $UserId;
 		$this->logger = $logger;
 		$this->l10n = $l10n;
@@ -253,7 +259,11 @@ class AccountsController extends Controller {
 		$account = $this->accountService->find($this->currentUserId, $accountId);
 		$alias = $aliasId ? $this->aliasesService->find($aliasId, $this->currentUserId) : null;
 
-		$messageData = NewMessageData::fromRequest($account, $to, $cc, $bcc, $subject, $body, $attachments);
+		$expandedTo = $this->groupsIntegration->expand($to);
+		$expandedCc = $this->groupsIntegration->expand($cc);
+		$expandedBcc = $this->groupsIntegration->expand($bcc);
+
+		$messageData = NewMessageData::fromRequest($account, $expandedTo, $expandedCc, $expandedBcc, $subject, $body, $attachments);
 		$repliedMessageData = new RepliedMessageData($account, $folderId, $messageId);
 
 		try {
