@@ -70,8 +70,6 @@ class ErrorMiddleware extends Middleware {
 			return parent::afterException($controller, $methodName, $exception);
 		}
 
-		$this->logger->logException($exception);
-
 		if ($exception instanceof ClientException) {
 			return new JSONResponse([
 				'message' => $exception->getMessage()
@@ -81,6 +79,7 @@ class ErrorMiddleware extends Middleware {
 		} else if ($exception instanceof NotImplemented) {
 			return new JSONResponse([], Http::STATUS_NOT_IMPLEMENTED);
 		} else {
+			$this->logger->logException($exception);
 			if ($this->config->getSystemValue('debug', false)) {
 				return new JSONResponse([
 					'type' => get_class($exception),

@@ -73,7 +73,7 @@ class ErrorMiddlewareTest extends TestCase {
 
 	public function testDoesNotChangeUntaggedMethodResponses() {
 		$controller = $this->createMock(Controller::class);
-		$exception = new DoesNotExistException("nope");
+		$exception = new DoesNotExistException('nope');
 		$this->reflector->expects($this->once())
 			->method('hasAnnotation')
 			->willReturn(false);
@@ -84,21 +84,21 @@ class ErrorMiddlewareTest extends TestCase {
 
 	public function trappedErrorsData() {
 		return [
-			[new DoesNotExistException("does not exist"), Http::STATUS_NOT_FOUND],
-			[new ServiceException(), Http::STATUS_INTERNAL_SERVER_ERROR],
-			[new NotImplemented(), Http::STATUS_NOT_IMPLEMENTED],
+			[new DoesNotExistException('does not exist'), false, Http::STATUS_NOT_FOUND],
+			[new ServiceException(), true, Http::STATUS_INTERNAL_SERVER_ERROR],
+			[new NotImplemented(), false, Http::STATUS_NOT_IMPLEMENTED],
 		];
 	}
 
 	/**
 	 * @dataProvider trappedErrorsData
 	 */
-	public function testTrapsErrors($exception, $expectedStatus) {
+	public function testTrapsErrors($exception, $shouldLog, $expectedStatus) {
 		$controller = $this->createMock(Controller::class);
 		$this->reflector->expects($this->once())
 			->method('hasAnnotation')
 			->willReturn(true);
-		$this->logger->expects($this->once())
+		$this->logger->expects($this->exactly($shouldLog ? 1 : 0))
 			->method('logException')
 			->with($exception);
 
