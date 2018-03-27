@@ -19,6 +19,7 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>
  *
  */
+
 namespace OCA\Mail\Tests\Model;
 
 use ChristophWurst\Nextcloud\Testing\TestCase;
@@ -29,7 +30,7 @@ use OCA\Mail\AddressList;
 use OCA\Mail\Model\IMAPMessage;
 use OCA\Mail\Service\Html;
 
-class ImapMessageTest extends TestCase {
+class IMAPMessageTest extends TestCase {
 
 	public function testNoFrom() {
 		$data = new Horde_Imap_Client_Data_Fetch();
@@ -40,7 +41,7 @@ class ImapMessageTest extends TestCase {
 
 	public function testIconvHtmlMessage() {
 		$conn = $this->getMockBuilder('Horde_Imap_Client_Socket')
-		->disableOriginalConstructor()
+			->disableOriginalConstructor()
 			->setMethods(['fetch'])
 			->getMock();
 
@@ -55,13 +56,14 @@ class ImapMessageTest extends TestCase {
 		$urlGenerator->expects($this->any())
 			->method('linkToRoute')
 			->will($this->returnCallback(function ($url) {
-				return "https://docs.example.com/server/go.php?to=$url";
-			}));
+					return "https://docs.example.com/server/go.php?to=$url";
+				}));
 		$htmlService = new Html($urlGenerator, $request);
 
 		// mock first fetch
 		$firstFetch = new Horde_Imap_Client_Data_Fetch();
-		$firstPart = Horde_Mime_Part::parseMessage(file_get_contents(__DIR__ . '/../data/mail-message-123.txt'), ['level' => 1]);
+		$firstPart = Horde_Mime_Part::parseMessage(file_get_contents(__DIR__ . '/../data/mail-message-123.txt'),
+				['level' => 1]);
 		$firstFetch->setStructure($firstPart);
 		$firstFetch->setBodyPart(1, $firstPart->getPart(1)->getContents());
 		$firstFetch->setBodyPart(2, $firstPart->getPart(2)->getContents());
@@ -73,11 +75,23 @@ class ImapMessageTest extends TestCase {
 
 
 		$message = new IMAPMessage($conn, 'INBOX', 123, null, true, $htmlService);
-		$htmlBody = $message->getHtmlBody(0, 0, 123, function() {return null;});
+		$htmlBody = $message->getHtmlBody(0, 0, 123, function() {
+			return null;
+		});
 		$this->assertTrue(strlen($htmlBody) > 1000);
 
 		$plainTextBody = $message->getPlainBody();
 		$this->assertTrue(strlen($plainTextBody) > 1000);
 	}
-}
 
+	public function testSerialize() {
+		$data = new Horde_Imap_Client_Data_Fetch();
+		$m = new IMAPMessage(null, 'INBOX', 123, $data);
+		$m->setUid('1234');
+
+		$json = $m->jsonSerialize();
+
+		$this->assertEquals('1234', $json['id']);
+	}
+
+}
