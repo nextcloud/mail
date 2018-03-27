@@ -454,6 +454,9 @@ define(function(require) {
 		focusSubject: function() {
 			this.$el.find('input.subject').focus();
 		},
+		focusMessageBody: function() {
+			this.$el.find('textarea.message-body').focus();
+		},
 		onAutoComplete: function(e) {
 			var $elem = $(e.target);
 			function split(val) {
