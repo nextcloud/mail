@@ -23,19 +23,27 @@ namespace OCA\Mail\Tests\Service;
 
 use ChristophWurst\Nextcloud\Testing\TestCase;
 use OCA\Mail\Service\ContactsIntegration;
+use OCP\Contacts\IManager;
+use OCP\IConfig;
 
 class ContactsIntegrationTest extends TestCase {
 
+	/** @var IManager */
 	private $contactsManager;
+
+	/** @var IConfig */
+	private $config;
+
+	/** @var ContactsIntegration */
 	private $contactsIntegration;
 
 	protected function setUp() {
 		parent::setUp();
 
-		$this->contactsManager = $this->getMockBuilder('OCP\Contacts\IManager')
-			->disableOriginalConstructor()
-			->getMock();
-		$this->contactsIntegration = new ContactsIntegration($this->contactsManager);
+		$this->contactsManager = $this->createMock(IManager::class);
+		$this->config = $this->createMock(IConfig::class);
+		$this->contactsIntegration = new ContactsIntegration($this->contactsManager,
+			$this->config);
 	}
 
 	public function testDisabledContactsManager() {
@@ -75,7 +83,10 @@ class ContactsIntegrationTest extends TestCase {
 				'FN' => 'Johann Strauss II',
 			]
 		];
-
+		$this->config->expects($this->once())
+			->method('getAppValue')
+			->with('core', 'shareapi_allow_share_dialog_user_enumeration', 'no')
+			->willReturn('yes');
 		$this->contactsManager->expects($this->once())
 			->method('isEnabled')
 			->will($this->returnValue(true));
@@ -83,7 +94,6 @@ class ContactsIntegrationTest extends TestCase {
 			->method('search')
 			->with($term, ['FN', 'EMAIL'])
 			->will($this->returnValue($searchResult));
-
 		$expected = [
 			[
 				'id' => 1,
@@ -104,6 +114,57 @@ class ContactsIntegrationTest extends TestCase {
 				'photo' => null,
 			],
 		];
+
+		$actual = $this->contactsIntegration->getMatchingRecipient($term);
+
+		$this->assertEquals($expected, $actual);
+	}
+
+	public function testGetMatchingRecipientNoSystemUsers() {
+		$term = 'jo'; // searching for: John Doe
+		$searchResult = [
+			[
+				// Simple match
+				'UID' => 1,
+				'FN' => 'Jonathan Frakes',
+				'EMAIL' => 'jonathan@frakes.com',
+			],
+			[
+				// Array of addresses
+				'UID' => 2,
+				'FN' => 'John Doe',
+				'EMAIL' => [
+					'john@doe.info',
+					'doe@john.info',
+				],
+				'isLocalSystemBook' => true,
+			],
+			[
+				// Johann Strauss II didn't have a email address ;-)
+				'UID' => 3,
+				'FN' => 'Johann Strauss II',
+			]
+		];
+		$this->config->expects($this->once())
+			->method('getAppValue')
+			->with('core', 'shareapi_allow_share_dialog_user_enumeration', 'no')
+			->willReturn('no');
+		$this->contactsManager->expects($this->once())
+			->method('isEnabled')
+			->will($this->returnValue(true));
+		$this->contactsManager->expects($this->once())
+			->method('search')
+			->with($term, ['FN', 'EMAIL'])
+			->will($this->returnValue($searchResult));
+		$expected = [
+			[
+				'id' => 1,
+				'label' => 'Jonathan Frakes (jonathan@frakes.com)',
+				'value' => '"Jonathan Frakes" <jonathan@frakes.com>',
+				'photo' => null,
+			],
+		];
+
 		$actual = $this->contactsIntegration->getMatchingRecipient($term);
 
 		$this->assertEquals($expected, $actual);

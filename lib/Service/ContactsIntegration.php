@@ -23,19 +23,22 @@
 namespace OCA\Mail\Service;
 
 use OCP\Contacts\IManager;
+use OCP\IConfig;
 
 class ContactsIntegration {
 
-	/**
-	 * @var IManager
-	 */
+	/** @var IManager */
 	private $contactsManager;
+
+	/** @var IConfig */
+	private $config;
 
 	/**
 	 * @param IManager $contactsManager
 	 */
-	public function __construct(IManager $contactsManager) {
+	public function __construct(IManager $contactsManager, IConfig $config) {
 		$this->contactsManager = $contactsManager;
+		$this->config = $config;
 	}
 
 	/**
@@ -49,9 +52,17 @@ class ContactsIntegration {
 			return [];
 		}
 
+		// If 'Allow username autocompletion in share dialog' is disabled in the admin sharing settings, then we must not
+		// auto-complete system users
+		$allowSystemUsers = $this->config->getAppValue('core', 'shareapi_allow_share_dialog_user_enumeration', 'no') === 'yes';
+
 		$result = $this->contactsManager->search($term, ['FN', 'EMAIL']);
 		$receivers = [];
 		foreach ($result as $r) {
+			if (!$allowSystemUsers && isset($r['isLocalSystemBook']) && $r['isLocalSystemBook']) {
+				continue;
+			}
+
 			$id = $r['UID'];
 			$fn = $r['FN'];
 			if (!isset($r['EMAIL'])) {
