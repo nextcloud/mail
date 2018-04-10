@@ -53,7 +53,7 @@ OC.L10N.register(
     "Error while refreshing messages." : "Error al recargar los mensajes.",
     "Setting up your account" : "Configurando tu cuenta",
     "Inbox" : "Bandeja de entrada",
-    "Sent" : "Enviado",
+    "Sent" : "Enviados",
     "Drafts" : "Borradores",
     "Archive" : "Archivados",
     "Trash" : "Papelera",
