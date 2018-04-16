@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#composer-lock-the-lock-file",
         "This file is @generated automatically"
     ],
-    "content-hash": "b405d1174800beca50a0614766796124",
+    "content-hash": "4851d57ead040602137a16cf0ba399e8",
     "packages": [
         {
             "name": "arthurhoaro/favicon",
@@ -58,27 +58,33 @@
         },
         {
             "name": "cerdic/css-tidy",
-            "version": "v1.5.6",
+            "version": "v1.5.7",
             "source": {
                 "type": "git",
                 "url": "https://github.com/Cerdic/CSSTidy.git",
-                "reference": "d4443352da925610919f1b49c5f6bb68216b6b60"
+                "reference": "226bca013a4dc58b6471931564c6b568af2b66e9"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/Cerdic/CSSTidy/zipball/d4443352da925610919f1b49c5f6bb68216b6b60",
-                "reference": "d4443352da925610919f1b49c5f6bb68216b6b60",
+                "url": "https://api.github.com/repos/Cerdic/CSSTidy/zipball/226bca013a4dc58b6471931564c6b568af2b66e9",
+                "reference": "226bca013a4dc58b6471931564c6b568af2b66e9",
                 "shasum": ""
+            },
+            "require-dev": {
+                "pear/text_diff": "^1.2",
+                "simpletest/simpletest": "^1.1"
             },
             "type": "library",
             "autoload": {
                 "classmap": [
-                    "."
+                    "class.csstidy_optimise.php",
+                    "class.csstidy_print.php",
+                    "class.csstidy.php"
                 ]
             },
             "notification-url": "https://packagist.org/downloads/",
             "license": [
-                "LGPL-2.1"
+                "LGPL-2.1-or-later"
             ],
             "authors": [
                 {
@@ -87,7 +93,7 @@
                 }
             ],
             "description": "CSSTidy is a CSS minifier",
-            "time": "2017-09-29T14:18:45+00:00"
+            "time": "2018-04-10T09:09:46+00:00"
         },
         {
             "name": "ezyang/htmlpurifier",
