@@ -76,6 +76,7 @@ OC.L10N.register(
     "Account" : "Λογαριασμός",
     "Keyboard shortcuts" : "Συντομεύσεις πληκτρολογίου",
     "Speed up your Mail experience with these quick shortcuts." : "Βελτιώστε την ταχύτητά σας στην εμπειρία χρήσης στο πρόγραμμα Αλληλογραφίας με αυτές τις συντομεύσεις.",
+    "Compose new message" : "Σύνταξη νέου μηνύματος",
     "Newer message" : "Νεότερο μήνυμα",
     "Older message" : "Παλαιότερο μήνυμα",
     "Toggle star" : "Εναλλαγή αστεριού",
