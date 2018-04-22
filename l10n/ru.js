@@ -40,7 +40,7 @@ OC.L10N.register(
     "An error occurred while uploading {fname}" : "При загрузке {fname} произошла ошибка",
     "Reply" : "Ответить",
     "Send" : "Отправить",
-    "Sending …" : "Отправка...",
+    "Sending …" : "Отправка…",
     "Message sent!" : "Сообщение отправлено!",
     "Server error" : "Ошибка сервера",
     "An unknown error occurred" : "Произошла неизвестная ошибка",
