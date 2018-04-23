@@ -75,6 +75,6 @@
     "js-storage": "1.0.4",
     "nextcloud_issuetemplate_builder": "^0.1.0",
     "requirejs": "^2.3.5",
-    "underscore": "^1.8.3"
+    "underscore": "^1.9.0"
   }
 }
