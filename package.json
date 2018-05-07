@@ -38,7 +38,7 @@
     "jscs-jsdoc": "^2.0.0",
     "jshint": "^2.9.5",
     "karma": "^2.0.2",
-    "karma-coverage": "^1.1.1",
+    "karma-coverage": "^1.1.2",
     "karma-jasmine": "^1.1.1",
     "karma-jasmine-ajax": "^0.1.13",
     "karma-phantomjs-launcher": "^1.0.4",
