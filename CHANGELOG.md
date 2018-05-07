@@ -1,6 +1,15 @@
 # Changelog
 All notable changes to this project will be documented in this file.
 
+## 0.8.0 – 2018-05-07
+### Fixed
+- Nextcloud version requirements
+- Auto completion suggestions of other users
+- Exception logging of handled errors
+- Unread message counter update on message deletion
+- Non-square avatars
+- Clearing message view when last message of a folder is deleted
+
 ## 0.7.10 – 2018-02-19
 ### Added
 - Warn when sending messages or replies to a norepy address
