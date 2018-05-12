@@ -58,7 +58,7 @@ OC.L10N.register(
     "Creating account failed: " : "La creació del compte ha fallat:",
     "Delete permanently" : "Esborra permanentment",
     "Error loading message" : "Error al carregar el missatge",
-    "Settings" : "Paràmetres",
+    "Settings" : "Configuració",
     "Forwarding to %s" : "Reenviant a %s",
     "Click here if you are not automatically redirected within the next few seconds." : "Prem aquí si no se't redirigeix automàticament en pocs segons.",
     "Redirect" : "Redireccionar",
