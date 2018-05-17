@@ -29,7 +29,7 @@ OC.L10N.register(
     "Could not load the desired message" : "Nelze načíst vyžádanou zprávu",
     "Could not load the message" : "Nelze načíst zprívu",
     "{from}\n{subject}" : "{from}\n{subject}",
-    "_%n new message \nfrom {from}_::_%n new messages \nfrom {from}_" : ["%n nová zpráva\nod {from}","%n nové zprávy\nod {from}","%n nových zpráv\nod {from}"],
+    "_%n new message \nfrom {from}_::_%n new messages \nfrom {from}_" : ["%n nová zpráva\nod {from}","%n nové zprávy\nod {from}","%n nových zpráv\nod {from}","%n nových zpráv\nod {from}"],
     "Nextcloud Mail" : "Nextcloud Mail",
     "Save" : "Uložit",
     "Saved" : "Uloženo",
@@ -128,4 +128,4 @@ OC.L10N.register(
     "Download attachment" : "Stáhnout přílohu",
     "Save to Files" : "Uložit do Souborů"
 },
-"nplurals=3; plural=(n==1) ? 0 : (n>=2 && n<=4) ? 1 : 2;");
+"nplurals=4; plural=(n < 10 && n % 1 == 0) ? 1 : (n < 9999 && n >= 10 && n % 1 == 0) ? 3 : (n % 1 != 0) : 4;");

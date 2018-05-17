@@ -29,7 +29,7 @@ OC.L10N.register(
     "Could not load the desired message" : "Nepavyko įkelti pageidaujamo laiško",
     "Could not load the message" : "Nepavyko įkelti laiško",
     "{from}\n{subject}" : "{from}\n{subject}",
-    "_%n new message \nfrom {from}_::_%n new messages \nfrom {from}_" : ["%n naujas laiškas \nnuo {from}","%n nauji laiškai \nnuo {from}","%n naujų laiškų \nnuo {from}"],
+    "_%n new message \nfrom {from}_::_%n new messages \nfrom {from}_" : ["%n naujas laiškas \nnuo {from}","%n nauji laiškai \nnuo {from}","%n naujų laiškų \nnuo {from}","%n naujų laiškų \nnuo {from}"],
     "Nextcloud Mail" : "Nextcloud el. paštas",
     "Save" : "Įrašyti",
     "Saved" : "Įrašyta",
@@ -128,4 +128,4 @@ OC.L10N.register(
     "Download attachment" : "Atsisiųsti priedą",
     "Save to Files" : "Įrašyti į Failus"
 },
-"nplurals=3; plural=(n%10==1 && n%100!=11 ? 0 : n%10>=2 && (n%100<10 || n%100>=20) ? 1 : 2);");
+"nplurals=4; plural=(n % 10 == 1 && (n % 100 > 19 || n % 100 < 11) ? 1 : (n%10 >= 2 && n % 10 <=9) && (n % 100 > 19 || n % 100 < 11) ? 3 : n % 1 != 0 ? 4);");

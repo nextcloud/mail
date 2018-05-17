@@ -29,7 +29,7 @@ OC.L10N.register(
     "Could not load the desired message" : "სასურველი წერილის ჩატვირთვა ვერ მოხერხდა",
     "Could not load the message" : "წერილის ჩატვირთვა ვერ მოხერხდა",
     "{from}\n{subject}" : "{from}\n{subject}",
-    "_%n new message \nfrom {from}_::_%n new messages \nfrom {from}_" : ["%n ახალი წერილი\n{from}-ისგან"],
+    "_%n new message \nfrom {from}_::_%n new messages \nfrom {from}_" : ["%n ახალი წერილი\n{from}-ისგან","%n ახალი წერილი\n{from}-ისგან"],
     "Nextcloud Mail" : "Nextcloud ფოსტა",
     "Save" : "შენახვა",
     "Saved" : "შენახულია",
@@ -127,4 +127,4 @@ OC.L10N.register(
     "Download attachment" : "დანართის გადმოწერა",
     "Save to Files" : "შენახვა ფაილებში"
 },
-"nplurals=1; plural=0;");
+"nplurals=2; plural=(n==1);");

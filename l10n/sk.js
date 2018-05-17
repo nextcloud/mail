@@ -29,7 +29,7 @@ OC.L10N.register(
     "Could not load the desired message" : "Nepodarilo sa načítať požadovanú správu",
     "Could not load the message" : "Správu sa nepodarilo sa načítať",
     "{from}\n{subject}" : "{from}\n{subject}",
-    "_%n new message \nfrom {from}_::_%n new messages \nfrom {from}_" : ["%n nová správa\nod {from}","%n nové správy\nod {from}","%n nových správ\nod {from}"],
+    "_%n new message \nfrom {from}_::_%n new messages \nfrom {from}_" : ["%n nová správa\nod {from}","%n nové správy\nod {from}","%n nových správ\nod {from}","%n nových správ\nod {from}"],
     "Nextcloud Mail" : "Nextcloud Mail",
     "Save" : "Uložiť",
     "Saved" : "Uložené",
@@ -127,4 +127,4 @@ OC.L10N.register(
     "Download attachment" : "Stiahnuť prílohu",
     "Save to Files" : "Uložiť do Súborov"
 },
-"nplurals=3; plural=(n==1) ? 0 : (n>=2 && n<=4) ? 1 : 2;");
+"nplurals=4; plural=(n % 1 == 0 ? 4: n==1 ? 1: n % 1 == 0 && n>=2 && n<=4 ? 3);");
