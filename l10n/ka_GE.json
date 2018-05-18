@@ -124,5 +124,5 @@
     "Import into calendar" : "იმპორტი კალენდარში",
     "Download attachment" : "დანართის გადმოწერა",
     "Save to Files" : "შენახვა ფაილებში"
-},"pluralForm" :"nplurals=2; plural=(n==1);"
+},"pluralForm" :"nplurals=2; plural=(n!=1);"
 }

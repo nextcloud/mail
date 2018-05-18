@@ -127,4 +127,4 @@ OC.L10N.register(
     "Download attachment" : "დანართის გადმოწერა",
     "Save to Files" : "შენახვა ფაილებში"
 },
-"nplurals=2; plural=(n==1);");
+"nplurals=2; plural=(n!=1);");
