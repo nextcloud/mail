@@ -371,7 +371,7 @@ class MessagesController extends Controller {
 	/**
 	 * @param int $accountId
 	 * @param string $folderId
-	 * @return IMailBox
+	 * @return MailBox
 	 */
 	private function getFolder($accountId, $folderId) {
 		$account = $this->getAccount($accountId);
