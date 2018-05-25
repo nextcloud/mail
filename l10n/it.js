@@ -64,6 +64,8 @@ OC.L10N.register(
     "Updating account failed: " : "Aggiornamento account non riuscito:",
     "Creating account failed: " : "Creazione account non riuscita:",
     "Delete permanently" : "Elimina definitivamente",
+    "IMAP web client" : "Client web IMAP",
+    "Easy to use email client which connects to your mail server via IMAP and SMTP." : "Client di posta elettronica di facile utilizzo che ti collega al tuo server di posta tramite IMAP e SMTP.",
     "Error loading message" : "Errore durante il caricamento del messaggio",
     "Settings" : "Impostazioni",
     "Forwarding to %s" : "Inoltro a %s",

@@ -62,6 +62,8 @@
     "Updating account failed: " : "Falhou ao atualizar a conta:",
     "Creating account failed: " : "A criação de contas falhou:",
     "Delete permanently" : "Excluir permanentemente",
+    "IMAP web client" : "Cliente web IMAP",
+    "Easy to use email client which connects to your mail server via IMAP and SMTP." : "Cliente de email fácil de usar que se conecta ao seu servidor de e-mail via IMAP e SMTP.",
     "Error loading message" : "Erro carregando mensagem",
     "Settings" : "Configurações",
     "Forwarding to %s" : "Encaminhando para %s",
