@@ -14,7 +14,7 @@
     "Message flag could not be set." : "Značka zpráva nemohla být nastavena.",
     "Could not move message." : "Nelze přesunout zprávu.",
     "Invalid account" : "Neplatný účet",
-    "Invalid folder" : "Neplatný adresář",
+    "Invalid folder" : "Neplatná složka",
     "Error while creating the account: " : "Chyba při vytváření účtu:",
     "Unknown error" : "Neznámá chyba",
     "Error while updating the account: " : "Chyba při aktualizaci účtu",
