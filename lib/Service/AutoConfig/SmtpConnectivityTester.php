@@ -80,6 +80,8 @@ class SmtpConnectivityTester {
 		if ($withHostPrefix) {
 			$hostPrefixes = ['', 'imap.'];
 		}
+		$encryptedPassword = $this->crypto->encrypt($password);
+
 		foreach ($hostPrefixes as $hostPrefix) {
 			$url = $hostPrefix . $host;
 			if (gethostbyname($url) === $url) {
@@ -95,8 +97,7 @@ class SmtpConnectivityTester {
 							$account->setOutboundHost($url);
 							$account->setOutboundPort($port);
 							$account->setOutboundUser($user);
-							$password = $this->crypto->encrypt($password);
-							$account->setOutboundPassword($password);
+							$account->setOutboundPassword($encryptedPassword);
 							$account->setOutboundSslMode($protocol);
 
 							$this->testStmtpConnection($account);
