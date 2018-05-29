@@ -64,6 +64,7 @@ OC.L10N.register(
     "Updating account failed: " : "Se presentó una falla al actualizar la cuenta",
     "Creating account failed: " : "Se presentó una falla al crear la cuenta:",
     "Delete permanently" : "Borrar permanentemente",
+    "IMAP web client" : "Cliente web IMAP",
     "Error loading message" : "Se presentó un error al cargar el mensaje",
     "Settings" : "Configuraciones ",
     "Forwarding to %s" : "Reenviando a %s",
