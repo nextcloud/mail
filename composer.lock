@@ -1,10 +1,10 @@
 {
     "_readme": [
         "This file locks the dependencies of your project to a known state",
-        "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#composer-lock-the-lock-file",
+        "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "056ed17213b4e4e251cf80ab39bfacbc",
+    "content-hash": "811202f5483d4f624e26e8eaa79d3585",
     "packages": [
         {
             "name": "arthurhoaro/favicon",
@@ -197,6 +197,66 @@
             "time": "2016-06-25T11:20:11+00:00"
         },
         {
+            "name": "horde/imap-client",
+            "version": "dev-query-datatime-2.29.15",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/icewind1991/Imap_Client.git",
+                "reference": "168f0cfbe7ce9a673af94b273c83d302c9317f3a"
+            },
+            "require": {
+                "ext-hash": "*",
+                "ext-json": "*",
+                "pear-pear.horde.org/horde_exception": "^2@stable",
+                "pear-pear.horde.org/horde_mail": "^2@stable",
+                "pear-pear.horde.org/horde_mime": "^2.5.2@stable",
+                "pear-pear.horde.org/horde_secret": "^2@stable",
+                "pear-pear.horde.org/horde_socket_client": "^2@stable",
+                "pear-pear.horde.org/horde_stream": "^1.4@stable",
+                "pear-pear.horde.org/horde_stream_filter": "^2@stable",
+                "pear-pear.horde.org/horde_translation": "^2.2@stable",
+                "pear-pear.horde.org/horde_util": "^2@stable",
+                "php": "^5.3 || ^7"
+            },
+            "replace": {
+                "pear-horde/horde_imap_client": "2.*",
+                "pear-pear.horde.org/horde_imap_client": "2.*"
+            },
+            "suggest": {
+                "ext-intl": "*",
+                "ext-mbstring": "*",
+                "pear-pear.horde.org/Horde_Cache": "^2@stable",
+                "pear-pear.horde.org/Horde_Compress_Fast": "^1@stable",
+                "pear-pear.horde.org/Horde_Crypt_Blowfish": "^1.1@stable",
+                "pear-pear.horde.org/Horde_Db": "^2.2@stable",
+                "pear-pear.horde.org/Horde_HashTable": "^1@stable",
+                "pear-pear.horde.org/Horde_Mongo": "^1@stable",
+                "pear-pear.horde.org/Horde_Pack": "^1@stable",
+                "pear-pear.horde.org/Horde_Stringprep": "^1@stable",
+                "pear-pear.horde.org/Horde_Support": "^2@stable",
+                "pear-pear.horde.org/Horde_Test": "^2.2.7@stable"
+            },
+            "type": "library",
+            "autoload": {
+                "psr-0": {
+                    "Horde_Imap_Client": "lib/"
+                }
+            },
+            "license": [
+                "LGPL-2.1"
+            ],
+            "authors": [
+                {
+                    "name": "Michael Slusarz",
+                    "email": "slusarz@horde.org",
+                    "role": "lead"
+                }
+            ],
+            "description": "Horde IMAP Client",
+            "homepage": "https://pear.horde.org",
+            "time": "2018-05-29T11:26:49+00:00"
+        },
+        {
             "name": "kwi/urllinker",
             "version": "dev-default",
             "source": {
@@ -239,7 +299,7 @@
             ],
             "description": "Autolink URLs in text or html",
             "homepage": "http://www.kwi.dk/projects/php/UrlLinker/",
-            "time": "2014-12-28T23:05:00+00:00"
+            "time": "2014-12-28T22:05:00+00:00"
         },
         {
             "name": "pear-pear.horde.org/Horde_Crypt_Blowfish",
@@ -364,46 +424,6 @@
                 "BSD-2-Clause"
             ],
             "description": "Normalized access to various backends providing IDNA (Internationalized Domain Names in Applications) support."
-        },
-        {
-            "name": "pear-pear.horde.org/Horde_Imap_Client",
-            "version": "2.29.15",
-            "dist": {
-                "type": "file",
-                "url": "https://pear.horde.org/get/Horde_Imap_Client-2.29.15.tgz",
-                "reference": null,
-                "shasum": null
-            },
-            "require": {
-                "ext-hash": "*",
-                "ext-json": "*",
-                "pear-pear.horde.org/horde_exception": "<3.0.0.0",
-                "pear-pear.horde.org/horde_mail": "<3.0.0.0",
-                "pear-pear.horde.org/horde_mime": "<3.0.0.0",
-                "pear-pear.horde.org/horde_secret": "<3.0.0.0",
-                "pear-pear.horde.org/horde_socket_client": "<3.0.0.0",
-                "pear-pear.horde.org/horde_stream": "<2.0.0.0",
-                "pear-pear.horde.org/horde_stream_filter": "<3.0.0.0",
-                "pear-pear.horde.org/horde_translation": "<3.0.0.0",
-                "pear-pear.horde.org/horde_util": "<3.0.0.0",
-                "php": "<8.0.0.0"
-            },
-            "replace": {
-                "pear-horde/horde_imap_client": "== 2.29.15.0"
-            },
-            "type": "pear-library",
-            "autoload": {
-                "classmap": [
-                    ""
-                ]
-            },
-            "include-path": [
-                "/"
-            ],
-            "license": [
-                "LGPL-2.1"
-            ],
-            "description": "Interface to access IMAP4rev1 (RFC 3501) mail servers. Also supports connections to POP3 (STD 53/RFC 1939)."
         },
         {
             "name": "pear-pear.horde.org/Horde_ListHeaders",
@@ -1006,33 +1026,38 @@
         },
         {
             "name": "facebook/webdriver",
-            "version": "1.5.0",
+            "version": "1.6.0",
             "source": {
                 "type": "git",
                 "url": "https://github.com/facebook/php-webdriver.git",
-                "reference": "86b5ca2f67173c9d34340845dd690149c886a605"
+                "reference": "bd8c740097eb9f2fc3735250fc1912bc811a954e"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/facebook/php-webdriver/zipball/86b5ca2f67173c9d34340845dd690149c886a605",
-                "reference": "86b5ca2f67173c9d34340845dd690149c886a605",
+                "url": "https://api.github.com/repos/facebook/php-webdriver/zipball/bd8c740097eb9f2fc3735250fc1912bc811a954e",
+                "reference": "bd8c740097eb9f2fc3735250fc1912bc811a954e",
                 "shasum": ""
             },
             "require": {
                 "ext-curl": "*",
+                "ext-json": "*",
+                "ext-mbstring": "*",
                 "ext-zip": "*",
                 "php": "^5.6 || ~7.0",
                 "symfony/process": "^2.8 || ^3.1 || ^4.0"
             },
             "require-dev": {
                 "friendsofphp/php-cs-fixer": "^2.0",
-                "guzzle/guzzle": "^3.4.1",
-                "php-coveralls/php-coveralls": "^1.0.2",
+                "jakub-onderka/php-parallel-lint": "^0.9.2",
+                "php-coveralls/php-coveralls": "^2.0",
                 "php-mock/php-mock-phpunit": "^1.1",
                 "phpunit/phpunit": "^5.7",
                 "sebastian/environment": "^1.3.4 || ^2.0 || ^3.0",
                 "squizlabs/php_codesniffer": "^2.6",
                 "symfony/var-dumper": "^3.3 || ^4.0"
+            },
+            "suggest": {
+                "ext-SimpleXML": "For Firefox profile creation"
             },
             "type": "library",
             "extra": {
@@ -1057,7 +1082,7 @@
                 "selenium",
                 "webdriver"
             ],
-            "time": "2017-11-15T11:08:09+00:00"
+            "time": "2018-05-16T17:37:13+00:00"
         },
         {
             "name": "myclabs/deep-copy",
@@ -1252,23 +1277,23 @@
         },
         {
             "name": "phpspec/prophecy",
-            "version": "1.7.5",
+            "version": "1.7.6",
             "source": {
                 "type": "git",
                 "url": "https://github.com/phpspec/prophecy.git",
-                "reference": "dfd6be44111a7c41c2e884a336cc4f461b3b2401"
+                "reference": "33a7e3c4fda54e912ff6338c48823bd5c0f0b712"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/phpspec/prophecy/zipball/dfd6be44111a7c41c2e884a336cc4f461b3b2401",
-                "reference": "dfd6be44111a7c41c2e884a336cc4f461b3b2401",
+                "url": "https://api.github.com/repos/phpspec/prophecy/zipball/33a7e3c4fda54e912ff6338c48823bd5c0f0b712",
+                "reference": "33a7e3c4fda54e912ff6338c48823bd5c0f0b712",
                 "shasum": ""
             },
             "require": {
                 "doctrine/instantiator": "^1.0.2",
                 "php": "^5.3|^7.0",
                 "phpdocumentor/reflection-docblock": "^2.0|^3.0.2|^4.0",
-                "sebastian/comparator": "^1.1|^2.0",
+                "sebastian/comparator": "^1.1|^2.0|^3.0",
                 "sebastian/recursion-context": "^1.0|^2.0|^3.0"
             },
             "require-dev": {
@@ -1311,7 +1336,7 @@
                 "spy",
                 "stub"
             ],
-            "time": "2018-02-19T10:16:54+00:00"
+            "time": "2018-04-18T13:57:24+00:00"
         },
         {
             "name": "phpunit/php-code-coverage",
@@ -2217,17 +2242,72 @@
             "time": "2016-10-03T07:35:21+00:00"
         },
         {
-            "name": "symfony/process",
-            "version": "v3.4.4",
+            "name": "symfony/polyfill-ctype",
+            "version": "v1.8.0",
             "source": {
                 "type": "git",
-                "url": "https://github.com/symfony/process.git",
-                "reference": "09a5172057be8fc677840e591b17f385e58c7c0d"
+                "url": "https://github.com/symfony/polyfill-ctype.git",
+                "reference": "7cc359f1b7b80fc25ed7796be7d96adc9b354bae"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/symfony/process/zipball/09a5172057be8fc677840e591b17f385e58c7c0d",
-                "reference": "09a5172057be8fc677840e591b17f385e58c7c0d",
+                "url": "https://api.github.com/repos/symfony/polyfill-ctype/zipball/7cc359f1b7b80fc25ed7796be7d96adc9b354bae",
+                "reference": "7cc359f1b7b80fc25ed7796be7d96adc9b354bae",
+                "shasum": ""
+            },
+            "require": {
+                "php": ">=5.3.3"
+            },
+            "type": "library",
+            "extra": {
+                "branch-alias": {
+                    "dev-master": "1.8-dev"
+                }
+            },
+            "autoload": {
+                "psr-4": {
+                    "Symfony\\Polyfill\\Ctype\\": ""
+                },
+                "files": [
+                    "bootstrap.php"
+                ]
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "MIT"
+            ],
+            "authors": [
+                {
+                    "name": "Symfony Community",
+                    "homepage": "https://symfony.com/contributors"
+                },
+                {
+                    "name": "Gert de Pagter",
+                    "email": "BackEndTea@gmail.com"
+                }
+            ],
+            "description": "Symfony polyfill for ctype functions",
+            "homepage": "https://symfony.com",
+            "keywords": [
+                "compatibility",
+                "ctype",
+                "polyfill",
+                "portable"
+            ],
+            "time": "2018-04-30T19:57:29+00:00"
+        },
+        {
+            "name": "symfony/process",
+            "version": "v3.4.11",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/symfony/process.git",
+                "reference": "4cbf2db9abcb01486a21b7a059e03a62fae63187"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/symfony/process/zipball/4cbf2db9abcb01486a21b7a059e03a62fae63187",
+                "reference": "4cbf2db9abcb01486a21b7a059e03a62fae63187",
                 "shasum": ""
             },
             "require": {
@@ -2263,24 +2343,25 @@
             ],
             "description": "Symfony Process Component",
             "homepage": "https://symfony.com",
-            "time": "2018-01-29T09:03:43+00:00"
+            "time": "2018-05-16T08:49:21+00:00"
         },
         {
             "name": "symfony/yaml",
-            "version": "v3.4.4",
+            "version": "v3.4.11",
             "source": {
                 "type": "git",
                 "url": "https://github.com/symfony/yaml.git",
-                "reference": "eab73b6c21d27ae4cd037c417618dfd4befb0bfe"
+                "reference": "c5010cc1692ce1fa328b1fb666961eb3d4a85bb0"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/symfony/yaml/zipball/eab73b6c21d27ae4cd037c417618dfd4befb0bfe",
-                "reference": "eab73b6c21d27ae4cd037c417618dfd4befb0bfe",
+                "url": "https://api.github.com/repos/symfony/yaml/zipball/c5010cc1692ce1fa328b1fb666961eb3d4a85bb0",
+                "reference": "c5010cc1692ce1fa328b1fb666961eb3d4a85bb0",
                 "shasum": ""
             },
             "require": {
-                "php": "^5.5.9|>=7.0.8"
+                "php": "^5.5.9|>=7.0.8",
+                "symfony/polyfill-ctype": "~1.8"
             },
             "conflict": {
                 "symfony/console": "<3.4"
@@ -2321,7 +2402,7 @@
             ],
             "description": "Symfony Yaml Component",
             "homepage": "https://symfony.com",
-            "time": "2018-01-21T19:05:02+00:00"
+            "time": "2018-05-03T23:18:14+00:00"
         },
         {
             "name": "webmozart/assert",
@@ -2379,7 +2460,7 @@
     "stability-flags": {
         "pear-pear.horde.org/horde_date": 0,
         "pear-pear.horde.org/horde_exception": 0,
-        "pear-pear.horde.org/horde_imap_client": 0,
+        "horde/imap-client": 20,
         "pear-pear.horde.org/horde_mail": 0,
         "pear-pear.horde.org/horde_mime": 0,
         "pear-pear.horde.org/horde_nls": 0,
