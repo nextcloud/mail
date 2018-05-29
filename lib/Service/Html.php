@@ -62,7 +62,7 @@ class Html {
 	 */
 	public function convertLinks($data) {
 		$linker = new UrlLinker(true, false);
-		$data = $linker->linkUrlsInTrustedHtml($data);
+		$data = $linker->linkUrlsAndEscapeHtml($data);
 
 		$config = HTMLPurifier_Config::createDefault();
 
