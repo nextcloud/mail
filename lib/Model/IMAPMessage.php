@@ -480,7 +480,6 @@ class IMAPMessage implements IMessage, JsonSerializable {
 	 */
 	private function handleTextMessage($p, $partNo) {
 		$data = $this->loadBodyData($p, $partNo);
-		$data = Util::sanitizeHTML($data);
 		$this->plainMessage .= trim($data) . "\n\n";
 	}
 
