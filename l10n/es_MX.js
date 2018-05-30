@@ -65,6 +65,7 @@ OC.L10N.register(
     "Creating account failed: " : "Se presentó una falla al crear la cuenta:",
     "Delete permanently" : "Borrar permanentemente",
     "IMAP web client" : "Cliente web IMAP",
+    "Easy to use email client which connects to your mail server via IMAP and SMTP." : "Cliente de correo electrónico fácil de usar que se conecta con tu servidor de correo vía IMAP y SMTP.",
     "Error loading message" : "Se presentó un error al cargar el mensaje",
     "Settings" : "Configuraciones ",
     "Forwarding to %s" : "Reenviando a %s",
