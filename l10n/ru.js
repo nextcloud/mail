@@ -64,6 +64,7 @@ OC.L10N.register(
     "Updating account failed: " : "Ошибка обновления учётной записи:",
     "Creating account failed: " : "Ошибка создания учетной записи:",
     "Delete permanently" : "Удалить окончательно",
+    "IMAP web client" : "IMAP веб клиент",
     "Error loading message" : "Ошибка загрузки сообщения",
     "Settings" : "Настройки",
     "Forwarding to %s" : "Пересылка на %s",
