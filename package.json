@@ -27,7 +27,7 @@
   "devDependencies": {
     "coveralls": "^3.0.1",
     "es6-object-assign": "^1.1.0",
-    "grunt": "^1.0.2",
+    "grunt": "^1.0.3",
     "grunt-cli": "^1.2.0",
     "grunt-contrib-jshint": "^1.1.0",
     "grunt-jscs": "^3.0.1",
