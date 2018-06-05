@@ -85,8 +85,8 @@ class MailManager implements IMailManager {
 		$havePrefix = $this->prefixDetector->havePrefix($folders);
 		$this->folderMapper->getFoldersStatus($folders, $client);
 		$this->folderMapper->detectFolderSpecialUse($folders);
-		$this->folderMapper->sortFolders($folders);
 		$this->folderNameTranslator->translateAll($folders, $havePrefix);
+		$this->folderMapper->sortFolders($folders);
 		return $this->folderMapper->buildFolderHierarchy($folders, $havePrefix);
 	}
 
