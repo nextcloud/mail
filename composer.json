@@ -3,6 +3,10 @@
 		{
 			"type": "pear",
 			"url": "https://pear.horde.org"
+		},
+		{
+			"url": "https://github.com/icewind1991/Imap_Client.git",
+			"type": "git"
 		}
 	],
 	"config": {
@@ -14,7 +18,7 @@
 		"php": ">=5.6.0",
 		"pear-pear.horde.org/Horde_Date": "^2.4.1@stable",
 		"pear-pear.horde.org/Horde_Exception": "^2.0.8@stable",
-		"pear-pear.horde.org/Horde_Imap_Client": "^2.29.15@stable",
+		"horde/imap-client": "dev-query-datatime-2.29.15",
 		"pear-pear.horde.org/Horde_Mail": "^2.6.4@stable",
 		"pear-pear.horde.org/Horde_Mime": "^2.11.0@stable",
 		"pear-pear.horde.org/Horde_Nls": "^2.2.1@stable",
