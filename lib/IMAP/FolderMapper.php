@@ -33,7 +33,7 @@ class FolderMapper {
 	 * @param Account $account
 	 * @param Horde_Imap_Client_Socket $client
 	 * @param string $pattern
-	 * @return Folder
+	 * @return Folder[]
 	 */
 	public function getFolders(Account $account, Horde_Imap_Client_Socket $client,
 		$pattern = '*') {
