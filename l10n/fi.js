@@ -64,6 +64,7 @@ OC.L10N.register(
     "Updating account failed: " : "Tilin päivittäminen epäonnistui:",
     "Creating account failed: " : "Tilin luominen epäonnistui:",
     "Delete permanently" : "Poista pysyvästi",
+    "IMAP web client" : "IMAP-verkkoasiakas",
     "Error loading message" : "Virhe viestiä ladatessa",
     "Settings" : "Asetukset",
     "Forwarding to %s" : "Välitä viesti %s",

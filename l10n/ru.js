@@ -65,6 +65,7 @@ OC.L10N.register(
     "Creating account failed: " : "Ошибка создания учетной записи:",
     "Delete permanently" : "Удалить окончательно",
     "IMAP web client" : "IMAP веб клиент",
+    "Easy to use email client which connects to your mail server via IMAP and SMTP." : "Простой в использовании почтовый клиент, который подключается к вашему почтовому серверу через протоколы IMAP и SMTP.",
     "Error loading message" : "Ошибка загрузки сообщения",
     "Settings" : "Настройки",
     "Forwarding to %s" : "Пересылка на %s",
