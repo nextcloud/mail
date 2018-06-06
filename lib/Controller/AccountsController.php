@@ -186,6 +186,7 @@ class AccountsController extends Controller {
 	 * @return JSONResponse
 	 */
 	public function destroy($id) {
+		$this->aliasesService->deleteAll($id, $this->currentUserId);
 		$this->accountService->delete($this->currentUserId, $id);
 		return new JSONResponse();
 	}
