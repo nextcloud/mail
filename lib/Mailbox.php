@@ -100,10 +100,8 @@ class Mailbox implements IMailBox {
 		if ($filter instanceof Horde_Imap_Client_Search_Query) {
 			$query = $filter;
 		} else {
-			$query = new Horde_Imap_Client_Search_Query();
-			if ($filter) {
-				$query->text($filter, false);
-			}
+			$searchHelper = new SearchHelper();
+			$query = $searchHelper->parseFilterString($filter);
 		}
 		if ($this->getSpecialRole() !== 'trash') {
 			$query->flag(Horde_Imap_Client::FLAG_DELETED, false);
