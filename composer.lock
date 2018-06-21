@@ -201,8 +201,8 @@
             "version": "dev-query-datatime-2.29.15",
             "source": {
                 "type": "git",
-                "url": "https://github.com/icewind1991/Imap_Client.git",
-                "reference": "168f0cfbe7ce9a673af94b273c83d302c9317f3a"
+                "url": "https://github.com/rodrigoaguilera/Imap_Client.git",
+                "reference": "ab7675d5eb0c7f0e8cf8fcdb327134b13d132369"
             },
             "require": {
                 "ext-hash": "*",
