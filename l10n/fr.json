@@ -62,6 +62,7 @@
     "Updating account failed: " : "La mise à jour du compte a échoué : ",
     "Creating account failed: " : "La création du compte a échoué : ",
     "Delete permanently" : "Supprimer définitivement",
+    "Easy to use email client which connects to your mail server via IMAP and SMTP." : "Client de messagerie facile à utiliser qui se connecte à votre serveur de messagerie via IMAP et SMTP.",
     "Error loading message" : "Erreur lors du chargement du message",
     "Settings" : "Paramètres",
     "Forwarding to %s" : "Faire suivre à %s",
