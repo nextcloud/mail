@@ -105,6 +105,9 @@ class TransformURLScheme extends HTMLPurifier_URIFilter {
 		if ($uri->query !== null) {
 			$originalURL = $originalURL . urlencode('?' . $uri->query);
 		}
+		if ($uri->fragment !== null) {
+			$originalURL = $originalURL . urlencode('#' . $uri->fragment);
+		}
 
 		// Get the HTML attribute
 		$element = $context->get('CurrentAttr');
