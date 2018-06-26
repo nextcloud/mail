@@ -47,15 +47,19 @@ class AccountService {
 	/** @var Manager */
 	private $defaultAccountManager;
 
+	/** @var AliasesService */
+	private $aliasesService;
+
 	/**
 	 * @param MailAccountMapper $mapper
 	 * @param IL10N $l10n
 	 */
 	public function __construct(MailAccountMapper $mapper, IL10N $l10n,
-		Manager $defaultAccountManager) {
+		Manager $defaultAccountManager, AliasesService $aliasesService) {
 		$this->mapper = $mapper;
 		$this->l10n = $l10n;
 		$this->defaultAccountManager = $defaultAccountManager;
+		$this->aliasesService = $aliasesService;
 	}
 
 	/**
@@ -111,6 +115,8 @@ class AccountService {
 		if ((int) $accountId === Manager::ACCOUNT_ID) {
 			return;
 		}
+		$this->aliasesService->deleteAll($accountId, $currentUserId);
+
 		$mailAccount = $this->mapper->find($currentUserId, $accountId);
 		$this->mapper->delete($mailAccount);
 	}

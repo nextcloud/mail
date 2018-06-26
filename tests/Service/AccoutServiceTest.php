@@ -26,6 +26,7 @@ use OCA\Mail\Account;
 use OCA\Mail\Db\MailAccount;
 use OCA\Mail\Db\MailAccountMapper;
 use OCA\Mail\Service\AccountService;
+use OCA\Mail\Service\AliasesService;
 use OCA\Mail\Service\DefaultAccount\Manager;
 use OCP\IL10N;
 use PHPUnit_Framework_MockObject_MockObject;
@@ -42,7 +43,10 @@ class AccountServiceTest extends TestCase {
 	private $l10n;
 
 	/** @var AccountService|PHPUnit_Framework_MockObject_MockObject */
-	private $service;
+	private $accountService;
+
+	/** @var AliasesService|PHPUnit_Framework_MockObject_MockObject */
+	private $aliasesService;
 
 	/** @var MailAccount|PHPUnit_Framework_MockObject_MockObject */
 	private $account1;
@@ -59,7 +63,9 @@ class AccountServiceTest extends TestCase {
 		$this->mapper = $this->createMock(MailAccountMapper::class);
 		$this->l10n = $this->createMock(IL10N::class);
 		$this->defaultAccountManager = $this->createMock(Manager::class);
-		$this->service = new AccountService($this->mapper, $this->l10n, $this->defaultAccountManager);
+		$this->aliasesService = $this->createMock(AliasesService::class);
+		$this->accountService = new AccountService($this->mapper, $this->l10n
+			, $this->defaultAccountManager, $this->aliasesService);
 
 		$this->account1 = $this->createMock(MailAccount::class);
 		$this->account2 = $this->createMock(MailAccount::class);
@@ -78,7 +84,7 @@ class AccountServiceTest extends TestCase {
 			new Account($this->account1),
 			new Account($this->account2),
 		];
-		$actual = $this->service->findByUserId($this->user);
+		$actual = $this->accountService->findByUserId($this->user);
 
 		$this->assertEquals($expected, $actual);
 	}
@@ -92,7 +98,7 @@ class AccountServiceTest extends TestCase {
 			->will($this->returnValue($this->account1));
 
 		$expected = new Account($this->account1);
-		$actual = $this->service->find($this->user, $accountId);
+		$actual = $this->accountService->find($this->user, $accountId);
 
 		$this->assertEquals($expected, $actual);
 	}
@@ -112,7 +118,7 @@ class AccountServiceTest extends TestCase {
 			->method('delete')
 			->with($this->account1);
 
-		$this->service->delete($this->user, $accountId);
+		$this->accountService->delete($this->user, $accountId);
 	}
 
 	public function testSave() {
@@ -124,7 +130,7 @@ class AccountServiceTest extends TestCase {
 			->with($account)
 			->will($this->returnValue($expected));
 
-		$actual = $this->service->save($account);
+		$actual = $this->accountService->save($account);
 
 		$this->assertEquals($expected, $actual);
 	}

@@ -27,6 +27,7 @@ class AliasMapper extends Mapper {
 	/**
 	 * @param int $aliasId
 	 * @param string $currentUserId
+	 *
 	 * @return Alias
 	 */
 	public function find($aliasId, $currentUserId) {
@@ -37,6 +38,7 @@ class AliasMapper extends Mapper {
 	/**
 	 * @param int $accountId
 	 * @param string $currentUserId
+	 *
 	 * @return Alias[]
 	 */
 	public function findAll($accountId, $currentUserId) {
@@ -46,5 +48,23 @@ class AliasMapper extends Mapper {
 			$accountId
 		];
 		return $this->findEntities($sql, $params);
+	}
+
+	/**
+	 * @param int $accountId the account whose aliases will be deleted
+	 * @param string $currentUserId the user that is currently logged in
+	 */
+	public function deleteAll($accountId, $currentUserId) {
+		$sql = 'DELETE FROM *PREFIX*mail_aliases USING *PREFIX*mail_accounts
+					WHERE *PREFIX*mail_aliases.account_id = *PREFIX*mail_accounts.id
+						AND *PREFIX*mail_accounts.user_id = ?
+						AND *PREFIX*mail_aliases.account_id= ?';
+		$params = [
+			$currentUserId,
+			$accountId
+		];
+
+		$stmt = $this->execute($sql, $params);
+		$stmt->closeCursor();
 	}
 }
