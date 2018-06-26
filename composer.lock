@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "811202f5483d4f624e26e8eaa79d3585",
+    "content-hash": "a09bec573d3d36c5b928dbdc4530da35",
     "packages": [
         {
             "name": "arthurhoaro/favicon",
@@ -197,66 +197,6 @@
             "time": "2016-06-25T11:20:11+00:00"
         },
         {
-            "name": "horde/imap-client",
-            "version": "dev-query-datatime-2.29.15",
-            "source": {
-                "type": "git",
-                "url": "https://github.com/icewind1991/Imap_Client.git",
-                "reference": "168f0cfbe7ce9a673af94b273c83d302c9317f3a"
-            },
-            "require": {
-                "ext-hash": "*",
-                "ext-json": "*",
-                "pear-pear.horde.org/horde_exception": "^2@stable",
-                "pear-pear.horde.org/horde_mail": "^2@stable",
-                "pear-pear.horde.org/horde_mime": "^2.5.2@stable",
-                "pear-pear.horde.org/horde_secret": "^2@stable",
-                "pear-pear.horde.org/horde_socket_client": "^2@stable",
-                "pear-pear.horde.org/horde_stream": "^1.4@stable",
-                "pear-pear.horde.org/horde_stream_filter": "^2@stable",
-                "pear-pear.horde.org/horde_translation": "^2.2@stable",
-                "pear-pear.horde.org/horde_util": "^2@stable",
-                "php": "^5.3 || ^7"
-            },
-            "replace": {
-                "pear-horde/horde_imap_client": "2.*",
-                "pear-pear.horde.org/horde_imap_client": "2.*"
-            },
-            "suggest": {
-                "ext-intl": "*",
-                "ext-mbstring": "*",
-                "pear-pear.horde.org/Horde_Cache": "^2@stable",
-                "pear-pear.horde.org/Horde_Compress_Fast": "^1@stable",
-                "pear-pear.horde.org/Horde_Crypt_Blowfish": "^1.1@stable",
-                "pear-pear.horde.org/Horde_Db": "^2.2@stable",
-                "pear-pear.horde.org/Horde_HashTable": "^1@stable",
-                "pear-pear.horde.org/Horde_Mongo": "^1@stable",
-                "pear-pear.horde.org/Horde_Pack": "^1@stable",
-                "pear-pear.horde.org/Horde_Stringprep": "^1@stable",
-                "pear-pear.horde.org/Horde_Support": "^2@stable",
-                "pear-pear.horde.org/Horde_Test": "^2.2.7@stable"
-            },
-            "type": "library",
-            "autoload": {
-                "psr-0": {
-                    "Horde_Imap_Client": "lib/"
-                }
-            },
-            "license": [
-                "LGPL-2.1"
-            ],
-            "authors": [
-                {
-                    "name": "Michael Slusarz",
-                    "email": "slusarz@horde.org",
-                    "role": "lead"
-                }
-            ],
-            "description": "Horde IMAP Client",
-            "homepage": "https://pear.horde.org",
-            "time": "2018-05-29T11:26:49+00:00"
-        },
-        {
             "name": "kwi/urllinker",
             "version": "dev-default",
             "source": {
@@ -299,7 +239,7 @@
             ],
             "description": "Autolink URLs in text or html",
             "homepage": "http://www.kwi.dk/projects/php/UrlLinker/",
-            "time": "2014-12-28T22:05:00+00:00"
+            "time": "2014-12-28T23:05:00+00:00"
         },
         {
             "name": "pear-pear.horde.org/Horde_Crypt_Blowfish",
@@ -424,6 +364,46 @@
                 "BSD-2-Clause"
             ],
             "description": "Normalized access to various backends providing IDNA (Internationalized Domain Names in Applications) support."
+        },
+        {
+            "name": "pear-pear.horde.org/Horde_Imap_Client",
+            "version": "2.29.16",
+            "dist": {
+                "type": "file",
+                "url": "https://pear.horde.org/get/Horde_Imap_Client-2.29.16.tgz",
+                "reference": null,
+                "shasum": null
+            },
+            "require": {
+                "ext-hash": "*",
+                "ext-json": "*",
+                "pear-pear.horde.org/horde_exception": "<3.0.0.0",
+                "pear-pear.horde.org/horde_mail": "<3.0.0.0",
+                "pear-pear.horde.org/horde_mime": "<3.0.0.0",
+                "pear-pear.horde.org/horde_secret": "<3.0.0.0",
+                "pear-pear.horde.org/horde_socket_client": "<3.0.0.0",
+                "pear-pear.horde.org/horde_stream": "<2.0.0.0",
+                "pear-pear.horde.org/horde_stream_filter": "<3.0.0.0",
+                "pear-pear.horde.org/horde_translation": "<3.0.0.0",
+                "pear-pear.horde.org/horde_util": "<3.0.0.0",
+                "php": "<8.0.0.0"
+            },
+            "replace": {
+                "pear-horde/horde_imap_client": "== 2.29.16.0"
+            },
+            "type": "pear-library",
+            "autoload": {
+                "classmap": [
+                    ""
+                ]
+            },
+            "include-path": [
+                "/"
+            ],
+            "license": [
+                "LGPL-2.1"
+            ],
+            "description": "Interface to access IMAP4rev1 (RFC 3501) mail servers. Also supports connections to POP3 (STD 53/RFC 1939)."
         },
         {
             "name": "pear-pear.horde.org/Horde_ListHeaders",
@@ -2399,7 +2379,7 @@
     "stability-flags": {
         "pear-pear.horde.org/horde_date": 0,
         "pear-pear.horde.org/horde_exception": 0,
-        "horde/imap-client": 20,
+        "pear-pear.horde.org/horde_imap_client": 0,
         "pear-pear.horde.org/horde_mail": 0,
         "pear-pear.horde.org/horde_mime": 0,
         "pear-pear.horde.org/horde_nls": 0,
