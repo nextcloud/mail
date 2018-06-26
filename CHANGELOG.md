@@ -1,11 +1,21 @@
 # Changelog
 All notable changes to this project will be documented in this file.
 
-## 0.8.1 – 2018-05-14
-### Added
-- New and updated translations
+## 0.8.2 – 2018-06-26
 ### Fixed
 - Installation on Nextcloud 13.x
+
+## 0.8.1 – 2018-05-14
+### Added
+- Advanced search
+- New and updated translations
+### Fixed
+- Preserve URI hash in sanitized HTML messages
+- Pagination of incoming messages
+- Autoconfig issues
+- Security issues in third party JavaScript libraries
+- Folder sorting
+- Issue template URL in README
 
 ## 0.8.0 – 2018-05-07
 ### Fixed
