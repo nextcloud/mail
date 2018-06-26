@@ -5,7 +5,7 @@
 			"url": "https://pear.horde.org"
 		},
 		{
-			"url": "https://github.com/icewind1991/Imap_Client.git",
+			"url": "https://github.com/rodrigoaguilera/Imap_Client.git",
 			"type": "git"
 		}
 	],
