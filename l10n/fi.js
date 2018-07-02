@@ -65,6 +65,7 @@ OC.L10N.register(
     "Creating account failed: " : "Tilin luominen epäonnistui:",
     "Delete permanently" : "Poista pysyvästi",
     "IMAP web client" : "IMAP-verkkoasiakas",
+    "Easy to use email client which connects to your mail server via IMAP and SMTP." : "Helppokäyttöinen sähköpostisovellus, joka yhdistää palvelimiin IMAP- ja SMTP-protokollia käyttäen.",
     "Error loading message" : "Virhe viestiä ladatessa",
     "Settings" : "Asetukset",
     "Forwarding to %s" : "Välitä viesti %s",
