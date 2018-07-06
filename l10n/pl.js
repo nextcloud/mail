@@ -39,7 +39,7 @@ OC.L10N.register(
     "An error occurred while uploading {fname}" : "Wystąpił błąd podczas wysyłania {fname}",
     "Reply" : "Odpowiedz",
     "Send" : "Wyślij",
-    "Sending …" : "Wysyłanie...",
+    "Sending …" : "Wysyłanie…",
     "Message sent!" : "Wiadomość wysłana!",
     "Server error" : "Błąd serwera",
     "An unknown error occurred" : "Wystąpił nieznany błąd",
