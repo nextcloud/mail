@@ -19,23 +19,29 @@ define(function(require) {
 	var Radio = require('radio');
 	var MessageTemplate = require('templates/message-list-item.html');
 	var imageplaceholder = require('views/imageplaceholder');
-	var tooltip = require('views/tooltip');
 
 	return Marionette.View.extend({
 		template: MessageTemplate,
 		ui: {
 			self: '.app-content-list-item',
 			iconDelete: '.action.delete',
-			star: '.star'
+			star: '.star',
+			menu: '.popovermenu',
+			toggleMenu: '.toggle-menu'
 		},
 		events: {
-			'click .action.delete': 'deleteMessage',
 			'click @ui.self': 'openMessage',
-			'click @ui.star': 'toggleMessageStar'
+			'click @ui.star': 'toggleMessageStar',
+			'click @ui.toggleMenu': 'toggleActionsMenu',
+			'click .action.delete': 'deleteMessage',
+			'click .action.toggle-read': 'toggleMessageRead'
 		},
 		modelEvents: {
 			change: 'render'
 		},
+
+		/** @type {bool} */
+		actionsMenuShown: false,
 
 		/**
 		 * Get the sender/recipient label as string
@@ -62,7 +68,9 @@ define(function(require) {
 
 		serializeModel: function() {
 			var json = this.model.toJSON();
-			json.isUnified = require('state').currentAccount && require('state').currentAccount.get('isUnified');
+			json.isUnified =
+				require('state').currentAccount &&
+				require('state').currentAccount.get('isUnified');
 			json.sender = this.model.get('from')[0];
 			json.label = this._getMessageLabel();
 			return json;
@@ -78,7 +86,8 @@ define(function(require) {
 			}
 
 			var _this = this;
-			var dragScope = 'folder-' + this.model.folder.account.get('accountId');
+			var dragScope =
+				'folder-' + this.model.folder.account.get('accountId');
 			this.$el.draggable({
 				appendTo: '#content-wrapper',
 				scope: dragScope,
@@ -95,7 +104,15 @@ define(function(require) {
 				revert: 'invalid'
 			});
 
-			tooltip('.action.delete', {placement: 'left'});
+			this.listenTo(Radio.ui, 'document:click', function(event) {
+				var target = $(event.target);
+				var toggleDropdown = this.getUI('toggleMenu');
+				if (!toggleDropdown.is(target)) {
+					// Click was not triggered by toggle menu -> close menu
+					this.actionsMenuShown = false;
+					this.toggleMenuClass();
+				}
+			});
 
 			this._fetchAvatar();
 		},
@@ -104,11 +121,16 @@ define(function(require) {
 		 * @private
 		 */
 		_fetchAvatar: function() {
-			Radio.avatar.request('avatar', this.model.get('fromEmail')).then(function(url) {
-				if (url) {
-					this.model.set('senderImage', url);
-				}
-			}.bind(this)).catch(CrashReport.report);
+			Radio.avatar
+				.request('avatar', this.model.get('fromEmail'))
+				.then(
+					function(url) {
+						if (url) {
+							this.model.set('senderImage', url);
+						}
+					}.bind(this)
+				)
+				.catch(CrashReport.report);
 		},
 
 		toggleMessageStar: function(event) {
@@ -119,44 +141,80 @@ define(function(require) {
 			// directly change star state in the interface for quick feedback
 			if (starred) {
 				this.getUI('star')
-						.removeClass('icon-starred')
-						.addClass('icon-star');
+					.removeClass('icon-starred')
+					.addClass('icon-star');
 			} else {
 				this.getUI('star')
-						.removeClass('icon-star')
-						.addClass('icon-starred');
+					.removeClass('icon-star')
+					.addClass('icon-starred');
 			}
 
 			Radio.message.trigger('flag', this.model, 'flagged', !starred);
 		},
+
 		openMessage: function(event) {
+			// Ignore the event if the actions menu was targeted
+			if ($(event.target).hasClass('toggle-menu')) {
+				return;
+			}
 			event.stopPropagation();
 			$('.app-content-list').addClass('showdetails');
 			// make sure message is marked as read when clicked on it
 			Radio.message.trigger('flag', this.model, 'unseen', false);
-			Radio.message.trigger('load', this.model.folder.account, this.model.folder, this.model, {
-				force: true
-			});
+			Radio.message.trigger(
+				'load',
+				this.model.folder.account,
+				this.model.folder,
+				this.model,
+				{
+					force: true
+				}
+			);
 		},
+
+		toggleActionsMenu: function() {
+			this.actionsMenuShown = !this.actionsMenuShown;
+			this.toggleMenuClass();
+		},
+
+		toggleMenuClass: function() {
+			this.getUI('menu').toggleClass('open', this.actionsMenuShown);
+		},
+
+		toggleMessageRead: function(event) {
+			event.stopPropagation();
+			var message = this.model;
+			if (message) {
+				var state = message.get('flags').get('unseen');
+				Radio.message.trigger('flag', message, 'unseen', !state);
+			}
+			this.toggleActionsMenu();
+		},
+
 		deleteMessage: function(event) {
 			event.stopPropagation();
 			var message = this.model;
-
-			this.getUI('iconDelete').removeClass('icon-delete').addClass('icon-loading-small');
-			$('.tooltip').remove();
 
 			this.$el.addClass('transparency').slideUp(function() {
 				$('.tooltip').remove();
 
 				// really delete the message
-				Radio.folder.request('message:delete', message, require('state').currentFolder);
+				Radio.folder.request(
+					'message:delete',
+					message,
+					require('state').currentFolder
+				);
 
 				// manually trigger mouseover event for current mouse position
 				// in order to create a tooltip for the next message if needed
 				if (event.clientX) {
-					$(document.elementFromPoint(event.clientX, event.clientY)).trigger('mouseover');
+					$(
+						document.elementFromPoint(event.clientX, event.clientY)
+					).trigger('mouseover');
 				}
 			});
+
+			this.toggleActionsMenu();
 		}
 	});
 });

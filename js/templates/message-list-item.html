@@ -34,6 +34,25 @@
 				title="{{formatDate dateInt}}">
 				{{relativeModifiedDate dateInt}}
 			</span>
+		</div>
+		<div class="app-content-list-item-menu">
+			<div class="icon-more toggle-menu"></div>
+			<div class="popovermenu">
+				<ul>
+					<li>
+						<button class="action toggle-read">
+							<span class="icon-mail"></span>
+							<span>{{ t 'Toggle read' }}</span>
+						</button>
+					</li>
+					<li>
+						<button class="action delete">
+							<span class="icon-delete"></span>
+							<span>{{ t 'Delete' }}</span>
+						</button>
+					</li>
+				</ul>
+			</div>
+		</div>
 	</div>
-	<div class="icon-delete action delete" title="{{delete}}"></div>
 </div>
