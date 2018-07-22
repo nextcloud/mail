@@ -118,6 +118,7 @@ OC.L10N.register(
     "Subject" : "Aihe",
     "Save all to Files" : "Tallenna kaikki tiedostoihin",
     "Add mail account" : "Lisää sähköpostitili",
+    "Use Gravatar and favicon avatars" : "Käytä Gravatar- ja favicon-avatareja",
     "No search results for" : "Ei tuloksia haulle",
     "The images have been blocked to protect your privacy." : "Kuvat estettiin yksityisyytesi suojelemiseksi.",
     "Show images from this sender" : "Näytä kuvat tältä lähettäjältä",
