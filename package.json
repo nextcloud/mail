@@ -50,7 +50,7 @@
     "string.prototype.endswith": "^0.2.0",
     "string.prototype.repeat": "^0.2.0",
     "string.prototype.startswith": "^0.2.0",
-    "webpack": "^4.12.1",
+    "webpack": "^4.16.1",
     "webpack-cli": "^3.0.8",
     "webpack-merge": "^4.1.3"
   },
