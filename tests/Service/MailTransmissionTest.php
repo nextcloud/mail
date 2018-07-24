@@ -21,6 +21,7 @@
 
 namespace OCA\Mail\Tests\Service;
 
+use ChristophWurst\Nextcloud\Testing\TestCase;
 use Horde_Imap_Client;
 use Horde_Mail_Transport;
 use OC\Files\Node\File;
@@ -38,7 +39,6 @@ use OCA\Mail\Service\AutoCompletion\AddressCollector;
 use OCA\Mail\Service\Logger;
 use OCA\Mail\Service\MailTransmission;
 use OCA\Mail\SMTP\SmtpClientFactory;
-use ChristophWurst\Nextcloud\Testing\TestCase;
 use OCP\Files\Folder;
 use PHPUnit_Framework_MockObject_MockObject;
 
@@ -123,24 +123,24 @@ class MailTransmissionTest extends TestCase {
 			->method('getTo')
 			->willReturn(new AddressList([
 				new Address('To', 'to@domain.tld'),
-		]));
+			]));
 		$message->expects($this->once())
 			->method('getCc')
 			->willReturn(new AddressList([
 				new Address('Cc', 'cc@domain.tld'),
-		]));
+			]));
 		$message->expects($this->once())
 			->method('getBcc')
 			->willReturn(new AddressList([
 				new Address('Bcc', 'bcc@domain.tld'),
-		]));
+			]));
 		$this->addressCollector->expects($this->once())
 			->method('addAddresses')
 			->with($this->equalTo(new AddressList([
-					new Address('To', 'to@domain.tld'),
-					new Address('Cc', 'cc@domain.tld'),
-					new Address('Bcc', 'bcc@domain.tld'),
-		])));
+				new Address('To', 'to@domain.tld'),
+				new Address('Cc', 'cc@domain.tld'),
+				new Address('Bcc', 'bcc@domain.tld'),
+			])));
 
 		$this->transmission->sendMessage('garfield', $messageData, $replyData);
 	}
@@ -244,7 +244,7 @@ class MailTransmissionTest extends TestCase {
 			->willReturnMap([
 				['cat.jpg', true],
 				['dog.jpg', false],
-		]);
+			]);
 		$node = $this->createMock(File::class);
 		$this->userFolder->expects($this->once())
 			->method('get')
@@ -277,8 +277,8 @@ class MailTransmissionTest extends TestCase {
 			->method('newReplyMessage')
 			->willReturn($message);
 		$mailbox = $this->createMock(Mailbox::class);
-		$account->expects($this->exactly(2)) // once to get the orignal message and once to flag it
-			->method('getMailbox')
+		$account->expects($this->exactly(2))// once to get the orignal message and once to flag it
+		->method('getMailbox')
 			->with(base64_decode($folderId))
 			->willReturn($mailbox);
 		$repliedMessage = $this->createMock(IMessage::class);
@@ -322,9 +322,12 @@ class MailTransmissionTest extends TestCase {
 			->willReturn($message);
 		$account->expects($this->once())
 			->method('saveDraft')
-			->with($message, null);
+			->with($message, null)
+			->willReturn(13);
 
-		$this->transmission->saveDraft($messageData);
+		$newId = $this->transmission->saveDraft($messageData);
+
+		$this->assertEquals(13, $newId);
 	}
 
 	public function testSaveDraftAndReplaceOldOne() {
@@ -336,9 +339,12 @@ class MailTransmissionTest extends TestCase {
 			->willReturn($message);
 		$account->expects($this->once())
 			->method('saveDraft')
-			->with($message, 123);
+			->with($message, 123)
+			->willReturn(14);
 
-		$this->transmission->saveDraft($messageData, 123);
+		$newId = $this->transmission->saveDraft($messageData, 123);
+
+		$this->assertEquals(14, $newId);
 	}
 
 }
