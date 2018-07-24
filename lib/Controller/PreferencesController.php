@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 /**
  * @copyright 2017 Christoph Wurst <christoph@winzerhof-wurst.at>
  *
@@ -41,6 +43,7 @@ class PreferencesController extends Controller {
 	 */
 	public function __construct(IRequest $request, IUserPreferences $userPreference) {
 		parent::__construct('mail', $request);
+
 		$this->userPreference = $userPreference;
 	}
 
@@ -51,7 +54,7 @@ class PreferencesController extends Controller {
 	 * @param string $id
 	 * @return JSONResponse
 	 */
-	public function show($id) {
+	public function show(string $id): JSONResponse {
 		return new JSONResponse([
 			'value' => $this->userPreference->getPreference($id)
 		]);
@@ -63,8 +66,10 @@ class PreferencesController extends Controller {
 	 *
 	 * @param string $key
 	 * @param string $value
+	 * @return JSONResponse
+	 * @throws ClientException
 	 */
-	public function update($key, $value) {
+	public function update($key, $value): JSONResponse {
 		if (is_null($key) || is_null($value)) {
 			throw new ClientException('key or value missing');
 		}
