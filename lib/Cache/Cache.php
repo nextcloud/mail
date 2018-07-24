@@ -24,6 +24,7 @@ declare(strict_types=1);
 
 namespace OCA\Mail\Cache;
 
+use Exception;
 use Horde_Imap_Client_Cache_Backend;
 use Horde_Imap_Client_Exception;
 use InvalidArgumentException;
