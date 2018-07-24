@@ -416,7 +416,7 @@ class Mailbox implements IMailBox {
 
 	/**
 	 * @param int $messageId
-	 * @param string $attachmentId
+	 * @param int $attachmentId
 	 * @return Attachment
 	 */
 	public function getAttachment($messageId, $attachmentId) {
