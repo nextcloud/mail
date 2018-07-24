@@ -1,6 +1,11 @@
 # Changelog
 All notable changes to this project will be documented in this file.
 
+## 0.8.3 – 2018-07-24
+### Added
+- New and updated translations
+- Performance improvements
+
 ## 0.8.2 – 2018-06-28
 ### Added
 - Advanced search
