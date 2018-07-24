@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 /**
  * @author Christoph Wurst <christoph@winzerhof-wurst.at>
  * @author Luc Calaresu <dev@calaresu.com>
@@ -44,8 +46,8 @@ class LocalAttachmentsController extends Controller {
 	 * @param IAttachmentService $attachmentService
 	 * @param string $UserId
 	 */
-	public function __construct($appName, IRequest $request,
-		IAttachmentService $attachmentService, $UserId) {
+	public function __construct(string $appName, IRequest $request,
+								IAttachmentService $attachmentService, $UserId) {
 		parent::__construct($appName, $request);
 		$this->attachmentService = $attachmentService;
 		$this->userId = $UserId;
@@ -57,7 +59,7 @@ class LocalAttachmentsController extends Controller {
 	 *
 	 * @return JSONResponse
 	 */
-	public function create() {
+	public function create(): JSONResponse {
 		$file = $this->request->getUploadedFile('attachment');
 
 		if (is_null($file)) {
