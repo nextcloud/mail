@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 /**
  * @author Christoph Wurst <christoph@winzerhof-wurst.at>
  *
@@ -37,9 +39,10 @@ class AutoCompleteController extends Controller {
 	 * @param AutoCompleteService $service
 	 * @param string $UserId
 	 */
-	public function __construct($appName, IRequest $request,
-		AutoCompleteService $service) {
+	public function __construct(string $appName, IRequest $request,
+								AutoCompleteService $service) {
 		parent::__construct($appName, $request);
+
 		$this->service = $service;
 	}
 
@@ -50,7 +53,7 @@ class AutoCompleteController extends Controller {
 	 * @param string $term
 	 * @return JSONResponse
 	 */
-	public function index($term) {
+	public function index(string $term): JSONResponse {
 		return new JSONResponse($this->service->findMatches($term));
 	}
 
