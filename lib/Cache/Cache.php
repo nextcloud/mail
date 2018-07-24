@@ -82,16 +82,16 @@ class Cache extends Horde_Imap_Client_Cache_Backend {
 	 */
 	public function __construct(array $params = []) {
 		// Default parameters.
-		$params = array_merge(array(
+		$params = array_merge([
 			'lifetime' => 604800,
 			'slicesize' => 50
-		), array_filter($params));
+		], array_filter($params));
 
 		if (!isset($params['cacheob'])) {
 			throw new InvalidArgumentException('Missing cacheob parameter.');
 		}
 
-		foreach (array('lifetime', 'slicesize') as $val) {
+		foreach (['lifetime', 'slicesize'] as $val) {
 			$params[$val] = intval($params[$val]);
 		}
 
@@ -103,7 +103,7 @@ class Cache extends Horde_Imap_Client_Cache_Backend {
 	 */
 	protected function _initOb() {
 		$this->_cache = $this->_params['cacheob'];
-		register_shutdown_function(array($this, 'save'));
+		register_shutdown_function([$this, 'save']);
 	}
 
 	/**
@@ -171,7 +171,10 @@ class Cache extends Horde_Imap_Client_Cache_Backend {
 
 		foreach (array_intersect($uids, array_keys($ptr)) as $val) {
 			if (is_string($ptr[$val])) {
-				$ptr[$val] = @unserialize($ptr[$val]);
+				try {
+					$ptr[$val] = @unserialize($ptr[$val]);
+				} catch (Exception $e) {
+				}
 			}
 
 			$ret[$val] = (empty($fields) || empty($ptr[$val]))
@@ -208,7 +211,10 @@ class Cache extends Horde_Imap_Client_Cache_Backend {
 		foreach ($data as $k => $v) {
 			if (isset($d[$k])) {
 				if (is_string($d[$k])) {
-					$d[$k] = @unserialize($d[$k]);
+					try {
+						$d[$k] = @unserialize($d[$k]);
+					} catch (Exception $e) {
+					}
 				}
 				$d[$k] = is_array($d[$k])
 					? array_merge($d[$k], $v)
@@ -278,7 +284,7 @@ class Cache extends Horde_Imap_Client_Cache_Backend {
 					unset($slicemap['s'][$val]);
 				}
 			} else {
-				$this->_toUpdate($mailbox, 'slice', array($slice));
+				$this->_toUpdate($mailbox, 'slice', [$slice]);
 			}
 		}
 	}
@@ -304,7 +310,7 @@ class Cache extends Horde_Imap_Client_Cache_Backend {
 	 * @return string  The cache ID.
 	 */
 	protected function _getCid($mailbox, $slice) {
-		return implode('|', array(
+		return implode('|', [
 			'horde_imap_client',
 			$this->_params['username'],
 			$mailbox,
@@ -312,7 +318,7 @@ class Cache extends Horde_Imap_Client_Cache_Backend {
 			$this->_params['port'],
 			$slice,
 			self::VERSION
-		));
+		]);
 	}
 
 	/**
@@ -321,7 +327,7 @@ class Cache extends Horde_Imap_Client_Cache_Backend {
 	 * @param string $mbox The mailbox to delete.
 	 */
 	protected function _deleteMailbox($mbox) {
-		foreach (array_merge(array_keys(array_flip($this->_slicemap[$mbox]['s'])), array('slicemap')) as $slice) {
+		foreach (array_merge(array_keys(array_flip($this->_slicemap[$mbox]['s'])), ['slicemap']) as $slice) {
 			$cid = $this->_getCid($mbox, $slice);
 			$this->_cache->remove($cid);
 			unset($this->_loaded[$cid]);
@@ -368,9 +374,14 @@ class Cache extends Horde_Imap_Client_Cache_Backend {
 			return;
 		}
 
-		if ((($data = $this->_cache->get($cache_id)) !== false) &&
-			($data = @unserialize($data)) &&
-			is_array($data)) {
+		if (($data = $this->_cache->get($cache_id, 0)) !== false) {
+			try {
+				$data = @unserialize($data);
+			} catch (Exception $e) {
+			}
+		}
+
+		if (($data !== false) && is_array($data)) {
 			$this->_data[$mailbox] += $data;
 			$this->_loaded[$cache_id] = true;
 		} else {
@@ -397,10 +408,14 @@ class Cache extends Horde_Imap_Client_Cache_Backend {
 	 */
 	protected function _loadSliceMap($mailbox, $uidvalid = null) {
 		if (!isset($this->_slicemap[$mailbox]) &&
-			(($data = $this->_cache->get($this->_getCid($mailbox, 'slicemap'))) !== false) &&
-			($slice = @unserialize($data)) &&
-			is_array($slice)) {
-			$this->_slicemap[$mailbox] = $slice;
+			(($data = $this->_cache->get($this->_getCid($mailbox, 'slicemap'), 0)) !== false)) {
+			try {
+				if (($slice = @unserialize($data)) &&
+					is_array($slice)) {
+					$this->_slicemap[$mailbox] = $slice;
+				}
+			} catch (Exception $e) {
+			}
 		}
 
 		if (isset($this->_slicemap[$mailbox])) {
@@ -416,17 +431,17 @@ class Cache extends Horde_Imap_Client_Cache_Backend {
 			}
 		}
 
-		$this->_slicemap[$mailbox] = array(
+		$this->_slicemap[$mailbox] = [
 			// Tracking count for purposes of determining slices
 			'c' => 0,
 			// Metadata storage
 			// By default includes UIDVALIDITY of mailbox.
-			'd' => array('uidvalid' => $uidvalid),
+			'd' => ['uidvalid' => $uidvalid],
 			// The ID of the last slice.
 			'i' => 0,
 			// The slice list.
 			's' => []
-		);
+		];
 	}
 
 	/**
@@ -438,10 +453,10 @@ class Cache extends Horde_Imap_Client_Cache_Backend {
 	 */
 	protected function _toUpdate($mailbox, $type, $data) {
 		if (!isset($this->_update[$mailbox])) {
-			$this->_update[$mailbox] = array(
+			$this->_update[$mailbox] = [
 				'add' => [],
 				'slice' => []
-			);
+			];
 		}
 
 		$this->_update[$mailbox][$type] = ($type === 'slicemap')
