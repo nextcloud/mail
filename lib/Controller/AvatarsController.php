@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 /**
  * @author Christoph Wurst <christoph@winzerhof-wurst.at>
  * @author Jakob Sack <mail@jakobsack.de>
@@ -49,8 +51,9 @@ class AvatarsController extends Controller {
 	 * @param string $UserId
 	 * @param ITimeFactory $timeFactory
 	 */
-	public function __construct($appName, IRequest $request, IAvatarService $avatarService, $UserId, ITimeFactory $timeFactory) {
+	public function __construct(string $appName, IRequest $request, IAvatarService $avatarService, $UserId, ITimeFactory $timeFactory) {
 		parent::__construct($appName, $request);
+
 		$this->avatarService = $avatarService;
 		$this->uid = $UserId;
 		$this->timeFactory = $timeFactory;
@@ -64,7 +67,7 @@ class AvatarsController extends Controller {
 	 * @param string $email
 	 * @return JSONResponse
 	 */
-	public function url($email) {
+	public function url(string $email): JSONResponse {
 		if (is_null($email) || empty($email)) {
 			return new JSONResponse([], Http::STATUS_BAD_REQUEST);
 		}
@@ -97,7 +100,7 @@ class AvatarsController extends Controller {
 	 * @param string $email
 	 * @return Response
 	 */
-	public function image($email) {
+	public function image(string $email): Response {
 		if (is_null($email) || empty($email)) {
 			return new JSONResponse([], Http::STATUS_BAD_REQUEST);
 		}
@@ -119,7 +122,7 @@ class AvatarsController extends Controller {
 		return $resp;
 	}
 
-	private function noAvatarFoundResponse() {
+	private function noAvatarFoundResponse(): Response {
 		$response = new Response();
 		$response->setStatus(Http::STATUS_NOT_FOUND);
 		// Clear cache
