@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 /**
  * @copyright 2017 Christoph Wurst <christoph@winzerhof-wurst.at>
  *
@@ -33,12 +35,12 @@ interface IAvatarService {
 	 * @param string $uid
 	 * @return string|null URL, if one can be found
 	 */
-	public function getAvatar($email, $uid);
+	public function getAvatar(string $email, string $uid);
 
 	/**
 	 * @param string $email
 	 * @param string $uid
 	 * @return array|null image data
 	 */
-	public function getAvatarImage($email, $uid);
+	public function getAvatarImage(string $email, string $uid);
 }
