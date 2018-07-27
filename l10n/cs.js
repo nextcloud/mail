@@ -64,6 +64,7 @@ OC.L10N.register(
     "Updating account failed: " : "Aktualizace účtu selhala:",
     "Creating account failed: " : "Vytvoření účtu selhalo:",
     "Delete permanently" : "Trvale odstranit",
+    "IMAP web client" : "Webový IMAP klient",
     "Error loading message" : "Chyba načtení zprávy",
     "Settings" : "Nastavení",
     "Forwarding to %s" : "Přeposílá na %s",
