@@ -47,6 +47,8 @@ OC.L10N.register(
     "Click here if you are not automatically redirected within the next few seconds." : "Clique aqui se não for automaticamente redireccionado dentro de segundos.",
     "Redirect" : "Redirecionar",
     "Continue to %s" : "Continuar para %s",
+    "IMAP Host" : "Anfitrião de IMAP",
+    "SMTP Host" : "Anfitrião de SMTP",
     "Connect" : "Ligar"
 },
 "nplurals=2; plural=(n != 1);");
