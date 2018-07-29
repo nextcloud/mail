@@ -30,6 +30,7 @@ use Horde_Mail_Transport_Smtphorde;
 use OCA\Mail\Account;
 use OCP\IConfig;
 use OCP\Security\ICrypto;
+use OCP\Util;
 
 class SmtpClientFactory {
 
@@ -63,6 +64,7 @@ class SmtpClientFactory {
 		$password = $this->crypto->decrypt($password);
 		$security = $mailAccount->getOutboundSslMode();
 		$params = [
+			'localhost' => Util::getServerHostName(),
 			'host' => $mailAccount->getOutboundHost(),
 			'password' => $password,
 			'port' => $mailAccount->getOutboundPort(),
