@@ -119,6 +119,9 @@ class MessagesControllerTest extends TestCase {
 			->method('getMessage')
 			->with($this->equalTo($messageId))
 			->will($this->returnValue($this->message));
+		$this->message->expects($this->once())
+			->method('getHtmlBody')
+			->willReturn('');
 		$this->timeFactory->method('getTime')->willReturn(1000);
 
 		$expectedResponse = new HtmlResponse('');
