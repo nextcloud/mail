@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 /**
  * @author Christoph Wurst <christoph@winzerhof-wurst.at>
  * @author Thomas Müller <thomas.mueller@tmit.eu>
@@ -30,11 +32,11 @@ use OCA\Mail\Contracts\IUserPreferences;
 use OCA\Mail\Http\Middleware\ErrorMiddleware;
 use OCA\Mail\Service\Attachment\AttachmentService;
 use OCA\Mail\Service\AvatarService;
+use OCA\Mail\Service\Group\IGroupService;
+use OCA\Mail\Service\Group\NextcloudGroupService;
 use OCA\Mail\Service\MailManager;
 use OCA\Mail\Service\MailTransmission;
 use OCA\Mail\Service\UserPreferenceSevice;
-use OCA\Mail\Service\Group\IGroupService;
-use OCA\Mail\Service\Group\NextcloudGroupService;
 use OCP\AppFramework\App;
 use OCP\Util;
 
