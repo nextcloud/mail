@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 /**
  * @author Christoph Wurst <christoph@winzerhof-wurst.at>
  *
@@ -21,7 +23,6 @@
 
 namespace OCA\Mail\IMAP\Sync;
 
-use Horde_Imap_Client;
 use Horde_Imap_Client_Base;
 use Horde_Imap_Client_Data_Sync;
 use OCA\Mail\Model\IMAPMessage;
@@ -33,29 +34,29 @@ use OCA\Mail\Model\IMAPMessage;
 interface ISyncStrategy {
 
 	/**
-	 * @param Horde_Imap_Client $imapClient
+	 * @param Horde_Imap_Client_Base $imapClient
 	 * @param Request $syncRequest
 	 * @param Horde_Imap_Client_Data_Sync $hordeSync
 	 * @return IMAPMessage[]
 	 */
 	public function getNewMessages(Horde_Imap_Client_Base $imapClient,
-		Request $syncRequest, Horde_Imap_Client_Data_Sync $hordeSync);
+								   Request $syncRequest, Horde_Imap_Client_Data_Sync $hordeSync): array;
 
 	/**
-	 * @param Horde_Imap_Client $imapClient
+	 * @param Horde_Imap_Client_Base $imapClient
 	 * @param Request $syncRequest
 	 * @param Horde_Imap_Client_Data_Sync $hordeSync
 	 * @return IMAPMessage[]
 	 */
 	public function getChangedMessages(Horde_Imap_Client_Base $imapClient,
-		Request $syncRequest, Horde_Imap_Client_Data_Sync $hordeSync);
+									   Request $syncRequest, Horde_Imap_Client_Data_Sync $hordeSync): array;
 
 	/**
-	 * @param Horde_Imap_Client $imapClient
+	 * @param Horde_Imap_Client_Base $imapClient
 	 * @param Request $syncRequest
 	 * @param Horde_Imap_Client_Data_Sync $hordeSync
 	 * @return int[]
 	 */
 	public function getVanishedMessages(Horde_Imap_Client_Base $imapClient,
-		Request $syncRequest, Horde_Imap_Client_Data_Sync $hordeSync);
+										Request $syncRequest, Horde_Imap_Client_Data_Sync $hordeSync): array;
 }

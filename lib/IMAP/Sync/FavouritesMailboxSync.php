@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 /**
  * @author Christoph Wurst <christoph@winzerhof-wurst.at>
  *
@@ -27,11 +29,17 @@ use OCA\Mail\Model\IMAPMessage;
 
 class FavouritesMailboxSync extends SimpleMailboxSync {
 
+	/**
+	 * @param Horde_Imap_Client_Base $imapClient
+	 * @param Request $syncRequest
+	 * @param Horde_Imap_Client_Data_Sync $hordeSync
+	 * @return array
+	 */
 	public function getNewMessages(Horde_Imap_Client_Base $imapClient,
-		Request $syncRequest, Horde_Imap_Client_Data_Sync $hordeSync) {
+								   Request $syncRequest, Horde_Imap_Client_Data_Sync $hordeSync): array {
 		$newMessages = parent::getNewMessages($imapClient, $syncRequest, $hordeSync);
 
-		return array_filter($newMessages, function(IMAPMessage $message) {
+		return array_filter($newMessages, function (IMAPMessage $message) {
 			$flags = $message->getFlags();
 			return isset($flags['flagged']) && $flags['flagged'];
 		});
