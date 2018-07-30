@@ -1,4 +1,7 @@
 <?php
+
+declare(strict_types=1);
+
 /**
  * @author Tahaa Karim <tahaalibra@gmail.com>
  *
@@ -57,7 +60,7 @@ class AliasesController extends Controller {
 	 * @param int $accountId
 	 * @return JSONResponse
 	 */
-	public function index($accountId) {
+	public function index($accountId): JSONResponse {
 		return new JSONResponse($this->aliasService->findAll($accountId, $this->currentUser->getUID()));
 	}
 
@@ -84,7 +87,7 @@ class AliasesController extends Controller {
 	 * @param int $id
 	 * @return JSONResponse
 	 */
-	public function destroy($id) {
+	public function destroy($id): JSONResponse {
 		return new JSONResponse($this->aliasService->delete($id, $this->currentUser->getUID()));
 	}
 
@@ -97,7 +100,7 @@ class AliasesController extends Controller {
 	 * @param string $aliasName
 	 * @return JSONResponse
 	 */
-	public function create($accountId, $alias, $aliasName) {
+	public function create($accountId, $alias, $aliasName): JSONResponse {
 		return new JSONResponse($this->aliasService->create($accountId, $alias, $aliasName), Http::STATUS_CREATED);
 	}
 }

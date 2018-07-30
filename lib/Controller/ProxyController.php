@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 /**
  * @author Christoph Wurst <christoph@winzerhof-wurst.at>
  * @author Lukas Reschke <lukas@owncloud.com>
@@ -59,8 +61,8 @@ class ProxyController extends Controller {
 	 * @param string $referrer
 	 * @param string $hostname
 	 */
-	public function __construct($appName, IRequest $request,
-		IURLGenerator $urlGenerator, ISession $session,	IClientService $clientService, $referrer, $hostname) {
+	public function __construct(string $appName, IRequest $request,
+								IURLGenerator $urlGenerator, ISession $session, IClientService $clientService, $referrer, $hostname) {
 		parent::__construct($appName, $request);
 		$this->urlGenerator = $urlGenerator;
 		$this->session = $session;
@@ -78,7 +80,7 @@ class ProxyController extends Controller {
 	 * @throws \Exception If the URL is not valid.
 	 * @return TemplateResponse
 	 */
-	public function redirect($src) {
+	public function redirect(string $src): TemplateResponse {
 		$authorizedRedirect = false;
 
 		if (strpos($src, 'http://') !== 0
@@ -116,7 +118,7 @@ class ProxyController extends Controller {
 	 *
 	 * @return ProxyDownloadResponse
 	 */
-	public function proxy($src) {
+	public function proxy(string $src): ProxyDownloadResponse {
 		// close the session to allow parallel downloads
 		$this->session->close();
 

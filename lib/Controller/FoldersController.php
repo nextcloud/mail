@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 /**
  * @author Christoph Wurst <christoph@winzerhof-wurst.at>
  * @author Thomas Imbreckx <zinks@iozero.be>
@@ -27,7 +29,6 @@ use OCA\Mail\Contracts\IMailManager;
 use OCA\Mail\Exception\NotImplemented;
 use OCA\Mail\Http\JSONResponse;
 use OCA\Mail\IMAP\Sync\Request as SyncRequest;
-use OCA\Mail\IMAP\Sync\Response as SyncResponse;
 use OCA\Mail\Service\AccountService;
 use OCP\AppFramework\Controller;
 use OCP\AppFramework\Http;
@@ -51,9 +52,10 @@ class FoldersController extends Controller {
 	 * @param string $UserId
 	 * @param IMailManager $mailManager
 	 */
-	public function __construct($appName, IRequest $request,
-		AccountService $accountService, $UserId, IMailManager $mailManager) {
+	public function __construct(string $appName, IRequest $request,
+								AccountService $accountService, $UserId, IMailManager $mailManager) {
 		parent::__construct($appName, $request);
+
 		$this->accountService = $accountService;
 		$this->currentUserId = $UserId;
 		$this->mailManager = $mailManager;
@@ -66,7 +68,7 @@ class FoldersController extends Controller {
 	 * @param int $accountId
 	 * @return JSONResponse
 	 */
-	public function index($accountId) {
+	public function index(int $accountId): JSONResponse {
 		$account = $this->accountService->find($this->currentUserId, $accountId);
 
 		$folders = $this->mailManager->getFolders($account);
@@ -88,7 +90,7 @@ class FoldersController extends Controller {
 	 * @param int[] $uids
 	 * @return JSONResponse
 	 */
-	public function sync($accountId, $folderId, $syncToken, $uids = []) {
+	public function sync(int $accountId, string $folderId, string $syncToken, array $uids = []): JSONResponse {
 		$account = $this->accountService->find($this->currentUserId, $accountId);
 
 		if (empty($accountId) || empty($folderId) || empty($syncToken) || !is_array($uids)) {
