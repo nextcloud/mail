@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 /**
  * @author Christoph Wurst <christoph@winzerhof-wurst.at>
  *
@@ -32,14 +34,14 @@ interface IMailManager {
 	 * @param Account $account
 	 * @return Folder[]
 	 */
-	public function getFolders(Account $account);
+	public function getFolders(Account $account): array;
 
 	/**
 	 * @param Account
 	 * @param SyncRequest $syncRequest
 	 * @return SyncResponse
 	 */
-	public function syncMessages(Account $account, SyncRequest $syncRequest);
+	public function syncMessages(Account $account, SyncRequest $syncRequest): SyncResponse;
 
 	/**
 	 * @param Account $sourceAccount
@@ -48,6 +50,6 @@ interface IMailManager {
 	 * @param Account $destinationAccount
 	 * @param string $destFolderId
 	 */
-	public function moveMessage(Account $sourceAccount, $sourceFolderId,
-		$messageId, Account $destinationAccount, $destFolderId);
+	public function moveMessage(Account $sourceAccount, string $sourceFolderId, int $messageId,
+								Account $destinationAccount, string $destFolderId);
 }

@@ -42,7 +42,7 @@ use OCP\Files\Folder;
 
 class MailTransmission implements IMailTransmission {
 
-	/** @var AddressCollector  */
+	/** @var AddressCollector */
 	private $addressCollector;
 
 	/** @var Folder */
@@ -82,7 +82,7 @@ class MailTransmission implements IMailTransmission {
 	 * @param int|null $draftUID
 	 * @return int message UID
 	 */
-	public function sendMessage($userId, NewMessageData $messageData, RepliedMessageData $replyData, Alias $alias = null, $draftUID = null) {
+	public function sendMessage(string $userId, NewMessageData $messageData, RepliedMessageData $replyData, Alias $alias = null, int $draftUID = null) {
 		$account = $messageData->getAccount();
 
 		if ($replyData->isReply()) {
@@ -119,7 +119,7 @@ class MailTransmission implements IMailTransmission {
 	 * @return int
 	 * @throws ServiceException
 	 */
-	public function saveDraft(NewMessageData $message, $draftUID = null) {
+	public function saveDraft(NewMessageData $message, int $draftUID = null): int {
 		$account = $message->getAccount();
 		$imapMessage = $account->newMessage();
 		$imapMessage->setTo($message->getTo());

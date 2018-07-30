@@ -42,7 +42,7 @@ class AttachmentService implements IAttachmentService {
 	 * @param AttachmentStorage $storage
 	 */
 	public function __construct(LocalAttachmentMapper $mapper,
-		AttachmentStorage $storage) {
+								AttachmentStorage $storage) {
 		$this->mapper = $mapper;
 		$this->storage = $storage;
 	}
@@ -53,7 +53,7 @@ class AttachmentService implements IAttachmentService {
 	 * @return LocalAttachment
 	 * @throws UploadException
 	 */
-	public function addFile($userId, UploadedFile $file) {
+	public function addFile(string $userId, UploadedFile $file): LocalAttachment {
 		$attachment = new LocalAttachment();
 		$attachment->setUserId($userId);
 		$attachment->setFileName($file->getFileName());
@@ -74,8 +74,9 @@ class AttachmentService implements IAttachmentService {
 	 * @param string $userId
 	 * @param array $id
 	 * @return array of LocalAttachment and ISimpleFile
+	 * @throws AttachmentNotFoundException
 	 */
-	public function getAttachment($userId, $id) {
+	public function getAttachment(string $userId, int $id): array {
 		try {
 			$attachment = $this->mapper->find($userId, $id);
 			$file = $this->storage->retrieve($userId, $id);
@@ -88,8 +89,9 @@ class AttachmentService implements IAttachmentService {
 	/**
 	 * @param string $userId
 	 * @param int $id
+	 * @throws \Exception
 	 */
-	public function deleteAttachment($userId, $id) {
+	public function deleteAttachment(string $userId, int $id) {
 		try {
 			$attachment = $this->mapper->find($userId, $id);
 			$this->mapper->delete($attachment);
