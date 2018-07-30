@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 /**
  * @author Christoph Wurst <christoph@winzerhof-wurst.at>
  *
@@ -23,6 +25,8 @@ namespace OCA\Mail\IMAP;
 
 use Horde_Imap_Client_Base;
 use Horde_Imap_Client_Data_Fetch;
+use Horde_Imap_Client_Exception;
+use Horde_Imap_Client_Exception_NoSupportExtension;
 use Horde_Imap_Client_Fetch_Query;
 use Horde_Imap_Client_Ids;
 use OCA\Mail\Folder;
@@ -35,6 +39,8 @@ class MessageMapper {
 	 * @param Folder $mailbox
 	 * @param array $ids
 	 * @return IMAPMessage[]
+	 * @throws Horde_Imap_Client_Exception
+	 * @throws Horde_Imap_Client_Exception_NoSupportExtension
 	 */
 	public function findByIds(Horde_Imap_Client_Base $client, $mailbox, array $ids) {
 		$query = new Horde_Imap_Client_Fetch_Query();
@@ -46,20 +52,20 @@ class MessageMapper {
 		$query->structure();
 		$query->headers('imp',
 			[
-			'importance',
-			'list-post',
-			'x-priority',
-			'content-type',
+				'importance',
+				'list-post',
+				'x-priority',
+				'content-type',
 			], [
-			'cache' => true,
-			'peek' => true,
-		]);
+				'cache' => true,
+				'peek' => true,
+			]);
 
 		$fetchResults = iterator_to_array($client->fetch($mailbox, $query, [
-				'ids' => new Horde_Imap_Client_Ids($ids),
-			]), false);
+			'ids' => new Horde_Imap_Client_Ids($ids),
+		]), false);
 
-		return array_map(function(Horde_Imap_Client_Data_Fetch $fetchResult) use ($client, $mailbox) {
+		return array_map(function (Horde_Imap_Client_Data_Fetch $fetchResult) use ($client, $mailbox) {
 			return new IMAPMessage($client, $mailbox, $fetchResult->getUid(), $fetchResult);
 		}, $fetchResults);
 	}
@@ -69,14 +75,16 @@ class MessageMapper {
 	 * @param string $sourceFolderId
 	 * @param int $messageId
 	 * @param string $destFolderId
+	 * @throws Horde_Imap_Client_Exception
+	 * @throws Horde_Imap_Client_Exception_NoSupportExtension
 	 */
-	public function move(Horde_Imap_Client_Base $client, $sourceFolderId,
-		$messageId, $destFolderId) {
+	public function move(Horde_Imap_Client_Base $client, string $sourceFolderId,
+						 int $messageId, string $destFolderId) {
 		$client->copy($sourceFolderId, $destFolderId,
 			[
-			'ids' => new \Horde_Imap_Client_Ids($messageId),
-			'move' => true,
-		]);
+				'ids' => new Horde_Imap_Client_Ids($messageId),
+				'move' => true,
+			]);
 	}
 
 }

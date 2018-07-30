@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 /**
  * @author Christoph Wurst <christoph@winzerhof-wurst.at>
  *
@@ -22,6 +24,7 @@
 namespace OCA\Mail\IMAP;
 
 use Horde_Imap_Client;
+use Horde_Imap_Client_Exception;
 use Horde_Imap_Client_Socket;
 use OCA\Mail\Account;
 use OCA\Mail\Folder;
@@ -34,9 +37,10 @@ class FolderMapper {
 	 * @param Horde_Imap_Client_Socket $client
 	 * @param string $pattern
 	 * @return Folder[]
+	 * @throws Horde_Imap_Client_Exception
 	 */
 	public function getFolders(Account $account, Horde_Imap_Client_Socket $client,
-		$pattern = '*') {
+							   string $pattern = '*') {
 		$mailboxes = $client->listMailboxes($pattern, Horde_Imap_Client::MBOX_ALL, [
 			'delimiter' => true,
 			'attributes' => true,
@@ -82,13 +86,13 @@ class FolderMapper {
 	 * @param bool $havePrefix
 	 * @return Folder[]
 	 */
-	public function buildFolderHierarchy(array $folders, $havePrefix) {
+	public function buildFolderHierarchy(array $folders, bool $havePrefix): array {
 		$indexedFolders = [];
 		foreach ($folders as $folder) {
 			$indexedFolders[$folder->getMailbox()] = $folder;
 		}
 
-		$top = array_filter($indexedFolders, function(Folder $folder) use ($havePrefix) {
+		$top = array_filter($indexedFolders, function (Folder $folder) use ($havePrefix) {
 			return $folder instanceof SearchFolder || is_null($this->getParentId($folder, $havePrefix));
 		});
 
@@ -111,7 +115,7 @@ class FolderMapper {
 	 * @param bool $hasPrefix
 	 * @return string
 	 */
-	private function getParentId(Folder $folder, $hasPrefix) {
+	private function getParentId(Folder $folder, bool $hasPrefix) {
 		$topLevel = $hasPrefix ? 1 : 0;
 		$hierarchy = explode($folder->getDelimiter(), $folder->getMailbox());
 		if (count($hierarchy) <= ($topLevel + 1)) {
@@ -124,14 +128,15 @@ class FolderMapper {
 	/**
 	 * @param Folder[] $folders
 	 * @param Horde_Imap_Client_Socket $client
+	 * @throws Horde_Imap_Client_Exception
 	 */
 	public function getFoldersStatus(array $folders,
-		Horde_Imap_Client_Socket $client) {
-		$mailboxes = array_map(function(Folder $folder) {
+									 Horde_Imap_Client_Socket $client) {
+		$mailboxes = array_map(function (Folder $folder) {
 			return $folder->getMailbox();
-		}, array_filter($folders, function(Folder $folder) {
-				return $folder->isSearchable();
-			}));
+		}, array_filter($folders, function (Folder $folder) {
+			return $folder->isSearchable();
+		}));
 
 		$status = $client->status($mailboxes);
 
@@ -178,7 +183,7 @@ class FolderMapper {
 			strtolower(Horde_Imap_Client::SPECIALUSE_TRASH)
 		];
 
-		$attributes = array_map(function($n) {
+		$attributes = array_map(function ($n) {
 			return strtolower($n);
 		}, $folder->getAttributes());
 
@@ -195,6 +200,8 @@ class FolderMapper {
 
 	/**
 	 * Assign a special use based on the name
+	 *
+	 * @param Folder $folder
 	 */
 	protected function guessSpecialUse(Folder $folder) {
 		$specialFoldersDict = [
@@ -219,8 +226,8 @@ class FolderMapper {
 	 * @param Folder[] $folders
 	 * @return Folder[]
 	 */
-	public function sortFolders(array &$folders) {
-		usort($folders, function(Folder $f1, Folder $f2) {
+	public function sortFolders(array &$folders): array {
+		usort($folders, function (Folder $f1, Folder $f2) {
 			$specialUse1 = $f1->getSpecialUse();
 			$specialUse2 = $f2->getSpecialUse();
 			$roleA = count($specialUse1) > 0 ? reset($specialUse1) : null;
