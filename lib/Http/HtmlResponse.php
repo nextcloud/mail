@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 /**
  * @author Christoph Wurst <wurst.christoph@gmail.com>
  * @author Lukas Reschke <lukas@owncloud.com>
@@ -32,18 +34,16 @@ class HtmlResponse extends Response {
 	/** @var string */
 	private $content;
 
-	/**
-	 * @param string $content
-	 */
-	public function __construct($content) {
+	public function __construct(string $content) {
 		$this->content = $content;
 	}
 
 	/**
 	 * Simply sets the headers and returns the file contents
+	 *
 	 * @return string the file contents
 	 */
-	public function render() {
+	public function render(): string {
 		return $this->content;
 	}
 
