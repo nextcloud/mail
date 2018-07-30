@@ -224,9 +224,8 @@ class FolderMapper {
 
 	/**
 	 * @param Folder[] $folders
-	 * @return Folder[]
 	 */
-	public function sortFolders(array &$folders): array {
+	public function sortFolders(array &$folders) {
 		usort($folders, function (Folder $f1, Folder $f2) {
 			$specialUse1 = $f1->getSpecialUse();
 			$specialUse2 = $f2->getSpecialUse();
