@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 /**
  * @author Christoph Wurst <christoph@winzerhof-wurst.at>
  *
@@ -42,7 +44,7 @@ class RepliedMessageData {
 	 * @param string|null $folderId
 	 * @param int|null $id
 	 */
-	public function __construct(Account $account, $folderId, $id) {
+	public function __construct(Account $account, string $folderId = null, int $id = null) {
 		$this->account = $account;
 		$this->folderId = $folderId;
 		$this->id = $id;
@@ -51,7 +53,7 @@ class RepliedMessageData {
 	/**
 	 * @return Account
 	 */
-	public function getAccount() {
+	public function getAccount(): Account {
 		return $this->account;
 	}
 
@@ -72,7 +74,7 @@ class RepliedMessageData {
 	/**
 	 * @return bool
 	 */
-	public function isReply() {
+	public function isReply(): bool {
 		return !is_null($this->folderId) && !is_null($this->id);
 	}
 
