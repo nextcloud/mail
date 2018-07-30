@@ -377,7 +377,9 @@ class Cache extends Horde_Imap_Client_Cache_Backend {
 
 		if (($data = $this->_cache->get($cache_id, 0)) !== false) {
 			try {
-				$data = @unserialize($data);
+				if (is_string($data)) {
+					$data = @unserialize($data);
+				}
 			} catch (Exception $e) {
 			}
 		}
@@ -411,7 +413,8 @@ class Cache extends Horde_Imap_Client_Cache_Backend {
 		if (!isset($this->_slicemap[$mailbox]) &&
 			(($data = $this->_cache->get($this->_getCid($mailbox, 'slicemap'), 0)) !== false)) {
 			try {
-				if (($slice = @unserialize($data)) &&
+				if (is_string($data) &&
+					($slice = @unserialize($data)) &&
 					is_array($slice)) {
 					$this->_slicemap[$mailbox] = $slice;
 				}
