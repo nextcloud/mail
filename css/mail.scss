@@ -342,12 +342,6 @@
 }
 
 /* editor */
-#mail-new-message-fixed {
-	z-index: 111; /* navigation menu is 110 ;-) */
-	background-color: rgba(255, 255, 255, .75);
-	padding: 10px;
-	position: relative;
-}
 #mail-new-message-list {
 	margin-top: 36px;
 }
@@ -414,7 +408,7 @@ textarea.message-body {
 	padding-right: 25%;
 }
 
-#app .message-composer .composer-fields .noreply-box {
+#content .message-composer .composer-fields .noreply-box {
 	margin-top: 0;
 	background: #fdffc3;
 	padding-left: 64px;
@@ -562,7 +556,6 @@ input.submit-message,
 }
 
 #mail-message-header {
-	position: fixed;
 	height: 90px;
 	width: 50%;
 	z-index: 100;
@@ -633,13 +626,6 @@ input.submit-message,
 	height: 100%;
 	overflow-y: auto;
 	overflow-x: hidden;
-}
-.mail-message-container {
-	position: absolute;
-	top: 0px;
-	right: 0px;
-	bottom: 0px;
-	left: 0px;
 }
 
 .new-message-attachments li {

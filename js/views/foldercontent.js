@@ -41,15 +41,14 @@ define(function(require) {
 
 	return Marionette.View.extend({
 		template: MessageContentTemplate,
-		className: 'container',
 		detailView: null,
 		account: null,
 		folder: null,
 		searchQuery: null,
 		composer: null,
 		regions: {
-			messages: '#mail-messages',
-			message: '#mail-message'
+			messages: '.app-content-list',
+			message: '.app-content-detail'
 		},
 		initialize: function(options) {
 			this.account = options.account;

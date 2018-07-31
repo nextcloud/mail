@@ -45,7 +45,7 @@ define(function(require) {
 		accountsView: null,
 		activeContent: null,
 		regions: {
-			content: '#app-content .mail-content',
+			content: '#app-content-wrapper',
 			setup: '#setup'
 		},
 		initialize: function() {

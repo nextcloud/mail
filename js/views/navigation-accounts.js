@@ -24,7 +24,7 @@ define(function(require) {
 
 		tagName: 'ul',
 
-		id: 'app-navigation-accounts',
+		id: 'usergrouplist',
 
 		className: 'with-icon',
 

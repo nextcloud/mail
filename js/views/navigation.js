@@ -23,7 +23,7 @@ define(function(require) {
 		regions: {
 			newMessage: '#mail-new-message-fixed',
 			accounts: {
-				el: '#app-navigation-accounts',
+				el: '#usergrouplist',
 				replaceElement: true
 			},
 			settings: '#app-settings-content'

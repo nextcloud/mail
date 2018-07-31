@@ -43,7 +43,7 @@ define([
 							+ '<div id="app">'
 							+ '	<div id="app-navigation" class="icon-loading">'
 							+ '		<div id="mail-new-message-fixed"></div>'
-							+ '		<div id="app-navigation-accounts"></div>'
+							+ '		<div id="usergrouplist"></div>'
 							+ '		<div id="app-settings">'
 							+ '			<div id="app-settings-header">'
 							+ '				<button class="settings-button" data-apps-slide-toggle="#app-settings-content"><?php p($l->t("Settings"));?></button>'
