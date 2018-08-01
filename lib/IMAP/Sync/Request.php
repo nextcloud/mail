@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 /**
  * @author Christoph Wurst <christoph@winzerhof-wurst.at>
  *
@@ -35,9 +37,9 @@ class Request {
 	/**
 	 * @param string $mailbox
 	 * @param string $syncToken
-	 * @param int $uids
+	 * @param int[] $uids
 	 */
-	public function __construct($mailbox, $syncToken, array $uids) {
+	public function __construct(string $mailbox, string $syncToken, array $uids) {
 		$this->mailbox = $mailbox;
 		$this->syncToken = $syncToken;
 		$this->uids = $uids;
@@ -45,10 +47,8 @@ class Request {
 
 	/**
 	 * Get the mailbox name
-	 *
-	 * @return string
 	 */
-	public function getMailbox() {
+	public function getMailbox(): string {
 		// TODO: this is kinda hacky
 		$parts = explode('/', $this->mailbox);
 		if (count($parts) > 1 && $parts[count($parts) - 1] === 'FLAGGED') {
@@ -57,10 +57,7 @@ class Request {
 		return $this->mailbox;
 	}
 
-	/**
-	 * @return bool
-	 */
-	public function isFlaggedMailbox() {
+	public function isFlaggedMailbox(): bool {
 		// TODO: this is kinda hacky
 		return $this->mailbox !== $this->getMailbox();
 	}
@@ -68,7 +65,7 @@ class Request {
 	/**
 	 * @return string the Horde sync token
 	 */
-	public function getToken() {
+	public function getToken(): string {
 		return $this->syncToken;
 	}
 
@@ -77,7 +74,7 @@ class Request {
 	 *
 	 * @return int[]
 	 */
-	public function getUids() {
+	public function getUids(): array {
 		return $this->uids;
 	}
 

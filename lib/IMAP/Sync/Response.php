@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 /**
  * @author Christoph Wurst <christoph@winzerhof-wurst.at>
  *
@@ -44,18 +46,15 @@ class Response implements JsonSerializable {
 	 * @param IMAPMessage[] $changedMessages
 	 * @param array $vanishedMessages
 	 */
-	public function __construct($syncToken, array $newMessages = [], array $changedMessages = [],
-		array $vanishedMessages = []) {
+	public function __construct(string $syncToken, array $newMessages = [], array $changedMessages = [],
+								array $vanishedMessages = []) {
 		$this->syncToken = $syncToken;
 		$this->newMessages = $newMessages;
 		$this->changedMessages = $changedMessages;
 		$this->vanishedMessages = $vanishedMessages;
 	}
 
-	/**
-	 * @return array
-	 */
-	public function jsonSerialize() {
+	public function jsonSerialize(): array {
 		return [
 			'newMessages' => $this->newMessages,
 			'changedMessages' => $this->changedMessages,

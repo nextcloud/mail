@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 /**
  * @author Christoph Wurst <christoph@winzerhof-wurst.at>
  *
@@ -40,35 +42,35 @@ class SimpleMailboxSync implements ISyncStrategy {
 	}
 
 	/**
-	 * @param Horde_Imap_Client $imapClient
+	 * @param Horde_Imap_Client_Base $imapClient
 	 * @param Request $syncRequest
 	 * @param Horde_Imap_Client_Data_Sync $hordeSync
 	 * @return IMAPMessage[]
 	 */
 	public function getNewMessages(Horde_Imap_Client_Base $imapClient,
-		Request $syncRequest, Horde_Imap_Client_Data_Sync $hordeSync) {
+								   Request $syncRequest, Horde_Imap_Client_Data_Sync $hordeSync): array {
 		return $this->messageMapper->findByIds($imapClient, $syncRequest->getMailbox(), $hordeSync->newmsgsuids->ids);
 	}
 
 	/**
-	 * @param Horde_Imap_Client $imapClient
+	 * @param Horde_Imap_Client_Base $imapClient
 	 * @param Request $syncRequest
 	 * @param Horde_Imap_Client_Data_Sync $hordeSync
 	 * @return IMAPMessage[]
 	 */
 	public function getChangedMessages(Horde_Imap_Client_Base $imapClient,
-		Request $syncRequest, Horde_Imap_Client_Data_Sync $hordeSync) {
+									   Request $syncRequest, Horde_Imap_Client_Data_Sync $hordeSync): array {
 		return $this->messageMapper->findByIds($imapClient, $syncRequest->getMailbox(), $hordeSync->flagsuids->ids);
 	}
 
 	/**
-	 * @param Horde_Imap_Client $imapClient
+	 * @param Horde_Imap_Client_Base $imapClient
 	 * @param Request $syncRequest
 	 * @param Horde_Imap_Client_Data_Sync $hordeSync
 	 * @return IMAPMessage[]
 	 */
 	public function getVanishedMessages(Horde_Imap_Client_Base $imapClient,
-		Request $syncRequest, Horde_Imap_Client_Data_Sync $hordeSync) {
+										Request $syncRequest, Horde_Imap_Client_Data_Sync $hordeSync): array {
 		return $hordeSync->vanisheduids->ids;
 	}
 

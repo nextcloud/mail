@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 /**
  * @author Christoph Wurst <christoph@winzerhof-wurst.at>
  *
@@ -22,10 +24,10 @@
 namespace OCA\Mail\IMAP\Sync;
 
 use Horde_Imap_Client_Base;
+use Horde_Imap_Client_Exception;
+use Horde_Imap_Client_Exception_Sync;
 use Horde_Imap_Client_Ids;
 use Horde_Imap_Client_Mailbox;
-use OCA\Mail\IMAP\Sync\Request;
-use OCA\Mail\IMAP\Sync\Response;
 
 class Synchronizer {
 
@@ -40,7 +42,7 @@ class Synchronizer {
 	 * @param FavouritesMailboxSync $favSync
 	 */
 	public function __construct(SimpleMailboxSync $simpleSync,
-		FavouritesMailboxSync $favSync) {
+								FavouritesMailboxSync $favSync) {
 		$this->simpleSync = $simpleSync;
 		$this->favSync = $favSync;
 	}
@@ -49,8 +51,10 @@ class Synchronizer {
 	 * @param Horde_Imap_Client_Base $imapClient
 	 * @param Request $request
 	 * @return Response
+	 * @throws Horde_Imap_Client_Exception
+	 * @throws Horde_Imap_Client_Exception_Sync
 	 */
-	public function sync(Horde_Imap_Client_Base $imapClient, Request $request) {
+	public function sync(Horde_Imap_Client_Base $imapClient, Request $request): Response {
 		$mailbox = new Horde_Imap_Client_Mailbox($request->getMailbox());
 		$ids = new Horde_Imap_Client_Ids($request->getUids());
 		$hordeSync = $imapClient->sync($mailbox, $request->getToken(), [
@@ -70,7 +74,7 @@ class Synchronizer {
 	 * @param Request $request
 	 * @return ISyncStrategy
 	 */
-	private function getSyncStrategy(Request $request) {
+	private function getSyncStrategy(Request $request): ISyncStrategy {
 		if ($request->isFlaggedMailbox()) {
 			return $this->favSync;
 		} else {
