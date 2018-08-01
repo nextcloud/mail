@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 /**
  * @author Christoph Wurst <christoph@winzerhof-wurst.at>
  * @author Thomas Müller <thomas.mueller@tmit.eu>
@@ -33,9 +35,6 @@ class ContactsIntegration {
 	/** @var IConfig */
 	private $config;
 
-	/**
-	 * @param IManager $contactsManager
-	 */
 	public function __construct(IManager $contactsManager, IConfig $config) {
 		$this->contactsManager = $contactsManager;
 		$this->config = $config;
@@ -47,7 +46,7 @@ class ContactsIntegration {
 	 * @param string $term
 	 * @return array
 	 */
-	public function getMatchingRecipient($term) {
+	public function getMatchingRecipient(string $term): array {
 		if (!$this->contactsManager->isEnabled()) {
 			return [];
 		}
@@ -92,7 +91,7 @@ class ContactsIntegration {
 	 * @param string $email
 	 * @return null|string
 	 */
-	public function getPhoto($email) {
+	public function getPhoto(string $email) {
 		$result = $this->contactsManager->search($email, ['EMAIL']);
 		if (count($result) > 0) {
 			if (isset($result[0]['PHOTO'])) {
@@ -102,7 +101,7 @@ class ContactsIntegration {
 		return null;
 	}
 
-	private function getPhotoUri($raw) {
+	private function getPhotoUri(string $raw) {
 		$uriPrefix = 'VALUE=uri:';
 		if (substr($raw, 0, strlen($uriPrefix)) === $uriPrefix) {
 			return substr($raw, strpos($raw, 'http'));

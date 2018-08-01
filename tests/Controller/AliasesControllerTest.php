@@ -23,6 +23,7 @@ namespace OCA\Mail\Tests\Controller;
 
 use ChristophWurst\Nextcloud\Testing\TestCase;
 use OCA\Mail\Controller\AliasesController;
+use OCA\Mail\Db\Alias;
 use OCA\Mail\Http\JSONResponse;
 use OCP\AppFramework\Http;
 
@@ -77,17 +78,18 @@ class AliasesControllerTest extends TestCase {
 
 	public function testDestroy() {
 		$aliasId = 123;
+		$alias = $this->createMock(Alias::class);
 		$this->user->expects($this->once())
 			->method('getUID')
 			->will($this->returnValue($this->userId));
 		$this->aliasService->expects($this->once())
 			->method('delete')
 			->with($this->equalTo($aliasId), $this->equalTo($this->userId))
-			->will($this->returnValue([]));
+			->will($this->returnValue($alias));
 
 		$response = $this->controller->destroy($aliasId);
 
-		$expectedResponse = new JSONResponse();
+		$expectedResponse = new JSONResponse($alias);
 		$this->assertEquals($expectedResponse, $response);
 	}
 

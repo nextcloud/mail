@@ -47,7 +47,7 @@ class SearchMailbox extends Mailbox {
 	 * @param int $cursor time stamp of the oldest message on the client
 	 * @return array
 	 */
-	public function getMessages($filter = null, $cursor = null) {
+	public function getMessages($filter = null, int $cursor = null): array {
 		$query = new Horde_Imap_Client_Search_Query();
 		$query->flag('FLAGGED');
 		if ($filter) {
@@ -60,7 +60,7 @@ class SearchMailbox extends Mailbox {
 	/**
 	 * @return string
 	 */
-	public function getFolderId() {
+	public function getFolderId(): string {
 		return parent::getFolderId() . '/FLAGGED';
 	}
 
@@ -75,8 +75,8 @@ class SearchMailbox extends Mailbox {
 	 * @param int $flags
 	 * @return mixed
 	 */
-	public function getStatus($flags = \Horde_Imap_Client::STATUS_ALL) {
-		$status = parent::getStatus($flags);
+	public function getStatus(): array {
+		$status = parent::getStatus(Horde_Imap_Client::STATUS_ALL);
 		$status['unseen'] = 0;
 
 		return $status;

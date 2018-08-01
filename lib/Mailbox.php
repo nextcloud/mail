@@ -163,7 +163,7 @@ class Mailbox implements IMailBox {
 	 * @param int $cursor time stamp of the oldest message on the client
 	 * @return array
 	 */
-	public function getMessages($filter = null, $cursor = null) {
+	public function getMessages($filter = null, int $cursor = null): array {
 		if (!$this->conn->capability->query('SORT') && (is_null($filter) || $filter === '')) {
 			$ids = $this->getFetchIds($cursor);
 		} else {
@@ -224,16 +224,15 @@ class Mailbox implements IMailBox {
 	 * @param bool $loadHtmlMessageBody
 	 * @return IMAPMessage
 	 */
-	public function getMessage($messageId, $loadHtmlMessageBody = false) {
+	public function getMessage(int $messageId, bool $loadHtmlMessageBody = false) {
 		return new IMAPMessage($this->conn, $this->mailBox, $messageId, null, $loadHtmlMessageBody);
 	}
 
 	/**
-	 * @param int $flags
 	 * @return array
 	 */
-	public function getStatus($flags = \Horde_Imap_Client::STATUS_ALL) {
-		return $this->conn->status($this->mailBox, $flags);
+	public function getStatus(): array {
+		return $this->conn->status($this->mailBox, Horde_Imap_Client::STATUS_ALL);
 	}
 
 	/**
@@ -258,7 +257,7 @@ class Mailbox implements IMailBox {
 		$this->displayName = $displayName;
 	}
 
-	public function getFolderId() {
+	public function getFolderId(): string {
 		return $this->mailBox->utf8;
 	}
 
@@ -419,7 +418,7 @@ class Mailbox implements IMailBox {
 	 * @param int $attachmentId
 	 * @return Attachment
 	 */
-	public function getAttachment($messageId, $attachmentId) {
+	public function getAttachment(int $messageId, int $attachmentId): Attachment {
 		return new Attachment($this->conn, $this->mailBox, $messageId, $attachmentId);
 	}
 
@@ -465,7 +464,7 @@ class Mailbox implements IMailBox {
 	 * @param string $flag
 	 * @param boolean $add
 	 */
-	public function setMessageFlag($uid, $flag, $add) {
+	public function setMessageFlag(int $uid, string $flag, $add) {
 		$options = [
 			'ids' => new Horde_Imap_Client_Ids($uid)
 		];

@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 /**
  * @author Christoph Wurst <christoph@winzerhof-wurst.at>
  *
@@ -64,7 +66,11 @@ class MailTransmission implements IMailTransmission {
 	 * @param SmtpClientFactory $clientFactory
 	 * @param Logger $logger
 	 */
-	public function __construct(AddressCollector $addressCollector, $userFolder, IAttachmentService $attachmentService, SmtpClientFactory $clientFactory, Logger $logger) {
+	public function __construct(AddressCollector $addressCollector,
+								$userFolder,
+								IAttachmentService $attachmentService,
+								SmtpClientFactory $clientFactory,
+								Logger $logger) {
 		$this->addressCollector = $addressCollector;
 		$this->userFolder = $userFolder;
 		$this->attachmentService = $attachmentService;
@@ -82,7 +88,11 @@ class MailTransmission implements IMailTransmission {
 	 * @param int|null $draftUID
 	 * @return int message UID
 	 */
-	public function sendMessage(string $userId, NewMessageData $messageData, RepliedMessageData $replyData, Alias $alias = null, int $draftUID = null) {
+	public function sendMessage(string $userId,
+								NewMessageData $messageData,
+								RepliedMessageData $replyData,
+								Alias $alias = null,
+								int $draftUID = null) {
 		$account = $messageData->getAccount();
 
 		if ($replyData->isReply()) {
@@ -146,7 +156,9 @@ class MailTransmission implements IMailTransmission {
 	 * @param RepliedMessageData $replyData
 	 * @return IMessage
 	 */
-	private function buildReplyMessage(Account $account, NewMessageData $messageData, RepliedMessageData $replyData) {
+	private function buildReplyMessage(Account $account,
+									   NewMessageData $messageData,
+									   RepliedMessageData $replyData) {
 		// Reply
 		$message = $account->newReplyMessage();
 
@@ -197,7 +209,7 @@ class MailTransmission implements IMailTransmission {
 	 * @param NewMessageData $messageData
 	 * @param IMessage $message
 	 */
-	private function handleAttachments($userId, NewMessageData $messageData, IMessage $message) {
+	private function handleAttachments(string $userId, NewMessageData $messageData, IMessage $message) {
 		foreach ($messageData->getAttachments() as $attachment) {
 			if (isset($attachment['isLocal']) && $attachment['isLocal'] === 'true') {
 				$this->handleLocalAttachment($userId, $attachment, $message);
@@ -213,7 +225,7 @@ class MailTransmission implements IMailTransmission {
 	 * @param IMessage $message
 	 * @return int|null
 	 */
-	private function handleLocalAttachment($userId, array $attachment, IMessage $message) {
+	private function handleLocalAttachment(string $userId, array $attachment, IMessage $message) {
 		if (!isset($attachment['id'])) {
 			$this->logger->warning('ignoring local attachment because its id is unknown');
 			return null;
@@ -262,7 +274,7 @@ class MailTransmission implements IMailTransmission {
 	/**
 	 * @param IMessage $message
 	 */
-	private function collectMailAddresses($message) {
+	private function collectMailAddresses(IMessage $message) {
 		try {
 			$addresses = $message->getTo()
 				->merge($message->getCC())

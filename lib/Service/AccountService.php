@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 /**
  * @author Christoph Wurst <christoph@winzerhof-wurst.at>
  * @author Thomas Müller <thomas.mueller@tmit.eu>
@@ -47,12 +49,9 @@ class AccountService {
 	/** @var Manager */
 	private $defaultAccountManager;
 
-	/**
-	 * @param MailAccountMapper $mapper
-	 * @param IL10N $l10n
-	 */
-	public function __construct(MailAccountMapper $mapper, IL10N $l10n,
-		Manager $defaultAccountManager) {
+	public function __construct(MailAccountMapper $mapper,
+								IL10N $l10n,
+								Manager $defaultAccountManager) {
 		$this->mapper = $mapper;
 		$this->l10n = $l10n;
 		$this->defaultAccountManager = $defaultAccountManager;
@@ -62,9 +61,9 @@ class AccountService {
 	 * @param string $currentUserId
 	 * @return Account[]
 	 */
-	public function findByUserId($currentUserId) {
+	public function findByUserId(string $currentUserId): array {
 		if ($this->accounts === null) {
-			$accounts = array_map(function($a) {
+			$accounts = array_map(function ($a) {
 				return new Account($a);
 			}, $this->mapper->findByUserId($currentUserId));
 
@@ -80,11 +79,11 @@ class AccountService {
 	}
 
 	/**
-	 * @param $currentUserId
-	 * @param $accountId
+	 * @param string $currentUserId
+	 * @param int $accountId
 	 * @return Account
 	 */
-	public function find($currentUserId, $accountId) {
+	public function find(string $currentUserId, int $accountId) {
 		if ($this->accounts !== null) {
 			foreach ($this->accounts as $account) {
 				if ($account->getId() === $accountId) {
@@ -94,7 +93,7 @@ class AccountService {
 			throw new Exception("Invalid account id <$accountId>");
 		}
 
-		if ((int) $accountId === Manager::ACCOUNT_ID) {
+		if ((int)$accountId === Manager::ACCOUNT_ID) {
 			$defaultAccount = $this->defaultAccountManager->getDefaultAccount();
 			if (is_null($defaultAccount)) {
 				throw new Exception('Default account config missing');
@@ -107,8 +106,8 @@ class AccountService {
 	/**
 	 * @param int $accountId
 	 */
-	public function delete($currentUserId, $accountId) {
-		if ((int) $accountId === Manager::ACCOUNT_ID) {
+	public function delete(string $currentUserId, int $accountId) {
+		if ($accountId === Manager::ACCOUNT_ID) {
 			return;
 		}
 		$mailAccount = $this->mapper->find($currentUserId, $accountId);
@@ -119,7 +118,7 @@ class AccountService {
 	 * @param MailAccount $newAccount
 	 * @return MailAccount
 	 */
-	public function save(MailAccount $newAccount) {
+	public function save(MailAccount $newAccount): MailAccount {
 		return $this->mapper->save($newAccount);
 	}
 

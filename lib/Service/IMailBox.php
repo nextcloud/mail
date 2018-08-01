@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 /**
  * @author Christoph Wurst <christoph@winzerhof-wurst.at>
  * @author Thomas Müller <thomas.mueller@tmit.eu>
@@ -19,6 +21,7 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>
  *
  */
+
 namespace OCA\Mail\Service;
 
 use Horde_Imap_Client_Search_Query;
@@ -30,17 +33,17 @@ interface IMailBox {
 	/**
 	 * @return string
 	 */
-	public function getFolderId();
+	public function getFolderId(): string;
 
 	/**
 	 * @param string|Horde_Imap_Client_Search_Query $filter
 	 * @param int $cursorId last known ID on the client
 	 * @return array
 	 */
-	public function getMessages($filter = null, $cursorId = null);
+	public function getMessages($filter = null, int $cursorId = null): array;
 
 	/**
-	 * @return string
+	 * @return string|null
 	 */
 	public function getSpecialRole();
 
@@ -48,25 +51,25 @@ interface IMailBox {
 	 * @param int $id
 	 * @return IMessage
 	 */
-	public function getMessage($id, $loadHtmlMessageBody = false);
+	public function getMessage(int $id, bool $loadHtmlMessageBody = false);
 
 	/**
 	 * @param int $messageId
 	 * @param int $attachmentId
 	 * @return Attachment
 	 */
-	public function getAttachment($messageId, $attachmentId);
+	public function getAttachment(int $messageId, int $attachmentId): Attachment;
 
 	/**
 	 * @param int $messageId
 	 * @param string $flag
 	 * @param mixed $value
 	 */
-	public function setMessageFlag($messageId, $flag, $value);
+	public function setMessageFlag(int $messageId, string $flag, $value);
 
 	/**
 	 * @return array
 	 */
-	public function getStatus();
+	public function getStatus(): array;
 
 }
