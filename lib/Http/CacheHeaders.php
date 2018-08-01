@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 /**
  * @copyright 2017 Christoph Wurst <christoph@winzerhof-wurst.at>
  *
@@ -30,7 +32,7 @@ use OCP\AppFramework\Utility\ITimeFactory;
 
 trait CacheHeaders {
 
-	public function setCacheHeaders($cacheFor, ITimeFactory $timeFactory) {
+	public function setCacheHeaders(int $cacheFor, ITimeFactory $timeFactory) {
 		$this->cacheFor(7 * 24 * 60 * 60);
 
 		$expires = new DateTime();

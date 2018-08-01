@@ -119,9 +119,12 @@ class MessagesControllerTest extends TestCase {
 			->method('getMessage')
 			->with($this->equalTo($messageId))
 			->will($this->returnValue($this->message));
+		$this->message->expects($this->once())
+			->method('getHtmlBody')
+			->willReturn('');
 		$this->timeFactory->method('getTime')->willReturn(1000);
 
-		$expectedResponse = new HtmlResponse(null);
+		$expectedResponse = new HtmlResponse('');
 		$expectedResponse->setCacheHeaders(3600, $this->timeFactory);
 		$expectedResponse->addHeader('Pragma', 'cache');
 		if (class_exists('\OCP\AppFramework\Http\ContentSecurityPolicy')) {

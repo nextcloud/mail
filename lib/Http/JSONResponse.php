@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 /**
  * @copyright 2017 Christoph Wurst <christoph@winzerhof-wurst.at>
  *
@@ -29,4 +31,5 @@ use OCP\AppFramework\Http\JSONResponse as Base;
 class JSONResponse extends Base {
 
 	use CacheHeaders;
+
 }
