@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 /**
  * @copyright 2017 Christoph Wurst <christoph@winzerhof-wurst.at>
  *
@@ -42,7 +44,7 @@ class Avatar implements JsonSerializable {
 	 * @param string|null $mime
 	 * @param bool $isExternal
 	 */
-	public function __construct($url, $mime = null, $isExternal = true) {
+	public function __construct(string $url, string $mime = null, bool $isExternal = true) {
 		$this->url = $url;
 		$this->mime = $mime;
 		$this->isExternal = $isExternal;
@@ -51,7 +53,7 @@ class Avatar implements JsonSerializable {
 	/**
 	 * @return string
 	 */
-	public function getUrl() {
+	public function getUrl(): string {
 		return $this->url;
 	}
 
@@ -65,16 +67,16 @@ class Avatar implements JsonSerializable {
 	}
 
 	/**
-	 * @return boolean
+	 * @return bool
 	 */
-	public function isExternal() {
+	public function isExternal(): bool {
 		return $this->isExternal;
 	}
 
 	/**
 	 * @return array
 	 */
-	public function jsonSerialize() {
+	public function jsonSerialize(): array {
 		return [
 			'isExternal' => $this->isExternal,
 			'mime' => $this->mime,

@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 /**
  * @author Christoph Wurst <christoph@winzerhof-wurst.at>
  * @author Jakob Sack <mail@jakobsack.de>
@@ -33,9 +35,6 @@ class AddressbookSource implements IAvatarSource {
 	/** @var ContactsIntegration */
 	private $contactsIntegration;
 
-	/**
-	 * @param ContactsIntegration $contactsIntegration
-	 */
 	public function __construct(ContactsIntegration $contactsIntegration) {
 		$this->contactsIntegration = $contactsIntegration;
 	}
@@ -45,7 +44,7 @@ class AddressbookSource implements IAvatarSource {
 	 *
 	 * @return bool
 	 */
-	public function isExternal() {
+	public function isExternal(): bool {
 		return false;
 	}
 
@@ -54,7 +53,7 @@ class AddressbookSource implements IAvatarSource {
 	 * @param AvatarFactory $factory
 	 * @return Avatar|null avatar URL if one can be found
 	 */
-	public function fetch($email, AvatarFactory $factory) {
+	public function fetch(string $email, AvatarFactory $factory) {
 		$url = $this->contactsIntegration->getPhoto($email);
 
 		if (is_null($url)) {

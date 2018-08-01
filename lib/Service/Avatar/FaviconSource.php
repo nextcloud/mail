@@ -39,11 +39,9 @@ class FaviconSource implements IAvatarSource {
 	/** @var IMimeTypeDetector */
 	private $mimeDetector;
 
-	/**
-	 * @param IClientService $clientService
-	 * @param Favicon $favicon
-	 */
-	public function __construct(IClientService $clientService, Favicon $favicon, IMimeTypeDetector $mimeDetector) {
+	public function __construct(IClientService $clientService,
+								Favicon $favicon,
+								IMimeTypeDetector $mimeDetector) {
 		$this->clientService = $clientService;
 		$this->favicon = $favicon;
 		$this->mimeDetector = $mimeDetector;
@@ -54,7 +52,7 @@ class FaviconSource implements IAvatarSource {
 	 *
 	 * @return bool
 	 */
-	public function isExternal() {
+	public function isExternal(): bool {
 		return true;
 	}
 
@@ -63,7 +61,7 @@ class FaviconSource implements IAvatarSource {
 	 * @param AvatarFactory $factory
 	 * @return Avatar|null avatar URL if one can be found
 	 */
-	public function fetch($email, AvatarFactory $factory) {
+	public function fetch(string $email, AvatarFactory $factory) {
 		$horde = new Horde_Mail_Rfc822_Address($email);
 		// TODO: fall back to insecure HTTP?
 		$domain = 'https://' . $horde->host;
