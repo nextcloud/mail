@@ -51,7 +51,10 @@ define(function(require) {
 		composer: null,
 		regions: {
 			messages: '.app-content-list',
-			message: '.app-content-detail'
+			message: {
+				el: '.app-content-detail',
+				replaceElement: true
+			}
 		},
 		initialize: function(options) {
 			this.account = options.account;

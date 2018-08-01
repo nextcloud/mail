@@ -26,7 +26,7 @@ define(function(require) {
 
 	return Marionette.View.extend({
 		template: MessageTemplate,
-		className: 'mail-message-container',
+		className: 'app-content-detail',
 		message: null,
 		messageBody: null,
 		reply: null,
