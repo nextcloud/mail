@@ -249,20 +249,20 @@ class AccountsController extends Controller {
 	 * @TrapError
 	 *
 	 * @param int $accountId
-	 * @param string $folderId
 	 * @param string $subject
 	 * @param string $body
 	 * @param string $to
 	 * @param string $cc
 	 * @param string $bcc
-	 * @param int $draftUID
-	 * @param int $messageId
+	 * @param int|null $draftUID
+	 * @param string|null $folderId
+	 * @param int|null $messageId
 	 * @param mixed $attachments
 	 * @param int|null $aliasId
 	 * @return JSONResponse
 	 * @throws Horde_Exception
 	 */
-	public function send(int $accountId, string $folderId, string $subject, string $body, string $to, string $cc, string $bcc, int $draftUID = null, int $messageId = null, array $attachments, int $aliasId = null): JSONResponse {
+	public function send(int $accountId, string $subject, string $body, string $to, string $cc, string $bcc, int $draftUID = null, string $folderId = null, int $messageId = null, array $attachments = [], int $aliasId = null): JSONResponse {
 		$account = $this->accountService->find($this->currentUserId, $accountId);
 		$alias = $aliasId ? $this->aliasesService->find($aliasId, $this->currentUserId) : null;
 
