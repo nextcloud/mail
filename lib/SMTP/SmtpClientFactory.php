@@ -1,9 +1,11 @@
 <?php
 
+declare(strict_types=1);
+
 /**
- * @copyright 2017 Christoph Wurst <christoph@winzerhof-wurst.at>
+ * @copyright 2018 Christoph Wurst <christoph@winzerhof-wurst.at>
  *
- * @author 2017 Christoph Wurst <christoph@winzerhof-wurst.at>
+ * @author 2018 Christoph Wurst <christoph@winzerhof-wurst.at>
  *
  * @license GNU AGPL version 3 or any later version
  *
@@ -39,10 +41,6 @@ class SmtpClientFactory {
 	/** @var ICrypto */
 	private $crypto;
 
-	/**
-	 * @param IConfig $config
-	 * @param ICrypto $crypto
-	 */
 	public function __construct(IConfig $config, ICrypto $crypto) {
 		$this->config = $config;
 		$this->crypto = $crypto;
@@ -52,7 +50,7 @@ class SmtpClientFactory {
 	 * @param Account $account
 	 * @return Horde_Mail_Transport
 	 */
-	public function create(Account $account) {
+	public function create(Account $account): Horde_Mail_Transport {
 		$mailAccount = $account->getMailAccount();
 		$transport = $this->config->getSystemValue('app.mail.transport', 'smtp');
 		if ($transport === 'php-mail') {
@@ -68,7 +66,7 @@ class SmtpClientFactory {
 			'port' => $mailAccount->getOutboundPort(),
 			'username' => $mailAccount->getOutboundUser(),
 			'secure' => $security === 'none' ? false : $security,
-			'timeout' => (int) $this->config->getSystemValue('app.mail.smtp.timeout', 2)
+			'timeout' => (int)$this->config->getSystemValue('app.mail.smtp.timeout', 2)
 		];
 		if ($this->config->getSystemValue('debug', false)) {
 			$params['debug'] = $this->config->getSystemValue('datadirectory') . '/horde_smtp.log';
