@@ -45,7 +45,10 @@ define(function(require) {
 		accountsView: null,
 		activeContent: null,
 		regions: {
-			content: '#app-content-wrapper',
+			content: {
+				el: '#app-content-wrapper',
+				replaceElement: true
+			},
 			setup: '#setup'
 		},
 		initialize: function() {

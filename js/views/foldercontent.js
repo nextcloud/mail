@@ -40,6 +40,9 @@ define(function(require) {
 	});
 
 	return Marionette.View.extend({
+		attributes: {
+			id: 'app-content-wrapper'
+		},
 		template: MessageContentTemplate,
 		detailView: null,
 		account: null,
