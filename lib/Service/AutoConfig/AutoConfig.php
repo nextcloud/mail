@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 /**
  * @author Bernhard Scheirle <bernhard+git@scheirle.de>
  * @author Christoph Wurst <christoph@winzerhof-wurst.at>
