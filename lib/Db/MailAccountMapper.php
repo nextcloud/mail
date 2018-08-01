@@ -38,7 +38,7 @@ class MailAccountMapper extends Mapper {
 
 	/** Finds an Mail Account by id
 	 *
-	 * @param int $userId
+	 * @param string $userId
 	 * @param int $accountId
 	 * @return MailAccount
 	 */

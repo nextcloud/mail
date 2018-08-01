@@ -146,7 +146,7 @@ class IspDbConfigurationDetector {
 	private function testImapConfiguration(array $imap, string $email, string $password, string $name) {
 		$host = $imap['hostname'];
 		$port = $imap['port'];
-		$encryptionProtocol = null;
+		$encryptionProtocol = 'none';
 		if ($imap['socketType'] === 'SSL') {
 			$encryptionProtocol = 'ssl';
 		}

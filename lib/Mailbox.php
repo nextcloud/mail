@@ -231,8 +231,8 @@ class Mailbox implements IMailBox {
 	/**
 	 * @return array
 	 */
-	public function getStatus(): array {
-		return $this->conn->status($this->mailBox, Horde_Imap_Client::STATUS_ALL);
+	public function getStatus(int $flags = Horde_Imap_Client::STATUS_ALL): array {
+		return $this->conn->status($this->mailBox, $flags);
 	}
 
 	/**

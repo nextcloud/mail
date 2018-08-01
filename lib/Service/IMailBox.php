@@ -24,6 +24,7 @@ declare(strict_types=1);
 
 namespace OCA\Mail\Service;
 
+use Horde_Imap_Client;
 use Horde_Imap_Client_Search_Query;
 use OCA\Mail\Attachment;
 use OCA\Mail\Model\IMessage;
@@ -68,8 +69,9 @@ interface IMailBox {
 	public function setMessageFlag(int $messageId, string $flag, $value);
 
 	/**
+	 * @param int $flags
 	 * @return array
 	 */
-	public function getStatus(): array;
+	public function getStatus(int $flags = Horde_Imap_Client::STATUS_ALL): array;
 
 }
