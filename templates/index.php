@@ -48,7 +48,6 @@ script('mail', 'build/build');
 	</div>
 </div>
 <div id="app-content">
-	<div id="app-navigation-toggle" class="icon-menu"></div>
 	<div id="app-content-wrapper"></div>
 </div>
 <div id="user-displayname"

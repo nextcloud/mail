@@ -43,14 +43,12 @@ define(function(require) {
 
 		show: function() {
 			this.$el.show();
-			$('#app-navigation-toggle').css('background-image', '');
 		},
 
 		hide: function() {
 			// TODO: move if or rename function
 			if (require('state').accounts.length === 0) {
 				this.$el.hide();
-				$('#app-navigation-toggle').css('background-image', 'none');
 			}
 		},
 
