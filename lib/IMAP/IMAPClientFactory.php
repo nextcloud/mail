@@ -78,7 +78,7 @@ class IMAPClientFactory {
 		if ($this->cacheFactory->isAvailable()) {
 			$params['cache'] = [
 				'backend' => new Cache([
-					'cacheob' => $this->cacheFactory->createDistributed(md5($account->getId())),
+					'cacheob' => $this->cacheFactory->createDistributed(md5((string)$account->getId())),
 				])];
 		}
 		return new Horde_Imap_Client_Socket($params);
