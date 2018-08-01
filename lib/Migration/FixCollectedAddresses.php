@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 /**
  * @author Christoph Wurst <christoph@winzerhof-wurst.at>
  *
@@ -37,7 +39,7 @@ class FixCollectedAddresses implements IRepairStep {
 		$this->mapper = $mapper;
 	}
 
-	public function getName() {
+	public function getName(): string {
 		return 'Purify and migrate collected mail addresses';
 	}
 
