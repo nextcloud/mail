@@ -26,7 +26,7 @@ define(function(require) {
 
 	return Marionette.View.extend({
 		template: MessageTemplate,
-		className: 'app-content-detail',
+		className: 'app-content-details',
 		message: null,
 		messageBody: null,
 		reply: null,

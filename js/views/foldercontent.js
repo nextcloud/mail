@@ -52,7 +52,7 @@ define(function(require) {
 		regions: {
 			messages: '.app-content-list',
 			message: {
-				el: '.app-content-detail',
+				el: '.app-content-details',
 				replaceElement: true
 			}
 		},
