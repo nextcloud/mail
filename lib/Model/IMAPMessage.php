@@ -350,7 +350,7 @@ class IMAPMessage implements IMessage, JsonSerializable {
 		} else {
 			if (!is_null($structure->findBody())) {
 				// get the body from the server
-				$partId = $structure->findBody();
+				$partId = (int) $structure->findBody();
 				$this->getPart($structure->getPart($partId), $partId);
 			}
 		}
@@ -592,9 +592,9 @@ class IMAPMessage implements IMessage, JsonSerializable {
 	}
 
 	/**
-	 * @return IMessage
+	 * @return IMessage|null
 	 */
-	public function getRepliedMessage(): IMessage {
+	public function getRepliedMessage() {
 		throw new Exception('not implemented');
 	}
 

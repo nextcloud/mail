@@ -91,9 +91,9 @@ interface IMessage {
 	public function setBcc(AddressList $bcc);
 
 	/**
-	 * @return IMessage
+	 * @return IMessage|null
 	 */
-	public function getRepliedMessage(): IMessage;
+	public function getRepliedMessage();
 
 	/**
 	 * @param IMessage $message

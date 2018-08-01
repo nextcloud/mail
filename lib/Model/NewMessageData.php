@@ -44,10 +44,10 @@ class NewMessageData {
 	/** @var AddressList */
 	private $bcc;
 
-	/** @var string */
+	/** @var string|null */
 	private $subject;
 
-	/** @var string */
+	/** @var string|null */
 	private $body;
 
 	/** @var array */
@@ -58,11 +58,17 @@ class NewMessageData {
 	 * @param AddressList $to
 	 * @param AddressList $cc
 	 * @param AddressList $bcc
-	 * @param string $subject
-	 * @param string $body
+	 * @param string|null $subject
+	 * @param string|null $body
 	 * @param array $attachments
 	 */
-	public function __construct(Account $account, AddressList $to, AddressList $cc, AddressList $bcc, string $subject, string $body, array $attachments) {
+	public function __construct(Account $account,
+								AddressList $to,
+								AddressList $cc,
+								AddressList $bcc,
+								string $subject = null,
+								string $body = null ,
+								array $attachments = []) {
 		$this->account = $account;
 		$this->to = $to;
 		$this->cc = $cc;
@@ -82,13 +88,19 @@ class NewMessageData {
 	 * @param array|null $attachments
 	 * @return NewMessageData
 	 */
-	public static function fromRequest(Account $account, string $to = null, string $cc = null, string $bcc = null, $subject = '', $body = '', array $attachments = []) {
+	public static function fromRequest(Account $account,
+									   string $to = null,
+									   string $cc = null,
+									   string $bcc = null,
+									   string $subject = null,
+									   string $body = null,
+									   array $attachments = []) {
 		$toList = AddressList::parse($to ?: '');
 		$ccList = AddressList::parse($cc ?: '');
 		$bccList = AddressList::parse($bcc ?: '');
-		$attchmentsArray = is_null($attachments) ? [] : $attachments;
+		$attachmentsArray = is_null($attachments) ? [] : $attachments;
 
-		return new NewMessageData($account, $toList, $ccList, $bccList, $subject, $body, $attchmentsArray);
+		return new self($account, $toList, $ccList, $bccList, $subject, $body, $attachmentsArray);
 	}
 
 	/**
@@ -122,14 +134,14 @@ class NewMessageData {
 	/**
 	 * @return string
 	 */
-	public function getSubject(): string {
+	public function getSubject() {
 		return $this->subject;
 	}
 
 	/**
 	 * @return string
 	 */
-	public function getBody(): string {
+	public function getBody() {
 		return $this->body;
 	}
 

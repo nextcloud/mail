@@ -153,9 +153,9 @@ class Message implements IMessage {
 	}
 
 	/**
-	 * @return IMessage
+	 * @return IMessage|null
 	 */
-	public function getRepliedMessage(): IMessage {
+	public function getRepliedMessage() {
 		return $this->repliedMessage;
 	}
 

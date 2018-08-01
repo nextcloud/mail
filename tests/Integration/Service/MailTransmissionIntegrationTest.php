@@ -118,7 +118,6 @@ class MailTransmissionIntegrationTest extends TestCase {
 		$mb = $this->getMessageBuilder();
 		$originalMessage = $mb->from('from@domain.tld')
 			->to('to@domain.tld')
-			->subject('subject')
 			->subject('reply test')
 			->finish();
 		$originalUID = $this->saveMessage('inbox', $originalMessage);
@@ -137,7 +136,6 @@ class MailTransmissionIntegrationTest extends TestCase {
 		$mb = $this->getMessageBuilder();
 		$originalMessage = $mb->from('from@domain.tld')
 			->to('to@domain.tld')
-			->subject('subject')
 			->subject('reply test')
 			->finish();
 		$originalUID = $this->saveMessage('inbox', $originalMessage);
@@ -156,7 +154,6 @@ class MailTransmissionIntegrationTest extends TestCase {
 		$mb = $this->getMessageBuilder();
 		$originalMessage = $mb->from('from@domain.tld')
 			->to('to@domain.tld')
-			->subject('subject')
 			->subject('reply test')
 			->finish();
 		$originalUID = $this->saveMessage('inbox', $originalMessage);
