@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 /**
  * @author Christoph Wurst <christoph@winzerhof-wurst.at>
  *
@@ -42,10 +44,10 @@ class NewMessageData {
 	/** @var AddressList */
 	private $bcc;
 
-	/** @var string */
+	/** @var string|null */
 	private $subject;
 
-	/** @var string */
+	/** @var string|null */
 	private $body;
 
 	/** @var array */
@@ -56,11 +58,17 @@ class NewMessageData {
 	 * @param AddressList $to
 	 * @param AddressList $cc
 	 * @param AddressList $bcc
-	 * @param string $subject
-	 * @param string $body
+	 * @param string|null $subject
+	 * @param string|null $body
 	 * @param array $attachments
 	 */
-	public function __construct(Account $account, AddressList $to, AddressList $cc, AddressList $bcc, $subject, $body, array $attachments) {
+	public function __construct(Account $account,
+								AddressList $to,
+								AddressList $cc,
+								AddressList $bcc,
+								string $subject = null,
+								string $body = null ,
+								array $attachments = []) {
 		$this->account = $account;
 		$this->to = $to;
 		$this->cc = $cc;
@@ -80,40 +88,46 @@ class NewMessageData {
 	 * @param array|null $attachments
 	 * @return NewMessageData
 	 */
-	public static function fromRequest(Account $account, $to, $cc, $bcc, $subject, $body, $attachments) {
+	public static function fromRequest(Account $account,
+									   string $to = null,
+									   string $cc = null,
+									   string $bcc = null,
+									   string $subject = null,
+									   string $body = null,
+									   array $attachments = []) {
 		$toList = AddressList::parse($to ?: '');
 		$ccList = AddressList::parse($cc ?: '');
 		$bccList = AddressList::parse($bcc ?: '');
-		$attchmentsArray = is_null($attachments) ? [] : $attachments;
+		$attachmentsArray = is_null($attachments) ? [] : $attachments;
 
-		return new NewMessageData($account, $toList, $ccList, $bccList, $subject, $body, $attchmentsArray);
+		return new self($account, $toList, $ccList, $bccList, $subject, $body, $attachmentsArray);
 	}
 
 	/**
 	 * @return Account
 	 */
-	public function getAccount() {
+	public function getAccount(): Account {
 		return $this->account;
 	}
 
 	/**
 	 * @return AddressList
 	 */
-	public function getTo() {
+	public function getTo(): AddressList {
 		return $this->to;
 	}
 
 	/**
 	 * @return AddressList
 	 */
-	public function getCc() {
+	public function getCc(): AddressList {
 		return $this->cc;
 	}
 
 	/**
 	 * @return AddressList
 	 */
-	public function getBcc() {
+	public function getBcc(): AddressList {
 		return $this->bcc;
 	}
 
@@ -134,7 +148,7 @@ class NewMessageData {
 	/**
 	 * @return array
 	 */
-	public function getAttachments() {
+	public function getAttachments(): array {
 		return $this->attachments;
 	}
 

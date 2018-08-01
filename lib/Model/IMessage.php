@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 /**
  * @author Christoph Wurst <christoph@winzerhof-wurst.at>
  *
@@ -18,6 +20,7 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>
  *
  */
+
 namespace OCA\Mail\Model;
 
 use Horde_Mail_Rfc822_List;
@@ -37,10 +40,10 @@ interface IMessage {
 
 	/**
 	 * Get all flags set on this message
-	 * 
+	 *
 	 * @return array
 	 */
-	public function getFlags();
+	public function getFlags(): array;
 
 	/**
 	 * @param array $flags
@@ -50,7 +53,7 @@ interface IMessage {
 	/**
 	 * @return AddressList
 	 */
-	public function getFrom();
+	public function getFrom(): AddressList;
 
 	/**
 	 * @param string $from
@@ -60,7 +63,7 @@ interface IMessage {
 	/**
 	 * @return AddressList
 	 */
-	public function getTo();
+	public function getTo(): AddressList;
 
 	/**
 	 * @param AddressList $to
@@ -70,7 +73,7 @@ interface IMessage {
 	/**
 	 * @return AddressList
 	 */
-	public function getCC();
+	public function getCC(): AddressList;
 
 	/**
 	 * @param AddressList $cc
@@ -80,7 +83,7 @@ interface IMessage {
 	/**
 	 * @return AddressList
 	 */
-	public function getBCC();
+	public function getBCC(): AddressList;
 
 	/**
 	 * @param AddressList $bcc
@@ -88,7 +91,7 @@ interface IMessage {
 	public function setBcc(AddressList $bcc);
 
 	/**
-	 * @return IMessage
+	 * @return IMessage|null
 	 */
 	public function getRepliedMessage();
 
@@ -100,32 +103,32 @@ interface IMessage {
 	/**
 	 * @return string
 	 */
-	public function getSubject();
+	public function getSubject(): string;
 
 	/**
 	 * @param string $subject
 	 */
-	public function setSubject($subject);
+	public function setSubject(string $subject);
 
 	/**
 	 * @return string
 	 */
-	public function getContent();
+	public function getContent(): string;
 
 	/**
 	 * @param string $content
 	 */
-	public function setContent($content);
+	public function setContent(string $content);
 
 	/**
 	 * @return File[]
 	 */
-	public function getCloudAttachments();
+	public function getCloudAttachments(): array;
 
 	/**
 	 * @return int[]
 	 */
-	public function getLocalAttachments();
+	public function getLocalAttachments(): array;
 
 	/**
 	 * @param File $fileName

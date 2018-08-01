@@ -76,7 +76,7 @@ class MailTransmissionTest extends TestCase {
 
 	public function testSendNewMessage() {
 		$account = $this->createMock(Account::class);
-		$messageData = NewMessageData::fromRequest($account, 'to@d.com', '', '', 'sub', 'bod', null);
+		$messageData = NewMessageData::fromRequest($account, 'to@d.com', '', '', 'sub', 'bod');
 		$replyData = new RepliedMessageData($account, null, null);
 		$message = $this->createMock(IMessage::class);
 		$account->expects($this->once())
@@ -105,7 +105,7 @@ class MailTransmissionTest extends TestCase {
 
 	public function testSendNewMessageAndCollectAddresses() {
 		$account = $this->createMock(Account::class);
-		$messageData = NewMessageData::fromRequest($account, 'to@domain.tld', 'cc@domain.tld', 'bcc@domain.tld', 'sub', 'bod', null);
+		$messageData = NewMessageData::fromRequest($account, 'to@domain.tld', 'cc@domain.tld', 'bcc@domain.tld', 'sub', 'bod');
 		$replyData = new RepliedMessageData($account, null, null);
 		$message = $this->createMock(IMessage::class);
 		$transport = $this->createMock(Horde_Mail_Transport::class);
@@ -147,7 +147,7 @@ class MailTransmissionTest extends TestCase {
 
 	public function testSendMessageAndDeleteDraft() {
 		$account = $this->createMock(Account::class);
-		$messageData = NewMessageData::fromRequest($account, 'to@d.com', '', '', 'sub', 'bod', null);
+		$messageData = NewMessageData::fromRequest($account, 'to@d.com', '', '', 'sub', 'bod');
 		$replyData = new RepliedMessageData($account, null, null);
 		$message = $this->createMock(IMessage::class);
 		$account->expects($this->once())
@@ -178,7 +178,7 @@ class MailTransmissionTest extends TestCase {
 		$account = $this->createMock(Account::class);
 		$alias = $this->createMock(Alias::class);
 		$alias->alias = 'a@d.com';
-		$messageData = NewMessageData::fromRequest($account, 'to@d.com', '', '', 'sub', 'bod', null);
+		$messageData = NewMessageData::fromRequest($account, 'to@d.com', '', '', 'sub', 'bod');
 		$replyData = new RepliedMessageData($account, null, null);
 		$message = $this->createMock(IMessage::class);
 		$account->expects($this->once())
@@ -268,7 +268,7 @@ class MailTransmissionTest extends TestCase {
 
 	public function testReplyToAnExistingMessage() {
 		$account = $this->createMock(Account::class);
-		$messageData = NewMessageData::fromRequest($account, 'to@d.com', '', '', 'sub', 'bod', null);
+		$messageData = NewMessageData::fromRequest($account, 'to@d.com', '', '', 'sub', 'bod');
 		$folderId = base64_encode('INBOX');
 		$repliedMessageId = 321;
 		$replyData = new RepliedMessageData($account, $folderId, $repliedMessageId);
@@ -315,7 +315,7 @@ class MailTransmissionTest extends TestCase {
 
 	public function testSaveDraft() {
 		$account = $this->createMock(Account::class);
-		$messageData = NewMessageData::fromRequest($account, 'to@d.com', '', '', 'sub', 'bod', null);
+		$messageData = NewMessageData::fromRequest($account, 'to@d.com', '', '', 'sub', 'bod');
 		$message = $this->createMock(IMessage::class);
 		$account->expects($this->once())
 			->method('newMessage')
@@ -332,7 +332,7 @@ class MailTransmissionTest extends TestCase {
 
 	public function testSaveDraftAndReplaceOldOne() {
 		$account = $this->createMock(Account::class);
-		$messageData = NewMessageData::fromRequest($account, 'to@d.com', '', '', 'sub', 'bod', null);
+		$messageData = NewMessageData::fromRequest($account, 'to@d.com', '', '', 'sub', 'bod');
 		$message = $this->createMock(IMessage::class);
 		$account->expects($this->once())
 			->method('newMessage')
