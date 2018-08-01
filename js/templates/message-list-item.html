@@ -1,41 +1,40 @@
-<div class="mail-message-summary {{#if flags.unseen}}unseen{{/if}} {{#if active}}active{{/if}}" data-message-id="{{id}}">
+<div class="app-content-list-item mail-message-summary {{#if flags.unseen}}unseen{{/if}} {{#if active}}active{{/if}}" data-message-id="{{id}}">
 	{{#if isUnified}}
 	<div class="mail-message-account-color" style="background-color: {{accountColor accountMail}}"></div>
 	{{/if}}
-	<div class="mail-message-header">
-		<div class="sender-image avatardiv">
-			{{#if senderImage}}
-			<img src="{{senderImage}}" width="32px" height="32px" />
-			{{else}}
-			<div class="avatar" data-user="{{sender.label}}" data-size="32"></div>
-			{{/if}}
-		</div>
 
-		{{#if flags.flagged}}
-		<div class="star icon-starred" data-starred="true"></div>
+	{{#if flags.flagged}}
+	<div class="star app-content-list-item-star icon-starred" data-starred="true"></div>
+	{{else}}
+	<div class="star app-content-list-item-star icon-star" data-starred="false"></div>
+	{{/if}}
+
+	<div class="app-content-list-item-icon sender-image avatardiv">
+		{{#if senderImage}}
+		<img src="{{senderImage}}" width="32px" height="32px" />
 		{{else}}
-		<div class="star icon-star" data-starred="false"></div>
+		<div class="avatar" data-user="{{sender.label}}" data-size="32"></div>
 		{{/if}}
-
-		{{#if flags.answered}}
-		<div class="icon-reply"></div>
-		{{/if}}
-
-		{{#if flags.hasAttachments}}
-		<div class="icon-public icon-attachment"></div>
-		{{/if}}
-
-		<div class="mail-message-summary-from" title="{{label}}">{{label}}</div>
-		<div class="mail-message-summary-subject" title="{{subject}}">
-			{{subject}}
-		</div>
-		<div class="date">
-				<span class="modified live-relative-timestamp"
-					data-timestamp="{{dateMicro}}"
-					title="{{formatDate dateInt}}">
-					{{relativeModifiedDate dateInt}}
-				</span>
-		</div>
-		<div class="icon-delete action delete" title="{{delete}}"></div>
 	</div>
+
+	<div class="mail-message-summary-from app-content-list-item-line-one" title="{{label}}">{{label}}</div>
+	<div class="mail-message-summary-subject app-content-list-item-line-two" title="{{subject}}">
+		{{subject}}
+	</div>
+	<div class="app-content-list-item-details date">
+			<span class="modified live-relative-timestamp"
+				data-timestamp="{{dateMicro}}"
+				title="{{formatDate dateInt}}">
+				{{relativeModifiedDate dateInt}}
+			</span>
+	</div>
+	<div class="icon-delete action delete" title="{{delete}}"></div>
+
+	{{#if flags.answered}}
+	<div class="icon-reply"></div>
+	{{/if}}
+
+	{{#if flags.hasAttachments}}
+	<div class="icon-public icon-attachment"></div>
+	{{/if}}
 </div>
