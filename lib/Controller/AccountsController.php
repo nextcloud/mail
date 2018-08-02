@@ -262,7 +262,7 @@ class AccountsController extends Controller {
 	 * @return JSONResponse
 	 * @throws Horde_Exception
 	 */
-	public function send(int $accountId, string $subject, string $body, string $to, string $cc, string $bcc, int $draftUID = null, string $folderId = null, int $messageId = null, array $attachments = [], int $aliasId = null): JSONResponse {
+	public function send(int $accountId, string $subject = null, string $body, string $to, string $cc, string $bcc, int $draftUID = null, string $folderId = null, int $messageId = null, array $attachments = [], int $aliasId = null): JSONResponse {
 		$account = $this->accountService->find($this->currentUserId, $accountId);
 		$alias = $aliasId ? $this->aliasesService->find($aliasId, $this->currentUserId) : null;
 
@@ -295,7 +295,7 @@ class AccountsController extends Controller {
 	 * @param int $uid
 	 * @return JSONResponse
 	 */
-	public function draft(int $accountId, string $subject, string $body, string $to, string $cc, string $bcc, int $uid = null): JSONResponse {
+	public function draft(int $accountId, string $subject = null, string $body, string $to, string $cc, string $bcc, int $uid = null): JSONResponse {
 		if (is_null($uid)) {
 			$this->logger->info("Saving a new draft in account <$accountId>");
 		} else {

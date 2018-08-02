@@ -164,6 +164,7 @@
 
 .mail-message-account-color {
 	position: absolute;
+	left: 0px;
 	width: 2px;
 	height: 69px;
 	z-index: 1;
@@ -429,37 +430,25 @@ input.submit-message,
 	-ms-filter: "progid:DXImageTransform.Microsoft.Alpha(Opacity=100)";
 	opacity: 1;
 }
-.mail-message-summary.active .star.icon-star,
-.mail-message-summary:hover .star.icon-star,
-.mail-message-summary:focus .star.icon-star {
+.app-content-list-item.active .star.icon-star,
+.app-content-list-item:hover .star.icon-star,
+.app-content-list-item:focus .star.icon-star {
 	display: inline-block;
-}
-
-.icon-reply {
-	background-image: url('../img/reply.svg');
-	position: absolute;
-	left: 49px;
-	top: 40px;
-	-ms-filter: "progid:DXImageTransform.Microsoft.Alpha(Opacity=50)";
-	opacity: .5;
-}
-.icon-reply ~ .mail-message-summary-subject {
-	margin-left: 57px;
-	width: 65%;
-}
-
-.icon-attachment {
-	position: absolute;
-	left: 9px;
-	top: 40px;
-	-ms-filter: "progid:DXImageTransform.Microsoft.Alpha(Opacity=25)";
-	opacity: .25;
 }
 
 .icon-reply,
 .icon-attachment {
-	min-width: 16px;
-	min-height: 16px;
+	display: inline-block;
+	vertical-align: text-top;
+}
+.icon-reply {
+	background-image: url('../img/reply.svg');
+	-ms-filter: "progid:DXImageTransform.Microsoft.Alpha(Opacity=50)";
+	opacity: .5;
+}
+.icon-attachment {
+	-ms-filter: "progid:DXImageTransform.Microsoft.Alpha(Opacity=25)";
+	opacity: .25;
 }
 
 .icon-add {
