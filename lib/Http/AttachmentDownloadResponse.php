@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 /**
  * @author Lukas Reschke <lukas@owncloud.com>
  * @author Thomas Müller <thomas.mueller@tmit.eu>
@@ -25,26 +27,30 @@ namespace OCA\Mail\Http;
 use OCP\AppFramework\Http\DownloadResponse;
 
 class AttachmentDownloadResponse extends DownloadResponse {
-	/** @var string  */
+
+	/** @var string */
 	private $content;
 
 	/**
 	 * Creates a response that prompts the user to download a file which
 	 * contains the passed string
+	 *
 	 * @param string $content the content that should be written into the file
 	 * @param string $filename the name that the downloaded file should have
 	 * @param string $contentType the mimetype that the downloaded file should have
 	 */
-	public function __construct($content, $filename, $contentType){
+	public function __construct(string $content, string $filename, string $contentType) {
 		parent::__construct($filename, $contentType);
+
 		$this->content = $content;
 	}
 
 	/**
 	 * Simply sets the headers and returns the file contents
+	 *
 	 * @return string the file contents
 	 */
-	public function render(){
+	public function render(): string {
 		return $this->content;
 	}
 

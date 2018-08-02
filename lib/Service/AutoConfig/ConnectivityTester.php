@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 /**
  * @author Christoph Wurst <christoph@winzerhof-wurst.at>
  *
@@ -42,7 +44,7 @@ class ConnectivityTester {
 	 * @param integer $port
 	 * @return bool
 	 */
-	public function canConnect($url, $port) {
+	public function canConnect(string $url, int $port): bool {
 		$this->logger->debug("attempting to connect to <$url> on port <$port>");
 		$fp = @fsockopen($url, $port, $error, $errorstr, self::CONNECTION_TIMEOUT);
 		if (is_resource($fp)) {

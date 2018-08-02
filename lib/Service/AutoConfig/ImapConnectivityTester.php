@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 /**
  * @author Christoph Wurst <christoph@winzerhof-wurst.at>
  *
@@ -33,7 +35,7 @@ class ImapConnectivityTester {
 	/** @var ConnectivityTester */
 	private $connectivityTester;
 
-	/** @var string */
+	/** @var string|null */
 	private $userId;
 
 	/** @var Logger */
@@ -46,7 +48,9 @@ class ImapConnectivityTester {
 	 * @param Logger $logger
 	 */
 	public function __construct(ImapConnector $imapConnector,
-		ConnectivityTester $connectivityTester, $UserId, Logger $logger) {
+								ConnectivityTester $connectivityTester,
+								string $UserId = null,
+								Logger $logger) {
 		$this->imapConnector = $imapConnector;
 		$this->connectivityTester = $connectivityTester;
 		$this->userId = $UserId;
@@ -54,20 +58,20 @@ class ImapConnectivityTester {
 	}
 
 	/**
-	 * @param $email
-	 * @param $host
-	 * @param $users
-	 * @param $password
-	 * @param $name
+	 * @param string $email
+	 * @param string $host
+	 * @param string|string[] $users
+	 * @param string $password
+	 * @param string $name
 	 * @return MailAccount|null
 	 */
-	public function test($email, $host, $users, $password, $name) {
+	public function test(string $email, string $host, $users, string $password, string $name) {
 		if (!is_array($users)) {
 			$users = [$users];
 		}
 
 		$ports = [143, 585, 993];
-		$encryptionProtocols = ['ssl', 'tls', null];
+		$encryptionProtocols = ['ssl', 'tls', 'none'];
 		$hostPrefixes = ['', 'imap.'];
 		foreach ($hostPrefixes as $hostPrefix) {
 			$url = $hostPrefix . $host;

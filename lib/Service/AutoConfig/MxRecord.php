@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 /**
  * @author Christoph Wurst <christoph@winzerhof-wurst.at>
  *
@@ -18,20 +20,16 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>
  *
  */
+
 namespace OCA\Mail\Service\AutoConfig;
 
 use OCA\Mail\Service\Logger;
 
 class MxRecord {
 
-	/**
-	 * @var Logger
-	 */
+	/** @var Logger */
 	private $logger;
 
-	/**
-	 * @param Logger $logger
-	 */
 	public function __construct(Logger $logger) {
 		$this->logger = $logger;
 	}
@@ -40,15 +38,15 @@ class MxRecord {
 	 * @param $host
 	 * @return bool|array
 	 */
-	public function query($host) {
-		if (getmxrr($host, $mx_records, $mx_weight) === false) {
+	public function query(string $host) {
+		if (getmxrr($host, $mxRecords, $mxWeight) === false) {
 			$this->logger->debug("no MX records for host <$host> found");
 			return false;
 		}
-		$this->logger->debug("found " . count($mx_records) . " MX records for host <$host>");
+		$this->logger->debug("found " . count($mxRecords) . " MX records for host <$host>");
 
 		// TODO: sort by weight
-		return $mx_records;
+		return $mxRecords;
 	}
 
 }

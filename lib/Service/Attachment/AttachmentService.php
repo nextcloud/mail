@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 /**
  * @author Christoph Wurst <christoph@winzerhof-wurst.at>
  * @author Luc Calaresu <dev@calaresu.com>
@@ -22,6 +24,7 @@
 
 namespace OCA\Mail\Service\Attachment;
 
+use Exception;
 use OCA\Mail\Contracts\IAttachmentService;
 use OCA\Mail\Db\LocalAttachment;
 use OCA\Mail\Db\LocalAttachmentMapper;
@@ -37,10 +40,6 @@ class AttachmentService implements IAttachmentService {
 	/** @var AttachmentStorage */
 	private $storage;
 
-	/**
-	 * @param LocalAttachmentMapper $mapper
-	 * @param AttachmentStorage $storage
-	 */
 	public function __construct(LocalAttachmentMapper $mapper,
 								AttachmentStorage $storage) {
 		$this->mapper = $mapper;
@@ -89,7 +88,6 @@ class AttachmentService implements IAttachmentService {
 	/**
 	 * @param string $userId
 	 * @param int $id
-	 * @throws \Exception
 	 */
 	public function deleteAttachment(string $userId, int $id) {
 		try {

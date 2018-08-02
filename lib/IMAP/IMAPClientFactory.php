@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 /**
  * @author Christoph Wurst <christoph@winzerhof-wurst.at>
  *
@@ -54,7 +56,7 @@ class IMAPClientFactory {
 	 * @param Account $account
 	 * @return Horde_Imap_Client_Socket
 	 */
-	public function getClient(Account $account) {
+	public function getClient(Account $account): Horde_Imap_Client_Socket {
 		$host = $account->getMailAccount()->getInboundHost();
 		$user = $account->getMailAccount()->getInboundUser();
 		$password = $account->getMailAccount()->getInboundPassword();
@@ -71,13 +73,13 @@ class IMAPClientFactory {
 			'hostspec' => $host,
 			'port' => $port,
 			'secure' => $sslMode,
-			'timeout' => (int) $this->config->getSystemValue('app.mail.imap.timeout', 20),
+			'timeout' => (int)$this->config->getSystemValue('app.mail.imap.timeout', 20),
 		];
 		if ($this->cacheFactory->isAvailable()) {
 			$params['cache'] = [
 				'backend' => new Cache([
-					'cacheob' => $this->cacheFactory->createDistributed(md5($account->getId())),
-			])];
+					'cacheob' => $this->cacheFactory->createDistributed(md5((string)$account->getId())),
+				])];
 		}
 		return new Horde_Imap_Client_Socket($params);
 	}

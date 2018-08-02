@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 /**
  * @author Christoph Wurst <christoph@winzerhof-wurst.at>
  *
@@ -80,10 +82,10 @@ class Message implements IMessage {
 
 	/**
 	 * Get all flags set on this message
-	 * 
+	 *
 	 * @return array
 	 */
-	public function getFlags() {
+	public function getFlags(): array {
 		return $this->flags;
 	}
 
@@ -97,7 +99,7 @@ class Message implements IMessage {
 	/**
 	 * @return AddressList
 	 */
-	public function getFrom() {
+	public function getFrom(): AddressList {
 		return $this->from;
 	}
 
@@ -111,7 +113,7 @@ class Message implements IMessage {
 	/**
 	 * @return AddressList
 	 */
-	public function getTo() {
+	public function getTo(): AddressList {
 		return $this->to;
 	}
 
@@ -125,7 +127,7 @@ class Message implements IMessage {
 	/**
 	 * @return AddressList
 	 */
-	public function getCC() {
+	public function getCC(): AddressList {
 		return $this->cc;
 	}
 
@@ -139,7 +141,7 @@ class Message implements IMessage {
 	/**
 	 * @return AddressList
 	 */
-	public function getBCC() {
+	public function getBCC(): AddressList {
 		return $this->bcc;
 	}
 
@@ -151,7 +153,7 @@ class Message implements IMessage {
 	}
 
 	/**
-	 * @return IMessage
+	 * @return IMessage|null
 	 */
 	public function getRepliedMessage() {
 		return $this->repliedMessage;
@@ -167,42 +169,42 @@ class Message implements IMessage {
 	/**
 	 * @return string
 	 */
-	public function getSubject() {
+	public function getSubject(): string {
 		return $this->subject;
 	}
 
 	/**
 	 * @param string $subject
 	 */
-	public function setSubject($subject) {
+	public function setSubject(string $subject) {
 		$this->subject = $subject;
 	}
 
 	/**
 	 * @return string
 	 */
-	public function getContent() {
+	public function getContent(): string {
 		return $this->content;
 	}
 
 	/**
 	 * @param string $content
 	 */
-	public function setContent($content) {
+	public function setContent(string $content) {
 		$this->content = $content;
 	}
 
 	/**
 	 * @return File[]
 	 */
-	public function getCloudAttachments() {
+	public function getCloudAttachments(): array {
 		return $this->cloudAttachments;
 	}
 
 	/**
 	 * @return int[]
 	 */
-	public function getLocalAttachments() {
+	public function getLocalAttachments(): array {
 		return $this->localAttachments;
 	}
 

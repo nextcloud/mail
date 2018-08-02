@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 /**
  * @author Christoph Wurst <christoph@winzerhof-wurst.at>
  *
@@ -18,11 +20,12 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>
  *
  */
+
 namespace OCA\Mail\Model;
 
 class ReplyMessage extends Message {
 
-	public function setSubject($subject) {
+	public function setSubject(string $subject) {
 		// prevent 'Re: Re:' stacking
 		if (strcasecmp(substr($subject, 0, 4), 'Re: ') === 0) {
 			parent::setSubject($subject);

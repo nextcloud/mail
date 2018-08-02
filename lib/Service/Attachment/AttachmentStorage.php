@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 /**
  * @author Christoph Wurst <christoph@winzerhof-wurst.at>
  *
@@ -21,6 +23,7 @@
 
 namespace OCA\Mail\Service\Attachment;
 
+use Exception;
 use OCA\Mail\Exception\AttachmentNotFoundException;
 use OCA\Mail\Exception\UploadException;
 use OCP\Files\IAppData;
@@ -35,9 +38,6 @@ class AttachmentStorage {
 	/** @var IAppData */
 	private $appData;
 
-	/**
-	 * @param IAppData $appData
-	 */
 	public function __construct(IAppData $appData) {
 		$this->appData = $appData;
 	}
@@ -47,7 +47,7 @@ class AttachmentStorage {
 	 * @return ISimpleFolder
 	 * @throws NotPermittedException
 	 */
-	private function getAttachmentFolder($userId) {
+	private function getAttachmentFolder($userId): ISimpleFolder {
 		$folderName = implode('_', [
 			'mail',
 			$userId
@@ -68,7 +68,7 @@ class AttachmentStorage {
 	 * @param UploadedFile $uploadedFile
 	 * @throws UploadException
 	 */
-	public function save($userId, $attachmentId, UploadedFile $uploadedFile) {
+	public function save(string $userId, int $attachmentId, UploadedFile $uploadedFile) {
 		$folder = $this->getAttachmentFolder($userId);
 
 		$file = $folder->newFile($attachmentId);
@@ -95,7 +95,7 @@ class AttachmentStorage {
 	 * @return ISimpleFile
 	 * @throws AttachmentNotFoundException
 	 */
-	public function retrieve($userId, $attachmentId) {
+	public function retrieve(string $userId, int $attachmentId) {
 		$folder = $this->getAttachmentFolder($userId);
 
 		try {
@@ -106,7 +106,7 @@ class AttachmentStorage {
 	}
 
 	public function delete($userId, $attachmentId) {
-		throw new \Exception('not implemented');
+		throw new Exception('not implemented');
 	}
 
 }

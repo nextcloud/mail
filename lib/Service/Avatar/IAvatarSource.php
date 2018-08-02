@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 /**
  * @copyright 2017 Christoph Wurst <christoph@winzerhof-wurst.at>
  *
@@ -31,12 +33,12 @@ interface IAvatarSource {
 	 *
 	 * @return bool
 	 */
-	public function isExternal();
+	public function isExternal():bool ;
 
 	/**
 	 * @param string $email sender email address
 	 * @param AvatarFactory $factory
 	 * @return Avatar|null avatar URL if one can be found
 	 */
-	public function fetch($email, AvatarFactory $factory);
+	public function fetch(string $email, AvatarFactory $factory);
 }

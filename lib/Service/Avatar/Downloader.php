@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 /**
  * @copyright 2017 Christoph Wurst <christoph@winzerhof-wurst.at>
  *
@@ -32,9 +34,6 @@ class Downloader {
 	/** @var IClientService */
 	private $clientService;
 
-	/**
-	 * @param IClientService $clientService
-	 */
 	public function __construct(IClientService $clientService) {
 		$this->clientService = $clientService;
 	}
@@ -43,7 +42,7 @@ class Downloader {
 	 * @param string $url
 	 * @return string|null
 	 */
-	public function download($url) {
+	public function download(string $url) {
 		$client = $this->clientService->newClient();
 
 		try {

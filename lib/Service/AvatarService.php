@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 /**
  * @author Jakob Sack <mail@jakobsack.de>
  *
@@ -59,8 +61,11 @@ class AvatarService implements IAvatarService {
 	 * @param IUserPreferences $preferences
 	 */
 	public function __construct(CompositeAvatarSource $source,
-								Downloader $downloader, AvatarCache $cache, IURLGenerator $urlGenerator,
-								AvatarFactory $avatarFactory, IUserPreferences $preferences) {
+								Downloader $downloader,
+								AvatarCache $cache,
+								IURLGenerator $urlGenerator,
+								AvatarFactory $avatarFactory,
+								IUserPreferences $preferences) {
 		$this->source = $source;
 		$this->cache = $cache;
 		$this->urlGenerator = $urlGenerator;
@@ -72,14 +77,14 @@ class AvatarService implements IAvatarService {
 	/**
 	 * @return bool
 	 */
-	private function externalAvatarsAllowed() {
+	private function externalAvatarsAllowed(): bool {
 		return $this->preferences->getPreference('external-avatars', 'true') === 'true';
 	}
 
 	/**
 	 * @param Avatar $avatar
 	 */
-	private function hasAllowedMime(Avatar $avatar) {
+	private function hasAllowedMime(Avatar $avatar): bool {
 		if ($avatar->isExternal()) {
 			$mime = $avatar->getMime();
 

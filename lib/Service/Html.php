@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 /**
  * @author Christoph Wurst <christoph@winzerhof-wurst.at>
  * @author Jakob Sack <jakob@owncloud.org>
@@ -60,7 +62,7 @@ class Html {
 	 * @param string $data
 	 * @return string
 	 */
-	public function convertLinks($data) {
+	public function convertLinks(string $data): string {
 		$linker = new UrlLinker(true, false);
 		$data = $linker->linkUrlsAndEscapeHtml($data);
 
@@ -92,7 +94,7 @@ class Html {
 	 * @param string $body
 	 * @return array
 	 */
-	public function parseMailBody($body) {
+	public function parseMailBody(string $body): array {
 		$signature = null;
 		$parts = explode("-- \r\n", $body);
 		if (count($parts) > 1) {
@@ -106,7 +108,7 @@ class Html {
 		];
 	}
 
-	public function sanitizeHtmlMailBody($mailBody, array $messageParameters, Closure $mapCidToAttachmentId) {
+	public function sanitizeHtmlMailBody(string $mailBody, array $messageParameters, Closure $mapCidToAttachmentId): string {
 		$config = HTMLPurifier_Config::createDefault();
 
 		// Append target="_blank" to all link (a) elements

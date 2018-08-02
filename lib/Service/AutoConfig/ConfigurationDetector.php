@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 /**
  * @copyright 2017 Christoph Wurst <christoph@winzerhof-wurst.at>
  *
@@ -49,7 +51,7 @@ class ConfigurationDetector {
 	 * @param string $name
 	 * @return null|MailAccount
 	 */
-	public function detectImapAndSmtp($email, $password, $name) {
+	public function detectImapAndSmtp(string $email, string $password, string $name) {
 		$account = $this->imapServerDetector->detect($email, $password, $name);
 		if (is_null($account)) {
 			return null;

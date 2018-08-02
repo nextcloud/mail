@@ -1,9 +1,11 @@
 <?php
 
+declare(strict_types=1);
+
 /**
- * @copyright 2017 Christoph Wurst <christoph@winzerhof-wurst.at>
+ * @copyright 2018 Christoph Wurst <christoph@winzerhof-wurst.at>
  *
- * @author 2017 Christoph Wurst <christoph@winzerhof-wurst.at>
+ * @author 20178 Christoph Wurst <christoph@winzerhof-wurst.at>
  *
  * @license GNU AGPL version 3 or any later version
  *
@@ -35,6 +37,7 @@ use OCP\Security\ICrypto;
 
 class IspDbConfigurationDetector {
 
+	/** @var string */
 	private $UserId;
 
 	/** @var Logger */
@@ -63,7 +66,12 @@ class IspDbConfigurationDetector {
 	 * @param ImapConnector $imapConnector
 	 * @param SmtpClientFactory $smtpClientFactory
 	 */
-	public function __construct(Logger $logger, $UserId, ICrypto $crypto, IspDb $ispDb, ImapConnector $imapConnector, SmtpClientFactory $smtpClientFactory) {
+	public function __construct(Logger $logger,
+								string $UserId = null,
+								ICrypto $crypto,
+								IspDb $ispDb,
+								ImapConnector $imapConnector,
+								SmtpClientFactory $smtpClientFactory) {
 		$this->logger = $logger;
 		$this->UserId = $UserId;
 		$this->ispDb = $ispDb;
@@ -78,7 +86,7 @@ class IspDbConfigurationDetector {
 	 * @param string $name
 	 * @return MailAccount|null
 	 */
-	public function detectImapAndSmtp($email, $password, $name) {
+	public function detectImapAndSmtp(string $email, string $password, string $name) {
 		// splitting the email address into user and host part
 		// TODO: use horde libs for email address parsing
 		list(, $host) = explode("@", $email);
@@ -112,7 +120,7 @@ class IspDbConfigurationDetector {
 	 * @param string $name
 	 * @return MailAccount|null
 	 */
-	private function detectImap(array $ispdb, $email, $password, $name) {
+	private function detectImap(array $ispdb, string $email, string $password, string $name) {
 		if (!isset($ispdb['imap'])) {
 			// Nothing to detect
 			return null;
@@ -135,10 +143,10 @@ class IspDbConfigurationDetector {
 	 * @param string $name
 	 * @return MailAccount|null
 	 */
-	private function testImapConfiguration(array $imap, $email, $password, $name) {
+	private function testImapConfiguration(array $imap, string $email, string $password, string $name) {
 		$host = $imap['hostname'];
 		$port = $imap['port'];
-		$encryptionProtocol = null;
+		$encryptionProtocol = 'none';
 		if ($imap['socketType'] === 'SSL') {
 			$encryptionProtocol = 'ssl';
 		}
@@ -148,7 +156,7 @@ class IspDbConfigurationDetector {
 		if ($imap['username'] === '%EMAILADDRESS%') {
 			$user = $email;
 		} elseif ($imap['username'] === '%EMAILLOCALPART%') {
-			list($user, ) = explode("@", $email);
+			list($user,) = explode("@", $email);
 		} else {
 			$this->logger->info("Unknown username variable: " . $imap['username']);
 			return null;
@@ -171,7 +179,7 @@ class IspDbConfigurationDetector {
 	 * @param string $password
 	 * @return boolean
 	 */
-	private function detectSmtp(array $ispdb, MailAccount $account, $email, $password) {
+	private function detectSmtp(array $ispdb, MailAccount $account, string $email, string $password) {
 		if (!isset($ispdb['smtp'])) {
 			// Nothing to detect
 			return null;
@@ -194,12 +202,12 @@ class IspDbConfigurationDetector {
 	 * @param string $password
 	 * @return boolean
 	 */
-	private function testSmtpConfiguration(array $smtp, MailAccount $account, $email, $password) {
+	private function testSmtpConfiguration(array $smtp, MailAccount $account, string $email, string $password) {
 		try {
 			if ($smtp['username'] === '%EMAILADDRESS%') {
 				$user = $email;
 			} elseif ($smtp['username'] === '%EMAILLOCALPART%') {
-				list($user, ) = explode("@", $email);
+				list($user,) = explode("@", $email);
 			} else {
 				$this->logger->info("Unknown username variable: " . $smtp['username']);
 				return null;

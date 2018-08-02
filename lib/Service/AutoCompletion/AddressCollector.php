@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 /**
  * @author Christoph Wurst <christoph@winzerhof-wurst.at>
  *
@@ -39,12 +41,7 @@ class AddressCollector {
 	/** @var Logger */
 	private $logger;
 
-	/**
-	 * @param CollectedAddressMapper $mapper
-	 * @param string $UserId
-	 * @param Logger $logger
-	 */
-	public function __construct(CollectedAddressMapper $mapper, $UserId, Logger $logger) {
+	public function __construct(CollectedAddressMapper $mapper, string $UserId = null, Logger $logger) {
 		$this->mapper = $mapper;
 		$this->userId = $UserId;
 		$this->logger = $logger;
@@ -96,8 +93,9 @@ class AddressCollector {
 	 * Find and return all known and matching email addresses
 	 *
 	 * @param string $term
+	 * @return CollectedAddress[]
 	 */
-	public function searchAddress($term) {
+	public function searchAddress(string $term): array {
 		$this->logger->debug("searching for collected address <$term>");
 		$result = $this->mapper->findMatching($this->userId, $term);
 		$this->logger->debug("found " . count($result) . " matches in collected addresses");

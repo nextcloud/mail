@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 /**
  * @author Bernhard Scheirle <bernhard+git@scheirle.de>
  * @author Christoph Wurst <christoph@winzerhof-wurst.at>
@@ -32,7 +34,7 @@ class IspDb {
 	private $logger;
 
 	/** @var string[] */
-	public function getUrls() {
+	public function getUrls(): array {
 		return [
 			'https://autoconfig.{DOMAIN}/mail/config-v1.1.xml',
 			'https://{DOMAIN}/.well-known/autoconfig/mail/config-v1.1.xml',
@@ -40,9 +42,6 @@ class IspDb {
 		];
 	}
 
-	/**
-	 * @param Logger $logger
-	 */
 	public function __construct(Logger $logger) {
 		$this->logger = $logger;
 	}
@@ -50,7 +49,7 @@ class IspDb {
 	/**
 	 * @param string $url
 	 */
-	private function queryUrl($url) {
+	private function queryUrl(string $url): array {
 		try {
 			$content = @file_get_contents($url, false, stream_context_create([
 				'http' => [
@@ -69,7 +68,7 @@ class IspDb {
 				return [];
 			}
 			$provider = [
-				'displayName' => (string) $xml->emailProvider->displayName,
+				'displayName' => (string)$xml->emailProvider->displayName,
 			];
 			foreach ($xml->emailProvider->children() as $tag => $server) {
 				if (!in_array($tag, ['incomingServer', 'outgoingServer'])) {
@@ -77,16 +76,16 @@ class IspDb {
 				}
 				foreach ($server->attributes() as $name => $value) {
 					if ($name === 'type') {
-						$type = (string) $value;
+						$type = (string)$value;
 					}
 				}
 				$data = [];
 				foreach ($server as $name => $value) {
 					foreach ($value->children() as $tag => $val) {
-						$data[$name][$tag] = (string) $val;
+						$data[$name][$tag] = (string)$val;
 					}
 					if (!isset($data[$name])) {
-						$data[$name] = (string) $value;
+						$data[$name] = (string)$value;
 					}
 				}
 				$provider[$type][] = $data;
@@ -101,9 +100,10 @@ class IspDb {
 
 	/**
 	 * @param string $domain
+	 * @param bool $tryMx
 	 * @return array
 	 */
-	public function query($domain, $tryMx = true) {
+	public function query(string $domain, bool $tryMx = true): array {
 		$this->logger->debug("IsbDb: querying <$domain>");
 		if (strpos($domain, '@') !== false) {
 			// TODO: use horde mail address parsing instead

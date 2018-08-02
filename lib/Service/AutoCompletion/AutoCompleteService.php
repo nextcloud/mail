@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 /**
  * @author Christoph Wurst <christoph@winzerhof-wurst.at>
  * @author Matthias Rella <mrella@pisys.eu>
@@ -43,7 +45,7 @@ class AutoCompleteService {
 		$this->addressCollector = $ac;
 	}
 
-	public function findMatches($term) {
+	public function findMatches(string $term): array {
 		$recipientsFromContacts = $this->contactsIntegration->getMatchingRecipient($term);
 		$recipientGroups = $this->groupsIntegration->getMatchingGroups($term);
 		$fromCollector = $this->addressCollector->searchAddress($term);

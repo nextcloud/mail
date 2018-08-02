@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 /**
  * @author Christoph Wurst <christoph@winzerhof-wurst.at>
  *
@@ -52,7 +54,11 @@ class SmtpConnectivityTester {
 	 * @param Logger $logger
 	 * @param string $UserId
 	 */
-	public function __construct(ConnectivityTester $connectivityTester, ICrypto $crypto, SmtpClientFactory $clientFactory, Logger $logger, $UserId) {
+	public function __construct(ConnectivityTester $connectivityTester,
+								ICrypto $crypto,
+								SmtpClientFactory $clientFactory,
+								Logger $logger,
+								$UserId) {
 		$this->connectivityTester = $connectivityTester;
 		$this->crypto = $crypto;
 		$this->clientFactory = $clientFactory;
@@ -62,20 +68,24 @@ class SmtpConnectivityTester {
 
 	/**
 	 * @param MailAccount $account
-	 * @param $host
-	 * @param $users
-	 * @param $password
+	 * @param string $host
+	 * @param string|array $users
+	 * @param string $password
 	 * @param bool $withHostPrefix
 	 * @return bool
 	 */
-	public function test(MailAccount $account, $host, $users, $password, $withHostPrefix = false) {
+	public function test(MailAccount $account,
+						 string $host,
+						 $users,
+						 string $password,
+						 bool $withHostPrefix = false): bool {
 		if (!is_array($users)) {
 			$users = [$users];
 		}
 
 		// port 25 should be the last one to test
 		$ports = [587, 465, 25];
-		$protocols = ['ssl', 'tls', null];
+		$protocols = ['ssl', 'tls', 'none'];
 		$hostPrefixes = [''];
 		if ($withHostPrefix) {
 			$hostPrefixes = ['', 'imap.'];

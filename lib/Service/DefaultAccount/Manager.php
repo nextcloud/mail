@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 /**
  * @author Christoph Wurst <christoph@winzerhof-wurst.at>
  *
@@ -55,8 +57,11 @@ class Manager {
 	 * @param IUserSession $userSession
 	 * @param ICrypto $crypto
 	 */
-	public function __construct(IConfig $config, IStore $credentialStore,
-		Logger $logger, IUserSession $userSession, ICrypto $crypto) {
+	public function __construct(IConfig $config,
+								IStore $credentialStore,
+								Logger $logger,
+								IUserSession $userSession,
+								ICrypto $crypto) {
 		$this->config = $config;
 		$this->logger = $logger;
 		$this->userSession = $userSession;
