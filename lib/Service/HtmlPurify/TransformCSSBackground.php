@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 /**
  * @author Jakob Sack <jakob@owncloud.org>
  * @author Jakob Sack <mail@jakobsack.de>
@@ -22,6 +24,7 @@
 
 
 namespace OCA\Mail\Service\HtmlPurify;
+
 use HTMLPurifier_AttrTransform;
 use HTMLPurifier_Config;
 use HTMLPurifier_Context;
@@ -32,6 +35,7 @@ use OCP\Util;
  * Adds copies src to data-src on all img tags.
  */
 class TransformCSSBackground extends HTMLPurifier_AttrTransform {
+
 	/** @var IURLGenerator */
 	private $urlGenerator;
 
@@ -54,20 +58,20 @@ class TransformCSSBackground extends HTMLPurifier_AttrTransform {
 		// Check if there is a background image given
 		$cssAttributes = explode(';', $attr['style']);
 
-		$func = function($cssAttribute) {
+		$func = function ($cssAttribute) {
 			if (preg_match('/\S/', $cssAttribute) === 0) {
 				// empty or whitespace
 				return '';
 			}
 
 			list($name, $value) = explode(':', $cssAttribute, 2);
-			if(strpos($name, 'background') !== false &&
+			if (strpos($name, 'background') !== false &&
 				strpos($value, 'url(') !== false) {
 				// Replace image URL
 				$value = preg_replace('/url\("?http.*\)/i',
 					'url(' . $this->urlGenerator->imagePath('mail', 'blocked-image.png') . ')',
 					$value);
-				return $name.':'.$value;
+				return $name . ':' . $value;
 			} else {
 				return $cssAttribute;
 			}

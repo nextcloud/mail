@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 /**
  * @author Christoph Wurst <christoph@winzerhof-wurst.at>
  *
@@ -62,8 +64,10 @@ class MailManager implements IMailManager {
 	 * @param MessageMapper $messageMapper
 	 */
 	public function __construct(IMAPClientFactory $imapClientFactory,
-								FolderMapper $folderMapper, MailboxPrefixDetector $prefixDetector,
-								FolderNameTranslator $folderNameTranslator, Synchronizer $synchronizer,
+								FolderMapper $folderMapper,
+								MailboxPrefixDetector $prefixDetector,
+								FolderNameTranslator $folderNameTranslator,
+								Synchronizer $synchronizer,
 								MessageMapper $messageMapper) {
 		$this->imapClientFactory = $imapClientFactory;
 		$this->folderMapper = $folderMapper;
@@ -107,12 +111,18 @@ class MailManager implements IMailManager {
 	 * @param Account $destinationAccount
 	 * @param string $destFolderId
 	 */
-	public function moveMessage(Account $sourceAccount, string $sourceFolderId, int $messageId,
-								Account $destinationAccount, string $destFolderId) {
-
+	public function moveMessage(Account $sourceAccount,
+								string $sourceFolderId,
+								int $messageId,
+								Account $destinationAccount,
+								string $destFolderId) {
 		if ($sourceAccount->getId() === $destinationAccount->getId()) {
-			$this->moveMessageOnSameAccount($sourceAccount, $sourceFolderId,
-				$destFolderId, $messageId);
+			$this->moveMessageOnSameAccount(
+				$sourceAccount,
+				$sourceFolderId,
+				$destFolderId,
+				$messageId
+			);
 		} else {
 			throw new ServiceException('It is not possible to move across accounts yet');
 		}
@@ -124,8 +134,10 @@ class MailManager implements IMailManager {
 	 * @param string $destFolderId
 	 * @param int $messageId
 	 */
-	private function moveMessageOnSameAccount(Account $account, $sourceFolderId,
-											  $destFolderId, $messageId) {
+	private function moveMessageOnSameAccount(Account $account,
+											  string $sourceFolderId,
+											  string $destFolderId,
+											  int $messageId) {
 		$client = $this->imapClientFactory->getClient($account);
 
 		$this->messageMapper->move($client, $sourceFolderId, $messageId, $destFolderId);

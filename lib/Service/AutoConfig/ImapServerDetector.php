@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 /**
  * @author Christoph Wurst <christoph@winzerhof-wurst.at>
  *
@@ -18,6 +20,7 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>
  *
  */
+
 namespace OCA\Mail\Service\AutoConfig;
 
 use OCA\Mail\Db\MailAccount;
@@ -35,18 +38,20 @@ class ImapServerDetector {
 	 * @param ImapConnectivityTester $imapTester
 	 */
 	public function __construct(MxRecord $mxRecord,
-		ImapConnectivityTester $imapTester) {
+								ImapConnectivityTester $imapTester) {
 		$this->mxRecord = $mxRecord;
 		$this->imapConnectivityTester = $imapTester;
 	}
 
 	/**
-	 * @param $email
-	 * @param $password
-	 * @param $name
+	 * @param string $email
+	 * @param string $password
+	 * @param string $name
 	 * @return MailAccount|null
 	 */
-	public function detect($email, $password, $name) {
+	public function detect(string $email,
+						   string $password,
+						   string $name) {
 		// splitting the email address into user and host part
 		// TODO: use horde libs for email address parsing
 		list($user, $host) = explode("@", $email);
@@ -57,8 +62,16 @@ class ImapServerDetector {
 		$mxHosts = $this->mxRecord->query($host);
 		if ($mxHosts) {
 			foreach ($mxHosts as $mxHost) {
-				$result = $this->imapConnectivityTester->test($email, $mxHost,
-					[$user, $email], $password, $name);
+				$result = $this->imapConnectivityTester->test(
+					$email,
+					$mxHost,
+					[
+						$user,
+						$email
+					],
+					$password,
+					$name
+				);
 				if ($result) {
 					return $result;
 				}
@@ -69,8 +82,16 @@ class ImapServerDetector {
 		 * IMAP login with full email address as user
 		 * works for a lot of providers (e.g. Google Mail)
 		 */
-		return $this->imapConnectivityTester->test($email, $host, [$user, $email],
-				$password, $name);
+		return $this->imapConnectivityTester->test(
+			$email,
+			$host,
+			[
+				$user,
+				$email
+			],
+			$password,
+			$name
+		);
 	}
 
 }

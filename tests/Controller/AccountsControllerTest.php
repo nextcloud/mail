@@ -130,14 +130,17 @@ class AccountsControllerTest extends TestCase {
 		$this->aliasesService->expects($this->any())
 			->method('findAll')
 			->with($this->equalTo($this->accountId), $this->equalTo($this->userId))
-			->will($this->returnValue('aliases'));
+			->will($this->returnValue(['a1', 'a2']));
 
 		$response = $this->controller->index();
 
 		$expectedResponse = new JSONResponse([
 			[
 				'accountId' => 123,
-				'aliases' => 'aliases'
+				'aliases' => [
+					'a1',
+					'a2',
+				],
 			]
 		]);
 		$this->assertEquals($expectedResponse, $response);
