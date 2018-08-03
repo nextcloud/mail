@@ -1,6 +1,13 @@
 # Changelog
 All notable changes to this project will be documented in this file.
 
+## 0.9.0 – 2018-08-06
+### Fixed
+- Nextcloud 14 compatibility
+### Changed
+- Dropped Nextcloud 13 support
+- Requires php7+
+
 ## 0.8.3 – 2018-07-24
 ### Added
 - New and updated translations
