@@ -33,7 +33,7 @@ define(function(require) {
 				hint: this.hint
 			};
 		},
-		className: 'container',
+		className: 'app-content-detail',
 		hint: '',
 		initialize: function(options) {
 			this.hint = options.text || '';
