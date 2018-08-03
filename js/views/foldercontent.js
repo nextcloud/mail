@@ -115,7 +115,7 @@ define(function(require) {
 			isDraft = _.isUndefined(isDraft) ? false : isDraft;
 			$('.tooltip').remove();
 			$('#mail_new_message').prop('disabled', true);
-			$('#mail-message').removeClass('hidden-mobile');
+			$('.app-content-list').addClass('showdetails');
 
 			// setup composer view
 			this.showChildView('message', new ComposerView({

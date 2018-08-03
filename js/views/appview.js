@@ -97,7 +97,7 @@ define(function(require) {
 			// TODO: create marionette view and encapsulate events
 			// close message when close button is tapped on mobile
 			$(document).on('click', '#mail-message-close', function() {
-				$('#mail-message').addClass('hidden-mobile');
+				$('.app-content-list').removeClass('showdetails');
 			});
 
 			// TODO: create marionette view and encapsulate events

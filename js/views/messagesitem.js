@@ -131,7 +131,7 @@ define(function(require) {
 		},
 		openMessage: function(event) {
 			event.stopPropagation();
-			$('#mail-message').removeClass('hidden-mobile');
+			$('.app-content-list').addClass('showdetails');
 			// make sure message is marked as read when clicked on it
 			Radio.message.trigger('flag', this.model, 'unseen', false);
 			Radio.message.trigger('load', this.model.folder.account, this.model.folder, this.model, {

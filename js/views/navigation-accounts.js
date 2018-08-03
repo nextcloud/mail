@@ -65,7 +65,7 @@ define(function(require) {
 		onFolderChanged: function() {
 			// hide message detail view on mobile
 			// TODO: find better place for this
-			$('#mail-message').addClass('hidden-mobile');
+			$('.app-content-list').addClass('showdetails');
 		}
 	});
 });
