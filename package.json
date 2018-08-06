@@ -36,7 +36,7 @@
     "jasmine-ajax": "^3.4.0",
     "jasmine-core": "^3.1.0",
     "jscs-jsdoc": "^2.0.0",
-    "jshint": "^2.9.5",
+    "jshint": "^2.9.6",
     "karma": "^2.0.5",
     "karma-coverage": "^1.1.2",
     "karma-jasmine": "^1.1.2",
@@ -50,7 +50,7 @@
     "string.prototype.endswith": "^0.2.0",
     "string.prototype.repeat": "^0.2.0",
     "string.prototype.startswith": "^0.2.0",
-    "webpack": "^4.16.3",
+    "webpack": "^4.16.4",
     "webpack-cli": "^3.1.0",
     "webpack-merge": "^4.1.3"
   },

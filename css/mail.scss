@@ -434,6 +434,9 @@ input.submit-message,
 .app-content-list-item:focus .star.icon-star {
 	display: inline-block;
 }
+.app-content-list-item.unseen {
+	font-weight: bold;
+}
 
 .icon-reply,
 .icon-attachment {
