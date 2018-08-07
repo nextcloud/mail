@@ -45,6 +45,11 @@ OC = {
 	}
 };
 
+OCA = {};
+OCA.Search = function() {
+
+};
+
 // jQuery module stubs
 $.fn.tooltip = function() {
 
