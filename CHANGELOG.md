@@ -1,9 +1,10 @@
 # Changelog
 All notable changes to this project will be documented in this file.
 
-## 0.9.0 – 2018-08-06
+## 0.9.0 – 2018-08-09
 ### Fixed
 - Nextcloud 14 compatibility
+- Cache permissions of favicon library
 ### Changed
 - Dropped Nextcloud 13 support
 - Requires php7+
