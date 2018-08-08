@@ -27,6 +27,9 @@ build/artifacts
 # NetBeans project
 nbproject/
 
+# PhpStorm
+.idea/
+
 translations.js
 
 # JS coverage
