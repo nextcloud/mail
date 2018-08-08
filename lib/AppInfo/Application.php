@@ -70,7 +70,6 @@ class Application extends App {
 		});
 
 		$container->registerParameter("testSmtp", $testSmtp);
-		$container->registerParameter("referrer", isset($_SERVER['HTTP_REFERER']) ? $_SERVER['HTTP_REFERER'] : null);
 		$container->registerParameter("hostname", Util::getServerHostName());
 
 		$container->registerAlias('ErrorMiddleware', ErrorMiddleware::class);
