@@ -44,6 +44,7 @@ class FaviconSource implements IAvatarSource {
 								IMimeTypeDetector $mimeDetector) {
 		$this->clientService = $clientService;
 		$this->favicon = $favicon;
+		$this->favicon->setCacheTimeout(-1);
 		$this->mimeDetector = $mimeDetector;
 	}
 
