@@ -1,5 +1,3 @@
-/* global SearchProxy */
-
 /**
  * @author Christoph Wurst <christoph@winzerhof-wurst.at>
  *
@@ -30,6 +28,7 @@ define(function(require) {
 	var Marionette = require('backbone.marionette');
 	var OC = require('OC');
 	var AppView = require('views/appview');
+	var Search = require('search');
 	var Radio = require('radio');
 	var Router = require('router');
 	var AccountController = require('controller/accountcontroller');
@@ -82,7 +81,9 @@ define(function(require) {
 		 * Register the actual search module in the search proxy
 		 */
 		setUpSearch: function() {
-			SearchProxy.setFilter(require('search').filter);
+			new OCA.Search(Search.filter, function() {
+				Search.filter('');
+			});
 		},
 
 		/**

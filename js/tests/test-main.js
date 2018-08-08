@@ -45,16 +45,9 @@ OC = {
 	}
 };
 
-SearchProxy = {
-	attach: function(search) {
+OCA = {};
+OCA.Search = function() {
 
-	},
-	filterProxy: function(query) {
-
-	},
-	setFilter: function(newFilter) {
-
-	}
 };
 
 // jQuery module stubs
