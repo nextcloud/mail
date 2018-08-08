@@ -1,5 +1,3 @@
-/* global SearchProxy */
-
 /**
  * @author Christoph Wurst <christoph@winzerhof-wurst.at>
  *
@@ -83,7 +81,7 @@ define(function(require) {
 		 * Register the actual search module in the search proxy
 		 */
 		setUpSearch: function() {
-			new OCA.Search(Search.filter, function(arg) {
+			new OCA.Search(Search.filter, function() {
 				Search.filter('');
 			});
 		},
