@@ -47,9 +47,6 @@ class ProxyController extends Controller {
 	private $clientService;
 
 	/** @var string */
-	private $referrer;
-
-	/** @var string */
 	private $hostname;
 
 	/**
@@ -58,16 +55,19 @@ class ProxyController extends Controller {
 	 * @param IURLGenerator $urlGenerator
 	 * @param ISession $session
 	 * @param IClientService $clientService
-	 * @param string $referrer
 	 * @param string $hostname
 	 */
-	public function __construct(string $appName, IRequest $request,
-								IURLGenerator $urlGenerator, ISession $session, IClientService $clientService, $referrer, $hostname) {
+	public function __construct(string $appName,
+								IRequest $request,
+								IURLGenerator $urlGenerator,
+								ISession $session,
+								IClientService $clientService,
+								$hostname) {
 		parent::__construct($appName, $request);
+		$this->request = $request;
 		$this->urlGenerator = $urlGenerator;
 		$this->session = $session;
 		$this->clientService = $clientService;
-		$this->referrer = $referrer;
 		$this->hostname = $hostname;
 	}
 
@@ -93,7 +93,8 @@ class ProxyController extends Controller {
 		// this is there to prevent an open redirector.
 		// Since we can't prevent the referrer from being added with a HTTP only header we rely on an
 		// additional JS file here.
-		if (parse_url($this->referrer, PHP_URL_HOST) === $this->hostname) {
+		$referrer = $this->request->server['HTTP_REFERER'] ?? null;
+		if (is_string($referrer) && parse_url($referrer, PHP_URL_HOST) === $this->hostname) {
 			$authorizedRedirect = true;
 		}
 
