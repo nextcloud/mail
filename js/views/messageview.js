@@ -33,7 +33,8 @@ define(function(require) {
 		account: null,
 		folder: null,
 		ui: {
-			messageIframe: 'iframe'
+			messageIframe: 'iframe',
+			options: '#options'
 		},
 		regions: {
 			replyComposer: '#reply-composer',
@@ -69,9 +70,9 @@ define(function(require) {
 			// Render the message body
 			adjustControlsWidth();
 
-			// Hide forward button until the message has finished loading
+			// Hide options until the message has finished loading
 			if (this.messageBody.get('hasHtmlBody')) {
-				$('#forward-button').hide();
+				$('#options').hide();
 			}
 		},
 		onIframeLoad: function() {
@@ -127,8 +128,8 @@ define(function(require) {
 			// Safe current mesages's content for later use (forward)
 			require('state').currentMessageBody = text;
 
-			// Show forward button
-			this.$('#forward-button').show();
+			// Show options
+			$(this.getUI('options')).show();
 		},
 		onRender: function() {
 			this.getUI('messageIframe').on('load', _.bind(this.onIframeLoad, this));

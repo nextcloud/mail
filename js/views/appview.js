@@ -90,6 +90,10 @@ define(function(require) {
 				Radio.message.trigger('forward');
 			});
 
+			$(document).on('click', '#print-button', function() {
+				Radio.message.trigger('print');
+			});
+
 			$(document).on('click', '.link-mailto', function(event) {
 				Radio.ui.trigger('composer:show', event);
 			});

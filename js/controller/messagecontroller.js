@@ -28,6 +28,7 @@ define(function(require) {
 
 	Radio.message.on('load', load);
 	Radio.message.on('forward', openForwardComposer);
+	Radio.message.on('print', printMessage);
 	Radio.message.on('flag', flagMessage);
 	Radio.message.on('move', moveMessage);
 
@@ -103,6 +104,44 @@ define(function(require) {
 		}
 
 		Radio.ui.trigger('composer:show', data);
+	}
+
+	function printMessage() {
+		$('<iframe>', {
+			src: 'javascript:void(0)', // prevent override by browser
+			id:  'print'
+		}).css('visibility', 'hidden')
+		  .appendTo('body');
+
+		var iframe = $('#print'),
+			iframeWin = iframe.prop('contentWindow'),
+			doc       = iframe.contents(),
+			head      = doc.find('head'),
+			body      = doc.find('body'),
+			msgHeader = $('#mail-message-header').prop('outerHTML'),
+			msgBody   = $('.mail-message-body').prop('outerHTML');
+
+		head.append('<title>' + document.title + '</title>');
+
+		body.html(msgHeader + msgBody);
+
+		$('link[rel=stylesheet]').each(function() {
+			var href = $(this).attr('href'),
+				media = $(this).attr('media') || 'all';
+
+				head.append($('<link/>', {
+					type: 'text/css',
+					rel: 'stylesheet',
+					href: href,
+					media: media
+				}));
+		});
+
+		setTimeout(function() {
+			iframeWin.focus(); // required for IE
+			iframeWin.print();
+			iframe.remove();
+		}, 1000);
 	}
 
 	/**

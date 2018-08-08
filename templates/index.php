@@ -24,6 +24,7 @@
  *
  */
 style('mail', 'mail');
+style('mail', 'print');
 style('mail', 'mobile');
 script('mail', 'build/build');
 ?>

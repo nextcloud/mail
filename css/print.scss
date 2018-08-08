@@ -1,0 +1,24 @@
+@media print {
+	#reply-composer {
+		display: none !important;
+	}
+
+	#options {
+		display: none !important;
+	}
+
+	.attachments {
+		.attachment-name {
+			overflow: inherit;
+			text-overflow: inherit;
+	}
+
+		button {
+			display: none !important;
+		}
+	}
+
+    .section {
+      padding: 0 30px;
+    }
+}
