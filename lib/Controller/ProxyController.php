@@ -93,7 +93,7 @@ class ProxyController extends Controller {
 		// this is there to prevent an open redirector.
 		// Since we can't prevent the referrer from being added with a HTTP only header we rely on an
 		// additional JS file here.
-		$referrer = $this->request['server']['HTTP_REFERER'] ?? null;
+		$referrer = $this->request->server['HTTP_REFERER'] ?? null;
 		if (is_string($referrer) && parse_url($referrer, PHP_URL_HOST) === $this->hostname) {
 			$authorizedRedirect = true;
 		}

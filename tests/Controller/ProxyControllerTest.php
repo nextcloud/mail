@@ -47,10 +47,7 @@ class ProxyControllerTest extends TestCase {
 		parent::setUp();
 
 		$this->appName = 'mail';
-		$this->request = $this->createMock([
-			IRequest::class,
-			ArrayAccess::class,
-		]);
+		$this->request = $this->createMock(IRequest::class);
 		$this->urlGenerator = $this->createMock(IURLGenerator::class);
 		$this->session = $this->createMock(ISession::class);
 		$this->clientService = $this->createMock(IClientService::class);
@@ -102,14 +99,9 @@ class ProxyControllerTest extends TestCase {
 			->method('linkToRoute')
 			->with('mail.page.index')
 			->will($this->returnValue('mail-route'));
-		$serverData = [
+		$this->request->server = [
 			'HTTP_REFERER' => $referrer,
 		];
-		$this->request
-			->expects($this->once())
-			->method('offsetGet')
-			->with('server')
-			->willReturn($serverData);
 		$this->controller = new ProxyController(
 			$this->appName,
 			$this->request,
