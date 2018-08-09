@@ -116,7 +116,7 @@ class TransformURLScheme extends HTMLPurifier_URIFilter {
 		}
 
 		// Get the HTML attribute
-		$element = $context->get('CurrentAttr');
+		$element = $context->exists('CurrentAttr') ? $context->get('CurrentAttr') : null;
 
 		// If element is of type "href" it is most likely a link that should get redirected
 		// otherwise it's an element that we send through our proxy
