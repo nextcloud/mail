@@ -29,4 +29,8 @@
 			<step>OCA\Mail\Migration\FixCollectedAddresses</step>
 		</post-migration>
 	</repair-steps>
+	<commands>
+		<command>OCA\Mail\Command\CreateAccount</command>
+		<command>OCA\Mail\Command\ExportAccount</command>
+	</commands>
 </info>
