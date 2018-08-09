@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 /**
  * @copyright 2017 Christoph Wurst <christoph@winzerhof-wurst.at>
  *
@@ -32,7 +34,7 @@ class AvatarFactory {
 	 * @param string $url
 	 * @return Avatar
 	 */
-	public function createInternal($url) {
+	public function createInternal(string $url): Avatar {
 		return new Avatar($url, null, false);
 	}
 
@@ -43,7 +45,7 @@ class AvatarFactory {
 	 * @param string $mime
 	 * @return Avatar
 	 */
-	public function createExternal($url, $mime) {
+	public function createExternal(string $url, string $mime): Avatar {
 		return new Avatar($url, $mime);
 	}
 

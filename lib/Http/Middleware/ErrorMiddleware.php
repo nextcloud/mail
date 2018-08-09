@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 /**
  * @copyright 2017 Christoph Wurst <christoph@winzerhof-wurst.at>
  *
@@ -32,6 +34,7 @@ use OCA\Mail\Service\Logger;
 use OCP\AppFramework\Controller;
 use OCP\AppFramework\Db\DoesNotExistException;
 use OCP\AppFramework\Http;
+use OCP\AppFramework\Http\Response;
 use OCP\AppFramework\Middleware;
 use OCP\AppFramework\Utility\IControllerMethodReflector;
 use OCP\IConfig;
@@ -53,7 +56,7 @@ class ErrorMiddleware extends Middleware {
 	 * @param IControllerMethodReflector $reflector
 	 */
 	public function __construct(IConfig $config, Logger $logger,
-		IControllerMethodReflector $reflector) {
+								IControllerMethodReflector $reflector) {
 		$this->config = $config;
 		$this->logger = $logger;
 		$this->reflector = $reflector;
@@ -63,7 +66,8 @@ class ErrorMiddleware extends Middleware {
 	 * @param Controller $controller
 	 * @param string $methodName
 	 * @param Exception $exception
-	 * @return JSONResponse
+	 * @return Response
+	 * @throws Exception
 	 */
 	public function afterException($controller, $methodName, Exception $exception) {
 		if (!$this->reflector->hasAnnotation('TrapError')) {
@@ -73,7 +77,7 @@ class ErrorMiddleware extends Middleware {
 		if ($exception instanceof ClientException) {
 			return new JSONResponse([
 				'message' => $exception->getMessage()
-				], Http::STATUS_BAD_REQUEST);
+			], Http::STATUS_BAD_REQUEST);
 		} else if ($exception instanceof DoesNotExistException) {
 			return new JSONResponse([], Http::STATUS_NOT_FOUND);
 		} else if ($exception instanceof NotImplemented) {
@@ -86,15 +90,15 @@ class ErrorMiddleware extends Middleware {
 					'message' => $exception->getMessage(),
 					'code' => $exception->getCode(),
 					'trace' => $this->filterTrace($exception->getTrace()),
-					], Http::STATUS_INTERNAL_SERVER_ERROR);
+				], Http::STATUS_INTERNAL_SERVER_ERROR);
 			} else {
 				return new JSONResponse([], Http::STATUS_INTERNAL_SERVER_ERROR);
 			}
 		}
 	}
 
-	private function filterTrace(array $original) {
-		return array_map(function(array $row) {
+	private function filterTrace(array $original): array {
+		return array_map(function (array $row) {
 			return array_intersect_key($row,
 				array_flip(['file', 'line', 'function', 'class']));
 		}, $original);

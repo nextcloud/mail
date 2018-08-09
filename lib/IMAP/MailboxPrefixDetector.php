@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 /**
  * @copyright 2017 Christoph Wurst <christoph@winzerhof-wurst.at>
  *
@@ -35,7 +37,7 @@ class MailboxPrefixDetector {
 	 * @param Folder[] $folders
 	 * @return bool
 	 */
-	public function havePrefix(array $folders) {
+	public function havePrefix(array $folders): bool {
 		foreach ($folders as $folder) {
 			if ($folder instanceof SearchFolder) {
 				// Ignore special flagged mailbox

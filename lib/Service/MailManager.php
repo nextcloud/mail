@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 /**
  * @author Christoph Wurst <christoph@winzerhof-wurst.at>
  *
@@ -32,7 +34,6 @@ use OCA\Mail\IMAP\MessageMapper;
 use OCA\Mail\IMAP\Sync\Request;
 use OCA\Mail\IMAP\Sync\Response;
 use OCA\Mail\IMAP\Sync\Synchronizer;
-use OCA\Mail\Service\FolderNameTranslator;
 
 class MailManager implements IMailManager {
 
@@ -63,9 +64,11 @@ class MailManager implements IMailManager {
 	 * @param MessageMapper $messageMapper
 	 */
 	public function __construct(IMAPClientFactory $imapClientFactory,
-		FolderMapper $folderMapper, MailboxPrefixDetector $prefixDetector,
-		FolderNameTranslator $folderNameTranslator, Synchronizer $synchronizer,
-		MessageMapper $messageMapper) {
+								FolderMapper $folderMapper,
+								MailboxPrefixDetector $prefixDetector,
+								FolderNameTranslator $folderNameTranslator,
+								Synchronizer $synchronizer,
+								MessageMapper $messageMapper) {
 		$this->imapClientFactory = $imapClientFactory;
 		$this->folderMapper = $folderMapper;
 		$this->prefixDetector = $prefixDetector;
@@ -78,7 +81,7 @@ class MailManager implements IMailManager {
 	 * @param Account $account
 	 * @return Folder[]
 	 */
-	public function getFolders(Account $account) {
+	public function getFolders(Account $account): array {
 		$client = $this->imapClientFactory->getClient($account);
 
 		$folders = $this->folderMapper->getFolders($account, $client);
@@ -95,7 +98,7 @@ class MailManager implements IMailManager {
 	 * @param Request $syncRequest
 	 * @return Response
 	 */
-	public function syncMessages(Account $account, Request $syncRequest) {
+	public function syncMessages(Account $account, Request $syncRequest): Response {
 		$client = $this->imapClientFactory->getClient($account);
 
 		return $this->synchronizer->sync($client, $syncRequest);
@@ -108,12 +111,18 @@ class MailManager implements IMailManager {
 	 * @param Account $destinationAccount
 	 * @param string $destFolderId
 	 */
-	public function moveMessage(Account $sourceAccount, $sourceFolderId,
-		$messageId, Account $destinationAccount, $destFolderId) {
-
+	public function moveMessage(Account $sourceAccount,
+								string $sourceFolderId,
+								int $messageId,
+								Account $destinationAccount,
+								string $destFolderId) {
 		if ($sourceAccount->getId() === $destinationAccount->getId()) {
-			$this->moveMessageOnSameAccount($sourceAccount, $sourceFolderId,
-				$destFolderId, $messageId);
+			$this->moveMessageOnSameAccount(
+				$sourceAccount,
+				$sourceFolderId,
+				$destFolderId,
+				$messageId
+			);
 		} else {
 			throw new ServiceException('It is not possible to move across accounts yet');
 		}
@@ -125,8 +134,10 @@ class MailManager implements IMailManager {
 	 * @param string $destFolderId
 	 * @param int $messageId
 	 */
-	private function moveMessageOnSameAccount(Account $account, $sourceFolderId,
-		$destFolderId, $messageId) {
+	private function moveMessageOnSameAccount(Account $account,
+											  string $sourceFolderId,
+											  string $destFolderId,
+											  int $messageId) {
 		$client = $this->imapClientFactory->getClient($account);
 
 		$this->messageMapper->move($client, $sourceFolderId, $messageId, $destFolderId);

@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 /**
  * @author Christoph Wurst <christoph@winzerhof-wurst.at>
  * @author Christoph Wurst <wurst.christoph@gmail.com>
@@ -37,9 +39,9 @@ use OCA\Mail\Model\NewMessageData;
 use OCA\Mail\Model\RepliedMessageData;
 use OCA\Mail\Service\AccountService;
 use OCA\Mail\Service\AliasesService;
+use OCA\Mail\Service\GroupsIntegration;
 use OCA\Mail\Service\Logger;
 use OCA\Mail\Service\SetupService;
-use OCA\Mail\Service\GroupsIntegration;
 use OCP\AppFramework\Controller;
 use OCP\AppFramework\Http;
 use OCP\IL10N;
@@ -66,7 +68,7 @@ class AccountsController extends Controller {
 	/** @var ICrypto */
 	private $crypto;
 
-	/** @var AliasesService  */
+	/** @var AliasesService */
 	private $aliasesService;
 
 	/** @var IMailTransmission */
@@ -105,7 +107,7 @@ class AccountsController extends Controller {
 	 *
 	 * @return JSONResponse
 	 */
-	public function index() {
+	public function index(): JSONResponse {
 		$mailAccounts = $this->accountService->findByUserId($this->currentUserId);
 
 		$json = [];
@@ -123,8 +125,9 @@ class AccountsController extends Controller {
 	 *
 	 * @param int $accountId
 	 * @return JSONResponse
+	 * @throws Exception
 	 */
-	public function show($accountId) {
+	public function show($accountId): JSONResponse {
 		return new JSONResponse($this->accountService->find($this->currentUserId, $accountId));
 	}
 
@@ -148,8 +151,9 @@ class AccountsController extends Controller {
 	 * @param string $smtpPassword
 	 * @param bool $autoDetect
 	 * @return JSONResponse
+	 * @throws ClientException
 	 */
-	public function update($id, $accountName, $emailAddress, $password, $imapHost, $imapPort, $imapSslMode, $imapUser, $imapPassword, $smtpHost, $smtpPort, $smtpSslMode, $smtpUser, $smtpPassword, $autoDetect) {
+	public function update(int $id, string $accountName, string $emailAddress, string $password, string $imapHost, int $imapPort, string $imapSslMode, string $imapUser, string $imapPassword, string $smtpHost, int $smtpPort, string $smtpSslMode, string $smtpUser, string $smtpPassword, bool $autoDetect): JSONResponse {
 		$account = null;
 		$errorMessage = null;
 		try {
@@ -185,7 +189,7 @@ class AccountsController extends Controller {
 	 * @param int $id
 	 * @return JSONResponse
 	 */
-	public function destroy($id) {
+	public function destroy($id): JSONResponse {
 		$this->accountService->delete($this->currentUserId, $id);
 		return new JSONResponse();
 	}
@@ -209,8 +213,9 @@ class AccountsController extends Controller {
 	 * @param string $smtpPassword
 	 * @param bool $autoDetect
 	 * @return JSONResponse
+	 * @throws ClientException
 	 */
-	public function create($accountName, $emailAddress, $password, $imapHost, $imapPort, $imapSslMode, $imapUser, $imapPassword, $smtpHost, $smtpPort, $smtpSslMode, $smtpUser, $smtpPassword, $autoDetect) {
+	public function create(string $accountName, string $emailAddress, string $password, string $imapHost = null, int $imapPort = null, string $imapSslMode = null, string $imapUser = null, string $imapPassword = null, string $smtpHost = null, int $smtpPort = null, string $smtpSslMode = null, string $smtpUser = null, string $smtpPassword = null, bool $autoDetect = true): JSONResponse {
 		$account = null;
 		$errorMessage = null;
 		try {
@@ -244,18 +249,20 @@ class AccountsController extends Controller {
 	 * @TrapError
 	 *
 	 * @param int $accountId
-	 * @param string $folderId
 	 * @param string $subject
 	 * @param string $body
 	 * @param string $to
 	 * @param string $cc
 	 * @param string $bcc
-	 * @param int $draftUID
-	 * @param int $messageId
+	 * @param int|null $draftUID
+	 * @param string|null $folderId
+	 * @param int|null $messageId
 	 * @param mixed $attachments
+	 * @param int|null $aliasId
 	 * @return JSONResponse
+	 * @throws Horde_Exception
 	 */
-	public function send($accountId, $folderId, $subject, $body, $to, $cc, $bcc, $draftUID, $messageId, $attachments, $aliasId) {
+	public function send(int $accountId, string $subject = null, string $body, string $to, string $cc, string $bcc, int $draftUID = null, string $folderId = null, int $messageId = null, array $attachments = [], int $aliasId = null): JSONResponse {
 		$account = $this->accountService->find($this->currentUserId, $accountId);
 		$alias = $aliasId ? $this->aliasesService->find($aliasId, $this->currentUserId) : null;
 
@@ -278,7 +285,7 @@ class AccountsController extends Controller {
 	/**
 	 * @NoAdminRequired
 	 * @TrapError
-	 * 
+	 *
 	 * @param int $accountId
 	 * @param string $subject
 	 * @param string $body
@@ -288,7 +295,7 @@ class AccountsController extends Controller {
 	 * @param int $uid
 	 * @return JSONResponse
 	 */
-	public function draft($accountId, $subject, $body, $to, $cc, $bcc, $uid) {
+	public function draft(int $accountId, string $subject = null, string $body, string $to, string $cc, string $bcc, int $uid = null): JSONResponse {
 		if (is_null($uid)) {
 			$this->logger->info("Saving a new draft in account <$accountId>");
 		} else {

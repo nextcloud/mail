@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 /**
  * @copyright 2017 Christoph Wurst <christoph@winzerhof-wurst.at>
  *
@@ -38,9 +40,6 @@ class Cache {
 	/** @var AvatarFactory */
 	private $avatarFactory;
 
-	/**
-	 * @param ICacheFactory $cacheFactory
-	 */
 	public function __construct(ICacheFactory $cacheFactory, AvatarFactory $avatarFactory) {
 		$this->cache = $cacheFactory->createDistributed('mail.avatars');
 		$this->avatarFactory = $avatarFactory;
@@ -51,7 +50,7 @@ class Cache {
 	 * @param string $uid
 	 * @return string
 	 */
-	private function buildUrlKey($email, $uid) {
+	private function buildUrlKey(string $email, string $uid): string {
 		return base64_encode(json_encode([$email, $uid]));
 	}
 
@@ -60,15 +59,16 @@ class Cache {
 	 * @param string $uid
 	 * @return string
 	 */
-	private function buildImageKey($url, $uid) {
+	private function buildImageKey(string $url, string $uid): string {
 		return base64_encode(json_encode([$url, $uid]));
 	}
 
 	/**
 	 * @param string $email
+	 * @param string $uid
 	 * @return Avatar|null avatar URL
 	 */
-	public function get($email, $uid) {
+	public function get(string $email, string $uid) {
 		$cached = $this->cache->get($this->buildUrlKey($email, $uid));
 
 		if (is_null($cached)) {
@@ -87,7 +87,7 @@ class Cache {
 	 * @param string $uid
 	 * @param Avatar $avatar
 	 */
-	public function add($email, $uid, Avatar $avatar) {
+	public function add(string $email, string $uid, Avatar $avatar) {
 		$this->cache->set($this->buildUrlKey($email, $uid), $avatar->jsonSerialize(), self::CACHE_TTL);
 	}
 
@@ -96,7 +96,7 @@ class Cache {
 	 * @param string $uid
 	 * @return string|null cached image data
 	 */
-	public function getImage($url, $uid) {
+	public function getImage(string $url, string $uid) {
 		return $this->cache->get($this->buildImageKey($url, $uid));
 	}
 
@@ -105,7 +105,7 @@ class Cache {
 	 * @param string $uid
 	 * @param string $image base64 encoded image data
 	 */
-	public function addImage($url, $uid, $image) {
+	public function addImage(string $url, string $uid, string $image) {
 		$this->cache->set($this->buildImageKey($url, $uid), $image, self::CACHE_TTL);
 	}
 

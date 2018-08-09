@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 /**
  * @author Tahaa Karim <tahaalibra@gmail.com>
  *
@@ -29,9 +31,6 @@ class AliasesService {
 	/** @var AliasMapper */
 	private $mapper;
 
-	/**
-	 * @param AliasMapper $mapper
-	 */
 	public function __construct(AliasMapper $mapper) {
 		$this->mapper = $mapper;
 	}
@@ -41,26 +40,26 @@ class AliasesService {
 	 * @param String $currentUserId
 	 * @return Alias[]
 	 */
-	public function findAll($accountId, $currentUserId) {
+	public function findAll(int $accountId, string $currentUserId): array {
 		return $this->mapper->findAll($accountId, $currentUserId);
 	}
 
 	/**
 	 * @param int $aliasId
-	 * @param String $currentUserId
+	 * @param string $currentUserId
 	 * @return Alias
 	 */
-	public function find($aliasId, $currentUserId) {
+	public function find(int $aliasId, string $currentUserId): Alias {
 		return $this->mapper->find($aliasId, $currentUserId);
 	}
 
 	/**
 	 * @param int $accountId
-	 * @param String $alias
-	 * @param String $aliasName
+	 * @param string $alias
+	 * @param string $aliasName
 	 * @return Alias
 	 */
-	public function create($accountId, $alias, $aliasName) {
+	public function create(int $accountId, string $alias, string $aliasName) {
 		$aliasEntity = new Alias();
 		$aliasEntity->setAccountId($accountId);
 		$aliasEntity->setAlias($alias);
@@ -73,7 +72,7 @@ class AliasesService {
 	 * @param String $currentUserId
 	 * @return Alias
 	 */
-	public function delete($aliasId, $currentUserId) {
+	public function delete(int $aliasId, string $currentUserId): Alias {
 		$alias = $this->mapper->find($aliasId, $currentUserId);
 		$this->mapper->delete($alias);
 		return $alias;

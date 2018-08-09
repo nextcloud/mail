@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 /**
  * @author Matthias Rella <mrella@pisys.eu>
  *
@@ -29,22 +31,22 @@ interface IGroupService {
 	 * @param string $term
 	 * @return array of matched groups as associative arrays
 	 */
-	public function search($term);
+	public function search(string $term): array;
 
 	/**
 	 * Get the group's namespace.
 	 *
 	 * @return string
 	 */
-	public function getNamespace();
+	public function getNamespace(): string;
 
 	/**
 	 * Get the group's users.
 	 *
-	 * @param string $groupId 
-	 * @return array with group's users as associative arrays 
+	 * @param string $groupId
+	 * @return array with group's users as associative arrays
 	 */
-	public function getUsers($groupId);
+	public function getUsers(string $groupId): array;
 
 }
 

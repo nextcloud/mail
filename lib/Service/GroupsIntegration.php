@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 /**
  * @author Matthias Rella <mrella@pisys.eu>
  *
@@ -43,7 +45,7 @@ class GroupsIntegration {
 	 * @param string $term
 	 * @return array
 	 */
-	public function getMatchingGroups($term) {
+	public function getMatchingGroups(string $term): array {
 		$receivers = [];
 		foreach ($this->groupServices as $gs) {
 			$result = $gs->search($term);
@@ -67,7 +69,7 @@ class GroupsIntegration {
 	 * @param IGroupService $gs
 	 * @return string
 	 */
-	public function servicePrefix(IGroupService $gs) {
+	public function servicePrefix(IGroupService $gs): string {
 		if (empty($gs->getNamespace())) {
 			throw new ServiceException('GroupService has no namespace');
 		}
@@ -80,29 +82,29 @@ class GroupsIntegration {
 	 * @param string $recipients
 	 * @return string
 	 */
-	public function expand($recipients) {
+	public function expand(string $recipients) {
 		return array_reduce($this->groupServices,
-			function($carry, $service) {
-			return preg_replace_callback(
-				'/' . preg_quote($this->servicePrefix($service)) . '([\w\d ]+)(,?)/',
-				function($matches) use ($service) {
-				if (empty($matches[1])) {
-					return '';
-				}
-				$members = $service->getUsers($matches[1]);
-				if (empty($members)) {
-					throw new ServiceException($matches[1] . " ({$service->getNamespace()}) has no members");
-				}
-				$addresses = [];
-				foreach ($members as $m) {
-					if (!empty($m['email'])) {
-						$addresses[] = $m['email'];
-					}
-				}
-				return implode(',', $addresses)
-					. (!empty($matches[2]) && !empty($addresses) ? ',' : '');
-			}, $carry);
-		}, $recipients);
+			function ($carry, $service) {
+				return preg_replace_callback(
+					'/' . preg_quote($this->servicePrefix($service)) . '([\w\d ]+)(,?)/',
+					function ($matches) use ($service) {
+						if (empty($matches[1])) {
+							return '';
+						}
+						$members = $service->getUsers($matches[1]);
+						if (empty($members)) {
+							throw new ServiceException($matches[1] . " ({$service->getNamespace()}) has no members");
+						}
+						$addresses = [];
+						foreach ($members as $m) {
+							if (!empty($m['email'])) {
+								$addresses[] = $m['email'];
+							}
+						}
+						return implode(',', $addresses)
+							. (!empty($matches[2]) && !empty($addresses) ? ',' : '');
+					}, $carry);
+			}, $recipients);
 	}
 
 }

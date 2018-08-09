@@ -5,7 +5,7 @@
 	<name>Mail</name>
 	<summary>IMAP web client</summary>
 	<description>Easy to use email client which connects to your mail server via IMAP and SMTP.</description>
-	<version>0.8.3</version>
+	<version>0.9.0</version>
 	<licence>agpl</licence>
 	<author>Christoph Wurst</author>
 	<author>Jan-Christoph Borchardt</author>
@@ -29,4 +29,8 @@
 			<step>OCA\Mail\Migration\FixCollectedAddresses</step>
 		</post-migration>
 	</repair-steps>
+	<commands>
+		<command>OCA\Mail\Command\CreateAccount</command>
+		<command>OCA\Mail\Command\ExportAccount</command>
+	</commands>
 </info>

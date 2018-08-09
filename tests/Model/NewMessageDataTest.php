@@ -35,7 +35,7 @@ class NewMessageDataTest extends TestCase {
 		$bcc = '';
 		$subject = 'Hello';
 		$body = 'Hi!';
-		$attachments = null;
+		$attachments = [];
 		$messageData = NewMessageData::fromRequest($account, $to, $cc, $bcc, $subject, $body, $attachments);
 
 		$this->assertEquals($account, $messageData->getAccount());
@@ -54,7 +54,7 @@ class NewMessageDataTest extends TestCase {
 		$bcc = '"Test3" <test3@domain.net>';
 		$subject = 'Hello';
 		$body = 'Hi!';
-		$attachments = null;
+		$attachments = [];
 		$messageData = NewMessageData::fromRequest($account, $to, $cc, $bcc, $subject, $body, $attachments);
 
 		$this->assertEquals($account, $messageData->getAccount());

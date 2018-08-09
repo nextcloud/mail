@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 /**
  * @author Christoph Wurst <christoph@winzerhof-wurst.at>
  *
@@ -21,13 +23,13 @@
 
 namespace OCA\Mail\Command;
 
+use OCA\Mail\Db\MailAccount;
+use OCA\Mail\Service\AccountService;
+use OCP\Security\ICrypto;
 use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Input\InputArgument;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\OutputInterface;
-use OCP\Security\ICrypto;
-use OCA\Mail\Db\MailAccount;
-use OCA\Mail\Service\AccountService;
 
 class CreateAccount extends Command {
 

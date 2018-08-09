@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 /**
  * @author Lukas Reschke <lukas@statuscode.ch>
  * @author Thomas Müller <thomas.mueller@tmit.eu>
@@ -22,10 +24,12 @@
 
 namespace OCA\Mail\Http;
 
+use DateTime;
 use OCP\AppFramework\Http\DownloadResponse;
 
 class ProxyDownloadResponse extends DownloadResponse {
 
+	/** @var string */
 	private $content;
 
 	/**
@@ -33,25 +37,28 @@ class ProxyDownloadResponse extends DownloadResponse {
 	 * contains the passed string
 	 * Additionally the response will be cacheable by browsers. Since the content is
 	 * generally not sensitive content (e.g. Logos in mails) this should not be a problem.
+	 *
 	 * @param string $content the content that should be written into the file
 	 * @param string $filename the name that the downloaded file should have
 	 * @param string $contentType the mimetype that the downloaded file should have
 	 */
-	public function __construct($content, $filename, $contentType){
+	public function __construct(string $content, string $filename, string $contentType) {
 		parent::__construct($filename, $contentType);
+
 		$this->content = $content;
 
-		$expires = new \DateTime('now + 11 months');
-		$this->addHeader('Expires', $expires->format(\DateTime::RFC1123));
+		$expires = new DateTime('now + 11 months');
+		$this->addHeader('Expires', $expires->format(DateTime::RFC1123));
 		$this->addHeader('Cache-Control', 'private');
 		$this->addHeader('Pragma', 'cache');
 	}
 
 	/**
 	 * Simply sets the headers and returns the file contents
+	 *
 	 * @return string the file contents
 	 */
-	public function render(){
+	public function render(): string {
 		return $this->content;
 	}
 

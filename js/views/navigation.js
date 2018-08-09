@@ -11,7 +11,6 @@
 define(function(require) {
 	'use strict';
 
-	var $ = require('jquery');
 	var Marionette = require('backbone.marionette');
 	var Radio = require('radio');
 	var NewMessageView = require('views/newmessage');
@@ -23,7 +22,7 @@ define(function(require) {
 		regions: {
 			newMessage: '#mail-new-message-fixed',
 			accounts: {
-				el: '#app-navigation-accounts',
+				el: '#usergrouplist',
 				replaceElement: true
 			},
 			settings: '#app-settings-content'
@@ -43,14 +42,12 @@ define(function(require) {
 
 		show: function() {
 			this.$el.show();
-			$('#app-navigation-toggle').css('background-image', '');
 		},
 
 		hide: function() {
 			// TODO: move if or rename function
 			if (require('state').accounts.length === 0) {
 				this.$el.hide();
-				$('#app-navigation-toggle').css('background-image', 'none');
 			}
 		},
 

@@ -62,6 +62,8 @@
     "Updating account failed: " : "Mistókst að uppfæra notandaaðgang: ",
     "Creating account failed: " : "Mistókst að búa til notandaaðgang: ",
     "Delete permanently" : "Eyða varanlega",
+    "IMAP web client" : "IMAP vefforrit",
+    "Easy to use email client which connects to your mail server via IMAP and SMTP." : "Einfalt og auðvelt tölvupóstforrit sem tengist póstþjóninum þínum með IMAP og SMTP.",
     "Error loading message" : "Villa við hleðslu á skilaboðum",
     "Settings" : "Stillingar",
     "Forwarding to %s" : "Áframsendi til %s",

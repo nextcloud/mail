@@ -24,8 +24,8 @@ namespace OCA\Mail\Db;
 use OCP\AppFramework\Db\Entity;
 
 /**
- * @method void setAccountId(string $accountId)
- * @method string getAccountId()
+ * @method void setAccountId(int $accountId)
+ * @method int getAccountId()
  * @method void setName(string $name)
  * @method string getName()
  * @method void setAlias(string $alias)

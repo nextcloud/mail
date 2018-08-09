@@ -24,13 +24,14 @@ define(function(require) {
 	return Marionette.View.extend({
 		template: MessageTemplate,
 		ui: {
+			self: '.app-content-list-item',
 			iconDelete: '.action.delete',
 			star: '.star'
 		},
 		events: {
 			'click .action.delete': 'deleteMessage',
-			'click .mail-message-header': 'openMessage',
-			'click .star': 'toggleMessageStar'
+			'click @ui.self': 'openMessage',
+			'click @ui.star': 'toggleMessageStar'
 		},
 		modelEvents: {
 			change: 'render'
@@ -67,14 +68,6 @@ define(function(require) {
 			return json;
 		},
 		onRender: function() {
-			// Get rid of that pesky wrapping-div.
-			// Assumes 1 child element present in template.
-			this.$el = this.$el.children();
-			// Unwrap the element to prevent infinitely
-			// nesting elements during re-render.
-			this.$el.unwrap();
-			this.setElement(this.$el);
-
 			var displayName = this.model.get('from')[0].label;
 			// Don't show any placeholder if 'from' isn't set
 			if (displayName) {
@@ -138,7 +131,7 @@ define(function(require) {
 		},
 		openMessage: function(event) {
 			event.stopPropagation();
-			$('#mail-message').removeClass('hidden-mobile');
+			$('.app-content-list').addClass('showdetails');
 			// make sure message is marked as read when clicked on it
 			Radio.message.trigger('flag', this.model, 'unseen', false);
 			Radio.message.trigger('load', this.model.folder.account, this.model.folder, this.model, {

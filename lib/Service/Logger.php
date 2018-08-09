@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 /**
  * @author Christoph Wurst <christoph@winzerhof-wurst.at>
  * @author Christoph Wurst <wurst.christoph@gmail.com>
@@ -33,12 +35,7 @@ class Logger {
 	/** @var ILogger */
 	private $logger;
 
-	/**
-	 * 
-	 * @param string $appName
-	 * @param ILogger $logger
-	 */
-	public function __construct($appName, ILogger $logger) {
+	public function __construct(string $appName, ILogger $logger) {
 		$this->context = [
 			'app' => $appName,
 		];

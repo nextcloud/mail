@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 /**
  * @author Jakob Sack <mail@jakobsack.de>
  *
@@ -30,19 +32,18 @@ class AvatarDownloadResponse extends DownloadResponse {
 	/** @var string */
 	private $content;
 
-	/**
-	 * @param string $content
-	 */
-	public function __construct($content) {
+	public function __construct(string $content) {
 		parent::__construct('avatar', 'application/octet-stream');
+
 		$this->content = $content;
 	}
 
 	/**
 	 * Simply sets the headers and returns the file contents
+	 *
 	 * @return string the file contents
 	 */
-	public function render() {
+	public function render(): string {
 		return $this->content;
 	}
 

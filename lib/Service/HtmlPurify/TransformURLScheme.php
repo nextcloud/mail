@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 /**
  * @author Christoph Wurst <christoph@winzerhof-wurst.at>
  * @author Thomas Müller <thomas.mueller@tmit.eu>
@@ -22,6 +24,7 @@
 
 namespace OCA\Mail\Service\HtmlPurify;
 
+use Closure;
 use HTMLPurifier_Config;
 use HTMLPurifier_URI;
 use HTMLPurifier_URIFilter;
@@ -45,8 +48,10 @@ class TransformURLScheme extends HTMLPurifier_URIFilter {
 	 */
 	private $mapCidToAttachmentId;
 
-	public function __construct($messageParameters, \Closure $mapCidToAttachmentId,
-		IURLGenerator $urlGenerator, IRequest $request) {
+	public function __construct($messageParameters,
+								Closure $mapCidToAttachmentId,
+								IURLGenerator $urlGenerator,
+								IRequest $request) {
 		$this->messageParameters = $messageParameters;
 		$this->mapCidToAttachmentId = $mapCidToAttachmentId;
 		$this->urlGenerator = $urlGenerator;
@@ -55,6 +60,7 @@ class TransformURLScheme extends HTMLPurifier_URIFilter {
 
 	/**
 	 * Transformator which will rewrite all HTTPS and HTTP urls to
+	 *
 	 * @param \HTMLPurifier_URI $uri
 	 * @param HTMLPurifier_Config $config
 	 * @param \HTMLPurifier_Context $context
@@ -94,7 +100,7 @@ class TransformURLScheme extends HTMLPurifier_URIFilter {
 
 		// Add the port if it's not a default port
 		if ($uri->port !== null &&
-			!($uri->scheme === 'http' && $uri->port === 80) && 
+			!($uri->scheme === 'http' && $uri->port === 80) &&
 			!($uri->scheme === 'https' && $uri->port === 443) &&
 			!($uri->scheme === 'ftp' && $uri->port === 21)) {
 			$originalURL = $originalURL . urlencode(':' . $uri->port);
@@ -110,7 +116,7 @@ class TransformURLScheme extends HTMLPurifier_URIFilter {
 		}
 
 		// Get the HTML attribute
-		$element = $context->get('CurrentAttr');
+		$element = $context->exists('CurrentAttr') ? $context->get('CurrentAttr') : null;
 
 		// If element is of type "href" it is most likely a link that should get redirected
 		// otherwise it's an element that we send through our proxy

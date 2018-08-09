@@ -117,16 +117,15 @@ class AccountServiceTest extends TestCase {
 
 	public function testSave() {
 		$account = new MailAccount();
-		$expected = 42;
 
 		$this->mapper->expects($this->once())
 			->method('save')
 			->with($account)
-			->will($this->returnValue($expected));
+			->will($this->returnArgument(0));
 
 		$actual = $this->service->save($account);
 
-		$this->assertEquals($expected, $actual);
+		$this->assertEquals($account, $actual);
 	}
 
 }

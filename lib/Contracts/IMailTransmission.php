@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 /**
  * @author Christoph Wurst <christoph@winzerhof-wurst.at>
  *
@@ -36,8 +38,8 @@ interface IMailTransmission {
 	 * @param Alias|null $alias
 	 * @param int|null $draftUID
 	 */
-	public function sendMessage($userId, NewMessageData $message,
-		RepliedMessageData $reply, Alias $alias = null, $draftUID = null);
+	public function sendMessage(string $userId, NewMessageData $message,
+								RepliedMessageData $reply, Alias $alias = null, int $draftUID = null);
 
 	/**
 	 * Save a message draft
@@ -47,5 +49,5 @@ interface IMailTransmission {
 	 * @return int
 	 * @throws ServiceException
 	 */
-	public function saveDraft(NewMessageData $message, $draftUID = null);
+	public function saveDraft(NewMessageData $message, int $draftUID = null): int;
 }

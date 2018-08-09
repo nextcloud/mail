@@ -27,7 +27,7 @@ define(function(require) {
 
 		id: 'emptycontent',
 
-		className: 'container',
+		className: 'app-content-details',
 
 		template: ErrorTemplate,
 
