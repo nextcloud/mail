@@ -24,13 +24,13 @@
 		<php min-version="7.0" max-version="7.2" />
 		<nextcloud min-version="14" max-version="14" />
 	</dependencies>
-	<commands>
-		<command>OCA\Mail\Command\CreateAccount</command>
-		<command>OCA\Mail\Command\ExportAccount</command>
-	</commands>
 	<repair-steps>
 		<post-migration>
 			<step>OCA\Mail\Migration\FixCollectedAddresses</step>
 		</post-migration>
 	</repair-steps>
+	<commands>
+		<command>OCA\Mail\Command\CreateAccount</command>
+		<command>OCA\Mail\Command\ExportAccount</command>
+	</commands>
 </info>
