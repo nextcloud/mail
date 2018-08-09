@@ -67,11 +67,11 @@ before_script:
   - php -f core/occ maintenance:install --database-name oc_autotest --database-user oc_autotest --admin-user admin --admin-pass admin --database $DB --database-pass=''
 
   # Set up app
-  - krankerl up
-  - php -f core/occ app:enable mail
-  # Enable app twice to check occ errors of registered commands
-  - php -f core/occ app:enable mail
   - cd core/apps/mail
+  - krankerl up
+  - php -f ../../occ app:enable mail
+  # Enable app twice to check occ errors of registered commands
+  - php -f ../../occ app:enable mail
 
   # Prepare IMAP test docker
   - make add-imap-account
