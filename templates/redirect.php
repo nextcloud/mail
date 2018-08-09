@@ -20,11 +20,12 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>
  *
  */
+style('mail', 'redirect');
 ?>
 <?php /** @var array $_ */ ?>
 <?php if (isset($_['authorizedRedirect']) && ($_['authorizedRedirect'])): ?>
 	<?php script('mail', 'autoredirect'); ?>
-	<div class="error" style="text-align: center;">
+	<div class="error">
 		<div class="icon-loading-dark"
 		     style="height: 60px;"></div>
 		<p>
