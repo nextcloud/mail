@@ -1,7 +1,7 @@
 OC.L10N.register(
     "mail",
     {
-    "Mail" : "Correu electrónic",
+    "Mail" : "Correu electrònic",
     "Loading accounts" : "S'està carregant",
     "Error while loading the accounts." : "Error al carregar els comptes.",
     "Can not load this folder." : "No s'ha pogut carregar aquesta carpeta.",
