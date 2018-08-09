@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 /**
  * @author Christoph Wurst <christoph@winzerhof-wurst.at>
  * @author Lukas Reschke <lukas@owncloud.com>
@@ -25,6 +27,7 @@
 namespace OCA\Mail\Controller;
 
 use OCA\Mail\Contracts\IUserPreferences;
+use OCA\Mail\Http\JSONResponse;
 use OCA\Mail\Service\AccountService;
 use OCA\Mail\Service\AliasesService;
 use OCP\AppFramework\Controller;
@@ -69,11 +72,12 @@ class PageController extends Controller {
 	 * @param string $UserId
 	 * @param IUserPreferences
 	 */
-	public function __construct($appName, IRequest $request,
-		IURLGenerator $urlGenerator, IConfig $config, AccountService $accountService,
-		AliasesService $aliasesService, $UserId, IUserSession $userSession,
-		IUserPreferences $preferences) {
+	public function __construct(string $appName, IRequest $request,
+								IURLGenerator $urlGenerator, IConfig $config, AccountService $accountService,
+								AliasesService $aliasesService, string $UserId, IUserSession $userSession,
+								IUserPreferences $preferences) {
 		parent::__construct($appName, $request);
+
 		$this->urlGenerator = $urlGenerator;
 		$this->config = $config;
 		$this->accountService = $accountService;
@@ -89,7 +93,7 @@ class PageController extends Controller {
 	 *
 	 * @return TemplateResponse renders the index page
 	 */
-	public function index() {
+	public function index(): TemplateResponse {
 		$mailAccounts = $this->accountService->findByUserId($this->currentUserId);
 
 		$accountsJson = [];
@@ -103,14 +107,14 @@ class PageController extends Controller {
 		$user = $this->userSession->getUser();
 		$response = new TemplateResponse($this->appName, 'index',
 			[
-			'debug' => $this->config->getSystemValue('debug', false),
-			'app-version' => $this->config->getAppValue('mail', 'installed_version'),
-			'accounts' => base64_encode(json_encode($accountsJson)),
-			'external-avatars' => $this->preferences->getPreference('external-avatars', 'true'),
-			'prefill_displayName' => $user->getDisplayName(),
-			'prefill_email' => $this->config->getUserValue($user->getUID(), 'settings',
-				'email', ''),
-		]);
+				'debug' => $this->config->getSystemValue('debug', false),
+				'app-version' => $this->config->getAppValue('mail', 'installed_version'),
+				'accounts' => base64_encode(json_encode($accountsJson)),
+				'external-avatars' => $this->preferences->getPreference('external-avatars', 'true'),
+				'prefill_displayName' => $user->getDisplayName(),
+				'prefill_email' => $this->config->getUserValue($user->getUID(), 'settings',
+					'email', ''),
+			]);
 
 		$csp = new ContentSecurityPolicy();
 		$csp->addAllowedFrameDomain('\'self\'');
@@ -126,7 +130,7 @@ class PageController extends Controller {
 	 * @param string $uri
 	 * @return RedirectResponse
 	 */
-	public function compose($uri) {
+	public function compose(string $uri): RedirectResponse {
 		$parts = parse_url($uri);
 		$params = ['to' => $parts['path']];
 		if (isset($parts['query'])) {
@@ -139,8 +143,8 @@ class PageController extends Controller {
 
 		array_walk($params,
 			function (&$value, $key) {
-			$value = "$key=" . urlencode($value);
-		});
+				$value = "$key=" . urlencode($value);
+			});
 
 		$hashParams = '#mailto?' . implode('&', $params);
 

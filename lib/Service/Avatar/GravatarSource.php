@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 /**
  * @author Christoph Wurst <christoph@winzerhof-wurst.at>
  * @author Jakob Sack <mail@jakobsack.de>
@@ -31,9 +33,6 @@ class GravatarSource implements IAvatarSource {
 	/** @var IClientService */
 	private $clientService;
 
-	/**
-	 * @param IClientService $clientService
-	 */
 	public function __construct(IClientService $clientService) {
 		$this->clientService = $clientService;
 	}
@@ -43,7 +42,7 @@ class GravatarSource implements IAvatarSource {
 	 *
 	 * @return bool
 	 */
-	public function isExternal() {
+	public function isExternal(): bool {
 		return true;
 	}
 
@@ -52,7 +51,7 @@ class GravatarSource implements IAvatarSource {
 	 * @param AvatarFactory $factory
 	 * @return Avatar|null avatar URL if one can be found
 	 */
-	public function fetch($email, AvatarFactory $factory) {
+	public function fetch(string $email, AvatarFactory $factory) {
 		$gravatar = new Gravatar(['size' => 128], true);
 		$avatarUrl = $gravatar->avatar($email, ['d' => 404], true);
 

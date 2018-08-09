@@ -44,7 +44,11 @@ class AutoConfigControllerTest extends TestCase {
 
 	public function testAutoComplete() {
 		$term = 'john d';
-		$result = 'johne doe';
+		$result = [
+			'id' => 13,
+			'label' => 'johne doe',
+			'value' => 'johne doe <john@doe.com>',
+		];
 
 		$this->service->expects($this->once())
 			->method('findMatches')

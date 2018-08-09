@@ -1,6 +1,31 @@
 # Changelog
 All notable changes to this project will be documented in this file.
 
+## 0.9.0 – 2018-08-09
+### Fixed
+- Nextcloud 14 compatibility
+- Cache permissions of favicon library
+### Changed
+- Dropped Nextcloud 13 support
+- Requires php7+
+
+## 0.8.3 – 2018-07-24
+### Added
+- New and updated translations
+- Performance improvements
+
+## 0.8.2 – 2018-06-28
+### Added
+- Advanced search
+- New and updated translations
+### Fixed
+- Preserve URI hash in sanitized HTML messages
+- Pagination of incoming messages
+- Autoconfig issues
+- Security issues in third party JavaScript libraries
+- Folder sorting
+- Issue template URL in README
+
 ## 0.8.1 – 2018-05-14
 ### Added
 - New and updated translations

@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 /**
  * @author Jakob Sack <mail@jakobsack.de>
  *
@@ -59,8 +61,11 @@ class AvatarService implements IAvatarService {
 	 * @param IUserPreferences $preferences
 	 */
 	public function __construct(CompositeAvatarSource $source,
-		Downloader $downloader, AvatarCache $cache, IURLGenerator $urlGenerator,
-		AvatarFactory $avatarFactory, IUserPreferences $preferences) {
+								Downloader $downloader,
+								AvatarCache $cache,
+								IURLGenerator $urlGenerator,
+								AvatarFactory $avatarFactory,
+								IUserPreferences $preferences) {
 		$this->source = $source;
 		$this->cache = $cache;
 		$this->urlGenerator = $urlGenerator;
@@ -72,23 +77,23 @@ class AvatarService implements IAvatarService {
 	/**
 	 * @return bool
 	 */
-	private function externalAvatarsAllowed() {
+	private function externalAvatarsAllowed(): bool {
 		return $this->preferences->getPreference('external-avatars', 'true') === 'true';
 	}
 
 	/**
 	 * @param Avatar $avatar
 	 */
-	private function hasAllowedMime(Avatar $avatar) {
+	private function hasAllowedMime(Avatar $avatar): bool {
 		if ($avatar->isExternal()) {
 			$mime = $avatar->getMime();
 
 			return in_array($mime,
 				[
-				'image/jpeg',
-				'image/png',
-				'image/x-icon',
-			]);
+					'image/jpeg',
+					'image/png',
+					'image/x-icon',
+				]);
 		} else {
 			// We trust internal URLs by default
 			return true;
@@ -100,7 +105,7 @@ class AvatarService implements IAvatarService {
 	 * @param string $uid
 	 * @return Avatar|null
 	 */
-	public function getAvatar($email, $uid) {
+	public function getAvatar(string $email, string $uid) {
 		$cachedAvatar = $this->cache->get($email, $uid);
 		if (!is_null($cachedAvatar)) {
 			return $cachedAvatar;
@@ -123,7 +128,7 @@ class AvatarService implements IAvatarService {
 	 * @param string $uid
 	 * @return array|null image data
 	 */
-	public function getAvatarImage($email, $uid) {
+	public function getAvatarImage(string $email, string $uid) {
 		$avatar = $this->getAvatar($email, $uid);
 		if (is_null($avatar)) {
 			return null;

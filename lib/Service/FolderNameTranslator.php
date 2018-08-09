@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 /**
  * @author Christoph Wurst <christoph@winzerhof-wurst.at>
  *
@@ -32,9 +34,6 @@ class FolderNameTranslator {
 	/** @var string[] */
 	private $translations = [];
 
-	/**
-	 * @param IL10N $l10n
-	 */
 	public function __construct(IL10N $l10n) {
 		$this->l10n = $l10n;
 	}
@@ -42,7 +41,7 @@ class FolderNameTranslator {
 	/**
 	 * @return string[]
 	 */
-	private function buildTranslations() {
+	private function buildTranslations(): array {
 		if (empty($this->translations)) {
 			$this->translations = [
 				// TRANSLATORS: translated mail box name
@@ -70,7 +69,7 @@ class FolderNameTranslator {
 	 * @param Folder[] $folders
 	 * @param bool $havePrefix
 	 */
-	public function translateAll(array $folders, $havePrefix) {
+	public function translateAll(array $folders, bool $havePrefix) {
 		foreach ($folders as $folder) {
 			$this->translate($folder, $havePrefix);
 		}
@@ -80,7 +79,7 @@ class FolderNameTranslator {
 	 * @param Folder $folder
 	 * @param bool $hasPrefix
 	 */
-	private function translate(Folder $folder, $hasPrefix = false) {
+	private function translate(Folder $folder, bool $hasPrefix = false) {
 		$translations = $this->buildTranslations();
 		// TODO: only list "best" one per type? e.g. only one inbox
 		$specialUses = $folder->getSpecialUse();

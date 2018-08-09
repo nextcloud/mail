@@ -64,6 +64,8 @@ OC.L10N.register(
     "Updating account failed: " : "Hesap güncellenemedi:",
     "Creating account failed: " : "Hesap oluşturulamadı:",
     "Delete permanently" : "Kalıcı olarak sil",
+    "IMAP web client" : "IMAP web istemcisi",
+    "Easy to use email client which connects to your mail server via IMAP and SMTP." : "E-posta sunucunuz ile IMAP ve SMTP bağlantısı kuran kullanımı kolay bir e-posta istemcisi.",
     "Error loading message" : "İleti yüklenirken sorun çıktı",
     "Settings" : "Ayarlar",
     "Forwarding to %s" : "%s adresine iletiliyor",

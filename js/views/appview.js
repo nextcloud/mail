@@ -45,7 +45,10 @@ define(function(require) {
 		accountsView: null,
 		activeContent: null,
 		regions: {
-			content: '#app-content .mail-content',
+			content: {
+				el: '#app-content-wrapper',
+				replaceElement: true
+			},
 			setup: '#setup'
 		},
 		initialize: function() {
@@ -94,7 +97,7 @@ define(function(require) {
 			// TODO: create marionette view and encapsulate events
 			// close message when close button is tapped on mobile
 			$(document).on('click', '#mail-message-close', function() {
-				$('#mail-message').addClass('hidden-mobile');
+				$('.app-content-list').removeClass('showdetails');
 			});
 
 			// TODO: create marionette view and encapsulate events

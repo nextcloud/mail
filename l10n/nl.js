@@ -64,6 +64,7 @@ OC.L10N.register(
     "Updating account failed: " : "Bijwerken van account mislukt:",
     "Creating account failed: " : "Aanmaken account mislukt:",
     "Delete permanently" : "Definitief verwijderen",
+    "IMAP web client" : "IMAP web client",
     "Error loading message" : "Fout bij laden bericht",
     "Settings" : "Instellingen",
     "Forwarding to %s" : "Doorsturen aan %s",

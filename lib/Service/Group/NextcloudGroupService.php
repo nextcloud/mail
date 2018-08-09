@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 /**
  * @author Matthias Rella <mrella@pisys.eu>
  *
@@ -44,15 +46,15 @@ class NextcloudGroupService implements IGroupService {
 		$this->groupManager = $groupManager;
 	}
 
-	public function getNamespace() {
+	public function getNamespace(): string {
 		return $this->namespace;
 	}
 
-	public function search($term) {
+	public function search(string $term): array {
 		$groups = $this->groupManager->search($term);
 
 		return array_map(
-			function($g) {
+			function ($g) {
 				return [
 					'id' => $g->getGID(),
 					'name' => $g->getDisplayName()
@@ -62,13 +64,13 @@ class NextcloudGroupService implements IGroupService {
 		);
 	}
 
-	public function getUsers($groupId) {
-		if(!$this->groupManager->groupExists($groupId)) {
+	public function getUsers(string $groupId): array {
+		if (!$this->groupManager->groupExists($groupId)) {
 			throw new ServiceException("$groupId ({$this->getNamespace()}) does not exist");
 		}
 		$users = $this->groupManager->get($groupId)->getUsers();
 		return array_map(
-			function($user) {
+			function ($user) {
 				return [
 					'id' => $user->getUID(),
 					'name' => $user->getDisplayName(),

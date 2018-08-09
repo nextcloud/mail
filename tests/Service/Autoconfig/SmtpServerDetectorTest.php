@@ -59,7 +59,7 @@ class SmtpServerDetectorTest extends TestCase {
 		$this->smtpConnectivityTester->expects($this->once())
 			->method('test')
 			->with($this->equalTo($account), $this->equalTo('mx.domain.tld'), $this->equalTo(['user', 'user@domain.tld']))
-			->willReturn($this->createMock(MailAccount::class));
+			->willReturn(true);
 
 		$result = $this->detector->detect($account, $email, $password);
 

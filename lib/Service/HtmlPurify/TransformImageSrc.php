@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 /**
  * @author Jakob Sack <jakob@owncloud.org>
  * @author Jakob Sack <mail@jakobsack.de>
@@ -34,9 +36,7 @@ use OCP\Util;
  */
 class TransformImageSrc extends HTMLPurifier_AttrTransform {
 
-	/**
-	* @type HTMLPurifier_URIParser
-	*/
+	/** @var HTMLPurifier_URIParser */
 	private $parser;
 
 	/** @var IURLGenerator */
@@ -61,7 +61,7 @@ class TransformImageSrc extends HTMLPurifier_AttrTransform {
 
 		// Block tracking pixels
 		if (isset($attr['width']) && isset($attr['height']) &&
-			(int)$attr['width'] < 5 && (int)$attr['height'] < 5){
+			(int)$attr['width'] < 5 && (int)$attr['height'] < 5) {
 			// Replace with a transparent png in case it's important for the layout
 			$attr['src'] = $this->urlGenerator->imagePath('mail', 'blocked-image.png');
 			$attr = $this->setDisplayNone($attr);
@@ -85,9 +85,9 @@ class TransformImageSrc extends HTMLPurifier_AttrTransform {
 	 * Sets html attribute style="display: none;", keeps old style
 	 * attributes
 	 */
-	private function setDisplayNone($attr) {
+	private function setDisplayNone(array $attr): array {
 		if (isset($attr['style'])) {
-			$attr['style'] = 'display: none;'.$attr['style']; // the space is important for jquery!
+			$attr['style'] = 'display: none;' . $attr['style']; // the space is important for jquery!
 		} else {
 			$attr['style'] = 'display: none;';
 		}

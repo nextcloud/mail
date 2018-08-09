@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 /**
  * @author Christoph Wurst <christoph@winzerhof-wurst.at>
  *
@@ -18,6 +20,7 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>
  *
  */
+
 namespace OCA\Mail\Service\AutoConfig;
 
 use OCP\Security\ICrypto;
@@ -27,44 +30,43 @@ use OCA\Mail\Service\Logger;
 
 class ImapConnector {
 
-	/**
-	 * @var ICrypto
-	 */
+	/** @var ICrypto */
 	private $crypto;
 
-	/**
-	 * @var Logger
-	 */
+	/** @var Logger */
 	private $logger;
 
-	/**
-	 * @var string
-	 */
+	/** @var string */
 	private $userId;
 
 	/**
 	 * @param ICrypto $crypto
 	 * @param Logger $logger
-	 * @param string $UserId
+	 * @param string|null $UserId
 	 */
-	public function __construct(ICrypto $crypto, Logger $logger, $UserId) {
+	public function __construct(ICrypto $crypto, Logger $logger, string $UserId = null) {
 		$this->crypto = $crypto;
 		$this->logger = $logger;
 		$this->userId = $UserId;
 	}
 
 	/**
-	 * @param $email
-	 * @param $password
-	 * @param $name
-	 * @param $host
-	 * @param $port
-	 * @param string|null $encryptionProtocol
-	 * @param $user
+	 * @param string $email
+	 * @param string $password
+	 * @param string $name
+	 * @param string $host
+	 * @param int $port
+	 * @param string $encryptionProtocol
+	 * @param string $user
 	 * @return MailAccount
 	 */
-	public function connect($email, $password, $name, $host, $port,
-		$encryptionProtocol, $user) {
+	public function connect(string $email,
+							string $password,
+							string $name,
+							string $host,
+							int $port,
+							string $encryptionProtocol,
+							string $user) {
 
 		$account = new MailAccount();
 		$account->setUserId($this->userId);

@@ -130,14 +130,17 @@ class AccountsControllerTest extends TestCase {
 		$this->aliasesService->expects($this->any())
 			->method('findAll')
 			->with($this->equalTo($this->accountId), $this->equalTo($this->userId))
-			->will($this->returnValue('aliases'));
+			->will($this->returnValue(['a1', 'a2']));
 
 		$response = $this->controller->index();
 
 		$expectedResponse = new JSONResponse([
 			[
 				'accountId' => 123,
-				'aliases' => 'aliases'
+				'aliases' => [
+					'a1',
+					'a2',
+				],
 			]
 		]);
 		$this->assertEquals($expectedResponse, $response);
@@ -398,7 +401,7 @@ class AccountsControllerTest extends TestCase {
 			->with($this->userId, $messageData, $replyData, null, null);
 		$expected = new JSONResponse();
 
-		$resp = $this->controller->send(13, null, 'sub', 'bod', 'to@d.com', '', '', null, null, [], null);
+		$resp = $this->controller->send(13, 'sub', 'bod', 'to@d.com', '', '');
 
 		$this->assertEquals($expected, $resp);
 	}
@@ -416,7 +419,7 @@ class AccountsControllerTest extends TestCase {
 			->willThrowException(new Horde_Exception('error'));
 		$this->expectException(Horde_Exception::class);
 
-		$this->controller->send(13, null, 'sub', 'bod', 'to@d.com', '', '', null, null, [], null);
+		$this->controller->send(13, 'sub', 'bod', 'to@d.com', '', '');
 	}
 
 	public function testSendReply() {
@@ -433,7 +436,7 @@ class AccountsControllerTest extends TestCase {
 			->with($this->userId, $messageData, $replyData, null, null);
 		$expected = new JSONResponse();
 
-		$resp = $this->controller->send(13, $folderId, 'sub', 'bod', 'to@d.com', '', '', null, $messageId, [], null);
+		$resp = $this->controller->send(13, 'sub', 'bod', 'to@d.com', '', '', null, $folderId, $messageId, [], null);
 
 		$this->assertEquals($expected, $resp);
 	}

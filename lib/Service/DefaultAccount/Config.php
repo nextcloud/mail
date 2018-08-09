@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 /**
  * @author Christoph Wurst <christoph@winzerhof-wurst.at>
  *
@@ -112,7 +114,7 @@ class Config {
 	 * @param IUser $user
 	 * @return string
 	 */
-	private function buildUserEmail($original, IUser $user) {
+	private function buildUserEmail(string $original, IUser $user) {
 		if (!is_null($user->getUID())) {
 			$original = str_replace('%USERID%', $user->getUID(), $original);
 		}

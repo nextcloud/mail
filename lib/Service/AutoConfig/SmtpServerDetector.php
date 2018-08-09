@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 /**
  * @author Christoph Wurst <christoph@winzerhof-wurst.at>
  *
@@ -40,7 +42,8 @@ class SmtpServerDetector {
 	 * @param bool $testSmtp
 	 */
 	public function __construct(MxRecord $mxRecord,
-		SmtpConnectivityTester $smtpTester, $testSmtp) {
+								SmtpConnectivityTester $smtpTester,
+								bool $testSmtp) {
 		$this->mxRecord = $mxRecord;
 		$this->smtpConnectivityTester = $smtpTester;
 		$this->testSmtp = $testSmtp;
@@ -52,8 +55,10 @@ class SmtpServerDetector {
 	 * @param string $password
 	 * @return bool
 	 */
-	public function detect(MailAccount $account, $email, $password) {
-		if ($this->testSmtp === false) {
+	public function detect(MailAccount $account,
+						   string $email,
+						   string $password): bool {
+		if (!$this->testSmtp) {
 			return true;
 		}
 

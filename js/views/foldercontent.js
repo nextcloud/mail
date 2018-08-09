@@ -40,16 +40,21 @@ define(function(require) {
 	});
 
 	return Marionette.View.extend({
+		attributes: {
+			id: 'app-content-wrapper'
+		},
 		template: MessageContentTemplate,
-		className: 'container',
 		detailView: null,
 		account: null,
 		folder: null,
 		searchQuery: null,
 		composer: null,
 		regions: {
-			messages: '#mail-messages',
-			message: '#mail-message'
+			messages: '.app-content-list',
+			message: {
+				el: '.app-content-details',
+				replaceElement: true
+			}
 		},
 		initialize: function(options) {
 			this.account = options.account;
@@ -110,7 +115,7 @@ define(function(require) {
 			isDraft = _.isUndefined(isDraft) ? false : isDraft;
 			$('.tooltip').remove();
 			$('#mail_new_message').prop('disabled', true);
-			$('#mail-message').removeClass('hidden-mobile');
+			$('.app-content-list').addClass('showdetails');
 
 			// setup composer view
 			this.showChildView('message', new ComposerView({
@@ -160,7 +165,7 @@ define(function(require) {
 			switch (key) {
 				case 46:
 					// Mimic a client clicking the delete button for the currently active message.
-					$('.mail-message-summary.active .icon-delete.action.delete').click();
+					$('.app-content-list-item.active .icon-delete.action.delete').click();
 					break;
 				case 39:
 				case 74:

@@ -1,16 +1,21 @@
 { "translations": {
     "Mail" : "Retpoŝto",
     "Error while loading the accounts." : "Eraris ŝargo de la kontoj.",
+    "Can not load this folder." : "Ne ŝargeblis ĉi tiun dosierujon ",
     "Error while deleting message." : "Eraris forigo de mesaĝo.",
     "Attachments saved to Files." : "Kunsendaĵoj konserviĝis en Dosierojn.",
     "Attachment saved to Files." : "Kunsendaĵo konserviĝis en Dosierojn.",
     "Error while saving attachments to Files." : "Eraris konservo de kunsendaĵoj en Dosierojn.",
     "Error while saving attachment to Files." : "Eraris konservo de kunsendaĵo en Dosierojn.",
+    "Error while creating the account: " : "Eraris kreo de konto:",
     "Unknown error" : "Nekonata eraro",
     "All inboxes" : "Ĉiuj enirkestoj",
     "you" : "vi",
     "Send message to {email}" : "Mesaĝi al {email}",
     "{from}\n{subject}" : "{from}\n{subject}",
+    "_%n new message \nfrom {from}_::_%n new messages \nfrom {from}_" : ["%n nova mesaĝo\nde {from}","%n novaj mesaĝoj \nde {from}"],
+    "Save" : "Konservi",
+    "Saved" : "Konservita",
     "Error while deleting account." : "Eraris forigo de konto.",
     "Choose a file to add as attachment" : "Elektu dosieron por aldoni kiel kunsendaĵo",
     "Reply" : "Respondi",
@@ -32,6 +37,15 @@
     "Delete permanently" : "Forigi por ĉiam",
     "Error loading message" : "Eraris ŝargo de mesaĝo",
     "Continue to %s" : "Daŭri al %s",
-    "Connect" : "Konekti"
+    "Delete" : "Forigi",
+    "Search" : "Serĉi",
+    "Name" : "Nomo",
+    "Mail Address" : "Retpoŝtadreso",
+    "Password" : "Pasvorto",
+    "None" : "Nenio",
+    "Connect" : "Konekti",
+    "from" : "el",
+    "to" : "al",
+    "Subject" : "Temo"
 },"pluralForm" :"nplurals=2; plural=(n != 1);"
 }

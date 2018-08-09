@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 /**
  * @copyright 2017 Christoph Wurst <christoph@winzerhof-wurst.at>
  *
@@ -32,12 +34,9 @@ class CompositeAvatarSource {
 	/** @var IAvatarSource[] */
 	private $sources;
 
-	/**
-	 * @param AddressbookSource $addressbookSource
-	 * @param FaviconSource $faviconSource
-	 * @param GravatarSource $gravatarSource
-	 */
-	public function __construct(AddressbookSource $addressbookSource, FaviconSource $faviconSource, GravatarSource $gravatarSource) {
+	public function __construct(AddressbookSource $addressbookSource,
+								FaviconSource $faviconSource,
+								GravatarSource $gravatarSource) {
 		// This determines the priority of known sources
 		$this->sources = [
 			$addressbookSource,
@@ -52,7 +51,7 @@ class CompositeAvatarSource {
 	 * @param bool $queryExternal
 	 * @return Avatar|null avatar URL if one can be found
 	 */
-	public function fetch($email, AvatarFactory $factory, $queryExternal) {
+	public function fetch(string $email, AvatarFactory $factory, bool $queryExternal) {
 		foreach ($this->sources as $source) {
 			if (!$queryExternal && $source->isExternal()) {
 				// Skip this one

@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 /**
  * @author Christoph Wurst <christoph@winzerhof-wurst.at>
  *
@@ -29,29 +31,22 @@ interface IAttachmentService {
 
 	/**
 	 * Save an uploaded file
-	 *
-	 * @param string $userId
-	 * @param UploadedFile $file
-	 * @return LocalAttachment
 	 */
-	public function addFile($userId, UploadedFile $file);
+	public function addFile(string $userId, UploadedFile $file): LocalAttachment;
 
 	/**
 	 * Try to get an attachment by id
 	 *
 	 * @throws AttachmentNotFoundException
-	 * @param string $userId
-	 * @param int $id
 	 * @return array of LocalAttachment and ISimpleFile
 	 */
-	public function getAttachment($userId, $id);
+	public function getAttachment(string $userId, int $id): array;
 
 	/**
 	 * Delete an attachment if it exists
 	 *
 	 * @param string $userId
 	 * @param int $id
-	 * @return LocalAttachment
 	 */
-	public function deleteAttachment($userId, $id);
+	public function deleteAttachment(string $userId, int $id);
 }

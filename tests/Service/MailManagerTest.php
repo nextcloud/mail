@@ -29,6 +29,7 @@ use OCA\Mail\IMAP\IMAPClientFactory;
 use OCA\Mail\IMAP\MailboxPrefixDetector;
 use OCA\Mail\IMAP\MessageMapper;
 use OCA\Mail\IMAP\Sync\Request;
+use OCA\Mail\IMAP\Sync\Response;
 use OCA\Mail\IMAP\Sync\Synchronizer;
 use OCA\Mail\Service\FolderNameTranslator;
 use OCA\Mail\Service\MailManager;
@@ -104,7 +105,8 @@ class MailManagerTest extends TestCase {
 			->with($this->equalTo($folders), $this->equalTo(false));
 		$this->folderMapper->expects($this->once())
 			->method('buildFolderHierarchy')
-			->with($this->equalTo($folders));
+			->with($this->equalTo($folders))
+			->willReturn($folders);
 
 		$this->manager->getFolders($account);
 	}
@@ -112,13 +114,15 @@ class MailManagerTest extends TestCase {
 	public function testSync() {
 		$account = $this->createMock(Account::class);
 		$syncRequest = $this->createMock(Request::class);
+		$syncResonse = $this->createMock(Response::class);
 		$client = $this->createMock(Horde_Imap_Client_Socket::class);
 		$this->imapClientFactory->expects($this->once())
 			->method('getClient')
 			->willReturn($client);
 		$this->sync->expects($this->once())
 			->method('sync')
-			->with($client, $syncRequest);
+			->with($client, $syncRequest)
+			->willReturn($syncResonse);
 
 		$this->manager->syncMessages($account, $syncRequest);
 	}
