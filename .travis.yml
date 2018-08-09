@@ -41,7 +41,11 @@ cache:
   - "$HOME/.npm"
 
 before_install:
+  - composer self-update
+  - composer --version
   - php --info
+  - npm install -g npm@latest
+  - npm -v
 
   - wget https://github.com/ChristophWurst/krankerl/releases/download/v0.9.3/krankerl_0.9.3_amd64.deb
   - sudo dpkg -i krankerl_0.9.3_amd64.deb
@@ -52,8 +56,6 @@ before_install:
   - if [[ "$DB" == 'mysql' ]]; then mysql -u root -e "CREATE USER 'oc_autotest'@'localhost' IDENTIFIED BY '';"; fi
   - if [[ "$DB" == 'mysql' ]]; then mysql -u root -e "GRANT ALL ON oc_autotest.* TO 'oc_autotest'@'localhost';"; fi
 
-  - composer self-update
-  - make install-composer-deps-dev
   - make start-imap-docker
   - make start-smtp-docker
   - cd ..
@@ -69,8 +71,7 @@ before_script:
   # Enable app twice to check occ errors of registered commands
   - php -f core/occ app:enable mail
   - cd core/apps/mail
-  - sh -c "if [ '$TEST_JS' = 'TRUE' ]; then npm install -g npm@latest; fi"
-  - sh -c "if [ '$TEST_JS' = 'TRUE' ]; then make dev-setup; fi"
+  - krankerl up
 
   # Prepare IMAP test docker
   - make add-imap-account
