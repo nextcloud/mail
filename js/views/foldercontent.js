@@ -164,8 +164,9 @@ define(function(require) {
 			var state;
 			switch (key) {
 				case 46:
+					// delete key
 					// Mimic a client clicking the delete button for the currently active message.
-					$('.app-content-list-item.active .icon-delete.action.delete').click();
+					$('.app-content-list-item.active .action.delete').click();
 					break;
 				case 39:
 				case 74:

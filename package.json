@@ -23,6 +23,11 @@
   "bugs": {
     "url": "https://github.com/nextcloud/mail/issues"
   },
+  "prettier": {
+    "singleQuote": true,
+    "tabWidth": 4,
+    "useTabs": true
+  },
   "homepage": "https://github.com/nextcloud/mail",
   "devDependencies": {
     "coveralls": "^3.0.2",
