@@ -25,7 +25,6 @@
  */
 style('mail', 'mail');
 style('mail', 'mobile');
-script('mail', 'searchproxy');
 script('mail', 'build/build');
 ?>
 
