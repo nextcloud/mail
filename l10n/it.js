@@ -82,6 +82,7 @@ OC.L10N.register(
     "Mail address" : "Indirizzo di posta",
     "Display Name" : "Nome visualizzato",
     "Account" : "Account",
+    "Toggle read" : "Commuta letto",
     "Delete" : "Elimina",
     "Keyboard shortcuts" : "Scorciatoie da tastiera",
     "Speed up your Mail experience with these quick shortcuts." : "Velocizza la tua esperienza di posta elettronica con queste scorciatoie.",
