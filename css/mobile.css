@@ -44,13 +44,6 @@
 	display: none;
 }
 
-/* make header scroll away on mobile */
-#mail-message-header {
-	position: relative;
-	width: initial;
-	height: 100px;
-}
-
 textarea.message-body {
 	padding-right: 12px;
 }
