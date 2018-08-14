@@ -737,8 +737,8 @@ input.submit-message,
 				padding-left: 38px !important;
 			}
 
-			&:focus,
 			&:hover,
+			& a:focus,
 			&.active,
 			a.selected {
 				&,
