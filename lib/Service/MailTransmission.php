@@ -231,7 +231,7 @@ class MailTransmission implements IMailTransmission {
 			return null;
 		}
 
-		$id = $attachment['id'];
+		$id = (int) $attachment['id'];
 
 		try {
 			list($localAttachment, $file) = $this->attachmentService->getAttachment($userId, $id);
