@@ -33,7 +33,7 @@ use OCP\AppFramework\Utility\ITimeFactory;
 trait CacheHeaders {
 
 	public function setCacheHeaders(int $cacheFor, ITimeFactory $timeFactory) {
-		$this->cacheFor(7 * 24 * 60 * 60);
+		$this->cacheFor($cacheFor);
 
 		$expires = new DateTime();
 		$expires->setTimestamp($timeFactory->getTime());
