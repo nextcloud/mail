@@ -82,6 +82,7 @@ OC.L10N.register(
     "Mail address" : "Адреса поште",
     "Display Name" : "Име за приказ",
     "Account" : "Налог",
+    "Toggle read" : "Укључи/искључи прочитано",
     "Delete" : "Избриши",
     "Keyboard shortcuts" : "Пречице на тастатури",
     "Speed up your Mail experience with these quick shortcuts." : "Убрзајте рад са Поштом са овим брзим пречицама.",
