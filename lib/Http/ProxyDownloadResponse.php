@@ -24,10 +24,15 @@ declare(strict_types=1);
 
 namespace OCA\Mail\Http;
 
+use DateInterval;
 use DateTime;
+use OC;
 use OCP\AppFramework\Http\DownloadResponse;
+use OCP\AppFramework\Utility\ITimeFactory;
 
 class ProxyDownloadResponse extends DownloadResponse {
+
+	use CacheHeaders;
 
 	/** @var string */
 	private $content;
@@ -47,10 +52,10 @@ class ProxyDownloadResponse extends DownloadResponse {
 
 		$this->content = $content;
 
-		$expires = new DateTime('now + 11 months');
-		$this->addHeader('Expires', $expires->format(DateTime::RFC1123));
-		$this->addHeader('Cache-Control', 'private');
-		$this->addHeader('Pragma', 'cache');
+		$time = OC::$server->query(ITimeFactory::class);
+		$now = (new DateTime('now'))->getTimestamp();
+		$expires = (new DateTime('now + 11 months'))->getTimestamp();
+		$this->setCacheHeaders($expires - $now, $time);
 	}
 
 	/**
