@@ -24,6 +24,7 @@ declare(strict_types=1);
 
 namespace OCA\Mail\Http;
 
+use DateInterval;
 use DateTime;
 use OC;
 use OCP\AppFramework\Http\DownloadResponse;
