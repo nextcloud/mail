@@ -24,64 +24,32 @@ declare(strict_types=1);
 namespace OCA\Mail\Tests\System;
 
 use Exception;
+use Horde_Imap_Client;
+use Horde_Imap_Client_Base;
 use Horde_Imap_Client_Socket;
 use Horde_Mail_Rfc822_Address;
 use Horde_Mime_Mail;
 use Horde_Mime_Part;
 use OC;
 use OCA\Mail\Account;
+use OCA\Mail\Db\MailAccount;
 use OCA\Mail\IMAP\IMAPClientFactory;
 use OCA\Mail\Service\AccountService;
-use OCA\Mail\Service\SetupService;
-use OCA\Mail\SMTP\SmtpClientFactory;
 use OCP\IServerContainer;
+use OCP\IUser;
 use OCP\IUserManager;
-use function str_random;
+use function range;
+use Throwable;
 
 require_once __DIR__ . '/../../../../lib/base.php';
 require_once __DIR__ . '/../../vendor/autoload.php';
-require_once __DIR__ . '/TestMailAccount.php';
 
-/** @var IServerContainer $serverContainer */
-$serverContainer = OC::$server;
-
-/** @var IUserManager $userManager */
-$userManager = $serverContainer->query(IUserManager::class);
-
-$testUID = 'testuser' . rand(0, PHP_INT_MAX);
-$testPwd = $testUID . 'pwd';
-
-$email1 = $testUID . 1 . '@domain.tld';
-$email2 = $testUID . 2 . '@domain.tld';
-
-$testUser = $userManager->createUser($testUID, $testPwd);
-
-echo "Created user $testUID\n";
-
-if ($testUser === false) {
-	throw new Exception("Could not create user $testUID");
-}
-
-/** @var AccountService $accountService */
-$accountService = $serverContainer->query(AccountService::class);
-
-$testAccount1 = new TestMailAccount($email1);
-$testAccount2 = new TestMailAccount($email2);
-
-echo "Creating test mail accounts\n";
-echo "Test mail accounts created\n";
-$account1 = new Account($testAccount1->create($testUID, $accountService));
-$account2 = new Account($testAccount2->create($testUID, $accountService));
-
-echo "Creating test data\n";
-/** @var IMAPClientFactory $imapClientFactory */
-$imapClientFactory = $serverContainer->query(IMAPClientFactory::class);
-$imapClient1 = $imapClientFactory->getClient($account1);
-$imapClient2 = $imapClientFactory->getClient($account2);
-
-function create_text_message(Horde_Imap_Client_Socket $imapClient, string $email, string $subject) {
+function create_text_message(Horde_Imap_Client_Socket $imapClient,
+							 string $email,
+							 string $subject,
+							 array $flags = []) {
 	$headers = [
-		//'From' => new Horde_Mail_Rfc822_Address('sender@domain.tld'),
+		'From' => new Horde_Mail_Rfc822_Address('sender@domain.tld'),
 		'To' => new Horde_Mail_Rfc822_Address($email),
 		'Subject' => $subject,
 	];
@@ -99,11 +67,125 @@ function create_text_message(Horde_Imap_Client_Socket $imapClient, string $email
 	$imapClient->append('INBOX', [
 		[
 			'data' => $data,
+			'flags' => $flags,
 		]
 	]);
 }
 
-create_text_message($imapClient1, $email1, 'Message 1');
+function create_test_user($userManager, $testUID, $testPwd): IUser {
+	$testUser = $userManager->createUser($testUID, $testPwd);
 
-echo "Credentials: $testUID : $testPwd\n";
-echo "You may now log in at https://localhost/login?user=$testUID&redirect_url=/apps/mail\n";
+	if ($testUser === false) {
+		throw new Exception("Could not create user $testUID");
+	}
+
+	return $testUser;
+}
+
+function create_mail_account(string $uid,
+							 string $name,
+							 string $email,
+							 string $username,
+							 AccountService $accountService): MailAccount {
+	exec("docker exec -it ncimaptest /opt/bin/useradd $username mypasswd");
+
+	$mailAccount = new MailAccount();
+	$mailAccount->setUserId($uid);
+	$mailAccount->setName($name);
+	$mailAccount->setEmail($email);
+	$mailAccount->setInboundHost('localhost');
+	$mailAccount->setInboundPort(993);
+	$mailAccount->setInboundSslMode('ssl');
+	$mailAccount->setInboundUser($username);
+	$mailAccount->setInboundPassword(OC::$server->getCrypto()->encrypt('mypasswd'));
+
+	$mailAccount->setOutboundHost('localhost');
+	$mailAccount->setOutboundPort(2525);
+	$mailAccount->setOutboundUser($username);
+	$mailAccount->setOutboundPassword(OC::$server->getCrypto()->encrypt('mypasswd'));
+	$mailAccount->setOutboundSslMode('none');
+
+	$account = $accountService->save($mailAccount);
+
+	return $account;
+}
+
+/**
+ * @param $imapClientFactory
+ * @param $account1
+ * @param $email1
+ */
+function create_test_data(IMAPClientFactory $imapClientFactory,
+						  Account $account1,
+						  string $email1,
+						  Account $account2,
+						  string $email2) {
+	echo "Creating test data... ";
+
+	$imapClient1 = $imapClientFactory->getClient($account1);
+	$imapClient2 = $imapClientFactory->getClient($account2);
+
+	// First, let's create some unseen messages (not actually shown)
+	$flags = [
+		Horde_Imap_Client::FLAG_SEEN,
+	];
+	foreach (range(0, 50) as $i) {
+		create_text_message($imapClient1, $email1, 'A message', $flags);
+		create_text_message($imapClient2, $email2, 'A message', $flags);
+	}
+
+	echo "done\n";
+}
+
+try {
+
+	/** @var IServerContainer $serverContainer */
+	$serverContainer = OC::$server;
+	/** @var IUserManager $userManager */
+	$userManager = $serverContainer->query(IUserManager::class);
+	/** @var AccountService $accountService */
+	$accountService = $serverContainer->query(AccountService::class);
+	/** @var IMAPClientFactory $imapClientFactory */
+	$imapClientFactory = $serverContainer->query(IMAPClientFactory::class);
+
+	$testUID = 'testuser' . rand(0, PHP_INT_MAX);
+	$testPwd = $testUID . 'pwd';
+
+	echo "Creating test user... ";
+	create_test_user($userManager, $testUID, $testPwd);
+	echo "done: $testUID\n";
+
+	$email1 = $testUID . 1 . '@domain.tld';
+	$email2 = $testUID . 2 . '@domain.tld';
+
+	echo "Creating test mail accounts... ";
+	// Random data from https://duckduckgo.com/?q=random+name&ia=answer
+	$account1 = new Account(
+		create_mail_account(
+			$testUID,
+			'Lauretta Lahman',
+			'lauretta.lahman@protonmail.com',
+			$email1,
+			$accountService
+		)
+	);
+	$account2 = new Account(
+		create_mail_account(
+			$testUID,
+			'Lauretta Lahman',
+			'l.lahman@gmail.com',
+			$email2,
+			$accountService
+		)
+	);
+	echo "done\n";
+
+	create_test_data($imapClientFactory, $account1, $email1, $account2, $email2);
+
+	echo "Credentials: $testUID : $testPwd\n";
+	echo "You may now log in at https://localhost/login?user=$testUID&redirect_url=/apps/mail\n";
+} catch (Throwable $t) {
+	echo "An error occurred: " . $t->getMessage() . " in " . $t->getFile() . " on line " . $t->getLine();
+	throw $t;
+}
+
