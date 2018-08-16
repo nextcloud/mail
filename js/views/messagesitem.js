@@ -83,6 +83,10 @@ define(function(require) {
 					$(a).height('32px');
 					imageplaceholder(a, from.label, from.label);
 				});
+			} else {
+				var $avatar = this.$('.avatar');
+				$avatar.height('32px');
+				imageplaceholder($avatar, '?', '?');
 			}
 
 			var _this = this;
