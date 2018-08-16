@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "a09bec573d3d36c5b928dbdc4530da35",
+    "content-hash": "5a6a2e71874425421cc59e5a55dc2446",
     "packages": [
         {
             "name": "arthurhoaro/favicon",
@@ -239,7 +239,7 @@
             ],
             "description": "Autolink URLs in text or html",
             "homepage": "http://www.kwi.dk/projects/php/UrlLinker/",
-            "time": "2014-12-28T23:05:00+00:00"
+            "time": "2014-12-28T22:05:00+00:00"
         },
         {
             "name": "pear-pear.horde.org/Horde_Crypt_Blowfish",
@@ -884,19 +884,24 @@
     "packages-dev": [
         {
             "name": "christophwurst/nextcloud",
-            "version": "13.0.2",
+            "version": "14.0.0-beta4",
             "source": {
                 "type": "git",
                 "url": "https://github.com/ChristophWurst/nextcloud_composer.git",
-                "reference": "dcfe63673eed9a9a7971a96219055080868942fb"
+                "reference": "e6db39b6996621f0192035dd7dd3b6ddae17b97f"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/ChristophWurst/nextcloud_composer/zipball/dcfe63673eed9a9a7971a96219055080868942fb",
-                "reference": "dcfe63673eed9a9a7971a96219055080868942fb",
+                "url": "https://api.github.com/repos/ChristophWurst/nextcloud_composer/zipball/e6db39b6996621f0192035dd7dd3b6ddae17b97f",
+                "reference": "e6db39b6996621f0192035dd7dd3b6ddae17b97f",
                 "shasum": ""
             },
             "type": "library",
+            "extra": {
+                "branch-alias": {
+                    "dev-master": "14.0.0-dev"
+                }
+            },
             "notification-url": "https://packagist.org/downloads/",
             "license": [
                 "AGPL-3.0-or-later"
@@ -908,7 +913,7 @@
                 }
             ],
             "description": "Composer package containing Nextcloud's public API (classes, interfaces)",
-            "time": "2018-04-26T12:12:23+00:00"
+            "time": "2018-08-16T15:16:59+00:00"
         },
         {
             "name": "christophwurst/nextcloud_testing",
@@ -2389,7 +2394,8 @@
         "pear-pear.horde.org/horde_text_flowed": 0,
         "pear-pear.horde.org/horde_util": 0,
         "pear-pear.horde.org/horde_smtp": 0,
-        "kwi/urllinker": 20
+        "kwi/urllinker": 20,
+        "christophwurst/nextcloud": 10
     },
     "prefer-stable": false,
     "prefer-lowest": false,
