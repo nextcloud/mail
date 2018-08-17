@@ -48,7 +48,8 @@ class LocalAttachmentMapper extends QBMapper {
 		$query = $qb
 			->select('*')
 			->from($this->getTableName())
-			->where($qb->expr()->eq('user_id', $qb->createNamedParameter($userId)));
+			->where($qb->expr()->eq('user_id', $qb->createNamedParameter($userId)))
+			->andWhere($qb->expr()->eq('id', $qb->createNamedParameter($id)));
 
 		return $this->findEntity($query);
 	}

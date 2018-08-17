@@ -48,13 +48,11 @@ class CollectedAddressMapper extends QBMapper {
 		$dbQuery = $qb
 			->select('*')
 			->from($this->getTableName())
-			->where(
-				$qb->expr()->eq('user_id', $qb->createNamedParameter($userId)),
-				$qb->expr()->orX(
-					$qb->expr()->iLike('email', $qb->createNamedParameter("%$query%")),
-					$qb->expr()->iLike('display_name', $qb->createNamedParameter("%$query%"))
-				)
-			);
+			->where($qb->expr()->eq('user_id', $qb->createNamedParameter($userId)))
+			->andWhere($qb->expr()->orX(
+				$qb->expr()->iLike('email', $qb->createNamedParameter("%$query%")),
+				$qb->expr()->iLike('display_name', $qb->createNamedParameter("%$query%"))
+			));
 
 		return $this->findEntities($dbQuery);
 	}
@@ -65,7 +63,7 @@ class CollectedAddressMapper extends QBMapper {
 			->select('*')
 			->from($this->getTableName())
 			->where($qb->expr()->eq('user_id', $qb->createNamedParameter($userId)))
-			->andWhere($qb->expr()->eq('email', $qb->createNamedParameter($email)));
+			->andWhere($qb->expr()->iLike('email', $qb->createNamedParameter($email)));
 
 		return count($this->findEntities($dbQuery)) > 0;
 	}
