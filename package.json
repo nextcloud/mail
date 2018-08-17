@@ -1,27 +1,38 @@
 {
-  "name": "mail",
-  "version": "0.1.0",
-  "private": true,
-  "scripts": {
-    "build": "./node_modules/@vue/cli-service/bin/vue-cli-service.js build",
-    "dev": "./node_modules/@vue/cli-service/bin/vue-cli-service.js build --watch",
-    "lint": "./node_modules/@vue/cli-service/bin/vue-cli-service.js lint",
-    "test:unit": "./node_modules/@vue/cli-service/bin/vue-cli-service.js test:unit",
-    "test:e2e": "./node_modules/@vue/cli-service/bin/vue-cli-service.js test:e2e"
-  },
-  "dependencies": {
-    "@vue/cli-service": "^3.0.1",
-    "vue": "^2.5.17",
-    "vue-router": "^3.0.1",
-    "vuex": "^3.0.1"
-  },
-  "devDependencies": {
-    "@vue/cli-plugin-babel": "^3.0.1",
-    "@vue/cli-plugin-e2e-nightwatch": "^3.0.1",
-    "@vue/cli-plugin-eslint": "^3.0.1",
-    "@vue/cli-plugin-unit-mocha": "^3.0.1",
-    "@vue/test-utils": "^1.0.0-beta.20",
-    "chai": "^4.1.2",
-    "vue-template-compiler": "^2.5.17"
-  }
+	"name": "mail",
+	"description": "Nextcloud Mail",
+	"version": "1.0.0",
+	"author": "Christoph Wurst <christoph@winzerhof-wurst.at>",
+	"license": "agpl",
+	"private": true,
+	"scripts": {
+		"build": "webpack --progress --hide-modules --config js/webpack.prod.js",
+		"dev": "webpack --progress --watch --config js/webpack.dev.js"
+	},
+	"dependencies": {
+		"vue": "^2.5.16",
+		"vue-click-outside": "^1.0.7",
+		"vue-router": "^3.0.1",
+		"vuex": "^3.0.1",
+		"vuex-router-sync": "^5.0.0"
+	},
+	"browserslist": [
+		"last 2 versions",
+		"not ie <= 11"
+	],
+	"devDependencies": {
+		"babel-core": "^6.26.3",
+		"babel-loader": "^7.1.4",
+		"babel-plugin-syntax-dynamic-import": "^6.18.0",
+		"babel-preset-env": "^1.7.0",
+		"css-loader": "^0.28.11",
+		"file-loader": "^1.1.11",
+		"node-sass": "^4.9.0",
+		"sass-loader": "^7.0.3",
+		"vue-loader": "^15.2.4",
+		"vue-template-compiler": "^2.5.16",
+		"webpack": "^4.12.0",
+		"webpack-cli": "^3.0.4",
+		"webpack-merge": "^4.1.2"
+	}
 }
