@@ -22,11 +22,11 @@
 
 namespace OCA\Mail\Db;
 
-use OCP\AppFramework\Db\Mapper;
+use OCP\AppFramework\Db\QBMapper;
 use OCP\DB\QueryBuilder\IQueryBuilder;
 use OCP\IDBConnection;
 
-class CollectedAddressMapper extends Mapper {
+class CollectedAddressMapper extends QBMapper {
 
 	/**
 	 * @param IDBConnection $db
@@ -40,25 +40,32 @@ class CollectedAddressMapper extends Mapper {
 	 *
 	 * @param string $userId
 	 * @param string $query
+	 *
 	 * @return CollectedAddress[]
 	 */
 	public function findMatching($userId, $query) {
-		$sql = 'SELECT * FROM *PREFIX*mail_collected_addresses WHERE `user_id` = ? AND (`email` ILIKE ? OR `display_name` ILIKE ?)';
-		$params = [
-			$userId,
-			'%' . $query . '%',
-			'%' . $query . '%',
-		];
-		return $this->findEntities($sql, $params);
+		$qb = $this->db->getQueryBuilder();
+		$dbQuery = $qb
+			->select('*')
+			->from($this->getTableName())
+			->where($qb->expr()->eq('user_id', $qb->createNamedParameter($userId)))
+			->andWhere($qb->expr()->orX(
+				$qb->expr()->iLike('email', $qb->createNamedParameter("%$query%")),
+				$qb->expr()->iLike('display_name', $qb->createNamedParameter("%$query%"))
+			));
+
+		return $this->findEntities($dbQuery);
 	}
 
 	public function exists($userId, $email) {
-		$sql = 'SELECT * FROM *PREFIX*mail_collected_addresses WHERE `user_id` = ? AND `email` ILIKE ?';
-		$params = [
-			$userId,
-			$email
-		];
-		return count($this->findEntities($sql, $params)) > 0;
+		$qb = $this->db->getQueryBuilder();
+		$dbQuery = $qb
+			->select('*')
+			->from($this->getTableName())
+			->where($qb->expr()->eq('user_id', $qb->createNamedParameter($userId)))
+			->andWhere($qb->expr()->iLike('email', $qb->createNamedParameter($email)));
+
+		return count($this->findEntities($dbQuery)) > 0;
 	}
 
 	public function getTotal() {
@@ -68,7 +75,7 @@ class CollectedAddressMapper extends Mapper {
 			->from($this->getTableName());
 		$result = $qb->execute();
 
-		$count = (int) $result->fetchColumn(0);
+		$count = (int)$result->fetchColumn(0);
 		$result->closeCursor();
 		return $count;
 	}
@@ -85,16 +92,10 @@ class CollectedAddressMapper extends Mapper {
 			->setMaxResults(100);
 		if (!is_null($minId)) {
 			$query = $query->where($qb->expr()->gte('id',
-					$qb->createNamedParameter($minId)));
+				$qb->createNamedParameter($minId)));
 		}
 
-		$result = $query->execute();
-		$rows = $result->fetchAll();
-		$result->closeCursor();
-
-		return array_map(function(array $data) {
-			return CollectedAddress::fromRow($data);
-		}, $rows);
+		return $this->findEntities($query);
 	}
 
 }

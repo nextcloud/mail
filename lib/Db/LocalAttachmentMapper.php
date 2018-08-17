@@ -23,10 +23,10 @@
 namespace OCA\Mail\Db;
 
 use OCP\AppFramework\Db\DoesNotExistException;
-use OCP\AppFramework\Db\Mapper;
+use OCP\AppFramework\Db\QBMapper;
 use OCP\IDBConnection;
 
-class LocalAttachmentMapper extends Mapper {
+class LocalAttachmentMapper extends QBMapper {
 
 	/**
 	 * @param IDBConnection $db
@@ -37,15 +37,21 @@ class LocalAttachmentMapper extends Mapper {
 
 	/**
 	 * @throws DoesNotExistException
+	 *
 	 * @param int $userId
 	 * @param int $id
+	 *
 	 * @return LocalAttachment
 	 */
 	public function find($userId, $id) {
-		$sql = 'SELECT * FROM `' . $this->getTableName() . '` WHERE user_id = ? and id = ?';
-		$params = [$userId, $id];
+		$qb = $this->db->getQueryBuilder();
+		$query = $qb
+			->select('*')
+			->from($this->getTableName())
+			->where($qb->expr()->eq('user_id', $qb->createNamedParameter($userId)))
+			->andWhere($qb->expr()->eq('id', $qb->createNamedParameter($id)));
 
-		return $this->findEntity($sql, $params);
+		return $this->findEntity($query);
 	}
 
 }

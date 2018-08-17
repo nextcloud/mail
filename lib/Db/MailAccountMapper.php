@@ -24,10 +24,10 @@
 
 namespace OCA\Mail\Db;
 
-use OCP\AppFramework\Db\Mapper;
+use OCP\AppFramework\Db\QBMapper;
 use OCP\IDBConnection;
 
-class MailAccountMapper extends Mapper {
+class MailAccountMapper extends QBMapper {
 
 	/**
 	 * @param IDBConnection $db
@@ -40,31 +40,43 @@ class MailAccountMapper extends Mapper {
 	 *
 	 * @param string $userId
 	 * @param int $accountId
+	 *
 	 * @return MailAccount
 	 */
 	public function find($userId, $accountId) {
-		$sql = 'SELECT * FROM `' . $this->getTableName() . '` WHERE user_id = ? and id = ?';
-		$params = [$userId, $accountId];
+		$qb = $this->db->getQueryBuilder();
+		$query = $qb
+			->select('*')
+			->from($this->getTableName())
+			->where($qb->expr()->eq('user_id', $qb->createNamedParameter($userId)))
+			->andWhere($qb->expr()->eq('id', $qb->createNamedParameter($accountId)));
 
-		return $this->findEntity($sql, $params);
+		return $this->findEntity($qb);
 	}
 
 	/**
 	 * Finds all Mail Accounts by user id existing for this user
+	 *
 	 * @param string $userId the id of the user that we want to find
 	 * @param $userId
+	 *
 	 * @return MailAccount[]
 	 */
 	public function findByUserId($userId) {
-		$sql = 'SELECT * FROM ' . $this->getTableName() . ' WHERE user_id = ?';
-		$params = [$userId];
+		$qb = $this->db->getQueryBuilder();
+		$query = $qb
+			->select('*')
+			->from($this->getTableName())
+			->where($qb->expr()->eq('user_id', $qb->createNamedParameter($userId)));
 
-		return $this->findEntities($sql, $params);
+		return $this->findEntities($query);
 	}
 
 	/**
 	 * Saves an User Account into the database
+	 *
 	 * @param MailAccount $account
+	 *
 	 * @return MailAccount
 	 */
 	public function save(MailAccount $account) {
