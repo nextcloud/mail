@@ -1,41 +1,25 @@
-/**
- * @author Christoph Wurst <christoph@winzerhof-wurst.at>
- *
- * Mail
- *
- * This code is free software: you can redistribute it and/or modify
- * it under the terms of the GNU Affero General Public License, version 3,
- * as published by the Free Software Foundation.
- *
- * This program is distributed in the hope that it will be useful,
- * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
- * GNU Affero General Public License for more details.
- *
- * You should have received a copy of the GNU Affero General Public License, version 3,
- * along with this program.  If not, see <http://www.gnu.org/licenses/>
- *
- */
+import Vue from 'vue'
+import Router from 'vue-router'
+import Home from './views/Home.vue'
 
-define(function(require) {
-	'use strict';
+Vue.use(Router)
 
-	var Marionette = require('backbone.marionette');
-
-	/**
-	 * @class Router
-	 */
-	var Router = Marionette.AppRouter.extend({
-		appRoutes: {
-			'': 'default',
-			'accounts/:accountId/folders/:folderId': 'showFolder',
-			'accounts/:accountId/folders/:folderId/search/:query': 'searchFolder',
-			'mailto(?:params)': 'mailTo',
-			'setup': 'showSetup',
-			'shortcuts': 'showKeyboardShortcuts',
-			'accounts/:accountId/settings': 'showAccountSettings'
+export default new Router({
+	mode: 'history',
+	base: process.env.BASE_URL,
+	routes: [
+		{
+			path: '/',
+			name: 'home',
+			component: Home
+		},
+		{
+			path: '/about',
+			name: 'about',
+			// route level code-splitting
+			// this generates a separate chunk (about.[hash].js) for this route
+			// which is lazy-loaded when the route is visited.
+			component: () => import(/* webpackChunkName: "about" */ './views/About.vue')
 		}
-	});
-
-	return Router;
-});
+	]
+})

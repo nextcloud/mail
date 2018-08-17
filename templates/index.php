@@ -25,31 +25,10 @@
  */
 style('mail', 'mail');
 style('mail', 'mobile');
-script('mail', 'build/build');
+script('mail', 'build/app');
 ?>
 
 <input type="hidden" id="debug-mode" value="<?php p($_['debug'] ? 'true' : 'false'); ?>">
 <input type="hidden" id="config-installed-version" value="<?php p($_['app-version']); ?>">
 <input type="hidden" id="serialized-accounts" value="<?php p($_['accounts']); ?>">
 <input type="hidden" id="external-avatars" value="<?php p($_['external-avatars']); ?>">
-
-<div id="app-navigation" class="icon-loading">
-	<div id="mail-new-message-fixed"
-		 class="app-navigation-new">
-	</div>
-	<ul id="usergrouplist"></ul>
-	<div id="app-settings">
-		<div id="app-settings-header">
-			<button class="settings-button"
-					data-apps-slide-toggle="#app-settings-content"><?php p($l->t('Settings'));?></button>
-		</div>
-		<div id="app-settings-content"></div>
-	</div>
-</div>
-<div id="app-content">
-	<div id="app-content-wrapper"></div>
-</div>
-<div id="user-displayname"
-     style="display: none"><?php p($_['prefill_displayName']); ?></div>
-<div id="user-email"
-     style="display: none"><?php p($_['prefill_email']); ?></div>
