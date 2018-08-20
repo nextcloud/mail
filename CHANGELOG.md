@@ -1,6 +1,21 @@
 # Changelog
 All notable changes to this project will be documented in this file.
 
+## 0.10.0 – 2018-08-20
+### Added
+- Account export command (`occ mail:account:export <UID>`)
+- Popover menu for messages
+- Ability to mark messages as unread in the UI
+### Changed
+- New and updated translations
+### Fixed
+- Non-existent variable access warning
+- SMTP FQDN hostname when sending messages
+- Text alignment on redirect page
+- Message header on mobile devices
+- Sending messages with local attachments
+- Removed usage of deprecated server APIs
+
 ## 0.9.0 – 2018-08-09
 ### Fixed
 - Nextcloud 14 compatibility
