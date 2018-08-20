@@ -1,6 +1,8 @@
 import Vue from 'vue'
 import Router from 'vue-router'
-import Home from './views/Home.vue'
+
+import Home from './views/Home'
+import Setup from './views/Setup';
 
 Vue.use(Router)
 
@@ -17,12 +19,12 @@ export default new Router({
 		{
 			path: '/accounts/:accountId/folders/:folderId',
 			name: 'folder',
-			component: () => import(/* webpackChunkName: "about" */ './views/Setup.vue'),
+			component: Home
 		},
 		{
 			path: '/setup',
 			name: 'setup',
-			component: () => import(/* webpackChunkName: "about" */ './views/Setup.vue'),
+			component: Setup
 		}
 	]
 })

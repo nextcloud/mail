@@ -6,12 +6,20 @@ Vue.use(Vuex)
 export default new Vuex.Store({
 	state: {
 		accounts: [
-			/*{
+			{
 				id: -1,
-				name: 'All inboxes',
-				specialUse: 'inbox',
-				unread: 2
-			},*/
+				name: 'email1@domain.com',
+				visible: false,
+				bullet: '#ee2629',
+				folders: [
+					{
+						id: -1,
+						name: 'All inboxes',
+						specialUse: 'inbox',
+						unread: 2
+					}
+				]
+			},
 			{
 				id: 1,
 				name: 'email1@domain.com',

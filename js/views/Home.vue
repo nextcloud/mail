@@ -17,13 +17,15 @@
 				const items = chain(account => {
 					let items = []
 
-					items.push({
-						id: 'account' + account.id,
-						key: 'account' + account.id,
-						text: account.name,
-						bullet: account.bullet, // TODO
-						router: {}
-					})
+					if (account.visible !== false) {
+						items.push({
+							id: 'account' + account.id,
+							key: 'account' + account.id,
+							text: account.name,
+							bullet: account.bullet, // TODO
+							router: {}
+						})
+					}
 
 					return items.concat(account.folders.map(folder => {
 						console.info('while', items, folder.id, folder.specialUse);
