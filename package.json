@@ -10,6 +10,7 @@
 		"dev": "webpack --progress --watch --config js/webpack.dev.js"
 	},
 	"dependencies": {
+		"ramda": "^0.25.0",
 		"vue": "^2.5.16",
 		"vue-click-outside": "^1.0.7",
 		"vue-router": "^3.0.1",

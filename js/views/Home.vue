@@ -5,6 +5,8 @@
 </template>
 
 <script>
+	import chain from "ramda/es/chain";
+
 	import AppNavigation from "../components/core/appNavigation";
 
 	export default {
@@ -12,6 +14,44 @@
 		components: {AppNavigation},
 		computed: {
 			menu () {
+				const items = chain(account => {
+					let items = []
+
+					items.push({
+						id: 'account' + account.id,
+						key: 'account' + account.id,
+						text: account.name,
+						bullet: account.bullet, // TODO
+						router: {}
+					})
+
+					return items.concat(account.folders.map(folder => {
+						console.info('while', items, folder.id, folder.specialUse);
+
+						var icon = 'folder';
+						if (folder.specialUse) {
+							icon = folder.specialUse;
+						}
+
+						return {
+							id: 'account' + account.id + '_' + folder.id,
+							key: 'account' + account.id + '_' + folder.id,
+							text: folder.name,
+							icon: 'icon-' + icon,
+							router: {
+								name: 'folder',
+								params: {
+									accountId: account.id,
+									folderId: folder.id,
+								}
+							},
+							utils: {
+								counter: folder.unread,
+							}
+						}
+					}))
+				}, this.$store.state.accounts);
+
 				return {
 					id: 'accounts-list',
 					new: {
@@ -20,88 +60,10 @@
 						icon: 'icon-add',
 						action: this.newMessage
 					},
-					items: [
-						{
-							id: -1,
-							key: -1,
-							text: 'All inboxes',
-							icon: 'icon-inbox',
-							router: {},
-							utils: {
-								counter: 2
-							}
-						},
-						{
-							id: 1,
-							key: 1,
-							text: 'email1@domain.com',
-							bullet: '#ee2629',
-							router: {}
-						},
-						{
-							id: 'folder1',
-							key: 'folder1',
-							text: 'Inbox',
-							icon: 'icon-inbox',
-							router: {},
-							utils: {
-								counter: 2
-							}
-						},
-						{
-							id: 'folder2',
-							key: 'folder2',
-							text: 'Favorites',
-							icon: 'icon-flagged',
-							router: {},
-							utils: {
-								counter: 2
-							}
-						},
-						{
-							id: 'folder3',
-							key: 'folder3',
-							text: 'Drafts',
-							icon: 'icon-drafts',
-							router: {},
-							utils: {
-								counter: 1
-							}
-						},
-						{
-							id: 'folder4',
-							key: 'folder4',
-							text: 'Sent',
-							icon: 'icon-sent',
-							router: {},
-							utils: {
-								counter: 0
-							}
-						},
-						{
-							id: 'folder5',
-							key: 'folder5',
-							text: 'Show all',
-							router: {}
-						},
-						{
-							id: 2,
-							key: 2,
-							text: 'email2@domain.com',
-							bullet: '#81ee53',
-							router: {}
-						},
-						{
-							id: 'folder2',
-							key: 'folder2',
-							text: 'Inbox',
-							icon: 'icon-inbox',
-							router: {},
-							utils: {
-								counter: 0
-							}
-						}
-					]
+					items: items,
+					utils: {
+						counter: 0
+					}
 				}
 			}
 		},
