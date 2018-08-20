@@ -6,7 +6,8 @@ Vue.use(Router)
 
 export default new Router({
 	mode: 'history',
-	base: process.env.BASE_URL,
+	base: OC.generateUrl('/apps/mail/'),
+	linkActiveClass: 'active',
 	routes: [
 		{
 			path: '/',
