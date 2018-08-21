@@ -76,13 +76,17 @@ define(function(require) {
 			return json;
 		},
 		onRender: function() {
-			var displayName = this.model.get('from')[0].label;
+			var from = this.model.get('from')[0];
 			// Don't show any placeholder if 'from' isn't set
-			if (displayName) {
+			if (from) {
 				_.each(this.$el.find('.avatar'), function(a) {
 					$(a).height('32px');
-					imageplaceholder(a, displayName, displayName);
+					imageplaceholder(a, from.label, from.label);
 				});
+			} else {
+				var $avatar = this.$('.avatar');
+				$avatar.height('32px');
+				imageplaceholder($avatar, '?', '?');
 			}
 
 			var _this = this;

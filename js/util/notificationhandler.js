@@ -74,7 +74,12 @@ define(function(require) {
 			return;
 		}
 
-		var from = _.map(messages, function(m) {
+		var from = messages.filter(function(m) {
+			return m.get('from').length > 0;
+		}).map(function(m) {
+			if (m.get('from').length === 0) {
+				return null;
+			}
 			return m.get('from')[0].label;
 		});
 		from = _.uniq(from);

@@ -53,8 +53,10 @@ define(function(require) {
 				var minutes = date.getMinutes();
 				var text = HtmlHelper.htmlToText(this.messageBody.get('body'));
 
+				var from = this.messageBody.get('from')[0];
+				var fromLine = _.isUndefined(from) ? '' : from.label + ' – ';
 				this.reply.body = '\n\n\n\n' +
-						this.messageBody.get('from')[0].label + ' – ' +
+						fromLine +
 						$.datepicker.formatDate('D, d. MM yy ', date) +
 						date.getHours() + ':' + (minutes < 10 ? '0' : '') + minutes + '\n> ' +
 						text.replace(/\n/g, '\n> ');

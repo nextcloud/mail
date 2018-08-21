@@ -430,9 +430,10 @@ define(function(require) {
 		setReplyBody: function(from, date, text) {
 			var minutes = date.getMinutes();
 
+			var fromLine = _.isUndefined(from) ? '' : from.label + ' – ';
 			this.$('.message-body').first().text(
 					'\n\n\n' +
-					from.label + ' – ' +
+					fromLine +
 					$.datepicker.formatDate('D, d. MM yy ', date) +
 					date.getHours() + ':' + (minutes < 10 ? '0' : '') + minutes + '\n> ' +
 					text.replace(/\n/g, '\n> ')

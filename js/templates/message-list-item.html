@@ -13,7 +13,11 @@
 		{{#if senderImage}}
 		<img src="{{senderImage}}" width="32px" height="32px" />
 		{{else}}
+		{{#if sender}}
 		<div class="avatar" data-user="{{sender.label}}" data-size="32"></div>
+		{{else}}
+		<div class="avatar" data-user="?" data-size="32"></div>
+		{{/if}}
 		{{/if}}
 	</div>
 
