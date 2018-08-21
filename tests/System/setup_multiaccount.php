@@ -45,12 +45,14 @@ require_once __DIR__ . '/../../../../lib/base.php';
 require_once __DIR__ . '/../../vendor/autoload.php';
 
 function create_text_message(Horde_Imap_Client_Socket $imapClient,
-							 string $email,
+							 string $sender,
+							 string $receiver,
 							 string $subject,
-							 array $flags = []) {
+							 array $flags = [],
+							 string $bodyText = '') {
 	$headers = [
-		'From' => new Horde_Mail_Rfc822_Address('sender@domain.tld'),
-		'To' => new Horde_Mail_Rfc822_Address($email),
+		'From' => new Horde_Mail_Rfc822_Address($sender),
+		'To' => new Horde_Mail_Rfc822_Address($receiver),
 		'Subject' => $subject,
 	];
 
@@ -58,7 +60,7 @@ function create_text_message(Horde_Imap_Client_Socket $imapClient,
 	$mail->addHeaders($headers);
 	$body = new Horde_Mime_Part();
 	$body->setType('text/plain');
-	$body->setContents('');
+	$body->setContents($bodyText);
 	$mail->setBasePart($body);
 
 	$raw = $mail->getRaw();
@@ -110,6 +112,14 @@ function create_mail_account(string $uid,
 	return $account;
 }
 
+const MAIL_BODY = <<<MAILBODY
+Hi,
+
+Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam nonumy eirmod tempor invidunt ut labore et dolore magna aliquyam erat, sed diam voluptua. At vero eos et accusam et justo duo dolores et ea rebum. Stet clita kasd gubergren, no sea takimata sanctus est Lorem ipsum dolor sit amet. Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam nonumy eirmod tempor invidunt ut labore et dolore magna aliquyam erat, sed diam voluptua.
+
+At vero eos et accusam et justo duo dolores et ea rebum. Stet clita kasd gubergren, no sea takimata sanctus est Lorem ipsum dolor sit amet.
+MAILBODY;
+
 /**
  * @param $imapClientFactory
  * @param $account1
@@ -130,11 +140,23 @@ function create_test_data(IMAPClientFactory $imapClientFactory,
 		Horde_Imap_Client::FLAG_SEEN,
 	];
 	foreach (range(0, 50) as $i) {
-		create_text_message($imapClient1, $email1, 'A message', $flags);
-		create_text_message($imapClient2, $email2, 'A message', $flags);
+		create_text_message($imapClient1, $email1, $email1, 'A message', $flags);
+		create_text_message($imapClient2, $email2, $email2, 'A message', $flags);
+	}
+	foreach (get_test_data1() as list($sender, $subject)) {
+		create_text_message($imapClient1, $sender, 'lauretta.lahman@protonmail.com', $subject, [], MAIL_BODY);
 	}
 
 	echo "done\n";
+}
+
+function get_test_data1(): array {
+	return [
+		['Leon Green <leon.green@acme.inc>', 'Outline for tomorrows meeting'],
+		['Louis Johnson <louis.johnson@acme.inc>', 'New projector for room 1.02'],
+		['Christine Scott <christine.scott@acme.inc>', 'Parental leave of Leon Green'],
+		['Molly Allen <molly.allen@acme.inc>', 'Our homepage is down :('],
+	];
 }
 
 try {
