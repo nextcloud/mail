@@ -22,8 +22,7 @@
 							id: 'account' + account.id,
 							key: 'account' + account.id,
 							text: account.name,
-							bullet: account.bullet, // TODO
-							router: {}
+							bullet: account.bullet // TODO
 						})
 					}
 
