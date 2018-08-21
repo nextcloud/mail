@@ -95,7 +95,7 @@ class SmtpClientFactoryTest extends TestCase {
 			->willReturn('pass123');
 		$this->config->expects($this->at(1))
 			->method('getSystemValue')
-			->with('app.mail.smtp.timeout', 2)
+			->with('app.mail.smtp.timeout', 5)
 			->willReturn(2);
 		$this->hostNameFactory->expects($this->once())
 			->method('getHostName')

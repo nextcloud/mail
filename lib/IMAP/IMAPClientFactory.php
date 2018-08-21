@@ -73,7 +73,7 @@ class IMAPClientFactory {
 			'hostspec' => $host,
 			'port' => $port,
 			'secure' => $sslMode,
-			'timeout' => (int)$this->config->getSystemValue('app.mail.imap.timeout', 20),
+			'timeout' => (int)$this->config->getSystemValue('app.mail.imap.timeout', 5),
 		];
 		if ($this->cacheFactory->isAvailable()) {
 			$params['cache'] = [
