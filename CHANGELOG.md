@@ -1,7 +1,7 @@
 # Changelog
 All notable changes to this project will be documented in this file.
 
-## 0.10.0 – 2018-08-20
+## 0.10.0 – 2018-08-21
 ### Added
 - Account export command (`occ mail:account:export <UID>`)
 - Popover menu for messages
