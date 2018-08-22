@@ -1,4 +1,4 @@
-<div class="app-content-list-item {{#if flags.unseen}}unseen{{/if}} {{#if active}}active{{/if}}" data-message-id="{{id}}">
+<div class="app-content-list-item {{#if flags.unseen}}unseen{{/if}} {{#if active}}active{{/if}}" data-message-id="{{id}}" tabindex="0">
 	{{#if isUnified}}
 	<div class="mail-message-account-color" style="background-color: {{accountColor accountMail}}"></div>
 	{{/if}}
@@ -40,7 +40,7 @@
 			</span>
 		</div>
 		<div class="app-content-list-item-menu">
-			<div class="icon-more toggle-menu"></div>
+			<div class="icon-more toggle-menu" tabindex="0"></div>
 			<div class="popovermenu">
 				<ul>
 					<li>
