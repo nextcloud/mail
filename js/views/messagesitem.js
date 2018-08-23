@@ -33,6 +33,7 @@ define(function(require) {
 			'click @ui.self': 'openMessage',
 			'click @ui.star': 'toggleMessageStar',
 			'click @ui.toggleMenu': 'toggleActionsMenu',
+			'keyup @ui.toggleMenu': 'toggleActionsMenuKeyboard',
 			'click .action.delete': 'deleteMessage',
 			'click .action.toggle-read': 'toggleMessageRead'
 		},
@@ -179,6 +180,12 @@ define(function(require) {
 		toggleActionsMenu: function() {
 			this.actionsMenuShown = !this.actionsMenuShown;
 			this.toggleMenuClass();
+		},
+
+		toggleActionsMenuKeyboard: function(event) {
+			if (event.key === ' ' || event.key === 'Enter') {
+				this.toggleActionsMenu();
+			}
 		},
 
 		toggleMenuClass: function() {
