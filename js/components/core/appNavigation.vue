@@ -35,7 +35,7 @@
 			<div id="app-settings-header">
 				<button class="settings-button"
 						data-apps-slide-toggle="#app-settings-content"
-				>{{t('settings', 'Settings')}}
+				>{{t('mail', 'Settings')}}
 				</button>
 			</div>
 			<div id="app-settings-content">
