@@ -27,8 +27,6 @@
 					}
 
 					return items.concat(account.folders.map(folder => {
-						console.info('while', items, folder.id, folder.specialUse);
-
 						var icon = 'folder';
 						if (folder.specialUse) {
 							icon = folder.specialUse;
