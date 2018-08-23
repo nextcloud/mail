@@ -1,6 +1,7 @@
 <template>
 	<div id="content" class="mail">
 		<app-navigation :menu="menu"/>
+		<FolderContent />
 	</div>
 </template>
 
@@ -8,10 +9,14 @@
 	import chain from "ramda/es/chain";
 
 	import AppNavigation from "../components/core/appNavigation";
+	import FolderContent from "../components/FolderContent";
 
 	export default {
 		name: 'home',
-		components: {AppNavigation},
+		components: {
+			AppNavigation,
+			FolderContent,
+		},
 		computed: {
 			menu () {
 				const items = chain(account => {
