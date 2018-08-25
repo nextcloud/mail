@@ -89,7 +89,7 @@ script:
 
   # Run server's app code checker
   # TODO: enable once table renames are possible
-  # - php ../../occ app:check-code mail
+  - php ../../occ app:check-code mail
 
   # Run JS tests
   - sh -c "if [ '$TEST_JS' = 'TRUE' ]; then grunt; fi"

@@ -79,8 +79,7 @@ class CollectedAddressMapperTest extends TestCase {
 		$this->address3->setDisplayName('User 3');
 		$this->address3->setUserId($this->userId);
 
-		$qb = $this->db->getQueryBuilder();
-		$sql = 'INSERT INTO *PREFIX*mail_collected_addresses (`email`, `display_name`, `user_id`) VALUES (?, ?, ?)';
+		$sql = 'INSERT INTO *PREFIX*mail_coll_addresses (`email`, `display_name`, `user_id`) VALUES (?, ?, ?)';
 		$stmt = $this->db->prepare($sql);
 
 		// Empty DB
@@ -93,19 +92,19 @@ class CollectedAddressMapperTest extends TestCase {
 			$this->address1->getDisplayName(),
 			$this->address1->getUserId(),
 		]);
-		$this->address1->setId($this->db->lastInsertId('PREFIX*mail_collected_addresses'));
+		$this->address1->setId($this->db->lastInsertId('PREFIX*mail_coll_addresses'));
 		$stmt->execute([
 			$this->address2->getEmail(),
 			$this->address2->getDisplayName(),
 			$this->address2->getUserId(),
 		]);
-		$this->address2->setId($this->db->lastInsertId('PREFIX*mail_collected_addresses'));
+		$this->address2->setId($this->db->lastInsertId('PREFIX*mail_coll_addresses'));
 		$stmt->execute([
 			$this->address3->getEmail(),
 			$this->address3->getDisplayName(),
 			$this->address3->getUserId(),
 		]);
-		$this->address3->setId($this->db->lastInsertId('PREFIX*mail_collected_addresses'));
+		$this->address3->setId($this->db->lastInsertId('PREFIX*mail_coll_addresses'));
 	}
 
 	public function matchingData() {
@@ -121,11 +120,11 @@ class CollectedAddressMapperTest extends TestCase {
 	public function testFindMatching($query, $result) {
 		$matches = $this->mapper->findMatching($this->userId, $query);
 
-		$this->assertCount(count($result), $matches);
+		$this->assertCount(\count($result), $matches);
 		$i = 0;
 		foreach ($matches as $match) {
 			$this->assertInstanceOf('\OCA\Mail\Db\CollectedAddress', $match);
-			$this->assertTrue(in_array($match->getEmail(), $result));
+			$this->assertContains($match->getEmail(), $result);
 			$this->assertEquals($this->userId, $match->getUserId());
 			$i++;
 		}

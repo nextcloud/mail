@@ -14,8 +14,9 @@ The nightly builds are provided by [Portknox.net](https://portknox.net)
 Connect to your database and run the following commands (`oc_` is the default table prefix):
 ```sql
 DELETE FROM oc_appconfig WHERE appid = 'mail';
+DELETE FROM oc_migrations WHERE app = 'mail';
 DROP TABLE oc_mail_accounts;
 DROP TABLE oc_mail_aliases;
-DROP TABLE oc_mail_collected_addresses;
+DROP TABLE oc_mail_coll_addresses;
 DROP TABLE oc_mail_attachments;
 ```
