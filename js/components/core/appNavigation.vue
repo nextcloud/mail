@@ -36,6 +36,7 @@
 			<div id="app-settings-header">
 				<button class="settings-button"
 					data-apps-slide-toggle="#app-settings-content"
+						v-click-outside="closeMenu"
 					@click="toggleMenu"
 				>{{ t('mail', 'Settings') }}</button>
 			</div>
@@ -48,12 +49,17 @@
 
 <script>
 	import navigationItem from './navigationItem';
+	import ClickOutside from 'vue-click-outside';
 
 	export default {
 		name: 'appNavigation',
 		props: ['menu'],
 		components: {
-			navigationItem
+			navigationItem,
+			ClickOutside
+		},
+		directives: {
+			ClickOutside
 		},
 		data() {
 			return {
