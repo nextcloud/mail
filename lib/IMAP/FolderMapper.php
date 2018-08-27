@@ -107,6 +107,13 @@ class FolderMapper {
 			}
 		}
 
+		//filter for \\noselect
+        foreach ($top as $folder) {
+		    if($folder->isNoselect()){
+                unset($top[array_search($folder, $top)]);
+            }
+        }
+
 		return array_values($top);
 	}
 

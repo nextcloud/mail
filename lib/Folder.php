@@ -91,6 +91,13 @@ class Folder implements JsonSerializable {
 		return $this->attributes;
 	}
 
+    /**
+     * @return array
+     */
+    public function isNoselect() {
+        return in_array('\noselect', $this->attributes);
+    }
+
 	/**
 	 * @param Folder $folder
 	 */
@@ -170,7 +177,7 @@ class Folder implements JsonSerializable {
 			'unseen' => isset($this->status['unseen']) ? $this->status['unseen'] : 0,
 			'total' => isset($this->status['messages']) ? (int) $this->status['messages'] : 0,
 			'isEmpty' => isset($this->status['messages']) ? 0 >= (int) $this->status['messages'] : true,
-			'noSelect' => in_array('\noselect', $this->attributes),
+			'noSelect' => $this->isNoselect(),
 			'attributes' => $this->attributes,
 			'delimiter' => $this->delimiter,
 			'folders' => array_values($folders),
