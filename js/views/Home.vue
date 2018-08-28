@@ -11,10 +11,15 @@
 
 	import AppNavigation from "../components/core/appNavigation";
 	import AppSettingsMenu from "../components/AppSettingsMenu";
+	import FolderContent from "../components/FolderContent"
 
 	export default {
 		name: 'home',
-		components: {AppSettingsMenu, AppNavigation},
+		components: {
+			AppSettingsMenu,
+			FolderContent,
+			AppNavigation
+		},
 		computed: {
 			menu () {
 				const items = chain(account => {

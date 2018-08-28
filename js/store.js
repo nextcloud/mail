@@ -16,7 +16,19 @@ export default new Vuex.Store({
 						id: -1,
 						name: 'All inboxes',
 						specialUse: 'inbox',
-						unread: 2
+						unread: 2,
+						messages: [
+							{
+								id: 123,
+								from: 'Steffen Lindner',
+								subject: 'Message 123',
+							},
+							{
+								id: 321,
+								from: 'Kevin Ndung\'u Gathuku',
+								subject: 'Message 321',
+							},
+						]
 					}
 				]
 			},
@@ -71,6 +83,11 @@ export default new Vuex.Store({
 				]
 			}
 		]
+	},
+	getters: {
+		currentFolder (state) {
+			return state.accounts[0].folders[0]
+		}
 	},
 	mutations: {},
 	actions: {}
