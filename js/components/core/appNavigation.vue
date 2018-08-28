@@ -31,15 +31,17 @@
 			<navigation-item v-for="item in menu.items" :item="item"
 							 :key="item.key"/>
 		</ul>
-		<div id="app-settings" v-if="!!$slots['settings-content']">
+		<div v-click-outside="closeMenu" v-if="!!$slots['settings-content']" id="app-settings"
+			:class="{open: opened}">
 			<div id="app-settings-header">
 				<button class="settings-button"
-						data-apps-slide-toggle="#app-settings-content"
-				>{{t('settings', 'Settings')}}
-				</button>
+					data-apps-slide-toggle="#app-settings-content"
+						v-click-outside="closeMenu"
+					@click="toggleMenu"
+				>{{ t('mail', 'Settings') }}</button>
 			</div>
 			<div id="app-settings-content">
-				<slot name="settings-content"></slot>
+				<slot name="settings-content" />
 			</div>
 		</div>
 	</div>
@@ -47,12 +49,30 @@
 
 <script>
 	import navigationItem from './navigationItem';
+	import ClickOutside from 'vue-click-outside';
 
 	export default {
 		name: 'appNavigation',
 		props: ['menu'],
 		components: {
-			navigationItem
+			navigationItem,
+			ClickOutside
+		},
+		directives: {
+			ClickOutside
+		},
+		data() {
+			return {
+				opened: false
+			}
+		},
+		methods: {
+			toggleMenu () {
+				this.opened = !this.opened
+			},
+			closeMenu () {
+				this.opened = false
+			}
 		}
 	};
 </script>

@@ -1,6 +1,8 @@
 <template>
 	<div id="content" class="mail">
-		<app-navigation :menu="menu"/>
+		<app-navigation :menu="menu">
+			<AppSettingsMenu slot="settings-content" />
+		</app-navigation>
 		<FolderContent />
 	</div>
 </template>
@@ -9,13 +11,15 @@
 	import chain from "ramda/es/chain";
 
 	import AppNavigation from "../components/core/appNavigation";
-	import FolderContent from "../components/FolderContent";
+	import AppSettingsMenu from "../components/AppSettingsMenu";
+	import FolderContent from "../components/FolderContent"
 
 	export default {
 		name: 'home',
 		components: {
-			AppNavigation,
+			AppSettingsMenu,
 			FolderContent,
+			AppNavigation
 		},
 		computed: {
 			menu () {
@@ -32,6 +36,8 @@
 					}
 
 					return items.concat(account.folders.map(folder => {
+						console.info('while', items, folder.id, folder.specialUse);
+
 						var icon = 'folder';
 						if (folder.specialUse) {
 							icon = folder.specialUse;
