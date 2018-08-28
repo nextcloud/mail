@@ -7,7 +7,6 @@ import Setup from './views/Setup';
 Vue.use(Router)
 
 export default new Router({
-	mode: 'history',
 	base: OC.generateUrl('/apps/mail/'),
 	linkActiveClass: 'active',
 	routes: [
