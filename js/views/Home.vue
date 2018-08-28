@@ -3,6 +3,7 @@
 		<app-navigation :menu="menu">
 			<AppSettingsMenu slot="settings-content" />
 		</app-navigation>
+		<FolderContent />
 	</div>
 </template>
 
