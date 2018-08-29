@@ -68,9 +68,7 @@ class MailManager implements IMailManager {
 								MailboxPrefixDetector $prefixDetector,
 								FolderNameTranslator $folderNameTranslator,
 								Synchronizer $synchronizer,
-								MessageMapper $messageMapper
-
-    ) {
+								MessageMapper $messageMapper) {
 		$this->imapClientFactory = $imapClientFactory;
 		$this->folderMapper = $folderMapper;
 		$this->prefixDetector = $prefixDetector;

@@ -108,11 +108,11 @@ class FolderMapper {
 		}
 
 		//filter for \\noselect
-        foreach ($top as $folder) {
-		    if($folder->isNoselect()){
-                unset($top[array_search($folder, $top)]);
+        $top = array_filter($top, function($folder) {
+            if(!$folder->isNoselect()){
+                return $folder;
             }
-        }
+        });
 
 		return array_values($top);
 	}
