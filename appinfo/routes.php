@@ -55,6 +55,11 @@ $app->registerRoutes($this,
 			'verb' => 'GET'
 		],
 		[
+			'name' => 'messages#downloadAttachments',
+			'url' => '/api/accounts/{accountId}/folders/{folderId}/messages/{messageId}/attachments',
+			'verb' => 'GET'
+		],
+		[
 			'name' => 'messages#saveAttachment',
 			'url' => '/api/accounts/{accountId}/folders/{folderId}/messages/{messageId}/attachment/{attachmentId}',
 			'verb' => 'POST'

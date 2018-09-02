@@ -45,6 +45,7 @@ use OCP\AppFramework\Http\JSONResponse;
 use OCP\AppFramework\Http\Response;
 use OCP\AppFramework\Http\TemplateResponse;
 use OCP\AppFramework\Utility\ITimeFactory;
+use OCP\AppFramework\Http\ZipResponse;
 use OCP\Files\Folder;
 use OCP\Files\IMimeTypeDetector;
 use OCP\IL10N;
@@ -132,10 +133,21 @@ class MessagesController extends Controller {
 		}
 		$messages = $mailBox->getMessages($filter, $cursor);
 
-		$json = array_map(function ($j) use ($mailBox) {
+		$json = array_map(function ($j) use ($mailBox, $accountId, $folderId) {
 			if ($mailBox->getSpecialRole() === 'trash') {
 				$j['delete'] = (string)$this->l10n->t('Delete permanently');
 			}
+
+			$downloadUrl = $this->urlGenerator->linkToRoute('mail.messages.downloadAttachments', [
+				'accountId' => $accountId,
+				'folderId' => $folderId,
+				'messageId' => $j['id'],
+			]);
+
+			$downloadUrl = $this->urlGenerator->getAbsoluteURL($downloadUrl);
+
+			$j['downloadAllAttachmentsUrl'] = $downloadUrl;
+
 			return $j;
 		}, $messages);
 
@@ -264,6 +276,42 @@ class MessagesController extends Controller {
 
 		return new AttachmentDownloadResponse(
 			$attachment->getContents(), $attachment->getName(), $attachment->getType());
+	}
+
+	/**
+	 * @NoAdminRequired
+	 * @NoCSRFRequired
+	 * @TrapError
+	 *
+	 * @param int $accountId
+	 * @param string $folderId
+	 * @param int $messageId
+	 * @return ZipResponse
+	 */
+	public function downloadAttachments(int $accountId, string $folderId, int $messageId) {
+		$mailBox = $this->getFolder($accountId, $folderId);
+		$message = $mailBox->getMessage($messageId);
+
+		$json = $message->getFullMessage($mailBox->getSpecialRole());
+
+		$streamer = new ZipResponse("attachments", $this->request);
+
+		if (isset($json['attachments'])) {
+			foreach($json['attachments'] as $attachment){
+				$attachmentObject = $mailBox->getAttachment($messageId, intval($attachment['id']));
+				$fileName = $attachmentObject->getName();
+				$fileParts = pathinfo($fileName);
+				$fileName = $fileParts['filename'];
+
+				$fh = fopen("php://temp", 'r+');
+				fputs($fh, $attachmentObject->getContents());
+				$size = ftell($fh);
+				rewind($fh);
+				$streamer->addResource($fh, $fileName, $size);
+			}
+		}
+
+		return $streamer;
 	}
 
 	/**
