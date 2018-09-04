@@ -1,6 +1,6 @@
 <template>
 	<span :title="email"
-		  v-tooltip="tooltipData">{{ label }}</span>
+		  v-tooltip="{ content: 'label', placement: 'bottom' }">{{ label }}</span>
 </template>
 
 <script>
@@ -9,13 +9,6 @@
 		props: [
 			'email',
 			'label',
-		],
-		data () {
-			return {
-				tooltipData: {
-					placement: 'bottom',
-				}
-			};
-		}
+		]
 	}
 </script>
