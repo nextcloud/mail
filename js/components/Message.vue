@@ -7,7 +7,7 @@
 				to <!-- TODO: translate -->
 				<AddressList :entries="to"/>
 				<template v-if="cc.length">
-					(cc
+					(cc <!-- TODO: translate -->
 					<AddressList :entries="cc"/><!--
 					-->)
 				</template>
