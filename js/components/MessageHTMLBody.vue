@@ -1,5 +1,5 @@
 <template>
-	<div>
+	<div id="mail-content">
 		<div id="show-images-text">
 			<!--{{ t 'The images have been blocked to protect your privacy.' }}-->
 			<button id="show-images-button">

@@ -1,6 +1,12 @@
 <template>
 	<div>
-		{{ body }}
+		<div id="mail-content">
+			{{ body }}
+		</div>
+		<div v-if="signature"
+			 class="mail-signature">
+			{{signature}}
+		</div>
 	</div>
 </template>
 
@@ -9,6 +15,7 @@
 		name: "MessagePlainTextBody",
 		props: [
 			'body',
+			'signature',
 		]
 	};
 </script>

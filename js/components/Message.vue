@@ -17,14 +17,9 @@
 			<div id="mail-content">
 				<MessageHTMLBody v-if="hasHtmlBody"/>
 				<MessagePlainTextBody v-else
-									  :body="body"/>
+									  :body="body"
+									  :signature="signature"/>
 			</div>
-			<!-- {{#if signature}}
-			<div class="mail-signature">
-				{{{signature}}}
-			</div>
-			{{/if}} -->
-
 			<div class="mail-message-attachments"></div>
 			<div id="reply-composer"></div>
 			<input type="button" id="forward-button" value="Forward">
@@ -66,7 +61,8 @@
 				],
 				subject: 'Do you enjoy the Vue?',
 				hasHtmlBody: false,
-				body: 'Henlo!'
+				body: 'Henlo!',
+				signature: 'Backbone Marionette',
 			};
 		}
 	}
