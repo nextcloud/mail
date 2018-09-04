@@ -6,12 +6,11 @@
 				<AddressList :entries="from"/>
 				to <!-- TODO: translate -->
 				<AddressList :entries="to"/>
-				<!--{{printAddressList from}}
-				{{ t 'to' }}
-				{{printAddressList to}}
-				{{#if cc.length}}
-				({{ t 'cc' }} {{printAddressList cc}})
-				{{/if}}-->
+				<template v-if="cc.length">
+					(cc
+					<AddressList :entries="cc"/><!--
+					-->)
+				</template>
 			</p>
 		</div>
 		<div class="mail-message-body">
@@ -67,6 +66,12 @@
 					{
 						label: 'Angular',
 						email: 'angular@frameworks.js',
+					}
+				],
+				cc: [
+					{
+						label: 'Underscore Jayes',
+						email: 'underscore@frameworks.js',
 					}
 				],
 				subject: 'Do you enjoy the Vue?'
