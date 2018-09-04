@@ -1,6 +1,6 @@
 <template>
 	<span :title="email"
-		  v-tooltip="{ content: 'label', placement: 'bottom' }">{{ label }}</span>
+		  v-tooltip.bottom="label">{{ label }}</span>
 </template>
 
 <script>
