@@ -3,6 +3,9 @@
 		<div id="mail-message-header" class="section">
 			<h2 :title="subject">{{subject}}</h2>
 			<p class="transparency">
+				<AddressList :entries="from"/>
+				to <!-- TODO: translate -->
+				<AddressList :entries="to"/>
 				<!--{{printAddressList from}}
 				{{ t 'to' }}
 				{{printAddressList to}}
@@ -43,10 +46,29 @@
 </template>
 
 <script>
+	import AddressList from "./AddressList";
+
 	export default {
 		name: "Message",
-		data() {
+		components: {AddressList},
+		data () {
 			return {
+				from: [
+					{
+						label: 'Backbone Marionette',
+						email: 'backbone.marionette@frameworks.js',
+					}
+				],
+				to: [
+					{
+						label: 'React',
+						email: 'react@frameworks.js',
+					},
+					{
+						label: 'Angular',
+						email: 'angular@frameworks.js',
+					}
+				],
 				subject: 'Do you enjoy the Vue?'
 			};
 		}
