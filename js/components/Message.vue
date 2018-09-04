@@ -15,21 +15,9 @@
 		</div>
 		<div class="mail-message-body">
 			<div id="mail-content">
-				<!--{{#if hasHtmlBody}}
-				<div id="show-images-text">
-					{{ t 'The images have been blocked to protect your privacy.'
-					}}
-					<button id="show-images-button">{{ t 'Show images from this
-						sender' }}
-					</button>
-				</div>
-				<div class="icon-loading">
-					<iframe src="{{htmlBodyUrl}}" seamless>
-					</iframe>
-				</div>
-				{{else}}
-				{{{body}}}
-				{{/if}}-->
+				<MessageHTMLBody v-if="hasHtmlBody"/>
+				<MessagePlainTextBody v-else
+									  :body="body"/>
 			</div>
 			<!-- {{#if signature}}
 			<div class="mail-signature">
@@ -46,10 +34,12 @@
 
 <script>
 	import AddressList from "./AddressList";
+	import MessageHTMLBody from "./MessageHTMLBody";
+	import MessagePlainTextBody from "./MessagePlainTextBody";
 
 	export default {
 		name: "Message",
-		components: {AddressList},
+		components: {MessagePlainTextBody, MessageHTMLBody, AddressList},
 		data () {
 			return {
 				from: [
@@ -74,7 +64,9 @@
 						email: 'underscore@frameworks.js',
 					}
 				],
-				subject: 'Do you enjoy the Vue?'
+				subject: 'Do you enjoy the Vue?',
+				hasHtmlBody: false,
+				body: 'Henlo!'
 			};
 		}
 	}
