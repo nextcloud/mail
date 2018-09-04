@@ -9,16 +9,16 @@
 			{{subject}}
 		</div>
 		<div class="app-content-list-item-details date">
-				<span class="modified live-relative-timestamp"
-					  data-timestamp="1534968683000"
-					  title="22. August 2018 22:11">x seconds ago</span>
+			<Moment timestamp="1536048354000" />
 		</div>
 	</div>
 </template>
 
 <script>
+	import Moment from "./Moment";
 	export default {
 		name: "MessageListItem",
+		components: {Moment},
 		props: [
 			'from',
 			'subject',
