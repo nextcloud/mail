@@ -1,7 +1,7 @@
 <template>
 	<span class="live-relative-timestamp"
 		  :data-timestamp="timestamp"
-		  :title=title>{{ formatted }}</span>
+		  :title="title">{{ formatted }}</span>
 </template>
 
 <script>
