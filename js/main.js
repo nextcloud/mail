@@ -25,7 +25,7 @@ import App from './App';
 import router from './router';
 import store from './store';
 import {sync} from 'vuex-router-sync';
-import tooltip from './directives/tooltip';
+import VTooltip from 'v-tooltip'
 
 sync(store, router);
 
@@ -34,7 +34,7 @@ Vue.prototype.n = n;
 Vue.prototype.OC = OC;
 Vue.prototype.OCA = OCA;
 
-Vue.directive('tooltip', tooltip);
+Vue.use(VTooltip);
 
 new Vue({
 	el: '#content',
