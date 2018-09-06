@@ -4,7 +4,7 @@
 			<AppSettingsMenu slot="settings-content"/>
 		</app-navigation>
 		<FolderContent>
-			<Message/>
+			<NewMessageDetail/>
 		</FolderContent>
 	</div>
 </template>
@@ -13,18 +13,18 @@
 	import AppNavigation from "../components/core/appNavigation";
 	import AppSettingsMenu from "../components/AppSettingsMenu";
 	import FolderContent from "../components/FolderContent";
-	import Message from "../components/Message";
 
 	import SidebarItems from "../mixins/SidebarItems";
+	import NewMessageDetail from "../components/NewMessageDetail";
 
 	export default {
 		name: 'home',
 		extends: SidebarItems,
 		components: {
+			NewMessageDetail,
 			AppNavigation,
 			AppSettingsMenu,
 			FolderContent,
-			Message,
 		},
 		computed: {
 			menu () {
