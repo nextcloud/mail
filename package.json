@@ -27,6 +27,8 @@
     "not ie <= 11"
   ],
   "devDependencies": {
+    "@vue/server-test-utils": "^1.0.0-beta.24",
+    "@vue/test-utils": "^1.0.0-beta.24",
     "babel-core": "^6.26.3",
     "babel-loader": "^7.1.4",
     "babel-plugin-syntax-dynamic-import": "^6.18.0",

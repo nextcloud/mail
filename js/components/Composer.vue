@@ -52,8 +52,10 @@
 					  :placeholder="t('mail', 'Message …')">{{message}}</textarea>
 		</div>
 		<div class="submit-message-wrapper">
-			<input class="submit-message send primary" type="submit"
-				   :value="submitButtonTitle" disabled>
+			<input class="submit-message send primary"
+				   type="submit"
+				   :value="submitButtonTitle"
+				   v-on:click="onSend">
 			<div class="submit-message-wrapper-inside"></div>
 		</div>
 		<div class="new-message-attachments">
@@ -69,6 +71,16 @@
 
 	export default {
 		name: "Composer",
+		props: {
+			draft: {
+				type: Function,
+				required: true
+			},
+			send: {
+				type: Function,
+				required: true
+			}
+		},
 		data () {
 			return {
 				aliases: [],
@@ -86,10 +98,11 @@
 			addressListPlain (val) {
 				return 'todo';
 			}
+		},
+		methods: {
+			onSend() {
+				this.send();
+			}
 		}
 	}
 </script>
-
-<style scoped>
-
-</style>

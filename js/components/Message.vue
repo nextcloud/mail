@@ -24,7 +24,8 @@
 			<div id="reply-composer"></div>
 			<input type="button" id="forward-button" value="Forward">
 		</div>
-		<Composer/>
+		<Composer :send="sendReply"
+				  :draft="saveReplyDraft"/>
 	</div>
 </template>
 
@@ -71,6 +72,20 @@
 				body: 'Henlo!',
 				signature: 'Backbone Marionette',
 			};
+		},
+		methods: {
+			sendReply() {
+				console.log('todo: sending reply');
+				return new Promise((res, _) => {
+					setTimeout(() => res, 1000);
+				});
+			},
+			saveReplyDraft() {
+				console.log('todo: saving reply draft');
+				return new Promise((res, _) => {
+					setTimeout(() => res, 1000);
+				});
+			}
 		}
 	}
 </script>
