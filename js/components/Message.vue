@@ -1,5 +1,5 @@
 <template>
-	<div class="app-content-detail">
+	<div class="app-content-details">
 		<div id="mail-message-header" class="section">
 			<h2 :title="subject">{{subject}}</h2>
 			<p class="transparency">
