@@ -1,3 +1,17 @@
 {
-  "plugins": ["syntax-dynamic-import"]
+  "plugins": [
+    "syntax-dynamic-import"
+  ],
+  "env": {
+    "test": {
+      "presets": [
+        [
+          "env",
+          {
+            "modules": "commonjs"
+          }
+        ]
+      ]
+    }
+  }
 }
