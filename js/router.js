@@ -1,6 +1,7 @@
 import Vue from 'vue'
 import Router from 'vue-router'
 
+import AccountSettings from './views/AccountSettings';
 import Home from './views/Home'
 import NewMessage from './views/NewMessage';
 import Setup from './views/Setup';
@@ -25,6 +26,11 @@ export default new Router({
 			path: '/accounts/:accountId/folders/:folderId',
 			name: 'folder',
 			component: Home
+		},
+		{
+			path: '/accounts/:accountId/settings',
+			name: 'accountSettings',
+			component: AccountSettings
 		},
 		{
 			path: '/setup',

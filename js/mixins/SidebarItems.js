@@ -11,7 +11,13 @@ export default {
 						id: 'account' + account.id,
 						key: 'account' + account.id,
 						text: account.name,
-						bullet: account.bullet // TODO
+						bullet: account.bullet, // TODO
+						router: {
+							'name': 'accountSettings',
+							params: {
+								accountId: account.id,
+							}
+						}
 					})
 				}
 
