@@ -48,6 +48,7 @@
 
 			<textarea name="body"
 					  class="message-body"
+					  v-autosize
 					  :placeholder="t('mail', 'Message …')">{{message}}</textarea>
 		</div>
 		<div class="submit-message-wrapper">
@@ -61,6 +62,11 @@
 </template>
 
 <script>
+	import Autosize from 'vue-autosize';
+	import Vue from 'vue';
+
+	Vue.use(Autosize);
+
 	export default {
 		name: "Composer",
 		data () {
