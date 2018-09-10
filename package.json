@@ -24,7 +24,7 @@
   },
   "browserslist": [
     "last 2 versions",
-    "not ie <= 11"
+    "ie >= 11"
   ],
   "devDependencies": {
     "@babel/core": "^7.0.0",
