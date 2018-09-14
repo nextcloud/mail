@@ -23,6 +23,8 @@ declare(strict_types=1);
 
 namespace OCA\Mail\Migration;
 
+use OCA\Mail\Db\CollectedAddress;
+use OCA\Mail\Db\CollectedAddressMapper;
 use OCP\DB\ISchemaWrapper;
 use OCP\IDBConnection;
 use OCP\Migration\SimpleMigrationStep;
@@ -52,9 +54,39 @@ class Version0110Date20180825201241 extends SimpleMigrationStep {
 		/** @var ISchemaWrapper $schema */
 		$schema = $schemaClosure();
 
-		if ($schema->hasTable('mail_collected_addresses')) {
-			$this->copyCollectedAddresses();
+		if (!$schema->hasTable('mail_collected_addresses')) {
+			return;
 		}
+
+		/** @var IDBConnection $connection */
+		$connection = $this->connection;
+
+		// add method to overwrite tableName
+		$collectedAdressesMapper = new class($connection) extends CollectedAddressMapper {
+			public function setTableName(string $tableName) {
+				$this->tableName = $tableName;
+			}
+		};
+
+		// change table name
+		$collectedAdressesMapper->setTableName('mail_collected_addresses');
+
+		$nrOfAddresses = $collectedAdressesMapper->getTotal();
+		$output->startProgress($nrOfAddresses);
+
+		$chunk = $collectedAdressesMapper->getChunk();
+		while (\count($chunk) > 0) {
+			$maxId = null;
+			foreach ($chunk as $address) {
+				/* @var $address CollectedAddress */
+				$maxId = $address->getId();
+				$this->insertAddress($address);
+			}
+
+			$output->advance(\count($chunk));
+			$chunk = $collectedAdressesMapper->getChunk($maxId + 1);
+		}
+		$output->finishProgress();
 	}
 
 	/**
@@ -83,28 +115,25 @@ class Version0110Date20180825201241 extends SimpleMigrationStep {
 	}
 
 	/**
-	 * Copy collected addresses to new table
+	 * Insert collected addresses to new table
+	 *
+	 * @param CollectedAddress $address
 	 */
-	private function copyCollectedAddresses(): void {
-		$query = $this->connection->getQueryBuilder();
-		$query->select('*')
-			->from('mail_collected_addresses');
-
-		$insert = $this->connection->getQueryBuilder();
-		$insert->insert('mail_coll_addresses')
-			->values(['id' => '?', 'user_id' => '?', 'email' => '?', 'display_name' => '?']);
-
-		$result = $query->execute();
-
-		while ($row = $result->fetch()) {
-			$insert->setParameters([
-				$row['id'],
-				$row['user_id'],
-				$row['email'],
-				$row['display_name']
-			])->execute();
-		}
-
-		$result->closeCursor();
+	private function insertAddress(CollectedAddress $address) {
+		$this->connection->getQueryBuilder()
+			->insert('mail_coll_addresses')
+			->values([
+				'id' => '?',
+				'user_id' => '?',
+				'email' => '?',
+				'display_name' => '?'
+			])
+			->setParameters([
+				$address->getId(),
+				$address->getUserId(),
+				$address->getEmail(),
+				$address->getDisplayName()
+			])
+			->execute();
 	}
 }
