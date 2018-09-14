@@ -30,9 +30,6 @@ use OCP\IDBConnection;
 use OCP\Migration\SimpleMigrationStep;
 use OCP\Migration\IOutput;
 
-/**
- * Auto-generated migration step: Please modify to your needs!
- */
 class Version0110Date20180825201241 extends SimpleMigrationStep {
 
 	/** @var IDBConnection */
@@ -66,6 +63,7 @@ class Version0110Date20180825201241 extends SimpleMigrationStep {
 			public function setTableName(string $tableName) {
 				$this->tableName = $tableName;
 			}
+
 			public function setEntityClass(string $entityClass) {
 				$this->entityClass = $entityClass;
 			}
@@ -109,14 +107,6 @@ class Version0110Date20180825201241 extends SimpleMigrationStep {
 		}
 
 		return $schema;
-	}
-
-	/**
-	 * @param IOutput $output
-	 * @param \Closure $schemaClosure The `\Closure` returns a `ISchemaWrapper`
-	 * @param array $options
-	 */
-	public function postSchemaChange(IOutput $output, \Closure $schemaClosure, array $options) {
 	}
 
 	/**
