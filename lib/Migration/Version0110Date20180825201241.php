@@ -61,15 +61,20 @@ class Version0110Date20180825201241 extends SimpleMigrationStep {
 		/** @var IDBConnection $connection */
 		$connection = $this->connection;
 
-		// add method to overwrite tableName
+		// add method to overwrite tableName / entityClass
 		$collectedAdressesMapper = new class($connection) extends CollectedAddressMapper {
 			public function setTableName(string $tableName) {
 				$this->tableName = $tableName;
+			}
+			public function setEntityClass(string $entityClass) {
+				$this->entityClass = $entityClass;
 			}
 		};
 
 		// change table name
 		$collectedAdressesMapper->setTableName('mail_collected_addresses');
+		// change entity class
+		$collectedAdressesMapper->setEntityClass(CollectedAddress::class);
 
 		$nrOfAddresses = $collectedAdressesMapper->getTotal();
 		$output->startProgress($nrOfAddresses);
