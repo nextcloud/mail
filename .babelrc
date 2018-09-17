@@ -1,17 +1,18 @@
 {
-  "plugins": [
-    "syntax-dynamic-import"
-  ],
-  "env": {
-    "test": {
-      "presets": [
-        [
-          "env",
-          {
-            "modules": "commonjs"
-          }
-        ]
-      ]
-    }
-  }
+	"plugins": ["syntax-dynamic-import"],
+	"env": {
+		"test": {
+			"presets": [
+				[
+					"@babel/preset-env",
+					{
+						"targets": {
+							"browsers": ["last 2 versions", "ie >= 11"]
+						},
+						"modules": "commonjs"
+					}
+				]
+			]
+		}
+	}
 }
