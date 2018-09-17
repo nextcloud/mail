@@ -8,16 +8,16 @@
     "packages": [
         {
             "name": "arthurhoaro/favicon",
-            "version": "v1.2.1",
+            "version": "v1.2.2",
             "source": {
                 "type": "git",
                 "url": "https://github.com/ArthurHoaro/favicon.git",
-                "reference": "02163a16798bb024b0a413aa38400226665c1b2a"
+                "reference": "50fd2a0f984db13948a69ab120451e03e41979fa"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/ArthurHoaro/favicon/zipball/02163a16798bb024b0a413aa38400226665c1b2a",
-                "reference": "02163a16798bb024b0a413aa38400226665c1b2a",
+                "url": "https://api.github.com/repos/ArthurHoaro/favicon/zipball/50fd2a0f984db13948a69ab120451e03e41979fa",
+                "reference": "50fd2a0f984db13948a69ab120451e03e41979fa",
                 "shasum": ""
             },
             "require": {
@@ -54,7 +54,7 @@
                 "finder",
                 "icon"
             ],
-            "time": "2017-04-23T16:00:33+00:00"
+            "time": "2018-09-08T09:37:54+00:00"
         },
         {
             "name": "cerdic/css-tidy",
