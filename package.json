@@ -12,7 +12,7 @@
   },
   "dependencies": {
     "@vue/babel-preset-app": "^3.0.1",
-    "babel-jest": "^23.4.2",
+    "babel-jest": "^23.6.0",
     "moment": "^2.22.2",
     "ramda": "^0.25.0",
     "v-tooltip": "^2.0.0-rc.33",
