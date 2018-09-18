@@ -32,7 +32,7 @@
 	},
 	"require-dev": {
 		"christophwurst/nextcloud": "14.0.0",
-		"christophwurst/nextcloud_testing": "0.3.1"
+		"christophwurst/nextcloud_testing": "0.5.1"
 	},
 	"suggest": {
 		"phan/phan": "^0.10.0"
