@@ -1,11 +1,12 @@
 <template>
 	<div id="content" class="mail">
-		<app-navigation :menu="menu">
-			<AppSettingsMenu slot="settings-content"/>
-		</app-navigation>
-		<FolderContent>
-			<Message/>
-		</FolderContent>
+		<Loading v-if="loading" :hint="t('mail', 'Loading your accounts')"/>
+		<template v-else>
+			<app-navigation :menu="menu">
+				<AppSettingsMenu slot="settings-content"/>
+			</app-navigation>
+			<FolderContent />
+		</template>
 	</div>
 </template>
 
@@ -13,7 +14,7 @@
 	import AppNavigation from "../components/core/appNavigation";
 	import AppSettingsMenu from "../components/AppSettingsMenu";
 	import FolderContent from "../components/FolderContent";
-	import Message from "../components/Message";
+	import Loading from "../components/Loading";
 
 	import SidebarItems from "../mixins/SidebarItems";
 
@@ -21,15 +22,25 @@
 		name: 'home',
 		extends: SidebarItems,
 		components: {
+			Loading,
 			AppNavigation,
 			AppSettingsMenu,
 			FolderContent,
-			Message,
+		},
+		data () {
+			return {
+				loading: true
+			}
 		},
 		computed: {
 			menu () {
 				return this.buildMenu(this.$store.state.accounts);
 			}
+		},
+		created () {
+			this.$store.dispatch('fetchAccounts').then(() => {
+				this.loading = false;
+			});
 		}
 	};
 </script>

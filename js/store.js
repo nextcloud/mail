@@ -1,94 +1,68 @@
 import Vue from 'vue'
 import Vuex from 'vuex'
 
+import {
+	fetch as fetchAccount,
+	fetchAll as fetchAllAccounts
+} from './service/AccountService'
+
 Vue.use(Vuex)
 
+export const mutations = {
+	addAccount (state, account) {
+		Vue.set(state.accounts, account.id, account)
+	}
+}
+
+export const actions = {
+	fetchAccounts ({commit}) {
+		return fetchAllAccounts().then(accounts => accounts.map(account => commit('addAccount', account)))
+	},
+	fetchAccount ({commit}, id) {
+		return fetchAccount(id).then(account => commit('addAccount', account))
+	}
+}
+
 export default new Vuex.Store({
+	strict: process.env.NODE_ENV !== 'production',
 	state: {
-		accounts: [
-			{
-				id: -1,
-				name: 'email1@domain.com',
-				visible: false,
-				bullet: '#ee2629',
-				folders: [
-					{
-						id: -1,
-						name: 'All inboxes',
-						specialUse: 'inbox',
-						unread: 2,
-						messages: [
-							{
-								id: 123,
-								from: 'Steffen Lindner',
-								subject: 'Message 123',
-							},
-							{
-								id: 321,
-								from: 'Kevin Ndung\'u Gathuku',
-								subject: 'Message 321',
-							},
-						]
-					}
-				]
+		accounts: {},
+		folders: {
+			1: {
+				id: 'folder1',
+				name: 'Inbox',
+				specialUse: 'inbox',
+				unread: 2
 			},
-			{
-				id: 1,
-				name: 'email1@domain.com',
-				bullet: '#ee2629',
-				folders: [
-					{
-						id: 'folder1',
-						name: 'Inbox',
-						specialUse: 'inbox',
-						unread: 2
-					},
-					{
-						id: 'folder2',
-						name: 'Favorites',
-						specialUse: 'flagged',
-						unread: 2
-					},
-					{
-						id: 'folder3',
-						name: 'Drafts',
-						specialUse: 'drafts',
-						unread: 1
-					},
-					{
-						id: 'folder4',
-						name: 'Sent',
-						specialUse: 'sent',
-						unread: 2000
-					},
-					{
-						id: 'folder5',
-						name: 'Show all',
-					}
-				]
+			2: {
+				id: 'folder2',
+				name: 'Favorites',
+				specialUse: 'flagged',
+				unread: 2
 			},
-			{
-				id: 2,
-				name: 'email2@domain.com',
-				bullet: '#81ee53',
-				folders: [
-					{
-						id: 'folder2',
-						name: 'Inbox',
-						specialUse: 'inbox',
-						utils: {
-							counter: 0
-						}
-					}
-				]
+			3: {
+				id: 'folder3',
+				name: 'Drafts',
+				specialUse: 'drafts',
+				unread: 1
+			},
+			4: {
+				id: 'folder4',
+				name: 'Sent',
+				specialUse: 'sent',
+				unread: 2000
+			},
+			5: {
+				id: 'folder5',
+				name: 'Show all',
 			}
-		]
+		}
 	},
 	getters: {
 		currentFolder (state) {
-			return state.accounts[0].folders[0]
+			return []
 		}
 	},
-	mutations: {},
-	actions: {}
+	mutations,
+	actions
 })

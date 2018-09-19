@@ -3,7 +3,6 @@ import Router from 'vue-router'
 
 import AccountSettings from './views/AccountSettings';
 import Home from './views/Home'
-import NewMessage from './views/NewMessage';
 import Setup from './views/Setup';
 
 Vue.use(Router)
@@ -16,11 +15,6 @@ export default new Router({
 			path: '/',
 			name: 'home',
 			component: Home
-		},
-		{
-			path: '/new',
-			name: 'newMessage',
-			component: NewMessage
 		},
 		{
 			path: '/accounts/:accountId/folders/:folderId',
