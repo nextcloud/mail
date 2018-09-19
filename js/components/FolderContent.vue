@@ -33,7 +33,11 @@
 			}
 		},
 		created () {
-			this.$store.dispatch('fetchAccounts').then(() => {
+			this.$store.dispatch(
+				'fetchMessages', {
+					accountId: this.$route.params.accountId,
+					folderId: this.$route.params.folderId
+				}).then(() => {
 				this.loading = false;
 			});
 		}
