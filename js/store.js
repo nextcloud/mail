@@ -6,6 +6,9 @@ import {
 	fetchAll as fetchAllAccounts
 } from './service/AccountService'
 import {
+	fetchAll as fetchAllFolders,
+} from './service/FolderService'
+import {
 	fetchEnvelopes,
 	fetchMessage
 } from './service/MessageService'
@@ -14,11 +17,24 @@ Vue.use(Vuex)
 
 export const mutations = {
 	addAccount (state, account) {
+		account.folders = []
 		Vue.set(state.accounts, account.id, account)
 	},
-	addEnvelope (state, {accountId, folderId, envelope}) {
-		// TODO: append/add to folder envelopes list
-		Vue.set(state.envelopes, accountId + '-' + folderId + '-' + envelope.id, envelope)
+	addFolder (state, {account, folder}) {
+		let id = account.id + '-' + folder.id
+		folder.envelopes = []
+		Vue.set(state.folders, id, folder)
+		account.folders.push(id)
+	},
+	addEnvelope (state, {accountId, folder, envelope}) {
+		let id = accountId + '-' + folder.id + '-' + envelope.id;
+		Vue.set(state.envelopes, id, envelope)
+		// TODO: prepend/append sort magic
+		// TODO: reduce O(n) complexity
+		if (folder.envelopes.indexOf(id) === -1) {
+			// Prevent duplicates
+			folder.envelopes.push(id)
+		}
 	},
 	addMessage (state, {accountId, folderId, message}) {
 		Vue.set(state.messages, accountId + '-' + folderId + '-' + message.id, message)
@@ -38,11 +54,26 @@ export const actions = {
 			return account
 		})
 	},
+	fetchFolders ({commit, getters}, {accountId}) {
+		return fetchAllFolders(accountId).then(folders => {
+			let account = getters.getAccount(accountId)
+
+			folders.forEach(folder => {
+				commit('addFolder', {
+					account,
+					folder
+				})
+			})
+			return folders
+		})
+	},
 	fetchEnvelopes ({commit, getters}, {accountId, folderId}) {
 		return fetchEnvelopes(accountId, folderId).then(envs => {
+			let folder = getters.getFolder(accountId, folderId)
+
 			envs.forEach(envelope => commit('addEnvelope', {
 				accountId,
-				folderId,
+				folder,
 				envelope
 			}))
 			return envs
@@ -76,8 +107,7 @@ export const getters = {
 	getEnvelopes: (state, getters) => (accountId, folderId) => {
 		return getters.getFolder(accountId, folderId).envelopes.map(msgId => state.envelopes[msgId])
 	},
-	getMessage: (state, getters) => (accountId, folderId, id) => {
-		console.debug('store::getMessage', accountId, folderId, id, ':', state.messages[accountId + '-' + folderId + '-' + id])
+	getMessage: (state) => (accountId, folderId, id) => {
 		return state.messages[accountId + '-' + folderId + '-' + id]
 	},
 }
@@ -86,22 +116,7 @@ export default new Vuex.Store({
 	strict: process.env.NODE_ENV !== 'production',
 	state: {
 		accounts: {},
-		folders: {
-			'1-SU5CT1g=': {
-				id: 'SU5CT1g=',
-				name: 'Inbox',
-				specialUse: 'inbox',
-				unread: 2,
-				envelopes: ['1-SU5CT1g=-1', '1-SU5CT1g=-2']
-			},
-			'2-SU5CT1g=': {
-				id: 'SU5CT1g=',
-				name: 'Inbox',
-				specialUse: 'inbox',
-				unread: 0,
-				envelopes: []
-			},
-		},
+		folders: {},
 		envelopes: {},
 		messages: {},
 	},
