@@ -64,6 +64,9 @@ export const getters = {
 	getAccount: (state) => (id) => {
 		return state.accounts[id]
 	},
+	getAccounts: (state) => () => {
+		return state.accounts
+	},
 	getFolder: (state) => (accountId, folderId) => {
 		return state.folders[accountId + '-' + folderId]
 	},

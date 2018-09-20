@@ -34,7 +34,7 @@
 		},
 		computed: {
 			menu () {
-				return this.buildMenu(this.$store.state.accounts);
+				return this.buildMenu();
 			}
 		},
 		created () {
