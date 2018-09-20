@@ -1,10 +1,10 @@
 <template>
 	<div class="app-content-list">
-		<EmptyFolder v-if="messages.length === 0"/>
-		<MessageListItem v-for="message in messages"
-						 :key="message.id"
-						 :from="message.from"
-						 :subject="message.subject"/>
+		<EmptyFolder v-if="envelopes.length === 0"/>
+		<MessageListItem v-else
+				 v-for="env in envelopes"
+				 :key="env.id"
+				 :data="env"/>
 	</div>
 </template>
 
@@ -15,10 +15,16 @@
 	export default {
 		name: "MessageList",
 		computed: {
-			messages () {
-				return this.$store.getters.currentFolder.messages
+			envelopes () {
+				return this.$store.getters.getEnvelopes(
+					this.$route.params.accountId,
+					this.$route.params.folderId
+				)
 			}
 		},
-		components: { MessageListItem, EmptyFolder }
+		components: { 
+			MessageListItem,
+			EmptyFolder
+		}
 	}
 </script>

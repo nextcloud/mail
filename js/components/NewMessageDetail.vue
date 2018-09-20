@@ -20,7 +20,6 @@
 			},
 			sendMessage () {
 				console.info('sending message');
-				console.info('sending message');
 				return Promise.resolve();
 			}
 		}

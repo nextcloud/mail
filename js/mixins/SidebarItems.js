@@ -2,9 +2,12 @@ import chain from "ramda/es/chain";
 
 export default {
 	methods: {
-		buildMenu (accounts) {
-			const items = chain(account => {
-				let items = []
+		buildMenu () {
+			let items = [];
+
+			let accounts = this.$store.getters.getAccounts();
+			for (let id in accounts) {
+				let account = accounts[id];
 
 				if (account.visible !== false) {
 					items.push({
@@ -13,7 +16,7 @@ export default {
 						text: account.name,
 						bullet: account.bullet, // TODO
 						router: {
-							'name': 'accountSettings',
+							name: 'accountSettings',
 							params: {
 								accountId: account.id,
 							}
@@ -21,13 +24,16 @@ export default {
 					})
 				}
 
-				return items.concat(account.folders.map(folder => {
+				let folders = this.$store.getters.getFolders(account.id);
+				for (let id in folders) {
+					let folder = folders[id];
+
 					let icon = 'folder';
 					if (folder.specialUse) {
 						icon = folder.specialUse;
 					}
 
-					return {
+					items.push({
 						id: 'account' + account.id + '_' + folder.id,
 						key: 'account' + account.id + '_' + folder.id,
 						text: folder.name,
@@ -42,9 +48,11 @@ export default {
 						utils: {
 							counter: folder.unread,
 						}
-					}
-				}))
-			}, accounts);
+					})
+				}
+			}
+
+			console.info(items)
 
 			return {
 				id: 'accounts-list',
