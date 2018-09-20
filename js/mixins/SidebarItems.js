@@ -52,8 +52,6 @@ export default {
 				}
 			}
 
-			console.info(items)
-
 			return {
 				id: 'accounts-list',
 				new: {
