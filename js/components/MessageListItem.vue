@@ -37,17 +37,5 @@
 		props: [
 			'data',
 		],
-		methods: {
-			elem () {
-				return {
-					is: 'router-link',
-					tag: 'div',
-					to: {
-						name: 'message',
-
-					}
-				}
-			}
-		}
 	}
 </script>
