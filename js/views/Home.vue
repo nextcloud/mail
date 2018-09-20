@@ -43,7 +43,7 @@
 
 				console.debug('accounts fetched', accounts)
 
-				if (accounts.length > 0) {
+				if (this.$route.name === 'home' && accounts.length > 0) {
 					// Show first account
 
 					let firstAccount = accounts[0]
