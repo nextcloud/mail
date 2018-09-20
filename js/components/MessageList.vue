@@ -1,12 +1,15 @@
 <template>
 	<div class="app-content-list">
-		<MessageListItem v-for="env in envelopes"
+		<EmptyFolder v-if="envelopes.length === 0"/>
+		<MessageListItem v-else
+						 v-for="env in envelopes"
 						 :key="env.id"
 						 :data="env"/>
 	</div>
 </template>
 
 <script>
+	import EmptyFolder from "./EmptyFolder";
 	import MessageListItem from "./MessageListItem";
 
 	export default {
@@ -19,6 +22,9 @@
 				)
 			}
 		},
-		components: {MessageListItem}
+		components: {
+			MessageListItem,
+			EmptyFolder
+		}
 	}
 </script>

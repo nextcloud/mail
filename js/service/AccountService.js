@@ -13,7 +13,9 @@ export function fetchAll () {
 					id: 2,
 					bullet: '#4948ee',
 					name: 'user.name@private.tld',
-					folders: [],
+					folders: [
+						'2-SU5CT1g='
+					],
 				}
 			])
 		}, 800);

@@ -94,6 +94,13 @@ export default new Vuex.Store({
 				unread: 2,
 				envelopes: ['1-SU5CT1g=-1', '1-SU5CT1g=-2']
 			},
+			'2-SU5CT1g=': {
+				id: 'SU5CT1g=',
+				name: 'Inbox',
+				specialUse: 'inbox',
+				unread: 0,
+				envelopes: []
+			},
 		},
 		envelopes: {},
 		messages: {},
