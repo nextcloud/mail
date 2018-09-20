@@ -152,7 +152,7 @@
 						is: 'router-link',
 						tag: 'li',
 						to: item.router,
-						exact: true
+						exact: item.exact || false
 					}
 				}
 				return {
