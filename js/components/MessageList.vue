@@ -2,9 +2,9 @@
 	<div class="app-content-list">
 		<EmptyFolder v-if="envelopes.length === 0"/>
 		<MessageListItem v-else
-				 v-for="env in envelopes"
-				 :key="env.id"
-				 :data="env"/>
+						 v-for="env in envelopes"
+						 :key="env.id"
+						 :data="env"/>
 	</div>
 </template>
 
@@ -22,7 +22,7 @@
 				)
 			}
 		},
-		components: { 
+		components: {
 			MessageListItem,
 			EmptyFolder
 		}
