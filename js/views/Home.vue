@@ -38,7 +38,16 @@
 			}
 		},
 		created () {
-			this.$store.dispatch('fetchAccounts').then(accounts => {
+			this.$store.dispatch('fetchAccounts')
+				.then(accounts => {
+					return Promise.all(accounts.map(account => {
+						return this.$store.dispatch('fetchFolders', {
+							accountId: account.id,
+						})
+					})).then(() => {
+						return accounts
+					})
+				}).then(accounts => {
 				this.loading = false
 
 				console.debug('accounts fetched', accounts)
@@ -60,7 +69,7 @@
 						}
 					})
 				}
-			})
+			}).catch(console.error.bind(this))
 		}
 	};
 </script>

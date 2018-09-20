@@ -53,6 +53,8 @@
 		},
 		methods: {
 			fetchData () {
+				this.loading = true
+
 				this.$store.dispatch(
 					'fetchEnvelopes', {
 						accountId: this.$route.params.accountId,
