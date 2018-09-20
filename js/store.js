@@ -13,24 +13,34 @@ export const mutations = {
 	addAccount (state, account) {
 		Vue.set(state.accounts, account.id, account)
 	},
-	addMessage (state, {accountId, folderId, message}) {
-		Vue.set(state.messages, accountId + '-' + folderId + '-' + message.id, message)
+	addEnvelope (state, {accountId, folderId, envelope}) {
+		// TODO: append/add to folder envelopes list
+		Vue.set(state.envelopes, accountId + '-' + folderId + '-' + envelope.id, envelope)
 	}
 }
 
 export const actions = {
 	fetchAccounts ({commit}) {
-		return fetchAllAccounts().then(accounts => accounts.map(account => commit('addAccount', account)))
+		return fetchAllAccounts().then(accounts => {
+			accounts.forEach(account => commit('addAccount', account))
+			return accounts
+		})
 	},
 	fetchAccount ({commit}, id) {
-		return fetchAccount(id).then(account => commit('addAccount', account))
+		return fetchAccount(id).then(account => {
+			commit('addAccount', account)
+			return account
+		})
 	},
-	fetchMessages ({commit}, {accountId, folderId}) {
-		return fetchEnvelopes(accountId, folderId).then(msgs => msgs.map(message => commit('addMessage', {
-			accountId,
-			folderId,
-			message
-		})))
+	fetchEnvelopes ({commit, getters}, {accountId, folderId}) {
+		return fetchEnvelopes(accountId, folderId).then(envs => {
+			envs.forEach(envelope => commit('addEnvelope', {
+				accountId,
+				folderId,
+				envelope
+			}))
+			return envs
+		})
 	}
 }
 
@@ -40,6 +50,9 @@ export const getters = {
 	},
 	getFolder: (state) => (accountId, folderId) => {
 		return state.folders[accountId + '-' + folderId]
+	},
+	getFolders: (state) => (accountId) => {
+		return state.accounts[accountId].folders.map(folderId => state.folders[folderId])
 	},
 	getEnvelopes: (state, getters) => (accountId, folderId) => {
 		return getters.getFolder(accountId, folderId).envelopes.map(msgId => state.envelopes[msgId])
@@ -52,56 +65,15 @@ export default new Vuex.Store({
 		accounts: {},
 		folders: {
 			'1-SU5CT1g=': {
-				id: 'folder1',
+				id: 'SU5CT1g=',
 				name: 'Inbox',
 				specialUse: 'inbox',
 				unread: 2,
 				envelopes: ['1-SU5CT1g=-1', '1-SU5CT1g=-2']
 			},
-			2: {
-				id: 'folder2',
-				name: 'Favorites',
-				specialUse: 'flagged',
-				unread: 2
-			},
-			3: {
-				id: 'folder3',
-				name: 'Drafts',
-				specialUse: 'drafts',
-				unread: 1
-			},
-			4: {
-				id: 'folder4',
-				name: 'Sent',
-				specialUse: 'sent',
-				unread: 2000
-			},
-			5: {
-				id: 'folder5',
-				name: 'Show all',
-			}
 		},
-		envelopes: {
-			'1-SU5CT1g=-1': {
-				id: '1',
-				from: 'Sender 1',
-				subject: 'Message 1',
-				envelopes: ['1-SU5CT1g=-1', '1-SU5CT1g=-2']
-			},
-			'1-SU5CT1g=-2': {
-				id: '2',
-				from: 'Sender 2',
-				subject: 'Message 2',
-				envelopes: ['1-SU5CT1g=-1', '1-SU5CT1g=-2']
-			},
-			'1-SU5CT1g=-3': {
-				id: '3',
-				from: 'Sender 3',
-				subject: 'Message 3',
-				envelopes: ['1-SU5CT1g=-1', '1-SU5CT1g=-2']
-			}
-		},
-		messages: [],
+		envelopes: {},
+		messages: {},
 	},
 	getters,
 	mutations,

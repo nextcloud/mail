@@ -4,13 +4,15 @@ export function fetchAll () {
 			res([
 				{
 					id: 1,
-					folders: [],
+					folders: [
+						'1-SU5CT1g='
+					],
 				}, {
 					id: 2,
 					folders: [],
 				}
 			])
-		}, 1500);
+		}, 800);
 	})
 }
 
@@ -20,6 +22,6 @@ export function fetch () {
 			res({
 				id: 3,
 			})
-		}, 1500);
+		}, 800);
 	})
 }

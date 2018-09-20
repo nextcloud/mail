@@ -1,20 +1,27 @@
 <template>
-	<div class="app-content-list-item">
+	<router-link class="app-content-list-item" :to="{
+			name: 'message',
+			params: {
+							accountId: this.$route.params.accountId,
+							folderId: this.$route.params.folderId,
+							messageId: this.data.id
+			},
+			exact: true}">
 		<div class="app-content-list-item-icon">
-			<Avatar :label="from"/>
+			<Avatar :label="data.from"/>
 		</div>
 		<div class="app-content-list-item-line-one"
-			 :title="from">
-			{{from}}
+			 :title="data.from">
+			{{data.from}}
 		</div>
 		<div class="app-content-list-item-line-two"
-			 :title="subject">
-			{{subject}}
+			 :title="data.subject">
+			{{data.subject}}
 		</div>
 		<div class="app-content-list-item-details date">
 			<Moment timestamp="1536048354000"/>
 		</div>
-	</div>
+	</router-link>
 </template>
 
 <script>
@@ -28,8 +35,19 @@
 			Moment
 		},
 		props: [
-			'from',
-			'subject',
-		]
+			'data',
+		],
+		methods: {
+			elem () {
+				return {
+					is: 'router-link',
+					tag: 'div',
+					to: {
+						name: 'message',
+
+					}
+				}
+			}
+		}
 	}
 </script>

@@ -2,8 +2,7 @@
 	<div class="app-content-list">
 		<MessageListItem v-for="env in envelopes"
 						 :key="env.id"
-						 :from="env.from"
-						 :subject="env.subject"/>
+						 :data="env"/>
 	</div>
 </template>
 
@@ -13,7 +12,7 @@
 	export default {
 		name: "MessageList",
 		computed: {
-			envelopes() {
+			envelopes () {
 				return this.$store.getters.getEnvelopes(
 					this.$route.params.accountId,
 					this.$route.params.folderId

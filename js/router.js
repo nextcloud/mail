@@ -22,6 +22,11 @@ export default new Router({
 			component: Home
 		},
 		{
+			path: '/accounts/:accountId/folders/:folderId/message/:messageId',
+			name: 'message',
+			component: Home
+		},
+		{
 			path: '/accounts/:accountId/settings',
 			name: 'accountSettings',
 			component: AccountSettings

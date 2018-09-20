@@ -34,11 +34,24 @@
 		},
 		created () {
 			this.$store.dispatch(
-				'fetchMessages', {
+				'fetchEnvelopes', {
 					accountId: this.$route.params.accountId,
 					folderId: this.$route.params.folderId
-				}).then(() => {
+				}).then(envelopes => {
 				this.loading = false;
+
+				if (envelopes.length > 0) {
+					// Show first message
+					let first = envelopes[0];
+					this.$router.replace({
+						name: 'message',
+						params: {
+							accountId: this.$route.params.accountId,
+							folderId: this.$route.params.folderId,
+							messageId: first.id,
+						}
+					})
+				}
 			});
 		}
 	}

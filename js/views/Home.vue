@@ -5,7 +5,7 @@
 			<app-navigation :menu="menu">
 				<AppSettingsMenu slot="settings-content"/>
 			</app-navigation>
-			<FolderContent />
+			<FolderContent/>
 		</template>
 	</div>
 </template>
@@ -38,9 +38,29 @@
 			}
 		},
 		created () {
-			this.$store.dispatch('fetchAccounts').then(() => {
-				this.loading = false;
-			});
+			this.$store.dispatch('fetchAccounts').then(accounts => {
+				this.loading = false
+
+				console.debug('accounts fetched', accounts)
+
+				if (accounts.length > 0) {
+					// Show first account
+
+					let firstAccount = accounts[0]
+					// FIXME: this assumes that there's at least one folder
+					let firstFolder = this.$store.getters.getFolders(firstAccount.id)[0]
+
+					console.debug('loading first folder of first account', firstAccount.id, firstFolder.id)
+
+					this.$router.replace({
+						name: 'folder',
+						params: {
+							accountId: firstAccount.id,
+							folderId: firstFolder.id,
+						}
+					})
+				}
+			})
 		}
 	};
 </script>
