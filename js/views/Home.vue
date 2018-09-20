@@ -4,7 +4,7 @@
 			<AppSettingsMenu slot="settings-content"/>
 		</app-navigation>
 		<FolderContent>
-			<Message/>
+			<Message v-if="messages.length > 0" />
 		</FolderContent>
 	</div>
 </template>
@@ -29,6 +29,9 @@
 		computed: {
 			menu () {
 				return this.buildMenu(this.$store.state.accounts);
+			},
+			messages () {
+				return this.$store.getters.currentFolder.messages
 			}
 		}
 	};
