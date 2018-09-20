@@ -62,7 +62,7 @@
 					}).then(envelopes => {
 					this.loading = false;
 
-					if (envelopes.length > 0) {
+					if (this.$route.name !== 'message' && envelopes.length > 0) {
 						// Show first message
 						let first = envelopes[0];
 

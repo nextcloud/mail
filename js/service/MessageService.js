@@ -1,7 +1,7 @@
 export function fetchEnvelopes (accountId, folderId) {
 	return new Promise((res, rej) => {
 		setTimeout(() => {
-			if (accountId === 1) {
+			if (accountId == 1) {
 				res([
 					{
 						id: '1',
