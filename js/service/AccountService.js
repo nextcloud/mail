@@ -1,4 +1,4 @@
-import HttpClient from '../http/Client'
+import HttpClient from 'nextcloud-axios'
 
 function fixAccountId (original) {
 	return {
