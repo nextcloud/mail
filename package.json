@@ -12,6 +12,7 @@
   },
   "dependencies": {
     "@vue/babel-preset-app": "^3.0.1",
+    "axios": "^0.18.0",
     "babel-jest": "^23.6.0",
     "moment": "^2.22.2",
     "ramda": "^0.25.0",
