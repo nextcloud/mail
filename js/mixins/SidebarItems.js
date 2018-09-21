@@ -1,6 +1,5 @@
 import conv from 'color-convert'
 import md5 from 'md5'
-import chain from "ramda/es/chain";
 
 export default {
 	methods: {
