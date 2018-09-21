@@ -1,5 +1,8 @@
 <template>
-	<router-link class="app-content-list-item" :to="{
+	<router-link :class="{
+			'app-content-list-item': true,
+			'unseen': data.flags.unseen
+		}" :to="{
 			name: 'message',
 			params: {
 				accountId: this.$route.params.accountId,
@@ -16,6 +19,7 @@
 		</div>
 		<div class="app-content-list-item-line-two"
 			 :title="data.subject">
+			<span v-if="data.flags.answered" class="icon-reply"></span>
 			{{data.subject}}
 		</div>
 		<div class="app-content-list-item-details date">
@@ -50,3 +54,32 @@
 		}
 	}
 </script>
+
+<style scoped>
+	.app-content-list-item.active .star.icon-star,
+	.app-content-list-item:hover .star.icon-star,
+	.app-content-list-item:focus .star.icon-star {
+		display: inline-block;
+	}
+
+	.app-content-list-item.unseen {
+		font-weight: bold;
+	}
+
+	.icon-reply,
+	.icon-attachment {
+		display: inline-block;
+		vertical-align: text-top;
+	}
+
+	.icon-reply {
+		background-image: url('../../img/reply.svg');
+		-ms-filter: "progid:DXImageTransform.Microsoft.Alpha(Opacity=50)";
+		opacity: .5;
+	}
+
+	.icon-attachment {
+		-ms-filter: "progid:DXImageTransform.Microsoft.Alpha(Opacity=25)";
+		opacity: .25;
+	}
+</style>

@@ -428,29 +428,6 @@ input.submit-message,
 	-ms-filter: "progid:DXImageTransform.Microsoft.Alpha(Opacity=100)";
 	opacity: 1;
 }
-.app-content-list-item.active .star.icon-star,
-.app-content-list-item:hover .star.icon-star,
-.app-content-list-item:focus .star.icon-star {
-	display: inline-block;
-}
-.app-content-list-item.unseen {
-	font-weight: bold;
-}
-
-.icon-reply,
-.icon-attachment {
-	display: inline-block;
-	vertical-align: text-top;
-}
-.icon-reply {
-	background-image: url('../img/reply.svg');
-	-ms-filter: "progid:DXImageTransform.Microsoft.Alpha(Opacity=50)";
-	opacity: .5;
-}
-.icon-attachment {
-	-ms-filter: "progid:DXImageTransform.Microsoft.Alpha(Opacity=25)";
-	opacity: .25;
-}
 
 .icon-add {
 	display: inline-block;
