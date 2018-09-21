@@ -1,7 +1,15 @@
-import chain from "ramda/es/chain";
+import conv from 'color-convert'
+import md5 from 'md5'
 
 export default {
 	methods: {
+		accountBulletColor (name) {
+			const hashed = md5(name)
+			const hsl = conv.hex.hsl(hashed)
+			const fixedHsl = [Math.round(hsl[0] / 40) * 40, hsl[1], hsl[2]]
+			return '#' + conv.hsl.hex(fixedHsl)
+		},
+
 		buildMenu () {
 			let items = [];
 
@@ -14,7 +22,7 @@ export default {
 						id: 'account' + account.id,
 						key: 'account' + account.id,
 						text: account.name,
-						bullet: account.bullet, // TODO
+						bullet: this.accountBulletColor(account.name), // TODO
 						router: {
 							name: 'accountSettings',
 							params: {
