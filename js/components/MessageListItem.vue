@@ -2,17 +2,17 @@
 	<router-link class="app-content-list-item" :to="{
 			name: 'message',
 			params: {
-							accountId: this.$route.params.accountId,
-							folderId: this.$route.params.folderId,
-							messageId: this.data.id
+				accountId: this.$route.params.accountId,
+				folderId: this.$route.params.folderId,
+				messageId: this.data.id
 			},
 			exact: true}">
 		<div class="app-content-list-item-icon">
-			<Avatar :label="data.from"/>
+			<Avatar :label="sender"/>
 		</div>
 		<div class="app-content-list-item-line-one"
-			 :title="data.from">
-			{{data.from}}
+			 :title="sender">
+			{{sender}}
 		</div>
 		<div class="app-content-list-item-line-two"
 			 :title="data.subject">
@@ -37,5 +37,16 @@
 		props: [
 			'data',
 		],
+		computed: {
+			sender () {
+				if (this.data.from.length === 0) {
+					// No sender
+					return '?'
+				}
+
+				const first = this.data.from[0]
+				return first.label || first.email
+			}
+		}
 	}
 </script>

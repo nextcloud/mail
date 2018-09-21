@@ -1,29 +1,12 @@
+import HttpClient from 'nextcloud-axios'
+
 export function fetchEnvelopes (accountId, folderId) {
-	return new Promise((res, rej) => {
-		setTimeout(() => {
-			if (accountId == 1) {
-				res([
-					{
-						id: '1',
-						from: 'Sender 1',
-						subject: 'Message 1',
-					},
-					{
-						id: '2',
-						from: 'Sender 2',
-						subject: 'Message 2',
-					},
-					{
-						id: '3',
-						from: 'Sender 3',
-						subject: 'Message 3',
-					}
-				])
-			} else {
-				res([])
-			}
-		}, 800)
+	const url = OC.generateUrl('/apps/mail/api/accounts/{accountId}/folders/{folderId}/messages', {
+		accountId,
+		folderId,
 	})
+
+	return HttpClient.get(url).then(resp => resp.data)
 }
 
 export function fetchMessage (accountId, folderId, id) {
