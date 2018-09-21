@@ -37,7 +37,7 @@
     "babel-loader": "^8.0.2",
     "babel-plugin-syntax-dynamic-import": "^6.18.0",
     "css-loader": "^1.0.0",
-    "file-loader": "^1.1.11",
+    "file-loader": "^2.0.0",
     "jest": "^23.6.0",
     "jest-vue-preprocessor": "^1.4.0",
     "jsdom": "^12.0.0",
