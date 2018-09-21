@@ -12,9 +12,9 @@
   },
   "dependencies": {
     "@vue/babel-preset-app": "^3.0.1",
-    "axios": "^0.18.0",
     "babel-jest": "^23.6.0",
     "moment": "^2.22.2",
+    "nextcloud-axios": "^0.1.0",
     "ramda": "^0.25.0",
     "v-tooltip": "^2.0.0-rc.33",
     "vue": "^2.5.16",
