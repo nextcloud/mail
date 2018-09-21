@@ -1,27 +1,22 @@
-export function fetchAll () {
-	return new Promise((res, rej) => {
-		setTimeout(() => {
-			res([
-				{
-					id: 1,
-					name: 'user@work.tld',
-					bullet: '#eea941',
-				}, {
-					id: 2,
-					bullet: '#4948ee',
-					name: 'user.name@private.tld',
-				}
-			])
-		}, 800);
-	})
+import HttpClient from 'nextcloud-axios'
+
+function fixAccountId (original) {
+	return {
+		id: original.accountId,
+		...original
+	}
 }
 
-export function fetch () {
-	return new Promise((res, rej) => {
-		setTimeout(() => {
-			res({
-				id: 3,
-			})
-		}, 800);
+export function fetchAll () {
+	const url = OC.generateUrl('/apps/mail/api/accounts')
+
+	return HttpClient.get(url).then(resp => resp.data.map(fixAccountId))
+}
+
+export function fetch (id) {
+	const url = OC.generateUrl('/apps/mail/api/accounts/:id', {
+		id: id
 	})
+
+	return HttpClient.get(url).then(resp => fixAccountId(resp.data))
 }
