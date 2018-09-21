@@ -22,6 +22,7 @@
 		<div class="app-content-list-item-line-two"
 			 :title="data.subject">
 			<span v-if="data.flags.answered" class="icon-reply"></span>
+			<span v-if="data.flags.hasAttachments" class="icon-public icon-attachment"></span>
 			{{data.subject}}
 		</div>
 		<div class="app-content-list-item-details date">
