@@ -26,7 +26,7 @@
 			{{data.subject}}
 		</div>
 		<div class="app-content-list-item-details date">
-			<Moment timestamp="1536048354000"/>
+			<Moment :timestamp="data.dateInt * 1000"/>
 		</div>
 	</router-link>
 </template>
