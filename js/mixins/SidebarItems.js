@@ -37,8 +37,8 @@ export default {
 					let folder = folders[id];
 
 					let icon = 'folder';
-					if (folder.specialUse) {
-						icon = folder.specialUse;
+					if (folder.specialRole) {
+						icon = folder.specialRole;
 					}
 
 					items.push({
