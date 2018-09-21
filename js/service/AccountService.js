@@ -14,8 +14,8 @@ export function fetchAll () {
 }
 
 export function fetch (id) {
-	const url = OC.generateUrl('/apps/mail/api/accounts/:id', {
-		id: id
+	const url = OC.generateUrl('/apps/mail/api/accounts/{id}', {
+		id
 	})
 
 	return HttpClient.get(url).then(resp => fixAccountId(resp.data))
