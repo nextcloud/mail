@@ -1,6 +1,6 @@
 export function fetchAll (accountId) {
 	return new Promise((res, rej) => {
-		if (accountId === 1) {
+		if (accountId == 1) {
 			setTimeout(() => {
 				res([
 					{
