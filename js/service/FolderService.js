@@ -1,27 +1,11 @@
+import HttpClient from 'nextcloud-axios'
+
 export function fetchAll (accountId) {
-	return new Promise((res, rej) => {
-		if (accountId == 1) {
-			setTimeout(() => {
-				res([
-					{
-						id: 'SU5CT1g=',
-						name: 'Inbox',
-						specialUse: 'inbox',
-						unread: 2,
-					},
-				])
-			}, 500)
-		} else {
-			setTimeout(() => {
-				res([
-					{
-						id: 'SU5CT1g=',
-						name: 'Inbox',
-						specialUse: 'inbox',
-						unread: 0,
-					},
-				])
-			}, 500)
-		}
+	const url = OC.generateUrl('/apps/mail/api/accounts/{accountId}/folders', {
+		accountId
 	})
+
+	// FIXME: this return format is weird and should be avoided
+	// TODO: respect `resp.data.delimiter` value
+	return HttpClient.get(url).then(resp => resp.data.folders)
 }
