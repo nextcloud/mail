@@ -29,7 +29,6 @@
 		data () {
 			return {
 				loading: true,
-				newMessage: false,
 			}
 		},
 		computed: {
@@ -38,6 +37,9 @@
 					this.$route.params.accountId,
 					this.$route.params.folderId
 				).length > 0
+			},
+			newMessage () {
+				return this.$route.params.messageId === 'new'
 			}
 		},
 		created () {
