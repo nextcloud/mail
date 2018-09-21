@@ -260,17 +260,11 @@
 	border-right: none;
 }
 
-/* editor */
-#mail-new-message-list {
-	margin-top: 36px;
+.icon-starred[data-starred="false"]:hover {
+	background-image: var(--icon-star-dark-FC0) !important;
 }
-#mail_new_message {
-	width: 100%;
-	padding: 10px;
-	padding-left: 34px;
-	background-position: 10px center;
-	text-align: left;
-	margin: 0;
+.icon-starred[data-starred="false"]:not(:hover) {
+	background-image: var(--icon-star-000) !important;
 }
 
 .message-composer {

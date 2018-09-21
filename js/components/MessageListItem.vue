@@ -10,6 +10,8 @@
 				messageId: this.data.id
 			},
 			exact: true}">
+		<div class="app-content-list-item-star icon-starred"
+			 :data-starred="data.flags.flagged ? 'true':'false'"></div>
 		<div class="app-content-list-item-icon">
 			<Avatar :label="sender"/>
 		</div>
@@ -56,12 +58,6 @@
 </script>
 
 <style scoped>
-	.app-content-list-item.active .star.icon-star,
-	.app-content-list-item:hover .star.icon-star,
-	.app-content-list-item:focus .star.icon-star {
-		display: inline-block;
-	}
-
 	.app-content-list-item.unseen {
 		font-weight: bold;
 	}
