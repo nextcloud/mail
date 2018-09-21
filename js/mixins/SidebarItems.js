@@ -21,7 +21,7 @@ export default {
 					items.push({
 						id: 'account' + account.id,
 						key: 'account' + account.id,
-						text: account.name,
+						text: account.emailAddress,
 						bullet: this.accountBulletColor(account.name), // TODO
 						router: {
 							name: 'accountSettings',
