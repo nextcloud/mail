@@ -10,6 +10,7 @@ import {
 } from './service/FolderService'
 import {
 	fetchEnvelopes,
+	syncEnvelopes,
 	fetchMessage
 } from './service/MessageService'
 
@@ -26,6 +27,9 @@ export const mutations = {
 		Vue.set(state.folders, id, folder)
 		account.folders.push(id)
 	},
+	updateFolderSyncToken (state, {folder, syncToken}) {
+		folder.syncToken = syncToken
+	},
 	addEnvelope (state, {accountId, folder, envelope}) {
 		let id = accountId + '-' + folder.id + '-' + envelope.id;
 		Vue.set(state.envelopes, id, envelope)
@@ -35,6 +39,9 @@ export const mutations = {
 			// Prevent duplicates
 			folder.envelopes.push(id)
 		}
+	},
+	removeEnvelope (state, {accountId, folder, envelope}) {
+		folder.envelopes = folder.envelopes.filter(existing => existing.id !== envelope.id)
 	},
 	addMessage (state, {accountId, folderId, message}) {
 		Vue.set(state.messages, accountId + '-' + folderId + '-' + message.id, message)
@@ -103,6 +110,33 @@ export const actions = {
 			}))
 
 			return envs
+		})
+	},
+	syncEnvelopes ({commit, getters}, {accountId, folderId}) {
+		const folder = getters.getFolder(accountId, folderId)
+		const syncToken = folder.syncToken
+		const uids = getters.getEnvelopes(accountId, folderId).map(env => env.id)
+
+		return syncEnvelopes(accountId, folderId, syncToken, uids).then(syncData => {
+			console.debug('got sync response:', syncData)
+			syncData.newMessages.concat(syncData.changedMessages).forEach(envelope => {
+				commit('addEnvelope', {
+					accountId,
+					folder,
+					envelope
+				})
+			})
+			syncData.vanishedMessages.forEach(envelope => {
+				commit('removeEnvelope', {
+					accountId,
+					folder,
+					envelope
+				})
+			})
+			commit('updateFolderSyncToken', {
+				folder,
+				syncToken: syncData.token
+			})
 		})
 	},
 	fetchMessage ({commit}, {accountId, folderId, id}) {
