@@ -1,12 +1,9 @@
 <template>
 	<div>
-		<div id="mail-content">
-			{{ body }}
-		</div>
+		<div id="mail-content" v-html="body" />
 		<div v-if="signature"
-			 class="mail-signature">
-			{{signature}}
-		</div>
+			 class="mail-signature"
+			 v-html="signature" />
 	</div>
 </template>
 
@@ -19,3 +16,11 @@
 		]
 	};
 </script>
+
+<style scoped>
+	.mail-signature {
+		font-family: monospace;
+		opacity: 0.5;
+		line-height: initial;
+	}
+</style>
