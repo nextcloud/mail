@@ -37,6 +37,10 @@ define(function(require) {
 	 * @returns {Promise}
 	 */
 	function loadAvatar(email) {
+		if (email === null) {
+			return Promise.resolve(undefined);
+		}
+
 		var url = OC.generateUrl('/apps/mail/api/avatars/url/{email}', {
 			email: email
 		});

@@ -49,6 +49,7 @@ OC.L10N.register(
     "Continue to %s" : "Continuar para %s",
     "IMAP Host" : "Anfitrião de IMAP",
     "SMTP Host" : "Anfitrião de SMTP",
-    "Connect" : "Ligar"
+    "Connect" : "Ligar",
+    "Download attachment" : "Transferir anexo"
 },
 "nplurals=2; plural=(n != 1);");
