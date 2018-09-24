@@ -16,7 +16,8 @@
 				</p>
 			</div>
 			<div class="mail-message-body">
-				<MessageHTMLBody v-if="message.hasHtmlBody"/>
+				<MessageHTMLBody v-if="message.hasHtmlBody"
+								 :url="htmlUrl"/>
 				<MessagePlainTextBody v-else
 									  :body="message.body"
 									  :signature="message.signature"/>
@@ -51,6 +52,15 @@
 				loading: true,
 				message: undefined,
 			};
+		},
+		computed: {
+			htmlUrl () {
+				return OC.generateUrl('/apps/mail/api/accounts/{accountId}/folders/{folderId}/messages/{id}/html', {
+					accountId: this.$route.params.accountId,
+					folderId: this.$route.params.folderId,
+					id: this.$route.params.messageId
+				})
+			}
 		},
 		created () {
 			this.fetchMessage()
@@ -108,9 +118,11 @@
 	.mail-message-attachments {
 		margin: 10px 10px 50px 30px;
 	}
+
 	.mail-message-attachments {
 		margin-top: 10px;
 	}
+
 	#mail-content iframe {
 		width: 100%;
 	}
@@ -131,6 +143,7 @@
 		color: rgba(0, 0, 0, .3) !important;
 		opacity: 1;
 	}
+
 	#mail-message-header .transparency a {
 		color: rgba(0, 0, 0, .5) !important;
 	}

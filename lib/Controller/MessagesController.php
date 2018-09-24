@@ -199,6 +199,7 @@ class MessagesController extends Controller {
 		try {
 			$mailBox = $this->getFolder($accountId, $folderId);
 
+			/** @var IMAPMessage $m */
 			$m = $mailBox->getMessage($messageId, true);
 			$html = $m->getHtmlBody($accountId, $folderId, $messageId,
 				function ($cid) use ($m) {
