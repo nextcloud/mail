@@ -79,6 +79,32 @@ export const actions = {
 			return envs
 		})
 	},
+	fetchNextEnvelopePage ({commit, getters}, {accountId, folderId}) {
+		const folder = getters.getFolder(accountId, folderId)
+		const lastEnvelopeId = folder.envelopes[folder.envelopes.length - 1]
+		if (typeof lastEnvelopeId === 'undefined') {
+			console.error('folder is empty', folder.envelopes)
+			return Promise.reject(new Error('Local folder has no envelopes, cannot determine cursor'))
+		}
+		const lastEnvelope = getters.getEnvelopeById(lastEnvelopeId)
+		if (typeof lastEnvelope === 'undefined') {
+			return Promise.reject(new Error('Cannot find last envelope. Required for the folder cursor'))
+		}
+
+		console.debug('loading next envelope page, cursor=' + lastEnvelope.dateInt)
+
+		return fetchEnvelopes(accountId, folderId, lastEnvelope.dateInt).then(envs => {
+			console.debug('page loaded, size=' + envs.length)
+
+			envs.forEach(envelope => commit('addEnvelope', {
+				accountId,
+				folder,
+				envelope
+			}))
+
+			return envs
+		})
+	},
 	fetchMessage ({commit}, {accountId, folderId, id}) {
 		return fetchMessage(accountId, folderId, id).then(message => {
 			commit('addMessage', {
@@ -103,6 +129,9 @@ export const getters = {
 	},
 	getFolders: (state) => (accountId) => {
 		return state.accounts[accountId].folders.map(folderId => state.folders[folderId])
+	},
+	getEnvelopeById: (state) => (id) => {
+		return state.envelopes[id]
 	},
 	getEnvelopes: (state, getters) => (accountId, folderId) => {
 		return getters.getFolder(accountId, folderId).envelopes.map(msgId => state.envelopes[msgId])
