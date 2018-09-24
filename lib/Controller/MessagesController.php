@@ -148,17 +148,7 @@ class MessagesController extends Controller {
 		/* @var $message IMAPMessage */
 		$message = $mailBox->getMessage($id);
 
-		$json = $this->enhanceMessage($accountId, $folderId, $id, $message, $mailBox);
-
-		// Unified inbox hack
-		// TODO: evalue whether this is still in use on the client side
-		$messageId = $id;
-		$json['messageId'] = $messageId;
-		$json['accountId'] = $accountId;
-		$json['folderId'] = $folderId;
-		// End unified inbox hack
-
-		return $json;
+		return $this->enhanceMessage($accountId, $folderId, $id, $message, $mailBox);
 	}
 
 	/**
@@ -433,22 +423,6 @@ class MessagesController extends Controller {
 	/**
 	 * @param int $accountId
 	 * @param string $folderId
-	 * @param int $messageId
-	 * @return string
-	 */
-	private function buildHtmlBodyUrl(int $accountId, string $folderId, int $messageId): string {
-		$htmlBodyUrl = $this->urlGenerator->linkToRoute('mail.messages.getHtmlBody',
-			[
-				'accountId' => $accountId,
-				'folderId' => $folderId,
-				'messageId' => $messageId,
-			]);
-		return $this->urlGenerator->getAbsoluteURL($htmlBodyUrl);
-	}
-
-	/**
-	 * @param int $accountId
-	 * @param string $folderId
 	 * @param int $id
 	 * @param IMAPMessage $m
 	 * @param IMailBox $mailBox
@@ -457,10 +431,6 @@ class MessagesController extends Controller {
 	private function enhanceMessage(int $accountId, string $folderId, int $id, IMAPMessage $m,
 									IMailBox $mailBox): array {
 		$json = $m->getFullMessage($mailBox->getSpecialRole());
-
-		if (isset($json['hasHtmlBody'])) {
-			$json['htmlBodyUrl'] = $this->buildHtmlBodyUrl($accountId, $folderId, $id);
-		}
 
 		if (isset($json['attachments'])) {
 			$json['attachments'] = array_map(function ($a) use ($accountId, $folderId, $id) {

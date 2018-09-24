@@ -70,7 +70,7 @@
 					'fetchMessage', {
 						accountId: this.$route.params.accountId,
 						folderId: this.$route.params.folderId,
-						folderId: this.$route.params.messageId,
+						id: this.$route.params.messageId,
 					}).then(message => {
 					this.message = message
 					this.loading = false
