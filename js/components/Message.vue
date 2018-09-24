@@ -16,12 +16,10 @@
 				</p>
 			</div>
 			<div class="mail-message-body">
-				<div id="mail-content">
-					<MessageHTMLBody v-if="message.hasHtmlBody"/>
-					<MessagePlainTextBody v-else
-										  :body="message.body"
-										  :signature="message.signature"/>
-				</div>
+				<MessageHTMLBody v-if="message.hasHtmlBody"/>
+				<MessagePlainTextBody v-else
+									  :body="message.body"
+									  :signature="message.signature"/>
 				<div class="mail-message-attachments"></div>
 				<div id="reply-composer"></div>
 				<input type="button" id="forward-button" value="Forward">
@@ -91,3 +89,49 @@
 		}
 	}
 </script>
+
+<style>
+	.mail-message-body {
+		margin-bottom: 100px;
+	}
+
+	#mail-message-header h2,
+	#mail-message-header p {
+		white-space: nowrap;
+		overflow: hidden;
+		text-overflow: ellipsis;
+		padding-bottom: 7px;
+		margin-bottom: 0;
+	}
+
+	#mail-content,
+	.mail-message-attachments {
+		margin: 10px 10px 50px 30px;
+	}
+	.mail-message-attachments {
+		margin-top: 10px;
+	}
+	#mail-content iframe {
+		width: 100%;
+	}
+
+	#show-images-text {
+		display: none;
+	}
+
+	#mail-content a,
+	.mail-signature a {
+		color: #07d;
+		border-bottom: 1px dotted #07d;
+		text-decoration: none;
+		word-wrap: break-word;
+	}
+
+	#mail-message-header .transparency {
+		color: rgba(0, 0, 0, .3) !important;
+		opacity: 1;
+	}
+	#mail-message-header .transparency a {
+		color: rgba(0, 0, 0, .5) !important;
+	}
+</style>
