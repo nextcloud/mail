@@ -16,6 +16,20 @@ export function fetchEnvelopes (accountId, folderId, cursor) {
 	}).then(resp => resp.data)
 }
 
+export function syncEnvelopes (accountId, folderId, syncToken, uids) {
+	const url = OC.generateUrl('/apps/mail/api/accounts/{accountId}/folders/{folderId}/sync', {
+		accountId,
+		folderId,
+	})
+
+	return HttpClient.get(url, {
+		params: {
+			syncToken,
+			uids,
+		}
+	}).then(resp => resp.data)
+}
+
 export function fetchMessage (accountId, folderId, id) {
 	const url = OC.generateUrl('/apps/mail/api/accounts/{accountId}/folders/{folderId}/messages/{id}', {
 		accountId,
