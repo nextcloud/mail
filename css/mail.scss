@@ -260,17 +260,11 @@
 	border-right: none;
 }
 
-/* editor */
-#mail-new-message-list {
-	margin-top: 36px;
+.icon-starred[data-starred="false"]:hover {
+	background-image: var(--icon-star-dark-FC0) !important;
 }
-#mail_new_message {
-	width: 100%;
-	padding: 10px;
-	padding-left: 34px;
-	background-position: 10px center;
-	text-align: left;
-	margin: 0;
+.icon-starred[data-starred="false"]:not(:hover) {
+	background-image: var(--icon-star-000) !important;
 }
 
 .message-composer {
@@ -427,29 +421,6 @@ input.submit-message,
 .star.icon-star:focus {
 	-ms-filter: "progid:DXImageTransform.Microsoft.Alpha(Opacity=100)";
 	opacity: 1;
-}
-.app-content-list-item.active .star.icon-star,
-.app-content-list-item:hover .star.icon-star,
-.app-content-list-item:focus .star.icon-star {
-	display: inline-block;
-}
-.app-content-list-item.unseen {
-	font-weight: bold;
-}
-
-.icon-reply,
-.icon-attachment {
-	display: inline-block;
-	vertical-align: text-top;
-}
-.icon-reply {
-	background-image: url('../img/reply.svg');
-	-ms-filter: "progid:DXImageTransform.Microsoft.Alpha(Opacity=50)";
-	opacity: .5;
-}
-.icon-attachment {
-	-ms-filter: "progid:DXImageTransform.Microsoft.Alpha(Opacity=25)";
-	opacity: .25;
 }
 
 .icon-add {
