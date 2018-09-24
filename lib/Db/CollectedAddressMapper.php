@@ -32,7 +32,7 @@ class CollectedAddressMapper extends QBMapper {
 	 * @param IDBConnection $db
 	 */
 	public function __construct(IDBConnection $db) {
-		parent::__construct($db, 'mail_collected_addresses');
+		parent::__construct($db, 'mail_coll_addresses');
 	}
 
 	/**
@@ -90,7 +90,7 @@ class CollectedAddressMapper extends QBMapper {
 			->from($this->getTableName())
 			->orderBy('id')
 			->setMaxResults(100);
-		if (!is_null($minId)) {
+		if ($minId !== null) {
 			$query = $query->where($qb->expr()->gte('id',
 				$qb->createNamedParameter($minId)));
 		}

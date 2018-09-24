@@ -90,7 +90,7 @@ script:
 
   # Run server's app code checker
   # TODO: enable once table renames are possible
-  # - php ../../occ app:check-code mail
+  - php ../../occ app:check-code mail
 
   # Run JS tests
   - sh -c "if [ '$TEST_JS' = 'TRUE' ]; then grunt; fi"
@@ -98,7 +98,7 @@ script:
 
   # Run PHP tests
   - cd tests
-  - ../vendor/phpunit/phpunit/phpunit --configuration phpunit.xml --fail-on-warning
+  - ../vendor/bin/phpunit --configuration phpunit.xml --fail-on-warning
   - if [[ "$PHP_COVERAGE" = "TRUE" ]]; then wget https://scrutinizer-ci.com/ocular.phar;
     fi
   - if [[ "$PHP_COVERAGE" = "TRUE" ]]; then php ocular.phar code-coverage:upload --format=php-clover
@@ -115,6 +115,8 @@ matrix:
   include:
     #- php: 7.0
     #  env: "DB=mysql CORE_BRANCH=master TEST_JS=TRUE"
+    - php: 7.2
+      env: "DB=mysql CORE_BRANCH=stable14"
     - php: 7.1
       env: "DB=mysql CORE_BRANCH=master PACKAGE=TRUE"
     - php: 7.1
