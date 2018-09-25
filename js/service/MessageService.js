@@ -30,17 +30,18 @@ export function syncEnvelopes (accountId, folderId, syncToken, uids) {
 	}).then(resp => resp.data)
 }
 
-export function flagEnvelope (accountId, folderId, id, flag, value) {
+export function setEnvelopeFlag (accountId, folderId, id, flag, value) {
 	const url = OC.generateUrl('apps/mail/api/accounts/{accountId}/folders/{folderId}/messages/{id}/flags', {
 		accountId,
 		folderId,
 		id
 	})
 
+	const flags = {}
+	flags[flag] = value
+
 	return HttpClient.put(url, {
-		flags: {
-			flag: value
-		}
+		flags: flags
 	}).then(resp => {flag: value})
 }
 
