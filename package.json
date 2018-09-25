@@ -11,7 +11,7 @@
     "test": "./node_modules/.bin/jest"
   },
   "dependencies": {
-    "@vue/babel-preset-app": "^3.0.1",
+    "@vue/babel-preset-app": "^3.0.4",
     "babel-jest": "^23.6.0",
     "color-convert": "^1.9.3",
     "md5": "^2.2.1",
