@@ -4,7 +4,7 @@
 			<Loading v-if="loading"
 					 :hint="t('mail', 'Loading messages')"/>
 			<template v-else>
-				<MessageList/>
+				<EnvelopeList/>
 				<NewMessageDetail v-if="newMessage"/>
 				<Message v-else-if="hasMessages"/>
 			</template>
@@ -14,7 +14,7 @@
 
 <script>
 	import Message from "./Message";
-	import MessageList from "./MessageList";
+	import EnvelopeList from "./EnvelopeList";
 	import NewMessageDetail from "./NewMessageDetail";
 	import Loading from "./Loading";
 
@@ -24,7 +24,7 @@
 			Loading,
 			NewMessageDetail,
 			Message,
-			MessageList
+			EnvelopeList,
 		},
 		data () {
 			return {

@@ -7,7 +7,7 @@
 		<div id="list-refreshing"
 			 :class="{'icon-loading-small': true, 'refreshing': refreshing}"/>
 		<EmptyFolder v-if="envelopes.length === 0"/>
-		<MessageListItem v-else
+		<Envelope v-else
 						 v-for="env in envelopes"
 						 :key="env.id"
 						 :data="env"/>
@@ -22,12 +22,12 @@
 	import Vue from 'vue'
 
 	import EmptyFolder from './EmptyFolder'
-	import MessageListItem from './MessageListItem'
+	import Envelope from './Envelope'
 
 	Vue.use(vuescroll, {throttle: 600})
 
 	export default {
-		name: "MessageList",
+		name: "EnvelopeList",
 		computed: {
 			envelopes () {
 				return this.$store.getters.getEnvelopes(
@@ -37,7 +37,7 @@
 			}
 		},
 		components: {
-			MessageListItem,
+			Envelope,
 			EmptyFolder,
 		},
 		directives: {
