@@ -93,8 +93,8 @@ script:
   - php ../../occ app:check-code mail
 
   # Run JS tests
-  - sh -c "if [ '$TEST_JS' = 'TRUE' ]; then grunt; fi"
-  - sh -c "if [ '$TEST_JS' = 'TRUE' ]; then cat ./coverage/*/lcov.info | ./node_modules/coveralls/bin/coveralls.js; fi"
+  #- sh -c "if [ '$TEST_JS' = 'TRUE' ]; then grunt; fi"
+  #- sh -c "if [ '$TEST_JS' = 'TRUE' ]; then cat ./coverage/*/lcov.info | ./node_modules/coveralls/bin/coveralls.js; fi"
 
   # Run PHP tests
   - cd tests
@@ -113,8 +113,8 @@ script:
 
 matrix:
   include:
-    #- php: 7.0
-    #  env: "DB=mysql CORE_BRANCH=master TEST_JS=TRUE"
+    - php: 7.0
+      env: "DB=mysql CORE_BRANCH=master TEST_JS=TRUE"
     - php: 7.2
       env: "DB=mysql CORE_BRANCH=stable14"
     - php: 7.1
