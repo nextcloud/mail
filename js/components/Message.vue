@@ -74,15 +74,41 @@
 			fetchMessage () {
 				this.loading = true
 				this.message = undefined
+
+				const accountId = this.$route.params.accountId
+				const folderId = this.$route.params.folderId
+				const id = this.$route.params.messageId
+
 				this.$store.dispatch(
 					'fetchMessage', {
-						accountId: this.$route.params.accountId,
-						folderId: this.$route.params.folderId,
-						id: this.$route.params.messageId,
+						accountId,
+						folderId,
+						id
 					}).then(message => {
 					this.message = message
 					this.loading = false
-				})
+				}).then(() => {
+					// TODO: add timeout so that message isn't flagged when only viewed
+					// for a few seconds
+					if (accountId !== this.$route.params.accountId
+						|| folderId !== this.$route.params.folderId
+						|| id !== this.$route.params.messageId) {
+						console.debug('User navigated away, loaded message won\'t be flagged as seen')
+						return
+					}
+
+					if (!this.$store.getters.getEnvelope(accountId, folderId, id).flags.unseen) {
+						// Already seen -> no change necessary
+						return
+					}
+
+					return this.$store.dispatch(
+						'toggleEnvelopeSeen', {
+							accountId,
+							folderId,
+							id
+						})
+				}).catch(console.error.bind(this))
 			},
 			sendReply () {
 				console.log('todo: sending reply')

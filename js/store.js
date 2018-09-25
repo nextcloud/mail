@@ -11,7 +11,7 @@ import {
 import {
 	fetchEnvelopes,
 	syncEnvelopes,
-	flagEnvelope,
+	setEnvelopeFlag,
 	fetchMessage
 } from './service/MessageService'
 
@@ -154,7 +154,7 @@ export const actions = {
 			value: !oldState
 		})
 
-		flagEnvelope(accountId, folderId, id, 'flagged', !oldState).catch(e => {
+		setEnvelopeFlag(accountId, folderId, id, 'flagged', !oldState).catch(e => {
 			console.error('could not toggle message flagged state', e)
 
 			// Revert change
@@ -163,6 +163,30 @@ export const actions = {
 				folderId,
 				id,
 				flag: 'flagged',
+				value: oldState
+			})
+		})
+	},
+	toggleEnvelopeSeen ({commit, getters}, {accountId, folderId, id}) {
+		// Change immediately and switch back on error
+		const oldState = getters.getEnvelope(accountId, folderId, id).flags.unseen
+		commit('flagEnvelope', {
+			accountId,
+			folderId,
+			id,
+			flag: 'unseen',
+			value: !oldState
+		})
+
+		setEnvelopeFlag(accountId, folderId, id, 'unseen', !oldState).catch(e => {
+			console.error('could not toggle message unseen state', e)
+
+			// Revert change
+			commit('flagEnvelope', {
+				accountId,
+				folderId,
+				id,
+				flag: 'unseen',
 				value: oldState
 			})
 		})
