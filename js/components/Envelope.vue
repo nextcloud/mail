@@ -11,6 +11,7 @@
 			},
 			exact: true}">
 		<div class="app-content-list-item-star icon-starred"
+			 v-on:click="toggleFlagged"
 			 :data-starred="data.flags.flagged ? 'true':'false'"></div>
 		<div class="app-content-list-item-icon">
 			<Avatar :label="sender"/>
@@ -22,7 +23,8 @@
 		<div class="app-content-list-item-line-two"
 			 :title="data.subject">
 			<span v-if="data.flags.answered" class="icon-reply"></span>
-			<span v-if="data.flags.hasAttachments" class="icon-public icon-attachment"></span>
+			<span v-if="data.flags.hasAttachments"
+				  class="icon-public icon-attachment"></span>
 			{{data.subject}}
 		</div>
 		<div class="app-content-list-item-details date">
@@ -36,7 +38,7 @@
 	import Moment from "./Moment";
 
 	export default {
-		name: "MessageListItem",
+		name: "Envelope",
 		components: {
 			Avatar,
 			Moment
@@ -53,6 +55,18 @@
 
 				const first = this.data.from[0]
 				return first.label || first.email
+			}
+		},
+		methods: {
+			toggleFlagged (e) {
+				// Don't navigate
+				e.preventDefault()
+
+				this.$store.dispatch('toggleEnvelopeFlagged', {
+					accountId: this.$route.params.accountId,
+					folderId: this.$route.params.folderId,
+					id: this.data.id
+				})
 			}
 		}
 	}

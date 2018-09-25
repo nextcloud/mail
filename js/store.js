@@ -11,6 +11,7 @@ import {
 import {
 	fetchEnvelopes,
 	syncEnvelopes,
+	flagEnvelope,
 	fetchMessage
 } from './service/MessageService'
 
@@ -39,6 +40,9 @@ export const mutations = {
 			// Prevent duplicates
 			folder.envelopes.push(id)
 		}
+	},
+	flagEnvelope (state, {accountId, folderId, id, flag, value}) {
+		state.envelopes[accountId + '-' + folderId + '-' + id].flags[flag] = value
 	},
 	removeEnvelope (state, {accountId, folder, envelope}) {
 		folder.envelopes = folder.envelopes.filter(existing => existing.id !== envelope.id)
@@ -139,6 +143,30 @@ export const actions = {
 			})
 		})
 	},
+	toggleEnvelopeFlagged ({commit, getters}, {accountId, folderId, id}) {
+		// Change immediately and switch back on error
+		const oldState = getters.getEnvelope(accountId, folderId, id).flags.flagged
+		commit('flagEnvelope', {
+			accountId,
+			folderId,
+			id,
+			flag: 'flagged',
+			value: !oldState
+		})
+
+		flagEnvelope(accountId, folderId, id, 'flagged', !oldState).catch(e => {
+			console.error('could not toggle message flagged state', e)
+
+			// Revert change
+			commit('flagEnvelope', {
+				accountId,
+				folderId,
+				id,
+				flag: 'flagged',
+				value: oldState
+			})
+		})
+	},
 	fetchMessage ({commit}, {accountId, folderId, id}) {
 		return fetchMessage(accountId, folderId, id).then(message => {
 			commit('addMessage', {
@@ -163,6 +191,9 @@ export const getters = {
 	},
 	getFolders: (state) => (accountId) => {
 		return state.accounts[accountId].folders.map(folderId => state.folders[folderId])
+	},
+	getEnvelope: (state) => (accountId, folderId, id) => {
+		return state.envelopes[accountId + '-' + folderId + '-' + id]
 	},
 	getEnvelopeById: (state) => (id) => {
 		return state.envelopes[id]
