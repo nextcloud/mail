@@ -10,13 +10,13 @@
 </template>
 
 <script>
-	import AppNavigation from "../components/core/appNavigation";
-	import AppSettingsMenu from "../components/AppSettingsMenu";
+	import {AppNavigation} from 'nextcloud-vue'
+	import AppSettingsMenu from '../components/AppSettingsMenu'
 
-	import SidebarItems from "../mixins/SidebarItems";
+	import SidebarItems from '../mixins/SidebarItems'
 
 	export default {
-		name: "AccountSettings",
+		name: 'AccountSettings',
 		extends: SidebarItems,
 		components: {
 			AppNavigation,
@@ -24,7 +24,7 @@
 		},
 		computed: {
 			menu () {
-				return this.buildMenu();
+				return this.buildMenu()
 			}
 		}
 	}
