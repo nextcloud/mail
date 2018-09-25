@@ -3,7 +3,7 @@
 		<div id="app-content">
 			<div class="container">
 				<div id="setup-content container">
-					<account-form v-bind:settings-page="false" />
+					<account-form v-bind:settings-page="false"/>
 				</div>
 			</div>
 		</div>
@@ -11,11 +11,12 @@
 </template>
 
 <script>
-import AccountForm from '../components/AccountForm';
-export default {
-  name: 'Setup',
-  components: {
-    AccountForm
-  }
-};
+	import AccountForm from '../components/AccountForm';
+
+	export default {
+		name: 'Setup',
+		components: {
+			AccountForm
+		}
+	};
 </script>

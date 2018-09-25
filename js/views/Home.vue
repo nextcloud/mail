@@ -11,15 +11,15 @@
 </template>
 
 <script>
-	import AppNavigation from "../components/core/appNavigation";
-	import AppSettingsMenu from "../components/AppSettingsMenu";
-	import FolderContent from "../components/FolderContent";
-	import Loading from "../components/Loading";
+	import {AppNavigation} from 'nextcloud-vue'
+	import AppSettingsMenu from '../components/AppSettingsMenu'
+	import FolderContent from '../components/FolderContent'
+	import Loading from '../components/Loading'
 
-	import SidebarItems from "../mixins/SidebarItems";
+	import SidebarItems from '../mixins/SidebarItems'
 
 	export default {
-		name: 'home',
+		name: 'Home',
 		extends: SidebarItems,
 		components: {
 			Loading,
@@ -34,7 +34,7 @@
 		},
 		computed: {
 			menu () {
-				return this.buildMenu();
+				return this.buildMenu()
 			}
 		},
 		created () {
@@ -71,5 +71,5 @@
 				}
 			}).catch(console.error.bind(this))
 		}
-	};
+	}
 </script>
