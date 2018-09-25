@@ -29,19 +29,29 @@
 		</div>
 		<div class="app-content-list-item-details date">
 			<Moment :timestamp="data.dateInt * 1000"/>
+			<div class="app-content-list-item-menu">
+				<div class="icon-more"></div>
+				<div class="popovermenu">
+					<PopoverMenu :menu="popoverMenu" />
+				</div>
+			</div>
 		</div>
 	</router-link>
 </template>
 
 <script>
-	import Avatar from "./Avatar";
-	import Moment from "./Moment";
+	import {PopoverMenu, PopoverMenuItem} from 'nextcloud-vue'
+
+	import Avatar from './Avatar'
+	import Moment from './Moment'
 
 	export default {
-		name: "Envelope",
+		name: 'Envelope',
 		components: {
+			PopoverMenuItem,
 			Avatar,
-			Moment
+			Moment,
+			PopoverMenu,
 		},
 		props: [
 			'data',
@@ -55,6 +65,15 @@
 
 				const first = this.data.from[0]
 				return first.label || first.email
+			},
+			popoverMenu() {
+				return [
+					{
+						input: 'checkbox',
+						text: t('mail', 'Seen'),
+						action: () => console.log('CHECK'),
+					}
+				]
 			}
 		},
 		methods: {
