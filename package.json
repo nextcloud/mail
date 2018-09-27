@@ -8,7 +8,9 @@
   "scripts": {
     "build": "webpack --progress --hide-modules --config js/webpack.prod.js",
     "dev": "webpack --progress --watch --config js/webpack.dev.js",
-    "test": "./node_modules/.bin/jest"
+    "test": "./node_modules/.bin/jest",
+    "lint": "$(npm bin)/eslint --ext .js,.vue js",
+    "lint:autofix": "eslint --ext .js,.vue js --fix"
   },
   "dependencies": {
     "@vue/babel-preset-app": "^3.0.4",
@@ -38,14 +40,20 @@
     "@babel/preset-env": "^7.1.0",
     "@vue/server-test-utils": "^1.0.0-beta.25",
     "@vue/test-utils": "^1.0.0-beta.25",
-    "babel-loader": "^8.0.4",
+    "babel-eslint": "^10.0.1",
+    "babel-loader": "^8.0.2",
     "babel-plugin-syntax-dynamic-import": "^6.18.0",
     "css-loader": "^1.0.0",
+    "eslint": "^5.6.0",
+    "eslint-config-prettier": "^3.1.0",
+    "eslint-plugin-prettier": "^2.7.0",
+    "eslint-plugin-vue": "^5.0.0-beta.3",
     "file-loader": "^2.0.0",
     "jest": "^23.6.0",
     "jest-vue-preprocessor": "^1.4.0",
     "jsdom": "^12.0.0",
     "node-sass": "^4.9.0",
+    "prettier": "1.14.3",
     "sass-loader": "^7.0.3",
     "url-loader": "^1.1.1",
     "vue-jest": "^2.6.0",
@@ -61,5 +69,12 @@
       "^.+\\.js$": "<rootDir>/node_modules/babel-jest",
       ".*\\.(vue)$": "<rootDir>/node_modules/jest-vue-preprocessor"
     }
+  },
+  "prettier": {
+    "singleQuote": true,
+    "semi": false,
+    "useTabs": true,
+    "tabWidth": 4,
+    "trailingComma": "es5"
   }
 }
