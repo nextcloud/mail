@@ -30,8 +30,10 @@
 		<div class="app-content-list-item-details date">
 			<Moment :timestamp="data.dateInt * 1000"/>
 			<div class="app-content-list-item-menu">
-				<div class="icon-more"></div>
-				<div class="popovermenu">
+				<div class="icon-more"
+					 v-on:click="togglePopoverMenu"/>
+				<div class="popovermenu"
+					 :class="{open: this.menuOpened}">
 					<PopoverMenu :menu="popoverMenu" />
 				</div>
 			</div>
@@ -56,6 +58,11 @@
 		props: [
 			'data',
 		],
+		data() {
+			return {
+				menuOpened: false
+			}
+		},
 		computed: {
 			sender () {
 				if (this.data.from.length === 0) {
@@ -86,6 +93,9 @@
 					folderId: this.$route.params.folderId,
 					id: this.data.id
 				})
+			},
+			togglePopoverMenu (e) {
+				this.menuOpened = !this.menuOpened
 			}
 		}
 	}
