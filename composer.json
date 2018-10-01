@@ -24,7 +24,7 @@
 		"pear-pear.horde.org/Horde_Text_Flowed": "^2.0.3@stable",
 		"pear-pear.horde.org/Horde_Util": "^2.5.8@stable",
 		"pear-pear.horde.org/Horde_Smtp": "^1.9.5@stable",
-		"cerdic/css-tidy": "v1.6.2",
+		"cerdic/css-tidy": "v1.6.4",
 		"ezyang/htmlpurifier": "4.10.0",
 		"kwi/urllinker": "dev-default",
 		"gravatarphp/gravatar": "^1.0",

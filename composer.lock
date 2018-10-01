@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "7bf57d5971b85a75c5a073e392806b67",
+    "content-hash": "54506ab3954e46529575defeb2282bf9",
     "packages": [
         {
             "name": "arthurhoaro/favicon",
@@ -58,16 +58,16 @@
         },
         {
             "name": "cerdic/css-tidy",
-            "version": "v1.6.2",
+            "version": "v1.6.4",
             "source": {
                 "type": "git",
                 "url": "https://github.com/Cerdic/CSSTidy.git",
-                "reference": "081e0ff987b7ec3fd509c8c69a96c2b39d700581"
+                "reference": "ba7eae1ea2adeaf21e0e892ba3fc67dfb913f85d"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/Cerdic/CSSTidy/zipball/081e0ff987b7ec3fd509c8c69a96c2b39d700581",
-                "reference": "081e0ff987b7ec3fd509c8c69a96c2b39d700581",
+                "url": "https://api.github.com/repos/Cerdic/CSSTidy/zipball/ba7eae1ea2adeaf21e0e892ba3fc67dfb913f85d",
+                "reference": "ba7eae1ea2adeaf21e0e892ba3fc67dfb913f85d",
                 "shasum": ""
             },
             "require-dev": {
@@ -93,7 +93,7 @@
                 }
             ],
             "description": "CSSTidy is a CSS minifier",
-            "time": "2018-09-25T21:50:42+00:00"
+            "time": "2018-09-29T12:26:47+00:00"
         },
         {
             "name": "ezyang/htmlpurifier",
