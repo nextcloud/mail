@@ -2,7 +2,8 @@ OC.L10N.register(
     "mail",
     {
     "Mail" : "Elektronska pošta",
-    "Error while loading the accounts." : "Prišlo je do napake med nalaganjem računa.¸",
+    "Loading accounts" : "Poteka nalaganje računov ...",
+    "Error while loading the accounts." : "Prišlo je do napake med nalaganjem računa.",
     "Searching for {query}" : "Iščem {query}",
     "Error while deleting message." : "Napaka med brisanjem sporočila.",
     "Forwarded message" : "Posreduj sporočilo",
@@ -53,8 +54,13 @@ OC.L10N.register(
     "The link leads to %s" : "Povezava vodi na %s",
     "If you don’t want to visit that page, you can return to <a href=\"%s\">Mail</a>." : "Če ne želite obiskati te strani, se lahko vrnete na <a href=\"%s\">pošto</a>.",
     "Continue to %s" : "Nadaljuj na %s",
+    "Delete account" : "Izbriši račun",
     "New message" : "Novo obvestilo",
+    "Account Settings" : "Nastavitve računa",
     "Mail address" : "Elektronski naslov",
-    "Connect" : "Poveži"
+    "Account" : "Račun",
+    "Mail Address" : "Elektronski naslov",
+    "Connect" : "Poveži",
+    "Subject" : "Zadeva"
 },
 "nplurals=4; plural=(n%100==1 ? 0 : n%100==2 ? 1 : n%100==3 || n%100==4 ? 2 : 3);");

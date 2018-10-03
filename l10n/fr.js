@@ -82,6 +82,7 @@ OC.L10N.register(
     "Mail address" : "Adresse mail",
     "Display Name" : "Nom affiché",
     "Account" : "Compte",
+    "Toggle read" : "Basculer en lecture",
     "Delete" : "Supprimer",
     "Keyboard shortcuts" : "Raccourcis clavier",
     "Speed up your Mail experience with these quick shortcuts." : "Accélérez votre expérience Mail avec ces raccourcis rapides.",
