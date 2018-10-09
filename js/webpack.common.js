@@ -11,6 +11,14 @@ module.exports = {
 	module: {
 		rules: [
 			{
+				test: /davclient/,
+				use: 'exports-loader?dav'
+			},
+			{
+				test: /ical/,
+				use: 'exports-loader?ICAL'
+			},
+			{
 				test: /\.css$/,
 				use: ['vue-style-loader', 'css-loader']
 			},

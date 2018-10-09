@@ -1,7 +1,7 @@
 <template>
 	<div class="app-content-details">
 		<Loading v-if="loading"/>
-		<v-template v-else>
+		<template v-else>
 			<div id="mail-message-header" class="section">
 				<h2 :title="message.subject">{{message.subject}}</h2>
 				<p class="transparency">
@@ -21,14 +21,13 @@
 				<MessagePlainTextBody v-else
 									  :body="message.body"
 									  :signature="message.signature"/>
-				<div class="mail-message-attachments"></div>
+				<MessageAttachments :attachments="message.attachments" />
 				<div id="reply-composer"></div>
 				<input type="button" id="forward-button" value="Forward">
 			</div>
 			<Composer :send="sendReply"
 					  :draft="saveReplyDraft"/>
-			<MessageAttachments :attachments="message.attachments" />
-		</v-template>
+		</template>
 	</div>
 </template>
 

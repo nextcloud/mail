@@ -371,7 +371,7 @@ class IMAPMessage implements IMessage, JsonSerializable {
 				return;
 			}
 			$this->attachments[] = [
-				'id' => $p->getMimeId(),
+				'id' => (int) $p->getMimeId(),
 				'messageId' => $this->messageId,
 				'fileName' => $filename,
 				'mime' => $p->getType(),

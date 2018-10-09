@@ -20,21 +20,32 @@
   -->
 
 <template>
-	<v-template>
+	<div class="mail-message-attachments">
 		<div class="attachments">
 			<MessageAttachment v-for="attachment in attachments"
-							   :key="attachment.id"/>
+							   :key="attachment.id"
+							   :id="attachment.id"
+							   :fileName="attachment.fileName"
+							   :size="attachment.size"
+							   :url="attachment.downloadUrl"
+							   :isImage="attachment.isImage"
+							   :isCalendarEvent="attachment.isCalendarEvent"
+							   :mimeUrl="attachment.mimeUrl"/>
 		</div>
 		<p v-if="moreThanOne">
-			<button class="icon-folder attachments-save-to-cloud">
+			<button class="attachments-save-to-cloud"
+					:class="{'icon-folder' : !savingToCloud, 'icon-loading-small' : savingToCloud}"
+					:disabled="savingToCloud"
+					v-on:click="saveAll">
 				{{ t('mail', 'Save all to Files') }}
 			</button>
 		</p>
-	</v-template>
+	</div>
 </template>
 
 <script>
-	import MessageAttachment from "./MessageAttachment";
+	import MessageAttachment from './MessageAttachment'
+	import {saveAttachmentsToFiles} from '../service/AttachmentService'
 
 	export default {
 		name: "MessageAttachments",
@@ -44,14 +55,64 @@
 		props: {
 			attachments: Array,
 		},
+		data () {
+			return {
+				savingToCloud: false,
+			}
+		},
 		computed: {
 			moreThanOne () {
 				return this.attachments.length > 1
+			}
+		},
+		methods: {
+			saveAll () {
+				const pickDestination = () => {
+					return new Promise((res, rej) => {
+						OC.dialogs.filepicker(
+							t('mail', 'CChoose a folder to store the attachments in'),
+							res,
+							false,
+							'httpd/unix-directory',
+							true
+						)
+					})
+				}
+				const saveAttachments = (accountId, folderId, messageId) => directory => {
+					return saveAttachmentsToFiles(
+						accountId,
+						folderId,
+						messageId,
+						directory
+					)
+				}
+				const accountId = this.$route.params.accountId
+				const folderId = this.$route.params.folderId
+				const messageId = this.$route.params.messageId
+
+				return pickDestination()
+					.then(dest => {
+						this.savingToCloud = true
+						return dest
+					})
+					.then(saveAttachments(accountId, folderId, messageId))
+					.then(() => console.info('saved'))
+					.catch(e => console.error('not saved', e))
+					.then(() => this.savingToCloud = false)
 			}
 		}
 	}
 </script>
 
-<style scoped>
+<style>
+	.mail-message-attachments {
+		margin-bottom: 20px;
+	}
 
+	/* show icon + text for Download all button
+		as well as when there is only one attachment */
+	.attachments-save-to-cloud {
+		background-position: 9px center;
+		padding-left: 32px;
+	}
 </style>
