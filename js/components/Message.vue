@@ -33,6 +33,8 @@
 </template>
 
 <script>
+	import { generateUrl } from 'nextcloud-server/dist/router'
+
 	import AddressList from "./AddressList"
 	import Composer from "./Composer"
 	import MessageHTMLBody from "./MessageHTMLBody"
@@ -58,7 +60,7 @@
 		},
 		computed: {
 			htmlUrl () {
-				return OC.generateUrl('/apps/mail/api/accounts/{accountId}/folders/{folderId}/messages/{id}/html', {
+				return generateUrl('/apps/mail/api/accounts/{accountId}/folders/{folderId}/messages/{id}/html', {
 					accountId: this.$route.params.accountId,
 					folderId: this.$route.params.folderId,
 					id: this.$route.params.messageId
