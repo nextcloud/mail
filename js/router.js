@@ -1,14 +1,15 @@
 import Vue from 'vue'
 import Router from 'vue-router'
+import {generateUrl} from 'nextcloud-server/dist/router'
 
-import AccountSettings from './views/AccountSettings';
+import AccountSettings from './views/AccountSettings'
 import Home from './views/Home'
-import Setup from './views/Setup';
+import Setup from './views/Setup'
 
 Vue.use(Router)
 
 export default new Router({
-	base: OC.generateUrl('/apps/mail/'),
+	base: generateUrl('/apps/mail/'),
 	linkActiveClass: 'active',
 	routes: [
 		{
