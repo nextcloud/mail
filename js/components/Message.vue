@@ -1,7 +1,7 @@
 <template>
 	<div class="app-content-details">
 		<Loading v-if="loading"/>
-		<template v-else>
+		<v-template v-else>
 			<div id="mail-message-header" class="section">
 				<h2 :title="message.subject">{{message.subject}}</h2>
 				<p class="transparency">
@@ -27,7 +27,8 @@
 			</div>
 			<Composer :send="sendReply"
 					  :draft="saveReplyDraft"/>
-		</template>
+			<MessageAttachments :attachments="message.attachments" />
+		</v-template>
 	</div>
 </template>
 
@@ -37,10 +38,12 @@
 	import MessageHTMLBody from "./MessageHTMLBody"
 	import MessagePlainTextBody from "./MessagePlainTextBody"
 	import Loading from "./Loading"
+	import MessageAttachments from "./MessageAttachments";
 
 	export default {
 		name: "Message",
 		components: {
+			MessageAttachments,
 			Loading,
 			AddressList,
 			Composer,
