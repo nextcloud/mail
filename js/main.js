@@ -25,11 +25,18 @@ import App from './App';
 import router from './router';
 import store from './store';
 import {sync} from 'vuex-router-sync';
+import {translate, translatePlural} from 'nextcloud-server/dist/l10n'
 import VTooltip from 'v-tooltip'
 
 sync(store, router);
 
-Vue.prototype.t = t;
+Vue.mixin({
+	methods: {
+		t: translate,
+		n: translatePlural
+	}
+})
+
 Vue.prototype.n = n;
 Vue.prototype.OC = OC;
 Vue.prototype.OCA = OCA;
