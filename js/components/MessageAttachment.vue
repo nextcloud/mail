@@ -54,7 +54,8 @@
 
 <script>
 	import {formatFileSize} from 'nextcloud-server/dist/format'
-	import { mixin as onClickOutside } from 'vue-on-click-outside'
+	import {mixin as onClickOutside} from 'vue-on-click-outside'
+	import {pickFileOrDirectory} from 'nextcloud-server/dist/files'
 	import {PopoverMenu} from 'nextcloud-vue'
 
 	import {
@@ -107,17 +108,6 @@
 				return formatFileSize(size)
 			},
 			saveToCloud () {
-				const pickDestination = () => {
-					return new Promise((res, rej) => {
-						OC.dialogs.filepicker(
-							t('mail', 'Choose a folder to store the attachment in'),
-							path => res(path),
-							false,
-							'httpd/unix-directory',
-							true
-						)
-					})
-				}
 				const saveAttachment = (accountId, folderId, messageId, attachmentId) => directory => {
 					return saveAttachmentToFiles(
 						accountId,
@@ -131,7 +121,12 @@
 				const folderId = this.$route.params.folderId
 				const messageId = this.$route.params.messageId
 
-				return pickDestination()
+				return pickFileOrDirectory(
+					t('mail', 'Choose a folder to store the attachment in'),
+					false,
+					['httpd/unix-directory'],
+					true
+				)
 					.then(dest => {
 						this.savingToCloud = true
 						return dest
@@ -154,7 +149,7 @@
 						this.loadingCalendars = false
 					})
 			},
-			closeCalendarPopover() {
+			closeCalendarPopover () {
 				this.showCalendarPopover = false
 			},
 			importCalendar (url) {
