@@ -21,7 +21,7 @@
 				<MessagePlainTextBody v-else
 									  :body="message.body"
 									  :signature="message.signature"/>
-				<div class="mail-message-attachments"></div>
+				<MessageAttachments :attachments="message.attachments" />
 				<div id="reply-composer"></div>
 				<input type="button" id="forward-button" value="Forward">
 			</div>
@@ -39,10 +39,12 @@
 	import MessageHTMLBody from "./MessageHTMLBody"
 	import MessagePlainTextBody from "./MessagePlainTextBody"
 	import Loading from "./Loading"
+	import MessageAttachments from "./MessageAttachments";
 
 	export default {
 		name: "Message",
 		components: {
+			MessageAttachments,
 			Loading,
 			AddressList,
 			Composer,
