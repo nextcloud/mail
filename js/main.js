@@ -37,7 +37,6 @@ Vue.mixin({
 	}
 })
 
-Vue.prototype.n = n;
 Vue.prototype.OC = OC;
 Vue.prototype.OCA = OCA;
 
