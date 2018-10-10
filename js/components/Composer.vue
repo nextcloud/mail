@@ -1,6 +1,7 @@
 <template>
 	<div class="message-composer">
-		<select class="mail-account">
+		<select class="mail-account"
+				:disabled="sending">
 			<option v-for="alias in aliases" :value="alias.id">
 				{{ t('mail', 'from') }} {{alias.name}} &lt;{{alias.emailAddress}}&gt;
 			</option>
@@ -11,25 +12,27 @@
 				transparency: true,
 				hidden: hasCC,
 				}">{{ t ('mail', '+ cc/bcc') }}</a>
-			<input type="text" name="to"
+			<input type="text"
+				   id="to"
 				   :value="to | addressListPlain"
+				   :disabled="sending"
 				   class="to recipient-autocomplete"/>
 			<label class="to-label transparency" for="to">{{ t('mail', 'to')
 				}}</label>
 			<div :class="{ 'composer-cc-bcc': true, hidden: !hasCC }">
 				<input type="text"
-					   name="cc"
+					   id="cc"
 					   class="cc recipient-autocomplete"
 					   :value="cc | addressListPlain"
-				/>
+					   :disabled="sending"/>
 				<label for="cc" class="cc-label transparency">
 					{{ t('mail', 'cc') }}
 				</label>
 				<input type="text"
-					   name="bcc"
+					   id="bcc"
 					   class="bcc recipient-autocomplete"
 					   :value="bcc | addressListPlain"
-				/>
+					   :disabled="sending"/>
 				<label for="bcc" class="bcc-label transparency">
 					{{ t('mail', 'bcc') }}
 				</label>
@@ -43,20 +46,22 @@
 				   type="text"
 				   name="subject"
 				   :value="subject"
+				   :disabled="sending"
 				   class="subject" autocomplete="off"
 				   :placeholder=" t ('mail', 'Subject')"/>
 
 			<textarea name="body"
 					  class="message-body"
 					  v-autosize
+					  :disabled="sending"
 					  :placeholder="t('mail', 'Message …')">{{message}}</textarea>
 		</div>
 		<div class="submit-message-wrapper">
 			<input class="submit-message send primary"
 				   type="submit"
 				   :value="submitButtonTitle"
+				   :disabled="sending"
 				   v-on:click="onSend">
-			<div class="submit-message-wrapper-inside"></div>
 		</div>
 		<div class="new-message-attachments">
 		</div>
@@ -83,25 +88,35 @@
 		},
 		data () {
 			return {
-				aliases: [],
 				hasCC: true,
 				to: [],
 				cc: [],
 				bcc: [],
 				subject: '',
 				noReply: false,
-				message: 'helllooooooo',
-				submitButtonTitle: 'Send',
+				message: '',
+				submitButtonTitle: t('mail', 'Send'),
+				sending: false,
+			}
+		},
+		computed: {
+			aliases () {
+				return this.$store.getters.getAccounts()
 			}
 		},
 		filters: {
-			addressListPlain (val) {
-				return 'todo';
+			addressListPlain (addresses) {
+				return addresses.join('; ')
 			}
 		},
 		methods: {
-			onSend() {
-				this.send();
+			onSend () {
+				this.sending = true
+
+				return this.send()
+					.then(() => console.info('message sent'))
+					.catch(e => console.error('could not send message', e))
+					.then(() => this.sending = false)
 			}
 		}
 	}

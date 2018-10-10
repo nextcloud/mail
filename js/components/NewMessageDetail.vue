@@ -16,11 +16,11 @@
 		methods: {
 			saveDraft () {
 				console.info('saving new draft');
-				return Promise.resolve();
+				return new Promise((res, rej) => setTimeout(res, 2000))
 			},
 			sendMessage () {
 				console.info('sending message');
-				return Promise.resolve();
+				return new Promise((res, rej) => setTimeout(res, 2000))
 			}
 		}
 	}
