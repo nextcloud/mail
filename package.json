@@ -13,7 +13,7 @@
     "lint:autofix": "eslint --ext .js,.vue js --fix"
   },
   "dependencies": {
-    "@vue/babel-preset-app": "^3.0.4",
+    "@vue/babel-preset-app": "^3.0.5",
     "babel-jest": "^23.6.0",
     "color-convert": "^1.9.3",
     "md5": "^2.2.1",
