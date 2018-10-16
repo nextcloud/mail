@@ -119,6 +119,7 @@ define(function(require) {
 
 			// setup composer view
 			this.showChildView('message', new ComposerView({
+				className: 'app-content-details',
 				accounts: require('state').accounts,
 				data: data
 			}));
