@@ -28,7 +28,12 @@ module.exports = {
 			},
 			{
 				test: /\.vue$/,
-				loader: 'vue-loader'
+				loader: 'vue-loader',
+				options: {
+					loaders: {
+						js: 'babel?presets[]=es2015' // Pass parameters as options
+					}
+				}
 			},
 			{
 				test: /\.js$/,
