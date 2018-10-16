@@ -9,7 +9,9 @@
     "build": "webpack --progress --hide-modules --config js/webpack.prod.js",
     "dev": "webpack --progress --watch --config js/webpack.dev.js",
     "lint": "$(npm bin)/eslint --ext .js,.vue js",
-    "lint:autofix": "eslint --ext .js,.vue js --fix"
+    "lint:autofix": "eslint --ext .js,.vue js --fix",
+    "test": "mocha-webpack --webpack-config js/webpack.test.js --require js/tests/setup.js js/tests/**/*.spec.js",
+    "test:watch": "mocha-webpack -w --webpack-config js/webpack.test.js --require js/tests/setup.js js/tests/**/*.spec.js"
   },
   "dependencies": {
     "@vue/babel-preset-app": "^3.0.5",
@@ -42,11 +44,13 @@
   "devDependencies": {
     "@babel/core": "^7.1.2",
     "@babel/preset-env": "^7.1.0",
+    "@vue/test-utils": "^1.0.0-beta.25",
     "babel-core": "^7.0.0-bridge.0",
     "babel-eslint": "^10.0.1",
     "babel-loader": "^8.0.2",
     "babel-plugin-syntax-dynamic-import": "^6.18.0",
     "babel-preset-env": "^1.7.0",
+    "chai": "^4.2.0",
     "css-loader": "^1.0.0",
     "eslint": "^5.7.0",
     "eslint-config-prettier": "^3.1.0",
@@ -54,16 +58,21 @@
     "eslint-plugin-vue": "^5.0.0-beta.3",
     "file-loader": "^2.0.0",
     "jsdom": "^12.2.0",
+    "jsdom-global": "^3.0.2",
+    "mocha": "^5.2.0",
+    "mocha-webpack": "^2.0.0-beta.0",
     "node-sass": "^4.9.4",
     "prettier": "1.14.3",
     "sass-loader": "^7.0.3",
+    "sinon": "^7.0.0",
     "url-loader": "^1.1.2",
     "vue-loader": "^15.4.2",
     "vue-server-renderer": "^2.5.17",
     "vue-template-compiler": "^2.5.16",
     "webpack": "^4.20.2",
     "webpack-cli": "^3.1.2",
-    "webpack-merge": "^4.1.2"
+    "webpack-merge": "^4.1.2",
+    "webpack-node-externals": "^1.7.2"
   },
   "prettier": {
     "singleQuote": true,
