@@ -59,6 +59,7 @@ OC.L10N.register(
     "Account Settings" : "Nastavitve računa",
     "Mail address" : "Elektronski naslov",
     "Account" : "Račun",
+    "Delete" : "Izbriši",
     "Mail Address" : "Elektronski naslov",
     "Connect" : "Poveži",
     "Subject" : "Zadeva"
