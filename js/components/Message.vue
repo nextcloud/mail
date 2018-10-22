@@ -21,7 +21,7 @@
 				<MessagePlainTextBody v-else
 									  :body="message.body"
 									  :signature="message.signature"/>
-				<div class="mail-message-attachments"></div>
+				<MessageAttachments :attachments="message.attachments" />
 				<div id="reply-composer"></div>
 				<input type="button" id="forward-button" value="Forward">
 			</div>
@@ -32,15 +32,19 @@
 </template>
 
 <script>
+	import { generateUrl } from 'nextcloud-server/dist/router'
+
 	import AddressList from "./AddressList"
 	import Composer from "./Composer"
 	import MessageHTMLBody from "./MessageHTMLBody"
 	import MessagePlainTextBody from "./MessagePlainTextBody"
 	import Loading from "./Loading"
+	import MessageAttachments from "./MessageAttachments";
 
 	export default {
 		name: "Message",
 		components: {
+			MessageAttachments,
 			Loading,
 			AddressList,
 			Composer,
@@ -55,7 +59,7 @@
 		},
 		computed: {
 			htmlUrl () {
-				return OC.generateUrl('/apps/mail/api/accounts/{accountId}/folders/{folderId}/messages/{id}/html', {
+				return generateUrl('/apps/mail/api/accounts/{accountId}/folders/{folderId}/messages/{id}/html', {
 					accountId: this.$route.params.accountId,
 					folderId: this.$route.params.folderId,
 					id: this.$route.params.messageId

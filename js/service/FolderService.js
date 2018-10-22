@@ -1,7 +1,8 @@
+import { generateUrl } from 'nextcloud-server/dist/router'
 import HttpClient from 'nextcloud-axios'
 
 export function fetchAll(accountId) {
-  const url = OC.generateUrl('/apps/mail/api/accounts/{accountId}/folders', {
+  const url = generateUrl('/apps/mail/api/accounts/{accountId}/folders', {
     accountId
   })
 

@@ -1,7 +1,8 @@
+import { generateUrl } from 'nextcloud-server/dist/router'
 import HttpClient from 'nextcloud-axios'
 
 export function fetchEnvelopes(accountId, folderId, cursor) {
-  const url = OC.generateUrl('/apps/mail/api/accounts/{accountId}/folders/{folderId}/messages', {
+  const url = generateUrl('/apps/mail/api/accounts/{accountId}/folders/{folderId}/messages', {
     accountId,
     folderId,
   })
@@ -17,7 +18,7 @@ export function fetchEnvelopes(accountId, folderId, cursor) {
 }
 
 export function syncEnvelopes(accountId, folderId, syncToken, uids) {
-  const url = OC.generateUrl('/apps/mail/api/accounts/{accountId}/folders/{folderId}/sync', {
+  const url = generateUrl('/apps/mail/api/accounts/{accountId}/folders/{folderId}/sync', {
     accountId,
     folderId,
   })
@@ -31,7 +32,7 @@ export function syncEnvelopes(accountId, folderId, syncToken, uids) {
 }
 
 export function setEnvelopeFlag(accountId, folderId, id, flag, value) {
-  const url = OC.generateUrl('apps/mail/api/accounts/{accountId}/folders/{folderId}/messages/{id}/flags', {
+  const url = generateUrl('apps/mail/api/accounts/{accountId}/folders/{folderId}/messages/{id}/flags', {
     accountId,
     folderId,
     id
@@ -46,7 +47,7 @@ export function setEnvelopeFlag(accountId, folderId, id, flag, value) {
 }
 
 export function fetchMessage(accountId, folderId, id) {
-  const url = OC.generateUrl('/apps/mail/api/accounts/{accountId}/folders/{folderId}/messages/{id}', {
+  const url = generateUrl('/apps/mail/api/accounts/{accountId}/folders/{folderId}/messages/{id}', {
     accountId,
     folderId,
     id

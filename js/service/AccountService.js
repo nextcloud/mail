@@ -1,3 +1,4 @@
+import { generateUrl } from 'nextcloud-server/dist/router'
 import HttpClient from 'nextcloud-axios'
 
 function fixAccountId(original) {
@@ -8,13 +9,13 @@ function fixAccountId(original) {
 }
 
 export function fetchAll() {
-  const url = OC.generateUrl('/apps/mail/api/accounts')
+  const url = generateUrl('/apps/mail/api/accounts')
 
   return HttpClient.get(url).then(resp => resp.data.map(fixAccountId))
 }
 
 export function fetch(id) {
-  const url = OC.generateUrl('/apps/mail/api/accounts/{id}', {
+  const url = generateUrl('/apps/mail/api/accounts/{id}', {
     id
   })
 
