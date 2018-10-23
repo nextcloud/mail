@@ -25,7 +25,7 @@
  */
 style('mail', 'mail');
 style('mail', 'mobile');
-script('mail', 'build/mail');
+script('mail', 'mail');
 ?>
 
 <input type="hidden" id="debug-mode" value="<?php p($_['debug'] ? 'true' : 'false'); ?>">
