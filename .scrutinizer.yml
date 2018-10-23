@@ -8,11 +8,10 @@ build:
 filter:
     excluded_paths:
         - 'build/*'
-        - 'vendor/*'
         - 'l10n/*'
+        - 'src/tests/*'
         - 'tests/'
-        - 'js/vendor/*'
-        - 'js/tests/*'
+        - 'vendor/*'
 
 imports:
     - javascript
