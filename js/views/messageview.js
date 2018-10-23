@@ -85,13 +85,13 @@ define(function(require) {
 				'font-weight': 'normal',
 				'font-size': '.8em',
 				'line-height': '1.6em',
-				'font-family': '"Open Sans", Frutiger, Calibri, "Myriad Pro", Myriad, sans-serif',
-				'color': '#000'
+				'font-family': '"Nunito", "Open Sans", Frutiger, Calibri, "Myriad Pro", Myriad, sans-serif',
+				'color': '#222'
 			});
 			// Fix font when different font is forced
 			this.getUI('messageIframe').contents().find('font').prop({
-				'face': 'Open Sans',
-				'color': '#000'
+				'face': 'Nunito',
+				'color': '#222'
 			});
 			this.getUI('messageIframe').contents().find('.moz-text-flowed').css({
 				'font-family': 'inherit',
