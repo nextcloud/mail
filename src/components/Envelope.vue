@@ -92,10 +92,31 @@ export default {
 		popoverMenu() {
 			return [
 				{
-					input: 'checkbox',
+					icon: 'icon-mail',
 					text: t('mail', 'Seen'),
-					action: () => console.log('CHECK'),
+					action: () => {
+						this.menuOpened = false
+
+						this.$store.dispatch('toggleEnvelopeSeen', {
+							accountId: this.$route.params.accountId,
+							folderId: this.$route.params.folderId,
+							id: this.data.id,
+						})
+					},
 				},
+				{
+					icon: 'icon-delete',
+					text: t('mail', 'Delete'),
+					action: () => {
+						this.menuOpened = false
+
+						this.$store.dispatch('deleteMessage', {
+							accountId: this.$route.params.accountId,
+							folderId: this.$route.params.folderId,
+							id: this.data.id,
+						})
+					}
+				}
 			]
 		},
 	},

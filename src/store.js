@@ -12,7 +12,8 @@ import {
 	fetchEnvelopes,
 	syncEnvelopes,
 	setEnvelopeFlag,
-	fetchMessage
+	fetchMessage,
+	deleteMessage,
 } from './service/MessageService'
 
 Vue.use(Vuex)
@@ -49,6 +50,9 @@ export const mutations = {
 	},
 	addMessage (state, {accountId, folderId, message}) {
 		Vue.set(state.messages, accountId + '-' + folderId + '-' + message.id, message)
+	},
+	removeMessage (state, {accountId, folderId, id}) {
+		Vue.delete(state.messages, accountId + '-' + folderId + '-' + id)
 	}
 }
 
@@ -199,6 +203,15 @@ export const actions = {
 				message
 			})
 			return message
+		})
+	},
+	deleteMessage ({commit}, {accountId, folderId, id}) {
+		return deleteMessage(accountId, folderId, id).then(() => {
+			commit('removeMessage', {
+				accountId,
+				folderId,
+				id,
+			})
 		})
 	}
 }
