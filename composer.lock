@@ -884,16 +884,16 @@
     "packages-dev": [
         {
             "name": "christophwurst/nextcloud",
-            "version": "14.0.0",
+            "version": "v14.0.3",
             "source": {
                 "type": "git",
                 "url": "https://github.com/ChristophWurst/nextcloud_composer.git",
-                "reference": "3adf5ad0ecef6b3fa82636d0e6cf09d456f188cf"
+                "reference": "6988090d74635889519765b9b74bc9352e566a76"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/ChristophWurst/nextcloud_composer/zipball/3adf5ad0ecef6b3fa82636d0e6cf09d456f188cf",
-                "reference": "3adf5ad0ecef6b3fa82636d0e6cf09d456f188cf",
+                "url": "https://api.github.com/repos/ChristophWurst/nextcloud_composer/zipball/6988090d74635889519765b9b74bc9352e566a76",
+                "reference": "6988090d74635889519765b9b74bc9352e566a76",
                 "shasum": ""
             },
             "type": "library",
@@ -913,7 +913,7 @@
                 }
             ],
             "description": "Composer package containing Nextcloud's public API (classes, interfaces)",
-            "time": "2018-09-17T12:48:04+00:00"
+            "time": "2018-10-12T08:37:31+00:00"
         },
         {
             "name": "christophwurst/nextcloud_testing",
@@ -2384,16 +2384,16 @@
         },
         {
             "name": "symfony/process",
-            "version": "v3.4.15",
+            "version": "v3.4.17",
             "source": {
                 "type": "git",
                 "url": "https://github.com/symfony/process.git",
-                "reference": "4d6b125d5293cbceedc2aa10f2c71617e76262e7"
+                "reference": "1dc2977afa7d70f90f3fefbcd84152813558910e"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/symfony/process/zipball/4d6b125d5293cbceedc2aa10f2c71617e76262e7",
-                "reference": "4d6b125d5293cbceedc2aa10f2c71617e76262e7",
+                "url": "https://api.github.com/repos/symfony/process/zipball/1dc2977afa7d70f90f3fefbcd84152813558910e",
+                "reference": "1dc2977afa7d70f90f3fefbcd84152813558910e",
                 "shasum": ""
             },
             "require": {
@@ -2429,7 +2429,7 @@
             ],
             "description": "Symfony Process Component",
             "homepage": "https://symfony.com",
-            "time": "2018-08-03T10:42:44+00:00"
+            "time": "2018-10-02T12:28:39+00:00"
         },
         {
             "name": "theseer/tokenizer",

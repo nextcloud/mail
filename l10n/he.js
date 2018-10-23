@@ -82,6 +82,7 @@ OC.L10N.register(
     "Mail address" : "כתובת דוא״ל",
     "Display Name" : "שם תצוגה",
     "Account" : "חשבון",
+    "Toggle read" : "החלפת מצב קריאה",
     "Delete" : "מחיקה",
     "Keyboard shortcuts" : "קיצורי מקלדת",
     "Speed up your Mail experience with these quick shortcuts." : "ניתן להאיץ את חוויית הדוא״ל שלך עם קיצורי המקלדת הזריזים האלו.",
