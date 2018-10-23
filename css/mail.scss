@@ -234,6 +234,8 @@
 
 /* autocomplete list */
 .ui-autocomplete .ui-menu-item a.mail-recipient-autocomplete {
+	margin: 0px;
+	font-weight: normal !important;
 	display: flex;
 	align-content: center;
 	align-items: center;
@@ -247,6 +249,7 @@
 	border-radius: 0 !important;
 	border-left: none;
 	border-right: none;
+	z-index: 1000;
 }
 
 .icon-starred[data-starred="false"]:hover {
