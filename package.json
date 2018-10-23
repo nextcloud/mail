@@ -6,12 +6,12 @@
   "license": "agpl",
   "private": true,
   "scripts": {
-    "build": "webpack --progress --hide-modules --config src/webpack.prod.js",
-    "dev": "webpack --progress --watch --config src/webpack.dev.js",
+    "build": "webpack --progress --hide-modules --config webpack.prod.js",
+    "dev": "webpack --progress --watch --config webpack.dev.js",
     "lint": "$(npm bin)/eslint --ext .js,.vue js",
     "lint:autofix": "eslint --ext .js,.vue js --fix",
-    "test": "mocha-webpack --webpack-config src/webpack.test.js --require src/tests/setup.js src/tests/**/*.spec.js",
-    "test:watch": "mocha-webpack -w --webpack-config src/webpack.test.js --require src/tests/setup.js src/tests/**/*.spec.js"
+    "test": "mocha-webpack --webpack-config webpack.test.js --require src/tests/setup.js src/tests/**/*.spec.js",
+    "test:watch": "mocha-webpack -w --webpack-config webpack.test.js --require src/tests/setup.js src/tests/**/*.spec.js"
   },
   "dependencies": {
     "@vue/babel-preset-app": "^3.0.5",
