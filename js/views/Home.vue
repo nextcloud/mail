@@ -1,5 +1,5 @@
 <template>
-	<div id="content" class="mail">
+	<div id="content" class="app-mail">
 		<Loading v-if="loading" :hint="t('mail', 'Loading your accounts')"/>
 		<template v-else>
 			<app-navigation :menu="menu">
