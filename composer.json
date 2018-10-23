@@ -31,7 +31,7 @@
 		"arthurhoaro/favicon": "^1.2"
 	},
 	"require-dev": {
-		"christophwurst/nextcloud": "14.0.0",
+		"christophwurst/nextcloud": "14.0.3",
 		"christophwurst/nextcloud_testing": "0.5.1"
 	},
 	"suggest": {

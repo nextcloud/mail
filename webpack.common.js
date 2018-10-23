@@ -2,10 +2,10 @@ const path = require('path');
 const { VueLoaderPlugin } = require('vue-loader');
 
 module.exports = {
-	entry: path.join(__dirname, 'main.js'),
+	entry: path.join(__dirname, 'src/main.js'),
 	output: {
-		path: path.resolve(__dirname, 'build'),
-		publicPath: '/build/',
+		path: path.resolve(__dirname, 'js'),
+		publicPath: '/js/',
 		filename: 'mail.js'
 	},
 	module: {
@@ -54,10 +54,6 @@ module.exports = {
 	},
 	plugins: [new VueLoaderPlugin()],
 	resolve: {
-		alias: {
-			vue$: 'vue/dist/vue.esm.js',
-			'@core': path.resolve('components/core')
-		},
 		extensions: ['*', '.js', '.vue', '.json']
 	}
 };

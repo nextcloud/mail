@@ -6,12 +6,12 @@
   "license": "agpl",
   "private": true,
   "scripts": {
-    "build": "webpack --progress --hide-modules --config js/webpack.prod.js",
-    "dev": "webpack --progress --watch --config js/webpack.dev.js",
+    "build": "webpack --progress --hide-modules --config webpack.prod.js",
+    "dev": "webpack --progress --watch --config webpack.dev.js",
     "lint": "$(npm bin)/eslint --ext .js,.vue js",
     "lint:autofix": "eslint --ext .js,.vue js --fix",
-    "test": "mocha-webpack --webpack-config js/webpack.test.js --require js/tests/setup.js js/tests/**/*.spec.js",
-    "test:watch": "mocha-webpack -w --webpack-config js/webpack.test.js --require js/tests/setup.js js/tests/**/*.spec.js"
+    "test": "mocha-webpack --webpack-config webpack.test.js --require src/tests/setup.js src/tests/**/*.spec.js",
+    "test:watch": "mocha-webpack -w --webpack-config webpack.test.js --require src/tests/setup.js src/tests/**/*.spec.js"
   },
   "dependencies": {
     "@vue/babel-preset-app": "^3.0.5",
@@ -68,7 +68,7 @@
     "vue-loader": "^15.4.2",
     "vue-server-renderer": "^2.5.17",
     "vue-template-compiler": "^2.5.16",
-    "webpack": "^4.21.0",
+    "webpack": "^4.22.0",
     "webpack-cli": "^3.1.2",
     "webpack-merge": "^4.1.2",
     "webpack-node-externals": "^1.7.2"
