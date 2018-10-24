@@ -1,9 +1,7 @@
 <template>
   <router-link
-    :class="{
-      'app-content-list-item': true,
-      'unseen': data.flags.unseen
-    }"
+    class="app-content-list-item"
+    :class="{ unseen: data.flags.unseen }"
     :to="{
       name: 'message',
       params: {

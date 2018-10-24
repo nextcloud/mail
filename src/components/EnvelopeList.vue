@@ -1,19 +1,24 @@
 <template>
-	<div class="app-content-list"
-		 v-infinite-scroll="loadMore"
-		 infinite-scroll-disabled="loading"
-		 infinite-scroll-distance="30"
-		 v-scroll="onScroll">
+	<transition-group name="list"
+					  tag="div"
+					  class="app-content-list"
+					  v-infinite-scroll="loadMore"
+					  infinite-scroll-disabled="loading"
+					  infinite-scroll-distance="30"
+					  v-scroll="onScroll">
 		<div id="list-refreshing"
-			 :class="{'icon-loading-small': true, 'refreshing': refreshing}"/>
+			 :key="'loading'"
+			 class="icon-loading-small"
+			 :class="{refreshing: refreshing}"/>
 		<EmptyFolder v-if="envelopes.length === 0"/>
 		<Envelope v-else
-						 v-for="env in envelopes"
-						 :key="env.id"
-						 :data="env"/>
+				  v-for="env in envelopes"
+				  :key="env.id"
+				  :data="env"/>
 		<div id="load-more-mail-messages"
+			 :key="'loadingMore'"
 			 :class="{'icon-loading-small': loadingMore}"/>
-	</div>
+	</transition-group>
 </template>
 
 <script>
@@ -101,5 +106,14 @@
 
 	#list-refreshing.refreshing {
 		min-height: 32px;
+	}
+
+	.list-enter-active, .list-leave-active {
+		transition: all 1s;
+	}
+	.list-enter, .list-leave-to {
+		opacity: 0;
+		height: 0px;
+		transform: scaleY(0);
 	}
 </style>
