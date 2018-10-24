@@ -73,6 +73,9 @@
     "webpack-merge": "^4.1.2",
     "webpack-node-externals": "^1.7.2"
   },
+  "jshintConfig": {
+    "esversion": 6
+  },
   "prettier": {
     "singleQuote": true,
     "semi": false,
