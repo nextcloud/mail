@@ -26,6 +26,23 @@
 
 <script>
 	export default {
-		name: 'app'
+		name: 'App',
+		mounted () {
+			this.sync()
+		},
+		methods: {
+			sync () {
+				setTimeout(() => {
+					this.$store.dispatch('syncInboxes')
+						.catch(err => {
+							console.error('background sync failed', err)
+						})
+						.then(() => {
+							// Start over
+							this.sync()
+						});
+				}, 30 * 1000)
+			}
+		}
 	}
 </script>
