@@ -32,7 +32,7 @@ export function syncEnvelopes(accountId, folderId, syncToken, uids) {
 }
 
 export function setEnvelopeFlag(accountId, folderId, id, flag, value) {
-  const url = generateUrl('apps/mail/api/accounts/{accountId}/folders/{folderId}/messages/{id}/flags', {
+  const url = generateUrl('/apps/mail/api/accounts/{accountId}/folders/{folderId}/messages/{id}/flags', {
     accountId,
     folderId,
     id
@@ -43,7 +43,7 @@ export function setEnvelopeFlag(accountId, folderId, id, flag, value) {
 
   return HttpClient.put(url, {
     flags: flags
-  }).then(resp => { flag: value })
+  }).then(() => { flag: value })
 }
 
 export function fetchMessage(accountId, folderId, id) {
@@ -54,4 +54,14 @@ export function fetchMessage(accountId, folderId, id) {
   })
 
   return HttpClient.get(url).then(resp => resp.data)
+}
+
+export function deleteMessage(accountId, folderId, id) {
+	const url = generateUrl('/apps/mail/api/accounts/{accountId}/folders/{folderId}/messages/{id}', {
+		accountId,
+		folderId,
+		id
+	})
+
+	return HttpClient.delete(url).then(resp => resp.data)
 }

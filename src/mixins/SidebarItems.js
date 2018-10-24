@@ -51,7 +51,8 @@ export default {
 							params: {
 								accountId: account.id,
 								folderId: folder.id,
-							}
+							},
+							exact: false,
 						},
 						utils: {
 							counter: folder.unread,

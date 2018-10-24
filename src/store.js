@@ -12,7 +12,8 @@ import {
 	fetchEnvelopes,
 	syncEnvelopes,
 	setEnvelopeFlag,
-	fetchMessage
+	fetchMessage,
+	deleteMessage,
 } from './service/MessageService'
 
 Vue.use(Vuex)
@@ -44,11 +45,21 @@ export const mutations = {
 	flagEnvelope (state, {accountId, folderId, id, flag, value}) {
 		state.envelopes[accountId + '-' + folderId + '-' + id].flags[flag] = value
 	},
-	removeEnvelope (state, {accountId, folder, envelope}) {
-		folder.envelopes = folder.envelopes.filter(existing => existing.id !== envelope.id)
+	removeEnvelope (state, {accountId, folder, id}) {
+		const envelopeId = accountId + '-' + folder.id + '-' + id
+		const idx = folder.envelopes.indexOf(envelopeId)
+		if (idx < 0) {
+			console.warn('envelope does not exist', accountId, folder.id, id)
+			return
+		}
+		folder.envelopes.splice(idx, 1)
+		Vue.delete(folder.envelopes, envelopeId)
 	},
 	addMessage (state, {accountId, folderId, message}) {
 		Vue.set(state.messages, accountId + '-' + folderId + '-' + message.id, message)
+	},
+	removeMessage (state, {accountId, folderId, id}) {
+		Vue.delete(state.messages, accountId + '-' + folderId + '-' + id)
 	}
 }
 
@@ -134,7 +145,7 @@ export const actions = {
 				commit('removeEnvelope', {
 					accountId,
 					folder,
-					envelope
+					id: envelope.id
 				})
 			})
 			commit('updateFolderSyncToken', {
@@ -200,6 +211,26 @@ export const actions = {
 			})
 			return message
 		})
+	},
+	deleteMessage ({getters, commit}, {accountId, folderId, id}) {
+		const folder = getters.getFolder(accountId, folderId)
+		const envelope = getters.getEnvelope(accountId, folderId, id)
+		commit('removeEnvelope', {accountId, folder, id})
+
+		return deleteMessage(accountId, folderId, id)
+			.then(() => {
+				console.log('message removed')
+				commit('removeMessage', {
+					accountId,
+					folder,
+					id,
+				})
+			})
+			.catch(err => {
+				console.error('could not delete message', err)
+				commit('addEnvelope', {accountId, folderId, envelope})
+				throw err
+			})
 	}
 }
 
