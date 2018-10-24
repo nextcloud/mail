@@ -154,6 +154,21 @@ export const actions = {
 			})
 		})
 	},
+	syncInboxes ({getters, dispatch}) {
+		console.debug('syncing all inboxes')
+		return Promise.all(getters.getAccounts().map(account => {
+			return Promise.all(getters.getFolders(account.id).map(folder => {
+				if (folder.specialRole !== 'inbox') {
+					return
+				}
+
+				return dispatch('syncEnvelopes', {
+					accountId: account.id,
+					folderId: folder.id,
+				})
+			})).then(() => console.debug('account ' + account.id + ' synced'))
+		})).then(() => console.debug('synced all inboxes successfully'))
+	},
 	toggleEnvelopeFlagged ({commit, getters}, {accountId, folderId, id}) {
 		// Change immediately and switch back on error
 		const oldState = getters.getEnvelope(accountId, folderId, id).flags.flagged
@@ -239,7 +254,7 @@ export const getters = {
 		return state.accounts[id]
 	},
 	getAccounts: (state) => () => {
-		return state.accounts
+		return Object.keys(state.accounts).map(id => state.accounts[id])
 	},
 	getFolder: (state) => (accountId, folderId) => {
 		return state.folders[accountId + '-' + folderId]
