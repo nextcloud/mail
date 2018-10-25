@@ -25,7 +25,8 @@
 				<div id="reply-composer"></div>
 				<input type="button" id="forward-button" value="Forward">
 			</div>
-			<Composer :send="sendReply"
+			<Composer :isReply="true"
+					  :send="sendReply"
 					  :draft="saveReplyDraft"/>
 		</template>
 	</div>
@@ -115,16 +116,10 @@
 				}).catch(console.error.bind(this))
 			},
 			sendReply () {
-				console.log('todo: sending reply')
-				return new Promise((res, _) => {
-					setTimeout(() => res, 1000);
-				})
+				return new Promise((res, _) => setTimeout(res, 1000))
 			},
 			saveReplyDraft () {
-				console.log('todo: saving reply draft')
-				return new Promise((res, _) => {
-					setTimeout(() => res, 1000)
-				})
+				return new Promise((res, _) => setTimeout(res, 1000))
 			}
 		}
 	}
