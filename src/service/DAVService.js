@@ -1,3 +1,5 @@
+/* global $ */
+
 /**
  * @author Christoph Wurst <christoph@winzerhof-wurst.at>
  *
@@ -19,17 +21,24 @@
 
 import dav from 'davclient.js'
 import ical from 'ical.js'
+import {
+	getCurrentUID,
+	getRequestToken
+} from 'nextcloud-server/dist/auth'
+import {
+	generateRemoteUrl
+} from 'nextcloud-server/dist/router'
 
 const client = new dav.Client({
-	baseUrl: OC.linkToRemote('dav/calendars'),
+	baseUrl: generateRemoteUrl('dav/calendars'),
 	xmlNamespaces: {
 		'DAV:': 'd',
 		'urn:ietf:params:xml:ns:caldav': 'c',
 		'http://apple.com/ns/ical/': 'aapl',
 		'http://owncloud.org/ns': 'oc',
-		'http://calendarserver.org/ns/': 'cs'
+		'http://calendarserver.org/ns/': 'cs',
 	}
-});
+})
 const props = [
 	'{DAV:}displayname',
 	'{urn:ietf:params:xml:ns:caldav}calendar-description',
@@ -40,35 +49,35 @@ const props = [
 	'{http://owncloud.org/ns}calendar-enabled',
 	'{DAV:}acl',
 	'{DAV:}owner',
-	'{http://owncloud.org/ns}invite'
-];
+	'{http://owncloud.org/ns}invite',
+]
 
-const getResponseCodeFromHTTPResponse = (t) => {
-	return parseInt(t.split(' ')[1]);
+const getResponseCodeFromHTTPResponse = t => {
+	return parseInt(t.split(' ')[1])
 }
 
 const getACLFromResponse = properties => {
-	let canWrite = false;
-	let acl = properties['{DAV:}acl'];
+	let canWrite = false
+	let acl = properties['{DAV:}acl']
 	if (acl) {
 		for (var k = 0; k < acl.length; k++) {
-			var href = acl[k].getElementsByTagNameNS('DAV:', 'href');
+			var href = acl[k].getElementsByTagNameNS('DAV:', 'href')
 			if (href.length === 0) {
-				continue;
+				continue
 			}
-			href = href[0].textContent;
-			var writeNode = acl[k].getElementsByTagNameNS('DAV:', 'write');
+			href = href[0].textContent
+			var writeNode = acl[k].getElementsByTagNameNS('DAV:', 'write')
 			if (writeNode.length > 0) {
-				canWrite = true;
+				canWrite = true
 			}
 		}
 	}
-	properties.canWrite = canWrite;
+	properties.canWrite = canWrite
 }
 
 
 const getCalendarData = (properties) => {
-	getACLFromResponse(properties);
+	getACLFromResponse(properties)
 
 	const data = {
 		displayname: properties['{DAV:}displayname'],
@@ -77,104 +86,106 @@ const getCalendarData = (properties) => {
 		components: {
 			vevent: false
 		},
-		writable: properties.canWrite
-	};
+		writable: properties.canWrite,
+	}
 
-	const components = properties['{urn:ietf:params:xml:ns:caldav}supported-calendar-component-set'] || [];
+	const components = properties['{urn:ietf:params:xml:ns:caldav}supported-calendar-component-set'] || []
 	for (let i = 0; i < components.length; i++) {
-		var name = components[i].attributes.getNamedItem('name').textContent.toLowerCase();
+		var name = components[i].attributes.getNamedItem('name').textContent.toLowerCase()
 		if (data.components.hasOwnProperty(name)) {
-			data.components[name] = true;
+			data.components[name] = true
 		}
 	}
 
-	return data;
+	return data
 }
 
 /**
  * @returns {Promise}
  */
 export const getUserCalendars = () => {
-	var url = OC.linkToRemote('dav/calendars') + '/' + OC.currentUser + '/';
+	var url = generateRemoteUrl('dav/calendars') + '/' + getCurrentUID().uid + '/'
 
-	return client.propFind(url, props, 1, {
-		requesttoken: OC.requestToken
-	}).then(function (data) {
-		const calendars = [];
+	return getRequestToken()
+		.then(token => client.propFind(url, props, 1, {
+			requesttoken: token
+		}))
+		.then(data => {
+			const calendars = []
 
-		data.body.forEach(cal => {
-			if (cal.propStat.length < 1) {
-				return;
-			}
-			if (getResponseCodeFromHTTPResponse(cal.propStat[0].status) === 200) {
-				const properties = getCalendarData(cal.propStat[0].properties);
-				if (properties && properties.components.vevent && properties.writable === true) {
-					properties.url = cal.href;
-					calendars.push(properties);
+			data.body.forEach(cal => {
+				if (cal.propStat.length < 1) {
+					return
 				}
-			}
-		});
+				if (getResponseCodeFromHTTPResponse(cal.propStat[0].status) === 200) {
+					const properties = getCalendarData(cal.propStat[0].properties)
+					if (properties && properties.components.vevent && properties.writable === true) {
+						properties.url = cal.href
+						calendars.push(properties)
+					}
+				}
+			})
 
-		return calendars;
-	});
+			return calendars
+		})
 }
 
 const getRandomString = () => {
-	let str = '';
+	let str = ''
 	for (let i = 0; i < 7; i++) {
-		str += Math.random().toString(36).substring(7);
+		str += Math.random().toString(36).substring(7)
 	}
-	return str;
+	return str
 }
 
 const createICalElement = () => {
-	const root = new ical.Component(['vcalendar', [], []]);
+	const root = new ical.Component(['vcalendar', [], []])
 
-	root.updatePropertyWithValue('prodid', '-//' + OC.theme.name + ' Mail');
+	root.updatePropertyWithValue('prodid', '-//' + OC.theme.name + ' Mail')
 
-	return root;
+	return root
 }
 
 const splitCalendar = (data) => {
-	const timezones = [];
-	const allObjects = {};
-	const jCal = ical.parse(data);
-	const components = new ical.Component(jCal);
+	const timezones = []
+	const allObjects = {}
+	const jCal = ical.parse(data)
+	const components = new ical.Component(jCal)
 
-	const vtimezones = components.getAllSubcomponents('vtimezone');
-	vtimezones.forEach(vtimezone => timezones.push(vtimezone));
+	const vtimezones = components.getAllSubcomponents('vtimezone')
+	vtimezones.forEach(vtimezone => timezones.push(vtimezone))
 
-	const componentNames = ['vevent', 'vjournal', 'vtodo'];
+	const componentNames = ['vevent', 'vjournal', 'vtodo']
 	componentNames.forEach(componentName => {
-		const vobjects = components.getAllSubcomponents(componentName);
-		allObjects[componentName] = {};
+		const vobjects = components.getAllSubcomponents(componentName)
+		allObjects[componentName] = {}
 
 		vobjects.forEach(vobject => {
-			var uid = vobject.getFirstPropertyValue('uid');
-			allObjects[componentName][uid] = allObjects[componentName][uid] || [];
-			allObjects[componentName][uid].push(vobject);
-		});
-	});
+			var uid = vobject.getFirstPropertyValue('uid')
+			allObjects[componentName][uid] = allObjects[componentName][uid] || []
+			allObjects[componentName][uid].push(vobject)
+		})
+	})
 
-	const split = [];
+	const split = []
 	componentNames.forEach(componentName => {
-		split[componentName] = [];
+		split[componentName] = []
 		for (let objectsId in allObjects[componentName]) {
-			const objects = allObjects[componentName][objectsId];
-			const component = createICalElement();
-			timezones.forEach(tz => component.addSubcomponent(tz));
+			const objects = allObjects[componentName][objectsId]
+			const component = createICalElement()
+			timezones.forEach(component.addSubcomponent)
 			for (let objectId in objects) {
-				component.addSubcomponent(objects[objectId]);
+				component.addSubcomponent(objects[objectId])
 			}
-			split[componentName].push(component.toString());
+			split[componentName].push(component.toString())
 		}
-	});
+	})
 
 	return {
 		name: components.getFirstPropertyValue('x-wr-calname'),
 		color: components.getFirstPropertyValue('x-apple-calendar-color'),
-		split: split
-	};
+		split
+	}
 }
 
 /**
@@ -183,22 +194,22 @@ const splitCalendar = (data) => {
  * @returns {Promise}
  */
 export const importCalendarEvent = url => data => {
-	console.debug('importing event into calendar', url, data);
-	const promises = [];
+	console.debug('importing event into calendar', url, data)
+	const promises = []
 
-	const file = splitCalendar(data);
-
-	['vevent', 'vjournal', 'vtodo'].forEach(componentName => {
+	const file = splitCalendar(data)
+	const components = ['vevent', 'vjournal', 'vtodo']
+	components.forEach(componentName => {
 		for (let componentId in file.split[componentName]) {
-			const component = file.split[componentName][componentId];
+			const component = file.split[componentName][componentId]
 			promises.push(Promise.resolve($.ajax({
 				url: url + getRandomString(),
 				method: 'PUT',
 				contentType: 'text/calendar; charset=utf-8',
 				data: component
-			})));
+			})))
 		}
-	});
+	})
 
-	return Promise.all(promises);
+	return Promise.all(promises)
 }
