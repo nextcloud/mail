@@ -1,9 +1,9 @@
 <template>
-	<div class="message-composer">
+	<div v-if="state === STATES.EDITING"
+		 class="message-composer">
 		<select class="mail-account"
 				v-model="selectedAlias"
-				v-on:keyup="onInputChanged"
-				:disabled="sending">
+				v-on:keyup="onInputChanged">
 			<option v-for="alias in aliases" :value="alias.id">
 				{{ t('mail', 'from') }} {{alias.name}} &lt;{{alias.emailAddress}}&gt;
 			</option>
@@ -18,7 +18,6 @@
 				   id="to"
 				   v-model="toVal"
 				   v-on:keyup="onInputChanged"
-				   :disabled="sending"
 				   class="to recipient-autocomplete"/>
 			<label class="to-label transparency" for="to">{{ t('mail', 'to')
 				}}</label>
@@ -27,8 +26,7 @@
 					   id="cc"
 					   class="cc recipient-autocomplete"
 					   v-model="ccVal"
-					   v-on:keyup="onInputChanged"
-					   :disabled="sending"/>
+					   v-on:keyup="onInputChanged">
 				<label for="cc" class="cc-label transparency">
 					{{ t('mail', 'cc') }}
 				</label>
@@ -36,8 +34,7 @@
 					   id="bcc"
 					   class="bcc recipient-autocomplete"
 					   v-model="bccVal"
-					   v-on:keyup="onInputChanged"
-					   :disabled="sending"/>
+					   v-on:keyup="onInputChanged">
 				<label for="bcc" class="bcc-label transparency">
 					{{ t('mail', 'bcc') }}
 				</label>
@@ -52,29 +49,45 @@
 				   name="subject"
 				   v-model="subjectVal"
 				   v-on:keyup="onInputChanged"
-				   :disabled="sending"
 				   class="subject" autocomplete="off"
-				   :placeholder=" t ('mail', 'Subject')"/>
+				   :placeholder="t('mail', 'Subject')"/>
 
 			<textarea name="body"
 					  class="message-body"
 					  v-autosize
 					  v-model="bodyVal"
 					  v-on:keyup="onInputChanged"
-					  :disabled="sending"
 					  :placeholder="t('mail', 'Message …')">{{message}}</textarea>
 		</div>
 		<div class="submit-message-wrapper">
 			<input class="submit-message send primary"
 				   type="submit"
 				   :value="submitButtonTitle"
-				   :disabled="sending"
 				   v-on:click="onSend">
 		</div>
 		<div class="new-message-attachments">
 		</div>
 		<span id="draft-status" v-if="savingDraft === true">{{ t('mail', 'Saving draft …') }}</span>
 		<span id="draft-status" v-else-if="savingDraft === false">{{ t('mail', 'Draft saved') }}</span>
+	</div>
+	<Loading v-else-if="state === STATES.SENDING"
+			 :hint="t('mail', 'Sending …')" />
+	<div v-else-if="state === STATES.ERROR"
+		 class="emptycontent">
+		<h2>{{ t('mail', 'Error sending your message') }}</h2>
+		<p v-if="errorText">{{ errorText }}</p>
+		<button v-on:click="state = STATES.EDITING"
+				class="button">{{ t('mail', 'Go back') }}</button>
+		<button v-on:click="onSend"
+		        class="button primary">{{ t('mail', 'Retry') }}</button>
+	</div>
+	<div v-else
+		 class="emptycontent">
+		<h2 v-if="!isReply">{{ t('mail', 'Message sent!') }}</h2>
+		<h2 v-else>{{ t('mail', 'Reply sent!') }}</h2>
+		<button v-on:click="reset"
+				v-if="!isReply"
+				class="button primary">{{ t('mail', 'Write another message') }}</button>
 	</div>
 </template>
 
@@ -83,11 +96,27 @@
 	import Autosize from 'vue-autosize'
 	import Vue from 'vue'
 
+	import Loading from './Loading'
+
 	Vue.use(Autosize)
+
+	const STATES = Object.seal({
+		EDITING: 0,
+		SENDING: 1,
+		ERROR: 2,
+		FINISHED: 3,
+	})
 
 	export default {
 		name: 'Composer',
+		components: {
+			Loading,
+		},
 		props: {
+			isReply: {
+				type: Boolean,
+				default: false,
+			},
 			to: {
 				type: Array,
 				default: () => [],
@@ -122,9 +151,11 @@
 				message: '',
 				submitButtonTitle: t('mail', 'Send'),
 				draftsPromise: Promise.resolve(),
-				sending: false,
 				savingDraft: undefined,
-				saveDraftDebounced: _.debounce(this.saveDraft, 700)
+				saveDraftDebounced: _.debounce(this.saveDraft, 700),
+				state: STATES.EDITING,
+				errorText: undefined,
+				STATES
 			}
 		},
 		computed: {
@@ -164,15 +195,20 @@
 				this.saveDraftDebounced(this.getMessageData())
 			},
 			onSend () {
-				this.sending = true
+				this.state = STATES.SENDING
 
 				return this.draftsPromise
 					.then(this.getMessageData())
 					.then(data => this.send(data))
 					.then(() => console.info('message sent'))
-					.catch(e => console.error('could not send message', e))
-					.then(() => this.sending = false)
-					.then(() => this.reset())
+					.then(() => this.state = STATES.FINISHED)
+					.catch(e => {
+						console.error('could not send message', e)
+						if (e && e.toString) {
+							this.errorText = e.toString()
+						}
+						this.state = STATES.ERROR
+					})
 			},
 			reset () {
 				this.toVal = ''
@@ -181,6 +217,8 @@
 				this.subjectVal = ''
 				this.bodyVal = ''
 				this.attachments = []
+				this.errorText = undefined
+				this.state = STATES.EDITING
 			}
 		}
 	}
