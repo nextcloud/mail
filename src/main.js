@@ -26,6 +26,7 @@ import router from './router';
 import store from './store';
 import {sync} from 'vuex-router-sync';
 import {translate, translatePlural} from 'nextcloud-server/dist/l10n'
+import VueShortKey from 'vue-shortkey'
 import VTooltip from 'v-tooltip'
 
 sync(store, router);
@@ -33,13 +34,11 @@ sync(store, router);
 Vue.mixin({
 	methods: {
 		t: translate,
-		n: translatePlural
+		n: translatePlural,
 	}
 })
 
-Vue.prototype.OC = OC;
-Vue.prototype.OCA = OCA;
-
+Vue.use(VueShortKey)
 Vue.use(VTooltip);
 
 new Vue({
