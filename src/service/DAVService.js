@@ -1,3 +1,5 @@
+/* global $ */
+
 /**
  * @author Christoph Wurst <christoph@winzerhof-wurst.at>
  *
@@ -171,7 +173,7 @@ const splitCalendar = (data) => {
 		for (let objectsId in allObjects[componentName]) {
 			const objects = allObjects[componentName][objectsId]
 			const component = createICalElement()
-			timezones.forEach(tz => component.addSubcomponent(tz))
+			timezones.forEach(component.addSubcomponent)
 			for (let objectId in objects) {
 				component.addSubcomponent(objects[objectId])
 			}
@@ -196,8 +198,8 @@ export const importCalendarEvent = url => data => {
 	const promises = []
 
 	const file = splitCalendar(data)
-
-		['vevent', 'vjournal', 'vtodo'].forEach(componentName => {
+	const components = ['vevent', 'vjournal', 'vtodo']
+	components.forEach(componentName => {
 		for (let componentId in file.split[componentName]) {
 			const component = file.split[componentName][componentId]
 			promises.push(Promise.resolve($.ajax({

@@ -53,7 +53,7 @@ export const getRandomFolderErrorMessage = (folder) => {
 			name: folderName
 		}),
 	]
-	const texts = rawTexts.map(text => text.replace('{tag}', '<strong>').replace('{endtag}', '</strong>')
+	const texts = rawTexts.map(text => text.replace('{tag}', '<strong>').replace('{endtag}', '</strong>'))
 	const text = texts[Math.floor(Math.random() * texts.length)]
 	return text + ' ' + getRandomSmiley();
 }
