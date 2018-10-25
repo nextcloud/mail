@@ -19,6 +19,7 @@
     "davclient.js": "^0.1.0",
     "exports-loader": "^0.7.0",
     "ical.js": "^1.2.2",
+    "lodash": "^4.17.11",
     "md5": "^2.2.1",
     "moment": "^2.22.2",
     "nextcloud-axios": "^0.1.2",
