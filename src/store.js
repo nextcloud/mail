@@ -1,3 +1,4 @@
+import _ from 'lodash'
 import Vue from 'vue'
 import Vuex from 'vuex'
 
@@ -15,6 +16,9 @@ import {
 	fetchMessage,
 	deleteMessage,
 } from './service/MessageService'
+import {
+	showNewMessagesNotification
+} from './service/NotificationService'
 
 Vue.use(Vuex)
 
@@ -156,6 +160,8 @@ export const actions = {
 				folder,
 				syncToken: syncData.token
 			})
+
+			return syncData.newMessages
 		})
 	},
 	syncInboxes ({getters, dispatch}) {
@@ -170,8 +176,16 @@ export const actions = {
 					accountId: account.id,
 					folderId: folder.id,
 				})
-			})).then(() => console.debug('account ' + account.id + ' synced'))
-		})).then(() => console.debug('synced all inboxes successfully'))
+			}))
+		}))
+			.then(results => {
+				console.debug('synced all inboxes successfully')
+
+				const newMessages = _.flatMapDeep(results).filter(_.negate(_.isUndefined))
+				if (newMessages.length > 0) {
+					showNewMessagesNotification(newMessages)
+				}
+			})
 	},
 	toggleEnvelopeFlagged ({commit, getters}, {accountId, folderId, id}) {
 		// Change immediately and switch back on error
