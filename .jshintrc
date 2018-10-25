@@ -21,7 +21,9 @@
 		"describe": true,
 		"define": true,
 		"beforeEach": true,
-		"afterEach": true
+		"afterEach": true,
+		"require": true
 	},
-	"esversion": 6
+	"esversion": 6,
+	"asi": true
 }
