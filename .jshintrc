@@ -10,7 +10,6 @@
 	"trailing": true,
 	"maxparams": 5,
 	"curly": true,
-	"jquery": true,
 	"maxlen": 120,
 	"indent": 4,
 	"browser": true,
@@ -21,14 +20,8 @@
 		"expect": true,
 		"describe": true,
 		"define": true,
-		"require": true,
 		"beforeEach": true,
-		"afterEach": true,
-		"fakeServer": true,
-		"OC": true,
-		"OCA": true,
-		"Promise": true,
-		"t": true,
-		"n": true
-	}
+		"afterEach": true
+	},
+	"esversion": 6
 }
