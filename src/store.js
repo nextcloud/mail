@@ -21,7 +21,11 @@ Vue.use(Vuex)
 export const mutations = {
 	addAccount (state, account) {
 		account.folders = []
+		account.collapsed = true
 		Vue.set(state.accounts, account.id, account)
+	},
+	toggleAccountCollapsed (state, accountId) {
+		state.accounts[accountId].collapsed = !state.accounts[accountId].collapsed
 	},
 	addFolder (state, {account, folder}) {
 		let id = account.id + '-' + folder.id
