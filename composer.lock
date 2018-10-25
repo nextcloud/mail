@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "283a954ed8d4067d253a89b3563d9761",
+    "content-hash": "9bc65325a27f92cd23798c06685c78cc",
     "packages": [
         {
             "name": "arthurhoaro/favicon",
@@ -239,7 +239,7 @@
             ],
             "description": "Autolink URLs in text or html",
             "homepage": "http://www.kwi.dk/projects/php/UrlLinker/",
-            "time": "2014-12-28T23:05:00+00:00"
+            "time": "2014-12-28T22:05:00+00:00"
         },
         {
             "name": "pear-pear.horde.org/Horde_Crypt_Blowfish",
