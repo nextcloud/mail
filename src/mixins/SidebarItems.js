@@ -1,5 +1,6 @@
 import conv from 'color-convert'
 import md5 from 'md5'
+import {translate as t} from 'nextcloud-server/dist/l10n'
 
 const SHOW_COLLAPSED = Object.seal([
 	'inbox',
