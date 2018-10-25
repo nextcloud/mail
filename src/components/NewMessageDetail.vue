@@ -14,13 +14,13 @@
 			Composer
 		},
 		methods: {
-			saveDraft () {
-				console.info('saving new draft');
+			saveDraft (data) {
 				return new Promise((res, rej) => setTimeout(res, 2000))
+					.then(() => console.log('draft saved', data))
 			},
-			sendMessage () {
-				console.info('sending message');
+			sendMessage (data) {
 				return new Promise((res, rej) => setTimeout(res, 2000))
+					.then(() => console.log('message sent', data))
 			}
 		}
 	}
