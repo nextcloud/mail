@@ -28,7 +28,6 @@
 			</li>
 		</ul>
 		<button class="button"
-				v-if="false"
 				v-on:click="onAddLocalAttachment">
 			<span class="icon-upload"/>
 			{{ t('mail', 'Upload attachment') }}
@@ -38,7 +37,10 @@
 			<span class="icon-folder"/>
 			{{ t('mail', 'Add attachment from Files') }}
 		</button>
-		<input type="file" multiple id="local-attachments"
+		<input type="file"
+			   ref="localAttachments"
+			   v-on:change="onLocalAttachmentSelected"
+			   multiple
 			   style="display: none;">
 	</div>
 </template>
@@ -58,7 +60,10 @@
 		},
 		methods: {
 			onAddLocalAttachment () {
-				console.debug('todo: implement')
+				this.$refs.localAttachments.click()
+			},
+			onLocalAttachmentSelected (e) {
+				console.info(e.target.files)
 			},
 			onAddCloudAttachment () {
 				pickFileOrDirectory(
