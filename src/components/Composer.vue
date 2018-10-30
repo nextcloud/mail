@@ -189,7 +189,10 @@
 				this.draftsPromise = this.draftsPromise
 					.then(uid => this.draft(data(uid)))
 					.catch(console.error.bind(this))
-					.then(() => this.savingDraft = false)
+					.then(uid => {
+						this.savingDraft = false
+						return uid
+					})
 			},
 			onInputChanged () {
 				this.saveDraftDebounced(this.getMessageData())
