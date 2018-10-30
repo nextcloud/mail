@@ -113,9 +113,8 @@
 			Loading,
 		},
 		props: {
-			isReply: {
-				type: Boolean,
-				default: false,
+			replyTo: {
+				type: Object,
 			},
 			to: {
 				type: Array,
@@ -161,6 +160,9 @@
 		computed: {
 			aliases () {
 				return this.$store.getters.getAccounts()
+			},
+			isReply () {
+				return !_.isUndefined(this.replyTo)
 			}
 		},
 		filters: {
@@ -181,6 +183,8 @@
 						subject: this.subjectVal,
 						body: this.bodyVal,
 						attachments: [], // TODO
+						folderId: this.replyTo ? this.replyTo.folderId : undefined,
+						messageId: this.replyTo ? this.replyTo.messageId : undefined,
 					}
 				}
 			},
