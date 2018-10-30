@@ -56,6 +56,22 @@ export function fetchMessage(accountId, folderId, id) {
   return HttpClient.get(url).then(resp => resp.data)
 }
 
+export function saveDraft(accountId, data) {
+  const url = generateUrl('/apps/mail/api/accounts/{accountId}/draft', {
+    accountId,
+  })
+
+  return HttpClient.post(url, data).then(resp => resp.data)
+}
+
+export function sendMessage(accountId, data) {
+  const url = generateUrl('/apps/mail/api/accounts/{accountId}/send', {
+    accountId,
+  })
+
+  return HttpClient.post(url, data).then(resp => resp.data)
+}
+
 export function deleteMessage(accountId, folderId, id) {
 	const url = generateUrl('/apps/mail/api/accounts/{accountId}/folders/{folderId}/messages/{id}', {
 		accountId,
