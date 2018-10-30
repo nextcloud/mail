@@ -2,10 +2,12 @@
 	<div id="content" class="app-mail">
 		<Loading v-if="loading" :hint="t('mail', 'Loading your accounts')"/>
 		<template v-else>
-			<app-navigation :menu="menu">
-				<AppSettingsMenu slot="settings-content"/>
-			</app-navigation>
-			<FolderContent/>
+			<Draggable v-model="fakeEnvelopes" :options="{group:'envelopes', draggable: 'li'}">
+				<app-navigation :menu="menu">
+					<AppSettingsMenu slot="settings-content"/>
+				</app-navigation>
+				<FolderContent/>
+			</Draggable>
 		</template>
 	</div>
 </template>
@@ -15,6 +17,7 @@
 	import AppSettingsMenu from '../components/AppSettingsMenu'
 	import FolderContent from '../components/FolderContent'
 	import Loading from '../components/Loading'
+	import Draggable from 'vuedraggable'
 
 	import SidebarItems from '../mixins/SidebarItems'
 
@@ -26,10 +29,12 @@
 			AppNavigation,
 			AppSettingsMenu,
 			FolderContent,
+			Draggable,
 		},
 		data () {
 			return {
-				loading: true
+				loading: true,
+				fakeEnvelopes: [],
 			}
 		},
 		computed: {

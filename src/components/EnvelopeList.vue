@@ -1,31 +1,38 @@
 <template>
-	<transition-group name="list"
-					  tag="div"
-					  class="app-content-list"
-					  v-infinite-scroll="loadMore"
-					  infinite-scroll-disabled="loading"
-					  infinite-scroll-distance="30"
-					  v-scroll="onScroll"
-					  v-shortkey.once="{next: ['arrowright'], prev: ['arrowleft']}" @shortkey.native="navigateEnvelope">
-		<div id="list-refreshing"
-			 :key="'loading'"
-			 class="icon-loading-small"
-			 :class="{refreshing: refreshing}"/>
-		<EmptyFolder v-if="envelopes.length === 0"/>
-		<Envelope v-else
-				  v-for="env in envelopes"
-				  :key="env.id"
-				  :data="env"/>
-		<div id="load-more-mail-messages"
-			 :key="'loadingMore'"
-			 :class="{'icon-loading-small': loadingMore}"/>
-	</transition-group>
+	<Draggable v-model="envelopes"
+				  :options="{sort: false, group: 'envelopes'}"
+				  :move="onMoveEnvelope"
+				  @start="onStartDragging"
+				  @end="onEndDragging">
+		<transition-group name="list"
+						  tag="div"
+						  class="app-content-list"
+						  v-infinite-scroll="loadMore"
+						  infinite-scroll-disabled="loading"
+						  infinite-scroll-distance="30"
+						  v-scroll="onScroll"
+						  v-shortkey.once="{next: ['arrowright'], prev: ['arrowleft']}" @shortkey.native="navigateEnvelope">
+			<div id="list-refreshing"
+				 :key="'loading'"
+				 class="icon-loading-small"
+				 :class="{refreshing: refreshing}"/>
+			<EmptyFolder v-if="envelopes.length === 0"/>
+			<Envelope v-else
+					  v-for="env in envelopes"
+					  :key="env.id"
+					  :data="env"/>
+			<div id="load-more-mail-messages"
+				 :key="'loadingMore'"
+				 :class="{'icon-loading-small': loadingMore}"/>
+		</transition-group>
+	</Draggable>
 </template>
 
 <script>
 	import infiniteScroll from 'vue-infinite-scroll'
 	import vuescroll from 'vue-scroll'
 	import Vue from 'vue'
+	import Draggable from 'vuedraggable'
 
 	import EmptyFolder from './EmptyFolder'
 	import Envelope from './Envelope'
@@ -45,6 +52,7 @@
 		components: {
 			Envelope,
 			EmptyFolder,
+			Draggable,
 		},
 		directives: {
 			infiniteScroll,
@@ -117,6 +125,15 @@
 						messageId: next.id,
 					}
 				});
+			},
+			onMoveEnvelope (evt, origEvt) {
+				console.info(evt, origEvt)
+			},
+			onStartDragging (e) {
+				console.info('start dragging', this.envelopes[e.oldIndex - 1].subject)
+			},
+			onEndDragging (e) {
+				console.info('end dragging', e)
 			}
 		}
 	}
