@@ -23,7 +23,9 @@
 	<div class="new-message-attachments">
 		<ul>
 			<li v-for="attachment in value">
-				<div class="new-message-attachment-name">{{attachment.displayName}}</div>
+				<div class="new-message-attachment-name">
+					{{attachment.displayName}}
+				</div>
 				<div class="new-message-attachments-action svg icon-delete"></div>
 			</li>
 		</ul>
@@ -50,6 +52,8 @@
 	import {translate as t} from 'nextcloud-server/dist/l10n'
 	import {pickFileOrDirectory} from 'nextcloud-server/dist/files'
 
+	import {uploadLocalAttachment} from '../service/AttachmentService'
+
 	export default {
 		name: 'ComposerAttachments',
 		props: {
@@ -62,16 +66,38 @@
 			onAddLocalAttachment () {
 				this.$refs.localAttachments.click()
 			},
+			fileNameToAttachment (name, id) {
+				return {
+					fileName: name,
+					displayName: _.trimStart(name, '/'),
+					id,
+					isLocal: !_.isUndefined(id)
+				}
+			},
+			emitNewAttachment (attachment) {
+				console.log('emit', attachment)
+				this.$emit('input', this.value.concat([attachment]))
+			},
 			onLocalAttachmentSelected (e) {
-				console.info(e.target.files)
+				return Promise.all(
+					_.map(
+						e.target.files,
+						file => uploadLocalAttachment(file)
+							.then(({file, id}) => {
+								console.info('uploaded')
+								return this.emitNewAttachment(
+									this.fileNameToAttachment(file.name, id)
+								)
+							})
+					)
+				).catch(console.error.bind(this))
 			},
 			onAddCloudAttachment () {
-				pickFileOrDirectory(
-					t('mail', 'Choose a file to add as attachment')
-				).then(path => this.$emit('input', this.value.concat([{
-					fileName: path,
-					displayName: _.trimStart(path, '/'),
-				}])))
+				return pickFileOrDirectory(t('mail', 'Choose a file to add as attachment'))
+					.then(path => this.emitNewAttachment(
+						this.fileNameToAttachment(path)
+					))
+					.catch(console.error.bind(this))
 			}
 		}
 	}
