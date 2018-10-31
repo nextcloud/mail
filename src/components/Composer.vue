@@ -65,8 +65,7 @@
 				   :value="submitButtonTitle"
 				   v-on:click="onSend">
 		</div>
-		<div class="new-message-attachments">
-		</div>
+		<ComposerAttachments v-model="attachments" />
 		<span id="draft-status" v-if="savingDraft === true">{{ t('mail', 'Saving draft …') }}</span>
 		<span id="draft-status" v-else-if="savingDraft === false">{{ t('mail', 'Draft saved') }}</span>
 	</div>
@@ -97,6 +96,7 @@
 	import Vue from 'vue'
 
 	import Loading from './Loading'
+	import ComposerAttachments from "./ComposerAttachments";
 
 	Vue.use(Autosize)
 
@@ -110,6 +110,7 @@
 	export default {
 		name: 'Composer',
 		components: {
+			ComposerAttachments,
 			Loading,
 		},
 		props: {
@@ -147,6 +148,7 @@
 				bccVal: '',
 				subjectVal: this.subject,
 				bodyVal: '',
+				attachments: [],
 				noReply: false,
 				message: '',
 				submitButtonTitle: t('mail', 'Send'),
@@ -180,7 +182,7 @@
 						draftUID: uid,
 						subject: this.subjectVal,
 						body: this.bodyVal,
-						attachments: [], // TODO
+						attachments: this.attachments,
 					}
 				}
 			},
