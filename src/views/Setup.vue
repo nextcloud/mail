@@ -20,3 +20,9 @@
 		}
 	}
 </script>
+
+<style>
+	#emptycontent {
+		margin-top: 10vh;
+	}
+</style>
