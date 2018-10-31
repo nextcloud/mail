@@ -26,7 +26,8 @@
 				<div class="new-message-attachment-name">
 					{{attachment.displayName}}
 				</div>
-				<div class="new-message-attachments-action svg icon-delete"></div>
+				<div class="new-message-attachments-action svg icon-delete"
+					 v-on:click="onDelete(attachment)"></div>
 			</li>
 		</ul>
 		<button class="button"
@@ -75,7 +76,6 @@
 				}
 			},
 			emitNewAttachment (attachment) {
-				console.log('emit', attachment)
 				this.$emit('input', this.value.concat([attachment]))
 			},
 			onLocalAttachmentSelected (e) {
@@ -98,6 +98,9 @@
 						this.fileNameToAttachment(path)
 					))
 					.catch(console.error.bind(this))
+			},
+			onDelete (attachment) {
+				this.$emit('input', this.value.filter(a => a !== attachment))
 			}
 		}
 	}
