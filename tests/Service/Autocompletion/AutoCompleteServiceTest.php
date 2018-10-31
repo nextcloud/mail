@@ -52,8 +52,8 @@ class AutoCompleteServiceTest extends TestCase {
 		$term = 'jo';
 
 		$contactsResult = [
-			['id' => 12, 'label' => '"john doe" <john@doe.cz>', 'value' => '"john doe" <john@doe.cz>'],
-			['id' => 13, 'label' => '"joe doe" <joe@doe.se>', 'value' => '"joe doe" <joe@doe.se>'],
+			['id' => 12, 'label' => '"john doe" <john@doe.cz>', 'email' => 'john@doe.cz'],
+			['id' => 13, 'label' => '"joe doe" <joe@doe.se>', 'email' => 'joe@doe.se'],
 		];
 		$john = new CollectedAddress();
 		$john->setId(1234);
@@ -65,7 +65,7 @@ class AutoCompleteServiceTest extends TestCase {
 		];
 
 		$groupsResult = [
-			['id' => 20, 'label' => 'Journalists', 'value' => 'Journalists']
+			['id' => 20, 'label' => 'Journalists', 'email' => 'Journalists']
 		];
 
 		$this->contactsIntegration->expects($this->once())
@@ -84,10 +84,10 @@ class AutoCompleteServiceTest extends TestCase {
 		$response = $this->service->findMatches($term);
 
 		$expected = [
-			['id' => 12, 'label' => '"john doe" <john@doe.cz>', 'value' => '"john doe" <john@doe.cz>'],
-			['id' => 13, 'label' => '"joe doe" <joe@doe.se>', 'value' => '"joe doe" <joe@doe.se>'],
-			['id' => 1234, 'label' => 'John Doe', 'value' => '"John Doe" <john@doe.com>'],
-			['id' => 20, 'label' => 'Journalists', 'value' => 'Journalists'],
+			['id' => 12, 'label' => '"john doe" <john@doe.cz>', 'email' => 'john@doe.cz'],
+			['id' => 13, 'label' => '"joe doe" <joe@doe.se>', 'email' => 'joe@doe.se'],
+			['id' => 1234, 'label' => 'John Doe', 'email' => 'john@doe.com'],
+			['id' => 20, 'label' => 'Journalists', 'email' => 'Journalists'],
 		];
 		$this->assertEquals($expected, $response);
 	}

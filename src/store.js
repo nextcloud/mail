@@ -583,6 +583,7 @@ export default new Vuex.Store({
 		},
 		envelopes: {},
 		messages: {},
+		autocompleteEntries: [],
 	},
 	getters,
 	mutations,

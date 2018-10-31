@@ -75,10 +75,13 @@ class ContactsIntegration {
 
 			// loop through all email addresses of this contact
 			foreach ($email as $e) {
+				if ($e === '') {
+					continue;
+				}
 				$receivers[] = [
 					'id' => $id,
 					'label' => "$fn ($e)",
-					'value' => "\"$fn\" <$e>",
+					'email' => $e,
 					'photo' => $photo,
 				];
 			}
