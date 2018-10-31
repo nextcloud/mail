@@ -42,3 +42,21 @@ export function saveAttachmentsToFiles (accountId, folderId, messageId, director
 export function downloadAttachment (url) {
 	return Axios.get(url).then(res => res.data)
 }
+
+export const uploadLocalAttachment = file => {
+	const url = generateUrl('/apps/mail/api/attachments')
+	const data = new FormData()
+	const opts = {
+		onUploadProgress: prog => console.log(prog, prog.loaded, prog.total)
+	}
+	data.append('attachment', file)
+
+	return Axios.post(url, data, opts)
+		.then(resp => resp.data)
+		.then(({id}) => {
+			return {
+				file,
+				id
+			}
+		})
+}

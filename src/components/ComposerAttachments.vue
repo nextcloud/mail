@@ -23,12 +23,13 @@
 	<div class="new-message-attachments">
 		<ul>
 			<li v-for="attachment in value">
-				<div class="new-message-attachment-name">{{attachment.displayName}}</div>
+				<div class="new-message-attachment-name">
+					{{attachment.displayName}}
+				</div>
 				<div class="new-message-attachments-action svg icon-delete"></div>
 			</li>
 		</ul>
 		<button class="button"
-				v-if="false"
 				v-on:click="onAddLocalAttachment">
 			<span class="icon-upload"/>
 			{{ t('mail', 'Upload attachment') }}
@@ -38,7 +39,10 @@
 			<span class="icon-folder"/>
 			{{ t('mail', 'Add attachment from Files') }}
 		</button>
-		<input type="file" multiple id="local-attachments"
+		<input type="file"
+			   ref="localAttachments"
+			   v-on:change="onLocalAttachmentSelected"
+			   multiple
 			   style="display: none;">
 	</div>
 </template>
@@ -47,6 +51,8 @@
 	import _ from 'lodash'
 	import {translate as t} from 'nextcloud-server/dist/l10n'
 	import {pickFileOrDirectory} from 'nextcloud-server/dist/files'
+
+	import {uploadLocalAttachment} from '../service/AttachmentService'
 
 	export default {
 		name: 'ComposerAttachments',
@@ -58,15 +64,40 @@
 		},
 		methods: {
 			onAddLocalAttachment () {
-				console.debug('todo: implement')
+				this.$refs.localAttachments.click()
+			},
+			fileNameToAttachment (name, id) {
+				return {
+					fileName: name,
+					displayName: _.trimStart(name, '/'),
+					id,
+					isLocal: !_.isUndefined(id)
+				}
+			},
+			emitNewAttachment (attachment) {
+				console.log('emit', attachment)
+				this.$emit('input', this.value.concat([attachment]))
+			},
+			onLocalAttachmentSelected (e) {
+				return Promise.all(
+					_.map(
+						e.target.files,
+						file => uploadLocalAttachment(file)
+							.then(({file, id}) => {
+								console.info('uploaded')
+								return this.emitNewAttachment(
+									this.fileNameToAttachment(file.name, id)
+								)
+							})
+					)
+				).catch(console.error.bind(this))
 			},
 			onAddCloudAttachment () {
-				pickFileOrDirectory(
-					t('mail', 'Choose a file to add as attachment')
-				).then(path => this.$emit('input', this.value.concat([{
-					fileName: path,
-					displayName: _.trimStart(path, '/'),
-				}])))
+				return pickFileOrDirectory(t('mail', 'Choose a file to add as attachment'))
+					.then(path => this.emitNewAttachment(
+						this.fileNameToAttachment(path)
+					))
+					.catch(console.error.bind(this))
 			}
 		}
 	}
