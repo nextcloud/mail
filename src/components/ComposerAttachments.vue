@@ -30,9 +30,13 @@
 			</li>
 		</ul>
 		<button class="button"
+				:disabled="uploading"
 				v-on:click="onAddLocalAttachment">
-			<span class="icon-upload"/>
-			{{ t('mail', 'Upload attachment') }}
+			<span :class="{ 'icon-upload' : !uploading, 'icon-loading-small': uploading }"/>
+			{{ uploading ?
+			t('mail', 'Uploading …') :
+			t('mail', 'Upload attachment')
+			}}
 		</button>
 		<button class="button"
 				v-on:click="onAddCloudAttachment">
@@ -56,6 +60,11 @@
 
 	export default {
 		name: 'ComposerAttachments',
+		data () {
+			return {
+				uploading: false,
+			}
+		},
 		props: {
 			value: {
 				type: Array,
@@ -79,6 +88,8 @@
 				this.$emit('input', this.value.concat([attachment]))
 			},
 			onLocalAttachmentSelected (e) {
+				this.uploading = true
+
 				return Promise.all(
 					_.map(
 						e.target.files,
@@ -90,7 +101,9 @@
 								)
 							})
 					)
-				).catch(console.error.bind(this))
+				)
+					.catch(console.error.bind(this))
+					.then(() => this.uploading = false)
 			},
 			onAddCloudAttachment () {
 				return pickFileOrDirectory(t('mail', 'Choose a file to add as attachment'))
