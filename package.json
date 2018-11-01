@@ -33,7 +33,7 @@
     "vue-infinite-scroll": "^2.0.2",
     "vue-on-click-outside": "^1.0.3",
     "vue-router": "^3.0.1",
-    "vue-scroll": "^2.1.7",
+    "vue-scroll": "^2.1.9",
     "vue-shortkey": "^3.1.6",
     "vue-slide-up-down": "^1.4.1",
     "vuex": "^3.0.1",
