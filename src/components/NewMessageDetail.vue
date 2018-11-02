@@ -6,21 +6,21 @@
 </template>
 
 <script>
-	import Composer from "./Composer";
+	import Composer from './Composer'
+	import {saveDraft, sendMessage} from '../service/MessageService'
 
 	export default {
-		name: "NewMessageDetail",
+		name: 'NewMessageDetail',
 		components: {
 			Composer
 		},
 		methods: {
-			saveDraft () {
-				console.info('saving new draft');
-				return new Promise((res, rej) => setTimeout(res, 2000))
+			saveDraft (data) {
+				return saveDraft(data.account, data)
+					.then(({uid}) => uid)
 			},
-			sendMessage () {
-				console.info('sending message');
-				return new Promise((res, rej) => setTimeout(res, 2000))
+			sendMessage (data) {
+				return sendMessage(data.account, data)
 			}
 		}
 	}

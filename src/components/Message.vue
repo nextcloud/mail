@@ -25,7 +25,8 @@
 				<div id="reply-composer"></div>
 				<input type="button" id="forward-button" value="Forward">
 			</div>
-			<Composer :send="sendReply"
+			<Composer :replyTo="replyTo"
+					  :send="sendReply"
 					  :draft="saveReplyDraft"/>
 		</template>
 	</div>
@@ -34,15 +35,16 @@
 <script>
 	import { generateUrl } from 'nextcloud-server/dist/router'
 
-	import AddressList from "./AddressList"
-	import Composer from "./Composer"
-	import MessageHTMLBody from "./MessageHTMLBody"
-	import MessagePlainTextBody from "./MessagePlainTextBody"
-	import Loading from "./Loading"
-	import MessageAttachments from "./MessageAttachments";
+	import AddressList from './AddressList'
+	import Composer from './Composer'
+	import MessageHTMLBody from './MessageHTMLBody'
+	import MessagePlainTextBody from './MessagePlainTextBody'
+	import Loading from './Loading'
+	import MessageAttachments from './MessageAttachments'
+	import {saveDraft, sendMessage} from '../service/MessageService'
 
 	export default {
-		name: "Message",
+		name: 'Message',
 		components: {
 			MessageAttachments,
 			Loading,
@@ -64,6 +66,12 @@
 					folderId: this.$route.params.folderId,
 					id: this.$route.params.messageId
 				})
+			},
+			replyTo () {
+				return {
+					folderId: this.$route.params.folderId,
+					messageId: this.$route.params.messageId,
+				}
 			}
 		},
 		created () {
@@ -114,18 +122,13 @@
 						})
 				}).catch(console.error.bind(this))
 			},
-			sendReply () {
-				console.log('todo: sending reply')
-				return new Promise((res, _) => {
-					setTimeout(() => res, 1000);
-				})
+			saveReplyDraft (data) {
+				return saveDraft(data.account, data)
+					.then(({uid}) => uid)
 			},
-			saveReplyDraft () {
-				console.log('todo: saving reply draft')
-				return new Promise((res, _) => {
-					setTimeout(() => res, 1000)
-				})
-			}
+			sendReply (data) {
+				return sendMessage(data.account, data)
+			},
 		}
 	}
 </script>

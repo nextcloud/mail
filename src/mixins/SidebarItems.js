@@ -1,5 +1,13 @@
 import conv from 'color-convert'
 import md5 from 'md5'
+import {translate as t} from 'nextcloud-server/dist/l10n'
+
+const SHOW_COLLAPSED = Object.seal([
+	'inbox',
+	'flagged',
+	'drafts',
+	'sent'
+]);
 
 export default {
 	methods: {
@@ -32,33 +40,39 @@ export default {
 					})
 				}
 
-				let folders = this.$store.getters.getFolders(account.id);
-				for (let id in folders) {
-					let folder = folders[id];
-
-					let icon = 'folder';
-					if (folder.specialRole) {
-						icon = folder.specialRole;
-					}
-
-					items.push({
-						id: 'account' + account.id + '_' + folder.id,
-						key: 'account' + account.id + '_' + folder.id,
-						text: folder.name,
-						icon: 'icon-' + icon,
-						router: {
-							name: 'folder',
-							params: {
-								accountId: account.id,
-								folderId: folder.id,
-							},
-							exact: false,
-						},
-						utils: {
-							counter: folder.unread,
+				this.$store.getters.getFolders(account.id)
+					.filter(folder => !account.collapsed || SHOW_COLLAPSED.indexOf(folder.specialRole) !== -1)
+					.forEach(folder => {
+						let icon = 'folder';
+						if (folder.specialRole) {
+							icon = folder.specialRole;
 						}
+
+						items.push({
+							id: 'account' + account.id + '_' + folder.id,
+							key: 'account' + account.id + '_' + folder.id,
+							text: folder.name,
+							icon: 'icon-' + icon,
+							router: {
+								name: 'folder',
+								params: {
+									accountId: account.id,
+									folderId: folder.id,
+								},
+								exact: false,
+							},
+							utils: {
+								counter: folder.unread,
+							}
+						})
 					})
-				}
+
+				items.push({
+					id: 'collapse-' + account.id,
+					key: 'collapse-' + account.id,
+					text: account.collapsed ? t('mail', 'Show all folders') : t('mail', 'Collapse folders'),
+					action: () => this.$store.commit('toggleAccountCollapsed', account.id)
+				})
 			}
 
 			return {

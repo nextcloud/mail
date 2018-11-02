@@ -1,3 +1,4 @@
+import _ from 'lodash'
 import Vue from 'vue'
 import Vuex from 'vuex'
 
@@ -15,13 +16,20 @@ import {
 	fetchMessage,
 	deleteMessage,
 } from './service/MessageService'
+import {
+	showNewMessagesNotification
+} from './service/NotificationService'
 
 Vue.use(Vuex)
 
 export const mutations = {
 	addAccount (state, account) {
 		account.folders = []
+		account.collapsed = true
 		Vue.set(state.accounts, account.id, account)
+	},
+	toggleAccountCollapsed (state, accountId) {
+		state.accounts[accountId].collapsed = !state.accounts[accountId].collapsed
 	},
 	addFolder (state, {account, folder}) {
 		let id = account.id + '-' + folder.id
@@ -152,7 +160,32 @@ export const actions = {
 				folder,
 				syncToken: syncData.token
 			})
+
+			return syncData.newMessages
 		})
+	},
+	syncInboxes ({getters, dispatch}) {
+		console.debug('syncing all inboxes')
+		return Promise.all(getters.getAccounts().map(account => {
+			return Promise.all(getters.getFolders(account.id).map(folder => {
+				if (folder.specialRole !== 'inbox') {
+					return
+				}
+
+				return dispatch('syncEnvelopes', {
+					accountId: account.id,
+					folderId: folder.id,
+				})
+			}))
+		}))
+			.then(results => {
+				console.debug('synced all inboxes successfully')
+
+				const newMessages = _.flatMapDeep(results).filter(_.negate(_.isUndefined))
+				if (newMessages.length > 0) {
+					showNewMessagesNotification(newMessages)
+				}
+			})
 	},
 	toggleEnvelopeFlagged ({commit, getters}, {accountId, folderId, id}) {
 		// Change immediately and switch back on error
@@ -239,7 +272,7 @@ export const getters = {
 		return state.accounts[id]
 	},
 	getAccounts: (state) => () => {
-		return state.accounts
+		return Object.keys(state.accounts).map(id => state.accounts[id])
 	},
 	getFolder: (state) => (accountId, folderId) => {
 		return state.folders[accountId + '-' + folderId]

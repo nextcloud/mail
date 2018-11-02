@@ -3,7 +3,7 @@ build:
         analysis:
             tests:
                 override:
-                    - php-scrutinizer-run --enable-security-analysis
+                    - php-scrutinizer-run
 
 filter:
     excluded_paths:

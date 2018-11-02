@@ -5,7 +5,8 @@
 					  v-infinite-scroll="loadMore"
 					  infinite-scroll-disabled="loading"
 					  infinite-scroll-distance="30"
-					  v-scroll="onScroll">
+					  v-scroll="onScroll"
+					  v-shortkey.once="{next: ['arrowright'], prev: ['arrowleft']}" @shortkey.native="navigateEnvelope">
 		<div id="list-refreshing"
 			 :key="'loading'"
 			 class="icon-loading-small"
@@ -76,6 +77,46 @@
 						this.refreshing = false
 					})
 				}
+			},
+			navigateEnvelope (e) {
+				const envelopes = this.$store.getters.getEnvelopes(
+					this.$route.params.accountId,
+					this.$route.params.folderId,
+				)
+				const currentId = this.$route.params.messageId
+
+				if (!currentId) {
+					console.debug('ignoring shortcut: no envelope selected')
+					return
+				}
+
+				const current = envelopes.filter(e => e.id == currentId)
+				if (current.length === 0) {
+					console.debug('ignoring shortcut: currently displayed messages is not in current envelope list')
+					return
+				}
+
+				const idx = envelopes.indexOf(current[0])
+				let next
+				if (e.srcKey === 'next') {
+					next = envelopes[idx+1]
+				} else {
+					next = envelopes[idx-1]
+				}
+
+				if (!next) {
+					console.debug('ignoring shortcut: head or tail of envelope list reached', envelopes, idx, e.srcKey)
+					return
+				}
+
+				this.$router.push({
+					name: 'message',
+					params: {
+						accountId: this.$route.params.accountId,
+						folderId: this.$route.params.folderId,
+						messageId: next.id,
+					}
+				});
 			}
 		}
 	}
