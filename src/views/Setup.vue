@@ -30,11 +30,14 @@
 		},
 		methods: {
 			onSave (data) {
-				console.info('saving', data)
+				return this.$store.dispatch('createAccount', data)
+					.then(account => {
+						this.$router.push({
+							name: 'home',
+						})
 
-				return new Promise((res, rej) => {
-					setTimeout(res, 2000)
-				})
+						return account
+					})
 			}
 		}
 	}
