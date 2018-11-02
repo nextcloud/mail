@@ -67,34 +67,40 @@
 					   required/>
 				<h4>{{ t('mail', 'IMAP Security') }}</h4>
 				<div class="flex-row">
+					<input type="radio"
+						   id="man-imap-sec-none"
+						   name="man-imap-sec"
+						   v-model="manualConfig.imapSslMode"
+						   :disabled="loading"
+						   @change="onImapSslModeChange"
+						   value="none">
 					<label class="button"
+						   for="man-imap-sec-none"
 						   :class="{primary: manualConfig.imapSslMode === 'none' }">
-						<input type="radio"
-							   name="man-imap-sec"
-							   v-model="manualConfig.imapSslMode"
-							   :disabled="loading"
-							   @change="onImapSslModeChange"
-							   value="none">
 						{{ t('mail', 'None') }}
 					</label>
+					<input type="radio"
+						   id="man-imap-sec-ssl"
+						   name="man-imap-sec"
+						   v-model="manualConfig.imapSslMode"
+						   :disabled="loading"
+						   @change="onImapSslModeChange"
+						   value="ssl">
 					<label class="button"
+						   for="man-imap-sec-ssl"
 						   :class="{primary: manualConfig.imapSslMode === 'ssl' }">
-						<input type="radio"
-							   name="man-imap-sec"
-							   v-model="manualConfig.imapSslMode"
-							   :disabled="loading"
-							   @change="onImapSslModeChange"
-							   value="ssl">
 						{{ t('mail', 'SSL/TLS') }}
 					</label>
+					<input type="radio"
+						   id="man-imap-sec-tls"
+						   name="man-imap-sec"
+						   v-model="manualConfig.imapSslMode"
+						   :disabled="loading"
+						   @change="onImapSslModeChange"
+						   value="tls">
 					<label class="button"
+						   for="man-imap-sec-tls"
 						   :class="{primary: manualConfig.imapSslMode === 'tls' }">
-						<input type="radio"
-							   name="man-imap-sec"
-							   v-model="manualConfig.imapSslMode"
-							   :disabled="loading"
-							   @change="onImapSslModeChange"
-							   value="tls">
 						{{ t('mail', 'STARTTLS') }}
 					</label>
 				</div>
