@@ -1,278 +1,398 @@
 <template>
-    <div id="account-form">
-        <form method="post" v-on:submit.prevent.stop="onSubmit">
-        <div class="hidden-visually">
-            <!-- Hack for Safari and Chromium/Chrome which ignore autocomplete="off" -->
-            <input type="text" id="fake_user" name="fake_user"
-                autocomplete="off" tabindex="-1">
-            <input type="password" id="fake_password" name="fake_password"
-                autocomplete="off" tabindex="-1">
-        </div>
-        <fieldset>
-            <div id="emptycontent" ref="emptyContent">
-                <div class="icon-mail"></div>
-                <h2>{{ t('mail', 'Connect your mail account') }}</h2>
-            </div>
-            <p class="grouptop">
-                <input type="text"
-                    ref="accountName"
-                    name="account-name"
-                    :placeholder="t('mail', 'Name')"
-                    v-model="config.accountName"
-                    autofocus />
-            </p>
-            <p class="groupmiddle">
-                <input type="email"
-                    ref="mailAddress"
-                    name="mail-address"
-                    :placeholder="t('mail', 'Mail Address')"
-                    v-model="config.emailAddress"
-                    required />
-            </p>
-            <p class="groupbottom">
-                <input type="password"
-                    name="mail-password"
-                    ref="mailPassword"
-                    :placeholder="t('mail', 'Password')"
-                    v-model="config.password"
-                    required />
-            </p>
+	<div id="account-form">
+		<tabs :options="{ useUrlFragment: false, defaultTabHash: 'auto' }"
+			  @changed="onModeChanged">
+			<tab :name="t('mail', 'Auto')"
+				 id="auto"
+				 key="auto">
+				<label for="auto-name">
+					{{ t('mail', 'Name') }}
+				</label>
+				<input type="text"
+					   id="auto-name"
+					   :placeholder="t('mail', 'Name')"
+					   v-model="autoConfig.accountName"
+					   :disabled="loading"
+					   autofocus/>
+				<label for="auto-address">
+					{{ t('mail', 'Mail Address') }}
+				</label>
+				<input type="email"
+					   id="auto-address"
+					   :placeholder="t('mail', 'Mail Address')"
+					   v-model="autoConfig.emailAddress"
+					   :disabled="loading"
+					   required/>
+				<label for="auto-password">
+					{{ t('mail', 'Password') }}
+				</label>
+				<input type="password"
+					   id="auto-password"
+					   :placeholder="t('mail', 'Password')"
+					   v-model="autoConfig.password"
+					   :disabled="loading"
+					   required/>
+			</tab>
+			<tab :name="t('mail', 'Manual')"
+				 id="manual"
+				 key="manual">
+				<label for="man-name">
+					{{ t('mail', 'Name') }}
+				</label>
+				<input type="text"
+					   id="man-name"
+					   :placeholder="t('mail', 'Name')"
+					   v-model="manualConfig.accountName"
+					   :disabled="loading"
+					   autofocus/>
+				<label for="man-address">
+					{{ t('mail', 'Mail Address') }}
+				</label>
+				<input type="email"
+					   id="man-address"
+					   :placeholder="t('mail', 'Mail Address')"
+					   v-model="manualConfig.emailAddress"
+					   :disabled="loading"
+					   required/>
 
-            <a class="toggle-manual-mode icon-caret-dark" v-on:click.stop="toggleManualMode">{{ t('mail', 'Manual configuration') }}</a>
+				<h3>{{ t('mail', 'IMAP Settings') }}</h3>
+				<label for="man-imap-host">
+					{{ t('mail', 'IMAP Host') }}
+				</label>
+				<input type="text"
+					   id="man-imap-host"
+					   :placeholder="t('mail', 'IMAP Host')"
+					   v-model="manualConfig.imapHost"
+					   :disabled="loading"
+					   required/>
+				<h4>{{ t('mail', 'IMAP Security') }}</h4>
+				<div class="flex-row">
+					<input type="radio"
+						   id="man-imap-sec-none"
+						   name="man-imap-sec"
+						   v-model="manualConfig.imapSslMode"
+						   :disabled="loading"
+						   @change="onImapSslModeChange"
+						   value="none">
+					<label class="button"
+						   for="man-imap-sec-none"
+						   :class="{primary: manualConfig.imapSslMode === 'none' }">
+						{{ t('mail', 'None') }}
+					</label>
+					<input type="radio"
+						   id="man-imap-sec-ssl"
+						   name="man-imap-sec"
+						   v-model="manualConfig.imapSslMode"
+						   :disabled="loading"
+						   @change="onImapSslModeChange"
+						   value="ssl">
+					<label class="button"
+						   for="man-imap-sec-ssl"
+						   :class="{primary: manualConfig.imapSslMode === 'ssl' }">
+						{{ t('mail', 'SSL/TLS') }}
+					</label>
+					<input type="radio"
+						   id="man-imap-sec-tls"
+						   name="man-imap-sec"
+						   v-model="manualConfig.imapSslMode"
+						   :disabled="loading"
+						   @change="onImapSslModeChange"
+						   value="tls">
+					<label class="button"
+						   for="man-imap-sec-tls"
+						   :class="{primary: manualConfig.imapSslMode === 'tls' }">
+						{{ t('mail', 'STARTTLS') }}
+					</label>
+				</div>
+				<label for="man-imap-port">
+					{{ t('mail', 'IMAP Port') }}
+				</label>
+				<input type="number"
+					   id="man-imap-port"
+					   :placeholder="t('mail', 'IMAP Port')"
+					   v-model="manualConfig.imapPort"
+					   :disabled="loading"
+					   required/>
+				<label for="man-imap-user">
+					{{ t('mail', 'IMAP User') }}
+				</label>
+				<input type="text"
+					   id="man-imap-user"
+					   :placeholder="t('mail', 'IMAP User')"
+					   v-model="manualConfig.imapUser"
+					   :disabled="loading"
+					   required/>
+				<label for="man-imap-password">
+					{{ t('mail', 'IMAP Password') }}
+				</label>
+				<input type="password"
+					   id="man-imap-password"
+					   :placeholder="t('mail', 'IMAP Password')"
+					   v-model="manualConfig.imapPassword"
+					   :disabled="loading"
+					   required/>
 
-            <div class="manual-inputs" ref="manualInputs">
-                <p class="grouptop">
-                    <input type="text"
-                        name="imap-host"
-                        ref="imapHost"
-                        :placeholder="t('mail', 'IMAP Host')"
-                        v-model="config.imapHost" />
-                </p>
-                <p class="groupmiddle" id="setup-imap-ssl">
-                    <select id="setup-imap-ssl-mode"
-                        v-model="config.imapSslMode"
-                        ref="imapSslMode"
-                        name="imap-sslmode"
-                        :title="t('mail', 'IMAP security')"
-                        v-on:change="onImapSslModeChange">
-                        <option value="none">{{ t('mail', 'None') }}</option>
-                        <option value="ssl">{{ t('mail', 'SSL/TLS') }}</option>
-                        <option value="tls">{{ t('mail', 'STARTTLS') }}</option>
-                    </select>
-                </p>
-                <p class="groupmiddle">
-                    <input type="number"
-                        ref="imapPort"
-                        name="imap-port"
-                        :placeholder="t('mail', 'IMAP Port')"
-                        v-model="config.imapPort" />
-                </p>
-                <p class="groupmiddle">
-                    <input type="text"
-                        ref="imapUser"
-                        name="imap-user"
-                        :placeholder="t('mail', 'IMAP User')"
-                        v-model="config.imapUser" />
-                </p>
-                <p class="groupbottom">
-                    <input type="password"
-                        ref="imapPassword"
-                        name="imap-password"
-                        :placeholder="t('mail', 'IMAP Password')"
-                        v-model="config.imapPassword"
-                        required />
-                </p>
-                <p class="grouptop">
-                    <input type="text"
-                        ref="smtpHost"
-                        name="smtp-host"
-                        :placeholder="t('mail', 'SMTP Host')"
-                        v-model="config.smtpHost" />
-                </p>
-                <p class="groupmiddle" id="setup-smtp-ssl">
-                    <select id="setup-smtp-ssl-mode"
-                        v-model="config.smtpSslMode"
-                        ref="smtpSslMode"
-                        name="mail-smtp-sslmode"
-                        :title="t('mail', 'SMTP security')"
-                        v-on:change="onSmtpSslModeChange">
-                        <option value="none">{{ t('mail', 'None') }}</option>
-                        <option value="ssl">{{ t('mail', 'SSL/TLS') }}</option>
-                        <option value="tls">{{ t('mail', 'STARTTLS') }}</option>
-                    </select>
-                </p>
-                <p class="groupmiddle">
-                    <input type="number"
-                        ref="smtpPort"
-                        name="smtp-port"
-                        :placeholder="t('mail', 'SMTP Port')"
-                        v-model="config.smtpPort" />
-                </p>
-                <p class="groupmiddle">
-                    <input type="text"
-                        ref="smtpUser"
-                        name="smtp-user"
-                        :placeholder="t('mail', 'SMTP User')"
-                        v-model="config.smtpUser" />
-                </p>
-                <p class="groupbottom">
-                    <input type="password"
-                        ref="smtpPassword"
-                        name="smtp-password"
-                        :placeholder="t('mail', 'SMTP Password')"
-                        v-model="config.smtpPassword"
-                        required />
-                </p>
-            </div>
-
-            <input type="submit"
-                ref="submitButton"
-                class="primary"
-                :value="t('mail', 'Connect')"/>
-            </fieldset>
-        </form>
-    </div>
+				<h3>{{ t('mail', 'SMTP Settings') }}</h3>
+				<input type="text"
+					   ref="smtpHost"
+					   name="smtp-host"
+					   :placeholder="t('mail', 'SMTP Host')"
+					   v-model="manualConfig.smtpHost"
+					   :disabled="loading"
+					   required/>
+				<h4>{{ t('mail', 'SMTP Security') }}</h4>
+				<div class="flex-row">
+					<input type="radio"
+						   id="man-smtp-sec-none"
+						   name="man-smtp-sec"
+						   v-model="manualConfig.smtpSslMode"
+						   :disabled="loading"
+						   @change="onSmtpSslModeChange"
+						   value="none">
+					<label class="button"
+						   for="man-smtp-sec-none"
+						   :class="{primary: manualConfig.smtpSslMode === 'none' }">
+						{{ t('mail', 'None') }}
+					</label>
+					<input type="radio"
+						   id="man-smtp-sec-ssl"
+						   name="man-smtp-sec"
+						   v-model="manualConfig.smtpSslMode"
+						   :disabled="loading"
+						   @change="onSmtpSslModeChange"
+						   value="ssl">
+					<label class="button"
+						   for="man-smtp-sec-ssl"
+						   :class="{primary: manualConfig.smtpSslMode === 'ssl' }">
+						{{ t('mail', 'SSL/TLS') }}
+					</label>
+					<input type="radio"
+						   id="man-smtp-sec-tls"
+						   name="man-smtp-sec"
+						   v-model="manualConfig.smtpSslMode"
+						   :disabled="loading"
+						   @change="onSmtpSslModeChange"
+						   value="tls">
+					<label class="button"
+						   for="man-smtp-sec-tls"
+						   :class="{primary: manualConfig.smtpSslMode === 'tls' }">
+						{{ t('mail', 'STARTTLS') }}
+					</label>
+				</div>
+				<label for="man-smtp-port">
+					{{ t('mail', 'SMTP Port') }}
+				</label>
+				<input type="number"
+					   id="man-smtp-port"
+					   :placeholder="t('mail', 'SMTP Port')"
+					   v-model="manualConfig.smtpPort"
+					   :disabled="loading"
+					   required/>
+				<label for="man-smtp-user">
+					{{ t('mail', 'SMTP User') }}
+				</label>
+				<input type="text"
+					   id="man-smtp-user"
+					   :placeholder="t('mail', 'SMTP User')"
+					   v-model="manualConfig.smtpUser"
+					   :disabled="loading"
+					   required/>
+				<label for="man-smtp-password">
+					{{ t('mail', 'SMTP Password') }}
+				</label>
+				<input type="password"
+					   id="man-smtp-password"
+					   :placeholder="t('mail', 'SMTP Password')"
+					   v-model="manualConfig.smtpPassword"
+					   :disabled="loading"
+					   required/>
+			</tab>
+		</tabs>
+		<input type="submit"
+			   class="primary"
+			   v-on:click="onSubmit"
+			   :disabled="loading"
+			   :value="t('mail', 'Connect')"/>
+	</div>
 </template>
 
 <script>
-export default {
-  name: 'AccountForm',
-  props: {
-    settingsPage: Boolean
-  },
-  data() {
-    return {
-      firstToggle: true,
-      config: {
-        accountName: $('#user-displayname').text() || '',
-        emailAddress: $('#user-email').text() || '',
-        password: '',
-        accountName: '',
-        autoDetect: true,
-        imapHost: '',
-        imapPort: 993,
-        imapSslMode: 'ssl',
-        imapUser: '',
-        imapPassword: '',
-        smtpHost: '',
-        smtpPort: 587,
-        smtpSslMode: 'tls',
-        smtpUser: '',
-        smtpPassword: '',
-      }
-    };
-  },
-  mounted() {
-    if (this.settingsPage) {
-      $(this.$refs.emptyContent).hide();
-      $(this.$refs.submitButton).val(t('mail', 'Save'));
-    }
+	import {Tab, Tabs} from 'vue-tabs-component'
 
-    if (this.config.autoDetect) {
-      $(this.$refs.mailPassword).show();
-      $(this.$refs.manualInputs).hide();
-    } else {
-      $(this.$refs.mailPassword).hide();
-    }
-  },
-  methods: {
-    toggleManualMode: function() {
-      this.config.autoDetect = !this.config.autoDetect;
+	export default {
+		name: 'AccountForm',
+		props: {
+			displayName: {
+				type: String,
+				default: '',
+			},
+			email: {
+				type: String,
+				default: '',
+			},
+			save: {
+				type: Function,
+				required: true,
+			}
+		},
+		components: {
+			Tab,
+			Tabs,
+		},
+		data () {
+			return {
+				loading: false,
+				mode: 'auto',
+				autoConfig: {
+					accountName: this.displayName,
+					emailAddress: this.email,
+					password: '',
+				},
+				manualConfig: {
+					accountName: '',
+					emailAddress: '',
+					accountName: '',
+					autoDetect: true,
+					imapHost: '',
+					imapPort: 993,
+					imapSslMode: 'ssl',
+					imapUser: '',
+					imapPassword: '',
+					smtpHost: '',
+					smtpPort: 587,
+					smtpSslMode: 'tls',
+					smtpUser: '',
+					smtpPassword: '',
+				}
+			};
+		},
+		methods: {
+			onModeChanged (e) {
+				this.mode = e.tab.id
 
-      $(this.$refs.manualInputs).slideToggle();
-      this.$refs.imapHost.focus();
+				if (this.mode === 'manual') {
+					if (this.manualConfig.accountName === '') {
+						this.manualConfig.accountName = this.autoConfig.accountName
+					}
+					if (this.manualConfig.emailAddress === '') {
+						this.manualConfig.emailAddress = this.autoConfig.emailAddress
+					}
 
-      if (!this.config.autoDetect) {
-        if (this.firstToggle) {
-          // Manual mode opened for the first time
-          // -> copy email, password for imap&smtp
-          const email = this.config.emailAddress;
-          const password = this.config.password;
+					// IMAP
+					if (this.manualConfig.imapUser === '') {
+						this.manualConfig.imapUser = this.autoConfig.emailAddress
+					}
+					if (this.manualConfig.imapPassword === '') {
+						this.manualConfig.imapPassword = this.autoConfig.password
+					}
 
-          this.config.imapUser = this.config.emailAddress;
-          this.config.imapPassword = this.config.password;
-          this.config.smtpUser = this.config.emailAddress;
-          this.config.smtpPassword = this.config.password;
-          this.firstToggle = false;
-        }
+					// SMTP
+					if (this.manualConfig.smtpUser === '') {
+						this.manualConfig.smtpUser = this.autoConfig.emailAddress
+					}
+					if (this.manualConfig.smtpPassword === '') {
+						this.manualConfig.smtpPassword = this.autoConfig.password
+					}
+				}
+			},
+			onImapSslModeChange: function () {
+				switch (this.manualConfig.imapSslMode) {
+					case 'none':
+					case 'tls':
+						this.manualConfig.imapPort = 143;
+						break;
+					case 'ssl':
+						this.manualConfig.imapPort = 993;
+						break;
+				}
+			},
+			onSmtpSslModeChange: function () {
+				switch (this.manualConfig.smtpSslMode) {
+					case 'none':
+					case 'tls':
+						this.manualConfig.smtpPort = 587;
+						break;
+					case 'ssl':
+						this.manualConfig.smtpPort = 465;
+						break;
+				}
+			},
+			saveChanges () {
+				if (this.mode === 'auto') {
+					return this.save({
+						mode: this.mode,
+						...this.autoConfig,
+					})
+				} else {
+					return this.save({
+						mode: this.mode,
+						...this.manualConfig,
+					})
+				}
+			},
+			onSubmit: function () {
+				this.loading = true
 
-        $(this.$refs.mailPassword).slideToggle(() => {
-          $(this.$refs.mailAddress)
-            .parent()
-            .removeClass('groupmiddle')
-            .addClass('groupbottom');
-          // Focus imap host input
-          this.$refs.imapHost.focus();
-        });
-      } else {
-        $(this.$refs.mailPassword).slideToggle();
-        $(this.$refs.mailAddress)
-          .parent()
-          .removeClass('groupbottom')
-          .addClass('groupmiddle');
-      }
-    },
-    onImapSslModeChange: function() {
-      const imapDefaultPort = 143;
-      const imapDefaultSecurePort = 993;
-
-      switch (this.config.imapSslMode) {
-        case 'none':
-        case 'tls':
-          this.config.imapPort = imapDefaultPort;
-          break;
-        case 'ssl':
-          this.config.imapPort = imapDefaultSecurePort;
-          break;
-      }
-    },
-    onSmtpSslModeChange: function() {
-      const smtpDefaultPort = 587;
-      const smtpDefaultSecurePort = 465;
-
-      switch (this.config.smtpSslMode) {
-        case 'none':
-        case 'tls':
-          this.config.smtpPort = smtpDefaultPort;
-          break;
-        case 'ssl':
-          this.config.smtpPort = smtpDefaultSecurePort;
-          break;
-      }
-    },
-    onSubmit: function() {
-      const emailAddress = this.config.emailAddress
-      const accountName = this.config.accountName;
-      const password = this.config.password;
-
-      let config = {
-        accountName,
-        emailAddress,
-        password,
-        autoDetect: true
-      };
-
-      // if manual setup is open, use manual values
-      if (!this.config.autoDetect) {
-        config = {
-          accountName,
-          emailAddress,
-          password,
-          imapHost: this.config.imapHost,
-          imapPort: this.config.imapPort,
-          imapSslMode: this.config.imapSslMode,
-          imapUser: this.config.imapUser,
-          imapPassword: this.config.imapPassword,
-          smtpHost: this.config.smtpHost,
-          smtpPort: this.config.smtpPort,
-          smtpSslMode: this.config.smtpSslMode,
-          smtpUser: this.config.smtpUser,
-          smtpPassword: this.config.smtpPassword,
-          autoDetect: false
-        };
-      }
-      // TODO: Handle form submit
-    }
-  }
-};
+				this.saveChanges()
+					.catch(console.error.bind(this))
+					.then(() => this.loading = false)
+			}
+		}
+	};
 </script>
+
+<style>
+	.tabs-component-tabs {
+		display: flex;
+	}
+
+	.tabs-component-tab {
+		flex-grow: 1;
+		color: var(--color-text-lighter);
+		font-weight: bold;
+	}
+
+	.tabs-component-tab.is-active {
+		border-bottom: 1px solid black;
+	}
+
+	.tabs-component-panels {
+		padding-top: 20px;
+	}
+
+	.tabs-component-panels label {
+		text-align: left;
+		width: 100%;
+		display: inline-block;
+	}
+
+	.tabs-component-panels input,
+	.tabs-component-panels select {
+		margin-bottom: 10px;
+	}
+</style>
+
+<style scoped>
+	h4 {
+		text-align: left;
+	}
+
+	.flex-row {
+		display: flex;
+	}
+
+	label.button {
+		display: inline-block;
+		text-align: center;
+		flex-grow: 1;
+	}
+
+	input[type="radio"] {
+		display: none;
+	}
+
+	input[type=radio][disabled] + label {
+		cursor: default;
+		opacity: 0.5;
+	}
+</style>
