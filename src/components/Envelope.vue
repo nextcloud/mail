@@ -42,9 +42,8 @@
     <div class="app-content-list-item-details date">
       <Moment :timestamp="data.dateInt * 1000" />
     </div>
-    <div class="app-content-list-item-menu">
-      <Action :actions="actions" />
-    </div>
+    <Action class="app-content-list-item-menu"
+            :actions="actions" />
   </router-link>
 </template>
 
