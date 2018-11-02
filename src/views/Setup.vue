@@ -4,7 +4,9 @@
 			<div id="emptycontent">
 				<div class="icon-mail"></div>
 				<h2>{{ t('mail', 'Connect your mail account') }}</h2>
-				<AccountForm v-bind:settings-page="false"/>
+				<AccountForm :displayName="displayName"
+							 :email="email"
+							 :save="onSave"/>
 			</div>
 		</div>
 	</div>
@@ -17,6 +19,23 @@
 		name: 'Setup',
 		components: {
 			AccountForm,
+		},
+		computed: {
+			displayName () {
+				return $('#user-displayname').text() || ''
+			},
+			email () {
+				return $('#user-email').text() || ''
+			}
+		},
+		methods: {
+			onSave (data) {
+				console.info('saving', data)
+
+				return new Promise((res, rej) => {
+					setTimeout(res, 2000)
+				})
+			}
 		}
 	}
 </script>
