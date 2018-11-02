@@ -54,6 +54,7 @@ module.exports = {
 	},
 	plugins: [new VueLoaderPlugin()],
 	resolve: {
-		extensions: ['*', '.js', '.vue', '.json']
+		extensions: ['*', '.js', '.vue', '.json'],
+		symlinks: false
 	}
 };

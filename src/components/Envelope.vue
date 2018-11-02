@@ -17,7 +17,7 @@
       @click="toggleFlagged"
     />
     <div class="app-content-list-item-icon">
-      <Avatar :label="sender" />
+      <Avatar :displayName="sender" />
     </div>
     <div
       class="app-content-list-item-line-one"
@@ -58,9 +58,8 @@
 </template>
 
 <script>
-import { PopoverMenu, PopoverMenuItem } from 'nextcloud-vue'
+import { Avatar, PopoverMenu, PopoverMenuItem } from 'nextcloud-vue'
 
-import Avatar from './Avatar'
 import Moment from './Moment'
 
 export default {
