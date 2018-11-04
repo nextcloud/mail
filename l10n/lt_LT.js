@@ -97,7 +97,7 @@ OC.L10N.register(
     "Manual configuration" : "Rankinė konfigūracija",
     "IMAP Host" : "IMAP serveris",
     "IMAP security" : "IMAP saugumas",
-    "None" : "Joks",
+    "None" : "Nėra",
     "STARTTLS" : "STARTTLS",
     "IMAP Port" : "IMAP prievadas",
     "IMAP User" : "IMAP naudotojo vardas",
