@@ -97,8 +97,7 @@ script:
   # - sh -c "if [ '$TEST_JS' = 'TRUE' ]; then cat ./coverage/*/lcov.info | ./node_modules/coveralls/bin/coveralls.js; fi"
 
   # Run PHP tests
-  - cd tests
-  - ../vendor/bin/phpunit --configuration phpunit.xml --fail-on-warning
+  - composer run test
   - if [[ "$PHP_COVERAGE" = "TRUE" ]]; then wget https://scrutinizer-ci.com/ocular.phar;
     fi
   - if [[ "$PHP_COVERAGE" = "TRUE" ]]; then php ocular.phar code-coverage:upload --format=php-clover
