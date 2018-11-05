@@ -17,7 +17,8 @@
 			</div>
 			<div class="mail-message-body">
 				<MessageHTMLBody v-if="message.hasHtmlBody"
-								 :url="htmlUrl"/>
+								 :url="htmlUrl"
+								 @loaded="onHtmlBodyLoaded"/>
 				<MessagePlainTextBody v-else
 									  :body="message.body"
 									  :signature="message.signature"/>
@@ -25,7 +26,12 @@
 				<div id="reply-composer"></div>
 				<input type="button" id="forward-button" value="Forward">
 			</div>
-			<Composer :replyTo="replyTo"
+			<Composer v-if="!message.hasHtmlBody || htmlBodyLoaded"
+					  :to="replyRecipient.to"
+					  :cc="replyRecipient.cc"
+					  :subject="replySubject"
+					  :body="replyBody"
+					  :replyTo="replyTo"
 					  :send="sendReply"
 					  :draft="saveReplyDraft"/>
 		</template>
@@ -36,7 +42,13 @@
 	import { generateUrl } from 'nextcloud-server/dist/router'
 
 	import AddressList from './AddressList'
+	import {
+		buildReplyBody,
+		buildRecipients as buildReplyRecipients,
+		buildReplySubject,
+	} from '../ReplyBuilder'
 	import Composer from './Composer'
+	import {htmlToText} from '../util/HtmlHelper'
 	import MessageHTMLBody from './MessageHTMLBody'
 	import MessagePlainTextBody from './MessagePlainTextBody'
 	import Loading from './Loading'
@@ -57,6 +69,10 @@
 			return {
 				loading: true,
 				message: undefined,
+				htmlBodyLoaded: false,
+				replyRecipient: {},
+				replySubject: '',
+				replyBody: '',
 			};
 		},
 		computed: {
@@ -86,6 +102,10 @@
 			fetchMessage () {
 				this.loading = true
 				this.message = undefined
+				this.replyRecipient = {}
+				this.replySubject = ''
+				this.replyBody = ''
+				this.htmlBodyLoaded = false
 
 				const accountId = this.$route.params.accountId
 				const folderId = this.$route.params.folderId
@@ -98,6 +118,14 @@
 						id
 					}).then(message => {
 					this.message = message
+
+					this.replyRecipient = buildReplyRecipients(message, {}) // TODO: own address
+					this.replySubject = buildReplySubject(message.subject)
+
+					if (!message.hasHtmlBody) {
+						this.setReplyText(message.body)
+					}
+
 					this.loading = false
 				}).then(() => {
 					// TODO: add timeout so that message isn't flagged when only viewed
@@ -121,6 +149,17 @@
 							id
 						})
 				}).catch(console.error.bind(this))
+			},
+			setReplyText (text) {
+				this.replyBody = buildReplyBody(
+					htmlToText(text),
+					this.message.from[0],
+					this.message.dateInt,
+				)
+			},
+			onHtmlBodyLoaded (bodyString) {
+				this.setReplyText(bodyString)
+				this.htmlBodyLoaded = true
 			},
 			saveReplyDraft (data) {
 				return saveDraft(data.account, data)

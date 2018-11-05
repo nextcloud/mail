@@ -20,10 +20,10 @@
 		],
 		computed: {
 			title () {
-				return moment.unix(this.timestamp / 1000).format(this.format || 'LLL');
+				return moment.unix(this.timestamp).format(this.format || 'LLL');
 			},
 			formatted () {
-				return moment.unix(this.timestamp / 1000).fromNow();
+				return moment.unix(this.timestamp).fromNow();
 			}
 		}
 	}

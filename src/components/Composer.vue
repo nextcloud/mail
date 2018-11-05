@@ -96,7 +96,7 @@
 	import Vue from 'vue'
 
 	import Loading from './Loading'
-	import ComposerAttachments from "./ComposerAttachments";
+	import ComposerAttachments from './ComposerAttachments'
 
 	Vue.use(Autosize)
 
@@ -129,6 +129,10 @@
 				type: String,
 				default: '',
 			},
+			body: {
+				type: String,
+				default: ''
+			},
 			draft: {
 				type: Function,
 				required: true,
@@ -141,12 +145,12 @@
 		data () {
 			return {
 				hasCC: true,
-				selectedAlias: this.$route.params.accountId,
+				selectedAlias: this.$route.params.accountId, // TODO: fix for unified inbox
 				toVal: this.addressListPlain(this.to),
 				ccVal: this.addressListPlain(this.cc),
 				bccVal: '',
 				subjectVal: this.subject,
-				bodyVal: '',
+				bodyVal: this.body,
 				attachments: [],
 				noReply: false,
 				message: '',
@@ -167,12 +171,17 @@
 				return !_.isUndefined(this.replyTo)
 			}
 		},
-		filters: {
-
-		},
 		methods: {
 			addressListPlain (addresses) {
-				return addresses.join('; ')
+				return addresses
+					.map(addr => {
+						if (addr.label && addr.label !== addr.email) {
+							return `"${addr.label}" <${addr.email}>`
+						} else {
+							return addr.email
+						}
+					})
+					.join('; ')
 			},
 			getMessageData () {
 				return uid => {

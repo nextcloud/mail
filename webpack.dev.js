@@ -8,5 +8,5 @@ module.exports = merge(common, {
     noInfo: true,
     overlay: true
   },
-  devtool: '#cheap-source-map',
+  devtool: 'cheap-source-map',
 })

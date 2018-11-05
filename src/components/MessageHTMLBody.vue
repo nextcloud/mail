@@ -22,9 +22,12 @@
 <script>
 	export default {
 		name: "MessageHTMLBody",
-		props: [
-			'url',
-		],
+		props: {
+			url: {
+				type: String,
+				required: true,
+			},
+		},
 		data () {
 			return {
 				loading: true
@@ -32,7 +35,12 @@
 		},
 		methods: {
 			onMessageFrameLoad () {
-				console.log('todo: resize', this.$refs.iframe)
+				const iframe = this.$refs.iframe
+				const iframeDoc = iframe.contentDocument || iframe.contentWindow.document
+				const iframeBody = iframeDoc.querySelectorAll('body')[0]
+
+				console.log('todo: resize', iframe)
+				this.$emit('loaded', iframeBody.outerHTML)
 				this.loading = false
 			}
 		}
