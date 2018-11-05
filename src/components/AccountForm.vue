@@ -1,7 +1,8 @@
 <template>
 	<div id="account-form">
 		<tabs :options="{ useUrlFragment: false, defaultTabHash: 'auto' }"
-			  @changed="onModeChanged">
+			  @changed="onModeChanged"
+			  cache-lifetime="0">
 			<tab :name="t('mail', 'Auto')"
 				 id="auto"
 				 key="auto">
@@ -252,7 +253,6 @@
 					accountName: '',
 					emailAddress: '',
 					accountName: '',
-					autoDetect: true,
 					imapHost: '',
 					imapPort: 993,
 					imapSslMode: 'ssl',
@@ -320,12 +320,12 @@
 			saveChanges () {
 				if (this.mode === 'auto') {
 					return this.save({
-						mode: this.mode,
+						autoDetect: true,
 						...this.autoConfig,
 					})
 				} else {
 					return this.save({
-						mode: this.mode,
+						autoDetect: false,
 						...this.manualConfig,
 					})
 				}

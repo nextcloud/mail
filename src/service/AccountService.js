@@ -1,23 +1,31 @@
-import { generateUrl } from 'nextcloud-server/dist/router'
+import {generateUrl} from 'nextcloud-server/dist/router'
 import HttpClient from 'nextcloud-axios'
 
-function fixAccountId(original) {
-  return {
-    id: original.accountId,
-    ...original
-  }
+const fixAccountId = original => {
+	return {
+		id: original.accountId,
+		...original
+	}
 }
 
-export function fetchAll() {
-  const url = generateUrl('/apps/mail/api/accounts')
+export const create = data => {
+	const url = generateUrl('/apps/mail/api/accounts')
 
-  return HttpClient.get(url).then(resp => resp.data.map(fixAccountId))
+	return HttpClient.post(url, data)
+		.then(resp => resp.data)
+		.then(fixAccountId)
 }
 
-export function fetch(id) {
-  const url = generateUrl('/apps/mail/api/accounts/{id}', {
-    id
-  })
+export const fetchAll = () => {
+	const url = generateUrl('/apps/mail/api/accounts')
 
-  return HttpClient.get(url).then(resp => fixAccountId(resp.data))
+	return HttpClient.get(url).then(resp => resp.data.map(fixAccountId))
+}
+
+export const fetch = id => {
+	const url = generateUrl('/apps/mail/api/accounts/{id}', {
+		id
+	})
+
+	return HttpClient.get(url).then(resp => fixAccountId(resp.data))
 }

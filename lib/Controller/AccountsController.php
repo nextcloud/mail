@@ -175,11 +175,7 @@ class AccountsController extends Controller {
 			}
 		}
 
-		return new JSONResponse([
-			'data' => [
-				'id' => $account->getId()
-			]
-		]);
+		return new JSONResponse($account);
 	}
 
 	/**
@@ -215,7 +211,7 @@ class AccountsController extends Controller {
 	 * @return JSONResponse
 	 * @throws ClientException
 	 */
-	public function create(string $accountName, string $emailAddress, string $password, string $imapHost = null, int $imapPort = null, string $imapSslMode = null, string $imapUser = null, string $imapPassword = null, string $smtpHost = null, int $smtpPort = null, string $smtpSslMode = null, string $smtpUser = null, string $smtpPassword = null, bool $autoDetect = true): JSONResponse {
+	public function create(string $accountName, string $emailAddress, string $password = null, string $imapHost = null, int $imapPort = null, string $imapSslMode = null, string $imapUser = null, string $imapPassword = null, string $smtpHost = null, int $smtpPort = null, string $smtpSslMode = null, string $smtpUser = null, string $smtpPassword = null, bool $autoDetect = true): JSONResponse {
 		$account = null;
 		$errorMessage = null;
 		try {
@@ -237,11 +233,7 @@ class AccountsController extends Controller {
 			}
 		}
 
-		return new JSONResponse([
-			'data' => [
-				'id' => $account->getId()
-			]
-		], Http::STATUS_CREATED);
+		return new JSONResponse($account, Http::STATUS_CREATED);
 	}
 
 	/**

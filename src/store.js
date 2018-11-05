@@ -3,6 +3,7 @@ import Vue from 'vue'
 import Vuex from 'vuex'
 
 import {
+	create as createAccount,
 	fetch as fetchAccount,
 	fetchAll as fetchAllAccounts
 } from './service/AccountService'
@@ -83,6 +84,14 @@ export const actions = {
 			commit('addAccount', account)
 			return account
 		})
+	},
+	createAccount ({commit}, config) {
+		return createAccount(config)
+			.then(account => {
+				console.debug('account created', account)
+				commit('addAccount', account)
+				return account
+			})
 	},
 	fetchFolders ({commit, getters}, {accountId}) {
 		return fetchAllFolders(accountId).then(folders => {
