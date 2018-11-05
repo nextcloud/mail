@@ -125,6 +125,10 @@
 				type: Array,
 				default: () => [],
 			},
+			bcc: {
+				type: Array,
+				default: () => [],
+			},
 			subject: {
 				type: String,
 				default: '',
@@ -148,7 +152,7 @@
 				selectedAlias: this.$route.params.accountId, // TODO: fix for unified inbox
 				toVal: this.addressListPlain(this.to),
 				ccVal: this.addressListPlain(this.cc),
-				bccVal: '',
+				bccVal: this.addressListPlain(this.bcc),
 				subjectVal: this.subject,
 				bodyVal: this.body,
 				attachments: [],

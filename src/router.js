@@ -18,6 +18,11 @@ export default new Router({
 			component: Home
 		},
 		{
+			path: '/mailto',
+			name: 'mailto',
+			component: Home
+		},
+		{
 			path: '/accounts/:accountId/folders/:folderId',
 			name: 'folder',
 			component: Home
