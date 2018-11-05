@@ -34,6 +34,11 @@
 		"christophwurst/nextcloud": "14.0.3",
 		"christophwurst/nextcloud_testing": "0.5.1"
 	},
+	"scripts": {
+		"test": "phpunit -c tests/phpunit.xml --fail-on-warning",
+		"test:unit": "phpunit -c tests/phpunit.xml tests --fail-on-warning",
+		"test:unit:dev": "phpunit -c tests/phpunit.xml tests --no-coverage --fail-on-warning"
+	},
 	"suggest": {
 		"phan/phan": "^0.10.0"
 	}
