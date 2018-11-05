@@ -198,18 +198,11 @@ class AccountsControllerTest extends TestCase {
 			->method('createNewAutoconfiguredAccount')
 			->with($accountName, $email, $password)
 			->willReturn($account);
-		$account->expects($this->once())
-			->method('getId')
-			->willReturn(135);
 
 		$response = $this->controller->create($accountName, $email, $password, null, null, null, null, null, null, null, null,
 			null, null, true);
 
-		$expectedResponse = new JSONResponse([
-			'data' => [
-				'id' => 135,
-			],
-			], Http::STATUS_CREATED);
+		$expectedResponse = new JSONResponse($account, Http::STATUS_CREATED);
 
 		$this->assertEquals($expectedResponse, $response);
 	}
@@ -237,18 +230,11 @@ class AccountsControllerTest extends TestCase {
 			->method('createNewAutoconfiguredAccount')
 			->with($accountName, $email, $password)
 			->willReturn($account);
-		$account->expects($this->once())
-			->method('getId')
-			->willReturn(135);
 
 		$response = $this->controller->create($accountName, $email, $password, null, null, null, null, null, null, null, null,
 			null, null, true);
 
-		$expectedResponse = new JSONResponse([
-			'data' => [
-				'id' => 135,
-			],
-			], Http::STATUS_CREATED);
+		$expectedResponse = new JSONResponse($account, Http::STATUS_CREATED);
 
 		$this->assertEquals($expectedResponse, $response);
 	}
@@ -287,17 +273,10 @@ class AccountsControllerTest extends TestCase {
 			->method('createNewAccount')
 			->with($accountName, $email, $imapHost, $imapPort, $imapSslMode, $imapUser, $imapPassword, $smtpHost, $smtpPort, $smtpSslMode, $smtpUser, $smtpPassword, $this->userId)
 			->willReturn($account);
-		$account->expects($this->once())
-			->method('getId')
-			->willReturn(135);
 
 		$response = $this->controller->create($accountName, $email, $password, $imapHost, $imapPort, $imapSslMode, $imapUser, $imapPassword, $smtpHost, $smtpPort, $smtpSslMode, $smtpUser, $smtpPassword, $autoDetect);
 
-		$expectedResponse = new JSONResponse([
-			'data' => [
-				'id' => 135,
-			],
-			], Http::STATUS_CREATED);
+		$expectedResponse = new JSONResponse($account, Http::STATUS_CREATED);
 
 		$this->assertEquals($expectedResponse, $response);
 	}
@@ -317,7 +296,6 @@ class AccountsControllerTest extends TestCase {
 		$smtpSslMode = 'none';
 		$smtpUser = 'user@domain.tld';
 		$smtpPassword = 'mypassword';
-		$account = $this->createMock(Account::class);
 		$this->setupService->expects($this->once())
 			->method('createNewAccount')
 			->with($accountName, $email, $imapHost, $imapPort, $imapSslMode, $imapUser, $imapPassword, $smtpHost, $smtpPort, $smtpSslMode, $smtpUser, $smtpPassword, $this->userId)
@@ -348,17 +326,10 @@ class AccountsControllerTest extends TestCase {
 			->method('createNewAccount')
 			->with($accountName, $email, $imapHost, $imapPort, $imapSslMode, $imapUser, $imapPassword, $smtpHost, $smtpPort, $smtpSslMode, $smtpUser, $smtpPassword, $this->userId, $id)
 			->willReturn($account);
-		$account->expects($this->once())
-			->method('getId')
-			->willReturn(135);
 
 		$response = $this->controller->update($id, $accountName, $email, $password, $imapHost, $imapPort, $imapSslMode, $imapUser, $imapPassword, $smtpHost, $smtpPort, $smtpSslMode, $smtpUser, $smtpPassword, $autoDetect);
 
-		$expectedResponse = new JSONResponse([
-			'data' => [
-				'id' => 135,
-			],
-			]);
+		$expectedResponse = new JSONResponse($account);
 
 		$this->assertEquals($expectedResponse, $response);
 	}
@@ -379,7 +350,6 @@ class AccountsControllerTest extends TestCase {
 		$smtpSslMode = 'none';
 		$smtpUser = 'user@domain.tld';
 		$smtpPassword = 'mypassword';
-		$account = $this->createMock(Account::class);
 		$this->setupService->expects($this->once())
 			->method('createNewAccount')
 			->with($accountName, $email, $imapHost, $imapPort, $imapSslMode, $imapUser, $imapPassword, $smtpHost, $smtpPort, $smtpSslMode, $smtpUser, $smtpPassword, $this->userId, $id)
