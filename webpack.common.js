@@ -8,6 +8,9 @@ module.exports = {
 		publicPath: '/js/',
 		filename: 'mail.js'
 	},
+	node: {
+		fs: 'empty'
+	},
 	module: {
 		rules: [
 			{

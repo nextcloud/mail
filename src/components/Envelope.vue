@@ -40,7 +40,7 @@
       {{ data.subject }}
     </div>
     <div class="app-content-list-item-details date">
-      <Moment :timestamp="data.dateInt * 1000" />
+      <Moment :timestamp="data.dateInt" />
     </div>
     <Action class="app-content-list-item-menu"
             :actions="actions" />
