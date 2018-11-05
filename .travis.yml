@@ -104,7 +104,6 @@ script:
     clover.xml; fi
 
   # Test packaging
-  - cd ..
   - if [[ "$PACKAGE" = "TRUE" ]]; then make appstore; fi
 
   # Upload the nightly to ftp server
