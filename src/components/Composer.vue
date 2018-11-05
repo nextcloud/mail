@@ -148,7 +148,9 @@
 				subjectVal: this.subject,
 				bodyVal: '',
 				attachments: [],
-				noReply: false,
+				noReply: this.to.some(to =>
+					to.email.startsWith('noreply@') || to.email.startsWith('no-reply@')
+				),
 				message: '',
 				submitButtonTitle: t('mail', 'Send'),
 				draftsPromise: Promise.resolve(),
