@@ -1,25 +1,22 @@
 import _ from 'lodash'
 import Vue from 'vue'
 import Vuex from 'vuex'
+import {translate as t} from 'nextcloud-server/dist/l10n'
 
 import {
 	create as createAccount,
 	fetch as fetchAccount,
 	fetchAll as fetchAllAccounts
 } from './service/AccountService'
+import {fetchAll as fetchAllFolders,} from './service/FolderService'
 import {
-	fetchAll as fetchAllFolders,
-} from './service/FolderService'
-import {
-	fetchEnvelopes,
-	syncEnvelopes,
-	setEnvelopeFlag,
-	fetchMessage,
 	deleteMessage,
+	fetchEnvelopes,
+	fetchMessage,
+	setEnvelopeFlag,
+	syncEnvelopes,
 } from './service/MessageService'
-import {
-	showNewMessagesNotification
-} from './service/NotificationService'
+import {showNewMessagesNotification} from './service/NotificationService'
 import {parseUid} from './util/EnvelopeUidParser'
 
 Vue.use(Vuex)
@@ -35,6 +32,7 @@ export const mutations = {
 	},
 	addFolder (state, {account, folder}) {
 		let id = account.id + '-' + folder.id
+		folder.accountId = account.id
 		folder.envelopes = []
 		Vue.set(state.folders, id, folder)
 		account.folders.push(id)
@@ -43,17 +41,29 @@ export const mutations = {
 		folder.syncToken = syncToken
 	},
 	addEnvelope (state, {accountId, folder, envelope}) {
-		let uid = accountId + '-' + folder.id + '-' + envelope.id
+		const uid = accountId + '-' + folder.id + '-' + envelope.id
+		const insert = folder => {
+			Vue.set(
+				folder,
+				'envelopes',
+				_.sortedUniq(
+					_.orderBy(
+						folder.envelopes.concat([uid]),
+						id => state.envelopes[id].dateInt,
+						'desc'
+					)
+				)
+			)
+		}
+
 		envelope.accountId = accountId
 		envelope.folderId = folder.id
 		envelope.uid = uid
 		Vue.set(state.envelopes, uid, envelope)
-		// TODO: prepend/append sort magic
-		// TODO: reduce O(n) complexity
-		if (folder.envelopes.indexOf(uid) === -1) {
-			// Prevent duplicates
-			folder.envelopes.push(uid)
-		}
+		insert(folder)
+	},
+	addUnifiedEnvelopes (state, {folder, uids}) {
+		Vue.set(folder, 'envelopes', uids)
 	},
 	flagEnvelope (state, {envelope, flag, value}) {
 		envelope.flags[flag] = value
@@ -81,10 +91,10 @@ export const mutations = {
 }
 
 export const actions = {
-	fetchAccounts ({commit}) {
+	fetchAccounts ({commit, getters}) {
 		return fetchAllAccounts().then(accounts => {
 			accounts.forEach(account => commit('addAccount', account))
-			return accounts
+			return getters.getAccounts()
 		})
 	},
 	fetchAccount ({commit}, id) {
@@ -102,6 +112,10 @@ export const actions = {
 			})
 	},
 	fetchFolders ({commit, getters}, {accountId}) {
+		if (getters.getAccount(accountId).isUnified) {
+			return Promise.resolve(getters.getFolders(accountId))
+		}
+
 		return fetchAllFolders(accountId).then(folders => {
 			let account = getters.getAccount(accountId)
 
@@ -114,7 +128,45 @@ export const actions = {
 			return folders
 		})
 	},
-	fetchEnvelopes ({commit, getters}, {accountId, folderId}) {
+	fetchEnvelopes ({state, commit, getters, dispatch}, {accountId, folderId}) {
+		const folder = getters.getFolder(accountId, folderId)
+		if (folder.isUnified) {
+			// Fetch and combine envelopes of all individual folders
+			//
+			// The last envelope is excluded to efficiently build the next unified
+			// pages (fetch only individual pages that do not have sufficient local
+			// data)
+			//
+			// TODO: handle short/ending streams and show their last element as well
+			return Promise.all(
+				getters.getAccounts()
+					.filter(account => !account.isUnified)
+					.map(account => Promise.all(
+						getters.getFolders(account.id)
+							.filter(f => f.specialRole === folder.specialRole)
+							.map(folder => dispatch('fetchEnvelopes', {
+								accountId: account.id,
+								folderId: folder.id,
+							})))
+					)
+			)
+				.then(res => res.map(envs => envs.slice(0, 19)))
+				.then(res => _.flattenDepth(res, 2))
+				.then(envs => _.orderBy(
+					envs,
+					env => env.dateInt,
+					'desc'
+				))
+				.then(envs => _.slice(envs, 0, 19)) // 19 to handle non-overlapping streams
+				.then(envelopes => {
+					commit('addUnifiedEnvelopes', {
+						folder,
+						uids: envelopes.map(e => e.uid),
+					})
+					return envelopes
+				})
+		}
+
 		return fetchEnvelopes(accountId, folderId).then(envs => {
 			let folder = getters.getFolder(accountId, folderId)
 
@@ -126,8 +178,82 @@ export const actions = {
 			return envs
 		})
 	},
-	fetchNextEnvelopePage ({commit, getters}, {accountId, folderId}) {
+	fetchNextUnifiedEnvelopePage ({state, commit, getters, dispatch}, {accountId, folderId}) {
 		const folder = getters.getFolder(accountId, folderId)
+
+		// We only care about folders of the same type/role
+		const individualFolders = _.flatten(
+			getters.getAccounts()
+				.filter(a => !a.isUnified)
+				.map(a => getters.getFolders(a.id)
+					.filter(f => f.specialRole === folder.specialRole))
+		)
+		// Build a sorted list of all currently known envelopes (except last elem)
+		const knownEnvelopes = _.orderBy(
+			_.flatten(
+				individualFolders.map(f => f.envelopes.slice(0, f.envelopes.length - 1))
+			),
+			id => state.envelopes[id].dateInt,
+			'desc'
+		)
+		// The index of the last element in the current unified mailbox determines
+		// the new offset
+		const tailId = _.last(folder.envelopes)
+		const tailIdx = knownEnvelopes.indexOf(tailId)
+		if (tailIdx === -1) {
+			return Promise.reject(new Error('current envelopes do not contain unified mailbox tail. this should not have happened'))
+		}
+
+		// Select the next page, based on offline data
+		const nextCandidates = knownEnvelopes.slice(tailIdx + 1, tailIdx + 20)
+
+		// Now, let's check if any of the "streams" have reached their ends.
+		// In that case, we attempt to fetch more elements recursively
+		//
+		// In case of an empty next page we always fetch all streams (this might be redundant)
+		//
+		// Their end was reached if the last known (oldest) envelope is an element
+		// of the offline page
+		// TODO: what about streams that ended before? Is it safe to ignore those?
+		const needFetch = individualFolders
+			.filter(f => !_.isEmpty(f.envelopes))
+			.filter(f => {
+				const lastShown = f.envelopes[f.envelopes.length - 2]
+				return nextCandidates.length <= 18 || nextCandidates.indexOf(lastShown) !== -1
+			})
+
+		if (_.isEmpty(needFetch)) {
+			commit('addUnifiedEnvelopes', {
+				folder,
+				uids: _.sortedUniq(
+					_.orderBy(
+						folder.envelopes.concat(nextCandidates),
+						id => state.envelopes[id].dateInt,
+						'desc'
+					)
+				),
+			})
+		} else {
+			return Promise.all(needFetch
+				.map(f => dispatch('fetchNextEnvelopePage', {
+					accountId: f.accountId,
+					folderId: f.id
+				})))
+				.then(() => {
+					return dispatch('fetchNextUnifiedEnvelopePage', {
+						accountId,
+						folderId
+					})
+				})
+		}
+	},
+	fetchNextEnvelopePage ({commit, getters, dispatch}, {accountId, folderId}) {
+		const folder = getters.getFolder(accountId, folderId)
+
+		if (folder.isUnified) {
+			return dispatch('fetchNextUnifiedEnvelopePage', {accountId, folderId})
+		}
+
 		const lastEnvelopeId = folder.envelopes[folder.envelopes.length - 1]
 		if (typeof lastEnvelopeId === 'undefined') {
 			console.error('folder is empty', folder.envelopes)
@@ -138,11 +264,7 @@ export const actions = {
 			return Promise.reject(new Error('Cannot find last envelope. Required for the folder cursor'))
 		}
 
-		console.debug('loading next envelope page, cursor=' + lastEnvelope.dateInt)
-
 		return fetchEnvelopes(accountId, folderId, lastEnvelope.dateInt).then(envs => {
-			console.debug('page loaded, size=' + envs.length)
-
 			envs.forEach(envelope => commit('addEnvelope', {
 				accountId,
 				folder,
@@ -152,13 +274,28 @@ export const actions = {
 			return envs
 		})
 	},
-	syncEnvelopes ({commit, getters}, {accountId, folderId}) {
+	syncEnvelopes ({commit, getters, dispatch}, {accountId, folderId}) {
 		const folder = getters.getFolder(accountId, folderId)
+
+		if (folder.isUnified) {
+			return Promise.all(
+				getters.getAccounts()
+					.filter(account => !account.isUnified)
+					.map(account => Promise.all(
+						getters.getFolders(account.id)
+							.filter(f => f.specialRole === folder.specialRole)
+							.map(folder => dispatch('syncEnvelopes', {
+								accountId: account.id,
+								folderId: folder.id,
+							})))
+					)
+			)
+		}
+
 		const syncToken = folder.syncToken
 		const uids = getters.getEnvelopes(accountId, folderId).map(env => env.id)
 
 		return syncEnvelopes(accountId, folderId, syncToken, uids).then(syncData => {
-			console.debug('got sync response:', syncData)
 			syncData.newMessages.concat(syncData.changedMessages).forEach(envelope => {
 				commit('addEnvelope', {
 					accountId,
@@ -182,22 +319,21 @@ export const actions = {
 		})
 	},
 	syncInboxes ({getters, dispatch}) {
-		console.debug('syncing all inboxes')
-		return Promise.all(getters.getAccounts().map(account => {
-			return Promise.all(getters.getFolders(account.id).map(folder => {
-				if (folder.specialRole !== 'inbox') {
-					return
-				}
+		return Promise.all(getters.getAccounts()
+			.filter(a => !a.isUnified)
+			.map(account => {
+				return Promise.all(getters.getFolders(account.id).map(folder => {
+					if (folder.specialRole !== 'inbox') {
+						return
+					}
 
-				return dispatch('syncEnvelopes', {
-					accountId: account.id,
-					folderId: folder.id,
-				})
+					return dispatch('syncEnvelopes', {
+						accountId: account.id,
+						folderId: folder.id,
+					})
+				}))
 			}))
-		}))
 			.then(results => {
-				console.debug('synced all inboxes successfully')
-
 				const newMessages = _.flatMapDeep(results).filter(_.negate(_.isUndefined))
 				if (newMessages.length > 0) {
 					showNewMessagesNotification(newMessages)
@@ -302,7 +438,10 @@ export const getters = {
 		return state.accounts[id]
 	},
 	getAccounts: (state) => () => {
-		return Object.keys(state.accounts).map(id => state.accounts[id])
+		return _.sortBy(
+			Object.keys(state.accounts).map(id => state.accounts[id]),
+			account => account.id
+		)
 	},
 	getFolder: (state) => (accountId, folderId) => {
 		return state.folders[accountId + '-' + folderId]
@@ -327,8 +466,27 @@ export const getters = {
 export default new Vuex.Store({
 	strict: process.env.NODE_ENV !== 'production',
 	state: {
-		accounts: {},
-		folders: {},
+		accounts: {
+			0: {
+				id: 0,
+				isUnified: true,
+				folders: ['0-inbox'],
+				collapsed: false,
+				emailAddress: '',
+				name: ''
+			},
+		},
+		folders: {
+			'0-inbox': {
+				id: 'inbox',
+				accountId: 0,
+				isUnified: true,
+				specialRole: 'inbox',
+				name: t('mail', 'All inboxes'), // TODO,
+				unread: 0,
+				envelopes: [],
+			}
+		},
 		envelopes: {},
 		messages: {},
 	},

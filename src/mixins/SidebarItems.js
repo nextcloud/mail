@@ -23,9 +23,9 @@ export default {
 
 			let accounts = this.$store.getters.getAccounts();
 			for (let id in accounts) {
-				let account = accounts[id];
+				const account = accounts[id]
 
-				if (account.visible !== false) {
+				if (account.isUnified !== true && account.visible !== false) {
 					items.push({
 						id: 'account' + account.id,
 						key: 'account' + account.id,
@@ -67,12 +67,14 @@ export default {
 						})
 					})
 
-				items.push({
-					id: 'collapse-' + account.id,
-					key: 'collapse-' + account.id,
-					text: account.collapsed ? t('mail', 'Show all folders') : t('mail', 'Collapse folders'),
-					action: () => this.$store.commit('toggleAccountCollapsed', account.id)
-				})
+				if (!account.isUnified) {
+					items.push({
+						id: 'collapse-' + account.id,
+						key: 'collapse-' + account.id,
+						text: account.collapsed ? t('mail', 'Show all folders') : t('mail', 'Collapse folders'),
+						action: () => this.$store.commit('toggleAccountCollapsed', account.id)
+					})
+				}
 			}
 
 			return {
