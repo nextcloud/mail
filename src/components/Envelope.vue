@@ -7,7 +7,7 @@
       params: {
         accountId: this.$route.params.accountId,
         folderId: this.$route.params.folderId,
-        messageId: this.data.id
+        messageUid: this.data.uid
       },
       exact: true}"
   >
@@ -76,22 +76,14 @@ export default {
 					icon: 'icon-mail',
 					text: t('mail', 'Seen'),
 					action: () => {
-						this.$store.dispatch('toggleEnvelopeSeen', {
-							accountId: this.$route.params.accountId,
-							folderId: this.$route.params.folderId,
-							id: this.data.id,
-						})
+						this.$store.dispatch('toggleEnvelopeSeen', this.data)
 					},
 				},
 				{
 					icon: 'icon-delete',
 					text: t('mail', 'Delete'),
 					action: () => {
-						this.$store.dispatch('deleteMessage', {
-							accountId: this.$route.params.accountId,
-							folderId: this.$route.params.folderId,
-							id: this.data.id,
-						})
+						this.$store.dispatch('deleteMessage', this.data)
 					}
 				}
 			]
@@ -102,11 +94,7 @@ export default {
 			// Don't navigate
 			e.preventDefault()
 
-			this.$store.dispatch('toggleEnvelopeFlagged', {
-				accountId: this.$route.params.accountId,
-				folderId: this.$route.params.folderId,
-				id: this.data.id,
-			})
+			this.$store.dispatch('toggleEnvelopeFlagged', this.data)
 		},
 	},
 }

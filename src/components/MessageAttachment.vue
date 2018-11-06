@@ -58,6 +58,8 @@
 	import {pickFileOrDirectory} from 'nextcloud-server/dist/files'
 	import {PopoverMenu} from 'nextcloud-vue'
 
+	import {parseUid} from '../util/EnvelopeUidParser'
+
 	import {
 		downloadAttachment,
 		saveAttachmentToFiles
@@ -117,9 +119,7 @@
 						directory
 					)
 				}
-				const accountId = this.$route.params.accountId
-				const folderId = this.$route.params.folderId
-				const messageId = this.$route.params.messageId
+				const {accountId, folderId, id} = parseUid(this.$route.params.messageUid)
 
 				return pickFileOrDirectory(
 					t('mail', 'Choose a folder to store the attachment in'),
@@ -131,7 +131,7 @@
 						this.savingToCloud = true
 						return dest
 					})
-					.then(saveAttachment(accountId, folderId, messageId, this.id))
+					.then(saveAttachment(accountId, folderId, id, this.id))
 					.then(() => console.info('saved'))
 					.catch(e => console.error('not saved', e))
 					.then(() => this.savingToCloud = false)

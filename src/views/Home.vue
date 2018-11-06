@@ -85,7 +85,7 @@
 						params: {
 							accountId: firstAccount.id,
 							folderId: firstFolder.id,
-							messageId: 'new',
+							messageUid: 'new',
 						},
 						query: {
 							to: this.$route.query.to,

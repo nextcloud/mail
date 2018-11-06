@@ -27,6 +27,7 @@
 				<input type="button" id="forward-button" value="Forward">
 			</div>
 			<Composer v-if="!message.hasHtmlBody || htmlBodyLoaded"
+					  :fromAccount="message.accountId"
 					  :to="replyRecipient.to"
 					  :cc="replyRecipient.cc"
 					  :subject="replySubject"
@@ -78,15 +79,16 @@
 		computed: {
 			htmlUrl () {
 				return generateUrl('/apps/mail/api/accounts/{accountId}/folders/{folderId}/messages/{id}/html', {
-					accountId: this.$route.params.accountId,
-					folderId: this.$route.params.folderId,
-					id: this.$route.params.messageId
+					accountId: this.message.accountId,
+					folderId: this.message.folderId,
+					id: this.message.id
 				})
 			},
 			replyTo () {
 				return {
-					folderId: this.$route.params.folderId,
-					messageId: this.$route.params.messageId,
+					accountId: this.message.accountId,
+					folderId: this.message.folderId,
+					messageId: this.message.id,
 				}
 			}
 		},
@@ -107,16 +109,10 @@
 				this.replyBody = ''
 				this.htmlBodyLoaded = false
 
-				const accountId = this.$route.params.accountId
-				const folderId = this.$route.params.folderId
-				const id = this.$route.params.messageId
+				const messageUid = this.$route.params.messageUid
 
 				this.$store.dispatch(
-					'fetchMessage', {
-						accountId,
-						folderId,
-						id
-					}).then(message => {
+					'fetchMessage', messageUid).then(message => {
 					this.message = message
 
 					this.replyRecipient = buildReplyRecipients(message, {}) // TODO: own address
@@ -127,27 +123,21 @@
 					}
 
 					this.loading = false
-				}).then(() => {
+
 					// TODO: add timeout so that message isn't flagged when only viewed
 					// for a few seconds
-					if (accountId !== this.$route.params.accountId
-						|| folderId !== this.$route.params.folderId
-						|| id !== this.$route.params.messageId) {
+					if (message.uid !== this.$route.params.messageUid) {
 						console.debug('User navigated away, loaded message won\'t be flagged as seen')
 						return
 					}
 
-					if (!this.$store.getters.getEnvelope(accountId, folderId, id).flags.unseen) {
+					const envelope = this.$store.getters.getEnvelope(message.accountId, message.folderId, message.id);
+					if (!envelope.flags.unseen) {
 						// Already seen -> no change necessary
 						return
 					}
 
-					return this.$store.dispatch(
-						'toggleEnvelopeSeen', {
-							accountId,
-							folderId,
-							id
-						})
+					return this.$store.dispatch('toggleEnvelopeSeen', envelope)
 				}).catch(console.error.bind(this))
 			},
 			setReplyText (text) {
