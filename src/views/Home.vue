@@ -54,7 +54,6 @@
 
 				if (this.$route.name === 'home' && accounts.length > 0) {
 					// Show first account
-
 					let firstAccount = accounts[0]
 					// FIXME: this assumes that there's at least one folder
 					let firstFolder = this.$store.getters.getFolders(firstAccount.id)[0]
@@ -66,6 +65,34 @@
 						params: {
 							accountId: firstAccount.id,
 							folderId: firstFolder.id,
+						}
+					})
+				} else if (this.$route.name === 'mailto') {
+					if (accounts.length === 0) {
+						console.error('cannot handle mailto:, no accounts configured')
+						return
+					}
+
+					// Show first account
+					let firstAccount = accounts[0]
+					// FIXME: this assumes that there's at least one folder
+					let firstFolder = this.$store.getters.getFolders(firstAccount.id)[0]
+
+					console.debug('loading composer with first account and folder', firstAccount.id, firstFolder.id)
+
+					this.$router.replace({
+						name: 'message',
+						params: {
+							accountId: firstAccount.id,
+							folderId: firstFolder.id,
+							messageId: 'new',
+						},
+						query: {
+							to: this.$route.query.to,
+							cc: this.$route.query.cc,
+							bcc: this.$route.query.bcc,
+							subject: this.$route.query.subject,
+							body: this.$route.query.body,
 						}
 					})
 				}
