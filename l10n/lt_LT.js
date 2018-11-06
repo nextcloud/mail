@@ -64,6 +64,7 @@ OC.L10N.register(
     "Updating account failed: " : "Paskyros atnaujinimas nepavyko: ",
     "Creating account failed: " : "Paskyros kūrimas nepavyko:",
     "Delete permanently" : "Ištrinti negrįžtamai",
+    "IMAP web client" : "IMAP saityno klientas",
     "Error loading message" : "Klaida, įkeliant laišką",
     "Settings" : "Nustatymai",
     "Forwarding to %s" : "Persiunčiama į %s",
