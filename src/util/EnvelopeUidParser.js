@@ -25,8 +25,8 @@ export const parseUid = str => {
 	const match = reg.exec(str)
 
 	return {
-		accountId: parseInt(match[0], 10),
-		folderId: match[2], // TODO: this should be group 1
+		accountId: parseInt(match[1], 10),
+		folderId: match[2],
 		id: parseInt(match[3], 10),
 	}
 }
