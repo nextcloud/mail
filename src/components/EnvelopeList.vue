@@ -79,18 +79,15 @@
 				}
 			},
 			navigateEnvelope (e) {
-				const envelopes = this.$store.getters.getEnvelopes(
-					this.$route.params.accountId,
-					this.$route.params.folderId,
-				)
-				const currentId = this.$route.params.messageId
+				const envelopes = this.envelopes
+				const currentUid = this.$route.params.messageUid
 
-				if (!currentId) {
+				if (!currentUid) {
 					console.debug('ignoring shortcut: no envelope selected')
 					return
 				}
 
-				const current = envelopes.filter(e => e.id == currentId)
+				const current = envelopes.filter(e => e.uid == currentUid)
 				if (current.length === 0) {
 					console.debug('ignoring shortcut: currently displayed messages is not in current envelope list')
 					return
@@ -109,12 +106,14 @@
 					return
 				}
 
+				// Keep the selected account-folder combination, but navigate to a different message
+				// (it's not a bug that we don't use next.accountId and next.folderId here)
 				this.$router.push({
 					name: 'message',
 					params: {
 						accountId: this.$route.params.accountId,
 						folderId: this.$route.params.folderId,
-						messageId: next.id,
+						messageUid: next.uid,
 					}
 				});
 			}

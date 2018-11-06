@@ -28,7 +28,7 @@ export default new Router({
 			component: Home
 		},
 		{
-			path: '/accounts/:accountId/folders/:folderId/message/:messageId',
+			path: '/accounts/:accountId/folders/:folderId/message/:messageUid',
 			name: 'message',
 			component: Home
 		},

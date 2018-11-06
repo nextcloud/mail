@@ -20,6 +20,7 @@ import {
 import {
 	showNewMessagesNotification
 } from './service/NotificationService'
+import {parseUid} from './util/EnvelopeUidParser'
 
 Vue.use(Vuex)
 
@@ -42,30 +43,37 @@ export const mutations = {
 		folder.syncToken = syncToken
 	},
 	addEnvelope (state, {accountId, folder, envelope}) {
-		let id = accountId + '-' + folder.id + '-' + envelope.id;
-		Vue.set(state.envelopes, id, envelope)
+		let uid = accountId + '-' + folder.id + '-' + envelope.id
+		envelope.accountId = accountId
+		envelope.folderId = folder.id
+		envelope.uid = uid
+		Vue.set(state.envelopes, uid, envelope)
 		// TODO: prepend/append sort magic
 		// TODO: reduce O(n) complexity
-		if (folder.envelopes.indexOf(id) === -1) {
+		if (folder.envelopes.indexOf(uid) === -1) {
 			// Prevent duplicates
-			folder.envelopes.push(id)
+			folder.envelopes.push(uid)
 		}
 	},
-	flagEnvelope (state, {accountId, folderId, id, flag, value}) {
-		state.envelopes[accountId + '-' + folderId + '-' + id].flags[flag] = value
+	flagEnvelope (state, {envelope, flag, value}) {
+		envelope.flags[flag] = value
 	},
 	removeEnvelope (state, {accountId, folder, id}) {
-		const envelopeId = accountId + '-' + folder.id + '-' + id
-		const idx = folder.envelopes.indexOf(envelopeId)
+		const envelopeUid = accountId + '-' + folder.id + '-' + id
+		const idx = folder.envelopes.indexOf(envelopeUid)
 		if (idx < 0) {
 			console.warn('envelope does not exist', accountId, folder.id, id)
 			return
 		}
 		folder.envelopes.splice(idx, 1)
-		Vue.delete(folder.envelopes, envelopeId)
+		Vue.delete(folder.envelopes, envelopeUid)
 	},
 	addMessage (state, {accountId, folderId, message}) {
-		Vue.set(state.messages, accountId + '-' + folderId + '-' + message.id, message)
+		const uid = accountId + '-' + folderId + '-' + message.id
+		message.accountId = accountId
+		message.folderId = folderId
+		message.uid = uid
+		Vue.set(state.messages, uid, message)
 	},
 	removeMessage (state, {accountId, folderId, id}) {
 		Vue.delete(state.messages, accountId + '-' + folderId + '-' + id)
@@ -196,55 +204,61 @@ export const actions = {
 				}
 			})
 	},
-	toggleEnvelopeFlagged ({commit, getters}, {accountId, folderId, id}) {
+	toggleEnvelopeFlagged ({commit, getters}, envelope) {
 		// Change immediately and switch back on error
-		const oldState = getters.getEnvelope(accountId, folderId, id).flags.flagged
+		const oldState = envelope.flags.flagged
 		commit('flagEnvelope', {
-			accountId,
-			folderId,
-			id,
+			envelope,
 			flag: 'flagged',
 			value: !oldState
 		})
 
-		setEnvelopeFlag(accountId, folderId, id, 'flagged', !oldState).catch(e => {
+		setEnvelopeFlag(
+			envelope.accountId,
+			envelope.folderId,
+			envelope.id,
+			'flagged',
+			!oldState
+		).catch(e => {
 			console.error('could not toggle message flagged state', e)
 
 			// Revert change
 			commit('flagEnvelope', {
-				accountId,
-				folderId,
-				id,
+				envelope,
 				flag: 'flagged',
 				value: oldState
 			})
 		})
 	},
-	toggleEnvelopeSeen ({commit, getters}, {accountId, folderId, id}) {
+	toggleEnvelopeSeen ({commit, getters}, envelope) {
 		// Change immediately and switch back on error
-		const oldState = getters.getEnvelope(accountId, folderId, id).flags.unseen
+		const oldState = envelope.flags.unseen
 		commit('flagEnvelope', {
-			accountId,
-			folderId,
-			id,
+			envelope,
 			flag: 'unseen',
 			value: !oldState
 		})
 
-		setEnvelopeFlag(accountId, folderId, id, 'unseen', !oldState).catch(e => {
-			console.error('could not toggle message unseen state', e)
+		setEnvelopeFlag(
+			envelope.accountId,
+			envelope.folderId,
+			envelope.id,
+			'unseen',
+			!oldState
+		)
+			.catch(e => {
+				console.error('could not toggle message unseen state', e)
 
-			// Revert change
-			commit('flagEnvelope', {
-				accountId,
-				folderId,
-				id,
-				flag: 'unseen',
-				value: oldState
+				// Revert change
+				commit('flagEnvelope', {
+					envelope,
+					flag: 'unseen',
+					value: oldState
+				})
 			})
-		})
 	},
-	fetchMessage ({commit}, {accountId, folderId, id}) {
+	fetchMessage ({commit}, uid) {
+		const {accountId, folderId, id} = parseUid(uid)
 		return fetchMessage(accountId, folderId, id).then(message => {
 			commit('addMessage', {
 				accountId,
@@ -254,23 +268,30 @@ export const actions = {
 			return message
 		})
 	},
-	deleteMessage ({getters, commit}, {accountId, folderId, id}) {
-		const folder = getters.getFolder(accountId, folderId)
-		const envelope = getters.getEnvelope(accountId, folderId, id)
-		commit('removeEnvelope', {accountId, folder, id})
+	deleteMessage ({getters, commit}, envelope) {
+		const folder = getters.getFolder(envelope.accountId, envelope.folderId)
+		commit('removeEnvelope', {
+			accountId: envelope.accountId,
+			folder,
+			id: envelope.id,
+		})
 
-		return deleteMessage(accountId, folderId, id)
+		return deleteMessage(envelope.accountId, envelope.folderId, envelope.id)
 			.then(() => {
-				console.log('message removed')
 				commit('removeMessage', {
-					accountId,
+					accountId: envelope.accountId,
 					folder,
-					id,
+					id: envelope.id,
 				})
+				console.log('message removed')
 			})
 			.catch(err => {
 				console.error('could not delete message', err)
-				commit('addEnvelope', {accountId, folderId, envelope})
+				commit('addEnvelope', {
+					accountId: envelope.accountId,
+					folder,
+					envelope,
+				})
 				throw err
 			})
 	}

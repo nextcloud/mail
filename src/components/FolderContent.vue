@@ -39,7 +39,7 @@
 				).length > 0
 			},
 			newMessage () {
-				return this.$route.params.messageId === 'new'
+				return this.$route.params.messageUid === 'new'
 			}
 		},
 		created () {
@@ -68,12 +68,14 @@
 						// Show first message
 						let first = envelopes[0];
 
+						// Keep the selected account-folder combination, but navigate to the message
+						// (it's not a bug that we don't use first.accountId and first.folderId here)
 						this.$router.replace({
 							name: 'message',
 							params: {
 								accountId: this.$route.params.accountId,
 								folderId: this.$route.params.folderId,
-								messageId: first.id,
+								messageUid: first.uid,
 							}
 						})
 					}

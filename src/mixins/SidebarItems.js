@@ -88,7 +88,7 @@ export default {
 							params: {
 								accountId: this.$route.params.accountId,
 								folderId: this.$route.params.folderId,
-								messageId: 'new',
+								messageUid: 'new',
 							}
 						});
 					}

@@ -45,6 +45,7 @@
 
 <script>
 	import MessageAttachment from './MessageAttachment'
+	import {parseUid} from '../util/EnvelopeUidParser'
 	import {saveAttachmentsToFiles} from '../service/AttachmentService'
 
 	export default {
@@ -86,16 +87,14 @@
 						directory
 					)
 				}
-				const accountId = this.$route.params.accountId
-				const folderId = this.$route.params.folderId
-				const messageId = this.$route.params.messageId
+				const {accountId, folderId, id} = parseUid(this.$route.params.messageUid)
 
 				return pickDestination()
 					.then(dest => {
 						this.savingToCloud = true
 						return dest
 					})
-					.then(saveAttachments(accountId, folderId, messageId))
+					.then(saveAttachments(accountId, folderId, id))
 					.then(() => console.info('saved'))
 					.catch(e => console.error('not saved', e))
 					.then(() => this.savingToCloud = false)

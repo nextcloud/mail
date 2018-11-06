@@ -1,6 +1,7 @@
 <template>
 	<div class="app-content-details">
-		<Composer :to="fromUrl.to"
+		<Composer :fromAccount="fromAccount"
+				  :to="fromUrl.to"
 				  :cc="fromUrl.cc"
 				  :bcc="fromUrl.bcc"
 				  :subject="fromUrl.subject"
@@ -22,7 +23,13 @@
 			Composer
 		},
 		computed: {
-			fromUrl() {
+			fromAccount () {
+				// Only preselect an account when we're not in a unified mailbox
+				if (this.$route.params.accountId !== -1) {
+					return this.$route.params.accountId
+				}
+			},
+			fromUrl () {
 				return {
 					to: this.stringToRecipients(this.$route.query.to),
 					cc: this.stringToRecipients(this.$route.query.cc),
