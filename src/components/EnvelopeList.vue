@@ -8,16 +8,17 @@
 					  v-scroll="onScroll"
 					  v-shortkey.once="{next: ['arrowright'], prev: ['arrowleft']}" @shortkey.native="navigateEnvelope">
 		<div id="list-refreshing"
-			 :key="'loading'"
+			 key="loading"
 			 class="icon-loading-small"
 			 :class="{refreshing: refreshing}"/>
-		<EmptyFolder v-if="envelopes.length === 0"/>
+		<EmptyFolder v-if="envelopes.length === 0"
+					 key="empty" />
 		<Envelope v-else
 				  v-for="env in envelopes"
-				  :key="env.id"
+				  :key="env.uid"
 				  :data="env"/>
 		<div id="load-more-mail-messages"
-			 :key="'loadingMore'"
+			 key="loadingMore"
 			 :class="{'icon-loading-small': loadingMore}"/>
 	</transition-group>
 </template>
