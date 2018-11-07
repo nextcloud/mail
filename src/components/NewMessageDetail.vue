@@ -25,8 +25,9 @@
 		computed: {
 			fromAccount () {
 				// Only preselect an account when we're not in a unified mailbox
-				if (this.$route.params.accountId !== -1) {
-					return this.$route.params.accountId
+				if (this.$route.params.accountId !== 0
+					&& this.$route.params.accountId !== '0') {
+					return parseInt(this.$route.params.accountId, 10)
 				}
 			},
 			fromUrl () {
