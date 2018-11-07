@@ -152,7 +152,7 @@
 		data () {
 			return {
 				hasCC: true,
-				selectedAlias: this.fromAccount,
+				selectedAlias: -1, // Fixed in `beforeMount`
 				toVal: this.addressListPlain(this.to),
 				ccVal: this.addressListPlain(this.cc),
 				bccVal: this.addressListPlain(this.bcc),
@@ -172,9 +172,13 @@
 				STATES
 			}
 		},
+		beforeMount () {
+			this.selectedAlias = this.fromAccount || this.aliases[0].id
+		},
 		computed: {
 			aliases () {
 				return this.$store.getters.getAccounts()
+					.filter(a => !a.isUnified)
 			},
 			isReply () {
 				return !_.isUndefined(this.replyTo)
