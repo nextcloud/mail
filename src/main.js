@@ -20,16 +20,20 @@
  *
  */
 
-import Vue from 'vue';
-import App from './App';
-import router from './router';
-import store from './store';
-import {sync} from 'vuex-router-sync';
+import Vue from 'vue'
+import App from './App'
+import router from './router'
+import store from './store'
+import {sync} from 'vuex-router-sync'
 import {translate, translatePlural} from 'nextcloud-server/dist/l10n'
+import {generateFilePath} from 'nextcloud-server/dist/router'
 import VueShortKey from 'vue-shortkey'
 import VTooltip from 'v-tooltip'
 
-sync(store, router);
+__webpack_nonce__ = btoa(OC.requestToken)
+__webpack_public_path__ = generateFilePath('mail', '', 'js/')
+
+sync(store, router)
 
 Vue.mixin({
 	methods: {
@@ -39,11 +43,11 @@ Vue.mixin({
 })
 
 Vue.use(VueShortKey)
-Vue.use(VTooltip);
+Vue.use(VTooltip)
 
 new Vue({
 	el: '#content',
 	router,
 	store,
 	render: h => h(App)
-});
+})

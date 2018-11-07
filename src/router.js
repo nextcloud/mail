@@ -2,9 +2,9 @@ import Vue from 'vue'
 import Router from 'vue-router'
 import {generateUrl} from 'nextcloud-server/dist/router'
 
-import AccountSettings from './views/AccountSettings'
-import Home from './views/Home'
-import Setup from './views/Setup'
+const AccountSettings = () => import('./views/AccountSettings')
+const Home = () => import('./views/Home')
+const Setup = () => import('./views/Setup')
 
 Vue.use(Router)
 
