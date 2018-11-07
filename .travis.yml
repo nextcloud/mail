@@ -101,7 +101,7 @@ script:
   - if [[ "$PHP_COVERAGE" = "TRUE" ]]; then wget https://scrutinizer-ci.com/ocular.phar;
     fi
   - if [[ "$PHP_COVERAGE" = "TRUE" ]]; then php ocular.phar code-coverage:upload --format=php-clover
-    clover.xml; fi
+    tests/clover.xml; fi
 
   # Test packaging
   - if [[ "$PACKAGE" = "TRUE" ]]; then make appstore; fi
