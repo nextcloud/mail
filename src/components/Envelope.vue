@@ -11,6 +11,10 @@
       },
       exact: true}"
   >
+    <div class="mail-message-account-color"
+         v-if="showAccountColor"
+         :style="{ 'background-color': accountColor }">
+    </div>
     <div
       class="app-content-list-item-star icon-starred"
       :data-starred="data.flags.flagged ? 'true':'false'"
@@ -49,8 +53,9 @@
 
 <script>
 import { Action, Avatar, PopoverMenu, PopoverMenuItem } from 'nextcloud-vue'
-
 import Moment from './Moment'
+
+import {calculateAccountColor} from '../util/AccountColor'
 
 export default {
 	name: 'Envelope',
@@ -59,8 +64,22 @@ export default {
 		Avatar,
 		Moment,
 	},
-	props: ['data'],
+	props: {
+		data: {
+			type: Object,
+            required: true,
+        },
+        showAccountColor: {
+			type: Boolean,
+            default: false,
+        }
+	},
 	computed: {
+		accountColor() {
+			return calculateAccountColor(
+				this.$store.getters.getAccount(this.data.accountId).name
+            )
+        },
 		sender() {
 			if (this.data.from.length === 0) {
 				// No sender
@@ -101,6 +120,14 @@ export default {
 </script>
 
 <style scoped>
+.mail-message-account-color {
+	position: absolute;
+	left: 0px;
+	width: 2px;
+	height: 69px;
+	z-index: 1;
+}
+
 .app-content-list-item.unseen {
 	font-weight: bold;
 }
