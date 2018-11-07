@@ -16,7 +16,8 @@
 		<Envelope v-else
 				  v-for="env in envelopes"
 				  :key="env.uid"
-				  :data="env"/>
+				  :data="env"
+				  :show-account-color="folder.isUnified"/>
 		<div id="load-more-mail-messages"
 			 key="loadingMore"
 			 :class="{'icon-loading-small': loadingMore}"/>
@@ -38,6 +39,12 @@
 		computed: {
 			envelopes () {
 				return this.$store.getters.getEnvelopes(
+					this.$route.params.accountId,
+					this.$route.params.folderId
+				)
+			},
+			folder () {
+				return this.$store.getters.getFolder(
 					this.$route.params.accountId,
 					this.$route.params.folderId
 				)
