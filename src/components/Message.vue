@@ -1,6 +1,11 @@
 <template>
 	<div class="app-content-details">
 		<Loading v-if="loading"/>
+		<Error v-else-if="!message"
+			   :error="t('mail', 'Not found')"
+			   :message="t('mail', 'This message does not exist. It may have been deleted.')">
+
+		</Error>
 		<template v-else>
 			<div id="mail-message-header" class="section">
 				<h2 :title="message.subject">{{message.subject}}</h2>
@@ -49,6 +54,7 @@
 		buildReplySubject,
 	} from '../ReplyBuilder'
 	import Composer from './Composer'
+	import Error from './Error'
 	import {htmlToText} from '../util/HtmlHelper'
 	import MessageHTMLBody from './MessageHTMLBody'
 	import MessagePlainTextBody from './MessagePlainTextBody'
@@ -59,10 +65,11 @@
 	export default {
 		name: 'Message',
 		components: {
-			MessageAttachments,
-			Loading,
 			AddressList,
 			Composer,
+			Error,
+			Loading,
+			MessageAttachments,
 			MessageHTMLBody,
 			MessagePlainTextBody,
 		},
@@ -111,34 +118,41 @@
 
 				const messageUid = this.$route.params.messageUid
 
-				this.$store.dispatch(
-					'fetchMessage', messageUid).then(message => {
-					this.message = message
+				this.$store.dispatch('fetchMessage', messageUid)
+					.then(message => {
+						this.message = message
 
-					this.replyRecipient = buildReplyRecipients(message, {}) // TODO: own address
-					this.replySubject = buildReplySubject(message.subject)
+						if (_.isUndefined(this.message)) {
+							console.info('message could not be found', messageUid)
+							this.loading = false
+							return
+						}
 
-					if (!message.hasHtmlBody) {
-						this.setReplyText(message.body)
-					}
+						this.replyRecipient = buildReplyRecipients(message, {}) // TODO: own address
+						this.replySubject = buildReplySubject(message.subject)
 
-					this.loading = false
+						if (!message.hasHtmlBody) {
+							this.setReplyText(message.body)
+						}
 
-					// TODO: add timeout so that message isn't flagged when only viewed
-					// for a few seconds
-					if (message.uid !== this.$route.params.messageUid) {
-						console.debug('User navigated away, loaded message won\'t be flagged as seen')
-						return
-					}
+						this.loading = false
 
-					const envelope = this.$store.getters.getEnvelope(message.accountId, message.folderId, message.id);
-					if (!envelope.flags.unseen) {
-						// Already seen -> no change necessary
-						return
-					}
+						// TODO: add timeout so that message isn't flagged when only viewed
+						// for a few seconds
+						if (message.uid !== this.$route.params.messageUid) {
+							console.debug('User navigated away, loaded message won\'t be flagged as seen')
+							return
+						}
 
-					return this.$store.dispatch('toggleEnvelopeSeen', envelope)
-				}).catch(console.error.bind(this))
+						const envelope = this.$store.getters.getEnvelope(message.accountId, message.folderId, message.id);
+						if (!envelope.flags.unseen) {
+							// Already seen -> no change necessary
+							return
+						}
+
+						return this.$store.dispatch('toggleEnvelopeSeen', envelope)
+					})
+					.catch(console.error)
 			},
 			setReplyText (text) {
 				this.replyBody = buildReplyBody(

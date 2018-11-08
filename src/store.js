@@ -418,14 +418,19 @@ export const actions = {
 	},
 	fetchMessage ({commit}, uid) {
 		const {accountId, folderId, id} = parseUid(uid)
-		return fetchMessage(accountId, folderId, id).then(message => {
-			commit('addMessage', {
-				accountId,
-				folderId,
-				message
+		return fetchMessage(accountId, folderId, id)
+			.then(message => {
+				// Only commit if not undefined (not found)
+				if (message) {
+					commit('addMessage', {
+						accountId,
+						folderId,
+						message
+					})
+				}
+
+				return message
 			})
-			return message
-		})
 	},
 	deleteMessage ({getters, commit}, envelope) {
 		const folder = getters.getFolder(envelope.accountId, envelope.folderId)
