@@ -85,6 +85,20 @@ export const mutations = {
 			return
 		}
 		folder.envelopes.splice(idx, 1)
+
+		const unifiedAccount = state.accounts[UNIFIED_ACCOUNT_ID]
+		unifiedAccount.folders
+			.map(fId => state.folders[fId])
+			.filter(f => f.specialRole === folder.specialRole)
+			.forEach(folder => {
+				const idx = folder.envelopes.indexOf(envelopeUid)
+				if (idx < 0) {
+					console.warn('envelope does not exist in unified mailbox', accountId, folder.id, id)
+					return
+				}
+				folder.envelopes.splice(idx, 1)
+			})
+
 		Vue.delete(folder.envelopes, envelopeUid)
 	},
 	addMessage (state, {accountId, folderId, message}) {
