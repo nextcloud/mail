@@ -21,11 +21,20 @@ import {parseUid} from './util/EnvelopeUidParser'
 
 Vue.use(Vuex)
 
+const UNIFIED_ACCOUNT_ID = 0
+const UNIFIED_INBOX_ID = 'inbox'
+const UNIFIED_INBOX_UID = UNIFIED_ACCOUNT_ID + '-' + UNIFIED_INBOX_ID
+
 export const mutations = {
 	addAccount (state, account) {
 		account.folders = []
 		account.collapsed = true
 		Vue.set(state.accounts, account.id, account)
+		Vue.set(
+			state,
+			'accountList',
+			_.sortBy(state.accountList.concat([account.id]))
+		)
 	},
 	toggleAccountCollapsed (state, accountId) {
 		state.accounts[accountId].collapsed = !state.accounts[accountId].collapsed
@@ -438,10 +447,7 @@ export const getters = {
 		return state.accounts[id]
 	},
 	getAccounts: (state) => () => {
-		return _.sortBy(
-			Object.keys(state.accounts).map(id => state.accounts[id]),
-			account => account.id
-		)
+		return state.accountList.map(id => state.accounts[id])
 	},
 	getFolder: (state) => (accountId, folderId) => {
 		return state.folders[accountId + '-' + folderId]
@@ -467,18 +473,21 @@ export default new Vuex.Store({
 	strict: process.env.NODE_ENV !== 'production',
 	state: {
 		accounts: {
-			0: {
-				id: 0,
+			[UNIFIED_ACCOUNT_ID]: {
+				id: UNIFIED_ACCOUNT_ID,
 				isUnified: true,
-				folders: ['0-inbox'],
+				folders: [UNIFIED_INBOX_UID],
 				collapsed: false,
 				emailAddress: '',
 				name: ''
 			},
 		},
+		accountList: [
+			UNIFIED_ACCOUNT_ID,
+		],
 		folders: {
-			'0-inbox': {
-				id: 'inbox',
+			[UNIFIED_INBOX_UID]: {
+				id: UNIFIED_INBOX_ID,
 				accountId: 0,
 				isUnified: true,
 				specialRole: 'inbox',
