@@ -51,25 +51,34 @@ export const mutations = {
 	},
 	addEnvelope (state, {accountId, folder, envelope}) {
 		const uid = accountId + '-' + folder.id + '-' + envelope.id
-		const insert = folder => {
-			Vue.set(
-				folder,
-				'envelopes',
-				_.sortedUniq(
-					_.orderBy(
-						folder.envelopes.concat([uid]),
-						id => state.envelopes[id].dateInt,
-						'desc'
-					)
-				)
-			)
-		}
-
 		envelope.accountId = accountId
 		envelope.folderId = folder.id
 		envelope.uid = uid
 		Vue.set(state.envelopes, uid, envelope)
-		insert(folder)
+		Vue.set(
+			folder,
+			'envelopes',
+			_.sortedUniq(
+				_.orderBy(
+					folder.envelopes.concat([uid]),
+					id => state.envelopes[id].dateInt,
+					'desc'
+				)
+			)
+		)
+	},
+	addUnifiedEnvelope (state, {folder, envelope}) {
+		Vue.set(
+			folder,
+			'envelopes',
+			_.sortedUniq(
+				_.orderBy(
+					folder.envelopes.concat([envelope.uid]),
+					id => state.envelopes[id].dateInt,
+					'desc'
+				)
+			)
+		)
 	},
 	addUnifiedEnvelopes (state, {folder, uids}) {
 		Vue.set(folder, 'envelopes', uids)
@@ -319,12 +328,20 @@ export const actions = {
 		const uids = getters.getEnvelopes(accountId, folderId).map(env => env.id)
 
 		return syncEnvelopes(accountId, folderId, syncToken, uids).then(syncData => {
+			const unifiedFolder = getters.getUnifiedFolder(folder.specialRole)
+
 			syncData.newMessages.concat(syncData.changedMessages).forEach(envelope => {
 				commit('addEnvelope', {
 					accountId,
 					folder,
 					envelope
 				})
+				if (unifiedFolder) {
+					commit('addUnifiedEnvelope', {
+						folder: unifiedFolder,
+						envelope
+					})
+				}
 			})
 			syncData.vanishedMessages.forEach(id => {
 				commit('removeEnvelope', {
@@ -332,6 +349,7 @@ export const actions = {
 					folder,
 					id
 				})
+				// Already removed from unified inbox
 			})
 			commit('updateFolderSyncToken', {
 				folder,
@@ -473,6 +491,14 @@ export const getters = {
 	},
 	getFolders: (state) => (accountId) => {
 		return state.accounts[accountId].folders.map(folderId => state.folders[folderId])
+	},
+	getUnifiedFolder: (state) => (specialRole) => {
+		return _.head(
+			state.accounts[UNIFIED_ACCOUNT_ID]
+				.folders
+				.map(folderId => state.folders[folderId])
+				.filter(folder => folder.specialRole === specialRole)
+		)
 	},
 	getEnvelope: (state) => (accountId, folderId, id) => {
 		return state.envelopes[accountId + '-' + folderId + '-' + id]
