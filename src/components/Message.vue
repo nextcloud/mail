@@ -3,7 +3,7 @@
 		<Loading v-if="loading"/>
 		<Error v-else-if="!message"
 			   :error="t('mail', 'Not found')"
-			   :message="t('mail', 'This message does not exist. It may have been deleted.')">
+			   :message="errorMessage">
 
 		</Error>
 		<template v-else>
@@ -55,6 +55,7 @@
 	} from '../ReplyBuilder'
 	import Composer from './Composer'
 	import Error from './Error'
+	import {getRandomMessageErrorMessage} from '../util/ErrorMessageFactory'
 	import {htmlToText} from '../util/HtmlHelper'
 	import MessageHTMLBody from './MessageHTMLBody'
 	import MessagePlainTextBody from './MessagePlainTextBody'
@@ -77,6 +78,7 @@
 			return {
 				loading: true,
 				message: undefined,
+				errorMessage: '',
 				htmlBodyLoaded: false,
 				replyRecipient: {},
 				replySubject: '',
@@ -124,6 +126,7 @@
 
 						if (_.isUndefined(this.message)) {
 							console.info('message could not be found', messageUid)
+							this.errorMessage = getRandomMessageErrorMessage()
 							this.loading = false
 							return
 						}
