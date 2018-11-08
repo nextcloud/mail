@@ -326,11 +326,11 @@ export const actions = {
 					envelope
 				})
 			})
-			syncData.vanishedMessages.forEach(envelope => {
+			syncData.vanishedMessages.forEach(id => {
 				commit('removeEnvelope', {
 					accountId,
 					folder,
-					id: envelope.id
+					id
 				})
 			})
 			commit('updateFolderSyncToken', {
