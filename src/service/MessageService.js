@@ -53,7 +53,14 @@ export function fetchMessage(accountId, folderId, id) {
     id
   })
 
-  return HttpClient.get(url).then(resp => resp.data)
+  return HttpClient.get(url)
+    .then(resp => resp.data)
+    .catch(err => {
+      if (err.response.status === 404) {
+        return undefined
+      }
+      throw err
+    })
 }
 
 export function saveDraft(accountId, data) {
