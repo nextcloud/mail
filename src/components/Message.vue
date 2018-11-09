@@ -2,9 +2,9 @@
 	<div class="app-content-details">
 		<Loading v-if="loading"/>
 		<Error v-else-if="!message"
-			   :error="t('mail', 'Not found')"
-			   :message="errorMessage">
-
+			   :error="error && error.message ? error.message : t('mail', 'Not found')"
+			   :message="errorMessage"
+			   :data="error">
 		</Error>
 		<template v-else>
 			<div id="mail-message-header" class="section">
@@ -79,6 +79,7 @@
 				loading: true,
 				message: undefined,
 				errorMessage: '',
+				error: undefined,
 				htmlBodyLoaded: false,
 				replyRecipient: {},
 				replySubject: '',
@@ -113,6 +114,8 @@
 			fetchMessage () {
 				this.loading = true
 				this.message = undefined
+				this.errorMessage = ''
+				this.error = undefined
 				this.replyRecipient = {}
 				this.replySubject = ''
 				this.replyBody = ''
@@ -155,7 +158,14 @@
 
 						return this.$store.dispatch('toggleEnvelopeSeen', envelope)
 					})
-					.catch(console.error)
+					.catch(err => {
+						console.error('could not load message ', messageUid, err)
+						if (err.isError) {
+							this.errorMessage = t('mail', 'Could not load your message')
+							this.error = err
+							this.loading = false
+						}
+					})
 			},
 			setReplyText (text) {
 				this.replyBody = buildReplyBody(

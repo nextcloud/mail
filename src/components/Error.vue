@@ -23,10 +23,18 @@
 	<div class="emptycontent">
 		<h2>{{ error }}</h2>
 		<p>{{ message }}</p>
+		<p v-if="data && data.debug">
+			<a class="button"
+			   :href="reportUrl"
+			   target="_blank"
+			   rel="noopener">{{ t('mail', 'Report this bug') }}</a>
+		</p>
 	</div>
 </template>
 
 <script>
+	import {getReportUrl} from '../util/CrashReport'
+
 	export default {
 		name: 'Error',
 		props: {
@@ -38,10 +46,14 @@
 				type: String,
 				required: true,
 			},
+			data: {
+				type: Object,
+			}
+		},
+		computed: {
+			reportUrl() {
+				return getReportUrl(this.data)
+			}
 		}
 	}
 </script>
-
-<style scoped>
-
-</style>
