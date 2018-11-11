@@ -25,7 +25,7 @@
     "moment": "^2.22.2",
     "nextcloud-axios": "^0.1.2",
     "nextcloud-server": "^0.15.7",
-    "nextcloud-vue": "^0.3.1",
+    "nextcloud-vue": "^0.4.2",
     "remove": "^0.1.5",
     "v-tooltip": "^2.0.0-rc.33",
     "vue": "^2.5.16",
