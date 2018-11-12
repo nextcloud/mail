@@ -19,9 +19,6 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-/**
- * @param {Axio} resp
- */
 const isErrorResponse = resp => {
 	return 'x-mail-error' in resp.headers
 }
