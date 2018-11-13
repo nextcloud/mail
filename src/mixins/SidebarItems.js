@@ -33,32 +33,38 @@ export default {
 					})
 				}
 
+				const folderToEntry = folder => {
+					let icon = 'folder';
+					if (folder.specialRole) {
+						icon = folder.specialRole;
+					}
+
+					return {
+						id: 'account' + account.id + '_' + folder.id,
+						key: 'account' + account.id + '_' + folder.id,
+						text: folder.name,
+						icon: 'icon-' + icon,
+						router: {
+							name: 'folder',
+							params: {
+								accountId: account.id,
+								folderId: folder.id,
+							},
+							exact: false,
+						},
+						utils: {
+							counter: folder.unread,
+						},
+						collapsible: true,
+						opened: folder.opened,
+						children: folder.folders.map(folderToEntry)
+					}
+				}
+
 				this.$store.getters.getFolders(account.id)
 					.filter(folder => !account.collapsed || SHOW_COLLAPSED.indexOf(folder.specialRole) !== -1)
-					.forEach(folder => {
-						let icon = 'folder';
-						if (folder.specialRole) {
-							icon = folder.specialRole;
-						}
-
-						items.push({
-							id: 'account' + account.id + '_' + folder.id,
-							key: 'account' + account.id + '_' + folder.id,
-							text: folder.name,
-							icon: 'icon-' + icon,
-							router: {
-								name: 'folder',
-								params: {
-									accountId: account.id,
-									folderId: folder.id,
-								},
-								exact: false,
-							},
-							utils: {
-								counter: folder.unread,
-							}
-						})
-					})
+					.map(folderToEntry)
+					.forEach(i => items.push(i))
 
 				if (!account.isUnified) {
 					items.push({
