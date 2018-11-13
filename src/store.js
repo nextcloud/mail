@@ -40,10 +40,18 @@ export const mutations = {
 		state.accounts[accountId].collapsed = !state.accounts[accountId].collapsed
 	},
 	addFolder (state, {account, folder}) {
-		let id = account.id + '-' + folder.id
-		folder.accountId = account.id
-		folder.envelopes = []
-		Vue.set(state.folders, id, folder)
+		const addToState = folder => {
+			const id = account.id + '-' + folder.id
+			folder.accountId = account.id
+			folder.envelopes = []
+			Vue.set(state.folders, id, folder)
+			return id
+		}
+
+		// Add all folders (including subfolders ot state, but only toplevel to account
+		const id = addToState(folder)
+		folder.folders.forEach(addToState)
+
 		account.folders.push(id)
 	},
 	updateFolderSyncToken (state, {folder, syncToken}) {
@@ -545,6 +553,7 @@ export default new Vuex.Store({
 				specialRole: 'inbox',
 				name: t('mail', 'All inboxes'), // TODO,
 				unread: 0,
+				folders: [],
 				envelopes: [],
 			}
 		},
