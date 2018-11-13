@@ -1,6 +1,8 @@
 import { generateUrl } from 'nextcloud-server/dist/router'
 import HttpClient from 'nextcloud-axios'
 
+import {parseErrorResponse} from '../http/ErrorResponseParser'
+
 export function fetchEnvelopes(accountId, folderId, cursor) {
   const url = generateUrl('/apps/mail/api/accounts/{accountId}/folders/{folderId}/messages', {
     accountId,
@@ -59,7 +61,7 @@ export function fetchMessage(accountId, folderId, id) {
       if (err.response.status === 404) {
         return undefined
       }
-      throw err
+      return Promise.reject(parseErrorResponse(err.response))
     })
 }
 
