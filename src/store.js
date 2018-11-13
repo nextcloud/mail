@@ -125,6 +125,9 @@ export const mutations = {
 		message.uid = uid
 		Vue.set(state.messages, uid, message)
 	},
+	setMessageBodyText (state, {uid, bodyText}) {
+		Vue.set(state.messages[uid], 'bodyText', bodyText)
+	},
 	removeMessage (state, {accountId, folderId, id}) {
 		Vue.delete(state.messages, accountId + '-' + folderId + '-' + id)
 	}
@@ -527,6 +530,9 @@ export const getters = {
 	getMessage: (state) => (accountId, folderId, id) => {
 		return state.messages[accountId + '-' + folderId + '-' + id]
 	},
+	getMessageByUid: (state) => uid => {
+		return state.messages[uid]
+	}
 }
 
 export default new Vuex.Store({

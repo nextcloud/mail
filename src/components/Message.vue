@@ -29,7 +29,10 @@
 									  :signature="message.signature"/>
 				<MessageAttachments :attachments="message.attachments" />
 				<div id="reply-composer"></div>
-				<input type="button" id="forward-button" value="Forward">
+				<input type="button"
+					   id="forward-button"
+					   value="Forward"
+					   @click="forwardMessage">
 			</div>
 			<Composer v-if="!message.hasHtmlBody || htmlBodyLoaded"
 					  :fromAccount="message.accountId"
@@ -168,8 +171,15 @@
 					})
 			},
 			setReplyText (text) {
+				const bodyText = htmlToText(text)
+
+				this.$store.commit('setMessageBodyText', {
+					uid: this.message.uid,
+					bodyText,
+				})
+
 				this.replyBody = buildReplyBody(
-					htmlToText(text),
+					this.message.bodyText,
 					this.message.from[0],
 					this.message.dateInt,
 				)
@@ -185,6 +195,19 @@
 			sendReply (data) {
 				return sendMessage(data.account, data)
 			},
+			forwardMessage () {
+				this.$router.push({
+					name: 'message',
+					params: {
+						accountId: this.$route.params.accountId,
+						folderId: this.$route.params.folderId,
+						messageUid: 'new',
+					},
+					query: {
+						uid: this.message.uid,
+					}
+				});
+			}
 		}
 	}
 </script>
