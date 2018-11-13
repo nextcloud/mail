@@ -330,7 +330,7 @@ export const actions = {
 		return syncEnvelopes(accountId, folderId, syncToken, uids).then(syncData => {
 			const unifiedFolder = getters.getUnifiedFolder(folder.specialRole)
 
-			syncData.newMessages.concat(syncData.changedMessages).forEach(envelope => {
+			syncData.newMessages.forEach(envelope => {
 				commit('addEnvelope', {
 					accountId,
 					folder,
@@ -342,6 +342,13 @@ export const actions = {
 						envelope
 					})
 				}
+			})
+			syncData.changedMessages.forEach(envelope => {
+				commit('addEnvelope', {
+					accountId,
+					folder,
+					envelope
+				})
 			})
 			syncData.vanishedMessages.forEach(id => {
 				commit('removeEnvelope', {
