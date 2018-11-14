@@ -1,9 +1,9 @@
 <template>
 	<div id="mail-content">
-		<div id="show-images-text">
-			<!--{{ t 'The images have been blocked to protect your privacy.' }}-->
-			<button id="show-images-button">
-				<!--{{ t 'Show images from this	sender' }}-->
+		<div v-if="hasBlockedContent">
+			{{ t('mail', 'The images have been blocked to protect your privacy.') }}
+			<button @click="onShowBlockedContent">
+				{{ t('mail', 'Show images from this	sender') }}
 			</button>
 		</div>
 		<div v-if="loading"
@@ -30,18 +30,34 @@
 		},
 		data () {
 			return {
-				loading: true
+				loading: true,
+				hasBlockedContent: false,
 			}
 		},
 		methods: {
-			onMessageFrameLoad () {
+			getIframeDoc () {
 				const iframe = this.$refs.iframe
-				const iframeDoc = iframe.contentDocument || iframe.contentWindow.document
+				return iframe.contentDocument || iframe.contentWindow.document
+			},
+			onMessageFrameLoad () {
+				const iframeDoc = this.getIframeDoc()
 				const iframeBody = iframeDoc.querySelectorAll('body')[0]
+				this.hasBlockedContent = iframeDoc.querySelectorAll('[data-original-src]').length > 0
+						|| iframeDoc.querySelectorAll('[data-original-style]').length > 0
 
-				console.log('todo: resize', iframe)
 				this.$emit('loaded', iframeBody.outerHTML)
 				this.loading = false
+			},
+			onShowBlockedContent () {
+				const iframeDoc = this.getIframeDoc()
+				iframeDoc.querySelectorAll('[data-original-src]').forEach(
+					node =>	node.setAttribute('src', node.getAttribute('data-original-src'))
+				)
+				iframeDoc.querySelectorAll('[data-original-style]').forEach(node =>
+					node.setAttribute('style', node.getAttribute('data-original-style'))
+				)
+
+				this.hasBlockedContent = false
 			}
 		}
 	};
