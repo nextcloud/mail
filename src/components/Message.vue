@@ -128,6 +128,13 @@
 
 				this.$store.dispatch('fetchMessage', messageUid)
 					.then(message => {
+						// TODO: add timeout so that message isn't flagged when only viewed
+						// for a few seconds
+						if (message.uid !== this.$route.params.messageUid) {
+							console.debug('User navigated away, loaded message won\'t be shown nor flagged as seen')
+							return
+						}
+
 						this.message = message
 
 						if (_.isUndefined(this.message)) {
@@ -145,13 +152,6 @@
 						}
 
 						this.loading = false
-
-						// TODO: add timeout so that message isn't flagged when only viewed
-						// for a few seconds
-						if (message.uid !== this.$route.params.messageUid) {
-							console.debug('User navigated away, loaded message won\'t be flagged as seen')
-							return
-						}
 
 						const envelope = this.$store.getters.getEnvelope(message.accountId, message.folderId, message.id);
 						if (!envelope.flags.unseen) {
