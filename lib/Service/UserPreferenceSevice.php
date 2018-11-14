@@ -24,6 +24,7 @@
 
 namespace OCA\Mail\Service;
 
+use function is_bool;
 use OCA\Mail\Contracts\IUserPreferences;
 use OCP\IConfig;
 
@@ -47,9 +48,11 @@ class UserPreferenceSevice implements IUserPreferences {
 	/**
 	 * @param string $key
 	 * @param mixed $value
+	 * @return mixed new value
 	 */
 	public function setPreference($key, $value) {
 		$this->config->setUserValue($this->UserId, 'mail', $key, $value);
+		return $value;
 	}
 
 	/**

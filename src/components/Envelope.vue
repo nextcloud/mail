@@ -21,7 +21,8 @@
       @click="toggleFlagged"
     />
     <div class="app-content-list-item-icon">
-      <Avatar :displayName="sender" />
+      <Avatar :displayName="sender"
+              :email="senderEmail"/>
     </div>
     <div
       class="app-content-list-item-line-one"
@@ -52,9 +53,10 @@
 </template>
 
 <script>
-import { Action, Avatar, PopoverMenu, PopoverMenuItem } from 'nextcloud-vue'
+import { Action, PopoverMenu, PopoverMenuItem } from 'nextcloud-vue'
 import Moment from './Moment'
 
+import Avatar from './Avatar'
 import {calculateAccountColor} from '../util/AccountColor'
 
 export default {
@@ -89,6 +91,11 @@ export default {
 			const first = this.data.from[0]
 			return first.label || first.email
 		},
+        senderEmail() {
+			if (this.data.from.length > 0) {
+				return this.data.from[0].email
+			}
+        },
 		actions() {
 			return [
 				{
