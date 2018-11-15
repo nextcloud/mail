@@ -71,7 +71,7 @@
 				const pickDestination = () => {
 					return new Promise((res, rej) => {
 						OC.dialogs.filepicker(
-							t('mail', 'CChoose a folder to store the attachments in'),
+							t('mail', 'Choose a folder to store the attachments in'),
 							res,
 							false,
 							'httpd/unix-directory',
