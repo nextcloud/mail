@@ -35,8 +35,7 @@ class ReplyMessageTest extends MessageTest {
 
 		$this->message->setSubject($subject);
 
-		// "Re: " should be added
-		$this->assertSame("Re: $subject", $this->message->getSubject());
+		$this->assertSame('Re: test message', $this->message->getSubject());
 	}
 
 	public function testSubjectReStacking() {
@@ -44,7 +43,6 @@ class ReplyMessageTest extends MessageTest {
 
 		$this->message->setSubject($subject);
 
-		// Subject shouldn't change
 		$this->assertSame($subject, $this->message->getSubject());
 	}
 
@@ -53,80 +51,30 @@ class ReplyMessageTest extends MessageTest {
 
 		$this->message->setSubject($subject);
 
-		// Subject shouldn't change
-		$this->assertSame($subject, $this->message->getSubject());
+		$this->assertSame('Re: test message', $this->message->getSubject());
 	}
 
 	public function testSubjectAwStacking() {
-		$subject = 'Aw: test message';
+		$subject = '回复: test message';
 
 		$this->message->setSubject($subject);
 
-		// Subject shouldn't change
-		$this->assertSame($subject, $this->message->getSubject());
+		$this->assertSame('Re: test message', $this->message->getSubject());
 	}
 
 	public function testSubjectAwCaseStacking() {
-		$subject = 'AW: test message';
+		$subject = 'İlt: test message';
 
 		$this->message->setSubject($subject);
 
-		// Subject shouldn't change
-		$this->assertSame($subject, $this->message->getSubject());
+		$this->assertSame('Re: test message', $this->message->getSubject());
 	}
 
 	public function testSubjectWgStacking() {
-		$subject = 'Wg: test message';
+		$subject = 'ΣΧΕΤ: test message';
 
 		$this->message->setSubject($subject);
 
-		// Subject shouldn't change
-		$this->assertSame($subject, $this->message->getSubject());
+		$this->assertSame('Re: test message', $this->message->getSubject());
 	}
-
-	public function testSubjectWgCaseStacking() {
-		$subject = 'WG: test message';
-
-		$this->message->setSubject($subject);
-
-		// Subject shouldn't change
-		$this->assertSame($subject, $this->message->getSubject());
-	}
-
-	public function testSubjectFwStacking() {
-		$subject = 'Fw: test message';
-
-		$this->message->setSubject($subject);
-
-		// Subject shouldn't change
-		$this->assertSame($subject, $this->message->getSubject());
-	}
-
-	public function testSubjectFwCaseStacking() {
-		$subject = 'FW: test message';
-
-		$this->message->setSubject($subject);
-
-		// Subject shouldn't change
-		$this->assertSame($subject, $this->message->getSubject());
-	}
-
-	public function testSubjectFwdStacking() {
-		$subject = 'Fwd: test message';
-
-		$this->message->setSubject($subject);
-
-		// Subject shouldn't change
-		$this->assertSame($subject, $this->message->getSubject());
-	}
-
-	public function testSubjectFwdCaseStacking() {
-		$subject = 'FWD: test message';
-
-		$this->message->setSubject($subject);
-
-		// Subject shouldn't change
-		$this->assertSame($subject, $this->message->getSubject());
-	}
-
 }
