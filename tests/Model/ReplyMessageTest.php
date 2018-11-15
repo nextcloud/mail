@@ -54,7 +54,7 @@ class ReplyMessageTest extends MessageTest {
 		$this->assertSame('Re: test message', $this->message->getSubject());
 	}
 
-	public function testSubjectAwStacking() {
+	public function testSubjectChineseStacking() {
 		$subject = '回复: test message';
 
 		$this->message->setSubject($subject);
@@ -62,7 +62,7 @@ class ReplyMessageTest extends MessageTest {
 		$this->assertSame('Re: test message', $this->message->getSubject());
 	}
 
-	public function testSubjectAwCaseStacking() {
+	public function testSubjectTurkishCaseStacking() {
 		$subject = 'İlt: test message';
 
 		$this->message->setSubject($subject);
@@ -70,7 +70,7 @@ class ReplyMessageTest extends MessageTest {
 		$this->assertSame('Re: test message', $this->message->getSubject());
 	}
 
-	public function testSubjectWgStacking() {
+	public function testSubjectGreekStacking() {
 		$subject = 'ΣΧΕΤ: test message';
 
 		$this->message->setSubject($subject);
