@@ -45,6 +45,27 @@ Vue.mixin({
 Vue.use(VueShortKey)
 Vue.use(VTooltip)
 
+const getPreferenceFromPage = key => {
+	const elem = document.getElementById(key)
+	if (!elem) {
+		return
+	}
+	return elem.value
+}
+
+store.commit('savePreference', {
+	key: 'debug',
+	value: getPreferenceFromPage('debug-mode')
+})
+store.commit('savePreference', {
+	key: 'version',
+	value: getPreferenceFromPage('config-installed-version')
+})
+store.commit('savePreference', {
+	key: 'external-avatars',
+	value: getPreferenceFromPage('external-avatars')
+})
+
 new Vue({
 	el: '#content',
 	router,

@@ -17,7 +17,9 @@ import {
 	syncEnvelopes,
 } from './service/MessageService'
 import {showNewMessagesNotification} from './service/NotificationService'
+import {savePreference} from './service/PreferenceService'
 import {parseUid} from './util/EnvelopeUidParser'
+import {value} from './util/undefined'
 
 Vue.use(Vuex)
 
@@ -26,6 +28,9 @@ const UNIFIED_INBOX_ID = 'inbox'
 const UNIFIED_INBOX_UID = UNIFIED_ACCOUNT_ID + '-' + UNIFIED_INBOX_ID
 
 export const mutations = {
+	savePreference (state, {key, value}) {
+		Vue.set(state.preferences, key, value)
+	},
 	addAccount (state, account) {
 		account.folders = []
 		account.collapsed = true
@@ -130,10 +135,19 @@ export const mutations = {
 	},
 	removeMessage (state, {accountId, folderId, id}) {
 		Vue.delete(state.messages, accountId + '-' + folderId + '-' + id)
-	}
+	},
 }
 
 export const actions = {
+	savePreference ({commit, getters}, {key, value}) {
+		return savePreference(key, value)
+			.then(({value}) => {
+				commit('savePreference', {
+					key,
+					value,
+				})
+			})
+	},
 	fetchAccounts ({commit, getters}) {
 		return fetchAllAccounts().then(accounts => {
 			accounts.forEach(account => commit('addAccount', account))
@@ -498,6 +512,9 @@ export const actions = {
 }
 
 export const getters = {
+	getPreference: (state) => (key, def) => {
+		return value(state.preferences[key]).or(def)
+	},
 	getAccount: (state) => (id) => {
 		return state.accounts[id]
 	},
@@ -532,12 +549,13 @@ export const getters = {
 	},
 	getMessageByUid: (state) => uid => {
 		return state.messages[uid]
-	}
+	},
 }
 
 export default new Vuex.Store({
 	strict: process.env.NODE_ENV !== 'production',
 	state: {
+		preferences: {},
 		accounts: {
 			[UNIFIED_ACCOUNT_ID]: {
 				id: UNIFIED_ACCOUNT_ID,

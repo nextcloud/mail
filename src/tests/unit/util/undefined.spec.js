@@ -1,11 +1,9 @@
-<?php
+/* global expect */
 
-declare(strict_types=1);
-
-/**
- * @copyright 2017 Christoph Wurst <christoph@winzerhof-wurst.at>
+/*
+ * @copyright 2018 Christoph Wurst <christoph@winzerhof-wurst.at>
  *
- * @author 2017 Christoph Wurst <christoph@winzerhof-wurst.at>
+ * @author 2018 Christoph Wurst <christoph@winzerhof-wurst.at>
  *
  * @license GNU AGPL version 3 or any later version
  *
@@ -21,23 +19,24 @@ declare(strict_types=1);
  *
  * You should have received a copy of the GNU Affero General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
- *
  */
 
-namespace OCA\Mail\Contracts;
+import {value} from '../../../util/undefined'
 
-interface IUserPreferences {
+describe('undefined helper', () => {
+	it('returns other value', () => {
+		const wrapped = undefined
 
-	/**
-	 * @param string $key
-	 * @param mixed $value
-	 * @return mixed new value
-	 */
-	public function setPreference($key, $value);
+		const val = value(wrapped)
 
-	/**
-	 * @param string $key
-	 * @param mixed|null $default
-	 */
-	public function getPreference($key, $default = null);
-}
+		expect(val.or(3)).to.equal(3)
+	})
+
+	it('returns actual value', () => {
+		const wrapped = 4
+
+		const val = value(wrapped)
+
+		expect(val.or(3)).to.equal(4)
+	})
+})

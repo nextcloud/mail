@@ -1,11 +1,7 @@
-<?php
-
-declare(strict_types=1);
-
 /**
- * @copyright 2017 Christoph Wurst <christoph@winzerhof-wurst.at>
+ * @copyright 2018 Christoph Wurst <christoph@winzerhof-wurst.at>
  *
- * @author 2017 Christoph Wurst <christoph@winzerhof-wurst.at>
+ * @author 2018 Christoph Wurst <christoph@winzerhof-wurst.at>
  *
  * @license GNU AGPL version 3 or any later version
  *
@@ -24,20 +20,27 @@ declare(strict_types=1);
  *
  */
 
-namespace OCA\Mail\Contracts;
+import Axios from 'nextcloud-axios'
+import {generateUrl} from 'nextcloud-server/dist/router'
 
-interface IUserPreferences {
+export const savePreference = (key, value) => {
+	const url = generateUrl('/apps/mail/api/preferences/{key}', {
+		key
+	})
+	const data = {
+		key,
+		value,
+	}
 
-	/**
-	 * @param string $key
-	 * @param mixed $value
-	 * @return mixed new value
-	 */
-	public function setPreference($key, $value);
+	return Axios.put(url, data)
+		.then(resp => resp.data)
+}
 
-	/**
-	 * @param string $key
-	 * @param mixed|null $default
-	 */
-	public function getPreference($key, $default = null);
+export const getPreference = key => {
+	const url = generateUrl('/apps/mail/api/preferences/{key}', {
+		key
+	})
+
+	return Axios.get(url)
+		.then(resp => resp.data)
 }
