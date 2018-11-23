@@ -1,6 +1,8 @@
 <template>
-	<span :title="email"
-		  v-tooltip.bottom="label">{{ label }}</span>
+	<router-link :to="newMessageRoute"
+				 exact
+				 v-tooltip.bottom="label">{{ label }}
+	</router-link>
 </template>
 
 <script>
@@ -9,6 +11,20 @@
 		props: [
 			'email',
 			'label',
-		]
+		],
+		computed: {
+			newMessageRoute () {
+				return {
+					name: 'message',
+					params: {
+						accountId: this.$route.params.accountId,
+						folderId: this.$route.params.folderId,
+						messageUid: 'new'
+					}, query: {
+						to: this.email
+					}
+				}
+			}
+		}
 	}
 </script>
