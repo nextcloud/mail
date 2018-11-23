@@ -51,7 +51,7 @@ class MailAccountMapper extends QBMapper {
 			->where($qb->expr()->eq('user_id', $qb->createNamedParameter($userId)))
 			->andWhere($qb->expr()->eq('id', $qb->createNamedParameter($accountId)));
 
-		return $this->findEntity($qb);
+		return $this->findEntity($query);
 	}
 
 	/**
