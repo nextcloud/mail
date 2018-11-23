@@ -1,4 +1,5 @@
 <?php
+declare(strict_types=1);
 
 /**
  * @author Christoph Wurst <christoph@winzerhof-wurst.at>
@@ -43,7 +44,7 @@ class MailAccountMapper extends QBMapper {
 	 *
 	 * @return MailAccount
 	 */
-	public function find($userId, $accountId) {
+	public function find(string $userId, int $accountId): MailAccount {
 		$qb = $this->db->getQueryBuilder();
 		$query = $qb
 			->select('*')
@@ -51,18 +52,17 @@ class MailAccountMapper extends QBMapper {
 			->where($qb->expr()->eq('user_id', $qb->createNamedParameter($userId)))
 			->andWhere($qb->expr()->eq('id', $qb->createNamedParameter($accountId)));
 
-		return $this->findEntity($qb);
+		return $this->findEntity($query);
 	}
 
 	/**
 	 * Finds all Mail Accounts by user id existing for this user
 	 *
 	 * @param string $userId the id of the user that we want to find
-	 * @param $userId
 	 *
 	 * @return MailAccount[]
 	 */
-	public function findByUserId($userId) {
+	public function findByUserId(string $userId): array {
 		$qb = $this->db->getQueryBuilder();
 		$query = $qb
 			->select('*')
@@ -79,7 +79,7 @@ class MailAccountMapper extends QBMapper {
 	 *
 	 * @return MailAccount
 	 */
-	public function save(MailAccount $account) {
+	public function save(MailAccount $account): MailAccount {
 		if (is_null($account->getId())) {
 			return $this->insert($account);
 		} else {
