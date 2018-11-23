@@ -1,4 +1,5 @@
 <?php
+declare(strict_types=1);
 
 /**
  * Mail
@@ -12,10 +13,10 @@
 
 namespace OCA\Mail\Db;
 
-use OCP\AppFramework\Db\Mapper;
+use OCP\AppFramework\Db\QBMapper;
 use OCP\IDBConnection;
 
-class AliasMapper extends Mapper {
+class AliasMapper extends QBMapper {
 
 	/**
 	 * @param IDBConnection $db
@@ -29,9 +30,19 @@ class AliasMapper extends Mapper {
 	 * @param string $currentUserId
 	 * @return Alias
 	 */
-	public function find($aliasId, $currentUserId) {
-		$sql = 'select *PREFIX*mail_aliases.* from *PREFIX*mail_aliases join *PREFIX*mail_accounts on *PREFIX*mail_aliases.account_id = *PREFIX*mail_accounts.id where *PREFIX*mail_accounts.user_id = ? and *PREFIX*mail_aliases.id=?';
-		return $this->findEntity($sql, [$currentUserId, $aliasId]);
+	public function find(int $aliasId, string $currentUserId): Alias {
+		$qb = $this->db->getQueryBuilder();
+		$qb->select('aliases.*')
+			->from($this->getTableName(), 'aliases')
+			->join('aliases', 'mail_accounts', 'accounts', $qb->expr()->eq('aliases.account_id', 'accounts.id'))
+			->where(
+				$qb->expr()->andX(
+					$qb->expr()->eq('accounts.user_id', $qb->createNamedParameter($currentUserId)),
+					$qb->expr()->eq('aliases.id', $qb->createNamedParameter($aliasId))
+				)
+			);
+
+		return $this->findEntity($qb);
 	}
 
 	/**
@@ -39,12 +50,18 @@ class AliasMapper extends Mapper {
 	 * @param string $currentUserId
 	 * @return Alias[]
 	 */
-	public function findAll($accountId, $currentUserId) {
-		$sql = 'select *PREFIX*mail_aliases.* from *PREFIX*mail_aliases join *PREFIX*mail_accounts on *PREFIX*mail_aliases.account_id = *PREFIX*mail_accounts.id where *PREFIX*mail_accounts.user_id = ? AND *PREFIX*mail_aliases.account_id=?';
-		$params = [
-			$currentUserId,
-			$accountId
-		];
-		return $this->findEntities($sql, $params);
+	public function findAll(int $accountId, string $currentUserId): array {
+		$qb = $this->db->getQueryBuilder();
+		$qb->select('aliases.*')
+			->from($this->getTableName(), 'aliases')
+			->join('aliases', 'mail_accounts', 'accounts', $qb->expr()->eq('aliases.account_id', 'accounts.id'))
+			->where(
+				$qb->expr()->andX(
+					$qb->expr()->eq('accounts.user_id', $qb->createNamedParameter($currentUserId)),
+					$qb->expr()->eq('aliases.account_id', $qb->createNamedParameter($accountId))
+				)
+			);
+
+		return $this->findEntities($qb);
 	}
 }
