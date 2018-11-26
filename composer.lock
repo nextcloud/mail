@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "d0cd71dec699e10b1fc411c7bc2626cf",
+    "content-hash": "18c72fe38d76ba0735134fa2ee2863b4",
     "packages": [
         {
             "name": "arthurhoaro/favicon",
@@ -884,22 +884,25 @@
     "packages-dev": [
         {
             "name": "christophwurst/nextcloud",
-            "version": "v14.0.3",
+            "version": "dev-stable15",
             "source": {
                 "type": "git",
                 "url": "https://github.com/ChristophWurst/nextcloud_composer.git",
-                "reference": "6988090d74635889519765b9b74bc9352e566a76"
+                "reference": "b9945622a4e5524f5b6bf6d651f94ff7d4d8f8d9"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/ChristophWurst/nextcloud_composer/zipball/6988090d74635889519765b9b74bc9352e566a76",
-                "reference": "6988090d74635889519765b9b74bc9352e566a76",
+                "url": "https://api.github.com/repos/ChristophWurst/nextcloud_composer/zipball/b9945622a4e5524f5b6bf6d651f94ff7d4d8f8d9",
+                "reference": "b9945622a4e5524f5b6bf6d651f94ff7d4d8f8d9",
                 "shasum": ""
+            },
+            "require": {
+                "php": "^7.0"
             },
             "type": "library",
             "extra": {
                 "branch-alias": {
-                    "dev-master": "14.0.0-dev"
+                    "dev-master": "15.0.0-dev"
                 }
             },
             "notification-url": "https://packagist.org/downloads/",
@@ -913,7 +916,7 @@
                 }
             ],
             "description": "Composer package containing Nextcloud's public API (classes, interfaces)",
-            "time": "2018-10-12T08:37:31+00:00"
+            "time": "2018-11-16T08:23:46+00:00"
         },
         {
             "name": "christophwurst/nextcloud_testing",
@@ -2537,7 +2540,8 @@
         "pear-pear.horde.org/horde_text_flowed": 0,
         "pear-pear.horde.org/horde_util": 0,
         "pear-pear.horde.org/horde_smtp": 0,
-        "kwi/urllinker": 20
+        "kwi/urllinker": 20,
+        "christophwurst/nextcloud": 20
     },
     "prefer-stable": false,
     "prefer-lowest": false,

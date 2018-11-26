@@ -29,6 +29,20 @@ env:
   matrix:
   - DB=sqlite
 
+matrix:
+  include:
+    - php: 7.0
+      env: "DB=mysql CORE_BRANCH=master TEST_JS=TRUE"
+    - php: 7.1
+      env: "DB=mysql CORE_BRANCH=master PACKAGE=TRUE"
+    - php: 7.1
+      env: "DB=pgsql PHP_COVERAGE=TRUE"
+    - php: 7.0
+      env: "DB=pgsql CORE_BRANCH=stable15"
+    - php: 7.2
+      env: "DB=pgsql PHP_COVERAGE=v15.0.0RC1 "
+  fast_finish: true
+
 branches:
   only:
   - master
@@ -109,15 +123,3 @@ script:
 
   # Upload the nightly to ftp server
   - if [[ "$NIGHTLY" = "TRUE" ]]; then curl --ftp-create-dirs -T /home/travis/build/nextcloud/core/apps/mail/build/artifacts/mail.tar.gz -u $FTP_LOGIN:$FTP_PW ftp://upload.portknox.de/htdocs/mail/nextcloud_mail_nightly_build_$(date +%Y-%m-%d).tar.gz; fi
-
-matrix:
-  include:
-    - php: 7.2
-      env: "DB=mysql CORE_BRANCH=stable14"
-    - php: 7.0
-      env: "DB=mysql CORE_BRANCH=master TEST_JS=TRUE"
-    - php: 7.1
-      env: "DB=mysql CORE_BRANCH=master PACKAGE=TRUE"
-    - php: 7.1
-      env: "DB=pgsql PHP_COVERAGE=TRUE"
-  fast_finish: true
