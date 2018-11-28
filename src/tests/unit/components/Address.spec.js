@@ -1,6 +1,10 @@
-import {shallowMount} from '@vue/test-utils'
+import {createLocalVue, shallowMount} from '@vue/test-utils'
+import VTooltip from 'v-tooltip'
 
 import Address from '../../../components/Address.vue'
+
+const localVue = createLocalVue()
+localVue.use(VTooltip)
 
 describe('Address', () => {
 	let $route
@@ -18,6 +22,7 @@ describe('Address', () => {
 			folderId: 'folder1',
 		}
 		const addr = shallowMount(Address, {
+			localVue,
 			mocks: {
 				$route
 			},
@@ -27,7 +32,6 @@ describe('Address', () => {
 			},
 		})
 
-		expect(addr.contains('router-link')).to.be.true
 		expect(addr.vm.newMessageRoute.name).to.equal('message')
 		expect(addr.vm.newMessageRoute.params.accountId).to.equal(1)
 		expect(addr.vm.newMessageRoute.params.folderId).to.equal('folder1')

@@ -22,6 +22,9 @@
 require('jsdom-global')()
 global.expect = require('chai').expect
 
+// Fix for jsdom https://github.com/developit/preact/issues/444
+global.SVGElement = global.Element;
+
 global.OC = {
 	getLocale: () => 'en'
 }
