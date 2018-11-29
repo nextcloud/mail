@@ -19,8 +19,9 @@
 		</p>
 
 		<p class="app-settings-hint">
-			<a id="keyboard-shortcuts"
-			   href="">{{ t('mail','Keyboard shortcuts')}}</a>
+			<router-link :to="{ name: 'keyboardShortcuts' }">
+				{{ t('mail', 'Keyboard shortcuts') }}
+			</router-link>
 		</p>
 	</div>
 </template>
