@@ -13,11 +13,6 @@
 						 :customLabel="formatAliases" />
 		</div>
 		<div class="composer-fields">
-			<a href="#"
-			   class="composer-cc-bcc-toggle transparency"
-			   :class="{ hidden: hasCC }">
-				{{ t ('mail', '+ cc/bcc') }}
-			</a>
 			<label class="to-label transparency" for="to">
 				{{ t('mail', 'to') }}
 			</label>
@@ -31,9 +26,14 @@
 						 label="label"
 						 track-by="email"
 						 :multiple="true" />
+			<a v-if="!showCC"
+			   href="#"
+			   @click.prevent="showCC = true">
+				{{ t ('mail', '+ cc/bcc') }}
+			</a>
 		</div>
 		<div class="composer-fields"
-			 v-if="hasCC">
+			 v-if="showCC">
 			<label for="cc" class="cc-label transparency">
 				{{ t('mail', 'cc') }}
 			</label>
@@ -48,7 +48,7 @@
 						 :multiple="true" />
 		</div>
 		<div class="composer-fields"
-			 v-if="hasCC">
+			 v-if="showCC">
 			<label for="bcc" class="bcc-label transparency">
 				{{ t('mail', 'bcc') }}
 			</label>
@@ -184,7 +184,7 @@
 		},
 		data () {
 			return {
-				hasCC: true,
+				showCC: this.cc.length > 0,
 				selectedAlias: -1, // Fixed in `beforeMount`
 				autocompleteRecipients: this.to.concat(this.cc).concat(this.bcc),
 				newRecipients: [],
@@ -425,12 +425,6 @@
 	label.bcc-label {
 		top: initial;
 		bottom: 0;
-	}
-
-	.composer-cc-bcc-toggle {
-		position: absolute;
-		right: 0;
-		padding: 12px;
 	}
 
 	textarea.reply {
