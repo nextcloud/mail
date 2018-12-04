@@ -1,15 +1,8 @@
 <template>
   <router-link
     class="app-content-list-item"
-    :class="{ unseen: data.flags.unseen }"
-    :to="{
-      name: 'message',
-      params: {
-        accountId: this.$route.params.accountId,
-        folderId: this.$route.params.folderId,
-        messageUid: this.data.uid
-      },
-      exact: true}"
+    :class="{ unseen: data.flags.unseen, draft }"
+    :to="link"
   >
     <div class="mail-message-account-color"
          v-if="showAccountColor"
@@ -42,6 +35,12 @@
         v-if="data.flags.hasAttachments"
         class="icon-public icon-attachment"
       />
+      <span
+              v-if="draft"
+              class="draft"
+      >
+        <em>{{ t('mail', 'Draft: ') }}</em>
+      </span>
       {{ data.subject }}
     </div>
     <div class="app-content-list-item-details date">
@@ -81,6 +80,36 @@ export default {
 			return calculateAccountColor(
 				this.$store.getters.getAccount(this.data.accountId).name
             )
+        },
+        draft() {
+			return this.data.flags.draft
+        },
+        link() {
+			if (this.draft) {
+				// TODO: does not work with a unified drafts folder
+                //       the query should also contain the account and folder
+                //       id for that to work
+				return {
+					name: 'message',
+					params: {
+						accountId: this.$route.params.accountId,
+						folderId: this.$route.params.folderId,
+						messageUid: 'new',
+						draftUid: this.data.uid,
+					},
+					exact: true
+				}
+			} else {
+				return {
+					name: 'message',
+					params: {
+						accountId: this.$route.params.accountId,
+						folderId: this.$route.params.folderId,
+						messageUid: this.data.uid
+					},
+					exact: true
+				}
+            }
         },
 		sender() {
 			if (this.data.from.length === 0) {
@@ -137,6 +166,9 @@ export default {
 
 .app-content-list-item.unseen {
 	font-weight: bold;
+}
+.app-content-list-item.draft .app-content-list-item-line-two {
+	font-style: italic;
 }
 
 .icon-reply,

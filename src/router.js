@@ -29,7 +29,7 @@ export default new Router({
 			component: Home
 		},
 		{
-			path: '/accounts/:accountId/folders/:folderId/message/:messageUid',
+			path: '/accounts/:accountId/folders/:folderId/message/:messageUid/:draftUid?',
 			name: 'message',
 			component: Home
 		},

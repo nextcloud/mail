@@ -130,6 +130,32 @@ export const mutations = {
 		message.uid = uid
 		Vue.set(state.messages, uid, message)
 	},
+	updateDraft (state, {draft, data, newUid}) {
+		// Update draft's UID
+		const oldUid = draft.uid
+		const uid = draft.accountId + '-' + draft.folderId + '-' + newUid
+		console.debug('saving draft as UID ' + uid)
+		draft.uid = uid
+
+		// TODO: strategy to keep the full draft object in sync, not just the visible
+		//       changes
+		draft.subject = data.subject
+
+		// Update ref in folder's envelope list
+		const envs = state.folders[draft.accountId + '-' + draft.folderId].envelopes
+		const idx = envs.indexOf(oldUid)
+		if (idx < 0) {
+			console.warn('not replacing draft ' + oldUid + ' in envelope list because it did not exist')
+		} else {
+			envs[idx] = uid
+		}
+
+		// Move message/envelope objects to new keys
+		Vue.delete(state.envelopes, oldUid)
+		Vue.delete(state.messages, oldUid)
+		Vue.set(state.envelopes, uid, draft)
+		Vue.set(state.messages, uid, draft)
+	},
 	setMessageBodyText (state, {uid, bodyText}) {
 		Vue.set(state.messages[uid], 'bodyText', bodyText)
 	},
@@ -481,6 +507,13 @@ export const actions = {
 
 				return message
 			})
+	},
+	replaceDraft ({getters, commit}, {draft, uid, data}) {
+		commit('updateDraft', {
+			draft,
+			data,
+			newUid: uid,
+		})
 	},
 	deleteMessage ({getters, commit}, envelope) {
 		const folder = getters.getFolder(envelope.accountId, envelope.folderId)

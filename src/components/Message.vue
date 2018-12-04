@@ -87,7 +87,7 @@
 				replyRecipient: {},
 				replySubject: '',
 				replyBody: '',
-			};
+			}
 		},
 		computed: {
 			htmlUrl () {
