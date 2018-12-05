@@ -1,7 +1,10 @@
 ---
-name: 🐛 Bug
+name: "\U0001F41B Bug"
 about: Have you encountered a bug?
-version: 0.1
+title: ''
+labels: bug, 0. to triage
+assignees: ''
+
 ---
 
 ### Expected behavior
