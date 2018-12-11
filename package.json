@@ -30,7 +30,7 @@
     "nextcloud_issuetemplate_builder": "^0.1.0",
     "remove": "^0.1.5",
     "v-tooltip": "^2.0.0-rc.33",
-    "vue": "^2.5.16",
+    "vue": "^2.5.20",
     "vue-autosize": "^1.0.2",
     "vue-click-outside": "^1.0.7",
     "vue-infinite-scroll": "^2.0.2",
