@@ -17,6 +17,8 @@ define(function(require) {
 	var FolderListView = require('views/folderlistview');
 	var AccountTemplate = require('templates/account.html');
 
+	var COLLAPSE_BUTTON_MIN_FOLDERS = 6;
+
 	return Marionette.View.extend({
 
 		template: AccountTemplate,
@@ -27,7 +29,7 @@ define(function(require) {
 				isUnifiedInbox: this.model.get('accountId') === -1,
 				toggleCollapseMessage: toggleCollapseMessage,
 				hasMenu: this.model.get('accountId') !== -1,
-				hasFolders: this.model.folders.length > 0,
+				hasCollapseFoldersButton: this.model.folders.length >= COLLAPSE_BUTTON_MIN_FOLDERS,
 				isDeletable: this.model.get('accountId') !== -2
 			};
 		},
@@ -131,7 +133,7 @@ define(function(require) {
 
 			this.showChildView('folders', new FolderListView({
 				collection: this.model.folders,
-				collapsed: this.collapsed
+				collapsed: this.collapsed && this.model.folders.length >= COLLAPSE_BUTTON_MIN_FOLDERS
 			}));
 		},
 
