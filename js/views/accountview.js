@@ -17,6 +17,8 @@ define(function(require) {
 	var FolderListView = require('views/folderlistview');
 	var AccountTemplate = require('templates/account.html');
 
+	var LOCALSTORAGE_NOT_COLLAPSED_PREFIX = 'nc-mail-not-collapsed-';
+
 	var COLLAPSE_BUTTON_MIN_FOLDERS = 6;
 
 	return Marionette.View.extend({
@@ -70,10 +72,24 @@ define(function(require) {
 		 */
 		initialize: function(options) {
 			this.model = options.model;
+
+			if (window.localStorage &&
+				window.localStorage.getItem(LOCALSTORAGE_NOT_COLLAPSED_PREFIX + this.model.get('accountId'))) {
+				this.collapsed = false;
+			}
 		},
 
 		toggleCollapse: function() {
 			this.collapsed = !this.collapsed;
+
+			if (window.localStorage) {
+				if (this.collapsed) {
+					window.localStorage.removeItem(LOCALSTORAGE_NOT_COLLAPSED_PREFIX + this.model.get('accountId'));
+				} else {
+					window.localStorage.setItem(LOCALSTORAGE_NOT_COLLAPSED_PREFIX + this.model.get('accountId'), true);
+				}
+			}
+
 			this.render();
 		},
 
