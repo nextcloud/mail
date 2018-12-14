@@ -26,6 +26,7 @@ Vue.use(Vuex)
 const UNIFIED_ACCOUNT_ID = 0
 const UNIFIED_INBOX_ID = 'inbox'
 const UNIFIED_INBOX_UID = UNIFIED_ACCOUNT_ID + '-' + UNIFIED_INBOX_ID
+const LOCALSTORAGE_NOT_COLLAPSED_PREFIX = 'nc-mail-not-collapsed-';
 
 export const mutations = {
 	savePreference (state, {key, value}) {
@@ -33,7 +34,8 @@ export const mutations = {
 	},
 	addAccount (state, account) {
 		account.folders = []
-		account.collapsed = true
+		account.collapsed = !(window.localStorage &&
+				window.localStorage.getItem(LOCALSTORAGE_NOT_COLLAPSED_PREFIX + account.id))
 		Vue.set(state.accounts, account.id, account)
 		Vue.set(
 			state,
@@ -43,6 +45,14 @@ export const mutations = {
 	},
 	toggleAccountCollapsed (state, accountId) {
 		state.accounts[accountId].collapsed = !state.accounts[accountId].collapsed
+
+		if (window.localStorage) {
+			if (state.accounts[accountId].collapsed) {
+				window.localStorage.removeItem(LOCALSTORAGE_NOT_COLLAPSED_PREFIX + accountId);
+			} else {
+				window.localStorage.setItem(LOCALSTORAGE_NOT_COLLAPSED_PREFIX + accountId, true);
+			}
+		}
 	},
 	addFolder (state, {account, folder}) {
 		const addToState = folder => {
