@@ -9,6 +9,8 @@ const SHOW_COLLAPSED = Object.seal([
 	'sent'
 ]);
 
+const COLLAPSE_BUTTON_MIN_FOLDERS = 6;
+
 export default {
 	methods: {
 		buildMenu () {
@@ -62,11 +64,11 @@ export default {
 				}
 
 				this.$store.getters.getFolders(account.id)
-					.filter(folder => !account.collapsed || SHOW_COLLAPSED.indexOf(folder.specialRole) !== -1)
+					.filter(folder =>  account.folders.length < COLLAPSE_BUTTON_MIN_FOLDERS || !account.collapsed || SHOW_COLLAPSED.indexOf(folder.specialRole) !== -1)
 					.map(folderToEntry)
 					.forEach(i => items.push(i))
 
-				if (!account.isUnified) {
+				if (!account.isUnified && account.folders.length >= COLLAPSE_BUTTON_MIN_FOLDERS) {
 					items.push({
 						id: 'collapse-' + account.id,
 						key: 'collapse-' + account.id,
