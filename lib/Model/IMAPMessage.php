@@ -540,11 +540,6 @@ class IMAPMessage implements IMessage, JsonSerializable {
 			throw new DoesNotExistException("Mail body for this mail($this->messageId) could not be loaded");
 		}
 
-		$mimeHeaders = $fetch->getMimeHeader($partNo, Horde_Imap_Client_Data_Fetch::HEADER_PARSE);
-		if ($enc = $mimeHeaders->getValue('content-transfer-encoding')) {
-			$p->setTransferEncoding($enc);
-		}
-
 		$data = $fetch->getBodyPart($partNo);
 
 		$p->setContents($data);
