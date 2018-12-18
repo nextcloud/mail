@@ -1,7 +1,10 @@
 ---
-name: 🚀 Feature Request
+name: "\U0001F680 Feature Request"
 about: You have a neat idea that should be implemented?
-version: 0.1
+title: ''
+labels: enhancement, 0. to triage
+assignees: ''
+
 ---
 
 ### Feature Request

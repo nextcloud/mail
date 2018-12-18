@@ -1,7 +1,10 @@
 ---
-name: 🙋 Question
+name: "\U0001F64B Question"
 about: Do you have a question about the app?
-version: 0.1
+title: ''
+labels: question, 0. to triage
+assignees: ''
+
 ---
 
 ### Question
