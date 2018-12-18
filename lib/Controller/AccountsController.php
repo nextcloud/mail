@@ -175,11 +175,7 @@ class AccountsController extends Controller {
 			}
 		}
 
-		return new JSONResponse([
-			'data' => [
-				'id' => $account->getId()
-			]
-		]);
+		return new JSONResponse($account);
 	}
 
 	/**
@@ -215,7 +211,7 @@ class AccountsController extends Controller {
 	 * @return JSONResponse
 	 * @throws ClientException
 	 */
-	public function create(string $accountName, string $emailAddress, string $password, string $imapHost = null, int $imapPort = null, string $imapSslMode = null, string $imapUser = null, string $imapPassword = null, string $smtpHost = null, int $smtpPort = null, string $smtpSslMode = null, string $smtpUser = null, string $smtpPassword = null, bool $autoDetect = true): JSONResponse {
+	public function create(string $accountName, string $emailAddress, string $password = null, string $imapHost = null, int $imapPort = null, string $imapSslMode = null, string $imapUser = null, string $imapPassword = null, string $smtpHost = null, int $smtpPort = null, string $smtpSslMode = null, string $smtpUser = null, string $smtpPassword = null, bool $autoDetect = true): JSONResponse {
 		$account = null;
 		$errorMessage = null;
 		try {
@@ -237,11 +233,7 @@ class AccountsController extends Controller {
 			}
 		}
 
-		return new JSONResponse([
-			'data' => [
-				'id' => $account->getId()
-			]
-		], Http::STATUS_CREATED);
+		return new JSONResponse($account, Http::STATUS_CREATED);
 	}
 
 	/**
@@ -295,18 +287,18 @@ class AccountsController extends Controller {
 	 * @param int $uid
 	 * @return JSONResponse
 	 */
-	public function draft(int $accountId, string $subject = null, string $body, string $to, string $cc, string $bcc, int $uid = null): JSONResponse {
-		if (is_null($uid)) {
+	public function draft(int $accountId, string $subject = null, string $body, string $to, string $cc, string $bcc, int $draftUID = null): JSONResponse {
+		if (is_null($draftUID)) {
 			$this->logger->info("Saving a new draft in account <$accountId>");
 		} else {
-			$this->logger->info("Updating draft <$uid> in account <$accountId>");
+			$this->logger->info("Updating draft <$draftUID> in account <$accountId>");
 		}
 
 		$account = $this->accountService->find($this->currentUserId, $accountId);
 		$messageData = NewMessageData::fromRequest($account, $to, $cc, $bcc, $subject, $body, []);
 
 		try {
-			$newUID = $this->mailTransmission->saveDraft($messageData, $uid);
+			$newUID = $this->mailTransmission->saveDraft($messageData, $draftUID);
 			return new JSONResponse([
 				'uid' => $newUID,
 			]);

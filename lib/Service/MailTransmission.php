@@ -211,7 +211,7 @@ class MailTransmission implements IMailTransmission {
 	 */
 	private function handleAttachments(string $userId, NewMessageData $messageData, IMessage $message) {
 		foreach ($messageData->getAttachments() as $attachment) {
-			if (isset($attachment['isLocal']) && $attachment['isLocal'] === 'true') {
+			if (isset($attachment['isLocal']) && $attachment['isLocal']) {
 				$this->handleLocalAttachment($userId, $attachment, $message);
 			} else {
 				$this->handleCloudAttachment($attachment, $message);

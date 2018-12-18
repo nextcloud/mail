@@ -18,14 +18,6 @@
 	height: 100%;
 }
 
-.mail-account {
-	max-width: 100%;
-	height: 44px;
-	padding-left: 30px;
-	background-color: transparent;
-	border: none;
-}
-
 .folders .ui-droppable-active {
 	background-color: rgb(240, 240, 240);
 }
@@ -162,14 +154,6 @@
 	display: none;
 }
 
-.mail-message-account-color {
-	position: absolute;
-	left: 0px;
-	width: 2px;
-	height: 69px;
-	z-index: 1;
-}
-
 .account-toggle-collapse {
 	opacity: .5;
 }
@@ -220,17 +204,6 @@
 	background: -webkit-radial-gradient(top, ellipse cover, var(--color-main-background),rgba(255,255,255,0) 70%);
 	background: radial-gradient(ellipse at top, var(--color-main-background),rgba(255,255,255,0) 70%);
 }
-#load-more-mail-messages {
-	margin: 10px auto;
-	padding: 10px;
-	margin-top: 50px;
-	margin-bottom: 200px;
-}
-/* TODO: put this in core icons.css as general rule for buttons with icons */
-#load-more-mail-messages.icon-loading-small {
-	padding-left: 32px;
-	background-position: 9px center;
-}
 
 #app-navigation .msg.success {
 	color: #fff;
@@ -263,138 +236,11 @@
 	z-index: 1000;
 }
 
-/* editor */
-#mail-new-message-list {
-	margin-top: 36px;
+.icon-starred[data-starred="false"]:hover {
+	background-image: var(--icon-star-dark-FC0) !important;
 }
-#mail_new_message {
-	width: 100%;
-	padding: 10px;
-	padding-left: 34px;
-	background-position: 10px center;
-	text-align: left;
-	margin: 0;
-}
-
-.message-composer {
-	margin: 0;
-	margin-bottom: 10px; /* line up with the send button */
-	z-index: 100;
-}
-#reply-composer .message-composer {
-	margin: 0;
-}
-.composer-fields {
-	position: relative;
-}
-input.to,
-input.cc,
-input.bcc,
-input.subject,
-textarea.message-body {
-	width: 100%;
-}
-input.to,
-input.cc,
-input.bcc,
-input.subject,
-textarea.message-body {
-	padding: 12px;
-	padding-left: 64px;
-	border: 1px solid #eee;
-	border-right: none;
-	border-left: none;
-	border-radius: 0;
-	margin: 0;
-}
-input.to {
-	padding-right: 60px; /* for cc-bcc-toggle */
-}
-input.cc,
-input.bcc,
-input.subject,
-textarea.message-body {
-	border-top: none;
-}
-input.subject {
-	font-size: 20px;
-	font-weight: 300;
-}
-input.subject,
-textarea.message-body {
-	padding-left: 30px;
-}
-textarea.message-body {
-	min-height: 300px;
-	resize: none;
-	padding-right: 25%;
-}
-
-#content .message-composer .composer-fields .noreply-box {
-	margin-top: 0;
-	background: #fdffc3;
-	padding-left: 64px;
-}
-
-.composer-cc-bcc {
-	position: relative;
-}
-label.to-label,
-label.cc-label,
-label.bcc-label {
-	position: absolute;
-	left: 0;
-	top: 0;
-	padding: 12px;
-	padding-left: 30px;
-	cursor: text;
-	opacity: .5;
-}
-label.bcc-label {
-	top: initial;
-	bottom: 0;
-}
-.composer-cc-bcc-toggle {
-	position: absolute;
-	right: 0;
-	padding: 12px;
-}
-textarea.reply {
-	min-height: 100px;
-}
-input.submit-message,
-.submit-message-wrapper {
-	position: fixed;
-	bottom: 10px;
-	right: 15px;
-}
-.submit-message-wrapper {
-	position: fixed;
-	height: 36px;
-	width: 60px;
-}
-
-.submit-message-wrapper-inside {
-	position: absolute;
-	left: 0;
-	right: 0;
-	top: 0;
-	bottom: 0;
-	z-index: 102;
-}
-#reply-msg {
-	float: left;
-}
-
-/* extra button styles */
-.submit-message.send,
-#mail_new_attachment,
-#forward-button {
-	padding: 12px;
-}
-.new-message-attachments,
-#forward-button {
-	margin-left: 30px;
+.icon-starred[data-starred="false"]:not(:hover) {
+	background-image: var(--icon-star-000) !important;
 }
 
 .unread {
@@ -431,40 +277,10 @@ input.submit-message,
 	-ms-filter: "progid:DXImageTransform.Microsoft.Alpha(Opacity=100)";
 	opacity: 1;
 }
-.app-content-list-item.active .star.icon-star,
-.app-content-list-item:hover .star.icon-star,
-.app-content-list-item:focus .star.icon-star {
-	display: inline-block;
-}
-.app-content-list-item.unseen {
-	font-weight: bold;
-}
-
-.icon-reply,
-.icon-attachment {
-	display: inline-block;
-	vertical-align: text-top;
-}
-.icon-reply {
-	background-image: url('../img/reply.svg');
-	-ms-filter: "progid:DXImageTransform.Microsoft.Alpha(Opacity=50)";
-	opacity: .5;
-}
-.icon-attachment {
-	-ms-filter: "progid:DXImageTransform.Microsoft.Alpha(Opacity=25)";
-	opacity: .25;
-}
 
 .icon-add {
 	display: inline-block;
 	vertical-align: text-top;
-}
-
-
-/* message display */
-
-.mail-message-body {
-	margin-bottom: 100px;
 }
 
 #mail-message-header {
@@ -479,184 +295,9 @@ input.submit-message,
 	background: linear-gradient(var(--color-main-background) , var(--color-main-background)  80%, rgba(255,255,255,0));
 }
 
-#mail-message-header h2,
-#mail-message-header p {
-	white-space: nowrap;
-	overflow: hidden;
-	text-overflow: ellipsis;
-	padding-bottom: 7px;
-	margin-bottom: 0;
-}
-
-#mail-message-close {
-	display: none;
-}
-
-#mail-content,
-.mail-message-attachments {
-	margin: 100px 10px 50px 30px;
-}
-.mail-message-attachments {
-	margin-top: 10px;
-}
-#mail-content iframe {
-	width: 100%;
-}
-
-#show-images-text {
-	display: none;
-}
-
-#mail-content a,
-.mail-signature a {
-	color: #07d;
-	border-bottom: 1px dotted #07d;
-	text-decoration: none;
-	word-wrap: break-word;
-}
-.mail-signature {
-	font-family: monospace;
-	opacity: 0.5;
-	line-height: initial;
-}
-
 .transparency {
 	-ms-filter: "progid:DXImageTransform.Microsoft.Alpha(Opacity=50)";
 	opacity: .5;
-}
-#mail-message-header .transparency {
-	color: rgba(0, 0, 0, .3) !important;
-	opacity: 1;
-}
-#mail-message-header .transparency a {
-	color: rgba(0, 0, 0, .5) !important;
-}
-
-#mail-message {
-	position: absolute;
-	top: 0;
-	right: 0;
-	width: 70%;
-	height: 100%;
-	overflow-y: auto;
-	overflow-x: hidden;
-}
-
-.new-message-attachments li {
-	padding: 10px;
-}
-.new-message-attachments-action {
-	display: inline-block;
-	vertical-align: middle;
-	padding: 22px;
-	opacity: .5;
-}
-
-.mail-message-attachments {
-	margin-bottom: 20px;
-}
-.mail-message-attachments .attachments > div {
-	position: relative;
-	display: inline-block;
-	border: 1px solid var(--color-border);
-	border-radius: 3px;
-	margin: 0 10px 10px 0;
-	padding: 5px;
-}
-.mail-message-attachments .attachments > div:hover,
-.mail-message-attachments .attachments > div span:hover {
-	background-color: var(--color-background-dark);
-	cursor: pointer;
-}
-@media only screen and (max-width: 768px) {
-	.mail-message-attachments .attachments > div {
-		width: calc(100% - 5px);
-	}
-}
-@media only screen and (min-width: 769px) and (max-width: 1400px) {
-	.mail-message-attachments .attachments > div {
-		width: calc(50% - 10px);
-	}
-}
-@media only screen and (min-width: 1401px) {
-	.mail-message-attachments .attachments > div {
-		width: calc(33% - 12px);
-	}
-}
-.mail-message-attachments .mail-attached-image {
-	max-width: 100%;
-	max-height: 120px;
-}
-.attachment-save-to-cloud,
-.attachment-download,
-.attachment-import {
-	position: absolute;
-	height: 32px;
-	width: 32px;
-	margin: 0;
-	bottom: 0;
-	background-color: transparent;
-	border-color: transparent;
-}
-.attachment-save-to-cloud {
-	right: 0;
-}
-.attachment-download {
-	right: 32px;
-	opacity: .6;
-}
-.attachment-import {
-	right: 64px;
-}
-.attachment-import-popover {
-	right: 32px;
-	top: 42px;
-}
-.attachment-import-popover::after {
-	right: 32px;
-}
-/* show icon + text for Download all button
-	as well as when there is only one attachment */
-.attachments-save-to-cloud,
-.attachments-download,
-.mail-message-attachment-single .attachment-save-to-cloud,
-.mail-message-attachment-single .attachment-download {
-	background-position: 9px center;
-	padding-left: 32px;
-}
-.attachment-name {
-	display: inline-block;
-	width: calc(100% - 108px);
-	white-space: nowrap;
-	overflow: hidden;
-	text-overflow: ellipsis;
-	vertical-align: middle;
-}
-/* show attachment size less prominent */
-.attachment-size {
-	-ms-filter: "progid:DXImageTransform.Microsoft.Alpha(Opacity=50)";
-	opacity: .5;
-}
-.attachment-icon {
-	vertical-align: middle;
-}
-
-/* attachment filenames */
-.new-message-attachment-name {
-	display:inline-block;
-}
-/* Colour the filename with a different color during attachment upload */
-.new-message-attachment-name.upload-ongoing {
-	color: #0082c9;
-}
-/* Colour the filename in red if the attachment upload failed */
-.new-message-attachment-name.upload-warning {
-	color: #d2322d;
-}
-/* Red ProgressBar for failed attachment uploads */
-.new-message-attachment-name.upload-warning .ui-progressbar-value {
-	border: 1px solid #e9322d;
-	background: #e9322d;
 }
 
 

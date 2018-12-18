@@ -74,9 +74,11 @@ class PreferencesController extends Controller {
 			throw new ClientException('key or value missing');
 		}
 
-		$this->userPreference->setPreference($key, $value);
+		$newValue = $this->userPreference->setPreference($key, $value);
 
-		return new JSONResponse();
+		return new JSONResponse([
+			'value' => $newValue,
+		]);
 	}
 
 }

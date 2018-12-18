@@ -54,7 +54,7 @@ class GroupsIntegration {
 				$receivers[] = [
 					'id' => $gid,
 					'label' => $g['name'] . " (" . $gs->getNamespace() . ")",
-					'value' => $gid,
+					'email' => $gid,
 					'photo' => null,
 				];
 			}

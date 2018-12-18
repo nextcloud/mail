@@ -29,6 +29,7 @@ namespace OCA\Mail\Http\Middleware;
 use Exception;
 use OCA\Mail\Exception\ClientException;
 use OCA\Mail\Exception\NotImplemented;
+use OCA\Mail\Http\JSONErrorResponse;
 use OCA\Mail\Http\JSONResponse;
 use OCA\Mail\Service\Logger;
 use OCP\AppFramework\Controller;
@@ -75,7 +76,7 @@ class ErrorMiddleware extends Middleware {
 		}
 
 		if ($exception instanceof ClientException) {
-			return new JSONResponse([
+			return new JSONErrorResponse([
 				'message' => $exception->getMessage()
 			], Http::STATUS_BAD_REQUEST);
 		} else if ($exception instanceof DoesNotExistException) {
@@ -85,14 +86,15 @@ class ErrorMiddleware extends Middleware {
 		} else {
 			$this->logger->logException($exception);
 			if ($this->config->getSystemValue('debug', false)) {
-				return new JSONResponse([
+				return new JSONErrorResponse([
+					'debug' => true,
 					'type' => get_class($exception),
 					'message' => $exception->getMessage(),
 					'code' => $exception->getCode(),
 					'trace' => $this->filterTrace($exception->getTrace()),
 				], Http::STATUS_INTERNAL_SERVER_ERROR);
 			} else {
-				return new JSONResponse([], Http::STATUS_INTERNAL_SERVER_ERROR);
+				return new JSONErrorResponse([], Http::STATUS_INTERNAL_SERVER_ERROR);
 			}
 		}
 	}
