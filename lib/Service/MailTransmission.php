@@ -101,7 +101,7 @@ class MailTransmission implements IMailTransmission {
 			$message = $this->buildNewMessage($account, $messageData);
 		}
 
-		$fromEmail = $alias ? $alias->alias : $account->getEMailAddress();
+		$fromEmail = $alias ? $alias->getAlias() : $account->getEMailAddress();
 		$from = new AddressList([
 			new Address($account->getName(), $fromEmail),
 		]);

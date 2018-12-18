@@ -176,8 +176,8 @@ class MailTransmissionTest extends TestCase {
 
 	public function testSendMessageFromAlias() {
 		$account = $this->createMock(Account::class);
-		$alias = $this->createMock(Alias::class);
-		$alias->alias = 'a@d.com';
+		$alias = new Alias();
+		$alias->setAlias('a@d.com');
 		$messageData = NewMessageData::fromRequest($account, 'to@d.com', '', '', 'sub', 'bod');
 		$replyData = new RepliedMessageData($account, null, null);
 		$message = $this->createMock(IMessage::class);
