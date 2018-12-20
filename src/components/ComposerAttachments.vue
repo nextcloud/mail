@@ -90,7 +90,7 @@
 			onLocalAttachmentSelected (e) {
 				this.uploading = true
 
-				return Promise.all(
+				const done = Promise.all(
 					_.map(
 						e.target.files,
 						file => uploadLocalAttachment(file)
@@ -104,6 +104,10 @@
 				)
 					.catch(console.error.bind(this))
 					.then(() => this.uploading = false)
+
+				this.$emit('upload', done)
+
+				return done
 			},
 			onAddCloudAttachment () {
 				return pickFileOrDirectory(t('mail', 'Choose a file to add as attachment'))

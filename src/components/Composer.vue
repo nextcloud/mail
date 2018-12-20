@@ -92,10 +92,13 @@
 				   :value="submitButtonTitle"
 				   v-on:click="onSend">
 		</div>
-		<ComposerAttachments v-model="attachments" />
+		<ComposerAttachments v-model="attachments"
+							 @upload="onAttachmentsUploading"/>
 		<span id="draft-status" v-if="savingDraft === true">{{ t('mail', 'Saving draft …') }}</span>
 		<span id="draft-status" v-else-if="savingDraft === false">{{ t('mail', 'Draft saved') }}</span>
 	</div>
+	<Loading v-else-if="state === STATES.UPLOADING"
+			 :hint="t('mail', 'Uploading attachments …')" />
 	<Loading v-else-if="state === STATES.SENDING"
 			 :hint="t('mail', 'Sending …')" />
 	<div v-else-if="state === STATES.ERROR"
@@ -134,9 +137,10 @@
 
 	const STATES = Object.seal({
 		EDITING: 0,
-		SENDING: 1,
-		ERROR: 2,
-		FINISHED: 3,
+		UPLOADING: 1,
+		SENDING: 2,
+		ERROR: 3,
+		FINISHED: 4,
 	})
 
 	export default {
@@ -197,6 +201,7 @@
 				message: '',
 				submitButtonTitle: t('mail', 'Send'),
 				draftsPromise: Promise.resolve(),
+				attachmentsPromise: Promise.resolve(),
 				savingDraft: undefined,
 				saveDraftDebounced: _.debounce(this.saveDraft, 700),
 				state: STATES.EDITING,
@@ -282,6 +287,12 @@
 						)
 					})
 			},
+			onAttachmentsUploading (uploaded) {
+				this.attachmentsPromise = this.attachmentsPromise
+					.then(() => uploaded)
+					.catch(console.error.bind(this))
+					.then(() => console.debug('attachments uploaded'))
+			},
 			onNewToAddr (addr) {
 				this.onNewAddr(addr, this.selectTo)
 			},
@@ -300,9 +311,11 @@
 				list.push(res)
 			},
 			onSend () {
-				this.state = STATES.SENDING
+				this.state = STATES.UPLOADING
 
-				return this.draftsPromise
+				return this.attachmentsPromise
+					.then(() => this.state = STATES.SENDING)
+					.then(() => this.draftsPromise)
 					.then(this.getMessageData())
 					.then(data => this.send(data))
 					.then(() => console.info('message sent'))
