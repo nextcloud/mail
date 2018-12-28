@@ -31,8 +31,8 @@ use Horde_Mail_Exception;
 use Horde_Mail_Transport_Smtphorde;
 use OCA\Mail\Account;
 use OCA\Mail\Db\MailAccount;
-use OCA\Mail\Service\Logger;
 use OCA\Mail\SMTP\SmtpClientFactory;
+use OCP\ILogger;
 use OCP\Security\ICrypto;
 
 class IspDbConfigurationDetector {
@@ -40,7 +40,7 @@ class IspDbConfigurationDetector {
 	/** @var string */
 	private $UserId;
 
-	/** @var Logger */
+	/** @var ILogger */
 	private $logger;
 
 	/** @var string */
@@ -59,14 +59,14 @@ class IspDbConfigurationDetector {
 	private $smtpClientFactory;
 
 	/**
-	 * @param Logger $logger
+	 * @param ILogger $logger
 	 * @param string $UserId
 	 * @param ICrypto $crypto
 	 * @param IspDb $ispDb
 	 * @param ImapConnector $imapConnector
 	 * @param SmtpClientFactory $smtpClientFactory
 	 */
-	public function __construct(Logger $logger,
+	public function __construct(ILogger $logger,
 								string $UserId = null,
 								ICrypto $crypto,
 								IspDb $ispDb,

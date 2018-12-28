@@ -23,7 +23,7 @@ namespace OCA\Mail\Tests\Service\Autoconfig;
 
 use ChristophWurst\Nextcloud\Testing\TestCase;
 use OCA\Mail\Service\AutoConfig\MxRecord;
-use OCA\Mail\Service\Logger;
+use OCP\ILogger;
 
 class MxRecordTest extends TestCase {
 
@@ -33,7 +33,7 @@ class MxRecordTest extends TestCase {
 	protected function setUp() {
 		parent::setUp();
 
-		$logger = $this->createMock(Logger::class);
+		$logger = $this->createMock(ILogger::class);
 		$this->record = new MxRecord($logger);
 	}
 

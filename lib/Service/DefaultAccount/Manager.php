@@ -24,10 +24,10 @@ declare(strict_types=1);
 namespace OCA\Mail\Service\DefaultAccount;
 
 use OCA\Mail\Db\MailAccount;
-use OCA\Mail\Service\Logger;
 use OCP\Authentication\Exceptions\CredentialsUnavailableException;
 use OCP\Authentication\LoginCredentials\IStore;
 use OCP\IConfig;
+use OCP\ILogger;
 use OCP\IUserSession;
 use OCP\Security\ICrypto;
 
@@ -41,7 +41,7 @@ class Manager {
 	/** @var IStore */
 	private $credentialStore;
 
-	/** @var Logger */
+	/** @var ILogger */
 	private $logger;
 
 	/** @var IUserSession */
@@ -53,13 +53,13 @@ class Manager {
 	/**
 	 * @param IConfig $config
 	 * @param IStore $credentialStore
-	 * @param Logger $logger
+	 * @param ILogger $logger
 	 * @param IUserSession $userSession
 	 * @param ICrypto $crypto
 	 */
 	public function __construct(IConfig $config,
 								IStore $credentialStore,
-								Logger $logger,
+								ILogger $logger,
 								IUserSession $userSession,
 								ICrypto $crypto) {
 		$this->config = $config;

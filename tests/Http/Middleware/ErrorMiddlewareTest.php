@@ -29,12 +29,12 @@ use OCA\Mail\Exception\NotImplemented;
 use OCA\Mail\Exception\ServiceException;
 use OCA\Mail\Http\JSONResponse;
 use OCA\Mail\Http\Middleware\ErrorMiddleware;
-use OCA\Mail\Service\Logger;
 use OCP\AppFramework\Controller;
 use OCP\AppFramework\Db\DoesNotExistException;
 use OCP\AppFramework\Http;
 use OCP\AppFramework\Utility\IControllerMethodReflector;
 use OCP\IConfig;
+use OCP\ILogger;
 use PHPUnit_Framework_MockObject_MockObject;
 
 class ErrorMiddlewareTest extends TestCase {
@@ -42,7 +42,7 @@ class ErrorMiddlewareTest extends TestCase {
 	/** @var IConfig|PHPUnit_Framework_MockObject_MockObject */
 	private $config;
 
-	/** @var Logger|PHPUnit_Framework_MockObject_MockObject */
+	/** @var ILogger|PHPUnit_Framework_MockObject_MockObject */
 	private $logger;
 
 	/** @var IControllerMethodReflector|PHPUnit_Framework_MockObject_MockObject */
@@ -55,7 +55,7 @@ class ErrorMiddlewareTest extends TestCase {
 		parent::setUp();
 
 		$this->config = $this->createMock(IConfig::class);
-		$this->logger = $this->createMock(Logger::class);
+		$this->logger = $this->createMock(ILogger::class);
 		$this->reflector = $this->createMock(IControllerMethodReflector::class);
 
 		$this->middleware = new ErrorMiddleware($this->config, $this->logger,

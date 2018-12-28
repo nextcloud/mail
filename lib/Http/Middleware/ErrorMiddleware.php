@@ -31,7 +31,6 @@ use OCA\Mail\Exception\ClientException;
 use OCA\Mail\Exception\NotImplemented;
 use OCA\Mail\Http\JSONErrorResponse;
 use OCA\Mail\Http\JSONResponse;
-use OCA\Mail\Service\Logger;
 use OCP\AppFramework\Controller;
 use OCP\AppFramework\Db\DoesNotExistException;
 use OCP\AppFramework\Http;
@@ -39,10 +38,11 @@ use OCP\AppFramework\Http\Response;
 use OCP\AppFramework\Middleware;
 use OCP\AppFramework\Utility\IControllerMethodReflector;
 use OCP\IConfig;
+use OCP\ILogger;
 
 class ErrorMiddleware extends Middleware {
 
-	/** @var Logger */
+	/** @var ILogger */
 	private $logger;
 
 	/** @var IConfig */
@@ -53,10 +53,10 @@ class ErrorMiddleware extends Middleware {
 
 	/**
 	 * @param IConfig $config
-	 * @param Logger $logger
+	 * @param ILogger $logger
 	 * @param IControllerMethodReflector $reflector
 	 */
-	public function __construct(IConfig $config, Logger $logger,
+	public function __construct(IConfig $config, ILogger $logger,
 								IControllerMethodReflector $reflector) {
 		$this->config = $config;
 		$this->logger = $logger;

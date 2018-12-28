@@ -35,12 +35,12 @@ use OCA\Mail\Model\RepliedMessageData;
 use OCA\Mail\Service\AccountService;
 use OCA\Mail\Service\AliasesService;
 use OCA\Mail\Service\AutoConfig\AutoConfig;
-use OCA\Mail\Service\Logger;
 use OCA\Mail\Service\SetupService;
 use OCA\Mail\Service\GroupsIntegration;
 use OCP\AppFramework\Db\DoesNotExistException;
 use OCP\AppFramework\Http;
 use OCP\IL10N;
+use OCP\ILogger;
 use OCP\IRequest;
 use OCP\Security\ICrypto;
 use PHPUnit_Framework_MockObject_MockObject;
@@ -65,7 +65,7 @@ class AccountsControllerTest extends TestCase {
 	/** @var AutoConfig|PHPUnit_Framework_MockObject_MockObject */
 	private $autoConfig;
 
-	/** @var Logger|PHPUnit_Framework_MockObject_MockObject */
+	/** @var ILogger|PHPUnit_Framework_MockObject_MockObject */
 	private $logger;
 
 	/** @var IL10N|PHPUnit_Framework_MockObject_MockObject */
@@ -104,7 +104,7 @@ class AccountsControllerTest extends TestCase {
 			->will($this->returnArgument(0));
 		$this->userId = 'manfred';
 		$this->autoConfig = $this->createMock(AutoConfig::class);
-		$this->logger = $this->createMock(Logger::class);
+		$this->logger = $this->createMock(ILogger::class);
 		$this->l10n = $this->createMock(IL10N::class);
 		$this->crypto = $this->createMock(ICrypto::class);
 		$this->aliasesService = $this->createMock(AliasesService::class);
