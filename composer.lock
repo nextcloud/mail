@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "9bc65325a27f92cd23798c06685c78cc",
+    "content-hash": "aef7b18eb10428120a83fb840054f603",
     "packages": [
         {
             "name": "arthurhoaro/favicon",
@@ -239,7 +239,7 @@
             ],
             "description": "Autolink URLs in text or html",
             "homepage": "http://www.kwi.dk/projects/php/UrlLinker/",
-            "time": "2014-12-28T22:05:00+00:00"
+            "time": "2014-12-28T23:05:00+00:00"
         },
         {
             "name": "pear-pear.horde.org/Horde_Crypt_Blowfish",
@@ -761,10 +761,10 @@
         },
         {
             "name": "pear-pear.horde.org/Horde_Text_Filter",
-            "version": "2.3.5",
+            "version": "2.3.6",
             "dist": {
                 "type": "file",
-                "url": "https://pear.horde.org/get/Horde_Text_Filter-2.3.5.tgz",
+                "url": "https://pear.horde.org/get/Horde_Text_Filter-2.3.6.tgz",
                 "reference": null,
                 "shasum": null
             },
@@ -775,7 +775,7 @@
                 "php": "<8.0.0.0"
             },
             "replace": {
-                "pear-horde/horde_text_filter": "== 2.3.5.0"
+                "pear-horde/horde_text_filter": "== 2.3.6.0"
             },
             "type": "pear-library",
             "autoload": {
@@ -888,12 +888,12 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/ChristophWurst/nextcloud_composer.git",
-                "reference": "1df7ee55551dcfb4bd01c442f72caa24c3a1c37d"
+                "reference": "014198311112df2893b834a4a079348e6e4b850d"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/ChristophWurst/nextcloud_composer/zipball/1df7ee55551dcfb4bd01c442f72caa24c3a1c37d",
-                "reference": "1df7ee55551dcfb4bd01c442f72caa24c3a1c37d",
+                "url": "https://api.github.com/repos/ChristophWurst/nextcloud_composer/zipball/014198311112df2893b834a4a079348e6e4b850d",
+                "reference": "014198311112df2893b834a4a079348e6e4b850d",
                 "shasum": ""
             },
             "require": {
@@ -916,7 +916,7 @@
                 }
             ],
             "description": "Composer package containing Nextcloud's public API (classes, interfaces)",
-            "time": "2018-12-05T11:28:48+00:00"
+            "time": "2018-12-12T09:46:24+00:00"
         },
         {
             "name": "christophwurst/nextcloud_testing",
@@ -2536,7 +2536,6 @@
         "pear-pear.horde.org/horde_nls": 0,
         "pear-pear.horde.org/horde_stream": 0,
         "pear-pear.horde.org/horde_support": 0,
-        "pear-pear.horde.org/horde_text_filter": 0,
         "pear-pear.horde.org/horde_text_flowed": 0,
         "pear-pear.horde.org/horde_util": 0,
         "pear-pear.horde.org/horde_smtp": 0,
