@@ -25,6 +25,7 @@ use ChristophWurst\Nextcloud\Testing\TestCase;
 use OCA\Mail\AddressList;
 use OCA\Mail\Db\CollectedAddress;
 use OCA\Mail\Service\AutoCompletion\AddressCollector;
+use OCP\ILogger;
 
 class AddressCollectorTest extends TestCase {
 
@@ -39,7 +40,7 @@ class AddressCollectorTest extends TestCase {
 		$this->mapper = $this->getMockBuilder('\OCA\Mail\Db\CollectedAddressMapper')
 			->disableOriginalConstructor()
 			->getMock();
-		$this->logger = $this->getMockBuilder('\OCA\Mail\Service\Logger')
+		$this->logger = $this->getMockBuilder(ILogger::class)
 			->disableOriginalConstructor()
 			->getMock();
 

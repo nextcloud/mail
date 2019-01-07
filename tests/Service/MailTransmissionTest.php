@@ -36,10 +36,10 @@ use OCA\Mail\Model\NewMessageData;
 use OCA\Mail\Model\RepliedMessageData;
 use OCA\Mail\Model\ReplyMessage;
 use OCA\Mail\Service\AutoCompletion\AddressCollector;
-use OCA\Mail\Service\Logger;
 use OCA\Mail\Service\MailTransmission;
 use OCA\Mail\SMTP\SmtpClientFactory;
 use OCP\Files\Folder;
+use OCP\ILogger;
 use PHPUnit_Framework_MockObject_MockObject;
 
 class MailTransmissionTest extends TestCase {
@@ -56,7 +56,7 @@ class MailTransmissionTest extends TestCase {
 	/** @var SmtpClientFactory|PHPUnit_Framework_MockObject_MockObject */
 	private $clientFactory;
 
-	/** @var Logger|PHPUnit_Framework_MockObject_MockObject */
+	/** @var ILogger|PHPUnit_Framework_MockObject_MockObject */
 	private $logger;
 
 	/** @var MailTransmission */
@@ -69,7 +69,7 @@ class MailTransmissionTest extends TestCase {
 		$this->userFolder = $this->createMock(Folder::class);
 		$this->attachmentService = $this->createMock(IAttachmentService::class);
 		$this->clientFactory = $this->createMock(SmtpClientFactory::class);
-		$this->logger = $this->createMock(Logger::class);
+		$this->logger = $this->createMock(ILogger::class);
 
 		$this->transmission = new MailTransmission($this->addressCollector, $this->userFolder, $this->attachmentService, $this->clientFactory, $this->logger);
 	}

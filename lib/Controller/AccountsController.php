@@ -40,11 +40,11 @@ use OCA\Mail\Model\RepliedMessageData;
 use OCA\Mail\Service\AccountService;
 use OCA\Mail\Service\AliasesService;
 use OCA\Mail\Service\GroupsIntegration;
-use OCA\Mail\Service\Logger;
 use OCA\Mail\Service\SetupService;
 use OCP\AppFramework\Controller;
 use OCP\AppFramework\Http;
 use OCP\IL10N;
+use OCP\ILogger;
 use OCP\IRequest;
 use OCP\Security\ICrypto;
 
@@ -59,7 +59,7 @@ class AccountsController extends Controller {
 	/** @var string */
 	private $currentUserId;
 
-	/** @var Logger */
+	/** @var ILogger */
 	private $logger;
 
 	/** @var IL10N */
@@ -82,12 +82,12 @@ class AccountsController extends Controller {
 	 * @param IRequest $request
 	 * @param AccountService $accountService
 	 * @param $UserId
-	 * @param Logger $logger
+	 * @param ILogger $logger
 	 * @param IL10N $l10n
 	 * @param ICrypto $crypto
 	 * @param SetupService $setup
 	 */
-	public function __construct($appName, IRequest $request, AccountService $accountService, GroupsIntegration $groupsIntegration, $UserId, Logger $logger, IL10N $l10n, ICrypto $crypto, AliasesService $aliasesService, IMailTransmission $mailTransmission, SetupService $setup
+	public function __construct($appName, IRequest $request, AccountService $accountService, GroupsIntegration $groupsIntegration, $UserId, ILogger $logger, IL10N $l10n, ICrypto $crypto, AliasesService $aliasesService, IMailTransmission $mailTransmission, SetupService $setup
 	) {
 		parent::__construct($appName, $request);
 		$this->accountService = $accountService;
