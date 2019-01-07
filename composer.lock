@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "aef7b18eb10428120a83fb840054f603",
+    "content-hash": "ffbea7d2b619c487fb0da29638cbaf97",
     "packages": [
         {
             "name": "arthurhoaro/favicon",
@@ -58,16 +58,16 @@
         },
         {
             "name": "cerdic/css-tidy",
-            "version": "v1.5.7",
+            "version": "v1.6.5",
             "source": {
                 "type": "git",
                 "url": "https://github.com/Cerdic/CSSTidy.git",
-                "reference": "226bca013a4dc58b6471931564c6b568af2b66e9"
+                "reference": "32cecbbc7e847c66a45450c92d80c4779ccca484"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/Cerdic/CSSTidy/zipball/226bca013a4dc58b6471931564c6b568af2b66e9",
-                "reference": "226bca013a4dc58b6471931564c6b568af2b66e9",
+                "url": "https://api.github.com/repos/Cerdic/CSSTidy/zipball/32cecbbc7e847c66a45450c92d80c4779ccca484",
+                "reference": "32cecbbc7e847c66a45450c92d80c4779ccca484",
                 "shasum": ""
             },
             "require-dev": {
@@ -93,7 +93,7 @@
                 }
             ],
             "description": "CSSTidy is a CSS minifier",
-            "time": "2018-04-10T09:09:46+00:00"
+            "time": "2018-12-18T21:54:05+00:00"
         },
         {
             "name": "ezyang/htmlpurifier",
@@ -2536,6 +2536,7 @@
         "pear-pear.horde.org/horde_nls": 0,
         "pear-pear.horde.org/horde_stream": 0,
         "pear-pear.horde.org/horde_support": 0,
+        "pear-pear.horde.org/horde_text_filter": 0,
         "pear-pear.horde.org/horde_text_flowed": 0,
         "pear-pear.horde.org/horde_util": 0,
         "pear-pear.horde.org/horde_smtp": 0,
