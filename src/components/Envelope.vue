@@ -138,6 +138,7 @@ export default {
 					icon: 'icon-delete',
 					text: t('mail', 'Delete'),
 					action: () => {
+						this.$emit('delete', this.data)
 						this.$store.dispatch('deleteMessage', this.data)
 					}
 				}

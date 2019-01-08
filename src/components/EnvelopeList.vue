@@ -17,7 +17,8 @@
 				  v-for="env in envelopes"
 				  :key="env.uid"
 				  :data="env"
-				  :show-account-color="folder.isUnified"/>
+				  :show-account-color="folder.isUnified"
+				  @delete="onEnvelopeDeleted"/>
 		<div id="load-more-mail-messages"
 			 key="loadingMore"
 			 :class="{'icon-loading-small': loadingMore}"/>
@@ -73,6 +74,37 @@
 				}).catch(console.error.bind(this)).then(() => {
 					this.loadingMore = false
 				})
+			},
+			onEnvelopeDeleted (envelope) {
+				const envelopes = this.envelopes
+				const idx = this.envelopes.indexOf(envelope)
+				if (idx === -1) {
+					console.debug('envelope to delete does not exist in envelope list')
+					return
+				}
+
+				let next
+				if (idx === 0) {
+					next = envelopes[idx+1]
+				} else {
+					next = envelopes[idx-1]
+				}
+
+				if (!next) {
+					console.debug('no next/previous envelope, not navigating')
+					return
+				}
+
+				// Keep the selected account-folder combination, but navigate to a different message
+				// (it's not a bug that we don't use next.accountId and next.folderId here)
+				this.$router.push({
+					name: 'message',
+					params: {
+						accountId: this.$route.params.accountId,
+						folderId: this.$route.params.folderId,
+						messageUid: next.uid,
+					}
+				});
 			},
 			onScroll (e, p) {
 				if (p.scrollTop === 0 && !this.refreshing) {
