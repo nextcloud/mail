@@ -6,7 +6,8 @@
 					  infinite-scroll-disabled="loading"
 					  infinite-scroll-distance="30"
 					  v-scroll="onScroll"
-					  v-shortkey.once="{next: ['arrowright'], prev: ['arrowleft']}" @shortkey.native="navigateEnvelope">
+					  v-shortkey.once="{del: ['del'], next: ['arrowright'], prev: ['arrowleft']}"
+					  @shortkey.native="handleShortcut">
 		<div id="list-refreshing"
 			 key="loading"
 			 class="icon-loading-small"
@@ -118,7 +119,7 @@
 					})
 				}
 			},
-			navigateEnvelope (e) {
+			handleShortcut (e) {
 				const envelopes = this.envelopes
 				const currentUid = this.$route.params.messageUid
 
@@ -133,29 +134,44 @@
 					return
 				}
 
-				const idx = envelopes.indexOf(current[0])
-				let next
-				if (e.srcKey === 'next') {
-					next = envelopes[idx+1]
-				} else {
-					next = envelopes[idx-1]
-				}
+				const env = current[0]
+				const idx = envelopes.indexOf(env)
 
-				if (!next) {
-					console.debug('ignoring shortcut: head or tail of envelope list reached', envelopes, idx, e.srcKey)
-					return
-				}
+				switch (e.srcKey) {
+					case 'next':
+					case 'prev':
+						let next
+						if (e.srcKey === 'next') {
+							next = envelopes[idx+1]
+						} else {
+							next = envelopes[idx-1]
+						}
 
-				// Keep the selected account-folder combination, but navigate to a different message
-				// (it's not a bug that we don't use next.accountId and next.folderId here)
-				this.$router.push({
-					name: 'message',
-					params: {
-						accountId: this.$route.params.accountId,
-						folderId: this.$route.params.folderId,
-						messageUid: next.uid,
-					}
-				});
+						if (!next) {
+							console.debug('ignoring shortcut: head or tail of envelope list reached', envelopes, idx, e.srcKey)
+							return
+						}
+
+						// Keep the selected account-folder combination, but navigate to a different message
+						// (it's not a bug that we don't use next.accountId and next.folderId here)
+						this.$router.push({
+							name: 'message',
+							params: {
+								accountId: this.$route.params.accountId,
+								folderId: this.$route.params.folderId,
+								messageUid: next.uid,
+							}
+						})
+						break
+					case 'del':
+						console.debug('deleting', env)
+						this.$store.dispatch('deleteMessage', env)
+							.catch(console.error.bind(this))
+
+						break
+					default:
+						console.warn('shortcut ' + e.srcKey + ' is unknown. ignoring.')
+				}
 			}
 		}
 	}
