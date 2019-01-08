@@ -1,7 +1,7 @@
 <template>
 	<router-link :to="newMessageRoute"
 				 exact
-				 v-tooltip.bottom="label">{{ label }}
+				 v-tooltip.bottom="email">{{ label }}
 	</router-link>
 </template>
 
