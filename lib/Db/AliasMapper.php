@@ -77,7 +77,7 @@ class AliasMapper extends QBMapper {
 		$query = $qb->delete($this->getTableName(), 'aliases')
 			->join('aliases', 'mail_accounts', 'accounts', $qb->expr()->eq('aliases.account_id', 'accounts.id'))
 			->where($qb->expr()->eq('account_id', $qb->createNamedParameter($accountId)))
-			->where(
+			->andWhere(
 				$qb->expr()->andX(
 					$qb->expr()->eq('accounts.user_id', $qb->createNamedParameter($currentUserId)),
 					$qb->expr()->eq('aliases.account_id', $qb->createNamedParameter($accountId))
