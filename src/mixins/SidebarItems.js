@@ -70,6 +70,7 @@ export default {
 					items.push({
 						id: 'collapse-' + account.id,
 						key: 'collapse-' + account.id,
+						classes: ['collapse-folders'],
 						text: account.collapsed ? t('mail', 'Show all folders') : t('mail', 'Collapse folders'),
 						action: () => this.$store.commit('toggleAccountCollapsed', account.id)
 					})
