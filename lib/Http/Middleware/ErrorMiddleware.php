@@ -29,8 +29,8 @@ namespace OCA\Mail\Http\Middleware;
 use Exception;
 use OCA\Mail\Exception\ClientException;
 use OCA\Mail\Exception\NotImplemented;
+use OCA\Mail\Http\JSONErrorResponse;
 use OCA\Mail\Http\JSONResponse;
-use OCA\Mail\Service\Logger;
 use OCP\AppFramework\Controller;
 use OCP\AppFramework\Db\DoesNotExistException;
 use OCP\AppFramework\Http;
@@ -38,10 +38,11 @@ use OCP\AppFramework\Http\Response;
 use OCP\AppFramework\Middleware;
 use OCP\AppFramework\Utility\IControllerMethodReflector;
 use OCP\IConfig;
+use OCP\ILogger;
 
 class ErrorMiddleware extends Middleware {
 
-	/** @var Logger */
+	/** @var ILogger */
 	private $logger;
 
 	/** @var IConfig */
@@ -52,10 +53,10 @@ class ErrorMiddleware extends Middleware {
 
 	/**
 	 * @param IConfig $config
-	 * @param Logger $logger
+	 * @param ILogger $logger
 	 * @param IControllerMethodReflector $reflector
 	 */
-	public function __construct(IConfig $config, Logger $logger,
+	public function __construct(IConfig $config, ILogger $logger,
 								IControllerMethodReflector $reflector) {
 		$this->config = $config;
 		$this->logger = $logger;
@@ -75,7 +76,7 @@ class ErrorMiddleware extends Middleware {
 		}
 
 		if ($exception instanceof ClientException) {
-			return new JSONResponse([
+			return new JSONErrorResponse([
 				'message' => $exception->getMessage()
 			], Http::STATUS_BAD_REQUEST);
 		} else if ($exception instanceof DoesNotExistException) {
@@ -85,14 +86,15 @@ class ErrorMiddleware extends Middleware {
 		} else {
 			$this->logger->logException($exception);
 			if ($this->config->getSystemValue('debug', false)) {
-				return new JSONResponse([
+				return new JSONErrorResponse([
+					'debug' => true,
 					'type' => get_class($exception),
 					'message' => $exception->getMessage(),
 					'code' => $exception->getCode(),
 					'trace' => $this->filterTrace($exception->getTrace()),
 				], Http::STATUS_INTERNAL_SERVER_ERROR);
 			} else {
-				return new JSONResponse([], Http::STATUS_INTERNAL_SERVER_ERROR);
+				return new JSONErrorResponse([], Http::STATUS_INTERNAL_SERVER_ERROR);
 			}
 		}
 	}

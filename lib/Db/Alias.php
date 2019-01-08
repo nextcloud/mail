@@ -1,4 +1,5 @@
 <?php
+declare(strict_types=1);
 
 /**
  * @author Jakob Sack <mail@jakobsack.de>
@@ -33,8 +34,18 @@ use OCP\AppFramework\Db\Entity;
  */
 class Alias extends Entity {
 
-	public $accountId;
-	public $name;
-	public $alias;
+	/** @var int */
+	protected $accountId;
 
+	/** @var string */
+	protected $name;
+
+	/** @var string */
+	protected $alias;
+
+	public function __construct() {
+		$this->addType('accountId', 'int');
+		$this->addType('name', 'string');
+		$this->addType('alias', 'string');
+	}
 }

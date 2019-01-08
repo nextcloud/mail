@@ -24,15 +24,20 @@
 		"pear-pear.horde.org/Horde_Text_Flowed": "^2.0.3@stable",
 		"pear-pear.horde.org/Horde_Util": "^2.5.8@stable",
 		"pear-pear.horde.org/Horde_Smtp": "^1.9.5@stable",
-		"cerdic/css-tidy": "v1.5.7",
+		"cerdic/css-tidy": "v1.6.5",
 		"ezyang/htmlpurifier": "4.10.0",
 		"kwi/urllinker": "dev-default",
 		"gravatarphp/gravatar": "^1.0",
 		"arthurhoaro/favicon": "^1.2"
 	},
 	"require-dev": {
-		"christophwurst/nextcloud": "14.0.0-beta4",
-		"christophwurst/nextcloud_testing": "0.3.1"
+		"christophwurst/nextcloud": "dev-stable15",
+		"christophwurst/nextcloud_testing": "0.5.1"
+	},
+	"scripts": {
+		"test": "phpunit -c tests/phpunit.xml --fail-on-warning",
+		"test:unit": "phpunit -c tests/phpunit.xml tests --fail-on-warning",
+		"test:unit:dev": "phpunit -c tests/phpunit.xml tests --no-coverage --fail-on-warning"
 	},
 	"suggest": {
 		"phan/phan": "^0.10.0"

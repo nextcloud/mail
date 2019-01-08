@@ -98,19 +98,19 @@ class ContactsIntegrationTest extends TestCase {
 			[
 				'id' => 1,
 				'label' => 'Jonathan Frakes (jonathan@frakes.com)',
-				'value' => '"Jonathan Frakes" <jonathan@frakes.com>',
+				'email' => 'jonathan@frakes.com',
 				'photo' => null,
 			],
 			[
 				'id' => 2,
 				'label' => 'John Doe (john@doe.info)',
-				'value' => '"John Doe" <john@doe.info>',
+				'email' => 'john@doe.info',
 				'photo' => null,
 			],
 			[
 				'id' => 2,
 				'label' => 'John Doe (doe@john.info)',
-				'value' => '"John Doe" <doe@john.info>',
+				'email' => 'doe@john.info',
 				'photo' => null,
 			],
 		];
@@ -160,7 +160,7 @@ class ContactsIntegrationTest extends TestCase {
 			[
 				'id' => 1,
 				'label' => 'Jonathan Frakes (jonathan@frakes.com)',
-				'value' => '"Jonathan Frakes" <jonathan@frakes.com>',
+				'email' => 'jonathan@frakes.com',
 				'photo' => null,
 			],
 		];

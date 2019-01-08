@@ -1,4 +1,5 @@
 <?php
+declare(strict_types=1);
 
 /**
  * @author Christoph Wurst <christoph@winzerhof-wurst.at>
@@ -20,9 +21,7 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>
  *
  */
-$app = new \OCA\Mail\AppInfo\Application();
-$app->registerRoutes($this,
-	[
+return [
 	'routes' => [
 		[
 			'name' => 'page#index',
@@ -104,4 +103,4 @@ $app->registerRoutes($this,
 		'messages' => ['url' => '/api/accounts/{accountId}/folders/{folderId}/messages'],
 		'preferences' => ['url' => '/api/preferences'],
 	]
-]);
+];

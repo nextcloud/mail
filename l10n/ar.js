@@ -112,7 +112,7 @@ OC.L10N.register(
     "Save all to Files" : "حفظ الجميع لـ الملفات",
     "Add mail account" : "أضف حساب بريدي",
     "No search results for" : "لا نتائج بحث لـ",
-    "The images have been blocked to protect your privacy." : "تح حجب هذه الصورة لحماية خصوصيتك",
+    "The images have been blocked to protect your privacy." : "تم حجب هذه الصورة لحماية خصوصيتك",
     "Show images from this sender" : "أظهر الصور من هذا المُرسل",
     "Forward" : "مرر",
     "Upload attachment" : "رفع المرفقات",

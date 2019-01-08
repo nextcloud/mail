@@ -58,6 +58,7 @@ OC.L10N.register(
     "Updating account failed: " : "Αποτυχία ενημέρωσης λογαριασμού:",
     "Creating account failed: " : "Αποτυχία δημιουργίας λογαριασμού:",
     "Delete permanently" : "Μόνιμη διαγραφή",
+    "IMAP web client" : "Πελάτης ιστού IMAP",
     "Error loading message" : "Σφάλμα φόρτωσης μηνύματος",
     "Settings" : "Ρυθμίσεις",
     "Forwarding to %s" : "Προώθηση σε %s",
