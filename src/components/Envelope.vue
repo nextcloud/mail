@@ -129,7 +129,7 @@ export default {
 			return [
 				{
 					icon: 'icon-mail',
-					text: this.data.flags.unseen ? t('mail', 'Mark seen') : t('mail', 'Mark unseen'),
+					text: this.data.flags.unseen ? t('mail', 'Mark read') : t('mail', 'Mark unread'),
 					action: () => {
 						this.$store.dispatch('toggleEnvelopeSeen', this.data)
 					},
