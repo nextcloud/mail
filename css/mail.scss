@@ -127,6 +127,9 @@
 	display: inline-block !important;
 }
 
+#accounts-list li.collapse-folders a {
+	color: var(--color-text-maxcontrast);
+}
 
 #emptycontent,
 #mail-messages #emptycontent.emptycontent-search {
