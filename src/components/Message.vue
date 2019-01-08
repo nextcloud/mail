@@ -144,7 +144,11 @@
 							return
 						}
 
-						this.replyRecipient = buildReplyRecipients(message, {}) // TODO: own address
+						const account = this.$store.getters.getAccount(message.accountId)
+						this.replyRecipient = buildReplyRecipients(message, {
+							label: account.name,
+							email: account.emailAddress,
+						})
 						this.replySubject = buildReplySubject(message.subject)
 
 						if (!message.hasHtmlBody) {
