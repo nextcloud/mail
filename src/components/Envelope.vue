@@ -11,7 +11,7 @@
     <div
       class="app-content-list-item-star icon-starred"
       :data-starred="data.flags.flagged ? 'true':'false'"
-      @click="toggleFlagged"
+      @click.prevent="toggleFlagged"
     />
     <div class="app-content-list-item-icon">
       <Avatar :displayName="sender"
@@ -129,7 +129,7 @@ export default {
 			return [
 				{
 					icon: 'icon-mail',
-					text: t('mail', 'Seen'),
+					text: this.data.flags.unseen ? t('mail', 'Mark seen') : t('mail', 'Mark unseen'),
 					action: () => {
 						this.$store.dispatch('toggleEnvelopeSeen', this.data)
 					},
@@ -146,9 +146,6 @@ export default {
 	},
 	methods: {
 		toggleFlagged(e) {
-			// Don't navigate
-			e.preventDefault()
-
 			this.$store.dispatch('toggleEnvelopeFlagged', this.data)
 		},
 	},
