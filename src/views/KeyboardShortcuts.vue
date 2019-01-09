@@ -16,11 +16,11 @@
 						<dd>{{ t('mail', 'Compose new message') }}</dd>
 					</div>
 					<div>
-						<dt><kbd>K</kbd> or <kbd>←</kbd></dt>
+						<dt><kbd>←</kbd></dt>
 						<dd>{{ t('mail', 'Newer message') }}</dd>
 					</div>
 					<div>
-						<dt><kbd>J</kbd> or <kbd>→</kbd></dt>
+						<dt><kbd>→</kbd></dt>
 						<dd>{{ t('mail', 'Older message') }}</dd>
 					</div>
 
