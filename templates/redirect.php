@@ -37,16 +37,17 @@ style('mail', 'redirect');
 		</p>
 	</div>
 <?php else: ?>
-	<div class="error">
+	<div class="update">
 		<h2><?php p($l->t('Redirect')); ?></h2>
 		<p><?php p($l->t('The link leads to %s', array($_['urlHost']))); ?></p>
-		<p><?php print_unescaped($l->t('If you don’t want to visit that page, you can return to <a href="%s">Mail</a>.',
+		<p class="infogroup"><?php print_unescaped($l->t('If you don’t want to visit that page, you can return to <a href="%s">Mail</a>.',
 			array($_['mailURL'])));
 	?></p>
 
-		<br/>
-		<a href="<?php p($_['url']) ?>" class="button" rel="noreferrer" id="redirectLink"><?php p($l->t('Continue to %s',
-				array($_['urlHost'])));
-		?></a>
+		<p>
+			<a href="<?php p($_['url']) ?>" class="button primary" rel="noreferrer" id="redirectLink"><?php p($l->t('Continue to %s',
+					array($_['urlHost'])));
+			?></a>
+		</p>
 	</div>
 <?php endif; ?>

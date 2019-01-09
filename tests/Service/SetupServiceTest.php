@@ -28,10 +28,10 @@ use OCA\Mail\Account;
 use OCA\Mail\Db\MailAccount;
 use OCA\Mail\Service\AccountService;
 use OCA\Mail\Service\AutoConfig\AutoConfig;
-use OCA\Mail\Service\Logger;
 use OCA\Mail\Service\SetupService;
 use OCA\Mail\SMTP\SmtpClientFactory;
 use ChristophWurst\Nextcloud\Testing\TestCase;
+use OCP\ILogger;
 use OCP\Security\ICrypto;
 use PHPUnit_Framework_MockObject_MockObject;
 
@@ -49,7 +49,7 @@ class SetupServiceTest extends TestCase {
 	/** @var SmtpClientFactory|PHPUnit_Framework_MockObject_MockObject */
 	private $smtpClientFactory;
 
-	/** @var Logger|PHPUnit_Framework_MockObject_MockObject */
+	/** @var ILogger|PHPUnit_Framework_MockObject_MockObject */
 	private $logger;
 
 	/** @var SetupService */
@@ -62,7 +62,7 @@ class SetupServiceTest extends TestCase {
 		$this->accountService = $this->createMock(AccountService::class);
 		$this->crypto = $this->createMock(ICrypto::class);
 		$this->smtpClientFactory = $this->createMock(SmtpClientFactory::class);
-		$this->logger = $this->createMock(Logger::class);
+		$this->logger = $this->createMock(ILogger::class);
 
 		$this->service = new SetupService($this->autoConfig, $this->accountService, $this->crypto, $this->smtpClientFactory, $this->logger);
 	}

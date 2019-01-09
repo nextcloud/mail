@@ -82,6 +82,7 @@ OC.L10N.register(
     "Mail address" : "Tölvupóstfang",
     "Display Name" : "Birtingarnafn",
     "Account" : "Notandaaðgangur",
+    "Toggle read" : "Víxla lesnu af/á",
     "Delete" : "Eyða",
     "Keyboard shortcuts" : "Flýtileiðir á lyklaborði",
     "Speed up your Mail experience with these quick shortcuts." : "Flýttu fyrir vinnu þinni með póst með þessum flýtilyklum.",

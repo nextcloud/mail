@@ -55,7 +55,7 @@ class AutoCompleteService {
 			return [
 				'id' => $address->getId(),
 				'label' => $address->getDisplayName(),
-				'value' => '"' . $address->getDisplayName() . '" <' . $address->getEmail() . '>',
+				'email' => $address->getEmail(),
 			];
 		}, $fromCollector);
 

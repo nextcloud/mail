@@ -23,19 +23,19 @@ declare(strict_types=1);
 
 namespace OCA\Mail\Service\AutoConfig;
 
-use OCA\Mail\Service\Logger;
+use OCP\ILogger;
 
 class ConnectivityTester {
 
 	const CONNECTION_TIMEOUT = 5;
 
-	/** @var Logger */
+	/** @var ILogger */
 	protected $logger;
 
 	/**
-	 * @param Logger $logger
+	 * @param ILogger $logger
 	 */
-	public function __construct(Logger $logger) {
+	public function __construct(ILogger $logger) {
 		$this->logger = $logger;
 	}
 

@@ -40,11 +40,11 @@ use OCA\Mail\Model\RepliedMessageData;
 use OCA\Mail\Service\AccountService;
 use OCA\Mail\Service\AliasesService;
 use OCA\Mail\Service\GroupsIntegration;
-use OCA\Mail\Service\Logger;
 use OCA\Mail\Service\SetupService;
 use OCP\AppFramework\Controller;
 use OCP\AppFramework\Http;
 use OCP\IL10N;
+use OCP\ILogger;
 use OCP\IRequest;
 use OCP\Security\ICrypto;
 
@@ -59,7 +59,7 @@ class AccountsController extends Controller {
 	/** @var string */
 	private $currentUserId;
 
-	/** @var Logger */
+	/** @var ILogger */
 	private $logger;
 
 	/** @var IL10N */
@@ -82,12 +82,12 @@ class AccountsController extends Controller {
 	 * @param IRequest $request
 	 * @param AccountService $accountService
 	 * @param $UserId
-	 * @param Logger $logger
+	 * @param ILogger $logger
 	 * @param IL10N $l10n
 	 * @param ICrypto $crypto
 	 * @param SetupService $setup
 	 */
-	public function __construct($appName, IRequest $request, AccountService $accountService, GroupsIntegration $groupsIntegration, $UserId, Logger $logger, IL10N $l10n, ICrypto $crypto, AliasesService $aliasesService, IMailTransmission $mailTransmission, SetupService $setup
+	public function __construct($appName, IRequest $request, AccountService $accountService, GroupsIntegration $groupsIntegration, $UserId, ILogger $logger, IL10N $l10n, ICrypto $crypto, AliasesService $aliasesService, IMailTransmission $mailTransmission, SetupService $setup
 	) {
 		parent::__construct($appName, $request);
 		$this->accountService = $accountService;
@@ -175,11 +175,7 @@ class AccountsController extends Controller {
 			}
 		}
 
-		return new JSONResponse([
-			'data' => [
-				'id' => $account->getId()
-			]
-		]);
+		return new JSONResponse($account);
 	}
 
 	/**
@@ -215,7 +211,7 @@ class AccountsController extends Controller {
 	 * @return JSONResponse
 	 * @throws ClientException
 	 */
-	public function create(string $accountName, string $emailAddress, string $password, string $imapHost = null, int $imapPort = null, string $imapSslMode = null, string $imapUser = null, string $imapPassword = null, string $smtpHost = null, int $smtpPort = null, string $smtpSslMode = null, string $smtpUser = null, string $smtpPassword = null, bool $autoDetect = true): JSONResponse {
+	public function create(string $accountName, string $emailAddress, string $password = null, string $imapHost = null, int $imapPort = null, string $imapSslMode = null, string $imapUser = null, string $imapPassword = null, string $smtpHost = null, int $smtpPort = null, string $smtpSslMode = null, string $smtpUser = null, string $smtpPassword = null, bool $autoDetect = true): JSONResponse {
 		$account = null;
 		$errorMessage = null;
 		try {
@@ -237,11 +233,7 @@ class AccountsController extends Controller {
 			}
 		}
 
-		return new JSONResponse([
-			'data' => [
-				'id' => $account->getId()
-			]
-		], Http::STATUS_CREATED);
+		return new JSONResponse($account, Http::STATUS_CREATED);
 	}
 
 	/**
@@ -295,18 +287,18 @@ class AccountsController extends Controller {
 	 * @param int $uid
 	 * @return JSONResponse
 	 */
-	public function draft(int $accountId, string $subject = null, string $body, string $to, string $cc, string $bcc, int $uid = null): JSONResponse {
-		if (is_null($uid)) {
+	public function draft(int $accountId, string $subject = null, string $body, string $to, string $cc, string $bcc, int $draftUID = null): JSONResponse {
+		if (is_null($draftUID)) {
 			$this->logger->info("Saving a new draft in account <$accountId>");
 		} else {
-			$this->logger->info("Updating draft <$uid> in account <$accountId>");
+			$this->logger->info("Updating draft <$draftUID> in account <$accountId>");
 		}
 
 		$account = $this->accountService->find($this->currentUserId, $accountId);
 		$messageData = NewMessageData::fromRequest($account, $to, $cc, $bcc, $subject, $body, []);
 
 		try {
-			$newUID = $this->mailTransmission->saveDraft($messageData, $uid);
+			$newUID = $this->mailTransmission->saveDraft($messageData, $draftUID);
 			return new JSONResponse([
 				'uid' => $newUID,
 			]);

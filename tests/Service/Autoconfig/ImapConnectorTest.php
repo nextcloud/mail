@@ -26,7 +26,7 @@ use Horde_Imap_Client_Exception;
 use OC;
 use OCA\Mail\Db\MailAccount;
 use OCA\Mail\Service\AutoConfig\ImapConnector;
-use OCA\Mail\Service\Logger;
+use OCP\ILogger;
 use OCP\Security\ICrypto;
 use PHPUnit_Framework_MockObject_MockObject;
 
@@ -35,7 +35,7 @@ class ImapConnectorTest extends TestCase {
 	/** @var ICrypto */
 	private $crypto;
 
-	/** @var Logger|PHPUnit_Framework_MockObject_MockObject */
+	/** @var ILogger|PHPUnit_Framework_MockObject_MockObject */
 	private $logger;
 
 	/** @var ImapConnector */
@@ -45,7 +45,7 @@ class ImapConnectorTest extends TestCase {
 		parent::setUp();
 
 		$this->crypto = OC::$server->getCrypto();
-		$this->logger = $this->createMock(Logger::class);
+		$this->logger = $this->createMock(ILogger::class);
 
 		$this->connector = new ImapConnector($this->crypto, $this->logger, 'christopher');
 	}

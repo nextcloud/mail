@@ -26,10 +26,11 @@ declare(strict_types=1);
 
 namespace OCA\Mail\Tests\Support;
 
+use ChristophWurst\Nextcloud\Testing\TestCase;
 use OCA\Mail\Support\HostNameFactory;
 use OCP\Util;
 
-class HostNameFactoryTest extends \PHPUnit_Framework_TestCase {
+class HostNameFactoryTest extends TestCase {
 
 	/** @var HostNameFactory */
 	private $factory;

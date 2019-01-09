@@ -28,7 +28,7 @@ use OCA\Mail\Address;
 use OCA\Mail\AddressList;
 use OCA\Mail\Db\CollectedAddress;
 use OCA\Mail\Db\CollectedAddressMapper;
-use OCA\Mail\Service\Logger;
+use OCP\ILogger;
 
 class AddressCollector {
 
@@ -38,10 +38,10 @@ class AddressCollector {
 	/** @var string */
 	private $userId;
 
-	/** @var Logger */
+	/** @var ILogger */
 	private $logger;
 
-	public function __construct(CollectedAddressMapper $mapper, string $UserId = null, Logger $logger) {
+	public function __construct(CollectedAddressMapper $mapper, string $UserId = null, ILogger $logger) {
 		$this->mapper = $mapper;
 		$this->userId = $UserId;
 		$this->logger = $logger;

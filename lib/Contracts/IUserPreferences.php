@@ -31,6 +31,7 @@ interface IUserPreferences {
 	/**
 	 * @param string $key
 	 * @param mixed $value
+	 * @return mixed new value
 	 */
 	public function setPreference($key, $value);
 

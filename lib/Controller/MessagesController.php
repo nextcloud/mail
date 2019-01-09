@@ -37,7 +37,6 @@ use OCA\Mail\Http\HtmlResponse;
 use OCA\Mail\Model\IMAPMessage;
 use OCA\Mail\Service\AccountService;
 use OCA\Mail\Service\IMailBox;
-use OCA\Mail\Service\Logger;
 use OCP\AppFramework\Controller;
 use OCP\AppFramework\Db\DoesNotExistException;
 use OCP\AppFramework\Http\ContentSecurityPolicy;
@@ -49,6 +48,7 @@ use OCP\AppFramework\Http\ZipResponse;
 use OCP\Files\Folder;
 use OCP\Files\IMimeTypeDetector;
 use OCP\IL10N;
+use OCP\ILogger;
 use OCP\IRequest;
 use OCP\IURLGenerator;
 
@@ -63,7 +63,7 @@ class MessagesController extends Controller {
 	/** @var string */
 	private $currentUserId;
 
-	/** @var Logger */
+	/** @var ILogger */
 	private $logger;
 
 	/** @var Folder */
@@ -90,7 +90,7 @@ class MessagesController extends Controller {
 	 * @param AccountService $accountService
 	 * @param string $UserId
 	 * @param $userFolder
-	 * @param Logger $logger
+	 * @param ILogger $logger
 	 * @param IL10N $l10n
 	 * @param IMimeTypeDetector $mimeTypeDetector
 	 * @param IURLGenerator $urlGenerator
@@ -98,7 +98,7 @@ class MessagesController extends Controller {
 	 */
 	public function __construct(string $appName, IRequest $request,
 								AccountService $accountService, IMailManager $mailManager, string $UserId,
-								$userFolder, Logger $logger, IL10N $l10n, IMimeTypeDetector $mimeTypeDetector,
+								$userFolder, ILogger $logger, IL10N $l10n, IMimeTypeDetector $mimeTypeDetector,
 								IURLGenerator $urlGenerator, ITimeFactory $timeFactory) {
 		parent::__construct($appName, $request);
 
@@ -160,17 +160,7 @@ class MessagesController extends Controller {
 		/* @var $message IMAPMessage */
 		$message = $mailBox->getMessage($id);
 
-		$json = $this->enhanceMessage($accountId, $folderId, $id, $message, $mailBox);
-
-		// Unified inbox hack
-		// TODO: evalue whether this is still in use on the client side
-		$messageId = $id;
-		$json['messageId'] = $messageId;
-		$json['accountId'] = $accountId;
-		$json['folderId'] = $folderId;
-		// End unified inbox hack
-
-		return $json;
+		return $this->enhanceMessage($accountId, $folderId, $id, $message, $mailBox);
 	}
 
 	/**
@@ -221,6 +211,7 @@ class MessagesController extends Controller {
 		try {
 			$mailBox = $this->getFolder($accountId, $folderId);
 
+			/** @var IMAPMessage $m */
 			$m = $mailBox->getMessage($messageId, true);
 			$html = $m->getHtmlBody($accountId, $folderId, $messageId,
 				function ($cid) use ($m) {
@@ -481,22 +472,6 @@ class MessagesController extends Controller {
 	/**
 	 * @param int $accountId
 	 * @param string $folderId
-	 * @param int $messageId
-	 * @return string
-	 */
-	private function buildHtmlBodyUrl(int $accountId, string $folderId, int $messageId): string {
-		$htmlBodyUrl = $this->urlGenerator->linkToRoute('mail.messages.getHtmlBody',
-			[
-				'accountId' => $accountId,
-				'folderId' => $folderId,
-				'messageId' => $messageId,
-			]);
-		return $this->urlGenerator->getAbsoluteURL($htmlBodyUrl);
-	}
-
-	/**
-	 * @param int $accountId
-	 * @param string $folderId
 	 * @param int $id
 	 * @param IMAPMessage $m
 	 * @param IMailBox $mailBox
@@ -505,10 +480,6 @@ class MessagesController extends Controller {
 	private function enhanceMessage(int $accountId, string $folderId, int $id, IMAPMessage $m,
 									IMailBox $mailBox): array {
 		$json = $m->getFullMessage($mailBox->getSpecialRole());
-
-		if (isset($json['hasHtmlBody'])) {
-			$json['htmlBodyUrl'] = $this->buildHtmlBodyUrl($accountId, $folderId, $id);
-		}
 
 		if (isset($json['attachments'])) {
 			$json['attachments'] = array_map(function ($a) use ($accountId, $folderId, $id) {

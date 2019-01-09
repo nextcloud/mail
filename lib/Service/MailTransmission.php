@@ -41,6 +41,7 @@ use OCA\Mail\Model\RepliedMessageData;
 use OCA\Mail\Service\AutoCompletion\AddressCollector;
 use OCA\Mail\SMTP\SmtpClientFactory;
 use OCP\Files\Folder;
+use OCP\ILogger;
 
 class MailTransmission implements IMailTransmission {
 
@@ -56,7 +57,7 @@ class MailTransmission implements IMailTransmission {
 	/** @var SmtpClientFactory */
 	private $clientFactory;
 
-	/** @var Logger */
+	/** @var ILogger */
 	private $logger;
 
 	/**
@@ -64,13 +65,13 @@ class MailTransmission implements IMailTransmission {
 	 * @param Folder $userFolder
 	 * @param IAttachmentService $attachmentService
 	 * @param SmtpClientFactory $clientFactory
-	 * @param Logger $logger
+	 * @param ILogger $logger
 	 */
 	public function __construct(AddressCollector $addressCollector,
 								$userFolder,
 								IAttachmentService $attachmentService,
 								SmtpClientFactory $clientFactory,
-								Logger $logger) {
+								ILogger $logger) {
 		$this->addressCollector = $addressCollector;
 		$this->userFolder = $userFolder;
 		$this->attachmentService = $attachmentService;
@@ -101,7 +102,7 @@ class MailTransmission implements IMailTransmission {
 			$message = $this->buildNewMessage($account, $messageData);
 		}
 
-		$fromEmail = $alias ? $alias->alias : $account->getEMailAddress();
+		$fromEmail = $alias ? $alias->getAlias() : $account->getEMailAddress();
 		$from = new AddressList([
 			new Address($account->getName(), $fromEmail),
 		]);
@@ -211,7 +212,7 @@ class MailTransmission implements IMailTransmission {
 	 */
 	private function handleAttachments(string $userId, NewMessageData $messageData, IMessage $message) {
 		foreach ($messageData->getAttachments() as $attachment) {
-			if (isset($attachment['isLocal']) && $attachment['isLocal'] === 'true') {
+			if (isset($attachment['isLocal']) && $attachment['isLocal']) {
 				$this->handleLocalAttachment($userId, $attachment, $message);
 			} else {
 				$this->handleCloudAttachment($attachment, $message);

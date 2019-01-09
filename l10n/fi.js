@@ -82,6 +82,7 @@ OC.L10N.register(
     "Mail address" : "Sähköpostiosoite",
     "Display Name" : "Näyttönimi",
     "Account" : "Tili",
+    "Toggle read" : "Merkitse luetuksi/lukemattomaksi",
     "Delete" : "Poista",
     "Keyboard shortcuts" : "Pikanäppäimet",
     "Speed up your Mail experience with these quick shortcuts." : "Nopeuta sähköpostikokemustasi näillä pikanäppäimillä.",
