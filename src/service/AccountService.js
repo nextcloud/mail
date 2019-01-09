@@ -1,7 +1,7 @@
 import {generateUrl} from 'nextcloud-server/dist/router'
 import HttpClient from 'nextcloud-axios'
 
-const fixAccountId = original => {
+export const fixAccountId = original => {
 	return {
 		id: original.accountId,
 		...original
