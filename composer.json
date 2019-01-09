@@ -32,14 +32,13 @@
 	},
 	"require-dev": {
 		"christophwurst/nextcloud": "dev-stable15",
-		"christophwurst/nextcloud_testing": "0.5.1"
+		"christophwurst/nextcloud_testing": "0.5.1",
+		"phan/phan": "^1.2"
 	},
 	"scripts": {
+		"phan": "phan --allow-polyfill-parser -k .phan/config.php",
 		"test": "phpunit -c tests/phpunit.xml --fail-on-warning",
 		"test:unit": "phpunit -c tests/phpunit.xml tests --fail-on-warning",
 		"test:unit:dev": "phpunit -c tests/phpunit.xml tests --no-coverage --fail-on-warning"
-	},
-	"suggest": {
-		"phan/phan": "^0.10.0"
 	}
 }
