@@ -30,6 +30,8 @@ import {generateFilePath} from 'nextcloud-server/dist/router'
 import VueShortKey from 'vue-shortkey'
 import VTooltip from 'v-tooltip'
 
+import {fixAccountId} from './service/AccountService'
+
 __webpack_nonce__ = btoa(OC.requestToken)
 __webpack_public_path__ = generateFilePath('mail', '', 'js/')
 
@@ -65,6 +67,11 @@ store.commit('savePreference', {
 	key: 'external-avatars',
 	value: getPreferenceFromPage('external-avatars')
 })
+
+const accounts = JSON.parse(atob(getPreferenceFromPage('serialized-accounts')))
+accounts
+	.map(fixAccountId)
+	.forEach(account => store.commit('addAccount', account))
 
 new Vue({
 	el: '#content',
