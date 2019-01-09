@@ -1,5 +1,8 @@
 <template>
-	<div id="content" class="app-mail">
+	<div id="content"
+		 class="app-mail"
+	     v-shortkey.once="['c']"
+		 @shortkey="onNewMessage">
 		<Loading v-if="loading" :hint="t('mail', 'Loading your accounts')"/>
 		<template v-else>
 			<app-navigation :menu="menu">
@@ -97,6 +100,19 @@
 					})
 				}
 			}).catch(console.error.bind(this))
+		},
+		methods: {
+			onNewMessage () {
+				// FIXME: assumes that we're on the 'message' route already
+				this.$router.push({
+					name: 'message',
+					params: {
+						accountId: this.$route.params.accountId,
+						folderId: this.$route.params.folderId,
+						messageUid: 'new',
+					}
+				});
+			}
 		}
 	}
 </script>
