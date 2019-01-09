@@ -25,7 +25,7 @@ namespace OCA\Mail\Service\AutoConfig;
 
 use Horde_Imap_Client_Exception;
 use OCA\Mail\Db\MailAccount;
-use OCA\Mail\Service\Logger;
+use OCP\ILogger;
 
 class ImapConnectivityTester {
 
@@ -38,19 +38,19 @@ class ImapConnectivityTester {
 	/** @var string|null */
 	private $userId;
 
-	/** @var Logger */
+	/** @var ILogger */
 	private $logger;
 
 	/**
 	 * @param ImapConnector $imapConnector
 	 * @param ConnectivityTester $connectivityTester
 	 * @param string $UserId
-	 * @param Logger $logger
+	 * @param ILogger $logger
 	 */
 	public function __construct(ImapConnector $imapConnector,
 								ConnectivityTester $connectivityTester,
 								string $UserId = null,
-								Logger $logger) {
+								ILogger $logger) {
 		$this->imapConnector = $imapConnector;
 		$this->connectivityTester = $connectivityTester;
 		$this->userId = $UserId;

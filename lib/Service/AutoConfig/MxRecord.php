@@ -23,14 +23,14 @@ declare(strict_types=1);
 
 namespace OCA\Mail\Service\AutoConfig;
 
-use OCA\Mail\Service\Logger;
+use OCP\ILogger;
 
 class MxRecord {
 
-	/** @var Logger */
+	/** @var ILogger */
 	private $logger;
 
-	public function __construct(Logger $logger) {
+	public function __construct(ILogger $logger) {
 		$this->logger = $logger;
 	}
 

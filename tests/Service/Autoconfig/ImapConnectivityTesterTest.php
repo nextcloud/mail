@@ -26,7 +26,7 @@ use Horde_Imap_Client_Exception;
 use OCA\Mail\Service\AutoConfig\ConnectivityTester;
 use OCA\Mail\Service\AutoConfig\ImapConnectivityTester;
 use OCA\Mail\Service\AutoConfig\ImapConnector;
-use OCA\Mail\Service\Logger;
+use OCP\ILogger;
 use OpenCloud\Common\Log\Logger as Logger2;
 use PHPUnit_Framework_MockObject_MockObject;
 
@@ -49,7 +49,7 @@ class ImapConnectivityTesterTest extends TestCase {
 
 		$this->imapConnector = $this->createMock(ImapConnector::class);
 		$this->connectivityTester = $this->createMock(ConnectivityTester::class);
-		$this->logger = $this->createMock(Logger::class);
+		$this->logger = $this->createMock(ILogger::class);
 		$this->tester = new ImapConnectivityTester($this->imapConnector, $this->connectivityTester, 'dave', $this->logger);
 	}
 

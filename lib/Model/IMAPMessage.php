@@ -358,10 +358,10 @@ class IMAPMessage implements IMessage, JsonSerializable {
 
 	/**
 	 * @param Horde_Mime_Part $p
-	 * @param int $partNo
+	 * @param mixed $partNo
 	 * @throws DoesNotExistException
 	 */
-	private function getPart(Horde_Mime_Part $p, int $partNo) {
+	private function getPart(Horde_Mime_Part $p, $partNo) {
 		// ATTACHMENT
 		// Any part with a filename is an attachment,
 		// so an attached text file (type 0) is not mistaken as the message.
@@ -371,7 +371,7 @@ class IMAPMessage implements IMessage, JsonSerializable {
 				return;
 			}
 			$this->attachments[] = [
-				'id' => $p->getMimeId(),
+				'id' => (int) $p->getMimeId(),
 				'messageId' => $this->messageId,
 				'fileName' => $filename,
 				'mime' => $p->getType(),
@@ -479,33 +479,33 @@ class IMAPMessage implements IMessage, JsonSerializable {
 
 	/**
 	 * @param Horde_Mime_Part $part
-	 * @param int $partNo
+	 * @param mixed $partNo
 	 * @throws DoesNotExistException
 	 */
-	private function handleMultiPartMessage(Horde_Mime_Part $part, int $partNo) {
+	private function handleMultiPartMessage(Horde_Mime_Part $part, $partNo) {
 		$i = 1;
 		foreach ($part->getParts() as $p) {
-			$this->getPart($p, (int)"$partNo.$i");
+			$this->getPart($p, "$partNo.$i");
 			$i++;
 		}
 	}
 
 	/**
 	 * @param Horde_Mime_Part $p
-	 * @param int $partNo
+	 * @param mixed $partNo
 	 * @throws DoesNotExistException
 	 */
-	private function handleTextMessage(Horde_Mime_Part $p, int $partNo) {
+	private function handleTextMessage(Horde_Mime_Part $p, $partNo) {
 		$data = $this->loadBodyData($p, $partNo);
 		$this->plainMessage .= trim($data) . "\n\n";
 	}
 
 	/**
 	 * @param Horde_Mime_Part $p
-	 * @param int $partNo
+	 * @param mixed $partNo
 	 * @throws DoesNotExistException
 	 */
-	private function handleHtmlMessage(Horde_Mime_Part $p, int $partNo) {
+	private function handleHtmlMessage(Horde_Mime_Part $p, $partNo) {
 		$this->hasHtmlMessage = true;
 		if ($this->loadHtmlMessage) {
 			$data = $this->loadBodyData($p, $partNo);
@@ -515,12 +515,12 @@ class IMAPMessage implements IMessage, JsonSerializable {
 
 	/**
 	 * @param Horde_Mime_Part $p
-	 * @param int $partNo
+	 * @param mixed $partNo
 	 * @return string
 	 * @throws DoesNotExistException
 	 * @throws Exception
 	 */
-	private function loadBodyData(Horde_Mime_Part $p, int $partNo): string {
+	private function loadBodyData(Horde_Mime_Part $p, $partNo): string {
 		// DECODE DATA
 		$fetch_query = new Horde_Imap_Client_Fetch_Query();
 		$ids = new Horde_Imap_Client_Ids($this->messageId);

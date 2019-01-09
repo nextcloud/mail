@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "18c72fe38d76ba0735134fa2ee2863b4",
+    "content-hash": "ffbea7d2b619c487fb0da29638cbaf97",
     "packages": [
         {
             "name": "arthurhoaro/favicon",
@@ -58,16 +58,16 @@
         },
         {
             "name": "cerdic/css-tidy",
-            "version": "v1.6.4",
+            "version": "v1.6.5",
             "source": {
                 "type": "git",
                 "url": "https://github.com/Cerdic/CSSTidy.git",
-                "reference": "ba7eae1ea2adeaf21e0e892ba3fc67dfb913f85d"
+                "reference": "32cecbbc7e847c66a45450c92d80c4779ccca484"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/Cerdic/CSSTidy/zipball/ba7eae1ea2adeaf21e0e892ba3fc67dfb913f85d",
-                "reference": "ba7eae1ea2adeaf21e0e892ba3fc67dfb913f85d",
+                "url": "https://api.github.com/repos/Cerdic/CSSTidy/zipball/32cecbbc7e847c66a45450c92d80c4779ccca484",
+                "reference": "32cecbbc7e847c66a45450c92d80c4779ccca484",
                 "shasum": ""
             },
             "require-dev": {
@@ -93,7 +93,7 @@
                 }
             ],
             "description": "CSSTidy is a CSS minifier",
-            "time": "2018-09-29T12:26:47+00:00"
+            "time": "2018-12-18T21:54:05+00:00"
         },
         {
             "name": "ezyang/htmlpurifier",
@@ -761,10 +761,10 @@
         },
         {
             "name": "pear-pear.horde.org/Horde_Text_Filter",
-            "version": "2.3.5",
+            "version": "2.3.6",
             "dist": {
                 "type": "file",
-                "url": "https://pear.horde.org/get/Horde_Text_Filter-2.3.5.tgz",
+                "url": "https://pear.horde.org/get/Horde_Text_Filter-2.3.6.tgz",
                 "reference": null,
                 "shasum": null
             },
@@ -775,7 +775,7 @@
                 "php": "<8.0.0.0"
             },
             "replace": {
-                "pear-horde/horde_text_filter": "== 2.3.5.0"
+                "pear-horde/horde_text_filter": "== 2.3.6.0"
             },
             "type": "pear-library",
             "autoload": {
@@ -888,12 +888,12 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/ChristophWurst/nextcloud_composer.git",
-                "reference": "b9945622a4e5524f5b6bf6d651f94ff7d4d8f8d9"
+                "reference": "014198311112df2893b834a4a079348e6e4b850d"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/ChristophWurst/nextcloud_composer/zipball/b9945622a4e5524f5b6bf6d651f94ff7d4d8f8d9",
-                "reference": "b9945622a4e5524f5b6bf6d651f94ff7d4d8f8d9",
+                "url": "https://api.github.com/repos/ChristophWurst/nextcloud_composer/zipball/014198311112df2893b834a4a079348e6e4b850d",
+                "reference": "014198311112df2893b834a4a079348e6e4b850d",
                 "shasum": ""
             },
             "require": {
@@ -916,7 +916,7 @@
                 }
             ],
             "description": "Composer package containing Nextcloud's public API (classes, interfaces)",
-            "time": "2018-11-16T08:23:46+00:00"
+            "time": "2018-12-12T09:46:24+00:00"
         },
         {
             "name": "christophwurst/nextcloud_testing",
@@ -2386,17 +2386,75 @@
             "time": "2016-10-03T07:35:21+00:00"
         },
         {
-            "name": "symfony/process",
-            "version": "v3.4.18",
+            "name": "symfony/polyfill-ctype",
+            "version": "v1.10.0",
             "source": {
                 "type": "git",
-                "url": "https://github.com/symfony/process.git",
-                "reference": "35c2914a9f50519bd207164c353ae4d59182c2cb"
+                "url": "https://github.com/symfony/polyfill-ctype.git",
+                "reference": "e3d826245268269cd66f8326bd8bc066687b4a19"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/symfony/process/zipball/35c2914a9f50519bd207164c353ae4d59182c2cb",
-                "reference": "35c2914a9f50519bd207164c353ae4d59182c2cb",
+                "url": "https://api.github.com/repos/symfony/polyfill-ctype/zipball/e3d826245268269cd66f8326bd8bc066687b4a19",
+                "reference": "e3d826245268269cd66f8326bd8bc066687b4a19",
+                "shasum": ""
+            },
+            "require": {
+                "php": ">=5.3.3"
+            },
+            "suggest": {
+                "ext-ctype": "For best performance"
+            },
+            "type": "library",
+            "extra": {
+                "branch-alias": {
+                    "dev-master": "1.9-dev"
+                }
+            },
+            "autoload": {
+                "psr-4": {
+                    "Symfony\\Polyfill\\Ctype\\": ""
+                },
+                "files": [
+                    "bootstrap.php"
+                ]
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "MIT"
+            ],
+            "authors": [
+                {
+                    "name": "Symfony Community",
+                    "homepage": "https://symfony.com/contributors"
+                },
+                {
+                    "name": "Gert de Pagter",
+                    "email": "BackEndTea@gmail.com"
+                }
+            ],
+            "description": "Symfony polyfill for ctype functions",
+            "homepage": "https://symfony.com",
+            "keywords": [
+                "compatibility",
+                "ctype",
+                "polyfill",
+                "portable"
+            ],
+            "time": "2018-08-06T14:22:27+00:00"
+        },
+        {
+            "name": "symfony/process",
+            "version": "v3.4.20",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/symfony/process.git",
+                "reference": "abb46b909dd6ba0b50e10d4c10ffe6ee96dd70f2"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/symfony/process/zipball/abb46b909dd6ba0b50e10d4c10ffe6ee96dd70f2",
+                "reference": "abb46b909dd6ba0b50e10d4c10ffe6ee96dd70f2",
                 "shasum": ""
             },
             "require": {
@@ -2432,7 +2490,7 @@
             ],
             "description": "Symfony Process Component",
             "homepage": "https://symfony.com",
-            "time": "2018-10-14T17:33:21+00:00"
+            "time": "2018-11-20T16:10:26+00:00"
         },
         {
             "name": "theseer/tokenizer",
@@ -2476,20 +2534,21 @@
         },
         {
             "name": "webmozart/assert",
-            "version": "1.3.0",
+            "version": "1.4.0",
             "source": {
                 "type": "git",
                 "url": "https://github.com/webmozart/assert.git",
-                "reference": "0df1908962e7a3071564e857d86874dad1ef204a"
+                "reference": "83e253c8e0be5b0257b881e1827274667c5c17a9"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/webmozart/assert/zipball/0df1908962e7a3071564e857d86874dad1ef204a",
-                "reference": "0df1908962e7a3071564e857d86874dad1ef204a",
+                "url": "https://api.github.com/repos/webmozart/assert/zipball/83e253c8e0be5b0257b881e1827274667c5c17a9",
+                "reference": "83e253c8e0be5b0257b881e1827274667c5c17a9",
                 "shasum": ""
             },
             "require": {
-                "php": "^5.3.3 || ^7.0"
+                "php": "^5.3.3 || ^7.0",
+                "symfony/polyfill-ctype": "^1.8"
             },
             "require-dev": {
                 "phpunit/phpunit": "^4.6",
@@ -2522,7 +2581,7 @@
                 "check",
                 "validate"
             ],
-            "time": "2018-01-29T19:49:41+00:00"
+            "time": "2018-12-25T11:19:39+00:00"
         }
     ],
     "aliases": [],

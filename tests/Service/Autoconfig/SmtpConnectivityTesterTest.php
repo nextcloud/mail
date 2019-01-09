@@ -27,8 +27,8 @@ use Horde_Mail_Transport_Smtphorde;
 use OCA\Mail\Db\MailAccount;
 use OCA\Mail\Service\AutoConfig\ConnectivityTester;
 use OCA\Mail\Service\AutoConfig\SmtpConnectivityTester;
-use OCA\Mail\Service\Logger;
 use OCA\Mail\SMTP\SmtpClientFactory;
+use OCP\ILogger;
 use OCP\Security\ICrypto;
 use PHPUnit_Framework_MockObject_MockObject;
 
@@ -43,7 +43,7 @@ class SmtpConnectivityTesterTest extends TestCase {
 	/** @var SmtpClientFactory|PHPUnit_Framework_MockObject_MockObject */
 	private $clientFactory;
 
-	/** @var Logger|PHPUnit_Framework_MockObject_MockObject */
+	/** @var ILogger|PHPUnit_Framework_MockObject_MockObject */
 	private $logger;
 
 	/** @var SmtpConnectivityTester */
@@ -55,7 +55,7 @@ class SmtpConnectivityTesterTest extends TestCase {
 		$this->connectivityTester = $this->createMock(ConnectivityTester::class);
 		$this->crypto = $this->createMock(ICrypto::class);
 		$this->clientFactory = $this->createMock(SmtpClientFactory::class);
-		$this->logger = $this->createMock(Logger::class);
+		$this->logger = $this->createMock(ILogger::class);
 		$this->tester = new SmtpConnectivityTester($this->connectivityTester, $this->crypto, $this->clientFactory, $this->logger, 'dave');
 	}
 

@@ -28,6 +28,7 @@ use OCA\Mail\Account;
 use OCA\Mail\Db\MailAccount;
 use OCA\Mail\Service\AutoConfig\AutoConfig;
 use OCA\Mail\SMTP\SmtpClientFactory;
+use OCP\ILogger;
 use OCP\Security\ICrypto;
 
 class SetupService {
@@ -44,16 +45,16 @@ class SetupService {
 	/** @var SmtpClientFactory */
 	private $smtpClientFactory;
 
-	/** var Logger */
+	/** var ILogger */
 	private $logger;
 
 	/**
 	 * @param AutoConfig $autoConfig
 	 * @param AccountService $accountService
 	 * @param ICrypto $crypto
-	 * @param Logger $logger
+	 * @param ILogger $logger
 	 */
-	public function __construct(AutoConfig $autoConfig, AccountService $accountService, ICrypto $crypto, SmtpClientFactory $smtpClientFactory, Logger $logger) {
+	public function __construct(AutoConfig $autoConfig, AccountService $accountService, ICrypto $crypto, SmtpClientFactory $smtpClientFactory, ILogger $logger) {
 		$this->autoConfig = $autoConfig;
 		$this->accountService = $accountService;
 		$this->crypto = $crypto;
