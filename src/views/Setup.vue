@@ -1,12 +1,12 @@
 <template>
 	<AppContent app-name="mail">
-			<div id="emptycontent">
-				<div class="icon-mail"></div>
-				<h2>{{ t('mail', 'Connect your mail account') }}</h2>
-				<AccountForm :displayName="displayName"
-							 :email="email"
-							 :save="onSave"/>
-			</div>
+		<div id="emptycontent">
+			<div class="icon-mail"></div>
+			<h2>{{ t('mail', 'Connect your mail account') }}</h2>
+			<AccountForm :displayName="displayName"
+						 :email="email"
+						 :save="onSave"/>
+		</div>
 	</AppContent>
 </template>
 

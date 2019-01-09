@@ -4,16 +4,34 @@
 				@shortkey.native="onNewMessage">
 		<Loading v-if="loading" :hint="t('mail', 'Loading your accounts')"/>
 		<template v-else>
-			<AppNavigation :menu="menu">
-				<AppSettingsMenu slot="settings-content"/>
-			</AppNavigation>
-			<FolderContent/>
+			<template slot="navigation">
+				<AppNavigationNew :text="t('mail', 'New message')"
+								  buttonId="mail_new_message"
+								  buttonClass="icon-add"
+								  @click="onNewMessage"/>
+				<ul id="accounts-list">
+					<AppNavigationItem v-for="item in menu"
+									   :key="item.key"
+									   :item="item"/>
+				</ul>
+				<AppNavigationSettings :title="t('mail', 'Settings')">
+					<AppSettingsMenu />
+				</AppNavigationSettings>
+			</template>
+			<template slot="content">
+				<FolderContent/>
+			</template>
 		</template>
 	</AppContent>
 </template>
 
 <script>
-	import {AppContent, AppNavigation} from 'nextcloud-vue'
+	import {
+		AppContent,
+		AppNavigationItem,
+		AppNavigationNew,
+		AppNavigationSettings
+	} from 'nextcloud-vue'
 	import AppSettingsMenu from '../components/AppSettingsMenu'
 	import FolderContent from '../components/FolderContent'
 	import Loading from '../components/Loading'
@@ -25,7 +43,9 @@
 		extends: SidebarItems,
 		components: {
 			AppContent,
-			AppNavigation,
+			AppNavigationItem,
+			AppNavigationNew,
+			AppNavigationSettings,
 			AppSettingsMenu,
 			FolderContent,
 			Loading,

@@ -1,14 +1,12 @@
 <template>
-	<div id="app-content">
-		<div id="app-content-wrapper">
-			<Loading v-if="loading"
-					 :hint="t('mail', 'Loading messages')"/>
-			<template v-else>
-				<EnvelopeList/>
-				<NewMessageDetail v-if="newMessage"/>
-				<Message v-else-if="hasMessages"/>
-			</template>
-		</div>
+	<div id="app-content-wrapper">
+		<Loading v-if="loading"
+				 :hint="t('mail', 'Loading messages')"/>
+		<template v-else>
+			<EnvelopeList/>
+			<NewMessageDetail v-if="newMessage"/>
+			<Message v-else-if="hasMessages"/>
+		</template>
 	</div>
 </template>
 
