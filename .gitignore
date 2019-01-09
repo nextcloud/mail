@@ -2,10 +2,6 @@
 composer.phar
 /vendor/
 
-# Unnecessary bower dependency files
-/js/vendor/jquery/src/*
-/js/vendor/ical.js/samples/*
-
 # Mac OS
 .DS_Store
 
@@ -15,11 +11,7 @@ tests/clover.xml
 # Node.js modules
 node_modules/
 
-# optimized JS files
-# Old r.js
-js/mail.min.js
-# new webpack
-/js/build
+/js
 
 # packaged app
 build/artifacts

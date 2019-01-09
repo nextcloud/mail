@@ -63,8 +63,11 @@ class PreferencesControllerTest extends TestCase {
 	public function testSetPreference() {
 		$this->preferences->expects($this->once())
 			->method('setPreference')
-			->with('test');
-		$expected = new JSONResponse();
+			->with('test')
+			->willReturnArgument(1);
+		$expected = new JSONResponse([
+			'value' => 123,
+		]);
 
 		$actual = $this->controller->update('test', 123);
 

@@ -112,7 +112,7 @@ OC.L10N.register(
     "to" : "ti",
     "cc" : "cc",
     "bcc" : "bcc",
-    "Note that the mail came from a noreply address so your reply will probably not be read." : "Vær oppmerksom på at eposten kom fra en \"ikke svar\" adresse slik at ditt svar blir muligens ikke lest.",
+    "Note that the mail came from a noreply address so your reply will probably not be read." : "Vær oppmerksom på at e-posten kom fra en \"ikke svar\" adresse slik at ditt svar blir muligens ikke lest.",
     "Subject" : "Emne",
     "Save all to Files" : "Lagre alle i Filer",
     "Add mail account" : "Legg til e-postkonto",

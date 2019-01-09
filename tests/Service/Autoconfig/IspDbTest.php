@@ -24,6 +24,7 @@ namespace OCA\Mail\Tests\Service\Autoconfig;
 
 use ChristophWurst\Nextcloud\Testing\TestCase;
 use OCA\Mail\Service\AutoConfig\IspDb;
+use OCP\ILogger;
 
 class IspDbtest extends TestCase {
 
@@ -32,7 +33,7 @@ class IspDbtest extends TestCase {
 	protected function setUp() {
 		parent::setUp();
 
-		$this->logger = $this->getMockBuilder('\OCA\Mail\Service\Logger')
+		$this->logger = $this->getMockBuilder(ILogger::class)
 			->disableOriginalConstructor()
 			->getMock();
 	}

@@ -59,7 +59,7 @@ class GroupsIntegrationTest extends TestCase {
 			[
 				'id' => 'namespace1:testgroup',
 				'label' => 'first test group (Namespace1)',
-				'value' => 'namespace1:testgroup',
+				'email' => 'namespace1:testgroup',
 				'photo' => null,
 			]
 		];

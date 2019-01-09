@@ -76,7 +76,7 @@ class SmtpClientFactory {
 			'port' => $mailAccount->getOutboundPort(),
 			'username' => $mailAccount->getOutboundUser(),
 			'secure' => $security === 'none' ? false : $security,
-			'timeout' => (int)$this->config->getSystemValue('app.mail.smtp.timeout', 2)
+			'timeout' => (int)$this->config->getSystemValue('app.mail.smtp.timeout', 5)
 		];
 		if ($this->config->getSystemValue('debug', false)) {
 			$params['debug'] = $this->config->getSystemValue('datadirectory') . '/horde_smtp.log';

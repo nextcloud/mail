@@ -7,11 +7,11 @@
 	],
 	"config": {
 		"platform": {
-			"php": "5.6"
+			"php": "7.0.13"
 		}
 	},
 	"require": {
-		"php": ">=5.6.0",
+		"php": ">=7.0.13",
 		"pear-pear.horde.org/Horde_Date": "^2.4.1@stable",
 		"pear-pear.horde.org/Horde_Exception": "^2.0.8@stable",
 		"pear-pear.horde.org/Horde_Imap_Client": "^2.29.16@stable",
@@ -24,15 +24,20 @@
 		"pear-pear.horde.org/Horde_Text_Flowed": "^2.0.3@stable",
 		"pear-pear.horde.org/Horde_Util": "^2.5.8@stable",
 		"pear-pear.horde.org/Horde_Smtp": "^1.9.5@stable",
-		"cerdic/css-tidy": "v1.5.7",
+		"cerdic/css-tidy": "v1.6.5",
 		"ezyang/htmlpurifier": "4.10.0",
 		"kwi/urllinker": "dev-default",
 		"gravatarphp/gravatar": "^1.0",
 		"arthurhoaro/favicon": "^1.2"
 	},
 	"require-dev": {
-		"christophwurst/nextcloud": "13.0.2",
-		"christophwurst/nextcloud_testing": "0.3.1"
+		"christophwurst/nextcloud": "dev-stable15",
+		"christophwurst/nextcloud_testing": "0.5.1"
+	},
+	"scripts": {
+		"test": "phpunit -c tests/phpunit.xml --fail-on-warning",
+		"test:unit": "phpunit -c tests/phpunit.xml tests --fail-on-warning",
+		"test:unit:dev": "phpunit -c tests/phpunit.xml tests --no-coverage --fail-on-warning"
 	},
 	"suggest": {
 		"phan/phan": "^0.10.0"

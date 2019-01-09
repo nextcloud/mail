@@ -24,11 +24,11 @@ namespace OCA\Mail\Tests\Service\DefaultAccount;
 use ChristophWurst\Nextcloud\Testing\TestCase;
 use OCA\Mail\Db\MailAccount;
 use OCA\Mail\Service\DefaultAccount\Manager;
-use OCA\Mail\Service\Logger;
 use OCP\Authentication\Exceptions\CredentialsUnavailableException;
 use OCP\Authentication\LoginCredentials\ICredentials;
 use OCP\Authentication\LoginCredentials\IStore;
 use OCP\IConfig;
+use OCP\ILogger;
 use OCP\IUser;
 use OCP\IUserSession;
 use OCP\Security\ICrypto;
@@ -42,7 +42,7 @@ class ManagerTest extends TestCase {
 	/** @var IStore|PHPUnit_Framework_MockObject_MockObject */
 	private $credentialStore;
 
-	/** @var Logger|PHPUnit_Framework_MockObject_MockObject */
+	/** @var ILogger|PHPUnit_Framework_MockObject_MockObject */
 	private $logger;
 
 	/** @var IUserSession|PHPUnit_Framework_MockObject_MockObject */
@@ -59,7 +59,7 @@ class ManagerTest extends TestCase {
 
 		$this->config = $this->createMock(IConfig::class);
 		$this->credentialStore = $this->createMock(IStore::class);
-		$this->logger = $this->createMock(Logger::class);
+		$this->logger = $this->createMock(ILogger::class);
 		$this->userSession = $this->createMock(IUserSession::class);
 		$this->crypto = $this->createMock(ICrypto::class);
 

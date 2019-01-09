@@ -82,6 +82,7 @@ OC.L10N.register(
     "Mail address" : "Почтовый адрес",
     "Display Name" : "Отображаемое имя",
     "Account" : "Учётная запись",
+    "Toggle read" : "Переключить отметку прочтения",
     "Delete" : "Удалить",
     "Keyboard shortcuts" : "Комбинации клавиш",
     "Speed up your Mail experience with these quick shortcuts." : "Ускорьте работу с почтой использованием этих комбинаций клавиш.",

@@ -33,7 +33,6 @@ use OCA\Mail\Http\HtmlResponse;
 use OCA\Mail\Mailbox;
 use OCA\Mail\Model\IMAPMessage;
 use OCA\Mail\Service\AccountService;
-use OCA\Mail\Service\Logger;
 use OCP\AppFramework\Db\DoesNotExistException;
 use OCP\AppFramework\Http\ContentSecurityPolicy;
 use OCP\AppFramework\Http\JSONResponse;
@@ -41,6 +40,7 @@ use OCP\AppFramework\Utility\ITimeFactory;
 use OCP\Files\Folder;
 use OCP\Files\IMimeTypeDetector;
 use OCP\IL10N;
+use OCP\ILogger;
 use OCP\IRequest;
 use OCP\IURLGenerator;
 
@@ -73,7 +73,7 @@ class MessagesControllerTest extends TestCase {
 		$this->userId = 'john';
 		$this->userFolder = $this->createMock(Folder::class);
 		$this->request = $this->createMock(Request::class);
-		$this->logger = $this->createMock(Logger::class);
+		$this->logger = $this->createMock(ILogger::class);
 		$this->l10n = $this->createMock(IL10N::class);
 		$this->mimeTypeDetector = $this->createMock(IMimeTypeDetector::class);
 		$this->urlGenerator = $this->createMock(IURLGenerator::class);
