@@ -1,20 +1,19 @@
 <template>
-	<div id="content"
-		 class="app-mail"
-	     v-shortkey.once="['c']"
-		 @shortkey="onNewMessage">
+	<AppContent app-name="mail"
+				v-shortkey.once="['c']"
+				@shortkey.native="onNewMessage">
 		<Loading v-if="loading" :hint="t('mail', 'Loading your accounts')"/>
 		<template v-else>
-			<app-navigation :menu="menu">
+			<AppNavigation :menu="menu">
 				<AppSettingsMenu slot="settings-content"/>
-			</app-navigation>
+			</AppNavigation>
 			<FolderContent/>
 		</template>
-	</div>
+	</AppContent>
 </template>
 
 <script>
-	import {AppNavigation} from 'nextcloud-vue'
+	import {AppContent, AppNavigation} from 'nextcloud-vue'
 	import AppSettingsMenu from '../components/AppSettingsMenu'
 	import FolderContent from '../components/FolderContent'
 	import Loading from '../components/Loading'
@@ -25,10 +24,11 @@
 		name: 'Home',
 		extends: SidebarItems,
 		components: {
-			Loading,
+			AppContent,
 			AppNavigation,
 			AppSettingsMenu,
 			FolderContent,
+			Loading,
 		},
 		data () {
 			return {

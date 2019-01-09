@@ -1,6 +1,5 @@
 <template>
-	<div id="content" class="mail">
-		<div id="app-content">
+	<AppContent app-name="mail">
 			<div id="emptycontent">
 				<div class="icon-mail"></div>
 				<h2>{{ t('mail', 'Connect your mail account') }}</h2>
@@ -8,17 +7,18 @@
 							 :email="email"
 							 :save="onSave"/>
 			</div>
-		</div>
-	</div>
+	</AppContent>
 </template>
 
 <script>
+	import {AppContent} from 'nextcloud-vue'
 	import AccountForm from '../components/AccountForm'
 
 	export default {
 		name: 'Setup',
 		components: {
 			AccountForm,
+			AppContent,
 		},
 		computed: {
 			displayName () {
