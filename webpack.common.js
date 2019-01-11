@@ -36,7 +36,7 @@ module.exports = {
 			{
 				test: /\.js$/,
 				loader: 'babel-loader',
-				exclude: /node_modules/
+				include: '/node_modules/quill/',
 			},
 			{
 				test: /\.(png|jpg|gif)$/,
@@ -47,12 +47,14 @@ module.exports = {
 			},
 			{
 				test: /\.(svg)$/i,
-				use: [
-					{
-						loader: 'url-loader'
-					}
-				]
-			}
+				loader: 'url-loader',
+				exclude: path.join(__dirname, 'node_modules/quill'),
+			},
+			{
+				test: /\.(svg)$/i,
+				loader: 'html-loader',
+				include: path.join(__dirname, 'node_modules/quill'),
+			},
 		]
 	},
 	plugins: [new VueLoaderPlugin()],

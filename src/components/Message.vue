@@ -42,7 +42,9 @@
 					  :body="replyBody"
 					  :replyTo="replyTo"
 					  :send="sendReply"
-					  :draft="saveReplyDraft"/>
+					  :draft="saveReplyDraft"
+					  :mode="mode"
+			/>
 		</template>
 	</div>
 </template>
@@ -103,7 +105,12 @@
 					folderId: this.message.folderId,
 					messageId: this.message.id,
 				}
-			}
+			},
+			mode() {
+				console.log('html?: ' + this.message.hasHtmlBody)
+				console.log("reply: " + this.replyBody)
+				return this.message.hasHtmlBody ? 'html' : 'text'
+			},
 		},
 		created () {
 			this.fetchMessage()
@@ -174,8 +181,10 @@
 						}
 					})
 			},
-			setReplyText (text) {
-				const bodyText = htmlToText(text)
+			setReplyText (bodyText) {
+				if (!this.message.hasHtmlBody) {
+					bodyText = htmlToText(bodyText)
+				}
 
 				this.$store.commit('setMessageBodyText', {
 					uid: this.message.uid,
@@ -186,6 +195,7 @@
 					this.message.bodyText,
 					this.message.from[0],
 					this.message.dateInt,
+					this.message.hasHtmlBody
 				)
 			},
 			onHtmlBodyLoaded (bodyString) {

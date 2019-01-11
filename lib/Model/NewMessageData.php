@@ -53,11 +53,15 @@ class NewMessageData {
 	/** @var array */
 	private $attachments;
 
+	/** @var string */
+	private $mode;
+
 	/**
 	 * @param Account $account
 	 * @param AddressList $to
 	 * @param AddressList $cc
 	 * @param AddressList $bcc
+	 * @param string $mode
 	 * @param string|null $subject
 	 * @param string|null $body
 	 * @param array $attachments
@@ -66,13 +70,15 @@ class NewMessageData {
 								AddressList $to,
 								AddressList $cc,
 								AddressList $bcc,
+								string $mode,
 								string $subject = null,
-								string $body = null ,
+								string $body = null,
 								array $attachments = []) {
 		$this->account = $account;
 		$this->to = $to;
 		$this->cc = $cc;
 		$this->bcc = $bcc;
+		$this->mode = $mode;
 		$this->subject = $subject;
 		$this->body = $body;
 		$this->attachments = $attachments;
@@ -92,6 +98,7 @@ class NewMessageData {
 									   string $to = null,
 									   string $cc = null,
 									   string $bcc = null,
+									   string $mode = null,
 									   string $subject = null,
 									   string $body = null,
 									   array $attachments = []) {
@@ -100,7 +107,7 @@ class NewMessageData {
 		$bccList = AddressList::parse($bcc ?: '');
 		$attachmentsArray = is_null($attachments) ? [] : $attachments;
 
-		return new self($account, $toList, $ccList, $bccList, $subject, $body, $attachmentsArray);
+		return new self($account, $toList, $ccList, $bccList, $mode, $subject, $body, $attachmentsArray);
 	}
 
 	/**
@@ -150,6 +157,14 @@ class NewMessageData {
 	 */
 	public function getAttachments(): array {
 		return $this->attachments;
+	}
+
+	/**
+	 * @return string
+	 */
+	public function getMode(): string
+	{
+		return $this->mode;
 	}
 
 }

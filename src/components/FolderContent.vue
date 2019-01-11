@@ -62,24 +62,29 @@
 						accountId: this.$route.params.accountId,
 						folderId: this.$route.params.folderId
 					}).then(envelopes => {
-					this.loading = false;
+					this.$store.dispatch('getTheme').then(() => {
+						this.loading = false
 
-					if (this.$route.name !== 'message' && envelopes.length > 0) {
-						// Show first message
-						let first = envelopes[0];
+						if (
+							this.$route.name !== 'message' &&
+							envelopes.length > 0
+						) {
+							// Show first message
+							let first = envelopes[0]
 
-						// Keep the selected account-folder combination, but navigate to the message
-						// (it's not a bug that we don't use first.accountId and first.folderId here)
-						this.$router.replace({
-							name: 'message',
-							params: {
-								accountId: this.$route.params.accountId,
-								folderId: this.$route.params.folderId,
-								messageUid: first.uid,
-							}
-						})
-					}
-				});
+							// Keep the selected account-folder combination, but navigate to the message
+							// (it's not a bug that we don't use first.accountId and first.folderId here)
+							this.$router.replace({
+								name: 'message',
+								params: {
+									accountId: this.$route.params.accountId,
+									folderId: this.$route.params.folderId,
+									messageUid: first.uid,
+								},
+							})
+						}
+					})
+				})
 			}
 		}
 	}

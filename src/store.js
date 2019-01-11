@@ -18,6 +18,7 @@ import {
 } from './service/MessageService'
 import {showNewMessagesNotification} from './service/NotificationService'
 import {savePreference} from './service/PreferenceService'
+import { getTheme } from './service/ThemeService'
 import {parseUid} from './util/EnvelopeUidParser'
 import {value} from './util/undefined'
 
@@ -161,6 +162,10 @@ export const mutations = {
 	},
 	removeMessage (state, {accountId, folderId, id}) {
 		Vue.delete(state.messages, accountId + '-' + folderId + '-' + id)
+	},
+
+	setTheme(state, theme) {
+		state.theme = theme
 	},
 }
 
@@ -541,7 +546,13 @@ export const actions = {
 				})
 				throw err
 			})
-	}
+	},
+
+	getTheme({ commit }) {
+		return getTheme().then(theme => {
+			commit('setTheme', theme)
+		})
+	},
 }
 
 export const getters = {
@@ -617,6 +628,7 @@ export default new Vuex.Store({
 		envelopes: {},
 		messages: {},
 		autocompleteEntries: [],
+		theme: '',
 	},
 	getters,
 	mutations,

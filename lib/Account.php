@@ -199,7 +199,14 @@ class Account implements JsonSerializable {
 
 		$mail = new Horde_Mime_Mail();
 		$mail->addHeaders($headers);
-		$mail->setBody($message->getContent());
+
+		switch ($message->getMode()) {
+			case 'html':
+				$mail->setHtmlBody($message->getContent());
+				break;
+			case 'text':
+				$mail->setBody($message->getContent());
+		}
 
 		// Append cloud attachments
 		foreach ($message->getCloudAttachments() as $attachment) {

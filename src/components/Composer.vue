@@ -79,13 +79,14 @@
 			{{ t('mail', 'Note that the mail came from a noreply address so	your reply will probably not be read.') }}
 		</div>
 		<div class="composer-fields">
-			<textarea name="body"
-					  class="message-body"
-					  v-autosize
-					  v-model="bodyVal"
-					  @keyup="onInputChanged"
-					  @keypress="onBodyKeyPress"
-					  :placeholder="t('mail', 'Message …')">{{message}}</textarea>
+			<input type="hidden" name="body" />
+			<Editor
+					v-model="bodyVal"
+					:placeholder="t('mail', 'Message …')"
+					:mode="mode"
+					@input="onInputChanged"
+					@mode="onModeChanged"
+			/>
 		</div>
 		<div class="submit-message-wrapper">
 			<input class="submit-message send primary"
@@ -129,6 +130,7 @@
 	import Vue from 'vue'
 
 	import {findRecipient} from '../service/AutocompleteService'
+	import Editor from './Editor'
 	import Loading from './Loading'
 	import ComposerAttachments from './ComposerAttachments'
 
@@ -148,6 +150,7 @@
 		name: 'Composer',
 		components: {
 			ComposerAttachments,
+			Editor,
 			Loading,
 			Multiselect,
 		},
@@ -185,6 +188,10 @@
 			send: {
 				type: Function,
 				required: true,
+			},
+			mode: {
+				type: String,
+				required: true,
 			}
 		},
 		data () {
@@ -211,6 +218,7 @@
 				selectTo: this.to,
 				selectCc: this.cc,
 				selectBcc: this.bcc,
+				modeVal: this.mode,
 			}
 		},
 		beforeMount () {
@@ -260,6 +268,7 @@
 						attachments: this.attachments,
 						folderId: this.replyTo ? this.replyTo.folderId : undefined,
 						messageId: this.replyTo ? this.replyTo.messageId : undefined,
+						mode: this.modeVal
 					}
 				}
 			},
@@ -351,7 +360,11 @@
 			 */
 			formatAliases(alias) {
 				return `${alias.name} <${alias.emailAddress}>`
-			}
+			},
+
+			onModeChanged(mode) {
+				this.modeVal = mode
+			},
 		}
 	}
 </script>
@@ -396,8 +409,7 @@
 	#to,
 	#cc,
 	#bcc,
-	input.subject,
-	textarea.message-body {
+	input.subject {
 		padding: 12px;
 		margin: 0;
 	}
@@ -408,20 +420,13 @@
 
 	input.cc,
 	input.bcc,
-	input.subject,
-	textarea.message-body {
+	input.subject {
 		border-top: none;
 	}
 
 	input.subject {
 		font-size: 20px;
 		font-weight: 300;
-	}
-
-	textarea.message-body {
-		min-height: 300px;
-		resize: none;
-		padding-right: 25%;
 	}
 
 	#draft-status {

@@ -44,7 +44,7 @@ Vue.mixin({
 	}
 })
 
-Vue.use(VueShortKey, { prevent: ['input', 'textarea'] })
+Vue.use(VueShortKey, { prevent: ['input', '.ql-editor'] })
 Vue.use(VTooltip)
 
 const getPreferenceFromPage = key => {

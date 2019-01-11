@@ -251,10 +251,22 @@ class AccountsController extends Controller {
 	 * @param int|null $messageId
 	 * @param mixed $attachments
 	 * @param int|null $aliasId
+	 * @param string $mode
 	 * @return JSONResponse
 	 * @throws Horde_Exception
 	 */
-	public function send(int $accountId, string $subject = null, string $body, string $to, string $cc, string $bcc, int $draftUID = null, string $folderId = null, int $messageId = null, array $attachments = [], int $aliasId = null): JSONResponse {
+	public function send(int $accountId,
+						 string $body,
+						 string $to,
+						 string $cc,
+						 string $bcc,
+						 string $mode,
+						 string $subject = null,
+						 int $draftUID = null,
+						 string $folderId = null,
+						 int $messageId = null,
+						 array $attachments = [],
+						 int $aliasId = null): JSONResponse {
 		$account = $this->accountService->find($this->currentUserId, $accountId);
 		$alias = $aliasId ? $this->aliasesService->find($aliasId, $this->currentUserId) : null;
 
@@ -262,7 +274,7 @@ class AccountsController extends Controller {
 		$expandedCc = $this->groupsIntegration->expand($cc);
 		$expandedBcc = $this->groupsIntegration->expand($bcc);
 
-		$messageData = NewMessageData::fromRequest($account, $expandedTo, $expandedCc, $expandedBcc, $subject, $body, $attachments);
+		$messageData = NewMessageData::fromRequest($account, $expandedTo, $expandedCc, $expandedBcc, $mode, $subject, $body, $attachments);
 		$repliedMessageData = new RepliedMessageData($account, $folderId, $messageId);
 
 		try {
@@ -279,15 +291,24 @@ class AccountsController extends Controller {
 	 * @TrapError
 	 *
 	 * @param int $accountId
-	 * @param string $subject
 	 * @param string $body
 	 * @param string $to
 	 * @param string $cc
 	 * @param string $bcc
-	 * @param int $uid
+	 * @param string $mode
+	 * @param string $subject
+	 * @param int|null $draftUID
 	 * @return JSONResponse
+	 * @throws ServiceException
 	 */
-	public function draft(int $accountId, string $subject = null, string $body, string $to, string $cc, string $bcc, int $draftUID = null): JSONResponse {
+	public function draft(int $accountId,
+						  string $body,
+						  string $to,
+						  string $cc,
+						  string $bcc,
+						  string $mode,
+						  string $subject = null,
+						  int $draftUID = null): JSONResponse {
 		if (is_null($draftUID)) {
 			$this->logger->info("Saving a new draft in account <$accountId>");
 		} else {
@@ -295,7 +316,7 @@ class AccountsController extends Controller {
 		}
 
 		$account = $this->accountService->find($this->currentUserId, $accountId);
-		$messageData = NewMessageData::fromRequest($account, $to, $cc, $bcc, $subject, $body, []);
+		$messageData = NewMessageData::fromRequest($account, $to, $cc, $bcc, $mode, $subject, $body, []);
 
 		try {
 			$newUID = $this->mailTransmission->saveDraft($messageData, $draftUID);

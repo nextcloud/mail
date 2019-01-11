@@ -64,6 +64,9 @@ class Message implements IMessage {
 	/** @var int[] */
 	private $localAttachments = [];
 
+	/** @var string */
+	private $mode;
+
 	public function __construct() {
 		$this->from = new AddressList();
 		$this->to = new AddressList();
@@ -233,6 +236,22 @@ class Message implements IMessage {
 		$part->setContents($file->getContent());
 		$part->setType($file->getMimeType());
 		$this->localAttachments[] = $part;
+	}
+
+	/**
+	 * @return string
+	 */
+	public function getMode(): string
+	{
+		return $this->mode;
+	}
+
+	/**
+	 * @param string $mode
+	 */
+	public function setMode(string $mode)
+	{
+		$this->mode = $mode;
 	}
 
 }

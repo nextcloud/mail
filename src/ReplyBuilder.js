@@ -26,16 +26,33 @@ import {getLocale} from 'nextcloud-server/dist/l10n'
 
 moment.locale(getLocale())
 
-export const buildReplyBody = (original, from, date) => {
-	const start = '\n\n'
-	const body = '\n> ' + original.replace(/\n/g, '\n> ')
+export const buildReplyBody = (original, from, date, isHtml) => {
+	let start = '\n\n'
+	let header = ''
+	let body = '\n> ' + original.replace(/\n/g, '\n> ')
 
-	if (from) {
-		const dateString = moment.unix(date).format('LLL')
-		return start + `"${from.label}" <${from.email}> – ${dateString}` + body
-	} else {
+	if (!(from && isHtml)) {
 		return start + body
+	} else {
+		const dateString = moment.unix(date).format('LLL')
+		header = `"${from.label}" <${from.email}> – ${dateString}`
 	}
+
+	if (isHtml) {
+		start = '<br><br>'
+		header = '<p>‐‐‐‐‐‐‐ Original Message ‐‐‐‐‐‐‐</p>'
+
+		if (from) {
+			header = `<p>header
+				.replace(/&/g, '&amp;')
+				.replace(/</g, '&lt;')
+				.replace(/>/g, '&gt;'):</p>`
+		}
+
+		body = original
+	}
+
+	return start + header + body
 }
 
 const RecipientType = Object.seal({

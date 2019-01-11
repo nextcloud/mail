@@ -93,6 +93,11 @@ return [
 			'url' => '/proxy',
 			'verb' => 'GET'
 		],
+		[
+			'name' => 'theme#value',
+			'url' => '/api/theme',
+			'verb' => 'GET'
+		],
 	],
 	'resources' => [
 		'accounts' => ['url' => '/api/accounts'],
