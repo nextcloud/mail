@@ -5,6 +5,7 @@ import {translate as t} from 'nextcloud-server/dist/l10n'
 
 import {
 	create as createAccount,
+	update as updateAccount,
 	fetch as fetchAccount,
 	fetchAll as fetchAllAccounts
 } from './service/AccountService'
@@ -40,6 +41,10 @@ export const mutations = {
 			'accountList',
 			_.sortBy(state.accountList.concat([account.id]))
 		)
+	},
+	editAccount (state, account) {
+		// TODO
+		console.log("called editAccount via commit")
 	},
 	toggleAccountCollapsed (state, accountId) {
 		state.accounts[accountId].collapsed = !state.accounts[accountId].collapsed
@@ -191,6 +196,15 @@ export const actions = {
 			.then(account => {
 				console.debug('account created', account)
 				commit('addAccount', account)
+				return account
+			})
+	},
+	updateAccount ({commit}, config) {
+		console.log('updateAccount config', config)
+		return updateAccount(config)
+			.then(account => {
+				console.debug('account updated', account)
+				commit('editAccount', account)
 				return account
 			})
 	},

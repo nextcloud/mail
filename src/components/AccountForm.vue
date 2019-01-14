@@ -213,7 +213,7 @@
 			   class="primary"
 			   v-on:click="onSubmit"
 			   :disabled="loading"
-			   :value="t('mail', 'Connect')"/>
+			   :value="submitButtonText"/>
 	</div>
 </template>
 
@@ -234,7 +234,11 @@
 			save: {
 				type: Function,
 				required: true,
-			}
+			},
+			settingsPage: {
+				type: Boolean,
+				default: false,
+			},
 		},
 		components: {
 			Tab,
@@ -263,7 +267,8 @@
 					smtpSslMode: 'tls',
 					smtpUser: '',
 					smtpPassword: '',
-				}
+				},
+				submitButtonText: this.settingsPage ? t('mail', 'Save') : t('mail', 'Connect'),
 			};
 		},
 		methods: {
