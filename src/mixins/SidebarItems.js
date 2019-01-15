@@ -77,29 +77,18 @@ export default {
 				}
 			}
 
-			return {
-				id: 'accounts-list',
-				new: {
-					'id': 'mail_new_message',
-					text: t('mail', 'New message'),
-					icon: 'icon-add',
-					action: () => {
-						// FIXME: assumes that we're on the 'message' route already
-						this.$router.push({
-							name: 'message',
-							params: {
-								accountId: this.$route.params.accountId,
-								folderId: this.$route.params.folderId,
-								messageUid: 'new',
-							}
-						});
-					}
-				},
-				items: items,
-				utils: {
-					counter: 0
+			return items
+		},
+		onNewMessage () {
+			// FIXME: assumes that we're on the 'message' route already
+			this.$router.push({
+				name: 'message',
+				params: {
+					accountId: this.$route.params.accountId,
+					folderId: this.$route.params.folderId,
+					messageUid: 'new',
 				}
-			}
+			});
 		}
 	}
 }

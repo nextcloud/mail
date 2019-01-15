@@ -1,10 +1,20 @@
 <template>
-	<div id="content" class="app-mail">
-		<app-navigation :menu="menu">
-			<AppSettingsMenu slot="settings-content"/>
-		</app-navigation>
-
-		<div id="app-content">
+	<AppContent app-name="mail">
+		<template slot="navigation">
+			<AppNavigationNew :text="t('mail', 'New message')"
+							  buttonId="mail_new_message"
+							  buttonClass="icon-add"
+							  @click="onNewMessage"/>
+			<ul id="accounts-list">
+				<AppNavigationItem v-for="item in menu"
+								   :key="item.key"
+								   :item="item"/>
+			</ul>
+			<AppNavigationSettings :title="t('mail', 'Settings')">
+				<AppSettingsMenu />
+			</AppNavigationSettings>
+		</template>
+		<template slot="content">
 			<div class="app-content-details">
 				<h2>{{ t('mail', 'Keyboard shortcuts') }}</h2>
 
@@ -51,12 +61,17 @@
 					</div>
 				</dl>
 			</div>
-		</div>
-	</div>
+		</template>
+	</AppContent>
 </template>
 
 <script>
-	import {AppNavigation} from 'nextcloud-vue'
+	import {
+		AppContent,
+		AppNavigationItem,
+		AppNavigationNew,
+		AppNavigationSettings
+	} from 'nextcloud-vue'
 
 	import AppSettingsMenu from '../components/AppSettingsMenu'
 	import SidebarItems from '../mixins/SidebarItems'
@@ -65,7 +80,10 @@
 		name: 'KeyboardShortcuts',
 		extends: SidebarItems,
 		components: {
-			AppNavigation,
+			AppContent,
+			AppNavigationItem,
+			AppNavigationNew,
+			AppNavigationSettings,
 			AppSettingsMenu,
 		},
 		computed: {
