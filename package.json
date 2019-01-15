@@ -26,7 +26,7 @@
     "moment": "^2.23.0",
     "nextcloud-axios": "^0.1.3",
     "nextcloud-server": "^0.15.9",
-    "nextcloud-vue": "^0.5.0",
+    "nextcloud-vue": "^0.6.0",
     "nextcloud_issuetemplate_builder": "^0.1.0",
     "remove": "^0.1.5",
     "v-tooltip": "^2.0.0-rc.33",
