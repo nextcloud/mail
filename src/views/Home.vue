@@ -61,19 +61,16 @@
 			}
 		},
 		created () {
-			this.$store.dispatch('fetchAccounts')
-				.then(accounts => {
-					return Promise.all(accounts.map(account => {
-						return this.$store.dispatch('fetchFolders', {
-							accountId: account.id,
-						})
-					})).then(() => {
-						return accounts
-					})
-				}).then(accounts => {
+			const accounts = this.$store.getters.getAccounts()
+
+			return Promise.all(accounts.map(account => {
+				return this.$store.dispatch('fetchFolders', {
+					accountId: account.id,
+				})
+			})).then(() => {
 				this.loading = false
 
-				console.debug('accounts fetched', accounts)
+				console.debug('account folders fetched', accounts)
 
 				if (this.$route.name === 'home' && accounts.length > 0) {
 					// Show first account
