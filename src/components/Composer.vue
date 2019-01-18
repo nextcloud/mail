@@ -376,7 +376,7 @@
 	.composer-fields {
 		display: flex;
 		align-items: center;
-		border-top: 1px solid #eee;
+		border-top: 1px solid var(--color-border);
 		padding-right: 30px;
 	}
 	.composer-fields .multiselect,

@@ -256,11 +256,10 @@
 	}
 
 	#mail-message-header .transparency {
-		color: rgba(0, 0, 0, .3) !important;
-		opacity: 1;
+		opacity: .6;
 	}
 
 	#mail-message-header .transparency a {
-		color: rgba(0, 0, 0, .5) !important;
+		font-weight: bold;
 	}
 </style>
