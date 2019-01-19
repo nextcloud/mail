@@ -1221,16 +1221,16 @@
         },
         {
             "name": "microsoft/tolerant-php-parser",
-            "version": "v0.0.15",
+            "version": "v0.0.16",
             "source": {
                 "type": "git",
                 "url": "https://github.com/Microsoft/tolerant-php-parser.git",
-                "reference": "54a84f1250dcde5641e86b5e966fec5f0e201f71"
+                "reference": "b662587eb797685a98239d1d52d25168a03fdfb2"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/Microsoft/tolerant-php-parser/zipball/54a84f1250dcde5641e86b5e966fec5f0e201f71",
-                "reference": "54a84f1250dcde5641e86b5e966fec5f0e201f71",
+                "url": "https://api.github.com/repos/Microsoft/tolerant-php-parser/zipball/b662587eb797685a98239d1d52d25168a03fdfb2",
+                "reference": "b662587eb797685a98239d1d52d25168a03fdfb2",
                 "shasum": ""
             },
             "require": {
@@ -1258,7 +1258,7 @@
                 }
             ],
             "description": "Tolerant PHP-to-AST parser designed for IDE usage scenarios",
-            "time": "2018-09-26T05:43:26+00:00"
+            "time": "2018-12-29T00:31:32+00:00"
         },
         {
             "name": "myclabs/deep-copy",
@@ -1349,16 +1349,16 @@
         },
         {
             "name": "phan/phan",
-            "version": "1.2.0",
+            "version": "1.2.1",
             "source": {
                 "type": "git",
                 "url": "https://github.com/phan/phan.git",
-                "reference": "e961f8e1458055488795adf3701535562baa526e"
+                "reference": "8f8a01d2bb547675a758e19f11916909d1b85279"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/phan/phan/zipball/e961f8e1458055488795adf3701535562baa526e",
-                "reference": "e961f8e1458055488795adf3701535562baa526e",
+                "url": "https://api.github.com/repos/phan/phan/zipball/8f8a01d2bb547675a758e19f11916909d1b85279",
+                "reference": "8f8a01d2bb547675a758e19f11916909d1b85279",
                 "shasum": ""
             },
             "require": {
@@ -1367,7 +1367,7 @@
                 "ext-filter": "*",
                 "ext-json": "*",
                 "felixfbecker/advanced-json-rpc": "^3.0.3",
-                "microsoft/tolerant-php-parser": "0.0.15",
+                "microsoft/tolerant-php-parser": "0.0.16",
                 "php": "^7.0.0",
                 "sabre/event": "^5.0",
                 "symfony/console": "^2.3|^3.0|~4.0"
@@ -1411,7 +1411,7 @@
                 "php",
                 "static"
             ],
-            "time": "2019-01-05T15:41:52+00:00"
+            "time": "2019-01-18T14:40:09+00:00"
         },
         {
             "name": "phar-io/manifest",
@@ -2958,7 +2958,7 @@
                 },
                 {
                     "name": "Gert de Pagter",
-                    "email": "BackEndTea@gmail.com"
+                    "email": "backendtea@gmail.com"
                 }
             ],
             "description": "Symfony polyfill for ctype functions",
