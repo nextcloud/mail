@@ -55,6 +55,11 @@
 			fetchData () {
 				this.loading = true
 
+				if (!this.$route.params.accountId && !this.$route.params.folderId) {
+					console.warn('no account nor folder id -> cannot fetch envelopes in FolderContent')
+					return;
+				}
+
 				this.$store.dispatch(
 					'fetchEnvelopes', {
 						accountId: this.$route.params.accountId,

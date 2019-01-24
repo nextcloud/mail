@@ -26,10 +26,12 @@ declare(strict_types=1);
 
 namespace OCA\Mail\Controller;
 
+use Exception;
 use OCA\Mail\Contracts\IUserPreferences;
 use OCA\Mail\Http\JSONResponse;
 use OCA\Mail\Service\AccountService;
 use OCA\Mail\Service\AliasesService;
+use OCA\Mail\Service\MailManager;
 use OCP\AppFramework\Controller;
 use OCP\AppFramework\Http\ContentSecurityPolicy;
 use OCP\AppFramework\Http\RedirectResponse;
@@ -62,6 +64,9 @@ class PageController extends Controller {
 	/** @var IUserPreferences */
 	private $preferences;
 
+	/** @var MailManager */
+	private $mailManager;
+
 	/**
 	 * @param string $appName
 	 * @param IRequest $request
@@ -75,7 +80,7 @@ class PageController extends Controller {
 	public function __construct(string $appName, IRequest $request,
 								IURLGenerator $urlGenerator, IConfig $config, AccountService $accountService,
 								AliasesService $aliasesService, string $UserId, IUserSession $userSession,
-								IUserPreferences $preferences) {
+								IUserPreferences $preferences, MailManager $mailManager) {
 		parent::__construct($appName, $request);
 
 		$this->urlGenerator = $urlGenerator;
@@ -85,6 +90,7 @@ class PageController extends Controller {
 		$this->currentUserId = $UserId;
 		$this->userSession = $userSession;
 		$this->preferences = $preferences;
+		$this->mailManager = $mailManager;
 	}
 
 	/**
@@ -101,6 +107,13 @@ class PageController extends Controller {
 			$json = $mailAccount->jsonSerialize();
 			$json['aliases'] = $this->aliasesService->findAll($mailAccount->getId(),
 				$this->currentUserId);
+			try {
+				$folders = $this->mailManager->getFolders($mailAccount);
+				$json['folders'] = $folders;
+			} catch (Exception $ex) {
+				$json['folders'] = [];
+				$json['error'] = true;
+			}
 			$accountsJson[] = $json;
 		}
 
