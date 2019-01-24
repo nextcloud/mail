@@ -25,8 +25,10 @@ use ChristophWurst\Nextcloud\Testing\TestCase;
 use OCA\Mail\Account;
 use OCA\Mail\Contracts\IUserPreferences;
 use OCA\Mail\Controller\PageController;
+use OCA\Mail\Folder;
 use OCA\Mail\Service\AccountService;
 use OCA\Mail\Service\AliasesService;
+use OCA\Mail\Service\MailManager;
 use OCP\AppFramework\Http\ContentSecurityPolicy;
 use OCP\AppFramework\Http\RedirectResponse;
 use OCP\AppFramework\Http\TemplateResponse;
@@ -66,6 +68,9 @@ class PageControllerTest extends TestCase {
 	/** @var IUserPreferences|PHPUnit_Framework_MockObject_MockObject */
 	private $preferences;
 
+	/** @var MailManager|PHPUnit_Framework_MockObject_MockObject */
+	private $mailManager;
+
 	/** @var PageController */
 	private $controller;
 
@@ -81,16 +86,18 @@ class PageControllerTest extends TestCase {
 		$this->aliasesService = $this->createMock(AliasesService::class);
 		$this->userSession = $this->createMock(IUserSession::class);
 		$this->preferences = $this->createMock(IUserPreferences::class);
+		$this->mailManager = $this->createMock(MailManager::class);
 
 		$this->controller = new PageController($this->appName, $this->request,
 			$this->urlGenerator, $this->config, $this->accountService,
-			$this->aliasesService, $this->userId, $this->userSession, $this->preferences);
+			$this->aliasesService, $this->userId, $this->userSession,
+			$this->preferences, $this->mailManager);
 	}
 
 	public function testIndex() {
 		$account1 = $this->createMock(Account::class);
 		$account2 = $this->createMock(Account::class);
-
+		$folder = $this->createMock(Folder::class);
 		$this->preferences->expects($this->once())
 			->method('getPreference')
 			->with('external-avatars', 'true')
@@ -102,11 +109,22 @@ class PageControllerTest extends TestCase {
 					$account1,
 					$account2,
 		]));
+		$this->mailManager->expects($this->at(0))
+			->method('getFolders')
+			->with($account1)
+			->willReturn([$folder]);
+		$this->mailManager->expects($this->at(1))
+			->method('getFolders')
+			->with($account2)
+			->willReturn([]);
 		$account1->expects($this->once())
 			->method('jsonSerialize')
 			->will($this->returnValue([
 					'accountId' => 1,
 		]));
+		$folder->expects($this->once())
+			->method('jsonSerialize')
+			->willReturn(['id' => 'inbox']);
 		$account1->expects($this->once())
 			->method('getId')
 			->will($this->returnValue(1));
@@ -130,14 +148,20 @@ class PageControllerTest extends TestCase {
 				'aliases' => [
 					'a11',
 					'a12',
-				]
+				],
+				'folders' => [
+					[
+						'id' => 'inbox',
+					],
+				],
 			],
 			[
 				'accountId' => 2,
 				'aliases' => [
 					'a21',
 					'a22',
-				]
+				],
+				'folders' => [],
 			],
 		];
 
