@@ -79,7 +79,7 @@ class PageController extends Controller {
 	 */
 	public function __construct(string $appName, IRequest $request,
 								IURLGenerator $urlGenerator, IConfig $config, AccountService $accountService,
-								AliasesService $aliasesService, string $UserId, IUserSession $userSession,
+								AliasesService $aliasesService, $UserId, IUserSession $userSession,
 								IUserPreferences $preferences, MailManager $mailManager) {
 		parent::__construct($appName, $request);
 
