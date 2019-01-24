@@ -38,18 +38,18 @@
 
 	export default {
 		name: "EnvelopeList",
-		computed: {
-			envelopes () {
-				return this.$store.getters.getEnvelopes(
-					this.$route.params.accountId,
-					this.$route.params.folderId
-				)
+		props: {
+			account: {
+				type: Object,
+				required: true,
 			},
-			folder () {
-				return this.$store.getters.getFolder(
-					this.$route.params.accountId,
-					this.$route.params.folderId
-				)
+			folder: {
+				type: Object,
+				required: true,
+			},
+			envelopes: {
+				type: Array,
+				required: true,
 			}
 		},
 		components: {

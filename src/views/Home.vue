@@ -17,7 +17,8 @@
 			</AppNavigationSettings>
 		</template>
 		<template slot="content">
-			<FolderContent/>
+			<FolderContent :account="activeAccount"
+						   :folder="activeFolder" />
 		</template>
 	</AppContent>
 </template>
@@ -46,6 +47,17 @@
 			FolderContent,
 		},
 		computed: {
+			activeAccount () {
+				return this.$store.getters.getAccount(
+					this.$route.params.accountId
+				)
+			},
+			activeFolder () {
+				return this.$store.getters.getFolder(
+					this.$route.params.accountId,
+					this.$route.params.folderId
+				)
+			},
 			menu () {
 				return this.buildMenu()
 			}
