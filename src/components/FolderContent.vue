@@ -3,7 +3,9 @@
 		<Loading v-if="loading"
 				 :hint="t('mail', 'Loading messages')"/>
 		<template v-else>
-			<EnvelopeList/>
+			<EnvelopeList :account="account"
+						  :folder="folder"
+						  :envelopes="envelopes"/>
 			<NewMessageDetail v-if="newMessage"/>
 			<Message v-else-if="hasMessages"/>
 		</template>
@@ -24,6 +26,16 @@
 			Message,
 			EnvelopeList,
 		},
+		props: {
+			account: {
+				type: Object,
+				required: true,
+			},
+			folder: {
+				type: Object,
+				required: true,
+			},
+		},
 		data () {
 			return {
 				loading: true,
@@ -32,12 +44,18 @@
 		computed: {
 			hasMessages () {
 				return this.$store.getters.getEnvelopes(
-					this.$route.params.accountId,
-					this.$route.params.folderId
+					this.account.id,
+					this.folder.id,
 				).length > 0
 			},
 			newMessage () {
 				return this.$route.params.messageUid === 'new'
+			},
+			envelopes () {
+				return this.$store.getters.getEnvelopes(
+					this.account.id,
+					this.folder.id,
+				)
 			}
 		},
 		created () {
@@ -55,15 +73,10 @@
 			fetchData () {
 				this.loading = true
 
-				if (!this.$route.params.accountId && !this.$route.params.folderId) {
-					console.warn('no account nor folder id -> cannot fetch envelopes in FolderContent')
-					return;
-				}
-
 				this.$store.dispatch(
 					'fetchEnvelopes', {
-						accountId: this.$route.params.accountId,
-						folderId: this.$route.params.folderId
+						accountId: this.account.id,
+						folderId: this.folder.id,
 					}).then(envelopes => {
 					this.loading = false;
 
@@ -76,8 +89,8 @@
 						this.$router.replace({
 							name: 'message',
 							params: {
-								accountId: this.$route.params.accountId,
-								folderId: this.$route.params.folderId,
+								accountId: this.account.id,
+								folderId: this.folder.id,
 								messageUid: first.uid,
 							}
 						})
