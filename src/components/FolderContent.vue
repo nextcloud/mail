@@ -5,7 +5,8 @@
 		<template v-else>
 			<EnvelopeList :account="account"
 						  :folder="folder"
-						  :envelopes="envelopes"/>
+						  :envelopes="envelopes"
+						  :searchQuery="searchQuery"/>
 			<NewMessageDetail v-if="newMessage"/>
 			<Message v-else-if="hasMessages"/>
 		</template>
@@ -13,6 +14,8 @@
 </template>
 
 <script>
+	import _ from 'lodash';
+
 	import Message from "./Message";
 	import EnvelopeList from "./EnvelopeList";
 	import NewMessageDetail from "./NewMessageDetail";
@@ -39,6 +42,8 @@
 		data () {
 			return {
 				loading: true,
+				searchQuery: undefined,
+				alive: false,
 			}
 		},
 		computed: {
@@ -52,14 +57,29 @@
 				return this.$route.params.messageUid === 'new'
 			},
 			envelopes () {
-				return this.$store.getters.getEnvelopes(
-					this.account.id,
-					this.folder.id,
-				)
+				if (_.isUndefined(this.searchQuery)) {
+					return this.$store.getters.getEnvelopes(
+						this.account.id,
+						this.folder.id,
+					)
+				} else {
+					return this.$store.getters.getSearchEnvelopes(
+						this.account.id,
+						this.folder.id,
+					)
+				}
+
 			}
 		},
 		created () {
+			this.alive = true
+
+			new OCA.Search(this.searchProxy, this.clearSearchProxy)
+
 			this.fetchData()
+		},
+		beforeDestroy () {
+			this.alive = false
 		},
 		watch: {
 			'$route' (to, from) {
@@ -77,26 +97,49 @@
 					'fetchEnvelopes', {
 						accountId: this.account.id,
 						folderId: this.folder.id,
-					}).then(envelopes => {
-					this.loading = false;
+						query: this.searchQuery,
+					})
+					.then(() => {
+						const envelopes = this.envelopes
+						console.debug('envelopes fetched', envelopes)
 
-					if (this.$route.name !== 'message' && envelopes.length > 0) {
-						// Show first message
-						let first = envelopes[0];
+						this.loading = false
 
-						// Keep the selected account-folder combination, but navigate to the message
-						// (it's not a bug that we don't use first.accountId and first.folderId here)
-						this.$router.replace({
-							name: 'message',
-							params: {
-								accountId: this.account.id,
-								folderId: this.folder.id,
-								messageUid: first.uid,
-							}
-						})
-					}
-				});
-			}
+						if (this.$route.name !== 'message' && envelopes.length > 0) {
+							// Show first message
+							let first = envelopes[0];
+
+							// Keep the selected account-folder combination, but navigate to the message
+							// (it's not a bug that we don't use first.accountId and first.folderId here)
+							this.$router.replace({
+								name: 'message',
+								params: {
+									accountId: this.account.id,
+									folderId: this.folder.id,
+									messageUid: first.uid,
+								}
+							})
+						}
+					});
+			},
+			searchProxy (query) {
+				if (this.alive) {
+					this.search(query)
+				}
+			},
+			clearSearchProxy () {
+				if (this.alive) {
+					this.clearSearch()
+				}
+			},
+			search (query) {
+				this.searchQuery = query
+
+				this.fetchData()
+			},
+			clearSearch () {
+				this.searchQuery = undefined
+			},
 		}
 	}
 </script>
