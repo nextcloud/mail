@@ -70,7 +70,7 @@
     "sass-loader": "^7.0.3",
     "sinon": "^7.2.3",
     "url-loader": "^1.1.2",
-    "vue-loader": "^15.5.1",
+    "vue-loader": "^15.6.2",
     "vue-server-renderer": "^2.5.22",
     "vue-template-compiler": "^2.5.22",
     "webpack": "^4.29.0",
