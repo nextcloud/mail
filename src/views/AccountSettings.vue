@@ -81,6 +81,11 @@
 
 						return account
 					})
+					.catch(err => {
+						console.error('account update failed:', err)
+
+						throw err
+					})
 			},
 		},
 	}
