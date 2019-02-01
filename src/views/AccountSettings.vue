@@ -24,7 +24,7 @@
 							:displayName="displayName"
 							:email="email"
 							:save="onSave"
-							:settingsPage="true"
+							:account="account"
 					/>
 				</div>
 			</div>
@@ -58,6 +58,9 @@
 		computed: {
 			menu () {
 				return this.buildMenu()
+			},
+			account () {
+				return this.$store.getters.getAccount(this.$route.params.accountId)
 			},
 			displayName () {
 				return this.$store.getters.getAccount(this.$route.params.accountId)

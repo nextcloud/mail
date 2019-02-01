@@ -1,6 +1,6 @@
 <template>
 	<div id="account-form">
-		<tabs :options="{ useUrlFragment: false, defaultTabHash: 'auto' }"
+		<tabs :options="{ useUrlFragment: false, defaultTabHash: settingsPage ? 'manual' : 'auto' }"
 			  @changed="onModeChanged"
 			  cache-lifetime="0">
 			<tab :name="t('mail', 'Auto')"
@@ -218,6 +218,7 @@
 </template>
 
 <script>
+	import _ from 'underscore'
 	import {Tab, Tabs} from 'vue-tabs-component'
 
 	export default {
@@ -235,16 +236,24 @@
 				type: Function,
 				required: true,
 			},
-			settingsPage: {
-				type: Boolean,
-				default: false,
-			},
+			account: {
+				type: Object,
+				required: false,
+			}
 		},
 		components: {
 			Tab,
 			Tabs,
 		},
 		data () {
+			const fromAccountOr = (prop, def) => {
+				if (!_.isUndefined(this.account)) {
+					return this.account[prop]
+				} else {
+					return def
+				}
+			}
+
 			return {
 				loading: false,
 				mode: 'auto',
@@ -256,20 +265,24 @@
 				manualConfig: {
 					accountName: '',
 					emailAddress: '',
-					accountName: '',
-					imapHost: '',
-					imapPort: 993,
-					imapSslMode: 'ssl',
-					imapUser: '',
+					imapHost: fromAccountOr('imapHost', ''),
+					imapPort: fromAccountOr('imapPort', 993),
+					imapSslMode: fromAccountOr('imapSslMode', 'ssl'),
+					imapUser: fromAccountOr('imapUser', ''),
 					imapPassword: '',
-					smtpHost: '',
-					smtpPort: 587,
-					smtpSslMode: 'tls',
-					smtpUser: '',
+					smtpHost: fromAccountOr('smtpHost', ''),
+					smtpPort: fromAccountOr('smtpPort', 587),
+					smtpSslMode: fromAccountOr('smtpSslMode', 'tls'),
+					smtpUser: fromAccountOr('smtpUser', ''),
 					smtpPassword: '',
 				},
 				submitButtonText: this.settingsPage ? t('mail', 'Save') : t('mail', 'Connect'),
 			};
+		},
+		computed: {
+			settingsPage () {
+				return !_.isUndefined(this.account)
+			}
 		},
 		methods: {
 			onModeChanged (e) {
