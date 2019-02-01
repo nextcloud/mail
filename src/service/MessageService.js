@@ -3,13 +3,16 @@ import HttpClient from 'nextcloud-axios'
 
 import {parseErrorResponse} from '../http/ErrorResponseParser'
 
-export function fetchEnvelopes(accountId, folderId, cursor) {
+export function fetchEnvelopes(accountId, folderId, query, cursor) {
   const url = generateUrl('/apps/mail/api/accounts/{accountId}/folders/{folderId}/messages', {
     accountId,
     folderId,
   })
   const params = {}
 
+  if (query) {
+    params.filter = query
+  }
   if (cursor) {
     params.cursor = cursor
   }

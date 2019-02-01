@@ -17,13 +17,15 @@ export default {
 			let accounts = this.$store.getters.getAccounts();
 			for (let id in accounts) {
 				const account = accounts[id]
+				const isError = account.error;
 
 				if (account.isUnified !== true && account.visible !== false) {
 					items.push({
 						id: 'account' + account.id,
 						key: 'account' + account.id,
 						text: account.emailAddress,
-						bullet: calculateAccountColor(account.name), // TODO
+						bullet: isError ? undefined : calculateAccountColor(account.name), // TODO
+						icon: isError ? 'icon-error' : undefined,
 						router: {
 							name: 'accountSettings',
 							params: {
@@ -66,7 +68,7 @@ export default {
 					.map(folderToEntry)
 					.forEach(i => items.push(i))
 
-				if (!account.isUnified) {
+				if (!account.isUnified && account.folders.length > 0) {
 					items.push({
 						id: 'collapse-' + account.id,
 						key: 'collapse-' + account.id,
@@ -77,29 +79,18 @@ export default {
 				}
 			}
 
-			return {
-				id: 'accounts-list',
-				new: {
-					'id': 'mail_new_message',
-					text: t('mail', 'New message'),
-					icon: 'icon-add',
-					action: () => {
-						// FIXME: assumes that we're on the 'message' route already
-						this.$router.push({
-							name: 'message',
-							params: {
-								accountId: this.$route.params.accountId,
-								folderId: this.$route.params.folderId,
-								messageUid: 'new',
-							}
-						});
-					}
-				},
-				items: items,
-				utils: {
-					counter: 0
+			return items
+		},
+		onNewMessage () {
+			// FIXME: assumes that we're on the 'message' route already
+			this.$router.push({
+				name: 'message',
+				params: {
+					accountId: this.$route.params.accountId,
+					folderId: this.$route.params.folderId,
+					messageUid: 'new',
 				}
-			}
+			});
 		}
 	}
 }
