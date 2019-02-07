@@ -1,15 +1,15 @@
 import _ from 'lodash'
 import Vue from 'vue'
 import Vuex from 'vuex'
-import {translate as t} from 'nextcloud-server/dist/l10n'
+import { translate as t } from 'nextcloud-server/dist/l10n'
 
 import {
 	create as createAccount,
 	update as updateAccount,
 	fetch as fetchAccount,
-	fetchAll as fetchAllAccounts
+	fetchAll as fetchAllAccounts,
 } from './service/AccountService'
-import {fetchAll as fetchAllFolders,} from './service/FolderService'
+import { fetchAll as fetchAllFolders } from './service/FolderService'
 import {
 	deleteMessage,
 	fetchEnvelopes,
@@ -17,10 +17,10 @@ import {
 	setEnvelopeFlag,
 	syncEnvelopes,
 } from './service/MessageService'
-import {showNewMessagesNotification} from './service/NotificationService'
-import {savePreference} from './service/PreferenceService'
-import {parseUid} from './util/EnvelopeUidParser'
-import {value} from './util/undefined'
+import { showNewMessagesNotification } from './service/NotificationService'
+import { savePreference } from './service/PreferenceService'
+import { parseUid } from './util/EnvelopeUidParser'
+import { value } from './util/undefined'
 
 Vue.use(Vuex)
 
@@ -29,10 +29,10 @@ const UNIFIED_INBOX_ID = 'inbox'
 const UNIFIED_INBOX_UID = UNIFIED_ACCOUNT_ID + '-' + UNIFIED_INBOX_ID
 
 export const mutations = {
-	savePreference (state, {key, value}) {
+	savePreference(state, { key, value }) {
 		Vue.set(state.preferences, key, value)
 	},
-	addAccount (state, account) {
+	addAccount(state, account) {
 		account.folders = []
 		account.collapsed = true
 		Vue.set(state.accounts, account.id, account)
@@ -42,14 +42,18 @@ export const mutations = {
 			_.sortBy(state.accountList.concat([account.id]))
 		)
 	},
-	editAccount (state, account) {
-		// TODO
-		console.log("called editAccount via commit")
+	editAccount(state, account) {
+		Vue.set(
+			state.accounts,
+			account.id,
+			Object.assign({}, state.accounts[account.id], account)
+		)
 	},
-	toggleAccountCollapsed (state, accountId) {
-		state.accounts[accountId].collapsed = !state.accounts[accountId].collapsed
+	toggleAccountCollapsed(state, accountId) {
+		state.accounts[accountId].collapsed = !state.accounts[accountId]
+			.collapsed
 	},
-	addFolder (state, {account, folder}) {
+	addFolder(state, { account, folder }) {
 		const addToState = folder => {
 			const id = account.id + '-' + folder.id
 			folder.accountId = account.id
@@ -65,10 +69,10 @@ export const mutations = {
 
 		account.folders.push(id)
 	},
-	updateFolderSyncToken (state, {folder, syncToken}) {
+	updateFolderSyncToken(state, { folder, syncToken }) {
 		folder.syncToken = syncToken
 	},
-	addEnvelope (state, {accountId, folder, envelope}) {
+	addEnvelope(state, { accountId, folder, envelope }) {
 		const uid = accountId + '-' + folder.id + '-' + envelope.id
 		envelope.accountId = accountId
 		envelope.folderId = folder.id
@@ -86,7 +90,7 @@ export const mutations = {
 			)
 		)
 	},
-	addSearchEnvelopes (state, {accountId, folder, envelopes, clear}) {
+	addSearchEnvelopes(state, { accountId, folder, envelopes, clear }) {
 		const uids = envelopes.map(envelope => {
 			const uid = accountId + '-' + folder.id + '-' + envelope.id
 			envelope.accountId = accountId
@@ -97,11 +101,7 @@ export const mutations = {
 		})
 
 		if (clear) {
-			Vue.set(
-				folder,
-				'searchEnvelopes',
-				uids
-			)
+			Vue.set(folder, 'searchEnvelopes', uids)
 		} else {
 			Vue.set(
 				folder,
@@ -116,7 +116,7 @@ export const mutations = {
 			)
 		}
 	},
-	addUnifiedEnvelope (state, {folder, envelope}) {
+	addUnifiedEnvelope(state, { folder, envelope }) {
 		Vue.set(
 			folder,
 			'envelopes',
@@ -129,16 +129,16 @@ export const mutations = {
 			)
 		)
 	},
-	addUnifiedEnvelopes (state, {folder, uids}) {
+	addUnifiedEnvelopes(state, { folder, uids }) {
 		Vue.set(folder, 'envelopes', uids)
 	},
-	addUnifiedSearchEnvelopes (state, {folder, uids}) {
+	addUnifiedSearchEnvelopes(state, { folder, uids }) {
 		Vue.set(folder, 'searchEnvelopes', uids)
 	},
-	flagEnvelope (state, {envelope, flag, value}) {
+	flagEnvelope(state, { envelope, flag, value }) {
 		envelope.flags[flag] = value
 	},
-	removeEnvelope (state, {accountId, folder, id}) {
+	removeEnvelope(state, { accountId, folder, id }) {
 		const envelopeUid = accountId + '-' + folder.id + '-' + id
 		const idx = folder.envelopes.indexOf(envelopeUid)
 		if (idx < 0) {
@@ -154,7 +154,12 @@ export const mutations = {
 			.forEach(folder => {
 				const idx = folder.envelopes.indexOf(envelopeUid)
 				if (idx < 0) {
-					console.warn('envelope does not exist in unified mailbox', accountId, folder.id, id)
+					console.warn(
+						'envelope does not exist in unified mailbox',
+						accountId,
+						folder.id,
+						id
+					)
 					return
 				}
 				folder.envelopes.splice(idx, 1)
@@ -162,14 +167,14 @@ export const mutations = {
 
 		Vue.delete(folder.envelopes, envelopeUid)
 	},
-	addMessage (state, {accountId, folderId, message}) {
+	addMessage(state, { accountId, folderId, message }) {
 		const uid = accountId + '-' + folderId + '-' + message.id
 		message.accountId = accountId
 		message.folderId = folderId
 		message.uid = uid
 		Vue.set(state.messages, uid, message)
 	},
-	updateDraft (state, {draft, data, newUid}) {
+	updateDraft(state, { draft, data, newUid }) {
 		// Update draft's UID
 		const oldUid = draft.uid
 		const uid = draft.accountId + '-' + draft.folderId + '-' + newUid
@@ -181,10 +186,15 @@ export const mutations = {
 		draft.subject = data.subject
 
 		// Update ref in folder's envelope list
-		const envs = state.folders[draft.accountId + '-' + draft.folderId].envelopes
+		const envs =
+			state.folders[draft.accountId + '-' + draft.folderId].envelopes
 		const idx = envs.indexOf(oldUid)
 		if (idx < 0) {
-			console.warn('not replacing draft ' + oldUid + ' in envelope list because it did not exist')
+			console.warn(
+				'not replacing draft ' +
+					oldUid +
+					' in envelope list because it did not exist'
+			)
 		} else {
 			envs[idx] = uid
 		}
@@ -195,54 +205,49 @@ export const mutations = {
 		Vue.set(state.envelopes, uid, draft)
 		Vue.set(state.messages, uid, draft)
 	},
-	setMessageBodyText (state, {uid, bodyText}) {
+	setMessageBodyText(state, { uid, bodyText }) {
 		Vue.set(state.messages[uid], 'bodyText', bodyText)
 	},
-	removeMessage (state, {accountId, folderId, id}) {
+	removeMessage(state, { accountId, folderId, id }) {
 		Vue.delete(state.messages, accountId + '-' + folderId + '-' + id)
 	},
 }
 
 export const actions = {
-	savePreference ({commit, getters}, {key, value}) {
-		return savePreference(key, value)
-			.then(({value}) => {
-				commit('savePreference', {
-					key,
-					value,
-				})
+	savePreference({ commit, getters }, { key, value }) {
+		return savePreference(key, value).then(({ value }) => {
+			commit('savePreference', {
+				key,
+				value,
 			})
+		})
 	},
-	fetchAccounts ({commit, getters}) {
+	fetchAccounts({ commit, getters }) {
 		return fetchAllAccounts().then(accounts => {
 			accounts.forEach(account => commit('addAccount', account))
 			return getters.getAccounts()
 		})
 	},
-	fetchAccount ({commit}, id) {
+	fetchAccount({ commit }, id) {
 		return fetchAccount(id).then(account => {
 			commit('addAccount', account)
 			return account
 		})
 	},
-	createAccount ({commit}, config) {
-		return createAccount(config)
-			.then(account => {
-				console.debug('account created', account)
-				commit('addAccount', account)
-				return account
-			})
+	createAccount({ commit }, config) {
+		return createAccount(config).then(account => {
+			commit('addAccount', account)
+			return account
+		})
 	},
-	updateAccount ({commit}, config) {
-		console.log('updateAccount config', config)
-		return updateAccount(config)
-			.then(account => {
-				console.debug('account updated', account)
-				commit('editAccount', account)
-				return account
-			})
+	updateAccount({ commit }, config) {
+		return updateAccount(config).then(account => {
+			console.debug('account updated', account)
+			commit('editAccount', account)
+			return account
+		})
 	},
-	fetchFolders ({commit, getters}, {accountId}) {
+	fetchFolders({ commit, getters }, { accountId }) {
 		if (getters.getAccount(accountId).isUnified) {
 			return Promise.resolve(getters.getFolders(accountId))
 		}
@@ -253,13 +258,16 @@ export const actions = {
 			folders.forEach(folder => {
 				commit('addFolder', {
 					account,
-					folder
+					folder,
 				})
 			})
 			return folders
 		})
 	},
-	fetchEnvelopes ({state, commit, getters, dispatch}, {accountId, folderId, query}) {
+	fetchEnvelopes(
+		{ state, commit, getters, dispatch },
+		{ accountId, folderId, query }
+	) {
 		const folder = getters.getFolder(accountId, folderId)
 		const isSearch = !_.isUndefined(query)
 		if (folder.isUnified) {
@@ -271,25 +279,29 @@ export const actions = {
 			//
 			// TODO: handle short/ending streams and show their last element as well
 			return Promise.all(
-				getters.getAccounts()
+				getters
+					.getAccounts()
 					.filter(account => !account.isUnified)
-					.map(account => Promise.all(
-						getters.getFolders(account.id)
-							.filter(f => f.specialRole === folder.specialRole)
-							.map(folder => dispatch('fetchEnvelopes', {
-								accountId: account.id,
-								folderId: folder.id,
-								query,
-							})))
+					.map(account =>
+						Promise.all(
+							getters
+								.getFolders(account.id)
+								.filter(
+									f => f.specialRole === folder.specialRole
+								)
+								.map(folder =>
+									dispatch('fetchEnvelopes', {
+										accountId: account.id,
+										folderId: folder.id,
+										query,
+									})
+								)
+						)
 					)
 			)
 				.then(res => res.map(envs => envs.slice(0, 19)))
 				.then(res => _.flattenDepth(res, 2))
-				.then(envs => _.orderBy(
-					envs,
-					env => env.dateInt,
-					'desc'
-				))
+				.then(envs => _.orderBy(envs, env => env.dateInt, 'desc'))
 				.then(envs => _.slice(envs, 0, 19)) // 19 to handle non-overlapping streams
 				.then(envelopes => {
 					if (!isSearch) {
@@ -311,11 +323,13 @@ export const actions = {
 			let folder = getters.getFolder(accountId, folderId)
 
 			if (!isSearch) {
-				envelopes.forEach(envelope => commit('addEnvelope', {
-					accountId,
-					folder,
-					envelope,
-				}))
+				envelopes.forEach(envelope =>
+					commit('addEnvelope', {
+						accountId,
+						folder,
+						envelope,
+					})
+				)
 			} else {
 				commit('addSearchEnvelopes', {
 					accountId,
@@ -327,17 +341,24 @@ export const actions = {
 			return envelopes
 		})
 	},
-	fetchNextUnifiedEnvelopePage ({state, commit, getters, dispatch}, {accountId, folderId, query}) {
+	fetchNextUnifiedEnvelopePage(
+		{ state, commit, getters, dispatch },
+		{ accountId, folderId, query }
+	) {
 		const folder = getters.getFolder(accountId, folderId)
 		const isSearch = !_.isUndefined(query)
 		const list = isSearch ? 'searchEnvelopes' : 'envelopes'
 
 		// We only care about folders of the same type/role
 		const individualFolders = _.flatten(
-			getters.getAccounts()
+			getters
+				.getAccounts()
 				.filter(a => !a.isUnified)
-				.map(a => getters.getFolders(a.id)
-					.filter(f => f.specialRole === folder.specialRole))
+				.map(a =>
+					getters
+						.getFolders(a.id)
+						.filter(f => f.specialRole === folder.specialRole)
+				)
 		)
 		// Build a sorted list of all currently known envelopes (except last elem)
 		const knownEnvelopes = _.orderBy(
@@ -352,7 +373,11 @@ export const actions = {
 		const tailId = _.last(folder[list])
 		const tailIdx = knownEnvelopes.indexOf(tailId)
 		if (tailIdx === -1) {
-			return Promise.reject(new Error('current envelopes do not contain unified mailbox tail. this should not have happened'))
+			return Promise.reject(
+				new Error(
+					'current envelopes do not contain unified mailbox tail. this should not have happened'
+				)
+			)
 		}
 
 		// Select the next page, based on offline data
@@ -370,7 +395,10 @@ export const actions = {
 			.filter(f => !_.isEmpty(f[list]))
 			.filter(f => {
 				const lastShown = f[list][f[list].length - 2]
-				return nextCandidates.length <= 18 || nextCandidates.indexOf(lastShown) !== -1
+				return (
+					nextCandidates.length <= 18 ||
+					nextCandidates.indexOf(lastShown) !== -1
+				)
 			})
 
 		if (_.isEmpty(needFetch)) {
@@ -398,22 +426,27 @@ export const actions = {
 				})
 			}
 		} else {
-			return Promise.all(needFetch
-				.map(f => dispatch('fetchNextEnvelopePage', {
-					accountId: f.accountId,
-					folderId: f.id,
-					query,
-				})))
-				.then(() => {
-					return dispatch('fetchNextUnifiedEnvelopePage', {
-						accountId,
-						folderId,
+			return Promise.all(
+				needFetch.map(f =>
+					dispatch('fetchNextEnvelopePage', {
+						accountId: f.accountId,
+						folderId: f.id,
 						query,
 					})
+				)
+			).then(() => {
+				return dispatch('fetchNextUnifiedEnvelopePage', {
+					accountId,
+					folderId,
+					query,
 				})
+			})
 		}
 	},
-	fetchNextEnvelopePage ({commit, getters, dispatch}, {accountId, folderId, query}) {
+	fetchNextEnvelopePage(
+		{ commit, getters, dispatch },
+		{ accountId, folderId, query }
+	) {
 		const folder = getters.getFolder(accountId, folderId)
 		const isSearch = !_.isUndefined(query)
 		const list = isSearch ? 'searchEnvelopes' : 'envelopes'
@@ -422,129 +455,163 @@ export const actions = {
 			return dispatch('fetchNextUnifiedEnvelopePage', {
 				accountId,
 				folderId,
-				query
+				query,
 			})
 		}
 
 		const lastEnvelopeId = folder[list][folder.envelopes.length - 1]
 		if (typeof lastEnvelopeId === 'undefined') {
 			console.error('folder is empty', folder[list])
-			return Promise.reject(new Error('Local folder has no envelopes, cannot determine cursor'))
+			return Promise.reject(
+				new Error(
+					'Local folder has no envelopes, cannot determine cursor'
+				)
+			)
 		}
 		const lastEnvelope = getters.getEnvelopeById(lastEnvelopeId)
 		if (typeof lastEnvelope === 'undefined') {
-			return Promise.reject(new Error('Cannot find last envelope. Required for the folder cursor'))
+			return Promise.reject(
+				new Error(
+					'Cannot find last envelope. Required for the folder cursor'
+				)
+			)
 		}
 
-		return fetchEnvelopes(accountId, folderId, query, lastEnvelope.dateInt)
-			.then(envelopes => {
-				if (!isSearch) {
-					envelopes.forEach(envelope => commit('addEnvelope', {
+		return fetchEnvelopes(
+			accountId,
+			folderId,
+			query,
+			lastEnvelope.dateInt
+		).then(envelopes => {
+			if (!isSearch) {
+				envelopes.forEach(envelope =>
+					commit('addEnvelope', {
 						accountId,
 						folder,
-						envelope
-					}))
-				} else {
-					commit('addSearchEnvelopes', {
-						accountId,
-						folder,
-						envelopes,
-						clear: false,
+						envelope,
 					})
-				}
+				)
+			} else {
+				commit('addSearchEnvelopes', {
+					accountId,
+					folder,
+					envelopes,
+					clear: false,
+				})
+			}
 
-				return envelopes
-			})
+			return envelopes
+		})
 	},
-	syncEnvelopes ({commit, getters, dispatch}, {accountId, folderId}) {
+	syncEnvelopes({ commit, getters, dispatch }, { accountId, folderId }) {
 		const folder = getters.getFolder(accountId, folderId)
 
 		if (folder.isUnified) {
 			return Promise.all(
-				getters.getAccounts()
+				getters
+					.getAccounts()
 					.filter(account => !account.isUnified)
-					.map(account => Promise.all(
-						getters.getFolders(account.id)
-							.filter(f => f.specialRole === folder.specialRole)
-							.map(folder => dispatch('syncEnvelopes', {
-								accountId: account.id,
-								folderId: folder.id,
-							})))
+					.map(account =>
+						Promise.all(
+							getters
+								.getFolders(account.id)
+								.filter(
+									f => f.specialRole === folder.specialRole
+								)
+								.map(folder =>
+									dispatch('syncEnvelopes', {
+										accountId: account.id,
+										folderId: folder.id,
+									})
+								)
+						)
 					)
 			)
 		}
 
 		const syncToken = folder.syncToken
-		const uids = getters.getEnvelopes(accountId, folderId).map(env => env.id)
+		const uids = getters
+			.getEnvelopes(accountId, folderId)
+			.map(env => env.id)
 
-		return syncEnvelopes(accountId, folderId, syncToken, uids).then(syncData => {
-			const unifiedFolder = getters.getUnifiedFolder(folder.specialRole)
+		return syncEnvelopes(accountId, folderId, syncToken, uids).then(
+			syncData => {
+				const unifiedFolder = getters.getUnifiedFolder(
+					folder.specialRole
+				)
 
-			syncData.newMessages.forEach(envelope => {
-				commit('addEnvelope', {
-					accountId,
-					folder,
-					envelope
-				})
-				if (unifiedFolder) {
-					commit('addUnifiedEnvelope', {
-						folder: unifiedFolder,
-						envelope
+				syncData.newMessages.forEach(envelope => {
+					commit('addEnvelope', {
+						accountId,
+						folder,
+						envelope,
 					})
-				}
-			})
-			syncData.changedMessages.forEach(envelope => {
-				commit('addEnvelope', {
-					accountId,
-					folder,
-					envelope
+					if (unifiedFolder) {
+						commit('addUnifiedEnvelope', {
+							folder: unifiedFolder,
+							envelope,
+						})
+					}
 				})
-			})
-			syncData.vanishedMessages.forEach(id => {
-				commit('removeEnvelope', {
-					accountId,
-					folder,
-					id
+				syncData.changedMessages.forEach(envelope => {
+					commit('addEnvelope', {
+						accountId,
+						folder,
+						envelope,
+					})
 				})
-				// Already removed from unified inbox
-			})
-			commit('updateFolderSyncToken', {
-				folder,
-				syncToken: syncData.token
-			})
+				syncData.vanishedMessages.forEach(id => {
+					commit('removeEnvelope', {
+						accountId,
+						folder,
+						id,
+					})
+					// Already removed from unified inbox
+				})
+				commit('updateFolderSyncToken', {
+					folder,
+					syncToken: syncData.token,
+				})
 
-			return syncData.newMessages
+				return syncData.newMessages
+			}
+		)
+	},
+	syncInboxes({ getters, dispatch }) {
+		return Promise.all(
+			getters
+				.getAccounts()
+				.filter(a => !a.isUnified)
+				.map(account => {
+					return Promise.all(
+						getters.getFolders(account.id).map(folder => {
+							if (folder.specialRole !== 'inbox') {
+								return
+							}
+
+							return dispatch('syncEnvelopes', {
+								accountId: account.id,
+								folderId: folder.id,
+							})
+						})
+					)
+				})
+		).then(results => {
+			const newMessages = _.flatMapDeep(results).filter(
+				_.negate(_.isUndefined)
+			)
+			if (newMessages.length > 0) {
+				showNewMessagesNotification(newMessages)
+			}
 		})
 	},
-	syncInboxes ({getters, dispatch}) {
-		return Promise.all(getters.getAccounts()
-			.filter(a => !a.isUnified)
-			.map(account => {
-				return Promise.all(getters.getFolders(account.id).map(folder => {
-					if (folder.specialRole !== 'inbox') {
-						return
-					}
-
-					return dispatch('syncEnvelopes', {
-						accountId: account.id,
-						folderId: folder.id,
-					})
-				}))
-			}))
-			.then(results => {
-				const newMessages = _.flatMapDeep(results).filter(_.negate(_.isUndefined))
-				if (newMessages.length > 0) {
-					showNewMessagesNotification(newMessages)
-				}
-			})
-	},
-	toggleEnvelopeFlagged ({commit, getters}, envelope) {
+	toggleEnvelopeFlagged({ commit, getters }, envelope) {
 		// Change immediately and switch back on error
 		const oldState = envelope.flags.flagged
 		commit('flagEnvelope', {
 			envelope,
 			flag: 'flagged',
-			value: !oldState
+			value: !oldState,
 		})
 
 		setEnvelopeFlag(
@@ -560,17 +627,17 @@ export const actions = {
 			commit('flagEnvelope', {
 				envelope,
 				flag: 'flagged',
-				value: oldState
+				value: oldState,
 			})
 		})
 	},
-	toggleEnvelopeSeen ({commit, getters}, envelope) {
+	toggleEnvelopeSeen({ commit, getters }, envelope) {
 		// Change immediately and switch back on error
 		const oldState = envelope.flags.unseen
 		commit('flagEnvelope', {
 			envelope,
 			flag: 'unseen',
-			value: !oldState
+			value: !oldState,
 		})
 
 		setEnvelopeFlag(
@@ -579,42 +646,40 @@ export const actions = {
 			envelope.id,
 			'unseen',
 			!oldState
-		)
-			.catch(e => {
-				console.error('could not toggle message unseen state', e)
+		).catch(e => {
+			console.error('could not toggle message unseen state', e)
 
-				// Revert change
-				commit('flagEnvelope', {
-					envelope,
-					flag: 'unseen',
-					value: oldState
+			// Revert change
+			commit('flagEnvelope', {
+				envelope,
+				flag: 'unseen',
+				value: oldState,
+			})
+		})
+	},
+	fetchMessage({ commit }, uid) {
+		const { accountId, folderId, id } = parseUid(uid)
+		return fetchMessage(accountId, folderId, id).then(message => {
+			// Only commit if not undefined (not found)
+			if (message) {
+				commit('addMessage', {
+					accountId,
+					folderId,
+					message,
 				})
-			})
-	},
-	fetchMessage ({commit}, uid) {
-		const {accountId, folderId, id} = parseUid(uid)
-		return fetchMessage(accountId, folderId, id)
-			.then(message => {
-				// Only commit if not undefined (not found)
-				if (message) {
-					commit('addMessage', {
-						accountId,
-						folderId,
-						message
-					})
-				}
+			}
 
-				return message
-			})
+			return message
+		})
 	},
-	replaceDraft ({getters, commit}, {draft, uid, data}) {
+	replaceDraft({ getters, commit }, { draft, uid, data }) {
 		commit('updateDraft', {
 			draft,
 			data,
 			newUid: uid,
 		})
 	},
-	deleteMessage ({getters, commit}, envelope) {
+	deleteMessage({ getters, commit }, envelope) {
 		const folder = getters.getFolder(envelope.accountId, envelope.folderId)
 		commit('removeEnvelope', {
 			accountId: envelope.accountId,
@@ -640,49 +705,54 @@ export const actions = {
 				})
 				throw err
 			})
-	}
+	},
 }
 
 export const getters = {
-	getPreference: (state) => (key, def) => {
+	getPreference: state => (key, def) => {
 		return value(state.preferences[key]).or(def)
 	},
-	getAccount: (state) => (id) => {
+	getAccount: state => id => {
 		return state.accounts[id]
 	},
-	getAccounts: (state) => () => {
+	getAccounts: state => () => {
 		return state.accountList.map(id => state.accounts[id])
 	},
-	getFolder: (state) => (accountId, folderId) => {
+	getFolder: state => (accountId, folderId) => {
 		return state.folders[accountId + '-' + folderId]
 	},
-	getFolders: (state) => (accountId) => {
-		return state.accounts[accountId].folders.map(folderId => state.folders[folderId])
+	getFolders: state => accountId => {
+		return state.accounts[accountId].folders.map(
+			folderId => state.folders[folderId]
+		)
 	},
-	getUnifiedFolder: (state) => (specialRole) => {
+	getUnifiedFolder: state => specialRole => {
 		return _.head(
-			state.accounts[UNIFIED_ACCOUNT_ID]
-				.folders
+			state.accounts[UNIFIED_ACCOUNT_ID].folders
 				.map(folderId => state.folders[folderId])
 				.filter(folder => folder.specialRole === specialRole)
 		)
 	},
-	getEnvelope: (state) => (accountId, folderId, id) => {
+	getEnvelope: state => (accountId, folderId, id) => {
 		return state.envelopes[accountId + '-' + folderId + '-' + id]
 	},
-	getEnvelopeById: (state) => (id) => {
+	getEnvelopeById: state => id => {
 		return state.envelopes[id]
 	},
 	getEnvelopes: (state, getters) => (accountId, folderId) => {
-		return getters.getFolder(accountId, folderId).envelopes.map(msgId => state.envelopes[msgId])
+		return getters
+			.getFolder(accountId, folderId)
+			.envelopes.map(msgId => state.envelopes[msgId])
 	},
 	getSearchEnvelopes: (state, getters) => (accountId, folderId) => {
-		return getters.getFolder(accountId, folderId).searchEnvelopes.map(msgId => state.envelopes[msgId])
+		return getters
+			.getFolder(accountId, folderId)
+			.searchEnvelopes.map(msgId => state.envelopes[msgId])
 	},
-	getMessage: (state) => (accountId, folderId, id) => {
+	getMessage: state => (accountId, folderId, id) => {
 		return state.messages[accountId + '-' + folderId + '-' + id]
 	},
-	getMessageByUid: (state) => uid => {
+	getMessageByUid: state => uid => {
 		return state.messages[uid]
 	},
 }
@@ -698,12 +768,10 @@ export default new Vuex.Store({
 				folders: [UNIFIED_INBOX_UID],
 				collapsed: false,
 				emailAddress: '',
-				name: ''
+				name: '',
 			},
 		},
-		accountList: [
-			UNIFIED_ACCOUNT_ID,
-		],
+		accountList: [UNIFIED_ACCOUNT_ID],
 		folders: {
 			[UNIFIED_INBOX_UID]: {
 				id: UNIFIED_INBOX_ID,
@@ -715,7 +783,7 @@ export default new Vuex.Store({
 				folders: [],
 				envelopes: [],
 				searchEnvelopes: [],
-			}
+			},
 		},
 		envelopes: {},
 		messages: {},
@@ -723,5 +791,5 @@ export default new Vuex.Store({
 	},
 	getters,
 	mutations,
-	actions
+	actions,
 })

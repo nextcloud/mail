@@ -21,8 +21,6 @@ export const update = data => {
 		id: data.accountId,
 	})
 
-	console.log('updateAccount data', data)
-
 	return HttpClient.put(url, data)
 		.then(resp => resp.data)
 		.then(fixAccountId)
