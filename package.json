@@ -15,7 +15,7 @@
   },
   "dependencies": {
     "@vue/babel-preset-app": "^3.3.0",
-    "color-convert": "^1.9.3",
+    "color-convert": "^2.0.0",
     "davclient.js": "^0.1.0",
     "debounce-promise": "^3.1.0",
     "exports-loader": "^0.7.0",
