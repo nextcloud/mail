@@ -19,6 +19,7 @@ OC.L10N.register(
     "Sending …" : "Pošiljanje ...",
     "Message sent!" : "Sporočilo je poslano!",
     "Send" : "Pošlji",
+    "Upload attachment" : "Pošlji prilogo",
     "Choose a file to add as attachment" : "Izbor datoteke za prilogo",
     "Delete" : "Izbriši",
     "Choose a folder to store the attachment in" : "Izbor mape za shranjevanje prilog.",
