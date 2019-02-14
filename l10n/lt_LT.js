@@ -1,6 +1,7 @@
 OC.L10N.register(
     "mail",
     {
+    "Mail" : "Paštas",
     "Inbox" : "Gauta",
     "Sent" : "Išsiųsta",
     "Drafts" : "Juodraščiai",
@@ -14,6 +15,7 @@ OC.L10N.register(
     "Creating account failed: " : "Paskyros kūrimas nepavyko:",
     "Delete permanently" : "Ištrinti negrįžtamai",
     "IMAP web client" : "IMAP saityno klientas",
+    "Easy to use email client which connects to your mail server via IMAP and SMTP." : "Lengvas naudoti el. pašto klientas, kuris prisijungia prie jūsų pašto serverio per IMAP ir SMTP.",
     "Name" : "Vardas",
     "Mail Address" : "Elektroninio pašto adresas",
     "Password" : "Slaptažodis",
