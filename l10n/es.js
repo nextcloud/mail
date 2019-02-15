@@ -79,6 +79,8 @@ OC.L10N.register(
     "Save all to Files" : "Guardar todo en Archivos",
     "Choose a folder to store the attachments in" : "Escoge una carpeta donde guardar los adjuntos",
     "The images have been blocked to protect your privacy." : "Las imágenes han sido bloqueadas para proteger tu privacidad.",
+    "Show images from this\tsender" : "Mostrar imágenes de este\tremitente",
+    "Could not load your draft" : "No se ha podido cargar el borrador",
     "New message" : "Nuevo mensaje",
     "Settings" : "Ajustes",
     "Speed up your Mail experience with these quick shortcuts." : "Acelera tu experiencia de Correo con estos rápidos atajos de teclado.",
