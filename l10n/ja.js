@@ -39,6 +39,7 @@ OC.L10N.register(
     "bcc" : "bcc",
     "Subject" : "件名",
     "Sending …" : "送信中 …",
+    "Go back" : "戻る",
     "Message sent!" : "へメッセージを送信しました！",
     "Send" : "送信",
     "Upload attachment" : "添付ファイルをアップロードする",
