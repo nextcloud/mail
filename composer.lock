@@ -427,10 +427,10 @@
         },
         {
             "name": "pear-pear.horde.org/Horde_Mail",
-            "version": "2.6.4",
+            "version": "2.6.5",
             "dist": {
                 "type": "file",
-                "url": "https://pear.horde.org/get/Horde_Mail-2.6.4.tgz"
+                "url": "https://pear.horde.org/get/Horde_Mail-2.6.5.tgz"
             },
             "require": {
                 "pear-pear.horde.org/horde_exception": "<3.0.0.0",
@@ -442,7 +442,7 @@
                 "php": "<8.0.0.0"
             },
             "replace": {
-                "pear-horde/horde_mail": "== 2.6.4.0"
+                "pear-horde/horde_mail": "== 2.6.5.0"
             },
             "type": "pear-library",
             "autoload": {
