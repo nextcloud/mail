@@ -359,10 +359,10 @@
         },
         {
             "name": "pear-pear.horde.org/Horde_Imap_Client",
-            "version": "2.29.16",
+            "version": "2.29.17",
             "dist": {
                 "type": "file",
-                "url": "https://pear.horde.org/get/Horde_Imap_Client-2.29.16.tgz"
+                "url": "https://pear.horde.org/get/Horde_Imap_Client-2.29.17.tgz"
             },
             "require": {
                 "ext-hash": "*",
@@ -379,7 +379,7 @@
                 "php": "<8.0.0.0"
             },
             "replace": {
-                "pear-horde/horde_imap_client": "== 2.29.16.0"
+                "pear-horde/horde_imap_client": "== 2.29.17.0"
             },
             "type": "pear-library",
             "autoload": {
