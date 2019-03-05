@@ -29,3 +29,11 @@ export const fetch = id => {
 
 	return HttpClient.get(url).then(resp => fixAccountId(resp.data))
 }
+
+export const deleteAccount = id => {
+	const url = generateUrl('/apps/mail/api/accounts/{id}', {
+		id
+	})
+
+	return HttpClient.delete(url).then(resp => fixAccountId(resp.data))
+}

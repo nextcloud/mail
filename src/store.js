@@ -6,7 +6,8 @@ import {translate as t} from 'nextcloud-server/dist/l10n'
 import {
 	create as createAccount,
 	fetch as fetchAccount,
-	fetchAll as fetchAllAccounts
+	fetchAll as fetchAllAccounts,
+	deleteAccount,
 } from './service/AccountService'
 import {fetchAll as fetchAllFolders,} from './service/FolderService'
 import {
@@ -226,6 +227,17 @@ export const actions = {
 				console.debug('account created', account)
 				commit('addAccount', account)
 				return account
+			})
+	},
+	deleteAccount ({commit}, account) {
+		return deleteAccount(account.id)
+			.then(account => {
+				console.debug('account deleted')
+				location.reload() // TODO: better handling of this
+			})
+			.catch(err => {
+				console.error('could not delete account', err)
+				throw err
 			})
 	},
 	fetchFolders ({commit, getters}, {accountId}) {

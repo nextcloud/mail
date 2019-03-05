@@ -52,7 +52,7 @@
 </template>
 
 <script>
-import { Action, PopoverMenu, PopoverMenuItem } from 'nextcloud-vue'
+import { Action } from 'nextcloud-vue'
 import Moment from './Moment'
 
 import Avatar from './Avatar'
