@@ -90,6 +90,25 @@
 								params: {
 									accountId: account.id,
 								}
+							},
+							utils: {
+								actions: [
+									{
+										icon: 'icon-settings',
+										text: t('mail', 'Edit'),
+										action: () => {
+											this.$router.push(route)
+										},
+									},
+									{
+										icon: 'icon-delete',
+										text: t('mail', 'Delete'),
+										action: () => {
+											this.$store.dispatch('deleteAccount', account)
+												.catch(console.error.bind(this))
+										}
+									}
+								]
 							}
 						})
 					}
