@@ -78,7 +78,7 @@ export default {
 	computed: {
 		accountColor() {
 			return calculateAccountColor(
-				this.$store.getters.getAccount(this.data.accountId).name
+				this.$store.getters.getAccount(this.data.accountId).emailAddress
             )
         },
         draft() {

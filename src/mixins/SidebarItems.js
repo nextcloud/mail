@@ -30,7 +30,7 @@ export default {
 						id: 'account' + account.id,
 						key: 'account' + account.id,
 						text: account.emailAddress,
-						bullet: isError ? undefined : calculateAccountColor(account.name), // TODO
+						bullet: isError ? undefined : calculateAccountColor(account.emailAddress),
 						icon: isError ? 'icon-error' : undefined,
 						router: route,
 						utils: {
