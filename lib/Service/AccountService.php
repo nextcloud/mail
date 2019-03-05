@@ -115,9 +115,9 @@ class AccountService {
 		if ($accountId === Manager::ACCOUNT_ID) {
 			return;
 		}
-		$this->aliasesService->deleteAll($accountId, $currentUserId);
 
 		$mailAccount = $this->mapper->find($currentUserId, $accountId);
+		$this->aliasesService->deleteAll($accountId);
 		$this->mapper->delete($mailAccount);
 	}
 

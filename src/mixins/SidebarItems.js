@@ -20,17 +20,37 @@ export default {
 				const isError = account.error;
 
 				if (account.isUnified !== true && account.visible !== false) {
+					const route = {
+						name: 'accountSettings',
+						params: {
+							accountId: account.id,
+						}
+					}
 					items.push({
 						id: 'account' + account.id,
 						key: 'account' + account.id,
 						text: account.emailAddress,
 						bullet: isError ? undefined : calculateAccountColor(account.name), // TODO
 						icon: isError ? 'icon-error' : undefined,
-						router: {
-							name: 'accountSettings',
-							params: {
-								accountId: account.id,
-							}
+						router: route,
+						utils: {
+							actions: [
+								{
+									icon: 'icon-settings',
+									text: t('mail', 'Edit'),
+									action: () => {
+										this.$router.push(route)
+									},
+								},
+								{
+									icon: 'icon-delete',
+									text: t('mail', 'Delete'),
+									action: () => {
+										this.$store.dispatch('deleteAccount', account)
+											.catch(console.error.bind(this))
+									}
+								}
+							]
 						}
 					})
 				}
