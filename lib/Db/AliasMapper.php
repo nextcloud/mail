@@ -71,18 +71,12 @@ class AliasMapper extends QBMapper {
 	 * @param int $accountId the account whose aliases will be deleted
 	 * @param string $currentUserId the user that is currently logged in
 	 */
-	public function deleteAll($accountId, $currentUserId) {
+	public function deleteAll($accountId) {
 		$qb = $this->db->getQueryBuilder();
 
-		$query = $qb->delete($this->getTableName(), 'aliases')
-			->join('aliases', 'mail_accounts', 'accounts', $qb->expr()->eq('aliases.account_id', 'accounts.id'))
-			->where($qb->expr()->eq('account_id', $qb->createNamedParameter($accountId)))
-			->andWhere(
-				$qb->expr()->andX(
-					$qb->expr()->eq('accounts.user_id', $qb->createNamedParameter($currentUserId)),
-					$qb->expr()->eq('aliases.account_id', $qb->createNamedParameter($accountId))
-				)
-			);
+		$query = $qb
+			->delete($this->getTableName())
+			->where($qb->expr()->eq('account_id', $qb->createNamedParameter($accountId)));
 
 		$query->execute();
 	}

@@ -1,3 +1,4 @@
+<<<<<<< HEAD:src/store.js
 import _ from 'lodash'
 import Vue from 'vue'
 import Vuex from 'vuex'
@@ -10,11 +11,45 @@ import {
 	fetchAll as fetchAllAccounts,
 } from './service/AccountService'
 import { fetchAll as fetchAllFolders } from './service/FolderService'
+=======
+/*
+ * @copyright 2019 Christoph Wurst <christoph@winzerhof-wurst.at>
+ *
+ * @author 2019 Christoph Wurst <christoph@winzerhof-wurst.at>
+ *
+ * @license GNU AGPL version 3 or any later version
+ *
+ * This program is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU Affero General Public License as
+ * published by the Free Software Foundation, either version 3 of the
+ * License, or (at your option) any later version.
+ *
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU Affero General Public License for more details.
+ *
+ * You should have received a copy of the GNU Affero General Public License
+ * along with this program.  If not, see <http://www.gnu.org/licenses/>.
+ */
+
+import _ from "lodash";
+
+import {savePreference} from "../service/PreferenceService";
+import {
+	create as createAccount,
+	deleteAccount,
+	fetch as fetchAccount,
+	fetchAll as fetchAllAccounts
+} from "../service/AccountService";
+import {fetchAll as fetchAllFolders} from "../service/FolderService";
+>>>>>>> 12b4a7d848da1bf5d72db31f1a3b7e42c09af590:src/store/actions.js
 import {
 	deleteMessage,
 	fetchEnvelopes,
 	fetchMessage,
 	setEnvelopeFlag,
+<<<<<<< HEAD:src/store.js
 	syncEnvelopes,
 } from './service/MessageService'
 import { showNewMessagesNotification } from './service/NotificationService'
@@ -219,6 +254,21 @@ export const actions = {
 			commit('savePreference', {
 				key,
 				value,
+=======
+	syncEnvelopes
+} from "../service/MessageService";
+import {showNewMessagesNotification} from "../service/NotificationService";
+import {parseUid} from "../util/EnvelopeUidParser";
+
+export default {
+	savePreference ({commit, getters}, {key, value}) {
+		return savePreference(key, value)
+			.then(({value}) => {
+				commit('savePreference', {
+					key,
+					value,
+				})
+>>>>>>> 12b4a7d848da1bf5d72db31f1a3b7e42c09af590:src/store/actions.js
 			})
 		})
 	},
@@ -240,6 +290,7 @@ export const actions = {
 			return account
 		})
 	},
+<<<<<<< HEAD:src/store.js
 	updateAccount({ commit }, config) {
 		return updateAccount(config).then(account => {
 			console.debug('account updated', account)
@@ -248,6 +299,20 @@ export const actions = {
 		})
 	},
 	fetchFolders({ commit, getters }, { accountId }) {
+=======
+	deleteAccount ({commit}, account) {
+		return deleteAccount(account.id)
+			.then(account => {
+				console.debug('account deleted')
+				location.reload() // TODO: better handling of this
+			})
+			.catch(err => {
+				console.error('could not delete account', err)
+				throw err
+			})
+	},
+	fetchFolders ({commit, getters}, {accountId}) {
+>>>>>>> 12b4a7d848da1bf5d72db31f1a3b7e42c09af590:src/store/actions.js
 		if (getters.getAccount(accountId).isUnified) {
 			return Promise.resolve(getters.getFolders(accountId))
 		}
@@ -705,6 +770,7 @@ export const actions = {
 				})
 				throw err
 			})
+<<<<<<< HEAD:src/store.js
 	},
 }
 
@@ -793,3 +859,7 @@ export default new Vuex.Store({
 	mutations,
 	actions,
 })
+=======
+	}
+}
+>>>>>>> 12b4a7d848da1bf5d72db31f1a3b7e42c09af590:src/store/actions.js
