@@ -15,6 +15,6 @@ export const htmlToText = html => {
 		noLinkBrackets: true,
 		ignoreHref: true,
 		ignoreImage: true,
-		wordwrap: 78 // 80 minus '> ' prefix for replies
-	});
+		wordwrap: 78, // 80 minus '> ' prefix for replies
+	})
 }
