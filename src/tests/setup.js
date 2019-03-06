@@ -29,8 +29,8 @@ global.expect = require('chai').expect
 window.Date = Date
 
 // Fix for jsdom https://github.com/developit/preact/issues/444
-global.SVGElement = global.Element;
+global.SVGElement = global.Element
 
 global.OC = {
-	getLocale: () => 'en'
+	getLocale: () => 'en',
 }

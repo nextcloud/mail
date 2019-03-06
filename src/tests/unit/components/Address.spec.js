@@ -24,7 +24,7 @@ describe('Address', () => {
 		const addr = shallowMount(Address, {
 			localVue,
 			mocks: {
-				$route
+				$route,
 			},
 			propsData: {
 				label: 'Test User',
@@ -36,5 +36,5 @@ describe('Address', () => {
 		expect(addr.vm.newMessageRoute.params.accountId).to.equal(1)
 		expect(addr.vm.newMessageRoute.params.folderId).to.equal('folder1')
 		expect(addr.vm.newMessageRoute.query.to).to.equal('user@domain.com')
-	});
-});
+	})
+})
