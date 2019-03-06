@@ -8,8 +8,8 @@
   "scripts": {
     "build": "webpack --progress --hide-modules --config webpack.prod.js",
     "dev": "webpack --progress --watch --config webpack.dev.js",
-    "lint": "$(npm bin)/eslint --ext .js,.vue js",
-    "lint:autofix": "eslint --ext .js,.vue js --fix",
+    "lint": "eslint --ext .js,.vue src",
+    "lint:autofix": "eslint --ext .js,.vue src --fix",
     "test": "mocha-webpack --webpack-config webpack.test.js --require src/tests/setup.js \"src/tests/**/*.spec.js\"",
     "test:watch": "mocha-webpack -w --webpack-config webpack.test.js --require src/tests/setup.js \"src/tests/**/*.spec.js\""
   },
@@ -80,9 +80,11 @@
     "webpack-node-externals": "^1.7.2"
   },
   "prettier": {
+    "bracketSpacing": false,
     "singleQuote": true,
     "semi": false,
     "useTabs": true,
+    "printWidth": 120,
     "tabWidth": 4,
     "trailingComma": "es5"
   }
