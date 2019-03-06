@@ -21,28 +21,29 @@
  -->
 
 <template>
-	<router-view/>
+	<router-view />
 </template>
 
 <script>
-	export default {
-		name: 'App',
-		mounted () {
-			this.sync()
+export default {
+	name: 'App',
+	mounted() {
+		this.sync()
+	},
+	methods: {
+		sync() {
+			setTimeout(() => {
+				this.$store
+					.dispatch('syncInboxes')
+					.catch(err => {
+						console.error('background sync failed', err)
+					})
+					.then(() => {
+						// Start over
+						this.sync()
+					})
+			}, 30 * 1000)
 		},
-		methods: {
-			sync () {
-				setTimeout(() => {
-					this.$store.dispatch('syncInboxes')
-						.catch(err => {
-							console.error('background sync failed', err)
-						})
-						.then(() => {
-							// Start over
-							this.sync()
-						});
-				}, 30 * 1000)
-			}
-		}
-	}
+	},
+}
 </script>
