@@ -30,6 +30,8 @@ import {generateFilePath} from 'nextcloud-server/dist/router'
 import VueShortKey from 'vue-shortkey'
 import VTooltip from 'v-tooltip'
 
+import {fixAccountId} from './service/AccountService'
+
 __webpack_nonce__ = btoa(OC.requestToken)
 __webpack_public_path__ = generateFilePath('mail', '', 'js/')
 
@@ -39,10 +41,10 @@ Vue.mixin({
 	methods: {
 		t: translate,
 		n: translatePlural,
-	}
+	},
 })
 
-Vue.use(VueShortKey, { prevent: ['input', 'textarea'] })
+Vue.use(VueShortKey, {prevent: ['input', 'textarea']})
 Vue.use(VTooltip)
 
 const getPreferenceFromPage = key => {
@@ -55,20 +57,28 @@ const getPreferenceFromPage = key => {
 
 store.commit('savePreference', {
 	key: 'debug',
-	value: getPreferenceFromPage('debug-mode')
+	value: getPreferenceFromPage('debug-mode'),
 })
 store.commit('savePreference', {
 	key: 'version',
-	value: getPreferenceFromPage('config-installed-version')
+	value: getPreferenceFromPage('config-installed-version'),
 })
 store.commit('savePreference', {
 	key: 'external-avatars',
-	value: getPreferenceFromPage('external-avatars')
+	value: getPreferenceFromPage('external-avatars'),
+})
+
+const accounts = JSON.parse(atob(getPreferenceFromPage('serialized-accounts')))
+accounts.map(fixAccountId).forEach(account => {
+	const folders = account.folders
+	delete account.folders
+	store.commit('addAccount', account)
+	folders.forEach(folder => store.commit('addFolder', {account, folder}))
 })
 
 new Vue({
 	el: '#content',
 	router,
 	store,
-	render: h => h(App)
+	render: h => h(App),
 })

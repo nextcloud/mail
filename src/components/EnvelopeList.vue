@@ -6,14 +6,14 @@
 					  infinite-scroll-disabled="loading"
 					  infinite-scroll-distance="30"
 					  v-scroll="onScroll"
-					  v-shortkey.once="{del: ['del'], next: ['arrowright'], prev: ['arrowleft']}"
+					  v-shortkey.once="shortkeys"
 					  @shortkey.native="handleShortcut">
 		<div id="list-refreshing"
 			 key="loading"
 			 class="icon-loading-small"
 			 :class="{refreshing: refreshing}"/>
 		<EmptyFolder v-if="envelopes.length === 0"
-					 key="empty" />
+					 key="empty"/>
 		<Envelope v-else
 				  v-for="env in envelopes"
 				  :key="env.uid"
@@ -27,6 +27,7 @@
 </template>
 
 <script>
+	import _ from 'lodash'
 	import infiniteScroll from 'vue-infinite-scroll'
 	import vuescroll from 'vue-scroll'
 	import Vue from 'vue'
@@ -38,18 +39,23 @@
 
 	export default {
 		name: "EnvelopeList",
-		computed: {
-			envelopes () {
-				return this.$store.getters.getEnvelopes(
-					this.$route.params.accountId,
-					this.$route.params.folderId
-				)
+		props: {
+			account: {
+				type: Object,
+				required: true,
 			},
-			folder () {
-				return this.$store.getters.getFolder(
-					this.$route.params.accountId,
-					this.$route.params.folderId
-				)
+			folder: {
+				type: Object,
+				required: true,
+			},
+			envelopes: {
+				type: Array,
+				required: true,
+			},
+			searchQuery: {
+				type: String,
+				required: false,
+				default: undefined,
 			}
 		},
 		components: {
@@ -63,6 +69,19 @@
 			return {
 				loadingMore: false,
 				refreshing: false,
+				shortkeys: {
+					del: ['del'],
+					flag: ['s'],
+					next: ['arrowright'],
+					prev: ['arrowleft'],
+					refresh: ['r'],
+					unseen: ['u']
+				}
+			}
+		},
+		computed: {
+			isSearch () {
+				return !_.isUndefined(this.searchQuery)
 			}
 		},
 		methods: {
@@ -72,8 +91,19 @@
 				this.$store.dispatch('fetchNextEnvelopePage', {
 					accountId: this.$route.params.accountId,
 					folderId: this.$route.params.folderId,
+					query: this.searchQuery,
 				}).catch(console.error.bind(this)).then(() => {
 					this.loadingMore = false
+				})
+			},
+			sync () {
+				this.refreshing = true
+
+				this.$store.dispatch('syncEnvelopes', {
+					accountId: this.$route.params.accountId,
+					folderId: this.$route.params.folderId,
+				}).catch(console.error.bind(this)).then(() => {
+					this.refreshing = false
 				})
 			},
 			onEnvelopeDeleted (envelope) {
@@ -86,9 +116,9 @@
 
 				let next
 				if (idx === 0) {
-					next = envelopes[idx+1]
+					next = envelopes[idx + 1]
 				} else {
-					next = envelopes[idx-1]
+					next = envelopes[idx - 1]
 				}
 
 				if (!next) {
@@ -109,14 +139,7 @@
 			},
 			onScroll (e, p) {
 				if (p.scrollTop === 0 && !this.refreshing) {
-					this.refreshing = true
-
-					this.$store.dispatch('syncEnvelopes', {
-						accountId: this.$route.params.accountId,
-						folderId: this.$route.params.folderId,
-					}).catch(console.error.bind(this)).then(() => {
-						this.refreshing = false
-					})
+					return this.sync()
 				}
 			},
 			handleShortcut (e) {
@@ -142,9 +165,9 @@
 					case 'prev':
 						let next
 						if (e.srcKey === 'next') {
-							next = envelopes[idx+1]
+							next = envelopes[idx + 1]
 						} else {
-							next = envelopes[idx-1]
+							next = envelopes[idx - 1]
 						}
 
 						if (!next) {
@@ -168,6 +191,23 @@
 						this.$store.dispatch('deleteMessage', env)
 							.catch(console.error.bind(this))
 
+						break
+					case 'flag':
+						console.debug('flagging envelope via shortkey', env)
+						this.$store.dispatch('toggleEnvelopeFlagged', env)
+							.catch(console.error.bind(this))
+						break
+					case 'refresh':
+						console.debug('syncing envelopes via shortkey')
+						if (!this.refreshing) {
+							this.sync()
+						}
+
+						break
+					case 'unseen':
+						console.debug('marking message as seen/unseen via shortkey', env)
+						this.$store.dispatch('toggleEnvelopeSeen', env)
+							.catch(console.error.bind(this))
 						break
 					default:
 						console.warn('shortcut ' + e.srcKey + ' is unknown. ignoring.')
@@ -207,6 +247,7 @@
 	.list-enter-active, .list-leave-active {
 		transition: all 1s;
 	}
+
 	.list-enter, .list-leave-to {
 		opacity: 0;
 		height: 0px;

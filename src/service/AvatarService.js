@@ -30,7 +30,7 @@ export const fetchAvatarUrl = email => {
 	}
 
 	const url = generateUrl('/apps/mail/api/avatars/url/{email}', {
-		email
+		email,
 	})
 
 	return Axios.get(url)
@@ -38,7 +38,7 @@ export const fetchAvatarUrl = email => {
 		.then(avatar => {
 			if (avatar.isExternal) {
 				return generateUrl('/apps/mail/api/avatars/image/{email}', {
-					email: email
+					email: email,
 				})
 			} else {
 				return avatar.url

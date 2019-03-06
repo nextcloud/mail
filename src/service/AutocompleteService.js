@@ -27,6 +27,5 @@ export const findRecipient = term => {
 		term,
 	})
 
-	return Axios.get(url)
-		.then(resp => resp.data)
+	return Axios.get(url).then(resp => resp.data)
 }

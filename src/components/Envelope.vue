@@ -52,7 +52,7 @@
 </template>
 
 <script>
-import { Action, PopoverMenu, PopoverMenuItem } from 'nextcloud-vue'
+import { Action } from 'nextcloud-vue'
 import Moment from './Moment'
 
 import Avatar from './Avatar'
@@ -78,7 +78,7 @@ export default {
 	computed: {
 		accountColor() {
 			return calculateAccountColor(
-				this.$store.getters.getAccount(this.data.accountId).name
+				this.$store.getters.getAccount(this.data.accountId).emailAddress
             )
         },
         draft() {

@@ -20,14 +20,14 @@
  */
 
 define(function(require) {
-	'use strict';
+	'use strict'
 
-	var $ = require('jquery');
-	var OC = require('OC');
-	var Radio = require('radio');
+	var $ = require('jquery')
+	var OC = require('OC')
+	var Radio = require('radio')
 
-	Radio.aliases.reply('save', saveAlias);
-	Radio.aliases.reply('delete', deleteAlias);
+	Radio.aliases.reply('save', saveAlias)
+	Radio.aliases.reply('delete', deleteAlias)
 
 	/**
 	 * @param {Account} account
@@ -36,17 +36,17 @@ define(function(require) {
 	 */
 	function saveAlias(account, alias) {
 		var url = OC.generateUrl('/apps/mail/api/accounts/{id}/aliases', {
-			id: account.get('accountId')
-		});
+			id: account.get('accountId'),
+		})
 		var data = {
 			type: 'POST',
 			data: {
 				accountId: account.get('accountId'),
 				alias: alias.alias,
-				aliasName: alias.name
-			}
-		};
-		return Promise.resolve($.ajax(url, data));
+				aliasName: alias.name,
+			},
+		}
+		return Promise.resolve($.ajax(url, data))
 	}
 
 	/**
@@ -57,12 +57,11 @@ define(function(require) {
 	function deleteAlias(account, aliasId) {
 		var url = OC.generateUrl('/apps/mail/api/accounts/{id}/aliases/{aliasId}', {
 			id: account.get('accountId'),
-			aliasId: aliasId
-		});
+			aliasId: aliasId,
+		})
 		var data = {
-			type: 'DELETE'
-		};
-		return Promise.resolve($.ajax(url, data));
+			type: 'DELETE',
+		}
+		return Promise.resolve($.ajax(url, data))
 	}
-
-});
+})

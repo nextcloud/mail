@@ -16,37 +16,37 @@ export default new Router({
 		{
 			path: '/',
 			name: 'home',
-			component: Home
+			component: Home,
 		},
 		{
 			path: '/mailto',
 			name: 'mailto',
-			component: Home
+			component: Home,
 		},
 		{
 			path: '/accounts/:accountId/folders/:folderId',
 			name: 'folder',
-			component: Home
+			component: Home,
 		},
 		{
 			path: '/accounts/:accountId/folders/:folderId/message/:messageUid/:draftUid?',
 			name: 'message',
-			component: Home
+			component: Home,
 		},
 		{
 			path: '/accounts/:accountId/settings',
 			name: 'accountSettings',
-			component: AccountSettings
+			component: AccountSettings,
 		},
 		{
 			path: '/keyboard-shortcuts',
 			name: 'keyboardShortcuts',
-			component: KeyboardShortcuts
+			component: KeyboardShortcuts,
 		},
 		{
 			path: '/setup',
 			name: 'setup',
-			component: Setup
-		}
-	]
-});
+			component: Setup,
+		},
+	],
+})
