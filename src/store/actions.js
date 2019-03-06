@@ -24,6 +24,7 @@ import _ from "lodash";
 import {savePreference} from "../service/PreferenceService";
 import {
 	create as createAccount,
+	update as updateAccount,
 	deleteAccount,
 	fetch as fetchAccount,
 	fetchAll as fetchAllAccounts
@@ -66,6 +67,14 @@ export default {
 			.then(account => {
 				console.debug('account created', account)
 				commit('addAccount', account)
+				return account
+			})
+	},
+	updateAccount ({commit}, config) {
+		return updateAccount(config)
+			.then(account => {
+				console.debug('account updated', account)
+				commit('editAccount', account)
 				return account
 			})
 	},

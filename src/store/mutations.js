@@ -38,6 +38,13 @@ export default {
 			_.sortBy(state.accountList.concat([account.id]))
 		)
 	},
+	editAccount(state, account) {
+		Vue.set(
+			state.accounts,
+			account.id,
+			Object.assign({}, state.accounts[account.id], account)
+		)
+	},
 	toggleAccountCollapsed (state, accountId) {
 		state.accounts[accountId].collapsed = !state.accounts[accountId].collapsed
 	},

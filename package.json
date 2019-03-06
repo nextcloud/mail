@@ -8,8 +8,8 @@
   "scripts": {
     "build": "webpack --progress --hide-modules --config webpack.prod.js",
     "dev": "webpack --progress --watch --config webpack.dev.js",
-    "lint": "$(npm bin)/eslint --ext .js,.vue js",
-    "lint:autofix": "eslint --ext .js,.vue js --fix",
+    "lint": "eslint --ext .js,.vue src",
+    "lint:autofix": "eslint --ext .js,.vue src --fix",
     "test": "mocha-webpack --webpack-config webpack.test.js --require src/tests/setup.js \"src/tests/**/*.spec.js\"",
     "test:watch": "mocha-webpack -w --webpack-config webpack.test.js --require src/tests/setup.js \"src/tests/**/*.spec.js\""
   },
@@ -29,6 +29,7 @@
     "nextcloud-vue": "^0.8.0",
     "nextcloud_issuetemplate_builder": "^0.1.0",
     "remove": "^0.1.5",
+    "underscore": "^1.9.1",
     "v-tooltip": "^2.0.0-rc.33",
     "vue": "^2.6.8",
     "vue-autosize": "^1.0.2",
@@ -56,7 +57,7 @@
     "babel-loader": "^8.0.5",
     "chai": "^4.2.0",
     "css-loader": "^2.1.0",
-    "eslint": "^5.14.1",
+    "eslint": "^5.15.1",
     "eslint-config-prettier": "^4.1.0",
     "eslint-plugin-prettier": "^3.0.1",
     "eslint-plugin-vue": "^5.2.2",
@@ -68,7 +69,7 @@
     "node-sass": "^4.11.0",
     "prettier": "1.16.4",
     "sass-loader": "^7.0.3",
-    "sinon": "^7.2.6",
+    "sinon": "^7.2.7",
     "url-loader": "^1.1.2",
     "vue-loader": "^15.7.0",
     "vue-server-renderer": "^2.6.8",
@@ -79,9 +80,11 @@
     "webpack-node-externals": "^1.7.2"
   },
   "prettier": {
+    "bracketSpacing": false,
     "singleQuote": true,
     "semi": false,
     "useTabs": true,
+    "printWidth": 120,
     "tabWidth": 4,
     "trailingComma": "es5"
   }
