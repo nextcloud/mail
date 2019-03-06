@@ -19,36 +19,28 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-import _ from "lodash";
+import _ from 'lodash'
 import Vue from 'vue'
 
-import {UNIFIED_ACCOUNT_ID} from "./constants";
+import {UNIFIED_ACCOUNT_ID} from './constants'
 
 export default {
-	savePreference (state, {key, value}) {
+	savePreference(state, {key, value}) {
 		Vue.set(state.preferences, key, value)
 	},
-	addAccount (state, account) {
+	addAccount(state, account) {
 		account.folders = []
 		account.collapsed = true
 		Vue.set(state.accounts, account.id, account)
-		Vue.set(
-			state,
-			'accountList',
-			_.sortBy(state.accountList.concat([account.id]))
-		)
+		Vue.set(state, 'accountList', _.sortBy(state.accountList.concat([account.id])))
 	},
 	editAccount(state, account) {
-		Vue.set(
-			state.accounts,
-			account.id,
-			Object.assign({}, state.accounts[account.id], account)
-		)
+		Vue.set(state.accounts, account.id, Object.assign({}, state.accounts[account.id], account))
 	},
-	toggleAccountCollapsed (state, accountId) {
+	toggleAccountCollapsed(state, accountId) {
 		state.accounts[accountId].collapsed = !state.accounts[accountId].collapsed
 	},
-	addFolder (state, {account, folder}) {
+	addFolder(state, {account, folder}) {
 		const addToState = folder => {
 			const id = account.id + '-' + folder.id
 			folder.accountId = account.id
@@ -64,10 +56,10 @@ export default {
 
 		account.folders.push(id)
 	},
-	updateFolderSyncToken (state, {folder, syncToken}) {
+	updateFolderSyncToken(state, {folder, syncToken}) {
 		folder.syncToken = syncToken
 	},
-	addEnvelope (state, {accountId, folder, envelope}) {
+	addEnvelope(state, {accountId, folder, envelope}) {
 		const uid = accountId + '-' + folder.id + '-' + envelope.id
 		envelope.accountId = accountId
 		envelope.folderId = folder.id
@@ -76,16 +68,10 @@ export default {
 		Vue.set(
 			folder,
 			'envelopes',
-			_.sortedUniq(
-				_.orderBy(
-					folder.envelopes.concat([uid]),
-					id => state.envelopes[id].dateInt,
-					'desc'
-				)
-			)
+			_.sortedUniq(_.orderBy(folder.envelopes.concat([uid]), id => state.envelopes[id].dateInt, 'desc'))
 		)
 	},
-	addSearchEnvelopes (state, {accountId, folder, envelopes, clear}) {
+	addSearchEnvelopes(state, {accountId, folder, envelopes, clear}) {
 		const uids = envelopes.map(envelope => {
 			const uid = accountId + '-' + folder.id + '-' + envelope.id
 			envelope.accountId = accountId
@@ -96,48 +82,32 @@ export default {
 		})
 
 		if (clear) {
-			Vue.set(
-				folder,
-				'searchEnvelopes',
-				uids
-			)
+			Vue.set(folder, 'searchEnvelopes', uids)
 		} else {
 			Vue.set(
 				folder,
 				'searchEnvelopes',
-				_.sortedUniq(
-					_.orderBy(
-						folder.searchEnvelopes.concat(uids),
-						id => state.envelopes[id].dateInt,
-						'desc'
-					)
-				)
+				_.sortedUniq(_.orderBy(folder.searchEnvelopes.concat(uids), id => state.envelopes[id].dateInt, 'desc'))
 			)
 		}
 	},
-	addUnifiedEnvelope (state, {folder, envelope}) {
+	addUnifiedEnvelope(state, {folder, envelope}) {
 		Vue.set(
 			folder,
 			'envelopes',
-			_.sortedUniq(
-				_.orderBy(
-					folder.envelopes.concat([envelope.uid]),
-					id => state.envelopes[id].dateInt,
-					'desc'
-				)
-			)
+			_.sortedUniq(_.orderBy(folder.envelopes.concat([envelope.uid]), id => state.envelopes[id].dateInt, 'desc'))
 		)
 	},
-	addUnifiedEnvelopes (state, {folder, uids}) {
+	addUnifiedEnvelopes(state, {folder, uids}) {
 		Vue.set(folder, 'envelopes', uids)
 	},
-	addUnifiedSearchEnvelopes (state, {folder, uids}) {
+	addUnifiedSearchEnvelopes(state, {folder, uids}) {
 		Vue.set(folder, 'searchEnvelopes', uids)
 	},
-	flagEnvelope (state, {envelope, flag, value}) {
+	flagEnvelope(state, {envelope, flag, value}) {
 		envelope.flags[flag] = value
 	},
-	removeEnvelope (state, {accountId, folder, id}) {
+	removeEnvelope(state, {accountId, folder, id}) {
 		const envelopeUid = accountId + '-' + folder.id + '-' + id
 		const idx = folder.envelopes.indexOf(envelopeUid)
 		if (idx < 0) {
@@ -161,14 +131,14 @@ export default {
 
 		Vue.delete(folder.envelopes, envelopeUid)
 	},
-	addMessage (state, {accountId, folderId, message}) {
+	addMessage(state, {accountId, folderId, message}) {
 		const uid = accountId + '-' + folderId + '-' + message.id
 		message.accountId = accountId
 		message.folderId = folderId
 		message.uid = uid
 		Vue.set(state.messages, uid, message)
 	},
-	updateDraft (state, {draft, data, newUid}) {
+	updateDraft(state, {draft, data, newUid}) {
 		// Update draft's UID
 		const oldUid = draft.uid
 		const uid = draft.accountId + '-' + draft.folderId + '-' + newUid
@@ -194,10 +164,10 @@ export default {
 		Vue.set(state.envelopes, uid, draft)
 		Vue.set(state.messages, uid, draft)
 	},
-	setMessageBodyText (state, {uid, bodyText}) {
+	setMessageBodyText(state, {uid, bodyText}) {
 		Vue.set(state.messages[uid], 'bodyText', bodyText)
 	},
-	removeMessage (state, {accountId, folderId, id}) {
+	removeMessage(state, {accountId, folderId, id}) {
 		Vue.delete(state.messages, accountId + '-' + folderId + '-' + id)
 	},
 }
