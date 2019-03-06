@@ -20,50 +20,47 @@
   -->
 
 <template>
-	<BaseAvatar v-if="loading || !hasAvatar"
-				:displayName="displayName"/>
-	<BaseAvatar v-else
-				:displayName="displayName"
-				:url="avatarUrl"/>
+	<BaseAvatar v-if="loading || !hasAvatar" :display-name="displayName" />
+	<BaseAvatar v-else :display-name="displayName" :url="avatarUrl" />
 </template>
 
 <script>
-	import _ from 'lodash'
-	import {Avatar as BaseAvatar} from 'nextcloud-vue'
+import _ from 'lodash'
+import {Avatar as BaseAvatar} from 'nextcloud-vue'
 
-	import {fetchAvatarUrlMemoized} from '../service/AvatarService'
+import {fetchAvatarUrlMemoized} from '../service/AvatarService'
 
-	export default {
-		name: 'Avatar',
-		props: {
-			displayName: {
-				type: String,
-				required: true,
-			},
-			email: {
-				type: String,
-			}
+export default {
+	name: 'Avatar',
+	components: {
+		BaseAvatar,
+	},
+	props: {
+		displayName: {
+			type: String,
+			required: true,
 		},
-		data() {
-			return {
-				loading: true,
-				avatarUrl: undefined,
-			}
+		email: {
+			type: String,
+			required: true,
 		},
-		computed: {
-			hasAvatar() {
-				return !_.isUndefined(this.avatarUrl)
-			}
-		},
-		components: {
-			BaseAvatar
-		},
-		mounted () {
-			fetchAvatarUrlMemoized(this.email)
-				.then(url => {
-					this.avatarUrl = url
-					this.loading = false
-				})
+	},
+	data() {
+		return {
+			loading: true,
+			avatarUrl: undefined,
 		}
-	}
+	},
+	computed: {
+		hasAvatar() {
+			return !_.isUndefined(this.avatarUrl)
+		},
+	},
+	mounted() {
+		fetchAvatarUrlMemoized(this.email).then(url => {
+			this.avatarUrl = url
+			this.loading = false
+		})
+	},
+}
 </script>

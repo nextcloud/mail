@@ -1,242 +1,246 @@
 <template>
-  <div id="account-form">
-    <tabs
-      :options="{ useUrlFragment: false, defaultTabHash: settingsPage ? 'manual' : 'auto' }"
-      @changed="onModeChanged"
-      cache-lifetime="0"
-    >
-      <tab :name="t('mail', 'Auto')" id="auto" key="auto">
-        <label for="auto-name">{{ t('mail', 'Name') }}</label>
-        <input
-          type="text"
-          id="auto-name"
-          :placeholder="t('mail', 'Name')"
-          v-model="autoConfig.accountName"
-          :disabled="loading"
-          autofocus
-        >
-        <label for="auto-address">{{ t('mail', 'Mail Address') }}</label>
-        <input
-          type="email"
-          id="auto-address"
-          :placeholder="t('mail', 'Mail Address')"
-          v-model="autoConfig.emailAddress"
-          :disabled="loading"
-          required
-        >
-        <label for="auto-password">{{ t('mail', 'Password') }}</label>
-        <input
-          type="password"
-          id="auto-password"
-          :placeholder="t('mail', 'Password')"
-          v-model="autoConfig.password"
-          :disabled="loading"
-          required
-        >
-      </tab>
-      <tab :name="t('mail', 'Manual')" id="manual" key="manual">
-        <label for="man-name">{{ t('mail', 'Name') }}</label>
-        <input
-          type="text"
-          id="man-name"
-          :placeholder="t('mail', 'Name')"
-          v-model="manualConfig.accountName"
-          :disabled="loading"
-          autofocus
-        >
-        <label for="man-address">{{ t('mail', 'Mail Address') }}</label>
-        <input
-          type="email"
-          id="man-address"
-          :placeholder="t('mail', 'Mail Address')"
-          v-model="manualConfig.emailAddress"
-          :disabled="loading"
-          required
-        >
+	<div id="account-form">
+		<tabs
+			:options="{useUrlFragment: false, defaultTabHash: settingsPage ? 'manual' : 'auto'}"
+			cache-lifetime="0"
+			@changed="onModeChanged"
+		>
+			<tab id="auto" key="auto" :name="t('mail', 'Auto')">
+				<label for="auto-name">{{ t('mail', 'Name') }}</label>
+				<input
+					id="auto-name"
+					v-model="autoConfig.accountName"
+					type="text"
+					:placeholder="t('mail', 'Name')"
+					:disabled="loading"
+					autofocus
+				/>
+				<label for="auto-address">{{ t('mail', 'Mail Address') }}</label>
+				<input
+					id="auto-address"
+					v-model="autoConfig.emailAddress"
+					type="email"
+					:placeholder="t('mail', 'Mail Address')"
+					:disabled="loading"
+					required
+				/>
+				<label for="auto-password">{{ t('mail', 'Password') }}</label>
+				<input
+					id="auto-password"
+					v-model="autoConfig.password"
+					type="password"
+					:placeholder="t('mail', 'Password')"
+					:disabled="loading"
+					required
+				/>
+			</tab>
+			<tab id="manual" key="manual" :name="t('mail', 'Manual')">
+				<label for="man-name">{{ t('mail', 'Name') }}</label>
+				<input
+					id="man-name"
+					v-model="manualConfig.accountName"
+					type="text"
+					:placeholder="t('mail', 'Name')"
+					:disabled="loading"
+					autofocus
+				/>
+				<label for="man-address">{{ t('mail', 'Mail Address') }}</label>
+				<input
+					id="man-address"
+					v-model="manualConfig.emailAddress"
+					type="email"
+					:placeholder="t('mail', 'Mail Address')"
+					:disabled="loading"
+					required
+				/>
 
-        <h3>{{ t('mail', 'IMAP Settings') }}</h3>
-        <label for="man-imap-host">{{ t('mail', 'IMAP Host') }}</label>
-        <input
-          type="text"
-          id="man-imap-host"
-          :placeholder="t('mail', 'IMAP Host')"
-          v-model="manualConfig.imapHost"
-          :disabled="loading"
-          required
-        >
-        <h4>{{ t('mail', 'IMAP Security') }}</h4>
-        <div class="flex-row">
-          <input
-            type="radio"
-            id="man-imap-sec-none"
-            name="man-imap-sec"
-            v-model="manualConfig.imapSslMode"
-            :disabled="loading"
-            @change="onImapSslModeChange"
-            value="none"
-          >
-          <label
-            class="button"
-            for="man-imap-sec-none"
-            :class="{primary: manualConfig.imapSslMode === 'none' }"
-          >{{ t('mail', 'None') }}</label>
-          <input
-            type="radio"
-            id="man-imap-sec-ssl"
-            name="man-imap-sec"
-            v-model="manualConfig.imapSslMode"
-            :disabled="loading"
-            @change="onImapSslModeChange"
-            value="ssl"
-          >
-          <label
-            class="button"
-            for="man-imap-sec-ssl"
-            :class="{primary: manualConfig.imapSslMode === 'ssl' }"
-          >{{ t('mail', 'SSL/TLS') }}</label>
-          <input
-            type="radio"
-            id="man-imap-sec-tls"
-            name="man-imap-sec"
-            v-model="manualConfig.imapSslMode"
-            :disabled="loading"
-            @change="onImapSslModeChange"
-            value="tls"
-          >
-          <label
-            class="button"
-            for="man-imap-sec-tls"
-            :class="{primary: manualConfig.imapSslMode === 'tls' }"
-          >{{ t('mail', 'STARTTLS') }}</label>
-        </div>
-        <label for="man-imap-port">{{ t('mail', 'IMAP Port') }}</label>
-        <input
-          type="number"
-          id="man-imap-port"
-          :placeholder="t('mail', 'IMAP Port')"
-          v-model="manualConfig.imapPort"
-          :disabled="loading"
-          required
-        >
-        <label for="man-imap-user">{{ t('mail', 'IMAP User') }}</label>
-        <input
-          type="text"
-          id="man-imap-user"
-          :placeholder="t('mail', 'IMAP User')"
-          v-model="manualConfig.imapUser"
-          :disabled="loading"
-          required
-        >
-        <label for="man-imap-password">{{ t('mail', 'IMAP Password') }}</label>
-        <input
-          type="password"
-          id="man-imap-password"
-          :placeholder="t('mail', 'IMAP Password')"
-          v-model="manualConfig.imapPassword"
-          :disabled="loading"
-          required
-        >
+				<h3>{{ t('mail', 'IMAP Settings') }}</h3>
+				<label for="man-imap-host">{{ t('mail', 'IMAP Host') }}</label>
+				<input
+					id="man-imap-host"
+					v-model="manualConfig.imapHost"
+					type="text"
+					:placeholder="t('mail', 'IMAP Host')"
+					:disabled="loading"
+					required
+				/>
+				<h4>{{ t('mail', 'IMAP Security') }}</h4>
+				<div class="flex-row">
+					<input
+						id="man-imap-sec-none"
+						v-model="manualConfig.imapSslMode"
+						type="radio"
+						name="man-imap-sec"
+						:disabled="loading"
+						value="none"
+						@change="onImapSslModeChange"
+					/>
+					<label
+						class="button"
+						for="man-imap-sec-none"
+						:class="{primary: manualConfig.imapSslMode === 'none'}"
+						>{{ t('mail', 'None') }}</label
+					>
+					<input
+						id="man-imap-sec-ssl"
+						v-model="manualConfig.imapSslMode"
+						type="radio"
+						name="man-imap-sec"
+						:disabled="loading"
+						value="ssl"
+						@change="onImapSslModeChange"
+					/>
+					<label
+						class="button"
+						for="man-imap-sec-ssl"
+						:class="{primary: manualConfig.imapSslMode === 'ssl'}"
+						>{{ t('mail', 'SSL/TLS') }}</label
+					>
+					<input
+						id="man-imap-sec-tls"
+						v-model="manualConfig.imapSslMode"
+						type="radio"
+						name="man-imap-sec"
+						:disabled="loading"
+						value="tls"
+						@change="onImapSslModeChange"
+					/>
+					<label
+						class="button"
+						for="man-imap-sec-tls"
+						:class="{primary: manualConfig.imapSslMode === 'tls'}"
+						>{{ t('mail', 'STARTTLS') }}</label
+					>
+				</div>
+				<label for="man-imap-port">{{ t('mail', 'IMAP Port') }}</label>
+				<input
+					id="man-imap-port"
+					v-model="manualConfig.imapPort"
+					type="number"
+					:placeholder="t('mail', 'IMAP Port')"
+					:disabled="loading"
+					required
+				/>
+				<label for="man-imap-user">{{ t('mail', 'IMAP User') }}</label>
+				<input
+					id="man-imap-user"
+					v-model="manualConfig.imapUser"
+					type="text"
+					:placeholder="t('mail', 'IMAP User')"
+					:disabled="loading"
+					required
+				/>
+				<label for="man-imap-password">{{ t('mail', 'IMAP Password') }}</label>
+				<input
+					id="man-imap-password"
+					v-model="manualConfig.imapPassword"
+					type="password"
+					:placeholder="t('mail', 'IMAP Password')"
+					:disabled="loading"
+					required
+				/>
 
-        <h3>{{ t('mail', 'SMTP Settings') }}</h3>
-        <input
-          type="text"
-          ref="smtpHost"
-          name="smtp-host"
-          :placeholder="t('mail', 'SMTP Host')"
-          v-model="manualConfig.smtpHost"
-          :disabled="loading"
-          required
-        >
-        <h4>{{ t('mail', 'SMTP Security') }}</h4>
-        <div class="flex-row">
-          <input
-            type="radio"
-            id="man-smtp-sec-none"
-            name="man-smtp-sec"
-            v-model="manualConfig.smtpSslMode"
-            :disabled="loading"
-            @change="onSmtpSslModeChange"
-            value="none"
-          >
-          <label
-            class="button"
-            for="man-smtp-sec-none"
-            :class="{primary: manualConfig.smtpSslMode === 'none' }"
-          >{{ t('mail', 'None') }}</label>
-          <input
-            type="radio"
-            id="man-smtp-sec-ssl"
-            name="man-smtp-sec"
-            v-model="manualConfig.smtpSslMode"
-            :disabled="loading"
-            @change="onSmtpSslModeChange"
-            value="ssl"
-          >
-          <label
-            class="button"
-            for="man-smtp-sec-ssl"
-            :class="{primary: manualConfig.smtpSslMode === 'ssl' }"
-          >{{ t('mail', 'SSL/TLS') }}</label>
-          <input
-            type="radio"
-            id="man-smtp-sec-tls"
-            name="man-smtp-sec"
-            v-model="manualConfig.smtpSslMode"
-            :disabled="loading"
-            @change="onSmtpSslModeChange"
-            value="tls"
-          >
-          <label
-            class="button"
-            for="man-smtp-sec-tls"
-            :class="{primary: manualConfig.smtpSslMode === 'tls' }"
-          >{{ t('mail', 'STARTTLS') }}</label>
-        </div>
-        <label for="man-smtp-port">{{ t('mail', 'SMTP Port') }}</label>
-        <input
-          type="number"
-          id="man-smtp-port"
-          :placeholder="t('mail', 'SMTP Port')"
-          v-model="manualConfig.smtpPort"
-          :disabled="loading"
-          required
-        >
-        <label for="man-smtp-user">{{ t('mail', 'SMTP User') }}</label>
-        <input
-          type="text"
-          id="man-smtp-user"
-          :placeholder="t('mail', 'SMTP User')"
-          v-model="manualConfig.smtpUser"
-          :disabled="loading"
-          required
-        >
-        <label for="man-smtp-password">{{ t('mail', 'SMTP Password') }}</label>
-        <input
-          type="password"
-          id="man-smtp-password"
-          :placeholder="t('mail', 'SMTP Password')"
-          v-model="manualConfig.smtpPassword"
-          :disabled="loading"
-          required
-        >
-      </tab>
-    </tabs>
-    <input
-      type="submit"
-      class="primary"
-      v-on:click="onSubmit"
-      :disabled="loading"
-      :value="submitButtonText"
-    >
-  </div>
+				<h3>{{ t('mail', 'SMTP Settings') }}</h3>
+				<input
+					ref="smtpHost"
+					v-model="manualConfig.smtpHost"
+					type="text"
+					name="smtp-host"
+					:placeholder="t('mail', 'SMTP Host')"
+					:disabled="loading"
+					required
+				/>
+				<h4>{{ t('mail', 'SMTP Security') }}</h4>
+				<div class="flex-row">
+					<input
+						id="man-smtp-sec-none"
+						v-model="manualConfig.smtpSslMode"
+						type="radio"
+						name="man-smtp-sec"
+						:disabled="loading"
+						value="none"
+						@change="onSmtpSslModeChange"
+					/>
+					<label
+						class="button"
+						for="man-smtp-sec-none"
+						:class="{primary: manualConfig.smtpSslMode === 'none'}"
+						>{{ t('mail', 'None') }}</label
+					>
+					<input
+						id="man-smtp-sec-ssl"
+						v-model="manualConfig.smtpSslMode"
+						type="radio"
+						name="man-smtp-sec"
+						:disabled="loading"
+						value="ssl"
+						@change="onSmtpSslModeChange"
+					/>
+					<label
+						class="button"
+						for="man-smtp-sec-ssl"
+						:class="{primary: manualConfig.smtpSslMode === 'ssl'}"
+						>{{ t('mail', 'SSL/TLS') }}</label
+					>
+					<input
+						id="man-smtp-sec-tls"
+						v-model="manualConfig.smtpSslMode"
+						type="radio"
+						name="man-smtp-sec"
+						:disabled="loading"
+						value="tls"
+						@change="onSmtpSslModeChange"
+					/>
+					<label
+						class="button"
+						for="man-smtp-sec-tls"
+						:class="{primary: manualConfig.smtpSslMode === 'tls'}"
+						>{{ t('mail', 'STARTTLS') }}</label
+					>
+				</div>
+				<label for="man-smtp-port">{{ t('mail', 'SMTP Port') }}</label>
+				<input
+					id="man-smtp-port"
+					v-model="manualConfig.smtpPort"
+					type="number"
+					:placeholder="t('mail', 'SMTP Port')"
+					:disabled="loading"
+					required
+				/>
+				<label for="man-smtp-user">{{ t('mail', 'SMTP User') }}</label>
+				<input
+					id="man-smtp-user"
+					v-model="manualConfig.smtpUser"
+					type="text"
+					:placeholder="t('mail', 'SMTP User')"
+					:disabled="loading"
+					required
+				/>
+				<label for="man-smtp-password">{{ t('mail', 'SMTP Password') }}</label>
+				<input
+					id="man-smtp-password"
+					v-model="manualConfig.smtpPassword"
+					type="password"
+					:placeholder="t('mail', 'SMTP Password')"
+					:disabled="loading"
+					required
+				/>
+			</tab>
+		</tabs>
+		<input type="submit" class="primary" :disabled="loading" :value="submitButtonText" @click="onSubmit" />
+	</div>
 </template>
 
 <script>
 import _ from 'underscore'
-import { Tab, Tabs } from 'vue-tabs-component'
+import {Tab, Tabs} from 'vue-tabs-component'
 
 export default {
 	name: 'AccountForm',
+	components: {
+		Tab,
+		Tabs,
+	},
 	props: {
 		displayName: {
 			type: String,
@@ -253,11 +257,8 @@ export default {
 		account: {
 			type: Object,
 			required: false,
+			default: () => undefined,
 		},
-	},
-	components: {
-		Tab,
-		Tabs,
 	},
 	data() {
 		const fromAccountOr = (prop, def) => {
@@ -290,9 +291,7 @@ export default {
 				smtpUser: fromAccountOr('smtpUser', ''),
 				smtpPassword: '',
 			},
-			submitButtonText: this.account
-				? t('mail', 'Save')
-				: t('mail', 'Connect'),
+			submitButtonText: this.account ? t('mail', 'Save') : t('mail', 'Connect'),
 		}
 	},
 	computed: {
