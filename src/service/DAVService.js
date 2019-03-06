@@ -21,13 +21,8 @@
 
 import dav from 'davclient.js'
 import ical from 'ical.js'
-import {
-	getCurrentUID,
-	getRequestToken
-} from 'nextcloud-server/dist/auth'
-import {
-	generateRemoteUrl
-} from 'nextcloud-server/dist/router'
+import {getCurrentUID, getRequestToken} from 'nextcloud-server/dist/auth'
+import {generateRemoteUrl} from 'nextcloud-server/dist/router'
 
 const client = new dav.Client({
 	baseUrl: generateRemoteUrl('dav/calendars'),
@@ -37,7 +32,7 @@ const client = new dav.Client({
 		'http://apple.com/ns/ical/': 'aapl',
 		'http://owncloud.org/ns': 'oc',
 		'http://calendarserver.org/ns/': 'cs',
-	}
+	},
 })
 const props = [
 	'{DAV:}displayname',
@@ -75,8 +70,7 @@ const getACLFromResponse = properties => {
 	properties.canWrite = canWrite
 }
 
-
-const getCalendarData = (properties) => {
+const getCalendarData = properties => {
 	getACLFromResponse(properties)
 
 	const data = {
@@ -84,7 +78,7 @@ const getCalendarData = (properties) => {
 		color: properties['{http://apple.com/ns/ical/}calendar-color'],
 		order: properties['{http://apple.com/ns/ical/}calendar-order'],
 		components: {
-			vevent: false
+			vevent: false,
 		},
 		writable: properties.canWrite,
 	}
@@ -107,9 +101,11 @@ export const getUserCalendars = () => {
 	var url = generateRemoteUrl('dav/calendars') + '/' + getCurrentUID().uid + '/'
 
 	return getRequestToken()
-		.then(token => client.propFind(url, props, 1, {
-			requesttoken: token
-		}))
+		.then(token =>
+			client.propFind(url, props, 1, {
+				requesttoken: token,
+			})
+		)
 		.then(data => {
 			const calendars = []
 
@@ -133,7 +129,9 @@ export const getUserCalendars = () => {
 const getRandomString = () => {
 	let str = ''
 	for (let i = 0; i < 7; i++) {
-		str += Math.random().toString(36).substring(7)
+		str += Math.random()
+			.toString(36)
+			.substring(7)
 	}
 	return str
 }
@@ -146,7 +144,7 @@ const createICalElement = () => {
 	return root
 }
 
-const splitCalendar = (data) => {
+const splitCalendar = data => {
 	const timezones = []
 	const allObjects = {}
 	const jCal = ical.parse(data)
@@ -184,7 +182,7 @@ const splitCalendar = (data) => {
 	return {
 		name: components.getFirstPropertyValue('x-wr-calname'),
 		color: components.getFirstPropertyValue('x-apple-calendar-color'),
-		split
+		split,
 	}
 }
 
@@ -202,12 +200,16 @@ export const importCalendarEvent = url => data => {
 	components.forEach(componentName => {
 		for (let componentId in file.split[componentName]) {
 			const component = file.split[componentName][componentId]
-			promises.push(Promise.resolve($.ajax({
-				url: url + getRandomString(),
-				method: 'PUT',
-				contentType: 'text/calendar; charset=utf-8',
-				data: component
-			})))
+			promises.push(
+				Promise.resolve(
+					$.ajax({
+						url: url + getRandomString(),
+						method: 'PUT',
+						contentType: 'text/calendar; charset=utf-8',
+						data: component,
+					})
+				)
+			)
 		}
 	})
 
