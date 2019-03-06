@@ -6,7 +6,7 @@
 </template>
 
 <script>
-	export default {
-		name: 'EmptyFolder'
-	};
+export default {
+	name: 'EmptyFolder',
+}
 </script>
