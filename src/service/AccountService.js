@@ -1,4 +1,4 @@
-import { generateUrl } from 'nextcloud-server/dist/router'
+import {generateUrl} from 'nextcloud-server/dist/router'
 import HttpClient from 'nextcloud-axios'
 
 export const fixAccountId = original => {
@@ -42,7 +42,7 @@ export const fetch = id => {
 
 export const deleteAccount = id => {
 	const url = generateUrl('/apps/mail/api/accounts/{id}', {
-		id
+		id,
 	})
 
 	return HttpClient.delete(url).then(resp => fixAccountId(resp.data))

@@ -25,22 +25,20 @@ import {generateUrl} from 'nextcloud-server/dist/router'
 
 export const savePreference = (key, value) => {
 	const url = generateUrl('/apps/mail/api/preferences/{key}', {
-		key
+		key,
 	})
 	const data = {
 		key,
 		value,
 	}
 
-	return Axios.put(url, data)
-		.then(resp => resp.data)
+	return Axios.put(url, data).then(resp => resp.data)
 }
 
 export const getPreference = key => {
 	const url = generateUrl('/apps/mail/api/preferences/{key}', {
-		key
+		key,
 	})
 
-	return Axios.get(url)
-		.then(resp => resp.data)
+	return Axios.get(url).then(resp => resp.data)
 }
