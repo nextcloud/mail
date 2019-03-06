@@ -2,20 +2,7 @@
 	<AppContent app-name="mail"
 				v-shortkey.once="['c']"
 				@shortkey.native="onNewMessage">
-		<template slot="navigation">
-			<AppNavigationNew :text="t('mail', 'New message')"
-							  buttonId="mail_new_message"
-							  buttonClass="icon-add"
-							  @click="onNewMessage"/>
-			<ul id="accounts-list">
-				<AppNavigationItem v-for="item in menu"
-								   :key="item.key"
-								   :item="item"/>
-			</ul>
-			<AppNavigationSettings :title="t('mail', 'Settings')">
-				<AppSettingsMenu/>
-			</AppNavigationSettings>
-		</template>
+		<Navigation slot="navigation" />
 		<template slot="content">
 			<FolderContent :account="activeAccount"
 						   :folder="activeFolder" />
@@ -24,27 +11,17 @@
 </template>
 
 <script>
-	import {
-		AppContent,
-		AppNavigationItem,
-		AppNavigationNew,
-		AppNavigationSettings
-	} from 'nextcloud-vue'
-	import AppSettingsMenu from '../components/AppSettingsMenu'
-	import FolderContent from '../components/FolderContent'
+	import {AppContent} from 'nextcloud-vue'
 
-	import SidebarItems from '../mixins/SidebarItems'
+	import Navigation from '../components/Navigation'
+	import FolderContent from '../components/FolderContent'
 
 	export default {
 		name: 'Home',
-		extends: SidebarItems,
 		components: {
 			AppContent,
-			AppNavigationItem,
-			AppNavigationNew,
-			AppNavigationSettings,
-			AppSettingsMenu,
 			FolderContent,
+			Navigation,
 		},
 		computed: {
 			activeAccount () {
