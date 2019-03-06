@@ -144,7 +144,11 @@
 							return
 						}
 
-						this.replyRecipient = buildReplyRecipients(message, {}) // TODO: own address
+						const account = this.$store.getters.getAccount(message.accountId)
+						this.replyRecipient = buildReplyRecipients(message, {
+							label: account.name,
+							email: account.emailAddress,
+						})
 						this.replySubject = buildReplySubject(message.subject)
 
 						if (!message.hasHtmlBody) {
@@ -252,11 +256,10 @@
 	}
 
 	#mail-message-header .transparency {
-		color: rgba(0, 0, 0, .3) !important;
-		opacity: 1;
+		opacity: .6;
 	}
 
 	#mail-message-header .transparency a {
-		color: rgba(0, 0, 0, .5) !important;
+		font-weight: bold;
 	}
 </style>

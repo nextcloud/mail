@@ -69,7 +69,6 @@ appstore: clean install-deps optimize-js
 	rsync -a \
 	--exclude=bower.json \
 	--exclude=.bowerrc \
-	--exclude=/build \
 	--exclude=composer.json \
 	--exclude=composer.lock \
 	--exclude=composer.phar \

@@ -11,7 +11,7 @@
     <div
       class="app-content-list-item-star icon-starred"
       :data-starred="data.flags.flagged ? 'true':'false'"
-      @click="toggleFlagged"
+      @click.prevent="toggleFlagged"
     />
     <div class="app-content-list-item-icon">
       <Avatar :displayName="sender"
@@ -52,7 +52,7 @@
 </template>
 
 <script>
-import { Action, PopoverMenu, PopoverMenuItem } from 'nextcloud-vue'
+import { Action } from 'nextcloud-vue'
 import Moment from './Moment'
 
 import Avatar from './Avatar'
@@ -78,7 +78,7 @@ export default {
 	computed: {
 		accountColor() {
 			return calculateAccountColor(
-				this.$store.getters.getAccount(this.data.accountId).name
+				this.$store.getters.getAccount(this.data.accountId).emailAddress
             )
         },
         draft() {
@@ -129,7 +129,7 @@ export default {
 			return [
 				{
 					icon: 'icon-mail',
-					text: t('mail', 'Seen'),
+					text: this.data.flags.unseen ? t('mail', 'Mark read') : t('mail', 'Mark unread'),
 					action: () => {
 						this.$store.dispatch('toggleEnvelopeSeen', this.data)
 					},
@@ -138,6 +138,7 @@ export default {
 					icon: 'icon-delete',
 					text: t('mail', 'Delete'),
 					action: () => {
+						this.$emit('delete', this.data)
 						this.$store.dispatch('deleteMessage', this.data)
 					}
 				}
@@ -146,9 +147,6 @@ export default {
 	},
 	methods: {
 		toggleFlagged(e) {
-			// Don't navigate
-			e.preventDefault()
-
 			this.$store.dispatch('toggleEnvelopeFlagged', this.data)
 		},
 	},

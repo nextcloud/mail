@@ -78,4 +78,12 @@ class AliasesService {
 		return $alias;
 	}
 
+	/**
+	 * Deletes all aliases of an account.
+	 * @param int $accountId the account which aliases will be deleted
+	 * @param string $currentUserId the user whom the account belongs to
+	 */
+	public function deleteAll($accountId) {
+		$this->mapper->deleteAll($accountId);
+	}
 }

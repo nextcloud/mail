@@ -28,6 +28,7 @@ class AliasMapper extends QBMapper {
 	/**
 	 * @param int $aliasId
 	 * @param string $currentUserId
+	 *
 	 * @return Alias
 	 */
 	public function find(int $aliasId, string $currentUserId): Alias {
@@ -48,6 +49,7 @@ class AliasMapper extends QBMapper {
 	/**
 	 * @param int $accountId
 	 * @param string $currentUserId
+	 *
 	 * @return Alias[]
 	 */
 	public function findAll(int $accountId, string $currentUserId): array {
@@ -63,5 +65,19 @@ class AliasMapper extends QBMapper {
 			);
 
 		return $this->findEntities($qb);
+	}
+
+	/**
+	 * @param int $accountId the account whose aliases will be deleted
+	 * @param string $currentUserId the user that is currently logged in
+	 */
+	public function deleteAll($accountId) {
+		$qb = $this->db->getQueryBuilder();
+
+		$query = $qb
+			->delete($this->getTableName())
+			->where($qb->expr()->eq('account_id', $qb->createNamedParameter($accountId)));
+
+		$query->execute();
 	}
 }

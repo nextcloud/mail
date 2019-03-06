@@ -83,7 +83,8 @@
 					  class="message-body"
 					  v-autosize
 					  v-model="bodyVal"
-					  v-on:keyup="onInputChanged"
+					  @keyup="onInputChanged"
+					  @keypress="onBodyKeyPress"
 					  :placeholder="t('mail', 'Message …')">{{message}}</textarea>
 		</div>
 		<div class="submit-message-wrapper">
@@ -293,6 +294,12 @@
 					.catch(console.error.bind(this))
 					.then(() => console.debug('attachments uploaded'))
 			},
+			onBodyKeyPress (event) {
+				// CTRL+Enter sends the message
+				if (event.keyCode === 13 && event.ctrlKey) {
+					return this.onSend()
+				}
+			},
 			onNewToAddr (addr) {
 				this.onNewAddr(addr, this.selectTo)
 			},
@@ -369,7 +376,7 @@
 	.composer-fields {
 		display: flex;
 		align-items: center;
-		border-top: 1px solid #eee;
+		border-top: 1px solid var(--color-border);
 		padding-right: 30px;
 	}
 	.composer-fields .multiselect,
