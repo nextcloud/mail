@@ -1,16 +1,13 @@
 <template>
 	<AppContent app-name="mail">
-		<Navigation slot="navigation"/>
+		<Navigation slot="navigation" />
 		<template slot="content">
-			<div class="section" id="account-info">
-				<h2>{{ t ('mail', 'Account Settings') }} - {{ email }}</h2>
+			<div id="account-info" class="section">
+				<h2>{{ t('mail', 'Account Settings') }} - {{ email }}</h2>
 			</div>
 			<div class="section">
 				<div id="mail-settings">
-					<AccountForm :displayName="displayName"
-								 :email="email"
-								 :save="onSave"
-								 :account="account"/>
+					<AccountForm :display-name="displayName" :email="email" :save="onSave" :account="account" />
 				</div>
 			</div>
 		</template>
@@ -18,50 +15,47 @@
 </template>
 
 <script>
-	import {AppContent} from 'nextcloud-vue'
+import {AppContent} from 'nextcloud-vue'
 
-	import AccountForm from '../components/AccountForm'
-	import Navigation from '../components/Navigation'
+import AccountForm from '../components/AccountForm'
+import Navigation from '../components/Navigation'
 
-	export default {
-		name: 'AccountSettings',
-		components: {
-			AccountForm,
-			AppContent,
-			Navigation,
+export default {
+	name: 'AccountSettings',
+	components: {
+		AccountForm,
+		AppContent,
+		Navigation,
+	},
+	computed: {
+		menu() {
+			return this.buildMenu()
 		},
-		extends: SidebarItems,
-		computed: {
-			menu () {
-				return this.buildMenu()
-			},
-			account () {
-				return this.$store.getters.getAccount(this.$route.params.accountId)
-			},
-			displayName () {
-				return this.$store.getters.getAccount(this.$route.params.accountId)
-					.name
-			},
-			email () {
-				return this.$store.getters.getAccount(this.$route.params.accountId)
-					.emailAddress
-			},
+		account() {
+			return this.$store.getters.getAccount(this.$route.params.accountId)
 		},
-		methods: {
-			onSave (data) {
-				console.log('data to save:', data)
-				return this.$store
-					.dispatch('updateAccount', {
-						...data,
-						accountId: this.$route.params.accountId,
-					})
-					.then(account => account)
-					.catch(err => {
-						console.error('account update failed:', err)
+		displayName() {
+			return this.$store.getters.getAccount(this.$route.params.accountId).name
+		},
+		email() {
+			return this.$store.getters.getAccount(this.$route.params.accountId).emailAddress
+		},
+	},
+	methods: {
+		onSave(data) {
+			console.log('data to save:', data)
+			return this.$store
+				.dispatch('updateAccount', {
+					...data,
+					accountId: this.$route.params.accountId,
+				})
+				.then(account => account)
+				.catch(err => {
+					console.error('account update failed:', err)
 
-						throw err
-					})
-			},
+					throw err
+				})
 		},
-	}
+	},
+}
 </script>
