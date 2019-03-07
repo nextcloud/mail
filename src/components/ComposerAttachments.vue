@@ -31,7 +31,11 @@
 		</ul>
 		<button class="button" :disabled="uploading" @click="onAddLocalAttachment">
 			<span :class="{'icon-upload': !uploading, 'icon-loading-small': uploading}"></span>
-			{{ uploading ? t('mail', 'Uploading …') : t('mail', 'Upload attachment') }}
+			{{
+				uploading
+					? t('mail', 'Uploading {percent}% …', {percent: uploadProgress})
+					: t('mail', 'Upload attachment')
+			}}
 		</button>
 		<button class="button" @click="onAddCloudAttachment">
 			<span class="icon-folder" />
@@ -45,6 +49,7 @@
 import _ from 'lodash'
 import {translate as t} from 'nextcloud-server/dist/l10n'
 import {pickFileOrDirectory} from 'nextcloud-server/dist/files'
+import Vue from 'vue'
 
 import {uploadLocalAttachment} from '../service/AttachmentService'
 
@@ -59,7 +64,19 @@ export default {
 	data() {
 		return {
 			uploading: false,
+			uploads: {},
 		}
+	},
+	computed: {
+		uploadProgress() {
+			let uploaded = 0
+			let total = 0
+			for (let id in this.uploads) {
+				uploaded += this.uploads[id].uploaded
+				total += this.uploads[id].total
+			}
+			return ((uploaded / total) * 100).toFixed(1)
+		},
 	},
 	methods: {
 		onAddLocalAttachment() {
@@ -79,14 +96,25 @@ export default {
 		onLocalAttachmentSelected(e) {
 			this.uploading = true
 
-			const done = Promise.all(
-				_.map(e.target.files, file =>
-					uploadLocalAttachment(file).then(({file, id}) => {
-						console.info('uploaded')
-						return this.emitNewAttachment(this.fileNameToAttachment(file.name, id))
-					})
-				)
-			)
+			Vue.set(this, 'uploads', {})
+
+			const progress = id => (prog, uploaded) => {
+				this.uploads[id].uploaded = uploaded
+			}
+
+			const promises = _.map(e.target.files, file => {
+				Vue.set(this.uploads, file.name, {
+					total: file.size,
+					uploaded: 0,
+				})
+
+				return uploadLocalAttachment(file, progress(file.name)).then(({file, id}) => {
+					console.info('uploaded')
+					return this.emitNewAttachment(this.fileNameToAttachment(file.name, id))
+				})
+			})
+
+			const done = Promise.all(promises)
 				.catch(console.error.bind(this))
 				.then(() => (this.uploading = false))
 
