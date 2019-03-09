@@ -59,7 +59,6 @@ OC.L10N.register(
     "Reply sent!" : "Respondo sendiĝis!",
     "Write another message" : "Verki alian mesaĝon",
     "Send" : "Sendi",
-    "Uploading …" : "Alŝutante…",
     "Upload attachment" : "Alŝuti kunsendaĵon",
     "Add attachment from Files" : "Aldoni kunsendaĵojn el „Dosieroj“",
     "Choose a file to add as attachment" : "Elektu dosieron aldonotan kiel kunsendaĵon",

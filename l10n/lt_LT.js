@@ -56,7 +56,6 @@ OC.L10N.register(
     "Reply sent!" : "Atsakymas išsiųstas!",
     "Write another message" : "Rašyti dar vieną laišką",
     "Send" : "Siųsti",
-    "Uploading …" : "Įkeliama …",
     "Upload attachment" : "Įkelti priedą",
     "Add attachment from Files" : "Pridėti priedą iš Failų",
     "Choose a file to add as attachment" : "Pasirinkite failą, kurį prisegsite prie laiško",

@@ -59,7 +59,6 @@ OC.L10N.register(
     "Reply sent!" : "Antwoord verzonden!",
     "Write another message" : "Schrijf nog een bericht",
     "Send" : "Versturen",
-    "Uploading …" : "Uploaden ...",
     "Upload attachment" : "Bijlage uploaden",
     "Add attachment from Files" : "Bijlage toevoegen vanuit Bestanden",
     "Choose a file to add as attachment" : "Kies een bestand om als bijlage toe te voegen",
