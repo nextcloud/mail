@@ -58,6 +58,7 @@
     "Reply sent!" : "Réponse envoyé !",
     "Write another message" : "Écrire un autre message",
     "Send" : "Envoyer",
+    "Uploading {percent}% …" : "Envoi {percent}% …",
     "Upload attachment" : "Téléverser les pièces jointes",
     "Add attachment from Files" : "Ajouter des pièces jointes depuis Fichiers",
     "Choose a file to add as attachment" : "Choisissez un fichier à joindre au message",

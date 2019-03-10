@@ -60,6 +60,7 @@ OC.L10N.register(
     "Reply sent!" : "Resposta enviada!",
     "Write another message" : "Escrever outra mensagem",
     "Send" : "Enviar",
+    "Uploading {percent}% …" : "Enviando {percent}%…",
     "Upload attachment" : "Enviar anexo",
     "Add attachment from Files" : "Adicionar anexo a partir de arquivos",
     "Choose a file to add as attachment" : "Escolha um arquivo para adicionar como anexo",
