@@ -60,7 +60,7 @@ OC.L10N.register(
     "Reply sent!" : "Yanıt gönderildi!",
     "Write another message" : "Başka bir ileti gönder",
     "Send" : "Gönder",
-    "Uploading {percent}% …" : "{percent}% Yükleniyor…",
+    "Uploading {percent}% …" : "Yükleniyor %{percent} …",
     "Upload attachment" : "Ek dosya yükle",
     "Add attachment from Files" : "Dosyalardan ek dosya ekle",
     "Choose a file to add as attachment" : "Eklenecek ek dosyasını seçin",

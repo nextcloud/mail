@@ -60,6 +60,7 @@ OC.L10N.register(
     "Reply sent!" : "Odpověď odeslána!",
     "Write another message" : "Napsat jinou zprávu",
     "Send" : "Odeslat",
+    "Uploading {percent}% …" : "Nahrávání {percent}%…",
     "Upload attachment" : "Nahrát přílohu",
     "Add attachment from Files" : "Přidat přílohu ze Souborů",
     "Choose a file to add as attachment" : "Vyberte soubor k přiložení",
