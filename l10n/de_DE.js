@@ -96,7 +96,7 @@ OC.L10N.register(
     "Toggle unread" : "Ungelesen umschalten",
     "Search" : "Suchen",
     "Refresh" : "Aktualisieren",
-    "Connect your mail account" : "Verbinde Dein E-Mail-Konto",
+    "Connect your mail account" : "Verbinden Sie Ihr E-Mail-Konto",
     "{from}\n{subject}" : "{from}\n{subject}",
     "_%n new message \nfrom {from}_::_%n new messages \nfrom {from}_" : ["%n neue Nachricht\nvon {from}","%n neue Nachrichten\nvon {from}"],
     "Nextcloud Mail" : "Nextcloud Mail",
