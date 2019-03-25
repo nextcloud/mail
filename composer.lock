@@ -848,12 +848,12 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/ChristophWurst/nextcloud_composer.git",
-                "reference": "014198311112df2893b834a4a079348e6e4b850d"
+                "reference": "6b56dfad6b04a533ff514354e01df0632aefa98b"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/ChristophWurst/nextcloud_composer/zipball/014198311112df2893b834a4a079348e6e4b850d",
-                "reference": "014198311112df2893b834a4a079348e6e4b850d",
+                "url": "https://api.github.com/repos/ChristophWurst/nextcloud_composer/zipball/6b56dfad6b04a533ff514354e01df0632aefa98b",
+                "reference": "6b56dfad6b04a533ff514354e01df0632aefa98b",
                 "shasum": ""
             },
             "require": {
@@ -876,7 +876,7 @@
                 }
             ],
             "description": "Composer package containing Nextcloud's public API (classes, interfaces)",
-            "time": "2018-12-12T09:46:24+00:00"
+            "time": "2019-03-05T07:24:26+00:00"
         },
         {
             "name": "christophwurst/nextcloud_testing",
@@ -2880,16 +2880,16 @@
         },
         {
             "name": "symfony/polyfill-ctype",
-            "version": "v1.10.0",
+            "version": "v1.11.0",
             "source": {
                 "type": "git",
                 "url": "https://github.com/symfony/polyfill-ctype.git",
-                "reference": "e3d826245268269cd66f8326bd8bc066687b4a19"
+                "reference": "82ebae02209c21113908c229e9883c419720738a"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/symfony/polyfill-ctype/zipball/e3d826245268269cd66f8326bd8bc066687b4a19",
-                "reference": "e3d826245268269cd66f8326bd8bc066687b4a19",
+                "url": "https://api.github.com/repos/symfony/polyfill-ctype/zipball/82ebae02209c21113908c229e9883c419720738a",
+                "reference": "82ebae02209c21113908c229e9883c419720738a",
                 "shasum": ""
             },
             "require": {
@@ -2901,7 +2901,7 @@
             "type": "library",
             "extra": {
                 "branch-alias": {
-                    "dev-master": "1.9-dev"
+                    "dev-master": "1.11-dev"
                 }
             },
             "autoload": {
@@ -2934,7 +2934,7 @@
                 "polyfill",
                 "portable"
             ],
-            "time": "2018-08-06T14:22:27+00:00"
+            "time": "2019-02-06T07:57:58+00:00"
         },
         {
             "name": "symfony/polyfill-mbstring",
