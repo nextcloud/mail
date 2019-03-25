@@ -34,7 +34,7 @@ export default {
 	created() {
 		const accounts = this.$store.getters.getAccounts()
 
-		if (this.$route.name === 'home' && accounts.length > 0) {
+		if (this.$route.name === 'home' && accounts.length > 1) {
 			// Show first account
 			let firstAccount = accounts[0]
 			// FIXME: this assumes that there's at least one folder
@@ -48,6 +48,11 @@ export default {
 					accountId: firstAccount.id,
 					folderId: firstFolder.id,
 				},
+			})
+		} else if (this.$route.name === 'home' && accounts.length === 1) {
+			// The only account we have is the unified one -> show the setup page
+			this.$router.replace({
+				name: 'setup',
 			})
 		} else if (this.$route.name === 'mailto') {
 			if (accounts.length === 0) {
