@@ -59,7 +59,18 @@ export default {
 		return createAccount(config).then(account => {
 			console.debug('account created', account)
 			commit('addAccount', account)
-			return account
+
+			fetchAllFolders(account.id)
+				.then(folders =>
+					folders.forEach(folder => {
+						commit('addFolder', {
+							account,
+							folder,
+						})
+					})
+				)
+				.then(() => console.info("new account's folders fetched"))
+				.then(() => account)
 		})
 	},
 	updateAccount({commit}, config) {
