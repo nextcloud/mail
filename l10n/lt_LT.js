@@ -9,7 +9,7 @@ OC.L10N.register(
     "Trash" : "Šiukšlinė",
     "Junk" : "Šlamštas",
     "All" : "Viskas",
-    "Favorites" : "Mėgstami",
+    "Favorites" : "Svarbiausi",
     "Auto detect failed. Please use manual mode." : "Automatinis nustatymų aptikimas nepavyko. Įveskite duomenis rankiniu būdu.",
     "Updating account failed: " : "Paskyros atnaujinimas nepavyko: ",
     "Creating account failed: " : "Paskyros sukūrimas nepavyko: ",
