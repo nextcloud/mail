@@ -1,30 +1,46 @@
 <template>
-	<div id="app-content-wrapper">
-		<Loading v-if="loading" :hint="t('mail', 'Loading messages')" />
-		<template v-else>
-			<EnvelopeList :account="account" :folder="folder" :envelopes="envelopes" :search-query="searchQuery" />
-			<NewMessageDetail v-if="newMessage" />
-			<Message v-else-if="hasMessages" />
-		</template>
+	<div>
+		<AppDetailsToggle @close="hideMessage" />
+		<div id="app-content-wrapper">
+			<Loading v-if="loading" :hint="t('mail', 'Loading messages')" />
+			<template v-else>
+				<EnvelopeList
+					:account="account"
+					:folder="folder"
+					:envelopes="envelopes"
+					:search-query="searchQuery"
+					:show="!showMessage"
+				/>
+				<NewMessageDetail v-if="newMessage" />
+				<Message v-else-if="showMessage" />
+				<NoMessageSelected v-else-if="hasMessages" :mailbox="folder.name" />
+			</template>
+		</div>
 	</div>
 </template>
 
 <script>
 import _ from 'lodash'
+import isMobile from 'nextcloud-vue/dist/Mixins/isMobile'
 
-import Message from './Message'
+import AppDetailsToggle from './AppDetailsToggle'
 import EnvelopeList from './EnvelopeList'
-import NewMessageDetail from './NewMessageDetail'
 import Loading from './Loading'
+import Message from './Message'
+import NewMessageDetail from './NewMessageDetail'
+import NoMessageSelected from './NoMessageSelected'
 
 export default {
 	name: 'FolderContent',
 	components: {
-		Loading,
-		NewMessageDetail,
-		Message,
+		AppDetailsToggle,
 		EnvelopeList,
+		Loading,
+		Message,
+		NewMessageDetail,
+		NoMessageSelected,
 	},
+	mixins: [isMobile],
 	props: {
 		account: {
 			type: Object,
@@ -45,6 +61,9 @@ export default {
 	computed: {
 		hasMessages() {
 			return this.$store.getters.getEnvelopes(this.account.id, this.folder.id).length > 0
+		},
+		showMessage() {
+			return this.hasMessages && this.$route.name === 'message'
 		},
 		newMessage() {
 			return this.$route.params.messageUid === 'new'
@@ -91,7 +110,7 @@ export default {
 
 					this.loading = false
 
-					if (this.$route.name !== 'message' && envelopes.length > 0) {
+					if (!this.isMobile && this.$route.name !== 'message' && envelopes.length > 0) {
 						// Show first message
 						let first = envelopes[0]
 
@@ -107,6 +126,15 @@ export default {
 						})
 					}
 				})
+		},
+		hideMessage() {
+			this.$router.replace({
+				name: 'folder',
+				params: {
+					accountId: this.account.id,
+					folderId: this.folder.id,
+				},
+			})
 		},
 		searchProxy(query) {
 			if (this.alive) {

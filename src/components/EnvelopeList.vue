@@ -6,6 +6,7 @@
 		name="list"
 		tag="div"
 		class="app-content-list"
+		:class="{showdetails: !show}"
 		infinite-scroll-disabled="loading"
 		infinite-scroll-distance="30"
 		@shortkey.native="handleShortcut"
@@ -61,6 +62,10 @@ export default {
 			type: String,
 			required: false,
 			default: undefined,
+		},
+		show: {
+			type: Boolean,
+			default: true,
 		},
 	},
 	data() {
