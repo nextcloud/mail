@@ -2,10 +2,8 @@
 	<AppContent app-name="mail">
 		<Navigation slot="navigation" />
 		<template slot="content">
-			<div id="account-info" class="section">
-				<h2>{{ t('mail', 'Account Settings') }} - {{ email }}</h2>
-			</div>
 			<div class="section">
+				<h2>{{ t('mail', 'Account Settings') }} - {{ email }}</h2>
 				<div id="mail-settings">
 					<AccountForm :display-name="displayName" :email="email" :save="onSave" :account="account" />
 				</div>

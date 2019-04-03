@@ -59,7 +59,6 @@ OC.L10N.register(
     "Reply sent!" : "Svar sendt!",
     "Write another message" : "Skriv en ny melding",
     "Send" : "Send",
-    "Uploading …" : "Laster opp…",
     "Upload attachment" : "Last opp vedlegg",
     "Add attachment from Files" : "Legg til vedlegg fra Filer",
     "Choose a file to add as attachment" : "Velg en fil å legge til som vedlegg",

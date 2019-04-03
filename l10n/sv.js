@@ -59,7 +59,7 @@ OC.L10N.register(
     "Reply sent!" : "Svar skickat!",
     "Write another message" : "Skriv ett annat meddelande",
     "Send" : "Skicka",
-    "Uploading …" : "Laddar upp ...",
+    "Uploading {percent}% …" : "Laddar upp {percent}% …",
     "Upload attachment" : "Ladda upp bilaga",
     "Add attachment from Files" : "Lägg till bilaga från Filer",
     "Choose a file to add as attachment" : "Välj en fil att lägga som bilaga",
