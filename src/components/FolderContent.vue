@@ -1,6 +1,6 @@
 <template>
 	<div>
-		<AppDetailsToggle @close="hideMessage" />
+		<AppDetailsToggle v-if="showMessage" @close="hideMessage" />
 		<div id="app-content-wrapper">
 			<Loading v-if="loading" :hint="t('mail', 'Loading messages')" />
 			<template v-else>
