@@ -1,9 +1,7 @@
 <template>
 	<AppContent v-shortkey.once="['c']" app-name="mail" @shortkey.native="onNewMessage">
 		<Navigation slot="navigation" />
-		<template slot="content">
-			<FolderContent v-if="activeAccount" :account="activeAccount" :folder="activeFolder" />
-		</template>
+		<FolderContent v-if="activeAccount" slot="content" :account="activeAccount" :folder="activeFolder" />
 	</AppContent>
 </template>
 
