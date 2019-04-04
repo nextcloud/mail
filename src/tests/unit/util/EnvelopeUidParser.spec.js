@@ -22,7 +22,7 @@
 import {parseUid} from '../../../util/EnvelopeUidParser'
 
 describe('EnvelopeUidParser', () => {
-	it ('parses a simple UID', () => {
+	it('parses a simple UID', () => {
 		const uid = '1-SU5CT1g=-123'
 
 		const parsed = parseUid(uid)
@@ -32,7 +32,7 @@ describe('EnvelopeUidParser', () => {
 		expect(parsed.id).to.equal(123)
 	})
 
-	it ('parses the default account UID', () => {
+	it('parses the default account UID', () => {
 		const uid = '-2-SU5CT1g=-123'
 
 		const parsed = parseUid(uid)
