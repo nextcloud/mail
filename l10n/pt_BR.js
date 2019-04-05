@@ -87,6 +87,7 @@ OC.L10N.register(
     "Show all folders" : "Mostrar todas as pastas",
     "Collapse folders" : "Esconder as pastas",
     "Could not load your draft" : "Não pude carregar seu rascunho",
+    "No message selected" : "Nenhuma mensagem selecionada",
     "Account Settings" : "Configurações da Conta",
     "Speed up your Mail experience with these quick shortcuts." : "Acelere o uso de seu e-mail com estes atalhos rápidos.",
     "Compose new message" : "Redigir nova mensagem",

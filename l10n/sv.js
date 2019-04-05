@@ -86,6 +86,7 @@ OC.L10N.register(
     "Show all folders" : "Visa alla kataloger",
     "Collapse folders" : "Dölj mappar",
     "Could not load your draft" : "Kunde inte ladda ditt utkast",
+    "No message selected" : "Inget meddelande valt",
     "Account Settings" : "Kontoinställningar",
     "Speed up your Mail experience with these quick shortcuts." : "Snabba upp din E-post-upplevelse med dessa genvägar.",
     "Compose new message" : "Skapa nytt meddelande",

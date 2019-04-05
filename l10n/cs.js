@@ -87,6 +87,7 @@ OC.L10N.register(
     "Show all folders" : "Zobrazit všechny složky",
     "Collapse folders" : "Sbalit složky",
     "Could not load your draft" : "Nedaří se načíst váš koncept",
+    "No message selected" : "Nevybrána žádná zpráva",
     "Account Settings" : "Nastavení účtu",
     "Speed up your Mail experience with these quick shortcuts." : "Zrychlete své používání aplikace Email pomocí těchto pohotových zkratek.",
     "Compose new message" : "Napsat novou zprávu",
