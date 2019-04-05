@@ -1,5 +1,6 @@
 <template>
 	<div>
+		<div v-if="needsNavToggle" id="app-navigation-toggle" class="icon-menu" style="display:none;" tabindex="0"></div>
 		<AppDetailsToggle v-if="showMessage" @close="hideMessage" />
 		<div id="app-content-wrapper">
 			<Loading v-if="loading" :hint="t('mail', 'Loading messages')" />
@@ -53,6 +54,7 @@ export default {
 	},
 	data() {
 		return {
+			needsNavToggle: false,
 			loading: true,
 			searchQuery: undefined,
 			alive: false,
@@ -90,6 +92,12 @@ export default {
 		new OCA.Search(this.searchProxy, this.clearSearchProxy)
 
 		this.fetchData()
+	},
+	mounted() {
+		if (!this.$el.querySelector('#app-navigation-toggle')) {
+			console.debug('adding the missing #app-navigation-toggle element')
+			this.needsNavToggle = true
+		}
 	},
 	beforeDestroy() {
 		this.alive = false
