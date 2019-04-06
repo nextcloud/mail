@@ -45,6 +45,7 @@ OC.L10N.register(
     "cc" : "cc",
     "bcc" : "bcc",
     "Subject" : "Tema",
+    "Note that the mail came from a noreply address so\tyour reply will probably not be read." : "Turėkite omenyje, kad laiškas atėjo iš adreso, kuris nėra skirtas atsakyti, taigi,\tjūsų atsakymas, tikriausiai, nebus perskaitytas.",
     "Saving draft …" : "Įrašomas juodraštis …",
     "Draft saved" : "Juodraštis įrašytas",
     "Uploading attachments …" : "Įkeliami priedai …",
