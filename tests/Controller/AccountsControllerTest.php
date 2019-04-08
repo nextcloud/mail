@@ -168,6 +168,28 @@ class AccountsControllerTest extends TestCase {
 		$this->controller->show($this->accountId);
 	}
 
+	public function testUpdateSignature() {
+		$this->accountService->expects($this->once())
+			->method('updateSignature')
+			->with($this->equalTo($this->accountId), $this->equalTo($this->userId), 'sig');
+
+		$response = $this->controller->updateSignature($this->accountId, 'sig');
+
+		$expectedResponse = new JSONResponse();
+		$this->assertEquals($expectedResponse, $response);
+	}
+
+	public function testDeleteSignature() {
+		$this->accountService->expects($this->once())
+			->method('updateSignature')
+			->with($this->equalTo($this->accountId), $this->equalTo($this->userId), null);
+
+		$response = $this->controller->updateSignature($this->accountId, null);
+
+		$expectedResponse = new JSONResponse();
+		$this->assertEquals($expectedResponse, $response);
+	}
+
 	public function testDestroy() {
 		$this->accountService->expects($this->once())
 			->method('delete')

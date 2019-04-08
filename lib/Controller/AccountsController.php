@@ -196,6 +196,20 @@ class AccountsController extends Controller {
 	 * @NoAdminRequired
 	 * @TrapError
 	 *
+	 * @param int $accountId
+	 * @param string|null $signature
+	 *
+	 * @return JSONResponse
+	 */
+	public function updateSignature(int $accountId, string $signature = null) {
+		$this->accountService->updateSignature($accountId, $this->currentUserId, $signature);
+		return new JSONResponse();
+	}
+
+	/**
+	 * @NoAdminRequired
+	 * @TrapError
+	 *
 	 * @param int $id
 	 * @return JSONResponse
 	 */

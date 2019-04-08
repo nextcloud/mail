@@ -28,6 +28,7 @@ use Exception;
 use OCA\Mail\Account;
 use OCA\Mail\Db\MailAccount;
 use OCA\Mail\Db\MailAccountMapper;
+use OCA\Mail\Exception\ServiceException;
 use OCA\Mail\Service\DefaultAccount\Manager;
 use OCP\IL10N;
 
@@ -127,6 +128,16 @@ class AccountService {
 	 */
 	public function save(MailAccount $newAccount): MailAccount {
 		return $this->mapper->save($newAccount);
+	}
+
+	public function updateSignature(int $id, string $uid, string $signature = null) {
+		$account = $this->find($uid, $id);
+		if ($account === null) {
+			throw new ServiceException("Account does not exist or user is not permitted to change it");
+		}
+		$mailAccount = $account->getMailAccount();
+		$mailAccount->setSignature($signature);
+		$this->mapper->save($mailAccount);
 	}
 
 }

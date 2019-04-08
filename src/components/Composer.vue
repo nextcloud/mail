@@ -226,8 +226,10 @@ export default {
 	beforeMount() {
 		if (this.fromAccount) {
 			this.selectedAlias = this.aliases.find(alias => alias.id === this.fromAccount)
+		} else {
+			this.selectedAlias = this.aliases[0]
 		}
-		this.selectedAlias = this.aliases[0]
+		this.bodyVal = this.bodyWithSignature(this.selectedAlias, this.body)
 	},
 	methods: {
 		recipientToRfc822(recipient) {
@@ -345,6 +347,15 @@ export default {
 		 */
 		formatAliases(alias) {
 			return `${alias.name} <${alias.emailAddress}>`
+		},
+		bodyWithSignature(alias, body) {
+			console.info(alias)
+
+			if (!alias || !alias.signature) {
+				return body
+			}
+
+			return body + '\n\n--\n\n' + alias.signature
 		},
 	},
 }
