@@ -87,6 +87,7 @@ OC.L10N.register(
     "Show all folders" : "Wyświetl wszystkie foldery",
     "Collapse folders" : "Zwiń foldery",
     "Could not load your draft" : "Nie można wczytać szkicu wiadomości",
+    "No message selected" : "Nie wybrano żadnej wiadomości",
     "Account Settings" : "Ustawienia konta",
     "Speed up your Mail experience with these quick shortcuts." : "Aby przyspieszyć korzystanie z Poczty użyj tych skrótów.",
     "Compose new message" : "Napisz nową wiadomość",

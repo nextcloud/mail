@@ -87,6 +87,7 @@ OC.L10N.register(
     "Show all folders" : "Tüm klasörleri görüntüle",
     "Collapse folders" : "Klasörleri daralt",
     "Could not load your draft" : "Taslağınız yüklenemedi",
+    "No message selected" : "Herhangi bir ileti seçilmemiş",
     "Account Settings" : "Hesap Ayarları",
     "Speed up your Mail experience with these quick shortcuts." : "Kısayol tuşlarını kullanarak e-posta deneyiminizi hızlandırabilirsiniz.",
     "Compose new message" : "Yeni ileti gönder",

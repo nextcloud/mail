@@ -87,6 +87,7 @@ OC.L10N.register(
     "Show all folders" : "显示全部文件夹",
     "Collapse folders" : "折叠文件夹",
     "Could not load your draft" : "无法加载您的草稿",
+    "No message selected" : "没有选择消息",
     "Account Settings" : "账户设置",
     "Speed up your Mail experience with these quick shortcuts." : "利用这些快捷方式使您的邮件使用过程更加迅捷",
     "Compose new message" : "撰写新消息",

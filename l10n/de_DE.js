@@ -87,6 +87,7 @@ OC.L10N.register(
     "Show all folders" : "Alle Ordner anzeigen",
     "Collapse folders" : "Ordner einklappen",
     "Could not load your draft" : "Ihr Entwurf konnte nicht geladen werden",
+    "No message selected" : "Keine Nachricht ausgewählt",
     "Account Settings" : "Konto-Einstellungen",
     "Speed up your Mail experience with these quick shortcuts." : "Verbessern Sie Ihre Arbeit mit Mail durch diese Schnellbefehle.",
     "Compose new message" : "Neue Nachricht erstellen",
