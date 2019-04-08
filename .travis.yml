@@ -38,10 +38,10 @@ matrix:
       env: "DB=mysql CORE_BRANCH=master PACKAGE=TRUE"
     - php: 7.1
       env: "DB=pgsql PHP_COVERAGE=TRUE"
-    - php: 7.0
-      env: "DB=pgsql CORE_BRANCH=stable15"
     - php: 7.1
-      env: "DB=pgsql CORE_BRANCH=v15.0.0"
+      env: "DB=pgsql CORE_BRANCH=v16.0.0beta3"
+    - php: 7.2
+      env: "DB=pgsql CORE_BRANCH=v16.0.0alpha1"
     - php: 7.2
       env: "DB=pgsql PHP_COVERAGE=TRUE"
   fast_finish: true
