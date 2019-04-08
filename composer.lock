@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "4d057fd0fdc3a34951356924070bc757",
+    "content-hash": "4d3611a11bad0f7b824fc99fc60643d6",
     "packages": [
         {
             "name": "arthurhoaro/favicon",
@@ -239,7 +239,7 @@
             ],
             "description": "Autolink URLs in text or html",
             "homepage": "http://www.kwi.dk/projects/php/UrlLinker/",
-            "time": "2014-12-28T23:05:00+00:00"
+            "time": "2014-12-28T22:05:00+00:00"
         },
         {
             "name": "pear-pear.horde.org/Horde_Crypt_Blowfish",
@@ -844,25 +844,25 @@
     "packages-dev": [
         {
             "name": "christophwurst/nextcloud",
-            "version": "dev-stable15",
+            "version": "v16.0.0-beta3",
             "source": {
                 "type": "git",
                 "url": "https://github.com/ChristophWurst/nextcloud_composer.git",
-                "reference": "6b56dfad6b04a533ff514354e01df0632aefa98b"
+                "reference": "69332fc5190a4c209669a3933e7ca1767a292e7a"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/ChristophWurst/nextcloud_composer/zipball/6b56dfad6b04a533ff514354e01df0632aefa98b",
-                "reference": "6b56dfad6b04a533ff514354e01df0632aefa98b",
+                "url": "https://api.github.com/repos/ChristophWurst/nextcloud_composer/zipball/69332fc5190a4c209669a3933e7ca1767a292e7a",
+                "reference": "69332fc5190a4c209669a3933e7ca1767a292e7a",
                 "shasum": ""
             },
             "require": {
-                "php": "^7.0"
+                "php": "^7.1"
             },
             "type": "library",
             "extra": {
                 "branch-alias": {
-                    "dev-master": "15.0.0-dev"
+                    "dev-master": "16.0.0-dev"
                 }
             },
             "notification-url": "https://packagist.org/downloads/",
@@ -876,7 +876,7 @@
                 }
             ],
             "description": "Composer package containing Nextcloud's public API (classes, interfaces)",
-            "time": "2019-03-05T07:24:26+00:00"
+            "time": "2019-04-08T08:10:16+00:00"
         },
         {
             "name": "christophwurst/nextcloud_testing",
@@ -2923,7 +2923,7 @@
                 },
                 {
                     "name": "Gert de Pagter",
-                    "email": "backendtea@gmail.com"
+                    "email": "BackEndTea@gmail.com"
                 }
             ],
             "description": "Symfony polyfill for ctype functions",
@@ -3152,15 +3152,15 @@
         "pear-pear.horde.org/horde_util": 0,
         "pear-pear.horde.org/horde_smtp": 0,
         "kwi/urllinker": 20,
-        "christophwurst/nextcloud": 20
+        "christophwurst/nextcloud": 10
     },
     "prefer-stable": false,
     "prefer-lowest": false,
     "platform": {
-        "php": ">=7.0.13"
+        "php": ">=7.1"
     },
     "platform-dev": [],
     "platform-overrides": {
-        "php": "7.0.13"
+        "php": "7.1"
     }
 }
