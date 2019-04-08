@@ -4,6 +4,7 @@ All notable changes to this project will be documented in this file.
 ## 0.12.0 - 2018-04-08
 ### Added
 - Nextcloud 16 support
+- php7.3 support
 - A new front-end (with lots of improvements)
 - Many UX enhancements
 - New and updated translations
