@@ -1,19 +1,19 @@
 <template>
-	<AppContent app-name="mail">
+	<Content app-name="mail">
 		<Navigation slot="navigation" />
-		<template slot="content">
+		<AppContent slot="content">
 			<div class="section">
 				<h2>{{ t('mail', 'Account Settings') }} - {{ email }}</h2>
 				<div id="mail-settings">
 					<AccountForm :display-name="displayName" :email="email" :save="onSave" :account="account" />
 				</div>
 			</div>
-		</template>
-	</AppContent>
+		</AppContent>
+	</Content>
 </template>
 
 <script>
-import {AppContent} from 'nextcloud-vue'
+import {AppContent, Content} from 'nextcloud-vue'
 
 import AccountForm from '../components/AccountForm'
 import Navigation from '../components/Navigation'
@@ -23,6 +23,7 @@ export default {
 	components: {
 		AccountForm,
 		AppContent,
+		Content,
 		Navigation,
 	},
 	computed: {
