@@ -53,6 +53,7 @@ export default {
 	data() {
 		return {
 			loading: false,
+			signature: this.account.signature,
 		}
 	},
 	methods: {
