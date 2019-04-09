@@ -64,8 +64,7 @@ class AccountServiceTest extends TestCase {
 		$this->l10n = $this->createMock(IL10N::class);
 		$this->defaultAccountManager = $this->createMock(Manager::class);
 		$this->aliasesService = $this->createMock(AliasesService::class);
-		$this->accountService = new AccountService($this->mapper, $this->l10n
-			, $this->defaultAccountManager, $this->aliasesService);
+		$this->accountService = new AccountService($this->mapper, $this->defaultAccountManager, $this->aliasesService);
 
 		$this->account1 = $this->createMock(MailAccount::class);
 		$this->account2 = $this->createMock(MailAccount::class);

@@ -30,7 +30,6 @@ use OCA\Mail\Db\MailAccount;
 use OCA\Mail\Db\MailAccountMapper;
 use OCA\Mail\Exception\ServiceException;
 use OCA\Mail\Service\DefaultAccount\Manager;
-use OCP\IL10N;
 
 class AccountService {
 
@@ -44,9 +43,6 @@ class AccountService {
 	 */
 	private $accounts;
 
-	/** @var IL10N */
-	private $l10n;
-
 	/** @var Manager */
 	private $defaultAccountManager;
 
@@ -54,11 +50,9 @@ class AccountService {
 	private $aliasesService;
 
 	public function __construct(MailAccountMapper $mapper,
-								IL10N $l10n,
 								Manager $defaultAccountManager,
 								AliasesService $aliasesService) {
 		$this->mapper = $mapper;
-		$this->l10n = $l10n;
 		$this->defaultAccountManager = $defaultAccountManager;
 		$this->aliasesService = $aliasesService;
 	}
@@ -89,7 +83,7 @@ class AccountService {
 	 * @param int $accountId
 	 * @return Account
 	 */
-	public function find(string $currentUserId, int $accountId) {
+	public function find(string $currentUserId, int $accountId): Account {
 		if ($this->accounts !== null) {
 			foreach ($this->accounts as $account) {
 				if ($account->getId() === $accountId) {
@@ -99,7 +93,7 @@ class AccountService {
 			throw new Exception("Invalid account id <$accountId>");
 		}
 
-		if ((int)$accountId === Manager::ACCOUNT_ID) {
+		if ($accountId === Manager::ACCOUNT_ID) {
 			$defaultAccount = $this->defaultAccountManager->getDefaultAccount();
 			if (is_null($defaultAccount)) {
 				throw new Exception('Default account config missing');
@@ -112,7 +106,7 @@ class AccountService {
 	/**
 	 * @param int $accountId
 	 */
-	public function delete(string $currentUserId, int $accountId) {
+	public function delete(string $currentUserId, int $accountId): void {
 		if ($accountId === Manager::ACCOUNT_ID) {
 			return;
 		}
@@ -130,10 +124,10 @@ class AccountService {
 		return $this->mapper->save($newAccount);
 	}
 
-	public function updateSignature(int $id, string $uid, string $signature = null) {
+	public function updateSignature(int $id, string $uid, string $signature = null): void {
 		$account = $this->find($uid, $id);
 		if ($account === null) {
-			throw new ServiceException("Account does not exist or user is not permitted to change it");
+			throw new ServiceException('Account does not exist or user is not permitted to change it');
 		}
 		$mailAccount = $account->getMailAccount();
 		$mailAccount->setSignature($signature);
