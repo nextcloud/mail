@@ -84,8 +84,8 @@ export default {
 	updateAccountSignature({commit}, {account, signature}) {
 		return updateSignature(account, signature).then(() => {
 			console.debug('account signature updated')
-			account.signature = signature
-			commit('editAccount', account)
+			const updated = Object.assign({}, account, {signature})
+			commit('editAccount', updated)
 			return account
 		})
 	},
