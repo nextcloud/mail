@@ -134,4 +134,23 @@ class AccountServiceTest extends TestCase {
 		$this->assertEquals($account, $actual);
 	}
 
+	public function testUpdateSignature() {
+		$id = 3;
+		$uid = 'ian';
+		$signature = 'sig';
+		$mailAccount = $this->createMock(MailAccount::class);
+		$this->mapper->expects($this->once())
+			->method('find')
+			->with(
+				$uid,
+				$id
+			)
+			->willReturn($mailAccount);
+		$this->mapper->expects($this->once())
+			->method('save')
+			->with($mailAccount);
+
+		$this->accountService->updateSignature($id, $uid, $signature);
+	}
+
 }
