@@ -65,7 +65,7 @@
     "file-loader": "^3.0.1",
     "jsdom": "^14.0.0",
     "jsdom-global": "^3.0.2",
-    "mocha": "^5.2.0",
+    "mocha": "^6.1.2",
     "node-sass": "^4.11.0",
     "prettier": "1.16.4",
     "sass-loader": "^7.0.3",
