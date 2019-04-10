@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "fefa2685c1b42f5100872b2b08e00fbb",
+    "content-hash": "0f49672fdd108af1d2f1a5a1627f3f51",
     "packages": [
         {
             "name": "arthurhoaro/favicon",
@@ -844,22 +844,25 @@
     "packages-dev": [
         {
             "name": "christophwurst/nextcloud",
-            "version": "v14.0.3",
+            "version": "v15.0.5",
             "source": {
                 "type": "git",
                 "url": "https://github.com/ChristophWurst/nextcloud_composer.git",
-                "reference": "6988090d74635889519765b9b74bc9352e566a76"
+                "reference": "6b56dfad6b04a533ff514354e01df0632aefa98b"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/ChristophWurst/nextcloud_composer/zipball/6988090d74635889519765b9b74bc9352e566a76",
-                "reference": "6988090d74635889519765b9b74bc9352e566a76",
+                "url": "https://api.github.com/repos/ChristophWurst/nextcloud_composer/zipball/6b56dfad6b04a533ff514354e01df0632aefa98b",
+                "reference": "6b56dfad6b04a533ff514354e01df0632aefa98b",
                 "shasum": ""
+            },
+            "require": {
+                "php": "^7.0"
             },
             "type": "library",
             "extra": {
                 "branch-alias": {
-                    "dev-master": "14.0.0-dev"
+                    "dev-master": "15.0.0-dev"
                 }
             },
             "notification-url": "https://packagist.org/downloads/",
@@ -873,7 +876,7 @@
                 }
             ],
             "description": "Composer package containing Nextcloud's public API (classes, interfaces)",
-            "time": "2018-10-12T08:37:31+00:00"
+            "time": "2019-03-05T07:24:26+00:00"
         },
         {
             "name": "christophwurst/nextcloud_testing",
