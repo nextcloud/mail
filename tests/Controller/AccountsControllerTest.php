@@ -112,7 +112,7 @@ class AccountsControllerTest extends TestCase {
 		$this->setupService = $this->createMock(SetupService::class);
 
 		$this->controller = new AccountsController($this->appName, $this->request, $this->accountService, $this->groupsIntegration, $this->userId,
-			$this->logger, $this->l10n, $this->crypto, $this->aliasesService, $this->transmission, $this->setupService);
+			$this->logger, $this->l10n, $this->aliasesService, $this->transmission, $this->setupService);
 		$this->account = $this->createMock(Account::class);
 		$this->accountId = 123;
 	}
