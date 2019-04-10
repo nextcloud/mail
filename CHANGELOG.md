@@ -1,6 +1,10 @@
 # Changelog
 All notable changes to this project will be documented in this file.
 
+## 0.11.1 – 2019-04-10
+### Added
+- php7.3 support for Nextcloud 15
+
 ## 0.11.0 – 2018-10-16
 ### Added
 - Nextcloud 15 support
