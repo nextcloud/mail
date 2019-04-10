@@ -33,13 +33,8 @@ class AutoCompleteController extends Controller {
 	/** @var AutoCompleteService */
 	private $service;
 
-	/**
-	 * @param string $appName
-	 * @param IRequest $request
-	 * @param AutoCompleteService $service
-	 * @param string $UserId
-	 */
-	public function __construct(string $appName, IRequest $request,
+	public function __construct(string $appName,
+								IRequest $request,
 								AutoCompleteService $service) {
 		parent::__construct($appName, $request);
 
