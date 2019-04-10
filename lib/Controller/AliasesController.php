@@ -37,17 +37,13 @@ class AliasesController extends Controller {
 	/** @var AliasesService */
 	private $aliasService;
 
-	/**
-	 * @var IUser
-	 */
+	/** @var IUser */
 	private $currentUser;
 
-	/**
-	 * @param string $appName
-	 * @param IRequest $request
-	 * @param AliasesService $aliasesService
-	 */
-	public function __construct($appName, IRequest $request, AliasesService $aliasesService, IUserSession $userSession) {
+	public function __construct(string $appName,
+								IRequest $request,
+								AliasesService $aliasesService,
+								IUserSession $userSession) {
 		parent::__construct($appName, $request);
 		$this->aliasService = $aliasesService;
 		$this->currentUser = $userSession->getUser();

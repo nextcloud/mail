@@ -44,14 +44,11 @@ class AvatarsController extends Controller {
 	/** @var ITimeFactory */
 	private $timeFactory;
 
-	/**
-	 * @param string $appName
-	 * @param IRequest $request
-	 * @param IAvatarService $avatarService
-	 * @param string $UserId
-	 * @param ITimeFactory $timeFactory
-	 */
-	public function __construct(string $appName, IRequest $request, IAvatarService $avatarService, $UserId, ITimeFactory $timeFactory) {
+	public function __construct(string $appName,
+								IRequest $request,
+								IAvatarService $avatarService,
+								string $UserId,
+								ITimeFactory $timeFactory) {
 		parent::__construct($appName, $request);
 
 		$this->avatarService = $avatarService;
@@ -68,7 +65,7 @@ class AvatarsController extends Controller {
 	 * @return JSONResponse
 	 */
 	public function url(string $email): JSONResponse {
-		if (is_null($email) || empty($email)) {
+		if (empty($email)) {
 			return new JSONResponse([], Http::STATUS_BAD_REQUEST);
 		}
 
