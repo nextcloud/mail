@@ -36,6 +36,7 @@
 		"phan/phan": "^1.2"
 	},
 	"scripts": {
+		"lint": "find . -name \\*.php -not -path './vendor/*' -exec php -l \"{}\" \\;",
 		"phan": "phan --allow-polyfill-parser -k .phan/config.php",
 		"test": "phpunit -c tests/phpunit.xml --fail-on-warning",
 		"test:unit": "phpunit -c tests/phpunit.xml tests --fail-on-warning",
