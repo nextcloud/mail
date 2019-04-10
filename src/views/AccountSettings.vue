@@ -4,9 +4,11 @@
 		<AppContent slot="content">
 			<div class="section">
 				<h2>{{ t('mail', 'Account Settings') }} - {{ email }}</h2>
+				<h3>{{ t('mail', 'Mail server') }}</h3>
 				<div id="mail-settings">
 					<AccountForm :display-name="displayName" :email="email" :save="onSave" :account="account" />
 				</div>
+				<SignatureSettings :account="account" />
 			</div>
 		</AppContent>
 	</Content>
@@ -17,6 +19,7 @@ import {AppContent, Content} from 'nextcloud-vue'
 
 import AccountForm from '../components/AccountForm'
 import Navigation from '../components/Navigation'
+import SignatureSettings from '../components/SignatureSettings'
 
 export default {
 	name: 'AccountSettings',
@@ -25,13 +28,18 @@ export default {
 		AppContent,
 		Content,
 		Navigation,
+		SignatureSettings,
+	},
+	data() {
+		const account = this.$store.getters.getAccount(this.$route.params.accountId)
+		return {
+			account,
+			signature: account.signature,
+		}
 	},
 	computed: {
 		menu() {
 			return this.buildMenu()
-		},
-		account() {
-			return this.$store.getters.getAccount(this.$route.params.accountId)
 		},
 		displayName() {
 			return this.$store.getters.getAccount(this.$route.params.accountId).name

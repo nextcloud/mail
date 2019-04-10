@@ -53,7 +53,8 @@ class TestMailAccount extends TestCase {
 			'smtpHost' => 'smtp.marvel.com',
 			'smtpPort' => 458,
 			'smtpUser' => 'spiderman',
-			'smtpSslMode' => 'ssl'
+			'smtpSslMode' => 'ssl',
+			'signature' => null,
 			), $a->toJson());
 	}
 
@@ -69,7 +70,8 @@ class TestMailAccount extends TestCase {
 			'smtpHost' => 'smtp.marvel.com',
 			'smtpPort' => 458,
 			'smtpUser' => 'spiderman',
-			'smtpSslMode' => 'ssl'
+			'smtpSslMode' => 'ssl',
+			'signature' => null,
 		];
 		$a = new MailAccount($expected);
 		// TODO: fix inconsistency

@@ -25,6 +25,7 @@ import {savePreference} from '../service/PreferenceService'
 import {
 	create as createAccount,
 	update as updateAccount,
+	updateSignature,
 	deleteAccount,
 	fetch as fetchAccount,
 	fetchAll as fetchAllAccounts,
@@ -77,6 +78,14 @@ export default {
 		return updateAccount(config).then(account => {
 			console.debug('account updated', account)
 			commit('editAccount', account)
+			return account
+		})
+	},
+	updateAccountSignature({commit}, {account, signature}) {
+		return updateSignature(account, signature).then(() => {
+			console.debug('account signature updated')
+			const updated = Object.assign({}, account, {signature})
+			commit('editAccount', updated)
 			return account
 		})
 	},
