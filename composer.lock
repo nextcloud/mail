@@ -239,7 +239,7 @@
             ],
             "description": "Autolink URLs in text or html",
             "homepage": "http://www.kwi.dk/projects/php/UrlLinker/",
-            "time": "2014-12-28T22:05:00+00:00"
+            "time": "2014-12-28T23:05:00+00:00"
         },
         {
             "name": "pear-pear.horde.org/Horde_Crypt_Blowfish",
@@ -1181,16 +1181,16 @@
         },
         {
             "name": "microsoft/tolerant-php-parser",
-            "version": "v0.0.16",
+            "version": "v0.0.17",
             "source": {
                 "type": "git",
                 "url": "https://github.com/Microsoft/tolerant-php-parser.git",
-                "reference": "b662587eb797685a98239d1d52d25168a03fdfb2"
+                "reference": "89386de8dec9c004c8ea832692e236c92f34b542"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/Microsoft/tolerant-php-parser/zipball/b662587eb797685a98239d1d52d25168a03fdfb2",
-                "reference": "b662587eb797685a98239d1d52d25168a03fdfb2",
+                "url": "https://api.github.com/repos/Microsoft/tolerant-php-parser/zipball/89386de8dec9c004c8ea832692e236c92f34b542",
+                "reference": "89386de8dec9c004c8ea832692e236c92f34b542",
                 "shasum": ""
             },
             "require": {
@@ -1218,7 +1218,7 @@
                 }
             ],
             "description": "Tolerant PHP-to-AST parser designed for IDE usage scenarios",
-            "time": "2018-12-29T00:31:32+00:00"
+            "time": "2019-03-09T19:24:59+00:00"
         },
         {
             "name": "myclabs/deep-copy",
@@ -1309,16 +1309,16 @@
         },
         {
             "name": "phan/phan",
-            "version": "1.2.6",
+            "version": "1.2.8",
             "source": {
                 "type": "git",
                 "url": "https://github.com/phan/phan.git",
-                "reference": "78b8f2bdab9dab2146872bf130a9265a3f1f9a27"
+                "reference": "63eb0801e193adddcd7d308980e731ff5546426f"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/phan/phan/zipball/78b8f2bdab9dab2146872bf130a9265a3f1f9a27",
-                "reference": "78b8f2bdab9dab2146872bf130a9265a3f1f9a27",
+                "url": "https://api.github.com/repos/phan/phan/zipball/63eb0801e193adddcd7d308980e731ff5546426f",
+                "reference": "63eb0801e193adddcd7d308980e731ff5546426f",
                 "shasum": ""
             },
             "require": {
@@ -1327,12 +1327,13 @@
                 "ext-filter": "*",
                 "ext-json": "*",
                 "felixfbecker/advanced-json-rpc": "^3.0.3",
-                "microsoft/tolerant-php-parser": "0.0.16",
+                "microsoft/tolerant-php-parser": "0.0.17",
                 "php": "^7.0.0",
                 "sabre/event": "^5.0",
                 "symfony/console": "^2.3|^3.0|~4.0"
             },
             "require-dev": {
+                "brianium/paratest": "^1.1",
                 "phpunit/phpunit": "^6.3.0"
             },
             "suggest": {
@@ -1372,7 +1373,7 @@
                 "php",
                 "static"
             ],
-            "time": "2019-03-09T19:38:20+00:00"
+            "time": "2019-04-06T14:41:29+00:00"
         },
         {
             "name": "phar-io/manifest",
@@ -2923,7 +2924,7 @@
                 },
                 {
                     "name": "Gert de Pagter",
-                    "email": "BackEndTea@gmail.com"
+                    "email": "backendtea@gmail.com"
                 }
             ],
             "description": "Symfony polyfill for ctype functions",
