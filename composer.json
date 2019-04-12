@@ -7,11 +7,11 @@
 	],
 	"config": {
 		"platform": {
-			"php": "7.0.13"
+			"php": "7.1"
 		}
 	},
 	"require": {
-		"php": ">=7.0.13",
+		"php": ">=7.1",
 		"pear-pear.horde.org/horde_date": "^2.4.1@stable",
 		"pear-pear.horde.org/horde_exception": "^2.0.8@stable",
 		"pear-pear.horde.org/horde_imap_client": "^2.29.16@stable",
@@ -31,11 +31,12 @@
 		"arthurhoaro/favicon": "^1.2"
 	},
 	"require-dev": {
-		"christophwurst/nextcloud": "dev-stable15",
+		"christophwurst/nextcloud": "v16.0.0-beta3",
 		"christophwurst/nextcloud_testing": "0.5.1",
 		"phan/phan": "^1.2"
 	},
 	"scripts": {
+		"lint": "find . -name \\*.php -not -path './vendor/*' -exec php -l \"{}\" \\;",
 		"phan": "phan --allow-polyfill-parser -k .phan/config.php",
 		"test": "phpunit -c tests/phpunit.xml --fail-on-warning",
 		"test:unit": "phpunit -c tests/phpunit.xml tests --fail-on-warning",

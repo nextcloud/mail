@@ -26,6 +26,19 @@ export const update = data => {
 		.then(fixAccountId)
 }
 
+export const updateSignature = (account, signature) => {
+	const url = generateUrl(`/apps/mail/api/accounts/{id}/signature`, {
+		id: account.id,
+	})
+	const data = {
+		signature,
+	}
+
+	return HttpClient.put(url, data)
+		.then(resp => resp.data)
+		.then(fixAccountId)
+}
+
 export const fetchAll = () => {
 	const url = generateUrl('/apps/mail/api/accounts')
 

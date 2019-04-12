@@ -37,8 +37,8 @@ OC.L10N.register(
     "The images have been blocked to protect your privacy." : " таны хувийн нууцыг хамгаалахын тулд дүрсийг хаасан байна.",
     "New message" : "шинэ зурвас",
     "Settings" : "тохиргоо",
-    "Connect your mail account" : "Таны мэйл бүртгэлийг холбоно",
     "Show all folders" : "Бүх хавтас харуулах",
+    "Connect your mail account" : "Таны мэйл бүртгэлийг холбоно",
     "Error loading message" : "алдаатай ачааллах зурвас"
 },
 "nplurals=2; plural=(n != 1);");

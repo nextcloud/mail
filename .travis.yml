@@ -22,27 +22,24 @@ services:
 env:
   global:
   - CORE_BRANCH=master
-  - TEST_JS=FALSE
   - PHP_COVERAGE=FALSE
-  - PACKAGE=FALSE
-  - NIGHTLY=FALSE
+  - TEST_SUITE=TEST-PHP
   matrix:
-  - DB=sqlite
+  - DB=mysql TEST_SUITE=LINT-PHP
+  - DB=mysql TEST_SUITE=TEST-PHP
 
 matrix:
   include:
+    - php: 7.3
+      env: "DB=mysql TEST_SUITE=TEST-JS"
+    - php: 7.3
+      env: "DB=mysql TEST_SUITE=PACKAGE"
     - php: 7.1
-      env: "DB=mysql CORE_BRANCH=master TEST_JS=TRUE"
-    - php: 7.1
-      env: "DB=mysql CORE_BRANCH=master PACKAGE=TRUE"
-    - php: 7.1
-      env: "DB=pgsql PHP_COVERAGE=TRUE"
-    - php: 7.0
-      env: "DB=pgsql CORE_BRANCH=stable15"
-    - php: 7.1
-      env: "DB=pgsql CORE_BRANCH=v15.0.0"
-    - php: 7.2
-      env: "DB=pgsql PHP_COVERAGE=TRUE"
+      env: "DB=mysql PHP_COVERAGE=TRUE"
+    - php: 7.3
+      env: "DB=sqlite CORE_BRANCH=v16.0.0beta3"
+    - php: 7.3
+      env: "DB=pgsql CORE_BRANCH=v16.0.0alpha1"
   fast_finish: true
 
 branches:
@@ -60,6 +57,10 @@ cache:
 before_install:
   - php --info
 
+  # Install Krankerl
+  - wget https://github.com/ChristophWurst/krankerl/releases/download/v0.10.1/krankerl_0.10.1_amd64.deb
+  - sudo dpkg -i krankerl_0.10.1_amd64.deb
+
   # Set up DB
   - if [[ "$DB" == 'pgsql' ]]; then createuser -U travis -s oc_autotest; fi
   - if [[ "$DB" == 'mysql' ]]; then mysql -u root -e 'create database oc_autotest;'; fi
@@ -67,33 +68,33 @@ before_install:
   - if [[ "$DB" == 'mysql' ]]; then mysql -u root -e "GRANT ALL ON oc_autotest.* TO 'oc_autotest'@'localhost';"; fi
 
   - composer self-update
-  - make install-composer-deps-dev
-  - make start-imap-docker
-  - make start-smtp-docker
+  - sh -c "if [ '$TEST_SUITE' = 'TEST-PHP' ]; then make install-composer-deps-dev; fi"
+  - sh -c "if [ '$TEST_SUITE' = 'TEST-PHP' ]; then make start-imap-docker; fi"
+  - sh -c "if [ '$TEST_SUITE' = 'TEST-PHP' ]; then make start-smtp-docker; fi"
   - cd ..
   - git clone https://github.com/nextcloud/server.git --recursive --depth 1 -b $CORE_BRANCH core
   - mv mail core/apps/
 
 before_script:
   # Set up core
-  - php -f core/occ maintenance:install --database-name oc_autotest --database-user oc_autotest --admin-user admin --admin-pass admin --database $DB --database-pass=''
+  - sh -c "if [ '$TEST_SUITE' = 'TEST-PHP' ]; then php -f core/occ maintenance:install --database-name oc_autotest --database-user oc_autotest --admin-user admin --admin-pass admin --database $DB --database-pass=''; fi"
 
   # Set up app
-  - php -f core/occ app:enable mail
+  - sh -c "if [ '$TEST_SUITE' = 'TEST-PHP' ]; then php -f core/occ app:enable mail; fi"
   # Enable app twice to check occ errors of registered commands
-  - php -f core/occ app:enable mail
+  - sh -c "if [ '$TEST_SUITE' = 'TEST-PHP' ]; then php -f core/occ app:enable mail; fi"
   - cd core/apps/mail
-  - sh -c "if [ '$TEST_JS' = 'TRUE' ]; then npm install -g npm@latest; fi"
-  - sh -c "if [ '$TEST_JS' = 'TRUE' ]; then make dev-setup; fi"
+  - sh -c "if [ '$TEST_SUITE' = 'TEST-JS' ]; then npm install -g npm@latest; fi"
+  - sh -c "if [ '$TEST_SUITE' = 'TEST-JS' ]; then make dev-setup; fi"
 
   # Prepare IMAP test docker
-  - make add-imap-account
+  - sh -c "if [ '$TEST_SUITE' = 'TEST-PHP' ]; then make add-imap-account; fi"
 
   # XDebug is only needed if we report coverage -> speeds up other builds
   - if [[ "$PHP_COVERAGE" = "FALSE" ]]; then phpenv config-rm xdebug.ini; fi
 
   # Print running docker images, just to verify they did not crash
-  - docker ps
+  - sh -c "if [ '$TEST_SUITE' = 'TEST-PHP' ]; then docker ps; fi"
 
 script:
   # Check info.xml schema validity
@@ -102,26 +103,26 @@ script:
   - rm info.xsd
 
   # Check PHP syntax errors
-  - find . -name \*.php -not -path './vendor/*' -exec php -l "{}" \;
+  - sh -c "if [ '$TEST_SUITE' = 'LINT-PHP' ]; then composer run lint; fi"
 
   # Run server's app code checker
-  # TODO: enable once table renames are possible
-  - php ../../occ app:check-code mail
+  - sh -c "if [ '$TEST_SUITE' = 'LINT-PHP' ]; then php ../../occ app:check-code mail; fi"
 
   # Run JS tests
-  - sh -c "if [ '$TEST_JS' = 'TRUE' ]; then npm test; fi"
+  - sh -c "if [ '$TEST_SUITE' = 'TEST-JS' ]; then npm test; fi"
   # - sh -c "if [ '$TEST_JS' = 'TRUE' ]; then cat ./coverage/*/lcov.info | ./node_modules/coveralls/bin/coveralls.js; fi"
 
+  # Run JS lint
+  - sh -c "if [ '$TEST_SUITE' = 'TEST-JS' ]; then npm run lint; fi"
+
   # Run PHP tests
-  - composer run test
+  - sh -c "if [ '$TEST_SUITE' = 'TEST-PHP' ]; then composer run test; fi"
   - if [[ "$PHP_COVERAGE" = "TRUE" ]]; then wget https://scrutinizer-ci.com/ocular.phar;
     fi
   - if [[ "$PHP_COVERAGE" = "TRUE" ]]; then php ocular.phar code-coverage:upload --format=php-clover
     tests/clover.xml; fi
 
   # Test packaging
-  - if [[ "$PACKAGE" = "TRUE" ]]; then make appstore; fi
+  - if [[ "$TEST_SUITE" = "PACKAGE" ]]; then make appstore; fi
 
-  # Upload the nightly to ftp server
-  - if [[ "$NIGHTLY" = "TRUE" ]]; then curl --ftp-create-dirs -T /home/travis/build/nextcloud/core/apps/mail/build/artifacts/mail.tar.gz -u $FTP_LOGIN:$FTP_PW ftp://upload.portknox.de/htdocs/mail/nextcloud_mail_nightly_build_$(date +%Y-%m-%d).tar.gz; fi
 

@@ -1,7 +1,7 @@
 /*
- * @copyright 2018 Christoph Wurst <christoph@winzerhof-wurst.at>
+ * @copyright 2019 Christoph Wurst <christoph@winzerhof-wurst.at>
  *
- * @author 2018 Christoph Wurst <christoph@winzerhof-wurst.at>
+ * @author 2019 Christoph Wurst <christoph@winzerhof-wurst.at>
  *
  * @license GNU AGPL version 3 or any later version
  *
@@ -19,19 +19,26 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-const reg = /^(-?\d+)-((?:[A-Za-z0-9+/]{4})*(?:[A-Za-z0-9+/]{2}==|[A-Za-z0-9+/]{3}=|[A-Za-z0-9+/]{4}))-(\d+)$/
+import {parseUid} from '../../../util/EnvelopeUidParser'
 
-export const parseUid = str => {
-	const match = reg.exec(str)
+describe('EnvelopeUidParser', () => {
+	it('parses a simple UID', () => {
+		const uid = '1-SU5CT1g=-123'
 
-	if (match === null) {
-		console.error(`UID ${str} is invalid`)
-		throw new Error(`UID ${str} is invalid`)
-	}
+		const parsed = parseUid(uid)
 
-	return {
-		accountId: parseInt(match[1], 10),
-		folderId: match[2],
-		id: parseInt(match[3], 10),
-	}
-}
+		expect(parsed.accountId).to.equal(1)
+		expect(parsed.folderId).to.equal('SU5CT1g=')
+		expect(parsed.id).to.equal(123)
+	})
+
+	it('parses the default account UID', () => {
+		const uid = '-2-SU5CT1g=-123'
+
+		const parsed = parseUid(uid)
+
+		expect(parsed.accountId).to.equal(-2)
+		expect(parsed.folderId).to.equal('SU5CT1g=')
+		expect(parsed.id).to.equal(123)
+	})
+})

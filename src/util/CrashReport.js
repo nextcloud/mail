@@ -38,7 +38,7 @@ const flattenError = error => {
 }
 
 const flattenTrace = trace => {
-	return trace.reduce(function (acc, entry) {
+	return trace.reduce(function(acc, entry) {
 		var text = ''
 		if (entry.class) {
 			text += '  at ' + entry.class + '::' + entry.function
@@ -59,12 +59,17 @@ export const getReportUrl = error => {
 		message += '.'
 	}
 	var builder = new IssueTemplateBuilder()
-	var template = builder.addEmptyStepsToReproduce()
+	var template = builder
+		.addEmptyStepsToReproduce()
 		.addExpectedActualBehaviour()
 		.addLogs('Error', flattenError(error))
 		.render()
 
-	return 'https://github.com/nextcloud/mail/issues/new' +
-		'?title=' + encodeURIComponent(message) +
-		'&body=' + encodeURIComponent(template)
+	return (
+		'https://github.com/nextcloud/mail/issues/new' +
+		'?title=' +
+		encodeURIComponent(message) +
+		'&body=' +
+		encodeURIComponent(template)
+	)
 }

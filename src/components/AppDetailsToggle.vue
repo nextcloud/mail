@@ -1,7 +1,7 @@
 <!--
-  - @copyright 2018 Christoph Wurst <christoph@winzerhof-wurst.at>
+  - @copyright 2019 Christoph Wurst <christoph@winzerhof-wurst.at>
   -
-  - @author 2018 Christoph Wurst <christoph@winzerhof-wurst.at>
+  - @author 2019 Christoph Wurst <christoph@winzerhof-wurst.at>
   -
   - @license GNU AGPL version 3 or any later version
   -
@@ -20,38 +20,30 @@
   -->
 
 <template>
-	<div class="emptycontent">
-		<h2>{{ error }}</h2>
-		<p>{{ message }}</p>
-		<p v-if="data && data.debug">
-			<a class="button" :href="reportUrl" target="_blank" rel="noopener">{{ t('mail', 'Report this bug') }}</a>
-		</p>
-	</div>
+	<div v-if="isMobile" class="toggle icon-confirm" tabindex="0" @click="$emit('close')"></div>
 </template>
 
 <script>
-import {getReportUrl} from '../util/CrashReport'
+import isMobile from 'nextcloud-vue/dist/Mixins/isMobile'
 
 export default {
-	name: 'Error',
-	props: {
-		error: {
-			type: String,
-			required: true,
-		},
-		message: {
-			type: String,
-			required: true,
-		},
-		data: {
-			type: Object,
-			default: () => undefined,
-		},
-	},
-	computed: {
-		reportUrl() {
-			return getReportUrl(this.data)
-		},
-	},
+	name: 'AppDetailsToggle',
+	mixins: [isMobile],
 }
 </script>
+
+<style scoped>
+.toggle {
+	position: fixed;
+	display: inline-block;
+	left: 0;
+	width: 44px;
+	height: 44px;
+	z-index: 149;
+	background-color: var(--color-main-background-darker);
+	cursor: pointer;
+	opacity: 0.6;
+	transform: rotate(180deg);
+	margin-top: 44px; /* under the show navigation button */
+}
+</style>

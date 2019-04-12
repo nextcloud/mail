@@ -112,7 +112,7 @@ class AccountsControllerTest extends TestCase {
 		$this->setupService = $this->createMock(SetupService::class);
 
 		$this->controller = new AccountsController($this->appName, $this->request, $this->accountService, $this->groupsIntegration, $this->userId,
-			$this->logger, $this->l10n, $this->crypto, $this->aliasesService, $this->transmission, $this->setupService);
+			$this->logger, $this->l10n, $this->aliasesService, $this->transmission, $this->setupService);
 		$this->account = $this->createMock(Account::class);
 		$this->accountId = 123;
 	}
@@ -166,6 +166,28 @@ class AccountsControllerTest extends TestCase {
 		$this->expectException(DoesNotExistException::class);
 
 		$this->controller->show($this->accountId);
+	}
+
+	public function testUpdateSignature() {
+		$this->accountService->expects($this->once())
+			->method('updateSignature')
+			->with($this->equalTo($this->accountId), $this->equalTo($this->userId), 'sig');
+
+		$response = $this->controller->updateSignature($this->accountId, 'sig');
+
+		$expectedResponse = new JSONResponse();
+		$this->assertEquals($expectedResponse, $response);
+	}
+
+	public function testDeleteSignature() {
+		$this->accountService->expects($this->once())
+			->method('updateSignature')
+			->with($this->equalTo($this->accountId), $this->equalTo($this->userId), null);
+
+		$response = $this->controller->updateSignature($this->accountId, null);
+
+		$expectedResponse = new JSONResponse();
+		$this->assertEquals($expectedResponse, $response);
 	}
 
 	public function testDestroy() {

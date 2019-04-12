@@ -25,6 +25,7 @@ import {savePreference} from '../service/PreferenceService'
 import {
 	create as createAccount,
 	update as updateAccount,
+	updateSignature,
 	deleteAccount,
 	fetch as fetchAccount,
 	fetchAll as fetchAllAccounts,
@@ -59,13 +60,32 @@ export default {
 		return createAccount(config).then(account => {
 			console.debug('account created', account)
 			commit('addAccount', account)
-			return account
+
+			fetchAllFolders(account.id)
+				.then(folders =>
+					folders.forEach(folder => {
+						commit('addFolder', {
+							account,
+							folder,
+						})
+					})
+				)
+				.then(() => console.info("new account's folders fetched"))
+				.then(() => account)
 		})
 	},
 	updateAccount({commit}, config) {
 		return updateAccount(config).then(account => {
 			console.debug('account updated', account)
 			commit('editAccount', account)
+			return account
+		})
+	},
+	updateAccountSignature({commit}, {account, signature}) {
+		return updateSignature(account, signature).then(() => {
+			console.debug('account signature updated')
+			const updated = Object.assign({}, account, {signature})
+			commit('editAccount', updated)
 			return account
 		})
 	},
