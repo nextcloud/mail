@@ -1,6 +1,18 @@
 # Changelog
 All notable changes to this project will be documented in this file.
 
+## 0.13.0 - 2019-04-12
+### Added
+- Signatures support
+### Changed
+- New and updated translations
+### Fixed
+- Mailvelope hint in settings menu
+
+## 0.11.1 – 2019-04-10
+### Added
+- php7.3 support for Nextcloud 15
+
 ## 0.12.0 - 2018-04-08
 ### Added
 - Nextcloud 16 support
