@@ -1,7 +1,7 @@
 # Changelog
 All notable changes to this project will be documented in this file.
 
-## 0.13.0 - 2019-04-11
+## 0.13.0 - 2019-04-12
 ### Added
 - Signatures support
 ### Changed
