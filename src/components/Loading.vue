@@ -7,14 +7,15 @@
 </template>
 
 <script>
-	export default {
-		name: "Loading",
-		props: {
-			hint: String
-		}
-	}
+export default {
+	name: 'Loading',
+	props: {
+		hint: {
+			type: String,
+			default: () => undefined,
+		},
+	},
+}
 </script>
 
-<style scoped>
-
-</style>
+<style scoped></style>

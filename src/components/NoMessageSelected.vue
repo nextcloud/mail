@@ -1,7 +1,7 @@
 <!--
-  - @copyright 2018 Christoph Wurst <christoph@winzerhof-wurst.at>
+  - @copyright 2019 Christoph Wurst <christoph@winzerhof-wurst.at>
   -
-  - @author 2018 Christoph Wurst <christoph@winzerhof-wurst.at>
+  - @author 2019 Christoph Wurst <christoph@winzerhof-wurst.at>
   -
   - @license GNU AGPL version 3 or any later version
   -
@@ -20,47 +20,42 @@
   -->
 
 <template>
-	<BaseAvatar v-if="loading || !hasAvatar" :display-name="displayName" />
-	<BaseAvatar v-else :display-name="displayName" :url="avatarUrl" />
+	<div class="app-content-details">
+		<div class="icon icon-mail"></div>
+		<h2>{{ mailbox }}</h2>
+		<p>{{ t('mail', 'No message selected') }}</p>
+	</div>
 </template>
 
 <script>
-import _ from 'lodash'
-import {Avatar as BaseAvatar} from 'nextcloud-vue'
-
-import {fetchAvatarUrlMemoized} from '../service/AvatarService'
-
 export default {
-	name: 'Avatar',
-	components: {
-		BaseAvatar,
-	},
+	name: 'NoMessageSelected',
 	props: {
-		displayName: {
+		mailbox: {
 			type: String,
 			required: true,
 		},
-		email: {
-			type: String,
-			required: true,
-		},
-	},
-	data() {
-		return {
-			loading: true,
-			avatarUrl: undefined,
-		}
-	},
-	computed: {
-		hasAvatar() {
-			return !_.isUndefined(this.avatarUrl)
-		},
-	},
-	mounted() {
-		fetchAvatarUrlMemoized(this.email).then(url => {
-			this.avatarUrl = url
-			this.loading = false
-		})
 	},
 }
 </script>
+
+<style scoped>
+.app-content-details {
+	display: flex;
+	flex-direction: column;
+	justify-content: center;
+}
+
+.icon {
+	height: 64px;
+	width: 64px;
+	margin: 0 auto 15px;
+	background-size: 64px;
+	opacity: 0.4;
+}
+
+h2,
+p {
+	text-align: center;
+}
+</style>

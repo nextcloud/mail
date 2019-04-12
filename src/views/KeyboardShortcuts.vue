@@ -53,20 +53,17 @@
 </template>
 
 <script>
-	import {AppContent} from 'nextcloud-vue'
+import {AppContent} from 'nextcloud-vue'
 
-	import AppSettingsMenu from '../components/AppSettingsMenu'
-	import Navigation from '../components/Navigation'
+import Navigation from '../components/Navigation'
 
-	export default {
-		name: 'KeyboardShortcuts',
-		components: {
-			AppContent,
-			AppSettingsMenu,
-			Navigation,
-		}
-	}
+export default {
+	name: 'KeyboardShortcuts',
+	components: {
+		AppContent,
+		Navigation,
+	},
+}
 </script>
 
-<style>
-</style>
+<style></style>
