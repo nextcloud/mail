@@ -1,7 +1,7 @@
 <template>
 	<Content app-name="mail">
-		<Navigation slot="navigation" />
-		<AppContent slot="content">
+		<Navigation />
+		<AppContent>
 			<div class="app-content-details">
 				<h2>{{ t('mail', 'Keyboard shortcuts') }}</h2>
 

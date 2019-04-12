@@ -1,7 +1,7 @@
 <template>
 	<Content app-name="mail">
-		<Navigation slot="navigation" />
-		<AppContent slot="content">
+		<Navigation />
+		<AppContent>
 			<div class="section">
 				<h2>{{ t('mail', 'Account Settings') }} - {{ email }}</h2>
 				<h3>{{ t('mail', 'Mail server') }}</h3>
