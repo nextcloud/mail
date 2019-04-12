@@ -46,7 +46,6 @@ use OCP\AppFramework\Http;
 use OCP\IL10N;
 use OCP\ILogger;
 use OCP\IRequest;
-use OCP\Security\ICrypto;
 
 class AccountsController extends Controller {
 
@@ -65,9 +64,6 @@ class AccountsController extends Controller {
 	/** @var IL10N */
 	private $l10n;
 
-	/** @var ICrypto */
-	private $crypto;
-
 	/** @var AliasesService */
 	private $aliasesService;
 
@@ -77,17 +73,7 @@ class AccountsController extends Controller {
 	/** @var SetupService */
 	private $setup;
 
-	/**
-	 * @param string $appName
-	 * @param IRequest $request
-	 * @param AccountService $accountService
-	 * @param $UserId
-	 * @param ILogger $logger
-	 * @param IL10N $l10n
-	 * @param ICrypto $crypto
-	 * @param SetupService $setup
-	 */
-	public function __construct($appName, IRequest $request, AccountService $accountService, GroupsIntegration $groupsIntegration, $UserId, ILogger $logger, IL10N $l10n, ICrypto $crypto, AliasesService $aliasesService, IMailTransmission $mailTransmission, SetupService $setup
+	public function __construct(string $appName, IRequest $request, AccountService $accountService, GroupsIntegration $groupsIntegration, $UserId, ILogger $logger, IL10N $l10n, AliasesService $aliasesService, IMailTransmission $mailTransmission, SetupService $setup
 	) {
 		parent::__construct($appName, $request);
 		$this->accountService = $accountService;
@@ -95,7 +81,6 @@ class AccountsController extends Controller {
 		$this->currentUserId = $UserId;
 		$this->logger = $logger;
 		$this->l10n = $l10n;
-		$this->crypto = $crypto;
 		$this->aliasesService = $aliasesService;
 		$this->mailTransmission = $mailTransmission;
 		$this->setup = $setup;
@@ -153,12 +138,26 @@ class AccountsController extends Controller {
 	 * @return JSONResponse
 	 * @throws ClientException
 	 */
-	public function update(int $id, string $accountName, string $emailAddress, string $password, string $imapHost, int $imapPort, string $imapSslMode, string $imapUser, string $imapPassword, string $smtpHost, int $smtpPort, string $smtpSslMode, string $smtpUser, string $smtpPassword, bool $autoDetect): JSONResponse {
+	public function update(int $id,
+						   bool $autoDetect,
+						   string $accountName,
+						   string $emailAddress,
+						   string $password = null,
+						   string $imapHost = null,
+						   int $imapPort = null,
+						   string $imapSslMode = null,
+						   string $imapUser = null,
+						   string $imapPassword = null,
+						   string $smtpHost = null,
+						   int $smtpPort = null,
+						   string $smtpSslMode = null,
+						   string $smtpUser = null,
+						   string $smtpPassword = null): JSONResponse {
 		$account = null;
 		$errorMessage = null;
 		try {
 			if ($autoDetect) {
-				$account = $this->setup->createNewAutoconfiguredAccount($accountName, $emailAddress, $password);
+				$account = $this->setup->createNewAutoConfiguredAccount($accountName, $emailAddress, $password);
 			} else {
 				$account = $this->setup->createNewAccount($accountName, $emailAddress, $imapHost, $imapPort, $imapSslMode, $imapUser, $imapPassword, $smtpHost, $smtpPort, $smtpSslMode, $smtpUser, $smtpPassword, $this->currentUserId, $id);
 			}
@@ -176,6 +175,20 @@ class AccountsController extends Controller {
 		}
 
 		return new JSONResponse($account);
+	}
+
+	/**
+	 * @NoAdminRequired
+	 * @TrapError
+	 *
+	 * @param int $accountId
+	 * @param string|null $signature
+	 *
+	 * @return JSONResponse
+	 */
+	public function updateSignature(int $accountId, string $signature = null): JSONResponse {
+		$this->accountService->updateSignature($accountId, $this->currentUserId, $signature);
+		return new JSONResponse();
 	}
 
 	/**
@@ -216,7 +229,7 @@ class AccountsController extends Controller {
 		$errorMessage = null;
 		try {
 			if ($autoDetect) {
-				$account = $this->setup->createNewAutoconfiguredAccount($accountName, $emailAddress, $password);
+				$account = $this->setup->createNewAutoConfiguredAccount($accountName, $emailAddress, $password);
 			} else {
 				$account = $this->setup->createNewAccount($accountName, $emailAddress, $imapHost, $imapPort, $imapSslMode, $imapUser, $imapPassword, $smtpHost, $smtpPort, $smtpSslMode, $smtpUser, $smtpPassword, $this->currentUserId);
 			}

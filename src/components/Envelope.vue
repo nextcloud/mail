@@ -1,58 +1,38 @@
 <template>
-  <router-link
-    class="app-content-list-item"
-    :class="{ unseen: data.flags.unseen, draft }"
-    :to="link"
-  >
-    <div class="mail-message-account-color"
-         v-if="showAccountColor"
-         :style="{ 'background-color': accountColor }">
-    </div>
-    <div
-      class="app-content-list-item-star icon-starred"
-      :data-starred="data.flags.flagged ? 'true':'false'"
-      @click.prevent="toggleFlagged"
-    />
-    <div class="app-content-list-item-icon">
-      <Avatar :displayName="sender"
-              :email="senderEmail"/>
-    </div>
-    <div
-      class="app-content-list-item-line-one"
-      :title="sender"
-    >
-      {{ sender }}
-    </div>
-    <div
-      class="app-content-list-item-line-two"
-      :title="data.subject"
-    >
-      <span
-        v-if="data.flags.answered"
-        class="icon-reply"
-      />
-      <span
-        v-if="data.flags.hasAttachments"
-        class="icon-public icon-attachment"
-      />
-      <span
-              v-if="draft"
-              class="draft"
-      >
-        <em>{{ t('mail', 'Draft: ') }}</em>
-      </span>
-      {{ data.subject }}
-    </div>
-    <div class="app-content-list-item-details date">
-      <Moment :timestamp="data.dateInt" />
-    </div>
-    <Action class="app-content-list-item-menu"
-            :actions="actions" />
-  </router-link>
+	<router-link class="app-content-list-item" :class="{unseen: data.flags.unseen, draft}" :to="link">
+		<div
+			v-if="showAccountColor"
+			class="mail-message-account-color"
+			:style="{'background-color': accountColor}"
+		></div>
+		<div
+			class="app-content-list-item-star icon-starred"
+			:data-starred="data.flags.flagged ? 'true' : 'false'"
+			@click.prevent="toggleFlagged"
+		/>
+		<div class="app-content-list-item-icon">
+			<Avatar :display-name="sender" :email="senderEmail" />
+		</div>
+		<div class="app-content-list-item-line-one" :title="sender">
+			{{ sender }}
+		</div>
+		<div class="app-content-list-item-line-two" :title="data.subject">
+			<span v-if="data.flags.answered" class="icon-reply" />
+			<span v-if="data.flags.hasAttachments" class="icon-public icon-attachment" />
+			<span v-if="draft" class="draft">
+				<em>{{ t('mail', 'Draft: ') }}</em>
+			</span>
+			{{ data.subject }}
+		</div>
+		<div class="app-content-list-item-details date">
+			<Moment :timestamp="data.dateInt" />
+		</div>
+		<Action class="app-content-list-item-menu" :actions="actions" />
+	</router-link>
 </template>
 
 <script>
-import { Action, PopoverMenu, PopoverMenuItem } from 'nextcloud-vue'
+import {Action} from 'nextcloud-vue'
 import Moment from './Moment'
 
 import Avatar from './Avatar'
@@ -68,27 +48,25 @@ export default {
 	props: {
 		data: {
 			type: Object,
-            required: true,
-        },
-        showAccountColor: {
+			required: true,
+		},
+		showAccountColor: {
 			type: Boolean,
-            default: false,
-        }
+			default: false,
+		},
 	},
 	computed: {
 		accountColor() {
-			return calculateAccountColor(
-				this.$store.getters.getAccount(this.data.accountId).name
-            )
-        },
-        draft() {
+			return calculateAccountColor(this.$store.getters.getAccount(this.data.accountId).emailAddress)
+		},
+		draft() {
 			return this.data.flags.draft
-        },
-        link() {
+		},
+		link() {
 			if (this.draft) {
 				// TODO: does not work with a unified drafts folder
-                //       the query should also contain the account and folder
-                //       id for that to work
+				//       the query should also contain the account and folder
+				//       id for that to work
 				return {
 					name: 'message',
 					params: {
@@ -97,7 +75,7 @@ export default {
 						messageUid: 'new',
 						draftUid: this.data.uid,
 					},
-					exact: true
+					exact: true,
 				}
 			} else {
 				return {
@@ -105,12 +83,12 @@ export default {
 					params: {
 						accountId: this.$route.params.accountId,
 						folderId: this.$route.params.folderId,
-						messageUid: this.data.uid
+						messageUid: this.data.uid,
 					},
-					exact: true
+					exact: true,
 				}
-            }
-        },
+			}
+		},
 		sender() {
 			if (this.data.from.length === 0) {
 				// No sender
@@ -120,11 +98,13 @@ export default {
 			const first = this.data.from[0]
 			return first.label || first.email
 		},
-        senderEmail() {
+		senderEmail() {
 			if (this.data.from.length > 0) {
 				return this.data.from[0].email
+			} else {
+				return undefined
 			}
-        },
+		},
 		actions() {
 			return [
 				{
@@ -140,8 +120,8 @@ export default {
 					action: () => {
 						this.$emit('delete', this.data)
 						this.$store.dispatch('deleteMessage', this.data)
-					}
-				}
+					},
+				},
 			]
 		},
 	},

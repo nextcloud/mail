@@ -44,13 +44,7 @@ describe('HtmlHelper', () => {
 	})
 
 	it('does not produce large number of line breaks for nested elements', () => {
-		const html =
-			'<div>' +
-			'    <div>' +
-			'        line1' +
-			'    </div>' +
-			'</div>' +
-			'<div>line2</div>'
+		const html = '<div>' + '    <div>' + '        line1' + '    </div>' + '</div>' + '<div>line2</div>'
 		const expected = ' line1 line2'
 
 		const actual = htmlToText(html)
@@ -86,9 +80,10 @@ describe('HtmlHelper', () => {
 	})
 
 	it('converts deeply nested elements to text', () => {
-		const html = '<html>'
-			+ '<body><p>Hello!</p><p>this <i>is</i> <b>some</b> random <strong>text</strong></p></body>'
-			+ '</html>'
+		const html =
+			'<html>' +
+			'<body><p>Hello!</p><p>this <i>is</i> <b>some</b> random <strong>text</strong></p></body>' +
+			'</html>'
 		const expected = 'Hello!\n\nthis is some random text'
 
 		const actual = htmlToText(html)

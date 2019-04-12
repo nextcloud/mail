@@ -299,8 +299,8 @@
 }
 
 .transparency {
-	-ms-filter: "progid:DXImageTransform.Microsoft.Alpha(Opacity=50)";
-	opacity: .5;
+	-ms-filter: "progid:DXImageTransform.Microsoft.Alpha(Opacity=60)";
+	opacity: .6;
 }
 .attachments-download-all,
 
@@ -329,25 +329,25 @@
 
 /* icons */
 .icon-inbox {
-	background-image: url('../img/inbox.svg');
+	@include icon-color('inbox', 'mail', $color-black);
 }
 .icon-flagged {
-	background-image: url('../img/star.svg');
+	@include icon-color('star', 'mail', $color-black);
 }
 .icon-drafts {
-	background-image: url('../img/drafts.svg');
+	@include icon-color('drafts', 'mail', $color-black);
 }
 .icon-sent {
-	background-image: url('../img/sent.svg');
+	@include icon-color('sent', 'mail', $color-black);
 }
 .icon-archive {
-	background-image: url('../img/archive.svg');
+	@include icon-color('archive', 'mail', $color-black);
 }
 .icon-junk {
-	background-image: url('../img/junk.svg');
+	@include icon-color('junk', 'mail', $color-black);
 }
 .icon-trash {
-	background-image: url('../img/trash.svg');
+	@include icon-color('trash', 'mail', $color-black);
 }
 
 

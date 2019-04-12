@@ -17,20 +17,9 @@
  *
  */
 
-import {
-	translate as t
-} from 'nextcloud-server/dist/l10n'
+import {translate as t} from 'nextcloud-server/dist/l10n'
 
-const smileys = [
-	':-(',
-	':-/',
-	':-\\',
-	':-|',
-	':\'-(',
-	':\'-/',
-	':\'-\\',
-	':\'-|',
-];
+const smileys = [':-(', ':-/', ':-\\', ':-|', ":'-(", ":'-/", ":'-\\", ":'-|"]
 
 const getRandomSmiley = () => {
 	return smileys[Math.floor(Math.random() * smileys.length)]
@@ -40,22 +29,22 @@ const getRandomSmiley = () => {
  * @param {Folder} folder
  * @returns {string}
  */
-export const getRandomFolderErrorMessage = (folder) => {
-	const folderName = folder.get('name');
+export const getRandomFolderErrorMessage = folder => {
+	const folderName = folder.get('name')
 	const rawTexts = [
 		t('mail', 'Could not load {tag}{name}{endtag}', {
-			name: folderName
+			name: folderName,
 		}),
 		t('mail', 'Could not load {tag}{name}{endtag}', {
-			name: folderName
+			name: folderName,
 		}),
 		t('mail', 'There was a problem loading {tag}{name}{endtag}', {
-			name: folderName
+			name: folderName,
 		}),
 	]
 	const texts = rawTexts.map(text => text.replace('{tag}', '<strong>').replace('{endtag}', '</strong>'))
 	const text = texts[Math.floor(Math.random() * texts.length)]
-	return text + ' ' + getRandomSmiley();
+	return text + ' ' + getRandomSmiley()
 }
 
 /**

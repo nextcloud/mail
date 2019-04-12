@@ -43,14 +43,9 @@
  *
  */
 
-import {
-	buildReplyBody,
-	buildRecipients,
-	buildReplySubject,
-} from '../../ReplyBuilder'
+import {buildReplyBody, buildRecipients, buildReplySubject} from '../../ReplyBuilder'
 
 describe('ReplyBuilder', () => {
-
 	it('creates a reply body without any sender', () => {
 		const body = 'Newsletter\nhello\ncheers'
 		const expectedReply = '\n\n\n> Newsletter\n> hello\n> cheers'
@@ -70,7 +65,7 @@ describe('ReplyBuilder', () => {
 				label: 'Test User',
 				email: 'test@user.ru',
 			},
-			1541426237,
+			1541426237
 		)
 
 		expect(replyBody.startsWith(expectedReply)).to.be.true
@@ -78,14 +73,14 @@ describe('ReplyBuilder', () => {
 
 	let envelope
 
-	beforeEach(function () {
+	beforeEach(function() {
 		envelope = {}
 	})
 
 	const createAddress = addr => {
 		return {
 			label: addr,
-			email: addr
+			email: addr,
 		}
 	}
 
@@ -193,7 +188,7 @@ describe('ReplyBuilder', () => {
 		assertSameAddressList(reply.cc, [dani])
 	})
 
-	it('handles jan\'s reply to nina\'s mesage to a mailing list', () => {
+	it("handles jan's reply to nina's mesage to a mailing list", () => {
 		const nina = createAddress('nina@nc.com')
 		const list = createAddress('list@nc.com')
 		const jan = createAddress('jan@nc.com')
@@ -217,13 +212,11 @@ describe('ReplyBuilder', () => {
 		expect(replySubject).to.equal('RE: Hello')
 	})
 
-	it('does not stack subject re:\'s', () => {
+	it("does not stack subject re:'s", () => {
 		const orig = 'Re: Hello'
 
 		const replySubject = buildReplySubject(orig)
 
 		expect(replySubject).to.equal('Re: Hello')
 	})
-
 })
-

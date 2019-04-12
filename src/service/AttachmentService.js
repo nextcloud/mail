@@ -22,32 +22,35 @@
 import Axios from 'nextcloud-axios'
 import {generateUrl} from 'nextcloud-server/dist/router'
 
-export function saveAttachmentToFiles (accountId, folderId, messageId, attachmentId, directory) {
-	const url = generateUrl('apps/mail/api/accounts/{accountId}/folders/{folderId}/messages/{messageId}/attachment/{attachmentId}', {
-		accountId,
-		folderId,
-		messageId,
-		attachmentId,
-	})
+export function saveAttachmentToFiles(accountId, folderId, messageId, attachmentId, directory) {
+	const url = generateUrl(
+		'apps/mail/api/accounts/{accountId}/folders/{folderId}/messages/{messageId}/attachment/{attachmentId}',
+		{
+			accountId,
+			folderId,
+			messageId,
+			attachmentId,
+		}
+	)
 
 	return Axios.post(url, {
-		targetPath: directory
+		targetPath: directory,
 	})
 }
 
-export function saveAttachmentsToFiles (accountId, folderId, messageId, directory) {
+export function saveAttachmentsToFiles(accountId, folderId, messageId, directory) {
 	return saveAttachmentToFiles(accountId, folderId, messageId, 0, directory)
 }
 
-export function downloadAttachment (url) {
+export function downloadAttachment(url) {
 	return Axios.get(url).then(res => res.data)
 }
 
-export const uploadLocalAttachment = file => {
+export const uploadLocalAttachment = (file, progress) => {
 	const url = generateUrl('/apps/mail/api/attachments')
 	const data = new FormData()
 	const opts = {
-		onUploadProgress: prog => console.log(prog, prog.loaded, prog.total)
+		onUploadProgress: prog => progress(prog, prog.loaded, prog.total),
 	}
 	data.append('attachment', file)
 
@@ -56,7 +59,7 @@ export const uploadLocalAttachment = file => {
 		.then(({id}) => {
 			return {
 				file,
-				id
+				id,
 			}
 		})
 }

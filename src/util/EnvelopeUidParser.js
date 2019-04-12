@@ -19,10 +19,15 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-const reg = /^(\d+)-((?:[A-Za-z0-9+/]{4})*(?:[A-Za-z0-9+/]{2}==|[A-Za-z0-9+/]{3}=|[A-Za-z0-9+/]{4}))-(\d+)$/
+const reg = /^(-?\d+)-((?:[A-Za-z0-9+/]{4})*(?:[A-Za-z0-9+/]{2}==|[A-Za-z0-9+/]{3}=|[A-Za-z0-9+/]{4}))-(\d+)$/
 
 export const parseUid = str => {
 	const match = reg.exec(str)
+
+	if (match === null) {
+		console.error(`UID ${str} is invalid`)
+		throw new Error(`UID ${str} is invalid`)
+	}
 
 	return {
 		accountId: parseInt(match[1], 10),

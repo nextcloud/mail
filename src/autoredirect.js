@@ -1,5 +1,7 @@
 /* global $ */
 
 $(document).ready(function() {
-	$('#redirectLink').get(0).click();
-});
+	$('#redirectLink')
+		.get(0)
+		.click()
+})

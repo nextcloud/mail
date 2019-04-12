@@ -64,8 +64,7 @@ class AccountServiceTest extends TestCase {
 		$this->l10n = $this->createMock(IL10N::class);
 		$this->defaultAccountManager = $this->createMock(Manager::class);
 		$this->aliasesService = $this->createMock(AliasesService::class);
-		$this->accountService = new AccountService($this->mapper, $this->l10n
-			, $this->defaultAccountManager, $this->aliasesService);
+		$this->accountService = new AccountService($this->mapper, $this->defaultAccountManager, $this->aliasesService);
 
 		$this->account1 = $this->createMock(MailAccount::class);
 		$this->account2 = $this->createMock(MailAccount::class);
@@ -132,6 +131,25 @@ class AccountServiceTest extends TestCase {
 		$actual = $this->accountService->save($account);
 
 		$this->assertEquals($account, $actual);
+	}
+
+	public function testUpdateSignature() {
+		$id = 3;
+		$uid = 'ian';
+		$signature = 'sig';
+		$mailAccount = $this->createMock(MailAccount::class);
+		$this->mapper->expects($this->once())
+			->method('find')
+			->with(
+				$uid,
+				$id
+			)
+			->willReturn($mailAccount);
+		$this->mapper->expects($this->once())
+			->method('save')
+			->with($mailAccount);
+
+		$this->accountService->updateSignature($id, $uid, $signature);
 	}
 
 }
