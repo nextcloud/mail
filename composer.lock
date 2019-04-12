@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "4d3611a11bad0f7b824fc99fc60643d6",
+    "content-hash": "c212255482b4af527782596ad1016f5d",
     "packages": [
         {
             "name": "arthurhoaro/favicon",
@@ -844,16 +844,16 @@
     "packages-dev": [
         {
             "name": "christophwurst/nextcloud",
-            "version": "v16.0.0-beta3",
+            "version": "v16.0.0-RC1",
             "source": {
                 "type": "git",
                 "url": "https://github.com/ChristophWurst/nextcloud_composer.git",
-                "reference": "69332fc5190a4c209669a3933e7ca1767a292e7a"
+                "reference": "dd3131cef901825cbbdedb25c0ff50d28fea2fec"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/ChristophWurst/nextcloud_composer/zipball/69332fc5190a4c209669a3933e7ca1767a292e7a",
-                "reference": "69332fc5190a4c209669a3933e7ca1767a292e7a",
+                "url": "https://api.github.com/repos/ChristophWurst/nextcloud_composer/zipball/dd3131cef901825cbbdedb25c0ff50d28fea2fec",
+                "reference": "dd3131cef901825cbbdedb25c0ff50d28fea2fec",
                 "shasum": ""
             },
             "require": {
@@ -876,7 +876,7 @@
                 }
             ],
             "description": "Composer package containing Nextcloud's public API (classes, interfaces)",
-            "time": "2019-04-08T08:10:16+00:00"
+            "time": "2019-04-12T06:01:46+00:00"
         },
         {
             "name": "christophwurst/nextcloud_testing",
@@ -3152,7 +3152,7 @@
         "pear-pear.horde.org/horde_util": 0,
         "pear-pear.horde.org/horde_smtp": 0,
         "kwi/urllinker": 20,
-        "christophwurst/nextcloud": 10
+        "christophwurst/nextcloud": 5
     },
     "prefer-stable": false,
     "prefer-lowest": false,
