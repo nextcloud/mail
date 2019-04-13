@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "c212255482b4af527782596ad1016f5d",
+    "content-hash": "eefb0db3f19f61b8e462e92ce88ae32e",
     "packages": [
         {
             "name": "arthurhoaro/favicon",
@@ -144,26 +144,23 @@
         },
         {
             "name": "gravatarphp/gravatar",
-            "version": "v1.0.0",
+            "version": "v2.0.0",
             "source": {
                 "type": "git",
                 "url": "https://github.com/gravatarphp/gravatar.git",
-                "reference": "21b760c50bcdddd8e65d3a4b3981b7ec9b3d44aa"
+                "reference": "54a5d48b4564ec9f1db8a498ad23d500ab83c063"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/gravatarphp/gravatar/zipball/21b760c50bcdddd8e65d3a4b3981b7ec9b3d44aa",
-                "reference": "21b760c50bcdddd8e65d3a4b3981b7ec9b3d44aa",
+                "url": "https://api.github.com/repos/gravatarphp/gravatar/zipball/54a5d48b4564ec9f1db8a498ad23d500ab83c063",
+                "reference": "54a5d48b4564ec9f1db8a498ad23d500ab83c063",
                 "shasum": ""
             },
             "require": {
-                "php": ">=5.4"
+                "php": "^7.1"
             },
             "require-dev": {
-                "friendsofphp/php-cs-fixer": "^1.11",
-                "henrikbjorn/phpspec-code-coverage": "^2.0",
-                "phpspec/phpspec": "^2.5",
-                "sllh/php-cs-fixer-styleci-bridge": "^2.0"
+                "phpspec/phpspec": "^5.1"
             },
             "type": "library",
             "extra": {
@@ -194,7 +191,7 @@
                 "image",
                 "profile"
             ],
-            "time": "2016-06-25T11:20:11+00:00"
+            "time": "2019-01-08T21:43:01+00:00"
         },
         {
             "name": "kwi/urllinker",
