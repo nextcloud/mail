@@ -1,12 +1,12 @@
 <template>
-	<AppContent v-shortkey.once="['c']" app-name="mail" @shortkey.native="onNewMessage">
-		<Navigation slot="navigation" />
-		<FolderContent v-if="activeAccount" slot="content" :account="activeAccount" :folder="activeFolder" />
-	</AppContent>
+	<Content v-shortkey.once="['c']" app-name="mail" @shortkey.native="onNewMessage">
+		<Navigation />
+		<FolderContent v-if="activeAccount" :account="activeAccount" :folder="activeFolder" />
+	</Content>
 </template>
 
 <script>
-import {AppContent} from 'nextcloud-vue'
+import {Content} from 'nextcloud-vue'
 
 import Navigation from '../components/Navigation'
 import FolderContent from '../components/FolderContent'
@@ -14,7 +14,7 @@ import FolderContent from '../components/FolderContent'
 export default {
 	name: 'Home',
 	components: {
-		AppContent,
+		Content,
 		FolderContent,
 		Navigation,
 	},
