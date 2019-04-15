@@ -1,5 +1,5 @@
 <template>
-	<div>
+	<AppContent>
 		<AppDetailsToggle v-if="showMessage" @close="hideMessage" />
 		<div id="app-content-wrapper">
 			<Loading v-if="loading" :hint="t('mail', 'Loading messages')" />
@@ -16,11 +16,12 @@
 				<NoMessageSelected v-else-if="hasMessages" :mailbox="folder.name" />
 			</template>
 		</div>
-	</div>
+	</AppContent>
 </template>
 
 <script>
 import _ from 'lodash'
+import {AppContent} from 'nextcloud-vue/dist/Components/AppContent'
 import isMobile from 'nextcloud-vue/dist/Mixins/isMobile'
 
 import AppDetailsToggle from './AppDetailsToggle'
@@ -33,6 +34,7 @@ import NoMessageSelected from './NoMessageSelected'
 export default {
 	name: 'FolderContent',
 	components: {
+		AppContent,
 		AppDetailsToggle,
 		EnvelopeList,
 		Loading,
