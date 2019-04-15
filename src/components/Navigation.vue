@@ -42,7 +42,6 @@
 <script>
 import {translate as t} from 'nextcloud-server/dist/l10n'
 import {
-	AppContent,
 	AppNavigation,
 	AppNavigationItem,
 	AppNavigationNew,
