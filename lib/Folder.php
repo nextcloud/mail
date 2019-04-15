@@ -174,6 +174,7 @@ class Folder implements JsonSerializable {
 			'attributes' => $this->attributes,
 			'delimiter' => $this->delimiter,
 			'folders' => array_values($folders),
+			'specialUse' => $this->specialUse,
 			'specialRole' => empty($this->specialUse) ? null : $this->specialUse[0],
 			'syncToken' => $this->syncToken,
 		];

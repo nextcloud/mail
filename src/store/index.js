@@ -95,6 +95,7 @@ export default new Vuex.Store({
 				id: UNIFIED_INBOX_ID,
 				accountId: 0,
 				isUnified: true,
+				specialUse: ['inbox'],
 				specialRole: 'inbox',
 				name: t('mail', 'All inboxes'), // TODO,
 				unread: 0,
