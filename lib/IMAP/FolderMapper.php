@@ -40,7 +40,7 @@ class FolderMapper {
 	 * @throws Horde_Imap_Client_Exception
 	 */
 	public function getFolders(Account $account, Horde_Imap_Client_Socket $client,
-							   string $pattern = '*') {
+							   string $pattern = '*'): array {
 		$mailboxes = $client->listMailboxes($pattern, Horde_Imap_Client::MBOX_ALL, [
 			'delimiter' => true,
 			'attributes' => true,

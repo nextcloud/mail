@@ -46,33 +46,20 @@ class MailManager implements IMailManager {
 	/** @var MailboxPrefixDetector */
 	private $prefixDetector;
 
-	/** @var FolderNameTranslator */
-	private $folderNameTranslator;
-
 	/** @var Synchronizer */
 	private $synchronizer;
 
 	/** @var MessageMapper */
 	private $messageMapper;
 
-	/**
-	 * @param IMAPClientFactory $imapClientFactory
-	 * @param FolderMapper $folderMapper
-	 * @param MailboxPrefixDetector $prefixDetector
-	 * @param FolderNameTranslator $folderNameTranslator
-	 * @param Synchronizer $synchronizer
-	 * @param MessageMapper $messageMapper
-	 */
 	public function __construct(IMAPClientFactory $imapClientFactory,
 								FolderMapper $folderMapper,
 								MailboxPrefixDetector $prefixDetector,
-								FolderNameTranslator $folderNameTranslator,
 								Synchronizer $synchronizer,
 								MessageMapper $messageMapper) {
 		$this->imapClientFactory = $imapClientFactory;
 		$this->folderMapper = $folderMapper;
 		$this->prefixDetector = $prefixDetector;
-		$this->folderNameTranslator = $folderNameTranslator;
 		$this->synchronizer = $synchronizer;
 		$this->messageMapper = $messageMapper;
 	}
@@ -88,7 +75,6 @@ class MailManager implements IMailManager {
 		$havePrefix = $this->prefixDetector->havePrefix($folders);
 		$this->folderMapper->getFoldersStatus($folders, $client);
 		$this->folderMapper->detectFolderSpecialUse($folders);
-		$this->folderNameTranslator->translateAll($folders, $havePrefix);
 		$this->folderMapper->sortFolders($folders);
 		return $this->folderMapper->buildFolderHierarchy($folders, $havePrefix);
 	}

@@ -42,7 +42,6 @@
 <script>
 import {translate as t} from 'nextcloud-server/dist/l10n'
 import {
-	AppContent,
 	AppNavigation,
 	AppNavigationItem,
 	AppNavigationNew,
@@ -51,6 +50,7 @@ import {
 } from 'nextcloud-vue'
 
 import {calculateAccountColor} from '../util/AccountColor'
+import {translate as translateMailboxName} from '../l10n/MailboxTranslator'
 
 const SHOW_COLLAPSED = Object.seal(['inbox', 'flagged', 'drafts', 'sent'])
 
@@ -118,7 +118,7 @@ export default {
 					return {
 						id: 'account' + account.id + '_' + folder.id,
 						key: 'account' + account.id + '_' + folder.id,
-						text: folder.name,
+						text: translateMailboxName(folder),
 						icon: 'icon-' + icon,
 						router: {
 							name: 'folder',

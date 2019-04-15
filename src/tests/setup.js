@@ -33,4 +33,12 @@ global.SVGElement = global.Element
 
 global.OC = {
 	getLocale: () => 'en',
+	L10N: {
+		translate: (app, string) => {
+			if (app !== 'mail') {
+				throw new Error('tried to translate a string for an app other than Mail')
+			}
+			return string
+		},
+	},
 }

@@ -31,7 +31,6 @@ use OCA\Mail\IMAP\MessageMapper;
 use OCA\Mail\IMAP\Sync\Request;
 use OCA\Mail\IMAP\Sync\Response;
 use OCA\Mail\IMAP\Sync\Synchronizer;
-use OCA\Mail\Service\FolderNameTranslator;
 use OCA\Mail\Service\MailManager;
 use OCP\Files\Folder;
 use PHPUnit_Framework_MockObject_MockObject;
@@ -50,9 +49,6 @@ class MailManagerTest extends TestCase {
 	/** @var MessageMapper|PHPUnit_Framework_MockObject_MockObject */
 	private $messageMapper;
 
-	/** @var FolderNameTranslator|PHPUnit_Framework_MockObject_MockObject */
-	private $translator;
-
 	/** @var Synchronizer|PHPUnit_Framework_MockObject_MockObject */
 	private $sync;
 
@@ -66,12 +62,15 @@ class MailManagerTest extends TestCase {
 		$this->folderMapper = $this->createMock(FolderMapper::class);
 		$this->prefixDetector = $this->createMock(MailboxPrefixDetector::class);
 		$this->messageMapper = $this->createMock(MessageMapper::class);
-		$this->translator = $this->createMock(FolderNameTranslator::class);
 		$this->sync = $this->createMock(Synchronizer::class);
 
-		$this->manager = new MailManager($this->imapClientFactory,
-			$this->folderMapper, $this->prefixDetector, $this->translator, $this->sync,
-			$this->messageMapper);
+		$this->manager = new MailManager(
+			$this->imapClientFactory,
+			$this->folderMapper,
+			$this->prefixDetector,
+			$this->sync,
+			$this->messageMapper
+		);
 	}
 
 	public function testGetFolders() {
@@ -100,9 +99,6 @@ class MailManagerTest extends TestCase {
 		$this->folderMapper->expects($this->once())
 			->method('sortFolders')
 			->with($this->equalTo($folders));
-		$this->translator->expects($this->once())
-			->method('translateAll')
-			->with($this->equalTo($folders), $this->equalTo(false));
 		$this->folderMapper->expects($this->once())
 			->method('buildFolderHierarchy')
 			->with($this->equalTo($folders))
