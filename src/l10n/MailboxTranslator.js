@@ -63,8 +63,8 @@ export const translate = folder => {
 			return translateSpecial(folder)
 		} catch (e) {
 			console.error(e)
-			return folder.id
+			return atob(folder.id)
 		}
 	}
-	return folder.id
+	return atob(folder.id)
 }

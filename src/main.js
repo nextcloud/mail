@@ -71,9 +71,7 @@ store.commit('savePreference', {
 const accounts = JSON.parse(atob(getPreferenceFromPage('serialized-accounts')))
 accounts.map(fixAccountId).forEach(account => {
 	const folders = account.folders
-	delete account.folders
 	store.commit('addAccount', account)
-	folders.forEach(folder => store.commit('addFolder', {account, folder}))
 })
 
 new Vue({

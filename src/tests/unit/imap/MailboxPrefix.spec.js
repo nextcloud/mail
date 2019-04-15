@@ -19,28 +19,40 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-import {translate} from '../../../l10n/MailboxTranslator'
+import {havePrefix} from '../../../imap/MailboxPrefix'
 
-describe('MailboxTranslator', () => {
-	it('translates the inbox', () => {
-		const folder = {
-			id: btoa('INBOX'),
-			specialUse: ['inbox'],
-		}
+describe('MailboxPrefix', () => {
+	it('does not find a prefix if there is none', () => {
+		const mailboxes = [
+			{
+				id: 'INBOX',
+				delimiter: '.',
+			},
+			{
+				id: 'Sent',
+				delimiter: '.',
+			},
+		]
 
-		const name = translate(folder)
+		const result = havePrefix(mailboxes)
 
-		expect(name).to.equal('Inbox')
+		expect(result).to.equal(false)
 	})
 
-	it('does not translate an arbitrary mailbox', () => {
-		const folder = {
-			id: btoa('Newsletters'),
-			specialUse: [],
-		}
+	it('detects a prefix', () => {
+		const mailboxes = [
+			{
+				id: 'INBOX',
+				delimiter: '.',
+			},
+			{
+				id: 'INBOX.Sent',
+				delimiter: '.',
+			},
+		]
 
-		const name = translate(folder)
+		const result = havePrefix(mailboxes)
 
-		expect(name).to.equal('Newsletters')
+		expect(result).to.equal(true)
 	})
 })

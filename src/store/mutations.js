@@ -22,6 +22,9 @@
 import _ from 'lodash'
 import Vue from 'vue'
 
+import {buildMailboxHierarchy} from '../imap/MailboxHierarchy'
+import {havePrefix} from '../imap/MailboxPrefix'
+import {sortMailboxes} from '../imap/MailboxSorter'
 import {UNIFIED_ACCOUNT_ID} from './constants'
 
 export default {
@@ -29,18 +32,10 @@ export default {
 		Vue.set(state.preferences, key, value)
 	},
 	addAccount(state, account) {
-		account.folders = []
 		account.collapsed = true
 		Vue.set(state.accounts, account.id, account)
 		Vue.set(state, 'accountList', _.sortBy(state.accountList.concat([account.id])))
-	},
-	editAccount(state, account) {
-		Vue.set(state.accounts, account.id, Object.assign({}, state.accounts[account.id], account))
-	},
-	toggleAccountCollapsed(state, accountId) {
-		state.accounts[accountId].collapsed = !state.accounts[accountId].collapsed
-	},
-	addFolder(state, {account, folder}) {
+
 		const addToState = folder => {
 			const id = account.id + '-' + folder.id
 			folder.accountId = account.id
@@ -50,11 +45,22 @@ export default {
 			return id
 		}
 
-		// Add all folders (including subfolders ot state, but only toplevel to account
-		const id = addToState(folder)
-		folder.folders.forEach(addToState)
+		// Save the folders to the store, but only keep IDs in the account's folder list
+		const folders = buildMailboxHierarchy(sortMailboxes(account.folders || []), havePrefix(account.folders))
+		Vue.set(account, 'folders', [])
+		folders.forEach(folder => {
+			// Add all folders (including subfolders to state, but only toplevel to account
+			const id = addToState(folder)
+			folder.folders.forEach(addToState)
 
-		account.folders.push(id)
+			account.folders.push(id)
+		})
+	},
+	editAccount(state, account) {
+		Vue.set(state.accounts, account.id, Object.assign({}, state.accounts[account.id], account))
+	},
+	toggleAccountCollapsed(state, accountId) {
+		state.accounts[accountId].collapsed = !state.accounts[accountId].collapsed
 	},
 	updateFolderSyncToken(state, {folder, syncToken}) {
 		folder.syncToken = syncToken
