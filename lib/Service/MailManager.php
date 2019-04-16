@@ -29,7 +29,6 @@ use OCA\Mail\Exception\ServiceException;
 use OCA\Mail\Folder;
 use OCA\Mail\IMAP\FolderMapper;
 use OCA\Mail\IMAP\IMAPClientFactory;
-use OCA\Mail\IMAP\MailboxPrefixDetector;
 use OCA\Mail\IMAP\MessageMapper;
 use OCA\Mail\IMAP\Sync\Request;
 use OCA\Mail\IMAP\Sync\Response;
@@ -43,9 +42,6 @@ class MailManager implements IMailManager {
 	/** @var FolderMapper */
 	private $folderMapper;
 
-	/** @var MailboxPrefixDetector */
-	private $prefixDetector;
-
 	/** @var Synchronizer */
 	private $synchronizer;
 
@@ -54,12 +50,10 @@ class MailManager implements IMailManager {
 
 	public function __construct(IMAPClientFactory $imapClientFactory,
 								FolderMapper $folderMapper,
-								MailboxPrefixDetector $prefixDetector,
 								Synchronizer $synchronizer,
 								MessageMapper $messageMapper) {
 		$this->imapClientFactory = $imapClientFactory;
 		$this->folderMapper = $folderMapper;
-		$this->prefixDetector = $prefixDetector;
 		$this->synchronizer = $synchronizer;
 		$this->messageMapper = $messageMapper;
 	}
@@ -72,11 +66,9 @@ class MailManager implements IMailManager {
 		$client = $this->imapClientFactory->getClient($account);
 
 		$folders = $this->folderMapper->getFolders($account, $client);
-		$havePrefix = $this->prefixDetector->havePrefix($folders);
 		$this->folderMapper->getFoldersStatus($folders, $client);
 		$this->folderMapper->detectFolderSpecialUse($folders);
-		$this->folderMapper->sortFolders($folders);
-		return $this->folderMapper->buildFolderHierarchy($folders, $havePrefix);
+		return $folders;
 	}
 
 	/**

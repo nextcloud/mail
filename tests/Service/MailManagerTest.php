@@ -26,7 +26,6 @@ use Horde_Imap_Client_Socket;
 use OCA\Mail\Account;
 use OCA\Mail\IMAP\FolderMapper;
 use OCA\Mail\IMAP\IMAPClientFactory;
-use OCA\Mail\IMAP\MailboxPrefixDetector;
 use OCA\Mail\IMAP\MessageMapper;
 use OCA\Mail\IMAP\Sync\Request;
 use OCA\Mail\IMAP\Sync\Response;
@@ -43,9 +42,6 @@ class MailManagerTest extends TestCase {
 	/** @var FolderMapper|PHPUnit_Framework_MockObject_MockObject */
 	private $folderMapper;
 
-	/** @var MailboxPrefixDetector|PHPUnit_Framework_MockObject_MockObject */
-	private $prefixDetector;
-
 	/** @var MessageMapper|PHPUnit_Framework_MockObject_MockObject */
 	private $messageMapper;
 
@@ -60,14 +56,12 @@ class MailManagerTest extends TestCase {
 
 		$this->imapClientFactory = $this->createMock(IMAPClientFactory::class);
 		$this->folderMapper = $this->createMock(FolderMapper::class);
-		$this->prefixDetector = $this->createMock(MailboxPrefixDetector::class);
 		$this->messageMapper = $this->createMock(MessageMapper::class);
 		$this->sync = $this->createMock(Synchronizer::class);
 
 		$this->manager = new MailManager(
 			$this->imapClientFactory,
 			$this->folderMapper,
-			$this->prefixDetector,
 			$this->sync,
 			$this->messageMapper
 		);
@@ -76,9 +70,6 @@ class MailManagerTest extends TestCase {
 	public function testGetFolders() {
 		$client = $this->createMock(Horde_Imap_Client_Socket::class);
 		$account = $this->createMock(Account::class);
-		$this->prefixDetector->expects($this->once())
-			->method('havePrefix')
-			->willReturn(false);
 		$this->imapClientFactory->expects($this->once())
 			->method('getClient')
 			->willReturn($client);
@@ -96,13 +87,6 @@ class MailManagerTest extends TestCase {
 		$this->folderMapper->expects($this->once())
 			->method('detectFolderSpecialUse')
 			->with($this->equalTo($folders));
-		$this->folderMapper->expects($this->once())
-			->method('sortFolders')
-			->with($this->equalTo($folders));
-		$this->folderMapper->expects($this->once())
-			->method('buildFolderHierarchy')
-			->with($this->equalTo($folders))
-			->willReturn($folders);
 
 		$this->manager->getFolders($account);
 	}

@@ -19,28 +19,44 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-import {translate} from '../../../l10n/MailboxTranslator'
+const getParentId = (mailbox, hasPrefix) => {
+	const top = hasPrefix ? 1 : 0
+	const hierarchy = atob(mailbox.id).split(mailbox.delimiter)
+	if (hierarchy.length <= top + 1) {
+		return
+	}
+	if (hasPrefix) {
+		return hierarchy[0] + mailbox.delimiter + hierarchy[1]
+	} else {
+		return hierarchy[0]
+	}
+}
 
-describe('MailboxTranslator', () => {
-	it('translates the inbox', () => {
-		const folder = {
-			id: btoa('INBOX'),
-			specialUse: ['inbox'],
+export const buildMailboxHierarchy = (mailboxes, havePrefix) => {
+	if (!mailboxes.length) {
+		// Nothing to do
+		return mailboxes
+	}
+
+	const cloned = mailboxes.map(mailbox => {
+		return {
+			folders: [],
+			...mailbox,
+		}
+	})
+	const top = cloned.filter(mailbox => getParentId(mailbox, havePrefix) === undefined)
+
+	cloned.forEach(mailbox => {
+		if (top.indexOf(mailbox) !== -1) {
+			return
 		}
 
-		const name = translate(folder)
-
-		expect(name).to.equal('Inbox')
-	})
-
-	it('does not translate an arbitrary mailbox', () => {
-		const folder = {
-			id: btoa('Newsletters'),
-			specialUse: [],
+		const parentId = getParentId(mailbox, havePrefix)
+		const parent = cloned.filter(mailbox => atob(mailbox.id) === parentId)[0]
+		if (parent) {
+			parent.folders.push(mailbox)
 		}
-
-		const name = translate(folder)
-
-		expect(name).to.equal('Newsletters')
 	})
-})
+
+	return top
+}

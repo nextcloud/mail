@@ -95,52 +95,6 @@ class FolderMapperTest extends TestCase {
 		$this->assertEquals($expected, $folders);
 	}
 
-	public function testBuildHierarchyWithoutPrefix() {
-		$account = $this->createMock(Account::class);
-		$folder1 = new Folder($account, new Horde_Imap_Client_Mailbox('test'), [], '.');
-		$folder2 = new Folder($account, new Horde_Imap_Client_Mailbox('test.sub'), [], '.');
-		$folder3 = new Folder($account, new Horde_Imap_Client_Mailbox('test.sub.sub'), [], '.');
-		$folders = [
-			clone $folder1,
-			clone $folder2,
-			clone $folder3,
-		];
-		$folder1->addFolder($folder2);
-		$folder1->addFolder($folder3);
-		$expected = [
-			$folder1,
-		];
-
-		$result = $this->mapper->buildFolderHierarchy($folders, false);
-
-		$this->assertEquals($expected, $result);
-	}
-
-	public function testBuildHierarchyWithPrefix() {
-		$account = $this->createMock(Account::class);
-		$folder1 = new Folder($account, new Horde_Imap_Client_Mailbox('INBOX'), [], '.');
-		$folder2 = new Folder($account, new Horde_Imap_Client_Mailbox('INBOX.sub'), [], '.');
-		$folder3 = new Folder($account, new Horde_Imap_Client_Mailbox('INBOX.sub.sub'), [], '.');
-		$folder4 = new Folder($account, new Horde_Imap_Client_Mailbox('INBOX.sub.sub.sub'), [], '.');
-		$folders = [
-			clone $folder1,
-			clone $folder2,
-			clone $folder3,
-			clone $folder4,
-		];
-		$folder2->addFolder($folder3);
-		$folder2->addFolder($folder4);
-		$expected = [
-			$folder1,
-			$folder2,
-		];
-
-		$result = $this->mapper->buildFolderHierarchy($folders, true);
-
-		$this->assertCount(count($expected), $result);
-		$this->assertEquals($expected, $result);
-	}
-
 	public function testGetFoldersStatus() {
 		$folders = [
 			$this->createMock(Folder::class),
@@ -250,47 +204,6 @@ class FolderMapperTest extends TestCase {
 			->with($this->equalTo('sent'));
 
 		$this->mapper->detectFolderSpecialUse($folders);
-	}
-
-	public function testSortFolders() {
-		$account = $this->createMock(Account::class);
-		$mailbox = $this->createMock(Horde_Imap_Client_Mailbox::class);
-
-		$folder1 = new Folder($account, $mailbox, [], '.');
-		$folder1->setDisplayName('Entwürfe');
-		$folder1->addSpecialUse('drafts');
-		$folder2 = new Folder($account, $mailbox, [], '.');
-		$folder2->setDisplayName('Eingang');
-		$folder2->addSpecialUse('inbox');
-		$folder3 = new Folder($account, $mailbox, [], '.');
-		$folder3->setDisplayName('Other 2');
-		$folder4 = new Folder($account, $mailbox, [], '.');
-		$folder4->setDisplayName('Other 1');
-		$folder5 = new Folder($account, $mailbox, [], '.');
-		$folder5->setDisplayName('Gesendete Elemente');
-		$folder5->addSpecialUse('sent');
-		$folder6 = new Folder($account, $mailbox, [], '.');
-		$folder6->setDisplayName('Gesendet');
-		$folder6->addSpecialUse('sent');
-
-		$folders = [
-			$folder1,
-			$folder2,
-			$folder3,
-			$folder4,
-			$folder5,
-			$folder6,
-		];
-
-		$this->mapper->sortFolders($folders);
-
-		// Expected order: Inbox, Drafts, Sent1, Sent2, other 1, other 2
-		$this->assertSame($folder2, $folders[0]);
-		$this->assertSame($folder1, $folders[1]);
-		$this->assertSame($folder6, $folders[2]);
-		$this->assertSame($folder5, $folders[3]);
-		$this->assertSame($folder4, $folders[4]);
-		$this->assertSame($folder3, $folders[5]);
 	}
 
 }

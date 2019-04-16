@@ -58,18 +58,13 @@ export default {
 	},
 	createAccount({commit}, config) {
 		return createAccount(config).then(account => {
-			console.debug('account created', account)
-			commit('addAccount', account)
+			console.debug('account created, fetching folders …', account)
 
 			fetchAllFolders(account.id)
-				.then(folders =>
-					folders.forEach(folder => {
-						commit('addFolder', {
-							account,
-							folder,
-						})
-					})
-				)
+				.then(folders => {
+					account.folders = folders
+					commit('addAccount', account)
+				})
 				.then(() => console.info("new account's folders fetched"))
 				.then(() => account)
 		})
@@ -99,23 +94,6 @@ export default {
 				console.error('could not delete account', err)
 				throw err
 			})
-	},
-	fetchFolders({commit, getters}, {accountId}) {
-		if (getters.getAccount(accountId).isUnified) {
-			return Promise.resolve(getters.getFolders(accountId))
-		}
-
-		return fetchAllFolders(accountId).then(folders => {
-			let account = getters.getAccount(accountId)
-
-			folders.forEach(folder => {
-				commit('addFolder', {
-					account,
-					folder,
-				})
-			})
-			return folders
-		})
 	},
 	fetchEnvelopes({state, commit, getters, dispatch}, {accountId, folderId, query}) {
 		const folder = getters.getFolder(accountId, folderId)
