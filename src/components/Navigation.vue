@@ -29,8 +29,20 @@
 		/>
 		<ul id="accounts-list">
 			<template v-for="group in menu">
-				<AppNavigationItem v-for="item in group.items" :key="item.key" :item="item" />
-				<AppNavigationSpacer :key="group.id" />
+				<NavigationAccount v-if="group.account" :key="group.account.id" :account="group.account" />
+				<NavigationFolder
+					v-for="item in group.folders"
+					v-show="!group.account.collapsed || SHOW_COLLAPSED.indexOf(item.specialRole) !== -1"
+					:key="item.key"
+					:account="group.account"
+					:folder="item"
+				/>
+				<NavigationAccountExpandCollapse
+					v-if="!group.account.isUnified && group.account.folders.length > 0"
+					:key="'collapse-' + group.account.id"
+					:account="group.account"
+				/>
+				<AppNavigationSpacer :key="'spacer-' + group.account.id" />
 			</template>
 		</ul>
 		<AppNavigationSettings :title="t('mail', 'Settings')">
@@ -40,17 +52,11 @@
 </template>
 
 <script>
-import {translate as t} from 'nextcloud-server/dist/l10n'
-import {
-	AppNavigation,
-	AppNavigationItem,
-	AppNavigationNew,
-	AppNavigationSettings,
-	AppNavigationSpacer,
-} from 'nextcloud-vue'
+import {AppNavigation, AppNavigationNew, AppNavigationSettings, AppNavigationSpacer} from 'nextcloud-vue'
 
-import {calculateAccountColor} from '../util/AccountColor'
-import {translate as translateMailboxName} from '../l10n/MailboxTranslator'
+import NavigationAccount from './NavigationAccount'
+import NavigationAccountExpandCollapse from './NavigationAccountExpandCollapse'
+import NavigationFolder from './NavigationFolder'
 
 const SHOW_COLLAPSED = Object.seal(['inbox', 'flagged', 'drafts', 'sent'])
 
@@ -60,102 +66,31 @@ export default {
 	name: 'Navigation',
 	components: {
 		AppNavigation,
-		AppNavigationItem,
 		AppNavigationNew,
 		AppNavigationSettings,
 		AppNavigationSpacer,
 		AppSettingsMenu,
+		NavigationAccount,
+		NavigationAccountExpandCollapse,
+		NavigationFolder,
+	},
+	data() {
+		return {
+			SHOW_COLLAPSED,
+		}
 	},
 	computed: {
 		menu() {
 			return this.$store.getters.getAccounts().map(account => {
-				const items = []
-
-				const isError = account.error
-
-				if (account.isUnified !== true && account.visible !== false) {
-					const route = {
-						name: 'accountSettings',
-						params: {
-							accountId: account.id,
-						},
-					}
-
-					items.push({
-						id: 'account' + account.id,
-						key: 'account' + account.id,
-						text: account.emailAddress,
-						bullet: isError ? undefined : calculateAccountColor(account.name), // TODO
-						icon: isError ? 'icon-error' : undefined,
-						router: route,
-						utils: {
-							actions: [
-								{
-									icon: 'icon-settings',
-									text: t('mail', 'Edit'),
-									action: () => {
-										this.$router.push(route) // eslint-disable-line
-									},
-								},
-								{
-									icon: 'icon-delete',
-									text: t('mail', 'Delete'),
-									action: () => {
-										this.$store.dispatch('deleteAccount', account).catch(console.error.bind(this))
-									},
-								},
-							],
-						},
-					})
-				}
-
-				const folderToEntry = folder => {
-					let icon = 'folder'
-					if (folder.specialRole) {
-						icon = folder.specialRole
-					}
-
-					return {
-						id: 'account' + account.id + '_' + folder.id,
-						key: 'account' + account.id + '_' + folder.id,
-						text: translateMailboxName(folder),
-						icon: 'icon-' + icon,
-						router: {
-							name: 'folder',
-							params: {
-								accountId: account.id,
-								folderId: folder.id,
-							},
-							exact: false,
-						},
-						utils: {
-							counter: folder.unread,
-						},
-						collapsible: true,
-						opened: folder.opened,
-						children: folder.folders.map(folderToEntry),
-					}
-				}
-
-				this.$store.getters
+				const folders = this.$store.getters
 					.getFolders(account.id)
 					.filter(folder => !account.collapsed || SHOW_COLLAPSED.indexOf(folder.specialRole) !== -1)
-					.map(folderToEntry)
-					.forEach(i => items.push(i))
-
-				if (!account.isUnified && account.folders.length > 0) {
-					items.push({
-						id: 'collapse-' + account.id,
-						key: 'collapse-' + account.id,
-						classes: ['collapse-folders'],
-						text: account.collapsed ? t('mail', 'Show all folders') : t('mail', 'Collapse folders'),
-						action: () => this.$store.commit('toggleAccountCollapsed', account.id),
-					})
-				}
+				//.map(folderToEntry)
 
 				return {
 					id: account.id,
-					items,
+					account: account,
+					folders,
 				}
 			})
 		},
