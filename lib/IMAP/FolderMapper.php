@@ -25,10 +25,13 @@ namespace OCA\Mail\IMAP;
 
 use Horde_Imap_Client;
 use Horde_Imap_Client_Exception;
+use Horde_Imap_Client_Mailbox;
 use Horde_Imap_Client_Socket;
 use OCA\Mail\Account;
+use OCA\Mail\Exception\ServiceException;
 use OCA\Mail\Folder;
 use OCA\Mail\SearchFolder;
+use function reset;
 
 class FolderMapper {
 
@@ -36,6 +39,7 @@ class FolderMapper {
 	 * @param Account $account
 	 * @param Horde_Imap_Client_Socket $client
 	 * @param string $pattern
+	 *
 	 * @return Folder[]
 	 * @throws Horde_Imap_Client_Exception
 	 */
@@ -81,9 +85,29 @@ class FolderMapper {
 		return $folders;
 	}
 
+	public function createFolder(Horde_Imap_Client_Socket $client,
+								 Account $account,
+								 string $name): Folder {
+		$client->createMailbox($name);
+
+		$list = $client->listMailboxes($name, Horde_Imap_Client::MBOX_ALL, [
+			'delimiter' => true,
+			'attributes' => true,
+			'special_use' => true,
+		]);
+		$mb = reset($list);
+
+		if ($mb === null) {
+			throw new ServiceException("Created mailbox does not exist");
+		}
+
+		return new Folder($account, $mb['mailbox'], $mb['attributes'], $mb['delimiter']);
+	}
+
 	/**
 	 * @param Folder[] $folders
 	 * @param Horde_Imap_Client_Socket $client
+	 *
 	 * @throws Horde_Imap_Client_Exception
 	 */
 	public function getFoldersStatus(array $folders,

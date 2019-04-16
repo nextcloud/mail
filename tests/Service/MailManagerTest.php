@@ -24,6 +24,7 @@ namespace OCA\Mail\Tests\Service;
 use ChristophWurst\Nextcloud\Testing\TestCase;
 use Horde_Imap_Client_Socket;
 use OCA\Mail\Account;
+use OCA\Mail\Folder;
 use OCA\Mail\IMAP\FolderMapper;
 use OCA\Mail\IMAP\IMAPClientFactory;
 use OCA\Mail\IMAP\MessageMapper;
@@ -31,21 +32,20 @@ use OCA\Mail\IMAP\Sync\Request;
 use OCA\Mail\IMAP\Sync\Response;
 use OCA\Mail\IMAP\Sync\Synchronizer;
 use OCA\Mail\Service\MailManager;
-use OCP\Files\Folder;
-use PHPUnit_Framework_MockObject_MockObject;
+use PHPUnit\Framework\MockObject\MockObject;
 
 class MailManagerTest extends TestCase {
 
-	/** @var IMAPClientFactory|PHPUnit_Framework_MockObject_MockObject */
+	/** @var IMAPClientFactory|MockObject */
 	private $imapClientFactory;
 
-	/** @var FolderMapper|PHPUnit_Framework_MockObject_MockObject */
+	/** @var FolderMapper|MockObject */
 	private $folderMapper;
 
-	/** @var MessageMapper|PHPUnit_Framework_MockObject_MockObject */
+	/** @var MessageMapper|MockObject */
 	private $messageMapper;
 
-	/** @var Synchronizer|PHPUnit_Framework_MockObject_MockObject */
+	/** @var Synchronizer|MockObject */
 	private $sync;
 
 	/** @varr MailManager */
@@ -89,6 +89,29 @@ class MailManagerTest extends TestCase {
 			->with($this->equalTo($folders));
 
 		$this->manager->getFolders($account);
+	}
+
+	public function testCreateFolder() {
+		$client = $this->createMock(Horde_Imap_Client_Socket::class);
+		$account = $this->createMock(Account::class);
+		$this->imapClientFactory->expects($this->once())
+			->method('getClient')
+			->willReturn($client);
+		$folder =$this->createMock(Folder::class);
+		$this->folderMapper->expects($this->once())
+			->method('createFolder')
+			->with($this->equalTo($client), $this->equalTo($account), $this->equalTo('new'))
+			->willReturn($folder);
+		$this->folderMapper->expects($this->once())
+			->method('getFoldersStatus')
+			->with($this->equalTo([$folder]));
+		$this->folderMapper->expects($this->once())
+			->method('detectFolderSpecialUse')
+			->with($this->equalTo([$folder]));
+
+		$created = $this->manager->createFolder($account, 'new');
+
+		$this->assertEquals($folder, $created);
 	}
 
 	public function testSync() {

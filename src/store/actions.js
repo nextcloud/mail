@@ -30,7 +30,7 @@ import {
 	fetch as fetchAccount,
 	fetchAll as fetchAllAccounts,
 } from '../service/AccountService'
-import {fetchAll as fetchAllFolders} from '../service/FolderService'
+import {fetchAll as fetchAllFolders, create as createFolder} from '../service/FolderService'
 import {deleteMessage, fetchEnvelopes, fetchMessage, setEnvelopeFlag, syncEnvelopes} from '../service/MessageService'
 import {showNewMessagesNotification} from '../service/NotificationService'
 import {parseUid} from '../util/EnvelopeUidParser'
@@ -94,6 +94,12 @@ export default {
 				console.error('could not delete account', err)
 				throw err
 			})
+	},
+	createFolder({commit}, {account, name}) {
+		return createFolder(account.id, name).then(folder => {
+			console.debug(`folder ${name} created for account ${account.id}`)
+			commit('addFolder', {account, folder})
+		})
 	},
 	fetchEnvelopes({state, commit, getters, dispatch}, {accountId, folderId, query}) {
 		const folder = getters.getFolder(accountId, folderId)

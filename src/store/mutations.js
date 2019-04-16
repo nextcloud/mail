@@ -27,6 +27,15 @@ import {havePrefix} from '../imap/MailboxPrefix'
 import {sortMailboxes} from '../imap/MailboxSorter'
 import {UNIFIED_ACCOUNT_ID} from './constants'
 
+const addFolderToState = (state, account) => folder => {
+	const id = account.id + '-' + folder.id
+	folder.accountId = account.id
+	folder.envelopes = []
+	folder.searchEnvelopes = []
+	Vue.set(state.folders, id, folder)
+	return id
+}
+
 export default {
 	savePreference(state, {key, value}) {
 		Vue.set(state.preferences, key, value)
@@ -36,18 +45,10 @@ export default {
 		Vue.set(state.accounts, account.id, account)
 		Vue.set(state, 'accountList', _.sortBy(state.accountList.concat([account.id])))
 
-		const addToState = folder => {
-			const id = account.id + '-' + folder.id
-			folder.accountId = account.id
-			folder.envelopes = []
-			folder.searchEnvelopes = []
-			Vue.set(state.folders, id, folder)
-			return id
-		}
-
 		// Save the folders to the store, but only keep IDs in the account's folder list
 		const folders = buildMailboxHierarchy(sortMailboxes(account.folders || []), havePrefix(account.folders))
 		Vue.set(account, 'folders', [])
+		const addToState = addFolderToState(state, account)
 		folders.forEach(folder => {
 			// Add all folders (including subfolders to state, but only toplevel to account
 			const id = addToState(folder)
@@ -61,6 +62,29 @@ export default {
 	},
 	toggleAccountCollapsed(state, accountId) {
 		state.accounts[accountId].collapsed = !state.accounts[accountId].collapsed
+	},
+	addFolder(state, {account, folder}) {
+		// Flatten the existing ones before updating the hierarchy
+		const existing = account.folders.map(id => state.folders[id])
+		existing.forEach(folder => {
+			if (!folder.folders) {
+				return
+			}
+			folder.folders.map(folder => existing.push(folder))
+			folder.folders = []
+		})
+		// Save the folders to the store, but only keep IDs in the account's folder list
+		existing.push(folder)
+		const folders = buildMailboxHierarchy(sortMailboxes(existing), havePrefix(existing))
+		Vue.set(account, 'folders', [])
+		const addToState = addFolderToState(state, account)
+		folders.forEach(folder => {
+			// Add all folders (including subfolders to state, but only toplevel to account
+			const id = addToState(folder)
+			folder.folders.forEach(addToState)
+
+			account.folders.push(id)
+		})
 	},
 	updateFolderSyncToken(state, {folder, syncToken}) {
 		folder.syncToken = syncToken

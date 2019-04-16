@@ -122,8 +122,10 @@ class FoldersController extends Controller {
 	 * @NoAdminRequired
 	 * @TrapError
 	 */
-	public function create() {
-		throw new NotImplemented();
+	public function create(int $accountId, string $name) {
+		$account = $this->accountService->find($this->currentUserId, $accountId);
+
+		return new JSONResponse($this->mailManager->createFolder($account, $name));
 	}
 
 }
