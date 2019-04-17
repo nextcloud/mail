@@ -37,6 +37,14 @@ interface IMailManager {
 	public function getFolders(Account $account): array;
 
 	/**
+	 * @param Account $account
+	 * @param string $name
+	 *
+	 * @return Folder
+	 */
+	public function createFolder(Account $account, string $name): Folder;
+
+	/**
 	 * @param Account
 	 * @param SyncRequest $syncRequest
 	 * @return SyncResponse

@@ -73,6 +73,21 @@ class MailManager implements IMailManager {
 
 	/**
 	 * @param Account $account
+	 * @param string $name
+	 *
+	 * @return Folder
+	 */
+	public function createFolder(Account $account, string $name): Folder {
+		$client = $this->imapClientFactory->getClient($account);
+
+		$folder = $this->folderMapper->createFolder($client, $account, $name);
+		$this->folderMapper->getFoldersStatus([$folder], $client);
+		$this->folderMapper->detectFolderSpecialUse([$folder]);
+		return $folder;
+	}
+
+	/**
+	 * @param Account $account
 	 * @param Request $syncRequest
 	 * @return Response
 	 */

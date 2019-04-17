@@ -20,7 +20,7 @@
   -->
 
 <template>
-	<AppNavigationItem v-if="visible" :item="data" />
+	<AppNavigationItem v-if="visible" :item="data" :menu-open.sync="menuOpen" />
 </template>
 
 <script>
@@ -38,6 +38,11 @@ export default {
 			type: Object,
 			required: true,
 		},
+	},
+	data() {
+		return {
+			menuOpen: false,
+		}
 	},
 	computed: {
 		visible() {
@@ -76,14 +81,11 @@ export default {
 							},
 						},
 						{
-							text: t('Add folder'),
-						},
-						{
 							icon: 'icon-add',
 							text: t('mail', 'Add folder'),
 							input: 'text',
 							action: e => {
-								this.createFolder(e.target.value)
+								this.createFolder(e)
 							},
 						},
 					],
@@ -92,8 +94,17 @@ export default {
 		},
 	},
 	methods: {
-		createFolder(account) {
-			console.info('create', account)
+		createFolder(e) {
+			const name = e.target.elements[0].value
+			console.info('creating folder ' + name, name)
+			this.menuOpen = false
+			this.$store
+				.dispatch('createFolder', {account: this.account, name})
+				.then(() => console.info(`folder ${name} created`))
+				.catch(e => {
+					console.error('could not create folder', e)
+					throw e
+				})
 		},
 	},
 }

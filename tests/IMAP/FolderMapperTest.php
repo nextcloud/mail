@@ -95,6 +95,34 @@ class FolderMapperTest extends TestCase {
 		$this->assertEquals($expected, $folders);
 	}
 
+	public function testCreateFolder() {
+		$account = $this->createMock(Account::class);
+		$client = $this->createMock(Horde_Imap_Client_Socket::class);
+		$client->expects($this->once())
+			->method('createMailbox')
+			->with($this->equalTo('new'));
+		$client->expects($this->once())
+			->method('listMailboxes')
+			->with($this->equalTo('new'), $this->equalTo(Horde_Imap_Client::MBOX_ALL),
+				$this->equalTo([
+					'delimiter' => true,
+					'attributes' => true,
+					'special_use' => true,
+				]))
+			->willReturn([
+				[
+					'mailbox' => new Horde_Imap_Client_Mailbox('new'),
+					'attributes' => [],
+					'delimiter' => '.',
+				],
+			]);
+
+		$created = $this->mapper->createFolder($client, $account, 'new');
+
+		$expected = new Folder($account, new Horde_Imap_Client_Mailbox('new'), [], '.');
+		$this->assertEquals($expected, $created);
+	}
+
 	public function testGetFoldersStatus() {
 		$folders = [
 			$this->createMock(Folder::class),
