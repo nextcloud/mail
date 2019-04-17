@@ -1,6 +1,16 @@
 # Changelog
 All notable changes to this project will be documented in this file.
 
+## 0.14.0 - 2019-04-17
+### Added
+- Ability to create new folders (mailboxes)
+- Nextcloud 17 compatibility
+### Changed
+- New and updated translations
+### Fixed
+- Update vulnerable js dependencies
+- Navigation toggle on mobile
+
 ## 0.13.0 - 2019-04-12
 ### Added
 - Signatures support
