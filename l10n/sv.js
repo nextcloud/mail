@@ -84,6 +84,7 @@ OC.L10N.register(
     "New message" : "Nytt meddelande",
     "Settings" : "Inställningar",
     "Edit" : "Redigera",
+    "Add folder" : "Lägg till mapp",
     "Show all folders" : "Visa alla kataloger",
     "Collapse folders" : "Dölj mappar",
     "Could not load your draft" : "Kunde inte ladda ditt utkast",

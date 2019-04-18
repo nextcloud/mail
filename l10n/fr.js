@@ -84,6 +84,7 @@ OC.L10N.register(
     "New message" : "Nouveau message",
     "Settings" : "Paramètres",
     "Edit" : "Modifier",
+    "Add folder" : "Ajouter un dossier",
     "Show all folders" : "Montrer tous les dossiers",
     "Collapse folders" : "Replier les dossiers",
     "Could not load your draft" : "Impossible de charger votre brouillon",

@@ -85,6 +85,7 @@ OC.L10N.register(
     "New message" : "Neue Nachricht",
     "Settings" : "Einstellungen",
     "Edit" : "Bearbeiten",
+    "Add folder" : "Ordner hinzufügen",
     "Show all folders" : "Alle Ordner anzeigen",
     "Collapse folders" : "Ordner einklappen",
     "Could not load your draft" : "Ihr Entwurf konnte nicht geladen werden",

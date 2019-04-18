@@ -85,6 +85,7 @@ OC.L10N.register(
     "New message" : "Nova mensagem",
     "Settings" : "Configurações",
     "Edit" : "Editar",
+    "Add folder" : "Adicionar pasta",
     "Show all folders" : "Exibir todas as pastas",
     "Collapse folders" : "Esconder as pastas",
     "Could not load your draft" : "Não pude carregar seu rascunho",

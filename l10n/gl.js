@@ -85,6 +85,7 @@ OC.L10N.register(
     "New message" : "Nova mensaxe",
     "Settings" : "Axustes",
     "Edit" : "Editar",
+    "Add folder" : "Engadir cartafol",
     "Show all folders" : "Amosar todos os cartafoles",
     "Collapse folders" : "Contraer os cartafoles",
     "Could not load your draft" : "Non foi posíbel cargar o seu borrador",

@@ -85,6 +85,7 @@ OC.L10N.register(
     "New message" : "Nuovo messaggio",
     "Settings" : "Impostazioni",
     "Edit" : "Modifica",
+    "Add folder" : "Aggiungi cartella",
     "Show all folders" : "Mostra tutte le cartelle",
     "Collapse folders" : "Contrai le cartelle",
     "Could not load your draft" : "Impossibile caricare la tua bozza",
