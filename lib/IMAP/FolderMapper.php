@@ -23,15 +23,16 @@ declare(strict_types=1);
 
 namespace OCA\Mail\IMAP;
 
+use function array_filter;
+use function array_map;
+use function reset;
 use Horde_Imap_Client;
 use Horde_Imap_Client_Exception;
-use Horde_Imap_Client_Mailbox;
 use Horde_Imap_Client_Socket;
 use OCA\Mail\Account;
 use OCA\Mail\Exception\ServiceException;
 use OCA\Mail\Folder;
 use OCA\Mail\SearchFolder;
-use function reset;
 
 class FolderMapper {
 
@@ -125,6 +126,22 @@ class FolderMapper {
 				$folder->setStatus($status[$folder->getMailbox()]);
 			}
 		}
+	}
+
+	/**
+	 * @param Horde_Imap_Client_Socket $client
+	 * @param string $mailbox
+	 *
+	 * @throws Horde_Imap_Client_Exception
+	 */
+	public function getFoldersStatusAsObject(Horde_Imap_Client_Socket $client,
+											 string $mailbox) {
+		$status = $client->status($mailbox);
+
+		return new FolderStats(
+			$status['messages'],
+			$status['unseen']
+		);
 	}
 
 	/**

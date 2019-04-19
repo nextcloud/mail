@@ -54,6 +54,11 @@ return [
 			'verb' => 'GET'
 		],
 		[
+			'name' => 'folders#stats',
+			'url' => '/api/accounts/{accountId}/folders/{folderId}/stats',
+			'verb' => 'GET'
+		],
+		[
 			'name' => 'messages#downloadAttachment',
 			'url' => '/api/accounts/{accountId}/folders/{folderId}/messages/{messageId}/attachment/{attachmentId}',
 			'verb' => 'GET'
