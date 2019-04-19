@@ -27,6 +27,7 @@ use Horde_Imap_Client_Socket;
 use OCA\Mail\Account;
 use OCA\Mail\Folder;
 use OCA\Mail\IMAP\FolderMapper;
+use OCA\Mail\IMAP\FolderStats;
 use OCA\Mail\SearchFolder;
 use ChristophWurst\Nextcloud\Testing\TestCase;
 
@@ -190,6 +191,22 @@ class FolderMapperTest extends TestCase {
 			->method('setStatus');
 
 		$this->mapper->getFoldersStatus($folders, $client);
+	}
+
+	public function testGetFoldersStatusAsObject() {
+		$client = $this->createMock(Horde_Imap_Client_Socket::class);
+		$client->expects($this->once())
+			->method('status')
+			->with('INBOX')
+			->willReturn([
+				'messages' => 123,
+				'unseen' => 2,
+			]);
+
+		$stats = $this->mapper->getFoldersStatusAsObject($client, 'INBOX');
+
+		$expected = new FolderStats(123, 2);
+		$this->assertEquals($expected, $stats);
 	}
 
 	public function testDetectSpecialUseFromAttributes() {

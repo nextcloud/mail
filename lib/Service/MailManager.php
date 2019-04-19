@@ -28,6 +28,7 @@ use OCA\Mail\Contracts\IMailManager;
 use OCA\Mail\Exception\ServiceException;
 use OCA\Mail\Folder;
 use OCA\Mail\IMAP\FolderMapper;
+use OCA\Mail\IMAP\FolderStats;
 use OCA\Mail\IMAP\IMAPClientFactory;
 use OCA\Mail\IMAP\MessageMapper;
 use OCA\Mail\IMAP\Sync\Request;
@@ -84,6 +85,18 @@ class MailManager implements IMailManager {
 		$this->folderMapper->getFoldersStatus([$folder], $client);
 		$this->folderMapper->detectFolderSpecialUse([$folder]);
 		return $folder;
+	}
+
+	/**
+	 * @param Account $account
+	 * @param string $folderId
+	 *
+	 * @return FolderStats
+	 */
+	public function getFolderStats(Account $account, string $folderId): FolderStats {
+		$client = $this->imapClientFactory->getClient($account);
+
+		return $this->folderMapper->getFoldersStatusAsObject($client, $folderId);
 	}
 
 	/**

@@ -25,6 +25,8 @@ declare(strict_types=1);
 
 namespace OCA\Mail\Controller;
 
+use function base64_decode;
+use function is_array;
 use OCA\Mail\Contracts\IMailManager;
 use OCA\Mail\Exception\NotImplemented;
 use OCA\Mail\Http\JSONResponse;
@@ -100,6 +102,27 @@ class FoldersController extends Controller {
 		$syncResponse = $this->mailManager->syncMessages($account, new SyncRequest(base64_decode($folderId), $syncToken, $uids));
 
 		return new JSONResponse($syncResponse);
+	}
+
+	/**
+	 * @NoAdminRequired
+	 * @TrapError
+	 *
+	 * @param int $accountId
+	 * @param string $folderId
+	 *
+	 * @return JSONResponse
+	 */
+	public function stats(int $accountId, string $folderId): JSONResponse {
+		$account = $this->accountService->find($this->currentUserId, $accountId);
+
+		if (empty($accountId) || empty($folderId)) {
+			return new JSONResponse(null, Http::STATUS_BAD_REQUEST);
+		}
+
+		$stats = $this->mailManager->getFolderStats($account, base64_decode($folderId));
+
+		return new JSONResponse($stats);
 	}
 
 	/**

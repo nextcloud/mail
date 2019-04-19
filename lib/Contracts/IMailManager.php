@@ -25,6 +25,7 @@ namespace OCA\Mail\Contracts;
 
 use OCA\Mail\Account;
 use OCA\Mail\Folder;
+use OCA\Mail\IMAP\FolderStats;
 use OCA\Mail\IMAP\Sync\Request as SyncRequest;
 use OCA\Mail\IMAP\Sync\Response as SyncResponse;
 
@@ -45,6 +46,14 @@ interface IMailManager {
 	public function createFolder(Account $account, string $name): Folder;
 
 	/**
+	 * @param Account $account
+	 * @param string $folderId
+	 *
+	 * @return FolderStats
+	 */
+	public function getFolderStats(Account $account, string $folderId): FolderStats;
+
+	/**
 	 * @param Account
 	 * @param SyncRequest $syncRequest
 	 * @return SyncResponse
@@ -60,4 +69,5 @@ interface IMailManager {
 	 */
 	public function moveMessage(Account $sourceAccount, string $sourceFolderId, int $messageId,
 								Account $destinationAccount, string $destFolderId);
+
 }

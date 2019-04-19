@@ -1,5 +1,5 @@
 import {generateUrl} from 'nextcloud-server/dist/router'
-import HttpClient from 'nextcloud-axios'
+import Axios from 'nextcloud-axios'
 
 export function fetchAll(accountId) {
 	const url = generateUrl('/apps/mail/api/accounts/{accountId}/folders', {
@@ -8,7 +8,7 @@ export function fetchAll(accountId) {
 
 	// FIXME: this return format is weird and should be avoided
 	// TODO: respect `resp.data.delimiter` value
-	return HttpClient.get(url).then(resp => resp.data.folders)
+	return Axios.get(url).then(resp => resp.data.folders)
 }
 
 export function create(accountId, name) {
@@ -19,5 +19,14 @@ export function create(accountId, name) {
 	const data = {
 		name,
 	}
-	return HttpClient.post(url, data).then(resp => resp.data)
+	return Axios.post(url, data).then(resp => resp.data)
+}
+
+export function getFolderStats(accountId, folderId) {
+	const url = generateUrl('/apps/mail/api/accounts/{accountId}/folders/{folderId}/stats', {
+		accountId,
+		folderId,
+	})
+
+	return Axios.get(url).then(resp => resp.data)
 }

@@ -20,13 +20,14 @@
   -->
 
 <template>
-	<AppNavigationItem :item="data" />
+	<AppNavigationItem :item="data" :menu-open.sync="menuOpen" />
 </template>
 
 <script>
 import {AppNavigationItem} from 'nextcloud-vue'
 
 import {translate as translateMailboxName} from '../l10n/MailboxTranslator'
+import {getFolderStats} from '../service/FolderService'
 
 export default {
 	name: 'NavigationFolder',
@@ -43,16 +44,58 @@ export default {
 			required: true,
 		},
 	},
+	data() {
+		return {
+			menuOpen: false,
+			loadingFolderStats: true,
+			folderStats: undefined,
+		}
+	},
 	computed: {
 		data() {
-			return this.folderToEntry(this.folder)
+			return this.folderToEntry(this.folder, true)
+		},
+	},
+	watch: {
+		menuOpen() {
+			// Fetch current stats when the menu is opened
+			if (this.menuOpen) {
+				this.fetchFolderStats()
+			}
 		},
 	},
 	methods: {
-		folderToEntry(folder) {
+		folderToEntry(folder, top) {
 			let icon = 'folder'
 			if (folder.specialRole) {
 				icon = folder.specialRole
+			}
+
+			const actions = []
+			if (top) {
+				if (this.loadingFolderStats) {
+					actions.push({
+						icon: 'icon-info',
+						text: atob(this.folder.id),
+						longtext: t('mail', 'Loading …'),
+					})
+				} else {
+					actions.push({
+						icon: 'icon-info',
+						text: atob(this.folder.id),
+						longtext: t('mail', '{total} messages ({unread} unread)', {
+							total: this.folderStats.total,
+							unread: this.folderStats.unread,
+						}),
+					})
+				}
+
+				actions.push({
+					icon: 'icon-add',
+					text: t('mail', 'Add subfolder'),
+					input: 'text',
+					action: this.createFolder,
+				})
 			}
 
 			return {
@@ -69,12 +112,38 @@ export default {
 					exact: false,
 				},
 				utils: {
+					actions,
 					counter: folder.unread,
 				},
 				collapsible: true,
 				opened: folder.opened,
-				children: folder.folders.map(this.folderToEntry),
+				children: folder.folders.map(folder => this.folderToEntry(folder, false)),
 			}
+		},
+		fetchFolderStats() {
+			this.loadingFolderStats = true
+
+			getFolderStats(this.account.id, this.folder.id)
+				.then(stats => {
+					console.debug('loaded folder stats', stats)
+					this.folderStats = stats
+
+					this.loadingFolderStats = false
+				})
+				.catch(console.error.bind(this))
+		},
+		createFolder(e) {
+			const name = e.target.elements[0].value
+			const withPrefix = atob(this.folder.id) + this.folder.delimiter + name
+			console.info(`creating folder ${withPrefix} as subfolder of ${this.folder.id}`)
+			this.menuOpen = false
+			this.$store
+				.dispatch('createFolder', {account: this.account, name: withPrefix})
+				.then(() => console.info(`folder ${withPrefix} created`))
+				.catch(e => {
+					console.error(`could not create folder ${withPrefix}`, e)
+					throw e
+				})
 		},
 	},
 }
