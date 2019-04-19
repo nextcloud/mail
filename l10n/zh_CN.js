@@ -85,6 +85,7 @@ OC.L10N.register(
     "New message" : "新建消息",
     "Settings" : "设置",
     "Edit" : "编辑",
+    "Add folder" : "添加文件夹",
     "Show all folders" : "显示全部文件夹",
     "Collapse folders" : "折叠文件夹",
     "Could not load your draft" : "无法加载您的草稿",
