@@ -8,8 +8,8 @@
 		<div
 			class="app-content-list-item-star icon-starred"
 			:data-starred="data.flags.flagged ? 'true' : 'false'"
-			@click.prevent="toggleFlagged"
-		/>
+			@click.prevent="onToggleFlagged"
+		></div>
 		<div class="app-content-list-item-icon">
 			<Avatar :display-name="sender" :email="senderEmail" />
 		</div>
@@ -27,12 +27,17 @@
 		<div class="app-content-list-item-details date">
 			<Moment :timestamp="data.dateInt" />
 		</div>
-		<Action class="app-content-list-item-menu" :actions="actions" />
+		<Actions class="app-content-list-item-menu" menu-align="right">
+			<ActionButton icon="icon-mail" @click="onToggleSeen">{{
+				data.flags.unseen ? t('mail', 'Mark read') : t('mail', 'Mark unread')
+			}}</ActionButton>
+			<ActionButton icon="icon-delete" @click="onDelete">{{ t('mail', 'Delete') }}</ActionButton>
+		</Actions>
 	</router-link>
 </template>
 
 <script>
-import {Action} from 'nextcloud-vue'
+import {Actions, ActionButton} from 'nextcloud-vue'
 import Moment from './Moment'
 
 import Avatar from './Avatar'
@@ -41,7 +46,8 @@ import {calculateAccountColor} from '../util/AccountColor'
 export default {
 	name: 'Envelope',
 	components: {
-		Action,
+		Actions,
+		ActionButton,
 		Avatar,
 		Moment,
 	},
@@ -105,29 +111,17 @@ export default {
 				return undefined
 			}
 		},
-		actions() {
-			return [
-				{
-					icon: 'icon-mail',
-					text: this.data.flags.unseen ? t('mail', 'Mark read') : t('mail', 'Mark unread'),
-					action: () => {
-						this.$store.dispatch('toggleEnvelopeSeen', this.data)
-					},
-				},
-				{
-					icon: 'icon-delete',
-					text: t('mail', 'Delete'),
-					action: () => {
-						this.$emit('delete', this.data)
-						this.$store.dispatch('deleteMessage', this.data)
-					},
-				},
-			]
-		},
 	},
 	methods: {
-		toggleFlagged(e) {
+		onToggleFlagged() {
 			this.$store.dispatch('toggleEnvelopeFlagged', this.data)
+		},
+		onToggleSeen() {
+			this.$store.dispatch('toggleEnvelopeSeen', this.data)
+		},
+		onDelete() {
+			this.$emit('delete', this.data)
+			this.$store.dispatch('deleteMessage', this.data)
 		},
 	},
 }
