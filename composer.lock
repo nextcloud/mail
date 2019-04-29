@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "b696bde2af50d954f9c5a5b1be5ea8a1",
+    "content-hash": "19b2a80d924feb4a952754271eb34f30",
     "packages": [
         {
             "name": "arthurhoaro/favicon",
@@ -841,16 +841,16 @@
     "packages-dev": [
         {
             "name": "christophwurst/nextcloud",
-            "version": "v16.0.0-RC1",
+            "version": "v16.0.0",
             "source": {
                 "type": "git",
                 "url": "https://github.com/ChristophWurst/nextcloud_composer.git",
-                "reference": "dd3131cef901825cbbdedb25c0ff50d28fea2fec"
+                "reference": "13e62cd107e54bbb0a58a4c5e38cfe508fee7261"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/ChristophWurst/nextcloud_composer/zipball/dd3131cef901825cbbdedb25c0ff50d28fea2fec",
-                "reference": "dd3131cef901825cbbdedb25c0ff50d28fea2fec",
+                "url": "https://api.github.com/repos/ChristophWurst/nextcloud_composer/zipball/13e62cd107e54bbb0a58a4c5e38cfe508fee7261",
+                "reference": "13e62cd107e54bbb0a58a4c5e38cfe508fee7261",
                 "shasum": ""
             },
             "require": {
@@ -873,7 +873,7 @@
                 }
             ],
             "description": "Composer package containing Nextcloud's public API (classes, interfaces)",
-            "time": "2019-04-12T06:01:46+00:00"
+            "time": "2019-04-25T13:33:13+00:00"
         },
         {
             "name": "christophwurst/nextcloud_testing",
@@ -3105,8 +3105,7 @@
         "pear-pear.horde.org/horde_text_flowed": 0,
         "pear-pear.horde.org/horde_util": 0,
         "pear-pear.horde.org/horde_smtp": 0,
-        "kwi/urllinker": 20,
-        "christophwurst/nextcloud": 5
+        "kwi/urllinker": 20
     },
     "prefer-stable": false,
     "prefer-lowest": false,
