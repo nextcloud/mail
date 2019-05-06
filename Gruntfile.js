@@ -19,12 +19,6 @@ module.exports = function(grunt) {
 			all: ['Gruntfile.js', 'js/*.js', 'js/models/*.js', 'js/views/*.js',
 				'!js/build/build.js', '!js/webpack.*.js']
 		},
-		jscs: {
-			src: '<%= jshint.all %>',
-			options: {
-				config: '.jscsrc'
-			}
-		},
 		karma: {
 			unit: {
 				configFile: 'karma.conf.js',
@@ -37,8 +31,6 @@ module.exports = function(grunt) {
 			}
 		}
 	});
-	// jscs
-	grunt.loadNpmTasks('grunt-jscs');
 
 	// jshint
 	grunt.loadNpmTasks('grunt-contrib-jshint');
@@ -47,5 +39,5 @@ module.exports = function(grunt) {
 	grunt.loadNpmTasks('grunt-karma');
 
 	// Default task
-	grunt.registerTask('default', ['jscs', 'jshint', 'karma:continuous']);
+	grunt.registerTask('default', ['jshint', 'karma:continuous']);
 };
