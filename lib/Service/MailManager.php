@@ -149,4 +149,10 @@ class MailManager implements IMailManager {
 		$this->messageMapper->move($client, $sourceFolderId, $messageId, $destFolderId);
 	}
 
+	public function markFolderAsRead(Account $account, string $folderId): void {
+		$client = $this->imapClientFactory->getClient($account);
+
+		$this->messageMapper->markAllRead($client, $folderId);
+	}
+
 }

@@ -110,6 +110,26 @@ class FoldersController extends Controller {
 	 *
 	 * @param int $accountId
 	 * @param string $folderId
+	 * @return JSONResponse
+	 */
+	public function markAllAsRead(int $accountId, string $folderId): JSONResponse {
+		$account = $this->accountService->find($this->currentUserId, $accountId);
+
+		if (empty($accountId) || empty($folderId)) {
+			return new JSONResponse(null, Http::STATUS_BAD_REQUEST);
+		}
+
+		$syncResponse = $this->mailManager->markFolderAsRead($account, base64_decode($folderId));
+
+		return new JSONResponse($syncResponse);
+	}
+
+	/**
+	 * @NoAdminRequired
+	 * @TrapError
+	 *
+	 * @param int $accountId
+	 * @param string $folderId
 	 *
 	 * @return JSONResponse
 	 */

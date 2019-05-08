@@ -30,7 +30,7 @@ import {
 	fetch as fetchAccount,
 	fetchAll as fetchAllAccounts,
 } from '../service/AccountService'
-import {fetchAll as fetchAllFolders, create as createFolder} from '../service/FolderService'
+import {fetchAll as fetchAllFolders, create as createFolder, markFolderRead} from '../service/FolderService'
 import {deleteMessage, fetchEnvelopes, fetchMessage, setEnvelopeFlag, syncEnvelopes} from '../service/MessageService'
 import {showNewMessagesNotification} from '../service/NotificationService'
 import {parseUid} from '../util/EnvelopeUidParser'
@@ -100,6 +100,14 @@ export default {
 			console.debug(`folder ${name} created for account ${account.id}`)
 			commit('addFolder', {account, folder})
 		})
+	},
+	markFolderRead({dispatch}, {account, folderId}) {
+		return markFolderRead(account.id, folderId).then(
+			dispatch('syncEnvelopes', {
+				accountId: account.id,
+				folderId: folderId,
+			})
+		)
 	},
 	fetchEnvelopes({state, commit, getters, dispatch}, {accountId, folderId, query}) {
 		const folder = getters.getFolder(accountId, folderId)

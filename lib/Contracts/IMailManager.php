@@ -70,4 +70,12 @@ interface IMailManager {
 	public function moveMessage(Account $sourceAccount, string $sourceFolderId, int $messageId,
 								Account $destinationAccount, string $destFolderId);
 
+	/**
+	 * Mark all messages of a folder as read
+	 *
+	 * @param Account $account
+	 * @param string $folderId
+	 */
+	public function markFolderAsRead(Account $account, string $folderId): void;
+
 }

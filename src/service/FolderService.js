@@ -30,3 +30,12 @@ export function getFolderStats(accountId, folderId) {
 
 	return Axios.get(url).then(resp => resp.data)
 }
+
+export function markFolderRead(accountId, folderId) {
+	const url = generateUrl('/apps/mail/api/accounts/{accountId}/folders/{folderId}/read', {
+		accountId,
+		folderId,
+	})
+
+	return Axios.post(url).then(resp => resp.data)
+}

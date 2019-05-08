@@ -25,6 +25,7 @@ namespace OCA\Mail\IMAP;
 
 use function array_filter;
 use function array_map;
+use Horde_Imap_Client_Mailbox;
 use function reset;
 use Horde_Imap_Client;
 use Horde_Imap_Client_Exception;
