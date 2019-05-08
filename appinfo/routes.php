@@ -54,6 +54,11 @@ return [
 			'verb' => 'GET'
 		],
 		[
+			'name' => 'folders#markAllAsRead',
+			'url' => '/api/accounts/{accountId}/folders/{folderId}/read',
+			'verb' => 'POST'
+		],
+		[
 			'name' => 'folders#stats',
 			'url' => '/api/accounts/{accountId}/folders/{folderId}/stats',
 			'verb' => 'GET'

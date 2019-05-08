@@ -72,6 +72,7 @@ export default {
 			}
 
 			const actions = []
+
 			if (top) {
 				if (this.loadingFolderStats) {
 					actions.push({
@@ -89,6 +90,17 @@ export default {
 						}),
 					})
 				}
+			}
+
+			if (top) {
+				// TODO: make *mark as read* available for all folders once there is
+				//       more than one action
+				actions.push({
+					icon: 'icon-checkmark',
+					text: t('mail', 'Mark all as read'),
+					longtext: t('mail', 'Mark all messages of this folder as read'),
+					action: this.markAsRead(folder),
+				})
 
 				actions.push({
 					icon: 'icon-add',
@@ -144,6 +156,15 @@ export default {
 					console.error(`could not create folder ${withPrefix}`, e)
 					throw e
 				})
+		},
+		markAsRead(folder) {
+			return () => {
+				this.menuOpen = false
+				this.$store
+					.dispatch('markFolderRead', {account: this.account, folderId: folder.id})
+					.then(() => console.info(`folder ${folder.id} marked as read`))
+					.catch(console.error.bind(this))
+			}
 		},
 	},
 }
