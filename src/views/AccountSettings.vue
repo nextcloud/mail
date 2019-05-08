@@ -15,7 +15,8 @@
 </template>
 
 <script>
-import {AppContent, Content} from 'nextcloud-vue'
+import AppContent from 'nextcloud-vue/dist/Components/AppContent'
+import Content from 'nextcloud-vue/dist/Components/Content'
 
 import AccountForm from '../components/AccountForm'
 import Logger from '../logger'

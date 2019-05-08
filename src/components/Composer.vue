@@ -125,7 +125,7 @@
 import _ from 'lodash'
 import Autosize from 'vue-autosize'
 import debouncePromise from 'debounce-promise'
-import {Multiselect} from 'nextcloud-vue'
+import Multiselect from 'nextcloud-vue/dist/Components/Multiselect'
 import Vue from 'vue'
 
 import {findRecipient} from '../service/AutocompleteService'

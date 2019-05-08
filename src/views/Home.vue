@@ -6,7 +6,7 @@
 </template>
 
 <script>
-import {Content} from 'nextcloud-vue'
+import Content from 'nextcloud-vue/dist/Components/Content'
 
 import Navigation from '../components/Navigation'
 import FolderContent from '../components/FolderContent'
