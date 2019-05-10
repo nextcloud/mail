@@ -90,6 +90,8 @@ OC.L10N.register(
     "Collapse folders" : "折叠文件夹",
     "Loading …" : "加载中...",
     "{total} messages ({unread} unread)" : "{total} 条消息 ({unread} 条未读)",
+    "Mark all as read" : "标记所有为已读",
+    "Mark all messages of this folder as read" : "标记此文件夹的所有消息为已读",
     "Add subfolder" : "添加子文件夹",
     "Could not load your draft" : "无法加载您的草稿",
     "No message selected" : "没有选择消息",

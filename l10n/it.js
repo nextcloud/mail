@@ -90,6 +90,8 @@ OC.L10N.register(
     "Collapse folders" : "Contrai le cartelle",
     "Loading …" : "Caricamento in corso…",
     "{total} messages ({unread} unread)" : "{total} messaggi ({unread} non letti)",
+    "Mark all as read" : "Marca tutti come letti",
+    "Mark all messages of this folder as read" : "Marca tutti i messaggi di questa cartella come letti",
     "Add subfolder" : "Aggiungi sottocartella",
     "Could not load your draft" : "Impossibile caricare la tua bozza",
     "No message selected" : "Nessun messaggio selezionato",

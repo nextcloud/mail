@@ -90,6 +90,8 @@ OC.L10N.register(
     "Collapse folders" : "Zwiń foldery",
     "Loading …" : "Wczytywanie…",
     "{total} messages ({unread} unread)" : "{total} wiadomości ({unread} nieprzeczytane)",
+    "Mark all as read" : "Oznacz wszystkie jako przeczytane",
+    "Mark all messages of this folder as read" : "Zaznacz wszystkie wiadomości tego katalogu jako przeczytane",
     "Add subfolder" : "Dodaj podkatalog",
     "Could not load your draft" : "Nie można wczytać szkicu wiadomości",
     "No message selected" : "Nie wybrano żadnej wiadomości",

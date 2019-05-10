@@ -89,6 +89,8 @@ OC.L10N.register(
     "Collapse folders" : "Dölj mappar",
     "Loading …" : "Laddar ...",
     "{total} messages ({unread} unread)" : "{total} meddelanden ({unread} olästa)",
+    "Mark all as read" : "Markera alla som lästa",
+    "Mark all messages of this folder as read" : "Markera alla meddelanden i denna mapp som lästa",
     "Add subfolder" : "Skapa undermapp",
     "Could not load your draft" : "Kunde inte ladda ditt utkast",
     "No message selected" : "Inget meddelande valt",

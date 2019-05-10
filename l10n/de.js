@@ -90,6 +90,8 @@ OC.L10N.register(
     "Collapse folders" : "Ordner einklappen",
     "Loading …" : "Lade…",
     "{total} messages ({unread} unread)" : "{total} Nachrichten ({unread} ungelesen)",
+    "Mark all as read" : "Alles als gelesen markieren",
+    "Mark all messages of this folder as read" : "Alle Nachrichten in diesem Ordner als gelesen kennzeichnen",
     "Add subfolder" : "Unterordner hinzufügen",
     "Could not load your draft" : "Dein Entwurf konnte nicht geladen werden",
     "No message selected" : "Keine Nachricht ausgewählt",

@@ -90,6 +90,8 @@ OC.L10N.register(
     "Collapse folders" : "Esconder as pastas",
     "Loading …" : "Carregando...",
     "{total} messages ({unread} unread)" : "{total} mensagens ({unread} não lidas)",
+    "Mark all as read" : "Marcar todas como lidas",
+    "Mark all messages of this folder as read" : "Marcar todas as mensagens desta pasta como lidas",
     "Add subfolder" : "Adicionar subpasta",
     "Could not load your draft" : "Não pude carregar seu rascunho",
     "No message selected" : "Nenhuma mensagem selecionada",

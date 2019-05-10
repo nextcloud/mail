@@ -90,6 +90,8 @@ OC.L10N.register(
     "Collapse folders" : "Klasörleri daralt",
     "Loading …" : "Yükleniyor…",
     "{total} messages ({unread} unread)" : "{total} ileti ({unread} okunmamış)",
+    "Mark all as read" : "Tümünü okunmuş olarak işaretle",
+    "Mark all messages of this folder as read" : "Bu klasördeki tüm iletileri okunmuş olarak işaretle",
     "Add subfolder" : "Alt klasör ekle",
     "Could not load your draft" : "Taslağınız yüklenemedi",
     "No message selected" : "Herhangi bir ileti seçilmemiş",

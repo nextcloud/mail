@@ -90,6 +90,8 @@ OC.L10N.register(
     "Collapse folders" : "Contraer os cartafoles",
     "Loading …" : "Cargando…",
     "{total} messages ({unread} unread)" : "{total} mensaxes ({unread} sen ler)",
+    "Mark all as read" : "Marcar todo como lido",
+    "Mark all messages of this folder as read" : "Marcar todas as mensaxes deste cartafol como lidos",
     "Add subfolder" : "Engadir subcartafol",
     "Could not load your draft" : "Non foi posíbel cargar o seu borrador",
     "No message selected" : "Non seleccionou ningunha mensaxe",
