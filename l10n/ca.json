@@ -88,6 +88,8 @@
     "Collapse folders" : "Replega les carpetes",
     "Loading …" : "S'està carregant ...",
     "{total} messages ({unread} unread)" : "{total} missatges ({unread} no llegits)",
+    "Mark all as read" : "Marca-ho tot com a llegit",
+    "Mark all messages of this folder as read" : "Marca tots els missatges d'aquesta carpeta com a llegits",
     "Add subfolder" : "Afegeix una subcarpeta",
     "Could not load your draft" : "No s’ha pogut carregar el vostre esborrany",
     "No message selected" : "No s'ha seleccionat cap missatge",
