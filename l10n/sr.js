@@ -90,6 +90,8 @@ OC.L10N.register(
     "Collapse folders" : "Сажми фасцикле",
     "Loading …" : "Учитавање…",
     "{total} messages ({unread} unread)" : "{total} порука ({unread} непрочитано)",
+    "Mark all as read" : "Означи све као прочитано",
+    "Mark all messages of this folder as read" : "Означи све поруке у овој фасцикли прочитаним",
     "Add subfolder" : "Додај подфасциклу",
     "Could not load your draft" : "Не могу да учитам нацрт",
     "No message selected" : "Није одабрана ниједна порука",
