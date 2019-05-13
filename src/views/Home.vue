@@ -1,5 +1,16 @@
 <template>
-	<Content v-shortkey.once="['c']" app-name="mail" @shortkey.native="onNewMessage">
+	<Content
+		v-shortkey.once="['c']"
+		v-drag-and-drop:options="{
+			dropzoneSelector: '.icon-folder',
+			draggableSelector: '.app-content-list-item',
+			onDrop: function(e) {
+				moveMessage(e)
+			},
+		}"
+		app-name="mail"
+		@shortkey.native="onNewMessage"
+	>
 		<Navigation />
 		<FolderContent v-if="activeAccount" :account="activeAccount" :folder="activeFolder" />
 	</Content>
@@ -83,6 +94,28 @@ export default {
 		}
 	},
 	methods: {
+		moveMessage(e) {
+			var startAccount = e.items[0].attributes.href.baseURI.match(/message\/(\d)/)
+			var targetAccount = e.droptarget.href.match(/accounts\/(\d)/)
+			if (targetAccount[1] == startAccount[1]) {
+				var accountId = targetAccount[1]
+				var startFolderId = e.items[0].attributes.href.baseURI.match(/.+-([^-]+)-\d+$/)
+				var targetFolderId = e.droptarget.href.match(/.+\/([\S]+)$/)
+				if (startFolderId[1] != targetFolderId[1]) {
+					var msgId = e.items[0].attributes.href.baseURI.match(/.+-([\S]+)$/)
+					this.$store.dispatch('moveMessage', {
+						accountId: accountId,
+						startFolderId: startFolderId[1],
+						targetFolderId: targetFolderId[1],
+						msgId: msgId[1],
+					})
+				} else {
+					console.info('target folder is the same as start folder => wont try to move email')
+				}
+			} else {
+				console.info('Cannot move email in another mailbox')
+			}
+		},
 		onNewMessage() {
 			// FIXME: assumes that we're on the 'message' route already
 			this.$router.push({

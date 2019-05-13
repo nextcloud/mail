@@ -31,7 +31,7 @@ import {
 	fetchAll as fetchAllAccounts,
 } from '../service/AccountService'
 import {fetchAll as fetchAllFolders, create as createFolder, markFolderRead} from '../service/FolderService'
-import {deleteMessage, fetchEnvelopes, fetchMessage, setEnvelopeFlag, syncEnvelopes} from '../service/MessageService'
+import {moveMessage, deleteMessage, fetchEnvelopes, fetchMessage, setEnvelopeFlag, syncEnvelopes} from '../service/MessageService'
 import {showNewMessagesNotification} from '../service/NotificationService'
 import {parseUid} from '../util/EnvelopeUidParser'
 
@@ -458,6 +458,33 @@ export default {
 			data,
 			newUid: uid,
 		})
+	},
+	moveMessage({getters, commit}, data) {
+		const folder = getters.getFolder(data.accountId, data.startFolderId)
+		commit('removeEnvelope', {
+			accountId: data.accountId,
+			folder,
+			id: data.msgId,
+		})
+		return moveMessage(data.accountId, data.startFolderId, data.targetFolderId, data.msgId)
+			.then(() => {
+				commit('removeMessage', {
+					accountId: data.accountId,
+					folder,
+					id: data.msgId,
+				})
+				console.log('message moved')
+			})
+			.catch(err => {
+				console.error('could not move message', err)
+				const env = getters.getEnvelope(data.accountId, data.startFolderId, data.msgId)
+				commit('addEnvelope', {
+					accountId: data.accountId,
+					folder,
+					env,
+				})
+				throw err
+			})
 	},
 	deleteMessage({getters, commit}, envelope) {
 		const folder = getters.getFolder(envelope.accountId, envelope.folderId)

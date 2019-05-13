@@ -21,6 +21,7 @@
  */
 
 import Vue from 'vue'
+import VueDraggable from 'vue-draggable'
 import App from './App'
 import {getRequestToken} from 'nextcloud-auth'
 import router from './router'
@@ -47,6 +48,7 @@ Vue.mixin({
 
 Vue.use(VueShortKey, {prevent: ['input', 'textarea']})
 Vue.use(VTooltip)
+Vue.use(VueDraggable)
 
 const getPreferenceFromPage = key => {
 	const elem = document.getElementById(key)
