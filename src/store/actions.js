@@ -56,6 +56,7 @@ import {
 	fetchEnvelope,
 	fetchEnvelopes,
 	fetchMessage,
+	moveMessage,
 	setEnvelopeFlag,
 	syncEnvelopes,
 } from '../service/MessageService'
@@ -533,6 +534,33 @@ export default {
 			data,
 			newUid: uid,
 		})
+	},
+	moveMessage({getters, commit}, data) {
+		const folder = getters.getFolder(data.accountId, data.startFolderId)
+		commit('removeEnvelope', {
+			accountId: data.accountId,
+			folder,
+			id: data.msgId,
+		})
+		return moveMessage(data.accountId, data.startFolderId, data.targetFolderId, data.msgId)
+			.then(() => {
+				commit('removeMessage', {
+					accountId: data.accountId,
+					folder,
+					id: data.msgId,
+				})
+				console.log('message moved')
+			})
+			.catch(err => {
+				console.error('could not move message', err)
+				const env = getters.getEnvelope(data.accountId, data.startFolderId, data.msgId)
+				commit('addEnvelope', {
+					accountId: data.accountId,
+					folder,
+					env,
+				})
+				throw err
+			})
 	},
 	deleteMessage({getters, commit}, {accountId, folderId, id}) {
 		commit('removeEnvelope', {accountId, folderId, id})
