@@ -90,6 +90,8 @@ OC.L10N.register(
     "Collapse folders" : "Maletendi dosierujojn",
     "Loading …" : "Ŝargado...",
     "{total} messages ({unread} unread)" : "{total} mesaĝoj ({unread} ne legitaj)",
+    "Mark all as read" : "Marki ĉion kiel legita",
+    "Mark all messages of this folder as read" : "Marki ĉiujn mesaĝojn el tiu dosierujo kiel legitaj",
     "Add subfolder" : "Aldoni subdosierujon",
     "Could not load your draft" : "Ne eblis ŝargi vian malneton",
     "No message selected" : "Neniu mesaĝo elektita",
