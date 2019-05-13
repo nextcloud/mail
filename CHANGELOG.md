@@ -1,6 +1,13 @@
 # Changelog
 All notable changes to this project will be documented in this file.
 
+## 0.15.0 - 2019-05-13
+### Added
+- Ability to mark folders as read
+- Ability to create subfolders more easily
+### Changed
+- New and updated translations
+
 ## 0.14.0 - 2019-04-17
 ### Added
 - Ability to create new folders (mailboxes)
