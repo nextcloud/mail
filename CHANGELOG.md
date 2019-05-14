@@ -1,6 +1,12 @@
 # Changelog
 All notable changes to this project will be documented in this file.
 
+## 0.15.1 - 2019-05-14
+### Fixed
+- Cached Webpack chunks cause errors on upgrade
+### Changed
+- New and updated translations
+
 ## 0.15.0 - 2019-05-13
 ### Added
 - Ability to mark folders as read
