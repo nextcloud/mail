@@ -90,6 +90,8 @@ OC.L10N.register(
     "Collapse folders" : "Sbalit složky",
     "Loading …" : "Načítání…",
     "{total} messages ({unread} unread)" : "{total} zpráv ({unread} nepřečteno)",
+    "Mark all as read" : "Označit vše jako přečtené",
+    "Mark all messages of this folder as read" : "Označit všechny zprávy v této složce jako přečtené",
     "Add subfolder" : "Přidat podsložku",
     "Could not load your draft" : "Nedaří se načíst váš koncept",
     "No message selected" : "Nevybrána žádná zpráva",
