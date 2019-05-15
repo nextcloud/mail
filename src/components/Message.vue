@@ -47,6 +47,7 @@
 </template>
 
 <script>
+import _ from 'lodash'
 import {generateUrl} from 'nextcloud-server/dist/router'
 
 import AddressList from './AddressList'

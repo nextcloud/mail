@@ -232,7 +232,7 @@
 </template>
 
 <script>
-import _ from 'underscore'
+import _ from 'lodash'
 import {Tab, Tabs} from 'vue-tabs-component'
 
 export default {
