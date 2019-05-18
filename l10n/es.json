@@ -88,6 +88,8 @@
     "Collapse folders" : "Ocultar carpetas",
     "Loading …" : "Cargando…",
     "{total} messages ({unread} unread)" : "{total} mensajes ({unread} sin leer)",
+    "Mark all as read" : "Marcar como leído",
+    "Mark all messages of this folder as read" : "Marcar todos los mensajes de esta carpeta como leídos",
     "Add subfolder" : "Añadir subcarpeta",
     "Could not load your draft" : "No se ha podido cargar el borrador",
     "No message selected" : "Ningún mensaje seleccionado",
