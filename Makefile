@@ -38,8 +38,14 @@ install-npm-deps-dev:
 optimize-js: install-npm-deps-dev
 	npm run build
 
-dev-js: install-npm-deps-dev
+build-js:
 	npm run dev
+
+build-js-production:
+	npm run build
+
+watch-js:
+	npm run watch
 
 dev-setup: install-composer-deps-dev install-npm-deps-dev optimize-js
 
