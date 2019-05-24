@@ -91,6 +91,7 @@
 		</div>
 		<div class="composer-fields">
 			<textarea
+				ref="body"
 				v-model="bodyVal"
 				v-autosize
 				name="body"
@@ -100,12 +101,14 @@
 				@keypress="onBodyKeyPress"
 			></textarea>
 		</div>
-                <Actions class="submit-message-wrapper app-content-list-item-menu" menu-align="right">
-			<ActionButton icon="icon-mail" @click="onSend">{{ t('mail', 'Reply') }}</ActionButton>
-			<ActionButton icon="icon-delete" @click="onSend">{{ t('mail', 'Reply all') }}</ActionButton>
-			<ActionButton icon="icon-delete" @click="onSend">{{ t('mail', 'Forward') }}</ActionButton>
-		</Actions>
-		<ComposerAttachments v-model="attachments" @upload="onAttachmentsUploading" />
+		<div class="composer-actions">
+			<div>
+				<ComposerAttachments v-model="attachments" @upload="onAttachmentsUploading" />
+			</div>
+			<div>
+				<input class="submit-message send primary" type="submit" :value="submitButtonTitle" @click="onSend" />
+			</div>
+		</div>
 		<span v-if="savingDraft === true" id="draft-status">{{ t('mail', 'Saving draft …') }}</span>
 		<span v-else-if="savingDraft === false" id="draft-status">{{ t('mail', 'Draft saved') }}</span>
 	</div>
@@ -137,7 +140,6 @@ import {findRecipient} from '../service/AutocompleteService'
 import Loading from './Loading'
 import Logger from '../logger'
 import ComposerAttachments from './ComposerAttachments'
-import {Actions, ActionButton} from 'nextcloud-vue'
 
 const debouncedSearch = debouncePromise(findRecipient, 500)
 
@@ -154,8 +156,6 @@ const STATES = Object.seal({
 export default {
 	name: 'Composer',
 	components: {
-		Actions,
-		ActionButton,
 		ComposerAttachments,
 		Loading,
 		Multiselect,
@@ -242,6 +242,10 @@ export default {
 			this.selectedAlias = this.aliases[0]
 		}
 		this.bodyVal = this.bodyWithSignature(this.selectedAlias, this.body)
+	},
+	mounted: function() {
+		this.$refs.body.focus()
+		this.$refs.body.setSelectionRange(0, 0)
 	},
 	methods: {
 		recipientToRfc822(recipient) {
@@ -382,6 +386,12 @@ export default {
 	margin: 0;
 }
 
+.composer-actions {
+	display: flex;
+	flex-direction: row;
+	align-items: flex-end;
+}
+
 .composer-fields.mail-account > .multiselect {
 	max-width: none;
 	min-height: auto;
@@ -464,13 +474,6 @@ label.bcc-label {
 
 textarea.reply {
 	min-height: 100px;
-}
-
-.submit-message-wrapper {
-	position: fixed;
-	top: 135px;
-	right: 15px;
-	z-index: 9999; /* always on top */
 }
 </style>
 

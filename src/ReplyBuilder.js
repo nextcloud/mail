@@ -111,7 +111,7 @@ export const buildReplySubject = original => {
 // TODO: https://en.wikipedia.org/wiki/List_of_email_subject_abbreviations#Abbreviations_in_other_languages
 const forwardPrepends = ['fwd']
 
-export const buildFowardSubject = original => {
+export const buildForwardSubject = original => {
 	if (forwardPrepends.some(prepend => original.toLowerCase().startsWith(`${prepend}:`))) {
 		return original
 	}
