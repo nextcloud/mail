@@ -84,6 +84,7 @@ OC.L10N.register(
     "Show all folders" : "Rodyti visus aplankus",
     "Collapse folders" : "Suskleisti aplankus",
     "Loading …" : "Įkeliama …",
+    "Mark all as read" : "Žymėti visus kaip skaitytus",
     "Add subfolder" : "Pridėti poaplankį",
     "Could not load your draft" : "Nepavyko įkelti jūsų juodraščio",
     "Signature" : "Parašas",

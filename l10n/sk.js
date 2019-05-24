@@ -29,6 +29,7 @@ OC.L10N.register(
     "SMTP Port" : "SMTP číslo portu",
     "SMTP User" : "SMTP používateľ",
     "SMTP Password" : "SMTP heslo",
+    "Save" : "Uložiť",
     "Connect" : "Pripojiť",
     "Add mail account" : "Pridať mailový účet",
     "Use Gravatar and favicon avatars" : "Použiť Gravatar a favicon avatary",
