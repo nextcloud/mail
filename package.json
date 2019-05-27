@@ -1,5 +1,5 @@
 {
-  "name": "mail",
+  "name": "nextcloud-mail",
   "description": "Nextcloud Mail",
   "version": "0.15.1",
   "author": "Christoph Wurst <christoph@winzerhof-wurst.at>",
