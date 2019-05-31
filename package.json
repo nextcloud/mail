@@ -63,7 +63,7 @@
     "eslint-plugin-prettier": "^3.1.0",
     "eslint-plugin-vue": "^5.2.2",
     "file-loader": "^3.0.1",
-    "jsdom": "^15.1.0",
+    "jsdom": "^15.1.1",
     "jsdom-global": "^3.0.2",
     "mocha": "^6.1.4",
     "node-sass": "^4.12.0",
