@@ -27,7 +27,7 @@
     "md5": "^2.2.1",
     "mochapack": "^1.1.1",
     "moment": "^2.24.0",
-    "nextcloud-axios": "^0.1.3",
+    "nextcloud-axios": "^0.2.0",
     "nextcloud-server": "^0.15.9",
     "nextcloud-vue": "^0.11.3",
     "nextcloud_issuetemplate_builder": "^0.1.0",
