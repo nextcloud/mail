@@ -90,6 +90,8 @@ OC.L10N.register(
     "Collapse folders" : "Mappen inklappen",
     "Loading …" : "Laden ...",
     "{total} messages ({unread} unread)" : "{total} berichten ({unread} ongelezen)",
+    "Mark all as read" : "Alles als gelezen markeren",
+    "Mark all messages of this folder as read" : "Markeer alle berichten in deze map als gelezen",
     "Add subfolder" : "Toevoegen submap",
     "Could not load your draft" : "Kan jouw concept niet laden",
     "No message selected" : "Geen bericht geselecteerd",
