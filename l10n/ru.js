@@ -90,6 +90,8 @@ OC.L10N.register(
     "Collapse folders" : "Свернуть папки",
     "Loading …" : "Загрузка ...",
     "{total} messages ({unread} unread)" : "{total} сообщений ({unread} непрочитано)",
+    "Mark all as read" : "Отметить все как прочитанное",
+    "Mark all messages of this folder as read" : "Отметить все сообщения в этой папке как прочитанные",
     "Add subfolder" : "Добавить подпапку",
     "Could not load your draft" : "Невозможно загрузить ваш черновик",
     "No message selected" : "Ни одного сообщения не выбрано",
