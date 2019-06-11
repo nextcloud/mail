@@ -9,7 +9,7 @@
 		>
 		</Error>
 		<template v-else>
-			<div id="mail-message-header" class="section">
+			<div id="mail-message-header" ref="header" class="section">
 				<h2 :title="message.subject">{{ message.subject }}</h2>
 				<p class="transparency">
 					<AddressList :entries="message.from" />
@@ -30,6 +30,7 @@
 				<MessageAttachments :attachments="message.attachments" />
 				<div id="reply-composer"></div>
 				<input id="forward-button" type="button" value="Forward" @click="forwardMessage" />
+				<MessagePrint v-if="printHeader && getPrintBody" :header="printHeader" :body="getPrintBody" />
 			</div>
 			<Composer
 				v-if="!message.hasHtmlBody || htmlBodyLoaded"
@@ -58,6 +59,7 @@ import {getRandomMessageErrorMessage} from '../util/ErrorMessageFactory'
 import {htmlToText} from '../util/HtmlHelper'
 import MessageHTMLBody from './MessageHTMLBody'
 import MessagePlainTextBody from './MessagePlainTextBody'
+import MessagePrint from './MessagePrint'
 import Loading from './Loading'
 import MessageAttachments from './MessageAttachments'
 import {saveDraft, sendMessage} from '../service/MessageService'
@@ -72,6 +74,7 @@ export default {
 		MessageAttachments,
 		MessageHTMLBody,
 		MessagePlainTextBody,
+		MessagePrint,
 	},
 	data() {
 		return {
@@ -79,6 +82,8 @@ export default {
 			message: undefined,
 			errorMessage: '',
 			error: undefined,
+			printHeader: undefined,
+			printBody: undefined,
 			htmlBodyLoaded: false,
 			replyRecipient: {},
 			replySubject: '',
@@ -100,6 +105,13 @@ export default {
 				messageId: this.message.id,
 			}
 		},
+		getPrintBody() {
+			if (this.message.hasHtmlBody && this.htmlBodyLoaded) {
+				return this.printBody
+			} else {
+				return this.message.body
+			}
+		},
 	},
 	watch: {
 		$route(to, from) {
@@ -108,6 +120,13 @@ export default {
 	},
 	created() {
 		this.fetchMessage()
+	},
+	updated() {
+		this.$nextTick(() => {
+			if (this.$refs.header) {
+				this.printHeader = this.$refs.header.innerHTML
+			}
+		})
 	},
 	methods: {
 		fetchMessage() {
@@ -182,6 +201,7 @@ export default {
 			this.replyBody = buildReplyBody(this.message.bodyText, this.message.from[0], this.message.dateInt)
 		},
 		onHtmlBodyLoaded(bodyString) {
+			this.printBody = bodyString
 			this.setReplyText(bodyString)
 			this.htmlBodyLoaded = true
 		},
