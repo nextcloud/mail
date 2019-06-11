@@ -1,6 +1,6 @@
 <template>
 	<div id="mail-content">
-		<div v-if="hasBlockedContent">
+		<div v-if="hasBlockedContent" id="mail-message-has-blocked-content">
 			{{ t('mail', 'The images have been blocked to protect your privacy.') }}
 			<button @click="onShowBlockedContent">
 				{{ t('mail', 'Show images from this	sender') }}
@@ -14,6 +14,9 @@
 </template>
 
 <script>
+import PrintScout from 'printscout'
+const scout = new PrintScout()
+
 export default {
 	name: 'MessageHTMLBody',
 	props: {
@@ -27,6 +30,14 @@ export default {
 			loading: true,
 			hasBlockedContent: false,
 		}
+	},
+	beforeMount() {
+		scout.on('beforeprint', this.onBeforePrint)
+		scout.on('afterprint', this.onAfterPrint)
+	},
+	beforeDestroy() {
+		scout.off('beforeprint', this.onBeforePrint)
+		scout.off('afterprint', this.onAfterPrint)
 	},
 	methods: {
 		getIframeDoc() {
@@ -42,6 +53,12 @@ export default {
 
 			this.$emit('loaded', iframeBody.outerHTML)
 			this.loading = false
+		},
+		onAfterPrint() {
+			this.$refs.iframe.style.setProperty('height', '')
+		},
+		onBeforePrint() {
+			this.$refs.iframe.style.setProperty('height', `${this.getIframeDoc().body.scrollHeight}px`, 'important')
 		},
 		onShowBlockedContent() {
 			const iframeDoc = this.getIframeDoc()
