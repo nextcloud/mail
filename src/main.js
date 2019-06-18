@@ -26,7 +26,7 @@ import router from './router'
 import store from './store'
 import {sync} from 'vuex-router-sync'
 import {translate, translatePlural} from 'nextcloud-server/dist/l10n'
-import {generateFilePath} from 'nextcloud-server/dist/router'
+import {generateFilePath} from 'nextcloud-router'
 import VueShortKey from 'vue-shortkey'
 import VTooltip from 'v-tooltip'
 

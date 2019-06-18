@@ -20,7 +20,7 @@
  */
 
 import Axios from 'nextcloud-axios'
-import {generateUrl} from 'nextcloud-server/dist/router'
+import {generateUrl} from 'nextcloud-router'
 
 export function saveAttachmentToFiles(accountId, folderId, messageId, attachmentId, directory) {
 	const url = generateUrl(

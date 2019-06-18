@@ -22,7 +22,7 @@
 
 import _ from 'lodash'
 import Axios from 'nextcloud-axios'
-import {generateUrl} from 'nextcloud-server/dist/router'
+import {generateUrl} from 'nextcloud-router'
 
 export const fetchAvatarUrl = email => {
 	if (email === null) {
