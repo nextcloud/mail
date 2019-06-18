@@ -46,8 +46,7 @@
     "vuex-router-sync": "^5.0.0"
   },
   "browserslist": [
-    "last 2 versions",
-    "ie >= 11"
+    "extends browserslist-config-nextcloud"
   ],
   "devDependencies": {
     "@babel/core": "^7.4.5",
@@ -56,6 +55,7 @@
     "@vue/test-utils": "^1.0.0-beta.29",
     "babel-eslint": "^10.0.1",
     "babel-loader": "^8.0.6",
+    "browserslist-config-nextcloud": "0.0.1",
     "chai": "^4.2.0",
     "css-loader": "^3.0.0",
     "eslint": "^5.16.0",
