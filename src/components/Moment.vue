@@ -3,7 +3,7 @@
 </template>
 
 <script>
-import {getLocale} from 'nextcloud-server/dist/l10n'
+import {getLocale} from 'nextcloud-l10n'
 import moment from 'moment'
 
 if (typeof OC !== 'undefined') {
