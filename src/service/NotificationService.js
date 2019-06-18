@@ -21,7 +21,7 @@
 
 import _ from 'lodash'
 import {translate as t, translatePlural as n} from 'nextcloud-server/dist/l10n'
-import {generateFilePath} from 'nextcloud-server/dist/router'
+import {generateFilePath} from 'nextcloud-router'
 
 /**
  * @todo use Notification.requestPermission().then once all browsers support promise API

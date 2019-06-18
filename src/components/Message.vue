@@ -48,7 +48,7 @@
 
 <script>
 import _ from 'lodash'
-import {generateUrl} from 'nextcloud-server/dist/router'
+import {generateUrl} from 'nextcloud-router'
 
 import AddressList from './AddressList'
 import {buildReplyBody, buildRecipients as buildReplyRecipients, buildReplySubject} from '../ReplyBuilder'
