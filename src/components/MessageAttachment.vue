@@ -56,7 +56,7 @@
 <script>
 import {formatFileSize} from 'nextcloud-server/dist/format'
 import {mixin as onClickOutside} from 'vue-on-click-outside'
-import {pickFileOrDirectory} from 'nextcloud-server/dist/files'
+import {getFilePickerBuilder} from 'nextcloud-dialogs'
 import {PopoverMenu} from 'nextcloud-vue'
 
 import {parseUid} from '../util/EnvelopeUidParser'
@@ -131,13 +131,15 @@ export default {
 				return saveAttachmentToFiles(accountId, folderId, messageId, attachmentId, directory)
 			}
 			const {accountId, folderId, id} = parseUid(this.$route.params.messageUid)
+			const picker = getFilePickerBuilder(t('mail', 'Choose a folder to store the attachment in'))
+				.setMultiSelect(false)
+				.addMimeTypeFilter('httpd/unix-directory')
+				.setModal(true)
+				.setType(1)
+				.build()
 
-			return pickFileOrDirectory(
-				t('mail', 'Choose a folder to store the attachment in'),
-				false,
-				['httpd/unix-directory'],
-				true
-			)
+			return picker
+				.pick()
 				.then(dest => {
 					this.savingToCloud = true
 					return dest
