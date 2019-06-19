@@ -54,7 +54,7 @@
 </template>
 
 <script>
-import {formatFileSize} from 'nextcloud-server/dist/format'
+import {formatFileSize} from 'nextcloud-files'
 import {mixin as onClickOutside} from 'vue-on-click-outside'
 import {getFilePickerBuilder} from 'nextcloud-dialogs'
 import {PopoverMenu} from 'nextcloud-vue'
