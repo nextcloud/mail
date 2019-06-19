@@ -21,7 +21,7 @@
 
 import dav from 'davclient.js'
 import ical from 'ical.js'
-import {getCurrentUID, getRequestToken} from 'nextcloud-server/dist/auth'
+import {getCurrentUser, getRequestToken} from 'nextcloud-auth'
 import {generateRemoteUrl} from 'nextcloud-router'
 
 const client = new dav.Client({
@@ -98,7 +98,7 @@ const getCalendarData = properties => {
  * @returns {Promise}
  */
 export const getUserCalendars = () => {
-	var url = generateRemoteUrl('dav/calendars') + '/' + getCurrentUID().uid + '/'
+	var url = generateRemoteUrl('dav/calendars') + '/' + getCurrentUser().uid + '/'
 
 	return getRequestToken()
 		.then(token =>
