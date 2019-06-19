@@ -22,6 +22,7 @@
 
 import Vue from 'vue'
 import App from './App'
+import {getRequestToken} from 'nextcloud-auth'
 import router from './router'
 import store from './store'
 import {sync} from 'vuex-router-sync'
@@ -32,7 +33,7 @@ import VTooltip from 'v-tooltip'
 
 import {fixAccountId} from './service/AccountService'
 
-__webpack_nonce__ = btoa(OC.requestToken)
+__webpack_nonce__ = btoa(getRequestToken())
 __webpack_public_path__ = generateFilePath('mail', '', 'js/')
 
 sync(store, router)
