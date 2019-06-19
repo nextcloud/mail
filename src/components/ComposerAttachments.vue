@@ -48,7 +48,7 @@
 <script>
 import _ from 'lodash'
 import {translate as t} from 'nextcloud-l10n'
-import {pickFileOrDirectory} from 'nextcloud-server/dist/files'
+import {getFilePickerBuilder} from 'nextcloud-dialogs'
 import Vue from 'vue'
 
 import {uploadLocalAttachment} from '../service/AttachmentService'
@@ -123,7 +123,10 @@ export default {
 			return done
 		},
 		onAddCloudAttachment() {
-			return pickFileOrDirectory(t('mail', 'Choose a file to add as attachment'))
+			const picker = getFilePickerBuilder(t('mail', 'Choose a file to add as attachment')).build()
+
+			return picker
+				.pick(t('mail', 'Choose a file to add as attachment'))
 				.then(path => this.emitNewAttachment(this.fileNameToAttachment(path)))
 				.catch(console.error.bind(this))
 		},
