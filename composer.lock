@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "5e7829a3f7b892144f9071a11a09a026",
+    "content-hash": "5d9b2a110b23cb2fbc142097a4656d7f",
     "packages": [
         {
             "name": "arthurhoaro/favicon",
@@ -239,7 +239,7 @@
             ],
             "description": "Autolink URLs in text or html",
             "homepage": "http://www.kwi.dk/projects/php/UrlLinker/",
-            "time": "2014-12-28T22:05:00+00:00"
+            "time": "2014-12-28T23:05:00+00:00"
         },
         {
             "name": "pear-pear.horde.org/Horde_Crypt_Blowfish",
@@ -457,6 +457,36 @@
                 "BSD-2-Clause"
             ],
             "description": "Provides interfaces for sending e-mail messages and parsing e-mail addresses."
+        },
+        {
+            "name": "pear-pear.horde.org/Horde_ManageSieve",
+            "version": "1.0.2",
+            "dist": {
+                "type": "file",
+                "url": "https://pear.horde.org/get/Horde_ManageSieve-1.0.2.tgz"
+            },
+            "require": {
+                "pear-pear.horde.org/horde_exception": "<3.0.0.0",
+                "pear-pear.horde.org/horde_socket_client": "<3.0.0.0",
+                "pear-pear.horde.org/horde_util": "<3.0.0.0",
+                "php": ">=5.4.0.0"
+            },
+            "replace": {
+                "pear-horde/horde_managesieve": "== 1.0.2.0"
+            },
+            "type": "pear-library",
+            "autoload": {
+                "classmap": [
+                    ""
+                ]
+            },
+            "include-path": [
+                "/"
+            ],
+            "license": [
+                "BSD"
+            ],
+            "description": "This library implements the ManageSieve protocol (RFC 5804)."
         },
         {
             "name": "pear-pear.horde.org/Horde_Mime",
@@ -1894,8 +1924,8 @@
             "authors": [
                 {
                     "name": "Sebastian Bergmann",
-                    "role": "lead",
-                    "email": "sebastian@phpunit.de"
+                    "email": "sebastian@phpunit.de",
+                    "role": "lead"
                 }
             ],
             "description": "Utility class for timing",
@@ -3038,8 +3068,8 @@
             "authors": [
                 {
                     "name": "Arne Blankerts",
-                    "role": "Developer",
-                    "email": "arne@blankerts.de"
+                    "email": "arne@blankerts.de",
+                    "role": "Developer"
                 }
             ],
             "description": "A small library for converting tokenized PHP source code into XML and potentially other formats",
@@ -3111,6 +3141,7 @@
         "pear-pear.horde.org/horde_text_flowed": 0,
         "pear-pear.horde.org/horde_util": 0,
         "pear-pear.horde.org/horde_smtp": 0,
+        "pear-pear.horde.org/horde_managesieve": 0,
         "kwi/urllinker": 20,
         "christophwurst/nextcloud": 10
     },

@@ -33,6 +33,7 @@
 
 namespace OCA\Mail;
 
+use Horde\ManageSieve;
 use Horde_Imap_Client;
 use Horde_Imap_Client_Ids;
 use Horde_Imap_Client_Mailbox;
@@ -65,7 +66,10 @@ class Account implements JsonSerializable {
 	private $mailboxes;
 
 	/** @var Horde_Imap_Client_Socket */
-	private $client;
+	private $imapClient;
+
+	/** @var ManageSieve */
+	private $sieveClient;
 
 	/** @var ICrypto */
 	private $crypto;
@@ -126,9 +130,10 @@ class Account implements JsonSerializable {
 
 	/**
 	 * @return Horde_Imap_Client_Socket
+	 * @throws \Horde_Imap_Client_Exception
 	 */
 	public function getImapConnection() {
-		if (is_null($this->client)) {
+		if (is_null($this->imapClient)) {
 			$host = $this->account->getInboundHost();
 			$user = $this->account->getInboundUser();
 			$password = $this->account->getInboundPassword();
@@ -156,10 +161,45 @@ class Account implements JsonSerializable {
 						))];
 				}
 			}
-			$this->client = new \Horde_Imap_Client_Socket($params);
-			$this->client->login();
+			$this->imapClient = new \Horde_Imap_Client_Socket($params);
+			$this->imapClient->login();
 		}
-		return $this->client;
+		return $this->imapClient;
+	}
+
+	/**
+	 * @return ManageSieve
+	 * @throws ManageSieve\Exception
+	 */
+	public function getSieveConnection()
+	{
+		if (is_null($this->sieveClient)) {
+			$host = $this->account->getSieveHost();
+			$user = $this->account->getSieveUser();
+			$password = $this->account->getSievePassword();
+			$password = $this->crypto->decrypt($password);
+			$port = $this->account->getSievePort();
+			$ssl_mode = $this->convertSslMode($this->account->getSieveSslMode());
+
+			$params = [
+				'host' => $host,
+				'port' => $port,
+				'user' => $user,
+				'password' => $password,
+				'secure' => $ssl_mode,
+			];
+
+			// TODO: configure sieve logging
+			/*if ($this->config->getSystemValue('debug', false)) {
+				$params['logger'] = $this->config->getSystemValue('datadirectory') . '/horde_sieve.log';
+			}*/
+
+			$this->sieveClient = new ManageSieve($params);
+
+			return $this->sieveClient;
+		}
+
+		return null;
 	}
 
 	/**
@@ -602,6 +642,11 @@ class Account implements JsonSerializable {
 		// connect to smtp
 		if ($transport instanceof Horde_Mail_Transport_Smtphorde) {
 			$transport->getSMTPObject();
+		}
+
+		// connect to sieve
+		if (!is_null($this->account->getSieveHost())) {
+			$this->getSieveConnection();
 		}
 	}
 

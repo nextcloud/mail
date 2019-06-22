@@ -93,9 +93,16 @@ class SetupService {
 	 * @param string $smtpSslMode
 	 * @param string $smtpUser
 	 * @param string $smtpPassword
+	 * @param array|null $sieveConfig
 	 * @param string $uid
+	 * @param null $accountId
+	 * @return null|Account
 	 */
-	public function createNewAccount($accountName, $emailAddress, $imapHost, $imapPort, $imapSslMode, $imapUser, $imapPassword, $smtpHost, $smtpPort, $smtpSslMode, $smtpUser, $smtpPassword, $uid, $accountId = null) {
+	public function createNewAccount($accountName, $emailAddress,
+									 $imapHost, $imapPort, $imapSslMode, $imapUser, $imapPassword,
+									 $smtpHost, $smtpPort, $smtpSslMode, $smtpUser, $smtpPassword,
+									 $sieveConfig,
+									 $uid, $accountId = null) {
 		$this->logger->info('Setting up manually configured account');
 		$newAccount = new MailAccount([
 			'accountId' => $accountId,
@@ -110,11 +117,19 @@ class SetupService {
 			'smtpPort' => $smtpPort,
 			'smtpSslMode' => $smtpSslMode,
 			'smtpUser' => $smtpUser,
-			'smtpPassword' => $smtpPassword
+			'smtpPassword' => $smtpPassword,
 		]);
 		$newAccount->setUserId($uid);
 		$newAccount->setInboundPassword($this->crypto->encrypt($newAccount->getInboundPassword()));
 		$newAccount->setOutboundPassword($this->crypto->encrypt($newAccount->getOutboundPassword()));
+
+		if (!is_null($sieveConfig)) {
+			$newAccount->setSieveHost($sieveConfig['host']);
+			$newAccount->setSievePort($sieveConfig['port']);
+			$newAccount->setSieveSslMode($sieveConfig['sslMode']);
+			$newAccount->setSieveUser($sieveConfig['user']);
+			$newAccount->setSievePassword($this->crypto->encrypt($sieveConfig['password']));
+		}
 
 		$account = new Account($newAccount);
 		$this->logger->debug('Connecting to account {account}', ['account' => $newAccount->getEmail()]);
