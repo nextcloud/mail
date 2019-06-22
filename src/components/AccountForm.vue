@@ -227,6 +227,14 @@
 				/>
 			</tab>
 		</tabs>
+
+		<div class="flex-row">
+			<input id="sieve-toggle" v-model="sieveEnabled" type="checkbox" />
+			<label for="sieve-toggle">Enable Sieve</label>
+		</div>
+
+		<SieveForm v-show="sieveEnabled" :config="sieveConfig" :loading="loading" />
+
 		<input type="submit" class="primary" :disabled="loading" :value="submitButtonText" @click="onSubmit" />
 	</div>
 </template>
@@ -235,10 +243,12 @@
 import {Tab, Tabs} from 'vue-tabs-component'
 
 import Logger from '../logger'
+import SieveForm from './SieveForm'
 
 export default {
 	name: 'AccountForm',
 	components: {
+		SieveForm,
 		Tab,
 		Tabs,
 	},
@@ -263,7 +273,7 @@ export default {
 	},
 	data() {
 		const fromAccountOr = (prop, def) => {
-			if (this.account !== undefined) {
+			if (this.account !== undefined && this.account.hasOwnProperty(prop)) {
 				return this.account[prop]
 			} else {
 				return def
@@ -273,6 +283,7 @@ export default {
 		return {
 			loading: false,
 			mode: 'auto',
+			sieveEnabled: false,
 			autoConfig: {
 				accountName: this.displayName,
 				emailAddress: this.email,
@@ -292,12 +303,31 @@ export default {
 				smtpUser: fromAccountOr('smtpUser', ''),
 				smtpPassword: '',
 			},
+			sieveConfig: {
+				host: fromAccountOr('sieveHost', ''),
+				port: fromAccountOr('sievePort', 4190),
+				sslMode: fromAccountOr('sieveSslMode', 'tls'),
+				user: fromAccountOr('sieveUser', ''),
+				password: '',
+			},
 			submitButtonText: this.account ? t('mail', 'Save') : t('mail', 'Connect'),
 		}
 	},
 	computed: {
 		settingsPage() {
 			return this.account !== undefined
+		},
+	},
+	watch: {
+		sieveEnabled(enabled) {
+			if (enabled) {
+				if (this.sieveConfig.user === '') {
+					this.sieveConfig.user = this.autoConfig.emailAddress
+				}
+				if (this.sieveConfig.password === '') {
+					this.sieveConfig.password = this.autoConfig.password
+				}
+			}
 		},
 	},
 	methods: {
@@ -352,17 +382,12 @@ export default {
 			}
 		},
 		saveChanges() {
-			if (this.mode === 'auto') {
-				return this.save({
-					autoDetect: true,
-					...this.autoConfig,
-				})
-			} else {
-				return this.save({
-					autoDetect: false,
-					...this.manualConfig,
-				})
-			}
+			const autoDetect = this.mode === 'auto'
+			const config = autoDetect ? this.autoConfig : this.manualConfig
+
+			config.sieveConfig = this.sieveEnabled ? this.sieveConfig : null
+
+			return this.save({autoDetect, ...config})
 		},
 		onSubmit: function() {
 			this.loading = true
@@ -394,39 +419,44 @@ export default {
 	padding-top: 20px;
 }
 
-.tabs-component-panels label {
+#account-form input,
+#account-form select {
+	margin-bottom: 10px;
+}
+
+#account-form label {
 	text-align: left;
 	width: 100%;
 	display: inline-block;
 }
 
-.tabs-component-panels input,
-.tabs-component-panels select {
-	margin-bottom: 10px;
-}
-</style>
-
-<style scoped>
-h4 {
+#account-form h4 {
 	text-align: left;
 }
 
-.flex-row {
+#account-form .flex-row {
 	display: flex;
 }
 
-label.button {
+#account-form label.button {
 	display: inline-block;
 	text-align: center;
 	flex-grow: 1;
 }
 
-input[type='radio'] {
+#account-form input[type='radio'] {
 	display: none;
 }
 
-input[type='radio'][disabled] + label {
+#account-form input[type='radio'][disabled] + label {
 	cursor: default;
 	opacity: 0.5;
+}
+</style>
+
+<style scoped>
+#sieve-toggle {
+	min-height: auto;
+	width: auto;
 }
 </style>
