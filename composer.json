@@ -29,6 +29,7 @@
 		"pear-pear.horde.org/horde_text_flowed": "^2.0.3@stable",
 		"pear-pear.horde.org/horde_util": "^2.5.8@stable",
 		"pear-pear.horde.org/horde_smtp": "^1.9.5@stable",
+		"pear-pear.horde.org/horde_managesieve": "^1.0.2@stable",
 		"cerdic/css-tidy": "v1.7.1",
 		"ezyang/htmlpurifier": "4.11.0",
 		"kwi/urllinker": "dev-bleeding",
