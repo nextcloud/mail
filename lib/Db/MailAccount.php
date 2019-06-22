@@ -57,6 +57,16 @@ use OCP\AppFramework\Db\Entity;
  * @method void setOutboundUser(string $outboundUser)
  * @method string getOutboundPassword()
  * @method void setOutboundPassword(string $outboundPassword)
+ * @method string getSieveHost()
+ * @method void setSieveHost(string|null $sieveHost)
+ * @method integer getSievePort()
+ * @method void setSievePort(integer|null $sievePort)
+ * @method string getSieveSslMode()
+ * @method void setSieveSslMode(string|null $sieveSslMode)
+ * @method string getSieveUser()
+ * @method void setSieveUser(string|null $sieveUser)
+ * @method string getSievePassword()
+ * @method void setSievePassword(string $sievePassword)
  * @method string|null getSignature()
  * @method void setSignature(string|null $signature)
  * @method int getLastMailboxSync()
@@ -77,6 +87,11 @@ class MailAccount extends Entity {
 	protected $outboundSslMode;
 	protected $outboundUser;
 	protected $outboundPassword;
+	protected $sieveHost;
+	protected $sievePort;
+	protected $sieveSslMode;
+	protected $sieveUser;
+	protected $sievePassword;
 	protected $signature;
 	protected $lastMailboxSync;
 
@@ -127,6 +142,22 @@ class MailAccount extends Entity {
 			$this->setOutboundPassword($params['smtpPassword']);
 		}
 
+		if (isset($params['sieveHost'])) {
+			$this->setSieveHost($params['sieveHost']);
+		}
+		if (isset($params['sievePort'])) {
+			$this->setSievePort($params['sievePort']);
+		}
+		if (isset($params['sieveSslMode'])) {
+			$this->setSieveSslMode($params['sieveSslMode']);
+		}
+		if (isset($params['sieveUser'])) {
+			$this->setSieveUser($params['sieveUser']);
+		}
+		if (isset($params['sievePassword'])) {
+			$this->setSievePassword($params['sievePassword']);
+		}
+
 		$this->addType('lastMailboxSync', 'integer');
 	}
 
@@ -150,6 +181,13 @@ class MailAccount extends Entity {
 			$result['smtpPort'] = $this->getOutboundPort();
 			$result['smtpUser'] = $this->getOutboundUser();
 			$result['smtpSslMode'] = $this->getOutboundSslMode();
+		}
+
+		if (!is_null($this->getSieveHost())) {
+			$result['sieveHost'] = $this->getSieveHost();
+			$result['sievePort'] = $this->getSievePort();
+			$result['sieveUser'] = $this->getSieveUser();
+			$result['sieveSslMode'] = $this->getSieveSslMode();
 		}
 
 		return $result;

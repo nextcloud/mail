@@ -64,6 +64,11 @@ class ExportAccount extends Command {
 			$output->writeln("- IMAP host: " . $account->getMailAccount()->getInboundHost() . ":" . $account->getMailAccount()->getInboundPort() . ", security: " . $account->getMailAccount()->getInboundSslMode());
 			$output->writeln("- SMTP user: " . $account->getMailAccount()->getOutboundUser());
 			$output->writeln("- SMTP host: " . $account->getMailAccount()->getOutboundHost() . ":" . $account->getMailAccount()->getOutboundPort() . ", security: " . $account->getMailAccount()->getOutboundSslMode());
+
+			if ($account->getMailAccount()->getSieveHost()) {
+				$output->writeln("- Sieve user: " . $account->getMailAccount()->getSieveUser());
+				$output->writeln("- Sieve host: " . $account->getMailAccount()->getSieveHost() . ":" . $account->getMailAccount()->getSievePort() . ", security: " . $account->getMailAccount()->getSieveSslMode());
+			}
 		}
 	}
 
