@@ -121,6 +121,12 @@ class Manager {
 		$account->setOutboundSslMode($config->getSmtpSslMode());
 		$account->setOutboundPassword($password);
 
+		$account->setSieveUser($config->buildSieveUser($user));
+		$account->setSieveHost($config->getSieveHost());
+		$account->setSievePort($config->getSievePort());
+		$account->setSieveSslMode($config->getSieveSslMode());
+		$account->setSievePassword($password);
+
 		return $account;
 	}
 
