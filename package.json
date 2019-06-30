@@ -32,7 +32,7 @@
     "nextcloud-dialogs": "0.0.1",
     "nextcloud-files": "0.0.1",
     "nextcloud-l10n": "0.0.1",
-    "nextcloud-router": "0.0.5",
+    "nextcloud-router": "0.0.6",
     "nextcloud-vue": "^0.11.4",
     "nextcloud_issuetemplate_builder": "^0.1.0",
     "v-tooltip": "^2.0.2",
