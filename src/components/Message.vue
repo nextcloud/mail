@@ -256,8 +256,14 @@ export default {
 }
 
 @media print {
-	#header, #app-navigation, #reply-composer, #forward-button, #mail-message-has-blocked-content,
-	.app-content-list, .message-composer, .mail-message-attachments {
+	#header,
+	#app-navigation,
+	#reply-composer,
+	#forward-button,
+	#mail-message-has-blocked-content,
+	.app-content-list,
+	.message-composer,
+	.mail-message-attachments {
 		display: none !important;
 	}
 	#app-content {
