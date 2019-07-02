@@ -173,7 +173,7 @@ class Account implements JsonSerializable {
 	 */
 	public function getSieveConnection()
 	{
-		if (is_null($this->sieveClient)) {
+		if ($this->sieveClient === null) {
 			$host = $this->account->getSieveHost();
 			$user = $this->account->getSieveUser();
 			$password = $this->account->getSievePassword();
@@ -196,10 +196,9 @@ class Account implements JsonSerializable {
 
 			$this->sieveClient = new ManageSieve($params);
 
-			return $this->sieveClient;
 		}
 
-		return null;
+		return $this->sieveClient;
 	}
 
 	/**

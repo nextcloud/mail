@@ -123,7 +123,7 @@ class SetupService {
 		$newAccount->setInboundPassword($this->crypto->encrypt($newAccount->getInboundPassword()));
 		$newAccount->setOutboundPassword($this->crypto->encrypt($newAccount->getOutboundPassword()));
 
-		if (!is_null($sieveConfig)) {
+		if ($sieveConfig !== null) {
 			$newAccount->setSieveHost($sieveConfig['host']);
 			$newAccount->setSievePort($sieveConfig['port']);
 			$newAccount->setSieveSslMode($sieveConfig['sslMode']);
