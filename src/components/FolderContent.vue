@@ -27,6 +27,7 @@ import isMobile from 'nextcloud-vue/dist/Mixins/isMobile'
 import AppDetailsToggle from './AppDetailsToggle'
 import EnvelopeList from './EnvelopeList'
 import Loading from './Loading'
+import Logger from '../logger'
 import Message from './Message'
 import NewMessageDetail from './NewMessageDetail'
 import NoMessageSelected from './NoMessageSelected'
@@ -108,7 +109,7 @@ export default {
 				})
 				.then(() => {
 					const envelopes = this.envelopes
-					console.debug('envelopes fetched', envelopes)
+					Logger.debug('envelopes fetched', envelopes)
 
 					this.loading = false
 

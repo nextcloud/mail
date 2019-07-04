@@ -51,6 +51,7 @@ import {translate as t} from 'nextcloud-l10n'
 import {getFilePickerBuilder} from 'nextcloud-dialogs'
 import Vue from 'vue'
 
+import Logger from '../logger'
 import {uploadLocalAttachment} from '../service/AttachmentService'
 
 export default {
@@ -109,13 +110,13 @@ export default {
 				})
 
 				return uploadLocalAttachment(file, progress(file.name)).then(({file, id}) => {
-					console.info('uploaded')
+					Logger.info('uploaded')
 					return this.emitNewAttachment(this.fileNameToAttachment(file.name, id))
 				})
 			})
 
 			const done = Promise.all(promises)
-				.catch(console.error.bind(this))
+				.catch(error => Logger.error('could not upload all attachments', {error}))
 				.then(() => (this.uploading = false))
 
 			this.$emit('upload', done)
@@ -128,7 +129,7 @@ export default {
 			return picker
 				.pick(t('mail', 'Choose a file to add as attachment'))
 				.then(path => this.emitNewAttachment(this.fileNameToAttachment(path)))
-				.catch(console.error.bind(this))
+				.catch(error => Logger.error('could not choose a file as attachment', {error}))
 		},
 		onDelete(attachment) {
 			this.$emit('input', this.value.filter(a => a !== attachment))

@@ -59,6 +59,7 @@ import {htmlToText} from '../util/HtmlHelper'
 import MessageHTMLBody from './MessageHTMLBody'
 import MessagePlainTextBody from './MessagePlainTextBody'
 import Loading from './Loading'
+import Logger from '../logger'
 import MessageAttachments from './MessageAttachments'
 import {saveDraft, sendMessage} from '../service/MessageService'
 
@@ -128,14 +129,14 @@ export default {
 					// TODO: add timeout so that message isn't flagged when only viewed
 					// for a few seconds
 					if (message.uid !== this.$route.params.messageUid) {
-						console.debug("User navigated away, loaded message won't be shown nor flagged as seen")
+						Logger.debug("User navigated away, loaded message won't be shown nor flagged as seen")
 						return
 					}
 
 					this.message = message
 
 					if (_.isUndefined(this.message)) {
-						console.info('message could not be found', messageUid)
+						Logger.info('message could not be found', {messageUid})
 						this.errorMessage = getRandomMessageErrorMessage()
 						this.loading = false
 						return
@@ -162,11 +163,11 @@ export default {
 
 					return this.$store.dispatch('toggleEnvelopeSeen', envelope)
 				})
-				.catch(err => {
-					console.error('could not load message ', messageUid, err)
-					if (err.isError) {
+				.catch(error => {
+					Logger.error('could not load message ', {messageUid, error})
+					if (error.isError) {
 						this.errorMessage = t('mail', 'Could not load your message')
-						this.error = err
+						this.error = error
 						this.loading = false
 					}
 				})

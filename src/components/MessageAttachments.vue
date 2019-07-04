@@ -49,6 +49,7 @@
 
 <script>
 import MessageAttachment from './MessageAttachment'
+import Logger from '../logger'
 import {parseUid} from '../util/EnvelopeUidParser'
 import {saveAttachmentsToFiles} from '../service/AttachmentService'
 
@@ -97,8 +98,8 @@ export default {
 					return dest
 				})
 				.then(saveAttachments(accountId, folderId, id))
-				.then(() => console.info('saved'))
-				.catch(e => console.error('not saved', e))
+				.then(() => Logger.info('saved'))
+				.catch(error => Logger.error('not saved', {error}))
 				.then(() => (this.savingToCloud = false))
 		},
 	},
