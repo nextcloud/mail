@@ -18,6 +18,7 @@
 import {AppContent, Content} from 'nextcloud-vue'
 
 import AccountForm from '../components/AccountForm'
+import Logger from '../logger'
 import Navigation from '../components/Navigation'
 import SignatureSettings from '../components/SignatureSettings'
 
@@ -50,17 +51,17 @@ export default {
 	},
 	methods: {
 		onSave(data) {
-			console.log('data to save:', data)
+			Logger.log('saving data', {data})
 			return this.$store
 				.dispatch('updateAccount', {
 					...data,
 					accountId: this.$route.params.accountId,
 				})
 				.then(account => account)
-				.catch(err => {
-					console.error('account update failed:', err)
+				.catch(error => {
+					Logger.error('account update failed:', {error})
 
-					throw err
+					throw error
 				})
 		},
 	},

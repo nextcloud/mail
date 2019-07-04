@@ -62,11 +62,11 @@ export function fetchMessage(accountId, folderId, id) {
 
 	return HttpClient.get(url)
 		.then(resp => resp.data)
-		.catch(err => {
-			if (err.response.status === 404) {
+		.catch(error => {
+			if (error.response && error.response.status === 404) {
 				return undefined
 			}
-			return Promise.reject(parseErrorResponse(err.response))
+			return Promise.reject(parseErrorResponse(error.response))
 		})
 }
 
