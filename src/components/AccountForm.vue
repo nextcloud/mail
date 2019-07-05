@@ -235,6 +235,8 @@
 import _ from 'lodash'
 import {Tab, Tabs} from 'vue-tabs-component'
 
+import Logger from '../logger'
+
 export default {
 	name: 'AccountForm',
 	components: {
@@ -367,7 +369,7 @@ export default {
 			this.loading = true
 
 			this.saveChanges()
-				.catch(console.error.bind(this))
+				.catch(error => Logger.error('could not save account details', {error}))
 				.then(() => (this.loading = false))
 		},
 	},

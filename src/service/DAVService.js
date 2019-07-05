@@ -24,6 +24,8 @@ import ical from 'ical.js'
 import {getCurrentUser, getRequestToken} from 'nextcloud-auth'
 import {generateRemoteUrl} from 'nextcloud-router'
 
+import Logger from '../logger'
+
 const client = new dav.Client({
 	baseUrl: generateRemoteUrl('dav/calendars'),
 	xmlNamespaces: {
@@ -192,7 +194,10 @@ const splitCalendar = data => {
  * @returns {Promise}
  */
 export const importCalendarEvent = url => data => {
-	console.debug('importing event into calendar', url, data)
+	Logger.debug('importing event into calendar', {
+		url,
+		data,
+	})
 	const promises = []
 
 	const file = splitCalendar(data)

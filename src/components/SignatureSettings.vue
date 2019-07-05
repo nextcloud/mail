@@ -42,6 +42,8 @@
 </template>
 
 <script>
+import Logger from '../logger'
+
 export default {
 	name: 'SignatureSettings',
 	props: {
@@ -63,13 +65,13 @@ export default {
 			this.$store
 				.dispatch('updateAccountSignature', {account: this.account, signature: null})
 				.then(() => {
-					console.info('signature deleted')
+					Logger.info('signature deleted')
 					this.signature = ''
 					this.loading = false
 				})
-				.catch(e => {
-					console.error('could not delete account signature', e)
-					throw e
+				.catch(error => {
+					Logger.error('could not delete account signature', {error})
+					throw error
 				})
 		},
 		saveSignature() {
@@ -78,12 +80,12 @@ export default {
 			this.$store
 				.dispatch('updateAccountSignature', {account: this.account, signature: this.signature})
 				.then(() => {
-					console.info('signature updated')
+					Logger.info('signature updated')
 					this.loading = false
 				})
-				.catch(e => {
-					console.error('could not update account signature', e)
-					throw e
+				.catch(error => {
+					Logger.error('could not update account signature', {error})
+					throw error
 				})
 		},
 	},

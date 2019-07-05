@@ -27,6 +27,7 @@
 import {AppNavigationItem} from 'nextcloud-vue'
 
 import {calculateAccountColor} from '../util/AccountColor'
+import Logger from '../logger'
 
 export default {
 	name: 'NavigationAccount',
@@ -77,7 +78,9 @@ export default {
 							icon: 'icon-delete',
 							text: t('mail', 'Delete'),
 							action: () => {
-								this.$store.dispatch('deleteAccount', this.account).catch(console.error.bind(this))
+								this.$store
+									.dispatch('deleteAccount', this.account)
+									.catch(error => Logger.error('could not delete account', {error}))
 							},
 						},
 						{
@@ -96,14 +99,14 @@ export default {
 	methods: {
 		createFolder(e) {
 			const name = e.target.elements[0].value
-			console.info('creating folder ' + name, name)
+			Logger.info('creating folder ' + name)
 			this.menuOpen = false
 			this.$store
 				.dispatch('createFolder', {account: this.account, name})
-				.then(() => console.info(`folder ${name} created`))
-				.catch(e => {
-					console.error('could not create folder', e)
-					throw e
+				.then(() => Logger.info(`folder ${name} created`))
+				.catch(error => {
+					Logger.error('could not create folder', {error})
+					throw error
 				})
 		},
 	},

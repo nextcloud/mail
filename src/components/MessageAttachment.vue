@@ -60,6 +60,7 @@ import {getFilePickerBuilder} from 'nextcloud-dialogs'
 import {PopoverMenu} from 'nextcloud-vue'
 
 import {parseUid} from '../util/EnvelopeUidParser'
+import Logger from '../logger'
 
 import {downloadAttachment, saveAttachmentToFiles} from '../service/AttachmentService'
 import {getUserCalendars, importCalendarEvent} from '../service/DAVService'
@@ -145,8 +146,8 @@ export default {
 					return dest
 				})
 				.then(saveAttachment(accountId, folderId, id, this.id))
-				.then(() => console.info('saved'))
-				.catch(e => console.error('not saved', e))
+				.then(() => Logger.info('saved'))
+				.catch(e => Logger.error('not saved', {error: e}))
 				.then(() => (this.savingToCloud = false))
 		},
 		download() {
@@ -168,8 +169,8 @@ export default {
 			return () => {
 				downloadAttachment(this.url)
 					.then(importCalendarEvent(url))
-					.then(() => console.info('calendar imported'))
-					.catch(e => console.error('import error', e))
+					.then(() => Logger.info('calendar imported'))
+					.catch(e => Logger.error('import error', {error: e}))
 					.then(() => (this.showCalendarPopover = false))
 			}
 		},

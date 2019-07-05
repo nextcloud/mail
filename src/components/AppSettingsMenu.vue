@@ -32,6 +32,8 @@
 </template>
 
 <script>
+import Logger from '../logger'
+
 export default {
 	name: 'AppSettingsMenu',
 	data() {
@@ -53,7 +55,7 @@ export default {
 					key: 'external-avatars',
 					value: e.target.checked ? 'true' : 'false',
 				})
-				.catch(console.error.bind(this))
+				.catch(error => Logger.error('could not save preferences', {error}))
 				.then(() => {
 					this.loadingAvatarSettings = false
 				})

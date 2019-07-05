@@ -26,8 +26,9 @@
 <script>
 import {AppNavigationItem} from 'nextcloud-vue'
 
-import {translate as translateMailboxName} from '../l10n/MailboxTranslator'
 import {getFolderStats} from '../service/FolderService'
+import Logger from '../logger'
+import {translate as translateMailboxName} from '../l10n/MailboxTranslator'
 
 export default {
 	name: 'NavigationFolder',
@@ -137,24 +138,24 @@ export default {
 
 			getFolderStats(this.account.id, this.folder.id)
 				.then(stats => {
-					console.debug('loaded folder stats', stats)
+					Logger.debug('loaded folder stats', {stats})
 					this.folderStats = stats
 
 					this.loadingFolderStats = false
 				})
-				.catch(console.error.bind(this))
+				.catch(error => Logger.error(`could not load folder states for ${this.folder.id}`, {error}))
 		},
 		createFolder(e) {
 			const name = e.target.elements[0].value
 			const withPrefix = atob(this.folder.id) + this.folder.delimiter + name
-			console.info(`creating folder ${withPrefix} as subfolder of ${this.folder.id}`)
+			Logger.info(`creating folder ${withPrefix} as subfolder of ${this.folder.id}`)
 			this.menuOpen = false
 			this.$store
 				.dispatch('createFolder', {account: this.account, name: withPrefix})
-				.then(() => console.info(`folder ${withPrefix} created`))
-				.catch(e => {
-					console.error(`could not create folder ${withPrefix}`, e)
-					throw e
+				.then(() => Logger.info(`folder ${withPrefix} created`))
+				.catch(error => {
+					Logger.error(`could not create folder ${withPrefix}`, {error})
+					throw error
 				})
 		},
 		markAsRead(folder) {
@@ -162,8 +163,8 @@ export default {
 				this.menuOpen = false
 				this.$store
 					.dispatch('markFolderRead', {account: this.account, folderId: folder.id})
-					.then(() => console.info(`folder ${folder.id} marked as read`))
-					.catch(console.error.bind(this))
+					.then(() => Logger.info(`folder ${folder.id} marked as read`))
+					.catch(error => Logger.error(`could not mark folder ${folder.id} as read`, {error}))
 			}
 		},
 	},

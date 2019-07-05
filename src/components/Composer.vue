@@ -130,6 +130,7 @@ import Vue from 'vue'
 
 import {findRecipient} from '../service/AutocompleteService'
 import Loading from './Loading'
+import Logger from '../logger'
 import ComposerAttachments from './ComposerAttachments'
 
 const debouncedSearch = debouncePromise(findRecipient, 500)
@@ -267,7 +268,7 @@ export default {
 			this.savingDraft = true
 			this.draftsPromise = this.draftsPromise
 				.then(uid => this.draft(data(uid)))
-				.catch(console.error.bind(this))
+				.catch(Logger.error)
 				.then(uid => {
 					this.savingDraft = false
 					return uid
@@ -287,8 +288,8 @@ export default {
 		onAttachmentsUploading(uploaded) {
 			this.attachmentsPromise = this.attachmentsPromise
 				.then(() => uploaded)
-				.catch(console.error.bind(this))
-				.then(() => console.debug('attachments uploaded'))
+				.catch(error => Logger.error('could not upload attachments', {error}))
+				.then(() => Logger.debug('attachments uploaded'))
 		},
 		onBodyKeyPress(event) {
 			// CTRL+Enter sends the message
@@ -321,12 +322,12 @@ export default {
 				.then(() => this.draftsPromise)
 				.then(this.getMessageData())
 				.then(data => this.send(data))
-				.then(() => console.info('message sent'))
+				.then(() => Logger.info('message sent'))
 				.then(() => (this.state = STATES.FINISHED))
-				.catch(e => {
-					console.error('could not send message', e)
-					if (e && e.toString) {
-						this.errorText = e.toString()
+				.catch(error => {
+					Logger.error('could not send message', {error})
+					if (error && error.toString) {
+						this.errorText = error.toString()
 					}
 					this.state = STATES.ERROR
 				})
@@ -349,8 +350,6 @@ export default {
 			return `${alias.name} <${alias.emailAddress}>`
 		},
 		bodyWithSignature(alias, body) {
-			console.info(alias)
-
 			if (!alias || !alias.signature) {
 				return body
 			}

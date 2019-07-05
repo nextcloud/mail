@@ -30,6 +30,7 @@ import Composer from './Composer'
 import {getRandomMessageErrorMessage} from '../util/ErrorMessageFactory'
 import Error from './Error'
 import Loading from './Loading'
+import Logger from '../logger'
 import {saveDraft, sendMessage} from '../service/MessageService'
 
 export default {
@@ -50,7 +51,7 @@ export default {
 	computed: {
 		composerData() {
 			if (!_.isUndefined(this.draft)) {
-				console.info('todo: handle draft data')
+				Logger.info('todo: handle draft data')
 				return {
 					to: this.draft.to,
 					cc: this.draft.cc,
@@ -62,7 +63,7 @@ export default {
 				// Forwarded message
 
 				const message = this.$store.getters.getMessageByUid(this.$route.query.uid)
-				console.debug('forwaring message', message)
+				Logger.debug('forwaring message', message)
 
 				return {
 					to: [],
@@ -95,7 +96,7 @@ export default {
 			// in that case we don't really start a new draft but just keep the
 			// URL consistent, hence not loading anything
 			if (this.draft && to.name === 'message' && to.params.draftUid === this.draft.uid) {
-				console.debug('detected navigation to current (new) draft UID, not reloading')
+				Logger.debug('detected navigation to current (new) draft UID, not reloading')
 				return
 			}
 
@@ -125,7 +126,7 @@ export default {
 
 			const draftUid = this.$route.params.draftUid
 			if (_.isUndefined(draftUid)) {
-				console.debug('not a draft, nothing to fetch')
+				Logger.debug('not a draft, nothing to fetch')
 				// Nothing to fetch
 				return
 			}
@@ -136,14 +137,14 @@ export default {
 				.dispatch('fetchMessage', draftUid)
 				.then(draft => {
 					if (draft.uid !== this.$route.params.draftUid) {
-						console.debug("User navigated away, loaded draft won't be shown")
+						Logger.debug("User navigated away, loaded draft won't be shown")
 						return
 					}
 
 					this.draft = draft
 
 					if (_.isUndefined(this.draft)) {
-						console.info('draft could not be found', draftUid)
+						Logger.info('draft could not be found', {draftUid})
 						this.errorMessage = getRandomMessageErrorMessage()
 						this.loading = false
 						return
@@ -151,18 +152,18 @@ export default {
 
 					this.loading = false
 				})
-				.catch(err => {
-					console.error('could not load draft ' + draftUid, err)
-					if (err.isError) {
+				.catch(error => {
+					Logger.error('could not load draft ' + draftUid, {error})
+					if (error.isError) {
 						this.errorMessage = t('mail', 'Could not load your draft')
-						this.error = err
+						this.error = error
 						this.loading = false
 					}
 				})
 		},
 		saveDraft(data) {
 			if (_.isUndefined(data.draftUID) && this.draft) {
-				console.debug('draft data does not have a draftUID, adding one')
+				Logger.debug('draft data does not have a draftUID, adding one')
 				data.draftUID = this.draft.id
 			}
 			return saveDraft(data.account, data).then(({uid}) => {
@@ -170,7 +171,7 @@ export default {
 					return uid
 				}
 
-				console.info('replacing draft ' + this.draft.uid + ' with ' + uid)
+				Logger.info('replacing draft ' + this.draft.uid + ' with ' + uid)
 				const update = {
 					draft: this.draft,
 					uid,

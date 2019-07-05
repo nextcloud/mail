@@ -23,6 +23,8 @@ import _ from 'lodash'
 import {translate as t, translatePlural as n} from 'nextcloud-l10n'
 import {generateFilePath} from 'nextcloud-router'
 
+import Logger from '../logger'
+
 /**
  * @todo use Notification.requestPermission().then once all browsers support promise API
  *
@@ -30,23 +32,23 @@ import {generateFilePath} from 'nextcloud-router'
  */
 const request = () => {
 	if (!('Notification' in window)) {
-		console.info('browser does not support desktop notifications')
+		Logger.info('browser does not support desktop notifications')
 		return Promise.reject()
 	} else if (Notification.permission === 'granted') {
 		return Promise.resolve()
 	} else if (Notification.permission === 'denied') {
-		console.info('desktop notifications are denied')
+		Logger.info('desktop notifications are denied')
 		return Promise.reject()
 	}
 
-	console.info('requesting permissions to show desktop notifications')
+	Logger.info('requesting permissions to show desktop notifications')
 	return Notification.requestPermission()
 }
 
 const showNotification = (title, body, icon) => {
 	request().then(() => {
 		if (document.querySelector(':focus') !== null) {
-			console.debug('browser is active. notification request is ignored')
+			Logger.debug('browser is active. notification request is ignored')
 			return
 		}
 	})
