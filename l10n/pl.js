@@ -98,7 +98,7 @@ OC.L10N.register(
     "Signature" : "Podpis",
     "A signature will be added to the text of new and response messages." : "Podpis będzie dodany do nowych i zwrotnych wiadomości.",
     "Account Settings" : "Ustawienia konta",
-    "Mail server" : "Serwer pocztowy",
+    "Mail server" : "Serwer poczty",
     "Speed up your Mail experience with these quick shortcuts." : "Aby przyspieszyć korzystanie z Poczty użyj tych skrótów.",
     "Compose new message" : "Napisz nową wiadomość",
     "Newer message" : "Nowsza wiadomość",
