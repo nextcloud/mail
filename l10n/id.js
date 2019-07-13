@@ -1,0 +1,26 @@
+OC.L10N.register(
+    "mail",
+    {
+    "Mail" : "Email",
+    "Inbox" : "Kotak masuk",
+    "Sent" : "Kirim",
+    "Drafts" : "Konsep",
+    "Archive" : "Arsip",
+    "Trash" : "Tempat sampah",
+    "Junk" : "Sampah",
+    "All" : "Semua",
+    "Favorites" : "Favorit",
+    "Auto detect failed. Please use manual mode." : "Deteksi otomatis gagal. Mohon gunakan modus manual.",
+    "Creating account failed: " : "Gagal membuat akun:",
+    "Delete permanently" : "Hapus secara permanen",
+    "Connect" : "Sambungkan",
+    "Sending …" : "Mengirim ...",
+    "Message sent!" : "Kirim pesan!",
+    "Send" : "Kirim",
+    "Choose a file to add as attachment" : "Pilih berkas untuk ditambahkan sebagai lampiran",
+    "Choose a folder to store the attachment in" : "Pilih folder untuk menyimpan lampiran didalamnya",
+    "{from}\n{subject}" : "{from}\n{subject}",
+    "All inboxes" : "Semua kotak masuk",
+    "Error loading message" : "Terjadi kesalahan saat memuat pesan"
+},
+"nplurals=1; plural=0;");

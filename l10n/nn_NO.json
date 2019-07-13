@@ -1,0 +1,10 @@
+{ "translations": {
+    "Mail" : "Post",
+    "Sent" : "Sendt",
+    "All" : "Alle",
+    "Favorites" : "Favorittar",
+    "Delete permanently" : "Slett for godt",
+    "Connect" : "Kopla til",
+    "Send" : "Send"
+},"pluralForm" :"nplurals=2; plural=(n != 1);"
+}
