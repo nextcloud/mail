@@ -34,7 +34,7 @@
     "nextcloud-l10n": "0.0.2",
     "nextcloud-logger": "0.0.2",
     "nextcloud-router": "0.0.6",
-    "nextcloud-vue": "^0.11.4",
+    "nextcloud-vue": "^0.11.5",
     "nextcloud_issuetemplate_builder": "^0.1.0",
     "v-tooltip": "^2.0.2",
     "vue": "^2.6.10",
