@@ -256,6 +256,10 @@ export default {
 }
 
 @media print {
+	#mail-message-header {
+		position: relative;
+	}
+
 	#header,
 	#app-navigation,
 	#reply-composer,
