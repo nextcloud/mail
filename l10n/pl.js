@@ -40,7 +40,7 @@ OC.L10N.register(
     "Connect" : "Połącz",
     "Add mail account" : "Dodaj konto e-mail",
     "Use Gravatar and favicon avatars" : "Używaj awatarów Gravatar i favicon",
-    "Keyboard shortcuts" : "Skróty klawiszowe",
+    "Keyboard shortcuts" : "Skróty klawiaturowe",
     "Looking for a way to encrypt your emails? Install the Mailvelope browser extension!" : "Szukasz sposobu na szyfrowanie wiadomości e-mail? Zainstaluj dla przeglądarki rozszerzenie Mailvelope!",
     "from" : "od",
     "to" : "do",
