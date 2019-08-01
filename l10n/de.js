@@ -96,7 +96,7 @@ OC.L10N.register(
     "Could not load your draft" : "Dein Entwurf konnte nicht geladen werden",
     "No message selected" : "Keine Nachricht ausgewählt",
     "Signature" : "Signatur",
-    "A signature will be added to the text of new and response messages." : "Neuen oder Antwortnachrichten wird eine Signatur angehängt.",
+    "A signature will be added to the text of new and response messages." : "An den Text von neuen Nachrichten oder Antworten wird eine Signatur angehängt.",
     "Account Settings" : "Konto-Einstellungen",
     "Mail server" : "Mail-Server",
     "Speed up your Mail experience with these quick shortcuts." : "Verbessere Deine Arbeit mit Mail durch diese Schnellbefehle.",
