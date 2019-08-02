@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "cb1769f1caf0014e98217abd051797ae",
+    "content-hash": "76e7a41cf7c57451ec95001e8d8b28be",
     "packages": [
         {
             "name": "arthurhoaro/favicon",
@@ -58,17 +58,20 @@
         },
         {
             "name": "cerdic/css-tidy",
-            "version": "v1.6.5",
+            "version": "v1.7.0",
             "source": {
                 "type": "git",
                 "url": "https://github.com/Cerdic/CSSTidy.git",
-                "reference": "32cecbbc7e847c66a45450c92d80c4779ccca484"
+                "reference": "292084eb9d944bc3dead73ab3ed5df43dfb0e7ff"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/Cerdic/CSSTidy/zipball/32cecbbc7e847c66a45450c92d80c4779ccca484",
-                "reference": "32cecbbc7e847c66a45450c92d80c4779ccca484",
+                "url": "https://api.github.com/repos/Cerdic/CSSTidy/zipball/292084eb9d944bc3dead73ab3ed5df43dfb0e7ff",
+                "reference": "292084eb9d944bc3dead73ab3ed5df43dfb0e7ff",
                 "shasum": ""
+            },
+            "require": {
+                "php": "^5.4.0 || ^7"
             },
             "require-dev": {
                 "pear/text_diff": "^1.2",
@@ -93,7 +96,7 @@
                 }
             ],
             "description": "CSSTidy is a CSS minifier",
-            "time": "2018-12-18T21:54:05+00:00"
+            "time": "2019-07-31T13:41:17+00:00"
         },
         {
             "name": "ezyang/htmlpurifier",
@@ -230,8 +233,8 @@
                 },
                 {
                     "name": "Dawid Nowak",
-                    "email": "code@dnowak.pl",
-                    "role": "Developer"
+                    "role": "Developer",
+                    "email": "code@dnowak.pl"
                 }
             ],
             "description": "Autolink URLs in text or html",
@@ -1463,18 +1466,18 @@
             "authors": [
                 {
                     "name": "Arne Blankerts",
-                    "email": "arne@blankerts.de",
-                    "role": "Developer"
+                    "role": "Developer",
+                    "email": "arne@blankerts.de"
                 },
                 {
                     "name": "Sebastian Heuer",
-                    "email": "sebastian@phpeople.de",
-                    "role": "Developer"
+                    "role": "Developer",
+                    "email": "sebastian@phpeople.de"
                 },
                 {
                     "name": "Sebastian Bergmann",
-                    "email": "sebastian@phpunit.de",
-                    "role": "Developer"
+                    "role": "Developer",
+                    "email": "sebastian@phpunit.de"
                 }
             ],
             "description": "Library for handling version information and constraints",
@@ -1796,8 +1799,8 @@
             "authors": [
                 {
                     "name": "Sebastian Bergmann",
-                    "email": "sebastian@phpunit.de",
-                    "role": "lead"
+                    "role": "lead",
+                    "email": "sebastian@phpunit.de"
                 }
             ],
             "description": "FilterIterator implementation that filters files based on a list of suffixes.",
@@ -1838,8 +1841,8 @@
             "authors": [
                 {
                     "name": "Sebastian Bergmann",
-                    "email": "sebastian@phpunit.de",
-                    "role": "lead"
+                    "role": "lead",
+                    "email": "sebastian@phpunit.de"
                 }
             ],
             "description": "Simple template engine.",
@@ -1887,8 +1890,8 @@
             "authors": [
                 {
                     "name": "Sebastian Bergmann",
-                    "email": "sebastian@phpunit.de",
-                    "role": "lead"
+                    "role": "lead",
+                    "email": "sebastian@phpunit.de"
                 }
             ],
             "description": "Utility class for timing",
@@ -2117,9 +2120,9 @@
             "authors": [
                 {
                     "name": "Evert Pot",
+                    "role": "Developer",
                     "email": "me@evertpot.com",
-                    "homepage": "http://evertpot.com/",
-                    "role": "Developer"
+                    "homepage": "http://evertpot.com/"
                 }
             ],
             "description": "sabre/event is a library for lightweight event-based programming",
@@ -2696,8 +2699,8 @@
             "authors": [
                 {
                     "name": "Sebastian Bergmann",
-                    "email": "sebastian@phpunit.de",
-                    "role": "lead"
+                    "role": "lead",
+                    "email": "sebastian@phpunit.de"
                 }
             ],
             "description": "Library that helps with managing the version number of Git-hosted PHP projects",
