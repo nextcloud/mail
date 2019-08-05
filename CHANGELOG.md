@@ -2,6 +2,14 @@
 All notable changes to this project will be documented in this file.
 
 ## 0.15.1 - 2019-05-14
+### Added
+- Better logging on the client-side
+### Fixed
+- Vulnerable `lodash` dependencies
+### Changed
+- New and updated translations
+
+## 0.15.1 - 2019-05-14
 ### Fixed
 - Cached Webpack chunks cause errors on upgrade
 ### Changed
