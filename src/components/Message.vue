@@ -255,4 +255,27 @@ export default {
 #mail-message-header .transparency a {
 	font-weight: bold;
 }
+
+@media print {
+	#mail-message-header {
+		position: relative;
+	}
+
+	#header,
+	#app-navigation,
+	#reply-composer,
+	#forward-button,
+	#mail-message-has-blocked-content,
+	.app-content-list,
+	.message-composer,
+	.mail-message-attachments {
+		display: none !important;
+	}
+	#app-content {
+		margin-left: 0 !important;
+	}
+	.mail-message-body {
+		margin-bottom: 0 !important;
+	}
+}
 </style>
