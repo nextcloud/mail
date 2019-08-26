@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "0763b482bf9987c08a392173b2129f86",
+    "content-hash": "62b15964773e0085c871689eaea02496",
     "packages": [
         {
             "name": "arthurhoaro/favicon",
@@ -880,20 +880,20 @@
         },
         {
             "name": "christophwurst/nextcloud_testing",
-            "version": "0.6.0",
+            "version": "0.7.0",
             "source": {
                 "type": "git",
                 "url": "https://github.com/ChristophWurst/nextcloud_testing.git",
-                "reference": "567c00b5ffa5168f261e987fbf12c4963ac5b308"
+                "reference": "5d6c5cb4090fbe7bee015f8ee47b1baaf1f0f7af"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/ChristophWurst/nextcloud_testing/zipball/567c00b5ffa5168f261e987fbf12c4963ac5b308",
-                "reference": "567c00b5ffa5168f261e987fbf12c4963ac5b308",
+                "url": "https://api.github.com/repos/ChristophWurst/nextcloud_testing/zipball/5d6c5cb4090fbe7bee015f8ee47b1baaf1f0f7af",
+                "reference": "5d6c5cb4090fbe7bee015f8ee47b1baaf1f0f7af",
                 "shasum": ""
             },
             "require": {
-                "facebook/webdriver": "^1.6",
+                "facebook/webdriver": "^1.7",
                 "phpunit/phpunit": "^7.5"
             },
             "require-dev": {
@@ -916,7 +916,7 @@
                 }
             ],
             "description": "Simple and fast unit and integration testing framework for Nextcloud, based on PHPUnit",
-            "time": "2019-02-13T09:39:52+00:00"
+            "time": "2019-08-08T09:38:30+00:00"
         },
         {
             "name": "composer/semver",
