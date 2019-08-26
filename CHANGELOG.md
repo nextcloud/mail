@@ -1,7 +1,7 @@
 # Changelog
 All notable changes to this project will be documented in this file.
 
-## 0.15.1 - 2019-05-14
+## 0.15.2 - 2019-08-06
 ### Added
 - Better logging on the client-side
 ### Fixed
