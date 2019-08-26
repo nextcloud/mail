@@ -3,7 +3,7 @@ All notable changes to this project will be documented in this file.
 
 ## 0.15.4 - 2019-08-26
 ### Fixed
-- Fulnerable eslint-utils
+- Vulnerable eslint-utils
 
 ## 0.15.3 - 2019-08-26
 ### Added
