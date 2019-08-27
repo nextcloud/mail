@@ -48,7 +48,10 @@ class TransformURLScheme extends HTMLPurifier_URIFilter {
 	 */
 	private $mapCidToAttachmentId;
 
-	public function __construct($messageParameters,
+	/** @var array */
+	private $messageParameters;
+
+	public function __construct(array $messageParameters,
 								Closure $mapCidToAttachmentId,
 								IURLGenerator $urlGenerator,
 								IRequest $request) {
