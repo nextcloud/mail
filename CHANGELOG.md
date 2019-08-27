@@ -1,6 +1,18 @@
 # Changelog
 All notable changes to this project will be documented in this file.
 
+## 0.15.4 - 2019-08-26
+### Fixed
+- Vulnerable eslint-utils
+
+## 0.15.3 - 2019-08-26
+### Added
+- Ability to print messages
+### Changed
+- New and updated translations
+### Fixed
+- JavaScript errors caused by a bug in the logging library
+
 ## 0.15.2 - 2019-08-06
 ### Added
 - Better logging on the client-side

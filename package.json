@@ -1,7 +1,7 @@
 {
   "name": "nextcloud-mail",
   "description": "Nextcloud Mail",
-  "version": "0.15.2",
+  "version": "0.15.4",
   "author": "Christoph Wurst <christoph@winzerhof-wurst.at>",
   "license": "agpl",
   "private": true,
@@ -15,11 +15,11 @@
     "test:watch": "mochapack -w --webpack-config webpack.test.js --require src/tests/setup.js \"src/tests/**/*.spec.js\""
   },
   "dependencies": {
-    "@vue/babel-preset-app": "^3.10.0",
+    "@vue/babel-preset-app": "^3.11.0",
     "color-convert": "^2.0.1",
     "davclient.js": "^0.1.0",
     "debounce-promise": "^3.1.2",
-    "eslint-plugin-nextcloud": "^0.2.0",
+    "eslint-plugin-nextcloud": "^0.3.0",
     "exports-loader": "^0.7.0",
     "html-to-text": "^5.1.1",
     "ical.js": "^1.3.0",
@@ -32,7 +32,7 @@
     "nextcloud-dialogs": "0.0.2",
     "nextcloud-files": "0.0.2",
     "nextcloud-l10n": "0.0.2",
-    "nextcloud-logger": "0.0.3",
+    "nextcloud-logger": "0.0.4",
     "nextcloud-router": "0.0.6",
     "nextcloud-vue": "^0.12.1",
     "nextcloud_issuetemplate_builder": "^0.1.0",
@@ -81,7 +81,7 @@
     "vue-server-renderer": "^2.6.10",
     "vue-template-compiler": "^2.6.10",
     "webpack": "^4.39.2",
-    "webpack-cli": "^3.3.6",
+    "webpack-cli": "^3.3.7",
     "webpack-merge": "^4.2.1",
     "webpack-node-externals": "^1.7.2"
   },
