@@ -26,7 +26,7 @@
 
 <script>
 import _ from 'lodash'
-import {Avatar as BaseAvatar} from 'nextcloud-vue'
+import BaseAvatar from 'nextcloud-vue/dist/Components/Avatar'
 
 import {fetchAvatarUrlMemoized} from '../service/AvatarService'
 

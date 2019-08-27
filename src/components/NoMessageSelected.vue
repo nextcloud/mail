@@ -20,16 +20,21 @@
   -->
 
 <template>
-	<div class="app-content-details">
+	<AppContentDetails>
 		<div class="icon icon-mail"></div>
 		<h2>{{ mailbox }}</h2>
 		<p>{{ t('mail', 'No message selected') }}</p>
-	</div>
+	</AppContentDetails>
 </template>
 
 <script>
+import AppContentDetails from 'nextcloud-vue/dist/Components/AppContentDetails'
+
 export default {
 	name: 'NoMessageSelected',
+	components: {
+		AppContentDetails,
+	},
 	props: {
 		mailbox: {
 			type: String,

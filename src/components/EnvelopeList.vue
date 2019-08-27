@@ -1,32 +1,32 @@
 <template>
-	<transition-group
-		v-infinite-scroll="loadMore"
-		v-scroll="onScroll"
-		v-shortkey.once="shortkeys"
-		name="list"
-		tag="div"
-		class="app-content-list"
-		:class="{showdetails: !show}"
-		infinite-scroll-disabled="loading"
-		infinite-scroll-distance="30"
-		@shortkey.native="handleShortcut"
-	>
-		<div id="list-refreshing" key="loading" class="icon-loading-small" :class="{refreshing: refreshing}" />
-		<EmptyFolder v-if="envelopes.length === 0" key="empty" />
-		<Envelope
-			v-for="env in envelopes"
-			v-else
-			:key="env.uid"
-			:data="env"
-			:show-account-color="folder.isUnified"
-			@delete="onEnvelopeDeleted"
-		/>
-		<div id="load-more-mail-messages" key="loadingMore" :class="{'icon-loading-small': loadingMore}" />
-	</transition-group>
+	<AppContentList :show-details="!show">
+		<transition-group
+			v-infinite-scroll="loadMore"
+			v-scroll="onScroll"
+			v-shortkey.once="shortkeys"
+			name="list"
+			infinite-scroll-disabled="loading"
+			infinite-scroll-distance="30"
+			@shortkey.native="handleShortcut"
+		>
+			<div id="list-refreshing" key="loading" class="icon-loading-small" :class="{refreshing: refreshing}" />
+			<EmptyFolder v-if="envelopes.length === 0" key="empty" />
+			<Envelope
+				v-for="env in envelopes"
+				v-else
+				:key="env.uid"
+				:data="env"
+				:show-account-color="folder.isUnified"
+				@delete="onEnvelopeDeleted"
+			/>
+			<div id="load-more-mail-messages" key="loadingMore" :class="{'icon-loading-small': loadingMore}" />
+		</transition-group>
+	</AppContentList>
 </template>
 
 <script>
 import _ from 'lodash'
+import AppContentList from 'nextcloud-vue/dist/Components/AppContentList'
 import infiniteScroll from 'vue-infinite-scroll'
 import vuescroll from 'vue-scroll'
 import Vue from 'vue'
@@ -40,6 +40,7 @@ Vue.use(vuescroll, {throttle: 600})
 export default {
 	name: 'EnvelopeList',
 	components: {
+		AppContentList,
 		Envelope,
 		EmptyFolder,
 	},

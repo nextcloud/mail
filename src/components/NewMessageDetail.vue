@@ -1,5 +1,5 @@
 <template>
-	<div class="app-content-details">
+	<AppContentDetails>
 		<Loading v-if="loading" />
 		<Error
 			v-else-if="error"
@@ -19,11 +19,12 @@
 			:draft="saveDraft"
 			:send="sendMessage"
 		/>
-	</div>
+	</AppContentDetails>
 </template>
 
 <script>
 import _ from 'lodash'
+import AppContentDetails from 'nextcloud-vue/dist/Components/AppContentDetails'
 
 import {buildFowardSubject, buildReplyBody} from '../ReplyBuilder'
 import Composer from './Composer'
@@ -36,6 +37,7 @@ import {saveDraft, sendMessage} from '../service/MessageService'
 export default {
 	name: 'NewMessageDetail',
 	components: {
+		AppContentDetails,
 		Composer,
 		Error,
 		Loading,

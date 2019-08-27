@@ -24,7 +24,7 @@
 </template>
 
 <script>
-import {AppNavigationItem} from 'nextcloud-vue'
+import AppNavigationItem from 'nextcloud-vue/dist/Components/AppNavigationItem'
 
 export default {
 	name: 'NavigationAccount',

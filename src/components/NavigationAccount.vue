@@ -24,7 +24,7 @@
 </template>
 
 <script>
-import {AppNavigationItem} from 'nextcloud-vue'
+import AppNavigationItem from 'nextcloud-vue/dist/Components/AppNavigationItem'
 
 import {calculateAccountColor} from '../util/AccountColor'
 import Logger from '../logger'
