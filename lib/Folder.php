@@ -166,7 +166,6 @@ class Folder implements JsonSerializable {
 			'id' => base64_encode($this->getMailbox()),
 			'accountId' => $this->account->getId(),
 			'name' => $this->getDisplayName(),
-			'specialRole' => null, // TODO
 			'unseen' => isset($this->status['unseen']) ? $this->status['unseen'] : 0,
 			'total' => isset($this->status['messages']) ? (int) $this->status['messages'] : 0,
 			'isEmpty' => isset($this->status['messages']) ? 0 >= (int) $this->status['messages'] : true,
