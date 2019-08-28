@@ -1,4 +1,4 @@
-<?php
+<?php declare(strict_types=1);
 
 /**
  * @author Christoph Wurst <christoph@winzerhof-wurst.at>
@@ -24,10 +24,13 @@ namespace OCA\Mail\Tests\Service;
 use ChristophWurst\Nextcloud\Testing\TestCase;
 use Horde_Imap_Client_Socket;
 use OCA\Mail\Account;
+use OCA\Mail\Db\Mailbox;
+use OCA\Mail\Db\MailboxMapper;
 use OCA\Mail\Folder;
 use OCA\Mail\IMAP\FolderMapper;
 use OCA\Mail\IMAP\FolderStats;
 use OCA\Mail\IMAP\IMAPClientFactory;
+use OCA\Mail\IMAP\MailboxSync;
 use OCA\Mail\IMAP\MessageMapper;
 use OCA\Mail\IMAP\Sync\Request;
 use OCA\Mail\IMAP\Sync\Response;
@@ -39,6 +42,12 @@ class MailManagerTest extends TestCase {
 
 	/** @var IMAPClientFactory|MockObject */
 	private $imapClientFactory;
+
+	/** @var MailboxMapper|MockObject */
+	private $mailboxMapper;
+
+	/** @var MailboxSync|MockObject */
+	private $mailboxSync;
 
 	/** @var FolderMapper|MockObject */
 	private $folderMapper;
@@ -56,12 +65,16 @@ class MailManagerTest extends TestCase {
 		parent::setUp();
 
 		$this->imapClientFactory = $this->createMock(IMAPClientFactory::class);
+		$this->mailboxMapper = $this->createMock(MailboxMapper::class);
+		$this->mailboxSync = $this->createMock(MailboxSync::class);
 		$this->folderMapper = $this->createMock(FolderMapper::class);
 		$this->messageMapper = $this->createMock(MessageMapper::class);
 		$this->sync = $this->createMock(Synchronizer::class);
 
 		$this->manager = new MailManager(
 			$this->imapClientFactory,
+			$this->mailboxMapper,
+			$this->mailboxSync,
 			$this->folderMapper,
 			$this->sync,
 			$this->messageMapper
@@ -69,27 +82,32 @@ class MailManagerTest extends TestCase {
 	}
 
 	public function testGetFolders() {
-		$client = $this->createMock(Horde_Imap_Client_Socket::class);
+		/** @var Account|MockObject $account */
 		$account = $this->createMock(Account::class);
-		$this->imapClientFactory->expects($this->once())
-			->method('getClient')
-			->willReturn($client);
+		$mailboxes = [
+			$this->createMock(Mailbox::class),
+			$this->createMock(Mailbox::class),
+		];
 		$folders = [
 			$this->createMock(Folder::class),
 			$this->createMock(Folder::class),
 		];
-		$this->folderMapper->expects($this->once())
-			->method('getFolders')
-			->with($this->equalTo($account), $this->equalTo($client))
-			->willReturn($folders);
-		$this->folderMapper->expects($this->once())
-			->method('getFoldersStatus')
-			->with($this->equalTo($folders));
+		$mailboxes[0]->method('toFolder')->willReturn($folders[0]);
+		$mailboxes[1]->method('toFolder')->willReturn($folders[1]);
+		$this->mailboxSync->expects($this->once())
+			->method('sync')
+			->with($this->equalTo($account));
+		$this->mailboxMapper->expects($this->once())
+			->method('findAll')
+			->with($this->equalTo($account))
+			->willReturn($mailboxes);
 		$this->folderMapper->expects($this->once())
 			->method('detectFolderSpecialUse')
 			->with($this->equalTo($folders));
 
-		$this->manager->getFolders($account);
+		$result = $this->manager->getFolders($account);
+
+		$this->assertSame($folders, $result);
 	}
 
 	public function testCreateFolder() {

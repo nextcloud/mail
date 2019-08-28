@@ -25,11 +25,14 @@ namespace OCA\Mail\Service;
 
 use OCA\Mail\Account;
 use OCA\Mail\Contracts\IMailManager;
+use OCA\Mail\Db\Mailbox;
+use OCA\Mail\Db\MailboxMapper;
 use OCA\Mail\Exception\ServiceException;
 use OCA\Mail\Folder;
 use OCA\Mail\IMAP\FolderMapper;
 use OCA\Mail\IMAP\FolderStats;
 use OCA\Mail\IMAP\IMAPClientFactory;
+use OCA\Mail\IMAP\MailboxSync;
 use OCA\Mail\IMAP\MessageMapper;
 use OCA\Mail\IMAP\Sync\Request;
 use OCA\Mail\IMAP\Sync\Response;
@@ -39,6 +42,12 @@ class MailManager implements IMailManager {
 
 	/** @var IMAPClientFactory */
 	private $imapClientFactory;
+
+	/** @var MailboxSync */
+	private $mailboxSync;
+
+	/** @var MailboxMapper */
+	private $mailboxMapper;
 
 	/** @var FolderMapper */
 	private $folderMapper;
@@ -50,10 +59,14 @@ class MailManager implements IMailManager {
 	private $messageMapper;
 
 	public function __construct(IMAPClientFactory $imapClientFactory,
+								MailboxMapper $mailboxMapper,
+								MailboxSync $mailboxSync,
 								FolderMapper $folderMapper,
 								Synchronizer $synchronizer,
 								MessageMapper $messageMapper) {
 		$this->imapClientFactory = $imapClientFactory;
+		$this->mailboxMapper = $mailboxMapper;
+		$this->mailboxSync = $mailboxSync;
 		$this->folderMapper = $folderMapper;
 		$this->synchronizer = $synchronizer;
 		$this->messageMapper = $messageMapper;
@@ -61,13 +74,18 @@ class MailManager implements IMailManager {
 
 	/**
 	 * @param Account $account
+	 *
 	 * @return Folder[]
 	 */
 	public function getFolders(Account $account): array {
-		$client = $this->imapClientFactory->getClient($account);
+		$this->mailboxSync->sync($account);
 
-		$folders = $this->folderMapper->getFolders($account, $client);
-		$this->folderMapper->getFoldersStatus($folders, $client);
+		$folders = array_map(
+			function (Mailbox $mb) {
+				return $mb->toFolder();
+			},
+			$this->mailboxMapper->findAll($account)
+		);
 		$this->folderMapper->detectFolderSpecialUse($folders);
 		return $folders;
 	}
@@ -102,6 +120,7 @@ class MailManager implements IMailManager {
 	/**
 	 * @param Account $account
 	 * @param Request $syncRequest
+	 *
 	 * @return Response
 	 */
 	public function syncMessages(Account $account, Request $syncRequest): Response {

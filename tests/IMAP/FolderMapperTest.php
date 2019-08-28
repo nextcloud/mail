@@ -62,6 +62,7 @@ class FolderMapperTest extends TestCase {
 
 	public function testGetFolders() {
 		$account = $this->createMock(Account::class);
+		$account->method('getId')->willReturn(27);
 		$client = $this->createMock(Horde_Imap_Client_Socket::class);
 		$client->expects($this->once())
 			->method('listMailboxes')
@@ -86,9 +87,9 @@ class FolderMapperTest extends TestCase {
 				],
 		]);
 		$expected = [
-			new Folder($account, new Horde_Imap_Client_Mailbox('INBOX'), [], '.'),
-			new SearchFolder($account, new Horde_Imap_Client_Mailbox('INBOX'), [], '.'),
-			new Folder($account, new Horde_Imap_Client_Mailbox('Sent'), ['\sent'], '.'),
+			new Folder(27, new Horde_Imap_Client_Mailbox('INBOX'), [], '.'),
+			new SearchFolder(27, new Horde_Imap_Client_Mailbox('INBOX'), [], '.'),
+			new Folder(27, new Horde_Imap_Client_Mailbox('Sent'), ['\sent'], '.'),
 		];
 
 		$folders = $this->mapper->getFolders($account, $client);
@@ -98,6 +99,7 @@ class FolderMapperTest extends TestCase {
 
 	public function testCreateFolder() {
 		$account = $this->createMock(Account::class);
+		$account->method('getId')->willReturn(42);
 		$client = $this->createMock(Horde_Imap_Client_Socket::class);
 		$client->expects($this->once())
 			->method('createMailbox')
@@ -120,7 +122,7 @@ class FolderMapperTest extends TestCase {
 
 		$created = $this->mapper->createFolder($client, $account, 'new');
 
-		$expected = new Folder($account, new Horde_Imap_Client_Mailbox('new'), [], '.');
+		$expected = new Folder(42, new Horde_Imap_Client_Mailbox('new'), [], '.');
 		$this->assertEquals($expected, $created);
 	}
 

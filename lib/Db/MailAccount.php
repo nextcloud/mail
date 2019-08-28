@@ -59,6 +59,8 @@ use OCP\AppFramework\Db\Entity;
  * @method void setOutboundPassword(string $outboundPassword)
  * @method string|null getSignature()
  * @method void setSignature(string|null $signature)
+ * @method int getLastMailboxSync()
+ * @method void setLastMailboxSync(int $time)
  */
 class MailAccount extends Entity {
 
@@ -76,6 +78,7 @@ class MailAccount extends Entity {
 	protected $outboundUser;
 	protected $outboundPassword;
 	protected $signature;
+	protected $lastMailboxSync;
 
 	/**
 	 * @param array $params
@@ -123,6 +126,8 @@ class MailAccount extends Entity {
 		if (isset($params['smtpPassword'])) {
 			$this->setOutboundPassword($params['smtpPassword']);
 		}
+
+		$this->addType('lastMailboxSync', 'integer');
 	}
 
 	/**

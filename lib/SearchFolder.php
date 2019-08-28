@@ -1,4 +1,4 @@
-<?php
+<?php declare(strict_types=1);
 
 /**
  * @author Christoph Wurst <christoph@winzerhof-wurst.at>
@@ -30,11 +30,11 @@ class SearchFolder extends Folder {
 	 * @param Account $account
 	 * @param Horde_Imap_Client_Mailbox $mailbox
 	 * @param array $attributes
-	 * @param type $delimiter
+	 * @param string $delimiter
 	 */
-	public function __construct(Account $account, Horde_Imap_Client_Mailbox $mailbox, array $attributes, $delimiter) {
+	public function __construct(int $accountId, Horde_Imap_Client_Mailbox $mailbox, array $attributes, $delimiter) {
 		$attributes[] = Horde_Imap_Client::SPECIALUSE_FLAGGED;
-		parent::__construct($account, $mailbox, $attributes, $delimiter);
+		parent::__construct($accountId, $mailbox, $attributes, $delimiter);
 	}
 
 	/**

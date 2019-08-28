@@ -69,7 +69,12 @@ class FolderMapper {
 				continue;
 			}
 
-			$folder = new Folder($account, $mailbox['mailbox'], $mailbox['attributes'], $mailbox['delimiter']);
+			$folder = new Folder(
+				$account->getId(),
+				$mailbox['mailbox'],
+				$mailbox['attributes'],
+				$mailbox['delimiter']
+			);
 
 			if ($folder->isSearchable()) {
 				$folder->setSyncToken($client->getSyncToken($folder->getMailbox()));
@@ -77,7 +82,7 @@ class FolderMapper {
 
 			$folders[] = $folder;
 			if ($mailbox['mailbox']->utf8 === 'INBOX') {
-				$searchFolder = new SearchFolder($account, $mailbox['mailbox'], $mailbox['attributes'], $mailbox['delimiter']);
+				$searchFolder = new SearchFolder($account->getId(), $mailbox['mailbox'], $mailbox['attributes'], $mailbox['delimiter']);
 				if ($folder->isSearchable()) {
 					$searchFolder->setSyncToken($client->getSyncToken($folder->getMailbox()));
 				}
@@ -103,7 +108,7 @@ class FolderMapper {
 			throw new ServiceException("Created mailbox does not exist");
 		}
 
-		return new Folder($account, $mb['mailbox'], $mb['attributes'], $mb['delimiter']);
+		return new Folder($account->getId(), $mb['mailbox'], $mb['attributes'], $mb['delimiter']);
 	}
 
 	/**
