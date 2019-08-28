@@ -52,7 +52,7 @@ export default {
 		folders.forEach(folder => {
 			// Add all folders (including subfolders to state, but only toplevel to account
 			const id = addToState(folder)
-			folder.folders.forEach(addToState)
+			Vue.set(folder, 'folders', folder.folders.map(addToState))
 
 			account.folders.push(id)
 		})
@@ -81,7 +81,7 @@ export default {
 		folders.forEach(folder => {
 			// Add all folders (including subfolders to state, but only toplevel to account
 			const id = addToState(folder)
-			folder.folders.forEach(addToState)
+			Vue.set(folder, 'folders', folder.folders.map(addToState))
 
 			account.folders.push(id)
 		})

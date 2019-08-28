@@ -48,6 +48,11 @@ export const getters = {
 	getFolders: state => accountId => {
 		return state.accounts[accountId].folders.map(folderId => state.folders[folderId])
 	},
+	getSubfolders: (state, getters) => (accountId, folderId) => {
+		const folder = getters.getFolder(accountId, folderId)
+
+		return folder.folders.map(id => state.folders[id])
+	},
 	getUnifiedFolder: state => specialRole => {
 		return _.head(
 			state.accounts[UNIFIED_ACCOUNT_ID].folders

@@ -130,7 +130,9 @@ export default {
 				},
 				collapsible: true,
 				opened: folder.opened,
-				children: folder.folders.map(folder => this.folderToEntry(folder, false)),
+				children: this.$store.getters
+					.getSubfolders(this.account.id, folder.id)
+					.map(folder => this.folderToEntry(folder, false)),
 			}
 		},
 		fetchFolderStats() {
