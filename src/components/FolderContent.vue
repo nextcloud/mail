@@ -63,7 +63,11 @@ export default {
 	},
 	computed: {
 		hasMessages() {
-			return this.$store.getters.getEnvelopes(this.account.id, this.folder.id).length > 0
+			// it actually should be `return this.$store.getters.getEnvelopes(this.account.id, this.folder.id).length > 0`
+			// but for some reason Vue doesn't track the dependencies on reactive data then and messages in subfolders can't
+			// be opened then
+
+			return this.folder.envelopes.map(msgId => this.$store.state.envelopes[msgId])
 		},
 		showMessage() {
 			return this.hasMessages && this.$route.name === 'message'
