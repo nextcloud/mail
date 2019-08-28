@@ -22,17 +22,18 @@
 
 import Vue from 'vue'
 import App from './App'
+import {getRequestToken} from 'nextcloud-auth'
 import router from './router'
 import store from './store'
 import {sync} from 'vuex-router-sync'
-import {translate, translatePlural} from 'nextcloud-server/dist/l10n'
-import {generateFilePath} from 'nextcloud-server/dist/router'
+import {translate, translatePlural} from 'nextcloud-l10n'
+import {generateFilePath} from 'nextcloud-router'
 import VueShortKey from 'vue-shortkey'
 import VTooltip from 'v-tooltip'
 
 import {fixAccountId} from './service/AccountService'
 
-__webpack_nonce__ = btoa(OC.requestToken)
+__webpack_nonce__ = btoa(getRequestToken())
 __webpack_public_path__ = generateFilePath('mail', '', 'js/')
 
 sync(store, router)
@@ -41,10 +42,10 @@ Vue.mixin({
 	methods: {
 		t: translate,
 		n: translatePlural,
-	}
+	},
 })
 
-Vue.use(VueShortKey, { prevent: ['input', '.ql-editor'] })
+Vue.use(VueShortKey, {prevent: ['input', '.ql-editor']})
 Vue.use(VTooltip)
 
 const getPreferenceFromPage = key => {
@@ -57,25 +58,26 @@ const getPreferenceFromPage = key => {
 
 store.commit('savePreference', {
 	key: 'debug',
-	value: getPreferenceFromPage('debug-mode')
+	value: getPreferenceFromPage('debug-mode'),
 })
 store.commit('savePreference', {
 	key: 'version',
-	value: getPreferenceFromPage('config-installed-version')
+	value: getPreferenceFromPage('config-installed-version'),
 })
 store.commit('savePreference', {
 	key: 'external-avatars',
-	value: getPreferenceFromPage('external-avatars')
+	value: getPreferenceFromPage('external-avatars'),
 })
 
 const accounts = JSON.parse(atob(getPreferenceFromPage('serialized-accounts')))
-accounts
-	.map(fixAccountId)
-	.forEach(account => store.commit('addAccount', account))
+accounts.map(fixAccountId).forEach(account => {
+	const folders = account.folders
+	store.commit('addAccount', account)
+})
 
 new Vue({
 	el: '#content',
 	router,
 	store,
-	render: h => h(App)
+	render: h => h(App),
 })

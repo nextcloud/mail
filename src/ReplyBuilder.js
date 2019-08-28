@@ -22,7 +22,7 @@
 
 import _ from 'lodash'
 import moment from 'moment'
-import {getLocale} from 'nextcloud-server/dist/l10n'
+import {getLocale} from 'nextcloud-l10n'
 
 moment.locale(getLocale())
 
@@ -58,7 +58,7 @@ export const buildReplyBody = (original, from, date, isHtml) => {
 const RecipientType = Object.seal({
 	None: 0,
 	To: 1,
-	Cc: 2
+	Cc: 2,
 })
 
 export const buildRecipients = (envelope, ownAddress) => {
@@ -112,9 +112,7 @@ export const buildRecipients = (envelope, ownAddress) => {
 }
 
 // TODO: https://en.wikipedia.org/wiki/List_of_email_subject_abbreviations#Abbreviations_in_other_languages
-const replyPrepends = [
-	're',
-]
+const replyPrepends = ['re']
 
 /*
  * Ref https://tools.ietf.org/html/rfc5322#section-3.6.5
@@ -128,9 +126,7 @@ export const buildReplySubject = original => {
 }
 
 // TODO: https://en.wikipedia.org/wiki/List_of_email_subject_abbreviations#Abbreviations_in_other_languages
-const forwardPrepends = [
-	'fwd',
-]
+const forwardPrepends = ['fwd']
 
 export const buildFowardSubject = original => {
 	if (forwardPrepends.some(prepend => original.toLowerCase().startsWith(`${prepend}:`))) {

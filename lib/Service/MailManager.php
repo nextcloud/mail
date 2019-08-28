@@ -28,8 +28,8 @@ use OCA\Mail\Contracts\IMailManager;
 use OCA\Mail\Exception\ServiceException;
 use OCA\Mail\Folder;
 use OCA\Mail\IMAP\FolderMapper;
+use OCA\Mail\IMAP\FolderStats;
 use OCA\Mail\IMAP\IMAPClientFactory;
-use OCA\Mail\IMAP\MailboxPrefixDetector;
 use OCA\Mail\IMAP\MessageMapper;
 use OCA\Mail\IMAP\Sync\Request;
 use OCA\Mail\IMAP\Sync\Response;
@@ -43,36 +43,18 @@ class MailManager implements IMailManager {
 	/** @var FolderMapper */
 	private $folderMapper;
 
-	/** @var MailboxPrefixDetector */
-	private $prefixDetector;
-
-	/** @var FolderNameTranslator */
-	private $folderNameTranslator;
-
 	/** @var Synchronizer */
 	private $synchronizer;
 
 	/** @var MessageMapper */
 	private $messageMapper;
 
-	/**
-	 * @param IMAPClientFactory $imapClientFactory
-	 * @param FolderMapper $folderMapper
-	 * @param MailboxPrefixDetector $prefixDetector
-	 * @param FolderNameTranslator $folderNameTranslator
-	 * @param Synchronizer $synchronizer
-	 * @param MessageMapper $messageMapper
-	 */
 	public function __construct(IMAPClientFactory $imapClientFactory,
 								FolderMapper $folderMapper,
-								MailboxPrefixDetector $prefixDetector,
-								FolderNameTranslator $folderNameTranslator,
 								Synchronizer $synchronizer,
 								MessageMapper $messageMapper) {
 		$this->imapClientFactory = $imapClientFactory;
 		$this->folderMapper = $folderMapper;
-		$this->prefixDetector = $prefixDetector;
-		$this->folderNameTranslator = $folderNameTranslator;
 		$this->synchronizer = $synchronizer;
 		$this->messageMapper = $messageMapper;
 	}
@@ -85,12 +67,36 @@ class MailManager implements IMailManager {
 		$client = $this->imapClientFactory->getClient($account);
 
 		$folders = $this->folderMapper->getFolders($account, $client);
-		$havePrefix = $this->prefixDetector->havePrefix($folders);
 		$this->folderMapper->getFoldersStatus($folders, $client);
 		$this->folderMapper->detectFolderSpecialUse($folders);
-		$this->folderNameTranslator->translateAll($folders, $havePrefix);
-		$this->folderMapper->sortFolders($folders);
-		return $this->folderMapper->buildFolderHierarchy($folders, $havePrefix);
+		return $folders;
+	}
+
+	/**
+	 * @param Account $account
+	 * @param string $name
+	 *
+	 * @return Folder
+	 */
+	public function createFolder(Account $account, string $name): Folder {
+		$client = $this->imapClientFactory->getClient($account);
+
+		$folder = $this->folderMapper->createFolder($client, $account, $name);
+		$this->folderMapper->getFoldersStatus([$folder], $client);
+		$this->folderMapper->detectFolderSpecialUse([$folder]);
+		return $folder;
+	}
+
+	/**
+	 * @param Account $account
+	 * @param string $folderId
+	 *
+	 * @return FolderStats
+	 */
+	public function getFolderStats(Account $account, string $folderId): FolderStats {
+		$client = $this->imapClientFactory->getClient($account);
+
+		return $this->folderMapper->getFoldersStatusAsObject($client, $folderId);
 	}
 
 	/**
@@ -141,6 +147,12 @@ class MailManager implements IMailManager {
 		$client = $this->imapClientFactory->getClient($account);
 
 		$this->messageMapper->move($client, $sourceFolderId, $messageId, $destFolderId);
+	}
+
+	public function markFolderAsRead(Account $account, string $folderId): void {
+		$client = $this->imapClientFactory->getClient($account);
+
+		$this->messageMapper->markAllRead($client, $folderId);
 	}
 
 }

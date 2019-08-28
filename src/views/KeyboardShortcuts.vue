@@ -1,11 +1,8 @@
 <template>
-	<div id="content" class="app-mail">
-		<app-navigation :menu="menu">
-			<AppSettingsMenu slot="settings-content"/>
-		</app-navigation>
-
-		<div id="app-content">
-			<div class="app-content-details">
+	<Content app-name="mail">
+		<Navigation />
+		<AppContent>
+			<AppContentDetails>
 				<h2>{{ t('mail', 'Keyboard shortcuts') }}</h2>
 
 				<p>{{ t('mail', 'Speed up your Mail experience with these quick shortcuts.') }}</p>
@@ -50,31 +47,27 @@
 						<dd>{{ t('mail', 'Refresh') }}</dd>
 					</div>
 				</dl>
-			</div>
-		</div>
-	</div>
+			</AppContentDetails>
+		</AppContent>
+	</Content>
 </template>
 
 <script>
-	import {AppNavigation} from 'nextcloud-vue'
+import AppContent from 'nextcloud-vue/dist/Components/AppContent'
+import AppContentDetails from 'nextcloud-vue/dist/Components/AppContentDetails'
+import Content from 'nextcloud-vue/dist/Components/Content'
 
-	import AppSettingsMenu from '../components/AppSettingsMenu'
-	import SidebarItems from '../mixins/SidebarItems'
+import Navigation from '../components/Navigation'
 
-	export default {
-		name: 'KeyboardShortcuts',
-		extends: SidebarItems,
-		components: {
-			AppNavigation,
-			AppSettingsMenu,
-		},
-		computed: {
-			menu () {
-				return this.buildMenu()
-			}
-		},
-	}
+export default {
+	name: 'KeyboardShortcuts',
+	components: {
+		AppContent,
+		AppContentDetails,
+		Content,
+		Navigation,
+	},
+}
 </script>
 
-<style>
-</style>
+<style></style>

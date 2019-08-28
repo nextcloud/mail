@@ -20,8 +20,10 @@
  */
 
 import _ from 'lodash'
-import {translate as t, translatePlural as n} from 'nextcloud-server/dist/l10n'
-import {generateFilePath} from 'nextcloud-server/dist/router'
+import {translate as t, translatePlural as n} from 'nextcloud-l10n'
+import {generateFilePath} from 'nextcloud-router'
+
+import Logger from '../logger'
 
 /**
  * @todo use Notification.requestPermission().then once all browsers support promise API
@@ -29,45 +31,39 @@ import {generateFilePath} from 'nextcloud-server/dist/router'
  * @return {Promise}
  */
 const request = () => {
-	if (!("Notification" in window)) {
-		console.info('browser does not support desktop notifications')
+	if (!('Notification' in window)) {
+		Logger.info('browser does not support desktop notifications')
 		return Promise.reject()
 	} else if (Notification.permission === 'granted') {
 		return Promise.resolve()
 	} else if (Notification.permission === 'denied') {
-		console.info('desktop notifications are denied')
+		Logger.info('desktop notifications are denied')
 		return Promise.reject()
 	}
 
-	console.info('requesting permissions to show desktop notifications')
+	Logger.info('requesting permissions to show desktop notifications')
 	return Notification.requestPermission()
 }
 
 const showNotification = (title, body, icon) => {
-	request()
-		.then(() => {
-			if (document.querySelector(':focus') !== null) {
-				console.debug('browser is active. notification request is ignored')
-				return
-			}
-		})
-
-	const notification = new Notification(
-		title,
-		{
-			body: body,
-			icon: icon
+	request().then(() => {
+		if (document.querySelector(':focus') !== null) {
+			Logger.debug('browser is active. notification request is ignored')
+			return
 		}
-	)
+	})
+
+	const notification = new Notification(title, {
+		body: body,
+		icon: icon,
+	})
 	notification.onclick = () => {
 		window.focus()
 	}
 }
 
-const getNotificationBody = (messages) => {
-	const labels = messages
-		.filter(m => m.from.length > 0)
-		.map(m => m.from[0].label)
+const getNotificationBody = messages => {
+	const labels = messages.filter(m => m.from.length > 0).map(m => m.from[0].label)
 	let from = _.uniq(labels)
 	if (from.length > 2) {
 		from = from.slice(0, 2)
@@ -78,16 +74,16 @@ const getNotificationBody = (messages) => {
 	if (messages.length === 1) {
 		return t('mail', '{from}\n{subject}', {
 			from: from.join(),
-			subject: messages[0].subject
+			subject: messages[0].subject,
 		})
 	} else {
 		return n('mail', '%n new message \nfrom {from}', '%n new messages \nfrom {from}', messages.length, {
-			from: from.join()
+			from: from.join(),
 		})
 	}
 }
 
-export const showNewMessagesNotification = (messages) => {
+export const showNewMessagesNotification = messages => {
 	showNotification(
 		t('mail', 'Nextcloud Mail'),
 		getNotificationBody(messages),

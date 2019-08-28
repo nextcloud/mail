@@ -22,11 +22,11 @@
 import _ from 'lodash'
 
 class IndefinableValue {
-	constructor (value) {
+	constructor(value) {
 		this.value = value
 	}
 
-	or (other) {
+	or(other) {
 		if (_.isUndefined(this.value)) {
 			return other
 		} else {

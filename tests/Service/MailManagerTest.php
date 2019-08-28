@@ -24,39 +24,32 @@ namespace OCA\Mail\Tests\Service;
 use ChristophWurst\Nextcloud\Testing\TestCase;
 use Horde_Imap_Client_Socket;
 use OCA\Mail\Account;
+use OCA\Mail\Folder;
 use OCA\Mail\IMAP\FolderMapper;
+use OCA\Mail\IMAP\FolderStats;
 use OCA\Mail\IMAP\IMAPClientFactory;
-use OCA\Mail\IMAP\MailboxPrefixDetector;
 use OCA\Mail\IMAP\MessageMapper;
 use OCA\Mail\IMAP\Sync\Request;
 use OCA\Mail\IMAP\Sync\Response;
 use OCA\Mail\IMAP\Sync\Synchronizer;
-use OCA\Mail\Service\FolderNameTranslator;
 use OCA\Mail\Service\MailManager;
-use OCP\Files\Folder;
-use PHPUnit_Framework_MockObject_MockObject;
+use PHPUnit\Framework\MockObject\MockObject;
 
 class MailManagerTest extends TestCase {
 
-	/** @var IMAPClientFactory|PHPUnit_Framework_MockObject_MockObject */
+	/** @var IMAPClientFactory|MockObject */
 	private $imapClientFactory;
 
-	/** @var FolderMapper|PHPUnit_Framework_MockObject_MockObject */
+	/** @var FolderMapper|MockObject */
 	private $folderMapper;
 
-	/** @var MailboxPrefixDetector|PHPUnit_Framework_MockObject_MockObject */
-	private $prefixDetector;
-
-	/** @var MessageMapper|PHPUnit_Framework_MockObject_MockObject */
+	/** @var MessageMapper|MockObject */
 	private $messageMapper;
 
-	/** @var FolderNameTranslator|PHPUnit_Framework_MockObject_MockObject */
-	private $translator;
-
-	/** @var Synchronizer|PHPUnit_Framework_MockObject_MockObject */
+	/** @var Synchronizer|MockObject */
 	private $sync;
 
-	/** @varr MailManager */
+	/** @var MailManager */
 	private $manager;
 
 	protected function setUp() {
@@ -64,22 +57,20 @@ class MailManagerTest extends TestCase {
 
 		$this->imapClientFactory = $this->createMock(IMAPClientFactory::class);
 		$this->folderMapper = $this->createMock(FolderMapper::class);
-		$this->prefixDetector = $this->createMock(MailboxPrefixDetector::class);
 		$this->messageMapper = $this->createMock(MessageMapper::class);
-		$this->translator = $this->createMock(FolderNameTranslator::class);
 		$this->sync = $this->createMock(Synchronizer::class);
 
-		$this->manager = new MailManager($this->imapClientFactory,
-			$this->folderMapper, $this->prefixDetector, $this->translator, $this->sync,
-			$this->messageMapper);
+		$this->manager = new MailManager(
+			$this->imapClientFactory,
+			$this->folderMapper,
+			$this->sync,
+			$this->messageMapper
+		);
 	}
 
 	public function testGetFolders() {
 		$client = $this->createMock(Horde_Imap_Client_Socket::class);
 		$account = $this->createMock(Account::class);
-		$this->prefixDetector->expects($this->once())
-			->method('havePrefix')
-			->willReturn(false);
 		$this->imapClientFactory->expects($this->once())
 			->method('getClient')
 			->willReturn($client);
@@ -97,18 +88,48 @@ class MailManagerTest extends TestCase {
 		$this->folderMapper->expects($this->once())
 			->method('detectFolderSpecialUse')
 			->with($this->equalTo($folders));
-		$this->folderMapper->expects($this->once())
-			->method('sortFolders')
-			->with($this->equalTo($folders));
-		$this->translator->expects($this->once())
-			->method('translateAll')
-			->with($this->equalTo($folders), $this->equalTo(false));
-		$this->folderMapper->expects($this->once())
-			->method('buildFolderHierarchy')
-			->with($this->equalTo($folders))
-			->willReturn($folders);
 
 		$this->manager->getFolders($account);
+	}
+
+	public function testCreateFolder() {
+		$client = $this->createMock(Horde_Imap_Client_Socket::class);
+		$account = $this->createMock(Account::class);
+		$this->imapClientFactory->expects($this->once())
+			->method('getClient')
+			->willReturn($client);
+		$folder =$this->createMock(Folder::class);
+		$this->folderMapper->expects($this->once())
+			->method('createFolder')
+			->with($this->equalTo($client), $this->equalTo($account), $this->equalTo('new'))
+			->willReturn($folder);
+		$this->folderMapper->expects($this->once())
+			->method('getFoldersStatus')
+			->with($this->equalTo([$folder]));
+		$this->folderMapper->expects($this->once())
+			->method('detectFolderSpecialUse')
+			->with($this->equalTo([$folder]));
+
+		$created = $this->manager->createFolder($account, 'new');
+
+		$this->assertEquals($folder, $created);
+	}
+
+	public function testGetFolderStats() {
+		$client = $this->createMock(Horde_Imap_Client_Socket::class);
+		$account = $this->createMock(Account::class);
+		$this->imapClientFactory->expects($this->once())
+			->method('getClient')
+			->willReturn($client);
+		$stats = $this->createMock(FolderStats::class);
+		$this->folderMapper->expects($this->once())
+			->method('getFoldersStatusAsObject')
+			->with($this->equalTo($client), $this->equalTo('INBOX'))
+			->willReturn($stats);
+
+		$actual = $this->manager->getFolderStats($account, 'INBOX');
+
+		$this->assertEquals($stats, $actual);
 	}
 
 	public function testSync() {

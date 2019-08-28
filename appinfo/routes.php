@@ -44,8 +44,23 @@ return [
 			'verb' => 'POST'
 		],
 		[
+			'name' => 'accounts#updateSignature',
+			'url' => '/api/accounts/{accountId}/signature',
+			'verb' => 'PUT'
+		],
+		[
 			'name' => 'folders#sync',
 			'url' => '/api/accounts/{accountId}/folders/{folderId}/sync',
+			'verb' => 'GET'
+		],
+		[
+			'name' => 'folders#markAllAsRead',
+			'url' => '/api/accounts/{accountId}/folders/{folderId}/read',
+			'verb' => 'POST'
+		],
+		[
+			'name' => 'folders#stats',
+			'url' => '/api/accounts/{accountId}/folders/{folderId}/stats',
 			'verb' => 'GET'
 		],
 		[

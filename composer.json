@@ -7,35 +7,36 @@
 	],
 	"config": {
 		"platform": {
-			"php": "7.0.13"
+			"php": "7.1"
 		}
 	},
 	"require": {
-		"php": ">=7.0.13",
-		"pear-pear.horde.org/Horde_Date": "^2.4.1@stable",
-		"pear-pear.horde.org/Horde_Exception": "^2.0.8@stable",
-		"pear-pear.horde.org/Horde_Imap_Client": "^2.29.16@stable",
-		"pear-pear.horde.org/Horde_Mail": "^2.6.4@stable",
-		"pear-pear.horde.org/Horde_Mime": "^2.11.0@stable",
-		"pear-pear.horde.org/Horde_Nls": "^2.2.1@stable",
-		"pear-pear.horde.org/Horde_Stream": "^1.6.3@stable",
-		"pear-pear.horde.org/Horde_Support": "^2.2.0@stable",
-		"pear-pear.horde.org/Horde_Text_Filter": "^2.3.5@stable",
-		"pear-pear.horde.org/Horde_Text_Flowed": "^2.0.3@stable",
-		"pear-pear.horde.org/Horde_Util": "^2.5.8@stable",
-		"pear-pear.horde.org/Horde_Smtp": "^1.9.5@stable",
-		"cerdic/css-tidy": "v1.6.5",
-		"ezyang/htmlpurifier": "4.10.0",
+		"php": ">=7.1",
+		"pear-pear.horde.org/horde_date": "^2.4.1@stable",
+		"pear-pear.horde.org/horde_exception": "^2.0.8@stable",
+		"pear-pear.horde.org/horde_imap_client": "^2.29.16@stable",
+		"pear-pear.horde.org/horde_mail": "^2.6.4@stable",
+		"pear-pear.horde.org/horde_mime": "^2.11.0@stable",
+		"pear-pear.horde.org/horde_nls": "^2.2.1@stable",
+		"pear-pear.horde.org/horde_stream": "^1.6.3@stable",
+		"pear-pear.horde.org/horde_support": "^2.2.0@stable",
+		"pear-pear.horde.org/horde_text_filter": "^2.3.5@stable",
+		"pear-pear.horde.org/horde_text_flowed": "^2.0.3@stable",
+		"pear-pear.horde.org/horde_util": "^2.5.8@stable",
+		"pear-pear.horde.org/horde_smtp": "^1.9.5@stable",
+		"cerdic/css-tidy": "v1.7.0",
+		"ezyang/htmlpurifier": "4.11.0",
 		"kwi/urllinker": "dev-default",
-		"gravatarphp/gravatar": "^1.0",
+		"gravatarphp/gravatar": "^2.0",
 		"arthurhoaro/favicon": "^1.2"
 	},
 	"require-dev": {
-		"christophwurst/nextcloud": "dev-stable15",
-		"christophwurst/nextcloud_testing": "0.5.1",
-		"phan/phan": "^1.2"
+		"christophwurst/nextcloud": "v16.0.2",
+		"christophwurst/nextcloud_testing": "0.7.0",
+		"phan/phan": "^2.0"
 	},
 	"scripts": {
+		"lint": "find . -name \\*.php -not -path './vendor/*' -exec php -l \"{}\" \\;",
 		"phan": "phan --allow-polyfill-parser -k .phan/config.php",
 		"test": "phpunit -c tests/phpunit.xml --fail-on-warning",
 		"test:unit": "phpunit -c tests/phpunit.xml tests --fail-on-warning",

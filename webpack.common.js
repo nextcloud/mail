@@ -5,6 +5,7 @@ module.exports = {
 	entry: path.join(__dirname, 'src/main.js'),
 	output: {
 		path: path.resolve(__dirname, 'js'),
+		chunkFilename: 'mail.[name].[contenthash].js',
 		publicPath: '/js/',
 		filename: 'mail.js'
 	},

@@ -20,13 +20,12 @@
  */
 
 import Axios from 'nextcloud-axios'
-import {generateUrl} from 'nextcloud-server/dist/router'
+import {generateUrl} from 'nextcloud-router'
 
 export const findRecipient = term => {
 	const url = generateUrl('/apps/mail/api/autoComplete?term={term}', {
 		term,
 	})
 
-	return Axios.get(url)
-		.then(resp => resp.data)
+	return Axios.get(url).then(resp => resp.data)
 }

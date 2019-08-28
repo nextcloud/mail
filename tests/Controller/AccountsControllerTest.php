@@ -112,7 +112,7 @@ class AccountsControllerTest extends TestCase {
 		$this->setupService = $this->createMock(SetupService::class);
 
 		$this->controller = new AccountsController($this->appName, $this->request, $this->accountService, $this->groupsIntegration, $this->userId,
-			$this->logger, $this->l10n, $this->crypto, $this->aliasesService, $this->transmission, $this->setupService);
+			$this->logger, $this->l10n, $this->aliasesService, $this->transmission, $this->setupService);
 		$this->account = $this->createMock(Account::class);
 		$this->accountId = 123;
 	}
@@ -166,6 +166,28 @@ class AccountsControllerTest extends TestCase {
 		$this->expectException(DoesNotExistException::class);
 
 		$this->controller->show($this->accountId);
+	}
+
+	public function testUpdateSignature() {
+		$this->accountService->expects($this->once())
+			->method('updateSignature')
+			->with($this->equalTo($this->accountId), $this->equalTo($this->userId), 'sig');
+
+		$response = $this->controller->updateSignature($this->accountId, 'sig');
+
+		$expectedResponse = new JSONResponse();
+		$this->assertEquals($expectedResponse, $response);
+	}
+
+	public function testDeleteSignature() {
+		$this->accountService->expects($this->once())
+			->method('updateSignature')
+			->with($this->equalTo($this->accountId), $this->equalTo($this->userId), null);
+
+		$response = $this->controller->updateSignature($this->accountId, null);
+
+		$expectedResponse = new JSONResponse();
+		$this->assertEquals($expectedResponse, $response);
 	}
 
 	public function testDestroy() {
@@ -327,7 +349,7 @@ class AccountsControllerTest extends TestCase {
 			->with($accountName, $email, $imapHost, $imapPort, $imapSslMode, $imapUser, $imapPassword, $smtpHost, $smtpPort, $smtpSslMode, $smtpUser, $smtpPassword, $this->userId, $id)
 			->willReturn($account);
 
-		$response = $this->controller->update($id, $accountName, $email, $password, $imapHost, $imapPort, $imapSslMode, $imapUser, $imapPassword, $smtpHost, $smtpPort, $smtpSslMode, $smtpUser, $smtpPassword, $autoDetect);
+		$response = $this->controller->update($id, $autoDetect, $accountName, $email, $password, $imapHost, $imapPort, $imapSslMode, $imapUser, $imapPassword, $smtpHost, $smtpPort, $smtpSslMode, $smtpUser, $smtpPassword);
 
 		$expectedResponse = new JSONResponse($account);
 
@@ -356,7 +378,7 @@ class AccountsControllerTest extends TestCase {
 			->willThrowException(new Exception());
 		$this->expectException(ClientException::class);
 
-		$this->controller->update($id, $accountName, $email, $password, $imapHost, $imapPort, $imapSslMode, $imapUser, $imapPassword, $smtpHost, $smtpPort, $smtpSslMode, $smtpUser, $smtpPassword, $autoDetect);
+		$this->controller->update($id, $autoDetect, $accountName, $email, $password, $imapHost, $imapPort, $imapSslMode, $imapUser, $imapPassword, $smtpHost, $smtpPort, $smtpSslMode, $smtpUser, $smtpPassword);
 	}
 
 	public function testSendNewMessage() {

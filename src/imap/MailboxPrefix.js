@@ -1,11 +1,7 @@
-<?php
-
-declare(strict_types=1);
-
-/**
- * @copyright 2017 Christoph Wurst <christoph@winzerhof-wurst.at>
+/*
+ * @copyright 2019 Christoph Wurst <christoph@winzerhof-wurst.at>
  *
- * @author 2017 Christoph Wurst <christoph@winzerhof-wurst.at>
+ * @author 2019 Christoph Wurst <christoph@winzerhof-wurst.at>
  *
  * @license GNU AGPL version 3 or any later version
  *
@@ -21,35 +17,18 @@ declare(strict_types=1);
  *
  * You should have received a copy of the GNU Affero General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
- *
  */
 
-namespace OCA\Mail\IMAP;
+const PREFIX = 'INBOX'
 
-use OCA\Mail\Folder;
-use OCA\Mail\SearchFolder;
-
-class MailboxPrefixDetector {
-
-	const PREFIX = 'INBOX';
-
-	/**
-	 * @param Folder[] $folders
-	 * @return bool
-	 */
-	public function havePrefix(array $folders): bool {
-		foreach ($folders as $folder) {
-			if ($folder instanceof SearchFolder) {
-				// Ignore special flagged mailbox
-				continue;
+export const havePrefix = mailboxes => {
+	return (
+		mailboxes.filter(mailbox => {
+			const hierarchy = mailbox.id.split(mailbox.delimiter)
+			if (hierarchy.length < 1 || hierarchy[0] !== PREFIX) {
+				return false
 			}
-
-			$parts = explode($folder->getDelimiter(), $folder->getMailbox());
-			if (count($parts) < 1 || $parts[0] !== self::PREFIX) {
-				return false;
-			}
-		}
-		return true;
-	}
-
+			return true
+		}).length === mailboxes.length
+	)
 }

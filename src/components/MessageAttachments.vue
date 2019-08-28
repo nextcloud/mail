@@ -22,21 +22,25 @@
 <template>
 	<div class="mail-message-attachments">
 		<div class="attachments">
-			<MessageAttachment v-for="attachment in attachments"
-							   :key="attachment.id"
-							   :id="attachment.id"
-							   :fileName="attachment.fileName"
-							   :size="attachment.size"
-							   :url="attachment.downloadUrl"
-							   :isImage="attachment.isImage"
-							   :isCalendarEvent="attachment.isCalendarEvent"
-							   :mimeUrl="attachment.mimeUrl"/>
+			<MessageAttachment
+				v-for="attachment in attachments"
+				:id="attachment.id"
+				:key="attachment.id"
+				:file-name="attachment.fileName"
+				:size="attachment.size"
+				:url="attachment.downloadUrl"
+				:is-image="attachment.isImage"
+				:is-calendar-event="attachment.isCalendarEvent"
+				:mime-url="attachment.mimeUrl"
+			/>
 		</div>
 		<p v-if="moreThanOne">
-			<button class="attachments-save-to-cloud"
-					:class="{'icon-folder' : !savingToCloud, 'icon-loading-small' : savingToCloud}"
-					:disabled="savingToCloud"
-					v-on:click="saveAll">
+			<button
+				class="attachments-save-to-cloud"
+				:class="{'icon-folder': !savingToCloud, 'icon-loading-small': savingToCloud}"
+				:disabled="savingToCloud"
+				@click="saveAll"
+			>
 				{{ t('mail', 'Save all to Files') }}
 			</button>
 		</p>
@@ -44,74 +48,73 @@
 </template>
 
 <script>
-	import MessageAttachment from './MessageAttachment'
-	import {parseUid} from '../util/EnvelopeUidParser'
-	import {saveAttachmentsToFiles} from '../service/AttachmentService'
+import MessageAttachment from './MessageAttachment'
+import Logger from '../logger'
+import {parseUid} from '../util/EnvelopeUidParser'
+import {saveAttachmentsToFiles} from '../service/AttachmentService'
 
-	export default {
-		name: "MessageAttachments",
-		components: {
-			MessageAttachment
+export default {
+	name: 'MessageAttachments',
+	components: {
+		MessageAttachment,
+	},
+	props: {
+		attachments: {
+			type: Array,
+			required: true,
 		},
-		props: {
-			attachments: Array,
-		},
-		data () {
-			return {
-				savingToCloud: false,
-			}
-		},
-		computed: {
-			moreThanOne () {
-				return this.attachments.length > 1
-			}
-		},
-		methods: {
-			saveAll () {
-				const pickDestination = () => {
-					return new Promise((res, rej) => {
-						OC.dialogs.filepicker(
-							t('mail', 'Choose a folder to store the attachments in'),
-							res,
-							false,
-							'httpd/unix-directory',
-							true
-						)
-					})
-				}
-				const saveAttachments = (accountId, folderId, messageId) => directory => {
-					return saveAttachmentsToFiles(
-						accountId,
-						folderId,
-						messageId,
-						directory
-					)
-				}
-				const {accountId, folderId, id} = parseUid(this.$route.params.messageUid)
-
-				return pickDestination()
-					.then(dest => {
-						this.savingToCloud = true
-						return dest
-					})
-					.then(saveAttachments(accountId, folderId, id))
-					.then(() => console.info('saved'))
-					.catch(e => console.error('not saved', e))
-					.then(() => this.savingToCloud = false)
-			}
+	},
+	data() {
+		return {
+			savingToCloud: false,
 		}
-	}
+	},
+	computed: {
+		moreThanOne() {
+			return this.attachments.length > 1
+		},
+	},
+	methods: {
+		saveAll() {
+			const pickDestination = () => {
+				return new Promise((res, rej) => {
+					OC.dialogs.filepicker(
+						t('mail', 'Choose a folder to store the attachments in'),
+						res,
+						false,
+						'httpd/unix-directory',
+						true
+					)
+				})
+			}
+			const saveAttachments = (accountId, folderId, messageId) => directory => {
+				return saveAttachmentsToFiles(accountId, folderId, messageId, directory)
+			}
+			const {accountId, folderId, id} = parseUid(this.$route.params.messageUid)
+
+			return pickDestination()
+				.then(dest => {
+					this.savingToCloud = true
+					return dest
+				})
+				.then(saveAttachments(accountId, folderId, id))
+				.then(() => Logger.info('saved'))
+				.catch(error => Logger.error('not saved', {error}))
+				.then(() => (this.savingToCloud = false))
+		},
+	},
+}
 </script>
 
 <style>
-	.mail-message-attachments {
-		margin-bottom: 20px;
-	}
+.mail-message-attachments {
+	margin-bottom: 20px;
+}
 
-	/* show icon + text for Download all button
+/* show icon + text for Download all button
 		as well as when there is only one attachment */
-	.attachments-save-to-cloud {
-		background-position: 9px center;
-		padding-left: 32px;
-	}
+.attachments-save-to-cloud {
+	background-position: 9px center;
+	padding-left: 32px;
+}
 </style>

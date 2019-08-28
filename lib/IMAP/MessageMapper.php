@@ -23,6 +23,7 @@ declare(strict_types=1);
 
 namespace OCA\Mail\IMAP;
 
+use Horde_Imap_Client;
 use Horde_Imap_Client_Base;
 use Horde_Imap_Client_Data_Fetch;
 use Horde_Imap_Client_Exception;
@@ -85,6 +86,15 @@ class MessageMapper {
 				'ids' => new Horde_Imap_Client_Ids($messageId),
 				'move' => true,
 			]);
+	}
+
+	public function markAllRead(Horde_Imap_Client_Base $client,
+								string $mailbox) {
+		$client->store($mailbox, [
+			'add' => [
+				Horde_Imap_Client::FLAG_SEEN,
+			],
+		]);
 	}
 
 }

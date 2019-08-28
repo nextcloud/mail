@@ -23,10 +23,15 @@ declare(strict_types=1);
 
 namespace OCA\Mail\IMAP;
 
+use function array_filter;
+use function array_map;
+use Horde_Imap_Client_Mailbox;
+use function reset;
 use Horde_Imap_Client;
 use Horde_Imap_Client_Exception;
 use Horde_Imap_Client_Socket;
 use OCA\Mail\Account;
+use OCA\Mail\Exception\ServiceException;
 use OCA\Mail\Folder;
 use OCA\Mail\SearchFolder;
 
@@ -36,11 +41,12 @@ class FolderMapper {
 	 * @param Account $account
 	 * @param Horde_Imap_Client_Socket $client
 	 * @param string $pattern
+	 *
 	 * @return Folder[]
 	 * @throws Horde_Imap_Client_Exception
 	 */
 	public function getFolders(Account $account, Horde_Imap_Client_Socket $client,
-							   string $pattern = '*') {
+							   string $pattern = '*'): array {
 		$mailboxes = $client->listMailboxes($pattern, Horde_Imap_Client::MBOX_ALL, [
 			'delimiter' => true,
 			'attributes' => true,
@@ -81,53 +87,29 @@ class FolderMapper {
 		return $folders;
 	}
 
-	/**
-	 * @param Folder[] $folders
-	 * @param bool $havePrefix
-	 * @return Folder[]
-	 */
-	public function buildFolderHierarchy(array $folders, bool $havePrefix): array {
-		$indexedFolders = [];
-		foreach ($folders as $folder) {
-			$indexedFolders[$folder->getMailbox()] = $folder;
+	public function createFolder(Horde_Imap_Client_Socket $client,
+								 Account $account,
+								 string $name): Folder {
+		$client->createMailbox($name);
+
+		$list = $client->listMailboxes($name, Horde_Imap_Client::MBOX_ALL, [
+			'delimiter' => true,
+			'attributes' => true,
+			'special_use' => true,
+		]);
+		$mb = reset($list);
+
+		if ($mb === null) {
+			throw new ServiceException("Created mailbox does not exist");
 		}
 
-		$top = array_filter($indexedFolders, function (Folder $folder) use ($havePrefix) {
-			return $folder instanceof SearchFolder || is_null($this->getParentId($folder, $havePrefix));
-		});
-
-		foreach ($indexedFolders as $folder) {
-			if (isset($top[$folder->getMailbox()])) {
-				continue;
-			}
-
-			$parentId = $this->getParentId($folder, $havePrefix);
-			if (isset($top[$parentId])) {
-				$indexedFolders[$parentId]->addFolder($folder);
-			}
-		}
-
-		return array_values($top);
-	}
-
-	/**
-	 * @param Folder $folder
-	 * @param bool $hasPrefix
-	 * @return string
-	 */
-	private function getParentId(Folder $folder, bool $hasPrefix) {
-		$topLevel = $hasPrefix ? 1 : 0;
-		$hierarchy = explode($folder->getDelimiter(), $folder->getMailbox());
-		if (count($hierarchy) <= ($topLevel + 1)) {
-			// Top level folder
-			return null;
-		}
-		return $hasPrefix ? $hierarchy[0] . $folder->getDelimiter() . $hierarchy[1] : $hierarchy[0];
+		return new Folder($account, $mb['mailbox'], $mb['attributes'], $mb['delimiter']);
 	}
 
 	/**
 	 * @param Folder[] $folders
 	 * @param Horde_Imap_Client_Socket $client
+	 *
 	 * @throws Horde_Imap_Client_Exception
 	 */
 	public function getFoldersStatus(array $folders,
@@ -145,6 +127,22 @@ class FolderMapper {
 				$folder->setStatus($status[$folder->getMailbox()]);
 			}
 		}
+	}
+
+	/**
+	 * @param Horde_Imap_Client_Socket $client
+	 * @param string $mailbox
+	 *
+	 * @throws Horde_Imap_Client_Exception
+	 */
+	public function getFoldersStatusAsObject(Horde_Imap_Client_Socket $client,
+											 string $mailbox) {
+		$status = $client->status($mailbox);
+
+		return new FolderStats(
+			$status['messages'],
+			$status['unseen']
+		);
 	}
 
 	/**
@@ -220,50 +218,6 @@ class FolderMapper {
 				$folder->addSpecialUse($specialRole);
 			}
 		}
-	}
-
-	/**
-	 * @param Folder[] $folders
-	 */
-	public function sortFolders(array &$folders) {
-		usort($folders, function (Folder $f1, Folder $f2) {
-			$specialUse1 = $f1->getSpecialUse();
-			$specialUse2 = $f2->getSpecialUse();
-			$roleA = count($specialUse1) > 0 ? reset($specialUse1) : null;
-			$roleB = count($specialUse2) > 0 ? reset($specialUse2) : null;
-			$specialRolesOrder = [
-				'all' => 0,
-				'inbox' => 1,
-				'flagged' => 2,
-				'drafts' => 3,
-				'sent' => 4,
-				'archive' => 5,
-				'junk' => 6,
-				'trash' => 7,
-			];
-			// if there is a flag unknown to us, we ignore it for sorting :
-			// the folder will be sorted by name like any other 'normal' folder
-			if (array_key_exists($roleA, $specialRolesOrder) === false) {
-				$roleA = null;
-			}
-			if (array_key_exists($roleB, $specialRolesOrder) === false) {
-				$roleB = null;
-			}
-
-			if ($roleA === null && $roleB !== null) {
-				return 1;
-			} elseif ($roleA !== null && $roleB === null) {
-				return -1;
-			} elseif ($roleA !== null && $roleB !== null) {
-				if ($roleA === $roleB) {
-					return strcasecmp($f1->getDisplayName(), $f2->getDisplayName());
-				} else {
-					return $specialRolesOrder[$roleA] - $specialRolesOrder[$roleB];
-				}
-			}
-			// we get here if $roleA === null && $roleB === null
-			return strcasecmp($f1->getDisplayName(), $f2->getDisplayName());
-		});
 	}
 
 }

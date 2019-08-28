@@ -21,12 +21,14 @@
 
 namespace OCA\Mail\Tests\Controller;
 
+use function base64_encode;
 use OCA\Mail\Account;
 use OCA\Mail\Contracts\IMailManager;
 use OCA\Mail\Controller\FoldersController;
 use OCA\Mail\Exception\NotImplemented;
 use OCA\Mail\Folder;
 use OCA\Mail\Http\JSONResponse;
+use OCA\Mail\IMAP\FolderStats;
 use OCA\Mail\Service\AccountService;
 use ChristophWurst\Nextcloud\Testing\TestCase;
 use OCP\IRequest;
@@ -98,6 +100,44 @@ class FoldersControllerTest extends TestCase {
 		$this->expectException(NotImplemented::class);
 
 		$this->controller->show();
+	}
+
+	public function testCreate() {
+		$account = $this->createMock(Account::class);
+		$folder = $this->createMock(Folder::class);
+		$accountId = 28;
+		$this->accountService->expects($this->once())
+			->method('find')
+			->with($this->equalTo($this->userId), $this->equalTo($accountId))
+			->willReturn($account);
+		$this->mailManager->expects($this->once())
+			->method('createFolder')
+			->with($this->equalTo($account), $this->equalTo('new'))
+			->willReturn($folder);
+
+		$response = $this->controller->create($accountId, 'new');
+
+		$expected = new JSONResponse($folder);
+		$this->assertEquals($expected, $response);
+	}
+
+	public function testStats() {
+		$account = $this->createMock(Account::class);
+		$stats = $this->createMock(FolderStats::class);
+		$accountId = 28;
+		$this->accountService->expects($this->once())
+			->method('find')
+			->with($this->equalTo($this->userId), $this->equalTo($accountId))
+			->willReturn($account);
+		$this->mailManager->expects($this->once())
+			->method('getFolderStats')
+			->with($this->equalTo($account), $this->equalTo('INBOX'))
+			->willReturn($stats);
+
+		$response = $this->controller->stats($accountId, base64_encode('INBOX'));
+
+		$expected = new JSONResponse($stats);
+		$this->assertEquals($expected, $response);
 	}
 
 	public function testUpdate() {
