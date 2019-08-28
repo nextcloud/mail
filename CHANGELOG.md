@@ -1,6 +1,12 @@
 # Changelog
 All notable changes to this project will be documented in this file.
 
+## 0.15.5 - 2019-08-28
+### Fixed
+- Wrong navigation to deleted message
+- Wrong navigation to next/prev message of deleted message
+- Non-translatable "forward" button 
+
 ## 0.15.4 - 2019-08-26
 ### Fixed
 - Vulnerable eslint-utils
