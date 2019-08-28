@@ -124,6 +124,10 @@ export default {
 				Logger.debug('envelope to delete does not exist in envelope list')
 				return
 			}
+			if (envelope.uid !== this.$route.params.messageUid) {
+				Logger.debug('other message open, not jumping to the next/previous message')
+				return
+			}
 
 			let next
 			if (idx === 0) {
