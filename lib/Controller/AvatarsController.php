@@ -69,6 +69,10 @@ class AvatarsController extends Controller {
 			return new JSONResponse([], Http::STATUS_BAD_REQUEST);
 		}
 
+		if (!filter_var($email, FILTER_VALIDATE_EMAIL)) {
+			return new JSONResponse([], Http::STATUS_BAD_REQUEST);
+		}
+
 		$avatar = $this->avatarService->getAvatar($email, $this->uid);
 		if (is_null($avatar)) {
 			// No avatar found
