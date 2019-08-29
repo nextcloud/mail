@@ -81,7 +81,10 @@ class MailTransmissionIntegrationTest extends TestCase {
 	public function testSendMail() {
 		$message = NewMessageData::fromRequest($this->account, 'recipient@domain.com', null, null, 'greetings', 'hello there', []);
 		$reply = new RepliedMessageData($this->account, null, null);
+
 		$this->transmission->sendMessage('ferdinand', $message, $reply);
+
+		$this->addToAssertionCount(1);
 	}
 
 	public function testSendMailWithLocalAttachment() {
@@ -97,7 +100,10 @@ class MailTransmissionIntegrationTest extends TestCase {
 				],
 		]);
 		$reply = new RepliedMessageData($this->account, null, null);
+
 		$this->transmission->sendMessage('gerald', $message, $reply);
+
+		$this->addToAssertionCount(1);
 	}
 
 	public function testSendMailWithCloudAttachment() {
@@ -110,7 +116,10 @@ class MailTransmissionIntegrationTest extends TestCase {
 				],
 		]);
 		$reply = new RepliedMessageData($this->account, null, null);
+
 		$this->transmission->sendMessage($this->user->getUID(), $message, $reply);
+
+		$this->addToAssertionCount(1);
 	}
 
 	public function testSendReply() {

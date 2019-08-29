@@ -104,6 +104,7 @@ class AccountServiceTest extends TestCase {
 
 	public function testFindNotFound() {
 		// TODO: implement code + write tests
+		$this->markTestSkipped('todo');
 	}
 
 	public function testDelete() {

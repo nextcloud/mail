@@ -92,14 +92,17 @@ class MessagesControllerTest extends TestCase {
 
 	public function testIndex() {
 		// TODO: write test
+		$this->markTestSkipped('todo');
 	}
 
 	public function testShow() {
 		// TODO: write test
+		$this->markTestSkipped('todo');
 	}
 
 	public function testShowMessageNotFound() {
 		// TODO: write test
+		$this->markTestSkipped('todo');
 	}
 
 	public function testGetHtmlBody() {
