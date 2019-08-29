@@ -29,6 +29,8 @@ class ApplicationTest extends TestCase {
 	public function testConstrucor() {
 		// Not really a test – it's just about code coverage
 		new Application();
+
+		$this->addToAssertionCount(1);
 	}
 
 }

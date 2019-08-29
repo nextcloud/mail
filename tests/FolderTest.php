@@ -85,6 +85,8 @@ class FolderTest extends TestCase {
 		$this->folder->setStatus([
 			'unseen' => 4,
 		]);
+
+		$this->addToAssertionCount(1);
 	}
 
 	public function testSpecialUse() {
