@@ -8,22 +8,22 @@
 [![Dependabot Status](https://api.dependabot.com/badges/status?host=github&repo=nextcloud/mail)](https://dependabot.com)
 [![Bountysource](https://img.shields.io/bountysource/team/nextcloud/activity.svg?maxAge=2592000)](https://www.bountysource.com/teams/nextcloud/issues?tracker_ids=44154351)
 
-**A mail app for [Nextcloud](https://nextcloud.com)**
+**💌 A mail app for [Nextcloud](https://nextcloud.com)**
 
 ![](screenshots/mail.png)
 
 
 ## Why is this so awesome?
 
-* :rocket: **Integration with other Nextcloud apps!** Currently Contacts, Calendar & Files – more to come.
-* :inbox_tray: **Multiple mail accounts!** Personal and company account? No problem, and a nice unified inbox.
-* :lock: **Send & receive encrypted mails!** Using the great [Mailvelope](https://mailvelope.com) browser extension.
-* :see_no_evil: **We’re not reinventing the wheel!** Based on the great [Horde](http://horde.org) libraries.
+* **🚀 Integration with other Nextcloud apps!** Currently Contacts, Calendar & Files – more to come.
+* **📥 Multiple mail accounts!** Personal and company account? No problem, and a nice unified inbox.
+* **🔒 Send & receive encrypted mails!** Using the great [Mailvelope](https://mailvelope.com) browser extension.
+* **🙈 We’re not reinventing the wheel!** Based on the great [Horde](http://horde.org) libraries.
 * **📬 Want to host your own mail server?** We don’t have to reimplement this as you could set up [Mail-in-a-Box](https://mailinabox.email)!
 
 And in the works for the [coming versions](https://github.com/nextcloud/mail/milestones/):
-* :books: Proper grouping of message threads
-* :package: Folder management
+* 📑 Proper grouping of message threads
+* 🗄️ Folder management
 
 If you experience any issues or have any suggestions for improvement, use the [issue tracker](https://github.com/nextcloud/mail/issues). Please follow the [issue template chooser](https://github.com/nextcloud/mail/issues/new/choose) so we get the info needed to debug and fix the problem. Thanks!
 
