@@ -75,10 +75,10 @@ class Version0156Date20190828140357 extends SimpleMigrationStep {
 			'notnull' => true,
 			'length' => 4,
 		]);
-		$mailboxTable->addColumn('selectable', 'integer', [
+		$mailboxTable->addColumn('selectable', 'boolean', [
 			'notnull' => true,
 			'length' => 1,
-			'default' => 1,
+			'default' => true,
 		]);
 		// We allow each mailbox name just once
 		$mailboxTable->setPrimaryKey([
