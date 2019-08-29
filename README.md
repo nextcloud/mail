@@ -19,6 +19,7 @@
 * :inbox_tray: **Multiple mail accounts!** Personal and company account? No problem, and a nice unified inbox.
 * :lock: **Send & receive encrypted mails!** Using the great [Mailvelope](https://mailvelope.com) browser extension.
 * :see_no_evil: **We’re not reinventing the wheel!** Based on the great [Horde](http://horde.org) libraries.
+* **📬 Want to host your own mail server?** We don’t have to reimplement this as you could set up [Mail-in-a-Box](https://mailinabox.email)!
 
 And in the works for the [coming versions](https://github.com/nextcloud/mail/milestones/):
 * :books: Proper grouping of message threads
