@@ -73,6 +73,7 @@ OC.L10N.register(
     "Report this bug" : "Segnala questo bug",
     "Loading messages" : "Caricamento messaggi",
     "Not found" : "Non trovato",
+    "Forward" : "Inoltra",
     "Could not load your message" : "Impossibile caricare il tuo messaggio",
     "Import into calendar" : "Importa nel calendario",
     "Download attachment" : "Scarica allegato",

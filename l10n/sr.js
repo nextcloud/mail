@@ -73,6 +73,7 @@ OC.L10N.register(
     "Report this bug" : "Пријави ову грешку",
     "Loading messages" : "Учитавам поруке",
     "Not found" : "Није нађено",
+    "Forward" : "Проследи",
     "Could not load your message" : "Неуспело учитавање поруке",
     "Import into calendar" : "Увези у календар",
     "Download attachment" : "Скини прилог",
