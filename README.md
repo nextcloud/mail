@@ -16,7 +16,7 @@
 ## Why is this so awesome?
 
 * **🚀 Integration with other Nextcloud apps!** Currently Contacts, Calendar & Files – more to come.
-* **📥 Multiple mail accounts!** Personal and company account? No problem, and a nice unified inbox.
+* **📥 Multiple mail accounts!** Personal and company account? No problem, and a nice unified inbox. Connect any IMAP account.
 * **🔒 Send & receive encrypted mails!** Using the great [Mailvelope](https://mailvelope.com) browser extension.
 * **🙈 We’re not reinventing the wheel!** Based on the great [Horde](http://horde.org) libraries.
 * **📬 Want to host your own mail server?** We don’t have to reimplement this as you could set up [Mail-in-a-Box](https://mailinabox.email)!
