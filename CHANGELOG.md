@@ -1,6 +1,13 @@
 # Changelog
 All notable changes to this project will be documented in this file.
 
+## 0.16.0 - 2019-08-29
+### Added
+- Folder cache to decrease page load times significantly
+### Changed
+- Updated description
+- New and updated translations
+
 ## 0.15.5 - 2019-08-28
 ### Fixed
 - Wrong navigation to deleted message
