@@ -53,6 +53,7 @@ class FolderMapperIntegrationTest extends TestCase {
 
 	public function testGetFolders() {
 		$account = $this->createMock(Account::class);
+		$account->method('getId')->willReturn(13);
 		$client = $this->getTestClient();
 
 		$folders = $this->mapper->getFolders($account, $client);

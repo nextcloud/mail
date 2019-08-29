@@ -26,8 +26,8 @@ use JsonSerializable;
 
 class Folder implements JsonSerializable {
 
-	/** @var Account */
-	private $account;
+	/** @var int */
+	private $accountId;
 
 	/** @var Horde_Imap_Client_Mailbox */
 	private $mailbox;
@@ -59,8 +59,8 @@ class Folder implements JsonSerializable {
 	 * @param array $attributes
 	 * @param string $delimiter
 	 */
-	public function __construct(Account $account, Horde_Imap_Client_Mailbox $mailbox, array $attributes, $delimiter) {
-		$this->account = $account;
+	public function __construct(int $accountId, Horde_Imap_Client_Mailbox $mailbox, array $attributes, $delimiter) {
+		$this->accountId = $accountId;
 		$this->mailbox = $mailbox;
 		$this->attributes = $attributes;
 		$this->delimiter = $delimiter;
@@ -154,6 +154,10 @@ class Folder implements JsonSerializable {
 		$this->syncToken = $syncToken;
 	}
 
+	public function getSyncToken(): ?string {
+		return $this->syncToken;
+	}
+
 	/**
 	 * @return array
 	 */
@@ -164,12 +168,12 @@ class Folder implements JsonSerializable {
 		}
 		return [
 			'id' => base64_encode($this->getMailbox()),
-			'accountId' => $this->account->getId(),
+			'accountId' => $this->accountId,
 			'name' => $this->getDisplayName(),
 			'unseen' => isset($this->status['unseen']) ? $this->status['unseen'] : 0,
 			'total' => isset($this->status['messages']) ? (int) $this->status['messages'] : 0,
 			'isEmpty' => isset($this->status['messages']) ? 0 >= (int) $this->status['messages'] : true,
-			'noSelect' => in_array('\noselect', $this->attributes),
+			'noSelect' => !$this->isSelectable(),
 			'attributes' => $this->attributes,
 			'delimiter' => $this->delimiter,
 			'folders' => array_values($folders),
@@ -177,6 +181,10 @@ class Folder implements JsonSerializable {
 			'specialRole' => empty($this->specialUse) ? null : $this->specialUse[0],
 			'syncToken' => $this->syncToken,
 		];
+	}
+
+	public function isSelectable(): bool {
+		return !in_array('\noselect', $this->attributes);
 	}
 
 }

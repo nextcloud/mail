@@ -29,8 +29,8 @@ use PHPUnit_Framework_MockObject_MockObject;
 
 class FolderTest extends TestCase {
 
-	/** @var Account|PHPUnit_Framework_MockObject_MockObject */
-	private $account;
+	/** @var int */
+	private $accountId;
 
 	/** @var Horde_Imap_Client_Mailbox|PHPUnit_Framework_MockObject_MockObject */
 	private $mailbox;
@@ -39,10 +39,10 @@ class FolderTest extends TestCase {
 	private $folder;
 
 	private function mockFolder(array $attributes = [], $delimiter = '.') {
-		$this->account = $this->createMock(Account::class);
+		$this->accountId = 15;
 		$this->mailbox = $this->createMock(Horde_Imap_Client_Mailbox::class);
 
-		$this->folder = new Folder($this->account, $this->mailbox, $attributes, $delimiter);
+		$this->folder = new Folder($this->accountId, $this->mailbox, $attributes, $delimiter);
 	}
 
 	public function testGetMailbox() {
@@ -131,9 +131,6 @@ class FolderTest extends TestCase {
 			->method('__get')
 			->with($this->equalTo('utf8'))
 			->willReturn('Sent');
-		$this->account->expects($this->once())
-			->method('getId')
-			->willReturn(123);
 
 		$this->folder->setDisplayName('Gesendet');
 		$this->folder->addSpecialUse('sent');
@@ -145,7 +142,7 @@ class FolderTest extends TestCase {
 
 		$expected = [
 			'id' => base64_encode('Sent'),
-			'accountId' => 123,
+			'accountId' => 15,
 			'name' => 'Gesendet',
 			'specialRole' => null,
 			'unseen' => 13,

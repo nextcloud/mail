@@ -672,4 +672,8 @@ class Account implements JsonSerializable {
 		return new ReplyMessage();
 	}
 
+	public function getLastMailboxSync(): int {
+		return (int) $this->account->getLastMailboxSync();
+	}
+
 }

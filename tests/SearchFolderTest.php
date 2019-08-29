@@ -1,4 +1,4 @@
-<?php
+<?php declare(strict_types=1);
 
 /**
  * @author Christoph Wurst <christoph@winzerhof-wurst.at>
@@ -29,8 +29,8 @@ use PHPUnit_Framework_MockObject_MockObject;
 
 class SearchFolderTest extends TestCase {
 
-	/** @var Account|PHPUnit_Framework_MockObject_MockObject */
-	private $account;
+	/** @var int */
+	private $accountId;
 
 	/** @var Horde_Imap_Client_Mailbox|PHPUnit_Framework_MockObject_MockObject */
 	private $mailbox;
@@ -41,10 +41,10 @@ class SearchFolderTest extends TestCase {
 	protected function setUp() {
 		parent::setUp();
 
-		$this->account = $this->createMock(Account::class);
+		$this->accountId = 16;
 		$this->mailbox = $this->createMock(Horde_Imap_Client_Mailbox::class);
 
-		$this->folder = new SearchFolder($this->account, $this->mailbox, [], ',');
+		$this->folder = new SearchFolder($this->accountId, $this->mailbox, [], ',');
 	}
 
 	public function testGetMailbox() {
