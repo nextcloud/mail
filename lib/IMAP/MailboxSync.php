@@ -92,9 +92,7 @@ class MailboxSync {
 		foreach ($folders as $folder) {
 			if (isset($existing[$folder->getMailbox()])) {
 				$this->updateMailboxFromFolder(
-					$account,
-					$folder,
-					$existing[$folder->getMailbox()]
+					$folder, $existing[$folder->getMailbox()]
 				);
 			} else {
 				$this->createMailboxFromFolder(
@@ -114,7 +112,7 @@ class MailboxSync {
 		$this->mailAccountMapper->update($account->getMailAccount());
 	}
 
-	private function updateMailboxFromFolder(Account $account, Folder $folder, Mailbox $mailbox): void {
+	private function updateMailboxFromFolder(Folder $folder, Mailbox $mailbox): void {
 		$mailbox->setDelimiter($folder->getDelimiter());
 		$mailbox->setSyncToken($folder->getSyncToken());
 		$mailbox->setAttributes(json_encode($folder->getAttributes()));
