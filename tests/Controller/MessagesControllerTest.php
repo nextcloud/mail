@@ -28,6 +28,7 @@ use OCA\Mail\Account;
 use OCA\Mail\Attachment;
 use OCA\Mail\Contracts\IMailManager;
 use OCA\Mail\Controller\MessagesController;
+use OCA\Mail\Exception\ServiceException;
 use OCA\Mail\Http\AttachmentDownloadResponse;
 use OCA\Mail\Http\HtmlResponse;
 use OCA\Mail\Mailbox;
@@ -355,10 +356,9 @@ class MessagesControllerTest extends TestCase {
 			->method('find')
 			->with($this->equalTo($this->userId), $this->equalTo($accountId))
 			->will($this->returnValue($this->account));
-
-		$this->account->expects($this->once())
+		$this->mailManager->expects($this->once())
 			->method('deleteMessage')
-			->with(base64_decode($folderId), $messageId);
+			->with($this->account, base64_decode($folderId), $messageId);
 
 		$expected = new JSONResponse();
 		$result = $this->controller->destroy($accountId, $folderId, $messageId);
@@ -387,11 +387,11 @@ class MessagesControllerTest extends TestCase {
 			->method('find')
 			->with($this->equalTo($this->userId), $this->equalTo($accountId))
 			->will($this->returnValue($this->account));
-		$this->account->expects($this->once())
+		$this->mailManager->expects($this->once())
 			->method('deleteMessage')
-			->with(base64_decode($folderId), $messageId)
-			->will($this->throwException(new DoesNotExistException('')));
-		$this->expectException(DoesNotExistException::class);
+			->with($this->account, base64_decode($folderId), $messageId)
+			->willThrowException(new ServiceException());
+		$this->expectException(ServiceException::class);
 
 		$this->controller->destroy($accountId, $folderId, $messageId);
 	}

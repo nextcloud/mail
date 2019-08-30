@@ -420,55 +420,6 @@ class Account implements JsonSerializable {
 	}
 
 	/**
-	 * @param string $sourceFolderId
-	 * @param int $messageId
-	 */
-	public function deleteMessage($sourceFolderId, $messageId) {
-		$mb = $this->getMailbox($sourceFolderId);
-		$hordeSourceMailBox = $mb->getHordeMailBox();
-		// by default we will create a 'Trash' folder if no trash is found
-		$trashId = "Trash";
-		$createTrash = true;
-
-		$trashFolders = $this->getSpecialFolder('trash', true);
-
-		if (count($trashFolders) !== 0) {
-			$trashId = $trashFolders[0]->getFolderId();
-			$createTrash = false;
-		} else {
-			// no trash -> guess
-			$trashes = array_filter($this->getMailboxes(), function($box) {
-				/**
-				 * @var Mailbox $box
-				 */
-				return (stripos($box->getDisplayName(), 'trash') !== false);
-			});
-			if (!empty($trashes)) {
-				$trashId = array_values($trashes);
-				$trashId = $trashId[0]->getFolderId();
-				$createTrash = false;
-			}
-		}
-
-		$hordeMessageIds = new Horde_Imap_Client_Ids($messageId);
-		$hordeTrashMailBox = new Horde_Imap_Client_Mailbox($trashId);
-
-		if ($sourceFolderId === $trashId) {
-			$this->getImapConnection()->expunge($hordeSourceMailBox,
-				array('ids' => $hordeMessageIds, 'delete' => true));
-
-			OC::$server->getLogger()->info("Message expunged: {message} from mailbox {mailbox}",
-				array('message' => $messageId, 'mailbox' => $sourceFolderId));
-		} else {
-			$this->getImapConnection()->copy($hordeSourceMailBox, $hordeTrashMailBox,
-				array('create' => $createTrash, 'move' => true, 'ids' => $hordeMessageIds));
-
-			OC::$server->getLogger()->info("Message moved to trash: {message} from mailbox {mailbox}",
-				array('message' => $messageId, 'mailbox' => $sourceFolderId, 'app' => 'mail'));
-		}
-	}
-
-	/**
 	 * @param int $messageId
 	 */
 	private function deleteDraft($messageId) {

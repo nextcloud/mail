@@ -26,6 +26,8 @@ use Horde_Imap_Client_Socket;
 use OCA\Mail\Account;
 use OCA\Mail\Db\Mailbox;
 use OCA\Mail\Db\MailboxMapper;
+use OCA\Mail\Events\BeforeMessageDeletedEvent;
+use OCA\Mail\Exception\ServiceException;
 use OCA\Mail\Folder;
 use OCA\Mail\IMAP\FolderMapper;
 use OCA\Mail\IMAP\FolderStats;
@@ -36,6 +38,8 @@ use OCA\Mail\IMAP\Sync\Request;
 use OCA\Mail\IMAP\Sync\Response;
 use OCA\Mail\IMAP\Sync\Synchronizer;
 use OCA\Mail\Service\MailManager;
+use OCP\AppFramework\Db\DoesNotExistException;
+use OCP\EventDispatcher\IEventDispatcher;
 use PHPUnit\Framework\MockObject\MockObject;
 
 class MailManagerTest extends TestCase {
@@ -58,6 +62,9 @@ class MailManagerTest extends TestCase {
 	/** @var Synchronizer|MockObject */
 	private $sync;
 
+	/** @var IEventDispatcher|MockObject */
+	private $eventDispatcher;
+
 	/** @var MailManager */
 	private $manager;
 
@@ -70,6 +77,7 @@ class MailManagerTest extends TestCase {
 		$this->folderMapper = $this->createMock(FolderMapper::class);
 		$this->messageMapper = $this->createMock(MessageMapper::class);
 		$this->sync = $this->createMock(Synchronizer::class);
+		$this->eventDispatcher = $this->createMock(IEventDispatcher::class);
 
 		$this->manager = new MailManager(
 			$this->imapClientFactory,
@@ -77,7 +85,8 @@ class MailManagerTest extends TestCase {
 			$this->mailboxSync,
 			$this->folderMapper,
 			$this->sync,
-			$this->messageMapper
+			$this->messageMapper,
+			$this->eventDispatcher
 		);
 	}
 
@@ -113,7 +122,7 @@ class MailManagerTest extends TestCase {
 		$this->imapClientFactory->expects($this->once())
 			->method('getClient')
 			->willReturn($client);
-		$folder =$this->createMock(Folder::class);
+		$folder = $this->createMock(Folder::class);
 		$this->folderMapper->expects($this->once())
 			->method('createFolder')
 			->with($this->equalTo($client), $this->equalTo($account), $this->equalTo('new'))
@@ -161,6 +170,135 @@ class MailManagerTest extends TestCase {
 			->willReturn($syncResonse);
 
 		$this->manager->syncMessages($account, $syncRequest);
+	}
+
+	public function testDeleteMessageSourceFolderNotFound(): void {
+		/** @var Account|MockObject $account */
+		$account = $this->createMock(Account::class);
+		$this->eventDispatcher->expects($this->once())
+			->method('dispatch')
+			->with(
+				$this->equalTo(BeforeMessageDeletedEvent::class),
+				$this->anything()
+			);
+		$this->mailboxMapper->expects($this->once())
+			->method('find')
+			->with($account, 'INBOX')
+			->willThrowException(new DoesNotExistException(""));
+		$this->expectException(ServiceException::class);
+
+		$this->manager->deleteMessage(
+			$account,
+			'INBOX',
+			123
+		);
+	}
+
+	public function testDeleteMessageTrashFolderNotFound(): void {
+		/** @var Account|MockObject $account */
+		$account = $this->createMock(Account::class);
+		$this->eventDispatcher->expects($this->once())
+			->method('dispatch')
+			->with(
+				$this->equalTo(BeforeMessageDeletedEvent::class),
+				$this->anything()
+			);
+		$this->mailboxMapper->expects($this->once())
+			->method('find')
+			->with($account, 'INBOX')
+			->willReturn($this->createMock(Mailbox::class));
+		$this->mailboxMapper->expects($this->once())
+			->method('findSpecial')
+			->with($account, 'trash')
+			->willThrowException(new DoesNotExistException(""));
+		$this->expectException(ServiceException::class);
+
+		$this->manager->deleteMessage(
+			$account,
+			'INBOX',
+			123
+		);
+	}
+
+	public function testDeleteMessage(): void {
+		/** @var Account|MockObject $account */
+		$account = $this->createMock(Account::class);
+		$inbox = new Mailbox();
+		$inbox->setName('INBOX');
+		$trash = new Mailbox();
+		$trash->setName('Trash');
+		$this->eventDispatcher->expects($this->once())
+			->method('dispatch')
+			->with(
+				$this->equalTo(BeforeMessageDeletedEvent::class),
+				$this->anything()
+			);
+		$this->mailboxMapper->expects($this->once())
+			->method('find')
+			->with($account, 'INBOX')
+			->willReturn($inbox);
+		$this->mailboxMapper->expects($this->once())
+			->method('findSpecial')
+			->with($account, 'trash')
+			->willReturn($trash);
+		$client = $this->createMock(Horde_Imap_Client_Socket::class);
+		$this->imapClientFactory->expects($this->once())
+			->method('getClient')
+			->willReturn($client);
+		$this->messageMapper->expects($this->once())
+			->method('move')
+			->with(
+				$client,
+				'INBOX',
+				123,
+				'Trash'
+			);
+
+		$this->manager->deleteMessage(
+			$account,
+			'INBOX',
+			123
+		);
+	}
+
+	public function testExpungeMessage(): void {
+		/** @var Account|MockObject $account */
+		$account = $this->createMock(Account::class);
+		$source = new Mailbox();
+		$source->setName('Trash');
+		$trash = new Mailbox();
+		$trash->setName('Trash');
+		$this->eventDispatcher->expects($this->once())
+			->method('dispatch')
+			->with(
+				$this->equalTo(BeforeMessageDeletedEvent::class),
+				$this->anything()
+			);
+		$this->mailboxMapper->expects($this->once())
+			->method('find')
+			->with($account, 'Trash')
+			->willReturn($source);
+		$this->mailboxMapper->expects($this->once())
+			->method('findSpecial')
+			->with($account, 'trash')
+			->willReturn($trash);
+		$client = $this->createMock(Horde_Imap_Client_Socket::class);
+		$this->imapClientFactory->expects($this->once())
+			->method('getClient')
+			->willReturn($client);
+		$this->messageMapper->expects($this->once())
+			->method('expunge')
+			->with(
+				$client,
+				'Trash',
+				123
+			);
+
+		$this->manager->deleteMessage(
+			$account,
+			'Trash',
+			123
+		);
 	}
 
 }

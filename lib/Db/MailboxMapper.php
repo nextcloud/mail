@@ -24,6 +24,9 @@
 namespace OCA\Mail\Db;
 
 use OCA\Mail\Account;
+use OCA\Mail\Exception\ServiceException;
+use OCP\AppFramework\Db\DoesNotExistException;
+use OCP\AppFramework\Db\MultipleObjectsReturnedException;
 use OCP\AppFramework\Db\QBMapper;
 use OCP\IDBConnection;
 
@@ -46,6 +49,54 @@ class MailboxMapper extends QBMapper {
 			->where($qb->expr()->eq('account_id', $qb->createNamedParameter($account->getId())));
 
 		return $this->findEntities($select);
+	}
+
+	/**
+	 * @throws DoesNotExistException
+	 * @throws ServiceException
+	 */
+	public function find(Account $account, string $name): Mailbox {
+		$qb = $this->db->getQueryBuilder();
+
+		$select = $qb->select('*')
+			->from($this->getTableName())
+			->where(
+				$qb->expr()->eq('account_id', $qb->createNamedParameter($account->getId())),
+				$qb->expr()->eq('name', $qb->createNamedParameter($name))
+			);
+
+		try {
+			return $this->findEntity($select);
+		} catch (MultipleObjectsReturnedException $e) {
+			// Not possible due to DB constraints
+			throw new ServiceException("The impossible has happened", 42, $e);
+		}
+	}
+
+	/**
+	 * @throws DoesNotExistException
+	 */
+	public function findSpecial(Account $account, string $specialUse): Mailbox {
+		$mailboxes = $this->findAll($account);
+
+		// First, let's try to detect by special use attribute
+		foreach ($mailboxes as $mailbox) {
+			$specialUses = json_decode($mailbox->getSpecialUse(), true) ?? [];
+			if (in_array($specialUse, $specialUses, true)) {
+				return $mailbox;
+			}
+		}
+
+		// No luck so far, let's do another round and just guess
+		foreach ($mailboxes as $mailbox) {
+			// TODO: also check localized name
+			if (strtolower($mailbox->getName()) === strtolower($specialUse)) {
+				return $mailbox;
+			}
+		}
+
+		// Give up
+		throw new DoesNotExistException("Special mailbox $specialUse does not exist");
 	}
 
 }

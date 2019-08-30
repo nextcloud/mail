@@ -152,7 +152,7 @@ class Mailbox implements IMailBox {
 
 	/**
 	 * Get message page
-	 * 
+	 *
 	 * Build the list of UIDs for the current page on the client side
 	 *
 	 * This is done by fetching a list of *all* UIDs and their data, sorting them
@@ -479,7 +479,7 @@ class Mailbox implements IMailBox {
 	/**
 	 * @return Horde_Imap_Client_Mailbox
 	 */
-	public function getHordeMailBox() {
+	public function getHordeMailBox(): Horde_Imap_Client_Mailbox {
 		return $this->mailBox;
 	}
 

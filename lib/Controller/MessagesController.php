@@ -340,7 +340,7 @@ class MessagesController extends Controller {
 		$this->logger->debug("deleting message <$id> of folder <$folderId>, account <$accountId>");
 		try {
 			$account = $this->getAccount($accountId);
-			$account->deleteMessage(base64_decode($folderId), $id);
+			$this->mailManager->deleteMessage($account, base64_decode($folderId), $id);
 			return new JSONResponse();
 		} catch (DoesNotExistException $e) {
 			$this->logger->error("could not delete message <$id> of folder <$folderId>, "

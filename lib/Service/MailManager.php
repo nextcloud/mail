@@ -29,6 +29,7 @@ use OCA\Mail\Account;
 use OCA\Mail\Contracts\IMailManager;
 use OCA\Mail\Db\Mailbox;
 use OCA\Mail\Db\MailboxMapper;
+use OCA\Mail\Events\BeforeMessageDeletedEvent;
 use OCA\Mail\Exception\ClientException;
 use OCA\Mail\Exception\ServiceException;
 use OCA\Mail\Folder;
@@ -40,6 +41,8 @@ use OCA\Mail\IMAP\MessageMapper;
 use OCA\Mail\IMAP\Sync\Request;
 use OCA\Mail\IMAP\Sync\Response;
 use OCA\Mail\IMAP\Sync\Synchronizer;
+use OCP\AppFramework\Db\DoesNotExistException;
+use OCP\EventDispatcher\IEventDispatcher;
 
 class MailManager implements IMailManager {
 
@@ -61,18 +64,23 @@ class MailManager implements IMailManager {
 	/** @var MessageMapper */
 	private $messageMapper;
 
+	/** @var IEventDispatcher */
+	private $eventDispatcher;
+
 	public function __construct(IMAPClientFactory $imapClientFactory,
 								MailboxMapper $mailboxMapper,
 								MailboxSync $mailboxSync,
 								FolderMapper $folderMapper,
 								Synchronizer $synchronizer,
-								MessageMapper $messageMapper) {
+								MessageMapper $messageMapper,
+								IEventDispatcher $eventDispatcher) {
 		$this->imapClientFactory = $imapClientFactory;
 		$this->mailboxMapper = $mailboxMapper;
 		$this->mailboxSync = $mailboxSync;
 		$this->folderMapper = $folderMapper;
 		$this->synchronizer = $synchronizer;
 		$this->messageMapper = $messageMapper;
+		$this->eventDispatcher = $eventDispatcher;
 	}
 
 	/**
@@ -145,6 +153,8 @@ class MailManager implements IMailManager {
 	 * @param int $messageId
 	 * @param Account $destinationAccount
 	 * @param string $destFolderId
+	 *
+	 * @throws ServiceException
 	 */
 	public function moveMessage(Account $sourceAccount,
 								string $sourceFolderId,
@@ -164,10 +174,53 @@ class MailManager implements IMailManager {
 	}
 
 	/**
+	 * @todo evaluate if we should sync mailboxes first
+	 *
+	 * @throws ServiceException
+	 */
+	public function deleteMessage(Account $account,
+								  string $mailboxId,
+								  int $messageId): void {
+		$this->eventDispatcher->dispatch(
+			BeforeMessageDeletedEvent::class,
+			new BeforeMessageDeletedEvent($account, $mailboxId, $messageId)
+		);
+
+		try {
+			$sourceFolder = $this->mailboxMapper->find($account, $mailboxId);
+		} catch (DoesNotExistException $e) {
+			throw new ServiceException("Source mailbox $mailboxId does not exist", 0, $e);
+		}
+		try {
+			$trashFolder = $this->mailboxMapper->findSpecial($account, 'trash');
+		} catch (DoesNotExistException $e) {
+			throw new ServiceException("No trash folder", 0, $e);
+		}
+
+		if ($mailboxId === $trashFolder->getName()) {
+			// Delete inside trash -> expunge
+			$this->messageMapper->expunge(
+				$this->imapClientFactory->getClient($account),
+				$sourceFolder->getName(),
+				$messageId
+			);
+		} else {
+			$this->messageMapper->move(
+				$this->imapClientFactory->getClient($account),
+				$sourceFolder->getName(),
+				$messageId,
+				$trashFolder->getName()
+			);
+		}
+	}
+
+	/**
 	 * @param Account $account
 	 * @param string $sourceFolderId
 	 * @param string $destFolderId
 	 * @param int $messageId
+	 *
+	 * @throws ServiceException
 	 */
 	private function moveMessageOnSameAccount(Account $account,
 											  string $sourceFolderId,
