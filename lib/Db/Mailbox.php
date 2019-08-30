@@ -27,8 +27,8 @@ use OCA\Mail\Folder;
 use OCP\AppFramework\Db\Entity;
 
 /**
- * @method string getId()
- * @method void setId(string $id)
+ * @method string getName()
+ * @method void setName(string $name)
  * @method int getAccountId()
  * @method void setAccountId(int $accountId)
  * @method string getSyncToken()
@@ -46,6 +46,7 @@ use OCP\AppFramework\Db\Entity;
  */
 class Mailbox extends Entity {
 
+	protected $name;
 	protected $accountId;
 	protected $syncToken;
 	protected $attributes;
@@ -55,7 +56,6 @@ class Mailbox extends Entity {
 	protected $selectable;
 
 	public function __construct() {
-		$this->addType('id', 'string');
 		$this->addType('accountId', 'integer');
 		$this->addType('messages', 'integer');
 		$this->addType('unseen', 'integer');
@@ -65,7 +65,7 @@ class Mailbox extends Entity {
 	public function toFolder(): Folder {
 		$folder = new Folder(
 			$this->accountId,
-			new \Horde_Imap_Client_Mailbox($this->id),
+			new \Horde_Imap_Client_Mailbox($this->name),
 			json_decode($this->getAttributes() ?? '[]', true) ?? [],
 			$this->delimiter
 		);
