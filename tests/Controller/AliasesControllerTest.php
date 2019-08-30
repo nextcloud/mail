@@ -24,8 +24,8 @@ namespace OCA\Mail\Tests\Controller;
 use ChristophWurst\Nextcloud\Testing\TestCase;
 use OCA\Mail\Controller\AliasesController;
 use OCA\Mail\Db\Alias;
-use OCA\Mail\Http\JSONResponse;
 use OCP\AppFramework\Http;
+use OCP\AppFramework\Http\JSONResponse;
 
 class AliasesControllerTest extends TestCase {
 	private $controller;
@@ -54,7 +54,7 @@ class AliasesControllerTest extends TestCase {
 		$this->userSession->expects($this->once())
 			->method('getUser')
 			->will($this->returnValue($this->user));
-		
+
 		$this->controller = new AliasesController($this->appName, $this->request, $this->aliasService, $this->userSession);
 	}
 

@@ -29,11 +29,11 @@ use function base64_decode;
 use function is_array;
 use OCA\Mail\Contracts\IMailManager;
 use OCA\Mail\Exception\NotImplemented;
-use OCA\Mail\Http\JSONResponse;
 use OCA\Mail\IMAP\Sync\Request as SyncRequest;
 use OCA\Mail\Service\AccountService;
 use OCP\AppFramework\Controller;
 use OCP\AppFramework\Http;
+use OCP\AppFramework\Http\JSONResponse;
 use OCP\IRequest;
 
 class FoldersController extends Controller {

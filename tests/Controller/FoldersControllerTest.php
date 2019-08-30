@@ -27,10 +27,10 @@ use OCA\Mail\Contracts\IMailManager;
 use OCA\Mail\Controller\FoldersController;
 use OCA\Mail\Exception\NotImplemented;
 use OCA\Mail\Folder;
-use OCA\Mail\Http\JSONResponse;
 use OCA\Mail\IMAP\FolderStats;
 use OCA\Mail\Service\AccountService;
 use ChristophWurst\Nextcloud\Testing\TestCase;
+use OCP\AppFramework\Http\JSONResponse;
 use OCP\IRequest;
 use PHPUnit_Framework_MockObject_MockObject;
 

@@ -26,6 +26,7 @@ declare(strict_types=1);
 namespace OCA\Mail\Http;
 
 use OCP\AppFramework\Http;
+use OCP\AppFramework\Http\JSONResponse;
 
 class JSONErrorResponse extends JSONResponse {
 

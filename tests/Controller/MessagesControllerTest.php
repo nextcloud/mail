@@ -100,8 +100,8 @@ class MessagesControllerTest extends TestCase {
 	/** @var MockObject|IURLGenerator */
 	private $urlGenerator;
 
-	/** @var MockObject|ITimeFactory */
-	private $timeFactory;
+	/** @var ITimeFactory */
+	private $oldFactory;
 
 	protected function setUp() {
 		parent::setUp();
@@ -118,7 +118,15 @@ class MessagesControllerTest extends TestCase {
 		$this->l10n = $this->createMock(IL10N::class);
 		$this->mimeTypeDetector = $this->createMock(IMimeTypeDetector::class);
 		$this->urlGenerator = $this->createMock(IURLGenerator::class);
-		$this->timeFactory = $this->createMock(ITimeFactory::class);
+
+		$timeFactory = $this->createMocK(ITimeFactory::class);
+		$timeFactory->expects($this->any())
+			->method('getTime')
+			->willReturn(10000);
+		$this->oldFactory = \OC::$server->offsetGet(ITimeFactory::class);
+		\OC::$server->registerService(ITimeFactory::class, function() use ($timeFactory) {
+			return $timeFactory;
+		});
 
 		$this->controller = new MessagesController(
 			$this->appName,
@@ -131,14 +139,20 @@ class MessagesControllerTest extends TestCase {
 			$this->logger,
 			$this->l10n,
 			$this->mimeTypeDetector,
-			$this->urlGenerator,
-			$this->timeFactory
+			$this->urlGenerator
 		);
 
 		$this->account = $this->createMock(Account::class);
 		$this->mailbox = $this->createMock(Mailbox::class);
 		$this->message = $this->createMock(IMAPMessage::class);
 		$this->attachment = $this->createMock(Attachment::class);
+	}
+
+	protected function tearDown() {
+		parent::tearDown();
+
+		\OC::$server->offsetUnset(ITimeFactory::class);
+		\OC::$server->offsetSet(ITimeFactory::class, $this->oldFactory);
 	}
 
 	public function testIndex() {
@@ -170,11 +184,9 @@ class MessagesControllerTest extends TestCase {
 			->method('getMessage')
 			->with($this->account, $folderId, $messageId, true)
 			->willReturn($message);
-		$this->timeFactory->method('getTime')->willReturn(1000);
 
 		$expectedResponse = new HtmlResponse('');
-		$expectedResponse->setCacheHeaders(3600, $this->timeFactory);
-		$expectedResponse->addHeader('Pragma', 'cache');
+		$expectedResponse->cacheFor(3600);
 		if (class_exists('\OCP\AppFramework\Http\ContentSecurityPolicy')) {
 			$policy = new ContentSecurityPolicy();
 			$policy->allowEvalScript(false);

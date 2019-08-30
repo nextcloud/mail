@@ -28,7 +28,6 @@ namespace OCA\Mail\Controller;
 
 use Exception;
 use OCA\Mail\Contracts\IUserPreferences;
-use OCA\Mail\Http\JSONResponse;
 use OCA\Mail\Service\AccountService;
 use OCA\Mail\Service\AliasesService;
 use OCA\Mail\Service\MailManager;

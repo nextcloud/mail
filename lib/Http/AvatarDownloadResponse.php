@@ -27,8 +27,6 @@ use OCP\AppFramework\Http\DownloadResponse;
 
 class AvatarDownloadResponse extends DownloadResponse {
 
-	use CacheHeaders;
-
 	/** @var string */
 	private $content;
 
