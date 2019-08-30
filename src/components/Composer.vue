@@ -83,6 +83,9 @@
 				@keyup="onInputChanged"
 			/>
 		</div>
+		<div v-if="noSubject" class="warning">
+			{{ t('mail', 'This mail does not have a subject yet.') }}
+		</div>
 		<div v-if="noReply" class="warning noreply-box">
 			{{ t('mail', 'Note that the mail came from a noreply address so	your reply will probably not be read.') }}
 		</div>
@@ -222,6 +225,9 @@ export default {
 		},
 		isReply() {
 			return !_.isUndefined(this.replyTo)
+		},
+		noSubject() {
+			return this.subjectVal === '' && this.bodyVal !== ''
 		},
 	},
 	beforeMount() {
