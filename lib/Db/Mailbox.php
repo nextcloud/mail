@@ -43,6 +43,8 @@ use OCP\AppFramework\Db\Entity;
  * @method void setUnseen(int $unseen)
  * @method bool getSelectable()
  * @method void setSelectable(bool $selectable)
+ * @method bool getSpecialUse()
+ * @method void setSpecialUse(string $specialUse)
  */
 class Mailbox extends Entity {
 
@@ -54,6 +56,7 @@ class Mailbox extends Entity {
 	protected $messages;
 	protected $unseen;
 	protected $selectable;
+	protected $specialUse;
 
 	public function __construct() {
 		$this->addType('accountId', 'integer');
@@ -70,6 +73,9 @@ class Mailbox extends Entity {
 			$this->delimiter
 		);
 		$folder->setSyncToken($this->getSyncToken());
+		foreach ((json_decode($this->getSpecialUse() ?? '[]', true) ?? []) as $use) {
+			$folder->addSpecialUse($use);
+		}
 		return $folder;
 	}
 

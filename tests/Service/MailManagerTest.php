@@ -101,9 +101,6 @@ class MailManagerTest extends TestCase {
 			->method('findAll')
 			->with($this->equalTo($account))
 			->willReturn($mailboxes);
-		$this->folderMapper->expects($this->once())
-			->method('detectFolderSpecialUse')
-			->with($this->equalTo($folders));
 
 		$result = $this->manager->getFolders($account);
 

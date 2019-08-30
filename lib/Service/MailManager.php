@@ -80,14 +80,12 @@ class MailManager implements IMailManager {
 	public function getFolders(Account $account): array {
 		$this->mailboxSync->sync($account);
 
-		$folders = array_map(
+		return array_map(
 			function (Mailbox $mb) {
 				return $mb->toFolder();
 			},
 			$this->mailboxMapper->findAll($account)
 		);
-		$this->folderMapper->detectFolderSpecialUse($folders);
-		return $folders;
 	}
 
 	/**
