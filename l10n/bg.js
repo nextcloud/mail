@@ -13,8 +13,6 @@ OC.L10N.register(
     "Auto detect failed. Please use manual mode." : "Неуспешни автоматични настройки. Моля, използвай ръчен режим.",
     "Creating account failed: " : "Неуспешно създаване на профил:",
     "Delete permanently" : "Изтрий завинаги",
-    "IMAP web client" : "IMAP уеб клиент",
-    "Easy to use email client which connects to your mail server via IMAP and SMTP." : "Имейл клиент, който поддържа IMAP и SMTP.",
     "Auto" : "Автоматично",
     "Name" : "Име",
     "Mail Address" : "Имейл адрес",

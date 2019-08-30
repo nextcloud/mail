@@ -14,8 +14,6 @@ OC.L10N.register(
     "Updating account failed: " : "Mistókst að uppfæra notandaaðgang: ",
     "Creating account failed: " : "Mistókst að búa til notandaaðgang: ",
     "Delete permanently" : "Eyða varanlega",
-    "IMAP web client" : "IMAP vefforrit",
-    "Easy to use email client which connects to your mail server via IMAP and SMTP." : "Einfalt og auðvelt tölvupóstforrit sem tengist póstþjóninum þínum með IMAP og SMTP.",
     "Auto" : "Sjálfvirkt",
     "Name" : "Nafn",
     "Mail Address" : "Tölvupóstfang",

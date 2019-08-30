@@ -14,8 +14,6 @@ OC.L10N.register(
     "Updating account failed: " : "Fiók frissítése sikertelen:",
     "Creating account failed: " : "Fiók létrehozása sikertelen: ",
     "Delete permanently" : "Végleges törlés",
-    "IMAP web client" : "IMAP web kliens",
-    "Easy to use email client which connects to your mail server via IMAP and SMTP." : "Könnyen használható levelező kliens mely a levelező szerveredhez csatlakozik IMAP és SMTP protokolon.",
     "Auto" : "Automatikus",
     "Name" : "Név",
     "Mail Address" : "E-mail cím",

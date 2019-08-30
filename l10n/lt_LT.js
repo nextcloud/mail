@@ -14,8 +14,6 @@ OC.L10N.register(
     "Updating account failed: " : "Paskyros atnaujinimas nepavyko: ",
     "Creating account failed: " : "Paskyros sukūrimas nepavyko: ",
     "Delete permanently" : "Ištrinti negrįžtamai",
-    "IMAP web client" : "IMAP saityno klientas",
-    "Easy to use email client which connects to your mail server via IMAP and SMTP." : "Lengvas naudoti el. pašto klientas, kuris prisijungia prie jūsų pašto serverio per IMAP ir SMTP.",
     "Name" : "Vardas",
     "Mail Address" : "Elektroninio pašto adresas",
     "Password" : "Slaptažodis",

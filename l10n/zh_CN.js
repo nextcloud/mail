@@ -14,8 +14,6 @@ OC.L10N.register(
     "Updating account failed: " : "更新账户失败：",
     "Creating account failed: " : "未能创建账户：",
     "Delete permanently" : "永久删除",
-    "IMAP web client" : "IMAP 网页客户端",
-    "Easy to use email client which connects to your mail server via IMAP and SMTP." : "使用邮件客户端更容易通过 IMAP 和 SMTP 连接到您的邮件服务器。",
     "Auto" : "自动",
     "Name" : "姓名",
     "Mail Address" : "邮箱",

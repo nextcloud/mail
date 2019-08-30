@@ -14,8 +14,6 @@ OC.L10N.register(
     "Updating account failed: " : "עדכון החשבון נכשל:",
     "Creating account failed: " : "יצירת חשבון נכשלה:",
     "Delete permanently" : "מחיקה לצמיתות",
-    "IMAP web client" : "לקוח דפדפן IMAP",
-    "Easy to use email client which connects to your mail server via IMAP and SMTP." : "לקוח דוא״ל פשוט שמתחבר לשרת הדוא״ל שלך דרך IMAP ו־SMTP.",
     "Name" : "שם",
     "Mail Address" : "כתובת דוא״ל",
     "Password" : "ססמה",

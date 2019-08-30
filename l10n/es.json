@@ -12,8 +12,6 @@
     "Updating account failed: " : "Fallo al actualizar la cuenta:",
     "Creating account failed: " : "No se ha podido crear la cuenta:",
     "Delete permanently" : "Eliminar permanentemente",
-    "IMAP web client" : "Cliente IMAP web",
-    "Easy to use email client which connects to your mail server via IMAP and SMTP." : "Cliente de correo fácil de usar que se conecta a tu servidor de correo vía IMAP y SMTP.",
     "Auto" : "Auto",
     "Name" : "Nombre",
     "Mail Address" : "Dirección de correo electrónico",

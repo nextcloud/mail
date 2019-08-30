@@ -14,8 +14,6 @@ OC.L10N.register(
     "Updating account failed: " : "Methodd diweddaru'r cyfrif :",
     "Creating account failed: " : "Methodd creu'r cyfrif:",
     "Delete permanently" : "Dileu'n barhaol",
-    "IMAP web client" : "Cleient gwe IMAP",
-    "Easy to use email client which connects to your mail server via IMAP and SMTP." : "Cleient e-bost hawdd ei ddefnyddio sy'n cysylltu â'ch gweinydd e-bost trwy IMAP a SMTP.",
     "Auto" : "Awto",
     "Name" : "Enw",
     "Mail Address" : "Cyfeiriad E-bost",

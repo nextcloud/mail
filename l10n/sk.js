@@ -14,8 +14,6 @@ OC.L10N.register(
     "Updating account failed: " : "Aktualizácia účtu zlyhala:",
     "Creating account failed: " : "Vytvorenie účtu zlyhalo:",
     "Delete permanently" : "Zmazať  natrvalo",
-    "IMAP web client" : "IMAP web klient",
-    "Easy to use email client which connects to your mail server via IMAP and SMTP." : "E-mailový klient, jednoduchý na používanie, ktorý sa pripája k vášmu poskytovateľovi e-mailov pomocou IMAP a SMTP.",
     "Name" : "Meno",
     "Mail Address" : "Emailová adresa",
     "Password" : "Heslo",

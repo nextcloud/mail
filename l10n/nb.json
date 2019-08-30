@@ -12,8 +12,6 @@
     "Updating account failed: " : "Oppdatering av konto mislyktes:",
     "Creating account failed: " : "Oppretting av konto mislyktes:",
     "Delete permanently" : "Slett permanent",
-    "IMAP web client" : "IMAP-webklient",
-    "Easy to use email client which connects to your mail server via IMAP and SMTP." : "Enkel å bruke e-postklient som kobles til e-postserveren din via IMAP og SMTP.",
     "Auto" : "Auto",
     "Name" : "Navn",
     "Mail Address" : "E-postadresse",

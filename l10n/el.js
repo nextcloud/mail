@@ -14,8 +14,6 @@ OC.L10N.register(
     "Updating account failed: " : "Αποτυχία ενημέρωσης λογαριασμού:",
     "Creating account failed: " : "Αποτυχία δημιουργίας λογαριασμού:",
     "Delete permanently" : "Μόνιμη διαγραφή",
-    "IMAP web client" : "Πελάτης ιστού IMAP",
-    "Easy to use email client which connects to your mail server via IMAP and SMTP." : "Ένας εύχρηστος πελάτης ηλεκτρονικού ταχυδρομείου που συνδέεται στον διακομιστή ηλεκτρονικού ταχυδρομείου σας μέσω  IMAP και  SMTP.",
     "Auto" : "Αυτόματα",
     "Name" : "Όνομα",
     "Mail Address" : "Διεύθυνση αλληλογραφίας",

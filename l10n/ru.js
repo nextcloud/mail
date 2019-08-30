@@ -14,8 +14,6 @@ OC.L10N.register(
     "Updating account failed: " : "Ошибка обновления учётной записи:",
     "Creating account failed: " : "Ошибка создания учетной записи:",
     "Delete permanently" : "Удалить окончательно",
-    "IMAP web client" : "IMAP веб клиент",
-    "Easy to use email client which connects to your mail server via IMAP and SMTP." : "Простой в использовании почтовый клиент, который подключается к вашему почтовому серверу через протоколы IMAP и SMTP.",
     "Auto" : "Автоматически",
     "Name" : "Имя",
     "Mail Address" : "E-mail адрес",

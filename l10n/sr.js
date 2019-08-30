@@ -14,8 +14,6 @@ OC.L10N.register(
     "Updating account failed: " : "Ажурирање налога неуспешно:",
     "Creating account failed: " : "Прављење налога није успело:",
     "Delete permanently" : "Обриши заувек",
-    "IMAP web client" : "IMAP веб клијент",
-    "Easy to use email client which connects to your mail server via IMAP and SMTP." : "Једноставан клијент е-поште који се повезује са Вашим сервером е-поште преко IMAP-а и SMTP-а.",
     "Auto" : "Аутоматски",
     "Name" : "Име",
     "Mail Address" : "Адреса е-поште",

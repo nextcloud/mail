@@ -14,8 +14,6 @@ OC.L10N.register(
     "Updating account failed: " : "アカウントの更新に失敗：",
     "Creating account failed: " : "アカウント作成に失敗:",
     "Delete permanently" : "完全に削除する",
-    "IMAP web client" : "IMAPウェブクライアント",
-    "Easy to use email client which connects to your mail server via IMAP and SMTP." : "IMAPとSMTP経由であなたのメールサーバーに接続する使いやすい電子メールクライアント。",
     "Auto" : "自動",
     "Name" : "名前",
     "Mail Address" : "メールアドレス",

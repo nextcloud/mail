@@ -14,8 +14,6 @@ OC.L10N.register(
     "Updating account failed: " : "Falhou ao atualizar a conta:",
     "Creating account failed: " : "A criação de contas falhou:",
     "Delete permanently" : "Excluir permanentemente",
-    "IMAP web client" : "Cliente web IMAP",
-    "Easy to use email client which connects to your mail server via IMAP and SMTP." : "Cliente de e-mail fácil de usar que se conecta ao seu servidor de e-mail via IMAP e SMTP.",
     "Auto" : "Automático",
     "Name" : "Nome",
     "Mail Address" : "Endereço de e-mail",

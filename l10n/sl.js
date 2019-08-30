@@ -14,8 +14,6 @@ OC.L10N.register(
     "Updating account failed: " : "Posodobitev računa je spodletela:",
     "Creating account failed: " : "Ustvarjanje računa je spodletelo:",
     "Delete permanently" : "Trajno izbriši",
-    "IMAP web client" : "IMAP spletni odjemalec",
-    "Easy to use email client which connects to your mail server via IMAP and SMTP." : "Enostavni spletni odjemalec za povezavo s strežnikom za elektronsko pošto preko IMAP in SMTP.",
     "Auto" : "Samodejno",
     "Name" : "Ime",
     "Mail Address" : "Elektronski naslov",

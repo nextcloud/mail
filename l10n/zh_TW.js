@@ -14,8 +14,6 @@ OC.L10N.register(
     "Updating account failed: " : "更新帳戶失敗",
     "Creating account failed: " : "建立帳號失敗：",
     "Delete permanently" : "永久刪除",
-    "IMAP web client" : "IMAP客戶端",
-    "Easy to use email client which connects to your mail server via IMAP and SMTP." : "一個簡易的電子郵件程式，透過IMAP與SMTP功能與郵件伺服器同步",
     "Auto" : "自動",
     "Name" : "名字",
     "Mail Address" : "郵件地址",

@@ -12,8 +12,6 @@
     "Updating account failed: " : "Se presentó una falla al actualizar la cuenta",
     "Creating account failed: " : "Se presentó una falla al crear la cuenta:",
     "Delete permanently" : "Borrar permanentemente",
-    "IMAP web client" : "Cliente web IMAP",
-    "Easy to use email client which connects to your mail server via IMAP and SMTP." : "Cliente de correo electrónico fácil de usar que se conecta con tu servidor de correo vía IMAP y SMTP.",
     "Name" : "Nombre",
     "Mail Address" : "Dirección de Correo",
     "Password" : "Contraseña",

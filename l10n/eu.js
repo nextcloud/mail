@@ -13,7 +13,6 @@ OC.L10N.register(
     "Auto detect failed. Please use manual mode." : "Autodetekzioa huts egin du. Erabili eskuzko modua",
     "Creating account failed: " : "Huts egin du kontua sortzerakoan:",
     "Delete permanently" : "Ezabatu betirako",
-    "IMAP web client" : "IMAP web bezeroa",
     "Name" : "Izena",
     "Mail Address" : "Eposta helbidea",
     "Password" : "Pasahitza",

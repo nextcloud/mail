@@ -14,8 +14,6 @@ OC.L10N.register(
     "Updating account failed: " : "Bijwerken van account mislukt:",
     "Creating account failed: " : "Aanmaken account mislukt:",
     "Delete permanently" : "Definitief verwijderen",
-    "IMAP web client" : "IMAP web client",
-    "Easy to use email client which connects to your mail server via IMAP and SMTP." : "Gebruiksvriendelijke e-mailclient die verbindt met je mailserver via IMAP en SMTP.",
     "Auto" : "Automatisch",
     "Name" : "Naam",
     "Mail Address" : "E-mailadres",

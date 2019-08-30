@@ -14,8 +14,6 @@ OC.L10N.register(
     "Updating account failed: " : "Tilin päivittäminen epäonnistui:",
     "Creating account failed: " : "Tilin luominen epäonnistui:",
     "Delete permanently" : "Poista pysyvästi",
-    "IMAP web client" : "IMAP-verkkoasiakas",
-    "Easy to use email client which connects to your mail server via IMAP and SMTP." : "Helppokäyttöinen sähköpostisovellus, joka yhdistää palvelimiin IMAP- ja SMTP-protokollia käyttäen.",
     "Auto" : "Automaattinen",
     "Name" : "Nimi",
     "Mail Address" : "Sähköpostiosoite",

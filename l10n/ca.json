@@ -12,8 +12,6 @@
     "Updating account failed: " : "Ha fallat l’actualització del compte:",
     "Creating account failed: " : "Ha fallat la creació del compte:",
     "Delete permanently" : "Suprimeix permanentment",
-    "IMAP web client" : "Client d'IMAP de web",
-    "Easy to use email client which connects to your mail server via IMAP and SMTP." : "Client de correu electrònic fàcil de fer servir que es connecta al servidor de correu mitjançant IMAP i SMTP.",
     "Auto" : "Auto",
     "Name" : "Nom",
     "Mail Address" : "Adreça de correu",

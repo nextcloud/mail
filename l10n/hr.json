@@ -12,8 +12,6 @@
     "Updating account failed: " : "Neuspjelo ažuriranje računa: ",
     "Creating account failed: " : "Neuspjelo stvaranje računa:",
     "Delete permanently" : "Trajno izbrisati",
-    "IMAP web client" : "IMAP web klijent",
-    "Easy to use email client which connects to your mail server via IMAP and SMTP." : "Jednostavan klijent za upravljanje e-poštom koji se povezuje s vašim poslužiteljem e-pošte putem IMAP-a i SMTP-a.",
     "Auto" : "Auto",
     "Name" : "Ime",
     "Mail Address" : "Adresa e-pošte",
