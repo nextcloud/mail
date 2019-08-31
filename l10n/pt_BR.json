@@ -12,6 +12,8 @@
     "Updating account failed: " : "Falhou ao atualizar a conta:",
     "Creating account failed: " : "A criação de contas falhou:",
     "Delete permanently" : "Excluir permanentemente",
+    "💌 A mail app for Nextcloud" : "💌 Um aplicativo de email para Nextcloud",
+    "**💌 A mail app for Nextcloud**\n\n- **🚀 Integration with other Nextcloud apps!** Currently Contacts, Calendar & Files – more to come.\n- **📥 Multiple mail accounts!** Personal and company account? No problem, and a nice unified inbox. Connect any IMAP account.\n- **🔒 Send & receive encrypted mails!** Using the great [Mailvelope](https://mailvelope.com) browser extension.\n- **🙈 We’re not reinventing the wheel!** Based on the great [Horde](http://horde.org) libraries.\n- **📬 Want to host your own mail server?** We don’t have to reimplement this as you could set up [Mail-in-a-Box](https://mailinabox.email)!" : "**💌 Um aplicativo de e-mail para Nextcloud**\n\n- **🚀 Integração com outros aplicativos Nextcloud!** Atualmente Contatos, Calendário & Arquivos – mais vindo.\n- **📥 Várias contas de e-mail!** Conta pessoal e corporativa? Não tem problema e existe uma caixa de entrada unificada. Conecte qualquer conta IMAP.\n- **🔒 Enviar e receber e-mails criptografados!** Usando a ótima extensão de navegador [Mailvelope](https://mailvelope.com).\n- **🙈 Não estamos reinventando a roda!** Baseado na ótima biblioteca [Horde](http://horde.org).\n- **📬 Deseja hospedar seu próprio servidor de e-mail?** Não precisamos reimplementar isso, pois você pode configurar [Mail-in-a-Box](https://mailinabox.email)!",
     "Auto" : "Automático",
     "Name" : "Nome",
     "Mail Address" : "Endereço de e-mail",
