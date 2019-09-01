@@ -47,6 +47,7 @@ OC.L10N.register(
     "cc" : "cc",
     "bcc" : "bcc",
     "Subject" : "Sujet",
+    "This mail does not have a subject yet." : "L’objet de ce courriel n'est pas encore renseigné.",
     "Note that the mail came from a noreply address so\tyour reply will probably not be read." : "Notez que le mail provient d'une adresse noreply donc\tvotre réponse ne sera sans doute pas lu.",
     "Message …" : "Message …",
     "Saving draft …" : "Sauvegarde du brouillon en cours …",
