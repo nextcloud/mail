@@ -1,6 +1,18 @@
 # Changelog
 All notable changes to this project will be documented in this file.
 
+## 0.17.0 - 2019-09-02
+### Added
+- Warning when a message does not have a subject
+- Cache mailbox special use as well for faster page loads
+### Fixed
+- SQL error at mailbox initialization
+- SQL error at mailbox cache update
+- Handling of avatars for invalid e-mail addresses
+### Changed
+- Dependency updates
+- New and updated translations
+
 ## 0.16.0 - 2019-08-29
 ### Added
 - Folder cache to decrease page load times significantly
