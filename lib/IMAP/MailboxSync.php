@@ -80,7 +80,7 @@ class MailboxSync {
 		$old = $this->mailboxMapper->findAll($account);
 		$indexedOld = array_combine(
 			array_map(function (Mailbox $mb) {
-				return $mb->getId();
+				return $mb->getName();
 			}, $old),
 			$old
 		);
@@ -125,7 +125,7 @@ class MailboxSync {
 
 	private function createMailboxFromFolder(Account $account, Folder $folder): void {
 		$mailbox = new Mailbox();
-		$mailbox->setId($folder->getMailbox());
+		$mailbox->setName($folder->getMailbox());
 		$mailbox->setAccountId($account->getId());
 		$mailbox->setSyncToken($folder->getSyncToken());
 		$mailbox->setAttributes(json_encode($folder->getAttributes()));
