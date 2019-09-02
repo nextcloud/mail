@@ -23,6 +23,7 @@
 
 namespace OCA\Mail\IMAP;
 
+use function json_encode;
 use OCA\Mail\Account;
 use OCA\Mail\Db\MailAccountMapper;
 use OCA\Mail\Db\Mailbox;
@@ -120,6 +121,7 @@ class MailboxSync {
 		$mailbox->setMessages(0); // TODO
 		$mailbox->setUnseen(0); // TODO
 		$mailbox->setSelectable($folder->isSelectable());
+		$mailbox->setSpecialUse(json_encode($folder->getSpecialUse()));
 		$this->mailboxMapper->update($mailbox);
 	}
 
@@ -133,6 +135,7 @@ class MailboxSync {
 		$mailbox->setMessages(0); // TODO
 		$mailbox->setUnseen(0); // TODO
 		$mailbox->setSelectable($folder->isSelectable());
+		$mailbox->setSpecialUse(json_encode($folder->getSpecialUse()));
 		$this->mailboxMapper->insert($mailbox);
 	}
 
