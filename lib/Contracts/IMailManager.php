@@ -24,6 +24,8 @@ declare(strict_types=1);
 namespace OCA\Mail\Contracts;
 
 use OCA\Mail\Account;
+use OCA\Mail\Exception\ClientException;
+use OCA\Mail\Exception\ServiceException;
 use OCA\Mail\Folder;
 use OCA\Mail\IMAP\FolderStats;
 use OCA\Mail\IMAP\Sync\Request as SyncRequest;
@@ -57,6 +59,9 @@ interface IMailManager {
 	 * @param Account
 	 * @param SyncRequest $syncRequest
 	 * @return SyncResponse
+	 *
+	 * @throws ClientException
+	 * @throws ServiceException
 	 */
 	public function syncMessages(Account $account, SyncRequest $syncRequest): SyncResponse;
 

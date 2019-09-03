@@ -23,10 +23,13 @@ declare(strict_types=1);
 
 namespace OCA\Mail\Service;
 
+use Horde_Imap_Client_Exception;
+use Horde_Imap_Client_Exception_Sync;
 use OCA\Mail\Account;
 use OCA\Mail\Contracts\IMailManager;
 use OCA\Mail\Db\Mailbox;
 use OCA\Mail\Db\MailboxMapper;
+use OCA\Mail\Exception\ClientException;
 use OCA\Mail\Exception\ServiceException;
 use OCA\Mail\Folder;
 use OCA\Mail\IMAP\FolderMapper;
@@ -90,6 +93,27 @@ class MailManager implements IMailManager {
 
 	/**
 	 * @param Account $account
+	 * @param Request $syncRequest
+	 *
+	 * @return Response
+	 *
+	 * @throws ClientException
+	 * @throws ServiceException
+	 */
+	public function syncMessages(Account $account, Request $syncRequest): Response {
+		$client = $this->imapClientFactory->getClient($account);
+
+		try {
+			return $this->synchronizer->sync($client, $syncRequest);
+		} catch (Horde_Imap_Client_Exception $e) {
+			throw new ServiceException("Could not sync messages", 0, $e);
+		} catch (Horde_Imap_Client_Exception_Sync $e) {
+			throw new ClientException("Sync failed because of an invalid sync token or UID validity changed", 0, $e);
+		}
+	}
+
+	/**
+	 * @param Account $account
 	 * @param string $name
 	 *
 	 * @return Folder
@@ -113,18 +137,6 @@ class MailManager implements IMailManager {
 		$client = $this->imapClientFactory->getClient($account);
 
 		return $this->folderMapper->getFoldersStatusAsObject($client, $folderId);
-	}
-
-	/**
-	 * @param Account $account
-	 * @param Request $syncRequest
-	 *
-	 * @return Response
-	 */
-	public function syncMessages(Account $account, Request $syncRequest): Response {
-		$client = $this->imapClientFactory->getClient($account);
-
-		return $this->synchronizer->sync($client, $syncRequest);
 	}
 
 	/**
