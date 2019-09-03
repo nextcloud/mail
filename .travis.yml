@@ -39,11 +39,11 @@ matrix:
     - php: 7.1
       env: "DB=mysql PHP_COVERAGE=TRUE"
     - php: 7.3
-      env: "DB=pgsql CORE_BRANCH=stable16"
+      env: "DB=pgsql CORE_BRANCH=v17.0.0beta3"
     - php: 7.3
-      env: "DB=mysql CORE_BRANCH=v16.0.0"
+      env: "DB=mysql CORE_BRANCH=v17.0.0beta3"
     - php: 7.3
-      env: "DB=sqlite CORE_BRANCH=v16.0.4"
+      env: "DB=sqlite CORE_BRANCH=v17.0.0beta3"
   fast_finish: true
 
 branches:
