@@ -43,7 +43,7 @@ use OCP\AppFramework\Db\Entity;
  * @method void setUnseen(int $unseen)
  * @method bool getSelectable()
  * @method void setSelectable(bool $selectable)
- * @method bool getSpecialUse()
+ * @method string getSpecialUse()
  * @method void setSpecialUse(string $specialUse)
  */
 class Mailbox extends Entity {

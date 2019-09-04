@@ -27,8 +27,13 @@ use Horde_Imap_Client_Data_Fetch;
 use Horde_Imap_Client_Fetch_Results;
 use OCA\Mail\IMAP\MessageMapper;
 use OCA\Mail\Model\IMAPMessage;
+use OCP\ILogger;
+use PHPUnit\Framework\MockObject\MockObject;
 
 class MessageMapperTest extends TestCase {
+
+	/** @var ILogger|MockObject */
+	private $logger;
 
 	/** @var MessageMapper */
 	private $mapper;
@@ -36,7 +41,11 @@ class MessageMapperTest extends TestCase {
 	protected function setUp() {
 		parent::setUp();
 
-		$this->mapper = new MessageMapper();
+		$this->logger = $this->createMock(ILogger::class);
+
+		$this->mapper = new MessageMapper(
+			$this->logger
+		);
 	}
 
 	public function testGetByIds() {

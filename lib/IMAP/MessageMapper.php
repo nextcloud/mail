@@ -30,15 +30,26 @@ use Horde_Imap_Client_Exception;
 use Horde_Imap_Client_Exception_NoSupportExtension;
 use Horde_Imap_Client_Fetch_Query;
 use Horde_Imap_Client_Ids;
+use OCA\Mail\Db\Mailbox;
+use OCA\Mail\Exception\ServiceException;
 use OCA\Mail\Folder;
 use OCA\Mail\Model\IMAPMessage;
+use OCP\ILogger;
 
 class MessageMapper {
+
+	/** @var ILogger */
+	private $logger;
+
+	public function __construct(ILogger $logger) {
+		$this->logger = $logger;
+	}
 
 	/**
 	 * @param Horde_Imap_Client_Base $client
 	 * @param Folder $mailbox
 	 * @param array $ids
+	 *
 	 * @return IMAPMessage[]
 	 * @throws Horde_Imap_Client_Exception
 	 * @throws Horde_Imap_Client_Exception_NoSupportExtension
@@ -76,16 +87,29 @@ class MessageMapper {
 	 * @param string $sourceFolderId
 	 * @param int $messageId
 	 * @param string $destFolderId
-	 * @throws Horde_Imap_Client_Exception
-	 * @throws Horde_Imap_Client_Exception_NoSupportExtension
 	 */
-	public function move(Horde_Imap_Client_Base $client, string $sourceFolderId,
-						 int $messageId, string $destFolderId) {
-		$client->copy($sourceFolderId, $destFolderId,
-			[
-				'ids' => new Horde_Imap_Client_Ids($messageId),
-				'move' => true,
-			]);
+	public function move(Horde_Imap_Client_Base $client,
+						 string $sourceFolderId,
+						 int $messageId,
+						 string $destFolderId): void {
+		try {
+			$client->copy($sourceFolderId, $destFolderId,
+				[
+					'ids' => new Horde_Imap_Client_Ids($messageId),
+					'move' => true,
+				]);
+		} catch (Horde_Imap_Client_Exception $e) {
+			$this->logger->logException(
+				$e,
+				['level' => ILogger::DEBUG]
+			);
+
+			throw new ServiceException(
+				"Could not move message $$messageId from $sourceFolderId to $destFolderId",
+				0,
+				$e
+			);
+		}
 	}
 
 	public function markAllRead(Horde_Imap_Client_Base $client,
@@ -95,6 +119,37 @@ class MessageMapper {
 				Horde_Imap_Client::FLAG_SEEN,
 			],
 		]);
+	}
+
+	/**
+	 * @throws ServiceException
+	 */
+	public function expunge(Horde_Imap_Client_Base $client,
+							string $mailbox,
+							int $id): void {
+		try {
+			$client->expunge(
+				$mailbox,
+				[
+					'ids' => new Horde_Imap_Client_Ids([$id]),
+					'delete' => true,
+				]);
+		} catch (Horde_Imap_Client_Exception $e) {
+			$this->logger->logException(
+				$e,
+				['level' => ILogger::DEBUG]
+			);
+
+			throw new ServiceException("Could not expunge message $id", 0, $e);
+		}
+
+		$this->logger->info(
+			"Message expunged: {message} from mailbox {mailbox}",
+			[
+				'message' => $id,
+				'mailbox' => $mailbox,
+			]
+		);
 	}
 
 }

@@ -29,7 +29,9 @@ use OCA\Mail\Contracts\IAvatarService;
 use OCA\Mail\Contracts\IMailManager;
 use OCA\Mail\Contracts\IMailTransmission;
 use OCA\Mail\Contracts\IUserPreferences;
+use OCA\Mail\Events\BeforeMessageDeletedEvent;
 use OCA\Mail\Http\Middleware\ErrorMiddleware;
+use OCA\Mail\Listener\MessageDeleteTrashCreatorListener;
 use OCA\Mail\Service\Attachment\AttachmentService;
 use OCA\Mail\Service\AvatarService;
 use OCA\Mail\Service\Group\IGroupService;
@@ -38,6 +40,7 @@ use OCA\Mail\Service\MailManager;
 use OCA\Mail\Service\MailTransmission;
 use OCA\Mail\Service\UserPreferenceSevice;
 use OCP\AppFramework\App;
+use OCP\EventDispatcher\IEventDispatcher;
 use OCP\Util;
 
 class Application extends App {
@@ -46,6 +49,7 @@ class Application extends App {
 		parent::__construct('mail', $urlParams);
 
 		$this->initializeAppContainer();
+		$this->registerEvents();
 	}
 
 	private function initializeAppContainer() {
@@ -76,6 +80,13 @@ class Application extends App {
 		$container->registerMiddleWare('ErrorMiddleware');
 
 		$container->registerAlias(IGroupService::class, NextcloudGroupService::class);
+	}
+
+	private function registerEvents(): void {
+		/** @var IEventDispatcher $dispatcher */
+		$dispatcher = $this->getContainer()->query(IEventDispatcher::class);
+
+		$dispatcher->addServiceListener(BeforeMessageDeletedEvent::class, MessageDeleteTrashCreatorListener::class);
 	}
 
 }

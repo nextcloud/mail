@@ -71,9 +71,20 @@ interface IMailManager {
 	 * @param int $messageId
 	 * @param Account $destinationAccount
 	 * @param string $destFolderId
+	 *
+	 * @throws ServiceException
 	 */
 	public function moveMessage(Account $sourceAccount, string $sourceFolderId, int $messageId,
 								Account $destinationAccount, string $destFolderId);
+
+	/**
+	 * @param Account $account
+	 * @param string $mailboxId
+	 * @param int $messageId
+	 *
+	 * @throws ServiceException
+	 */
+	public function deleteMessage(Account $account, string $mailboxId, int $messageId): void;
 
 	/**
 	 * Mark all messages of a folder as read
