@@ -30,8 +30,16 @@ use OCA\Mail\Contracts\IMailManager;
 use OCA\Mail\Contracts\IMailTransmission;
 use OCA\Mail\Contracts\IUserPreferences;
 use OCA\Mail\Events\BeforeMessageDeletedEvent;
+use OCA\Mail\Events\DraftSavedEvent;
+use OCA\Mail\Events\MessageSentEvent;
+use OCA\Mail\Events\SaveDraftEvent;
 use OCA\Mail\Http\Middleware\ErrorMiddleware;
-use OCA\Mail\Listener\MessageDeleteTrashCreatorListener;
+use OCA\Mail\Listener\AddressCollectionListener;
+use OCA\Mail\Listener\DeleteDraftListener;
+use OCA\Mail\Listener\DraftMailboxCreatorListener;
+use OCA\Mail\Listener\FlagRepliedMessageListener;
+use OCA\Mail\Listener\TrashMailboxCreatorListener;
+use OCA\Mail\Listener\SaveSentMessageListener;
 use OCA\Mail\Service\Attachment\AttachmentService;
 use OCA\Mail\Service\AvatarService;
 use OCA\Mail\Service\Group\IGroupService;
@@ -48,45 +56,7 @@ class Application extends App {
 	public function __construct(array $urlParams = []) {
 		parent::__construct('mail', $urlParams);
 
-		$this->initializeAppContainer();
-		$this->registerEvents();
-	}
-
-	private function initializeAppContainer() {
-		$container = $this->getContainer();
-
-		$transport = $container->getServer()->getConfig()->getSystemValue('app.mail.transport', 'smtp');
-		$testSmtp = $transport === 'smtp';
-
-		$container->registerAlias(IAvatarService::class, AvatarService::class);
-		$container->registerAlias(IAttachmentService::class, AttachmentService::class);
-		$container->registerAlias(IMailManager::class, MailManager::class);
-		$container->registerAlias(IMailTransmission::class, MailTransmission::class);
-		$container->registerAlias(IUserPreferences::class, UserPreferenceSevice::class);
-		$container->registerService('OCP\ISession', function ($c) {
-			return $c->getServer()->getSession();
-		});
-
-		$container->registerParameter("appName", "mail");
-		$container->registerService("userFolder", function () use ($container) {
-			$user = $container->query("UserId");
-			return $container->getServer()->getUserFolder($user);
-		});
-
-		$container->registerParameter("testSmtp", $testSmtp);
-		$container->registerParameter("hostname", Util::getServerHostName());
-
-		$container->registerAlias('ErrorMiddleware', ErrorMiddleware::class);
-		$container->registerMiddleWare('ErrorMiddleware');
-
-		$container->registerAlias(IGroupService::class, NextcloudGroupService::class);
-	}
-
-	private function registerEvents(): void {
-		/** @var IEventDispatcher $dispatcher */
-		$dispatcher = $this->getContainer()->query(IEventDispatcher::class);
-
-		$dispatcher->addServiceListener(BeforeMessageDeletedEvent::class, MessageDeleteTrashCreatorListener::class);
+		BootstrapSingleton::getInstance($this->getContainer())->boot();
 	}
 
 }

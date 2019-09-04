@@ -132,14 +132,14 @@ class NewMessageData {
 	}
 
 	/**
-	 * @return string
+	 * @return string|null
 	 */
 	public function getSubject() {
 		return $this->subject;
 	}
 
 	/**
-	 * @return string
+	 * @return string|null
 	 */
 	public function getBody() {
 		return $this->body;

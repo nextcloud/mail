@@ -75,7 +75,7 @@ class RepliedMessageData {
 	 * @return bool
 	 */
 	public function isReply(): bool {
-		return !is_null($this->folderId) && !is_null($this->id);
+		return $this->folderId !== null && $this->id !== null;
 	}
 
 }

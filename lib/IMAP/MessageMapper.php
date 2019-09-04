@@ -30,6 +30,8 @@ use Horde_Imap_Client_Exception;
 use Horde_Imap_Client_Exception_NoSupportExtension;
 use Horde_Imap_Client_Fetch_Query;
 use Horde_Imap_Client_Ids;
+use Horde_Imap_Client_Socket;
+use Horde_Mime_Mail;
 use OCA\Mail\Db\Mailbox;
 use OCA\Mail\Exception\ServiceException;
 use OCA\Mail\Folder;
@@ -148,6 +150,45 @@ class MessageMapper {
 			[
 				'message' => $id,
 				'mailbox' => $mailbox,
+			]
+		);
+	}
+
+	/**
+	 * @throws Horde_Imap_Client_Exception
+	 */
+	public function save(Horde_Imap_Client_Socket $client,
+						 Mailbox $mailbox,
+						 Horde_Mime_Mail $mail): int {
+
+		$uids = $client->append(
+			$mailbox->getName(),
+			[
+				[
+					'data' => $mail->getRaw(),
+					'flags' => [
+						Horde_Imap_Client::FLAG_SEEN
+					]
+				]
+			]
+		);
+
+		return (int)$uids->current();
+	}
+
+	/**
+	 * @throws Horde_Imap_Client_Exception
+	 * @throws Horde_Imap_Client_Exception_NoSupportExtension
+	 */
+	public function addFlag(Horde_Imap_Client_Socket $client,
+							Mailbox $mailbox,
+							int $uid,
+							string $flag): void {
+		$client->store(
+			$mailbox->getName(),
+			[
+				'ids' => new Horde_Imap_Client_Ids($uid),
+				'add' => [$flag],
 			]
 		);
 	}

@@ -265,7 +265,8 @@ class AccountsController extends Controller {
 	 * @param mixed $attachments
 	 * @param int|null $aliasId
 	 * @return JSONResponse
-	 * @throws Horde_Exception
+	 *
+	 * @throws ServiceException
 	 */
 	public function send(int $accountId, string $subject = null, string $body, string $to, string $cc, string $bcc, int $draftUID = null, string $folderId = null, int $messageId = null, array $attachments = [], int $aliasId = null): JSONResponse {
 		$account = $this->accountService->find($this->currentUserId, $accountId);
@@ -281,7 +282,7 @@ class AccountsController extends Controller {
 		try {
 			$this->mailTransmission->sendMessage($this->currentUserId, $messageData, $repliedMessageData, $alias, $draftUID);
 			return new JSONResponse();
-		} catch (Horde_Exception $ex) {
+		} catch (ServiceException $ex) {
 			$this->logger->error('Sending mail failed: ' . $ex->getMessage());
 			throw $ex;
 		}
