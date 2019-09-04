@@ -31,7 +31,14 @@ import {
 	fetchAll as fetchAllAccounts,
 } from '../service/AccountService'
 import {fetchAll as fetchAllFolders, create as createFolder, markFolderRead} from '../service/FolderService'
-import {moveMessage, deleteMessage, fetchEnvelopes, fetchMessage, setEnvelopeFlag, syncEnvelopes} from '../service/MessageService'
+import {
+	moveMessage,
+	deleteMessage,
+	fetchEnvelopes,
+	fetchMessage,
+	setEnvelopeFlag,
+	syncEnvelopes,
+} from '../service/MessageService'
 import {showNewMessagesNotification} from '../service/NotificationService'
 import {parseUid} from '../util/EnvelopeUidParser'
 
