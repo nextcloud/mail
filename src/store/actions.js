@@ -111,7 +111,7 @@ export default {
 	},
 	fetchEnvelopes({state, commit, getters, dispatch}, {accountId, folderId, query}) {
 		const folder = getters.getFolder(accountId, folderId)
-		const isSearch = !_.isUndefined(query)
+		const isSearch = query !== undefined
 		if (folder.isUnified) {
 			// Fetch and combine envelopes of all individual folders
 			//
@@ -183,7 +183,7 @@ export default {
 	},
 	fetchNextUnifiedEnvelopePage({state, commit, getters, dispatch}, {accountId, folderId, query}) {
 		const folder = getters.getFolder(accountId, folderId)
-		const isSearch = !_.isUndefined(query)
+		const isSearch = query !== undefined
 		const list = isSearch ? 'searchEnvelopes' : 'envelopes'
 
 		// We only care about folders of the same type/role
@@ -263,7 +263,7 @@ export default {
 	},
 	fetchNextEnvelopePage({commit, getters, dispatch}, {accountId, folderId, query}) {
 		const folder = getters.getFolder(accountId, folderId)
-		const isSearch = !_.isUndefined(query)
+		const isSearch = query !== undefined
 		const list = isSearch ? 'searchEnvelopes' : 'envelopes'
 
 		if (folder.isUnified) {
@@ -391,7 +391,7 @@ export default {
 					)
 				})
 		).then(results => {
-			const newMessages = _.flatMapDeep(results).filter(_.negate(_.isUndefined))
+			const newMessages = _.flatMapDeep(results).filter(m => m !== undefined)
 			if (newMessages.length > 0) {
 				showNewMessagesNotification(newMessages)
 			}

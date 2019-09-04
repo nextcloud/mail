@@ -25,7 +25,6 @@
 </template>
 
 <script>
-import _ from 'lodash'
 import AppContentList from 'nextcloud-vue/dist/Components/AppContentList'
 import infiniteScroll from 'vue-infinite-scroll'
 import vuescroll from 'vue-scroll'
@@ -86,7 +85,7 @@ export default {
 	},
 	computed: {
 		isSearch() {
-			return !_.isUndefined(this.searchQuery)
+			return this.searchQuery !== undefined
 		},
 	},
 	methods: {

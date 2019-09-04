@@ -25,7 +25,6 @@
 </template>
 
 <script>
-import _ from 'lodash'
 import BaseAvatar from 'nextcloud-vue/dist/Components/Avatar'
 
 import {fetchAvatarUrlMemoized} from '../service/AvatarService'
@@ -53,7 +52,7 @@ export default {
 	},
 	computed: {
 		hasAvatar() {
-			return !_.isUndefined(this.avatarUrl)
+			return this.avatarUrl !== undefined
 		},
 	},
 	mounted() {

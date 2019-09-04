@@ -23,7 +23,6 @@
 </template>
 
 <script>
-import _ from 'lodash'
 import AppContentDetails from 'nextcloud-vue/dist/Components/AppContentDetails'
 
 import {buildFowardSubject, buildReplyBody} from '../ReplyBuilder'
@@ -52,7 +51,7 @@ export default {
 	},
 	computed: {
 		composerData() {
-			if (!_.isUndefined(this.draft)) {
+			if (this.draft !== undefined) {
 				Logger.info('todo: handle draft data')
 				return {
 					to: this.draft.to,
@@ -61,7 +60,7 @@ export default {
 					subject: this.draft.subject,
 					body: this.draft.body,
 				}
-			} else if (!_.isUndefined(this.$route.query.uid)) {
+			} else if (this.$route.query.uid !== undefined) {
 				// Forwarded message
 
 				const message = this.$store.getters.getMessageByUid(this.$route.query.uid)
@@ -110,7 +109,7 @@ export default {
 	},
 	methods: {
 		stringToRecipients(str) {
-			if (_.isUndefined(str)) {
+			if (str === undefined) {
 				return []
 			}
 
@@ -127,7 +126,7 @@ export default {
 			this.error = undefined
 
 			const draftUid = this.$route.params.draftUid
-			if (_.isUndefined(draftUid)) {
+			if (draftUid === undefined) {
 				Logger.debug('not a draft, nothing to fetch')
 				// Nothing to fetch
 				return
@@ -145,7 +144,7 @@ export default {
 
 					this.draft = draft
 
-					if (_.isUndefined(this.draft)) {
+					if (this.draft === undefined) {
 						Logger.info('draft could not be found', {draftUid})
 						this.errorMessage = getRandomMessageErrorMessage()
 						this.loading = false
@@ -164,12 +163,12 @@ export default {
 				})
 		},
 		saveDraft(data) {
-			if (_.isUndefined(data.draftUID) && this.draft) {
+			if (data.draftUID === undefined && this.draft) {
 				Logger.debug('draft data does not have a draftUID, adding one')
 				data.draftUID = this.draft.id
 			}
 			return saveDraft(data.account, data).then(({uid}) => {
-				if (_.isUndefined(this.draft)) {
+				if (this.draft === undefined) {
 					return uid
 				}
 
