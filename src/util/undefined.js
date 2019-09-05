@@ -19,15 +19,13 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-import _ from 'lodash'
-
 class IndefinableValue {
 	constructor(value) {
 		this.value = value
 	}
 
 	or(other) {
-		if (_.isUndefined(this.value)) {
+		if (this.value === undefined) {
 			return other
 		} else {
 			return this.value

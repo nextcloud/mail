@@ -47,7 +47,6 @@
 </template>
 
 <script>
-import _ from 'lodash'
 import AppContentDetails from 'nextcloud-vue/dist/Components/AppContentDetails'
 import {generateUrl} from 'nextcloud-router'
 
@@ -137,7 +136,7 @@ export default {
 
 					this.message = message
 
-					if (_.isUndefined(this.message)) {
+					if (this.message === undefined) {
 						Logger.info('message could not be found', {messageUid})
 						this.errorMessage = getRandomMessageErrorMessage()
 						this.loading = false

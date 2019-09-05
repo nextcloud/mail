@@ -88,7 +88,7 @@ export default {
 				fileName: name,
 				displayName: _.trimStart(name, '/'),
 				id,
-				isLocal: !_.isUndefined(id),
+				isLocal: id !== undefined,
 			}
 		},
 		emitNewAttachment(attachment) {

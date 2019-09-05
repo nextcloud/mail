@@ -52,11 +52,11 @@ export const buildRecipients = (envelope, ownAddress) => {
 	// Locate why we received this envelope
 	// Can be in 'to', 'cc' or unknown
 	let replyingAddress = envelope.to.find(isOwnAddress)
-	if (!_.isUndefined(replyingAddress)) {
+	if (replyingAddress !== undefined) {
 		recipientType = RecipientType.To
 	} else {
 		replyingAddress = envelope.cc.find(isOwnAddress)
-		if (!_.isUndefined(replyingAddress)) {
+		if (replyingAddress !== undefined) {
 			recipientType = RecipientType.Cc
 		} else {
 			replyingAddress = ownAddress

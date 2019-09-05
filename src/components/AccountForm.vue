@@ -232,7 +232,6 @@
 </template>
 
 <script>
-import _ from 'lodash'
 import {Tab, Tabs} from 'vue-tabs-component'
 
 import Logger from '../logger'
@@ -264,7 +263,7 @@ export default {
 	},
 	data() {
 		const fromAccountOr = (prop, def) => {
-			if (!_.isUndefined(this.account)) {
+			if (this.account !== undefined) {
 				return this.account[prop]
 			} else {
 				return def
@@ -298,7 +297,7 @@ export default {
 	},
 	computed: {
 		settingsPage() {
-			return !_.isUndefined(this.account)
+			return this.account !== undefined
 		},
 	},
 	methods: {

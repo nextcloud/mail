@@ -224,7 +224,7 @@ export default {
 			return this.newRecipients.concat(this.autocompleteRecipients)
 		},
 		isReply() {
-			return !_.isUndefined(this.replyTo)
+			return this.replyTo !== undefined
 		},
 		noSubject() {
 			return this.subjectVal === '' && this.bodyVal !== ''
@@ -284,7 +284,7 @@ export default {
 			this.saveDraftDebounced(this.getMessageData())
 		},
 		onAutocomplete(term) {
-			if (_.isUndefined(term) || term === '') {
+			if (term === undefined || term === '') {
 				return
 			}
 			debouncedSearch(term).then(results => {
