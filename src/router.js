@@ -6,6 +6,7 @@ const AccountSettings = () => import('./views/AccountSettings')
 const Home = () => import('./views/Home')
 const KeyboardShortcuts = () => import('./views/KeyboardShortcuts')
 const Setup = () => import('./views/Setup')
+const SieveView = () => import('./views/SieveView')
 
 Vue.use(Router)
 
@@ -47,6 +48,11 @@ export default new Router({
 			path: '/setup',
 			name: 'setup',
 			component: Setup,
+		},
+		{
+			path: '/sieve',
+			name: 'sieve',
+			component: SieveView,
 		},
 	],
 })

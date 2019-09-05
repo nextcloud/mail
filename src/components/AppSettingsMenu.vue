@@ -24,6 +24,12 @@
 		</p>
 
 		<p class="app-settings-hint">
+			<router-link :to="{name: 'sieve'}">
+				{{ t('mail', 'Sieve') }}
+			</router-link>
+		</p>
+
+		<p class="app-settings-hint">
 			<a href="https://www.mailvelope.com/" target="_blank">{{
 				t('mail', 'Looking for a way to encrypt your emails? Install the Mailvelope browser extension!')
 			}}</a>
