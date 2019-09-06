@@ -313,6 +313,9 @@ export default {
 			submitButtonText: this.account ? t('mail', 'Save') : t('mail', 'Connect'),
 		}
 	},
+	created() {
+		this.sieveEnabled = this.sieveConfig.host !== ''
+	},
 	computed: {
 		settingsPage() {
 			return this.account !== undefined
