@@ -2,6 +2,10 @@
 	<Content app-name="mail">
 		<Navigation />
 		<AppContent>
+<!--			TODO: hide if sieve not configured-->
+			<div class="section">
+				<FilterSettings />
+			</div>
 			<div class="section">
 				<h2>{{ t('mail', 'Account Settings') }} - {{ email }}</h2>
 				<h3>{{ t('mail', 'Mail server') }}</h3>
@@ -22,6 +26,7 @@ import AccountForm from '../components/AccountForm'
 import Logger from '../logger'
 import Navigation from '../components/Navigation'
 import SignatureSettings from '../components/SignatureSettings'
+import FilterSettings from '../components/FilterSettings'
 
 export default {
 	name: 'AccountSettings',
@@ -31,6 +36,7 @@ export default {
 		Content,
 		Navigation,
 		SignatureSettings,
+		FilterSettings,
 	},
 	data() {
 		const account = this.$store.getters.getAccount(this.$route.params.accountId)
