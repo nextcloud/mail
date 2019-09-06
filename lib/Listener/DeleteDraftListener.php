@@ -25,13 +25,11 @@ namespace OCA\Mail\Listener;
 
 use Horde_Imap_Client;
 use Horde_Imap_Client_Exception;
-use Horde_Imap_Client_Exception_NoSupportExtension;
 use OCA\Mail\Account;
 use OCA\Mail\Db\Mailbox;
 use OCA\Mail\Db\MailboxMapper;
 use OCA\Mail\Events\DraftSavedEvent;
 use OCA\Mail\Events\MessageSentEvent;
-use OCA\Mail\Exception\ServiceException;
 use OCA\Mail\IMAP\IMAPClientFactory;
 use OCA\Mail\IMAP\MailboxSync;
 use OCA\Mail\IMAP\MessageMapper;
@@ -91,7 +89,7 @@ class DeleteDraftListener implements IEventListener {
 				$draftUid,
 				Horde_Imap_Client::FLAG_DELETED
 			);
-		} catch (Horde_Imap_Client_Exception_NoSupportExtension|Horde_Imap_Client_Exception $e) {
+		} catch (Horde_Imap_Client_Exception $e) {
 			$this->logger->logException($e, [
 				'message' => 'Could not flag draft as deleted'
 			]);
