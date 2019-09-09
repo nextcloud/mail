@@ -517,3 +517,8 @@
 		z-index: 500;
 	}
 }
+//css for drag and drop
+.app-content-list-item[aria-grabbed="true"], .app-content-list-item[aria-grabbed="true"]:focus {
+	background-color: #00a1c1;
+	border: 1px solid #000;
+}
