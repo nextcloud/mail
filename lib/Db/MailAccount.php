@@ -79,6 +79,9 @@ class MailAccount extends Entity {
 	protected $outboundPassword;
 	protected $signature;
 	protected $lastMailboxSync;
+	protected $managesieveHost;
+	protected $managesievePort;
+	protected $managesieveStarttls;
 
 	/**
 	 * @param array $params
@@ -126,6 +129,15 @@ class MailAccount extends Entity {
 		if (isset($params['smtpPassword'])) {
 			$this->setOutboundPassword($params['smtpPassword']);
 		}
+		if (isset($params['managesieveHost'])) {
+			$this->setManagesieveHost($params['managesieveHost']);
+		}
+		if (isset($params['managesievePort'])) {
+			$this->setManagesievePort($params['managesievePort']);
+		}
+		if (isset($params['managesieveSTARTTLS'])) {
+			$this->setManagesieveStarttls($params['managesieveSTARTTLS']);
+		}
 
 		$this->addType('lastMailboxSync', 'integer');
 	}
@@ -143,6 +155,9 @@ class MailAccount extends Entity {
 			'imapUser' => $this->getInboundUser(),
 			'imapSslMode' => $this->getInboundSslMode(),
 			'signature' => $this->getSignature(),
+			'managesieveHost' => $this->getManagesieveHost(),
+			'managesievePort' => $this->getManagesievePort(),
+			'managesieveSTARTTLS' => $this->getManagesieveStarttls(),
 		];
 
 		if (!is_null($this->getOutboundHost())) {
