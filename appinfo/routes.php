@@ -113,6 +113,16 @@ return [
 			'url' => '/proxy',
 			'verb' => 'GET'
 		],
+		[
+			'name' => 'filters#getScripts',
+			'url' => '/api/accounts/{accountId}/filters/scripts',
+			'verb' => 'GET'
+		],
+		[
+			'name' => 'filters#setActiveScript',
+			'url' => '/api/accounts/{accountId}/filters/scripts',
+			'verb' => 'PUT'
+		],
 	],
 	'resources' => [
 		'accounts' => ['url' => '/api/accounts'],
