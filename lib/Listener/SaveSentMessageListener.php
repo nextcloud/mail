@@ -25,22 +25,28 @@ namespace OCA\Mail\Listener;
 
 use Horde_Imap_Client_Exception;
 use OCA\Mail\Account;
+use OCA\Mail\Db\Mailbox;
 use OCA\Mail\Db\MailboxMapper;
-use OCA\Mail\Events\BeforeMessageDeletedEvent;
+use OCA\Mail\Events\MessageSentEvent;
+use OCA\Mail\Exception\ServiceException;
 use OCA\Mail\IMAP\IMAPClientFactory;
 use OCA\Mail\IMAP\MailboxSync;
+use OCA\Mail\IMAP\MessageMapper;
 use OCP\AppFramework\Db\DoesNotExistException;
 use OCP\EventDispatcher\Event;
 use OCP\EventDispatcher\IEventListener;
 use OCP\ILogger;
 
-class MessageDeleteTrashCreatorListener implements IEventListener {
+class SaveSentMessageListener implements IEventListener {
 
 	/** @var MailboxMapper */
 	private $mailboxMapper;
 
 	/** @var IMAPClientFactory */
 	private $imapClientFactory;
+
+	/** @var MessageMapper */
+	private $messageMapper;
 
 	/** @var MailboxSync */
 	private $mailboxSync;
@@ -50,52 +56,71 @@ class MessageDeleteTrashCreatorListener implements IEventListener {
 
 	public function __construct(MailboxMapper $mailboxMapper,
 								IMAPClientFactory $imapClientFactory,
+								MessageMapper $messageMapper,
 								MailboxSync $mailboxSync,
 								ILogger $logger) {
 		$this->mailboxMapper = $mailboxMapper;
 		$this->imapClientFactory = $imapClientFactory;
+		$this->messageMapper = $messageMapper;
 		$this->mailboxSync = $mailboxSync;
 		$this->logger = $logger;
 	}
 
 	public function handle(Event $event): void {
-		if (!($event instanceof BeforeMessageDeletedEvent)) {
+		if (!($event instanceof MessageSentEvent)) {
 			return;
 		}
 
+		// Save the message in the sent mailbox
 		try {
-			$this->mailboxMapper->findSpecial(
-				$event->getAccount(),
-				"trash"
-			);
+			$sentMailbox = $this->mailboxMapper->findSpecial($event->getAccount(), 'sent');
 		} catch (DoesNotExistException $e) {
-			$this->logger->debug("Creating trash mailbox");
-			$this->createTrash($event->getAccount());
-			$this->logger->debug("Trash mailbox created");
+			$this->logger->debug('creating sent mailbox');
+			$sentMailbox = $this->createSentMailbox($event->getAccount());
+			$this->logger->debug('sent mailbox created');
+		}
+
+		try {
+			$this->messageMapper->save(
+				$this->imapClientFactory->getClient($event->getAccount()),
+				$sentMailbox,
+				$event->getMail()
+			);
+		} catch (Horde_Imap_Client_Exception $e) {
+			throw new ServiceException('Could not save sent message on IMAP', 0, $e);
 		}
 	}
 
-	private function createTrash(Account $account): void {
+	/**
+	 * @throws DoesNotExistException
+	 * @throws ServiceException
+	 */
+	private function createSentMailbox(Account $account): Mailbox {
 		$client = $this->imapClientFactory->getClient($account);
 
 		try {
 			// TODO: localize mailbox name
 			$client->createMailbox(
-				"Trash",
+				'Sent',
 				[
-					"special_use" => [
-						\Horde_Imap_Client::SPECIALUSE_TRASH,
+					'special_use' => [
+						\Horde_Imap_Client::SPECIALUSE_SENT,
 					],
 				]
 			);
 		} catch (Horde_Imap_Client_Exception $e) {
+			// Let's assume this error is caused because the mailbox already exists,
+			// caused by concurrent requests or out-of-sync mailbox cache
 			$this->logger->logException($e, [
-				"message" => "Could not creat trash mailbox",
+				'message' => 'Could not create sent mailbox',
+				'level' => ILogger::WARN,
 			]);
 		}
 
 		// TODO: find a more elegant solution for updating the mailbox cache
 		$this->mailboxSync->sync($account, true);
+
+		return $this->mailboxMapper->findSpecial($account, 'sent');
 	}
 
 }

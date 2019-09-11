@@ -426,6 +426,8 @@ class Mailbox implements IMailBox {
 	 * @param string $rawBody
 	 * @param array $flags
 	 * @return array<int> UIDs
+	 *
+	 * @deprecated only used for testing
 	 */
 	public function saveMessage($rawBody, $flags = []) {
 		$uids = $this->conn->append($this->mailBox, [
@@ -436,27 +438,6 @@ class Mailbox implements IMailBox {
 		])->ids;
 
 		return reset($uids);
-	}
-
-	/**
-	 * Save draft
-	 *
-	 * @param string $rawBody
-	 * @return int UID of the saved draft
-	 */
-	public function saveDraft($rawBody) {
-
-		$uids = $this->conn->append($this->mailBox,
-			[
-			[
-				'data' => $rawBody,
-				'flags' => [
-					Horde_Imap_Client::FLAG_DRAFT,
-					Horde_Imap_Client::FLAG_SEEN
-				]
-			]
-		]);
-		return $uids->current();
 	}
 
 	/**
