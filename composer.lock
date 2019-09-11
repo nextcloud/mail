@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "5d9b2a110b23cb2fbc142097a4656d7f",
+    "content-hash": "7c47bf1dbeb909c6634d9d2d8f205ad9",
     "packages": [
         {
             "name": "arthurhoaro/favicon",
@@ -869,6 +869,70 @@
                 "LGPL-2.1"
             ],
             "description": "These classes provide functionality useful for all kind of applications."
+        },
+        {
+            "name": "protonlabs/libsieve-php",
+            "version": "v2.0.2",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/ProtonMail/libsieve-php.git",
+                "reference": "b568743d701db534e15b0a3ef378e82162c74a16"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/ProtonMail/libsieve-php/zipball/b568743d701db534e15b0a3ef378e82162c74a16",
+                "reference": "b568743d701db534e15b0a3ef378e82162c74a16",
+                "shasum": ""
+            },
+            "require": {
+                "ext-mbstring": "*",
+                "ext-simplexml": "*",
+                "php": ">=7.1.0"
+            },
+            "require-dev": {
+                "phpunit/phpunit": "^7",
+                "protonlabs/php-coding-standard": "^1.0",
+                "squizlabs/php_codesniffer": "^3.3"
+            },
+            "type": "library",
+            "autoload": {
+                "psr-4": {
+                    "Sieve\\": "lib/"
+                }
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "GPL-3.0-or-later"
+            ],
+            "authors": [
+                {
+                    "name": "Heiko Hund",
+                    "homepage": "https://sourceforge.net/u/heikoh/profile/"
+                },
+                {
+                    "name": "Martin Zeman",
+                    "email": "martin@protonmail.com",
+                    "homepage": "https://protonmail.com"
+                },
+                {
+                    "name": "Kay Lukas",
+                    "email": "kay@pm.me",
+                    "homepage": "https://protonmail.com"
+                },
+                {
+                    "name": "Thomas Hareau",
+                    "email": "thomas.hareau@protonmail.com",
+                    "homepage": "https://thomas.hareau.eu"
+                }
+            ],
+            "description": "libsieve-php is a library to manage and modify sieve (RFC5228) scripts.",
+            "homepage": "https://sourceforge.net/projects/libsieve-php/",
+            "keywords": [
+                "filters",
+                "mail",
+                "sieve"
+            ],
+            "time": "2019-02-08T20:05:14+00:00"
         }
     ],
     "packages-dev": [

@@ -25,22 +25,33 @@ namespace OCA\Mail\Service;
 
 use Horde\ManageSieve;
 use OCA\Mail\Account;
-use OCA\Mail\Sieve\Filter;
-use OCA\Mail\Sieve\SieveScript;
-use OCA\Mail\Sieve\SieveSerializer;
+use OCA\Mail\Service\Sieve\Script;
+use OCA\Mail\Service\Sieve\ScriptFactory;
 
-class FiltersService
+class SieveService
 {
 
 	/** @var ManageSieve */
 	private $sieveClient;
+
+	/** @var ScriptFactory */
+	private $scriptFactory;
+
+	/**
+	 * FiltersService constructor.
+	 * @param ScriptFactory $scriptFactory
+	 */
+	public function __construct(ScriptFactory $scriptFactory)
+	{
+		$this->scriptFactory = $scriptFactory;
+	}
 
 	/**
 	 * @param Account $account
 	 * @return $this
 	 * @throws ManageSieve\Exception
 	 */
-	public function setAccount(Account $account): FiltersService
+	public function setAccount(Account $account): SieveService
 	{
 		$this->sieveClient = $account->getSieveConnection();
 		return $this;
@@ -83,5 +94,56 @@ class FiltersService
 		}
 
 		return false;
+	}
+
+	/**
+	 * @param string $scriptName
+	 * @return string
+	 * @throws ManageSieve\Exception
+	 */
+	public function getScript(string $scriptName): string
+	{
+		return $this->sieveClient->getScript($scriptName);
+	}
+
+	/**
+	 * @param string $filter
+	 * @param string $type
+	 * @return array
+	 * @throws ManageSieve\Exception
+	 */
+	public function createScript(string $filter, string $type): array
+	{
+		switch ($type) {
+			case Script::TYPE_CUSTOM:
+				$script = $this->scriptFactory->createCustom($filter);
+				return $this->installRawScript($script);
+		}
+	}
+
+	/**
+	 * @param Script $script
+	 * @return array
+	 * @throws ManageSieve\Exception
+	 */
+	private function installRawScript(Script $script): array
+	{
+		if ($script->isValid()) {
+			$this->installScript($script);
+			return ['status' => 'success'];
+		} else {
+			return ['status' => 'error', 'message' => $script->getParseError()];
+		}
+	}
+
+	/**
+	 * @param Script $script
+	 * @throws ManageSieve\Exception
+	 */
+	private function installScript(Script $script)
+	{
+		if ($this->sieveClient->hasSpace($script->getName(), $script->getSize())) {
+			$this->sieveClient->installScript($script->getName(), $script->getScript(), true);
+		}
 	}
 }

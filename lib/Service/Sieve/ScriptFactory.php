@@ -1,7 +1,11 @@
-/*
- * @copyright 2019 Christoph Wurst <christoph@winzerhof-wurst.at>
+<?php
+
+declare(strict_types=1);
+
+/**
+ * @copyright 2019 Pierre Gordon <pierregordon@protonmail.com>
  *
- * @author 2019 Christoph Wurst <christoph@winzerhof-wurst.at>
+ * @author 2019 Pierre Gordon <pierregordon@protonmail.com>
  *
  * @license GNU AGPL version 3 or any later version
  *
@@ -17,11 +21,26 @@
  *
  * You should have received a copy of the GNU Affero General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
+ *
  */
 
-export const UNIFIED_ACCOUNT_ID = 0
-export const UNIFIED_INBOX_ID = btoa('inbox')
-export const UNIFIED_INBOX_UID = UNIFIED_ACCOUNT_ID + '-' + UNIFIED_INBOX_ID
+namespace OCA\Mail\Service\Sieve;
 
-export const SIEVE_NAME = 'nextcloud'
-export const SIEVE_CUSTOM_NAME = 'nextcloud.custom'
+class ScriptFactory {
+
+	/**
+	 * @param string $script
+	 * @return Script
+	 */
+	public function createCustom(string $script): Script {
+		return new Script(Script::SCRIPT_CUSTOM_NAME, $script);
+	}
+
+	/**
+	 * @param string $script
+	 * @return Script
+	 */
+	public function createSimple(string $script): Script {
+		return new Script(Script::SCRIPT_NAME, $script);
+	}
+}
