@@ -26,31 +26,32 @@ namespace OCA\Mail\Controller;
 use OCA\Mail\Exception\AccountException;
 use OCA\Mail\Http\JSONResponse;
 use OCA\Mail\Service\AccountService;
-use OCA\Mail\Service\FiltersService;
+use OCA\Mail\Service\SieveService;
+use OCA\Mail\Service\Sieve\Script;
 use OCP\AppFramework\Controller;
 use OCP\IRequest;
 use OCP\IUser;
 use OCP\IUserSession;
 
-class FiltersController  extends Controller
+class SieveController  extends Controller
 {
 
 	/** @var IUser */
 	private $currentUser;
 
-	/** @var FiltersService */
-	private $filtersService;
+	/** @var SieveService */
+	private $sieveService;
 
 	/** @var AccountService */
 	private $accountService;
 
 	public function __construct($appName, IRequest $request, IUserSession $userSession,
-								FiltersService $filtersService, AccountService $accountService)
+								SieveService $filtersService, AccountService $accountService)
 	{
 		parent::__construct($appName, $request);
 
 		$this->currentUser = $userSession->getUser();
-		$this->filtersService = $filtersService;
+		$this->sieveService = $filtersService;
 		$this->accountService = $accountService;
 
 	}
@@ -61,9 +62,35 @@ class FiltersController  extends Controller
 	 * @throws AccountException
 	 * @throws \Horde\ManageSieve\Exception
 	 */
-	public function getScripts(int $accountId): JSONResponse
+	public function index(int $accountId): JSONResponse
 	{
-		return new JSONResponse($this->getFiltersService($accountId)->getScriptNames());
+		return new JSONResponse($this->getSieveService($accountId)->getScriptNames());
+	}
+
+	/**
+	 * @param int $accountId
+	 * @param string $script
+	 * @return JSONResponse
+	 * @throws AccountException
+	 * @throws \Horde\ManageSieve\Exception
+	 */
+	public function create(int $accountId, string $script): JSONResponse
+	{
+		return new JSONResponse(
+			$this->getSieveService($accountId)->createScript($script, Script::TYPE_CUSTOM)
+		);
+	}
+
+	/**
+	 * @param int $accountId
+	 * @param string $id
+	 * @return JSONResponse
+	 * @throws AccountException
+	 * @throws \Horde\ManageSieve\Exception
+	 */
+	public function show(int $accountId, string $id): JSONResponse
+	{
+		return new JSONResponse($this->getSieveService($accountId)->getScript($id));
 	}
 
 	/**
@@ -75,19 +102,19 @@ class FiltersController  extends Controller
 	 */
 	public function setActiveScript(int $accountId, string $scriptName): JSONResponse
 	{
-		return new JSONResponse($this->getFiltersService($accountId)->setActiveScript($scriptName));
+		return new JSONResponse($this->getSieveService($accountId)->setActiveScript($scriptName));
 	}
 
 	/**
 	 * @param int $accountId
-	 * @return FiltersService
+	 * @return SieveService
 	 * @throws AccountException
 	 * @throws \Horde\ManageSieve\Exception
 	 */
-	private function getFiltersService(int $accountId): FiltersService
+	private function getSieveService(int $accountId): SieveService
 	{
 		$account = $this->accountService->find($this->currentUser->getUID(), $accountId);
 
-		return $this->filtersService->setAccount($account);
+		return $this->sieveService->setAccount($account);
 	}
 }

@@ -34,7 +34,8 @@
 		"ezyang/htmlpurifier": "4.11.0",
 		"kwi/urllinker": "dev-bleeding",
 		"gravatarphp/gravatar": "^2.0",
-		"arthurhoaro/favicon": "^1.2"
+		"arthurhoaro/favicon": "^1.2",
+		"protonlabs/libsieve-php": "^2.0"
 	},
 	"require-dev": {
 		"christophwurst/nextcloud": "v17.0.0-beta3",

@@ -114,14 +114,9 @@ return [
 			'verb' => 'GET'
 		],
 		[
-			'name' => 'filters#getScripts',
-			'url' => '/api/accounts/{accountId}/filters/scripts',
-			'verb' => 'GET'
-		],
-		[
-			'name' => 'filters#setActiveScript',
-			'url' => '/api/accounts/{accountId}/filters/scripts',
-			'verb' => 'PUT'
+			'name' => 'sieve#setActiveScript',
+			'url' => '/api/accounts/{accountId}/scripts/active',
+			'verb' => 'POST'
 		],
 	],
 	'resources' => [
@@ -132,5 +127,6 @@ return [
 		'localAttachments' => ['url' => '/api/attachments'],
 		'messages' => ['url' => '/api/accounts/{accountId}/folders/{folderId}/messages'],
 		'preferences' => ['url' => '/api/preferences'],
+		'sieve' => ['url' => '/api/accounts/{accountId}/scripts'],
 	]
 ];
