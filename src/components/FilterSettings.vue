@@ -1,8 +1,19 @@
 <template>
 	<div>
-		<div>
-			<h2>{{ t('mail', 'Filters') }}</h2>
+		<h2>{{ t('mail', 'Filters') }}</h2>
 
+		<div>
+			<label>
+				{{ t('mail', 'Mode') }}:
+				<select v-model="filterMode">
+					<option v-for="mode in filterModes" :key="mode" :value="mode">
+						{{ mode }}
+					</option>
+				</select>
+			</label>
+		</div>
+
+		<div v-show="filterMode === filterModes.available">
 			<label>
 				{{ t('mail', 'Active script') }}:
 				<select v-model="selectedScriptName">
@@ -21,23 +32,16 @@
 			/>
 		</div>
 
-		<div>
-			<label>
-				Use custom script
-				<input v-model="customScriptEnabled" type="checkbox" />
-			</label>
+		<div v-show="filterMode === filterModes.custom">
+			<textarea v-model="customScript" style="display: block"></textarea>
 
-			<div v-show="customScriptEnabled">
-				<textarea v-model="customScript" style="display: block"></textarea>
-
-				<input
-					type="submit"
-					class="primary"
-					:value="t('mail', 'Save')"
-					:disabled="canSaveCustomScript"
-					@click="onSaveCustomScript"
-				/>
-			</div>
+			<input
+				type="submit"
+				class="primary"
+				:value="t('mail', 'Save')"
+				:disabled="canSaveCustomScript"
+				@click="onSaveCustomScript"
+			/>
 		</div>
 	</div>
 </template>
@@ -54,16 +58,19 @@ export default {
 		return {
 			accountId: this.$route.params.accountId,
 			selectedScriptName: '',
-			customScriptEnabled: false,
 			customScript: '',
 			activeScriptName: '',
 			isSavingScript: false,
+			filterMode: '',
 			scriptNames: [],
-			scripts: [
-				{
-					[SIEVE_CUSTOM_NAME]: '',
-				},
-			],
+			scripts: {
+				[SIEVE_CUSTOM_NAME]: '',
+			},
+			filterModes: {
+				simple: 'Simple',
+				custom: 'Custom',
+				available: 'From available',
+			},
 		}
 	},
 
@@ -83,13 +90,23 @@ export default {
 				this.selectedScriptName = name
 			}
 
-			if (this.customScriptEnabled && name !== SIEVE_CUSTOM_NAME) {
-				this.customScriptEnabled = false
-			} else if (name === SIEVE_CUSTOM_NAME) {
-				this.customScript = this.scripts[SIEVE_CUSTOM_NAME]
-				this.customScriptEnabled = true
+			if (name === SIEVE_CUSTOM_NAME) {
+				if (!this.scripts[SIEVE_CUSTOM_NAME]) {
+					getScript(this.accountId, SIEVE_CUSTOM_NAME).then(script => {
+						this.scripts[SIEVE_CUSTOM_NAME] = script
+						this.customScript = script
+					})
+				}
+
+				if (this.customScript !== this.scripts[SIEVE_CUSTOM_NAME]) {
+					this.customScript = this.scripts[SIEVE_CUSTOM_NAME]
+				}
 			}
 		},
+	},
+
+	created() {
+		this.filterMode = this.filterModes.simple
 	},
 
 	mounted() {
@@ -136,12 +153,10 @@ export default {
 				this.activeScriptName = active || this.activeScriptName
 				this.scriptNames = entries || this.scriptNames
 
-				if (this.activeScriptName === SIEVE_CUSTOM_NAME) {
-					getScript(this.accountId, SIEVE_CUSTOM_NAME).then(script => {
-						this.scripts[SIEVE_CUSTOM_NAME] = script
-						this.customScript = script
-						this.customScriptEnabled = true
-					})
+				if (!['', SIEVE_NAME, SIEVE_CUSTOM_NAME].includes(this.activeScriptName)) {
+					this.filterMode = this.filterModes.available
+				} else if (this.activeScriptName === SIEVE_CUSTOM_NAME) {
+					this.filterMode = this.filterModes.custom
 				}
 			})
 		},
