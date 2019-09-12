@@ -125,7 +125,7 @@ class Manager {
 		$account->setSieveHost($config->getSieveHost());
 		$account->setSievePort($config->getSievePort());
 		$account->setSieveSslMode($config->getSieveSslMode());
-		$account->setSievePassword($password);
+		$account->setSievePassword($account->getSieveHost() ? $password : null);
 
 		return $account;
 	}

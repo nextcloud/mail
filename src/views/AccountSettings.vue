@@ -2,7 +2,6 @@
 	<Content app-name="mail">
 		<Navigation />
 		<AppContent>
-<!--			TODO: hide if sieve not configured-->
 			<div class="section">
 				<FilterSettings />
 			</div>
