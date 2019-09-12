@@ -29,7 +29,7 @@ class CreateAccountTest extends TestCase {
 	private $service;
 	private $crypto;
 	private $command;
-	private $args = [
+	private $requiredArgs = [
 		'user-id',
 		'name',
 		'email',
@@ -43,6 +43,13 @@ class CreateAccountTest extends TestCase {
 		'smtp-ssl-mode',
 		'smtp-user',
 		'smtp-password',
+	];
+	private $optionalArgs = [
+		'sieve-host',
+		'sieve-port',
+		'sieve-ssl-mode',
+		'sieve-user',
+		'sieve-password',
 	];
 
 	protected function setUp() {
@@ -68,8 +75,8 @@ class CreateAccountTest extends TestCase {
 		$actual = $this->command->getDefinition()->getArguments();
 
 		foreach ($actual as $actArg) {
-			$this->assertTrue($actArg->isRequired());
-			$this->assertTrue(in_array($actArg->getName(), $this->args));
+			$type = $actArg->isRequired() ? 'required' : 'optional';
+			$this->assertTrue(in_array($actArg->getName(), $this->{"{$type}Args"}));
 		}
 	}
 

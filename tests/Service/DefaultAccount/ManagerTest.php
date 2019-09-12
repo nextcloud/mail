@@ -105,6 +105,9 @@ class ManagerTest extends TestCase {
 				'smtpHost' => 'smtp.domain.tld',
 				'smtpPort' => 465,
 				'smtpSslMode' => 'tls',
+				'sieveHost' => null,
+				'sievePort' => null,
+				'sieveSslMode' => null,
 		]);
 		$credentials = $this->createMock(ICredentials::class);
 		$user = $this->createMock(IUser::class);
@@ -145,6 +148,11 @@ class ManagerTest extends TestCase {
 		$expected->setOutboundPort(465);
 		$expected->setOutboundSslMode('tls');
 		$expected->setOutboundPassword('encrypted');
+		$expected->setSieveUser(null);
+		$expected->setSieveHost(null);
+		$expected->setSievePort(null);
+		$expected->setSieveSslMode(null);
+		$expected->setSievePassword(null);
 
 		$account = $this->manager->getDefaultAccount();
 

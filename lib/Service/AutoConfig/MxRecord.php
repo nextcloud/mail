@@ -39,7 +39,10 @@ class MxRecord {
 	 * @return bool|array
 	 */
 	public function query(string $host) {
-		if (getmxrr($host, $mxRecords, $mxWeight) === false) {
+		if (
+			getmxrr($host, $mxRecords, $mxWeight) === false ||
+			$mxRecords[0] === ''
+		) {
 			$this->logger->debug("no MX records for host <$host> found");
 			return false;
 		}

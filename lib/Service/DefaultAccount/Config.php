@@ -123,13 +123,14 @@ class Config {
 
 	/**
 	 * @param IUser $user
-	 * @return string
+	 * @return string|null
 	 */
 	public function buildSieveUser(IUser $user) {
 		if (isset($this->data['sieveUser'])) {
 			return $this->buildUserEmail($this->data['sieveUser'], $user);
 		}
-		return $this->buildEmail($user);
+
+		return null;
 	}
 
 	/**
