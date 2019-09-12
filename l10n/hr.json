@@ -1,13 +1,5 @@
 { "translations": {
     "Mail" : "Pošta",
-    "Inbox" : "Dolazni sandučić",
-    "Sent" : "Poslano",
-    "Drafts" : "Skice",
-    "Archive" : "Arhiva",
-    "Trash" : "Smeće",
-    "Junk" : "Neželjeno",
-    "All" : "Sve",
-    "Favorites" : "Favoriti",
     "Auto detect failed. Please use manual mode." : "Neuspjelo automatsko otkrivanje. Upišite postavke ručno.",
     "Updating account failed: " : "Neuspjelo ažuriranje računa: ",
     "Creating account failed: " : "Neuspjelo stvaranje računa:",

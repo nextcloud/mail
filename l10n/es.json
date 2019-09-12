@@ -1,13 +1,5 @@
 { "translations": {
     "Mail" : "Correo electrónico",
-    "Inbox" : "Bandeja de entrada",
-    "Sent" : "Enviados",
-    "Drafts" : "Borradores",
-    "Archive" : "Archivados",
-    "Trash" : "Papelera",
-    "Junk" : "Correo no deseado",
-    "All" : "Todos",
-    "Favorites" : "Favoritos",
     "Auto detect failed. Please use manual mode." : "La autodetección ha fallado. Usa el modo manual.",
     "Updating account failed: " : "Fallo al actualizar la cuenta:",
     "Creating account failed: " : "No se ha podido crear la cuenta:",

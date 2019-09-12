@@ -1,13 +1,5 @@
 { "translations": {
     "Mail" : "Correo",
-    "Inbox" : "Bandexa de entrada",
-    "Sent" : "Enviado",
-    "Drafts" : "Borradores",
-    "Archive" : "Arquivo",
-    "Trash" : "Cesto do lixo",
-    "Junk" : "Lixo",
-    "All" : "Todo",
-    "Favorites" : "Favoritos",
     "Auto detect failed. Please use manual mode." : "Fallou o modo de detección automática. empregue o modo manual.",
     "Updating account failed: " : "Produciuse un fallo ao actualizar a conta:",
     "Creating account failed: " : "Produciuse un fallo ao crear a conta:",

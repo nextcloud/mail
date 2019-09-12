@@ -1,13 +1,5 @@
 { "translations": {
     "Mail" : "Poczta",
-    "Inbox" : "Odebrane",
-    "Sent" : "Wysłane",
-    "Drafts" : "Kopie robocze",
-    "Archive" : "Archiwum",
-    "Trash" : "Kosz",
-    "Junk" : "Spam",
-    "All" : "Wszystkie",
-    "Favorites" : "Ulubione",
     "Auto detect failed. Please use manual mode." : "Automatyczne wykrywanie nie powiodło się. Użyj trybu ręcznego.",
     "Updating account failed: " : "Aktualizacja konta nie powiodła się: ",
     "Creating account failed: " : "Utworzenie konta nie powiodło się: ",

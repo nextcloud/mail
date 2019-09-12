@@ -1,13 +1,5 @@
 { "translations": {
     "Mail" : "E-mail",
-    "Inbox" : "Caixa de Entrada",
-    "Sent" : "Enviados",
-    "Drafts" : "Rascunhos",
-    "Archive" : "Arquivados",
-    "Trash" : "Lixeira",
-    "Junk" : "Lixo",
-    "All" : "Todos",
-    "Favorites" : "Favoritos",
     "Auto detect failed. Please use manual mode." : "A auto detecção falhou. Por favor use o modo manual.",
     "Updating account failed: " : "Falhou ao atualizar a conta:",
     "Creating account failed: " : "A criação de contas falhou:",

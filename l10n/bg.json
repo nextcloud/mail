@@ -1,13 +1,5 @@
 { "translations": {
     "Mail" : "Поща",
-    "Inbox" : "Входяши",
-    "Sent" : "Изпратени",
-    "Drafts" : "Чернови",
-    "Archive" : "Архив",
-    "Trash" : "Кошче",
-    "Junk" : "Спам",
-    "All" : "Всички",
-    "Favorites" : "Любими",
     "Auto detect failed. Please use manual mode." : "Неуспешни автоматични настройки. Моля, използвай ръчен режим.",
     "Creating account failed: " : "Неуспешно създаване на профил:",
     "Delete permanently" : "Изтрий завинаги",

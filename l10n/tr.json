@@ -1,13 +1,5 @@
 { "translations": {
     "Mail" : "Posta",
-    "Inbox" : "Gelen Kutusu",
-    "Sent" : "Gönderilenler",
-    "Drafts" : "Taslaklar",
-    "Archive" : "Arşiv",
-    "Trash" : "Çöp Kutusu",
-    "Junk" : "Gereksiz",
-    "All" : "Tümü",
-    "Favorites" : "Sık Kullanılanlar",
     "Auto detect failed. Please use manual mode." : "Otomatik olarak algılanamadı. Lütfen el ile kipini kullanın.",
     "Updating account failed: " : "Hesap güncellenemedi:",
     "Creating account failed: " : "Hesap oluşturulamadı:",

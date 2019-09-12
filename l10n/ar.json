@@ -1,13 +1,5 @@
 { "translations": {
     "Mail" : "البريد",
-    "Inbox" : "صندوق الوارد",
-    "Sent" : "أرسلت",
-    "Drafts" : "المسودات",
-    "Archive" : "الأرشيف",
-    "Trash" : "سلة المحذوفات",
-    "Junk" : "عشوائي",
-    "All" : "الكل",
-    "Favorites" : "المفضلة ",
     "Auto detect failed. Please use manual mode." : "فشل في عملية التحقق الآلي. الرجاء استخدام نمط الدليل.",
     "Updating account failed: " : "فشلت عملية تحديث الحساب :",
     "Creating account failed: " : "فشل في إنشاء الحساب:",

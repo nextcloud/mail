@@ -1,13 +1,5 @@
 { "translations": {
     "Mail" : "Məktub",
-    "Inbox" : "Gələn qutusu",
-    "Sent" : "Göndərildi",
-    "Drafts" : "Qaralamalar",
-    "Archive" : "Arxiv",
-    "Trash" : "Zibil",
-    "Junk" : "Önəmsiz",
-    "All" : "Hamısı",
-    "Favorites" : "Sevimlilər",
     "Auto detect failed. Please use manual mode." : "Avtomatik təyinatda səhv baş verdi. Xahiş olunur əl rejimini seçəsiniz.",
     "Creating account failed: " : "Hesabın yaradılmasında səhv:",
     "Delete permanently" : "Həmişəlik sil",

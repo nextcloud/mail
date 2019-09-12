@@ -1,13 +1,5 @@
 { "translations": {
     "Mail" : "Почта",
-    "Inbox" : "Входящие",
-    "Sent" : "Отправленные",
-    "Drafts" : "Черновики",
-    "Archive" : "Архив",
-    "Trash" : "Корзина",
-    "Junk" : "Спам",
-    "All" : "Все",
-    "Favorites" : "Избранное",
     "Auto detect failed. Please use manual mode." : "Не удалось автоматически определить настройки. Воспользуйтесь ручным режимом.",
     "Updating account failed: " : "Ошибка обновления учётной записи:",
     "Creating account failed: " : "Ошибка создания учетной записи:",

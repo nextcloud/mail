@@ -1,13 +1,5 @@
 { "translations": {
     "Mail" : "電子郵件",
-    "Inbox" : "收件匣",
-    "Sent" : "寄件備份",
-    "Drafts" : "草稿",
-    "Archive" : "封存",
-    "Trash" : "回收筒",
-    "Junk" : "垃圾郵件",
-    "All" : "所有",
-    "Favorites" : "最愛",
     "Auto detect failed. Please use manual mode." : "自動偵測失敗，請改用手動輸入",
     "Updating account failed: " : "更新帳戶失敗",
     "Creating account failed: " : "建立帳號失敗：",

@@ -1,13 +1,5 @@
 { "translations": {
     "Mail" : "Posta",
-    "Inbox" : "Të marrë",
-    "Sent" : "Të dërguar",
-    "Drafts" : "Skica",
-    "Archive" : "Arkivë",
-    "Trash" : "Hedhurina",
-    "Junk" : "Të pavlera",
-    "All" : "Të gjithë",
-    "Favorites" : "Të parapëlqyer",
     "Auto detect failed. Please use manual mode." : "Vetëzbulimi dështoi. Ju lutemi, përdorni metodën dorazi.",
     "Creating account failed: " : "Krijimi i llogarisë dështoi: ",
     "Delete permanently" : "Fshije përgjithmonë",

@@ -1,13 +1,5 @@
 { "translations": {
     "Mail" : "Mail",
-    "Inbox" : "Indbakke",
-    "Sent" : "Sendt",
-    "Drafts" : "Udkast",
-    "Archive" : "Arkiv",
-    "Trash" : "Papirkurv",
-    "Junk" : "Junk",
-    "All" : "Alle",
-    "Favorites" : "Foretrukne",
     "Auto detect failed. Please use manual mode." : "Fejl ved autodetektion. Anvend venligst manuel opsætning",
     "Creating account failed: " : "Oprettelse af konto mislykkedes:",
     "Delete permanently" : "Slet permanent",

@@ -2,8 +2,6 @@ OC.L10N.register(
     "mail",
     {
     "Mail" : "মেইল",
-    "All" : "সবাই",
-    "Favorites" : "প্রিয়জন",
     "Creating account failed: " : "একাউন্ট তৈরী করা গেলনা:",
     "Connect" : "সংযুক্ত হও",
     "Sending …" : "পাঠানো হচ্ছে......",

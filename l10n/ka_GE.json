@@ -1,13 +1,5 @@
 { "translations": {
     "Mail" : "ფოსტა",
-    "Inbox" : "ინბოქსი",
-    "Sent" : "გაგზავნილი",
-    "Drafts" : "მონახაზები",
-    "Archive" : "არქივი",
-    "Trash" : "ნაგავი",
-    "Junk" : "უსარგებლო",
-    "All" : "ყველა",
-    "Favorites" : "რჩეული",
     "Auto detect failed. Please use manual mode." : "ავტო-აღმოჩენა ვერ მოხერხდა. გთხოვთ სცადოთ ხელით.",
     "Updating account failed: " : "ანგარიშის განახლება ვერ მოხერხდა:",
     "Creating account failed: " : "ანგარიშების შექმნა ვერ მოხერხდა:",

@@ -2,12 +2,6 @@ OC.L10N.register(
     "mail",
     {
     "Mail" : "Електронска пошта",
-    "Sent" : "Испратени",
-    "Archive" : "Архива",
-    "Trash" : "Корпа",
-    "Junk" : "Спам",
-    "All" : "Сите",
-    "Favorites" : "Омилени",
     "Delete permanently" : "Избриши",
     "Auto" : "Автоматски",
     "Name" : "Име",

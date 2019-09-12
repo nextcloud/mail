@@ -1,13 +1,5 @@
 { "translations": {
     "Mail" : "E-post",
-    "Inbox" : "Innboks",
-    "Sent" : "Sendt",
-    "Drafts" : "Kladder",
-    "Archive" : "Arkiv",
-    "Trash" : "Papirkurv",
-    "Junk" : "Søppel",
-    "All" : "Alle",
-    "Favorites" : "Favoritter",
     "Auto detect failed. Please use manual mode." : "Automatisk påvisning mislyktes. Bruk manuelt oppsett.",
     "Updating account failed: " : "Oppdatering av konto mislyktes:",
     "Creating account failed: " : "Oppretting av konto mislyktes:",

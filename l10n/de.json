@@ -1,13 +1,5 @@
 { "translations": {
     "Mail" : "E-Mail",
-    "Inbox" : "Posteingang",
-    "Sent" : "Gesendet",
-    "Drafts" : "Entwürfe",
-    "Archive" : "Archiv",
-    "Trash" : "Papierkorb",
-    "Junk" : "Spam",
-    "All" : "Alle",
-    "Favorites" : "Favoriten",
     "Auto detect failed. Please use manual mode." : "Automatische Erkennung fehlgeschlagen. Bitte nutze den manuellen Modus.",
     "Updating account failed: " : "Kontoaktualisierung fehlgeschlagen:",
     "Creating account failed: " : "Kontoerstellung fehlgeschlagen:",

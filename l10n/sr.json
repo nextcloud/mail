@@ -1,13 +1,5 @@
 { "translations": {
     "Mail" : "Пошта",
-    "Inbox" : "Долазне",
-    "Sent" : "Послате",
-    "Drafts" : "Недовршене",
-    "Archive" : "Архива",
-    "Trash" : "Смеће",
-    "Junk" : "Отпад",
-    "All" : "Све",
-    "Favorites" : "Омиљени",
     "Auto detect failed. Please use manual mode." : "Ауто-откривање није успело. Покушајте ручно.",
     "Updating account failed: " : "Ажурирање налога неуспешно:",
     "Creating account failed: " : "Прављење налога није успело:",

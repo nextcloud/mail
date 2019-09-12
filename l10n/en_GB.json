@@ -1,13 +1,5 @@
 { "translations": {
     "Mail" : "Mail",
-    "Inbox" : "Inbox",
-    "Sent" : "Sent",
-    "Drafts" : "Drafts",
-    "Archive" : "Archive",
-    "Trash" : "Trash",
-    "Junk" : "Junk",
-    "All" : "All",
-    "Favorites" : "Favourites",
     "Auto detect failed. Please use manual mode." : "Auto detect failed. Please use manual mode.",
     "Updating account failed: " : "Updating account failed: ",
     "Creating account failed: " : "Creating account failed: ",

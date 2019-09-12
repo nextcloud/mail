@@ -1,13 +1,5 @@
 { "translations": {
     "Mail" : "E-bost",
-    "Inbox" : "Blwch Derbyn",
-    "Sent" : "Anfonwyd",
-    "Drafts" : "Drafftiau",
-    "Archive" : "Archif",
-    "Trash" : "Sbwriel",
-    "Junk" : "Sothach",
-    "All" : "Popeth",
-    "Favorites" : "Ffefrynnau",
     "Auto detect failed. Please use manual mode." : "Methodd awtoganfod. Defnyddiwch y modd llaw.",
     "Updating account failed: " : "Methodd diweddaru'r cyfrif :",
     "Creating account failed: " : "Methodd creu'r cyfrif:",

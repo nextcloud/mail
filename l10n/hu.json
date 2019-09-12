@@ -1,13 +1,5 @@
 { "translations": {
     "Mail" : "Levelezés",
-    "Inbox" : "Bejövő",
-    "Sent" : "Elküldött",
-    "Drafts" : "Vázlatok",
-    "Archive" : "Archívum",
-    "Trash" : "Lomtár",
-    "Junk" : "Szemét",
-    "All" : "Mind",
-    "Favorites" : "Kedvencek",
     "Auto detect failed. Please use manual mode." : "Automatikus észlelés sikertelen. Használja a manuális módot.",
     "Updating account failed: " : "Fiók frissítése sikertelen:",
     "Creating account failed: " : "Fiók létrehozása sikertelen: ",

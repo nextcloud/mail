@@ -1,13 +1,5 @@
 { "translations": {
     "Mail" : "Paštas",
-    "Inbox" : "Gauta",
-    "Sent" : "Išsiųsta",
-    "Drafts" : "Juodraščiai",
-    "Archive" : "Archyvas",
-    "Trash" : "Šiukšlinė",
-    "Junk" : "Šlamštas",
-    "All" : "Viskas",
-    "Favorites" : "Svarbiausi",
     "Auto detect failed. Please use manual mode." : "Automatinis nustatymų aptikimas nepavyko. Įveskite duomenis rankiniu būdu.",
     "Updating account failed: " : "Paskyros atnaujinimas nepavyko: ",
     "Creating account failed: " : "Paskyros sukūrimas nepavyko: ",

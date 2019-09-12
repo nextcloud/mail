@@ -2,12 +2,6 @@ OC.L10N.register(
     "mail",
     {
     "Mail" : "Mail",
-    "Sent" : "Trimis",
-    "Drafts" : "Schițe",
-    "Archive" : "Arhivă",
-    "Trash" : "Gunoi",
-    "All" : "Toate ",
-    "Favorites" : "Favorite",
     "Creating account failed: " : "Crearea contului a eșuat:",
     "Delete permanently" : "Șterge permanent",
     "Name" : "Nume",

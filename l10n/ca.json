@@ -1,13 +1,5 @@
 { "translations": {
     "Mail" : "Correu electrònic",
-    "Inbox" : "Safata d'entrada",
-    "Sent" : "Enviats",
-    "Drafts" : "Esborranys",
-    "Archive" : "Arxiu",
-    "Trash" : "Paperera",
-    "Junk" : "Brossa",
-    "All" : "Tots",
-    "Favorites" : "Preferits",
     "Auto detect failed. Please use manual mode." : "La detecció automàtica ha fallat. Si us plau, feu servir el mode manual.",
     "Updating account failed: " : "Ha fallat l’actualització del compte:",
     "Creating account failed: " : "Ha fallat la creació del compte:",

@@ -1,13 +1,5 @@
 { "translations": {
     "Mail" : "Pošta ·",
-    "Inbox" : "Prejeto",
-    "Sent" : "Poslano",
-    "Drafts" : "Osnutki",
-    "Archive" : "Arhiv",
-    "Trash" : "Smeti",
-    "Junk" : "Neželena pošta",
-    "All" : "Vse",
-    "Favorites" : "Priljubljene",
     "Auto detect failed. Please use manual mode." : "Samodejno zaznavanje je spodletelo. Zaznavo bo treba izvesti ročno.",
     "Updating account failed: " : "Posodobitev računa je spodletela:",
     "Creating account failed: " : "Ustvarjanje računa je spodletelo:",

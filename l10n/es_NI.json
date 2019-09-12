@@ -1,13 +1,5 @@
 { "translations": {
     "Mail" : "Correo",
-    "Inbox" : "Buzón de entrada",
-    "Sent" : "Enviado",
-    "Drafts" : "Borradores",
-    "Archive" : "Archivar",
-    "Trash" : "Basura",
-    "Junk" : "Basura",
-    "All" : "Todos",
-    "Favorites" : "Favoritos",
     "Auto detect failed. Please use manual mode." : "Se presentó una falla en la auto detección. Por favor usa el modo manual.",
     "Creating account failed: " : "Se presentó una falla al crear la cuenta:",
     "Delete permanently" : "Borrar permanentemente",
