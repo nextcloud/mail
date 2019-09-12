@@ -187,7 +187,7 @@ class MailAccount extends Entity {
 			$result['smtpSslMode'] = $this->getOutboundSslMode();
 		}
 
-		if (!is_null($this->getSieveHost())) {
+		if ($this->getSieveHost() !== null) {
 			$result['sieveHost'] = $this->getSieveHost();
 			$result['sievePort'] = $this->getSievePort();
 			$result['sieveUser'] = $this->getSieveUser();

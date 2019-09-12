@@ -50,7 +50,7 @@ class Script
 	{
 		$this->name = $name;
 		$this->script = $script;
-		$this->parseError = null;
+		$this->parseError = '';
 	}
 
 	/**
@@ -85,7 +85,7 @@ class Script
 		return strlen($this->script);
 	}
 
-	public function isValid()
+	public function isValid(): bool
 	{
 		$parser = new SieveParser();
 

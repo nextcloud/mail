@@ -115,8 +115,8 @@ export default {
 
 	methods: {
 		onSetActiveScriptName() {
-			setActiveScript(this.accountId, this.selectedScriptName).then(successful => {
-				if (successful) {
+			setActiveScript(this.accountId, this.selectedScriptName).then(isActive => {
+				if (isActive) {
 					this.activeScriptName = this.selectedScriptName
 				} else {
 					// TODO: display error

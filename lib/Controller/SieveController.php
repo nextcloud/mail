@@ -23,7 +23,6 @@ declare(strict_types=1);
 
 namespace OCA\Mail\Controller;
 
-use OCA\Mail\Exception\AccountException;
 use OCA\Mail\Http\JSONResponse;
 use OCA\Mail\Service\AccountService;
 use OCA\Mail\Service\SieveService;
