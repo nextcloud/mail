@@ -131,7 +131,7 @@ class CreateAccount extends Command {
 		$account->setOutboundUser($smtpUser);
 		$account->setOutboundPassword($this->crypto->encrypt($smtpPassword));
 
-		if (!is_null($sieveHost)) {
+		if ($sieveHost !== null) {
 			$account->setSieveHost($sieveHost);
 			$account->setSievePort($sievePort);
 			$account->setSieveSslMode($sieveSslMode);

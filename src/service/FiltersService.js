@@ -16,13 +16,13 @@ export const getScripts = accountId => {
 export const getScript = (accountId, scriptName) => {
 	const url = generateScriptsUrl(accountId, scriptName)
 
-	return HttpClient.get(url).then(resp => resp.data)
+	return HttpClient.get(url).then(resp => resp.data.script)
 }
 
 export const setActiveScript = (accountId, scriptName) => {
 	const url = generateScriptsUrl(accountId, 'active')
 
-	return HttpClient.post(url, {scriptName}).then(resp => resp.data)
+	return HttpClient.post(url, {scriptName}).then(resp => resp.data.isActive)
 }
 
 export const saveCustomScript = (accountId, script) => {

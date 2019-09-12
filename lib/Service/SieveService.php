@@ -80,30 +80,31 @@ class SieveService
 
 	/**
 	 * @param string $scriptName
-	 * @return bool
+	 * @return array
 	 * @throws ManageSieve\Exception
 	 */
-	public function setActiveScript(string $scriptName): bool
+	public function setActiveScript(string $scriptName): array
 	{
+		$isActive = false;
 		$scriptNames = $this->sieveClient->listScripts();
 		$activeScriptName = $this->sieveClient->getActive();
 
 		if ($scriptName !== $activeScriptName && in_array($scriptName, $scriptNames)) {
 			$this->sieveClient->setActive($scriptName);
-			return true;
+			$isActive = true;
 		}
 
-		return false;
+		return compact('isActive');
 	}
 
 	/**
 	 * @param string $scriptName
-	 * @return string
+	 * @return array
 	 * @throws ManageSieve\Exception
 	 */
-	public function getScript(string $scriptName): string
+	public function getScript(string $scriptName): array
 	{
-		return $this->sieveClient->getScript($scriptName);
+		return ['script' => $this->sieveClient->getScript($scriptName)];
 	}
 
 	/**
@@ -118,6 +119,8 @@ class SieveService
 			case Script::TYPE_CUSTOM:
 				$script = $this->scriptFactory->createCustom($filter);
 				return $this->installRawScript($script);
+			default:
+				return ['status' => 'error', 'message' => 'Not implemented'];
 		}
 	}
 

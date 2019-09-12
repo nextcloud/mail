@@ -644,7 +644,7 @@ class Account implements JsonSerializable {
 		}
 
 		// connect to sieve
-		if (!is_null($this->account->getSieveHost())) {
+		if ($this->account->getSieveHost() !== null) {
 			$this->getSieveConnection();
 		}
 	}
