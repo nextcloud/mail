@@ -78,6 +78,9 @@ export const getters = {
 	getMessageByUid: state => uid => {
 		return state.messages[uid]
 	},
+	trueAccountList: state => {
+		return state.accountList.filter(x => x !== UNIFIED_ACCOUNT_ID)
+	},
 }
 
 export default new Vuex.Store({
@@ -112,6 +115,46 @@ export default new Vuex.Store({
 		envelopes: {},
 		messages: {},
 		autocompleteEntries: [],
+		sieveFilterSets: { 
+			1: [ 
+				{
+					"id": 0,
+					"name": "Filter #2",
+				},
+				{
+					"id": 1,
+					"name": "Filter #2_1",
+				} 
+			]
+		},
+		sieveFilters: {
+			1: {
+			1: [
+				{
+					"id": 0,
+					"name": "test 1.0",
+				},
+				{
+					"id": 1,
+					"name": "test 1.1",
+				},
+				{
+					"id": 2,
+					"name": "test 1.2",
+				},
+			],
+			0: [
+				{
+					"id": 1,
+					"name": "test 0.1",
+				},
+				{
+					"id": 2,
+					"name": "test 0.2",
+				},
+			],
+			},
+		},
 	},
 	getters,
 	mutations,
