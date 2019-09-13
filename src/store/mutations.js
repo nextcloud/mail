@@ -205,4 +205,28 @@ export default {
 	state.accounts[obj.accountID].managesievePort = obj.port
 	state.accounts[obj.accountID].managesieveSTARTTLS = obj.STARTTLS
     },
+    newFilterSet(state, {accountID, filterSet}){
+	state.sieveFilterSets[accountID].push(filterSet)
+    },
+    rmFilterSet(state, {accountID, filterSetID}){
+	state.sieveFilterSets[accountID] = state.sieveFilterSets[accountID].filter(x => x.id !== filterSetID)
+    },
+    updateFilterSets(state, {accountID, value}){
+	state.sieveFilterSets[accountID] = value
+    },
+    updateFilterSetName(state, {accountID, filterSetID, name}){
+	state.sieveFilterSets[accountID][state.sieveFilterSets[accountID].findIndex(x => x.id === filterSetID)].name = name	
+    },
+    newFilter(state, {accountID, filterSetID, filter}){
+	state.sieveFilters[accountID][filterSetID].push(filter)
+    },
+    rmFilter(state, {accountID, filterSetID, filterID}){
+	state.sieveFilters[accountID][filterSetID] = state.sieveFilters[accountID][filterSetID].filter(x => x.id !== filterID)
+    },
+    updateFilters(state, {accountID, filterSetID, value}){
+	state.sieveFilters[accountID][filterSetID] = value
+    },
+    updateFilterName(state, {accountID, filterSetID, filterID, name}){
+	state.sieveFilters[accountID][filterSetID][state.sieveFilters[accountID][filterSetID].findIndex(x => x.id === filterID)].name = name	
+    },
 }

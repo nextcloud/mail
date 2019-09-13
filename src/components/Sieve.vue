@@ -2,8 +2,8 @@
   <AppContent>
     <div id="sieve-app-content">
       <h2>{{ t("mail", "Sieve Configuration") }}</h2>
-      <tabs :options="{ useUrlFragment: false }" @clicked="tabClicked" @changed="tabChanged">
-	<tab v-for="accountID in trueAccountList" :key="accountID" :name="getAccount(accountID).emailAddress">
+      <tabs :options="{ useUrlFragment: false }" @clicked="tabClicked">
+	<tab v-for="accountID in $store.getters.trueAccountList" :key="accountID" :name="$store.getters.getAccount(accountID).emailAddress">
 
 
 	  <div class="flex-line" id="server-container">
@@ -12,11 +12,11 @@
 	    </div>
 
 	    <div v-if="!serverEdit" style="width: auto">
-	      <span v-if="getAccount(accountID).managesieveSTARTTLS">
+	      <span v-if="$store.getters.getAccount(accountID).managesieveSTARTTLS">
 		tls://
 	      </span>
 	      <span>
-		{{ getAccount(accountID).managesieveHost }}:{{ getAccount(accountID).managesievePort }}
+		{{ $store.getters.getAccount(accountID).managesieveHost }}:{{ $store.getters.getAccount(accountID).managesievePort }}
 	      </span>
 	    </div>
 	    <div v-else class="flex-line" style="width: auto">
@@ -40,86 +40,7 @@
 	  </div>
 
 
-	  <div class="main-container flex-container">
-	    <div class="filtersets-container">
-	      <draggable
-		group="filterSets"
-		class="list-group"
-		tag="ul"
-		v-model="filterSets"
-		v-bind="dragOptions"
-		@start="isDragging = true"
-		@end="isDragging = false"
-		@choose="selFilterSet($event.oldIndex-2)"
-		>
-		<button slot="header" @click="addFilterSet">{{ t("mail", "Add") }}</button>
-		<button slot="header" @click="rmFilterSet">{{ t("mail", "Remove") }}</button>
-		<div
-		  v-for="filterSet in filterSets"
-		  :class="setClassOnSelect(filterSet.id, -1)"
-		  :key="filterSet.id"
-		  >
-		  <div class="flex-line">
-		    <div v-if="!filterSet.nameEdit" class="list-text">
-		      <div>{{ filterSet.name }}</div>
-		    </div>
-		    <div v-else class="list-text">
-		      <input style="margin: 0;" v-model="filterSet.name"></input>
-		    </div>
-		    <div>
-		      <Actions v-if="!filterSet.nameEdit">
-			<ActionButton icon="icon-rename" @click="filterSet.nameEdit = true">Edit</ActionButton>
-		      </Actions>
-		      <Actions v-else>
-			<ActionButton icon="icon-confirm" @click="filterSet.nameEdit = false">Edit</ActionButton>
-		      </Actions>
-		    </div>
-		  </div>
-		</div>
-	      </draggable>
-	    </div>
-
-	    <div class="filter-container">
-	      <draggable
-		group="filters"
-		class="list-group"
-		tag="ul"
-		v-model="filterSets.find(x => x.id === selFilterSetID).filters"
-		v-bind="dragOptions"
-		@start="isDragging = true"
-		@end="isDragging = false"
-		@choose="selFilter($event.oldIndex-2)"
-		>
-		<button slot="header" @click="addFilter">{{ t("mail", "Add") }}</button>
-		<button slot="header" @click="rmFilter">{{ t("mail", "Remove") }}</button>
-		<div
-		  v-for="filter in filterSets.find(x => x.id === selFilterSetID).filters"
-		  :class="setClassOnSelect(selFilterSetID, filter.id)"
-		  :key="filter.id"
-		  >
-		  <div class="flex-horizontal"> 
-		    <div class="flex-line">
-		      <div v-if="!filter.expanded" class="list-text">
-			<div>{{ filter.name }}</div>
-		      </div>
-		      <div v-else class="list-text">
-			<input style="margin: 0;" v-model="filter.name"></input>
-		      </div>
-		      <div>
-			<Actions v-if="!filter.expanded">
-			  <ActionButton icon="icon-rename" @click="filter.expanded = true">Edit</ActionButton>
-			</Actions>
-			<Actions v-else>
-			  <ActionButton icon="icon-confirm" @click="filter.expanded = false">Edit</ActionButton>
-			</Actions>
-		      </div>
-		    </div>
-		    <div v-if="filter.expanded"> Hello World!! </div>
-		  </div>
-		</div>
-	      </draggable>
-	    </div>
-	  </div>
+	  <SieveFilterSets :accountID="accountID" />
 	</tab>
       </tabs>
     </div>
@@ -131,12 +52,9 @@
   import Actions from 'nextcloud-vue/dist/Components/Actions'
   import ActionButton from 'nextcloud-vue/dist/Components/ActionButton'
   import {Tab, Tabs} from 'vue-tabs-component'
-  import draggable from 'vuedraggable'
   import vSelect from 'vue-select'
   import Message from 'vue-m-message'
-  import {fetchAll as fetchAllAccounts} from '../service/AccountService'
-  import { mapGetters, mapMutations } from 'vuex'
-
+  import SieveFilterSets from './SieveFilterSets'
 
   import Logger from '../logger'
 
@@ -150,53 +68,12 @@
 	  vSelect,
 	  Tab,
 	  Tabs,
-	  draggable,
+	  SieveFilterSets,
       },
       props: {
       },
       data() {
 	  return {
-	      filterSets: [
-		  {
-		      "id": 0,
-		      "name": "Filter #2",
-		      "nameEdit": false,
-		      "filters": [
-			  {
-			      "id": 1,
-			      "expanded": false,
-			      "name": "test 0.1",
-			  },
-			  {
-			      "id": 2,
-			      "expanded": false,
-			      "name": "test 0.2",
-			  },
-		      ],
-		  },
-		  {
-		      "id": 1,
-		      "name": "Filter #2_1",
-		      "nameEdit": false,
-		      "filters": [
-			  {
-			      "id": 0,
-			      "expanded": false,
-			      "name": "test 1.0",
-			  },
-			  {
-			      "id": 1,
-			      "expanded": false,
-			      "name": "test 1.1",
-			  },
-			  {
-			      "id": 2,
-			      "expanded": false,
-			      "name": "test 1.2",
-			  },
-		      ],
-		  },
-	      ],
 	      serverEdit: false,
 	      managesieveConnDetails: {},
 	      serverTLSOptions: [
@@ -209,155 +86,27 @@
 		      label: t("mail","no STARTTLS"),
 		  },
 	      ],
-	      selFilterSetID: 0,
-	      selFilterID: -1,
 	  }
       },
       computed: {
-	  ...mapGetters([
-	      "trueAccountList",
-	      "getAccount",
-	  ]),
-	  ...mapMutations([
-	      "setManagesieveConnDetails",
-	  ]),
-	  dragOptions() {
-	      return {
-		  animation: 0,
-		  group: "description",
-		  disabled: false,
-		  ghostClass: "ghost"
-	      };
-	  },
       },
       watch: {
       },
       methods: {
-	  tabClicked (selectedTab) {
-              console.log('Current tab re-clicked:' + selectedTab.tab.name);
-          },
-          tabChanged (selectedTab) {
+	  tabClicked (accountID) {
 	      this.serverEdit = false;
-              console.log('Tab changed to:' + selectedTab.tab.name);
           },
 	  setServerEdit (accountID) {
-	      this.managesieveConnDetails.host = this.getAccount(accountID).managesieveHost;
-	      this.managesieveConnDetails.port = this.getAccount(accountID).managesievePort;
-	      this.managesieveConnDetails.STARTTLS = this.getAccount(accountID).managesieveSTARTTLS;
+	      this.managesieveConnDetails.host = this.$store.getters.getAccount(accountID).managesieveHost;
+	      this.managesieveConnDetails.port = this.$store.getters.getAccount(accountID).managesievePort;
+	      this.managesieveConnDetails.STARTTLS = this.$store.getters.getAccount(accountID).managesieveSTARTTLS;
 	      this.serverEdit = true;
 	  },
 	  updateServer (accountID) {
 	      this.managesieveConnDetails.accountID = accountID;
-	      console.log(this.managesieveConnDetails);
-	      this.setManagesieveConnDetails(this.managesieveConnDetails);
+	      this.$store.commit("setManagesieveConnDetails", this.managesieveConnDetails);
 	      this.serverEdit = false;
 	  },
-	  setClassOnSelect(filterSetID, filterID) {
-	      if (filterSetID === this.selFilterSetID && 
-		  (filterID === this.selFilterID || filterID === -1) ) {
-		  return "list-group-item list-group-item-a"
-	      } else {
-		  return "list-group-item"
-	      }
-	  },
-	  selFilterSet (index) {
-	      if (index >= 0) { // ignore buttons
-		  var oldFilterSet = this.filterSets.find(x => x.id === this.selFilterSetID);
-		  this.selFilterID = -1;
-		  this.filterSets[index].class = "list-group-item list-group-item-a";
-		  this.selFilterSetID = this.filterSets[index].id;
-	      }
-	      console.log(fetchAllAccounts());
-	  },
-	  selFilter (index) {
-	      if (index >= 0) { // ignore buttons
-		  var thisFilterSet = this.filterSets.find(x => x.id === this.selFilterSetID);
-		  if (this.selFilterID !== -1) { // dont unselect if none selected
-		      thisFilterSet.filters.find(x => x.id === this.selFilterID).class = "list-group-item";
-		  }
-		  this.selFilterID = thisFilterSet.filters[index].id;
-	      }
-	  },
-
-	  uniqueFilterSetName(name) {
-	      var nameIndex = 1;
-	      if (this.filterSets.find(x => x.name === name) === undefined) {
-		  console.log(this.filterSets.find(x => x.id === name));
-		  return name;
-	      } else {
-		  while (this.filterSets.find(x => x.name === name+"_"+nameIndex) !== undefined) {
-		      nameIndex += 1;
-		  }
-		  return name + "_" + nameIndex;
-	      }
-	  },
-	  addFilterSet () {
-	      var newID = 0;
-	      var newName = "Filter #";
-	      while (this.filterSets.find(x => x.id === newID) !== undefined) {
-		  newID += 1;
-	      }
-	      newName = this.uniqueFilterSetName(newName+newID);
-	      this.filterSets.push( {
-		  "id": newID,
-		  "name": newName,
-		  "nameEdit": false,
-		  "filters": [],
-	      } );
-	  },
-	  addFilter () {
-	      var newID = 0;
-	      var thisFilterSet = this.filterSets.find(x => x.id === this.selFilterSetID);
-	      while (thisFilterSet.filters.find(x => x.id === newID) !== undefined) {
-		  newID += 1;
-	      }
-	      thisFilterSet.filters.push( {
-		  "id": newID,
-		  "name": "empty",
-		  "expanded": false,
-	      } );
-	  },
-	  rmFilterSet() {
-	      if (this.filterSets.length > 1) { 
-		  var dropIndex = this.filterSets.findIndex(x => x.id === this.selFilterSetID);
-		  if (dropIndex === 0) {
-		      this.selFilterSet(1);
-		  } else {
-		      this.selFilterSet(0);
-		  }
-		  this.filterSets.splice(dropIndex,1);
-	      } else {
-		  Message.warning({
-		      "type": "warning",
-		      "message": t("mail", "At least one filter set must exist."),
-		      "position": "bottom-center",
-		  });
-	      }
-	  },
-	  rmFilter() {
-	      var thisFilterSet = this.filterSets.find(x => x.id === this.selFilterSetID);
-	      if (this.selFilterID === -1) {
-		  Message.warning({
-		      "type": "warning",
-		      "message": t("mail", "No filter selected."),
-		      "position": "bottom-center",
-		  });
-	      } else { 
-		  var dropIndex = thisFilterSet.filters.findIndex(x => x.id === this.selFilterID);
-		  if (thisFilterSet.filters.length === 1) {
-		      thisFilterSet.filters.splice(dropIndex,1);
-		      this.selFilterID = -1;
-		  } else {
-		      if (dropIndex === thisFilterSet.filters.length-1) {
-			  this.selFilter(dropIndex-1);
-		      } else {
-			  this.selFilter(dropIndex+1);
-		      }
-		  thisFilterSet.filters.splice(dropIndex,1);
-		  }
-	      }
-	  },
-
       },
   }
 </script>
