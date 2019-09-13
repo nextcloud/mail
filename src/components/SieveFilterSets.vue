@@ -162,10 +162,14 @@
 			},
 		},
 		watch: {
-			filterSetID: function () {
+			accountID: function () {
 				this.filterSetNameEdit = -1;
 				this.selFilterSetID = -1;
+				this.$store.dispatch("fetchSieveScripts", this.accountID);
 			},
+		},
+		created(){
+			this.$store.dispatch("fetchSieveScripts", this.accountID);
 		},
 	}
 </script>

@@ -224,4 +224,7 @@ export default {
 	updateFilterName(state, {accountID, filterSetID, filterID, name}){
 		state.sieveFilters[accountID][filterSetID][state.sieveFilters[accountID][filterSetID].findIndex(x => x.id === filterID)].name = name	
 	},
+	parseFilterSets(state, {accountID, scripts}) {
+		state.sieveFilterSets = scripts
+	}
 }

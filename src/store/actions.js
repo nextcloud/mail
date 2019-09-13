@@ -34,6 +34,7 @@ import {fetchAll as fetchAllFolders, create as createFolder, markFolderRead} fro
 import {deleteMessage, fetchEnvelopes, fetchMessage, setEnvelopeFlag, syncEnvelopes} from '../service/MessageService'
 import {showNewMessagesNotification} from '../service/NotificationService'
 import {parseUid} from '../util/EnvelopeUidParser'
+import {getScripts} from '../service/FiltersService'
 
 export default {
 	savePreference({commit, getters}, {key, value}) {
@@ -486,4 +487,10 @@ export default {
 				throw err
 			})
 	},
+	fetchSieveScripts({getters, commit}, accountID){
+		commit("parseFilterSets", {
+			"accountID": accountID,
+			"scripts": getScripts(accountID),
+		})
+	}
 }
