@@ -50,8 +50,8 @@ export default new Router({
 			component: Setup,
 		},
 		{
-			path: '/sieve',
-			name: 'sieve',
+			path: '/filter',
+			name: 'filter',
 			component: SieveView,
 		},
 	],

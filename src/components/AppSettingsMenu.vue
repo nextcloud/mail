@@ -24,8 +24,8 @@
 		</p>
 
 		<p class="app-settings-hint">
-			<router-link :to="{name: 'sieve'}">
-				{{ t('mail', 'Sieve') }}
+			<router-link :to="{name: 'filter'}">
+				{{ t('mail', 'Filter') }}
 			</router-link>
 		</p>
 
