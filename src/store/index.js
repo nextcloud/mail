@@ -49,15 +49,15 @@ export const getters = {
 		return state.accounts[accountId].folders.map(folderId => state.folders[folderId])
 	},
 	getSubfolders: (state, getters) => (accountId, folderId) => {
-	const folder = getters.getFolder(accountId, folderId)
+		const folder = getters.getFolder(accountId, folderId)
 
 		return folder.folders.map(id => state.folders[id])
 	},
 	getUnifiedFolder: state => specialRole => {
 		return _.head(
 			state.accounts[UNIFIED_ACCOUNT_ID].folders
-			.map(folderId => state.folders[folderId])
-			.filter(folder => folder.specialRole === specialRole)
+				.map(folderId => state.folders[folderId])
+				.filter(folder => folder.specialRole === specialRole)
 		)
 	},
 	getEnvelope: state => (accountId, folderId, id) => {
@@ -89,68 +89,68 @@ export default new Vuex.Store({
 		preferences: {},
 		accounts: {
 			[UNIFIED_ACCOUNT_ID]: {
-			id: UNIFIED_ACCOUNT_ID,
-			isUnified: true,
-			folders: [UNIFIED_INBOX_UID],
-			collapsed: false,
-			emailAddress: '',
-			name: '',
+				id: UNIFIED_ACCOUNT_ID,
+				isUnified: true,
+				folders: [UNIFIED_INBOX_UID],
+				collapsed: false,
+				emailAddress: '',
+				name: '',
 			},
 		},
 		accountList: [UNIFIED_ACCOUNT_ID],
 		folders: {
 			[UNIFIED_INBOX_UID]: {
-			id: UNIFIED_INBOX_ID,
-			accountId: 0,
-			isUnified: true,
-			specialUse: ['inbox'],
-			specialRole: 'inbox',
-			name: t('mail', 'All inboxes'), // TODO,
-			unread: 0,
-			folders: [],
-			envelopes: [],
-			searchEnvelopes: [],
+				id: UNIFIED_INBOX_ID,
+				accountId: 0,
+				isUnified: true,
+				specialUse: ['inbox'],
+				specialRole: 'inbox',
+				name: t('mail', 'All inboxes'), // TODO,
+				unread: 0,
+				folders: [],
+				envelopes: [],
+				searchEnvelopes: [],
 			},
 		},
 		envelopes: {},
 		messages: {},
 		autocompleteEntries: [],
 		sieveFilterSets: { 
-			1: [
-			{
-				"id": 0,
-				"name": "Filter #2",
-			},
-			{
-				"id": 1,
-				"name": "Filter #2_1",
-			} 
+			1: [ 
+				{
+					"id": 0,
+					"name": "Filter #2",
+				},
+				{
+					"id": 1,
+					"name": "Filter #2_1",
+				} 
 			]
 		},
 		sieveFilters: {
 			1: {
 			1: [
 				{
-				"id": 0,
-				"name": "test 1.0",
+					"id": 0,
+					"name": "test 1.0",
 				},
 				{
-				"id": 1,
-				"name": "test 1.1",
+					"id": 1,
+					"name": "test 1.1",
 				},
 				{
-				"id": 2,
-				"name": "test 1.2",
+					"id": 2,
+					"name": "test 1.2",
 				},
 			],
 			0: [
 				{
-				"id": 1,
-				"name": "test 0.1",
+					"id": 1,
+					"name": "test 0.1",
 				},
 				{
-				"id": 2,
-				"name": "test 0.2",
+					"id": 2,
+					"name": "test 0.2",
 				},
 			],
 			},

@@ -68,7 +68,7 @@ export default {
 		const existing = account.folders.map(id => state.folders[id])
 		existing.forEach(folder => {
 			if (!folder.folders) {
-			return
+				return
 			}
 			folder.folders.map(folder => existing.push(folder))
 			folder.folders = []
@@ -115,18 +115,18 @@ export default {
 			Vue.set(folder, 'searchEnvelopes', uids)
 		} else {
 			Vue.set(
-			folder,
-			'searchEnvelopes',
-			_.sortedUniq(_.orderBy(folder.searchEnvelopes.concat(uids), id => state.envelopes[id].dateInt, 'desc'))
+				folder,
+				'searchEnvelopes',
+				_.sortedUniq(_.orderBy(folder.searchEnvelopes.concat(uids), id => state.envelopes[id].dateInt, 'desc'))
 			)
 		}
 	},
 	addUnifiedEnvelope(state, {folder, envelope}) {
-	Vue.set(
-		folder,
-		'envelopes',
-		_.sortedUniq(_.orderBy(folder.envelopes.concat([envelope.uid]), id => state.envelopes[id].dateInt, 'desc'))
-	)
+		Vue.set(
+			folder,
+			'envelopes',
+			_.sortedUniq(_.orderBy(folder.envelopes.concat([envelope.uid]), id => state.envelopes[id].dateInt, 'desc'))
+		)
 	},
 	addUnifiedEnvelopes(state, {folder, uids}) {
 		Vue.set(folder, 'envelopes', uids)
@@ -156,8 +156,8 @@ export default {
 					console.warn('envelope does not exist in unified mailbox', accountId, folder.id, id)
 					return
 				}
-			folder.envelopes.splice(idx, 1)
-		})
+				folder.envelopes.splice(idx, 1)
+			})
 
 		Vue.delete(folder.envelopes, envelopeUid)
 	},
@@ -176,7 +176,7 @@ export default {
 		draft.uid = uid
 
 		// TODO: strategy to keep the full draft object in sync, not just the visible
-		//	   changes
+		//       changes
 		draft.subject = data.subject
 
 		// Update ref in folder's envelope list
