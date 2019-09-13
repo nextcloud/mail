@@ -78,8 +78,12 @@ export const getters = {
 	getMessageByUid: state => uid => {
 		return state.messages[uid]
 	},
-	trueAccountList: state => {
-		return state.accountList.filter(x => x !== UNIFIED_ACCOUNT_ID)
+	sieveAccountList: state => {
+		return state.accountList.map(function(accountID) {
+			if (state.accounts[accountID].sieveHost != undefined) {
+				return accountID
+			}
+		}).filter(accountID => accountID !== undefined)
 	},
 }
 

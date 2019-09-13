@@ -200,11 +200,6 @@ export default {
 	removeMessage(state, {accountId, folderId, id}) {
 		Vue.delete(state.messages, accountId + '-' + folderId + '-' + id)
 	},
-	setManagesieveConnDetails(state, obj) {
-		state.accounts[obj.accountID].managesieveHost = obj.host
-		state.accounts[obj.accountID].managesievePort = obj.port
-		state.accounts[obj.accountID].managesieveSTARTTLS = obj.STARTTLS
-	},
 	newFilterSet(state, {accountID, filterSet}){
 		state.sieveFilterSets[accountID].push(filterSet)
 	},
