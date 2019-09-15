@@ -23,7 +23,7 @@
 								<ActionButton icon="icon-rename" @click="filterSetNameEdit = filterSet.id; filterSetName = filterSet.name">Edit</ActionButton>
 							</Actions>
 							<Actions v-else>
-								<ActionButton icon="icon-confirm" @click="filterSetNameEditConfirm">Edit</ActionButton>
+								<ActionButton icon="icon-confirm" @click="filterSetNameEditConfirm">Save</ActionButton>
 							</Actions>
 						</div>
 					</div>
@@ -33,48 +33,80 @@
 			</draggable>
 		</div>
 		<div v-if="selFilterSetID !== -1" class="filter-container">
-			<SieveFilters :accountID="accountID" :filterSetID="selFilterSetID" />
+			<SieveFilters v-if="$store.getters.getFilterSetByID(accountID,selFilterSetID).parsed"
+			:accountID="accountID" 
+			:filterSetID="selFilterSetID" />
+			<div v-else class="flex-horizontal">
+				<div class="flex-line">
+					<div class="list-text">
+						<div>{{ t("mail", "Filterset not parsable. Fallback to raw edit.") }}</div>
+					</div>
+					<div>
+						<Actions v-if="rawSieveScript === ''">
+							<ActionButton icon="icon-rename" 
+							@click="rawSieveScript = $store.getters.getFilterSetByID(accountID,selFilterSetID).raw; ">
+								Edit
+							</ActionButton>
+						</Actions>
+						<Actions v-else>
+							<ActionButton icon="icon-confirm" @click="rawSieveConfirm">Save</ActionButton>
+						</Actions>
+					</div>
+				</div>
+				<div v-if="rawSieveScript === ''">
+					<textarea :value="$store.getters.getFilterSetByID(accountID,selFilterSetID).raw" 
+					v-autosize disabled="true" style="width: 100%; resize: none;"></textarea>
+				</div>
+				<div v-else>
+					<textarea v-autosize v-model="rawSieveScript" style="width: 100%; resize: none;"></textarea>
+				</div>
+			</div>
 		</div>
 	</div>
 </template>
 
 <script>
+	import Vue from 'vue'
 	import Actions from 'nextcloud-vue/dist/Components/Actions'
 	import ActionButton from 'nextcloud-vue/dist/Components/ActionButton'
 	import draggable from 'vuedraggable'
 	import Message from 'vue-m-message'
 	import SieveFilters from "./SieveFilters"
+	import Autosize from 'vue-autosize'
+
+	Vue.use(Autosize)
 
 	import Logger from '../logger'
 
 	export default {
 		name: 'SieveFilterSets',
 		components: {
-		Actions,
-		ActionButton,
-		draggable,
-		Message,
-		SieveFilters,
+			Actions,
+			ActionButton,
+			draggable,
+			Message,
+			SieveFilters,
 		},
 		props: {
-		accountID: Number,
+			accountID: Number,
 		},
 		data() {
 			return {
 				filterSetName: "",
 				filterSetNameEdit: -1,
 				selFilterSetID: -1,
+				rawSieveScript: '',
 			}
 		},
 		computed: {
 			filterSets: {
 				get() {
-				return this.$store.state.sieveFilterSets[this.accountID]
+					return this.$store.state.sieveFilterSets[this.accountID]
 				},
 				set(value) {
-				this.$store.commit("updateFilterSets", {
-						value,
-						"accountID": 1,
+					this.$store.commit("updateFilterSets", {
+							value,
+							"accountID": 1,
 					})
 				}
 			},
@@ -88,7 +120,7 @@
 				}
 			},
 			filterSetNameEditConfirm () {
-					if (this.$store.state.sieveFilterSets[this.accountID].find(x => x.name === this.filterSetName) === undefined) {
+					if (this.$store.getters.getFilterSetByName(accountID, this.filterSetName) === undefined) {
 						this.$store.commit("updateFilterSetName", {
 							"accountID": this.accountID,
 							"filterSetID": this.filterSetNameEdit,
@@ -103,34 +135,37 @@
 					});
 				}
 			},
+			rawSieveConfirm () {
+				this.$store.commit("updateRawSieveScript", {
+					accountID: this.accountID,
+					filterSetID: this.selFilterSetID,
+					raw: this.rawSieveScript,
+				});
+				this.rawSieveScript = '';
+			},
 			selFilterSet (index) {
 				if (index >= 0) { // ignore buttons
 					this.selFilterSetID = this.$store.state.sieveFilterSets[this.accountID][index].id;
 					if (this.selFilterSetID !== this.filterSetNameEdit) { // close edit on change
 						this.filterSetNameEdit = -1;
+						this.rawSieveScript = ''
 					}
 				}
 			},
 			addFilterSet () {
-				var newID = 0;
-				var newName = "Filter#";
-				var counter = 0;
-				while (this.$store.state.sieveFilterSets[this.accountID].find(x => x.id === newID) !== undefined) {
-					newID += 1;
-				}
+				let newName = "Filter#";
+				let counter = 0;
 				newName += newID;
-				if (this.$store.state.sieveFilterSets[this.accountID].find(x => x.name === newName) !== undefined){
-					while (this.$store.state.sieveFilterSets[this.accountID].find(x => x.name === newName+"_"+counter) !== undefined) {
+				if (this.$store.getters.getFilterSetByName(accountID, newName) !== undefined){
+					while (this.$store.getters.getFilterSetByName(accountID, newName+"_"+counter) !== undefined) {
 						counter += 1;
 					}
 					newName = newName+"_"+counter
 				}
 				this.$store.commit("newFilterSet", {
 					"accountID": this.accountID,
-					"filterSet": {
-						"id": newID,
-						"name": newName,
-					},
+					"name": newName,
+					"raw": "",
 				});
 			},
 			rmFilterSet() {
@@ -153,7 +188,6 @@
 							this.selFilterSet(dropIndex+1);
 						}
 					}
-					console.log(this.selFilterSetID);
 					this.$store.commit("rmFilterSet", {
 						"accountID": this.accountID,
 						"filterSetID": filterSetID,

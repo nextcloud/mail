@@ -5,7 +5,7 @@
 			<div id="sieve-app-content">
 				<h2>{{ t("mail", "Filter Configuration") }}</h2>
 				<tabs :options="{ useUrlFragment: false }">
-					<tab v-for="accountID in $store.getters.sieveAccountList"
+					<tab v-for="accountID in $store.getters.sieveAccountList()"
 						:key="accountID"
 						:name="$store.getters.getAccount(accountID).emailAddress">
 

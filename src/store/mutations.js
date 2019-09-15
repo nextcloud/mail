@@ -26,6 +26,7 @@ import {buildMailboxHierarchy} from '../imap/MailboxHierarchy'
 import {havePrefix} from '../imap/MailboxPrefix'
 import {sortMailboxes} from '../imap/MailboxSorter'
 import {UNIFIED_ACCOUNT_ID} from './constants'
+import {ParseSieveError,parseSieveScript} from '../service/SieveParserService'
 
 const addFolderToState = (state, account) => folder => {
 	const id = account.id + '-' + folder.id
@@ -200,9 +201,6 @@ export default {
 	removeMessage(state, {accountId, folderId, id}) {
 		Vue.delete(state.messages, accountId + '-' + folderId + '-' + id)
 	},
-	newFilterSet(state, {accountID, filterSet}){
-		state.sieveFilterSets[accountID].push(filterSet)
-	},
 	rmFilterSet(state, {accountID, filterSetID}){
 		state.sieveFilterSets[accountID] = state.sieveFilterSets[accountID].filter(x => x.id !== filterSetID)
 	},
@@ -224,7 +222,39 @@ export default {
 	updateFilterName(state, {accountID, filterSetID, filterID, name}){
 		state.sieveFilters[accountID][filterSetID][state.sieveFilters[accountID][filterSetID].findIndex(x => x.id === filterID)].name = name	
 	},
-	parseFilterSets(state, {accountID, scripts}) {
-		state.sieveFilterSets = scripts
-	}
+	newFilterSet(state, {accountID, name, raw}) {
+		let newID = 0
+		if (state.sieveFilterSets[accountID] !== undefined){
+			while (state.sieveFilterSets[accountID].find(x => x.id === newID) !== undefined){
+				newID += 1
+			}
+		} else {
+			state.sieveFilterSets[accountID] = []
+		}
+		try {
+			const filters = parseSieveScript(raw)
+			state.sieveFilterSets[accountID].push({
+				"id": newID,
+				"name": name,
+				"parsed": true,
+			})
+			state.sieveFilters[accountID][newID] = filters
+		}
+		catch (e) {
+			if (e instanceof ParseSieveError) {
+				state.sieveFilterSets[accountID].push({
+					"id": newID,
+					"name": name,
+					"parsed": false,
+					"raw": raw,
+					"parseError": e.message,
+				})
+			} else {
+				throw e
+			}
+		}
+	},
+	updateRawSieveScript(state, {accountID, filterSetID, raw}) {
+		state.sieveFilterSets[accountID].find(x => x.id === filterSetID).raw = raw
+	},
 }

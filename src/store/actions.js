@@ -488,9 +488,24 @@ export default {
 			})
 	},
 	fetchSieveScripts({getters, commit}, accountID){
-		commit("parseFilterSets", {
-			"accountID": accountID,
-			"scripts": getScripts(accountID),
-		})
+		//const scripts = getScripts(accountID)
+		const scripts = [{
+			"name": "Filter#1",
+			"raw":
+`require ["fileinto"];
+# rule:[test]
+if header :contains "subject" "bla"
+{
+        fileinto "Drafts";
+}`,
+		}]
+
+		for (const script of scripts) {
+			commit("newFilterSet", {
+				"accountID": accountID,
+				"name": script.name,
+				"raw": script.raw,
+			})
+		}
 	}
 }

@@ -22,11 +22,11 @@
 							<ActionButton icon="icon-rename" @click="filterNameEdit = filter.id; filterName = filter.name">Edit</ActionButton>
 						</Actions>
 						<Actions v-else>
-							<ActionButton icon="icon-confirm" @click="filterNameEditConfirm">Edit</ActionButton>
+							<ActionButton icon="icon-confirm" @click="filterNameEditConfirm">Save</ActionButton>
 						</Actions>
 					</div>
 				</div>
-				<div v-if="filterNameEdit === filter.id"> Hello World!! </div>
+				<div v-if="filterNameEdit === filter.id"> {{ inside }} </div>
 			</div>
 		</div>
 		<button slot="header" @click="addFilter()">{{ t("mail", "Add") }}</button>
@@ -59,6 +59,7 @@
 				filterName: "",
 				filterNameEdit: -1,
 				selFilterID: -1,
+				inside: "<button>Test</button>",
 			}
 		},
 		computed: {

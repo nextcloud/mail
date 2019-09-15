@@ -78,12 +78,18 @@ export const getters = {
 	getMessageByUid: state => uid => {
 		return state.messages[uid]
 	},
-	sieveAccountList: state => {
+	sieveAccountList: state => (accountID) => {
 		return state.accountList.map(function(accountID) {
 			if (state.accounts[accountID].sieveHost != undefined) {
 				return accountID
 			}
 		}).filter(accountID => accountID !== undefined)
+	},
+	getFilterSetByID: state => (accountID, filterSetID) => {
+		return state.sieveFilterSets[accountID].find(x => x.id === filterSetID)
+	},
+	getFilterSetByName: state => (accountID, name) => {
+		return state.sieveFilterSets[accountID].find(x => x.name === filterSetID)
 	},
 }
 
