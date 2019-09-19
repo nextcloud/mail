@@ -353,6 +353,10 @@ export default {
 		 * @returns {string}
 		 */
 		formatAliases(alias) {
+			if (!alias.name) {
+				return alias.emailAddress
+			}
+
 			return `${alias.name} <${alias.emailAddress}>`
 		},
 		bodyWithSignature(alias, body) {
