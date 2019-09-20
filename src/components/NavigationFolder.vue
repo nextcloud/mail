@@ -21,12 +21,15 @@
 
 <template>
 	<AppNavigationItem
+		:item="data"
 		:id="genId(folder)"
 		:key="genId(folder)"
 		:allow-collapse="true"
 		:icon="icon"
 		:title="title"
 		:to="to"
+		:menu-open.sync="menuOpen"
+		:open.sync="folderOpen"
 		@update:menuOpen="onMenuToggle"
 	>
 		<!-- actions -->
@@ -102,6 +105,9 @@ export default {
 	},
 	data() {
 		return {
+			folderOpen: false,
+			menuOpen: false,
+			loadingFolderStats: true,
 			folderStats: undefined,
 			loadingMarkAsRead: false,
 		}
@@ -113,6 +119,7 @@ export default {
 		folderId() {
 			return atob(this.folder.id)
 		},
+<<<<<<< HEAD
 		icon() {
 			return this.folder.specialRole ? 'icon-' + this.folder.specialRole : 'icon-folder'
 		},
@@ -123,6 +130,20 @@ export default {
 					accountId: this.account.id,
 					folderId: this.folder.id,
 				},
+=======
+	},
+	mounted() {
+		let self = this
+		this.$el.ondragenter = function() {
+			self.folderOpen = true
+		}
+	},
+	methods: {
+		folderToEntry(folder, top) {
+			let icon = 'folder'
+			if (folder.specialRole) {
+				icon = folder.specialRole
+>>>>>>> Implements basic auto-expansion of folders when dragging an envelope over them
 			}
 		},
 		subFolders() {

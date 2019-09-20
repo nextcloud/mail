@@ -20,7 +20,7 @@
   -->
 
 <template>
-	<AppNavigationItem :title="title" @click="toggleCollapse" />
+	<AppNavigationItem :item="data" ref="navigationItem" :title="title" @click="toggleCollapse" />
 </template>
 
 <script>
@@ -50,6 +50,12 @@ export default {
 			this.$store.commit('toggleAccountCollapsed', this.account.id)
 		},
 	},
+	mounted() {
+		let self = this
+		this.$el.ondragenter = function() {
+			self.$store.commit('toggleAccountCollapsed', self.account.id)
+		}
+	}
 }
 </script>
 
