@@ -105,6 +105,7 @@ export default {
 	},
 	data() {
 		return {
+			timeoutID: '',
 			folderOpen: false,
 			menuOpen: false,
 			loadingFolderStats: true,
@@ -135,7 +136,20 @@ export default {
 	mounted() {
 		let self = this
 		this.$el.ondragenter = function() {
-			self.folderOpen = true
+			this.style.background = '#F5F5F5'
+			if (self.data.children.length > 0 && self.timeoutID === '') {
+				self.timeoutID = window.setTimeout(function() {
+					self.folderOpen = !self.folderOpen
+					self.timeoutID = ''
+				}, 800)
+			}
+		}
+		this.$el.ondragleave = function() {
+			this.style.background = ''
+			if (self.timeoutID !== '') {
+				window.clearTimeout(self.timeoutID)
+				self.timeoutID = ''
+			}
 		}
 	},
 	methods: {

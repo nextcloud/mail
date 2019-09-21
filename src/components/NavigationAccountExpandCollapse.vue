@@ -20,7 +20,7 @@
   -->
 
 <template>
-	<AppNavigationItem :item="data" ref="navigationItem" :title="title" @click="toggleCollapse" />
+	<AppNavigationItem :item="data" :title="title" @click="toggleCollapse" />
 </template>
 
 <script>
@@ -45,6 +45,16 @@ export default {
 			return this.account.collapsed ? t('mail', 'Show all folders') : t('mail', 'Collapse folders')
 		},
 	},
+	data() {
+		return {
+			timeoutID: '',
+			id: 'collapse-' + this.account.id,
+			key: 'collapse-' + this.account.id,
+			classes: ['collapse-folders'],
+			text: this.account.collapsed ? t('mail', 'Show all folders') : t('mail', 'Collapse folders'),
+			action: () => this.$store.commit('toggleAccountCollapsed', this.account.id),
+		}
+	},
 	methods: {
 		toggleCollapse() {
 			this.$store.commit('toggleAccountCollapsed', this.account.id)
@@ -53,7 +63,20 @@ export default {
 	mounted() {
 		let self = this
 		this.$el.ondragenter = function() {
-			self.$store.commit('toggleAccountCollapsed', self.account.id)
+			this.style.background = '#F5F5F5'
+			if (self.timeoutID === '') {
+				self.timeoutID = window.setTimeout(function() {
+					self.$store.commit('toggleAccountCollapsed', self.account.id)
+					self.timeoutID = ''
+				}, 800)
+			}
+		}
+		this.$el.ondragleave = function() {
+			this.style.background = ''
+			if (self.timeoutID !== '') {
+				window.clearTimeout(self.timeoutID)
+				self.timeoutID = ''
+			}
 		}
 	}
 }
