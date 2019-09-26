@@ -10,8 +10,8 @@
 						:name="$store.getters.getAccount(accountID).emailAddress">
 
 						<div id="server-container">
-								{{ tls(accountID) }}{{ $store.getters.getAccount(accountID).sieveHost }}&nbsp;
-								@&nbsp;{{ $store.getters.getAccount(accountID).sieveUser }}
+								{{ $store.getters.getAccount(accountID).sieveUser }}&nbsp;
+								@&nbsp;{{ tls(accountID) }}{{ $store.getters.getAccount(accountID).sieveHost }}
 						</div>
 
 					<SieveFilterSets :accountID="accountID" />
@@ -204,5 +204,12 @@
 	.flex-container {
 		display: flex;
 		align-items: flex-start;
+	}
+	.filter-test-field {
+		border: 2px groove;
+		border-radius: 5px;
+		padding: 4px;
+		background-color: white;
+		margin: 4px;
 	}
 </style>

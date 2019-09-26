@@ -16,14 +16,14 @@
 							<div>{{ filterSet.name }}</div>
 						</div>
 						<div v-else class="list-text">
-							<input style="margin: 0;" v-model="filterSetName"></input>
+							<input style="margin: 0px;width: 100%;" v-model="filterSetName"></input>
 						</div>
 						<div>
 							<Actions v-if="filterSetNameEdit !== filterSet.id">
 								<ActionButton icon="icon-rename" @click="filterSetNameEdit = filterSet.id; filterSetName = filterSet.name">Edit</ActionButton>
 							</Actions>
 							<Actions v-else>
-								<ActionButton icon="icon-confirm" @click="filterSetNameEditConfirm">Save</ActionButton>
+								<ActionButton icon="icon-confirm" @click="filterSetNameEditConfirm()">Save</ActionButton>
 							</Actions>
 						</div>
 					</div>
@@ -36,46 +36,20 @@
 			<SieveFilters v-if="$store.getters.getFilterSetByID(accountID,selFilterSetID).parsed"
 			:accountID="accountID" 
 			:filterSetID="selFilterSetID" />
-			<div v-else class="flex-horizontal">
-				<div class="flex-line">
-					<div class="list-text">
-						<div>{{ t("mail", "Filterset not parsable. Fallback to raw edit.") }}</div>
-					</div>
-					<div>
-						<Actions v-if="rawSieveScript === ''">
-							<ActionButton icon="icon-rename" 
-							@click="rawSieveScript = $store.getters.getFilterSetByID(accountID,selFilterSetID).raw; ">
-								Edit
-							</ActionButton>
-						</Actions>
-						<Actions v-else>
-							<ActionButton icon="icon-confirm" @click="rawSieveConfirm">Save</ActionButton>
-						</Actions>
-					</div>
-				</div>
-				<div v-if="rawSieveScript === ''">
-					<textarea :value="$store.getters.getFilterSetByID(accountID,selFilterSetID).raw" 
-					v-autosize disabled="true" style="width: 100%; resize: none;"></textarea>
-				</div>
-				<div v-else>
-					<textarea v-autosize v-model="rawSieveScript" style="width: 100%; resize: none;"></textarea>
-				</div>
-			</div>
+			<SieveFiltersRaw v-else 
+			:accountID="accountID" 
+			:filterSetID="selFilterSetID" />
 		</div>
 	</div>
 </template>
 
 <script>
-	import Vue from 'vue'
 	import Actions from 'nextcloud-vue/dist/Components/Actions'
 	import ActionButton from 'nextcloud-vue/dist/Components/ActionButton'
 	import draggable from 'vuedraggable'
 	import Message from 'vue-m-message'
 	import SieveFilters from "./SieveFilters"
-	import Autosize from 'vue-autosize'
-
-	Vue.use(Autosize)
-
+	import SieveFiltersRaw from "./SieveFiltersRaw"
 	import Logger from '../logger'
 
 	export default {
@@ -86,6 +60,7 @@
 			draggable,
 			Message,
 			SieveFilters,
+			SieveFiltersRaw,
 		},
 		props: {
 			accountID: Number,
@@ -95,7 +70,6 @@
 				filterSetName: "",
 				filterSetNameEdit: -1,
 				selFilterSetID: -1,
-				rawSieveScript: '',
 			}
 		},
 		computed: {
@@ -120,28 +94,25 @@
 				}
 			},
 			filterSetNameEditConfirm () {
-					if (this.$store.getters.getFilterSetByName(accountID, this.filterSetName) === undefined) {
-						this.$store.commit("updateFilterSetName", {
-							"accountID": this.accountID,
-							"filterSetID": this.filterSetNameEdit,
-							"name": this.filterSetName,
-						});
-						this.filterSetNameEdit = -1;
-					} else {
-					Message.warning({
-						"type": "warning",
-						"message": t("mail", "Filterset names must be unique."),
-						"position": "bottom-center",
+				if (this.$store.getters.getFilterSetByName(this.accountID, this.filterSetName) === undefined) {
+					this.$store.commit("updateFilterSetName", {
+						"accountID": this.accountID,
+						"filterSetID": this.filterSetNameEdit,
+						"name": this.filterSetName,
+
 					});
+					this.filterSetNameEdit = -1;
+				} else {
+					if (this.$store.getters.getFilterSetByName(this.accountID, this.filterSetName).id === this.filterSetNameEdit) {
+						this.filterSetNameEdit = -1
+					} else {
+						Message.warning({
+							"type": "warning",
+							"message": t("mail", "Filterset names must be unique."),
+							"position": "bottom-center",
+						});
+					}
 				}
-			},
-			rawSieveConfirm () {
-				this.$store.commit("updateRawSieveScript", {
-					accountID: this.accountID,
-					filterSetID: this.selFilterSetID,
-					raw: this.rawSieveScript,
-				});
-				this.rawSieveScript = '';
 			},
 			selFilterSet (index) {
 				if (index >= 0) { // ignore buttons
@@ -153,18 +124,8 @@
 				}
 			},
 			addFilterSet () {
-				let newName = "Filter#";
-				let counter = 0;
-				newName += newID;
-				if (this.$store.getters.getFilterSetByName(accountID, newName) !== undefined){
-					while (this.$store.getters.getFilterSetByName(accountID, newName+"_"+counter) !== undefined) {
-						counter += 1;
-					}
-					newName = newName+"_"+counter
-				}
 				this.$store.commit("newFilterSet", {
 					"accountID": this.accountID,
-					"name": newName,
 					"raw": "",
 				});
 			},
@@ -202,8 +163,8 @@
 				this.$store.dispatch("fetchSieveScripts", this.accountID);
 			},
 		},
-		created(){
+/*		created(){
 			this.$store.dispatch("fetchSieveScripts", this.accountID);
-		},
+		}, */
 	}
 </script>

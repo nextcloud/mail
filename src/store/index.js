@@ -89,7 +89,10 @@ export const getters = {
 		return state.sieveFilterSets[accountID].find(x => x.id === filterSetID)
 	},
 	getFilterSetByName: state => (accountID, name) => {
-		return state.sieveFilterSets[accountID].find(x => x.name === filterSetID)
+		return state.sieveFilterSets[accountID].find(x => x.name === name)
+	},
+	getFilterByID: state => (accountID, filterSetID, filterID) => {
+		return state.sieveFilters[accountID][filterSetID].find(x => x.id === filterID)
 	},
 }
 

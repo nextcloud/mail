@@ -11,22 +11,61 @@
 			>
 			<div class="flex-horizontal"> 
 				<div class="flex-line">
-					<div v-if="filterNameEdit !== filter.id" class="list-text">
+					<div v-if="filterEdit.id !== filter.id" class="list-text">
 						<div>{{ filter.name }}</div>
 					</div>
 					<div v-else class="list-text">
-						<input style="margin: 0;" v-model="filterName"></input>
+						<input style="margin: 0;" v-model="filterEdit.name"></input>
 					</div>
 					<div>
-						<Actions v-if="filterNameEdit !== filter.id">
-							<ActionButton icon="icon-rename" @click="filterNameEdit = filter.id; filterName = filter.name">Edit</ActionButton>
+						<Actions v-if="filterEdit.id !== filter.id">
+							<ActionButton icon="icon-rename" @click="filterEditStart(filter.id)">Edit</ActionButton>
 						</Actions>
 						<Actions v-else>
-							<ActionButton icon="icon-confirm" @click="filterNameEditConfirm">Save</ActionButton>
+							<ActionButton icon="icon-confirm" @click="filterEditConfirm">Save</ActionButton>
 						</Actions>
 					</div>
 				</div>
-				<div v-if="filterNameEdit === filter.id"> {{ inside }} </div>
+				<div v-if="filterEdit.id === filter.id" class="flex-horizontal">
+					<div class="flex-horizontal filter-test-field">
+						<div style="text-align: left; font-size: 10px">{{ t("mail", "For incoming mail:") }}</div>
+						<div style="text-align: center;">
+							<button :style="toggleTestArrayType('allof')" @click="filterEdit.testArrayType = 'allof'">{{ t("mail", "matching all of the following rules") }}</button>
+							<button :style="toggleTestArrayType('anyof')" @click="filterEdit.testArrayType = 'anyof'">{{ t("mail", "matching any of the following rules") }}</button>
+							<button :style="toggleTestArrayType('any')" @click="filterEdit.testArrayType = 'any'">{{ t("mail", "all messages") }}</button>
+						</div>
+						<div v-for="test in filterEdit.tests" class="flex-line">
+							<div class="list-text">
+								<select v-model="test.type" @change="testTypeChange(test)">
+									<option v-for="key in sieveTestsKeys" :value="key" :selected="key === test.type">{{ sieveTests[key].name }}</option>>
+								</select>
+
+								<!-- subject/to/from-->
+								<span v-if="['subject', 'from', 'to'].indexOf(test.type) > -1">
+									<select v-model="test.opts.matchType">
+										<option v-for="mT in sieveTests[test.type].matchTypes" :value="mT" :selected="mT === test.opts.matchType">
+											{{ matchTypes[mT].name }}
+										</option>
+									</select>
+									<button :style="test.opts.negate ? 'background-color: silver;' : ''" 
+									@click="test.opts.negate = !test.opts.negate">{{ t("mail", "not") }}</button>
+									<input style="margin: 0;" v-model="test.opts.value"></input>
+								</span>
+							
+							</div>
+							<div>
+								<Actions v-if="filterEdit.tests.length > 1">
+									<ActionButton icon="icon-delete" @click="rmTest(test.id)">{{ t("mail", "Delete") }}</ActionButton>
+								</Actions>
+							</div>
+						</div>
+						<div>
+							<Actions>
+								<ActionButton icon="icon-add" @click="addTest">{{ t("mail", "Add") }}</ActionButton>
+							</Actions>
+						</div>
+					</div>
+				</div>
 			</div>
 		</div>
 		<button slot="header" @click="addFilter()">{{ t("mail", "Add") }}</button>
@@ -39,8 +78,8 @@
 	import ActionButton from 'nextcloud-vue/dist/Components/ActionButton'
 	import draggable from 'vuedraggable'
 	import Message from 'vue-m-message'
-
 	import Logger from '../logger'
+	import {sieveTestsBlueprint, matchTypeBlueprint} from '../service/SieveParserService'
 
 	export default {
 		name: 'SieveFilters',
@@ -56,12 +95,16 @@
 		},
 		data() {
 			return {
-				filterName: "",
-				filterNameEdit: -1,
+				filterEdit: -1,
 				selFilterID: -1,
-				inside: "<button>Test</button>",
+				sieveTests: sieveTestsBlueprint,
+				sieveTestsKeys: Object.keys(sieveTestsBlueprint),
+				matchTypes: matchTypeBlueprint,
 			}
 		},
+/*		created () {
+			this.sieveests = sieveTestsBlueprint
+		},*/
 		computed: {
 			filters:{
 				get() {
@@ -77,6 +120,28 @@
 			}, 
 		},
 		methods: {
+			testTypeChange(test) {
+				test.opts = JSON.parse(JSON.stringify(this.sieveTests[test.type].opts))
+			},
+			addTest() {
+				let newID = 0
+				while (this.filterEdit.tests.find(x => x.id === newID) !== undefined){
+					newID += 1
+				}
+				this.filterEdit.tests.push({
+					"id": newID,
+					"type": "subject",
+					"opts": JSON.parse(JSON.stringify(this.sieveTests["subject"].opts))
+				})
+			},
+			rmTest(testID){
+				this.filterEdit.tests.filter(x => x.id !== testID)
+			},
+			toggleTestArrayType(button) {
+				if (button === this.filterEdit.testArrayType) {
+					return "background-color: silver;"
+				}
+			},
 			setClassOnSelect(filterID) {
 				if (filterID === this.selFilterID) {
 					return "list-group-item list-group-item-a"
@@ -84,21 +149,25 @@
 					return "list-group-item"
 				}
 			},
-			filterNameEditConfirm () {
-				this.$store.commit("updateFilterName", {
+			filterEditStart(id) {
+				this.filterEdit = JSON.parse(
+					JSON.stringify(this.$store.getters.getFilterByID(this.accountID, this.filterSetID, id)))
+			},
+			filterEditConfirm () {
+				this.$store.commit("updateFilter", {
 					"accountID": this.accountID,
 					"filterSetID": this.filterSetID,
-					"filterID": this.filterNameEdit,
-					"name": this.filterName,
+					"filterID": this.filterEdit.id,
+					"filter": this.filterEdit,
 				});
-				this.filterNameEdit = -1;
+				this.filterEdit = -1;
 			},
 			selFilter (index) {
 				if (index >= 0) { // ignore buttons
 					this.filterSetNameEdit = -1;
 					this.selFilterID = this.$store.state.sieveFilters[this.accountID][this.filterSetID][index].id;
-					if (this.selFilterID !== this.filterNameEdit) {
-						this.filterNameEdit = -1;
+					if (this.selFilterID !== this.filterEdit.id) {
+						this.filterEdit = -1;
 					}
 				}
 			},
@@ -113,6 +182,12 @@
 					"filter": {
 						"id": newID,
 						"name": "Filter#"+newID,
+						"testArrayType": "allof",
+						"tests": [{
+							"id": 0,
+							"type": "subject",
+							"opts": JSON.parse(JSON.stringify(this.sieveTests["subject"].opts))
+						}],
 					}
 				});
 			},
@@ -148,9 +223,12 @@
 		},
 		watch: {
 			filterSetID: function () {
-				this.filterNameEdit = -1;
+				this.filterEdit = -1;
 				this.selFilterID = -1;
 			},
 		},
 	}
 </script>
+
+<style>
+</style>

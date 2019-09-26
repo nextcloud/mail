@@ -492,9 +492,9 @@ export default {
 		const scripts = [{
 			"name": "Filter#1",
 			"raw":
-`require ["fileinto"];
+`require ["fileinto", "test"];
 # rule:[test]
-if header :contains "subject" "bla"
+if header :contains "subject" "\"bla\""
 {
         fileinto "Drafts";
 }`,

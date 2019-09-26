@@ -21,6 +21,7 @@
 
 import _ from 'lodash'
 import Vue from 'vue'
+import getters from './index.js'
 
 import {buildMailboxHierarchy} from '../imap/MailboxHierarchy'
 import {havePrefix} from '../imap/MailboxPrefix'
@@ -219,11 +220,14 @@ export default {
 	updateFilters(state, {accountID, filterSetID, value}){
 		state.sieveFilters[accountID][filterSetID] = value
 	},
-	updateFilterName(state, {accountID, filterSetID, filterID, name}){
-		state.sieveFilters[accountID][filterSetID][state.sieveFilters[accountID][filterSetID].findIndex(x => x.id === filterID)].name = name	
+	updateFilter(state, {accountID, filterSetID, filterID, filter}){
+		state.sieveFilters[accountID][filterSetID][state.sieveFilters[accountID][filterSetID].findIndex(x => x.id === filterID)] = filter	
 	},
 	newFilterSet(state, {accountID, name, raw}) {
 		let newID = 0
+		if (state.sieveFilterSets[accountID] === undefined) {
+			Vue.set(state.sieveFilterSets, accountID, [])
+		}
 		if (state.sieveFilterSets[accountID] !== undefined){
 			while (state.sieveFilterSets[accountID].find(x => x.id === newID) !== undefined){
 				newID += 1
@@ -231,16 +235,31 @@ export default {
 		} else {
 			state.sieveFilterSets[accountID] = []
 		}
+		if (name === undefined) {
+			name = "FilterSet#"+newID;
+			let counter = 0;
+			if (state.sieveFilterSets[accountID].find(x => x.name === name) !== undefined){
+				while (state.sieveFilterSets[accountID].find(x => x.name === name+"_"+counter) !== undefined) {
+					counter += 1;
+				}
+				name = name+"_"+counter
+			}
+		}
 		try {
-			const filters = parseSieveScript(raw)
+			let {req, filters} = parseSieveScript(raw)
 			state.sieveFilterSets[accountID].push({
 				"id": newID,
 				"name": name,
 				"parsed": true,
+				"require": req,
 			})
-			state.sieveFilters[accountID][newID] = filters
-		}
-		catch (e) {
+			if (state.sieveFilters[accountID] === undefined) {
+				Vue.set(state.sieveFilters, accountID, {})
+			}
+			if (state.sieveFilters[accountID][newID] === undefined) {
+				Vue.set(state.sieveFilters[accountID], newID, filters)
+			}
+		} catch (e) {
 			if (e instanceof ParseSieveError) {
 				state.sieveFilterSets[accountID].push({
 					"id": newID,
