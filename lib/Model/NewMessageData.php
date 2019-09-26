@@ -44,7 +44,7 @@ class NewMessageData {
 	/** @var AddressList */
 	private $bcc;
 
-	/** @var string|null */
+	/** @var string */
 	private $subject;
 
 	/** @var string|null */
@@ -58,7 +58,7 @@ class NewMessageData {
 	 * @param AddressList $to
 	 * @param AddressList $cc
 	 * @param AddressList $bcc
-	 * @param string|null $subject
+	 * @param string $subject
 	 * @param string|null $body
 	 * @param array $attachments
 	 */
@@ -66,7 +66,7 @@ class NewMessageData {
 								AddressList $to,
 								AddressList $cc,
 								AddressList $bcc,
-								string $subject = null,
+								string $subject,
 								string $body = null ,
 								array $attachments = []) {
 		$this->account = $account;
@@ -92,13 +92,13 @@ class NewMessageData {
 									   string $to = null,
 									   string $cc = null,
 									   string $bcc = null,
-									   string $subject = null,
+									   string $subject,
 									   string $body = null,
 									   array $attachments = []) {
 		$toList = AddressList::parse($to ?: '');
 		$ccList = AddressList::parse($cc ?: '');
 		$bccList = AddressList::parse($bcc ?: '');
-		$attachmentsArray = is_null($attachments) ? [] : $attachments;
+		$attachmentsArray = $attachments === null ? [] : $attachments;
 
 		return new self($account, $toList, $ccList, $bccList, $subject, $body, $attachmentsArray);
 	}
@@ -132,9 +132,9 @@ class NewMessageData {
 	}
 
 	/**
-	 * @return string|null
+	 * @return string
 	 */
-	public function getSubject() {
+	public function getSubject(): string {
 		return $this->subject;
 	}
 

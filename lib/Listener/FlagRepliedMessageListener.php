@@ -67,7 +67,7 @@ class FlagRepliedMessageListener implements IEventListener {
 		try {
 			$mailbox = $this->mailboxMapper->find(
 				$event->getAccount(),
-				base64_decode($event->getRepliedMessageData()->getFolderId())
+				$event->getRepliedMessageData()->getFolderId()
 			);
 		} catch (DoesNotExistException $e) {
 			$this->logger->logException($e, [

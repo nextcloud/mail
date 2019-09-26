@@ -107,10 +107,10 @@ class MessageTest extends TestCase {
 	}
 
 	public function testRepliedMessage() {
-		$reply = new Message();
+		$reply = '9609171955.AA24342@cmstex2.maths.umanitoba.ca';
 
-		$this->message->setRepliedMessage($reply);
-		$actual = $this->message->getRepliedMessage();
+		$this->message->setInReplyTo($reply);
+		$actual = $this->message->getInReplyTo();
 
 		$this->assertSame($reply, $actual);
 	}

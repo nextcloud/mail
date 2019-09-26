@@ -88,7 +88,7 @@ class AccountsControllerTest extends TestCase {
 
 	/** @var IMailTransmission|PHPUnit_Framework_MockObject_MockObject */
 	private $transmission;
-	
+
 	/** @var SetupService|PHPUnit_Framework_MockObject_MockObject */
 	private $setupService;
 
@@ -355,7 +355,7 @@ class AccountsControllerTest extends TestCase {
 
 		$this->assertEquals($expectedResponse, $response);
 	}
-	
+
 	public function testUpdateManualFailure() {
 		$autoDetect = false;
 		$id = 135;
@@ -416,7 +416,7 @@ class AccountsControllerTest extends TestCase {
 
 	public function testSendReply() {
 		$account = $this->createMock(Account::class);
-		$folderId = base64_encode('INBOX');
+		$folderId = 'INBOX';
 		$messageId = 1234;
 		$this->accountService->expects($this->once())
 			->method('find')
@@ -428,7 +428,7 @@ class AccountsControllerTest extends TestCase {
 			->with($this->userId, $messageData, $replyData, null, null);
 		$expected = new JSONResponse();
 
-		$resp = $this->controller->send(13, 'sub', 'bod', 'to@d.com', '', '', null, $folderId, $messageId, [], null);
+		$resp = $this->controller->send(13, 'sub', 'bod', 'to@d.com', '', '', null, base64_encode($folderId), $messageId, [], null);
 
 		$this->assertEquals($expected, $resp);
 	}

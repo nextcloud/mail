@@ -170,7 +170,7 @@ class MailTransmissionIntegrationTest extends TestCase {
 			->finish();
 		$originalUID = $this->saveMessage('inbox', $originalMessage);
 
-		$message = NewMessageData::fromRequest($this->account, 'recipient@domain.com', null, null, null, 'hello there', []);
+		$message = NewMessageData::fromRequest($this->account, 'recipient@domain.com', null, null, '', 'hello there', []);
 		$reply = new RepliedMessageData($this->account, $inbox, $originalUID);
 		$uid = $this->transmission->sendMessage('ferdinand', $message, $reply);
 

@@ -134,7 +134,7 @@ class FlagRepliedMessageListenerTest extends TestCase {
 			->willReturn(true);
 		$repliedMessageData->expects($this->once())
 			->method('getFolderId')
-			->willReturn(base64_encode('INBOX'));
+			->willReturn('INBOX');
 		$this->mailboxMapper->expects($this->once())
 			->method('find')
 			->with($account, 'INBOX')
@@ -171,7 +171,7 @@ class FlagRepliedMessageListenerTest extends TestCase {
 			->willReturn(true);
 		$repliedMessageData->expects($this->once())
 			->method('getFolderId')
-			->willReturn(base64_encode('INBOX'));
+			->willReturn('INBOX');
 		$repliedMessageData->expects($this->once())
 			->method('getId')
 			->willReturn(321);

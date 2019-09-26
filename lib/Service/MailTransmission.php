@@ -26,6 +26,7 @@ namespace OCA\Mail\Service;
 use Exception;
 use Horde_Exception;
 use Horde_Imap_Client;
+use Horde_Imap_Client_Exception;
 use Horde_Imap_Client_Mailbox;
 use Horde_Mail_Transport_Null;
 use Horde_Mime_Exception;
@@ -148,8 +149,8 @@ class MailTransmission implements IMailTransmission {
 			'Subject' => $message->getSubject(),
 		];
 
-		if ($message->getRepliedMessage() !== null) {
-			$headers['In-Reply-To'] = $message->getRepliedMessage()->getMessageId();
+		if ($message->getInReplyTo() !== null) {
+			$headers['In-Reply-To'] = $message->getInReplyTo();
 		}
 
 		$mail = new Horde_Mime_Mail();
@@ -190,7 +191,7 @@ class MailTransmission implements IMailTransmission {
 		$account = $message->getAccount();
 		$imapMessage = $account->newMessage();
 		$imapMessage->setTo($message->getTo());
-		$imapMessage->setSubject($message->getSubject() ?: '');
+		$imapMessage->setSubject($message->getSubject());
 		$from = new AddressList([
 			new Address($account->getName(), $account->getEMailAddress()),
 		]);
@@ -244,23 +245,23 @@ class MailTransmission implements IMailTransmission {
 									   NewMessageData $messageData,
 									   RepliedMessageData $replyData): IMessage {
 		// Reply
-		$message = $account->newReplyMessage();
-
-		$mailbox = $account->getMailbox(base64_decode($replyData->getFolderId()));
-		$repliedMessage = $mailbox->getMessage($replyData->getId());
-
-		if ($messageData->getSubject() === null) {
-			// No subject set – use the original one
-			$message->setSubject($repliedMessage->getSubject());
-		} else {
-			$message->setSubject($messageData->getSubject());
-		}
-
-		// TODO: old code used
-		// $message->setTo(Message::parseAddressList($repliedMessage->getToList()));
-		// when $to was null. Needs investigation whether that is needed or even makes sense.
+		$message = $account->newMessage();
+		$message->setSubject($messageData->getSubject());
 		$message->setTo($messageData->getTo());
-		$message->setRepliedMessage($repliedMessage);
+
+		$client = $this->imapClientFactory->getClient($account);
+
+		try {
+			$repliedMessage = $this->messageMapper->find(
+				$client,
+				$replyData->getFolderId(),
+				$replyData->getId()
+			);
+
+			$message->setInReplyTo($repliedMessage->getMessageId());
+		} catch (DoesNotExistException|Horde_Imap_Client_Exception $e) {
+			// Nothing to do
+		}
 
 		return $message;
 	}
@@ -269,7 +270,7 @@ class MailTransmission implements IMailTransmission {
 		// New message
 		$message = $account->newMessage();
 		$message->setTo($messageData->getTo());
-		$message->setSubject($messageData->getSubject() ?: '');
+		$message->setSubject($messageData->getSubject());
 
 		return $message;
 	}

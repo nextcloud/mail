@@ -110,22 +110,16 @@ class MessagesControllerTest extends TestCase {
 		$accountId = 17;
 		$folderId = 'testfolder';
 		$messageId = 4321;
+		$message = $this->createMock(IMAPMessage::class);
 
 		$this->accountService->expects($this->once())
 			->method('find')
 			->with($this->equalTo($this->userId), $this->equalTo($accountId))
 			->will($this->returnValue($this->account));
-		$this->account->expects($this->once())
-			->method('getMailbox')
-			->with($this->equalTo($folderId))
-			->will($this->returnValue($this->mailbox));
-		$this->mailbox->expects($this->once())
+		$this->mailManager->expects($this->once())
 			->method('getMessage')
-			->with($this->equalTo($messageId))
-			->will($this->returnValue($this->message));
-		$this->message->expects($this->once())
-			->method('getHtmlBody')
-			->willReturn('');
+			->with($this->account, $folderId, $messageId, true)
+			->willReturn($message);
 		$this->timeFactory->method('getTime')->willReturn(1000);
 
 		$expectedResponse = new HtmlResponse('');

@@ -33,8 +33,8 @@ use Horde_Imap_Client_Socket;
 use Horde_Mime_Mail;
 use OCA\Mail\Db\Mailbox;
 use OCA\Mail\Exception\ServiceException;
-use OCA\Mail\Folder;
 use OCA\Mail\Model\IMAPMessage;
+use OCP\AppFramework\Db\DoesNotExistException;
 use OCP\ILogger;
 
 class MessageMapper {
@@ -47,14 +47,31 @@ class MessageMapper {
 	}
 
 	/**
-	 * @param Horde_Imap_Client_Base $client
-	 * @param Folder $mailbox
-	 * @param array $ids
-	 *
+	 * @return IMAPMessage
+	 * @throws DoesNotExistException
+	 * @throws Horde_Imap_Client_Exception
+	 */
+	public function find(Horde_Imap_Client_Base $client,
+						 string $mailbox,
+						 int $id,
+						 bool $loadBody = false): IMAPMessage {
+		$result = $this->findByIds($client, $mailbox, [$id], $loadBody);
+
+		if (count($result) === 0) {
+			throw new DoesNotExistException("Message does not exist");
+		}
+
+		return $result[0];
+	}
+
+	/**
 	 * @return IMAPMessage[]
 	 * @throws Horde_Imap_Client_Exception
 	 */
-	public function findByIds(Horde_Imap_Client_Base $client, $mailbox, array $ids) {
+	public function findByIds(Horde_Imap_Client_Base $client,
+							  string $mailbox,
+							  array $ids,
+							  bool $loadBody = false): array {
 		$query = new Horde_Imap_Client_Fetch_Query();
 		$query->envelope();
 		$query->flags();
@@ -77,8 +94,23 @@ class MessageMapper {
 			'ids' => new Horde_Imap_Client_Ids($ids),
 		]), false);
 
-		return array_map(function (Horde_Imap_Client_Data_Fetch $fetchResult) use ($client, $mailbox) {
-			return new IMAPMessage($client, $mailbox, $fetchResult->getUid(), $fetchResult);
+		return array_map(function (Horde_Imap_Client_Data_Fetch $fetchResult) use ($client, $mailbox, $loadBody) {
+			if ($loadBody) {
+				return new IMAPMessage(
+					$client,
+					$mailbox,
+					$fetchResult->getUid(),
+					null,
+					$loadBody
+				);
+			} else {
+				return new IMAPMessage(
+					$client,
+					$mailbox,
+					$fetchResult->getUid(),
+					$fetchResult
+				);
+			}
 		}, $fetchResults);
 	}
 

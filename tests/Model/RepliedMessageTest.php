@@ -24,6 +24,7 @@ namespace OCA\Mail\Tests\Model;
 use ChristophWurst\Nextcloud\Testing\TestCase;
 use OCA\Mail\Account;
 use OCA\Mail\Model\RepliedMessageData;
+use PHPUnit\Framework\MockObject\MockObject;
 
 class RepliedMessageTest extends TestCase {
 
@@ -35,8 +36,9 @@ class RepliedMessageTest extends TestCase {
 	}
 
 	public function testGetFolderId() {
+		/** @var Account|MockObject $account */
 		$account = $this->createMock(Account::class);
-		$folderId = base64_encode('INBOX');
+		$folderId = 'INBOX';
 		$data = new RepliedMessageData($account, $folderId, null);
 
 		$this->assertEquals($folderId, $data->getFolderId());

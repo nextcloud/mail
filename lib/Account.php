@@ -34,16 +34,11 @@
 namespace OCA\Mail;
 
 use Horde_Imap_Client;
-use Horde_Imap_Client_Ids;
 use Horde_Imap_Client_Mailbox;
 use Horde_Imap_Client_Socket;
 use Horde_Mail_Rfc822_List;
 use Horde_Mail_Transport;
-use Horde_Mail_Transport_Null;
 use Horde_Mail_Transport_Smtphorde;
-use Horde_Mime_Headers_Date;
-use Horde_Mime_Headers_MessageId;
-use Horde_Mime_Mail;
 use JsonSerializable;
 use OC;
 use OCA\Mail\Cache\Cache;
@@ -51,7 +46,6 @@ use OCA\Mail\Db\Alias;
 use OCA\Mail\Db\MailAccount;
 use OCA\Mail\Model\IMessage;
 use OCA\Mail\Model\Message;
-use OCA\Mail\Model\ReplyMessage;
 use OCP\ICacheFactory;
 use OCP\IConfig;
 use OCP\Security\ICrypto;
@@ -60,9 +54,6 @@ class Account implements JsonSerializable {
 
 	/** @var MailAccount */
 	private $account;
-
-	/** @var Mailbox[]|null */
-	private $mailboxes;
 
 	/** @var Horde_Imap_Client_Socket */
 	private $client;
@@ -84,11 +75,9 @@ class Account implements JsonSerializable {
 	 */
 	public function __construct(MailAccount $account) {
 		$this->account = $account;
-		$this->mailboxes = null;
 		$this->crypto = OC::$server->getCrypto();
 		$this->config = OC::$server->getConfig();
 		$this->memcacheFactory = OC::$server->getMemcacheFactory();
-		$this->alias = null;
 	}
 
 	public function getMailAccount() {
@@ -170,7 +159,6 @@ class Account implements JsonSerializable {
 	public function createMailbox($mailBox, $opts = []) {
 		$conn = $this->getImapConnection();
 		$conn->createMailbox($mailBox, $opts);
-		$this->mailboxes = null;
 
 		return $this->getMailbox($mailBox);
 	}
@@ -184,7 +172,6 @@ class Account implements JsonSerializable {
 		}
 		$conn = $this->getImapConnection();
 		$conn->deleteMailbox($mailBox);
-		$this->mailboxes = null;
 	}
 
 	/**
@@ -282,15 +269,6 @@ class Account implements JsonSerializable {
 	 */
 	public function newMessage() {
 		return new Message();
-	}
-
-	/**
-	 * Factory method for creating new reply messages
-	 *
-	 * @return ReplyMessage
-	 */
-	public function newReplyMessage() {
-		return new ReplyMessage();
 	}
 
 }
