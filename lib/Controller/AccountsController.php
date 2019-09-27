@@ -268,7 +268,7 @@ class AccountsController extends Controller {
 	 *
 	 * @throws ServiceException
 	 */
-	public function send(int $accountId, string $subject = null, string $body, string $to, string $cc, string $bcc, int $draftUID = null, string $folderId = null, int $messageId = null, array $attachments = [], int $aliasId = null): JSONResponse {
+	public function send(int $accountId, string $subject, string $body, string $to, string $cc, string $bcc, int $draftUID = null, string $folderId = null, int $messageId = null, array $attachments = [], int $aliasId = null): JSONResponse {
 		$account = $this->accountService->find($this->currentUserId, $accountId);
 		$alias = $aliasId ? $this->aliasesService->find($aliasId, $this->currentUserId) : null;
 
@@ -277,7 +277,10 @@ class AccountsController extends Controller {
 		$expandedBcc = $this->groupsIntegration->expand($bcc);
 
 		$messageData = NewMessageData::fromRequest($account, $expandedTo, $expandedCc, $expandedBcc, $subject, $body, $attachments);
-		$repliedMessageData = new RepliedMessageData($account, $folderId, $messageId);
+		$repliedMessageData = null;
+		if ($folderId !== null && $messageId !== null) {
+			$repliedMessageData = new RepliedMessageData($account, base64_decode($folderId), $messageId);
+		}
 
 		try {
 			$this->mailTransmission->sendMessage($this->currentUserId, $messageData, $repliedMessageData, $alias, $draftUID);
@@ -301,7 +304,7 @@ class AccountsController extends Controller {
 	 * @param int $uid
 	 * @return JSONResponse
 	 */
-	public function draft(int $accountId, string $subject = null, string $body, string $to, string $cc, string $bcc, int $draftUID = null): JSONResponse {
+	public function draft(int $accountId, string $subject, string $body, string $to, string $cc, string $bcc, int $draftUID = null): JSONResponse {
 		if (is_null($draftUID)) {
 			$this->logger->info("Saving a new draft in account <$accountId>");
 		} else {

@@ -22,23 +22,21 @@
 namespace OCA\Mail\Tests\Service;
 
 use ChristophWurst\Nextcloud\Testing\TestCase;
-use Horde_Imap_Client;
+use Horde_Imap_Client_Socket;
 use Horde_Mail_Transport;
 use OC\Files\Node\File;
 use OCA\Mail\Account;
-use OCA\Mail\Address;
-use OCA\Mail\AddressList;
 use OCA\Mail\Contracts\IAttachmentService;
 use OCA\Mail\Db\Alias;
 use OCA\Mail\Db\MailboxMapper;
 use OCA\Mail\IMAP\IMAPClientFactory;
 use OCA\Mail\IMAP\MessageMapper;
 use OCA\Mail\Mailbox;
+use OCA\Mail\Model\IMAPMessage;
 use OCA\Mail\Model\IMessage;
 use OCA\Mail\Model\Message;
 use OCA\Mail\Model\NewMessageData;
 use OCA\Mail\Model\RepliedMessageData;
-use OCA\Mail\Model\ReplyMessage;
 use OCA\Mail\Service\MailTransmission;
 use OCA\Mail\SMTP\SmtpClientFactory;
 use OCP\EventDispatcher\IEventDispatcher;
@@ -103,7 +101,6 @@ class MailTransmissionTest extends TestCase {
 		/** @var Account|MockObject $account */
 		$account = $this->createMock(Account::class);
 		$messageData = NewMessageData::fromRequest($account, 'to@d.com', '', '', 'sub', 'bod');
-		$replyData = new RepliedMessageData($account, null, null);
 		$message = new Message();
 		$account->expects($this->once())
 			->method('newMessage')
@@ -114,7 +111,7 @@ class MailTransmissionTest extends TestCase {
 			->with($account)
 			->willReturn($transport);
 
-		$this->transmission->sendMessage('garfield', $messageData, $replyData);
+		$this->transmission->sendMessage('garfield', $messageData, null);
 	}
 
 	public function testSendMessageFromAlias() {
@@ -123,7 +120,6 @@ class MailTransmissionTest extends TestCase {
 		$alias = new Alias();
 		$alias->setAlias('a@d.com');
 		$messageData = NewMessageData::fromRequest($account, 'to@d.com', '', '', 'sub', 'bod');
-		$replyData = new RepliedMessageData($account, null, null);
 		$message = new Message();
 		$account->expects($this->once())
 			->method('newMessage')
@@ -140,7 +136,7 @@ class MailTransmissionTest extends TestCase {
 			->method('setAlias')
 			->with($alias);
 
-		$this->transmission->sendMessage('garfield', $messageData, $replyData, $alias);
+		$this->transmission->sendMessage('garfield', $messageData, null, $alias);
 	}
 
 	public function testSendNewMessageWithCloudAttachments() {
@@ -156,7 +152,6 @@ class MailTransmissionTest extends TestCase {
 			[] // add an invalid one too
 		];
 		$messageData = NewMessageData::fromRequest($account, 'to@d.com', '', '', 'sub', 'bod', $attachmenst);
-		$replyData = new RepliedMessageData($account, null, null);
 		$message = new Message();
 		$account->expects($this->once())
 			->method('newMessage')
@@ -178,29 +173,29 @@ class MailTransmissionTest extends TestCase {
 			->with('cat.jpg')
 			->willReturn($node);
 
-		$this->transmission->sendMessage('garfield', $messageData, $replyData);
+		$this->transmission->sendMessage('garfield', $messageData, null);
 	}
 
 	public function testReplyToAnExistingMessage() {
 		/** @var Account|MockObject $account */
 		$account = $this->createMock(Account::class);
 		$messageData = NewMessageData::fromRequest($account, 'to@d.com', '', '', 'sub', 'bod');
-		$folderId = base64_encode('INBOX');
+		$folderId = 'INBOX';
 		$repliedMessageId = 321;
 		$replyData = new RepliedMessageData($account, $folderId, $repliedMessageId);
-		$message = new ReplyMessage();
+		$message = new Message();
 		$account->expects($this->once())
-			->method('newReplyMessage')
+			->method('newMessage')
 			->willReturn($message);
-		$mailbox = $this->createMock(Mailbox::class);
-		$account->expects($this->once())
-			->method('getMailbox')
-			->with(base64_decode($folderId))
-			->willReturn($mailbox);
-		$repliedMessage = $this->createMock(IMessage::class);
-		$mailbox->expects($this->once())
-			->method('getMessage')
-			->with($repliedMessageId)
+		$client = $this->createMock(Horde_Imap_Client_Socket::class);
+		$this->imapClientFactory->expects($this->once())
+			->method('getClient')
+			->with($account)
+			->willReturn($client);
+		$repliedMessage = $this->createMock(IMAPMessage::class);
+		$this->messageMapper->expects($this->once())
+			->method('find')
+			->with($client, $folderId, $repliedMessageId)
 			->willReturn($repliedMessage);
 		$transport = $this->createMock(Horde_Mail_Transport::class);
 		$this->smtpClientFactory->expects($this->once())
@@ -219,7 +214,7 @@ class MailTransmissionTest extends TestCase {
 		$account->expects($this->once())
 			->method('newMessage')
 			->willReturn($message);
-		$client = $this->createMock(\Horde_Imap_Client_Socket::class);
+		$client = $this->createMock(Horde_Imap_Client_Socket::class);
 		$this->imapClientFactory->expects($this->once())
 			->method('getClient')
 			->with($account)

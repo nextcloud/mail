@@ -24,46 +24,34 @@ namespace OCA\Mail\Tests\Model;
 use ChristophWurst\Nextcloud\Testing\TestCase;
 use OCA\Mail\Account;
 use OCA\Mail\Model\RepliedMessageData;
+use PHPUnit\Framework\MockObject\MockObject;
 
 class RepliedMessageTest extends TestCase {
 
 	public function testGetAccount() {
+		/** @var Account|MockObject $account */
 		$account = $this->createMock(Account::class);
-		$data = new RepliedMessageData($account, null, null);
+		$data = new RepliedMessageData($account, "abc", 123);
 
 		$this->assertEquals($account, $data->getAccount());
 	}
 
 	public function testGetFolderId() {
+		/** @var Account|MockObject $account */
 		$account = $this->createMock(Account::class);
-		$folderId = base64_encode('INBOX');
-		$data = new RepliedMessageData($account, $folderId, null);
+		$folderId = 'INBOX';
+		$data = new RepliedMessageData($account, $folderId, 123);
 
 		$this->assertEquals($folderId, $data->getFolderId());
 	}
 
 	public function testGetId() {
+		/** @var Account|MockObject $account */
 		$account = $this->createMock(Account::class);
 		$messageId = 12;
-		$data = new RepliedMessageData($account, null, $messageId);
+		$data = new RepliedMessageData($account, "abc", $messageId);
 
 		$this->assertEquals($messageId, $data->getId());
-	}
-
-	public function testIsReply() {
-		$account = $this->createMock(Account::class);
-		$folderId = base64_encode('INBOX');
-		$messageId = 12;
-		$data = new RepliedMessageData($account, $folderId, $messageId);
-
-		$this->assertTrue($data->isReply());
-	}
-
-	public function testIsNoReply() {
-		$account = $this->createMock(Account::class);
-		$data = new RepliedMessageData($account, null, null);
-
-		$this->assertFalse($data->isReply());
 	}
 
 }

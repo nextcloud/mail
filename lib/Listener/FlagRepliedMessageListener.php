@@ -27,6 +27,7 @@ use Horde_Imap_Client;
 use Horde_Imap_Client_Exception;
 use OCA\Mail\Db\MailboxMapper;
 use OCA\Mail\Events\MessageSentEvent;
+use OCA\Mail\Exception\ServiceException;
 use OCA\Mail\IMAP\IMAPClientFactory;
 use OCA\Mail\IMAP\MessageMapper;
 use OCP\AppFramework\Db\DoesNotExistException;
@@ -60,16 +61,16 @@ class FlagRepliedMessageListener implements IEventListener {
 	}
 
 	public function handle(Event $event): void {
-		if (!($event instanceof MessageSentEvent) || !$event->getRepliedMessageData()->isReply()) {
+		if (!($event instanceof MessageSentEvent) || $event->getRepliedMessageData() === null) {
 			return;
 		}
 
 		try {
 			$mailbox = $this->mailboxMapper->find(
 				$event->getAccount(),
-				base64_decode($event->getRepliedMessageData()->getFolderId())
+				$event->getRepliedMessageData()->getFolderId()
 			);
-		} catch (DoesNotExistException $e) {
+		} catch (DoesNotExistException|ServiceException $e) {
 			$this->logger->logException($e, [
 				'message' => 'Could not flag the message in reply to',
 				'level' => ILogger::WARN,

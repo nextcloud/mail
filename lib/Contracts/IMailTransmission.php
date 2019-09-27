@@ -42,7 +42,7 @@ interface IMailTransmission {
 	 */
 	public function sendMessage(string $userId,
 								NewMessageData $message,
-								RepliedMessageData $reply,
+								RepliedMessageData $reply = null,
 								Alias $alias = null,
 								int $draftUID = null);
 

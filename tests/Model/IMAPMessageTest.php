@@ -86,12 +86,12 @@ class IMAPMessageTest extends TestCase {
 
 	public function testSerialize() {
 		$data = new Horde_Imap_Client_Data_Fetch();
+		$data->setUid(1234);
 		$m = new IMAPMessage(null, 'INBOX', 123, $data);
-		$m->setUid('1234');
 
 		$json = $m->jsonSerialize();
 
-		$this->assertEquals('1234', $json['id']);
+		$this->assertEquals(1234, $json['id']);
 	}
 
 }

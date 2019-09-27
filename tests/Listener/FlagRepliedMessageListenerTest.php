@@ -85,8 +85,6 @@ class FlagRepliedMessageListenerTest extends TestCase {
 		$account = $this->createMock(Account::class);
 		/** @var NewMessageData|MockObject $newMessageData */
 		$newMessageData = $this->createMock(NewMessageData::class);
-		/** @var RepliedMessageData|MockObject $repliedMessageData */
-		$repliedMessageData = $this->createMock(RepliedMessageData::class);
 		/** @var IMessage|MockObject $message */
 		$message = $this->createMock(IMessage::class);
 		/** @var \Horde_Mime_Mail|MockObject $mail */
@@ -94,14 +92,11 @@ class FlagRepliedMessageListenerTest extends TestCase {
 		$event = new MessageSentEvent(
 			$account,
 			$newMessageData,
-			$repliedMessageData,
+			null,
 			123,
 			$message,
 			$mail
 		);
-		$repliedMessageData->expects($this->once())
-			->method('isReply')
-			->willReturn(false);
 		$this->mailboxMapper->expects($this->never())
 			->method('find');
 		$this->logger->expects($this->never())
@@ -130,11 +125,8 @@ class FlagRepliedMessageListenerTest extends TestCase {
 			$mail
 		);
 		$repliedMessageData->expects($this->once())
-			->method('isReply')
-			->willReturn(true);
-		$repliedMessageData->expects($this->once())
 			->method('getFolderId')
-			->willReturn(base64_encode('INBOX'));
+			->willReturn('INBOX');
 		$this->mailboxMapper->expects($this->once())
 			->method('find')
 			->with($account, 'INBOX')
@@ -167,11 +159,8 @@ class FlagRepliedMessageListenerTest extends TestCase {
 			$mail
 		);
 		$repliedMessageData->expects($this->once())
-			->method('isReply')
-			->willReturn(true);
-		$repliedMessageData->expects($this->once())
 			->method('getFolderId')
-			->willReturn(base64_encode('INBOX'));
+			->willReturn('INBOX');
 		$repliedMessageData->expects($this->once())
 			->method('getId')
 			->willReturn(321);

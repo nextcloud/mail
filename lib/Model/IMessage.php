@@ -34,7 +34,7 @@ interface IMessage {
 	/**
 	 * Get the ID if available
 	 *
-	 * @return int|null
+	 * @return string|null
 	 */
 	public function getMessageId();
 
@@ -91,14 +91,14 @@ interface IMessage {
 	public function setBcc(AddressList $bcc);
 
 	/**
-	 * @return IMessage|null
+	 * @return string|null
 	 */
-	public function getRepliedMessage();
+	public function getInReplyTo();
 
 	/**
-	 * @param IMessage $message
+	 * @param string $message
 	 */
-	public function setRepliedMessage(IMessage $message);
+	public function setInReplyTo(string $id);
 
 	/**
 	 * @return string

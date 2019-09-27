@@ -60,22 +60,20 @@ class IMAPMessage implements IMessage, JsonSerializable {
 	 */
 	private $attachmentsToIgnore = ['signature.asc', 'smime.p7s'];
 
-	/** @var int */
-	private $uid;
-
 	/** @var Html|null */
 	private $htmlService;
 
 	/**
 	 * @param Horde_Imap_Client_Socket|null $conn
-	 * @param Horde_Imap_Client_Mailbox $mailBox
+	 * @param Horde_Imap_Client_Mailbox|string $mailBox
 	 * @param int $messageId
 	 * @param Horde_Imap_Client_Data_Fetch|null $fetch
 	 * @param bool $loadHtmlMessage
 	 * @param Html|null $htmlService
 	 * @throws DoesNotExistException
 	 */
-	public function __construct($conn, $mailBox,
+	public function __construct($conn,
+								$mailBox,
 								int $messageId,
 								Horde_Imap_Client_Data_Fetch $fetch = null,
 								bool $loadHtmlMessage = false,
@@ -127,18 +125,7 @@ class IMAPMessage implements IMessage, JsonSerializable {
 	 * @return int
 	 */
 	public function getUid(): int {
-		if (!is_null($this->uid)) {
-			return $this->uid;
-		}
 		return $this->fetch->getUid();
-	}
-
-	public function setUid(int $uid) {
-		$this->uid = $uid;
-		$this->attachments = array_map(function ($attachment) use ($uid) {
-			$attachment['messageId'] = $uid;
-			return $attachment;
-		}, $this->attachments);
 	}
 
 	/**
@@ -236,19 +223,17 @@ class IMAPMessage implements IMessage, JsonSerializable {
 	/**
 	 * Get the ID if available
 	 *
-	 * @return int|null
+	 * @return string
 	 */
-	public function getMessageId() {
-		$e = $this->getEnvelope();
-		return $e->message_id;
+	public function getMessageId(): string {
+		return $this->getEnvelope()->message_id;
 	}
 
 	/**
 	 * @return string
 	 */
 	public function getSubject(): string {
-		$e = $this->getEnvelope();
-		return $e->subject;
+		return $this->getEnvelope()->subject;
 	}
 
 	/**
@@ -414,10 +399,9 @@ class IMAPMessage implements IMessage, JsonSerializable {
 	}
 
 	/**
-	 * @param string $specialRole
 	 * @return array
 	 */
-	public function getFullMessage($specialRole = null): array {
+	public function getFullMessage(): array {
 		$mailBody = $this->plainMessage;
 
 		$data = $this->jsonSerialize();
@@ -426,7 +410,7 @@ class IMAPMessage implements IMessage, JsonSerializable {
 		} else {
 			$mailBody = $this->htmlService->convertLinks($mailBody);
 			list($mailBody, $signature) = $this->htmlService->parseMailBody($mailBody);
-			$data['body'] = $specialRole === 'drafts' ? $mailBody : nl2br($mailBody);
+			$data['body'] = $mailBody;
 			$data['signature'] = $signature;
 		}
 
@@ -594,14 +578,14 @@ class IMAPMessage implements IMessage, JsonSerializable {
 	/**
 	 * @return IMessage|null
 	 */
-	public function getRepliedMessage() {
+	public function getInReplyTo() {
 		throw new Exception('not implemented');
 	}
 
 	/**
 	 * @param IMessage $message
 	 */
-	public function setRepliedMessage(IMessage $message) {
+	public function setInReplyTo(string $message) {
 		throw new Exception('not implemented');
 	}
 

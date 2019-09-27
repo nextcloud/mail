@@ -102,9 +102,8 @@ class MailTransmissionIntegrationTest extends TestCase {
 
 	public function testSendMail() {
 		$message = NewMessageData::fromRequest($this->account, 'recipient@domain.com', null, null, 'greetings', 'hello there', []);
-		$reply = new RepliedMessageData($this->account, null, null);
 
-		$this->transmission->sendMessage('ferdinand', $message, $reply);
+		$this->transmission->sendMessage('ferdinand', $message, null);
 
 		$this->addToAssertionCount(1);
 	}
@@ -121,9 +120,8 @@ class MailTransmissionIntegrationTest extends TestCase {
 				'id' => 13,
 			],
 		]);
-		$reply = new RepliedMessageData($this->account, null, null);
 
-		$this->transmission->sendMessage('gerald', $message, $reply);
+		$this->transmission->sendMessage('gerald', $message, null);
 
 		$this->addToAssertionCount(1);
 	}
@@ -137,9 +135,8 @@ class MailTransmissionIntegrationTest extends TestCase {
 				'fileName' => 'text.txt',
 			],
 		]);
-		$reply = new RepliedMessageData($this->account, null, null);
 
-		$this->transmission->sendMessage($this->user->getUID(), $message, $reply);
+		$this->transmission->sendMessage($this->user->getUID(), $message, null);
 
 		$this->addToAssertionCount(1);
 	}
@@ -170,7 +167,7 @@ class MailTransmissionIntegrationTest extends TestCase {
 			->finish();
 		$originalUID = $this->saveMessage('inbox', $originalMessage);
 
-		$message = NewMessageData::fromRequest($this->account, 'recipient@domain.com', null, null, null, 'hello there', []);
+		$message = NewMessageData::fromRequest($this->account, 'recipient@domain.com', null, null, '', 'hello there', []);
 		$reply = new RepliedMessageData($this->account, $inbox, $originalUID);
 		$uid = $this->transmission->sendMessage('ferdinand', $message, $reply);
 
