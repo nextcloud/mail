@@ -157,16 +157,18 @@ class MessageMapper {
 	 */
 	public function save(Horde_Imap_Client_Socket $client,
 						 Mailbox $mailbox,
-						 Horde_Mime_Mail $mail): int {
+						 Horde_Mime_Mail $mail,
+						 array $flags = []): int {
+		$flags = array_merge([
+			Horde_Imap_Client::FLAG_SEEN,
+		], $flags);
 
 		$uids = $client->append(
 			$mailbox->getName(),
 			[
 				[
 					'data' => $mail->getRaw(),
-					'flags' => [
-						Horde_Imap_Client::FLAG_SEEN
-					]
+					'flags' => $flags,
 				]
 			]
 		);
