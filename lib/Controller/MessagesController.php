@@ -40,7 +40,6 @@ use OCA\Mail\Model\IMAPMessage;
 use OCA\Mail\Service\AccountService;
 use OCA\Mail\Service\IMailBox;
 use OCP\AppFramework\Controller;
-use OCP\AppFramework\Db\DoesNotExistException;
 use OCP\AppFramework\Http;
 use OCP\AppFramework\Http\ContentSecurityPolicy;
 use OCP\AppFramework\Http\JSONResponse;
@@ -168,12 +167,19 @@ class MessagesController extends Controller {
 			return new JSONResponse(null, Http::STATUS_FORBIDDEN);
 		}
 
-		$json = $this->mailManager->getMessage($account, base64_decode($folderId), $id, true)->getFullMessage();
-		if (isset($json['attachments'])) {
-			$json['attachments'] = array_map(function ($a) use ($accountId, $folderId, $id) {
-				return $this->enrichDownloadUrl($accountId, $folderId, $id, $a);
-			}, $json['attachments']);
-		}
+		$json = $this->mailManager->getMessage(
+			$account,
+			base64_decode($folderId),
+			$id,
+			true
+		)->getFullMessage(
+			$accountId,
+			base64_decode($folderId),
+			$id
+		);
+		$json['attachments'] = array_map(function ($a) use ($accountId, $folderId, $id) {
+			return $this->enrichDownloadUrl($accountId, $folderId, $id, $a);
+		}, $json['attachments']);
 
 		return new JSONResponse($json);
 	}
@@ -222,27 +228,14 @@ class MessagesController extends Controller {
 				);
 			}
 
-			/** @var IMAPMessage $m */
-			$m = $this->mailManager->getMessage(
-				$account,
-				base64_decode($folderId),
-				$messageId,
-				true
+			$htmlResponse = new HtmlResponse(
+				$this->mailManager->getMessage(
+					$account,
+					base64_decode($folderId),
+					$messageId,
+					true
+				)->getHtmlBody($accountId, $folderId, $messageId)
 			);
-			$html = $m->getHtmlBody($accountId, $folderId, $messageId,
-				function ($cid) use ($m) {
-					$match = array_filter($m->attachments,
-						function ($a) use ($cid) {
-							return $a['cid'] === $cid;
-						});
-					$match = array_shift($match);
-					if ($match === null) {
-						return null;
-					}
-					return $match['id'];
-				});
-
-			$htmlResponse = new HtmlResponse($html);
 
 			// Harden the default security policy
 			$policy = new ContentSecurityPolicy();

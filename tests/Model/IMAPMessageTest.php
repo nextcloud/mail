@@ -75,9 +75,7 @@ class IMAPMessageTest extends TestCase {
 
 
 		$message = new IMAPMessage($conn, 'INBOX', 123, null, true, $htmlService);
-		$htmlBody = $message->getHtmlBody(0, 0, 123, function() {
-			return null;
-		});
+		$htmlBody = $message->getHtmlBody(0, 0, 123);
 		$this->assertTrue(strlen($htmlBody) > 1000);
 
 		$plainTextBody = $message->getPlainBody();
