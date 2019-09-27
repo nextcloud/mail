@@ -401,12 +401,13 @@ class IMAPMessage implements IMessage, JsonSerializable {
 	/**
 	 * @return array
 	 */
-	public function getFullMessage(): array {
+	public function getFullMessage(int $accountId, string $mailbox, int $id): array {
 		$mailBody = $this->plainMessage;
 
 		$data = $this->jsonSerialize();
 		if ($this->hasHtmlMessage) {
 			$data['hasHtmlBody'] = true;
+			$data['body'] = $this->getHtmlBody($accountId, $mailbox, $id);
 		} else {
 			$mailBody = $this->htmlService->convertLinks($mailBody);
 			list($mailBody, $signature) = $this->htmlService->parseMailBody($mailBody);
@@ -443,15 +444,24 @@ class IMAPMessage implements IMessage, JsonSerializable {
 	 * @param int $accountId
 	 * @param string $folderId
 	 * @param int $messageId
-	 * @param Closure $attachments
 	 * @return string
 	 */
-	public function getHtmlBody(int $accountId, string $folderId, int $messageId, Closure $attachments): string {
+	public function getHtmlBody(int $accountId, string $folderId, int $messageId): string {
 		return $this->htmlService->sanitizeHtmlMailBody($this->htmlMessage, [
 			'accountId' => $accountId,
 			'folderId' => $folderId,
 			'messageId' => $messageId,
-		], $attachments);
+		], function ($cid) {
+			$match = array_filter($this->attachments,
+				function ($a) use ($cid) {
+					return $a['cid'] === $cid;
+				});
+			$match = array_shift($match);
+			if ($match === null) {
+				return null;
+			}
+			return $match['id'];
+		});
 	}
 
 	/**
