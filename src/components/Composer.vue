@@ -91,6 +91,7 @@
 		</div>
 		<div class="composer-fields">
 			<textarea
+				ref="body"
 				v-model="bodyVal"
 				v-autosize
 				name="body"
@@ -100,10 +101,14 @@
 				@keypress="onBodyKeyPress"
 			></textarea>
 		</div>
-		<div class="submit-message-wrapper">
-			<input class="submit-message send primary" type="submit" :value="submitButtonTitle" @click="onSend" />
+		<div class="composer-actions">
+			<div>
+				<ComposerAttachments v-model="attachments" @upload="onAttachmentsUploading" />
+			</div>
+			<div>
+				<input class="submit-message send primary" type="submit" :value="submitButtonTitle" @click="onSend" />
+			</div>
 		</div>
-		<ComposerAttachments v-model="attachments" @upload="onAttachmentsUploading" />
 		<span v-if="savingDraft === true" id="draft-status">{{ t('mail', 'Saving draft …') }}</span>
 		<span v-else-if="savingDraft === false" id="draft-status">{{ t('mail', 'Draft saved') }}</span>
 	</div>
@@ -237,6 +242,10 @@ export default {
 			this.selectedAlias = this.aliases[0]
 		}
 		this.bodyVal = this.bodyWithSignature(this.selectedAlias, this.body)
+	},
+	mounted: function() {
+		this.$refs.body.focus()
+		this.$refs.body.setSelectionRange(0, 0)
 	},
 	methods: {
 		recipientToRfc822(recipient) {
@@ -381,6 +390,12 @@ export default {
 	margin: 0;
 }
 
+.composer-actions {
+	display: flex;
+	flex-direction: row;
+	align-items: flex-end;
+}
+
 .composer-fields.mail-account > .multiselect {
 	max-width: none;
 	min-height: auto;
@@ -463,23 +478,6 @@ label.bcc-label {
 
 textarea.reply {
 	min-height: 100px;
-}
-
-input.submit-message,
-.submit-message-wrapper {
-	position: fixed;
-	bottom: 10px;
-	right: 15px;
-}
-
-.submit-message-wrapper {
-	position: fixed;
-	height: 36px;
-	width: 60px;
-}
-
-.submit-message.send {
-	padding: 12px;
 }
 </style>
 
