@@ -33,18 +33,18 @@ class RepliedMessageData {
 	/** @var Account */
 	private $account;
 
-	/** @var string|null */
+	/** @var string */
 	private $folderId;
 
-	/** @var int|null */
+	/** @var int */
 	private $id;
 
 	/**
 	 * @param Account $account
-	 * @param string|null $folderId
-	 * @param int|null $id
+	 * @param string $folderId
+	 * @param int $id
 	 */
-	public function __construct(Account $account, string $folderId = null, int $id = null) {
+	public function __construct(Account $account, string $folderId, int $id) {
 		$this->account = $account;
 		$this->folderId = $folderId;
 		$this->id = $id;
@@ -57,25 +57,12 @@ class RepliedMessageData {
 		return $this->account;
 	}
 
-	/**
-	 * @return string|null
-	 */
-	public function getFolderId() {
+	public function getFolderId(): string {
 		return $this->folderId;
 	}
 
-	/**
-	 * @return int|null
-	 */
-	public function getId() {
+	public function getId(): int {
 		return $this->id;
-	}
-
-	/**
-	 * @return bool
-	 */
-	public function isReply(): bool {
-		return $this->folderId !== null && $this->id !== null;
 	}
 
 }

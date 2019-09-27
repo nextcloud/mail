@@ -117,12 +117,12 @@ class MailTransmission implements IMailTransmission {
 	 */
 	public function sendMessage(string $userId,
 								NewMessageData $messageData,
-								RepliedMessageData $replyData,
+								RepliedMessageData $replyData = null,
 								Alias $alias = null,
 								int $draftUID = null) {
 		$account = $messageData->getAccount();
 
-		if ($replyData->isReply()) {
+		if ($replyData !== null) {
 			$message = $this->buildReplyMessage($account, $messageData, $replyData);
 		} else {
 			$message = $this->buildNewMessage($account, $messageData);

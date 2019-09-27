@@ -277,7 +277,10 @@ class AccountsController extends Controller {
 		$expandedBcc = $this->groupsIntegration->expand($bcc);
 
 		$messageData = NewMessageData::fromRequest($account, $expandedTo, $expandedCc, $expandedBcc, $subject, $body, $attachments);
-		$repliedMessageData = new RepliedMessageData($account, $folderId === null ? null : base64_decode($folderId), $messageId);
+		$repliedMessageData = null;
+		if ($folderId !== null && $messageId !== null) {
+			$repliedMessageData = new RepliedMessageData($account, base64_decode($folderId), $messageId);
+		}
 
 		try {
 			$this->mailTransmission->sendMessage($this->currentUserId, $messageData, $repliedMessageData, $alias, $draftUID);

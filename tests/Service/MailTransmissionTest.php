@@ -101,7 +101,6 @@ class MailTransmissionTest extends TestCase {
 		/** @var Account|MockObject $account */
 		$account = $this->createMock(Account::class);
 		$messageData = NewMessageData::fromRequest($account, 'to@d.com', '', '', 'sub', 'bod');
-		$replyData = new RepliedMessageData($account, null, null);
 		$message = new Message();
 		$account->expects($this->once())
 			->method('newMessage')
@@ -112,7 +111,7 @@ class MailTransmissionTest extends TestCase {
 			->with($account)
 			->willReturn($transport);
 
-		$this->transmission->sendMessage('garfield', $messageData, $replyData);
+		$this->transmission->sendMessage('garfield', $messageData, null);
 	}
 
 	public function testSendMessageFromAlias() {
@@ -121,7 +120,6 @@ class MailTransmissionTest extends TestCase {
 		$alias = new Alias();
 		$alias->setAlias('a@d.com');
 		$messageData = NewMessageData::fromRequest($account, 'to@d.com', '', '', 'sub', 'bod');
-		$replyData = new RepliedMessageData($account, null, null);
 		$message = new Message();
 		$account->expects($this->once())
 			->method('newMessage')
@@ -138,7 +136,7 @@ class MailTransmissionTest extends TestCase {
 			->method('setAlias')
 			->with($alias);
 
-		$this->transmission->sendMessage('garfield', $messageData, $replyData, $alias);
+		$this->transmission->sendMessage('garfield', $messageData, null, $alias);
 	}
 
 	public function testSendNewMessageWithCloudAttachments() {
@@ -154,7 +152,6 @@ class MailTransmissionTest extends TestCase {
 			[] // add an invalid one too
 		];
 		$messageData = NewMessageData::fromRequest($account, 'to@d.com', '', '', 'sub', 'bod', $attachmenst);
-		$replyData = new RepliedMessageData($account, null, null);
 		$message = new Message();
 		$account->expects($this->once())
 			->method('newMessage')
@@ -176,7 +173,7 @@ class MailTransmissionTest extends TestCase {
 			->with('cat.jpg')
 			->willReturn($node);
 
-		$this->transmission->sendMessage('garfield', $messageData, $replyData);
+		$this->transmission->sendMessage('garfield', $messageData, null);
 	}
 
 	public function testReplyToAnExistingMessage() {

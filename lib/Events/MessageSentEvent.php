@@ -38,7 +38,7 @@ class MessageSentEvent extends Event {
 	/** @var NewMessageData */
 	private $newMessageData;
 
-	/** @var RepliedMessageData */
+	/** @var null|RepliedMessageData */
 	private $repliedMessageData;
 
 	/** @var int|null */
@@ -52,8 +52,8 @@ class MessageSentEvent extends Event {
 
 	public function __construct(Account $account,
 								NewMessageData $newMessageData,
-								RepliedMessageData $repliedMessageData,
-								?int $draftUid,
+								?RepliedMessageData $repliedMessageData,
+								?int $draftUid = null,
 								IMessage $message,
 								Horde_Mime_Mail $mail) {
 		parent::__construct();
@@ -73,7 +73,7 @@ class MessageSentEvent extends Event {
 		return $this->newMessageData;
 	}
 
-	public function getRepliedMessageData(): RepliedMessageData {
+	public function getRepliedMessageData(): ?RepliedMessageData {
 		return $this->repliedMessageData;
 	}
 

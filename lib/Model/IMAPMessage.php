@@ -65,14 +65,15 @@ class IMAPMessage implements IMessage, JsonSerializable {
 
 	/**
 	 * @param Horde_Imap_Client_Socket|null $conn
-	 * @param Horde_Imap_Client_Mailbox $mailBox
+	 * @param Horde_Imap_Client_Mailbox|string $mailBox
 	 * @param int $messageId
 	 * @param Horde_Imap_Client_Data_Fetch|null $fetch
 	 * @param bool $loadHtmlMessage
 	 * @param Html|null $htmlService
 	 * @throws DoesNotExistException
 	 */
-	public function __construct($conn, $mailBox,
+	public function __construct($conn,
+								$mailBox,
 								int $messageId,
 								Horde_Imap_Client_Data_Fetch $fetch = null,
 								bool $loadHtmlMessage = false,
