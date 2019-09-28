@@ -225,7 +225,8 @@ class MailTransmission implements IMailTransmission {
 			$newUid = $this->messageMapper->save(
 				$client,
 				$draftsMailbox,
-				$mail
+				$mail,
+				[Horde_Imap_Client::FLAG_DRAFT]
 			);
 		} catch (DoesNotExistException $e) {
 			throw new ServiceException('Drafts mailbox does not exist', 0, $e);
