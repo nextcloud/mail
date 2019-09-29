@@ -66,6 +66,8 @@ OC.L10N.register(
     "Report this bug" : "Bu hatayı bildirin",
     "Loading messages" : "İletiler yükleniyor",
     "Not found" : "Bulunamadı",
+    "Reply" : "Yanıtla",
+    "Reply to sender only" : "Yalnız gönderene yanıtla",
     "Forward" : "İlet",
     "Could not load your message" : "İletiniz yüklenemedi",
     "Import into calendar" : "Şu takvimin içine aktar",

@@ -66,6 +66,8 @@ OC.L10N.register(
     "Report this bug" : "报告此问题",
     "Loading messages" : "加载消息",
     "Not found" : "没有找到",
+    "Reply" : "回复",
+    "Reply to sender only" : "只回复发送者",
     "Forward" : "转发",
     "Could not load your message" : "无法加载您的消息",
     "Import into calendar" : "导入到日历",

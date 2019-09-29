@@ -65,6 +65,8 @@ OC.L10N.register(
     "Report this bug" : "Signaler ce bogue",
     "Loading messages" : "Chargement des messages",
     "Not found" : "Non trouvé",
+    "Reply" : "Répondre",
+    "Reply to sender only" : "Répondre à l'émetteur uniquement",
     "Forward" : "Faire suivre",
     "Could not load your message" : "Impossible de charger votre message",
     "Import into calendar" : "Importer dans le calendrier",

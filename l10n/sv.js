@@ -65,6 +65,8 @@ OC.L10N.register(
     "Report this bug" : "Rapportera detta fel",
     "Loading messages" : "Laddar meddelanden",
     "Not found" : "Hittades inte",
+    "Reply" : "Svara",
+    "Reply to sender only" : "Svara endast avsändaren",
     "Forward" : "Vidarebefordra",
     "Could not load your message" : "Kunde inte ladda ditt meddelande",
     "Import into calendar" : "Importera till kalender",
