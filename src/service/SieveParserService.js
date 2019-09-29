@@ -43,7 +43,20 @@ export const sieveTestsBlueprint = {
 		}
 	},
 }
-
+export const sieveActionsBlueprint = {
+	"move": {
+		"name": t("mail", "Move mail into"),
+		"opts": {
+			"value": "",
+		}
+	},
+	"copy": {
+		"name": t("mail", "Copy mail into"),
+		"opts": {
+			"value": "",
+		}
+	},
+}
 export class sieveTest {
 	constructor(test) {
 		// separate test type from arguments

@@ -65,11 +65,44 @@
 							</Actions>
 						</div>
 					</div>
+					<div class="flex-horizontal filter-test-field">
+						<div style="text-align: left; font-size: 10px">{{ t("mail", "Do the following:") }}</div>
+						<div v-for="action in filterEdit.actions" class="flex-line">
+							<div class="list-text">
+								<select v-model="action.type" @change="actionTypeChange(action)">
+									<option v-for="key in sieveActionsKeys" 
+									:value="key" 
+									:selected="key === action.type">{{ sieveActions[key].name }}</option>>
+								</select>
+
+								<!-- move/copy -->
+								<span v-if="['move','copy'].indexOf(action.type) > -1">
+									<select v-model="action.opts.value">
+										<option v-for="folder in $store.getters.getFolders(accountID)" 
+										:value="folder.id" 
+										:selected="folder.id === action.opts.value"> {{ folderName(folder) }} </option>
+									</select>
+								</span>
+							
+							</div>
+							<div>
+								<Actions v-if="filterEdit.actions.length > 1">
+									<ActionButton icon="icon-delete" @click="rmAction(action.id)">{{ t("mail", "Delete") }}</ActionButton>
+								</Actions>
+							</div>
+						</div>
+						<div>
+							<Actions>
+								<ActionButton icon="icon-add" @click="addAction">{{ t("mail", "Add") }}</ActionButton>
+							</Actions>
+						</div>
+					</div>
 				</div>
 			</div>
 		</div>
 		<button slot="header" @click="addFilter()">{{ t("mail", "Add") }}</button>
 		<button slot="header" @click="rmFilter()">{{ t("mail", "Remove") }}</button>
+		<button slot="header" @click="rawEdit()">{{ t("mail", "Raw Edit") }}</button>
 	</draggable>
 </template>
 
@@ -79,7 +112,8 @@
 	import draggable from 'vuedraggable'
 	import Message from 'vue-m-message'
 	import Logger from '../logger'
-	import {sieveTestsBlueprint, matchTypeBlueprint} from '../service/SieveParserService'
+	import {sieveActionsBlueprint, sieveTestsBlueprint, matchTypeBlueprint} from '../service/SieveParserService'
+	import {translate as mailboxTranslator} from '../l10n/MailboxTranslator.js'
 
 	export default {
 		name: 'SieveFilters',
@@ -100,6 +134,8 @@
 				sieveTests: sieveTestsBlueprint,
 				sieveTestsKeys: Object.keys(sieveTestsBlueprint),
 				matchTypes: matchTypeBlueprint,
+				sieveActions: sieveActionsBlueprint,
+				sieveActionsKeys: Object.keys(sieveActionsBlueprint),
 			}
 		},
 /*		created () {
@@ -135,7 +171,27 @@
 				})
 			},
 			rmTest(testID){
-				this.filterEdit.tests.filter(x => x.id !== testID)
+				this.filterEdit.tests = this.filterEdit.tests.filter(x => x.id !== testID)
+			},
+			actionTypeChange(action) {
+				action.opts = JSON.parse(JSON.stringify(this.sieveActions[action.type].opts))
+			},
+			addAction() {
+				let newID = 0
+				while (this.filterEdit.actions.find(x => x.id === newID) !== undefined){
+					newID += 1
+				}
+				this.filterEdit.actions.push({
+					"id": newID,
+					"type": "move",
+					"opts": JSON.parse(JSON.stringify(this.sieveActions["move"].opts))
+				})
+			},
+			rmAction(actionID){
+				this.filterEdit.actions = this.filterEdit.actions.filter(x => x.id !== actionID)
+			},
+			folderName(folder) {
+				return mailboxTranslator(folder)
 			},
 			toggleTestArrayType(button) {
 				if (button === this.filterEdit.testArrayType) {
@@ -187,6 +243,11 @@
 							"id": 0,
 							"type": "subject",
 							"opts": JSON.parse(JSON.stringify(this.sieveTests["subject"].opts))
+						}],
+						"actions": [{
+							"id": 0,
+							"type": "move",
+							"opts": JSON.parse(JSON.stringify(this.sieveActions["move"].opts))
 						}],
 					}
 				});
