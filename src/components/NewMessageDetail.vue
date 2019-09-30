@@ -60,7 +60,7 @@ export default {
 					bcc: this.draft.bcc, // TODO: impl in composer
 					subject: this.draft.subject,
 					body: this.draft.body,
-					isPlainText: this.draft.hasHtmlBody !== undefined
+					isPlainText: this.draft.hasHtmlBody !== undefined,
 				}
 			} else if (this.$route.query.uid !== undefined) {
 				// Forwarded message

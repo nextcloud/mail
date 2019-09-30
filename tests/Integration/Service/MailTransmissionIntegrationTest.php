@@ -193,7 +193,7 @@ class MailTransmissionIntegrationTest extends TestCase {
 	}
 
 	public function testSaveNewDraft() {
-		$message = NewMessageData::fromRequest($this->account, 'recipient@domain.com', null, null, 'greetings', 'hello there', []);
+		$message = NewMessageData::fromRequest($this->account, 'recipient@domain.com', null, null, 'greetings', 'hello there', [], false);
 		$uid = $this->transmission->saveDraft($message);
 		// There should be a new mailbox …
 		$this->assertMailboxExists('Drafts');
