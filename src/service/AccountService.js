@@ -16,6 +16,16 @@ export const create = data => {
 		.then(fixAccountId)
 }
 
+export const patch = (account, data) => {
+	const url = generateUrl(`/apps/mail/api/accounts/{id}`, {
+		id: account.accountId,
+	})
+
+	return HttpClient.patch(url, data)
+		.then(resp => resp.data)
+		.then(fixAccountId)
+}
+
 export const update = data => {
 	const url = generateUrl(`/apps/mail/api/accounts/{id}`, {
 		id: data.accountId,

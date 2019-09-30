@@ -18,6 +18,7 @@
 			:body="composerData.body"
 			:draft="saveDraft"
 			:send="sendMessage"
+			:is-plain-text="composerData.isPlainText"
 		/>
 	</AppContentDetails>
 </template>
@@ -52,13 +53,14 @@ export default {
 	computed: {
 		composerData() {
 			if (this.draft !== undefined) {
-				Logger.info('todo: handle draft data')
+				Logger.info('todo: handle draft data', {draft: this.draft})
 				return {
 					to: this.draft.to,
 					cc: this.draft.cc,
 					bcc: this.draft.bcc, // TODO: impl in composer
 					subject: this.draft.subject,
 					body: this.draft.body,
+					isPlainText: this.draft.hasHtmlBody !== undefined
 				}
 			} else if (this.$route.query.uid !== undefined) {
 				// Forwarded message

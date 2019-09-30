@@ -45,7 +45,7 @@ Vue.mixin({
 	},
 })
 
-Vue.use(VueShortKey, {prevent: ['input', 'textarea']})
+Vue.use(VueShortKey, {prevent: ['input', 'div']})
 Vue.use(VTooltip)
 
 const getPreferenceFromPage = key => {

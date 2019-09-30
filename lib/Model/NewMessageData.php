@@ -53,6 +53,9 @@ class NewMessageData {
 	/** @var array */
 	private $attachments;
 
+	/** @var bool */
+	private $isHtml;
+
 	/**
 	 * @param Account $account
 	 * @param AddressList $to
@@ -61,14 +64,16 @@ class NewMessageData {
 	 * @param string $subject
 	 * @param string|null $body
 	 * @param array $attachments
+	 * @package bool $isHtml
 	 */
 	public function __construct(Account $account,
 								AddressList $to,
 								AddressList $cc,
 								AddressList $bcc,
 								string $subject,
-								string $body = null ,
-								array $attachments = []) {
+								string $body = null,
+								array $attachments = [],
+								bool $isHtml = true) {
 		$this->account = $account;
 		$this->to = $to;
 		$this->cc = $cc;
@@ -76,6 +81,7 @@ class NewMessageData {
 		$this->subject = $subject;
 		$this->body = $body;
 		$this->attachments = $attachments;
+		$this->isHtml = $isHtml;
 	}
 
 	/**
@@ -86,6 +92,7 @@ class NewMessageData {
 	 * @param string $subject
 	 * @param string $body
 	 * @param array|null $attachments
+	 *
 	 * @return NewMessageData
 	 */
 	public static function fromRequest(Account $account,
@@ -94,13 +101,14 @@ class NewMessageData {
 									   string $bcc = null,
 									   string $subject,
 									   string $body = null,
-									   array $attachments = []) {
+									   array $attachments = [],
+									   bool $isHtml = true) {
 		$toList = AddressList::parse($to ?: '');
 		$ccList = AddressList::parse($cc ?: '');
 		$bccList = AddressList::parse($bcc ?: '');
 		$attachmentsArray = $attachments === null ? [] : $attachments;
 
-		return new self($account, $toList, $ccList, $bccList, $subject, $body, $attachmentsArray);
+		return new self($account, $toList, $ccList, $bccList, $subject, $body, $attachmentsArray, $isHtml);
 	}
 
 	/**
@@ -150,6 +158,10 @@ class NewMessageData {
 	 */
 	public function getAttachments(): array {
 		return $this->attachments;
+	}
+
+	public function isHtml(): bool {
+		return $this->isHtml;
 	}
 
 }

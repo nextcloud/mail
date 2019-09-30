@@ -61,9 +61,18 @@ describe('HtmlHelper', () => {
 		expect(actual).to.equal(expected)
 	})
 
-	it('converts paragraphs to text', () => {
+	it('converts paragraph to text', () => {
 		const html = '<p>hello</p>'
 		const expected = 'hello'
+
+		const actual = htmlToText(html)
+
+		expect(actual).to.equal(expected)
+	})
+
+	it('converts paragraphs to text', () => {
+		const html = '<p>hello</p><p>world</p>'
+		const expected = 'hello\n\nworld'
 
 		const actual = htmlToText(html)
 
