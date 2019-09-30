@@ -11,7 +11,7 @@
 			@click.prevent="onToggleFlagged"
 		></div>
 		<div class="app-content-list-item-icon">
-			<Avatar :display-name="sender" :email="senderEmail" />
+			<Avatar :display-name="addresses" :email="senderEmail" />
 		</div>
 		<div class="app-content-list-item-line-one" :title="addresses">
 			{{ addresses }}
