@@ -38,7 +38,7 @@ class AccountTest extends AbstractTest {
 		$this->getTestAccount()->createMailBox($name);
 		$this->assertMailBoxExists($name);
 
-		$this->getTestAccount()->deleteMailbox($name);
+		$this->getTestAccount()->getImapConnection()->deleteMailbox($name);
 		$this->assertMailBoxNotExists($name);
 	}
 
