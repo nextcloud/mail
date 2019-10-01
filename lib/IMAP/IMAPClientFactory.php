@@ -84,6 +84,9 @@ class IMAPClientFactory {
 						'cacheob' => $this->cacheFactory->createDistributed(md5((string)$account->getId())),
 					])];
 			}
+			if ($this->config->getSystemValue('debug', false)) {
+				$params['debug'] = $this->config->getSystemValue('datadirectory') . '/horde_imap.log';
+			}
 			$this->cache[$account->getId()] = new Horde_Imap_Client_Socket($params);
 		}
 
