@@ -153,18 +153,6 @@ class Account implements JsonSerializable {
 
 	/**
 	 * @param string $mailBox
-	 * @param array $opts
-	 * @return Mailbox
-	 */
-	public function createMailbox($mailBox, $opts = []) {
-		$conn = $this->getImapConnection();
-		$conn->createMailbox($mailBox, $opts);
-
-		return $this->getMailbox($mailBox);
-	}
-
-	/**
-	 * @param string $mailBox
 	 */
 	public function deleteMailbox($mailBox) {
 		if ($mailBox instanceof Mailbox) {
@@ -207,21 +195,6 @@ class Account implements JsonSerializable {
 		}
 
 		return $mailboxes;
-	}
-
-	/**
-	 * @param string $folderId
-	 * @return Mailbox
-	 */
-	public function getMailbox($folderId) {
-		$conn = $this->getImapConnection();
-		$parts = explode('/', $folderId);
-		if (count($parts) > 1 && $parts[1] === 'FLAGGED') {
-			$mailbox = new Horde_Imap_Client_Mailbox($parts[0]);
-			return new SearchMailbox($conn, $mailbox, []);
-		}
-		$mailbox = new Horde_Imap_Client_Mailbox($folderId);
-		return new Mailbox($conn, $mailbox, []);
 	}
 
 	/**
