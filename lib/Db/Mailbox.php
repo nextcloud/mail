@@ -23,8 +23,14 @@
 
 namespace OCA\Mail\Db;
 
+use Horde_Imap_Client;
 use OCA\Mail\Folder;
 use OCP\AppFramework\Db\Entity;
+use function in_array;
+use function json_decode;
+use function ltrim;
+use function rtrim;
+use function strtolower;
 
 /**
  * @method string getName()
@@ -73,10 +79,35 @@ class Mailbox extends Entity {
 			$this->delimiter
 		);
 		$folder->setSyncToken($this->getSyncToken());
-		foreach ((json_decode($this->getSpecialUse() ?? '[]', true) ?? []) as $use) {
+		foreach ($this->getSpecialUseParsed() as $use) {
 			$folder->addSpecialUse($use);
 		}
 		return $folder;
+	}
+
+	private function getSpecialUseParsed(): array {
+		return json_decode($this->getSpecialUse() ?? '[]', true) ?? [];
+	}
+
+	public function isSpecialUse(string $specialUse): bool {
+		return in_array(
+			ltrim(
+				strtolower($specialUse),
+				'\\'
+			),
+			array_map("strtolower", $this->getSpecialUseParsed()),
+			true
+		);
+	}
+
+	public function getMailbox(): string {
+		// TODO: evaluate if SPECIALUSE_FLAGGED can also be set on a real IMAP mailbox
+		// because then this could be problematic if they name also ends with /FLAGGED
+		// though, this sounds very unlikely
+		if ($this->isSpecialUse(Horde_Imap_Client::SPECIALUSE_FLAGGED)) {
+			return rtrim($this->getName(), '/FLAGGED');
+		}
+		return $this->getName();
 	}
 
 }

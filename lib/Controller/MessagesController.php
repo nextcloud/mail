@@ -33,6 +33,7 @@ namespace OCA\Mail\Controller;
 use Exception;
 use OCA\Mail\Account;
 use OCA\Mail\Contracts\IMailManager;
+use OCA\Mail\Contracts\IMailSearch;
 use OCA\Mail\Exception\ServiceException;
 use OCA\Mail\Http\AttachmentDownloadResponse;
 use OCA\Mail\Http\HtmlResponse;
@@ -52,6 +53,7 @@ use OCP\IL10N;
 use OCP\ILogger;
 use OCP\IRequest;
 use OCP\IURLGenerator;
+use function base64_decode;
 
 class MessagesController extends Controller {
 
@@ -60,6 +62,9 @@ class MessagesController extends Controller {
 
 	/** @var IMailManager */
 	private $mailManager;
+
+	/** @var IMailSearch */
+	private $mailSearch;
 
 	/** @var string */
 	private $currentUserId;
@@ -101,6 +106,7 @@ class MessagesController extends Controller {
 								IRequest $request,
 								AccountService $accountService,
 								IMailManager $mailManager,
+								IMailSearch $mailSearch,
 								string $UserId,
 								$userFolder,
 								ILogger $logger,
@@ -111,6 +117,8 @@ class MessagesController extends Controller {
 		parent::__construct($appName, $request);
 
 		$this->accountService = $accountService;
+		$this->mailManager = $mailManager;
+		$this->mailSearch = $mailSearch;
 		$this->currentUserId = $UserId;
 		$this->userFolder = $userFolder;
 		$this->logger = $logger;
@@ -118,7 +126,6 @@ class MessagesController extends Controller {
 		$this->mimeTypeDetector = $mimeTypeDetector;
 		$this->urlGenerator = $urlGenerator;
 		$this->timeFactory = $timeFactory;
-		$this->mailManager = $mailManager;
 	}
 
 	/**
@@ -129,26 +136,26 @@ class MessagesController extends Controller {
 	 * @param string $folderId
 	 * @param int $cursor
 	 * @param string $filter
+	 *
 	 * @return JSONResponse
+	 * @throws ServiceException
 	 */
 	public function index(int $accountId, string $folderId, int $cursor = null, string $filter = null): JSONResponse {
-		$mailBox = $this->getFolder($accountId, $folderId);
+		$account = $this->getAccount($accountId);
+		if ($account === null) {
+			return new JSONResponse(null, Http::STATUS_FORBIDDEN);
+		}
 
 		$this->logger->debug("loading messages of folder <$folderId>");
 
-		if ($cursor === '') {
-			$cursor = null;
-		}
-		$messages = $mailBox->getMessages($filter, $cursor);
-
-		$json = array_map(function ($j) use ($mailBox) {
-			if ($mailBox->getSpecialRole() === 'trash') {
-				$j['delete'] = (string)$this->l10n->t('Delete permanently');
-			}
-			return $j;
-		}, $messages);
-
-		return new JSONResponse($json);
+		return new JSONResponse(
+			$this->mailSearch->findMessages(
+				$account,
+				base64_decode($folderId),
+				$filter === '' ? null : $filter,
+				$cursor
+			)
+		);
 	}
 
 	/**
@@ -158,6 +165,7 @@ class MessagesController extends Controller {
 	 * @param int $accountId
 	 * @param string $folderId
 	 * @param int $id
+	 *
 	 * @return JSONResponse
 	 * @throws ServiceException
 	 */
@@ -193,6 +201,7 @@ class MessagesController extends Controller {
 	 * @param int $id
 	 * @param int $destAccountId
 	 * @param string $destFolderId
+	 *
 	 * @return JSONResponse
 	 * @throws Exception
 	 */
@@ -270,6 +279,7 @@ class MessagesController extends Controller {
 	 * @param string $folderId
 	 * @param int $messageId
 	 * @param int $attachmentId
+	 *
 	 * @return AttachmentDownloadResponse
 	 */
 	public function downloadAttachment(int $accountId, string $folderId, int $messageId,
@@ -291,6 +301,7 @@ class MessagesController extends Controller {
 	 * @param int $messageId
 	 * @param int $attachmentId
 	 * @param string $targetPath
+	 *
 	 * @return JSONResponse
 	 */
 	public function saveAttachment(int $accountId, string $folderId, int $messageId,
@@ -336,6 +347,7 @@ class MessagesController extends Controller {
 	 * @param string $folderId
 	 * @param string $messageId
 	 * @param array $flags
+	 *
 	 * @return JSONResponse
 	 */
 	public function setFlags(int $accountId, string $folderId, int $messageId, array $flags): JSONResponse {
@@ -375,9 +387,12 @@ class MessagesController extends Controller {
 
 	/**
 	 * @param int $accountId
+	 *
 	 * @return Account|null
+	 * @todo add caching to \OCA\Mail\Service\AccountService
+	 * @deprecated use \OCA\Mail\Service\AccountService::find
 	 */
-	private function getAccount($accountId) {
+	private function getAccount($accountId): ?Account {
 		if (!array_key_exists($accountId, $this->accounts)) {
 			$this->accounts[$accountId] = $this->accountService->find(
 				$this->currentUserId,
@@ -390,6 +405,7 @@ class MessagesController extends Controller {
 	/**
 	 * @param int $accountId
 	 * @param string $folderId
+	 *
 	 * @return IMailBox
 	 */
 	private function getFolder(int $accountId, string $folderId): IMailBox {
@@ -402,6 +418,7 @@ class MessagesController extends Controller {
 	 * @param string $folderId
 	 * @param int $messageId
 	 * @param array $attachment
+	 *
 	 * @return array
 	 */
 	private function enrichDownloadUrl(int $accountId, string $folderId, int $messageId,
@@ -441,6 +458,7 @@ class MessagesController extends Controller {
 
 	/**
 	 * @param array $attachment
+	 *
 	 * @return boolean
 	 */
 	private function attachmentIsCalendarEvent(array $attachment): bool {

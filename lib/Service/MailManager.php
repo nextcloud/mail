@@ -150,11 +150,12 @@ class MailManager implements IMailManager {
 
 	public function getMessage(Account $account, string $mailbox, int $id, bool $loadBody = false): IMAPMessage {
 		$client = $this->imapClientFactory->getClient($account);
+		$mailbox = $this->mailboxMapper->find($account, $mailbox);
 
 		try {
 			return $this->messageMapper->find(
 				$client,
-				$mailbox,
+				$mailbox->getMailbox(),
 				$id,
 				$loadBody
 			);
