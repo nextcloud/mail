@@ -4,7 +4,7 @@
 			<draggable
 			class="list-group"
 			v-model="filterSets"
-			@choose="selFilterSet($event.oldIndex-2)"
+			@choose="selFilterSet($event.oldIndex)"
 			>
 				<div
 				v-for="filterSet in filterSets"
@@ -30,6 +30,10 @@
 				</div>
 				<button slot="header" @click="addFilterSet()">{{ t("mail", "Add") }}</button>
 				<button slot="header" @click="rmFilterSet()">{{ t("mail", "Remove") }}</button>
+				<template v-if="selFilterSetID !== -1">
+					<button v-if="filterSets[selFilterSetID].parsed" slot="header" @click="rawEdit()">{{ t("mail", "Raw Edit") }}</button>
+					<button v-else slot="header" @click="parse()">{{ t("mail", "Parse") }}</button>
+				</template>
 			</draggable>
 		</div>
 		<div v-if="selFilterSetID !== -1" class="filter-container">
@@ -50,6 +54,8 @@
 	import Message from 'vue-m-message'
 	import SieveFilters from "./SieveFilters"
 	import SieveFiltersRaw from "./SieveFiltersRaw"
+	import {parseSieveScript, makeSieveScript, ParseSieveError} from "../service/SieveParserService"
+	import Vue from 'vue'
 	import Logger from '../logger'
 
 	export default {
@@ -86,6 +92,58 @@
 			},
 		},
 		methods: {
+			rawEdit() {
+				const raw = makeSieveScript(this.$store.state.sieveFilters[this.accountID][this.selFilterSetID])
+				this.$store.commit("updateFilterSet", {
+					"accountID": this.accountID,
+					"filterSetID": this.selFilterSetID,
+					"value": {
+						"id": this.filterSets[this.selFilterSetID].id,
+						"name": this.filterSets[this.selFilterSetID].name,
+						"parsed": false,
+						"raw": raw,
+						"parseError": "user raw editing",
+					}
+				})
+			},
+			parse() {
+				try {
+					let {req, filters} = parseSieveScript(this.filterSets[this.selFilterSetID].raw)
+					this.$store.commit("updateFilterSet", {
+						"accountID": this.accountID,
+						"filterSetID": this.selFilterSetID,
+						"value": {
+							"id": this.filterSets[this.selFilterSetID].id,
+							"name": this.filterSets[this.selFilterSetID].name,
+							"parsed": true,
+							"require": req,
+						}
+					})
+					for (filter of filters) {
+						this.$store.commit("newFilter", {
+							"accountID": this.accountID,
+							"filterSetID": this.selFilterSetID,
+							"filter": filter,
+						})
+					}
+				} catch (e) {
+					if (e instanceof ParseSieveError) {
+						this.$store.commit("updateFilterSet", {
+							"accountID": this.accountID,
+							"filterSetID": this.selFilterSetID,
+							"value": {
+								"id": this.filterSets[this.selFilterSetID].id,
+								"name": this.filterSets[this.selFilterSetID].name,
+								"parsed": false,
+								"raw": this.filterSets[this.selFilterSetID].raw,
+								"parseError": e.message,
+							}
+						})
+					} else {
+						throw e
+					}
+				}
+			},
 			setClassOnSelect(filterSetID) {
 				if (filterSetID === this.selFilterSetID) {
 					return "list-group-item list-group-item-a"
@@ -115,6 +173,12 @@
 				}
 			},
 			selFilterSet (index) {
+				// 2 buttons if no filterset selected
+				if (this.selFilterSetID === -1) {
+					index = index-2
+				} else {
+					index = index-3
+				}
 				if (index >= 0) { // ignore buttons
 					this.selFilterSetID = this.$store.state.sieveFilterSets[this.accountID][index].id;
 					if (this.selFilterSetID !== this.filterSetNameEdit) { // close edit on change

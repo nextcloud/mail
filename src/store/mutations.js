@@ -208,10 +208,19 @@ export default {
 	updateFilterSets(state, {accountID, value}){
 		state.sieveFilterSets[accountID] = value
 	},
+	updateFilterSet(state, {accountID, filterSetID, value}){
+		Vue.set(state.sieveFilterSets[accountID], state.sieveFilterSets[accountID].findIndex(x => x.id === filterSetID), value)
+	},
 	updateFilterSetName(state, {accountID, filterSetID, name}){
 		state.sieveFilterSets[accountID][state.sieveFilterSets[accountID].findIndex(x => x.id === filterSetID)].name = name	
 	},
 	newFilter(state, {accountID, filterSetID, filter}){
+		if (state.sieveFilters[accountID] === undefined) {
+			Vue.set(state.sieveFilters, accountID, {})
+		}
+		if (state.sieveFilters[accountID][filterSetID] === undefined) {
+			Vue.set(state.sieveFilters[accountID], filterSetID, [])
+		}
 		state.sieveFilters[accountID][filterSetID].push(filter)
 	},
 	rmFilter(state, {accountID, filterSetID, filterID}){

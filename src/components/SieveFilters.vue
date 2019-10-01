@@ -2,7 +2,7 @@
 	<draggable
 		class="list-group"
 		v-model="filters"
-		@choose="selFilter($event.oldIndex-2)"
+		@choose="selFilter($event.oldIndex)"
 		>
 		<div
 			v-for="filter in filters"
@@ -27,82 +27,13 @@
 					</div>
 				</div>
 				<div v-if="filterEdit.id === filter.id" class="flex-horizontal">
-					<div class="flex-horizontal filter-test-field">
-						<div style="text-align: left; font-size: 10px">{{ t("mail", "For incoming mail:") }}</div>
-						<div style="text-align: center;">
-							<button :style="toggleTestArrayType('allof')" @click="filterEdit.testArrayType = 'allof'">{{ t("mail", "matching all of the following rules") }}</button>
-							<button :style="toggleTestArrayType('anyof')" @click="filterEdit.testArrayType = 'anyof'">{{ t("mail", "matching any of the following rules") }}</button>
-							<button :style="toggleTestArrayType('any')" @click="filterEdit.testArrayType = 'any'">{{ t("mail", "all messages") }}</button>
-						</div>
-						<div v-for="test in filterEdit.tests" class="flex-line">
-							<div class="list-text">
-								<select v-model="test.type" @change="testTypeChange(test)">
-									<option v-for="key in sieveTestsKeys" :value="key" :selected="key === test.type">{{ sieveTests[key].name }}</option>>
-								</select>
-
-								<!-- subject/to/from-->
-								<span v-if="['subject', 'from', 'to'].indexOf(test.type) > -1">
-									<select v-model="test.opts.matchType">
-										<option v-for="mT in sieveTests[test.type].matchTypes" :value="mT" :selected="mT === test.opts.matchType">
-											{{ matchTypes[mT].name }}
-										</option>
-									</select>
-									<button :style="test.opts.negate ? 'background-color: silver;' : ''" 
-									@click="test.opts.negate = !test.opts.negate">{{ t("mail", "not") }}</button>
-									<input style="margin: 0;" v-model="test.opts.value"></input>
-								</span>
-							
-							</div>
-							<div>
-								<Actions v-if="filterEdit.tests.length > 1">
-									<ActionButton icon="icon-delete" @click="rmTest(test.id)">{{ t("mail", "Delete") }}</ActionButton>
-								</Actions>
-							</div>
-						</div>
-						<div>
-							<Actions>
-								<ActionButton icon="icon-add" @click="addTest">{{ t("mail", "Add") }}</ActionButton>
-							</Actions>
-						</div>
-					</div>
-					<div class="flex-horizontal filter-test-field">
-						<div style="text-align: left; font-size: 10px">{{ t("mail", "Do the following:") }}</div>
-						<div v-for="action in filterEdit.actions" class="flex-line">
-							<div class="list-text">
-								<select v-model="action.type" @change="actionTypeChange(action)">
-									<option v-for="key in sieveActionsKeys" 
-									:value="key" 
-									:selected="key === action.type">{{ sieveActions[key].name }}</option>>
-								</select>
-
-								<!-- move/copy -->
-								<span v-if="['move','copy'].indexOf(action.type) > -1">
-									<select v-model="action.opts.value">
-										<option v-for="folder in $store.getters.getFolders(accountID)" 
-										:value="folder.id" 
-										:selected="folder.id === action.opts.value"> {{ folderName(folder) }} </option>
-									</select>
-								</span>
-							
-							</div>
-							<div>
-								<Actions v-if="filterEdit.actions.length > 1">
-									<ActionButton icon="icon-delete" @click="rmAction(action.id)">{{ t("mail", "Delete") }}</ActionButton>
-								</Actions>
-							</div>
-						</div>
-						<div>
-							<Actions>
-								<ActionButton icon="icon-add" @click="addAction">{{ t("mail", "Add") }}</ActionButton>
-							</Actions>
-						</div>
-					</div>
+					<SieveTests v-model="filterEdit.tests" />
+					<SieveActions v-model="filterEdit.actions" :accountID="accountID"/>
 				</div>
 			</div>
 		</div>
 		<button slot="header" @click="addFilter()">{{ t("mail", "Add") }}</button>
 		<button slot="header" @click="rmFilter()">{{ t("mail", "Remove") }}</button>
-		<button slot="header" @click="rawEdit()">{{ t("mail", "Raw Edit") }}</button>
 	</draggable>
 </template>
 
@@ -112,8 +43,9 @@
 	import draggable from 'vuedraggable'
 	import Message from 'vue-m-message'
 	import Logger from '../logger'
-	import {sieveActionsBlueprint, sieveTestsBlueprint, matchTypeBlueprint} from '../service/SieveParserService'
-	import {translate as mailboxTranslator} from '../l10n/MailboxTranslator.js'
+	import SieveTests from './SieveTests'
+	import SieveActions from './SieveActions'
+	import {sieveActionsBlueprint, sieveTestsBlueprint} from '../service/SieveParserService'
 
 	export default {
 		name: 'SieveFilters',
@@ -122,6 +54,8 @@
 			ActionButton,
 			draggable,
 			Message,
+			SieveTests,
+			SieveActions,
 		},
 		props: {
 			accountID: Number,
@@ -131,16 +65,8 @@
 			return {
 				filterEdit: -1,
 				selFilterID: -1,
-				sieveTests: sieveTestsBlueprint,
-				sieveTestsKeys: Object.keys(sieveTestsBlueprint),
-				matchTypes: matchTypeBlueprint,
-				sieveActions: sieveActionsBlueprint,
-				sieveActionsKeys: Object.keys(sieveActionsBlueprint),
 			}
 		},
-/*		created () {
-			this.sieveests = sieveTestsBlueprint
-		},*/
 		computed: {
 			filters:{
 				get() {
@@ -156,48 +82,6 @@
 			}, 
 		},
 		methods: {
-			testTypeChange(test) {
-				test.opts = JSON.parse(JSON.stringify(this.sieveTests[test.type].opts))
-			},
-			addTest() {
-				let newID = 0
-				while (this.filterEdit.tests.find(x => x.id === newID) !== undefined){
-					newID += 1
-				}
-				this.filterEdit.tests.push({
-					"id": newID,
-					"type": "subject",
-					"opts": JSON.parse(JSON.stringify(this.sieveTests["subject"].opts))
-				})
-			},
-			rmTest(testID){
-				this.filterEdit.tests = this.filterEdit.tests.filter(x => x.id !== testID)
-			},
-			actionTypeChange(action) {
-				action.opts = JSON.parse(JSON.stringify(this.sieveActions[action.type].opts))
-			},
-			addAction() {
-				let newID = 0
-				while (this.filterEdit.actions.find(x => x.id === newID) !== undefined){
-					newID += 1
-				}
-				this.filterEdit.actions.push({
-					"id": newID,
-					"type": "move",
-					"opts": JSON.parse(JSON.stringify(this.sieveActions["move"].opts))
-				})
-			},
-			rmAction(actionID){
-				this.filterEdit.actions = this.filterEdit.actions.filter(x => x.id !== actionID)
-			},
-			folderName(folder) {
-				return mailboxTranslator(folder)
-			},
-			toggleTestArrayType(button) {
-				if (button === this.filterEdit.testArrayType) {
-					return "background-color: silver;"
-				}
-			},
 			setClassOnSelect(filterID) {
 				if (filterID === this.selFilterID) {
 					return "list-group-item list-group-item-a"
@@ -219,6 +103,7 @@
 				this.filterEdit = -1;
 			},
 			selFilter (index) {
+				index = index-2 // first indices are the 2 buttons
 				if (index >= 0) { // ignore buttons
 					this.filterSetNameEdit = -1;
 					this.selFilterID = this.$store.state.sieveFilters[this.accountID][this.filterSetID][index].id;
@@ -238,16 +123,18 @@
 					"filter": {
 						"id": newID,
 						"name": "Filter#"+newID,
-						"testArrayType": "allof",
-						"tests": [{
-							"id": 0,
-							"type": "subject",
-							"opts": JSON.parse(JSON.stringify(this.sieveTests["subject"].opts))
-						}],
+						"tests": {
+							"type": "allof",
+							"list": [{
+								"id": 0,
+								"type": "subject",
+								"opts": JSON.parse(JSON.stringify(sieveTestsBlueprint["subject"].opts_default))
+							}],
+						},
 						"actions": [{
 							"id": 0,
 							"type": "move",
-							"opts": JSON.parse(JSON.stringify(this.sieveActions["move"].opts))
+							"opts": JSON.parse(JSON.stringify(sieveActionsBlueprint["move"].opts_default))
 						}],
 					}
 				});
@@ -272,7 +159,6 @@
 						} else {
 							this.selFilter(dropIndex+1);
 						}
-						console.log("Hello");
 					}
 					this.$store.commit("rmFilter", {
 						"accountID": this.accountID,

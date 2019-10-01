@@ -182,7 +182,7 @@
 		border-top: solid 1px lightgray;
 	}
 	.filtersets-container {
-		width: 20%;
+		width: 227px;
 		border: solid 1px lightgray;
 		border-radius: 5px;
 		background-color: white;
