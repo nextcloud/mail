@@ -62,6 +62,7 @@ OC.L10N.register(
     "Mark read" : "Marquer comme lu",
     "Mark unread" : "Marquer comme non-lu",
     "Delete" : "Supprimer",
+    "Bcc recipients only" : "Destinataires bcc uniquement",
     "Report this bug" : "Signaler ce bogue",
     "Loading messages" : "Chargement des messages",
     "Not found" : "Non trouvé",

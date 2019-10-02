@@ -62,6 +62,7 @@ OC.L10N.register(
     "Mark read" : "Markera som läst",
     "Mark unread" : "Markera som oläst",
     "Delete" : "Ta bort",
+    "Bcc recipients only" : "Endast bcc-mottagare",
     "Report this bug" : "Rapportera detta fel",
     "Loading messages" : "Laddar meddelanden",
     "Not found" : "Hittades inte",
