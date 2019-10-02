@@ -35,10 +35,12 @@ class AccountTest extends AbstractTest {
 	 */
 	public function testCreateAndDelete($name) {
 		$name = uniqid($name);
-		$this->getTestAccount()->createMailBox($name);
+		$imapConnection = $this->getTestAccount()->getImapConnection();
+
+		$imapConnection->createMailBox($name);
 		$this->assertMailBoxExists($name);
 
-		$this->getTestAccount()->getImapConnection()->deleteMailbox($name);
+		$imapConnection->deleteMailbox($name);
 		$this->assertMailBoxNotExists($name);
 	}
 
