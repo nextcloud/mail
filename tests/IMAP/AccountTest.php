@@ -58,7 +58,7 @@ class AccountTest extends AbstractTest {
 	 */
 	public function testListMessages($name) {
 		$name = uniqid($name);
-		$newMailBox = parent::createMailBox($name);
+		$newMailBox = $this->getTestAccount()->getImapConnection()->createMailBox($name);
 		$count = $newMailBox->getTotalMessages();
 		$this->assertEquals(0, $count);
 		$messages = $newMailBox->getMessages();
