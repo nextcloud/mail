@@ -33,7 +33,6 @@
 
 namespace OCA\Mail;
 
-use Horde_Imap_Client;
 use Horde_Imap_Client_Mailbox;
 use Horde_Imap_Client_Socket;
 use Horde_Mail_Rfc822_List;
@@ -172,41 +171,6 @@ class Account implements JsonSerializable {
 		}
 		$conn = $this->getImapConnection();
 		$conn->deleteMailbox($mailBox);
-	}
-
-	/**
-	 * Lists mailboxes (folders) for this account.
-	 *
-	 * Lists mailboxes and also queries the server for their 'special use',
-	 * eg. inbox, sent, trash, etc
-	 *
-	 * @param string $pattern Pattern to match mailboxes against. All by default.
-	 * @return Mailbox[]
-	 */
-	protected function listMailboxes($pattern = '*') {
-		// open the imap connection
-		$conn = $this->getImapConnection();
-
-		// if successful -> get all folders of that account
-		$mailBoxes = $conn->listMailboxes($pattern, Horde_Imap_Client::MBOX_ALL,
-			[
-			'delimiter' => true,
-			'attributes' => true,
-			'special_use' => true,
-			'sort' => true
-		]);
-
-		$mailboxes = [];
-		foreach ($mailBoxes as $mailbox) {
-			$mailboxes[] = new Mailbox($conn, $mailbox['mailbox'],
-				$mailbox['attributes'], $mailbox['delimiter']);
-			if ($mailbox['mailbox']->utf8 === 'INBOX') {
-				$mailboxes[] = new SearchMailbox($conn, $mailbox['mailbox'],
-					$mailbox['attributes'], $mailbox['delimiter']);
-			}
-		}
-
-		return $mailboxes;
 	}
 
 	/**
