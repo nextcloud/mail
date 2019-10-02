@@ -432,9 +432,7 @@ class IMAPMessage implements IMessage, JsonSerializable {
 			'bcc' => $this->getBCC()->jsonSerialize(),
 			'fromEmail' => is_null($this->getFrom()->first()) ? null : $this->getFrom()->first()->getEmail(),
 			'subject' => $this->getSubject(),
-			'date' => OC::$server->getDateTimeFormatter()->formatDate($this->getSentDate()->format('U')),
 			'dateInt' => $this->getSentDate()->getTimestamp(),
-			'dateIso' => $this->getSentDate()->format('c'),
 			'size' => Util::humanFileSize($this->getSize()),
 			'flags' => $this->getFlags(),
 		];
