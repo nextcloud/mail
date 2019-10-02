@@ -435,7 +435,6 @@ class IMAPMessage implements IMessage, JsonSerializable {
 			'date' => OC::$server->getDateTimeFormatter()->formatDate($this->getSentDate()->format('U')),
 			'dateInt' => $this->getSentDate()->getTimestamp(),
 			'dateIso' => $this->getSentDate()->format('c'),
-			'size' => Util::humanFileSize($this->getSize()),
 			'flags' => $this->getFlags(),
 		];
 	}
