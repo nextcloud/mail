@@ -1,4 +1,5 @@
 <?php
+
 declare(strict_types=1);
 
 /**
@@ -30,6 +31,11 @@ use JsonSerializable;
 
 class Address implements JsonSerializable {
 
+	public const TYPE_FROM = 0;
+	public const TYPE_TO = 1;
+	public const TYPE_CC = 2;
+	public const TYPE_BCC = 3;
+
 	/** @var Horde_Mail_Rfc822_Address */
 	private $wrapped;
 
@@ -40,17 +46,17 @@ class Address implements JsonSerializable {
 	public function __construct($label, $email) {
 		$this->wrapped = new Horde_Mail_Rfc822_Address($email);
 		// If no label is set we use the email
-		if ($label !== $email && !is_null($label)) {
+		if ($label !== $email && $label !== null) {
 			$this->wrapped->personal = $label;
 		}
 	}
 
 	/**
-	 * @return string
+	 * @return string|null
 	 */
-	public function getLabel(): string {
+	public function getLabel(): ?string {
 		$personal = $this->wrapped->personal;
-		if (is_null($personal)) {
+		if ($personal === null) {
 			// Fallback
 			return $this->getEmail();
 		}
@@ -58,9 +64,9 @@ class Address implements JsonSerializable {
 	}
 
 	/**
-	 * @return string
+	 * @return string|null
 	 */
-	public function getEmail(): string {
+	public function getEmail(): ?string {
 		return $this->wrapped->bare_address;
 	}
 

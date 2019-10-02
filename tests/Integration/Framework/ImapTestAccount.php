@@ -22,7 +22,9 @@
 namespace OCA\Mail\Tests\Integration\Framework;
 
 use OC;
+use OCA\Mail\Account;
 use OCA\Mail\Db\MailAccount;
+use OCA\Mail\IMAP\MailboxSync;
 use OCA\Mail\Service\AccountService;
 
 trait ImapTestAccount {
@@ -57,7 +59,13 @@ trait ImapTestAccount {
 		$mailAccount->setOutboundUser('user@domain.tld');
 		$mailAccount->setOutboundPassword(OC::$server->getCrypto()->encrypt('mypassword'));
 		$mailAccount->setOutboundSslMode('none');
-		return $accountService->save($mailAccount);
+		$acc = $accountService->save($mailAccount);
+
+		/** @var MailboxSync $mbSync */
+		$mbSync = OC::$server->query(MailboxSync::class);
+		$mbSync->sync(new Account($mailAccount));
+
+		return $acc;
 	}
 
 }

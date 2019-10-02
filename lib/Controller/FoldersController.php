@@ -25,6 +25,10 @@ declare(strict_types=1);
 
 namespace OCA\Mail\Controller;
 
+use Horde_Imap_Client;
+use OCA\Mail\Exception\MailboxNotCachedException;
+use OCA\Mail\Exception\ServiceException;
+use OCA\Mail\Service\SyncService;
 use function base64_decode;
 use function is_array;
 use OCA\Mail\Contracts\IMailManager;
@@ -47,6 +51,9 @@ class FoldersController extends Controller {
 	/**  @var IMailManager */
 	private $mailManager;
 
+	/** @var SyncService */
+	private $syncService;
+
 	/**
 	 * @param string $appName
 	 * @param IRequest $request
@@ -54,13 +61,18 @@ class FoldersController extends Controller {
 	 * @param string $UserId
 	 * @param IMailManager $mailManager
 	 */
-	public function __construct(string $appName, IRequest $request,
-								AccountService $accountService, $UserId, IMailManager $mailManager) {
+	public function __construct(string $appName,
+								IRequest $request,
+								AccountService $accountService,
+								$UserId,
+								IMailManager $mailManager,
+								SyncService $syncService) {
 		parent::__construct($appName, $request);
 
 		$this->accountService = $accountService;
 		$this->currentUserId = $UserId;
 		$this->mailManager = $mailManager;
+		$this->syncService = $syncService;
 	}
 
 	/**
@@ -91,15 +103,28 @@ class FoldersController extends Controller {
 	 * @param string $syncToken
 	 * @param int[] $uids
 	 * @return JSONResponse
+	 * @throws ServiceException
 	 */
-	public function sync(int $accountId, string $folderId, string $syncToken, array $uids = []): JSONResponse {
+	public function sync(int $accountId, string $folderId, array $uids): JSONResponse {
 		$account = $this->accountService->find($this->currentUserId, $accountId);
 
-		if (empty($accountId) || empty($folderId) || empty($syncToken) || !is_array($uids)) {
+		if (empty($accountId) || empty($folderId) || !is_array($uids)) {
 			return new JSONResponse(null, Http::STATUS_BAD_REQUEST);
 		}
 
-		$syncResponse = $this->mailManager->syncMessages($account, new SyncRequest(base64_decode($folderId), $syncToken, $uids));
+		try {
+			$syncResponse = $this->syncService->syncMailbox(
+				$account,
+				base64_decode($folderId),
+				Horde_Imap_Client::SYNC_NEWMSGSUIDS | Horde_Imap_Client::SYNC_FLAGSUIDS | Horde_Imap_Client::SYNC_VANISHEDUIDS,
+				array_map(function($uid) {
+					return (int) $uid;
+				}, $uids),
+				true
+			);
+		} catch (MailboxNotCachedException $e) {
+			return new JSONResponse(null, Http::STATUS_PRECONDITION_REQUIRED);
+		}
 
 		return new JSONResponse($syncResponse);
 	}
