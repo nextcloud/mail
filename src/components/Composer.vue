@@ -31,12 +31,12 @@
 				@search-change="onAutocomplete"
 			/>
 			<a v-if="!showCC" href="#" @click.prevent="showCC = true">
-				{{ t('mail', '+ cc/bcc') }}
+				{{ t('mail', '+ CC/BCC') }}
 			</a>
 		</div>
 		<div v-if="showCC" class="composer-fields">
 			<label for="cc" class="cc-label transparency">
-				{{ t('mail', 'cc') }}
+				{{ t('mail', 'CC') }}
 			</label>
 			<Multiselect
 				id="cc"
