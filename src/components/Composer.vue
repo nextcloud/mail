@@ -133,7 +133,7 @@
 import Autosize from 'vue-autosize'
 import debounce from 'lodash/fp/debounce'
 import debouncePromise from 'debounce-promise'
-import uniqBy from 'lodash/fp/debounce'
+import uniqBy from 'lodash/fp/uniqBy'
 import Multiselect from 'nextcloud-vue/dist/Components/Multiselect'
 import Vue from 'vue'
 
@@ -213,7 +213,7 @@ export default {
 			draftsPromise: Promise.resolve(),
 			attachmentsPromise: Promise.resolve(),
 			savingDraft: undefined,
-			saveDraftDebounced: debounce(this.saveDraft, 700),
+			saveDraftDebounced: debounce(700)(this.saveDraft),
 			state: STATES.EDITING,
 			errorText: undefined,
 			STATES,

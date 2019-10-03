@@ -146,8 +146,8 @@ export default {
 					)
 			)
 				.then(res => res.map(envs => envs.slice(0, 19)))
-				.then(res => flattenDepth(res, 2))
-				.then(envs => orderBy(envs, env => env.dateInt, 'desc'))
+				.then(res => flattenDepth(2)(res))
+				.then(envs => orderBy(env => env.dateInt)('desc')(envs))
 				.then(envs => envs.slice(0, 19)) // 19 to handle non-overlapping streams
 				.then(envelopes => {
 					if (!isSearch) {

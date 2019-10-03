@@ -19,6 +19,7 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
+import identity from 'lodash/fp/identity'
 import orderBy from 'lodash/fp/orderBy'
 import sortBy from 'lodash/fp/sortBy'
 import sortedUniq from 'lodash/fp/sortedUniq'
@@ -45,7 +46,7 @@ export default {
 	addAccount(state, account) {
 		account.collapsed = true
 		Vue.set(state.accounts, account.id, account)
-		Vue.set(state, 'accountList', sortBy(state.accountList.concat([account.id])))
+		Vue.set(state, 'accountList', sortBy(identity)(state.accountList.concat([account.id])))
 
 		// Save the folders to the store, but only keep IDs in the account's folder list
 		const folders = buildMailboxHierarchy(sortMailboxes(account.folders || []), havePrefix(account.folders))
@@ -100,7 +101,7 @@ export default {
 		Vue.set(
 			folder,
 			'envelopes',
-			sortedUniq(orderBy(folder.envelopes.concat([uid]), id => state.envelopes[id].dateInt, 'desc'))
+			sortedUniq(orderBy(id => state.envelopes[id].dateInt)('desc')(folder.envelopes.concat([uid])))
 		)
 	},
 	addSearchEnvelopes(state, {accountId, folder, envelopes, clear}) {
@@ -119,7 +120,7 @@ export default {
 			Vue.set(
 				folder,
 				'searchEnvelopes',
-				sortedUniq(orderBy(folder.searchEnvelopes.concat(uids), id => state.envelopes[id].dateInt, 'desc'))
+				sortedUniq(orderBy(id => state.envelopes[id].dateInt)('desc')(folder.searchEnvelopes.concat(uids)))
 			)
 		}
 	},
@@ -127,7 +128,7 @@ export default {
 		Vue.set(
 			folder,
 			'envelopes',
-			sortedUniq(orderBy(folder.envelopes.concat([envelope.uid]), id => state.envelopes[id].dateInt, 'desc'))
+			sortedUniq(orderBy(id => state.envelopes[id].dateInt)('desc')(folder.envelopes.concat([envelope.uid])))
 		)
 	},
 	addUnifiedEnvelopes(state, {folder, uids}) {
