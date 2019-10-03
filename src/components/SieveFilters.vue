@@ -122,7 +122,7 @@
 					"filterSetID": this.filterSetID,
 					"filter": {
 						"id": newID,
-						"name": "Filter#"+newID,
+						"name": "Filter_"+newID,
 						"tests": {
 							"type": "allof",
 							"list": [{

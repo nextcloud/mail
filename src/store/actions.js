@@ -490,7 +490,7 @@ export default {
 	fetchSieveScripts({getters, commit}, accountID){
 		//const scripts = getScripts(accountID)
 		const scripts = [{
-			"name": "Filter#1",
+			"name": "Filter_1",
 			"raw":
 `require ["fileinto", "test"];
 # rule:[test]

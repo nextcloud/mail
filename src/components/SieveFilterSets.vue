@@ -102,13 +102,16 @@
 						"name": this.filterSets[this.selFilterSetID].name,
 						"parsed": false,
 						"raw": raw,
-						"parseError": "user raw editing",
 					}
+				})
+				this.$store.commit("rmFilters", {
+					"accountID": this.accountID,
+					"filterSetID": this.selFilterSetID,
 				})
 			},
 			parse() {
 				try {
-					let {req, filters} = parseSieveScript(this.filterSets[this.selFilterSetID].raw)
+					let filters = parseSieveScript(this.filterSets[this.selFilterSetID].raw)
 					this.$store.commit("updateFilterSet", {
 						"accountID": this.accountID,
 						"filterSetID": this.selFilterSetID,
@@ -116,10 +119,9 @@
 							"id": this.filterSets[this.selFilterSetID].id,
 							"name": this.filterSets[this.selFilterSetID].name,
 							"parsed": true,
-							"require": req,
 						}
 					})
-					for (filter of filters) {
+					for (const filter of filters) {
 						this.$store.commit("newFilter", {
 							"accountID": this.accountID,
 							"filterSetID": this.selFilterSetID,

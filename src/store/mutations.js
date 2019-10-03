@@ -226,6 +226,9 @@ export default {
 	rmFilter(state, {accountID, filterSetID, filterID}){
 		state.sieveFilters[accountID][filterSetID] = state.sieveFilters[accountID][filterSetID].filter(x => x.id !== filterID)
 	},
+	rmFilters(state, {accountID, filterSetID}){
+		Vue.set(state.sieveFilters[accountID], filterSetID, [])
+	},
 	updateFilters(state, {accountID, filterSetID, value}){
 		state.sieveFilters[accountID][filterSetID] = value
 	},
@@ -245,7 +248,7 @@ export default {
 			state.sieveFilterSets[accountID] = []
 		}
 		if (name === undefined) {
-			name = "FilterSet#"+newID;
+			name = "FilterSet_"+newID;
 			let counter = 0;
 			if (state.sieveFilterSets[accountID].find(x => x.name === name) !== undefined){
 				while (state.sieveFilterSets[accountID].find(x => x.name === name+"_"+counter) !== undefined) {
@@ -255,12 +258,11 @@ export default {
 			}
 		}
 		try {
-			let {req, filters} = parseSieveScript(raw)
+			let filters = parseSieveScript(raw)
 			state.sieveFilterSets[accountID].push({
 				"id": newID,
 				"name": name,
 				"parsed": true,
-				"require": req,
 			})
 			if (state.sieveFilters[accountID] === undefined) {
 				Vue.set(state.sieveFilters, accountID, {})

@@ -2,7 +2,9 @@
 	<div class="flex-horizontal">
 		<div class="flex-line">
 			<div class="list-text">
-				<div>{{ t("mail", "Filterset not parsable. Reason: ")+$store.state.sieveFilterSets[accountID][filterSetID].parseError }}</div>
+				<div v-if="$store.state.sieveFilterSets[accountID][filterSetID].parseError !== undefined">
+					{{ t("mail", "Filterset not parsable. Reason: ")+$store.state.sieveFilterSets[accountID][filterSetID].parseError }}
+				</div>
 			</div>
 			<div>
 				<Actions v-if="!rawSieveScriptEdit">

@@ -2,83 +2,191 @@ export const ParseSieveError = function(message) {
 	this.message = message
 }
 
+/*
+register matchtype here
+key: [string] sieve matchtype value
+props:
+	name: [string] matchtype name (required)
+	reqs: [string] requirement to be imported to sieve script (not required)
+*/
 export const matchTypeBlueprint = {
-	"is": {
+	":is": {
 		"name": t("mail", "is"),
 	},
-	"contains": {
+	":contains": {
 		"name": t("mail", "contains"),
 	},
-	"matches": {
-		"reqs": ["test2"],
+	":matches": {
+		"req": "test2",
 		"name": t("mail", "matches"),
 	},
 }
 
+/*
+register test here
+key: [string] sieve test id
+props:
+	name: [string] test name
+	req: [string] requirement to be imported to sieve script
+	matchTypes: [array of matchTypes] all possible matchTypes to this test
+	opts_default: [object] default test options
+	make: method to create sieve script
+		input:	test object (name, opts)
+		output:	req		= array of requirements
+				script	= rendered sieve test string
+	parse: method to parse sieve script
+		input:	test array e.g.: 'not header ":is" "to" "test"'' -> ["not","header",":is","to","test"]
+		output:	if test array is recognised: new test object
+				else: undefined
+*/
 export const sieveTestsBlueprint = {
 	"subject": {
 		"name": t("mail", "Subject"),
-		"matchTypes": ["is", "contains", "matches"],
+		"matchTypes": [":is", ":contains", ":matches"],
 		"opts_default": {
 			"negate": false,
-			"matchType": "is",
+			"matchType": ":is",
 			"value": "",
 		},
 		"make": function(test) {
 			let reqs = new Set([])
-			if (matchTypeBlueprint[test.opts.matchType].reqs !== undefined) {
-				for (let req of matchTypeBlueprint[test.opts.matchType].reqs) {
-					reqs.add(req)
-				}
+			if (matchTypeBlueprint[test.opts.matchType].req !== undefined) {
+				reqs.add(req)
 			}
 			const negate = test.opts.negate ? "not " : ""
-			let script = `${negate} header :${test.opts.matchType} \"subject\" \"${test.opts.value}\"`
+			let script = `${negate} header ${test.opts.matchType} \"subject\" \"${test.opts.value}\"`
 			return {reqs, script}
+		},
+		"parse": function(test) {
+			let out = {
+				"type": "subject",
+				"opts": {
+					"negate": false,
+					"matchType": ":is",
+					"value": "",
+				}
+			}
+			if (test[0].toLowerCase() === "not") {
+				out.opts.negate = true
+				test.shift()
+			}
+			if (test[0].toLowerCase() === "header" && test[2].toLowerCase() === "subject") {
+				if (this.matchTypes.indexOf(test[1]) > -1) {
+					out.opts.matchType = test[1]
+					out.opts.value = test[3]
+					return out
+				} else {
+					throw new ParseSieveError(`option '${test[1]}' couldn't be parsed`)
+				}
+			} else {
+				return undefined
+			}
 		},
 	},
 	"from": {
 		"name": t("mail", "From"),
-		"matchTypes": ["is", "contains", "matches"],
+		"matchTypes": [":is", ":contains", ":matches"],
 		"opts_default": {
 			"negate": false,
-			"matchType": "is",
+			"matchType": ":is",
 			"value": "",
 		},
 		"make": function(test) {
 			let reqs = new Set([])
-			if (matchTypeBlueprint[test.opts.matchType].reqs !== undefined) {
-				for (let req of matchTypeBlueprint[test.opts.matchType].reqs) {
-					reqs.add(req)
-				}
+			if (matchTypeBlueprint[test.opts.matchType].req !== undefined) {
+				reqs.add(req)
 			}
 			const negate = test.opts.negate ? "not " : ""
-			let script = `${negate} header :${test.opts.matchType} \"from\" \"${test.opts.value}\"`
+			let script = `${negate} header ${test.opts.matchType} \"from\" \"${test.opts.value}\"`
 			return {reqs, script}
+		},
+		"parse": function(test) {
+			let out = {
+				"type": "from",
+				"opts": {
+					"negate": false,
+					"matchType": ":is",
+					"value": "",
+				}
+			}
+			if (test[0].toLowerCase() === "not") {
+				out.opts.negate = true
+				test.shift()
+			}
+			if (test[0].toLowerCase() === "header" && test[2].toLowerCase() === "from") {
+				if (this.matchTypes.indexOf(test[1]) > -1) {
+					out.opts.matchType = test[1]
+					out.opts.value = test[3]
+					return out
+				} else {
+					throw new ParseSieveError(`option '${test[1]}' couldn't be parsed`)
+				}
+			} else {
+				return undefined
+			}
 		},
 	},
 	"to": {
 		"name": t("mail", "To"),
-		"matchTypes": ["is", "contains", "matches"],
+		"matchTypes": [":is", ":contains", ":matches"],
 		"req": "test",
 		"opts_default": {
 			"negate": false,
-			"matchType": "is",
+			"matchType": ":is",
 			"value": "",
 		},
 		"make": function(test) {
 			let reqs = new Set([])
-			if (matchTypeBlueprint[test.opts.matchType].reqs !== undefined) {
-				for (let req of matchTypeBlueprint[test.opts.matchType].reqs) {
-					reqs.add(req)
-				}
+			if (matchTypeBlueprint[test.opts.matchType].req !== undefined) {
+				reqs.add(req)
 			}
 			const negate = test.opts.negate ? "not " : ""
-			let script = `${negate} header :${test.opts.matchType} \"to\" \"${test.opts.value}\"`
+			let script = `${negate} header ${test.opts.matchType} \"to\" \"${test.opts.value}\"`
 			return {reqs, script}
+		},
+		"parse": function(test) {
+			let out = {
+				"type": "to",
+				"opts": {
+					"negate": false,
+					"matchType": ":is",
+					"value": "",
+				}
+			}
+			if (test[0].toLowerCase() === "not") {
+				out.opts.negate = true
+				test.shift()
+			}
+			if (test[0].toLowerCase() === "header" && test[2].toLowerCase() === "to") {
+				if (this.matchTypes.indexOf(test[1]) > -1) {
+					out.opts.matchType = test[1]
+					out.opts.value = test[3]
+					return out
+				} else {
+					throw new ParseSieveError(`option '${test[1]}' couldn't be parsed`)
+				}
+			} else {
+				return undefined
+			}
 		},
 	},
 }
-
+/*
+register action here
+key: [string] sieve action id
+props:
+	name: [string] action name
+	req: [string] requirement to be imported to sieve script
+	opts_default: [object] default action options
+	make: method to create sieve script
+		input:	action object (name, opts)
+		output:	req		= array of requirements
+				script	= rendered sieve action string
+	parse: method to parse sieve script
+		input:	action array e.g.: 'fileinto :copy "INBOX"' -> ["fileinto", ":copy", "INBOX"]
+		output:	if test array is recognised: new test object
+				else: undefined
+*/
 export const sieveActionsBlueprint = {
 	"move": {
 		"name": t("mail", "Move mail into"),
@@ -88,8 +196,21 @@ export const sieveActionsBlueprint = {
 		"make": function(action) {
 			let reqs = ["fileinto"]
 			let folder = atob(action.opts.value)
-			let script = `fileinto ${folder}`
+			let script = `fileinto ${folder};`
 			return {reqs, script}
+		},
+		"parse": function(action) {
+			let out = {
+				"type": "move",
+				"opts": {
+					"value": btoa(action[1]),
+				}
+			}
+			if (action[0].toLowerCase() === "fileinto" && action.length === 2) {
+				return out
+			} else {
+				return undefined
+			}
 		},
 	},
 	"copy": {
@@ -100,8 +221,21 @@ export const sieveActionsBlueprint = {
 		"make": function(action) {
 			let reqs = ["fileinto", "copy"]
 			let folder = atob(action.opts.value)
-			let script = `fileinto :copy ${folder}`
+			let script = `fileinto :copy ${folder};`
 			return {reqs, script}
+		},
+		"parse": function(action) {
+			let out = {
+				"type": "copy",
+				"opts": {
+					"value": btoa(action[2]),
+				}
+			}
+			if (action[0].toLowerCase() === "fileinto" && action[1] === ":copy" && action.length === 3) {
+				return out
+			} else {
+				return undefined
+			}
 		},
 	},
 }
@@ -135,7 +269,7 @@ export const makeSieveScript = function(filters){
 
 			raw += 
 `
-# rule:${filter.name}
+# rule:[${filter.name}]
 if ${filter.tests.type}(${tests})
 {
 	${actions}
@@ -143,99 +277,132 @@ if ${filter.tests.type}(${tests})
 `
 		}
 		const reqs = Array.from(reqSet).join("\",\"")
-		const out = 
-`require [\"${reqs}\"]
-${raw}`
-		return out
-
-	}
-}
-
-export class sieveTest {
-	constructor(test) {
-		// separate test type from arguments
-		const testRegex = /\s*(\S+)\s+([\S\s]*)/gm
-		const testMatch = testRegex.exec(test)
-		if (testMatch === undefined) {
-			throw new ParseSieveError("test '"+test+"' couldn't be interpreted")
+		if (reqs === "") {
+			return `${raw}`
 		} else {
-			switch (testMatch[1]) {
-				case "header":
-					const headerRegex = /:(\S+)\s+\"(\S+)\"\s+\"([^"\\]*(?:\\.[^"\\]*)*)\"/gm
-					const headerMatch = headerRegex.exec(testMatch[1])
-					if (headerMatch === undefined) {
-						throw new ParseSieveError("test header arguments '"+testMatch[1]+"' couldn't be interpreted")
-					} else {
-						headerName = headerMatch[2].toLowerCase()
-						switch (headerName) {
-							case "subject":
-								break
-
-						}
-					}
-					break
-				default:
-					throw new ParseSieveError("test type '"+testMatch[1]+"' is not supported")
-					break
-			}
-		}
-	}
-}
-export class sieveAction {
-	constructor(action) {
-		this.raw = action
-	}
-}
-/*
-Supported: if
-Missing: else if, else
-*/
-export class sieveCommand {
-	constructor(obj) {
-		switch (obj.type) {
-			case "if":
-				this.name = obj.name
-				this.test = new sieveTest(obj.arguments)
-				this.actions = new sieveAction(obj.actions)
-				break
-			default:
-				throw new ParseSieveError("command '"+obj.type+"' unknown")
-				break
+			return `require [\"${reqs}\"];
+${raw}`
 		}
 	}
 }
 
 export const parseSieveScript = (raw) => {
 	if (raw == "") {
-		return {"require": [], "filters": []}
+		return []
 	} else {
-		let requireList = []
-		let commandList = []
+		let filters = []
+		let strings = {}
+		let counter = 0
+		// separate multiline strings
+		const multilineRegex = /text:\s*?(.[\s\S]*?)^\.\n/gm
+		match = multilineRegex.exec(raw)
+		while (match !== null) {
+			console.log(match)
+			strings[`__${counter}__`] = match[1]
+			counter += 1
+			raw = raw.replace(match[0], `__${counter}__`)
+			match = reg.exec(raw)
+		}
+		// separate one line strings
+		match = raw.match(/"[\s\S]*?"/)
+		while ( match != null) {
+			raw = raw.replace(match[0], `__${counter}__`)
+			strings[`__${counter}__`] = match[0].slice(1,-1)
+			counter += 1
+			match = raw.match(/"[\s\S]*?"/)
+		}
+
 		// throw away comments
 		const commentRegex = /#(?!\s+rule:).*|\/\*.*\*\/|\/\*(.*\n)+\*\//gm
 		raw = raw.replace(commentRegex,"")
-		// get require list
+		
+		// throw away require list
 		const requireRegex = /require\s*(\[[^{}]*?\]);\s*/gm
-		requireList = JSON.parse(requireRegex.exec(raw)[1])
 		raw = raw.replace(requireRegex,"")
+		
 		// get commands/filters
-		const commandRegex = /(# rule:\[(\w+)\]\s*)?(\w+)\s*([^;]*?)\s*\{\s*([^\}]*?)\s*\}\s*/gm
+		const commandRegex = /(?:# rule:\[(\w+)\]\s*)?^(\w+)\s*([^;]*?)\s*\{\s*([^\}]*?)\s*\}\s*/gm
 		let match = commandRegex.exec(raw)
+		let newFilterID = 0
 		while (match !== null) {
-			commandList.push(new sieveCommand({
-				"name": match[2],
-				"type": match[3],
-				"arguments": match[4],
-				"actions": match[5],
-			}))
+			const [ , name, command_type, testsArray, actionsRaw] = match
+			let filter = {
+				"id": newFilterID,
+				"name": name !== undefined ? name : "Filter_"+newFilterID,
+				"tests": {
+					"type": "allof",
+					"list": [],
+				},
+				"actions": [], /*[{
+					"id": 0,
+					"type": "move",
+					"opts": JSON.parse(JSON.stringify(sieveActionsBlueprint["move"].opts_default))
+				}],*/
+			}
+
+			if (command_type === "if") {
+				
+				// parse tests
+				const testsArrayRegex = /(allof|anyof)?\s*\(?\s*([\s\S]*.)\s*\)/gm
+				const testMatch = testsArrayRegex.exec(testsArray)
+				let tests
+				if (testMatch === null) {
+					tests = [ testsArray ]
+				} else {
+					filter.tests.type = testMatch[1]
+					tests = testMatch[2].split(/\s*,\s*/)
+				}
+				let newTestID = 0
+				for (let test of tests) {
+					test = test.split(/\s+/)
+					let newTest
+					for (const testType in sieveTestsBlueprint) {
+						if (newTest === undefined){
+							newTest = sieveTestsBlueprint[testType].parse(test.map(x => strings[x] === undefined ? x : strings[x]))
+						}
+					}
+					if (newTest === undefined) {
+						throw new ParseSieveError(`test '${test}' couldn't be interpreted`)
+					} else {
+						newTest["id"] = newTestID
+						newTestID += 1
+					}
+					filter.tests.list.push(newTest)
+				}
+
+				// parse actions
+				const actions = actionsRaw.split(/;\s*/).filter(x => x !== "")
+				let newActionID = 0
+				for (let action of actions) {
+					action = action.split(/\s+/)
+					let newAction
+					for (const actionType in sieveActionsBlueprint) {
+						if (newAction === undefined){
+							newAction = sieveActionsBlueprint[actionType].parse(action.map(x => strings[x] === undefined ? x : strings[x]))
+						}
+					}
+					if (newAction === undefined) {
+						throw new ParseSieveError(`action '${action}' couldn't be interpreted`)
+					} else {
+						newAction["id"] = newActionID
+						newActionID += 1
+					}
+					filter.actions.push(newAction)
+				}
+			} else {
+				throw new ParseSieveError("command type '"+type+"' not supported")
+			}
+
 			match = commandRegex.exec(raw)
+			newFilterID += 1
+			filters.push(filter)
 		}
 		raw = raw.replace(commandRegex, "")
 		// if anything left parse error
 		if (raw.match(/\S/gm) !== null) {
 			throw new ParseSieveError("unknown script part: '"+raw+"'")
 		} else {
-			return {"req": requireList, "filters": commandList}
+			return filters
 		}
 	}
 }
