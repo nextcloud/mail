@@ -21,8 +21,8 @@
 
 import dav from 'davclient.js'
 import ical from 'ical.js'
-import {getCurrentUser, getRequestToken} from 'nextcloud-auth'
-import {generateRemoteUrl} from 'nextcloud-router'
+import {getCurrentUser, getRequestToken} from '@nextcloud/auth'
+import {generateRemoteUrl} from '@nextcloud/router'
 
 import Logger from '../logger'
 

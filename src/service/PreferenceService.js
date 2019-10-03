@@ -20,8 +20,8 @@
  *
  */
 
-import Axios from 'nextcloud-axios'
-import {generateUrl} from 'nextcloud-router'
+import Axios from '@nextcloud/axios'
+import {generateUrl} from '@nextcloud/router'
 
 export const savePreference = (key, value) => {
 	const url = generateUrl('/apps/mail/api/preferences/{key}', {

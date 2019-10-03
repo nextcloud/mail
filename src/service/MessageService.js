@@ -1,5 +1,5 @@
-import {generateUrl} from 'nextcloud-router'
-import HttpClient from 'nextcloud-axios'
+import {generateUrl} from '@nextcloud/router'
+import HttpClient from '@nextcloud/axios'
 
 import {parseErrorResponse} from '../http/ErrorResponseParser'
 
