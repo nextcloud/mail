@@ -20,7 +20,6 @@
 </template>
 
 <script>
-import _ from 'lodash'
 import AppContent from 'nextcloud-vue/dist/Components/AppContent'
 import isMobile from 'nextcloud-vue/dist/Mixins/isMobile'
 
