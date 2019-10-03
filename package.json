@@ -15,6 +15,7 @@
     "test:watch": "mochapack -w --webpack-config webpack.test.js --require src/tests/setup.js \"src/tests/**/*.spec.js\""
   },
   "dependencies": {
+    "@bundle-analyzer/webpack-plugin": "^0.5.0",
     "@nextcloud/auth": "^0.1.0",
     "@nextcloud/axios": "^0.4.0",
     "@nextcloud/dialogs": "^0.1.0",
