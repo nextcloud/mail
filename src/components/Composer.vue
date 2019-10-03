@@ -53,7 +53,7 @@
 		</div>
 		<div v-if="showCC" class="composer-fields">
 			<label for="bcc" class="bcc-label transparency">
-				{{ t('mail', 'bcc') }}
+				{{ t('mail', 'BCC') }}
 			</label>
 			<Multiselect
 				id="bcc"
