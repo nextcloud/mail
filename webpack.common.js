@@ -1,4 +1,5 @@
 const path = require('path');
+const BundleAnalyzerPlugin = require('@bundle-analyzer/webpack-plugin')
 const { VueLoaderPlugin } = require('vue-loader');
 
 module.exports = {
@@ -56,7 +57,10 @@ module.exports = {
 			}
 		]
 	},
-	plugins: [new VueLoaderPlugin()],
+	plugins: [
+		new BundleAnalyzerPlugin({ token: process.env.BUNDLE_ANALYZER_TOKEN }),
+		new VueLoaderPlugin()
+	],
 	resolve: {
 		extensions: ['*', '.js', '.vue', '.json'],
 		symlinks: false

@@ -15,6 +15,7 @@
     "test:watch": "mochapack -w --webpack-config webpack.test.js --require src/tests/setup.js \"src/tests/**/*.spec.js\""
   },
   "dependencies": {
+    "@bundle-analyzer/webpack-plugin": "^0.5.0",
     "@vue/babel-preset-app": "^3.11.0",
     "color-convert": "^2.0.1",
     "davclient.js": "^0.1.0",
