@@ -1,5 +1,5 @@
-import {generateUrl} from 'nextcloud-router'
-import Axios from 'nextcloud-axios'
+import {generateUrl} from '@nextcloud/router'
+import Axios from '@nextcloud/axios'
 
 export function fetchAll(accountId) {
 	const url = generateUrl('/apps/mail/api/accounts/{accountId}/folders', {

@@ -19,8 +19,8 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-import Axios from 'nextcloud-axios'
-import {generateUrl} from 'nextcloud-router'
+import Axios from '@nextcloud/axios'
+import {generateUrl} from '@nextcloud/router'
 
 export function saveAttachmentToFiles(accountId, folderId, messageId, attachmentId, directory) {
 	const url = generateUrl(

@@ -22,12 +22,12 @@
 
 import Vue from 'vue'
 import App from './App'
-import {getRequestToken} from 'nextcloud-auth'
+import {getRequestToken} from '@nextcloud/auth'
 import router from './router'
 import store from './store'
 import {sync} from 'vuex-router-sync'
-import {translate, translatePlural} from 'nextcloud-l10n'
-import {generateFilePath} from 'nextcloud-router'
+import {translate, translatePlural} from '@nextcloud/l10n'
+import {generateFilePath} from '@nextcloud/router'
 import VueShortKey from 'vue-shortkey'
 import VTooltip from 'v-tooltip'
 

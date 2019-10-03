@@ -22,7 +22,7 @@
 
 import _ from 'lodash'
 import moment from 'moment'
-import {getLocale} from 'nextcloud-l10n'
+import {getLocale} from '@nextcloud/l10n'
 
 moment.locale(getLocale())
 
