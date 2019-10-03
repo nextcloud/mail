@@ -47,8 +47,8 @@
 
 <script>
 import _ from 'lodash'
-import {translate as t} from 'nextcloud-l10n'
-import {getFilePickerBuilder} from 'nextcloud-dialogs'
+import {translate as t} from '@nextcloud/l10n'
+import {getFilePickerBuilder} from '@nextcloud/dialogs'
 import Vue from 'vue'
 
 import Logger from '../logger'

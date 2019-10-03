@@ -20,8 +20,8 @@
  */
 
 import _ from 'lodash'
-import {translate as t, translatePlural as n} from 'nextcloud-l10n'
-import {generateFilePath} from 'nextcloud-router'
+import {translate as t, translatePlural as n} from '@nextcloud/l10n'
+import {generateFilePath} from '@nextcloud/router'
 
 import Logger from '../logger'
 
