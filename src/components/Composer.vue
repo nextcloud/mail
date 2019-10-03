@@ -298,7 +298,7 @@ export default {
 				return
 			}
 			debouncedSearch(term).then(results => {
-				this.autocompleteRecipients = uniqBy(this.autocompleteRecipients.concat(results), 'email')
+				this.autocompleteRecipients = uniqBy('email')(this.autocompleteRecipients.concat(results))
 			})
 		},
 		onAttachmentsUploading(uploaded) {

@@ -200,10 +200,8 @@ export default {
 				.map(a => getters.getFolders(a.id).filter(f => f.specialRole === folder.specialRole))
 		)
 		// Build a sorted list of all currently known envelopes (except last elem)
-		const knownEnvelopes = orderBy(
-			flatten(individualFolders.map(f => f[list].slice(0, f[list].length - 1))),
-			id => state.envelopes[id].dateInt,
-			'desc'
+		const knownEnvelopes = orderBy(id => state.envelopes[id].dateInt)('desc')(
+			flatten(individualFolders.map(f => f[list].slice(0, f[list].length - 1)))
 		)
 		// The index of the last element in the current unified mailbox determines
 		// the new offset
@@ -238,14 +236,14 @@ export default {
 				commit('addUnifiedEnvelopes', {
 					folder,
 					uids: sortedUniq(
-						orderBy(folder[list].concat(nextCandidates), id => state.envelopes[id].dateInt, 'desc')
+						orderBy(id => state.envelopes[id].dateInt)('desc')(folder[list].concat(nextCandidates))
 					),
 				})
 			} else {
 				commit('addUnifiedSearchEnvelopes', {
 					folder,
 					uids: sortedUniq(
-						orderBy(folder[list].concat(nextCandidates), id => state.envelopes[id].dateInt, 'desc')
+						orderBy(id => state.envelopes[id].dateInt)('desc')(folder[list].concat(nextCandidates))
 					),
 				})
 			}
