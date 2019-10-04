@@ -25,8 +25,6 @@ OC.L10N.register(
     "Keyboard shortcuts" : "קיצורי מקלדת",
     "from" : "מאת",
     "to" : "אל",
-    "cc" : "עותק",
-    "bcc" : "עותק נסתר",
     "Subject" : "נושא",
     "Sending …" : "שולח...",
     "Message sent!" : "הודעה נשלחה!",

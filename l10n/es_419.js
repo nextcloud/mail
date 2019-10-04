@@ -24,8 +24,6 @@ OC.L10N.register(
     "Keyboard shortcuts" : "Atajos del teclado",
     "from" : "de",
     "to" : "para",
-    "cc" : "cc",
-    "bcc" : "cco",
     "Subject" : "Asunto",
     "Sending …" : "Enviando ...",
     "Message sent!" : "¡Mensaje enviado!",

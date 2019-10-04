@@ -25,8 +25,6 @@ OC.L10N.register(
     "Keyboard shortcuts" : "키보드 단축키",
     "from" : "보낸 사람",
     "to" : "받는 사람",
-    "cc" : "참조",
-    "bcc" : "숨은 참조",
     "Subject" : "제목",
     "Sending …" : "보내는 중...",
     "Message sent!" : "메시지를 보냈습니다!",

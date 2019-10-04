@@ -23,8 +23,6 @@ OC.L10N.register(
     "Keyboard shortcuts" : "Teklatuaren lasterbideak",
     "from" : "Nondik",
     "to" : "nora",
-    "cc" : "cc",
-    "bcc" : "bcc",
     "Subject" : "Gaia",
     "Sending …" : "Bidaltzen...",
     "Message sent!" : "Mezua bidali egin da!",

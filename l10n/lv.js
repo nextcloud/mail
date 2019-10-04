@@ -22,8 +22,6 @@ OC.L10N.register(
     "Add mail account" : "Pievienot e-pasta kontu",
     "from" : "no",
     "to" : "kam",
-    "cc" : "kopija",
-    "bcc" : "diskrētā kopija",
     "Subject" : "Temats",
     "Sending …" : "Sūta …",
     "Message sent!" : "Vēstule aizsūtīta!",

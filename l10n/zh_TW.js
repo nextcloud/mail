@@ -34,8 +34,6 @@ OC.L10N.register(
     "Looking for a way to encrypt your emails? Install the Mailvelope browser extension!" : "需要一個方式加密您的電子郵件嗎？請安裝 Mailvelope 瀏覽器擴充程式",
     "from" : "自",
     "to" : "至",
-    "cc" : "副本",
-    "bcc" : "密件副本",
     "Subject" : "主旨",
     "Sending …" : "傳送中…",
     "Message sent!" : "信件已寄出",

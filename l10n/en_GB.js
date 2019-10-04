@@ -25,8 +25,6 @@ OC.L10N.register(
     "Keyboard shortcuts" : "Keyboard shortcuts",
     "from" : "from",
     "to" : "to",
-    "cc" : "cc",
-    "bcc" : "bcc",
     "Subject" : "Subject",
     "Sending …" : "Sending…",
     "Message sent!" : "Message sent!",

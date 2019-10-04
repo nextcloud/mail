@@ -23,8 +23,6 @@ OC.L10N.register(
     "Keyboard shortcuts" : "Shkurtoret e tastierës",
     "from" : "nga",
     "to" : "te",
-    "cc" : "cc",
-    "bcc" : "bcc",
     "Subject" : "Temë",
     "Sending …" : "Po dërgohet …",
     "Message sent!" : "Mesazhi u dërgua!",

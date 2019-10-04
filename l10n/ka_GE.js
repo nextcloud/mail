@@ -25,8 +25,6 @@ OC.L10N.register(
     "Keyboard shortcuts" : "კლავიატურის კომბინაციები",
     "from" : "ვისგან",
     "to" : "ვის",
-    "cc" : "კკ",
-    "bcc" : "ბკკ",
     "Subject" : "სათაური",
     "Sending …" : "იგზავნება …",
     "Message sent!" : "წერილი გაგზავნილია!",

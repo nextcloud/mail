@@ -21,8 +21,6 @@ OC.L10N.register(
     "Keyboard shortcuts" : "Klaviatuuri otseteed",
     "from" : "saatja",
     "to" : "saaja",
-    "cc" : "cc",
-    "bcc" : "bcc",
     "Subject" : "Teema",
     "Sending …" : "Saadan ...",
     "Message sent!" : "Sõnum on saadetud!",

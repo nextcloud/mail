@@ -26,8 +26,6 @@ OC.L10N.register(
     "Keyboard shortcuts" : "Klávesové skratky",
     "from" : "od",
     "to" : "komu",
-    "cc" : "kópia",
-    "bcc" : "skrytá kópia",
     "Subject" : "Predmet",
     "Message …" : "Správa ...",
     "Sending …" : "Odosielam ...",
