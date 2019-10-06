@@ -372,10 +372,10 @@
         },
         {
             "name": "pear-pear.horde.org/Horde_Imap_Client",
-            "version": "2.29.18",
+            "version": "2.30.0",
             "dist": {
                 "type": "file",
-                "url": "https://pear.horde.org/get/Horde_Imap_Client-2.29.18.tgz"
+                "url": "https://pear.horde.org/get/Horde_Imap_Client-2.30.0.tgz"
             },
             "require": {
                 "ext-hash": "*",
@@ -392,7 +392,7 @@
                 "php": "<8.0.0.0"
             },
             "replace": {
-                "pear-horde/horde_imap_client": "== 2.29.18.0"
+                "pear-horde/horde_imap_client": "== 2.30.0.0"
             },
             "type": "pear-library",
             "autoload": {
@@ -1321,9 +1321,9 @@
             "authors": [
                 {
                     "name": "Christian Weiske",
-                    "role": "Developer",
                     "email": "cweiske@cweiske.de",
-                    "homepage": "http://github.com/cweiske/jsonmapper/"
+                    "homepage": "http://github.com/cweiske/jsonmapper/",
+                    "role": "Developer"
                 }
             ],
             "description": "Map nested JSON structures onto PHP classes",
@@ -2135,9 +2135,9 @@
             "authors": [
                 {
                     "name": "Evert Pot",
-                    "role": "Developer",
                     "email": "me@evertpot.com",
-                    "homepage": "http://evertpot.com/"
+                    "homepage": "http://evertpot.com/",
+                    "role": "Developer"
                 }
             ],
             "description": "sabre/event is a library for lightweight event-based programming",
