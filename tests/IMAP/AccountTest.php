@@ -35,10 +35,12 @@ class AccountTest extends AbstractTest {
 	 */
 	public function testCreateAndDelete($name) {
 		$name = uniqid($name);
-		$this->createMailBox($name);
+		$imapConnection = $this->getTestAccount()->getImapConnection();
+
+		$imapConnection->createMailBox($name);
 		$this->assertMailBoxExists($name);
 
-		$this->getTestAccount()->deleteMailbox($name);
+		$imapConnection->deleteMailbox($name);
 		$this->assertMailBoxNotExists($name);
 	}
 
@@ -49,25 +51,4 @@ class AccountTest extends AbstractTest {
 			['äöü']
 		];
 	}
-
-	/**
-	 * @dataProvider providesMailBoxNames
-	 * @param $name
-	 */
-	public function testListMessages($name) {
-		$name = uniqid($name);
-		$newMailBox = parent::createMailBox($name);
-		$count = $newMailBox->getTotalMessages();
-		$this->assertEquals(0, $count);
-		$messages = $newMailBox->getMessages();
-		$this->assertInternalType('array', $messages);
-		$this->assertEquals(0, count($messages));
-		$this->createTestMessage($newMailBox);
-		$count = $newMailBox->getTotalMessages();
-		$this->assertEquals(1, $count);
-		$messages = $newMailBox->getMessages();
-		$this->assertInternalType('array', $messages);
-		$this->assertEquals(1, count($messages));
-	}
-
 }

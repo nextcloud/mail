@@ -152,18 +152,6 @@ class Account implements JsonSerializable {
 
 	/**
 	 * @param string $mailBox
-	 * @param array $opts
-	 * @return Mailbox
-	 */
-	public function createMailbox($mailBox, $opts = []) {
-		$conn = $this->getImapConnection();
-		$conn->createMailbox($mailBox, $opts);
-
-		return $this->getMailbox($mailBox);
-	}
-
-	/**
-	 * @param string $mailBox
 	 */
 	public function deleteMailbox($mailBox) {
 		if ($mailBox instanceof Mailbox) {
