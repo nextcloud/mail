@@ -115,7 +115,7 @@
     "Click here if you are not automatically redirected within the next few seconds." : "Cliquer ici si vous n'êtes pas automatiquement redirigé dans les prochaines secondes.",
     "Redirect" : "Redirection",
     "The link leads to %s" : "Le lien dirige vers %s",
-    "If you don’t want to visit that page, you can return to <a href=\"%s\">Mail</a>." : "Si vous ne désirez pas visiter cette page, vous pouvez retourner aux <a href=\"%s\">Mails</a>.",
+    "If you don’t want to visit that page, you can return to <a href=\"%s\">Mail</a>." : "Si vous ne souhaitez pas visiter cette page, vous pouvez retourner aux <a href=\"%s\">Mails</a>.",
     "Continue to %s" : "Continuer vers %s"
 },"pluralForm" :"nplurals=2; plural=(n > 1);"
 }
