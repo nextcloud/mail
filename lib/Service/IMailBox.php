@@ -37,13 +37,6 @@ interface IMailBox {
 	public function getFolderId(): string;
 
 	/**
-	 * @param string|Horde_Imap_Client_Search_Query $filter
-	 * @param int $cursorId last known ID on the client
-	 * @return array
-	 */
-	public function getMessages($filter = null, int $cursorId = null): array;
-
-	/**
 	 * @return string|null
 	 */
 	public function getSpecialRole();

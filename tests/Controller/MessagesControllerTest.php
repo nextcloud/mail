@@ -27,13 +27,16 @@ use OC\AppFramework\Http\Request;
 use OCA\Mail\Account;
 use OCA\Mail\Attachment;
 use OCA\Mail\Contracts\IMailManager;
+use OCA\Mail\Contracts\IMailSearch;
 use OCA\Mail\Controller\MessagesController;
 use OCA\Mail\Exception\ServiceException;
 use OCA\Mail\Http\AttachmentDownloadResponse;
 use OCA\Mail\Http\HtmlResponse;
 use OCA\Mail\Mailbox;
 use OCA\Mail\Model\IMAPMessage;
+use OCA\Mail\Model\Message;
 use OCA\Mail\Service\AccountService;
+use OCA\Mail\Service\MailManager;
 use OCP\AppFramework\Db\DoesNotExistException;
 use OCP\AppFramework\Http\ContentSecurityPolicy;
 use OCP\AppFramework\Http\JSONResponse;
@@ -44,24 +47,59 @@ use OCP\IL10N;
 use OCP\ILogger;
 use OCP\IRequest;
 use OCP\IURLGenerator;
+use PHPUnit\Framework\MockObject\MockObject;
 
 class MessagesControllerTest extends TestCase {
 
+	/** @var string */
 	private $appName;
+
+	/** @var MockObject|IRequest */
 	private $request;
+
+	/** @var MockObject|AccountService */
 	private $accountService;
+
+	/** @var MockObject|MailManager */
 	private $mailManager;
+
+	/** @var MockObject|IMailSearch */
+	private $mailSearch;
+
+	/** @var string */
 	private $userId;
+
+	/** @var MockObject|Folder */
 	private $userFolder;
+
+	/** @var MockObject|ILogger */
 	private $logger;
+
+	/** @var MockObject|IL10N */
 	private $l10n;
+
+	/** @var MessagesController */
 	private $controller;
+
+	/** @var MockObject|Account */
 	private $account;
+
+	/** @var MockObject|Mailbox */
 	private $mailbox;
+
+	/** @var MockObject|Message */
 	private $message;
+
+	/** @var MockObject|Attachment */
 	private $attachment;
+
+	/** @var MockObject|IMimeTypeDetector */
 	private $mimeTypeDetector;
+
+	/** @var MockObject|IURLGenerator */
 	private $urlGenerator;
+
+	/** @var MockObject|ITimeFactory */
 	private $timeFactory;
 
 	protected function setUp() {
@@ -71,6 +109,7 @@ class MessagesControllerTest extends TestCase {
 		$this->request = $this->getMockBuilder(IRequest::class)->getMock();
 		$this->accountService = $this->createMock(AccountService::class);
 		$this->mailManager = $this->createMock(IMailManager::class);
+		$this->mailSearch = $this->createMock(IMailSearch::class);
 		$this->userId = 'john';
 		$this->userFolder = $this->createMock(Folder::class);
 		$this->request = $this->createMock(Request::class);
@@ -81,9 +120,19 @@ class MessagesControllerTest extends TestCase {
 		$this->timeFactory = $this->createMock(ITimeFactory::class);
 
 		$this->controller = new MessagesController(
-			$this->appName, $this->request, $this->accountService, $this->mailManager,
-			$this->userId, $this->userFolder, $this->logger, $this->l10n,
-			$this->mimeTypeDetector, $this->urlGenerator, $this->timeFactory);
+			$this->appName,
+			$this->request,
+			$this->accountService,
+			$this->mailManager,
+			$this->mailSearch,
+			$this->userId,
+			$this->userFolder,
+			$this->logger,
+			$this->l10n,
+			$this->mimeTypeDetector,
+			$this->urlGenerator,
+			$this->timeFactory
+		);
 
 		$this->account = $this->createMock(Account::class);
 		$this->mailbox = $this->createMock(Mailbox::class);

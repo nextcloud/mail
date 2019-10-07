@@ -26,6 +26,7 @@ namespace OCA\Mail\AppInfo;
 use OCA\Mail\Contracts\IAttachmentService;
 use OCA\Mail\Contracts\IAvatarService;
 use OCA\Mail\Contracts\IMailManager;
+use OCA\Mail\Contracts\IMailSearch;
 use OCA\Mail\Contracts\IMailTransmission;
 use OCA\Mail\Contracts\IUserPreferences;
 use OCA\Mail\Events\BeforeMessageDeletedEvent;
@@ -44,6 +45,7 @@ use OCA\Mail\Service\AvatarService;
 use OCA\Mail\Service\Group\IGroupService;
 use OCA\Mail\Service\Group\NextcloudGroupService;
 use OCA\Mail\Service\MailManager;
+use OCA\Mail\Service\MailSearch;
 use OCA\Mail\Service\MailTransmission;
 use OCA\Mail\Service\UserPreferenceSevice;
 use OCP\AppFramework\IAppContainer;
@@ -92,6 +94,7 @@ class BootstrapSingleton {
 		$container->registerAlias(IAvatarService::class, AvatarService::class);
 		$container->registerAlias(IAttachmentService::class, AttachmentService::class);
 		$container->registerAlias(IMailManager::class, MailManager::class);
+		$container->registerAlias(IMailSearch::class, MailSearch::class);
 		$container->registerAlias(IMailTransmission::class, MailTransmission::class);
 		$container->registerAlias(IUserPreferences::class, UserPreferenceSevice::class);
 

@@ -1,6 +1,9 @@
-<?php
+<?php declare(strict_types=1);
+
 /**
- * @copyright Copyright (c) 2018 Robin Appelman <robin@icewind.nl>
+ * @copyright 2019 Christoph Wurst <christoph@winzerhof-wurst.at>
+ *
+ * @author 2019 Christoph Wurst <christoph@winzerhof-wurst.at>
  *
  * @license GNU AGPL version 3 or any later version
  *
@@ -16,18 +19,18 @@
  *
  * You should have received a copy of the GNU Affero General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
- *
  */
 
-namespace OCA\Mail\Tests;
+namespace OCA\Mail\Tests\IMAP\Search;
 
 use ChristophWurst\Nextcloud\Testing\TestCase;
-use OCA\Mail\SearchHelper;
+use OCA\Mail\IMAP\Search\SearchFilterStringParser;
 
-class SearchHelperTest extends TestCase {
+class SearchFilterStringParserTest extends TestCase {
+
 	private function search($filter) {
-		$helper = new SearchHelper();
-		$query = $helper->parseFilterString($filter);
+		$helper = new SearchFilterStringParser();
+		$query = $helper->parse($filter);
 		return (string)($query->build()['query']);
 	}
 

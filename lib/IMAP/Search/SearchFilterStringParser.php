@@ -1,6 +1,9 @@
-<?php
+<?php declare(strict_types=1);
+
 /**
- * @copyright Copyright (c) 2018 Robin Appelman <robin@icewind.nl>
+ * @copyright 2019 Christoph Wurst <christoph@winzerhof-wurst.at>
+ *
+ * @author 2019 Christoph Wurst <christoph@winzerhof-wurst.at>
  *
  * @license GNU AGPL version 3 or any later version
  *
@@ -16,26 +19,23 @@
  *
  * You should have received a copy of the GNU Affero General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
- *
  */
 
-namespace OCA\Mail;
+namespace OCA\Mail\IMAP\Search;
 
+use Horde_Imap_Client_Search_Query;
 
-class SearchHelper {
-	const FLAG_MAP = [
+class SearchFilterStringParser {
+
+	private const FLAG_MAP = [
 		'read' => ['SEEN', true],
 		'unread' => ['SEEN', false],
 		'answered' => ['ANSWERED', true],
 	];
 
-	/**
-	 * @param string $filter
-	 * @return \Horde_Imap_Client_Search_Query
-	 */
-	public function parseFilterString($filter) {
-		$query = new \Horde_Imap_Client_Search_Query();
-		if (!$filter) {
+	public function parse(?string $filter): Horde_Imap_Client_Search_Query {
+		$query = new Horde_Imap_Client_Search_Query();
+		if (empty($filter)) {
 			return $query;
 		}
 		$tokens = explode(' ', $filter);
@@ -52,29 +52,33 @@ class SearchHelper {
 		return $query;
 	}
 
-	private function parseFilterToken(\Horde_Imap_Client_Search_Query $query, $token) {
-		if (strpos($token, ':')) {
-			list($type, $param) = explode(':', $token);
-			$type = strtolower($type);
-
-			switch ($type) {
-				case 'is':
-				case 'not':
-					if (array_key_exists($param, self::FLAG_MAP)) {
-						$flag = self::FLAG_MAP[$param];
-						$query->flag($flag[0], $type === 'is' ? $flag[1] : !$flag[1]);
-						return true;
-					}
-					break;
-				case 'from':
-				case 'to':
-				case 'cc':
-				case 'bcc':
-				case 'subject':
-					$query->headerText($type, $param);
-					return true;
-			}
+	private function parseFilterToken(Horde_Imap_Client_Search_Query $query, $token): bool {
+		if (strpos($token, ':') === false) {
+			return false;
 		}
+
+		list($type, $param) = explode(':', $token);
+		$type = strtolower($type);
+
+		switch ($type) {
+			case 'is':
+			case 'not':
+				if (array_key_exists($param, self::FLAG_MAP)) {
+					$flag = self::FLAG_MAP[$param];
+					$query->flag($flag[0], $type === 'is' ? $flag[1] : !$flag[1]);
+					return true;
+				}
+				break;
+			case 'from':
+			case 'to':
+			case 'cc':
+			case 'bcc':
+			case 'subject':
+				$query->headerText($type, $param);
+				return true;
+		}
+
 		return false;
 	}
+
 }
