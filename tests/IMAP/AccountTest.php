@@ -51,25 +51,4 @@ class AccountTest extends AbstractTest {
 			['äöü']
 		];
 	}
-
-	/**
-	 * @dataProvider providesMailBoxNames
-	 * @param $name
-	 */
-	public function testListMessages($name) {
-		$name = uniqid($name);
-		$newMailBox = $this->getTestAccount()->getImapConnection()->createMailBox($name);
-		$count = $newMailBox->getTotalMessages();
-		$this->assertEquals(0, $count);
-		$messages = $newMailBox->getMessages();
-		$this->assertInternalType('array', $messages);
-		$this->assertEquals(0, count($messages));
-		$this->createTestMessage($newMailBox);
-		$count = $newMailBox->getTotalMessages();
-		$this->assertEquals(1, $count);
-		$messages = $newMailBox->getMessages();
-		$this->assertInternalType('array', $messages);
-		$this->assertEquals(1, count($messages));
-	}
-
 }
