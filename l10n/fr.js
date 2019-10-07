@@ -50,7 +50,7 @@ OC.L10N.register(
     "Go back" : "Revenir en arrière",
     "Retry" : "Réessayer",
     "Message sent!" : "Message envoyé !",
-    "Reply sent!" : "Réponse envoyé !",
+    "Reply sent!" : "Réponse envoyée !",
     "Write another message" : "Écrire un autre message",
     "Send" : "Envoyer",
     "Uploading {percent}% …" : "Envoi {percent}% …",
