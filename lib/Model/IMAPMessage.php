@@ -289,26 +289,12 @@ class IMAPMessage implements IMessage, JsonSerializable {
 	}
 
 	private function loadMessageBodies() {
-		$headers = [];
-
 		$fetch_query = new Horde_Imap_Client_Fetch_Query();
 		$fetch_query->envelope();
 		$fetch_query->structure();
 		$fetch_query->flags();
 		$fetch_query->size();
 		$fetch_query->imapDate();
-
-		$headers = array_merge($headers, [
-			'importance',
-			'list-post',
-			'x-priority'
-		]);
-		$headers[] = 'content-type';
-
-		$fetch_query->headers('imp', $headers, [
-			'cache' => true,
-			'peek' => true
-		]);
 
 		// $list is an array of Horde_Imap_Client_Data_Fetch objects.
 		$ids = new Horde_Imap_Client_Ids($this->messageId);

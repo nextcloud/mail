@@ -120,19 +120,6 @@ class MailSearch implements IMailSearch {
 			$fetchQuery->uid();
 			$fetchQuery->imapDate();
 			$fetchQuery->structure();
-			$fetchQuery->headers(
-				'imp',
-				[
-					'importance',
-					'list-post',
-					'x-priority',
-					'content-type',
-				],
-				[
-					'cache' => true,
-					'peek' => true
-				]
-			);
 
 			$fetchResult = $client->fetch($mailbox->getMailbox(), $fetchQuery, ['ids' => $ids]);
 		} catch (Horde_Imap_Client_Exception $e) {
