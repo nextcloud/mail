@@ -4,7 +4,6 @@ OC.L10N.register(
     "Mail" : "Correio",
     "Auto detect failed. Please use manual mode." : "A deteção automática falhou. Por favor, utilize o modo manual",
     "Creating account failed: " : "Não foi possível criar a conta:",
-    "Delete permanently" : "Eliminar permanentemente",
     "IMAP Host" : "Anfitrião de IMAP",
     "SMTP Host" : "Anfitrião de SMTP",
     "Connect" : "Ligar",

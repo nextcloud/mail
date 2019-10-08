@@ -2,7 +2,6 @@ OC.L10N.register(
     "mail",
     {
     "Mail" : "Pos",
-    "Delete permanently" : "Skrap permanent",
     "Name" : "Naam",
     "Mail Address" : "Posadres",
     "Password" : "Wagwoord",

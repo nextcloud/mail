@@ -5,7 +5,6 @@ OC.L10N.register(
     "Auto detect failed. Please use manual mode." : "Automatinis nustatymų aptikimas nepavyko. Įveskite duomenis rankiniu būdu.",
     "Updating account failed: " : "Paskyros atnaujinimas nepavyko: ",
     "Creating account failed: " : "Paskyros sukūrimas nepavyko: ",
-    "Delete permanently" : "Ištrinti negrįžtamai",
     "Name" : "Vardas",
     "Mail Address" : "Elektroninio pašto adresas",
     "Password" : "Slaptažodis",

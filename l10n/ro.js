@@ -3,7 +3,6 @@ OC.L10N.register(
     {
     "Mail" : "Mail",
     "Creating account failed: " : "Crearea contului a eșuat:",
-    "Delete permanently" : "Șterge permanent",
     "Name" : "Nume",
     "Password" : "Parolă",
     "Manual" : "Manual",

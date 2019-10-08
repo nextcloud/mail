@@ -2,7 +2,6 @@ OC.L10N.register(
     "mail",
     {
     "Mail" : "Електронска пошта",
-    "Delete permanently" : "Избриши",
     "Auto" : "Автоматски",
     "Name" : "Име",
     "Mail Address" : "Адреса на е-пошта",

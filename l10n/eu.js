@@ -4,7 +4,6 @@ OC.L10N.register(
     "Mail" : "Posta",
     "Auto detect failed. Please use manual mode." : "Autodetekzioa huts egin du. Erabili eskuzko modua",
     "Creating account failed: " : "Huts egin du kontua sortzerakoan:",
-    "Delete permanently" : "Ezabatu betirako",
     "Name" : "Izena",
     "Mail Address" : "Eposta helbidea",
     "Password" : "Pasahitza",

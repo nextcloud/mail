@@ -5,7 +5,6 @@ OC.L10N.register(
     "Auto detect failed. Please use manual mode." : "La detecció automàtica ha fallat. Si us plau, feu servir el mode manual.",
     "Updating account failed: " : "Ha fallat l’actualització del compte:",
     "Creating account failed: " : "Ha fallat la creació del compte:",
-    "Delete permanently" : "Suprimeix permanentment",
     "💌 A mail app for Nextcloud" : "💌 Una aplicació de correu per a Nextcloud",
     "Auto" : "Auto",
     "Name" : "Nom",

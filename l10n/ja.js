@@ -5,7 +5,6 @@ OC.L10N.register(
     "Auto detect failed. Please use manual mode." : "自動判別に失敗しました。手動モードをご利用ください。",
     "Updating account failed: " : "アカウントの更新に失敗：",
     "Creating account failed: " : "アカウント作成に失敗:",
-    "Delete permanently" : "完全に削除する",
     "💌 A mail app for Nextcloud" : "💌Nextcloudのメールアプリ",
     "Auto" : "自動",
     "Name" : "名前",

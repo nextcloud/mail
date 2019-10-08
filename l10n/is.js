@@ -5,7 +5,6 @@ OC.L10N.register(
     "Auto detect failed. Please use manual mode." : "Mistókst að finna sjálkrafa. Notaðu handvirku leiðina.",
     "Updating account failed: " : "Mistókst að uppfæra notandaaðgang: ",
     "Creating account failed: " : "Mistókst að búa til notandaaðgang: ",
-    "Delete permanently" : "Eyða varanlega",
     "Auto" : "Sjálfvirkt",
     "Name" : "Nafn",
     "Mail Address" : "Tölvupóstfang",

@@ -5,7 +5,6 @@ OC.L10N.register(
     "Auto detect failed. Please use manual mode." : "איתור אוטומטי נכשל. יש להשתמש במצב ידני.",
     "Updating account failed: " : "עדכון החשבון נכשל:",
     "Creating account failed: " : "יצירת חשבון נכשלה:",
-    "Delete permanently" : "מחיקה לצמיתות",
     "Name" : "שם",
     "Mail Address" : "כתובת דוא״ל",
     "Password" : "ססמה",

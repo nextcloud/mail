@@ -3,7 +3,6 @@ OC.L10N.register(
     {
     "Mail" : "шуудан",
     "Creating account failed: " : "аккаунт үүсгэж чадсангүй:",
-    "Delete permanently" : "бүр мөсөн устгах",
     "Name" : "нэр",
     "Mail Address" : "шуудангийн хаяг",
     "Password" : "нууц үг",

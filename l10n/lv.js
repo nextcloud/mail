@@ -4,7 +4,6 @@ OC.L10N.register(
     "Mail" : "E-pasts",
     "Auto detect failed. Please use manual mode." : "Automātiski noteikt neizdevās. Lūdzu, izmantojiet manuālo režīmu.",
     "Creating account failed: " : "Konta izveide neizdevās:",
-    "Delete permanently" : "Dzēst pavisam",
     "Name" : "Nosaukums",
     "Mail Address" : "E-pasta adrese",
     "Password" : "Parole",

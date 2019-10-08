@@ -4,7 +4,6 @@ OC.L10N.register(
     "Mail" : "Mail",
     "Auto detect failed. Please use manual mode." : "L'autodeteccion a fracassat. Utilizatz lo mòde manual.",
     "Creating account failed: " : "La creacion del compte a fracassat :",
-    "Delete permanently" : "Suprimir definitivament",
     "Connect" : "Connectar",
     "Sending …" : "Mandadís ...",
     "Message sent!" : "Messatge mandat !",

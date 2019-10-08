@@ -5,7 +5,6 @@ OC.L10N.register(
     "Auto detect failed. Please use manual mode." : "Automatisk detektering misslyckades. Vänligen använd manuellt läge.",
     "Updating account failed: " : "Uppdatering av konto misslyckades:",
     "Creating account failed: " : "Misslyckades att skapa kontot:",
-    "Delete permanently" : "Radera permanent",
     "💌 A mail app for Nextcloud" : "En e-post-app för Nextcloud",
     "Auto" : "Auto",
     "Name" : "Namn",

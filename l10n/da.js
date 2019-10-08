@@ -4,7 +4,6 @@ OC.L10N.register(
     "Mail" : "Mail",
     "Auto detect failed. Please use manual mode." : "Fejl ved autodetektion. Anvend venligst manuel opsætning",
     "Creating account failed: " : "Oprettelse af konto mislykkedes:",
-    "Delete permanently" : "Slet permanent",
     "Auto" : "Auto",
     "Name" : "Navn",
     "Mail Address" : "Email addresse",

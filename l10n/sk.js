@@ -5,7 +5,6 @@ OC.L10N.register(
     "Auto detect failed. Please use manual mode." : "Automatická detekcia zlyhala. Prosím, použite manuálny režim.",
     "Updating account failed: " : "Aktualizácia účtu zlyhala:",
     "Creating account failed: " : "Vytvorenie účtu zlyhalo:",
-    "Delete permanently" : "Zmazať  natrvalo",
     "Name" : "Meno",
     "Mail Address" : "Emailová adresa",
     "Password" : "Heslo",

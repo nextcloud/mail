@@ -4,7 +4,6 @@ OC.L10N.register(
     "Mail" : "Поща",
     "Auto detect failed. Please use manual mode." : "Неуспешни автоматични настройки. Моля, използвай ръчен режим.",
     "Creating account failed: " : "Неуспешно създаване на профил:",
-    "Delete permanently" : "Изтрий завинаги",
     "Auto" : "Автоматично",
     "Name" : "Име",
     "Mail Address" : "Имейл адрес",

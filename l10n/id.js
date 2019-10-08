@@ -4,7 +4,6 @@ OC.L10N.register(
     "Mail" : "Email",
     "Auto detect failed. Please use manual mode." : "Deteksi otomatis gagal. Mohon gunakan modus manual.",
     "Creating account failed: " : "Gagal membuat akun:",
-    "Delete permanently" : "Hapus secara permanen",
     "Connect" : "Sambungkan",
     "Sending …" : "Mengirim ...",
     "Message sent!" : "Kirim pesan!",

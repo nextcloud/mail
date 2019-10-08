@@ -5,7 +5,6 @@ OC.L10N.register(
     "Auto detect failed. Please use manual mode." : "ავტო-აღმოჩენა ვერ მოხერხდა. გთხოვთ სცადოთ ხელით.",
     "Updating account failed: " : "ანგარიშის განახლება ვერ მოხერხდა:",
     "Creating account failed: " : "ანგარიშების შექმნა ვერ მოხერხდა:",
-    "Delete permanently" : "სამუდამოდ წაშლა",
     "Name" : "სახელი",
     "Mail Address" : "ფოსტის მისამართი",
     "Password" : "პაროლი",

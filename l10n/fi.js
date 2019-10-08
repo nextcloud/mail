@@ -5,7 +5,6 @@ OC.L10N.register(
     "Auto detect failed. Please use manual mode." : "Automaattinen havaitseminen epäonnistui. Käytä manuaalitilaa.",
     "Updating account failed: " : "Tilin päivittäminen epäonnistui:",
     "Creating account failed: " : "Tilin luominen epäonnistui:",
-    "Delete permanently" : "Poista pysyvästi",
     "Auto" : "Automaattinen",
     "Name" : "Nimi",
     "Mail Address" : "Sähköpostiosoite",

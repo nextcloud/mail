@@ -4,7 +4,6 @@ OC.L10N.register(
     "Mail" : "Kirjad",
     "Auto detect failed. Please use manual mode." : "Automaatne tuvastus ebaõnnestus. Palun proovi käsitsi.",
     "Creating account failed: " : "Konto loomine ebaõnnestus:",
-    "Delete permanently" : "Kustuta jäädavalt",
     "Name" : "Nimi",
     "Mail Address" : "E-posti aadress",
     "Password" : "Parool",

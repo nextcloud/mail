@@ -5,7 +5,6 @@ OC.L10N.register(
     "Auto detect failed. Please use manual mode." : "Η αυτόματη ανίχνευση απέτυχε. Παρακαλούμε χρησιμοποιήστε τη χειροκίνητη λειτουργία.",
     "Updating account failed: " : "Αποτυχία ενημέρωσης λογαριασμού:",
     "Creating account failed: " : "Αποτυχία δημιουργίας λογαριασμού:",
-    "Delete permanently" : "Μόνιμη διαγραφή",
     "Auto" : "Αυτόματα",
     "Name" : "Όνομα",
     "Mail Address" : "Διεύθυνση αλληλογραφίας",

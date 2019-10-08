@@ -5,7 +5,6 @@ OC.L10N.register(
     "Auto detect failed. Please use manual mode." : "Automatisk påvisning mislyktes. Bruk manuelt oppsett.",
     "Updating account failed: " : "Oppdatering av konto mislyktes:",
     "Creating account failed: " : "Oppretting av konto mislyktes:",
-    "Delete permanently" : "Slett permanent",
     "Auto" : "Auto",
     "Name" : "Navn",
     "Mail Address" : "E-postadresse",

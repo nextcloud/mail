@@ -5,7 +5,6 @@ OC.L10N.register(
     "Auto detect failed. Please use manual mode." : "Automatikus észlelés sikertelen. Használja a manuális módot.",
     "Updating account failed: " : "Fiók frissítése sikertelen:",
     "Creating account failed: " : "Fiók létrehozása sikertelen: ",
-    "Delete permanently" : "Végleges törlés",
     "Auto" : "Automatikus",
     "Name" : "Név",
     "Mail Address" : "E-mail cím",

@@ -4,7 +4,6 @@ OC.L10N.register(
     "Mail" : "Corréu",
     "Auto detect failed. Please use manual mode." : "Falló l'autodeteición. Por favor, usa el mou manual.",
     "Creating account failed: " : "Fallu creando la cuenta:",
-    "Delete permanently" : "Desaniciar dafechu",
     "Name" : "Nome",
     "Mail Address" : "Direición de corréu",
     "Password" : "Contraseña",

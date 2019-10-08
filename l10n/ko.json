@@ -3,7 +3,6 @@
     "Auto detect failed. Please use manual mode." : "자동 감지가 실패했습니다. 수동 모드를 사용하십시오.",
     "Updating account failed: " : "계정 업데이트 실패:",
     "Creating account failed: " : "계정 생성 실패: ",
-    "Delete permanently" : "영구히 삭제",
     "Name" : "이름",
     "Mail Address" : "메일 주소",
     "Password" : "암호",

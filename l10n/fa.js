@@ -3,7 +3,6 @@ OC.L10N.register(
     {
     "Mail" : "ایمیل",
     "Auto detect failed. Please use manual mode." : "شناسایی خودکار با شکست مواجه شد. لطفا از حالت دستی استفاده کنید.",
-    "Delete permanently" : "حذف قطعی",
     "Connect" : "اتصال",
     "Sending …" : "در حال ارسال ...",
     "Message sent!" : "پیام ارسال شد!",

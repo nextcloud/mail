@@ -5,7 +5,6 @@ OC.L10N.register(
     "Auto detect failed. Please use manual mode." : "Aŭtomata rekono malsukcesis. Bv. uzi permanan reĝimon.",
     "Updating account failed: " : "Ĝisdatigo de konto malsukcesis:",
     "Creating account failed: " : "Kreo de konto malsukcesis:",
-    "Delete permanently" : "Forigi por ĉiam",
     "Auto" : "Aŭtomate",
     "Name" : "Nomo",
     "Mail Address" : "Retpoŝtadreso",

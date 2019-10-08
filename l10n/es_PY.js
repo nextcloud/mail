@@ -4,7 +4,6 @@ OC.L10N.register(
     "Mail" : "Correo",
     "Auto detect failed. Please use manual mode." : "Se presentó una falla en la auto detección. Por favor usa el modo manual.",
     "Creating account failed: " : "Se presentó una falla al crear la cuenta:",
-    "Delete permanently" : "Borrar permanentemente",
     "Name" : "Nombre",
     "Mail Address" : "Dirección de Correo",
     "Password" : "Contraseña",

@@ -4,7 +4,6 @@ OC.L10N.register(
     "Mail" : "Məktub",
     "Auto detect failed. Please use manual mode." : "Avtomatik təyinatda səhv baş verdi. Xahiş olunur əl rejimini seçəsiniz.",
     "Creating account failed: " : "Hesabın yaradılmasında səhv:",
-    "Delete permanently" : "Həmişəlik sil",
     "Connect" : "Qoşul",
     "Sending …" : "Göndərilir...",
     "Send" : "Göndər",
