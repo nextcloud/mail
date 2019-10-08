@@ -27,7 +27,7 @@ import {buildMailboxHierarchy} from '../imap/MailboxHierarchy'
 import {havePrefix} from '../imap/MailboxPrefix'
 import {sortMailboxes} from '../imap/MailboxSorter'
 import {UNIFIED_ACCOUNT_ID} from './constants'
-import {ParseSieveError,parseSieveScript} from '../service/SieveParserService'
+import {ParseSieveError,parseSieveScript} from '../service/FiltersService'
 
 const addFolderToState = (state, account) => folder => {
 	const id = account.id + '-' + folder.id
@@ -202,18 +202,6 @@ export default {
 	removeMessage(state, {accountId, folderId, id}) {
 		Vue.delete(state.messages, accountId + '-' + folderId + '-' + id)
 	},
-	rmFilterSet(state, {accountID, filterSetID}){
-		state.sieveFilterSets[accountID] = state.sieveFilterSets[accountID].filter(x => x.id !== filterSetID)
-	},
-	updateFilterSets(state, {accountID, value}){
-		state.sieveFilterSets[accountID] = value
-	},
-	updateFilterSet(state, {accountID, filterSetID, value}){
-		Vue.set(state.sieveFilterSets[accountID], state.sieveFilterSets[accountID].findIndex(x => x.id === filterSetID), value)
-	},
-	updateFilterSetName(state, {accountID, filterSetID, name}){
-		state.sieveFilterSets[accountID][state.sieveFilterSets[accountID].findIndex(x => x.id === filterSetID)].name = name	
-	},
 	newFilter(state, {accountID, filterSetID, filter}){
 		if (state.sieveFilters[accountID] === undefined) {
 			Vue.set(state.sieveFilters, accountID, {})
@@ -222,20 +210,9 @@ export default {
 			Vue.set(state.sieveFilters[accountID], filterSetID, [])
 		}
 		state.sieveFilters[accountID][filterSetID].push(filter)
+		state.sieveFilterSets[accountID][filterSetID].changed = true
 	},
-	rmFilter(state, {accountID, filterSetID, filterID}){
-		state.sieveFilters[accountID][filterSetID] = state.sieveFilters[accountID][filterSetID].filter(x => x.id !== filterID)
-	},
-	rmFilters(state, {accountID, filterSetID}){
-		Vue.set(state.sieveFilters[accountID], filterSetID, [])
-	},
-	updateFilters(state, {accountID, filterSetID, value}){
-		state.sieveFilters[accountID][filterSetID] = value
-	},
-	updateFilter(state, {accountID, filterSetID, filterID, filter}){
-		state.sieveFilters[accountID][filterSetID][state.sieveFilters[accountID][filterSetID].findIndex(x => x.id === filterID)] = filter	
-	},
-	newFilterSet(state, {accountID, name, raw}) {
+	newFilterSet(state, {accountID, name, raw, original_name, active = false, changed = true}) {
 		let newID = 0
 		if (state.sieveFilterSets[accountID] === undefined) {
 			Vue.set(state.sieveFilterSets, accountID, [])
@@ -262,7 +239,10 @@ export default {
 			state.sieveFilterSets[accountID].push({
 				"id": newID,
 				"name": name,
+				"original_name": original_name,
 				"parsed": true,
+				"active": active,
+				"changed": changed,
 			})
 			if (state.sieveFilters[accountID] === undefined) {
 				Vue.set(state.sieveFilters, accountID, {})
@@ -277,14 +257,61 @@ export default {
 					"name": name,
 					"parsed": false,
 					"raw": raw,
+					"active": active,
 					"parseError": e.message,
+					"changed": changed,
+					"original_name": original_name,
 				})
 			} else {
 				throw e
 			}
 		}
 	},
+	rmFilter(state, {accountID, filterSetID, filterID}){
+		state.sieveFilters[accountID][filterSetID] = state.sieveFilters[accountID][filterSetID].filter(x => x.id !== filterID)
+		state.sieveFilterSets[accountID][filterSetID].changed = true
+	},
+	rmFilters(state, {accountID, filterSetID}){
+		Vue.set(state.sieveFilters[accountID], filterSetID, [])
+	},
+	rmFilterSet(state, {accountID, filterSetID}){
+		state.sieveDelete.add(state.sieveFilterSets[accountID][state.sieveFilterSets[accountID].findIndex(x => x.id === filterSetID)].name)
+		state.sieveFilterSets[accountID] = state.sieveFilterSets[accountID].filter(x => x.id !== filterSetID)
+		Vue.delete(state.sieveFilters[accountID], filterSetID)
+	},
+	updateFilter(state, {accountID, filterSetID, filterID, filter}){
+		state.sieveFilters[accountID][filterSetID][state.sieveFilters[accountID][filterSetID].findIndex(x => x.id === filterID)] = filter
+		state.sieveFilterSets[accountID][filterSetID].changed = true
+	},
+	updateFilters(state, {accountID, filterSetID, value}){
+		state.sieveFilters[accountID][filterSetID] = value
+		state.sieveFilterSets[accountID][filterSetID].changed = true
+	},
+	updateFilterSet(state, {accountID, filterSetID, value}){
+		Vue.set(state.sieveFilterSets[accountID], state.sieveFilterSets[accountID].findIndex(x => x.id === filterSetID), value)
+	},
+	updateFilterSets(state, {accountID, value}){
+		state.sieveFilterSets[accountID] = value
+	},
+	updateFilterSetName(state, {accountID, filterSetID, name}){
+		state.sieveDelete.add(state.sieveFilterSets[accountID][state.sieveFilterSets[accountID].findIndex(x => x.id === filterSetID)].name)
+		state.sieveFilterSets[accountID][state.sieveFilterSets[accountID].findIndex(x => x.id === filterSetID)].name = name
+		state.sieveFilterSets[accountID][filterSetID].changed = true
+	},
 	updateRawSieveScript(state, {accountID, filterSetID, raw}) {
 		state.sieveFilterSets[accountID].find(x => x.id === filterSetID).raw = raw
+		state.sieveFilterSets[accountID][filterSetID].changed = true
+	},
+	resetFilterAccount(state, {accountID}) {
+		Vue.delete(state.sieveFilterSets, accountID)
+		Vue.delete(state.sieveFilters, accountID)
+	},
+	setSieveLoading(state, bool) {
+		state.sieveLoading = bool
+		state.sieveDelete = new Set()
+	},
+	toggleActiveSieve(state, {accountID, filterSetID}) {
+		state.sieveFilterSets[accountID][state.sieveFilterSets[accountID].findIndex(x => x.id === filterSetID)].active = 
+			!state.sieveFilterSets[accountID][state.sieveFilterSets[accountID].findIndex(x => x.id === filterSetID)].active
 	},
 }

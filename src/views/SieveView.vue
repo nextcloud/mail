@@ -4,17 +4,43 @@
 		<AppContent>
 			<div id="sieve-app-content">
 				<h2>{{ t("mail", "Filter Configuration") }}</h2>
-				<tabs :options="{ useUrlFragment: false }">
+				<tabs :options="{ useUrlFragment: false }"
+					@changed="tabChanged"
+					>
 					<tab v-for="accountID in $store.getters.sieveAccountList()"
 						:key="accountID"
+						:id="accountID"
 						:name="$store.getters.getAccount(accountID).emailAddress">
 
-						<div id="server-container">
+						<div id="server-container" class="flex-line">
+							<div class="list-text">
 								{{ $store.getters.getAccount(accountID).sieveUser }}&nbsp;
 								@&nbsp;{{ tls(accountID) }}{{ $store.getters.getAccount(accountID).sieveHost }}
+							</div>
+							<div v-if="!$store.state.sieveLoading">
+								<Actions>
+									<ActionButton icon="icon-history" @click="$store.dispatch('fetchSieveScripts', accountID)">Reload</ActionButton>
+								</Actions>
+								<Actions>
+									<ActionButton icon="icon-checkmark" @click="saveScripts(accountID)">Save</ActionButton>
+								</Actions>
+							</div>
+							<div v-else>
+								<Actions>
+									<ActionButton disabled icon="icon-history">Reload</ActionButton>
+								</Actions>
+								<Actions>
+									<ActionButton disabled icon="icon-checkmark"">Save</ActionButton>
+								</Actions>
+							</div>
 						</div>
-
-					<SieveFilterSets :accountID="accountID" />
+					<div v-if="$store.state.sieveLoading" class="main-container flex-container">
+						<div class="loading-container">
+							<div><ClipLoader :loading="true" color="dimgray" /></div>
+							<div style="font-size: 17px;">Scripts loading...</div>
+						</div>
+					</div>
+					<SieveFilterSets v-else :accountID="accountID" />
 					</tab>
 				</tabs>
 			</div>
@@ -28,26 +54,38 @@
 	import Navigation from '../components/Navigation'
 	import SieveFilterSets from '../components/SieveFilterSets'
 	import {Tab, Tabs} from 'vue-tabs-component'
+	import ActionButton from 'nextcloud-vue/dist/Components/ActionButton'
+	import Actions from 'nextcloud-vue/dist/Components/Actions'
+	import { ClipLoader } from '@saeris/vue-spinners'
 
 	export default {
 		name: 'SieveView',
 		components: {
+			Actions,
+			ActionButton,
 			Content,
 			AppContent,
 			Navigation,
 			SieveFilterSets,
 			Tab,
 			Tabs,
+			ClipLoader,
 		},
 		methods: {
+			tabChanged (selectedTab) {
+				this.$store.dispatch("fetchSieveScripts", selectedTab.tab.id)
+			},
 			tls (accountID) {
 				if (this.$store.getters.getAccount(accountID).sieveSslMode === "tls") {
 					return "tls://"
 				} else {
 					return ""
 				}
-			}
+			},
 		},
+		/*mounted: function() {
+			this.$store.dispatch("fetchSieveScripts", this.$store.getters.sieveAccountList()[0])
+		}*/
 	}
 </script>
 
@@ -148,6 +186,7 @@
 		font-weight: bold;
 		font-size: 16px;
 		text-align: center;
+		height: 60px;
 	}
 	.list-group-item {
 		color: var(--color-text-lighter);
@@ -171,6 +210,8 @@
 		flex: 1;
 		text-align: left;
 		padding: 5px;
+		width: 138px;
+		overflow-y: scroll;
 	}
 	.list-input {
 		margin: 5px !important;
@@ -182,7 +223,7 @@
 		border-top: solid 1px lightgray;
 	}
 	.filtersets-container {
-		width: 227px;
+		width: 225px;
 		border: solid 1px lightgray;
 		border-radius: 5px;
 		background-color: white;
@@ -196,6 +237,17 @@
 		padding: 5px;
 		margin: 2px;
 		flex: 1;
+	}
+	.loading-container {
+		background-color: white;
+		border: solid 1px lightgray;
+		border-radius: 5px;
+		padding: 5px;
+		margin: 2px;
+		width: 100%;
+		display: flex;
+		align-items: center;
+		flex-direction: column;
 	}
 	.flex-line {
 		display: flex;
@@ -211,5 +263,8 @@
 		padding: 4px;
 		background-color: white;
 		margin: 4px;
+	}
+	.sieve-button {
+		margin: 0
 	}
 </style>

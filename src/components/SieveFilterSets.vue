@@ -1,6 +1,12 @@
 <template>
 	<div class="main-container flex-container">
 		<div class="filtersets-container">
+				<button class="sieve-button" @click="addFilterSet()">{{ t("mail", "Add") }}</button>
+				<button class="sieve-button" @click="rmFilterSet()">{{ t("mail", "Remove") }}</button>
+				<template v-if="selFilterSetID !== -1">
+					<button class="sieve-button" v-if="$store.getters.getFilterSetByID(accountID, selFilterSetID).parsed" @click="rawEdit()">{{ t("mail", "Raw Edit") }}</button>
+					<button class="sieve-button" v-else @click="parse()">{{ t("mail", "Parse") }}</button>
+				</template>
 			<draggable
 			class="list-group"
 			v-model="filterSets"
@@ -12,11 +18,15 @@
 				:key="filterSet.id"
 				>
 					<div class="flex-line">
+						<div>
+							<input type="checkbox" class="active-script" :checked="filterSet.active" @input="toggleActive(filterSet.id)"
+							style="height: 13px; min-height: 13px; margin-left: 3px; cursor: auto;">
+						</div>
 						<div v-if="filterSetNameEdit !== filterSet.id" class="list-text">
-							<div>{{ filterSet.name }}</div>
+							{{ filterSet.name }}
 						</div>
 						<div v-else class="list-text">
-							<input style="margin: 0px;width: 100%;" v-model="filterSetName"></input>
+							<input style="margin: 0px;width: 100%;" v-model="filterSetName">
 						</div>
 						<div>
 							<Actions v-if="filterSetNameEdit !== filterSet.id">
@@ -28,22 +38,16 @@
 						</div>
 					</div>
 				</div>
-				<button slot="header" @click="addFilterSet()">{{ t("mail", "Add") }}</button>
-				<button slot="header" @click="rmFilterSet()">{{ t("mail", "Remove") }}</button>
-				<template v-if="selFilterSetID !== -1">
-					<button v-if="filterSets[selFilterSetID].parsed" slot="header" @click="rawEdit()">{{ t("mail", "Raw Edit") }}</button>
-					<button v-else slot="header" @click="parse()">{{ t("mail", "Parse") }}</button>
-				</template>
 			</draggable>
 		</div>
-		<div v-if="selFilterSetID !== -1" class="filter-container">
+		<template v-if="selFilterSetID !== -1">
 			<SieveFilters v-if="$store.getters.getFilterSetByID(accountID,selFilterSetID).parsed"
 			:accountID="accountID" 
 			:filterSetID="selFilterSetID" />
 			<SieveFiltersRaw v-else 
 			:accountID="accountID" 
 			:filterSetID="selFilterSetID" />
-		</div>
+		</template>
 	</div>
 </template>
 
@@ -54,7 +58,7 @@
 	import Message from 'vue-m-message'
 	import SieveFilters from "./SieveFilters"
 	import SieveFiltersRaw from "./SieveFiltersRaw"
-	import {parseSieveScript, makeSieveScript, ParseSieveError} from "../service/SieveParserService"
+	import {parseSieveScript, makeSieveScript, ParseSieveError, getScripts} from "../service/FiltersService"
 	import Vue from 'vue'
 	import Logger from '../logger'
 
@@ -86,7 +90,7 @@
 				set(value) {
 					this.$store.commit("updateFilterSets", {
 							value,
-							"accountID": 1,
+							"accountID": this.accountID,
 					})
 				}
 			},
@@ -98,9 +102,12 @@
 					"accountID": this.accountID,
 					"filterSetID": this.selFilterSetID,
 					"value": {
-						"id": this.filterSets[this.selFilterSetID].id,
-						"name": this.filterSets[this.selFilterSetID].name,
+						"id": this.$store.getters.getFilterSetByID(this.accountID, this.selFilterSetID).id,
+						"name": this.$store.getters.getFilterSetByID(this.accountID, this.selFilterSetID).name,
+						"original_name": this.$store.getters.getFilterSetByID(this.accountID, this.selFilterSetID).original_name,
 						"parsed": false,
+						"active": this.$store.getters.getFilterSetByID(this.accountID, this.selFilterSetID).active,
+						"changed": this.$store.getters.getFilterSetByID(this.accountID, this.selFilterSetID).changed,
 						"raw": raw,
 					}
 				})
@@ -116,8 +123,11 @@
 						"accountID": this.accountID,
 						"filterSetID": this.selFilterSetID,
 						"value": {
-							"id": this.filterSets[this.selFilterSetID].id,
-							"name": this.filterSets[this.selFilterSetID].name,
+							"id": this.$store.getters.getFilterSetByID(this.accountID, this.selFilterSetID).id,
+							"active": this.$store.getters.getFilterSetByID(this.accountID, this.selFilterSetID).active,
+							"name": this.$store.getters.getFilterSetByID(this.accountID, this.selFilterSetID).name,
+							"original_name": this.$store.getters.getFilterSetByID(this.accountID, this.selFilterSetID).original_name,
+							"changed": this.$store.getters.getFilterSetByID(this.accountID, this.selFilterSetID).changed,
 							"parsed": true,
 						}
 					})
@@ -134,11 +144,14 @@
 							"accountID": this.accountID,
 							"filterSetID": this.selFilterSetID,
 							"value": {
-								"id": this.filterSets[this.selFilterSetID].id,
-								"name": this.filterSets[this.selFilterSetID].name,
+								"id": this.$store.getters.getFilterSetByID(this.accountID, this.selFilterSetID).id,
+								"name": this.$store.getters.getFilterSetByID(this.accountID, this.selFilterSetID).name,
+								"active": this.$store.getters.getFilterSetByID(this.accountID, this.selFilterSetID).active,
 								"parsed": false,
-								"raw": this.filterSets[this.selFilterSetID].raw,
+								"raw": this.$store.getters.getFilterSetByID(this.accountID, this.selFilterSetID).raw,
 								"parseError": e.message,
+								"original_name": this.$store.getters.getFilterSetByID(this.accountID, this.selFilterSetID).original_name,
+								"changed": this.$store.getters.getFilterSetByID(this.accountID, this.selFilterSetID).changed,
 							}
 						})
 					} else {
@@ -175,24 +188,17 @@
 				}
 			},
 			selFilterSet (index) {
-				// 2 buttons if no filterset selected
-				if (this.selFilterSetID === -1) {
-					index = index-2
-				} else {
-					index = index-3
-				}
-				if (index >= 0) { // ignore buttons
-					this.selFilterSetID = this.$store.state.sieveFilterSets[this.accountID][index].id;
-					if (this.selFilterSetID !== this.filterSetNameEdit) { // close edit on change
-						this.filterSetNameEdit = -1;
-						this.rawSieveScript = ''
-					}
+				this.selFilterSetID = this.$store.state.sieveFilterSets[this.accountID][index].id;
+				if (this.selFilterSetID !== this.filterSetNameEdit) { // close edit on change
+					this.filterSetNameEdit = -1;
+					this.rawSieveScript = ''
 				}
 			},
 			addFilterSet () {
 				this.$store.commit("newFilterSet", {
 					"accountID": this.accountID,
 					"raw": "",
+					"changed": true,
 				});
 			},
 			rmFilterSet() {
@@ -220,6 +226,12 @@
 						"filterSetID": filterSetID,
 					});
 				}
+			},
+			toggleActive(filterSetID) {
+				this.$store.commit('toggleActiveSieve', {
+					"accountID": this.accountID,
+					"filterSetID": filterSetID,
+				})
 			},
 		},
 		watch: {

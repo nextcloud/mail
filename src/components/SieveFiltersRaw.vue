@@ -1,29 +1,31 @@
 <template>
-	<div class="flex-horizontal">
-		<div class="flex-line">
-			<div class="list-text">
-				<div v-if="$store.state.sieveFilterSets[accountID][filterSetID].parseError !== undefined">
-					{{ t("mail", "Filterset not parsable. Reason: ")+$store.state.sieveFilterSets[accountID][filterSetID].parseError }}
+	<div class="filter-container">
+		<div class="flex-horizontal">
+			<div class="flex-line">
+				<div class="list-text">
+					<div v-if="$store.getters.getFilterSetByID(accountID,filterSetID).parseError !== undefined">
+						{{ t("mail", "Filterset not parsable. Reason: ")+$store.state.sieveFilterSets[accountID][filterSetID].parseError }}
+					</div>
+				</div>
+				<div>
+					<Actions v-if="!rawSieveScriptEdit">
+						<ActionButton icon="icon-rename" 
+						@click="rawSieveScript = $store.getters.getFilterSetByID(accountID,filterSetID).raw; rawSieveScriptEdit=true">
+							Edit
+						</ActionButton>
+					</Actions>
+					<Actions v-else>
+						<ActionButton icon="icon-confirm" @click="rawSieveConfirm">Save</ActionButton>
+					</Actions>
 				</div>
 			</div>
-			<div>
-				<Actions v-if="!rawSieveScriptEdit">
-					<ActionButton icon="icon-rename" 
-					@click="rawSieveScript = $store.getters.getFilterSetByID(accountID,filterSetID).raw; rawSieveScriptEdit=true">
-						Edit
-					</ActionButton>
-				</Actions>
-				<Actions v-else>
-					<ActionButton icon="icon-confirm" @click="rawSieveConfirm">Save</ActionButton>
-				</Actions>
+			<div v-if="!rawSieveScriptEdit">
+				<textarea :value="$store.getters.getFilterSetByID(accountID,filterSetID).raw" 
+				v-autosize disabled="true" style="width: 100%; resize: none;"></textarea>
 			</div>
-		</div>
-		<div v-if="!rawSieveScriptEdit">
-			<textarea :value="$store.getters.getFilterSetByID(accountID,filterSetID).raw" 
-			v-autosize disabled="true" style="width: 100%; resize: none;"></textarea>
-		</div>
-		<div v-else>
-			<textarea v-autosize v-model="rawSieveScript" style="width: 100%; resize: none;"></textarea>
+			<div v-else>
+				<textarea v-autosize v-model="rawSieveScript" style="width: 100%; resize: none;"></textarea>
+			</div>
 		</div>
 	</div>
 </template>

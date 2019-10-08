@@ -41,7 +41,7 @@
 <script>
 	import Actions from 'nextcloud-vue/dist/Components/Actions'
 	import ActionButton from 'nextcloud-vue/dist/Components/ActionButton'
-	import {sieveTestsBlueprint, matchTypeBlueprint} from '../service/SieveParserService'
+	import {sieveTestsBlueprint, matchTypeBlueprint} from '../service/FiltersService'
 	
 	export default {
 		name: 'SieveTests',

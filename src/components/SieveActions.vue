@@ -1,6 +1,6 @@
 <template>
 	<div class="flex-horizontal filter-test-field">
-		<div style="text-align: left; font-size: 10px">{{ t("mail", "Do the following:") }}</div>
+		<div style="text-align: left; font-size: 10px">{{ t("mail", "Do:") }}</div>
 		<div v-for="action in actionsEdit" class="flex-line">
 			<div class="list-text">
 				<select v-model="action.type" @change="actionTypeChange(action)">
@@ -36,7 +36,7 @@
 <script>
 	import Actions from 'nextcloud-vue/dist/Components/Actions'
 	import ActionButton from 'nextcloud-vue/dist/Components/ActionButton'
-	import {sieveActionsBlueprint} from '../service/SieveParserService'
+	import {sieveActionsBlueprint} from '../service/FiltersService'
 	import {translate as mailboxTranslator} from '../l10n/MailboxTranslator.js'
 	
 	export default {

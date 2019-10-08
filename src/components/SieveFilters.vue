@@ -1,40 +1,42 @@
 <template>
-	<draggable
-		class="list-group"
-		v-model="filters"
-		@choose="selFilter($event.oldIndex)"
-		>
-		<div
-			v-for="filter in filters"
-			:class="setClassOnSelect(filter.id)"
-			:key="filter.id"
+	<div class="filter-container">
+		<button class="sieve-button" @click="addFilter()">{{ t("mail", "Add") }}</button>
+		<button class="sieve-button" @click="rmFilter()">{{ t("mail", "Remove") }}</button>
+		<draggable
+			class="list-group"
+			v-model="filters"
+			@choose="selFilter($event.oldIndex)"
 			>
-			<div class="flex-horizontal"> 
-				<div class="flex-line">
-					<div v-if="filterEdit.id !== filter.id" class="list-text">
-						<div>{{ filter.name }}</div>
+			<div
+				v-for="filter in filters"
+				:class="setClassOnSelect(filter.id)"
+				:key="filter.id"
+				>
+				<div class="flex-horizontal"> 
+					<div class="flex-line">
+						<div v-if="filterEdit.id !== filter.id" class="list-text">
+							<div>{{ filter.name }}</div>
+						</div>
+						<div v-else class="list-text">
+							<input style="margin: 0;" v-model="filterEdit.name"></input>
+						</div>
+						<div>
+							<Actions v-if="filterEdit.id !== filter.id">
+								<ActionButton icon="icon-rename" @click="filterEditStart(filter.id)">Edit</ActionButton>
+							</Actions>
+							<Actions v-else>
+								<ActionButton icon="icon-confirm" @click="filterEditConfirm">Save</ActionButton>
+							</Actions>
+						</div>
 					</div>
-					<div v-else class="list-text">
-						<input style="margin: 0;" v-model="filterEdit.name"></input>
+					<div v-if="filterEdit.id === filter.id" class="flex-horizontal">
+						<SieveTests v-model="filterEdit.tests" />
+						<SieveActions v-model="filterEdit.actions" :accountID="accountID"/>
 					</div>
-					<div>
-						<Actions v-if="filterEdit.id !== filter.id">
-							<ActionButton icon="icon-rename" @click="filterEditStart(filter.id)">Edit</ActionButton>
-						</Actions>
-						<Actions v-else>
-							<ActionButton icon="icon-confirm" @click="filterEditConfirm">Save</ActionButton>
-						</Actions>
-					</div>
-				</div>
-				<div v-if="filterEdit.id === filter.id" class="flex-horizontal">
-					<SieveTests v-model="filterEdit.tests" />
-					<SieveActions v-model="filterEdit.actions" :accountID="accountID"/>
 				</div>
 			</div>
-		</div>
-		<button slot="header" @click="addFilter()">{{ t("mail", "Add") }}</button>
-		<button slot="header" @click="rmFilter()">{{ t("mail", "Remove") }}</button>
-	</draggable>
+		</draggable>
+	</div>
 </template>
 
 <script>
@@ -45,7 +47,7 @@
 	import Logger from '../logger'
 	import SieveTests from './SieveTests'
 	import SieveActions from './SieveActions'
-	import {sieveActionsBlueprint, sieveTestsBlueprint} from '../service/SieveParserService'
+	import {sieveActionsBlueprint, sieveTestsBlueprint} from '../service/FiltersService'
 
 	export default {
 		name: 'SieveFilters',
@@ -103,13 +105,10 @@
 				this.filterEdit = -1;
 			},
 			selFilter (index) {
-				index = index-2 // first indices are the 2 buttons
-				if (index >= 0) { // ignore buttons
-					this.filterSetNameEdit = -1;
-					this.selFilterID = this.$store.state.sieveFilters[this.accountID][this.filterSetID][index].id;
-					if (this.selFilterID !== this.filterEdit.id) {
-						this.filterEdit = -1;
-					}
+				this.filterSetNameEdit = -1;
+				this.selFilterID = this.$store.state.sieveFilters[this.accountID][this.filterSetID][index].id;
+				if (this.selFilterID !== this.filterEdit.id) {
+					this.filterEdit = -1;
 				}
 			},
 			addFilter () {

@@ -130,6 +130,8 @@ export default new Vuex.Store({
 		autocompleteEntries: [],
 		sieveFilterSets: {},
 		sieveFilters: {},
+		sieveLoading: true,
+		sieveDelete: new Set(),
 	},
 	getters,
 	mutations,
