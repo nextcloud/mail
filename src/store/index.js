@@ -2,6 +2,7 @@
  * @copyright 2019 Christoph Wurst <christoph@winzerhof-wurst.at>
  *
  * @author 2019 Christoph Wurst <christoph@winzerhof-wurst.at>
+ * @author 2019, Merlin Mittelbach <merlin.mittelbach@memit.de>
  *
  * @license GNU AGPL version 3 or any later version
  *

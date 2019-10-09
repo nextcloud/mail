@@ -1,3 +1,25 @@
+/**
+ * @copyright Copyright (c) 2019, Merlin Mittelbach <merlin.mittelbach@memit.de>
+ *
+ * @author 2019, Merlin Mittelbach <merlin.mittelbach@memit.de>
+ * @author Pierre Gordon <pierregordon@protonmail.com>
+ *
+ * @license GNU AGPL version 3 or any later version
+ *
+ * This program is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU Affero General Public License as
+ * published by the Free Software Foundation, either version 3 of the
+ * License, or (at your option) any later version.
+ *
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU Affero General Public License for more details.
+ *
+ * You should have received a copy of the GNU Affero General Public License
+ * along with this program.  If not, see <http://www.gnu.org/licenses/>.
+ *
+ */
 import {generateUrl} from 'nextcloud-router'
 import HttpClient from 'nextcloud-axios'
 
@@ -49,7 +71,7 @@ register matchtype here
 key: [string] sieve matchtype value
 props:
 	name: [string] matchtype name (required)
-	reqs: [string] requirement to be imported to sieve script (not required)
+	req: [string] requirement to be imported to sieve script (not required)
 */
 export const matchTypeBlueprint = {
 	":is": {
@@ -59,8 +81,11 @@ export const matchTypeBlueprint = {
 		"name": t("mail", "contains"),
 	},
 	":matches": {
-		"req": "test2",
 		"name": t("mail", "matches"),
+	},
+	":regex": {
+		"req": "regex",
+		"name": t("mail", "matches regular expression"),
 	},
 }
 
@@ -84,7 +109,7 @@ props:
 export const sieveTestsBlueprint = {
 	"subject": {
 		"name": t("mail", "Subject"),
-		"matchTypes": [":is", ":contains", ":matches"],
+		"matchTypes": [":is", ":contains", ":matches", ":regex"],
 		"opts_default": {
 			"negate": false,
 			"matchType": ":is",
@@ -97,7 +122,7 @@ export const sieveTestsBlueprint = {
 			}
 			const negate = test.opts.negate ? "not " : ""
 			const escapedValue = escapeSieve(test.opts.value)
-			let script = `${negate} header ${test.opts.matchType} \"subject\" \"${escapedValue}\"`
+			let script = `${negate}header ${test.opts.matchType} \"subject\" \"${escapedValue}\"`
 			return {reqs, script}
 		},
 		"parse": function(test) {
@@ -128,7 +153,7 @@ export const sieveTestsBlueprint = {
 	},
 	"from": {
 		"name": t("mail", "From"),
-		"matchTypes": [":is", ":contains", ":matches"],
+		"matchTypes": [":is", ":contains", ":matches", ":regex"],
 		"opts_default": {
 			"negate": false,
 			"matchType": ":is",
@@ -137,11 +162,11 @@ export const sieveTestsBlueprint = {
 		"make": function(test) {
 			let reqs = new Set([])
 			if (matchTypeBlueprint[test.opts.matchType].req !== undefined) {
-				reqs.add(req)
+				reqs.add(matchTypeBlueprint[test.opts.matchType].req)
 			}
 			const negate = test.opts.negate ? "not " : ""
 			const escapedValue = escapeSieve(test.opts.value)
-			let script = `${negate} header ${test.opts.matchType} \"from\" \"${escapedValue}\"`
+			let script = `${negate}header ${test.opts.matchType} \"from\" \"${escapedValue}\"`
 			return {reqs, script}
 		},
 		"parse": function(test) {
@@ -172,8 +197,7 @@ export const sieveTestsBlueprint = {
 	},
 	"to": {
 		"name": t("mail", "To"),
-		"matchTypes": [":is", ":contains", ":matches"],
-		"req": "test",
+		"matchTypes": [":is", ":contains", ":matches", ":regex"],
 		"opts_default": {
 			"negate": false,
 			"matchType": ":is",
@@ -182,11 +206,11 @@ export const sieveTestsBlueprint = {
 		"make": function(test) {
 			let reqs = new Set([])
 			if (matchTypeBlueprint[test.opts.matchType].req !== undefined) {
-				reqs.add(req)
+				reqs.add(matchTypeBlueprint[test.opts.matchType].req)
 			}
 			const negate = test.opts.negate ? "not " : ""
 			const escapedValue = escapeSieve(test.opts.value)
-			let script = `${negate} header ${test.opts.matchType} \"to\" \"${escapedvalue}\"`
+			let script = `${negate}header ${test.opts.matchType} \"to\" \"${escapedValue}\"`
 			return {reqs, script}
 		},
 		"parse": function(test) {
@@ -205,6 +229,85 @@ export const sieveTestsBlueprint = {
 			if (test[0].toLowerCase() === "header" && test[2].toLowerCase() === "to") {
 				if (this.matchTypes.indexOf(test[1]) > -1) {
 					out.opts.matchType = test[1]
+					out.opts.value = test[3]
+					return out
+				} else {
+					throw new ParseSieveError(`matchtype not supported: '${test[1]}'`)
+				}
+			} else {
+				return undefined
+			}
+		},
+	},
+	"exists": {
+		"name": t("mail", "Header exists"),
+		"opts_default": {
+			"negate": false,
+			"value": "",
+		},
+		"make": function(test) {
+			let reqs = new Set([])
+			const negate = test.opts.negate ? "not " : ""
+			const escapedValue = escapeSieve(test.opts.value)
+			let script = `${negate}exists \"${escapedValue}\"`
+			return {reqs, script}
+		},
+		"parse": function(test) {
+			let out = {
+				"type": "exists",
+				"opts": {
+					"negate": false,
+					"value": "",
+				}
+			}
+			if (test[0].toLowerCase() === "not") {
+				out.opts.negate = true
+				test.shift()
+			}
+			if (test[0].toLowerCase() === "exists") {
+				out.opts.value = test[1]
+				return out
+			} else {
+				return undefined
+			}
+		},
+	},
+	"content": {
+		"name": t("mail", "Content"),
+		"matchTypes": [":is", ":contains", ":matches", ":regex"],
+		"req": "body",
+		"opts_default": {
+			"negate": false,
+			"matchType": ":is",
+			"value": "",
+		},
+		"make": function(test) {
+			let reqs = new Set([this.req])
+			if (matchTypeBlueprint[test.opts.matchType].req !== undefined) {
+				reqs.add(matchTypeBlueprint[test.opts.matchType].req)
+			}
+			const negate = test.opts.negate ? "not " : ""
+			const escapedValue = escapeSieve(test.opts.value)
+			let script = `${negate}body :text ${test.opts.matchType} \"${escapedValue}\"`
+			return {reqs, script}
+		},
+		"parse": function(test) {
+			let out = {
+				"type": "content",
+				"opts": {
+					"negate": false,
+					"matchType": ":is",
+					"value": "",
+				}
+			}
+			if (test[0].toLowerCase() === "not") {
+				out.opts.negate = true
+				test.shift()
+			}
+			if (test[0].toLowerCase() === "body" && test.indexOf(":text") > -1) {
+				const matchTypeIndex = test.indexOf(":text") === 1 ? 2 : 1
+				if (this.matchTypes.indexOf(test[matchTypeIndex]) > -1) {
+					out.opts.matchType = test[matchTypeIndex]
 					out.opts.value = test[3]
 					return out
 				} else {

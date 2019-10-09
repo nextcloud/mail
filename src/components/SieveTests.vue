@@ -1,3 +1,23 @@
+<!--
+  - @copyright Copyright (c) 2019, Merlin Mittelbach <merlin.mittelbach@memit.de>
+  -
+  - @author 2019, Merlin Mittelbach <merlin.mittelbach@memit.de>
+  -
+  - @license GNU AGPL version 3 or any later version
+  -
+  - This program is free software: you can redistribute it and/or modify
+  - it under the terms of the GNU Affero General Public License as
+  - published by the Free Software Foundation, either version 3 of the
+  - License, or (at your option) any later version.
+  -
+  - This program is distributed in the hope that it will be useful,
+  - but WITHOUT ANY WARRANTY; without even the implied warranty of
+  - MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+  - GNU Affero General Public License for more details.
+  -
+  - You should have received a copy of the GNU Affero General Public License
+  - along with this program.  If not, see <http://www.gnu.org/licenses/>.
+  -->
 <template>
 	<div class="flex-horizontal filter-test-field">
 		<div style="text-align: left; font-size: 10px">{{ t("mail", "For incoming mail:") }}</div>
@@ -12,12 +32,17 @@
 				</select>
 
 				<!-- subject/to/from-->
-				<span v-if="['subject', 'from', 'to'].indexOf(test.type) > -1">
+				<span v-if="['subject', 'from', 'to', 'content'].indexOf(test.type) > -1">
 					<select v-model="test.opts.matchType" @change="commit()">
 						<option v-for="mT in sieveTests[test.type].matchTypes" :value="mT" :selected="mT === test.opts.matchType">
 							{{ matchTypes[mT].name }}
 						</option>
 					</select>
+					<button :style="test.opts.negate ? 'background-color: silver;' : ''" 
+					@click="test.opts.negate = !test.opts.negate; commit()">{{ t("mail", "not") }}</button>
+					<input style="margin: 0;" v-model="test.opts.value" @change="commit()"></input>
+				</span>
+				<span v-if="['exists'].indexOf(test.type) > -1">
 					<button :style="test.opts.negate ? 'background-color: silver;' : ''" 
 					@click="test.opts.negate = !test.opts.negate; commit()">{{ t("mail", "not") }}</button>
 					<input style="margin: 0;" v-model="test.opts.value" @change="commit()"></input>
