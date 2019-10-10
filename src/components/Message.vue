@@ -53,6 +53,9 @@
 				</div>
 			</div>
 			<div class="mail-message-body">
+				<div v-if="message.itineraries.length > 0" class="message-itinerary">
+					<Itinerary :entries="message.itineraries" :message-id="message.messageId" />
+				</div>
 				<MessageHTMLBody v-if="message.hasHtmlBody" :url="htmlUrl" />
 				<MessagePlainTextBody v-else :body="message.body" :signature="message.signature" />
 				<MessageAttachments :attachments="message.attachments" />
@@ -72,6 +75,7 @@ import AddressList from './AddressList'
 import {buildRecipients as buildReplyRecipients, buildReplySubject} from '../ReplyBuilder'
 import Error from './Error'
 import {getRandomMessageErrorMessage} from '../util/ErrorMessageFactory'
+import Itinerary from './Itinerary'
 import MessageHTMLBody from './MessageHTMLBody'
 import MessagePlainTextBody from './MessagePlainTextBody'
 import Loading from './Loading'
@@ -86,6 +90,7 @@ export default {
 		AddressList,
 		AppContentDetails,
 		Error,
+		Itinerary,
 		Loading,
 		MessageAttachments,
 		MessageHTMLBody,
@@ -316,7 +321,7 @@ export default {
 
 #mail-content,
 .mail-message-attachments {
-	margin: 10px 10px 50px 38px;
+	margin: 10px 38px 50px 38px;
 }
 
 .mail-message-attachments {
@@ -344,7 +349,7 @@ export default {
 	flex-direction: row;
 	justify-content: flex-end;
 	margin-left: 10px;
-	margin-right: 35px;
+	margin-right: 22px;
 	height: 44px;
 }
 
