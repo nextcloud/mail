@@ -24,7 +24,7 @@
 			<div class="flex-line">
 				<div class="list-text">
 					<div v-if="$store.getters.getFilterSetByID(accountID,filterSetID).parseError !== undefined">
-						{{ t("mail", "Filterset not parsable. Reason: ")+$store.state.sieveFilterSets[accountID][filterSetID].parseError }}
+						{{ t("mail", "Filterset not parsable. Reason: ")+$store.getters.getFilterSetByID(accountID,filterSetID).parseError }}
 					</div>
 				</div>
 				<div>

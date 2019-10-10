@@ -32,13 +32,14 @@
 			class="list-group"
 			v-model="filterSets"
 			@choose="selFilterSet($event.oldIndex)"
+			:options="{handle: '.drag-handle', filter: '.ignore-drag', preventOnFilter: false, animation: 300}"
 			>
 				<div
 				v-for="filterSet in filterSets"
 				:class="setClassOnSelect(filterSet.id)"
 				:key="filterSet.id"
 				>
-					<div class="flex-line">
+					<div class="flex-line drag-handle">
 						<div>
 							<input type="checkbox" class="active-script" :checked="filterSet.active" @input="toggleActive(filterSet.id)"
 							style="height: 13px; min-height: 13px; margin-left: 3px; cursor: auto;">
@@ -47,7 +48,7 @@
 							{{ filterSet.name }}
 						</div>
 						<div v-else class="list-text">
-							<input style="margin: 0px;width: 100%;" v-model="filterSetName">
+							<input class="ignore-drag" style="margin: 0px;width: 100%;" v-model="filterSetName">
 						</div>
 						<div>
 							<Actions v-if="filterSetNameEdit !== filterSet.id">

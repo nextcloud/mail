@@ -26,6 +26,7 @@
 			class="list-group"
 			v-model="filters"
 			@choose="selFilter($event.oldIndex)"
+			:options="{handle: '.drag-handle', filter: '.ignore-drag', preventOnFilter: false, animation: 300}"
 			>
 			<div
 				v-for="filter in filters"
@@ -33,12 +34,12 @@
 				:key="filter.id"
 				>
 				<div class="flex-horizontal"> 
-					<div class="flex-line">
+					<div class="flex-line drag-handle">
 						<div v-if="filterEdit.id !== filter.id" class="list-text">
 							<div>{{ filter.name }}</div>
 						</div>
 						<div v-else class="list-text">
-							<input style="margin: 0;" v-model="filterEdit.name"></input>
+							<input class="ignore-drag" style="margin: 0;" v-model="filterEdit.name"></input>
 						</div>
 						<div>
 							<Actions v-if="filterEdit.id !== filter.id">

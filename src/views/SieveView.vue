@@ -24,7 +24,10 @@
 		<AppContent>
 			<div id="sieve-app-content">
 				<h2>{{ t("mail", "Filter Configuration") }}</h2>
-				<tabs :options="{ useUrlFragment: false }"
+				<div v-if="$store.getters.sieveAccountList().length === 0">
+					{{ t("mail", "No Filter Account found.") }}
+				</div>
+				<tabs v-else :options="{ useUrlFragment: false }"
 					@changed="tabChanged"
 					>
 					<tab v-for="accountID in $store.getters.sieveAccountList()"

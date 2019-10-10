@@ -435,7 +435,7 @@ ${raw}`
 }
 
 export const parseSieveScript = (raw) => {
-	if (raw == "") {
+	if (raw === "" || raw === undefined) {
 		return []
 	} else {
 		let filters = []

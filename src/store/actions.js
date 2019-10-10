@@ -492,48 +492,54 @@ export default {
 		commit("setSieveLoading", true)
 		commit("resetFilterAccount", {accountID})
 		let scripts = await getScripts(accountID)
-		scripts.entries = scripts.entries.filter(x => x !== "nextcloud_includes")
-		if (scripts.active === "nextcloud_includes") {
-			const includes_raw = await getScript(accountID, "nextcloud_includes")
-			const includeRegex = /include\s*:personal\s*"(\S*)";/gm
-			let match = includeRegex.exec(includes_raw)
-			while (match !== null) {
-				if (scripts.entries.indexOf(match[1]) !== -1) {
-					const raw = await getScript(accountID, match[1])
+		if (scripts.entries !== null) {
+			scripts.entries = scripts.entries.filter(x => x !== "nextcloud_includes")
+			if (scripts.active === "nextcloud_includes") {
+				const includes_raw = await getScript(accountID, "nextcloud_includes")
+				const includeRegex = /include\s*:personal\s*"(\S*)";/gm
+				let match = includeRegex.exec(includes_raw)
+				while (match !== null) {
+					if (scripts.entries.indexOf(match[1]) !== -1) {
+						const raw = await getScript(accountID, match[1])
+						commit("newFilterSet", {
+							"accountID": accountID,
+							"name": match[1],
+							"original_name": match[1],
+							"raw": raw,
+							"active": true,
+							"changed": false,
+						})
+					}
+					scripts.entries = scripts.entries.filter(x => x !== match[1])
+					match = includeRegex.exec(includes_raw)
+				}
+			} else {
+				if (scripts.active !== null) {
+					const raw = await getScript(accountID, scripts.active)
 					commit("newFilterSet", {
 						"accountID": accountID,
-						"name": match[1],
-						"original_name": match[1],
+						"name": scripts.active,
+						"original_name": scripts.active,
 						"raw": raw,
 						"active": true,
 						"changed": false,
 					})
+					scripts.entries = scripts.entries.filter(x => x !== scripts.active)
 				}
-				scripts.entries = scripts.entries.filter(x => x !== match[1])
-				match = includeRegex.exec(includes_raw)
 			}
+			for (const script of scripts.entries) {
+				const raw = await getScript(accountID, script)
+				commit("newFilterSet", {
+					"accountID": accountID,
+					"name": script,
+					"original_name": script,
+					"raw": raw,
+					"changed": false,
+				})
+			}
+			commit("setSieveLoading", false)
 		} else {
-			const raw = await getScript(accountID, scripts.active)
-			commit("newFilterSet", {
-				"accountID": accountID,
-				"name": scripts.active,
-				"original_name": scripts.active,
-				"raw": raw,
-				"active": true,
-				"changed": false,
-			})
-			scripts.entries = scripts.entries.filter(x => x !== scripts.active)
+			commit("setSieveLoading", false)
 		}
-		for (const script of scripts.entries) {
-			const raw = await getScript(accountID, script)
-			commit("newFilterSet", {
-				"accountID": accountID,
-				"name": script,
-				"original_name": script,
-				"raw": raw,
-				"changed": false,
-			})
-		}
-		commit("setSieveLoading", false)
 	}
 }
