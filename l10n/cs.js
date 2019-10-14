@@ -61,6 +61,8 @@ OC.L10N.register(
     "Report this bug" : "Nahlásit tuto chybu",
     "Loading messages" : "Načítání zpráv",
     "Not found" : "Nenalezeno",
+    "Reply" : "Odpovědět",
+    "Reply to sender only" : "Odpovědět pouze odesílateli",
     "Could not load your message" : "Nezdařilo se načtení vaší zprávy",
     "Import into calendar" : "Importovat do kalendáře",
     "Download attachment" : "Stáhnout přílohu",
