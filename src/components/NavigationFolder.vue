@@ -66,6 +66,13 @@ export default {
 		},
 	},
 	methods: {
+		/**
+		 * Generate a folder entry app navigation
+		 *
+		 * @param {Object} folder the current folder
+		 * @param {boolean} top is this a top level entry
+		 * @returns {Object}
+		 */
 		folderToEntry(folder, top) {
 			let icon = 'folder'
 			if (folder.specialRole) {
@@ -74,12 +81,18 @@ export default {
 
 			const actions = []
 
-			if (top) {
+			if (top && !this.account.isUnified) {
 				if (this.loadingFolderStats) {
 					actions.push({
 						icon: 'icon-info',
 						text: atob(this.folder.id),
 						longtext: t('mail', 'Loading …'),
+					})
+				} else if (this.folderStats.error) {
+					actions.push({
+						icon: 'icon-info',
+						text: atob(this.folder.id),
+						longtext: t('mail', 'Cannot fetch stats'),
 					})
 				} else {
 					actions.push({
@@ -135,17 +148,19 @@ export default {
 					.map(folder => this.folderToEntry(folder, false)),
 			}
 		},
-		fetchFolderStats() {
+		async fetchFolderStats() {
 			this.loadingFolderStats = true
 
-			getFolderStats(this.account.id, this.folder.id)
-				.then(stats => {
-					Logger.debug('loaded folder stats', {stats})
-					this.folderStats = stats
-
-					this.loadingFolderStats = false
-				})
-				.catch(error => Logger.error(`could not load folder states for ${this.folder.id}`, {error}))
+			try {
+				const stats = await getFolderStats(this.account.id, this.folder.id)
+				Logger.debug('loaded folder stats', {stats})
+				this.folderStats = stats
+			} catch (error) {
+				this.folderStats = {error: true}
+				Logger.error(`could not load folder stats for ${this.folder.id}`, error)
+			} finally {
+				this.loadingFolderStats = false
+			}
 		},
 		createFolder(e) {
 			const name = e.target.elements[0].value
