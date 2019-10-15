@@ -46,7 +46,7 @@
     "lodash": "^4.17.15",
     "md5": "^2.2.1",
     "mochapack": "^1.1.5",
-    "nextcloud-vue": "^0.12.4",
+    "nextcloud-vue": "^0.12.6",
     "nextcloud_issuetemplate_builder": "^0.1.0",
     "postcss-loader": "^3.0.0",
     "printscout": "2.0.3",
