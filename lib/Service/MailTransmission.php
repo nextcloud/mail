@@ -155,7 +155,11 @@ class MailTransmission implements IMailTransmission {
 
 		$mail = new Horde_Mime_Mail();
 		$mail->addHeaders($headers);
-		$mail->setBody($message->getContent());
+		if ($messageData->isHtml()) {
+			$mail->setHtmlBody($message->getContent());
+		} else {
+			$mail->setBody($message->getContent());
+		}
 
 		// Append cloud attachments
 		foreach ($message->getCloudAttachments() as $attachment) {
@@ -212,7 +216,11 @@ class MailTransmission implements IMailTransmission {
 
 		$mail = new Horde_Mime_Mail();
 		$mail->addHeaders($headers);
-		$mail->setBody($imapMessage->getContent());
+		if ($message->isHtml()) {
+			$mail->setHtmlBody($imapMessage->getContent());
+		} else {
+			$mail->setBody($imapMessage->getContent());
+		}
 		$mail->addHeaderOb(Horde_Mime_Headers_MessageId::create());
 
 		// 'Send' the message

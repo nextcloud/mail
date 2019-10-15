@@ -23,7 +23,7 @@ namespace OCA\Mail\Db;
 
 use ChristophWurst\Nextcloud\Testing\TestCase;
 
-class TestMailAccount extends TestCase {
+class MailAccountTest extends TestCase {
 
 	public function testToAPI() {
 		$a = new MailAccount();
@@ -41,6 +41,7 @@ class TestMailAccount extends TestCase {
 		$a->setOutboundUser('spiderman');
 		$a->setOutboundPassword('xxxx');
 		$a->setOutboundSslMode('ssl');
+		$a->setEditorMode('html');
 
 		$this->assertEquals(array(
 			'accountId' => 12345,
@@ -55,6 +56,7 @@ class TestMailAccount extends TestCase {
 			'smtpUser' => 'spiderman',
 			'smtpSslMode' => 'ssl',
 			'signature' => null,
+			'editorMode' => 'html',
 			), $a->toJson());
 	}
 
@@ -72,6 +74,7 @@ class TestMailAccount extends TestCase {
 			'smtpUser' => 'spiderman',
 			'smtpSslMode' => 'ssl',
 			'signature' => null,
+			'editorMode' => null,
 		];
 		$a = new MailAccount($expected);
 		// TODO: fix inconsistency

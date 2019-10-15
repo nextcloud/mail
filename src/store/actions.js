@@ -25,6 +25,7 @@ import {savePreference} from '../service/PreferenceService'
 import {
 	create as createAccount,
 	update as updateAccount,
+	patch as patchAccount,
 	updateSignature,
 	deleteAccount,
 	fetch as fetchAccount,
@@ -73,6 +74,13 @@ export default {
 		return updateAccount(config).then(account => {
 			console.debug('account updated', account)
 			commit('editAccount', account)
+			return account
+		})
+	},
+	patchAccount({commit}, {account, data}) {
+		return patchAccount(account, data).then(account => {
+			console.debug('account patched', account, data)
+			commit('editAccount', data)
 			return account
 		})
 	},

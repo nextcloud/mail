@@ -68,6 +68,7 @@ class MailAccountMapperTest extends TestCase {
 		$this->account->setOutboundPassword('xxxx');
 		$this->account->setOutboundSslMode('ssl');
 		$this->account->setUserId('user12345');
+		$this->account->setEditorMode('plaintext');
 	}
 
 	public function testFind(){

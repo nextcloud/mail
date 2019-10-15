@@ -79,11 +79,12 @@ class AccountService {
 	}
 
 	/**
-	 * @param string $currentUserId
+	 * @param string $uid
 	 * @param int $accountId
+	 *
 	 * @return Account
 	 */
-	public function find(string $currentUserId, int $accountId): Account {
+	public function find(string $uid, int $accountId): Account {
 		if ($this->accounts !== null) {
 			foreach ($this->accounts as $account) {
 				if ($account->getId() === $accountId) {
@@ -100,7 +101,7 @@ class AccountService {
 			}
 			return new Account($defaultAccount);
 		}
-		return new Account($this->mapper->find($currentUserId, $accountId));
+		return new Account($this->mapper->find($uid, $accountId));
 	}
 
 	/**

@@ -44,6 +44,11 @@ return [
 			'verb' => 'POST'
 		],
 		[
+			'name' => 'accounts#patchAccount',
+			'url' => '/api/accounts/{accountId}',
+			'verb' => 'PATCH'
+		],
+		[
 			'name' => 'accounts#updateSignature',
 			'url' => '/api/accounts/{accountId}/signature',
 			'verb' => 'PUT'

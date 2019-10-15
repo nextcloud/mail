@@ -90,16 +90,24 @@
 			{{ t('mail', 'Note that the mail came from a noreply address so	your reply will probably not be read.') }}
 		</div>
 		<div class="composer-fields">
-			<textarea
-				ref="body"
+			<!--@keypress="onBodyKeyPress"-->
+			<TextEditor
+				v-if="editorPlainText"
+				key="editor-plain"
 				v-model="bodyVal"
-				v-autosize
 				name="body"
 				class="message-body"
-				:placeholder="t('mail', 'Message …')"
-				@keyup="onInputChanged"
-				@keypress="onBodyKeyPress"
-			></textarea>
+				@input="onInputChanged"
+			></TextEditor>
+			<TextEditor
+				v-else
+				key="editor-rich"
+				v-model="bodyVal"
+				:html="true"
+				name="body"
+				class="message-body"
+				@input="onInputChanged"
+			></TextEditor>
 		</div>
 		<div class="composer-actions">
 			<div>
@@ -109,6 +117,12 @@
 				<input class="submit-message send primary" type="submit" :value="submitButtonTitle" @click="onSend" />
 			</div>
 		</div>
+		<Actions>
+			<ActionText icon="icon-info">{{ t('mail', 'Message options') }}</ActionText>
+			<ActionCheckbox :checked.sync="editorPlainText" :text="t('mail', 'Plain text')">{{
+				t('mail', 'Plain text')
+			}}</ActionCheckbox>
+		</Actions>
 		<span v-if="savingDraft === true" id="draft-status">{{ t('mail', 'Saving draft …') }}</span>
 		<span v-else-if="savingDraft === false" id="draft-status">{{ t('mail', 'Draft saved') }}</span>
 	</div>
@@ -133,9 +147,14 @@
 import _ from 'lodash'
 import Autosize from 'vue-autosize'
 import debouncePromise from 'debounce-promise'
+import Actions from 'nextcloud-vue/dist/Components/Actions'
+import ActionCheckbox from 'nextcloud-vue/dist/Components/ActionCheckbox'
+import ActionText from 'nextcloud-vue/dist/Components/ActionText'
 import Multiselect from 'nextcloud-vue/dist/Components/Multiselect'
+import {translate as t} from '@nextcloud/l10n'
 import Vue from 'vue'
 
+import TextEditor from './TextEditor'
 import {findRecipient} from '../service/AutocompleteService'
 import Loading from './Loading'
 import Logger from '../logger'
@@ -156,9 +175,13 @@ const STATES = Object.seal({
 export default {
 	name: 'Composer',
 	components: {
+		Actions,
+		ActionCheckbox,
+		ActionText,
 		ComposerAttachments,
 		Loading,
 		Multiselect,
+		TextEditor,
 	},
 	props: {
 		replyTo: {
@@ -197,6 +220,10 @@ export default {
 			type: Function,
 			required: true,
 		},
+		isPlainText: {
+			type: Boolean,
+			default: true,
+		},
 	},
 	data() {
 		return {
@@ -205,7 +232,7 @@ export default {
 			autocompleteRecipients: this.to.concat(this.cc).concat(this.bcc),
 			newRecipients: [],
 			subjectVal: this.subject,
-			bodyVal: this.body,
+			bodyVal: this.isPlainText ? this.body.replace(/([^>\r\n]?)(\r\n|\n\r|\r|\n)/g, '$1<br>$2') : this.body,
 			attachments: [],
 			noReply: this.to.some(to => to.email.startsWith('noreply@') || to.email.startsWith('no-reply@')),
 			submitButtonTitle: t('mail', 'Send'),
@@ -219,6 +246,7 @@ export default {
 			selectTo: this.to,
 			selectCc: this.cc,
 			selectBcc: this.bcc,
+			editorPlainText: this.isPlainText,
 		}
 	},
 	computed: {
@@ -235,17 +263,22 @@ export default {
 			return this.subjectVal === '' && this.bodyVal !== ''
 		},
 	},
+	watch: {
+		selectedAlias(val) {
+			if (val) {
+				// TODO: warn user before formatting is lost?
+				this.editorPlainText = val.editorMode === 'plaintext'
+			}
+		},
+	},
 	beforeMount() {
 		if (this.fromAccount) {
 			this.selectedAlias = this.aliases.find(alias => alias.id === this.fromAccount)
 		} else {
 			this.selectedAlias = this.aliases[0]
 		}
-		this.bodyVal = this.bodyWithSignature(this.selectedAlias, this.body)
-	},
-	mounted: function() {
-		this.$refs.body.focus()
-		this.$refs.body.setSelectionRange(0, 0)
+
+		this.bodyVal = this.bodyWithSignature(this.selectedAlias, this.bodyVal)
 	},
 	methods: {
 		recipientToRfc822(recipient) {
@@ -276,6 +309,7 @@ export default {
 					attachments: this.attachments,
 					folderId: this.replyTo ? this.replyTo.folderId : undefined,
 					messageId: this.replyTo ? this.replyTo.messageId : undefined,
+					isHtml: !this.editorPlainText,
 				}
 			}
 		},
@@ -410,7 +444,7 @@ export default {
 }
 .composer-fields .multiselect,
 .composer-fields input,
-.composer-fields textarea {
+.composer-fields TextEditor {
 	flex-grow: 1;
 	max-width: none;
 	border: none;
@@ -426,7 +460,7 @@ export default {
 #cc,
 #bcc,
 input.subject,
-textarea.message-body {
+.message-body {
 	padding: 12px;
 	margin: 0;
 }
@@ -438,7 +472,7 @@ textarea.message-body {
 input.cc,
 input.bcc,
 input.subject,
-textarea.message-body {
+.message-body {
 	border-top: none;
 }
 
@@ -447,10 +481,13 @@ input.subject {
 	font-weight: 300;
 }
 
-textarea.message-body {
+.message-body {
 	min-height: 300px;
-	resize: none;
+	width: 100%;
 	padding-right: 25%;
+	border: none !important;
+	outline: none !important;
+	box-shadow: none !important;
 }
 
 #draft-status {
@@ -476,7 +513,7 @@ label.bcc-label {
 	bottom: 0;
 }
 
-textarea.reply {
+.reply {
 	min-height: 100px;
 }
 </style>

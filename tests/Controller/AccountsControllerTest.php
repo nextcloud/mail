@@ -426,7 +426,19 @@ class AccountsControllerTest extends TestCase {
 			->with($this->userId, $messageData, $replyData, null, null);
 		$expected = new JSONResponse();
 
-		$resp = $this->controller->send(13, 'sub', 'bod', 'to@d.com', '', '', null, base64_encode($folderId), $messageId, [], null);
+		$resp = $this->controller->send(
+			13,
+			'sub',
+			'bod',
+			'to@d.com',
+			'',
+			'',
+			true,
+			null,
+			base64_encode($folderId),
+			$messageId,
+			[],
+			null);
 
 		$this->assertEquals($expected, $resp);
 	}
