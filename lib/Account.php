@@ -151,17 +151,6 @@ class Account implements JsonSerializable {
 	}
 
 	/**
-	 * @param string $mailBox
-	 */
-	public function deleteMailbox($mailBox) {
-		if ($mailBox instanceof Mailbox) {
-			$mailBox = $mailBox->getFolderId();
-		}
-		$conn = $this->getImapConnection();
-		$conn->deleteMailbox($mailBox);
-	}
-
-	/**
 	 * @param string $folderId
 	 * @return Mailbox
 	 */
