@@ -52,3 +52,9 @@ export default {
 	},
 }
 </script>
+
+<style lang="scss" scoped>
+::v-deep .app-navigation-entry__title {
+	color: var(--color-text-maxcontrast);
+}
+</style>
