@@ -20,7 +20,7 @@
  *
  */
 
-import _ from 'lodash'
+import negate from 'lodash/fp/negate'
 import moment from 'moment'
 import {getLocale} from '@nextcloud/l10n'
 
@@ -47,7 +47,7 @@ const RecipientType = Object.seal({
 export const buildRecipients = (envelope, ownAddress) => {
 	let recipientType = RecipientType.None
 	const isOwnAddress = a => a.email === ownAddress.email
-	const isNotOwnAddress = _.negate(isOwnAddress)
+	const isNotOwnAddress = negate(isOwnAddress)
 
 	// Locate why we received this envelope
 	// Can be in 'to', 'cc' or unknown
