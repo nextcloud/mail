@@ -42,7 +42,6 @@
 					type="text"
 					:placeholder="t('mail', 'Name')"
 					:disabled="loading"
-					autofocus
 				/>
 				<label for="man-address">{{ t('mail', 'Mail Address') }}</label>
 				<input
@@ -382,12 +381,13 @@ export default {
 
 .tabs-component-tab {
 	flex-grow: 1;
+	text-align: center;
 	color: var(--color-text-lighter);
-	font-weight: bold;
 }
 
 .tabs-component-tab.is-active {
 	border-bottom: 1px solid black;
+	font-weight: bold;
 }
 
 .tabs-component-panels {
