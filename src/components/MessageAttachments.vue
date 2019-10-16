@@ -52,6 +52,7 @@ import MessageAttachment from './MessageAttachment'
 import Logger from '../logger'
 import {parseUid} from '../util/EnvelopeUidParser'
 import {saveAttachmentsToFiles} from '../service/AttachmentService'
+import {FilePicker} from '@nextcloud/dialogs'
 
 export default {
 	name: 'MessageAttachments',
@@ -78,7 +79,7 @@ export default {
 		saveAll() {
 			const pickDestination = () => {
 				return new Promise((res, rej) => {
-					OC.dialogs.filepicker(
+					FilePicker(
 						t('mail', 'Choose a folder to store the attachments in'),
 						res,
 						false,
