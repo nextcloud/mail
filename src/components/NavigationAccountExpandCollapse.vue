@@ -20,11 +20,11 @@
   -->
 
 <template>
-	<AppNavigationItem :item="data" />
+	<AppNavigationItem :title="title" @click="toggleCollapse" />
 </template>
 
 <script>
-import AppNavigationItem from 'nextcloud-vue/dist/Components/AppNavigationItem'
+import AppNavigationItem from '@nextcloud/vue/dist/Components/AppNavigationItem'
 
 export default {
 	name: 'NavigationAccount',
@@ -38,14 +38,16 @@ export default {
 		},
 	},
 	computed: {
-		data() {
-			return {
-				id: 'collapse-' + this.account.id,
-				key: 'collapse-' + this.account.id,
-				classes: ['collapse-folders'],
-				text: this.account.collapsed ? t('mail', 'Show all folders') : t('mail', 'Collapse folders'),
-				action: () => this.$store.commit('toggleAccountCollapsed', this.account.id),
-			}
+		id() {
+			return 'collapse-' + this.account.id
+		},
+		title() {
+			return this.account.collapsed ? t('mail', 'Show all folders') : t('mail', 'Collapse folders')
+		},
+	},
+	methods: {
+		toggleCollapse() {
+			this.$store.commit('toggleAccountCollapsed', this.account.id)
 		},
 	},
 }

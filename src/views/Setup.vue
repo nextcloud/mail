@@ -9,7 +9,7 @@
 </template>
 
 <script>
-import Content from 'nextcloud-vue/dist/Components/Content'
+import Content from '@nextcloud/vue/dist/Components/Content'
 import AccountForm from '../components/AccountForm'
 
 export default {

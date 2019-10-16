@@ -24,7 +24,7 @@
 </template>
 
 <script>
-import isMobile from 'nextcloud-vue/dist/Mixins/isMobile'
+import isMobile from '@nextcloud/vue/dist/Mixins/isMobile'
 
 export default {
 	name: 'AppDetailsToggle',

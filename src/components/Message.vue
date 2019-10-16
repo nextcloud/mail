@@ -63,9 +63,9 @@
 </template>
 
 <script>
-import Actions from 'nextcloud-vue/dist/Components/Actions'
-import ActionButton from 'nextcloud-vue/dist/Components/ActionButton'
-import AppContentDetails from 'nextcloud-vue/dist/Components/AppContentDetails'
+import Actions from '@nextcloud/vue/dist/Components/Actions'
+import ActionButton from '@nextcloud/vue/dist/Components/ActionButton'
+import AppContentDetails from '@nextcloud/vue/dist/Components/AppContentDetails'
 import {generateUrl} from '@nextcloud/router'
 
 import AddressList from './AddressList'
