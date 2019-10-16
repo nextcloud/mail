@@ -23,6 +23,7 @@ declare(strict_types=1);
 
 namespace OCA\Mail\Service\AutoConfig;
 
+use OCA\Mail\IMAP\IMAPClientFactory;
 use OCP\ILogger;
 use OCP\Security\ICrypto;
 use OCA\Mail\Account;
@@ -39,15 +40,17 @@ class ImapConnector {
 	/** @var string */
 	private $userId;
 
-	/**
-	 * @param ICrypto $crypto
-	 * @param ILogger $logger
-	 * @param string|null $UserId
-	 */
-	public function __construct(ICrypto $crypto, ILogger $logger, string $UserId = null) {
+	/** @var IMAPClientFactory */
+	private $clientFactory;
+
+	public function __construct(ICrypto $crypto,
+								ILogger $logger,
+								IMAPClientFactory $clientFactory,
+								string $UserId = null) {
 		$this->crypto = $crypto;
 		$this->logger = $logger;
 		$this->userId = $UserId;
+		$this->clientFactory = $clientFactory;
 	}
 
 	/**
@@ -59,6 +62,8 @@ class ImapConnector {
 	 * @param string $encryptionProtocol
 	 * @param string $user
 	 * @return MailAccount
+	 *
+	 * @throws \Horde_Imap_Client_Exception
 	 */
 	public function connect(string $email,
 							string $password,
@@ -66,7 +71,7 @@ class ImapConnector {
 							string $host,
 							int $port,
 							string $encryptionProtocol,
-							string $user) {
+							string $user): MailAccount {
 
 		$account = new MailAccount();
 		$account->setUserId($this->userId);
@@ -80,7 +85,8 @@ class ImapConnector {
 		$account->setInboundPassword($password);
 
 		$a = new Account($account);
-		$a->getImapConnection();
+		$client = $this->clientFactory->getClient($a);
+		$client->login();
 		$this->logger->info("Test-Account-Successful: $this->userId, $host, $port, $user, $encryptionProtocol");
 		return $account;
 	}
