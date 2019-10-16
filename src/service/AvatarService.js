@@ -20,7 +20,7 @@
  *
  */
 
-import _ from 'lodash'
+import memoize from 'lodash/fp/memoize'
 import Axios from '@nextcloud/axios'
 import {generateUrl} from '@nextcloud/router'
 
@@ -53,4 +53,4 @@ export const fetchAvatarUrl = email => {
 		})
 }
 
-export const fetchAvatarUrlMemoized = _.memoize(fetchAvatarUrl)
+export const fetchAvatarUrlMemoized = memoize(fetchAvatarUrl)
