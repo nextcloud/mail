@@ -21,8 +21,8 @@
 
 <script>
 import _ from 'lodash'
-import AppContent from 'nextcloud-vue/dist/Components/AppContent'
-import isMobile from 'nextcloud-vue/dist/Mixins/isMobile'
+import AppContent from '@nextcloud/vue/dist/Components/AppContent'
+import isMobile from '@nextcloud/vue/dist/Mixins/isMobile'
 
 import AppDetailsToggle from './AppDetailsToggle'
 import EnvelopeList from './EnvelopeList'

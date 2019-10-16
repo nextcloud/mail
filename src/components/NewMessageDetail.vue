@@ -24,7 +24,7 @@
 </template>
 
 <script>
-import AppContentDetails from 'nextcloud-vue/dist/Components/AppContentDetails'
+import AppContentDetails from '@nextcloud/vue/dist/Components/AppContentDetails'
 
 import {buildForwardSubject, buildReplyBody, buildReplySubject} from '../ReplyBuilder'
 import Composer from './Composer'

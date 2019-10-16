@@ -25,7 +25,7 @@
 </template>
 
 <script>
-import AppContentList from 'nextcloud-vue/dist/Components/AppContentList'
+import AppContentList from '@nextcloud/vue/dist/Components/AppContentList'
 import infiniteScroll from 'vue-infinite-scroll'
 import vuescroll from 'vue-scroll'
 import Vue from 'vue'

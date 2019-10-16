@@ -28,7 +28,7 @@
 </template>
 
 <script>
-import AppContentDetails from 'nextcloud-vue/dist/Components/AppContentDetails'
+import AppContentDetails from '@nextcloud/vue/dist/Components/AppContentDetails'
 
 export default {
 	name: 'NoMessageSelected',
