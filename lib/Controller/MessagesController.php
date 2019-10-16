@@ -41,6 +41,7 @@ use OCA\Mail\Model\IMAPMessage;
 use OCA\Mail\Service\AccountService;
 use OCA\Mail\Service\IMailBox;
 use OCP\AppFramework\Controller;
+use OCP\AppFramework\Db\DoesNotExistException;
 use OCP\AppFramework\Http;
 use OCP\AppFramework\Http\ContentSecurityPolicy;
 use OCP\AppFramework\Http\JSONResponse;
@@ -83,9 +84,6 @@ class MessagesController extends Controller {
 
 	/** @var IURLGenerator */
 	private $urlGenerator;
-
-	/** @var Account[] */
-	private $accounts = [];
 
 	/** @var ITimeFactory */
 	private $timeFactory;
@@ -141,8 +139,9 @@ class MessagesController extends Controller {
 	 * @throws ServiceException
 	 */
 	public function index(int $accountId, string $folderId, int $cursor = null, string $filter = null): JSONResponse {
-		$account = $this->getAccount($accountId);
-		if ($account === null) {
+		try {
+			$account = $this->accountService->find($this->currentUserId, $accountId);
+		} catch (DoesNotExistException $e) {
 			return new JSONResponse(null, Http::STATUS_FORBIDDEN);
 		}
 
@@ -170,8 +169,9 @@ class MessagesController extends Controller {
 	 * @throws ServiceException
 	 */
 	public function show(int $accountId, string $folderId, int $id): JSONResponse {
-		$account = $this->getAccount($accountId);
-		if ($account === null) {
+		try {
+			$account = $this->accountService->find($this->currentUserId, $accountId);
+		} catch (DoesNotExistException $e) {
 			return new JSONResponse(null, Http::STATUS_FORBIDDEN);
 		}
 
@@ -227,8 +227,9 @@ class MessagesController extends Controller {
 	 */
 	public function getHtmlBody(int $accountId, string $folderId, int $messageId): Response {
 		try {
-			$account = $this->getAccount($accountId);
-			if ($account === null) {
+			try {
+				$account = $this->accountService->find($this->currentUserId, $accountId);
+			} catch (DoesNotExistException $e) {
 				return new TemplateResponse(
 					$this->appName,
 					'error',
@@ -377,29 +378,15 @@ class MessagesController extends Controller {
 	 */
 	public function destroy(int $accountId, string $folderId, int $id): JSONResponse {
 		$this->logger->debug("deleting message <$id> of folder <$folderId>, account <$accountId>");
-		$account = $this->getAccount($accountId);
-		if ($account === null) {
+
+		try {
+			$account = $this->accountService->find($this->currentUserId, $accountId);
+		} catch (DoesNotExistException $e) {
 			return new JSONResponse(null, Http::STATUS_FORBIDDEN);
 		}
+
 		$this->mailManager->deleteMessage($account, base64_decode($folderId), $id);
 		return new JSONResponse();
-	}
-
-	/**
-	 * @param int $accountId
-	 *
-	 * @return Account|null
-	 * @todo add caching to \OCA\Mail\Service\AccountService
-	 * @deprecated use \OCA\Mail\Service\AccountService::find
-	 */
-	private function getAccount($accountId): ?Account {
-		if (!array_key_exists($accountId, $this->accounts)) {
-			$this->accounts[$accountId] = $this->accountService->find(
-				$this->currentUserId,
-				$accountId
-			);
-		}
-		return $this->accounts[$accountId] ?? null;
 	}
 
 	/**
@@ -409,7 +396,7 @@ class MessagesController extends Controller {
 	 * @return IMailBox
 	 */
 	private function getFolder(int $accountId, string $folderId): IMailBox {
-		$account = $this->getAccount($accountId);
+		$account = $this->accountService->find($this->currentUserId, $accountId);
 		return $account->getMailbox(base64_decode($folderId));
 	}
 
