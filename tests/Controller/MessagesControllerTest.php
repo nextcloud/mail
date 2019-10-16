@@ -38,6 +38,7 @@ use OCA\Mail\Model\Message;
 use OCA\Mail\Service\AccountService;
 use OCA\Mail\Service\MailManager;
 use OCP\AppFramework\Db\DoesNotExistException;
+use OCP\AppFramework\Http;
 use OCP\AppFramework\Http\ContentSecurityPolicy;
 use OCP\AppFramework\Http\JSONResponse;
 use OCP\AppFramework\Utility\ITimeFactory;
@@ -417,9 +418,10 @@ class MessagesControllerTest extends TestCase {
 			->method('find')
 			->with($this->equalTo($this->userId), $this->equalTo($accountId))
 			->will($this->throwException(new DoesNotExistException('')));
-		$this->expectException(DoesNotExistException::class);
 
-		$this->controller->destroy($accountId, $folderId, $messageId);
+		$expected = new JSONResponse(null, Http::STATUS_FORBIDDEN);
+
+		$this->assertEquals($expected, $this->controller->destroy($accountId, $folderId, $messageId));
 	}
 
 	public function testDestroyWithFolderOrMessageNotFound() {
