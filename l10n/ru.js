@@ -38,7 +38,6 @@ OC.L10N.register(
     "Subject" : "Тема",
     "This mail does not have a subject yet." : "У этого письма еще нет темы.",
     "Note that the mail came from a noreply address so\tyour reply will probably not be read." : "Обратите внимание, что письмо пришло с адреса noreply, поэтому\tваш ответ, вероятнее всего, не будет прочтён.",
-    "Message …" : "Сообщение ...",
     "Saving draft …" : "Сохранение черновика ...",
     "Draft saved" : "Черновик сохранён",
     "Uploading attachments …" : "Загрузка вложений ...",

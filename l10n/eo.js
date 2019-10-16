@@ -35,7 +35,6 @@ OC.L10N.register(
     "to" : "al",
     "Subject" : "Temo",
     "Note that the mail came from a noreply address so\tyour reply will probably not be read." : "Atentu, ke tiu retmesaĝo devenis el adreso „noreply“ (angle por „bv. ne respondi“): neniu probable legos vian respondon.",
-    "Message …" : "Mesaĝo...",
     "Saving draft …" : "Konservado de malneto...",
     "Draft saved" : "Malneto konservita",
     "Uploading attachments …" : "Alŝutado de kunsendaĵoj...",

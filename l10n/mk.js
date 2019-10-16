@@ -28,7 +28,6 @@ OC.L10N.register(
     "from" : "од",
     "to" : "до",
     "Subject" : "Наслов",
-    "Message …" : "Порака ...",
     "Sending …" : "Испраќам ...",
     "Go back" : "Назад",
     "Message sent!" : "Пораката е испратена!",

@@ -26,7 +26,6 @@ OC.L10N.register(
     "from" : "od",
     "to" : "komu",
     "Subject" : "Predmet",
-    "Message …" : "Správa ...",
     "Sending …" : "Odosielam ...",
     "Message sent!" : "Správa odoslaná!",
     "Send" : "Odoslať",

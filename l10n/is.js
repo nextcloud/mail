@@ -35,7 +35,6 @@ OC.L10N.register(
     "to" : "til",
     "Subject" : "Viðfangsefni",
     "Note that the mail came from a noreply address so\tyour reply will probably not be read." : "Athugaðu að skilaboðin komu frá ekki-svara netfangi\t(noreply) þannig að svarið þitt verður líklega ekki lesið.",
-    "Message …" : "Skilaboð …",
     "Saving draft …" : "Vista drög …",
     "Draft saved" : "Drög vistuð",
     "Uploading attachments …" : "Sendi inn viðhengi…",

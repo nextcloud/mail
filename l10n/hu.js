@@ -33,7 +33,6 @@ OC.L10N.register(
     "from" : "feladó",
     "to" : "címzett",
     "Subject" : "Tárgy",
-    "Message …" : "Üzenet ...",
     "Saving draft …" : "Vázlat mentése ...",
     "Draft saved" : "Vázlat elmentve",
     "Uploading attachments …" : "Csatolmányok feltöltése ...",

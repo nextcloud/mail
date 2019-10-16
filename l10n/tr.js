@@ -41,7 +41,6 @@ OC.L10N.register(
     "Subject" : "Konu",
     "This mail does not have a subject yet." : "Bu e-postanın konusu yazılmamış.",
     "Note that the mail came from a noreply address so\tyour reply will probably not be read." : "E-posta noreply adresinden gönderildiğinden yanıtınızın okunmayabileceğini unutmayın",
-    "Message …" : "İleti …",
     "Saving draft …" : "Taslak kaydediliyor …",
     "Draft saved" : "Taslak kaydedildi",
     "Uploading attachments …" : "Ek dosya yükleniyor …",

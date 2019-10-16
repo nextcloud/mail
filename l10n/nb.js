@@ -33,7 +33,6 @@ OC.L10N.register(
     "to" : "til",
     "Subject" : "Emne",
     "Note that the mail came from a noreply address so\tyour reply will probably not be read." : "Vær oppmerksom på at e-posten kom fra en \"ikke svar\" adresse slik at ditt svar blir muligens ikke lest.",
-    "Message …" : "Melding…",
     "Saving draft …" : "Lagrer kladd…",
     "Draft saved" : "Kladd ble lagret",
     "Uploading attachments …" : "Laster opp vedlegg…",

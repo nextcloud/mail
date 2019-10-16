@@ -37,7 +37,6 @@ OC.L10N.register(
     "Subject" : "件名",
     "This mail does not have a subject yet." : "このメールには件名がありません。",
     "Note that the mail came from a noreply address so\tyour reply will probably not be read." : "このメールは送信専用のメールアドレスから配信されています\t返信内容の確認はされませんので、ご了承ください。",
-    "Message …" : "メッセージ…",
     "Saving draft …" : "下書きを保存しています",
     "Draft saved" : "下書きを保存しました。",
     "Uploading attachments …" : "添付ファイルをアップロード",

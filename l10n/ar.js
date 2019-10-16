@@ -28,7 +28,6 @@ OC.L10N.register(
     "from" : "من",
     "to" : "إلى",
     "Subject" : "الموضوع",
-    "Message …" : "الرسالة…",
     "Sending …" : "جار الإرسال",
     "Go back" : "العودة",
     "Retry" : "أعد المحاولة",

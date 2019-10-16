@@ -41,7 +41,6 @@ OC.L10N.register(
     "Subject" : "主题",
     "This mail does not have a subject yet." : "此邮件还没有标题。",
     "Note that the mail came from a noreply address so\tyour reply will probably not be read." : "此邮件来自一个无法回复的地址，您的回复将可能无法被阅读。",
-    "Message …" : "消息 …",
     "Saving draft …" : "保存草稿 …",
     "Draft saved" : "草稿已保存",
     "Uploading attachments …" : "上传附件 …",

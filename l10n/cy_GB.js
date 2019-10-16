@@ -35,7 +35,6 @@ OC.L10N.register(
     "to" : "at",
     "Subject" : "Pwnc",
     "Note that the mail came from a noreply address so\tyour reply will probably not be read." : "Sylwch fod yr e-bost wedi dod o gyfeiriad noreply felly mae'n debyg na fydd eich ateb yn cael ei ddarllen.",
-    "Message …" : "Neges …",
     "Saving draft …" : "Yn cadw drafft …",
     "Draft saved" : "Cadwyd y drafft",
     "Uploading attachments …" : "Llwytho atodiadau ...",

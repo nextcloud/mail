@@ -40,7 +40,6 @@ OC.L10N.register(
     "Subject" : "Ämne",
     "This mail does not have a subject yet." : "Det här brevet har inget ämne ännu.",
     "Note that the mail came from a noreply address so\tyour reply will probably not be read." : "Observera att avsändaren är en noreply-adress så\tditt svar kommer antagligen inte att läsas.",
-    "Message …" : "Meddelande ...",
     "Saving draft …" : "Sparar utkast ...",
     "Draft saved" : "Utkast sparat",
     "Uploading attachments …" : "Laddar upp bilagor ...",

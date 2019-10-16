@@ -37,7 +37,6 @@ OC.L10N.register(
     "Subject" : "Předmět",
     "This mail does not have a subject yet." : "E-mail zatím postrádá předmět.",
     "Note that the mail came from a noreply address so\tyour reply will probably not be read." : "Poznámka: E-mail pochází z noreply (neodpovídat) adresy, takže\tvaše odpověď pravděpodobně nebude přečtena.",
-    "Message …" : "Zpráva…",
     "Saving draft …" : "Ukládání konceptu…",
     "Draft saved" : "Koncept uložen",
     "Uploading attachments …" : "Nahrát přílohy…",

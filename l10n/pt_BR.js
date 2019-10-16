@@ -41,7 +41,6 @@ OC.L10N.register(
     "Subject" : "Assunto",
     "This mail does not have a subject yet." : "Este e-mail ainda não tem um assunto.",
     "Note that the mail came from a noreply address so\tyour reply will probably not be read." : "Observe que veio de um endereço noreply então\tsua resposta não será lida.",
-    "Message …" : "Mensagem...",
     "Saving draft …" : "Salvando rascunho...",
     "Draft saved" : "Rascunho salvo",
     "Uploading attachments …" : "Enviando anexos...",

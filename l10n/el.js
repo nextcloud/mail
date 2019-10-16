@@ -33,7 +33,6 @@ OC.L10N.register(
     "to" : "προς",
     "Subject" : "Θέμα",
     "Note that the mail came from a noreply address so\tyour reply will probably not be read." : "Σημειώστε ότι η αλληλογραφία προέρχεται από μια μη εξουσιοδοτημένη διεύθυνση, οπότε η απάντησή σας πιθανότατα δεν θα διαβαστεί.",
-    "Message …" : "Μήνυμα ...",
     "Saving draft …" : "Αποθήκευση προχείρου ...",
     "Draft saved" : "Το πρόχειρο αποθηκεύτηκε",
     "Uploading attachments …" : "Ανέβασμα συνημμένων ...",

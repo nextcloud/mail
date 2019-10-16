@@ -40,7 +40,6 @@ OC.L10N.register(
     "Subject" : "Наслов",
     "This mail does not have a subject yet." : "Овај мејл још нема наслов.",
     "Note that the mail came from a noreply address so\tyour reply will probably not be read." : "Ова е-пошта је стигла са адресе на којој има \"noreply\", што\tзначи да вероватно неће бити прочитана ако одговорите на њу.",
-    "Message …" : "Порука …",
     "Saving draft …" : "Чувам нацрт …",
     "Draft saved" : "Нацрт сачуван",
     "Uploading attachments …" : "Отпремам прилоге …",

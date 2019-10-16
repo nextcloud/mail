@@ -30,7 +30,6 @@ OC.L10N.register(
     "from" : "fra",
     "to" : "til",
     "Subject" : "Emne",
-    "Message …" : "Besked…",
     "Saving draft …" : "Gemmer kladde…",
     "Draft saved" : "Kladde gemt",
     "Uploading attachments …" : "Uploader vedhæftninger",

@@ -37,7 +37,6 @@ OC.L10N.register(
     "Subject" : "Zadeva",
     "This mail does not have a subject yet." : "To sporočilo je še brez zadeve.",
     "Note that the mail came from a noreply address so\tyour reply will probably not be read." : "Upoštevajte, da je elektronska pošta prispela z naslova 'no-reply' zato odgovora najbrž ne bo nihče prebral.",
-    "Message …" : "Sporočilo ...",
     "Saving draft …" : "Poteka shranjevanje osnutka ...",
     "Draft saved" : "Osnutek je shranjen",
     "Uploading attachments …" : "Poteka pošiljanje prilog ...",
