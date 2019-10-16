@@ -144,7 +144,8 @@
 </template>
 
 <script>
-import _ from 'lodash'
+import debounce from 'lodash/fp/debounce'
+import uniqBy from 'lodash/fp/uniqBy'
 import Autosize from 'vue-autosize'
 import debouncePromise from 'debounce-promise'
 import Actions from '@nextcloud/vue/dist/Components/Actions'
@@ -239,7 +240,7 @@ export default {
 			draftsPromise: Promise.resolve(),
 			attachmentsPromise: Promise.resolve(),
 			savingDraft: undefined,
-			saveDraftDebounced: _.debounce(this.saveDraft, 700),
+			saveDraftDebounced: debounce(700)(this.saveDraft),
 			state: STATES.EDITING,
 			errorText: undefined,
 			STATES,
@@ -331,7 +332,7 @@ export default {
 				return
 			}
 			debouncedSearch(term).then(results => {
-				this.autocompleteRecipients = _.uniqBy(this.autocompleteRecipients.concat(results), 'email')
+				this.autocompleteRecipients = uniqBy('email')(this.autocompleteRecipients.concat(results))
 			})
 		},
 		onAttachmentsUploading(uploaded) {
