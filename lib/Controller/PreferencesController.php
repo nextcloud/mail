@@ -28,8 +28,8 @@ namespace OCA\Mail\Controller;
 
 use OCA\Mail\Contracts\IUserPreferences;
 use OCA\Mail\Exception\ClientException;
-use OCA\Mail\Http\JSONResponse;
 use OCP\AppFramework\Controller;
+use OCP\AppFramework\Http\JSONResponse;
 use OCP\IRequest;
 
 class PreferencesController extends Controller {

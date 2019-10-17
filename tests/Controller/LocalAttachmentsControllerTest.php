@@ -26,8 +26,8 @@ use OCA\Mail\Contracts\IAttachmentService;
 use OCA\Mail\Controller\LocalAttachmentsController;
 use OCA\Mail\Db\LocalAttachment;
 use OCA\Mail\Exception\ClientException;
-use OCA\Mail\Http\JSONResponse;
 use OCA\Mail\Service\Attachment\UploadedFile;
+use OCP\AppFramework\Http\JSONResponse;
 use OCP\IRequest;
 use PHPUnit_Framework_MockObject_MockObject;
 

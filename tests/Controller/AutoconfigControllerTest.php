@@ -23,7 +23,7 @@ namespace OCA\Mail\Tests\Controller;
 
 use ChristophWurst\Nextcloud\Testing\TestCase;
 use OCA\Mail\Controller\AutoCompleteController;
-use OCA\Mail\Http\JSONResponse;
+use OCP\AppFramework\Http\JSONResponse;
 
 class AutoConfigControllerTest extends TestCase {
 

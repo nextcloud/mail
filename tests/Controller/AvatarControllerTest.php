@@ -27,10 +27,10 @@ namespace OCA\Mail\Tests\Controller;
 use OCA\Mail\Contracts\IAvatarService;
 use OCA\Mail\Controller\AvatarsController;
 use OCA\Mail\Http\AvatarDownloadResponse;
-use OCA\Mail\Http\JSONResponse;
 use OCA\Mail\Service\Avatar\Avatar;
 use ChristophWurst\Nextcloud\Testing\TestCase;
 use OCP\AppFramework\Http;
+use OCP\AppFramework\Http\JSONResponse;
 use OCP\AppFramework\Http\Response;
 use OCP\AppFramework\Utility\ITimeFactory;
 use OCP\IRequest;
@@ -41,23 +41,35 @@ class AvatarControllerTest extends TestCase {
 	/** @var IAvatarService|PHPUnit_Framework_MockObject_MockObject */
 	private $avatarService;
 
-	/** @var ITimeFactory|PHPUnit_Framework_MockObject_MockObject */
-	private $timeFactory;
-
 	/** @var AvatarsController */
 	private $controller;
+
+	/** @var ITimeFactory */
+	private $oldFactory;
 
 	protected function setUp() {
 		parent::setUp();
 
 		$request = $this->createMock(IRequest::class);
 		$this->avatarService = $this->createMock(IAvatarService::class);
-		$this->timeFactory = $this->createMocK(ITimeFactory::class);
-		$this->timeFactory->expects($this->any())
+
+		$timeFactory = $this->createMocK(ITimeFactory::class);
+		$timeFactory->expects($this->any())
 			->method('getTime')
 			->willReturn(10000);
+		$this->oldFactory = \OC::$server->offsetGet(ITimeFactory::class);
+		\OC::$server->registerService(ITimeFactory::class, function() use ($timeFactory) {
+			return $timeFactory;
+		});
 
-		$this->controller = new AvatarsController('mail', $request, $this->avatarService, 'jane', $this->timeFactory);
+		$this->controller = new AvatarsController('mail', $request, $this->avatarService, 'jane');
+	}
+
+	protected function tearDown() {
+		parent::tearDown();
+
+		\OC::$server->offsetUnset(ITimeFactory::class);
+		\OC::$server->offsetSet(ITimeFactory::class, $this->oldFactory);
 	}
 
 	public function testGetUrl() {
@@ -71,7 +83,7 @@ class AvatarControllerTest extends TestCase {
 		$resp = $this->controller->url($email);
 
 		$expected = new JSONResponse($avatar);
-		$expected->setCacheHeaders(7 * 24 * 60 * 60, $this->timeFactory);
+		$expected->cacheFor(7 * 24 * 60 * 60);
 		$this->assertEquals($expected, $resp);
 	}
 
@@ -85,7 +97,7 @@ class AvatarControllerTest extends TestCase {
 		$resp = $this->controller->url($email);
 
 		$expected = new JSONResponse([], Http::STATUS_NOT_FOUND);
-		$expected->setCacheHeaders(24 * 60 * 60, $this->timeFactory);
+		$expected->cacheFor(24 * 60 * 60);
 		$this->assertEquals($expected, $resp);
 	}
 
@@ -100,7 +112,7 @@ class AvatarControllerTest extends TestCase {
 
 		$expected = new AvatarDownloadResponse('data');
 		$expected->addHeader('Content-Type', 'image/jpeg');
-		$expected->setCacheHeaders(7 * 24 * 60 * 60, $this->timeFactory);
+		$expected->cacheFor(7 * 24 * 60 * 60);
 		$this->assertEquals($expected, $resp);
 	}
 

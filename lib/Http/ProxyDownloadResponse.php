@@ -31,8 +31,6 @@ use OCP\AppFramework\Utility\ITimeFactory;
 
 class ProxyDownloadResponse extends DownloadResponse {
 
-	use CacheHeaders;
-
 	/** @var string */
 	private $content;
 
@@ -51,10 +49,9 @@ class ProxyDownloadResponse extends DownloadResponse {
 
 		$this->content = $content;
 
-		$time = OC::$server->query(ITimeFactory::class);
 		$now = (new DateTime('now'))->getTimestamp();
 		$expires = (new DateTime('now + 11 months'))->getTimestamp();
-		$this->setCacheHeaders($expires - $now, $time);
+		$this->cacheFor($expires - $now);
 	}
 
 	/**

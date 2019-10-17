@@ -24,10 +24,10 @@ declare(strict_types=1);
 namespace OCA\Mail\Controller;
 
 use OCA\Mail\Exception\NotImplemented;
-use OCA\Mail\Http\JSONResponse;
 use OCA\Mail\Service\AliasesService;
 use OCP\AppFramework\Controller;
 use OCP\AppFramework\Http;
+use OCP\AppFramework\Http\JSONResponse;
 use OCP\IRequest;
 use OCP\IUser;
 use OCP\IUserSession;

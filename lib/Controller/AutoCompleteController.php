@@ -23,9 +23,9 @@ declare(strict_types=1);
 
 namespace OCA\Mail\Controller;
 
-use OCA\Mail\Http\JSONResponse;
 use OCA\Mail\Service\AutoCompletion\AutoCompleteService;
 use OCP\AppFramework\Controller;
+use OCP\AppFramework\Http\JSONResponse;
 use OCP\IRequest;
 
 class AutoCompleteController extends Controller {
