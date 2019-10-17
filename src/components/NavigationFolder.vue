@@ -25,14 +25,14 @@
 		:key="genId(folder)"
 		:allow-collapse="true"
 		:icon="icon"
-		:menu-open.sync="menuOpen"
 		:title="title"
 		:to="to"
+		@update:menuOpen="onMenuToggle"
 	>
 		<!-- actions -->
 		<template slot="actions">
 			<template v-if="top">
-				<ActionText v-if="statsText" icon="icon-info" :title="folderId">
+				<ActionText icon="icon-info" :title="folderId">
 					{{ statsText }}
 				</ActionText>
 
@@ -97,8 +97,6 @@ export default {
 	},
 	data() {
 		return {
-			menuOpen: false,
-			loadingFolderStats: true,
 			folderStats: undefined,
 		}
 	},
@@ -125,21 +123,13 @@ export default {
 			return this.$store.getters.getSubfolders(this.account.id, this.folder.id)
 		},
 		statsText() {
-			if (this.folderStats && this.folderStats.total && this.folderStats.unread) {
+			if (this.folderStats && 'total' in this.folderStats && 'unread' in this.folderStats) {
 				return t('mail', '{total} messages ({unread} unread)', {
 					total: this.folderStats.total,
 					unread: this.folderStats.unread,
 				})
 			}
-			return ''
-		},
-	},
-	watch: {
-		menuOpen() {
-			// Fetch current stats when the menu is opened
-			if (this.menuOpen) {
-				this.fetchFolderStats()
-			}
+			return t('mail', 'Loading message stats')
 		},
 	},
 	methods: {
@@ -151,11 +141,20 @@ export default {
 		},
 
 		/**
+		 * On menu toggle, fetch stats
+		 * @param {boolean} open menu opened state
+		 */
+		onMenuToggle(open) {
+			if (open) {
+				this.fetchFolderStats()
+			}
+		},
+
+		/**
 		 * Fetch folder unread/read stats
 		 */
 		async fetchFolderStats() {
-			this.loadingFolderStats = true
-
+			this.folderStats = null
 			try {
 				const stats = await getFolderStats(this.account.id, this.folder.id)
 				Logger.debug('loaded folder stats', {stats})
@@ -163,8 +162,6 @@ export default {
 			} catch (error) {
 				this.folderStats = {error: true}
 				Logger.error(`could not load folder stats for ${this.folder.id}`, error)
-			} finally {
-				this.loadingFolderStats = false
 			}
 		},
 
