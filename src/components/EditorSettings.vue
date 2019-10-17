@@ -20,26 +20,29 @@
   -->
 
 <template>
-	<div>
-		<h3>{{ t('mail', 'Editor') }}</h3>
+	<div class="section">
+		<h2>{{ t('mail', 'Writing mode') }}</h2>
+		<p class="settings-hint">
+			{{ t('mail', 'Preferred writing mode for new messages and replies.') }}
+		</p>
 		<p>
-			{{ t('mail', 'Configure your preferred editing mode for new messages and replies.') }}
-			<br />
-			<Multiselect v-model="mode" :options="options" track-by="name" label="label" />
+			<input id="plaintext" v-model="mode" type="radio" class="radio" value="plaintext" />
+			<label :class="{primary: mode === 'plaintext'}" for="plaintext">
+				{{ t('mail', 'Plain text') }}
+			</label>
+			<input id="richtext" v-model="mode" type="radio" class="radio" value="richtext" />
+			<label :class="{primary: mode === 'richtext'}" for="richtext">
+				{{ t('mail', 'Rich text') }}
+			</label>
 		</p>
 	</div>
 </template>
 
 <script>
-import Multiselect from '@nextcloud/vue/dist/Components/Multiselect'
-
 import Logger from '../logger'
 
 export default {
 	name: 'EditorSettings',
-	components: {
-		Multiselect,
-	},
 	props: {
 		account: {
 			type: Object,
@@ -47,20 +50,8 @@ export default {
 		},
 	},
 	data() {
-		const options = [
-			{
-				name: 'richtext',
-				label: t('mail', 'Rich text'),
-			},
-			{
-				name: 'plaintext',
-				label: t('mail', 'Plain text'),
-			},
-		]
-
 		return {
-			mode: options.find(o => o.name === this.account.editorMode),
-			options,
+			mode: this.account.editorMode,
 		}
 	},
 	watch: {
@@ -69,7 +60,7 @@ export default {
 				.dispatch('patchAccount', {
 					account: this.account,
 					data: {
-						editorMode: val.name,
+						editorMode: val,
 					},
 				})
 				.then(() => {
@@ -84,3 +75,15 @@ export default {
 	},
 }
 </script>
+
+<style lang="scss" scoped>
+.settings-hint {
+	margin-top: -12px;
+	margin-bottom: 6px;
+	color: var(--color-text-maxcontrast);
+}
+
+label {
+	padding-right: 12px;
+}
+</style>

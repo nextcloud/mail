@@ -20,29 +20,34 @@
   -->
 
 <template>
-	<div>
-		<h3>{{ t('mail', 'Signature') }}</h3>
-		<p>
-			{{ t('mail', 'A signature will be added to the text of new and response messages.') }}
+	<div class="section">
+		<h2>{{ t('mail', 'Signature') }}</h2>
+		<p class="settings-hint">
+			{{ t('mail', 'A signature is added to the text of new messages and replies.') }}
 		</p>
+		<textarea v-model="signature" v-autosize="signature" />
 		<p>
-			<textarea v-model="signature" :disabled="loading"></textarea>
-		</p>
-		<p>
-			<input type="submit" :value="t('mail', 'Delete')" :disabled="loading" @click="deleteSignature" />
-			<input
-				type="submit"
+			<button
 				class="primary"
-				:value="t('mail', 'Save')"
+				:class="loading ? 'icon-loading-small-dark' : 'icon-checkmark-white'"
 				:disabled="loading"
 				@click="saveSignature"
-			/>
+			>
+				{{ t('mail', 'Save signature') }}
+			</button>
+			<button v-if="signature" class="button-text" @click="deleteSignature">
+				{{ t('mail', 'Delete') }}
+			</button>
 		</p>
 	</div>
 </template>
 
 <script>
+import Vue from 'vue'
+import Autosize from 'vue-autosize'
 import Logger from '../logger'
+
+Vue.use(Autosize)
 
 export default {
 	name: 'SignatureSettings',
@@ -91,3 +96,40 @@ export default {
 	},
 }
 </script>
+
+<style lang="scss" scoped>
+.settings-hint {
+	margin-top: -12px;
+	margin-bottom: 6px;
+	color: var(--color-text-maxcontrast);
+}
+
+textarea {
+	display: block;
+	width: 400px;
+	max-width: 85vw;
+	height: 100px;
+	resize: none;
+}
+
+.primary {
+	padding-left: 26px;
+	background-position: 6px;
+
+	&:after {
+		left: 14px;
+	}
+}
+
+.button-text {
+	background-color: transparent;
+	border: none;
+	color: var(--color-text-maxcontrast);
+	font-weight: normal;
+
+	&:hover,
+	&:focus {
+		color: var(--color-main-text);
+	}
+}
+</style>

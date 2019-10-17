@@ -3,13 +3,25 @@
 		<Navigation />
 		<AppContent>
 			<div class="section">
-				<h2>{{ t('mail', 'Account Settings') }} - {{ email }}</h2>
-				<h3>{{ t('mail', 'Mail server') }}</h3>
+				<h2>{{ t('mail', 'Account settings') }}</h2>
+				<p>
+					<strong>{{ displayName }}</strong> &lt;{{ email }}&gt;
+					<a class="button icon-rename" href="#account-form" :title="t('mail', 'Change name')"></a>
+				</p>
+			</div>
+			<SignatureSettings :account="account" />
+			<EditorSettings :account="account" />
+			<div class="section">
+				<h2>{{ t('mail', 'Mail server') }}</h2>
 				<div id="mail-settings">
-					<AccountForm :display-name="displayName" :email="email" :save="onSave" :account="account" />
+					<AccountForm
+						:key="account.accountId"
+						:display-name="displayName"
+						:email="email"
+						:save="onSave"
+						:account="account"
+					/>
 				</div>
-				<EditorSettings :account="account" />
-				<SignatureSettings :account="account" />
 			</div>
 		</AppContent>
 	</Content>
@@ -71,3 +83,16 @@ export default {
 	},
 }
 </script>
+
+<style lang="scss" scoped>
+.button.icon-rename {
+	background-color: transparent;
+	border: none;
+	opacity: 0.3;
+
+	&:hover,
+	&:focus {
+		opacity: 1;
+	}
+}
+</style>
