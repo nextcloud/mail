@@ -30,10 +30,11 @@ class ScriptFactory {
 
 	/**
 	 * @param string $script
+	 * @param string $script_name
 	 * @return Script
 	 */
-	public function createCustom(string $script): Script {
-		return new Script(Script::SCRIPT_CUSTOM_NAME, $script);
+	public function createCustom(string $script, string $script_name): Script {
+		return new Script(Script::SCRIPT_CUSTOM_BASE_NAME . $script_name, $script);
 	}
 
 	/**

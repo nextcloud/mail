@@ -109,19 +109,18 @@ class SieveService
 
 	/**
 	 * @param string $filter
-	 * @param string $type
+	 * @param string $script_name
 	 * @return array
 	 * @throws ManageSieve\Exception
 	 */
-	public function createScript(string $filter, string $type): array
+	public function createScript(string $filter, ?string $script_name): array
 	{
-		switch ($type) {
-			case Script::TYPE_CUSTOM:
-				$script = $this->scriptFactory->createCustom($filter);
-				return $this->installRawScript($script);
-			default:
-				return ['status' => 'error', 'message' => 'Not implemented'];
+		if ($script_name !== null) {
+			$script = $this->scriptFactory->createCustom($filter, $script_name);
+			return $this->installRawScript($script);
 		}
+
+		return ['status' => 'error', 'message' => 'Not implemented'];
 	}
 
 	/**
