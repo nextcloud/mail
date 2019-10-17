@@ -38,6 +38,7 @@ use Horde_Imap_Client_Fetch_Query;
 use Horde_Imap_Client_Ids;
 use Horde_Imap_Client_Mailbox;
 use Horde_Imap_Client_Socket;
+use Horde_Mime_Headers;
 use Horde_Mime_Part;
 use JsonSerializable;
 use OC;
@@ -161,6 +162,20 @@ class IMAPMessage implements IMessage, JsonSerializable {
 	 */
 	public function getEnvelope() {
 		return $this->fetch->getEnvelope();
+	}
+
+	private function getRawReferences(): string {
+		/** @var Horde_Mime_Headers $headers */
+		$headers = $this->fetch->getHeaders('references', Horde_Imap_Client_Data_Fetch::HEADER_PARSE);
+		$header = $headers->getHeader('references');
+		if ($header === null) {
+			return '';
+		}
+		return $header->value_single;
+	}
+
+	private function getRawInReplyTo(): string {
+		return $this->fetch->getEnvelope()->in_reply_to;
 	}
 
 	/**
@@ -630,6 +645,9 @@ class IMAPMessage implements IMessage, JsonSerializable {
 
 		$msg->setUid($this->getUid());
 		$msg->setMessageId($this->getMessageId());
+		$msg->setReferences($this->getRawReferences());
+		$msg->setThreadRootId($this->getMessageId());
+		$msg->setInReplyTo($this->getRawInReplyTo());
 		$msg->setMailboxId($mailboxId);
 		$msg->setFrom($this->getFrom());
 		$msg->setTo($this->getTo());
