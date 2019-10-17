@@ -1,4 +1,4 @@
-/*
+/**
  * @copyright 2019 Christoph Wurst <christoph@winzerhof-wurst.at>
  *
  * @author 2019 Christoph Wurst <christoph@winzerhof-wurst.at>
@@ -19,7 +19,14 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-import _ from 'lodash'
+import flatMapDeep from 'lodash/fp/flatMapDeep'
+import flatten from 'lodash/fp/flatten'
+import flattenDepth from 'lodash/fp/flattenDepth'
+import isEmpty from 'lodash/fp/isEmpty'
+import last from 'lodash/fp/last'
+import orderBy from 'lodash/fp/orderBy'
+import slice from 'lodash/fp/slice'
+import sortedUniq from 'lodash/fp/sortedUniq'
 
 import {savePreference} from '../service/PreferenceService'
 import {
@@ -148,9 +155,9 @@ export default {
 					)
 			)
 				.then(res => res.map(envs => envs.slice(0, 19)))
-				.then(res => _.flattenDepth(res, 2))
-				.then(envs => _.orderBy(envs, env => env.dateInt, 'desc'))
-				.then(envs => _.slice(envs, 0, 19)) // 19 to handle non-overlapping streams
+				.then(res => flattenDepth(2)(res))
+				.then(envs => orderBy(env => env.dateInt)('desc')(envs))
+				.then(envs => slice(0)(19)(envs)) // 19 to handle non-overlapping streams
 				.then(envelopes => {
 					if (!isSearch) {
 						commit('addUnifiedEnvelopes', {
@@ -195,21 +202,19 @@ export default {
 		const list = isSearch ? 'searchEnvelopes' : 'envelopes'
 
 		// We only care about folders of the same type/role
-		const individualFolders = _.flatten(
+		const individualFolders = flatten(
 			getters
 				.getAccounts()
 				.filter(a => !a.isUnified)
 				.map(a => getters.getFolders(a.id).filter(f => f.specialRole === folder.specialRole))
 		)
 		// Build a sorted list of all currently known envelopes (except last elem)
-		const knownEnvelopes = _.orderBy(
-			_.flatten(individualFolders.map(f => f[list].slice(0, f[list].length - 1))),
-			id => state.envelopes[id].dateInt,
-			'desc'
+		const knownEnvelopes = orderBy(id => state.envelopes[id].dateInt)('desc')(
+			flatten(individualFolders.map(f => f[list].slice(0, f[list].length - 1)))
 		)
 		// The index of the last element in the current unified mailbox determines
 		// the new offset
-		const tailId = _.last(folder[list])
+		const tailId = last(folder[list])
 		const tailIdx = knownEnvelopes.indexOf(tailId)
 		if (tailIdx === -1) {
 			return Promise.reject(
@@ -229,25 +234,25 @@ export default {
 		// of the offline page
 		// TODO: what about streams that ended before? Is it safe to ignore those?
 		const needFetch = individualFolders
-			.filter(f => !_.isEmpty(f[list]))
+			.filter(f => !isEmpty(f[list]))
 			.filter(f => {
 				const lastShown = f[list][f[list].length - 2]
 				return nextCandidates.length <= 18 || nextCandidates.indexOf(lastShown) !== -1
 			})
 
-		if (_.isEmpty(needFetch)) {
+		if (isEmpty(needFetch)) {
 			if (!isSearch) {
 				commit('addUnifiedEnvelopes', {
 					folder,
-					uids: _.sortedUniq(
-						_.orderBy(folder[list].concat(nextCandidates), id => state.envelopes[id].dateInt, 'desc')
+					uids: sortedUniq(
+						orderBy(id => state.envelopes[id].dateInt)('desc')(folder[list].concat(nextCandidates))
 					),
 				})
 			} else {
 				commit('addUnifiedSearchEnvelopes', {
 					folder,
-					uids: _.sortedUniq(
-						_.orderBy(folder[list].concat(nextCandidates), id => state.envelopes[id].dateInt, 'desc')
+					uids: sortedUniq(
+						orderBy(id => state.envelopes[id].dateInt)('desc')(folder[list].concat(nextCandidates))
 					),
 				})
 			}
@@ -399,7 +404,7 @@ export default {
 					)
 				})
 		).then(results => {
-			const newMessages = _.flatMapDeep(results).filter(m => m !== undefined)
+			const newMessages = flatMapDeep(results).filter(m => m !== undefined)
 			if (newMessages.length > 0) {
 				showNewMessagesNotification(newMessages)
 			}
