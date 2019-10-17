@@ -46,7 +46,7 @@
 				</ActionInput>
 			</template>
 		</template>
-		<AppNavigationCounter slot="counter">
+		<AppNavigationCounter v-if="folder.unread" slot="counter">
 			{{ folder.unread }}
 		</AppNavigationCounter>
 
