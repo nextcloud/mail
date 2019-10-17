@@ -53,15 +53,13 @@
     "Choose a folder to store the attachments in" : "Избери папка за зачувување на прилозите",
     "New message" : "Нова порака",
     "Settings" : "Параметри",
-    "Edit" : "Уреди",
     "Add folder" : "Додади папка",
     "Show all folders" : "Прикажи ги сите папки",
     "Collapse folders" : "Сокриј ги папките",
-    "Loading …" : "Се вчитува…",
-    "{total} messages ({unread} unread)" : "{total} пораки ({unread} непрочитани)",
     "Mark all as read" : "Означи ги сите како прочитани",
     "Mark all messages of this folder as read" : "Означи ги сите пораки во оваа папка како прочитани",
     "Add subfolder" : "Додади подпапка",
+    "{total} messages ({unread} unread)" : "{total} пораки ({unread} непрочитани)",
     "{from}\n{subject}" : "{from}\n{subject}"
 },"pluralForm" :"nplurals=2; plural=(n % 10 == 1 && n % 100 != 11) ? 0 : 1;"
 }
