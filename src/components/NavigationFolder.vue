@@ -32,13 +32,13 @@
 		<!-- actions -->
 		<template slot="actions">
 			<template v-if="top">
-				<ActionText icon="icon-info" :title="folderId">
-					{{ statsText }}
-				</ActionText>
-
 				<!-- TODO: make *mark as read* available for all folders once there is more than one action -->
-				<ActionButton icon="icon-checkmark" :title="t('mail', 'Mark all as read')" @click="markAsRead">
-					{{ t('mail', 'Mark all messages of this folder as read') }}
+				<ActionButton
+					icon="icon-checkmark"
+					:title="folder.unread ? t('mail', 'Mark all as read') : t('mail', 'All read')"
+					@click="markAsRead"
+				>
+					{{ statsText }}
 				</ActionButton>
 
 				<ActionInput icon="icon-add" @submit="createFolder">
@@ -64,7 +64,6 @@
 <script>
 import AppNavigationItem from '@nextcloud/vue/dist/Components/AppNavigationItem'
 import AppNavigationCounter from '@nextcloud/vue/dist/Components/AppNavigationCounter'
-import ActionText from '@nextcloud/vue/dist/Components/ActionText'
 import ActionButton from '@nextcloud/vue/dist/Components/ActionButton'
 import ActionInput from '@nextcloud/vue/dist/Components/ActionInput'
 
@@ -77,7 +76,6 @@ export default {
 	components: {
 		AppNavigationItem,
 		AppNavigationCounter,
-		ActionText,
 		ActionButton,
 		ActionInput,
 	},
@@ -124,10 +122,16 @@ export default {
 		},
 		statsText() {
 			if (this.folderStats && 'total' in this.folderStats && 'unread' in this.folderStats) {
-				return t('mail', '{total} messages ({unread} unread)', {
-					total: this.folderStats.total,
-					unread: this.folderStats.unread,
-				})
+				if (this.folderStats.unread === 0) {
+					return t('mail', '{total} messages', {
+						total: this.folderStats.total,
+					})
+				} else {
+					return t('mail', '{unread} unread of {total}', {
+						total: this.folderStats.total,
+						unread: this.folderStats.unread,
+					})
+				}
 			}
 			return t('mail', 'Loading message stats')
 		},
