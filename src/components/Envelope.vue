@@ -133,7 +133,7 @@ export default {
 }
 </script>
 
-<style scoped>
+<style lang="scss" scoped>
 .mail-message-account-color {
 	position: absolute;
 	left: 0px;
@@ -164,5 +164,16 @@ export default {
 .icon-attachment {
 	-ms-filter: 'progid:DXImageTransform.Microsoft.Alpha(Opacity=25)';
 	opacity: 0.25;
+}
+
+// Fix layout of messages in list until we move to component
+
+.app-content-list-item-line-two,
+.app-content-list-item-menu {
+	margin-top: -8px;
+}
+
+.app-content-list-item-menu {
+	margin-right: -2px;
 }
 </style>
