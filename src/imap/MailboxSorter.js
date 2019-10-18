@@ -19,13 +19,13 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-import _ from 'lodash'
+import clone from 'lodash/fp/clone'
 
 const specialRolesOrder = ['all', 'inbox', 'flagged', 'drafts', 'sent', 'archive', 'junk', 'trash']
 
 export const sortMailboxes = mailboxes => {
-	const clone = _.clone(mailboxes)
-	clone.sort((f1, f2) => {
+	const c = clone(mailboxes)
+	c.sort((f1, f2) => {
 		if (f1.specialUse.length && f2.specialUse.length) {
 			const s1 = specialRolesOrder.indexOf(f1.specialUse[0])
 			const s2 = specialRolesOrder.indexOf(f2.specialUse[0])
@@ -43,5 +43,5 @@ export const sortMailboxes = mailboxes => {
 			return atob(f1.id).localeCompare(atob(f2.id))
 		}
 	})
-	return clone
+	return c
 }

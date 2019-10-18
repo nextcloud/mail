@@ -47,7 +47,7 @@ trait ImapTest {
 	 * @return Horde_Imap_Client_Socket
 	 */
 	private function getTestClient() {
-		if (is_null($this->client)) {
+		if ($this->client === null) {
 			$this->client = new Horde_Imap_Client_Socket([
 				'username' => 'user@domain.tld',
 				'password' => 'mypassword',
@@ -234,24 +234,6 @@ trait ImapTest {
 		$actualContent = $message->getBodyText();
 
 		$this->assertSame($content, $actualContent, 'message content does not match');
-	}
-
-	public function assertMessageSubject($mailbox, $uid, $subject) {
-		$client = $this->getTestClient();
-
-		$query = new Horde_Imap_Client_Fetch_Query();
-		$query->envelope();
-		$result = $client->fetch($mailbox, $query, [
-			'ids' => new Horde_Imap_Client_Ids([$uid]),
-		]);
-		$messages = iterator_to_array($result);
-		$this->assertCount(1, $messages);
-		/* @var $message Horde_Imap_Client_Data_Fetch */
-		$message = reset($messages);
-
-		$actualSubject = $message->getEnvelope()->subject;
-
-		$this->assertSame($subject, $actualSubject, 'message subject does not match');
 	}
 
 }

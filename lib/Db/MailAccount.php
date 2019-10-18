@@ -71,6 +71,8 @@ use OCP\AppFramework\Db\Entity;
  * @method void setSignature(string|null $signature)
  * @method int getLastMailboxSync()
  * @method void setLastMailboxSync(int $time)
+ * @method string getEditorMode()
+ * @method void setEditorMode(string $editorMode)
  */
 class MailAccount extends Entity {
 
@@ -94,6 +96,7 @@ class MailAccount extends Entity {
 	protected $sievePassword;
 	protected $signature;
 	protected $lastMailboxSync;
+	protected $editorMode;
 
 	/**
 	 * @param array $params
@@ -174,6 +177,7 @@ class MailAccount extends Entity {
 			'imapUser' => $this->getInboundUser(),
 			'imapSslMode' => $this->getInboundSslMode(),
 			'signature' => $this->getSignature(),
+			'editorMode' => $this->getEditorMode(),
 		];
 
 		if (!is_null($this->getOutboundHost())) {

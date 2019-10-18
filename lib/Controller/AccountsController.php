@@ -109,6 +109,7 @@ class AccountsController extends Controller {
 	 * @TrapError
 	 *
 	 * @param int $accountId
+	 *
 	 * @return JSONResponse
 	 * @throws Exception
 	 */
@@ -136,6 +137,7 @@ class AccountsController extends Controller {
 	 * @param string $smtpPassword
 	 * @param array|null $sieveConfig
 	 * @param bool $autoDetect
+	 *
 	 * @return JSONResponse
 	 * @throws ClientException
 	 */
@@ -191,6 +193,32 @@ class AccountsController extends Controller {
 	 * @TrapError
 	 *
 	 * @param int $accountId
+	 * @param string|null $editorMode
+	 *
+	 * @return JSONResponse
+	 */
+	public function patchAccount(int $accountId,
+								 string $editorMode = null): JSONResponse {
+		$account = $this->accountService->find($this->currentUserId, $accountId);
+
+		if ($account === null) {
+			return new JSONResponse(null, Http::STATUS_FORBIDDEN);
+		}
+
+		$dbAccount = $account->getMailAccount();
+		if ($editorMode !== null) {
+			$dbAccount->setEditorMode($editorMode);
+		}
+		return new JSONResponse(
+			$this->accountService->save($dbAccount)->toJson()
+		);
+	}
+
+	/**
+	 * @NoAdminRequired
+	 * @TrapError
+	 *
+	 * @param int $accountId
 	 * @param string|null $signature
 	 *
 	 * @return JSONResponse
@@ -205,6 +233,7 @@ class AccountsController extends Controller {
 	 * @TrapError
 	 *
 	 * @param int $id
+	 *
 	 * @return JSONResponse
 	 */
 	public function destroy($id): JSONResponse {
@@ -231,6 +260,7 @@ class AccountsController extends Controller {
 	 * @param string $smtpPassword
 	 * @param array|null $sieveConfig
 	 * @param bool $autoDetect
+	 *
 	 * @return JSONResponse
 	 * @throws ClientException
 	 */
@@ -294,10 +324,23 @@ class AccountsController extends Controller {
 	 * @param int|null $messageId
 	 * @param mixed $attachments
 	 * @param int|null $aliasId
+	 *
 	 * @return JSONResponse
-	 * @throws Horde_Exception
+	 *
+	 * @throws ServiceException
 	 */
-	public function send(int $accountId, string $subject = null, string $body, string $to, string $cc, string $bcc, int $draftUID = null, string $folderId = null, int $messageId = null, array $attachments = [], int $aliasId = null): JSONResponse {
+	public function send(int $accountId,
+						 string $subject,
+						 string $body,
+						 string $to,
+						 string $cc,
+						 string $bcc,
+						 bool $isHtml = true,
+						 int $draftUID = null,
+						 string $folderId = null,
+						 int $messageId = null,
+						 array $attachments = [],
+						 int $aliasId = null): JSONResponse {
 		$account = $this->accountService->find($this->currentUserId, $accountId);
 		$alias = $aliasId ? $this->aliasesService->find($aliasId, $this->currentUserId) : null;
 
@@ -305,13 +348,16 @@ class AccountsController extends Controller {
 		$expandedCc = $this->groupsIntegration->expand($cc);
 		$expandedBcc = $this->groupsIntegration->expand($bcc);
 
-		$messageData = NewMessageData::fromRequest($account, $expandedTo, $expandedCc, $expandedBcc, $subject, $body, $attachments);
-		$repliedMessageData = new RepliedMessageData($account, $folderId, $messageId);
+		$messageData = NewMessageData::fromRequest($account, $expandedTo, $expandedCc, $expandedBcc, $subject, $body, $attachments, $isHtml);
+		$repliedMessageData = null;
+		if ($folderId !== null && $messageId !== null) {
+			$repliedMessageData = new RepliedMessageData($account, base64_decode($folderId), $messageId);
+		}
 
 		try {
 			$this->mailTransmission->sendMessage($this->currentUserId, $messageData, $repliedMessageData, $alias, $draftUID);
 			return new JSONResponse();
-		} catch (Horde_Exception $ex) {
+		} catch (ServiceException $ex) {
 			$this->logger->error('Sending mail failed: ' . $ex->getMessage());
 			throw $ex;
 		}
@@ -328,9 +374,17 @@ class AccountsController extends Controller {
 	 * @param string $cc
 	 * @param string $bcc
 	 * @param int $uid
+	 *
 	 * @return JSONResponse
 	 */
-	public function draft(int $accountId, string $subject = null, string $body, string $to, string $cc, string $bcc, int $draftUID = null): JSONResponse {
+	public function draft(int $accountId,
+						  string $subject = null,
+						  string $body,
+						  string $to,
+						  string $cc,
+						  string $bcc,
+						  bool $isHtml = true,
+						  int $draftUID = null): JSONResponse {
 		if (is_null($draftUID)) {
 			$this->logger->info("Saving a new draft in account <$accountId>");
 		} else {
@@ -338,7 +392,7 @@ class AccountsController extends Controller {
 		}
 
 		$account = $this->accountService->find($this->currentUserId, $accountId);
-		$messageData = NewMessageData::fromRequest($account, $to, $cc, $bcc, $subject, $body, []);
+		$messageData = NewMessageData::fromRequest($account, $to, $cc, $bcc, $subject, $body, [], $isHtml);
 
 		try {
 			$newUID = $this->mailTransmission->saveDraft($messageData, $draftUID);

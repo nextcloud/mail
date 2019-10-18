@@ -20,9 +20,9 @@
  *
  */
 
-import _ from 'lodash'
+import negate from 'lodash/fp/negate'
 import moment from 'moment'
-import {getLocale} from 'nextcloud-l10n'
+import {getLocale} from '@nextcloud/l10n'
 
 moment.locale(getLocale())
 
@@ -47,7 +47,7 @@ const RecipientType = Object.seal({
 export const buildRecipients = (envelope, ownAddress) => {
 	let recipientType = RecipientType.None
 	const isOwnAddress = a => a.email === ownAddress.email
-	const isNotOwnAddress = _.negate(isOwnAddress)
+	const isNotOwnAddress = negate(isOwnAddress)
 
 	// Locate why we received this envelope
 	// Can be in 'to', 'cc' or unknown
@@ -111,7 +111,7 @@ export const buildReplySubject = original => {
 // TODO: https://en.wikipedia.org/wiki/List_of_email_subject_abbreviations#Abbreviations_in_other_languages
 const forwardPrepends = ['fwd']
 
-export const buildFowardSubject = original => {
+export const buildForwardSubject = original => {
 	if (forwardPrepends.some(prepend => original.toLowerCase().startsWith(`${prepend}:`))) {
 		return original
 	}

@@ -30,6 +30,7 @@ use OCA\Mail\Db\MailAccount;
 use OCA\Mail\Db\MailAccountMapper;
 use OCA\Mail\Exception\ServiceException;
 use OCA\Mail\Service\DefaultAccount\Manager;
+use OCP\AppFramework\Db\DoesNotExistException;
 
 class AccountService {
 
@@ -79,28 +80,30 @@ class AccountService {
 	}
 
 	/**
-	 * @param string $currentUserId
+	 * @param string $uid
 	 * @param int $accountId
+	 *
 	 * @return Account
+	 * @throws DoesNotExistException
 	 */
-	public function find(string $currentUserId, int $accountId): Account {
+	public function find(string $uid, int $accountId): Account {
 		if ($this->accounts !== null) {
 			foreach ($this->accounts as $account) {
 				if ($account->getId() === $accountId) {
 					return $account;
 				}
 			}
-			throw new Exception("Invalid account id <$accountId>");
+			throw new DoesNotExistException("Invalid account id <$accountId>");
 		}
 
 		if ($accountId === Manager::ACCOUNT_ID) {
 			$defaultAccount = $this->defaultAccountManager->getDefaultAccount();
 			if (is_null($defaultAccount)) {
-				throw new Exception('Default account config missing');
+				throw new DoesNotExistException('Default account config missing');
 			}
 			return new Account($defaultAccount);
 		}
-		return new Account($this->mapper->find($currentUserId, $accountId));
+		return new Account($this->mapper->find($uid, $accountId));
 	}
 
 	/**

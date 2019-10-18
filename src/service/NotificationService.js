@@ -19,9 +19,9 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-import _ from 'lodash'
-import {translate as t, translatePlural as n} from 'nextcloud-l10n'
-import {generateFilePath} from 'nextcloud-router'
+import uniq from 'lodash/fp/uniq'
+import {translate as t, translatePlural as n} from '@nextcloud/l10n'
+import {generateFilePath} from '@nextcloud/router'
 
 import Logger from '../logger'
 
@@ -64,7 +64,7 @@ const showNotification = (title, body, icon) => {
 
 const getNotificationBody = messages => {
 	const labels = messages.filter(m => m.from.length > 0).map(m => m.from[0].label)
-	let from = _.uniq(labels)
+	let from = uniq(labels)
 	if (from.length > 2) {
 		from = from.slice(0, 2)
 		from.push('…')

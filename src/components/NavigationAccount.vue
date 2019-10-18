@@ -20,11 +20,39 @@
   -->
 
 <template>
-	<AppNavigationItem v-if="visible" :item="data" :menu-open.sync="menuOpen" />
+	<AppNavigationItem
+		v-if="visible"
+		:id="id"
+		:key="id"
+		:icon="iconError"
+		:menu-open.sync="menuOpen"
+		:title="account.emailAddress"
+		:to="settingsRoute"
+	>
+		<!-- Color dot -->
+		<AppNavigationIconBullet v-if="bulletColor" slot="icon" :color="bulletColor" />
+
+		<!-- Actions -->
+		<template #actions>
+			<ActionRouter :to="settingsRoute" icon="icon-settings">
+				{{ t('mail', 'Edit account') }}
+			</ActionRouter>
+			<ActionButton icon="icon-delete" @click="deleteAccount">
+				{{ t('mail', 'Delete account') }}
+			</ActionButton>
+			<ActionInput icon="icon-add" @submit="createFolder">
+				{{ t('mail', 'Add folder') }}
+			</ActionInput>
+		</template>
+	</AppNavigationItem>
 </template>
 
 <script>
-import AppNavigationItem from 'nextcloud-vue/dist/Components/AppNavigationItem'
+import AppNavigationItem from '@nextcloud/vue/dist/Components/AppNavigationItem'
+import AppNavigationIconBullet from '@nextcloud/vue/dist/Components/AppNavigationIconBullet'
+import ActionRouter from '@nextcloud/vue/dist/Components/ActionRouter'
+import ActionButton from '@nextcloud/vue/dist/Components/ActionButton'
+import ActionInput from '@nextcloud/vue/dist/Components/ActionInput'
 
 import {calculateAccountColor} from '../util/AccountColor'
 import Logger from '../logger'
@@ -33,6 +61,10 @@ export default {
 	name: 'NavigationAccount',
 	components: {
 		AppNavigationItem,
+		AppNavigationIconBullet,
+		ActionRouter,
+		ActionButton,
+		ActionInput,
 	},
 	props: {
 		account: {
@@ -49,51 +81,22 @@ export default {
 		visible() {
 			return this.account.isUnified !== true && this.account.visible !== false
 		},
-		data() {
-			const route = {
+		settingsRoute() {
+			return {
 				name: 'accountSettings',
 				params: {
 					accountId: this.account.id,
 				},
 			}
-
-			const isError = this.account.error
-			return {
-				id: 'account' + this.account.id,
-				key: 'account' + this.account.id,
-				text: this.account.emailAddress,
-				bullet: isError ? undefined : calculateAccountColor(this.account.name), // TODO
-				icon: isError ? 'icon-error' : undefined,
-				router: route,
-				utils: {
-					actions: [
-						{
-							icon: 'icon-settings',
-							text: t('mail', 'Edit'),
-							action: () => {
-									this.$router.push(route) // eslint-disable-line
-							},
-						},
-						{
-							icon: 'icon-delete',
-							text: t('mail', 'Delete'),
-							action: () => {
-								this.$store
-									.dispatch('deleteAccount', this.account)
-									.catch(error => Logger.error('could not delete account', {error}))
-							},
-						},
-						{
-							icon: 'icon-add',
-							text: t('mail', 'Add folder'),
-							input: 'text',
-							action: e => {
-								this.createFolder(e)
-							},
-						},
-					],
-				},
-			}
+		},
+		id() {
+			return 'account-' + this.account.id
+		},
+		bulletColor() {
+			return this.account.error ? undefined : calculateAccountColor(this.account.emailAddress)
+		},
+		iconError() {
+			return this.account.error ? 'icon-error' : undefined
 		},
 	},
 	methods: {
@@ -108,6 +111,11 @@ export default {
 					Logger.error('could not create folder', {error})
 					throw error
 				})
+		},
+		deleteAccount() {
+			this.$store
+				.dispatch('deleteAccount', this.account)
+				.catch(error => Logger.error('could not delete account', {error}))
 		},
 	},
 }

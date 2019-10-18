@@ -41,6 +41,7 @@ use OCA\Mail\IMAP\MessageMapper;
 use OCA\Mail\IMAP\Sync\Request;
 use OCA\Mail\IMAP\Sync\Response;
 use OCA\Mail\IMAP\Sync\Synchronizer;
+use OCA\Mail\Model\IMAPMessage;
 use OCP\AppFramework\Db\DoesNotExistException;
 use OCP\EventDispatcher\IEventDispatcher;
 
@@ -147,6 +148,22 @@ class MailManager implements IMailManager {
 		return $this->folderMapper->getFoldersStatusAsObject($client, $folderId);
 	}
 
+	public function getMessage(Account $account, string $mailbox, int $id, bool $loadBody = false): IMAPMessage {
+		$client = $this->imapClientFactory->getClient($account);
+		$mailbox = $this->mailboxMapper->find($account, $mailbox);
+
+		try {
+			return $this->messageMapper->find(
+				$client,
+				$mailbox->getMailbox(),
+				$id,
+				$loadBody
+			);
+		} catch (Horde_Imap_Client_Exception|DoesNotExistException $e) {
+			throw new ServiceException("Could not load message", 0, $e);
+		}
+	}
+
 	/**
 	 * @param Account $sourceAccount
 	 * @param string $sourceFolderId
@@ -174,9 +191,9 @@ class MailManager implements IMailManager {
 	}
 
 	/**
+	 * @throws ServiceException
 	 * @todo evaluate if we should sync mailboxes first
 	 *
-	 * @throws ServiceException
 	 */
 	public function deleteMessage(Account $account,
 								  string $mailboxId,

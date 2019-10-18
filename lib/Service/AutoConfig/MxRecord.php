@@ -46,6 +46,14 @@ class MxRecord {
 			$this->logger->debug("no MX records for host <$host> found");
 			return false;
 		}
+		$mxRecords = array_filter($mxRecords, function($record) {
+			return !empty($record);
+		});
+		if (empty(($mxRecords))) {
+			$this->logger->debug("all records for <$host>'s MX are empty");
+			return false;
+		}
+
 		$this->logger->debug("found " . count($mxRecords) . " MX records for host <$host>");
 
 		// TODO: sort by weight

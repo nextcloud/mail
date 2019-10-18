@@ -75,9 +75,7 @@ class IMAPMessageTest extends TestCase {
 
 
 		$message = new IMAPMessage($conn, 'INBOX', 123, null, true, $htmlService);
-		$htmlBody = $message->getHtmlBody(0, 0, 123, function() {
-			return null;
-		});
+		$htmlBody = $message->getHtmlBody(0, 0, 123);
 		$this->assertTrue(strlen($htmlBody) > 1000);
 
 		$plainTextBody = $message->getPlainBody();
@@ -86,12 +84,12 @@ class IMAPMessageTest extends TestCase {
 
 	public function testSerialize() {
 		$data = new Horde_Imap_Client_Data_Fetch();
+		$data->setUid(1234);
 		$m = new IMAPMessage(null, 'INBOX', 123, $data);
-		$m->setUid('1234');
 
 		$json = $m->jsonSerialize();
 
-		$this->assertEquals('1234', $json['id']);
+		$this->assertEquals(1234, $json['id']);
 	}
 
 }

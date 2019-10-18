@@ -11,6 +11,7 @@
 				<div id="mail-settings">
 					<AccountForm :display-name="displayName" :email="email" :save="onSave" :account="account" />
 				</div>
+				<EditorSettings :account="account" />
 				<SignatureSettings :account="account" />
 			</div>
 		</AppContent>
@@ -18,10 +19,11 @@
 </template>
 
 <script>
-import AppContent from 'nextcloud-vue/dist/Components/AppContent'
-import Content from 'nextcloud-vue/dist/Components/Content'
+import AppContent from '@nextcloud/vue/dist/Components/AppContent'
+import Content from '@nextcloud/vue/dist/Components/Content'
 
 import AccountForm from '../components/AccountForm'
+import EditorSettings from '../components/EditorSettings'
 import Logger from '../logger'
 import Navigation from '../components/Navigation'
 import SignatureSettings from '../components/SignatureSettings'
@@ -33,6 +35,7 @@ export default {
 		AccountForm,
 		AppContent,
 		Content,
+		EditorSettings,
 		Navigation,
 		SignatureSettings,
 		FilterSettings,

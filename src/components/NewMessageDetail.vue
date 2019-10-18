@@ -18,14 +18,15 @@
 			:body="composerData.body"
 			:draft="saveDraft"
 			:send="sendMessage"
+			:is-plain-text="composerData.isPlainText"
 		/>
 	</AppContentDetails>
 </template>
 
 <script>
-import AppContentDetails from 'nextcloud-vue/dist/Components/AppContentDetails'
+import AppContentDetails from '@nextcloud/vue/dist/Components/AppContentDetails'
 
-import {buildFowardSubject, buildReplyBody} from '../ReplyBuilder'
+import {buildForwardSubject, buildReplyBody, buildReplySubject} from '../ReplyBuilder'
 import Composer from './Composer'
 import {getRandomMessageErrorMessage} from '../util/ErrorMessageFactory'
 import Error from './Error'
@@ -52,24 +53,37 @@ export default {
 	computed: {
 		composerData() {
 			if (this.draft !== undefined) {
-				Logger.info('todo: handle draft data')
+				Logger.info('todo: handle draft data', {draft: this.draft})
 				return {
 					to: this.draft.to,
 					cc: this.draft.cc,
 					bcc: this.draft.bcc, // TODO: impl in composer
 					subject: this.draft.subject,
 					body: this.draft.body,
+					isPlainText: this.draft.hasHtmlBody !== undefined,
 				}
 			} else if (this.$route.query.uid !== undefined) {
 				// Forwarded message
 
 				const message = this.$store.getters.getMessageByUid(this.$route.query.uid)
-				Logger.debug('forwaring message', message)
+				Logger.debug('forwarding or replying to message', message)
+
+				// message headers set for 'reply' actions by default
+				let subject = buildReplySubject(message.subject)
+				let msgTo = message.from
+				let msgCc = []
+				if (this.$route.params.messageUid === 'replyAll') {
+					msgCc = message.to.concat(message.cc)
+				} else if (this.$route.params.messageUid !== 'reply') {
+					// forward
+					subject = buildForwardSubject(message.subject)
+					msgTo = []
+				}
 
 				return {
-					to: [],
-					cc: [],
-					subject: buildFowardSubject(message.subject),
+					to: msgTo,
+					cc: msgCc,
+					subject: subject,
 					body: buildReplyBody(message.bodyText, message.from[0], message.dateInt),
 				}
 			} else {

@@ -30,8 +30,11 @@ declare(strict_types=1);
 
 namespace OCA\Mail\Controller;
 
+use Exception;
 use OCA\Mail\Account;
 use OCA\Mail\Contracts\IMailManager;
+use OCA\Mail\Contracts\IMailSearch;
+use OCA\Mail\Exception\ServiceException;
 use OCA\Mail\Http\AttachmentDownloadResponse;
 use OCA\Mail\Http\HtmlResponse;
 use OCA\Mail\Model\IMAPMessage;
@@ -39,6 +42,7 @@ use OCA\Mail\Service\AccountService;
 use OCA\Mail\Service\IMailBox;
 use OCP\AppFramework\Controller;
 use OCP\AppFramework\Db\DoesNotExistException;
+use OCP\AppFramework\Http;
 use OCP\AppFramework\Http\ContentSecurityPolicy;
 use OCP\AppFramework\Http\JSONResponse;
 use OCP\AppFramework\Http\Response;
@@ -50,6 +54,7 @@ use OCP\IL10N;
 use OCP\ILogger;
 use OCP\IRequest;
 use OCP\IURLGenerator;
+use function base64_decode;
 
 class MessagesController extends Controller {
 
@@ -58,6 +63,9 @@ class MessagesController extends Controller {
 
 	/** @var IMailManager */
 	private $mailManager;
+
+	/** @var IMailSearch */
+	private $mailSearch;
 
 	/** @var string */
 	private $currentUserId;
@@ -77,9 +85,6 @@ class MessagesController extends Controller {
 	/** @var IURLGenerator */
 	private $urlGenerator;
 
-	/** @var Account[] */
-	private $accounts = [];
-
 	/** @var ITimeFactory */
 	private $timeFactory;
 
@@ -95,13 +100,23 @@ class MessagesController extends Controller {
 	 * @param IURLGenerator $urlGenerator
 	 * @param ITimeFactory $timeFactory
 	 */
-	public function __construct(string $appName, IRequest $request,
-								AccountService $accountService, IMailManager $mailManager, string $UserId,
-								$userFolder, ILogger $logger, IL10N $l10n, IMimeTypeDetector $mimeTypeDetector,
-								IURLGenerator $urlGenerator, ITimeFactory $timeFactory) {
+	public function __construct(string $appName,
+								IRequest $request,
+								AccountService $accountService,
+								IMailManager $mailManager,
+								IMailSearch $mailSearch,
+								string $UserId,
+								$userFolder,
+								ILogger $logger,
+								IL10N $l10n,
+								IMimeTypeDetector $mimeTypeDetector,
+								IURLGenerator $urlGenerator,
+								ITimeFactory $timeFactory) {
 		parent::__construct($appName, $request);
 
 		$this->accountService = $accountService;
+		$this->mailManager = $mailManager;
+		$this->mailSearch = $mailSearch;
 		$this->currentUserId = $UserId;
 		$this->userFolder = $userFolder;
 		$this->logger = $logger;
@@ -109,7 +124,6 @@ class MessagesController extends Controller {
 		$this->mimeTypeDetector = $mimeTypeDetector;
 		$this->urlGenerator = $urlGenerator;
 		$this->timeFactory = $timeFactory;
-		$this->mailManager = $mailManager;
 	}
 
 	/**
@@ -120,35 +134,27 @@ class MessagesController extends Controller {
 	 * @param string $folderId
 	 * @param int $cursor
 	 * @param string $filter
+	 *
 	 * @return JSONResponse
+	 * @throws ServiceException
 	 */
 	public function index(int $accountId, string $folderId, int $cursor = null, string $filter = null): JSONResponse {
-		$mailBox = $this->getFolder($accountId, $folderId);
+		try {
+			$account = $this->accountService->find($this->currentUserId, $accountId);
+		} catch (DoesNotExistException $e) {
+			return new JSONResponse(null, Http::STATUS_FORBIDDEN);
+		}
 
 		$this->logger->debug("loading messages of folder <$folderId>");
 
-		if ($cursor === '') {
-			$cursor = null;
-		}
-		$messages = $mailBox->getMessages($filter, $cursor);
-
-		$json = array_map(function ($j) use ($mailBox) {
-			if ($mailBox->getSpecialRole() === 'trash') {
-				$j['delete'] = (string)$this->l10n->t('Delete permanently');
-			}
-			return $j;
-		}, $messages);
-
-		return new JSONResponse($json);
-	}
-
-	private function loadMessage(int $accountId, string $folderId, int $id) {
-		$account = $this->getAccount($accountId);
-		$mailBox = $account->getMailbox(base64_decode($folderId));
-		/* @var $message IMAPMessage */
-		$message = $mailBox->getMessage($id);
-
-		return $this->enhanceMessage($accountId, $folderId, $id, $message, $mailBox);
+		return new JSONResponse(
+			$this->mailSearch->findMessages(
+				$account,
+				base64_decode($folderId),
+				$filter === '' ? null : $filter,
+				$cursor
+			)
+		);
 	}
 
 	/**
@@ -158,10 +164,32 @@ class MessagesController extends Controller {
 	 * @param int $accountId
 	 * @param string $folderId
 	 * @param int $id
+	 *
 	 * @return JSONResponse
+	 * @throws ServiceException
 	 */
 	public function show(int $accountId, string $folderId, int $id): JSONResponse {
-		return new JSONResponse($this->loadMessage($accountId, $folderId, $id));
+		try {
+			$account = $this->accountService->find($this->currentUserId, $accountId);
+		} catch (DoesNotExistException $e) {
+			return new JSONResponse(null, Http::STATUS_FORBIDDEN);
+		}
+
+		$json = $this->mailManager->getMessage(
+			$account,
+			base64_decode($folderId),
+			$id,
+			true
+		)->getFullMessage(
+			$accountId,
+			base64_decode($folderId),
+			$id
+		);
+		$json['attachments'] = array_map(function ($a) use ($accountId, $folderId, $id) {
+			return $this->enrichDownloadUrl($accountId, $folderId, $id, $a);
+		}, $json['attachments']);
+
+		return new JSONResponse($json);
 	}
 
 	/**
@@ -173,8 +201,9 @@ class MessagesController extends Controller {
 	 * @param int $id
 	 * @param int $destAccountId
 	 * @param string $destFolderId
+	 *
 	 * @return JSONResponse
-	 * @throws \Exception
+	 * @throws Exception
 	 */
 	public function move($accountId, $folderId, $id, $destAccountId, $destFolderId): JSONResponse {
 		$srcAccount = $this->accountService->find($this->currentUserId, $accountId);
@@ -193,28 +222,30 @@ class MessagesController extends Controller {
 	 * @param int $accountId
 	 * @param string $folderId
 	 * @param int $messageId
+	 *
 	 * @return HtmlResponse|TemplateResponse
 	 */
 	public function getHtmlBody(int $accountId, string $folderId, int $messageId): Response {
 		try {
-			$mailBox = $this->getFolder($accountId, $folderId);
+			try {
+				$account = $this->accountService->find($this->currentUserId, $accountId);
+			} catch (DoesNotExistException $e) {
+				return new TemplateResponse(
+					$this->appName,
+					'error',
+					['message' => 'Not allowed'],
+					'none'
+				);
+			}
 
-			/** @var IMAPMessage $m */
-			$m = $mailBox->getMessage($messageId, true);
-			$html = $m->getHtmlBody($accountId, $folderId, $messageId,
-				function ($cid) use ($m) {
-					$match = array_filter($m->attachments,
-						function ($a) use ($cid) {
-							return $a['cid'] === $cid;
-						});
-					$match = array_shift($match);
-					if (is_null($match)) {
-						return null;
-					}
-					return $match['id'];
-				});
-
-			$htmlResponse = new HtmlResponse($html);
+			$htmlResponse = new HtmlResponse(
+				$this->mailManager->getMessage(
+					$account,
+					base64_decode($folderId),
+					$messageId,
+					true
+				)->getHtmlBody($accountId, $folderId, $messageId)
+			);
 
 			// Harden the default security policy
 			$policy = new ContentSecurityPolicy();
@@ -230,9 +261,13 @@ class MessagesController extends Controller {
 			$htmlResponse->addHeader('Pragma', 'cache');
 
 			return $htmlResponse;
-		} catch (\Exception $ex) {
-			return new TemplateResponse($this->appName, 'error',
-				['message' => $ex->getMessage()], 'none');
+		} catch (Exception $ex) {
+			return new TemplateResponse(
+				$this->appName,
+				'error',
+				['message' => $ex->getMessage()],
+				'none'
+			);
 		}
 	}
 
@@ -245,6 +280,7 @@ class MessagesController extends Controller {
 	 * @param string $folderId
 	 * @param int $messageId
 	 * @param int $attachmentId
+	 *
 	 * @return AttachmentDownloadResponse
 	 */
 	public function downloadAttachment(int $accountId, string $folderId, int $messageId,
@@ -266,6 +302,7 @@ class MessagesController extends Controller {
 	 * @param int $messageId
 	 * @param int $attachmentId
 	 * @param string $targetPath
+	 *
 	 * @return JSONResponse
 	 */
 	public function saveAttachment(int $accountId, string $folderId, int $messageId,
@@ -311,6 +348,7 @@ class MessagesController extends Controller {
 	 * @param string $folderId
 	 * @param string $messageId
 	 * @param array $flags
+	 *
 	 * @return JSONResponse
 	 */
 	public function setFlags(int $accountId, string $folderId, int $messageId, array $flags): JSONResponse {
@@ -334,40 +372,31 @@ class MessagesController extends Controller {
 	 * @param int $accountId
 	 * @param string $folderId
 	 * @param int $id
+	 *
 	 * @return JSONResponse
+	 * @throws ServiceException
 	 */
 	public function destroy(int $accountId, string $folderId, int $id): JSONResponse {
 		$this->logger->debug("deleting message <$id> of folder <$folderId>, account <$accountId>");
-		try {
-			$account = $this->getAccount($accountId);
-			$this->mailManager->deleteMessage($account, base64_decode($folderId), $id);
-			return new JSONResponse();
-		} catch (DoesNotExistException $e) {
-			$this->logger->error("could not delete message <$id> of folder <$folderId>, "
-				. "account <$accountId> because it does not exist");
-			throw $e;
-		}
-	}
 
-	/**
-	 * @param int $accountId
-	 * @return Account|null
-	 */
-	private function getAccount($accountId) {
-		if (!array_key_exists($accountId, $this->accounts)) {
-			$this->accounts[$accountId] = $this->accountService->find($this->currentUserId,
-				$accountId);
+		try {
+			$account = $this->accountService->find($this->currentUserId, $accountId);
+		} catch (DoesNotExistException $e) {
+			return new JSONResponse(null, Http::STATUS_FORBIDDEN);
 		}
-		return $this->accounts[$accountId];
+
+		$this->mailManager->deleteMessage($account, base64_decode($folderId), $id);
+		return new JSONResponse();
 	}
 
 	/**
 	 * @param int $accountId
 	 * @param string $folderId
+	 *
 	 * @return IMailBox
 	 */
 	private function getFolder(int $accountId, string $folderId): IMailBox {
-		$account = $this->getAccount($accountId);
+		$account = $this->accountService->find($this->currentUserId, $accountId);
 		return $account->getMailbox(base64_decode($folderId));
 	}
 
@@ -376,6 +405,7 @@ class MessagesController extends Controller {
 	 * @param string $folderId
 	 * @param int $messageId
 	 * @param array $attachment
+	 *
 	 * @return array
 	 */
 	private function enrichDownloadUrl(int $accountId, string $folderId, int $messageId,
@@ -415,32 +445,11 @@ class MessagesController extends Controller {
 
 	/**
 	 * @param array $attachment
+	 *
 	 * @return boolean
 	 */
 	private function attachmentIsCalendarEvent(array $attachment): bool {
 		return $attachment['mime'] === 'text/calendar';
-	}
-
-	/**
-	 * @param int $accountId
-	 * @param string $folderId
-	 * @param int $id
-	 * @param IMAPMessage $m
-	 * @param IMailBox $mailBox
-	 * @return array
-	 */
-	private function enhanceMessage(int $accountId, string $folderId, int $id, IMAPMessage $m,
-									IMailBox $mailBox): array {
-		$json = $m->getFullMessage($mailBox->getSpecialRole());
-
-		if (isset($json['attachments'])) {
-			$json['attachments'] = array_map(function ($a) use ($accountId, $folderId, $id) {
-				return $this->enrichDownloadUrl($accountId, $folderId, $id, $a);
-			}, $json['attachments']);
-
-			return $json;
-		}
-		return $json;
 	}
 
 }

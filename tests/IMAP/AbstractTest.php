@@ -69,7 +69,7 @@ abstract class AbstractTest extends TestCase {
 			try {
 				self::deleteMailbox($createdMailbox);
 			} catch (Exception $ex) {
-				
+
 			}
 		}
 	}
@@ -96,13 +96,6 @@ abstract class AbstractTest extends TestCase {
 	 */
 	protected function getTestAccount() {
 		return self::$account;
-	}
-
-	/**
-	 * @param string $mailbox
-	 */
-	private static function deleteMailbox($mailbox) {
-		self::$account->deleteMailbox($mailbox);
 	}
 
 	/**

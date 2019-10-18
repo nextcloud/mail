@@ -1,5 +1,5 @@
-import {generateUrl} from 'nextcloud-router'
-import HttpClient from 'nextcloud-axios'
+import {generateUrl} from '@nextcloud/router'
+import HttpClient from '@nextcloud/axios'
 
 export const fixAccountId = original => {
 	return {
@@ -12,6 +12,16 @@ export const create = data => {
 	const url = generateUrl('/apps/mail/api/accounts')
 
 	return HttpClient.post(url, data)
+		.then(resp => resp.data)
+		.then(fixAccountId)
+}
+
+export const patch = (account, data) => {
+	const url = generateUrl(`/apps/mail/api/accounts/{id}`, {
+		id: account.accountId,
+	})
+
+	return HttpClient.patch(url, data)
 		.then(resp => resp.data)
 		.then(fixAccountId)
 }

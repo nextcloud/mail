@@ -1,4 +1,5 @@
 <?php
+declare(strict_types=1);
 
 /**
  * @copyright 2017 Christoph Wurst <christoph@winzerhof-wurst.at>
@@ -26,7 +27,6 @@ namespace OCA\Mail;
 
 use Horde_Mail_Rfc822_Address;
 use JsonSerializable;
-use SGH\Comparable\Comparable;
 
 class Address implements JsonSerializable {
 
@@ -48,7 +48,7 @@ class Address implements JsonSerializable {
 	/**
 	 * @return string
 	 */
-	public function getLabel() {
+	public function getLabel(): string {
 		$personal = $this->wrapped->personal;
 		if (is_null($personal)) {
 			// Fallback
@@ -60,21 +60,21 @@ class Address implements JsonSerializable {
 	/**
 	 * @return string
 	 */
-	public function getEmail() {
+	public function getEmail(): string {
 		return $this->wrapped->bare_address;
 	}
 
 	/**
 	 * @return Horde_Mail_Rfc822_Address
 	 */
-	public function toHorde() {
+	public function toHorde(): Horde_Mail_Rfc822_Address {
 		return $this->wrapped;
 	}
 
 	/**
 	 * @return array
 	 */
-	public function jsonSerialize() {
+	public function jsonSerialize(): array {
 		return [
 			'label' => $this->getLabel(),
 			'email' => $this->getEmail(),
@@ -85,7 +85,7 @@ class Address implements JsonSerializable {
 	 * @param Address $object
 	 * @return boolean
 	 */
-	public function equals($object) {
+	public function equals($object): bool {
 		return $this->getEmail() === $object->getEmail()
 			&& $this->getLabel() === $object->getLabel();
 	}

@@ -53,9 +53,9 @@
 </template>
 
 <script>
-import AppContent from 'nextcloud-vue/dist/Components/AppContent'
-import AppContentDetails from 'nextcloud-vue/dist/Components/AppContentDetails'
-import Content from 'nextcloud-vue/dist/Components/Content'
+import AppContent from '@nextcloud/vue/dist/Components/AppContent'
+import AppContentDetails from '@nextcloud/vue/dist/Components/AppContentDetails'
+import Content from '@nextcloud/vue/dist/Components/Content'
 
 import Navigation from '../components/Navigation'
 

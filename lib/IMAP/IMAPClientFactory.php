@@ -41,6 +41,8 @@ class IMAPClientFactory {
 	/** @var ICacheFactory */
 	private $cacheFactory;
 
+	private $cache = [];
+
 	/**
 	 * @param ICrypto $crypto
 	 * @param IConfig $config
@@ -57,31 +59,38 @@ class IMAPClientFactory {
 	 * @return Horde_Imap_Client_Socket
 	 */
 	public function getClient(Account $account): Horde_Imap_Client_Socket {
-		$host = $account->getMailAccount()->getInboundHost();
-		$user = $account->getMailAccount()->getInboundUser();
-		$password = $account->getMailAccount()->getInboundPassword();
-		$password = $this->crypto->decrypt($password);
-		$port = $account->getMailAccount()->getInboundPort();
-		$sslMode = $account->getMailAccount()->getInboundSslMode();
-		if ($sslMode === 'none') {
-			$sslMode = false;
+		if (!isset($this->cache[$account->getId()])) {
+			$host = $account->getMailAccount()->getInboundHost();
+			$user = $account->getMailAccount()->getInboundUser();
+			$password = $account->getMailAccount()->getInboundPassword();
+			$password = $this->crypto->decrypt($password);
+			$port = $account->getMailAccount()->getInboundPort();
+			$sslMode = $account->getMailAccount()->getInboundSslMode();
+			if ($sslMode === 'none') {
+				$sslMode = false;
+			}
+
+			$params = [
+				'username' => $user,
+				'password' => $password,
+				'hostspec' => $host,
+				'port' => $port,
+				'secure' => $sslMode,
+				'timeout' => (int)$this->config->getSystemValue('app.mail.imap.timeout', 5),
+			];
+			if ($this->cacheFactory->isAvailable()) {
+				$params['cache'] = [
+					'backend' => new Cache([
+						'cacheob' => $this->cacheFactory->createDistributed(md5((string)$account->getId())),
+					])];
+			}
+			if ($this->config->getSystemValue('debug', false)) {
+				$params['debug'] = $this->config->getSystemValue('datadirectory') . '/horde_imap.log';
+			}
+			$this->cache[$account->getId()] = new Horde_Imap_Client_Socket($params);
 		}
 
-		$params = [
-			'username' => $user,
-			'password' => $password,
-			'hostspec' => $host,
-			'port' => $port,
-			'secure' => $sslMode,
-			'timeout' => (int)$this->config->getSystemValue('app.mail.imap.timeout', 5),
-		];
-		if ($this->cacheFactory->isAvailable()) {
-			$params['cache'] = [
-				'backend' => new Cache([
-					'cacheob' => $this->cacheFactory->createDistributed(md5((string)$account->getId())),
-				])];
-		}
-		return new Horde_Imap_Client_Socket($params);
+		return $this->cache[$account->getId()];
 	}
 
 }

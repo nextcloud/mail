@@ -31,12 +31,12 @@
 				@search-change="onAutocomplete"
 			/>
 			<a v-if="!showCC" href="#" @click.prevent="showCC = true">
-				{{ t('mail', '+ cc/bcc') }}
+				{{ t('mail', '+ CC/BCC') }}
 			</a>
 		</div>
 		<div v-if="showCC" class="composer-fields">
 			<label for="cc" class="cc-label transparency">
-				{{ t('mail', 'cc') }}
+				{{ t('mail', 'CC') }}
 			</label>
 			<Multiselect
 				id="cc"
@@ -53,7 +53,7 @@
 		</div>
 		<div v-if="showCC" class="composer-fields">
 			<label for="bcc" class="bcc-label transparency">
-				{{ t('mail', 'bcc') }}
+				{{ t('mail', 'BCC') }}
 			</label>
 			<Multiselect
 				id="bcc"
@@ -90,20 +90,39 @@
 			{{ t('mail', 'Note that the mail came from a noreply address so	your reply will probably not be read.') }}
 		</div>
 		<div class="composer-fields">
-			<textarea
+			<!--@keypress="onBodyKeyPress"-->
+			<TextEditor
+				v-if="editorPlainText"
+				key="editor-plain"
 				v-model="bodyVal"
-				v-autosize
 				name="body"
 				class="message-body"
-				:placeholder="t('mail', 'Message …')"
-				@keyup="onInputChanged"
-				@keypress="onBodyKeyPress"
-			></textarea>
+				@input="onInputChanged"
+			></TextEditor>
+			<TextEditor
+				v-else
+				key="editor-rich"
+				v-model="bodyVal"
+				:html="true"
+				name="body"
+				class="message-body"
+				@input="onInputChanged"
+			></TextEditor>
 		</div>
-		<div class="submit-message-wrapper">
-			<input class="submit-message send primary" type="submit" :value="submitButtonTitle" @click="onSend" />
+		<div class="composer-actions">
+			<div>
+				<ComposerAttachments v-model="attachments" @upload="onAttachmentsUploading" />
+			</div>
+			<div>
+				<input class="submit-message send primary" type="submit" :value="submitButtonTitle" @click="onSend" />
+			</div>
 		</div>
-		<ComposerAttachments v-model="attachments" @upload="onAttachmentsUploading" />
+		<Actions>
+			<ActionText icon="icon-info">{{ t('mail', 'Message options') }}</ActionText>
+			<ActionCheckbox :checked.sync="editorPlainText" :text="t('mail', 'Plain text')">{{
+				t('mail', 'Plain text')
+			}}</ActionCheckbox>
+		</Actions>
 		<span v-if="savingDraft === true" id="draft-status">{{ t('mail', 'Saving draft …') }}</span>
 		<span v-else-if="savingDraft === false" id="draft-status">{{ t('mail', 'Draft saved') }}</span>
 	</div>
@@ -125,12 +144,18 @@
 </template>
 
 <script>
-import _ from 'lodash'
+import debounce from 'lodash/fp/debounce'
+import uniqBy from 'lodash/fp/uniqBy'
 import Autosize from 'vue-autosize'
 import debouncePromise from 'debounce-promise'
-import Multiselect from 'nextcloud-vue/dist/Components/Multiselect'
+import Actions from '@nextcloud/vue/dist/Components/Actions'
+import ActionCheckbox from '@nextcloud/vue/dist/Components/ActionCheckbox'
+import ActionText from '@nextcloud/vue/dist/Components/ActionText'
+import Multiselect from '@nextcloud/vue/dist/Components/Multiselect'
+import {translate as t} from '@nextcloud/l10n'
 import Vue from 'vue'
 
+import TextEditor from './TextEditor'
 import {findRecipient} from '../service/AutocompleteService'
 import Loading from './Loading'
 import Logger from '../logger'
@@ -151,9 +176,13 @@ const STATES = Object.seal({
 export default {
 	name: 'Composer',
 	components: {
+		Actions,
+		ActionCheckbox,
+		ActionText,
 		ComposerAttachments,
 		Loading,
 		Multiselect,
+		TextEditor,
 	},
 	props: {
 		replyTo: {
@@ -192,6 +221,10 @@ export default {
 			type: Function,
 			required: true,
 		},
+		isPlainText: {
+			type: Boolean,
+			default: true,
+		},
 	},
 	data() {
 		return {
@@ -200,20 +233,21 @@ export default {
 			autocompleteRecipients: this.to.concat(this.cc).concat(this.bcc),
 			newRecipients: [],
 			subjectVal: this.subject,
-			bodyVal: this.body,
+			bodyVal: this.isPlainText ? this.body.replace(/([^>\r\n]?)(\r\n|\n\r|\r|\n)/g, '$1<br>$2') : this.body,
 			attachments: [],
 			noReply: this.to.some(to => to.email.startsWith('noreply@') || to.email.startsWith('no-reply@')),
 			submitButtonTitle: t('mail', 'Send'),
 			draftsPromise: Promise.resolve(),
 			attachmentsPromise: Promise.resolve(),
 			savingDraft: undefined,
-			saveDraftDebounced: _.debounce(this.saveDraft, 700),
+			saveDraftDebounced: debounce(700)(this.saveDraft),
 			state: STATES.EDITING,
 			errorText: undefined,
 			STATES,
 			selectTo: this.to,
 			selectCc: this.cc,
 			selectBcc: this.bcc,
+			editorPlainText: this.isPlainText,
 		}
 	},
 	computed: {
@@ -230,13 +264,22 @@ export default {
 			return this.subjectVal === '' && this.bodyVal !== ''
 		},
 	},
+	watch: {
+		selectedAlias(val) {
+			if (val) {
+				// TODO: warn user before formatting is lost?
+				this.editorPlainText = val.editorMode === 'plaintext'
+			}
+		},
+	},
 	beforeMount() {
 		if (this.fromAccount) {
 			this.selectedAlias = this.aliases.find(alias => alias.id === this.fromAccount)
 		} else {
 			this.selectedAlias = this.aliases[0]
 		}
-		this.bodyVal = this.bodyWithSignature(this.selectedAlias, this.body)
+
+		this.bodyVal = this.bodyWithSignature(this.selectedAlias, this.bodyVal)
 	},
 	methods: {
 		recipientToRfc822(recipient) {
@@ -267,6 +310,7 @@ export default {
 					attachments: this.attachments,
 					folderId: this.replyTo ? this.replyTo.folderId : undefined,
 					messageId: this.replyTo ? this.replyTo.messageId : undefined,
+					isHtml: !this.editorPlainText,
 				}
 			}
 		},
@@ -288,7 +332,7 @@ export default {
 				return
 			}
 			debouncedSearch(term).then(results => {
-				this.autocompleteRecipients = _.uniqBy(this.autocompleteRecipients.concat(results), 'email')
+				this.autocompleteRecipients = uniqBy('email')(this.autocompleteRecipients.concat(results))
 			})
 		},
 		onAttachmentsUploading(uploaded) {
@@ -353,6 +397,10 @@ export default {
 		 * @returns {string}
 		 */
 		formatAliases(alias) {
+			if (!alias.name) {
+				return alias.emailAddress
+			}
+
 			return `${alias.name} <${alias.emailAddress}>`
 		},
 		bodyWithSignature(alias, body) {
@@ -377,6 +425,12 @@ export default {
 	margin: 0;
 }
 
+.composer-actions {
+	display: flex;
+	flex-direction: row;
+	align-items: flex-end;
+}
+
 .composer-fields.mail-account > .multiselect {
 	max-width: none;
 	min-height: auto;
@@ -391,7 +445,7 @@ export default {
 }
 .composer-fields .multiselect,
 .composer-fields input,
-.composer-fields textarea {
+.composer-fields TextEditor {
 	flex-grow: 1;
 	max-width: none;
 	border: none;
@@ -407,7 +461,7 @@ export default {
 #cc,
 #bcc,
 input.subject,
-textarea.message-body {
+.message-body {
 	padding: 12px;
 	margin: 0;
 }
@@ -419,7 +473,7 @@ textarea.message-body {
 input.cc,
 input.bcc,
 input.subject,
-textarea.message-body {
+.message-body {
 	border-top: none;
 }
 
@@ -428,10 +482,13 @@ input.subject {
 	font-weight: 300;
 }
 
-textarea.message-body {
+.message-body {
 	min-height: 300px;
-	resize: none;
+	width: 100%;
 	padding-right: 25%;
+	border: none !important;
+	outline: none !important;
+	box-shadow: none !important;
 }
 
 #draft-status {
@@ -457,25 +514,8 @@ label.bcc-label {
 	bottom: 0;
 }
 
-textarea.reply {
+.reply {
 	min-height: 100px;
-}
-
-input.submit-message,
-.submit-message-wrapper {
-	position: fixed;
-	bottom: 10px;
-	right: 15px;
-}
-
-.submit-message-wrapper {
-	position: fixed;
-	height: 36px;
-	width: 60px;
-}
-
-.submit-message.send {
-	padding: 12px;
 }
 </style>
 

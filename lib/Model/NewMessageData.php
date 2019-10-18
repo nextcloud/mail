@@ -44,7 +44,7 @@ class NewMessageData {
 	/** @var AddressList */
 	private $bcc;
 
-	/** @var string|null */
+	/** @var string */
 	private $subject;
 
 	/** @var string|null */
@@ -53,22 +53,27 @@ class NewMessageData {
 	/** @var array */
 	private $attachments;
 
+	/** @var bool */
+	private $isHtml;
+
 	/**
 	 * @param Account $account
 	 * @param AddressList $to
 	 * @param AddressList $cc
 	 * @param AddressList $bcc
-	 * @param string|null $subject
+	 * @param string $subject
 	 * @param string|null $body
 	 * @param array $attachments
+	 * @package bool $isHtml
 	 */
 	public function __construct(Account $account,
 								AddressList $to,
 								AddressList $cc,
 								AddressList $bcc,
-								string $subject = null,
-								string $body = null ,
-								array $attachments = []) {
+								string $subject,
+								string $body = null,
+								array $attachments = [],
+								bool $isHtml = true) {
 		$this->account = $account;
 		$this->to = $to;
 		$this->cc = $cc;
@@ -76,6 +81,7 @@ class NewMessageData {
 		$this->subject = $subject;
 		$this->body = $body;
 		$this->attachments = $attachments;
+		$this->isHtml = $isHtml;
 	}
 
 	/**
@@ -86,21 +92,23 @@ class NewMessageData {
 	 * @param string $subject
 	 * @param string $body
 	 * @param array|null $attachments
+	 *
 	 * @return NewMessageData
 	 */
 	public static function fromRequest(Account $account,
 									   string $to = null,
 									   string $cc = null,
 									   string $bcc = null,
-									   string $subject = null,
+									   string $subject,
 									   string $body = null,
-									   array $attachments = []) {
+									   array $attachments = [],
+									   bool $isHtml = true) {
 		$toList = AddressList::parse($to ?: '');
 		$ccList = AddressList::parse($cc ?: '');
 		$bccList = AddressList::parse($bcc ?: '');
-		$attachmentsArray = is_null($attachments) ? [] : $attachments;
+		$attachmentsArray = $attachments === null ? [] : $attachments;
 
-		return new self($account, $toList, $ccList, $bccList, $subject, $body, $attachmentsArray);
+		return new self($account, $toList, $ccList, $bccList, $subject, $body, $attachmentsArray, $isHtml);
 	}
 
 	/**
@@ -134,12 +142,12 @@ class NewMessageData {
 	/**
 	 * @return string
 	 */
-	public function getSubject() {
+	public function getSubject(): string {
 		return $this->subject;
 	}
 
 	/**
-	 * @return string
+	 * @return string|null
 	 */
 	public function getBody() {
 		return $this->body;
@@ -150,6 +158,10 @@ class NewMessageData {
 	 */
 	public function getAttachments(): array {
 		return $this->attachments;
+	}
+
+	public function isHtml(): bool {
+		return $this->isHtml;
 	}
 
 }

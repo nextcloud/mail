@@ -3,6 +3,11 @@
 		{
 			"type": "pear",
 			"url": "https://pear.horde.org"
+		},
+		{
+			"type": "vcs",
+			"url": "https://github.com/kwi-dk/UrlLinker",
+			"branch": "bleeding"
 		}
 	],
 	"config": {
@@ -25,9 +30,9 @@
 		"pear-pear.horde.org/horde_util": "^2.5.8@stable",
 		"pear-pear.horde.org/horde_smtp": "^1.9.5@stable",
 		"pear-pear.horde.org/horde_managesieve": "^1.0.2@stable",
-		"cerdic/css-tidy": "v1.7.0",
+		"cerdic/css-tidy": "v1.7.1",
 		"ezyang/htmlpurifier": "4.11.0",
-		"kwi/urllinker": "dev-default",
+		"kwi/urllinker": "dev-bleeding",
 		"gravatarphp/gravatar": "^2.0",
 		"arthurhoaro/favicon": "^1.2",
 		"protonlabs/libsieve-php": "^2.0"

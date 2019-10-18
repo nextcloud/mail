@@ -391,10 +391,9 @@ class AccountsControllerTest extends TestCase {
 			->method('find')
 			->willReturn($account);
 		$messageData = NewMessageData::fromRequest($account, 'to@d.com', '', '', 'sub', 'bod', []);
-		$replyData = new RepliedMessageData($account, null, null);
 		$this->transmission->expects($this->once())
 			->method('sendMessage')
-			->with($this->userId, $messageData, $replyData, null, null);
+			->with($this->userId, $messageData, null, null, null);
 		$expected = new JSONResponse();
 
 		$resp = $this->controller->send(13, 'sub', 'bod', 'to@d.com', '', '');
@@ -408,10 +407,9 @@ class AccountsControllerTest extends TestCase {
 			->method('find')
 			->willReturn($account);
 		$messageData = NewMessageData::fromRequest($account, 'to@d.com', '', '', 'sub', 'bod', []);
-		$replyData = new RepliedMessageData($account, null, null);
 		$this->transmission->expects($this->once())
 			->method('sendMessage')
-			->with($this->userId, $messageData, $replyData, null, null)
+			->with($this->userId, $messageData, null, null, null)
 			->willThrowException(new Horde_Exception('error'));
 		$this->expectException(Horde_Exception::class);
 
@@ -420,7 +418,7 @@ class AccountsControllerTest extends TestCase {
 
 	public function testSendReply() {
 		$account = $this->createMock(Account::class);
-		$folderId = base64_encode('INBOX');
+		$folderId = 'INBOX';
 		$messageId = 1234;
 		$this->accountService->expects($this->once())
 			->method('find')
@@ -432,7 +430,19 @@ class AccountsControllerTest extends TestCase {
 			->with($this->userId, $messageData, $replyData, null, null);
 		$expected = new JSONResponse();
 
-		$resp = $this->controller->send(13, 'sub', 'bod', 'to@d.com', '', '', null, $folderId, $messageId, [], null);
+		$resp = $this->controller->send(
+			13,
+			'sub',
+			'bod',
+			'to@d.com',
+			'',
+			'',
+			true,
+			null,
+			base64_encode($folderId),
+			$messageId,
+			[],
+			null);
 
 		$this->assertEquals($expected, $resp);
 	}

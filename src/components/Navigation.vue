@@ -52,10 +52,10 @@
 </template>
 
 <script>
-import AppNavigation from 'nextcloud-vue/dist/Components/AppNavigation'
-import AppNavigationNew from 'nextcloud-vue/dist/Components/AppNavigationNew'
-import AppNavigationSettings from 'nextcloud-vue/dist/Components/AppNavigationSettings'
-import AppNavigationSpacer from 'nextcloud-vue/dist/Components/AppNavigationSpacer'
+import AppNavigation from '@nextcloud/vue/dist/Components/AppNavigation'
+import AppNavigationNew from '@nextcloud/vue/dist/Components/AppNavigationNew'
+import AppNavigationSettings from '@nextcloud/vue/dist/Components/AppNavigationSettings'
+import AppNavigationSpacer from '@nextcloud/vue/dist/Components/AppNavigationSpacer'
 
 import NavigationAccount from './NavigationAccount'
 import NavigationAccountExpandCollapse from './NavigationAccountExpandCollapse'

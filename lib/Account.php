@@ -34,17 +34,11 @@
 namespace OCA\Mail;
 
 use Horde\ManageSieve;
-use Horde_Imap_Client;
-use Horde_Imap_Client_Ids;
 use Horde_Imap_Client_Mailbox;
 use Horde_Imap_Client_Socket;
 use Horde_Mail_Rfc822_List;
 use Horde_Mail_Transport;
-use Horde_Mail_Transport_Null;
 use Horde_Mail_Transport_Smtphorde;
-use Horde_Mime_Headers_Date;
-use Horde_Mime_Headers_MessageId;
-use Horde_Mime_Mail;
 use JsonSerializable;
 use OC;
 use OCA\Mail\Cache\Cache;
@@ -52,7 +46,6 @@ use OCA\Mail\Db\Alias;
 use OCA\Mail\Db\MailAccount;
 use OCA\Mail\Model\IMessage;
 use OCA\Mail\Model\Message;
-use OCA\Mail\Model\ReplyMessage;
 use OCP\ICacheFactory;
 use OCP\IConfig;
 use OCP\Security\ICrypto;
@@ -61,9 +54,6 @@ class Account implements JsonSerializable {
 
 	/** @var MailAccount */
 	private $account;
-
-	/** @var Mailbox[]|null */
-	private $mailboxes;
 
 	/** @var Horde_Imap_Client_Socket */
 	private $imapClient;
@@ -88,11 +78,9 @@ class Account implements JsonSerializable {
 	 */
 	public function __construct(MailAccount $account) {
 		$this->account = $account;
-		$this->mailboxes = null;
 		$this->crypto = OC::$server->getCrypto();
 		$this->config = OC::$server->getConfig();
 		$this->memcacheFactory = OC::$server->getMemcacheFactory();
-		$this->alias = null;
 	}
 
 	public function getMailAccount() {
@@ -202,156 +190,6 @@ class Account implements JsonSerializable {
 	}
 
 	/**
-	 * @param string $mailBox
-	 * @param array $opts
-	 * @return Mailbox
-	 */
-	public function createMailbox($mailBox, $opts = []) {
-		$conn = $this->getImapConnection();
-		$conn->createMailbox($mailBox, $opts);
-		$this->mailboxes = null;
-
-		return $this->getMailbox($mailBox);
-	}
-
-	/**
-	 * Send a new message or reply to an existing message
-	 *
-	 * @param IMessage $message
-	 * @param Horde_Mail_Transport $transport
-	 * @param int|null $draftUID
-	 * @return int message UID
-	 */
-	public function sendMessage(IMessage $message, Horde_Mail_Transport $transport, $draftUID) {
-		// build mime body
-		$headers = [
-			'From' => $message->getFrom()->first()->toHorde(),
-			'To' => $message->getTo()->toHorde(),
-			'Cc' => $message->getCC()->toHorde(),
-			'Bcc' => $message->getBCC()->toHorde(),
-			'Subject' => $message->getSubject(),
-		];
-
-		if (!is_null($message->getRepliedMessage())) {
-			$headers['In-Reply-To'] = $message->getRepliedMessage()->getMessageId();
-		}
-
-		$mail = new Horde_Mime_Mail();
-		$mail->addHeaders($headers);
-		$mail->setBody($message->getContent());
-
-		// Append cloud attachments
-		foreach ($message->getCloudAttachments() as $attachment) {
-			$mail->addMimePart($attachment);
-		}
-		// Append local attachments
-		foreach ($message->getLocalAttachments() as $attachment) {
-			$mail->addMimePart($attachment);
-		}
-
-		// Send the message
-		$mail->send($transport, false, false);
-
-		// Save the message in the sent folder
-		$sentFolder = $this->getSentFolder();
-		$raw = stream_get_contents($mail->getRaw());
-		$uid = $sentFolder->saveMessage($raw, [
-			Horde_Imap_Client::FLAG_SEEN
-		]);
-
-		// Delete draft if one exists
-		if (!is_null($draftUID)) {
-			$this->deleteDraft($draftUID);
-		}
-
-		return $uid;
-	}
-
-	/**
-	 * @param IMessage $message
-	 * @param int|null $previousUID
-	 * @return int
-	 */
-	public function saveDraft(IMessage $message, $previousUID) {
-		// build mime body
-		$headers = [
-			'From' => $message->getFrom()->first()->toHorde(),
-			'To' => $message->getTo()->toHorde(),
-			'Cc' => $message->getCC()->toHorde(),
-			'Bcc' => $message->getBCC()->toHorde(),
-			'Subject' => $message->getSubject(),
-			'Date' => Horde_Mime_Headers_Date::create(),
-		];
-
-		$mail = new Horde_Mime_Mail();
-		$mail->addHeaders($headers);
-		$mail->setBody($message->getContent());
-		$mail->addHeaderOb(Horde_Mime_Headers_MessageId::create());
-
-		// "Send" the message
-		$transport = new Horde_Mail_Transport_Null();
-		$mail->send($transport, false, false);
-		// save the message in the drafts folder
-		$draftsFolder = $this->getDraftsFolder();
-		$raw = stream_get_contents($mail->getRaw());
-		$newUid = $draftsFolder->saveDraft($raw);
-
-		// delete old version if one exists
-		if (!is_null($previousUID)) {
-			$this->deleteDraft($previousUID);
-		}
-
-		return $newUid;
-	}
-
-	/**
-	 * @param string $mailBox
-	 */
-	public function deleteMailbox($mailBox) {
-		if ($mailBox instanceof Mailbox) {
-			$mailBox = $mailBox->getFolderId();
-		}
-		$conn = $this->getImapConnection();
-		$conn->deleteMailbox($mailBox);
-		$this->mailboxes = null;
-	}
-
-	/**
-	 * Lists mailboxes (folders) for this account.
-	 *
-	 * Lists mailboxes and also queries the server for their 'special use',
-	 * eg. inbox, sent, trash, etc
-	 *
-	 * @param string $pattern Pattern to match mailboxes against. All by default.
-	 * @return Mailbox[]
-	 */
-	protected function listMailboxes($pattern = '*') {
-		// open the imap connection
-		$conn = $this->getImapConnection();
-
-		// if successful -> get all folders of that account
-		$mailBoxes = $conn->listMailboxes($pattern, Horde_Imap_Client::MBOX_ALL,
-			[
-			'delimiter' => true,
-			'attributes' => true,
-			'special_use' => true,
-			'sort' => true
-		]);
-
-		$mailboxes = [];
-		foreach ($mailBoxes as $mailbox) {
-			$mailboxes[] = new Mailbox($conn, $mailbox['mailbox'],
-				$mailbox['attributes'], $mailbox['delimiter']);
-			if ($mailbox['mailbox']->utf8 === 'INBOX') {
-				$mailboxes[] = new SearchMailbox($conn, $mailbox['mailbox'],
-					$mailbox['attributes'], $mailbox['delimiter']);
-			}
-		}
-
-		return $mailboxes;
-	}
-
-	/**
 	 * @param string $folderId
 	 * @return Mailbox
 	 */
@@ -367,250 +205,10 @@ class Account implements JsonSerializable {
 	}
 
 	/**
-	 * Get a list of all mailboxes in this account
-	 *
-	 * @return Mailbox[]
-	 */
-	public function getMailboxes() {
-		if ($this->mailboxes === null) {
-			$this->mailboxes = $this->listMailboxes();
-			$this->sortMailboxes();
-			$this->localizeSpecialMailboxes();
-		}
-
-		return $this->mailboxes;
-	}
-
-	/**
 	 * @return array
 	 */
 	public function jsonSerialize() {
 		return $this->account->toJson();
-	}
-
-	/**
-	 * Lists special use folders for this account.
-	 *
-	 * The special uses returned are the "best" one for each special role,
-	 * picked amongst the ones returned by the server, as well
-	 * as the one guessed by our code.
-	 *
-	 * @param bool $base64_encode
-	 * @return array In the form [<special use>=><folder id>, ...]
-	 */
-	public function getSpecialFoldersIds($base64_encode=true) {
-		$folderRoles = ['inbox', 'sent', 'drafts', 'trash', 'archive', 'junk', 'flagged', 'all'];
-		$specialFoldersIds = [];
-
-		foreach ($folderRoles as $role) {
-			$folders = $this->getSpecialFolder($role, true);
-			$specialFoldersIds[$role] = (count($folders) === 0) ? null : $folders[0]->getFolderId();
-			if ($specialFoldersIds[$role] !== null && $base64_encode === true) {
-				$specialFoldersIds[$role] = base64_encode($specialFoldersIds[$role]);
-			}
-		}
-		return $specialFoldersIds;
-	}
-
-	/**
-	 * Get the "drafts" mailbox
-	 *
-	 * @return Mailbox The best candidate for the "drafts" inbox
-	 */
-	public function getDraftsFolder() {
-		// check for existence
-		$draftsFolder = $this->getSpecialFolder('drafts', true);
-		if (count($draftsFolder) === 0) {
-			// drafts folder does not exist - let's create one
-			// TODO: also search for translated drafts mailboxes
-			$this->createMailbox('Drafts', [
-				'special_use' => ['drafts'],
-			]);
-			return $this->guessBestMailBox($this->listMailboxes('Drafts'));
-		}
-		return $draftsFolder[0];
-	}
-
-	/**
-	 * @return Mailbox|null
-	 */
-	public function getInbox() {
-		$folders = $this->getSpecialFolder('inbox', false);
-		return count($folders) > 0 ? $folders[0] : null;
-	}
-
-	/**
-	 * Get the "sent mail" mailbox
-	 *
-	 * @return Mailbox The best candidate for the "sent mail" inbox
-	 */
-	public function getSentFolder() {
-		//check for existence
-		$sentFolders = $this->getSpecialFolder('sent', true);
-		if (count($sentFolders) === 0) {
-			//sent folder does not exist - let's create one
-			//TODO: also search for translated sent mailboxes
-			$this->createMailbox('Sent', [
-				'special_use' => ['sent'],
-			]);
-			return $this->guessBestMailBox($this->listMailboxes('Sent'));
-		}
-		return $sentFolders[0];
-	}
-
-	/**
-	 * @param int $messageId
-	 */
-	private function deleteDraft($messageId) {
-		$draftsFolder = $this->getDraftsFolder();
-		$draftsFolder->setMessageFlag($messageId, Horde_Imap_Client::FLAG_DELETED, true);
-
-		$draftsMailBox = new Horde_Imap_Client_Mailbox($draftsFolder->getFolderId(), false);
-		$this->getImapConnection()->expunge($draftsMailBox);
-	}
-
-	/**
-	 * Get 'best' mailbox guess
-	 *
-	 * For now the best candidate is the one with
-	 * the most messages in it.
-	 *
-	 * @param array $folders
-	 * @return Mailbox
-	 */
-	protected function guessBestMailBox(array $folders) {
-		$maxMessages = -1;
-		$bestGuess = null;
-		foreach ($folders as $folder) {
-			/** @var Mailbox $folder */
-			if ($folder->getTotalMessages() > $maxMessages) {
-				$maxMessages = $folder->getTotalMessages();
-				$bestGuess = $folder;
-			}
-		}
-		return $bestGuess;
-	}
-
-	/**
-	 * Get mailbox(es) that have the given special use role
-	 *
-	 * With this method we can get a list of all mailboxes that have been
-	 * determined to have a specific special use role. It can also return
-	 * the best candidate for this role, for situations where we want
-	 * one single folder.
-	 *
-	 * @param string $role Special role of the folder we want to get ('sent', 'inbox', etc.)
-	 * @param bool $guessBest If set to true, return only the folder with the most messages in it
-	 *
-	 * @return Mailbox[] if $guessBest is false, or Mailbox if $guessBest is true. Empty [] if no match.
-	 */
-	protected function getSpecialFolder($role, $guessBest=true) {
-
-		$specialFolders = [];
-		foreach ($this->getMailboxes() as $mailbox) {
-			if ($role === $mailbox->getSpecialRole()) {
-				$specialFolders[] = $mailbox;
-			}
-		}
-
-		if ($guessBest === true && count($specialFolders) > 1) {
-			return [$this->guessBestMailBox($specialFolders)];
-		} else {
-			return $specialFolders;
-		}
-	}
-
-	/**
-	 *  Localizes the name of the special use folders
-	 *
-	 *  The display name of the best candidate folder for each special use
-	 *  is localized to the user's language
-	 */
-	protected function localizeSpecialMailboxes() {
-
-		$l = OC::$server->getL10N('mail');
-		$map = [
-			// TRANSLATORS: translated mail box name
-			'inbox'   => $l->t('Inbox'),
-			// TRANSLATORS: translated mail box name
-			'sent'    => $l->t('Sent'),
-			// TRANSLATORS: translated mail box name
-			'drafts'  => $l->t('Drafts'),
-			// TRANSLATORS: translated mail box name
-			'archive' => $l->t('Archive'),
-			// TRANSLATORS: translated mail box name
-			'trash'   => $l->t('Trash'),
-			// TRANSLATORS: translated mail box name
-			'junk'    => $l->t('Junk'),
-			// TRANSLATORS: translated mail box name
-			'all'     => $l->t('All'),
-			// TRANSLATORS: translated mail box name
-			'flagged' => $l->t('Favorites'),
-		];
-		$mailboxes = $this->getMailboxes();
-		$specialIds = $this->getSpecialFoldersIds(false);
-		foreach ($mailboxes as $i => $mailbox) {
-			if (in_array($mailbox->getFolderId(), $specialIds) === true) {
-				if (isset($map[$mailbox->getSpecialRole()])) {
-					$translatedDisplayName = $map[$mailbox->getSpecialRole()];
-					$mailboxes[$i]->setDisplayName((string)$translatedDisplayName);
-				}
-			}
-		}
-	}
-
-	/**
-	 * Sort mailboxes
-	 *
-	 * Sort the array of mailboxes with
-	 *  - special use folders coming first in this order: all, inbox, flagged, drafts, sent, archive, junk, trash
-	 *  - 'normal' folders coming after that, sorted alphabetically
-	 */
-	protected function sortMailboxes() {
-
-		$mailboxes = $this->getMailboxes();
-		usort($mailboxes, function($a, $b) {
-			/**
-			 * @var Mailbox $a
-			 * @var Mailbox $b
-			 */
-			$roleA = $a->getSpecialRole();
-			$roleB = $b->getSpecialRole();
-			$specialRolesOrder = [
-				'all'     => 0,
-				'inbox'   => 1,
-				'flagged' => 2,
-				'drafts'  => 3,
-				'sent'    => 4,
-				'archive' => 5,
-				'junk'    => 6,
-				'trash'   => 7,
-			];
-			// if there is a flag unknown to us, we ignore it for sorting :
-			// the folder will be sorted by name like any other 'normal' folder
-			if (array_key_exists($roleA, $specialRolesOrder) === false) {
-				$roleA = null;
-			}
-			if (array_key_exists($roleB, $specialRolesOrder) === false) {
-				$roleB = null;
-			}
-
-			if ($roleA === null && $roleB !== null) {
-				return 1;
-			} elseif ($roleA !== null && $roleB === null) {
-				return -1;
-			} elseif ($roleA !== null && $roleB !== null) {
-				if ($roleA === $roleB) {
-					return strcasecmp($a->getdisplayName(), $b->getDisplayName());
-				} else {
-					return $specialRolesOrder[$roleA] - $specialRolesOrder[$roleB];
-				}
-			}
-			// we get here if $roleA === null && $roleB === null
-			return strcasecmp($a->getDisplayName(), $b->getDisplayName());
-		});
-
-		$this->mailboxes = $mailboxes;
 	}
 
 	/**
@@ -656,19 +254,6 @@ class Account implements JsonSerializable {
 	 */
 	public function newMessage() {
 		return new Message();
-	}
-
-	/**
-	 * Factory method for creating new reply messages
-	 *
-	 * @return ReplyMessage
-	 */
-	public function newReplyMessage() {
-		return new ReplyMessage();
-	}
-
-	public function getLastMailboxSync(): int {
-		return (int) $this->account->getLastMailboxSync();
 	}
 
 }

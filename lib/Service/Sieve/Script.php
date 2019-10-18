@@ -33,7 +33,7 @@ class Script
 {
 
 	public const SCRIPT_NAME = 'nextcloud';
-	public const SCRIPT_CUSTOM_NAME = 'nextcloud.custom';
+	public const SCRIPT_CUSTOM_BASE_NAME = 'nextcloud.filter.';
 	public const TYPE_CUSTOM = 'custom';
 	public const TYPE_SIMPLE = 'simple';
 

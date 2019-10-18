@@ -24,6 +24,7 @@ declare(strict_types=1);
 namespace OCA\Mail\Contracts;
 
 use OCA\Mail\Db\Alias;
+use OCA\Mail\Exception\ServiceException;
 use OCA\Mail\Model\NewMessageData;
 use OCA\Mail\Model\RepliedMessageData;
 
@@ -36,17 +37,23 @@ interface IMailTransmission {
 	 * @param NewMessageData $message
 	 * @param RepliedMessageData $reply
 	 * @param Alias|null $alias
-	 * @param int|null $draftUID
+	 *
+	 * @throws ServiceException
 	 */
-	public function sendMessage(string $userId, NewMessageData $message,
-								RepliedMessageData $reply, Alias $alias = null, int $draftUID = null);
+	public function sendMessage(string $userId,
+								NewMessageData $message,
+								RepliedMessageData $reply = null,
+								Alias $alias = null,
+								int $draftUID = null);
 
 	/**
 	 * Save a message draft
 	 *
 	 * @param NewMessageData $message
 	 * @param int $draftUID
+	 *
 	 * @return int
+	 *
 	 * @throws ServiceException
 	 */
 	public function saveDraft(NewMessageData $message, int $draftUID = null): int;

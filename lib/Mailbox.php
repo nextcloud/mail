@@ -93,126 +93,6 @@ class Mailbox implements IMailBox {
 	}
 
 	/**
-	 * @param string|Horde_Imap_Client_Search_Query $filter
-	 * @param int $cursor
-	 */
-	private function getSearchIds($filter, $cursor = null) {
-		if ($filter instanceof Horde_Imap_Client_Search_Query) {
-			$query = $filter;
-		} else {
-			$searchHelper = new SearchHelper();
-			$query = $searchHelper->parseFilterString($filter);
-		}
-		if ($this->getSpecialRole() !== 'trash') {
-			$query->flag(Horde_Imap_Client::FLAG_DELETED, false);
-		}
-		if (!is_null($cursor)) {
-			$query->dateTimeSearch(DateTime::createFromFormat("U", $cursor), Horde_Imap_Client_Search_Query::DATE_BEFORE);
-		}
-
-		try {
-			$result = $this->conn->search($this->mailBox, $query, [
-				'sort' => [
-					Horde_Imap_Client::SORT_DATE
-				],
-			]);
-		} catch (Horde_Imap_Client_Exception $e) {
-			// maybe the server's advertisment of SORT was a fake
-			// see https://github.com/nextcloud/mail/issues/50
-			// try again without SORT
-			return $this->getFetchIds($cursor);
-		}
-
-		return array_reverse($result['match']->ids);
-	}
-
-	/**
-	 * @param int $cursor
-	 * @return type
-	 */
-	private function getFetchIds($cursor = null) {
-		$q = new Horde_Imap_Client_Fetch_Query();
-		$q->uid();
-		$q->imapDate();
-
-		$result = $this->conn->fetch($this->mailBox, $q);
-		$uidMap = [];
-		foreach ($result as $r) {
-			$ts = $r->getImapDate()->getTimeStamp();
-			if (is_null($cursor) || $ts < $cursor) {
-				$uidMap[$r->getUid()] = $ts;
-			}
-		}
-		// sort by time
-		uasort($uidMap, function($a, $b) {
-			return $a < $b;
-		});
-		return array_keys($uidMap);
-	}
-
-	/**
-	 * Get message page
-	 *
-	 * Build the list of UIDs for the current page on the client side
-	 *
-	 * This is done by fetching a list of *all* UIDs and their data, sorting them
-	 * respectively and selecting the appropriate page. The page starts once UID after
-	 * the cursorId, if given. The size of the page is limited to 20.
-	 *
-	 * @param string|Horde_Imap_Client_Search_Query $filter
-	 * @param int $cursor time stamp of the oldest message on the client
-	 * @return array
-	 */
-	public function getMessages($filter = null, int $cursor = null): array {
-		if (!$this->conn->capability->query('SORT') && (is_null($filter) || $filter === '')) {
-			$ids = $this->getFetchIds($cursor);
-		} else {
-			$ids = $this->getSearchIds($filter, $cursor);
-		}
-		$page = new Horde_Imap_Client_Ids(array_slice($ids, 0, 20, true));
-
-		$fetchQuery = new Horde_Imap_Client_Fetch_Query();
-		$fetchQuery->envelope();
-		$fetchQuery->flags();
-		$fetchQuery->size();
-		$fetchQuery->uid();
-		$fetchQuery->imapDate();
-		$fetchQuery->structure();
-
-		$headers = [
-			'importance',
-			'list-post',
-			'x-priority',
-			'content-type',
-		];
-
-		$fetchQuery->headers('imp', $headers, [
-			'cache' => true,
-			'peek' => true
-		]);
-
-		$options = ['ids' => $page];
-		// $list is an array of Horde_Imap_Client_Data_Fetch objects.
-		$fetchResult = $this->conn->fetch($this->mailBox, $fetchQuery, $options);
-
-		ob_start(); // fix for Horde warnings
-		$messages = [];
-		foreach ($fetchResult->ids() as $messageId) {
-			$header = $fetchResult[$messageId];
-			$message = new IMAPMessage($this->conn, $this->mailBox, $messageId, $header);
-			$messages[] = $message->jsonSerialize();
-		}
-		ob_get_clean();
-
-		// sort by time
-		usort($messages, function($a, $b) {
-			return $a['dateInt'] < $b['dateInt'];
-		});
-
-		return $messages;
-	}
-
-	/**
 	 * @return array
 	 */
 	public function attributes() {
@@ -426,6 +306,8 @@ class Mailbox implements IMailBox {
 	 * @param string $rawBody
 	 * @param array $flags
 	 * @return array<int> UIDs
+	 *
+	 * @deprecated only used for testing
 	 */
 	public function saveMessage($rawBody, $flags = []) {
 		$uids = $this->conn->append($this->mailBox, [
@@ -436,27 +318,6 @@ class Mailbox implements IMailBox {
 		])->ids;
 
 		return reset($uids);
-	}
-
-	/**
-	 * Save draft
-	 *
-	 * @param string $rawBody
-	 * @return int UID of the saved draft
-	 */
-	public function saveDraft($rawBody) {
-
-		$uids = $this->conn->append($this->mailBox,
-			[
-			[
-				'data' => $rawBody,
-				'flags' => [
-					Horde_Imap_Client::FLAG_DRAFT,
-					Horde_Imap_Client::FLAG_SEEN
-				]
-			]
-		]);
-		return $uids->current();
 	}
 
 	/**

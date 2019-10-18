@@ -20,8 +20,8 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-import _ from 'lodash'
-import {translate as t} from 'nextcloud-l10n'
+import head from 'lodash/fp/head'
+import {translate as t} from '@nextcloud/l10n'
 import Vue from 'vue'
 import Vuex from 'vuex'
 
@@ -55,7 +55,7 @@ export const getters = {
 		return folder.folders.map(id => state.folders[id])
 	},
 	getUnifiedFolder: state => specialRole => {
-		return _.head(
+		return head(
 			state.accounts[UNIFIED_ACCOUNT_ID].folders
 				.map(folderId => state.folders[folderId])
 				.filter(folder => folder.specialRole === specialRole)

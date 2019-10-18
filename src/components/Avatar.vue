@@ -25,7 +25,7 @@
 </template>
 
 <script>
-import BaseAvatar from 'nextcloud-vue/dist/Components/Avatar'
+import BaseAvatar from '@nextcloud/vue/dist/Components/Avatar'
 
 import {fetchAvatarUrlMemoized} from '../service/AvatarService'
 

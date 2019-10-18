@@ -46,9 +46,10 @@
 </template>
 
 <script>
-import _ from 'lodash'
-import {translate as t} from 'nextcloud-l10n'
-import {getFilePickerBuilder} from 'nextcloud-dialogs'
+import map from 'lodash/fp/map'
+import trimStart from 'lodash/fp/trimCharsStart'
+import {translate as t} from '@nextcloud/l10n'
+import {getFilePickerBuilder} from '@nextcloud/dialogs'
 import Vue from 'vue'
 
 import Logger from '../logger'
@@ -86,7 +87,7 @@ export default {
 		fileNameToAttachment(name, id) {
 			return {
 				fileName: name,
-				displayName: _.trimStart(name, '/'),
+				displayName: trimStart('/')(name),
 				id,
 				isLocal: id !== undefined,
 			}
@@ -103,7 +104,7 @@ export default {
 				this.uploads[id].uploaded = uploaded
 			}
 
-			const promises = _.map(e.target.files, file => {
+			const promises = map(file => {
 				Vue.set(this.uploads, file.name, {
 					total: file.size,
 					uploaded: 0,
@@ -113,7 +114,7 @@ export default {
 					Logger.info('uploaded')
 					return this.emitNewAttachment(this.fileNameToAttachment(file.name, id))
 				})
-			})
+			})(e.target.files)
 
 			const done = Promise.all(promises)
 				.catch(error => Logger.error('could not upload all attachments', {error}))

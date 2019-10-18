@@ -27,21 +27,26 @@ use OCA\Mail\Account;
 use OCA\Mail\Contracts\IAttachmentService;
 use OCA\Mail\Contracts\IMailTransmission;
 use OCA\Mail\Db\MailAccount;
+use OCA\Mail\Db\MailAccountMapper;
+use OCA\Mail\Db\MailboxMapper;
+use OCA\Mail\IMAP\IMAPClientFactory;
+use OCA\Mail\IMAP\MessageMapper;
 use OCA\Mail\Model\NewMessageData;
 use OCA\Mail\Model\RepliedMessageData;
 use OCA\Mail\Service\Attachment\UploadedFile;
-use OCA\Mail\Service\AutoCompletion\AddressCollector;
 use OCA\Mail\Service\MailTransmission;
 use OCA\Mail\SMTP\SmtpClientFactory;
 use OCA\Mail\Tests\Integration\Framework\ImapTest;
 use OCA\Mail\Tests\Integration\TestCase;
+use OCP\EventDispatcher\IEventDispatcher;
 use OCP\ILogger;
 use OCP\IUser;
+use OCP\Security\ICrypto;
 
 class MailTransmissionIntegrationTest extends TestCase {
 
 	use ImapTest,
-     TestUser;
+		TestUser;
 
 	/** @var Account */
 	private $account;
@@ -58,31 +63,47 @@ class MailTransmissionIntegrationTest extends TestCase {
 	protected function setUp() {
 		parent::setUp();
 
+		$this->resetImapAccount();
+
+		/** @var ICrypto $crypo */
 		$crypo = OC::$server->getCrypto();
-		$this->account = new Account(MailAccount::fromParams([
-				'email' => 'user@domain.tld',
-				'inboundHost' => 'localhost',
-				'inboundPort' => '993',
-				'inboundSslMode' => 'ssl',
-				'inboundUser' => 'user@domain.tld',
-				'inboundPassword' => $crypo->encrypt('mypassword'),
-				'outboundHost' => 'localhost',
-				'outboundPort' => '2525',
-				'outboundSslMode' => 'none',
-				'outboundUser' => 'user@domain.tld',
-				'outboundPassword' => $crypo->encrypt('mypassword'),
-		]));
+		/** @var MailAccountMapper $mapper */
+		$mapper = OC::$server->query(MailAccountMapper::class);
+		$mailAccount = MailAccount::fromParams([
+			'email' => 'user@domain.tld',
+			'inboundHost' => 'localhost',
+			'inboundPort' => '993',
+			'inboundSslMode' => 'ssl',
+			'inboundUser' => 'user@domain.tld',
+			'inboundPassword' => $crypo->encrypt('mypassword'),
+			'outboundHost' => 'localhost',
+			'outboundPort' => '2525',
+			'outboundSslMode' => 'none',
+			'outboundUser' => 'user@domain.tld',
+			'outboundPassword' => $crypo->encrypt('mypassword'),
+		]);
+		$mapper->insert($mailAccount);
+
+		$this->account = new Account($mailAccount);
 		$this->attachmentService = OC::$server->query(IAttachmentService::class);
 		$this->user = $this->createTestUser();
 		$userFolder = OC::$server->getUserFolder($this->user->getUID());
-		$this->transmission = new MailTransmission(OC::$server->query(AddressCollector::class), $userFolder, $this->attachmentService, OC::$server->query(SmtpClientFactory::class), OC::$server->query(ILogger::class));
+		$this->transmission = new MailTransmission(
+			$userFolder,
+			$this->attachmentService,
+			OC::$server->query(IMAPClientFactory::class),
+			OC::$server->query(SmtpClientFactory::class),
+			OC::$server->query(IEventDispatcher::class),
+			OC::$server->query(MailboxMapper::class),
+			OC::$server->query(MessageMapper::class),
+			OC::$server->query(ILogger::class)
+		);
 	}
 
 	public function testSendMail() {
 		$message = NewMessageData::fromRequest($this->account, 'recipient@domain.com', null, null, 'greetings', 'hello there', []);
-		$reply = new RepliedMessageData($this->account, null, null);
 
-		$this->transmission->sendMessage('ferdinand', $message, $reply);
+		$this->transmission->sendMessage('ferdinand', $message, null);
 
 		$this->addToAssertionCount(1);
 	}
@@ -94,14 +115,13 @@ class MailTransmissionIntegrationTest extends TestCase {
 		]);
 		$this->attachmentService->addFile('gerald', $file);
 		$message = NewMessageData::fromRequest($this->account, 'recipient@domain.com', null, null, 'greetings', 'hello there', [
-				[
-					'isLocal' => 'true',
-					'id' => 13,
-				],
+			[
+				'isLocal' => 'true',
+				'id' => 13,
+			],
 		]);
-		$reply = new RepliedMessageData($this->account, null, null);
 
-		$this->transmission->sendMessage('gerald', $message, $reply);
+		$this->transmission->sendMessage('gerald', $message, null);
 
 		$this->addToAssertionCount(1);
 	}
@@ -110,14 +130,13 @@ class MailTransmissionIntegrationTest extends TestCase {
 		$userFolder = OC::$server->getUserFolder($this->user->getUID());
 		$userFolder->newFile('text.txt');
 		$message = NewMessageData::fromRequest($this->account, 'recipient@domain.com', null, null, 'greetings', 'hello there', [
-				[
-					'isLocal' => false,
-					'fileName' => 'text.txt',
-				],
+			[
+				'isLocal' => false,
+				'fileName' => 'text.txt',
+			],
 		]);
-		$reply = new RepliedMessageData($this->account, null, null);
 
-		$this->transmission->sendMessage($this->user->getUID(), $message, $reply);
+		$this->transmission->sendMessage($this->user->getUID(), $message, null);
 
 		$this->addToAssertionCount(1);
 	}
@@ -133,11 +152,10 @@ class MailTransmissionIntegrationTest extends TestCase {
 
 		$message = NewMessageData::fromRequest($this->account, 'recipient@domain.com', null, null, 'greetings', 'hello there', []);
 		$reply = new RepliedMessageData($this->account, $inbox, $originalUID);
-		$uid = $this->transmission->sendMessage('ferdinand', $message, $reply);
+		$this->transmission->sendMessage('ferdinand', $message, $reply);
 
 		$this->assertMailboxExists('Sent');
 		$this->assertMessageCount(1, 'Sent');
-		$this->assertMessageSubject('Sent', $uid, 'Re: greetings');
 	}
 
 	public function testSendReplyWithoutSubject() {
@@ -149,13 +167,12 @@ class MailTransmissionIntegrationTest extends TestCase {
 			->finish();
 		$originalUID = $this->saveMessage('inbox', $originalMessage);
 
-		$message = NewMessageData::fromRequest($this->account, 'recipient@domain.com', null, null, null, 'hello there', []);
+		$message = NewMessageData::fromRequest($this->account, 'recipient@domain.com', null, null, '', 'hello there', []);
 		$reply = new RepliedMessageData($this->account, $inbox, $originalUID);
 		$uid = $this->transmission->sendMessage('ferdinand', $message, $reply);
 
 		$this->assertMailboxExists('Sent');
 		$this->assertMessageCount(1, 'Sent');
-		$this->assertMessageSubject('Sent', $uid, 'Re: reply test');
 	}
 
 	public function testSendReplyWithoutReplySubject() {
@@ -169,15 +186,14 @@ class MailTransmissionIntegrationTest extends TestCase {
 
 		$message = NewMessageData::fromRequest($this->account, 'recipient@domain.com', null, null, 'Re: reply test', 'hello there', []);
 		$reply = new RepliedMessageData($this->account, $inbox, $originalUID);
-		$uid = $this->transmission->sendMessage('ferdinand', $message, $reply);
+		$this->transmission->sendMessage('ferdinand', $message, $reply);
 
 		$this->assertMailboxExists('Sent');
 		$this->assertMessageCount(1, 'Sent');
-		$this->assertMessageSubject('Sent', $uid, 'Re: reply test');
 	}
 
 	public function testSaveNewDraft() {
-		$message = NewMessageData::fromRequest($this->account, 'recipient@domain.com', null, null, 'greetings', 'hello there', []);
+		$message = NewMessageData::fromRequest($this->account, 'recipient@domain.com', null, null, 'greetings', 'hello there', [], false);
 		$uid = $this->transmission->saveDraft($message);
 		// There should be a new mailbox …
 		$this->assertMailboxExists('Drafts');

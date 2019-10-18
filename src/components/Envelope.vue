@@ -1,7 +1,7 @@
 <template>
 	<router-link class="app-content-list-item" :class="{unseen: data.flags.unseen, draft}" :to="link">
 		<div
-			v-if="showAccountColor"
+			v-if="folder.isUnified"
 			class="mail-message-account-color"
 			:style="{'background-color': accountColor}"
 		></div>
@@ -11,10 +11,10 @@
 			@click.prevent="onToggleFlagged"
 		></div>
 		<div class="app-content-list-item-icon">
-			<Avatar :display-name="sender" :email="senderEmail" />
+			<Avatar :display-name="addresses" :email="senderEmail" />
 		</div>
-		<div class="app-content-list-item-line-one" :title="sender">
-			{{ sender }}
+		<div class="app-content-list-item-line-one" :title="addresses">
+			{{ addresses }}
 		</div>
 		<div class="app-content-list-item-line-two" :title="data.subject">
 			<span v-if="data.flags.answered" class="icon-reply" />
@@ -37,8 +37,8 @@
 </template>
 
 <script>
-import Actions from 'nextcloud-vue/dist/Components/Actions'
-import ActionButton from 'nextcloud-vue/dist/Components/ActionButton'
+import Actions from '@nextcloud/vue/dist/Components/Actions'
+import ActionButton from '@nextcloud/vue/dist/Components/ActionButton'
 import Moment from './Moment'
 
 import Avatar from './Avatar'
@@ -57,9 +57,9 @@ export default {
 			type: Object,
 			required: true,
 		},
-		showAccountColor: {
-			type: Boolean,
-			default: false,
+		folder: {
+			type: Object,
+			required: true,
 		},
 	},
 	computed: {
@@ -96,14 +96,16 @@ export default {
 				}
 			}
 		},
-		sender() {
-			if (this.data.from.length === 0) {
-				// No sender
-				return '?'
+		addresses() {
+			// Show recipients' label/address in a sent folder
+			if (this.folder.specialRole === 'sent') {
+				let recipients = [this.data.to, this.data.cc].flat().map(function(recipient) {
+					return recipient.label ? recipient.label : recipient.email
+				})
+				return recipients.length > 0 ? recipients.join(', ') : t('mail', 'BCC recipients only')
 			}
-
-			const first = this.data.from[0]
-			return first.label || first.email
+			// Show sender label/address in other folder types
+			return this.data.from.length === 0 ? '?' : this.data.from[0].label || this.data.from[0].email
 		},
 		senderEmail() {
 			if (this.data.from.length > 0) {

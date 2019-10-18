@@ -69,14 +69,14 @@ class SieveController  extends Controller
 	/**
 	 * @param int $accountId
 	 * @param string $script
+	 * @param string $script_name
 	 * @return JSONResponse
-	 * @throws AccountException
 	 * @throws \Horde\ManageSieve\Exception
 	 */
-	public function create(int $accountId, string $script): JSONResponse
+	public function create(int $accountId, string $script, string $script_name = null): JSONResponse
 	{
 		return new JSONResponse(
-			$this->getSieveService($accountId)->createScript($script, Script::TYPE_CUSTOM)
+			$this->getSieveService($accountId)->createScript($script, $script_name)
 		);
 	}
 

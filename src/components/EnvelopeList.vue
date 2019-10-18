@@ -16,7 +16,7 @@
 				v-else
 				:key="env.uid"
 				:data="env"
-				:show-account-color="folder.isUnified"
+				:folder="folder"
 				@delete="onEnvelopeDeleted"
 			/>
 			<div id="load-more-mail-messages" key="loadingMore" :class="{'icon-loading-small': loadingMore}" />
@@ -25,7 +25,7 @@
 </template>
 
 <script>
-import AppContentList from 'nextcloud-vue/dist/Components/AppContentList'
+import AppContentList from '@nextcloud/vue/dist/Components/AppContentList'
 import infiniteScroll from 'vue-infinite-scroll'
 import vuescroll from 'vue-scroll'
 import Vue from 'vue'

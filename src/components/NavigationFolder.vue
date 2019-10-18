@@ -20,11 +20,53 @@
   -->
 
 <template>
-	<AppNavigationItem :item="data" :menu-open.sync="menuOpen" />
+	<AppNavigationItem
+		:id="genId(folder)"
+		:key="genId(folder)"
+		:allow-collapse="true"
+		:icon="icon"
+		:menu-open.sync="menuOpen"
+		:title="title"
+		:to="to"
+	>
+		<!-- actions -->
+		<template slot="actions">
+			<template v-if="top">
+				<ActionText v-if="statsText" icon="icon-info" :title="folderId">
+					{{ statsText }}
+				</ActionText>
+
+				<!-- TODO: make *mark as read* available for all folders once there is more than one action -->
+				<ActionButton icon="icon-checkmark" :title="t('mail', 'Mark all as read')" @click="markAsRead">
+					{{ t('mail', 'Mark all messages of this folder as read') }}
+				</ActionButton>
+
+				<ActionInput icon="icon-add" @submit="createFolder">
+					{{ t('mail', 'Add subfolder') }}
+				</ActionInput>
+			</template>
+		</template>
+		<AppNavigationCounter slot="counter">
+			{{ folder.unread }}
+		</AppNavigationCounter>
+
+		<!-- subfolders -->
+		<NavigationFolder
+			v-for="subFolder in subFolders"
+			:key="genId(subFolder)"
+			:account="account"
+			:folder="subFolder"
+			:top="false"
+		/>
+	</AppNavigationItem>
 </template>
 
 <script>
-import AppNavigationItem from 'nextcloud-vue/dist/Components/AppNavigationItem'
+import AppNavigationItem from '@nextcloud/vue/dist/Components/AppNavigationItem'
+import AppNavigationCounter from '@nextcloud/vue/dist/Components/AppNavigationCounter'
+import ActionText from '@nextcloud/vue/dist/Components/ActionText'
+import ActionButton from '@nextcloud/vue/dist/Components/ActionButton'
+import ActionInput from '@nextcloud/vue/dist/Components/ActionInput'
 
 import {getFolderStats} from '../service/FolderService'
 import Logger from '../logger'
@@ -34,6 +76,10 @@ export default {
 	name: 'NavigationFolder',
 	components: {
 		AppNavigationItem,
+		AppNavigationCounter,
+		ActionText,
+		ActionButton,
+		ActionInput,
 	},
 	props: {
 		account: {
@@ -44,6 +90,10 @@ export default {
 			type: Object,
 			required: true,
 		},
+		top: {
+			type: Boolean,
+			default: true,
+		},
 	},
 	data() {
 		return {
@@ -53,8 +103,35 @@ export default {
 		}
 	},
 	computed: {
-		data() {
-			return this.folderToEntry(this.folder, true)
+		title() {
+			return translateMailboxName(this.folder)
+		},
+		folderId() {
+			return atob(this.folder.id)
+		},
+		icon() {
+			return this.folder.specialRole ? 'icon-' + this.folder.specialRole : 'icon-folder'
+		},
+		to() {
+			return {
+				name: 'folder',
+				params: {
+					accountId: this.account.id,
+					folderId: this.folder.id,
+				},
+			}
+		},
+		subFolders() {
+			return this.$store.getters.getSubfolders(this.account.id, this.folder.id)
+		},
+		statsText() {
+			if (this.folderStats && this.folderStats.total && this.folderStats.unread) {
+				return t('mail', '{total} messages ({unread} unread)', {
+					total: this.folderStats.total,
+					unread: this.folderStats.unread,
+				})
+			}
+			return ''
 		},
 	},
 	watch: {
@@ -66,87 +143,31 @@ export default {
 		},
 	},
 	methods: {
-		folderToEntry(folder, top) {
-			let icon = 'folder'
-			if (folder.specialRole) {
-				icon = folder.specialRole
-			}
-
-			const actions = []
-
-			if (top) {
-				if (this.loadingFolderStats) {
-					actions.push({
-						icon: 'icon-info',
-						text: atob(this.folder.id),
-						longtext: t('mail', 'Loading …'),
-					})
-				} else {
-					actions.push({
-						icon: 'icon-info',
-						text: atob(this.folder.id),
-						longtext: t('mail', '{total} messages ({unread} unread)', {
-							total: this.folderStats.total,
-							unread: this.folderStats.unread,
-						}),
-					})
-				}
-			}
-
-			if (top) {
-				// TODO: make *mark as read* available for all folders once there is
-				//       more than one action
-				actions.push({
-					icon: 'icon-checkmark',
-					text: t('mail', 'Mark all as read'),
-					longtext: t('mail', 'Mark all messages of this folder as read'),
-					action: this.markAsRead(folder),
-				})
-
-				actions.push({
-					icon: 'icon-add',
-					text: t('mail', 'Add subfolder'),
-					input: 'text',
-					action: this.createFolder,
-				})
-			}
-
-			return {
-				id: 'account' + this.account.id + '_' + folder.id,
-				key: 'account' + this.account.id + '_' + folder.id,
-				text: translateMailboxName(folder),
-				icon: 'icon-' + icon,
-				router: {
-					name: 'folder',
-					params: {
-						accountId: this.account.id,
-						folderId: folder.id,
-					},
-					exact: false,
-				},
-				utils: {
-					actions,
-					counter: folder.unread,
-				},
-				collapsible: true,
-				opened: folder.opened,
-				children: this.$store.getters
-					.getSubfolders(this.account.id, folder.id)
-					.map(folder => this.folderToEntry(folder, false)),
-			}
+		/**
+		 * Generate unique key id for a specific folder
+		 */
+		genId(folder) {
+			return 'account-' + this.account.id + '_' + folder.id
 		},
-		fetchFolderStats() {
+
+		/**
+		 * Fetch folder unread/read stats
+		 */
+		async fetchFolderStats() {
 			this.loadingFolderStats = true
 
-			getFolderStats(this.account.id, this.folder.id)
-				.then(stats => {
-					Logger.debug('loaded folder stats', {stats})
-					this.folderStats = stats
-
-					this.loadingFolderStats = false
-				})
-				.catch(error => Logger.error(`could not load folder states for ${this.folder.id}`, {error}))
+			try {
+				const stats = await getFolderStats(this.account.id, this.folder.id)
+				Logger.debug('loaded folder stats', {stats})
+				this.folderStats = stats
+			} catch (error) {
+				this.folderStats = {error: true}
+				Logger.error(`could not load folder stats for ${this.folder.id}`, error)
+			} finally {
+				this.loadingFolderStats = false
+			}
 		},
+
 		createFolder(e) {
 			const name = e.target.elements[0].value
 			const withPrefix = atob(this.folder.id) + this.folder.delimiter + name
@@ -160,13 +181,13 @@ export default {
 					throw error
 				})
 		},
-		markAsRead(folder) {
+		markAsRead() {
 			return () => {
 				this.menuOpen = false
 				this.$store
-					.dispatch('markFolderRead', {account: this.account, folderId: folder.id})
-					.then(() => Logger.info(`folder ${folder.id} marked as read`))
-					.catch(error => Logger.error(`could not mark folder ${folder.id} as read`, {error}))
+					.dispatch('markFolderRead', {account: this.account, folderId: this.folder.id})
+					.then(() => Logger.info(`folder ${this.folder.id} marked as read`))
+					.catch(error => Logger.error(`could not mark folder ${this.folder.id} as read`, {error}))
 			}
 		},
 	},

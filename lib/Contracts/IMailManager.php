@@ -30,11 +30,13 @@ use OCA\Mail\Folder;
 use OCA\Mail\IMAP\FolderStats;
 use OCA\Mail\IMAP\Sync\Request as SyncRequest;
 use OCA\Mail\IMAP\Sync\Response as SyncResponse;
+use OCA\Mail\Model\IMAPMessage;
 
 interface IMailManager {
 
 	/**
 	 * @param Account $account
+	 *
 	 * @return Folder[]
 	 */
 	public function getFolders(Account $account): array;
@@ -56,8 +58,20 @@ interface IMailManager {
 	public function getFolderStats(Account $account, string $folderId): FolderStats;
 
 	/**
+	 * @param Account $account
+	 * @param string $mailbox
+	 * @param int $id
+	 * @param bool $loadBody
+	 *
+	 * @return IMAPMessage
+	 * @throws ServiceException
+	 */
+	public function getMessage(Account $account, string $mailbox, int $id, bool $loadBody = false): IMAPMessage;
+
+	/**
 	 * @param Account
 	 * @param SyncRequest $syncRequest
+	 *
 	 * @return SyncResponse
 	 *
 	 * @throws ClientException

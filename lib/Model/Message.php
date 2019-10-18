@@ -49,8 +49,8 @@ class Message implements IMessage {
 	/** @var AddressList */
 	private $bcc;
 
-	/** @var IMessage */
-	private $repliedMessage = null;
+	/** @var string|null */
+	private $inReplyTo = null;
 
 	/** @var array */
 	private $flags = [];
@@ -74,7 +74,7 @@ class Message implements IMessage {
 	/**
 	 * Get the ID
 	 *
-	 * @return int|null
+	 * @return string|null
 	 */
 	public function getMessageId() {
 		return null;
@@ -153,17 +153,17 @@ class Message implements IMessage {
 	}
 
 	/**
-	 * @return IMessage|null
+	 * @return string|null
 	 */
-	public function getRepliedMessage() {
-		return $this->repliedMessage;
+	public function getInReplyTo() {
+		return $this->inReplyTo;
 	}
 
 	/**
 	 * @param IMessage $message
 	 */
-	public function setRepliedMessage(IMessage $message) {
-		$this->repliedMessage = $message;
+	public function setInReplyTo(string $id) {
+		$this->inReplyTo = $id;
 	}
 
 	/**
