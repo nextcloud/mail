@@ -102,7 +102,7 @@ export default {
 				let recipients = [this.data.to, this.data.cc].flat().map(function(recipient) {
 					return recipient.label ? recipient.label : recipient.email
 				})
-				return recipients.length > 0 ? recipients.join(', ') : t('mail', 'BCC recipients only')
+				return recipients.length > 0 ? recipients.join(', ') : t('mail', 'Blind copy recipients only')
 			}
 			// Show sender label/address in other folder types
 			return this.data.from.length === 0 ? '?' : this.data.from[0].label || this.data.from[0].email
