@@ -257,10 +257,9 @@ export default {
 #list-refreshing {
 	overflow-y: hidden;
 	min-height: 0;
-
 	transition-property: all;
 	transition-duration: 0.5s;
-	transition-timing-function: ease-in;
+	transition-timing-function: ease-in-out;
 }
 
 #list-refreshing.refreshing {
@@ -269,7 +268,7 @@ export default {
 
 .list-enter-active,
 .list-leave-active {
-	transition: all 1s;
+	transition: all var(--animation-quick);
 }
 
 .list-enter,
