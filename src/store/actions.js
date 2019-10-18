@@ -2,6 +2,7 @@
  * @copyright 2019 Christoph Wurst <christoph@winzerhof-wurst.at>
  *
  * @author 2019 Christoph Wurst <christoph@winzerhof-wurst.at>
+ * @author 2019, Merlin Mittelbach <merlin.mittelbach@memit.de>
  *
  * @license GNU AGPL version 3 or any later version
  *
@@ -35,6 +36,7 @@ import {fetchAll as fetchAllFolders, create as createFolder, markFolderRead} fro
 import {deleteMessage, fetchEnvelopes, fetchMessage, setEnvelopeFlag, syncEnvelopes} from '../service/MessageService'
 import {showNewMessagesNotification} from '../service/NotificationService'
 import {parseUid} from '../util/EnvelopeUidParser'
+import {getScripts, getScript} from '../service/FiltersService'
 
 export default {
 	savePreference({commit, getters}, {key, value}) {
@@ -494,4 +496,58 @@ export default {
 				throw err
 			})
 	},
+	async fetchSieveScripts({getters, commit}, accountID){
+		commit("setSieveLoading", true)
+		commit("resetFilterAccount", {accountID})
+		let scripts = await getScripts(accountID)
+		if (scripts.entries !== null) {
+			scripts.entries = scripts.entries.filter(x => x !== "nextcloud_includes")
+			if (scripts.active === "nextcloud_includes") {
+				const includes_raw = await getScript(accountID, "nextcloud_includes")
+				const includeRegex = /include\s*:personal\s*"(\S*)";/gm
+				let match = includeRegex.exec(includes_raw)
+				while (match !== null) {
+					if (scripts.entries.indexOf(match[1]) !== -1) {
+						const raw = await getScript(accountID, match[1])
+						commit("newFilterSet", {
+							"accountID": accountID,
+							"name": match[1],
+							"original_name": match[1],
+							"raw": raw,
+							"active": true,
+							"changed": false,
+						})
+					}
+					scripts.entries = scripts.entries.filter(x => x !== match[1])
+					match = includeRegex.exec(includes_raw)
+				}
+			} else {
+				if (scripts.active !== null) {
+					const raw = await getScript(accountID, scripts.active)
+					commit("newFilterSet", {
+						"accountID": accountID,
+						"name": scripts.active,
+						"original_name": scripts.active,
+						"raw": raw,
+						"active": true,
+						"changed": false,
+					})
+					scripts.entries = scripts.entries.filter(x => x !== scripts.active)
+				}
+			}
+			for (const script of scripts.entries) {
+				const raw = await getScript(accountID, script)
+				commit("newFilterSet", {
+					"accountID": accountID,
+					"name": script,
+					"original_name": script,
+					"raw": raw,
+					"changed": false,
+				})
+			}
+			commit("setSieveLoading", false)
+		} else {
+			commit("setSieveLoading", false)
+		}
+	}
 }

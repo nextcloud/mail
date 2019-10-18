@@ -2,6 +2,7 @@
  * @copyright 2019 Christoph Wurst <christoph@winzerhof-wurst.at>
  *
  * @author 2019 Christoph Wurst <christoph@winzerhof-wurst.at>
+ * @author 2019, Merlin Mittelbach <merlin.mittelbach@memit.de>
  *
  * @license GNU AGPL version 3 or any later version
  *
@@ -78,6 +79,22 @@ export const getters = {
 	getMessageByUid: state => uid => {
 		return state.messages[uid]
 	},
+	sieveAccountList: state => (accountID) => {
+		return state.accountList.map(function(accountID) {
+			if (state.accounts[accountID].sieveHost != undefined) {
+				return accountID
+			}
+		}).filter(accountID => accountID !== undefined)
+	},
+	getFilterSetByID: state => (accountID, filterSetID) => {
+		return state.sieveFilterSets[accountID].find(x => x.id === filterSetID)
+	},
+	getFilterSetByName: state => (accountID, name) => {
+		return state.sieveFilterSets[accountID].find(x => x.name === name)
+	},
+	getFilterByID: state => (accountID, filterSetID, filterID) => {
+		return state.sieveFilters[accountID][filterSetID].find(x => x.id === filterID)
+	},
 }
 
 export default new Vuex.Store({
@@ -112,6 +129,10 @@ export default new Vuex.Store({
 		envelopes: {},
 		messages: {},
 		autocompleteEntries: [],
+		sieveFilterSets: {},
+		sieveFilters: {},
+		sieveLoading: true,
+		sieveDelete: new Set(),
 	},
 	getters,
 	mutations,
