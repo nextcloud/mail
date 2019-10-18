@@ -61,7 +61,6 @@ OC.L10N.register(
     "Settings" : "Ρυθμίσεις",
     "Show all folders" : "Εμφάνιση όλων των φακέλων",
     "Collapse folders" : "Σύμπτυξη φακέλων",
-    "Account Settings" : "Ρυθμίσεις λογαριασμού",
     "Speed up your Mail experience with these quick shortcuts." : "Βελτιώστε την ταχύτητά σας στην εμπειρία χρήσης στο πρόγραμμα Αλληλογραφίας με αυτές τις συντομεύσεις.",
     "Compose new message" : "Σύνταξη νέου μηνύματος",
     "Newer message" : "Νεότερο μήνυμα",

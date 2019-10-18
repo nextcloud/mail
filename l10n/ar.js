@@ -52,7 +52,6 @@ OC.L10N.register(
     "Show all folders" : "أظهر جميع المجلدات",
     "Collapse folders" : "طي المجلدات",
     "Signature" : "التوقيع",
-    "Account Settings" : "إعدادات الحساب",
     "Mail server" : "خادم البريد",
     "Speed up your Mail experience with these quick shortcuts." : "سرّع تجربة بريدك مع هذه الإختصارات.",
     "Compose new message" : "إرسل رسالة جديدة",
