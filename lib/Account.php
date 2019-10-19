@@ -113,6 +113,7 @@ class Account implements JsonSerializable {
 	}
 
 	/**
+	 * @deprecated use \OCA\Mail\IMAP\IMAPClientFactory instead
 	 * @return Horde_Imap_Client_Socket
 	 */
 	public function getImapConnection() {
@@ -193,6 +194,9 @@ class Account implements JsonSerializable {
 		return $this->account->getEmail();
 	}
 
+	/**
+	 * @deprecated
+	 */
 	public function testConnectivity(Horde_Mail_Transport $transport) {
 		// connect to imap
 		$this->getImapConnection();
