@@ -67,7 +67,7 @@ export default {
 					Logger.info('editor mode updated')
 				})
 				.catch(error => {
-					Logger.error('could not upate editor mode', {error})
+					Logger.error('could not update editor mode', {error})
 					this.editorMode = oldVal
 					throw error
 				})

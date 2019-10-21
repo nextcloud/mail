@@ -20,11 +20,8 @@
  *
  */
 
+import moment from '@nextcloud/moment'
 import negate from 'lodash/fp/negate'
-import moment from 'moment'
-import {getLocale} from '@nextcloud/l10n'
-
-moment.locale(getLocale())
 
 export const buildReplyBody = (original, from, date) => {
 	const start = '\n\n'
@@ -35,6 +32,18 @@ export const buildReplyBody = (original, from, date) => {
 		return start + `"${from.label}" <${from.email}> – ${dateString}` + body
 	} else {
 		return start + body
+	}
+}
+
+export const buildHtmlReplyBody = (original, from, date) => {
+	const start = `<p></p>`
+	const body = `<blockquote>${original}</blockquote>`
+
+	if (from) {
+		const dateString = moment.unix(date).format('LLL')
+		return `${start}"${from.label}" <${from.email}> – ${dateString}<br>${body}`
+	} else {
+		return `${start}${body}`
 	}
 }
 

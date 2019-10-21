@@ -28,10 +28,9 @@ import AppContentDetails from '@nextcloud/vue/dist/Components/AppContentDetails'
 import Axios from '@nextcloud/axios'
 import {generateUrl} from '@nextcloud/router'
 
-import {buildForwardSubject, buildReplyBody, buildReplySubject} from '../ReplyBuilder'
+import {buildForwardSubject, buildHtmlReplyBody, buildReplyBody, buildReplySubject} from '../ReplyBuilder'
 import Composer from './Composer'
 import {getRandomMessageErrorMessage} from '../util/ErrorMessageFactory'
-import {htmlToText} from '../util/HtmlHelper'
 import Error from './Error'
 import Loading from './Loading'
 import Logger from '../logger'
@@ -223,9 +222,8 @@ export default {
 				})
 		},
 		getForwardReplyBody() {
-			// TODO: in case of an HTML message, do not remove HTML but use the rich editor if possible
 			if (this.original.hasHtmlBody) {
-				return buildReplyBody(htmlToText(this.originalBody), this.original.from[0], this.original.dateInt)
+				return buildHtmlReplyBody(this.originalBody, this.original.from[0], this.original.dateInt)
 			}
 			return buildReplyBody(this.originalBody, this.original.from[0], this.original.dateInt)
 		},
