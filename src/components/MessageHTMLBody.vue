@@ -51,7 +51,6 @@ export default {
 				iframeDoc.querySelectorAll('[data-original-src]').length > 0 ||
 				iframeDoc.querySelectorAll('[data-original-style]').length > 0
 
-			this.$emit('loaded', iframeBody.outerHTML)
 			this.loading = false
 		},
 		onAfterPrint() {

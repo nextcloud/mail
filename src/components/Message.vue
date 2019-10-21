@@ -53,7 +53,7 @@
 				</div>
 			</div>
 			<div class="mail-message-body">
-				<MessageHTMLBody v-if="message.hasHtmlBody" :url="htmlUrl" @loaded="onHtmlBodyLoaded" />
+				<MessageHTMLBody v-if="message.hasHtmlBody" :url="htmlUrl" />
 				<MessagePlainTextBody v-else :body="message.body" :signature="message.signature" />
 				<MessageAttachments :attachments="message.attachments" />
 				<div id="reply-composer"></div>
@@ -72,13 +72,11 @@ import AddressList from './AddressList'
 import {buildRecipients as buildReplyRecipients, buildReplySubject} from '../ReplyBuilder'
 import Error from './Error'
 import {getRandomMessageErrorMessage} from '../util/ErrorMessageFactory'
-import {htmlToText} from '../util/HtmlHelper'
 import MessageHTMLBody from './MessageHTMLBody'
 import MessagePlainTextBody from './MessagePlainTextBody'
 import Loading from './Loading'
 import Logger from '../logger'
 import MessageAttachments from './MessageAttachments'
-import {saveDraft, sendMessage} from '../service/MessageService'
 
 export default {
 	name: 'Message',
@@ -99,7 +97,6 @@ export default {
 			message: undefined,
 			errorMessage: '',
 			error: undefined,
-			htmlBodyLoaded: false,
 			replyRecipient: {},
 			replySubject: '',
 			envelope: '',
@@ -140,7 +137,6 @@ export default {
 			this.error = undefined
 			this.replyRecipient = {}
 			this.replySubject = ''
-			this.htmlBodyLoaded = false
 
 			const messageUid = this.$route.params.messageUid
 
@@ -171,10 +167,6 @@ export default {
 
 					this.replySubject = buildReplySubject(message.subject)
 
-					if (!message.hasHtmlBody) {
-						this.setReplyText(message.body)
-					}
-
 					this.loading = false
 
 					this.envelope = this.$store.getters.getEnvelope(message.accountId, message.folderId, message.id)
@@ -193,24 +185,6 @@ export default {
 						this.loading = false
 					}
 				})
-		},
-		setReplyText(text) {
-			const bodyText = htmlToText(text)
-
-			this.$store.commit('setMessageBodyText', {
-				uid: this.message.uid,
-				bodyText,
-			})
-		},
-		onHtmlBodyLoaded(bodyString) {
-			this.setReplyText(bodyString)
-			this.htmlBodyLoaded = true
-		},
-		saveReplyDraft(data) {
-			return saveDraft(data.account, data).then(({uid}) => uid)
-		},
-		sendReply(data) {
-			return sendMessage(data.account, data)
 		},
 		replyMessage() {
 			this.$router.push({

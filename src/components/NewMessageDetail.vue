@@ -25,10 +25,13 @@
 
 <script>
 import AppContentDetails from '@nextcloud/vue/dist/Components/AppContentDetails'
+import Axios from '@nextcloud/axios'
+import {generateUrl} from '@nextcloud/router'
 
 import {buildForwardSubject, buildReplyBody, buildReplySubject} from '../ReplyBuilder'
 import Composer from './Composer'
 import {getRandomMessageErrorMessage} from '../util/ErrorMessageFactory'
+import {htmlToText} from '../util/HtmlHelper'
 import Error from './Error'
 import Loading from './Loading'
 import Logger from '../logger'
@@ -46,6 +49,8 @@ export default {
 		return {
 			loading: false,
 			draft: undefined,
+			original: undefined,
+			originalBody: undefined,
 			errorMessage: '',
 			error: undefined,
 		}
@@ -63,10 +68,9 @@ export default {
 					isPlainText: this.draft.hasHtmlBody !== undefined,
 				}
 			} else if (this.$route.query.uid !== undefined) {
-				// Forwarded message
-
-				const message = this.$store.getters.getMessageByUid(this.$route.query.uid)
-				Logger.debug('forwarding or replying to message', message)
+				// Forward or reply to a message
+				const message = this.original
+				Logger.debug('forwarding or replying to message', {message})
 
 				// message headers set for 'reply' actions by default
 				let subject = buildReplySubject(message.subject)
@@ -84,7 +88,7 @@ export default {
 					to: msgTo,
 					cc: msgCc,
 					subject: subject,
-					body: buildReplyBody(message.bodyText, message.from[0], message.dateInt),
+					body: this.getForwardReplyBody(),
 				}
 			} else {
 				// New or mailto: message
@@ -135,18 +139,17 @@ export default {
 			]
 		},
 		fetchMessage() {
-			this.draft = undefined
-			this.errorMessage = ''
-			this.error = undefined
-
-			const draftUid = this.$route.params.draftUid
-			if (draftUid === undefined) {
-				Logger.debug('not a draft, nothing to fetch')
-				// Nothing to fetch
-				return
+			if (this.$route.params.draftUid !== undefined) {
+				return this.fetchDraftMessage(this.$route.params.draftUid)
+			} else if (this.$route.query.uid !== undefined) {
+				return this.fetchOriginalMessage(this.$route.query.uid)
 			}
-
+		},
+		fetchDraftMessage(draftUid) {
 			this.loading = true
+			this.draft = undefined
+			this.error = undefined
+			this.errorMessage = ''
 
 			this.$store
 				.dispatch('fetchMessage', draftUid)
@@ -175,6 +178,56 @@ export default {
 						this.loading = false
 					}
 				})
+		},
+		fetchOriginalMessage(uid) {
+			this.loading = true
+			this.error = undefined
+			this.errorMessage = ''
+
+			this.$store
+				.dispatch('fetchMessage', uid)
+				.then(message => {
+					if (message.uid !== this.$route.query.uid) {
+						Logger.debug("User navigated away, loaded original message won't be used")
+						return
+					}
+
+					Logger.debug('original message fetched', {message})
+					this.original = message
+
+					if (message.hasHtmlBody) {
+						Logger.debug('original message has HTML body')
+						return Axios.get(
+							generateUrl('/apps/mail/api/accounts/{accountId}/folders/{folderId}/messages/{id}/html', {
+								accountId: message.accountId,
+								folderId: message.folderId,
+								id: message.id,
+							})
+						).then(resp => resp.data)
+					} else {
+						return message.body
+					}
+				})
+				.then(body => {
+					this.originalBody = body
+
+					this.loading = false
+				})
+				.catch(error => {
+					Logger.error('could not load original message ' + uid, {error})
+					if (error.isError) {
+						this.errorMessage = t('mail', 'Could not load original message')
+						this.error = error
+						this.loading = false
+					}
+				})
+		},
+		getForwardReplyBody() {
+			// TODO: in case of an HTML message, do not remove HTML but use the rich editor if possible
+			if (this.original.hasHtmlBody) {
+				return buildReplyBody(htmlToText(this.originalBody), this.original.from[0], this.original.dateInt)
+			}
+			return buildReplyBody(this.originalBody, this.original.from[0], this.original.dateInt)
 		},
 		saveDraft(data) {
 			if (data.draftUID === undefined && this.draft) {

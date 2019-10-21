@@ -197,9 +197,6 @@ export default {
 		Vue.set(state.envelopes, uid, draft)
 		Vue.set(state.messages, uid, draft)
 	},
-	setMessageBodyText(state, {uid, bodyText}) {
-		Vue.set(state.messages[uid], 'bodyText', bodyText)
-	},
 	removeMessage(state, {accountId, folderId, id}) {
 		Vue.delete(state.messages, accountId + '-' + folderId + '-' + id)
 	},
