@@ -34,6 +34,7 @@
 import CKEditor from '@ckeditor/ckeditor5-vue'
 import Editor from '@ckeditor/ckeditor5-editor-balloon/src/ballooneditor'
 import EssentialsPlugin from '@ckeditor/ckeditor5-essentials/src/essentials'
+import BlockQuotePlugin from '@ckeditor/ckeditor5-block-quote/src/blockquote'
 import BoldPlugin from '@ckeditor/ckeditor5-basic-styles/src/bold'
 import ItalicPlugin from '@ckeditor/ckeditor5-basic-styles/src/italic'
 import LinkPlugin from '@ckeditor/ckeditor5-link/src/link'
@@ -65,10 +66,10 @@ export default {
 			editor: Editor,
 			config: {
 				plugins: this.html
-					? [EssentialsPlugin, ParagraphPlugin, BoldPlugin, ItalicPlugin, LinkPlugin]
+					? [EssentialsPlugin, ParagraphPlugin, BoldPlugin, ItalicPlugin, LinkPlugin, BlockQuotePlugin]
 					: [EssentialsPlugin, ParagraphPlugin],
 				toolbar: {
-					items: this.html ? ['bold', 'italic', 'link', 'undo', 'redo'] : ['undo', 'redo'],
+					items: this.html ? ['bold', 'italic', 'blockquote', 'link', 'undo', 'redo'] : ['undo', 'redo'],
 				},
 				language: 'en',
 			},
