@@ -69,7 +69,7 @@ import AppContentDetails from '@nextcloud/vue/dist/Components/AppContentDetails'
 import {generateUrl} from '@nextcloud/router'
 
 import AddressList from './AddressList'
-import {buildReplyBody, buildRecipients as buildReplyRecipients, buildReplySubject} from '../ReplyBuilder'
+import {buildRecipients as buildReplyRecipients, buildReplySubject} from '../ReplyBuilder'
 import Error from './Error'
 import {getRandomMessageErrorMessage} from '../util/ErrorMessageFactory'
 import {htmlToText} from '../util/HtmlHelper'
@@ -102,7 +102,6 @@ export default {
 			htmlBodyLoaded: false,
 			replyRecipient: {},
 			replySubject: '',
-			replyBody: '',
 			envelope: '',
 		}
 	},
@@ -141,7 +140,6 @@ export default {
 			this.error = undefined
 			this.replyRecipient = {}
 			this.replySubject = ''
-			this.replyBody = ''
 			this.htmlBodyLoaded = false
 
 			const messageUid = this.$route.params.messageUid
@@ -203,8 +201,6 @@ export default {
 				uid: this.message.uid,
 				bodyText,
 			})
-
-			this.replyBody = buildReplyBody(this.message.bodyText, this.message.from[0], this.message.dateInt)
 		},
 		onHtmlBodyLoaded(bodyString) {
 			this.setReplyText(bodyString)
