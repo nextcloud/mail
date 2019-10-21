@@ -20,8 +20,8 @@
   -->
 
 <template>
-	<BaseAvatar v-if="loading || !hasAvatar" :display-name="displayName" size="40" />
-	<BaseAvatar v-else :display-name="displayName" :url="avatarUrl" size="40" />
+	<BaseAvatar v-if="loading || !hasAvatar" :display-name="displayName" :size="40" />
+	<BaseAvatar v-else :display-name="displayName" :url="avatarUrl" :size="40" />
 </template>
 
 <script>
