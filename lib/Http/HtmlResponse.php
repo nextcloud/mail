@@ -33,6 +33,7 @@ class HtmlResponse extends Response {
 	private $content;
 
 	public function __construct(string $content) {
+		parent::__construct();
 		$this->content = $content;
 	}
 
