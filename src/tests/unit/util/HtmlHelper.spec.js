@@ -34,18 +34,18 @@ describe('HtmlHelper', () => {
 		expect(actual).to.equal(expected)
 	})
 
-	it('concats divs', () => {
+	it('breaks on divs', () => {
 		const html = '<div>one</div><div>two</div>'
-		const expected = 'onetwo'
+		const expected = 'one\ntwo'
 
 		const actual = htmlToText(html)
 
 		expect(actual).to.equal(expected)
 	})
 
-	it('does not produce large number of line breaks for nested elements', () => {
+	it('produces a line break for each ending div element', () => {
 		const html = '<div>' + '    <div>' + '        line1' + '    </div>' + '</div>' + '<div>line2</div>'
-		const expected = ' line1 line2'
+		const expected = ' line1\n\nline2'
 
 		const actual = htmlToText(html)
 
@@ -103,6 +103,30 @@ describe('HtmlHelper', () => {
 	it('does not leak internal redirection URLs', () => {
 		const html = '<a href="https://localhost/apps/mail/redirect?src=domain.tld">domain.tld</a>'
 		const expected = 'domain.tld'
+
+		const actual = htmlToText(html)
+
+		expect(actual).to.equal(expected)
+	})
+
+	it('preserves quotes', () => {
+		const html = `<blockquote><div><b>yes.</b></div><div><br /></div><div>Am Montag, den 21.10.2019, 16:51 +0200 schrieb Christoph Wurst:</div><blockquote style="margin:0 0 0 .8ex;border-left:2px #729fcf solid;padding-left:1ex;"><div>ok cool</div><div><br /></div><div>Am Montag, den 21.10.2019, 16:51 +0200 schrieb Christoph Wurst:</div><blockquote style="margin:0 0 0 .8ex;border-left:2px #729fcf solid;padding-left:1ex;"><div>Hello</div><div><br /></div><div>this is some t<i>e</i>xt</div><div><br /></div><div>yes</div><div><br /></div><div>cheers</div><br></blockquote><br></blockquote></blockquote>`
+		const expected = `> yes.
+>
+> Am Montag, den 21.10.2019, 16:51 +0200 schrieb Christoph Wurst:
+> > ok cool
+> >
+> > Am Montag, den 21.10.2019, 16:51 +0200 schrieb Christoph Wurst:
+> > > Hello
+> > >
+> > > this is some text
+> > >
+> > > yes
+> > >
+> > > cheers
+> > >
+> > >
+> >`
 
 		const actual = htmlToText(html)
 

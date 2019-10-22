@@ -61,7 +61,7 @@ export default {
 	},
 	data() {
 		return {
-			text: this.value,
+			text: '',
 			ready: false,
 			editor: Editor,
 			config: {
@@ -103,8 +103,33 @@ export default {
 
 			this.ready = true
 		},
-		onEditorReady() {
-			this.bodyVal = htmlToText(this.bodyVal)
+		onEditorReady(editor) {
+			const schema = editor.model.schema
+
+			schema.on(
+				'checkChild',
+				(evt, args) => {
+					const context = args[0]
+
+					if (context.endsWith('blockQuote')) {
+						// Prevent next listeners from being called.
+						evt.stop()
+						// Set the checkChild()'s return value.
+						evt.return = true
+					}
+				},
+				{
+					priority: 'highest',
+				}
+			)
+
+			// Set value as late as possible, so the custom schema listener is used
+			// for the initial editor model
+			if (this.html) {
+				this.text = this.value
+			} else {
+				this.text = `<p>${htmlToText(this.value).replace(/[\n\r]/gm, '<br>')}</p>`
+			}
 		},
 		onInput() {
 			this.$emit('input', this.html ? this.text : htmlToText(this.text))
