@@ -22,6 +22,7 @@
 import flatMapDeep from 'lodash/fp/flatMapDeep'
 import flatten from 'lodash/fp/flatten'
 import flattenDepth from 'lodash/fp/flattenDepth'
+import identity from 'lodash/fp/identity'
 import isEmpty from 'lodash/fp/isEmpty'
 import last from 'lodash/fp/last'
 import orderBy from 'lodash/fp/orderBy'
@@ -404,7 +405,7 @@ export default {
 					)
 				})
 		).then(results => {
-			const newMessages = flatMapDeep(results).filter(m => m !== undefined)
+			const newMessages = flatMapDeep(identity)(results).filter(m => m !== undefined)
 			if (newMessages.length > 0) {
 				showNewMessagesNotification(newMessages)
 			}
