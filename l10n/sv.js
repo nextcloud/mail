@@ -95,6 +95,7 @@ OC.L10N.register(
     "{unread} unread of {total}" : "{unread} olästa av {total}",
     "Loading message stats" : "Laddar meddelandestatistik",
     "Could not load your draft" : "Kunde inte ladda ditt utkast",
+    "Could not load original message" : "Det gick inte att ladda originalmeddelandet",
     "No message selected" : "Inget meddelande valt",
     "Signature" : "Signatur",
     "A signature is added to the text of new messages and replies." : "En signatur läggs till i texten för nya meddelanden och svar.",

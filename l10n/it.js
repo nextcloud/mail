@@ -96,6 +96,7 @@ OC.L10N.register(
     "{unread} unread of {total}" : "{unread} non letti di {total}",
     "Loading message stats" : "Caricamento statistiche messaggi",
     "Could not load your draft" : "Impossibile caricare la tua bozza",
+    "Could not load original message" : "Impossibile caricare il messaggio originale",
     "No message selected" : "Nessun messaggio selezionato",
     "Signature" : "Firma",
     "A signature is added to the text of new messages and replies." : "Una firma sarà aggiunta al testo dei nuovi messaggi e delle risposte.",

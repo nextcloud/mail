@@ -96,6 +96,7 @@ OC.L10N.register(
     "{unread} unread of {total}" : "{unread} / {total} okunmamış ileti",
     "Loading message stats" : "İleti istatistikleri yükleniyor",
     "Could not load your draft" : "Taslağınız yüklenemedi",
+    "Could not load original message" : "Özgün ileti yüklenemedi",
     "No message selected" : "Herhangi bir ileti seçilmemiş",
     "Signature" : "İmza",
     "A signature is added to the text of new messages and replies." : "Yeni ileti ve yanıtlar için bir imza eklendi.",

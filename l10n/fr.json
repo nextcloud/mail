@@ -93,6 +93,7 @@
     "{unread} unread of {total}" : "{unread} non lus sur {total}",
     "Loading message stats" : "Chargement des statistiques de message",
     "Could not load your draft" : "Impossible de charger votre brouillon",
+    "Could not load original message" : "Impossible de charger le message d'origine",
     "No message selected" : "Aucun message sélectionné",
     "Signature" : "Signature",
     "A signature is added to the text of new messages and replies." : "Une signature est ajoutée au texte des nouveaux messages et des réponses.",
