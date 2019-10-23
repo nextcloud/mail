@@ -10,6 +10,8 @@
 
 <script>
 import Content from '@nextcloud/vue/dist/Components/Content'
+import {loadState} from '@nextcloud/initial-state'
+
 import AccountForm from '../components/AccountForm'
 
 export default {
@@ -18,23 +20,26 @@ export default {
 		AccountForm,
 		Content,
 	},
-	computed: {
-		displayName() {
-			return $('#user-displayname').text() || ''
-		},
-		email() {
-			return $('#user-email').text() || ''
-		},
+	data() {
+		return {
+			displayName: loadState('mail', 'prefill_displayName'),
+			email: loadState('mail', 'prefill_email'),
+		}
 	},
 	methods: {
 		onSave(data) {
-			return this.$store.dispatch('createAccount', data).then(account => {
-				this.$router.push({
-					name: 'home',
-				})
+			return this.$store
+				.dispatch('createAccount', data)
+				.then(account => {
+					this.$router.push({
+						name: 'home',
+					})
 
-				return account
-			})
+					return account
+				})
+				.catch(e => {
+					console.error(e)
+				})
 		},
 	},
 }
