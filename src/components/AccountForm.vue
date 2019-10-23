@@ -226,6 +226,7 @@
 				/>
 			</tab>
 		</tabs>
+		<slot name="feedback"></slot>
 		<input type="submit" class="primary" :disabled="loading" :value="submitButtonText" @click="onSubmit" />
 	</div>
 </template>

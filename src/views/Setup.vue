@@ -3,7 +3,11 @@
 		<div id="emptycontent">
 			<div class="icon-mail"></div>
 			<h2>{{ t('mail', 'Connect your mail account') }}</h2>
-			<AccountForm :display-name="displayName" :email="email" :save="onSave" />
+			<AccountForm :display-name="displayName" :email="email" :save="onSave">
+				<template v-if="error" #feedback class="warning">
+					{{ error }}
+				</template>
+			</AccountForm>
 		</div>
 	</Content>
 </template>
@@ -11,8 +15,10 @@
 <script>
 import Content from '@nextcloud/vue/dist/Components/Content'
 import {loadState} from '@nextcloud/initial-state'
+import {translate as t} from '@nextcloud/l10n'
 
 import AccountForm from '../components/AccountForm'
+import logger from '../logger'
 
 export default {
 	name: 'Setup',
@@ -24,10 +30,13 @@ export default {
 		return {
 			displayName: loadState('mail', 'prefill_displayName'),
 			email: loadState('mail', 'prefill_email'),
+			error: null,
 		}
 	},
 	methods: {
 		onSave(data) {
+			this.error = null
+
 			return this.$store
 				.dispatch('createAccount', data)
 				.then(account => {
@@ -37,8 +46,14 @@ export default {
 
 					return account
 				})
-				.catch(e => {
-					console.error(e)
+				.catch(error => {
+					logger.error('Could not create account', {error})
+
+					if (error.message) {
+						this.error = error.message
+					} else {
+						this.error = t('mail', 'Unexpected error during account creation')
+					}
 				})
 		},
 	},
