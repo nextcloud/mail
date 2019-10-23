@@ -27,21 +27,36 @@ use Exception;
 use OCA\Mail\Controller\ProxyController;
 use OCA\Mail\Http\ProxyDownloadResponse;
 use OCP\AppFramework\Http\TemplateResponse;
+use OCP\Http\Client\IClient;
 use OCP\Http\Client\IClientService;
 use OCP\Http\Client\IResponse;
 use OCP\IRequest;
 use OCP\ISession;
 use OCP\IURLGenerator;
+use PHPUnit\Framework\MockObject\MockObject;
 
 class ProxyControllerTest extends TestCase {
 
+	/** @var string */
 	private $appName;
+
+	/** @var IRequest|MockObject */
 	private $request;
+
+	/** @var IURLGenerator|MockObject */
 	private $urlGenerator;
+
+	/** @var ISession|MockObject */
 	private $session;
-	private $controller;
-	private $hostname;
+
+	/** @var IClientService|MockObject */
 	private $clientService;
+
+	/** @var string */
+	private $hostname;
+
+	/** @var ProxyController */
+	private $controller;
 
 	protected function setUp() {
 		parent::setUp();
@@ -58,32 +73,32 @@ class ProxyControllerTest extends TestCase {
 		return [
 			[
 				'http://nextcloud.com',
-				'http://anotherhostname.com',
+				false,
 				false
 			],
 			[
 				'https://nextcloud.com',
-				'http://anotherhostname.com',
+				false,
 				false
 			],
 			[
 				'http://nextcloud.com',
-				'https://example.com',
+				true,
 				true
 			],
 			[
 				'http://example.com',
-				'https://example.com',
-				true
+				false,
+				false
 			],
 			[
 				'https://example.com',
-				'https://example.com',
+				true,
 				true
 			],
 			[
 				'ftp://example.com',
-				'https://example.com',
+				true,
 				true
 			],
 		];
@@ -93,15 +108,15 @@ class ProxyControllerTest extends TestCase {
 	 * @dataProvider redirectDataProvider
 	 */
 	public function testRedirect(string $url,
-								 string $referrer,
+								 bool $passesTest,
 								 bool $authorized) {
 		$this->urlGenerator->expects($this->once())
 			->method('linkToRoute')
 			->with('mail.page.index')
 			->will($this->returnValue('mail-route'));
-		$this->request->server = [
-			'HTTP_REFERER' => $referrer,
-		];
+		$this->request->expects($this->once())
+			->method('passesStrictCookieCheck')
+			->willReturn($passesTest);
 		$this->controller = new ProxyController(
 			$this->appName,
 			$this->request,
@@ -149,7 +164,7 @@ class ProxyControllerTest extends TestCase {
 
 		$this->session->expects($this->once())
 			->method('close');
-		$client = $this->getMockBuilder('\OCP\Http\Client\IClient')->getMock();
+		$client = $this->getMockBuilder(IClient::class)->getMock();
 		$this->clientService->expects($this->once())
 			->method('newClient')
 			->will($this->returnValue($client));
