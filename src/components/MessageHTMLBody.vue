@@ -17,6 +17,8 @@
 import PrintScout from 'printscout'
 const scout = new PrintScout()
 
+import logger from '../logger'
+
 export default {
 	name: 'MessageHTMLBody',
 	props: {
@@ -61,9 +63,11 @@ export default {
 		},
 		onShowBlockedContent() {
 			const iframeDoc = this.getIframeDoc()
-			iframeDoc
-				.querySelectorAll('[data-original-src]')
-				.forEach(node => node.setAttribute('src', node.getAttribute('data-original-src')))
+			logger.debug('showing external images')
+			iframeDoc.querySelectorAll('[data-original-src]').forEach(node => {
+				node.style.display = null
+				node.setAttribute('src', node.getAttribute('data-original-src'))
+			})
 			iframeDoc
 				.querySelectorAll('[data-original-style]')
 				.forEach(node => node.setAttribute('style', node.getAttribute('data-original-style')))
