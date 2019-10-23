@@ -14,6 +14,13 @@ export const create = data => {
 	return HttpClient.post(url, data)
 		.then(resp => resp.data)
 		.then(fixAccountId)
+		.catch(e => {
+			if (e.response && e.response.status === 400) {
+				throw e.response.data
+			}
+
+			throw e
+		})
 }
 
 export const patch = (account, data) => {
