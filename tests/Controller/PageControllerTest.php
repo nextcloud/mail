@@ -1,4 +1,4 @@
-<?php
+<?php declare(strict_types=1);
 
 /**
  * @author Christoph Wurst <christoph@winzerhof-wurst.at>
@@ -33,43 +33,47 @@ use OCP\AppFramework\Http\ContentSecurityPolicy;
 use OCP\AppFramework\Http\RedirectResponse;
 use OCP\AppFramework\Http\TemplateResponse;
 use OCP\IConfig;
+use OCP\IInitialStateService;
 use OCP\IRequest;
 use OCP\IURLGenerator;
 use OCP\IUser;
 use OCP\IUserSession;
-use PHPUnit_Framework_MockObject_MockObject;
+use PHPUnit\Framework\MockObject\MockObject;
 
 class PageControllerTest extends TestCase {
 
 	/** @var string */
 	private $appName;
 
-	/** @var IRequest|PHPUnit_Framework_MockObject_MockObject */
+	/** @var IRequest|MockObject */
 	private $request;
 
 	/** @var string */
 	private $userId;
 
-	/** @var IURLGenerator|PHPUnit_Framework_MockObject_MockObject */
+	/** @var IURLGenerator|MockObject */
 	private $urlGenerator;
 
-	/** @var IConfig|PHPUnit_Framework_MockObject_MockObject */
+	/** @var IConfig|MockObject */
 	private $config;
 
-	/** @var AccountService|PHPUnit_Framework_MockObject_MockObject */
+	/** @var AccountService|MockObject */
 	private $accountService;
 
-	/** @var AliasesService|PHPUnit_Framework_MockObject_MockObject */
+	/** @var AliasesService|MockObject */
 	private $aliasesService;
 
-	/** @var IUserSession|PHPUnit_Framework_MockObject_MockObject */
+	/** @var IUserSession|MockObject */
 	private $userSession;
 
-	/** @var IUserPreferences|PHPUnit_Framework_MockObject_MockObject */
+	/** @var IUserPreferences|MockObject */
 	private $preferences;
 
-	/** @var MailManager|PHPUnit_Framework_MockObject_MockObject */
+	/** @var MailManager|MockObject */
 	private $mailManager;
+
+	/** @var IInitialStateService|MockObject */
+	private $initialState;
 
 	/** @var PageController */
 	private $controller;
@@ -87,11 +91,21 @@ class PageControllerTest extends TestCase {
 		$this->userSession = $this->createMock(IUserSession::class);
 		$this->preferences = $this->createMock(IUserPreferences::class);
 		$this->mailManager = $this->createMock(MailManager::class);
+		$this->initialState = $this->createMock(IInitialStateService::class);
 
-		$this->controller = new PageController($this->appName, $this->request,
-			$this->urlGenerator, $this->config, $this->accountService,
-			$this->aliasesService, $this->userId, $this->userSession,
-			$this->preferences, $this->mailManager);
+		$this->controller = new PageController(
+			$this->appName,
+			$this->request,
+			$this->urlGenerator,
+			$this->config,
+			$this->accountService,
+			$this->aliasesService,
+			$this->userId,
+			$this->userSession,
+			$this->preferences,
+			$this->mailManager,
+			$this->initialState
+		);
 	}
 
 	public function testIndex() {
@@ -188,6 +202,12 @@ class PageControllerTest extends TestCase {
 			->with($this->equalTo('jane'), $this->equalTo('settings'),
 				$this->equalTo('email'), $this->equalTo(''))
 			->will($this->returnValue('jane@doe.cz'));
+		$this->initialState->expects($this->at(0))
+			->method('provideInitialState')
+			->with('mail', 'prefill_displayName', 'Jane Doe');
+		$this->initialState->expects($this->at(1))
+			->method('provideInitialState')
+			->with('mail', 'prefill_email', 'jane@doe.cz');
 
 		$expected = new TemplateResponse($this->appName, 'index',
 			[
@@ -195,8 +215,6 @@ class PageControllerTest extends TestCase {
 			'external-avatars' => 'true',
 			'app-version' => '1.2.3',
 			'accounts' => base64_encode(json_encode($accountsJson)),
-			'prefill_displayName' => 'Jane Doe',
-			'prefill_email' => 'jane@doe.cz',
 		]);
 		$csp = new ContentSecurityPolicy();
 		$csp->addAllowedFrameDomain('\'self\'');

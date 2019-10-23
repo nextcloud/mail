@@ -27,6 +27,7 @@ declare(strict_types=1);
 namespace OCA\Mail\Controller;
 
 use Exception;
+use OCA\Mail\AppInfo\Application;
 use OCA\Mail\Contracts\IUserPreferences;
 use OCA\Mail\Service\AccountService;
 use OCA\Mail\Service\AliasesService;
@@ -36,6 +37,7 @@ use OCP\AppFramework\Http\ContentSecurityPolicy;
 use OCP\AppFramework\Http\RedirectResponse;
 use OCP\AppFramework\Http\TemplateResponse;
 use OCP\IConfig;
+use OCP\IInitialStateService;
 use OCP\IRequest;
 use OCP\IURLGenerator;
 use OCP\IUserSession;
@@ -66,20 +68,20 @@ class PageController extends Controller {
 	/** @var MailManager */
 	private $mailManager;
 
-	/**
-	 * @param string $appName
-	 * @param IRequest $request
-	 * @param IURLGenerator $urlGenerator
-	 * @param IConfig $config
-	 * @param AccountService $accountService
-	 * @param AliasesService $aliasesService
-	 * @param string $UserId
-	 * @param IUserPreferences
-	 */
-	public function __construct(string $appName, IRequest $request,
-								IURLGenerator $urlGenerator, IConfig $config, AccountService $accountService,
-								AliasesService $aliasesService, $UserId, IUserSession $userSession,
-								IUserPreferences $preferences, MailManager $mailManager) {
+	/** @var IInitialStateService */
+	private $initialStateService;
+
+	public function __construct(string $appName,
+								IRequest $request,
+								IURLGenerator $urlGenerator,
+								IConfig $config,
+								AccountService $accountService,
+								AliasesService $aliasesService,
+								?string $UserId,
+								IUserSession $userSession,
+								IUserPreferences $preferences,
+								MailManager $mailManager,
+								IInitialStateService $initialStateService) {
 		parent::__construct($appName, $request);
 
 		$this->urlGenerator = $urlGenerator;
@@ -90,6 +92,7 @@ class PageController extends Controller {
 		$this->userSession = $userSession;
 		$this->preferences = $preferences;
 		$this->mailManager = $mailManager;
+		$this->initialStateService = $initialStateService;
 	}
 
 	/**
@@ -123,10 +126,17 @@ class PageController extends Controller {
 				'app-version' => $this->config->getAppValue('mail', 'installed_version'),
 				'accounts' => base64_encode(json_encode($accountsJson)),
 				'external-avatars' => $this->preferences->getPreference('external-avatars', 'true'),
-				'prefill_displayName' => $user->getDisplayName(),
-				'prefill_email' => $this->config->getUserValue($user->getUID(), 'settings',
-					'email', ''),
 			]);
+		$this->initialStateService->provideInitialState(
+			Application::APP_ID,
+			'prefill_displayName',
+			$user->getDisplayName()
+		);
+		$this->initialStateService->provideInitialState(
+			Application::APP_ID,
+			'prefill_email',
+			$this->config->getUserValue($user->getUID(), 'settings', 'email', '')
+		);
 
 		$csp = new ContentSecurityPolicy();
 		$csp->addAllowedFrameDomain('\'self\'');
@@ -140,6 +150,7 @@ class PageController extends Controller {
 	 * @NoCSRFRequired
 	 *
 	 * @param string $uri
+	 *
 	 * @return RedirectResponse
 	 */
 	public function compose(string $uri): RedirectResponse {

@@ -53,8 +53,10 @@ use OCP\Util;
 
 class Application extends App {
 
+	public const APP_ID = 'mail';
+
 	public function __construct(array $urlParams = []) {
-		parent::__construct('mail', $urlParams);
+		parent::__construct(self::APP_ID, $urlParams);
 
 		BootstrapSingleton::getInstance($this->getContainer())->boot();
 	}
