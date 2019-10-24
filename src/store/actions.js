@@ -101,15 +101,10 @@ export default {
 		})
 	},
 	deleteAccount({commit}, account) {
-		return deleteAccount(account.id)
-			.then(account => {
-				console.debug('account deleted')
-				location.reload() // TODO: better handling of this
-			})
-			.catch(err => {
-				console.error('could not delete account', err)
-				throw err
-			})
+		return deleteAccount(account.id).catch(err => {
+			console.error('could not delete account', err)
+			throw err
+		})
 	},
 	createFolder({commit}, {account, name}) {
 		return createFolder(account.id, name).then(folder => {
