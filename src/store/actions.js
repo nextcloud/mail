@@ -41,6 +41,7 @@ import {
 } from '../service/AccountService'
 import {fetchAll as fetchAllFolders, create as createFolder, markFolderRead} from '../service/FolderService'
 import {deleteMessage, fetchEnvelopes, fetchMessage, setEnvelopeFlag, syncEnvelopes} from '../service/MessageService'
+import logger from '../logger'
 import {showNewMessagesNotification} from '../service/NotificationService'
 import {parseUid} from '../util/EnvelopeUidParser'
 
@@ -67,9 +68,8 @@ export default {
 	},
 	createAccount({commit}, config) {
 		return createAccount(config).then(account => {
-			console.debug('account created, fetching folders …', account)
-
-			fetchAllFolders(account.id)
+			logger.debug(`account ${account.id} created, fetching folders …`, account)
+			return fetchAllFolders(account.id)
 				.then(folders => {
 					account.folders = folders
 					commit('addAccount', account)
