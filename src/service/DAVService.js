@@ -1,5 +1,3 @@
-/* global $ */
-
 /**
  * @author Christoph Wurst <christoph@winzerhof-wurst.at>
  *
@@ -23,6 +21,7 @@ import dav from 'davclient.js'
 import ical from 'ical.js'
 import {getCurrentUser, getRequestToken} from '@nextcloud/auth'
 import {generateRemoteUrl} from '@nextcloud/router'
+import Axios from '@nextcloud/axios'
 
 import Logger from '../logger'
 
@@ -207,12 +206,15 @@ export const importCalendarEvent = url => data => {
 			const component = file.split[componentName][componentId]
 			promises.push(
 				Promise.resolve(
-					$.ajax({
-						url: url + getRandomString(),
-						method: 'PUT',
-						contentType: 'text/calendar; charset=utf-8',
-						data: component,
-					})
+					Axios.put(
+						url + getRandomString(),
+						{data},
+						{
+							headers: {
+								contentType: 'text/calendar; charset=utf-8',
+							},
+						}
+					)
 				)
 			)
 		}
