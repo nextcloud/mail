@@ -8,8 +8,9 @@
 <script>
 import Content from '@nextcloud/vue/dist/Components/Content'
 
-import Navigation from '../components/Navigation'
 import FolderContent from '../components/FolderContent'
+import logger from '../logger'
+import Navigation from '../components/Navigation'
 
 export default {
 	name: 'Home',
@@ -48,7 +49,7 @@ export default {
 				},
 			})
 		} else if (this.$route.name === 'home' && accounts.length === 1) {
-			// The only account we have is the unified one -> show the setup page
+			logger.debug('the only account we have is the unified one -> show the setup page')
 			this.$router.replace({
 				name: 'setup',
 			})
