@@ -28,10 +28,10 @@
 			<Moment :timestamp="data.dateInt" />
 		</div>
 		<Actions class="app-content-list-item-menu" menu-align="right">
-			<ActionButton icon="icon-mail" @click="onToggleSeen">{{
+			<ActionButton icon="icon-mail" @click.prevent="onToggleSeen">{{
 				data.flags.unseen ? t('mail', 'Mark read') : t('mail', 'Mark unread')
 			}}</ActionButton>
-			<ActionButton icon="icon-delete" @click="onDelete">{{ t('mail', 'Delete') }}</ActionButton>
+			<ActionButton icon="icon-delete" @click.prevent="onDelete">{{ t('mail', 'Delete') }}</ActionButton>
 		</Actions>
 	</router-link>
 </template>
