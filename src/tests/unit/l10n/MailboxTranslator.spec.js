@@ -36,6 +36,7 @@ describe('MailboxTranslator', () => {
 	it('does not translate an arbitrary mailbox', () => {
 		const folder = {
 			id: btoa('Newsletters'),
+			displayName: 'Newsletters',
 			specialUse: [],
 		}
 

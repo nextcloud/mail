@@ -35,12 +35,6 @@ export default {
 	components: {
 		AppContentDetails,
 	},
-	props: {
-		mailbox: {
-			type: String,
-			required: true,
-		},
-	},
 }
 </script>
 

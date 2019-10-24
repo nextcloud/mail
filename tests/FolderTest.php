@@ -98,13 +98,6 @@ class FolderTest extends TestCase {
 		$this->assertSame('flagged', $this->folder->getSpecialUse()[0]);
 	}
 
-	public function testDisplayName() {
-		$this->mockFolder();
-
-		$this->folder->setDisplayName('Eingang');
-		$this->assertSame('Eingang', $this->folder->getDisplayName());
-	}
-
 	public function testIsSearchable() {
 		$this->mockFolder([]);
 
@@ -127,12 +120,11 @@ class FolderTest extends TestCase {
 		$subFolder->expects($this->once())
 			->method('jsonSerialize')
 			->willReturn(['subdir data']);
-		$this->mailbox->expects($this->once())
+		$this->mailbox->expects($this->exactly(2))
 			->method('__get')
 			->with($this->equalTo('utf8'))
 			->willReturn('Sent');
 
-		$this->folder->setDisplayName('Gesendet');
 		$this->folder->addSpecialUse('sent');
 		$this->folder->setStatus([
 			'unseen' => 13,
@@ -143,7 +135,7 @@ class FolderTest extends TestCase {
 		$expected = [
 			'id' => base64_encode('Sent'),
 			'accountId' => 15,
-			'name' => 'Gesendet',
+			'displayName' => 'Sent',
 			'specialRole' => null,
 			'unseen' => 13,
 			'total' => 333,

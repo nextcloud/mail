@@ -62,9 +62,8 @@ export const translate = folder => {
 		try {
 			return translateSpecial(folder)
 		} catch (e) {
-			console.error(e)
-			return atob(folder.id)
+			console.error('could not translate special folder', e)
 		}
 	}
-	return atob(folder.id)
+	return folder.displayName
 }
