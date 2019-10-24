@@ -103,8 +103,27 @@ export const buildRecipients = (envelope, ownAddress) => {
 	}
 }
 
-// TODO: https://en.wikipedia.org/wiki/List_of_email_subject_abbreviations#Abbreviations_in_other_languages
-const replyPrepends = ['re']
+const replyPrepends = [
+	'antw',
+	'atb',
+	'aw',
+	'bls',
+	'odp',
+	'r',
+	're',
+	'ref',
+	'res',
+	'rif',
+	'sv',
+	'vá',
+	'vs',
+	'ynt',
+	'απ',
+	'σχετ',
+	'השב',
+	'回复',
+	'回覆',
+]
 
 /*
  * Ref https://tools.ietf.org/html/rfc5322#section-3.6.5
@@ -118,7 +137,31 @@ export const buildReplySubject = original => {
 }
 
 // TODO: https://en.wikipedia.org/wiki/List_of_email_subject_abbreviations#Abbreviations_in_other_languages
-const forwardPrepends = ['fwd']
+const forwardPrepends = [
+	'doorst',
+	'enc',
+	'fs',
+	'fw',
+	'fwd',
+	'i',
+	'i̇lt',
+	'pd',
+	'rv',
+	'továbbítás',
+	'tr',
+	'trs',
+	'vb',
+	'vl',
+	'vs',
+	'wg',
+	'yml',
+	'ΠΡΘ',
+	'הועבר',
+	'إعادة توجيه',
+	'رد',
+	'轉寄',
+	'转发',
+]
 
 export const buildForwardSubject = original => {
 	if (forwardPrepends.some(prepend => original.toLowerCase().startsWith(`${prepend}:`))) {
