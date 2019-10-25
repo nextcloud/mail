@@ -13,7 +13,7 @@
 				/>
 				<NewMessageDetail v-if="newMessage" />
 				<Message v-else-if="showMessage" />
-				<NoMessageSelected v-else-if="hasMessages" :mailbox="folder.name" />
+				<NoMessageSelected v-else-if="hasMessages" />
 			</template>
 		</div>
 	</AppContent>
