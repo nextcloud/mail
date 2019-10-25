@@ -103,7 +103,7 @@ class Html {
 		}
 
 		return [
-			$body,
+			nl2br($body),
 			$signature
 		];
 	}
