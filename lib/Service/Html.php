@@ -98,12 +98,12 @@ class Html {
 		$signature = null;
 		$parts = explode("-- \r\n", $body);
 		if (count($parts) > 1) {
-			$signature = nl2br(array_pop($parts));
+			$signature = array_pop($parts);
 			$body = implode("-- \r\n", $parts);
 		}
 
 		return [
-			nl2br($body),
+			$body,
 			$signature
 		];
 	}

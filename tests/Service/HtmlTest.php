@@ -82,7 +82,7 @@ class HtmlTest extends TestCase {
 		return [
 				['abc', null, 'abc'],
 				['abc', 'def', "abc-- \r\ndef"],
-				["abc-- <br />\r\ndef", 'ghi', "abc-- \r\ndef-- \r\nghi"],
+				["abc-- \r\ndef", 'ghi', "abc-- \r\ndef-- \r\nghi"],
 		];
 	}
 

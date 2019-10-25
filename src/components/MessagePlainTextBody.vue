@@ -1,7 +1,7 @@
 <template>
 	<div>
-		<div id="mail-content" v-html="body"></div>
-		<div v-if="signature" class="mail-signature" v-html="signature"></div>
+		<div id="mail-content" v-html="htmlBody"></div>
+		<div v-if="signature" class="mail-signature" v-html="htmlSignature"></div>
 	</div>
 </template>
 
@@ -16,6 +16,19 @@ export default {
 		signature: {
 			type: String,
 			default: () => undefined,
+		},
+	},
+	computed: {
+		htmlBody() {
+			return this.nl2br(this.body)
+		},
+		htmlSignature() {
+			return this.nl2br(this.signature)
+		},
+	},
+	methods: {
+		nl2br(str) {
+			return str.replace(/(\r\n|\n\r|\n|\r)/g, '<br />')
 		},
 	},
 }
