@@ -1,5 +1,5 @@
 <template>
-	<div id="account-form">
+	<form id="account-form" @submit.prevent="onSubmit">
 		<tabs
 			:options="{useUrlFragment: false, defaultTabHash: settingsPage ? 'manual' : 'auto'}"
 			cache-lifetime="0"
@@ -227,14 +227,14 @@
 			</tab>
 		</tabs>
 		<slot name="feedback"></slot>
-		<input type="submit" class="primary" :disabled="loading" :value="submitButtonText" @click="onSubmit" />
-	</div>
+		<input type="submit" class="primary" :disabled="loading" :value="submitButtonText" @click.prevent="onSubmit" />
+	</form>
 </template>
 
 <script>
 import {Tab, Tabs} from 'vue-tabs-component'
 
-import Logger from '../logger'
+import logger from '../logger'
 
 export default {
 	name: 'AccountForm',
@@ -329,7 +329,7 @@ export default {
 				}
 			}
 		},
-		onImapSslModeChange: function() {
+		onImapSslModeChange() {
 			switch (this.manualConfig.imapSslMode) {
 				case 'none':
 				case 'tls':
@@ -340,7 +340,7 @@ export default {
 					break
 			}
 		},
-		onSmtpSslModeChange: function() {
+		onSmtpSslModeChange() {
 			switch (this.manualConfig.smtpSslMode) {
 				case 'none':
 				case 'tls':
@@ -364,11 +364,13 @@ export default {
 				})
 			}
 		},
-		onSubmit: function() {
+		onSubmit(event) {
+			console.debug('account form submitted', {event})
+
 			this.loading = true
 
 			this.saveChanges()
-				.catch(error => Logger.error('could not save account details', {error}))
+				.catch(error => logger.error('could not save account details', {error}))
 				.then(() => (this.loading = false))
 		},
 	},
