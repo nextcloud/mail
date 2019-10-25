@@ -32,13 +32,18 @@
 		<!-- actions -->
 		<template slot="actions">
 			<template v-if="top">
+				<ActionText icon="icon-info" :title="folderId">
+					{{ statsText }}
+				</ActionText>
+
 				<!-- TODO: make *mark as read* available for all folders once there is more than one action -->
 				<ActionButton
 					icon="icon-checkmark"
-					:title="folder.unread ? t('mail', 'Mark all as read') : t('mail', 'All read')"
+					:title="t('mail', 'Mark all as read')"
+					:disabled="loadingMarkAsRead"
 					@click="markAsRead"
 				>
-					{{ statsText }}
+					{{ t('mail', 'Mark all messages of this folder as read') }}
 				</ActionButton>
 
 				<ActionInput icon="icon-add" @submit="createFolder">
@@ -66,9 +71,10 @@ import AppNavigationItem from '@nextcloud/vue/dist/Components/AppNavigationItem'
 import AppNavigationCounter from '@nextcloud/vue/dist/Components/AppNavigationCounter'
 import ActionButton from '@nextcloud/vue/dist/Components/ActionButton'
 import ActionInput from '@nextcloud/vue/dist/Components/ActionInput'
+import ActionText from '@nextcloud/vue/dist/Components/ActionText'
 
 import {getFolderStats} from '../service/FolderService'
-import Logger from '../logger'
+import logger from '../logger'
 import {translate as translateMailboxName} from '../l10n/MailboxTranslator'
 
 export default {
@@ -76,6 +82,7 @@ export default {
 	components: {
 		AppNavigationItem,
 		AppNavigationCounter,
+		ActionText,
 		ActionButton,
 		ActionInput,
 	},
@@ -96,6 +103,7 @@ export default {
 	data() {
 		return {
 			folderStats: undefined,
+			loadingMarkAsRead: false,
 		}
 	},
 	computed: {
@@ -133,7 +141,7 @@ export default {
 					})
 				}
 			}
-			return t('mail', 'Loading message stats')
+			return t('mail', 'Loading …')
 		},
 	},
 	methods: {
@@ -161,35 +169,41 @@ export default {
 			this.folderStats = null
 			try {
 				const stats = await getFolderStats(this.account.id, this.folder.id)
-				Logger.debug('loaded folder stats', {stats})
+				logger.debug('loaded folder stats', {stats})
 				this.folderStats = stats
 			} catch (error) {
 				this.folderStats = {error: true}
-				Logger.error(`could not load folder stats for ${this.folder.id}`, error)
+				logger.error(`could not load folder stats for ${this.folder.id}`, error)
 			}
 		},
 
 		createFolder(e) {
 			const name = e.target.elements[0].value
 			const withPrefix = atob(this.folder.id) + this.folder.delimiter + name
-			Logger.info(`creating folder ${withPrefix} as subfolder of ${this.folder.id}`)
+			logger.info(`creating folder ${withPrefix} as subfolder of ${this.folder.id}`)
 			this.menuOpen = false
 			this.$store
-				.dispatch('createFolder', {account: this.account, name: withPrefix})
-				.then(() => Logger.info(`folder ${withPrefix} created`))
+				.dispatch('createFolder', {
+					account: this.account,
+					name: withPrefix,
+				})
+				.then(() => logger.info(`folder ${withPrefix} created`))
 				.catch(error => {
-					Logger.error(`could not create folder ${withPrefix}`, {error})
+					logger.error(`could not create folder ${withPrefix}`, {error})
 					throw error
 				})
 		},
 		markAsRead() {
-			return () => {
-				this.menuOpen = false
-				this.$store
-					.dispatch('markFolderRead', {account: this.account, folderId: this.folder.id})
-					.then(() => Logger.info(`folder ${this.folder.id} marked as read`))
-					.catch(error => Logger.error(`could not mark folder ${this.folder.id} as read`, {error}))
-			}
+			this.loadingMarkAsRead = true
+
+			this.$store
+				.dispatch('markFolderRead', {
+					account: this.account,
+					folderId: this.folder.id,
+				})
+				.then(() => logger.info(`folder ${this.folder.id} marked as read`))
+				.catch(error => logger.error(`could not mark folder ${this.folder.id} as read`, {error}))
+				.then(() => (this.loadingMarkAsRead = false))
 		},
 	},
 }
