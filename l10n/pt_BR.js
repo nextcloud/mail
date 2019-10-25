@@ -113,6 +113,7 @@ OC.L10N.register(
     "Search" : "Pesquisar",
     "Refresh" : "Atualizar",
     "Connect your mail account" : "Conectar sua conta de e-mail",
+    "Unexpected error during account creation" : "Erro ao criar conta",
     "{from}\n{subject}" : "{from}\n{subject}",
     "_%n new message \nfrom {from}_::_%n new messages \nfrom {from}_" : ["%n nova mensagem \nde {from}","%n novas mensagens \nde {from}"],
     "Nextcloud Mail" : "E-mail Nextcloud",

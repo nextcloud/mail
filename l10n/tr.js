@@ -113,6 +113,7 @@ OC.L10N.register(
     "Search" : "Arama",
     "Refresh" : "Yenlle",
     "Connect your mail account" : "Posta hesabınızı bağlayın",
+    "Unexpected error during account creation" : "Hesap eklenirken bilinmeyen bir sorun çıktı",
     "{from}\n{subject}" : "{from}\n{subject}",
     "_%n new message \nfrom {from}_::_%n new messages \nfrom {from}_" : ["%n yeni ileti\ngönderen {from}","%n yeni ileti\ngönderen {from}"],
     "Nextcloud Mail" : "Nextcloud Posta",

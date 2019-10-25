@@ -112,6 +112,7 @@ OC.L10N.register(
     "Search" : "Sök",
     "Refresh" : "Uppdatera",
     "Connect your mail account" : "Anslut ditt e-postkonto",
+    "Unexpected error during account creation" : "Oväntat fel under skapande av konto",
     "{from}\n{subject}" : "{från}\n{ämne}",
     "_%n new message \nfrom {from}_::_%n new messages \nfrom {from}_" : ["%n nytt meddelande \nfrån {from}","%n nya meddelanden \nfrån {from}"],
     "Nextcloud Mail" : "Nextcloud Mail",
