@@ -53,9 +53,10 @@ import AppNavigationIconBullet from '@nextcloud/vue/dist/Components/AppNavigatio
 import ActionRouter from '@nextcloud/vue/dist/Components/ActionRouter'
 import ActionButton from '@nextcloud/vue/dist/Components/ActionButton'
 import ActionInput from '@nextcloud/vue/dist/Components/ActionInput'
+import {generateUrl} from '@nextcloud/router'
 
 import {calculateAccountColor} from '../util/AccountColor'
-import Logger from '../logger'
+import logger from '../logger'
 
 export default {
 	name: 'NavigationAccount',
@@ -102,20 +103,28 @@ export default {
 	methods: {
 		createFolder(e) {
 			const name = e.target.elements[0].value
-			Logger.info('creating folder ' + name)
+			logger.info('creating folder ' + name)
 			this.menuOpen = false
 			this.$store
 				.dispatch('createFolder', {account: this.account, name})
-				.then(() => Logger.info(`folder ${name} created`))
+				.then(() => logger.info(`folder ${name} created`))
 				.catch(error => {
-					Logger.error('could not create folder', {error})
+					logger.error('could not create folder', {error})
 					throw error
 				})
 		},
 		deleteAccount() {
+			const id = this.account.id
+
 			this.$store
 				.dispatch('deleteAccount', this.account)
-				.catch(error => Logger.error('could not delete account', {error}))
+				.then(() => {
+					logger.info(`account ${id} deleted, redirecting …`)
+
+					// TODO: update store and handle this more efficiently
+					location.href = generateUrl('/apps/mail')
+				})
+				.catch(error => logger.error('could not delete account', {error}))
 		},
 	},
 }
