@@ -37,7 +37,7 @@
     "@nextcloud/logger": "^0.1.0",
     "@nextcloud/moment": "^0.2.2",
     "@nextcloud/router": "^0.1.0",
-    "@nextcloud/vue": "^1.0.0",
+    "@nextcloud/vue": "^1.1.0",
     "@vue/babel-preset-app": "^4.0.4",
     "color-convert": "^2.0.1",
     "davclient.js": "^0.1.0",
