@@ -1,8 +1,8 @@
 <template>
 	<div v-if="state === STATES.EDITING" class="message-composer">
 		<div class="composer-fields mail-account">
-			<label class="to-label transparency" for="from">
-				{{ t('mail', 'from') }}
+			<label class="from-label" for="from">
+				{{ t('mail', 'From') }}
 			</label>
 			<Multiselect
 				id="from"
@@ -10,13 +10,16 @@
 				:options="aliases"
 				label="name"
 				track-by="id"
+				:searchable="false"
+				:hide-selected="true"
 				:custom-label="formatAliases"
+				:placeholder="t('mail', 'Select account')"
 				@keyup="onInputChanged"
 			/>
 		</div>
 		<div class="composer-fields">
-			<label class="to-label transparency" for="to">
-				{{ t('mail', 'to') }}
+			<label class="to-label" for="to">
+				{{ t('mail', 'To') }}
 			</label>
 			<Multiselect
 				id="to"
@@ -26,17 +29,19 @@
 				label="label"
 				track-by="email"
 				:multiple="true"
+				:placeholder="t('mail', 'Contact or email address …')"
+				:show-no-options="false"
 				@keyup="onInputChanged"
 				@tag="onNewToAddr"
 				@search-change="onAutocomplete"
 			/>
-			<a v-if="!showCC" href="#" @click.prevent="showCC = true">
-				{{ t('mail', '+ CC/BCC') }}
+			<a v-if="!showCC" class="copy-toggle" href="#" @click.prevent="showCC = true">
+				{{ t('mail', '+ Copy') }}
 			</a>
 		</div>
 		<div v-if="showCC" class="composer-fields">
-			<label for="cc" class="cc-label transparency">
-				{{ t('mail', 'CC') }}
+			<label for="cc" class="cc-label">
+				{{ t('mail', 'Copy') }}
 			</label>
 			<Multiselect
 				id="cc"
@@ -46,14 +51,18 @@
 				label="label"
 				track-by="email"
 				:multiple="true"
+				:placeholder="t('mail', '')"
+				:show-no-options="false"
 				@keyup="onInputChanged"
 				@tag="onNewCcAddr"
 				@search-change="onAutocomplete"
-			/>
+			>
+				<span slot="noOptions">{{ t('mail', 'No contacts found.') }}</span>
+			</Multiselect>
 		</div>
 		<div v-if="showCC" class="composer-fields">
-			<label for="bcc" class="bcc-label transparency">
-				{{ t('mail', 'BCC') }}
+			<label for="bcc" class="bcc-label">
+				{{ t('mail', 'Blind copy') }}
 			</label>
 			<Multiselect
 				id="bcc"
@@ -63,13 +72,17 @@
 				label="label"
 				track-by="email"
 				:multiple="true"
+				:placeholder="t('mail', '')"
+				:show-no-options="false"
 				@keyup="onInputChanged"
 				@tag="onNewBccAddr"
 				@search-change="onAutocomplete"
-			/>
+			>
+				<span slot="noOptions">{{ t('mail', 'No contacts found.') }}</span>
+			</Multiselect>
 		</div>
 		<div class="composer-fields">
-			<label for="subject" class="subject-label transparency">
+			<label for="subject" class="subject-label hidden-visually">
 				{{ t('mail', 'Subject') }}
 			</label>
 			<input
@@ -79,15 +92,13 @@
 				name="subject"
 				class="subject"
 				autocomplete="off"
-				:placeholder="t('mail', 'Subject')"
+				:placeholder="t('mail', 'Subject …')"
+				autofocus
 				@keyup="onInputChanged"
 			/>
 		</div>
-		<div v-if="noSubject" class="warning">
-			{{ t('mail', 'This mail does not have a subject yet.') }}
-		</div>
 		<div v-if="noReply" class="warning noreply-box">
-			{{ t('mail', 'Note that the mail came from a noreply address so	your reply will probably not be read.') }}
+			{{ t('mail', 'This message came from a noreply address so your reply will probably not be read.') }}
 		</div>
 		<div class="composer-fields">
 			<!--@keypress="onBodyKeyPress"-->
@@ -97,6 +108,7 @@
 				v-model="bodyVal"
 				name="body"
 				class="message-body"
+				:placeholder="t('mail', 'Write message …')"
 				@input="onInputChanged"
 			></TextEditor>
 			<TextEditor
@@ -106,25 +118,28 @@
 				:html="true"
 				name="body"
 				class="message-body"
+				:placeholder="t('mail', 'Write message …')"
 				@input="onInputChanged"
 			></TextEditor>
 		</div>
 		<div class="composer-actions">
-			<div>
-				<ComposerAttachments v-model="attachments" @upload="onAttachmentsUploading" />
-			</div>
-			<div>
-				<input class="submit-message send primary" type="submit" :value="submitButtonTitle" @click="onSend" />
+			<ComposerAttachments v-model="attachments" @upload="onAttachmentsUploading" />
+			<div class="composer-actions-right">
+				<p class="composer-actions-draft">
+					<span v-if="savingDraft === true" id="draft-status">{{ t('mail', 'Saving draft …') }}</span>
+					<span v-else-if="savingDraft === false" id="draft-status">{{ t('mail', 'Draft saved') }}</span>
+				</p>
+				<Actions>
+					<ActionText icon="icon-info">{{ t('mail', 'Message options') }}</ActionText>
+					<ActionCheckbox :checked.sync="editorPlainText" :text="t('mail', 'Plain text')">{{
+						t('mail', 'Plain text')
+					}}</ActionCheckbox>
+				</Actions>
+				<div>
+					<input class="submit-message send primary" type="submit" :value="submitButtonTitle" @click="onSend" />
+				</div>
 			</div>
 		</div>
-		<Actions>
-			<ActionText icon="icon-info">{{ t('mail', 'Message options') }}</ActionText>
-			<ActionCheckbox :checked.sync="editorPlainText" :text="t('mail', 'Plain text')">{{
-				t('mail', 'Plain text')
-			}}</ActionCheckbox>
-		</Actions>
-		<span v-if="savingDraft === true" id="draft-status">{{ t('mail', 'Saving draft …') }}</span>
-		<span v-else-if="savingDraft === false" id="draft-status">{{ t('mail', 'Draft saved') }}</span>
 	</div>
 	<Loading v-else-if="state === STATES.UPLOADING" :hint="t('mail', 'Uploading attachments …')" />
 	<Loading v-else-if="state === STATES.SENDING" :hint="t('mail', 'Sending …')" />
@@ -422,21 +437,26 @@ export default {
 }
 </script>
 
-<style scoped>
+<style lang="scss" scoped>
 .message-composer {
 	margin: 0;
-	margin-bottom: 10px; /* line up with the send button */
 	z-index: 100;
-}
-
-#reply-composer .message-composer {
-	margin: 0;
 }
 
 .composer-actions {
 	display: flex;
 	flex-direction: row;
 	align-items: flex-end;
+	justify-content: space-between;
+	position: sticky;
+	bottom: 0;
+	padding: 12px;
+	background: linear-gradient(transparent, var(--color-main-background));
+}
+
+.composer-actions-right {
+	display: flex;
+	align-items: center;
 }
 
 .composer-fields.mail-account > .multiselect {
@@ -451,6 +471,7 @@ export default {
 	border-top: 1px solid var(--color-border);
 	padding-right: 30px;
 }
+
 .composer-fields .multiselect,
 .composer-fields input,
 .composer-fields TextEditor {
@@ -459,41 +480,26 @@ export default {
 	border: none;
 	border-radius: 0px;
 }
-.noreply-box {
-	margin-top: 0;
-	background: #fdffc3;
-	padding-left: 64px;
-}
 
-#to,
-#cc,
-#bcc,
-input.subject,
-.message-body {
-	padding: 12px;
-	margin: 0;
-}
-
-#to {
-	padding-right: 60px; /* for cc-bcc-toggle */
-}
-
-input.cc,
-input.bcc,
-input.subject,
-.message-body {
-	border-top: none;
-}
-
-input.subject {
+.subject {
 	font-size: 20px;
-	font-weight: 300;
+	font-weight: bold;
+	margin: 0;
+	padding: 24px 12px;
+}
+
+.noreply-box {
+	padding: 5px 12px;
+	border-radius: 0;
 }
 
 .message-body {
 	min-height: 300px;
 	width: 100%;
-	padding-right: 25%;
+	margin: 0;
+	padding: 12px;
+	padding-right: 15%;
+	padding-top: 0;
 	border: none !important;
 	outline: none !important;
 	box-shadow: none !important;
@@ -505,21 +511,35 @@ input.subject {
 	font-size: small;
 }
 
-label.to-label,
-label.cc-label,
-label.bcc-label,
-label.subject-label {
+.from-label,
+.to-label,
+.copy-toggle,
+.cc-label,
+.bcc-label {
 	padding: 12px;
-	padding-left: 30px;
 	cursor: text;
-	opacity: 0.5;
-	width: 90px;
+	color: var(--color-text-maxcontrast);
+	width: 100px;
 	text-align: right;
+	white-space: nowrap;
+	overflow: hidden;
+	text-overflow: ellipsis;
 }
 
-label.bcc-label {
+.bcc-label {
 	top: initial;
 	bottom: 0;
+}
+
+.copy-toggle {
+	cursor: pointer;
+	width: initial;
+	margin-right: -30px; // account for padding on .composer-fields
+
+	&:hover,
+	&:focus {
+		color: var(--color-main-text);
+	}
 }
 
 .reply {
