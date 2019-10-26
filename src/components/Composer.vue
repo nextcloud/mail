@@ -136,7 +136,12 @@
 					}}</ActionCheckbox>
 				</Actions>
 				<div>
-					<input class="submit-message send primary" type="submit" :value="submitButtonTitle" @click="onSend" />
+					<input
+						class="submit-message send primary icon-confirm-white"
+						type="submit"
+						:value="submitButtonTitle"
+						@click="onSend"
+					/>
 				</div>
 			</div>
 		</div>
@@ -451,7 +456,7 @@ export default {
 	position: sticky;
 	bottom: 0;
 	padding: 12px;
-	background: linear-gradient(transparent, var(--color-main-background));
+	background: linear-gradient(transparent, var(--color-main-background-translucent) 50%);
 }
 
 .composer-actions-right {
@@ -459,26 +464,33 @@ export default {
 	align-items: center;
 }
 
-.composer-fields.mail-account > .multiselect {
-	max-width: none;
-	min-height: auto;
-	width: 350px;
-}
-
 .composer-fields {
 	display: flex;
 	align-items: center;
 	border-top: 1px solid var(--color-border);
-	padding-right: 30px;
-}
 
-.composer-fields .multiselect,
-.composer-fields input,
-.composer-fields TextEditor {
-	flex-grow: 1;
-	max-width: none;
-	border: none;
-	border-radius: 0px;
+	&.mail-account {
+		border-top: none;
+
+		& > .multiselect {
+			max-width: none;
+			min-height: auto;
+			width: 350px;
+		}
+	}
+
+	.multiselect,
+	input,
+	TextEditor {
+		flex-grow: 1;
+		max-width: none;
+		border: none;
+		border-radius: 0;
+	}
+
+	.multiselect {
+		margin-right: 12px;
+	}
 }
 
 .subject {
@@ -498,7 +510,6 @@ export default {
 	width: 100%;
 	margin: 0;
 	padding: 12px;
-	padding-right: 15%;
 	padding-top: 0;
 	border: none !important;
 	outline: none !important;
@@ -534,7 +545,6 @@ export default {
 .copy-toggle {
 	cursor: pointer;
 	width: initial;
-	margin-right: -30px; // account for padding on .composer-fields
 
 	&:hover,
 	&:focus {
@@ -544,6 +554,12 @@ export default {
 
 .reply {
 	min-height: 100px;
+}
+
+.send {
+	padding: 12px 18px 13px 36px;
+	background-position: 12px center;
+	margin-left: 4px;
 }
 </style>
 
