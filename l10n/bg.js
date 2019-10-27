@@ -28,8 +28,6 @@ OC.L10N.register(
     "Connect" : "Свържи",
     "Add mail account" : "Добавяне на профил",
     "Keyboard shortcuts" : "Бързи клавиши",
-    "from" : "от",
-    "to" : "до",
     "Subject" : "Тема",
     "Draft saved" : "Черновата записана",
     "Sending …" : "Изпращане...",

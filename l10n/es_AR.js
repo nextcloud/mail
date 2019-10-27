@@ -21,8 +21,6 @@ OC.L10N.register(
     "Connect" : "Conectar",
     "Add mail account" : "Agregar cuenta de correo",
     "Keyboard shortcuts" : "Atajos de teclado",
-    "from" : "de",
-    "to" : "para",
     "Subject" : "Asunto",
     "Sending …" : "Enviando ...",
     "Message sent!" : "¡Mensaje enviado!",

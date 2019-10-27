@@ -16,8 +16,6 @@ OC.L10N.register(
     "SMTP User" : "SMTP-gebruiker",
     "SMTP Password" : "SMTP-wagwoord",
     "Add mail account" : "Voeg posrekening toe",
-    "from" : "van",
-    "to" : "aan",
     "Subject" : "Onderwerp",
     "Sending …" : "Stuur…",
     "Message sent!" : "Boodskap gestuur!",

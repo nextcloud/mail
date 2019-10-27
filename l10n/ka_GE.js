@@ -22,8 +22,6 @@ OC.L10N.register(
     "Add mail account" : "საფოსტო ანგარიშის დამატება",
     "Use Gravatar and favicon avatars" : "მოიხმარეთ Gravatar და favicon ავატარები",
     "Keyboard shortcuts" : "კლავიატურის კომბინაციები",
-    "from" : "ვისგან",
-    "to" : "ვის",
     "Subject" : "სათაური",
     "Sending …" : "იგზავნება …",
     "Message sent!" : "წერილი გაგზავნილია!",

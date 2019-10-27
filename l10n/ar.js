@@ -25,8 +25,6 @@ OC.L10N.register(
     "Connect" : "اتصال",
     "Add mail account" : "أضف حساب بريدي",
     "Keyboard shortcuts" : "إختصارات لوحة المفاتيح",
-    "from" : "من",
-    "to" : "إلى",
     "Subject" : "الموضوع",
     "Sending …" : "جار الإرسال",
     "Go back" : "العودة",

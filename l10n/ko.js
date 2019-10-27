@@ -30,8 +30,6 @@ OC.L10N.register(
     "Add mail account" : "메일 계정 추가",
     "Use Gravatar and favicon avatars" : "Gravatar 및 파비콘 아바타 사용",
     "Keyboard shortcuts" : "키보드 단축키",
-    "from" : "보낸 사람",
-    "to" : "받는 사람",
     "Subject" : "제목",
     "Sending …" : "보내는 중...",
     "Message sent!" : "메시지를 보냈습니다!",

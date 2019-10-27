@@ -7,8 +7,6 @@ OC.L10N.register(
     "Password" : "Parolă",
     "Manual" : "Manual",
     "Connect" : "Conectare",
-    "from" : "de la",
-    "to" : "către",
     "Subject" : "Subiect",
     "Sending …" : "Se trimite...",
     "Message sent!" : "Mesaj trimis!",

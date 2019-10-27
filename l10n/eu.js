@@ -20,8 +20,6 @@ OC.L10N.register(
     "Connect" : "Konektatu",
     "Add mail account" : "Eposta helbidea gehitu",
     "Keyboard shortcuts" : "Teklatuaren lasterbideak",
-    "from" : "Nondik",
-    "to" : "nora",
     "Subject" : "Gaia",
     "Sending …" : "Bidaltzen...",
     "Message sent!" : "Mezua bidali egin da!",

@@ -27,8 +27,6 @@ OC.L10N.register(
     "Connect" : "Tilslut",
     "Add mail account" : "Tilføj mail konto",
     "Keyboard shortcuts" : "Tastaturgenveje",
-    "from" : "fra",
-    "to" : "til",
     "Subject" : "Emne",
     "Saving draft …" : "Gemmer kladde…",
     "Draft saved" : "Kladde gemt",

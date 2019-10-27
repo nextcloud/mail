@@ -20,8 +20,6 @@ OC.L10N.register(
     "Connect" : "Lidhu",
     "Add mail account" : "Shto llogarinë e postës elektronike",
     "Keyboard shortcuts" : "Shkurtoret e tastierës",
-    "from" : "nga",
-    "to" : "te",
     "Subject" : "Temë",
     "Sending …" : "Po dërgohet …",
     "Message sent!" : "Mesazhi u dërgua!",

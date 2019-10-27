@@ -16,7 +16,6 @@ OC.L10N.register(
     "SMTP Password" : "Энгийн мэйл дамжуулах протокол-ийн нууц үг",
     "Connect" : "холбох",
     "Add mail account" : "шуудангийн хаяг нэмэх",
-    "from" : "тэндээс",
     "Subject" : "Сэдэв",
     "Sending …" : "илгээмж",
     "Message sent!" : "зурвас илгээсэн",

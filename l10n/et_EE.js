@@ -18,8 +18,6 @@ OC.L10N.register(
     "SMTP Password" : "SMTP parool",
     "Connect" : "Ühenda",
     "Keyboard shortcuts" : "Klaviatuuri otseteed",
-    "from" : "saatja",
-    "to" : "saaja",
     "Subject" : "Teema",
     "Sending …" : "Saadan ...",
     "Message sent!" : "Sõnum on saadetud!",

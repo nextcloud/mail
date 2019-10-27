@@ -25,8 +25,6 @@ OC.L10N.register(
     "Save" : "Зачувај",
     "Connect" : "Поврзи се",
     "Add mail account" : "Додади е-пошта сметка",
-    "from" : "од",
-    "to" : "до",
     "Subject" : "Наслов",
     "Sending …" : "Испраќам ...",
     "Go back" : "Назад",

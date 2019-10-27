@@ -30,8 +30,6 @@ OC.L10N.register(
     "Add mail account" : "E-mail fiók hozzáadás",
     "Use Gravatar and favicon avatars" : "Gravatar és favicon avatarok használata",
     "Keyboard shortcuts" : "Gyorsbillentyűk",
-    "from" : "feladó",
-    "to" : "címzett",
     "Subject" : "Tárgy",
     "Saving draft …" : "Vázlat mentése ...",
     "Draft saved" : "Vázlat elmentve",

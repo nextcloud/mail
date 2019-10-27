@@ -22,8 +22,6 @@ OC.L10N.register(
     "Add mail account" : "הוספת חשבון דוא״ל",
     "Use Gravatar and favicon avatars" : "להשתמש בסמלים של Gravatar ושל favicon",
     "Keyboard shortcuts" : "קיצורי מקלדת",
-    "from" : "מאת",
-    "to" : "אל",
     "Subject" : "נושא",
     "Sending …" : "שולח...",
     "Message sent!" : "הודעה נשלחה!",

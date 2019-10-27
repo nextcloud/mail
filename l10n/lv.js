@@ -19,8 +19,6 @@ OC.L10N.register(
     "SMTP Password" : "SMTP parole",
     "Connect" : "Savienoties",
     "Add mail account" : "Pievienot e-pasta kontu",
-    "from" : "no",
-    "to" : "kam",
     "Subject" : "Temats",
     "Sending …" : "Sūta …",
     "Message sent!" : "Vēstule aizsūtīta!",

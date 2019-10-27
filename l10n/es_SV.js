@@ -22,8 +22,6 @@ OC.L10N.register(
     "Add mail account" : "Agregar cuenta de correo",
     "Use Gravatar and favicon avatars" : "Usar Gravatar y avatares favicon",
     "Keyboard shortcuts" : "Atajos del teclado",
-    "from" : "de",
-    "to" : "para",
     "Subject" : "Asunto",
     "Sending …" : "Enviando ...",
     "Message sent!" : "¡Mensaje enviado!",
