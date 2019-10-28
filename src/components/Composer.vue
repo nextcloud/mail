@@ -177,10 +177,10 @@ import Vue from 'vue'
 
 import ComposerAttachments from './ComposerAttachments'
 import {findRecipient} from '../service/AutocompleteService'
+import {htmlToText, textToSimpleHtml} from '../util/HtmlHelper'
 import Loading from './Loading'
 import logger from '../logger'
 import TextEditor from './TextEditor'
-import {textToSimpleHtml} from '../util/HtmlHelper'
 
 const debouncedSearch = debouncePromise(findRecipient, 500)
 
@@ -327,7 +327,7 @@ export default {
 					bcc: this.selectBcc.map(this.recipientToRfc822).join(', '),
 					draftUID: uid,
 					subject: this.subjectVal,
-					body: this.bodyVal,
+					body: this.editorPlainText ? htmlToText(this.bodyVal) : this.bodyVal,
 					attachments: this.attachments,
 					folderId: this.replyTo ? this.replyTo.folderId : undefined,
 					messageId: this.replyTo ? this.replyTo.messageId : undefined,

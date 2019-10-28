@@ -137,7 +137,7 @@ export default {
 			}
 		},
 		onInput() {
-			this.$emit('input', this.html ? this.text : htmlToText(this.text))
+			this.$emit('input', this.text)
 		},
 	},
 }
