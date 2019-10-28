@@ -136,7 +136,12 @@
 					}}</ActionCheckbox>
 				</Actions>
 				<div>
-					<input class="submit-message send primary" type="submit" :value="submitButtonTitle" @click="onSend" />
+					<input
+						class="submit-message send primary"
+						type="submit"
+						:value="submitButtonTitle"
+						@click="onSend"
+					/>
 				</div>
 			</div>
 		</div>
