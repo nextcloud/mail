@@ -178,7 +178,7 @@ import Vue from 'vue'
 import ComposerAttachments from './ComposerAttachments'
 import {findRecipient} from '../service/AutocompleteService'
 import Loading from './Loading'
-import Logger from '../logger'
+import logger from '../logger'
 import TextEditor from './TextEditor'
 import {textToSimpleHtml} from '../util/HtmlHelper'
 
@@ -339,7 +339,7 @@ export default {
 			this.savingDraft = true
 			this.draftsPromise = this.draftsPromise
 				.then(uid => this.draft(data(uid)))
-				.catch(Logger.error)
+				.catch(logger.error.bind(logger))
 				.then(uid => {
 					this.savingDraft = false
 					return uid
@@ -359,8 +359,8 @@ export default {
 		onAttachmentsUploading(uploaded) {
 			this.attachmentsPromise = this.attachmentsPromise
 				.then(() => uploaded)
-				.catch(error => Logger.error('could not upload attachments', {error}))
-				.then(() => Logger.debug('attachments uploaded'))
+				.catch(error => logger.error('could not upload attachments', {error}))
+				.then(() => logger.debug('attachments uploaded'))
 		},
 		onBodyKeyPress(event) {
 			// CTRL+Enter sends the message
@@ -393,10 +393,10 @@ export default {
 				.then(() => this.draftsPromise)
 				.then(this.getMessageData())
 				.then(data => this.send(data))
-				.then(() => Logger.info('message sent'))
+				.then(() => logger.info('message sent'))
 				.then(() => (this.state = STATES.FINISHED))
 				.catch(error => {
-					Logger.error('could not send message', {error})
+					logger.error('could not send message', {error})
 					if (error && error.toString) {
 						this.errorText = error.toString()
 					}
