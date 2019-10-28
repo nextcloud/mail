@@ -175,11 +175,12 @@ import Multiselect from '@nextcloud/vue/dist/Components/Multiselect'
 import {translate as t} from '@nextcloud/l10n'
 import Vue from 'vue'
 
-import TextEditor from './TextEditor'
+import ComposerAttachments from './ComposerAttachments'
 import {findRecipient} from '../service/AutocompleteService'
 import Loading from './Loading'
 import Logger from '../logger'
-import ComposerAttachments from './ComposerAttachments'
+import TextEditor from './TextEditor'
+import {textToSimpleHtml} from '../util/HtmlHelper'
 
 const debouncedSearch = debouncePromise(findRecipient, 500)
 
@@ -253,7 +254,7 @@ export default {
 			autocompleteRecipients: this.to.concat(this.cc).concat(this.bcc),
 			newRecipients: [],
 			subjectVal: this.subject,
-			bodyVal: this.isPlainText ? this.textToSimpleHtml(this.body) : this.body,
+			bodyVal: this.isPlainText ? textToSimpleHtml(this.body) : this.body,
 			attachments: [],
 			noReply: this.to.some(to => to.email.startsWith('noreply@') || to.email.startsWith('no-reply@')),
 			submitButtonTitle: t('mail', 'Send'),
@@ -285,11 +286,6 @@ export default {
 		},
 	},
 	watch: {
-		editorPlainText(val) {
-			if (!val) {
-				this.bodyVal = this.textToSimpleHtml(this.bodyVal)
-			}
-		},
 		selectedAlias(val) {
 			if (val) {
 				// TODO: warn user before formatting is lost?
@@ -433,10 +429,7 @@ export default {
 				return body
 			}
 
-			return body + '\n\n--\n\n' + alias.signature
-		},
-		textToSimpleHtml(text) {
-			return text.replace(/([^>\r\n]?)(\r\n|\n\r|\r|\n)/g, '$1<br>$2')
+			return `${body} <br>--<br> ${textToSimpleHtml(alias.signature)}`
 		},
 	},
 }

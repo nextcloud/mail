@@ -32,3 +32,7 @@ export const htmlToText = html => {
 		.replace(/^[\n\r]+/g, '') // trim line breaks at beginning and end
 		.replace(/ $/gm, '') // trim white space at end of each line
 }
+
+export const textToSimpleHtml = text => {
+	return text.replace(/([^>\r\n]?)(\r\n|\n\r|\r|\n)/g, '$1<br>$2')
+}
