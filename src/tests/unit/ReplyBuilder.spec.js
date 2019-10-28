@@ -57,7 +57,7 @@ describe('ReplyBuilder', () => {
 
 	it('creates a reply body', () => {
 		const body = 'Newsletter\nhello'
-		const expectedReply = '\n\n"Test User" <test@user.ru> – November 5, 2018 '
+		const expectedReply = '\n\n"Test User" test@user.ru – November 5, 2018 '
 
 		const replyBody = buildReplyBody(
 			body,
