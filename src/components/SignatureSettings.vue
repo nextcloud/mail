@@ -25,7 +25,9 @@
 		<p class="settings-hint">
 			{{ t('mail', 'A signature is added to the text of new messages and replies.') }}
 		</p>
-		<textarea v-model="signature" v-autosize="signature" />
+		<p>
+			<TextEditor v-model="signature" :html="true" :placeholder="t('mail', 'Signature …')" />
+		</p>
 		<p>
 			<button
 				class="primary"
@@ -43,14 +45,15 @@
 </template>
 
 <script>
-import Vue from 'vue'
-import Autosize from 'vue-autosize'
-import Logger from '../logger'
-
-Vue.use(Autosize)
+import logger from '../logger'
+import TextEditor from './TextEditor'
+import {textToSimpleHtml} from '../util/HtmlHelper'
 
 export default {
 	name: 'SignatureSettings',
+	components: {
+		TextEditor,
+	},
 	props: {
 		account: {
 			type: Object,
@@ -58,9 +61,17 @@ export default {
 		},
 	},
 	data() {
+		let signature = this.account.signature || ''
+
+		if ((signature.includes('\n') || signature.includes('\r')) && !signature.includes('>')) {
+			// Looks like a plain text signature -> convert to HTML
+			signature = textToSimpleHtml(signature)
+			logger.info('Converted plain text signature to HTML')
+		}
+
 		return {
 			loading: false,
-			signature: this.account.signature,
+			signature,
 		}
 	},
 	methods: {
@@ -70,12 +81,12 @@ export default {
 			this.$store
 				.dispatch('updateAccountSignature', {account: this.account, signature: null})
 				.then(() => {
-					Logger.info('signature deleted')
+					logger.info('signature deleted')
 					this.signature = ''
 					this.loading = false
 				})
 				.catch(error => {
-					Logger.error('could not delete account signature', {error})
+					logger.error('could not delete account signature', {error})
 					throw error
 				})
 		},
@@ -85,11 +96,11 @@ export default {
 			this.$store
 				.dispatch('updateAccountSignature', {account: this.account, signature: this.signature})
 				.then(() => {
-					Logger.info('signature updated')
+					logger.info('signature updated')
 					this.loading = false
 				})
 				.catch(error => {
-					Logger.error('could not update account signature', {error})
+					logger.error('could not update account signature', {error})
 					throw error
 				})
 		},

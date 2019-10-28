@@ -58,6 +58,10 @@ export default {
 			type: Boolean,
 			default: false,
 		},
+		placeholder: {
+			type: String,
+			default: '',
+		},
 	},
 	data() {
 		return {
@@ -65,6 +69,7 @@ export default {
 			ready: false,
 			editor: Editor,
 			config: {
+				placeholder: this.placeholder,
 				plugins: this.html
 					? [EssentialsPlugin, ParagraphPlugin, BoldPlugin, ItalicPlugin, LinkPlugin, BlockQuotePlugin]
 					: [EssentialsPlugin, ParagraphPlugin],
