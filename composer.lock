@@ -1331,16 +1331,16 @@
         },
         {
             "name": "phan/phan",
-            "version": "2.3.0",
+            "version": "2.4.0",
             "source": {
                 "type": "git",
                 "url": "https://github.com/phan/phan.git",
-                "reference": "cd72de4bde30606a8da3aaec7dd1b1ba365e8627"
+                "reference": "9670327691736be2581394fd34a89df0ff008d17"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/phan/phan/zipball/cd72de4bde30606a8da3aaec7dd1b1ba365e8627",
-                "reference": "cd72de4bde30606a8da3aaec7dd1b1ba365e8627",
+                "url": "https://api.github.com/repos/phan/phan/zipball/9670327691736be2581394fd34a89df0ff008d17",
+                "reference": "9670327691736be2581394fd34a89df0ff008d17",
                 "shasum": ""
             },
             "require": {
@@ -1399,7 +1399,7 @@
                 "php",
                 "static"
             ],
-            "time": "2019-10-14T02:32:36+00:00"
+            "time": "2019-10-26T17:47:01+00:00"
         },
         {
             "name": "phar-io/manifest",
@@ -2054,16 +2054,16 @@
         },
         {
             "name": "psr/log",
-            "version": "1.1.0",
+            "version": "1.1.1",
             "source": {
                 "type": "git",
                 "url": "https://github.com/php-fig/log.git",
-                "reference": "6c001f1daafa3a3ac1d8ff69ee4db8e799a654dd"
+                "reference": "bf73deb2b3b896a9d9c75f3f0d88185d2faa27e2"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/php-fig/log/zipball/6c001f1daafa3a3ac1d8ff69ee4db8e799a654dd",
-                "reference": "6c001f1daafa3a3ac1d8ff69ee4db8e799a654dd",
+                "url": "https://api.github.com/repos/php-fig/log/zipball/bf73deb2b3b896a9d9c75f3f0d88185d2faa27e2",
+                "reference": "bf73deb2b3b896a9d9c75f3f0d88185d2faa27e2",
                 "shasum": ""
             },
             "require": {
@@ -2072,7 +2072,7 @@
             "type": "library",
             "extra": {
                 "branch-alias": {
-                    "dev-master": "1.0.x-dev"
+                    "dev-master": "1.1.x-dev"
                 }
             },
             "autoload": {
@@ -2097,7 +2097,7 @@
                 "psr",
                 "psr-3"
             ],
-            "time": "2018-11-20T15:27:04+00:00"
+            "time": "2019-10-25T08:06:51+00:00"
         },
         {
             "name": "sabre/event",
