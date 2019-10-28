@@ -9,7 +9,7 @@
 		>
 		</Error>
 		<template v-else>
-			<div id="mail-message-header" class="section">
+			<div id="mail-message-header">
 				<div id="mail-message-header-fields">
 					<h2 :title="message.subject">{{ message.subject }}</h2>
 					<p class="transparency">
@@ -294,7 +294,7 @@ export default {
 #mail-message-header-fields {
 	// initial width
 	width: 0;
-	padding-left: 44px;
+	padding-left: 38px;
 	// grow and try to fill 100%
 	flex: 1 1 auto;
 	h2,
@@ -316,7 +316,7 @@ export default {
 
 #mail-content,
 .mail-message-attachments {
-	margin: 10px 10px 50px 30px;
+	margin: 10px 10px 50px 38px;
 }
 
 .mail-message-attachments {
@@ -353,7 +353,7 @@ export default {
 	height: 44px;
 	min-width: 44px;
 	margin: 0;
-	padding: 11px 10px 10px 25px;
+	padding: 9px 18px 10px 32px;
 }
 
 /* Show action button label and move icon to the left
@@ -366,12 +366,12 @@ export default {
 @media only screen and (min-width: 600px) {
 	.icon-reply-white,
 	.icon-reply-all-white {
-		background-position: 5px center;
+		background-position: 12px center;
 	}
 }
 
 #mail-message-actions-menu {
-	margin-left: 5px;
+	margin-left: 4px;
 }
 
 @media print {
