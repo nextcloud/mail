@@ -17,7 +17,7 @@
  *
  */
 
-import dav from 'davclient.js'
+import {Client} from 'davclient.js'
 import ical from 'ical.js'
 import {getCurrentUser, getRequestToken} from '@nextcloud/auth'
 import {generateRemoteUrl} from '@nextcloud/router'
@@ -25,7 +25,7 @@ import Axios from '@nextcloud/axios'
 
 import Logger from '../logger'
 
-const client = new dav.Client({
+const client = new Client({
 	baseUrl: generateRemoteUrl('dav/calendars'),
 	xmlNamespaces: {
 		'DAV:': 'd',
