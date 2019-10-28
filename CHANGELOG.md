@@ -1,6 +1,36 @@
 # Changelog
 All notable changes to this project will be documented in this file.
 
+## 0.18.0 - 2019-10-28
+### Added
+- Html editor
+- Html signatures support
+- Better layout for reading and writing messages
+- Reply, reply-all and forward overhaul
+- Message composer design improvements
+- Account setup error feedback
+- Account settings page design overhaul
+### Fixed
+- Removed reply-to email address from quoted text
+- Logging error in drafts error handler
+- Unnecessary line breaks in quoted reply text
+- Umlauts encoding on folder (mailbox) names
+- Missing navigation when adding an account
+- Account form should be a HTML form
+- Marking another message as read without navigation
+- Deleting another message without navigation
+- Fix missing redirect on account deletion
+- Fix missing navigation when first account is added
+- Envelope delete animation
+- Broken auto redirect on external links of a HTML message
+- Show external images
+- Handling of internationalized FWD and AW prefixes
+- Flagging drafts as \draft
+### Changed
+- Dependency updates
+- New and updated translations
+- JavaScript is now generated for @nextcloud/browserslist-config browsers
+
 ## 0.17.0 - 2019-09-02
 ### Added
 - Warning when a message does not have a subject
