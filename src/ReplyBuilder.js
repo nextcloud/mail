@@ -29,9 +29,9 @@ export const buildReplyBody = (original, from, date) => {
 
 	if (from) {
 		const dateString = moment.unix(date).format('LLL')
-		return start + `"${from.label}" <${from.email}> – ${dateString}` + body
+		return `${start}"${from.label}" ${from.email} – ${dateString}` + body
 	} else {
-		return start + body
+		return `${start}${body}`
 	}
 }
 
@@ -41,7 +41,7 @@ export const buildHtmlReplyBody = (original, from, date) => {
 
 	if (from) {
 		const dateString = moment.unix(date).format('LLL')
-		return `${start}"${from.label}" <${from.email}> – ${dateString}<br>${body}`
+		return `${start}"${from.label}" ${from.email} – ${dateString}<br>${body}`
 	} else {
 		return `${start}${body}`
 	}
