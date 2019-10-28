@@ -22,7 +22,7 @@
     "@ckeditor/ckeditor5-dev-utils": "^12.0.5",
     "@ckeditor/ckeditor5-dev-webpack-plugin": "^8.0.5",
     "@ckeditor/ckeditor5-editor-balloon": "^12.2.2",
-    "@ckeditor/ckeditor5-editor-classic": "^12.1.4",
+    "@ckeditor/ckeditor5-editor-classic": "^15.0.0",
     "@ckeditor/ckeditor5-essentials": "^11.0.5",
     "@ckeditor/ckeditor5-link": "^11.1.2",
     "@ckeditor/ckeditor5-paragraph": "^11.0.5",
