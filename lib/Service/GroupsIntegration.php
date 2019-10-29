@@ -86,7 +86,7 @@ class GroupsIntegration {
 		return array_reduce($this->groupServices,
 			function ($carry, $service) {
 				return preg_replace_callback(
-					'/' . preg_quote($this->servicePrefix($service)) . '([\w\d ]+)(,?)/',
+					'/' . preg_quote($this->servicePrefix($service)) . '([^,]+)(,?)/',
 					function ($matches) use ($service) {
 						if (empty($matches[1])) {
 							return '';

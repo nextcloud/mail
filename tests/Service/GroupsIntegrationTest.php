@@ -25,10 +25,14 @@ use ChristophWurst\Nextcloud\Testing\TestCase;
 use OCA\Mail\Service\GroupsIntegration;
 use OCA\Mail\Service\Group\NextcloudGroupService;
 use OCA\Mail\Exception\ServiceException;
+use PHPUnit\Framework\MockObject\MockObject;
 
 class GroupsIntegrationTest extends TestCase {
 
+	/** @var NextcloudGroupService|MockObject */
 	private $groupService1;
+
+	/** @var GroupsIntegration */
 	private $groupsIntegration;
 
 	protected function setUp() {
@@ -38,7 +42,9 @@ class GroupsIntegrationTest extends TestCase {
 		$this->groupService1->expects($this->any())
 			->method('getNamespace')
 			->willReturn('Namespace1');
-		$this->groupsIntegration = new GroupsIntegration($this->groupService1);
+		$this->groupsIntegration = new GroupsIntegration(
+			$this->groupService1
+		);
 	}
 
 	public function testGetMatchingGroups() {
@@ -76,7 +82,7 @@ class GroupsIntegrationTest extends TestCase {
 				'name' => "Bobby",
 				'email' => "bob@smith.net"
 			],
-			[ 
+			[
 				'id' => 'mary',
 				'name' => 'Mary',
 				'email' => 'mary@smith.net'
@@ -102,7 +108,7 @@ class GroupsIntegrationTest extends TestCase {
 				'name' => "Bobby",
 				'email' => "bob@smith.net"
 			],
-			[ 
+			[
 				'id' => 'mary',
 				'name' => 'Mary',
 				'email' => 'mary@smith.net'
@@ -128,7 +134,7 @@ class GroupsIntegrationTest extends TestCase {
 				'name' => "Bobby",
 				'email' => "bob@smith.net"
 			],
-			[ 
+			[
 				'id' => 'mary',
 				'name' => 'Mary',
 				'email' => 'mary@smith.net'
@@ -144,6 +150,57 @@ class GroupsIntegrationTest extends TestCase {
 
 		$this->assertEquals($expected, $actual);
 
+	}
+
+	public function testExpandUmlauts() {
+		$recipients = "john@doe.com,namespace1:ümlaut";
+		$members = [
+			[
+				'id' => 'bob',
+				'name' => "Bobby",
+				'email' => "bob@smith.net"
+			],
+			[
+				'id' => 'mary',
+				'name' => 'Mary',
+				'email' => 'mary@smith.net'
+			]
+		];
+		$this->groupService1->expects($this->once())
+			->method('getUsers')
+			->willReturn($members);
+
+		$expected = "john@doe.com,bob@smith.net,mary@smith.net";
+
+		$actual = $this->groupsIntegration->expand($recipients);
+
+		$this->assertEquals($expected, $actual);
+	}
+
+	public function testExpandSpace() {
+		$recipients = "john@doe.com,namespace1:test group";
+		$members = [
+			[
+				'id' => 'bob',
+				'name' => "Bobby",
+				'email' => "bob@smith.net"
+			],
+			[
+				'id' => 'mary',
+				'name' => 'Mary',
+				'email' => 'mary@smith.net'
+			]
+		];
+		$this->groupService1->expects($this->once())
+			->method('getUsers')
+			->with('test group')
+			->willReturn($members);
+
+		$expected = "john@doe.com,bob@smith.net,mary@smith.net";
+
+		$actual = $this->groupsIntegration->expand($recipients);
+
+		$this->assertEquals($expected, $actual);
 	}
 
 	public function testExpandEmpty() {
