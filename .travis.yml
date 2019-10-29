@@ -106,9 +106,6 @@ script:
   - xmllint appinfo/info.xml --schema info.xsd --noout
   - rm info.xsd
 
-  # Check PHP syntax errors
-  - sh -c "if [ '$TEST_SUITE' = 'LINT-PHP' ]; then composer run lint; fi"
-
   # Run server's app code checker
   - sh -c "if [ '$TEST_SUITE' = 'LINT-PHP' ]; then php ../../occ app:check-code mail; fi"
 
