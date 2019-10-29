@@ -36,6 +36,8 @@ OC.L10N.register(
     "Select account" : "Välj konto",
     "To" : "Till",
     "Contact or email address …" : "Kontakt eller e-postadress ...",
+    "+ Copy" : "+ Kopia",
+    "Copy" : "Kopia",
     "No contacts found." : "Inga kontakter hittades.",
     "Subject" : "Ämne",
     "Subject …" : "Ämne ...",
