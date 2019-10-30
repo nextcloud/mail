@@ -101,6 +101,7 @@ OC.L10N.register(
     "No message selected" : "Inget meddelande valt",
     "Signature" : "Signatur",
     "A signature is added to the text of new messages and replies." : "En signatur läggs till i texten för nya meddelanden och svar.",
+    "Signature …" : "Signatur …",
     "Save signature" : "Spara signatur",
     "Account settings" : "Kontoinställningar",
     "Change name" : "Byt namn",
