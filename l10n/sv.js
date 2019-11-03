@@ -76,7 +76,7 @@ OC.L10N.register(
     "Forward" : "Vidarebefordra",
     "Could not load your message" : "Kunde inte ladda ditt meddelande",
     "Import into calendar" : "Importera till kalender",
-    "Download attachment" : "Ladda ned bilaga",
+    "Download attachment" : "Hämta bilaga",
     "Save to Files" : "Spara fil till dina filer",
     "Choose a folder to store the attachment in" : "Välj en mapp att spara den bifogade filen i",
     "Save all to Files" : "Spara allt till dina filer",
