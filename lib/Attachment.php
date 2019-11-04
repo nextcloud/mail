@@ -64,6 +64,7 @@ class Attachment {
 	private function load() {
 		$fetch_query = new \Horde_Imap_Client_Fetch_Query();
 		$fetch_query->bodyPart($this->attachmentId);
+		$fetch_query->structure();
 		$fetch_query->mimeHeader($this->attachmentId);
 
 		// $list is an array of Horde_Imap_Client_Data_Fetch objects.
@@ -74,9 +75,15 @@ class Attachment {
 			throw new DoesNotExistException('Unable to load the attachment.');
 		}
 		$fetch = $headers[$this->messageId];
+		/** @var \Horde_Mime_Headers $mimeHeaders */
 		$mimeHeaders = $fetch->getMimeHeader($this->attachmentId, Horde_Imap_Client_Data_Fetch::HEADER_PARSE);
+		$structure = $fetch->getStructure();
+		$attachment = $structure[$this->attachmentId];
+		$name = $attachment->getName();
 
 		$this->mimePart = new \Horde_Mime_Part();
+
+		$this->mimePart->setDispositionParameter('filename', $name);
 
 		// To prevent potential problems with the SOP we serve all files with the
 		// MIME type "application/octet-stream"
