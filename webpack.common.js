@@ -48,9 +48,7 @@ module.exports = {
 				test: /\.js$/,
 				loader: 'babel-loader',
 				exclude: /node_modules/,
-				include: [
-					path.join(__dirname, 'node_modules', '@ckeditor')
-				],
+				exclude: /node_modules(?!(\/|\\)(@ckeditor)(\/|\\))/
 			},
 			{
 				test: /\.(png|jpg|gif)$/,
