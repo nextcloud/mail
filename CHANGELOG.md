@@ -1,6 +1,11 @@
 # Changelog
 All notable changes to this project will be documented in this file.
 
+## 0.18.1 - 2019-11-04
+### Fixed
+- JavaScript transpilation for older browsers
+- Groups expansion with special characters and spaces
+
 ## 0.18.0 - 2019-10-28
 ### Added
 - Html editor
