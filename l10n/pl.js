@@ -70,6 +70,7 @@ OC.L10N.register(
     "Mark read" : "Oznacz jako przeczytana",
     "Mark unread" : "Oznacz jako nie przeczytana",
     "Delete" : "Usuń",
+    "Blind copy recipients only" : "Tylko dla niewidocznych kopii",
     "Report this bug" : "Zgłoś ten błąd",
     "Loading messages" : "Ładowanie wiadomości",
     "Not found" : "Nie znaleziono",
