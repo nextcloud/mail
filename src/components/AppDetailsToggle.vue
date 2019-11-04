@@ -39,11 +39,10 @@ export default {
 	left: 0;
 	width: 44px;
 	height: 44px;
-	z-index: 149;
-	background-color: var(--color-main-background-darker);
+	z-index: 1500;
 	cursor: pointer;
-	opacity: 0.6;
 	transform: rotate(180deg);
-	margin-top: 44px; /* under the show navigation button */
+	background-color: var(--color-main-background);
+	opacity: 1;
 }
 </style>
