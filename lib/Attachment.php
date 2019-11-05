@@ -92,11 +92,8 @@ class Attachment {
 			$this->mimePart->setDispositionParameter('filename', $contentDisposition['filename']);
 		} else {
 			$contentDisposition = $mimeHeaders->getValue('content-type', \Horde_Mime_Headers::VALUE_PARAMS);
-			$vars = ['name'];
-			foreach ($contentDisposition as $key => $val) {
-				if(in_array($key, $vars)) {
-					$this->mimePart->setContentTypeParameter($key, $val);
-				}
+			if (isset($contentDisposition['name'])) {
+				$this->mimePart->setContentTypeParameter('name', $contentDisposition['name']);
 			}
 		}
 
