@@ -304,6 +304,7 @@ export default {
 		text-overflow: ellipsis;
 		padding-bottom: 7px;
 		margin-bottom: 0;
+		padding-left: 7px; // this is a temporary fix, will be removed when we fix the toggle button
 	}
 
 	.transparency {
