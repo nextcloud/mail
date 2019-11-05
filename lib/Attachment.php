@@ -74,6 +74,7 @@ class Attachment {
 			throw new DoesNotExistException('Unable to load the attachment.');
 		}
 		$fetch = $headers[$this->messageId];
+		/** @var \Horde_Mime_Headers $mimeHeaders */
 		$mimeHeaders = $fetch->getMimeHeader($this->attachmentId, Horde_Imap_Client_Data_Fetch::HEADER_PARSE);
 
 		$this->mimePart = new \Horde_Mime_Part();
@@ -87,13 +88,8 @@ class Attachment {
 
 		// Extract headers from part
 		$contentDisposition = $mimeHeaders->getValue('content-disposition', \Horde_Mime_Headers::VALUE_PARAMS);
-		if (!is_null($contentDisposition)) {
-			$vars = ['filename'];
-			foreach ($contentDisposition as $key => $val) {
-				if(in_array($key, $vars)) {
-					$this->mimePart->setDispositionParameter($key, $val);
-				}
-			}
+		if (!is_null($contentDisposition) && isset($contentDisposition['filename'])) {
+			$this->mimePart->setDispositionParameter('filename', $contentDisposition['filename']);
 		} else {
 			$contentDisposition = $mimeHeaders->getValue('content-type', \Horde_Mime_Headers::VALUE_PARAMS);
 			$vars = ['name'];
