@@ -1,12 +1,12 @@
 <template>
 	<div>
-		<router-link to="/setup" class="button new-button">{{ t('mail', 'Add mail account') }} </router-link>
+		<router-link to="/setup" class="icon-add app-settings-button button new-button">{{ t('mail', 'Add mail account') }}</router-link>
 
-		<p v-if="loadingAvatarSettings" class="avatar-settings">
+		<p v-if="loadingAvatarSettings" class="app-settings avatar-settings">
 			<span class="icon-loading-small"></span>
 			{{ t('mail', 'Use Gravatar and favicon avatars') }}
 		</p>
-		<p v-else>
+		<p v-else class="app-settings">
 			<input
 				id="gravatar-enabled"
 				class="checkbox"
@@ -69,5 +69,13 @@ p.avatar-settings span.icon-loading-small {
 	display: inline-block;
 	vertical-align: middle;
 	padding: 5px 0;
+}
+p.app-settings {
+	padding-top: 15px;
+}
+.app-settings-button {
+	display: block;
+	padding-left: 34px;
+	background-position: 10px center;
 }
 </style>
