@@ -83,23 +83,19 @@ export default {
 #mail-content {
 	margin-left: 30px;
 	margin-top: 2px;
+	display: flex;
+	flex-direction: column;
+	height: 100%;
 }
 #mail-message-has-blocked-content {
 	margin-left: 8px;
 }
 
 #message-container {
-	position: relative;
-	width: 100%;
-	height: 0;
-	padding-bottom: 56.25%;
+	flex-grow: 1;
 }
 
 #message-frame {
-	position: absolute;
-	top: 0;
-	left: 0;
-	width: 100%;
 	height: 100%;
 }
 </style>
