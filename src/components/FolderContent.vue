@@ -13,7 +13,7 @@
 				/>
 				<NewMessageDetail v-if="newMessage" />
 				<Message v-else-if="showMessage" />
-				<NoMessageSelected v-else-if="hasMessages" />
+				<NoMessageSelected v-else-if="hasMessages && !isMobile" />
 			</template>
 		</div>
 	</AppContent>

@@ -1,4 +1,8 @@
 @media only screen and (max-width: $breakpoint-mobile) {
+	.app-content-list {
+		max-width: 100vw;
+	}
+
 	/* full width for message list on mobile */
 	#mail-messages {
 		width: 100%;
