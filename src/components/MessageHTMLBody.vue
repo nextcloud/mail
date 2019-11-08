@@ -51,6 +51,13 @@ export default {
 			const iframe = this.$refs.iframe
 			return iframe.contentDocument || iframe.contentWindow.document
 		},
+		onMessageFrameLoad() {
+			const iframeDoc = this.getIframeDoc()
+			this.hasBlockedContent =
+				iframeDoc.querySelectorAll('[data-original-src]').length > 0 ||
+				iframeDoc.querySelectorAll('[data-original-style]').length > 0
+			this.loading = false
+		},
 		onAfterPrint() {
 			this.$refs.iframe.style.setProperty('height', '')
 		},
