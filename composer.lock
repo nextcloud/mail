@@ -281,7 +281,7 @@
             "license": [
                 "LGPL-2.1"
             ],
-            "description": "Provides blowfish encryption/decryption for PHP string data."
+            "description": "A library that provides blowfish encryption/decryption for PHP string data."
         },
         {
             "name": "pear-pear.horde.org/Horde_Date",
@@ -368,7 +368,7 @@
             "license": [
                 "BSD-2-Clause"
             ],
-            "description": "Normalized access to various backends providing IDNA (Internationalized Domain Names in Applications) support."
+            "description": "A library that wraps various backends providing IDNA (Internationalized Domain Names in Applications) support."
         },
         {
             "name": "pear-pear.horde.org/Horde_Imap_Client",
@@ -851,7 +851,7 @@
             "license": [
                 "LGPL-2.1"
             ],
-            "description": "These classes provide functionality useful for all kind of applications."
+            "description": "A library that provides functionality useful for all kind of applications."
         }
     ],
     "packages-dev": [
@@ -995,24 +995,24 @@
         },
         {
             "name": "composer/xdebug-handler",
-            "version": "1.3.3",
+            "version": "1.4.0",
             "source": {
                 "type": "git",
                 "url": "https://github.com/composer/xdebug-handler.git",
-                "reference": "46867cbf8ca9fb8d60c506895449eb799db1184f"
+                "reference": "cbe23383749496fe0f373345208b79568e4bc248"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/composer/xdebug-handler/zipball/46867cbf8ca9fb8d60c506895449eb799db1184f",
-                "reference": "46867cbf8ca9fb8d60c506895449eb799db1184f",
+                "url": "https://api.github.com/repos/composer/xdebug-handler/zipball/cbe23383749496fe0f373345208b79568e4bc248",
+                "reference": "cbe23383749496fe0f373345208b79568e4bc248",
                 "shasum": ""
             },
             "require": {
-                "php": "^5.3.2 || ^7.0",
+                "php": "^5.3.2 || ^7.0 || ^8.0",
                 "psr/log": "^1.0"
             },
             "require-dev": {
-                "phpunit/phpunit": "^4.8.35 || ^5.7 || ^6.5"
+                "phpunit/phpunit": "^4.8.35 || ^5.7 || 6.5 - 8"
             },
             "type": "library",
             "autoload": {
@@ -1030,12 +1030,12 @@
                     "email": "john-stevenson@blueyonder.co.uk"
                 }
             ],
-            "description": "Restarts a process without xdebug.",
+            "description": "Restarts a process without Xdebug.",
             "keywords": [
                 "Xdebug",
                 "performance"
             ],
-            "time": "2019-05-27T17:52:04+00:00"
+            "time": "2019-11-06T16:40:04+00:00"
         },
         {
             "name": "doctrine/instantiator",
@@ -1331,16 +1331,16 @@
         },
         {
             "name": "phan/phan",
-            "version": "2.4.0",
+            "version": "2.4.2",
             "source": {
                 "type": "git",
                 "url": "https://github.com/phan/phan.git",
-                "reference": "9670327691736be2581394fd34a89df0ff008d17"
+                "reference": "0a3e6ab36a16f0f6f2c703d78f6fa62b470a533b"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/phan/phan/zipball/9670327691736be2581394fd34a89df0ff008d17",
-                "reference": "9670327691736be2581394fd34a89df0ff008d17",
+                "url": "https://api.github.com/repos/phan/phan/zipball/0a3e6ab36a16f0f6f2c703d78f6fa62b470a533b",
+                "reference": "0a3e6ab36a16f0f6f2c703d78f6fa62b470a533b",
                 "shasum": ""
             },
             "require": {
@@ -1399,7 +1399,7 @@
                 "php",
                 "static"
             ],
-            "time": "2019-10-26T17:47:01+00:00"
+            "time": "2019-11-08T13:51:23+00:00"
         },
         {
             "name": "phar-io/manifest",
@@ -2054,16 +2054,16 @@
         },
         {
             "name": "psr/log",
-            "version": "1.1.1",
+            "version": "1.1.2",
             "source": {
                 "type": "git",
                 "url": "https://github.com/php-fig/log.git",
-                "reference": "bf73deb2b3b896a9d9c75f3f0d88185d2faa27e2"
+                "reference": "446d54b4cb6bf489fc9d75f55843658e6f25d801"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/php-fig/log/zipball/bf73deb2b3b896a9d9c75f3f0d88185d2faa27e2",
-                "reference": "bf73deb2b3b896a9d9c75f3f0d88185d2faa27e2",
+                "url": "https://api.github.com/repos/php-fig/log/zipball/446d54b4cb6bf489fc9d75f55843658e6f25d801",
+                "reference": "446d54b4cb6bf489fc9d75f55843658e6f25d801",
                 "shasum": ""
             },
             "require": {
@@ -2097,7 +2097,7 @@
                 "psr",
                 "psr-3"
             ],
-            "time": "2019-10-25T08:06:51+00:00"
+            "time": "2019-11-01T11:05:21+00:00"
         },
         {
             "name": "sabre/event",
@@ -2727,16 +2727,16 @@
         },
         {
             "name": "symfony/console",
-            "version": "v3.4.32",
+            "version": "v3.4.33",
             "source": {
                 "type": "git",
                 "url": "https://github.com/symfony/console.git",
-                "reference": "4727d7f3c99b9dea0ae70ed4f34645728aa90453"
+                "reference": "c7edffb26b29cae972ca4afccb610a38ce8d0ccf"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/symfony/console/zipball/4727d7f3c99b9dea0ae70ed4f34645728aa90453",
-                "reference": "4727d7f3c99b9dea0ae70ed4f34645728aa90453",
+                "url": "https://api.github.com/repos/symfony/console/zipball/c7edffb26b29cae972ca4afccb610a38ce8d0ccf",
+                "reference": "c7edffb26b29cae972ca4afccb610a38ce8d0ccf",
                 "shasum": ""
             },
             "require": {
@@ -2795,20 +2795,20 @@
             ],
             "description": "Symfony Console Component",
             "homepage": "https://symfony.com",
-            "time": "2019-10-06T19:52:09+00:00"
+            "time": "2019-10-24T15:33:53+00:00"
         },
         {
             "name": "symfony/debug",
-            "version": "v3.4.32",
+            "version": "v3.4.33",
             "source": {
                 "type": "git",
                 "url": "https://github.com/symfony/debug.git",
-                "reference": "b3e7ce815d82196435d16dc458023f8fb6b36ceb"
+                "reference": "f72e33fdb1170b326e72c3157f0cd456351dd086"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/symfony/debug/zipball/b3e7ce815d82196435d16dc458023f8fb6b36ceb",
-                "reference": "b3e7ce815d82196435d16dc458023f8fb6b36ceb",
+                "url": "https://api.github.com/repos/symfony/debug/zipball/f72e33fdb1170b326e72c3157f0cd456351dd086",
+                "reference": "f72e33fdb1170b326e72c3157f0cd456351dd086",
                 "shasum": ""
             },
             "require": {
@@ -2851,7 +2851,7 @@
             ],
             "description": "Symfony Debug Component",
             "homepage": "https://symfony.com",
-            "time": "2019-09-19T15:32:51+00:00"
+            "time": "2019-10-24T15:33:53+00:00"
         },
         {
             "name": "symfony/polyfill-ctype",
