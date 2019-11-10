@@ -281,7 +281,7 @@
             "license": [
                 "LGPL-2.1"
             ],
-            "description": "Provides blowfish encryption/decryption for PHP string data."
+            "description": "A library that provides blowfish encryption/decryption for PHP string data."
         },
         {
             "name": "pear-pear.horde.org/Horde_Date",
@@ -368,7 +368,7 @@
             "license": [
                 "BSD-2-Clause"
             ],
-            "description": "Normalized access to various backends providing IDNA (Internationalized Domain Names in Applications) support."
+            "description": "A library that wraps various backends providing IDNA (Internationalized Domain Names in Applications) support."
         },
         {
             "name": "pear-pear.horde.org/Horde_Imap_Client",
@@ -827,17 +827,17 @@
         },
         {
             "name": "pear-pear.horde.org/Horde_Util",
-            "version": "2.5.8",
+            "version": "2.5.9",
             "dist": {
                 "type": "file",
-                "url": "https://pear.horde.org/get/Horde_Util-2.5.8.tgz"
+                "url": "https://pear.horde.org/get/Horde_Util-2.5.9.tgz"
             },
             "require": {
                 "ext-dom": "*",
                 "php": "<8.0.0.0"
             },
             "replace": {
-                "pear-horde/horde_util": "== 2.5.8.0"
+                "pear-horde/horde_util": "== 2.5.9.0"
             },
             "type": "pear-library",
             "autoload": {
@@ -851,7 +851,7 @@
             "license": [
                 "LGPL-2.1"
             ],
-            "description": "These classes provide functionality useful for all kind of applications."
+            "description": "A library that provides functionality useful for all kind of applications."
         }
     ],
     "packages-dev": [
