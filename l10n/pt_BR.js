@@ -104,6 +104,7 @@ OC.L10N.register(
     "No message selected" : "Nenhuma mensagem selecionada",
     "Signature" : "Assinatura",
     "A signature is added to the text of new messages and replies." : "Uma assinatura é adicionada ao texto de novas mensagens e respostas.",
+    "Signature …" : "Assinatura...",
     "Save signature" : "Salvar assinatura",
     "Account settings" : "Configurações da conta",
     "Change name" : "Alterar nome",

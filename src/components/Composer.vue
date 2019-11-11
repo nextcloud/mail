@@ -310,7 +310,7 @@ export default {
 			} else if (recipient.label === '') {
 				// Invalid label
 				return recipient.email
-			} else if (recipient.email.search(/^[a-zA-Z]+:[a-zA-Z]+$/) === 0) {
+			} else if (recipient.email.search(/^[a-zA-Z]+:/) === 0) {
 				// Group integration
 				return recipient.email
 			} else {
