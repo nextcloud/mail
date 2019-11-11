@@ -133,7 +133,10 @@ export default {
 				.catch(error => Logger.error('could not choose a file as attachment', {error}))
 		},
 		onDelete(attachment) {
-			this.$emit('input', this.value.filter(a => a !== attachment))
+			this.$emit(
+				'input',
+				this.value.filter(a => a !== attachment)
+			)
 		},
 	},
 }
