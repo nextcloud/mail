@@ -343,10 +343,10 @@
         },
         {
             "name": "pear-pear.horde.org/Horde_Idna",
-            "version": "1.1.1",
+            "version": "1.1.2",
             "dist": {
                 "type": "file",
-                "url": "https://pear.horde.org/get/Horde_Idna-1.1.1.tgz"
+                "url": "https://pear.horde.org/get/Horde_Idna-1.1.2.tgz"
             },
             "require": {
                 "pear-pear.horde.org/horde_exception": "<3.0.0.0",
@@ -354,7 +354,7 @@
                 "php": "<8.0.0.0"
             },
             "replace": {
-                "pear-horde/horde_idna": "== 1.1.1.0"
+                "pear-horde/horde_idna": "== 1.1.2.0"
             },
             "type": "pear-library",
             "autoload": {
