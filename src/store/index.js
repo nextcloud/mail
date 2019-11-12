@@ -102,7 +102,6 @@ export default new Vuex.Store({
 				isUnified: true,
 				specialUse: ['inbox'],
 				specialRole: 'inbox',
-				name: t('mail', 'All inboxes'), // TODO,
 				unread: 0,
 				folders: [],
 				envelopes: [],
