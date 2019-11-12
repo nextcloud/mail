@@ -11,7 +11,7 @@
 			@click.prevent="onToggleFlagged"
 		></div>
 		<div class="app-content-list-item-icon">
-			<Avatar :display-name="addresses" :email="senderEmail" />
+			<Avatar :display-name="addresses" :email="avatarEmail" />
 		</div>
 		<div class="app-content-list-item-line-one" :title="addresses">
 			{{ addresses }}
@@ -107,7 +107,16 @@ export default {
 			// Show sender label/address in other folder types
 			return this.data.from.length === 0 ? '?' : this.data.from[0].label || this.data.from[0].email
 		},
-		senderEmail() {
+		avatarEmail() {
+			// Show first recipients' avatar in a sent folder (or undefined when sent to Bcc only)
+			if (this.folder.specialRole === 'sent') {
+				let recipients = [this.data.to, this.data.cc].flat().map(function(recipient) {
+					return recipient.email
+				})
+				return recipients.length > 0 ? recipients[0] : undefined
+			}
+
+			// Show sender avatar in other folder types
 			if (this.data.from.length > 0) {
 				return this.data.from[0].email
 			} else {
