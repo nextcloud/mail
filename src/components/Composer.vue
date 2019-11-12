@@ -24,6 +24,7 @@
 			<Multiselect
 				id="to"
 				v-model="selectTo"
+				ref="toLabel"
 				:options="selectableRecipients"
 				:taggable="true"
 				label="label"
@@ -93,7 +94,6 @@
 				class="subject"
 				autocomplete="off"
 				:placeholder="t('mail', 'Subject …')"
-				autofocus
 				@keyup="onInputChanged"
 			/>
 		</div>
@@ -301,6 +301,9 @@ export default {
 		}
 
 		this.bodyVal = this.bodyWithSignature(this.selectedAlias, this.bodyVal)
+	},
+	mounted() {
+		this.$refs.toLabel.$el.focus()
 	},
 	methods: {
 		recipientToRfc822(recipient) {
