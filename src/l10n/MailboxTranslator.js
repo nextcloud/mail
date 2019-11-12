@@ -40,7 +40,11 @@ const translateSpecial = folder => {
 	}
 	if (folder.specialUse.includes('inbox')) {
 		// TRANSLATORS: translated mail box name
-		return t('mail', 'Inbox')
+		if (folder.isUnified === true) {
+			return t('mail', 'All inboxes')
+		} else {
+			return t('mail', 'Inbox')
+		}
 	}
 	if (folder.specialUse.includes('junk')) {
 		// TRANSLATORS: translated mail box name
