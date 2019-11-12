@@ -137,11 +137,11 @@
 						t('mail', 'Add attachment from Files')
 					}}</ActionButton>
 					<ActionCheckbox
-						:checked="editorPlainText"
-						:text="t('mail', 'Plain text')"
-						@check="editorPlainText = true"
-						@uncheck="editorPlainText = false"
-						>{{ t('mail', 'Plain text') }}</ActionCheckbox
+						:checked="!editorPlainText"
+						:text="t('mail', 'Enable formatting')"
+						@check="editorPlainText = false"
+						@uncheck="editorPlainText = true"
+						>{{ t('mail', 'Enable formatting') }}</ActionCheckbox
 					>
 				</Actions>
 				<div>
