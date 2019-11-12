@@ -55,6 +55,10 @@ export default {
 			type: Array,
 			required: true,
 		},
+		bus: {
+			type: Object,
+			required: true,
+		},
 	},
 	data() {
 		return {
@@ -72,6 +76,10 @@ export default {
 			}
 			return ((uploaded / total) * 100).toFixed(1)
 		},
+	},
+	created() {
+		this.bus.$on('onAddLocalAttachment', this.onAddLocalAttachment)
+		this.bus.$on('onAddCloudAttachment', this.onAddCloudAttachment)
 	},
 	methods: {
 		onAddLocalAttachment() {

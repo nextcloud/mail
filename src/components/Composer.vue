@@ -123,7 +123,7 @@
 			></TextEditor>
 		</div>
 		<div class="composer-actions">
-			<ComposerAttachments ref="composerAttachments" v-model="attachments" @upload="onAttachmentsUploading" />
+			<ComposerAttachments v-model="attachments" :bus="bus" @upload="onAttachmentsUploading" />
 			<div class="composer-actions-right">
 				<p class="composer-actions-draft">
 					<span v-if="savingDraft === true" id="draft-status">{{ t('mail', 'Saving draft …') }}</span>
@@ -278,6 +278,7 @@ export default {
 			selectCc: this.cc,
 			selectBcc: this.bcc,
 			editorPlainText: this.isPlainText,
+			bus: new Vue(),
 		}
 	},
 	computed: {
@@ -358,10 +359,10 @@ export default {
 			this.saveDraftDebounced(this.getMessageData())
 		},
 		onAddLocalAttachment() {
-			this.$refs.composerAttachments.onAddLocalAttachment()
+			this.bus.$emit('onAddLocalAttachment')
 		},
 		onAddCloudAttachment() {
-			this.$refs.composerAttachments.onAddCloudAttachment()
+			this.bus.$emit('onAddCloudAttachment')
 		},
 		onAutocomplete(term) {
 			if (term === undefined || term === '') {
