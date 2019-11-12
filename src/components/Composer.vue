@@ -123,17 +123,26 @@
 			></TextEditor>
 		</div>
 		<div class="composer-actions">
-			<ComposerAttachments v-model="attachments" @upload="onAttachmentsUploading" />
+			<ComposerAttachments v-model="attachments" :bus="bus" @upload="onAttachmentsUploading" />
 			<div class="composer-actions-right">
 				<p class="composer-actions-draft">
 					<span v-if="savingDraft === true" id="draft-status">{{ t('mail', 'Saving draft …') }}</span>
 					<span v-else-if="savingDraft === false" id="draft-status">{{ t('mail', 'Draft saved') }}</span>
 				</p>
 				<Actions>
-					<ActionText icon="icon-info">{{ t('mail', 'Message options') }}</ActionText>
-					<ActionCheckbox :checked.sync="editorPlainText" :text="t('mail', 'Plain text')">{{
-						t('mail', 'Plain text')
-					}}</ActionCheckbox>
+					<ActionButton icon="icon-upload" @click="onAddLocalAttachment">{{
+						t('mail', 'Upload attachment')
+					}}</ActionButton>
+					<ActionButton icon="icon-folder" @click="onAddCloudAttachment">{{
+						t('mail', 'Add attachment from Files')
+					}}</ActionButton>
+					<ActionCheckbox
+						:checked="editorPlainText"
+						:text="t('mail', 'Plain text')"
+						@check="editorPlainText = true"
+						@uncheck="editorPlainText = false"
+						>{{ t('mail', 'Plain text') }}</ActionCheckbox
+					>
 				</Actions>
 				<div>
 					<input
@@ -169,8 +178,8 @@ import uniqBy from 'lodash/fp/uniqBy'
 import Autosize from 'vue-autosize'
 import debouncePromise from 'debounce-promise'
 import Actions from '@nextcloud/vue/dist/Components/Actions'
+import ActionButton from '@nextcloud/vue/dist/Components/ActionButton'
 import ActionCheckbox from '@nextcloud/vue/dist/Components/ActionCheckbox'
-import ActionText from '@nextcloud/vue/dist/Components/ActionText'
 import Multiselect from '@nextcloud/vue/dist/Components/Multiselect'
 import {translate as t} from '@nextcloud/l10n'
 import Vue from 'vue'
@@ -198,8 +207,8 @@ export default {
 	name: 'Composer',
 	components: {
 		Actions,
+		ActionButton,
 		ActionCheckbox,
-		ActionText,
 		ComposerAttachments,
 		Loading,
 		Multiselect,
@@ -269,6 +278,7 @@ export default {
 			selectCc: this.cc,
 			selectBcc: this.bcc,
 			editorPlainText: this.isPlainText,
+			bus: new Vue(),
 		}
 	},
 	computed: {
@@ -347,6 +357,12 @@ export default {
 		},
 		onInputChanged() {
 			this.saveDraftDebounced(this.getMessageData())
+		},
+		onAddLocalAttachment() {
+			this.bus.$emit('onAddLocalAttachment')
+		},
+		onAddCloudAttachment() {
+			this.bus.$emit('onAddCloudAttachment')
 		},
 		onAutocomplete(term) {
 			if (term === undefined || term === '') {

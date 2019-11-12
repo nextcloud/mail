@@ -28,19 +28,12 @@
 				</div>
 				<div class="new-message-attachments-action svg icon-delete" @click="onDelete(attachment)"></div>
 			</li>
+			<li v-if="uploading" class="attachments-upload-progress">
+				<div :class="{'icon-loading-small': uploading}"></div>
+				<div>{{ uploading ? t('mail', 'Uploading {percent}% …', {percent: uploadProgress}) : '' }}</div>
+			</li>
 		</ul>
-		<button class="button" :disabled="uploading" @click="onAddLocalAttachment">
-			<span :class="{'icon-upload': !uploading, 'icon-loading-small': uploading}"></span>
-			{{
-				uploading
-					? t('mail', 'Uploading {percent}% …', {percent: uploadProgress})
-					: t('mail', 'Upload attachment')
-			}}
-		</button>
-		<button class="button" @click="onAddCloudAttachment">
-			<span class="icon-folder" />
-			{{ t('mail', 'Add attachment from Files') }}
-		</button>
+
 		<input ref="localAttachments" type="file" multiple style="display: none;" @change="onLocalAttachmentSelected" />
 	</div>
 </template>
@@ -62,6 +55,10 @@ export default {
 			type: Array,
 			required: true,
 		},
+		bus: {
+			type: Object,
+			required: true,
+		},
 	},
 	data() {
 		return {
@@ -79,6 +76,10 @@ export default {
 			}
 			return ((uploaded / total) * 100).toFixed(1)
 		},
+	},
+	created() {
+		this.bus.$on('onAddLocalAttachment', this.onAddLocalAttachment)
+		this.bus.$on('onAddCloudAttachment', this.onAddCloudAttachment)
 	},
 	methods: {
 		onAddLocalAttachment() {
@@ -179,5 +180,13 @@ button {
 .new-message-attachment-name.upload-warning .ui-progressbar-value {
 	border: 1px solid #e9322d;
 	background: #e9322d;
+}
+
+.attachments-upload-progress {
+	display: flex;
+}
+
+.attachments-upload-progress > div {
+	padding-left: 3px;
 }
 </style>
