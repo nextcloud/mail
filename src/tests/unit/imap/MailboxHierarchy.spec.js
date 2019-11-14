@@ -122,6 +122,42 @@ describe('mailboxHierarchyBuilder', () => {
 		])
 	})
 
+	it('does not use the flagged inbox as subfolder of inbox', () => {
+		const mb1 = {
+			id: btoa('INBOX'),
+			delimiter: '/',
+		}
+		const mb2 = {
+			id: btoa('INBOX/FLAGGED'),
+			delimiter: '/',
+		}
+		const mb3 = {
+			id: btoa('Archive'),
+			delimiter: '/',
+		}
+		const mailboxes = [mb1, mb2, mb3]
+
+		const hierarchy = buildMailboxHierarchy(mailboxes)
+
+		expect(hierarchy).to.deep.equal([
+			{
+				id: btoa('INBOX'),
+				delimiter: '/',
+				folders: [],
+			},
+			{
+				id: btoa('INBOX/FLAGGED'),
+				delimiter: '/',
+				folders: [],
+			},
+			{
+				id: btoa('Archive'),
+				delimiter: '/',
+				folders: [],
+			},
+		])
+	})
+
 	it('builds a nested hierarchy with a prefix', () => {
 		const mb1 = {
 			id: btoa('INBOX.Archive'),
