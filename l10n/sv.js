@@ -49,6 +49,7 @@ OC.L10N.register(
     "Draft saved" : "Utkast sparat",
     "Upload attachment" : "Ladda upp bilaga",
     "Add attachment from Files" : "Lägg till bilaga från Filer",
+    "Enable formatting" : "Aktivera formatering",
     "Uploading attachments …" : "Laddar upp bilagor ...",
     "Sending …" : "Skickar ...",
     "Error sending your message" : "Ett fel inträffade när ditt meddelande skulle skickas",

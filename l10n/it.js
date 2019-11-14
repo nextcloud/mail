@@ -49,6 +49,7 @@ OC.L10N.register(
     "Draft saved" : "Bozza salvata",
     "Upload attachment" : "Carica allegato",
     "Add attachment from Files" : "Aggiungi allegato da File",
+    "Enable formatting" : "Abilita formattazione",
     "Uploading attachments …" : "Caricamento allegati…",
     "Sending …" : "Invio in corso...",
     "Error sending your message" : "Errore di invio del messaggio",

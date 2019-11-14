@@ -43,6 +43,7 @@ OC.L10N.register(
     "Blind copy" : "无信头副本",
     "Subject" : "主题",
     "Subject …" : "标题...",
+    "This message came from a noreply address so your reply will probably not be read." : "标记的邮件来自一个无法回复的地址，您的回复可能不会被阅读。",
     "Write message …" : "编写消息...",
     "Saving draft …" : "保存草稿 …",
     "Draft saved" : "草稿已保存",

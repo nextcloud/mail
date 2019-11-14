@@ -49,6 +49,7 @@ OC.L10N.register(
     "Draft saved" : "Entwurf gespeichert",
     "Upload attachment" : "Anhang hochladen",
     "Add attachment from Files" : "Anhang von \"Dateien\" hinzufügen",
+    "Enable formatting" : "Formatierung aktivieren",
     "Uploading attachments …" : "Lade Anhang hoch ...",
     "Sending …" : "Sende…",
     "Error sending your message" : "Fehler beim Versenden der Nachricht",

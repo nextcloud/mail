@@ -49,6 +49,7 @@ OC.L10N.register(
     "Draft saved" : "Gardouse o borrador",
     "Upload attachment" : "Enviar anexos",
     "Add attachment from Files" : "Engadir anexos dende Ficheiros",
+    "Enable formatting" : "Activar o formatado",
     "Uploading attachments …" : "Enviando anexos…",
     "Sending …" : "Enviando…",
     "Error sending your message" : "Produciuse un erro ao enviar a súa mensaxe",
