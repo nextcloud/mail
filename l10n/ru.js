@@ -36,7 +36,7 @@ OC.L10N.register(
     "Subject" : "Тема",
     "Saving draft …" : "Сохранение черновика ...",
     "Draft saved" : "Черновик сохранён",
-    "Upload attachment" : "Загрузить вложение",
+    "Upload attachment" : "Передать вложение",
     "Add attachment from Files" : "Выбрать вложение из файлов",
     "Uploading attachments …" : "Загрузка вложений ...",
     "Sending …" : "Отправка…",
