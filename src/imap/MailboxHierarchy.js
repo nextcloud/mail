@@ -22,7 +22,7 @@
 const getParentId = (mailbox, hasPrefix) => {
 	const top = hasPrefix ? 1 : 0
 	const hierarchy = atob(mailbox.id).split(mailbox.delimiter)
-	if (hierarchy.length <= top + 1) {
+	if (hierarchy.length <= top + 1 || atob(mailbox.id) === 'INBOX/FLAGGED') {
 		return
 	}
 	if (hasPrefix) {
