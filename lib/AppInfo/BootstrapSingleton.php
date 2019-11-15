@@ -23,6 +23,7 @@
 
 namespace OCA\Mail\AppInfo;
 
+use OC\Hooks\PublicEmitter;
 use OCA\Mail\Contracts\IAttachmentService;
 use OCA\Mail\Contracts\IAvatarService;
 use OCA\Mail\Contracts\IMailManager;
@@ -34,6 +35,7 @@ use OCA\Mail\Events\DraftSavedEvent;
 use OCA\Mail\Events\MessageSentEvent;
 use OCA\Mail\Events\SaveDraftEvent;
 use OCA\Mail\Http\Middleware\ErrorMiddleware;
+use OCA\Mail\Http\Middleware\ProvisioningMiddleware;
 use OCA\Mail\Listener\AddressCollectionListener;
 use OCA\Mail\Listener\DeleteDraftListener;
 use OCA\Mail\Listener\DraftMailboxCreatorListener;
@@ -50,7 +52,8 @@ use OCA\Mail\Service\MailTransmission;
 use OCA\Mail\Service\UserPreferenceSevice;
 use OCP\AppFramework\IAppContainer;
 use OCP\EventDispatcher\IEventDispatcher;
-use OCP\IContainer;
+use OCP\IUser;
+use OCP\IUserManager;
 use OCP\Util;
 
 class BootstrapSingleton {
@@ -108,6 +111,7 @@ class BootstrapSingleton {
 
 		$container->registerAlias('ErrorMiddleware', ErrorMiddleware::class);
 		$container->registerMiddleWare('ErrorMiddleware');
+		$container->registerMiddleWare(ProvisioningMiddleware::class);
 
 		$container->registerAlias(IGroupService::class, NextcloudGroupService::class);
 	}

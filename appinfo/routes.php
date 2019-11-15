@@ -113,6 +113,16 @@ return [
 			'url' => '/proxy',
 			'verb' => 'GET'
 		],
+		[
+			'name' => 'settings#provisioning',
+			'url' => '/api/settings/provisioning',
+			'verb' => 'POST'
+		],
+		[
+			'name' => 'settings#deprovision',
+			'url' => '/api/settings/provisioning',
+			'verb' => 'DELETE'
+		],
 	],
 	'resources' => [
 		'accounts' => ['url' => '/api/accounts'],

@@ -64,12 +64,14 @@ class MailTransmissionIntegrationTest extends TestCase {
 		parent::setUp();
 
 		$this->resetImapAccount();
+		$this->user = $this->createTestUser();
 
 		/** @var ICrypto $crypo */
 		$crypo = OC::$server->getCrypto();
 		/** @var MailAccountMapper $mapper */
 		$mapper = OC::$server->query(MailAccountMapper::class);
 		$mailAccount = MailAccount::fromParams([
+			'userId' => $this->user->getUID(),
 			'email' => 'user@domain.tld',
 			'inboundHost' => 'localhost',
 			'inboundPort' => '993',
@@ -86,7 +88,6 @@ class MailTransmissionIntegrationTest extends TestCase {
 
 		$this->account = new Account($mailAccount);
 		$this->attachmentService = OC::$server->query(IAttachmentService::class);
-		$this->user = $this->createTestUser();
 		$userFolder = OC::$server->getUserFolder($this->user->getUID());
 		$this->transmission = new MailTransmission(
 			$userFolder,

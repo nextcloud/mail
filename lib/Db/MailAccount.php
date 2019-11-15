@@ -45,7 +45,7 @@ use OCP\AppFramework\Db\Entity;
  * @method void setInboundSslMode(string $inboundSslMode)
  * @method string getInboundUser()
  * @method void setInboundUser(string $inboundUser)
- * @method string getInboundPassword()
+ * @method string|null getInboundPassword()
  * @method void setInboundPassword(string $inboundPassword)
  * @method string getOutboundHost()
  * @method void setOutboundHost(string $outboundHost)
@@ -55,7 +55,7 @@ use OCP\AppFramework\Db\Entity;
  * @method void setOutboundSslMode(string $outboundSslMode)
  * @method string getOutboundUser()
  * @method void setOutboundUser(string $outboundUser)
- * @method string getOutboundPassword()
+ * @method string|null getOutboundPassword()
  * @method void setOutboundPassword(string $outboundPassword)
  * @method string|null getSignature()
  * @method void setSignature(string|null $signature)
@@ -63,6 +63,8 @@ use OCP\AppFramework\Db\Entity;
  * @method void setLastMailboxSync(int $time)
  * @method string getEditorMode()
  * @method void setEditorMode(string $editorMode)
+ * @method bool getProvisioned()
+ * @method void setProvisioned(bool $provisioned)
  */
 class MailAccount extends Entity {
 
@@ -82,12 +84,12 @@ class MailAccount extends Entity {
 	protected $signature;
 	protected $lastMailboxSync;
 	protected $editorMode;
+	protected $provisioned;
 
 	/**
 	 * @param array $params
 	 */
 	public function __construct(array $params=[]) {
-
 		if (isset($params['accountId'])) {
 			$this->setId($params['accountId']);
 		}
@@ -131,6 +133,7 @@ class MailAccount extends Entity {
 		}
 
 		$this->addType('lastMailboxSync', 'integer');
+		$this->addType('provisioned', 'bool');
 	}
 
 	/**
@@ -147,6 +150,7 @@ class MailAccount extends Entity {
 			'imapSslMode' => $this->getInboundSslMode(),
 			'signature' => $this->getSignature(),
 			'editorMode' => $this->getEditorMode(),
+			'provisioned' => $this->getProvisioned(),
 		];
 
 		if (!is_null($this->getOutboundHost())) {

@@ -25,8 +25,12 @@ declare(strict_types=1);
 
 namespace OCA\Mail\Db;
 
+use OCP\AppFramework\Db\DoesNotExistException;
+use OCP\AppFramework\Db\MultipleObjectsReturnedException;
 use OCP\AppFramework\Db\QBMapper;
+use OCP\DB\QueryBuilder\IQueryBuilder;
 use OCP\IDBConnection;
+use OCP\IUser;
 
 class MailAccountMapper extends QBMapper {
 
@@ -73,6 +77,24 @@ class MailAccountMapper extends QBMapper {
 	}
 
 	/**
+	 * @throws DoesNotExistException
+	 * @throws MultipleObjectsReturnedException
+	 */
+	public function findProvisionedAccount(IUser $user): MailAccount {
+		$qb = $this->db->getQueryBuilder();
+
+		$query = $qb
+			->select('*')
+			->from($this->getTableName())
+			->where(
+				$qb->expr()->eq('user_id', $qb->createNamedParameter($user->getUID())),
+				$qb->expr()->eq('provisioned', $qb->createNamedParameter(true, IQueryBuilder::PARAM_BOOL))
+			);
+
+		return $this->findEntity($query);
+	}
+
+	/**
 	 * Saves an User Account into the database
 	 *
 	 * @param MailAccount $account
@@ -80,12 +102,20 @@ class MailAccountMapper extends QBMapper {
 	 * @return MailAccount
 	 */
 	public function save(MailAccount $account): MailAccount {
-		if (is_null($account->getId())) {
+		if ($account->getId() === null) {
 			return $this->insert($account);
-		} else {
-			$this->update($account);
-			return $account;
 		}
+
+		return $this->update($account);
+	}
+
+	public function deleteProvisionedAccounts(): void {
+		$qb = $this->db->getQueryBuilder();
+
+		$delete = $qb->delete($this->getTableName())
+			->where($qb->expr()->eq('provisioned', $qb->createNamedParameter(true, IQueryBuilder::PARAM_BOOL)));
+
+		$delete->execute();
 	}
 
 }
