@@ -49,6 +49,7 @@ OC.L10N.register(
     "Draft saved" : "Taslak kaydedildi",
     "Upload attachment" : "Ek dosya yükle",
     "Add attachment from Files" : "Dosyalardan ek dosya ekle",
+    "Enable formatting" : "Biçimlendirme kullanılsın",
     "Uploading attachments …" : "Ek dosya yükleniyor …",
     "Sending …" : "Gönderiliyor...",
     "Error sending your message" : "İletiniz gönderilirken sorun çıktı",
