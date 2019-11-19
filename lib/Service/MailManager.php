@@ -30,6 +30,7 @@ use OCA\Mail\Db\Mailbox;
 use OCA\Mail\Db\MailboxMapper;
 use OCA\Mail\Events\BeforeMessageDeletedEvent;
 use OCA\Mail\Events\MessageDeletedEvent;
+use OCA\Mail\Exception\ClientException;
 use OCA\Mail\Exception\ServiceException;
 use OCA\Mail\Folder;
 use OCA\Mail\IMAP\FolderMapper;
@@ -140,6 +141,30 @@ class MailManager implements IMailManager {
 			);
 		} catch (Horde_Imap_Client_Exception|DoesNotExistException $e) {
 			throw new ServiceException("Could not load message", $e->getCode(), $e);
+		}
+	}
+
+	/**
+	 * @param Account $account
+	 * @param string $mb
+	 * @param int $id
+	 *
+	 * @return string
+	 *
+	 * @throws ClientException
+	 * @throws ServiceException
+	 */
+	public function getSource(Account $account, string $mailbox, int $id): string {
+		$client = $this->imapClientFactory->getClient($account);
+
+		try {
+			return $this->messageMapper->getSource(
+				$client,
+				$mailbox,
+				$id
+			);
+		} catch (Horde_Imap_Client_Exception|DoesNotExistException $e) {
+			throw new ServiceException("Could not load message", 0, $e);
 		}
 	}
 

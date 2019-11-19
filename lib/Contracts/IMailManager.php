@@ -65,6 +65,17 @@ interface IMailManager {
 
 	/**
 	 * @param Account $account
+	 * @param string $mb
+	 * @param int $id
+	 *
+	 * @return string
+	 * @throws ClientException
+	 * @throws ServiceException
+	 */
+	public function getSource(Account $account, string $mb, int $id): string;
+
+	/**
+	 * @param Account $account
 	 * @param string $mailbox
 	 * @param int $id
 	 * @param bool $loadBody

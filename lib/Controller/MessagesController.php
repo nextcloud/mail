@@ -267,6 +267,35 @@ class MessagesController extends Controller {
 	 * @param int $messageId
 	 *
 	 * @return HtmlResponse|TemplateResponse
+	 * @throws ServiceException
+	 */
+	public function getSource(int $accountId, string $folderId, int $messageId): JSONResponse {
+		$account = $this->accountService->find($this->currentUserId, $accountId);
+
+		$response = new JSONResponse([
+			'source' => $this->mailManager->getSource(
+				$account,
+				base64_decode($folderId),
+				$messageId
+			)
+		]);
+
+		// Enable caching
+		$response->cacheFor(60 * 60);
+
+		return $response;
+	}
+
+	/**
+	 * @NoAdminRequired
+	 * @NoCSRFRequired
+	 * @TrapError
+	 *
+	 * @param int $accountId
+	 * @param string $folderId
+	 * @param int $messageId
+	 *
+	 * @return HtmlResponse|TemplateResponse
 	 *
 	 * @throws ClientException
 	 */

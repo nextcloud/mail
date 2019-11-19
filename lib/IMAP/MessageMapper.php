@@ -27,6 +27,7 @@ use Horde_Imap_Client;
 use Horde_Imap_Client_Base;
 use Horde_Imap_Client_Data_Fetch;
 use Horde_Imap_Client_Exception;
+use Horde_Imap_Client_Exception_NoSupportExtension;
 use Horde_Imap_Client_Fetch_Query;
 use Horde_Imap_Client_Ids;
 use Horde_Imap_Client_Socket;
@@ -40,6 +41,7 @@ use OCP\ILogger;
 use function array_filter;
 use function array_map;
 use function iterator_to_array;
+use function reset;
 
 class MessageMapper {
 
@@ -256,6 +258,42 @@ class MessageMapper {
 				'add' => [$flag],
 			]
 		);
+	}
+
+	/**
+	 * @param Horde_Imap_Client_Socket $client
+	 * @param string $mailbox
+	 * @param int $id
+	 *
+	 * @return string|null
+	 * @throws ServiceException
+	 */
+	public function getSource(Horde_Imap_Client_Socket $client,
+							  string $mailbox,
+							  int $id): ?string {
+		$query = new Horde_Imap_Client_Fetch_Query();
+		$query->uid();
+		$query->fullText([
+			'peek' => true,
+		]);
+
+		try {
+			$result = iterator_to_array($client->fetch($mailbox, $query, [
+				'ids' => new Horde_Imap_Client_Ids($id),
+			]), false);
+		} catch (Horde_Imap_Client_Exception $e) {
+			throw new ServiceException("Could not fetch message source: " . $e->getMessage(), $e->getCode(), $e);
+		}
+
+		$msg = array_map(function (Horde_Imap_Client_Data_Fetch $result) {
+			return $result->getFullMsg();
+		}, $result);
+
+		if (empty($msg)) {
+			return null;
+		}
+
+		return reset($msg);
 	}
 
 	public function getHtmlBody(Horde_Imap_Client_Socket $client,

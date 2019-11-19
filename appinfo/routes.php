@@ -84,6 +84,11 @@ return [
 			'verb' => 'GET'
 		],
 		[
+			'name' => 'messages#getSource',
+			'url' => '/api/accounts/{accountId}/folders/{folderId}/messages/{messageId}/source',
+			'verb' => 'GET'
+		],
+		[
 			'name' => 'messages#getHtmlBody',
 			'url' => '/api/accounts/{accountId}/folders/{folderId}/messages/{messageId}/html',
 			'verb' => 'GET'
