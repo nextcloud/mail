@@ -29,7 +29,7 @@ OC.L10N.register(
     "SMTP Password" : "SMTP Parolası",
     "Save" : "Kaydet",
     "Connect" : "Bağlan",
-    "Add mail account" : "Posta hesabi ekle",
+    "Add mail account" : "E-posta hesabı ekle",
     "Use Gravatar and favicon avatars" : "Gravatar ve favicon avatarları kullanılsın",
     "Keyboard shortcuts" : "Tuş takımı kısayolları",
     "Looking for a way to encrypt your emails? Install the Mailvelope browser extension!" : "E-postalarınızı şifreleyecek bir yöntem mi arıyorsunuz? Mailvelope tarayıcı eklentisini kurun!",
