@@ -17,7 +17,7 @@ export const htmlToText = html => {
 		noLinkBrackets: true,
 		ignoreHref: true,
 		ignoreImage: true,
-		wordwrap: 78, // 80 minus '> ' prefix for replies
+		wordwrap: false,
 		format: {
 			blockquote: function(element, fn, options) {
 				return fn(element.children, options)
