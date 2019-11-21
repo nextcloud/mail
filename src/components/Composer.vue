@@ -487,7 +487,6 @@ export default {
 		& > .multiselect {
 			max-width: none;
 			min-height: auto;
-			width: 350px;
 		}
 	}
 
