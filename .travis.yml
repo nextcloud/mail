@@ -5,6 +5,12 @@ php:
   - 7.1
   - 7.2
   - 7.3
+  - beta
+  - nightly
+jobs:
+  allow_failures:
+  - php: beta
+  - php: nightly
 
 addons:
   apt:
@@ -24,24 +30,25 @@ env:
   - CORE_BRANCH=master
   - PHP_COVERAGE=FALSE
   - TEST_SUITE=TEST-PHP
+  - DB=mysql
   matrix:
-  - DB=mysql TEST_SUITE=LINT-PHP
-  - DB=mysql TEST_SUITE=TEST-PHP
+  - TEST_SUITE=LINT-PHP
+  - TEST_SUITE=TEST-PHP
 
 matrix:
   include:
     - php: 7.3
       env: "DB=pgsql"
     - php: 7.3
-      env: "DB=mysql TEST_SUITE=TEST-JS"
+      env: "TEST_SUITE=TEST-JS"
     - php: 7.3
-      env: "DB=mysql TEST_SUITE=PACKAGE"
+      env: "TEST_SUITE=PACKAGE"
     - php: 7.1
-      env: "DB=mysql PHP_COVERAGE=TRUE"
+      env: "PHP_COVERAGE=TRUE"
     - php: 7.3
       env: "DB=pgsql CORE_BRANCH=stable17"
     - php: 7.3
-      env: "DB=mysql CORE_BRANCH=stable17"
+      env: "CORE_BRANCH=stable17"
     - php: 7.3
       env: "DB=sqlite CORE_BRANCH=stable17"
   fast_finish: true
