@@ -443,7 +443,7 @@ class MessagesController extends Controller {
 	 * @return boolean
 	 */
 	private function attachmentIsCalendarEvent(array $attachment): bool {
-		return $attachment['mime'] === 'text/calendar';
+		return in_array($attachment['mime'],  ['text/calendar', 'application/ics'], true);
 	}
 
 }
