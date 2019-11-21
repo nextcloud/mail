@@ -101,12 +101,10 @@ const getCalendarData = properties => {
 export const getUserCalendars = () => {
 	var url = generateRemoteUrl('dav/calendars') + '/' + getCurrentUser().uid + '/'
 
-	return getRequestToken()
-		.then(token =>
-			client.propFind(url, props, 1, {
-				requesttoken: token,
-			})
-		)
+	return client
+		.propFind(url, props, 1, {
+			requesttoken: getRequestToken(),
+		})
 		.then(data => {
 			const calendars = []
 
@@ -172,7 +170,7 @@ const splitCalendar = data => {
 		for (let objectsId in allObjects[componentName]) {
 			const objects = allObjects[componentName][objectsId]
 			const component = createICalElement()
-			timezones.forEach(component.addSubcomponent)
+			timezones.forEach(component.addSubcomponent.bind(component))
 			for (let objectId in objects) {
 				component.addSubcomponent(objects[objectId])
 			}
@@ -206,15 +204,11 @@ export const importCalendarEvent = url => data => {
 			const component = file.split[componentName][componentId]
 			promises.push(
 				Promise.resolve(
-					Axios.put(
-						url + getRandomString(),
-						{data},
-						{
-							headers: {
-								contentType: 'text/calendar; charset=utf-8',
-							},
-						}
-					)
+					Axios.put(url + getRandomString() + '.ics', component, {
+						headers: {
+							'Content-Type': 'text/calendar; charset=utf-8',
+						},
+					})
 				)
 			)
 		}
