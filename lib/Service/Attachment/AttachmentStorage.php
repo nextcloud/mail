@@ -71,9 +71,9 @@ class AttachmentStorage {
 	public function save(string $userId, int $attachmentId, UploadedFile $uploadedFile) {
 		$folder = $this->getAttachmentFolder($userId);
 
-		$file = $folder->newFile($attachmentId);
+		$file = $folder->newFile((string) $attachmentId);
 		$tmpPath = $uploadedFile->getTempPath();
-		if (is_null($tmpPath)) {
+		if ($tmpPath === null) {
 			throw new UploadException('tmp_name of uploaded file is null');
 		}
 
