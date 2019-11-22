@@ -2,7 +2,6 @@ sudo: required
 dist: trusty
 language: php
 php:
-  - 7.1
   - 7.2
   - 7.3
 #jobs:
@@ -41,7 +40,7 @@ matrix:
       env: "TEST_SUITE=TEST-JS"
     - php: 7.3
       env: "TEST_SUITE=PACKAGE"
-    - php: 7.1
+    - php: 7.2
       env: "PHP_COVERAGE=TRUE"
     - php: 7.3
       env: "DB=pgsql CORE_BRANCH=stable17"
