@@ -43,8 +43,9 @@
 	"scripts": {
 		"lint": "find . -name \\*.php -not -path './vendor/*' -exec php -l \"{}\" \\;",
 		"phan": "phan --allow-polyfill-parser -k .phan/config.php",
-		"test": "phpunit -c tests/phpunit.xml --fail-on-warning",
-		"test:unit": "phpunit -c tests/phpunit.xml tests --fail-on-warning",
-		"test:unit:dev": "phpunit -c tests/phpunit.xml tests --no-coverage --fail-on-warning"
+		"test:integration": "phpunit -c tests/phpunit.integration.xml tests/Integration --fail-on-warning",
+		"test:integration:dev": "phpunit -c tests/phpunit.integration.xml tests/Integration --no-coverage --fail-on-warning",
+		"test:unit": "phpunit -c tests/phpunit.unit.xml tests/Unit --fail-on-warning",
+		"test:unit:dev": "phpunit -c tests/phpunit.unit.xml tests/Unit --no-coverage --fail-on-warning"
 	}
 }
