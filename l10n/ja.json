@@ -87,7 +87,6 @@
     "{from}\n{subject}" : "{from}\n{subject}",
     "_%n new message \nfrom {from}_::_%n new messages \nfrom {from}_" : ["%n個の新しいメッセージ\nfrom{from}"],
     "Nextcloud Mail" : "Nextcloud メール",
-    "All inboxes" : "すべての受信トレイ",
     "Could not load {tag}{name}{endtag}" : "{tag} {name} {endtag}を読み込めませんでした",
     "There was a problem loading {tag}{name}{endtag}" : "{tag}{name}{endtag} の読み込み中に問題が発生しました",
     "Could not load the desired message" : "目的のメッセージを読み込めませんでした",

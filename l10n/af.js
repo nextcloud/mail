@@ -26,7 +26,6 @@ OC.L10N.register(
     "Settings" : "Instellings",
     "Connect your mail account" : "Koppel u posrekening",
     "{from}\n{subject}" : "{from}\n{subject}",
-    "All inboxes" : "Alle inkassies",
     "Forwarding to %s" : "Stuur aan na %s",
     "Click here if you are not automatically redirected within the next few seconds." : "Klik hier indien u nie binne die volgende paar sekondes outomaties herverwys word nie.",
     "Redirect" : "Herverwys",

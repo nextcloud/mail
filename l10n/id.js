@@ -11,7 +11,6 @@ OC.L10N.register(
     "Choose a file to add as attachment" : "Pilih berkas untuk ditambahkan sebagai lampiran",
     "Choose a folder to store the attachment in" : "Pilih folder untuk menyimpan lampiran didalamnya",
     "{from}\n{subject}" : "{from}\n{subject}",
-    "All inboxes" : "Semua kotak masuk",
     "Error loading message" : "Terjadi kesalahan saat memuat pesan"
 },
 "nplurals=1; plural=0;");

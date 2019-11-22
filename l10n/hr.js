@@ -90,7 +90,6 @@ OC.L10N.register(
     "{from}\n{subject}" : "{from}\n{subject}",
     "_%n new message \nfrom {from}_::_%n new messages \nfrom {from}_" : ["%n nova poruka \nod {from}","%n novih poruka \nod {from}","%n novih poruka \nod {from}"],
     "Nextcloud Mail" : "Nextcloud Mail",
-    "All inboxes" : "Sve dolazne",
     "Could not load {tag}{name}{endtag}" : "Pogreška pri učitavanju {tag}{name}{endtag}",
     "There was a problem loading {tag}{name}{endtag}" : "Došlo je do pogreške pri učitavanju {tag}{name}{endtag}",
     "Could not load the desired message" : "Ne može se učitati željena poruka",

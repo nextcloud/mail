@@ -33,7 +33,6 @@ OC.L10N.register(
     "Refresh" : "Refrescar",
     "{from}\n{subject}" : "{from}\n{subject}",
     "_%n new message \nfrom {from}_::_%n new messages \nfrom {from}_" : ["%n mensaxe nuevu \nde {from}","%n mensaxes nuevos \nde {from}"],
-    "All inboxes" : "Toles bandexes d'entrada",
     "Could not load {tag}{name}{endtag}" : "Nun pudo cargase {tag}{name}{endtag}",
     "There was a problem loading {tag}{name}{endtag}" : "Hebo un problema cargando  {tag}{name}{endtag}",
     "Error loading message" : "Fallu cargando mensaxe",

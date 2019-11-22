@@ -119,7 +119,6 @@
     "{from}\n{subject}" : "{from}\n{subject}",
     "_%n new message \nfrom {from}_::_%n new messages \nfrom {from}_" : ["%n nieuw bericht \nvan {from}","%n niewe berichten \nvan {from}"],
     "Nextcloud Mail" : "Nextcloud E-mail",
-    "All inboxes" : "Alle postvakken",
     "Could not load {tag}{name}{endtag}" : "Kon niet laden {tag}{name}{endtag}",
     "There was a problem loading {tag}{name}{endtag}" : "Er is een probleem bij het laden {tag}{name}{endtag}",
     "Could not load the desired message" : "Kon het gewenste bericht niet laden",

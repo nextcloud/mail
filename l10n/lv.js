@@ -36,7 +36,6 @@ OC.L10N.register(
     "Collapse folders" : "Sakļaut mapes",
     "Connect your mail account" : "Pievienojiet savu e-pasta kontu",
     "{from}\n{subject}" : "{from}\n{subject}",
-    "All inboxes" : "Visas iesūtnes",
     "Could not load {tag}{name}{endtag}" : "Nevarēja ielādēt {tag}{name}{endtag}",
     "There was a problem loading {tag}{name}{endtag}" : "Radusies problēma, ielādējot {tag}{name}{endtag}",
     "Error loading message" : "Kļūda ielādējot vēstuli",

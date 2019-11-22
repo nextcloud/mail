@@ -91,7 +91,6 @@ OC.L10N.register(
     "{from}\n{subject}" : "{from}\n{subject}",
     "_%n new message \nfrom {from}_::_%n new messages \nfrom {from}_" : ["%n порука\nод {from}","%n поруке\nод {from}","%n порука\nод {from}"],
     "Nextcloud Mail" : "Некстклауд Пошта",
-    "All inboxes" : "Сва сандучета",
     "Could not load {tag}{name}{endtag}" : "Не могу да учитам {tag}{name}{endtag}",
     "There was a problem loading {tag}{name}{endtag}" : "Десио се проблем приликом учитавања {tag}{name}{endtag}",
     "Could not load the desired message" : "Неуспело учитавање жељене поруке",

@@ -87,7 +87,6 @@ OC.L10N.register(
     "{from}\n{subject}" : "{from}\n{subject}",
     "_%n new message \nfrom {from}_::_%n new messages \nfrom {from}_" : ["%n nova mesaĝo\nel {from}","%n novaj mesaĝoj \nel {from}"],
     "Nextcloud Mail" : "Nextcloud-retpoŝtilo",
-    "All inboxes" : "Ĉiuj ricevujoj",
     "Could not load {tag}{name}{endtag}" : "Ne eblis ŝargi {tag}{name}{endtag}",
     "There was a problem loading {tag}{name}{endtag}" : "Problemo okazis dum ŝargo de {tag}{name}{endtag}",
     "Could not load the desired message" : "Ne eblis ŝargi la deziratan mesaĝon",

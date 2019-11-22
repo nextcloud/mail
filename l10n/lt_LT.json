@@ -98,7 +98,6 @@
     "{from}\n{subject}" : "{from}\n{subject}",
     "_%n new message \nfrom {from}_::_%n new messages \nfrom {from}_" : ["%n naujas laiškas \nnuo {from}","%n nauji laiškai \nnuo {from}","%n naujų laiškų \nnuo {from}","%n naujų laiškų \nnuo {from}"],
     "Nextcloud Mail" : "Nextcloud el. paštas",
-    "All inboxes" : "Visos pašto dėžutės",
     "Could not load {tag}{name}{endtag}" : "Nepavyko įkelti {tag}{name}{endtag}",
     "There was a problem loading {tag}{name}{endtag}" : "Įvyko klaida bandant parodyti {tag}{name}{endtag}",
     "Could not load the desired message" : "Nepavyko įkelti pageidaujamo laiško",

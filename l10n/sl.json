@@ -118,7 +118,6 @@
     "{from}\n{subject}" : "{from}\n{subject}",
     "_%n new message \nfrom {from}_::_%n new messages \nfrom {from}_" : ["%n novo sporočilo \npošilja {from}","%n novi sporočili \npošilja {from}","%n nova sporočila \npošilja {from}","%n novih sporočil \npošilja {from}"],
     "Nextcloud Mail" : "Pošta Nextcloud Mail",
-    "All inboxes" : "Vsi predali",
     "Could not load {tag}{name}{endtag}" : "Ni mogoče naložiti {tag}{name}{endtag}",
     "There was a problem loading {tag}{name}{endtag}" : "Prišlo je do napake pri nalaganju {tag}{name}{endtag}",
     "Could not load the desired message" : "Želenega sporočila ni mogoče naložiti",

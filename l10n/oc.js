@@ -11,7 +11,6 @@ OC.L10N.register(
     "Choose a file to add as attachment" : "Causissètz un fichièr de jónher al messatge",
     "Choose a folder to store the attachment in" : "Causissètz lo dorsièr dins lo qual enregistrar la pèça junta",
     "{from}\n{subject}" : "{from}\n{subject}",
-    "All inboxes" : "Totas las bóstias",
     "Error loading message" : "Error al moment del cargament del messatge",
     "Continue to %s" : "Contunhar cap a %s"
 },

@@ -45,7 +45,6 @@ OC.L10N.register(
     "Connect your mail account" : "Conecte su cuenta de correo",
     "{from}\n{subject}" : "{from}\n{subject}",
     "Nextcloud Mail" : "Correo de Nextcloud",
-    "All inboxes" : "Todos los buzones de entrada",
     "Could not load {tag}{name}{endtag}" : "No fue posible cargar {tag}{name}{endtag}",
     "There was a problem loading {tag}{name}{endtag}" : "Se presentó un problema al cargar  {tag}{name}{endtag}",
     "Could not load the desired message" : "No se pudo cargar el mensaje deseado",

@@ -122,7 +122,6 @@ OC.L10N.register(
     "{from}\n{subject}" : "{from}\n{subject}",
     "_%n new message \nfrom {from}_::_%n new messages \nfrom {from}_" : ["%n nová zpráva\nod {from}","%n nové zprávy\nod {from}","%n nových zpráv\nod {from}","%n nových zpráv\nod {from}"],
     "Nextcloud Mail" : "Nextcloud Mail",
-    "All inboxes" : "Všechny schránky",
     "Could not load {tag}{name}{endtag}" : "Nedaří se načíst {tag}{name}{endtag}",
     "There was a problem loading {tag}{name}{endtag}" : "Došlo k problému s načtením {tag}{name}{endtag}",
     "Could not load the desired message" : "Nelze načíst vyžádanou zprávu",

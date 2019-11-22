@@ -69,7 +69,6 @@
     "{from}\n{subject}" : "{from}\n{subject}",
     "_%n new message \nfrom {from}_::_%n new messages \nfrom {from}_" : ["%n nová správa\nod {from}","%n nové správy\nod {from}","%n nových správ\nod {from}","%n nových správ\nod {from}"],
     "Nextcloud Mail" : "Nextcloud Mail",
-    "All inboxes" : "Všetky doručené",
     "Could not load {tag}{name}{endtag}" : "Nedá sa načítať {tag}{name}{endtag}",
     "There was a problem loading {tag}{name}{endtag}" : "Vyskytol sa problém pri načítaní {tag}{name}{endtag}",
     "Could not load the desired message" : "Nepodarilo sa načítať požadovanú správu",

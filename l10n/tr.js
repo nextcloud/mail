@@ -122,7 +122,6 @@ OC.L10N.register(
     "{from}\n{subject}" : "{from}\n{subject}",
     "_%n new message \nfrom {from}_::_%n new messages \nfrom {from}_" : ["%n yeni ileti\ngönderen {from}","%n yeni ileti\ngönderen {from}"],
     "Nextcloud Mail" : "Nextcloud Posta",
-    "All inboxes" : "Tüm gelen kutuları",
     "Could not load {tag}{name}{endtag}" : "{tag}{name}{endtag} yüklenemedi",
     "There was a problem loading {tag}{name}{endtag}" : "{tag}{name}{endtag} yüklenirken bir sorun çıktı",
     "Could not load the desired message" : "İstenilen ileti yüklenemedi",

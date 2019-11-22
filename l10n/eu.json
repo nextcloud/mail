@@ -48,7 +48,6 @@
     "{from}\n{subject}" : "{from}\n{subject}",
     "_%n new message \nfrom {from}_::_%n new messages \nfrom {from}_" : ["%n mezu berri \njaso dituzu {from}-etik","%n mezu berri \njaso dituzu {from}-etik"],
     "Nextcloud Mail" : "Nextcloud eposta",
-    "All inboxes" : "Postontzi guztiak",
     "Could not load {tag}{name}{endtag}" : "Ezin izan da {tag}{name}{endtag} kargatu",
     "There was a problem loading {tag}{name}{endtag}" : "Arazo bat egon da {tag}{name}{endtag} kargatzerakoan",
     "Error loading message" : "Errorea mezua kargatzerakoan",

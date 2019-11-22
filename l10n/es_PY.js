@@ -51,7 +51,6 @@ OC.L10N.register(
     "{from}\n{subject}" : "{from}\n{subject}",
     "_%n new message \nfrom {from}_::_%n new messages \nfrom {from}_" : ["%n mensaje nuevo \nde {from}","%n mensajes nuevos \nde {from}"],
     "Nextcloud Mail" : "Correo Nextcloud",
-    "All inboxes" : "Todos los buzones de entrada",
     "Could not load {tag}{name}{endtag}" : "No fue posible cargar {tag}{name}{endtag}",
     "There was a problem loading {tag}{name}{endtag}" : "Se presentó un problema al cargar  {tag}{name}{endtag}",
     "Error loading message" : "Se presentó un error al cargar el mensaje",

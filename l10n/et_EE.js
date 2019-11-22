@@ -31,7 +31,6 @@ OC.L10N.register(
     "Search" : "Otsi",
     "Refresh" : "Värskenda",
     "{from}\n{subject}" : "{from}\n{subject}",
-    "All inboxes" : "Kõik postkastid",
     "Error loading message" : "Tõrge kirja laadimisel",
     "Forwarding to %s" : "Edasta %s"
 },

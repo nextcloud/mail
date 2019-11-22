@@ -46,7 +46,6 @@ OC.L10N.register(
     "Refresh" : "Rifresko",
     "Connect your mail account" : "Lidhni llogarinë tuaj të postës elektronike",
     "{from}\n{subject}" : "{nga}\n{subjekt}",
-    "All inboxes" : "Krejt kutitë e postës",
     "Could not load {tag}{name}{endtag}" : "Nuk mund të ngarkohej {tag}{name}{endtag}",
     "There was a problem loading {tag}{name}{endtag}" : "Pati një problem me ngarkimin e {tag}{name}{endtag}",
     "Error loading message" : "Gabim në ngarkimin e kartelës",

@@ -122,7 +122,6 @@ OC.L10N.register(
     "{from}\n{subject}" : "{from}\n{subject}",
     "_%n new message \nfrom {from}_::_%n new messages \nfrom {from}_" : ["%n mensaje nuevo \nde {from}","%n mensajes nuevos\nde {from}"],
     "Nextcloud Mail" : "Correo de Nextcloud",
-    "All inboxes" : "Todas las bandejas de entrada",
     "Could not load {tag}{name}{endtag}" : "No se ha podido cargar {tag}{name}{endtag}",
     "There was a problem loading {tag}{name}{endtag}" : "Ha habido un problema al cargar {tag}{name}{endtag}",
     "Could not load the desired message" : "No se ha podido cargar el mensaje deseado",

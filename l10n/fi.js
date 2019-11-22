@@ -97,7 +97,6 @@ OC.L10N.register(
     "{from}\n{subject}" : "{from}\n{subject}",
     "_%n new message \nfrom {from}_::_%n new messages \nfrom {from}_" : ["%n uusi viesti \nlähettäjältä {from}","%n uutta viestiä \nlähettäjältä {from}"],
     "Nextcloud Mail" : "Nextcloud-sähköposti",
-    "All inboxes" : "Kaikki saapuneiden laatikot",
     "Could not load {tag}{name}{endtag}" : "{tag}{name}{endtag} ei voitu ladata",
     "There was a problem loading {tag}{name}{endtag}" : "Ladattaessa {tag}{name}{endtag} ilmeni ongelma",
     "Could not load the desired message" : "Haluttua viestiä ei voitu ladata",

@@ -87,7 +87,6 @@ OC.L10N.register(
     "{from}\n{subject}" : "{from}\n{subject}",
     "_%n new message \nfrom {from}_::_%n new messages \nfrom {from}_" : ["oddi wrth {from}","oddi wrth {from}","oddi wrth {from}","oddi wrth {from}"],
     "Nextcloud Mail" : "E-bost Nextcloud",
-    "All inboxes" : "Pob blwch derbyn",
     "Could not load {tag}{name}{endtag}" : "Methu llwytho {tag} {name} {endtag}",
     "There was a problem loading {tag}{name}{endtag}" : "Bu anhawster wrth lwytho {tag}{name}{endtag}",
     "Could not load the desired message" : "Methu llwytho'r neges a ddewiswyd",

@@ -121,7 +121,6 @@ OC.L10N.register(
     "{from}\n{subject}" : "{from}\n{subject}",
     "_%n new message \nfrom {from}_::_%n new messages \nfrom {from}_" : ["来自 {from} 的 %n 条新消息"],
     "Nextcloud Mail" : "Nextcloud 邮件",
-    "All inboxes" : "所有收件箱",
     "Could not load {tag}{name}{endtag}" : "无法加载 {tag}{name}{endtag}",
     "There was a problem loading {tag}{name}{endtag}" : "加载 {tag}{name}{endtag} 时出现问题",
     "Could not load the desired message" : "无法加载想要的消息",

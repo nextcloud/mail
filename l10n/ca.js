@@ -95,7 +95,6 @@ OC.L10N.register(
     "{from}\n{subject}" : "{from}\n{subject}",
     "_%n new message \nfrom {from}_::_%n new messages \nfrom {from}_" : ["%n nou missatge\nde {from}","%n nous missatges\nde {from}"],
     "Nextcloud Mail" : "Nextcloud Mail",
-    "All inboxes" : "Totes les safates d'entrada",
     "Could not load {tag}{name}{endtag}" : "No s'ha pogut carregar {tag}{name}{endtag}",
     "There was a problem loading {tag}{name}{endtag}" : "S'ha produït un problema mentre es carregava {tag}{name}{endtag}",
     "Could not load the desired message" : "No s’ha pogut carregar el missatge desitjat",

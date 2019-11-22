@@ -66,7 +66,6 @@ OC.L10N.register(
     "{from}\n{subject}" : "{fra}\n{emne}",
     "_%n new message \nfrom {from}_::_%n new messages \nfrom {from}_" : ["%n ny besked \nfra {from}","%n nye beskeder \nfra {from}"],
     "Nextcloud Mail" : "Nextcloud Mail",
-    "All inboxes" : "Alle indbakker",
     "Could not load {tag}{name}{endtag}" : "Kunne ikke hente {tag}{name}{endtag}",
     "There was a problem loading {tag}{name}{endtag}" : "Der var et problem med at hente {tag}{name}{endtag}",
     "Error loading message" : "Fejl under indlæsning af besked",

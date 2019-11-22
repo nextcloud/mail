@@ -67,7 +67,6 @@
     "Connect your mail account" : "Συνδέστε το λογαριασμό αλληλογραφίας σας",
     "{from}\n{subject}" : "{from}\n{subject}",
     "Nextcloud Mail" : "Αλληλογραφία Nextcloud",
-    "All inboxes" : "Όλα τα εισερχόμενα",
     "Could not load {tag}{name}{endtag}" : "Αδυναμία φόρτωσης {tag}{name}{endtag}",
     "There was a problem loading {tag}{name}{endtag}" : "Παρουσιάστηκε πρόβλημα φόρτωσης {tag}{name}{endtag}",
     "Error loading message" : "Σφάλμα φόρτωσης μηνύματος",

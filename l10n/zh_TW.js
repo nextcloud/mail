@@ -63,7 +63,6 @@ OC.L10N.register(
     "{from}\n{subject}" : "{from}\n{subject}",
     "_%n new message \nfrom {from}_::_%n new messages \nfrom {from}_" : ["%n則新信件\n來自 {from}"],
     "Nextcloud Mail" : "Nextcloud 郵件",
-    "All inboxes" : "所有收件匣",
     "Could not load {tag}{name}{endtag}" : "無法載入 {tag}{name}{endtag}",
     "There was a problem loading {tag}{name}{endtag}" : "載入 {tag}{name}{endtag} 時出現問題",
     "Could not load the desired message" : "無法載入所選的信件",

@@ -54,7 +54,6 @@ OC.L10N.register(
     "{from}\n{subject}" : "{from}\n{subject}",
     "_%n new message \nfrom {from}_::_%n new messages \nfrom {from}_" : ["הודעה חדשה \nמאת {from}","2 הודעות חדשות \nמאת {from}","%n הודעות חדשות \nמאת {from}","%n הודעות חדשות \nמאת {from}"],
     "Nextcloud Mail" : "דוא״ל Nextcloud",
-    "All inboxes" : "כל תיבות דואר נכנס",
     "Could not load {tag}{name}{endtag}" : "לא ניתן לטעון את {tag}{name}{endtag}",
     "There was a problem loading {tag}{name}{endtag}" : "אירעה שגיאה בטעינה של {tag}{name}{endtag}",
     "Could not load the desired message" : "לא ניתן לטעון את ההודעה המבוקשת",

@@ -13,7 +13,6 @@ OC.L10N.register(
     "Show all folders" : "แสดงโฟลเดอร์ทั้งหมด",
     "Collapse folders" : "ยุบโฟลเดอร์",
     "{from}\n{subject}" : "{from}\n{subject}",
-    "All inboxes" : "กล่องจดหมายทั้งหมด",
     "Error loading message" : "กิดข้อผิดพลาดในการโหลด",
     "Redirect" : "เปลี่ยนเส้นทาง",
     "The link leads to %s" : "ลิงค์ที่จะนำไปยัง %s",

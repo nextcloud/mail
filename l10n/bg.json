@@ -60,7 +60,6 @@
     "{from}\n{subject}" : "{from}\n{subject}",
     "_%n new message \nfrom {from}_::_%n new messages \nfrom {from}_" : ["%n ново съобщение \nот {from}","%n нови съобщения\nот {from}"],
     "Nextcloud Mail" : "Nextcloud Е-Мейл",
-    "All inboxes" : "Всички",
     "Could not load {tag}{name}{endtag}" : "{tag}{name}{endtag} не може да бъде зареден",
     "There was a problem loading {tag}{name}{endtag}" : "Проблем при зареждане на {tag}{name}{endtag}",
     "Could not load the desired message" : "Желаното съобщение не може да бъде заредено",

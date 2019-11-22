@@ -120,7 +120,6 @@
     "{from}\n{subject}" : "{from}\n{subject}",
     "_%n new message \nfrom {from}_::_%n new messages \nfrom {from}_" : ["%n nowa wiadomość\nod {from}","%n nowe wiadomości \nod {from}","%n nowych wiadomości \nod {from}","%n nowych wiadomości \nod {from}"],
     "Nextcloud Mail" : "Poczta Nextcloud",
-    "All inboxes" : "Wszystkie skrzynki odbiorcze",
     "Could not load {tag}{name}{endtag}" : "Nie można załadować {tag}{name}{endtag}",
     "There was a problem loading {tag}{name}{endtag}" : "Wystąpił problem podczas ładowania {tag}{name}{endtag}",
     "Could not load the desired message" : "Nie można wczytać żądanej wiadomości",

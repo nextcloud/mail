@@ -62,7 +62,6 @@ OC.L10N.register(
     "Connect your mail account" : "تحديث",
     "{from}\n{subject}" : "{from}\n{subject}",
     "Nextcloud Mail" : "بريد ناكست كلاود",
-    "All inboxes" : "جميع الوارد",
     "Could not load {tag}{name}{endtag}" : "تعذر تحميل {tag}{name}{endtag}",
     "There was a problem loading {tag}{name}{endtag}" : "حدث خطأ ما عند تحميل {tag}{name}{endtag}",
     "Could not load the message" : "تعذرت عملية تحميل الرسالة",

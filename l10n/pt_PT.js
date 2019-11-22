@@ -36,7 +36,6 @@ OC.L10N.register(
     "Collapse folders" : "Ocultar pastas",
     "Mark all as read" : "Marcar todas como lidas",
     "{from}\n{subject}" : "{from}\n{subject}",
-    "All inboxes" : "Todas as caixas de entrada",
     "Error loading message" : "Erro ao carregar a mensagem",
     "Click here if you are not automatically redirected within the next few seconds." : "Clique aqui se não for automaticamente redireccionado dentro de segundos.",
     "Redirect" : "Redirecionar",

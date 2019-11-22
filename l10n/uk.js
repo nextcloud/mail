@@ -13,7 +13,6 @@ OC.L10N.register(
     "Show all folders" : "Переглянути всі теки",
     "Collapse folders" : "Згорнути теки",
     "{from}\n{subject}" : "{from}\n{subject}",
-    "All inboxes" : "Всі вхідні",
     "Error loading message" : "Помилка завантаження повідомлення.",
     "Continue to %s" : "Подовження за %s"
 },
