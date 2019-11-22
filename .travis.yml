@@ -5,10 +5,9 @@ php:
   - 7.1
   - 7.2
   - 7.3
-  - nightly
-jobs:
-  allow_failures:
-  - php: nightly
+#jobs:
+#  allow_failures:
+#  - php: nightly
 
 addons:
   apt:
@@ -29,6 +28,7 @@ env:
   - PHP_COVERAGE=FALSE
   - TEST_SUITE=TEST-PHP
   - DB=mysql
+  - PATCH_VERSION_CHECK=FALSE
   matrix:
   - TEST_SUITE=LINT-PHP
   - TEST_SUITE=TEST-PHP
@@ -51,6 +51,8 @@ matrix:
       env: "DB=sqlite CORE_BRANCH=stable17"
     - php: 7.4snapshot
       env: "DB=sqlite CORE_BRANCH=feature/php74"
+    - php: nightly
+      env: "DB=sqlite PATCH_VERSION_CHECK=TRUE"
   fast_finish: true
 
 branches:
@@ -84,6 +86,8 @@ before_install:
   - sh -c "if [ '$TEST_SUITE' = 'TEST-PHP' ]; then make start-smtp-docker; fi"
   - cd ..
   - git clone https://github.com/nextcloud/server.git --recursive --depth 1 -b $CORE_BRANCH core
+  - if [[ "$PATCH_VERSION_CHECK" = "TRUE" ]]; then echo "<?php" > core/lib/versioncheck.php; fi
+  - if [[ "$PATCH_VERSION_CHECK" = "TRUE" ]]; then  sed -ri 's/(<php min\-version="[0-9\.]+") max\-version="[0-9\.]+"/\1/g' mail/appinfo/info.xml; fi
   - mv mail core/apps/
 
 before_script:
