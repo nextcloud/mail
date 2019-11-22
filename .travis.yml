@@ -5,11 +5,9 @@ php:
   - 7.1
   - 7.2
   - 7.3
-  - beta
   - nightly
 jobs:
   allow_failures:
-  - php: beta
   - php: nightly
 
 addons:
@@ -51,6 +49,8 @@ matrix:
       env: "CORE_BRANCH=stable17"
     - php: 7.3
       env: "DB=sqlite CORE_BRANCH=stable17"
+    - php: 7.4snapshot
+      env: "DB=sqlite CORE_BRANCH=feature/php74"
   fast_finish: true
 
 branches:
@@ -102,7 +102,7 @@ before_script:
   - sh -c "if [ '$TEST_SUITE' = 'TEST-PHP' ]; then make add-imap-account; fi"
 
   # XDebug is only needed if we report coverage -> speeds up other builds
-  - if [[ "$PHP_COVERAGE" = "FALSE" ]]; then phpenv config-rm xdebug.ini; fi
+  - if [[ "$PHP_COVERAGE" = "FALSE" ]]; then phpenv config-rm xdebug.ini || true; fi
 
   # Print running docker images, just to verify they did not crash
   - sh -c "if [ '$TEST_SUITE' = 'TEST-PHP' ]; then docker ps; fi"
