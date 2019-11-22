@@ -6,7 +6,7 @@ composer.phar
 .DS_Store
 
 # test coverage
-tests/clover.xml
+tests/clover*.xml
 
 # Node.js modules
 node_modules/
