@@ -80,6 +80,7 @@
     "Mark all as read" : "Žymėti visus kaip skaitytus",
     "Mark all messages of this folder as read" : "Žymėti visus laiškus šiame aplanke kaip skaitytus",
     "Add subfolder" : "Pridėti poaplankį",
+    "Loading …" : "Įkeliama…",
     "Could not load your draft" : "Nepavyko įkelti jūsų juodraščio",
     "Signature" : "Parašas",
     "Save signature" : "Įrašyti parašą",
@@ -105,7 +106,7 @@
     "Error loading message" : "Klaida, įkeliant laišką",
     "Forwarding to %s" : "Persiunčiama į %s",
     "Click here if you are not automatically redirected within the next few seconds." : "Jeigu per artimiausias kelias sekundes nesate automatiškai nukreipiami, spustelėkite čia.",
-    "Redirect" : "Nukreipti",
+    "Redirect" : "Peradresuoti",
     "The link leads to %s" : "Nuoroda veda į %s",
     "If you don’t want to visit that page, you can return to <a href=\"%s\">Mail</a>." : "Jeigu jūs nenorite lankytis tame puslapyje, galite grįžti į <a href=\"%s\">Paštą</a>.",
     "Continue to %s" : "Tęsti į %s"
