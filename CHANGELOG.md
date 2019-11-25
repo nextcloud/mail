@@ -1,6 +1,28 @@
 # Changelog
 All notable changes to this project will be documented in this file.
 
+## 0.19.0 - 2019-11–25
+### Added
+- php7.4 support
+### Changed
+- Mail detail view now only has one back/menu button
+- Composer attachment buttons moved into action menu
+- Simpler wording for plain text/rich text switch
+### Fixed
+- Fix opening messages with attachment content-type and content-disposition
+- Spacing in settings section
+- No popover for addresses without a display name
+- Horizontal scrolling issue on mobile
+- Show recipient avatar instead of sender avatar in \sent mailboxes
+- Focus *to* field automatically when writing a new message
+- Virtual flagged inbox shown as child of the inbox
+- Missing label of unified inbox
+- .ics attachment mime detection
+- .ics attachment import
+- Unwanted flowed text formatting
+### Removed
+- php7.1 support
+
 ## 0.18.1 - 2019-11-04
 ### Fixed
 - JavaScript transpilation for older browsers
