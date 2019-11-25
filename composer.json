@@ -12,11 +12,11 @@
 	],
 	"config": {
 		"platform": {
-			"php": "7.1"
+			"php": "7.2"
 		}
 	},
 	"require": {
-		"php": ">=7.1",
+		"php": ">=7.2",
 		"pear-pear.horde.org/horde_date": "^2.4.1@stable",
 		"pear-pear.horde.org/horde_exception": "^2.0.8@stable",
 		"pear-pear.horde.org/horde_imap_client": "^2.29.16@stable",
@@ -36,7 +36,7 @@
 		"arthurhoaro/favicon": "^1.2"
 	},
 	"require-dev": {
-		"christophwurst/nextcloud": "v17.0.0-beta3",
+		"christophwurst/nextcloud": "v17.0.0",
 		"christophwurst/nextcloud_testing": "0.7.0",
 		"phan/phan": "^2.0"
 	},
