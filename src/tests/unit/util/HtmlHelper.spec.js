@@ -1,5 +1,3 @@
-/* global expect */
-
 /**
  * @copyright 2017 Christoph Wurst <christoph@winzerhof-wurst.at>
  *

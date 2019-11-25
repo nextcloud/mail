@@ -23,8 +23,8 @@
 			</label>
 			<Multiselect
 				id="to"
-				v-model="selectTo"
 				ref="toLabel"
+				v-model="selectTo"
 				:options="selectableRecipients"
 				:taggable="true"
 				label="label"

@@ -87,7 +87,7 @@ const getCalendarData = properties => {
 	const components = properties['{urn:ietf:params:xml:ns:caldav}supported-calendar-component-set'] || []
 	for (let i = 0; i < components.length; i++) {
 		var name = components[i].attributes.getNamedItem('name').textContent.toLowerCase()
-		if (data.components.hasOwnProperty(name)) {
+		if (Object.hasOwnProperty.call(data.components, name)) {
 			data.components[name] = true
 		}
 	}
