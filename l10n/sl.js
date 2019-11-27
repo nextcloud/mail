@@ -48,6 +48,7 @@ OC.L10N.register(
     "Draft saved" : "Osnutek je shranjen",
     "Upload attachment" : "Pošlji prilogo",
     "Add attachment from Files" : "Dodaj prilogo iz Datotek",
+    "Enable formatting" : "Omogoči oblikovanje",
     "Uploading attachments …" : "Poteka pošiljanje prilog ...",
     "Sending …" : "Poteka pošiljanje ...",
     "Error sending your message" : "Prošlo je do napake med pošiljanjem sporočila",
