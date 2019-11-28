@@ -142,7 +142,6 @@ export default {
 		folderId() {
 			return atob(this.folder.id)
 		},
-<<<<<<< HEAD
 		icon() {
 			if (this.filter === 'starred') {
 				return 'icon-flagged'
@@ -157,7 +156,8 @@ export default {
 					folderId: this.folder.id,
 					filter: this.filter ? this.filter : undefined,
 				},
-=======
+			}
+		}
 	},
 	mounted() {
 		let self = this
@@ -183,7 +183,6 @@ export default {
 			let icon = 'folder'
 			if (folder.specialRole) {
 				icon = folder.specialRole
->>>>>>> Implements basic auto-expansion of folders when dragging an envelope over them
 			}
 		},
 		subFolders() {
