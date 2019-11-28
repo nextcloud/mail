@@ -120,7 +120,6 @@ export default {
 		folderId() {
 			return atob(this.folder.id)
 		},
-<<<<<<< HEAD
 		icon() {
 			return this.folder.specialRole ? 'icon-' + this.folder.specialRole : 'icon-folder'
 		},
@@ -131,7 +130,8 @@ export default {
 					accountId: this.account.id,
 					folderId: this.folder.id,
 				},
-=======
+			}
+		}
 	},
 	mounted() {
 		let self = this
@@ -157,7 +157,6 @@ export default {
 			let icon = 'folder'
 			if (folder.specialRole) {
 				icon = folder.specialRole
->>>>>>> Implements basic auto-expansion of folders when dragging an envelope over them
 			}
 		},
 		subFolders() {
