@@ -71,6 +71,11 @@ You can use the php-mail function to send mails. This is needed for some webhost
 ```php
 'app.mail.transport' => 'php-mail'
 ```
+### Content Security Policy
+This app uses iframes to display mail contents. If mail bodies do not load, check your browser console, and make sure your webserver's [Content Security Policy](https://en.wikipedia.org/wiki/Content_Security_Policy) headers allow displaying iframes if they have the same origin as the parent page (`frame-ancestors`). For example on Apache:
+```apache
+Header always set Content-Security-Policy "script-src 'self' 'unsafe-inline'; frame-ancestors 'self'"
+```
 
 ## Troubleshooting
 
