@@ -4,6 +4,7 @@ language: php
 php:
   - 7.2
   - 7.3
+  - 7.4snapshot
 #jobs:
 #  allow_failures:
 #  - php: nightly
@@ -48,8 +49,6 @@ matrix:
       env: "CORE_BRANCH=stable17"
     - php: 7.3
       env: "DB=sqlite CORE_BRANCH=stable17"
-    - php: 7.4snapshot
-      env: "DB=sqlite CORE_BRANCH=feature/php74"
     - php: nightly
       env: "DB=sqlite PATCH_VERSION_CHECK=TRUE"
   fast_finish: true
