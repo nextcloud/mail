@@ -34,7 +34,7 @@ class AddressCollectorTest extends TestCase {
 	private $logger;
 	private $collector;
 
-	protected function setUp() {
+	protected function setUp(): void {
 		parent::setUp();
 
 		$this->mapper = $this->getMockBuilder('\OCA\Mail\Db\CollectedAddressMapper')

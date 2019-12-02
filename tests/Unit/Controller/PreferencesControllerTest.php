@@ -39,7 +39,7 @@ class PreferencesControllerTest extends TestCase {
 	/** @var PreferencesController */
 	private $controller;
 
-	protected function setUp() {
+	protected function setUp(): void {
 		parent::setUp();
 
 		$request = $this->createMock(IRequest::class);

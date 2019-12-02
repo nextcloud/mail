@@ -42,7 +42,7 @@ class GravatarSourceTest extends TestCase {
 	/** @var GravatarSource */
 	private $source;
 
-	protected function setUp() {
+	protected function setUp(): void {
 		parent::setUp();
 
 		$this->clientService = $this->createMock(IClientService::class);

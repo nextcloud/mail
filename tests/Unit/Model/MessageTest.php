@@ -31,7 +31,7 @@ class MessageTest extends TestCase {
 
 	protected $message;
 
-	protected function setUp() {
+	protected function setUp(): void {
 		parent::setUp();
 
 		$this->message = new Message();

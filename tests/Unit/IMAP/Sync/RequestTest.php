@@ -35,7 +35,7 @@ class RequestTest extends TestCase {
 	/** @var Request */
 	private $request;
 
-	protected function setUp() {
+	protected function setUp(): void {
 		parent::setUp();
 
 		$this->mailbox = 'inbox';

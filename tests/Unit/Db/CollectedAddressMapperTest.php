@@ -58,7 +58,7 @@ class CollectedAddressMapperTest extends TestCase {
 	/** @var CollectedAddress */
 	private $address3;
 
-	protected function setUp() {
+	protected function setUp(): void {
 		parent::setUp();
 
 		$this->db = OC::$server->getDatabaseConnection();

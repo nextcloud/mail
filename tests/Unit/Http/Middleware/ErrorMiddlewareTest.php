@@ -51,7 +51,7 @@ class ErrorMiddlewareTest extends TestCase {
 	/** @var ErrorMiddleware */
 	private $middleware;
 
-	protected function setUp() {
+	protected function setUp(): void {
 		parent::setUp();
 
 		$this->config = $this->createMock(IConfig::class);

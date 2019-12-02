@@ -1,4 +1,4 @@
-<?php
+<?php declare(strict_types=1);
 
 /**
  * @author Christoph Wurst <christoph@winzerhof-wurst.at>
@@ -43,35 +43,35 @@ use OCP\IL10N;
 use OCP\ILogger;
 use OCP\IRequest;
 use OCP\Security\ICrypto;
-use PHPUnit_Framework_MockObject_MockObject;
+use PHPUnit\Framework\MockObject\MockObject;
 
 class AccountsControllerTest extends TestCase {
 
 	/** @var string */
 	private $appName;
 
-	/** @var IRequest|PHPUnit_Framework_MockObject_MockObject */
+	/** @var IRequest|MockObject */
 	private $request;
 
-	/** @var AccountService|PHPUnit_Framework_MockObject_MockObject */
+	/** @var AccountService|MockObject */
 	private $accountService;
 
-	/** @var GroupsIntegration|PHPUnit_Framework_MockObject_MockObject */
+	/** @var GroupsIntegration|MockObject */
 	private $groupsIntegration;
 
 	/** @var string */
 	private $userId;
 
-	/** @var AutoConfig|PHPUnit_Framework_MockObject_MockObject */
+	/** @var AutoConfig|MockObject */
 	private $autoConfig;
 
-	/** @var ILogger|PHPUnit_Framework_MockObject_MockObject */
+	/** @var ILogger|MockObject */
 	private $logger;
 
-	/** @var IL10N|PHPUnit_Framework_MockObject_MockObject */
+	/** @var IL10N|MockObject */
 	private $l10n;
 
-	/** @var ICrypto|PHPUnit_Framework_MockObject_MockObject */
+	/** @var ICrypto|MockObject */
 	private $crypto;
 
 	/** @var AccountsController */
@@ -80,19 +80,19 @@ class AccountsControllerTest extends TestCase {
 	/** @var int */
 	private $accountId;
 
-	/** @var Account|PHPUnit_Framework_MockObject_MockObject */
+	/** @var Account|MockObject */
 	private $account;
 
-	/** @var AliasesService|PHPUnit_Framework_MockObject_MockObject */
+	/** @var AliasesService|MockObject */
 	private $aliasesService;
 
-	/** @var IMailTransmission|PHPUnit_Framework_MockObject_MockObject */
+	/** @var IMailTransmission|MockObject */
 	private $transmission;
 
-	/** @var SetupService|PHPUnit_Framework_MockObject_MockObject */
+	/** @var SetupService|MockObject */
 	private $setupService;
 
-	protected function setUp() {
+	protected function setUp(): void {
 		parent::setUp();
 
 		$this->appName = 'mail';
@@ -281,12 +281,12 @@ class AccountsControllerTest extends TestCase {
 		$password = 'mypassword';
 		$accountName = 'Mail';
 		$imapHost = 'localhost';
-		$imapPort = '993';
+		$imapPort = 993;
 		$imapSslMode = 'ssl';
 		$imapUser = 'user@domain.tld';
 		$imapPassword = 'mypassword';
 		$smtpHost = 'localhost';
-		$smtpPort = '465';
+		$smtpPort = 465;
 		$smtpSslMode = 'none';
 		$smtpUser = 'user@domain.tld';
 		$smtpPassword = 'mypassword';
@@ -309,12 +309,12 @@ class AccountsControllerTest extends TestCase {
 		$password = 'mypassword';
 		$accountName = 'Mail';
 		$imapHost = 'localhost';
-		$imapPort = '993';
+		$imapPort = 993;
 		$imapSslMode = 'ssl';
 		$imapUser = 'user@domain.tld';
 		$imapPassword = 'mypassword';
 		$smtpHost = 'localhost';
-		$smtpPort = '465';
+		$smtpPort = 465;
 		$smtpSslMode = 'none';
 		$smtpUser = 'user@domain.tld';
 		$smtpPassword = 'mypassword';
@@ -334,12 +334,12 @@ class AccountsControllerTest extends TestCase {
 		$password = 'mypassword';
 		$accountName = 'Mail';
 		$imapHost = 'localhost';
-		$imapPort = '993';
+		$imapPort = 993;
 		$imapSslMode = 'ssl';
 		$imapUser = 'user@domain.tld';
 		$imapPassword = 'mypassword';
 		$smtpHost = 'localhost';
-		$smtpPort = '465';
+		$smtpPort = 465;
 		$smtpSslMode = 'none';
 		$smtpUser = 'user@domain.tld';
 		$smtpPassword = 'mypassword';
@@ -363,12 +363,12 @@ class AccountsControllerTest extends TestCase {
 		$password = 'mypassword';
 		$accountName = 'Mail';
 		$imapHost = 'localhost';
-		$imapPort = '993';
+		$imapPort = 993;
 		$imapSslMode = 'ssl';
 		$imapUser = 'user@domain.tld';
 		$imapPassword = 'mypassword';
 		$smtpHost = 'localhost';
-		$smtpPort = '465';
+		$smtpPort = 465;
 		$smtpSslMode = 'none';
 		$smtpUser = 'user@domain.tld';
 		$smtpPassword = 'mypassword';
@@ -453,15 +453,12 @@ class AccountsControllerTest extends TestCase {
 	}
 
 	public function testDraft() {
-		$withPreviousDraft = true;
 		$subject = 'Hello';
 		$body = 'Hi!';
-		$from = 'test@example.com';
 		$to = 'user1@example.com';
 		$cc = '"user2" <user2@example.com>, user3@example.com';
 		$bcc = 'user4@example.com';
-		$messageId = 123;
-		$uid = $withPreviousDraft ? 123 : null;
+		$uid = 123;
 		$newUID = 124;
 
 		$this->accountService->expects($this->once())
@@ -475,7 +472,7 @@ class AccountsControllerTest extends TestCase {
 		$expected = new JSONResponse([
 			'uid' => $newUID,
 		]);
-		$actual = $this->controller->draft($this->accountId, $subject, $body, $to, $cc, $bcc, $uid, $messageId);
+		$actual = $this->controller->draft($this->accountId, $subject, $body, $to, $cc, $bcc, true, $uid);
 
 		$this->assertEquals($expected, $actual);
 	}

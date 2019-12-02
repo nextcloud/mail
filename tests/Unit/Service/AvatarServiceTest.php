@@ -61,7 +61,7 @@ class AvatarServiceTest extends TestCase {
 	/** @var AvatarService */
 	private $avatarService;
 
-	protected function setUp() {
+	protected function setUp(): void {
 		parent::setUp();
 
 		$this->source = $this->createMock(CompositeAvatarSource::class);

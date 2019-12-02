@@ -39,7 +39,7 @@ class AddressbookSourceTest extends TestCase {
 	/** @var AddressbookSource */
 	private $source;
 
-	protected function setUp() {
+	protected function setUp(): void {
 		parent::setUp();
 
 		$this->ci = $this->createMock(ContactsIntegration::class);

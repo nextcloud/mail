@@ -40,7 +40,7 @@ class DownloaderTest extends TestCase {
 	/** @var Downloader */
 	private $downloader;
 
-	protected function setUp() {
+	protected function setUp(): void {
 		parent::setUp();
 
 		$this->clientService = $this->createMock(IClientService::class);

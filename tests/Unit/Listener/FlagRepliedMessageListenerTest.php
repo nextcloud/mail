@@ -56,7 +56,7 @@ class FlagRepliedMessageListenerTest extends TestCase {
 	/** @var FlagRepliedMessageListener */
 	private $listener;
 
-	protected function setUp() {
+	protected function setUp(): void {
 		parent::setUp();
 
 		$this->imapClientFactory = $this->createMock(IMAPClientFactory::class);

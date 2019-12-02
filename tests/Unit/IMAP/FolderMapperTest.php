@@ -36,7 +36,7 @@ class FolderMapperTest extends TestCase {
 	/** @var FolderMapper */
 	private $mapper;
 
-	protected function setUp() {
+	protected function setUp(): void {
 		parent::setUp();
 
 		$this->mapper = new FolderMapper();

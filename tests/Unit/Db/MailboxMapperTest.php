@@ -43,7 +43,7 @@ class MailboxMapperTest extends TestCase {
 	/** @var MailboxMapper */
 	private $mapper;
 
-	protected function setUp() {
+	protected function setUp(): void {
 		parent::setUp();
 
 		$this->db = \OC::$server->getDatabaseConnection();

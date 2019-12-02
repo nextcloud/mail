@@ -44,7 +44,7 @@ class ImapConnectivityTesterTest extends TestCase {
 	/** @var ImapConnectivityTester */
 	private $tester;
 
-	protected function setUp() {
+	protected function setUp(): void {
 		parent::setUp();
 
 		$this->imapConnector = $this->createMock(ImapConnector::class);

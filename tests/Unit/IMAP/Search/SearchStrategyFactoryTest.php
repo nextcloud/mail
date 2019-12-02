@@ -37,7 +37,7 @@ class SearchStrategyFactoryTest extends TestCase {
 	/** @var SearchStrategyFactory */
 	private $factory;
 
-	protected function setUp() {
+	protected function setUp(): void {
 		parent::setUp();
 
 		$this->factory = new SearchStrategyFactory();

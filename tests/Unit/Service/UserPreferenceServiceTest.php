@@ -39,7 +39,7 @@ class UserPreferenceServiceTest extends TestCase {
 	/** @var UserPreferenceSevice */
 	private $service;
 
-	protected function setUp() {
+	protected function setUp(): void {
 		parent::setUp();
 
 		$this->config = $this->createMock(IConfig::class);

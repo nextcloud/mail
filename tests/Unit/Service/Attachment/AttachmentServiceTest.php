@@ -41,7 +41,7 @@ class AttachmentServiceTest extends TestCase {
 	/** @var AttachmentService */
 	private $service;
 
-	protected function setUp() {
+	protected function setUp(): void {
 		parent::setUp();
 
 		$this->mapper = $this->createMock(LocalAttachmentMapper::class);

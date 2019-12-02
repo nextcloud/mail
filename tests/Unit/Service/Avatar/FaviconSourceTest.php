@@ -50,7 +50,7 @@ class FaviconSourceTest extends TestCase {
 	/** @var FaviconSource */
 	private $source;
 
-	protected function setUp() {
+	protected function setUp(): void {
 		parent::setUp();
 
 		$this->clientService = $this->createMock(IClientService::class);

@@ -43,7 +43,7 @@ class SynchronizerTest extends TestCase {
 	/** @var Synchronizer */
 	private $synchronizer;
 
-	protected function setUp() {
+	protected function setUp(): void {
 		parent::setUp();
 
 		$this->simpleSync = $this->createMock(SimpleMailboxSync::class);

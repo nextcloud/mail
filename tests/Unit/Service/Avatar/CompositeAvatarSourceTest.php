@@ -47,7 +47,7 @@ class CompositeAvatarSourceTest extends TestCase {
 	/** @var CompositeAvatarSource */
 	private $source;
 
-	protected function setUp() {
+	protected function setUp(): void {
 		parent::setUp();
 
 		$this->addressbookSource = $this->createMock(AddressbookSource::class);

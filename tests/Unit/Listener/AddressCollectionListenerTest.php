@@ -50,7 +50,7 @@ class AddressCollectionListenerTest extends TestCase {
 	/** @var IListener */
 	private $listener;
 
-	protected function setUp() {
+	protected function setUp(): void {
 		parent::setUp();
 
 		$this->addressCollector = $this->createMock(AddressCollector::class);

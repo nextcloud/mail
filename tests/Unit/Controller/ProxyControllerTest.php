@@ -58,7 +58,7 @@ class ProxyControllerTest extends TestCase {
 	/** @var ProxyController */
 	private $controller;
 
-	protected function setUp() {
+	protected function setUp(): void {
 		parent::setUp();
 
 		$this->appName = 'mail';
@@ -142,9 +142,6 @@ class ProxyControllerTest extends TestCase {
 		$this->assertEquals($expected, $response);
 	}
 
-	/**
-	 * @expectedException Exception
-	 */
 	public function testRedirectInvalidUrl() {
 		$this->controller = new ProxyController(
 			$this->appName,
@@ -154,6 +151,8 @@ class ProxyControllerTest extends TestCase {
 			$this->clientService,
 			''
 		);
+		$this->expectException(Exception::class);
+
 		$this->controller->redirect('ftps://example.com');
 	}
 
