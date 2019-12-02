@@ -45,7 +45,7 @@ class LocalAttachmentsControllerTest extends TestCase {
 	/** @var LocalAttachmentsController */
 	private $controller;
 
-	protected function setUp() {
+	protected function setUp(): void {
 		parent::setUp();
 
 		$this->request = $this->createMock(IRequest::class);

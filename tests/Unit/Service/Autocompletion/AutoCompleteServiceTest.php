@@ -36,7 +36,7 @@ class AutoCompleteServiceTest extends TestCase {
 	private $addressCollector;
 	private $service;
 
-	protected function setUp() {
+	protected function setUp(): void {
 		parent::setUp();
 
 		$this->contactsIntegration = $this->createMock(ContactsIntegration::class);

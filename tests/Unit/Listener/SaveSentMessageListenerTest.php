@@ -62,7 +62,7 @@ class SaveSentMessageListenerTest extends TestCase {
 	/** @var IListener */
 	private $listener;
 
-	protected function setUp() {
+	protected function setUp(): void {
 		parent::setUp();
 
 		$this->mailboxMapper = $this->createMock(MailboxMapper::class);

@@ -42,7 +42,7 @@ class AutoConfigTest extends TestCase {
 	/** @var AutoConfig */
 	private $autoConfig;
 
-	protected function setUp() {
+	protected function setUp(): void {
 		parent::setUp();
 
 		$this->ispDbDetector = $this->createMock(IspDbConfigurationDetector::class);

@@ -73,7 +73,7 @@ class MailTransmissionTest extends TestCase {
 	/** @var MailTransmission */
 	private $transmission;
 
-	protected function setUp() {
+	protected function setUp(): void {
 		parent::setUp();
 
 		$this->userFolder = $this->createMock(Folder::class);

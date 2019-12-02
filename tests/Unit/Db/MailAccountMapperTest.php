@@ -49,7 +49,7 @@ class MailAccountMapperTest extends TestCase {
 	/**
 	 * Initialize Mapper
 	 */
-	public function setup(){
+	public function setup(): void {
 		parent::setUp();
 		$this->db = OC::$server->getDatabaseConnection();
 		$this->mapper = new MailAccountMapper($this->db);

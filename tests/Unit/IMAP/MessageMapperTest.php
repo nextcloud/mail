@@ -38,7 +38,7 @@ class MessageMapperTest extends TestCase {
 	/** @var MessageMapper */
 	private $mapper;
 
-	protected function setUp() {
+	protected function setUp(): void {
 		parent::setUp();
 
 		$this->logger = $this->createMock(ILogger::class);

@@ -39,7 +39,7 @@ class SmtpServerDetectorTest extends TestCase {
 	/** @var SmtpServerDetector */
 	private $detector;
 
-	protected function setUp() {
+	protected function setUp(): void {
 		parent::setUp();
 
 		$this->mxRecord = $this->createMock(MxRecord::class);

@@ -33,7 +33,7 @@ class NextcloudGroupServiceTest extends TestCase {
 	private $groupsManager;
 	private $groupService;
 
-	protected function setUp() {
+	protected function setUp(): void {
 		parent::setUp();
 
 		$this->groupsManager = $this->createMock(IGroupManager::class);
@@ -97,7 +97,7 @@ class NextcloudGroupServiceTest extends TestCase {
 	}
 
 	public function testGetUsers() {
-		$users = [ 
+		$users = [
 			$this->createTestUser('bob', 'Bobby', 'bob@smith.net'),
 			$this->createTestUser('alice', 'Alice', 'alice@smith.net')
 		];

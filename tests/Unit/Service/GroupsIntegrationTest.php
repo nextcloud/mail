@@ -35,7 +35,7 @@ class GroupsIntegrationTest extends TestCase {
 	/** @var GroupsIntegration */
 	private $groupsIntegration;
 
-	protected function setUp() {
+	protected function setUp(): void {
 		parent::setUp();
 
 		$this->groupService1 = $this->createMock(NextcloudGroupService::class);

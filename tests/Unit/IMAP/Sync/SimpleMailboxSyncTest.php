@@ -48,7 +48,7 @@ class SimpleMailboxSyncTest extends TestCase {
 	/** @var SimpleMailboxSync */
 	private $sync;
 
-	protected function setUp() {
+	protected function setUp(): void {
 		parent::setUp();
 
 		$this->mapper = $this->createMock(MessageMapper::class);

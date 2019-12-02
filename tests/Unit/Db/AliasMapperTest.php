@@ -34,7 +34,7 @@ use OCP\IDBConnection;
  * @package OCA\Mail\Db
  */
 class AliasMapperTest extends TestCase {
-	
+
 	use DatabaseTransaction;
 
 	/** @var AliasMapper */
@@ -49,7 +49,7 @@ class AliasMapperTest extends TestCase {
 	/**
 	 * Initialize Mapper
 	 */
-	public function setup() {
+	public function setup(): void {
 		parent::setUp();
 		$this->db = OC::$server->getDatabaseConnection();
 		$this->mapper = new AliasMapper($this->db);

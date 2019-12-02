@@ -37,7 +37,7 @@ class ContactsIntegrationTest extends TestCase {
 	/** @var ContactsIntegration */
 	private $contactsIntegration;
 
-	protected function setUp() {
+	protected function setUp(): void {
 		parent::setUp();
 
 		$this->contactsManager = $this->createMock(IManager::class);

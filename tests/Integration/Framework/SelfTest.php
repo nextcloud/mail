@@ -49,7 +49,7 @@ class SelfTest extends TestCase {
 		$this->assertMessageCount(0, 'INBOX');
 		$id = $this->saveMessage('INBOX', $message);
 		$this->assertMessageCount(1, 'INBOX');
-		$this->assertInternalType('int', $id);
+		$this->assertIsInt($id);
 	}
 
 }

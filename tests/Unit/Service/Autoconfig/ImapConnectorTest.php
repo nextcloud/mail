@@ -47,7 +47,7 @@ class ImapConnectorTest extends TestCase {
 	/** @var ImapConnector */
 	private $connector;
 
-	protected function setUp() {
+	protected function setUp(): void {
 		parent::setUp();
 
 		$this->crypto = $this->createMock(ICrypto::class);

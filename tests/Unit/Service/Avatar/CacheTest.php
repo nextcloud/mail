@@ -48,7 +48,7 @@ class CacheTest extends TestCase {
 	/** @var Cache */
 	private $cache;
 
-	protected function setUp() {
+	protected function setUp(): void {
 		parent::setUp();
 
 		$this->cacheFactory = $this->createMock(ICacheFactory::class);

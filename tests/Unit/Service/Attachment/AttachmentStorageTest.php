@@ -42,7 +42,7 @@ class AttachmentStorageTest extends TestCase {
 	/** @var AttachmentStorage */
 	private $storage;
 
-	protected function setUp() {
+	protected function setUp(): void {
 		parent::setUp();
 
 		file_put_contents($this->tmpFilePath, 'test test');

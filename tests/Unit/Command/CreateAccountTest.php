@@ -45,7 +45,7 @@ class CreateAccountTest extends TestCase {
 		'smtp-password',
 	];
 
-	protected function setUp() {
+	protected function setUp(): void {
 		parent::setUp();
 
 		$this->service = $this->getMockBuilder('\OCA\Mail\Service\AccountService')

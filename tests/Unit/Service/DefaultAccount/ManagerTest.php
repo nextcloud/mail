@@ -54,7 +54,7 @@ class ManagerTest extends TestCase {
 	/** @var Manager|PHPUnit_Framework_MockObject_MockObject */
 	private $manager;
 
-	protected function setUp() {
+	protected function setUp(): void {
 		parent::setUp();
 
 		$this->config = $this->createMock(IConfig::class);

@@ -60,7 +60,7 @@ class MailTransmissionIntegrationTest extends TestCase {
 	/** @var IMailTransmission */
 	private $transmission;
 
-	protected function setUp() {
+	protected function setUp(): void {
 		parent::setUp();
 
 		$this->resetImapAccount();

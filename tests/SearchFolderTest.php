@@ -38,7 +38,7 @@ class SearchFolderTest extends TestCase {
 	/** @var SearchFolder */
 	private $folder;
 
-	protected function setUp() {
+	protected function setUp(): void {
 		parent::setUp();
 
 		$this->accountId = 16;

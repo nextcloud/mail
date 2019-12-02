@@ -42,7 +42,7 @@ class ConfigurationDetectorTest extends TestCase {
 	/** @var ConfigurationDetector */
 	private $detector;
 
-	protected function setUp() {
+	protected function setUp(): void {
 		parent::setUp();
 
 		$this->imapServerDetector = $this->createMock(ImapServerDetector::class);

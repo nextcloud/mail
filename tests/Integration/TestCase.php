@@ -26,7 +26,7 @@ use ChristophWurst\Nextcloud\Testing\TestCase as Base;
 
 class TestCase extends Base {
 
-	protected function setUp() {
+	protected function setUp(): void {
 		parent::setUp();
 
 		// If it's an IMAP test, we reset the test account automatically

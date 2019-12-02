@@ -30,7 +30,7 @@ class MxRecordTest extends TestCase {
 	/** @var MxRecord */
 	private $record;
 
-	protected function setUp() {
+	protected function setUp(): void {
 		parent::setUp();
 
 		$logger = $this->createMock(ILogger::class);
@@ -40,7 +40,7 @@ class MxRecordTest extends TestCase {
 	public function testQuery() {
 		$records = $this->record->query('nextcloud.com');
 
-		$this->assertInternalType('array', $records);
+		$this->assertIsArray($records);
 		$this->assertNotEmpty($records);
 	}
 

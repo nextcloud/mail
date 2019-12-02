@@ -41,7 +41,7 @@ abstract class AbstractTest extends TestCase {
 	/** @var string[] */
 	private static $createdMailboxes = [];
 
-	public static function setUpBeforeClass() {
+	public static function setUpBeforeClass(): void {
 		$user = 'user@domain.tld';
 		$password = 'mypassword';
 		$password = OC::$server->getCrypto()->encrypt($password);
@@ -64,7 +64,7 @@ abstract class AbstractTest extends TestCase {
 		self::$account->getImapConnection();
 	}
 
-	public static function tearDownAfterClass() {
+	public static function tearDownAfterClass(): void {
 		foreach (self::$createdMailboxes as $createdMailbox) {
 			try {
 				self::deleteMailbox($createdMailbox);

@@ -41,7 +41,7 @@ class AliasesServiceTest extends TestCase {
 	/** @var Alias|PHPUnit_Framework_MockObject_MockObject */
 	private $alias;
 
-	protected function setUp() {
+	protected function setUp(): void {
 		parent::setUp();
 
 		$this->mapper = $this->createMock(AliasMapper::class);

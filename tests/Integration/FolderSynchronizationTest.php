@@ -36,7 +36,7 @@ class FolderSynchronizationTest extends TestCase {
 	/** @var FoldersController */
 	private $foldersController;
 
-	protected function setUp() {
+	protected function setUp(): void {
 		parent::setUp();
 
 		$this->foldersController = new FoldersController('mail', OC::$server->getRequest(), OC::$server->query(AccountService::class), $this->getTestAccountUserId(), OC::$server->query(IMailManager::class));

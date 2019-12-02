@@ -41,7 +41,7 @@ class FixCollectedAddressesTest extends TestCase {
 	/** @var FixCollectedAddresses */
 	private $repairStep;
 
-	protected function setUp() {
+	protected function setUp(): void {
 		parent::setUp();
 
 		$this->mapper = $this->createMock(CollectedAddressMapper::class);

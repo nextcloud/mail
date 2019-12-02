@@ -49,7 +49,7 @@ class SmtpConnectivityTesterTest extends TestCase {
 	/** @var SmtpConnectivityTester */
 	private $tester;
 
-	protected function setUp() {
+	protected function setUp(): void {
 		parent::setUp();
 
 		$this->connectivityTester = $this->createMock(ConnectivityTester::class);

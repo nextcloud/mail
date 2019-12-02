@@ -37,7 +37,7 @@ class AliasesControllerTest extends TestCase {
 	private $user;
 	private $alias;
 
-	public function setUp() {
+	public function setUp(): void {
 		parent::setUp();
 		$this->request = $this->getMockBuilder('OCP\IRequest')
 			->getMock();

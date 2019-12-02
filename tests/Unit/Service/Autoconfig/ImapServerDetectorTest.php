@@ -39,7 +39,7 @@ class ImapServerDetectorTest extends TestCase {
 	/** @var ImapServerDetector */
 	private $detector;
 
-	protected function setUp() {
+	protected function setUp(): void {
 		parent::setUp();
 
 		$this->mxRecord = $this->createMock(MxRecord::class);

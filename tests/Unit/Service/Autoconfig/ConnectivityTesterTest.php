@@ -34,7 +34,7 @@ class ConnectivityTesterTest extends TestCase {
 	/** @var ConnectivityTester */
 	private $tester;
 
-	protected function setUp() {
+	protected function setUp(): void {
 		parent::setUp();
 
 		$this->logger = $this->createMock(ILogger::class);

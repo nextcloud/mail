@@ -47,7 +47,7 @@ class AvatarControllerTest extends TestCase {
 	/** @var ITimeFactory */
 	private $oldFactory;
 
-	protected function setUp() {
+	protected function setUp(): void {
 		parent::setUp();
 
 		$request = $this->createMock(IRequest::class);
@@ -65,7 +65,7 @@ class AvatarControllerTest extends TestCase {
 		$this->controller = new AvatarsController('mail', $request, $this->avatarService, 'jane');
 	}
 
-	protected function tearDown() {
+	protected function tearDown(): void {
 		parent::tearDown();
 
 		\OC::$server->offsetUnset(ITimeFactory::class);

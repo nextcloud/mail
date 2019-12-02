@@ -55,7 +55,7 @@ class SetupServiceTest extends TestCase {
 	/** @var SetupService */
 	private $service;
 
-	protected function setUp() {
+	protected function setUp(): void {
 		parent::setUp();
 
 		$this->autoConfig = $this->createMock(AutoConfig::class);

@@ -46,7 +46,7 @@ class IMAPClientFactoryTest extends TestCase {
 	/** @var IMAPClientFactory */
 	private $factory;
 
-	protected function setUp() {
+	protected function setUp(): void {
 		parent::setUp();
 
 		$this->crypto = $this->createMock(ICrypto::class);
