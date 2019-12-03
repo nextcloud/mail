@@ -1,4 +1,4 @@
-<?php
+<?php declare(strict_types=1);
 
 /**
  * @author Tahaa Karim <tahaalibra@gmail.com>
@@ -19,19 +19,19 @@
  *
  */
 
-namespace OCA\Mail\Db;
+namespace OCA\Mail\Tests\Integration\Db;
 
 use OC;
 use ChristophWurst\Nextcloud\Testing\DatabaseTransaction;
 use ChristophWurst\Nextcloud\Testing\TestCase;
+use OCA\Mail\Db\Alias;
+use OCA\Mail\Db\AliasMapper;
+use OCA\Mail\Db\MailAccount;
+use OCA\Mail\Db\MailAccountMapper;
 use OCP\IDBConnection;
 
 /**
- * Class AliasMapperTest
- *
  * @group DB
- *
- * @package OCA\Mail\Db
  */
 class AliasMapperTest extends TestCase {
 

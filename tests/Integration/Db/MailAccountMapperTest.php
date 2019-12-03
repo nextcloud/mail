@@ -1,4 +1,4 @@
-<?php
+<?php declare(strict_types=1);
 
 /**
  * @author Thomas Müller <thomas.mueller@tmit.eu>
@@ -19,19 +19,17 @@
  *
  */
 
-namespace OCA\Mail\Db;
+namespace OCA\Mail\Tests\Integration\Db;
 
 use OC;
 use ChristophWurst\Nextcloud\Testing\DatabaseTransaction;
 use ChristophWurst\Nextcloud\Testing\TestCase;
+use OCA\Mail\Db\MailAccount;
+use OCA\Mail\Db\MailAccountMapper;
 use OCP\IDBConnection;
 
 /**
- * Class MailAccountMapperTest
- *
  * @group DB
- *
- * @package OCA\Mail\Db
  */
 class MailAccountMapperTest extends TestCase {
 

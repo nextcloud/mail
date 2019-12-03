@@ -26,3 +26,7 @@ coverage/
 
 # vim
 .*.sw?
+
+
+# PHPunit temp file
+tests/.phpunit.result.cache

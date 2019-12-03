@@ -20,21 +20,17 @@
  *
  */
 
-namespace OCA\Mail\Tests\Unit\Db;
+namespace OCA\Mail\Tests\Integration\Db;
 
 use OC;
 use OCA\Mail\Db\CollectedAddress;
 use OCA\Mail\Db\CollectedAddressMapper;
-use ChristophWurst\Nextcloud\Testing\DatabaseTransaction;;
+use ChristophWurst\Nextcloud\Testing\DatabaseTransaction;
 use ChristophWurst\Nextcloud\Testing\TestCase;
 use OCP\IDBConnection;
 
 /**
- * Class CollectedAddressMapperTest
- *
  * @group DB
- *
- * @package OCA\Mail\Tests\Unit\Db
  */
 class CollectedAddressMapperTest extends TestCase {
 
