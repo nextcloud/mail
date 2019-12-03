@@ -1,6 +1,11 @@
 # Changelog
 All notable changes to this project will be documented in this file.
 
+## 0.19.1 - 2019-12–03
+### Changed
+- New and updated translations
+- Updated dependencies
+
 ## 0.19.0 - 2019-11–25
 ### Added
 - php7.4 support
