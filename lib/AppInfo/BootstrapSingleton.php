@@ -111,7 +111,8 @@ class BootstrapSingleton {
 
 		$container->registerAlias('ErrorMiddleware', ErrorMiddleware::class);
 		$container->registerMiddleWare('ErrorMiddleware');
-		$container->registerMiddleWare(ProvisioningMiddleware::class);
+		$container->registerAlias('ProvisioningMiddleware', ProvisioningMiddleware::class);
+		$container->registerMiddleWare('ProvisioningMiddleware');
 
 		$container->registerAlias(IGroupService::class, NextcloudGroupService::class);
 	}
