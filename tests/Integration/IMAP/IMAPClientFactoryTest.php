@@ -1,4 +1,4 @@
-<?php
+<?php declare(strict_types=1);
 
 /**
  * @author Christoph Wurst <christoph@winzerhof-wurst.at>
@@ -19,7 +19,7 @@
  *
  */
 
-namespace OCA\Mail\Tests\Unit\IMAP;
+namespace OCA\Mail\Tests\Integration\IMAP;
 
 use Horde_Imap_Client_Socket;
 use OC;
@@ -30,17 +30,17 @@ use ChristophWurst\Nextcloud\Testing\TestCase;
 use OCP\ICacheFactory;
 use OCP\IConfig;
 use OCP\Security\ICrypto;
-use PHPUnit_Framework_MockObject_MockObject;
+use PHPUnit\Framework\MockObject\MockObject;
 
 class IMAPClientFactoryTest extends TestCase {
 
-	/** @var ICrypto|PHPUnit_Framework_MockObject_MockObject */
+	/** @var ICrypto|MockObject */
 	private $crypto;
 
-	/** @var IConfig|PHPUnit_Framework_MockObject_MockObject */
+	/** @var IConfig|MockObject */
 	private $config;
 
-	/** @var ICacheFactory|PHPUnit_Framework_MockObject_MockObject */
+	/** @var ICacheFactory|MockObject */
 	private $cacheFactory;
 
 	/** @var IMAPClientFactory */
@@ -83,7 +83,7 @@ class IMAPClientFactoryTest extends TestCase {
 		$this->assertInstanceOf(Horde_Imap_Client_Socket::class, $client);
 	}
 
-	public function testClientConectivity() {
+	public function testClientConnectivity() {
 		$account = $this->getTestAccount();
 		$this->crypto->expects($this->once())
 			->method('decrypt')

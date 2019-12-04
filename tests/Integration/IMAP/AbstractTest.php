@@ -21,7 +21,7 @@
  *
  */
 
-namespace OCA\Mail\Tests\Unit\IMAP;
+namespace OCA\Mail\Tests\Integration\IMAP;
 
 use ChristophWurst\Nextcloud\Testing\TestCase;
 use Exception;

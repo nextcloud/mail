@@ -1,4 +1,4 @@
-<?php
+<?php declare(strict_types=1);
 
 /**
  * @author Thomas Müller <thomas.mueller@tmit.eu>
@@ -19,9 +19,10 @@
  *
  */
 
-namespace OCA\Mail\Db;
+namespace OCA\Mail\Tests\Integration\Db;
 
 use ChristophWurst\Nextcloud\Testing\TestCase;
+use OCA\Mail\Db\MailAccount;
 
 class MailAccountTest extends TestCase {
 
