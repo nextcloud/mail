@@ -6,12 +6,17 @@
 				<h2>{{ t('mail', 'Account settings') }}</h2>
 				<p>
 					<strong>{{ displayName }}</strong> &lt;{{ email }}&gt;
-					<a class="button icon-rename" href="#account-form" :title="t('mail', 'Change name')"></a>
+					<a
+						v-if="!account.provisioned"
+						class="button icon-rename"
+						href="#account-form"
+						:title="t('mail', 'Change name')"
+					></a>
 				</p>
 			</div>
 			<SignatureSettings :account="account" />
 			<EditorSettings :account="account" />
-			<div class="section">
+			<div v-if="!account.provisioned" class="section">
 				<h2>{{ t('mail', 'Mail server') }}</h2>
 				<div id="mail-settings">
 					<AccountForm

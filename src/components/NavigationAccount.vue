@@ -37,7 +37,7 @@
 			<ActionRouter :to="settingsRoute" icon="icon-settings">
 				{{ t('mail', 'Edit account') }}
 			</ActionRouter>
-			<ActionButton icon="icon-delete" @click="deleteAccount">
+			<ActionButton v-if="!account.provisioned" icon="icon-delete" @click="deleteAccount">
 				{{ t('mail', 'Delete account') }}
 			</ActionButton>
 			<ActionInput icon="icon-add" @submit="createFolder">

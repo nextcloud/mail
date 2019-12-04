@@ -20,7 +20,8 @@ if (process.env.BUNDLE_ANALYZER_TOKEN) {
 module.exports = {
 	entry: {
 		autoredirect: path.join(__dirname, 'src/autoredirect.js'),
-		mail: path.join(__dirname, 'src/main.js')
+		mail: path.join(__dirname, 'src/main.js'),
+		settings: path.join(__dirname, 'src/main-settings')
 	},
 	output: {
 		path: path.resolve(__dirname, 'js'),

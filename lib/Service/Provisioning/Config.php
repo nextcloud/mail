@@ -21,12 +21,16 @@ declare(strict_types=1);
  *
  */
 
-namespace OCA\Mail\Service\DefaultAccount;
+namespace OCA\Mail\Service\Provisioning;
 
+use JsonSerializable;
 use OCP\IUser;
 
-class Config {
+class Config implements JsonSerializable {
 
+	private const VERSION = 1;
+
+	/** @var string[] */
 	private $data;
 
 	/**
@@ -115,13 +119,28 @@ class Config {
 	 * @return string
 	 */
 	private function buildUserEmail(string $original, IUser $user) {
-		if (!is_null($user->getUID())) {
+		if ($user->getUID() !== null) {
 			$original = str_replace('%USERID%', $user->getUID(), $original);
 		}
-		if (!is_null($user->getEMailAddress())) {
+		if ($user->getEMailAddress() !== null) {
 			$original = str_replace('%EMAIL%', $user->getEMailAddress(), $original);
 		}
 		return $original;
+	}
+
+	public function setActive(bool $state): self {
+		$this->data['active'] = $state;
+		return $this;
+	}
+
+	public function jsonSerialize() {
+		return array_merge(
+			[
+				'active' => false,
+				'version' => self::VERSION,
+			],
+			$this->data
+		);
 	}
 
 }

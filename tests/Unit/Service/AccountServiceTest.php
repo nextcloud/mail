@@ -27,44 +27,42 @@ use OCA\Mail\Db\MailAccount;
 use OCA\Mail\Db\MailAccountMapper;
 use OCA\Mail\Service\AccountService;
 use OCA\Mail\Service\AliasesService;
-use OCA\Mail\Service\DefaultAccount\Manager;
 use OCP\IL10N;
-use PHPUnit_Framework_MockObject_MockObject;
+use PHPUnit\Framework\MockObject\MockObject;
 
 class AccountServiceTest extends TestCase {
 
 	/** @var string */
 	private $user = 'herbert';
 
-	/** @var MailAccountMapper|PHPUnit_Framework_MockObject_MockObject */
+	/** @var MailAccountMapper|MockObject */
 	private $mapper;
 
-	/** @var IL10N|PHPUnit_Framework_MockObject_MockObject */
+	/** @var IL10N|MockObject */
 	private $l10n;
 
-	/** @var AccountService|PHPUnit_Framework_MockObject_MockObject */
+	/** @var AccountService|MockObject */
 	private $accountService;
 
-	/** @var AliasesService|PHPUnit_Framework_MockObject_MockObject */
+	/** @var AliasesService|MockObject */
 	private $aliasesService;
 
-	/** @var MailAccount|PHPUnit_Framework_MockObject_MockObject */
+	/** @var MailAccount|MockObject */
 	private $account1;
 
-	/** @var MailAccount|PHPUnit_Framework_MockObject_MockObject */
+	/** @var MailAccount|MockObject */
 	private $account2;
-
-	/** @var Manager|PHPUnit_Framework_MockObject_MockObject */
-	private $defaultAccountManager;
 
 	protected function setUp(): void {
 		parent::setUp();
 
 		$this->mapper = $this->createMock(MailAccountMapper::class);
 		$this->l10n = $this->createMock(IL10N::class);
-		$this->defaultAccountManager = $this->createMock(Manager::class);
 		$this->aliasesService = $this->createMock(AliasesService::class);
-		$this->accountService = new AccountService($this->mapper, $this->defaultAccountManager, $this->aliasesService);
+		$this->accountService = new AccountService(
+			$this->mapper,
+			$this->aliasesService
+		);
 
 		$this->account1 = $this->createMock(MailAccount::class);
 		$this->account2 = $this->createMock(MailAccount::class);
