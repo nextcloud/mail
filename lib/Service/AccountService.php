@@ -24,13 +24,12 @@ declare(strict_types=1);
 
 namespace OCA\Mail\Service;
 
-use Exception;
 use OCA\Mail\Account;
 use OCA\Mail\Db\MailAccount;
 use OCA\Mail\Db\MailAccountMapper;
 use OCA\Mail\Exception\ServiceException;
-use OCA\Mail\Service\DefaultAccount\Manager;
 use OCP\AppFramework\Db\DoesNotExistException;
+use function array_map;
 
 class AccountService {
 
@@ -44,17 +43,12 @@ class AccountService {
 	 */
 	private $accounts;
 
-	/** @var Manager */
-	private $defaultAccountManager;
-
 	/** @var AliasesService */
 	private $aliasesService;
 
 	public function __construct(MailAccountMapper $mapper,
-								Manager $defaultAccountManager,
 								AliasesService $aliasesService) {
 		$this->mapper = $mapper;
-		$this->defaultAccountManager = $defaultAccountManager;
 		$this->aliasesService = $aliasesService;
 	}
 
@@ -64,16 +58,9 @@ class AccountService {
 	 */
 	public function findByUserId(string $currentUserId): array {
 		if ($this->accounts === null) {
-			$accounts = array_map(function ($a) {
+			return $this->accounts = array_map(function ($a) {
 				return new Account($a);
-			}, $this->mapper->findByUserId($currentUserId));
-
-			$defaultAccount = $this->defaultAccountManager->getDefaultAccount();
-			if (!is_null($defaultAccount)) {
-				$accounts[] = new Account($defaultAccount);
-			}
-
-			$this->accounts = $accounts;
+			}, $this->mapper->findByUserId($currentUserId));;
 		}
 
 		return $this->accounts;
@@ -96,13 +83,6 @@ class AccountService {
 			throw new DoesNotExistException("Invalid account id <$accountId>");
 		}
 
-		if ($accountId === Manager::ACCOUNT_ID) {
-			$defaultAccount = $this->defaultAccountManager->getDefaultAccount();
-			if (is_null($defaultAccount)) {
-				throw new DoesNotExistException('Default account config missing');
-			}
-			return new Account($defaultAccount);
-		}
 		return new Account($this->mapper->find($uid, $accountId));
 	}
 
@@ -110,10 +90,6 @@ class AccountService {
 	 * @param int $accountId
 	 */
 	public function delete(string $currentUserId, int $accountId): void {
-		if ($accountId === Manager::ACCOUNT_ID) {
-			return;
-		}
-
 		$mailAccount = $this->mapper->find($currentUserId, $accountId);
 		$this->aliasesService->deleteAll($accountId);
 		$this->mapper->delete($mailAccount);

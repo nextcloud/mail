@@ -19,10 +19,10 @@
  *
  */
 
-namespace OCA\Mail\Tests\Unit\Service\DefaultAccount;
+namespace OCA\Mail\Tests\Unit\Service\Provisioning;
 
 use ChristophWurst\Nextcloud\Testing\TestCase;
-use OCA\Mail\Service\DefaultAccount\Config;
+use OCA\Mail\Service\Provisioning\Config;
 use OCP\IUser;
 
 class ConfigTest extends TestCase {
