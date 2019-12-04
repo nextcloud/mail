@@ -1,7 +1,13 @@
 # Changelog
 All notable changes to this project will be documented in this file.
 
-## 0.19.1 - 2019-12–03
+## 0.20.0 - 2019-12-04
+### Added
+- Admin settings UI to configure provisioned accounts (formerly known as "default account") -> provisioned accounts are now stored in the database
+### Removed
+- Default account configuration via config.php
+
+## 0.19.1 - 2019-12-03
 ### Changed
 - New and updated translations
 - Updated dependencies
