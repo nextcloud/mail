@@ -283,8 +283,10 @@ class MessagesController extends Controller {
 
 		$attachment = $mailBox->getAttachment($messageId, $attachmentId);
 
+        // NU: This is probably a bad fix, we assume that an attachment without
+        // a name is a calendar event.
 		return new AttachmentDownloadResponse(
-			$attachment->getContents(), $attachment->getName(), $attachment->getType());
+			$attachment->getContents(), $attachment->getName()??'calendar.ics', $attachment->getType());
 	}
 
 	/**
