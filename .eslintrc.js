@@ -6,12 +6,10 @@ module.exports = {
 		jquery: true,
 		mocha: true,
 	},
-	plugins: [
-		'nextcloud',
-	],
 	extends: [
-		'plugin:vue/recommended',
+		'plugin:@nextcloud/recommended',
 		'plugin:prettier/recommended',
+		'plugin:vue/recommended',
 		'prettier/vue',
 		'eslint:recommended',
 	],
@@ -21,8 +19,6 @@ module.exports = {
 		'no-unused-vars': 'off',
 		'vue/no-v-html': 'off',
 		'no-case-declarations': 'off',
-		'nextcloud/no-deprecations': 'warn',
-		'nextcloud/no-removed-apis': 'error',
 	},
 	parserOptions: {
 		parser: 'babel-eslint',

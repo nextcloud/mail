@@ -122,9 +122,6 @@ script:
   - sh -c "if [ '$TEST_SUITE' = 'TEST-JS' ]; then npm test; fi"
   # - sh -c "if [ '$TEST_JS' = 'TRUE' ]; then cat ./coverage/*/lcov.info | ./node_modules/coveralls/bin/coveralls.js; fi"
 
-  # Run JS lint
-  - sh -c "if [ '$TEST_SUITE' = 'TEST-JS' ]; then npm run lint; fi"
-
   # Run PHP tests
   - sh -c "if [ '$TEST_SUITE' = 'TEST-PHP' ]; then composer test:unit; fi"
   - sh -c "if [ '$TEST_SUITE' = 'TEST-PHP' ]; then composer test:integration; fi"
