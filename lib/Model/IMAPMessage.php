@@ -269,6 +269,10 @@ class IMAPMessage implements IMessage, JsonSerializable {
 			 */
 			$filename = $p->getName();
 
+            if (empty($filename) && 'text/calendar' === $p->getType()) {
+                $filename = 'calendar.ics';
+            }
+
 			if (!is_null($p->getContentId())) {
 				continue;
 			}
@@ -337,6 +341,10 @@ class IMAPMessage implements IMessage, JsonSerializable {
 		// Any part with a filename is an attachment,
 		// so an attached text file (type 0) is not mistaken as the message.
 		$filename = $p->getName();
+        if (empty($filename) && 'text/calendar' === $p->getType()) {
+            $filename = 'calendar.ics';
+        }
+
 		if (isset($filename)) {
 			if (in_array($filename, $this->attachmentsToIgnore)) {
 				return;
