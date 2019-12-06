@@ -87,6 +87,16 @@ class AccountService {
 	}
 
 	/**
+	 * @param int $id
+	 *
+	 * @return Account
+	 * @throws DoesNotExistException
+	 */
+	public function findById(int $id): Account {
+		return new Account($this->mapper->findById($id));
+	}
+
+	/**
 	 * @param int $accountId
 	 */
 	public function delete(string $currentUserId, int $accountId): void {
