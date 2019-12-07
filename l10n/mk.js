@@ -3,7 +3,7 @@ OC.L10N.register(
     {
     "Mail" : "Електронска пошта",
     "Auto detect failed. Please use manual mode." : "Неуспешно автоматско детектирање. Ве молиме рачно внесете ги параметрите.",
-    "Updating account failed: " : "Неуспешно ажурирање на сметката:",
+    "Updating account failed: " : "Неуспешно ажурирање на сметка:",
     "Creating account failed: " : "Неуспешно креирање на сметка:",
     "💌 A mail app for Nextcloud" : "💌 Апликација за електронска пошта за Nextcloud",
     "**💌 A mail app for Nextcloud**\n\n- **🚀 Integration with other Nextcloud apps!** Currently Contacts, Calendar & Files – more to come.\n- **📥 Multiple mail accounts!** Personal and company account? No problem, and a nice unified inbox. Connect any IMAP account.\n- **🔒 Send & receive encrypted mails!** Using the great [Mailvelope](https://mailvelope.com) browser extension.\n- **🙈 We’re not reinventing the wheel!** Based on the great [Horde](http://horde.org) libraries.\n- **📬 Want to host your own mail server?** We don’t have to reimplement this as you could set up [Mail-in-a-Box](https://mailinabox.email)!" : "**💌 Апликација за електронска пошта за Nextcloud**\n\n- **🚀 Интеграција со други Nextcloud апликации!** Моментално Контакти, Календари & Датотеки.\n- **📥 Повеќе сметки за пошта!** Лична и бизнис сметка? Нема проблем, и убаво унифицирано сандаче. Поврзете ја секоја IMAP сметка.\n- **🔒 Испраќање & примање на криптирани пораки!** Користејќи го одличното [Mailvelope](https://mailvelope.com) искуство на прелистувачот.\n- **🙈 Ние не го реинвестираме тркалото!** Врз основа на одличните [Horde](http://horde.org) библиотеки.\n- **📬 Сакате да бидете домаќин на вашиот сопствен сервер за пошта?** Не мора да го повториме ова како што можете да го поставите [Mail-in-a-Box](https://mailinabox.email)!",
@@ -120,7 +120,7 @@ OC.L10N.register(
     "Connect your mail account" : "Поврзете ја вашата е-пошта сметка",
     "Unexpected error during account creation" : "Неочекувана грешка при креирање на сметка",
     "{from}\n{subject}" : "{from}\n{subject}",
-    "_%n new message \nfrom {from}_::_%n new messages \nfrom {from}_" : ["%n Ннова порака \nод {from}","%n нови пораки\nод {from}"],
+    "_%n new message \nfrom {from}_::_%n new messages \nfrom {from}_" : ["%n нова порака \nод {from}","%n нови пораки\nод {from}"],
     "Nextcloud Mail" : "Nextcloud Електронска пошта",
     "Could not load {tag}{name}{endtag}" : "Неможе да се вчита {tag}{name}{endtag}",
     "There was a problem loading {tag}{name}{endtag}" : "Има проблем со вчитување на {tag}{name}{endtag}",
