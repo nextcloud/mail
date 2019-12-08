@@ -81,7 +81,7 @@ OC.L10N.register(
     "Import into calendar" : "Şu takvimin içine aktar",
     "Download attachment" : "Ek dosyayı indir",
     "Save to Files" : "Dosyalara Kaydet",
-    "Choose a folder to store the attachment in" : "Ek dosyasının depolanacağı bir klasör seçin",
+    "Choose a folder to store the attachment in" : "Ek dosyanın depolanacağı bir klasör seçin",
     "Save all to Files" : "Tümünü dosyalara kaydet",
     "Choose a folder to store the attachments in" : "Ek dosyalarının kaydedileceği bir klasör seçin",
     "The images have been blocked to protect your privacy." : "Gizliliğinizi korumak için görsellerin görüntülenmesi engellendi.",
