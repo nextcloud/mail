@@ -69,7 +69,7 @@
     "extends @nextcloud/browserslist-config"
   ],
   "devDependencies": {
-    "@babel/core": "^7.7.4",
+    "@babel/core": "^7.7.5",
     "@babel/plugin-syntax-dynamic-import": "^7.7.4",
     "@babel/preset-env": "^7.7.4",
     "@nextcloud/browserslist-config": "^1.0.0",
