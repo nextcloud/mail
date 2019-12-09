@@ -1,6 +1,15 @@
 # Changelog
 All notable changes to this project will be documented in this file.
 
+## 0.20.1 - 2019-12-09
+### Added
+- occ command to diagnose an account (# of mailboxes, messages; IMAP capabilities)
+### Changed
+- New and updated translations
+- Updated dependencies
+### Fixed
+- Provisioned account update password check when password is set to empty string
+
 ## 0.20.0 - 2019-12-04
 ### Added
 - Admin settings UI to configure provisioned accounts (formerly known as "default account") -> provisioned accounts are now stored in the database
