@@ -162,9 +162,9 @@ class Manager {
 		try {
 			$account = $this->mailAccountMapper->findProvisionedAccount($user);
 
-			if ($account->getInboundPassword() !== null
+			if (!empty($account->getInboundPassword())
 				&& $this->crypto->decrypt($account->getInboundPassword()) === $password
-				&& $account->getOutboundPassword() !== null
+				&& !empty($account->getOutboundPassword())
 				&& $this->crypto->decrypt($account->getOutboundPassword()) === $password) {
 				$this->logger->debug('Password of provisioned account is up to date');
 				return;
