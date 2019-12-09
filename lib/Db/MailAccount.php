@@ -65,6 +65,8 @@ use OCP\AppFramework\Db\Entity;
  * @method void setEditorMode(string $editorMode)
  * @method bool getProvisioned()
  * @method void setProvisioned(bool $provisioned)
+ * @method int getOrder()
+ * @method void setOrder(int $order)
  */
 class MailAccount extends Entity {
 
@@ -85,6 +87,7 @@ class MailAccount extends Entity {
 	protected $lastMailboxSync;
 	protected $editorMode;
 	protected $provisioned;
+	protected $order;
 
 	/**
 	 * @param array $params
@@ -132,8 +135,11 @@ class MailAccount extends Entity {
 			$this->setOutboundPassword($params['smtpPassword']);
 		}
 
+		$this->addType('inboundPort', 'integer');
+		$this->addType('outboundPort', 'integer');
 		$this->addType('lastMailboxSync', 'integer');
 		$this->addType('provisioned', 'bool');
+		$this->addType('order', 'integer');
 	}
 
 	/**
@@ -143,6 +149,7 @@ class MailAccount extends Entity {
 		$result = [
 			'accountId' => $this->getId(),
 			'name' => $this->getName(),
+			'order' => $this->getOrder(),
 			'emailAddress' => $this->getEmail(),
 			'imapHost' => $this->getInboundHost(),
 			'imapPort' => $this->getInboundPort(),

@@ -43,6 +43,12 @@
 			<ActionInput icon="icon-add" @submit="createFolder">
 				{{ t('mail', 'Add folder') }}
 			</ActionInput>
+			<ActionButton v-if="!isFirst" icon="icon-triangle-n" @click="changeAccountOrderUp">
+				{{ t('mail', 'Move Up') }}
+			</ActionButton>
+			<ActionButton v-if="!isLast" icon="icon-triangle-s" @click="changeAccountOrderDown">
+				{{ t('mail', 'Move down') }}
+			</ActionButton>
 		</template>
 	</AppNavigationItem>
 </template>
@@ -71,6 +77,14 @@ export default {
 		account: {
 			type: Object,
 			required: true,
+		},
+		isFirst: {
+			type: Boolean,
+			default: false,
+		},
+		isLast: {
+			type: Boolean,
+			default: false,
 		},
 	},
 	data() {
@@ -125,6 +139,16 @@ export default {
 					location.href = generateUrl('/apps/mail')
 				})
 				.catch(error => logger.error('could not delete account', {error}))
+		},
+		changeAccountOrderUp() {
+			this.$store
+				.dispatch('moveAccount', {account: this.account, up: true})
+				.catch(error => logger.error('could not move account up', {error}))
+		},
+		changeAccountOrderDown() {
+			this.$store
+				.dispatch('moveAccount', {account: this.account})
+				.catch(error => logger.error('could not move account down', {error}))
 		},
 	},
 }

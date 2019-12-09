@@ -29,7 +29,13 @@
 		/>
 		<ul id="accounts-list">
 			<template v-for="group in menu">
-				<NavigationAccount v-if="group.account" :key="group.account.id" :account="group.account" />
+				<NavigationAccount
+					v-if="group.account"
+					:key="group.account.id"
+					:account="group.account"
+					:is-first="isFirst(group.account)"
+					:is-last="isLast(group.account)"
+				/>
 				<NavigationFolder
 					v-for="item in group.folders"
 					v-show="!group.account.collapsed || SHOW_COLLAPSED.indexOf(item.specialRole) !== -1"
@@ -109,6 +115,14 @@ export default {
 					messageUid: 'new',
 				},
 			})
+		},
+		isFirst(account) {
+			const accounts = this.$store.getters.getAccounts()
+			return account === accounts[1]
+		},
+		isLast(account) {
+			const accounts = this.$store.getters.getAccounts()
+			return account === accounts[accounts.length - 1]
 		},
 	},
 }

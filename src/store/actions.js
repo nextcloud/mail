@@ -112,6 +112,28 @@ export default {
 			commit('addFolder', {account, folder})
 		})
 	},
+	moveAccount({commit, getters}, {account, up}) {
+		const accounts = getters.getAccounts()
+		const index = accounts.indexOf(account)
+		if (up) {
+			const previous = accounts[index - 1]
+			accounts[index - 1] = account
+			accounts[index] = previous
+		} else {
+			const next = accounts[index + 1]
+			accounts[index + 1] = account
+			accounts[index] = next
+		}
+		return Promise.all(
+			accounts.map((account, idx) => {
+				if (account.id === 0) {
+					return
+				}
+				commit('saveAccountsOrder', {account, order: idx})
+				return patchAccount(account, {order: idx})
+			})
+		)
+	},
 	markFolderRead({dispatch}, {account, folderId}) {
 		return markFolderRead(account.id, folderId).then(
 			dispatch('syncEnvelopes', {
