@@ -30,7 +30,7 @@ class Config implements JsonSerializable {
 
 	private const VERSION = 1;
 
-	/** @var string[] */
+	/** @var mixed[] */
 	private $data;
 
 	/**
@@ -56,10 +56,10 @@ class Config implements JsonSerializable {
 	}
 
 	/**
-	 * @return string|int
+	 * @return int
 	 */
-	public function getImapPort() {
-		return $this->data['imapPort'];
+	public function getImapPort(): int {
+		return (int) $this->data['imapPort'];
 	}
 
 	/**
@@ -87,10 +87,10 @@ class Config implements JsonSerializable {
 	}
 
 	/**
-	 * @return string|int
+	 * @return int
 	 */
-	public function getSmtpPort() {
-		return $this->data['smtpPort'];
+	public function getSmtpPort(): int {
+		return (int) $this->data['smtpPort'];
 	}
 
 	/**
@@ -131,6 +131,10 @@ class Config implements JsonSerializable {
 	public function setActive(bool $state): self {
 		$this->data['active'] = $state;
 		return $this;
+	}
+
+	public function isActive(): bool {
+		return (bool) ($this->data['active'] ?? true);
 	}
 
 	public function jsonSerialize() {

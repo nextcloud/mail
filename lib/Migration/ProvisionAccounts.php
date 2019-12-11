@@ -48,6 +48,10 @@ class ProvisionAccounts implements IRepairStep {
 			$output->info("No Mail provisioning config set");
 			return;
 		}
+		if (!$config->isActive()) {
+			$output->info("Mail provisioning is disabled");
+			return;
+		}
 
 		$cnt = $this->provisioningManager->provision($config);
 		$output->info("$cnt accounts provisioned");
