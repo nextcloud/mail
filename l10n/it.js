@@ -59,7 +59,7 @@ OC.L10N.register(
     "Reply sent!" : "Risposta inviata!",
     "Write another message" : "Scrivi un altro messaggio",
     "Send" : "Invia",
-    "Uploading {percent}% …" : "Caricamento {percent}% …",
+    "Uploading {percent}% …" : "Caricamento {percent}%…",
     "Choose a file to add as attachment" : "Scegli un file da aggiungere come allegato",
     "Writing mode" : "Modalità di scrittura",
     "Preferred writing mode for new messages and replies." : "Modalità di scrittura preferita per nuovi messaggi e risposte.",
