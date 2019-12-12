@@ -33,7 +33,7 @@ class Attachment {
 	 * @param \Horde_Imap_Client_Socket $conn
 	 * @param \Horde_Imap_Client_Mailbox $mailBox
 	 * @param int $messageId
-	 * @param int $attachmentId
+	 * @param string $attachmentId
 	 */
 	public function __construct($conn, $mailBox, $messageId, $attachmentId) {
 		$this->conn = $conn;

@@ -247,7 +247,7 @@ class MessagesControllerTest extends TestCase {
 		$accountId = 17;
 		$folderId = base64_encode('my folder');
 		$messageId = 123;
-		$attachmentId = 3;
+		$attachmentId = '2.2';
 		$targetPath = 'Downloads';
 
 		$this->accountService->expects($this->once())
@@ -295,7 +295,7 @@ class MessagesControllerTest extends TestCase {
 		$accountId = 17;
 		$folderId = base64_encode('my folder');
 		$messageId = 123;
-		$attachmentId = 3;
+		$attachmentId = '0';
 		$targetPath = 'Downloads';
 
 		$this->accountService->expects($this->once())
@@ -343,8 +343,13 @@ class MessagesControllerTest extends TestCase {
 			->will($this->returnValue('abcdefg'));
 
 		$expected = new JSONResponse();
-		$response = $this->controller->saveAttachment($accountId, $folderId,
-			$messageId, 0, $targetPath);
+		$response = $this->controller->saveAttachment(
+			$accountId,
+			$folderId,
+			$messageId,
+			$attachmentId,
+			$targetPath
+		);
 
 		$this->assertEquals($expected, $response);
 	}
