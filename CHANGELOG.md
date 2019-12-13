@@ -1,6 +1,12 @@
 # Changelog
 All notable changes to this project will be documented in this file.
 
+## 0.20.2 - 2019-12-13
+### Changed
+- New and updated translations
+### Fixed
+- JavaScript vulnerability in `serialize-javascript` dependency
+
 ## 0.20.1 - 2019-12-09
 ### Added
 - occ command to diagnose an account (# of mailboxes, messages; IMAP capabilities)
