@@ -79,7 +79,7 @@
     "babel-loader": "^8.0.6",
     "browserslist-config-nextcloud": "0.1.0",
     "chai": "^4.2.0",
-    "css-loader": "^3.3.0",
+    "css-loader": "^3.3.2",
     "eslint": "^6.7.2",
     "eslint-config-prettier": "^6.7.0",
     "eslint-plugin-prettier": "^3.1.1",
