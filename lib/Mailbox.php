@@ -295,10 +295,10 @@ class Mailbox implements IMailBox {
 
 	/**
 	 * @param int $messageId
-	 * @param int $attachmentId
+	 * @param string $attachmentId
 	 * @return Attachment
 	 */
-	public function getAttachment(int $messageId, int $attachmentId): Attachment {
+	public function getAttachment(int $messageId, string $attachmentId): Attachment {
 		return new Attachment($this->conn, $this->mailBox, $messageId, $attachmentId);
 	}
 

@@ -278,7 +278,7 @@ class MessagesController extends Controller {
 	 * @return AttachmentDownloadResponse
 	 */
 	public function downloadAttachment(int $accountId, string $folderId, int $messageId,
-									   int $attachmentId) {
+									   string $attachmentId) {
 		$mailBox = $this->getFolder($accountId, $folderId);
 
 		$attachment = $mailBox->getAttachment($messageId, $attachmentId);
@@ -300,10 +300,10 @@ class MessagesController extends Controller {
 	 * @return JSONResponse
 	 */
 	public function saveAttachment(int $accountId, string $folderId, int $messageId,
-								   int $attachmentId, string $targetPath) {
+								   string $attachmentId, string $targetPath) {
 		$mailBox = $this->getFolder($accountId, $folderId);
 
-		if ($attachmentId === 0) {
+		if ($attachmentId === '0') {
 			// Save all attachments
 			/* @var $m IMAPMessage */
 			$m = $mailBox->getMessage($messageId);
