@@ -772,17 +772,17 @@
         },
         {
             "name": "pear-pear.horde.org/Horde_Text_Flowed",
-            "version": "2.0.3",
+            "version": "2.0.4",
             "dist": {
                 "type": "file",
-                "url": "https://pear.horde.org/get/Horde_Text_Flowed-2.0.3.tgz"
+                "url": "https://pear.horde.org/get/Horde_Text_Flowed-2.0.4.tgz"
             },
             "require": {
                 "pear-pear.horde.org/horde_util": "<3.0.0.0",
                 "php": "<8.0.0.0"
             },
             "replace": {
-                "pear-horde/horde_text_flowed": "== 2.0.3.0"
+                "pear-horde/horde_text_flowed": "== 2.0.4.0"
             },
             "type": "pear-library",
             "autoload": {
@@ -796,7 +796,7 @@
             "license": [
                 "LGPL-2.1"
             ],
-            "description": "The Horde_Text_Flowed:: class provides common methods for manipulating text using the encoding described in RFC 3676 ('flowed' text)."
+            "description": "A library that provides common methods for manipulating text using the encoding described in RFC 3676 ('flowed' text)."
         },
         {
             "name": "pear-pear.horde.org/Horde_Translation",
