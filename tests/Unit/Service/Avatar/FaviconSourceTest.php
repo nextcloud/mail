@@ -1,4 +1,4 @@
-<?php
+<?php declare(strict_types=1);
 
 /**
  * @copyright 2017 Christoph Wurst <christoph@winzerhof-wurst.at>
@@ -25,7 +25,6 @@
 namespace OCA\Mail\Tests\Unit\Service\Avatar;
 
 use Favicon\Favicon;
-use Mpclarkson\IconScraper\Icon;
 use OCA\Mail\Service\Avatar\Avatar;
 use OCA\Mail\Service\Avatar\AvatarFactory;
 use OCA\Mail\Service\Avatar\FaviconSource;
@@ -34,17 +33,17 @@ use OCP\Files\IMimeTypeDetector;
 use OCP\Http\Client\IClient;
 use OCP\Http\Client\IClientService;
 use OCP\Http\Client\IResponse;
-use PHPUnit_Framework_MockObject_MockObject;
+use PHPUnit\Framework\MockObject\MockObject;
 
 class FaviconSourceTest extends TestCase {
 
-	/** @var IClientService|PHPUnit_Framework_MockObject_MockObject */
+	/** @var IClientService|MockObject */
 	private $clientService;
 
-	/** @var Favicon|PHPUnit_Framework_MockObject_MockObject */
+	/** @var Favicon|MockObject */
 	private $favicon;
 
-	/** @var IMimeTypeDetector|PHPUnit_Framework_MockObject_MockObject */
+	/** @var IMimeTypeDetector|MockObject */
 	private $mimeDetector;
 
 	/** @var FaviconSource */
