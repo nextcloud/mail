@@ -1,6 +1,13 @@
 # Changelog
 All notable changes to this project will be documented in this file.
 
+## 0.20.3 - 2019-12-16
+### Changed
+- New and updated translations
+### Fixed
+- Attachment handling of non-integer MIME IDs like `2.2`
+- Php warning of `each` usage in a Horde library
+
 ## 0.20.2 - 2019-12-13
 ### Changed
 - New and updated translations
