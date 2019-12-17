@@ -44,6 +44,7 @@ class MailAccountTest extends TestCase {
 		$a->setOutboundSslMode('ssl');
 		$a->setEditorMode('html');
 		$a->setProvisioned(false);
+		$a->setOrder(13);
 
 		$this->assertEquals(array(
 			'accountId' => 12345,
@@ -60,6 +61,7 @@ class MailAccountTest extends TestCase {
 			'signature' => null,
 			'editorMode' => 'html',
 			'provisioned' => false,
+			'order' => 13,
 			), $a->toJson());
 	}
 
@@ -79,6 +81,7 @@ class MailAccountTest extends TestCase {
 			'signature' => null,
 			'editorMode' => null,
 			'provisioned' => false,
+			'order' => null,
 		];
 		$a = new MailAccount($expected);
 		// TODO: fix inconsistency

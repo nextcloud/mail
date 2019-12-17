@@ -19,9 +19,7 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-import identity from 'lodash/fp/identity'
 import orderBy from 'lodash/fp/orderBy'
-import sortBy from 'lodash/fp/sortBy'
 import sortedUniq from 'lodash/fp/sortedUniq'
 import Vue from 'vue'
 
@@ -39,6 +37,11 @@ const addFolderToState = (state, account) => folder => {
 	return id
 }
 
+const sortAccounts = accounts => {
+	accounts.sort((a1, a2) => a1.order - a2.order)
+	return accounts
+}
+
 export default {
 	savePreference(state, {key, value}) {
 		Vue.set(state.preferences, key, value)
@@ -46,7 +49,11 @@ export default {
 	addAccount(state, account) {
 		account.collapsed = true
 		Vue.set(state.accounts, account.id, account)
-		Vue.set(state, 'accountList', sortBy(identity)(state.accountList.concat([account.id])))
+		Vue.set(
+			state,
+			'accountList',
+			sortAccounts(state.accountList.concat([account.id]).map(id => state.accounts[id])).map(a => a.id)
+		)
 
 		// Save the folders to the store, but only keep IDs in the account's folder list
 		const folders = buildMailboxHierarchy(sortMailboxes(account.folders || []), havePrefix(account.folders))
@@ -62,6 +69,14 @@ export default {
 	},
 	editAccount(state, account) {
 		Vue.set(state.accounts, account.id, Object.assign({}, state.accounts[account.id], account))
+	},
+	saveAccountsOrder(state, {account, order}) {
+		Vue.set(account, 'order', order)
+		Vue.set(
+			state,
+			'accountList',
+			sortAccounts(state.accountList.map(id => state.accounts[id])).map(a => a.id)
+		)
 	},
 	toggleAccountCollapsed(state, accountId) {
 		state.accounts[accountId].collapsed = !state.accounts[accountId].collapsed

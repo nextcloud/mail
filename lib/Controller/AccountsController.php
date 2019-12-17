@@ -184,11 +184,13 @@ class AccountsController extends Controller {
 	 *
 	 * @param int $accountId
 	 * @param string|null $editorMode
+	 * @param int|null $order
 	 *
 	 * @return JSONResponse
 	 */
 	public function patchAccount(int $accountId,
-								 string $editorMode = null): JSONResponse {
+								 string $editorMode = null,
+								 int $order = null): JSONResponse {
 		$account = $this->accountService->find($this->currentUserId, $accountId);
 
 		if ($account === null) {
@@ -198,6 +200,9 @@ class AccountsController extends Controller {
 		$dbAccount = $account->getMailAccount();
 		if ($editorMode !== null) {
 			$dbAccount->setEditorMode($editorMode);
+		}
+		if ($order !== null) {
+			$dbAccount->setOrder($order);
 		}
 		return new JSONResponse(
 			$this->accountService->save($dbAccount)->toJson()
