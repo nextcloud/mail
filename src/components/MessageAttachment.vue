@@ -73,7 +73,7 @@ export default {
 	mixins: [onClickOutside],
 	props: {
 		id: {
-			type: Number,
+			type: String,
 			required: true,
 		},
 		fileName: {
