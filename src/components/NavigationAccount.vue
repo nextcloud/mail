@@ -37,9 +37,7 @@
 			<ActionRouter :to="settingsRoute" icon="icon-settings">
 				{{ t('mail', 'Edit account') }}
 			</ActionRouter>
-			<ActionButton v-if="!account.provisioned" icon="icon-delete" @click="deleteAccount">
-				{{ t('mail', 'Delete account') }}
-			</ActionButton>
+			
 			<ActionInput icon="icon-add" @submit="createFolder">
 				{{ t('mail', 'Add folder') }}
 			</ActionInput>
@@ -48,6 +46,9 @@
 			</ActionButton>
 			<ActionButton v-if="!isLast" icon="icon-triangle-s" @click="changeAccountOrderDown">
 				{{ t('mail', 'Move down') }}
+			</ActionButton>
+			<ActionButton v-if="!account.provisioned" icon="icon-delete" @click="deleteAccount">
+				{{ t('mail', 'Delete account') }}
 			</ActionButton>
 		</template>
 	</AppNavigationItem>
