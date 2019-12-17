@@ -37,7 +37,6 @@
 			<ActionRouter :to="settingsRoute" icon="icon-settings">
 				{{ t('mail', 'Edit account') }}
 			</ActionRouter>
-			
 			<ActionInput icon="icon-add" @submit="createFolder">
 				{{ t('mail', 'Add folder') }}
 			</ActionInput>
