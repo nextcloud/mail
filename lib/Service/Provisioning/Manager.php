@@ -154,6 +154,7 @@ class Manager {
 		if (!isset($data['smtpUser'])) {
 			$data['smtpUser'] = $data['email'];
 		}
+		$data['active'] = true;
 
 		return $this->configMapper->save(new Config($data));
 	}
