@@ -39,7 +39,7 @@ export const getters = {
 	getAccount: state => id => {
 		return state.accounts[id]
 	},
-	getAccounts: state => () => {
+	accounts: state => {
 		return state.accountList.map(id => state.accounts[id])
 	},
 	getFolder: state => (accountId, folderId) => {
