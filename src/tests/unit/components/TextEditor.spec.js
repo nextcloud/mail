@@ -1,7 +1,7 @@
 /*
- * @copyright 2018 Christoph Wurst <christoph@winzerhof-wurst.at>
+ * @copyright 2019 Christoph Wurst <christoph@winzerhof-wurst.at>
  *
- * @author 2018 Christoph Wurst <christoph@winzerhof-wurst.at>
+ * @author 2019 Christoph Wurst <christoph@winzerhof-wurst.at>
  *
  * @license GNU AGPL version 3 or any later version
  *
@@ -19,10 +19,24 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-const merge = require('webpack-merge');
-const common = require('./webpack.common.js');
+import {createLocalVue, mount} from '@vue/test-utils'
 
-module.exports = merge(common, {
-	mode: 'development',
-	devtool: 'inline-cheap-module-source-map',
+import TextEditor from '../../../components/TextEditor.vue'
+
+const localVue = createLocalVue()
+
+describe('Address', () => {
+
+	beforeEach(() => {
+	})
+
+	it('renders', () => {
+		const editor = mount(TextEditor, {
+			localVue,
+			propsData: {
+				value: '<p>some text</p>',
+				html: true,
+			},
+		})
+	})
 })
