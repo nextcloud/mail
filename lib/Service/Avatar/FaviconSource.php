@@ -1,4 +1,4 @@
-<?php
+<?php declare(strict_types=1);
 
 /**
  * @author Christoph Wurst <christoph@winzerhof-wurst.at>
@@ -44,7 +44,7 @@ class FaviconSource implements IAvatarSource {
 								IMimeTypeDetector $mimeDetector) {
 		$this->clientService = $clientService;
 		$this->favicon = $favicon;
-		$this->favicon->setCacheTimeout(-1);
+		$this->favicon->setCacheTimeout(0);
 		$this->mimeDetector = $mimeDetector;
 	}
 
