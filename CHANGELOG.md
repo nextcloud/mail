@@ -1,6 +1,17 @@
 # Changelog
 All notable changes to this project will be documented in this file.
 
+## 0.21.0 - 2019-12-17
+### Added
+- Ability to move accounts up and down in the sidebar
+### Changed
+- New and updated translations
+- Updated dependencies
+### Fixed
+- Default enable state for imported provisioned account
+- Don't provision accounts when config is disabled
+- Caching of Favicon library to a local app directory
+
 ## 0.20.3 - 2019-12-16
 ### Changed
 - New and updated translations
