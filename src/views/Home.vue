@@ -31,7 +31,7 @@ export default {
 		},
 	},
 	created() {
-		const accounts = this.$store.getters.getAccounts()
+		const accounts = this.$store.getters.accounts
 
 		if (this.$route.name === 'home' && accounts.length > 1) {
 			// Show first account

@@ -283,7 +283,7 @@ export default {
 	},
 	computed: {
 		aliases() {
-			return this.$store.getters.getAccounts().filter(a => !a.isUnified)
+			return this.$store.getters.accounts.filter(a => !a.isUnified)
 		},
 		selectableRecipients() {
 			return this.newRecipients.concat(this.autocompleteRecipients)

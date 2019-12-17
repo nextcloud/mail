@@ -90,7 +90,7 @@ export default {
 	},
 	computed: {
 		menu() {
-			return this.$store.getters.getAccounts().map(account => {
+			return this.$store.getters.accounts.map(account => {
 				const folders = this.$store.getters
 					.getFolders(account.id)
 					.filter(folder => !account.collapsed || SHOW_COLLAPSED.indexOf(folder.specialRole) !== -1)
@@ -117,11 +117,11 @@ export default {
 			})
 		},
 		isFirst(account) {
-			const accounts = this.$store.getters.getAccounts()
+			const accounts = this.$store.getters.accounts
 			return account === accounts[1]
 		},
 		isLast(account) {
-			const accounts = this.$store.getters.getAccounts()
+			const accounts = this.$store.getters.accounts
 			return account === accounts[accounts.length - 1]
 		},
 	},

@@ -38,7 +38,7 @@ export default {
 	},
 	computed: {
 		hasAccounts() {
-			return this.$store.getters.getAccounts().length > 1
+			return this.$store.getters.accounts.length > 1
 		},
 	},
 	methods: {
