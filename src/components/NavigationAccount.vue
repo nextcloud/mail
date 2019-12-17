@@ -127,6 +127,17 @@ export default {
 					throw error
 				})
 		},
+		
+		changeAccountOrderUp() {
+			this.$store
+				.dispatch('moveAccount', {account: this.account, up: true})
+				.catch(error => logger.error('could not move account up', {error}))
+		},
+		changeAccountOrderDown() {
+			this.$store
+				.dispatch('moveAccount', {account: this.account})
+				.catch(error => logger.error('could not move account down', {error}))
+		},
 		deleteAccount() {
 			const id = this.account.id
 
@@ -139,16 +150,6 @@ export default {
 					location.href = generateUrl('/apps/mail')
 				})
 				.catch(error => logger.error('could not delete account', {error}))
-		},
-		changeAccountOrderUp() {
-			this.$store
-				.dispatch('moveAccount', {account: this.account, up: true})
-				.catch(error => logger.error('could not move account up', {error}))
-		},
-		changeAccountOrderDown() {
-			this.$store
-				.dispatch('moveAccount', {account: this.account})
-				.catch(error => logger.error('could not move account down', {error}))
 		},
 	},
 }
