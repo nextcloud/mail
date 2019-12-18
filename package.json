@@ -34,7 +34,7 @@
     "@nextcloud/initial-state": "^1.0.0",
     "@nextcloud/l10n": "^1.0.0",
     "@nextcloud/logger": "^0.1.0",
-    "@nextcloud/moment": "^0.2.2",
+    "@nextcloud/moment": "^1.0.0",
     "@nextcloud/router": "^0.1.0",
     "@nextcloud/vue": "^1.2.2",
     "@vue/babel-preset-app": "^4.1.1",
