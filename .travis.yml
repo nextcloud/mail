@@ -10,6 +10,7 @@ jobs:
   - php: nightly
 
 addons:
+  mariadb: '10.1'
   apt:
     packages:
     - mysql-server-5.6
