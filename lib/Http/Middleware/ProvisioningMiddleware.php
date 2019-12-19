@@ -65,7 +65,12 @@ class ProvisioningMiddleware extends Middleware {
 			// Nothing to update
 			return;
 		}
+		$config = $this->provisioningManager->getConfig();
+		if ($config === null || !$config->isActive()) {
+			return;
+		}
 		try {
+			$this->provisioningManager->provisionSingleUser($config, $user);
 			$this->provisioningManager->updatePassword(
 				$user,
 				$this->credentialStore->getLoginCredentials()->getPassword()
