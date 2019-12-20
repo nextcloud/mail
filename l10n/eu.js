@@ -90,6 +90,8 @@ OC.L10N.register(
     "Settings" : "Ezarpenak",
     "Edit account" : "Editatu kontua",
     "Add folder" : "Gehitu karpeta",
+    "Move Up" : "Eraman gora",
+    "Move down" : "Eraman behera",
     "Delete account" : "Ezabatu kontua",
     "Show all folders" : "Erakutsi karpeta guztiak",
     "Collapse folders" : "Bildu karpetak",

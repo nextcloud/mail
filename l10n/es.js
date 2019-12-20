@@ -90,6 +90,8 @@ OC.L10N.register(
     "Settings" : "Ajustes",
     "Edit account" : "Editar cuenta",
     "Add folder" : "Añadir carpeta",
+    "Move Up" : "Subir",
+    "Move down" : "Bajar",
     "Delete account" : "Eliminar cuenta",
     "Show all folders" : "Mostrar todas las carpetas",
     "Collapse folders" : "Ocultar carpetas",
