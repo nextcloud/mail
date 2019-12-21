@@ -90,6 +90,8 @@ OC.L10N.register(
     "Settings" : "Inställningar",
     "Edit account" : "Redigera konto",
     "Add folder" : "Lägg till mapp",
+    "Move Up" : "Flytta upp",
+    "Move down" : "Flytta ner",
     "Delete account" : "Radera konto",
     "Show all folders" : "Visa alla kataloger",
     "Collapse folders" : "Dölj mappar",
