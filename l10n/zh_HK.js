@@ -1,0 +1,25 @@
+OC.L10N.register(
+    "mail",
+    {
+    "Mail" : "電子郵件",
+    "Name" : "名稱",
+    "Password" : "密碼",
+    "None" : "空",
+    "SMTP Password" : "SMTP 密碼",
+    "Save" : "儲存",
+    "Connect" : "連線",
+    "Sending …" : "發送中 …",
+    "Send" : "發送",
+    "Delete" : "刪除",
+    "Reply" : "回覆",
+    "Settings" : "設定",
+    "Add folder" : "Add folder",
+    "Delete account" : "Delete account",
+    "General" : "一般",
+    "User" : "User",
+    "Host" : "主機",
+    "Port" : "連接埠",
+    "Search" : "Search",
+    "Refresh" : "重新整理"
+},
+"nplurals=1; plural=0;");

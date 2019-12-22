@@ -1,0 +1,15 @@
+{ "translations": {
+    "Mail" : "Pochta",
+    "Name" : "Ism...",
+    "Password" : "Parol",
+    "Save" : "Saqlash",
+    "Connect" : "Ulanmoq",
+    "Copy" : "Nusxalash",
+    "Send" : "Yuborish",
+    "Delete" : "O'chir",
+    "Settings" : "Sozlamalar",
+    "General" : "Umumiy",
+    "Search" : "Qidirmoq",
+    "Refresh" : "Yangilash"
+},"pluralForm" :"nplurals=1; plural=0;"
+}

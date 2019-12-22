@@ -1,0 +1,15 @@
+{ "translations": {
+    "Name" : "اسم",
+    "Password" : "پاسورڈ",
+    "Save" : "حفظ",
+    "Connect" : "منسلک",
+    "Send" : "بھجیں",
+    "Delete" : "حذف کریں",
+    "Reply" : "جواب",
+    "Settings" : "سیٹینگز",
+    "Add folder" : "Add folder",
+    "Delete account" : "Delete account",
+    "User" : "User",
+    "Search" : "Search"
+},"pluralForm" :"nplurals=2; plural=(n != 1);"
+}

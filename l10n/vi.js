@@ -1,0 +1,28 @@
+OC.L10N.register(
+    "mail",
+    {
+    "Mail" : "Mail",
+    "Name" : "Tên",
+    "Password" : "Mật khẩu",
+    "None" : "Không có",
+    "Save" : "Lưu",
+    "Connect" : "Kết nối",
+    "Keyboard shortcuts" : "Phím tắt",
+    "Copy" : "Sao chép",
+    "Upload attachment" : "Tải lên một đính kèm",
+    "Go back" : "Quay lại",
+    "Send" : "Gởi",
+    "Delete" : "Xóa",
+    "Reply" : "Trả l",
+    "Settings" : "Thiết lập",
+    "Add folder" : "Add folder",
+    "Delete account" : "Delete account",
+    "Mark all as read" : "Đánh dấu tất cả như đã ",
+    "General" : "Tổng hợp",
+    "User" : "Người dùng",
+    "Host" : "Máy chủ",
+    "Port" : "Cổng",
+    "Search" : "Tìm",
+    "Refresh" : "Làm mới"
+},
+"nplurals=1; plural=0;");

@@ -78,6 +78,7 @@
     "Delete account" : "Διαγραφή λογαριασμού",
     "Show all folders" : "Εμφάνιση όλων των φακέλων",
     "Collapse folders" : "Σύμπτυξη φακέλων",
+    "Mark all as read" : "Σημείωση όλων ως ανεγνωσμένων",
     "Mark all messages of this folder as read" : "Σημείωση όλων των μυνημάτων ως αναγνωσμένων",
     "Add subfolder" : "Προσθήκη υποφακέλου",
     "{total} messages" : "{total} μυνήματα",
