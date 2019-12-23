@@ -15,7 +15,7 @@ OC.L10N.register(
     "IMAP Settings" : "IMAP ezarpenak",
     "IMAP Host" : "IMAP ostalaria",
     "IMAP Security" : "IMAP Seguritatea",
-    "None" : "Ezer",
+    "None" : "Bat ere ez",
     "SSL/TLS" : "SSL/TLS",
     "STARTTLS" : "STARTTLS",
     "IMAP Port" : "IMAP portua",
