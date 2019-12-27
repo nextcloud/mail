@@ -90,6 +90,8 @@ OC.L10N.register(
     "Settings" : "Подешавања",
     "Edit account" : "Измени налог",
     "Add folder" : "Додај фасциклу",
+    "Move Up" : "Помери нагоре",
+    "Move down" : "Помери надоле",
     "Delete account" : "Обриши налог",
     "Show all folders" : "Прикажи све фасцикле",
     "Collapse folders" : "Сажми фасцикле",
