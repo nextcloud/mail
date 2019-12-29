@@ -80,7 +80,7 @@
     "browserslist-config-nextcloud": "0.1.0",
     "chai": "^4.2.0",
     "css-loader": "^3.4.0",
-    "eslint": "^6.7.2",
+    "eslint": "^6.8.0",
     "eslint-config-prettier": "^6.9.0",
     "eslint-plugin-prettier": "^3.1.2",
     "eslint-plugin-vue": "^6.0.1",
