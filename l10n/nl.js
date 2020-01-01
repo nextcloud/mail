@@ -49,6 +49,7 @@ OC.L10N.register(
     "Draft saved" : "Concept opgeslagen",
     "Upload attachment" : "Bijlage uploaden",
     "Add attachment from Files" : "Bijlage toevoegen vanuit Bestanden",
+    "Enable formatting" : "Inschakelen formattering",
     "Uploading attachments …" : "Bijlage aan het uploaden ...",
     "Sending …" : "Versturen ...",
     "Error sending your message" : "Fout bij het versturen van jouw bericht",
