@@ -271,6 +271,7 @@ export default {
 <style lang="scss">
 #mail-message {
 	flex-grow: 1;
+	max-width: none !important;
 }
 
 .mail-message-body {
