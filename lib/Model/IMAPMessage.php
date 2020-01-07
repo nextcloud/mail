@@ -49,6 +49,7 @@ use OCP\AppFramework\Db\DoesNotExistException;
 use OCP\Files\File;
 use OCP\Files\SimpleFS\ISimpleFile;
 use OCP\Util;
+use function base64_encode;
 use function mb_convert_encoding;
 
 class IMAPMessage implements IMessage, JsonSerializable {
@@ -431,7 +432,7 @@ class IMAPMessage implements IMessage, JsonSerializable {
 	public function getHtmlBody(int $accountId, string $folderId, int $messageId): string {
 		return $this->htmlService->sanitizeHtmlMailBody($this->htmlMessage, [
 			'accountId' => $accountId,
-			'folderId' => $folderId,
+			'folderId' => base64_encode($folderId),
 			'messageId' => $messageId,
 		], function ($cid) {
 			$match = array_filter($this->attachments,
