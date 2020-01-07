@@ -84,6 +84,7 @@ export default {
 				}
 
 				return {
+					accountId: message.accountId,
 					to: msgTo,
 					cc: msgCc,
 					subject: subject,
