@@ -6,6 +6,8 @@ OC.L10N.register(
     "Name" : "نام",
     "Password" : "گذرواژه",
     "None" : "هیچ‌کدام",
+    "SSL/TLS" : "SSL/TLS",
+    "STARTTLS" : "شروع TLS",
     "SMTP Password" : "رمز عبور SMTP",
     "Save" : "ذخیره",
     "Connect" : "اتصال",
