@@ -24,32 +24,7 @@ declare(strict_types=1);
 
 namespace OCA\Mail\AppInfo;
 
-use OCA\Mail\Contracts\IAttachmentService;
-use OCA\Mail\Contracts\IAvatarService;
-use OCA\Mail\Contracts\IMailManager;
-use OCA\Mail\Contracts\IMailTransmission;
-use OCA\Mail\Contracts\IUserPreferences;
-use OCA\Mail\Events\BeforeMessageDeletedEvent;
-use OCA\Mail\Events\DraftSavedEvent;
-use OCA\Mail\Events\MessageSentEvent;
-use OCA\Mail\Events\SaveDraftEvent;
-use OCA\Mail\Http\Middleware\ErrorMiddleware;
-use OCA\Mail\Listener\AddressCollectionListener;
-use OCA\Mail\Listener\DeleteDraftListener;
-use OCA\Mail\Listener\DraftMailboxCreatorListener;
-use OCA\Mail\Listener\FlagRepliedMessageListener;
-use OCA\Mail\Listener\TrashMailboxCreatorListener;
-use OCA\Mail\Listener\SaveSentMessageListener;
-use OCA\Mail\Service\Attachment\AttachmentService;
-use OCA\Mail\Service\AvatarService;
-use OCA\Mail\Service\Group\IGroupService;
-use OCA\Mail\Service\Group\NextcloudGroupService;
-use OCA\Mail\Service\MailManager;
-use OCA\Mail\Service\MailTransmission;
-use OCA\Mail\Service\UserPreferenceSevice;
 use OCP\AppFramework\App;
-use OCP\EventDispatcher\IEventDispatcher;
-use OCP\Util;
 
 class Application extends App {
 
