@@ -191,7 +191,7 @@ const splitCalendar = data => {
  * @returns {Promise}
  */
 export const importCalendarEvent = url => data => {
-	Logger.debug('importing event into calendar', {
+	Logger.debug('importing events into calendar', {
 		url,
 		data,
 	})
@@ -202,6 +202,7 @@ export const importCalendarEvent = url => data => {
 	components.forEach(componentName => {
 		for (let componentId in file.split[componentName]) {
 			const component = file.split[componentName][componentId]
+			Logger.info('importing event component', {component})
 			promises.push(
 				Promise.resolve(
 					Axios.put(url + getRandomString() + '.ics', component, {
