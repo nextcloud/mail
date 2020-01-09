@@ -19,10 +19,9 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-import {getCurrentUser} from '@nextcloud/auth'
 import {getLoggerBuilder} from '@nextcloud/logger'
 
 export default getLoggerBuilder()
 	.setApp('mail')
-	.setUid(getCurrentUser().uid)
+	.detectUser()
 	.build()
