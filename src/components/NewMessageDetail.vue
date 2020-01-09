@@ -28,7 +28,13 @@ import AppContentDetails from '@nextcloud/vue/dist/Components/AppContentDetails'
 import Axios from '@nextcloud/axios'
 import {generateUrl} from '@nextcloud/router'
 
-import {buildForwardSubject, buildHtmlReplyBody, buildReplyBody, buildReplySubject} from '../ReplyBuilder'
+import {
+	buildForwardSubject,
+	buildHtmlReplyBody,
+	buildReplyBody,
+	buildReplySubject,
+	buildRecipients as buildReplyRecipients,
+} from '../ReplyBuilder'
 import Composer from './Composer'
 import {getRandomMessageErrorMessage} from '../util/ErrorMessageFactory'
 import Error from './Error'
@@ -83,10 +89,13 @@ export default {
 					msgTo = []
 				}
 
+				const account = this.$store.getters.getAccount(message.accountId)
+				const replyRecipients = buildReplyRecipients(message, this.$store.getters.getAccount(message.accountId))
+
 				return {
 					accountId: message.accountId,
-					to: msgTo,
-					cc: msgCc,
+					to: replyRecipients.to,
+					cc: replyRecipients.cc,
 					subject: subject,
 					body: this.getForwardReplyBody(),
 				}
