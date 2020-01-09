@@ -83,10 +83,21 @@ export default {
 					msgTo = []
 				}
 
+				// Remove original recipient from 'To' and 'Cc' fields
+				// This only works if original recipient's email address is the same as the email
+				// address of the account for which the original email was received, not an alias.
+				var account = this.$store.getters.getAccount(message.accountId)
+				var msgToFiltered = msgTo.filter(function(to) {
+					return to.email !== account.emailAddress
+				})
+				var msgCcFiltered = msgCc.filter(function(cc) {
+					return cc.email !== account.emailAddress
+				})
+
 				return {
 					accountId: message.accountId,
-					to: msgTo,
-					cc: msgCc,
+					to: msgToFiltered,
+					cc: msgCcFiltered,
 					subject: subject,
 					body: this.getForwardReplyBody(),
 				}
