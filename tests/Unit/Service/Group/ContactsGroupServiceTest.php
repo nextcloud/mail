@@ -131,7 +131,7 @@ class ContactsGroupServiceTest extends TestCase {
 				'CATEGORIES' => 'work,family'
 			],
 			[
-				// take first email
+				// take all email
 				'UID' => 2,
 				'FN' => 'John Doe',
 				'EMAIL' => [
@@ -165,6 +165,9 @@ class ContactsGroupServiceTest extends TestCase {
 			],
 			[
 				'email' => 'john@doe.info',
+			],
+			[
+				'email' => 'doe@john.info',
 			],
 		];
 

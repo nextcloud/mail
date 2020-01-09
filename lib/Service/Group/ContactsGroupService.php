@@ -105,15 +105,15 @@ class ContactsGroupService implements IGroupService {
 				continue;
 			}
 
-			$email = $r['EMAIL'];
-			// only take first email ?
-			if (is_array($email) && count($email) > 0) {
-				$email = $email[0];
+			$emails = $r['EMAIL'];
+			if (!is_array($emails)) {
+				$emails = [$emails];
 			}
-
-			$receivers[] = [
-				'email' => $email
-			];
+			foreach($emails as $email) {
+				$receivers[] = [
+					'email' => $email
+				];
+			}
 		}
 		return $receivers;
 	}
