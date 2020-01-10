@@ -18,6 +18,7 @@ OC.L10N.register(
     "Send" : "ارسال",
     "Delete" : "حذف",
     "Reply" : "پاسخ",
+    "Forward" : "فرستادن",
     "Choose a folder to store the attachment in" : "لطفا پوشه ای را برای ذخیره سازی ضمیمه انتخاب کنید",
     "Settings" : "تنظیمات",
     "Add folder" : "Add folder",
