@@ -109,6 +109,7 @@ OC.L10N.register(
     "Signature …" : "Handtekening ...",
     "Save signature" : "Handtekening opslaan",
     "Mail app" : "Mail toepassing",
+    "Email: {email}" : "E-mail: {email}",
     "General" : "Algemeen",
     "Email address" : "E-mailadres",
     "IMAP" : "IMAP",

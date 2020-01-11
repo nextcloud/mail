@@ -112,6 +112,7 @@
     "Airplane" : "Flugzeug",
     "Reservation {id}" : "Reservierung {id}",
     "Flight {flightNr} from {depAirport} to {arrAirport}" : "Flug {flightNr} von {depAirport} nach {arrAirport}",
+    "Train" : "Zug",
     "{trainNr} from {depStation} to {arrStation}" : "{trainNr} von {depStation} nach {arrStation}",
     "Train from {depStation} to {arrStation}" : "Zug von {depStation} nach {arrStation}",
     "Mail app" : "Mail App",
