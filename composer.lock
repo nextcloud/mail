@@ -139,16 +139,16 @@
         },
         {
             "name": "christophwurst/kitinerary-bin",
-            "version": "0.2.0",
+            "version": "0.2.1",
             "source": {
                 "type": "git",
                 "url": "https://github.com/ChristophWurst/kitinerary-bin.git",
-                "reference": "76ad3cfcf6fd896e6d3ffc560ffa17bb8efbd7e4"
+                "reference": "33d35907cf51956d64f2e20ef1038c5bd65fcd46"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/ChristophWurst/kitinerary-bin/zipball/76ad3cfcf6fd896e6d3ffc560ffa17bb8efbd7e4",
-                "reference": "76ad3cfcf6fd896e6d3ffc560ffa17bb8efbd7e4",
+                "url": "https://api.github.com/repos/ChristophWurst/kitinerary-bin/zipball/33d35907cf51956d64f2e20ef1038c5bd65fcd46",
+                "reference": "33d35907cf51956d64f2e20ef1038c5bd65fcd46",
                 "shasum": ""
             },
             "require": {
@@ -174,7 +174,7 @@
                 }
             ],
             "description": "KItinerary binary executable",
-            "time": "2019-12-04T14:56:35+00:00"
+            "time": "2019-12-18T20:00:22+00:00"
         },
         {
             "name": "christophwurst/kitinerary-flatpak",
