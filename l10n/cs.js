@@ -114,6 +114,7 @@ OC.L10N.register(
     "Airplane" : "Letadlo",
     "Reservation {id}" : "Rezervace {id}",
     "Flight {flightNr} from {depAirport} to {arrAirport}" : "Let {flightNr} z {depAirport} do {arrAirport}",
+    "Train" : "Vlak",
     "{trainNr} from {depStation} to {arrStation}" : "{trainNr} z {depStation} do {arrStation}",
     "Train from {depStation} to {arrStation}" : "Vlak z {depStation} do {arrStation}",
     "Mail app" : "E-mailová aplikace",
