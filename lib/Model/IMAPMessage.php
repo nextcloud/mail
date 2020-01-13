@@ -419,6 +419,7 @@ class IMAPMessage implements IMessage, JsonSerializable {
 			'subject' => $this->getSubject(),
 			'dateInt' => $this->getSentDate()->getTimestamp(),
 			'flags' => $this->getFlags(),
+			'hasHtmlBody' => $this->hasHtmlMessage,
 		];
 	}
 
