@@ -75,6 +75,7 @@ import AppNavigationNew from '@nextcloud/vue/dist/Components/AppNavigationNew'
 import AppNavigationSettings from '@nextcloud/vue/dist/Components/AppNavigationSettings'
 import AppNavigationSpacer from '@nextcloud/vue/dist/Components/AppNavigationSpacer'
 
+import logger from '../logger'
 import NavigationAccount from './NavigationAccount'
 import NavigationAccountExpandCollapse from './NavigationAccountExpandCollapse'
 import NavigationFolder from './NavigationFolder'
@@ -120,16 +121,30 @@ export default {
 	},
 	methods: {
 		onNewMessage() {
-			// FIXME: assumes that we're on the 'message' route already
-			this.$router.push({
-				name: 'message',
-				params: {
-					accountId: this.$route.params.accountId,
-					folderId: this.$route.params.folderId,
-					filter: this.$route.params.filter ? this.$route.params.filter : undefined,
-					messageUid: 'new',
-				},
-			})
+			const accountId = this.$route.params.accountId || this.$store.getters.accounts[0].id
+
+			// FIXME: this assumes that there's at least one folder
+			const folderId = this.$route.params.folderId || this.$store.getters.getFolders(accountId)[0].id
+			if (this.$router.currentRoute.name === 'message' && this.$router.currentRoute.params.messageUid === 'new') {
+				// If we already show the composer, navigating to it would be pointless (and doesn't work)
+				// instead trigger an event to reset the composer
+				this.$root.$emit('newMessage')
+				return
+			}
+
+			this.$router
+				.push({
+					name: 'message',
+					params: {
+						accountId,
+						folderId,
+						filter: this.$route.params.filter ? this.$route.params.filter : undefined,
+						messageUid: 'new',
+					},
+				})
+				.catch((err) => {
+					logger.error(err)
+				})
 		},
 		isFirst(account) {
 			const accounts = this.$store.getters.accounts
