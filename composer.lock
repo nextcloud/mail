@@ -178,20 +178,20 @@
         },
         {
             "name": "christophwurst/kitinerary-flatpak",
-            "version": "0.2.0",
+            "version": "0.2.2",
             "source": {
                 "type": "git",
                 "url": "https://github.com/ChristophWurst/kitinerary-flatpak.git",
-                "reference": "1bc6b8304c68f8656c5f1b7bf7e74a3c465e211c"
+                "reference": "2f0254f31a6b3d88f7a8ac5de25c580820401d37"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/ChristophWurst/kitinerary-flatpak/zipball/1bc6b8304c68f8656c5f1b7bf7e74a3c465e211c",
-                "reference": "1bc6b8304c68f8656c5f1b7bf7e74a3c465e211c",
+                "url": "https://api.github.com/repos/ChristophWurst/kitinerary-flatpak/zipball/2f0254f31a6b3d88f7a8ac5de25c580820401d37",
+                "reference": "2f0254f31a6b3d88f7a8ac5de25c580820401d37",
                 "shasum": ""
             },
             "require": {
-                "christophwurst/kitinerary": "0.2.0",
+                "christophwurst/kitinerary": "^0.2",
                 "ext-json": "*"
             },
             "type": "library",
@@ -211,7 +211,7 @@
                 }
             ],
             "description": "KItinerary Flatpak binding",
-            "time": "2019-12-04T14:55:14+00:00"
+            "time": "2020-01-13T21:42:51+00:00"
         },
         {
             "name": "ezyang/htmlpurifier",
