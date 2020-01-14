@@ -12,6 +12,7 @@ OC.L10N.register(
     "Save" : "ذخیره",
     "Connect" : "اتصال",
     "Keyboard shortcuts" : "میان بر صفحه ی کلید",
+    "Select account" : "حساب را انتخاب کنید",
     "Copy" : "کپی کردن",
     "Sending …" : "در حال ارسال ...",
     "Message sent!" : "پیام ارسال شد!",

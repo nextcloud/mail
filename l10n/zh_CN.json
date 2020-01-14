@@ -112,6 +112,7 @@
     "Airplane" : "飞机",
     "Reservation {id}" : "预订 {id}",
     "Flight {flightNr} from {depAirport} to {arrAirport}" : "{flightNr} 航班从 {depAirport} 飞往 {arrAirport}",
+    "Train" : "火车",
     "{trainNr} from {depStation} to {arrStation}" : "{trainNr} 从 {depStation} 到 {arrStation}",
     "Train from {depStation} to {arrStation}" : "火车从 {depStation} 到 {arrStation}",
     "Mail app" : "邮件应用",
