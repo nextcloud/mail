@@ -62,6 +62,10 @@ export default {
 			type: String,
 			default: '',
 		},
+		focus: {
+			type: Boolean,
+			default: false,
+		},
 	},
 	data() {
 		return {
@@ -127,6 +131,9 @@ export default {
 					priority: 'highest',
 				}
 			)
+			if (this.focus) {
+				logger.debug('focusing TextEditor')
+			}
 
 			// Set value as late as possible, so the custom schema listener is used
 			// for the initial editor model
