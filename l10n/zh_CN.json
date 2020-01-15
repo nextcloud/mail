@@ -98,7 +98,7 @@
     "Add subfolder" : "添加子文件夹",
     "{total} messages" : "{total} 封邮件",
     "{unread} unread of {total}" : "总共 {total} 封邮件，{unread} 封未读邮件",
-    "Loading …" : "加载中...",
+    "Loading …" : "正在加载...",
     "Could not load your draft" : "无法加载您的草稿",
     "Could not load original message" : "无法加载初始消息",
     "No message selected" : "没有选择消息",
