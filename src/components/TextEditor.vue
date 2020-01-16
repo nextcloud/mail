@@ -133,6 +133,7 @@ export default {
 			)
 			if (this.focus) {
 				logger.debug('focusing TextEditor')
+				editor.editing.view.focus()
 			}
 
 			// Set value as late as possible, so the custom schema listener is used
