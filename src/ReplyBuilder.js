@@ -24,8 +24,8 @@ import moment from '@nextcloud/moment'
 import negate from 'lodash/fp/negate'
 
 export const buildReplyBody = (original, from, date) => {
-	const start = '\n\n'
-	const body = '\n> ' + original.replace(/\n/g, '\n> ')
+	const start = '<p></p><p></p>'
+	const body = '<br>&gt; ' + original.replace(/\n/g, '<br>&gt; ')
 
 	if (from) {
 		const dateString = moment.unix(date).format('LLL')
@@ -36,7 +36,7 @@ export const buildReplyBody = (original, from, date) => {
 }
 
 export const buildHtmlReplyBody = (original, from, date) => {
-	const start = `<p></p>`
+	const start = `<p></p><p></p>`
 	const body = `<blockquote>${original}</blockquote>`
 
 	if (from) {
