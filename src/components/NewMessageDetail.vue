@@ -77,20 +77,25 @@ export default {
 				const message = this.original
 				Logger.debug('forwarding or replying to message', {message})
 
-				// message headers set for 'reply' actions by default
-				let subject = buildReplySubject(message.subject)
-				let msgTo = message.from
-				let msgCc = []
-				if (this.$route.params.messageUid === 'replyAll') {
-					msgCc = message.to.concat(message.cc)
-				} else if (this.$route.params.messageUid !== 'reply') {
+				let subject = ''
+				let replyRecipients = {}
+				if (this.$route.params.messageUid === 'reply') {
+					Logger.debug('simple reply')
+					subject = buildReplySubject(message.subject)
+					replyRecipients.to = message.from
+				} else if (this.$route.params.messageUid === 'replyAll') {
+					Logger.debug('replying to all')
+					Logger.debug('replying to all: original', {original: this.original})
+					subject = buildReplySubject(message.subject)
+					const account = this.$store.getters.getAccount(message.accountId)
+					replyRecipients = buildReplyRecipients(message, {
+						email: account.emailAddress,
+						label: account.name,
+					})
+				} else {
 					// forward
 					subject = buildForwardSubject(message.subject)
-					msgTo = []
 				}
-
-				const account = this.$store.getters.getAccount(message.accountId)
-				const replyRecipients = buildReplyRecipients(message, this.$store.getters.getAccount(message.accountId))
 
 				return {
 					accountId: message.accountId,
