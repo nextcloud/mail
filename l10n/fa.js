@@ -15,6 +15,7 @@ OC.L10N.register(
     "Select account" : "حساب را انتخاب کنید",
     "Copy" : "کپی کردن",
     "Sending …" : "در حال ارسال ...",
+    "Retry" : "تلاش دوباره",
     "Message sent!" : "پیام ارسال شد!",
     "Send" : "ارسال",
     "Delete" : "حذف",
