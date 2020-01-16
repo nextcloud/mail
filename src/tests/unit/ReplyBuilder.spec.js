@@ -25,7 +25,7 @@ import {buildReplyBody, buildRecipients, buildReplySubject} from '../../ReplyBui
 describe('ReplyBuilder', () => {
 	it('creates a reply body without any sender', () => {
 		const body = 'Newsletter\nhello\ncheers'
-		const expectedReply = '\n\n\n> Newsletter\n> hello\n> cheers'
+		const expectedReply = '<p></p><p></p><br>&gt; Newsletter<br>&gt; hello<br>&gt; cheers'
 
 		const replyBody = buildReplyBody(body)
 
@@ -34,7 +34,7 @@ describe('ReplyBuilder', () => {
 
 	it('creates a reply body', () => {
 		const body = 'Newsletter\nhello'
-		const expectedReply = '\n\n"Test User" test@user.ru – November 5, 2018 '
+		const expectedReply = '<p></p><p></p>"Test User" test@user.ru – November 5, 2018 '
 
 		const replyBody = buildReplyBody(
 			body,
