@@ -46,6 +46,7 @@ use OCA\Mail\Service\Attachment\AttachmentService;
 use OCA\Mail\Service\AvatarService;
 use OCA\Mail\Service\Group\IGroupService;
 use OCA\Mail\Service\Group\NextcloudGroupService;
+use OCA\Mail\Service\Group\ContactsGroupService;
 use OCA\Mail\Service\MailManager;
 use OCA\Mail\Service\MailSearch;
 use OCA\Mail\Service\MailTransmission;
@@ -115,6 +116,7 @@ class BootstrapSingleton {
 		$container->registerMiddleWare('ProvisioningMiddleware');
 
 		$container->registerAlias(IGroupService::class, NextcloudGroupService::class);
+		$container->registerAlias(IGroupService::class, ContactsGroupService::class);
 	}
 
 	private function registerEvents(IAppContainer $container): void {
