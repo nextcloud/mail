@@ -178,7 +178,7 @@ export default {
 		},
 
 		createFolder(e) {
-			const name = e.target.elements[0].value
+			const name = e.target.elements[1].value
 			const withPrefix = atob(this.folder.id) + this.folder.delimiter + name
 			logger.info(`creating folder ${withPrefix} as subfolder of ${this.folder.id}`)
 			this.menuOpen = false

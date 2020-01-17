@@ -116,7 +116,7 @@ export default {
 	},
 	methods: {
 		createFolder(e) {
-			const name = e.target.elements[0].value
+			const name = e.target.elements[1].value
 			logger.info('creating folder ' + name)
 			this.menuOpen = false
 			this.$store

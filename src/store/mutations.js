@@ -88,7 +88,7 @@ export default {
 			if (!folder.folders) {
 				return
 			}
-			folder.folders.map(folder => existing.push(folder))
+			folder.folders.map(id => existing.push(state.folders[id]))
 			folder.folders = []
 		})
 		// Save the folders to the store, but only keep IDs in the account's folder list
