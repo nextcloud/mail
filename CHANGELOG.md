@@ -1,6 +1,20 @@
 # Changelog
 All notable changes to this project will be documented in this file.
 
+## 1.0.0 - 2020-01-17
+### Added
+- Itinerary extraction with KItinerary
+- Sending to contacts groups
+### Changed
+- New and updated translations
+- Updated dependencies
+### Fixed
+- Vanishing newlines in plaintext drafts
+- Missing newlines on top of the reply body
+- Unnecessary spaces in reply recipient line
+- Automatic focus on reply body
+- Display name change propagation for provisioned accounts
+
 ## 0.21.1 - 2020-01-07
 ### Changed
 - New and updated translations
