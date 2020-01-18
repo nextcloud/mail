@@ -1,7 +1,7 @@
 OC.L10N.register(
     "mail",
     {
-    "Mail" : "Mail",
+    "Mail" : "E-posta",
     "Auto detect failed. Please use manual mode." : "Otomatik olarak algılanamadı. Lütfen el ile kipini kullanın.",
     "Updating account failed: " : "Hesap güncellenemedi:",
     "Creating account failed: " : "Hesap oluşturulamadı:",
@@ -117,7 +117,7 @@ OC.L10N.register(
     "Train" : "Tren",
     "{trainNr} from {depStation} to {arrStation}" : "{depStation} ile {arrStation} arasında {trainNr}  numaralı sefer",
     "Train from {depStation} to {arrStation}" : "{depStation} ile {arrStation} arasında tren",
-    "Mail app" : "Mail uygulaması",
+    "Mail app" : "E-posta uygulaması",
     "The mail app allows users to read mails on their IMAP accounts." : "Mail uygulaması kullanıcıların IMAP hesaplarındaki e-postaları okuyabilmesini sağlar.",
     "Email: {email}" : "E-posta: {email}",
     "IMAP: {user} on {host}:{port} ({ssl} encryption)" : "IMAP: {host}:{port} üzerindeki {user} (şifreleme {ssl})",
