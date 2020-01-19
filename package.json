@@ -39,7 +39,7 @@
     "@nextcloud/vue": "^1.2.5",
     "@vue/babel-preset-app": "^4.1.2",
     "color-convert": "^2.0.1",
-    "core-js": "^3.6.2",
+    "core-js": "^3.6.4",
     "davclient.js": "git+https://github.com/owncloud/davclient.js.git#0.2.1",
     "debounce-promise": "^3.1.2",
     "html-to-text": "^5.1.1",
