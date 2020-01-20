@@ -60,7 +60,7 @@ class Folder implements JsonSerializable {
 		$this->accountId = $accountId;
 		$this->mailbox = $mailbox;
 		$this->attributes = $attributes;
-		$this->delimiter = $delimiter;
+		$this->delimiter = $delimiter ?: '/';
 		$this->folders = [];
 		$this->status = [];
 		$this->specialUse = [];
