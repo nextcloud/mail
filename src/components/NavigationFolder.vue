@@ -46,7 +46,7 @@
 					{{ t('mail', 'Mark all messages of this folder as read') }}
 				</ActionButton>
 
-				<ActionInput icon="icon-add" @submit="createFolder">
+				<ActionInput v-if="!account.isUnified" icon="icon-add" @submit="createFolder">
 					{{ t('mail', 'Add subfolder') }}
 				</ActionInput>
 			</template>
