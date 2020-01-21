@@ -25,6 +25,7 @@
 namespace OCA\Mail\Tests\Unit\Http\Middleware;
 
 use ChristophWurst\Nextcloud\Testing\TestCase;
+use Exception;
 use OCA\Mail\Exception\NotImplemented;
 use OCA\Mail\Exception\ServiceException;
 use OCA\Mail\Http\Middleware\ErrorMiddleware;
@@ -106,6 +107,22 @@ class ErrorMiddlewareTest extends TestCase {
 
 		$this->assertInstanceOf(JSONResponse::class, $response);
 		$this->assertEquals($expectedStatus, $response->getStatus());
+	}
+
+	public function testSerializesRecursively() {
+		$inner = new Exception();
+		$outer = new ServiceException("Test", 0, $inner);
+		$controller = $this->createMock(Controller::class);
+		$this->reflector->expects($this->once())
+			->method('hasAnnotation')
+			->willReturn(true);
+		$this->logger->expects($this->once())
+			->method('logException')
+			->with($outer);
+
+		$response = $this->middleware->afterException($controller, 'index', $outer);
+
+		$this->assertInstanceOf(JSONResponse::class, $response);
 	}
 
 }

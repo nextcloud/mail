@@ -39,6 +39,7 @@ use OCP\AppFramework\Middleware;
 use OCP\AppFramework\Utility\IControllerMethodReflector;
 use OCP\IConfig;
 use OCP\ILogger;
+use function get_class;
 
 class ErrorMiddleware extends Middleware {
 
@@ -67,6 +68,7 @@ class ErrorMiddleware extends Middleware {
 	 * @param Controller $controller
 	 * @param string $methodName
 	 * @param Exception $exception
+	 *
 	 * @return Response
 	 * @throws Exception
 	 */
@@ -86,17 +88,29 @@ class ErrorMiddleware extends Middleware {
 		} else {
 			$this->logger->logException($exception);
 			if ($this->config->getSystemValue('debug', false)) {
-				return new JSONErrorResponse([
-					'debug' => true,
-					'type' => get_class($exception),
-					'message' => $exception->getMessage(),
-					'code' => $exception->getCode(),
-					'trace' => $this->filterTrace($exception->getTrace()),
-				], Http::STATUS_INTERNAL_SERVER_ERROR);
-			} else {
-				return new JSONErrorResponse([], Http::STATUS_INTERNAL_SERVER_ERROR);
+				return new JSONErrorResponse(array_merge(
+					[
+						'debug' => true,
+					],
+					$this->serializeException($exception)
+				), Http::STATUS_INTERNAL_SERVER_ERROR);
 			}
+
+			return new JSONErrorResponse([], Http::STATUS_INTERNAL_SERVER_ERROR);
 		}
+	}
+
+	private function serializeException(?Exception $exception): ?array {
+		if ($exception === null) {
+			return null;
+		}
+		return [
+			'type' => get_class($exception),
+			'message' => $exception->getMessage(),
+			'code' => $exception->getCode(),
+			'trace' => $this->filterTrace($exception->getTrace()),
+			'previous' => $this->serializeException($exception->getPrevious()),
+		];
 	}
 
 	private function filterTrace(array $original): array {
