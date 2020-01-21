@@ -35,3 +35,9 @@ If you can not access your Gmail account use https://accounts.google.com/Display
 ### Outlook.com
 
 If you can not access your Outlook.com account try to enable the 'Two-Factor Verification' (https://account.live.com/proofs/Manage) and set up an app password (https://account.live.com/proofs/AppPassword), which you then use for the Nextcloud Mail app.
+
+### Autoconfig for your e-mail domain fails
+
+If autoconfiguration for your domain fails, you can create an autoconfig file and place it as https://autoconfig.yourdomain.tld/mail/config-v1.1.xml
+For more information please refer to Mozilla's documentation:
+https://developer.mozilla.org/en-US/docs/Mozilla/Thunderbird/Autoconfiguration/FileFormat/HowTo
