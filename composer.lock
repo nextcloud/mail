@@ -103,16 +103,16 @@
         },
         {
             "name": "christophwurst/kitinerary",
-            "version": "0.2.0",
+            "version": "0.2.1",
             "source": {
                 "type": "git",
                 "url": "https://github.com/ChristophWurst/kitinerary.git",
-                "reference": "166abd7af84632130d8c74fd80b2225631ee95c6"
+                "reference": "d2adb02b6d46b36571dc3c5127a8360ba2d5b418"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/ChristophWurst/kitinerary/zipball/166abd7af84632130d8c74fd80b2225631ee95c6",
-                "reference": "166abd7af84632130d8c74fd80b2225631ee95c6",
+                "url": "https://api.github.com/repos/ChristophWurst/kitinerary/zipball/d2adb02b6d46b36571dc3c5127a8360ba2d5b418",
+                "reference": "d2adb02b6d46b36571dc3c5127a8360ba2d5b418",
                 "shasum": ""
             },
             "require": {
@@ -135,7 +135,7 @@
                 }
             ],
             "description": "KItinerary adapter",
-            "time": "2019-12-04T14:51:41+00:00"
+            "time": "2020-01-13T21:39:22+00:00"
         },
         {
             "name": "christophwurst/kitinerary-bin",
