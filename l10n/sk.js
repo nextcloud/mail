@@ -8,7 +8,7 @@ OC.L10N.register(
     "Name" : "Meno",
     "Mail Address" : "Emailová adresa",
     "Password" : "Heslo",
-    "Manual" : "Príručka",
+    "Manual" : "Ručné nastavenia",
     "IMAP Host" : "IMAP hostiteľ",
     "None" : "Žiadny",
     "SSL/TLS" : "SSL/TLS",
