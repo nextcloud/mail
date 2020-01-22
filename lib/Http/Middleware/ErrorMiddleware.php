@@ -39,6 +39,7 @@ use OCP\AppFramework\Middleware;
 use OCP\AppFramework\Utility\IControllerMethodReflector;
 use OCP\IConfig;
 use OCP\ILogger;
+use Throwable;
 use function get_class;
 
 class ErrorMiddleware extends Middleware {
@@ -100,16 +101,16 @@ class ErrorMiddleware extends Middleware {
 		}
 	}
 
-	private function serializeException(?Exception $exception): ?array {
-		if ($exception === null) {
+	private function serializeException(?Throwable $throwable): ?array {
+		if ($throwable === null) {
 			return null;
 		}
 		return [
-			'type' => get_class($exception),
-			'message' => $exception->getMessage(),
-			'code' => $exception->getCode(),
-			'trace' => $this->filterTrace($exception->getTrace()),
-			'previous' => $this->serializeException($exception->getPrevious()),
+			'type' => get_class($throwable),
+			'message' => $throwable->getMessage(),
+			'code' => $throwable->getCode(),
+			'trace' => $this->filterTrace($throwable->getTrace()),
+			'previous' => $this->serializeException($throwable->getPrevious()),
 		];
 	}
 
