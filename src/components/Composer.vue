@@ -151,6 +151,7 @@
 						class="submit-message send primary icon-confirm-white"
 						type="submit"
 						:value="submitButtonTitle"
+						:disabled="!canSend"
 						@click="onSend"
 					/>
 				</div>
@@ -291,6 +292,9 @@ export default {
 		},
 		noSubject() {
 			return this.subjectVal === '' && this.bodyVal !== ''
+		},
+		canSend() {
+			return this.selectTo.length > 0 || this.selectCc.length > 0 || this.selectBcc.length > 0
 		},
 	},
 	watch: {
