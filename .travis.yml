@@ -42,11 +42,9 @@ matrix:
     - php: 7.2
       env: "PHP_COVERAGE=TRUE"
     - php: 7.3
-      env: "DB=pgsql CORE_BRANCH=stable17"
-    - php: 7.3
       env: "CORE_BRANCH=stable17"
     - php: 7.3
-      env: "DB=sqlite CORE_BRANCH=stable17"
+      env: "CORE_BRANCH=stable18"
     - php: nightly
       env: "DB=sqlite PATCH_VERSION_CHECK=TRUE"
   fast_finish: true
@@ -56,7 +54,6 @@ branches:
   - master
   - "/^stable\\d+(\\.\\d+)?$/"
   - /^v\d++(\.\d+)?+(\.\d+)?+(\.\d+)?$/
-  - refactor/vue
 
 cache:
   directories:
