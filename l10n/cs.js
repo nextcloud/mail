@@ -152,7 +152,7 @@ OC.L10N.register(
     "Nextcloud Mail" : "Nextcloud Mail",
     "Could not load {tag}{name}{endtag}" : "Nedaří se načíst {tag}{name}{endtag}",
     "There was a problem loading {tag}{name}{endtag}" : "Došlo k problému s načtením {tag}{name}{endtag}",
-    "Could not load the desired message" : "Nelze načíst vyžádanou zprávu",
+    "Could not load the desired message" : "Nedaří se načíst vyžádanou zprávu",
     "Could not load the message" : "Zprávu se nedaří načíst",
     "Error loading message" : "Chyba při načtení zprávy",
     "Forwarding to %s" : "Přeposílá se na %s",
