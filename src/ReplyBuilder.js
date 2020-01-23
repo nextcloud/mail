@@ -96,6 +96,11 @@ export const buildRecipients = (envelope, ownAddress) => {
 		cc = envelope.cc
 	}
 
+	// edge case: pure self-sent email
+	if (to.length == 0) {
+		to = envelope.from
+	}
+
 	return {
 		to,
 		from: replyingAddress ? [replyingAddress] : [],
