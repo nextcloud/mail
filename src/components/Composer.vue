@@ -37,12 +37,12 @@
 				@search-change="onAutocomplete"
 			/>
 			<a v-if="!showCC" class="copy-toggle" href="#" @click.prevent="showCC = true">
-				{{ t('mail', '+ Copy') }}
+				{{ t('mail', '+ CC/BCC') }}
 			</a>
 		</div>
 		<div v-if="showCC" class="composer-fields">
 			<label for="cc" class="cc-label">
-				{{ t('mail', 'Copy') }}
+				{{ t('mail', 'CC') }}
 			</label>
 			<Multiselect
 				id="cc"
@@ -63,7 +63,7 @@
 		</div>
 		<div v-if="showCC" class="composer-fields">
 			<label for="bcc" class="bcc-label">
-				{{ t('mail', 'Blind copy') }}
+				{{ t('mail', 'BCC') }}
 			</label>
 			<Multiselect
 				id="bcc"
