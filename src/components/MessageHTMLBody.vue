@@ -1,11 +1,5 @@
 <template>
 	<div id="mail-content">
-		<div v-if="hasBlockedContent" id="mail-message-has-blocked-content">
-			{{ t('mail', 'The images have been blocked to protect your privacy.') }}
-			<button @click="onShowBlockedContent">
-				{{ t('mail', 'Show images from this	sender') }}
-			</button>
-		</div>
 		<div v-if="loading" class="icon-loading" />
 		<div id="message-container" :class="{hidden: loading}">
 			<iframe id="message-frame" ref="iframe" :src="url" seamless @load="onMessageFrameLoad" />
