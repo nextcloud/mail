@@ -25,6 +25,7 @@ declare(strict_types=1);
 
 namespace OCA\Mail\Migration;
 
+use Exception;
 use OCP\ILogger;
 use OCP\Migration\IOutput;
 use OCP\Migration\IRepairStep;
@@ -62,7 +63,9 @@ class MakeItineraryExtractorExecutable implements IRepairStep {
 			return;
 		}
 		try {
-			@chmod($this->file, 744);
+			if (!@chmod($this->file, 744)) {
+				throw new Exception('chmod returned false');
+			}
 		} catch (Throwable $e) {
 			$this->logger->logException($e, [
 				'message' => 'Can\'t make itinerary extractor executable',
