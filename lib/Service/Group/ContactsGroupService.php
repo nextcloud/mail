@@ -70,7 +70,7 @@ class ContactsGroupService implements IGroupService {
 			if (!isset($r['EMAIL'])) {
 				continue;
 			}
-			foreach (explode(',', $r['CATEGORIES']) as $group) {
+			foreach (explode(',', $r['CATEGORIES'] ?? '') as $group) {
 				$receivers[] =[
 					'id' => $group,
 					'name' => $group
