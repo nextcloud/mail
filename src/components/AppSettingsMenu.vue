@@ -18,7 +18,11 @@
 			/>
 			<label for="gravatar-enabled">{{ t('mail', 'Use Gravatar and favicon avatars') }}</label>
 		</p>
-
+		<p>
+			<button class="icon-mail app-settings-button" @click="registerProtocolHandler">
+				{{ t('mail', 'Register as application for mail links') }}
+			</button>
+		</p>
 		<p class="icon-details app-settings-button button">
 			<router-link :to="{name: 'keyboardShortcuts'}">
 				{{ t('mail', 'Keyboard shortcuts') }}
@@ -35,6 +39,7 @@
 
 <script>
 import Logger from '../logger'
+import {generateUrl} from '@nextcloud/router'
 
 export default {
 	name: 'AppSettingsMenu',
@@ -61,6 +66,17 @@ export default {
 				.then(() => {
 					this.loadingAvatarSettings = false
 				})
+		},
+		registerProtocolHandler: function() {
+			if (window.navigator.registerProtocolHandler) {
+				var url =
+					window.location.protocol + '//' + window.location.host + generateUrl('apps/mail/compose?uri=%s')
+				try {
+					window.navigator.registerProtocolHandler('mailto', url, OC.theme.name + ' Mail')
+				} catch (err) {
+					Logger.error('could not register protocol handler', {err})
+				}
+			}
 		},
 	},
 }
