@@ -34,6 +34,7 @@
 	<repair-steps>
 		<post-migration>
 			<step>OCA\Mail\Migration\FixCollectedAddresses</step>
+			<step>OCA\Mail\Migration\MakeItineraryExtractorExecutable</step>
 			<step>OCA\Mail\Migration\MigrateProvisioningConfig</step>
 			<step>OCA\Mail\Migration\ProvisionAccounts</step>
 		</post-migration>
