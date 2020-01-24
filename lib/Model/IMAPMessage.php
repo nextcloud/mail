@@ -263,21 +263,20 @@ class IMAPMessage implements IMessage, JsonSerializable {
 	 */
 	private function hasAttachments($part) {
 		foreach ($part->getParts() as $p) {
-			/**
-			 * @var Horde_Mime_Part $p
-			 */
+			/** @var Horde_Mime_Part $p */
 			$filename = $p->getName();
 
-			if (!is_null($p->getContentId())) {
+			if ($p->getContentId() !== null) {
 				continue;
 			}
-			if (isset($filename)) {
+			// TODO: show embedded messages and don't treat them as attachments
+			if ($p->getType() === 'message/rfc822' || isset($filename)) {
 				// do not show technical attachments
 				if (in_array($filename, $this->attachmentsToIgnore)) {
 					continue;
-				} else {
-					return true;
 				}
+
+				return true;
 			}
 			if ($this->hasAttachments($p)) {
 				return true;
@@ -336,7 +335,8 @@ class IMAPMessage implements IMessage, JsonSerializable {
 		// Any part with a filename is an attachment,
 		// so an attached text file (type 0) is not mistaken as the message.
 		$filename = $p->getName();
-		if (isset($filename)) {
+		// TODO: show embedded messages and don't treat them as attachments
+		if ($p->getType() === 'message/rfc822' || isset($filename)) {
 			if (in_array($filename, $this->attachmentsToIgnore)) {
 				return;
 			}

@@ -14,6 +14,7 @@
 				:hide-selected="true"
 				:custom-label="formatAliases"
 				:placeholder="t('mail', 'Select account')"
+				:clear-on-select="false"
 				@keyup="onInputChanged"
 			/>
 		</div>
@@ -31,6 +32,7 @@
 				track-by="email"
 				:multiple="true"
 				:placeholder="t('mail', 'Contact or email address …')"
+				:clear-on-select="false"
 				:show-no-options="false"
 				@keyup="onInputChanged"
 				@tag="onNewToAddr"
@@ -53,6 +55,7 @@
 				track-by="email"
 				:multiple="true"
 				:placeholder="t('mail', '')"
+				:clear-on-select="false"
 				:show-no-options="false"
 				@keyup="onInputChanged"
 				@tag="onNewCcAddr"
