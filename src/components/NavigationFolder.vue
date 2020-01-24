@@ -32,7 +32,7 @@
 		<!-- actions -->
 		<template slot="actions">
 			<template v-if="top">
-				<ActionText icon="icon-info" :title="folderId">
+				<ActionText v-if="!account.isUnified" icon="icon-info" :title="folderId">
 					{{ statsText }}
 				</ActionText>
 
