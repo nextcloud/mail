@@ -8,7 +8,6 @@ OC.L10N.register(
     "Save" : "Lưu",
     "Connect" : "Kết nối",
     "Keyboard shortcuts" : "Phím tắt",
-    "Copy" : "Sao chép",
     "Upload attachment" : "Tải lên một đính kèm",
     "Go back" : "Quay lại",
     "Send" : "Gởi",

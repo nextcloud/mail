@@ -16,7 +16,6 @@ OC.L10N.register(
     "Save" : "Guardar",
     "Connect" : "Ligar",
     "Keyboard shortcuts" : "Atalhos de teclado",
-    "Copy" : "Copiar",
     "Subject" : "Assunto",
     "Saving draft …" : "A guardar rascunho ...",
     "Draft saved" : "Rascunho guardado",

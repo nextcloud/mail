@@ -18,7 +18,6 @@ OC.L10N.register(
     "Connect" : "холбох",
     "Add mail account" : "шуудангийн хаяг нэмэх",
     "Select account" : "Аккаунт сонгох",
-    "Copy" : "Хуулах",
     "Subject" : "Сэдэв",
     "Add attachment from Files" : "Файлаас хавсралт нэмэх",
     "Sending …" : "илгээмж",

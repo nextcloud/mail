@@ -27,7 +27,6 @@ OC.L10N.register(
     "Add mail account" : "أضف حساب بريدي",
     "Keyboard shortcuts" : "إختصارات لوحة المفاتيح",
     "Select account" : "إختيار حساب",
-    "Copy" : "أنسخ",
     "Subject" : "الموضوع",
     "Upload attachment" : "رفع المرفقات",
     "Add attachment from Files" : "إضافة مرفقات مِن الملفات",

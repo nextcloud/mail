@@ -24,7 +24,6 @@ OC.L10N.register(
     "Add mail account" : "Agregar cuenta de correo",
     "Keyboard shortcuts" : "Atajos de teclado",
     "Select account" : "Seleccione la cuenta",
-    "Copy" : "Copiar",
     "Subject" : "Asunto",
     "Add attachment from Files" : "Agregar adjunto desde Archivos",
     "Sending …" : "Enviando ...",

@@ -31,7 +31,6 @@ OC.L10N.register(
     "Use Gravatar and favicon avatars" : "Defnyddiwch Gravatar ac afatarau favicon",
     "Keyboard shortcuts" : "Llwybrau byr bysellfwrdd",
     "Looking for a way to encrypt your emails? Install the Mailvelope browser extension!" : "Chwilio am ffordd i amgryptio'ch e-byst? Gosodwch estyniad porwr Mailvelope!",
-    "Copy" : "Copïo",
     "Subject" : "Pwnc",
     "Saving draft …" : "Yn cadw drafft …",
     "Draft saved" : "Cadwyd y drafft",

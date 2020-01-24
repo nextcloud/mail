@@ -19,7 +19,6 @@ OC.L10N.register(
     "Connect" : "Verbind",
     "Add mail account" : "Voeg posrekening toe",
     "Keyboard shortcuts" : "Sneltoetse",
-    "Copy" : "Kopieer",
     "Subject" : "Onderwerp",
     "Sending …" : "Stuur…",
     "Go back" : "Gaan terug",

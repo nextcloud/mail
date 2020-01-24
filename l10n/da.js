@@ -29,7 +29,6 @@ OC.L10N.register(
     "Add mail account" : "Tilføj mail konto",
     "Keyboard shortcuts" : "Tastaturgenveje",
     "Select account" : "Vælg konto",
-    "Copy" : "Kopiér",
     "Subject" : "Emne",
     "Saving draft …" : "Gemmer kladde…",
     "Draft saved" : "Kladde gemt",

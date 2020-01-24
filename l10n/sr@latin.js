@@ -8,7 +8,6 @@ OC.L10N.register(
     "Save" : "Save",
     "Connect" : "Poveži se",
     "Select account" : "Označite nalog",
-    "Copy" : "Kopiraj",
     "Send" : "Pošalji",
     "Delete" : "Delete",
     "Reply" : "Odgovori",

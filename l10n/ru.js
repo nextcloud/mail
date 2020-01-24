@@ -37,8 +37,6 @@ OC.L10N.register(
     "Select account" : "Выбрать аккаунт",
     "To" : "Кому",
     "Contact or email address …" : "Имя или адрес электронной почты...",
-    "+ Copy" : "+ Копия",
-    "Copy" : "Копировать",
     "No contacts found." : "Контакты не найдены.",
     "Subject" : "Тема",
     "Subject …" : "Тема...",

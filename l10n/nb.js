@@ -31,7 +31,6 @@ OC.L10N.register(
     "Use Gravatar and favicon avatars" : "Bruk Gravatar- og favikon-avatarer",
     "Keyboard shortcuts" : "Tastatursnarveier",
     "Select account" : "Velg konto",
-    "Copy" : "Kopier",
     "Subject" : "Emne",
     "Saving draft …" : "Lagrer kladd…",
     "Draft saved" : "Kladd ble lagret",

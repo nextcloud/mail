@@ -25,7 +25,6 @@ OC.L10N.register(
     "Use Gravatar and favicon avatars" : "Use Gravatar and favicon avatars",
     "Keyboard shortcuts" : "Keyboard shortcuts",
     "Select account" : "Select account",
-    "Copy" : "Copy",
     "Subject" : "Subject",
     "Upload attachment" : "Upload attachment",
     "Add attachment from Files" : "Add attachment from Files",

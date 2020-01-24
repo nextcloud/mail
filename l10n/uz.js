@@ -6,7 +6,6 @@ OC.L10N.register(
     "Password" : "Parol",
     "Save" : "Saqlash",
     "Connect" : "Ulanmoq",
-    "Copy" : "Nusxalash",
     "Send" : "Yuborish",
     "Delete" : "O'chir",
     "Settings" : "Sozlamalar",

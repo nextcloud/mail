@@ -11,7 +11,6 @@ OC.L10N.register(
     "Save" : "Salveguardar",
     "Connect" : "Connecter se",
     "Keyboard shortcuts" : "Combinationes de claves",
-    "Copy" : "Copiar",
     "Sending …" : "Inviante ...",
     "Go back" : "Retornar",
     "Message sent!" : "Message inviate!",

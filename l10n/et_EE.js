@@ -21,7 +21,6 @@ OC.L10N.register(
     "Save" : "Salvesta",
     "Connect" : "Ühenda",
     "Keyboard shortcuts" : "Klaviatuuri otseteed",
-    "Copy" : "Kopeeri",
     "Subject" : "Teema",
     "Sending …" : "Saadan ...",
     "Go back" : "Mine tagasi",

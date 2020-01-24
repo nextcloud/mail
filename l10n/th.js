@@ -11,7 +11,6 @@ OC.L10N.register(
     "Save" : "บันทึก",
     "Connect" : "เชื่อมต่อ",
     "Keyboard shortcuts" : "ปุ่มลัด",
-    "Copy" : "คัดลอก",
     "Sending …" : "กำลังส่ง ...",
     "Go back" : "กลับไป",
     "Message sent!" : "ส่งข้อความ!",

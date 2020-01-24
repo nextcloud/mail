@@ -31,7 +31,6 @@ OC.L10N.register(
     "Use Gravatar and favicon avatars" : "Gravatar 및 파비콘 아바타 사용",
     "Keyboard shortcuts" : "키보드 단축키",
     "Select account" : "계정 선택",
-    "Copy" : "복사",
     "Subject" : "제목",
     "Upload attachment" : "첨부 파일 업로드",
     "Add attachment from Files" : "파일 앱에서 첨부 파일 추가",

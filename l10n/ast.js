@@ -22,7 +22,6 @@ OC.L10N.register(
     "Connect" : "Coneutar",
     "Keyboard shortcuts" : "Atayos de tecláu",
     "Select account" : "Esbillar cuenta",
-    "Copy" : "Copiar",
     "Subject" : "Asuntu",
     "Sending …" : "Unviando...",
     "Go back" : "Dir p'atrás",

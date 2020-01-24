@@ -28,7 +28,6 @@ OC.L10N.register(
     "Use Gravatar and favicon avatars" : "Použiť Gravatar a favicon avatary",
     "Keyboard shortcuts" : "Klávesové skratky",
     "Select account" : "Vybrať účet",
-    "Copy" : "Kopírovať",
     "Subject" : "Predmet",
     "Upload attachment" : "Nahrať prílohu",
     "Add attachment from Files" : "Pridať prílohu zo Súborov",

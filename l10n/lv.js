@@ -23,7 +23,6 @@ OC.L10N.register(
     "Add mail account" : "Pievienot e-pasta kontu",
     "Keyboard shortcuts" : "Tastatūras saīsnes",
     "Select account" : "Izvēlieties kontu",
-    "Copy" : "Kopēt",
     "Subject" : "Temats",
     "Add attachment from Files" : "Pievienot pielikumu no failiem",
     "Sending …" : "Sūta …",

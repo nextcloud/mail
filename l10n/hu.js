@@ -31,7 +31,6 @@ OC.L10N.register(
     "Use Gravatar and favicon avatars" : "Gravatar és favicon avatarok használata",
     "Keyboard shortcuts" : "Gyorsbillentyűk",
     "Select account" : "Fiók kiválasztása",
-    "Copy" : "Másolás",
     "Subject" : "Tárgy",
     "Saving draft …" : "Vázlat mentése ...",
     "Draft saved" : "Vázlat elmentve",

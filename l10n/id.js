@@ -13,7 +13,6 @@ OC.L10N.register(
     "Save" : "Simpan",
     "Connect" : "Sambungkan",
     "Keyboard shortcuts" : "Pintasan keyboard",
-    "Copy" : "Salin",
     "Sending …" : "Mengirim ...",
     "Go back" : "Kembali",
     "Message sent!" : "Kirim pesan!",

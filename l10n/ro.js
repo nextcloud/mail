@@ -15,7 +15,6 @@ OC.L10N.register(
     "Connect" : "Conectare",
     "Keyboard shortcuts" : "Scurtături din tastatură",
     "Select account" : "Selectează cont",
-    "Copy" : "Copiază",
     "Subject" : "Subiect",
     "Sending …" : "Se trimite...",
     "Go back" : "Înapoi",

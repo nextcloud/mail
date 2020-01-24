@@ -23,7 +23,6 @@ OC.L10N.register(
     "Add mail account" : "Shto llogarinë e postës elektronike",
     "Keyboard shortcuts" : "Shkurtoret e tastierës",
     "Select account" : "Përzgjidhni llogari",
-    "Copy" : "Kopjo",
     "Subject" : "Temë",
     "Upload attachment" : "Ngarko bashkëngjitje",
     "Add attachment from Files" : "Shto bashkëlidhje nga Dosjet",

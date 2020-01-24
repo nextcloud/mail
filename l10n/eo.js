@@ -31,7 +31,6 @@ OC.L10N.register(
     "Use Gravatar and favicon avatars" : "Uzi servon „Gravatar“ kaj avatarojn en retpaĝsimbolo",
     "Keyboard shortcuts" : "Fulmoklavoj",
     "Looking for a way to encrypt your emails? Install the Mailvelope browser extension!" : "Ĉu vi serĉas manieron ĉifri viajn mesaĝojn? Instalu la retumilan kromprogramon „Mailvelope“!",
-    "Copy" : "Kopii",
     "Subject" : "Temo",
     "Saving draft …" : "Konservado de malneto...",
     "Draft saved" : "Malneto konservita",
