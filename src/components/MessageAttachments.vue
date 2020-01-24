@@ -31,6 +31,7 @@
 				:url="attachment.downloadUrl"
 				:is-image="attachment.isImage"
 				:is-calendar-event="attachment.isCalendarEvent"
+				:mime="attachment.mime"
 				:mime-url="attachment.mimeUrl"
 			/>
 		</div>
