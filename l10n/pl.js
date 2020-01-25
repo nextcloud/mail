@@ -36,7 +36,7 @@ OC.L10N.register(
     "From" : "Od",
     "Select account" : "Wybierz konto",
     "To" : "Do",
-    "Contact or email address …" : "Kontakt lub adres email ...",
+    "Contact or email address …" : "Kontakt lub adres e-mail...",
     "+ CC/BCC" : "+ DW/UDW",
     "CC" : "DW",
     "No contacts found." : "Nie znaleziono kontaktów.",
