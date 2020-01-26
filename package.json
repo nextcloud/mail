@@ -51,7 +51,7 @@
     "postcss-loader": "^3.0.0",
     "printscout": "2.0.3",
     "raw-loader": "^4.0.0",
-    "v-tooltip": "^2.0.2",
+    "v-tooltip": "^2.0.3",
     "vue": "^2.6.11",
     "vue-autosize": "^1.0.2",
     "vue-click-outside": "^1.0.7",
