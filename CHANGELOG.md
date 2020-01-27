@@ -1,6 +1,10 @@
 # Changelog
 All notable changes to this project will be documented in this file.
 
+## 1.1.1 - 2020-01-27
+### Fixed
+- Missing file in release tarball
+
 ## 1.1.0 - 2020-01-27
 ### Added
 - Nextcloud 19 support
