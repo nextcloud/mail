@@ -1,6 +1,26 @@
 # Changelog
 All notable changes to this project will be documented in this file.
 
+## 1.1.0 - 2020-01-27
+### Added
+- Nextcloud 19 support
+### Changed
+- New and updated translations
+- Updated dependencies
+### Fixed
+- Clearing recipient input when focus is lost
+- Broken mailbox stats on unified inbox
+- Invisible embedded message parts
+- Mailto protocol handler registration
+- KItinerary executable permissions
+- CC/BCC label
+- Sending messages without a recipient
+- No category for contacts autocompletion edge case
+- Catch more error in error middleware
+- Remove non-working mark all read action from unified inbox
+- Remove non-working add subfolder action from unified inbox
+- Missing inner exception in debug json error response
+
 ## 1.0.0 - 2020-01-17
 ### Added
 - Itinerary extraction with KItinerary
