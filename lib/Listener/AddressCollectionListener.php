@@ -23,6 +23,7 @@
 
 namespace OCA\Mail\Listener;
 
+use OCA\Mail\Contracts\IUserPreferences;
 use OCA\Mail\Events\MessageSentEvent;
 use OCA\Mail\Service\AutoCompletion\AddressCollector;
 use OCP\EventDispatcher\Event;
@@ -32,20 +33,29 @@ use Throwable;
 
 class AddressCollectionListener implements IEventListener {
 
+	/** @var IUserPreferences */
+	private $preferences;
+
 	/** @var AddressCollector */
 	private $collector;
 
 	/** @var ILogger */
 	private $logger;
 
-	public function __construct(AddressCollector $collector,
+	public function __construct(IUserPreferences $preferences,
+								AddressCollector $collector,
 								ILogger $logger) {
 		$this->collector = $collector;
 		$this->logger = $logger;
+		$this->preferences = $preferences;
 	}
 
 	public function handle(Event $event): void {
 		if (!($event instanceof MessageSentEvent)) {
+			return;
+		}
+		if ($this->preferences->getPreference('collect-data', 'true') !== 'true') {
+			$this->logger->debug('Not collecting email addresses because the user opted out');
 			return;
 		}
 

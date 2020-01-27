@@ -112,17 +112,19 @@ class PageControllerTest extends TestCase {
 		$account1 = $this->createMock(Account::class);
 		$account2 = $this->createMock(Account::class);
 		$folder = $this->createMock(Folder::class);
-		$this->preferences->expects($this->once())
+		$this->preferences->expects($this->exactly(2))
 			->method('getPreference')
-			->with('external-avatars', 'true')
-			->willReturn('true');
+			->willReturnMap([
+				['external-avatars', 'true', 'true'],
+				['collect-data', 'true', 'true'],
+			]);
 		$this->accountService->expects($this->once())
 			->method('findByUserId')
 			->with($this->userId)
 			->will($this->returnValue([
-					$account1,
-					$account2,
-		]));
+				$account1,
+				$account2,
+			]));
 		$this->mailManager->expects($this->at(0))
 			->method('getFolders')
 			->with($account1)
@@ -134,8 +136,8 @@ class PageControllerTest extends TestCase {
 		$account1->expects($this->once())
 			->method('jsonSerialize')
 			->will($this->returnValue([
-					'accountId' => 1,
-		]));
+				'accountId' => 1,
+			]));
 		$folder->expects($this->once())
 			->method('jsonSerialize')
 			->willReturn(['id' => 'inbox']);
@@ -145,17 +147,17 @@ class PageControllerTest extends TestCase {
 		$account2->expects($this->once())
 			->method('jsonSerialize')
 			->will($this->returnValue([
-					'accountId' => 2,
-		]));
+				'accountId' => 2,
+			]));
 		$account2->expects($this->once())
 			->method('getId')
 			->will($this->returnValue(2));
 		$this->aliasesService->expects($this->exactly(2))
 			->method('findAll')
 			->will($this->returnValueMap([
-					[1, $this->userId, ['a11', 'a12']],
-					[2, $this->userId, ['a21', 'a22']],
-		]));
+				[1, $this->userId, ['a11', 'a12']],
+				[2, $this->userId, ['a21', 'a22']],
+			]));
 		$accountsJson = [
 			[
 				'accountId' => 1,
@@ -211,11 +213,12 @@ class PageControllerTest extends TestCase {
 
 		$expected = new TemplateResponse($this->appName, 'index',
 			[
-			'debug' => true,
-			'external-avatars' => 'true',
-			'app-version' => '1.2.3',
-			'accounts' => base64_encode(json_encode($accountsJson)),
-		]);
+				'debug' => true,
+				'external-avatars' => 'true',
+				'app-version' => '1.2.3',
+				'accounts' => base64_encode(json_encode($accountsJson)),
+				'collect-data' => 'true'
+			]);
 		$csp = new ContentSecurityPolicy();
 		$csp->addAllowedFrameDomain('\'self\'');
 		$expected->setContentSecurityPolicy($csp);
