@@ -64,8 +64,8 @@ before_install:
   - php --info
 
   # Install Krankerl
-  - wget https://github.com/ChristophWurst/krankerl/releases/download/v0.10.1/krankerl_0.10.1_amd64.deb
-  - sudo dpkg -i krankerl_0.10.1_amd64.deb
+  - if [[ "$TEST_SUITE" = "PACKAGE" ]]; then wget https://github.com/ChristophWurst/krankerl/releases/download/v0.12.0/krankerl_0.12.0_amd64.deb; fi
+  - if [[ "$TEST_SUITE" = "PACKAGE" ]]; then sudo dpkg -i krankerl_0.12.0_amd64.deb; fi
 
   # Set up DB
   - if [[ "$DB" == 'pgsql' ]]; then createuser -U travis -s oc_autotest; fi
