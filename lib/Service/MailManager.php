@@ -133,6 +133,9 @@ class MailManager implements IMailManager {
 		$folder = $this->folderMapper->createFolder($client, $account, $name);
 		$this->folderMapper->getFoldersStatus([$folder], $client);
 		$this->folderMapper->detectFolderSpecialUse([$folder]);
+
+		$this->mailboxSync->sync($account, true);
+
 		return $folder;
 	}
 
