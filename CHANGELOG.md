@@ -20,6 +20,9 @@ All notable changes to this project will be documented in this file.
 - Remove non-working mark all read action from unified inbox
 - Remove non-working add subfolder action from unified inbox
 - Missing inner exception in debug json error response
+- Reply sender handling
+- Provisioning for new users
+- Creating a new mailbox
 
 ## 1.0.0 - 2020-01-17
 ### Added
