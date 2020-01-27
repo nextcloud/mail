@@ -181,6 +181,50 @@ describe('ReplyBuilder', () => {
 		assertSameAddressList(reply.cc, [])
 	})
 
+	it('removes original sender for recipients list when same as replier (self-sent email)', () => {
+		const a = createAddress('a@domain.tld')
+		const b = createAddress('b@domain.tld')
+		envelope.from = [a]
+		envelope.to = [a, b]
+		envelope.cc = []
+
+		var reply = buildRecipients(envelope, a)
+
+		assertSameAddressList(reply.from, [a])
+		assertSameAddressList(reply.to, [b])
+		assertSameAddressList(reply.cc, [])
+	})
+
+	it('removes original sender for recipients list when same as replier (self-sent email) with many CC', () => {
+		const a = createAddress('a@domain.tld')
+		const b = createAddress('b@domain.tld')
+		const c = createAddress('c@domain.tld')
+		const d = createAddress('d@domain.tld')
+		const e = createAddress('e@domain.tld')
+		envelope.from = [a]
+		envelope.to = [b, c]
+		envelope.cc = [a, d, e]
+
+		const reply = buildRecipients(envelope, a)
+
+		assertSameAddressList(reply.from, [a])
+		assertSameAddressList(reply.to, [b, c])
+		assertSameAddressList(reply.cc, [d, e])
+	})
+
+	it('pure self-sent email', () => {
+		const a = createAddress('a@domain.tld')
+		envelope.from = [a]
+		envelope.to = [a]
+		envelope.cc = []
+
+		var reply = buildRecipients(envelope, a)
+
+		assertSameAddressList(reply.from, [a])
+		assertSameAddressList(reply.to, [a])
+		assertSameAddressList(reply.cc, [])
+	})
+
 	it('adds re: to a reply subject', () => {
 		const orig = 'Hello'
 

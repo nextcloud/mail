@@ -114,7 +114,7 @@ class Attachment {
 	}
 
 	/**
-	 * @return string
+	 * @return string|null
 	 */
 	public function getName() {
 		return $this->mimePart->getName();

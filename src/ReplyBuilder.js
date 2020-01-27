@@ -75,25 +75,30 @@ export const buildRecipients = (envelope, ownAddress) => {
 	let to = []
 	let cc = []
 	if (recipientType === RecipientType.To) {
-		// Send to everyone except yourself plus the original sender
+		// Send to everyone except yourself, plus the original sender if not ourself
 		to = envelope.to.filter(isNotOwnAddress)
-		to = to.concat(envelope.from)
+		to = to.concat(envelope.from.filter(isNotOwnAddress))
 
 		// CC remains the same
 		cc = envelope.cc
 	} else if (recipientType === RecipientType.Cc) {
-		// Send to the same people plus the sender
-		to = envelope.to.concat(envelope.from)
+		// Send to the same people, plus the sender if not ourself
+		to = envelope.to.concat(envelope.from.filter(isNotOwnAddress))
 
 		// All CC values are being kept except the replying address
 		cc = envelope.cc.filter(isNotOwnAddress)
 	} else {
-		// Send to the same recipient and the sender -> answer all
+		// Send to the same recipient and the sender (if not ourself) -> answer all
 		to = envelope.to
-		to = to.concat(envelope.from)
+		to = to.concat(envelope.from.filter(isNotOwnAddress))
 
 		// Keep CC values
 		cc = envelope.cc
+	}
+
+	// edge case: pure self-sent email
+	if (to.length == 0) {
+		to = envelope.from
 	}
 
 	return {

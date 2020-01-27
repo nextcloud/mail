@@ -235,7 +235,7 @@ class MessagesControllerTest extends TestCase {
 		$this->attachment->expects($this->once())
 			->method('getContents')
 			->will($this->returnValue($contents));
-		$this->attachment->expects($this->once())
+		$this->attachment->expects($this->any())
 			->method('getName')
 			->will($this->returnValue($name));
 		$this->attachment->expects($this->once())
