@@ -166,7 +166,7 @@ class PageController extends Controller {
 
 		array_walk($params,
 			function (&$value, $key) {
-				$value = "$key=" . urlencode($value);
+				$value = "$key=" . $value;
 			});
 
 		$hashParams = '#mailto?' . implode('&', $params);
