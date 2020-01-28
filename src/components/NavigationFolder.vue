@@ -132,11 +132,11 @@ export default {
 		statsText() {
 			if (this.folderStats && 'total' in this.folderStats && 'unread' in this.folderStats) {
 				if (this.folderStats.unread === 0) {
-					return t('mail', '{total} messages', {
+					return n('mail', '{total} message', '{total} messages', {
 						total: this.folderStats.total,
 					})
 				} else {
-					return t('mail', '{unread} unread of {total}', {
+					return n('mail', '{unread} unread of {total}', '{unread} unread of {total}', {
 						total: this.folderStats.total,
 						unread: this.folderStats.unread,
 					})
