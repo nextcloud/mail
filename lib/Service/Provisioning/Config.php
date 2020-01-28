@@ -112,7 +112,7 @@ class Config implements JsonSerializable {
 	}
 
 	/**
-	 * Replace %USERID% and %EMAIL% to allow special configurations
+	 * Replace %USERID% %DISPLAYNAME% and %EMAIL% to allow special configurations
 	 *
 	 * @param string $original
 	 * @param IUser $user
@@ -121,6 +121,9 @@ class Config implements JsonSerializable {
 	private function buildUserEmail(string $original, IUser $user) {
 		if ($user->getUID() !== null) {
 			$original = str_replace('%USERID%', $user->getUID(), $original);
+		}
+		if ($user->getDisplayName() !== null) {
+			$original = str_replace('%DISPLAYNAME%', $user->getDisplayName(), $original);
 		}
 		if ($user->getEMailAddress() !== null) {
 			$original = str_replace('%EMAIL%', $user->getEMailAddress(), $original);
