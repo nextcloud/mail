@@ -243,7 +243,7 @@
 						/>
 						<br />
 						<small>{{
-							t('mail', "* in LDAP Environments %USERID% usually makes no sense, if you cannot login to IMAP/SMTP with email, you can do a dirty workaround by provisioning Displayname with login attribut")
+							t('mail', "* %USERID%, %DISPLAYNAME% and %EMAIL% will be replaced with the user's UID, email and display name.")
 						}}</small>
 					</div>
 				</div>
