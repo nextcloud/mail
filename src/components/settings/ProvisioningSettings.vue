@@ -243,7 +243,10 @@
 						/>
 						<br />
 						<small>{{
-							t('mail', '* %USERID%, %DISPLAYNAME% and %EMAIL% will be replaced with the users UID, email and display name.')
+							t(
+								'mail',
+								"* %USERID%, %DISPLAYNAME% and %EMAIL% will be replaced with the user's UID, email and display name."
+							)
 						}}</small>
 					</div>
 				</div>
