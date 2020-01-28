@@ -339,7 +339,9 @@ class MessagesController extends Controller {
 		foreach ($attachmentIds as $attachmentId) {
 			$attachment = $mailBox->getAttachment($messageId, $attachmentId);
 
-			$fileName = $attachment->getName();
+			$fileName = $attachment->getName() ?? $this->l10n->t('Embedded message %s', [
+					$attachmentId,
+				]) . '.eml';
 			$fileParts = pathinfo($fileName);
 			$fileName = $fileParts['filename'];
 			$fileExtension = $fileParts['extension'];
