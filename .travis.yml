@@ -1,5 +1,5 @@
 sudo: required
-dist: trusty
+dist: xenial
 language: php
 php:
   - 7.2
@@ -9,15 +9,9 @@ jobs:
   allow_failures:
   - php: nightly
 
-addons:
-  apt:
-    packages:
-    - mysql-server-5.6
-    - mysql-client-core-5.6
-    - mysql-client-5.6
-
 services:
   - docker
+  - mysql
   - postgresql
 
 env:
