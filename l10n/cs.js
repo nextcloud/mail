@@ -101,8 +101,6 @@ OC.L10N.register(
     "Mark all as read" : "Označit vše jako přečtené",
     "Mark all messages of this folder as read" : "Označit všechny zprávy v této složce jako přečtené",
     "Add subfolder" : "Přidat podsložku",
-    "{total} messages" : "{total} zpráv",
-    "{unread} unread of {total}" : "{unread} z {total} nepřečteno",
     "Loading …" : "Načítání…",
     "Could not load your draft" : "Nedaří se načíst váš koncept",
     "Could not load original message" : "Nedaří se načíst původní zprávu",

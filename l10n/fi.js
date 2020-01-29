@@ -79,7 +79,6 @@ OC.L10N.register(
     "Mark all as read" : "Merkitse kaikki luetuiksi",
     "Mark all messages of this folder as read" : "Merkitse tämän kansion kaikki viestit luetuiksi",
     "Add subfolder" : "Lisää alikansio",
-    "{total} messages" : "{total} viestiä",
     "Loading …" : "Ladataan…",
     "Could not load your draft" : "Luonnosta ei voitu ladata",
     "No message selected" : "Viestiä ei ole valittu",

@@ -99,8 +99,6 @@
     "Mark all as read" : "Alles als gelesen markieren",
     "Mark all messages of this folder as read" : "Alle Nachrichten in diesem Ordner als gelesen kennzeichnen",
     "Add subfolder" : "Unterordner hinzufügen",
-    "{total} messages" : "{total} Nachrichten",
-    "{unread} unread of {total}" : "{unread} ungelesen von {total}",
     "Loading …" : "Lade ...",
     "Could not load your draft" : "Dein Entwurf konnte nicht geladen werden",
     "Could not load original message" : "Original Nachricht konnte nicht geladen werden",

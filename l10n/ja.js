@@ -95,8 +95,6 @@ OC.L10N.register(
     "Mark all as read" : "すべて既読にする",
     "Mark all messages of this folder as read" : "このフォルダのすべてのメッセージを開封済みにする",
     "Add subfolder" : "サブフォルダを追加",
-    "{total} messages" : "{total} メッセージ",
-    "{unread} unread of {total}" : "{total} メッセージの内 {unread} 件が未開封",
     "Loading …" : "読み込み中...",
     "Could not load your draft" : "下書きを読み込めませんでした",
     "Could not load original message" : "元のメッセージを読み込めませんでした",

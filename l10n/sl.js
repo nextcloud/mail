@@ -95,8 +95,6 @@ OC.L10N.register(
     "Mark all as read" : "Označi vse kot prebrano",
     "Mark all messages of this folder as read" : "Označi vsa sporočila v tej mapi kot prebrana",
     "Add subfolder" : "Dodaj podmapo",
-    "{total} messages" : "{total} sporočil",
-    "{unread} unread of {total}" : "{unread} neprebranih od skupno {total}",
     "Loading …" : "Poteka nalaganje …",
     "Could not load your draft" : "Osnutka ni mogoče naložiti",
     "Could not load original message" : "Ni mogoče naložiti izvornega sporočila",

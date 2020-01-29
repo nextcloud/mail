@@ -99,8 +99,6 @@
     "Mark all as read" : "标记所有为已读",
     "Mark all messages of this folder as read" : "将此文件夹中的所有消息都标记为已读",
     "Add subfolder" : "添加子文件夹",
-    "{total} messages" : "{total} 封邮件",
-    "{unread} unread of {total}" : "总共 {total} 封邮件，{unread} 封未读邮件",
     "Loading …" : "正在加载...",
     "Could not load your draft" : "无法加载您的草稿",
     "Could not load original message" : "无法加载初始消息",

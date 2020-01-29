@@ -95,8 +95,6 @@ OC.L10N.register(
     "Mark all as read" : "Markatu dena irakurrita bezala",
     "Mark all messages of this folder as read" : "Markatu karpeta honetako mezu guztiak irakurrita bezala",
     "Add subfolder" : "Gehitu azpi-karpeta bat",
-    "{total} messages" : "{total} mezuak",
-    "{unread} unread of {total}" : "{unread} irakurri gabe {total} horietatik",
     "Loading …" : "Kargatzen...",
     "Could not load your draft" : "Ezin izan da zure zirriborroa gorde",
     "Could not load original message" : "Ezin izan da jatorrizko mezua kargatu",

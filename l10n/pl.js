@@ -101,8 +101,6 @@ OC.L10N.register(
     "Mark all as read" : "Oznacz wszystkie jako przeczytane",
     "Mark all messages of this folder as read" : "Zaznacz wszystkie wiadomości w katalogu jako przeczytane",
     "Add subfolder" : "Dodaj podfolder",
-    "{total} messages" : "{total} wiadomości",
-    "{unread} unread of {total}" : "{unread} nieprzeczytane {total}",
     "Loading …" : "Wczytywanie…",
     "Could not load your draft" : "Nie można załadować wersji roboczej",
     "Could not load original message" : "Nie można załadować oryginalnej wiadomości",

@@ -94,8 +94,6 @@ OC.L10N.register(
     "Mark all as read" : "Σημείωση όλων ως ανεγνωσμένων",
     "Mark all messages of this folder as read" : "Σημείωση όλων των μυνημάτων ως αναγνωσμένων",
     "Add subfolder" : "Προσθήκη υποφακέλου",
-    "{total} messages" : "{total} μυνήματα",
-    "{unread} unread of {total}" : "{unread} αδιάβαστα από {total}",
     "Loading …" : "Φόρτωση…",
     "Could not load your draft" : "Δεν ήταν δυνατή η φόρτωση του πρόχειρου σας",
     "Could not load original message" : "Δεν ήταν δυνατή η φόρτωση του πρωτότυπου μηνύματος",

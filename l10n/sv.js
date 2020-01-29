@@ -101,8 +101,6 @@ OC.L10N.register(
     "Mark all as read" : "Markera alla som lästa",
     "Mark all messages of this folder as read" : "Markera alla meddelanden i den här mappen som lästa",
     "Add subfolder" : "Skapa undermapp",
-    "{total} messages" : "{total} meddelanden",
-    "{unread} unread of {total}" : "{unread} olästa av {total}",
     "Loading …" : "Laddar ...",
     "Could not load your draft" : "Kunde inte ladda ditt utkast",
     "Could not load original message" : "Det gick inte att ladda originalmeddelandet",

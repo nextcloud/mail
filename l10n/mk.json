@@ -91,8 +91,6 @@
     "Mark all as read" : "Означи ги сите како прочитани",
     "Mark all messages of this folder as read" : "Означи ги сите пораки во оваа папка како прочитани",
     "Add subfolder" : "Додади подпапка",
-    "{total} messages" : "{total} пораки",
-    "{unread} unread of {total}" : "{unread} непрочитани од {total}",
     "Loading …" : "Се вчитува…",
     "Could not load your draft" : "Неможе да се вчита вашиот нацрт",
     "Could not load original message" : "Неможе да се вчита оргиналната порака",

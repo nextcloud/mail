@@ -99,8 +99,6 @@
     "Mark all as read" : "Marquer tout comme lu",
     "Mark all messages of this folder as read" : "Marquer tous les messages de ce dossier comme lus",
     "Add subfolder" : "Ajouter un sous-dossier",
-    "{total} messages" : "{total} messages",
-    "{unread} unread of {total}" : "{unread} non lus sur {total}",
     "Loading …" : "Chargement …",
     "Could not load your draft" : "Impossible de charger votre brouillon",
     "Could not load original message" : "Impossible de charger le message d'origine",

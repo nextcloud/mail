@@ -99,8 +99,6 @@
     "Mark all as read" : "Marca tutti come letti",
     "Mark all messages of this folder as read" : "Marca tutti i messaggi di questa cartella come letti",
     "Add subfolder" : "Aggiungi sottocartella",
-    "{total} messages" : "{total} messaggi",
-    "{unread} unread of {total}" : "{unread} non letti di {total}",
     "Loading …" : "Caricamento in corso...",
     "Could not load your draft" : "Impossibile caricare la tua bozza",
     "Could not load original message" : "Impossibile caricare il messaggio originale",

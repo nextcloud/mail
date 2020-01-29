@@ -93,8 +93,6 @@
     "Mark all as read" : "Označi sve kao pročitano",
     "Mark all messages of this folder as read" : "Označi sve poruke u ovoj mapi kao pročitane",
     "Add subfolder" : "Dodaj podmapu",
-    "{total} messages" : "{total} poruka",
-    "{unread} unread of {total}" : "{unread} nepročitanih od {total}",
     "Loading …" : "Učitavanje…",
     "Could not load your draft" : "Učitavanje vaše skice nije uspjelo",
     "Could not load original message" : "Nije moguće učitati izvornu poruku",

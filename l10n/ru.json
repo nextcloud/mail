@@ -90,8 +90,6 @@
     "Mark all as read" : "Отметить все как прочитанное",
     "Mark all messages of this folder as read" : "Отметить все сообщения в этой папке как прочитанные",
     "Add subfolder" : "Добавить подпапку",
-    "{total} messages" : "{total} писем",
-    "{unread} unread of {total}" : "непрочитано {unread} из {total} ",
     "Loading …" : "Загрузка ...",
     "Could not load your draft" : "Невозможно загрузить ваш черновик",
     "Could not load original message" : "Не удалось загрузить исходное письмо",
