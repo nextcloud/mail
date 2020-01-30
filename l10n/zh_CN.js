@@ -102,6 +102,8 @@ OC.L10N.register(
     "Mark all messages of this folder as read" : "将此文件夹中的所有消息都标记为已读",
     "Add subfolder" : "添加子文件夹",
     "Loading …" : "正在加载...",
+    "_{total} message_::_{total} messages_" : ["{total} 条消息"],
+    "_{unread} unread of {total}_::_{unread} unread of {total}_" : ["{unread} 条未读，一共 {total} 条"],
     "Could not load your draft" : "无法加载您的草稿",
     "Could not load original message" : "无法加载初始消息",
     "No message selected" : "没有选择消息",

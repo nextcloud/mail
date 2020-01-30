@@ -102,6 +102,8 @@ OC.L10N.register(
     "Mark all messages of this folder as read" : "Alle Nachrichten in diesem Ordner als gelesen kennzeichnen",
     "Add subfolder" : "Unterordner hinzufügen",
     "Loading …" : "Lade ...",
+    "_{total} message_::_{total} messages_" : ["{total} Nachricht","{total} Nachrichten"],
+    "_{unread} unread of {total}_::_{unread} unread of {total}_" : ["{unread} ungelesen von {total}","{unread} ungelesen von {total}"],
     "Could not load your draft" : "Ihr Entwurf konnte nicht geladen werden",
     "Could not load original message" : "Original Nachricht konnte nicht geladen werden",
     "No message selected" : "Keine Nachricht ausgewählt",

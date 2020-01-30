@@ -100,6 +100,8 @@
     "Mark all messages of this folder as read" : "Marca tutti i messaggi di questa cartella come letti",
     "Add subfolder" : "Aggiungi sottocartella",
     "Loading …" : "Caricamento in corso...",
+    "_{total} message_::_{total} messages_" : ["{total} messaggio","{total} messaggi"],
+    "_{unread} unread of {total}_::_{unread} unread of {total}_" : ["{unread} non letto di {total}","{unread} non letti di {total}"],
     "Could not load your draft" : "Impossibile caricare la tua bozza",
     "Could not load original message" : "Impossibile caricare il messaggio originale",
     "No message selected" : "Nessun messaggio selezionato",

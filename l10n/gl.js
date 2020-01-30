@@ -102,6 +102,8 @@ OC.L10N.register(
     "Mark all messages of this folder as read" : "Marcar todas as mensaxes deste cartafol como lidas",
     "Add subfolder" : "Engadir subcartafol",
     "Loading …" : "Cargando…",
+    "_{total} message_::_{total} messages_" : ["{total} mensaxe","{total} mensaxes"],
+    "_{unread} unread of {total}_::_{unread} unread of {total}_" : ["{unread} sen ler de {total}","{unread} sen ler de {total}"],
     "Could not load your draft" : "Non foi posíbel cargar o seu borrador",
     "Could not load original message" : "Non foi posíbel cargar a mensaxe orixinal",
     "No message selected" : "Non seleccionou ningunha mensaxe",
