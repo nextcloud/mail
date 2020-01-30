@@ -1,6 +1,14 @@
 # Changelog
 All notable changes to this project will be documented in this file.
 
+## 1.1.2 - 2020-01-30
+### Changed
+- New and updated translations
+### Fixed
+- Saving all attachments to Files
+- Saving embedded messages to Files
+- Octal value of KItinerary binary chmod from 744 to 0744
+
 ## 1.1.1 - 2020-01-27
 ### Fixed
 - Missing file in release tarball
