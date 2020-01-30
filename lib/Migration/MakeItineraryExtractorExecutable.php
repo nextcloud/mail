@@ -63,7 +63,7 @@ class MakeItineraryExtractorExecutable implements IRepairStep {
 			return;
 		}
 		try {
-			if (!@chmod($this->file, 744)) {
+			if (!@chmod($this->file, 0744)) {
 				throw new Exception('chmod returned false');
 			}
 		} catch (Throwable $e) {
