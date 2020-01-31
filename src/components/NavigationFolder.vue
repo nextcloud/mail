@@ -76,6 +76,7 @@ import ActionText from '@nextcloud/vue/dist/Components/ActionText'
 
 import {getFolderStats} from '../service/FolderService'
 import logger from '../logger'
+import {translatePlural as n} from '@nextcloud/l10n'
 import {translate as translateMailboxName} from '../l10n/MailboxTranslator'
 
 export default {
@@ -132,14 +133,20 @@ export default {
 		statsText() {
 			if (this.folderStats && 'total' in this.folderStats && 'unread' in this.folderStats) {
 				if (this.folderStats.unread === 0) {
-					return n('mail', '{total} message', '{total} messages', {
+					return n('mail', '{total} message', '{total} messages', this.folderStats.total, {
 						total: this.folderStats.total,
 					})
 				} else {
-					return n('mail', '{unread} unread of {total}', '{unread} unread of {total}', {
-						total: this.folderStats.total,
-						unread: this.folderStats.unread,
-					})
+					return n(
+						'mail',
+						'{unread} unread of {total}',
+						'{unread} unread of {total}',
+						this.folderStats.unread,
+						{
+							total: this.folderStats.total,
+							unread: this.folderStats.unread,
+						}
+					)
 				}
 			}
 			return t('mail', 'Loading …')
