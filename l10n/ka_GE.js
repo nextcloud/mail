@@ -42,6 +42,7 @@ OC.L10N.register(
     "Import into calendar" : "იმპორტი კალენდარში",
     "Download attachment" : "დანართის გადმოწერა",
     "Save to Files" : "შენახვა ფაილებში",
+    "Unnamed" : "უსახელო",
     "Choose a folder to store the attachment in" : "გთხოვთ აირჩიოთ დირექტორია, სადაც მოთავსდება დანართი",
     "Save all to Files" : "ყველაფრის ფაილებში შენახვა",
     "The images have been blocked to protect your privacy." : "სურათები თქვენი კონფიდენციალურობის დასაცავად დაიბლოკა",

@@ -44,6 +44,7 @@ OC.L10N.register(
     "Import into calendar" : "Import into calendar",
     "Download attachment" : "Download attachment",
     "Save to Files" : "Save to Files",
+    "Unnamed" : "Unnamed",
     "Choose a folder to store the attachment in" : "Choose a folder to store the attachment in",
     "Save all to Files" : "Save all to Files",
     "The images have been blocked to protect your privacy." : "The images have been blocked to protect your privacy.",

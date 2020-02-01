@@ -78,6 +78,7 @@ OC.L10N.register(
     "Import into calendar" : "Importuoti į kalendorių",
     "Download attachment" : "Atsisiųsti priedą",
     "Save to Files" : "Įrašyti į Failus",
+    "Unnamed" : "Be pavadinimo",
     "Embedded message" : "Įterptas laiškas",
     "Choose a folder to store the attachment in" : "Pasirinkite aplanką, kuriame išsaugoti priedą",
     "Save all to Files" : "Įrašyti visus į Failus",

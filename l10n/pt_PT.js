@@ -37,6 +37,7 @@ OC.L10N.register(
     "Forward" : "Encaminhar",
     "Download attachment" : "Transferir anexo",
     "Save to Files" : "Guardar em Ficheiros",
+    "Unnamed" : "Sem nome",
     "Choose a folder to store the attachment in" : "Escolha uma pasta para guardar o anexo",
     "Save all to Files" : "Guardar todos em Ficheiros",
     "Settings" : "Definições",

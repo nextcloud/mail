@@ -21,6 +21,7 @@ OC.L10N.register(
     "Choose a file to add as attachment" : "Обрати файл для вкладення",
     "Delete" : "Видалити",
     "Reply" : "Відповісти",
+    "Unnamed" : "Без назви",
     "Choose a folder to store the attachment in" : "Оберіть теку для зберігання вкладень",
     "Settings" : "Налаштування",
     "Add folder" : "Add folder",

@@ -83,6 +83,7 @@ OC.L10N.register(
     "Import into calendar" : "Şu takvimin içine aktar",
     "Download attachment" : "Ek dosyayı indir",
     "Save to Files" : "Dosyalara Kaydet",
+    "Unnamed" : "Adsız",
     "Embedded message" : "Gömülü ileti",
     "Choose a folder to store the attachment in" : "Ek dosyanın depolanacağı bir klasör seçin",
     "Save all to Files" : "Tümünü dosyalara kaydet",

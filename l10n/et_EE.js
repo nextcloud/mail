@@ -32,6 +32,7 @@ OC.L10N.register(
     "Delete" : "Kustuta",
     "Reply" : "Vasta",
     "Forward" : "Edasi",
+    "Unnamed" : "Nimeta",
     "Choose a folder to store the attachment in" : "Vali kaust, kuhu manus salvestada",
     "New message" : "Uus sõnum",
     "Settings" : "Seaded",

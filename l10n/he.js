@@ -43,6 +43,7 @@ OC.L10N.register(
     "Import into calendar" : "ייבוא ליומן",
     "Download attachment" : "הורדת קובץ מצורף",
     "Save to Files" : "שמירה לקבצים",
+    "Unnamed" : "ללא שם",
     "Choose a folder to store the attachment in" : "יש לבחור תיקייה לשמירת הקובץ המצורף",
     "Save all to Files" : "שמירת הכו לקבצים",
     "The images have been blocked to protect your privacy." : "התמונות נחסמו כדי להגן על הפרטיות שלך",

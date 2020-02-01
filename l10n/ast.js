@@ -33,6 +33,7 @@ OC.L10N.register(
     "Reply" : "Rempuesta",
     "Could not load your message" : "Nun pudo cargase'l to mensaxe",
     "Download attachment" : "Baxar axuntu",
+    "Unnamed" : "Ensin nome",
     "Choose a folder to store the attachment in" : "Escueyi una carpeta pa guardar l'axuntu",
     "The images have been blocked to protect your privacy." : "Bloquiáronse les imáxenes pa protexer la to privacidá.",
     "New message" : "Mensaxe nuevu",

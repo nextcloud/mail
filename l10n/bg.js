@@ -58,6 +58,7 @@ OC.L10N.register(
     "Could not load your message" : "Вашето съобщение не може да бъде заредено",
     "Download attachment" : "Изтегли прикачените файлове",
     "Save to Files" : "Запази във Файлове",
+    "Unnamed" : "Без име",
     "Choose a folder to store the attachment in" : "Избери папка, където да бъде запазен прикаченият файл",
     "New message" : "Ново съобщение",
     "Settings" : "Настройки",

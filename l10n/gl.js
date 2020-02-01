@@ -83,6 +83,7 @@ OC.L10N.register(
     "Import into calendar" : "Importar ao calendario",
     "Download attachment" : "Descargar anexos",
     "Save to Files" : "Gardar en Ficheiros",
+    "Unnamed" : "Sen nome",
     "Embedded message" : "Mensaxe incrustada",
     "Choose a folder to store the attachment in" : "Escolla un cartafol no que gardar o anexo de entrada",
     "Save all to Files" : "Gardar todo en Ficheiros",

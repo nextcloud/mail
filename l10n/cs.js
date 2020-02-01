@@ -83,6 +83,7 @@ OC.L10N.register(
     "Import into calendar" : "Importovat do kalendáře",
     "Download attachment" : "Stáhnout přílohu",
     "Save to Files" : "Uložit do Souborů",
+    "Unnamed" : "Nepojmenovaný",
     "Embedded message" : "Zapouzdřená zpráva",
     "Choose a folder to store the attachment in" : "Vyberte složku pro uložení přílohy",
     "Save all to Files" : "Uložit vše do Souborů",

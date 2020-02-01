@@ -78,6 +78,7 @@ OC.L10N.register(
     "Import into calendar" : "Flytja inn dagatal",
     "Download attachment" : "Sækja viðhengi",
     "Save to Files" : "Vista í skrár",
+    "Unnamed" : "Nafnlaust",
     "Choose a folder to store the attachment in" : "Veldu möppu þar sem á að geyma viðhengið",
     "Save all to Files" : "Vista allt í skrár",
     "Choose a folder to store the attachments in" : "Veldu möppu þar sem á að geyma viðhengin",

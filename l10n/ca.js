@@ -75,6 +75,7 @@ OC.L10N.register(
     "Import into calendar" : "Importa al calendari",
     "Download attachment" : "Descarrega l'adjunt",
     "Save to Files" : "Desa els fitxers",
+    "Unnamed" : "Sense nom",
     "Choose a folder to store the attachment in" : "Trieu una carpeta per emmagatzemar-hi el fitxer adjunt",
     "Save all to Files" : "Desa tots els fitxers",
     "Choose a folder to store the attachments in" : "Trieu una carpeta per emmagatzemar-hi els fitxers adjunts",

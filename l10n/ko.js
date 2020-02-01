@@ -50,6 +50,7 @@ OC.L10N.register(
     "Import into calendar" : "달력으로 가져오기",
     "Download attachment" : "첨부 파일 다운로드",
     "Save to Files" : "파일에 저장",
+    "Unnamed" : "이름 없음",
     "Choose a folder to store the attachment in" : "첨부 항목을 저장할 폴더 선택",
     "Save all to Files" : "모두 저장",
     "The images have been blocked to protect your privacy." : "개인 정보를 보호하기 위해 사진을 차단했습니다.",

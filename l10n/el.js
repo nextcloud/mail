@@ -83,6 +83,7 @@ OC.L10N.register(
     "Import into calendar" : "Εισαγωγή στο ημερολόγιο",
     "Download attachment" : "Λήψη συνημμένου",
     "Save to Files" : "Αποθήκευση στα Αρχεία",
+    "Unnamed" : "Ανώνυμο",
     "Embedded message" : "Ενσωματωμένο μήνυμα",
     "Choose a folder to store the attachment in" : "Επιλέξτε ένα φάκελο για να αποθηκεύσετε τα συνημμένα",
     "Save all to Files" : "Αποθήκευση όλων στα Αρχεία",
