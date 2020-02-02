@@ -43,6 +43,7 @@ OC.L10N.register(
     "Import into calendar" : "Importar al calendario",
     "Download attachment" : "Descargar adjunto",
     "Save to Files" : "Guardar a Archivos",
+    "Unnamed" : "Sin nombre",
     "Choose a folder to store the attachment in" : "Seleccciona la carpeta en la cual almacenar el adjunto",
     "Save all to Files" : "Guardar todo a Archivos",
     "The images have been blocked to protect your privacy." : "Las imágenes han sido bloqueadas para proteger tu privacidad. ",

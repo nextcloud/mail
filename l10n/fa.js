@@ -26,6 +26,7 @@ OC.L10N.register(
     "Add folder" : "Add folder",
     "Delete account" : "حذف حساب کاربری",
     "Mark all as read" : "علامت همه به عنوان خوانده‌شده",
+    "Loading …" : "بارگذاری …",
     "Signature" : "امضا",
     "General" : "عمومی",
     "User" : "User",

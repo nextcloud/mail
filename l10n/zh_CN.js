@@ -83,6 +83,7 @@ OC.L10N.register(
     "Import into calendar" : "导入到日历",
     "Download attachment" : "下载附件",
     "Save to Files" : "保存到“文件”",
+    "Unnamed" : "未命名",
     "Embedded message" : "嵌入式消息",
     "Choose a folder to store the attachment in" : "选择一个文件夹来存储附件",
     "Save all to Files" : "全部保存到文件",
