@@ -29,18 +29,15 @@ namespace OCA\Mail\Http\Middleware;
 use Exception;
 use OCA\Mail\Exception\ClientException;
 use OCA\Mail\Exception\NotImplemented;
-use OCA\Mail\Http\JSONErrorResponse;
+use OCA\Mail\Http\JsonResponse;
 use OCP\AppFramework\Controller;
 use OCP\AppFramework\Db\DoesNotExistException;
 use OCP\AppFramework\Http;
-use OCP\AppFramework\Http\JSONResponse;
 use OCP\AppFramework\Http\Response;
 use OCP\AppFramework\Middleware;
 use OCP\AppFramework\Utility\IControllerMethodReflector;
 use OCP\IConfig;
 use OCP\ILogger;
-use Throwable;
-use function get_class;
 
 class ErrorMiddleware extends Middleware {
 
@@ -79,46 +76,31 @@ class ErrorMiddleware extends Middleware {
 		}
 
 		if ($exception instanceof ClientException) {
-			return new JSONErrorResponse([
+			return JsonResponse::fail([
 				'message' => $exception->getMessage()
-			], Http::STATUS_BAD_REQUEST);
-		} else if ($exception instanceof DoesNotExistException) {
-			return new JSONResponse([], Http::STATUS_NOT_FOUND);
-		} else if ($exception instanceof NotImplemented) {
-			return new JSONResponse([], Http::STATUS_NOT_IMPLEMENTED);
-		} else {
-			$this->logger->logException($exception);
-			if ($this->config->getSystemValue('debug', false)) {
-				return new JSONErrorResponse(array_merge(
-					[
-						'debug' => true,
-					],
-					$this->serializeException($exception)
-				), Http::STATUS_INTERNAL_SERVER_ERROR);
-			}
-
-			return new JSONErrorResponse([], Http::STATUS_INTERNAL_SERVER_ERROR);
+			]);
 		}
-	}
 
-	private function serializeException(?Throwable $throwable): ?array {
-		if ($throwable === null) {
-			return null;
+		if ($exception instanceof DoesNotExistException) {
+			return JSONResponse::fail([], Http::STATUS_NOT_FOUND);
 		}
-		return [
-			'type' => get_class($throwable),
-			'message' => $throwable->getMessage(),
-			'code' => $throwable->getCode(),
-			'trace' => $this->filterTrace($throwable->getTrace()),
-			'previous' => $this->serializeException($throwable->getPrevious()),
-		];
-	}
 
-	private function filterTrace(array $original): array {
-		return array_map(function (array $row) {
-			return array_intersect_key($row,
-				array_flip(['file', 'line', 'function', 'class']));
-		}, $original);
+		if ($exception instanceof NotImplemented) {
+			return JSONResponse::fail([], Http::STATUS_NOT_IMPLEMENTED);
+		}
+
+		$this->logger->logException($exception);
+		if ($this->config->getSystemValue('debug', false)) {
+			return JsonResponse::errorFromThrowable(
+				$exception,
+				Http::STATUS_INTERNAL_SERVER_ERROR,
+				[
+					'debug' => true,
+				]
+			);
+		}
+
+		return JsonResponse::error("Server error");
 	}
 
 }

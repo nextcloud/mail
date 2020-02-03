@@ -20,7 +20,7 @@
  */
 
 const isErrorResponse = resp => {
-	return 'x-mail-error' in resp.headers
+	return 'x-mail-response' in resp.headers && resp.data.status === 'error'
 }
 
 export const parseErrorResponse = resp => {
@@ -28,11 +28,11 @@ export const parseErrorResponse = resp => {
 		return resp
 	}
 
-	const {debug, type, code, message, trace} = resp.data
+	const {debug, type, code, message, trace} = resp.data.data || {}
 
 	return {
 		isError: true,
-		debug,
+		debug: !!debug,
 		type,
 		code,
 		message,
