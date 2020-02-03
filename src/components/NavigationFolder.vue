@@ -32,7 +32,11 @@
 		<!-- actions -->
 		<template slot="actions">
 			<template v-if="top">
-				<ActionText v-if="!account.isUnified" icon="icon-info" :title="folderId">
+				<ActionText
+					v-if="!account.isUnified && folder.specialRole !== 'flagged'"
+					icon="icon-info"
+					:title="folderId"
+				>
 					{{ statsText }}
 				</ActionText>
 
@@ -76,9 +80,7 @@ import ActionText from '@nextcloud/vue/dist/Components/ActionText'
 
 import {getFolderStats} from '../service/FolderService'
 import logger from '../logger'
-import {translatePlural as n} from '@nextcloud/l10n'
 import {translate as translateMailboxName} from '../l10n/MailboxTranslator'
-
 
 export default {
 	name: 'NavigationFolder',
@@ -138,7 +140,7 @@ export default {
 						total: this.folderStats.total,
 					})
 				} else {
-					return n('mail', '{unread} unread of {total}', '{unread} unread of {total}', undefined, {
+					return n('mail', '{unread} unread of {total}', '{unread} unread of {total}', {
 						total: this.folderStats.total,
 						unread: this.folderStats.unread,
 					})
