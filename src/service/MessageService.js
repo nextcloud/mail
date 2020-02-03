@@ -1,5 +1,5 @@
 import {generateUrl} from '@nextcloud/router'
-import HttpClient from '@nextcloud/axios'
+import axios from '@nextcloud/axios'
 
 import {parseErrorResponse} from '../http/ErrorResponseParser'
 
@@ -17,9 +17,11 @@ export function fetchEnvelopes(accountId, folderId, query, cursor) {
 		params.cursor = cursor
 	}
 
-	return HttpClient.get(url, {
-		params: params,
-	}).then(resp => resp.data)
+	return axios
+		.get(url, {
+			params: params,
+		})
+		.then(resp => resp.data)
 }
 
 export function syncEnvelopes(accountId, folderId, uids) {
@@ -28,11 +30,13 @@ export function syncEnvelopes(accountId, folderId, uids) {
 		folderId,
 	})
 
-	return HttpClient.get(url, {
-		params: {
-			uids,
-		},
-	}).then(resp => resp.data)
+	return axios
+		.get(url, {
+			params: {
+				uids,
+			},
+		})
+		.then(resp => resp.data)
 }
 
 export function setEnvelopeFlag(accountId, folderId, id, flag, value) {
@@ -45,11 +49,13 @@ export function setEnvelopeFlag(accountId, folderId, id, flag, value) {
 	const flags = {}
 	flags[flag] = value
 
-	return HttpClient.put(url, {
-		flags: flags,
-	}).then(() => {
-		value
-	})
+	return axios
+		.put(url, {
+			flags: flags,
+		})
+		.then(() => {
+			value
+		})
 }
 
 export function fetchMessage(accountId, folderId, id) {
@@ -59,7 +65,8 @@ export function fetchMessage(accountId, folderId, id) {
 		id,
 	})
 
-	return HttpClient.get(url)
+	return axios
+		.get(url)
 		.then(resp => resp.data)
 		.catch(error => {
 			if (error.response && error.response.status === 404) {
@@ -74,7 +81,7 @@ export function saveDraft(accountId, data) {
 		accountId,
 	})
 
-	return HttpClient.post(url, data).then(resp => resp.data)
+	return axios.post(url, data).then(resp => resp.data)
 }
 
 export function sendMessage(accountId, data) {
@@ -82,7 +89,7 @@ export function sendMessage(accountId, data) {
 		accountId,
 	})
 
-	return HttpClient.post(url, data).then(resp => resp.data)
+	return axios.post(url, data).then(resp => resp.data)
 }
 
 export function deleteMessage(accountId, folderId, id) {
@@ -92,5 +99,5 @@ export function deleteMessage(accountId, folderId, id) {
 		id,
 	})
 
-	return HttpClient.delete(url).then(resp => resp.data)
+	return axios.delete(url).then(resp => resp.data)
 }
