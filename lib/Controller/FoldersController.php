@@ -105,7 +105,7 @@ class FoldersController extends Controller {
 	 * @return JSONResponse
 	 * @throws ServiceException
 	 */
-	public function sync(int $accountId, string $folderId, array $uids): JSONResponse {
+	public function sync(int $accountId, string $folderId, array $uids = []): JSONResponse {
 		$account = $this->accountService->find($this->currentUserId, $accountId);
 
 		if (empty($accountId) || empty($folderId) || !is_array($uids)) {
