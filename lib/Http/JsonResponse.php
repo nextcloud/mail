@@ -25,6 +25,7 @@ declare(strict_types=1);
 
 namespace OCA\Mail\Http;
 
+use OCA\Mail\Exception\ClientException;
 use OCP\AppFramework\Http;
 use OCP\AppFramework\Http\JSONResponse as Base;
 use Throwable;
@@ -40,7 +41,7 @@ use function get_class;
 class JsonResponse extends Base {
 
 	public function __construct($data = [],
-						 int $statusCode = Http::STATUS_OK) {
+								int $statusCode = Http::STATUS_OK) {
 		parent::__construct($data, $statusCode);
 
 		$this->addHeader('x-mail-response', 'true');
@@ -65,6 +66,16 @@ class JsonResponse extends Base {
 				'data' => $data,
 			],
 			$status
+		);
+	}
+
+	public static function failWith(ClientException $exception): self {
+		return self::fail(
+			[
+				'message' => $exception->getMessage(),
+				'type' => get_class($exception),
+			],
+			$exception->getHttpCode()
 		);
 	}
 

@@ -127,4 +127,16 @@ class Mailbox extends Entity {
 		return $this->getName();
 	}
 
+	public function isCached(): bool {
+		return $this->getSyncNewToken() !== null
+			&& $this->getSyncChangedToken() !== null
+			&& $this->getSyncVanishedToken() !== null;
+	}
+
+	public function hasLocks(): bool {
+		return $this->getSyncNewLock() !== null
+			|| $this->getSyncChangedLock() !== null
+			|| $this->getSyncVanishedLock() !== null;
+	}
+
 }

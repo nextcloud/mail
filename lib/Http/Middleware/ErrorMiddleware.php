@@ -76,9 +76,7 @@ class ErrorMiddleware extends Middleware {
 		}
 
 		if ($exception instanceof ClientException) {
-			return JsonResponse::fail([
-				'message' => $exception->getMessage()
-			]);
+			return JsonResponse::failWith($exception);
 		}
 
 		if ($exception instanceof DoesNotExistException) {

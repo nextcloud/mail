@@ -24,7 +24,7 @@
 namespace OCA\Mail\Db;
 
 use OCA\Mail\Account;
-use OCA\Mail\Exception\ConcurrentSyncException;
+use OCA\Mail\Exception\MailboxLockedException;
 use OCA\Mail\Exception\ServiceException;
 use OCP\AppFramework\Db\DoesNotExistException;
 use OCP\AppFramework\Db\MultipleObjectsReturnedException;
@@ -109,7 +109,7 @@ class MailboxMapper extends QBMapper {
 	}
 
 	/**
-	 * @throws ConcurrentSyncException
+	 * @throws MailboxLockedException
 	 */
 	private function lockForSync(Mailbox $mailbox, string $attr, ?int $lock): int {
 		$now = $this->timeFactory->getTime();
@@ -117,7 +117,7 @@ class MailboxMapper extends QBMapper {
 		if ($lock !== null
 			&& $lock > ($now - 5 * 60)) {
 			// Another process is syncing
-			throw new ConcurrentSyncException($mailbox->getId() . ' is already being synced');
+			throw MailboxLockedException::from($mailbox);
 		}
 
 		$query = $this->db->getQueryBuilder();
@@ -130,14 +130,14 @@ class MailboxMapper extends QBMapper {
 		if ($query->execute() === 0) {
 			// Another process just started syncing
 
-			throw new ConcurrentSyncException();
+			throw MailboxLockedException::from($mailbox);
 		}
 
 		return $now;
 	}
 
 	/**
-	 * @throws ConcurrentSyncException
+	 * @throws MailboxLockedException
 	 */
 	public function lockForNewSync(Mailbox $mailbox): void {
 		$mailbox->setSyncNewLock(
@@ -146,7 +146,7 @@ class MailboxMapper extends QBMapper {
 	}
 
 	/**
-	 * @throws ConcurrentSyncException
+	 * @throws MailboxLockedException
 	 */
 	public function lockForChangeSync(Mailbox $mailbox): void {
 		$mailbox->setSyncChangedLock(
@@ -155,7 +155,7 @@ class MailboxMapper extends QBMapper {
 	}
 
 	/**
-	 * @throws ConcurrentSyncException
+	 * @throws MailboxLockedException
 	 */
 	public function lockForVanishedSync(Mailbox $mailbox): void {
 		$mailbox->setSyncVanishedLock(

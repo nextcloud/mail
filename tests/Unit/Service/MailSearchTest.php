@@ -27,8 +27,11 @@ use ChristophWurst\Nextcloud\Testing\TestCase;
 use Horde_Imap_Client_Fetch_Results;
 use Horde_Imap_Client_Socket;
 use OCA\Mail\Account;
+use OCA\Mail\Db\Mailbox;
 use OCA\Mail\Db\MailboxMapper;
 use OCA\Mail\Db\MessageMapper;
+use OCA\Mail\Exception\MailboxLockedException;
+use OCA\Mail\Exception\MailboxNotCachedException;
 use OCA\Mail\IMAP\IMAPClientFactory;
 use OCA\Mail\IMAP\Search\Provider;
 use OCA\Mail\Service\Search\FilterStringParser;
@@ -74,8 +77,50 @@ class MailSearchTest extends TestCase {
 		);
 	}
 
+	public function testFindMessagesNotCached() {
+		$account = $this->createMock(Account::class);
+		$mailbox = new Mailbox();
+		$mailbox->setSyncNewToken('abc');
+		$mailbox->setSyncChangedToken('def');
+		$this->mailboxMapper->expects($this->once())
+			->method('find')
+			->willReturn($mailbox);
+		$this->expectException(MailboxNotCachedException::class);
+
+		$messages = $this->search->findMessages(
+			$account,
+			'INBOX',
+			null,
+			null
+		);
+	}
+
+	public function testFindMessagesLocked() {
+		$account = $this->createMock(Account::class);
+		$mailbox = new Mailbox();
+		$mailbox->setSyncNewLock(123);
+		$this->mailboxMapper->expects($this->once())
+			->method('find')
+			->willReturn($mailbox);
+		$this->expectException(MailboxLockedException::class);
+
+		$messages = $this->search->findMessages(
+			$account,
+			'INBOX',
+			null,
+			null
+		);
+	}
+
 	public function testNoFindMessages() {
 		$account = $this->createMock(Account::class);
+		$mailbox = new Mailbox();
+		$mailbox->setSyncNewToken('abc');
+		$mailbox->setSyncChangedToken('def');
+		$mailbox->setSyncVanishedToken('ghi');
+		$this->mailboxMapper->expects($this->once())
+			->method('find')
+			->willReturn($mailbox);
 
 		$messages = $this->search->findMessages(
 			$account,

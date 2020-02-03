@@ -27,7 +27,12 @@ declare(strict_types=1);
 namespace OCA\Mail\Exception;
 
 use Exception;
+use OCP\AppFramework\Http;
 
 class ClientException extends Exception {
+
+	public function getHttpCode(): int {
+		return Http::STATUS_BAD_REQUEST;
+	}
 
 }
