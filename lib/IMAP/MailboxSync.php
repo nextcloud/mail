@@ -115,7 +115,6 @@ class MailboxSync {
 
 	private function updateMailboxFromFolder(Folder $folder, Mailbox $mailbox): void {
 		$mailbox->setDelimiter($folder->getDelimiter());
-		$mailbox->setSyncToken($folder->getSyncToken());
 		$mailbox->setAttributes(json_encode($folder->getAttributes()));
 		$mailbox->setDelimiter($folder->getDelimiter());
 		$mailbox->setMessages(0); // TODO
@@ -129,7 +128,6 @@ class MailboxSync {
 		$mailbox = new Mailbox();
 		$mailbox->setName($folder->getMailbox());
 		$mailbox->setAccountId($account->getId());
-		$mailbox->setSyncToken($folder->getSyncToken());
 		$mailbox->setAttributes(json_encode($folder->getAttributes()));
 		$mailbox->setDelimiter($folder->getDelimiter());
 		$mailbox->setMessages(0); // TODO

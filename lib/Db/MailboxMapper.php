@@ -24,16 +24,25 @@
 namespace OCA\Mail\Db;
 
 use OCA\Mail\Account;
+use OCA\Mail\Exception\ConcurrentSyncException;
 use OCA\Mail\Exception\ServiceException;
 use OCP\AppFramework\Db\DoesNotExistException;
 use OCP\AppFramework\Db\MultipleObjectsReturnedException;
 use OCP\AppFramework\Db\QBMapper;
+use OCP\AppFramework\Utility\ITimeFactory;
+use OCP\DB\QueryBuilder\IQueryBuilder;
 use OCP\IDBConnection;
+use OCP\Security\ISecureRandom;
 
 class MailboxMapper extends QBMapper {
 
-	public function __construct(IDBConnection $db) {
+	/** @var ITimeFactory */
+	private $timeFactory;
+
+	public function __construct(IDBConnection $db,
+								ITimeFactory $timeFactory) {
 		parent::__construct($db, 'mail_mailboxes');
+		$this->timeFactory = $timeFactory;
 	}
 
 	/**
@@ -97,6 +106,92 @@ class MailboxMapper extends QBMapper {
 
 		// Give up
 		throw new DoesNotExistException("Special mailbox $specialUse does not exist");
+	}
+
+	/**
+	 * @throws ConcurrentSyncException
+	 */
+	private function lockForSync(Mailbox $mailbox, string $attr, ?int $lock): int {
+		$now = $this->timeFactory->getTime();
+
+		if ($lock !== null
+			&& $lock > ($now - 5 * 60)) {
+			// Another process is syncing
+			throw new ConcurrentSyncException($mailbox->getId() . ' is already being synced');
+		}
+
+		$query = $this->db->getQueryBuilder();
+		$query->update($this->getTableName())
+			->set($attr, $query->createNamedParameter($now, IQueryBuilder::PARAM_INT))
+			->where(
+				$query->expr()->eq('id', $query->createNamedParameter($mailbox->getId(), IQueryBuilder::PARAM_INT)),
+				$this->eqOrNull($query, $attr, $lock, IQueryBuilder::PARAM_INT)
+			);
+		if ($query->execute() === 0) {
+			// Another process just started syncing
+
+			throw new ConcurrentSyncException();
+		}
+
+		return $now;
+	}
+
+	/**
+	 * @throws ConcurrentSyncException
+	 */
+	public function lockForNewSync(Mailbox $mailbox): void {
+		$mailbox->setSyncNewLock(
+			$this->lockForSync($mailbox, 'sync_new_lock', $mailbox->getSyncNewLock())
+		);
+	}
+
+	/**
+	 * @throws ConcurrentSyncException
+	 */
+	public function lockForChangeSync(Mailbox $mailbox): void {
+		$mailbox->setSyncChangedLock(
+			$this->lockForSync($mailbox, 'sync_changed_lock', $mailbox->getSyncChangedLock())
+		);
+	}
+
+	/**
+	 * @throws ConcurrentSyncException
+	 */
+	public function lockForVanishedSync(Mailbox $mailbox): void {
+		$mailbox->setSyncVanishedLock(
+			$this->lockForSync($mailbox, 'sync_vanished_lock', $mailbox->getSyncVanishedLock())
+		);
+	}
+
+	/**
+	 * @param Mailbox $mailbox
+	 * @param IQueryBuilder $query
+	 *
+	 * @return string
+	 */
+	private function eqOrNull(IQueryBuilder $query, string $column, $value, int $type): string {
+		if ($value === null) {
+			return $query->expr()->isNull($column);
+		}
+		return $query->expr()->eq($column, $query->createNamedParameter($value, $type));
+	}
+
+	public function unlockFromNewSync(Mailbox $mailbox): void {
+		$mailbox->setSyncNewLock(null);
+
+		$this->update($mailbox);
+	}
+
+	public function unlockFromChangedSync(Mailbox $mailbox): void {
+		$mailbox->setSyncChangedLock(null);
+
+		$this->update($mailbox);
+	}
+
+	public function unlockFromVanishedSync(Mailbox $mailbox): void {
+		$mailbox->setSyncVanishedLock(null);
+
+		$this->update($mailbox);
 	}
 
 }

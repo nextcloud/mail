@@ -28,39 +28,63 @@ use OCA\Mail\Model\IMAPMessage;
 
 class Response implements JsonSerializable {
 
-	/** @var string */
-	private $syncToken;
-
 	/** @var IMAPMessage[] */
 	private $newMessages;
 
 	/** @var IMAPMessage[] */
 	private $changedMessages;
 
-	/** @var array */
-	private $vanishedMessages;
+	/** @var int[] */
+	private $vanishedMessageUids;
 
 	/**
 	 * @param string $syncToken
 	 * @param IMAPMessage[] $newMessages
 	 * @param IMAPMessage[] $changedMessages
-	 * @param array $vanishedMessages
+	 * @param int[] $vanishedMessageUids
 	 */
-	public function __construct(string $syncToken, array $newMessages = [], array $changedMessages = [],
-								array $vanishedMessages = []) {
-		$this->syncToken = $syncToken;
+	public function __construct(array $newMessages = [], array $changedMessages = [],
+								array $vanishedMessageUids = []) {
 		$this->newMessages = $newMessages;
 		$this->changedMessages = $changedMessages;
-		$this->vanishedMessages = $vanishedMessages;
+		$this->vanishedMessageUids = $vanishedMessageUids;
+	}
+
+	/**
+	 * @return IMAPMessage[]
+	 */
+	public function getNewMessages(): array {
+		return $this->newMessages;
+	}
+
+	/**
+	 * @return IMAPMessage[]
+	 */
+	public function getChangedMessages(): array {
+		return $this->changedMessages;
+	}
+
+	/**
+	 * @return int[]
+	 */
+	public function getVanishedMessageUids(): array {
+		return $this->vanishedMessageUids;
 	}
 
 	public function jsonSerialize(): array {
 		return [
 			'newMessages' => $this->newMessages,
 			'changedMessages' => $this->changedMessages,
-			'vanishedMessages' => $this->vanishedMessages,
-			'token' => $this->syncToken,
+			'vanishedMessages' => $this->vanishedMessageUids,
 		];
+	}
+
+	public function merge(Response $other): self {
+		return new self(
+			array_merge($this->getNewMessages(), $other->getNewMessages()),
+			array_merge($this->getChangedMessages(), $other->getChangedMessages()),
+			array_merge($this->getVanishedMessageUids(), $other->getVanishedMessageUids())
+		);
 	}
 
 }

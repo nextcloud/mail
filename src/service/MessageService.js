@@ -22,7 +22,7 @@ export function fetchEnvelopes(accountId, folderId, query, cursor) {
 	}).then(resp => resp.data)
 }
 
-export function syncEnvelopes(accountId, folderId, syncToken, uids) {
+export function syncEnvelopes(accountId, folderId, uids) {
 	const url = generateUrl('/apps/mail/api/accounts/{accountId}/folders/{folderId}/sync', {
 		accountId,
 		folderId,
@@ -30,7 +30,6 @@ export function syncEnvelopes(accountId, folderId, syncToken, uids) {
 
 	return HttpClient.get(url, {
 		params: {
-			syncToken,
 			uids,
 		},
 	}).then(resp => resp.data)

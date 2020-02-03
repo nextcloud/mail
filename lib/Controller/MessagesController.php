@@ -40,6 +40,7 @@ use OCA\Mail\Model\IMAPMessage;
 use OCA\Mail\Service\AccountService;
 use OCA\Mail\Service\IMailBox;
 use OCA\Mail\Service\ItineraryService;
+use OCA\Mail\Service\SyncService;
 use OCP\AppFramework\Controller;
 use OCP\AppFramework\Db\DoesNotExistException;
 use OCP\AppFramework\Http;
@@ -68,6 +69,9 @@ class MessagesController extends Controller {
 
 	/** @var ItineraryService */
 	private $itineraryService;
+
+	/** @var SyncService */
+	private $syncService;
 
 	/** @var string */
 	private $currentUserId;
@@ -104,6 +108,7 @@ class MessagesController extends Controller {
 								IMailManager $mailManager,
 								IMailSearch $mailSearch,
 								ItineraryService $itineraryService,
+								SyncService $syncService,
 								string $UserId,
 								$userFolder,
 								ILogger $logger,
@@ -116,6 +121,7 @@ class MessagesController extends Controller {
 		$this->mailManager = $mailManager;
 		$this->mailSearch = $mailSearch;
 		$this->itineraryService = $itineraryService;
+		$this->syncService = $syncService;
 		$this->currentUserId = $UserId;
 		$this->userFolder = $userFolder;
 		$this->logger = $logger;
@@ -143,6 +149,11 @@ class MessagesController extends Controller {
 		} catch (DoesNotExistException $e) {
 			return new JSONResponse(null, Http::STATUS_FORBIDDEN);
 		}
+
+		$this->syncService->ensurePopulated(
+			$account,
+			base64_decode($folderId)
+		);
 
 		$this->logger->debug("loading messages of folder <$folderId>");
 

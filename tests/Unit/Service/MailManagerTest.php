@@ -59,9 +59,6 @@ class MailManagerTest extends TestCase {
 	/** @var MessageMapper|MockObject */
 	private $messageMapper;
 
-	/** @var Synchronizer|MockObject */
-	private $sync;
-
 	/** @var IEventDispatcher|MockObject */
 	private $eventDispatcher;
 
@@ -73,10 +70,9 @@ class MailManagerTest extends TestCase {
 
 		$this->imapClientFactory = $this->createMock(IMAPClientFactory::class);
 		$this->mailboxMapper = $this->createMock(MailboxMapper::class);
-		$this->mailboxSync = $this->createMock(MailboxSync::class);
 		$this->folderMapper = $this->createMock(FolderMapper::class);
 		$this->messageMapper = $this->createMock(MessageMapper::class);
-		$this->sync = $this->createMock(Synchronizer::class);
+		$this->mailboxSync = $this->createMock(MailboxSync::class);
 		$this->eventDispatcher = $this->createMock(IEventDispatcher::class);
 
 		$this->manager = new MailManager(
@@ -84,7 +80,6 @@ class MailManagerTest extends TestCase {
 			$this->mailboxMapper,
 			$this->mailboxSync,
 			$this->folderMapper,
-			$this->sync,
 			$this->messageMapper,
 			$this->eventDispatcher
 		);
@@ -154,22 +149,6 @@ class MailManagerTest extends TestCase {
 		$actual = $this->manager->getFolderStats($account, 'INBOX');
 
 		$this->assertEquals($stats, $actual);
-	}
-
-	public function testSync() {
-		$account = $this->createMock(Account::class);
-		$syncRequest = $this->createMock(Request::class);
-		$syncResonse = $this->createMock(Response::class);
-		$client = $this->createMock(Horde_Imap_Client_Socket::class);
-		$this->imapClientFactory->expects($this->once())
-			->method('getClient')
-			->willReturn($client);
-		$this->sync->expects($this->once())
-			->method('sync')
-			->with($client, $syncRequest)
-			->willReturn($syncResonse);
-
-		$this->manager->syncMessages($account, $syncRequest);
 	}
 
 	public function testDeleteMessageSourceFolderNotFound(): void {

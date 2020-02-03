@@ -21,16 +21,10 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-namespace OCA\Mail\IMAP\Search;
+namespace OCA\Mail\Exception;
 
-use Horde_Imap_Client_Exception;
-use Horde_Imap_Client_Ids;
+use Exception;
 
-interface ISearchStrategy {
-
-	/**
-	 * @throws Horde_Imap_Client_Exception
-	 */
-	public function getIds(int $maxResults, array $flags = []): Horde_Imap_Client_Ids;
+class ConcurrentSyncException extends Exception {
 
 }

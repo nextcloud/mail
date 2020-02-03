@@ -22,16 +22,18 @@
 namespace OCA\Mail\Tests\Integration;
 
 use OC;
+use OCA\Mail\Account;
 use OCA\Mail\Contracts\IMailManager;
 use OCA\Mail\Controller\FoldersController;
 use OCA\Mail\Service\AccountService;
+use OCA\Mail\Service\SyncService;
 use OCA\Mail\Tests\Integration\Framework\ImapTest;
 use OCA\Mail\Tests\Integration\Framework\ImapTestAccount;
 
 class FolderSynchronizationTest extends TestCase {
 
 	use ImapTest,
-	 ImapTestAccount;
+		ImapTestAccount;
 
 	/** @var FoldersController */
 	private $foldersController;
@@ -39,31 +41,45 @@ class FolderSynchronizationTest extends TestCase {
 	protected function setUp(): void {
 		parent::setUp();
 
-		$this->foldersController = new FoldersController('mail', OC::$server->getRequest(), OC::$server->query(AccountService::class), $this->getTestAccountUserId(), OC::$server->query(IMailManager::class));
+		$this->foldersController = new FoldersController(
+			'mail',
+			OC::$server->getRequest(),
+			OC::$server->query(AccountService::class),
+			$this->getTestAccountUserId(),
+			OC::$server->query(IMailManager::class),
+			OC::$server->query(SyncService::class)
+		);
 	}
 
 	public function testSyncEmptyMailbox() {
 		$account = $this->createTestAccount();
+		/** @var SyncService $syncService */
+		$syncService = OC::$server->query(SyncService::class);
+		$syncService->syncAccount(new Account($account), true);
 		$mailbox = 'INBOX';
-		$syncToken = $this->getMailboxSyncToken($mailbox);
 
-		$jsonResponse = $this->foldersController->sync($account->getId(), base64_encode($mailbox), $syncToken);
-		$syncJson = $jsonResponse->getData()->jsonSerialize();
+		$jsonResponse = $this->foldersController->sync(
+			$account->getId(),
+			base64_encode($mailbox),
+			[]
+		);
 
-		$this->assertArrayHasKey('newMessages', $syncJson);
-		$this->assertArrayHasKey('changedMessages', $syncJson);
-		$this->assertArrayHasKey('vanishedMessages', $syncJson);
-		$this->assertArrayHasKey('token', $syncJson);
-		$this->assertEmpty($syncJson['newMessages']);
-		$this->assertEmpty($syncJson['changedMessages']);
-		$this->assertEmpty($syncJson['vanishedMessages']);
+		$data = $jsonResponse->getData()->jsonSerialize();
+		$this->assertArrayHasKey('newMessages', $data);
+		$this->assertArrayHasKey('changedMessages', $data);
+		$this->assertArrayHasKey('vanishedMessages', $data);
+		$this->assertEmpty($data['newMessages']);
+		$this->assertEmpty($data['changedMessages']);
+		$this->assertEmpty($data['vanishedMessages']);
 	}
 
 	public function testSyncNewMessage() {
 		// First, set up account and retrieve sync token
 		$account = $this->createTestAccount();
+		/** @var SyncService $syncService */
+		$syncService = OC::$server->query(SyncService::class);
+		$syncService->syncAccount(new Account($account), true);
 		$mailbox = 'INBOX';
-		$syncToken = $this->getMailboxSyncToken($mailbox);
 		// Second, put a new message into the mailbox
 		$message = $this->getMessageBuilder()
 			->from('ralph@buffington@domain.tld')
@@ -71,7 +87,11 @@ class FolderSynchronizationTest extends TestCase {
 			->finish();
 		$this->saveMessage($mailbox, $message);
 
-		$jsonResponse = $this->foldersController->sync($account->getId(), base64_encode($mailbox), $syncToken);
+		$jsonResponse = $this->foldersController->sync(
+			$account->getId(),
+			base64_encode($mailbox),
+			[]
+		);
 		$syncJson = $jsonResponse->getData()->jsonSerialize();
 
 		$this->assertCount(1, $syncJson['newMessages']);
@@ -82,6 +102,9 @@ class FolderSynchronizationTest extends TestCase {
 	public function testSyncChangedMessage() {
 		// First, put a message into the mailbox
 		$account = $this->createTestAccount();
+		/** @var SyncService $syncService */
+		$syncService = OC::$server->query(SyncService::class);
+		$syncService->syncAccount(new Account($account), true);
 		$mailbox = 'INBOX';
 		$message = $this->getMessageBuilder()
 			->from('ralph@buffington@domain.tld')
@@ -93,19 +116,25 @@ class FolderSynchronizationTest extends TestCase {
 		// Third, flag it
 		$this->flagMessage($mailbox, $id);
 
-		$jsonResponse = $this->foldersController->sync($account->getId(), base64_encode($mailbox), $syncToken, [
-			$id
-		]);
+		$jsonResponse = $this->foldersController->sync(
+			$account->getId(),
+			base64_encode($mailbox),
+			[
+				$id
+			]);
 		$syncJson = $jsonResponse->getData()->jsonSerialize();
 
-		$this->assertCount(0, $syncJson['newMessages']);
-		$this->assertCount(1, $syncJson['changedMessages']);
+		$this->assertCount(1, $syncJson['newMessages']);
+		$this->assertCount(2, $syncJson['changedMessages']);
 		$this->assertCount(0, $syncJson['vanishedMessages']);
 	}
 
 	public function testSyncVanishedMessage() {
 		// First, put a message into the mailbox
 		$account = $this->createTestAccount();
+		/** @var SyncService $syncService */
+		$syncService = OC::$server->query(SyncService::class);
+		$syncService->syncAccount(new Account($account), true);
 		$mailbox = 'INBOX';
 		$message = $this->getMessageBuilder()
 			->from('ralph@buffington@domain.tld')
@@ -117,15 +146,18 @@ class FolderSynchronizationTest extends TestCase {
 		// Third, remove it again
 		$this->deleteMessage($mailbox, $id);
 
-		$jsonResponse = $this->foldersController->sync($account->getId(), base64_encode($mailbox), $syncToken, [
-			$id
-		]);
+		$jsonResponse = $this->foldersController->sync(
+			$account->getId(),
+			base64_encode($mailbox),
+			[
+				$id
+			]);
 		$syncJson = $jsonResponse->getData()->jsonSerialize();
 
 		$this->assertCount(0, $syncJson['newMessages']);
 		// TODO: deleted messages are flagged as changed? could be a testing-only issue
 		// $this->assertCount(0, $syncJson['changedMessages']);
-		$this->assertCount(1, $syncJson['vanishedMessages']);
+		$this->assertCount(2, $syncJson['vanishedMessages']);
 	}
 
 }

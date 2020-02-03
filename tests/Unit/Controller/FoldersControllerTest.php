@@ -21,6 +21,8 @@
 
 namespace OCA\Mail\Tests\Unit\Controller;
 
+use OCA\Mail\Service\SyncService;
+use PHPUnit\Framework\MockObject\MockObject;
 use function base64_encode;
 use OCA\Mail\Account;
 use OCA\Mail\Contracts\IMailManager;
@@ -32,34 +34,45 @@ use OCA\Mail\Service\AccountService;
 use ChristophWurst\Nextcloud\Testing\TestCase;
 use OCP\AppFramework\Http\JSONResponse;
 use OCP\IRequest;
-use PHPUnit_Framework_MockObject_MockObject;
 
 class FoldersControllerTest extends TestCase {
 
 	/** @var string */
 	private $appName = 'mail';
 
-	/** @var IRequest|PHPUnit_Framework_MockObject_MockObject */
+	/** @var IRequest|MockObject */
 	private $request;
 
-	/** @var AccountService|PHPUnit_Framework_MockObject_MockObject */
+	/** @var AccountService|MockObject */
 	private $accountService;
 
 	/** @var string */
 	private $userId = 'john';
 
-	/** @var IMailManager|PHPUnit_Framework_MockObject_MockObject */
+	/** @var IMailManager|MockObject */
 	private $mailManager;
 
 	/** @var FoldersController */
 	private $controller;
 
+	/** @var SyncService|MockObject */
+	private $syncService;
+
 	public function setUp(): void {
 		parent::setUp();
+
 		$this->request = $this->createMock(IRequest::class);
 		$this->accountService = $this->createMock(AccountService::class);
 		$this->mailManager = $this->createMock(IMailManager::class);
-		$this->controller = new FoldersController($this->appName, $this->request, $this->accountService, $this->userId, $this->mailManager);
+		$this->syncService = $this->createMock(SyncService::class);
+		$this->controller = new FoldersController(
+			$this->appName,
+			$this->request,
+			$this->accountService,
+			$this->userId,
+			$this->mailManager,
+			$this->syncService
+		);
 	}
 
 	public function testIndex() {
@@ -75,7 +88,7 @@ class FoldersControllerTest extends TestCase {
 			->with($this->equalTo($account))
 			->willReturn([
 				$folder
-		]);
+			]);
 		$account->expects($this->once())
 			->method('getEmail')
 			->willReturn('user@example.com');

@@ -1,4 +1,4 @@
-<?php
+<?php declare(strict_types=1);
 
 /**
  * @copyright 2017 Christoph Wurst <christoph@winzerhof-wurst.at>
@@ -67,6 +67,12 @@ class AddressList implements Countable, JsonSerializable {
 				return $obj instanceof Horde_Mail_Rfc822_Address;
 			}));
 		return new AddressList($addresses);
+	}
+
+	public static function fromRow(array $recipient): self {
+		return new self([
+			new Address($recipient['label'], $recipient['email'])
+		]);
 	}
 
 	/**

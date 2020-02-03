@@ -28,23 +28,18 @@ use Horde_Imap_Client_Fetch_Results;
 use Horde_Imap_Client_Socket;
 use OCA\Mail\Account;
 use OCA\Mail\Db\MailboxMapper;
+use OCA\Mail\Db\MessageMapper;
 use OCA\Mail\IMAP\IMAPClientFactory;
-use OCA\Mail\IMAP\Search\SearchFilterStringParser;
-use OCA\Mail\IMAP\Search\SearchStrategyFactory;
-use OCA\Mail\Service\MailSearch;
+use OCA\Mail\IMAP\Search\Provider;
+use OCA\Mail\Service\Search\FilterStringParser;
+use OCA\Mail\Service\Search\MailSearch;
 use OCP\ILogger;
 use PHPUnit\Framework\MockObject\MockObject;
 
 class MailSearchTest extends TestCase {
 
-	/** @var MockObject|IMAPClientFactory */
-	private $imapClientFactory;
-
-	/** @var MockObject|SearchStrategyFactory */
-	private $searchStrategyFactory;
-
-	/** @var MockObject|SearchFilterStringParser */
-	private $searchStringParser;
+	/** @var FilterStringParser|MockObject */
+	private $filterStringParser;
 
 	/** @var MockObject|MailboxMapper */
 	private $mailboxMapper;
@@ -55,34 +50,32 @@ class MailSearchTest extends TestCase {
 	/** @var MailSearch */
 	private $search;
 
+	/** @var Provider|MockObject */
+	private $imapSearchProvider;
+
+	/** @var MessageMapper|MockObject */
+	private $messageMapper;
+
 	protected function setUp(): void {
 		parent::setUp();
 
-		$this->imapClientFactory = $this->createMock(IMAPClientFactory::class);
-		$this->searchStrategyFactory = $this->createMock(SearchStrategyFactory::class);
-		$this->searchStringParser = $this->createMock(SearchFilterStringParser::class);
+		$this->filterStringParser = $this->createMock(FilterStringParser::class);
 		$this->mailboxMapper = $this->createMock(MailboxMapper::class);
+		$this->imapSearchProvider = $this->createMock(Provider::class);
+		$this->messageMapper = $this->createMock(MessageMapper::class);
 		$this->logger = $this->createMock(ILogger::class);
 
 		$this->search = new MailSearch(
-			$this->imapClientFactory,
-			$this->searchStrategyFactory,
-			$this->searchStringParser,
+			$this->filterStringParser,
 			$this->mailboxMapper,
+			$this->imapSearchProvider,
+			$this->messageMapper,
 			$this->logger
 		);
 	}
 
 	public function testNoFindMessages() {
 		$account = $this->createMock(Account::class);
-		$client = $this->createMock(Horde_Imap_Client_Socket::class);
-		$this->imapClientFactory->expects($this->once())
-			->method('getClient')
-			->with($account)
-			->willReturn($client);
-		$client->expects($this->once())
-			->method('fetch')
-			->willReturn(new Horde_Imap_Client_Fetch_Results());
 
 		$messages = $this->search->findMessages(
 			$account,

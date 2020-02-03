@@ -2,7 +2,11 @@
 	<AppContent>
 		<AppDetailsToggle v-if="showMessage" @close="hideMessage" />
 		<div id="app-content-wrapper">
-			<Loading v-if="loading" :hint="t('mail', 'Loading messages')" />
+			<Loading
+				v-if="loading"
+				:hint="t('mail', 'Loading messages')"
+				:slow-hint="t('mail', 'This can take a bit longer when the mailbox is accessed for the first time.')"
+			/>
 			<template v-else>
 				<EnvelopeList
 					:account="account"

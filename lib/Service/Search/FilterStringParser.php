@@ -21,11 +21,9 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-namespace OCA\Mail\IMAP\Search;
+namespace OCA\Mail\Service\Search;
 
-use Horde_Imap_Client_Search_Query;
-
-class SearchFilterStringParser {
+class FilterStringParser {
 
 	private const FLAG_MAP = [
 		'read' => ['SEEN', true],
@@ -33,26 +31,22 @@ class SearchFilterStringParser {
 		'answered' => ['ANSWERED', true],
 	];
 
-	public function parse(?string $filter): Horde_Imap_Client_Search_Query {
-		$query = new Horde_Imap_Client_Search_Query();
+	public function parse(?string $filter): SearchQuery {
+		$query = new SearchQuery();
 		if (empty($filter)) {
 			return $query;
 		}
 		$tokens = explode(' ', $filter);
-		$textTokens = [];
 		foreach ($tokens as $token) {
 			if (!$this->parseFilterToken($query, $token)) {
-				$textTokens[] = $token;
+				$query->addTextToken($token);
 			}
-		}
-		if (count($textTokens)) {
-			$query->text(implode(' ', $textTokens), false);
 		}
 
 		return $query;
 	}
 
-	private function parseFilterToken(Horde_Imap_Client_Search_Query $query, $token): bool {
+	private function parseFilterToken(SearchQuery $query, $token): bool {
 		if (strpos($token, ':') === false) {
 			return false;
 		}
@@ -65,16 +59,24 @@ class SearchFilterStringParser {
 			case 'not':
 				if (array_key_exists($param, self::FLAG_MAP)) {
 					$flag = self::FLAG_MAP[$param];
-					$query->flag($flag[0], $type === 'is' ? $flag[1] : !$flag[1]);
+					$query->addFlag($flag[0], $type === 'is' ? $flag[1] : !$flag[1]);
 					return true;
 				}
 				break;
 			case 'from':
+				$query->addFrom($param);
+				return true;
 			case 'to':
+				$query->addTo($param);
+				return true;
 			case 'cc':
+				$query->addCc($param);
+				return true;
 			case 'bcc':
+				$query->addBcc($param);
+				return true;
 			case 'subject':
-				$query->headerText($type, $param);
+				$query->setSubject($param);
 				return true;
 		}
 

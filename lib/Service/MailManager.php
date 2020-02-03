@@ -24,13 +24,11 @@ declare(strict_types=1);
 namespace OCA\Mail\Service;
 
 use Horde_Imap_Client_Exception;
-use Horde_Imap_Client_Exception_Sync;
 use OCA\Mail\Account;
 use OCA\Mail\Contracts\IMailManager;
 use OCA\Mail\Db\Mailbox;
 use OCA\Mail\Db\MailboxMapper;
 use OCA\Mail\Events\BeforeMessageDeletedEvent;
-use OCA\Mail\Exception\ClientException;
 use OCA\Mail\Exception\ServiceException;
 use OCA\Mail\Folder;
 use OCA\Mail\IMAP\FolderMapper;
@@ -38,9 +36,6 @@ use OCA\Mail\IMAP\FolderStats;
 use OCA\Mail\IMAP\IMAPClientFactory;
 use OCA\Mail\IMAP\MailboxSync;
 use OCA\Mail\IMAP\MessageMapper;
-use OCA\Mail\IMAP\Sync\Request;
-use OCA\Mail\IMAP\Sync\Response;
-use OCA\Mail\IMAP\Sync\Synchronizer;
 use OCA\Mail\Model\IMAPMessage;
 use OCP\AppFramework\Db\DoesNotExistException;
 use OCP\EventDispatcher\IEventDispatcher;
@@ -59,9 +54,6 @@ class MailManager implements IMailManager {
 	/** @var FolderMapper */
 	private $folderMapper;
 
-	/** @var Synchronizer */
-	private $synchronizer;
-
 	/** @var MessageMapper */
 	private $messageMapper;
 
@@ -72,14 +64,12 @@ class MailManager implements IMailManager {
 								MailboxMapper $mailboxMapper,
 								MailboxSync $mailboxSync,
 								FolderMapper $folderMapper,
-								Synchronizer $synchronizer,
 								MessageMapper $messageMapper,
 								IEventDispatcher $eventDispatcher) {
 		$this->imapClientFactory = $imapClientFactory;
 		$this->mailboxMapper = $mailboxMapper;
 		$this->mailboxSync = $mailboxSync;
 		$this->folderMapper = $folderMapper;
-		$this->synchronizer = $synchronizer;
 		$this->messageMapper = $messageMapper;
 		$this->eventDispatcher = $eventDispatcher;
 	}
@@ -98,27 +88,6 @@ class MailManager implements IMailManager {
 			},
 			$this->mailboxMapper->findAll($account)
 		);
-	}
-
-	/**
-	 * @param Account $account
-	 * @param Request $syncRequest
-	 *
-	 * @return Response
-	 *
-	 * @throws ClientException
-	 * @throws ServiceException
-	 */
-	public function syncMessages(Account $account, Request $syncRequest): Response {
-		$client = $this->imapClientFactory->getClient($account);
-
-		try {
-			return $this->synchronizer->sync($client, $syncRequest);
-		} catch (Horde_Imap_Client_Exception $e) {
-			throw new ServiceException("Could not sync messages", 0, $e);
-		} catch (Horde_Imap_Client_Exception_Sync $e) {
-			throw new ClientException("Sync failed because of an invalid sync token or UID validity changed", 0, $e);
-		}
 	}
 
 	/**

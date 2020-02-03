@@ -101,7 +101,7 @@ class SimpleMailboxSyncTest extends TestCase {
 		$this->hordeSync->vanisheduids = $this->createMock(Horde_Imap_Client_Ids::class);
 		$this->hordeSync->vanisheduids->ids = [23, 24];
 
-		$ids = $this->sync->getVanishedMessages($this->imapClient, $this->syncRequest, $this->hordeSync);
+		$ids = $this->sync->getVanishedMessageUids($this->imapClient, $this->syncRequest, $this->hordeSync);
 
 		$this->assertEquals([23, 24], $ids);
 	}

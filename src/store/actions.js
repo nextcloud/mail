@@ -357,10 +357,9 @@ export default {
 			)
 		}
 
-		const syncToken = folder.syncToken
 		const uids = getters.getEnvelopes(accountId, folderId).map(env => env.id)
 
-		return syncEnvelopes(accountId, folderId, syncToken, uids).then(syncData => {
+		return syncEnvelopes(accountId, folderId, uids).then(syncData => {
 			const unifiedFolder = getters.getUnifiedFolder(folder.specialRole)
 
 			syncData.newMessages.forEach(envelope => {
@@ -390,10 +389,6 @@ export default {
 					id,
 				})
 				// Already removed from unified inbox
-			})
-			commit('updateFolderSyncToken', {
-				folder,
-				syncToken: syncData.token,
 			})
 
 			return syncData.newMessages

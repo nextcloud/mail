@@ -76,7 +76,7 @@ class AddressCollector {
 			$this->logger->debug("<$address> is not a valid RFC822 mail address");
 			return;
 		}
-		if (!$this->mapper->exists($this->userId, $address->getEmail())) {
+		if ($address->getEmail() !== null && !$this->mapper->exists($this->userId, $address->getEmail())) {
 			$this->logger->debug("saving new address <{$address->getEmail()}>");
 
 			$entity = new CollectedAddress();
