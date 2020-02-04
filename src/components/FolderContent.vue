@@ -34,10 +34,13 @@ import EnvelopeList from './EnvelopeList'
 import Error from './Error'
 import Loading from './Loading'
 import logger from '../logger'
-import {MailboxNotCachedException} from '../service/MessageService'
+import MailboxNotCachedError from '../errors/MailboxNotCachedError'
 import Message from './Message'
 import NewMessageDetail from './NewMessageDetail'
 import NoMessageSelected from './NoMessageSelected'
+import {matchError} from '../errors/match'
+import MailboxLockedError from '../errors/MailboxLockedError'
+import {wait} from '../util/wait'
 
 export default {
 	name: 'FolderContent',
@@ -132,52 +135,64 @@ export default {
 					return this.loadEnvelopes()
 				})
 		},
-		loadEnvelopes() {
+		async loadEnvelopes() {
 			this.loadingEnvelopes = true
 			this.error = false
 
-			this.$store
-				.dispatch('fetchEnvelopes', {
+			try {
+				await this.$store.dispatch('fetchEnvelopes', {
 					accountId: this.account.id,
 					folderId: this.folder.id,
 					query: this.searchQuery,
 				})
-				.then(() => {
-					const envelopes = this.envelopes
-					logger.debug('envelopes fetched', envelopes)
 
-					this.loadingEnvelopes = false
+				const envelopes = this.envelopes
+				logger.debug('envelopes fetched', envelopes)
 
-					if (!this.isMobile && this.$route.name !== 'message' && envelopes.length > 0) {
-						// Show first message
-						let first = envelopes[0]
+				this.loadingEnvelopes = false
 
-						// Keep the selected account-folder combination, but navigate to the message
-						// (it's not a bug that we don't use first.accountId and first.folderId here)
-						this.$router.replace({
-							name: 'message',
-							params: {
-								accountId: this.account.id,
-								folderId: this.folder.id,
-								messageUid: first.uid,
-							},
-						})
-					}
-				})
-				.catch(error => {
-					if (error instanceof MailboxNotCachedException) {
+				if (!this.isMobile && this.$route.name !== 'message' && envelopes.length > 0) {
+					// Show first message
+					let first = envelopes[0]
+
+					// Keep the selected account-folder combination, but navigate to the message
+					// (it's not a bug that we don't use first.accountId and first.folderId here)
+					this.$router.replace({
+						name: 'message',
+						params: {
+							accountId: this.account.id,
+							folderId: this.folder.id,
+							messageUid: first.uid,
+						},
+					})
+				}
+			} catch (error) {
+				await matchError(error, {
+					[MailboxLockedError.name]: async error => {
+						logger.info('Mailbox is locked', {error})
+
+						await wait(15 * 1000)
+						// Keep trying
+						await this.loadEnvelopes()
+					},
+					[MailboxNotCachedError.name]: async error => {
+						logger.info('Mailbox not cached. Triggering initialization', {error})
 						this.loadingEnvelopes = false
-						logger.info('Mailbox not cached. Triggering initialization')
 
-						return this.initializeCache()
-					}
-					logger.error('Could not fetch envelopes', {error})
-					this.error = error
+						try {
+							await this.initializeCache()
+						} catch (error) {
+							logger.error('Could not initialize cache', {error})
+							this.error = error
+						}
+					},
+					default: error => {
+						logger.error('Could not fetch envelopes', {error})
+						this.loadingEnvelopes = false
+						this.error = error
+					},
 				})
-				.catch(error => {
-					logger.error('Could not fetch envelopes or initialize cache')
-					this.error = error
-				})
+			}
 		},
 		hideMessage() {
 			this.$router.replace({
