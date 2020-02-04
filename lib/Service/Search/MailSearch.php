@@ -30,6 +30,9 @@ use OCA\Mail\Db\Mailbox;
 use OCA\Mail\Db\MailboxMapper;
 use OCA\Mail\Db\Message;
 use OCA\Mail\Db\MessageMapper;
+use OCA\Mail\Exception\ClientException;
+use OCA\Mail\Exception\MailboxLockedException;
+use OCA\Mail\Exception\MailboxNotCachedException;
 use OCA\Mail\Exception\ServiceException;
 use OCA\Mail\IMAP\Search\Provider as ImapSearchProvider;
 use OCP\AppFramework\Db\DoesNotExistException;
@@ -71,6 +74,7 @@ class MailSearch implements IMailSearch {
 	 * @param string|null $cursor
 	 *
 	 * @return Message[]
+	 * @throws ClientException
 	 * @throws ServiceException
 	 */
 	public function findMessages(Account $account,
@@ -81,6 +85,13 @@ class MailSearch implements IMailSearch {
 			$mailbox = $this->mailboxMapper->find($account, $mailboxName);
 		} catch (DoesNotExistException $e) {
 			throw new ServiceException('Mailbox does not exist', 0, $e);
+		}
+
+		if ($mailbox->hasLocks()) {
+			throw MailboxLockedException::from($mailbox);
+		}
+		if (!$mailbox->isCached()) {
+			throw MailboxNotCachedException::from($mailbox);
 		}
 
 		$query = $this->filterStringParser->parse($filter);

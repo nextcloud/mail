@@ -2,10 +2,12 @@
 	<AppContent>
 		<AppDetailsToggle v-if="showMessage" @close="hideMessage" />
 		<div id="app-content-wrapper">
+			<Error v-if="error" :error="t('mail', 'Could not open mailbox')" message="" />
+			<Loading v-else-if="loadingEnvelopes" :hint="t('mail', 'Loading messages')" />
 			<Loading
-				v-if="loading"
+				v-else-if="loadingCacheInitialization"
 				:hint="t('mail', 'Loading messages')"
-				:slow-hint="t('mail', 'This can take a bit longer when the mailbox is accessed for the first time.')"
+				:slow-hint="t('mail', 'Indexing your messages. This can take a bit longer for larger mailboxes.')"
 			/>
 			<template v-else>
 				<EnvelopeList
@@ -29,8 +31,10 @@ import isMobile from '@nextcloud/vue/dist/Mixins/isMobile'
 
 import AppDetailsToggle from './AppDetailsToggle'
 import EnvelopeList from './EnvelopeList'
+import Error from './Error'
 import Loading from './Loading'
-import Logger from '../logger'
+import logger from '../logger'
+import {MailboxNotCachedException} from '../service/MessageService'
 import Message from './Message'
 import NewMessageDetail from './NewMessageDetail'
 import NoMessageSelected from './NoMessageSelected'
@@ -41,6 +45,7 @@ export default {
 		AppContent,
 		AppDetailsToggle,
 		EnvelopeList,
+		Error,
 		Loading,
 		Message,
 		NewMessageDetail,
@@ -59,7 +64,9 @@ export default {
 	},
 	data() {
 		return {
-			loading: true,
+			error: false,
+			loadingEnvelopes: true,
+			loadingCacheInitialization: false,
 			searchQuery: undefined,
 			alive: false,
 		}
@@ -94,7 +101,7 @@ export default {
 		$route(to, from) {
 			if (to.name === 'folder') {
 				// Navigate (back) to the folder view -> (re)fetch data
-				this.fetchData()
+				this.loadEnvelopes()
 			}
 		},
 	},
@@ -103,14 +110,31 @@ export default {
 
 		new OCA.Search(this.searchProxy, this.clearSearchProxy)
 
-		this.fetchData()
+		this.loadEnvelopes()
 	},
 	beforeDestroy() {
 		this.alive = false
 	},
 	methods: {
-		fetchData() {
-			this.loading = true
+		initializeCache() {
+			this.loadingCacheInitialization = true
+			this.error = false
+
+			this.$store
+				.dispatch('syncEnvelopes', {
+					accountId: this.account.id,
+					folderId: this.folder.id,
+					init: true,
+				})
+				.then(() => {
+					this.loadingCacheInitialization = false
+
+					return this.loadEnvelopes()
+				})
+		},
+		loadEnvelopes() {
+			this.loadingEnvelopes = true
+			this.error = false
 
 			this.$store
 				.dispatch('fetchEnvelopes', {
@@ -120,9 +144,9 @@ export default {
 				})
 				.then(() => {
 					const envelopes = this.envelopes
-					Logger.debug('envelopes fetched', envelopes)
+					logger.debug('envelopes fetched', envelopes)
 
-					this.loading = false
+					this.loadingEnvelopes = false
 
 					if (!this.isMobile && this.$route.name !== 'message' && envelopes.length > 0) {
 						// Show first message
@@ -139,6 +163,20 @@ export default {
 							},
 						})
 					}
+				})
+				.catch(error => {
+					if (error instanceof MailboxNotCachedException) {
+						this.loadingEnvelopes = false
+						logger.info('Mailbox not cached. Triggering initialization')
+
+						return this.initializeCache()
+					}
+					logger.error('Could not fetch envelopes', {error})
+					this.error = error
+				})
+				.catch(error => {
+					logger.error('Could not fetch envelopes or initialize cache')
+					this.error = error
 				})
 		},
 		hideMessage() {
@@ -163,7 +201,7 @@ export default {
 		search(query) {
 			this.searchQuery = query
 
-			this.fetchData()
+			this.loadEnvelopes()
 		},
 		clearSearch() {
 			this.searchQuery = undefined

@@ -26,6 +26,7 @@ declare(strict_types=1);
 namespace OCA\Mail\Controller;
 
 use Horde_Imap_Client;
+use OCA\Mail\Exception\ClientException;
 use OCA\Mail\Exception\MailboxNotCachedException;
 use OCA\Mail\Exception\ServiceException;
 use OCA\Mail\Service\SyncService;
@@ -102,10 +103,12 @@ class FoldersController extends Controller {
 	 * @param string $folderId
 	 * @param string $syncToken
 	 * @param int[] $uids
+	 *
 	 * @return JSONResponse
+	 * @throws ClientException
 	 * @throws ServiceException
 	 */
-	public function sync(int $accountId, string $folderId, array $uids = []): JSONResponse {
+	public function sync(int $accountId, string $folderId, array $uids = [], bool $init = false): JSONResponse {
 		$account = $this->accountService->find($this->currentUserId, $accountId);
 
 		if (empty($accountId) || empty($folderId) || !is_array($uids)) {
@@ -120,7 +123,7 @@ class FoldersController extends Controller {
 				array_map(function($uid) {
 					return (int) $uid;
 				}, $uids),
-				true
+				!$init
 			);
 		} catch (MailboxNotCachedException $e) {
 			return new JSONResponse(null, Http::STATUS_PRECONDITION_REQUIRED);

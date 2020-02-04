@@ -24,6 +24,7 @@
 namespace OCA\Mail\Contracts;
 
 use OCA\Mail\Account;
+use OCA\Mail\Exception\ClientException;
 use OCA\Mail\Exception\ServiceException;
 use OCA\Mail\Model\IMAPMessage;
 
@@ -36,6 +37,7 @@ interface IMailSearch {
 	 * @param string|null $cursor
 	 *
 	 * @return IMAPMessage[]
+	 * @throws ClientException
 	 * @throws ServiceException
 	 */
 	public function findMessages(Account $account, string $mailboxName, ?string $filter, ?int $cursor): array;

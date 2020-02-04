@@ -23,8 +23,17 @@
 
 namespace OCA\Mail\Exception;
 
-use Exception;
+use OCA\Mail\Db\Mailbox;
+use OCP\AppFramework\Http;
 
-class ConcurrentSyncException extends Exception {
+class MailboxLockedException extends ClientException {
+
+	public static function from(Mailbox $mailbox): self {
+		return new self($mailbox->getId() . ' is already being synced');
+	}
+
+	public function getHttpCode(): int {
+		return Http::STATUS_CONFLICT;
+	}
 
 }

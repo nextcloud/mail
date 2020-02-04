@@ -32,7 +32,8 @@ use OCA\Mail\Db\MailboxMapper;
 use OCA\Mail\Db\Message;
 use OCA\Mail\Db\MessageMapper;
 use OCA\Mail\Db\MessageMapper as DatabaseMessageMapper;
-use OCA\Mail\Exception\ConcurrentSyncException;
+use OCA\Mail\Exception\ClientException;
+use OCA\Mail\Exception\MailboxLockedException;
 use OCA\Mail\Exception\MailboxNotCachedException;
 use OCA\Mail\Exception\ServiceException;
 use OCA\Mail\IMAP\IMAPClientFactory;
@@ -50,6 +51,57 @@ use function array_chunk;
 use function array_map;
 
 class SyncService {
+
+	/**
+	 * @param int[] $knownUids
+	 *
+	 * @throws ClientException
+	 * @throws ServiceException
+	 */
+	private function sync(Account $account,
+						  Mailbox $mailbox,
+						  int $criteria,
+						  array $knownUids = null,
+						  bool $force = false): Response {
+		if ($mailbox->getSelectable() === false) {
+			return new Response();
+		}
+
+		if ($criteria & Horde_Imap_Client::SYNC_NEWMSGSUIDS) {
+			$this->mailboxMapper->lockForNewSync($mailbox);
+		}
+		if ($criteria & Horde_Imap_Client::SYNC_FLAGSUIDS) {
+			$this->mailboxMapper->lockForChangeSync($mailbox);
+		}
+		if ($criteria & Horde_Imap_Client::SYNC_VANISHEDUIDS) {
+			$this->mailboxMapper->lockForVanishedSync($mailbox);
+		}
+
+		try {
+			if ($force
+				|| $mailbox->getSyncNewToken() === null
+				|| $mailbox->getSyncChangedToken() === null
+				|| $mailbox->getSyncVanishedToken() === null) {
+				$response = $this->runInitialSync($account, $mailbox);
+			} else {
+				$response = $this->runPartialSync($account, $mailbox, $criteria, $knownUids);
+			}
+		} catch (Throwable $e) {
+			throw new ServiceException('Sync failed', 0, $e);
+		} finally {
+			if ($criteria & Horde_Imap_Client::SYNC_VANISHEDUIDS) {
+				$this->mailboxMapper->unlockFromVanishedSync($mailbox);
+			}
+			if ($criteria & Horde_Imap_Client::SYNC_FLAGSUIDS) {
+				$this->mailboxMapper->unlockFromChangedSync($mailbox);
+			}
+			if ($criteria & Horde_Imap_Client::SYNC_NEWMSGSUIDS) {
+				$this->mailboxMapper->unlockFromNewSync($mailbox);
+			}
+		}
+
+		return $response;
+	}
 
 	/** @var DatabaseMessageMapper */
 	private $dbMapper;
@@ -94,6 +146,7 @@ class SyncService {
 	}
 
 	/**
+	 * @throws ClientException
 	 * @throws ServiceException
 	 */
 	public function syncAccount(Account $account,
@@ -113,6 +166,7 @@ class SyncService {
 	/**
 	 * @param int[] $knownUids
 	 *
+	 * @throws ClientException
 	 * @throws ServiceException
 	 */
 	public function syncMailbox(Account $account,
@@ -123,8 +177,8 @@ class SyncService {
 		try {
 			$mb = $this->mailboxMapper->find($account, $mailbox);
 
-			if ($partialOnly && $mb->getSyncNewToken() === null) {
-				throw new MailboxNotCachedException();
+			if ($partialOnly && !$mb->isCached()) {
+				throw MailboxNotCachedException::from($mb);
 			}
 
 			return $this->sync(
@@ -158,67 +212,13 @@ class SyncService {
 			$this->mailboxMapper->lockForVanishedSync($mb);
 
 			$this->runInitialSync($account, $mb);
-		} catch (ConcurrentSyncException $e) {
+		} catch (MailboxLockedException $e) {
 			// Fine, then we don't have to do it
 		} finally {
 			$this->mailboxMapper->unlockFromNewSync($mb);
 			$this->mailboxMapper->unlockFromChangedSync($mb);
 			$this->mailboxMapper->unlockFromVanishedSync($mb);
 		}
-	}
-
-	/**
-	 * @param int[] $knownUids
-	 *
-	 * @throws ServiceException
-	 */
-	private function sync(Account $account,
-						  Mailbox $mailbox,
-						  int $criteria,
-						  array $knownUids = null,
-						  bool $force = false): Response {
-		if ($mailbox->getSelectable() === false) {
-			return new Response();
-		}
-
-		try {
-			if ($criteria & Horde_Imap_Client::SYNC_NEWMSGSUIDS) {
-				$this->mailboxMapper->lockForNewSync($mailbox);
-			}
-			if ($criteria & Horde_Imap_Client::SYNC_FLAGSUIDS) {
-				$this->mailboxMapper->lockForChangeSync($mailbox);
-			}
-			if ($criteria & Horde_Imap_Client::SYNC_VANISHEDUIDS) {
-				$this->mailboxMapper->lockForVanishedSync($mailbox);
-			}
-		} catch (ConcurrentSyncException $e) {
-			throw new ServiceException('Another sync is in progress for ' . $mailbox->getId(), 0, $e);
-		}
-
-		try {
-			if ($force
-				|| $mailbox->getSyncNewToken() === null
-				|| $mailbox->getSyncChangedToken() === null
-				|| $mailbox->getSyncVanishedToken() === null) {
-				$response = $this->runInitialSync($account, $mailbox);
-			} else {
-				$response = $this->runPartialSync($account, $mailbox, $criteria, $knownUids);
-			}
-		} catch (Throwable $e) {
-			throw new ServiceException('Sync failed', 0, $e);
-		} finally {
-			if ($criteria & Horde_Imap_Client::SYNC_VANISHEDUIDS) {
-				$this->mailboxMapper->unlockFromVanishedSync($mailbox);
-			}
-			if ($criteria & Horde_Imap_Client::SYNC_FLAGSUIDS) {
-				$this->mailboxMapper->unlockFromChangedSync($mailbox);
-			}
-			if ($criteria & Horde_Imap_Client::SYNC_NEWMSGSUIDS) {
-				$this->mailboxMapper->unlockFromNewSync($mailbox);
-			}
-		}
-
-		return $response;
 	}
 
 	/**
