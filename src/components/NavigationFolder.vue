@@ -172,6 +172,10 @@ export default {
 		 */
 		async fetchFolderStats() {
 			this.folderStats = null
+			if (this.account.isUnified || this.folder.specialRole === 'flagged') {
+				return
+			}
+
 			try {
 				const stats = await getFolderStats(this.account.id, this.folder.id)
 				logger.debug('loaded folder stats', {stats})
