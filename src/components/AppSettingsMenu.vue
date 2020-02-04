@@ -4,6 +4,31 @@
 			{{ t('mail', 'Add mail account') }}
 		</router-link>
 
+		<p v-if="loadingOptOutSettings" class="app-settings">
+			<span class="icon-loading-small"></span>
+			{{
+				t(
+					'mail',
+					'Allow the app to collect data about your interactions. Based on this data, the app will adapt to your preferences. The data will only be stored locally.'
+				)
+			}}
+		</p>
+		<p v-else class="app-settings">
+			<input
+				id="data-collection-toggle"
+				class="checkbox"
+				type="checkbox"
+				:checked="useDataCollection"
+				@change="onToggleCollectData"
+			/>
+			<label for="data-collection-toggle">{{
+				t(
+					'mail',
+					'Allow the app to collect data about your interactions. Based on this data, the app will adapt to your preferences. The data will only be stored locally.'
+				)
+			}}</label>
+		</p>
+
 		<p v-if="loadingAvatarSettings" class="app-settings avatar-settings">
 			<span class="icon-loading-small"></span>
 			{{ t('mail', 'Use Gravatar and favicon avatars') }}
@@ -46,11 +71,15 @@ export default {
 	data() {
 		return {
 			loadingAvatarSettings: false,
+			loadingOptOutSettings: false,
 		}
 	},
 	computed: {
 		useExternalAvatars() {
 			return this.$store.getters.getPreference('external-avatars', 'true') === 'true'
+		},
+		useDataCollection() {
+			return this.$store.getters.getPreference('collect-data', 'true') === 'true'
 		},
 	},
 	methods: {
@@ -65,6 +94,19 @@ export default {
 				.catch(error => Logger.error('could not save preferences', {error}))
 				.then(() => {
 					this.loadingAvatarSettings = false
+				})
+		},
+		onToggleCollectData(e) {
+			this.loadingOptOutSettings = true
+
+			this.$store
+				.dispatch('savePreference', {
+					key: 'collect-data',
+					value: e.target.checked ? 'true' : 'false',
+				})
+				.catch(error => Logger.error('could not save preferences', {error}))
+				.then(() => {
+					this.loadingOptOutSettings = false
 				})
 		},
 		registerProtocolHandler: function() {
@@ -83,7 +125,7 @@ export default {
 </script>
 
 <style scoped>
-p.avatar-settings span.icon-loading-small {
+p.app-settings span.icon-loading-small {
 	display: inline-block;
 	vertical-align: middle;
 	padding: 5px 0;

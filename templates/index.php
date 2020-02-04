@@ -32,3 +32,4 @@ script('mail', 'mail');
 <input type="hidden" id="config-installed-version" value="<?php p($_['app-version']); ?>">
 <input type="hidden" id="serialized-accounts" value="<?php p($_['accounts']); ?>">
 <input type="hidden" id="external-avatars" value="<?php p($_['external-avatars']); ?>">
+<input type="hidden" id="collect-data" value="<?php p($_['collect-data']); ?>">
