@@ -32,7 +32,11 @@
 		<!-- actions -->
 		<template slot="actions">
 			<template v-if="top">
-				<ActionText v-if="!account.isUnified" icon="icon-info" :title="folderId">
+				<ActionText
+					v-if="!account.isUnified && folder.specialRole !== 'flagged'"
+					icon="icon-info"
+					:title="folderId"
+				>
 					{{ statsText }}
 				</ActionText>
 
@@ -175,6 +179,10 @@ export default {
 		 */
 		async fetchFolderStats() {
 			this.folderStats = null
+			if (this.account.isUnified || this.folder.specialRole === 'flagged') {
+				return
+			}
+
 			try {
 				const stats = await getFolderStats(this.account.id, this.folder.id)
 				logger.debug('loaded folder stats', {stats})
