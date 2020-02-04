@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "fbd5348d4fd32a9198e15dee8cd5b800",
+    "content-hash": "0e6c40b7b109e86ed727290146ab5057",
     "packages": [
         {
             "name": "arthurhoaro/favicon",
@@ -1016,16 +1016,16 @@
     "packages-dev": [
         {
             "name": "christophwurst/nextcloud",
-            "version": "v18.0.0",
+            "version": "v17.0.2",
             "source": {
                 "type": "git",
                 "url": "https://github.com/ChristophWurst/nextcloud_composer.git",
-                "reference": "0e63a8762d25ac2abbac5b7ea037e5b326a07034"
+                "reference": "25aeb8ea0623e54da9ef26daefecff8b9c576df3"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/ChristophWurst/nextcloud_composer/zipball/0e63a8762d25ac2abbac5b7ea037e5b326a07034",
-                "reference": "0e63a8762d25ac2abbac5b7ea037e5b326a07034",
+                "url": "https://api.github.com/repos/ChristophWurst/nextcloud_composer/zipball/25aeb8ea0623e54da9ef26daefecff8b9c576df3",
+                "reference": "25aeb8ea0623e54da9ef26daefecff8b9c576df3",
                 "shasum": ""
             },
             "require": {
@@ -1034,7 +1034,7 @@
             "type": "library",
             "extra": {
                 "branch-alias": {
-                    "dev-master": "18.0.0-dev"
+                    "dev-master": "17.0.0-dev"
                 }
             },
             "notification-url": "https://packagist.org/downloads/",
@@ -1048,7 +1048,7 @@
                 }
             ],
             "description": "Composer package containing Nextcloud's public API (classes, interfaces)",
-            "time": "2020-01-27T11:04:43+00:00"
+            "time": "2019-12-19T08:20:46+00:00"
         },
         {
             "name": "christophwurst/nextcloud_testing",
