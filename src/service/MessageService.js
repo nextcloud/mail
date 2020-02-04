@@ -2,15 +2,9 @@ import {generateUrl} from '@nextcloud/router'
 import axios from '@nextcloud/axios'
 
 import logger from '../logger'
+import MailboxNotCachedError from '../errors/MailboxNotCachedError'
 import {parseErrorResponse} from '../http/ErrorResponseParser'
-
-export class MailboxNotCachedException extends Error {
-	constructor(message) {
-		super(message)
-		this.name = 'MailboxNotCachedException'
-		this.message = message
-	}
-}
+import {convertAxiosError} from '../errors/convert'
 
 export function fetchEnvelopes(accountId, folderId, query, cursor) {
 	const url = generateUrl('/apps/mail/api/accounts/{accountId}/folders/{folderId}/messages', {
@@ -32,16 +26,7 @@ export function fetchEnvelopes(accountId, folderId, query, cursor) {
 		})
 		.then(resp => resp.data)
 		.catch(error => {
-			if (
-				error.response &&
-				error.response.status === 400 &&
-				'x-mail-response' in error.response.headers &&
-				error.response.data.data.type === 'OCA\\Mail\\Exception\\MailboxNotCachedException'
-			) {
-				logger.debug(`mailbox ${folderId} of account ${accountId} is not cached`)
-				throw new MailboxNotCachedException()
-			}
-			throw error
+			throw convertAxiosError(error)
 		})
 }
 
