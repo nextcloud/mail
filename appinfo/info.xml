@@ -15,8 +15,10 @@
 	<version>1.2.0</version>
 	<licence>agpl</licence>
 	<author>Christoph Wurst</author>
+	<author>Roeland Jago Douma</author>
+	<author>Greta Doçi</author>
+	<author>Cyrille Bollu</author>
 	<author>Jan-Christoph Borchardt</author>
-	<author>Steffen Lindner</author>
 	<namespace>Mail</namespace>
 	<documentation>
 		<admin>https://github.com/nextcloud/mail#readme</admin>
