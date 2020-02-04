@@ -33,7 +33,8 @@ import AppDetailsToggle from './AppDetailsToggle'
 import EnvelopeList from './EnvelopeList'
 import Error from './Error'
 import Loading from './Loading'
-import Logger from '../logger'
+import logger from '../logger'
+import {MailboxNotCachedException} from '../service/MessageService'
 import Message from './Message'
 import NewMessageDetail from './NewMessageDetail'
 import NoMessageSelected from './NoMessageSelected'
@@ -143,7 +144,7 @@ export default {
 				})
 				.then(() => {
 					const envelopes = this.envelopes
-					Logger.debug('envelopes fetched', envelopes)
+					logger.debug('envelopes fetched', envelopes)
 
 					this.loadingEnvelopes = false
 
@@ -164,12 +165,18 @@ export default {
 					}
 				})
 				.catch(error => {
-					if (error.name === 'MailboxNotCachedException') {
+					if (error instanceof MailboxNotCachedException) {
 						this.loadingEnvelopes = false
+						logger.info('Mailbox not cached. Triggering initialization')
 
 						return this.initializeCache()
 					}
-					this.error = {}
+					logger.error('Could not fetch envelopes', {error})
+					this.error = error
+				})
+				.catch(error => {
+					logger.error('Could not fetch envelopes or initialize cache')
+					this.error = error
 				})
 		},
 		hideMessage() {
