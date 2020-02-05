@@ -37,6 +37,8 @@ use OCA\Mail\Exception\ServiceException;
 use OCA\Mail\IMAP\Search\Provider as ImapSearchProvider;
 use OCP\AppFramework\Db\DoesNotExistException;
 use OCP\ILogger;
+use function array_intersect;
+use function array_merge;
 
 class MailSearch implements IMailSearch {
 
@@ -107,35 +109,28 @@ class MailSearch implements IMailSearch {
 			$query->addFlag(Horde_Imap_Client::FLAG_DELETED, false);
 		}
 
-		$uids = array_merge(
-			$this->getDbUids($mailbox, $query),
-			$this->getImapUids($account, $mailbox, $query)
+		return $this->messageMapper->findByUids(
+			$mailbox,
+			$this->getUids($account, $mailbox, $query)
 		);
-
-		return $this->messageMapper->findByUids($mailbox, $uids);
-	}
-
-	private function getDbUids(Mailbox $mailbox, SearchQuery $query) {
-		return $this->messageMapper->findUidsByQuery($mailbox, $query);
 	}
 
 	/**
-	 * @param Account $account
-	 * @param SearchQuery $query
-	 * @param Mailbox $mailbox
+	 * We combine local flag and headers merge with UIDs that match the body search if necessary
 	 *
 	 * @throws ServiceException
 	 */
-	private function getImapUids(Account $account, Mailbox $mailbox, SearchQuery $query): array {
+	private function getUids(Account $account, Mailbox $mailbox, SearchQuery $query): array {
 		if (empty($query->getTextTokens())) {
-			return [];
+			return $this->messageMapper->findUidsByQuery($mailbox, $query);
 		}
 
-		return $this->imapSearchProvider->findMatches(
+		$fromImap = $this->imapSearchProvider->findMatches(
 			$account,
 			$mailbox,
 			$query
 		);
+		return $this->messageMapper->findUidsByQuery($mailbox, $query, $fromImap);
 	}
 
 }

@@ -31,6 +31,7 @@ use OCA\Mail\Exception\ServiceException;
 use OCA\Mail\IMAP\IMAPClientFactory;
 use OCA\Mail\Service\Search\SearchQuery;
 use OCP\ILogger;
+use function array_reduce;
 
 class Provider {
 
@@ -67,16 +68,22 @@ class Provider {
 		return $fetchResult['match']->ids;
 	}
 
+	/**
+	 * @param SearchQuery $searchQuery
+	 *
+	 * @todo possible optimization: filter flags here as well as it might speed up IMAP search
+	 *
+	 * @return Horde_Imap_Client_Search_Query
+	 */
 	private function convertMailQueryToHordeQuery(SearchQuery $searchQuery): Horde_Imap_Client_Search_Query {
-		$query = new Horde_Imap_Client_Search_Query();
-
-		foreach ($searchQuery->getFlags() as $flag => $set) {
-			$query->flag($flag, $set);
-		}
-
-		// TODO: text, header text
-
-		return $query;
+		return array_reduce(
+			$searchQuery->getTextTokens(),
+			function (Horde_Imap_Client_Search_Query $query, string $textToken) {
+				$query->text($textToken, false);
+				return $query;
+			},
+			new Horde_Imap_Client_Search_Query()
+		);
 	}
 
 }
