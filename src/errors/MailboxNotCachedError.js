@@ -22,7 +22,11 @@
 export default class MailboxNotCachedError extends Error {
 	constructor(message) {
 		super(message)
-		this.name = 'MailboxNotCachedError'
+		this.name = MailboxNotCachedError.getName()
 		this.message = message
+	}
+
+	static getName() {
+		return 'MailboxNotCachedError'
 	}
 }

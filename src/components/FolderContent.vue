@@ -168,14 +168,14 @@ export default {
 				}
 			} catch (error) {
 				await matchError(error, {
-					[MailboxLockedError.name]: async error => {
+					[MailboxLockedError.getName()]: async error => {
 						logger.info('Mailbox is locked', {error})
 
 						await wait(15 * 1000)
 						// Keep trying
 						await this.loadEnvelopes()
 					},
-					[MailboxNotCachedError.name]: async error => {
+					[MailboxNotCachedError.getName()]: async error => {
 						logger.info('Mailbox not cached. Triggering initialization', {error})
 						this.loadingEnvelopes = false
 

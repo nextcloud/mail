@@ -22,7 +22,11 @@
 export default class MailboxLockedError extends Error {
 	constructor(message) {
 		super(message)
-		this.name = 'MailboxLockedError'
+		this.name = MailboxLockedError.getName()
 		this.message = message
+	}
+
+	static getName() {
+		return 'MailboxLockedError'
 	}
 }
