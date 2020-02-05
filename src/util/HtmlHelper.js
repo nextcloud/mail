@@ -24,6 +24,9 @@ export const htmlToText = html => {
 					.replace(/\n\n\n/g, '\n\n') // remove triple line breaks
 					.replace(/^/gm, '> ') // add > quotation to each line
 			},
+			paragraph: function(element, fn, options) {
+				return fn(element.children, options) + '\n'
+			},
 		},
 	})
 
