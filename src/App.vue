@@ -25,6 +25,10 @@
 </template>
 
 <script>
+import logger from './logger'
+import {matchError} from './errors/match'
+import MailboxLockedError from './errors/MailboxLockedError'
+
 export default {
 	name: 'App',
 	mounted() {
@@ -32,16 +36,24 @@ export default {
 	},
 	methods: {
 		sync() {
-			setTimeout(() => {
-				this.$store
-					.dispatch('syncInboxes')
-					.catch(err => {
-						console.error('background sync failed', err)
+			setTimeout(async () => {
+				try {
+					await this.$store.dispatch('syncInboxes')
+
+					logger.debug("Inboxes sync'ed in background")
+				} catch (error) {
+					matchError(error, {
+						[MailboxLockedError.name](error) {
+							logger.info('Background sync failed because a mailbox is locked', {error})
+						},
+						default(error) {
+							logger.error('Background sync failed: ' + error.message, {error})
+						},
 					})
-					.then(() => {
-						// Start over
-						this.sync()
-					})
+				} finally {
+					// Start over
+					this.sync()
+				}
 			}, 30 * 1000)
 		},
 	},

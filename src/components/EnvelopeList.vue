@@ -32,7 +32,9 @@ import Vue from 'vue'
 
 import EmptyFolder from './EmptyFolder'
 import Envelope from './Envelope'
-import Logger from '../logger'
+import logger from '../logger'
+import {matchError} from '../errors/match'
+import MailboxLockedError from '../errors/MailboxLockedError'
 
 Vue.use(vuescroll, {throttle: 600})
 
@@ -98,33 +100,41 @@ export default {
 					folderId: this.$route.params.folderId,
 					query: this.searchQuery,
 				})
-				.catch(error => Logger.error('could not fetch next envelope page', {error}))
+				.catch(error => logger.error('could not fetch next envelope page', {error}))
 				.then(() => {
 					this.loadingMore = false
 				})
 		},
-		sync() {
+		async sync() {
 			this.refreshing = true
 
-			this.$store
-				.dispatch('syncEnvelopes', {
+			try {
+				await this.$store.dispatch('syncEnvelopes', {
 					accountId: this.$route.params.accountId,
 					folderId: this.$route.params.folderId,
 				})
-				.catch(error => Logger.error('could not sync envelopes', {error}))
-				.then(() => {
-					this.refreshing = false
+			} catch (error) {
+				matchError(error, {
+					[MailboxLockedError.name](error) {
+						logger.info('Background sync failed because the mailbox is locked', {error})
+					},
+					default(error) {
+						logger.error('Could not sync envelopes: ' + error.message, {error})
+					},
 				})
+			} finally {
+				this.refreshing = false
+			}
 		},
 		onEnvelopeDeleted(envelope) {
 			const envelopes = this.envelopes
 			const idx = this.envelopes.indexOf(envelope)
 			if (idx === -1) {
-				Logger.debug('envelope to delete does not exist in envelope list')
+				logger.debug('envelope to delete does not exist in envelope list')
 				return
 			}
 			if (envelope.uid !== this.$route.params.messageUid) {
-				Logger.debug('other message open, not jumping to the next/previous message')
+				logger.debug('other message open, not jumping to the next/previous message')
 				return
 			}
 
@@ -136,7 +146,7 @@ export default {
 			}
 
 			if (!next) {
-				Logger.debug('no next/previous envelope, not navigating')
+				logger.debug('no next/previous envelope, not navigating')
 				return
 			}
 
@@ -161,13 +171,13 @@ export default {
 			const currentUid = this.$route.params.messageUid
 
 			if (!currentUid) {
-				Logger.debug('ignoring shortcut: no envelope selected')
+				logger.debug('ignoring shortcut: no envelope selected')
 				return
 			}
 
 			const current = envelopes.filter(e => e.uid == currentUid)
 			if (current.length === 0) {
-				Logger.debug('ignoring shortcut: currently displayed messages is not in current envelope list')
+				logger.debug('ignoring shortcut: currently displayed messages is not in current envelope list')
 				return
 			}
 
@@ -185,7 +195,7 @@ export default {
 					}
 
 					if (!next) {
-						Logger.debug('ignoring shortcut: head or tail of envelope list reached', {
+						logger.debug('ignoring shortcut: head or tail of envelope list reached', {
 							envelopes,
 							idx,
 							srcKey: e.srcKey,
@@ -205,35 +215,35 @@ export default {
 					})
 					break
 				case 'del':
-					Logger.debug('deleting', {env})
+					logger.debug('deleting', {env})
 					this.$store
 						.dispatch('deleteMessage', env)
-						.catch(error => Logger.error('could not delete envelope', {env, error}))
+						.catch(error => logger.error('could not delete envelope', {env, error}))
 
 					break
 				case 'flag':
-					Logger.debug('flagging envelope via shortkey', {env})
+					logger.debug('flagging envelope via shortkey', {env})
 					this.$store
 						.dispatch('toggleEnvelopeFlagged', env)
-						.catch(error => Logger.error('could not flag envelope via shortkey', {env, error}))
+						.catch(error => logger.error('could not flag envelope via shortkey', {env, error}))
 					break
 				case 'refresh':
-					Logger.debug('syncing envelopes via shortkey')
+					logger.debug('syncing envelopes via shortkey')
 					if (!this.refreshing) {
 						this.sync()
 					}
 
 					break
 				case 'unseen':
-					Logger.debug('marking message as seen/unseen via shortkey', {env})
+					logger.debug('marking message as seen/unseen via shortkey', {env})
 					this.$store
 						.dispatch('toggleEnvelopeSeen', env)
 						.catch(error =>
-							Logger.error('could not mark envelope as seen/unseen via shortkey', {env, error})
+							logger.error('could not mark envelope as seen/unseen via shortkey', {env, error})
 						)
 					break
 				default:
-					Logger.warn('shortcut ' + e.srcKey + ' is unknown. ignoring.')
+					logger.warn('shortcut ' + e.srcKey + ' is unknown. ignoring.')
 			}
 		},
 	},

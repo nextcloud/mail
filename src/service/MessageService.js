@@ -30,20 +30,24 @@ export function fetchEnvelopes(accountId, folderId, query, cursor) {
 		})
 }
 
-export function syncEnvelopes(accountId, folderId, uids, init = false) {
+export async function syncEnvelopes(accountId, folderId, uids, init = false) {
 	const url = generateUrl('/apps/mail/api/accounts/{accountId}/folders/{folderId}/sync', {
 		accountId,
 		folderId,
 	})
 
-	return axios
-		.get(url, {
-			params: {
-				uids,
-				init,
-			},
-		})
-		.then(resp => resp.data)
+	try {
+		return (
+			await axios.get(url, {
+				params: {
+					uids,
+					init,
+				},
+			})
+		).data
+	} catch (e) {
+		throw convertAxiosError(e)
+	}
 }
 
 export function setEnvelopeFlag(accountId, folderId, id, flag, value) {
