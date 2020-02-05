@@ -104,7 +104,6 @@ OC.L10N.register(
     "Add subfolder" : "Skapa undermapp",
     "Loading …" : "Laddar ...",
     "_{total} message_::_{total} messages_" : ["{total} meddelande","{total} meddelanden"],
-    "_{unread} unread of {total}_::_{unread} unread of {total}_" : ["{unread} oläst av {total}","{unread} olästa av {total}"],
     "Could not load your draft" : "Kunde inte ladda ditt utkast",
     "Could not load original message" : "Det gick inte att ladda originalmeddelandet",
     "No message selected" : "Inget meddelande valt",

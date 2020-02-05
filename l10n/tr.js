@@ -104,7 +104,6 @@ OC.L10N.register(
     "Add subfolder" : "Alt klasör ekle",
     "Loading …" : "Yükleniyor …",
     "_{total} message_::_{total} messages_" : ["{total} ileti","{total} ileti"],
-    "_{unread} unread of {total}_::_{unread} unread of {total}_" : ["{unread} / {total} okunmamış","{unread} / {total} okunmamış"],
     "Could not load your draft" : "Taslağınız yüklenemedi",
     "Could not load original message" : "Özgün ileti yüklenemedi",
     "No message selected" : "Herhangi bir ileti seçilmemiş",

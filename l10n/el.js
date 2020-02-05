@@ -104,7 +104,6 @@ OC.L10N.register(
     "Add subfolder" : "Προσθήκη υποφακέλου",
     "Loading …" : "Φόρτωση…",
     "_{total} message_::_{total} messages_" : ["{total} μήνυμα","{total} μηνύματα"],
-    "_{unread} unread of {total}_::_{unread} unread of {total}_" : ["{unread} αδιάβαστα από {total}","{unread} αδιάβαστα από {total}"],
     "Could not load your draft" : "Δεν ήταν δυνατή η φόρτωση του πρόχειρου σας",
     "Could not load original message" : "Δεν ήταν δυνατή η φόρτωση του πρωτότυπου μηνύματος",
     "No message selected" : "Κανένα μήνυμα δεν επελέγη",

@@ -104,7 +104,6 @@ OC.L10N.register(
     "Add subfolder" : "Adicionar subpasta",
     "Loading …" : "Carregando...",
     "_{total} message_::_{total} messages_" : ["{total} mensagem","{total} mensagens"],
-    "_{unread} unread of {total}_::_{unread} unread of {total}_" : ["{unread} não lido de {total}","{unread} não lidos de {total}"],
     "Could not load your draft" : "Não pude carregar seu rascunho",
     "Could not load original message" : "Não foi possível carregar a mensagem original",
     "No message selected" : "Nenhuma mensagem selecionada",

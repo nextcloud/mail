@@ -104,7 +104,6 @@ OC.L10N.register(
     "Add subfolder" : "Ajouter un sous-dossier",
     "Loading …" : "Chargement …",
     "_{total} message_::_{total} messages_" : ["{total} message","{total} messages"],
-    "_{unread} unread of {total}_::_{unread} unread of {total}_" : ["{unread} non lu sur {total}","{unread} non lus sur {total}"],
     "Could not load your draft" : "Impossible de charger votre brouillon",
     "Could not load original message" : "Impossible de charger le message d'origine",
     "No message selected" : "Aucun message sélectionné",

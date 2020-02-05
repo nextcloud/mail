@@ -104,7 +104,6 @@ OC.L10N.register(
     "Add subfolder" : "Añadir subcarpeta",
     "Loading …" : "Cargando …",
     "_{total} message_::_{total} messages_" : ["{total} mensaje","{total} mensajes"],
-    "_{unread} unread of {total}_::_{unread} unread of {total}_" : ["{unread} sin leer de {total}","{unread} sin leer de {total}"],
     "Could not load your draft" : "No se ha podido cargar el borrador",
     "Could not load original message" : "No se ha podido cargar el mensaje original",
     "No message selected" : "Ningún mensaje seleccionado",
