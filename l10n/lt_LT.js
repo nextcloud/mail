@@ -69,6 +69,7 @@ OC.L10N.register(
     "Mark unread" : "Žymėti kaip neskaitytą",
     "Delete" : "Ištrinti",
     "Report this bug" : "Pranešti apie šią klaidą",
+    "Could not open mailbox" : "Nepavyko atverti pašto dėžutės",
     "Loading messages" : "Įkeliami laiškai",
     "Not found" : "Nerasta",
     "Reply" : "Atsakyti",
