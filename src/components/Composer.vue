@@ -199,6 +199,7 @@ import {htmlToText, textToSimpleHtml} from '../util/HtmlHelper'
 import Loading from './Loading'
 import logger from '../logger'
 import TextEditor from './TextEditor'
+import {emit} from '@nextcloud/event-bus'
 
 const debouncedSearch = debouncePromise(findRecipient, 500)
 
@@ -421,7 +422,10 @@ export default {
 				.then(this.getMessageData())
 				.then(data => this.send(data))
 				.then(() => logger.info('message sent'))
-				.then(() => (this.state = STATES.FINISHED))
+				.then(() => {
+					emit('mail:interaction', {type: 'message-sent', recipient: this.selectedUser.user})
+					this.state = STATES.FINISHED
+				})
 				.catch(error => {
 					logger.error('could not send message', {error})
 					if (error && error.toString) {

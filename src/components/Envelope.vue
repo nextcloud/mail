@@ -127,8 +127,12 @@ export default {
 	},
 	methods: {
 		onToggleFlagged() {
-			this.$store.dispatch('toggleEnvelopeFlagged', this.data)
-			emit('mail:interaction', { type: 'message-starred', recipient: this.selectedUser.user})
+			this.$store.dispatch('toggleEnvelopeFlagged', this.data).then(() => {
+				emit('mail:interaction', {
+					type: 'message-starred',
+					recipient: this.recipient.email,
+				})
+			})
 		},
 		onToggleSeen() {
 			this.$store.dispatch('toggleEnvelopeSeen', this.data)

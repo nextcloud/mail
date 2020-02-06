@@ -232,9 +232,13 @@ export default {
 			})
 		},
 		onToggleSeen() {
-			this.$store.dispatch('toggleEnvelopeSeen', this.envelope)
-			emit('mail:interaction', { type: 'message-read', recipient: this.selectedUser.user})
-				},
+			this.$store.dispatch('toggleEnvelopeSeen', this.envelope).then(() => {
+				emit('mail:interaction', {
+					type: 'message-read',
+					recipient: this.selectedUser.user,
+				})
+			})
+		},
 		onDelete(e) {
 			// Don't try to navigate to the deleted message
 			e.preventDefault()
@@ -253,7 +257,12 @@ export default {
 			}
 
 			this.$emit('delete', this.envelope)
-			this.$store.dispatch('deleteMessage', this.envelope)
+			this.$store.dispatch('deleteMessage', this.envelope).then(() => {
+				emit('mail:interaction', {
+					type: 'message-delete',
+					recipient: this.selectedUser.user,
+				})
+			})
 
 			if (!next) {
 				Logger.debug('no next/previous envelope, not navigating')
