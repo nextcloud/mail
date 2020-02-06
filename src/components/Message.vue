@@ -81,6 +81,7 @@ import MessagePlainTextBody from './MessagePlainTextBody'
 import Loading from './Loading'
 import Logger from '../logger'
 import MessageAttachments from './MessageAttachments'
+import {emit} from '@nextcloud/event-bus'
 
 export default {
 	name: 'Message',
@@ -232,7 +233,8 @@ export default {
 		},
 		onToggleSeen() {
 			this.$store.dispatch('toggleEnvelopeSeen', this.envelope)
-		},
+			emit('mail:interaction', { type: 'message-read', recipient: this.selectedUser.user})
+				},
 		onDelete(e) {
 			// Don't try to navigate to the deleted message
 			e.preventDefault()

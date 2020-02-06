@@ -43,6 +43,7 @@ import Moment from './Moment'
 
 import Avatar from './Avatar'
 import {calculateAccountColor} from '../util/AccountColor'
+import {emit} from '@nextcloud/event-bus'
 
 export default {
 	name: 'Envelope',
@@ -127,6 +128,7 @@ export default {
 	methods: {
 		onToggleFlagged() {
 			this.$store.dispatch('toggleEnvelopeFlagged', this.data)
+			emit('mail:interaction', { type: 'message-starred', recipient: this.selectedUser.user})
 		},
 		onToggleSeen() {
 			this.$store.dispatch('toggleEnvelopeSeen', this.data)
