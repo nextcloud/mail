@@ -195,10 +195,11 @@ class MessageMapper extends QBMapper {
 	/**
 	 * @param Mailbox $mailbox
 	 * @param SearchQuery $query
+	 * @param int[]|null $uids
 	 *
 	 * @return int[]
 	 */
-	public function findUidsByQuery(Mailbox $mailbox, SearchQuery $query): array {
+	public function findUidsByQuery(Mailbox $mailbox, SearchQuery $query, array $uids = null): array {
 		$qb = $this->db->getQueryBuilder();
 
 		$select = $qb
@@ -232,12 +233,12 @@ class MessageMapper extends QBMapper {
 				$qb->expr()->in('r1.email', $qb->createNamedParameter($query->getTo(), IQueryBuilder::PARAM_STR_ARRAY))
 			);
 		}
-		if (!empty($query->getTo())) {
+		if (!empty($query->getCc())) {
 			$select->andWhere(
 				$qb->expr()->in('r2.email', $qb->createNamedParameter($query->getCc(), IQueryBuilder::PARAM_STR_ARRAY))
 			);
 		}
-		if (!empty($query->getTo())) {
+		if (!empty($query->getBcc())) {
 			$select->andWhere(
 				$qb->expr()->in('r3.email', $qb->createNamedParameter($query->getBcc(), IQueryBuilder::PARAM_STR_ARRAY))
 			);
@@ -246,6 +247,11 @@ class MessageMapper extends QBMapper {
 		if ($query->getCursor() !== null) {
 			$select->andWhere(
 				$qb->expr()->lt('sent_at', $qb->createNamedParameter($query->getCursor(), IQueryBuilder::PARAM_INT))
+			);
+		}
+		if ($uids !== null) {
+			$select->andWhere(
+				$qb->expr()->in('uid', $qb->createNamedParameter($uids, IQueryBuilder::PARAM_INT_ARRAY))
 			);
 		}
 
