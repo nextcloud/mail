@@ -32,6 +32,7 @@
 
 <script>
 import CKEditor from '@ckeditor/ckeditor5-vue'
+import AlignmentPlugin from '@ckeditor/ckeditor5-alignment/src/alignment'
 import Editor from '@ckeditor/ckeditor5-editor-balloon/src/ballooneditor'
 import EssentialsPlugin from '@ckeditor/ckeditor5-essentials/src/essentials'
 import BlockQuotePlugin from '@ckeditor/ckeditor5-block-quote/src/blockquote'
@@ -73,18 +74,8 @@ export default {
 		const toolbar = ['undo', 'redo']
 
 		if (this.html) {
-			plugins.push(
-				...[
-					EssentialsPlugin,
-					ParagraphPlugin,
-					BoldPlugin,
-					ItalicPlugin,
-					HeadingPlugin,
-					BlockQuotePlugin,
-					LinkPlugin,
-				]
-			)
-			toolbar.unshift(...['bold', 'italic', 'heading', 'blockquote', 'link'])
+			plugins.push(...[HeadingPlugin, AlignmentPlugin, BoldPlugin, ItalicPlugin, BlockQuotePlugin, LinkPlugin])
+			toolbar.unshift(...['heading', 'alignment', 'bold', 'italic', 'blockquote', 'link'])
 		}
 
 		return {
