@@ -36,6 +36,7 @@ import Editor from '@ckeditor/ckeditor5-editor-balloon/src/ballooneditor'
 import EssentialsPlugin from '@ckeditor/ckeditor5-essentials/src/essentials'
 import BlockQuotePlugin from '@ckeditor/ckeditor5-block-quote/src/blockquote'
 import BoldPlugin from '@ckeditor/ckeditor5-basic-styles/src/bold'
+import HeadingPlugin from '@ckeditor/ckeditor5-heading/src/heading'
 import ItalicPlugin from '@ckeditor/ckeditor5-basic-styles/src/italic'
 import LinkPlugin from '@ckeditor/ckeditor5-link/src/link'
 import ParagraphPlugin from '@ckeditor/ckeditor5-paragraph/src/paragraph'
@@ -68,17 +69,33 @@ export default {
 		},
 	},
 	data() {
+		const plugins = [EssentialsPlugin, ParagraphPlugin]
+		const toolbar = ['undo', 'redo']
+
+		if (this.html) {
+			plugins.push(
+				...[
+					EssentialsPlugin,
+					ParagraphPlugin,
+					BoldPlugin,
+					ItalicPlugin,
+					HeadingPlugin,
+					BlockQuotePlugin,
+					LinkPlugin,
+				]
+			)
+			toolbar.unshift(...['bold', 'italic', 'heading', 'blockquote', 'link'])
+		}
+
 		return {
 			text: '',
 			ready: false,
 			editor: Editor,
 			config: {
 				placeholder: this.placeholder,
-				plugins: this.html
-					? [EssentialsPlugin, ParagraphPlugin, BoldPlugin, ItalicPlugin, LinkPlugin, BlockQuotePlugin]
-					: [EssentialsPlugin, ParagraphPlugin],
+				plugins,
 				toolbar: {
-					items: this.html ? ['bold', 'italic', 'blockquote', 'link', 'undo', 'redo'] : ['undo', 'redo'],
+					items: toolbar,
 				},
 				language: 'en',
 			},
@@ -88,32 +105,35 @@ export default {
 		this.loadEditorTranslations(getLanguage())
 	},
 	methods: {
-		loadEditorTranslations(language) {
+		async loadEditorTranslations(language) {
 			if (language === 'en') {
 				// The default, nothing to fetch
 				return this.showEditor('en')
 			}
 
-			import(
-				/* webpackMode: "lazy-once" */
-				/* webpackPrefetch: true */
-				/* webpackPreload: true */
-				`@ckeditor/ckeditor5-build-balloon/build/translations/${language}`
-			)
-				.then(() => this.showEditor(language))
-				.catch(() => this.showEditor('en'))
+			try {
+				await import(
+					/* webpackMode: "lazy-once" */
+					/* webpackPrefetch: true */
+					/* webpackPreload: true */
+					`@ckeditor/ckeditor5-build-balloon/build/translations/${language}`
+				)
+				this.showEditor(language)
+			} catch (error) {
+				logger.error(`could not find CKEditor translations for "${language}"`)
+				this.showEditor('en')
+			}
 		},
 		showEditor(language) {
-			if (this.html) {
-				this.config.language = language
-			} else {
-				this.config.language = language
-			}
+			logger.debug(`using "${language}" as CKEditor language`)
+			this.config.language = language
 
 			this.ready = true
 		},
 		onEditorReady(editor) {
 			const schema = editor.model.schema
+
+			logger.debug('CKEditor editor is ready', {editor, schema})
 
 			schema.on(
 				'checkChild',
