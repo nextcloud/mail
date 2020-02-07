@@ -619,6 +619,7 @@ class IMAPMessage implements IMessage, JsonSerializable {
 		$msg->setFlagForwarded(in_array(Horde_Imap_Client::FLAG_FORWARDED, $flags, true));
 		$msg->setFlagJunk(in_array(Horde_Imap_Client::FLAG_JUNK, $flags, true));
 		$msg->setFlagNotjunk(in_array(Horde_Imap_Client::FLAG_NOTJUNK, $flags, true));
+		$msg->setFlagAttachments(false);
 
 		return $msg;
 	}

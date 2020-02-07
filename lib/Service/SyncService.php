@@ -38,6 +38,7 @@ use OCA\Mail\Exception\MailboxNotCachedException;
 use OCA\Mail\Exception\ServiceException;
 use OCA\Mail\IMAP\IMAPClientFactory;
 use OCA\Mail\IMAP\MessageMapper as ImapMessageMapper;
+use OCA\Mail\IMAP\PreviewEnhancer;
 use OCA\Mail\IMAP\Sync\Request;
 use OCA\Mail\IMAP\Sync\Response;
 use OCA\Mail\IMAP\Sync\Synchronizer;
@@ -121,6 +122,9 @@ class SyncService {
 	/** @var Synchronizer */
 	private $synchronizer;
 
+	/** @var PreviewEnhancer */
+	private $previewEnhancer;
+
 	/** @var PerformanceLogger */
 	private $performanceLogger;
 
@@ -133,6 +137,7 @@ class SyncService {
 								MailboxMapper $mailboxMapper,
 								MessageMapper $messageMapper,
 								Synchronizer $synchronizer,
+								PreviewEnhancer $previewEnhancer,
 								PerformanceLogger $performanceLogger,
 								ILogger $logger) {
 		$this->dbMapper = $dbMapper;
@@ -141,6 +146,7 @@ class SyncService {
 		$this->mailboxMapper = $mailboxMapper;
 		$this->messageMapper = $messageMapper;
 		$this->synchronizer = $synchronizer;
+		$this->previewEnhancer = $previewEnhancer;
 		$this->performanceLogger = $performanceLogger;
 		$this->logger = $logger;
 	}
@@ -361,7 +367,7 @@ class SyncService {
 		$this->mailboxMapper->update($mailbox);
 
 		$response = $response->merge(
-			$this->getDatabaseSyncChanges($mailbox, $uids)
+			$this->getDatabaseSyncChanges($account, $mailbox, $uids)
 		);
 
 		$perf->end();
@@ -369,7 +375,9 @@ class SyncService {
 		return $response;
 	}
 
-	private function getDatabaseSyncChanges(Mailbox $mailbox, array $uids): Response {
+	private function getDatabaseSyncChanges(Account $account,
+											Mailbox $mailbox,
+											array $uids): Response {
 		if (empty($uids)) {
 			return new Response();
 		}
@@ -387,7 +395,11 @@ class SyncService {
 			return !in_array($uid, $old, true);
 		});
 
-		return new Response($new, $changed, $vanished);
+		return new Response(
+			$this->previewEnhancer->process($account, $mailbox, $new),
+			$changed,
+			$vanished
+		);
 	}
 
 }

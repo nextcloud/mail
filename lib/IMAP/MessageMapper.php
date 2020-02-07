@@ -276,7 +276,6 @@ class MessageMapper {
 					'peek' => true
 				]);
 			}
-
 		}
 
 		$parts = $client->fetch($mailbox, $partsQuery, [
@@ -285,23 +284,14 @@ class MessageMapper {
 
 		foreach ($parts as $part) {
 			/** @var Horde_Imap_Client_Data_Fetch $part */
-			$stream = $part->getBodyPart($htmlPartId, true);
-			$partData = $structure->getPart($htmlPartId);
-			$partData->setContents($stream, [
-				'usestream' => true,
-			]);
-
 			$body = $part->getBodyPart($htmlPartId);
 			if ($body !== null) {
-				$structurePart = $structure[$htmlPartId];
 				$mimeHeaders = $part->getMimeHeader($htmlPartId, Horde_Imap_Client_Data_Fetch::HEADER_PARSE);
 				if ($enc = $mimeHeaders->getValue('content-transfer-encoding')) {
 					$structure->setTransferEncoding($enc);
 				}
 				$structure->setContents($body);
-				$decoded = $structure->getContents();
-
-				return $decoded;
+				return $structure->getContents();
 			}
 		}
 
@@ -327,7 +317,7 @@ class MessageMapper {
 		$partsQuery->fullText();
 		foreach ($structure->partIterator() as $part) {
 			/** @var Horde_Mime_Part $part */
-			if ($part->getMimeId() === "0") {
+			if ($part->getMimeId() === '0') {
 				// Ignore message header
 				continue;
 			}
@@ -369,6 +359,71 @@ class MessageMapper {
 			$attachments[] = $decoded;
 		}
 		return $attachments;
+	}
+
+	/**
+	 * @param Horde_Imap_Client_Socket $client
+	 * @param int[] $uids
+	 *
+	 * @return MessageStructureData[]
+	 * @throws Horde_Imap_Client_Exception
+	 */
+	public function getBodyStructureData(Horde_Imap_Client_Socket $client,
+										 string $mailbox,
+										 array $uids): array {
+		$structureQuery = new Horde_Imap_Client_Fetch_Query();
+		$structureQuery->structure();
+
+		$structures = $client->fetch($mailbox, $structureQuery, [
+			'ids' => new Horde_Imap_Client_Ids($uids),
+		]);
+
+		return array_map(function(Horde_Imap_Client_Data_Fetch $fetchData) use ($mailbox, $client) {
+			$hasAttachments = false;
+			$text = '';
+
+			$structure = $fetchData->getStructure();
+			foreach ($structure as $part) {
+				if ($part instanceof Horde_Mime_Part && $part->isAttachment()) {
+					$hasAttachments = true;
+					break;
+				}
+			}
+
+			$textBodyId = $structure->findBody('text');
+			// $htmlBodyId = $structure->findBody('html');
+			// $htmlBody = $data->getBodyPart($htmlBodyId);
+
+			$partsQuery = new Horde_Imap_Client_Fetch_Query();
+			if ($textBodyId === null) {
+				return new MessageStructureData($hasAttachments, $text);
+			}
+			$partsQuery->bodyPart($textBodyId, [
+				'decode' => true,
+				'peek' => true,
+			]);
+			$partsQuery->mimeHeader($textBodyId, [
+				'peek' => true
+			]);
+			$parts = $client->fetch($mailbox, $partsQuery, [
+				'ids' => new Horde_Imap_Client_Ids([$fetchData->getUid()]),
+			]);
+			/** @var Horde_Imap_Client_Data_Fetch $part */
+			$part = $parts[$fetchData->getUid()];
+			$body = $part->getBodyPart($textBodyId);
+
+			if (!empty($body)) {
+				$mimeHeaders = $fetchData->getMimeHeader($textBodyId, Horde_Imap_Client_Data_Fetch::HEADER_PARSE);
+				if ($enc = $mimeHeaders->getValue('content-transfer-encoding')) {
+					$structure->setTransferEncoding($enc);
+				}
+				$structure->setContents($body);
+				/** @var string $text */
+				$text = $structure->getContents();
+			}
+
+			return new MessageStructureData($hasAttachments, $text);
+ 		}, iterator_to_array($structures->getIterator()));
 	}
 
 }
