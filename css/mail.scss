@@ -240,7 +240,7 @@
 }
 
 .icon-starred[data-starred="false"]:hover {
-	background-image: var(--icon-star-dark-FC0) !important;
+	background-image: var(--icon-star-dark-fc0) !important;
 }
 .icon-starred[data-starred="false"]:not(:hover) {
 	background-image: var(--icon-star-000) !important;
