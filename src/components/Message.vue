@@ -135,7 +135,7 @@ export default {
 		this.fetchMessage()
 	},
 	methods: {
-		fetchMessage() {
+		async fetchMessage() {
 			this.loading = true
 			this.message = undefined
 			this.errorMessage = ''
@@ -145,51 +145,49 @@ export default {
 
 			const messageUid = this.$route.params.messageUid
 
-			this.$store
-				.dispatch('fetchMessage', messageUid)
-				.then(message => {
-					// TODO: add timeout so that message isn't flagged when only viewed
-					// for a few seconds
-					if (message.uid !== this.$route.params.messageUid) {
-						Logger.debug("User navigated away, loaded message won't be shown nor flagged as seen")
-						return
-					}
+			try {
+				const message = await this.$store.dispatch('fetchMessage', messageUid)
+				// TODO: add timeout so that message isn't flagged when only viewed
+				// for a few seconds
+				if (message && message.uid !== this.$route.params.messageUid) {
+					Logger.debug("User navigated away, loaded message won't be shown nor flagged as seen")
+					return
+				}
 
-					this.message = message
+				this.message = message
 
-					if (this.message === undefined) {
-						Logger.info('message could not be found', {messageUid})
-						this.errorMessage = getRandomMessageErrorMessage()
-						this.loading = false
-						return
-					}
-
-					const account = this.$store.getters.getAccount(message.accountId)
-					this.replyRecipient = buildReplyRecipients(message, {
-						label: account.name,
-						email: account.emailAddress,
-					})
-
-					this.replySubject = buildReplySubject(message.subject)
-
+				if (this.message === undefined) {
+					Logger.info('message could not be found', {messageUid})
+					this.errorMessage = getRandomMessageErrorMessage()
 					this.loading = false
+					return
+				}
 
-					this.envelope = this.$store.getters.getEnvelope(message.accountId, message.folderId, message.id)
-					if (!this.envelope.flags.unseen) {
-						// Already seen -> no change necessary
-						return
-					}
+				const account = this.$store.getters.getAccount(message.accountId)
+				this.replyRecipient = buildReplyRecipients(message, {
+					label: account.name,
+					email: account.emailAddress,
+				})
 
-					return this.$store.dispatch('toggleEnvelopeSeen', this.envelope)
-				})
-				.catch(error => {
-					Logger.error('could not load message ', {messageUid, error})
-					if (error.isError) {
-						this.errorMessage = t('mail', 'Could not load your message')
-						this.error = error
-						this.loading = false
-					}
-				})
+				this.replySubject = buildReplySubject(message.subject)
+
+				this.loading = false
+
+				this.envelope = this.$store.getters.getEnvelope(message.accountId, message.folderId, message.id)
+				if (!this.envelope.flags.unseen) {
+					// Already seen -> no change necessary
+					return
+				}
+
+				return this.$store.dispatch('toggleEnvelopeSeen', this.envelope)
+			} catch (error) {
+				Logger.error('could not load message ', {messageUid, error})
+				if (error.isError) {
+					this.errorMessage = t('mail', 'Could not load your message')
+					this.error = error
+					this.loading = false
+				}
+			}
 		},
 		replyMessage() {
 			this.$router.push({
