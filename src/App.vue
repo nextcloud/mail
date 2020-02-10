@@ -25,14 +25,18 @@
 </template>
 
 <script>
+import {subscribe} from '@nextcloud/event-bus'
+
 import logger from './logger'
 import {matchError} from './errors/match'
 import MailboxLockedError from './errors/MailboxLockedError'
+import {collect} from "./service/ContactsInteraction";
 
 export default {
 	name: 'App',
 	mounted() {
 		this.sync()
+		this.collectInteractions()
 	},
 	methods: {
 		sync() {
@@ -56,6 +60,9 @@ export default {
 				}
 			}, 30 * 1000)
 		},
+		collectInteractions() {
+			subscribe('mail:interaction', collect)
+		}
 	},
 }
 </script>

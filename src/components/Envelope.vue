@@ -126,13 +126,15 @@ export default {
 		},
 	},
 	methods: {
-		onToggleFlagged() {
-			this.$store.dispatch('toggleEnvelopeFlagged', this.data).then(() => {
+		async onToggleFlagged() {
+			await this.$store.dispatch('toggleEnvelopeFlagged', this.data)
+
+			if (this.data.flags.flagged) {
 				emit('mail:interaction', {
 					type: 'message-starred',
-					recipient: this.recipient.email,
+					sender: this.data.from,
 				})
-			})
+			}
 		},
 		onToggleSeen() {
 			this.$store.dispatch('toggleEnvelopeSeen', this.data)
