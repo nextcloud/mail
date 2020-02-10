@@ -31,6 +31,7 @@ use OCA\Mail\Db\Message;
 use OCA\Mail\Db\MessageMapper;
 use OCA\Mail\Exception\MailboxLockedException;
 use OCA\Mail\Exception\MailboxNotCachedException;
+use OCA\Mail\IMAP\PreviewEnhancer;
 use OCA\Mail\IMAP\Search\Provider;
 use OCA\Mail\Service\Search\FilterStringParser;
 use OCA\Mail\Service\Search\MailSearch;
@@ -55,6 +56,9 @@ class MailSearchTest extends TestCase {
 	/** @var Provider|MockObject */
 	private $imapSearchProvider;
 
+	/** @var PreviewEnhancer|MockObject */
+	private $previewEnhancer;
+
 	/** @var MessageMapper|MockObject */
 	private $messageMapper;
 
@@ -65,6 +69,7 @@ class MailSearchTest extends TestCase {
 		$this->mailboxMapper = $this->createMock(MailboxMapper::class);
 		$this->imapSearchProvider = $this->createMock(Provider::class);
 		$this->messageMapper = $this->createMock(MessageMapper::class);
+		$this->previewEnhancer = $this->createMock(PreviewEnhancer::class);
 		$this->logger = $this->createMock(ILogger::class);
 
 		$this->search = new MailSearch(
@@ -72,6 +77,7 @@ class MailSearchTest extends TestCase {
 			$this->mailboxMapper,
 			$this->imapSearchProvider,
 			$this->messageMapper,
+			$this->previewEnhancer,
 			$this->logger
 		);
 	}
@@ -158,6 +164,9 @@ class MailSearchTest extends TestCase {
 			]);
 		$this->imapSearchProvider->expects($this->never())
 			->method('findMatches');
+		$this->previewEnhancer->expects($this->once())
+			->method('process')
+			->willReturnArgument(2);
 
 		$messages = $this->search->findMessages(
 			$account,
@@ -200,6 +209,9 @@ class MailSearchTest extends TestCase {
 				$this->createMock(Message::class),
 				$this->createMock(Message::class),
 			]);
+		$this->previewEnhancer->expects($this->once())
+			->method('process')
+			->willReturnArgument(2);
 
 		$messages = $this->search->findMessages(
 			$account,

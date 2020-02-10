@@ -26,7 +26,6 @@ namespace OCA\Mail\Db;
 use JsonSerializable;
 use OCA\Mail\AddressList;
 use OCP\AppFramework\Db\Entity;
-use function json_encode;
 
 /**
  * @method void setUid(int $uid)
@@ -55,6 +54,12 @@ use function json_encode;
  * @method bool getFlagJunk()
  * @method void setFlagNotjunk(bool $notjunk)
  * @method bool getFlagNotjunk()
+ * @method void setStructureAnalyzed(bool $analyzed)
+ * @method bool getStructureAnalyzed()
+ * @method void setFlagAttachments(?bool $hasAttachments)
+ * @method null|bool getFlagAttachments()
+ * @method void setPreviewText(?string $subject)
+ * @method null|string getPreviewText()
  * @method void setUpdatedAt(int $time)
  * @method int getUpdatedAt()
  */
@@ -74,6 +79,9 @@ class Message extends Entity implements JsonSerializable {
 	protected $flagJunk;
 	protected $flagNotjunk;
 	protected $updatedAt;
+	protected $structureAnalyzed;
+	protected $flagAttachments;
+	protected $previewText;
 
 	/** @var AddressList */
 	private $from;
@@ -103,6 +111,8 @@ class Message extends Entity implements JsonSerializable {
 		$this->addType('flagForwarded', 'bool');
 		$this->addType('flagJunk', 'bool');
 		$this->addType('flagNotjunk', 'bool');
+		$this->addType('structureAnalyzed', 'bool');
+		$this->addType('flagAttachments', 'bool');
 		$this->addType('updatedAt', 'integer');
 	}
 
@@ -174,7 +184,7 @@ class Message extends Entity implements JsonSerializable {
 				'deleted' => $this->getFlagDeleted(),
 				'draft' => $this->getFlagDraft(),
 				'forwarded' => $this->getFlagForwarded(),
-				'hasAttachments' => false, // TODO
+				'hasAttachments' => $this->getFlagAttachments() ?? false,
 			],
 			'from' => $this->getFrom()->jsonSerialize(),
 			'to' => $this->getTo()->jsonSerialize(),

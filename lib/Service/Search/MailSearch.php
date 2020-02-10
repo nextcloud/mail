@@ -34,11 +34,10 @@ use OCA\Mail\Exception\ClientException;
 use OCA\Mail\Exception\MailboxLockedException;
 use OCA\Mail\Exception\MailboxNotCachedException;
 use OCA\Mail\Exception\ServiceException;
+use OCA\Mail\IMAP\PreviewEnhancer;
 use OCA\Mail\IMAP\Search\Provider as ImapSearchProvider;
 use OCP\AppFramework\Db\DoesNotExistException;
 use OCP\ILogger;
-use function array_intersect;
-use function array_merge;
 
 class MailSearch implements IMailSearch {
 
@@ -54,6 +53,9 @@ class MailSearch implements IMailSearch {
 	/** @var MessageMapper */
 	private $messageMapper;
 
+	/** @var PreviewEnhancer */
+	private $previewEnhancer;
+
 	/** @var ILogger */
 	private $logger;
 
@@ -61,11 +63,13 @@ class MailSearch implements IMailSearch {
 								MailboxMapper $mailboxMapper,
 								ImapSearchProvider $imapSearchProvider,
 								MessageMapper $messageMapper,
+								PreviewEnhancer $previewEnhancer,
 								ILogger $logger) {
 		$this->filterStringParser = $filterStringParser;
 		$this->mailboxMapper = $mailboxMapper;
 		$this->imapSearchProvider = $imapSearchProvider;
 		$this->messageMapper = $messageMapper;
+		$this->previewEnhancer = $previewEnhancer;
 		$this->logger = $logger;
 	}
 
@@ -109,9 +113,13 @@ class MailSearch implements IMailSearch {
 			$query->addFlag(Horde_Imap_Client::FLAG_DELETED, false);
 		}
 
-		return $this->messageMapper->findByUids(
+		return $this->previewEnhancer->process(
+			$account,
 			$mailbox,
-			$this->getUids($account, $mailbox, $query)
+			$this->messageMapper->findByUids(
+				$mailbox,
+				$this->getUids($account, $mailbox, $query)
+			)
 		);
 	}
 

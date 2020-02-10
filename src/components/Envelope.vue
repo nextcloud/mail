@@ -18,7 +18,7 @@
 		</div>
 		<div class="app-content-list-item-line-two" :title="data.subject">
 			<span v-if="data.flags.answered" class="icon-reply" />
-			<span v-if="data.flags.hasAttachments" class="icon-public icon-attachment" />
+			<span v-if="data.flags.hasAttachments === true" class="icon-public icon-attachment" />
 			<span v-if="draft" class="draft">
 				<em>{{ t('mail', 'Draft: ') }}</em>
 			</span>

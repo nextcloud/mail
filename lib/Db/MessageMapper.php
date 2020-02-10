@@ -55,7 +55,7 @@ class MessageMapper extends QBMapper {
 
 		$result = $query->execute();
 		$uids = array_map(function (array $row) {
-			return (int) $row['uid'];
+			return (int)$row['uid'];
 		}, $result->fetchAll());
 		$result->closeCursor();
 
@@ -134,7 +134,12 @@ class MessageMapper extends QBMapper {
 		$this->db->commit();
 	}
 
-	public function updateBulk(Message ...$messages): void {
+	/**
+	 * @param Message ...$messages
+	 *
+	 * @return Message[]
+	 */
+	public function updateBulk(Message ...$messages): array {
 		$this->db->beginTransaction();
 
 		$query = $this->db->getQueryBuilder();
@@ -154,6 +159,11 @@ class MessageMapper extends QBMapper {
 			));
 
 		foreach ($messages as $message) {
+			if (empty($message->getUpdatedFields())) {
+				// Micro optimization
+				continue;
+			}
+
 			$query->setParameter('uid', $message->getUid(), IQueryBuilder::PARAM_INT);
 			$query->setParameter('mailbox_id', $message->getMailboxId(), IQueryBuilder::PARAM_INT);
 			$query->setParameter('flag_answered', $message->getFlagAnswered(), IQueryBuilder::PARAM_BOOL);
@@ -169,6 +179,46 @@ class MessageMapper extends QBMapper {
 		}
 
 		$this->db->commit();
+
+		return $messages;
+	}
+
+	/**
+	 * @param Message ...$messages
+	 *
+	 * @return Message[]
+	 */
+	public function updatePreviewDataBulk(Message ...$messages): array {
+		$this->db->beginTransaction();
+
+		$query = $this->db->getQueryBuilder();
+		$query->update($this->getTableName())
+			->set('flag_attachments', $query->createParameter('flag_attachments'))
+			->set('preview_text', $query->createParameter('preview_text'))
+			->set('structure_analyzed', $query->createNamedParameter(true, IQueryBuilder::PARAM_BOOL))
+			->set('updated_at', $query->createNamedParameter($this->timeFactory->getTime(), IQueryBuilder::PARAM_INT))
+			->where($query->expr()->andX(
+				$query->expr()->eq('uid', $query->createParameter('uid')),
+				$query->expr()->eq('mailbox_id', $query->createParameter('mailbox_id'))
+			));
+
+		foreach ($messages as $message) {
+			if (empty($message->getUpdatedFields())) {
+				// Micro optimization
+				continue;
+			}
+
+			$query->setParameter('uid', $message->getUid(), IQueryBuilder::PARAM_INT);
+			$query->setParameter('mailbox_id', $message->getMailboxId(), IQueryBuilder::PARAM_INT);
+			$query->setParameter('flag_attachments', $message->getFlagAttachments(), $message->getFlagAttachments() === null ? IQueryBuilder::PARAM_NULL : IQueryBuilder::PARAM_BOOL);
+			$query->setParameter('preview_text', $message->getPreviewText(), $message->getPreviewText() === null ? IQueryBuilder::PARAM_NULL : IQueryBuilder::PARAM_STR);
+
+			$query->execute();
+		}
+
+		$this->db->commit();
+
+		return $messages;
 	}
 
 	public function deleteAll(Mailbox $mailbox): void {
@@ -306,6 +356,7 @@ class MessageMapper extends QBMapper {
 
 	/**
 	 * @param Message[] $messages
+	 *
 	 * @return Message[]
 	 */
 	private function findRecipients(array $messages): array {
@@ -353,6 +404,12 @@ class MessageMapper extends QBMapper {
 		return $messages;
 	}
 
+	/**
+	 * @param Mailbox $mailbox
+	 * @param int $highest
+	 *
+	 * @return Message[]
+	 */
 	public function findNew(Mailbox $mailbox, int $highest): array {
 		$qb = $this->db->getQueryBuilder();
 
