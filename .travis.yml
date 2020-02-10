@@ -11,6 +11,11 @@ services:
   - mysql
   - postgresql
 
+addons:
+  apt:
+    packages:
+      - docker-ce # To get the latest version
+
 env:
   global:
   - CORE_BRANCH=master
