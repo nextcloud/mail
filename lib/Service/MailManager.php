@@ -29,6 +29,7 @@ use OCA\Mail\Contracts\IMailManager;
 use OCA\Mail\Db\Mailbox;
 use OCA\Mail\Db\MailboxMapper;
 use OCA\Mail\Events\BeforeMessageDeletedEvent;
+use OCA\Mail\Events\MessageDeletedEvent;
 use OCA\Mail\Exception\ServiceException;
 use OCA\Mail\Folder;
 use OCA\Mail\IMAP\FolderMapper;
@@ -176,31 +177,36 @@ class MailManager implements IMailManager {
 		);
 
 		try {
-			$sourceFolder = $this->mailboxMapper->find($account, $mailboxId);
+			$sourceMailbox = $this->mailboxMapper->find($account, $mailboxId);
 		} catch (DoesNotExistException $e) {
 			throw new ServiceException("Source mailbox $mailboxId does not exist", 0, $e);
 		}
 		try {
-			$trashFolder = $this->mailboxMapper->findSpecial($account, 'trash');
+			$trashMailbox = $this->mailboxMapper->findSpecial($account, 'trash');
 		} catch (DoesNotExistException $e) {
 			throw new ServiceException("No trash folder", 0, $e);
 		}
 
-		if ($mailboxId === $trashFolder->getName()) {
+		if ($mailboxId === $trashMailbox->getName()) {
 			// Delete inside trash -> expunge
 			$this->messageMapper->expunge(
 				$this->imapClientFactory->getClient($account),
-				$sourceFolder->getName(),
+				$sourceMailbox->getName(),
 				$messageId
 			);
 		} else {
 			$this->messageMapper->move(
 				$this->imapClientFactory->getClient($account),
-				$sourceFolder->getName(),
+				$sourceMailbox->getName(),
 				$messageId,
-				$trashFolder->getName()
+				$trashMailbox->getName()
 			);
 		}
+
+		$this->eventDispatcher->dispatch(
+			MessageDeletedEvent::class,
+			new MessageDeletedEvent($account, $sourceMailbox, $messageId)
+		);
 	}
 
 	/**

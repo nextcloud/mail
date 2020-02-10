@@ -34,9 +34,6 @@ use OCA\Mail\IMAP\FolderStats;
 use OCA\Mail\IMAP\IMAPClientFactory;
 use OCA\Mail\IMAP\MailboxSync;
 use OCA\Mail\IMAP\MessageMapper;
-use OCA\Mail\IMAP\Sync\Request;
-use OCA\Mail\IMAP\Sync\Response;
-use OCA\Mail\IMAP\Sync\Synchronizer;
 use OCA\Mail\Service\MailManager;
 use OCP\AppFramework\Db\DoesNotExistException;
 use OCP\EventDispatcher\IEventDispatcher;
@@ -206,12 +203,8 @@ class MailManagerTest extends TestCase {
 		$inbox->setName('INBOX');
 		$trash = new Mailbox();
 		$trash->setName('Trash');
-		$this->eventDispatcher->expects($this->once())
-			->method('dispatch')
-			->with(
-				$this->equalTo(BeforeMessageDeletedEvent::class),
-				$this->anything()
-			);
+		$this->eventDispatcher->expects($this->exactly(2))
+			->method('dispatch');
 		$this->mailboxMapper->expects($this->once())
 			->method('find')
 			->with($account, 'INBOX')
@@ -247,12 +240,8 @@ class MailManagerTest extends TestCase {
 		$source->setName('Trash');
 		$trash = new Mailbox();
 		$trash->setName('Trash');
-		$this->eventDispatcher->expects($this->once())
-			->method('dispatch')
-			->with(
-				$this->equalTo(BeforeMessageDeletedEvent::class),
-				$this->anything()
-			);
+		$this->eventDispatcher->expects($this->exactly(2))
+			->method('dispatch');
 		$this->mailboxMapper->expects($this->once())
 			->method('find')
 			->with($account, 'Trash')

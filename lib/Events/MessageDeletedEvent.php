@@ -1,9 +1,9 @@
 <?php declare(strict_types=1);
 
 /**
- * @copyright 2019 Christoph Wurst <christoph@winzerhof-wurst.at>
+ * @copyright 2020 Christoph Wurst <christoph@winzerhof-wurst.at>
  *
- * @author 2019 Christoph Wurst <christoph@winzerhof-wurst.at>
+ * @author 2020 Christoph Wurst <christoph@winzerhof-wurst.at>
  *
  * @license GNU AGPL version 3 or any later version
  *
@@ -24,23 +24,26 @@
 namespace OCA\Mail\Events;
 
 use OCA\Mail\Account;
+use OCA\Mail\Db\Mailbox;
 use OCP\EventDispatcher\Event;
 
-class BeforeMessageDeletedEvent extends Event {
+class MessageDeletedEvent extends Event {
 
 	/** @var Account */
 	private $account;
 
-	/** @var string */
-	private $folderId;
+	/** @var Mailbox */
+	private $mailbox;
 
 	/** @var int */
 	private $messageId;
 
-	public function __construct(Account $account, string $mailbox, int $messageId) {
+	public function __construct(Account $account,
+								Mailbox $mailbox,
+								int $messageId) {
 		parent::__construct();
 		$this->account = $account;
-		$this->folderId = $mailbox;
+		$this->mailbox = $mailbox;
 		$this->messageId = $messageId;
 	}
 
@@ -48,8 +51,8 @@ class BeforeMessageDeletedEvent extends Event {
 		return $this->account;
 	}
 
-	public function getFolderId(): string {
-		return $this->folderId;
+	public function getMailbox(): Mailbox {
+		return $this->mailbox;
 	}
 
 	public function getMessageId(): int {
