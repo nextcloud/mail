@@ -23,11 +23,13 @@ declare(strict_types=1);
 
 namespace OCA\Mail\IMAP\Sync;
 
+use Horde_Imap_Client;
 use Horde_Imap_Client_Base;
 use Horde_Imap_Client_Exception;
 use Horde_Imap_Client_Exception_Sync;
 use Horde_Imap_Client_Ids;
 use Horde_Imap_Client_Mailbox;
+use OCA\mail\lib\Exception\UidValidityChangedException;
 
 class Synchronizer {
 
@@ -50,24 +52,36 @@ class Synchronizer {
 	/**
 	 * @param Horde_Imap_Client_Base $imapClient
 	 * @param Request $request
+	 * @param int $criteria
+	 *
 	 * @return Response
 	 * @throws Horde_Imap_Client_Exception
 	 * @throws Horde_Imap_Client_Exception_Sync
+	 * @throws UidValidityChangedException
 	 */
-	public function sync(Horde_Imap_Client_Base $imapClient, Request $request): Response {
+	public function sync(Horde_Imap_Client_Base $imapClient,
+						 Request $request,
+						 int $criteria = Horde_Imap_Client::SYNC_NEWMSGSUIDS|Horde_Imap_Client::SYNC_FLAGSUIDS|Horde_Imap_Client::SYNC_VANISHEDUIDS): Response {
 		$mailbox = new Horde_Imap_Client_Mailbox($request->getMailbox());
 		$ids = new Horde_Imap_Client_Ids($request->getUids());
-		$hordeSync = $imapClient->sync($mailbox, $request->getToken(), [
-			'ids' => $ids
-		]);
+		try {
+			$hordeSync = $imapClient->sync($mailbox, $request->getToken(), [
+				'criteria' => $criteria,
+				'ids' => $ids
+			]);
+		} catch (Horde_Imap_Client_Exception_Sync $e) {
+			if ($e->getCode() === Horde_Imap_Client_Exception_Sync::UIDVALIDITY_CHANGED) {
+				throw new UidValidityChangedException();
+			}
+			throw $e;
+		}
 
 		$syncStrategy = $this->getSyncStrategy($request);
 		$newMessages = $syncStrategy->getNewMessages($imapClient, $request, $hordeSync);
 		$changedMessages = $syncStrategy->getChangedMessages($imapClient, $request, $hordeSync);
-		$vanishedMessages = $syncStrategy->getVanishedMessages($imapClient, $request, $hordeSync);
+		$vanishedMessageUids = $syncStrategy->getVanishedMessageUids($imapClient, $request, $hordeSync);
 
-		$newSyncToken = $imapClient->getSyncToken($request->getMailbox());
-		return new Response($newSyncToken, $newMessages, $changedMessages, $vanishedMessages);
+		return new Response($newMessages, $changedMessages, $vanishedMessageUids);
 	}
 
 	/**

@@ -56,6 +56,7 @@
 <script>
 import {formatFileSize} from '@nextcloud/files'
 import {mixin as onClickOutside} from 'vue-on-click-outside'
+import {translate as t} from '@nextcloud/l10n'
 import {getFilePickerBuilder} from '@nextcloud/dialogs'
 import PopoverMenu from '@nextcloud/vue/dist/Components/PopoverMenu'
 
@@ -78,6 +79,7 @@ export default {
 		},
 		fileName: {
 			type: String,
+			default: t('mail', 'Unnamed'),
 			required: false,
 		},
 		url: {

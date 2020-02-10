@@ -78,6 +78,7 @@ OC.L10N.register(
     "Import into calendar" : "Uvozi v koledar",
     "Download attachment" : "Prejmi prilogo",
     "Save to Files" : "Shrani v Datoteke",
+    "Unnamed" : "Neimenovano",
     "Choose a folder to store the attachment in" : "Izbor mape za shranjevanje priloge",
     "Save all to Files" : "Shrani vse v Datoteke",
     "Choose a folder to store the attachments in" : "Izbor mape za shranjevanje priloge",

@@ -27,6 +27,7 @@ use OCA\Mail\Db\MailAccount;
 use OCA\Mail\Db\MailAccountMapper;
 use OCA\Mail\Service\AccountService;
 use OCA\Mail\Service\AliasesService;
+use OCP\BackgroundJob\IJobList;
 use OCP\IL10N;
 use PHPUnit\Framework\MockObject\MockObject;
 
@@ -53,15 +54,20 @@ class AccountServiceTest extends TestCase {
 	/** @var MailAccount|MockObject */
 	private $account2;
 
+	/** @var IJobList|MockObject */
+	private $jobList;
+
 	protected function setUp(): void {
 		parent::setUp();
 
 		$this->mapper = $this->createMock(MailAccountMapper::class);
 		$this->l10n = $this->createMock(IL10N::class);
 		$this->aliasesService = $this->createMock(AliasesService::class);
+		$this->jobList = $this->createMock(IJobList::class);
 		$this->accountService = new AccountService(
 			$this->mapper,
-			$this->aliasesService
+			$this->aliasesService,
+			$this->jobList
 		);
 
 		$this->account1 = $this->createMock(MailAccount::class);
@@ -73,9 +79,9 @@ class AccountServiceTest extends TestCase {
 			->method('findByUserId')
 			->with($this->user)
 			->will($this->returnValue([
-					$this->account1,
-					$this->account2,
-		]));
+				$this->account1,
+				$this->account2,
+			]));
 
 		$expected = [
 			new Account($this->account1),

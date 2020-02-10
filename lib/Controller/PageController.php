@@ -126,6 +126,7 @@ class PageController extends Controller {
 				'app-version' => $this->config->getAppValue('mail', 'installed_version'),
 				'accounts' => base64_encode(json_encode($accountsJson)),
 				'external-avatars' => $this->preferences->getPreference('external-avatars', 'true'),
+				'collect-data' => $this->preferences->getPreference('collect-data', 'true'),
 			]);
 		$this->initialStateService->provideInitialState(
 			Application::APP_ID,

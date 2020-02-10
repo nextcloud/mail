@@ -104,9 +104,6 @@ export default {
 			account.folders.push(id)
 		})
 	},
-	updateFolderSyncToken(state, {folder, syncToken}) {
-		folder.syncToken = syncToken
-	},
 	addEnvelope(state, {accountId, folder, envelope}) {
 		const uid = accountId + '-' + folder.id + '-' + envelope.id
 		envelope.accountId = accountId

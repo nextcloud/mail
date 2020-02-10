@@ -33,6 +33,7 @@ namespace OCA\Mail\Controller;
 use Exception;
 use OCA\Mail\Contracts\IMailManager;
 use OCA\Mail\Contracts\IMailSearch;
+use OCA\Mail\Exception\ClientException;
 use OCA\Mail\Exception\ServiceException;
 use OCA\Mail\Http\AttachmentDownloadResponse;
 use OCA\Mail\Http\HtmlResponse;
@@ -135,6 +136,7 @@ class MessagesController extends Controller {
 	 * @param string $filter
 	 *
 	 * @return JSONResponse
+	 * @throws ClientException
 	 * @throws ServiceException
 	 */
 	public function index(int $accountId, string $folderId, int $cursor = null, string $filter = null): JSONResponse {

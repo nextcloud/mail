@@ -64,6 +64,7 @@ OC.L10N.register(
     "Import into calendar" : "Tuo kalenteriin",
     "Download attachment" : "Lataa liite",
     "Save to Files" : "Tallenna tiedostoihin",
+    "Unnamed" : "Nimetön",
     "Choose a folder to store the attachment in" : "Valitse kansio liitetiedoston tallentamiselle",
     "Save all to Files" : "Tallenna kaikki tiedostoihin",
     "Choose a folder to store the attachments in" : "Valitse kansio johon liitteet tallennetaan",

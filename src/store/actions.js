@@ -334,7 +334,7 @@ export default {
 			return envelopes
 		})
 	},
-	syncEnvelopes({commit, getters, dispatch}, {accountId, folderId}) {
+	syncEnvelopes({commit, getters, dispatch}, {accountId, folderId, init = false}) {
 		const folder = getters.getFolder(accountId, folderId)
 
 		if (folder.isUnified) {
@@ -350,6 +350,7 @@ export default {
 									dispatch('syncEnvelopes', {
 										accountId: account.id,
 										folderId: folder.id,
+										init,
 									})
 								)
 						)
@@ -357,10 +358,9 @@ export default {
 			)
 		}
 
-		const syncToken = folder.syncToken
 		const uids = getters.getEnvelopes(accountId, folderId).map(env => env.id)
 
-		return syncEnvelopes(accountId, folderId, syncToken, uids).then(syncData => {
+		return syncEnvelopes(accountId, folderId, uids, init).then(syncData => {
 			const unifiedFolder = getters.getUnifiedFolder(folder.specialRole)
 
 			syncData.newMessages.forEach(envelope => {
@@ -390,10 +390,6 @@ export default {
 					id,
 				})
 				// Already removed from unified inbox
-			})
-			commit('updateFolderSyncToken', {
-				folder,
-				syncToken: syncData.token,
 			})
 
 			return syncData.newMessages

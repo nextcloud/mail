@@ -1,7 +1,10 @@
 import {generateUrl} from '@nextcloud/router'
-import HttpClient from '@nextcloud/axios'
+import axios from '@nextcloud/axios'
 
+import logger from '../logger'
+import MailboxNotCachedError from '../errors/MailboxNotCachedError'
 import {parseErrorResponse} from '../http/ErrorResponseParser'
+import {convertAxiosError} from '../errors/convert'
 
 export function fetchEnvelopes(accountId, folderId, query, cursor) {
 	const url = generateUrl('/apps/mail/api/accounts/{accountId}/folders/{folderId}/messages', {
@@ -17,23 +20,34 @@ export function fetchEnvelopes(accountId, folderId, query, cursor) {
 		params.cursor = cursor
 	}
 
-	return HttpClient.get(url, {
-		params: params,
-	}).then(resp => resp.data)
+	return axios
+		.get(url, {
+			params: params,
+		})
+		.then(resp => resp.data)
+		.catch(error => {
+			throw convertAxiosError(error)
+		})
 }
 
-export function syncEnvelopes(accountId, folderId, syncToken, uids) {
+export async function syncEnvelopes(accountId, folderId, uids, init = false) {
 	const url = generateUrl('/apps/mail/api/accounts/{accountId}/folders/{folderId}/sync', {
 		accountId,
 		folderId,
 	})
 
-	return HttpClient.get(url, {
-		params: {
-			syncToken,
-			uids,
-		},
-	}).then(resp => resp.data)
+	try {
+		return (
+			await axios.get(url, {
+				params: {
+					uids,
+					init,
+				},
+			})
+		).data
+	} catch (e) {
+		throw convertAxiosError(e)
+	}
 }
 
 export function setEnvelopeFlag(accountId, folderId, id, flag, value) {
@@ -46,11 +60,13 @@ export function setEnvelopeFlag(accountId, folderId, id, flag, value) {
 	const flags = {}
 	flags[flag] = value
 
-	return HttpClient.put(url, {
-		flags: flags,
-	}).then(() => {
-		value
-	})
+	return axios
+		.put(url, {
+			flags: flags,
+		})
+		.then(() => {
+			value
+		})
 }
 
 export function fetchMessage(accountId, folderId, id) {
@@ -60,7 +76,8 @@ export function fetchMessage(accountId, folderId, id) {
 		id,
 	})
 
-	return HttpClient.get(url)
+	return axios
+		.get(url)
 		.then(resp => resp.data)
 		.catch(error => {
 			if (error.response && error.response.status === 404) {
@@ -75,7 +92,7 @@ export function saveDraft(accountId, data) {
 		accountId,
 	})
 
-	return HttpClient.post(url, data).then(resp => resp.data)
+	return axios.post(url, data).then(resp => resp.data)
 }
 
 export function sendMessage(accountId, data) {
@@ -83,7 +100,7 @@ export function sendMessage(accountId, data) {
 		accountId,
 	})
 
-	return HttpClient.post(url, data).then(resp => resp.data)
+	return axios.post(url, data).then(resp => resp.data)
 }
 
 export function deleteMessage(accountId, folderId, id) {
@@ -93,5 +110,5 @@ export function deleteMessage(accountId, folderId, id) {
 		id,
 	})
 
-	return HttpClient.delete(url).then(resp => resp.data)
+	return axios.delete(url).then(resp => resp.data)
 }

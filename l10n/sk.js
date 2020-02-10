@@ -51,6 +51,7 @@ OC.L10N.register(
     "Import into calendar" : "Importovať do kalendára",
     "Download attachment" : "Stiahnuť prílohu",
     "Save to Files" : "Uložiť do Súborov",
+    "Unnamed" : "nepomenovaný",
     "Choose a folder to store the attachment in" : "Vyberte priečinok pre uloženie prílohy",
     "Save all to Files" : "Uložiť všetko do Súborov",
     "Choose a folder to store the attachments in" : "Vyberte priečinok na ukladanie príloh",

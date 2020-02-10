@@ -37,8 +37,18 @@ use function strtolower;
  * @method void setName(string $name)
  * @method int getAccountId()
  * @method void setAccountId(int $accountId)
- * @method string|null getSyncToken()
- * @method void setSyncToken(string|null $syncToken)
+ * @method string|null getSyncNewToken()
+ * @method void setSyncNewToken(string|null $syncNewToken)
+ * @method string|null getSyncChangedToken()
+ * @method void setSyncChangedToken(string|null $syncNewToken)
+ * @method string|null getSyncVanishedToken()
+ * @method void setSyncVanishedToken(string|null $syncNewToken)
+ * @method int|null getSyncNewLock()
+ * @method void setSyncNewLock(int|null $ts)
+ * @method int|null getSyncChangedLock()
+ * @method void setSyncChangedLock(int|null $ts)
+ * @method int|null getSyncVanishedLock()
+ * @method void setSyncVanishedLock(int|null $ts)
  * @method string getAttributes()
  * @method void setAttributes(string $attributes)
  * @method string getDelimiter()
@@ -56,7 +66,12 @@ class Mailbox extends Entity {
 
 	protected $name;
 	protected $accountId;
-	protected $syncToken;
+	protected $syncNewToken;
+	protected $syncChangedToken;
+	protected $syncVanishedToken;
+	protected $syncNewLock;
+	protected $syncChangedLock;
+	protected $syncVanishedLock;
 	protected $attributes;
 	protected $delimiter;
 	protected $messages;
@@ -68,6 +83,9 @@ class Mailbox extends Entity {
 		$this->addType('accountId', 'integer');
 		$this->addType('messages', 'integer');
 		$this->addType('unseen', 'integer');
+		$this->addType('syncNewLock', 'integer');
+		$this->addType('syncChangedLock', 'integer');
+		$this->addType('syncVanishedLock', 'integer');
 		$this->addType('selectable', 'boolean');
 	}
 
@@ -78,7 +96,6 @@ class Mailbox extends Entity {
 			json_decode($this->getAttributes() ?? '[]', true) ?? [],
 			$this->delimiter
 		);
-		$folder->setSyncToken($this->getSyncToken());
 		foreach ($this->getSpecialUseParsed() as $use) {
 			$folder->addSpecialUse($use);
 		}
@@ -108,6 +125,18 @@ class Mailbox extends Entity {
 			return rtrim($this->getName(), '/FLAGGED');
 		}
 		return $this->getName();
+	}
+
+	public function isCached(): bool {
+		return $this->getSyncNewToken() !== null
+			&& $this->getSyncChangedToken() !== null
+			&& $this->getSyncVanishedToken() !== null;
+	}
+
+	public function hasLocks(): bool {
+		return $this->getSyncNewLock() !== null
+			|| $this->getSyncChangedLock() !== null
+			|| $this->getSyncVanishedLock() !== null;
 	}
 
 }

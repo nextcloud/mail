@@ -1,9 +1,11 @@
-<?php declare(strict_types=1);
+<?php
+
+declare(strict_types=1);
 
 /**
- * @copyright 2019 Christoph Wurst <christoph@winzerhof-wurst.at>
+ * @copyright 2020 Christoph Wurst <christoph@winzerhof-wurst.at>
  *
- * @author 2019 Christoph Wurst <christoph@winzerhof-wurst.at>
+ * @author 2020 Christoph Wurst <christoph@winzerhof-wurst.at>
  *
  * @license GNU AGPL version 3 or any later version
  *
@@ -21,16 +23,28 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-namespace OCA\Mail\IMAP\Search;
+namespace OCA\Mail\IMAP;
 
-use Horde_Imap_Client_Exception;
-use Horde_Imap_Client_Ids;
+class MessageStructureData {
 
-interface ISearchStrategy {
+	/** @var bool */
+	private $hasAttachments;
 
-	/**
-	 * @throws Horde_Imap_Client_Exception
-	 */
-	public function getIds(int $maxResults, array $flags = []): Horde_Imap_Client_Ids;
+	/** @var string */
+	private $previewText;
+
+	public function __construct(bool $hasAttachments,
+								string $previewText) {
+		$this->hasAttachments = $hasAttachments;
+		$this->previewText = $previewText;
+	}
+
+	public function hasAttachments(): bool {
+		return $this->hasAttachments;
+	}
+
+	public function getPreviewText(): string {
+		return $this->previewText;
+	}
 
 }

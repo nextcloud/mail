@@ -30,13 +30,11 @@ class ResponseTest extends TestCase {
 		$newMessages = [];
 		$changedMessages = [];
 		$vanishedMessages = [];
-		$syncToken = 'bc4564';
-		$response = new Response($syncToken, $newMessages, $changedMessages, $vanishedMessages);
+		$response = new Response($newMessages, $changedMessages, $vanishedMessages);
 		$expected = [
 			'newMessages' => [],
 			'changedMessages' => [],
 			'vanishedMessages' => [],
-			'token' => $syncToken,
 		];
 
 		$json = $response->jsonSerialize();

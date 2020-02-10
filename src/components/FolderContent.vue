@@ -2,7 +2,13 @@
 	<AppContent>
 		<AppDetailsToggle v-if="showMessage" @close="hideMessage" />
 		<div id="app-content-wrapper">
-			<Loading v-if="loading" :hint="t('mail', 'Loading messages')" />
+			<Error v-if="error" :error="t('mail', 'Could not open mailbox')" message="" />
+			<Loading v-else-if="loadingEnvelopes" :hint="t('mail', 'Loading messages')" />
+			<Loading
+				v-else-if="loadingCacheInitialization"
+				:hint="t('mail', 'Loading messages')"
+				:slow-hint="t('mail', 'Indexing your messages. This can take a bit longer for larger mailboxes.')"
+			/>
 			<template v-else>
 				<EnvelopeList
 					:account="account"
@@ -25,11 +31,16 @@ import isMobile from '@nextcloud/vue/dist/Mixins/isMobile'
 
 import AppDetailsToggle from './AppDetailsToggle'
 import EnvelopeList from './EnvelopeList'
+import Error from './Error'
 import Loading from './Loading'
-import Logger from '../logger'
+import logger from '../logger'
+import MailboxNotCachedError from '../errors/MailboxNotCachedError'
 import Message from './Message'
 import NewMessageDetail from './NewMessageDetail'
 import NoMessageSelected from './NoMessageSelected'
+import {matchError} from '../errors/match'
+import MailboxLockedError from '../errors/MailboxLockedError'
+import {wait} from '../util/wait'
 
 export default {
 	name: 'FolderContent',
@@ -37,6 +48,7 @@ export default {
 		AppContent,
 		AppDetailsToggle,
 		EnvelopeList,
+		Error,
 		Loading,
 		Message,
 		NewMessageDetail,
@@ -55,7 +67,9 @@ export default {
 	},
 	data() {
 		return {
-			loading: true,
+			error: false,
+			loadingEnvelopes: true,
+			loadingCacheInitialization: false,
 			searchQuery: undefined,
 			alive: false,
 		}
@@ -90,7 +104,7 @@ export default {
 		$route(to, from) {
 			if (to.name === 'folder') {
 				// Navigate (back) to the folder view -> (re)fetch data
-				this.fetchData()
+				this.loadEnvelopes()
 			}
 		},
 	},
@@ -99,43 +113,86 @@ export default {
 
 		new OCA.Search(this.searchProxy, this.clearSearchProxy)
 
-		this.fetchData()
+		this.loadEnvelopes()
 	},
 	beforeDestroy() {
 		this.alive = false
 	},
 	methods: {
-		fetchData() {
-			this.loading = true
+		initializeCache() {
+			this.loadingCacheInitialization = true
+			this.error = false
 
 			this.$store
-				.dispatch('fetchEnvelopes', {
+				.dispatch('syncEnvelopes', {
+					accountId: this.account.id,
+					folderId: this.folder.id,
+					init: true,
+				})
+				.then(() => {
+					this.loadingCacheInitialization = false
+
+					return this.loadEnvelopes()
+				})
+		},
+		async loadEnvelopes() {
+			this.loadingEnvelopes = true
+			this.error = false
+
+			try {
+				await this.$store.dispatch('fetchEnvelopes', {
 					accountId: this.account.id,
 					folderId: this.folder.id,
 					query: this.searchQuery,
 				})
-				.then(() => {
-					const envelopes = this.envelopes
-					Logger.debug('envelopes fetched', envelopes)
 
-					this.loading = false
+				const envelopes = this.envelopes
+				logger.debug('envelopes fetched', envelopes)
 
-					if (!this.isMobile && this.$route.name !== 'message' && envelopes.length > 0) {
-						// Show first message
-						let first = envelopes[0]
+				this.loadingEnvelopes = false
 
-						// Keep the selected account-folder combination, but navigate to the message
-						// (it's not a bug that we don't use first.accountId and first.folderId here)
-						this.$router.replace({
-							name: 'message',
-							params: {
-								accountId: this.account.id,
-								folderId: this.folder.id,
-								messageUid: first.uid,
-							},
-						})
-					}
+				if (!this.isMobile && this.$route.name !== 'message' && envelopes.length > 0) {
+					// Show first message
+					let first = envelopes[0]
+
+					// Keep the selected account-folder combination, but navigate to the message
+					// (it's not a bug that we don't use first.accountId and first.folderId here)
+					this.$router.replace({
+						name: 'message',
+						params: {
+							accountId: this.account.id,
+							folderId: this.folder.id,
+							messageUid: first.uid,
+						},
+					})
+				}
+			} catch (error) {
+				await matchError(error, {
+					[MailboxLockedError.getName()]: async error => {
+						logger.info('Mailbox is locked', {error})
+
+						await wait(15 * 1000)
+						// Keep trying
+						await this.loadEnvelopes()
+					},
+					[MailboxNotCachedError.getName()]: async error => {
+						logger.info('Mailbox not cached. Triggering initialization', {error})
+						this.loadingEnvelopes = false
+
+						try {
+							await this.initializeCache()
+						} catch (error) {
+							logger.error('Could not initialize cache', {error})
+							this.error = error
+						}
+					},
+					default: error => {
+						logger.error('Could not fetch envelopes', {error})
+						this.loadingEnvelopes = false
+						this.error = error
+					},
 				})
+			}
 		},
 		hideMessage() {
 			this.$router.replace({
@@ -159,7 +216,7 @@ export default {
 		search(query) {
 			this.searchQuery = query
 
-			this.fetchData()
+			this.loadEnvelopes()
 		},
 		clearSearch() {
 			this.searchQuery = undefined

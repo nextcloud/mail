@@ -69,17 +69,6 @@ interface IMailManager {
 	public function getMessage(Account $account, string $mailbox, int $id, bool $loadBody = false): IMAPMessage;
 
 	/**
-	 * @param Account
-	 * @param SyncRequest $syncRequest
-	 *
-	 * @return SyncResponse
-	 *
-	 * @throws ClientException
-	 * @throws ServiceException
-	 */
-	public function syncMessages(Account $account, SyncRequest $syncRequest): SyncResponse;
-
-	/**
 	 * @param Account $sourceAccount
 	 * @param string $sourceFolderId
 	 * @param int $messageId

@@ -28,18 +28,22 @@ use Horde_Mime_Mail;
 use OCA\Mail\Account;
 use OCA\Mail\Address;
 use OCA\Mail\AddressList;
+use OCA\Mail\Contracts\IUserPreferences;
 use OCA\Mail\Events\MessageSentEvent;
 use OCA\Mail\Listener\AddressCollectionListener;
 use OCA\Mail\Model\IMessage;
 use OCA\Mail\Model\NewMessageData;
 use OCA\Mail\Model\RepliedMessageData;
 use OCA\Mail\Service\AutoCompletion\AddressCollector;
-use OCA\TwoFactorAdmin\Listener\IListener;
 use OCP\EventDispatcher\Event;
+use OCP\EventDispatcher\IEventListener;
 use OCP\ILogger;
 use PHPUnit\Framework\MockObject\MockObject;
 
 class AddressCollectionListenerTest extends TestCase {
+
+	/** @var IUserPreferences|MockObject */
+	private $preferences;
 
 	/** @var AddressCollector|MockObject */
 	private $addressCollector;
@@ -47,16 +51,18 @@ class AddressCollectionListenerTest extends TestCase {
 	/** @var ILogger|MockObject */
 	private $logger;
 
-	/** @var IListener */
+	/** @var IEventListener */
 	private $listener;
 
 	protected function setUp(): void {
 		parent::setUp();
 
+		$this->preferences = $this->createMock(IUserPreferences::class);
 		$this->addressCollector = $this->createMock(AddressCollector::class);
 		$this->logger = $this->createMock(ILogger::class);
 
 		$this->listener = new AddressCollectionListener(
+			$this->preferences,
 			$this->addressCollector,
 			$this->logger
 		);
@@ -73,6 +79,18 @@ class AddressCollectionListenerTest extends TestCase {
 		$this->addToAssertionCount(1);
 	}
 
+	public function testHandleOptOut() {
+		$event = $this->createMock(MessageSentEvent::class);
+		$this->preferences->expects($this->once())
+			->method('getPreference')
+			->with('collect-data', 'true')
+			->willReturn('false');
+		$this->addressCollector->expects($this->never())
+			->method('addAddresses');
+
+		$this->listener->handle($event);
+	}
+
 	public function testHandle() {
 		/** @var Account|MockObject $account */
 		$account = $this->createMock(Account::class);
@@ -82,6 +100,10 @@ class AddressCollectionListenerTest extends TestCase {
 		$repliedMessageData = $this->createMock(RepliedMessageData::class);
 		/** @var IMessage|MockObject $message */
 		$message = $this->createMock(IMessage::class);
+		$this->preferences->expects($this->once())
+			->method('getPreference')
+			->with('collect-data', 'true')
+			->willReturn('true');
 		/** @var Horde_Mime_Mail|MockObject $mail */
 		$mail = $this->createMock(Horde_Mime_Mail::class);
 		$event = new MessageSentEvent(

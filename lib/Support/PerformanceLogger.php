@@ -21,27 +21,30 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-namespace OCA\Mail\IMAP\Search;
+namespace OCA\Mail\Support;
 
-use Horde_Imap_Client_Search_Query;
-use Horde_Imap_Client_Socket;
+use OCP\AppFramework\Utility\ITimeFactory;
+use OCP\ILogger;
 
-class SearchStrategyFactory {
+class PerformanceLogger {
 
-	public function getStrategy(Horde_Imap_Client_Socket $client,
-								string $mailbox,
-								Horde_Imap_Client_Search_Query $query,
-								?int $cursor): ISearchStrategy {
-		if (!$client->capability->query('SORT') && 'ALL' === $query->__toString()) {
-			return new FullScanSearchStrategy($client, $mailbox, $cursor);
-		}
+	/** @var ITimeFactory */
+	private $timeFactory;
 
-		return new ImapSortSearchStrategy(
-			$client,
-			$mailbox,
-			$query,
-			$cursor,
-			new FullScanSearchStrategy($client, $mailbox, $cursor)
+	/** @var ILogger */
+	private $logger;
+
+	public function __construct(ITimeFactory $timeFactory,
+								ILogger $logger) {
+		$this->timeFactory = $timeFactory;
+		$this->logger = $logger;
+	}
+
+	public function start(string $task): PerformanceLoggerTask {
+		return new PerformanceLoggerTask(
+			$task,
+			$this->timeFactory,
+			$this->logger
 		);
 	}
 

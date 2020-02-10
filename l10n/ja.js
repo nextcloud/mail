@@ -78,6 +78,7 @@ OC.L10N.register(
     "Import into calendar" : "カレンダーにインポート",
     "Download attachment" : "添付ファイルをダウンロード",
     "Save to Files" : "ファイルに保存",
+    "Unnamed" : "名称未設定",
     "Choose a folder to store the attachment in" : "添付ファイルを保存するフォルダーを選択",
     "Save all to Files" : "すべてファイルに保存",
     "Choose a folder to store the attachments in" : "添付ファイルを保存するフォルダを選択してください",

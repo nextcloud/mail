@@ -78,6 +78,7 @@ OC.L10N.register(
     "Import into calendar" : "Egutegian inportatu",
     "Download attachment" : "Eranskina jaitsi",
     "Save to Files" : "Fitxategitan gorde",
+    "Unnamed" : "Izen gabekoa",
     "Choose a folder to store the attachment in" : "Hautatu karpeta bat eranskina gordetzeko",
     "Save all to Files" : "Dena fitxategitan gorde",
     "Choose a folder to store the attachments in" : "Aukeratu karpeta bat erantsitako fitxategiak gordetzeko",

@@ -1,11 +1,7 @@
-<?php
-
-declare(strict_types=1);
-
-/**
- * @copyright 2018 Christoph Wurst <christoph@winzerhof-wurst.at>
+/*
+ * @copyright 2020 Christoph Wurst <christoph@winzerhof-wurst.at>
  *
- * @author 2018 Christoph Wurst <christoph@winzerhof-wurst.at>
+ * @author 2020 Christoph Wurst <christoph@winzerhof-wurst.at>
  *
  * @license GNU AGPL version 3 or any later version
  *
@@ -23,17 +19,16 @@ declare(strict_types=1);
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-namespace OCA\Mail\Http;
-
-use OCP\AppFramework\Http;
-use OCP\AppFramework\Http\JSONResponse;
-
-class JSONErrorResponse extends JSONResponse {
-
-	public function __construct($data = array(), int $statusCode = Http::STATUS_OK) {
-		parent::__construct($data, $statusCode);
-
-		$this->addHeader('x-mail-error', 'true');
+/**
+ * @param {Error} error
+ * @param {object} matches
+ */
+export const matchError = async (error, matches) => {
+	if (error.name in matches) {
+		return await Promise.resolve(matches[error.name](error))
 	}
-
+	if ('default' in matches) {
+		return await Promise.resolve(matches['default'](error))
+	}
+	throw new Error('unhandled error in match: ' + error.name)
 }

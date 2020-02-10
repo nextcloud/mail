@@ -49,11 +49,12 @@
 </template>
 
 <script>
-import MessageAttachment from './MessageAttachment'
-import Logger from '../logger'
+import {getFilePickerBuilder} from '@nextcloud/dialogs'
 import {parseUid} from '../util/EnvelopeUidParser'
 import {saveAttachmentsToFiles} from '../service/AttachmentService'
-import {FilePicker} from '@nextcloud/dialogs'
+
+import MessageAttachment from './MessageAttachment'
+import Logger from '../logger'
 
 export default {
 	name: 'MessageAttachments',
@@ -78,23 +79,20 @@ export default {
 	},
 	methods: {
 		saveAll() {
-			const pickDestination = () => {
-				return new Promise((res, rej) => {
-					FilePicker(
-						t('mail', 'Choose a folder to store the attachments in'),
-						res,
-						false,
-						'httpd/unix-directory',
-						true
-					)
-				})
-			}
+			const picker = getFilePickerBuilder(t('mail', 'Choose a folder to store the attachments in'))
+				.setMultiSelect(false)
+				.addMimeTypeFilter('httpd/unix-directory')
+				.setModal(true)
+				.setType(1)
+				.build()
+
 			const saveAttachments = (accountId, folderId, messageId) => directory => {
 				return saveAttachmentsToFiles(accountId, folderId, messageId, directory)
 			}
 			const {accountId, folderId, id} = parseUid(this.$route.params.messageUid)
 
-			return pickDestination()
+			return picker
+				.pick()
 				.then(dest => {
 					this.savingToCloud = true
 					return dest

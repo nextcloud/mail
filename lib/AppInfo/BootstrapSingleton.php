@@ -48,7 +48,7 @@ use OCA\Mail\Service\Group\IGroupService;
 use OCA\Mail\Service\Group\NextcloudGroupService;
 use OCA\Mail\Service\Group\ContactsGroupService;
 use OCA\Mail\Service\MailManager;
-use OCA\Mail\Service\MailSearch;
+use OCA\Mail\Service\Search\MailSearch;
 use OCA\Mail\Service\MailTransmission;
 use OCA\Mail\Service\UserPreferenceSevice;
 use OCP\AppFramework\IAppContainer;

@@ -5,9 +5,6 @@ php:
   - 7.2
   - 7.3
   - 7.4
-jobs:
-  allow_failures:
-  - php: nightly
 
 services:
   - docker
@@ -42,6 +39,8 @@ matrix:
     - php: nightly
       env: "DB=sqlite PATCH_VERSION_CHECK=TRUE"
   fast_finish: true
+  allow_failures:
+    - php: nightly
 
 branches:
   only:

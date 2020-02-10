@@ -69,8 +69,8 @@ class SimpleMailboxSync implements ISyncStrategy {
 	 * @param Horde_Imap_Client_Data_Sync $hordeSync
 	 * @return IMAPMessage[]
 	 */
-	public function getVanishedMessages(Horde_Imap_Client_Base $imapClient,
-										Request $syncRequest, Horde_Imap_Client_Data_Sync $hordeSync): array {
+	public function getVanishedMessageUids(Horde_Imap_Client_Base $imapClient,
+										   Request $syncRequest, Horde_Imap_Client_Data_Sync $hordeSync): array {
 		return $hordeSync->vanisheduids->ids;
 	}
 

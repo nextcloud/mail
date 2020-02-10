@@ -60,6 +60,7 @@ OC.L10N.register(
     "Import into calendar" : "Importer til kalender",
     "Download attachment" : "Last ned vedlegg",
     "Save to Files" : "Lagre i Filer",
+    "Unnamed" : "Uten navn",
     "Choose a folder to store the attachment in" : "Velg en mappe å lagre vedlegget i",
     "Save all to Files" : "Lagre alle i Filer",
     "Choose a folder to store the attachments in" : "Velg en mappe å lagre vedleggene i",

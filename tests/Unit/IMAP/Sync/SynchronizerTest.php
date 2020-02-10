@@ -1,4 +1,4 @@
-<?php
+<?php declare(strict_types=1);
 
 /**
  * @author Christoph Wurst <christoph@winzerhof-wurst.at>
@@ -30,14 +30,14 @@ use OCA\Mail\IMAP\Sync\Request;
 use OCA\Mail\IMAP\Sync\Response;
 use OCA\Mail\IMAP\Sync\SimpleMailboxSync;
 use OCA\Mail\IMAP\Sync\Synchronizer;
-use PHPUnit_Framework_MockObject_MockObject;
+use PHPUnit\Framework\MockObject\MockObject;
 
 class SynchronizerTest extends TestCase {
 
-	/** @var SimpleMailboxSync|PHPUnit_Framework_MockObject_MockObject */
+	/** @var SimpleMailboxSync|MockObject */
 	private $simpleSync;
 
-	/** @var FavouritesMailboxSync|PHPUnit_Framework_MockObject_MockObject */
+	/** @var FavouritesMailboxSync|MockObject */
 	private $favSync;
 
 	/** @var Synchronizer */
@@ -83,7 +83,7 @@ class SynchronizerTest extends TestCase {
 			->willReturn($flagged);
 		$newMessages = [];
 		$changedMessages = [];
-		$vanishedMessages = [4, 5];
+		$vanishedMessageUids = [4, 5];
 		$sync->expects($this->once())
 			->method('getNewMessages')
 			->with($imapClient, $request, $hordeSync)
@@ -93,14 +93,10 @@ class SynchronizerTest extends TestCase {
 			->with($imapClient, $request, $hordeSync)
 			->willReturn($changedMessages);
 		$sync->expects($this->once())
-			->method('getVanishedMessages')
+			->method('getVanishedMessageUids')
 			->with($imapClient, $request, $hordeSync)
-			->willReturn($vanishedMessages);
-		$imapClient->expects($this->once())
-			->method('getSyncToken')
-			->with($this->equalTo('inbox'))
-			->willReturn('54321');
-		$expected = new Response('54321', $newMessages, $changedMessages, $vanishedMessages);
+			->willReturn($vanishedMessageUids);
+		$expected = new Response($newMessages, $changedMessages, $vanishedMessageUids);
 
 		$response = $this->synchronizer->sync($imapClient, $request);
 
