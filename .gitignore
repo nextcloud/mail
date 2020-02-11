@@ -1,6 +1,8 @@
 # Composer
 composer.phar
 /vendor/
+/translationfiles/templates/mail.pot
+/translationfiles/templates/src.pot
 
 # Mac OS
 .DS_Store

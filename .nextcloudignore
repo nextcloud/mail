@@ -31,6 +31,7 @@
 .scrutinizer.yml
 /src
 /tests
+/translationfiles
 .travis.yml
 /vendor/bin
 /webpack.*

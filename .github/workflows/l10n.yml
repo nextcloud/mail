@@ -1,0 +1,19 @@
+name: Lint
+on: pull_request
+
+jobs:
+  l10n-extract-check:
+    runs-on: ubuntu-latest
+    name: L10n check
+    steps:
+    - uses: actions/checkout@master
+    - name: Set up Node
+      uses: actions/setup-node@v1
+      with:
+        node-version: 12.x
+    - name: npm install
+      run: npm ci
+    - name: extract l10n files
+      run: npm run l10n:extract
+    - name: Check webpack build changes
+      run: bash -c "[[ ! \"`git status --porcelain translationfiles/templates`\" ]] || ( echo 'Uncommited l10n changes. Run `npm l10n:extract`.' && git status && exit 1 )"

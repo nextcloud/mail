@@ -1,0 +1,634 @@
+msgid ""
+msgstr ""
+"Content-Type: text/plain; charset=UTF-8\n"
+
+#: src/components/NavigationFolder.vue:140
+msgid "{total} message"
+msgid_plural "{total} messages"
+msgstr[0] ""
+msgstr[1] ""
+
+#: src/components/NavigationFolder.vue:144
+msgid "{unread} unread of {total}"
+msgid_plural "{unread} unread of {total}"
+msgstr[0] ""
+msgstr[1] ""
+
+#: src/service/NotificationService.js:80
+msgid ""
+"%n new message \n"
+"from {from}"
+msgid_plural ""
+"%n new messages \n"
+"from {from}"
+msgstr[0] ""
+msgstr[1] ""
+
+#: src/service/NotificationService.js:75
+msgctxt ""
+"{from}\n"
+"{subject}"
+msgid ""
+"{from}\n"
+"{subject}"
+msgstr ""
+
+#: src/components/itinerary/TrainReservation.vue:98
+msgctxt "{trainNr} from {depStation} to {arrStation}"
+msgid "{trainNr} from {depStation} to {arrStation}"
+msgstr ""
+
+#: src/components/settings/ProvisioningSettings.vue:246
+msgctxt "* %USERID% and %EMAIL% will be replaced with the user's UID and email"
+msgid "* %USERID% and %EMAIL% will be replaced with the user's UID and email"
+msgstr ""
+
+#: src/components/Composer.vue:43
+msgctxt "+ CC/BCC"
+msgid "+ CC/BCC"
+msgstr ""
+
+#: src/components/SignatureSettings.vue:26
+msgctxt "A signature is added to the text of new messages and replies."
+msgid "A signature is added to the text of new messages and replies."
+msgstr ""
+
+#: src/views/AccountSettings.vue:6
+msgctxt "Account settings"
+msgid "Account settings"
+msgstr ""
+
+#: src/components/Composer.vue:145
+msgctxt "Add attachment from Files"
+msgid "Add attachment from Files"
+msgstr ""
+
+#: src/components/NavigationAccount.vue:41
+msgctxt "Add folder"
+msgid "Add folder"
+msgstr ""
+
+#: src/components/AppSettingsMenu.vue:4
+msgctxt "Add mail account"
+msgid "Add mail account"
+msgstr ""
+
+#: src/components/NavigationFolder.vue:55
+msgctxt "Add subfolder"
+msgid "Add subfolder"
+msgstr ""
+
+#: src/l10n/MailboxTranslator.js:27
+msgctxt "All"
+msgid "All"
+msgstr ""
+
+#: src/l10n/MailboxTranslator.js:44
+msgctxt "All inboxes"
+msgid "All inboxes"
+msgstr ""
+
+#: src/components/AppSettingsMenu.vue:10
+msgctxt "Allow the app to collect data about your interactions. Based on this data, the app will adapt to your preferences. The data will only be stored locally."
+msgid "Allow the app to collect data about your interactions. Based on this data, the app will adapt to your preferences. The data will only be stored locally."
+msgstr ""
+
+#: src/l10n/MailboxTranslator.js:31
+msgctxt "Archive"
+msgid "Archive"
+msgstr ""
+
+#: src/components/Envelope.vue:105
+msgctxt "Blind copy recipients only"
+msgid "Blind copy recipients only"
+msgstr ""
+
+#: src/components/ComposerAttachments.vue:129
+#: src/components/ComposerAttachments.vue:132
+msgctxt "Choose a file to add as attachment"
+msgid "Choose a file to add as attachment"
+msgstr ""
+
+#: src/components/MessageAttachment.vue:150
+msgctxt "Choose a folder to store the attachment in"
+msgid "Choose a folder to store the attachment in"
+msgstr ""
+
+#: src/components/MessageAttachments.vue:82
+msgctxt "Choose a folder to store the attachments in"
+msgid "Choose a folder to store the attachments in"
+msgstr ""
+
+#: src/components/NavigationAccountExpandCollapse.vue:45
+msgctxt "Collapse folders"
+msgid "Collapse folders"
+msgstr ""
+
+#: src/views/KeyboardShortcuts.vue:13
+msgctxt "Compose new message"
+msgid "Compose new message"
+msgstr ""
+
+#: src/components/AccountForm.vue:295
+msgctxt "Connect"
+msgid "Connect"
+msgstr ""
+
+#: src/views/Setup.vue:6
+msgctxt "Connect your mail account"
+msgid "Connect your mail account"
+msgstr ""
+
+#: src/components/itinerary/EventReservation.vue:136
+#: src/components/itinerary/FlightReservation.vue:129
+#: src/components/itinerary/TrainReservation.vue:141
+msgctxt "Could not create event"
+msgid "Could not create event"
+msgstr ""
+
+#: src/util/ErrorMessageFactory.js:35
+#: src/util/ErrorMessageFactory.js:38
+msgctxt "Could not load {tag}{name}{endtag}"
+msgid "Could not load {tag}{name}{endtag}"
+msgstr ""
+
+#: src/components/NewMessageDetail.vue:233
+msgctxt "Could not load original message"
+msgid "Could not load original message"
+msgstr ""
+
+#: src/util/ErrorMessageFactory.js:56
+msgctxt "Could not load the desired message"
+msgid "Could not load the desired message"
+msgstr ""
+
+#: src/util/ErrorMessageFactory.js:57
+msgctxt "Could not load the message"
+msgid "Could not load the message"
+msgstr ""
+
+#: src/components/NewMessageDetail.vue:190
+msgctxt "Could not load your draft"
+msgid "Could not load your draft"
+msgstr ""
+
+#: src/components/Message.vue:186
+#: src/util/ErrorMessageFactory.js:55
+msgctxt "Could not load your message"
+msgid "Could not load your message"
+msgstr ""
+
+#: src/components/Envelope.vue:34
+#: src/components/Message.vue:50
+#: src/components/SignatureSettings.vue:41
+#: src/views/KeyboardShortcuts.vue:34
+msgctxt "Delete"
+msgid "Delete"
+msgstr ""
+
+#: src/components/NavigationAccount.vue:50
+msgctxt "Delete account"
+msgid "Delete account"
+msgstr ""
+
+#: src/components/Composer.vue:138
+msgctxt "Draft saved"
+msgid "Draft saved"
+msgstr ""
+
+#: src/components/Envelope.vue:23
+msgctxt "Draft: "
+msgid "Draft: "
+msgstr ""
+
+#: src/l10n/MailboxTranslator.js:35
+msgctxt "Drafts"
+msgid "Drafts"
+msgstr ""
+
+#: src/components/NavigationAccount.vue:38
+msgctxt "Edit account"
+msgid "Edit account"
+msgstr ""
+
+#: src/components/settings/ProvisionPreview.vue:29
+msgctxt "Email: {email}"
+msgid "Email: {email}"
+msgstr ""
+
+#: src/components/MessageAttachment.vue:121
+#: src/components/MessageAttachment.vue:127
+msgctxt "Embedded message"
+msgid "Embedded message"
+msgstr ""
+
+#: src/components/Composer.vue:152
+msgctxt "Enable formatting"
+msgid "Enable formatting"
+msgstr ""
+
+#: src/components/Composer.vue:170
+msgctxt "Error sending your message"
+msgid "Error sending your message"
+msgstr ""
+
+#: src/components/itinerary/EventReservation.vue:132
+#: src/components/itinerary/FlightReservation.vue:125
+#: src/components/itinerary/TrainReservation.vue:137
+msgctxt "Event imported into {calendar}"
+msgid "Event imported into {calendar}"
+msgstr ""
+
+#: src/l10n/MailboxTranslator.js:39
+msgctxt "Favorites"
+msgid "Favorites"
+msgstr ""
+
+#: src/components/itinerary/FlightReservation.vue:100
+msgctxt "Flight {flightNr} from {depAirport} to {arrAirport}"
+msgid "Flight {flightNr} from {depAirport} to {arrAirport}"
+msgstr ""
+
+#: src/components/Message.vue:44
+msgctxt "Forward"
+msgid "Forward"
+msgstr ""
+
+#: src/components/settings/ProvisioningSettings.vue:48
+msgctxt "General"
+msgid "General"
+msgstr ""
+
+#: src/components/Composer.vue:172
+msgctxt "Go back"
+msgid "Go back"
+msgstr ""
+
+#: src/components/settings/AdminSettings.vue:28
+msgctxt "Here you can find instance-wide settings. User specific settings are found in the app itself (bottom-left corner)."
+msgid "Here you can find instance-wide settings. User specific settings are found in the app itself (bottom-left corner)."
+msgstr ""
+
+#: src/components/settings/ProvisioningSettings.vue:62
+msgctxt "IMAP"
+msgid "IMAP"
+msgstr ""
+
+#: src/components/AccountForm.vue:66
+msgctxt "IMAP Security"
+msgid "IMAP Security"
+msgstr ""
+
+#: src/components/AccountForm.vue:56
+msgctxt "IMAP Settings"
+msgid "IMAP Settings"
+msgstr ""
+
+#: src/components/settings/ProvisionPreview.vue:31
+msgctxt "IMAP: {user} on {host}:{port} ({ssl} encryption)"
+msgid "IMAP: {user} on {host}:{port} ({ssl} encryption)"
+msgstr ""
+
+#: src/components/itinerary/CalendarImport.vue:29
+msgctxt "Import into {calendar}"
+msgid "Import into {calendar}"
+msgstr ""
+
+#: src/l10n/MailboxTranslator.js:46
+msgctxt "Inbox"
+msgid "Inbox"
+msgstr ""
+
+#: src/components/Itinerary.vue:26
+msgctxt "Itinerary for {type} is not supported yet"
+msgid "Itinerary for {type} is not supported yet"
+msgstr ""
+
+#: src/l10n/MailboxTranslator.js:51
+msgctxt "Junk"
+msgid "Junk"
+msgstr ""
+
+#: src/components/AppSettingsMenu.vue:53
+#: src/views/KeyboardShortcuts.vue:6
+msgctxt "Keyboard shortcuts"
+msgid "Keyboard shortcuts"
+msgstr ""
+
+#: src/components/NavigationFolder.vue:156
+msgctxt "Loading …"
+msgid "Loading …"
+msgstr ""
+
+#: src/components/AppSettingsMenu.vue:59
+msgctxt "Looking for a way to encrypt your emails? Install the Mailvelope browser extension!"
+msgid "Looking for a way to encrypt your emails? Install the Mailvelope browser extension!"
+msgstr ""
+
+#: src/components/settings/AdminSettings.vue:24
+msgctxt "Mail app"
+msgid "Mail app"
+msgstr ""
+
+#: src/views/AccountSettings.vue:20
+msgctxt "Mail server"
+msgid "Mail server"
+msgstr ""
+
+#: src/components/NavigationFolder.vue:51
+msgctxt "Mark all messages of this folder as read"
+msgid "Mark all messages of this folder as read"
+msgstr ""
+
+#: src/components/Envelope.vue:32
+#: src/components/Message.vue:47
+msgctxt "Mark read"
+msgid "Mark read"
+msgstr ""
+
+#: src/components/Envelope.vue:32
+#: src/components/Message.vue:47
+msgctxt "Mark unread"
+msgid "Mark unread"
+msgstr ""
+
+#: src/components/Composer.vue:176
+msgctxt "Message sent!"
+msgid "Message sent!"
+msgstr ""
+
+#: src/components/NavigationAccount.vue:47
+msgctxt "Move down"
+msgid "Move down"
+msgstr ""
+
+#: src/components/NavigationAccount.vue:44
+msgctxt "Move Up"
+msgid "Move Up"
+msgstr ""
+
+#: src/views/KeyboardShortcuts.vue:17
+msgctxt "Newer message"
+msgid "Newer message"
+msgstr ""
+
+#: src/service/NotificationService.js:88
+msgctxt "Nextcloud Mail"
+msgid "Nextcloud Mail"
+msgstr ""
+
+#: src/components/Composer.vue:66
+#: src/components/Composer.vue:88
+msgctxt "No contacts found."
+msgid "No contacts found."
+msgstr ""
+
+#: src/components/NoMessageSelected.vue:25
+msgctxt "No message selected"
+msgid "No message selected"
+msgstr ""
+
+#: src/components/EmptyFolder.vue:4
+msgctxt "No messages in this folder"
+msgid "No messages in this folder"
+msgstr ""
+
+#: src/components/AccountForm.vue:167
+#: src/components/AccountForm.vue:81
+#: src/components/settings/ProvisioningSettings.vue:112
+#: src/components/settings/ProvisioningSettings.vue:196
+msgctxt "None"
+msgid "None"
+msgstr ""
+
+#: src/views/KeyboardShortcuts.vue:21
+msgctxt "Older message"
+msgid "Older message"
+msgstr ""
+
+#: src/components/EditorSettings.vue:26
+msgctxt "Preferred writing mode for new messages and replies."
+msgid "Preferred writing mode for new messages and replies."
+msgstr ""
+
+#: src/views/KeyboardShortcuts.vue:47
+msgctxt "Refresh"
+msgid "Refresh"
+msgstr ""
+
+#: src/components/AppSettingsMenu.vue:48
+msgctxt "Register as application for mail links"
+msgid "Register as application for mail links"
+msgstr ""
+
+#: src/components/Message.vue:37
+msgctxt "Reply"
+msgid "Reply"
+msgstr ""
+
+#: src/components/Composer.vue:177
+msgctxt "Reply sent!"
+msgid "Reply sent!"
+msgstr ""
+
+#: src/components/Message.vue:41
+msgctxt "Reply to sender only"
+msgid "Reply to sender only"
+msgstr ""
+
+#: src/components/Error.vue:27
+msgctxt "Report this bug"
+msgid "Report this bug"
+msgstr ""
+
+#: src/components/itinerary/FlightReservation.vue:12
+msgctxt "Reservation {id}"
+msgid "Reservation {id}"
+msgstr ""
+
+#: src/components/Composer.vue:173
+msgctxt "Retry"
+msgid "Retry"
+msgstr ""
+
+#: src/components/AccountForm.vue:295
+msgctxt "Save"
+msgid "Save"
+msgstr ""
+
+#: src/components/MessageAttachments.vue:45
+msgctxt "Save all to Files"
+msgid "Save all to Files"
+msgstr ""
+
+#: src/components/SignatureSettings.vue:38
+msgctxt "Save signature"
+msgid "Save signature"
+msgstr ""
+
+#: src/components/Composer.vue:137
+msgctxt "Saving draft …"
+msgid "Saving draft …"
+msgstr ""
+
+#: src/views/KeyboardShortcuts.vue:39
+msgctxt "Search"
+msgid "Search"
+msgstr ""
+
+#: src/components/Composer.vue:274
+#: src/views/KeyboardShortcuts.vue:43
+msgctxt "Send"
+msgid "Send"
+msgstr ""
+
+#: src/l10n/MailboxTranslator.js:55
+msgctxt "Sent"
+msgid "Sent"
+msgstr ""
+
+#: src/components/NavigationAccountExpandCollapse.vue:45
+msgctxt "Show all folders"
+msgid "Show all folders"
+msgstr ""
+
+#: src/components/MessageHTMLBody.vue:6
+msgctxt "Show images from this\tsender"
+msgid "Show images from this\tsender"
+msgstr ""
+
+#: src/components/SignatureSettings.vue:24
+msgctxt "Signature"
+msgid "Signature"
+msgstr ""
+
+#: src/components/settings/ProvisioningSettings.vue:146
+msgctxt "SMTP"
+msgid "SMTP"
+msgstr ""
+
+#: src/components/AccountForm.vue:152
+msgctxt "SMTP Security"
+msgid "SMTP Security"
+msgstr ""
+
+#: src/components/AccountForm.vue:142
+msgctxt "SMTP Settings"
+msgid "SMTP Settings"
+msgstr ""
+
+#: src/components/settings/ProvisionPreview.vue:39
+msgctxt "SMTP: {user} on {host}:{port} ({ssl} encryption)"
+msgid "SMTP: {user} on {host}:{port} ({ssl} encryption)"
+msgstr ""
+
+#: src/views/KeyboardShortcuts.vue:8
+msgctxt "Speed up your Mail experience with these quick shortcuts."
+msgid "Speed up your Mail experience with these quick shortcuts."
+msgstr ""
+
+#: src/components/AccountForm.vue:182
+#: src/components/AccountForm.vue:96
+#: src/components/settings/ProvisioningSettings.vue:126
+#: src/components/settings/ProvisioningSettings.vue:210
+msgctxt "SSL/TLS"
+msgid "SSL/TLS"
+msgstr ""
+
+#: src/components/AccountForm.vue:111
+#: src/components/AccountForm.vue:197
+#: src/components/settings/ProvisioningSettings.vue:140
+#: src/components/settings/ProvisioningSettings.vue:224
+msgctxt "STARTTLS"
+msgid "STARTTLS"
+msgstr ""
+
+#: src/components/MessageHTMLBody.vue:4
+msgctxt "The images have been blocked to protect your privacy."
+msgid "The images have been blocked to protect your privacy."
+msgstr ""
+
+#: src/components/settings/AdminSettings.vue:25
+msgctxt "The mail app allows users to read mails on their IMAP accounts."
+msgid "The mail app allows users to read mails on their IMAP accounts."
+msgstr ""
+
+#: src/util/ErrorMessageFactory.js:41
+msgctxt "There was a problem loading {tag}{name}{endtag}"
+msgid "There was a problem loading {tag}{name}{endtag}"
+msgstr ""
+
+#: src/components/Composer.vue:107
+msgctxt "This message came from a noreply address so your reply will probably not be read."
+msgid "This message came from a noreply address so your reply will probably not be read."
+msgstr ""
+
+#: src/components/settings/ProvisioningSettings.vue:33
+msgctxt "This setting only makes most sense if you use the same user back-end for your organization's Nextcloud and mail server."
+msgid "This setting only makes most sense if you use the same user back-end for your organization's Nextcloud and mail server."
+msgstr ""
+
+#: src/views/KeyboardShortcuts.vue:26
+msgctxt "Toggle star"
+msgid "Toggle star"
+msgstr ""
+
+#: src/views/KeyboardShortcuts.vue:30
+msgctxt "Toggle unread"
+msgid "Toggle unread"
+msgstr ""
+
+#: src/components/itinerary/TrainReservation.vue:107
+msgctxt "Train from {depStation} to {arrStation}"
+msgid "Train from {depStation} to {arrStation}"
+msgstr ""
+
+#: src/l10n/MailboxTranslator.js:59
+msgctxt "Trash"
+msgid "Trash"
+msgstr ""
+
+#: src/views/Setup.vue:64
+msgctxt "Unexpected error during account creation"
+msgid "Unexpected error during account creation"
+msgstr ""
+
+#: src/components/MessageAttachment.vue:82
+msgctxt "Unnamed"
+msgid "Unnamed"
+msgstr ""
+
+#: src/components/Composer.vue:142
+msgctxt "Upload attachment"
+msgid "Upload attachment"
+msgstr ""
+
+#: src/components/ComposerAttachments.vue:33
+msgctxt "Uploading {percent}% …"
+msgid "Uploading {percent}% …"
+msgstr ""
+
+#: src/components/AppSettingsMenu.vue:34
+msgctxt "Use Gravatar and favicon avatars"
+msgid "Use Gravatar and favicon avatars"
+msgstr ""
+
+#: src/components/settings/ProvisioningSettings.vue:255
+msgctxt "With the settings above, the app will create account settings in the following way:"
+msgid "With the settings above, the app will create account settings in the following way:"
+msgstr ""
+
+#: src/components/Composer.vue:179
+msgctxt "Write another message"
+msgid "Write another message"
+msgstr ""
+
+#: src/components/EditorSettings.vue:24
+msgctxt "Writing mode"
+msgid "Writing mode"
+msgstr ""
+
+#: src/components/settings/ProvisioningSettings.vue:27
+msgctxt "You can configure a template for account settings, from which all users will get an account provisioned from."
+msgid "You can configure a template for account settings, from which all users will get an account provisioned from."
+msgstr ""
