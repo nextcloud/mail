@@ -15,5 +15,5 @@ jobs:
       run: npm ci
     - name: extract l10n files
       run: npm run l10n:extract
-    - name: Check webpack build changes
+    - name: Check l10n file changes
       run: bash -c "[[ ! \"`git status --porcelain translationfiles/templates`\" ]] || ( echo 'Uncommited l10n changes. Run `npm l10n:extract`.' && git status && exit 1 )"

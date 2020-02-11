@@ -90,7 +90,6 @@
     "eslint-plugin-vue": "^6.1.2",
     "file-loader": "^5.0.2",
     "gettext-extractor": "^3.5.2",
-    "i18next": "^19.1.0",
     "jsdom": "^16.1.0",
     "jsdom-global": "^3.0.2",
     "mocha": "^6.2.2",
