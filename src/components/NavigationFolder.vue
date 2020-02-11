@@ -42,7 +42,7 @@
 
 				<!-- TODO: make *mark as read* available for all folders once there is more than one action -->
 				<ActionButton
-					v-if="!account.isUnified"
+					v-if="!account.isUnified && folder.specialRole !== 'flagged'"
 					icon="icon-checkmark"
 					:title="t('mail', 'Mark all as read')"
 					:disabled="loadingMarkAsRead"
@@ -51,7 +51,11 @@
 					{{ t('mail', 'Mark all messages of this folder as read') }}
 				</ActionButton>
 
-				<ActionInput v-if="!account.isUnified && folder.specialRole !== 'flagged'" icon="icon-add" @submit="createFolder">
+				<ActionInput
+					v-if="!account.isUnified && folder.specialRole !== 'flagged'"
+					icon="icon-add"
+					@submit="createFolder"
+				>
 					{{ t('mail', 'Add subfolder') }}
 				</ActionInput>
 			</template>
