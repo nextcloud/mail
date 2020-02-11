@@ -173,8 +173,7 @@
 		<button class="button primary" @click="onSend">{{ t('mail', 'Retry') }}</button>
 	</div>
 	<div v-else class="emptycontent">
-		<h2 v-if="!isReply">{{ t('mail', 'Message sent!') }}</h2>
-		<h2 v-else>{{ t('mail', 'Reply sent!') }}</h2>
+		<h2>{{ t('mail', 'Message sent!') }}</h2>
 		<button v-if="!isReply" class="button primary" @click="reset">
 			{{ t('mail', 'Write another message') }}
 		</button>
