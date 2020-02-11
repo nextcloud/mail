@@ -88,7 +88,7 @@ class SyncService {
 				$response = $this->runPartialSync($account, $mailbox, $criteria, $knownUids);
 			}
 		} catch (Throwable $e) {
-			throw new ServiceException('Sync failed', 0, $e);
+			throw new ServiceException('Sync failed: ' . $e->getMessage(), 0, $e);
 		} finally {
 			if ($criteria & Horde_Imap_Client::SYNC_VANISHEDUIDS) {
 				$this->mailboxMapper->unlockFromVanishedSync($mailbox);
