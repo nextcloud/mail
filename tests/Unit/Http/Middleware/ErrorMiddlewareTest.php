@@ -26,6 +26,7 @@ namespace OCA\Mail\Tests\Unit\Http\Middleware;
 
 use ChristophWurst\Nextcloud\Testing\TestCase;
 use Exception;
+use Horde_Imap_Client_Exception;
 use OCA\Mail\Exception\NotImplemented;
 use OCA\Mail\Exception\ServiceException;
 use OCA\Mail\Http\Middleware\ErrorMiddleware;
@@ -36,17 +37,18 @@ use OCP\AppFramework\Http\JSONResponse;
 use OCP\AppFramework\Utility\IControllerMethodReflector;
 use OCP\IConfig;
 use OCP\ILogger;
-use PHPUnit_Framework_MockObject_MockObject;
+use PHPUnit\Framework\MockObject\MockObject;
+use Throwable;
 
 class ErrorMiddlewareTest extends TestCase {
 
-	/** @var IConfig|PHPUnit_Framework_MockObject_MockObject */
+	/** @var IConfig|MockObject */
 	private $config;
 
-	/** @var ILogger|PHPUnit_Framework_MockObject_MockObject */
+	/** @var ILogger|MockObject */
 	private $logger;
 
-	/** @var IControllerMethodReflector|PHPUnit_Framework_MockObject_MockObject */
+	/** @var IControllerMethodReflector|MockObject */
 	private $reflector;
 
 	/** @var ErrorMiddleware */
@@ -59,8 +61,11 @@ class ErrorMiddlewareTest extends TestCase {
 		$this->logger = $this->createMock(ILogger::class);
 		$this->reflector = $this->createMock(IControllerMethodReflector::class);
 
-		$this->middleware = new ErrorMiddleware($this->config, $this->logger,
-			$this->reflector);
+		$this->middleware = new ErrorMiddleware(
+			$this->config,
+			$this->logger,
+			$this->reflector
+		);
 	}
 
 	public function testDoesNotChangeSuccessfulResponses() {
@@ -123,6 +128,42 @@ class ErrorMiddlewareTest extends TestCase {
 		$response = $this->middleware->afterException($controller, 'index', $outer);
 
 		$this->assertInstanceOf(JSONResponse::class, $response);
+	}
+
+	public function temporaryExceptionsData(): array {
+		return [
+			[new ServiceException('not temporary'), false],
+			[new ServiceException('temporary', 0, new Horde_Imap_Client_Exception(null, Horde_Imap_Client_Exception::DISCONNECT)), true],
+			[new ServiceException('temporary', 0, new Horde_Imap_Client_Exception(null, Horde_Imap_Client_Exception::SERVER_CONNECT)), false],
+			[new ServiceException('temporary', 0, new Horde_Imap_Client_Exception(null, Horde_Imap_Client_Exception::SERVER_READERROR)), true],
+			[new ServiceException('temporary', 0, new Horde_Imap_Client_Exception(null, Horde_Imap_Client_Exception::SERVER_WRITEERROR)), true],
+		];
+	}
+
+	/**
+	 * @dataProvider temporaryExceptionsData
+	 */
+	public function testHandlesTemporaryErrors(Throwable $ex, bool $temporary): void {
+		$controller = $this->createMock(Controller::class);
+		$this->reflector->expects($this->once())
+			->method('hasAnnotation')
+			->willReturn(true);
+		$this->logger->expects($this->once())
+			->method('logException')
+			->with(
+				$ex,
+				[
+					'level' => $temporary ? ILogger::WARN : ILogger::ERROR,
+				]
+			);
+
+		$response = $this->middleware->afterException($controller, 'index', $ex);
+
+		$this->assertInstanceOf(JSONResponse::class, $response);
+		$this->assertSame(
+			$temporary ? Http::STATUS_SERVICE_UNAVAILABLE : Http::STATUS_INTERNAL_SERVER_ERROR,
+			$response->getStatus()
+		);
 	}
 
 }

@@ -27,8 +27,10 @@ declare(strict_types=1);
 namespace OCA\Mail\Http\Middleware;
 
 use Exception;
+use Horde_Imap_Client_Exception;
 use OCA\Mail\Exception\ClientException;
 use OCA\Mail\Exception\NotImplemented;
+use OCA\Mail\Exception\ServiceException;
 use OCA\Mail\Http\JsonResponse;
 use OCP\AppFramework\Controller;
 use OCP\AppFramework\Db\DoesNotExistException;
@@ -38,6 +40,7 @@ use OCP\AppFramework\Middleware;
 use OCP\AppFramework\Utility\IControllerMethodReflector;
 use OCP\IConfig;
 use OCP\ILogger;
+use Throwable;
 
 class ErrorMiddleware extends Middleware {
 
@@ -87,18 +90,44 @@ class ErrorMiddleware extends Middleware {
 			return JSONResponse::fail([], Http::STATUS_NOT_IMPLEMENTED);
 		}
 
-		$this->logger->logException($exception);
+		$temporary = $this->isTemporaryException($exception);
+		$this->logger->logException($exception, [
+			'level' => $temporary ? ILogger::WARN : ILogger::ERROR,
+		]);
 		if ($this->config->getSystemValue('debug', false)) {
 			return JsonResponse::errorFromThrowable(
 				$exception,
-				Http::STATUS_INTERNAL_SERVER_ERROR,
+				$temporary ? Http::STATUS_SERVICE_UNAVAILABLE : Http::STATUS_INTERNAL_SERVER_ERROR,
 				[
 					'debug' => true,
 				]
 			);
 		}
 
-		return JsonResponse::error("Server error");
+		return JsonResponse::error(
+			"Server error",
+			$temporary ? Http::STATUS_SERVICE_UNAVAILABLE : Http::STATUS_INTERNAL_SERVER_ERROR
+		);
+	}
+
+	private function isTemporaryException(Throwable $ex): bool {
+		if ($ex instanceof ServiceException && $ex->getPrevious() !== null) {
+			$ex = $ex->getPrevious();
+		}
+
+		if ($ex instanceof Horde_Imap_Client_Exception) {
+			return in_array(
+				$ex->getCode(),
+				[
+					Horde_Imap_Client_Exception::DISCONNECT,
+					Horde_Imap_Client_Exception::SERVER_READERROR,
+					Horde_Imap_Client_Exception::SERVER_WRITEERROR,
+				],
+				true
+			);
+		}
+
+		return false;
 	}
 
 }
