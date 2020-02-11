@@ -81,7 +81,7 @@ import ActionText from '@nextcloud/vue/dist/Components/ActionText'
 import {getFolderStats} from '../service/FolderService'
 import logger from '../logger'
 import {translatePlural as n} from '@nextcloud/l10n'
-import {translate as translateMailboxName} from '../l10n/MailboxTranslator'
+import {translate as translateMailboxName} from '../i18n/MailboxTranslator'
 
 export default {
 	name: 'NavigationFolder',
