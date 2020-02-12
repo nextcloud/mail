@@ -17,6 +17,8 @@ OC.L10N.register(
     "Host" : "باش ئاپپارات",
     "Port" : "ئېغىز",
     "Search" : "Search",
-    "Refresh" : "يېڭىلا"
+    "Refresh" : "يېڭىلا",
+    "All" : "ھەممىسى",
+    "Favorites" : "يىغقۇچ"
 },
 "nplurals=1; plural=0;");

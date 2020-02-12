@@ -16,6 +16,8 @@ OC.L10N.register(
     "Host" : "ஓம்புனர்",
     "Port" : "துறை ",
     "Search" : "Search",
-    "Refresh" : "மீள் ஏற்றுக"
+    "Refresh" : "மீள் ஏற்றுக",
+    "All" : "எல்லாம்",
+    "Favorites" : "விருப்பங்கள்"
 },
 "nplurals=2; plural=(n != 1);");

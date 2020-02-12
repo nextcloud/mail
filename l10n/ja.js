@@ -53,7 +53,6 @@ OC.L10N.register(
     "Go back" : "戻る",
     "Retry" : "再試行",
     "Message sent!" : "へメッセージを送信しました！",
-    "Reply sent!" : "返信を送信！",
     "Write another message" : "他のメッセージを書く",
     "Send" : "送信",
     "Uploading {percent}% …" : "アップロード中 {percent}% …",

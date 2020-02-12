@@ -19,6 +19,8 @@
     "Host" : "Host",
     "Port" : "Port",
     "Search" : "Search",
-    "Refresh" : "Opfrëschen"
+    "Refresh" : "Opfrëschen",
+    "All" : "All",
+    "Favorites" : "Favoriten"
 },"pluralForm" :"nplurals=2; plural=(n != 1);"
 }

@@ -21,6 +21,8 @@ OC.L10N.register(
     "Host" : "Host",
     "Port" : "Port",
     "Search" : "Search",
-    "Refresh" : "Opfrëschen"
+    "Refresh" : "Opfrëschen",
+    "All" : "All",
+    "Favorites" : "Favoriten"
 },
 "nplurals=2; plural=(n != 1);");

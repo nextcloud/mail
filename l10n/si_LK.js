@@ -16,6 +16,8 @@ OC.L10N.register(
     "Host" : "සත්කාරකය",
     "Port" : "තොට",
     "Search" : "Search",
-    "Refresh" : "නැවුම් කරන්න"
+    "Refresh" : "නැවුම් කරන්න",
+    "All" : "සියල්ල",
+    "Favorites" : "Favorites"
 },
 "nplurals=2; plural=(n != 1);");

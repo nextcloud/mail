@@ -25,6 +25,8 @@ OC.L10N.register(
     "Host" : "হোস্ট",
     "Port" : "পোর্ট",
     "Search" : "Search",
-    "Refresh" : "নবোদ্যম"
+    "Refresh" : "নবোদ্যম",
+    "All" : "সবাই",
+    "Favorites" : "প্রিয়জন"
 },
 "nplurals=2; plural=(n != 1);");

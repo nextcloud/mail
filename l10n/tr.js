@@ -58,7 +58,6 @@ OC.L10N.register(
     "Go back" : "Geri Dön",
     "Retry" : "Yeniden Dene",
     "Message sent!" : "İleti gönderildi!",
-    "Reply sent!" : "Yanıt gönderildi!",
     "Write another message" : "Başka bir ileti gönder",
     "Send" : "Gönder",
     "Uploading {percent}% …" : "Yükleniyor %{percent} …",

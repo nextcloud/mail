@@ -20,6 +20,11 @@ OC.L10N.register(
     "Host" : "主機",
     "Port" : "連接埠",
     "Search" : "Search",
-    "Refresh" : "重新整理"
+    "Refresh" : "重新整理",
+    "All" : "所有",
+    "Favorites" : "最愛",
+    "Inbox" : "收件箱",
+    "Sent" : "發送",
+    "Trash" : "垃圾桶"
 },
 "nplurals=1; plural=0;");

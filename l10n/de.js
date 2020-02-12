@@ -58,7 +58,6 @@ OC.L10N.register(
     "Go back" : "Zurück",
     "Retry" : "Erneut versuchen",
     "Message sent!" : "Nachricht versandt!",
-    "Reply sent!" : "Antwort versendet!",
     "Write another message" : "Eine weitere Nachricht verfassen",
     "Send" : "Senden",
     "Uploading {percent}% …" : "Lade hoch ({percent}%)…",

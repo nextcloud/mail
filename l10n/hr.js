@@ -53,7 +53,6 @@ OC.L10N.register(
     "Go back" : "Natrag",
     "Retry" : "Pokušaj ponovno",
     "Message sent!" : "Poruka poslana!",
-    "Reply sent!" : "Odgovor poslan!",
     "Write another message" : "Napiši drugu poruku",
     "Send" : "Pošalji",
     "Uploading {percent}% …" : "Otpremanje {percent} %…",

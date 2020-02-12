@@ -14,6 +14,8 @@
     "Host" : "සත්කාරකය",
     "Port" : "තොට",
     "Search" : "Search",
-    "Refresh" : "නැවුම් කරන්න"
+    "Refresh" : "නැවුම් කරන්න",
+    "All" : "සියල්ල",
+    "Favorites" : "Favorites"
 },"pluralForm" :"nplurals=2; plural=(n != 1);"
 }

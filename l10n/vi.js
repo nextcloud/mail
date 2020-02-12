@@ -22,6 +22,11 @@ OC.L10N.register(
     "Host" : "Máy chủ",
     "Port" : "Cổng",
     "Search" : "Tìm",
-    "Refresh" : "Làm mới"
+    "Refresh" : "Làm mới",
+    "All" : "Tất cả",
+    "Archive" : "Lưu trữ",
+    "Favorites" : "Ưa thích",
+    "Sent" : "Đã gửi",
+    "Trash" : "Thùng rác"
 },
 "nplurals=1; plural=0;");

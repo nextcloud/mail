@@ -53,7 +53,6 @@ OC.L10N.register(
     "Go back" : "Назад",
     "Retry" : "Обидете се повторно",
     "Message sent!" : "Пораката е испратена!",
-    "Reply sent!" : "Одговорот е испратен!",
     "Write another message" : "Напиши друга порака",
     "Send" : "Прати",
     "Uploading {percent}% …" : "Прикачување {percent}% …",

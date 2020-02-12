@@ -58,7 +58,6 @@ OC.L10N.register(
     "Go back" : "Jít zpět",
     "Retry" : "Zkusit znovu",
     "Message sent!" : "Zpráva odeslána!",
-    "Reply sent!" : "Odpověď odeslána",
     "Write another message" : "Napsat další zprávu",
     "Send" : "Odeslat",
     "Uploading {percent}% …" : "Nahrávání {percent}%…",

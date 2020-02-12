@@ -46,6 +46,14 @@ OC.L10N.register(
     "Search" : "Хайх",
     "Refresh" : "Сэргээх",
     "Connect your mail account" : "Таны мэйл бүртгэлийг холбоно",
+    "All" : "бүх",
+    "Archive" : "архив",
+    "Drafts" : "ноорог",
+    "Favorites" : "Онцолсон",
+    "Inbox" : "ирсэн",
+    "Junk" : "хэрэггүй",
+    "Sent" : "илгээсэн",
+    "Trash" : "хог",
     "Error loading message" : "алдаатай ачааллах зурвас"
 },
 "nplurals=2; plural=(n != 1);");

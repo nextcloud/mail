@@ -53,7 +53,6 @@ OC.L10N.register(
     "Go back" : "Egin atzera",
     "Retry" : "Saiatu berriro",
     "Message sent!" : "Mezua bidali egin da!",
-    "Reply sent!" : "Bidali egin da erantzuna!",
     "Write another message" : "Idatzi beste mezu bat",
     "Send" : "Bidali",
     "Uploading {percent}% …" : "Kargatzen {percent}% …",
