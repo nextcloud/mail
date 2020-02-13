@@ -98,6 +98,7 @@ class MailSearchTest extends TestCase {
 			$account,
 			'INBOX',
 			null,
+			null,
 			null
 		);
 	}
@@ -114,6 +115,7 @@ class MailSearchTest extends TestCase {
 		$this->search->findMessages(
 			$account,
 			'INBOX',
+			null,
 			null,
 			null
 		);
@@ -132,6 +134,7 @@ class MailSearchTest extends TestCase {
 		$messages = $this->search->findMessages(
 			$account,
 			'INBOX',
+			null,
 			null,
 			null
 		);
@@ -156,7 +159,7 @@ class MailSearchTest extends TestCase {
 			->willReturn($query);
 		$this->messageMapper->expects($this->once())
 			->method('findUidsByQuery')
-			->with($mailbox, $query)
+			->with($mailbox, $query, null)
 			->willReturn([1, 2]);
 		$this->messageMapper->expects($this->once())
 			->method('findByUids')
@@ -174,6 +177,7 @@ class MailSearchTest extends TestCase {
 			$account,
 			'INBOX',
 			'my search',
+			null,
 			null
 		);
 
@@ -200,10 +204,9 @@ class MailSearchTest extends TestCase {
 			->method('findMatches')
 			->with($account, $mailbox, $query)
 			->willReturn([2, 3]);
-
 		$this->messageMapper->expects($this->once())
 			->method('findUidsByQuery')
-			->with($mailbox, $query, [2, 3])
+			->with($mailbox, $query, null, [2, 3])
 			->willReturn([1, 2]);
 		$this->messageMapper->expects($this->once())
 			->method('findByUids')
@@ -219,6 +222,7 @@ class MailSearchTest extends TestCase {
 			$account,
 			'INBOX',
 			'my search',
+			null,
 			null
 		);
 

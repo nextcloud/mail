@@ -152,13 +152,13 @@ class SyncService {
 
 		if ($query !== null) {
 			// Filter new messages to those that also match the current filter
-			$newUids = $this->messageMapper->findUidsByQuery($mailbox, $query, $newUids);
+			$newUids = $this->messageMapper->findUidsByQuery($mailbox, $query, null, $newUids);
 		}
 		$new = $this->messageMapper->findByUids($mailbox, $newUids);
 
 		// TODO: $changed = $this->messageMapper->findChanged($mailbox, $uids);
 		if ($query !== null) {
-			$changedUids = $this->messageMapper->findUidsByQuery($mailbox, $query, $knownUids);
+			$changedUids = $this->messageMapper->findUidsByQuery($mailbox, $query, null, $knownUids);
 		} else {
 			$changedUids = $knownUids;
 		}

@@ -110,7 +110,8 @@ class MailSearch implements IMailSearch {
 	public function findMessages(Account $account,
 								 string $mailboxName,
 								 ?string $filter,
-								 ?int $cursor): array {
+								 ?int $cursor,
+								 ?int $limit): array {
 		try {
 			$mailbox = $this->mailboxMapper->find($account, $mailboxName);
 		} catch (DoesNotExistException $e) {
@@ -142,7 +143,7 @@ class MailSearch implements IMailSearch {
 			$mailbox,
 			$this->messageMapper->findByUids(
 				$mailbox,
-				$this->getUids($account, $mailbox, $query)
+				$this->getUids($account, $mailbox, $query, $limit)
 			)
 		);
 	}
@@ -152,9 +153,9 @@ class MailSearch implements IMailSearch {
 	 *
 	 * @throws ServiceException
 	 */
-	private function getUids(Account $account, Mailbox $mailbox, SearchQuery $query): array {
+	private function getUids(Account $account, Mailbox $mailbox, SearchQuery $query, ?int $limit): array {
 		if (empty($query->getTextTokens())) {
-			return $this->messageMapper->findUidsByQuery($mailbox, $query);
+			return $this->messageMapper->findUidsByQuery($mailbox, $query, $limit);
 		}
 
 		$fromImap = $this->imapSearchProvider->findMatches(
@@ -162,6 +163,6 @@ class MailSearch implements IMailSearch {
 			$mailbox,
 			$query
 		);
-		return $this->messageMapper->findUidsByQuery($mailbox, $query, $fromImap);
+		return $this->messageMapper->findUidsByQuery($mailbox, $query, $limit, $fromImap);
 	}
 }

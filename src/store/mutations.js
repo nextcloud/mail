@@ -20,7 +20,7 @@
  */
 
 import orderBy from 'lodash/fp/orderBy'
-import sortedUniq from 'lodash/fp/sortedUniq'
+import sortedUniqBy from 'lodash/fp/sortedUniqBy'
 import Vue from 'vue'
 
 import {buildMailboxHierarchy} from '../imap/MailboxHierarchy'
@@ -109,11 +109,10 @@ export default {
 		Vue.set(state.envelopes, envelope.uid, envelope)
 		const listId = normalizedEnvelopeListId(query)
 		const existing = folder.envelopeLists[listId] || []
-		Vue.set(
-			folder.envelopeLists,
-			listId,
-			sortedUniq(orderBy((id) => state.envelopes[id].dateInt, 'desc', existing.concat([envelope.uid])))
-		)
+		const uidToDateInt = (uid) => state.envelopes[uid].dateInt
+		const sortedUniqByDateInt = sortedUniqBy(uidToDateInt)
+		const orderByDateInt = orderBy(uidToDateInt, 'desc')
+		Vue.set(folder.envelopeLists, listId, sortedUniqByDateInt(orderByDateInt(existing.concat([envelope.uid]))))
 
 		const unifiedAccount = state.accounts[UNIFIED_ACCOUNT_ID]
 		unifiedAccount.folders
@@ -124,7 +123,7 @@ export default {
 				Vue.set(
 					folder.envelopeLists,
 					listId,
-					sortedUniq(orderBy((id) => state.envelopes[id].dateInt, 'desc', existing.concat([envelope.uid])))
+					sortedUniqByDateInt(orderByDateInt(existing.concat([envelope.uid])))
 				)
 			})
 	},
