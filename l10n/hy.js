@@ -14,6 +14,7 @@ OC.L10N.register(
     "General" : "Ընդհանուր",
     "User" : "User",
     "Search" : "Search",
-    "Refresh" : "Թարմացնել"
+    "Refresh" : "Թարմացնել",
+    "Favorites" : "Favorites"
 },
 "nplurals=2; plural=(n != 1);");

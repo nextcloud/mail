@@ -19,6 +19,13 @@ OC.L10N.register(
     "User" : "User",
     "Host" : "ម៉ាស៊ីន​ផ្ទុក",
     "Port" : "ច្រក",
-    "Search" : "Search"
+    "Search" : "Search",
+    "All" : "ទាំងអស់",
+    "Drafts" : "ពង្រាង",
+    "Favorites" : "Favorites",
+    "Inbox" : "ក្នុង​ប្រអប់សារ",
+    "Junk" : "ព្រៃ",
+    "Sent" : "ផ្ញើ",
+    "Trash" : "ធុង​សំរាម"
 },
 "nplurals=1; plural=0;");

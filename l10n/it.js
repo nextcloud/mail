@@ -155,7 +155,7 @@ OC.L10N.register(
     "Archive" : "Archivio",
     "Drafts" : "Bozze",
     "Favorites" : "Preferiti",
-    "All inboxes" : "Tutte le caselle di posta",
+    "All inboxes" : "Tutte le cartelle di posta in arrivo",
     "Inbox" : "Posta in arrivo",
     "Junk" : "Posta indesiderata",
     "Sent" : "Posta inviata",

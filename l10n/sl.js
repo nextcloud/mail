@@ -143,7 +143,7 @@ OC.L10N.register(
     "Unexpected error during account creation" : "Prišlo je do nepričakovane napake med ustvarjanjem računa",
     "Itinerary for {type} is not supported yet" : "{type} – vrsta prevoza še ni podprta",
     "All" : "Vse",
-    "Archive" : "Arhiviraj",
+    "Archive" : "Arhiv",
     "Drafts" : "Osnutki",
     "Favorites" : "Priljubljene",
     "All inboxes" : "Vsi predali",

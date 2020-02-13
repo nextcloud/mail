@@ -15,6 +15,8 @@ OC.L10N.register(
     "User" : "User",
     "Host" : "ಅತಿಥೆಯ-ಗಣಕ",
     "Port" : "﻿ರೇವು",
-    "Search" : "Search"
+    "Search" : "Search",
+    "All" : "﻿ಎಲ್ಲಾ",
+    "Favorites" : "ಅಚ್ಚುಮೆಚ್ಚಿನ"
 },
 "nplurals=2; plural=(n > 1);");

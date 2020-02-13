@@ -30,6 +30,15 @@
     "Port" : "Port",
     "Search" : "Cari",
     "Refresh" : "Segarkan",
+    "All" : "Semua",
+    "Archive" : "Arsip",
+    "Drafts" : "Konsep",
+    "Favorites" : "Disukai",
+    "All inboxes" : "Semua kotak masuk",
+    "Inbox" : "Kotak masuk",
+    "Junk" : "Sampah",
+    "Sent" : "Kirim",
+    "Trash" : "Tempat sampah",
     "{from}\n{subject}" : "{from}\n{subject}",
     "Error loading message" : "Terjadi kesalahan saat memuat pesan"
 },"pluralForm" :"nplurals=1; plural=0;"

@@ -12,6 +12,7 @@ OC.L10N.register(
     "Add folder" : "Add folder",
     "Delete account" : "Delete account",
     "User" : "User",
-    "Search" : "Search"
+    "Search" : "Search",
+    "Favorites" : "Favorites"
 },
 "nplurals=2; plural=(n != 1);");

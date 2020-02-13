@@ -11,6 +11,7 @@ OC.L10N.register(
     "Settings" : "Sozlamalar",
     "General" : "Umumiy",
     "Search" : "Qidirmoq",
-    "Refresh" : "Yangilash"
+    "Refresh" : "Yangilash",
+    "All" : "Hammasi"
 },
 "nplurals=1; plural=0;");
