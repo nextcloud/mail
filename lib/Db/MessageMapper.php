@@ -254,7 +254,7 @@ class MessageMapper extends QBMapper {
 
 		$select = $qb
 			->selectDistinct('m.uid')
-			->addSelect('sent_at')
+			->addSelect('m.sent_at')
 			->from($this->getTableName(), 'm');
 
 		if (!empty($query->getFrom())) {
