@@ -158,7 +158,7 @@ OC.L10N.register(
     "All inboxes" : "Tüm gelen kutuları",
     "Inbox" : "Gelen Kutusu",
     "Junk" : "Gereksiz",
-    "Sent" : "Gönderilenler",
+    "Sent" : "Gönderilmiş",
     "Trash" : "Çöp Kutusu",
     "{from}\n{subject}" : "{from}\n{subject}",
     "_%n new message \nfrom {from}_::_%n new messages \nfrom {from}_" : ["%n yeni ileti\ngönderen {from}","%n yeni ileti\ngönderen {from}"],
