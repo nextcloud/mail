@@ -1429,16 +1429,16 @@
         },
         {
             "name": "phan/phan",
-            "version": "2.4.8",
+            "version": "2.4.9",
             "source": {
                 "type": "git",
                 "url": "https://github.com/phan/phan.git",
-                "reference": "dc94f53f651bfb32766902e5d4198780245d8382"
+                "reference": "3b1e93023599b56568147761d94260443800a19f"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/phan/phan/zipball/dc94f53f651bfb32766902e5d4198780245d8382",
-                "reference": "dc94f53f651bfb32766902e5d4198780245d8382",
+                "url": "https://api.github.com/repos/phan/phan/zipball/3b1e93023599b56568147761d94260443800a19f",
+                "reference": "3b1e93023599b56568147761d94260443800a19f",
                 "shasum": ""
             },
             "require": {
@@ -1456,7 +1456,7 @@
                 "symfony/polyfill-mbstring": "^1.11.0"
             },
             "require-dev": {
-                "brianium/paratest": "^3.1.2",
+                "brianium/paratest": "^4.0.0",
                 "phpunit/phpunit": "^7.5.0"
             },
             "suggest": {
@@ -1498,7 +1498,7 @@
                 "php",
                 "static"
             ],
-            "time": "2020-01-25T17:22:42+00:00"
+            "time": "2020-02-13T14:52:18+00:00"
         },
         {
             "name": "phar-io/manifest",
@@ -3330,16 +3330,16 @@
         },
         {
             "name": "symfony/polyfill-mbstring",
-            "version": "v1.13.1",
+            "version": "v1.14.0",
             "source": {
                 "type": "git",
                 "url": "https://github.com/symfony/polyfill-mbstring.git",
-                "reference": "7b4aab9743c30be783b73de055d24a39cf4b954f"
+                "reference": "34094cfa9abe1f0f14f48f490772db7a775559f2"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/symfony/polyfill-mbstring/zipball/7b4aab9743c30be783b73de055d24a39cf4b954f",
-                "reference": "7b4aab9743c30be783b73de055d24a39cf4b954f",
+                "url": "https://api.github.com/repos/symfony/polyfill-mbstring/zipball/34094cfa9abe1f0f14f48f490772db7a775559f2",
+                "reference": "34094cfa9abe1f0f14f48f490772db7a775559f2",
                 "shasum": ""
             },
             "require": {
@@ -3351,7 +3351,7 @@
             "type": "library",
             "extra": {
                 "branch-alias": {
-                    "dev-master": "1.13-dev"
+                    "dev-master": "1.14-dev"
                 }
             },
             "autoload": {
@@ -3385,7 +3385,7 @@
                 "portable",
                 "shim"
             ],
-            "time": "2019-11-27T14:18:11+00:00"
+            "time": "2020-01-13T11:15:53+00:00"
         },
         {
             "name": "symfony/polyfill-php73",
