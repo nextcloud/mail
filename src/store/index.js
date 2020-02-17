@@ -20,7 +20,6 @@
  */
 
 import head from 'lodash/fp/head'
-import {translate as t} from '@nextcloud/l10n'
 import Vue from 'vue'
 import Vuex from 'vuex'
 
@@ -66,17 +65,8 @@ export const getters = {
 	getEnvelopeById: state => id => {
 		return state.envelopes[id]
 	},
-	getEnvelopes: (state, getters) => (accountId, folderId) => {
-		return getters.getFolder(accountId, folderId).envelopes.map(msgId => state.envelopes[msgId])
-	},
-	getSearchEnvelopes: (state, getters) => (accountId, folderId) => {
-		return getters.getFolder(accountId, folderId).searchEnvelopes.map(msgId => state.envelopes[msgId])
-	},
 	getMessage: state => (accountId, folderId, id) => {
 		return state.messages[accountId + '-' + folderId + '-' + id]
-	},
-	getMessageByUid: state => uid => {
-		return state.messages[uid]
 	},
 }
 

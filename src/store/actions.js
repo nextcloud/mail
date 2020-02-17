@@ -20,14 +20,23 @@
  */
 
 import flatMapDeep from 'lodash/fp/flatMapDeep'
-import flatten from 'lodash/fp/flatten'
-import flattenDepth from 'lodash/fp/flattenDepth'
-import identity from 'lodash/fp/identity'
-import isEmpty from 'lodash/fp/isEmpty'
-import last from 'lodash/fp/last'
 import orderBy from 'lodash/fp/orderBy'
-import slice from 'lodash/fp/slice'
-import sortedUniq from 'lodash/fp/sortedUniq'
+import {
+	andThen,
+	complement,
+	curry,
+	filter,
+	flatten,
+	identity,
+	isEmpty,
+	map,
+	last,
+	pipe,
+	prop,
+	propEq,
+	slice,
+	tap,
+} from 'ramda'
 
 import {savePreference} from '../service/PreferenceService'
 import {
@@ -40,10 +49,28 @@ import {
 	fetchAll as fetchAllAccounts,
 } from '../service/AccountService'
 import {fetchAll as fetchAllFolders, create as createFolder, markFolderRead} from '../service/FolderService'
-import {deleteMessage, fetchEnvelopes, fetchMessage, setEnvelopeFlag, syncEnvelopes} from '../service/MessageService'
+import {
+	deleteMessage,
+	fetchEnvelope,
+	fetchEnvelopes,
+	fetchMessage,
+	setEnvelopeFlag,
+	syncEnvelopes,
+} from '../service/MessageService'
 import logger from '../logger'
 import {showNewMessagesNotification} from '../service/NotificationService'
 import {parseUid} from '../util/EnvelopeUidParser'
+
+const findIndividualFolders = curry((getFolders, specialRole) =>
+	pipe(
+		filter(complement(prop('isUnified'))),
+		map(prop('accountId')),
+		map(getFolders),
+		flatten,
+		filter(propEq('specialRole', specialRole))
+	)
+)
+const combineEnvelopeLists = pipe(flatten, orderBy(prop('dateInt'), 'desc'), slice(0, 19))
 
 export default {
 	savePreference({commit, getters}, {key, value}) {
@@ -142,9 +169,29 @@ export default {
 			})
 		)
 	},
+	fetchEnvelope({commit, getters}, uid) {
+		const {accountId, folderId, id} = parseUid(uid)
+
+		const cached = getters.getEnvelope(accountId, folderId, id)
+		if (cached) {
+			return cached
+		}
+
+		return fetchEnvelope(accountId, folderId, id).then(envelope => {
+			// Only commit if not undefined (not found)
+			if (envelope) {
+				commit('addEnvelope', {
+					accountId,
+					folderId,
+					envelope,
+				})
+			}
+
+			return envelope
+		})
+	},
 	fetchEnvelopes({state, commit, getters, dispatch}, {accountId, folderId, query}) {
 		const folder = getters.getFolder(accountId, folderId)
-		const isSearch = query !== undefined
 		if (folder.isUnified) {
 			// Fetch and combine envelopes of all individual folders
 			//
@@ -153,186 +200,98 @@ export default {
 			// data)
 			//
 			// TODO: handle short/ending streams and show their last element as well
-			return Promise.all(
-				getters.accounts
-					.filter(account => !account.isUnified)
-					.map(account =>
-						Promise.all(
-							getters
-								.getFolders(account.id)
-								.filter(f => f.specialRole === folder.specialRole)
-								.map(folder =>
-									dispatch('fetchEnvelopes', {
-										accountId: account.id,
-										folderId: folder.id,
-										query,
-									})
-								)
-						)
-					)
-			)
-				.then(res => res.map(envs => envs.slice(0, 19)))
-				.then(res => flattenDepth(2)(res))
-				.then(envs => orderBy(env => env.dateInt)('desc')(envs))
-				.then(envs => slice(0)(19)(envs)) // 19 to handle non-overlapping streams
-				.then(envelopes => {
-					if (!isSearch) {
-						commit('addUnifiedEnvelopes', {
-							folder,
-							uids: envelopes.map(e => e.uid),
-						})
-					} else {
-						commit('addUnifiedSearchEnvelopes', {
-							folder,
-							uids: envelopes.map(e => e.uid),
-						})
-					}
-					return envelopes
-				})
-		}
-
-		return fetchEnvelopes(accountId, folderId, query).then(envelopes => {
-			let folder = getters.getFolder(accountId, folderId)
-
-			if (!isSearch) {
-				envelopes.forEach(envelope =>
-					commit('addEnvelope', {
-						accountId,
-						folder,
-						envelope,
-					})
-				)
-			} else {
-				commit('addSearchEnvelopes', {
-					accountId,
-					folder,
-					envelopes,
-					clear: true,
-				})
-			}
-			return envelopes
-		})
-	},
-	fetchNextUnifiedEnvelopePage({state, commit, getters, dispatch}, {accountId, folderId, query}) {
-		const folder = getters.getFolder(accountId, folderId)
-		const isSearch = query !== undefined
-		const list = isSearch ? 'searchEnvelopes' : 'envelopes'
-
-		// We only care about folders of the same type/role
-		const individualFolders = flatten(
-			getters.accounts
-				.filter(a => !a.isUnified)
-				.map(a => getters.getFolders(a.id).filter(f => f.specialRole === folder.specialRole))
-		)
-		// Build a sorted list of all currently known envelopes (except last elem)
-		const knownEnvelopes = orderBy(id => state.envelopes[id].dateInt)('desc')(
-			flatten(individualFolders.map(f => f[list].slice(0, f[list].length - 1)))
-		)
-		// The index of the last element in the current unified mailbox determines
-		// the new offset
-		const tailId = last(folder[list])
-		const tailIdx = knownEnvelopes.indexOf(tailId)
-		if (tailIdx === -1) {
-			return Promise.reject(
-				new Error('current envelopes do not contain unified mailbox tail. this should not have happened')
-			)
-		}
-
-		// Select the next page, based on offline data
-		const nextCandidates = knownEnvelopes.slice(tailIdx + 1, tailIdx + 20)
-
-		// Now, let's check if any of the "streams" have reached their ends.
-		// In that case, we attempt to fetch more elements recursively
-		//
-		// In case of an empty next page we always fetch all streams (this might be redundant)
-		//
-		// Their end was reached if the last known (oldest) envelope is an element
-		// of the offline page
-		// TODO: what about streams that ended before? Is it safe to ignore those?
-		const needFetch = individualFolders
-			.filter(f => !isEmpty(f[list]))
-			.filter(f => {
-				const lastShown = f[list][f[list].length - 2]
-				return nextCandidates.length <= 18 || nextCandidates.indexOf(lastShown) !== -1
-			})
-
-		if (isEmpty(needFetch)) {
-			if (!isSearch) {
-				commit('addUnifiedEnvelopes', {
-					folder,
-					uids: sortedUniq(
-						orderBy(id => state.envelopes[id].dateInt)('desc')(folder[list].concat(nextCandidates))
-					),
-				})
-			} else {
-				commit('addUnifiedSearchEnvelopes', {
-					folder,
-					uids: sortedUniq(
-						orderBy(id => state.envelopes[id].dateInt)('desc')(folder[list].concat(nextCandidates))
-					),
-				})
-			}
-		} else {
-			return Promise.all(
-				needFetch.map(f =>
-					dispatch('fetchNextEnvelopePage', {
+			const fetchIndividualLists = pipe(
+				map(f =>
+					dispatch('fetchEnvelopes', {
 						accountId: f.accountId,
 						folderId: f.id,
 						query,
 					})
+				),
+				Promise.all.bind(Promise),
+				andThen(map(slice(0, 19)))
+			)
+
+			return pipe(
+				findIndividualFolders(getters.getFolders, folder.specialRole),
+				fetchIndividualLists,
+				andThen(combineEnvelopeLists)
+			)(getters.accounts)
+		}
+
+		return pipe(
+			fetchEnvelopes,
+			andThen(
+				tap(
+					map(envelope =>
+						commit('addEnvelope', {
+							accountId,
+							folderId,
+							envelope,
+						})
+					)
 				)
-			).then(() => {
-				return dispatch('fetchNextUnifiedEnvelopePage', {
-					accountId,
-					folderId,
+			)
+		)(accountId, folderId, query)
+	},
+	fetchNextUnifiedEnvelopePage({state, commit, getters, dispatch}, {accountId, folderId, envelopes, query}) {
+		const folder = getters.getFolder(accountId, folderId)
+		const findIndividual = findIndividualFolders(getters.getFolders, folder.specialRole)
+
+		const fetchAndCombineAll = pipe(
+			findIndividual,
+			map(f =>
+				dispatch('fetchNextEnvelopePage', {
+					accountId: f.accountId,
+					folderId: f.id,
+					envelopes: filter(propEq('folderId', f.id), envelopes),
 					query,
 				})
-			})
-		}
+			),
+			Promise.all.bind(Promise),
+			andThen(tap(console.info.bind(this))),
+			andThen(combineEnvelopeLists),
+			andThen(tap(console.info.bind(this)))
+		)
+
+		return fetchAndCombineAll(getters.accounts)
 	},
-	fetchNextEnvelopePage({commit, getters, dispatch}, {accountId, folderId, query}) {
+	fetchNextEnvelopePage({commit, getters, dispatch}, {accountId, folderId, envelopes, query}) {
 		const folder = getters.getFolder(accountId, folderId)
-		const isSearch = query !== undefined
-		const list = isSearch ? 'searchEnvelopes' : 'envelopes'
 
 		if (folder.isUnified) {
 			return dispatch('fetchNextUnifiedEnvelopePage', {
+				accountId,
+				folderId,
+				envelopes,
+				query,
+			})
+		}
+
+		const cursorElement = last(envelopes)
+		if (typeof cursorElement === 'undefined') {
+			console.warn('No cursor given -> fetching first page')
+			return dispatch('fetchEnvelopes', {
 				accountId,
 				folderId,
 				query,
 			})
 		}
 
-		const lastEnvelopeId = folder[list][folder.envelopes.length - 1]
-		if (typeof lastEnvelopeId === 'undefined') {
-			console.error('folder is empty', folder[list])
-			return Promise.reject(new Error('Local folder has no envelopes, cannot determine cursor'))
-		}
-		const lastEnvelope = getters.getEnvelopeById(lastEnvelopeId)
-		if (typeof lastEnvelope === 'undefined') {
-			return Promise.reject(new Error('Cannot find last envelope. Required for the folder cursor'))
-		}
-
-		return fetchEnvelopes(accountId, folderId, query, lastEnvelope.dateInt).then(envelopes => {
-			if (!isSearch) {
-				envelopes.forEach(envelope =>
-					commit('addEnvelope', {
-						accountId,
-						folder,
-						envelope,
-					})
+		return pipe(
+			fetchEnvelopes,
+			andThen(
+				tap(
+					map(envelope =>
+						commit('addEnvelope', {
+							accountId,
+							folderId,
+							envelope,
+						})
+					)
 				)
-			} else {
-				commit('addSearchEnvelopes', {
-					accountId,
-					folder,
-					envelopes,
-					clear: false,
-				})
-			}
-
-			return envelopes
-		})
+			)
+		)(accountId, folderId, query, cursorElement.dateInt)
 	},
 	syncEnvelopes({commit, getters, dispatch}, {accountId, folderId, init = false}) {
 		const folder = getters.getFolder(accountId, folderId)
@@ -358,35 +317,27 @@ export default {
 			)
 		}
 
-		const uids = getters.getEnvelopes(accountId, folderId).map(env => env.id)
+		const uids = [] // TODO getters.getEnvelopes(accountId, folderId).map(env => env.id)
 
 		return syncEnvelopes(accountId, folderId, uids, init).then(syncData => {
-			const unifiedFolder = getters.getUnifiedFolder(folder.specialRole)
-
 			syncData.newMessages.forEach(envelope => {
 				commit('addEnvelope', {
 					accountId,
-					folder,
+					folderId,
 					envelope,
 				})
-				if (unifiedFolder) {
-					commit('addUnifiedEnvelope', {
-						folder: unifiedFolder,
-						envelope,
-					})
-				}
 			})
 			syncData.changedMessages.forEach(envelope => {
 				commit('addEnvelope', {
 					accountId,
-					folder,
+					folderId,
 					envelope,
 				})
 			})
 			syncData.vanishedMessages.forEach(id => {
 				commit('removeEnvelope', {
 					accountId,
-					folder,
+					folderId,
 					id,
 				})
 				// Already removed from unified inbox
@@ -503,7 +454,7 @@ export default {
 				console.error('could not delete message', err)
 				commit('addEnvelope', {
 					accountId: envelope.accountId,
-					folder,
+					folderId: envelope.folderId,
 					envelope,
 				})
 				throw err

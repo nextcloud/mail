@@ -104,50 +104,12 @@ export default {
 			account.folders.push(id)
 		})
 	},
-	addEnvelope(state, {accountId, folder, envelope}) {
-		const uid = accountId + '-' + folder.id + '-' + envelope.id
+	addEnvelope(state, {accountId, folderId, envelope}) {
+		const uid = accountId + '-' + folderId + '-' + envelope.id
 		envelope.accountId = accountId
-		envelope.folderId = folder.id
+		envelope.folderId = folderId
 		envelope.uid = uid
 		Vue.set(state.envelopes, uid, envelope)
-		Vue.set(
-			folder,
-			'envelopes',
-			sortedUniq(orderBy(id => state.envelopes[id].dateInt)('desc')(folder.envelopes.concat([uid])))
-		)
-	},
-	addSearchEnvelopes(state, {accountId, folder, envelopes, clear}) {
-		const uids = envelopes.map(envelope => {
-			const uid = accountId + '-' + folder.id + '-' + envelope.id
-			envelope.accountId = accountId
-			envelope.folderId = folder.id
-			envelope.uid = uid
-			Vue.set(state.envelopes, uid, envelope)
-			return uid
-		})
-
-		if (clear) {
-			Vue.set(folder, 'searchEnvelopes', uids)
-		} else {
-			Vue.set(
-				folder,
-				'searchEnvelopes',
-				sortedUniq(orderBy(id => state.envelopes[id].dateInt)('desc')(folder.searchEnvelopes.concat(uids)))
-			)
-		}
-	},
-	addUnifiedEnvelope(state, {folder, envelope}) {
-		Vue.set(
-			folder,
-			'envelopes',
-			sortedUniq(orderBy(id => state.envelopes[id].dateInt)('desc')(folder.envelopes.concat([envelope.uid])))
-		)
-	},
-	addUnifiedEnvelopes(state, {folder, uids}) {
-		Vue.set(folder, 'envelopes', uids)
-	},
-	addUnifiedSearchEnvelopes(state, {folder, uids}) {
-		Vue.set(folder, 'searchEnvelopes', uids)
 	},
 	flagEnvelope(state, {envelope, flag, value}) {
 		envelope.flags[flag] = value

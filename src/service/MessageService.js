@@ -1,10 +1,27 @@
 import {generateUrl} from '@nextcloud/router'
 import axios from '@nextcloud/axios'
+import {map} from 'ramda'
 
-import logger from '../logger'
-import MailboxNotCachedError from '../errors/MailboxNotCachedError'
 import {parseErrorResponse} from '../http/ErrorResponseParser'
 import {convertAxiosError} from '../errors/convert'
+
+export function fetchEnvelope(accountId, folderId, id) {
+	const url = generateUrl('/apps/mail/api/accounts/{accountId}/folders/{folderId}/messages/{id}', {
+		accountId,
+		folderId,
+		id,
+	})
+
+	return axios
+		.get(url)
+		.then(resp => resp.data)
+		.catch(error => {
+			if (error.response && error.response.status === 404) {
+				return undefined
+			}
+			return Promise.reject(parseErrorResponse(error.response))
+		})
+}
 
 export function fetchEnvelopes(accountId, folderId, query, cursor) {
 	const url = generateUrl('/apps/mail/api/accounts/{accountId}/folders/{folderId}/messages', {
@@ -22,9 +39,18 @@ export function fetchEnvelopes(accountId, folderId, query, cursor) {
 
 	return axios
 		.get(url, {
-			params: params,
+			params,
 		})
 		.then(resp => resp.data)
+		.then(
+			map(e =>
+				Object.assign({}, e, {
+					accountId,
+					folderId,
+					uid: `${accountId}-${folderId}-${e.id}`,
+				})
+			)
+		)
 		.catch(error => {
 			throw convertAxiosError(error)
 		})
@@ -70,7 +96,7 @@ export function setEnvelopeFlag(accountId, folderId, id, flag, value) {
 }
 
 export function fetchMessage(accountId, folderId, id) {
-	const url = generateUrl('/apps/mail/api/accounts/{accountId}/folders/{folderId}/messages/{id}', {
+	const url = generateUrl('/apps/mail/api/accounts/{accountId}/folders/{folderId}/messages/{id}/body', {
 		accountId,
 		folderId,
 		id,

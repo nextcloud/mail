@@ -73,6 +73,27 @@ class MailSearch implements IMailSearch {
 		$this->logger = $logger;
 	}
 
+	public function findMessage(Account $account, string $mailboxName, int $uid): Message {
+		try {
+			$mailbox = $this->mailboxMapper->find($account, $mailboxName);
+		} catch (DoesNotExistException $e) {
+			throw new ServiceException('Mailbox does not exist', 0, $e);
+		}
+
+		$messages = $this->previewEnhancer->process(
+			$account,
+			$mailbox,
+			$this->messageMapper->findByUids(
+				$mailbox,
+				[$uid]
+			)
+		);
+		if (empty($messages)) {
+			throw new DoesNotExistException("Message does not exist");
+		}
+		return $messages[0];
+	}
+
 	/**
 	 * @param Account $account
 	 * @param string $mailboxName

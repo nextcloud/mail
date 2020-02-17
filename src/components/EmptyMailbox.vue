@@ -7,6 +7,6 @@
 
 <script>
 export default {
-	name: 'EmptyFolder',
+	name: 'EmptyMailbox',
 }
 </script>
