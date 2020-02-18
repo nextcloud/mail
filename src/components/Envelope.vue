@@ -15,19 +15,19 @@
 		</div>
 		<div class="app-content-list-item-line-one" :title="addresses">
 			{{ addresses }}
-		<div class="app-content-list-item-line-two" :title="data.subject">
-			{{ data.subject }}
-		</div>
+			<div class="app-content-list-item-line-two" :title="data.subject">
+				{{ data.subject }}
+			</div>
 			<!-- work in progress -->
-		<div class="app-content-list-item-line-three">
-			<label> {{t('mail', 'First line of message should be shown here')}}</label>
+			<div class="app-content-list-item-line-three">
+				<label> {{ t('mail', 'First line of message should be shown here') }}</label>
+			</div>
 		</div>
-		</div>
-			<span v-if="data.flags.answered" class="icon-reply" />
-			<span v-if="data.flags.hasAttachments === true" class="icon-public icon-attachment" />
-			<span v-if="draft" class="draft">
-				<em>{{ t('mail', 'Draft: ') }}</em>
-			</span>
+		<span v-if="data.flags.answered" class="icon-reply" />
+		<span v-if="data.flags.hasAttachments === true" class="icon-public icon-attachment" />
+		<span v-if="draft" class="draft">
+			<em>{{ t('mail', 'Draft: ') }}</em>
+		</span>
 		<div class="app-content-list-item-details date">
 			<Moment :timestamp="data.dateInt" />
 		</div>
@@ -183,16 +183,23 @@ export default {
 
 .app-content-list-item-line-two {
 	margin-left: -50px;
-	margin-top: -8px;
+	margin-top: -6px;
 }
 .app-content-list-item-menu {
-	margin-top: -8px;
+	margin-top: -6px;
 }
 .app-content-list-item-line-three {
 	opacity: 0.3;
+	margin-bottom:20px
+
 }
 
 .app-content-list-item-menu {
 	margin-right: -2px;
+	margin-top: 25px;
+}
+.app-content-list-item-details {
+	margin-right: -40px;
+	margin-bottom: 45px;
 }
 </style>
