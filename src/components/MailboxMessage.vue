@@ -111,7 +111,8 @@ export default {
 			})
 		},
 		deleteMessage({envelope, message}) {
-			logger.debug('todo: navigate up/down')
+			console.info({envelope, message})
+			this.bus.$emit('delete', {envelope, message})
 		},
 		onScroll() {
 			this.bus.$emit('loadMore')

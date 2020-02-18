@@ -334,14 +334,6 @@ export default {
 					envelope,
 				})
 			})
-			syncData.vanishedMessages.forEach(id => {
-				commit('removeEnvelope', {
-					accountId,
-					folderId,
-					id,
-				})
-				// Already removed from unified inbox
-			})
 
 			return syncData.newMessages
 		})
@@ -435,11 +427,6 @@ export default {
 	},
 	deleteMessage({getters, commit}, envelope) {
 		const folder = getters.getFolder(envelope.accountId, envelope.folderId)
-		commit('removeEnvelope', {
-			accountId: envelope.accountId,
-			folder,
-			id: envelope.id,
-		})
 
 		return deleteMessage(envelope.accountId, envelope.folderId, envelope.id)
 			.then(() => {

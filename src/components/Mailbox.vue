@@ -35,7 +35,7 @@
 		:envelopes="envelopes"
 		:refreshing="refreshing"
 		:loading-more="loadingMore"
-		@delete="onEnvelopeDeleted"
+		@delete="onDelete"
 	/>
 </template>
 
@@ -43,6 +43,7 @@
 import EmptyMailbox from './EmptyMailbox'
 import EnvelopeList from './EnvelopeList'
 import Error from './Error'
+import {findIndex, propEq} from 'ramda'
 import Loading from './Loading'
 import logger from '../logger'
 import MailboxLockedError from '../errors/MailboxLockedError'
@@ -100,6 +101,7 @@ export default {
 	},
 	created() {
 		this.bus.$on('loadMore', this.loadMore)
+		this.bus.$on('delete', this.onDelete)
 		this.bus.$on('shortcut', this.handleShortcut)
 	},
 	async mounted() {
@@ -107,6 +109,7 @@ export default {
 	},
 	destroyed() {
 		this.bus.$off('loadMore', this.loadMore)
+		this.bus.$off('delete', this.onDelete)
 		this.bus.$off('shortcut', this.handleShortcut)
 	},
 	methods: {
@@ -253,6 +256,7 @@ export default {
 					break
 				case 'del':
 					logger.debug('deleting', {env})
+					this.onDelete({envelope: env})
 					this.$store
 						.dispatch('deleteMessage', env)
 						.catch(error => logger.error('could not delete envelope', {env, error}))
@@ -304,13 +308,14 @@ export default {
 				this.refreshing = false
 			}
 		},
-		onEnvelopeDeleted(envelope) {
+		onDelete({envelope}) {
 			const envelopes = this.envelopes
-			const idx = this.envelopes.indexOf(envelope)
+			const idx = findIndex(propEq('uid', envelope.uid), this.envelopes)
 			if (idx === -1) {
 				logger.debug('envelope to delete does not exist in envelope list')
 				return
 			}
+			this.envelopes.splice(idx, 1)
 			if (envelope.uid !== this.$route.params.messageUid) {
 				logger.debug('other message open, not jumping to the next/previous message')
 				return

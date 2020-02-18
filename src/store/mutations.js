@@ -19,8 +19,6 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-import orderBy from 'lodash/fp/orderBy'
-import sortedUniq from 'lodash/fp/sortedUniq'
 import Vue from 'vue'
 
 import {buildMailboxHierarchy} from '../imap/MailboxHierarchy'
@@ -31,7 +29,6 @@ import {UNIFIED_ACCOUNT_ID} from './constants'
 const addFolderToState = (state, account) => folder => {
 	const id = account.id + '-' + folder.id
 	folder.accountId = account.id
-	folder.envelopes = []
 	folder.searchEnvelopes = []
 	Vue.set(state.folders, id, folder)
 	return id
@@ -113,30 +110,6 @@ export default {
 	},
 	flagEnvelope(state, {envelope, flag, value}) {
 		envelope.flags[flag] = value
-	},
-	removeEnvelope(state, {accountId, folder, id}) {
-		const envelopeUid = accountId + '-' + folder.id + '-' + id
-		const idx = folder.envelopes.indexOf(envelopeUid)
-		if (idx < 0) {
-			console.warn('envelope does not exist', accountId, folder.id, id)
-			return
-		}
-		folder.envelopes.splice(idx, 1)
-
-		const unifiedAccount = state.accounts[UNIFIED_ACCOUNT_ID]
-		unifiedAccount.folders
-			.map(fId => state.folders[fId])
-			.filter(f => f.specialRole === folder.specialRole)
-			.forEach(folder => {
-				const idx = folder.envelopes.indexOf(envelopeUid)
-				if (idx < 0) {
-					console.warn('envelope does not exist in unified mailbox', accountId, folder.id, id)
-					return
-				}
-				folder.envelopes.splice(idx, 1)
-			})
-
-		Vue.delete(folder.envelopes, envelopeUid)
 	},
 	addMessage(state, {accountId, folderId, message}) {
 		const uid = accountId + '-' + folderId + '-' + message.id

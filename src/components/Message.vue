@@ -161,7 +161,7 @@ export default {
 				this.envelope = envelope
 				this.message = message
 
-				if (this.message === undefined) {
+				if (envelope === undefined || message === undefined) {
 					logger.info('message could not be found', {messageUid})
 					this.errorMessage = getRandomMessageErrorMessage()
 					this.loading = false

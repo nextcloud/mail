@@ -131,12 +131,12 @@ export default {
 		onToggleSeen() {
 			this.$store.dispatch('toggleEnvelopeSeen', this.data)
 		},
-		onDelete(e) {
+		async onDelete(e) {
 			// Don't navigate to the deleted message
 			e.preventDefault()
 
-			this.$emit('delete', this.data)
-			this.$store.dispatch('deleteMessage', this.data)
+			this.$emit('delete', {envelope: this.data})
+			await this.$store.dispatch('deleteMessage', this.data)
 		},
 	},
 }
