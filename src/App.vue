@@ -34,11 +34,16 @@ export default {
 	mounted() {
 		this.sync()
 	},
+	data() {
+		return {
+			syncContext: undefined,
+		}
+	},
 	methods: {
 		sync() {
 			setTimeout(async () => {
 				try {
-					await this.$store.dispatch('syncInboxes')
+					this.syncContex = await this.$store.dispatch('syncInboxes', this.syncContext)
 
 					logger.debug("Inboxes sync'ed in background")
 				} catch (error) {

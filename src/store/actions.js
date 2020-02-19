@@ -24,18 +24,22 @@ import orderBy from 'lodash/fp/orderBy'
 import {
 	andThen,
 	complement,
+	concat,
 	curry,
 	filter,
 	flatten,
 	identity,
-	isEmpty,
 	map,
+	mergeDeepRight,
 	last,
+	path,
 	pipe,
 	prop,
 	propEq,
+	reduce,
 	slice,
 	tap,
+	uniq,
 } from 'ramda'
 
 import {savePreference} from '../service/PreferenceService'
@@ -293,7 +297,7 @@ export default {
 			)
 		)(accountId, folderId, query, cursorElement.dateInt)
 	},
-	syncEnvelopes({commit, getters, dispatch}, {accountId, folderId, init = false}) {
+	syncEnvelopes({commit, getters, dispatch}, {accountId, folderId, uids, init = false}) {
 		const folder = getters.getFolder(accountId, folderId)
 
 		if (folder.isUnified) {
@@ -317,8 +321,6 @@ export default {
 			)
 		}
 
-		const uids = [] // TODO getters.getEnvelopes(accountId, folderId).map(env => env.id)
-
 		return syncEnvelopes(accountId, folderId, uids, init).then(syncData => {
 			syncData.newMessages.forEach(envelope => {
 				commit('addEnvelope', {
@@ -335,10 +337,59 @@ export default {
 				})
 			})
 
-			return syncData.newMessages
+			return {
+				...syncData,
+				accountId,
+				folderId,
+				uids,
+			}
 		})
 	},
-	syncInboxes({getters, dispatch}) {
+	syncInboxes({getters, dispatch}, syncContext) {
+		const findInboxes = findIndividualFolders(getters.getFolders, 'inbox')
+		const getUids = curry((context, folder) => {
+			const uids = path([folder.accountId, folder.id, 'uids'], context)
+			if (uids && uids.length) {
+				return Promise.resolve({
+					folder,
+					uids,
+				})
+			}
+			return dispatch('fetchEnvelopes', {
+				accountId: folder.accountId,
+				folderId: folder.id,
+			}).then(envelopes => {
+				return {
+					folder,
+					uids: map(prop('id'), envelopes),
+				}
+			})
+		})
+
+		const syncAll = pipe(
+			findInboxes,
+			map(getUids(syncContext)),
+			Promise.all.bind(Promise),
+			andThen(map(({folder, uids}) => dispatch('syncEnvelopes', {
+				accountId: folder.accountId,
+				folderId: folder.id,
+				uids,
+			}))),
+			andThen(Promise.all.bind(Promise)),
+			andThen(map(d => ({
+				[d.accountId]: {
+					[d.folderId]: {
+						newMessages: d.newMessages,
+						uids: uniq(concat(d.uids, d.newMessages)), // TODO: remove vanished?
+					}
+				}})
+			)),
+			andThen(reduce(mergeDeepRight, {})),
+			andThen(tap(console.info.bind(this))),
+		)
+
+		return syncAll(getters.accounts)
+
 		return Promise.all(
 			getters.accounts
 				.filter(a => !a.isUnified)
