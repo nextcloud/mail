@@ -19,66 +19,15 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-import head from 'lodash/fp/head'
-import {translate as t} from '@nextcloud/l10n'
 import Vue from 'vue'
 import Vuex from 'vuex'
 
-import {value} from '../util/undefined'
-
 import {UNIFIED_ACCOUNT_ID, UNIFIED_INBOX_ID, UNIFIED_INBOX_UID} from './constants'
 import actions from './actions'
+import {getters} from './getters'
 import mutations from './mutations'
 
 Vue.use(Vuex)
-
-export const getters = {
-	getPreference: state => (key, def) => {
-		return value(state.preferences[key]).or(def)
-	},
-	getAccount: state => id => {
-		return state.accounts[id]
-	},
-	accounts: state => {
-		return state.accountList.map(id => state.accounts[id])
-	},
-	getFolder: state => (accountId, folderId) => {
-		return state.folders[accountId + '-' + folderId]
-	},
-	getFolders: state => accountId => {
-		return state.accounts[accountId].folders.map(folderId => state.folders[folderId])
-	},
-	getSubfolders: (state, getters) => (accountId, folderId) => {
-		const folder = getters.getFolder(accountId, folderId)
-
-		return folder.folders.map(id => state.folders[id])
-	},
-	getUnifiedFolder: state => specialRole => {
-		return head(
-			state.accounts[UNIFIED_ACCOUNT_ID].folders
-				.map(folderId => state.folders[folderId])
-				.filter(folder => folder.specialRole === specialRole)
-		)
-	},
-	getEnvelope: state => (accountId, folderId, id) => {
-		return state.envelopes[accountId + '-' + folderId + '-' + id]
-	},
-	getEnvelopeById: state => id => {
-		return state.envelopes[id]
-	},
-	getEnvelopes: (state, getters) => (accountId, folderId) => {
-		return getters.getFolder(accountId, folderId).envelopes.map(msgId => state.envelopes[msgId])
-	},
-	getSearchEnvelopes: (state, getters) => (accountId, folderId) => {
-		return getters.getFolder(accountId, folderId).searchEnvelopes.map(msgId => state.envelopes[msgId])
-	},
-	getMessage: state => (accountId, folderId, id) => {
-		return state.messages[accountId + '-' + folderId + '-' + id]
-	},
-	getMessageByUid: state => uid => {
-		return state.messages[uid]
-	},
-}
 
 export default new Vuex.Store({
 	strict: process.env.NODE_ENV !== 'production',
@@ -104,8 +53,7 @@ export default new Vuex.Store({
 				specialRole: 'inbox',
 				unread: 0,
 				folders: [],
-				envelopes: [],
-				searchEnvelopes: [],
+				envelopeLists: {},
 			},
 		},
 		envelopes: {},

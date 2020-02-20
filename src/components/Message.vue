@@ -46,7 +46,7 @@
 						<ActionButton icon="icon-mail" @click="onToggleSeen">
 							{{ envelope.flags.unseen ? t('mail', 'Mark read') : t('mail', 'Mark unread') }}
 						</ActionButton>
-						<ActionButton icon="icon-delete" @click="onDelete">
+						<ActionButton icon="icon-delete" @click.prevent="onDelete">
 							{{ t('mail', 'Delete') }}
 						</ActionButton>
 					</Actions>
@@ -79,7 +79,7 @@ import Itinerary from './Itinerary'
 import MessageHTMLBody from './MessageHTMLBody'
 import MessagePlainTextBody from './MessagePlainTextBody'
 import Loading from './Loading'
-import Logger from '../logger'
+import logger from '../logger'
 import MessageAttachments from './MessageAttachments'
 
 export default {
@@ -100,11 +100,11 @@ export default {
 		return {
 			loading: true,
 			message: undefined,
+			envelope: undefined,
 			errorMessage: '',
 			error: undefined,
 			replyRecipient: {},
 			replySubject: '',
-			envelope: '',
 		}
 	},
 	computed: {
@@ -146,18 +146,23 @@ export default {
 			const messageUid = this.$route.params.messageUid
 
 			try {
-				const message = await this.$store.dispatch('fetchMessage', messageUid)
+				const [envelope, message] = await Promise.all([
+					this.$store.dispatch('fetchEnvelope', messageUid),
+					this.$store.dispatch('fetchMessage', messageUid),
+				])
+				logger.debug('envelope and message fetched', {envelope, message})
 				// TODO: add timeout so that message isn't flagged when only viewed
 				// for a few seconds
 				if (message && message.uid !== this.$route.params.messageUid) {
-					Logger.debug("User navigated away, loaded message won't be shown nor flagged as seen")
+					logger.debug("User navigated away, loaded message won't be shown nor flagged as seen")
 					return
 				}
 
+				this.envelope = envelope
 				this.message = message
 
-				if (this.message === undefined) {
-					Logger.info('message could not be found', {messageUid})
+				if (envelope === undefined || message === undefined) {
+					logger.info('message could not be found', {messageUid})
 					this.errorMessage = getRandomMessageErrorMessage()
 					this.loading = false
 					return
@@ -173,15 +178,11 @@ export default {
 
 				this.loading = false
 
-				this.envelope = this.$store.getters.getEnvelope(message.accountId, message.folderId, message.id)
-				if (!this.envelope.flags.unseen) {
-					// Already seen -> no change necessary
-					return
+				if (envelope.flags.unseen) {
+					return this.$store.dispatch('toggleEnvelopeSeen', envelope)
 				}
-
-				return this.$store.dispatch('toggleEnvelopeSeen', this.envelope)
 			} catch (error) {
-				Logger.error('could not load message ', {messageUid, error})
+				logger.error('could not load message ', {messageUid, error})
 				if (error.isError) {
 					this.errorMessage = t('mail', 'Could not load your message')
 					this.error = error
@@ -231,41 +232,12 @@ export default {
 		onToggleSeen() {
 			this.$store.dispatch('toggleEnvelopeSeen', this.envelope)
 		},
-		onDelete(e) {
-			// Don't try to navigate to the deleted message
-			e.preventDefault()
-
-			let envelopes = this.$store.getters.getEnvelopes(this.$route.params.accountId, this.$route.params.folderId)
-			const idx = envelopes.indexOf(this.envelope)
-
-			let next
-			if (idx === -1) {
-				Logger.debug('envelope to delete does not exist in envelope list')
-				return
-			} else if (idx === 0) {
-				next = envelopes[idx + 1]
-			} else {
-				next = envelopes[idx - 1]
-			}
-
-			this.$emit('delete', this.envelope)
-			this.$store.dispatch('deleteMessage', this.envelope)
-
-			if (!next) {
-				Logger.debug('no next/previous envelope, not navigating')
-				return
-			}
-
-			// Keep the selected account-folder combination, but navigate to a different message
-			// (it's not a bug that we don't use next.accountId and next.folderId here)
-			this.$router.push({
-				name: 'message',
-				params: {
-					accountId: this.$route.params.accountId,
-					folderId: this.$route.params.folderId,
-					messageUid: next.uid,
-				},
+		onDelete() {
+			this.$emit('delete', {
+				envelope: this.envelope,
+				message: this.message,
 			})
+			this.$store.dispatch('deleteMessage', this.message)
 		},
 	},
 }

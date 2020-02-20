@@ -27,8 +27,21 @@ use OCA\Mail\Account;
 use OCA\Mail\Db\Message;
 use OCA\Mail\Exception\ClientException;
 use OCA\Mail\Exception\ServiceException;
+use OCP\AppFramework\Db\DoesNotExistException;
 
 interface IMailSearch {
+
+	/**
+	 * @param Account $account
+	 * @param string $mailboxName
+	 * @param int $uid
+	 *
+	 * @return Message
+	 * @throws DoesNotExistException
+	 * @throws ClientException
+	 * @throws ServiceException
+	 */
+	public function findMessage(Account $account, string $mailboxName, int $uid): Message;
 
 	/**
 	 * @param Account $account

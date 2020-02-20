@@ -1,52 +1,26 @@
 <template>
-	<AppContentList :show-details="!show">
-		<transition-group
-			v-infinite-scroll="loadMore"
-			v-scroll="onScroll"
-			v-shortkey.once="shortkeys"
-			name="list"
-			infinite-scroll-disabled="loading"
-			infinite-scroll-distance="30"
-			@shortkey.native="handleShortcut"
-		>
+	<div>
+		<transition-group name="list">
 			<div id="list-refreshing" key="loading" class="icon-loading-small" :class="{refreshing: refreshing}" />
-			<EmptyFolder v-if="envelopes.length === 0" key="empty" />
 			<Envelope
 				v-for="env in envelopes"
-				v-else
 				:key="env.uid"
 				:data="env"
 				:folder="folder"
-				@delete="onEnvelopeDeleted"
+				@delete="$emit('delete', env)"
 			/>
 			<div id="load-more-mail-messages" key="loadingMore" :class="{'icon-loading-small': loadingMore}" />
 		</transition-group>
-	</AppContentList>
+	</div>
 </template>
 
 <script>
-import AppContentList from '@nextcloud/vue/dist/Components/AppContentList'
-import infiniteScroll from 'vue-infinite-scroll'
-import vuescroll from 'vue-scroll'
-import Vue from 'vue'
-
-import EmptyFolder from './EmptyFolder'
 import Envelope from './Envelope'
-import logger from '../logger'
-import {matchError} from '../errors/match'
-import MailboxLockedError from '../errors/MailboxLockedError'
-
-Vue.use(vuescroll, {throttle: 600})
 
 export default {
 	name: 'EnvelopeList',
 	components: {
-		AppContentList,
 		Envelope,
-		EmptyFolder,
-	},
-	directives: {
-		infiniteScroll,
 	},
 	props: {
 		account: {
@@ -61,190 +35,13 @@ export default {
 			type: Array,
 			required: true,
 		},
-		searchQuery: {
-			type: String,
-			required: false,
-			default: undefined,
-		},
-		show: {
+		refreshing: {
 			type: Boolean,
-			default: true,
+			required: true,
 		},
-	},
-	data() {
-		return {
-			loadingMore: false,
-			refreshing: false,
-			shortkeys: {
-				del: ['del'],
-				flag: ['s'],
-				next: ['arrowright'],
-				prev: ['arrowleft'],
-				refresh: ['r'],
-				unseen: ['u'],
-			},
-		}
-	},
-	computed: {
-		isSearch() {
-			return this.searchQuery !== undefined
-		},
-	},
-	methods: {
-		loadMore() {
-			this.loadingMore = true
-
-			this.$store
-				.dispatch('fetchNextEnvelopePage', {
-					accountId: this.$route.params.accountId,
-					folderId: this.$route.params.folderId,
-					query: this.searchQuery,
-				})
-				.catch(error => logger.error('could not fetch next envelope page', {error}))
-				.then(() => {
-					this.loadingMore = false
-				})
-		},
-		async sync() {
-			this.refreshing = true
-
-			try {
-				await this.$store.dispatch('syncEnvelopes', {
-					accountId: this.$route.params.accountId,
-					folderId: this.$route.params.folderId,
-				})
-			} catch (error) {
-				matchError(error, {
-					[MailboxLockedError.name](error) {
-						logger.info('Background sync failed because the mailbox is locked', {error})
-					},
-					default(error) {
-						logger.error('Could not sync envelopes: ' + error.message, {error})
-					},
-				})
-			} finally {
-				this.refreshing = false
-			}
-		},
-		onEnvelopeDeleted(envelope) {
-			const envelopes = this.envelopes
-			const idx = this.envelopes.indexOf(envelope)
-			if (idx === -1) {
-				logger.debug('envelope to delete does not exist in envelope list')
-				return
-			}
-			if (envelope.uid !== this.$route.params.messageUid) {
-				logger.debug('other message open, not jumping to the next/previous message')
-				return
-			}
-
-			let next
-			if (idx === 0) {
-				next = envelopes[idx + 1]
-			} else {
-				next = envelopes[idx - 1]
-			}
-
-			if (!next) {
-				logger.debug('no next/previous envelope, not navigating')
-				return
-			}
-
-			// Keep the selected account-folder combination, but navigate to a different message
-			// (it's not a bug that we don't use next.accountId and next.folderId here)
-			this.$router.push({
-				name: 'message',
-				params: {
-					accountId: this.$route.params.accountId,
-					folderId: this.$route.params.folderId,
-					messageUid: next.uid,
-				},
-			})
-		},
-		onScroll(e, p) {
-			if (p.scrollTop === 0 && !this.refreshing) {
-				return this.sync()
-			}
-		},
-		handleShortcut(e) {
-			const envelopes = this.envelopes
-			const currentUid = this.$route.params.messageUid
-
-			if (!currentUid) {
-				logger.debug('ignoring shortcut: no envelope selected')
-				return
-			}
-
-			const current = envelopes.filter(e => e.uid == currentUid)
-			if (current.length === 0) {
-				logger.debug('ignoring shortcut: currently displayed messages is not in current envelope list')
-				return
-			}
-
-			const env = current[0]
-			const idx = envelopes.indexOf(env)
-
-			switch (e.srcKey) {
-				case 'next':
-				case 'prev':
-					let next
-					if (e.srcKey === 'next') {
-						next = envelopes[idx + 1]
-					} else {
-						next = envelopes[idx - 1]
-					}
-
-					if (!next) {
-						logger.debug('ignoring shortcut: head or tail of envelope list reached', {
-							envelopes,
-							idx,
-							srcKey: e.srcKey,
-						})
-						return
-					}
-
-					// Keep the selected account-folder combination, but navigate to a different message
-					// (it's not a bug that we don't use next.accountId and next.folderId here)
-					this.$router.push({
-						name: 'message',
-						params: {
-							accountId: this.$route.params.accountId,
-							folderId: this.$route.params.folderId,
-							messageUid: next.uid,
-						},
-					})
-					break
-				case 'del':
-					logger.debug('deleting', {env})
-					this.$store
-						.dispatch('deleteMessage', env)
-						.catch(error => logger.error('could not delete envelope', {env, error}))
-
-					break
-				case 'flag':
-					logger.debug('flagging envelope via shortkey', {env})
-					this.$store
-						.dispatch('toggleEnvelopeFlagged', env)
-						.catch(error => logger.error('could not flag envelope via shortkey', {env, error}))
-					break
-				case 'refresh':
-					logger.debug('syncing envelopes via shortkey')
-					if (!this.refreshing) {
-						this.sync()
-					}
-
-					break
-				case 'unseen':
-					logger.debug('marking message as seen/unseen via shortkey', {env})
-					this.$store
-						.dispatch('toggleEnvelopeSeen', env)
-						.catch(error =>
-							logger.error('could not mark envelope as seen/unseen via shortkey', {env, error})
-						)
-					break
-				default:
-					logger.warn('shortcut ' + e.srcKey + ' is unknown. ignoring.')
-			}
+		loadingMore: {
+			type: Boolean,
+			required: true,
 		},
 	},
 }

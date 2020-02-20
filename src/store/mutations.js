@@ -25,14 +25,14 @@ import Vue from 'vue'
 
 import {buildMailboxHierarchy} from '../imap/MailboxHierarchy'
 import {havePrefix} from '../imap/MailboxPrefix'
+import {normalizedFolderId, normalizedMessageId, normalizeEnvelopeListId} from './normalization'
 import {sortMailboxes} from '../imap/MailboxSorter'
 import {UNIFIED_ACCOUNT_ID} from './constants'
 
 const addFolderToState = (state, account) => folder => {
 	const id = account.id + '-' + folder.id
 	folder.accountId = account.id
-	folder.envelopes = []
-	folder.searchEnvelopes = []
+	folder.envelopeLists = {}
 	Vue.set(state.folders, id, folder)
 	return id
 }
@@ -104,43 +104,15 @@ export default {
 			account.folders.push(id)
 		})
 	},
-	addEnvelope(state, {accountId, folder, envelope}) {
-		const uid = accountId + '-' + folder.id + '-' + envelope.id
-		envelope.accountId = accountId
-		envelope.folderId = folder.id
-		envelope.uid = uid
-		Vue.set(state.envelopes, uid, envelope)
+	addEnvelope(state, {accountId, folderId, query, envelope}) {
+		const folder = state.folders[normalizedFolderId(accountId, folderId)]
+		Vue.set(state.envelopes, envelope.uid, envelope)
+		const listId = normalizeEnvelopeListId(query)
+		const existing = folder.envelopeLists[listId] || []
 		Vue.set(
-			folder,
-			'envelopes',
-			sortedUniq(orderBy(id => state.envelopes[id].dateInt)('desc')(folder.envelopes.concat([uid])))
-		)
-	},
-	addSearchEnvelopes(state, {accountId, folder, envelopes, clear}) {
-		const uids = envelopes.map(envelope => {
-			const uid = accountId + '-' + folder.id + '-' + envelope.id
-			envelope.accountId = accountId
-			envelope.folderId = folder.id
-			envelope.uid = uid
-			Vue.set(state.envelopes, uid, envelope)
-			return uid
-		})
-
-		if (clear) {
-			Vue.set(folder, 'searchEnvelopes', uids)
-		} else {
-			Vue.set(
-				folder,
-				'searchEnvelopes',
-				sortedUniq(orderBy(id => state.envelopes[id].dateInt)('desc')(folder.searchEnvelopes.concat(uids)))
-			)
-		}
-	},
-	addUnifiedEnvelope(state, {folder, envelope}) {
-		Vue.set(
-			folder,
-			'envelopes',
-			sortedUniq(orderBy(id => state.envelopes[id].dateInt)('desc')(folder.envelopes.concat([envelope.uid])))
+			folder.envelopeLists,
+			listId,
+			sortedUniq(orderBy(id => state.envelopes[id].dateInt, 'desc', existing.concat([envelope.uid])))
 		)
 	},
 	addUnifiedEnvelopes(state, {folder, uids}) {
@@ -152,29 +124,31 @@ export default {
 	flagEnvelope(state, {envelope, flag, value}) {
 		envelope.flags[flag] = value
 	},
-	removeEnvelope(state, {accountId, folder, id}) {
-		const envelopeUid = accountId + '-' + folder.id + '-' + id
-		const idx = folder.envelopes.indexOf(envelopeUid)
+	removeEnvelope(state, {accountId, folderId, id, query}) {
+		const folder = state.folders[normalizedFolderId(accountId, folderId)]
+		const list = folder.envelopeLists[normalizeEnvelopeListId(query)]
+		const idx = list.indexOf(normalizedMessageId(accountId, folderId, id))
 		if (idx < 0) {
 			console.warn('envelope does not exist', accountId, folder.id, id)
 			return
 		}
-		folder.envelopes.splice(idx, 1)
+		list.splice(idx, 1)
 
 		const unifiedAccount = state.accounts[UNIFIED_ACCOUNT_ID]
 		unifiedAccount.folders
 			.map(fId => state.folders[fId])
 			.filter(f => f.specialRole === folder.specialRole)
 			.forEach(folder => {
-				const idx = folder.envelopes.indexOf(envelopeUid)
+				const list = folder.envelopeLists[normalizeEnvelopeListId(query)]
+				const idx = list.indexOf(normalizedMessageId(accountId, folderId, id))
 				if (idx < 0) {
 					console.warn('envelope does not exist in unified mailbox', accountId, folder.id, id)
 					return
 				}
-				folder.envelopes.splice(idx, 1)
+				list.splice(idx, 1)
 			})
 
-		Vue.delete(folder.envelopes, envelopeUid)
+		Vue.delete(list, normalizedMessageId(accountId, folderId, id))
 	},
 	addMessage(state, {accountId, folderId, message}) {
 		const uid = accountId + '-' + folderId + '-' + message.id
