@@ -136,6 +136,12 @@ class Account implements JsonSerializable {
 				'port' => $port,
 				'secure' => $ssl_mode,
 				'timeout' => (int) $this->config->getSystemValue('app.mail.imap.timeout', 20),
+				'context' => [
+					'ssl' => [
+						'verify_peer' => $this->config->getSystemValueBool('app.mail.verify-tls-peer', true),
+						'verify_peer_name' => $this->config->getSystemValueBool('app.mail.verify-tls-peer', true),
+					],
+				],
 			];
 			if ($this->config->getSystemValue('debug', false)) {
 				$params['debug'] = $this->config->getSystemValue('datadirectory') . '/horde_imap.log';
