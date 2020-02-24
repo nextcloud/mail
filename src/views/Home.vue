@@ -1,14 +1,14 @@
 <template>
 	<Content v-shortkey.once="['c']" app-name="mail" @shortkey.native="onNewMessage">
 		<Navigation />
-		<FolderContent v-if="activeAccount" :account="activeAccount" :folder="activeFolder" />
+		<MailboxMessage v-if="activeAccount" :account="activeAccount" :folder="activeFolder" />
 	</Content>
 </template>
 
 <script>
 import Content from '@nextcloud/vue/dist/Components/Content'
 
-import FolderContent from '../components/FolderContent'
+import MailboxMessage from '../components/MailboxMessage'
 import logger from '../logger'
 import Navigation from '../components/Navigation'
 
@@ -16,7 +16,7 @@ export default {
 	name: 'Home',
 	components: {
 		Content,
-		FolderContent,
+		MailboxMessage,
 		Navigation,
 	},
 	computed: {

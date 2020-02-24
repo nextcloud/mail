@@ -1,7 +1,7 @@
 /*
- * @copyright 2018 Christoph Wurst <christoph@winzerhof-wurst.at>
+ * @copyright 2020 Christoph Wurst <christoph@winzerhof-wurst.at>
  *
- * @author 2018 Christoph Wurst <christoph@winzerhof-wurst.at>
+ * @author 2020 Christoph Wurst <christoph@winzerhof-wurst.at>
  *
  * @license GNU AGPL version 3 or any later version
  *
@@ -19,22 +19,14 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-import {value} from '../../../util/undefined'
+import {curry, defaultTo} from 'ramda'
 
-describe('undefined helper', () => {
-	it('returns other value', () => {
-		const wrapped = undefined
-
-		const val = value(wrapped)
-
-		expect(val.or(3)).to.equal(3)
-	})
-
-	it('returns actual value', () => {
-		const wrapped = 4
-
-		const val = value(wrapped)
-
-		expect(val.or(3)).to.equal(4)
-	})
+export const normalizedFolderId = curry((accountId, folderId) => {
+	return `${accountId}-${folderId}`
 })
+
+export const normalizedMessageId = curry((accountId, folderId, messageId) => {
+	return `${accountId}-${folderId}-${messageId}`
+})
+
+export const normalizeEnvelopeListId = defaultTo('')

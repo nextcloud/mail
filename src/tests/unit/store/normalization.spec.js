@@ -1,7 +1,7 @@
 /*
- * @copyright 2018 Christoph Wurst <christoph@winzerhof-wurst.at>
+ * @copyright 2020 Christoph Wurst <christoph@winzerhof-wurst.at>
  *
- * @author 2018 Christoph Wurst <christoph@winzerhof-wurst.at>
+ * @author 2020 Christoph Wurst <christoph@winzerhof-wurst.at>
  *
  * @license GNU AGPL version 3 or any later version
  *
@@ -19,18 +19,25 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-class IndefinableValue {
-	constructor(value) {
-		this.value = value
-	}
+import {normalizedFolderId, normalizedMessageId} from '../../../store/normalization'
 
-	or(other) {
-		if (this.value === undefined) {
-			return other
-		} else {
-			return this.value
-		}
-	}
-}
+describe('Vuex store normalization', () => {
+	it('creates a unique folder ID', () => {
+		const accountId = 13
+		const folderId = 'INBOX'
 
-export const value = value => new IndefinableValue(value)
+		const id = normalizedFolderId(accountId, folderId)
+
+		expect(id).to.equal('13-INBOX')
+	})
+
+	it('creates a unique message ID', () => {
+		const accountId = 13
+		const folderId = 'INBOX'
+		const messageId = 123
+
+		const id = normalizedMessageId(accountId, folderId, 123)
+
+		expect(id).to.equal('13-INBOX-123')
+	})
+})

@@ -79,6 +79,11 @@ return [
 			'verb' => 'POST'
 		],
 		[
+			'name' => 'messages#getBody',
+			'url' => '/api/accounts/{accountId}/folders/{folderId}/messages/{messageId}/body',
+			'verb' => 'GET'
+		],
+		[
 			'name' => 'messages#getHtmlBody',
 			'url' => '/api/accounts/{accountId}/folders/{folderId}/messages/{messageId}/html',
 			'verb' => 'GET'

@@ -54,6 +54,7 @@ use OCP\IL10N;
 use OCP\ILogger;
 use OCP\IRequest;
 use OCP\IURLGenerator;
+use function array_map;
 use function base64_decode;
 
 class MessagesController extends Controller {
@@ -176,23 +177,52 @@ class MessagesController extends Controller {
 			return new JSONResponse(null, Http::STATUS_FORBIDDEN);
 		}
 
+		$this->logger->debug("loading message of folder <$folderId>");
+
+		return new JSONResponse(
+			$this->mailSearch->findMessage(
+				$account,
+				base64_decode($folderId),
+				$id
+			)
+		);
+	}
+
+	/**
+	 * @NoAdminRequired
+	 * @TrapError
+	 *
+	 * @param int $accountId
+	 * @param string $folderId
+	 * @param int $messageId
+	 *
+	 * @return JSONResponse
+	 * @throws ServiceException
+	 */
+	public function getBody(int $accountId, string $folderId, int $messageId): JSONResponse {
+		try {
+			$account = $this->accountService->find($this->currentUserId, $accountId);
+		} catch (DoesNotExistException $e) {
+			return new JSONResponse(null, Http::STATUS_FORBIDDEN);
+		}
+
 		$json = $this->mailManager->getMessage(
 			$account,
 			base64_decode($folderId),
-			$id,
+			$messageId,
 			true
 		)->getFullMessage(
 			$accountId,
 			base64_decode($folderId),
-			$id
+			$messageId
 		);
 		$json['itineraries'] = $this->itineraryService->extract(
 			$account,
 			base64_decode($folderId),
-			$id
+			$messageId
 		);
-		$json['attachments'] = array_map(function ($a) use ($accountId, $folderId, $id) {
-			return $this->enrichDownloadUrl($accountId, $folderId, $id, $a);
+		$json['attachments'] = array_map(function ($a) use ($accountId, $folderId, $messageId) {
+			return $this->enrichDownloadUrl($accountId, $folderId, $messageId, $a);
 		}, $json['attachments']);
 
 		return new JSONResponse($json);
