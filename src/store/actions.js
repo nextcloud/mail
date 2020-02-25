@@ -171,10 +171,25 @@ export default {
 			})
 		)
 	},
-	markFolderRead({dispatch}, {account, folderId}) {
-		return markFolderRead(account.id, folderId).then(
+	markFolderRead({getters, dispatch}, {accountId, folderId}) {
+		const folder = getters.getFolder(accountId, folderId)
+
+		if (folder.isUnified) {
+			const findIndividual = findIndividualFolders(getters.getFolders, folder.specialRole)
+			const individualFolders = findIndividual(getters.accounts)
+			return Promise.all(
+				individualFolders.map((f) =>
+					dispatch('markFolderRead', {
+						accountId: f.accountId,
+						folderId: f.id,
+					})
+				)
+			)
+		}
+
+		return markFolderRead(accountId, folderId).then(
 			dispatch('syncEnvelopes', {
-				accountId: account.id,
+				accountId: accountId,
 				folderId: folderId,
 			})
 		)
