@@ -37,6 +37,8 @@ use OCA\Mail\Exception\ServiceException;
 use OCA\Mail\Model\IMAPMessage;
 use OCP\AppFramework\Db\DoesNotExistException;
 use OCP\ILogger;
+use function array_filter;
+use function array_map;
 use function iterator_to_array;
 
 class MessageMapper {
@@ -70,25 +72,40 @@ class MessageMapper {
 	 * @param Horde_Imap_Client_Socket $client
 	 * @param Mailbox $mailbox
 	 *
+	 * @param int|null $highestKnownUid
+	 *
 	 * @return IMAPMessage[]
 	 * @throws Horde_Imap_Client_Exception
 	 */
-	public function findAll(Horde_Imap_Client_Socket $client, Mailbox $mailbox): array {
+	public function findAll(Horde_Imap_Client_Socket $client,
+							Mailbox $mailbox,
+							int $highestKnownUid = null,
+							int $maxResults = null): array {
 		$query = new Horde_Imap_Client_Fetch_Query();
 		$query->uid();
 
 		return $this->findByIds(
 			$client,
 			$mailbox->getMailbox(),
-			array_map(
-				function(Horde_Imap_Client_Data_Fetch $data) {
-					return $data->getUid();
-				},
-				iterator_to_array($client->fetch(
-					$mailbox->getMailbox(),
-					$query,
-					[]
-				))
+			array_slice(
+				array_filter(
+					array_map(
+						function(Horde_Imap_Client_Data_Fetch $data) {
+							return $data->getUid();
+						},
+						iterator_to_array($client->fetch(
+							$mailbox->getMailbox(),
+							$query,
+							[]
+						))
+					),
+					function(int $uid) use ($highestKnownUid) {
+						// Don't load the ones we already know
+						return $highestKnownUid === null || $uid > $highestKnownUid;
+					}
+				),
+				0,
+				$maxResults
 			)
 		);
 	}

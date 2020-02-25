@@ -37,17 +37,27 @@ class Response implements JsonSerializable {
 	/** @var int[] */
 	private $vanishedMessageUids;
 
+	/** @var bool */
+	private $incomplete;
+
 	/**
 	 * @param string $syncToken
 	 * @param IMAPMessage[] $newMessages
 	 * @param IMAPMessage[] $changedMessages
 	 * @param int[] $vanishedMessageUids
 	 */
-	public function __construct(array $newMessages = [], array $changedMessages = [],
-								array $vanishedMessageUids = []) {
+	public function __construct(array $newMessages = [],
+								array $changedMessages = [],
+								array $vanishedMessageUids = [],
+								bool $incomplete = false) {
 		$this->newMessages = $newMessages;
 		$this->changedMessages = $changedMessages;
 		$this->vanishedMessageUids = $vanishedMessageUids;
+		$this->incomplete = $incomplete;
+	}
+
+	public static function incomplete(): self {
+		return new self([], [], [], true);
 	}
 
 	/**
@@ -85,6 +95,10 @@ class Response implements JsonSerializable {
 			array_merge($this->getChangedMessages(), $other->getChangedMessages()),
 			array_merge($this->getVanishedMessageUids(), $other->getVanishedMessageUids())
 		);
+	}
+
+	public function isIncomplete(): bool {
+		return $this->incomplete;
 	}
 
 }

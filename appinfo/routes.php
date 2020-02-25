@@ -56,7 +56,7 @@ return [
 		[
 			'name' => 'folders#sync',
 			'url' => '/api/accounts/{accountId}/folders/{folderId}/sync',
-			'verb' => 'GET'
+			'verb' => 'POST'
 		],
 		[
 			'name' => 'folders#markAllAsRead',

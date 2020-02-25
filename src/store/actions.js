@@ -63,6 +63,8 @@ import logger from '../logger'
 import {normalizeEnvelopeListId} from './normalization'
 import {showNewMessagesNotification} from '../service/NotificationService'
 import {parseUid} from '../util/EnvelopeUidParser'
+import {matchError} from '../errors/match'
+import SyncIncompleteError from '../errors/SyncIncompleteError'
 
 const PAGE_SIZE = 20
 
@@ -375,45 +377,57 @@ export default {
 
 		const uids = getters.getEnvelopes(accountId, folderId, query).map(env => env.id)
 
-		return syncEnvelopes(accountId, folderId, uids, init).then(syncData => {
-			const unifiedFolder = getters.getUnifiedFolder(folder.specialRole)
+		return syncEnvelopes(accountId, folderId, uids, init)
+			.then(syncData => {
+				const unifiedFolder = getters.getUnifiedFolder(folder.specialRole)
 
-			syncData.newMessages.forEach(envelope => {
-				commit('addEnvelope', {
-					accountId,
-					folderId,
-					envelope,
-					query,
-				})
-				if (unifiedFolder) {
+				syncData.newMessages.forEach(envelope => {
 					commit('addEnvelope', {
-						accountId: unifiedFolder.accountId,
-						folderId: unifiedFolder.id,
+						accountId,
+						folderId,
 						envelope,
 						query,
 					})
-				}
-			})
-			syncData.changedMessages.forEach(envelope => {
-				commit('addEnvelope', {
-					accountId,
-					folderId,
-					envelope,
-					query,
+					if (unifiedFolder) {
+						commit('addEnvelope', {
+							accountId: unifiedFolder.accountId,
+							folderId: unifiedFolder.id,
+							envelope,
+							query,
+						})
+					}
 				})
-			})
-			syncData.vanishedMessages.forEach(id => {
-				commit('removeEnvelope', {
-					accountId,
-					folderId,
-					id,
-					query,
+				syncData.changedMessages.forEach(envelope => {
+					commit('addEnvelope', {
+						accountId,
+						folderId,
+						envelope,
+						query,
+					})
 				})
-				// Already removed from unified inbox
-			})
+				syncData.vanishedMessages.forEach(id => {
+					commit('removeEnvelope', {
+						accountId,
+						folderId,
+						id,
+						query,
+					})
+					// Already removed from unified inbox
+				})
 
-			return syncData.newMessages
-		})
+				return syncData.newMessages
+			})
+			.catch(error => {
+				return matchError(error, {
+					[SyncIncompleteError.getName()]() {
+						console.warn('(initial) sync is incomplete, retriggering')
+						return dispatch('syncEnvelopes', {accountId, folderId, query, init})
+					},
+					default(error) {
+						console.error('Could not sync envelopes: ' + error.message, error)
+					},
+				})
+			})
 	},
 	syncInboxes({getters, dispatch}) {
 		return Promise.all(
