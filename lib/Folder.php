@@ -87,22 +87,28 @@ class Folder implements JsonSerializable {
 
 	/**
 	 * @param Folder $folder
+	 *
+	 * @return void
 	 */
-	public function addFolder(Folder $folder) {
+	public function addFolder(Folder $folder): void {
 		$this->folders[$folder->getMailbox()] = $folder;
 	}
 
 	/**
 	 * @param array $status
+	 *
+	 * @return void
 	 */
-	public function setStatus(array $status) {
+	public function setStatus(array $status): void {
 		$this->status = $status;
 	}
 
 	/**
 	 * @param string $use
+	 *
+	 * @return void
 	 */
-	public function addSpecialUse($use) {
+	public function addSpecialUse($use): void {
 		$this->specialUse[] = $use;
 	}
 

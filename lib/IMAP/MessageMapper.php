@@ -162,7 +162,7 @@ class MessageMapper {
 	}
 
 	public function markAllRead(Horde_Imap_Client_Base $client,
-								string $mailbox) {
+								string $mailbox): void {
 		$client->store($mailbox, [
 			'add' => [
 				Horde_Imap_Client::FLAG_SEEN,

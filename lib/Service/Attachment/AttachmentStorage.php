@@ -66,9 +66,12 @@ class AttachmentStorage {
 	 * @param string $userId
 	 * @param int $attachmentId
 	 * @param UploadedFile $uploadedFile
+	 *
 	 * @throws UploadException
+	 *
+	 * @return void
 	 */
-	public function save(string $userId, int $attachmentId, UploadedFile $uploadedFile) {
+	public function save(string $userId, int $attachmentId, UploadedFile $uploadedFile): void {
 		$folder = $this->getAttachmentFolder($userId);
 
 		$file = $folder->newFile((string) $attachmentId);
@@ -105,7 +108,7 @@ class AttachmentStorage {
 		}
 	}
 
-	public function delete($userId, $attachmentId) {
+	public function delete(string $userId, int $attachmentId): void {
 		throw new Exception('not implemented');
 	}
 

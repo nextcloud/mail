@@ -27,6 +27,7 @@
 /.phan
 /phpunit*xml
 /postcss.config.js
+/psalm.xml
 /screenshots
 .scrutinizer.yml
 /src

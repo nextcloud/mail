@@ -57,7 +57,10 @@ class CollectedAddressMapper extends QBMapper {
 		return $this->findEntities($dbQuery);
 	}
 
-	public function exists($userId, $email) {
+	/**
+	 * @param null|string $email
+	 */
+	public function exists(string $userId, ?string $email) {
 		$qb = $this->db->getQueryBuilder();
 		$dbQuery = $qb
 			->select('*')

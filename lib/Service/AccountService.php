@@ -74,7 +74,8 @@ class AccountService {
 	}
 
 	/**
-	 * @param string $id
+	 * @param int $id
+	 *
 	 * @return Account
 	 */
 	public function findById(int $id): Account {

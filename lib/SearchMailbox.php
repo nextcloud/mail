@@ -58,7 +58,8 @@ class SearchMailbox extends Mailbox {
 
 	/**
 	 * @param int $flags
-	 * @return mixed
+	 *
+	 * @return array
 	 */
 	public function getStatus(int $flags = Horde_Imap_Client::STATUS_ALL): array {
 		$status = parent::getStatus($flags);

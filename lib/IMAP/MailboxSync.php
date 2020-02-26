@@ -66,7 +66,7 @@ class MailboxSync {
 		$this->logger = $logger;
 	}
 
-	public function sync(Account $account, $force = false): void {
+	public function sync(Account $account, bool $force = false): void {
 		if (!$force && $account->getMailAccount()->getLastMailboxSync() >= ($this->timeFactory->getTime() - 7200)) {
 			$this->logger->debug("account is up to date, skipping mailbox sync");
 			return;

@@ -145,6 +145,8 @@ class MailManager implements IMailManager {
 	 * @param string $destFolderId
 	 *
 	 * @throws ServiceException
+	 *
+	 * @return void
 	 */
 	public function moveMessage(Account $sourceAccount,
 								string $sourceFolderId,
@@ -216,11 +218,13 @@ class MailManager implements IMailManager {
 	 * @param int $messageId
 	 *
 	 * @throws ServiceException
+	 *
+	 * @return void
 	 */
 	private function moveMessageOnSameAccount(Account $account,
 											  string $sourceFolderId,
 											  string $destFolderId,
-											  int $messageId) {
+											  int $messageId): void {
 		$client = $this->imapClientFactory->getClient($account);
 
 		$this->messageMapper->move($client, $sourceFolderId, $messageId, $destFolderId);

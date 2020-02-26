@@ -113,8 +113,7 @@ class MailboxSyncTest extends TestCase {
 			->willReturn($folders);
 		$this->folderMapper->expects($this->once())
 			->method('detectFolderSpecialUse')
-			->with($folders)
-			->willReturn($folders);
+			->with($folders);
 
 		$this->sync->sync($account);
 	}

@@ -53,8 +53,10 @@ class AddressCollector {
 	 * Duplicates are ignored
 	 *
 	 * @param AddressList $addressList
+	 *
+	 * @return void
 	 */
-	public function addAddresses(AddressList $addressList) {
+	public function addAddresses(AddressList $addressList): void {
 		$this->logger->debug("collecting " . count($addressList) . " email addresses");
 		foreach ($addressList->iterate() as $address) {
 			/* @var $address Address */
@@ -64,8 +66,10 @@ class AddressCollector {
 
 	/**
 	 * @param Address $address
+	 *
+	 * @return void
 	 */
-	private function saveAddress(Address $address) {
+	private function saveAddress(Address $address): void {
 		try {
 			$hordeAddress = $address->toHorde();
 			if (!$hordeAddress->valid) {

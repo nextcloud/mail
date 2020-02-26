@@ -109,9 +109,11 @@ class FolderMapper {
 	 * @param Horde_Imap_Client_Socket $client
 	 *
 	 * @throws Horde_Imap_Client_Exception
+	 *
+	 * @return void
 	 */
 	public function getFoldersStatus(array $folders,
-									 Horde_Imap_Client_Socket $client) {
+									 Horde_Imap_Client_Socket $client): void {
 		$mailboxes = array_map(function (Folder $folder) {
 			return $folder->getMailbox();
 		}, array_filter($folders, function (Folder $folder) {
@@ -132,9 +134,11 @@ class FolderMapper {
 	 * @param string $mailbox
 	 *
 	 * @throws Horde_Imap_Client_Exception
+	 *
+	 * @return FolderStats
 	 */
 	public function getFoldersStatusAsObject(Horde_Imap_Client_Socket $client,
-											 string $mailbox) {
+											 string $mailbox): FolderStats {
 		$status = $client->status($mailbox);
 
 		return new FolderStats(
@@ -145,8 +149,10 @@ class FolderMapper {
 
 	/**
 	 * @param Folder[] $folders
+	 *
+	 * @return void
 	 */
-	public function detectFolderSpecialUse(array $folders) {
+	public function detectFolderSpecialUse(array $folders): void {
 		foreach ($folders as $folder) {
 			$this->detectSpecialUse($folder);
 		}
@@ -158,8 +164,10 @@ class FolderMapper {
 	 * This method reads the attributes sent by the server
 	 *
 	 * @param Folder $folder
+	 *
+	 * @return void
 	 */
-	protected function detectSpecialUse(Folder $folder) {
+	protected function detectSpecialUse(Folder $folder): void {
 		/*
 		 * @todo: support multiple attributes on same folder
 		 * "any given server or  message store may support
@@ -198,8 +206,10 @@ class FolderMapper {
 	 * Assign a special use based on the name
 	 *
 	 * @param Folder $folder
+	 *
+	 * @return void
 	 */
-	protected function guessSpecialUse(Folder $folder) {
+	protected function guessSpecialUse(Folder $folder): void {
 		$specialFoldersDict = [
 			'inbox' => ['inbox'],
 			'sent' => ['sent', 'sent items', 'sent messages', 'sent-mail', 'sentmail'],

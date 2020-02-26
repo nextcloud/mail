@@ -127,9 +127,12 @@ class SmtpConnectivityTester {
 
 	/**
 	 * @param MailAccount $mailAccount
+	 *
 	 * @throws Exception
+	 *
+	 * @return void
 	 */
-	protected function testStmtpConnection(MailAccount $mailAccount) {
+	protected function testStmtpConnection(MailAccount $mailAccount): void {
 		$account = new Account($mailAccount);
 		$smtp = $this->clientFactory->create($account);
 		$smtp->getSMTPObject();
