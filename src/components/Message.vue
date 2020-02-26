@@ -269,7 +269,7 @@ export default {
 #mail-message-header-fields {
 	// initial width
 	width: 0;
-	padding-left: 38px;
+	padding-left: 44px;
 	// grow and try to fill 100%
 	flex: 1 1 auto;
 	h2,
