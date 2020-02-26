@@ -317,7 +317,6 @@ export default {
 			}
 		},
 		onDelete({envelope}) {
-			const envelopes = this.envelopes
 			const idx = findIndex(propEq('uid', envelope.uid), this.envelopes)
 			if (idx === -1) {
 				logger.debug('envelope to delete does not exist in envelope list')
@@ -329,13 +328,7 @@ export default {
 				return
 			}
 
-			let next
-			if (idx === 0) {
-				next = envelopes[idx + 1]
-			} else {
-				next = envelopes[idx - 1]
-			}
-
+			const next = this.envelopes[idx === 0 ? idx : idx - 1]
 			if (!next) {
 				logger.debug('no next/previous envelope, not navigating')
 				return
