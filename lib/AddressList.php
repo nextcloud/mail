@@ -108,8 +108,12 @@ class AddressList implements Countable, JsonSerializable {
 
 	/**
 	 * Iterate over the internal list of addresses using a generator method
+	 *
+	 * @return \Generator
+	 *
+	 * @psalm-return \Generator<int, Address, mixed, void>
 	 */
-	public function iterate() {
+	public function iterate(): \Generator {
 		foreach ($this->addresses as $address) {
 			yield $address;
 		}

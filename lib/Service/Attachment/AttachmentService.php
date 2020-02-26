@@ -71,8 +71,10 @@ class AttachmentService implements IAttachmentService {
 
 	/**
 	 * @param string $userId
-	 * @param array $id
+	 * @param int $id
+	 *
 	 * @return array of LocalAttachment and ISimpleFile
+	 *
 	 * @throws AttachmentNotFoundException
 	 */
 	public function getAttachment(string $userId, int $id): array {
@@ -88,6 +90,8 @@ class AttachmentService implements IAttachmentService {
 	/**
 	 * @param string $userId
 	 * @param int $id
+	 *
+	 * @return void
 	 */
 	public function deleteAttachment(string $userId, int $id) {
 		try {

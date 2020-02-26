@@ -46,7 +46,7 @@ class FilterStringParser {
 		return $query;
 	}
 
-	private function parseFilterToken(SearchQuery $query, $token): bool {
+	private function parseFilterToken(SearchQuery $query, string $token): bool {
 		if (strpos($token, ':') === false) {
 			return false;
 		}

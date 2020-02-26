@@ -43,7 +43,8 @@
 		"roave/security-advisories": "dev-master",
 		"christophwurst/nextcloud": "v17.0.2",
 		"christophwurst/nextcloud_testing": "0.10.0",
-		"phan/phan": "^2.0"
+		"phan/phan": "^2.0",
+		"vimeo/psalm": "^3.9"
 	},
 	"scripts": {
 		"lint": "find . -name \\*.php -not -path './vendor/*' -exec php -l \"{}\" \\;",

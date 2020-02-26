@@ -92,7 +92,7 @@ class BootstrapSingleton {
 		$this->booted = true;
 	}
 
-	private function initializeAppContainer(IAppContainer $container) {
+	private function initializeAppContainer(IAppContainer $container): void {
 		$transport = $container->getServer()->getConfig()->getSystemValue('app.mail.transport', 'smtp');
 		$testSmtp = $transport === 'smtp';
 

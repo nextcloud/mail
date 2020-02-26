@@ -63,6 +63,9 @@ class DiagnoseAccount extends Command {
 		$this->logger = $logger;
 	}
 
+	/**
+	 * @return void
+	 */
 	protected function configure() {
 		$this->setName('mail:account:diagnose');
 		$this->setDescription('Diagnose a user\'s IMAP connection');

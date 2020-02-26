@@ -56,6 +56,9 @@ class SyncAccount extends Command {
 		$this->syncService = $syncService;
 	}
 
+	/**
+	 * @return void
+	 */
 	protected function configure() {
 		$this->setName('mail:account:sync');
 		$this->setDescription('Synchronize an IMAP account');
@@ -63,6 +66,9 @@ class SyncAccount extends Command {
 		$this->addOption(self::OPTION_FORCE, 'f', InputOption::VALUE_NONE);
 	}
 
+	/**
+	 * @return void
+	 */
 	protected function execute(InputInterface $input, OutputInterface $output) {
 		$accountId = (int)$input->getArgument(self::ARGUMENT_ACCOUNT_ID);
 		$force = $input->getOption(self::OPTION_FORCE);

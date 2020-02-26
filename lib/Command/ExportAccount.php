@@ -45,12 +45,18 @@ class ExportAccount extends Command {
 		$this->crypto = $crypto;
 	}
 
+	/**
+	 * @return void
+	 */
 	protected function configure() {
 		$this->setName('mail:account:export');
 		$this->setDescription('Exports a user\'s IMAP account(s)');
 		$this->addArgument(self::ARGUMENT_USER_ID, InputArgument::REQUIRED);
 	}
 
+	/**
+	 * @return void
+	 */
 	protected function execute(InputInterface $input, OutputInterface $output) {
 		$userId = $input->getArgument(self::ARGUMENT_USER_ID);
 

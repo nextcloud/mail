@@ -80,9 +80,10 @@ class GroupsIntegration {
 	 * Expands a string of group names to its members email addresses.
 	 *
 	 * @param string $recipients
-	 * @return string
+	 *
+	 * @return null|string
 	 */
-	public function expand(string $recipients) {
+	public function expand(string $recipients): ?string {
 		return array_reduce($this->groupServices,
 			function ($carry, $service) {
 				return preg_replace_callback(

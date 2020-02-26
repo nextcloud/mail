@@ -79,7 +79,7 @@ class Account implements JsonSerializable {
 		$this->memcacheFactory = OC::$server->getMemcacheFactory();
 	}
 
-	public function getMailAccount() {
+	public function getMailAccount(): MailAccount {
 		return $this->account;
 	}
 
@@ -195,9 +195,11 @@ class Account implements JsonSerializable {
 	}
 
 	/**
-	 * @deprecated
+	 * @deprecated 
+	 *
+	 * @return void
 	 */
-	public function testConnectivity(Horde_Mail_Transport $transport) {
+	public function testConnectivity(Horde_Mail_Transport $transport): void {
 		// connect to imap
 		$this->getImapConnection();
 

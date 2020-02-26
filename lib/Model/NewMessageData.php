@@ -91,7 +91,7 @@ class NewMessageData {
 	 * @param string|null $bcc
 	 * @param string $subject
 	 * @param string $body
-	 * @param array|null $attachments
+	 * @param array $attachments
 	 *
 	 * @return NewMessageData
 	 */

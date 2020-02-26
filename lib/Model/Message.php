@@ -91,6 +91,8 @@ class Message implements IMessage {
 
 	/**
 	 * @param string[] $flags
+	 *
+	 * @return void
 	 */
 	public function setFlags(array $flags) {
 		$this->flags = $flags;
@@ -105,6 +107,8 @@ class Message implements IMessage {
 
 	/**
 	 * @param AddressList $from
+	 *
+	 * @return void
 	 */
 	public function setFrom(AddressList $from) {
 		$this->from = $from;
@@ -119,6 +123,8 @@ class Message implements IMessage {
 
 	/**
 	 * @param AddressList $to
+	 *
+	 * @return void
 	 */
 	public function setTo(AddressList $to) {
 		$this->to = $to;
@@ -133,6 +139,8 @@ class Message implements IMessage {
 
 	/**
 	 * @param AddressList $cc
+	 *
+	 * @return void
 	 */
 	public function setCC(AddressList $cc) {
 		$this->cc = $cc;
@@ -147,6 +155,8 @@ class Message implements IMessage {
 
 	/**
 	 * @param AddressList $bcc
+	 *
+	 * @return void
 	 */
 	public function setBcc(AddressList $bcc) {
 		$this->bcc = $bcc;
@@ -161,6 +171,8 @@ class Message implements IMessage {
 
 	/**
 	 * @param IMessage $message
+	 *
+	 * @return void
 	 */
 	public function setInReplyTo(string $id) {
 		$this->inReplyTo = $id;
@@ -175,6 +187,8 @@ class Message implements IMessage {
 
 	/**
 	 * @param string $subject
+	 *
+	 * @return void
 	 */
 	public function setSubject(string $subject) {
 		$this->subject = $subject;
@@ -189,6 +203,8 @@ class Message implements IMessage {
 
 	/**
 	 * @param string $content
+	 *
+	 * @return void
 	 */
 	public function setContent(string $content) {
 		$this->content = $content;
@@ -210,6 +226,8 @@ class Message implements IMessage {
 
 	/**
 	 * @param File $file
+	 *
+	 * @return void
 	 */
 	public function addAttachmentFromFiles(File $file) {
 		$part = new Horde_Mime_Part();
@@ -224,6 +242,8 @@ class Message implements IMessage {
 	/**
 	 * @param LocalAttachment $attachment
 	 * @param ISimpleFile $file
+	 *
+	 * @return void
 	 */
 	public function addLocalAttachment(LocalAttachment $attachment, ISimpleFile $file) {
 		$part = new Horde_Mime_Part();

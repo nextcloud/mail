@@ -86,8 +86,10 @@ class Cache {
 	 * @param string $email
 	 * @param string $uid
 	 * @param Avatar $avatar
+	 *
+	 * @return void
 	 */
-	public function add(string $email, string $uid, Avatar $avatar) {
+	public function add(string $email, string $uid, Avatar $avatar): void {
 		$this->cache->set($this->buildUrlKey($email, $uid), $avatar->jsonSerialize(), self::CACHE_TTL);
 	}
 
@@ -104,8 +106,10 @@ class Cache {
 	 * @param string $url
 	 * @param string $uid
 	 * @param string $image base64 encoded image data
+	 *
+	 * @return void
 	 */
-	public function addImage(string $url, string $uid, string $image) {
+	public function addImage(string $url, string $uid, string $image): void {
 		$this->cache->set($this->buildImageKey($url, $uid), $image, self::CACHE_TTL);
 	}
 

@@ -177,9 +177,10 @@ class IspDbConfigurationDetector {
 	 * @param MailAccount $account
 	 * @param string $email
 	 * @param string $password
-	 * @return boolean
+	 *
+	 * @return bool|null
 	 */
-	private function detectSmtp(array $ispdb, MailAccount $account, string $email, string $password) {
+	private function detectSmtp(array $ispdb, MailAccount $account, string $email, string $password): ?bool {
 		if (!isset($ispdb['smtp'])) {
 			// Nothing to detect
 			return null;

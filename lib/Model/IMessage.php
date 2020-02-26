@@ -56,7 +56,7 @@ interface IMessage {
 	public function getFrom(): AddressList;
 
 	/**
-	 * @param string $from
+	 * @param AddressList $from
 	 */
 	public function setFrom(AddressList $from);
 

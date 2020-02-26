@@ -47,9 +47,10 @@ interface IMailSearch {
 	 * @param Account $account
 	 * @param string $mailboxName
 	 * @param string|null $filter
-	 * @param string|null $cursor
+	 * @param int|null $cursor
 	 *
 	 * @return Message[]
+	 *
 	 * @throws ClientException
 	 * @throws ServiceException
 	 */

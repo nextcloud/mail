@@ -114,6 +114,8 @@ class MailTransmission implements IMailTransmission {
 	 * @param int|null $draftUID
 	 *
 	 * @throws ServiceException
+	 *
+	 * @return void
 	 */
 	public function sendMessage(string $userId,
 								NewMessageData $messageData,
@@ -288,8 +290,10 @@ class MailTransmission implements IMailTransmission {
 	 * @param string $userId
 	 * @param NewMessageData $messageData
 	 * @param IMessage $message
+	 *
+	 * @return void
 	 */
-	private function handleAttachments(string $userId, NewMessageData $messageData, IMessage $message) {
+	private function handleAttachments(string $userId, NewMessageData $messageData, IMessage $message): void {
 		foreach ($messageData->getAttachments() as $attachment) {
 			if (isset($attachment['isLocal']) && $attachment['isLocal']) {
 				$this->handleLocalAttachment($userId, $attachment, $message);

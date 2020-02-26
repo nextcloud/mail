@@ -104,6 +104,9 @@ class ContactsIntegration {
 		return null;
 	}
 
+	/**
+	 * @return false|null|string
+	 */
 	private function getPhotoUri(string $raw) {
 		$uriPrefix = 'VALUE=uri:';
 		if (substr($raw, 0, strlen($uriPrefix)) === $uriPrefix) {

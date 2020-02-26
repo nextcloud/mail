@@ -100,8 +100,9 @@ class Mailbox implements IMailBox {
 	}
 
 	/**
-	 * @param string $messageId
+	 * @param int $messageId
 	 * @param bool $loadHtmlMessageBody
+	 *
 	 * @return IMAPMessage
 	 */
 	public function getMessage(int $messageId, bool $loadHtmlMessageBody = false) {
@@ -123,7 +124,7 @@ class Mailbox implements IMailBox {
 		return (int) $status['messages'];
 	}
 
-	protected function makeDisplayName() {
+	protected function makeDisplayName(): void {
 		$parts = explode($this->delimiter, $this->mailBox->utf8, 2);
 
 		if (count($parts) > 1) {
@@ -142,9 +143,9 @@ class Mailbox implements IMailBox {
 	}
 
 	/**
-	 * @return string
+	 * @return null|string
 	 */
-	public function getParent() {
+	public function getParent(): ?string {
 		$folderId = $this->getFolderId();
 		$parts = explode($this->delimiter, $folderId, 2);
 
@@ -171,8 +172,10 @@ class Mailbox implements IMailBox {
 
 	/**
 	 * @param string $displayName
+	 *
+	 * @return void
 	 */
-	public function setDisplayName($displayName) {
+	public function setDisplayName($displayName): void {
 		$this->displayName = $displayName;
 	}
 
@@ -228,8 +231,9 @@ class Mailbox implements IMailBox {
 	 *
 	 * This method reads the attributes sent by the server
 	 *
+	 * @return void
 	 */
-	protected function getSpecialRoleFromAttributes() {
+	protected function getSpecialRoleFromAttributes(): void {
 		/*
 		 * @todo: support multiple attributes on same folder
 		 * "any given server or  message store may support
@@ -268,8 +272,10 @@ class Mailbox implements IMailBox {
 
 	/**
 	 * Assign a special role to this mailbox based on its name
+	 *
+	 * @return void
 	 */
-	protected function guessSpecialRole() {
+	protected function guessSpecialRole(): void {
 
 		$specialFoldersDict = [
 			'inbox' => ['inbox'],
@@ -324,6 +330,8 @@ class Mailbox implements IMailBox {
 	 * @param int $uid
 	 * @param string $flag
 	 * @param boolean $add
+	 *
+	 * @return void
 	 */
 	public function setMessageFlag(int $uid, string $flag, $add) {
 		$options = [
