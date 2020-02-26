@@ -132,7 +132,7 @@ export default {
 			this.$store.dispatch('toggleEnvelopeSeen', this.data)
 		},
 		onDelete() {
-			this.$emit('delete', this.data)
+			this.$emit('delete', {envelope: this.data})
 			this.$store.dispatch('deleteMessage', this.data)
 		},
 	},
