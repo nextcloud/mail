@@ -154,6 +154,9 @@
 					<ActionButton icon="icon-download" @click="onSaveAndClose">
 						{{ t('mail', 'Save and close draft') }}
 					</ActionButton>
+					<ActionButton icon="icon-delete" @click.prevent="onDelete">
+						{{ t('mail', 'Discard draft') }}
+					</ActionButton>
 				</Actions>
 				<div>
 					<input
@@ -172,6 +175,11 @@
 	<Loading v-else-if="state === STATES.SAVING" :hint="t('mail', 'Saving …')" />
 	<div v-else-if="state === STATES.SAVED" class="emptycontent">
 		<h2>{{ t('mail', 'Saved!') }}</h2>
+		<p>{{ t('mail', 'Redirecting …') }}</p>
+	</div>
+	<Loading v-else-if="state === STATES.DISCARDING" :hint="t('mail', 'Discarding …')" />
+	<div v-else-if="state === STATES.DISCARDED" class="emptycontent">
+		<h2>{{ t('mail', 'Draft was discarded!') }}</h2>
 		<p>{{ t('mail', 'Redirecting …') }}</p>
 	</div>
 	<div v-else-if="state === STATES.ERROR" class="emptycontent">
@@ -220,6 +228,8 @@ const STATES = Object.seal({
 	FINISHED: 4,
 	SAVING: 5,
 	SAVED: 6,
+	DISCARDING: 7,
+	DISCARDED: 8,
 })
 
 export default {
@@ -388,6 +398,29 @@ export default {
 			this.saveDraft(this.getMessageData)
 			wait(1500) // Illusion of things going on behind the scenes
 				.then(() => (this.state = STATES.SAVED))
+				.then(() => wait(1000)) // Time to register the "success"-message
+				.then(() => this.$router.push({name: 'home'})) // TODO: Navigate to better place
+		},
+		onDelete() {
+			this.state = STATES.DISCARDING
+			this.draftsPromise
+				.then(this.getMessageData)
+				.then(message => {
+					// TODO: Somehow delete the draft
+					// We've got `message`, but we need an `envelope`. I'm not 100%
+					// on the distinction yet, but `envelope` seems to have some
+					// necessary parameters which we don't have access to here.
+					// const envelope = magic(message)
+
+					// I'm not sure if this is needed. It only seems to affect the
+					// Mailbox.vue, which I doooon't think is relevant from within
+					// a draft? Maaybe?
+					// this.$emit('delete', {envelope})
+
+					// this.$store.dispatch('deleteMessage', envelope)
+				})
+				.then(() => wait(1500)) // Illusion of things going on behind the scenes
+				.then(() => (this.state = STATES.DISCARDED))
 				.then(() => wait(1000)) // Time to register the "success"-message
 				.then(() => this.$router.push({name: 'home'})) // TODO: Navigate to better place
 		},
