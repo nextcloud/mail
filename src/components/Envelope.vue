@@ -6,6 +6,7 @@
 			:style="{'background-color': accountColor}"
 		></div>
 		<div
+			v-if="data.flags.flagged"
 			class="app-content-list-item-star icon-starred"
 			:data-starred="data.flags.flagged ? 'true' : 'false'"
 			@click.prevent="onToggleFlagged"
@@ -28,6 +29,9 @@
 			<Moment :timestamp="data.dateInt" />
 		</div>
 		<Actions class="app-content-list-item-menu" menu-align="right">
+			<ActionButton icon="icon-starred" @click.prevent="onToggleFlagged">{{
+				data.flags.flagged ? t('mail', 'Unfavorite') : t('mail', 'Favorite')
+			}}</ActionButton>
 			<ActionButton icon="icon-mail" @click.prevent="onToggleSeen">{{
 				data.flags.unseen ? t('mail', 'Mark read') : t('mail', 'Mark unread')
 			}}</ActionButton>
