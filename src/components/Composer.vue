@@ -338,21 +338,19 @@ export default {
 				return `"${recipient.label}" <${recipient.email}>`
 			}
 		},
-		getMessageData() {
-			return uid => {
-				return {
-					account: this.selectedAlias.id,
-					to: this.selectTo.map(this.recipientToRfc822).join(', '),
-					cc: this.selectCc.map(this.recipientToRfc822).join(', '),
-					bcc: this.selectBcc.map(this.recipientToRfc822).join(', '),
-					draftUID: uid,
-					subject: this.subjectVal,
-					body: this.editorPlainText ? htmlToText(this.bodyVal) : this.bodyVal,
-					attachments: this.attachments,
-					folderId: this.replyTo ? this.replyTo.folderId : undefined,
-					messageId: this.replyTo ? this.replyTo.messageId : undefined,
-					isHtml: !this.editorPlainText,
-				}
+		getMessageData(uid) {
+			return {
+				account: this.selectedAlias.id,
+				to: this.selectTo.map(this.recipientToRfc822).join(', '),
+				cc: this.selectCc.map(this.recipientToRfc822).join(', '),
+				bcc: this.selectBcc.map(this.recipientToRfc822).join(', '),
+				draftUID: uid,
+				subject: this.subjectVal,
+				body: this.editorPlainText ? htmlToText(this.bodyVal) : this.bodyVal,
+				attachments: this.attachments,
+				folderId: this.replyTo ? this.replyTo.folderId : undefined,
+				messageId: this.replyTo ? this.replyTo.messageId : undefined,
+				isHtml: !this.editorPlainText,
 			}
 		},
 		saveDraft(data) {
@@ -366,7 +364,7 @@ export default {
 				})
 		},
 		onInputChanged() {
-			this.saveDraftDebounced(this.getMessageData())
+			this.saveDraftDebounced(this.getMessageData)
 		},
 		onAddLocalAttachment() {
 			this.bus.$emit('onAddLocalAttachment')
@@ -417,7 +415,7 @@ export default {
 			return this.attachmentsPromise
 				.then(() => (this.state = STATES.SENDING))
 				.then(() => this.draftsPromise)
-				.then(this.getMessageData())
+				.then(this.getMessageData)
 				.then(data => this.send(data))
 				.then(() => logger.info('message sent'))
 				.then(() => (this.state = STATES.FINISHED))
