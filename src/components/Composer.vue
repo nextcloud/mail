@@ -151,6 +151,9 @@
 						@uncheck="editorPlainText = true"
 						>{{ t('mail', 'Enable formatting') }}</ActionCheckbox
 					>
+					<ActionButton icon="icon-download" @click="onSaveAndClose">
+						{{ t('mail', 'Save and close draft') }}
+					</ActionButton>
 				</Actions>
 				<div>
 					<input
@@ -166,6 +169,11 @@
 	</div>
 	<Loading v-else-if="state === STATES.UPLOADING" :hint="t('mail', 'Uploading attachments …')" />
 	<Loading v-else-if="state === STATES.SENDING" :hint="t('mail', 'Sending …')" />
+	<Loading v-else-if="state === STATES.SAVING" :hint="t('mail', 'Saving …')" />
+	<div v-else-if="state === STATES.SAVED" class="emptycontent">
+		<h2>{{ t('mail', 'Saved!') }}</h2>
+		<p>{{ t('mail', 'Redirecting …') }}</p>
+	</div>
 	<div v-else-if="state === STATES.ERROR" class="emptycontent">
 		<h2>{{ t('mail', 'Error sending your message') }}</h2>
 		<p v-if="errorText">{{ errorText }}</p>
@@ -195,6 +203,7 @@ import Vue from 'vue'
 import ComposerAttachments from './ComposerAttachments'
 import {findRecipient} from '../service/AutocompleteService'
 import {htmlToText, textToSimpleHtml} from '../util/HtmlHelper'
+import {wait} from '../util/wait'
 import Loading from './Loading'
 import logger from '../logger'
 import TextEditor from './TextEditor'
@@ -209,6 +218,8 @@ const STATES = Object.seal({
 	SENDING: 2,
 	ERROR: 3,
 	FINISHED: 4,
+	SAVING: 5,
+	SAVED: 6,
 })
 
 export default {
@@ -371,6 +382,14 @@ export default {
 		},
 		onAddCloudAttachment() {
 			this.bus.$emit('onAddCloudAttachment')
+		},
+		onSaveAndClose() {
+			this.state = STATES.SAVING
+			this.saveDraft(this.getMessageData)
+			wait(1500) // Illusion of things going on behind the scenes
+				.then(() => (this.state = STATES.SAVED))
+				.then(() => wait(1000)) // Time to register the "success"-message
+				.then(() => this.$router.push({name: 'home'})) // TODO: Navigate to better place
 		},
 		onAutocomplete(term) {
 			if (term === undefined || term === '') {
