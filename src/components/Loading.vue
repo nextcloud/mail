@@ -15,9 +15,12 @@ export default {
 	props: {
 		hint: {
 			type: String,
+			default: '',
+			required: false,
 		},
 		slowHint: {
 			type: String,
+			default: '',
 			required: false,
 		},
 	},
