@@ -290,7 +290,9 @@ export default {
 			return this.$store.getters.accounts.filter(a => !a.isUnified)
 		},
 		selectableRecipients() {
-			return this.newRecipients.concat(this.autocompleteRecipients)
+			return this.newRecipients
+				.concat(this.autocompleteRecipients)
+				.map(recipient => ({...recipient, label: recipient.label || recipient.email}))
 		},
 		isReply() {
 			return this.to.length > 0
