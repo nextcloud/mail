@@ -30,7 +30,7 @@ import {sortMailboxes} from '../imap/MailboxSorter'
 import {UNIFIED_ACCOUNT_ID} from './constants'
 
 const addFolderToState = (state, account) => folder => {
-	const id = account.id + '-' + folder.id
+	const id = normalizedFolderId(account.id, folder.id)
 	folder.accountId = account.id
 	folder.envelopeLists = {}
 	Vue.set(state.folders, id, folder)
@@ -151,7 +151,7 @@ export default {
 		Vue.delete(list, normalizedMessageId(accountId, folderId, id))
 	},
 	addMessage(state, {accountId, folderId, message}) {
-		const uid = accountId + '-' + folderId + '-' + message.id
+		const uid = normalizedMessageId(accountId, folderId, message.id)
 		message.accountId = accountId
 		message.folderId = folderId
 		message.uid = uid
@@ -160,7 +160,7 @@ export default {
 	updateDraft(state, {draft, data, newUid}) {
 		// Update draft's UID
 		const oldUid = draft.uid
-		const uid = draft.accountId + '-' + draft.folderId + '-' + newUid
+		const uid = normalizedMessageId(draft.accountId, draft.folderId, newUid)
 		console.debug('saving draft as UID ' + uid)
 		draft.uid = uid
 
@@ -169,7 +169,7 @@ export default {
 		draft.subject = data.subject
 
 		// Update ref in folder's envelope list
-		const envs = state.folders[draft.accountId + '-' + draft.folderId].envelopes
+		const envs = state.folders[normalizedFolderId(draft.accountId, draft.folderId)].envelopes
 		const idx = envs.indexOf(oldUid)
 		if (idx < 0) {
 			console.warn('not replacing draft ' + oldUid + ' in envelope list because it did not exist')
@@ -184,6 +184,6 @@ export default {
 		Vue.set(state.messages, uid, draft)
 	},
 	removeMessage(state, {accountId, folderId, id}) {
-		Vue.delete(state.messages, accountId + '-' + folderId + '-' + id)
+		Vue.delete(state.messages, normalizedMessageId(accountId, folderId, id))
 	},
 }
