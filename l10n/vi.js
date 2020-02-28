@@ -11,6 +11,7 @@ OC.L10N.register(
     "Upload attachment" : "Tải lên một đính kèm",
     "Go back" : "Quay lại",
     "Send" : "Gởi",
+    "Favorite" : "Ưa thích",
     "Delete" : "Xóa",
     "Reply" : "Trả l",
     "Settings" : "Thiết lập",

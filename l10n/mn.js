@@ -25,6 +25,7 @@ OC.L10N.register(
     "Retry" : "Дахин оролдох",
     "Message sent!" : "зурвас илгээсэн",
     "Send" : "илгээх",
+    "Favorite" : "Дуртай",
     "Delete" : "Устгах",
     "Reply" : "хариулт",
     "Forward" : "дамжих",

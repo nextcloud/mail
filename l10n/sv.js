@@ -68,6 +68,8 @@ OC.L10N.register(
     "Rich text" : "Formaterad text",
     "No messages in this folder" : "Inga meddelanden i denna mapp",
     "Draft: " : "Utkast:",
+    "Unfavorite" : "Inte favorit",
+    "Favorite" : "Favorit",
     "Mark read" : "Markera som läst",
     "Mark unread" : "Markera som oläst",
     "Delete" : "Ta bort",

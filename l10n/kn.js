@@ -8,6 +8,7 @@ OC.L10N.register(
     "SMTP Password" : "﻿SMTP ಗುಪ್ತ ಪದ",
     "Save" : "﻿ಉಳಿಸಿ",
     "Send" : "﻿ಕಳುಹಿಸಿ",
+    "Favorite" : "ಅಚ್ಚುಮೆಚ್ಚಿನ",
     "Delete" : "﻿ಅಳಿಸಿ",
     "Settings" : "ಆಯ್ಕೆ",
     "Add folder" : "Add folder",

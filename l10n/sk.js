@@ -41,6 +41,8 @@ OC.L10N.register(
     "Send" : "Odoslať",
     "Choose a file to add as attachment" : "Zvoľte súbor, ktorý chcete pridať ako prílohu.",
     "No messages in this folder" : "Žiadne správy v tomto priečinku!",
+    "Unfavorite" : "Odstrániť z obľúbených",
+    "Favorite" : "Obľúbené",
     "Mark read" : "Označiť ako prečítané",
     "Mark unread" : "Označiť ako neprečítané",
     "Delete" : "Zmazať",

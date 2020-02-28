@@ -51,6 +51,8 @@ OC.L10N.register(
     "Choose a file to add as attachment" : "Csatolandó fájl kiválasztása",
     "No messages in this folder" : "Nincs üzenet a mappában!",
     "Draft: " : "Vázlat:",
+    "Unfavorite" : "Nem kedvenc",
+    "Favorite" : "Kedvenc",
     "Mark read" : "Olvasottnak jelöl",
     "Mark unread" : "Olvasatlannak jelöl",
     "Delete" : "Törlés",

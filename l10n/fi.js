@@ -50,6 +50,8 @@ OC.L10N.register(
     "Choose a file to add as attachment" : "Valitse liitteeksi lisättävä tiedosto",
     "No messages in this folder" : "Tässä kansiossa ei ole viestejä",
     "Draft: " : "Luonnos: ",
+    "Unfavorite" : "Poista suosikeista",
+    "Favorite" : "Suosikki",
     "Mark read" : "Merkitse luetuksi",
     "Mark unread" : "Merkitse lukemattomaksi",
     "Delete" : "Poista",

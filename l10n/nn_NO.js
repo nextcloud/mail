@@ -10,6 +10,7 @@ OC.L10N.register(
     "Keyboard shortcuts" : "Tastatursnarvegar",
     "Retry" : "Forsøk att",
     "Send" : "Send",
+    "Favorite" : "Favoritt",
     "Delete" : "Ta bort",
     "Settings" : "Instillingar",
     "Add folder" : "Add folder",

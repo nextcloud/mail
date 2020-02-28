@@ -68,6 +68,8 @@ OC.L10N.register(
     "Rich text" : "Testo formattato",
     "No messages in this folder" : "Nessun messaggio in questa cartella",
     "Draft: " : "Bozza:",
+    "Unfavorite" : "Rimuovi preferito",
+    "Favorite" : "Preferito",
     "Mark read" : "Marca come letto",
     "Mark unread" : "Marca come non letto",
     "Delete" : "Elimina",

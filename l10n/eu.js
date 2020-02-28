@@ -63,6 +63,8 @@ OC.L10N.register(
     "Rich text" : "Testua + testu-apaingarriak",
     "No messages in this folder" : "Mezurik ez karpeta honetan",
     "Draft: " : "Zirriborroa: ",
+    "Unfavorite" : "Kendu gogokoetatik",
+    "Favorite" : "Gogokoa",
     "Mark read" : "Markatu irakurrita bezala",
     "Mark unread" : "Markatu irakurri gabe bezala",
     "Delete" : "Ezabatu",

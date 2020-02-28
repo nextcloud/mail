@@ -48,6 +48,7 @@ OC.L10N.register(
     "Choose a file to add as attachment" : "Dewiswch ffeil i'w hychwanegu fel atodiad",
     "No messages in this folder" : "Dim negeseuon yn y ffolder hon",
     "Draft: " : "Drafft:",
+    "Favorite" : "Ffefryn",
     "Mark read" : "Marcio wedi'i ddarllen",
     "Mark unread" : "Nodi heb ei ddarllen",
     "Delete" : "Dileu",

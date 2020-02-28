@@ -61,6 +61,8 @@ OC.L10N.register(
     "Rich text" : "Text enriquit",
     "No messages in this folder" : "No hi ha missatges en aquesta carpeta",
     "Draft: " : "Esborrany:",
+    "Unfavorite" : "Treu de favorits",
+    "Favorite" : "Preferit",
     "Mark read" : "Marca com a llegit",
     "Mark unread" : "Marca com a no llegit",
     "Delete" : "Suprimeix",

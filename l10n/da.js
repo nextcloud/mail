@@ -59,6 +59,8 @@ OC.L10N.register(
     "Plain text" : "Klartekst",
     "Rich text" : "Formateret tekst",
     "Draft: " : "Kladde:",
+    "Unfavorite" : "U-favorit",
+    "Favorite" : "Foretrukken",
     "Mark read" : "Marker som læst",
     "Mark unread" : "Marker som ulæst",
     "Delete" : "Slet",

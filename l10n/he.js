@@ -35,6 +35,7 @@ OC.L10N.register(
     "Send" : "שליחה",
     "Choose a file to add as attachment" : "בחירת קובץ להוספה כקובץ מצורף",
     "No messages in this folder" : "אין הודעות בתיקייה זו",
+    "Favorite" : "סימון כמועדף",
     "Mark read" : "סימון כנקרא",
     "Delete" : "מחיקה",
     "Reply" : "תגובה",

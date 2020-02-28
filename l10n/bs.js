@@ -9,6 +9,7 @@ OC.L10N.register(
     "Save" : "Spremi",
     "Keyboard shortcuts" : "Tipkovni prečaci",
     "Send" : "Pošalji",
+    "Favorite" : "Favorit",
     "Delete" : "Obriši",
     "Settings" : "Podešavanje",
     "Add folder" : "Add folder",
