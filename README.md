@@ -39,6 +39,8 @@ Once npm and Node.js are installed, PHP and JavaScript dependencies can be insta
 make dev-setup
 ```
 
+We are also available on [our public Mail development chat](https://cloud.nextcloud.com/call/89474m7g), if you want to join the discussion.
+
 ## Documentation
 
 Need help? Check out our documentation. It's split into three parts.
