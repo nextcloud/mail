@@ -29,24 +29,16 @@ use Horde_Imap_Client_Exception;
 use Horde_Imap_Client_Exception_Sync;
 use Horde_Imap_Client_Ids;
 use Horde_Imap_Client_Mailbox;
+use OCA\Mail\IMAP\MessageMapper;
 use OCA\mail\lib\Exception\UidValidityChangedException;
 
 class Synchronizer {
 
-	/** @var ISyncStrategy */
-	private $simpleSync;
+	/** @var MessageMapper */
+	private $messageMapper;
 
-	/** @var ISyncStrategy */
-	private $favSync;
-
-	/**
-	 * @param SimpleMailboxSync $simpleSync
-	 * @param FavouritesMailboxSync $favSync
-	 */
-	public function __construct(SimpleMailboxSync $simpleSync,
-								FavouritesMailboxSync $favSync) {
-		$this->simpleSync = $simpleSync;
-		$this->favSync = $favSync;
+	public function __construct(MessageMapper $messageMapper) {
+		$this->messageMapper = $messageMapper;
 	}
 
 	/**
@@ -76,24 +68,11 @@ class Synchronizer {
 			throw $e;
 		}
 
-		$syncStrategy = $this->getSyncStrategy($request);
-		$newMessages = $syncStrategy->getNewMessages($imapClient, $request, $hordeSync);
-		$changedMessages = $syncStrategy->getChangedMessages($imapClient, $request, $hordeSync);
-		$vanishedMessageUids = $syncStrategy->getVanishedMessageUids($imapClient, $request, $hordeSync);
+		$newMessages = $this->messageMapper->findByIds($imapClient, $request->getMailbox(), $hordeSync->newmsgsuids->ids);
+		$changedMessages = $this->messageMapper->findByIds($imapClient, $request->getMailbox(), $hordeSync->flagsuids->ids);
+		$vanishedMessageUids = $hordeSync->vanisheduids->ids;
 
 		return new Response($newMessages, $changedMessages, $vanishedMessageUids);
-	}
-
-	/**
-	 * @param Request $request
-	 * @return ISyncStrategy
-	 */
-	private function getSyncStrategy(Request $request): ISyncStrategy {
-		if ($request->isFlaggedMailbox()) {
-			return $this->favSync;
-		} else {
-			return $this->simpleSync;
-		}
 	}
 
 }

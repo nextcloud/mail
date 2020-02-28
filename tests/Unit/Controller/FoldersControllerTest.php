@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 /**
  * @author Christoph Wurst <christoph@winzerhof-wurst.at>
  *
@@ -21,7 +23,7 @@
 
 namespace OCA\Mail\Tests\Unit\Controller;
 
-use OCA\Mail\Service\SyncService;
+use OCA\Mail\Service\Sync\SyncService;
 use PHPUnit\Framework\MockObject\MockObject;
 use function base64_encode;
 use OCA\Mail\Account;

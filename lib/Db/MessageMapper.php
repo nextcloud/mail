@@ -46,13 +46,7 @@ class MessageMapper extends QBMapper {
 		$this->timeFactory = $timeFactory;
 	}
 
-	public function findAllUids(Mailbox $mailbox): array {
-		$query = $this->db->getQueryBuilder();
-
-		$query->select('uid')
-			->from($this->getTableName())
-			->where($query->expr()->eq('mailbox_id', $query->createNamedParameter($mailbox->getId())));
-
+	private function findUids(IQueryBuilder $query): array {
 		$result = $query->execute();
 		$uids = array_map(function (array $row) {
 			return (int)$row['uid'];
@@ -65,18 +59,28 @@ class MessageMapper extends QBMapper {
 	public function findHighestUid(Mailbox $mailbox): ?int {
 		$query = $this->db->getQueryBuilder();
 
-		$query->select($query->createFunction('MAX(' . $query->getColumnName('uid') .  ')'))
+		$query->select($query->createFunction('MAX(' . $query->getColumnName('uid') . ')'))
 			->from($this->getTableName())
 			->where($query->expr()->eq('mailbox_id', $query->createNamedParameter($mailbox->getId())));
 
 		$result = $query->execute();
-		$max = (int) $result->fetchColumn(0);
+		$max = (int)$result->fetchColumn(0);
 		$result->closeCursor();
 
 		if ($max === 0) {
 			return null;
 		}
 		return $max;
+	}
+
+	public function findAllUids(Mailbox $mailbox): array {
+		$query = $this->db->getQueryBuilder();
+
+		$query->select('uid')
+			->from($this->getTableName())
+			->where($query->expr()->eq('mailbox_id', $query->createNamedParameter($mailbox->getId())));
+
+		return $this->findUids($query);
 	}
 
 	public function insertBulk(Message ...$messages): void {
@@ -428,18 +432,18 @@ class MessageMapper extends QBMapper {
 	 *
 	 * @return Message[]
 	 */
-	public function findNew(Mailbox $mailbox, int $highest): array {
+	public function findNewUids(Mailbox $mailbox, int $highest): array {
 		$qb = $this->db->getQueryBuilder();
 
 		$select = $qb
-			->select('*')
+			->select('uid')
 			->from($this->getTableName())
 			->where(
 				$qb->expr()->eq('mailbox_id', $qb->createNamedParameter($mailbox->getId(), IQueryBuilder::PARAM_INT)),
 				$qb->expr()->gt('uid', $qb->createNamedParameter($highest, IQueryBuilder::PARAM_INT))
 			);
 
-		return $this->findRecipients($this->findEntities($select));
+		return $this->findUids($select);
 	}
 
 	public function findChanged(Mailbox $mailbox, int $since): array {

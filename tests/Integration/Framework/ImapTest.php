@@ -29,6 +29,10 @@ use Horde_Imap_Client_Socket;
 use Horde_Mail_Rfc822_Address;
 use Horde_Mime_Mail;
 use Horde_Mime_Part;
+use OCA\Mail\Account;
+use OCA\Mail\Db\MailAccount;
+use OCA\Mail\IMAP\IMAPClientFactory;
+use OCP\AppFramework\QueryException;
 
 trait ImapTest {
 
@@ -115,10 +119,12 @@ trait ImapTest {
 	/**
 	 * @param string $mailbox
 	 * @param SimpleMessage $message
+	 * @param MailAccount|null $account
+	 *
 	 * @return int id of the new message
 	 */
-	public function saveMessage($mailbox, SimpleMessage $message) {
-		$client = $this->getTestClient();
+	public function saveMessage($mailbox, SimpleMessage $message, MailAccount $account = null) {
+		$client = $this->getClient($account);
 
 		$headers = [
 			'From' => new Horde_Mail_Rfc822_Address($message->getFrom()),
@@ -145,8 +151,8 @@ trait ImapTest {
 			])->ids[0];
 	}
 
-	public function flagMessage($mailbox, $id) {
-		$client = $this->getTestClient();
+	public function flagMessage($mailbox, $id, MailAccount $account = null) {
+		$client = $this->getClient($account);
 
 		$client->store($mailbox, [
 			'ids' => new Horde_Imap_Client_Ids([$id]),
@@ -156,20 +162,14 @@ trait ImapTest {
 		]);
 	}
 
-	public function deleteMessage($mailbox, $id) {
-		$client = $this->getTestClient();
+	public function deleteMessage($mailbox, $id, MailAccount $account = null) {
+		$client = $this->getClient($account);
 
 		$ids = new Horde_Imap_Client_Ids([$id]);
 		$client->expunge($mailbox, [
 			'ids' => $ids,
 			'delete' => true,
 		]);
-	}
-
-	public function getMailboxSyncToken($mailbox) {
-		$client = $this->getTestClient();
-
-		return $client->getSyncToken($mailbox);
 	}
 
 	/**
@@ -234,6 +234,23 @@ trait ImapTest {
 		$actualContent = $message->getBodyText();
 
 		$this->assertSame($content, $actualContent, 'message content does not match');
+	}
+
+	/**
+	 * @param MailAccount|null $account
+	 *
+	 * @return Horde_Imap_Client_Socket
+	 * @throws QueryException
+	 */
+	protected function getClient(?MailAccount $account): Horde_Imap_Client_Socket {
+		if ($account !== null) {
+			/** @var IMAPClientFactory $clientFactory */
+			$clientFactory = \OC::$server->query(IMAPClientFactory::class);
+			$client = $clientFactory->getClient(new Account($account));
+		} else {
+			$client = $this->getTestClient();
+		}
+		return $client;
 	}
 
 }

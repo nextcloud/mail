@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 /**
  * @author Christoph Wurst <christoph@winzerhof-wurst.at>
  *
@@ -21,16 +23,17 @@
 
 namespace OCA\Mail\Tests\Integration;
 
+use Horde_Imap_Client;
 use OC;
 use OCA\Mail\Account;
 use OCA\Mail\Contracts\IMailManager;
 use OCA\Mail\Controller\FoldersController;
 use OCA\Mail\Service\AccountService;
-use OCA\Mail\Service\SyncService;
+use OCA\Mail\Service\Sync\SyncService;
 use OCA\Mail\Tests\Integration\Framework\ImapTest;
 use OCA\Mail\Tests\Integration\Framework\ImapTestAccount;
 
-class FolderSynchronizationTest extends TestCase {
+class MailboxSynchronizationTest extends TestCase {
 
 	use ImapTest,
 		ImapTestAccount;
@@ -53,9 +56,16 @@ class FolderSynchronizationTest extends TestCase {
 
 	public function testSyncEmptyMailbox() {
 		$account = $this->createTestAccount();
+		$mailbox = 'INBOX';
 		/** @var SyncService $syncService */
 		$syncService = OC::$server->query(SyncService::class);
-		$syncService->syncAccount(new Account($account), true);
+		$syncService->syncMailbox(
+			new Account($account),
+			$mailbox,
+			Horde_Imap_Client::SYNC_NEWMSGSUIDS | Horde_Imap_Client::SYNC_FLAGSUIDS | Horde_Imap_Client::SYNC_VANISHEDUIDS,
+			[],
+			false
+		);
 		$mailbox = 'INBOX';
 
 		$jsonResponse = $this->foldersController->sync(
@@ -78,14 +88,20 @@ class FolderSynchronizationTest extends TestCase {
 		$account = $this->createTestAccount();
 		/** @var SyncService $syncService */
 		$syncService = OC::$server->query(SyncService::class);
-		$syncService->syncAccount(new Account($account), true);
 		$mailbox = 'INBOX';
+		$syncService->syncMailbox(
+			new Account($account),
+			$mailbox,
+			Horde_Imap_Client::SYNC_NEWMSGSUIDS | Horde_Imap_Client::SYNC_FLAGSUIDS | Horde_Imap_Client::SYNC_VANISHEDUIDS,
+			[],
+			false
+		);
 		// Second, put a new message into the mailbox
 		$message = $this->getMessageBuilder()
 			->from('ralph@buffington@domain.tld')
 			->to('user@domain.tld')
 			->finish();
-		$this->saveMessage($mailbox, $message);
+		$newUid = $this->saveMessage($mailbox, $message, $account);
 
 		$jsonResponse = $this->foldersController->sync(
 			$account->getId(),
@@ -95,26 +111,29 @@ class FolderSynchronizationTest extends TestCase {
 		$syncJson = $jsonResponse->getData()->jsonSerialize();
 
 		$this->assertCount(1, $syncJson['newMessages']);
+		$this->assertEquals($newUid, $syncJson['newMessages'][0]->getUid());
 		$this->assertCount(0, $syncJson['changedMessages']);
 		$this->assertCount(0, $syncJson['vanishedMessages']);
 	}
 
 	public function testSyncChangedMessage() {
-		// First, put a message into the mailbox
 		$account = $this->createTestAccount();
 		/** @var SyncService $syncService */
 		$syncService = OC::$server->query(SyncService::class);
-		$syncService->syncAccount(new Account($account), true);
 		$mailbox = 'INBOX';
 		$message = $this->getMessageBuilder()
 			->from('ralph@buffington@domain.tld')
 			->to('user@domain.tld')
 			->finish();
-		$id = $this->saveMessage($mailbox, $message);
-		// Second, retrieve a sync token
-		$syncToken = $this->getMailboxSyncToken($mailbox);
-		// Third, flag it
-		$this->flagMessage($mailbox, $id);
+		$id = $this->saveMessage($mailbox, $message, $account);
+		$syncService->syncMailbox(
+			new Account($account),
+			$mailbox,
+			Horde_Imap_Client::SYNC_NEWMSGSUIDS | Horde_Imap_Client::SYNC_FLAGSUIDS | Horde_Imap_Client::SYNC_VANISHEDUIDS,
+			[],
+			false
+		);
+		$this->flagMessage($mailbox, $id, $account);
 
 		$jsonResponse = $this->foldersController->sync(
 			$account->getId(),
@@ -124,27 +143,30 @@ class FolderSynchronizationTest extends TestCase {
 			]);
 		$syncJson = $jsonResponse->getData()->jsonSerialize();
 
-		$this->assertCount(1, $syncJson['newMessages']);
-		$this->assertCount(2, $syncJson['changedMessages']);
+		$this->assertCount(0, $syncJson['newMessages']);
+		$this->assertCount(1, $syncJson['changedMessages']);
 		$this->assertCount(0, $syncJson['vanishedMessages']);
 	}
 
 	public function testSyncVanishedMessage() {
 		// First, put a message into the mailbox
 		$account = $this->createTestAccount();
-		/** @var SyncService $syncService */
-		$syncService = OC::$server->query(SyncService::class);
-		$syncService->syncAccount(new Account($account), true);
 		$mailbox = 'INBOX';
 		$message = $this->getMessageBuilder()
 			->from('ralph@buffington@domain.tld')
 			->to('user@domain.tld')
 			->finish();
-		$id = $this->saveMessage($mailbox, $message);
-		// Second, retrieve a sync token
-		$syncToken = $this->getMailboxSyncToken($mailbox);
-		// Third, remove it again
-		$this->deleteMessage($mailbox, $id);
+		$id = $this->saveMessage($mailbox, $message, $account);
+		/** @var SyncService $syncService */
+		$syncService = OC::$server->query(SyncService::class);
+		$syncService->syncMailbox(
+			new Account($account),
+			$mailbox,
+			Horde_Imap_Client::SYNC_NEWMSGSUIDS | Horde_Imap_Client::SYNC_FLAGSUIDS | Horde_Imap_Client::SYNC_VANISHEDUIDS,
+			[],
+			false
+		);
+		$this->deleteMessage($mailbox, $id, $account);
 
 		$jsonResponse = $this->foldersController->sync(
 			$account->getId(),
@@ -157,7 +179,7 @@ class FolderSynchronizationTest extends TestCase {
 		$this->assertCount(0, $syncJson['newMessages']);
 		// TODO: deleted messages are flagged as changed? could be a testing-only issue
 		// $this->assertCount(0, $syncJson['changedMessages']);
-		$this->assertCount(2, $syncJson['vanishedMessages']);
+		$this->assertCount(1, $syncJson['vanishedMessages']);
 	}
 
 }

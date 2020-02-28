@@ -23,9 +23,12 @@
 
 namespace OCA\Mail\Command;
 
+use OCA\Mail\Account;
 use OCA\Mail\Db\MailboxMapper;
+use OCA\Mail\Exception\IncompleteSyncException;
+use OCA\Mail\Exception\ServiceException;
 use OCA\Mail\Service\AccountService;
-use OCA\Mail\Service\SyncService;
+use OCA\Mail\Service\Sync\ImapToDbSynchronizer;
 use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Input\InputArgument;
 use Symfony\Component\Console\Input\InputInterface;
@@ -43,12 +46,12 @@ class SyncAccount extends Command {
 	/** @var MailboxMapper */
 	private $mailboxMapper;
 
-	/** @var SyncService */
+	/** @var ImapToDbSynchronizer */
 	private $syncService;
 
 	public function __construct(AccountService $service,
 								MailboxMapper $mailboxMapper,
-								SyncService $syncService) {
+								ImapToDbSynchronizer $syncService) {
 		parent::__construct();
 
 		$this->accountService = $service;
@@ -74,6 +77,21 @@ class SyncAccount extends Command {
 		$force = $input->getOption(self::OPTION_FORCE);
 
 		$account = $this->accountService->findById($accountId);
-		$this->syncService->syncAccount($account, $force);
+
+		$this->sync($account, $force, $output);
 	}
+
+	private function sync(Account $account, bool $force, OutputInterface $output) {
+		try {
+			$this->syncService->syncAccount($account, $force);
+		} catch (ServiceException $e) {
+			if (!($e->getPrevious() instanceof IncompleteSyncException)) {
+				throw $e;
+			}
+
+			$output->writeln("Batch of new messages sync'ed");
+			$this->sync($account, $force, $output);
+		}
+	}
+
 }

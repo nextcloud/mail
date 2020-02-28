@@ -25,7 +25,7 @@ namespace OCA\Mail\IMAP;
 
 use function array_filter;
 use function array_map;
-use Horde_Imap_Client_Mailbox;
+use function in_array;
 use function reset;
 use Horde_Imap_Client;
 use Horde_Imap_Client_Exception;
@@ -33,9 +33,18 @@ use Horde_Imap_Client_Socket;
 use OCA\Mail\Account;
 use OCA\Mail\Exception\ServiceException;
 use OCA\Mail\Folder;
-use OCA\Mail\SearchFolder;
 
 class FolderMapper {
+
+	/**
+	 * This is a temporary workaround for when the sieve folder is a subfolder of
+	 * INBOX. Once "#386 Subfolders and Dovecot" has been resolved, we can go back
+	 * to just comparing to 'dovecot.sieve'.
+	 */
+	private const DOVECOT_SIEVE_FOLDERS = [
+		'dovecot.sieve',
+		'INBOX.dovecot.sieve'
+	];
 
 	/**
 	 * @param Account $account
@@ -53,36 +62,19 @@ class FolderMapper {
 			'special_use' => true,
 		]);
 
-		$folders = [];
-		foreach ($mailboxes as $mailbox) {
-			/**
-			 * This is a temporary workaround for when the sieve folder is a subfolder of
-			 * INBOX. Once "#386 Subfolders and Dovecot" has been resolved, we can go back
-			 * to just comparing to 'dovecot.sieve'.
-			 */
-			$dovecotSieveFolders = [
-				'dovecot.sieve',
-				'INBOX.dovecot.sieve'
-			];
-			if (in_array($mailbox['mailbox']->utf8, $dovecotSieveFolders, true)) {
+		return array_filter(array_map(function(array $mailbox) use ($account) {
+			if (in_array($mailbox['mailbox']->utf8, self::DOVECOT_SIEVE_FOLDERS, true)) {
 				// This is a special folder that must not be shown
-				continue;
+				return null;
 			}
 
-			$folder = new Folder(
+			return new Folder(
 				$account->getId(),
 				$mailbox['mailbox'],
 				$mailbox['attributes'],
 				$mailbox['delimiter']
 			);
-
-			$folders[] = $folder;
-			if ($mailbox['mailbox']->utf8 === 'INBOX') {
-				$searchFolder = new SearchFolder($account->getId(), $mailbox['mailbox'], $mailbox['attributes'], $mailbox['delimiter']);
-				$folders[] = $searchFolder;
-			}
-		}
-		return $folders;
+		}, $mailboxes));
 	}
 
 	public function createFolder(Horde_Imap_Client_Socket $client,

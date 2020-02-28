@@ -23,12 +23,15 @@
 
 namespace OCA\Mail\Service\Search;
 
+use Horde_Imap_Client;
+
 class FilterStringParser {
 
 	private const FLAG_MAP = [
-		'read' => ['SEEN', true],
-		'unread' => ['SEEN', false],
-		'answered' => ['ANSWERED', true],
+		'answered' => [Horde_Imap_Client::FLAG_ANSWERED, true],
+		'read' => [Horde_Imap_Client::FLAG_SEEN, true],
+		'starred' => [Horde_Imap_Client::FLAG_FLAGGED, true],
+		'unread' => [Horde_Imap_Client::FLAG_SEEN, false],
 	];
 
 	public function parse(?string $filter): SearchQuery {
