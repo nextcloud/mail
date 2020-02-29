@@ -64,6 +64,8 @@ OC.L10N.register(
     "Rich text" : "Raiškusis tekstas",
     "No messages in this folder" : "Šiame aplankė pranešimų nėra",
     "Draft: " : "Juodraštis: ",
+    "Unfavorite" : "Nebežymėti kaip mėgstamą",
+    "Favorite" : "Mėgstamas",
     "Mark read" : "Žymėti kaip skaitytą",
     "Mark unread" : "Žymėti kaip neskaitytą",
     "Delete" : "Ištrinti",

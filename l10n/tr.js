@@ -68,6 +68,8 @@ OC.L10N.register(
     "Rich text" : "Zengin metin",
     "No messages in this folder" : "Bu klasörde herhangi bir ileti yok",
     "Draft: " : "Taslak",
+    "Unfavorite" : "Sık Kullanılanlardan Kaldır",
+    "Favorite" : "Sık Kullanılanlara Ekle",
     "Mark read" : "Okunmuş olarak işaretle",
     "Mark unread" : "Okunmamış olarak işaretle",
     "Delete" : "Sil",

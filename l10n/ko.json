@@ -38,6 +38,8 @@
     "Message sent!" : "메시지를 보냈습니다!",
     "Send" : "보내기",
     "Choose a file to add as attachment" : "첨부할 파일을 선택하십시오",
+    "Unfavorite" : "즐겨찾기에서 삭제",
+    "Favorite" : "즐겨찾기",
     "Mark read" : "읽은 상태로 표시",
     "Delete" : "삭제",
     "Loading messages" : "메세지를 불러오는 중",

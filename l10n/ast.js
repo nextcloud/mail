@@ -29,6 +29,7 @@ OC.L10N.register(
     "Message sent!" : "¡Mensaxe unviáu!",
     "Send" : "Unviar",
     "Choose a file to add as attachment" : "Escueyi un ficheru p'amestalu como axuntu",
+    "Favorite" : "Marcar como favoritu",
     "Delete" : "Desaniciar",
     "Reply" : "Rempuesta",
     "Could not load your message" : "Nun pudo cargase'l to mensaxe",

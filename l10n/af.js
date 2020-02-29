@@ -25,6 +25,7 @@ OC.L10N.register(
     "Retry" : "Herprobeer",
     "Message sent!" : "Boodskap gestuur!",
     "Send" : "Stuur",
+    "Favorite" : "Gunsteling",
     "Delete" : "Skrap",
     "Reply" : "Antwoord",
     "Forward" : "Stuur aan",

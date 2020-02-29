@@ -63,6 +63,7 @@ OC.L10N.register(
     "Rich text" : "Богат текст",
     "No messages in this folder" : "Нема пораки во оваа папка",
     "Draft: " : "Нацрт:",
+    "Favorite" : "Омилен",
     "Mark read" : "Означи како прочитано",
     "Mark unread" : "Означи како непрочитано",
     "Delete" : "Избриши",

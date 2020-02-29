@@ -68,6 +68,8 @@ OC.L10N.register(
     "Rich text" : "Rich-Text",
     "No messages in this folder" : "Keine Nachrichten in diesem Ordner",
     "Draft: " : "Entwurf:",
+    "Unfavorite" : "Nicht favorisieren",
+    "Favorite" : "Favorit",
     "Mark read" : "Als gelesen markieren",
     "Mark unread" : "Als ungelesen markieren",
     "Delete" : "Löschen",

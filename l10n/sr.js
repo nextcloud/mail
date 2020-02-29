@@ -68,6 +68,8 @@ OC.L10N.register(
     "Rich text" : "Обогаћени текст",
     "No messages in this folder" : "Нема порука у овој фасцикли",
     "Draft: " : "Нацрт: ",
+    "Unfavorite" : "Склони да је омиљени",
+    "Favorite" : "Омиљени",
     "Mark read" : "Означи као прочитано",
     "Mark unread" : "Означи као непрочитано",
     "Delete" : "Избриши",

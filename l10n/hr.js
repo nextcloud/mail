@@ -63,6 +63,8 @@ OC.L10N.register(
     "Rich text" : "Bogat tekst",
     "No messages in this folder" : "Nema poruka u ovoj mapi",
     "Draft: " : "Skica: ",
+    "Unfavorite" : "Ukloni iz favorita",
+    "Favorite" : "Favorit",
     "Mark read" : "Označi kao pročitano",
     "Mark unread" : "Označi kao nepročitano",
     "Delete" : "Izbriši",

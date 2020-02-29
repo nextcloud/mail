@@ -66,6 +66,8 @@ OC.L10N.register(
     "Rich text" : "Rijke tekst",
     "No messages in this folder" : "Geen berichten in deze map",
     "Draft: " : "Concept:",
+    "Unfavorite" : "Favoriet weghalen",
+    "Favorite" : "Favoriet",
     "Mark read" : "Markeer gelezen",
     "Mark unread" : "Markeer ongelezen",
     "Delete" : "Verwijderen",

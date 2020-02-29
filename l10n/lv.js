@@ -31,6 +31,7 @@ OC.L10N.register(
     "Message sent!" : "Vēstule aizsūtīta!",
     "Send" : "Sūtīt",
     "Choose a file to add as attachment" : "Izvēlēties datni ko pievienot kā pielikumu",
+    "Favorite" : "Favorīts",
     "Delete" : "Dzēst",
     "Reply" : "Atbildēt",
     "Forward" : "Turpināt",

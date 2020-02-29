@@ -68,6 +68,8 @@ OC.L10N.register(
     "Rich text" : "富文本",
     "No messages in this folder" : "该文件夹内没有消息",
     "Draft: " : "草稿: ",
+    "Unfavorite" : "取消收藏",
+    "Favorite" : "收藏",
     "Mark read" : "标记为已读",
     "Mark unread" : "标记为未读",
     "Delete" : "删除",

@@ -68,6 +68,8 @@ OC.L10N.register(
     "Rich text" : "متن غنی",
     "No messages in this folder" : "هیچ پیامی در این پوشه وجود ندارد",
     "Draft: " : "پیش نویس:",
+    "Unfavorite" : "ناخوشایند",
+    "Favorite" : "برگزیده",
     "Mark read" : "علامت گذاری به عنوان خوانده شده",
     "Mark unread" : "علامت گذاری به عنوان خوانده نشده",
     "Delete" : "حذف",

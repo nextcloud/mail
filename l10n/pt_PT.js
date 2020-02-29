@@ -28,6 +28,8 @@ OC.L10N.register(
     "Choose a file to add as attachment" : "Escolha um ficheiro para adicionar como anexo",
     "Plain text" : "Texto simples",
     "Draft: " : "Rascunho:",
+    "Unfavorite" : "Não favorito",
+    "Favorite" : "Favorito",
     "Mark read" : "Marcar como lido",
     "Mark unread" : "Marcar como não lido",
     "Delete" : "Eliminar",

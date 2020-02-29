@@ -19,6 +19,7 @@ OC.L10N.register(
     "Message sent!" : "Повідомлення відправлено!",
     "Send" : "Надіслати",
     "Choose a file to add as attachment" : "Обрати файл для вкладення",
+    "Favorite" : "Улюблений",
     "Delete" : "Видалити",
     "Reply" : "Відповісти",
     "Unnamed" : "Без назви",

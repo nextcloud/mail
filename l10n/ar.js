@@ -37,6 +37,7 @@ OC.L10N.register(
     "Send" : "أرسل",
     "Choose a file to add as attachment" : "اختر ملف لإضافته كمرفق",
     "Draft: " : "المسودة:",
+    "Favorite" : "المفضلة",
     "Delete" : "حذف",
     "Not found" : "غير موجود",
     "Reply" : "رد",

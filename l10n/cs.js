@@ -69,7 +69,7 @@ OC.L10N.register(
     "No messages in this folder" : "V této složce nejsou žádné zprávy",
     "Draft: " : "Koncept:",
     "Unfavorite" : "Odebrat z oblíbených",
-    "Favorite" : "Oblíbená",
+    "Favorite" : "Oblíbené",
     "Mark read" : "Označit jako přečtené",
     "Mark unread" : "Označit jako nepřečtené",
     "Delete" : "Smazat",

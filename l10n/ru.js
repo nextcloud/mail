@@ -68,6 +68,8 @@ OC.L10N.register(
     "Rich text" : "Текст с форматированием",
     "No messages in this folder" : "В этой папке нет сообщений",
     "Draft: " : "Черновик:",
+    "Unfavorite" : "Убрать из избранного",
+    "Favorite" : "Добавить в избранное",
     "Mark read" : "Отметить прочитанным",
     "Mark unread" : "Отметить непрочитанным",
     "Delete" : "Удалить",

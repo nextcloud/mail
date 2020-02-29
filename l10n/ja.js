@@ -63,6 +63,8 @@ OC.L10N.register(
     "Rich text" : "リッチテキスト",
     "No messages in this folder" : "このフォルダーにメッセージはありません",
     "Draft: " : "下書き",
+    "Unfavorite" : "お気に入りから外す",
+    "Favorite" : "お気に入り",
     "Mark read" : "既読にする",
     "Mark unread" : "未読にする",
     "Delete" : "削除",

@@ -21,6 +21,7 @@ OC.L10N.register(
     "Retry" : "Reîncearcă",
     "Message sent!" : "Mesaj trimis!",
     "Send" : "Trimite",
+    "Favorite" : "Favorite",
     "Delete" : "Șterge",
     "Reply" : "Răspunde",
     "Unnamed" : "Fără nume",

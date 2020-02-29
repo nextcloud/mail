@@ -49,6 +49,7 @@ OC.L10N.register(
     "Rich text" : "Форматиран текст",
     "No messages in this folder" : "Няма съобщения",
     "Draft: " : "Чернова: ",
+    "Favorite" : "Любима",
     "Mark read" : "Маркирай като прочетено",
     "Mark unread" : "Маркирай като непрочетено",
     "Delete" : "Изтриване",

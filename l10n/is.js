@@ -63,6 +63,8 @@ OC.L10N.register(
     "Rich text" : "Sniðinn texti",
     "No messages in this folder" : "Engin skilaboð í þessari möppu",
     "Draft: " : "Drög: ",
+    "Unfavorite" : "Taka úr eftirlætum",
+    "Favorite" : "Eftirlæti",
     "Mark read" : "Merkja sem lesið",
     "Mark unread" : "Merkja sem ólesið",
     "Delete" : "Eyða",

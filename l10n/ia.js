@@ -16,6 +16,7 @@ OC.L10N.register(
     "Message sent!" : "Message inviate!",
     "Send" : "Inviar",
     "Choose a file to add as attachment" : "Selectiona un file pro adder como attachamento",
+    "Favorite" : "Favorite",
     "Delete" : "Deler",
     "Reply" : "Responder",
     "Unnamed" : "Non nominate",

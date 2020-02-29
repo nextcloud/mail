@@ -68,6 +68,8 @@ OC.L10N.register(
     "Rich text" : "Texto mellorado",
     "No messages in this folder" : "Non hai mensaxes neste cartafol",
     "Draft: " : "Borrador:",
+    "Unfavorite" : "Desmarcar como favorito",
+    "Favorite" : "Favorito",
     "Mark read" : "Marcar como lido",
     "Mark unread" : "Marcar como sen ler",
     "Delete" : "Eliminar",
