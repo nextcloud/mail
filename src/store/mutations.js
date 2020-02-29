@@ -25,7 +25,7 @@ import Vue from 'vue'
 
 import {buildMailboxHierarchy} from '../imap/MailboxHierarchy'
 import {havePrefix} from '../imap/MailboxPrefix'
-import {normalizedFolderId, normalizedMessageId, normalizeEnvelopeListId} from './normalization'
+import {normalizedFolderId, normalizedMessageId, normalizedEnvelopeListId} from './normalization'
 import {sortMailboxes} from '../imap/MailboxSorter'
 import {UNIFIED_ACCOUNT_ID} from './constants'
 
@@ -107,7 +107,7 @@ export default {
 	addEnvelope(state, {accountId, folderId, query, envelope}) {
 		const folder = state.folders[normalizedFolderId(accountId, folderId)]
 		Vue.set(state.envelopes, envelope.uid, envelope)
-		const listId = normalizeEnvelopeListId(query)
+		const listId = normalizedEnvelopeListId(query)
 		const existing = folder.envelopeLists[listId] || []
 		Vue.set(
 			folder.envelopeLists,
@@ -126,7 +126,7 @@ export default {
 	},
 	removeEnvelope(state, {accountId, folderId, id, query}) {
 		const folder = state.folders[normalizedFolderId(accountId, folderId)]
-		const list = folder.envelopeLists[normalizeEnvelopeListId(query)]
+		const list = folder.envelopeLists[normalizedEnvelopeListId(query)]
 		const idx = list.indexOf(normalizedMessageId(accountId, folderId, id))
 		if (idx < 0) {
 			console.warn('envelope does not exist', accountId, folder.id, id)
@@ -139,7 +139,7 @@ export default {
 			.map(fId => state.folders[fId])
 			.filter(f => f.specialRole === folder.specialRole)
 			.forEach(folder => {
-				const list = folder.envelopeLists[normalizeEnvelopeListId(query)]
+				const list = folder.envelopeLists[normalizedEnvelopeListId(query)]
 				const idx = list.indexOf(normalizedMessageId(accountId, folderId, id))
 				if (idx < 0) {
 					console.warn('envelope does not exist in unified mailbox', accountId, folder.id, id)

@@ -60,7 +60,7 @@ import {
 	syncEnvelopes,
 } from '../service/MessageService'
 import logger from '../logger'
-import {normalizeEnvelopeListId} from './normalization'
+import {normalizedEnvelopeListId} from './normalization'
 import {showNewMessagesNotification} from '../service/NotificationService'
 import {parseUid} from '../util/EnvelopeUidParser'
 
@@ -325,7 +325,7 @@ export default {
 			return page
 		}
 
-		const list = folder.envelopeLists[normalizeEnvelopeListId(query)]
+		const list = folder.envelopeLists[normalizedEnvelopeListId(query)]
 		const lastEnvelopeId = last(list)
 		if (typeof lastEnvelopeId === 'undefined') {
 			console.error('folder is empty', list)
