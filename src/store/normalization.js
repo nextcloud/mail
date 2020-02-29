@@ -29,4 +29,4 @@ export const normalizedMessageId = curry((accountId, folderId, messageId) => {
 	return `${accountId}-${folderId}-${messageId}`
 })
 
-export const normalizeEnvelopeListId = defaultTo('')
+export const normalizedEnvelopeListId = defaultTo('')

@@ -22,7 +22,7 @@
 import {defaultTo, head} from 'ramda'
 
 import {UNIFIED_ACCOUNT_ID} from './constants'
-import {normalizeEnvelopeListId, normalizeFolderId, normalizeMessageId} from './normalization'
+import {normalizedEnvelopeListId, normalizedFolderId, normalizedMessageId} from './normalization'
 
 export const getters = {
 	getPreference: state => (key, def) => {
@@ -35,7 +35,7 @@ export const getters = {
 		return state.accountList.map(id => state.accounts[id])
 	},
 	getFolder: state => (accountId, folderId) => {
-		return state.folders[normalizeFolderId(accountId, folderId)]
+		return state.folders[normalizedFolderId(accountId, folderId)]
 	},
 	getFolders: state => accountId => {
 		return state.accounts[accountId].folders.map(folderId => state.folders[folderId])
@@ -53,16 +53,16 @@ export const getters = {
 		)
 	},
 	getEnvelope: state => (accountId, folderId, id) => {
-		return state.envelopes[normalizeMessageId(accountId, folderId, id)]
+		return state.envelopes[normalizedMessageId(accountId, folderId, id)]
 	},
 	getEnvelopeById: state => id => {
 		return state.envelopes[id]
 	},
 	getEnvelopes: (state, getters) => (accountId, folderId, query) => {
-		const list = getters.getFolder(accountId, folderId).envelopeLists[normalizeEnvelopeListId(query)] || []
+		const list = getters.getFolder(accountId, folderId).envelopeLists[normalizedEnvelopeListId(query)] || []
 		return list.map(msgId => state.envelopes[msgId])
 	},
 	getMessage: state => (accountId, folderId, id) => {
-		return state.messages[normalizeMessageId(accountId, folderId, id)]
+		return state.messages[normalizedMessageId(accountId, folderId, id)]
 	},
 }

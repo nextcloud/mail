@@ -31,7 +31,7 @@ import Mailbox from './Mailbox'
 import Message from './Message'
 import NewMessageDetail from './NewMessageDetail'
 import NoMessageSelected from './NoMessageSelected'
-import {normalizeEnvelopeListId} from '../store/normalization'
+import {normalizedEnvelopeListId} from '../store/normalization'
 
 export default {
 	name: 'MailboxMessage',
@@ -78,7 +78,7 @@ export default {
 			// it actually should be `return this.$store.getters.getEnvelopes(this.account.id, this.folder.id).length > 0`
 			// but for some reason Vue doesn't track the dependencies on reactive data then and messages in subfolders can't
 			// be opened then
-			const list = this.folder.envelopeLists[normalizeEnvelopeListId(this.searchQuery)]
+			const list = this.folder.envelopeLists[normalizedEnvelopeListId(this.searchQuery)]
 
 			if (list === undefined) {
 				return false
