@@ -7,7 +7,7 @@
 				:key="env.uid"
 				:data="env"
 				:folder="folder"
-				@delete="$emit('delete', {envelope: env})"
+				@delete="$emit('delete', env.uid)"
 			/>
 			<div id="load-more-mail-messages" key="loadingMore" :class="{'icon-loading-small': loadingMore}" />
 		</transition-group>
