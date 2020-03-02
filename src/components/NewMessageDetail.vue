@@ -67,7 +67,7 @@ export default {
 				return {
 					to: this.draft.to,
 					cc: this.draft.cc,
-					bcc: this.draft.bcc, // TODO: impl in composer
+					bcc: this.draft.bcc,
 					subject: this.draft.subject,
 					body: this.draft.body,
 					isPlainText: !this.draft.hasHtmlBody,
