@@ -137,7 +137,11 @@ export default {
 		},
 		onDelete() {
 			this.$emit('delete', {envelope: this.data})
-			this.$store.dispatch('deleteMessage', this.data)
+			this.$store.dispatch('deleteMessage', {
+				accountId: this.data.accountId,
+				folderId: this.data.folderId,
+				id: this.data.id,
+			})
 		},
 	},
 }

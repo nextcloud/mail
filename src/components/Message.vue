@@ -237,7 +237,11 @@ export default {
 				envelope: this.envelope,
 				message: this.message,
 			})
-			this.$store.dispatch('deleteMessage', this.message)
+			this.$store.dispatch('deleteMessage', {
+				accountId: this.message.accountId,
+				folderId: this.message.folderId,
+				id: this.message.id,
+			})
 		},
 	},
 }

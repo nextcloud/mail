@@ -502,30 +502,27 @@ export default {
 			newUid: uid,
 		})
 	},
-	deleteMessage({getters, commit}, envelope) {
-		const folder = getters.getFolder(envelope.accountId, envelope.folderId)
-		commit('removeEnvelope', {
-			accountId: envelope.accountId,
-			folderId: envelope.folderId,
-			id: envelope.id,
-		})
+	deleteMessage({getters, commit}, {accountId, folderId, id}) {
+		commit('removeEnvelope', {accountId, folderId, id})
 
-		return deleteMessage(envelope.accountId, envelope.folderId, envelope.id)
+		return deleteMessage(accountId, folderId, id)
 			.then(() => {
-				commit('removeMessage', {
-					accountId: envelope.accountId,
-					folder,
-					id: envelope.id,
-				})
+				const folder = getters.getFolder(accountId, folderId)
+				if (!folder) {
+					logger.error('could not find folder', {accountId, folderId})
+					return
+				}
+				commit('removeMessage', {accountId, folder, id})
 				console.log('message removed')
 			})
 			.catch(err => {
 				console.error('could not delete message', err)
-				commit('addEnvelope', {
-					accountId: envelope.accountId,
-					folderId: envelope.folderId,
-					envelope,
-				})
+				const envelope = getters.getEnvelope(accountId, folderId, id)
+				if (envelope) {
+					commit('addEnvelope', {accountId, folderId, envelope})
+				} else {
+					logger.error('could not find envelope', {accountId, folderId, id})
+				}
 				throw err
 			})
 	},

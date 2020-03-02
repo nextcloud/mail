@@ -265,7 +265,7 @@ export default {
 					logger.debug('deleting', {env})
 					this.onDelete({envelope: env})
 					this.$store
-						.dispatch('deleteMessage', env)
+						.dispatch('deleteMessage', {accountId: env.accountId, folderId: env.folderId, id: env.id})
 						.catch(error => logger.error('could not delete envelope', {env, error}))
 
 					break
