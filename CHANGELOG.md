@@ -1,6 +1,10 @@
 # Changelog
 All notable changes to this project will be documented in this file.
 
+## 1.1.3 - 2020-03-02
+### Fixed
+- Error in recipient selection
+
 ## 1.1.2 - 2020-01-30
 ### Changed
 - New and updated translations
