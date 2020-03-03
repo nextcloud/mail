@@ -14,14 +14,10 @@
 					<h2 :title="message.subject">{{ message.subject }}</h2>
 					<p class="transparency">
 						<AddressList :entries="message.from" />
-						to
-						<!-- TODO: translate -->
+						{{ t('mail', 'to') }}
 						<AddressList :entries="message.to" />
 						<template v-if="message.cc.length">
-							(cc
-							<!-- TODO: translate -->
-							<AddressList :entries="message.cc" /><!--
-							-->)
+							({{ t('mail', 'cc') }} <AddressList :entries="message.cc" />)
 						</template>
 					</p>
 				</div>

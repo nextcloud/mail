@@ -144,12 +144,6 @@ export default {
 </script>
 
 <style scoped>
-button {
-	/* TODO: remove for Nextcloud 15+ */
-	/* https://github.com/nextcloud/server/pull/12138 */
-	display: inline-block;
-}
-
 .new-message-attachments li {
 	padding: 10px;
 }
