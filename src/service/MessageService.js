@@ -4,6 +4,7 @@ import {curry, map} from 'ramda'
 
 import {parseErrorResponse} from '../http/ErrorResponseParser'
 import {convertAxiosError} from '../errors/convert'
+import SyncIncompleteError from '../errors/SyncIncompleteError'
 
 const amendEnvelopeWithIds = curry((accountId, folderId, envelope) => ({
 	accountId,
@@ -62,12 +63,14 @@ export async function syncEnvelopes(accountId, folderId, uids, init = false) {
 	})
 
 	try {
-		const response = await axios.get(url, {
-			params: {
-				uids,
-				init,
-			},
+		const response = await axios.post(url, {
+			uids,
+			init,
 		})
+
+		if (response.status === 202) {
+			throw new SyncIncompleteError()
+		}
 
 		const amend = amendEnvelopeWithIds(accountId, folderId)
 		return {

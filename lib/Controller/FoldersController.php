@@ -125,6 +125,10 @@ class FoldersController extends Controller {
 				}, $uids),
 				!$init
 			);
+
+			if ($syncResponse->isIncomplete()) {
+				return \OCA\Mail\Http\JsonResponse::fail([], Http::STATUS_ACCEPTED);
+			}
 		} catch (MailboxNotCachedException $e) {
 			return new JSONResponse(null, Http::STATUS_PRECONDITION_REQUIRED);
 		}

@@ -25,7 +25,6 @@ namespace OCA\Mail\Service;
 
 use Horde_Imap_Client;
 use Horde_Imap_Client_Exception;
-use Horde_Imap_Client_Exception_Sync;
 use OCA\Mail\Account;
 use OCA\Mail\Db\Mailbox;
 use OCA\Mail\Db\MailboxMapper;
@@ -33,7 +32,6 @@ use OCA\Mail\Db\Message;
 use OCA\Mail\Db\MessageMapper;
 use OCA\Mail\Db\MessageMapper as DatabaseMessageMapper;
 use OCA\Mail\Exception\ClientException;
-use OCA\Mail\Exception\MailboxLockedException;
 use OCA\Mail\Exception\MailboxNotCachedException;
 use OCA\Mail\Exception\ServiceException;
 use OCA\Mail\IMAP\IMAPClientFactory;
@@ -52,6 +50,9 @@ use function array_chunk;
 use function array_map;
 
 class SyncService {
+
+	/** @var int */
+	const MAX_NEW_MESSAGES = 10000;
 
 	/**
 	 * @param int[] $knownUids
@@ -173,6 +174,7 @@ class SyncService {
 	 * @param int[] $knownUids
 	 *
 	 * @throws ClientException
+	 * @throws MailboxNotCachedException
 	 * @throws ServiceException
 	 */
 	public function syncMailbox(Account $account,
@@ -201,49 +203,17 @@ class SyncService {
 	/**
 	 * @throws ServiceException
 	 */
-	public function ensurePopulated(Account $account, string $mailbox): void {
-		try {
-			$mb = $this->mailboxMapper->find($account, $mailbox);
-		} catch (DoesNotExistException $e) {
-			throw new ServiceException('Mailbox does not exist', 0, $e);
-		}
-
-		if ($mb->getSyncNewToken() !== null) {
-			return;
-		}
-
-		try {
-			$this->mailboxMapper->lockForNewSync($mb);
-			$this->mailboxMapper->lockForChangeSync($mb);
-			$this->mailboxMapper->lockForVanishedSync($mb);
-
-			$this->runInitialSync($account, $mb);
-		} catch (MailboxLockedException $e) {
-			// Fine, then we don't have to do it
-		} finally {
-			$this->mailboxMapper->unlockFromNewSync($mb);
-			$this->mailboxMapper->unlockFromChangedSync($mb);
-			$this->mailboxMapper->unlockFromVanishedSync($mb);
-		}
-	}
-
-	/**
-	 * @throws ServiceException
-	 */
 	private function runInitialSync(Account $account, Mailbox $mailbox): Response {
 		$perf = $this->performanceLogger->start('Initial sync ' . $account->getId() . ':' . $mailbox->getName());
 
+		$highestKnownUid = $this->dbMapper->findHighestUid($mailbox);
 		$client = $this->clientFactory->getClient($account);
 		try {
-			$imapMessages = $this->imapMapper->findAll($client, $mailbox);
+			$imapMessages = $this->imapMapper->findAll($client, $mailbox, $highestKnownUid, self::MAX_NEW_MESSAGES);
 			$perf->step('fetch all messages from IMAP');
 		} catch (Horde_Imap_Client_Exception $e) {
 			throw new ServiceException('Can not get messages from mailbox ' . $mailbox->getName() . ': ' . $e->getMessage(), 0, $e);
 		}
-
-		// The sync token could be reset by a migration, hence there could be existing data
-		$this->dbMapper->deleteAll($mailbox);
-		$perf->step('delete existing messages');
 
 		foreach (array_chunk($imapMessages, 500) as $chunk) {
 			$this->dbMapper->insertBulk(...array_map(function (IMAPMessage $imapMessage) use ($mailbox) {
@@ -251,6 +221,13 @@ class SyncService {
 			}, $chunk));
 		}
 		$perf->step('persist messages in database');
+
+		if (count($imapMessages) >= self::MAX_NEW_MESSAGES) {
+			// We need more attempts to fill the cache
+			$perf->end();
+
+			return Response::incomplete();
+		}
 
 		$mailbox->setSyncNewToken($client->getSyncToken($mailbox->getMailbox()));
 		$mailbox->setSyncChangedToken($client->getSyncToken($mailbox->getMailbox()));
