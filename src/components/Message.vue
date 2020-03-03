@@ -229,10 +229,7 @@ export default {
 			this.$store.dispatch('toggleEnvelopeSeen', this.envelope)
 		},
 		onDelete() {
-			this.$emit('delete', {
-				envelope: this.envelope,
-				message: this.message,
-			})
+			this.$emit('delete', this.envelope.uid)
 			this.$store.dispatch('deleteMessage', {
 				accountId: this.message.accountId,
 				folderId: this.message.folderId,

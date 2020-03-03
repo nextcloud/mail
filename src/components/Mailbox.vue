@@ -263,7 +263,7 @@ export default {
 					break
 				case 'del':
 					logger.debug('deleting', {env})
-					this.onDelete({envelope: env})
+					this.onDelete(env.uid)
 					this.$store
 						.dispatch('deleteMessage', {accountId: env.accountId, folderId: env.folderId, id: env.id})
 						.catch(error => logger.error('could not delete envelope', {env, error}))
@@ -316,14 +316,14 @@ export default {
 				this.refreshing = false
 			}
 		},
-		onDelete({envelope}) {
-			const idx = findIndex(propEq('uid', envelope.uid), this.envelopes)
+		onDelete(uid) {
+			const idx = findIndex(propEq('uid', uid), this.envelopes)
 			if (idx === -1) {
 				logger.debug('envelope to delete does not exist in envelope list')
 				return
 			}
 			this.envelopes.splice(idx, 1)
-			if (envelope.uid !== this.$route.params.messageUid) {
+			if (uid !== this.$route.params.messageUid) {
 				logger.debug('other message open, not jumping to the next/previous message')
 				return
 			}

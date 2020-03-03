@@ -114,9 +114,8 @@ export default {
 				},
 			})
 		},
-		deleteMessage({envelope, message}) {
-			console.info({envelope, message})
-			this.bus.$emit('delete', {envelope, message})
+		deleteMessage(envelopeUid) {
+			this.bus.$emit('delete', envelopeUid)
 		},
 		onScroll() {
 			this.bus.$emit('loadMore')
