@@ -38,6 +38,7 @@ use OCP\AppFramework\Http\RedirectResponse;
 use OCP\AppFramework\Http\TemplateResponse;
 use OCP\IConfig;
 use OCP\IInitialStateService;
+use OCP\ILogger;
 use OCP\IRequest;
 use OCP\IURLGenerator;
 use OCP\IUserSession;
@@ -71,6 +72,9 @@ class PageController extends Controller {
 	/** @var IInitialStateService */
 	private $initialStateService;
 
+	/** @var ILogger */
+	private $logger;
+
 	public function __construct(string $appName,
 								IRequest $request,
 								IURLGenerator $urlGenerator,
@@ -81,7 +85,8 @@ class PageController extends Controller {
 								IUserSession $userSession,
 								IUserPreferences $preferences,
 								MailManager $mailManager,
-								IInitialStateService $initialStateService) {
+								IInitialStateService $initialStateService,
+								ILogger $logger) {
 		parent::__construct($appName, $request);
 
 		$this->urlGenerator = $urlGenerator;
@@ -93,6 +98,7 @@ class PageController extends Controller {
 		$this->preferences = $preferences;
 		$this->mailManager = $mailManager;
 		$this->initialStateService = $initialStateService;
+		$this->logger = $logger;
 	}
 
 	/**
@@ -113,6 +119,10 @@ class PageController extends Controller {
 				$folders = $this->mailManager->getFolders($mailAccount);
 				$json['folders'] = $folders;
 			} catch (Exception $ex) {
+				$this->logger->logException($ex, [
+					'message' => 'Could not load account folders: ' . $ex->getMessage(),
+					'level' => ILogger::FATAL,
+				]);
 				$json['folders'] = [];
 				$json['error'] = true;
 			}
