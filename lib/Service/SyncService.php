@@ -52,7 +52,7 @@ use function array_map;
 class SyncService {
 
 	/** @var int */
-	const MAX_NEW_MESSAGES = 10000;
+	const MAX_NEW_MESSAGES = 5000;
 
 	/**
 	 * @param int[] $knownUids
