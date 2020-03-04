@@ -58,6 +58,8 @@ OC.L10N.register(
     "Report this bug" : "Ilmoita viasta",
     "Loading messages" : "Ladataan viestejä",
     "Not found" : "Ei löytynyt",
+    "to" : "Vastaanottaja",
+    "cc" : "Kopio",
     "Reply" : "Vastaa",
     "Reply to sender only" : "Vastaa vain lähettäjälle",
     "Forward" : "Lähetä edelleen",

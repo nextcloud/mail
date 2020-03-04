@@ -11,6 +11,7 @@ OC.L10N.register(
     "Send" : "Pošalji",
     "Favorite" : "Favorit",
     "Delete" : "Obriši",
+    "to" : "do",
     "Settings" : "Podešavanje",
     "Add folder" : "Add folder",
     "Delete account" : "Delete account",

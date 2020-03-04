@@ -72,6 +72,8 @@ OC.L10N.register(
     "Report this bug" : "バグを報告",
     "Loading messages" : "メッセージの読み込み中",
     "Not found" : "見つかりませんでした",
+    "to" : "宛先",
+    "cc" : "cc",
     "Reply" : "返信",
     "Reply to sender only" : "送信者のみに返信",
     "Forward" : "転送",

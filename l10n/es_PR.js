@@ -37,6 +37,8 @@ OC.L10N.register(
     "Favorite" : "Hacer favorito",
     "Mark read" : "Marcar como leído",
     "Delete" : "Borrar",
+    "to" : "para",
+    "cc" : "cc",
     "Reply" : "Responder",
     "Forward" : "Adelante",
     "Import into calendar" : "Importar al calendario",

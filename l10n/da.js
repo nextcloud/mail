@@ -66,6 +66,8 @@ OC.L10N.register(
     "Delete" : "Slet",
     "Loading messages" : "Henter beskedder",
     "Not found" : "Ikke fundet",
+    "to" : "til",
+    "cc" : "cc",
     "Reply" : "Besvar",
     "Forward" : "Videresend",
     "Import into calendar" : "Importere til kalender",

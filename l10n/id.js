@@ -20,6 +20,7 @@ OC.L10N.register(
     "Choose a file to add as attachment" : "Pilih berkas untuk ditambahkan sebagai lampiran",
     "Favorite" : "Favorit",
     "Delete" : "Hapus",
+    "to" : "untuk",
     "Reply" : "Balas",
     "Choose a folder to store the attachment in" : "Pilih folder untuk menyimpan lampiran didalamnya",
     "Settings" : "Setelan",

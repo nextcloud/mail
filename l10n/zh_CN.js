@@ -79,6 +79,8 @@ OC.L10N.register(
     "Loading messages" : "正在加载消息",
     "Indexing your messages. This can take a bit longer for larger mailboxes." : "正在为您的消息建立索引。 对于较大的邮箱，这可能需要更长的时间。",
     "Not found" : "没有找到",
+    "to" : "收件人",
+    "cc" : "抄送",
     "Reply" : "回复",
     "Reply to sender only" : "只回复发送者",
     "Forward" : "转发",

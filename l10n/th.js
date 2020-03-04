@@ -18,6 +18,7 @@ OC.L10N.register(
     "Choose a file to add as attachment" : "เลือกไฟล์ที่ต้องการแนบ",
     "Favorite" : "รายการโปรด",
     "Delete" : "ลบ",
+    "to" : "ถึง",
     "Reply" : "ตอบกลับ",
     "Unnamed" : "ไม่มีชื่อ",
     "Choose a folder to store the attachment in" : "เลือกโฟลเดอร์ที่จะเก็บสิ่งที่แนบมาใน",

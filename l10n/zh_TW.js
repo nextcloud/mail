@@ -45,6 +45,8 @@ OC.L10N.register(
     "Unfavorite" : "取消我的最愛",
     "Favorite" : "我的最愛",
     "Delete" : "刪除",
+    "to" : "至",
+    "cc" : "副本",
     "Reply" : "回覆",
     "Forward" : "向前",
     "Could not load your message" : "無法載入您的信件",

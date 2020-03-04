@@ -15,6 +15,7 @@ OC.L10N.register(
     "Choose a file to add as attachment" : "সংযুক্তি দেয়ার জন্য একটি ফাইল নির্বাচন করুন",
     "Favorite" : "প্রিয়জন",
     "Delete" : "মুছে",
+    "to" : "প্রতি",
     "Reply" : "জবাব",
     "Choose a folder to store the attachment in" : "সংযুক্তি সংরক্ষনের জন্য একটি ফোল্ডার নির্বাচন করুন",
     "Settings" : "সেটিংস",

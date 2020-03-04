@@ -71,6 +71,8 @@ OC.L10N.register(
     "Report this bug" : "Пријави грешка",
     "Loading messages" : "Вчитување пораки",
     "Not found" : "Не е пронајдено",
+    "to" : "до",
+    "cc" : "cc",
     "Reply" : "Одговор",
     "Reply to sender only" : "Одговор само до испраќачот",
     "Forward" : "Препрати",

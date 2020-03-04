@@ -23,6 +23,7 @@ OC.L10N.register(
     "Send" : "Trimite",
     "Favorite" : "Favorite",
     "Delete" : "Șterge",
+    "to" : "către",
     "Reply" : "Răspunde",
     "Unnamed" : "Fără nume",
     "Choose a folder to store the attachment in" : "Alege un dosar în care să stochez atașamentul",

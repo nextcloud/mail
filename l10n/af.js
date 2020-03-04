@@ -27,6 +27,7 @@ OC.L10N.register(
     "Send" : "Stuur",
     "Favorite" : "Gunsteling",
     "Delete" : "Skrap",
+    "to" : "aan",
     "Reply" : "Antwoord",
     "Forward" : "Stuur aan",
     "Import into calendar" : "Voer in na kalender",

@@ -31,6 +31,7 @@ OC.L10N.register(
     "Choose a file to add as attachment" : "Escueyi un ficheru p'amestalu como axuntu",
     "Favorite" : "Marcar como favoritu",
     "Delete" : "Desaniciar",
+    "to" : "hasta",
     "Reply" : "Rempuesta",
     "Could not load your message" : "Nun pudo cargase'l to mensaxe",
     "Download attachment" : "Baxar axuntu",

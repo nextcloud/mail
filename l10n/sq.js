@@ -36,6 +36,8 @@ OC.L10N.register(
     "Favorite" : "I/E Preferuar",
     "Mark read" : "Shëno të lexuar",
     "Delete" : "Fshij",
+    "to" : "te",
+    "cc" : "cc",
     "Reply" : "Përgjigju",
     "Forward" : "Përpara",
     "Import into calendar" : "Importo në kalendar",

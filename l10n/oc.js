@@ -16,6 +16,7 @@ OC.L10N.register(
     "Send" : "Mandar",
     "Choose a file to add as attachment" : "Causissètz un fichièr de jónher al messatge",
     "Delete" : "Suprimir",
+    "to" : "a",
     "Reply" : "Respondre",
     "Choose a folder to store the attachment in" : "Causissètz lo dorsièr dins lo qual enregistrar la pèça junta",
     "Settings" : "Paramètres",

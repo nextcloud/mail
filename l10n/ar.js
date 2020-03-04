@@ -40,6 +40,8 @@ OC.L10N.register(
     "Favorite" : "المفضلة",
     "Delete" : "حذف",
     "Not found" : "غير موجود",
+    "to" : "إلى",
+    "cc" : "نسخة كربونية",
     "Reply" : "رد",
     "Forward" : "إعادة توجيه ",
     "Could not load your message" : "تعذرت عملية تحميل رسالتك",

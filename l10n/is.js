@@ -72,6 +72,8 @@ OC.L10N.register(
     "Report this bug" : "Tilkynna þessa villu",
     "Loading messages" : "Hleð inn skilaboðum",
     "Not found" : "Fannst ekki",
+    "to" : "til",
+    "cc" : "cc",
     "Reply" : "Svara",
     "Reply to sender only" : "Svara einungis sendanda",
     "Forward" : "Áframsenda",

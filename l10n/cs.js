@@ -79,6 +79,8 @@ OC.L10N.register(
     "Loading messages" : "Načítání zpráv",
     "Indexing your messages. This can take a bit longer for larger mailboxes." : "Vytváření rejstříku vašich zpráv. V případě rozsáhlejších e-mailových schránek toto může trvat poněkud déle.",
     "Not found" : "Nenalezeno",
+    "to" : "do",
+    "cc" : "kopie",
     "Reply" : "Odpovědět",
     "Reply to sender only" : "Odpovědět pouze odesílateli",
     "Forward" : "Přeposlat",

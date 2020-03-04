@@ -38,6 +38,8 @@ OC.L10N.register(
     "Favorite" : "რჩეული",
     "Mark read" : "მონიშნეთ წაკითხულად",
     "Delete" : "გაუქმება",
+    "to" : "ვის",
+    "cc" : "კკ",
     "Reply" : "პასუხი",
     "Forward" : "წინ",
     "Could not load your message" : "თქვენი წერილის ჩატვირთვა ვერ მოხერხდა",

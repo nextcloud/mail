@@ -12,6 +12,7 @@ OC.L10N.register(
     "Send" : "Schécken",
     "Favorite" : "Favorit",
     "Delete" : "Läschen",
+    "to" : "bis",
     "Reply" : "Äntwerten",
     "Unnamed" : "ouni Numm",
     "Settings" : "Astellungen",

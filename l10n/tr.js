@@ -79,6 +79,8 @@ OC.L10N.register(
     "Loading messages" : "İletiler yükleniyor",
     "Indexing your messages. This can take a bit longer for larger mailboxes." : "İletileriniz dizine ekleniyor. Çok sayıda ileti bulunan posta kutularında bu işlem biraz zaman alabilir.",
     "Not found" : "Bulunamadı",
+    "to" : "kime",
+    "cc" : "kopya",
     "Reply" : "Yanıtla",
     "Reply to sender only" : "Yalnız gönderene yanıtla",
     "Forward" : "İlet",

@@ -12,6 +12,7 @@ OC.L10N.register(
     "Send" : "Send",
     "Favorite" : "Favoritt",
     "Delete" : "Ta bort",
+    "to" : "til",
     "Settings" : "Instillingar",
     "Add folder" : "Add folder",
     "Delete account" : "Delete account",
