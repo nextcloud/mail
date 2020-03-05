@@ -74,6 +74,8 @@ OC.L10N.register(
     "Loading messages" : "Ŝargas mesaĝojn",
     "Indexing your messages. This can take a bit longer for larger mailboxes." : "Indeksas viajn mesaĝojn. Tio eble daŭrus iom pli longe por pli grandaj poŝtkestoj.",
     "Not found" : "Ne trovita",
+    "to" : "al",
+    "cc" : "kopio",
     "Reply" : "Respondi",
     "Reply to sender only" : "Respondi nur al sendinto",
     "Forward" : "Antaŭen",

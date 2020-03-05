@@ -8,6 +8,7 @@ OC.L10N.register(
     "Connect" : "Berhubung",
     "Send" : "Hantar",
     "Delete" : "Padam",
+    "to" : "kepada",
     "Settings" : "Tetapan",
     "Add folder" : "Add folder",
     "Delete account" : "Delete account",

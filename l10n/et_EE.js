@@ -31,6 +31,8 @@ OC.L10N.register(
     "Favorite" : "Lemmik",
     "Mark read" : "Märgi loetuks",
     "Delete" : "Kustuta",
+    "to" : "saaja",
+    "cc" : "cc",
     "Reply" : "Vasta",
     "Forward" : "Edasi",
     "Unnamed" : "Nimeta",

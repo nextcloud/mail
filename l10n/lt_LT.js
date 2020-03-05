@@ -73,6 +73,8 @@ OC.L10N.register(
     "Could not open mailbox" : "Nepavyko atverti pašto dėžutės",
     "Loading messages" : "Įkeliami laiškai",
     "Not found" : "Nerasta",
+    "to" : "iki",
+    "cc" : "cc",
     "Reply" : "Atsakyti",
     "Reply to sender only" : "Atsakyti tik siuntėjui",
     "Forward" : "Persiųsti",

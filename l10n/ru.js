@@ -79,6 +79,8 @@ OC.L10N.register(
     "Loading messages" : "Загрузка сообщений",
     "Indexing your messages. This can take a bit longer for larger mailboxes." : "Выполняется индексация сообщений, это займёт некоторое время.",
     "Not found" : "Не найдено",
+    "to" : "до",
+    "cc" : "копия",
     "Reply" : "Ответить",
     "Reply to sender only" : "Ответить только отправителю",
     "Forward" : "Переслать",

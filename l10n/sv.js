@@ -79,6 +79,8 @@ OC.L10N.register(
     "Loading messages" : "Laddar meddelanden",
     "Indexing your messages. This can take a bit longer for larger mailboxes." : "Indexera dina meddelanden. Det kan ta lite längre tid för större brevlådor.",
     "Not found" : "Hittades inte",
+    "to" : "till",
+    "cc" : "cc",
     "Reply" : "Svara",
     "Reply to sender only" : "Svara endast avsändaren",
     "Forward" : "Vidarebefordra",

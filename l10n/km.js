@@ -11,6 +11,7 @@ OC.L10N.register(
     "Sending …" : "កំពុង​ផ្ញើរ...",
     "Send" : "ផ្ញើ",
     "Delete" : "លុប",
+    "to" : "ទៅ",
     "Reply" : "ឆ្លើយតប",
     "Settings" : "ការកំណត់",
     "Add folder" : "Add folder",

@@ -39,6 +39,8 @@ OC.L10N.register(
     "Favorite" : "Hacer favorito",
     "Mark read" : "Marcar como leído",
     "Delete" : "Borrar",
+    "to" : "para",
+    "cc" : "cc",
     "Reply" : "Responder",
     "Forward" : "Adelante",
     "Could not load your message" : "No fue posible cargar tu mensaje",

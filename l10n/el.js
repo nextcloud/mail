@@ -79,6 +79,8 @@ OC.L10N.register(
     "Loading messages" : "Φόρτωση μηνυμάτων",
     "Indexing your messages. This can take a bit longer for larger mailboxes." : "Αρχειοθέτηση των μηνυμάτων σας. Αυτό μπορεί να διαρκέσει περισσότερο για μεγαλύτερα γραμματοκιβώτια.",
     "Not found" : "Δε βρέθηκε",
+    "to" : "προς",
+    "cc" : "κοιν.",
     "Reply" : "Απάντηση",
     "Reply to sender only" : "Απάντηση μόνο στον αποστολέα",
     "Forward" : "Προώθηση",

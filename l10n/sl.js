@@ -72,6 +72,8 @@ OC.L10N.register(
     "Report this bug" : "Pošlji poročilo o hrošču",
     "Loading messages" : "Nalaganje sporočil",
     "Not found" : "Ni mogoče najti",
+    "to" : "do",
+    "cc" : "kp",
     "Reply" : "Odgovori",
     "Reply to sender only" : "Odgovori le pošiljatelju",
     "Forward" : "Posreduj",

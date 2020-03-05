@@ -79,6 +79,7 @@ OC.L10N.register(
     "Loading messages" : "بارگیری پیام ها",
     "Indexing your messages. This can take a bit longer for larger mailboxes." : "نمایه سازی پیام های شما این می تواند کمی برای صندوق های پستی بزرگتر کمی طولانی شود.",
     "Not found" : "پیدا نشد",
+    "to" : "به",
     "Reply" : "پاسخ",
     "Reply to sender only" : "فقط به فرستنده پاسخ دهید",
     "Forward" : "فرستادن",

@@ -27,6 +27,7 @@ OC.L10N.register(
     "Send" : "илгээх",
     "Favorite" : "Дуртай",
     "Delete" : "Устгах",
+    "to" : "Дуусах нь",
     "Reply" : "хариулт",
     "Forward" : "дамжих",
     "Download attachment" : "Татаж авах хавсралт",

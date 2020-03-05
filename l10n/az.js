@@ -15,6 +15,7 @@ OC.L10N.register(
     "Choose a file to add as attachment" : "Əlavə ediləcək faylı seçin",
     "Favorite" : "İstəkli",
     "Delete" : "Sil",
+    "to" : "doğru",
     "Reply" : "Cavab",
     "Choose a folder to store the attachment in" : "Əlavələrin saxlanılması üçün qovluğu seçin",
     "Settings" : "Quraşdırmalar",

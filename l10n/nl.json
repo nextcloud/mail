@@ -77,6 +77,8 @@
     "Loading messages" : "Berichten aan het laden",
     "Indexing your messages. This can take a bit longer for larger mailboxes." : "Indexeren van je berichten. Dit kan wat tijd kosten voor groet brievenbussen.",
     "Not found" : "Niet gevonden",
+    "to" : "naar",
+    "cc" : "cc",
     "Reply" : "Antwoord",
     "Reply to sender only" : "Antwoord alleen op afzender",
     "Forward" : "Doorsturen",

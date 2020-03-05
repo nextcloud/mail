@@ -79,6 +79,8 @@ OC.L10N.register(
     "Loading messages" : "Chargement des messages",
     "Indexing your messages. This can take a bit longer for larger mailboxes." : "L'indexation des messages est en cours. Cette opération peut être un peu longue pour les grosses boites aux lettres.",
     "Not found" : "Non trouvé",
+    "to" : "vers",
+    "cc" : "cc",
     "Reply" : "Répondre",
     "Reply to sender only" : "Répondre à l'émetteur uniquement",
     "Forward" : "Faire suivre",

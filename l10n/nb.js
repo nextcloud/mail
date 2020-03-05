@@ -55,6 +55,8 @@ OC.L10N.register(
     "Report this bug" : "Rapporter denne feilen",
     "Loading messages" : "Henter meldinger",
     "Not found" : "Ikke funnet",
+    "to" : "til",
+    "cc" : "cc",
     "Reply" : "Svar",
     "Forward" : "Fremover",
     "Could not load your message" : "Kunne ikke laste meldingene dine",

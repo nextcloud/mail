@@ -59,6 +59,8 @@ OC.L10N.register(
     "Report this bug" : "A hiba bejelentése",
     "Loading messages" : "Üzenetek betöltése",
     "Not found" : "Nem található",
+    "to" : "címzett",
+    "cc" : "másolat",
     "Reply" : "Válasz",
     "Forward" : "Tovább",
     "Could not load your message" : "Nem lehet betölteni az üzenetedet",

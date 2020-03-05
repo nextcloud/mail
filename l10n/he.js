@@ -38,6 +38,8 @@ OC.L10N.register(
     "Favorite" : "סימון כמועדף",
     "Mark read" : "סימון כנקרא",
     "Delete" : "מחיקה",
+    "to" : "אל",
+    "cc" : "עותק",
     "Reply" : "תגובה",
     "Forward" : "העברה",
     "Could not load your message" : "לא ניתן לטעון את ההודעה שלך",

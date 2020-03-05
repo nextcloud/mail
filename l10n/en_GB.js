@@ -40,6 +40,8 @@ OC.L10N.register(
     "Mark read" : "Mark read",
     "Delete" : "Delete",
     "Not found" : "Not found",
+    "to" : "to",
+    "cc" : "cc",
     "Reply" : "Reply",
     "Forward" : "Forward",
     "Could not load your message" : "Could not load your message",

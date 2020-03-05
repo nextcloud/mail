@@ -13,6 +13,7 @@ OC.L10N.register(
     "Send" : "Gởi",
     "Favorite" : "Ưa thích",
     "Delete" : "Xóa",
+    "to" : "đến",
     "Reply" : "Trả l",
     "Settings" : "Thiết lập",
     "Add folder" : "Add folder",

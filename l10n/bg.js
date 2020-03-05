@@ -54,6 +54,8 @@ OC.L10N.register(
     "Mark unread" : "Маркирай като непрочетено",
     "Delete" : "Изтриване",
     "Loading messages" : "Зареждане на съобщенията",
+    "to" : "до",
+    "cc" : "ЯК",
     "Reply" : "Отговори",
     "Forward" : "Напред",
     "Could not load your message" : "Вашето съобщение не може да бъде заредено",

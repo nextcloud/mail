@@ -69,6 +69,8 @@ OC.L10N.register(
     "Report this bug" : "Informa d'aquest error",
     "Loading messages" : "S'estan carregant missatges",
     "Not found" : "No s'ha trobat",
+    "to" : "a",
+    "cc" : "cc",
     "Reply" : "Respon",
     "Reply to sender only" : "Respon només al remitent",
     "Forward" : "Endavant",

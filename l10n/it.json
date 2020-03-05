@@ -77,6 +77,8 @@
     "Loading messages" : "Caricamento messaggi",
     "Indexing your messages. This can take a bit longer for larger mailboxes." : "Indicizzazione dei tuoi messaggi. Può richiedere più tempo per le caselle di posta più grandi.",
     "Not found" : "Non trovato",
+    "to" : "a",
+    "cc" : "cc",
     "Reply" : "Rispondi",
     "Reply to sender only" : "Rispondi solo al mittente",
     "Forward" : "Inoltra",

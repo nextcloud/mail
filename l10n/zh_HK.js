@@ -11,6 +11,7 @@ OC.L10N.register(
     "Sending …" : "發送中 …",
     "Send" : "發送",
     "Delete" : "刪除",
+    "to" : "至",
     "Reply" : "回覆",
     "Settings" : "設定",
     "Add folder" : "Add folder",
