@@ -80,6 +80,11 @@ return [
 			'verb' => 'GET'
 		],
 		[
+			'name' => 'folders#delete',
+			'url' => '/api/accounts/{accountId}/folders/{folderId}',
+			'verb' => 'DELETE'
+		],
+		[
 			'name' => 'messages#downloadAttachment',
 			'url' => '/api/accounts/{accountId}/folders/{folderId}/messages/{messageId}/attachment/{attachmentId}',
 			'verb' => 'GET'

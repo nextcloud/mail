@@ -219,4 +219,17 @@ class FolderMapper {
 			}
 		}
 	}
+
+	/**
+	 * @param Horde_Imap_Client_Socket $client
+	 * @param string $folderId
+	 * @throws ServiceException
+	 */
+	public function delete(Horde_Imap_Client_Socket $client, string $folderId): void {
+		try {
+			$client->deleteMailbox($folderId);
+		} catch (Horde_Imap_Client_Exception $e) {
+			throw new ServiceException('Could not delete mailbox: '.$e->getMessage(), 0, $e);
+		}
+	}
 }
