@@ -46,8 +46,8 @@
 			<ActionButton v-if="!isLast" icon="icon-triangle-s" @click="changeAccountOrderDown">
 				{{ t('mail', 'Move down') }}
 			</ActionButton>
-			<ActionButton v-if="!account.provisioned" icon="icon-delete" @click="deleteAccount">
-				{{ t('mail', 'Delete account') }}
+			<ActionButton v-if="!account.provisioned" icon="icon-delete" @click="removeAccount">
+				{{ t('mail', 'Remove account') }}
 			</ActionButton>
 		</template>
 	</AppNavigationItem>
@@ -90,6 +90,9 @@ export default {
 	data() {
 		return {
 			menuOpen: false,
+			loading: {
+				delete: false,
+			},
 		}
 	},
 	computed: {
@@ -127,18 +130,40 @@ export default {
 					throw error
 				})
 		},
-		deleteAccount() {
+		removeAccount() {
 			const id = this.account.id
+			logger.info('delete account', {account: this.account})
+			OC.dialogs.confirmDestructive(
+				t(
+					'mail',
+					'The account for {email} and cached email data will be removed from Nextcloud, but not from your email provider.',
+					{email: this.account.emailAddress}
+				),
+				t('mail', 'Remove account {email}', {email: this.account.emailAddress}),
+				{
+					type: OC.dialogs.YES_NO_BUTTONS,
+					confirm: t('mail', 'Remove {email}', {email: this.account.emailAddress}),
+					confirmClasses: 'error',
+					cancel: t('mail', 'Cancel'),
+				},
+				(result) => {
+					if (result) {
+						return this.$store
+							.dispatch('deleteAccount', this.account)
+							.then(() => {
+								this.loading.delete = true
+							})
+							.then(() => {
+								logger.info(`account ${id} deleted, redirecting …`)
 
-			this.$store
-				.dispatch('deleteAccount', this.account)
-				.then(() => {
-					logger.info(`account ${id} deleted, redirecting …`)
-
-					// TODO: update store and handle this more efficiently
-					location.href = generateUrl('/apps/mail')
-				})
-				.catch((error) => logger.error('could not delete account', {error}))
+								// TODO: update store and handle this more efficiently
+								location.href = generateUrl('/apps/mail')
+							})
+							.catch((error) => logger.error('could not delete account', {error}))
+					}
+					this.loading.delete = false
+				}
+			)
 		},
 		changeAccountOrderUp() {
 			this.$store
