@@ -19,8 +19,6 @@ env:
   - DB=mysql
   - PATCH_VERSION_CHECK=FALSE
   matrix:
-  - TEST_SUITE=LINT-PHP
-  - TEST_SUITE=TEST-PHP
 
 matrix:
   include:
@@ -67,9 +65,9 @@ before_install:
   - if [[ "$DB" == 'mysql' ]]; then mysql -u root -e "GRANT ALL ON oc_autotest.* TO 'oc_autotest'@'localhost';"; fi
 
   - composer self-update
-  - sh -c "if [ '$TEST_SUITE' = 'TEST-PHP' ]; then make install-composer-deps-dev; fi"
-  - sh -c "if [ '$TEST_SUITE' = 'TEST-PHP' ]; then make start-imap-docker; fi"
-  - sh -c "if [ '$TEST_SUITE' = 'TEST-PHP' ]; then make start-smtp-docker; fi"
+  - make install-composer-deps-dev
+  - make start-imap-docker
+  - make start-smtp-docker
   - cd ..
   - git clone https://github.com/nextcloud/server.git --recursive --depth 1 -b $CORE_BRANCH core
   - if [[ "$PATCH_VERSION_CHECK" = "TRUE" ]]; then echo "<?php" > core/lib/versioncheck.php; fi
@@ -78,35 +76,32 @@ before_install:
 
 before_script:
   # Set up core
-  - sh -c "if [ '$TEST_SUITE' = 'TEST-PHP' ]; then php -f core/occ maintenance:install --database-name oc_autotest --database-user oc_autotest --admin-user admin --admin-pass admin --database $DB --database-pass=''; fi"
+  - php -f core/occ maintenance:install --database-name oc_autotest --database-user oc_autotest --admin-user admin --admin-pass admin --database $DB --database-pass=''
 
   # Set up app
-  - sh -c "if [ '$TEST_SUITE' = 'TEST-PHP' ]; then php -f core/occ app:enable mail; fi"
+  - php -f core/occ app:enable mail
   # Enable app twice to check occ errors of registered commands
-  - sh -c "if [ '$TEST_SUITE' = 'TEST-PHP' ]; then php -f core/occ app:enable mail; fi"
+  - php -f core/occ app:enable mail
   - cd core/apps/mail
   - sh -c "if [ '$TEST_SUITE' = 'TEST-JS' ]; then npm install -g npm@latest; fi"
   - sh -c "if [ '$TEST_SUITE' = 'TEST-JS' ]; then make dev-setup; fi"
 
   # Prepare IMAP test docker
-  - sh -c "if [ '$TEST_SUITE' = 'TEST-PHP' ]; then make add-imap-account; fi"
+  - make add-imap-account
 
   # XDebug is only needed if we report coverage -> speeds up other builds
   - if [[ "$PHP_COVERAGE" = "FALSE" ]]; then phpenv config-rm xdebug.ini || true; fi
 
   # Print running docker images, just to verify they did not crash
-  - sh -c "if [ '$TEST_SUITE' = 'TEST-PHP' ]; then docker ps; fi"
+  - docker ps
 
 script:
-  # Run server's app code checker
-  - sh -c "if [ '$TEST_SUITE' = 'LINT-PHP' ]; then php ../../occ app:check-code mail; fi"
-
   # Run JS tests
   - sh -c "if [ '$TEST_SUITE' = 'TEST-JS' ]; then npm test; fi"
   # - sh -c "if [ '$TEST_JS' = 'TRUE' ]; then cat ./coverage/*/lcov.info | ./node_modules/coveralls/bin/coveralls.js; fi"
 
   # Run PHP tests
-  - sh -c "if [ '$TEST_SUITE' = 'TEST-PHP' ]; then composer test:integration; fi"
+  - composer test:integration
   - if [[ "$PHP_COVERAGE" = "TRUE" ]]; then wget https://scrutinizer-ci.com/ocular.phar; fi
   - if [[ "$PHP_COVERAGE" = "TRUE" ]]; then php ocular.phar code-coverage:upload --format=php-clover tests/clover.integration.xml; fi
 

@@ -32,6 +32,30 @@ jobs:
     - name: Lint
       run: composer run lint
 
+  app-code-check:
+    runs-on: ubuntu-latest
+    strategy:
+        matrix:
+            nextcloud-versions: ['master']
+    name: Nextcloud ${{ matrix.nextcloud-versions }} app code check
+    steps:
+        - name: Set up php7.4
+          uses: shivammathur/setup-php@master
+          with:
+              php-version: 7.4
+              extension-csv: ctype,curl,dom,gd,iconv,intl,json,mbstring,openssl,posix,sqlite,xml,zip
+              coverage: xdebug
+        - name: Checkout Nextcloud
+          run: git clone https://github.com/nextcloud/server.git --recursive --depth 1 -b ${{ matrix.nextcloud-versions }} nextcloud
+        - name: Run tests
+          run: php -f nextcloud/occ maintenance:install --database-name oc_autotest --database-user oc_autotest --admin-user admin --admin-pass admin --database sqlite --database-pass=''
+        - name: Checkout
+          uses: actions/checkout@master
+          with:
+              path: nextcloud/apps/mail
+        - name: Run tests
+          run: php -f nextcloud/occ app:check-code mail
+
   node-linters:
     runs-on: ubuntu-latest
     name: ESLint
