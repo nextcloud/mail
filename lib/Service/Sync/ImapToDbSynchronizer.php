@@ -190,9 +190,9 @@ class ImapToDbSynchronizer {
 			throw new IncompleteSyncException();
 		}
 
-		$mailbox->setSyncNewToken($client->getSyncToken($mailbox->getMailbox()));
-		$mailbox->setSyncChangedToken($client->getSyncToken($mailbox->getMailbox()));
-		$mailbox->setSyncVanishedToken($client->getSyncToken($mailbox->getMailbox()));
+		$mailbox->setSyncNewToken($client->getSyncToken($mailbox->getName()));
+		$mailbox->setSyncChangedToken($client->getSyncToken($mailbox->getName()));
+		$mailbox->setSyncVanishedToken($client->getSyncToken($mailbox->getName()));
 		$this->mailboxMapper->update($mailbox);
 
 		$perf->end();
@@ -218,7 +218,7 @@ class ImapToDbSynchronizer {
 				$response = $this->synchronizer->sync(
 					$client,
 					new Request(
-						$mailbox->getMailbox(),
+						$mailbox->getName(),
 						$mailbox->getSyncNewToken(),
 						$uids
 					),
@@ -238,14 +238,14 @@ class ImapToDbSynchronizer {
 			}
 			$perf->step('persist new messages');
 
-			$mailbox->setSyncNewToken($client->getSyncToken($mailbox->getMailbox()));
+			$mailbox->setSyncNewToken($client->getSyncToken($mailbox->getName()));
 		}
 		if ($criteria & Horde_Imap_Client::SYNC_FLAGSUIDS) {
 			try {
 				$response = $this->synchronizer->sync(
 					$client,
 					new Request(
-						$mailbox->getMailbox(),
+						$mailbox->getName(),
 						$mailbox->getSyncChangedToken(),
 						$uids
 					),
@@ -270,7 +270,7 @@ class ImapToDbSynchronizer {
 			// a silent sync and we don't update the change token until the next full
 			// mailbox sync
 			if ($knownUids === null) {
-				$mailbox->setSyncChangedToken($client->getSyncToken($mailbox->getMailbox()));
+				$mailbox->setSyncChangedToken($client->getSyncToken($mailbox->getName()));
 			}
 		}
 		if ($criteria & Horde_Imap_Client::SYNC_VANISHEDUIDS) {
@@ -278,7 +278,7 @@ class ImapToDbSynchronizer {
 				$response = $this->synchronizer->sync(
 					$client,
 					new Request(
-						$mailbox->getMailbox(),
+						$mailbox->getName(),
 						$mailbox->getSyncVanishedToken(),
 						$uids
 					),
@@ -296,7 +296,7 @@ class ImapToDbSynchronizer {
 			}
 			$perf->step('persist new messages');
 
-			$mailbox->setSyncVanishedToken($client->getSyncToken($mailbox->getMailbox()));
+			$mailbox->setSyncVanishedToken($client->getSyncToken($mailbox->getName()));
 		}
 		$this->mailboxMapper->update($mailbox);
 		$perf->end();

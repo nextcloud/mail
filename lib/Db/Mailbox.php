@@ -117,16 +117,6 @@ class Mailbox extends Entity {
 		);
 	}
 
-	public function getMailbox(): string {
-		// TODO: evaluate if SPECIALUSE_FLAGGED can also be set on a real IMAP mailbox
-		// because then this could be problematic if they name also ends with /FLAGGED
-		// though, this sounds very unlikely
-		if ($this->isSpecialUse(Horde_Imap_Client::SPECIALUSE_FLAGGED)) {
-			return rtrim($this->getName(), '/FLAGGED');
-		}
-		return $this->getName();
-	}
-
 	public function isCached(): bool {
 		return $this->getSyncNewToken() !== null
 			&& $this->getSyncChangedToken() !== null

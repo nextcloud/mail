@@ -69,7 +69,7 @@ class ItineraryService {
 	public function extract(Account $account, string $mailbox, int $id): Itinerary {
 		$mailbox = $this->mailboxMapper->find($account, $mailbox);
 
-		$cacheKey = 'mail_itinerary_' . $account->getId() . '_' . $mailbox->getMailbox() . '_' . $id;
+		$cacheKey = 'mail_itinerary_' . $account->getId() . '_' . $mailbox->getName() . '_' . $id;
 		if ($cached = ($this->cache->get($cacheKey))) {
 			return Itinerary::fromJson($cached);
 		}
@@ -77,7 +77,7 @@ class ItineraryService {
 		$client = $this->clientFactory->getClient($account);
 
 		$itinerary = new Itinerary();
-		$htmlBody = $this->messageMapper->getHtmlBody($client, $mailbox->getMailbox(), $id);
+		$htmlBody = $this->messageMapper->getHtmlBody($client, $mailbox->getName(), $id);
 		if ($htmlBody !== null) {
 			$itinerary = $itinerary->merge(
 				$this->extractor->extract($htmlBody)
@@ -86,7 +86,7 @@ class ItineraryService {
 		} else {
 			$this->logger->debug('Message does not have an HTML body, can\'t extract itinerary info');
 		}
-		$attachments = $this->messageMapper->getRawAttachments($client, $mailbox->getMailbox(), $id);
+		$attachments = $this->messageMapper->getRawAttachments($client, $mailbox->getName(), $id);
 		$itinerary = array_reduce($attachments, function(Itinerary $combined, string $attachment) {
 			$extracted = $this->extractor->extract($attachment);
 			$this->logger->debug('Extracted ' . count($extracted) . ' itinerary entries from an attachment');

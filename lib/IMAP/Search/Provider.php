@@ -58,7 +58,7 @@ class Provider {
 
 		try {
 			$fetchResult = $client->search(
-				$mailbox->getMailbox(),
+				$mailbox->getName(),
 				$this->convertMailQueryToHordeQuery($searchQuery)
 			);
 		} catch (Horde_Imap_Client_Exception $e) {

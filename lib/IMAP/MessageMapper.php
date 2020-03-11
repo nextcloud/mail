@@ -86,7 +86,7 @@ class MessageMapper {
 
 		return $this->findByIds(
 			$client,
-			$mailbox->getMailbox(),
+			$mailbox->getName(),
 			array_slice(
 				array_filter(
 					array_map(
@@ -94,7 +94,7 @@ class MessageMapper {
 							return $data->getUid();
 						},
 						iterator_to_array($client->fetch(
-							$mailbox->getMailbox(),
+							$mailbox->getName(),
 							$query,
 							[]
 						))
