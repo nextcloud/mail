@@ -79,7 +79,7 @@ OC.L10N.register(
     "Loading messages" : "Cargando mensaxes",
     "Indexing your messages. This can take a bit longer for larger mailboxes." : "Indexación das súas mensaxes. Isto pode levar un pouco máis en caixas de correo máis grandes.",
     "Not found" : "Non atopado",
-    "to" : "ata",
+    "to" : "para",
     "cc" : "cc",
     "Reply" : "Responder",
     "Reply to sender only" : "Responder só ao remitente",
