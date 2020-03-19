@@ -67,7 +67,12 @@
 				</div>
 				<MessageHTMLBody v-if="message.hasHtmlBody" :url="htmlUrl" />
 				<MessagePlainTextBody v-else :body="message.body" :signature="message.signature" />
-				<MessageAttachments :attachments="message.attachments" />
+				<Popover v-if="message.attachments[0]" class="attachment-popover">
+					<Actions slot="trigger">
+						<ActionButton icon="icon-public icon-attachment">Attachments</ActionButton>
+					</Actions>
+					<MessageAttachments :attachments="message.attachments" />
+				</Popover>
 				<div id="reply-composer"></div>
 			</div>
 		</template>
@@ -77,6 +82,7 @@
 <script>
 import Actions from '@nextcloud/vue/dist/Components/Actions'
 import ActionButton from '@nextcloud/vue/dist/Components/ActionButton'
+import Popover from '@nextcloud/vue/dist/Components/Popover'
 import AppContentDetails from '@nextcloud/vue/dist/Components/AppContentDetails'
 import axios from '@nextcloud/axios'
 import Modal from '@nextcloud/vue/dist/Components/Modal'
@@ -107,6 +113,7 @@ export default {
 		MessageHTMLBody,
 		MessagePlainTextBody,
 		Modal,
+		Popover,
 	},
 	data() {
 		return {
@@ -287,7 +294,8 @@ export default {
 
 .mail-message-body {
 	flex-grow: 1;
-	margin-bottom: 100px;
+	margin-bottom: 20px;
+	position: relative;
 }
 
 #mail-message-header {
@@ -327,13 +335,19 @@ export default {
 	}
 }
 
-#mail-content,
-.mail-message-attachments {
-	margin: 10px 38px 50px 38px;
+.v-popover > .trigger > .action-item {
+	border-radius: 22px;
+	background-color: rgba(127, 127, 127, 0.25) !important;
 }
 
-.mail-message-attachments {
-	margin-top: 10px;
+.attachment-popover {
+	position: absolute;
+	bottom: 0;
+	right: 20px;
+}
+
+.tooltip-inner {
+	text-align: left;
 }
 
 #mail-content iframe {

@@ -197,9 +197,10 @@ export default {
 .attachment {
 	position: relative;
 	display: inline-block;
+	width: 200px;
 	border: 1px solid var(--color-border);
 	border-radius: 3px;
-	margin: 0 10px 10px 0;
+	margin: 0 0 5px 0;
 	padding: 5px;
 }
 
@@ -207,24 +208,6 @@ export default {
 .attachment span:hover {
 	background-color: var(--color-background-dark);
 	cursor: pointer;
-}
-
-@media only screen and (max-width: 768px) {
-	.attachment {
-		width: calc(100% - 5px);
-	}
-}
-
-@media only screen and (min-width: 769px) and (max-width: 1400px) {
-	.attachment {
-		width: calc(50% - 10px);
-	}
-}
-
-@media only screen and (min-width: 1401px) {
-	.attachment {
-		width: calc(33% - 12px);
-	}
 }
 
 .mail-attached-image {
@@ -273,7 +256,7 @@ export default {
 
 .attachment-name {
 	display: inline-block;
-	width: calc(100% - 108px);
+	width: calc(100% - 72px);
 	white-space: nowrap;
 	overflow: hidden;
 	text-overflow: ellipsis;
@@ -288,5 +271,6 @@ export default {
 
 .attachment-icon {
 	vertical-align: middle;
+	text-align: left;
 }
 </style>
