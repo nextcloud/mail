@@ -9,8 +9,5 @@ assignees: ''
 
 ### Question
 
-<!-- Fill in the relevant information below to help triage your question. -->
-
-#### Summary
-
-<!-- Provide a summary of your question (if applicable). -->
+<!-- Please ask your question in the community forum at https://help.nextcloud.com/c/apps/mail -->
+<!-- The Github issue tracker shall only be used for actual bugs -->
