@@ -84,7 +84,7 @@ class PreviewEnhancer {
 		try {
 			$data = $this->imapMapper->getBodyStructureData(
 				$this->clientFactory->getClient($account),
-				$mailbox->getMailbox(),
+				$mailbox->getName(),
 				$needAnalyze
 			);
 		} catch (Horde_Imap_Client_Exception $e) {

@@ -24,21 +24,18 @@ namespace OCA\Mail\Tests\Unit\IMAP\Sync;
 use ChristophWurst\Nextcloud\Testing\TestCase;
 use Horde_Imap_Client_Base;
 use Horde_Imap_Client_Data_Sync;
+use Horde_Imap_Client_Ids;
 use Horde_Imap_Client_Mailbox;
-use OCA\Mail\IMAP\Sync\FavouritesMailboxSync;
+use OCA\Mail\IMAP\MessageMapper;
 use OCA\Mail\IMAP\Sync\Request;
 use OCA\Mail\IMAP\Sync\Response;
-use OCA\Mail\IMAP\Sync\SimpleMailboxSync;
 use OCA\Mail\IMAP\Sync\Synchronizer;
 use PHPUnit\Framework\MockObject\MockObject;
 
 class SynchronizerTest extends TestCase {
 
-	/** @var SimpleMailboxSync|MockObject */
-	private $simpleSync;
-
-	/** @var FavouritesMailboxSync|MockObject */
-	private $favSync;
+	/** @var MessageMapper|MockObject */
+	private $mapper;
 
 	/** @var Synchronizer */
 	private $synchronizer;
@@ -46,25 +43,12 @@ class SynchronizerTest extends TestCase {
 	protected function setUp(): void {
 		parent::setUp();
 
-		$this->simpleSync = $this->createMock(SimpleMailboxSync::class);
-		$this->favSync = $this->createMock(FavouritesMailboxSync::class);
+		$this->mapper = $this->createMock(MessageMapper::class);
 
-		$this->synchronizer = new Synchronizer($this->simpleSync, $this->favSync);
+		$this->synchronizer = new Synchronizer($this->mapper);
 	}
 
-	public function syncData() {
-		return [
-			[false],
-			[true],
-		];
-	}
-
-	/**
-	 * @dataProvider syncData
-	 */
-	public function testSync($flagged) {
-		$sync = $flagged ? $this->favSync : $this->simpleSync;
-
+	public function testSync() {
 		$imapClient = $this->createMock(Horde_Imap_Client_Base::class);
 		$request = $this->createMock(Request::class);
 		$request->expects($this->any())
@@ -78,24 +62,16 @@ class SynchronizerTest extends TestCase {
 			->method('sync')
 			->with($this->equalTo(new Horde_Imap_Client_Mailbox('inbox')), $this->equalTo('123456'))
 			->willReturn($hordeSync);
-		$request->expects($this->once())
-			->method('isFlaggedMailbox')
-			->willReturn($flagged);
 		$newMessages = [];
 		$changedMessages = [];
 		$vanishedMessageUids = [4, 5];
-		$sync->expects($this->once())
-			->method('getNewMessages')
-			->with($imapClient, $request, $hordeSync)
-			->willReturn($newMessages);
-		$sync->expects($this->once())
-			->method('getChangedMessages')
-			->with($imapClient, $request, $hordeSync)
-			->willReturn($changedMessages);
-		$sync->expects($this->once())
-			->method('getVanishedMessageUids')
-			->with($imapClient, $request, $hordeSync)
-			->willReturn($vanishedMessageUids);
+		$hordeSync->expects($this->exactly(3))
+			->method('__get')
+			->willReturnMap([
+				['newmsgsuids', new Horde_Imap_Client_Ids($newMessages)],
+				['flagsuids', new Horde_Imap_Client_Ids($changedMessages)],
+				['vanisheduids', new Horde_Imap_Client_Ids($vanishedMessageUids)],
+			]);
 		$expected = new Response($newMessages, $changedMessages, $vanishedMessageUids);
 
 		$response = $this->synchronizer->sync($imapClient, $request);

@@ -109,6 +109,11 @@ export default {
 			type: Boolean,
 			default: true,
 		},
+		filter: {
+			type: String,
+			default: '',
+			required: false,
+		},
 	},
 	data() {
 		return {
@@ -118,12 +123,22 @@ export default {
 	},
 	computed: {
 		title() {
+			if (this.filter === 'starred') {
+				// Little hack to trick the translation logic into a different path
+				return translateMailboxName({
+					...this.folder,
+					specialUse: ['flagged'],
+				})
+			}
 			return translateMailboxName(this.folder)
 		},
 		folderId() {
 			return atob(this.folder.id)
 		},
 		icon() {
+			if (this.filter === 'starred') {
+				return 'icon-flagged'
+			}
 			return this.folder.specialRole ? 'icon-' + this.folder.specialRole : 'icon-folder'
 		},
 		to() {
@@ -132,6 +147,7 @@ export default {
 				params: {
 					accountId: this.account.id,
 					folderId: this.folder.id,
+					filter: this.filter ? this.filter : undefined,
 				},
 			}
 		},

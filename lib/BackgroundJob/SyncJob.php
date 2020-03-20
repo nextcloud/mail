@@ -23,8 +23,10 @@
 
 namespace OCA\Mail\BackgroundJob;
 
+use Exception;
+use OCA\Mail\Exception\IncompleteSyncException;
 use OCA\Mail\Service\AccountService;
-use OCA\Mail\Service\SyncService;
+use OCA\Mail\Service\Sync\ImapToDbSynchronizer;
 use OCP\AppFramework\Db\DoesNotExistException;
 use OCP\AppFramework\Utility\ITimeFactory;
 use OCP\BackgroundJob\IJobList;
@@ -35,7 +37,7 @@ class SyncJob extends TimedJob {
 
 	/** @var AccountService */
 	private $accountService;
-	/** @var SyncService */
+	/** @var ImapToDbSynchronizer */
 	private $syncService;
 	/** @var ILogger */
 	private $logger;
@@ -44,7 +46,7 @@ class SyncJob extends TimedJob {
 
 	public function __construct(ITimeFactory $time,
 								AccountService $accountService,
-								SyncService $syncService,
+								ImapToDbSynchronizer $syncService,
 								ILogger $logger,
 								IJobList $jobList) {
 		parent::__construct($time);
@@ -70,7 +72,11 @@ class SyncJob extends TimedJob {
 
 		try {
 			$this->syncService->syncAccount($account);
-		} catch (\Exception $e) {
+		} catch (IncompleteSyncException $e) {
+			$this->logger->logException($e, [
+				'level' => ILogger::WARN,
+			]);
+		} catch (Exception $e) {
 			$this->logger->logException($e);
 		}
 	}

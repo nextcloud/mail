@@ -377,9 +377,14 @@ export default {
 
 		const uids = getters.getEnvelopes(accountId, folderId, query).map(env => env.id)
 
-		return syncEnvelopes(accountId, folderId, uids, query, init)
+<<<<<<< HEAD
+		return syncEnvelopes(accountId, folderId, uids, init)
 			.then(syncData => {
 				const unifiedFolder = getters.getUnifiedFolder(folder.specialRole)
+=======
+		return syncEnvelopes(accountId, folderId, uids, query, init).then(syncData => {
+			const unifiedFolder = getters.getUnifiedFolder(folder.specialRole)
+>>>>>>> Simplify the virtual favorite inbox
 
 				syncData.newMessages.forEach(envelope => {
 					commit('addEnvelope', {
@@ -389,14 +394,20 @@ export default {
 						query,
 					})
 					if (unifiedFolder) {
-						commit('updateEnvelope', {
+						commit('addEnvelope', {
+							accountId: unifiedFolder.accountId,
+							folderId: unifiedFolder.id,
 							envelope,
+							query,
 						})
 					}
 				})
 				syncData.changedMessages.forEach(envelope => {
-					commit('updateEnvelope', {
+					commit('addEnvelope', {
+						accountId,
+						folderId,
 						envelope,
+						query,
 					})
 				})
 				syncData.vanishedMessages.forEach(id => {
@@ -423,26 +434,18 @@ export default {
 				})
 			})
 	},
-	async syncInboxes({getters, dispatch}) {
-		return await Promise.all(
+	syncInboxes({getters, dispatch}) {
+		return Promise.all(
 			getters.accounts
 				.filter(a => !a.isUnified)
 				.map(account => {
 					return Promise.all(
-						getters.getFolders(account.id).map(async folder => {
+						getters.getFolders(account.id).map(folder => {
 							if (folder.specialRole !== 'inbox') {
 								return
 							}
 
-							const list = folder.envelopeLists[normalizedEnvelopeListId(undefined)]
-							if (list === undefined) {
-								await dispatch('fetchEnvelopes', {
-									accountId: account.id,
-									folderId: folder.id,
-								})
-							}
-
-							return await dispatch('syncEnvelopes', {
+							return dispatch('syncEnvelopes', {
 								accountId: account.id,
 								folderId: folder.id,
 							})
@@ -450,7 +453,7 @@ export default {
 					)
 				})
 		).then(results => {
-			const newMessages = flatMapDeep(identity, results).filter(m => m !== undefined)
+			const newMessages = flatMapDeep(identity)(results).filter(m => m !== undefined)
 			if (newMessages.length > 0) {
 				showNewMessagesNotification(newMessages)
 			}

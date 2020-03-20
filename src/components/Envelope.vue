@@ -83,6 +83,7 @@ export default {
 					params: {
 						accountId: this.$route.params.accountId,
 						folderId: this.$route.params.folderId,
+						filter: this.$route.params.filter ? this.$route.params.filter : undefined,
 						messageUid: 'new',
 						draftUid: this.data.uid,
 					},
@@ -94,6 +95,7 @@ export default {
 					params: {
 						accountId: this.$route.params.accountId,
 						folderId: this.$route.params.folderId,
+						filter: this.$route.params.filter ? this.$route.params.filter : undefined,
 						messageUid: this.data.uid,
 					},
 					exact: true,

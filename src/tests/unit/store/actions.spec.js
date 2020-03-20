@@ -25,6 +25,7 @@ import orderBy from 'lodash/fp/orderBy'
 
 import actions from '../../../store/actions'
 import * as MessageService from '../../../service/MessageService'
+import * as NotificationService from '../../../service/NotificationService'
 import {normalizedMessageId} from '../../../store/normalization'
 import {UNIFIED_ACCOUNT_ID, UNIFIED_INBOX_ID} from '../../../store/constants'
 
@@ -51,6 +52,10 @@ describe('Vuex store actions', () => {
 				getEnvelopes: sinon.stub(),
 			},
 		}
+	})
+
+	afterEach(() => {
+		sinon.restore()
 	})
 
 	it('combines unified inbox even if no inboxes are present', () => {
@@ -308,6 +313,156 @@ describe('Vuex store actions', () => {
 			accountId: UNIFIED_ACCOUNT_ID,
 			folderId: UNIFIED_INBOX_ID,
 			query: undefined,
+		})
+	})
+
+	describe('inbox sync', () => {
+		beforeEach(() => {
+			sinon.stub(NotificationService, 'showNewMessagesNotification')
+		})
+
+		afterEach(() => {
+			sinon.restore()
+		})
+
+		it('fetches the inbox first', async () => {
+			context.getters.accounts.push({
+				id: 13,
+				accountId: 13,
+			})
+			context.getters.accounts.push({
+				id: 26,
+				accountId: 26,
+			})
+			context.getters.getFolder.withArgs(UNIFIED_ACCOUNT_ID, UNIFIED_INBOX_ID).returns({
+				isUnified: true,
+				specialRole: 'inbox',
+				accountId: UNIFIED_ACCOUNT_ID,
+				id: UNIFIED_INBOX_ID,
+			})
+			context.getters.getFolders.withArgs(13).returns([
+				{
+					id: 'INBOX',
+					accountId: 13,
+					specialRole: 'inbox',
+					envelopeLists: {},
+				},
+				{
+					id: 'Drafts',
+					accountId: 13,
+					specialRole: 'draft',
+					envelopeLists: {},
+				},
+			])
+			context.getters.getFolders.withArgs(26).returns([
+				{
+					id: 'INBOX',
+					accountId: 26,
+					specialRole: 'inbox',
+					envelopeLists: {},
+				},
+				{
+					id: 'Drafts',
+					accountId: 26,
+					specialRole: 'draft',
+					envelopeLists: {},
+				},
+			])
+
+			await actions.syncInboxes(context)
+
+			expect(context.dispatch).have.callCount(4) // 2 fetch + 2 sync
+			expect(context.dispatch).have.been.calledWith('fetchEnvelopes', {
+				accountId: 13,
+				folderId: 'INBOX',
+			})
+			expect(context.dispatch).have.been.calledWith('syncEnvelopes', {
+				accountId: 13,
+				folderId: 'INBOX',
+			})
+			expect(context.dispatch).have.been.calledWith('fetchEnvelopes', {
+				accountId: 26,
+				folderId: 'INBOX',
+			})
+			expect(context.dispatch).have.been.calledWith('syncEnvelopes', {
+				accountId: 26,
+				folderId: 'INBOX',
+			})
+			// We can't detect new messages here
+			expect(NotificationService.showNewMessagesNotification).not.have.been.called
+		})
+
+		it('syncs each individual mailbox', async () => {
+			context.getters.accounts.push({
+				id: 13,
+				accountId: 13,
+			})
+			context.getters.accounts.push({
+				id: 26,
+				accountId: 26,
+			})
+			context.getters.getFolder.withArgs(UNIFIED_ACCOUNT_ID, UNIFIED_INBOX_ID).returns({
+				isUnified: true,
+				specialRole: 'inbox',
+				accountId: UNIFIED_ACCOUNT_ID,
+				id: UNIFIED_INBOX_ID,
+			})
+			context.getters.getFolders.withArgs(13).returns([
+				{
+					id: 'INBOX',
+					accountId: 13,
+					specialRole: 'inbox',
+					envelopeLists: {
+						'': [],
+					},
+				},
+				{
+					id: 'Drafts',
+					accountId: 13,
+					specialRole: 'draft',
+					envelopeLists: {
+						'': [],
+					},
+				},
+			])
+			context.getters.getFolders.withArgs(26).returns([
+				{
+					id: 'INBOX',
+					accountId: 26,
+					specialRole: 'inbox',
+					envelopeLists: {
+						'': [],
+					},
+				},
+				{
+					id: 'Drafts',
+					accountId: 26,
+					specialRole: 'draft',
+					envelopeLists: {
+						'': [],
+					},
+				},
+			])
+			context.dispatch
+				.withArgs('syncEnvelopes', {
+					accountId: 13,
+					folderId: 'INBOX',
+				})
+				.returns(Promise.resolve([{id: 123}, {id: 321}]))
+
+			await actions.syncInboxes(context)
+
+			expect(context.dispatch).have.been.calledTwice
+			expect(context.dispatch).have.been.calledWith('syncEnvelopes', {
+				accountId: 13,
+				folderId: 'INBOX',
+			})
+			expect(context.dispatch).have.been.calledWith('syncEnvelopes', {
+				accountId: 26,
+				folderId: 'INBOX',
+			})
+			// Here we expect notifications
+			expect(NotificationService.showNewMessagesNotification).have.been.called
 		})
 	})
 })

@@ -63,10 +63,18 @@ export async function syncEnvelopes(accountId, folderId, uids, query, init = fal
 	})
 
 	try {
+<<<<<<< HEAD
 		const response = await axios.post(url, {
 			uids,
-			query,
 			init,
+=======
+		const response = await axios.get(url, {
+			params: {
+				uids,
+				query,
+				init,
+			},
+>>>>>>> Simplify the virtual favorite inbox
 		})
 
 		if (response.status === 202) {

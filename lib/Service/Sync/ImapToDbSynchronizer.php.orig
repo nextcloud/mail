@@ -1,9 +1,9 @@
 <?php declare(strict_types=1);
 
 /**
- * @copyright 2019 Christoph Wurst <christoph@winzerhof-wurst.at>
+ * @copyright 2020 Christoph Wurst <christoph@winzerhof-wurst.at>
  *
- * @author 2019 Christoph Wurst <christoph@winzerhof-wurst.at>
+ * @author 2020 Christoph Wurst <christoph@winzerhof-wurst.at>
  *
  * @license GNU AGPL version 3 or any later version
  *
@@ -21,34 +21,33 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-namespace OCA\Mail\Service;
+namespace OCA\Mail\Service\Sync;
 
 use Horde_Imap_Client;
 use Horde_Imap_Client_Exception;
 use OCA\Mail\Account;
 use OCA\Mail\Db\Mailbox;
 use OCA\Mail\Db\MailboxMapper;
-use OCA\Mail\Db\Message;
-use OCA\Mail\Db\MessageMapper;
 use OCA\Mail\Db\MessageMapper as DatabaseMessageMapper;
 use OCA\Mail\Exception\ClientException;
+<<<<<<< HEAD:lib/Service/SyncService.php
 use OCA\Mail\Exception\MailboxNotCachedException;
+=======
+>>>>>>> Simplify the virtual favorite inbox:lib/Service/Sync/ImapToDbSynchronizer.php
 use OCA\Mail\Exception\ServiceException;
 use OCA\Mail\IMAP\IMAPClientFactory;
 use OCA\Mail\IMAP\MessageMapper as ImapMessageMapper;
-use OCA\Mail\IMAP\PreviewEnhancer;
 use OCA\Mail\IMAP\Sync\Request;
-use OCA\Mail\IMAP\Sync\Response;
 use OCA\Mail\IMAP\Sync\Synchronizer;
 use OCA\mail\lib\Exception\UidValidityChangedException;
 use OCA\Mail\Model\IMAPMessage;
 use OCA\Mail\Support\PerformanceLogger;
-use OCP\AppFramework\Db\DoesNotExistException;
 use OCP\ILogger;
 use Throwable;
 use function array_chunk;
 use function array_map;
 
+<<<<<<< HEAD:lib/Service/SyncService.php
 class SyncService {
 
 	/** @var int */
@@ -104,6 +103,9 @@ class SyncService {
 
 		return $response;
 	}
+=======
+class ImapToDbSynchronizer {
+>>>>>>> Simplify the virtual favorite inbox:lib/Service/Sync/ImapToDbSynchronizer.php
 
 	/** @var DatabaseMessageMapper */
 	private $dbMapper;
@@ -123,9 +125,6 @@ class SyncService {
 	/** @var Synchronizer */
 	private $synchronizer;
 
-	/** @var PreviewEnhancer */
-	private $previewEnhancer;
-
 	/** @var PerformanceLogger */
 	private $performanceLogger;
 
@@ -136,9 +135,8 @@ class SyncService {
 								IMAPClientFactory $clientFactory,
 								ImapMessageMapper $imapMapper,
 								MailboxMapper $mailboxMapper,
-								MessageMapper $messageMapper,
+								DatabaseMessageMapper $messageMapper,
 								Synchronizer $synchronizer,
-								PreviewEnhancer $previewEnhancer,
 								PerformanceLogger $performanceLogger,
 								ILogger $logger) {
 		$this->dbMapper = $dbMapper;
@@ -147,7 +145,6 @@ class SyncService {
 		$this->mailboxMapper = $mailboxMapper;
 		$this->messageMapper = $messageMapper;
 		$this->synchronizer = $synchronizer;
-		$this->previewEnhancer = $previewEnhancer;
 		$this->performanceLogger = $performanceLogger;
 		$this->logger = $logger;
 	}
@@ -177,33 +174,60 @@ class SyncService {
 	 * @throws MailboxNotCachedException
 	 * @throws ServiceException
 	 */
-	public function syncMailbox(Account $account,
-								string $mailbox,
-								int $criteria = Horde_Imap_Client::SYNC_NEWMSGSUIDS | Horde_Imap_Client::SYNC_FLAGSUIDS | Horde_Imap_Client::SYNC_VANISHEDUIDS,
-								array $knownUids = null,
-								bool $partialOnly = true): Response {
+	public function sync(Account $account,
+						  Mailbox $mailbox,
+						  int $criteria = Horde_Imap_Client::SYNC_NEWMSGSUIDS | Horde_Imap_Client::SYNC_FLAGSUIDS | Horde_Imap_Client::SYNC_VANISHEDUIDS,
+						  array $knownUids = null,
+						  bool $force = false): void {
+		if ($mailbox->getSelectable() === false) {
+			return;
+		}
+
+<<<<<<< HEAD:lib/Service/SyncService.php
+	/**
+	 * @throws ServiceException
+	 */
+	private function runInitialSync(Account $account, Mailbox $mailbox): Response {
+=======
+		if ($criteria & Horde_Imap_Client::SYNC_NEWMSGSUIDS) {
+			$this->mailboxMapper->lockForNewSync($mailbox);
+		}
+		if ($criteria & Horde_Imap_Client::SYNC_FLAGSUIDS) {
+			$this->mailboxMapper->lockForChangeSync($mailbox);
+		}
+		if ($criteria & Horde_Imap_Client::SYNC_VANISHEDUIDS) {
+			$this->mailboxMapper->lockForVanishedSync($mailbox);
+		}
+
 		try {
-			$mb = $this->mailboxMapper->find($account, $mailbox);
-
-			if ($partialOnly && !$mb->isCached()) {
-				throw MailboxNotCachedException::from($mb);
+			if ($force
+				|| $mailbox->getSyncNewToken() === null
+				|| $mailbox->getSyncChangedToken() === null
+				|| $mailbox->getSyncVanishedToken() === null) {
+				$this->runInitialSync($account, $mailbox);
+			} else {
+				$this->runPartialSync($account, $mailbox, $criteria, $knownUids);
 			}
-
-			return $this->sync(
-				$account,
-				$mb,
-				$criteria,
-				$knownUids
-			);
-		} catch (DoesNotExistException $e) {
-			throw new ServiceException('Mailbox to sync does not exist in the database', 0, $e);
+		} catch (Throwable $e) {
+			throw new ServiceException('Sync failed: ' . $e->getMessage(), 0, $e);
+		} finally {
+			if ($criteria & Horde_Imap_Client::SYNC_VANISHEDUIDS) {
+				$this->mailboxMapper->unlockFromVanishedSync($mailbox);
+			}
+			if ($criteria & Horde_Imap_Client::SYNC_FLAGSUIDS) {
+				$this->mailboxMapper->unlockFromChangedSync($mailbox);
+			}
+			if ($criteria & Horde_Imap_Client::SYNC_NEWMSGSUIDS) {
+				$this->mailboxMapper->unlockFromNewSync($mailbox);
+			}
 		}
 	}
 
 	/**
 	 * @throws ServiceException
 	 */
-	private function runInitialSync(Account $account, Mailbox $mailbox): Response {
+	private function runInitialSync(Account $account, Mailbox $mailbox): void {
+>>>>>>> Simplify the virtual favorite inbox:lib/Service/Sync/ImapToDbSynchronizer.php
 		$perf = $this->performanceLogger->start('Initial sync ' . $account->getId() . ':' . $mailbox->getName());
 
 		$highestKnownUid = $this->dbMapper->findHighestUid($mailbox);
@@ -235,9 +259,6 @@ class SyncService {
 		$this->mailboxMapper->update($mailbox);
 
 		$perf->end();
-
-		// Not returning *all* new messages here as this could exhaust the memory
-		return new Response();
 	}
 
 	/**
@@ -248,17 +269,16 @@ class SyncService {
 	private function runPartialSync(Account $account,
 									Mailbox $mailbox,
 									int $criteria,
-									array $knownUids = null): Response {
+									array $knownUids = null): void {
 		$perf = $this->performanceLogger->start('partial sync ' . $account->getId() . ':' . $mailbox->getName());
 
 		$client = $this->clientFactory->getClient($account);
 		$uids = $knownUids ?? $this->dbMapper->findAllUids($mailbox);
 		$perf->step('get all known UIDs');
 
-		$response = new Response();
 		if ($criteria & Horde_Imap_Client::SYNC_NEWMSGSUIDS) {
 			try {
-				$response = $response->merge($this->synchronizer->sync(
+				$response = $this->synchronizer->sync(
 					$client,
 					new Request(
 						$mailbox->getMailbox(),
@@ -266,11 +286,11 @@ class SyncService {
 						$uids
 					),
 					Horde_Imap_Client::SYNC_NEWMSGSUIDS
-				));
+				);
 			} catch (UidValidityChangedException $e) {
 				$this->logger->warning('Mailbox UID validity changed. Performing full sync.');
 
-				return $this->runInitialSync($account, $mailbox);
+				$this->runInitialSync($account, $mailbox);
 			}
 			$perf->step('get new messages via Horde');
 
@@ -285,7 +305,7 @@ class SyncService {
 		}
 		if ($criteria & Horde_Imap_Client::SYNC_FLAGSUIDS) {
 			try {
-				$response = $response->merge($this->synchronizer->sync(
+				$response = $this->synchronizer->sync(
 					$client,
 					new Request(
 						$mailbox->getMailbox(),
@@ -293,11 +313,11 @@ class SyncService {
 						$uids
 					),
 					Horde_Imap_Client::SYNC_FLAGSUIDS
-				));
+				);
 			} catch (UidValidityChangedException $e) {
 				$this->logger->warning('Mailbox UID validity changed. Performing full sync.');
 
-				return $this->runInitialSync($account, $mailbox);
+				$this->runInitialSync($account, $mailbox);
 			}
 			$perf->step('get changed messages via Horde');
 
@@ -318,7 +338,7 @@ class SyncService {
 		}
 		if ($criteria & Horde_Imap_Client::SYNC_VANISHEDUIDS) {
 			try {
-				$response = $response->merge($this->synchronizer->sync(
+				$response = $this->synchronizer->sync(
 					$client,
 					new Request(
 						$mailbox->getMailbox(),
@@ -326,11 +346,11 @@ class SyncService {
 						$uids
 					),
 					Horde_Imap_Client::SYNC_VANISHEDUIDS
-				));
+				);
 			} catch (UidValidityChangedException $e) {
 				$this->logger->warning('Mailbox UID validity changed. Performing full sync.');
 
-				return $this->runInitialSync($account, $mailbox);
+				$this->runInitialSync($account, $mailbox);
 			}
 			$perf->step('get vanished messages via Horde');
 
@@ -342,41 +362,7 @@ class SyncService {
 			$mailbox->setSyncVanishedToken($client->getSyncToken($mailbox->getMailbox()));
 		}
 		$this->mailboxMapper->update($mailbox);
-
-		$response = $response->merge(
-			$this->getDatabaseSyncChanges($account, $mailbox, $uids)
-		);
-
 		$perf->end();
-
-		return $response;
-	}
-
-	private function getDatabaseSyncChanges(Account $account,
-											Mailbox $mailbox,
-											array $uids): Response {
-		if (empty($uids)) {
-			return new Response();
-		}
-
-		sort($uids, SORT_NUMERIC);
-		$last = end($uids);
-
-		$new = $this->messageMapper->findNew($mailbox, $last);
-		// TODO: $changed = $this->messageMapper->findChanged($mailbox, $uids);
-		$changed = $this->messageMapper->findByUids($mailbox, $uids);
-		$old = array_map(function (Message $msg) {
-			return $msg->getUid();
-		}, $this->messageMapper->findByUids($mailbox, $uids));
-		$vanished = array_filter($uids, function (int $uid) use ($old) {
-			return !in_array($uid, $old, true);
-		});
-
-		return new Response(
-			$this->previewEnhancer->process($account, $mailbox, $new),
-			$changed,
-			$vanished
-		);
 	}
 
 }

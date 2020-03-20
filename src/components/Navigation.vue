@@ -36,13 +36,22 @@
 					:is-first="isFirst(group.account)"
 					:is-last="isLast(group.account)"
 				/>
-				<NavigationFolder
-					v-for="item in group.folders"
-					v-show="!group.account.collapsed || SHOW_COLLAPSED.indexOf(item.specialRole) !== -1"
-					:key="item.key"
-					:account="group.account"
-					:folder="item"
-				/>
+				<template v-for="item in group.folders">
+					<NavigationFolder
+						v-show="!group.account.collapsed || SHOW_COLLAPSED.indexOf(item.specialRole) !== -1"
+						:key="item.key"
+						:account="group.account"
+						:folder="item"
+					/>
+					<NavigationFolder
+						v-if="!group.account.isUnified && item.specialRole === 'inbox'"
+						v-show="!group.account.collapsed || SHOW_COLLAPSED.indexOf(item.specialRole) !== -1"
+						:key="item.key + '-starred'"
+						:account="group.account"
+						:folder="item"
+						filter="starred"
+					/>
+				</template>
 				<NavigationAccountExpandCollapse
 					v-if="!group.account.isUnified && group.account.folders.length > 0"
 					:key="'collapse-' + group.account.id"
@@ -112,6 +121,7 @@ export default {
 				params: {
 					accountId: this.$route.params.accountId,
 					folderId: this.$route.params.folderId,
+					filter: this.$route.params.filter ? this.$route.params.filter : undefined,
 					messageUid: 'new',
 				},
 			})

@@ -115,11 +115,12 @@ export default {
 			sortedUniq(orderBy(id => state.envelopes[id].dateInt, 'desc', existing.concat([envelope.uid])))
 		)
 	},
-	addUnifiedEnvelopes(state, {folder, uids}) {
-		Vue.set(folder, 'envelopes', uids)
-	},
-	addUnifiedSearchEnvelopes(state, {folder, uids}) {
-		Vue.set(folder, 'searchEnvelopes', uids)
+	updateEnvelope(state, {envelope}) {
+		const existing = state.envelopes[envelope.uid]
+		if (!existing) {
+			return
+		}
+		Vue.set(existing, 'flags', envelope.flags)
 	},
 	flagEnvelope(state, {envelope, flag, value}) {
 		envelope.flags[flag] = value
@@ -127,6 +128,13 @@ export default {
 	removeEnvelope(state, {accountId, folderId, id, query}) {
 		const folder = state.folders[normalizedFolderId(accountId, folderId)]
 		const list = folder.envelopeLists[normalizedEnvelopeListId(query)]
+		if (!list) {
+			console.warn(
+				`envelope list for {${normalizedEnvelopeListId(
+					query
+				)}} does not exist for account ${accountId} and folder ${folderId}`
+			)
+		}
 		const idx = list.indexOf(normalizedMessageId(accountId, folderId, id))
 		if (idx < 0) {
 			console.warn('envelope does not exist', accountId, folder.id, id)
@@ -140,6 +148,14 @@ export default {
 			.filter(f => f.specialRole === folder.specialRole)
 			.forEach(folder => {
 				const list = folder.envelopeLists[normalizedEnvelopeListId(query)]
+				if (!list) {
+					console.warn(
+						`envelope list for {${normalizedEnvelopeListId(
+							query
+						)}} does not exist for unified account ${accountId} and folder ${folderId}`
+					)
+					return
+				}
 				const idx = list.indexOf(normalizedMessageId(accountId, folderId, id))
 				if (idx < 0) {
 					console.warn('envelope does not exist in unified mailbox', accountId, folder.id, id)

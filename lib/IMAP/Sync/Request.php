@@ -49,17 +49,7 @@ class Request {
 	 * Get the mailbox name
 	 */
 	public function getMailbox(): string {
-		// TODO: this is kinda hacky
-		$parts = explode('/', $this->mailbox);
-		if (count($parts) > 1 && $parts[count($parts) - 1] === 'FLAGGED') {
-			return implode('/', array_slice($parts, 0, count($parts) - 1));
-		}
 		return $this->mailbox;
-	}
-
-	public function isFlaggedMailbox(): bool {
-		// TODO: this is kinda hacky
-		return $this->mailbox !== $this->getMailbox();
 	}
 
 	/**

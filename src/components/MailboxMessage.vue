@@ -10,7 +10,7 @@
 				:infinite-scroll-distance="10"
 				@shortkey.native="onShortcut"
 			>
-				<Mailbox :account="account" :folder="folder" :search-query="searchQuery" :bus="bus" />
+				<Mailbox :account="account" :folder="folder" :search-query="query" :bus="bus" />
 			</AppContentList>
 			<NewMessageDetail v-if="newMessage" />
 			<Message v-else-if="showMessage" @delete="deleteMessage" />
@@ -88,6 +88,15 @@ export default {
 		showMessage() {
 			return this.hasMessages && this.$route.name === 'message'
 		},
+		query() {
+			if (this.$route.params.filter === 'starred') {
+				if (this.searchQuery) {
+					return this.searchQuery + ' is:starred'
+				}
+				return 'is:starred'
+			}
+			return this.searchQuery
+		},
 		newMessage() {
 			return (
 				this.$route.params.messageUid === 'new' ||
@@ -111,6 +120,7 @@ export default {
 				params: {
 					accountId: this.account.id,
 					folderId: this.folder.id,
+					filter: this.$route.params.filter ? this.$route.params.filter : undefined,
 				},
 			})
 		},

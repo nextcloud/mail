@@ -128,7 +128,7 @@ class MailManager implements IMailManager {
 		try {
 			return $this->messageMapper->find(
 				$client,
-				$mailbox->getMailbox(),
+				$mailbox->getName(),
 				$id,
 				$loadBody
 			);

@@ -164,6 +164,7 @@ export default {
 						params: {
 							accountId: this.account.id,
 							folderId: this.folder.id,
+							filter: this.$route.params.filter ? this.$route.params.filter : undefined,
 							messageUid: first.uid,
 						},
 					})
@@ -257,6 +258,7 @@ export default {
 						params: {
 							accountId: this.$route.params.accountId,
 							folderId: this.$route.params.folderId,
+							filter: this.$route.params.filter ? this.$route.params.filter : undefined,
 							messageUid: next.uid,
 						},
 					})
@@ -341,6 +343,7 @@ export default {
 				params: {
 					accountId: this.$route.params.accountId,
 					folderId: this.$route.params.folderId,
+					filter: this.$route.params.filter ? this.$route.params.filter : undefined,
 					messageUid: next.uid,
 				},
 			})

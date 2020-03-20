@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 /**
  * @author Christoph Wurst <christoph@winzerhof-wurst.at>
  *
@@ -28,7 +30,6 @@ use OCA\Mail\Account;
 use OCA\Mail\Folder;
 use OCA\Mail\IMAP\FolderMapper;
 use OCA\Mail\IMAP\FolderStats;
-use OCA\Mail\SearchFolder;
 use ChristophWurst\Nextcloud\Testing\TestCase;
 
 class FolderMapperTest extends TestCase {
@@ -88,7 +89,6 @@ class FolderMapperTest extends TestCase {
 		]);
 		$expected = [
 			new Folder(27, new Horde_Imap_Client_Mailbox('INBOX'), [], '.'),
-			new SearchFolder(27, new Horde_Imap_Client_Mailbox('INBOX'), [], '.'),
 			new Folder(27, new Horde_Imap_Client_Mailbox('Sent'), ['\sent'], '.'),
 		];
 

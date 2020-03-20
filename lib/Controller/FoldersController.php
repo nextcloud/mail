@@ -27,14 +27,14 @@ namespace OCA\Mail\Controller;
 
 use Horde_Imap_Client;
 use OCA\Mail\Exception\ClientException;
+use OCA\Mail\Exception\IncompleteSyncException;
 use OCA\Mail\Exception\MailboxNotCachedException;
 use OCA\Mail\Exception\ServiceException;
-use OCA\Mail\Service\SyncService;
+use OCA\Mail\Service\Sync\SyncService;
 use function base64_decode;
 use function is_array;
 use OCA\Mail\Contracts\IMailManager;
 use OCA\Mail\Exception\NotImplemented;
-use OCA\Mail\IMAP\Sync\Request as SyncRequest;
 use OCA\Mail\Service\AccountService;
 use OCP\AppFramework\Controller;
 use OCP\AppFramework\Http;
@@ -61,6 +61,7 @@ class FoldersController extends Controller {
 	 * @param AccountService $accountService
 	 * @param string $UserId
 	 * @param IMailManager $mailManager
+	 * @param SyncService $syncService
 	 */
 	public function __construct(string $appName,
 								IRequest $request,
@@ -108,7 +109,7 @@ class FoldersController extends Controller {
 	 * @throws ClientException
 	 * @throws ServiceException
 	 */
-	public function sync(int $accountId, string $folderId, array $uids = [], bool $init = false): JSONResponse {
+	public function sync(int $accountId, string $folderId, array $uids = [], bool $init = false, string $query = null): JSONResponse {
 		$account = $this->accountService->find($this->currentUserId, $accountId);
 
 		if (empty($accountId) || empty($folderId) || !is_array($uids)) {
@@ -123,14 +124,13 @@ class FoldersController extends Controller {
 				array_map(function($uid) {
 					return (int) $uid;
 				}, $uids),
-				!$init
+				!$init,
+				$query
 			);
-
-			if ($syncResponse->isIncomplete()) {
-				return \OCA\Mail\Http\JsonResponse::fail([], Http::STATUS_ACCEPTED);
-			}
 		} catch (MailboxNotCachedException $e) {
 			return new JSONResponse(null, Http::STATUS_PRECONDITION_REQUIRED);
+		} catch (IncompleteSyncException $e) {
+			return \OCA\Mail\Http\JsonResponse::fail([], Http::STATUS_ACCEPTED);
 		}
 
 		return new JSONResponse($syncResponse);
