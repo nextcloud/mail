@@ -23,7 +23,7 @@ import clone from 'lodash/fp/clone'
 
 const specialRolesOrder = ['all', 'inbox', 'flagged', 'drafts', 'sent', 'archive', 'junk', 'trash']
 
-export const sortMailboxes = mailboxes => {
+export const sortMailboxes = (mailboxes) => {
 	const c = clone(mailboxes)
 	c.sort((f1, f2) => {
 		if (f1.specialUse.length && f2.specialUse.length) {

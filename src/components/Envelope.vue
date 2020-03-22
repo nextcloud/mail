@@ -105,7 +105,7 @@ export default {
 		addresses() {
 			// Show recipients' label/address in a sent folder
 			if (this.folder.specialRole === 'sent') {
-				let recipients = [this.data.to, this.data.cc].flat().map(function(recipient) {
+				let recipients = [this.data.to, this.data.cc].flat().map(function (recipient) {
 					return recipient.label ? recipient.label : recipient.email
 				})
 				return recipients.length > 0 ? recipients.join(', ') : t('mail', 'Blind copy recipients only')
@@ -116,7 +116,7 @@ export default {
 		avatarEmail() {
 			// Show first recipients' avatar in a sent folder (or undefined when sent to Bcc only)
 			if (this.folder.specialRole === 'sent') {
-				let recipients = [this.data.to, this.data.cc].flat().map(function(recipient) {
+				let recipients = [this.data.to, this.data.cc].flat().map(function (recipient) {
 					return recipient.email
 				})
 				return recipients.length > 0 ? recipients[0] : undefined

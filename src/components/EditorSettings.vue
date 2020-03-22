@@ -66,7 +66,7 @@ export default {
 				.then(() => {
 					Logger.info('editor mode updated')
 				})
-				.catch(error => {
+				.catch((error) => {
 					Logger.error('could not update editor mode', {error})
 					this.editorMode = oldVal
 					throw error

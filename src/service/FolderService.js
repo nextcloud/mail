@@ -8,7 +8,7 @@ export function fetchAll(accountId) {
 
 	// FIXME: this return format is weird and should be avoided
 	// TODO: respect `resp.data.delimiter` value
-	return Axios.get(url).then(resp => resp.data.folders)
+	return Axios.get(url).then((resp) => resp.data.folders)
 }
 
 export function create(accountId, name) {
@@ -19,7 +19,7 @@ export function create(accountId, name) {
 	const data = {
 		name,
 	}
-	return Axios.post(url, data).then(resp => resp.data)
+	return Axios.post(url, data).then((resp) => resp.data)
 }
 
 export function getFolderStats(accountId, folderId) {
@@ -28,7 +28,7 @@ export function getFolderStats(accountId, folderId) {
 		folderId,
 	})
 
-	return Axios.get(url).then(resp => resp.data)
+	return Axios.get(url).then((resp) => resp.data)
 }
 
 export function markFolderRead(accountId, folderId) {
@@ -37,5 +37,5 @@ export function markFolderRead(accountId, folderId) {
 		folderId,
 	})
 
-	return Axios.post(url).then(resp => resp.data)
+	return Axios.post(url).then((resp) => resp.data)
 }

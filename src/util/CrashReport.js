@@ -21,7 +21,7 @@
 
 import IssueTemplateBuilder from 'nextcloud_issuetemplate_builder'
 
-const flattenError = error => {
+const flattenError = (error) => {
 	let text = ''
 	if (error.type) {
 		text += error.type + ': '
@@ -37,8 +37,8 @@ const flattenError = error => {
 	return text
 }
 
-const flattenTrace = trace => {
-	return trace.reduce(function(acc, entry) {
+const flattenTrace = (trace) => {
+	return trace.reduce(function (acc, entry) {
 		var text = ''
 		if (entry.class) {
 			text += '  at ' + entry.class + '::' + entry.function
@@ -52,7 +52,7 @@ const flattenTrace = trace => {
 	}, '')
 }
 
-export const getReportUrl = error => {
+export const getReportUrl = (error) => {
 	console.error(error)
 	var message = error.message || 'An unkown error occurred.'
 	if (!message.endsWith('.')) {

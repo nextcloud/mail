@@ -129,7 +129,7 @@ export default {
 			return this.fileName + ' (' + formatFileSize(this.size) + ')'
 		},
 		calendarMenuEntries() {
-			return this.calendars.map(cal => {
+			return this.calendars.map((cal) => {
 				return {
 					icon: 'icon-add',
 					text: cal.displayname,
@@ -143,7 +143,7 @@ export default {
 			return formatFileSize(size)
 		},
 		saveToCloud() {
-			const saveAttachment = (accountId, folderId, messageId, attachmentId) => directory => {
+			const saveAttachment = (accountId, folderId, messageId, attachmentId) => (directory) => {
 				return saveAttachmentToFiles(accountId, folderId, messageId, attachmentId, directory)
 			}
 			const {accountId, folderId, id} = parseUid(this.$route.params.messageUid)
@@ -156,13 +156,13 @@ export default {
 
 			return picker
 				.pick()
-				.then(dest => {
+				.then((dest) => {
 					this.savingToCloud = true
 					return dest
 				})
 				.then(saveAttachment(accountId, folderId, id, this.id))
 				.then(() => Logger.info('saved'))
-				.catch(e => Logger.error('not saved', {error: e}))
+				.catch((e) => Logger.error('not saved', {error: e}))
 				.then(() => (this.savingToCloud = false))
 		},
 		download() {
@@ -171,7 +171,7 @@ export default {
 		},
 		loadCalendars() {
 			this.loadingCalendars = true
-			getUserCalendars().then(calendars => {
+			getUserCalendars().then((calendars) => {
 				this.calendars = calendars
 				this.showCalendarPopover = true
 				this.loadingCalendars = false
@@ -185,7 +185,7 @@ export default {
 				downloadAttachment(this.url)
 					.then(importCalendarEvent(url))
 					.then(() => Logger.info('calendar imported'))
-					.catch(e => Logger.error('import error', {error: e}))
+					.catch((e) => Logger.error('import error', {error: e}))
 					.then(() => (this.showCalendarPopover = false))
 			}
 		},

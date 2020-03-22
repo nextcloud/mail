@@ -29,7 +29,7 @@ import {normalizedFolderId, normalizedMessageId, normalizedEnvelopeListId} from 
 import {sortMailboxes} from '../imap/MailboxSorter'
 import {UNIFIED_ACCOUNT_ID} from './constants'
 
-const addFolderToState = (state, account) => folder => {
+const addFolderToState = (state, account) => (folder) => {
 	const id = normalizedFolderId(account.id, folder.id)
 	folder.accountId = account.id
 	folder.envelopeLists = {}
@@ -37,7 +37,7 @@ const addFolderToState = (state, account) => folder => {
 	return id
 }
 
-const sortAccounts = accounts => {
+const sortAccounts = (accounts) => {
 	accounts.sort((a1, a2) => a1.order - a2.order)
 	return accounts
 }
@@ -52,14 +52,14 @@ export default {
 		Vue.set(
 			state,
 			'accountList',
-			sortAccounts(state.accountList.concat([account.id]).map(id => state.accounts[id])).map(a => a.id)
+			sortAccounts(state.accountList.concat([account.id]).map((id) => state.accounts[id])).map((a) => a.id)
 		)
 
 		// Save the folders to the store, but only keep IDs in the account's folder list
 		const folders = buildMailboxHierarchy(sortMailboxes(account.folders || []), havePrefix(account.folders))
 		Vue.set(account, 'folders', [])
 		const addToState = addFolderToState(state, account)
-		folders.forEach(folder => {
+		folders.forEach((folder) => {
 			// Add all folders (including subfolders to state, but only toplevel to account
 			const id = addToState(folder)
 			Vue.set(folder, 'folders', folder.folders.map(addToState))
@@ -75,7 +75,7 @@ export default {
 		Vue.set(
 			state,
 			'accountList',
-			sortAccounts(state.accountList.map(id => state.accounts[id])).map(a => a.id)
+			sortAccounts(state.accountList.map((id) => state.accounts[id])).map((a) => a.id)
 		)
 	},
 	toggleAccountCollapsed(state, accountId) {
@@ -83,12 +83,12 @@ export default {
 	},
 	addFolder(state, {account, folder}) {
 		// Flatten the existing ones before updating the hierarchy
-		const existing = account.folders.map(id => state.folders[id])
-		existing.forEach(folder => {
+		const existing = account.folders.map((id) => state.folders[id])
+		existing.forEach((folder) => {
 			if (!folder.folders) {
 				return
 			}
-			folder.folders.map(id => existing.push(state.folders[id]))
+			folder.folders.map((id) => existing.push(state.folders[id]))
 			folder.folders = []
 		})
 		// Save the folders to the store, but only keep IDs in the account's folder list
@@ -96,7 +96,7 @@ export default {
 		const folders = buildMailboxHierarchy(sortMailboxes(existing), havePrefix(existing))
 		Vue.set(account, 'folders', [])
 		const addToState = addFolderToState(state, account)
-		folders.forEach(folder => {
+		folders.forEach((folder) => {
 			// Add all folders (including subfolders to state, but only toplevel to account
 			const id = addToState(folder)
 			Vue.set(folder, 'folders', folder.folders.map(addToState))
@@ -112,7 +112,7 @@ export default {
 		Vue.set(
 			folder.envelopeLists,
 			listId,
-			sortedUniq(orderBy(id => state.envelopes[id].dateInt, 'desc', existing.concat([envelope.uid])))
+			sortedUniq(orderBy((id) => state.envelopes[id].dateInt, 'desc', existing.concat([envelope.uid])))
 		)
 	},
 	updateEnvelope(state, {envelope}) {
@@ -144,9 +144,9 @@ export default {
 
 		const unifiedAccount = state.accounts[UNIFIED_ACCOUNT_ID]
 		unifiedAccount.folders
-			.map(fId => state.folders[fId])
-			.filter(f => f.specialRole === folder.specialRole)
-			.forEach(folder => {
+			.map((fId) => state.folders[fId])
+			.filter((f) => f.specialRole === folder.specialRole)
+			.forEach((folder) => {
 				const list = folder.envelopeLists[normalizedEnvelopeListId(query)]
 				if (!list) {
 					console.warn(

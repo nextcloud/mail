@@ -53,7 +53,7 @@ export default {
 	},
 	computed: {
 		cals() {
-			return this.calendars.map(original => {
+			return this.calendars.map((original) => {
 				this.$set(original, 'loading', false)
 				return original
 			})

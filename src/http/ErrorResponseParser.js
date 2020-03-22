@@ -19,11 +19,11 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-const isErrorResponse = resp => {
+const isErrorResponse = (resp) => {
 	return 'x-mail-response' in resp.headers && resp.data.status === 'error'
 }
 
-export const parseErrorResponse = resp => {
+export const parseErrorResponse = (resp) => {
 	if (!isErrorResponse(resp)) {
 		return resp
 	}

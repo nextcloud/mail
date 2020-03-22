@@ -78,8 +78,8 @@ export default {
 					...data,
 					accountId: this.$route.params.accountId,
 				})
-				.then(account => account)
-				.catch(error => {
+				.then((account) => account)
+				.catch((error) => {
 					Logger.error('account update failed:', {error})
 
 					throw error

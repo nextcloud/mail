@@ -24,7 +24,7 @@ import memoize from 'lodash/fp/memoize'
 import Axios from '@nextcloud/axios'
 import {generateUrl} from '@nextcloud/router'
 
-export const fetchAvatarUrl = email => {
+export const fetchAvatarUrl = (email) => {
 	if (email === null) {
 		return Promise.resolve(undefined)
 	}
@@ -34,8 +34,8 @@ export const fetchAvatarUrl = email => {
 	})
 
 	return Axios.get(url)
-		.then(resp => resp.data)
-		.then(avatar => {
+		.then((resp) => resp.data)
+		.then((avatar) => {
 			if (avatar.isExternal) {
 				return generateUrl('/apps/mail/api/avatars/image/{email}', {
 					email: email,
@@ -44,7 +44,7 @@ export const fetchAvatarUrl = email => {
 				return avatar.url
 			}
 		})
-		.catch(err => {
+		.catch((err) => {
 			if (err.response.status === 404) {
 				return undefined
 			}

@@ -10,7 +10,7 @@
 
 import {fromString} from 'html-to-text'
 
-export const htmlToText = html => {
+export const htmlToText = (html) => {
 	const withBlockBreaks = html.replace(/<\/div>/gi, '</div><br>')
 
 	const text = fromString(withBlockBreaks, {
@@ -19,12 +19,12 @@ export const htmlToText = html => {
 		ignoreImage: true,
 		wordwrap: false,
 		format: {
-			blockquote: function(element, fn, options) {
+			blockquote: function (element, fn, options) {
 				return fn(element.children, options)
 					.replace(/\n\n\n/g, '\n\n') // remove triple line breaks
 					.replace(/^/gm, '> ') // add > quotation to each line
 			},
-			paragraph: function(element, fn, options) {
+			paragraph: function (element, fn, options) {
 				return fn(element.children, options) + '\n'
 			},
 		},
@@ -36,6 +36,6 @@ export const htmlToText = html => {
 		.replace(/ $/gm, '') // trim white space at end of each line
 }
 
-export const textToSimpleHtml = text => {
+export const textToSimpleHtml = (text) => {
 	return text.replace(/([^>\r\n]?)(\r\n|\n\r|\r|\n)/g, '$1<br>$2')
 }

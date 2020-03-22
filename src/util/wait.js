@@ -19,8 +19,8 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-export const wait = ms => {
-	return new Promise(res => {
+export const wait = (ms) => {
+	return new Promise((res) => {
 		setTimeout(res, ms)
 	})
 }

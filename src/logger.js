@@ -21,7 +21,4 @@
 
 import {getLoggerBuilder} from '@nextcloud/logger'
 
-export default getLoggerBuilder()
-	.setApp('mail')
-	.detectUser()
-	.build()
+export default getLoggerBuilder().setApp('mail').detectUser().build()

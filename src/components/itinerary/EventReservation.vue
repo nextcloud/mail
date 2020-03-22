@@ -90,9 +90,7 @@ export default {
 			} else {
 				// Assume it's 2h and user will adjust if necessary
 				// TODO: handle 'duration' https://schema.org/Event
-				return moment('2019-10-22T12:00:00Z')
-					.add(2, 'hours')
-					.format()
+				return moment('2019-10-22T12:00:00Z').add(2, 'hours').format()
 			}
 		},
 		handleImport(calendar) {
@@ -131,7 +129,7 @@ export default {
 					logger.debug('event successfully imported')
 					OCP.Toast.success(t('mail', 'Event imported into {calendar}', {calendar: calendar.displayname}))
 				})
-				.catch(error => {
+				.catch((error) => {
 					logger.error('Could not import event', {error})
 					OCP.Toast.error(t('mail', 'Could not create event'))
 				})

@@ -50,11 +50,11 @@ describe('ReplyBuilder', () => {
 
 	let envelope
 
-	beforeEach(function() {
+	beforeEach(function () {
 		envelope = {}
 	})
 
-	const createAddress = addr => {
+	const createAddress = (addr) => {
 		return {
 			label: addr,
 			email: addr,
@@ -62,8 +62,8 @@ describe('ReplyBuilder', () => {
 	}
 
 	const assertSameAddressList = (l1, l2) => {
-		const rawL1 = l1.map(a => a.email)
-		const rawL2 = l2.map(a => a.email)
+		const rawL1 = l1.map((a) => a.email)
+		const rawL2 = l2.map((a) => a.email)
 		rawL1.sort()
 		rawL2.sort()
 		expect(rawL1).to.deep.equal(rawL2)

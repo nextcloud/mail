@@ -30,7 +30,7 @@ const map = {
 /**
  * @param {object} axiosError
  */
-export const convertAxiosError = axiosError => {
+export const convertAxiosError = (axiosError) => {
 	if (!('response' in axiosError)) {
 		// No conversion
 		return axiosError

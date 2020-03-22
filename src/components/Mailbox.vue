@@ -171,14 +171,14 @@ export default {
 				}
 			} catch (error) {
 				await matchError(error, {
-					[MailboxLockedError.getName()]: async error => {
+					[MailboxLockedError.getName()]: async (error) => {
 						logger.info('Mailbox is locked', {error})
 
 						await wait(15 * 1000)
 						// Keep trying
 						await this.loadEnvelopes()
 					},
-					[MailboxNotCachedError.getName()]: async error => {
+					[MailboxNotCachedError.getName()]: async (error) => {
 						logger.info('Mailbox not cached. Triggering initialization', {error})
 						this.loadingEnvelopes = false
 
@@ -189,7 +189,7 @@ export default {
 							this.error = error
 						}
 					},
-					default: error => {
+					default: (error) => {
 						logger.error('Could not fetch envelopes', {error})
 						this.loadingEnvelopes = false
 						this.error = error
@@ -223,7 +223,7 @@ export default {
 				return
 			}
 
-			const current = envelopes.filter(e => e.uid === currentUid)
+			const current = envelopes.filter((e) => e.uid === currentUid)
 			if (current.length === 0) {
 				logger.debug('ignoring shortcut: currently displayed messages is not in current envelope list')
 				return
@@ -268,14 +268,14 @@ export default {
 					this.onDelete(env.uid)
 					this.$store
 						.dispatch('deleteMessage', {accountId: env.accountId, folderId: env.folderId, id: env.id})
-						.catch(error => logger.error('could not delete envelope', {env, error}))
+						.catch((error) => logger.error('could not delete envelope', {env, error}))
 
 					break
 				case 'flag':
 					logger.debug('flagging envelope via shortkey', {env})
 					this.$store
 						.dispatch('toggleEnvelopeFlagged', env)
-						.catch(error => logger.error('could not flag envelope via shortkey', {env, error}))
+						.catch((error) => logger.error('could not flag envelope via shortkey', {env, error}))
 					break
 				case 'refresh':
 					logger.debug('syncing envelopes via shortkey')
@@ -288,7 +288,7 @@ export default {
 					logger.debug('marking message as seen/unseen via shortkey', {env})
 					this.$store
 						.dispatch('toggleEnvelopeSeen', env)
-						.catch(error =>
+						.catch((error) =>
 							logger.error('could not mark envelope as seen/unseen via shortkey', {env, error})
 						)
 					break

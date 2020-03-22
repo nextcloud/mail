@@ -224,7 +224,7 @@ export default {
 					name: withPrefix,
 				})
 				.then(() => logger.info(`folder ${withPrefix} created`))
-				.catch(error => {
+				.catch((error) => {
 					logger.error(`could not create folder ${withPrefix}`, {error})
 					throw error
 				})
@@ -238,7 +238,7 @@ export default {
 					folderId: this.folder.id,
 				})
 				.then(() => logger.info(`folder ${this.folder.id} marked as read`))
-				.catch(error => logger.error(`could not mark folder ${this.folder.id} as read`, {error}))
+				.catch((error) => logger.error(`could not mark folder ${this.folder.id} as read`, {error}))
 				.then(() => (this.loadingMarkAsRead = false))
 		},
 	},

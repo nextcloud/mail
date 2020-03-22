@@ -337,7 +337,7 @@ export default {
 				.then(() => {
 					logger.info('provisioning settings updated')
 				})
-				.catch(error => {
+				.catch((error) => {
 					// TODO: show user feedback
 					logger.error('Could not save provisioning settings', {error})
 				})
@@ -352,7 +352,7 @@ export default {
 				.then(() => {
 					logger.info('deprovisioned successfully')
 				})
-				.catch(error => {
+				.catch((error) => {
 					logger.error('could not deprovision accounts', {error})
 				})
 				.then(() => {

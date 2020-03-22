@@ -127,7 +127,7 @@ export default {
 			logger.debug('CKEditor editor is ready', {editor, schema})
 
 			// Set 0 pixel margin to all <p> elements
-			editor.conversion.for('downcast').add(dispatcher => {
+			editor.conversion.for('downcast').add((dispatcher) => {
 				dispatcher.on(
 					'insert:paragraph',
 					(evt, data, conversionApi) => {

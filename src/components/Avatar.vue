@@ -56,7 +56,7 @@ export default {
 		},
 	},
 	mounted() {
-		fetchAvatarUrlMemoized(this.email).then(url => {
+		fetchAvatarUrlMemoized(this.email).then((url) => {
 			this.avatarUrl = url
 			this.loading = false
 		})
