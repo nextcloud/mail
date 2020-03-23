@@ -137,6 +137,7 @@ class MessagesController extends Controller {
 	 * @param string $filter
 	 *
 	 * @return JSONResponse
+	 *
 	 * @throws ClientException
 	 * @throws ServiceException
 	 */
@@ -168,6 +169,8 @@ class MessagesController extends Controller {
 	 * @param int $id
 	 *
 	 * @return JSONResponse
+	 *
+	 * @throws ClientException
 	 * @throws ServiceException
 	 */
 	public function show(int $accountId, string $folderId, int $id): JSONResponse {
@@ -197,6 +200,8 @@ class MessagesController extends Controller {
 	 * @param int $messageId
 	 *
 	 * @return JSONResponse
+	 *
+	 * @throws ClientException
 	 * @throws ServiceException
 	 */
 	public function getBody(int $accountId, string $folderId, int $messageId): JSONResponse {
@@ -239,7 +244,9 @@ class MessagesController extends Controller {
 	 * @param string $destFolderId
 	 *
 	 * @return JSONResponse
-	 * @throws Exception
+	 *
+	 * @throws ClientException
+	 * @throws ServiceException
 	 */
 	public function move($accountId, $folderId, $id, $destAccountId, $destFolderId): JSONResponse {
 		$srcAccount = $this->accountService->find($this->currentUserId, $accountId);
@@ -260,6 +267,8 @@ class MessagesController extends Controller {
 	 * @param int $messageId
 	 *
 	 * @return HtmlResponse|TemplateResponse
+	 *
+	 * @throws ClientException
 	 */
 	public function getHtmlBody(int $accountId, string $folderId, int $messageId): Response {
 		try {
@@ -317,6 +326,9 @@ class MessagesController extends Controller {
 	 * @param int $attachmentId
 	 *
 	 * @return AttachmentDownloadResponse
+	 *
+	 * @throws ClientException
+	 * @throws ServiceException
 	 */
 	public function downloadAttachment(int $accountId, string $folderId, int $messageId,
 									   string $attachmentId) {
@@ -352,6 +364,9 @@ class MessagesController extends Controller {
 	 * @param string $targetPath
 	 *
 	 * @return JSONResponse
+	 *
+	 * @throws ClientException
+	 * @throws ServiceException
 	 */
 	public function saveAttachment(int $accountId, string $folderId, int $messageId,
 								   string $attachmentId, string $targetPath) {
@@ -400,6 +415,9 @@ class MessagesController extends Controller {
 	 * @param array $flags
 	 *
 	 * @return JSONResponse
+	 *
+	 * @throws ClientException
+	 * @throws ServiceException
 	 */
 	public function setFlags(int $accountId, string $folderId, int $messageId, array $flags): JSONResponse {
 		$mailBox = $this->getFolder($accountId, $folderId);
@@ -424,6 +442,8 @@ class MessagesController extends Controller {
 	 * @param int $id
 	 *
 	 * @return JSONResponse
+	 *
+	 * @throws ClientException
 	 * @throws ServiceException
 	 */
 	public function destroy(int $accountId, string $folderId, int $id): JSONResponse {
@@ -444,6 +464,9 @@ class MessagesController extends Controller {
 	 * @param string $folderId
 	 *
 	 * @return IMailBox
+	 *
+	 * @throws ClientException
+	 * @throws ServiceException
 	 */
 	private function getFolder(int $accountId, string $folderId): IMailBox {
 		$account = $this->accountService->find($this->currentUserId, $accountId);

@@ -33,6 +33,7 @@
 
 namespace OCA\Mail;
 
+use Horde_Imap_Client_Exception;
 use Horde_Imap_Client_Mailbox;
 use Horde_Imap_Client_Socket;
 use Horde_Mail_Rfc822_List;
@@ -43,6 +44,7 @@ use OC;
 use OCA\Mail\Cache\Cache;
 use OCA\Mail\Db\Alias;
 use OCA\Mail\Db\MailAccount;
+use OCA\Mail\Exception\ServiceException;
 use OCA\Mail\Model\IMessage;
 use OCA\Mail\Model\Message;
 use OCP\ICacheFactory;
@@ -115,9 +117,11 @@ class Account implements JsonSerializable {
 	/**
 	 * @deprecated use \OCA\Mail\IMAP\IMAPClientFactory instead
 	 * @return Horde_Imap_Client_Socket
+	 *
+	 * @throws ServiceException
 	 */
 	public function getImapConnection() {
-		if (is_null($this->client)) {
+		if ($this->client === null) {
 			$host = $this->account->getInboundHost();
 			$user = $this->account->getInboundUser();
 			$password = $this->account->getInboundPassword();
@@ -146,7 +150,11 @@ class Account implements JsonSerializable {
 				}
 			}
 			$this->client = new \Horde_Imap_Client_Socket($params);
-			$this->client->login();
+			try {
+				$this->client->login();
+			} catch (Horde_Imap_Client_Exception $e) {
+				throw new ServiceException("Could not connect to IMAP: " . $e->getMessage(), $e->getCode(), $e);
+			}
 		}
 		return $this->client;
 	}
@@ -155,6 +163,8 @@ class Account implements JsonSerializable {
 	 * @deprecated
 	 * @param string $folderId
 	 * @return Mailbox
+	 *
+	 * @throws ServiceException
 	 */
 	public function getMailbox($folderId) {
 		return new Mailbox(
@@ -196,6 +206,8 @@ class Account implements JsonSerializable {
 	 * @deprecated
 	 *
 	 * @return void
+	 *
+	 * @throws ServiceException
 	 */
 	public function testConnectivity(Horde_Mail_Transport $transport): void {
 		// connect to imap

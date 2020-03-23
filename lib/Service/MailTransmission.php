@@ -23,11 +23,9 @@ declare(strict_types=1);
 
 namespace OCA\Mail\Service;
 
-use Exception;
 use Horde_Exception;
 use Horde_Imap_Client;
 use Horde_Imap_Client_Exception;
-use Horde_Imap_Client_Mailbox;
 use Horde_Mail_Transport_Null;
 use Horde_Mime_Exception;
 use Horde_Mime_Headers_Date;
@@ -176,7 +174,7 @@ class MailTransmission implements IMailTransmission {
 		try {
 			$mail->send($transport, false, false);
 		} catch (Horde_Mime_Exception $e) {
-			throw new ServiceException('Could not send message', 0, $e);
+			throw new ServiceException('Could not send message: ' . $e->getMessage(), $e->getCode(), $e);
 		}
 
 		$this->eventDispatcher->dispatch(
@@ -270,8 +268,13 @@ class MailTransmission implements IMailTransmission {
 			);
 
 			$message->setInReplyTo($repliedMessage->getMessageId());
-		} catch (DoesNotExistException|Horde_Imap_Client_Exception $e) {
+		} catch (DoesNotExistException $e) {
 			// Nothing to do
+		} catch (Horde_Imap_Client_Exception $e) {
+			$this->logger->logException($e, [
+				'level' => ILogger::WARN,
+				'messages' => 'Could not find draft message: ' . $e->getMessage(),
+			]);
 		}
 
 		return $message;

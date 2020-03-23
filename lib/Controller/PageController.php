@@ -28,10 +28,10 @@ namespace OCA\Mail\Controller;
 
 use Exception;
 use OCA\Mail\AppInfo\Application;
+use OCA\Mail\Contracts\IMailManager;
 use OCA\Mail\Contracts\IUserPreferences;
 use OCA\Mail\Service\AccountService;
 use OCA\Mail\Service\AliasesService;
-use OCA\Mail\Service\MailManager;
 use OCP\AppFramework\Controller;
 use OCP\AppFramework\Http\ContentSecurityPolicy;
 use OCP\AppFramework\Http\RedirectResponse;
@@ -66,7 +66,7 @@ class PageController extends Controller {
 	/** @var IUserPreferences */
 	private $preferences;
 
-	/** @var MailManager */
+	/** @var IMailManager */
 	private $mailManager;
 
 	/** @var IInitialStateService */
@@ -84,7 +84,7 @@ class PageController extends Controller {
 								?string $UserId,
 								IUserSession $userSession,
 								IUserPreferences $preferences,
-								MailManager $mailManager,
+								IMailManager $mailManager,
 								IInitialStateService $initialStateService,
 								ILogger $logger) {
 		parent::__construct($appName, $request);

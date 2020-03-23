@@ -38,6 +38,8 @@ interface IMailManager {
 	 * @param Account $account
 	 *
 	 * @return Folder[]
+	 *
+	 * @throws ServiceException
 	 */
 	public function getFolders(Account $account): array;
 
@@ -46,6 +48,8 @@ interface IMailManager {
 	 * @param string $name
 	 *
 	 * @return Folder
+	 *
+	 * @throws ServiceException
 	 */
 	public function createFolder(Account $account, string $name): Folder;
 
@@ -54,6 +58,8 @@ interface IMailManager {
 	 * @param string $folderId
 	 *
 	 * @return FolderStats
+	 *
+	 * @throws ServiceException
 	 */
 	public function getFolderStats(Account $account, string $folderId): FolderStats;
 
@@ -64,6 +70,7 @@ interface IMailManager {
 	 * @param bool $loadBody
 	 *
 	 * @return IMAPMessage
+	 *
 	 * @throws ServiceException
 	 */
 	public function getMessage(Account $account, string $mailbox, int $id, bool $loadBody = false): IMAPMessage;
@@ -94,6 +101,8 @@ interface IMailManager {
 	 *
 	 * @param Account $account
 	 * @param string $folderId
+	 *
+	 * @throws ServiceException
 	 */
 	public function markFolderAsRead(Account $account, string $folderId): void;
 

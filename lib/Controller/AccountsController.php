@@ -110,7 +110,7 @@ class AccountsController extends Controller {
 	 * @param int $accountId
 	 *
 	 * @return JSONResponse
-	 * @throws Exception
+	 * @throws ClientException
 	 */
 	public function show($accountId): JSONResponse {
 		return new JSONResponse($this->accountService->find($this->currentUserId, $accountId));
@@ -187,6 +187,8 @@ class AccountsController extends Controller {
 	 * @param int|null $order
 	 *
 	 * @return JSONResponse
+	 *
+	 * @throws ClientException
 	 */
 	public function patchAccount(int $accountId,
 								 string $editorMode = null,
@@ -217,6 +219,9 @@ class AccountsController extends Controller {
 	 * @param string|null $signature
 	 *
 	 * @return JSONResponse
+	 *
+	 * @throws ClientException
+	 * @throws ServiceException
 	 */
 	public function updateSignature(int $accountId, string $signature = null): JSONResponse {
 		$this->accountService->updateSignature($accountId, $this->currentUserId, $signature);
@@ -301,6 +306,7 @@ class AccountsController extends Controller {
 	 *
 	 * @return JSONResponse
 	 *
+	 * @throws ClientException
 	 * @throws ServiceException
 	 */
 	public function send(int $accountId,
@@ -350,6 +356,8 @@ class AccountsController extends Controller {
 	 * @param int $uid
 	 *
 	 * @return JSONResponse
+	 *
+	 * @throws ClientException
 	 */
 	public function draft(int $accountId,
 						  string $subject = null,
@@ -359,7 +367,7 @@ class AccountsController extends Controller {
 						  string $bcc,
 						  bool $isHtml = true,
 						  int $draftUID = null): JSONResponse {
-		if (is_null($draftUID)) {
+		if ($draftUID === null) {
 			$this->logger->info("Saving a new draft in account <$accountId>");
 		} else {
 			$this->logger->info("Updating draft <$draftUID> in account <$accountId>");
