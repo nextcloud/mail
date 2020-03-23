@@ -77,6 +77,12 @@ class IMAPClientFactory {
 				'port' => $port,
 				'secure' => $sslMode,
 				'timeout' => (int)$this->config->getSystemValue('app.mail.imap.timeout', 5),
+				'context' => [
+					'ssl' => [
+						'verify_peer' => $this->config->getSystemValueBool('app.mail.verify-tls-peer', true),
+						'verify_peer_name' => $this->config->getSystemValueBool('app.mail.verify-tls-peer', true),
+					],
+				],
 			];
 			if ($this->cacheFactory->isAvailable()) {
 				$params['cache'] = [

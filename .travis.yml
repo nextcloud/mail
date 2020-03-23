@@ -82,6 +82,9 @@ before_script:
   - php -f core/occ app:enable mail
   # Enable app twice to check occ errors of registered commands
   - php -f core/occ app:enable mail
+  # Turn off TLS verification here as the test server is not trusted
+  - php -f core/occ config:system:set app.mail.verify-tls-peer --type bool --value false
+
   - cd core/apps/mail
   - sh -c "if [ '$TEST_SUITE' = 'TEST-JS' ]; then npm install -g npm@latest; fi"
   - sh -c "if [ '$TEST_SUITE' = 'TEST-JS' ]; then make dev-setup; fi"
