@@ -1,6 +1,10 @@
 # Changelog
 All notable changes to this project will be documented in this file.
 
+## 1.1.4 - 2020-03-23
+### Fixed
+- Security: verify TLS host by default. This can be a *breaking change* for self-hosted servers. If you want to return to the old insecure behavior, set `app.mail.verify-tls-peer` to `true` in `config.php`.
+
 ## 1.1.3 - 2020-03-02
 ### Fixed
 - Error in recipient selection
