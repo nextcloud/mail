@@ -79,6 +79,7 @@ class MailManager implements IMailManager {
 	 * @param Account $account
 	 *
 	 * @return Folder[]
+	 * @throws ServiceException
 	 */
 	public function getFolders(Account $account): array {
 		$this->mailboxSync->sync($account);
@@ -96,12 +97,17 @@ class MailManager implements IMailManager {
 	 * @param string $name
 	 *
 	 * @return Folder
+	 * @throws ServiceException
 	 */
 	public function createFolder(Account $account, string $name): Folder {
 		$client = $this->imapClientFactory->getClient($account);
 
 		$folder = $this->folderMapper->createFolder($client, $account, $name);
-		$this->folderMapper->getFoldersStatus([$folder], $client);
+		try {
+			$this->folderMapper->getFoldersStatus([$folder], $client);
+		} catch (Horde_Imap_Client_Exception $e) {
+			throw new ServiceException("Could not get mailbox status: " . $e->getMessage(), $e->getCode(), $e);
+		}
 		$this->folderMapper->detectFolderSpecialUse([$folder]);
 
 		$this->mailboxSync->sync($account, true);
@@ -133,7 +139,7 @@ class MailManager implements IMailManager {
 				$loadBody
 			);
 		} catch (Horde_Imap_Client_Exception|DoesNotExistException $e) {
-			throw new ServiceException("Could not load message", 0, $e);
+			throw new ServiceException("Could not load message", $e->getCode(), $e);
 		}
 	}
 

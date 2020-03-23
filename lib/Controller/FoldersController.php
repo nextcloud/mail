@@ -83,6 +83,9 @@ class FoldersController extends Controller {
 	 *
 	 * @param int $accountId
 	 * @return JSONResponse
+	 *
+	 * @throws ClientException
+	 * @throws ServiceException
 	 */
 	public function index(int $accountId): JSONResponse {
 		$account = $this->accountService->find($this->currentUserId, $accountId);
@@ -143,6 +146,8 @@ class FoldersController extends Controller {
 	 * @param int $accountId
 	 * @param string $folderId
 	 * @return JSONResponse
+	 *
+	 * @throws ClientException
 	 */
 	public function markAllAsRead(int $accountId, string $folderId): JSONResponse {
 		$account = $this->accountService->find($this->currentUserId, $accountId);
@@ -164,6 +169,8 @@ class FoldersController extends Controller {
 	 * @param string $folderId
 	 *
 	 * @return JSONResponse
+	 *
+	 * @throws ClientException
 	 */
 	public function stats(int $accountId, string $folderId): JSONResponse {
 		$account = $this->accountService->find($this->currentUserId, $accountId);
@@ -196,6 +203,9 @@ class FoldersController extends Controller {
 	/**
 	 * @NoAdminRequired
 	 * @TrapError
+	 *
+	 * @throws ClientException
+	 * @throws ServiceException
 	 */
 	public function create(int $accountId, string $name) {
 		$account = $this->accountService->find($this->currentUserId, $accountId);

@@ -26,6 +26,7 @@ namespace OCA\Mail\Service;
 
 use OCA\Mail\Account;
 use OCA\Mail\Db\MailAccount;
+use OCA\Mail\Exception\ServiceException;
 use OCA\Mail\Service\AutoConfig\AutoConfig;
 use OCA\Mail\SMTP\SmtpClientFactory;
 use OCP\ILogger;
@@ -94,6 +95,8 @@ class SetupService {
 	 * @param string $smtpUser
 	 * @param string $smtpPassword
 	 * @param string $uid
+	 *
+	 * @throws ServiceException
 	 */
 	public function createNewAccount($accountName, $emailAddress, $imapHost, $imapPort, $imapSslMode, $imapUser, $imapPassword, $smtpHost, $smtpPort, $smtpSslMode, $smtpUser, $smtpPassword, $uid, $accountId = null) {
 		$this->logger->info('Setting up manually configured account');

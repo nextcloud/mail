@@ -28,6 +28,7 @@ use OCA\Mail\Account;
 use OCA\Mail\BackgroundJob\SyncJob;
 use OCA\Mail\Db\MailAccount;
 use OCA\Mail\Db\MailAccountMapper;
+use OCA\Mail\Exception\ClientException;
 use OCA\Mail\Exception\ServiceException;
 use OCP\AppFramework\Db\DoesNotExistException;
 use OCP\BackgroundJob\IJobList;
@@ -88,7 +89,7 @@ class AccountService {
 	 * @param int $accountId
 	 *
 	 * @return Account
-	 * @throws DoesNotExistException
+	 * @throws ClientException
 	 */
 	public function find(string $uid, int $accountId): Account {
 		if ($this->accounts !== null) {
@@ -97,7 +98,7 @@ class AccountService {
 					return $account;
 				}
 			}
-			throw new DoesNotExistException("Invalid account id <$accountId>");
+			throw new ClientException("Account $accountId does not exist or you don\'t have permission to access it");
 		}
 
 		return new Account($this->mapper->find($uid, $accountId));
@@ -125,6 +126,14 @@ class AccountService {
 		return $newAccount;
 	}
 
+	/**
+	 * @param int $id
+	 * @param string $uid
+	 * @param string|null $signature
+	 *
+	 * @throws ClientException
+	 * @throws ServiceException
+	 */
 	public function updateSignature(int $id, string $uid, string $signature = null): void {
 		$account = $this->find($uid, $id);
 		if ($account === null) {

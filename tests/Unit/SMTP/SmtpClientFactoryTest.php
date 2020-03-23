@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 /**
  * @copyright 2017 Christoph Wurst <christoph@winzerhof-wurst.at>
  *
@@ -33,17 +35,17 @@ use ChristophWurst\Nextcloud\Testing\TestCase;
 use OCA\Mail\Support\HostNameFactory;
 use OCP\IConfig;
 use OCP\Security\ICrypto;
-use PHPUnit_Framework_MockObject_MockObject;
+use PHPUnit\Framework\MockObject\MockObject;
 
 class SmtpClientFactoryTest extends TestCase {
 
-	/** @var IConfig|PHPUnit_Framework_MockObject_MockObject */
+	/** @var IConfig|MockObject */
 	private $config;
 
-	/** @var ICrypto|PHPUnit_Framework_MockObject_MockObject */
+	/** @var ICrypto|MockObject */
 	private $crypto;
 
-	/** @var HostNameFactory|PHPUnit_Framework_MockObject_MockObject */
+	/** @var HostNameFactory|MockObject */
 	private $hostNameFactory;
 
 	/** @var SmtpClientFactory */
@@ -89,14 +91,14 @@ class SmtpClientFactoryTest extends TestCase {
 			->method('getSystemValue')
 			->with('debug', false)
 			->willReturn(false);
-		$this->crypto->expects($this->once())
-			->method('decrypt')
-			->with('obenc')
-			->willReturn('pass123');
 		$this->config->expects($this->at(1))
 			->method('getSystemValue')
 			->with('app.mail.smtp.timeout', 5)
 			->willReturn(2);
+		$this->crypto->expects($this->once())
+			->method('decrypt')
+			->with('obenc')
+			->willReturn('pass123');
 		$this->hostNameFactory->expects($this->once())
 			->method('getHostName')
 			->willReturn('cloud.example.com');

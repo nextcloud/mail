@@ -28,6 +28,7 @@ use Exception;
 use OC;
 use OCA\Mail\Account;
 use OCA\Mail\Db\MailAccount;
+use OCA\Mail\Exception\ServiceException;
 use OCA\Mail\Mailbox;
 
 /**
@@ -41,6 +42,9 @@ abstract class AbstractTest extends TestCase {
 	/** @var string[] */
 	private static $createdMailboxes = [];
 
+	/**
+	 * @throws ServiceException
+	 */
 	public static function setUpBeforeClass(): void {
 		$user = 'user@domain.tld';
 		$password = 'mypassword';

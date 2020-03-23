@@ -23,6 +23,8 @@
 
 namespace OCA\Mail\IMAP;
 
+use Horde_Imap_Client_Exception;
+use OCA\Mail\Exception\ServiceException;
 use function json_encode;
 use OCA\Mail\Account;
 use OCA\Mail\Db\MailAccountMapper;
@@ -66,6 +68,9 @@ class MailboxSync {
 		$this->logger = $logger;
 	}
 
+	/**
+	 * @throws ServiceException
+	 */
 	public function sync(Account $account, bool $force = false): void {
 		if (!$force && $account->getMailAccount()->getLastMailboxSync() >= ($this->timeFactory->getTime() - 7200)) {
 			$this->logger->debug("account is up to date, skipping mailbox sync");
@@ -74,8 +79,12 @@ class MailboxSync {
 
 		$client = $this->imapClientFactory->getClient($account);
 
-		$folders = $this->folderMapper->getFolders($account, $client);
-		$this->folderMapper->getFoldersStatus($folders, $client);
+		try {
+			$folders = $this->folderMapper->getFolders($account, $client);
+			$this->folderMapper->getFoldersStatus($folders, $client);
+		} catch (Horde_Imap_Client_Exception $e) {
+			throw new ServiceException("IMAP error" . $e->getMessage(), $e->getCode(), $e);
+		}
 		$this->folderMapper->detectFolderSpecialUse($folders);
 
 		$old = $this->mailboxMapper->findAll($account);
