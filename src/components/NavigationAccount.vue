@@ -122,7 +122,7 @@ export default {
 			this.$store
 				.dispatch('createFolder', {account: this.account, name})
 				.then(() => logger.info(`folder ${name} created`))
-				.catch(error => {
+				.catch((error) => {
 					logger.error('could not create folder', {error})
 					throw error
 				})
@@ -138,17 +138,17 @@ export default {
 					// TODO: update store and handle this more efficiently
 					location.href = generateUrl('/apps/mail')
 				})
-				.catch(error => logger.error('could not delete account', {error}))
+				.catch((error) => logger.error('could not delete account', {error}))
 		},
 		changeAccountOrderUp() {
 			this.$store
 				.dispatch('moveAccount', {account: this.account, up: true})
-				.catch(error => logger.error('could not move account up', {error}))
+				.catch((error) => logger.error('could not move account up', {error}))
 		},
 		changeAccountOrderDown() {
 			this.$store
 				.dispatch('moveAccount', {account: this.account})
-				.catch(error => logger.error('could not move account down', {error}))
+				.catch((error) => logger.error('could not move account down', {error}))
 		},
 	},
 }

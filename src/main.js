@@ -43,7 +43,7 @@ Vue.mixin(Nextcloud)
 Vue.use(VueShortKey, {prevent: ['input', 'div']})
 Vue.use(VTooltip)
 
-const getPreferenceFromPage = key => {
+const getPreferenceFromPage = (key) => {
 	const elem = document.getElementById(key)
 	if (!elem) {
 		return
@@ -69,7 +69,7 @@ store.commit('savePreference', {
 })
 
 const accounts = JSON.parse(atob(getPreferenceFromPage('serialized-accounts')))
-accounts.map(fixAccountId).forEach(account => {
+accounts.map(fixAccountId).forEach((account) => {
 	const folders = account.folders
 	store.commit('addAccount', account)
 })
@@ -78,5 +78,5 @@ new Vue({
 	el: '#content',
 	router,
 	store,
-	render: h => h(App),
+	render: (h) => h(App),
 })

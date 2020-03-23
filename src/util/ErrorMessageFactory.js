@@ -29,7 +29,7 @@ const getRandomSmiley = () => {
  * @param {Folder} folder
  * @returns {string}
  */
-export const getRandomFolderErrorMessage = folder => {
+export const getRandomFolderErrorMessage = (folder) => {
 	const folderName = folder.get('name')
 	const rawTexts = [
 		t('mail', 'Could not load {tag}{name}{endtag}', {
@@ -42,7 +42,7 @@ export const getRandomFolderErrorMessage = folder => {
 			name: folderName,
 		}),
 	]
-	const texts = rawTexts.map(text => text.replace('{tag}', '<strong>').replace('{endtag}', '</strong>'))
+	const texts = rawTexts.map((text) => text.replace('{tag}', '<strong>').replace('{endtag}', '</strong>'))
 	const text = texts[Math.floor(Math.random() * texts.length)]
 	return text + ' ' + getRandomSmiley()
 }

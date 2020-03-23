@@ -21,7 +21,7 @@
 
 import {translate as t} from '@nextcloud/l10n'
 
-const translateSpecial = folder => {
+const translateSpecial = (folder) => {
 	if (folder.specialUse.includes('all')) {
 		// TRANSLATORS: translated mail box name
 		return t('mail', 'All')
@@ -61,7 +61,7 @@ const translateSpecial = folder => {
 	throw new Error(`unknown special use ${folder.specialUse}`)
 }
 
-export const translate = folder => {
+export const translate = (folder) => {
 	if (folder.specialUse.length > 0) {
 		try {
 			return translateSpecial(folder)

@@ -22,7 +22,7 @@
 import {wait} from '../../../util/wait'
 
 describe('wait', () => {
-	it('waits', done => {
+	it('waits', (done) => {
 		wait(0).then(done)
 	})
 })

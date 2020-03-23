@@ -91,7 +91,7 @@ export default {
 					key: 'external-avatars',
 					value: e.target.checked ? 'true' : 'false',
 				})
-				.catch(error => Logger.error('could not save preferences', {error}))
+				.catch((error) => Logger.error('could not save preferences', {error}))
 				.then(() => {
 					this.loadingAvatarSettings = false
 				})
@@ -104,12 +104,12 @@ export default {
 					key: 'collect-data',
 					value: e.target.checked ? 'true' : 'false',
 				})
-				.catch(error => Logger.error('could not save preferences', {error}))
+				.catch((error) => Logger.error('could not save preferences', {error}))
 				.then(() => {
 					this.loadingOptOutSettings = false
 				})
 		},
-		registerProtocolHandler: function() {
+		registerProtocolHandler: function () {
 			if (window.navigator.registerProtocolHandler) {
 				var url =
 					window.location.protocol + '//' + window.location.host + generateUrl('apps/mail/compose?uri=%s')

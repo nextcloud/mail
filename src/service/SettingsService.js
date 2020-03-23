@@ -22,14 +22,14 @@
 import axios from '@nextcloud/axios'
 import {generateUrl} from '@nextcloud/router'
 
-export const saveProvisioningSettings = config => {
+export const saveProvisioningSettings = (config) => {
 	const url = generateUrl('/apps/mail/api/settings/provisioning')
 
-	return axios.post(url, config).then(resp => resp.data)
+	return axios.post(url, config).then((resp) => resp.data)
 }
 
 export const disableProvisioning = () => {
 	const url = generateUrl('/apps/mail/api/settings/provisioning')
 
-	return axios.delete(url).then(resp => resp.data)
+	return axios.delete(url).then((resp) => resp.data)
 }

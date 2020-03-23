@@ -38,21 +38,21 @@ export const buildMailboxHierarchy = (mailboxes, havePrefix) => {
 		return mailboxes
 	}
 
-	const cloned = mailboxes.map(mailbox => {
+	const cloned = mailboxes.map((mailbox) => {
 		return {
 			folders: [],
 			...mailbox,
 		}
 	})
-	const top = cloned.filter(mailbox => getParentId(mailbox, havePrefix) === undefined)
+	const top = cloned.filter((mailbox) => getParentId(mailbox, havePrefix) === undefined)
 
-	cloned.forEach(mailbox => {
+	cloned.forEach((mailbox) => {
 		if (top.indexOf(mailbox) !== -1) {
 			return
 		}
 
 		const parentId = getParentId(mailbox, havePrefix)
-		const parent = cloned.filter(mailbox => atob(mailbox.id) === parentId)[0]
+		const parent = cloned.filter((mailbox) => atob(mailbox.id) === parentId)[0]
 		if (parent) {
 			parent.folders.push(mailbox)
 		}

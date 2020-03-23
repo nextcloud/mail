@@ -47,7 +47,7 @@ export default {
 
 			return this.$store
 				.dispatch('createAccount', data)
-				.then(account => {
+				.then((account) => {
 					logger.info('account successfully created, redirecting …')
 					this.$router.push({
 						name: 'home',
@@ -55,7 +55,7 @@ export default {
 
 					return account
 				})
-				.catch(error => {
+				.catch((error) => {
 					logger.error('Could not create account', {error})
 
 					if (error.message) {

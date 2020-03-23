@@ -55,7 +55,7 @@ const RecipientType = Object.seal({
 
 export const buildRecipients = (envelope, ownAddress) => {
 	let recipientType = RecipientType.None
-	const isOwnAddress = a => a.email === ownAddress.email
+	const isOwnAddress = (a) => a.email === ownAddress.email
 	const isNotOwnAddress = negate(isOwnAddress)
 
 	// Locate why we received this envelope
@@ -133,8 +133,8 @@ const replyPrepends = [
 /*
  * Ref https://tools.ietf.org/html/rfc5322#section-3.6.5
  */
-export const buildReplySubject = original => {
-	if (replyPrepends.some(prepend => original.toLowerCase().startsWith(`${prepend}:`))) {
+export const buildReplySubject = (original) => {
+	if (replyPrepends.some((prepend) => original.toLowerCase().startsWith(`${prepend}:`))) {
 		return original
 	}
 
@@ -168,8 +168,8 @@ const forwardPrepends = [
 	'转发',
 ]
 
-export const buildForwardSubject = original => {
-	if (forwardPrepends.some(prepend => original.toLowerCase().startsWith(`${prepend}:`))) {
+export const buildForwardSubject = (original) => {
+	if (forwardPrepends.some((prepend) => original.toLowerCase().startsWith(`${prepend}:`))) {
 		return original
 	}
 

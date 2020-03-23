@@ -85,7 +85,7 @@ export default {
 					this.signature = ''
 					this.loading = false
 				})
-				.catch(error => {
+				.catch((error) => {
 					logger.error('could not delete account signature', {error})
 					throw error
 				})
@@ -99,7 +99,7 @@ export default {
 					logger.info('signature updated')
 					this.loading = false
 				})
-				.catch(error => {
+				.catch((error) => {
 					logger.error('could not update account signature', {error})
 					throw error
 				})

@@ -99,10 +99,10 @@ export default {
 	},
 	computed: {
 		menu() {
-			return this.$store.getters.accounts.map(account => {
+			return this.$store.getters.accounts.map((account) => {
 				const folders = this.$store.getters
 					.getFolders(account.id)
-					.filter(folder => !account.collapsed || SHOW_COLLAPSED.indexOf(folder.specialRole) !== -1)
+					.filter((folder) => !account.collapsed || SHOW_COLLAPSED.indexOf(folder.specialRole) !== -1)
 				//.map(folderToEntry)
 
 				return {

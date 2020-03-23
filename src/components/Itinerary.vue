@@ -64,8 +64,8 @@ export default {
 	},
 	mounted() {
 		getUserCalendarsOnce()
-			.then(calendars => (this.calendars = calendars))
-			.catch(error => logger.error('Could not load calendars', {error}))
+			.then((calendars) => (this.calendars = calendars))
+			.catch((error) => logger.error('Could not load calendars', {error}))
 	},
 }
 </script>

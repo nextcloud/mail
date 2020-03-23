@@ -269,7 +269,7 @@ export default {
 			subjectVal: this.subject,
 			bodyVal: this.isPlainText ? textToSimpleHtml(this.body) : this.body,
 			attachments: [],
-			noReply: this.to.some(to => to.email.startsWith('noreply@') || to.email.startsWith('no-reply@')),
+			noReply: this.to.some((to) => to.email.startsWith('noreply@') || to.email.startsWith('no-reply@')),
 			submitButtonTitle: t('mail', 'Send'),
 			draftsPromise: Promise.resolve(),
 			attachmentsPromise: Promise.resolve(),
@@ -287,12 +287,12 @@ export default {
 	},
 	computed: {
 		aliases() {
-			return this.$store.getters.accounts.filter(a => !a.isUnified)
+			return this.$store.getters.accounts.filter((a) => !a.isUnified)
 		},
 		selectableRecipients() {
 			return this.newRecipients
 				.concat(this.autocompleteRecipients)
-				.map(recipient => ({...recipient, label: recipient.label || recipient.email}))
+				.map((recipient) => ({...recipient, label: recipient.label || recipient.email}))
 		},
 		isReply() {
 			return this.to.length > 0
@@ -314,7 +314,7 @@ export default {
 	},
 	beforeMount() {
 		if (this.fromAccount) {
-			this.selectedAlias = this.aliases.find(alias => alias.id === this.fromAccount)
+			this.selectedAlias = this.aliases.find((alias) => alias.id === this.fromAccount)
 		} else {
 			this.selectedAlias = this.aliases[0]
 		}
@@ -358,9 +358,9 @@ export default {
 		saveDraft(data) {
 			this.savingDraft = true
 			this.draftsPromise = this.draftsPromise
-				.then(uid => this.draft(data(uid)))
+				.then((uid) => this.draft(data(uid)))
 				.catch(logger.error.bind(logger))
-				.then(uid => {
+				.then((uid) => {
 					this.savingDraft = false
 					return uid
 				})
@@ -378,14 +378,14 @@ export default {
 			if (term === undefined || term === '') {
 				return
 			}
-			debouncedSearch(term).then(results => {
+			debouncedSearch(term).then((results) => {
 				this.autocompleteRecipients = uniqBy('email')(this.autocompleteRecipients.concat(results))
 			})
 		},
 		onAttachmentsUploading(uploaded) {
 			this.attachmentsPromise = this.attachmentsPromise
 				.then(() => uploaded)
-				.catch(error => logger.error('could not upload attachments', {error}))
+				.catch((error) => logger.error('could not upload attachments', {error}))
 				.then(() => logger.debug('attachments uploaded'))
 		},
 		onBodyKeyPress(event) {
@@ -418,10 +418,10 @@ export default {
 				.then(() => (this.state = STATES.SENDING))
 				.then(() => this.draftsPromise)
 				.then(this.getMessageData)
-				.then(data => this.send(data))
+				.then((data) => this.send(data))
 				.then(() => logger.info('message sent'))
 				.then(() => (this.state = STATES.FINISHED))
-				.catch(error => {
+				.catch((error) => {
 					logger.error('could not send message', {error})
 					if (error && error.toString) {
 						this.errorText = error.toString()

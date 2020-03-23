@@ -92,22 +92,22 @@ export default {
 		})
 	},
 	fetchAccounts({commit, getters}) {
-		return fetchAllAccounts().then(accounts => {
-			accounts.forEach(account => commit('addAccount', account))
+		return fetchAllAccounts().then((accounts) => {
+			accounts.forEach((account) => commit('addAccount', account))
 			return getters.accounts
 		})
 	},
 	fetchAccount({commit}, id) {
-		return fetchAccount(id).then(account => {
+		return fetchAccount(id).then((account) => {
 			commit('addAccount', account)
 			return account
 		})
 	},
 	createAccount({commit}, config) {
-		return createAccount(config).then(account => {
+		return createAccount(config).then((account) => {
 			logger.debug(`account ${account.id} created, fetching folders …`, account)
 			return fetchAllFolders(account.id)
-				.then(folders => {
+				.then((folders) => {
 					account.folders = folders
 					commit('addAccount', account)
 				})
@@ -116,14 +116,14 @@ export default {
 		})
 	},
 	updateAccount({commit}, config) {
-		return updateAccount(config).then(account => {
+		return updateAccount(config).then((account) => {
 			console.debug('account updated', account)
 			commit('editAccount', account)
 			return account
 		})
 	},
 	patchAccount({commit}, {account, data}) {
-		return patchAccount(account, data).then(account => {
+		return patchAccount(account, data).then((account) => {
 			console.debug('account patched', account, data)
 			commit('editAccount', data)
 			return account
@@ -138,13 +138,13 @@ export default {
 		})
 	},
 	deleteAccount({commit}, account) {
-		return deleteAccount(account.id).catch(err => {
+		return deleteAccount(account.id).catch((err) => {
 			console.error('could not delete account', err)
 			throw err
 		})
 	},
 	createFolder({commit}, {account, name}) {
-		return createFolder(account.id, name).then(folder => {
+		return createFolder(account.id, name).then((folder) => {
 			console.debug(`folder ${name} created for account ${account.id}`, {folder})
 			commit('addFolder', {account, folder})
 		})
@@ -187,7 +187,7 @@ export default {
 			return cached
 		}
 
-		return fetchEnvelope(accountId, folderId, id).then(envelope => {
+		return fetchEnvelope(accountId, folderId, id).then((envelope) => {
 			// Only commit if not undefined (not found)
 			if (envelope) {
 				commit('addEnvelope', {
@@ -206,7 +206,7 @@ export default {
 
 		if (folder.isUnified) {
 			const fetchIndividualLists = pipe(
-				map(f =>
+				map((f) =>
 					dispatch('fetchEnvelopes', {
 						accountId: f.accountId,
 						folderId: f.id,
@@ -223,7 +223,7 @@ export default {
 				andThen(sliceToPage),
 				andThen(
 					tap(
-						map(envelope =>
+						map((envelope) =>
 							commit('addEnvelope', {
 								accountId,
 								folderId,
@@ -242,7 +242,7 @@ export default {
 			fetchEnvelopes,
 			andThen(
 				tap(
-					map(envelope =>
+					map((envelope) =>
 						commit('addEnvelope', {
 							accountId,
 							folderId,
@@ -287,7 +287,7 @@ export default {
 				return nextPage.length < PAGE_SIZE || (c <= head(nextPage).dateInt && c >= last(nextPage).dateInt)
 			})
 
-			const foldersToFetch = accounts =>
+			const foldersToFetch = (accounts) =>
 				pipe(
 					findIndividualFolders(getters.getFolders, folder.specialRole),
 					filter(needsFetch(query, nextLocalUnifiedEnvelopePage(accounts)))
@@ -297,7 +297,7 @@ export default {
 
 			if (fs.length) {
 				return pipe(
-					map(f =>
+					map((f) =>
 						dispatch('fetchNextEnvelopePage', {
 							accountId: f.accountId,
 							folderId: f.id,
@@ -316,7 +316,7 @@ export default {
 			}
 
 			const page = nextLocalUnifiedEnvelopePage(getters.accounts)
-			page.map(envelope =>
+			page.map((envelope) =>
 				commit('addEnvelope', {
 					accountId,
 					folderId,
@@ -338,8 +338,8 @@ export default {
 			return Promise.reject(new Error('Cannot find last envelope. Required for the folder cursor'))
 		}
 
-		return fetchEnvelopes(accountId, folderId, query, lastEnvelope.dateInt).then(envelopes => {
-			envelopes.forEach(envelope =>
+		return fetchEnvelopes(accountId, folderId, query, lastEnvelope.dateInt).then((envelopes) => {
+			envelopes.forEach((envelope) =>
 				commit('addEnvelope', {
 					accountId,
 					folderId,
@@ -356,13 +356,13 @@ export default {
 		if (folder.isUnified) {
 			return Promise.all(
 				getters.accounts
-					.filter(account => !account.isUnified)
-					.map(account =>
+					.filter((account) => !account.isUnified)
+					.map((account) =>
 						Promise.all(
 							getters
 								.getFolders(account.id)
-								.filter(f => f.specialRole === folder.specialRole)
-								.map(folder =>
+								.filter((f) => f.specialRole === folder.specialRole)
+								.map((folder) =>
 									dispatch('syncEnvelopes', {
 										accountId: account.id,
 										folderId: folder.id,
@@ -375,13 +375,13 @@ export default {
 			)
 		}
 
-		const uids = getters.getEnvelopes(accountId, folderId, query).map(env => env.id)
+		const uids = getters.getEnvelopes(accountId, folderId, query).map((env) => env.id)
 
 		return syncEnvelopes(accountId, folderId, uids, query, init)
-			.then(syncData => {
+			.then((syncData) => {
 				const unifiedFolder = getters.getUnifiedFolder(folder.specialRole)
 
-				syncData.newMessages.forEach(envelope => {
+				syncData.newMessages.forEach((envelope) => {
 					commit('addEnvelope', {
 						accountId,
 						folderId,
@@ -394,12 +394,12 @@ export default {
 						})
 					}
 				})
-				syncData.changedMessages.forEach(envelope => {
+				syncData.changedMessages.forEach((envelope) => {
 					commit('updateEnvelope', {
 						envelope,
 					})
 				})
-				syncData.vanishedMessages.forEach(id => {
+				syncData.vanishedMessages.forEach((id) => {
 					commit('removeEnvelope', {
 						accountId,
 						folderId,
@@ -411,7 +411,7 @@ export default {
 
 				return syncData.newMessages
 			})
-			.catch(error => {
+			.catch((error) => {
 				return matchError(error, {
 					[SyncIncompleteError.getName()]() {
 						console.warn('(initial) sync is incomplete, retriggering')
@@ -426,10 +426,10 @@ export default {
 	async syncInboxes({getters, dispatch}) {
 		return await Promise.all(
 			getters.accounts
-				.filter(a => !a.isUnified)
-				.map(account => {
+				.filter((a) => !a.isUnified)
+				.map((account) => {
 					return Promise.all(
-						getters.getFolders(account.id).map(async folder => {
+						getters.getFolders(account.id).map(async (folder) => {
 							if (folder.specialRole !== 'inbox') {
 								return
 							}
@@ -449,8 +449,8 @@ export default {
 						})
 					)
 				})
-		).then(results => {
-			const newMessages = flatMapDeep(identity, results).filter(m => m !== undefined)
+		).then((results) => {
+			const newMessages = flatMapDeep(identity, results).filter((m) => m !== undefined)
 			if (newMessages.length > 0) {
 				showNewMessagesNotification(newMessages)
 			}
@@ -465,7 +465,7 @@ export default {
 			value: !oldState,
 		})
 
-		setEnvelopeFlag(envelope.accountId, envelope.folderId, envelope.id, 'flagged', !oldState).catch(e => {
+		setEnvelopeFlag(envelope.accountId, envelope.folderId, envelope.id, 'flagged', !oldState).catch((e) => {
 			console.error('could not toggle message flagged state', e)
 
 			// Revert change
@@ -485,7 +485,7 @@ export default {
 			value: !oldState,
 		})
 
-		setEnvelopeFlag(envelope.accountId, envelope.folderId, envelope.id, 'unseen', !oldState).catch(e => {
+		setEnvelopeFlag(envelope.accountId, envelope.folderId, envelope.id, 'unseen', !oldState).catch((e) => {
 			console.error('could not toggle message unseen state', e)
 
 			// Revert change
@@ -498,7 +498,7 @@ export default {
 	},
 	fetchMessage({commit}, uid) {
 		const {accountId, folderId, id} = parseUid(uid)
-		return fetchMessage(accountId, folderId, id).then(message => {
+		return fetchMessage(accountId, folderId, id).then((message) => {
 			// Only commit if not undefined (not found)
 			if (message) {
 				commit('addMessage', {
@@ -531,7 +531,7 @@ export default {
 				commit('removeMessage', {accountId, folder, id})
 				console.log('message removed')
 			})
-			.catch(err => {
+			.catch((err) => {
 				console.error('could not delete message', err)
 				const envelope = getters.getEnvelope(accountId, folderId, id)
 				if (envelope) {

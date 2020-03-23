@@ -62,8 +62,8 @@ const showNotification = (title, body, icon) => {
 	}
 }
 
-const getNotificationBody = messages => {
-	const labels = messages.filter(m => m.from.length > 0).map(m => m.from[0].label)
+const getNotificationBody = (messages) => {
+	const labels = messages.filter((m) => m.from.length > 0).map((m) => m.from[0].label)
 	let from = uniq(labels)
 	if (from.length > 2) {
 		from = from.slice(0, 2)
@@ -83,7 +83,7 @@ const getNotificationBody = messages => {
 	}
 }
 
-export const showNewMessagesNotification = messages => {
+export const showNewMessagesNotification = (messages) => {
 	showNotification(
 		t('mail', 'Nextcloud Mail'),
 		getNotificationBody(messages),

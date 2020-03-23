@@ -370,7 +370,7 @@ export default {
 			this.loading = true
 
 			this.saveChanges()
-				.catch(error => logger.error('could not save account details', {error}))
+				.catch((error) => logger.error('could not save account details', {error}))
 				.then(() => (this.loading = false))
 		},
 	},

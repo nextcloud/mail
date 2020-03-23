@@ -22,8 +22,8 @@ export function fetchEnvelope(accountId, folderId, id) {
 
 	return axios
 		.get(url)
-		.then(resp => resp.data)
-		.catch(error => {
+		.then((resp) => resp.data)
+		.catch((error) => {
 			if (error.response && error.response.status === 404) {
 				return undefined
 			}
@@ -49,9 +49,9 @@ export function fetchEnvelopes(accountId, folderId, query, cursor) {
 		.get(url, {
 			params,
 		})
-		.then(resp => resp.data)
+		.then((resp) => resp.data)
 		.then(map(amendEnvelopeWithIds(accountId, folderId)))
-		.catch(error => {
+		.catch((error) => {
 			throw convertAxiosError(error)
 		})
 }
@@ -112,8 +112,8 @@ export function fetchMessage(accountId, folderId, id) {
 
 	return axios
 		.get(url)
-		.then(resp => resp.data)
-		.catch(error => {
+		.then((resp) => resp.data)
+		.catch((error) => {
 			if (error.response && error.response.status === 404) {
 				return undefined
 			}
@@ -126,7 +126,7 @@ export function saveDraft(accountId, data) {
 		accountId,
 	})
 
-	return axios.post(url, data).then(resp => resp.data)
+	return axios.post(url, data).then((resp) => resp.data)
 }
 
 export function sendMessage(accountId, data) {
@@ -134,7 +134,7 @@ export function sendMessage(accountId, data) {
 		accountId,
 	})
 
-	return axios.post(url, data).then(resp => resp.data)
+	return axios.post(url, data).then((resp) => resp.data)
 }
 
 export function deleteMessage(accountId, folderId, id) {
@@ -144,5 +144,5 @@ export function deleteMessage(accountId, folderId, id) {
 		id,
 	})
 
-	return axios.delete(url).then(resp => resp.data)
+	return axios.delete(url).then((resp) => resp.data)
 }

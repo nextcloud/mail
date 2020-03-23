@@ -101,11 +101,11 @@ export default {
 
 			Vue.set(this, 'uploads', {})
 
-			const progress = id => (prog, uploaded) => {
+			const progress = (id) => (prog, uploaded) => {
 				this.uploads[id].uploaded = uploaded
 			}
 
-			const promises = map(file => {
+			const promises = map((file) => {
 				Vue.set(this.uploads, file.name, {
 					total: file.size,
 					uploaded: 0,
@@ -118,7 +118,7 @@ export default {
 			})(e.target.files)
 
 			const done = Promise.all(promises)
-				.catch(error => Logger.error('could not upload all attachments', {error}))
+				.catch((error) => Logger.error('could not upload all attachments', {error}))
 				.then(() => (this.uploading = false))
 
 			this.$emit('upload', done)
@@ -130,13 +130,13 @@ export default {
 
 			return picker
 				.pick(t('mail', 'Choose a file to add as attachment'))
-				.then(path => this.emitNewAttachment(this.fileNameToAttachment(path)))
-				.catch(error => Logger.error('could not choose a file as attachment', {error}))
+				.then((path) => this.emitNewAttachment(this.fileNameToAttachment(path)))
+				.catch((error) => Logger.error('could not choose a file as attachment', {error}))
 		},
 		onDelete(attachment) {
 			this.$emit(
 				'input',
-				this.value.filter(a => a !== attachment)
+				this.value.filter((a) => a !== attachment)
 			)
 		},
 	},

@@ -167,7 +167,7 @@ export default {
 
 			this.$store
 				.dispatch('fetchMessage', draftUid)
-				.then(draft => {
+				.then((draft) => {
 					if (draft.uid !== this.$route.params.draftUid) {
 						Logger.debug("User navigated away, loaded draft won't be shown")
 						return
@@ -184,7 +184,7 @@ export default {
 
 					this.loading = false
 				})
-				.catch(error => {
+				.catch((error) => {
 					Logger.error('could not load draft ' + draftUid, {error})
 					if (error.isError) {
 						this.errorMessage = t('mail', 'Could not load your draft')
@@ -200,7 +200,7 @@ export default {
 
 			this.$store
 				.dispatch('fetchMessage', uid)
-				.then(message => {
+				.then((message) => {
 					if (message.uid !== this.$route.query.uid) {
 						Logger.debug("User navigated away, loaded original message won't be used")
 						return
@@ -217,17 +217,17 @@ export default {
 								folderId: message.folderId,
 								id: message.id,
 							})
-						).then(resp => resp.data)
+						).then((resp) => resp.data)
 					} else {
 						return message.body
 					}
 				})
-				.then(body => {
+				.then((body) => {
 					this.originalBody = body
 
 					this.loading = false
 				})
-				.catch(error => {
+				.catch((error) => {
 					Logger.error('could not load original message ' + uid, {error})
 					if (error.isError) {
 						this.errorMessage = t('mail', 'Could not load original message')

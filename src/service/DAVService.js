@@ -48,11 +48,11 @@ const props = [
 	'{http://owncloud.org/ns}invite',
 ]
 
-const getResponseCodeFromHTTPResponse = t => {
+const getResponseCodeFromHTTPResponse = (t) => {
 	return parseInt(t.split(' ')[1])
 }
 
-const getACLFromResponse = properties => {
+const getACLFromResponse = (properties) => {
 	let canWrite = false
 	let acl = properties['{DAV:}acl']
 	if (acl) {
@@ -71,7 +71,7 @@ const getACLFromResponse = properties => {
 	properties.canWrite = canWrite
 }
 
-const getCalendarData = properties => {
+const getCalendarData = (properties) => {
 	getACLFromResponse(properties)
 
 	const data = {
@@ -105,10 +105,10 @@ export const getUserCalendars = () => {
 		.propFind(url, props, 1, {
 			requesttoken: getRequestToken(),
 		})
-		.then(data => {
+		.then((data) => {
 			const calendars = []
 
-			data.body.forEach(cal => {
+			data.body.forEach((cal) => {
 				if (cal.propStat.length < 1) {
 					return
 				}
@@ -128,9 +128,7 @@ export const getUserCalendars = () => {
 const getRandomString = () => {
 	let str = ''
 	for (let i = 0; i < 7; i++) {
-		str += Math.random()
-			.toString(36)
-			.substring(7)
+		str += Math.random().toString(36).substring(7)
 	}
 	return str
 }
@@ -143,21 +141,21 @@ const createICalElement = () => {
 	return root
 }
 
-const splitCalendar = data => {
+const splitCalendar = (data) => {
 	const timezones = []
 	const allObjects = {}
 	const jCal = ical.parse(data)
 	const components = new ical.Component(jCal)
 
 	const vtimezones = components.getAllSubcomponents('vtimezone')
-	vtimezones.forEach(vtimezone => timezones.push(vtimezone))
+	vtimezones.forEach((vtimezone) => timezones.push(vtimezone))
 
 	const componentNames = ['vevent', 'vjournal', 'vtodo']
-	componentNames.forEach(componentName => {
+	componentNames.forEach((componentName) => {
 		const vobjects = components.getAllSubcomponents(componentName)
 		allObjects[componentName] = {}
 
-		vobjects.forEach(vobject => {
+		vobjects.forEach((vobject) => {
 			var uid = vobject.getFirstPropertyValue('uid')
 			allObjects[componentName][uid] = allObjects[componentName][uid] || []
 			allObjects[componentName][uid].push(vobject)
@@ -165,7 +163,7 @@ const splitCalendar = data => {
 	})
 
 	const split = []
-	componentNames.forEach(componentName => {
+	componentNames.forEach((componentName) => {
 		split[componentName] = []
 		for (let objectsId in allObjects[componentName]) {
 			const objects = allObjects[componentName][objectsId]
@@ -190,7 +188,7 @@ const splitCalendar = data => {
  * @param {Object} data
  * @returns {Promise}
  */
-export const importCalendarEvent = url => data => {
+export const importCalendarEvent = (url) => (data) => {
 	Logger.debug('importing events into calendar', {
 		url,
 		data,
@@ -199,7 +197,7 @@ export const importCalendarEvent = url => data => {
 
 	const file = splitCalendar(data)
 	const components = ['vevent', 'vjournal', 'vtodo']
-	components.forEach(componentName => {
+	components.forEach((componentName) => {
 		for (let componentId in file.split[componentName]) {
 			const component = file.split[componentName][componentId]
 			Logger.info('importing event component', {component})

@@ -153,7 +153,7 @@ describe('Vuex store actions', () => {
 		sinon.stub(MessageService, 'fetchEnvelopes').returns(
 			Promise.resolve(
 				reverse(
-					range(1, 21).map(n => ({
+					range(1, 21).map((n) => ({
 						id: n,
 						uid: normalizedMessageId(13, 'INBOX', n),
 						dateInt: n * 10000,
@@ -169,7 +169,7 @@ describe('Vuex store actions', () => {
 
 		expect(page).to.deep.equal(
 			reverse(
-				range(1, 21).map(n => ({
+				range(1, 21).map((n) => ({
 					id: n,
 					uid: normalizedMessageId(13, 'INBOX', n),
 					dateInt: n * 10000,

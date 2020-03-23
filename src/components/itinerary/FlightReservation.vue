@@ -124,7 +124,7 @@ export default {
 					logger.debug('event successfully imported')
 					OCP.Toast.success(t('mail', 'Event imported into {calendar}', {calendar: calendar.displayname}))
 				})
-				.catch(error => {
+				.catch((error) => {
 					logger.error('Could not import event', {error})
 					OCP.Toast.error(t('mail', 'Could not create event'))
 				})
