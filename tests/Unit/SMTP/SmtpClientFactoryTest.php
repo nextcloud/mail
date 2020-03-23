@@ -81,14 +81,17 @@ class SmtpClientFactoryTest extends TestCase {
 			'smtpPassword' => 'obenc',
 		]);
 		$account = new Account($mailAccount);
-		$this->config->expects($this->at(0))
+		$this->config->expects($this->any())
 			->method('getSystemValue')
-			->with('app.mail.transport', 'smtp')
-			->willReturn('smtp');
-		$this->config->expects($this->at(2))
-			->method('getSystemValue')
-			->with('debug', false)
-			->willReturn(false);
+			->willReturnMap([
+				['app.mail.transport', 'smtp', 'smtp'],
+				['debug', false, false],
+				['app.mail.smtp.timeout', 5, 2],
+			]);
+		$this->config->expects($this->any())
+			->method('getSystemValueBool')
+			->with('app.mail.verify-tls-peer', true)
+			->willReturn(true);
 		$this->crypto->expects($this->once())
 			->method('decrypt')
 			->with('obenc')
@@ -108,6 +111,12 @@ class SmtpClientFactoryTest extends TestCase {
 			'secure' => false,
 			'timeout' => 2,
 			'localhost' => 'cloud.example.com',
+			'context' => [
+				'ssl' => [
+					'verify_peer' => true,
+					'verify_peer_name' => true,
+				],
+			],
 		]);
 
 		$transport = $this->factory->create($account);

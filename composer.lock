@@ -714,17 +714,17 @@
         },
         {
             "name": "pear-pear.horde.org/Horde_Socket_Client",
-            "version": "2.1.2",
+            "version": "2.1.3",
             "dist": {
                 "type": "file",
-                "url": "https://pear.horde.org/get/Horde_Socket_Client-2.1.2.tgz"
+                "url": "https://pear.horde.org/get/Horde_Socket_Client-2.1.3.tgz"
             },
             "require": {
                 "pear-pear.horde.org/horde_exception": "<3.0.0.0",
                 "php": "<8.0.0.0"
             },
             "replace": {
-                "pear-horde/horde_socket_client": "== 2.1.2.0"
+                "pear-horde/horde_socket_client": "== 2.1.3.0"
             },
             "type": "pear-library",
             "autoload": {
@@ -738,7 +738,7 @@
             "license": [
                 "LGPL-2.1"
             ],
-            "description": "Provides abstract class for use in creating PHP network socket clients."
+            "description": "A library that provides an abstract PHP network socket client."
         },
         {
             "name": "pear-pear.horde.org/Horde_Stream",
@@ -3628,5 +3628,6 @@
     "platform-dev": [],
     "platform-overrides": {
         "php": "7.2"
-    }
+    },
+    "plugin-api-version": "1.1.0"
 }
