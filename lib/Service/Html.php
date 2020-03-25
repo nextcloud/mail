@@ -145,11 +145,11 @@ class Html {
 		// Add back the style tag
 		$styles = $purifier->context->get('StyleBlocks');
 		if ($styles) {
-			$result = implode("\n", array(
+			$result = implode("\n", [
 				'<style type="text/css">',
 				implode("\n", $styles),
 				'</style>',
-				$result,));
+				$result,]);
 		}
 		return $result;
 	}

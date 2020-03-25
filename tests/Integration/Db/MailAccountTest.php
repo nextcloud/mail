@@ -46,7 +46,7 @@ class MailAccountTest extends TestCase {
 		$a->setProvisioned(false);
 		$a->setOrder(13);
 
-		$this->assertEquals(array(
+		$this->assertEquals([
 			'accountId' => 12345,
 			'name' => 'Peter Parker',
 			'emailAddress' => 'peter.parker@marvel.com',
@@ -62,7 +62,7 @@ class MailAccountTest extends TestCase {
 			'editorMode' => 'html',
 			'provisioned' => false,
 			'order' => 13,
-			), $a->toJson());
+			], $a->toJson());
 	}
 
 	public function testMailAccountConstruct() {
