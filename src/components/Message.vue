@@ -42,10 +42,20 @@
 						<ActionButton icon="icon-mail" @click="onToggleSeen">
 							{{ envelope.flags.unseen ? t('mail', 'Mark read') : t('mail', 'Mark unread') }}
 						</ActionButton>
+						<ActionButton
+							:icon="sourceLoading ? 'icon-loading-small' : 'icon-details'"
+							:disabled="sourceLoading"
+							@click="onShowSource"
+						>
+							{{ t('mail', 'View source') }}
+						</ActionButton>
 						<ActionButton icon="icon-delete" @click.prevent="onDelete">
 							{{ t('mail', 'Delete') }}
 						</ActionButton>
 					</Actions>
+					<Modal v-if="showSource" @close="onCloseSource">
+						<pre class="message-source">{{ rawMessage }}</pre>
+					</Modal>
 				</div>
 			</div>
 			<div class="mail-message-body">
@@ -65,6 +75,8 @@
 import Actions from '@nextcloud/vue/dist/Components/Actions'
 import ActionButton from '@nextcloud/vue/dist/Components/ActionButton'
 import AppContentDetails from '@nextcloud/vue/dist/Components/AppContentDetails'
+import axios from '@nextcloud/axios'
+import Modal from '@nextcloud/vue/dist/Components/Modal'
 import {generateUrl} from '@nextcloud/router'
 
 import AddressList from './AddressList'
@@ -91,6 +103,7 @@ export default {
 		MessageAttachments,
 		MessageHTMLBody,
 		MessagePlainTextBody,
+		Modal,
 	},
 	data() {
 		return {
@@ -101,6 +114,9 @@ export default {
 			error: undefined,
 			replyRecipient: {},
 			replySubject: '',
+			rawMessage: '',
+			sourceLoading: false,
+			showSource: false,
 		}
 	},
 	computed: {
@@ -236,6 +252,27 @@ export default {
 				id: this.message.id,
 			})
 		},
+		async onShowSource() {
+			this.sourceLoading = true
+
+			try {
+				const resp = await axios.get(
+					generateUrl('/apps/mail/api/accounts/{accountId}/folders/{folderId}/messages/{id}/source', {
+						accountId: this.message.accountId,
+						folderId: this.message.folderId,
+						id: this.message.id,
+					})
+				)
+
+				this.rawMessage = resp.data.source
+				this.showSource = true
+			} finally {
+				this.sourceLoading = false
+			}
+		},
+		onCloseSource() {
+			this.showSource = false
+		},
 	},
 }
 </script>
@@ -346,6 +383,10 @@ export default {
 	margin-left: 4px;
 }
 
+.modal-container {
+	overflow-y: scroll !important;
+}
+
 @media print {
 	#mail-message-header-fields {
 		position: relative;
@@ -367,5 +408,10 @@ export default {
 	.mail-message-body {
 		margin-bottom: 0 !important;
 	}
+}
+
+pre.message-source {
+	font-family: monospace;
+	margin: 15px;
 }
 </style>
