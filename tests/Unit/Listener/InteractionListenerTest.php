@@ -32,8 +32,10 @@ use OCA\Mail\AddressList;
 use OCA\Mail\Events\MessageSentEvent;
 use OCA\Mail\Listener\InteractionListener;
 use OCA\Mail\Model\IMessage;
+use OCP\Contacts\Events\ContactInteractedWithEvent;
 use OCP\EventDispatcher\Event;
 use OCP\IUser;
+use function class_exists;
 
 class InteractionListenerTest extends TestCase {
 
@@ -60,6 +62,11 @@ class InteractionListenerTest extends TestCase {
 	}
 
 	public function testHandle(): void {
+		if (!class_exists(ContactInteractedWithEvent::class)) {
+			$this->markTestSkipped(ContactInteractedWithEvent::class . ' does not exist');
+			return;
+		}
+
 		$to = new AddressList([
 			new Address('rec 1', 'u1@domain.tld'),
 			new Address('rec 1', 'u2@domain.tld'),

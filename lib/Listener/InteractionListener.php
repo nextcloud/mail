@@ -33,6 +33,7 @@ use OCP\EventDispatcher\IEventDispatcher;
 use OCP\EventDispatcher\IEventListener;
 use OCP\ILogger;
 use OCP\IUserSession;
+use function class_exists;
 
 class InteractionListener implements IEventListener {
 
@@ -60,8 +61,14 @@ class InteractionListener implements IEventListener {
 		if (!($event instanceof MessageSentEvent)) {
 			return;
 		}
-
-		$user = $this->userSession->getUser();
+		if (!class_exists(ContactInteractedWithEvent::class)) {
+			$this->logger->debug(ContactInteractedWithEvent::class . ' does not exist, ignoring the event');
+			return;
+		}
+		if (($user = $this->userSession->getUser()) === null) {
+			$this->logger->debug('no user object found');
+			return;
+		}
 		$recipients = $event->getMessage()->getTo()
 			->merge($event->getMessage()->getCC())
 			->merge($event->getMessage()->getBCC());
