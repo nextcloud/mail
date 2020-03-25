@@ -20,11 +20,13 @@
   -->
 
 <template>
-	<AppNavigationItem :item="data" :title="title" @click="toggleCollapse" />
+	<AppNavigationItem :title="title" @click="toggleCollapse" />
 </template>
 
 <script>
 import AppNavigationItem from '@nextcloud/vue/dist/Components/AppNavigationItem'
+
+import logger from '../logger'
 
 export default {
 	name: 'NavigationAccount',
@@ -48,7 +50,6 @@ export default {
 	data() {
 		return {
 			timeoutID: '',
-			id: 'collapse-' + this.account.id,
 			key: 'collapse-' + this.account.id,
 			classes: ['collapse-folders'],
 			text: this.account.collapsed ? t('mail', 'Show all folders') : t('mail', 'Collapse folders'),
@@ -61,22 +62,22 @@ export default {
 		},
 	},
 	mounted() {
-		let self = this
-		this.$el.ondragenter = function() {
-			this.style.background = '#F5F5F5'
-			if (self.timeoutID === '') {
-				self.timeoutID = window.setTimeout(function() {
-					self.$store.commit('toggleAccountCollapsed', self.account.id)
-					self.timeoutID = ''
-				}, 800)
-			}
+		this.$el.ondragenter = () => {
+			logger.debug('drag enter on expand-collapse component')
+
+			// this.style.background = '#F5F5F5'
+			clearTimeout(this.timeoutID)
+			this.timeoutID = setTimeout(() => {
+				logger.debug('expanding folder list for drag and drop')
+
+				this.$store.commit('toggleAccountCollapsed', this.account.id)
+				this.timeoutID = undefined
+			}, 800)
 		}
-		this.$el.ondragleave = function() {
-			this.style.background = ''
-			if (self.timeoutID !== '') {
-				window.clearTimeout(self.timeoutID)
-				self.timeoutID = ''
-			}
+		this.$el.ondragleave = () => {
+			logger.debug('drag leave on expand-collapse component')
+
+			clearTimeout(this.timeoutID)
 		}
 	}
 }

@@ -21,7 +21,6 @@
 
 <template>
 	<AppNavigationItem
-		:item="data"
 		:id="genId(folder)"
 		:key="genId(folder)"
 		:allow-collapse="true"
@@ -160,55 +159,18 @@ export default {
 		}
 	},
 	mounted() {
-		let self = this
-		this.$el.ondragenter = function() {
-			this.style.background = '#F5F5F5'
-			if (self.data.children.length > 0 && self.timeoutID === '') {
-				self.timeoutID = window.setTimeout(function() {
-					self.folderOpen = !self.folderOpen
-					self.timeoutID = ''
-				}, 800)
-			}
+		this.$el.ondragenter = () => {
+			//this.style.background = '#F5F5F5'
+			clearTimeout(this.timeoutID)
+			this.timeoutID = setTimeout(() => {
+				this.folderOpen = !this.folderOpen
+				this.timeoutID = ''
+			}, 800)
 		}
-		this.$el.ondragleave = function() {
-			this.style.background = ''
-			if (self.timeoutID !== '') {
-				window.clearTimeout(self.timeoutID)
-				self.timeoutID = ''
-			}
+		this.$el.ondragleave = () => {
+			//this.style.background = ''
+			clearTimeout(this.timeoutID)
 		}
-	},
-	methods: {
-		folderToEntry(folder, top) {
-			let icon = 'folder'
-			if (folder.specialRole) {
-				icon = folder.specialRole
-			}
-		},
-		subFolders() {
-			return this.$store.getters.getSubfolders(this.account.id, this.folder.id)
-		},
-		statsText() {
-			if (this.folderStats && 'total' in this.folderStats && 'unread' in this.folderStats) {
-				if (this.folderStats.unread === 0) {
-					return n('mail', '{total} message', '{total} messages', this.folderStats.total, {
-						total: this.folderStats.total,
-					})
-				} else {
-					return n(
-						'mail',
-						'{unread} unread of {total}',
-						'{unread} unread of {total}',
-						this.folderStats.unread,
-						{
-							total: this.folderStats.total,
-							unread: this.folderStats.unread,
-						}
-					)
-				}
-			}
-			return t('mail', 'Loading …')
-		},
 	},
 	methods: {
 		/**
@@ -274,6 +236,32 @@ export default {
 				.then(() => logger.info(`folder ${this.folder.id} marked as read`))
 				.catch((error) => logger.error(`could not mark folder ${this.folder.id} as read`, {error}))
 				.then(() => (this.loadingMarkAsRead = false))
+		},
+
+		subFolders() {
+			return this.$store.getters.getSubfolders(this.account.id, this.folder.id)
+		},
+
+		statsText() {
+			if (this.folderStats && 'total' in this.folderStats && 'unread' in this.folderStats) {
+				if (this.folderStats.unread === 0) {
+					return n('mail', '{total} message', '{total} messages', this.folderStats.total, {
+						total: this.folderStats.total,
+					})
+				} else {
+					return n(
+						'mail',
+						'{unread} unread of {total}',
+						'{unread} unread of {total}',
+						this.folderStats.unread,
+						{
+							total: this.folderStats.total,
+							unread: this.folderStats.unread,
+						}
+					)
+				}
+			}
+			return t('mail', 'Loading …')
 		},
 	},
 }

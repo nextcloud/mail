@@ -18,6 +18,7 @@
 
 <script>
 import Content from '@nextcloud/vue/dist/Components/Content'
+import { VueDraggableDirective } from 'vue-draggable'
 
 import MailboxMessage from '../components/MailboxMessage'
 import logger from '../logger'
@@ -29,6 +30,9 @@ export default {
 		Content,
 		MailboxMessage,
 		Navigation,
+	},
+	directives: {
+		dragAndDrop: VueDraggableDirective
 	},
 	computed: {
 		activeAccount() {

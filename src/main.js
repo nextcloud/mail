@@ -21,7 +21,6 @@
  */
 
 import Vue from 'vue'
-import VueDraggable from 'vue-draggable'
 import {getRequestToken} from '@nextcloud/auth'
 import {sync} from 'vuex-router-sync'
 import {generateFilePath} from '@nextcloud/router'
@@ -43,7 +42,6 @@ Vue.mixin(Nextcloud)
 
 Vue.use(VueShortKey, {prevent: ['input', 'div']})
 Vue.use(VTooltip)
-Vue.use(VueDraggable)
 
 const getPreferenceFromPage = (key) => {
 	const elem = document.getElementById(key)
