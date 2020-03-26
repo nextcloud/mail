@@ -23,15 +23,12 @@ namespace OCA\Mail\Tests\Unit\Service\Autoconfig;
 
 use ChristophWurst\Nextcloud\Testing\TestCase;
 use Horde_Imap_Client_Exception;
-use OC;
-use OCA\Mail\Account;
 use OCA\Mail\Db\MailAccount;
 use OCA\Mail\IMAP\IMAPClientFactory;
 use OCA\Mail\Service\AutoConfig\ImapConnector;
 use OCP\ILogger;
 use OCP\Security\ICrypto;
 use PHPUnit\Framework\MockObject\MockObject;
-use PHPUnit_Framework_MockObject_MockObject;
 
 class ImapConnectorTest extends TestCase {
 

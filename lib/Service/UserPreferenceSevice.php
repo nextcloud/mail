@@ -24,7 +24,6 @@
 
 namespace OCA\Mail\Service;
 
-use function is_bool;
 use OCA\Mail\Contracts\IUserPreferences;
 use OCP\IConfig;
 

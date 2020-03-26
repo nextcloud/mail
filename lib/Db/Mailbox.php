@@ -23,13 +23,11 @@
 
 namespace OCA\Mail\Db;
 
-use Horde_Imap_Client;
 use OCA\Mail\Folder;
 use OCP\AppFramework\Db\Entity;
 use function in_array;
 use function json_decode;
 use function ltrim;
-use function rtrim;
 use function strtolower;
 
 /**

@@ -24,7 +24,6 @@ declare(strict_types=1);
 
 namespace OCA\Mail\Service\Attachment;
 
-use Exception;
 use OCA\Mail\Contracts\IAttachmentService;
 use OCA\Mail\Db\LocalAttachment;
 use OCA\Mail\Db\LocalAttachmentMapper;

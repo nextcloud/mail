@@ -25,7 +25,6 @@ declare(strict_types=1);
 namespace OCA\Mail\Service;
 
 use Horde_Imap_Client;
-use Horde_Imap_Client_Search_Query;
 use OCA\Mail\Attachment;
 use OCA\Mail\Model\IMessage;
 

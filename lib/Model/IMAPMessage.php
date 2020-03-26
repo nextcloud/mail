@@ -48,7 +48,6 @@ use OCP\AppFramework\Db\DoesNotExistException;
 use OCP\Files\File;
 use OCP\Files\SimpleFS\ISimpleFile;
 use function base64_encode;
-use function json_encode;
 use function mb_convert_encoding;
 
 class IMAPMessage implements IMessage, JsonSerializable {

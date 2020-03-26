@@ -23,7 +23,6 @@ declare(strict_types=1);
 
 namespace OCA\Mail\Model;
 
-use Horde_Mail_Rfc822_List;
 use Horde_Mime_Part;
 use OCA\Mail\AddressList;
 use OCA\Mail\Db\LocalAttachment;

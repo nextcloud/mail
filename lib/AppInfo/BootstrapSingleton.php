@@ -54,8 +54,6 @@ use OCA\Mail\Service\MailTransmission;
 use OCA\Mail\Service\UserPreferenceSevice;
 use OCP\AppFramework\IAppContainer;
 use OCP\EventDispatcher\IEventDispatcher;
-use OCP\IUser;
-use OCP\IUserManager;
 use OCP\Util;
 
 class BootstrapSingleton {
