@@ -30,7 +30,7 @@ jobs:
       run: composer install
     - name: Run tests
       working-directory: nextcloud/apps/mail
-      run: composer run test:unit
+      run: composer run test:unit:dev
     - name: Upload coverage to Scrutinizer
       working-directory: nextcloud/apps/mail
       run: |

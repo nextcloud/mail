@@ -22,7 +22,7 @@ export function fetchEnvelope(accountId, folderId, id) {
 
 	return axios
 		.get(url)
-		.then((resp) => resp.data)
+		.then((resp) => amendEnvelopeWithIds(accountId, folderId, resp.data))
 		.catch((error) => {
 			if (error.response && error.response.status === 404) {
 				return undefined

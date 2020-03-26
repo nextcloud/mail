@@ -184,6 +184,7 @@ export default {
 
 		const cached = getters.getEnvelope(accountId, folderId, id)
 		if (cached) {
+			logger.debug(`using cached value for envelope ${uid}`)
 			return cached
 		}
 
