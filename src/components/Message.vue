@@ -54,7 +54,10 @@
 						</ActionButton>
 					</Actions>
 					<Modal v-if="showSource" @close="onCloseSource">
-						<pre class="message-source">{{ rawMessage }}</pre>
+						<div class="section">
+							<h2>{{ t('mail', 'Message source') }}</h2>
+							<pre class="message-source">{{ rawMessage }}</pre>
+						</div>
 					</Modal>
 				</div>
 			</div>
@@ -410,8 +413,9 @@ export default {
 	}
 }
 
-pre.message-source {
+.message-source {
 	font-family: monospace;
-	margin: 15px;
+	white-space: pre-wrap;
+	user-select: text;
 }
 </style>
