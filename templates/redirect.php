@@ -31,7 +31,7 @@ style('mail', 'redirect');
 		<p>
 			<a href="<?php p($_['url']) ?>" rel="noreferrer" id="redirectLink"
 			   style="font-weight: 300 !important">
-				<h2><?php p($l->t('Forwarding to %s', [$_['urlHost']])); ?></h2>
+				<h2><?php p($l->t('Forwarding to %s', array($_['urlHost']))); ?></h2>
 				<?php p($l->t('Click here if you are not automatically redirected within the next few seconds.')); ?>
 			</a>
 		</p>
@@ -39,14 +39,14 @@ style('mail', 'redirect');
 <?php else: ?>
 	<div class="update">
 		<h2><?php p($l->t('Redirect')); ?></h2>
-		<p><?php p($l->t('The link leads to %s', [$_['urlHost']])); ?></p>
+		<p><?php p($l->t('The link leads to %s', array($_['urlHost']))); ?></p>
 		<p class="infogroup"><?php print_unescaped($l->t('If you don’t want to visit that page, you can return to <a href="%s">Mail</a>.',
-			[$_['mailURL']]));
+			array($_['mailURL'])));
 	?></p>
 
 		<p>
 			<a href="<?php p($_['url']) ?>" class="button primary" rel="noreferrer" id="redirectLink"><?php p($l->t('Continue to %s',
-					[$_['urlHost']]));
+					array($_['urlHost'])));
 			?></a>
 		</p>
 	</div>

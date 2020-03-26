@@ -149,10 +149,10 @@ class Account implements JsonSerializable {
 			if ($this->config->getSystemValue('app.mail.server-side-cache.enabled', true)) {
 				if ($this->memcacheFactory->isAvailable()) {
 					$params['cache'] = [
-						'backend' => new Cache([
+						'backend' => new Cache(array(
 							'cacheob' => $this->memcacheFactory
 								->createDistributed(md5($this->getId() . $this->getEMailAddress()))
-						])];
+						))];
 				}
 			}
 			$this->client = new \Horde_Imap_Client_Socket($params);
