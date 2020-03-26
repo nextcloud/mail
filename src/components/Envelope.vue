@@ -1,5 +1,9 @@
 <template>
-	<router-link class="app-content-list-item" :class="{unseen: data.flags.unseen, draft}" :to="link">
+	<router-link
+		class="app-content-list-item"
+		:class="{unseen: data.flags.unseen, draft}"
+		:to="link"
+	>
 		<div
 			v-if="folder.isUnified"
 			class="mail-message-account-color"
@@ -10,6 +14,13 @@
 			class="app-content-list-item-star icon-starred"
 			:data-starred="data.flags.flagged ? 'true' : 'false'"
 			@click.prevent="onToggleFlagged"
+		></div>
+		<div
+			v-if="data.flags.important"
+			class="app-content-list-item-star icon-important"
+			:data-starred="data.flags.flagged ? 'true' : 'false'"
+			@click.prevent="onToggleImportant"
+			v-html="importantSvg"
 		></div>
 		<div class="app-content-list-item-icon">
 			<Avatar :display-name="addresses" :email="avatarEmail" />
@@ -31,6 +42,9 @@
 		<Actions class="app-content-list-item-menu" menu-align="right">
 			<ActionButton icon="icon-starred" @click.prevent="onToggleFlagged">{{
 				data.flags.flagged ? t('mail', 'Unfavorite') : t('mail', 'Favorite')
+			}}</ActionButton>
+			<ActionButton icon="icon-info" @click.prevent="onToggleImportant">{{
+				data.flags.important ? t('mail', 'Mark unimportant') : t('mail', 'Mark important')
 			}}</ActionButton>
 			<ActionButton icon="icon-mail" @click.prevent="onToggleSeen">{{
 				data.flags.unseen ? t('mail', 'Mark read') : t('mail', 'Mark unread')
@@ -65,6 +79,11 @@ export default {
 			type: Object,
 			required: true,
 		},
+	},
+	data() {
+		return {
+			importantSvg,
+		}
 	},
 	computed: {
 		accountColor() {
@@ -134,6 +153,9 @@ export default {
 		onToggleFlagged() {
 			this.$store.dispatch('toggleEnvelopeFlagged', this.data)
 		},
+		onToggleImportant() {
+			this.$store.dispatch('toggleEnvelopeImportant', this.data)
+		},
 		onToggleSeen() {
 			this.$store.dispatch('toggleEnvelopeSeen', this.data)
 		},
@@ -158,6 +180,18 @@ export default {
 	z-index: 1;
 }
 
+.app-content-list-item-star.icon-important {
+	left: 7px;
+	top: 13px;
+	opacity: 1;
+	&:hover {
+		opacity: 0.5;
+	}
+	::v-deep path {
+		fill: #ffcc00;
+		stroke: var(--color-main-background);
+	}
+}
 .app-content-list-item.unseen {
 	font-weight: bold;
 }

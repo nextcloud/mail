@@ -331,6 +331,9 @@
 .icon-drafts {
 	@include icon-color('drafts', 'mail', $color-black);
 }
+.icon-important {
+	@include icon-color('important', 'mail', $color-black);
+}
 .icon-sent {
 	@include icon-color('sent', 'mail', $color-black);
 }
