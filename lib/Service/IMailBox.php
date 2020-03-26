@@ -54,13 +54,6 @@ interface IMailBox {
 	public function getAttachment(int $messageId, string $attachmentId): Attachment;
 
 	/**
-	 * @param int $messageId
-	 * @param string $flag
-	 * @param mixed $value
-	 */
-	public function setMessageFlag(int $messageId, string $flag, $value);
-
-	/**
 	 * @param int $flags
 	 * @return array
 	 */

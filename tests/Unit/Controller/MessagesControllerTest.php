@@ -129,7 +129,7 @@ class MessagesControllerTest extends TestCase {
 			->method('getTime')
 			->willReturn(10000);
 		$this->oldFactory = \OC::$server->offsetGet(ITimeFactory::class);
-		\OC::$server->registerService(ITimeFactory::class, function() use ($timeFactory) {
+		\OC::$server->registerService(ITimeFactory::class, function () use ($timeFactory) {
 			return $timeFactory;
 		});
 
@@ -372,17 +372,17 @@ class MessagesControllerTest extends TestCase {
 			->method('find')
 			->with($this->equalTo($this->userId), $this->equalTo($accountId))
 			->will($this->returnValue($this->account));
-		$this->account->expects($this->once())
-			->method('getMailbox')
-			->with(base64_decode($folderId))
-			->will($this->returnValue($this->mailbox));
-		$this->mailbox->expects($this->once())
-			->method('setMessageFlag')
-			->with($messageId, '\\seen', true);
+		$this->mailManager->expects($this->once())
+			->method('flagMessage')
+			->with($this->account, 'my folder', $messageId, 'seen', true);
 
 		$expected = new JSONResponse();
-		$response = $this->controller->setFlags($accountId, $folderId, $messageId,
-			$flags);
+		$response = $this->controller->setFlags(
+			$accountId,
+			$folderId,
+			$messageId,
+			$flags
+		);
 
 		$this->assertEquals($expected, $response);
 	}
@@ -399,17 +399,17 @@ class MessagesControllerTest extends TestCase {
 			->method('find')
 			->with($this->equalTo($this->userId), $this->equalTo($accountId))
 			->will($this->returnValue($this->account));
-		$this->account->expects($this->once())
-			->method('getMailbox')
-			->with(base64_decode($folderId))
-			->will($this->returnValue($this->mailbox));
-		$this->mailbox->expects($this->once())
-			->method('setMessageFlag')
-			->with($messageId, '\\flagged', true);
+		$this->mailManager->expects($this->once())
+			->method('flagMessage')
+			->with($this->account, 'my folder', $messageId, 'flagged', true);
 
 		$expected = new JSONResponse();
-		$response = $this->controller->setFlags($accountId, $folderId, $messageId,
-			$flags);
+		$response = $this->controller->setFlags(
+			$accountId,
+			$folderId,
+			$messageId,
+			$flags
+		);
 
 		$this->assertEquals($expected, $response);
 	}

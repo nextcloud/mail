@@ -235,6 +235,8 @@ class AccountsController extends Controller {
 	 * @param int $id
 	 *
 	 * @return JSONResponse
+	 *
+	 * @throws ClientException
 	 */
 	public function destroy($id): JSONResponse {
 		$this->accountService->delete($this->currentUserId, $id);

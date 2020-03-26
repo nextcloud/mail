@@ -260,6 +260,22 @@ class MessageMapper {
 	}
 
 	/**
+	 * @throws Horde_Imap_Client_Exception
+	 */
+	public function removeFlag(Horde_Imap_Client_Socket $client,
+							Mailbox $mailbox,
+							int $uid,
+							string $flag): void {
+		$client->store(
+			$mailbox->getName(),
+			[
+				'ids' => new Horde_Imap_Client_Ids($uid),
+				'remove' => [$flag],
+			]
+		);
+	}
+
+	/**
 	 * @param Horde_Imap_Client_Socket $client
 	 * @param string $mailbox
 	 * @param int $id

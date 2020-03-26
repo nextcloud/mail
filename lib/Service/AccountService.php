@@ -101,14 +101,24 @@ class AccountService {
 			throw new ClientException("Account $accountId does not exist or you don\'t have permission to access it");
 		}
 
-		return new Account($this->mapper->find($uid, $accountId));
+		try {
+			return new Account($this->mapper->find($uid, $accountId));
+		} catch (DoesNotExistException $e) {
+			throw new ClientException("Account $accountId does not exist or you don\'t have permission to access it");
+		}
 	}
 
 	/**
 	 * @param int $accountId
+	 *
+	 * @throws ClientException
 	 */
 	public function delete(string $currentUserId, int $accountId): void {
-		$mailAccount = $this->mapper->find($currentUserId, $accountId);
+		try {
+			$mailAccount = $this->mapper->find($currentUserId, $accountId);
+		} catch (DoesNotExistException $e) {
+			throw new ClientException("Account $accountId does not exist", 0, $e);
+		}
 		$this->aliasesService->deleteAll($accountId);
 		$this->mapper->delete($mailAccount);
 	}
