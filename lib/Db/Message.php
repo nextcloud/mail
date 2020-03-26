@@ -26,6 +26,7 @@ namespace OCA\Mail\Db;
 use JsonSerializable;
 use OCA\Mail\AddressList;
 use OCP\AppFramework\Db\Entity;
+use function in_array;
 
 /**
  * @method void setUid(int $uid)
@@ -64,6 +65,17 @@ use OCP\AppFramework\Db\Entity;
  * @method int getUpdatedAt()
  */
 class Message extends Entity implements JsonSerializable {
+
+	private const MUTABLE_FLAGS = [
+		'answered',
+		'deleted',
+		'draft',
+		'flagged',
+		'seen',
+		'forwarded',
+		'junk',
+		'notjunk',
+	];
 
 	protected $uid;
 	protected $messageId;
@@ -170,6 +182,18 @@ class Message extends Entity implements JsonSerializable {
 	 */
 	public function setBcc(AddressList $bcc): void {
 		$this->bcc = $bcc;
+	}
+
+	public function setFlag(string $flag, bool $value = true) {
+		if (!in_array($flag, self::MUTABLE_FLAGS, true)) {
+			// Ignore
+			return;
+		}
+
+		$this->setter(
+			$this->columnToProperty("flag_$flag"),
+			[$value]
+		);
 	}
 
 	public function jsonSerialize() {

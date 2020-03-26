@@ -27,23 +27,26 @@ namespace OCA\Mail\Tests\Unit\Listener;
 
 use ChristophWurst\Nextcloud\Testing\ServiceMockObject;
 use ChristophWurst\Nextcloud\Testing\TestCase;
+use OCA\Mail\Account;
+use OCA\Mail\Db\Mailbox;
+use OCA\Mail\Db\Message;
 use OCA\Mail\Events\MessageDeletedEvent;
-use OCA\Mail\Listener\MessageDeletedCacheUpdaterListener;
+use OCA\Mail\Events\MessageFlaggedEvent;
+use OCA\Mail\Listener\MessageCacheUpdaterListener;
 use OCP\EventDispatcher\Event;
-use OCP\EventDispatcher\IEventListener;
 
-class MessageDeletedCacheUpdaterListenerTest extends TestCase {
+class MessageCacheUpdaterListenerTest extends TestCase {
 
 	/** @var ServiceMockObject */
 	private $serviceMock;
 
-	/** @var IEventListener */
+	/** @var MessageCacheUpdaterListener */
 	private $listener;
 
 	protected function setUp(): void {
 		parent::setUp();
 
-		$this->serviceMock = $this->createServiceMock(MessageDeletedCacheUpdaterListener::class);
+		$this->serviceMock = $this->createServiceMock(MessageCacheUpdaterListener::class);
 		$this->listener = $this->serviceMock->getService();
 	}
 
@@ -56,14 +59,52 @@ class MessageDeletedCacheUpdaterListenerTest extends TestCase {
 		$this->listener->handle($event);
 	}
 
-	public function testHandle() {
-		$event = $this->createMock(MessageDeletedEvent::class);
+	public function testHandleMessageFlaggedNotCached() {
+		$account = $this->createMock(Account::class);
+		$mailbox = $this->createMock(Mailbox::class);
+		$event = new MessageFlaggedEvent(
+			$account,
+			$mailbox,
+			123,
+			'important',
+			true
+		);
 		$this->serviceMock->getParameter('mapper')
 			->expects($this->once())
-			->method('deleteByUid')
-			->with($event->getMailbox(), $event->getMessageId());
+			->method('findByUids')
+			->with($event->getMailbox(), [123])
+			->willReturn([]);
+		$this->serviceMock->getParameter('mapper')
+			->expects($this->never())
+			->method('update');
 
 		$this->listener->handle($event);
+	}
+
+	public function testHandleMessageFlagged() {
+		$account = $this->createMock(Account::class);
+		$mailbox = $this->createMock(Mailbox::class);
+		$event = new MessageFlaggedEvent(
+			$account,
+			$mailbox,
+			123,
+			'junk',
+			true
+		);
+		$message = new Message();
+		$this->serviceMock->getParameter('mapper')
+			->expects($this->once())
+			->method('findByUids')
+			->with($event->getMailbox(), [123])
+			->willReturn([$message]);
+		$this->serviceMock->getParameter('mapper')
+			->expects($this->once())
+			->method('update')
+			->with($message);
+
+		$this->listener->handle($event);
+
+		$this->assertTrue($message->getFlagJunk());
 	}
 
 }
