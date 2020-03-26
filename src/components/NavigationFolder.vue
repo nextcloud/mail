@@ -24,6 +24,7 @@
 		:id="genId(folder)"
 		:key="genId(folder)"
 		:allow-collapse="true"
+		:force-menu="forceMenu"
 		:icon="icon"
 		:title="title"
 		:to="to"
@@ -42,7 +43,7 @@
 
 				<!-- TODO: make *mark as read* available for all folders once there is more than one action -->
 				<ActionButton
-					v-if="!account.isUnified && folder.specialRole !== 'flagged'"
+					v-if="folder.specialRole !== 'flagged'"
 					icon="icon-checkmark"
 					:title="t('mail', 'Mark all as read')"
 					:disabled="loadingMarkAsRead"
@@ -109,10 +110,9 @@ export default {
 			type: Boolean,
 			default: true,
 		},
-		filter: {
-			type: String,
-			default: '',
-			required: false,
+		forceMenu: {
+			type: Boolean,
+			default: false,
 		},
 	},
 	data() {
@@ -234,7 +234,7 @@ export default {
 
 			this.$store
 				.dispatch('markFolderRead', {
-					account: this.account,
+					accountId: this.account.id,
 					folderId: this.folder.id,
 				})
 				.then(() => logger.info(`folder ${this.folder.id} marked as read`))
