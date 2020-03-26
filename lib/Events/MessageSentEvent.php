@@ -53,7 +53,7 @@ class MessageSentEvent extends Event {
 	public function __construct(Account $account,
 								NewMessageData $newMessageData,
 								?RepliedMessageData $repliedMessageData,
-								?int $draftUid = null,
+								?int $draftUid,
 								IMessage $message,
 								Horde_Mime_Mail $mail) {
 		parent::__construct();

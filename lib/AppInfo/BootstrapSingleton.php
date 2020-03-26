@@ -40,6 +40,7 @@ use OCA\Mail\Listener\AddressCollectionListener;
 use OCA\Mail\Listener\DeleteDraftListener;
 use OCA\Mail\Listener\DraftMailboxCreatorListener;
 use OCA\Mail\Listener\FlagRepliedMessageListener;
+use OCA\Mail\Listener\InteractionListener;
 use OCA\Mail\Listener\MessageDeletedCacheUpdaterListener;
 use OCA\Mail\Listener\SaveSentMessageListener;
 use OCA\Mail\Listener\TrashMailboxCreatorListener;
@@ -128,6 +129,7 @@ class BootstrapSingleton {
 		$dispatcher->addServiceListener(MessageSentEvent::class, AddressCollectionListener::class);
 		$dispatcher->addServiceListener(MessageSentEvent::class, DeleteDraftListener::class);
 		$dispatcher->addServiceListener(MessageSentEvent::class, FlagRepliedMessageListener::class);
+		$dispatcher->addServiceListener(MessageSentEvent::class, InteractionListener::class);
 		$dispatcher->addServiceListener(MessageSentEvent::class, SaveSentMessageListener::class);
 		$dispatcher->addServiceListener(SaveDraftEvent::class, DraftMailboxCreatorListener::class);
 	}
