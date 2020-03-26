@@ -53,7 +53,7 @@
 					/>
 				</template>
 				<NavigationAccountExpandCollapse
-					v-if="!group.account.isUnified && group.account.folders.length > 0"
+					v-if="!group.account.isUnified && group.showExpandCollapse"
 					:key="'collapse-' + group.account.id"
 					:account="group.account"
 				/>
@@ -100,15 +100,15 @@ export default {
 	computed: {
 		menu() {
 			return this.$store.getters.accounts.map((account) => {
-				const folders = this.$store.getters
-					.getFolders(account.id)
-					.filter((folder) => !account.collapsed || SHOW_COLLAPSED.indexOf(folder.specialRole) !== -1)
-				//.map(folderToEntry)
+				const folders = this.$store.getters.getFolders(account.id)
+				const foldersToShow = folders.filter((folder) => !account.collapsed || SHOW_COLLAPSED.indexOf(folder.specialRole) !== -1)
+				const nonSpecialRoleFolders = folders.filter((folder) => SHOW_COLLAPSED.indexOf(folder.specialRole) === -1)
 
 				return {
 					id: account.id,
 					account: account,
-					folders,
+					folders: foldersToShow,
+					showExpandCollapse: nonSpecialRoleFolders.length > 1
 				}
 			})
 		},

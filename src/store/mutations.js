@@ -47,7 +47,6 @@ export default {
 		Vue.set(state.preferences, key, value)
 	},
 	addAccount(state, account) {
-		account.collapsed = true
 		Vue.set(state.accounts, account.id, account)
 		Vue.set(
 			state,
@@ -66,6 +65,10 @@ export default {
 
 			account.folders.push(id)
 		})
+
+		// set collapsed if more than 1 non special role folder exists
+		const numberOfNoneSpecialRoleFolders = folders.filter((folder) => !folder.specialRole).length
+		Vue.set(state.accounts[account.id], 'collapsed', numberOfNoneSpecialRoleFolders > 1)
 	},
 	editAccount(state, account) {
 		Vue.set(state.accounts, account.id, Object.assign({}, state.accounts[account.id], account))
