@@ -74,8 +74,8 @@ class OftenContactedSenderClassifier extends AClassifier {
 
 		$select = $qb->select($qb->func()->count('*'))
 			->from('mail_recipients', 'r')
-			->join('r', 'mail_messages', 'm', $qb->expr()->eq('m.id', 'r.message_id', IQueryBuilder::PARAM_INT))
-			->join('r', 'mail_mailboxes', 'mb', $qb->expr()->eq('mb.id', $qb->expr()->castColumn('m.mailbox_id', IQueryBuilder::PARAM_INT), IQueryBuilder::PARAM_INT))
+			->join('r', 'mail_messages', 'm', $qb->expr()->eq('m.id', 'r.message_id'))
+			->join('r', 'mail_mailboxes', 'mb', $qb->expr()->eq('mb.id', 'm.mailbox_id'))
 			->where($qb->expr()->eq('r.id', $qb->createNamedParameter(Address::TYPE_FROM), IQueryBuilder::PARAM_INT))
 			->andWhere($qb->expr()->eq('mb.id', $qb->createNamedParameter($mb->getId(), IQueryBuilder::PARAM_INT)));
 		$result = $select->execute();

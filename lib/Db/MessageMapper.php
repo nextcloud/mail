@@ -104,6 +104,7 @@ class MessageMapper extends QBMapper {
 		$qb1->setValue('flag_forwarded', $qb1->createParameter('flag_forwarded'));
 		$qb1->setValue('flag_junk', $qb1->createParameter('flag_junk'));
 		$qb1->setValue('flag_notjunk', $qb1->createParameter('flag_notjunk'));
+		$qb1->setValue('flag_important', $qb1->createParameter('flag_important'));
 		$qb2 = $this->db->getQueryBuilder();
 
 		$qb2->insert('mail_recipients')
@@ -126,6 +127,7 @@ class MessageMapper extends QBMapper {
 			$qb1->setParameter('flag_forwarded', $message->getFlagForwarded(), IQueryBuilder::PARAM_BOOL);
 			$qb1->setParameter('flag_junk', $message->getFlagJunk(), IQueryBuilder::PARAM_BOOL);
 			$qb1->setParameter('flag_notjunk', $message->getFlagNotjunk(), IQueryBuilder::PARAM_BOOL);
+			$qb1->setParameter('flag_important', $message->getFlagImportant(), IQueryBuilder::PARAM_BOOL);
 
 			$qb1->execute();
 

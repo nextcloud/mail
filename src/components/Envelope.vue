@@ -1,9 +1,5 @@
 <template>
-	<router-link
-		class="app-content-list-item"
-		:class="{unseen: data.flags.unseen, draft}"
-		:to="link"
-	>
+	<router-link class="app-content-list-item" :class="{unseen: data.flags.unseen, draft}" :to="link">
 		<div
 			v-if="folder.isUnified"
 			class="mail-message-account-color"
@@ -18,7 +14,7 @@
 		<div
 			v-if="data.flags.important"
 			class="app-content-list-item-star icon-important"
-			:data-starred="data.flags.flagged ? 'true' : 'false'"
+			:data-starred="data.flags.important ? 'true' : 'false'"
 			@click.prevent="onToggleImportant"
 			v-html="importantSvg"
 		></div>
@@ -58,6 +54,7 @@
 import Actions from '@nextcloud/vue/dist/Components/Actions'
 import ActionButton from '@nextcloud/vue/dist/Components/ActionButton'
 import Moment from './Moment'
+import importantSvg from '../../img/important.svg'
 
 import Avatar from './Avatar'
 import {calculateAccountColor} from '../util/AccountColor'

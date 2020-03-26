@@ -97,7 +97,7 @@ class Message extends Entity implements JsonSerializable {
 	protected $updatedAt;
 	protected $structureAnalyzed;
 	protected $flagAttachments;
-	protected $flagImportant;
+	protected $flagImportant = false;
 	protected $previewText;
 
 	/** @var AddressList */

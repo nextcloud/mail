@@ -36,6 +36,7 @@ use OCA\Mail\Events\DraftSavedEvent;
 use OCA\Mail\Events\MessageDeletedEvent;
 use OCA\Mail\Events\MessageFlaggedEvent;
 use OCA\Mail\Events\MessageSentEvent;
+use OCA\Mail\Events\NewMessagesSynchronized;
 use OCA\Mail\Events\SaveDraftEvent;
 use OCA\Mail\Http\Middleware\ErrorMiddleware;
 use OCA\Mail\Http\Middleware\ProvisioningMiddleware;
@@ -45,6 +46,7 @@ use OCA\Mail\Listener\DraftMailboxCreatorListener;
 use OCA\Mail\Listener\FlagRepliedMessageListener;
 use OCA\Mail\Listener\InteractionListener;
 use OCA\Mail\Listener\MessageCacheUpdaterListener;
+use OCA\Mail\Listener\NewMessageClassificationListener;
 use OCA\Mail\Listener\SaveSentMessageListener;
 use OCA\Mail\Listener\TrashMailboxCreatorListener;
 use OCA\Mail\Service\Attachment\AttachmentService;
@@ -135,6 +137,7 @@ class BootstrapSingleton {
 		$dispatcher->addServiceListener(MessageSentEvent::class, FlagRepliedMessageListener::class);
 		$dispatcher->addServiceListener(MessageSentEvent::class, InteractionListener::class);
 		$dispatcher->addServiceListener(MessageSentEvent::class, SaveSentMessageListener::class);
+		$dispatcher->addServiceListener(NewMessagesSynchronized::class, NewMessageClassificationListener::class);
 		$dispatcher->addServiceListener(SaveDraftEvent::class, DraftMailboxCreatorListener::class);
 	}
 }

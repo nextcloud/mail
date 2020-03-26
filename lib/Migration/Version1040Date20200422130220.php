@@ -52,5 +52,4 @@ class Version1040Date20200422130220 extends SimpleMigrationStep {
 		$deleteRecipients = $qb2->delete('mail_recipients');
 		$deleteRecipients->execute();
 	}
-
 }
