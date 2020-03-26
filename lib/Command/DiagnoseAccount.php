@@ -24,7 +24,6 @@ declare(strict_types=1);
 namespace OCA\Mail\Command;
 
 use Horde_Imap_Client;
-use Horde_Imap_Client_Data_Capability;
 use Horde_Imap_Client_Exception;
 use Horde_Imap_Client_Mailbox;
 use Horde_Imap_Client_Socket;

@@ -33,7 +33,6 @@ use OCA\Mail\Account;
 use OCA\Mail\Support\HostNameFactory;
 use OCP\IConfig;
 use OCP\Security\ICrypto;
-use OCP\Util;
 
 class SmtpClientFactory {
 

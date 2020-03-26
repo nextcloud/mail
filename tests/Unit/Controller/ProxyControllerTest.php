@@ -21,7 +21,6 @@
 
 namespace OCA\Mail\Tests\Unit\Controller;
 
-use ArrayAccess;
 use ChristophWurst\Nextcloud\Testing\TestCase;
 use Exception;
 use OCA\Mail\Controller\ProxyController;

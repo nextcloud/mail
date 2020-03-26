@@ -31,13 +31,10 @@
 
 namespace OCA\Mail;
 
-use DateTime;
 use Horde_Imap_Client;
 use Horde_Imap_Client_Exception;
-use Horde_Imap_Client_Fetch_Query;
 use Horde_Imap_Client_Ids;
 use Horde_Imap_Client_Mailbox;
-use Horde_Imap_Client_Search_Query;
 use Horde_Imap_Client_Socket;
 use OCA\Mail\Model\IMAPMessage;
 use OCA\Mail\Service\IMailBox;

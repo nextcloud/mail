@@ -31,7 +31,6 @@ use OCA\Mail\Db\MailboxMapper;
 use OCA\Mail\Db\Message;
 use OCA\Mail\Db\MessageMapper;
 use OCA\Mail\Exception\ClientException;
-use OCA\Mail\Exception\IncompleteSyncException;
 use OCA\Mail\Exception\MailboxNotCachedException;
 use OCA\Mail\Exception\ServiceException;
 use OCA\Mail\IMAP\PreviewEnhancer;

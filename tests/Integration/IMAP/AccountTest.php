@@ -24,7 +24,6 @@
 
 namespace OCA\Mail\Tests\Integration\IMAP;
 
-use OCA\Mail\Tests\Integration\IMAP\AbstractTest;
 
 /**
  * @group IMAP

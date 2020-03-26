@@ -23,7 +23,6 @@ namespace OCA\Mail\Tests;
 
 use ChristophWurst\Nextcloud\Testing\TestCase;
 use Horde_Imap_Client_Mailbox;
-use OCA\Mail\Account;
 use OCA\Mail\Folder;
 use PHPUnit_Framework_MockObject_MockObject;
 

@@ -30,11 +30,8 @@ use OCA\Mail\Service\Avatar\AvatarFactory;
 use OCA\Mail\Service\Avatar\FaviconSource;
 use ChristophWurst\Nextcloud\Testing\TestCase;
 use OCP\Files\IMimeTypeDetector;
-use OCP\Http\Client\IClient;
 use OCP\Http\Client\IClientService;
-use OCP\Http\Client\IResponse;
 use OCP\IServerContainer;
-use PHPUnit\Framework\MockObject\MockObject;
 use function iterator_to_array;
 use function unlink;
 

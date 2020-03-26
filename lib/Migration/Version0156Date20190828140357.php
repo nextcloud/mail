@@ -24,7 +24,6 @@ namespace OCA\Mail\Migration;
 
 use Closure;
 use OCP\DB\ISchemaWrapper;
-use OCP\Migration\IMigrationStep;
 use OCP\Migration\SimpleMigrationStep;
 use OCP\Migration\IOutput;
 

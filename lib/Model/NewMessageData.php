@@ -23,7 +23,6 @@ declare(strict_types=1);
 
 namespace OCA\Mail\Model;
 
-use Horde_Mail_Rfc822_List;
 use OCA\Mail\Account;
 use OCA\Mail\AddressList;
 

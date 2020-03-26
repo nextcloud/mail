@@ -32,7 +32,6 @@ use OCP\AppFramework\Db\QBMapper;
 use OCP\AppFramework\Utility\ITimeFactory;
 use OCP\DB\QueryBuilder\IQueryBuilder;
 use OCP\IDBConnection;
-use OCP\Security\ISecureRandom;
 
 class MailboxMapper extends QBMapper {
 

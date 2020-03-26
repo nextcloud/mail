@@ -25,9 +25,7 @@ declare(strict_types=1);
 namespace OCA\Mail\Http;
 
 use DateTime;
-use OC;
 use OCP\AppFramework\Http\DownloadResponse;
-use OCP\AppFramework\Utility\ITimeFactory;
 
 class ProxyDownloadResponse extends DownloadResponse {
 

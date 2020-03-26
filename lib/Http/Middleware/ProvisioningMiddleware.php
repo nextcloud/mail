@@ -30,7 +30,6 @@ use OCA\Mail\Service\Provisioning\Manager as ProvisioningManager;
 use OCP\AppFramework\Middleware;
 use OCP\Authentication\Exceptions\CredentialsUnavailableException;
 use OCP\Authentication\Exceptions\PasswordUnavailableException;
-use OCP\Authentication\LoginCredentials\ICredentials;
 use OCP\Authentication\LoginCredentials\IStore as ICredentialStore;
 use OCP\ILogger;
 use OCP\IUserSession;

@@ -29,7 +29,6 @@ use HTMLPurifier_AttrTransform;
 use HTMLPurifier_Config;
 use HTMLPurifier_Context;
 use OCP\IURLGenerator;
-use OCP\Util;
 
 /**
  * Adds copies src to data-src on all img tags.
