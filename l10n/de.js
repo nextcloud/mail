@@ -152,7 +152,7 @@ OC.L10N.register(
     "Toggle unread" : "Ungelesen umschalten",
     "Search" : "Suchen",
     "Refresh" : "Aktualisieren",
-    "Connect your mail account" : "Verbinde Deine E-Mail-Konto",
+    "Connect your mail account" : "Verbinde Dein E-Mail-Konto",
     "Unexpected error during account creation" : "Fehler bei der Erstellung des Kontos",
     "Itinerary for {type} is not supported yet" : "Reiseroute für {Typ} wird noch nicht unterstützt",
     "All" : "Alle",
