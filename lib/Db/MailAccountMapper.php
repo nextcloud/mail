@@ -47,6 +47,8 @@ class MailAccountMapper extends QBMapper {
 	 * @param int $accountId
 	 *
 	 * @return MailAccount
+	 *
+	 * @throws DoesNotExistException
 	 */
 	public function find(string $userId, int $accountId): MailAccount {
 		$qb = $this->db->getQueryBuilder();

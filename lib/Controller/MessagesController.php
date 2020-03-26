@@ -449,7 +449,7 @@ class MessagesController extends Controller {
 	 * @throws ServiceException
 	 */
 	public function setFlags(int $accountId, string $folderId, int $messageId, array $flags): JSONResponse {
-		$mailBox = $this->getFolder($accountId, $folderId);
+		$account = $this->accountService->find($this->currentUserId, $accountId);
 
 		foreach ($flags as $flag => $value) {
 			$value = filter_var($value, FILTER_VALIDATE_BOOLEAN);
@@ -457,7 +457,7 @@ class MessagesController extends Controller {
 				$flag = 'seen';
 				$value = !$value;
 			}
-			$mailBox->setMessageFlag($messageId, '\\' . $flag, $value);
+			$this->mailManager->flagMessage($account, base64_decode($folderId), $messageId, $flag, $value);
 		}
 		return new JSONResponse();
 	}
@@ -493,6 +493,7 @@ class MessagesController extends Controller {
 	 * @param string $folderId
 	 *
 	 * @return IMailBox
+	 * @deprecated
 	 *
 	 * @throws ClientException
 	 * @throws ServiceException

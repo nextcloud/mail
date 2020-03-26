@@ -115,4 +115,16 @@ interface IMailManager {
 	 */
 	public function markFolderAsRead(Account $account, string $folderId): void;
 
+	/**
+	 * @param Account $account
+	 * @param string $mailbox
+	 * @param int $uid
+	 * @param string $flag
+	 * @param bool $value
+	 *
+	 * @throws ClientException
+	 * @throws ServiceException
+	 */
+	public function flagMessage(Account $account, string $mailbox, int $uid, string $flag, bool $value): void;
+
 }

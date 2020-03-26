@@ -33,7 +33,6 @@ namespace OCA\Mail;
 
 use Horde_Imap_Client;
 use Horde_Imap_Client_Exception;
-use Horde_Imap_Client_Ids;
 use Horde_Imap_Client_Mailbox;
 use Horde_Imap_Client_Socket;
 use OCA\Mail\Model\IMAPMessage;
@@ -321,32 +320,6 @@ class Mailbox implements IMailBox {
 		])->ids;
 
 		return reset($uids);
-	}
-
-	/**
-	 * @param int $uid
-	 * @param string $flag
-	 * @param boolean $add
-	 *
-	 * @return void
-	 */
-	public function setMessageFlag(int $uid, string $flag, $add) {
-		$options = [
-			'ids' => new Horde_Imap_Client_Ids($uid)
-		];
-		if ($add) {
-			$options['add'] = [$flag];
-		} else {
-			$options['remove'] = [$flag];
-		}
-		$this->conn->store($this->mailBox, $options);
-	}
-
-	/**
-	 * @return Horde_Imap_Client_Mailbox
-	 */
-	public function getHordeMailBox(): Horde_Imap_Client_Mailbox {
-		return $this->mailBox;
 	}
 
 }
