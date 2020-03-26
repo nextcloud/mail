@@ -138,7 +138,7 @@ export const buildReplySubject = (original) => {
 		return original
 	}
 
-	return `RE: ${original}`
+	return `Re: ${original}`
 }
 
 // TODO: https://en.wikipedia.org/wiki/List_of_email_subject_abbreviations#Abbreviations_in_other_languages
@@ -173,5 +173,5 @@ export const buildForwardSubject = (original) => {
 		return original
 	}
 
-	return `FWD: ${original}`
+	return `Fwd: ${original}`
 }

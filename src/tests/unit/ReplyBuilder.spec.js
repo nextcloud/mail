@@ -230,7 +230,7 @@ describe('ReplyBuilder', () => {
 
 		const replySubject = buildReplySubject(orig)
 
-		expect(replySubject).to.equal('RE: Hello')
+		expect(replySubject).to.equal('Re: Hello')
 	})
 
 	it("does not stack subject re:'s", () => {
