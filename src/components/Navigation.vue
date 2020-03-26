@@ -38,14 +38,22 @@
 				/>
 				<template v-for="item in group.folders">
 					<NavigationFolder
-						v-show="!group.account.collapsed || SHOW_COLLAPSED.indexOf(item.specialRole) !== -1"
+						v-show="
+							!group.isCollapsible ||
+							!group.account.collapsed ||
+							SHOW_COLLAPSED.indexOf(item.specialRole) !== -1
+						"
 						:key="item.key"
 						:account="group.account"
 						:folder="item"
 					/>
 					<NavigationFolder
 						v-if="!group.account.isUnified && item.specialRole === 'inbox'"
-						v-show="!group.account.collapsed || SHOW_COLLAPSED.indexOf(item.specialRole) !== -1"
+						v-show="
+							!group.isCollapsible ||
+							!group.account.collapsed ||
+							SHOW_COLLAPSED.indexOf(item.specialRole) !== -1
+						"
 						:key="item.key + '-starred'"
 						:account="group.account"
 						:folder="item"
@@ -53,7 +61,7 @@
 					/>
 				</template>
 				<NavigationAccountExpandCollapse
-					v-if="!group.account.isUnified && group.showExpandCollapse"
+					v-if="!group.account.isUnified && group.isCollapsible"
 					:key="'collapse-' + group.account.id"
 					:account="group.account"
 				/>
@@ -101,14 +109,20 @@ export default {
 		menu() {
 			return this.$store.getters.accounts.map((account) => {
 				const folders = this.$store.getters.getFolders(account.id)
-				const foldersToShow = folders.filter((folder) => !account.collapsed || SHOW_COLLAPSED.indexOf(folder.specialRole) !== -1)
-				const nonSpecialRoleFolders = folders.filter((folder) => SHOW_COLLAPSED.indexOf(folder.specialRole) === -1)
+				const nonSpecialRoleFolders = folders.filter(
+					(folder) => SHOW_COLLAPSED.indexOf(folder.specialRole) === -1
+				)
+				const isCollapsible = nonSpecialRoleFolders.length > 1
+				const foldersToShow = folders.filter(
+					(folder) =>
+						!isCollapsible || !account.collapsed || SHOW_COLLAPSED.indexOf(folder.specialRole) !== -1
+				)
 
 				return {
 					id: account.id,
 					account: account,
 					folders: foldersToShow,
-					showExpandCollapse: nonSpecialRoleFolders.length > 1
+					isCollapsible,
 				}
 			})
 		},
