@@ -23,32 +23,60 @@ declare(strict_types=1);
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-namespace OCA\Mail\Listener;
+namespace OCA\Mail\Events;
 
-use OCA\Mail\Db\MessageMapper;
-use OCA\Mail\Events\MessageDeletedEvent;
+use OCA\Mail\Account;
+use OCA\Mail\Db\Mailbox;
 use OCP\EventDispatcher\Event;
-use OCP\EventDispatcher\IEventListener;
 
-class MessageDeletedCacheUpdaterListener implements IEventListener {
+class MessageFlaggedEvent extends Event {
 
-	/** @var MessageMapper */
-	private $mapper;
+	/** @var Account */
+	private $account;
 
-	public function __construct(MessageMapper $mapper) {
-		$this->mapper = $mapper;
+	/** @var Mailbox */
+	private $mailbox;
+
+	/** @var int */
+	private $uid;
+
+	/** @var string */
+	private $flag;
+
+	/** @var bool */
+	private $set;
+
+	public function __construct(Account $account,
+								Mailbox $mailbox,
+								int $uid,
+								string $flag,
+								bool $set) {
+		parent::__construct();
+		$this->account = $account;
+		$this->mailbox = $mailbox;
+		$this->uid = $uid;
+		$this->flag = $flag;
+		$this->set = $set;
 	}
 
-	public function handle(Event $event): void {
-		if (!($event instanceof MessageDeletedEvent)) {
-			// Unrelated
-			return;
-		}
+	public function getAccount(): Account {
+		return $this->account;
+	}
 
-		$this->mapper->deleteByUid(
-			$event->getMailbox(),
-			$event->getMessageId()
-		);
+	public function getMailbox(): Mailbox {
+		return $this->mailbox;
+	}
+
+	public function getUid(): int {
+		return $this->uid;
+	}
+
+	public function getFlag(): string {
+		return $this->flag;
+	}
+
+	public function isSet(): bool {
+		return $this->set;
 	}
 
 }

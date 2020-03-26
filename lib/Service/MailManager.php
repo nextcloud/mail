@@ -31,6 +31,7 @@ use OCA\Mail\Db\Mailbox;
 use OCA\Mail\Db\MailboxMapper;
 use OCA\Mail\Events\BeforeMessageDeletedEvent;
 use OCA\Mail\Events\MessageDeletedEvent;
+use OCA\Mail\Events\MessageFlaggedEvent;
 use OCA\Mail\Exception\ClientException;
 use OCA\Mail\Exception\ServiceException;
 use OCA\Mail\Folder;
@@ -303,6 +304,17 @@ class MailManager implements IMailManager {
 				throw new ServiceException("Could not set message flag on IMAP: " . $e->getMessage(), $e->getCode(), $e);
 			}
 		}
+
+		$this->eventDispatcher->dispatch(
+			MessageFlaggedEvent::class,
+			new MessageFlaggedEvent(
+				$account,
+				$mb,
+				$uid,
+				$flag,
+				$value
+			)
+		);
 	}
 
 }

@@ -32,6 +32,7 @@ use OCA\Mail\Contracts\IUserPreferences;
 use OCA\Mail\Events\BeforeMessageDeletedEvent;
 use OCA\Mail\Events\DraftSavedEvent;
 use OCA\Mail\Events\MessageDeletedEvent;
+use OCA\Mail\Events\MessageFlaggedEvent;
 use OCA\Mail\Events\MessageSentEvent;
 use OCA\Mail\Events\SaveDraftEvent;
 use OCA\Mail\Http\Middleware\ErrorMiddleware;
@@ -41,7 +42,7 @@ use OCA\Mail\Listener\DeleteDraftListener;
 use OCA\Mail\Listener\DraftMailboxCreatorListener;
 use OCA\Mail\Listener\FlagRepliedMessageListener;
 use OCA\Mail\Listener\InteractionListener;
-use OCA\Mail\Listener\MessageDeletedCacheUpdaterListener;
+use OCA\Mail\Listener\MessageCacheUpdaterListener;
 use OCA\Mail\Listener\SaveSentMessageListener;
 use OCA\Mail\Listener\TrashMailboxCreatorListener;
 use OCA\Mail\Service\Attachment\AttachmentService;
@@ -125,7 +126,8 @@ class BootstrapSingleton {
 
 		$dispatcher->addServiceListener(BeforeMessageDeletedEvent::class, TrashMailboxCreatorListener::class);
 		$dispatcher->addServiceListener(DraftSavedEvent::class, DeleteDraftListener::class);
-		$dispatcher->addServiceListener(MessageDeletedEvent::class, MessageDeletedCacheUpdaterListener::class);
+		$dispatcher->addServiceListener(MessageFlaggedEvent::class, MessageCacheUpdaterListener::class);
+		$dispatcher->addServiceListener(MessageDeletedEvent::class, MessageCacheUpdaterListener::class);
 		$dispatcher->addServiceListener(MessageSentEvent::class, AddressCollectionListener::class);
 		$dispatcher->addServiceListener(MessageSentEvent::class, DeleteDraftListener::class);
 		$dispatcher->addServiceListener(MessageSentEvent::class, FlagRepliedMessageListener::class);
