@@ -49,11 +49,6 @@
 					/>
 					<NavigationFolder
 						v-if="!group.account.isUnified && item.specialRole === 'inbox'"
-						v-show="
-							!group.isCollapsible ||
-							!group.account.collapsed ||
-							SHOW_COLLAPSED.indexOf(item.specialRole) !== -1
-						"
 						:key="item.key + '-starred'"
 						:account="group.account"
 						:folder="item"
@@ -113,15 +108,11 @@ export default {
 					(folder) => SHOW_COLLAPSED.indexOf(folder.specialRole) === -1
 				)
 				const isCollapsible = nonSpecialRoleFolders.length > 1
-				const foldersToShow = folders.filter(
-					(folder) =>
-						!isCollapsible || !account.collapsed || SHOW_COLLAPSED.indexOf(folder.specialRole) !== -1
-				)
 
 				return {
 					id: account.id,
-					account: account,
-					folders: foldersToShow,
+					account,
+					folders,
 					isCollapsible,
 				}
 			})
