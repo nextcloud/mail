@@ -27,7 +27,7 @@
 import AppNavigationItem from '@nextcloud/vue/dist/Components/AppNavigationItem'
 
 export default {
-	name: 'NavigationAccount',
+	name: 'NavigationAccountExpandCollapse',
 	components: {
 		AppNavigationItem,
 	},
