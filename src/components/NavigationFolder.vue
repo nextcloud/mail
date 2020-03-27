@@ -110,6 +110,11 @@ export default {
 			type: Boolean,
 			default: true,
 		},
+		filter: {
+			type: String,
+			default: '',
+			required: false,
+		},
 		forceMenu: {
 			type: Boolean,
 			default: false,
