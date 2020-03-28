@@ -82,6 +82,7 @@ OC.L10N.register(
     "Reply to sender only" : "Odpovědět pouze odesílateli",
     "Forward" : "Přeposlat",
     "View source" : "Zobrazit zdroj",
+    "Message source" : "Zdrojový kód správy",
     "Could not load your message" : "Vaši zprávu se nedaří načíst",
     "Import into calendar" : "Importovat do kalendáře",
     "Download attachment" : "Stáhnout přílohu",
