@@ -45,6 +45,7 @@ import ParagraphPlugin from '@ckeditor/ckeditor5-paragraph/src/paragraph'
 import {getLanguage} from '@nextcloud/l10n'
 
 import logger from '../logger'
+import {htmlToText} from '../util/HtmlHelper'
 
 export default {
 	name: 'TextEditor',
@@ -68,6 +69,10 @@ export default {
 			type: Boolean,
 			default: false,
 		},
+		bus: {
+			type: Object,
+			required: true,
+		},
 	},
 	data() {
 		const plugins = [EssentialsPlugin, ParagraphPlugin]
@@ -82,6 +87,7 @@ export default {
 			text: '',
 			ready: false,
 			editor: Editor,
+			editorInstance: {},
 			config: {
 				placeholder: this.placeholder,
 				plugins,
@@ -126,6 +132,8 @@ export default {
 
 			logger.debug('CKEditor editor is ready', {editor, schema})
 
+			this.editorInstance = editor
+
 			// Set 0 pixel margin to all <p> elements
 			editor.conversion.for('downcast').add((dispatcher) => {
 				dispatcher.on(
@@ -166,10 +174,18 @@ export default {
 			this.text = this.value
 
 			logger.debug(`setting TextEditor contents to <${this.text}>`)
+
+			this.bus.$on('appendToBodyAtCursor', this.appendToBodyAtCursor)
 		},
 		onInput() {
 			logger.debug(`TextEditor input changed to <${this.text}>`)
 			this.$emit('input', this.text)
+		},
+		appendToBodyAtCursor(toAppend) {
+			// https://ckeditor.com/docs/ckeditor5/latest/builds/guides/faq.html#where-are-the-editorinserthtml-and-editorinserttext-methods-how-to-insert-some-content
+			const viewFragment = this.editorInstance.data.processor.toView(toAppend)
+			const modelFragment = this.editorInstance.data.toModel(viewFragment)
+			this.editorInstance.model.insertContent(modelFragment)
 		},
 	},
 }

@@ -1,5 +1,6 @@
 <!--
   - @copyright 2018 Christoph Wurst <christoph@winzerhof-wurst.at>
+  - @copyright 2020 Gary Kim <gary@garykim.dev>
   -
   - @author 2018 Christoph Wurst <christoph@winzerhof-wurst.at>
   -
@@ -41,12 +42,14 @@
 <script>
 import map from 'lodash/fp/map'
 import trimStart from 'lodash/fp/trimCharsStart'
+import {getRequestToken} from '@nextcloud/auth'
 import {translate as t} from '@nextcloud/l10n'
 import {getFilePickerBuilder} from '@nextcloud/dialogs'
 import Vue from 'vue'
 
 import Logger from '../logger'
 import {uploadLocalAttachment} from '../service/AttachmentService'
+import {shareFile} from '../service/FileSharingService'
 
 export default {
 	name: 'ComposerAttachments',
@@ -80,6 +83,7 @@ export default {
 	created() {
 		this.bus.$on('onAddLocalAttachment', this.onAddLocalAttachment)
 		this.bus.$on('onAddCloudAttachment', this.onAddCloudAttachment)
+		this.bus.$on('onAddCloudAttachmentLink', this.onAddCloudAttachmentLink)
 	},
 	methods: {
 		onAddLocalAttachment() {
@@ -133,11 +137,26 @@ export default {
 				.then((path) => this.emitNewAttachment(this.fileNameToAttachment(path)))
 				.catch((error) => Logger.error('could not choose a file as attachment', {error}))
 		},
+		onAddCloudAttachmentLink() {
+			const picker = getFilePickerBuilder(t('mail', 'Choose a file to share as a link')).build()
+
+			return picker
+				.pick(t('mail', 'Choose a file to share as a link'))
+				.then(async (path) => {
+					const url = await shareFile(path, getRequestToken())
+
+					return this.appendToBodyAtCursor(`<a href="${url}">${url}</a>`)
+				})
+				.catch((error) => Logger.error('could not choose a file as attachment link', {error}))
+		},
 		onDelete(attachment) {
 			this.$emit(
 				'input',
 				this.value.filter((a) => a !== attachment)
 			)
+		},
+		appendToBodyAtCursor(toAppend) {
+			this.bus.$emit('appendToBodyAtCursor', toAppend)
 		},
 	},
 }
