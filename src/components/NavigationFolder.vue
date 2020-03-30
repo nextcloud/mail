@@ -44,7 +44,7 @@
 				<!-- TODO: make *mark as read* available for all folders once there is more than one action -->
 				<ActionButton
 					v-if="folder.specialRole !== 'flagged'"
-					icon="icon-checkmark"
+					icon="icon-mail"
 					:title="t('mail', 'Mark all as read')"
 					:disabled="loadingMarkAsRead"
 					@click="markAsRead"
