@@ -116,6 +116,7 @@
 				class="message-body"
 				:placeholder="t('mail', 'Write message …')"
 				:focus="isReply"
+				:bus="bus"
 				@input="onInputChanged"
 			></TextEditor>
 			<TextEditor
@@ -127,6 +128,7 @@
 				class="message-body"
 				:placeholder="t('mail', 'Write message …')"
 				:focus="isReply"
+				:bus="bus"
 				@input="onInputChanged"
 			></TextEditor>
 		</div>
@@ -143,6 +145,9 @@
 					}}</ActionButton>
 					<ActionButton icon="icon-folder" @click="onAddCloudAttachment">{{
 						t('mail', 'Add attachment from Files')
+					}}</ActionButton>
+					<ActionButton icon="icon-folder" @click="onAddCloudAttachmentLink">{{
+						t('mail', 'Add attachment link from Files')
 					}}</ActionButton>
 					<ActionCheckbox
 						:checked="!editorPlainText"
@@ -373,6 +378,9 @@ export default {
 		},
 		onAddCloudAttachment() {
 			this.bus.$emit('onAddCloudAttachment')
+		},
+		onAddCloudAttachmentLink() {
+			this.bus.$emit('onAddCloudAttachmentLink')
 		},
 		onAutocomplete(term) {
 			if (term === undefined || term === '') {
