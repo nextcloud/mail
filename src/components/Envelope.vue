@@ -32,6 +32,8 @@
 			<ActionButton icon="icon-starred" @click.prevent="onToggleFlagged">{{
 				data.flags.flagged ? t('mail', 'Unfavorite') : t('mail', 'Favorite')
 			}}</ActionButton>
+			<ActionButton icon="icon-mail" @click="onNewTab">
+				{{ t('mail', 'Open in a new tab') }}</ActionButton>
 			<ActionButton icon="icon-mail" @click.prevent="onToggleSeen">{{
 				data.flags.unseen ? t('mail', 'Mark read') : t('mail', 'Mark unread')
 			}}</ActionButton>
@@ -133,6 +135,10 @@ export default {
 	methods: {
 		onToggleFlagged() {
 			this.$store.dispatch('toggleEnvelopeFlagged', this.data)
+		},
+		onNewTab() {
+			const routeData = this.$router.resolve(this.link)
+			window.open(routeData.href, '_blank')
 		},
 		onToggleSeen() {
 			this.$store.dispatch('toggleEnvelopeSeen', this.data)
