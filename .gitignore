@@ -30,3 +30,5 @@ coverage/
 
 # PHPunit temp file
 tests/.phpunit.result.cache
+
+/.php_cs.cache
