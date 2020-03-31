@@ -184,12 +184,29 @@ export default {
 
 // Fix layout of messages in list until we move to component
 
-.app-content-list-item-line-two,
-.app-content-list-item-menu {
-	margin-top: -8px;
-}
+.app-content-list .app-content-list-item {
+	padding-right: 0;
 
-.app-content-list-item-menu {
-	margin-right: -2px;
+	.app-content-list-item-line-two {
+		padding-right: 0;
+		margin-top: -8px;
+	}
+
+	.app-content-list-item-menu {
+		margin-right: -2px;
+		margin-top: -8px;
+
+		::v-deep .action-item__menu {
+			right: 7px !important;
+
+			.action-item__menu_arrow {
+				right: 6px !important;
+			}
+		}
+	}
+
+	.app-content-list-item-details {
+		padding-right: 7px;
+	}
 }
 </style>
