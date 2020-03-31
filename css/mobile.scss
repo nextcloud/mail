@@ -19,7 +19,6 @@
 		background: #fff;
 		width: 100%;
 		left: 0;
-		height: 100%;
 		top: 0;
 	}
 
@@ -48,11 +47,6 @@
 
 	textarea.message-body {
 		padding-right: 12px;
-	}
-
-	#mail-content,
-	.mail-message-attachments {
-		margin: 0 10px 50px 30px;
 	}
 
 	/* reply-forward actions align to the far right */

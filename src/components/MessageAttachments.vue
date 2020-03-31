@@ -107,13 +107,15 @@ export default {
 </script>
 
 <style>
-.mail-message-attachments {
-	margin-bottom: 20px;
+.attachments {
+	width: 210px;
 }
 
 /* show icon + text for Download all button
 		as well as when there is only one attachment */
 .attachments-save-to-cloud {
+	display: block;
+	margin: 3px auto 0 auto;
 	background-position: 9px center;
 	padding-left: 32px;
 }

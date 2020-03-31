@@ -61,13 +61,18 @@
 					</Modal>
 				</div>
 			</div>
-			<div class="mail-message-body">
+			<div :class="[message.hasHtmlBody ? 'mail-message-body mail-message-body-html' : 'mail-message-body']">
 				<div v-if="message.itineraries.length > 0" class="message-itinerary">
 					<Itinerary :entries="message.itineraries" :message-id="message.messageId" />
 				</div>
 				<MessageHTMLBody v-if="message.hasHtmlBody" :url="htmlUrl" />
 				<MessagePlainTextBody v-else :body="message.body" :signature="message.signature" />
-				<MessageAttachments :attachments="message.attachments" />
+				<Popover v-if="message.attachments[0]" class="attachment-popover">
+					<Actions slot="trigger">
+						<ActionButton icon="icon-public icon-attachment">Attachments</ActionButton>
+					</Actions>
+					<MessageAttachments :attachments="message.attachments" />
+				</Popover>
 				<div id="reply-composer"></div>
 			</div>
 		</template>
@@ -77,6 +82,7 @@
 <script>
 import Actions from '@nextcloud/vue/dist/Components/Actions'
 import ActionButton from '@nextcloud/vue/dist/Components/ActionButton'
+import Popover from '@nextcloud/vue/dist/Components/Popover'
 import AppContentDetails from '@nextcloud/vue/dist/Components/AppContentDetails'
 import axios from '@nextcloud/axios'
 import Modal from '@nextcloud/vue/dist/Components/Modal'
@@ -107,6 +113,7 @@ export default {
 		MessageHTMLBody,
 		MessagePlainTextBody,
 		Modal,
+		Popover,
 	},
 	data() {
 		return {
@@ -286,7 +293,9 @@ export default {
 }
 
 .mail-message-body {
-	margin-bottom: 100px;
+	flex-grow: 1;
+	margin-bottom: 10px;
+	position: relative;
 }
 
 #mail-message-header {
@@ -326,13 +335,27 @@ export default {
 	}
 }
 
-#mail-content,
-.mail-message-attachments {
-	margin: 10px 38px 50px 38px;
+.v-popover > .trigger > .action-item {
+	border-radius: 22px;
+	background-color: var(--color-background-darker);
 }
 
-.mail-message-attachments {
-	margin-top: 10px;
+.attachment-popover {
+	position: sticky;
+	bottom: 12px;
+	text-align: center;
+}
+
+.tooltip-inner {
+	text-align: left;
+}
+
+#mail-content {
+	margin: 10px 38px 50px 38px;
+
+	.mail-message-body-html & {
+		margin-bottom: -44px; // accounting for the sticky attachment button
+	}
 }
 
 #mail-content iframe {
