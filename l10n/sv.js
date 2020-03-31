@@ -161,6 +161,7 @@ OC.L10N.register(
     "Junk" : "Skräp",
     "Sent" : "Skickat",
     "Trash" : "Papperskorgen",
+    "Error while sharing file" : "Fel vid delning av fil",
     "{from}\n{subject}" : "{från}\n{ämne}",
     "_%n new message \nfrom {from}_::_%n new messages \nfrom {from}_" : ["%n nytt meddelande \nfrån {from}","%n nya meddelanden \nfrån {from}"],
     "Nextcloud Mail" : "Nextcloud Mail",

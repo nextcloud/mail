@@ -166,6 +166,7 @@ OC.L10N.register(
     "Junk" : "Zaborra",
     "Sent" : "Bidalia",
     "Trash" : "Zakarrontzia",
+    "Error while sharing file" : "Errorea fitxategia partekatzean",
     "{from}\n{subject}" : "{from}\n{subject}",
     "_%n new message \nfrom {from}_::_%n new messages \nfrom {from}_" : ["Mezu berri %n \njaso duzu {from} helbidetik","%n mezu berri \njaso dituzu {from} helbidetik"],
     "Nextcloud Mail" : "Nextcloud Posta",

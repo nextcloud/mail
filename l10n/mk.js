@@ -126,6 +126,7 @@ OC.L10N.register(
     "Junk" : "Спам",
     "Sent" : "Испратени",
     "Trash" : "Корпа",
+    "Error while sharing file" : "Грешка при споделување на датотека",
     "{from}\n{subject}" : "{from}\n{subject}",
     "_%n new message \nfrom {from}_::_%n new messages \nfrom {from}_" : ["%n нова порака \nод {from}","%n нови пораки\nод {from}"],
     "Nextcloud Mail" : "Nextcloud Електронска пошта",

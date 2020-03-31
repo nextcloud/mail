@@ -166,6 +166,7 @@ OC.L10N.register(
     "Junk" : "Spam",
     "Sent" : "Odeslaná",
     "Trash" : "Koš",
+    "Error while sharing file" : "Chyba při sdílení souboru",
     "{from}\n{subject}" : "{from}\n{subject}",
     "_%n new message \nfrom {from}_::_%n new messages \nfrom {from}_" : ["%n nová zpráva\nod {from}","%n nové zprávy\nod {from}","%n nových zpráv\nod {from}","%n nové zprávy\nod {from}"],
     "Nextcloud Mail" : "Nextcloud Mail",

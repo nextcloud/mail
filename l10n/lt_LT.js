@@ -153,6 +153,7 @@ OC.L10N.register(
     "Junk" : "Šlamštas",
     "Sent" : "Išsiųsta",
     "Trash" : "Šiukšlinė",
+    "Error while sharing file" : "Klaida bendrinant failą",
     "{from}\n{subject}" : "{from}\n{subject}",
     "_%n new message \nfrom {from}_::_%n new messages \nfrom {from}_" : ["%n naujas laiškas \nnuo {from}","%n nauji laiškai \nnuo {from}","%n naujų laiškų \nnuo {from}","%n naujų laiškų \nnuo {from}"],
     "Nextcloud Mail" : "Nextcloud el. paštas",

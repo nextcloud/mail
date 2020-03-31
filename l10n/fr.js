@@ -166,6 +166,7 @@ OC.L10N.register(
     "Junk" : "Indésirables",
     "Sent" : "Envoyés",
     "Trash" : "Corbeille",
+    "Error while sharing file" : "Erreur lors du partage du fichier",
     "{from}\n{subject}" : "{from}\n{subject}",
     "_%n new message \nfrom {from}_::_%n new messages \nfrom {from}_" : ["%n nouveau message\nde {from}","%n nouveaux messages\nde {from}"],
     "Nextcloud Mail" : "Nextcloud Mail",

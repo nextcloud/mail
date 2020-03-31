@@ -161,6 +161,7 @@ OC.L10N.register(
     "Junk" : "Gereksiz",
     "Sent" : "Gönderilmiş",
     "Trash" : "Çöp Kutusu",
+    "Error while sharing file" : "Dosya paylaşılırken sorun çıktı",
     "{from}\n{subject}" : "{from}\n{subject}",
     "_%n new message \nfrom {from}_::_%n new messages \nfrom {from}_" : ["%n yeni ileti\ngönderen {from}","%n yeni ileti\ngönderen {from}"],
     "Nextcloud Mail" : "Nextcloud Posta",

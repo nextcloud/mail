@@ -159,6 +159,7 @@
     "Junk" : "垃圾邮件",
     "Sent" : "已发送",
     "Trash" : "废件箱",
+    "Error while sharing file" : "共享文件时出错",
     "{from}\n{subject}" : "{from}\n{subject}",
     "_%n new message \nfrom {from}_::_%n new messages \nfrom {from}_" : ["来自 {from} 的 %n 条新消息"],
     "Nextcloud Mail" : "Nextcloud 邮件",
