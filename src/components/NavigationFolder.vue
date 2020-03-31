@@ -28,6 +28,8 @@
 		:icon="icon"
 		:title="title"
 		:to="to"
+		:menu-open.sync="menuOpen"
+		:open.sync="folderOpen"
 		@update:menuOpen="onMenuToggle"
 	>
 		<!-- actions -->
@@ -122,6 +124,10 @@ export default {
 	},
 	data() {
 		return {
+			timeoutID: '',
+			folderOpen: false,
+			menuOpen: false,
+			loadingFolderStats: true,
 			folderStats: undefined,
 			loadingMarkAsRead: false,
 		}
@@ -155,31 +161,21 @@ export default {
 					filter: this.filter ? this.filter : undefined,
 				},
 			}
-		},
-		subFolders() {
-			return this.$store.getters.getSubfolders(this.account.id, this.folder.id)
-		},
-		statsText() {
-			if (this.folderStats && 'total' in this.folderStats && 'unread' in this.folderStats) {
-				if (this.folderStats.unread === 0) {
-					return n('mail', '{total} message', '{total} messages', this.folderStats.total, {
-						total: this.folderStats.total,
-					})
-				} else {
-					return n(
-						'mail',
-						'{unread} unread of {total}',
-						'{unread} unread of {total}',
-						this.folderStats.unread,
-						{
-							total: this.folderStats.total,
-							unread: this.folderStats.unread,
-						}
-					)
-				}
-			}
-			return t('mail', 'Loading …')
-		},
+		}
+	},
+	mounted() {
+		this.$el.ondragenter = () => {
+			//this.style.background = '#F5F5F5'
+			clearTimeout(this.timeoutID)
+			this.timeoutID = setTimeout(() => {
+				this.folderOpen = !this.folderOpen
+				this.timeoutID = ''
+			}, 800)
+		}
+		this.$el.ondragleave = () => {
+			//this.style.background = ''
+			clearTimeout(this.timeoutID)
+		}
 	},
 	methods: {
 		/**
@@ -245,6 +241,32 @@ export default {
 				.then(() => logger.info(`folder ${this.folder.id} marked as read`))
 				.catch((error) => logger.error(`could not mark folder ${this.folder.id} as read`, {error}))
 				.then(() => (this.loadingMarkAsRead = false))
+		},
+
+		subFolders() {
+			return this.$store.getters.getSubfolders(this.account.id, this.folder.id)
+		},
+
+		statsText() {
+			if (this.folderStats && 'total' in this.folderStats && 'unread' in this.folderStats) {
+				if (this.folderStats.unread === 0) {
+					return n('mail', '{total} message', '{total} messages', this.folderStats.total, {
+						total: this.folderStats.total,
+					})
+				} else {
+					return n(
+						'mail',
+						'{unread} unread of {total}',
+						'{unread} unread of {total}',
+						this.folderStats.unread,
+						{
+							total: this.folderStats.total,
+							unread: this.folderStats.unread,
+						}
+					)
+				}
+			}
+			return t('mail', 'Loading …')
 		},
 	},
 }

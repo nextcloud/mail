@@ -1,5 +1,16 @@
 <template>
-	<Content v-shortkey.once="['c']" app-name="mail" @shortkey.native="onNewMessage">
+	<Content
+		v-shortkey.once="['c']"
+		v-drag-and-drop:options="{
+			dropzoneSelector: '.icon-folder',
+			draggableSelector: '.app-content-list-item',
+			onDrop: function(e) {
+				moveMessage(e)
+			},
+		}"
+		app-name="mail"
+		@shortkey.native="onNewMessage"
+	>
 		<Navigation />
 		<MailboxMessage v-if="activeAccount" :account="activeAccount" :folder="activeFolder" />
 	</Content>
@@ -7,6 +18,7 @@
 
 <script>
 import Content from '@nextcloud/vue/dist/Components/Content'
+import { VueDraggableDirective } from 'vue-draggable'
 
 import MailboxMessage from '../components/MailboxMessage'
 import logger from '../logger'
@@ -18,6 +30,9 @@ export default {
 		Content,
 		MailboxMessage,
 		Navigation,
+	},
+	directives: {
+		dragAndDrop: VueDraggableDirective
 	},
 	computed: {
 		activeAccount() {
@@ -39,8 +54,6 @@ export default {
 			// FIXME: this assumes that there's at least one folder
 			let firstFolder = this.$store.getters.getFolders(firstAccount.id)[0]
 
-			console.debug('loading first folder of first account', firstAccount.id, firstFolder.id)
-
 			this.$router.replace({
 				name: 'folder',
 				params: {
@@ -55,7 +68,7 @@ export default {
 			})
 		} else if (this.$route.name === 'mailto') {
 			if (accounts.length === 0) {
-				console.error('cannot handle mailto:, no accounts configured')
+				Logger.error('cannot handle mailto:, no accounts configured')
 				return
 			}
 
@@ -63,8 +76,6 @@ export default {
 			let firstAccount = accounts[0]
 			// FIXME: this assumes that there's at least one folder
 			let firstFolder = this.$store.getters.getFolders(firstAccount.id)[0]
-
-			console.debug('loading composer with first account and folder', firstAccount.id, firstFolder.id)
 
 			this.$router.replace({
 				name: 'message',
@@ -84,6 +95,67 @@ export default {
 		}
 	},
 	methods: {
+		moveMessage(e) {
+
+			// We don't want to use this.activeAccount here because we want it to work in the unified inbox
+			var startAccount = e.items[0].attributes.href.baseURI.match(/message\/(\d)/)
+			var targetAccount = e.droptarget.href.match(/accounts\/(\d)/)
+
+			if (targetAccount[1] == startAccount[1]) {
+				var accountId = targetAccount[1]
+
+				// We don't want to use this.activeFolder here because we want it to work in the unified inbox
+				var startFolderId = e.items[0].attributes.href.baseURI.match(/.+-([^-]+)-\d+$/)
+				var targetFolderId = e.droptarget.href.match(/.+\/([\S]+)$/)
+
+				if (startFolderId[1] != targetFolderId[1]) {
+					var msgId = e.items[0].attributes.href.baseURI.match(/.+-([\S]+)$/)
+
+					// Find out next/previous envelope
+					let envelopes = this.$store.getters.getEnvelopes(this.$route.params.accountId, this.$route.params.folderId)
+					let currentEnv = this.$store.getters.getEnvelope(startAccount[1], startFolderId[1], msgId[1])
+					let next
+					const idx = envelopes.indexOf(currentEnv)
+					if (idx === -1) {
+					        Logger.debug('envelope to delete does not exist in envelope list')
+					        return
+					} else if (idx === 0) {
+					        next = envelopes[idx + 1]
+					} else {
+					        next = envelopes[idx - 1]
+					}
+
+					// Move message and navigate to next/previous envelope
+					this.$store.dispatch('moveMessage', {
+						accountId: accountId,
+						startFolderId: startFolderId[1],
+						targetFolderId: targetFolderId[1],
+						msgId: msgId[1],
+					}).then(() => {
+
+						if (!next) {
+						        Logger.debug('no next/previous envelope, not navigating')
+						        return
+						}
+
+						// Keep the selected account-folder combination, but navigate to a different message
+						// (it's not a bug that we don't use next.accountId and next.folderId here)
+						this.$router.push({
+						        name: 'message',
+						        params: {
+						                accountId: this.$route.params.accountId,
+						                folderId: this.$route.params.folderId,
+						                messageUid: next.uid,
+						        },
+						})
+					})
+				} else {
+					Logger.info('target folder is the same as start folder => wont try to move email')
+				}
+			} else {
+				Logger.info('Cannot move email in another mailbox')
+			}
+		},
 		onNewMessage() {
 			// FIXME: assumes that we're on the 'message' route already
 			this.$router.push({

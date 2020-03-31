@@ -26,6 +26,8 @@
 <script>
 import AppNavigationItem from '@nextcloud/vue/dist/Components/AppNavigationItem'
 
+import logger from '../logger'
+
 export default {
 	name: 'NavigationAccountExpandCollapse',
 	components: {
@@ -45,11 +47,39 @@ export default {
 			return this.account.collapsed ? t('mail', 'Show all folders') : t('mail', 'Collapse folders')
 		},
 	},
+	data() {
+		return {
+			timeoutID: '',
+			key: 'collapse-' + this.account.id,
+			classes: ['collapse-folders'],
+			text: this.account.collapsed ? t('mail', 'Show all folders') : t('mail', 'Collapse folders'),
+			action: () => this.$store.commit('toggleAccountCollapsed', this.account.id),
+		}
+	},
 	methods: {
 		toggleCollapse() {
 			this.$store.commit('toggleAccountCollapsed', this.account.id)
 		},
 	},
+	mounted() {
+		this.$el.ondragenter = () => {
+			logger.debug('drag enter on expand-collapse component')
+
+			// this.style.background = '#F5F5F5'
+			clearTimeout(this.timeoutID)
+			this.timeoutID = setTimeout(() => {
+				logger.debug('expanding folder list for drag and drop')
+
+				this.$store.commit('toggleAccountCollapsed', this.account.id)
+				this.timeoutID = undefined
+			}, 800)
+		}
+		this.$el.ondragleave = () => {
+			logger.debug('drag leave on expand-collapse component')
+
+			clearTimeout(this.timeoutID)
+		}
+	}
 }
 </script>
 
