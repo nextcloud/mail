@@ -23,28 +23,39 @@
 import moment from '@nextcloud/moment'
 import negate from 'lodash/fp/negate'
 
+import {html} from './util/text'
+
+/**
+ * @param {Text} original
+ * @param {object} from
+ * @param {Number} date
+ * @return {Text}
+ */
 export const buildReplyBody = (original, from, date) => {
 	const start = '<p></p><p></p>'
-	const body = '<br>&gt; ' + original.replace(/\n/g, '<br>&gt; ')
 
-	if (from) {
-		const dateString = moment.unix(date).format('LLL')
-		return `${start}"${from.label}" ${from.email} – ${dateString}` + body
-	} else {
-		return `${start}${body}`
+	switch (original.format) {
+		case 'plain':
+			const plainBody = '<br>&gt; ' + original.value.replace(/\n/g, '<br>&gt; ')
+
+			if (from) {
+				const dateString = moment.unix(date).format('LLL')
+				return html(`${start}"${from.label}" ${from.email} – ${dateString}` + plainBody)
+			} else {
+				return html(`${start}${plainBody}`)
+			}
+		case 'html':
+			const htmlBody = `<blockquote>${original.value}</blockquote>`
+
+			if (from) {
+				const dateString = moment.unix(date).format('LLL')
+				return html(`${start}"${from.label}" ${from.email} – ${dateString}<br>${htmlBody}`)
+			} else {
+				return html(`${start}${htmlBody}`)
+			}
 	}
-}
 
-export const buildHtmlReplyBody = (original, from, date) => {
-	const start = `<p></p><p></p>`
-	const body = `<blockquote>${original}</blockquote>`
-
-	if (from) {
-		const dateString = moment.unix(date).format('LLL')
-		return `${start}"${from.label}" ${from.email} – ${dateString}<br>${body}`
-	} else {
-		return `${start}${body}`
-	}
+	throw new Error(`can't build a reply for the format ${original.format}`)
 }
 
 const RecipientType = Object.seal({

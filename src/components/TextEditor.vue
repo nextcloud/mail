@@ -45,7 +45,6 @@ import ParagraphPlugin from '@ckeditor/ckeditor5-paragraph/src/paragraph'
 import {getLanguage} from '@nextcloud/l10n'
 
 import logger from '../logger'
-import {htmlToText} from '../util/HtmlHelper'
 
 export default {
 	name: 'TextEditor',

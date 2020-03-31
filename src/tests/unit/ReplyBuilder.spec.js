@@ -21,20 +21,21 @@
  */
 
 import {buildReplyBody, buildRecipients, buildReplySubject} from '../../ReplyBuilder'
+import {html, plain} from '../../util/text'
 
 describe('ReplyBuilder', () => {
 	it('creates a reply body without any sender', () => {
-		const body = 'Newsletter\nhello\ncheers'
-		const expectedReply = '<p></p><p></p><br>&gt; Newsletter<br>&gt; hello<br>&gt; cheers'
+		const body = plain('Newsletter\nhello\ncheers')
+		const expectedReply = html('<p></p><p></p><br>&gt; Newsletter<br>&gt; hello<br>&gt; cheers')
 
 		const replyBody = buildReplyBody(body)
 
-		expect(replyBody).to.equal(expectedReply)
+		expect(replyBody).to.deep.equal(expectedReply)
 	})
 
 	it('creates a reply body', () => {
-		const body = 'Newsletter\nhello'
-		const expectedReply = '<p></p><p></p>"Test User" test@user.ru – November 5, 2018 '
+		const body = plain('Newsletter\nhello')
+		const expectedReply = html('<p></p><p></p>"Test User" test@user.ru – November 5, 2018 ')
 
 		const replyBody = buildReplyBody(
 			body,
@@ -45,7 +46,7 @@ describe('ReplyBuilder', () => {
 			1541426237
 		)
 
-		expect(replyBody.startsWith(expectedReply)).to.be.true
+		expect(replyBody.value.startsWith(expectedReply.value)).to.be.true
 	})
 
 	let envelope
