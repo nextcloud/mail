@@ -316,20 +316,42 @@ export default {
 				this.editorPlainText = val.editorMode === 'plaintext'
 			}
 		},
+		'$route.params.messageUid'(newID) {
+			this.reset()
+		},
 	},
 	beforeMount() {
-		if (this.fromAccount) {
-			this.selectedAlias = this.aliases.find((alias) => alias.id === this.fromAccount)
-		} else {
-			this.selectedAlias = this.aliases[0]
-		}
-
-		this.bodyVal = this.bodyWithSignature(this.selectedAlias, this.bodyVal)
+		this.setAlias()
+		this.initBody()
 	},
 	mounted() {
 		this.$refs.toLabel.$el.focus()
+		// event is triggered when user clicks 'new message' in navigation
+		this.$root.$on('newMessage', () => {
+			this.draftsPromise
+				.then(() => {
+					return this.saveDraft(this.getMessageData)
+				})
+				.then(() => {
+					// wait for the draft to be saved before resetting the message content
+					this.reset()
+				})
+		})
+	},
+	beforeDestroy() {
+		this.$root.$off('newMessage')
 	},
 	methods: {
+		setAlias() {
+			if (this.fromAccount) {
+				this.selectedAlias = this.aliases.find((alias) => alias.id === this.fromAccount)
+			} else {
+				this.selectedAlias = this.aliases[0]
+			}
+		},
+		initBody() {
+			this.bodyVal = this.bodyWithSignature(this.selectedAlias, this.bodyVal)
+		},
 		recipientToRfc822(recipient) {
 			if (recipient.email === recipient.label) {
 				// From mailto or sender without proper label
@@ -363,12 +385,31 @@ export default {
 		saveDraft(data) {
 			this.savingDraft = true
 			this.draftsPromise = this.draftsPromise
-				.then((uid) => this.draft(data(uid)))
+				.then((uid) => {
+					const draftData = data(uid)
+					if (
+						!uid &&
+						!draftData.subject &&
+						!draftData.body &&
+						!draftData.cc &&
+						!draftData.bcc &&
+						!draftData.to
+					) {
+						// this might happen after a call to reset()
+						// where the text input gets reset as well
+						// and fires an input event
+						logger.debug('Nothing substantial to save, ignoring draft save')
+						this.savingDraft = false
+						return uid
+					}
+					return this.draft(draftData)
+				})
 				.catch(logger.error.bind(logger))
 				.then((uid) => {
 					this.savingDraft = false
 					return uid
 				})
+			return this.draftsPromise
 		},
 		onInputChanged() {
 			this.saveDraftDebounced(this.getMessageData)
@@ -438,6 +479,7 @@ export default {
 				})
 		},
 		reset() {
+			this.draftsPromise = Promise.resolve() // "resets" draft uid as well
 			this.selectTo = []
 			this.selectCc = []
 			this.selectBcc = []
@@ -446,6 +488,17 @@ export default {
 			this.attachments = []
 			this.errorText = undefined
 			this.state = STATES.EDITING
+			this.autocompleteRecipients = []
+			this.newRecipients = []
+
+			this.setAlias()
+			this.initBody()
+			Vue.nextTick(() => {
+				// toLabel may not be on the DOM yet
+				// (because "Message sent" is shown)
+				// so we defer the focus call
+				this.$refs.toLabel.$el.focus()
+			})
 		},
 		/**
 		 * Format aliases for the Multiselect

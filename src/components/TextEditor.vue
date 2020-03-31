@@ -98,6 +98,12 @@ export default {
 			},
 		}
 	},
+	watch: {
+		value(newVal) {
+			// needed for reset in composer
+			this.text = newVal
+		},
+	},
 	beforeMount() {
 		this.loadEditorTranslations(getLanguage())
 	},
