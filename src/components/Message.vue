@@ -61,7 +61,7 @@
 					</Modal>
 				</div>
 			</div>
-			<div class="mail-message-body">
+			<div :class="[message.hasHtmlBody ? 'mail-message-body mail-message-body-html' : 'mail-message-body']">
 				<div v-if="message.itineraries.length > 0" class="message-itinerary">
 					<Itinerary :entries="message.itineraries" :message-id="message.messageId" />
 				</div>
@@ -294,7 +294,7 @@ export default {
 
 .mail-message-body {
 	flex-grow: 1;
-	margin-bottom: 20px;
+	margin-bottom: 10px;
 	position: relative;
 }
 
@@ -337,17 +337,25 @@ export default {
 
 .v-popover > .trigger > .action-item {
 	border-radius: 22px;
-	background-color: rgba(127, 127, 127, 0.25) !important;
+	background-color: var(--color-background-darker);
 }
 
 .attachment-popover {
-	position: absolute;
-	bottom: 0;
-	right: 20px;
+	position: sticky;
+	bottom: 12px;
+	text-align: center;
 }
 
 .tooltip-inner {
 	text-align: left;
+}
+
+#mail-content {
+	margin: 10px 38px 50px 38px;
+
+	.mail-message-body-html & {
+		margin-bottom: -44px; // accounting for the sticky attachment button
+	}
 }
 
 #mail-content iframe {
