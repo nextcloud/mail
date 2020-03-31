@@ -26,7 +26,7 @@
 			{{ t('mail', 'A signature is added to the text of new messages and replies.') }}
 		</p>
 		<p>
-			<TextEditor v-model="signature" :html="true" :placeholder="t('mail', 'Signature …')" />
+			<TextEditor v-model="signature" :html="true" :placeholder="t('mail', 'Signature …')" :bus="bus" />
 		</p>
 		<p>
 			<button
@@ -48,6 +48,7 @@
 import logger from '../logger'
 import TextEditor from './TextEditor'
 import {textToSimpleHtml} from '../util/HtmlHelper'
+import Vue from 'vue'
 
 export default {
 	name: 'SignatureSettings',
@@ -72,6 +73,7 @@ export default {
 		return {
 			loading: false,
 			signature,
+			bus: new Vue(),
 		}
 	},
 	methods: {
