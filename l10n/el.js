@@ -166,6 +166,7 @@ OC.L10N.register(
     "Junk" : "Ανεπιθύμητα",
     "Sent" : "Απεσταλμένα",
     "Trash" : "Απορρίμματα",
+    "Error while sharing file" : "Σφάλμα κατά τον διαμοιρασμό αρχείου",
     "{from}\n{subject}" : "{from}\n{subject}",
     "_%n new message \nfrom {from}_::_%n new messages \nfrom {from}_" : ["%n νεό μήνυμα\nαπό {from}","%n νέα μηνύματα\nαπό {from}"],
     "Nextcloud Mail" : "Αλληλογραφία Nextcloud",

@@ -161,6 +161,7 @@ OC.L10N.register(
     "Junk" : "Neželjeno",
     "Sent" : "Poslano",
     "Trash" : "Smeće",
+    "Error while sharing file" : "Pogreška pri dijeljenju datoteke",
     "{from}\n{subject}" : "{from}\n{subject}",
     "_%n new message \nfrom {from}_::_%n new messages \nfrom {from}_" : ["%n nova poruka \nod {from}","%n novih poruka \nod {from}","%n novih poruka \nod {from}"],
     "Nextcloud Mail" : "Nextcloud Mail",

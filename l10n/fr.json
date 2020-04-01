@@ -60,6 +60,7 @@
     "Send" : "Envoyer",
     "Uploading {percent}% …" : "Envoi {percent}% …",
     "Choose a file to add as attachment" : "Choisissez un fichier à joindre au message",
+    "Choose a file to share as a link" : "Sélectionnez un fichier à partager par lien",
     "Writing mode" : "Mode d'écriture",
     "Preferred writing mode for new messages and replies." : "Mode d'écriture préféré pour les nouveaux messages et les réponses.",
     "Plain text" : "Texte brut",
