@@ -219,6 +219,7 @@ export default {
 					accountId: this.$route.params.accountId,
 					folderId: this.$route.params.folderId,
 					messageUid: 'reply',
+					filter: this.$route.params.filter ? this.$route.params.filter : undefined,
 				},
 				query: {
 					uid: this.message.uid,
@@ -232,6 +233,7 @@ export default {
 					accountId: this.$route.params.accountId,
 					folderId: this.$route.params.folderId,
 					messageUid: 'replyAll',
+					filter: this.$route.params.filter ? this.$route.params.filter : undefined,
 				},
 				query: {
 					uid: this.message.uid,
@@ -245,6 +247,7 @@ export default {
 					accountId: this.$route.params.accountId,
 					folderId: this.$route.params.folderId,
 					messageUid: 'new',
+					filter: this.$route.params.filter ? this.$route.params.filter : undefined,
 				},
 				query: {
 					uid: this.message.uid,
