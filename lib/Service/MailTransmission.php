@@ -105,7 +105,6 @@ class MailTransmission implements IMailTransmission {
 	/**
 	 * Send a new message or reply to an existing one
 	 *
-	 * @param string $userId
 	 * @param NewMessageData $messageData
 	 * @param RepliedMessageData $replyData
 	 * @param Alias|null $alias
@@ -115,8 +114,7 @@ class MailTransmission implements IMailTransmission {
 	 *
 	 * @return void
 	 */
-	public function sendMessage(string $userId,
-								NewMessageData $messageData,
+	public function sendMessage(NewMessageData $messageData,
 								RepliedMessageData $replyData = null,
 								Alias $alias = null,
 								int $draftUID = null) {
@@ -137,7 +135,7 @@ class MailTransmission implements IMailTransmission {
 		$message->setCC($messageData->getCc());
 		$message->setBcc($messageData->getBcc());
 		$message->setContent($messageData->getBody());
-		$this->handleAttachments($userId, $messageData, $message);
+		$this->handleAttachments($account->getMailAccount()->getUserId(), $messageData, $message);
 
 		$transport = $this->smtpClientFactory->create($account);
 		// build mime body

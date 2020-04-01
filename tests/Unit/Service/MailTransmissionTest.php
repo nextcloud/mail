@@ -28,6 +28,7 @@ use OC\Files\Node\File;
 use OCA\Mail\Account;
 use OCA\Mail\Contracts\IAttachmentService;
 use OCA\Mail\Db\Alias;
+use OCA\Mail\Db\MailAccount;
 use OCA\Mail\Db\MailboxMapper;
 use OCA\Mail\IMAP\IMAPClientFactory;
 use OCA\Mail\IMAP\MessageMapper;
@@ -96,8 +97,11 @@ class MailTransmissionTest extends TestCase {
 	}
 
 	public function testSendNewMessage() {
+		$mailAccount = new MailAccount();
+		$mailAccount->setUserId('testuser');
 		/** @var Account|MockObject $account */
 		$account = $this->createMock(Account::class);
+		$account->method('getMailAccount')->willReturn($mailAccount);
 		$messageData = NewMessageData::fromRequest($account, 'to@d.com', '', '', 'sub', 'bod');
 		$message = new Message();
 		$account->expects($this->once())
@@ -109,12 +113,15 @@ class MailTransmissionTest extends TestCase {
 			->with($account)
 			->willReturn($transport);
 
-		$this->transmission->sendMessage('garfield', $messageData, null);
+		$this->transmission->sendMessage($messageData, null);
 	}
 
 	public function testSendMessageFromAlias() {
+		$mailAccount = new MailAccount();
+		$mailAccount->setUserId('testuser');
 		/** @var Account|MockObject $account */
 		$account = $this->createMock(Account::class);
+		$account->method('getMailAccount')->willReturn($mailAccount);
 		$alias = new Alias();
 		$alias->setAlias('a@d.com');
 		$messageData = NewMessageData::fromRequest($account, 'to@d.com', '', '', 'sub', 'bod');
@@ -134,12 +141,15 @@ class MailTransmissionTest extends TestCase {
 			->method('setAlias')
 			->with($alias);
 
-		$this->transmission->sendMessage('garfield', $messageData, null, $alias);
+		$this->transmission->sendMessage($messageData, null, $alias);
 	}
 
 	public function testSendNewMessageWithCloudAttachments() {
+		$mailAccount = new MailAccount();
+		$mailAccount->setUserId('testuser');
 		/** @var Account|MockObject $account */
 		$account = $this->createMock(Account::class);
+		$account->method('getMailAccount')->willReturn($mailAccount);
 		$attachmenst = [
 			[
 				'fileName' => 'cat.jpg',
@@ -171,12 +181,15 @@ class MailTransmissionTest extends TestCase {
 			->with('cat.jpg')
 			->willReturn($node);
 
-		$this->transmission->sendMessage('garfield', $messageData, null);
+		$this->transmission->sendMessage($messageData, null);
 	}
 
 	public function testReplyToAnExistingMessage() {
+		$mailAccount = new MailAccount();
+		$mailAccount->setUserId('testuser');
 		/** @var Account|MockObject $account */
 		$account = $this->createMock(Account::class);
+		$account->method('getMailAccount')->willReturn($mailAccount);
 		$messageData = NewMessageData::fromRequest($account, 'to@d.com', '', '', 'sub', 'bod');
 		$folderId = 'INBOX';
 		$repliedMessageId = 321;
@@ -201,12 +214,15 @@ class MailTransmissionTest extends TestCase {
 			->with($account)
 			->willReturn($transport);
 
-		$this->transmission->sendMessage('garfield', $messageData, $replyData);
+		$this->transmission->sendMessage($messageData, $replyData);
 	}
 
 	public function testSaveDraft() {
+		$mailAccount = new MailAccount();
+		$mailAccount->setUserId('testuser');
 		/** @var Account|MockObject $account */
 		$account = $this->createMock(Account::class);
+		$account->method('getMailAccount')->willReturn($mailAccount);
 		$messageData = NewMessageData::fromRequest($account, 'to@d.com', '', '', 'sub', 'bod');
 		$message = new Message();
 		$account->expects($this->once())
