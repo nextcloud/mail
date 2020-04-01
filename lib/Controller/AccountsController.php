@@ -337,7 +337,7 @@ class AccountsController extends Controller {
 		}
 
 		try {
-			$this->mailTransmission->sendMessage($this->currentUserId, $messageData, $repliedMessageData, $alias, $draftUID);
+			$this->mailTransmission->sendMessage($messageData, $repliedMessageData, $alias, $draftUID);
 			return new JSONResponse();
 		} catch (ServiceException $ex) {
 			$this->logger->error('Sending mail failed: ' . $ex->getMessage());

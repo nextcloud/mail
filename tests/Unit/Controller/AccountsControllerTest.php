@@ -389,7 +389,7 @@ class AccountsControllerTest extends TestCase {
 		$messageData = NewMessageData::fromRequest($account, 'to@d.com', '', '', 'sub', 'bod', []);
 		$this->transmission->expects($this->once())
 			->method('sendMessage')
-			->with($this->userId, $messageData, null, null, null);
+			->with($messageData, null, null, null);
 		$expected = new JSONResponse();
 
 		$resp = $this->controller->send(13, 'sub', 'bod', 'to@d.com', '', '');
@@ -405,7 +405,7 @@ class AccountsControllerTest extends TestCase {
 		$messageData = NewMessageData::fromRequest($account, 'to@d.com', '', '', 'sub', 'bod', []);
 		$this->transmission->expects($this->once())
 			->method('sendMessage')
-			->with($this->userId, $messageData, null, null, null)
+			->with($messageData, null, null, null)
 			->willThrowException(new Horde_Exception('error'));
 		$this->expectException(Horde_Exception::class);
 
@@ -423,7 +423,7 @@ class AccountsControllerTest extends TestCase {
 		$replyData = new RepliedMessageData($account, $folderId, $messageId);
 		$this->transmission->expects($this->once())
 			->method('sendMessage')
-			->with($this->userId, $messageData, $replyData, null, null);
+			->with($messageData, $replyData, null, null);
 		$expected = new JSONResponse();
 
 		$resp = $this->controller->send(

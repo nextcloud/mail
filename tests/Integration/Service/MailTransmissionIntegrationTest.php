@@ -104,7 +104,7 @@ class MailTransmissionIntegrationTest extends TestCase {
 	public function testSendMail() {
 		$message = NewMessageData::fromRequest($this->account, 'recipient@domain.com', null, null, 'greetings', 'hello there', []);
 
-		$this->transmission->sendMessage('ferdinand', $message, null);
+		$this->transmission->sendMessage($message, null);
 
 		$this->addToAssertionCount(1);
 	}
@@ -114,7 +114,7 @@ class MailTransmissionIntegrationTest extends TestCase {
 			'name' => 'text.txt',
 			'tmp_name' => dirname(__FILE__) . '/../../data/mail-message-123.txt',
 		]);
-		$this->attachmentService->addFile('gerald', $file);
+		$this->attachmentService->addFile($this->user->getUID(), $file);
 		$message = NewMessageData::fromRequest($this->account, 'recipient@domain.com', null, null, 'greetings', 'hello there', [
 			[
 				'isLocal' => 'true',
@@ -122,7 +122,7 @@ class MailTransmissionIntegrationTest extends TestCase {
 			],
 		]);
 
-		$this->transmission->sendMessage('gerald', $message, null);
+		$this->transmission->sendMessage($message, null);
 
 		$this->addToAssertionCount(1);
 	}
@@ -137,7 +137,7 @@ class MailTransmissionIntegrationTest extends TestCase {
 			],
 		]);
 
-		$this->transmission->sendMessage($this->user->getUID(), $message, null);
+		$this->transmission->sendMessage($message, null);
 
 		$this->addToAssertionCount(1);
 	}
@@ -153,7 +153,7 @@ class MailTransmissionIntegrationTest extends TestCase {
 
 		$message = NewMessageData::fromRequest($this->account, 'recipient@domain.com', null, null, 'greetings', 'hello there', []);
 		$reply = new RepliedMessageData($this->account, $inbox, $originalUID);
-		$this->transmission->sendMessage('ferdinand', $message, $reply);
+		$this->transmission->sendMessage($message, $reply);
 
 		$this->assertMailboxExists('Sent');
 		$this->assertMessageCount(1, 'Sent');
@@ -170,7 +170,7 @@ class MailTransmissionIntegrationTest extends TestCase {
 
 		$message = NewMessageData::fromRequest($this->account, 'recipient@domain.com', null, null, '', 'hello there', []);
 		$reply = new RepliedMessageData($this->account, $inbox, $originalUID);
-		$uid = $this->transmission->sendMessage('ferdinand', $message, $reply);
+		$uid = $this->transmission->sendMessage($message, $reply);
 
 		$this->assertMailboxExists('Sent');
 		$this->assertMessageCount(1, 'Sent');
@@ -187,7 +187,7 @@ class MailTransmissionIntegrationTest extends TestCase {
 
 		$message = NewMessageData::fromRequest($this->account, 'recipient@domain.com', null, null, 'Re: reply test', 'hello there', []);
 		$reply = new RepliedMessageData($this->account, $inbox, $originalUID);
-		$this->transmission->sendMessage('ferdinand', $message, $reply);
+		$this->transmission->sendMessage($message, $reply);
 
 		$this->assertMailboxExists('Sent');
 		$this->assertMessageCount(1, 'Sent');

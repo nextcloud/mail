@@ -40,8 +40,7 @@ interface IMailTransmission {
 	 *
 	 * @throws ServiceException
 	 */
-	public function sendMessage(string $userId,
-								NewMessageData $message,
+	public function sendMessage(NewMessageData $message,
 								RepliedMessageData $reply = null,
 								Alias $alias = null,
 								int $draftUID = null);
