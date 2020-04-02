@@ -18,7 +18,8 @@
 			:body="composerData.body"
 			:draft="saveDraft"
 			:send="sendMessage"
-			:reply-to="original"
+			:reply-to="composerData.replyTo"
+			:forward-from="composerData.forwardFrom"
 		/>
 	</AppContentDetails>
 </template>
@@ -76,32 +77,43 @@ export default {
 				const message = this.original
 				logger.debug('forwarding or replying to message', {message})
 
-				let subject = ''
-				let replyRecipients = {}
 				if (this.$route.params.messageUid === 'reply') {
 					logger.debug('simple reply')
-					subject = buildReplySubject(message.subject)
-					replyRecipients.to = message.from
+
+					return {
+						accountId: message.accountId,
+						to: message.from,
+						cc: [],
+						subject: buildReplySubject(message.subject),
+						body: this.originalBody,
+						replyTo: message,
+					}
 				} else if (this.$route.params.messageUid === 'replyAll') {
-					logger.debug('replying to all')
-					logger.debug('replying to all: original', {original: this.original})
-					subject = buildReplySubject(message.subject)
+					logger.debug('replying to all', {original: this.original})
 					const account = this.$store.getters.getAccount(message.accountId)
-					replyRecipients = buildReplyRecipients(message, {
+					const recipients = buildReplyRecipients(message, {
 						email: account.emailAddress,
 						label: account.name,
 					})
+
+					return {
+						accountId: message.accountId,
+						to: recipients.to,
+						cc: recipients.cc,
+						subject: buildReplySubject(message.subject),
+						body: this.originalBody,
+						replyTo: message,
+					}
 				} else {
 					// forward
-					subject = buildForwardSubject(message.subject)
-				}
-
-				return {
-					accountId: message.accountId,
-					to: replyRecipients.to,
-					cc: replyRecipients.cc,
-					subject: subject,
-					body: this.getForwardReplyBody(),
+					return {
+						accountId: message.accountId,
+						to: [],
+						cc: [],
+						subject: buildForwardSubject(message.subject),
+						body: this.originalBody,
+						forwardFrom: message,
+					}
 				}
 			} else {
 				// New or mailto: message
@@ -231,9 +243,6 @@ export default {
 			} finally {
 				this.loading = false
 			}
-		},
-		getForwardReplyBody() {
-			return buildReplyBody(this.originalBody, this.original.from[0], this.original.dateInt)
 		},
 		saveDraft(data) {
 			if (data.draftUID === undefined && this.draft) {
