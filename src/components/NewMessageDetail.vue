@@ -18,6 +18,7 @@
 			:body="composerData.body"
 			:draft="saveDraft"
 			:send="sendMessage"
+			:reply-to="original"
 		/>
 	</AppContentDetails>
 </template>
@@ -38,7 +39,7 @@ import Error from './Error'
 import {getRandomMessageErrorMessage} from '../util/ErrorMessageFactory'
 import {detect, html, plain, toPlain} from '../util/text'
 import Loading from './Loading'
-import Logger from '../logger'
+import logger from '../logger'
 import {saveDraft, sendMessage} from '../service/MessageService'
 
 export default {
@@ -62,7 +63,7 @@ export default {
 	computed: {
 		composerData() {
 			if (this.draft !== undefined) {
-				Logger.info('todo: handle draft data', {draft: this.draft})
+				logger.info('todo: handle draft data', {draft: this.draft})
 				return {
 					to: this.draft.to,
 					cc: this.draft.cc,
@@ -73,17 +74,17 @@ export default {
 			} else if (this.$route.query.uid !== undefined) {
 				// Forward or reply to a message
 				const message = this.original
-				Logger.debug('forwarding or replying to message', {message})
+				logger.debug('forwarding or replying to message', {message})
 
 				let subject = ''
 				let replyRecipients = {}
 				if (this.$route.params.messageUid === 'reply') {
-					Logger.debug('simple reply')
+					logger.debug('simple reply')
 					subject = buildReplySubject(message.subject)
 					replyRecipients.to = message.from
 				} else if (this.$route.params.messageUid === 'replyAll') {
-					Logger.debug('replying to all')
-					Logger.debug('replying to all: original', {original: this.original})
+					logger.debug('replying to all')
+					logger.debug('replying to all: original', {original: this.original})
 					subject = buildReplySubject(message.subject)
 					const account = this.$store.getters.getAccount(message.accountId)
 					replyRecipients = buildReplyRecipients(message, {
@@ -127,7 +128,7 @@ export default {
 			// in that case we don't really start a new draft but just keep the
 			// URL consistent, hence not loading anything
 			if (this.draft && to.name === 'message' && to.params.draftUid === this.draft.uid) {
-				Logger.debug('detected navigation to current (new) draft UID, not reloading')
+				logger.debug('detected navigation to current (new) draft UID, not reloading')
 				return
 			}
 
@@ -167,14 +168,14 @@ export default {
 				.dispatch('fetchMessage', draftUid)
 				.then((draft) => {
 					if (draft.uid !== this.$route.params.draftUid) {
-						Logger.debug("User navigated away, loaded draft won't be shown")
+						logger.debug("User navigated away, loaded draft won't be shown")
 						return
 					}
 
 					this.draft = draft
 
 					if (this.draft === undefined) {
-						Logger.info('draft could not be found', {draftUid})
+						logger.info('draft could not be found', {draftUid})
 						this.errorMessage = getRandomMessageErrorMessage()
 						this.loading = false
 						return
@@ -183,7 +184,7 @@ export default {
 					this.loading = false
 				})
 				.catch((error) => {
-					Logger.error('could not load draft ' + draftUid, {error})
+					logger.error('could not load draft ' + draftUid, {error})
 					if (error.isError) {
 						this.errorMessage = t('mail', 'Could not load your draft')
 						this.error = error
@@ -199,16 +200,16 @@ export default {
 			try {
 				const message = await this.$store.dispatch('fetchMessage', uid)
 				if (message.uid !== this.$route.query.uid) {
-					Logger.debug("User navigated away, loaded original message won't be used")
+					logger.debug("User navigated away, loaded original message won't be used")
 					return
 				}
 
-				Logger.debug('original message fetched', {message})
+				logger.debug('original message fetched', {message})
 				this.original = message
 
 				let body = plain(message.body || '')
 				if (message.hasHtmlBody) {
-					Logger.debug('original message has HTML body')
+					logger.debug('original message has HTML body')
 					const resp = await Axios.get(
 						generateUrl('/apps/mail/api/accounts/{accountId}/folders/{folderId}/messages/{id}/html', {
 							accountId: message.accountId,
@@ -221,7 +222,7 @@ export default {
 				}
 				this.originalBody = body
 			} catch (error) {
-				Logger.error('could not load original message ' + uid, {error})
+				logger.error('could not load original message ' + uid, {error})
 				if (error.isError) {
 					this.errorMessage = t('mail', 'Could not load original message')
 					this.error = error
@@ -236,7 +237,7 @@ export default {
 		},
 		saveDraft(data) {
 			if (data.draftUID === undefined && this.draft) {
-				Logger.debug('draft data does not have a draftUID, adding one')
+				logger.debug('draft data does not have a draftUID, adding one')
 				data.draftUID = this.draft.id
 			}
 			const dataForServer = {
@@ -248,7 +249,7 @@ export default {
 					return uid
 				}
 
-				Logger.info('replacing draft ' + this.draft.uid + ' with ' + uid)
+				logger.info('replacing draft ' + this.draft.uid + ' with ' + uid)
 				const update = {
 					draft: this.draft,
 					uid,
@@ -271,6 +272,7 @@ export default {
 			})
 		},
 		sendMessage(data) {
+			logger.debug('sending message', {data})
 			const dataForServer = {
 				...data,
 				body: data.isHtml ? data.body.value : toPlain(data.body).value,
