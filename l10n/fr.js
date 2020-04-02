@@ -51,6 +51,7 @@ OC.L10N.register(
     "Draft saved" : "Brouillon sauvegardé",
     "Upload attachment" : "Téléverser les pièces jointes",
     "Add attachment from Files" : "Ajouter des pièces jointes depuis Fichiers",
+    "Add attachment link from Files" : "Ajouter un lien de pièce jointe à partir des fichiers",
     "Enable formatting" : "Activer le formatage",
     "Uploading attachments …" : "Téléversement des pièces jointes en cours …",
     "Sending …" : "Envoi…",
