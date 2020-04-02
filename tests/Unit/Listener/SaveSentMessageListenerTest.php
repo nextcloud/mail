@@ -132,7 +132,7 @@ class SaveSentMessageListenerTest extends TestCase {
 			->with(
 				$this->anything(),
 				$this->equalTo([
-					'message' => 'Could not create sent mailbox',
+					'message' => 'Could not create sent mailbox: ',
 					'level' => ILogger::WARN,
 				])
 			);
