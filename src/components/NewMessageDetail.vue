@@ -18,7 +18,6 @@
 			:body="composerData.body"
 			:draft="saveDraft"
 			:send="sendMessage"
-			:is-plain-text="composerData.isPlainText"
 		/>
 	</AppContentDetails>
 </template>
@@ -30,14 +29,14 @@ import {generateUrl} from '@nextcloud/router'
 
 import {
 	buildForwardSubject,
-	buildHtmlReplyBody,
 	buildReplyBody,
 	buildReplySubject,
 	buildRecipients as buildReplyRecipients,
 } from '../ReplyBuilder'
 import Composer from './Composer'
-import {getRandomMessageErrorMessage} from '../util/ErrorMessageFactory'
 import Error from './Error'
+import {getRandomMessageErrorMessage} from '../util/ErrorMessageFactory'
+import {detect, html, plain, toPlain} from '../util/text'
 import Loading from './Loading'
 import Logger from '../logger'
 import {saveDraft, sendMessage} from '../service/MessageService'
@@ -69,8 +68,7 @@ export default {
 					cc: this.draft.cc,
 					bcc: this.draft.bcc,
 					subject: this.draft.subject,
-					body: this.draft.body,
-					isPlainText: !this.draft.hasHtmlBody,
+					body: this.draft.hasHtmlBody ? html(this.draft.body) : plain(this.draft.body),
 				}
 			} else if (this.$route.query.uid !== undefined) {
 				// Forward or reply to a message
@@ -118,7 +116,7 @@ export default {
 					to: this.stringToRecipients(this.$route.query.to),
 					cc: this.stringToRecipients(this.$route.query.cc),
 					subject: this.$route.query.subject || '',
-					body: this.$route.query.body || '',
+					body: this.$route.query.body ? detect(this.$route.query.body) : html(''),
 				}
 			}
 		},
@@ -193,53 +191,47 @@ export default {
 					}
 				})
 		},
-		fetchOriginalMessage(uid) {
+		async fetchOriginalMessage(uid) {
 			this.loading = true
 			this.error = undefined
 			this.errorMessage = ''
 
-			this.$store
-				.dispatch('fetchMessage', uid)
-				.then((message) => {
-					if (message.uid !== this.$route.query.uid) {
-						Logger.debug("User navigated away, loaded original message won't be used")
-						return
-					}
+			try {
+				const message = await this.$store.dispatch('fetchMessage', uid)
+				if (message.uid !== this.$route.query.uid) {
+					Logger.debug("User navigated away, loaded original message won't be used")
+					return
+				}
 
-					Logger.debug('original message fetched', {message})
-					this.original = message
+				Logger.debug('original message fetched', {message})
+				this.original = message
 
-					if (message.hasHtmlBody) {
-						Logger.debug('original message has HTML body')
-						return Axios.get(
-							generateUrl('/apps/mail/api/accounts/{accountId}/folders/{folderId}/messages/{id}/html', {
-								accountId: message.accountId,
-								folderId: message.folderId,
-								id: message.id,
-							})
-						).then((resp) => resp.data)
-					} else {
-						return message.body
-					}
-				})
-				.then((body) => {
-					this.originalBody = body
+				let body = plain(message.body || '')
+				if (message.hasHtmlBody) {
+					Logger.debug('original message has HTML body')
+					const resp = await Axios.get(
+						generateUrl('/apps/mail/api/accounts/{accountId}/folders/{folderId}/messages/{id}/html', {
+							accountId: message.accountId,
+							folderId: message.folderId,
+							id: message.id,
+						})
+					)
 
+					body = html(resp.data)
+				}
+				this.originalBody = body
+			} catch (error) {
+				Logger.error('could not load original message ' + uid, {error})
+				if (error.isError) {
+					this.errorMessage = t('mail', 'Could not load original message')
+					this.error = error
 					this.loading = false
-				})
-				.catch((error) => {
-					Logger.error('could not load original message ' + uid, {error})
-					if (error.isError) {
-						this.errorMessage = t('mail', 'Could not load original message')
-						this.error = error
-						this.loading = false
-					}
-				})
+				}
+			} finally {
+				this.loading = false
+			}
 		},
 		getForwardReplyBody() {
-			if (this.original.hasHtmlBody) {
-				return buildHtmlReplyBody(this.originalBody, this.original.from[0], this.original.dateInt)
-			}
 			return buildReplyBody(this.originalBody, this.original.from[0], this.original.dateInt)
 		},
 		saveDraft(data) {
@@ -247,7 +239,11 @@ export default {
 				Logger.debug('draft data does not have a draftUID, adding one')
 				data.draftUID = this.draft.id
 			}
-			return saveDraft(data.account, data).then(({uid}) => {
+			const dataForServer = {
+				...data,
+				body: data.isHtml ? data.body.value : toPlain(data.body).value,
+			}
+			return saveDraft(data.account, dataForServer).then(({uid}) => {
 				if (this.draft === undefined) {
 					return uid
 				}
@@ -275,7 +271,11 @@ export default {
 			})
 		},
 		sendMessage(data) {
-			return sendMessage(data.account, data)
+			const dataForServer = {
+				...data,
+				body: data.isHtml ? data.body.value : toPlain(data.body).value,
+			}
+			return sendMessage(data.account, dataForServer)
 		},
 	},
 }

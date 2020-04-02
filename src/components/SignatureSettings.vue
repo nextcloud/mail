@@ -47,7 +47,7 @@
 <script>
 import logger from '../logger'
 import TextEditor from './TextEditor'
-import {textToSimpleHtml} from '../util/HtmlHelper'
+import {detect, html, toHtml} from '../util/text'
 import Vue from 'vue'
 
 export default {
@@ -62,17 +62,9 @@ export default {
 		},
 	},
 	data() {
-		let signature = this.account.signature || ''
-
-		if ((signature.includes('\n') || signature.includes('\r')) && !signature.includes('>')) {
-			// Looks like a plain text signature -> convert to HTML
-			signature = textToSimpleHtml(signature)
-			logger.info('Converted plain text signature to HTML')
-		}
-
 		return {
 			loading: false,
-			signature,
+			signature: this.account.signature ? toHtml(detect(this.account.signature)) : html(''),
 			bus: new Vue(),
 		}
 	},

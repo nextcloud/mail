@@ -121,12 +121,12 @@ export function fetchMessage(accountId, folderId, id) {
 		})
 }
 
-export function saveDraft(accountId, data) {
+export async function saveDraft(accountId, data) {
 	const url = generateUrl('/apps/mail/api/accounts/{accountId}/draft', {
 		accountId,
 	})
 
-	return axios.post(url, data).then((resp) => resp.data)
+	return (await axios.post(url, data)).data
 }
 
 export function sendMessage(accountId, data) {

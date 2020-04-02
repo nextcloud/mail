@@ -199,7 +199,7 @@ import Vue from 'vue'
 
 import ComposerAttachments from './ComposerAttachments'
 import {findRecipient} from '../service/AutocompleteService'
-import {htmlToText, textToSimpleHtml} from '../util/HtmlHelper'
+import {detect, html, toHtml} from '../util/text'
 import Loading from './Loading'
 import logger from '../logger'
 import TextEditor from './TextEditor'
@@ -249,8 +249,8 @@ export default {
 			default: '',
 		},
 		body: {
-			type: String,
-			default: '',
+			type: Object,
+			default: () => html(''),
 		},
 		draft: {
 			type: Function,
@@ -260,10 +260,6 @@ export default {
 			type: Function,
 			required: true,
 		},
-		isPlainText: {
-			type: Boolean,
-			default: true,
-		},
 	},
 	data() {
 		return {
@@ -272,21 +268,21 @@ export default {
 			autocompleteRecipients: this.to.concat(this.cc).concat(this.bcc),
 			newRecipients: [],
 			subjectVal: this.subject,
-			bodyVal: this.isPlainText ? textToSimpleHtml(this.body) : this.body,
+			bodyVal: toHtml(this.body).value,
 			attachments: [],
 			noReply: this.to.some((to) => to.email.startsWith('noreply@') || to.email.startsWith('no-reply@')),
 			submitButtonTitle: t('mail', 'Send'),
 			draftsPromise: Promise.resolve(),
 			attachmentsPromise: Promise.resolve(),
 			savingDraft: undefined,
-			saveDraftDebounced: debounce(700)(this.saveDraft),
+			saveDraftDebounced: debounce(700, this.saveDraft),
 			state: STATES.EDITING,
 			errorText: undefined,
 			STATES,
 			selectTo: this.to,
 			selectCc: this.cc,
 			selectBcc: this.bcc,
-			editorPlainText: this.isPlainText,
+			editorPlainText: false,
 			bus: new Vue(),
 		}
 	},
@@ -301,9 +297,6 @@ export default {
 		},
 		isReply() {
 			return this.to.length > 0
-		},
-		noSubject() {
-			return this.subjectVal === '' && this.bodyVal !== ''
 		},
 		canSend() {
 			return this.selectTo.length > 0 || this.selectCc.length > 0 || this.selectBcc.length > 0
@@ -350,7 +343,7 @@ export default {
 			}
 		},
 		initBody() {
-			this.bodyVal = this.bodyWithSignature(this.selectedAlias, this.bodyVal)
+			this.bodyVal = this.bodyWithSignature(this.selectedAlias, this.bodyVal).value
 		},
 		recipientToRfc822(recipient) {
 			if (recipient.email === recipient.label) {
@@ -375,7 +368,7 @@ export default {
 				bcc: this.selectBcc.map(this.recipientToRfc822).join(', '),
 				draftUID: uid,
 				subject: this.subjectVal,
-				body: this.editorPlainText ? htmlToText(this.bodyVal) : this.bodyVal,
+				body: html(this.bodyVal),
 				attachments: this.attachments,
 				folderId: this.replyTo ? this.replyTo.folderId : undefined,
 				messageId: this.replyTo ? this.replyTo.messageId : undefined,
@@ -513,10 +506,12 @@ export default {
 		},
 		bodyWithSignature(alias, body) {
 			if (!alias || !alias.signature) {
-				return body
+				return html(body)
 			}
 
-			return `${body} <br>--<br> ${textToSimpleHtml(alias.signature)}`
+			return html(body)
+				.append('<br>--<br>')
+				.append(toHtml(detect(alias.signature)))
 		},
 	},
 }
