@@ -203,6 +203,7 @@ import {detect, html, toHtml} from '../util/text'
 import Loading from './Loading'
 import logger from '../logger'
 import TextEditor from './TextEditor'
+import {buildReplyBody} from '../ReplyBuilder'
 
 const debouncedSearch = debouncePromise(findRecipient, 500)
 
@@ -262,6 +263,12 @@ export default {
 		},
 		replyTo: {
 			type: Object,
+			required: false,
+			default: () => undefined,
+		},
+		forwardFrom: {
+			type: Object,
+			required: false,
 			default: () => undefined,
 		},
 	},
@@ -347,7 +354,19 @@ export default {
 			}
 		},
 		initBody() {
-			this.bodyVal = this.bodyWithSignature(this.selectedAlias, this.bodyVal).value
+			if (this.replyTo) {
+				this.bodyVal = this.bodyWithSignature(
+					this.selectedAlias,
+					buildReplyBody(this.body, this.replyTo.from[0], this.replyTo.dateInt).value
+				).value
+			} else if (this.forwardFrom) {
+				this.bodyVal = this.bodyWithSignature(
+					this.selectedAlias,
+					buildReplyBody(this.originalBody, this.original.from[0], this.original.dateInt).value
+				).value
+			} else {
+				this.bodyVal = this.bodyWithSignature(this.selectedAlias, this.bodyVal).value
+			}
 		},
 		recipientToRfc822(recipient) {
 			if (recipient.email === recipient.label) {
@@ -375,7 +394,7 @@ export default {
 				body: html(this.bodyVal),
 				attachments: this.attachments,
 				folderId: this.replyTo ? this.replyTo.folderId : undefined,
-				messageId: this.replyTo ? this.replyTo.messageId : undefined,
+				messageId: this.replyTo ? this.replyTo.id : undefined,
 				isHtml: !this.editorPlainText,
 			}
 		},
@@ -433,12 +452,6 @@ export default {
 				.then(() => uploaded)
 				.catch((error) => logger.error('could not upload attachments', {error}))
 				.then(() => logger.debug('attachments uploaded'))
-		},
-		onBodyKeyPress(event) {
-			// CTRL+Enter sends the message
-			if (event.keyCode === 13 && event.ctrlKey) {
-				return this.onSend()
-			}
 		},
 		onNewToAddr(addr) {
 			this.onNewAddr(addr, this.selectTo)
