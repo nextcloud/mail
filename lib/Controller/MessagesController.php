@@ -318,7 +318,7 @@ class MessagesController extends Controller {
 					base64_decode($folderId),
 					$messageId,
 					true
-				)->getHtmlBody($accountId, $folderId, $messageId)
+				)->getHtmlBody($accountId, base64_decode($folderId), $messageId)
 			);
 
 			// Harden the default security policy
