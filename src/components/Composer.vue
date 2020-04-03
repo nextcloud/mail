@@ -260,6 +260,10 @@ export default {
 			type: Function,
 			required: true,
 		},
+		replyTo: {
+			type: Object,
+			default: () => undefined,
+		},
 	},
 	data() {
 		return {
@@ -296,7 +300,7 @@ export default {
 				.map((recipient) => ({...recipient, label: recipient.label || recipient.email}))
 		},
 		isReply() {
-			return this.to.length > 0
+			return this.replyTo !== undefined
 		},
 		canSend() {
 			return this.selectTo.length > 0 || this.selectCc.length > 0 || this.selectBcc.length > 0
