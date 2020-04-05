@@ -155,6 +155,7 @@ OC.L10N.register(
     "Junk" : "Neželena pošta",
     "Sent" : "Poslano",
     "Trash" : "Smeti",
+    "Error while sharing file" : "Prišlo je do napake med souporabo datoteke",
     "{from}\n{subject}" : "{from}\n{subject}",
     "_%n new message \nfrom {from}_::_%n new messages \nfrom {from}_" : ["%n novo sporočilo \npošilja {from}","%n novi sporočili \npošilja {from}","%n nova sporočila \npošilja {from}","%n novih sporočil \npošilja {from}"],
     "Nextcloud Mail" : "Pošta Nextcloud Mail",

@@ -12,7 +12,7 @@ OC.L10N.register(
     "Name" : "Izena",
     "Mail Address" : "Helbide elektronikoa",
     "Password" : "Pasahitza",
-    "Manual" : "Eskuliburua",
+    "Manual" : "Eskuz",
     "IMAP Settings" : "IMAP ezarpenak",
     "IMAP Host" : "IMAP ostalaria",
     "IMAP Security" : "IMAP segurtasuna",
