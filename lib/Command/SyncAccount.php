@@ -24,9 +24,9 @@
 namespace OCA\Mail\Command;
 
 use OCA\Mail\Account;
-use OCA\Mail\Db\MailboxMapper;
 use OCA\Mail\Exception\IncompleteSyncException;
 use OCA\Mail\Exception\ServiceException;
+use OCA\Mail\IMAP\MailboxSync;
 use OCA\Mail\Service\AccountService;
 use OCA\Mail\Service\Sync\ImapToDbSynchronizer;
 use Symfony\Component\Console\Command\Command;
@@ -34,6 +34,7 @@ use Symfony\Component\Console\Input\InputArgument;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Input\InputOption;
 use Symfony\Component\Console\Output\OutputInterface;
+use function memory_get_peak_usage;
 
 class SyncAccount extends Command {
 
@@ -43,20 +44,20 @@ class SyncAccount extends Command {
 	/** @var AccountService */
 	private $accountService;
 
-	/** @var MailboxMapper */
-	private $mailboxMapper;
+	/** @var MailboxSync */
+	private $mailboxSync;
 
 	/** @var ImapToDbSynchronizer */
 	private $syncService;
 
 	public function __construct(AccountService $service,
-								MailboxMapper $mailboxMapper,
-								ImapToDbSynchronizer $syncService) {
+								MailboxSync $mailboxSync,
+								ImapToDbSynchronizer $messageSync) {
 		parent::__construct();
 
 		$this->accountService = $service;
-		$this->mailboxMapper = $mailboxMapper;
-		$this->syncService = $syncService;
+		$this->mailboxSync = $mailboxSync;
+		$this->syncService = $messageSync;
 	}
 
 	/**
@@ -79,10 +80,14 @@ class SyncAccount extends Command {
 		$account = $this->accountService->findById($accountId);
 
 		$this->sync($account, $force, $output);
+
+		$mbs = (int)(memory_get_peak_usage() / 1024 / 1024);
+		$output->writeln('<info>' . $mbs . 'MB of memory used</info>');
 	}
 
 	private function sync(Account $account, bool $force, OutputInterface $output) {
 		try {
+			$this->mailboxSync->sync($account, $force);
 			$this->syncService->syncAccount($account, $force);
 		} catch (ServiceException $e) {
 			if (!($e->getPrevious() instanceof IncompleteSyncException)) {

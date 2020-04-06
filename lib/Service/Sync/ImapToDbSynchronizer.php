@@ -170,21 +170,21 @@ class ImapToDbSynchronizer {
 		$highestKnownUid = $this->dbMapper->findHighestUid($mailbox);
 		$client = $this->clientFactory->getClient($account);
 		try {
-			$imapMessages = $this->imapMapper->findAll($client, $mailbox, $highestKnownUid, self::MAX_NEW_MESSAGES);
+			$imapMessages = $this->imapMapper->findAll($client, $mailbox, self::MAX_NEW_MESSAGES, $highestKnownUid);
 			$perf->step('fetch all messages from IMAP');
 		} catch (Horde_Imap_Client_Exception $e) {
 			throw new ServiceException('Can not get messages from mailbox ' . $mailbox->getName() . ': ' . $e->getMessage(), 0, $e);
 		}
 
-		foreach (array_chunk($imapMessages, 500) as $chunk) {
+		foreach (array_chunk($imapMessages['messages'], 500) as $chunk) {
 			$this->dbMapper->insertBulk(...array_map(function (IMAPMessage $imapMessage) use ($mailbox) {
 				return $imapMessage->toDbMessage($mailbox->getId());
 			}, $chunk));
 		}
 		$perf->step('persist messages in database');
 
-		if (count($imapMessages) >= self::MAX_NEW_MESSAGES) {
-			// We need more attempts to fill the cache
+		if (!$imapMessages['all']) {
+			// We might need more attempts to fill the cache
 			$perf->end();
 
 			throw new IncompleteSyncException();
