@@ -601,7 +601,6 @@ export default {
 	width: 100%;
 	margin: 0;
 	padding: 12px;
-	padding-top: 0;
 	border: none !important;
 	outline: none !important;
 	box-shadow: none !important;
