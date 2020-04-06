@@ -25,22 +25,18 @@
 		<p class="settings-hint">
 			{{ t('mail', 'A signature is added to the text of new messages and replies.') }}
 		</p>
-		<p>
-			<TextEditor v-model="signature" :html="true" :placeholder="t('mail', 'Signature …')" :bus="bus" />
-		</p>
-		<p>
-			<button
-				class="primary"
-				:class="loading ? 'icon-loading-small-dark' : 'icon-checkmark-white'"
-				:disabled="loading"
-				@click="saveSignature"
-			>
-				{{ t('mail', 'Save signature') }}
-			</button>
-			<button v-if="signature" class="button-text" @click="deleteSignature">
-				{{ t('mail', 'Delete') }}
-			</button>
-		</p>
+		<TextEditor v-model="signature" :html="true" :placeholder="t('mail', 'Signature …')" :bus="bus" />
+		<button
+			class="primary"
+			:class="loading ? 'icon-loading-small-dark' : 'icon-checkmark-white'"
+			:disabled="loading"
+			@click="saveSignature"
+		>
+			{{ t('mail', 'Save signature') }}
+		</button>
+		<button v-if="signature" class="button-text" @click="deleteSignature">
+			{{ t('mail', 'Delete') }}
+		</button>
 	</div>
 </template>
 
@@ -109,12 +105,13 @@ export default {
 	color: var(--color-text-maxcontrast);
 }
 
-textarea {
-	display: block;
+.ck.ck-editor__editable_inline {
 	width: 400px;
-	max-width: 85vw;
+	max-width: 78vw;
 	height: 100px;
-	resize: none;
+	border-radius: var(--border-radius) !important;
+	border: 1px solid var(--color-border) !important;
+	box-shadow: none !important;
 }
 
 .primary {
