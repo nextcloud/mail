@@ -199,7 +199,7 @@ import Vue from 'vue'
 
 import ComposerAttachments from './ComposerAttachments'
 import {findRecipient} from '../service/AutocompleteService'
-import {detect, html, toHtml} from '../util/text'
+import {detect, html, toHtml, toPlain} from '../util/text'
 import Loading from './Loading'
 import logger from '../logger'
 import TextEditor from './TextEditor'
@@ -293,7 +293,6 @@ export default {
 			selectTo: this.to,
 			selectCc: this.cc,
 			selectBcc: this.bcc,
-			editorPlainText: false,
 			bus: new Vue(),
 		}
 	},
@@ -312,14 +311,14 @@ export default {
 		canSend() {
 			return this.selectTo.length > 0 || this.selectCc.length > 0 || this.selectBcc.length > 0
 		},
+		editorPlainText() {
+			if (this.selectedAlias) {
+				return this.selectedAlias.editorMode === 'plaintext'
+			}
+			return false
+		},
 	},
 	watch: {
-		selectedAlias(val) {
-			if (val) {
-				// TODO: warn user before formatting is lost?
-				this.editorPlainText = val.editorMode === 'plaintext'
-			}
-		},
 		'$route.params.messageUid'(newID) {
 			this.reset()
 		},
@@ -357,12 +356,20 @@ export default {
 			if (this.replyTo) {
 				this.bodyVal = this.bodyWithSignature(
 					this.selectedAlias,
-					buildReplyBody(this.body, this.replyTo.from[0], this.replyTo.dateInt).value
+					buildReplyBody(
+						this.editorPlainText ? toPlain(this.body) : toHtml(this.body),
+						this.replyTo.from[0],
+						this.replyTo.dateInt
+					).value
 				).value
 			} else if (this.forwardFrom) {
 				this.bodyVal = this.bodyWithSignature(
 					this.selectedAlias,
-					buildReplyBody(this.originalBody, this.original.from[0], this.original.dateInt).value
+					buildReplyBody(
+						this.editorPlainText ? toPlain(this.originalBody) : toHtml(this.originalBody),
+						this.original.from[0],
+						this.original.dateInt
+					).value
 				).value
 			} else {
 				this.bodyVal = this.bodyWithSignature(this.selectedAlias, this.bodyVal).value
