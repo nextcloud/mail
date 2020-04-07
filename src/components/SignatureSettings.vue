@@ -60,7 +60,7 @@ export default {
 	data() {
 		return {
 			loading: false,
-			signature: this.account.signature ? toHtml(detect(this.account.signature)) : html(''),
+			signature: this.account.signature ? toHtml(detect(this.account.signature)).value : '',
 			bus: new Vue(),
 		}
 	},
