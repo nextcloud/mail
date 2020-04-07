@@ -23,12 +23,14 @@ declare(strict_types=1);
 
 namespace OCA\Mail\IMAP;
 
+use Generator;
 use Horde_Imap_Client;
 use Horde_Imap_Client_Base;
 use Horde_Imap_Client_Data_Fetch;
 use Horde_Imap_Client_Exception;
 use Horde_Imap_Client_Fetch_Query;
 use Horde_Imap_Client_Ids;
+use Horde_Imap_Client_Search_Query;
 use Horde_Imap_Client_Socket;
 use Horde_Mime_Mail;
 use Horde_Mime_Part;
@@ -73,42 +75,97 @@ class MessageMapper {
 	 * @param Horde_Imap_Client_Socket $client
 	 * @param Mailbox $mailbox
 	 *
+	 * @param int $maxResults
 	 * @param int|null $highestKnownUid
 	 *
-	 * @return IMAPMessage[]
+	 * @return array
 	 * @throws Horde_Imap_Client_Exception
 	 */
 	public function findAll(Horde_Imap_Client_Socket $client,
 							Mailbox $mailbox,
-							int $highestKnownUid = null,
-							int $maxResults = null): array {
+							int $maxResults,
+							?int $highestKnownUid = 0): array {
+		/**
+		 * To prevent memory exhaustion, we don't want to just ask for a list of
+		 * all UIDs and limit them client-side. Instead we can (hopefully
+		 * efficiently) query the min and max UID as well as the number of
+		 * messages. Based on that we assume that UIDs are somewhat distributed
+		 * equally and build a page to fetch.
+		 *
+		 * This logic might return fewer or more results than $maxResults
+		 */
+
+		$metaResults = $client->search(
+			$mailbox->getName(),
+			null,
+			[
+				'results' => [
+					Horde_Imap_Client::SEARCH_RESULTS_MIN,
+					Horde_Imap_Client::SEARCH_RESULTS_MAX,
+					Horde_Imap_Client::SEARCH_RESULTS_COUNT,
+				]
+			]
+		);
+		/** @var int $min */
+		$min = $metaResults['min'];
+		/** @var int $max */
+		$max = $metaResults['max'];
+		/** @var int $total */
+		$total = $metaResults['count'];
+
+		if ($total === 0) {
+			// Nothing to fetch for this mailbox
+			return [
+				'messages' => [],
+				'all' => true,
+			];
+		}
+
+		// The inclusive range of UIDs
+		$totalRange = $max - $min + 1;
+		// Here we assume somewhat equally distributed UIDs
+		// +1 is added to fetch all messages with the rare case of strictly
+		// continuous UIDs and fractions
+		$estimatedPageSize = (int)(($totalRange / $total) * $maxResults) + 1;
+		// Determine max UID to fetch, but don't exceed the known maximum
+		$upper = min(
+			$max,
+			$highestKnownUid + $estimatedPageSize
+		);
+
 		$query = new Horde_Imap_Client_Fetch_Query();
 		$query->uid();
-
-		return $this->findByIds(
-			$client,
-			$mailbox->getName(),
-			array_slice(
-				array_filter(
-					array_map(
-						function(Horde_Imap_Client_Data_Fetch $data) {
-							return $data->getUid();
-						},
-						iterator_to_array($client->fetch(
-							$mailbox->getName(),
-							$query,
-							[]
-						))
-					),
-					function(int $uid) use ($highestKnownUid) {
-						// Don't load the ones we already know
-						return $highestKnownUid === null || $uid > $highestKnownUid;
-					}
+		$uidsToFetch = array_slice(
+			array_filter(
+				array_map(
+					function (Horde_Imap_Client_Data_Fetch $data) {
+						return $data->getUid();
+					},
+					iterator_to_array($client->fetch(
+						$mailbox->getName(),
+						$query,
+						[
+							'ids' => new Horde_Imap_Client_Ids(($highestKnownUid + 1) . ':' . $upper)
+						]
+					))
 				),
-				0,
-				$maxResults
-			)
+
+				function (int $uid) use ($highestKnownUid) {
+					// Don't load the ones we already know
+					return $highestKnownUid === null || $uid > $highestKnownUid;
+				}
+			),
+			0,
+			$maxResults
 		);
+		return [
+			'messages' => $this->findByIds(
+				$client,
+				$mailbox->getName(),
+				$uidsToFetch
+			),
+			'all' => $upper === $max,
+		];
 	}
 
 	/**
@@ -263,9 +320,9 @@ class MessageMapper {
 	 * @throws Horde_Imap_Client_Exception
 	 */
 	public function removeFlag(Horde_Imap_Client_Socket $client,
-							Mailbox $mailbox,
-							int $uid,
-							string $flag): void {
+							   Mailbox $mailbox,
+							   int $uid,
+							   string $flag): void {
 		$client->store(
 			$mailbox->getName(),
 			[
@@ -448,7 +505,7 @@ class MessageMapper {
 			'ids' => new Horde_Imap_Client_Ids($uids),
 		]);
 
-		return array_map(function(Horde_Imap_Client_Data_Fetch $fetchData) use ($mailbox, $client) {
+		return array_map(function (Horde_Imap_Client_Data_Fetch $fetchData) use ($mailbox, $client) {
 			$hasAttachments = false;
 			$text = '';
 
@@ -493,7 +550,7 @@ class MessageMapper {
 			}
 
 			return new MessageStructureData($hasAttachments, $text);
- 		}, iterator_to_array($structures->getIterator()));
+		}, iterator_to_array($structures->getIterator()));
 	}
 
 }
