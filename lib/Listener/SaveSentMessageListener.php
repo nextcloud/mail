@@ -112,7 +112,7 @@ class SaveSentMessageListener implements IEventListener {
 			// Let's assume this error is caused because the mailbox already exists,
 			// caused by concurrent requests or out-of-sync mailbox cache
 			$this->logger->logException($e, [
-				'message' => 'Could not create sent mailbox',
+				'message' => 'Could not create sent mailbox: ' . $e->getMessage(),
 				'level' => ILogger::WARN,
 			]);
 		}
