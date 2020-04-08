@@ -20,11 +20,18 @@
  */
 
 import mutations from '../../../store/mutations'
-import {UNIFIED_ACCOUNT_ID} from '../../../store/constants'
+import {UNIFIED_ACCOUNT_ID, UNIFIED_INBOX_UID} from '../../../store/constants'
 
 describe('Vuex store mutations', () => {
 	it('adds envelopes', () => {
 		const state = {
+			accounts: {
+				[UNIFIED_ACCOUNT_ID]: {
+					accountId: UNIFIED_ACCOUNT_ID,
+					id: UNIFIED_ACCOUNT_ID,
+					folders: [],
+				},
+			},
 			envelopes: {},
 			folders: {
 				'13-INBOX': {
@@ -48,6 +55,13 @@ describe('Vuex store mutations', () => {
 		})
 
 		expect(state).to.deep.equal({
+			accounts: {
+				[UNIFIED_ACCOUNT_ID]: {
+					accountId: UNIFIED_ACCOUNT_ID,
+					id: UNIFIED_ACCOUNT_ID,
+					folders: [],
+				},
+			},
 			envelopes: {
 				'13-INBOX-123': {
 					accountId: 13,
@@ -60,6 +74,77 @@ describe('Vuex store mutations', () => {
 			folders: {
 				'13-INBOX': {
 					id: 'INBOX',
+					envelopeLists: {
+						'': ['13-INBOX-123'],
+					},
+				},
+			},
+		})
+	})
+
+	it('adds new envelopes to the unified inbox as well', () => {
+		const state = {
+			accounts: {
+				[UNIFIED_ACCOUNT_ID]: {
+					accountId: UNIFIED_ACCOUNT_ID,
+					id: UNIFIED_ACCOUNT_ID,
+					folders: [UNIFIED_INBOX_UID],
+				},
+			},
+			envelopes: {},
+			folders: {
+				'13-INBOX': {
+					id: 'INBOX',
+					envelopeLists: {},
+					specialRole: 'inbox',
+				},
+				[UNIFIED_INBOX_UID]: {
+					specialRole: 'inbox',
+					envelopeLists: {},
+				},
+			},
+		}
+
+		mutations.addEnvelope(state, {
+			accountId: 13,
+			folderId: 'INBOX',
+			query: undefined,
+			envelope: {
+				accountId: 13,
+				folderId: 'INBOX',
+				id: 123,
+				subject: 'henlo',
+				uid: '13-INBOX-123',
+			},
+		})
+
+		expect(state).to.deep.equal({
+			accounts: {
+				[UNIFIED_ACCOUNT_ID]: {
+					accountId: UNIFIED_ACCOUNT_ID,
+					id: UNIFIED_ACCOUNT_ID,
+					folders: [UNIFIED_INBOX_UID],
+				},
+			},
+			envelopes: {
+				'13-INBOX-123': {
+					accountId: 13,
+					folderId: 'INBOX',
+					uid: '13-INBOX-123',
+					id: 123,
+					subject: 'henlo',
+				},
+			},
+			folders: {
+				'13-INBOX': {
+					id: 'INBOX',
+					specialRole: 'inbox',
+					envelopeLists: {
+						'': ['13-INBOX-123'],
+					},
+				},
+				[UNIFIED_INBOX_UID]: {
+					specialRole: 'inbox',
 					envelopeLists: {
 						'': ['13-INBOX-123'],
 					},

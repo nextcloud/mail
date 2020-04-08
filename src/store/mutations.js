@@ -114,6 +114,19 @@ export default {
 			listId,
 			sortedUniq(orderBy((id) => state.envelopes[id].dateInt, 'desc', existing.concat([envelope.uid])))
 		)
+
+		const unifiedAccount = state.accounts[UNIFIED_ACCOUNT_ID]
+		unifiedAccount.folders
+			.map((fId) => state.folders[fId])
+			.filter((f) => f.specialRole && f.specialRole === folder.specialRole)
+			.forEach((folder) => {
+				const existing = folder.envelopeLists[listId] || []
+				Vue.set(
+					folder.envelopeLists,
+					listId,
+					sortedUniq(orderBy((id) => state.envelopes[id].dateInt, 'desc', existing.concat([envelope.uid])))
+				)
+			})
 	},
 	updateEnvelope(state, {envelope}) {
 		const existing = state.envelopes[envelope.uid]
@@ -145,7 +158,7 @@ export default {
 		const unifiedAccount = state.accounts[UNIFIED_ACCOUNT_ID]
 		unifiedAccount.folders
 			.map((fId) => state.folders[fId])
-			.filter((f) => f.specialRole === folder.specialRole)
+			.filter((f) => f.specialRole && f.specialRole === folder.specialRole)
 			.forEach((folder) => {
 				const list = folder.envelopeLists[normalizedEnvelopeListId(query)]
 				if (!list) {
