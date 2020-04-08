@@ -527,7 +527,7 @@ export default {
 			}
 
 			return html(body)
-				.append('<br>--<br>')
+				.append(html('<br>--<br>'))
 				.append(toHtml(detect(alias.signature)))
 		},
 	},
