@@ -29,12 +29,7 @@ import AppContentDetails from '@nextcloud/vue/dist/Components/AppContentDetails'
 import Axios from '@nextcloud/axios'
 import {generateUrl} from '@nextcloud/router'
 
-import {
-	buildForwardSubject,
-	buildReplyBody,
-	buildReplySubject,
-	buildRecipients as buildReplyRecipients,
-} from '../ReplyBuilder'
+import {buildForwardSubject, buildReplySubject, buildRecipients as buildReplyRecipients} from '../ReplyBuilder'
 import Composer from './Composer'
 import Error from './Error'
 import {getRandomMessageErrorMessage} from '../util/ErrorMessageFactory'
