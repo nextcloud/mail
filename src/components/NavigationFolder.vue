@@ -24,7 +24,7 @@
 		:id="genId(folder)"
 		:key="genId(folder)"
 		:allow-collapse="true"
-		:force-menu="forceMenu"
+		:force-menu="true"
 		:icon="icon"
 		:title="title"
 		:to="to"
@@ -114,10 +114,6 @@ export default {
 			type: String,
 			default: '',
 			required: false,
-		},
-		forceMenu: {
-			type: Boolean,
-			default: false,
 		},
 	},
 	data() {
