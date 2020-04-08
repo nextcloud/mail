@@ -30,6 +30,23 @@ export default {
 			return this.buildMenu()
 		},
 	},
+	watch: {
+		$route(to, from) {
+			if (
+				from.name === 'message' &&
+				to.name === 'folder' &&
+				Number.parseInt(from.params.accountId, 10) === Number.parseInt(to.params.accountId, 10) &&
+				from.params.folderId === to.params.folderId &&
+				from.params.filter === to.params.filter
+			) {
+				logger.warn("navigation from a message to just the folder. we don't want that, do we? let's go back", {
+					to,
+					from,
+				})
+				this.$router.replace(from)
+			}
+		},
+	},
 	created() {
 		const accounts = this.$store.getters.accounts
 
