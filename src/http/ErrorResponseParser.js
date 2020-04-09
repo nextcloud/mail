@@ -28,7 +28,7 @@ export const parseErrorResponse = (resp) => {
 		return resp
 	}
 
-	const {debug, type, code, message, trace} = resp.data.data || {}
+	const { debug, type, code, message, trace } = resp.data.data || {}
 
 	return {
 		isError: true,

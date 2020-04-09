@@ -5,7 +5,7 @@
 		</router-link>
 
 		<p v-if="loadingOptOutSettings" class="app-settings">
-			<span class="icon-loading-small"></span>
+			<span class="icon-loading-small" />
 			{{ text }}
 		</p>
 		<p v-else class="app-settings">
@@ -14,13 +14,12 @@
 				class="checkbox"
 				type="checkbox"
 				:checked="useDataCollection"
-				@change="onToggleCollectData"
-			/>
+				@change="onToggleCollectData">
 			<label for="data-collection-toggle">{{ text }}</label>
 		</p>
 
 		<p v-if="loadingAvatarSettings" class="app-settings avatar-settings">
-			<span class="icon-loading-small"></span>
+			<span class="icon-loading-small" />
 			{{ t('mail', 'Use Gravatar and favicon avatars') }}
 		</p>
 		<p v-else class="app-settings">
@@ -29,8 +28,7 @@
 				class="checkbox"
 				type="checkbox"
 				:checked="useExternalAvatars"
-				@change="onToggleExternalAvatars"
-			/>
+				@change="onToggleExternalAvatars">
 			<label for="gravatar-enabled">{{ t('mail', 'Use Gravatar and favicon avatars') }}</label>
 		</p>
 		<p>
@@ -48,7 +46,7 @@
 
 <script>
 import Logger from '../logger'
-import {generateUrl} from '@nextcloud/router'
+import { generateUrl } from '@nextcloud/router'
 
 export default {
 	name: 'AppSettingsMenu',
@@ -77,7 +75,7 @@ export default {
 					key: 'external-avatars',
 					value: e.target.checked ? 'true' : 'false',
 				})
-				.catch((error) => Logger.error('could not save preferences', {error}))
+				.catch((error) => Logger.error('could not save preferences', { error }))
 				.then(() => {
 					this.loadingAvatarSettings = false
 				})
@@ -90,19 +88,19 @@ export default {
 					key: 'collect-data',
 					value: e.target.checked ? 'true' : 'false',
 				})
-				.catch((error) => Logger.error('could not save preferences', {error}))
+				.catch((error) => Logger.error('could not save preferences', { error }))
 				.then(() => {
 					this.loadingOptOutSettings = false
 				})
 		},
-		registerProtocolHandler: function () {
+		registerProtocolHandler() {
 			if (window.navigator.registerProtocolHandler) {
-				var url =
-					window.location.protocol + '//' + window.location.host + generateUrl('apps/mail/compose?uri=%s')
+				const url
+					= window.location.protocol + '//' + window.location.host + generateUrl('apps/mail/compose?uri=%s')
 				try {
 					window.navigator.registerProtocolHandler('mailto', url, OC.theme.name + ' Mail')
 				} catch (err) {
-					Logger.error('could not register protocol handler', {err})
+					Logger.error('could not register protocol handler', { err })
 				}
 			}
 		},

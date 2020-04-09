@@ -5,13 +5,13 @@
 			v-else-if="!message"
 			:error="error && error.message ? error.message : t('mail', 'Not found')"
 			:message="errorMessage"
-			:data="error"
-		>
-		</Error>
+			:data="error" />
 		<template v-else>
 			<div id="mail-message-header">
 				<div id="mail-message-header-fields">
-					<h2 :title="message.subject">{{ message.subject }}</h2>
+					<h2 :title="message.subject">
+						{{ message.subject }}
+					</h2>
 					<p class="transparency">
 						<AddressList :entries="message.from" />
 						{{ t('mail', 'to') }}
@@ -28,8 +28,7 @@
 								? 'icon-reply-all-white button primary'
 								: 'icon-reply-white button primary'
 						"
-						@click="hasMultipleRecipients ? replyAll() : replyMessage()"
-					>
+						@click="hasMultipleRecipients ? replyAll() : replyMessage()">
 						<span class="action-label">{{ t('mail', 'Reply') }}</span>
 					</div>
 					<Actions id="mail-message-actions-menu" class="app-content-list-item-menu" menu-align="right">
@@ -39,12 +38,16 @@
 						<ActionButton icon="icon-forward" @click="forwardMessage">
 							{{ t('mail', 'Forward') }}
 						</ActionButton>
-						<ActionButton icon="icon-starred" @click.prevent="onToggleFlagged">{{
-							envelope.flags.flagged ? t('mail', 'Unfavorite') : t('mail', 'Favorite')
-						}}</ActionButton>
-						<ActionButton icon="icon-important" @click.prevent="onToggleImportant">{{
-							envelope.flags.important ? t('mail', 'Mark unimportant') : t('mail', 'Mark important')
-						}}</ActionButton>
+						<ActionButton icon="icon-starred" @click.prevent="onToggleFlagged">
+							{{
+								envelope.flags.flagged ? t('mail', 'Unfavorite') : t('mail', 'Favorite')
+							}}
+						</ActionButton>
+						<ActionButton icon="icon-important" @click.prevent="onToggleImportant">
+							{{
+								envelope.flags.important ? t('mail', 'Mark unimportant') : t('mail', 'Mark important')
+							}}
+						</ActionButton>
 						<ActionButton icon="icon-mail" @click="onToggleSeen">
 							{{ envelope.flags.seen ? t('mail', 'Mark unread') : t('mail', 'Mark read') }}
 						</ActionButton>
@@ -55,8 +58,7 @@
 						<ActionButton
 							:icon="sourceLoading ? 'icon-loading-small' : 'icon-details'"
 							:disabled="sourceLoading"
-							@click="onShowSource"
-						>
+							@click="onShowSource">
 							{{ t('mail', 'View source') }}
 						</ActionButton>
 						<ActionButton icon="icon-delete" @click.prevent="onDelete">
@@ -80,11 +82,13 @@
 				<MessagePlainTextBody v-else :body="message.body" :signature="message.signature" />
 				<Popover v-if="message.attachments[0]" class="attachment-popover">
 					<Actions slot="trigger">
-						<ActionButton icon="icon-public icon-attachment">Attachments</ActionButton>
+						<ActionButton icon="icon-public icon-attachment">
+							Attachments
+						</ActionButton>
 					</Actions>
 					<MessageAttachments :attachments="message.attachments" />
 				</Popover>
-				<div id="reply-composer"></div>
+				<div id="reply-composer" />
 			</div>
 		</template>
 	</AppContentDetails>
@@ -97,14 +101,14 @@ import Popover from '@nextcloud/vue/dist/Components/Popover'
 import AppContentDetails from '@nextcloud/vue/dist/Components/AppContentDetails'
 import axios from '@nextcloud/axios'
 import Modal from '@nextcloud/vue/dist/Components/Modal'
-import {generateUrl} from '@nextcloud/router'
+import { generateUrl } from '@nextcloud/router'
 
 import AddressList from './AddressList'
-import {buildRecipients as buildReplyRecipients, buildReplySubject} from '../ReplyBuilder'
+import { buildRecipients as buildReplyRecipients, buildReplySubject } from '../ReplyBuilder'
 import Error from './Error'
-import {getRandomMessageErrorMessage} from '../util/ErrorMessageFactory'
-import {html, plain} from '../util/text'
-import {isPgpgMessage} from '../crypto/pgp'
+import { getRandomMessageErrorMessage } from '../util/ErrorMessageFactory'
+import { html, plain } from '../util/text'
+import { isPgpgMessage } from '../crypto/pgp'
 import Itinerary from './Itinerary'
 import MessageEncryptedBody from './MessageEncryptedBody'
 import MessageHTMLBody from './MessageHTMLBody'
@@ -172,16 +176,16 @@ export default {
 	watch: {
 		$route(to, from) {
 			if (
-				from.name === to.name &&
-				Number.parseInt(from.params.accountId, 10) === Number.parseInt(to.params.accountId, 10) &&
-				from.params.folderId === to.params.folderId &&
-				from.params.messageUuid === to.params.messageUuid &&
-				from.params.filter === to.params.filter
+				from.name === to.name
+				&& Number.parseInt(from.params.accountId, 10) === Number.parseInt(to.params.accountId, 10)
+				&& from.params.folderId === to.params.folderId
+				&& from.params.messageUuid === to.params.messageUuid
+				&& from.params.filter === to.params.filter
 			) {
 				logger.debug('navigated but the message is still the same')
 				return
 			}
-			logger.debug('navigated to another message', {to, from})
+			logger.debug('navigated to another message', { to, from })
 			this.fetchMessage()
 		},
 	},
@@ -204,7 +208,7 @@ export default {
 					this.$store.dispatch('fetchEnvelope', messageUuid),
 					this.$store.dispatch('fetchMessage', messageUuid),
 				])
-				logger.debug('envelope and message fetched', {envelope, message})
+				logger.debug('envelope and message fetched', { envelope, message })
 				// TODO: add timeout so that message isn't flagged when only viewed
 				// for a few seconds
 				if (message && message.uuid !== this.$route.params.messageUuid) {
@@ -216,7 +220,7 @@ export default {
 				this.message = message
 
 				if (envelope === undefined || message === undefined) {
-					logger.info('message could not be found', {messageUuid: messageUuid, envelope, message})
+					logger.info('message could not be found', { messageUuid, envelope, message })
 					this.errorMessage = getRandomMessageErrorMessage()
 					this.loading = false
 					return
@@ -236,7 +240,7 @@ export default {
 					return this.$store.dispatch('toggleEnvelopeSeen', envelope)
 				}
 			} catch (error) {
-				logger.error('could not load message ', {messageUuid, error})
+				logger.error('could not load message ', { messageUuid, error })
 				if (error.isError) {
 					this.errorMessage = t('mail', 'Could not load your message')
 					this.error = error

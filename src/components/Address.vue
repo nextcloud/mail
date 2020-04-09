@@ -1,6 +1,13 @@
 <template>
-	<router-link v-if="email !== label" v-tooltip.bottom="email" :to="newMessageRoute" exact>{{ label }}</router-link>
-	<router-link v-else :to="newMessageRoute" exact>{{ label }}</router-link>
+	<router-link v-if="email !== label"
+		v-tooltip.bottom="email"
+		:to="newMessageRoute"
+		exact>
+		{{ label }}
+	</router-link>
+	<router-link v-else :to="newMessageRoute" exact>
+		{{ label }}
+	</router-link>
 </template>
 
 <script>

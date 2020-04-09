@@ -10,8 +10,7 @@
 						v-if="!account.provisioned"
 						class="button icon-rename"
 						href="#account-form"
-						:title="t('mail', 'Change name')"
-					></a>
+						:title="t('mail', 'Change name')" />
 				</p>
 				<AliasSettings v-if="!account.provisioned" :account="account" />
 			</div>
@@ -25,8 +24,7 @@
 						:display-name="displayName"
 						:email="email"
 						:save="onSave"
-						:account="account"
-					/>
+						:account="account" />
 				</div>
 			</div>
 		</AppContent>
@@ -71,7 +69,7 @@ export default {
 	},
 	methods: {
 		onSave(data) {
-			Logger.log('saving data', {data})
+			Logger.log('saving data', { data })
 			return this.$store
 				.dispatch('updateAccount', {
 					...data,
@@ -79,7 +77,7 @@ export default {
 				})
 				.then((account) => account)
 				.catch((error) => {
-					Logger.error('account update failed:', {error})
+					Logger.error('account update failed:', { error })
 
 					throw error
 				})

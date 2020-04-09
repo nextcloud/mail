@@ -35,12 +35,12 @@ export default {
 	watch: {
 		$route(to, from) {
 			if (
-				from.name === 'message' &&
-				to.name === 'folder' &&
-				!this.isMobile &&
-				Number.parseInt(from.params.accountId, 10) === Number.parseInt(to.params.accountId, 10) &&
-				from.params.folderId === to.params.folderId &&
-				from.params.filter === to.params.filter
+				from.name === 'message'
+				&& to.name === 'folder'
+				&& !this.isMobile
+				&& Number.parseInt(from.params.accountId, 10) === Number.parseInt(to.params.accountId, 10)
+				&& from.params.folderId === to.params.folderId
+				&& from.params.filter === to.params.filter
 			) {
 				logger.warn("navigation from a message to just the folder. we don't want that, do we? let's go back", {
 					to,
@@ -55,9 +55,9 @@ export default {
 
 		if (this.$route.name === 'home' && accounts.length > 1) {
 			// Show first account
-			let firstAccount = accounts[0]
+			const firstAccount = accounts[0]
 			// FIXME: this assumes that there's at least one folder
-			let firstFolder = this.$store.getters.getFolders(firstAccount.id)[0]
+			const firstFolder = this.$store.getters.getFolders(firstAccount.id)[0]
 
 			console.debug('loading first folder of first account', firstAccount.id, firstFolder.id)
 
@@ -80,9 +80,9 @@ export default {
 			}
 
 			// Show first account
-			let firstAccount = accounts[0]
+			const firstAccount = accounts[0]
 			// FIXME: this assumes that there's at least one folder
-			let firstFolder = this.$store.getters.getFolders(firstAccount.id)[0]
+			const firstFolder = this.$store.getters.getFolders(firstAccount.id)[0]
 
 			console.debug('loading composer with first account and folder', firstAccount.id, firstFolder.id)
 

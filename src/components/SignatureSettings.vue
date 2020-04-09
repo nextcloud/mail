@@ -25,13 +25,15 @@
 		<p class="settings-hint">
 			{{ t('mail', 'A signature is added to the text of new messages and replies.') }}
 		</p>
-		<TextEditor v-model="signature" :html="true" :placeholder="t('mail', 'Signature …')" :bus="bus" />
+		<TextEditor v-model="signature"
+			:html="true"
+			:placeholder="t('mail', 'Signature …')"
+			:bus="bus" />
 		<button
 			class="primary"
 			:class="loading ? 'icon-loading-small-dark' : 'icon-checkmark-white'"
 			:disabled="loading"
-			@click="saveSignature"
-		>
+			@click="saveSignature">
 			{{ t('mail', 'Save signature') }}
 		</button>
 		<button v-if="signature" class="button-text" @click="deleteSignature">
@@ -43,7 +45,7 @@
 <script>
 import logger from '../logger'
 import TextEditor from './TextEditor'
-import {detect, html, toHtml} from '../util/text'
+import { detect, toHtml } from '../util/text'
 import Vue from 'vue'
 
 export default {
@@ -73,14 +75,14 @@ export default {
 			this.loading = true
 
 			this.$store
-				.dispatch('updateAccountSignature', {account: this.account, signature: null})
+				.dispatch('updateAccountSignature', { account: this.account, signature: null })
 				.then(() => {
 					logger.info('signature deleted')
 					this.signature = ''
 					this.loading = false
 				})
 				.catch((error) => {
-					logger.error('could not delete account signature', {error})
+					logger.error('could not delete account signature', { error })
 					throw error
 				})
 		},
@@ -88,13 +90,13 @@ export default {
 			this.loading = true
 
 			this.$store
-				.dispatch('updateAccountSignature', {account: this.account, signature: this.signature})
+				.dispatch('updateAccountSignature', { account: this.account, signature: this.signature })
 				.then(() => {
 					logger.info('signature updated')
 					this.loading = false
 				})
 				.catch((error) => {
-					logger.error('could not update account signature', {error})
+					logger.error('could not update account signature', { error })
 					throw error
 				})
 		},

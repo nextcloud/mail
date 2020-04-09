@@ -1,7 +1,7 @@
 <template>
 	<div>
-		<div id="mail-content" v-html="htmlBody"></div>
-		<div v-if="signature" class="mail-signature" v-html="htmlSignature"></div>
+		<div id="mail-content" v-html="htmlBody" />
+		<div v-if="signature" class="mail-signature" v-html="htmlSignature" />
 	</div>
 </template>
 

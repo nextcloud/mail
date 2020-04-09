@@ -1,4 +1,4 @@
-/*
+/**
  * @copyright 2019 Christoph Wurst <christoph@winzerhof-wurst.at>
  *
  * @author 2019 Christoph Wurst <christoph@winzerhof-wurst.at>
@@ -19,15 +19,17 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-import {generateFilePath} from '@nextcloud/router'
-import {getRequestToken} from '@nextcloud/auth'
-import {loadState} from '@nextcloud/initial-state'
+import { generateFilePath } from '@nextcloud/router'
+import { getRequestToken } from '@nextcloud/auth'
+import { loadState } from '@nextcloud/initial-state'
 import Vue from 'vue'
 
 import AdminSettings from './components/settings/AdminSettings'
 import Nextcloud from './mixins/Nextcloud'
 
+// eslint-disable-next-line camelcase
 __webpack_nonce__ = btoa(getRequestToken())
+// eslint-disable-next-line camelcase
 __webpack_public_path__ = generateFilePath('mail', '', 'js/')
 
 Vue.mixin(Nextcloud)

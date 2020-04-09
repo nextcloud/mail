@@ -5,9 +5,7 @@
 			v-else-if="error"
 			:error="error && error.message ? error.message : t('mail', 'Not found')"
 			:message="errorMessage"
-			:data="error"
-		>
-		</Error>
+			:data="error" />
 		<Composer
 			v-else
 			:from-account="composerData.accountId"
@@ -19,24 +17,23 @@
 			:draft="saveDraft"
 			:send="sendMessage"
 			:reply-to="composerData.replyTo"
-			:forward-from="composerData.forwardFrom"
-		/>
+			:forward-from="composerData.forwardFrom" />
 	</AppContentDetails>
 </template>
 
 <script>
 import AppContentDetails from '@nextcloud/vue/dist/Components/AppContentDetails'
 import Axios from '@nextcloud/axios'
-import {generateUrl} from '@nextcloud/router'
+import { generateUrl } from '@nextcloud/router'
 
-import {buildForwardSubject, buildReplySubject, buildRecipients as buildReplyRecipients} from '../ReplyBuilder'
+import { buildForwardSubject, buildReplySubject, buildRecipients as buildReplyRecipients } from '../ReplyBuilder'
 import Composer from './Composer'
 import Error from './Error'
-import {getRandomMessageErrorMessage} from '../util/ErrorMessageFactory'
-import {detect, html, plain, toPlain} from '../util/text'
+import { getRandomMessageErrorMessage } from '../util/ErrorMessageFactory'
+import { detect, html, plain, toPlain } from '../util/text'
 import Loading from './Loading'
 import logger from '../logger'
-import {saveDraft, sendMessage} from '../service/MessageService'
+import { saveDraft, sendMessage } from '../service/MessageService'
 
 export default {
 	name: 'NewMessageDetail',
@@ -59,7 +56,7 @@ export default {
 	computed: {
 		composerData() {
 			if (this.draft !== undefined) {
-				logger.info('todo: handle draft data', {draft: this.draft})
+				logger.info('todo: handle draft data', { draft: this.draft })
 				return {
 					to: this.draft.to,
 					cc: this.draft.cc,
@@ -70,7 +67,7 @@ export default {
 			} else if (this.$route.query.uuid !== undefined) {
 				// Forward or reply to a message
 				const message = this.original
-				logger.debug('forwarding or replying to message', {message})
+				logger.debug('forwarding or replying to message', { message })
 
 				if (this.$route.params.messageUuid === 'reply') {
 					logger.debug('simple reply')
@@ -85,7 +82,7 @@ export default {
 						replyTo: message,
 					}
 				} else if (this.$route.params.messageUuid === 'replyAll') {
-					logger.debug('replying to all', {original: this.original})
+					logger.debug('replying to all', { original: this.original })
 					const account = this.$store.getters.getAccount(message.accountId)
 					const recipients = buildReplyRecipients(message, {
 						email: account.emailAddress,
@@ -185,7 +182,7 @@ export default {
 					this.draft = draft
 
 					if (this.draft === undefined) {
-						logger.info('draft could not be found', {draftUid})
+						logger.info('draft could not be found', { draftUid })
 						this.errorMessage = getRandomMessageErrorMessage()
 						this.loading = false
 						return
@@ -194,7 +191,7 @@ export default {
 					this.loading = false
 				})
 				.catch((error) => {
-					logger.error('could not load draft ' + draftUid, {error})
+					logger.error('could not load draft ' + draftUid, { error })
 					if (error.isError) {
 						this.errorMessage = t('mail', 'Could not load your draft')
 						this.error = error
@@ -214,7 +211,7 @@ export default {
 					return
 				}
 
-				logger.debug('original message fetched', {message})
+				logger.debug('original message fetched', { message })
 				this.original = message
 
 				let body = plain(message.body || '')
@@ -232,7 +229,7 @@ export default {
 				}
 				this.originalBody = body
 			} catch (error) {
-				logger.error('could not load original message ' + uid, {error})
+				logger.error('could not load original message ' + uid, { error })
 				if (error.isError) {
 					this.errorMessage = t('mail', 'Could not load original message')
 					this.error = error
@@ -251,7 +248,7 @@ export default {
 				...data,
 				body: data.isHtml ? data.body.value : toPlain(data.body).value,
 			}
-			return saveDraft(data.account, dataForServer).then(({uid}) => {
+			return saveDraft(data.account, dataForServer).then(({ uid }) => {
 				if (this.draft === undefined) {
 					return uid
 				}
@@ -279,7 +276,7 @@ export default {
 			})
 		},
 		sendMessage(data) {
-			logger.debug('sending message', {data})
+			logger.debug('sending message', { data })
 			const dataForServer = {
 				...data,
 				body: data.isHtml ? data.body.value : toPlain(data.body).value,

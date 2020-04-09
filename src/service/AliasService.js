@@ -1,8 +1,8 @@
-import {generateUrl} from '@nextcloud/router'
+import { generateUrl } from '@nextcloud/router'
 import axios from '@nextcloud/axios'
 
-export const createAlias = async (account, data) => {
-	const url = generateUrl(`/apps/mail/api/accounts/{id}/aliases`, {
+export const createAlias = async(account, data) => {
+	const url = generateUrl('/apps/mail/api/accounts/{id}/aliases', {
 		id: account.accountId,
 	})
 
@@ -18,7 +18,7 @@ export const createAlias = async (account, data) => {
 		})
 }
 
-export const deleteAlias = async (account, alias) => {
+export const deleteAlias = async(account, alias) => {
 	const url = generateUrl('/apps/mail/api/accounts/{id}/aliases/{aliasId}', {
 		id: account.accountId,
 		aliasId: alias.id,

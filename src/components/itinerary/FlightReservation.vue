@@ -1,22 +1,42 @@
 <template>
 	<div class="reservation">
 		<div class="departure">
-			<div class="iata">{{ data.reservationFor.departureAirport.iataCode }}</div>
-			<div class="airport">{{ data.reservationFor.departureAirport.name }}</div>
-			<div v-if="departureDate">{{ departureDate }}</div>
-			<div v-if="departureTime">{{ departureTime }}</div>
+			<div class="iata">
+				{{ data.reservationFor.departureAirport.iataCode }}
+			</div>
+			<div class="airport">
+				{{ data.reservationFor.departureAirport.name }}
+			</div>
+			<div v-if="departureDate">
+				{{ departureDate }}
+			</div>
+			<div v-if="departureTime">
+				{{ departureTime }}
+			</div>
 		</div>
 		<div class="connection">
 			<div><AirplaneIcon :title="t('mail', 'Airplane')" /></div>
 			<div>{{ flightNumber }}</div>
-			<div v-if="reservation">{{ t('mail', 'Reservation {id}', {id: reservation}) }}</div>
-			<div v-else><ArrowIcon decorative /></div>
+			<div v-if="reservation">
+				{{ t('mail', 'Reservation {id}', {id: reservation}) }}
+			</div>
+			<div v-else>
+				<ArrowIcon decorative />
+			</div>
 		</div>
 		<div class="arrival">
-			<div class="iata">{{ data.reservationFor.arrivalAirport.iataCode }}</div>
-			<div class="airport">{{ data.reservationFor.arrivalAirport.name }}</div>
-			<div v-if="arrivalDate">{{ arrivalDate }}</div>
-			<div v-if="arrivalTime">{{ arrivalTime }}</div>
+			<div class="iata">
+				{{ data.reservationFor.arrivalAirport.iataCode }}
+			</div>
+			<div class="airport">
+				{{ data.reservationFor.arrivalAirport.name }}
+			</div>
+			<div v-if="arrivalDate">
+				{{ arrivalDate }}
+			</div>
+			<div v-if="arrivalTime">
+				{{ arrivalTime }}
+			</div>
 		</div>
 		<CalendarImport :calendars="calendars" :handler="handleImport" />
 	</div>
@@ -28,10 +48,10 @@ import ArrowIcon from 'vue-material-design-icons/ArrowRight'
 import ical from 'ical.js'
 import md5 from 'md5'
 import moment from '@nextcloud/moment'
-import {showError, showSuccess} from '@nextcloud/dialogs'
+import { showError, showSuccess } from '@nextcloud/dialogs'
 
 import CalendarImport from './CalendarImport'
-import {importCalendarEvent} from '../../service/DAVService'
+import { importCalendarEvent } from '../../service/DAVService'
 import logger from '../../logger'
 
 export default {
@@ -118,15 +138,15 @@ export default {
 
 			const cal = new ical.Component('VCALENDAR')
 			cal.addSubcomponent(event)
-			logger.debug('generated calendar event from flight reservation data', {ical: cal.toString()})
+			logger.debug('generated calendar event from flight reservation data', { ical: cal.toString() })
 
 			return importCalendarEvent(calendar.url)(cal.toString())
 				.then(() => {
 					logger.debug('event successfully imported')
-					showSuccess(t('mail', 'Event imported into {calendar}', {calendar: calendar.displayname}))
+					showSuccess(t('mail', 'Event imported into {calendar}', { calendar: calendar.displayname }))
 				})
 				.catch((error) => {
-					logger.error('Could not import event', {error})
+					logger.error('Could not import event', { error })
 					showError(t('mail', 'Could not create event'))
 				})
 		},

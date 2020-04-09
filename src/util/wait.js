@@ -1,4 +1,4 @@
-/*
+/**
  * @copyright 2020 Christoph Wurst <christoph@winzerhof-wurst.at>
  *
  * @author 2020 Christoph Wurst <christoph@winzerhof-wurst.at>
@@ -20,7 +20,7 @@
  */
 
 export const wait = (ms) => {
-	return new Promise((res) => {
-		setTimeout(res, ms)
+	return new Promise((resolve) => {
+		setTimeout(resolve, ms)
 	})
 }

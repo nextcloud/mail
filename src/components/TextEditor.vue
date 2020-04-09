@@ -26,8 +26,7 @@
 		:config="config"
 		:editor="editor"
 		@input="onInput"
-		@ready="onEditorReady"
-	></ckeditor>
+		@ready="onEditorReady" />
 </template>
 
 <script>
@@ -42,7 +41,7 @@ import ItalicPlugin from '@ckeditor/ckeditor5-basic-styles/src/italic'
 import LinkPlugin from '@ckeditor/ckeditor5-link/src/link'
 import ParagraphPlugin from '@ckeditor/ckeditor5-paragraph/src/paragraph'
 
-import {getLanguage} from '@nextcloud/l10n'
+import { getLanguage } from '@nextcloud/l10n'
 
 import logger from '../logger'
 
@@ -135,7 +134,7 @@ export default {
 		onEditorReady(editor) {
 			const schema = editor.model.schema
 
-			logger.debug('CKEditor editor is ready', {editor, schema})
+			logger.debug('CKEditor editor is ready', { editor, schema })
 
 			this.editorInstance = editor
 

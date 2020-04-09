@@ -3,31 +3,30 @@
 		<div
 			v-if="folder.isUnified"
 			class="mail-message-account-color"
-			:style="{'background-color': accountColor}"
-		></div>
+			:style="{'background-color': accountColor}" />
 		<div
 			v-if="data.flags.flagged"
 			class="app-content-list-item-star icon-starred"
 			:data-starred="data.flags.flagged ? 'true' : 'false'"
-			@click.prevent="onToggleFlagged"
-		></div>
+			@click.prevent="onToggleFlagged" />
 		<div
 			v-if="data.flags.important"
 			class="app-content-list-item-star icon-important"
 			:data-starred="data.flags.important ? 'true' : 'false'"
 			@click.prevent="onToggleImportant"
-			v-html="importantSvg"
-		></div>
+			v-html="importantSvg" />
 		<div
 			v-if="data.flags.junk"
 			class="app-content-list-item-star icon-junk"
 			:data-starred="data.flags.junk ? 'true' : 'false'"
-			@click.prevent="onToggleJunk"
-		></div>
+			@click.prevent="onToggleJunk" />
 		<div class="app-content-list-item-icon">
 			<Avatar :display-name="addresses" :email="avatarEmail" />
 			<p v-if="selectMode" class="app-content-list-item-select-checkbox">
-				<input :id="`select-checkbox-${data.uid}`" class="checkbox" type="checkbox" :checked="selected" />
+				<input :id="`select-checkbox-${data.uid}`"
+					class="checkbox"
+					type="checkbox"
+					:checked="selected">
 				<label :for="`select-checkbox-${data.uid}`" @click.prevent="toggleSelected" />
 			</p>
 		</div>
@@ -46,22 +45,34 @@
 			<Moment :timestamp="data.dateInt" />
 		</div>
 		<Actions class="app-content-list-item-menu" menu-align="right">
-			<ActionButton icon="icon-starred" @click.prevent="onToggleFlagged">{{
-				data.flags.flagged ? t('mail', 'Unfavorite') : t('mail', 'Favorite')
-			}}</ActionButton>
-			<ActionButton icon="icon-important" @click.prevent="onToggleImportant">{{
-				data.flags.important ? t('mail', 'Mark unimportant') : t('mail', 'Mark important')
-			}}</ActionButton>
-			<ActionButton icon="icon-mail" @click.prevent="onToggleSeen">{{
-				data.flags.seen ? t('mail', 'Mark unread') : t('mail', 'Mark read')
-			}}</ActionButton>
-			<ActionButton icon="icon-junk" @click.prevent="onToggleJunk">{{
-				data.flags.junk ? t('mail', 'Mark not spam') : t('mail', 'Mark as spam')
-			}}</ActionButton>
-			<ActionButton icon="icon-checkmark" :close-after-click="true" @click.prevent="onSelect">{{
-				selected ? t('mail', 'Unselect') : t('mail', 'Select')
-			}}</ActionButton>
-			<ActionButton icon="icon-delete" @click.prevent="onDelete">{{ t('mail', 'Delete') }}</ActionButton>
+			<ActionButton icon="icon-starred" @click.prevent="onToggleFlagged">
+				{{
+					data.flags.flagged ? t('mail', 'Unfavorite') : t('mail', 'Favorite')
+				}}
+			</ActionButton>
+			<ActionButton icon="icon-important" @click.prevent="onToggleImportant">
+				{{
+					data.flags.important ? t('mail', 'Mark unimportant') : t('mail', 'Mark important')
+				}}
+			</ActionButton>
+			<ActionButton icon="icon-mail" @click.prevent="onToggleSeen">
+				{{
+					data.flags.seen ? t('mail', 'Mark unread') : t('mail', 'Mark read')
+				}}
+			</ActionButton>
+			<ActionButton icon="icon-junk" @click.prevent="onToggleJunk">
+				{{
+					data.flags.junk ? t('mail', 'Mark not spam') : t('mail', 'Mark as spam')
+				}}
+			</ActionButton>
+			<ActionButton icon="icon-checkmark" :close-after-click="true" @click.prevent="onSelect">
+				{{
+					selected ? t('mail', 'Unselect') : t('mail', 'Select')
+				}}
+			</ActionButton>
+			<ActionButton icon="icon-delete" @click.prevent="onDelete">
+				{{ t('mail', 'Delete') }}
+			</ActionButton>
 		</Actions>
 	</router-link>
 </template>
@@ -73,7 +84,7 @@ import Moment from './Moment'
 import importantSvg from '../../img/important.svg'
 
 import Avatar from './Avatar'
-import {calculateAccountColor} from '../util/AccountColor'
+import { calculateAccountColor } from '../util/AccountColor'
 
 export default {
 	name: 'Envelope',
@@ -145,7 +156,7 @@ export default {
 		addresses() {
 			// Show recipients' label/address in a sent folder
 			if (this.folder.specialRole === 'sent') {
-				let recipients = [this.data.to, this.data.cc].flat().map(function (recipient) {
+				const recipients = [this.data.to, this.data.cc].flat().map(function(recipient) {
 					return recipient.label ? recipient.label : recipient.email
 				})
 				return recipients.length > 0 ? recipients.join(', ') : t('mail', 'Blind copy recipients only')
@@ -156,7 +167,7 @@ export default {
 		avatarEmail() {
 			// Show first recipients' avatar in a sent folder (or undefined when sent to Bcc only)
 			if (this.folder.specialRole === 'sent') {
-				let recipients = [this.data.to, this.data.cc].flat().map(function (recipient) {
+				const recipients = [this.data.to, this.data.cc].flat().map(function(recipient) {
 					return recipient.email
 				})
 				return recipients.length > 0 ? recipients[0] : undefined

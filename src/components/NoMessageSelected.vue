@@ -21,9 +21,9 @@
 
 <template>
 	<AppContentDetails>
-		<div class="icon icon-mail"></div>
+		<div class="icon icon-mail" />
 		<h2>{{ t('mail', 'No message selected') }}</h2>
-		<p></p>
+		<p />
 	</AppContentDetails>
 </template>
 

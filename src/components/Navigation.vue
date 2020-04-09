@@ -25,8 +25,7 @@
 			:text="t('mail', 'New message')"
 			button-id="mail_new_message"
 			button-class="icon-add"
-			@click="onNewMessage"
-		/>
+			@click="onNewMessage" />
 		<ul id="accounts-list">
 			<template v-for="group in menu">
 				<NavigationAccount
@@ -35,32 +34,28 @@
 					:account="group.account"
 					:first-folder="group.folders[0]"
 					:is-first="isFirst(group.account)"
-					:is-last="isLast(group.account)"
-				/>
+					:is-last="isLast(group.account)" />
 				<template v-for="item in group.folders">
 					<NavigationFolder
 						v-show="
 							!group.isCollapsible ||
-							!group.account.collapsed ||
-							SHOW_COLLAPSED.indexOf(item.specialRole) !== -1
+								!group.account.collapsed ||
+								SHOW_COLLAPSED.indexOf(item.specialRole) !== -1
 						"
 						:key="item.key"
 						:account="group.account"
-						:folder="item"
-					/>
+						:folder="item" />
 					<NavigationFolder
 						v-if="!group.account.isUnified && item.specialRole === 'inbox'"
 						:key="item.key + '-starred'"
 						:account="group.account"
 						:folder="item"
-						filter="starred"
-					/>
+						filter="starred" />
 				</template>
 				<NavigationAccountExpandCollapse
 					v-if="!group.account.isUnified && group.isCollapsible"
 					:key="'collapse-' + group.account.id"
-					:account="group.account"
-				/>
+					:account="group.account" />
 				<AppNavigationSpacer :key="'spacer-' + group.account.id" />
 			</template>
 		</ul>
@@ -81,9 +76,9 @@ import NavigationAccount from './NavigationAccount'
 import NavigationAccountExpandCollapse from './NavigationAccountExpandCollapse'
 import NavigationFolder from './NavigationFolder'
 
-const SHOW_COLLAPSED = Object.seal(['inbox', 'flagged', 'drafts', 'sent'])
-
 import AppSettingsMenu from '../components/AppSettingsMenu'
+
+const SHOW_COLLAPSED = Object.seal(['inbox', 'flagged', 'drafts', 'sent'])
 
 export default {
 	name: 'Navigation',
@@ -127,8 +122,8 @@ export default {
 			// FIXME: this assumes that there's at least one folder
 			const folderId = this.$route.params.folderId || this.$store.getters.getFolders(accountId)[0].id
 			if (
-				this.$router.currentRoute.name === 'message' &&
-				this.$router.currentRoute.params.messageUuid === 'new'
+				this.$router.currentRoute.name === 'message'
+				&& this.$router.currentRoute.params.messageUuid === 'new'
 			) {
 				// If we already show the composer, navigating to it would be pointless (and doesn't work)
 				// instead trigger an event to reset the composer

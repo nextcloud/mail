@@ -1,4 +1,4 @@
-/*
+/**
  * @copyright Copyright (c) 2018 Christoph Wurst <christoph@winzerhof-wurst.at>
  *
  * @author Christoph Wurst <christoph@winzerhof-wurst.at>
@@ -21,9 +21,9 @@
  */
 
 import Vue from 'vue'
-import {getRequestToken} from '@nextcloud/auth'
-import {sync} from 'vuex-router-sync'
-import {generateFilePath} from '@nextcloud/router'
+import { getRequestToken } from '@nextcloud/auth'
+import { sync } from 'vuex-router-sync'
+import { generateFilePath } from '@nextcloud/router'
 import VueShortKey from 'vue-shortkey'
 import VTooltip from 'v-tooltip'
 
@@ -31,16 +31,18 @@ import App from './App'
 import Nextcloud from './mixins/Nextcloud'
 import router from './router'
 import store from './store'
-import {fixAccountId} from './service/AccountService'
+import { fixAccountId } from './service/AccountService'
 
+// eslint-disable-next-line camelcase
 __webpack_nonce__ = btoa(getRequestToken())
+// eslint-disable-next-line camelcase
 __webpack_public_path__ = generateFilePath('mail', '', 'js/')
 
 sync(store, router)
 
 Vue.mixin(Nextcloud)
 
-Vue.use(VueShortKey, {prevent: ['input', 'div']})
+Vue.use(VueShortKey, { prevent: ['input', 'div'] })
 Vue.use(VTooltip)
 
 const getPreferenceFromPage = (key) => {
@@ -70,11 +72,10 @@ store.commit('savePreference', {
 
 const accounts = JSON.parse(atob(getPreferenceFromPage('serialized-accounts')))
 accounts.map(fixAccountId).forEach((account) => {
-	const folders = account.folders
 	store.commit('addAccount', account)
 })
 
-new Vue({
+export default new Vue({
 	el: '#content',
 	router,
 	store,
