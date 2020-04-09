@@ -5,6 +5,7 @@
 			<AppContentList
 				v-infinite-scroll="onScroll"
 				v-shortkey.once="shortkeys"
+				infinite-scroll-immediate-check="false"
 				:show-details="showMessage"
 				:infinite-scroll-disabled="false"
 				:infinite-scroll-distance="10"
@@ -27,6 +28,7 @@ import isMobile from '@nextcloud/vue/dist/Mixins/isMobile'
 import Vue from 'vue'
 
 import AppDetailsToggle from './AppDetailsToggle'
+import logger from '../logger'
 import Mailbox from './Mailbox'
 import Message from './Message'
 import NewMessageDetail from './NewMessageDetail'
@@ -127,7 +129,9 @@ export default {
 		deleteMessage(envelopeUid) {
 			this.bus.$emit('delete', envelopeUid)
 		},
-		onScroll() {
+		onScroll(event) {
+			logger.debug('scroll', {event})
+
 			this.bus.$emit('loadMore')
 		},
 		onShortcut(e) {
