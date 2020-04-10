@@ -150,6 +150,17 @@ export default {
 	},
 	watch: {
 		$route(to, from) {
+			if (
+				from.name === to.name &&
+				Number.parseInt(from.params.accountId, 10) === Number.parseInt(to.params.accountId, 10) &&
+				from.params.folderId === to.params.folderId &&
+				from.params.messageUid === to.params.messageUid &&
+				from.params.filter === to.params.filter
+			) {
+				logger.debug('navigated but the message is still the same')
+				return
+			}
+			logger.debug('navigated to another message', {to, from})
 			this.fetchMessage()
 		},
 	},
