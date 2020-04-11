@@ -16,6 +16,7 @@ OC.L10N.register(
     "Keyboard shortcuts" : "Сполучення клавіш",
     "Sending …" : "Надсилання...",
     "Go back" : "Повернутися назад",
+    "Retry" : "Ще раз",
     "Message sent!" : "Повідомлення відправлено!",
     "Send" : "Надіслати",
     "Choose a file to add as attachment" : "Обрати файл для вкладення",
