@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "7d9b1124b0f3072820d00524de0383e3",
+    "content-hash": "9daa691ddb3b06dffdb3f291440ebfc3",
     "packages": [
         {
             "name": "arthurhoaro/favicon",
@@ -1615,16 +1615,16 @@
         },
         {
             "name": "friendsofphp/php-cs-fixer",
-            "version": "v2.16.1",
+            "version": "v2.16.2",
             "source": {
                 "type": "git",
                 "url": "https://github.com/FriendsOfPHP/PHP-CS-Fixer.git",
-                "reference": "c8afb599858876e95e8ebfcd97812d383fa23f02"
+                "reference": "c460a3cbaa58f983fe026cd52c45950bf61e9239"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/FriendsOfPHP/PHP-CS-Fixer/zipball/c8afb599858876e95e8ebfcd97812d383fa23f02",
-                "reference": "c8afb599858876e95e8ebfcd97812d383fa23f02",
+                "url": "https://api.github.com/repos/FriendsOfPHP/PHP-CS-Fixer/zipball/c460a3cbaa58f983fe026cd52c45950bf61e9239",
+                "reference": "c460a3cbaa58f983fe026cd52c45950bf61e9239",
                 "shasum": ""
             },
             "require": {
@@ -1660,6 +1660,7 @@
                 "symfony/yaml": "^3.0 || ^4.0 || ^5.0"
             },
             "suggest": {
+                "ext-dom": "For handling output formats in XML",
                 "ext-mbstring": "For handling non-UTF8 characters in cache signature.",
                 "php-cs-fixer/phpunit-constraint-isidenticalstring": "For IsIdenticalString constraint.",
                 "php-cs-fixer/phpunit-constraint-xmlmatchesxsd": "For XmlMatchesXsd constraint.",
@@ -1682,6 +1683,7 @@
                     "tests/Test/IntegrationCaseFactory.php",
                     "tests/Test/IntegrationCaseFactoryInterface.php",
                     "tests/Test/InternalIntegrationCaseFactory.php",
+                    "tests/Test/IsIdenticalConstraint.php",
                     "tests/TestCase.php"
                 ]
             },
@@ -1700,7 +1702,7 @@
                 }
             ],
             "description": "A tool to automatically fix PHP code style",
-            "time": "2019-11-25T22:10:32+00:00"
+            "time": "2020-04-10T21:08:06+00:00"
         },
         {
             "name": "microsoft/tolerant-php-parser",
@@ -1839,16 +1841,16 @@
         },
         {
             "name": "nextcloud/coding-standard",
-            "version": "v0.1.0",
+            "version": "v0.3.0",
             "source": {
                 "type": "git",
                 "url": "https://github.com/nextcloud/coding-standard.git",
-                "reference": "62db1739c26115ea565936520db5577e5482a6fe"
+                "reference": "4f5cd012760f8293e19e602651a0ecaa265e4db9"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/nextcloud/coding-standard/zipball/62db1739c26115ea565936520db5577e5482a6fe",
-                "reference": "62db1739c26115ea565936520db5577e5482a6fe",
+                "url": "https://api.github.com/repos/nextcloud/coding-standard/zipball/4f5cd012760f8293e19e602651a0ecaa265e4db9",
+                "reference": "4f5cd012760f8293e19e602651a0ecaa265e4db9",
                 "shasum": ""
             },
             "require": {
@@ -1872,7 +1874,7 @@
                 }
             ],
             "description": "Nextcloud coding standards for the php cs fixer",
-            "time": "2020-03-31T11:39:28+00:00"
+            "time": "2020-04-10T14:57:18+00:00"
         },
         {
             "name": "nikic/php-parser",
