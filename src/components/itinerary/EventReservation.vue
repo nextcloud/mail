@@ -35,9 +35,10 @@
 import ical from 'ical.js'
 import md5 from 'md5'
 import moment from '@nextcloud/moment'
+import {showError, showSuccess} from '@nextcloud/dialogs'
 
 import CalendarImport from './CalendarImport'
-import {importCalendarEvent, importSingleCalendarEvent} from '../../service/DAVService'
+import {importCalendarEvent} from '../../service/DAVService'
 import logger from '../../logger'
 
 export default {
@@ -127,11 +128,11 @@ export default {
 			return importCalendarEvent(calendar.url)(cal.toString())
 				.then(() => {
 					logger.debug('event successfully imported')
-					OCP.Toast.success(t('mail', 'Event imported into {calendar}', {calendar: calendar.displayname}))
+					showSuccess(t('mail', 'Event imported into {calendar}', {calendar: calendar.displayname}))
 				})
 				.catch((error) => {
 					logger.error('Could not import event', {error})
-					OCP.Toast.error(t('mail', 'Could not create event'))
+					showError(t('mail', 'Could not create event'))
 				})
 		},
 	},
