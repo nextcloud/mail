@@ -1,4 +1,6 @@
-<?php declare(strict_types=1);
+<?php
+
+declare(strict_types=1);
 
 /**
  * @copyright 2019 Christoph Wurst <christoph@winzerhof-wurst.at>
@@ -53,7 +55,6 @@ class FlagRepliedMessageListener implements IEventListener {
 								MailboxMapper $mailboxMapper,
 								MessageMapper $mapper,
 								ILogger $logger) {
-
 		$this->imapClientFactory = $imapClientFactory;
 		$this->mailboxMapper = $mailboxMapper;
 		$this->messageMapper = $mapper;
@@ -94,5 +95,4 @@ class FlagRepliedMessageListener implements IEventListener {
 			]);
 		}
 	}
-
 }

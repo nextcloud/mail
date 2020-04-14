@@ -1,4 +1,6 @@
-<?php declare(strict_types=1);
+<?php
+
+declare(strict_types=1);
 
 /**
  * @copyright 2019 Christoph Wurst <christoph@winzerhof-wurst.at>
@@ -26,5 +28,4 @@ namespace OCA\mail\lib\Exception;
 use OCA\Mail\Exception\ServiceException;
 
 class UidValidityChangedException extends ServiceException {
-
 }

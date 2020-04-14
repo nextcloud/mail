@@ -1,4 +1,6 @@
-<?php declare(strict_types=1);
+<?php
+
+declare(strict_types=1);
 
 /**
  * @copyright 2019 Christoph Wurst <christoph@winzerhof-wurst.at>
@@ -65,7 +67,6 @@ use function in_array;
  * @method int getUpdatedAt()
  */
 class Message extends Entity implements JsonSerializable {
-
 	private const MUTABLE_FLAGS = [
 		'answered',
 		'deleted',
@@ -216,5 +217,4 @@ class Message extends Entity implements JsonSerializable {
 			'bcc' => $this->getBcc()->jsonSerialize(),
 		];
 	}
-
 }

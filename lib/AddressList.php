@@ -1,4 +1,6 @@
-<?php declare(strict_types=1);
+<?php
+
+declare(strict_types=1);
 
 /**
  * @copyright 2017 Christoph Wurst <christoph@winzerhof-wurst.at>
@@ -60,12 +62,12 @@ class AddressList implements Countable, JsonSerializable {
 	 * @return AddressList
 	 */
 	public static function fromHorde(Horde_Mail_Rfc822_List $hordeList) {
-		$addresses = array_map(function(Horde_Mail_Rfc822_Address $addr) {
+		$addresses = array_map(function (Horde_Mail_Rfc822_Address $addr) {
 			return new Address($addr->personal, $addr->bare_address);
-		}, array_filter(iterator_to_array($hordeList), function(Horde_Mail_Rfc822_Object $obj) {
-				// TODO: how to handle non-addresses? This doesn't seem right …
-				return $obj instanceof Horde_Mail_Rfc822_Address;
-			}));
+		}, array_filter(iterator_to_array($hordeList), function (Horde_Mail_Rfc822_Object $obj) {
+			// TODO: how to handle non-addresses? This doesn't seem right …
+			return $obj instanceof Horde_Mail_Rfc822_Address;
+		}));
 		return new AddressList($addresses);
 	}
 
@@ -94,7 +96,7 @@ class AddressList implements Countable, JsonSerializable {
 	 * @return array
 	 */
 	public function jsonSerialize() {
-		return array_map(function(Address $address) {
+		return array_map(function (Address $address) {
 			return $address->jsonSerialize();
 		}, $this->addresses);
 	}
@@ -126,8 +128,8 @@ class AddressList implements Countable, JsonSerializable {
 	public function merge(AddressList $other) {
 		$addresses = $this->addresses;
 
-		array_walk($other->addresses, function(Address $address) use (&$addresses) {
-			$same = array_filter($addresses, function(Address $our) use ($address) {
+		array_walk($other->addresses, function (Address $address) use (&$addresses) {
+			$same = array_filter($addresses, function (Address $our) use ($address) {
 				// Check whether our array contains the other address
 				return $our->equals($address);
 			});
@@ -145,10 +147,9 @@ class AddressList implements Countable, JsonSerializable {
 	 * @return Horde_Mail_Rfc822_List
 	 */
 	public function toHorde() {
-		$hordeAddresses = array_map(function(Address $address) {
+		$hordeAddresses = array_map(function (Address $address) {
 			return $address->toHorde();
 		}, $this->addresses);
 		return new Horde_Mail_Rfc822_List($hordeAddresses);
 	}
-
 }

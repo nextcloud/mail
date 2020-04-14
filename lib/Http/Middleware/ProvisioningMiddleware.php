@@ -79,5 +79,4 @@ class ProvisioningMiddleware extends Middleware {
 			return;
 		}
 	}
-
 }

@@ -74,5 +74,4 @@ class Synchronizer {
 
 		return new Response($newMessages, $changedMessages, $vanishedMessageUids);
 	}
-
 }

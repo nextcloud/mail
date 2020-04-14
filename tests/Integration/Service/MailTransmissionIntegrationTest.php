@@ -44,7 +44,6 @@ use OCP\IUser;
 use OCP\Security\ICrypto;
 
 class MailTransmissionIntegrationTest extends TestCase {
-
 	use ImapTest,
 		TestUser;
 
@@ -212,5 +211,4 @@ class MailTransmissionIntegrationTest extends TestCase {
 
 		$this->assertMessageCount(1, 'Drafts');
 	}
-
 }

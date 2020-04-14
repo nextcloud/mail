@@ -134,5 +134,4 @@ class CompositeAvatarSourceTest extends TestCase {
 
 		$this->assertEquals($avatar, $actualAvatar);
 	}
-
 }

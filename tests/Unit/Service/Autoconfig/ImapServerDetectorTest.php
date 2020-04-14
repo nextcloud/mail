@@ -103,5 +103,4 @@ class ImapServerDetectorTest extends TestCase {
 
 		$this->assertNull($account);
 	}
-
 }

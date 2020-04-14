@@ -149,5 +149,4 @@ class FolderTest extends TestCase {
 		];
 		$this->assertEquals($expected, $this->folder->jsonSerialize());
 	}
-
 }

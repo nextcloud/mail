@@ -1,4 +1,6 @@
-<?php declare(strict_types=1);
+<?php
+
+declare(strict_types=1);
 
 /**
  * @author Christoph Wurst <christoph@winzerhof-wurst.at>
@@ -296,5 +298,4 @@ class PageControllerTest extends TestCase {
 
 		$this->assertEquals($expected, $response);
 	}
-
 }

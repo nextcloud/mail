@@ -34,15 +34,13 @@ class HtmlResponseTest extends TestCase {
 	 * @param $contentType
 	 */
 	public function testIt($content) {
-
 		$resp = new HtmlResponse($content);
 		$this->assertEquals($content, $resp->render());
 	}
 
 	public function providesResponseData() {
 		return [
-				['1234567890']
+			['1234567890']
 		];
 	}
-
 }

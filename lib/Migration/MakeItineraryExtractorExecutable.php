@@ -74,5 +74,4 @@ class MakeItineraryExtractorExecutable implements IRepairStep {
 			return;
 		}
 	}
-
 }

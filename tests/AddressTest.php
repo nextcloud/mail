@@ -29,7 +29,6 @@ use Horde_Mail_Rfc822_Address;
 use OCA\Mail\Address;
 
 class AddressTest extends TestCase {
-
 	public function testSerialization() {
 		$address = new Address('Christoph Wurst', 'christoph@domain.tld');
 
@@ -86,5 +85,4 @@ class AddressTest extends TestCase {
 
 		$this->assertFalse($equals);
 	}
-
 }

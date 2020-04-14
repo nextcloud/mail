@@ -1,4 +1,6 @@
-<?php declare(strict_types=1);
+<?php
+
+declare(strict_types=1);
 
 /**
  * @copyright 2019 Christoph Wurst <christoph@winzerhof-wurst.at>
@@ -70,7 +72,7 @@ class DeleteDraftListener implements IEventListener {
 	public function handle(Event $event): void {
 		if ($event instanceof DraftSavedEvent && $event->getDraftUid() !== null) {
 			$this->deleteDraft($event->getAccount(), $event->getDraftUid());
-		} else if ($event instanceof MessageSentEvent && $event->getDraftUid() !== null) {
+		} elseif ($event instanceof MessageSentEvent && $event->getDraftUid() !== null) {
 			$this->deleteDraft($event->getAccount(), $event->getDraftUid());
 		}
 	}
@@ -138,5 +140,4 @@ class DeleteDraftListener implements IEventListener {
 		// TODO: find a more elegant solution for updating the mailbox cache
 		$this->mailboxSync->sync($account, true);
 	}
-
 }

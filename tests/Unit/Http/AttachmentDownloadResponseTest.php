@@ -46,8 +46,7 @@ class AttachmentDownloadResponseTest extends TestCase {
 
 	public function providesResponseData() {
 		return [
-				['1234567890', 'test.txt', 'text/plain']
+			['1234567890', 'test.txt', 'text/plain']
 		];
 	}
-
 }

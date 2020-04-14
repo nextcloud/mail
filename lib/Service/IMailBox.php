@@ -58,5 +58,4 @@ interface IMailBox {
 	 * @return array
 	 */
 	public function getStatus(int $flags = Horde_Imap_Client::STATUS_ALL): array;
-
 }

@@ -1,4 +1,5 @@
 <?php
+
 declare(strict_types=1);
 
 /**
@@ -136,7 +137,7 @@ class MailAccountMapper extends QBMapper {
 		$delete->execute();
 	}
 
-	public function getAllAccounts(): array  {
+	public function getAllAccounts(): array {
 		$qb = $this->db->getQueryBuilder();
 		$query = $qb
 			->select('*')
@@ -144,5 +145,4 @@ class MailAccountMapper extends QBMapper {
 
 		return $this->findEntities($query);
 	}
-
 }

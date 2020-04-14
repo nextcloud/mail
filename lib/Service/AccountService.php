@@ -68,7 +68,8 @@ class AccountService {
 		if ($this->accounts === null) {
 			return $this->accounts = array_map(function ($a) {
 				return new Account($a);
-			}, $this->mapper->findByUserId($currentUserId));;
+			}, $this->mapper->findByUserId($currentUserId));
+			;
 		}
 
 		return $this->accounts;
@@ -153,5 +154,4 @@ class AccountService {
 		$mailAccount->setSignature($signature);
 		$this->mapper->save($mailAccount);
 	}
-
 }

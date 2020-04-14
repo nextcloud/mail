@@ -96,5 +96,4 @@ class ImapConnectivityTester {
 		}
 		return null;
 	}
-
 }

@@ -47,6 +47,4 @@ interface IGroupService {
 	 * @return array with group's users as associative arrays
 	 */
 	public function getUsers(string $groupId): array;
-
 }
-

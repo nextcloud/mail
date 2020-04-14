@@ -1,4 +1,6 @@
-<?php declare(strict_types=1);
+<?php
+
+declare(strict_types=1);
 
 /**
  * @copyright 2019 Christoph Wurst <christoph@winzerhof-wurst.at>
@@ -27,7 +29,6 @@ use OCA\Mail\Db\Mailbox;
 use OCP\AppFramework\Http;
 
 class MailboxLockedException extends ClientException {
-
 	public static function from(Mailbox $mailbox): self {
 		return new self($mailbox->getId() . ' is already being synced');
 	}
@@ -35,5 +36,4 @@ class MailboxLockedException extends ClientException {
 	public function getHttpCode(): int {
 		return Http::STATUS_CONFLICT;
 	}
-
 }

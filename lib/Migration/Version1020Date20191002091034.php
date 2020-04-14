@@ -1,4 +1,6 @@
-<?php declare(strict_types=1);
+<?php
+
+declare(strict_types=1);
 
 namespace OCA\Mail\Migration;
 
@@ -29,5 +31,4 @@ class Version1020Date20191002091034 extends SimpleMigrationStep {
 
 		return $schema;
 	}
-
 }

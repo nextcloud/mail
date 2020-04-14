@@ -129,5 +129,4 @@ class ErrorMiddleware extends Middleware {
 
 		return false;
 	}
-
 }

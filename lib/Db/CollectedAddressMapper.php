@@ -100,5 +100,4 @@ class CollectedAddressMapper extends QBMapper {
 
 		return $this->findEntities($query);
 	}
-
 }

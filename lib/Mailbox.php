@@ -251,7 +251,7 @@ class Mailbox implements IMailBox {
 				strtolower(Horde_Imap_Client::SPECIALUSE_TRASH)
 			];
 
-			$attributes = array_map(function($n) {
+			$attributes = array_map(function ($n) {
 				return strtolower($n);
 			}, $this->attributes);
 
@@ -272,7 +272,6 @@ class Mailbox implements IMailBox {
 	 * @return void
 	 */
 	protected function guessSpecialRole(): void {
-
 		$specialFoldersDict = [
 			'inbox' => ['inbox'],
 			'sent' => ['sent', 'sent items', 'sent messages', 'sent-mail', 'sentmail'],
@@ -321,5 +320,4 @@ class Mailbox implements IMailBox {
 
 		return reset($uids);
 	}
-
 }

@@ -44,5 +44,4 @@ class AvatarDownloadResponse extends DownloadResponse {
 	public function render(): string {
 		return $this->content;
 	}
-
 }

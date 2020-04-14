@@ -51,7 +51,6 @@ use function base64_encode;
 use function mb_convert_encoding;
 
 class IMAPMessage implements IMessage, JsonSerializable {
-
 	use ConvertAddresses;
 
 	/**
@@ -651,5 +650,4 @@ class IMAPMessage implements IMessage, JsonSerializable {
 
 		return $msg;
 	}
-
 }

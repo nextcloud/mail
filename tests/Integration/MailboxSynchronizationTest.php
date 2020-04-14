@@ -34,7 +34,6 @@ use OCA\Mail\Tests\Integration\Framework\ImapTest;
 use OCA\Mail\Tests\Integration\Framework\ImapTestAccount;
 
 class MailboxSynchronizationTest extends TestCase {
-
 	use ImapTest,
 		ImapTestAccount;
 
@@ -181,5 +180,4 @@ class MailboxSynchronizationTest extends TestCase {
 		// $this->assertCount(0, $syncJson['changedMessages']);
 		$this->assertCount(1, $syncJson['vanishedMessages']);
 	}
-
 }

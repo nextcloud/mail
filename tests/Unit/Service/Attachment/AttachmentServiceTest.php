@@ -57,13 +57,13 @@ class AttachmentServiceTest extends TestCase {
 			->method('getFileName')
 			->willReturn('cat.jpg');
 		$attachment = LocalAttachment::fromParams([
-				'userId' => $userId,
-				'fileName' => 'cat.jpg',
+			'userId' => $userId,
+			'fileName' => 'cat.jpg',
 		]);
 		$persistedAttachment = LocalAttachment::fromParams([
-				'id' => 123,
-				'userId' => $userId,
-				'fileName' => 'cat.jpg',
+			'id' => 123,
+			'userId' => $userId,
+			'fileName' => 'cat.jpg',
 		]);
 		$this->mapper->expects($this->once())
 			->method('insert')
@@ -88,13 +88,13 @@ class AttachmentServiceTest extends TestCase {
 			->method('getFileName')
 			->willReturn('cat.jpg');
 		$attachment = LocalAttachment::fromParams([
-				'userId' => $userId,
-				'fileName' => 'cat.jpg',
+			'userId' => $userId,
+			'fileName' => 'cat.jpg',
 		]);
 		$persistedAttachment = LocalAttachment::fromParams([
-				'id' => 123,
-				'userId' => $userId,
-				'fileName' => 'cat.jpg',
+			'id' => 123,
+			'userId' => $userId,
+			'fileName' => 'cat.jpg',
 		]);
 		$this->mapper->expects($this->once())
 			->method('insert')
@@ -106,5 +106,4 @@ class AttachmentServiceTest extends TestCase {
 
 		$this->service->addFile($userId, $uploadedFile);
 	}
-
 }

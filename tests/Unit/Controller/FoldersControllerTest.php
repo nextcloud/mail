@@ -160,5 +160,4 @@ class FoldersControllerTest extends TestCase {
 
 		$this->controller->update();
 	}
-
 }

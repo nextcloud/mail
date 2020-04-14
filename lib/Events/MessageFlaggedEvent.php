@@ -78,5 +78,4 @@ class MessageFlaggedEvent extends Event {
 	public function isSet(): bool {
 		return $this->set;
 	}
-
 }

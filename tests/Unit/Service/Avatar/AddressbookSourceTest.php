@@ -75,5 +75,4 @@ class AddressbookSourceTest extends TestCase {
 
 		$this->assertNull($avatar);
 	}
-
 }

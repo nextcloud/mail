@@ -73,5 +73,4 @@ class PreferencesControllerTest extends TestCase {
 
 		$this->assertEquals($expected, $actual);
 	}
-
 }

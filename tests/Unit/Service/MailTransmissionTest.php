@@ -1,4 +1,6 @@
-<?php declare(strict_types=1);
+<?php
+
+declare(strict_types=1);
 
 /**
  * @author Christoph Wurst <christoph@winzerhof-wurst.at>
@@ -247,5 +249,4 @@ class MailTransmissionTest extends TestCase {
 
 		$this->assertEquals(13, $newId);
 	}
-
 }

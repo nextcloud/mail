@@ -112,5 +112,4 @@ class PreviewEnhancer {
 			return $message;
 		}, $messages));
 	}
-
 }

@@ -79,5 +79,4 @@ class SmtpConnectivityTesterTest extends TestCase {
 
 		$this->assertFalse($result);
 	}
-
 }

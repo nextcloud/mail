@@ -72,7 +72,6 @@ class ImapConnector {
 							int $port,
 							string $encryptionProtocol,
 							string $user): MailAccount {
-
 		$account = new MailAccount();
 		$account->setUserId($this->userId);
 		$account->setName($name);
@@ -90,5 +89,4 @@ class ImapConnector {
 		$this->logger->info("Test-Account-Successful: $this->userId, $host, $port, $user, $encryptionProtocol");
 		return $account;
 	}
-
 }

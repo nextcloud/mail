@@ -40,7 +40,6 @@ use function json_decode;
 use function sort;
 
 class DiagnoseAccount extends Command {
-
 	private const ARGUMENT_ACCOUNT_ID = 'account-id';
 
 	/** @var AccountService */
@@ -139,5 +138,4 @@ class DiagnoseAccount extends Command {
 		}, 0);
 		$output->writeln("Account has " . $messages . " messages in " . count($mailboxes) . " mailboxes");
 	}
-
 }

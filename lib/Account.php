@@ -233,5 +233,4 @@ class Account implements JsonSerializable {
 	public function newMessage() {
 		return new Message();
 	}
-
 }

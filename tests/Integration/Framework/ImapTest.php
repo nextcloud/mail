@@ -95,7 +95,7 @@ trait ImapTest {
 	 * @return array<string>
 	 */
 	private function listMailboxes(Horde_Imap_Client_Socket $client) {
-		return array_map(function($mailbox) {
+		return array_map(function ($mailbox) {
 			return $mailbox['mailbox'];
 		}, $client->listMailboxes('*'));
 	}
@@ -145,10 +145,10 @@ trait ImapTest {
 		$data = stream_get_contents($raw);
 
 		return $client->append($mailbox, [
-				[
-					'data' => $data,
-				]
-			])->ids[0];
+			[
+				'data' => $data,
+			]
+		])->ids[0];
 	}
 
 	public function flagMessage($mailbox, $id, MailAccount $account = null) {
@@ -252,5 +252,4 @@ trait ImapTest {
 		}
 		return $client;
 	}
-
 }

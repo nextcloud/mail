@@ -1,4 +1,6 @@
-<?php declare(strict_types=1);
+<?php
+
+declare(strict_types=1);
 
 /**
  * @copyright 2019 Christoph Wurst <christoph@winzerhof-wurst.at>
@@ -87,7 +89,7 @@ class ItineraryService {
 			$this->logger->debug('Message does not have an HTML body, can\'t extract itinerary info');
 		}
 		$attachments = $this->messageMapper->getRawAttachments($client, $mailbox->getName(), $id);
-		$itinerary = array_reduce($attachments, function(Itinerary $combined, string $attachment) {
+		$itinerary = array_reduce($attachments, function (Itinerary $combined, string $attachment) {
 			$extracted = $this->extractor->extract($attachment);
 			$this->logger->debug('Extracted ' . count($extracted) . ' itinerary entries from an attachment');
 			return $combined->merge($extracted);
@@ -102,5 +104,4 @@ class ItineraryService {
 
 		return $final;
 	}
-
 }

@@ -25,7 +25,6 @@ use ChristophWurst\Nextcloud\Testing\TestCase;
 use OCA\Mail\Command\CreateAccount;
 
 class CreateAccountTest extends TestCase {
-
 	private $service;
 	private $crypto;
 	private $command;
@@ -72,5 +71,4 @@ class CreateAccountTest extends TestCase {
 			$this->assertTrue(in_array($actArg->getName(), $this->args));
 		}
 	}
-
 }

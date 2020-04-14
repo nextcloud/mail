@@ -178,5 +178,4 @@ class Manager {
 			// Nothing to update
 		}
 	}
-
 }

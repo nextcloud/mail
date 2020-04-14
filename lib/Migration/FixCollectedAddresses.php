@@ -82,5 +82,4 @@ class FixCollectedAddresses implements IRepairStep {
 			$this->mapper->delete($address);
 		}
 	}
-
 }

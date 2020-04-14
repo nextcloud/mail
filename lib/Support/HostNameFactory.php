@@ -44,5 +44,4 @@ class HostNameFactory {
 	public function getHostName(): string {
 		return Util::getServerHostName();
 	}
-
 }

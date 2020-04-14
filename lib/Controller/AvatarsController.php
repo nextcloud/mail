@@ -124,5 +124,4 @@ class AvatarsController extends Controller {
 		$response->cacheFor(0);
 		return $response;
 	}
-
 }

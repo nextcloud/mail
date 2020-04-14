@@ -62,5 +62,4 @@ class MigrateProvisioningConfig implements IRepairStep {
 		$this->config->deleteSystemValue('app.mail.accounts.default');
 		$output->info("Config migrated. Accounts not updated yet");
 	}
-
 }

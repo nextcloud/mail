@@ -105,5 +105,4 @@ class AddressCollector {
 		$this->logger->debug("found " . count($result) . " matches in collected addresses");
 		return $result;
 	}
-
 }

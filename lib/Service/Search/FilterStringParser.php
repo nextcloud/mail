@@ -1,4 +1,6 @@
-<?php declare(strict_types=1);
+<?php
+
+declare(strict_types=1);
 
 /**
  * @copyright 2019 Christoph Wurst <christoph@winzerhof-wurst.at>
@@ -26,7 +28,6 @@ namespace OCA\Mail\Service\Search;
 use Horde_Imap_Client;
 
 class FilterStringParser {
-
 	private const FLAG_MAP = [
 		'answered' => [Horde_Imap_Client::FLAG_ANSWERED, true],
 		'read' => [Horde_Imap_Client::FLAG_SEEN, true],
@@ -85,5 +86,4 @@ class FilterStringParser {
 
 		return false;
 	}
-
 }

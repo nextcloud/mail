@@ -111,5 +111,4 @@ class AttachmentStorage {
 	public function delete(string $userId, int $attachmentId): void {
 		throw new Exception('not implemented');
 	}
-
 }

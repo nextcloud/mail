@@ -36,7 +36,6 @@ class FolderStats implements JsonSerializable {
 	private $unread;
 
 	public function __construct(int $total, int $unread) {
-
 		$this->total = $total;
 		$this->unread = $unread;
 	}

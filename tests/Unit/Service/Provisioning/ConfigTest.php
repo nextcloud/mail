@@ -26,7 +26,6 @@ use OCA\Mail\Service\Provisioning\Config;
 use OCP\IUser;
 
 class ConfigTest extends TestCase {
-
 	public function testBuildEmailWithUserId() {
 		$user = $this->createMock(IUser::class);
 		$config = new Config([
@@ -194,5 +193,4 @@ class ConfigTest extends TestCase {
 
 		$this->assertEquals('user@domain.se', $config->buildImapUser($user));
 	}
-
 }

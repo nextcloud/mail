@@ -80,5 +80,4 @@ class PreferencesController extends Controller {
 			'value' => $newValue,
 		]);
 	}
-
 }

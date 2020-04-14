@@ -1,4 +1,6 @@
-<?php declare(strict_types=1);
+<?php
+
+declare(strict_types=1);
 
 /**
  * @copyright 2020 Christoph Wurst <christoph@winzerhof-wurst.at>
@@ -58,6 +60,4 @@ class MessageDeletedEvent extends Event {
 	public function getMessageId(): int {
 		return $this->messageId;
 	}
-
-
 }

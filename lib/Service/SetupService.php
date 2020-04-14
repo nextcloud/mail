@@ -130,7 +130,6 @@ class SetupService {
 			return new Account($newAccount);
 		}
 
-			return null;
+		return null;
 	}
-
 }

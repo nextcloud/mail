@@ -81,5 +81,4 @@ class DownloaderTest extends TestCase {
 
 		$this->assertNull($data);
 	}
-
 }

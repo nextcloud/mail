@@ -71,5 +71,4 @@ class ImapConnectivityTesterTest extends TestCase {
 
 		$this->assertNull($result);
 	}
-
 }

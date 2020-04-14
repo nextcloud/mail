@@ -101,5 +101,4 @@ class SetupServiceTest extends TestCase {
 
 		$this->assertEquals($expected, $actual);
 	}
-
 }

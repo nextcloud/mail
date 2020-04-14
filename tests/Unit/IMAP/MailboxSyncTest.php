@@ -117,5 +117,4 @@ class MailboxSyncTest extends TestCase {
 
 		$this->sync->sync($account);
 	}
-
 }

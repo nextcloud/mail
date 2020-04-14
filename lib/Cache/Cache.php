@@ -35,7 +35,7 @@ use InvalidArgumentException;
 class Cache extends Horde_Imap_Client_Cache_Backend {
 
 	/** Cache structure version. */
-	const VERSION = 3;
+	public const VERSION = 3;
 
 	/**
 	 * The cache object.
@@ -476,5 +476,4 @@ class Cache extends Horde_Imap_Client_Cache_Backend {
 		$this->save();
 		return parent::serialize();
 	}
-
 }

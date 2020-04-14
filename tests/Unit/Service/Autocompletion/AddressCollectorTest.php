@@ -28,7 +28,6 @@ use OCA\Mail\Service\AutoCompletion\AddressCollector;
 use OCP\ILogger;
 
 class AddressCollectorTest extends TestCase {
-
 	private $mapper;
 	private $userId = 'testuser';
 	private $logger;
@@ -109,5 +108,4 @@ class AddressCollectorTest extends TestCase {
 
 		$this->assertequals($mapperResult, $result);
 	}
-
 }

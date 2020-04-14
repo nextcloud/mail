@@ -32,7 +32,6 @@ use OCA\Mail\Address;
 use OCA\Mail\AddressList;
 
 class AddressListTest extends TestCase {
-
 	public function testSerialize() {
 		$list = new AddressList([
 			new Address('User 1', 'user1@domain.tld'),
@@ -182,5 +181,4 @@ class AddressListTest extends TestCase {
 
 		$this->assertCount(2, $c);
 	}
-
 }

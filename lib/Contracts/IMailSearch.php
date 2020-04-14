@@ -1,4 +1,6 @@
-<?php declare(strict_types=1);
+<?php
+
+declare(strict_types=1);
 
 /**
  * @copyright 2019 Christoph Wurst <christoph@winzerhof-wurst.at>
@@ -55,5 +57,4 @@ interface IMailSearch {
 	 * @throws ServiceException
 	 */
 	public function findMessages(Account $account, string $mailboxName, ?string $filter, ?int $cursor): array;
-
 }

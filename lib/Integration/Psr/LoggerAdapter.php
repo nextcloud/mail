@@ -1,4 +1,6 @@
-<?php declare(strict_types=1);
+<?php
+
+declare(strict_types=1);
 
 /**
  * @copyright 2019 Christoph Wurst <christoph@winzerhof-wurst.at>
@@ -154,5 +156,4 @@ class LoggerAdapter implements LoggerInterface {
 	public function log($level, $message, array $context = []) {
 		$this->logger->log($level, $message, $context);
 	}
-
 }

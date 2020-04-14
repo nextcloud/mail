@@ -66,5 +66,4 @@ class UserPreferenceServiceTest extends TestCase {
 
 		$this->service->setPreference('test', '123');
 	}
-
 }

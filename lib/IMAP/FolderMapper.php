@@ -62,7 +62,7 @@ class FolderMapper {
 			'special_use' => true,
 		]);
 
-		return array_filter(array_map(function(array $mailbox) use ($account) {
+		return array_filter(array_map(function (array $mailbox) use ($account) {
 			if (in_array($mailbox['mailbox']->utf8, self::DOVECOT_SIEVE_FOLDERS, true)) {
 				// This is a special folder that must not be shown
 				return null;
@@ -219,5 +219,4 @@ class FolderMapper {
 			}
 		}
 	}
-
 }

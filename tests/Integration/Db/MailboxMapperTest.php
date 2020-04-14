@@ -1,4 +1,6 @@
-<?php declare(strict_types=1);
+<?php
+
+declare(strict_types=1);
 
 /**
  * @copyright 2019 Christoph Wurst <christoph@winzerhof-wurst.at>
@@ -34,7 +36,6 @@ use OCP\IDBConnection;
 use PHPUnit\Framework\MockObject\MockObject;
 
 class MailboxMapperTest extends TestCase {
-
 	use DatabaseTransaction;
 
 	/** @var IDBConnection */
@@ -162,5 +163,4 @@ class MailboxMapperTest extends TestCase {
 
 		$this->assertSame('Trash', $result->getName());
 	}
-
 }

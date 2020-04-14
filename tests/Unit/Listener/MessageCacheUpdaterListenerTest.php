@@ -105,5 +105,4 @@ class MessageCacheUpdaterListenerTest extends TestCase {
 
 		$this->assertTrue($message->getFlagJunk());
 	}
-
 }

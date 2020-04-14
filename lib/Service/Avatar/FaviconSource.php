@@ -1,4 +1,6 @@
-<?php declare(strict_types=1);
+<?php
+
+declare(strict_types=1);
 
 /**
  * @author Christoph Wurst <christoph@winzerhof-wurst.at>
@@ -89,5 +91,4 @@ class FaviconSource implements IAvatarSource {
 
 		return $factory->createExternal($iconUrl, $mime);
 	}
-
 }

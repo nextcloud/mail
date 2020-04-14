@@ -26,5 +26,4 @@ namespace OCA\Mail\Exception;
 use Exception;
 
 class ServiceException extends Exception {
-
 }

@@ -49,5 +49,4 @@ class MxRecordTest extends TestCase {
 
 		$this->assertFalse($records);
 	}
-
 }

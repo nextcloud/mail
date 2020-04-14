@@ -124,7 +124,7 @@ class FoldersController extends Controller {
 				$account,
 				base64_decode($folderId),
 				Horde_Imap_Client::SYNC_NEWMSGSUIDS | Horde_Imap_Client::SYNC_FLAGSUIDS | Horde_Imap_Client::SYNC_VANISHEDUIDS,
-				array_map(function($uid) {
+				array_map(function ($uid) {
 					return (int) $uid;
 				}, $uids),
 				!$init,
@@ -212,5 +212,4 @@ class FoldersController extends Controller {
 
 		return new JSONResponse($this->mailManager->createFolder($account, $name));
 	}
-
 }

@@ -61,5 +61,4 @@ class UserPreferenceSevice implements IUserPreferences {
 	public function getPreference($key, $default = null) {
 		return $this->config->getUserValue($this->UserId, 'mail', $key, $default);
 	}
-
 }

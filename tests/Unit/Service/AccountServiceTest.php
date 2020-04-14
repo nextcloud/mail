@@ -156,5 +156,4 @@ class AccountServiceTest extends TestCase {
 
 		$this->accountService->updateSignature($id, $uid, $signature);
 	}
-
 }

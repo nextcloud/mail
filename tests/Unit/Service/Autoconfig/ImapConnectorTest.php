@@ -91,5 +91,4 @@ class ImapConnectorTest extends TestCase {
 
 		$this->fail('should not have been reached');
 	}
-
 }

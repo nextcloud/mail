@@ -78,5 +78,4 @@ class MessageMapperTest extends TestCase {
 
 		$this->assertEquals($expected, $result);
 	}
-
 }

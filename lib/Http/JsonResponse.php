@@ -39,7 +39,6 @@ use function get_class;
  * @see https://github.com/omniti-labs/jsend
  */
 class JsonResponse extends Base {
-
 	public function __construct($data = [],
 								int $statusCode = Http::STATUS_OK) {
 		parent::__construct($data, $statusCode);
@@ -127,5 +126,4 @@ class JsonResponse extends Base {
 				array_flip(['file', 'line', 'function', 'class']));
 		}, $original);
 	}
-
 }

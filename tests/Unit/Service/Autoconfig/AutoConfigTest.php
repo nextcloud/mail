@@ -95,5 +95,4 @@ class AutoConfigTest extends TestCase {
 
 		$this->assertSame($account, $result);
 	}
-
 }

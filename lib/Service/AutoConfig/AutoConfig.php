@@ -56,5 +56,4 @@ class AutoConfig {
 		}
 		return $this->configDetector->detectImapAndSmtp($email, $password, $name);
 	}
-
 }

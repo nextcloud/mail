@@ -58,7 +58,7 @@ class AvatarControllerTest extends TestCase {
 			->method('getTime')
 			->willReturn(10000);
 		$this->oldFactory = \OC::$server->offsetGet(ITimeFactory::class);
-		\OC::$server->registerService(ITimeFactory::class, function() use ($timeFactory) {
+		\OC::$server->registerService(ITimeFactory::class, function () use ($timeFactory) {
 			return $timeFactory;
 		});
 
@@ -130,5 +130,4 @@ class AvatarControllerTest extends TestCase {
 		$expected->cacheFor(0);
 		$this->assertEquals($expected, $resp);
 	}
-
 }

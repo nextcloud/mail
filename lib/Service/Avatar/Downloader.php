@@ -53,5 +53,4 @@ class Downloader {
 
 		return $resp->getBody();
 	}
-
 }

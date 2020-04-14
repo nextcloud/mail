@@ -388,5 +388,4 @@ class AccountsController extends Controller {
 			throw $ex;
 		}
 	}
-
 }

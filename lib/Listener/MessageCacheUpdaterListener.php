@@ -66,5 +66,4 @@ class MessageCacheUpdaterListener implements IEventListener {
 			);
 		}
 	}
-
 }

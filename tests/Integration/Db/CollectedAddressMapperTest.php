@@ -33,7 +33,6 @@ use OCP\IDBConnection;
  * @group DB
  */
 class CollectedAddressMapperTest extends TestCase {
-
 	use DatabaseTransaction;
 
 	/** @var IDBConnection */
@@ -159,5 +158,4 @@ class CollectedAddressMapperTest extends TestCase {
 
 		$this->assertCount(2, $chunk);
 	}
-
 }

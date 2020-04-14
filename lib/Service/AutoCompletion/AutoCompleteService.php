@@ -61,5 +61,4 @@ class AutoCompleteService {
 
 		return array_merge($recipientsFromContacts, $recipientsFromCollector, $recipientGroups);
 	}
-
 }

@@ -97,7 +97,6 @@ class GroupsIntegrationTest extends TestCase {
 		$actual = $this->groupsIntegration->expand($recipients);
 
 		$this->assertEquals($expected, $actual);
-
 	}
 
 	public function testExpand() {
@@ -123,7 +122,6 @@ class GroupsIntegrationTest extends TestCase {
 		$actual = $this->groupsIntegration->expand($recipients);
 
 		$this->assertEquals($expected, $actual);
-
 	}
 
 	public function testExpand2() {
@@ -149,7 +147,6 @@ class GroupsIntegrationTest extends TestCase {
 		$actual = $this->groupsIntegration->expand($recipients);
 
 		$this->assertEquals($expected, $actual);
-
 	}
 
 	public function testExpandUmlauts() {
@@ -221,7 +218,6 @@ class GroupsIntegrationTest extends TestCase {
 		$actual = $this->groupsIntegration->expand($recipients);
 
 		$this->assertEquals($expected, $actual);
-
 	}
 
 	public function testExpandWrong2() {
@@ -229,7 +225,5 @@ class GroupsIntegrationTest extends TestCase {
 		$recipients = "john@doe.com,namespace1:nogroup,alice@smith.net";
 
 		$this->groupsIntegration->expand($recipients);
-
 	}
-
 }

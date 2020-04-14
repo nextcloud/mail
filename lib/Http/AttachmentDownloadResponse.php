@@ -53,5 +53,4 @@ class AttachmentDownloadResponse extends DownloadResponse {
 	public function render(): string {
 		return $this->content;
 	}
-
 }

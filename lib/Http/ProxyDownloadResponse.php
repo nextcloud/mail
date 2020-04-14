@@ -60,5 +60,4 @@ class ProxyDownloadResponse extends DownloadResponse {
 	public function render(): string {
 		return $this->content;
 	}
-
 }

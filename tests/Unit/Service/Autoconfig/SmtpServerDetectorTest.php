@@ -101,5 +101,4 @@ class SmtpServerDetectorTest extends TestCase {
 
 		$this->assertFalse($result);
 	}
-
 }
