@@ -27,7 +27,6 @@ use JsonSerializable;
 use OCP\IUser;
 
 class Config implements JsonSerializable {
-
 	private const VERSION = 1;
 
 	/** @var mixed[] */
@@ -146,5 +145,4 @@ class Config implements JsonSerializable {
 			$this->data
 		);
 	}
-
 }

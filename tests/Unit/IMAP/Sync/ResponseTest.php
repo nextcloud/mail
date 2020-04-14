@@ -25,7 +25,6 @@ use ChristophWurst\Nextcloud\Testing\TestCase;
 use OCA\Mail\IMAP\Sync\Response;
 
 class ResponseTest extends TestCase {
-
 	public function testJsonSerialize() {
 		$newMessages = [];
 		$changedMessages = [];
@@ -41,5 +40,4 @@ class ResponseTest extends TestCase {
 
 		$this->assertEquals($expected, $json);
 	}
-
 }

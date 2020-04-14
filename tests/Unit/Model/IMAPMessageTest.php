@@ -31,7 +31,6 @@ use OCA\Mail\Model\IMAPMessage;
 use OCA\Mail\Service\Html;
 
 class IMAPMessageTest extends TestCase {
-
 	public function testNoFrom() {
 		$data = new Horde_Imap_Client_Data_Fetch();
 		$m = new IMAPMessage(null, 'INBOX', 123, $data);
@@ -56,8 +55,8 @@ class IMAPMessageTest extends TestCase {
 		$urlGenerator->expects($this->any())
 			->method('linkToRoute')
 			->will($this->returnCallback(function ($url) {
-					return "https://docs.example.com/server/go.php?to=$url";
-				}));
+				return "https://docs.example.com/server/go.php?to=$url";
+			}));
 		$htmlService = new Html($urlGenerator, $request);
 
 		// mock first fetch
@@ -91,5 +90,4 @@ class IMAPMessageTest extends TestCase {
 
 		$this->assertEquals(1234, $json['id']);
 	}
-
 }

@@ -92,5 +92,4 @@ class GravatarSourceTest extends TestCase {
 
 		$this->assertNull($actualAvatar);
 	}
-
 }

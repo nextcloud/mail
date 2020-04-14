@@ -30,9 +30,7 @@ use Exception;
 use OCP\AppFramework\Http;
 
 class ClientException extends Exception {
-
 	public function getHttpCode(): int {
 		return Http::STATUS_BAD_REQUEST;
 	}
-
 }

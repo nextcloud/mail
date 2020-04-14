@@ -1,4 +1,6 @@
-<?php declare(strict_types=1);
+<?php
+
+declare(strict_types=1);
 
 /**
  * @copyright 2019 Christoph Wurst <christoph@winzerhof-wurst.at>
@@ -61,7 +63,6 @@ use function strtolower;
  * @method void setSpecialUse(string $specialUse)
  */
 class Mailbox extends Entity {
-
 	protected $name;
 	protected $accountId;
 	protected $syncNewToken;
@@ -126,5 +127,4 @@ class Mailbox extends Entity {
 			|| $this->getSyncChangedLock() !== null
 			|| $this->getSyncVanishedLock() !== null;
 	}
-
 }

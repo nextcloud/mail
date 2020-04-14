@@ -130,5 +130,4 @@ class IspDb {
 		}
 		return $provider;
 	}
-
 }

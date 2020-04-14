@@ -192,5 +192,4 @@ class ProxyControllerTest extends TestCase {
 
 		$this->assertEquals($expected, $response);
 	}
-
 }

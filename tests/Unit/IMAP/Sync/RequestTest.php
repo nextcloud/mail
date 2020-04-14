@@ -51,5 +51,4 @@ class RequestTest extends TestCase {
 	public function testGetSyncToken() {
 		$this->assertEquals($this->syncToken, $this->request->getToken());
 	}
-
 }

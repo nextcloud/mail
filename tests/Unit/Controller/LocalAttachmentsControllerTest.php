@@ -84,5 +84,4 @@ class LocalAttachmentsControllerTest extends TestCase {
 
 		$this->assertEquals(new JSONResponse($attachment, 201), $actual);
 	}
-
 }

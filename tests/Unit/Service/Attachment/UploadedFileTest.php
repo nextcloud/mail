@@ -25,7 +25,6 @@ use ChristophWurst\Nextcloud\Testing\TestCase;
 use OCA\Mail\Service\Attachment\UploadedFile;
 
 class UploadedFileTest extends TestCase {
-
 	public function testGetFileNameNotExisting() {
 		$file = new UploadedFile([]);
 
@@ -53,5 +52,4 @@ class UploadedFileTest extends TestCase {
 
 		$this->assertEquals('/tmp/path', $file->getTempPath());
 	}
-
 }

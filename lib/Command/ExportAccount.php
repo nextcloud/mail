@@ -29,8 +29,7 @@ use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\OutputInterface;
 
 class ExportAccount extends Command {
-
-	const ARGUMENT_USER_ID = 'user-id';
+	public const ARGUMENT_USER_ID = 'user-id';
 
 	/** @var AccountService */
 	private $accountService;
@@ -72,5 +71,4 @@ class ExportAccount extends Command {
 			$output->writeln("- SMTP host: " . $account->getMailAccount()->getOutboundHost() . ":" . $account->getMailAccount()->getOutboundPort() . ", security: " . $account->getMailAccount()->getOutboundSslMode());
 		}
 	}
-
 }

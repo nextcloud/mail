@@ -30,7 +30,6 @@ use OCP\Files\File;
 use OCP\Files\SimpleFS\ISimpleFile;
 
 class Message implements IMessage {
-
 	use ConvertAddresses;
 
 	/** @var string */
@@ -253,5 +252,4 @@ class Message implements IMessage {
 		$part->setType($file->getMimeType());
 		$this->localAttachments[] = $part;
 	}
-
 }

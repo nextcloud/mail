@@ -61,5 +61,4 @@ class ConfigurationDetector {
 
 		return $account;
 	}
-
 }

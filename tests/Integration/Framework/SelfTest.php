@@ -27,7 +27,6 @@ use OCA\Mail\Tests\Integration\TestCase;
  * Tests the IMAP test framework functionality
  */
 class SelfTest extends TestCase {
-
 	use ImapTest;
 
 	public function testResetAccount() {
@@ -51,5 +50,4 @@ class SelfTest extends TestCase {
 		$this->assertMessageCount(1, 'INBOX');
 		$this->assertIsInt($id);
 	}
-
 }

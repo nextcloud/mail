@@ -28,7 +28,6 @@ use Horde_Mail_Rfc822_List;
 use Horde_Mail_Rfc822_Address;
 
 trait ConvertAddresses {
-
 	private function hordeToString(Horde_Mail_Rfc822_Address $address): string {
 		return $address->writeAddress();
 	}
@@ -67,5 +66,4 @@ trait ConvertAddresses {
 		}
 		return $list;
 	}
-
 }

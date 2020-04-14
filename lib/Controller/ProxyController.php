@@ -124,5 +124,4 @@ class ProxyController extends Controller {
 		$content = $response->getBody();
 		return new ProxyDownloadResponse($content, $src, 'application/octet-stream');
 	}
-
 }

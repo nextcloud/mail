@@ -32,7 +32,7 @@ use OCP\ICacheFactory;
 class Cache {
 
 	// Cache for one week
-	const CACHE_TTL = 7 * 24 * 60 * 60;
+	public const CACHE_TTL = 7 * 24 * 60 * 60;
 
 	/** @var ICache */
 	private $cache;
@@ -112,5 +112,4 @@ class Cache {
 	public function addImage(string $url, string $uid, string $image): void {
 		$this->cache->set($this->buildImageKey($url, $uid), $image, self::CACHE_TTL);
 	}
-
 }

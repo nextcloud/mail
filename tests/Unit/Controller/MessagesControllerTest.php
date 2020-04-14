@@ -463,5 +463,4 @@ class MessagesControllerTest extends TestCase {
 
 		$this->controller->destroy($accountId, $folderId, $messageId);
 	}
-
 }

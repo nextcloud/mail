@@ -160,5 +160,4 @@ class Folder implements JsonSerializable {
 	public function isSelectable(): bool {
 		return !in_array('\noselect', $this->attributes);
 	}
-
 }

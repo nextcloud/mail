@@ -83,5 +83,4 @@ class Avatar implements JsonSerializable {
 			'url' => $this->url,
 		];
 	}
-
 }

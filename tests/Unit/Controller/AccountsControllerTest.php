@@ -1,4 +1,6 @@
-<?php declare(strict_types=1);
+<?php
+
+declare(strict_types=1);
 
 /**
  * @author Christoph Wurst <christoph@winzerhof-wurst.at>
@@ -121,8 +123,8 @@ class AccountsControllerTest extends TestCase {
 		$this->account->expects($this->once())
 			->method('jsonSerialize')
 			->will($this->returnValue([
-					'accountId' => 123,
-		]));
+				'accountId' => 123,
+			]));
 		$this->accountService->expects($this->once())
 			->method('findByUserId')
 			->with($this->equalTo($this->userId))
@@ -476,5 +478,4 @@ class AccountsControllerTest extends TestCase {
 
 		$this->assertEquals($expected, $actual);
 	}
-
 }

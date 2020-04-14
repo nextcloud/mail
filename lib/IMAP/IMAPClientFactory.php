@@ -98,5 +98,4 @@ class IMAPClientFactory {
 
 		return $this->cache[$account->getId()];
 	}
-
 }

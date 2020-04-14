@@ -62,5 +62,4 @@ class AddressbookSource implements IAvatarSource {
 
 		return $factory->createInternal($url, null);
 	}
-
 }

@@ -213,5 +213,4 @@ class ContactsIntegrationTest extends TestCase {
 
 		$this->assertEquals($actual, $actual);
 	}
-
 }

@@ -26,8 +26,7 @@ namespace OCA\Mail\Service\AutoConfig;
 use OCP\ILogger;
 
 class ConnectivityTester {
-
-	const CONNECTION_TIMEOUT = 5;
+	public const CONNECTION_TIMEOUT = 5;
 
 	/** @var ILogger */
 	protected $logger;
@@ -55,5 +54,4 @@ class ConnectivityTester {
 		$this->logger->debug("cannot connect to <$url> on port <$port>");
 		return false;
 	}
-
 }

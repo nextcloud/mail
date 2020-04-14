@@ -1,7 +1,7 @@
 <?php
 
 /**
-* @author Boris Fritscher <boris.fritscher@gmail.com>
+ * @author Boris Fritscher <boris.fritscher@gmail.com>
  *
  * Mail
  *
@@ -175,7 +175,4 @@ class ContactsGroupServiceTest extends TestCase {
 
 		$this->assertEquals($expected, $actual);
 	}
-
-
 }
-

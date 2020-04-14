@@ -1,4 +1,6 @@
-<?php declare(strict_types=1);
+<?php
+
+declare(strict_types=1);
 
 /**
  * @author Tahaa Karim <tahaalibra@gmail.com>
@@ -34,7 +36,6 @@ use OCP\IDBConnection;
  * @group DB
  */
 class AliasMapperTest extends TestCase {
-
 	use DatabaseTransaction;
 
 	/** @var AliasMapper */
@@ -83,17 +84,16 @@ class AliasMapperTest extends TestCase {
 
 		$this->assertEquals(
 			[
-			'accountId' => $this->alias->getAccountId(),
-			'name' => $this->alias->getName(),
-			'alias' => $this->alias->getAlias(),
-			'id' => $this->alias->getId()
+				'accountId' => $this->alias->getAccountId(),
+				'name' => $this->alias->getName(),
+				'alias' => $this->alias->getAlias(),
+				'id' => $this->alias->getId()
 			], [
-			'accountId' => $result->getAccountId(),
-			'name' => $result->getName(),
-			'alias' => $result->getAlias(),
-			'id' => $result->getId()
+				'accountId' => $result->getAccountId(),
+				'name' => $result->getName(),
+				'alias' => $result->getAlias(),
+				'id' => $result->getId()
 			]
 		);
 	}
-
 }

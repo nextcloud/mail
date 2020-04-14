@@ -84,5 +84,4 @@ class InteractionListener implements IEventListener {
 			$this->dispatcher->dispatch(ContactInteractedWithEvent::class, $interactionEvent);
 		}
 	}
-
 }

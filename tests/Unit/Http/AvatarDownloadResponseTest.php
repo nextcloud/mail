@@ -28,12 +28,10 @@ use OCA\Mail\Http\AvatarDownloadResponse;
 use ChristophWurst\Nextcloud\Testing\TestCase;
 
 class AvatarDownloadResponseTest extends TestCase {
-
 	public function testResponse() {
 		$response = new AvatarDownloadResponse('data');
 
 		$this->assertEquals('application/octet-stream', $response->getHeaders()['Content-Type']);
 		$this->assertEquals('data', $response->render());
 	}
-
 }

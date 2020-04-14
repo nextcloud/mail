@@ -162,5 +162,4 @@ class NewMessageData {
 	public function isHtml(): bool {
 		return $this->isHtml;
 	}
-
 }

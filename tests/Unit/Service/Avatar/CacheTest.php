@@ -33,8 +33,7 @@ use OCP\ICacheFactory;
 use PHPUnit_Framework_MockObject_MockObject;
 
 class CacheTest extends TestCase {
-
-	const BLACK_DOT_BASE64 = 'R0lGODlhAQABAIAAAAUEBAAAACwAAAAAAQABAAACAkQBADs=';
+	public const BLACK_DOT_BASE64 = 'R0lGODlhAQABAIAAAAUEBAAAACwAAAAAAQABAAACAkQBADs=';
 
 	/** @var ICacheFactory|PHPUnit_Framework_MockObject_MockObject */
 	private $cacheFactory;
@@ -135,5 +134,4 @@ class CacheTest extends TestCase {
 
 		$this->cache->addImage('https://doe.com/favicon.ico', $uid, self::BLACK_DOT_BASE64);
 	}
-
 }

@@ -73,7 +73,6 @@ abstract class AbstractTest extends TestCase {
 			try {
 				self::deleteMailbox($createdMailbox);
 			} catch (Exception $ex) {
-
 			}
 		}
 	}
@@ -147,5 +146,4 @@ MIME-Version: 1.0
 $contents";
 		$mailbox->saveMessage($message);
 	}
-
 }

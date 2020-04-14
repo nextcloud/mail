@@ -88,5 +88,4 @@ class SmtpClientFactory {
 		}
 		return new Horde_Mail_Transport_Smtphorde($params);
 	}
-
 }

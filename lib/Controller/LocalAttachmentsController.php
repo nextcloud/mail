@@ -71,5 +71,4 @@ class LocalAttachmentsController extends Controller {
 
 		return new JSONResponse($attachment, Http::STATUS_CREATED);
 	}
-
 }

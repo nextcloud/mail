@@ -72,5 +72,4 @@ class GravatarSource implements IAvatarSource {
 		// TODO: check whether it's really always a jpeg
 		return $factory->createExternal($avatarUrl, 'image/jpeg');
 	}
-
 }

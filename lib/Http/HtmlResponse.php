@@ -45,5 +45,4 @@ class HtmlResponse extends Response {
 	public function render(): string {
 		return $this->content;
 	}
-
 }

@@ -107,5 +107,4 @@ class GroupsIntegration {
 					}, $carry);
 			}, $recipients);
 	}
-
 }

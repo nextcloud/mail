@@ -137,5 +137,4 @@ class SmtpConnectivityTester {
 		$smtp = $this->clientFactory->create($account);
 		$smtp->getSMTPObject();
 	}
-
 }

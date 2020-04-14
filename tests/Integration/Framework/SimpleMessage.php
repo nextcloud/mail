@@ -66,50 +66,49 @@ class SimpleMessage {
 	/**
 	 * @return string
 	 */
-	function getFrom() {
+	public function getFrom() {
 		return $this->from;
 	}
 
 	/**
 	 * @return string
 	 */
-	function getTo() {
+	public function getTo() {
 		return $this->to;
 	}
 
 	/**
 	 * @return string
 	 */
-	function getCc() {
+	public function getCc() {
 		return $this->cc;
 	}
 
 	/**
 	 * @return string
 	 */
-	function getBcc() {
+	public function getBcc() {
 		return $this->bcc;
 	}
 
 	/**
 	 * @return string
 	 */
-	function getDate() {
+	public function getDate() {
 		return $this->date;
 	}
 
 	/**
 	 * @return string
 	 */
-	function getSubject() {
+	public function getSubject() {
 		return $this->subject;
 	}
 
 	/**
 	 * @return string
 	 */
-	function getBody() {
+	public function getBody() {
 		return $this->body;
 	}
-
 }

@@ -416,8 +416,8 @@ class MessagesController extends Controller {
 			$attachment = $mailBox->getAttachment($messageId, $attachmentId);
 
 			$fileName = $attachment->getName() ?? $this->l10n->t('Embedded message %s', [
-					$attachmentId,
-				]) . '.eml';
+				$attachmentId,
+			]) . '.eml';
 			$fileParts = pathinfo($fileName);
 			$fileName = $fileParts['filename'];
 			$fileExtension = $fileParts['extension'];
@@ -540,10 +540,10 @@ class MessagesController extends Controller {
 	private function attachmentIsImage(array $attachment): bool {
 		return in_array(
 			$attachment['mime'], [
-			'image/jpeg',
-			'image/png',
-			'image/gif'
-		]);
+				'image/jpeg',
+				'image/png',
+				'image/gif'
+			]);
 	}
 
 	/**
@@ -554,5 +554,4 @@ class MessagesController extends Controller {
 	private function attachmentIsCalendarEvent(array $attachment): bool {
 		return in_array($attachment['mime'], ['text/calendar', 'application/ics'], true);
 	}
-
 }

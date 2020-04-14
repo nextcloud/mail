@@ -80,10 +80,9 @@ class HtmlTest extends TestCase {
 
 	public function parseMailBodyProvider() {
 		return [
-				['abc', null, 'abc'],
-				['abc', 'def', "abc-- \r\ndef"],
-				["abc-- \r\ndef", 'ghi', "abc-- \r\ndef-- \r\nghi"],
+			['abc', null, 'abc'],
+			['abc', 'def', "abc-- \r\ndef"],
+			["abc-- \r\ndef", 'ghi', "abc-- \r\ndef-- \r\nghi"],
 		];
 	}
-
 }

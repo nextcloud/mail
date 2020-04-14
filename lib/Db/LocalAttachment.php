@@ -50,5 +50,4 @@ class LocalAttachment extends Entity implements JsonSerializable {
 			'fileName' => $this->fileName,
 		];
 	}
-
 }

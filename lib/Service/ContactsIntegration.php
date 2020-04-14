@@ -117,5 +117,4 @@ class ContactsIntegration {
 			return null;
 		}
 	}
-
 }

@@ -46,5 +46,4 @@ class MessageStructureData {
 	public function getPreviewText(): string {
 		return $this->previewText;
 	}
-
 }

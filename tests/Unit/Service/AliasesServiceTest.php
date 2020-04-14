@@ -95,15 +95,15 @@ class AliasesServiceTest extends TestCase {
 
 		$this->assertEquals(
 			[
-			'accountId' => $aliasEntity->getAccountId(),
-			'name' => $aliasEntity->getName(),
-			'alias' => $aliasEntity->getAlias(),
-			'id' => $aliasEntity->getId()
+				'accountId' => $aliasEntity->getAccountId(),
+				'name' => $aliasEntity->getName(),
+				'alias' => $aliasEntity->getAlias(),
+				'id' => $aliasEntity->getId()
 			], [
-			'accountId' => $result->getAccountId(),
-			'name' => $result->getName(),
-			'alias' => $result->getAlias(),
-			'id' => $result->getId()
+				'accountId' => $result->getAccountId(),
+				'name' => $result->getName(),
+				'alias' => $result->getAlias(),
+				'id' => $result->getId()
 			]
 		);
 	}
@@ -120,5 +120,4 @@ class AliasesServiceTest extends TestCase {
 
 		$this->service->delete($aliasId, $this->user);
 	}
-
 }

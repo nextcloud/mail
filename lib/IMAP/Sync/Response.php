@@ -87,5 +87,4 @@ class Response implements JsonSerializable {
 			array_merge($this->getVanishedMessageUids(), $other->getVanishedMessageUids())
 		);
 	}
-
 }

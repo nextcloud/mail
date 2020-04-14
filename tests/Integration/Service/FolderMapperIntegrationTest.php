@@ -63,5 +63,4 @@ class FolderMapperIntegrationTest extends TestCase {
 			$this->assertInstanceOf(Folder::class, $folder);
 		}
 	}
-
 }

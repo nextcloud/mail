@@ -1,4 +1,6 @@
-<?php declare(strict_types=1);
+<?php
+
+declare(strict_types=1);
 
 /**
  * @author Thomas Müller <thomas.mueller@tmit.eu>
@@ -32,7 +34,6 @@ use OCP\IDBConnection;
  * @group DB
  */
 class MailAccountMapperTest extends TestCase {
-
 	use DatabaseTransaction;
 
 	/** @var MailAccountMapper */
@@ -71,7 +72,7 @@ class MailAccountMapperTest extends TestCase {
 		$this->account->setOrder(27);
 	}
 
-	public function testFind(){
+	public function testFind() {
 		/** @var MailAccount $b */
 		$b = $this->mapper->insert($this->account);
 
@@ -79,7 +80,7 @@ class MailAccountMapperTest extends TestCase {
 		$this->assertEquals($b->toJson(), $result->toJson());
 
 		$result = $this->mapper->findByUserId($b->getUserId());
-		$c = array_filter($result, function($a) use($b){
+		$c = array_filter($result, function ($a) use ($b) {
 			/** @var MailAccount $a */
 			return $a->getId() === $b->getId();
 		});

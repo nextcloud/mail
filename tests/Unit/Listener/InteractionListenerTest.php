@@ -102,5 +102,4 @@ class InteractionListenerTest extends TestCase {
 
 		$this->listener->handle($event);
 	}
-
 }

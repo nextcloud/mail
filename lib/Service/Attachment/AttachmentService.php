@@ -101,5 +101,4 @@ class AttachmentService implements IAttachmentService {
 		}
 		$this->storage->delete($userId, $id);
 	}
-
 }

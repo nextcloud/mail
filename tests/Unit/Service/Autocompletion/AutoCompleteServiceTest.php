@@ -30,7 +30,6 @@ use OCA\Mail\Service\ContactsIntegration;
 use OCA\Mail\Service\GroupsIntegration;
 
 class AutoCompleteServiceTest extends TestCase {
-
 	private $contactsIntegration;
 	private $groupsIntegration;
 	private $addressCollector;
@@ -91,5 +90,4 @@ class AutoCompleteServiceTest extends TestCase {
 		];
 		$this->assertEquals($expected, $response);
 	}
-
 }

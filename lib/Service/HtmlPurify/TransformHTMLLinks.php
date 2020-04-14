@@ -59,5 +59,4 @@ class TransformHTMLLinks extends HTMLPurifier_AttrTransform {
 
 		return $attr;
 	}
-
 }

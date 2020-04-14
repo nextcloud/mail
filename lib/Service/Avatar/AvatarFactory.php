@@ -48,5 +48,4 @@ class AvatarFactory {
 	public function createExternal(string $url, string $mime): Avatar {
 		return new Avatar($url, $mime);
 	}
-
 }

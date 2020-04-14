@@ -1,4 +1,6 @@
-<?php declare(strict_types=1);
+<?php
+
+declare(strict_types=1);
 
 /**
  * @copyright 2019 Christoph Wurst <christoph@winzerhof-wurst.at>
@@ -37,9 +39,8 @@ use Symfony\Component\Console\Output\OutputInterface;
 use function memory_get_peak_usage;
 
 class SyncAccount extends Command {
-
-	const ARGUMENT_ACCOUNT_ID = 'account-id';
-	const OPTION_FORCE = 'force';
+	public const ARGUMENT_ACCOUNT_ID = 'account-id';
+	public const OPTION_FORCE = 'force';
 
 	/** @var AccountService */
 	private $accountService;
@@ -98,5 +99,4 @@ class SyncAccount extends Command {
 			$this->sync($account, $force, $output);
 		}
 	}
-
 }

@@ -29,7 +29,6 @@ use OCP\IGroup;
 use OCP\IUser;
 
 class NextcloudGroupServiceTest extends TestCase {
-
 	private $groupsManager;
 	private $groupService;
 
@@ -129,7 +128,6 @@ class NextcloudGroupServiceTest extends TestCase {
 		];
 
 		$this->assertEquals($expected, $actual);
-
 	}
 
 	public function testGetUsersWrong() {
@@ -141,6 +139,4 @@ class NextcloudGroupServiceTest extends TestCase {
 
 		$this->groupService->getUsers('nogroup');
 	}
-
 }
-

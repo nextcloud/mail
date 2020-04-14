@@ -126,5 +126,4 @@ interface IMailManager {
 	 * @throws ServiceException
 	 */
 	public function flagMessage(Account $account, string $mailbox, int $uid, string $flag, bool $value): void;
-
 }

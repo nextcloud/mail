@@ -28,7 +28,6 @@ use OCA\Mail\AddressList;
 use OCA\Mail\Model\Message;
 
 class MessageTest extends TestCase {
-
 	protected $message;
 
 	protected function setUp(): void {
@@ -166,5 +165,4 @@ class MessageTest extends TestCase {
 		$this->assertCount(1, $actual);
 		//$this->assertEquals($expected, $actual[0]);
 	}
-
 }

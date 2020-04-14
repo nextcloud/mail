@@ -1,4 +1,6 @@
-<?php declare(strict_types=1);
+<?php
+
+declare(strict_types=1);
 
 /**
  * @copyright 2017 Christoph Wurst <christoph@winzerhof-wurst.at>
@@ -132,5 +134,4 @@ class FaviconSourceTest extends TestCase {
 
 		$this->assertNull($avatar);
 	}
-
 }

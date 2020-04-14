@@ -69,7 +69,6 @@ use OCP\AppFramework\Db\Entity;
  * @method void setOrder(int $order)
  */
 class MailAccount extends Entity {
-
 	protected $userId;
 	protected $name;
 	protected $email;

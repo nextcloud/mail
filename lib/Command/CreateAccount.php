@@ -32,20 +32,19 @@ use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\OutputInterface;
 
 class CreateAccount extends Command {
-
-	const ARGUMENT_USER_ID = 'user-id';
-	const ARGUMENT_NAME = 'name';
-	const ARGUMENT_EMAIL = 'email';
-	const ARGUMENT_IMAP_HOST = 'imap-host';
-	const ARGUMENT_IMAP_PORT = 'imap-port';
-	const ARGUMENT_IMAP_SSL_MODE = 'imap-ssl-mode';
-	const ARGUMENT_IMAP_USER = 'imap-user';
-	const ARGUMENT_IMAP_PASSWORD = 'imap-password';
-	const ARGUMENT_SMTP_HOST = 'smtp-host';
-	const ARGUMENT_SMTP_PORT = 'smtp-port';
-	const ARGUMENT_SMTP_SSL_MODE = 'smtp-ssl-mode';
-	const ARGUMENT_SMTP_USER = 'smtp-user';
-	const ARGUMENT_SMTP_PASSWORD = 'smtp-password';
+	public const ARGUMENT_USER_ID = 'user-id';
+	public const ARGUMENT_NAME = 'name';
+	public const ARGUMENT_EMAIL = 'email';
+	public const ARGUMENT_IMAP_HOST = 'imap-host';
+	public const ARGUMENT_IMAP_PORT = 'imap-port';
+	public const ARGUMENT_IMAP_SSL_MODE = 'imap-ssl-mode';
+	public const ARGUMENT_IMAP_USER = 'imap-user';
+	public const ARGUMENT_IMAP_PASSWORD = 'imap-password';
+	public const ARGUMENT_SMTP_HOST = 'smtp-host';
+	public const ARGUMENT_SMTP_PORT = 'smtp-port';
+	public const ARGUMENT_SMTP_SSL_MODE = 'smtp-ssl-mode';
+	public const ARGUMENT_SMTP_USER = 'smtp-user';
+	public const ARGUMENT_SMTP_PASSWORD = 'smtp-password';
 
 	/** @var AccountService */
 	private $accountService;
@@ -124,5 +123,4 @@ class CreateAccount extends Command {
 
 		$output->writeln("<info>Account $email created</info>");
 	}
-
 }

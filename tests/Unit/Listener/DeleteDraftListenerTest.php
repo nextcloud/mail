@@ -226,5 +226,4 @@ class DeleteDraftListenerTest extends TestCase {
 
 		$this->listener->handle($event);
 	}
-
 }

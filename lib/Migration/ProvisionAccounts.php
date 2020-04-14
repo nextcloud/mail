@@ -56,5 +56,4 @@ class ProvisionAccounts implements IRepairStep {
 		$cnt = $this->provisioningManager->provision($config);
 		$output->info("$cnt accounts provisioned");
 	}
-
 }

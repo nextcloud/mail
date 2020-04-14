@@ -53,7 +53,7 @@ class FolderMapperTest extends TestCase {
 					'delimiter' => true,
 					'attributes' => true,
 					'special_use' => true,
-			]))
+				]))
 			->willReturn([]);
 
 		$folders = $this->mapper->getFolders($account, $client);
@@ -72,7 +72,7 @@ class FolderMapperTest extends TestCase {
 					'delimiter' => true,
 					'attributes' => true,
 					'special_use' => true,
-			]))
+				]))
 			->willReturn([
 				[
 					'mailbox' => new Horde_Imap_Client_Mailbox('INBOX'),
@@ -86,7 +86,7 @@ class FolderMapperTest extends TestCase {
 					],
 					'delimiter' => '.',
 				],
-		]);
+			]);
 		$expected = [
 			new Folder(27, new Horde_Imap_Client_Mailbox('INBOX'), [], '.'),
 			new Folder(27, new Horde_Imap_Client_Mailbox('Sent'), ['\sent'], '.'),
@@ -144,7 +144,7 @@ class FolderMapperTest extends TestCase {
 				'folder1' => [
 					'total' => 123
 				],
-		]);
+			]);
 		$folders[0]->expects($this->once())
 			->method('setStatus');
 
@@ -167,7 +167,7 @@ class FolderMapperTest extends TestCase {
 			->with($this->equalTo(['folder1']))
 			->willReturn([
 				// Nothing reported for this folder
-		]);
+			]);
 		$folders[0]->expects($this->never())
 			->method('setStatus');
 
@@ -219,7 +219,7 @@ class FolderMapperTest extends TestCase {
 			->method('getAttributes')
 			->willReturn([
 				Horde_Imap_Client::SPECIALUSE_SENT,
-		]);
+			]);
 		$folders[0]->expects($this->once())
 			->method('addSpecialUse')
 			->with($this->equalTo('sent'));
@@ -252,5 +252,4 @@ class FolderMapperTest extends TestCase {
 
 		$this->mapper->detectFolderSpecialUse($folders);
 	}
-
 }

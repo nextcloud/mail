@@ -67,5 +67,4 @@ trait ImapTestAccount {
 
 		return $acc;
 	}
-
 }

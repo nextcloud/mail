@@ -39,8 +39,8 @@ $g =  \OC::$server->getURLGenerator();
 	[
 		'id' => 'mail',
 		'order' => 3,
-		'href' => $g->linkToRoute( 'mail.page.index' ),
-		'icon' => $g->imagePath( 'mail', 'mail.svg' ),
+		'href' => $g->linkToRoute('mail.page.index'),
+		'icon' => $g->imagePath('mail', 'mail.svg'),
 		'name' => $l->t('Mail'),
 	]
 );

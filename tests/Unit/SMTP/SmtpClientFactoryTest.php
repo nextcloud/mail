@@ -123,5 +123,4 @@ class SmtpClientFactoryTest extends TestCase {
 		$this->assertInstanceOf(Horde_Mail_Transport_Smtphorde::class, $transport);
 		$this->assertEquals($expected, $transport);
 	}
-
 }

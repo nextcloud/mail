@@ -1,4 +1,6 @@
-<?php declare(strict_types=1);
+<?php
+
+declare(strict_types=1);
 
 /**
  * @author Christoph Wurst <christoph@winzerhof-wurst.at>
@@ -322,5 +324,4 @@ class MailManagerTest extends TestCase {
 
 		$this->manager->flagMessage($account, 'INBOX', 123, 'seen', false);
 	}
-
 }

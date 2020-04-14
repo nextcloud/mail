@@ -65,5 +65,4 @@ class ConnectivityTesterTest extends TestCase {
 		$this->assertFalse($canConnect);
 		$this->assertLessThan(15, $after - $before);
 	}
-
 }

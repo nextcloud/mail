@@ -165,5 +165,4 @@ class ErrorMiddlewareTest extends TestCase {
 			$response->getStatus()
 		);
 	}
-
 }

@@ -69,5 +69,4 @@ class CompositeAvatarSource {
 
 		return null;
 	}
-
 }

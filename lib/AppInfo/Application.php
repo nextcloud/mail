@@ -27,7 +27,6 @@ namespace OCA\Mail\AppInfo;
 use OCP\AppFramework\App;
 
 class Application extends App {
-
 	public const APP_ID = 'mail';
 
 	public function __construct(array $urlParams = []) {
@@ -35,5 +34,4 @@ class Application extends App {
 
 		BootstrapSingleton::getInstance($this->getContainer())->boot();
 	}
-
 }

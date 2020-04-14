@@ -27,7 +27,6 @@ use OCA\Mail\AddressList;
 use OCA\Mail\Model\NewMessageData;
 
 class NewMessageDataTest extends TestCase {
-
 	public function testConstructionFromSimpleRequestData() {
 		$account = $this->createMock(Account::class);
 		$to = '"Test" <test@domain.com>';
@@ -68,5 +67,4 @@ class NewMessageDataTest extends TestCase {
 		$this->assertEquals('Hi!', $messageData->getBody());
 		$this->assertEquals([], $messageData->getAttachments());
 	}
-
 }

@@ -316,5 +316,4 @@ class MailManager implements IMailManager {
 			)
 		);
 	}
-
 }

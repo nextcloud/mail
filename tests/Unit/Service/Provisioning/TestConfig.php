@@ -1,4 +1,6 @@
-<?php declare(strict_types=1);
+<?php
+
+declare(strict_types=1);
 
 /**
  * @copyright 2019 Christoph Wurst <christoph@winzerhof-wurst.at>
@@ -26,7 +28,6 @@ namespace OCA\mail\tests\Unit\Service\Provisioning;
 use OCA\Mail\Service\Provisioning\Config;
 
 class TestConfig extends Config {
-
 	public function __construct() {
 		parent::__construct([
 			'email' => '%USERID%@domain.com',
@@ -40,5 +41,4 @@ class TestConfig extends Config {
 			'smtpSslMode' => 'tls',
 		]);
 	}
-
 }

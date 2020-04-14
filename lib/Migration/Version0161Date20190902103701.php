@@ -1,4 +1,6 @@
-<?php declare(strict_types=1);
+<?php
+
+declare(strict_types=1);
 
 /**
  * @author Christoph Wurst <christoph@winzerhof-wurst.at>
@@ -104,5 +106,4 @@ class Version0161Date20190902103701 extends SimpleMigrationStep {
 			->set('last_mailbox_sync', $update->createNamedParameter(0));
 		$update->execute();
 	}
-
 }

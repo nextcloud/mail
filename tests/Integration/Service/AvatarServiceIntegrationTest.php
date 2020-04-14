@@ -73,5 +73,4 @@ class AvatarServiceIntegrationTest extends TestCase {
 		$avatar = $this->service->getAvatar('christoph@winzerhof-wurst.at', 'jan');
 		$this->assertNull($avatar); // There is none
 	}
-
 }

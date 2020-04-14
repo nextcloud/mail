@@ -78,5 +78,4 @@ class ConfigurationDetectorTest extends TestCase {
 
 		$this->assertNotNull($result);
 	}
-
 }

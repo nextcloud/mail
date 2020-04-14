@@ -85,5 +85,4 @@ class SmtpServerDetector {
 		 */
 		return $this->smtpConnectivityTester->test($account, $host, [$user, $email], $password, true);
 	}
-
 }

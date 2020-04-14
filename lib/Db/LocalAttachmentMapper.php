@@ -53,5 +53,4 @@ class LocalAttachmentMapper extends QBMapper {
 
 		return $this->findEntity($query);
 	}
-
 }

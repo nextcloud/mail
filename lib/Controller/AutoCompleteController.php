@@ -51,5 +51,4 @@ class AutoCompleteController extends Controller {
 	public function index(string $term): JSONResponse {
 		return new JSONResponse($this->service->findMatches($term));
 	}
-
 }

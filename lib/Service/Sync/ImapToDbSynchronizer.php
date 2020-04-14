@@ -1,4 +1,6 @@
-<?php declare(strict_types=1);
+<?php
+
+declare(strict_types=1);
 
 /**
  * @copyright 2020 Christoph Wurst <christoph@winzerhof-wurst.at>
@@ -48,7 +50,7 @@ use function array_map;
 class ImapToDbSynchronizer {
 
 	/** @var int */
-	const MAX_NEW_MESSAGES = 5000;
+	public const MAX_NEW_MESSAGES = 5000;
 
 	/** @var DatabaseMessageMapper */
 	private $dbMapper;
@@ -301,5 +303,4 @@ class ImapToDbSynchronizer {
 		$this->mailboxMapper->update($mailbox);
 		$perf->end();
 	}
-
 }

@@ -33,7 +33,6 @@ use OCP\IRequest;
 use OCP\IURLGenerator;
 
 class TransformURLScheme extends HTMLPurifier_URIFilter {
-
 	public $name = 'TransformURLScheme';
 	public $post = true;
 
@@ -138,5 +137,4 @@ class TransformURLScheme extends HTMLPurifier_URIFilter {
 			return $uri;
 		}
 	}
-
 }

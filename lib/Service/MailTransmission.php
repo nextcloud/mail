@@ -357,5 +357,4 @@ class MailTransmission implements IMailTransmission {
 			$message->addAttachmentFromFiles($file);
 		}
 	}
-
 }

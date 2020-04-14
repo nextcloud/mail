@@ -33,7 +33,6 @@ use OCP\Files\SimpleFS\ISimpleFolder;
 use PHPUnit_Framework_MockObject_MockObject;
 
 class AttachmentStorageTest extends TestCase {
-
 	private $tmpFilePath = '/tmp/nc_mail_attachment_test';
 
 	/** @var IAppData|PHPUnit_Framework_MockObject_MockObject */
@@ -168,5 +167,4 @@ class AttachmentStorageTest extends TestCase {
 
 		$this->storage->save('fritz', 123, $uploadedFile);
 	}
-
 }

@@ -117,5 +117,4 @@ class MessageBuilder {
 	public function finish() {
 		return new SimpleMessage($this->from, $this->to, $this->cc, $this->bcc, $this->date, $this->subject, $this->body);
 	}
-
 }

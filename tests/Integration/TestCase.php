@@ -25,7 +25,6 @@ use OCA\Mail\Tests\Integration\Framework\ImapTest;
 use ChristophWurst\Nextcloud\Testing\TestCase as Base;
 
 class TestCase extends Base {
-
 	protected function setUp(): void {
 		parent::setUp();
 
@@ -34,5 +33,4 @@ class TestCase extends Base {
 			$this->resetImapAccount();
 		}
 	}
-
 }

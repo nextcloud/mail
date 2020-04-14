@@ -1,4 +1,6 @@
-<?php declare(strict_types=1);
+<?php
+
+declare(strict_types=1);
 
 /**
  * @copyright 2019 Christoph Wurst <christoph@winzerhof-wurst.at>
@@ -94,5 +96,4 @@ class DraftMailboxCreatorListener implements IEventListener {
 		// TODO: find a more elegant solution for updating the mailbox cache
 		$this->mailboxSync->sync($account, true);
 	}
-
 }

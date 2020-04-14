@@ -24,5 +24,4 @@ class Version1030Date20200228105714 extends SimpleMigrationStep {
 			->set('last_mailbox_sync', $update->createNamedParameter(0));
 		$update->execute();
 	}
-
 }

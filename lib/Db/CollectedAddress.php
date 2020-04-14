@@ -32,9 +32,7 @@ use OCP\AppFramework\Db\Entity;
  * @method string getDisplayName()
  */
 class CollectedAddress extends Entity {
-
 	protected $userId;
 	protected $email;
 	protected $displayName;
-
 }

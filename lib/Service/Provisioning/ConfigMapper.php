@@ -1,4 +1,6 @@
-<?php declare(strict_types=1);
+<?php
+
+declare(strict_types=1);
 
 /**
  * @copyright 2019 Christoph Wurst <christoph@winzerhof-wurst.at>
@@ -27,7 +29,6 @@ use OCA\Mail\AppInfo\Application;
 use OCP\IConfig;
 
 class ConfigMapper {
-
 	private const CONFIG_KEY = 'provisioning_settings';
 
 	/** @var IConfig */
@@ -58,5 +59,4 @@ class ConfigMapper {
 
 		return $config;
 	}
-
 }

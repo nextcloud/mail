@@ -49,5 +49,4 @@ class UploadedFile {
 	public function getTempPath() {
 		return isset($this->fileData['tmp_name']) ? $this->fileData['tmp_name'] : null;
 	}
-
 }

@@ -149,5 +149,4 @@ class AvatarService implements IAvatarService {
 
 		return [$avatar, $image];
 	}
-
 }

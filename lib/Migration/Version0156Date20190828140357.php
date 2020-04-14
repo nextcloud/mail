@@ -1,4 +1,6 @@
-<?php declare(strict_types=1);
+<?php
+
+declare(strict_types=1);
 
 /**
  * @author Christoph Wurst <christoph@winzerhof-wurst.at>
@@ -87,5 +89,4 @@ class Version0156Date20190828140357 extends SimpleMigrationStep {
 
 		return $schema;
 	}
-
 }

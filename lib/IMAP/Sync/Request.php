@@ -67,5 +67,4 @@ class Request {
 	public function getUids(): array {
 		return $this->uids;
 	}
-
 }

@@ -27,7 +27,6 @@ use OCA\Mail\Service\AutoConfig\IspDb;
 use OCP\ILogger;
 
 class IspDbtest extends TestCase {
-
 	private $logger;
 
 	protected function setUp(): void {
@@ -104,5 +103,4 @@ class IspDbtest extends TestCase {
 		$this->assertArrayHasKey('smtp', $data);
 		$this->assertTrue(count($data['smtp']) >= 1, 'no isp smtp data returned');
 	}
-
 }

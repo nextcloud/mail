@@ -109,7 +109,7 @@ class ContactsGroupService implements IGroupService {
 			if (!is_array($emails)) {
 				$emails = [$emails];
 			}
-			foreach($emails as $email) {
+			foreach ($emails as $email) {
 				$receivers[] = [
 					'email' => $email
 				];

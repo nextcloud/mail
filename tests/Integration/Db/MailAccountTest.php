@@ -1,4 +1,6 @@
-<?php declare(strict_types=1);
+<?php
+
+declare(strict_types=1);
 
 /**
  * @author Thomas Müller <thomas.mueller@tmit.eu>
@@ -25,7 +27,6 @@ use ChristophWurst\Nextcloud\Testing\TestCase;
 use OCA\Mail\Db\MailAccount;
 
 class MailAccountTest extends TestCase {
-
 	public function testToAPI() {
 		$a = new MailAccount();
 		$a->setId(3);
@@ -62,7 +63,7 @@ class MailAccountTest extends TestCase {
 			'editorMode' => 'html',
 			'provisioned' => false,
 			'order' => 13,
-			], $a->toJson());
+		], $a->toJson());
 	}
 
 	public function testMailAccountConstruct() {
@@ -89,5 +90,4 @@ class MailAccountTest extends TestCase {
 		unset($expected['accountName']);
 		$this->assertEquals($expected, $a->toJson());
 	}
-
 }

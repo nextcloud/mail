@@ -185,5 +185,4 @@ class PageController extends Controller {
 		$baseUrl = $this->urlGenerator->linkToRoute("mail.page.index");
 		return new RedirectResponse($baseUrl . $hashParams);
 	}
-
 }

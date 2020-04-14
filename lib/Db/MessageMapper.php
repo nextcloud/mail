@@ -1,4 +1,6 @@
-<?php declare(strict_types=1);
+<?php
+
+declare(strict_types=1);
 
 /**
  * @copyright 2019 Christoph Wurst <christoph@winzerhof-wurst.at>
@@ -330,16 +332,16 @@ class MessageMapper extends QBMapper {
 		$flags = $query->getFlags();
 		$flagKeys = array_keys($flags);
 		foreach ([
-					 Horde_Imap_Client::FLAG_ANSWERED,
-					 Horde_Imap_Client::FLAG_DELETED,
-					 Horde_Imap_Client::FLAG_DRAFT,
-					 Horde_Imap_Client::FLAG_FLAGGED,
-					 Horde_Imap_Client::FLAG_RECENT,
-					 Horde_Imap_Client::FLAG_SEEN,
-					 Horde_Imap_Client::FLAG_FORWARDED,
-					 Horde_Imap_Client::FLAG_JUNK,
-					 Horde_Imap_Client::FLAG_NOTJUNK,
-				 ] as $flag) {
+			Horde_Imap_Client::FLAG_ANSWERED,
+			Horde_Imap_Client::FLAG_DELETED,
+			Horde_Imap_Client::FLAG_DRAFT,
+			Horde_Imap_Client::FLAG_FLAGGED,
+			Horde_Imap_Client::FLAG_RECENT,
+			Horde_Imap_Client::FLAG_SEEN,
+			Horde_Imap_Client::FLAG_FORWARDED,
+			Horde_Imap_Client::FLAG_JUNK,
+			Horde_Imap_Client::FLAG_NOTJUNK,
+		] as $flag) {
 			if (in_array($flag, $flagKeys, true)) {
 				$key = ltrim($flag, '\\');
 				$select->andWhere($qb->expr()->eq("flag_$key", $qb->createNamedParameter($flags[$flag], IQueryBuilder::PARAM_BOOL)));
@@ -459,5 +461,4 @@ class MessageMapper extends QBMapper {
 
 		return $this->findRecipients($this->findEntities($select));
 	}
-
 }

@@ -37,8 +37,7 @@ use OCP\IURLGenerator;
 use PHPUnit_Framework_MockObject_MockObject;
 
 class AvatarServiceTest extends TestCase {
-
-	const BLACK_DOT_BASE64 = 'R0lGODlhAQABAIAAAAUEBAAAACwAAAAAAQABAAACAkQBADs=';
+	public const BLACK_DOT_BASE64 = 'R0lGODlhAQABAIAAAAUEBAAAACwAAAAAAQABAAACAkQBADs=';
 
 	/** @var IAvatarSource|PHPUnit_Framework_MockObject_MockObject */
 	private $source;
@@ -262,5 +261,4 @@ class AvatarServiceTest extends TestCase {
 
 		$this->assertNull($image);
 	}
-
 }

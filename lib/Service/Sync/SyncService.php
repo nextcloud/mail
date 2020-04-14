@@ -156,5 +156,4 @@ class SyncService {
 			$vanished
 		);
 	}
-
 }
