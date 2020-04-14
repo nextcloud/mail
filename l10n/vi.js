@@ -3,6 +3,7 @@ OC.L10N.register(
     {
     "Mail" : "Mail",
     "Name" : "Tên",
+    "Mail Address" : "Địa chỉ thư",
     "Password" : "Mật khẩu",
     "None" : "Không có",
     "Save" : "Lưu",
