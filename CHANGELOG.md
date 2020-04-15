@@ -1,6 +1,47 @@
 # Changelog
 All notable changes to this project will be documented in this file.
 
+## 1.3.0 - 2020-04-15
+## Added
+- A database cache for messages, so many operations do not need a connection to IMAP. This can drastically improve the overall app performance, especially searching got very fast. The change is most noticeable on IMAP server with poor support for IMAP capabilities. The initial sync may take a few seconds or minutes, but afterwards the app should be snappy for everyone. The app now also syncs in the background (cron job), so when you open it it already has most of the recent changes in your IMAP account.
+- Make it possible to view the source of the message
+- Possibility to add message attachments as link shares
+- Mark all as read in the unified inbox
+- Improved account signature setting
+- Hide folder collapse button if there is only one folder to hide
+- Floating attachment button with popover
+- Alignment and headings as formatting option in text edit
+- Better handling of server errors and possible recovery logic for some error types
+
+## Changed
+- Move favorite toggle to menu, otherwise not distinguishable
+- Update dependencies
+- Update CKEditor to v18
+
+## Fixed
+- Handling of plain/html replies in plain/html
+- Formatting of aliases in recipient dropdown
+- Navigation from account settings to new message composer
+- Missing padding-top of composer
+- Missing In-Reply-To header for replies
+- URLs of embedded images
+- Design issues with iFrame and floating attachment button
+- Fix more layout of message list until we move to component, ref #2827
+- Change mark all as read icon
+- Message iframe vertically to fit the container / available space
+- Make mark all as read, usable for unified account
+- Do not all-caps Cc and Bcc label Re and Fwd prefix
+- Customizes formatting of paragraph elements in html-to-text's fromString function so that they get converted to a single newline only
+- Enable translation of some strings
+- Label recipients correctly in Composer.vue
+- Jump to correct message after deleting current
+- Distinct select in strict mode (mysql error)
+- Missing translation
+- Folder stats text in actions menu
+- Remove statistics for favorites
+- Missing translated default string for unnamed
+- Change forward message sent feedback
+
 ## 1.1.4 - 2020-03-23
 ### Fixed
 - Security: verify TLS host by default. This can be a *breaking change* for self-hosted servers. If you want to return to the old insecure behavior, set `app.mail.verify-tls-peer` to `true` in `config.php`.
