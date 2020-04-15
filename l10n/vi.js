@@ -20,6 +20,7 @@ OC.L10N.register(
     "Add folder" : "Add folder",
     "Delete account" : "Delete account",
     "Mark all as read" : "Đánh dấu tất cả như đã ",
+    "Signature" : "Chữ ký",
     "General" : "Tổng hợp",
     "User" : "Người dùng",
     "Host" : "Máy chủ",

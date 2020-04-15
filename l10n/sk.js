@@ -47,6 +47,7 @@ OC.L10N.register(
     "Mark unread" : "Označiť ako neprečítané",
     "Delete" : "Zmazať",
     "Loading messages" : "Načítavam správy",
+    "Not found" : "Nenájdené",
     "to" : "komu",
     "cc" : "kópia",
     "Reply" : "Odpoveď",
