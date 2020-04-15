@@ -48,7 +48,7 @@
 		"vimeo/psalm": "^3.9"
 	},
 	"scripts": {
-		"cs:check": "php-cs-fixer fix --dry-run",
+		"cs:check": "php-cs-fixer fix --dry-run --diff",
 		"cs:fix": "php-cs-fixer fix",
 		"lint": "find . -name \\*.php -not -path './vendor/*' -exec php -l \"{}\" \\;",
 		"phan": "phan --allow-polyfill-parser -k .phan/config.php",
