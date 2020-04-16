@@ -175,7 +175,12 @@ class ImapToDbSynchronizer {
 		$highestKnownUid = $this->dbMapper->findHighestUid($mailbox);
 		$client = $this->clientFactory->getClient($account);
 		try {
-			$imapMessages = $this->imapMapper->findAll($client, $mailbox, self::MAX_NEW_MESSAGES, $highestKnownUid);
+			$imapMessages = $this->imapMapper->findAll(
+				$client,
+				$mailbox->getName(),
+				self::MAX_NEW_MESSAGES,
+				$highestKnownUid ?? 0
+			);
 			$perf->step('fetch all messages from IMAP');
 		} catch (Horde_Imap_Client_Exception $e) {
 			throw new ServiceException('Can not get messages from mailbox ' . $mailbox->getName() . ': ' . $e->getMessage(), 0, $e);
