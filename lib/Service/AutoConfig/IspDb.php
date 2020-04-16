@@ -36,8 +36,8 @@ class IspDb {
 	/** @var string[] */
 	public function getUrls(): array {
 		return [
-			'https://autoconfig.{DOMAIN}/mail/config-v1.1.xml',
-			'https://{DOMAIN}/.well-known/autoconfig/mail/config-v1.1.xml',
+			'{SCHEME}://autoconfig.{DOMAIN}/mail/config-v1.1.xml?emailaddress={EMAIL}',
+			'{SCHEME}://{DOMAIN}/.well-known/autoconfig/mail/config-v1.1.xml?emailaddress={EMAIL}',
 			'https://autoconfig.thunderbird.net/v1.1/{DOMAIN}',
 		];
 	}
@@ -103,7 +103,7 @@ class IspDb {
 	 * @param bool $tryMx
 	 * @return array
 	 */
-	public function query(string $domain, bool $tryMx = true): array {
+	public function query(string $domain, string $email, bool $tryMx = true): array {
 		$this->logger->debug("IsbDb: querying <$domain>");
 		if (strpos($domain, '@') !== false) {
 			// TODO: use horde mail address parsing instead
@@ -113,19 +113,30 @@ class IspDb {
 		$provider = [];
 		foreach ($this->getUrls() as $url) {
 			$url = str_replace("{DOMAIN}", $domain, $url);
-			$this->logger->debug("IsbDb: querying <$domain> via <$url>");
-
-			$provider = $this->queryUrl($url);
-			if (!empty($provider)) {
-				return $provider;
+			$url = str_replace("{EMAIL}", $email, $url);
+			if (strpos($url, "{SCHEME}") !== false) {
+				foreach (['https', 'http']  as $scheme) {
+					$completeurl = str_replace("{SCHEME}", $scheme, $url);
+					$this->logger->debug("IsbDb: querying <$domain> via <$completeurl>");
+					$provider = $this->queryUrl($completeurl);
+					if (!empty($provider)) {
+						return $provider;
+					}
+				}
+			} else {
+				$this->logger->debug("IsbDb: querying <$domain> via <$url>");
+				$provider = $this->queryUrl($url);
+				if (!empty($provider)) {
+					return $provider;
+				}
 			}
 		}
 
 		if ($tryMx && ($dns = dns_get_record($domain, DNS_MX))) {
 			$domain = $dns[0]['target'];
-			if (!($provider = $this->query($domain, false))) {
+			if (!($provider = $this->query($domain, $email, false))) {
 				list(, $domain) = explode('.', $domain, 2);
-				$provider = $this->query($domain, false);
+				$provider = $this->query($domain, $email, false);
 			}
 		}
 		return $provider;
