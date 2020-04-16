@@ -1,6 +1,10 @@
 # Changelog
 All notable changes to this project will be documented in this file.
 
+## 1.3.2 - 2020-04-16
+## Fixed
+- Initial synchronization on installations with high message UID numbers
+
 ## 1.3.1 - 2020-04-16
 ## Fixed
 - Also sync mailboxes before sync'ing messages in cron
