@@ -270,7 +270,7 @@ export default {
 			)
 		)(accountId, folderId, query)
 	},
-	fetchNextEnvelopePage({commit, getters, dispatch}, {accountId, folderId, query}) {
+	fetchNextEnvelopePage({commit, getters, dispatch}, {accountId, folderId, query, rec = true}) {
 		const folder = getters.getFolder(accountId, folderId)
 
 		if (folder.isUnified) {
@@ -308,10 +308,9 @@ export default {
 					findIndividualFolders(getters.getFolders, folder.specialRole),
 					filter(needsFetch(query, nextLocalUnifiedEnvelopePage(accounts)))
 				)(accounts)
-
 			const fs = foldersToFetch(getters.accounts)
 
-			if (fs.length) {
+			if (rec && fs.length) {
 				return pipe(
 					map((f) =>
 						dispatch('fetchNextEnvelopePage', {
@@ -326,6 +325,7 @@ export default {
 							accountId,
 							folderId,
 							query,
+							rec: false,
 						})
 					)
 				)(fs)
@@ -355,6 +355,7 @@ export default {
 		}
 
 		return fetchEnvelopes(accountId, folderId, query, lastEnvelope.dateInt).then((envelopes) => {
+			logger.debug(`fetched ${envelopes.length} messages for the next page of ${accountId}:${folderId}`)
 			envelopes.forEach((envelope) =>
 				commit('addEnvelope', {
 					accountId,
