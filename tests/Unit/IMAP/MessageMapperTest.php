@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 /**
  * @author Christoph Wurst <christoph@winzerhof-wurst.at>
  *
@@ -22,9 +24,12 @@
 namespace OCA\Mail\Tests\Unit\IMAP;
 
 use ChristophWurst\Nextcloud\Testing\TestCase;
-use Horde_Imap_Client_Base;
+use Horde_Imap_Client;
 use Horde_Imap_Client_Data_Fetch;
+use Horde_Imap_Client_Fetch_Query;
 use Horde_Imap_Client_Fetch_Results;
+use Horde_Imap_Client_Ids;
+use Horde_Imap_Client_Socket;
 use OCA\Mail\IMAP\MessageMapper;
 use OCA\Mail\Model\IMAPMessage;
 use OCP\ILogger;
@@ -49,7 +54,8 @@ class MessageMapperTest extends TestCase {
 	}
 
 	public function testGetByIds() {
-		$imapClient = $this->createMock(Horde_Imap_Client_Base::class);
+		/** @var Horde_Imap_Client_Socket|MockObject $imapClient */
+		$imapClient = $this->createMock(Horde_Imap_Client_Socket::class);
 		$mailbox = 'inbox';
 		$ids = [1, 3];
 
@@ -77,5 +83,140 @@ class MessageMapperTest extends TestCase {
 		$result = $this->mapper->findByIds($imapClient, $mailbox, $ids);
 
 		$this->assertEquals($expected, $result);
+	}
+
+	public function testFindAllEmptyMailbox(): void {
+		/** @var Horde_Imap_Client_Socket|MockObject $client */
+		$client = $this->createMock(Horde_Imap_Client_Socket::class);
+		$mailbox = 'inbox';
+		$client->expects($this->once())
+			->method('search')
+			->with(
+				$mailbox,
+				null,
+				[
+					'results' => [
+						Horde_Imap_Client::SEARCH_RESULTS_MIN,
+						Horde_Imap_Client::SEARCH_RESULTS_MAX,
+						Horde_Imap_Client::SEARCH_RESULTS_COUNT,
+					]
+				]
+			)
+			->willReturn([
+				'min' => 0,
+				'max' => 0,
+				'count' => 0,
+			]);
+		$client->expects($this->never())
+			->method('fetch');
+
+		$result = $this->mapper->findAll(
+			$client,
+			$mailbox,
+			5000,
+			0
+		);
+
+		$this->assertSame(
+			[
+				'messages' => [],
+				'all' => true,
+			],
+			$result
+		);
+	}
+
+	public function testFindAllNoKnownUid(): void {
+		/** @var Horde_Imap_Client_Socket|MockObject $client */
+		$client = $this->createMock(Horde_Imap_Client_Socket::class);
+		$mailbox = 'inbox';
+		$client->expects($this->once())
+			->method('search')
+			->with(
+				$mailbox,
+				null,
+				[
+					'results' => [
+						Horde_Imap_Client::SEARCH_RESULTS_MIN,
+						Horde_Imap_Client::SEARCH_RESULTS_MAX,
+						Horde_Imap_Client::SEARCH_RESULTS_COUNT,
+					]
+				]
+			)
+			->willReturn([
+				'min' => 123,
+				'max' => 321,
+				'count' => 50,
+			]);
+		$query = new Horde_Imap_Client_Fetch_Query();
+		$query->uid();
+		$uidResults = new Horde_Imap_Client_Fetch_Results();
+		$client->expects($this->at(1))
+			->method('fetch')
+			->with(
+				$mailbox,
+				$query,
+				[
+					'ids' => new Horde_Imap_Client_Ids('123:321'),
+				]
+			)->willReturn($uidResults);
+		$bodyResults = new Horde_Imap_Client_Fetch_Results();
+		$client->expects($this->at(2))
+			->method('fetch')
+			->willReturn($bodyResults);
+
+		$this->mapper->findAll(
+			$client,
+			$mailbox,
+			5000,
+			0
+		);
+	}
+
+	public function testFindAllWithKnownUid(): void {
+		/** @var Horde_Imap_Client_Socket|MockObject $client */
+		$client = $this->createMock(Horde_Imap_Client_Socket::class);
+		$mailbox = 'inbox';
+		$client->expects($this->once())
+			->method('search')
+			->with(
+				$mailbox,
+				null,
+				[
+					'results' => [
+						Horde_Imap_Client::SEARCH_RESULTS_MIN,
+						Horde_Imap_Client::SEARCH_RESULTS_MAX,
+						Horde_Imap_Client::SEARCH_RESULTS_COUNT,
+					]
+				]
+			)
+			->willReturn([
+				'min' => 123,
+				'max' => 321,
+				'count' => 50,
+			]);
+		$query = new Horde_Imap_Client_Fetch_Query();
+		$query->uid();
+		$uidResults = new Horde_Imap_Client_Fetch_Results();
+		$client->expects($this->at(1))
+			->method('fetch')
+			->with(
+				$mailbox,
+				$query,
+				[
+					'ids' => new Horde_Imap_Client_Ids('301:321'),
+				]
+			)->willReturn($uidResults);
+		$bodyResults = new Horde_Imap_Client_Fetch_Results();
+		$client->expects($this->at(2))
+			->method('fetch')
+			->willReturn($bodyResults);
+
+		$this->mapper->findAll(
+			$client,
+			$mailbox,
+			5000,
+			300
+		);
 	}
 }

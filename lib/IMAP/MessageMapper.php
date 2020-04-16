@@ -71,18 +71,18 @@ class MessageMapper {
 
 	/**
 	 * @param Horde_Imap_Client_Socket $client
-	 * @param Mailbox $mailbox
+	 * @param string $mailbox
 	 *
 	 * @param int $maxResults
-	 * @param int|null $highestKnownUid
+	 * @param int $highestKnownUid
 	 *
 	 * @return array
 	 * @throws Horde_Imap_Client_Exception
 	 */
 	public function findAll(Horde_Imap_Client_Socket $client,
-							Mailbox $mailbox,
+							string $mailbox,
 							int $maxResults,
-							?int $highestKnownUid = 0): array {
+							int $highestKnownUid): array {
 		/**
 		 * To prevent memory exhaustion, we don't want to just ask for a list of
 		 * all UIDs and limit them client-side. Instead we can (hopefully
@@ -94,7 +94,7 @@ class MessageMapper {
 		 */
 
 		$metaResults = $client->search(
-			$mailbox->getName(),
+			$mailbox,
 			null,
 			[
 				'results' => [
@@ -125,11 +125,17 @@ class MessageMapper {
 		// +1 is added to fetch all messages with the rare case of strictly
 		// continuous UIDs and fractions
 		$estimatedPageSize = (int)(($totalRange / $total) * $maxResults) + 1;
+		// Determine min UID to fetch, but don't exceed the known maximum
+		$lower = max(
+			$min,
+			($highestKnownUid ?? 0) + 1
+		);
 		// Determine max UID to fetch, but don't exceed the known maximum
 		$upper = min(
 			$max,
-			$highestKnownUid + $estimatedPageSize
+			$lower + $estimatedPageSize
 		);
+		$this->logger->debug("Built range for findAll: min=$min max=$max total=$total totalRange=$totalRange estimatedPageSize=$estimatedPageSize lower=$lower upper=$upper highestKnownUid=$highestKnownUid");
 
 		$query = new Horde_Imap_Client_Fetch_Query();
 		$query->uid();
@@ -140,10 +146,10 @@ class MessageMapper {
 						return $data->getUid();
 					},
 					iterator_to_array($client->fetch(
-						$mailbox->getName(),
+						$mailbox,
 						$query,
 						[
-							'ids' => new Horde_Imap_Client_Ids(($highestKnownUid + 1) . ':' . $upper)
+							'ids' => new Horde_Imap_Client_Ids($lower . ':' . $upper)
 						]
 					))
 				),
@@ -159,7 +165,7 @@ class MessageMapper {
 		return [
 			'messages' => $this->findByIds(
 				$client,
-				$mailbox->getName(),
+				$mailbox,
 				$uidsToFetch
 			),
 			'all' => $upper === $max,
