@@ -25,8 +25,8 @@ declare(strict_types=1);
 
 namespace OCA\Mail\BackgroundJob;
 
-use Exception;
 use OCA\Mail\Exception\IncompleteSyncException;
+use OCA\Mail\IMAP\MailboxSync;
 use OCA\Mail\Service\AccountService;
 use OCA\Mail\Service\Sync\ImapToDbSynchronizer;
 use OCP\AppFramework\Db\DoesNotExistException;
@@ -34,20 +34,28 @@ use OCP\AppFramework\Utility\ITimeFactory;
 use OCP\BackgroundJob\IJobList;
 use OCP\BackgroundJob\TimedJob;
 use OCP\ILogger;
+use Throwable;
 
 class SyncJob extends TimedJob {
 
 	/** @var AccountService */
 	private $accountService;
+
 	/** @var ImapToDbSynchronizer */
 	private $syncService;
+
+	/** @var MailboxSync */
+	private $mailboxSync;
+
 	/** @var ILogger */
 	private $logger;
+
 	/** @var IJobList */
 	private $jobList;
 
 	public function __construct(ITimeFactory $time,
 								AccountService $accountService,
+								MailboxSync $mailboxSync,
 								ImapToDbSynchronizer $syncService,
 								ILogger $logger,
 								IJobList $jobList) {
@@ -55,6 +63,7 @@ class SyncJob extends TimedJob {
 
 		$this->accountService = $accountService;
 		$this->syncService = $syncService;
+		$this->mailboxSync = $mailboxSync;
 		$this->logger = $logger;
 
 		$this->setInterval(3600);
@@ -73,13 +82,16 @@ class SyncJob extends TimedJob {
 		}
 
 		try {
+			$this->mailboxSync->sync($account, true);
 			$this->syncService->syncAccount($account);
 		} catch (IncompleteSyncException $e) {
 			$this->logger->logException($e, [
 				'level' => ILogger::WARN,
 			]);
-		} catch (Exception $e) {
-			$this->logger->logException($e);
+		} catch (Throwable $e) {
+			$this->logger->logException($e, [
+				'message' => 'Cron mail sync failed: ' . $e->getMessage(),
+			]);
 		}
 	}
 }
