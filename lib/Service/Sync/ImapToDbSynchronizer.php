@@ -151,7 +151,7 @@ class ImapToDbSynchronizer {
 			// Just rethrow, don't wrap into another exception
 			throw $e;
 		} catch (Throwable $e) {
-			throw new ServiceException('Sync failed: ' . $e->getMessage(), 0, $e);
+			throw new ServiceException('Sync failed for ' . $account->getId() . ':' . $mailbox->getName() . ': ' . $e->getMessage(), 0, $e);
 		} finally {
 			if ($criteria & Horde_Imap_Client::SYNC_VANISHEDUIDS) {
 				$this->mailboxMapper->unlockFromVanishedSync($mailbox);
