@@ -147,6 +147,9 @@ class ImapToDbSynchronizer {
 			} else {
 				$this->runPartialSync($account, $mailbox, $criteria, $knownUids);
 			}
+		} catch (ServiceException $e) {
+			// Just rethrow, don't wrap into another exception
+			throw $e;
 		} catch (Throwable $e) {
 			throw new ServiceException('Sync failed: ' . $e->getMessage(), 0, $e);
 		} finally {
@@ -189,7 +192,7 @@ class ImapToDbSynchronizer {
 			// We might need more attempts to fill the cache
 			$perf->end();
 
-			throw new IncompleteSyncException();
+			throw new IncompleteSyncException('Initial sync is not complete for ' . $account->getId() . ':' . $mailbox->getName());
 		}
 
 		$mailbox->setSyncNewToken($client->getSyncToken($mailbox->getName()));
