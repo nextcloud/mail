@@ -84,6 +84,23 @@ export async function syncEnvelopes(accountId, folderId, uids, query, init = fal
 	}
 }
 
+export async function clearCache(accountId, folderId) {
+	const url = generateUrl('/apps/mail/api/accounts/{accountId}/folders/{folderId}/sync', {
+		accountId,
+		folderId,
+	})
+
+	try {
+		const response = await axios.delete(url)
+
+		if (response.status === 202) {
+			throw new SyncIncompleteError()
+		}
+	} catch (e) {
+		throw convertAxiosError(e)
+	}
+}
+
 export function setEnvelopeFlag(accountId, folderId, id, flag, value) {
 	const url = generateUrl('/apps/mail/api/accounts/{accountId}/folders/{folderId}/messages/{id}/flags', {
 		accountId,

@@ -60,6 +60,11 @@ return [
 			'verb' => 'POST'
 		],
 		[
+			'name' => 'folders#clearCache',
+			'url' => '/api/accounts/{accountId}/folders/{folderId}/sync',
+			'verb' => 'DELETE'
+		],
+		[
 			'name' => 'folders#markAllAsRead',
 			'url' => '/api/accounts/{accountId}/folders/{folderId}/read',
 			'verb' => 'POST'
