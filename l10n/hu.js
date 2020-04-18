@@ -107,6 +107,7 @@ OC.L10N.register(
     "Junk" : "Szemét",
     "Sent" : "Elküldött",
     "Trash" : "Lomtár",
+    "Error while sharing file" : "Hiba a fájl megosztása közben",
     "{from}\n{subject}" : "{from}\n{subject}",
     "_%n new message \nfrom {from}_::_%n new messages \nfrom {from}_" : ["%n új üzenet \nfeladó: {from}","%n új üzenet \nfeladó: {from}"],
     "Nextcloud Mail" : "Nextcloud Mail",
