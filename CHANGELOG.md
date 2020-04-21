@@ -1,18 +1,28 @@
 # Changelog
 All notable changes to this project will be documented in this file.
 
+## 1.3.3 - 2020-04-21
+### Added
+- UI option to clear the cache of a single mailbox (debug mode only)
+### Fixed
+- Long recipient labels that are too big for the database column
+### Changed
+- Sync also the currently viewed mailbox in the background, not just the inboxes
+- New and updated translations
+- New screenshot
+
 ## 1.3.2 - 2020-04-16
-## Fixed
+### Fixed
 - Initial synchronization on installations with high message UID numbers
 
 ## 1.3.1 - 2020-04-16
-## Fixed
+### Fixed
 - Also sync mailboxes before sync'ing messages in cron
 - Handling of partial initial sync
 - Endless loading of paginated unified inbox
 
 ## 1.3.0 - 2020-04-15
-## Added
+### Added
 - A database cache for messages, so many operations do not need a connection to IMAP. This can drastically improve the overall app performance, especially searching got very fast. The change is most noticeable on IMAP server with poor support for IMAP capabilities. The initial sync may take a few seconds or minutes, but afterwards the app should be snappy for everyone. The app now also syncs in the background (cron job), so when you open it it already has most of the recent changes in your IMAP account.
 - Make it possible to view the source of the message
 - Possibility to add message attachments as link shares
@@ -22,13 +32,11 @@ All notable changes to this project will be documented in this file.
 - Floating attachment button with popover
 - Alignment and headings as formatting option in text edit
 - Better handling of server errors and possible recovery logic for some error types
-
-## Changed
+### Changed
 - Move favorite toggle to menu, otherwise not distinguishable
 - Update dependencies
 - Update CKEditor to v18
-
-## Fixed
+### Fixed
 - Handling of plain/html replies in plain/html
 - Formatting of aliases in recipient dropdown
 - Navigation from account settings to new message composer
