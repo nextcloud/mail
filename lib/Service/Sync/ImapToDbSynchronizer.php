@@ -33,6 +33,7 @@ use OCA\Mail\Db\MailboxMapper;
 use OCA\Mail\Db\MessageMapper as DatabaseMessageMapper;
 use OCA\Mail\Exception\ClientException;
 use OCA\Mail\Exception\IncompleteSyncException;
+use OCA\Mail\Exception\MailboxLockedException;
 use OCA\Mail\Exception\MailboxNotCachedException;
 use OCA\Mail\Exception\ServiceException;
 use OCA\Mail\IMAP\IMAPClientFactory;
@@ -113,6 +114,38 @@ class ImapToDbSynchronizer {
 	}
 
 	/**
+	 * Clear all cached data of a mailbox
+	 *
+	 * @param Account $account
+	 * @param Mailbox $mailbox
+	 *
+	 * @throws MailboxLockedException
+	 * @throws ServiceException
+	 */
+	public function clearCache(Account $account,
+							   Mailbox $mailbox): void {
+		$id = $account->getId() . ":" . $mailbox->getName();
+		try {
+			$this->mailboxMapper->lockForNewSync($mailbox);
+			$this->mailboxMapper->lockForChangeSync($mailbox);
+			$this->mailboxMapper->lockForVanishedSync($mailbox);
+
+			$this->messageMapper->deleteAll($mailbox);
+			$this->logger->debug("All messages of $id cleared");
+			$mailbox->setSyncNewToken(null);
+			$mailbox->setSyncChangedToken(null);
+			$mailbox->setSyncVanishedToken(null);
+			$this->mailboxMapper->update($mailbox);
+		} catch (Throwable $e) {
+			throw new ServiceException("Could not clear mailbox cache for $id: " . $e->getMessage(), 0, $e);
+		} finally {
+			$this->mailboxMapper->unlockFromNewSync($mailbox);
+			$this->mailboxMapper->unlockFromChangedSync($mailbox);
+			$this->mailboxMapper->unlockFromVanishedSync($mailbox);
+		}
+	}
+
+	/**
 	 * @param int[] $knownUids
 	 *
 	 * @throws ClientException
@@ -120,10 +153,10 @@ class ImapToDbSynchronizer {
 	 * @throws ServiceException
 	 */
 	public function sync(Account $account,
-						  Mailbox $mailbox,
-						  int $criteria = Horde_Imap_Client::SYNC_NEWMSGSUIDS | Horde_Imap_Client::SYNC_FLAGSUIDS | Horde_Imap_Client::SYNC_VANISHEDUIDS,
-						  array $knownUids = null,
-						  bool $force = false): void {
+						 Mailbox $mailbox,
+						 int $criteria = Horde_Imap_Client::SYNC_NEWMSGSUIDS | Horde_Imap_Client::SYNC_FLAGSUIDS | Horde_Imap_Client::SYNC_VANISHEDUIDS,
+						 array $knownUids = null,
+						 bool $force = false): void {
 		if ($mailbox->getSelectable() === false) {
 			return;
 		}

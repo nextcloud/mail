@@ -41,7 +41,6 @@
 					{{ statsText }}
 				</ActionText>
 
-				<!-- TODO: make *mark as read* available for all folders once there is more than one action -->
 				<ActionButton
 					v-if="folder.specialRole !== 'flagged'"
 					icon="icon-mail"
@@ -59,6 +58,16 @@
 				>
 					{{ t('mail', 'Add subfolder') }}
 				</ActionInput>
+
+				<ActionButton
+					v-if="debug && !account.isUnified && folder.specialRole !== 'flagged'"
+					icon="icon-settings"
+					:title="t('mail', 'Clear cache')"
+					:disabled="clearingCache"
+					@click="clearCache"
+				>
+					{{ t('mail', 'Clear locally cached data, in case there are issues with synchronization.') }}
+				</ActionButton>
 			</template>
 		</template>
 		<AppNavigationCounter v-if="folder.unread" slot="counter">
@@ -83,6 +92,7 @@ import ActionButton from '@nextcloud/vue/dist/Components/ActionButton'
 import ActionInput from '@nextcloud/vue/dist/Components/ActionInput'
 import ActionText from '@nextcloud/vue/dist/Components/ActionText'
 
+import {clearCache} from '../service/MessageService'
 import {getFolderStats} from '../service/FolderService'
 import logger from '../logger'
 import {translatePlural as n} from '@nextcloud/l10n'
@@ -118,8 +128,10 @@ export default {
 	},
 	data() {
 		return {
+			debug: window?.OC?.debug || false,
 			folderStats: undefined,
 			loadingMarkAsRead: false,
+			clearingCache: false,
 		}
 	},
 	computed: {
@@ -241,6 +253,22 @@ export default {
 				.then(() => logger.info(`folder ${this.folder.id} marked as read`))
 				.catch((error) => logger.error(`could not mark folder ${this.folder.id} as read`, {error}))
 				.then(() => (this.loadingMarkAsRead = false))
+		},
+		async clearCache() {
+			try {
+				this.clearingCache = true
+				logger.debug('clearing message cache', {
+					accountId: this.account.id,
+					folderId: this.folder.id,
+				})
+
+				await clearCache(this.account.id, this.folder.id)
+
+				// TODO: there might be a nicer way to handle this
+				window.location.reload(false)
+			} finally {
+				this.clearCache = false
+			}
 		},
 	},
 }

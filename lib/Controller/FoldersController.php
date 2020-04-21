@@ -145,6 +145,28 @@ class FoldersController extends Controller {
 	 *
 	 * @param int $accountId
 	 * @param string $folderId
+	 *
+	 * @return JSONResponse
+	 * @throws ClientException
+	 * @throws ServiceException
+	 */
+	public function clearCache(int $accountId, string $folderId): JSONResponse {
+		$account = $this->accountService->find($this->currentUserId, $accountId);
+
+		if (empty($accountId) || empty($folderId)) {
+			return new JSONResponse(null, Http::STATUS_BAD_REQUEST);
+		}
+
+		$this->syncService->clearCache($account, base64_decode($folderId));
+		return new JSONResponse(null);
+	}
+
+	/**
+	 * @NoAdminRequired
+	 * @TrapError
+	 *
+	 * @param int $accountId
+	 * @param string $folderId
 	 * @return JSONResponse
 	 *
 	 * @throws ClientException

@@ -31,6 +31,7 @@ use OCA\Mail\Db\MailboxMapper;
 use OCA\Mail\Db\Message;
 use OCA\Mail\Db\MessageMapper;
 use OCA\Mail\Exception\ClientException;
+use OCA\Mail\Exception\MailboxLockedException;
 use OCA\Mail\Exception\MailboxNotCachedException;
 use OCA\Mail\Exception\ServiceException;
 use OCA\Mail\IMAP\PreviewEnhancer;
@@ -69,6 +70,24 @@ class SyncService {
 		$this->mailboxMapper = $mailboxMapper;
 		$this->messageMapper = $messageMapper;
 		$this->previewEnhancer = $previewEnhancer;
+	}
+
+	/**
+	 * @param Account $account
+	 * @param string $mailboxId
+	 *
+	 * @throws MailboxLockedException
+	 * @throws ServiceException
+	 */
+	public function clearCache(Account $account,
+							   string $mailboxId): void {
+		try {
+			$mailbox = $this->mailboxMapper->find($account, $mailboxId);
+		} catch (DoesNotExistException $e) {
+			throw new ServiceException('Mailbox to sync does not exist in the database', 0, $e);
+		}
+
+		$this->synchronizer->clearCache($account, $mailbox);
 	}
 
 	/**
@@ -118,9 +137,9 @@ class SyncService {
 	 * @param array $knownUids
 	 * @param SearchQuery $query
 	 *
+	 * @return Response
 	 * @todo does not work with text token search queries
 	 *
-	 * @return Response
 	 */
 	private function getDatabaseSyncChanges(Account $account, Mailbox $mailbox, array $knownUids, ?SearchQuery $query): Response {
 		if (empty($knownUids)) {
