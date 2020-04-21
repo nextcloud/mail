@@ -87,6 +87,7 @@ export default {
 			loadingMore: false,
 			loadingEnvelopes: true,
 			loadingCacheInitialization: false,
+			loadMailboxInterval: undefined,
 		}
 	},
 	computed: {
@@ -109,6 +110,7 @@ export default {
 		this.bus.$on('loadMore', this.loadMore)
 		this.bus.$on('delete', this.onDelete)
 		this.bus.$on('shortcut', this.handleShortcut)
+		this.loadMailboxInterval = setInterval(this.loadMailbox, 60000)
 	},
 	async mounted() {
 		return await this.loadEnvelopes()
@@ -117,6 +119,7 @@ export default {
 		this.bus.$off('loadMore', this.loadMore)
 		this.bus.$off('delete', this.onDelete)
 		this.bus.$off('shortcut', this.handleShortcut)
+		this.stopInterval()
 	},
 	methods: {
 		initializeCache() {
@@ -267,15 +270,27 @@ export default {
 					logger.debug('deleting', {env})
 					this.onDelete(env.uid)
 					this.$store
-						.dispatch('deleteMessage', {accountId: env.accountId, folderId: env.folderId, id: env.id})
-						.catch((error) => logger.error('could not delete envelope', {env, error}))
+						.dispatch('deleteMessage', {
+							accountId: env.accountId,
+							folderId: env.folderId,
+							id: env.id,
+						})
+						.catch((error) =>
+							logger.error('could not delete envelope', {
+								env,
+								error,
+							})
+						)
 
 					break
 				case 'flag':
 					logger.debug('flagging envelope via shortkey', {env})
-					this.$store
-						.dispatch('toggleEnvelopeFlagged', env)
-						.catch((error) => logger.error('could not flag envelope via shortkey', {env, error}))
+					this.$store.dispatch('toggleEnvelopeFlagged', env).catch((error) =>
+						logger.error('could not flag envelope via shortkey', {
+							env,
+							error,
+						})
+					)
 					break
 				case 'refresh':
 					logger.debug('syncing envelopes via shortkey')
@@ -286,11 +301,12 @@ export default {
 					break
 				case 'unseen':
 					logger.debug('marking message as seen/unseen via shortkey', {env})
-					this.$store
-						.dispatch('toggleEnvelopeSeen', env)
-						.catch((error) =>
-							logger.error('could not mark envelope as seen/unseen via shortkey', {env, error})
-						)
+					this.$store.dispatch('toggleEnvelopeSeen', env).catch((error) =>
+						logger.error('could not mark envelope as seen/unseen via shortkey', {
+							env,
+							error,
+						})
+					)
 					break
 				default:
 					logger.warn('shortcut ' + e.srcKey + ' is unknown. ignoring.')
@@ -347,6 +363,27 @@ export default {
 					messageUid: next.uid,
 				},
 			})
+		},
+		async loadMailbox() {
+			//when the account is unified or inbox, return nothing, else sync the mailbox
+			if (this.account.isUnified || this.folder.specialRole === 'inbox') {
+				return
+			}
+			try {
+				await this.$store.dispatch('syncEnvelopes', {
+					accountId: this.$route.params.accountId,
+					folderId: this.$route.params.folderId,
+					query: this.searchQuery,
+				})
+
+				logger.debug("Mailbox sync'ed in background")
+			} catch (error) {
+				logger.error('Background sync failed: ' + error.message, {error})
+			}
+		},
+		stopInterval() {
+			clearInterval(this.loadMailboxInterval)
+			this.loadMailboxInterval = undefined
 		},
 	},
 }
