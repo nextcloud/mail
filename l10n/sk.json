@@ -109,6 +109,7 @@
     "Mark all as read" : "Označ všetko ako prečítané",
     "Mark all messages of this folder as read" : "Všetky správy v tomto priečinku označiť ako prečítané",
     "Add subfolder" : "Pridať podpriečinok",
+    "Clear cache" : "Vymazať vyrovnávaciu pamäť",
     "Loading …" : "Načítava sa...",
     "_{total} message_::_{total} messages_" : ["{total} správa","{total} správy","{total} správy","{total} správ"],
     "Could not load your draft" : "Koncept sa nepodarilo načítať",

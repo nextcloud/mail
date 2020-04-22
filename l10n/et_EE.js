@@ -43,6 +43,7 @@ OC.L10N.register(
     "Delete account" : "Kustuta konto",
     "Show all folders" : "Näita kõiki kaustu",
     "Mark all as read" : "Märgi loetuks",
+    "Clear cache" : "Tühjenda puhver",
     "Signature" : "Allkiri",
     "General" : "Üldine",
     "User" : "Kasutaja",

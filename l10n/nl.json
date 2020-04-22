@@ -109,6 +109,7 @@
     "Mark all as read" : "Alles als gelezen markeren",
     "Mark all messages of this folder as read" : "Markeer alle berichten in deze map als gelezen",
     "Add subfolder" : "Toevoegen submap",
+    "Clear cache" : "Leegmaken cache",
     "Loading …" : "Aan het laden ...",
     "_{total} message_::_{total} messages_" : ["{total} bericht","{total} berichten"],
     "Could not load your draft" : "Kan jouw concept niet laden",

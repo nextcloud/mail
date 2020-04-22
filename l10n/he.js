@@ -57,6 +57,7 @@ OC.L10N.register(
     "Show all folders" : "הצגת כל התיקיות",
     "Collapse folders" : "קיווץ תיקיות",
     "Mark all as read" : "סימון הכול כנקרא",
+    "Clear cache" : "פינוי מטמון",
     "Signature" : "חתימה",
     "General" : "כללי",
     "User" : "משתמש",

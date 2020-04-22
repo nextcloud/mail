@@ -76,6 +76,7 @@ OC.L10N.register(
     "Show all folders" : "Vis alle mapper",
     "Collapse folders" : "Skjul mapper",
     "Mark all as read" : "Marker alle som lest",
+    "Clear cache" : "Tøm hurtiglager",
     "Loading …" : "Laster...",
     "Could not load your draft" : "Kunne ikke laste inn denne kladden",
     "Signature" : "Signatur",

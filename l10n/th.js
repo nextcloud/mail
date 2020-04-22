@@ -28,6 +28,7 @@ OC.L10N.register(
     "Show all folders" : "แสดงโฟลเดอร์ทั้งหมด",
     "Collapse folders" : "ยุบโฟลเดอร์",
     "Mark all as read" : "เลือกอ่านทั้งหมด",
+    "Clear cache" : "ล้างแคช",
     "General" : "ทั่วไป",
     "User" : "User",
     "Host" : "โฮสต์",

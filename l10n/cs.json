@@ -109,6 +109,7 @@
     "Mark all as read" : "Označit vše jako přečtené",
     "Mark all messages of this folder as read" : "Označit všechny zprávy v této složce jako přečtené",
     "Add subfolder" : "Přidat podsložku",
+    "Clear cache" : "Vyprázdnit mezipaměť",
     "Loading …" : "Načítání…",
     "_{total} message_::_{total} messages_" : ["{total} zpráva","{total} zprávy","{total} zpráv","{total} zprávy"],
     "Could not load your draft" : "Nedaří se načíst váš koncept",

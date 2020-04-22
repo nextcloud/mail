@@ -111,6 +111,7 @@ OC.L10N.register(
     "Mark all as read" : "Tümünü okunmuş olarak işaretle",
     "Mark all messages of this folder as read" : "Bu klasördeki tüm iletileri okunmuş olarak işaretle",
     "Add subfolder" : "Alt klasör ekle",
+    "Clear cache" : "Ön belleği temizle",
     "Loading …" : "Yükleniyor …",
     "_{total} message_::_{total} messages_" : ["{total} ileti","{total} ileti"],
     "Could not load your draft" : "Taslağınız yüklenemedi",

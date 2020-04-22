@@ -101,6 +101,7 @@ OC.L10N.register(
     "Mark all as read" : "Žymėti visus kaip skaitytus",
     "Mark all messages of this folder as read" : "Žymėti visus laiškus šiame aplanke kaip skaitytus",
     "Add subfolder" : "Pridėti poaplankį",
+    "Clear cache" : "Išvalyti podėlį",
     "Loading …" : "Įkeliama…",
     "_{total} message_::_{total} messages_" : ["{total} laiškas","{total} laiškai","{total} laiškų","{total} laiškas"],
     "Could not load your draft" : "Nepavyko įkelti jūsų juodraščio",

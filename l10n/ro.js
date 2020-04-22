@@ -32,6 +32,7 @@ OC.L10N.register(
     "Delete account" : "Delete account",
     "Show all folders" : "Arată toate directoarele",
     "Mark all as read" : "Marcaţi tot ca fiind citit",
+    "Clear cache" : "Șterge cache",
     "Loading …" : "Se încarcă…",
     "Signature" : "Semnătură",
     "General" : "General",

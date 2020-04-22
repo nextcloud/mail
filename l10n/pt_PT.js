@@ -49,6 +49,7 @@ OC.L10N.register(
     "Show all folders" : "Mostrar todas as pastas",
     "Collapse folders" : "Ocultar pastas",
     "Mark all as read" : "Marcar todas como lidas",
+    "Clear cache" : "Limpar cache",
     "Signature" : "Assinatura",
     "General" : "Geral",
     "User" : "Utilizador",

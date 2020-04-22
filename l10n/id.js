@@ -27,6 +27,7 @@ OC.L10N.register(
     "Add folder" : "Add folder",
     "Delete account" : "Delete account",
     "Mark all as read" : "Tandai semua telah dibaca",
+    "Clear cache" : "Bersihkan cache",
     "Signature" : "Tanda",
     "General" : "Umum",
     "User" : "Pengguna",

@@ -111,6 +111,7 @@ OC.L10N.register(
     "Mark all as read" : "Marcar todas como lidas",
     "Mark all messages of this folder as read" : "Marcar todas as mensagens desta pasta como lidas",
     "Add subfolder" : "Adicionar subpasta",
+    "Clear cache" : "Limpar cache",
     "Loading …" : "Carregando...",
     "_{total} message_::_{total} messages_" : ["{total} mensagem","{total} mensagens"],
     "Could not load your draft" : "Não pude carregar seu rascunho",

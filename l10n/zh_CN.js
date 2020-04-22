@@ -104,6 +104,7 @@ OC.L10N.register(
     "Mark all as read" : "标记所有为已读",
     "Mark all messages of this folder as read" : "将此文件夹中的所有消息都标记为已读",
     "Add subfolder" : "添加子文件夹",
+    "Clear cache" : "清空缓存",
     "Loading …" : "正在加载...",
     "_{total} message_::_{total} messages_" : ["{total} 条消息"],
     "Could not load your draft" : "无法加载您的草稿",

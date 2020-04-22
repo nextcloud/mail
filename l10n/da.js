@@ -95,6 +95,7 @@ OC.L10N.register(
     "Mark all as read" : "Markér alle som læst",
     "Mark all messages of this folder as read" : "Markér alle beskeder i denne mappe som læst",
     "Add subfolder" : "Tilføj undermappe",
+    "Clear cache" : "Ryd cache",
     "Loading …" : "Indlæser…",
     "_{total} message_::_{total} messages_" : ["{total} besked","{total} beskeder"],
     "Could not load your draft" : "Kladden kunne ikke indlæses",

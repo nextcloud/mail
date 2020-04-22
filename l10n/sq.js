@@ -54,6 +54,7 @@ OC.L10N.register(
     "Show all folders" : "Shfaqi krejt dosjet",
     "Collapse folders" : "Tkurri dosjet",
     "Mark all as read" : "Shënoji krejt si të lexuar",
+    "Clear cache" : "Pastroje fshehtinën",
     "Signature" : "Nënshkrimi",
     "General" : "Të përgjithshme",
     "User" : "Përdorues",

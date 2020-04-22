@@ -104,6 +104,7 @@ OC.L10N.register(
     "Mark all as read" : "Označi sve kao pročitano",
     "Mark all messages of this folder as read" : "Označi sve poruke u ovoj mapi kao pročitane",
     "Add subfolder" : "Dodaj podmapu",
+    "Clear cache" : "Izbriši predmemoriju",
     "Loading …" : "Učitavanje…",
     "_{total} message_::_{total} messages_" : ["{total} poruka","{total} poruka","{total} poruka"],
     "Could not load your draft" : "Učitavanje vaše skice nije uspjelo",

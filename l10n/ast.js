@@ -45,6 +45,7 @@ OC.L10N.register(
     "Show all folders" : "Amosar toles carpetes",
     "Collapse folders" : "Contrayer carpetes",
     "Mark all as read" : "Conseñar too como lleío",
+    "Clear cache" : "Llimpiar caché",
     "Loading …" : "Cargando...",
     "Signature" : "Robla",
     "General" : "Xeneral",

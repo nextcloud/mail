@@ -102,6 +102,7 @@ OC.L10N.register(
     "Mark all as read" : "Marki ĉion kiel legita",
     "Mark all messages of this folder as read" : "Marki ĉiujn mesaĝojn el tiu dosierujo kiel legitaj",
     "Add subfolder" : "Aldoni subdosierujon",
+    "Clear cache" : "Forviŝi la kaŝmemoron",
     "Loading …" : "Ŝargas …",
     "_{total} message_::_{total} messages_" : ["{total} mesaĝo","{total} mesaĝoj"],
     "Could not load your draft" : "Ne eblis ŝargi vian malneton",

@@ -58,6 +58,7 @@ OC.L10N.register(
     "Show all folders" : "أظهر جميع المجلدات",
     "Collapse folders" : "طي المجلدات",
     "Mark all as read" : "تحديد الكل كمقروء",
+    "Clear cache" : "مسح ذاكرة التخزين المؤقتة",
     "Signature" : "التوقيع",
     "General" : "العامة",
     "Email address" : "عنوان البريد الإلكتروني",
