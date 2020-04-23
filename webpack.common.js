@@ -62,7 +62,7 @@ module.exports = {
 				test: /\.(svg)$/i,
 				use: [
 					{
-						loader: 'url-loader'
+						loader: 'svg-inline-loader'
 					}
 				],
 				exclude: path.join(__dirname, 'node_modules', '@ckeditor')

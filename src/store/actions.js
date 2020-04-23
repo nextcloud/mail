@@ -493,6 +493,26 @@ export default {
 			})
 		})
 	},
+	toggleEnvelopeImportant({commit, getters}, envelope) {
+		// Change immediately and switch back on error
+		const oldState = envelope.flags.important
+		commit('flagEnvelope', {
+			envelope,
+			flag: 'important',
+			value: !oldState,
+		})
+
+		setEnvelopeFlag(envelope.accountId, envelope.folderId, envelope.id, 'important', !oldState).catch((e) => {
+			console.error('could not toggle message important state', e)
+
+			// Revert change
+			commit('flagEnvelope', {
+				envelope,
+				flag: 'important',
+				value: oldState,
+			})
+		})
+	},
 	toggleEnvelopeSeen({commit, getters}, envelope) {
 		// Change immediately and switch back on error
 		const oldState = envelope.flags.unseen
