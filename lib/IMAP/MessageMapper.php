@@ -105,11 +105,11 @@ class MessageMapper {
 			]
 		);
 		/** @var int $min */
-		$min = $metaResults['min'];
+		$min = (int) $metaResults['min'];
 		/** @var int $max */
-		$max = $metaResults['max'];
+		$max = (int) $metaResults['max'];
 		/** @var int $total */
-		$total = $metaResults['count'];
+		$total = (int) $metaResults['count'];
 
 		if ($total === 0) {
 			// Nothing to fetch for this mailbox
