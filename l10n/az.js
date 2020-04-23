@@ -22,6 +22,7 @@ OC.L10N.register(
     "Add folder" : "Add folder",
     "Delete account" : "Delete account",
     "Mark all as read" : "Hamısını oxunulmuş kimi qeydə al",
+    "Clear cache" : "Keşi təmizlə",
     "General" : "Ümumi",
     "User" : "User",
     "Host" : "Şəbəkədə ünvan",

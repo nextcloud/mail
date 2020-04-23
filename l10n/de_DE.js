@@ -112,6 +112,7 @@ OC.L10N.register(
     "Mark all messages of this folder as read" : "Alle Nachrichten in diesem Ordner als gelesen kennzeichnen",
     "Add subfolder" : "Unterordner hinzufügen",
     "Clear cache" : "Cache löschen",
+    "Clear locally cached data, in case there are issues with synchronization." : "Löschen Sie lokal zwischengespeicherte Daten, falls es Probleme mit der Synchronisierung gibt.",
     "Loading …" : "Lade ...",
     "_{total} message_::_{total} messages_" : ["{total} Nachricht","{total} Nachrichten"],
     "Could not load your draft" : "Ihr Entwurf konnte nicht geladen werden",

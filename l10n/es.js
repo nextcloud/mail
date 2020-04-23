@@ -111,6 +111,7 @@ OC.L10N.register(
     "Mark all as read" : "Marcar como leído",
     "Mark all messages of this folder as read" : "Marcar todos los mensajes de esta bandeja como leídos",
     "Add subfolder" : "Añadir subcarpeta",
+    "Clear cache" : "Vaciar caché",
     "Loading …" : "Cargando …",
     "_{total} message_::_{total} messages_" : ["{total} mensaje","{total} mensajes"],
     "Could not load your draft" : "No se ha podido cargar el borrador",

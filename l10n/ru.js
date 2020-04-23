@@ -111,6 +111,7 @@ OC.L10N.register(
     "Mark all as read" : "Отметить все как прочитанное",
     "Mark all messages of this folder as read" : "Отметить все сообщения в этой папке как прочитанные",
     "Add subfolder" : "Добавить подпапку",
+    "Clear cache" : "Очистить кеш",
     "Loading …" : "Загрузка ...",
     "_{total} message_::_{total} messages_" : ["{total} письмо","{total} письма","{total} писем","{total} письма"],
     "Could not load your draft" : "Невозможно загрузить ваш черновик",

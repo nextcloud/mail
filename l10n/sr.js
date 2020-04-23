@@ -111,6 +111,7 @@ OC.L10N.register(
     "Mark all as read" : "Означи све као прочитано",
     "Mark all messages of this folder as read" : "Означи све поруке из ове фасцикле као прочитане",
     "Add subfolder" : "Додај подфасциклу",
+    "Clear cache" : "Очисти кеш",
     "Loading …" : "Учитавање…",
     "_{total} message_::_{total} messages_" : ["{total} порука","{total} поруке","{total} порука"],
     "Could not load your draft" : "Не могу да учитам нацрт",

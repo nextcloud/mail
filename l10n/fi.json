@@ -103,6 +103,7 @@
     "Mark all as read" : "Merkitse kaikki luetuiksi",
     "Mark all messages of this folder as read" : "Merkitse tämän kansion kaikki viestit luetuiksi",
     "Add subfolder" : "Lisää alikansio",
+    "Clear cache" : "Tyhjennä välimuisti",
     "Loading …" : "Ladataan…",
     "_{total} message_::_{total} messages_" : ["{total} viesti","{total} viestiä"],
     "Could not load your draft" : "Luonnosta ei voitu ladata",

@@ -22,6 +22,7 @@ OC.L10N.register(
     "Add folder" : "Add folder",
     "Delete account" : "Delete account",
     "Mark all as read" : "সব পঠিত হিসেবে চিহ্নিত কর",
+    "Clear cache" : "ক্যাশে পরিষ্কার কর",
     "General" : "সাধারণ",
     "User" : "User",
     "Host" : "হোস্ট",

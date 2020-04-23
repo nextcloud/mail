@@ -110,6 +110,7 @@
     "Mark all messages of this folder as read" : "Alle Nachrichten in diesem Ordner als gelesen kennzeichnen",
     "Add subfolder" : "Unterordner hinzufügen",
     "Clear cache" : "Benötigt keine Übersetzung. Für iOS wird nur die formelle Übersetzung verwendet (de_DE).",
+    "Clear locally cached data, in case there are issues with synchronization." : "Lösche lokal zwischengespeicherte Daten, falls es Probleme mit der Synchronisierung gibt.",
     "Loading …" : "Lade ...",
     "_{total} message_::_{total} messages_" : ["{total} Nachricht","{total} Nachrichten"],
     "Could not load your draft" : "Dein Entwurf konnte nicht geladen werden",

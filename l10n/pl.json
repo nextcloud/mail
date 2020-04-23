@@ -109,6 +109,8 @@
     "Mark all as read" : "Oznacz wszystkie jako przeczytane",
     "Mark all messages of this folder as read" : "Zaznacz wszystkie wiadomości w katalogu jako przeczytane",
     "Add subfolder" : "Dodaj podfolder",
+    "Clear cache" : "Wyczyść pamięć podręczną",
+    "Clear locally cached data, in case there are issues with synchronization." : "Wyczyść lokalnie buforowane dane, w przypadku problemów z synchronizacją.",
     "Loading …" : "Wczytywanie…",
     "_{total} message_::_{total} messages_" : ["{total} wiadomość","{total} wiadomości","{total} wiadomości","{total} wiadomości"],
     "Could not load your draft" : "Nie można załadować wersji roboczej",

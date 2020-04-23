@@ -91,6 +91,7 @@ OC.L10N.register(
     "Mark all as read" : "Marca-ho tot com a llegit",
     "Mark all messages of this folder as read" : "Marca tots els missatges d'aquesta carpeta com a llegits",
     "Add subfolder" : "Afegeix una subcarpeta",
+    "Clear cache" : "Neteja la memòria cau",
     "Loading …" : "Carregant …",
     "Could not load your draft" : "No s’ha pogut carregar el vostre esborrany",
     "Could not load original message" : "No s'ha pogut carregar el missatge original",

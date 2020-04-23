@@ -57,6 +57,7 @@ OC.L10N.register(
     "Show all folders" : "ყველა დირექტორიის ჩვენება",
     "Collapse folders" : "დირექტორიების კოლაფსი",
     "Mark all as read" : "ყველას წაკითხულად მონიშვნა",
+    "Clear cache" : "კეშის გასუფთავება",
     "Signature" : "ხელმოწერა",
     "General" : "ზოგადი",
     "User" : "მომხმარებელი",

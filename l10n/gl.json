@@ -109,6 +109,8 @@
     "Mark all as read" : "Marcar todo como lido",
     "Mark all messages of this folder as read" : "Marcar todas as mensaxes deste cartafol como lidas",
     "Add subfolder" : "Engadir subcartafol",
+    "Clear cache" : "Limpar a caché",
+    "Clear locally cached data, in case there are issues with synchronization." : "Borrar datos en caché local, no caso de que haxa problemas coa sincronización.",
     "Loading …" : "Cargando…",
     "_{total} message_::_{total} messages_" : ["{total} mensaxe","{total} mensaxes"],
     "Could not load your draft" : "Non foi posíbel cargar o seu borrador",

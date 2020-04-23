@@ -111,6 +111,8 @@ OC.L10N.register(
     "Mark all as read" : "Marquer tout comme lu",
     "Mark all messages of this folder as read" : "Marquer tous les messages de ce dossier comme lus",
     "Add subfolder" : "Ajouter un sous-dossier",
+    "Clear cache" : "Vider le cache",
+    "Clear locally cached data, in case there are issues with synchronization." : "Supprimer les données locales en cache pour régler les problèmes de synchronisation.",
     "Loading …" : "Chargement …",
     "_{total} message_::_{total} messages_" : ["{total} message","{total} messages"],
     "Could not load your draft" : "Impossible de charger votre brouillon",

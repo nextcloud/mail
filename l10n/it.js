@@ -112,6 +112,7 @@ OC.L10N.register(
     "Mark all messages of this folder as read" : "Marca tutti i messaggi di questa cartella come letti",
     "Add subfolder" : "Aggiungi sottocartella",
     "Clear cache" : "Svuota cache",
+    "Clear locally cached data, in case there are issues with synchronization." : "Cancella i dati locali in cache, nel caso ci siano problemi di sincronizzazione.",
     "Loading …" : "Caricamento in corso...",
     "_{total} message_::_{total} messages_" : ["{total} messaggio","{total} messaggi"],
     "Could not load your draft" : "Impossibile caricare la tua bozza",

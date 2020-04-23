@@ -80,6 +80,7 @@ OC.L10N.register(
     "Mark all as read" : "Az összes megjelölése olvasottként",
     "Mark all messages of this folder as read" : "A mappában található összes üzenet megjelölése olvasottként",
     "Add subfolder" : "Almappa hozzáadás",
+    "Clear cache" : "Gyorsítótár ürítése",
     "Loading …" : "Töltés ...",
     "No message selected" : "Nincs kiválasztott üzenet",
     "Signature" : "Aláírás",

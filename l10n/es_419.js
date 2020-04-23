@@ -55,6 +55,7 @@ OC.L10N.register(
     "Show all folders" : "Mostrar todas las carpetas",
     "Collapse folders" : "Compactar carpetas",
     "Mark all as read" : "Marcar todos como leídos",
+    "Clear cache" : "Borrar el caché",
     "Signature" : "Firma",
     "General" : "General",
     "User" : "Ususario",

@@ -32,6 +32,7 @@ OC.L10N.register(
     "Show all folders" : "Переглянути всі теки",
     "Collapse folders" : "Згорнути теки",
     "Mark all as read" : "Позначити все як прочитане",
+    "Clear cache" : "Очистити кеш",
     "Signature" : "Підпис",
     "General" : "Загальна",
     "User" : "Користувач",

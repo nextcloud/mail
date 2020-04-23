@@ -109,6 +109,7 @@
     "Mark all as read" : "Markatu dena irakurrita bezala",
     "Mark all messages of this folder as read" : "Markatu karpeta honetako mezu guztiak irakurrita bezala",
     "Add subfolder" : "Gehitu azpi-karpeta bat",
+    "Clear cache" : "Garbitu cachea",
     "Loading …" : "Kargatzen...",
     "_{total} message_::_{total} messages_" : ["Mezu {total}","{total} mezu"],
     "Could not load your draft" : "Ezin izan da zure zirriborroa kargatu",
