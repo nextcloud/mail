@@ -22,6 +22,7 @@
 namespace OCA\Mail\Tests\Unit\Service;
 
 use ChristophWurst\Nextcloud\Testing\TestCase;
+use OCA\Mail\Service\Group\ContactsGroupService;
 use OCA\Mail\Service\GroupsIntegration;
 use OCA\Mail\Service\Group\NextcloudGroupService;
 use OCA\Mail\Exception\ServiceException;
@@ -38,12 +39,17 @@ class GroupsIntegrationTest extends TestCase {
 	protected function setUp(): void {
 		parent::setUp();
 
-		$this->groupService1 = $this->createMock(NextcloudGroupService::class);
-		$this->groupService1->expects($this->any())
+		$this->groupService1 = $this->createMock(ContactsGroupService::class);
+		$this->groupService2 = $this->createMock(NextcloudGroupService::class);
+		$this->groupService1
 			->method('getNamespace')
 			->willReturn('Namespace1');
+		$this->groupService2
+			->method('getNamespace')
+			->willReturn('Namespace2');
 		$this->groupsIntegration = new GroupsIntegration(
-			$this->groupService1
+			$this->groupService1,
+			$this->groupService2
 		);
 	}
 
