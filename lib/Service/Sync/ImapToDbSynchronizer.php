@@ -230,7 +230,10 @@ class ImapToDbSynchronizer {
 			// We might need more attempts to fill the cache
 			$perf->end();
 
-			throw new IncompleteSyncException('Initial sync is not complete for ' . $account->getId() . ':' . $mailbox->getName());
+			$loggingMailboxId = $account->getId() . ':' . $mailbox->getName();
+			$total = $imapMessages['total'];
+			$cached = count($this->messageMapper->findAllUids($mailbox));
+			throw new IncompleteSyncException("Initial sync is not complete for $loggingMailboxId ($cached of $total messages cached).");
 		}
 
 		$mailbox->setSyncNewToken($client->getSyncToken($mailbox->getName()));
