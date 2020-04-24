@@ -56,5 +56,5 @@ interface IMailSearch {
 	 * @throws ClientException
 	 * @throws ServiceException
 	 */
-	public function findMessages(Account $account, string $mailboxName, ?string $filter, ?int $cursor): array;
+	public function findMessages(Account $account, string $mailboxName, ?string $filter, ?int $cursor, ?int $limit): array;
 }

@@ -141,7 +141,7 @@ class MessagesController extends Controller {
 	 * @throws ClientException
 	 * @throws ServiceException
 	 */
-	public function index(int $accountId, string $folderId, int $cursor = null, string $filter = null): JSONResponse {
+	public function index(int $accountId, string $folderId, int $cursor = null, string $filter = null, int $limit = null): JSONResponse {
 		try {
 			$account = $this->accountService->find($this->currentUserId, $accountId);
 		} catch (DoesNotExistException $e) {
@@ -155,7 +155,8 @@ class MessagesController extends Controller {
 				$account,
 				base64_decode($folderId),
 				$filter === '' ? null : $filter,
-				$cursor
+				$cursor,
+				$limit
 			)
 		);
 	}

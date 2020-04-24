@@ -65,6 +65,8 @@ import {showNewMessagesNotification} from '../service/NotificationService'
 import {parseUid} from '../util/EnvelopeUidParser'
 import {matchError} from '../errors/match'
 import SyncIncompleteError from '../errors/SyncIncompleteError'
+import MailboxLockedError from '../errors/MailboxLockedError'
+import {wait} from '../util/wait'
 
 const PAGE_SIZE = 20
 
@@ -217,7 +219,7 @@ export default {
 			return getters.getEnvelope(accountId, folderId, id)
 		})
 	},
-	fetchEnvelopes({state, commit, getters, dispatch}, {accountId, folderId, query}) {
+	fetchEnvelopes({state, commit, getters, dispatch}, {accountId, folderId, query, paginate = true}) {
 		const folder = getters.getFolder(accountId, folderId)
 
 		if (folder.isUnified) {
@@ -227,16 +229,17 @@ export default {
 						accountId: f.accountId,
 						folderId: f.id,
 						query,
+						paginate,
 					})
 				),
 				Promise.all.bind(Promise),
-				andThen(map(sliceToPage))
+				andThen(paginate ? map(sliceToPage) : identity)
 			)
 			const fetchUnifiedEnvelopes = pipe(
 				findIndividualFolders(getters.getFolders, folder.specialRole),
 				fetchIndividualLists,
 				andThen(combineEnvelopeLists),
-				andThen(sliceToPage),
+				andThen(paginate ? sliceToPage : identity),
 				andThen(
 					tap(
 						map((envelope) =>
@@ -268,7 +271,7 @@ export default {
 					)
 				)
 			)
-		)(accountId, folderId, query)
+		)(accountId, folderId, query, undefined, paginate ? 20 : undefined)
 	},
 	fetchNextEnvelopePage({commit, getters, dispatch}, {accountId, folderId, query, rec = true}) {
 		const folder = getters.getFolder(accountId, folderId)
@@ -354,7 +357,7 @@ export default {
 			return Promise.reject(new Error('Cannot find last envelope. Required for the folder cursor'))
 		}
 
-		return fetchEnvelopes(accountId, folderId, query, lastEnvelope.dateInt).then((envelopes) => {
+		return fetchEnvelopes(accountId, folderId, query, lastEnvelope.dateInt, 20).then((envelopes) => {
 			logger.debug(`fetched ${envelopes.length} messages for the next page of ${accountId}:${folderId}`)
 			envelopes.forEach((envelope) =>
 				commit('addEnvelope', {
@@ -433,6 +436,10 @@ export default {
 					[SyncIncompleteError.getName()]() {
 						console.warn('(initial) sync is incomplete, retriggering')
 						return dispatch('syncEnvelopes', {accountId, folderId, query, init})
+					},
+					[MailboxLockedError.getName()](error) {
+						logger.info('Sync failed because the mailbox is locked, retriggering', {error})
+						return wait(1500).then(() => dispatch('syncEnvelopes', {accountId, folderId, query, init}))
 					},
 					default(error) {
 						console.error('Could not sync envelopes: ' + error.message, error)

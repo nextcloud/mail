@@ -271,11 +271,12 @@ class MessageMapper extends QBMapper {
 	/**
 	 * @param Mailbox $mailbox
 	 * @param SearchQuery $query
+	 * @param int|null $limit
 	 * @param int[]|null $uids
 	 *
 	 * @return int[]
 	 */
-	public function findUidsByQuery(Mailbox $mailbox, SearchQuery $query, array $uids = null): array {
+	public function findUidsByQuery(Mailbox $mailbox, SearchQuery $query, ?int $limit, array $uids = null): array {
 		$qb = $this->db->getQueryBuilder();
 
 		$select = $qb
@@ -352,8 +353,11 @@ class MessageMapper extends QBMapper {
 		}
 
 		$select = $select
-			->orderBy('sent_at', 'desc')
-			->setMaxResults(20);
+			->orderBy('sent_at', 'desc');
+
+		if ($limit !== null) {
+			$select = $select->setMaxResults($limit);
+		}
 
 		return array_map(function (Message $message) {
 			return $message->getUid();

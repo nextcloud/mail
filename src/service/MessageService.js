@@ -31,7 +31,7 @@ export function fetchEnvelope(accountId, folderId, id) {
 		})
 }
 
-export function fetchEnvelopes(accountId, folderId, query, cursor) {
+export function fetchEnvelopes(accountId, folderId, query, cursor, limit) {
 	const url = generateUrl('/apps/mail/api/accounts/{accountId}/folders/{folderId}/messages', {
 		accountId,
 		folderId,
@@ -40,6 +40,9 @@ export function fetchEnvelopes(accountId, folderId, query, cursor) {
 
 	if (query) {
 		params.filter = query
+	}
+	if (limit) {
+		params.limit = limit
 	}
 	if (cursor) {
 		params.cursor = cursor

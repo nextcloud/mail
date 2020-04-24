@@ -22,7 +22,13 @@
 import Vue from 'vue'
 import Vuex from 'vuex'
 
-import {UNIFIED_ACCOUNT_ID, UNIFIED_INBOX_ID, UNIFIED_INBOX_UID} from './constants'
+import {
+	UNIFIED_ACCOUNT_ID,
+	UNIFIED_INBOX_ID,
+	UNIFIED_INBOX_UID,
+	PRIORITY_INBOX_ID,
+	PRIORITY_INBOX_UID,
+} from './constants'
 import actions from './actions'
 import {getters} from './getters'
 import mutations from './mutations'
@@ -36,8 +42,9 @@ export default new Vuex.Store({
 		accounts: {
 			[UNIFIED_ACCOUNT_ID]: {
 				id: UNIFIED_ACCOUNT_ID,
+				accountId: UNIFIED_ACCOUNT_ID,
 				isUnified: true,
-				folders: [UNIFIED_INBOX_UID],
+				folders: [PRIORITY_INBOX_UID, UNIFIED_INBOX_UID],
 				collapsed: false,
 				emailAddress: '',
 				name: '',
@@ -51,6 +58,16 @@ export default new Vuex.Store({
 				isUnified: true,
 				specialUse: ['inbox'],
 				specialRole: 'inbox',
+				unread: 0,
+				folders: [],
+				envelopeLists: {},
+			},
+			[PRIORITY_INBOX_UID]: {
+				id: PRIORITY_INBOX_ID,
+				accountId: 0,
+				isPriorityInbox: true,
+				specialUse: ['priority'],
+				specialRole: 'priority',
 				unread: 0,
 				folders: [],
 				envelopeLists: {},
