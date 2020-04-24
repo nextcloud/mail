@@ -29,8 +29,8 @@ use Horde_Imap_Client_Exception;
 use Horde_Imap_Client_Exception_Sync;
 use Horde_Imap_Client_Ids;
 use Horde_Imap_Client_Mailbox;
+use OCA\Mail\Exception\UidValidityChangedException;
 use OCA\Mail\IMAP\MessageMapper;
-use OCA\mail\lib\Exception\UidValidityChangedException;
 
 class Synchronizer {
 

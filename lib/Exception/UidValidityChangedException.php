@@ -23,9 +23,7 @@ declare(strict_types=1);
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-namespace OCA\mail\lib\Exception;
-
-use OCA\Mail\Exception\ServiceException;
+namespace OCA\Mail\Exception;
 
 class UidValidityChangedException extends ServiceException {
 }
