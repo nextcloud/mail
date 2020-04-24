@@ -112,6 +112,7 @@ OC.L10N.register(
     "Mark all messages of this folder as read" : "Σημείωση όλων των μυνημάτων ως αναγνωσμένων",
     "Add subfolder" : "Προσθήκη υποφακέλου",
     "Clear cache" : "Εκκαθάριση προσωρινής μνήμης",
+    "Clear locally cached data, in case there are issues with synchronization." : "Εκκαθαρίστε τα δεδομένα κρυφής μνήμης, σε περίπτωση που υπάρχουν προβλήματα με το συγχρονισμό.",
     "Loading …" : "Φόρτωση…",
     "_{total} message_::_{total} messages_" : ["{total} μήνυμα","{total} μηνύματα"],
     "Could not load your draft" : "Δεν ήταν δυνατή η φόρτωση του πρόχειρου σας",

@@ -110,6 +110,7 @@
     "Mark all messages of this folder as read" : "Všetky správy v tomto priečinku označiť ako prečítané",
     "Add subfolder" : "Pridať podpriečinok",
     "Clear cache" : "Vymazať vyrovnávaciu pamäť",
+    "Clear locally cached data, in case there are issues with synchronization." : "V prípade problémov so synchronizáciou, vyčistite údaje vo vyrovnávacej pamäti.",
     "Loading …" : "Načítava sa...",
     "_{total} message_::_{total} messages_" : ["{total} správa","{total} správy","{total} správy","{total} správ"],
     "Could not load your draft" : "Koncept sa nepodarilo načítať",
