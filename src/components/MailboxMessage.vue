@@ -19,15 +19,22 @@
 					:bus="bus"
 				/>
 				<template v-else>
-					<!--<SectionTitle class="app-content-list-item" :name="t('mail', 'Priority')" />-->
-					<!--<Mailbox :account="unifiedAccount" :folder="unifiedInbox" :search-query="searchQuery + ' is:starred'" :bus="bus" />-->
+					<SectionTitle class="app-content-list-item important" :name="t('mail', 'Priority')" />
+					<Mailbox
+						class="nameimportant"
+						:account="unifiedAccount"
+						:folder="unifiedInbox"
+						:paginate="false"
+						:search-query="appendToSearch('is:important not:starred')"
+						:bus="bus"
+					/>
 					<SectionTitle class="app-content-list-item starred" :name="t('mail', 'Favorites')" />
 					<Mailbox
 						class="namestarred"
 						:account="unifiedAccount"
 						:folder="unifiedInbox"
 						:paginate="false"
-						:search-query="appendToSearch('is:starred')"
+						:search-query="appendToSearch('is:starred not:important')"
 						:bus="bus"
 					/>
 					<SectionTitle class="app-content-list-item other" :name="t('mail', 'Other')" />
@@ -36,7 +43,7 @@
 						:account="unifiedAccount"
 						:folder="unifiedInbox"
 						:open-first="false"
-						:search-query="appendToSearch('not:starred')"
+						:search-query="appendToSearch('not:starred not:important')"
 						:bus="bus"
 					/>
 				</template>
