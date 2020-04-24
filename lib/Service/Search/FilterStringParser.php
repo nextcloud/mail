@@ -33,6 +33,7 @@ class FilterStringParser {
 		'read' => [Horde_Imap_Client::FLAG_SEEN, true],
 		'starred' => [Horde_Imap_Client::FLAG_FLAGGED, true],
 		'unread' => [Horde_Imap_Client::FLAG_SEEN, false],
+		'important' => ['\\important', true],
 	];
 
 	public function parse(?string $filter): SearchQuery {

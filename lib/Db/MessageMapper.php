@@ -345,6 +345,7 @@ class MessageMapper extends QBMapper {
 			Horde_Imap_Client::FLAG_FORWARDED,
 			Horde_Imap_Client::FLAG_JUNK,
 			Horde_Imap_Client::FLAG_NOTJUNK,
+			'\\important',
 		] as $flag) {
 			if (in_array($flag, $flagKeys, true)) {
 				$key = ltrim($flag, '\\');
