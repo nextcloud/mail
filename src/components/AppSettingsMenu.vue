@@ -6,12 +6,7 @@
 
 		<p v-if="loadingOptOutSettings" class="app-settings">
 			<span class="icon-loading-small"></span>
-			{{
-				t(
-					'mail',
-					'Allow the app to collect data about your interactions. Based on this data, the app will adapt to your preferences. The data will only be stored locally.'
-				)
-			}}
+			{{ t('mail', 'Allow the app to collect data about your interactions. Based on this data, the app will adapt to your preferences. The data will only be stored locally.') }}
 		</p>
 		<p v-else class="app-settings">
 			<input
@@ -21,12 +16,9 @@
 				:checked="useDataCollection"
 				@change="onToggleCollectData"
 			/>
-			<label for="data-collection-toggle">{{
-				t(
-					'mail',
-					'Allow the app to collect data about your interactions. Based on this data, the app will adapt to your preferences. The data will only be stored locally.'
-				)
-			}}</label>
+			<label for="data-collection-toggle">
+			{{ t('mail', 'Allow the app to collect data about your interactions. Based on this data, the app will adapt to your preferences. The data will only be stored locally.') }}
+			</label>
 		</p>
 
 		<p v-if="loadingAvatarSettings" class="app-settings avatar-settings">
