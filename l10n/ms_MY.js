@@ -8,6 +8,8 @@ OC.L10N.register(
     "Connect" : "Berhubung",
     "Send" : "Hantar",
     "Delete" : "Padam",
+    "Favorites" : "Favorites",
+    "Other" : "Lain",
     "to" : "kepada",
     "Settings" : "Tetapan",
     "Add folder" : "Add folder",
@@ -15,7 +17,6 @@ OC.L10N.register(
     "General" : "Umum",
     "User" : "User",
     "Search" : "Search",
-    "Refresh" : "Refresh",
-    "Favorites" : "Favorites"
+    "Refresh" : "Refresh"
 },
 "nplurals=1; plural=0;");

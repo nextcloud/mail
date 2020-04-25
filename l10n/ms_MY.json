@@ -6,6 +6,8 @@
     "Connect" : "Berhubung",
     "Send" : "Hantar",
     "Delete" : "Padam",
+    "Favorites" : "Favorites",
+    "Other" : "Lain",
     "to" : "kepada",
     "Settings" : "Tetapan",
     "Add folder" : "Add folder",
@@ -13,7 +15,6 @@
     "General" : "Umum",
     "User" : "User",
     "Search" : "Search",
-    "Refresh" : "Refresh",
-    "Favorites" : "Favorites"
+    "Refresh" : "Refresh"
 },"pluralForm" :"nplurals=1; plural=0;"
 }

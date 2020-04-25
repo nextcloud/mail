@@ -12,6 +12,8 @@ OC.L10N.register(
     "Send" : "Schécken",
     "Favorite" : "Favorit",
     "Delete" : "Läschen",
+    "Favorites" : "Favoriten",
+    "Other" : "Aner",
     "to" : "bis",
     "Reply" : "Äntwerten",
     "Unnamed" : "ouni Numm",
@@ -24,7 +26,6 @@ OC.L10N.register(
     "Port" : "Port",
     "Search" : "Search",
     "Refresh" : "Opfrëschen",
-    "All" : "All",
-    "Favorites" : "Favoriten"
+    "All" : "All"
 },
 "nplurals=2; plural=(n != 1);");

@@ -9,6 +9,8 @@ OC.L10N.register(
     "Keyboard shortcuts" : "விசைப்பலகை குறுக்குவழிகள்",
     "Favorite" : "விருப்பமான",
     "Delete" : "நீக்குக",
+    "Favorites" : "விருப்பங்கள்",
+    "Other" : "மற்றவை",
     "Settings" : "அமைப்புகள்",
     "Add folder" : "Add folder",
     "Delete account" : "Delete account",
@@ -18,7 +20,6 @@ OC.L10N.register(
     "Port" : "துறை ",
     "Search" : "Search",
     "Refresh" : "மீள் ஏற்றுக",
-    "All" : "எல்லாம்",
-    "Favorites" : "விருப்பங்கள்"
+    "All" : "எல்லாம்"
 },
 "nplurals=2; plural=(n != 1);");

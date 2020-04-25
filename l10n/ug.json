@@ -7,6 +7,8 @@
     "Send" : "يوللا",
     "Favorite" : "يىغقۇچ",
     "Delete" : "ئۆچۈر",
+    "Favorites" : "يىغقۇچ",
+    "Other" : "باشقا",
     "Reply" : "جاۋاب قايتۇر",
     "Settings" : "تەڭشەكلەر",
     "Add folder" : "Add folder",
@@ -17,7 +19,6 @@
     "Port" : "ئېغىز",
     "Search" : "Search",
     "Refresh" : "يېڭىلا",
-    "All" : "ھەممىسى",
-    "Favorites" : "يىغقۇچ"
+    "All" : "ھەممىسى"
 },"pluralForm" :"nplurals=1; plural=0;"
 }

@@ -10,6 +10,8 @@
     "Send" : "Schécken",
     "Favorite" : "Favorit",
     "Delete" : "Läschen",
+    "Favorites" : "Favoriten",
+    "Other" : "Aner",
     "to" : "bis",
     "Reply" : "Äntwerten",
     "Unnamed" : "ouni Numm",
@@ -22,7 +24,6 @@
     "Port" : "Port",
     "Search" : "Search",
     "Refresh" : "Opfrëschen",
-    "All" : "All",
-    "Favorites" : "Favoriten"
+    "All" : "All"
 },"pluralForm" :"nplurals=2; plural=(n != 1);"
 }

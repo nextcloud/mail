@@ -18,6 +18,7 @@ OC.L10N.register(
     "Choose a file to add as attachment" : "Selectiona un file pro adder como attachamento",
     "Favorite" : "Favorite",
     "Delete" : "Deler",
+    "Favorites" : "Favoritos",
     "to" : "a",
     "Reply" : "Responder",
     "Unnamed" : "Non nominate",
@@ -34,7 +35,6 @@ OC.L10N.register(
     "Search" : "Cercar",
     "Refresh" : "Refrescar",
     "All" : "Tote",
-    "Favorites" : "Favoritos",
     "All inboxes" : "Tote cassas de entrata",
     "Could not load {tag}{name}{endtag}" : "Impossibile cargar {tag}{name}{endtag}",
     "There was a problem loading {tag}{name}{endtag}" : "Un problema occurreva durante le carga de {tag}{name}{endtag}"

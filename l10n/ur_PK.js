@@ -7,12 +7,12 @@ OC.L10N.register(
     "Connect" : "منسلک",
     "Send" : "بھجیں",
     "Delete" : "حذف کریں",
+    "Favorites" : "Favorites",
     "Reply" : "جواب",
     "Settings" : "سیٹینگز",
     "Add folder" : "Add folder",
     "Delete account" : "Delete account",
     "User" : "User",
-    "Search" : "Search",
-    "Favorites" : "Favorites"
+    "Search" : "Search"
 },
 "nplurals=2; plural=(n != 1);");

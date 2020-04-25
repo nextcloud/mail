@@ -11,6 +11,7 @@ OC.L10N.register(
     "Sending …" : "發送中 …",
     "Send" : "發送",
     "Delete" : "刪除",
+    "Favorites" : "最愛",
     "to" : "至",
     "Reply" : "回覆",
     "Settings" : "設定",
@@ -23,7 +24,6 @@ OC.L10N.register(
     "Search" : "Search",
     "Refresh" : "重新整理",
     "All" : "所有",
-    "Favorites" : "最愛",
     "Inbox" : "收件箱",
     "Sent" : "發送",
     "Trash" : "垃圾桶"

@@ -9,6 +9,8 @@ OC.L10N.register(
     "Send" : "يوللا",
     "Favorite" : "يىغقۇچ",
     "Delete" : "ئۆچۈر",
+    "Favorites" : "يىغقۇچ",
+    "Other" : "باشقا",
     "Reply" : "جاۋاب قايتۇر",
     "Settings" : "تەڭشەكلەر",
     "Add folder" : "Add folder",
@@ -19,7 +21,6 @@ OC.L10N.register(
     "Port" : "ئېغىز",
     "Search" : "Search",
     "Refresh" : "يېڭىلا",
-    "All" : "ھەممىسى",
-    "Favorites" : "يىغقۇچ"
+    "All" : "ھەممىسى"
 },
 "nplurals=1; plural=0;");

@@ -14,6 +14,7 @@ OC.L10N.register(
     "Send" : "Gởi",
     "Favorite" : "Ưa thích",
     "Delete" : "Xóa",
+    "Favorites" : "Ưa thích",
     "to" : "đến",
     "Reply" : "Trả l",
     "Settings" : "Thiết lập",
@@ -30,7 +31,6 @@ OC.L10N.register(
     "Refresh" : "Làm mới",
     "All" : "Tất cả",
     "Archive" : "Lưu trữ",
-    "Favorites" : "Ưa thích",
     "Sent" : "Đã gửi",
     "Trash" : "Thùng rác"
 },

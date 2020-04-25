@@ -12,6 +12,8 @@ OC.L10N.register(
     "Send" : "Send",
     "Favorite" : "Favoritt",
     "Delete" : "Ta bort",
+    "Favorites" : "Favorit",
+    "Other" : "Anna",
     "to" : "til",
     "Settings" : "Instillingar",
     "Add folder" : "Add folder",
@@ -23,7 +25,6 @@ OC.L10N.register(
     "Search" : "Search",
     "Refresh" : "Last inn på nytt",
     "All" : "Alle",
-    "Favorites" : "Favorit",
     "Sent" : "Sendt"
 },
 "nplurals=2; plural=(n != 1);");

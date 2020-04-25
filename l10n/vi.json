@@ -12,6 +12,7 @@
     "Send" : "Gởi",
     "Favorite" : "Ưa thích",
     "Delete" : "Xóa",
+    "Favorites" : "Ưa thích",
     "to" : "đến",
     "Reply" : "Trả l",
     "Settings" : "Thiết lập",
@@ -28,7 +29,6 @@
     "Refresh" : "Làm mới",
     "All" : "Tất cả",
     "Archive" : "Lưu trữ",
-    "Favorites" : "Ưa thích",
     "Sent" : "Đã gửi",
     "Trash" : "Thùng rác"
 },"pluralForm" :"nplurals=1; plural=0;"

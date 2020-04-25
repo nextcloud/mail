@@ -8,6 +8,7 @@ OC.L10N.register(
     "Save" : "සුරකින්න",
     "Connect" : "සම්බන්ධ වන්න",
     "Delete" : "ඉවත් කරන්න",
+    "Favorites" : "Favorites",
     "Settings" : "සැකසුම්",
     "Add folder" : "Add folder",
     "Delete account" : "Delete account",
@@ -17,7 +18,6 @@ OC.L10N.register(
     "Port" : "තොට",
     "Search" : "Search",
     "Refresh" : "නැවුම් කරන්න",
-    "All" : "සියල්ල",
-    "Favorites" : "Favorites"
+    "All" : "සියල්ල"
 },
 "nplurals=2; plural=(n != 1);");

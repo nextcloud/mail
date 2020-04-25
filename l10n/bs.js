@@ -11,6 +11,8 @@ OC.L10N.register(
     "Send" : "Pošalji",
     "Favorite" : "Favorit",
     "Delete" : "Obriši",
+    "Favorites" : "Favoriti",
+    "Other" : "Ostali",
     "to" : "do",
     "Settings" : "Podešavanje",
     "Add folder" : "Add folder",
@@ -18,7 +20,6 @@ OC.L10N.register(
     "User" : "User",
     "Port" : "Priključak",
     "Search" : "Search",
-    "All" : "Sve",
-    "Favorites" : "Favoriti"
+    "All" : "Sve"
 },
 "nplurals=3; plural=(n%10==1 && n%100!=11 ? 0 : n%10>=2 && n%10<=4 && (n%100<10 || n%100>=20) ? 1 : 2);");

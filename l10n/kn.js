@@ -10,6 +10,7 @@ OC.L10N.register(
     "Send" : "﻿ಕಳುಹಿಸಿ",
     "Favorite" : "ಅಚ್ಚುಮೆಚ್ಚಿನ",
     "Delete" : "﻿ಅಳಿಸಿ",
+    "Favorites" : "ಅಚ್ಚುಮೆಚ್ಚಿನ",
     "Settings" : "ಆಯ್ಕೆ",
     "Add folder" : "Add folder",
     "Delete account" : "Delete account",
@@ -17,7 +18,6 @@ OC.L10N.register(
     "Host" : "ಅತಿಥೆಯ-ಗಣಕ",
     "Port" : "﻿ರೇವು",
     "Search" : "Search",
-    "All" : "﻿ಎಲ್ಲಾ",
-    "Favorites" : "ಅಚ್ಚುಮೆಚ್ಚಿನ"
+    "All" : "﻿ಎಲ್ಲಾ"
 },
 "nplurals=2; plural=(n > 1);");
