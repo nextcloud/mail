@@ -171,6 +171,7 @@ OC.L10N.register(
     "Drafts" : "Entwürfe",
     "All inboxes" : "Alle Posteingänge",
     "Inbox" : "Posteingang",
+    "Priority inbox" : "Vorrangiger Posteingang",
     "Junk" : "Spam",
     "Sent" : "Gesendet",
     "Trash" : "Papierkorb",

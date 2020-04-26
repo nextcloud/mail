@@ -66,6 +66,8 @@ OC.L10N.register(
     "Draft: " : "Juodraštis: ",
     "Unfavorite" : "Nebežymėti kaip mėgstamą",
     "Favorite" : "Mėgstamas",
+    "Mark unimportant" : "Žymėti kaip nesvarbų",
+    "Mark important" : "Žymėti kaip svarbų",
     "Mark read" : "Žymėti kaip skaitytą",
     "Mark unread" : "Žymėti kaip neskaitytą",
     "Delete" : "Ištrinti",

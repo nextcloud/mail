@@ -12,6 +12,7 @@ OC.L10N.register(
     "Send" : "發送",
     "Delete" : "刪除",
     "Favorites" : "最愛",
+    "Other" : "其他",
     "to" : "至",
     "Reply" : "回覆",
     "Settings" : "設定",

@@ -40,6 +40,7 @@ OC.L10N.register(
     "Favorite" : "المفضلة",
     "Delete" : "حذف",
     "Favorites" : "المفضلات",
+    "Other" : "آخر",
     "Not found" : "غير موجود",
     "to" : "إلى",
     "cc" : "نسخة كربونية",

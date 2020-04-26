@@ -171,6 +171,7 @@ OC.L10N.register(
     "Drafts" : "Rascunhos",
     "All inboxes" : "Todas as caixas de entrada",
     "Inbox" : "Caixa de entrada",
+    "Priority inbox" : "Caixa de entrada prioritária",
     "Junk" : "Lixo",
     "Sent" : "Enviados",
     "Trash" : "Lixeira",

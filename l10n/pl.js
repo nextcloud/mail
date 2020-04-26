@@ -171,6 +171,7 @@ OC.L10N.register(
     "Drafts" : "Kopie robocze",
     "All inboxes" : "Wszystkie skrzynki odbiorcze",
     "Inbox" : "Odebrane",
+    "Priority inbox" : "Priorytet skrzynki odbiorczej",
     "Junk" : "Spam",
     "Sent" : "Wysłane",
     "Trash" : "Kosz",

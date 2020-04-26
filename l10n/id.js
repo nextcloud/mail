@@ -21,6 +21,7 @@ OC.L10N.register(
     "Favorite" : "Favorit",
     "Delete" : "Hapus",
     "Favorites" : "Disukai",
+    "Other" : "Lainnya",
     "to" : "untuk",
     "Reply" : "Balas",
     "Choose a folder to store the attachment in" : "Pilih folder untuk menyimpan lampiran didalamnya",

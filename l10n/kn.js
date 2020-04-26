@@ -11,6 +11,7 @@ OC.L10N.register(
     "Favorite" : "ಅಚ್ಚುಮೆಚ್ಚಿನ",
     "Delete" : "﻿ಅಳಿಸಿ",
     "Favorites" : "ಅಚ್ಚುಮೆಚ್ಚಿನ",
+    "Other" : "﻿ಇತರೆ",
     "Settings" : "ಆಯ್ಕೆ",
     "Add folder" : "Add folder",
     "Delete account" : "Delete account",

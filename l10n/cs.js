@@ -171,6 +171,7 @@ OC.L10N.register(
     "Drafts" : "Koncepty",
     "All inboxes" : "Všechny schránky",
     "Inbox" : "Doručené zprávy",
+    "Priority inbox" : "Přednostní schránka",
     "Junk" : "Spam",
     "Sent" : "Odeslaná",
     "Trash" : "Koš",

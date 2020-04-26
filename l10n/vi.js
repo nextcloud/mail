@@ -15,6 +15,7 @@ OC.L10N.register(
     "Favorite" : "Ưa thích",
     "Delete" : "Xóa",
     "Favorites" : "Ưa thích",
+    "Other" : "Khác",
     "to" : "đến",
     "Reply" : "Trả l",
     "Settings" : "Thiết lập",

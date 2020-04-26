@@ -9,6 +9,7 @@ OC.L10N.register(
     "Connect" : "සම්බන්ධ වන්න",
     "Delete" : "ඉවත් කරන්න",
     "Favorites" : "Favorites",
+    "Other" : "වෙනත්",
     "Settings" : "සැකසුම්",
     "Add folder" : "Add folder",
     "Delete account" : "Delete account",

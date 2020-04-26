@@ -16,6 +16,7 @@ OC.L10N.register(
     "Favorite" : "প্রিয়জন",
     "Delete" : "মুছে",
     "Favorites" : "প্রিয়জন",
+    "Other" : "অন্যান্য",
     "to" : "প্রতি",
     "Reply" : "জবাব",
     "Choose a folder to store the attachment in" : "সংযুক্তি সংরক্ষনের জন্য একটি ফোল্ডার নির্বাচন করুন",

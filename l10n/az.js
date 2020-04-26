@@ -16,6 +16,7 @@ OC.L10N.register(
     "Favorite" : "İstəkli",
     "Delete" : "Sil",
     "Favorites" : "Sevimlilər",
+    "Other" : "Digər",
     "to" : "doğru",
     "Reply" : "Cavab",
     "Choose a folder to store the attachment in" : "Əlavələrin saxlanılması üçün qovluğu seçin",

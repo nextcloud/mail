@@ -24,6 +24,7 @@ OC.L10N.register(
     "Favorite" : "Favorite",
     "Delete" : "Șterge",
     "Favorites" : "Favorite",
+    "Other" : "Altele",
     "to" : "către",
     "Reply" : "Răspunde",
     "Unnamed" : "Fără nume",

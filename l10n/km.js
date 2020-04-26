@@ -12,6 +12,7 @@ OC.L10N.register(
     "Send" : "ផ្ញើ",
     "Delete" : "លុប",
     "Favorites" : "Favorites",
+    "Other" : "ផ្សេងៗ",
     "to" : "ទៅ",
     "Reply" : "ឆ្លើយតប",
     "Settings" : "ការកំណត់",

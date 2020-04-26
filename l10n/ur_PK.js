@@ -8,6 +8,7 @@ OC.L10N.register(
     "Send" : "بھجیں",
     "Delete" : "حذف کریں",
     "Favorites" : "Favorites",
+    "Other" : "دیگر",
     "Reply" : "جواب",
     "Settings" : "سیٹینگز",
     "Add folder" : "Add folder",

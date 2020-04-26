@@ -12,6 +12,7 @@ OC.L10N.register(
     "Favorite" : "Omiljene",
     "Delete" : "Delete",
     "Favorites" : "Omiljene",
+    "Other" : "Ostali",
     "Reply" : "Odgovori",
     "Forward" : "Prosledi",
     "Settings" : "Postavke",
