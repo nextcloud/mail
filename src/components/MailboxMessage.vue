@@ -25,7 +25,7 @@
 						:account="unifiedAccount"
 						:folder="unifiedInbox"
 						:paginate="false"
-						:search-query="appendToSearch('is:important not:starred')"
+						:search-query="appendToSearch('is:important')"
 						:bus="bus"
 					/>
 					<SectionTitle class="app-content-list-item starred" :name="t('mail', 'Favorites')" />
