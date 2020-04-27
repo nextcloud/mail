@@ -116,6 +116,7 @@ class MessageMapper {
 			return [
 				'messages' => [],
 				'all' => true,
+				'total' => $total,
 			];
 		}
 
@@ -169,6 +170,7 @@ class MessageMapper {
 				$uidsToFetch
 			),
 			'all' => $upper === $max,
+			'total' => $total,
 		];
 	}
 

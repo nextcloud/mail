@@ -121,6 +121,7 @@ class MessageMapperTest extends TestCase {
 			[
 				'messages' => [],
 				'all' => true,
+				'total' => 0,
 			],
 			$result
 		);
