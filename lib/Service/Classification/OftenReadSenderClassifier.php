@@ -64,7 +64,7 @@ class OftenReadSenderClassifier extends AClassifier {
 		return $this->greater(
 			$this->getNrOfReadMessages($mb, $sender->getEmail()),
 			$this->getNumberOfMessages($mb, $sender->getEmail()),
-			0.9
+			0.7
 		);
 	}
 
