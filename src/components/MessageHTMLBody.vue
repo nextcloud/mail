@@ -92,7 +92,7 @@ export default {
 }
 
 #message-container {
-	flex-grow: 1;
+	flex: 1;
 }
 
 #message-frame {
