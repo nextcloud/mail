@@ -23,7 +23,9 @@ declare(strict_types=1);
 
 namespace OCA\Mail\Service;
 
+use OCA\Mail\Service\Group\ContactsGroupService;
 use OCA\Mail\Service\Group\IGroupService;
+use OCA\Mail\Service\Group\NextcloudGroupService;
 use OCA\Mail\Exception\ServiceException;
 
 class GroupsIntegration {
@@ -35,8 +37,11 @@ class GroupsIntegration {
 	 */
 	private $groupServices = [];
 
-	public function __construct(IGroupService $groupService) {
-		$this->groupServices[] = $groupService;
+	public function __construct(ContactsGroupService $contactsGroupService, NextcloudGroupService $nextcloudGroupService) {
+		$this->groupServices = [
+			$contactsGroupService,
+			$nextcloudGroupService,
+		];
 	}
 
 	/**
