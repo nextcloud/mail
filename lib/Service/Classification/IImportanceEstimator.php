@@ -29,25 +29,24 @@ use OCA\Mail\Account;
 use OCA\Mail\Db\Mailbox;
 use OCA\Mail\Db\Message;
 
-abstract class AClassifier {
-	abstract public function isImportant(Account $account, Mailbox $mailbox, Message $message): bool;
+interface IImportanceEstimator {
 
-	final public function or(AClassifier $next): AClassifier {
-		return new class($this, $next) extends AClassifier {
-			/** @var AClassifier */
-			private $outer;
+	public const RANGE_MIN = 1;
+	public const RANGE_MAX = 9;
 
-			/** @var AClassifier */
-			private $next;
+	/**
+	 * Estimate how important the given message is for the user's inbox
+	 *
+	 * This method returns a number between RANGE_MIN and RANGE_MAX for how important
+	 * this message is for a certain aspect. If the implementation can not estimate
+	 * the importance – e.g. due to lack of available data – it can return `null`.
+	 *
+	 * @param Account $account
+	 * @param Mailbox $mailbox
+	 * @param Message $message
+	 *
+	 * @return null|int a value in [RANGE_MIN, RANGE_MAX] or null for neutral
+	 */
+	public function estimateImportance(Account $account, Mailbox $mailbox, Message $message): ?int;
 
-			public function __construct(AClassifier $outer, AClassifier $next) {
-				$this->outer = $outer;
-				$this->next = $next;
-			}
-
-			public function isImportant(Account $account, Mailbox $mailbox, Message $message): bool {
-				return $this->outer->isImportant($account, $mailbox, $message) || $this->next->isImportant($account, $mailbox, $message);
-			}
-		};
-	}
 }

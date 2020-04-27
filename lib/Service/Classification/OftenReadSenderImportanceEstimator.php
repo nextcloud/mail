@@ -34,8 +34,8 @@ use OCP\AppFramework\Db\DoesNotExistException;
 use OCP\DB\QueryBuilder\IQueryBuilder;
 use OCP\IDBConnection;
 
-class OftenRepliedSenderClassifier extends AClassifier {
-	use SafeRatio;
+class OftenReadSenderImportanceEstimator implements IImportanceEstimator {
+	use PercentageToRange;
 
 	/** @var MailboxMapper */
 	private $mailboxMapper;
@@ -49,26 +49,32 @@ class OftenRepliedSenderClassifier extends AClassifier {
 		$this->db = $db;
 	}
 
-	public function isImportant(Account $account, Mailbox $mailbox, Message $message): bool {
+	public function estimateImportance(Account $account, Mailbox $mailbox, Message $message): ?int {
 		$sender = $message->getTo()->first();
 		if ($sender === null) {
-			return false;
+			return null;
 		}
 
 		try {
 			$mb = $this->mailboxMapper->findSpecial($account, 'inbox');
 		} catch (DoesNotExistException $e) {
-			return false;
+			// Not enough data
+			return null;
 		}
 
-		return $this->greater(
-			$this->getNrOfRepliedMessages($mb, $sender->getEmail()),
-			$this->getNumberOfMessages($mb, $sender->getEmail()),
-			0.1
+		$total = $this->getNumberOfMessages($mb, $sender->getEmail());
+		if ($total === 0) {
+			// This is the first message, it's important
+			return IImportanceEstimator::RANGE_MAX;
+		}
+		return $this->mapToRange(
+			$this->getNrOfReadMessages($mb, $sender->getEmail()) / $total,
+			IImportanceEstimator::RANGE_MIN,
+			IImportanceEstimator::RANGE_MAX
 		);
 	}
 
-	private function getNrOfRepliedMessages(Mailbox $mb, string $email): int {
+	private function getNrOfReadMessages(Mailbox $mb, string $email): int {
 		$qb = $this->db->getQueryBuilder();
 
 		$select = $qb->select($qb->func()->count('*'))
@@ -77,7 +83,7 @@ class OftenRepliedSenderClassifier extends AClassifier {
 			->join('r', 'mail_mailboxes', 'mb', $qb->expr()->eq('mb.id', $qb->expr()->castColumn('m.mailbox_id', IQueryBuilder::PARAM_INT), IQueryBuilder::PARAM_INT))
 			->where($qb->expr()->eq('r.type', $qb->createNamedParameter(Address::TYPE_FROM), IQueryBuilder::PARAM_INT))
 			->andWhere($qb->expr()->eq('mb.id', $qb->createNamedParameter($mb->getId(), IQueryBuilder::PARAM_INT)))
-			->andWhere($qb->expr()->eq('m.flag_answered', $qb->createNamedParameter(true, IQueryBuilder::PARAM_BOOL)))
+			->andWhere($qb->expr()->eq('m.flag_seen', $qb->createNamedParameter(true, IQueryBuilder::PARAM_BOOL)))
 			->andWhere($qb->expr()->eq('r.email', $qb->createNamedParameter($email)));
 		$result = $select->execute();
 		$cnt = $result->fetchColumn();

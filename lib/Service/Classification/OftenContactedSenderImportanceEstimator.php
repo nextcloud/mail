@@ -34,8 +34,8 @@ use OCP\AppFramework\Db\DoesNotExistException;
 use OCP\DB\QueryBuilder\IQueryBuilder;
 use OCP\IDBConnection;
 
-class OftenContactedSenderClassifier extends AClassifier {
-	use SafeRatio;
+class OftenContactedSenderImportanceEstimator implements IImportanceEstimator {
+	use PercentageToRange;
 
 	/** @var MailboxMapper */
 	private $mailboxMapper;
@@ -49,23 +49,29 @@ class OftenContactedSenderClassifier extends AClassifier {
 		$this->db = $db;
 	}
 
-	public function isImportant(Account $account, Mailbox $mailbox, Message $message): bool {
+	public function estimateImportance(Account $account, Mailbox $mailbox, Message $message): ?int {
 		$sender = $message->getTo()->first();
 		if ($sender === null) {
-			return false;
+			// Nothing to estimate
+			return null;
 		}
 
 		try {
 			$mb = $this->mailboxMapper->findSpecial($account, 'sent');
 		} catch (DoesNotExistException $e) {
-			return false;
+			// No data yet
+			return null;
 		}
 
-		return $this->greater(
-			$this->getMessagesSentTo($mb, $sender->getEmail()),
-			$this->getMessagesSentTotal($mb),
-			0.1,
-			true // The very first message is important
+		$totalSent = $this->getMessagesSentTotal($mb);
+		if ($totalSent === 0) {
+			// No data yet
+			return null;
+		}
+		return $this->mapToRange(
+			$this->getMessagesSentTo($mb, $sender->getEmail()) / $totalSent,
+			IImportanceEstimator::RANGE_MIN,
+			IImportanceEstimator::RANGE_MAX
 		);
 	}
 

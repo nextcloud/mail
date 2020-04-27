@@ -25,12 +25,21 @@ declare(strict_types=1);
 
 namespace OCA\Mail\Listener;
 
+use Horde_Imap_Client;
 use OCA\Mail\Events\NewMessagesSynchronized;
 use OCA\Mail\Service\Classification\MessageClassifier;
 use OCP\EventDispatcher\Event;
 use OCP\EventDispatcher\IEventListener;
 
 class NewMessageClassificationListener implements IEventListener {
+
+	private const EXEMPT_FROM_CLASSIFICATION = [
+		Horde_Imap_Client::SPECIALUSE_ARCHIVE,
+		Horde_Imap_Client::SPECIALUSE_DRAFTS,
+		Horde_Imap_Client::SPECIALUSE_JUNK,
+		Horde_Imap_Client::SPECIALUSE_SENT,
+		Horde_Imap_Client::SPECIALUSE_TRASH,
+	];
 
 	/** @var MessageClassifier */
 	private $classifier;
@@ -42,6 +51,13 @@ class NewMessageClassificationListener implements IEventListener {
 	public function handle(Event $event): void {
 		if (!($event instanceof NewMessagesSynchronized)) {
 			return;
+		}
+
+		foreach (self::EXEMPT_FROM_CLASSIFICATION as $specialUse) {
+			if ($event->getMailbox()->isSpecialUse($specialUse)) {
+				// Nothing to do then
+				return;
+			}
 		}
 
 		foreach ($event->getMessages() as $message) {

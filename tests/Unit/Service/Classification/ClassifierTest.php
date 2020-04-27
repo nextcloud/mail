@@ -29,13 +29,13 @@ use ChristophWurst\Nextcloud\Testing\TestCase;
 use OCA\Mail\Account;
 use OCA\Mail\Db\Mailbox;
 use OCA\Mail\Db\Message;
-use OCA\Mail\Service\Classification\AClassifier;
+use OCA\Mail\Service\Classification\IImportanceEstimator;
 
 class ClassifierTest extends TestCase {
 	public function testShortcut(): void {
-		$c1 = $this->createMock(AClassifier::class);
+		$c1 = $this->createMock(IImportanceEstimator::class);
 		$c1->method('isImportant')->willReturn(true);
-		$c2 = $this->createMock(AClassifier::class);
+		$c2 = $this->createMock(IImportanceEstimator::class);
 		$c2->expects($this->never())
 			->method('isImportant');
 		$account = $this->createMock(Account::class);
@@ -48,8 +48,8 @@ class ClassifierTest extends TestCase {
 	}
 
 	public function testOr(): void {
-		$c1 = $this->createMock(AClassifier::class);
-		$c2 = $this->createMock(AClassifier::class);
+		$c1 = $this->createMock(IImportanceEstimator::class);
+		$c2 = $this->createMock(IImportanceEstimator::class);
 		$c2->method('isImportant')->willReturn(true);
 		$account = $this->createMock(Account::class);
 		$mailbox = $this->createMock(Mailbox::class);
@@ -61,8 +61,8 @@ class ClassifierTest extends TestCase {
 	}
 
 	public function testNone(): void {
-		$c1 = $this->createMock(AClassifier::class);
-		$c2 = $this->createMock(AClassifier::class);
+		$c1 = $this->createMock(IImportanceEstimator::class);
+		$c2 = $this->createMock(IImportanceEstimator::class);
 		$account = $this->createMock(Account::class);
 		$mailbox = $this->createMock(Mailbox::class);
 		$message = $this->createMock(Message::class);

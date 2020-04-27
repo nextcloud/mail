@@ -28,38 +28,37 @@ namespace OCA\Mail\Service\Classification;
 use OCA\Mail\Account;
 use OCA\Mail\Db\Mailbox;
 use OCA\Mail\Db\Message;
+use function array_product;
+use function count;
 
 class MessageClassifier {
 
-	/** @var AClassifier */
-	private $oftenImportantSenderClassifier;
+	private const NEUTRAL = 5;
 
-	/** @var AClassifier */
-	private $oftenContactedSenderClassifier;
+	/** @var IImportanceEstimator[] */
+	private $estimators;
 
-	/** @var AClassifier */
-	private $oftenReadSenderClassifier;
-
-	/** @var AClassifier */
-	private $oftenRepliedSenderClassifier;
-
-	public function __construct(OftenImportantSenderClassifier $oftenImportantSenderClassifier,
-								OftenContactedSenderClassifier $oftenContactedSenderClassifier,
-								OftenReadSenderClassifier $oftenReadSenderClassifier,
-								OftenRepliedSenderClassifier $oftenRepliedSenderClassifier) {
-		$this->oftenImportantSenderClassifier = $oftenImportantSenderClassifier;
-		$this->oftenContactedSenderClassifier = $oftenContactedSenderClassifier;
-		$this->oftenReadSenderClassifier = $oftenReadSenderClassifier;
-		$this->oftenRepliedSenderClassifier = $oftenRepliedSenderClassifier;
+	public function __construct(OftenImportantSenderImportanceEstimator $oftenImportantSenderClassifier,
+								OftenContactedSenderImportanceEstimator $oftenContactedSenderClassifier,
+								OftenReadSenderImportanceEstimator $oftenReadSenderClassifier,
+								OftenRepliedSenderImportanceEstimator $oftenRepliedSenderClassifier) {
+		$this->estimators = [
+			$oftenImportantSenderClassifier,
+			$oftenContactedSenderClassifier,
+			$oftenReadSenderClassifier,
+			$oftenRepliedSenderClassifier,
+		];
 	}
 
 	public function isImportant(Account $account,
 								Mailbox $mailbox,
 								Message $message): bool {
-		return $this->oftenImportantSenderClassifier
-			->or($this->oftenContactedSenderClassifier)
-			->or($this->oftenReadSenderClassifier)
-			->or($this->oftenRepliedSenderClassifier)
-			->isImportant($account, $mailbox, $message);
+		$estimations = array_map(function (IImportanceEstimator $estimator) use ($account, $mailbox, $message) {
+			return $estimator->estimateImportance($account, $mailbox, $message) ?? self::NEUTRAL;
+		}, $this->estimators);
+
+		$weighted = array_product($estimations) ** (1 / count($estimations));
+
+		return $weighted > self::NEUTRAL;
 	}
 }

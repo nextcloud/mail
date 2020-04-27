@@ -25,14 +25,10 @@ declare(strict_types=1);
 
 namespace OCA\Mail\Service\Classification;
 
-trait SafeRatio {
-	protected function greater(int $num,
-							   int $of,
-							   float $threshold,
-							   bool $default = false): bool {
-		if ($of === 0) {
-			return $default;
-		}
-		return $num / $of > $threshold;
+trait PercentageToRange {
+	protected function mapToRange(float $percentage,
+								  int $min,
+								  int $max): int {
+		return (int) (($max - $min) * $percentage + $min);
 	}
 }
