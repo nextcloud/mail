@@ -1,6 +1,15 @@
 # Changelog
 All notable changes to this project will be documented in this file.
 
+## 1.3.4 - 2020-04-27
+### Added
+- Incomplete initial sync now logs the current progress
+### Fixed
+- Sync'ing of provisioned accounts before their password is set
+- UidValidityChangedException namespace error
+- UID validity change logic
+- Nextcloud groups integration
+
 ## 1.3.3 - 2020-04-21
 ### Added
 - UI option to clear the cache of a single mailbox (debug mode only)
