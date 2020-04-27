@@ -130,12 +130,7 @@ class ImapToDbSynchronizer {
 			$this->mailboxMapper->lockForChangeSync($mailbox);
 			$this->mailboxMapper->lockForVanishedSync($mailbox);
 
-			$this->messageMapper->deleteAll($mailbox);
-			$this->logger->debug("All messages of $id cleared");
-			$mailbox->setSyncNewToken(null);
-			$mailbox->setSyncChangedToken(null);
-			$mailbox->setSyncVanishedToken(null);
-			$this->mailboxMapper->update($mailbox);
+			$this->resetCache($account, $mailbox);
 		} catch (Throwable $e) {
 			throw new ServiceException("Could not clear mailbox cache for $id: " . $e->getMessage(), 0, $e);
 		} finally {
@@ -143,6 +138,24 @@ class ImapToDbSynchronizer {
 			$this->mailboxMapper->unlockFromChangedSync($mailbox);
 			$this->mailboxMapper->unlockFromVanishedSync($mailbox);
 		}
+	}
+
+	/**
+	 * Wipe all cached messages of a mailbox from the database
+	 *
+	 * Warning: the caller has to ensure the mailbox is locked
+	 *
+	 * @param Account $account
+	 * @param Mailbox $mailbox
+	 */
+	private function resetCache(Account $account, Mailbox $mailbox): void {
+		$id = $account->getId() . ":" . $mailbox->getName();
+		$this->messageMapper->deleteAll($mailbox);
+		$this->logger->debug("All messages of $id cleared");
+		$mailbox->setSyncNewToken(null);
+		$mailbox->setSyncChangedToken(null);
+		$mailbox->setSyncVanishedToken(null);
+		$this->mailboxMapper->update($mailbox);
 	}
 
 	/**
@@ -178,7 +191,13 @@ class ImapToDbSynchronizer {
 				|| $mailbox->getSyncVanishedToken() === null) {
 				$this->runInitialSync($account, $mailbox);
 			} else {
-				$this->runPartialSync($account, $mailbox, $criteria, $knownUids);
+				try {
+					$this->runPartialSync($account, $mailbox, $criteria, $knownUids);
+				} catch (UidValidityChangedException $e) {
+					$this->logger->warning('Mailbox UID validity changed. Wiping cache and performing full sync.');
+					$this->resetCache($account, $mailbox);
+					$this->runInitialSync($account, $mailbox);
+				}
 			}
 		} catch (ServiceException $e) {
 			// Just rethrow, don't wrap into another exception
@@ -248,6 +267,7 @@ class ImapToDbSynchronizer {
 	 * @param int[] $knownUids
 	 *
 	 * @throws ServiceException
+	 * @throws UidValidityChangedException
 	 */
 	private function runPartialSync(Account $account,
 									Mailbox $mailbox,
@@ -260,21 +280,15 @@ class ImapToDbSynchronizer {
 		$perf->step('get all known UIDs');
 
 		if ($criteria & Horde_Imap_Client::SYNC_NEWMSGSUIDS) {
-			try {
-				$response = $this->synchronizer->sync(
-					$client,
-					new Request(
-						$mailbox->getName(),
-						$mailbox->getSyncNewToken(),
-						$uids
-					),
-					Horde_Imap_Client::SYNC_NEWMSGSUIDS
-				);
-			} catch (UidValidityChangedException $e) {
-				$this->logger->warning('Mailbox UID validity changed. Performing full sync.');
-
-				$this->runInitialSync($account, $mailbox);
-			}
+			$response = $this->synchronizer->sync(
+				$client,
+				new Request(
+					$mailbox->getName(),
+					$mailbox->getSyncNewToken(),
+					$uids
+				),
+				Horde_Imap_Client::SYNC_NEWMSGSUIDS
+			);
 			$perf->step('get new messages via Horde');
 
 			foreach (array_chunk($response->getNewMessages(), 500) as $chunk) {
@@ -287,21 +301,15 @@ class ImapToDbSynchronizer {
 			$mailbox->setSyncNewToken($client->getSyncToken($mailbox->getName()));
 		}
 		if ($criteria & Horde_Imap_Client::SYNC_FLAGSUIDS) {
-			try {
-				$response = $this->synchronizer->sync(
-					$client,
-					new Request(
-						$mailbox->getName(),
-						$mailbox->getSyncChangedToken(),
-						$uids
-					),
-					Horde_Imap_Client::SYNC_FLAGSUIDS
-				);
-			} catch (UidValidityChangedException $e) {
-				$this->logger->warning('Mailbox UID validity changed. Performing full sync.');
-
-				$this->runInitialSync($account, $mailbox);
-			}
+			$response = $this->synchronizer->sync(
+				$client,
+				new Request(
+					$mailbox->getName(),
+					$mailbox->getSyncChangedToken(),
+					$uids
+				),
+				Horde_Imap_Client::SYNC_FLAGSUIDS
+			);
 			$perf->step('get changed messages via Horde');
 
 			foreach (array_chunk($response->getChangedMessages(), 500) as $chunk) {
@@ -320,21 +328,15 @@ class ImapToDbSynchronizer {
 			}
 		}
 		if ($criteria & Horde_Imap_Client::SYNC_VANISHEDUIDS) {
-			try {
-				$response = $this->synchronizer->sync(
-					$client,
-					new Request(
-						$mailbox->getName(),
-						$mailbox->getSyncVanishedToken(),
-						$uids
-					),
-					Horde_Imap_Client::SYNC_VANISHEDUIDS
-				);
-			} catch (UidValidityChangedException $e) {
-				$this->logger->warning('Mailbox UID validity changed. Performing full sync.');
-
-				$this->runInitialSync($account, $mailbox);
-			}
+			$response = $this->synchronizer->sync(
+				$client,
+				new Request(
+					$mailbox->getName(),
+					$mailbox->getSyncVanishedToken(),
+					$uids
+				),
+				Horde_Imap_Client::SYNC_VANISHEDUIDS
+			);
 			$perf->step('get vanished messages via Horde');
 
 			foreach (array_chunk($response->getVanishedMessageUids(), 500) as $chunk) {
