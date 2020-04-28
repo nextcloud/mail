@@ -140,19 +140,32 @@ class MessageMapper {
 
 		$query = new Horde_Imap_Client_Fetch_Query();
 		$query->uid();
+		$fetchResult = $client->fetch(
+			$mailbox,
+			$query,
+			[
+				'ids' => new Horde_Imap_Client_Ids($lower . ':' . $upper)
+			]
+		);
+		if (count($fetchResult) === 0 && $upper < $max) {
+			/*
+			 * There were no messages in this range, but we've not reached the
+			 * latest message. This means we should try again until there is a
+			 * page that actually returns at least one message
+			 *
+			 * We take $upper as the lowest known UID as we just found out that
+			 * there is nothing to fetch in $highestKnownUid:$upper
+			 */
+			$this->logger->debug("Range for findAll did not find any messages. Trying again with a succeeding range");
+			return $this->findAll($client, $mailbox, $maxResults, $upper);
+		}
 		$uidsToFetch = array_slice(
 			array_filter(
 				array_map(
 					function (Horde_Imap_Client_Data_Fetch $data) {
 						return $data->getUid();
 					},
-					iterator_to_array($client->fetch(
-						$mailbox,
-						$query,
-						[
-							'ids' => new Horde_Imap_Client_Ids($lower . ':' . $upper)
-						]
-					))
+					iterator_to_array($fetchResult)
 				),
 
 				function (int $uid) use ($highestKnownUid) {
