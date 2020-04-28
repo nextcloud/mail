@@ -171,6 +171,7 @@ OC.L10N.register(
     "Drafts" : "Bozze",
     "All inboxes" : "Tutte le cartelle di posta in arrivo",
     "Inbox" : "Posta in arrivo",
+    "Priority inbox" : "In arrivo prioritaria",
     "Junk" : "Posta indesiderata",
     "Sent" : "Posta inviata",
     "Trash" : "Cestino",

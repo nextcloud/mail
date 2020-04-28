@@ -171,6 +171,7 @@ OC.L10N.register(
     "Drafts" : "Borradores",
     "All inboxes" : "Todas las bandejas de entrada",
     "Inbox" : "Bandeja de entrada",
+    "Priority inbox" : "Bandeja prioritaria",
     "Junk" : "Correo no deseado",
     "Sent" : "Enviados",
     "Trash" : "Papelera",
