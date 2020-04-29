@@ -64,10 +64,12 @@ class PerformanceLoggerTask {
 		$this->rel = $now;
 	}
 
-	public function end(): void {
+	public function end(): int {
 		$now = $this->timeFactory->getTime();
 		$passed = $now - $this->start;
 
 		$this->logger->debug($this->task . " took ${passed}s");
+
+		return $passed;
 	}
 }

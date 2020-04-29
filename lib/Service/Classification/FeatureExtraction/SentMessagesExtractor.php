@@ -23,46 +23,45 @@ declare(strict_types=1);
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-namespace OCA\Mail\Service\Classification;
+namespace OCA\Mail\Service\Classification\FeatureExtraction;
 
 use OCA\Mail\Account;
-use OCA\Mail\Db\Mailbox;
-use OCA\Mail\Db\MailboxMapper;
 use OCA\Mail\Db\Message;
 use OCA\Mail\Db\StatisticsDao;
-use OCP\AppFramework\Db\DoesNotExistException;
+use function array_map;
+use function array_unique;
 
-class OftenReadSenderClassifier extends AClassifier {
-	use SafeRatio;
-
-	/** @var MailboxMapper */
-	private $mailboxMapper;
+class SentMessagesExtractor implements IExtractor {
 
 	/** @var StatisticsDao */
 	private $statisticsDao;
 
-	public function __construct(MailboxMapper $mailboxMapper,
-								StatisticsDao $statisticsDao) {
-		$this->mailboxMapper = $mailboxMapper;
+	/** @var int */
+	private $messagesSentTotal = 0;
+
+	/** @var int[] */
+	private $messagesSent;
+
+	public function __construct(StatisticsDao $statisticsDao) {
 		$this->statisticsDao = $statisticsDao;
 	}
 
-	public function isImportant(Account $account, Mailbox $mailbox, Message $message): bool {
-		$sender = $message->getTo()->first();
-		if ($sender === null) {
-			return false;
-		}
+	public function prepare(Account $account,
+							array $incomingMailboxes,
+							array $outgoingMailboxes,
+							array $messages): bool {
+		$senders = array_unique(array_map(function (Message $message) {
+			return $message->getFrom()->first()->getEmail();
+		}, $messages));
 
-		try {
-			$mb = $this->mailboxMapper->findSpecial($account, 'inbox');
-		} catch (DoesNotExistException $e) {
-			return false;
-		}
+		$this->messagesSentTotal = $this->statisticsDao->getMessagesTotal(...$outgoingMailboxes);
+		$this->messagesSent = $this->statisticsDao->getMessagesSentToGrouped($outgoingMailboxes, $senders);
 
-		return $this->greater(
-			$this->statisticsDao->getNrOfReadMessages($mb, $sender->getEmail()),
-			$this->statisticsDao->getNumberOfMessages($mb, $sender->getEmail()),
-			0.7
-		);
+		// This extractor is only applicable if there are sent messages
+		return $this->messagesSentTotal > 0;
+	}
+
+	public function extract(string $email): float {
+		return ($this->messagesSent[$email] ?? 0) / $this->messagesSentTotal;
 	}
 }

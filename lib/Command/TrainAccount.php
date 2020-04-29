@@ -25,78 +25,57 @@ declare(strict_types=1);
 
 namespace OCA\Mail\Command;
 
-use OCA\Mail\Account;
-use OCA\Mail\Exception\IncompleteSyncException;
-use OCA\Mail\Exception\ServiceException;
-use OCA\Mail\IMAP\MailboxSync;
 use OCA\Mail\Service\AccountService;
-use OCA\Mail\Service\Sync\ImapToDbSynchronizer;
+use OCA\Mail\Service\Classification\ImportanceClassifier;
+use OCP\AppFramework\Db\DoesNotExistException;
 use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Input\InputArgument;
 use Symfony\Component\Console\Input\InputInterface;
-use Symfony\Component\Console\Input\InputOption;
 use Symfony\Component\Console\Output\OutputInterface;
 use function memory_get_peak_usage;
 
-class SyncAccount extends Command {
+class TrainAccount extends Command {
 	public const ARGUMENT_ACCOUNT_ID = 'account-id';
-	public const OPTION_FORCE = 'force';
 
 	/** @var AccountService */
 	private $accountService;
 
-	/** @var MailboxSync */
-	private $mailboxSync;
-
-	/** @var ImapToDbSynchronizer */
-	private $syncService;
+	/** @var ImportanceClassifier */
+	private $classifier;
 
 	public function __construct(AccountService $service,
-								MailboxSync $mailboxSync,
-								ImapToDbSynchronizer $messageSync) {
+								ImportanceClassifier $classifier) {
 		parent::__construct();
 
 		$this->accountService = $service;
-		$this->mailboxSync = $mailboxSync;
-		$this->syncService = $messageSync;
+		$this->classifier = $classifier;
 	}
 
 	/**
 	 * @return void
 	 */
 	protected function configure() {
-		$this->setName('mail:account:sync');
-		$this->setDescription('Synchronize an IMAP account');
+		$this->setName('mail:account:train');
+		$this->setDescription('Train the classifier of new messages');
 		$this->addArgument(self::ARGUMENT_ACCOUNT_ID, InputArgument::REQUIRED);
-		$this->addOption(self::OPTION_FORCE, 'f', InputOption::VALUE_NONE);
 	}
 
 	/**
-	 * @return void
+	 * @return int
 	 */
 	protected function execute(InputInterface $input, OutputInterface $output) {
 		$accountId = (int)$input->getArgument(self::ARGUMENT_ACCOUNT_ID);
-		$force = $input->getOption(self::OPTION_FORCE);
 
-		$account = $this->accountService->findById($accountId);
-
-		$this->sync($account, $force, $output);
+		try {
+			$account = $this->accountService->findById($accountId);
+		} catch (DoesNotExistException $e) {
+			$output->writeln("<error>account $accountId does not exist</error>");
+			return 1;
+		}
+		$this->classifier->train($account);
 
 		$mbs = (int)(memory_get_peak_usage() / 1024 / 1024);
 		$output->writeln('<info>' . $mbs . 'MB of memory used</info>');
-	}
-
-	private function sync(Account $account, bool $force, OutputInterface $output) {
-		try {
-			$this->mailboxSync->sync($account, $force);
-			$this->syncService->syncAccount($account, $force);
-		} catch (ServiceException $e) {
-			if (!($e instanceof IncompleteSyncException)) {
-				throw $e;
-			}
-
-			$output->writeln("Batch of new messages sync'ed");
-			$this->sync($account, $force, $output);
-		}
+		return 0;
 	}
 }

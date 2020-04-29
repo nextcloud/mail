@@ -26,13 +26,14 @@ declare(strict_types=1);
 namespace OCA\Mail\Migration;
 
 use OCA\Mail\BackgroundJob\SyncJob;
+use OCA\Mail\BackgroundJob\TrainImportanceClassifierJob;
 use OCA\Mail\Db\MailAccount;
 use OCA\Mail\Db\MailAccountMapper;
 use OCP\BackgroundJob\IJobList;
 use OCP\Migration\IOutput;
 use OCP\Migration\IRepairStep;
 
-class FixAccountSyncs implements IRepairStep {
+class FixBackgroundJobs implements IRepairStep {
 
 	/** @var IJobList */
 	private $jobList;
@@ -45,7 +46,7 @@ class FixAccountSyncs implements IRepairStep {
 	}
 
 	public function getName(): string {
-		return 'Insert sync background job for all accounts';
+		return 'Insert background jobs for all accounts';
 	}
 
 	public function run(IOutput $output) {
@@ -53,12 +54,11 @@ class FixAccountSyncs implements IRepairStep {
 		$accounts = $this->mapper->getAllAccounts();
 
 		$output->startProgress(count($accounts));
-
 		foreach ($accounts as $account) {
 			$this->jobList->add(SyncJob::class, ['accountId' => $account->getId()]);
+			$this->jobList->add(TrainImportanceClassifierJob::class, ['accountId' => $account->getId()]);
 			$output->advance();
 		}
-
 		$output->finishProgress();
 	}
 }

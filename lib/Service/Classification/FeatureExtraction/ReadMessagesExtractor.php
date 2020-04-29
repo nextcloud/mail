@@ -23,46 +23,51 @@ declare(strict_types=1);
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-namespace OCA\Mail\Service\Classification;
+namespace OCA\Mail\Service\Classification\FeatureExtraction;
 
 use OCA\Mail\Account;
-use OCA\Mail\Db\Mailbox;
-use OCA\Mail\Db\MailboxMapper;
 use OCA\Mail\Db\Message;
 use OCA\Mail\Db\StatisticsDao;
-use OCP\AppFramework\Db\DoesNotExistException;
+use function array_map;
+use function array_unique;
 
-class OftenReadSenderClassifier extends AClassifier {
-	use SafeRatio;
-
-	/** @var MailboxMapper */
-	private $mailboxMapper;
+class ReadMessagesExtractor implements IExtractor {
 
 	/** @var StatisticsDao */
 	private $statisticsDao;
 
-	public function __construct(MailboxMapper $mailboxMapper,
-								StatisticsDao $statisticsDao) {
-		$this->mailboxMapper = $mailboxMapper;
+	/** @var int[] */
+	private $totalMessages;
+
+	/** @var int[] */
+	private $readMessages;
+
+	public function __construct(StatisticsDao $statisticsDao) {
 		$this->statisticsDao = $statisticsDao;
 	}
 
-	public function isImportant(Account $account, Mailbox $mailbox, Message $message): bool {
-		$sender = $message->getTo()->first();
-		if ($sender === null) {
-			return false;
+	public function prepare(Account $account,
+							array $incomingMailboxes,
+							array $outgoingMailboxes,
+							array $messages): bool {
+		$senders = array_unique(array_map(function (Message $message) {
+			return $message->getFrom()->first()->getEmail();
+		}, $messages));
+
+		$this->totalMessages = $this->statisticsDao->getNumberOfMessagesGrouped($incomingMailboxes, $senders);
+		$this->readMessages = $this->statisticsDao->getNumberOfMessagesWithFlagGrouped($incomingMailboxes, 'seen', $senders);
+
+		return true;
+	}
+
+	public function extract(string $email): float {
+		$total = $this->totalMessages[$email] ?? 0;
+
+		// Prevent division by zero and just say no emails are read
+		if ($total === 0) {
+			return 0;
 		}
 
-		try {
-			$mb = $this->mailboxMapper->findSpecial($account, 'inbox');
-		} catch (DoesNotExistException $e) {
-			return false;
-		}
-
-		return $this->greater(
-			$this->statisticsDao->getNrOfReadMessages($mb, $sender->getEmail()),
-			$this->statisticsDao->getNumberOfMessages($mb, $sender->getEmail()),
-			0.7
-		);
+		return ($this->readMessages[$email] ?? 0) / $total;
 	}
 }

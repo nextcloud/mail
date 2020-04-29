@@ -26,13 +26,11 @@ declare(strict_types=1);
 namespace OCA\Mail\Service\Classification;
 
 use OCA\Mail\Account;
-use OCA\Mail\Address;
 use OCA\Mail\Db\Mailbox;
 use OCA\Mail\Db\MailboxMapper;
 use OCA\Mail\Db\Message;
+use OCA\Mail\Db\StatisticsDao;
 use OCP\AppFramework\Db\DoesNotExistException;
-use OCP\DB\QueryBuilder\IQueryBuilder;
-use OCP\IDBConnection;
 
 class OftenContactedSenderClassifier extends AClassifier {
 	use SafeRatio;
@@ -40,13 +38,13 @@ class OftenContactedSenderClassifier extends AClassifier {
 	/** @var MailboxMapper */
 	private $mailboxMapper;
 
-	/** @var IDBConnection */
-	private $db;
+	/** @var StatisticsDao */
+	private $statisticsDao;
 
 	public function __construct(MailboxMapper $mailboxMapper,
-								IDBConnection $db) {
+								StatisticsDao $statisticsDao) {
 		$this->mailboxMapper = $mailboxMapper;
-		$this->db = $db;
+		$this->statisticsDao = $statisticsDao;
 	}
 
 	public function isImportant(Account $account, Mailbox $mailbox, Message $message): bool {
@@ -62,41 +60,10 @@ class OftenContactedSenderClassifier extends AClassifier {
 		}
 
 		return $this->greater(
-			$this->getMessagesSentTo($mb, $sender->getEmail()),
-			$this->getMessagesSentTotal($mb),
+			$this->statisticsDao->getMessagesSentTo($mb, $sender->getEmail()),
+			$this->statisticsDao->getMessagesTotal($mb),
 			0.1,
 			true // The very first message is important
 		);
-	}
-
-	private function getMessagesSentTotal(Mailbox $mb): int {
-		$qb = $this->db->getQueryBuilder();
-
-		$select = $qb->select($qb->func()->count('*'))
-			->from('mail_recipients', 'r')
-			->join('r', 'mail_messages', 'm', $qb->expr()->eq('m.id', 'r.message_id'))
-			->join('r', 'mail_mailboxes', 'mb', $qb->expr()->eq('mb.id', 'm.mailbox_id'))
-			->where($qb->expr()->eq('r.type', $qb->createNamedParameter(Address::TYPE_FROM), IQueryBuilder::PARAM_INT))
-			->andWhere($qb->expr()->eq('mb.id', $qb->createNamedParameter($mb->getId(), IQueryBuilder::PARAM_INT)));
-		$result = $select->execute();
-		$cnt = $result->fetchColumn();
-		$result->closeCursor();
-		return (int)$cnt;
-	}
-
-	private function getMessagesSentTo(Mailbox $mb, string $email): int {
-		$qb = $this->db->getQueryBuilder();
-
-		$select = $qb->select($qb->func()->count('*'))
-			->from('mail_recipients', 'r')
-			->join('r', 'mail_messages', 'm', $qb->expr()->eq('m.id', 'r.message_id', IQueryBuilder::PARAM_INT))
-			->join('r', 'mail_mailboxes', 'mb', $qb->expr()->eq('mb.id', $qb->expr()->castColumn('m.mailbox_id', IQueryBuilder::PARAM_INT), IQueryBuilder::PARAM_INT))
-			->where($qb->expr()->eq('r.type', $qb->createNamedParameter(Address::TYPE_FROM), IQueryBuilder::PARAM_INT))
-			->andWhere($qb->expr()->eq('r.email', $qb->createNamedParameter($email)))
-			->andWhere($qb->expr()->eq('mb.id', $qb->createNamedParameter($mb->getId(), IQueryBuilder::PARAM_INT)));
-		$result = $select->execute();
-		$cnt = $result->fetchColumn();
-		$result->closeCursor();
-		return (int)$cnt;
 	}
 }

@@ -26,6 +26,7 @@ namespace OCA\Mail\Service;
 
 use OCA\Mail\Account;
 use OCA\Mail\BackgroundJob\SyncJob;
+use OCA\Mail\BackgroundJob\TrainImportanceClassifierJob;
 use OCA\Mail\Db\MailAccount;
 use OCA\Mail\Db\MailAccountMapper;
 use OCA\Mail\Exception\ClientException;
@@ -131,8 +132,9 @@ class AccountService {
 	public function save(MailAccount $newAccount): MailAccount {
 		$newAccount = $this->mapper->save($newAccount);
 
-		// Insert a background sync job for this account
+		// Insert background jobs for this account
 		$this->jobList->add(SyncJob::class, ['accountId' => $newAccount->getId()]);
+		$this->jobList->add(TrainImportanceClassifierJob::class, ['accountId' => $newAccount->getId()]);
 
 		return $newAccount;
 	}
