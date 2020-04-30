@@ -117,7 +117,7 @@ OC.L10N.register(
     "Mark all messages of this folder as read" : "Bu klasördeki tüm iletileri okunmuş olarak işaretle",
     "Add subfolder" : "Alt klasör ekle",
     "Clear cache" : "Ön belleği temizle",
-    "Clear locally cached data, in case there are issues with synchronization." : "Eşitleme sırasında hatalar oluşursa, yerel ön bellek verisini sıfırla",
+    "Clear locally cached data, in case there are issues with synchronization." : "Eşitleme sırasında sorun çıkarsa, yerel ön bellek verisini sıfırlar.",
     "Loading …" : "Yükleniyor …",
     "_{total} message_::_{total} messages_" : ["{total} ileti","{total} ileti"],
     "Could not load your draft" : "Taslağınız yüklenemedi",
