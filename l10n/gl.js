@@ -155,7 +155,7 @@ OC.L10N.register(
     "Account settings" : "Axustes da conta",
     "Change name" : "Cambiar o nome",
     "Mail server" : "Servidor de correo",
-    "Speed up your Mail experience with these quick shortcuts." : "Acelere a súa experiencia de correo con estes atallos rápidos.",
+    "Speed up your Mail experience with these quick shortcuts." : "Acelere a súa experiencia co Correo con estes atallos rápidos.",
     "Compose new message" : "Redactar unha nova mensaxe",
     "Newer message" : "Mensaxe máis recente",
     "Older message" : "Mensaxe máis antiga",
