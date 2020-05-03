@@ -4205,16 +4205,16 @@
         },
         {
             "name": "symfony/options-resolver",
-            "version": "v4.4.7",
+            "version": "v4.4.8",
             "source": {
                 "type": "git",
                 "url": "https://github.com/symfony/options-resolver.git",
-                "reference": "9072131b5e6e21203db3249c7db26b52897bc73e"
+                "reference": "ade3d89dd3b875b83c8cff2980c9bb0daf6ef297"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/symfony/options-resolver/zipball/9072131b5e6e21203db3249c7db26b52897bc73e",
-                "reference": "9072131b5e6e21203db3249c7db26b52897bc73e",
+                "url": "https://api.github.com/repos/symfony/options-resolver/zipball/ade3d89dd3b875b83c8cff2980c9bb0daf6ef297",
+                "reference": "ade3d89dd3b875b83c8cff2980c9bb0daf6ef297",
                 "shasum": ""
             },
             "require": {
@@ -4255,7 +4255,7 @@
                 "configuration",
                 "options"
             ],
-            "time": "2020-03-27T16:54:36+00:00"
+            "time": "2020-04-06T10:16:26+00:00"
         },
         {
             "name": "symfony/polyfill-ctype",
