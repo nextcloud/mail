@@ -555,7 +555,7 @@ export default {
 	position: sticky;
 	bottom: 0;
 	padding: 12px;
-	background: linear-gradient(transparent, var(--color-main-background-translucent) 50%);
+	background: linear-gradient(rgba(255, 255, 255, 0), var(--color-main-background-translucent) 50%);
 }
 
 .composer-actions-right {
