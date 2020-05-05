@@ -25,7 +25,8 @@
 						:account="unifiedAccount"
 						:folder="unifiedInbox"
 						:paginate="false"
-						:search-query="appendToSearch('is:important')"
+						:search-query="appendToSearch('is:important not:starred')"
+						:is-priority-inbox="true"
 						:bus="bus"
 					/>
 					<SectionTitle class="app-content-list-item starred" :name="t('mail', 'Favorites')" />
@@ -35,6 +36,7 @@
 						:folder="unifiedInbox"
 						:paginate="false"
 						:search-query="appendToSearch('is:starred not:important')"
+						:is-priority-inbox="true"
 						:bus="bus"
 					/>
 					<SectionTitle class="app-content-list-item other" :name="t('mail', 'Other')" />
@@ -44,6 +46,7 @@
 						:folder="unifiedInbox"
 						:open-first="false"
 						:search-query="appendToSearch('not:starred not:important')"
+						:is-priority-inbox="true"
 						:bus="bus"
 					/>
 				</template>
