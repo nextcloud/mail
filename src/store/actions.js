@@ -574,13 +574,33 @@ export default {
 			value: !oldState,
 		})
 
-		setEnvelopeFlag(envelope.accountId, envelope.folderId, envelope.id, 'unseen', !oldState).catch((e) => {
-			console.error('could not toggle message unseen state', e)
+		setEnvelopeFlag(envelope.accountId, envelope.folderId, envelope.id, 'seen', oldState).catch((e) => {
+			console.error('could not toggle message seen state', e)
 
 			// Revert change
 			commit('flagEnvelope', {
 				envelope,
 				flag: 'unseen',
+				value: oldState,
+			})
+		})
+	},
+	toggleEnvelopeJunk({commit, getters}, envelope) {
+		// Change immediately and switch back on error
+		const oldState = envelope.flags.junk
+		commit('flagEnvelope', {
+			envelope,
+			flag: 'junk',
+			value: !oldState,
+		})
+
+		setEnvelopeFlag(envelope.accountId, envelope.folderId, envelope.id, 'junk', !oldState).catch((e) => {
+			console.error('could not toggle message junk state', e)
+
+			// Revert change
+			commit('flagEnvelope', {
+				envelope,
+				flag: 'junk',
 				value: oldState,
 			})
 		})

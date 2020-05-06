@@ -285,26 +285,6 @@ class MailManagerTest extends TestCase {
 		$this->manager->flagMessage($account, 'INBOX', 123, 'important', true);
 	}
 
-	public function testCaseInsensitiveFlag(): void {
-		$client = $this->createMock(Horde_Imap_Client_Socket::class);
-		$account = $this->createMock(Account::class);
-		$this->imapClientFactory->expects($this->once())
-			->method('getClient')
-			->willReturn($client);
-		$mb = $this->createMock(Mailbox::class);
-		$this->mailboxMapper->expects($this->once())
-			->method('find')
-			->with($account, 'INBOX')
-			->willReturn($mb);
-		$this->messageMapper->expects($this->once())
-			->method('addFlag')
-			->with($client, $mb, 123, '\\seen');
-		$this->messageMapper->expects($this->never())
-			->method('removeFlag');
-
-		$this->manager->flagMessage($account, 'INBOX', 123, 'SeEn', true);
-	}
-
 	public function testRemoveFlag(): void {
 		$client = $this->createMock(Horde_Imap_Client_Socket::class);
 		$account = $this->createMock(Account::class);

@@ -42,6 +42,10 @@
 						<ActionButton icon="icon-mail" @click="onToggleSeen">
 							{{ envelope.flags.unseen ? t('mail', 'Mark read') : t('mail', 'Mark unread') }}
 						</ActionButton>
+
+						<ActionButton icon="icon-junk" @click="onToggleJunk">
+							{{ envelope.flags.notjunk ? t('mail', 'Mark not junk') : t('mail', 'Mark junk') }}
+						</ActionButton>
 						<ActionButton
 							:icon="sourceLoading ? 'icon-loading-small' : 'icon-details'"
 							:disabled="sourceLoading"
@@ -267,6 +271,9 @@ export default {
 		},
 		onToggleSeen() {
 			this.$store.dispatch('toggleEnvelopeSeen', this.envelope)
+		},
+		onToggleJunk() {
+			this.$store.dispatch('toggleEnvelopeJunk', this.envelope)
 		},
 		onDelete() {
 			this.$emit('delete', this.envelope.uid)

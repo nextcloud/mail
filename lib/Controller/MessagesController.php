@@ -454,10 +454,6 @@ class MessagesController extends Controller {
 
 		foreach ($flags as $flag => $value) {
 			$value = filter_var($value, FILTER_VALIDATE_BOOLEAN);
-			if ($flag === 'unseen') {
-				$flag = 'seen';
-				$value = !$value;
-			}
 			$this->mailManager->flagMessage($account, base64_decode($folderId), $messageId, $flag, $value);
 		}
 		return new JSONResponse();

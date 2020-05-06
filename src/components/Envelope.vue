@@ -18,6 +18,12 @@
 			@click.prevent="onToggleImportant"
 			v-html="importantSvg"
 		></div>
+		<div
+			v-if="data.flags.junk"
+			class="app-content-list-item-star icon-junk"
+			:data-starred="data.flags.junk ? 'true' : 'false'"
+			@click.prevent="onToggleJunk"
+		></div>
 		<div class="app-content-list-item-icon">
 			<Avatar :display-name="addresses" :email="avatarEmail" />
 		</div>
@@ -44,6 +50,9 @@
 			}}</ActionButton>
 			<ActionButton icon="icon-mail" @click.prevent="onToggleSeen">{{
 				data.flags.unseen ? t('mail', 'Mark read') : t('mail', 'Mark unread')
+			}}</ActionButton>
+			<ActionButton icon="icon-junk" @click.prevent="onToggleJunk">{{
+				data.flags.junk ? t('mail', 'Mark not spam') : t('mail', 'Mark as spam')
 			}}</ActionButton>
 			<ActionButton icon="icon-delete" @click.prevent="onDelete">{{ t('mail', 'Delete') }}</ActionButton>
 		</Actions>
@@ -156,6 +165,9 @@ export default {
 		onToggleSeen() {
 			this.$store.dispatch('toggleEnvelopeSeen', this.data)
 		},
+		onToggleJunk() {
+			this.$store.dispatch('toggleEnvelopeJunk', this.data)
+		},
 		onDelete() {
 			this.$emit('delete')
 			this.$store.dispatch('deleteMessage', {
@@ -206,6 +218,10 @@ export default {
 
 .app-content-list-item.unseen {
 	font-weight: bold;
+}
+.app-content-list-item-star.junk {
+	background-image: var(--icon-junk-000);
+	opacity: 1;
 }
 .app-content-list-item.draft .app-content-list-item-line-two {
 	font-style: italic;
