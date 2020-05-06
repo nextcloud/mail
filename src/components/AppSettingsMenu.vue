@@ -6,12 +6,7 @@
 
 		<p v-if="loadingOptOutSettings" class="app-settings">
 			<span class="icon-loading-small"></span>
-			{{
-				t(
-					'mail',
-					'Allow the app to collect data about your interactions. Based on this data, the app will adapt to your preferences. The data will only be stored locally.'
-				)
-			}}
+			{{ text }}
 		</p>
 		<p v-else class="app-settings">
 			<input
@@ -71,6 +66,10 @@ export default {
 	data() {
 		return {
 			loadingAvatarSettings: false,
+			text: t(
+				'mail',
+				'Allow the app to collect data about your interactions. Based on this data, the app will adapt to your preferences. The data will only be stored locally.'
+			),
 			loadingOptOutSettings: false,
 		}
 	},
