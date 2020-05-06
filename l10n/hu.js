@@ -77,7 +77,6 @@ OC.L10N.register(
     "New message" : "Új üzenet",
     "Settings" : "Beállítások",
     "Add folder" : "Mappa hozzáadás",
-    "Delete account" : "Fiók törlése",
     "Show all folders" : "Minden mappa megjelenítése",
     "Collapse folders" : "Mappák összecsukása",
     "Mark all as read" : "Az összes megjelölése olvasottként",

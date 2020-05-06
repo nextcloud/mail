@@ -110,7 +110,6 @@ OC.L10N.register(
     "Add folder" : "Додај фасциклу",
     "Move Up" : "Помери нагоре",
     "Move down" : "Помери надоле",
-    "Delete account" : "Обриши налог",
     "Show all folders" : "Прикажи све фасцикле",
     "Collapse folders" : "Сажми фасцикле",
     "Mark all as read" : "Означи све као прочитано",

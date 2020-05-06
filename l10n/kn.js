@@ -14,7 +14,7 @@ OC.L10N.register(
     "Other" : "﻿ಇತರೆ",
     "Settings" : "ಆಯ್ಕೆ",
     "Add folder" : "Add folder",
-    "Delete account" : "Delete account",
+    "Cancel" : "﻿ರದ್ದು",
     "User" : "User",
     "Host" : "ಅತಿಥೆಯ-ಗಣಕ",
     "Port" : "﻿ರೇವು",

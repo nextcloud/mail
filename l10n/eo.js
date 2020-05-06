@@ -99,7 +99,6 @@ OC.L10N.register(
     "Add folder" : "Aldoni dosierujon",
     "Move Up" : "Movi supren",
     "Move down" : "Movi malsupren",
-    "Delete account" : "Forigi konton",
     "Show all folders" : "Montri ĉiujn dosierujojn",
     "Collapse folders" : "Maletendi dosierujojn",
     "Mark all as read" : "Marki ĉion kiel legita",

@@ -56,7 +56,6 @@ OC.L10N.register(
     "New message" : "رسالة جديدة",
     "Settings" : "الإعدادات",
     "Add folder" : "إضافة مجلد",
-    "Delete account" : "حذف الحساب",
     "Show all folders" : "أظهر جميع المجلدات",
     "Collapse folders" : "طي المجلدات",
     "Mark all as read" : "تحديد الكل كمقروء",

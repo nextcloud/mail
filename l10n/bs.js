@@ -16,7 +16,7 @@ OC.L10N.register(
     "to" : "do",
     "Settings" : "Podešavanje",
     "Add folder" : "Add folder",
-    "Delete account" : "Delete account",
+    "Cancel" : "Otkaži",
     "User" : "User",
     "Port" : "Priključak",
     "Search" : "Search",

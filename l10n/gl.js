@@ -110,7 +110,6 @@ OC.L10N.register(
     "Add folder" : "Engadir cartafol",
     "Move Up" : "Mover cara arriba",
     "Move down" : "Mover cara abaixo",
-    "Delete account" : "Eliminar a conta",
     "Show all folders" : "Amosar todos os cartafoles",
     "Collapse folders" : "Contraer os cartafoles",
     "Mark all as read" : "Marcar todo como lido",

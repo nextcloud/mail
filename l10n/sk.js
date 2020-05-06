@@ -110,7 +110,6 @@ OC.L10N.register(
     "Add folder" : "Pridať priečinok",
     "Move Up" : "Presunúť hore",
     "Move down" : "Presunúť dole",
-    "Delete account" : "Zmazať účet",
     "Show all folders" : "Zobraziť všetky priečinky",
     "Collapse folders" : "Zvinúť priečinky",
     "Mark all as read" : "Označ všetko ako prečítané",

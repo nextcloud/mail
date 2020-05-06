@@ -23,7 +23,6 @@ OC.L10N.register(
     "Choose a folder to store the attachment in" : "Causissètz lo dorsièr dins lo qual enregistrar la pèça junta",
     "Settings" : "Paramètres",
     "Add folder" : "Add folder",
-    "Delete account" : "Delete account",
     "Mark all as read" : "Marcar totes coma legits",
     "Clear cache" : "Voidar l'escondedor",
     "General" : "Generals",

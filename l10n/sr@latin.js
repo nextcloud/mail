@@ -17,7 +17,6 @@ OC.L10N.register(
     "Forward" : "Prosledi",
     "Settings" : "Postavke",
     "Add folder" : "Add folder",
-    "Delete account" : "Delete account",
     "Mark all as read" : "Označi sve kao pročitano",
     "Clear cache" : "Očisti keš",
     "General" : "Opšte",

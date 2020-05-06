@@ -47,7 +47,6 @@ OC.L10N.register(
     "Settings" : "Definições",
     "Edit account" : "Editar conta",
     "Add folder" : "Add folder",
-    "Delete account" : "Apagar conta",
     "Show all folders" : "Mostrar todas as pastas",
     "Collapse folders" : "Ocultar pastas",
     "Mark all as read" : "Marcar todas como lidas",

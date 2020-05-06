@@ -12,7 +12,6 @@ OC.L10N.register(
     "Other" : "Այլ",
     "Settings" : "կարգավորումներ",
     "Add folder" : "Add folder",
-    "Delete account" : "Delete account",
     "General" : "Ընդհանուր",
     "User" : "User",
     "Search" : "Search",

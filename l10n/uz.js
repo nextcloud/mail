@@ -9,6 +9,7 @@ OC.L10N.register(
     "Send" : "Yuborish",
     "Delete" : "O'chir",
     "Settings" : "Sozlamalar",
+    "Cancel" : "Bekor qilish",
     "General" : "Umumiy",
     "Search" : "Qidirmoq",
     "Refresh" : "Yangilash",

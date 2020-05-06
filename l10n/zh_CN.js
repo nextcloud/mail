@@ -101,7 +101,6 @@ OC.L10N.register(
     "Add folder" : "添加文件夹",
     "Move Up" : "上移",
     "Move down" : "下移",
-    "Delete account" : "删除账号",
     "Show all folders" : "显示全部文件夹",
     "Collapse folders" : "折叠文件夹",
     "Mark all as read" : "标记所有为已读",

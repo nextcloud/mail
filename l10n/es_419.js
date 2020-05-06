@@ -54,7 +54,6 @@ OC.L10N.register(
     "New message" : "Mensaje nuevo",
     "Settings" : "Configuraciones ",
     "Add folder" : "Add folder",
-    "Delete account" : "Borrar cuenta",
     "Show all folders" : "Mostrar todas las carpetas",
     "Collapse folders" : "Compactar carpetas",
     "Mark all as read" : "Marcar todos como leídos",

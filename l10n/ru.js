@@ -110,7 +110,6 @@ OC.L10N.register(
     "Add folder" : "Добавить папку",
     "Move Up" : "Переместить выше",
     "Move down" : "Переместить ниже",
-    "Delete account" : "Удалить учётную запись",
     "Show all folders" : "Показать все папки",
     "Collapse folders" : "Свернуть папки",
     "Mark all as read" : "Отметить все как прочитанное",

@@ -109,7 +109,6 @@ OC.L10N.register(
     "Add folder" : "הוספת תיקייה",
     "Move Up" : "להעלות למעלה",
     "Move down" : "להוריד למטה",
-    "Delete account" : "מחיקת חשבון",
     "Show all folders" : "הצגת כל התיקיות",
     "Collapse folders" : "קיווץ תיקיות",
     "Mark all as read" : "סימון הכול כנקרא",

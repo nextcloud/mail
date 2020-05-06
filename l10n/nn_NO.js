@@ -17,7 +17,7 @@ OC.L10N.register(
     "to" : "til",
     "Settings" : "Instillingar",
     "Add folder" : "Add folder",
-    "Delete account" : "Delete account",
+    "Cancel" : "Avbryt",
     "Signature" : "Signatur",
     "General" : "Generelt",
     "User" : "Bruker",

@@ -10,6 +10,7 @@ OC.L10N.register(
     "Delete" : "ړنګول",
     "Favorites" : "په نښه شوي",
     "Other" : "نور",
-    "Settings" : "سمونې"
+    "Settings" : "سمونې",
+    "Cancel" : "پرېښول"
 },
 "nplurals=2; plural=(n != 1);");

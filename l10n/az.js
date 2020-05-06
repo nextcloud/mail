@@ -22,7 +22,7 @@ OC.L10N.register(
     "Choose a folder to store the attachment in" : "Əlavələrin saxlanılması üçün qovluğu seçin",
     "Settings" : "Quraşdırmalar",
     "Add folder" : "Add folder",
-    "Delete account" : "Delete account",
+    "Cancel" : "Dayandır",
     "Mark all as read" : "Hamısını oxunulmuş kimi qeydə al",
     "Clear cache" : "Keşi təmizlə",
     "General" : "Ümumi",

@@ -94,7 +94,6 @@ OC.L10N.register(
     "Settings" : "Stillingar",
     "Edit account" : "Breyta notandaaðgangi",
     "Add folder" : "Bæta við möppu",
-    "Delete account" : "Eyða notandaaðgangi",
     "Show all folders" : "Birta allar möppur",
     "Collapse folders" : "Fella möppur saman",
     "Mark all as read" : "Merkja allt sem lesið",

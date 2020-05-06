@@ -63,7 +63,6 @@ OC.L10N.register(
     "New message" : "新信件",
     "Settings" : "設定",
     "Add folder" : "新增資料夾",
-    "Delete account" : "刪除帳號",
     "Show all folders" : "顯示所有收件匣",
     "Collapse folders" : "收合收件匣",
     "Mark all as read" : "全部標示為已閱讀",

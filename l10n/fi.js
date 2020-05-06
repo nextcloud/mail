@@ -102,7 +102,6 @@ OC.L10N.register(
     "Add folder" : "Lisää kansio",
     "Move Up" : "Siirrä ylös",
     "Move down" : "Siirrä alas",
-    "Delete account" : "Poista tili",
     "Show all folders" : "Näytä kaikki kansiot",
     "Collapse folders" : "Supista kansiot",
     "Mark all as read" : "Merkitse kaikki luetuiksi",

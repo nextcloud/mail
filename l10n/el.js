@@ -110,7 +110,6 @@ OC.L10N.register(
     "Add folder" : "Προσθήκη φακέλου",
     "Move Up" : "Μετακίνηση Πάνω",
     "Move down" : "Μετακίνηση Κάτω",
-    "Delete account" : "Διαγραφή λογαριασμού",
     "Show all folders" : "Εμφάνιση όλων των φακέλων",
     "Collapse folders" : "Σύμπτυξη φακέλων",
     "Mark all as read" : "Σημείωση όλων ως ανεγνωσμένων",

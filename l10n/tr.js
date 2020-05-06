@@ -110,7 +110,6 @@ OC.L10N.register(
     "Add folder" : "Klasör ekle",
     "Move Up" : "Yukarı taşı",
     "Move down" : "Aşağı taşı",
-    "Delete account" : "Hesabı sil",
     "Show all folders" : "Tüm klasörleri görüntüle",
     "Collapse folders" : "Klasörleri daralt",
     "Mark all as read" : "Tümünü okunmuş olarak işaretle",

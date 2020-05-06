@@ -110,7 +110,6 @@ OC.L10N.register(
     "Add folder" : "Adicionar pasta",
     "Move Up" : "Mover para cima",
     "Move down" : "Mover para baixo",
-    "Delete account" : "Excluir conta",
     "Show all folders" : "Exibir todas as pastas",
     "Collapse folders" : "Esconder as pastas",
     "Mark all as read" : "Marcar todas como lidas",

@@ -17,7 +17,7 @@ OC.L10N.register(
     "Reply" : "ឆ្លើយតប",
     "Settings" : "ការកំណត់",
     "Add folder" : "Add folder",
-    "Delete account" : "Delete account",
+    "Cancel" : "បោះបង់",
     "General" : "ទូទៅ",
     "User" : "User",
     "Host" : "ម៉ាស៊ីន​ផ្ទុក",

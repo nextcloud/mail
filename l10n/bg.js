@@ -71,7 +71,6 @@ OC.L10N.register(
     "Settings" : "Настройки",
     "Edit account" : "Редактиране на профила",
     "Add folder" : "Добави папка",
-    "Delete account" : "Изтриване на профила",
     "Show all folders" : "Покажи всички папки",
     "Collapse folders" : "Свиване на папки",
     "Mark all as read" : "Маркирай всички като прочетени",

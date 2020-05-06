@@ -110,7 +110,6 @@ OC.L10N.register(
     "Add folder" : "Dodaj folder",
     "Move Up" : "Przenieś wyżej",
     "Move down" : "Przenieś niżej",
-    "Delete account" : "Usuń konto",
     "Show all folders" : "Pokaż wszystkie foldery",
     "Collapse folders" : "Zwiń foldery",
     "Mark all as read" : "Oznacz wszystkie jako przeczytane",

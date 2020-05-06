@@ -13,7 +13,7 @@ OC.L10N.register(
     "to" : "kepada",
     "Settings" : "Tetapan",
     "Add folder" : "Add folder",
-    "Delete account" : "Delete account",
+    "Cancel" : "Batal",
     "General" : "Umum",
     "User" : "User",
     "Search" : "Search",
