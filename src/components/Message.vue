@@ -307,7 +307,7 @@ export default {
 }
 
 .mail-message-body {
-	flex-grow: 1;
+	flex: 1;
 	margin-bottom: 10px;
 	position: relative;
 }
