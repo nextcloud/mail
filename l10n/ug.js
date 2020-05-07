@@ -14,6 +14,7 @@ OC.L10N.register(
     "Reply" : "جاۋاب قايتۇر",
     "Settings" : "تەڭشەكلەر",
     "Add folder" : "Add folder",
+    "Cancel" : "ۋاز كەچ",
     "General" : "ئادەتتىكى",
     "User" : "User",
     "Host" : "باش ئاپپارات",

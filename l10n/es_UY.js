@@ -53,6 +53,8 @@ OC.L10N.register(
     "The images have been blocked to protect your privacy." : "Las imágenes han sido bloqueadas para proteger tu privacidad. ",
     "New message" : "Mensaje nuevo",
     "Settings" : "Configuraciones ",
+    "Remove account" : "Eliminar cuenta",
+    "Cancel" : "Cancelar",
     "Show all folders" : "Mostrar todas las carpetas",
     "Collapse folders" : "Compactar carpetas",
     "Mark all as read" : "Marcar todos como leídos",

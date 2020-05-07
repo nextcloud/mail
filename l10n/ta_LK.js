@@ -13,6 +13,7 @@ OC.L10N.register(
     "Other" : "மற்றவை",
     "Settings" : "அமைப்புகள்",
     "Add folder" : "Add folder",
+    "Cancel" : "இரத்து செய்க",
     "General" : "பொதுவான",
     "User" : "User",
     "Host" : "ஓம்புனர்",

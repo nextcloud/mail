@@ -12,6 +12,7 @@ OC.L10N.register(
     "Reply" : "جواب",
     "Settings" : "سیٹینگز",
     "Add folder" : "Add folder",
+    "Cancel" : "منسوخ کریں",
     "User" : "User",
     "Search" : "Search"
 },

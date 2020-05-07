@@ -101,6 +101,8 @@ OC.L10N.register(
     "Move Up" : "Pakelti",
     "Move down" : "Nuleisti",
     "Remove account" : "Šalinti paskyrą",
+    "Remove account {email}" : "Šalinti paskyrą {email}",
+    "Remove {email}" : "Šalinti {email}",
     "Cancel" : "Atsisakyti",
     "Show all folders" : "Rodyti visus aplankus",
     "Collapse folders" : "Suskleisti aplankus",

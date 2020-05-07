@@ -27,6 +27,8 @@ OC.L10N.register(
     "Choose a folder to store the attachment in" : "Selectiona un dossier pro salveguardar le attachamento",
     "Settings" : "Configurationes",
     "Add folder" : "Add folder",
+    "Remove account" : "Remover conto",
+    "Cancel" : "Cancellar",
     "Show all folders" : "Monstrar tote dossiers",
     "Collapse folders" : "Plicar dossiers",
     "General" : "General",

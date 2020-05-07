@@ -50,6 +50,8 @@ OC.L10N.register(
     "New message" : "Jauna ziņa",
     "Settings" : "Iestatījumi",
     "Add folder" : "Pievienot mapi",
+    "Remove account" : "Noņemt kontu",
+    "Cancel" : "Atcelt",
     "Show all folders" : "Rādīt visas mapes",
     "Collapse folders" : "Sakļaut mapes",
     "Signature" : "Paraksts",

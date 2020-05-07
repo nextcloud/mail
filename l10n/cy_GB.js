@@ -71,6 +71,7 @@ OC.L10N.register(
     "New message" : "Neges newydd",
     "Settings" : "Gosodiadau",
     "Add folder" : "Ychwanegu ffolder",
+    "Cancel" : "Diddymu",
     "Show all folders" : "Dangos pob ffolder",
     "Collapse folders" : "Cwympo ffolderi",
     "Mark all as read" : "Marcio'r cyfan wedi'u darllen",

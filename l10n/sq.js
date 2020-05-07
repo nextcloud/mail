@@ -53,6 +53,8 @@ OC.L10N.register(
     "New message" : "Mesazh i ri",
     "Settings" : "Konfigurimet",
     "Add folder" : "Shto dosje",
+    "Remove account" : "Fshij llogarinë",
+    "Cancel" : "Anullo",
     "Show all folders" : "Shfaqi krejt dosjet",
     "Collapse folders" : "Tkurri dosjet",
     "Mark all as read" : "Shënoji krejt si të lexuar",

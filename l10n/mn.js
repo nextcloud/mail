@@ -40,6 +40,8 @@ OC.L10N.register(
     "New message" : "шинэ зурвас",
     "Settings" : "тохиргоо",
     "Add folder" : "Add folder",
+    "Remove account" : "Аккаунт устгах",
+    "Cancel" : "болиулах",
     "Show all folders" : "Бүх хавтас харуулах",
     "Signature" : "Гарын үсэг",
     "General" : "Ерөнхий",

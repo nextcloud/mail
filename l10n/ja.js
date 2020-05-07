@@ -96,6 +96,8 @@ OC.L10N.register(
     "Add folder" : "フォルダーを追加",
     "Move Up" : "上に移動",
     "Move down" : "下に移動",
+    "Remove account" : "アカウント削除",
+    "Cancel" : "キャンセル",
     "Show all folders" : "すべてのフォルダーを表示",
     "Collapse folders" : "すべて展開",
     "Mark all as read" : "すべて既読にする",

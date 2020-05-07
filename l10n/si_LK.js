@@ -12,6 +12,7 @@ OC.L10N.register(
     "Other" : "වෙනත්",
     "Settings" : "සැකසුම්",
     "Add folder" : "Add folder",
+    "Cancel" : "අවලංගු කරන්න",
     "General" : "සාමාන්‍යයෙන්",
     "User" : "User",
     "Host" : "සත්කාරකය",

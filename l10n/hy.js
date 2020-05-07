@@ -12,6 +12,7 @@ OC.L10N.register(
     "Other" : "Այլ",
     "Settings" : "կարգավորումներ",
     "Add folder" : "Add folder",
+    "Cancel" : "ընդհատել",
     "General" : "Ընդհանուր",
     "User" : "User",
     "Search" : "Search",

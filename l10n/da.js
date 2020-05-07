@@ -92,6 +92,8 @@ OC.L10N.register(
     "Add folder" : "Tilføj mappe",
     "Move Up" : "Flyt op",
     "Move down" : "Flyt ned",
+    "Remove account" : "Fjern konto",
+    "Cancel" : "Annullér",
     "Show all folders" : "Vis alle mapper",
     "Collapse folders" : "Fold mapper sammen",
     "Mark all as read" : "Markér alle som læst",

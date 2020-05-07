@@ -65,6 +65,8 @@ OC.L10N.register(
     "Settings" : "설정",
     "Edit account" : "계정 편집",
     "Add folder" : "폴더 추가",
+    "Remove account" : "계정 삭제",
+    "Cancel" : "취소",
     "Show all folders" : "모든 폴더 보기",
     "Collapse folders" : "폴더 접기",
     "Mark all as read" : "모두 읽은 것으로 표시",

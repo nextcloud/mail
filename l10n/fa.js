@@ -99,6 +99,8 @@ OC.L10N.register(
     "Add folder" : "Add folder",
     "Move Up" : "حرکت به بالا",
     "Move down" : "حرکت به پایین",
+    "Remove account" : "حذف حساب کاربری",
+    "Cancel" : "لغو",
     "Show all folders" : "نمایش همه پوشه ها",
     "Collapse folders" : "پوشه ها را جمع کنید",
     "Mark all as read" : "علامت همه به عنوان خوانده‌شده",

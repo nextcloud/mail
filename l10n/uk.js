@@ -31,6 +31,8 @@ OC.L10N.register(
     "Choose a folder to store the attachment in" : "Оберіть теку для зберігання вкладень",
     "Settings" : "Налаштування",
     "Add folder" : "Add folder",
+    "Remove account" : "Видалити обліковий запис",
+    "Cancel" : "Скасувати",
     "Show all folders" : "Переглянути всі теки",
     "Collapse folders" : "Згорнути теки",
     "Mark all as read" : "Позначити все як прочитане",

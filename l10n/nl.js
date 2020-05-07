@@ -110,6 +110,8 @@ OC.L10N.register(
     "Add folder" : "Toevoegen map",
     "Move Up" : "Hoger zetten",
     "Move down" : "Lager zetten",
+    "Remove account" : "Verwijder account",
+    "Cancel" : "Annuleren",
     "Show all folders" : "Laat alle mappen zien",
     "Collapse folders" : "Mappen inklappen",
     "Mark all as read" : "Alles als gelezen markeren",

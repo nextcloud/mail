@@ -27,6 +27,8 @@ OC.L10N.register(
     "Choose a folder to store the attachment in" : "เลือกโฟลเดอร์ที่จะเก็บสิ่งที่แนบมาใน",
     "Settings" : "ตั้งค่า",
     "Add folder" : "Add folder",
+    "Remove account" : "ลบบัญชี",
+    "Cancel" : "ยกเลิก",
     "Show all folders" : "แสดงโฟลเดอร์ทั้งหมด",
     "Collapse folders" : "ยุบโฟลเดอร์",
     "Mark all as read" : "เลือกอ่านทั้งหมด",
