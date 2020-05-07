@@ -231,7 +231,11 @@ class MessagesController extends Controller {
 			return $this->enrichDownloadUrl($accountId, $folderId, $messageId, $a);
 		}, $json['attachments']);
 
-		return new JSONResponse($json);
+		$response = new JSONResponse($json);
+		$response->addHeader('Cache-Control', 'private, max-age=7776000');
+		$response->addHeader('Pragma', 'private');
+
+		return $response;
 	}
 
 	/**
