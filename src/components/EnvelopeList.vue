@@ -47,7 +47,12 @@ export default {
 }
 </script>
 
-<style scoped>
+<style lang="scss" scoped>
+div {
+	// So we can align the loading spinner in the Priority inbox
+	position: relative;
+}
+
 #load-more-mail-messages {
 	margin: 10px auto;
 	padding: 10px;
@@ -62,15 +67,24 @@ export default {
 }
 
 #list-refreshing {
-	overflow-y: hidden;
-	min-height: 0;
-	transition-property: all;
+	position: absolute;
+	left: calc(50% - 8px);
+	overflow: hidden;
+	padding: 12px;
+	background-color: var(--color-main-background);
+	z-index: 1;
+	border-radius: var(--border-radius-pill);
+	border: 1px solid var(--color-border);
+	top: -24px;
+	opacity: 0;
+	transition-property: top, opacity;
 	transition-duration: 0.5s;
 	transition-timing-function: ease-in-out;
-}
 
-#list-refreshing.refreshing {
-	min-height: 32px;
+	&.refreshing {
+		top: 4px;
+		opacity: 1;
+	}
 }
 
 .list-enter-active,
