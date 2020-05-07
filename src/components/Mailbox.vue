@@ -131,7 +131,6 @@ export default {
 		this.bus.$on('delete', this.onDelete)
 		this.bus.$on('shortcut', this.handleShortcut)
 		this.loadMailboxInterval = setInterval(this.loadMailbox, 60000)
-		window.addEventListener('focus', this.onWindowFocus)
 	},
 	async mounted() {
 		return await this.loadEnvelopes()
@@ -141,7 +140,6 @@ export default {
 		this.bus.$off('delete', this.onDelete)
 		this.bus.$off('shortcut', this.handleShortcut)
 		this.stopInterval()
-		window.removeEventListener('focus', this.onWindowFocus)
 	},
 	methods: {
 		initializeCache() {
@@ -335,12 +333,8 @@ export default {
 					logger.warn('shortcut ' + e.srcKey + ' is unknown. ignoring.')
 			}
 		},
-		async onWindowFocus() {
-			if (!this.refreshing) {
-				await this.sync()
-			}
-		},
 		async sync() {
+			logger.debug("mailbox sync'ing")
 			this.refreshing = true
 
 			try {
@@ -393,7 +387,7 @@ export default {
 			})
 		},
 		async loadMailbox() {
-			//when the account is unified or inbox, return nothing, else sync the mailbox
+			// When the account is unified or inbox, return nothing, else sync the mailbox
 			if (this.account.isUnified || this.folder.specialRole === 'inbox') {
 				return
 			}

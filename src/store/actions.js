@@ -25,11 +25,11 @@ import {
 	andThen,
 	complement,
 	curry,
-	identity,
 	filter,
 	flatten,
 	gt,
 	head,
+	identity,
 	last,
 	map,
 	pipe,
@@ -43,14 +43,14 @@ import {
 import {savePreference} from '../service/PreferenceService'
 import {
 	create as createAccount,
-	update as updateAccount,
-	patch as patchAccount,
-	updateSignature,
 	deleteAccount,
 	fetch as fetchAccount,
 	fetchAll as fetchAllAccounts,
+	patch as patchAccount,
+	update as updateAccount,
+	updateSignature,
 } from '../service/AccountService'
-import {fetchAll as fetchAllFolders, create as createFolder, markFolderRead} from '../service/FolderService'
+import {create as createFolder, fetchAll as fetchAllFolders, markFolderRead} from '../service/FolderService'
 import {
 	deleteMessage,
 	fetchEnvelope,
@@ -67,6 +67,7 @@ import {matchError} from '../errors/match'
 import SyncIncompleteError from '../errors/SyncIncompleteError'
 import MailboxLockedError from '../errors/MailboxLockedError'
 import {wait} from '../util/wait'
+import {UNIFIED_ACCOUNT_ID, UNIFIED_INBOX_ID} from './constants'
 
 const PAGE_SIZE = 20
 
@@ -393,6 +394,26 @@ export default {
 						)
 					)
 			)
+		} else if (folder.isPriorityInbox && query === undefined) {
+			return Promise.all(
+				getters.accounts
+					.filter((account) => !account.isUnified)
+					.map((account) =>
+						Promise.all(
+							getters
+								.getFolders(account.id)
+								.filter((f) => f.specialRole === folder.specialRole)
+								.map((folder) =>
+									dispatch('syncEnvelopes', {
+										accountId: account.id,
+										folderId: folder.id,
+										query,
+										init,
+									})
+								)
+						)
+					)
+			)
 		}
 
 		const uids = getters.getEnvelopes(accountId, folderId, query).map((env) => env.id)
@@ -448,7 +469,7 @@ export default {
 			})
 	},
 	async syncInboxes({getters, dispatch}) {
-		return await Promise.all(
+		const results = await Promise.all(
 			getters.accounts
 				.filter((a) => !a.isUnified)
 				.map((account) => {
@@ -473,12 +494,36 @@ export default {
 						})
 					)
 				})
-		).then((results) => {
-			const newMessages = flatMapDeep(identity, results).filter((m) => m !== undefined)
-			if (newMessages.length > 0) {
-				showNewMessagesNotification(newMessages)
+		)
+		const newMessages = flatMapDeep(identity, results).filter((m) => m !== undefined)
+		if (newMessages.length === 0) {
+			return
+		}
+
+		try {
+			// Make sure the priority inbox is updated as well
+			logger.info('updating priority inbox')
+			for (const query of ['is:important not:starred', 'is:starred not:important', 'not:starred not:important']) {
+				logger.info("sync'ing priority inbox section", {query})
+				const folder = getters.getFolder(UNIFIED_ACCOUNT_ID, UNIFIED_INBOX_ID)
+				const list = folder.envelopeLists[normalizedEnvelopeListId(query)]
+				if (list === undefined) {
+					await dispatch('fetchEnvelopes', {
+						accountId: UNIFIED_ACCOUNT_ID,
+						folderId: UNIFIED_INBOX_ID,
+						query,
+					})
+				}
+
+				await dispatch('syncEnvelopes', {
+					accountId: UNIFIED_ACCOUNT_ID,
+					folderId: UNIFIED_INBOX_ID,
+					query,
+				})
 			}
-		})
+		} finally {
+			showNewMessagesNotification(newMessages)
+		}
 	},
 	toggleEnvelopeFlagged({commit, getters}, envelope) {
 		// Change immediately and switch back on error
