@@ -402,6 +402,7 @@ export default {
 				const unifiedFolder = getters.getUnifiedFolder(folder.specialRole)
 
 				syncData.newMessages.forEach((envelope) => {
+					fetchMessage(accountId, folderId, envelope.id)
 					commit('addEnvelope', {
 						accountId,
 						folderId,
