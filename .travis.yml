@@ -32,6 +32,8 @@ matrix:
       env: "PHP_COVERAGE=TRUE"
     - php: 7.3
       env: "CORE_BRANCH=stable18"
+    - php: 7.4
+      env: "CORE_BRANCH=stable19"
     - php: nightly
       env: "DB=sqlite PATCH_VERSION_CHECK=TRUE"
   fast_finish: true
