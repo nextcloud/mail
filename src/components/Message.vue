@@ -40,7 +40,7 @@
 							{{ t('mail', 'Forward') }}
 						</ActionButton>
 						<ActionButton icon="icon-mail" @click="onToggleSeen">
-							{{ envelope.flags.unseen ? t('mail', 'Mark read') : t('mail', 'Mark unread') }}
+							{{ envelope.flags.seen ? t('mail', 'Mark unread') : t('mail', 'Mark read') }}
 						</ActionButton>
 
 						<ActionButton icon="icon-junk" @click="onToggleJunk">
@@ -215,7 +215,7 @@ export default {
 
 				this.loading = false
 
-				if (envelope.flags.unseen) {
+				if (!envelope.flags.seen) {
 					return this.$store.dispatch('toggleEnvelopeSeen', envelope)
 				}
 			} catch (error) {

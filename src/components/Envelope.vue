@@ -1,5 +1,5 @@
 <template>
-	<router-link class="app-content-list-item" :class="{unseen: data.flags.unseen, draft}" :to="link">
+	<router-link class="app-content-list-item" :class="{seen: data.flags.seen, draft}" :to="link">
 		<div
 			v-if="folder.isUnified"
 			class="mail-message-account-color"
@@ -49,7 +49,7 @@
 				data.flags.important ? t('mail', 'Mark unimportant') : t('mail', 'Mark important')
 			}}</ActionButton>
 			<ActionButton icon="icon-mail" @click.prevent="onToggleSeen">{{
-				data.flags.unseen ? t('mail', 'Mark read') : t('mail', 'Mark unread')
+				data.flags.seen ? t('mail', 'Mark unread') : t('mail', 'Mark read')
 			}}</ActionButton>
 			<ActionButton icon="icon-junk" @click.prevent="onToggleJunk">{{
 				data.flags.junk ? t('mail', 'Mark not spam') : t('mail', 'Mark as spam')
@@ -216,7 +216,7 @@ export default {
 	}
 }
 
-.app-content-list-item.unseen {
+.app-content-list-item:not(.seen) {
 	font-weight: bold;
 }
 .app-content-list-item-star.junk {

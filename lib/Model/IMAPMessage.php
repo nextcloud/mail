@@ -134,7 +134,7 @@ class IMAPMessage implements IMessage, JsonSerializable {
 	public function getFlags(): array {
 		$flags = $this->fetch->getFlags();
 		return [
-			'unseen' => !in_array(Horde_Imap_Client::FLAG_SEEN, $flags),
+			'seen' => in_array(Horde_Imap_Client::FLAG_SEEN, $flags),
 			'flagged' => in_array(Horde_Imap_Client::FLAG_FLAGGED, $flags),
 			'answered' => in_array(Horde_Imap_Client::FLAG_ANSWERED, $flags),
 			'deleted' => in_array(Horde_Imap_Client::FLAG_DELETED, $flags),

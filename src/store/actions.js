@@ -567,20 +567,20 @@ export default {
 	},
 	toggleEnvelopeSeen({commit, getters}, envelope) {
 		// Change immediately and switch back on error
-		const oldState = envelope.flags.unseen
+		const oldState = envelope.flags.seen
 		commit('flagEnvelope', {
 			envelope,
-			flag: 'unseen',
+			flag: 'seen',
 			value: !oldState,
 		})
 
-		setEnvelopeFlag(envelope.accountId, envelope.folderId, envelope.id, 'seen', oldState).catch((e) => {
+		setEnvelopeFlag(envelope.accountId, envelope.folderId, envelope.id, 'seen', !oldState).catch((e) => {
 			console.error('could not toggle message seen state', e)
 
 			// Revert change
 			commit('flagEnvelope', {
 				envelope,
-				flag: 'unseen',
+				flag: 'seen',
 				value: oldState,
 			})
 		})
