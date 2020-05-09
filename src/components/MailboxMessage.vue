@@ -19,7 +19,7 @@
 					:bus="bus"
 				/>
 				<template v-else>
-					<SectionTitle class="app-content-list-item important" :name="t('mail', 'Priority')" />
+					<SectionTitle class="app-content-list-item important" :name="t('mail', 'Important')" />
 					<Mailbox
 						class="nameimportant"
 						:account="unifiedAccount"
