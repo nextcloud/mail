@@ -325,6 +325,9 @@
 .icon-inbox {
 	@include icon-color('inbox', 'mail', $color-black);
 }
+.icon-important {
+	@include icon-color('important', 'mail', $color-black);
+}
 .icon-flagged {
 	@include icon-color('star', 'mail', $color-black);
 }
