@@ -152,7 +152,7 @@ export default {
 			if (this.filter === 'starred') {
 				return 'icon-flagged'
 			} else if (this.folder.specialRole === 'priority') {
-				return 'icon-category-monitoring'
+				return 'icon-important'
 			}
 			return this.folder.specialRole ? 'icon-' + this.folder.specialRole : 'icon-folder'
 		},
