@@ -39,7 +39,7 @@
 			<ActionButton icon="icon-starred" @click.prevent="onToggleFlagged">{{
 				data.flags.flagged ? t('mail', 'Unfavorite') : t('mail', 'Favorite')
 			}}</ActionButton>
-			<ActionButton icon="icon-info" @click.prevent="onToggleImportant">{{
+			<ActionButton icon="icon-important" @click.prevent="onToggleImportant">{{
 				data.flags.important ? t('mail', 'Mark unimportant') : t('mail', 'Mark important')
 			}}</ActionButton>
 			<ActionButton icon="icon-mail" @click.prevent="onToggleSeen">{{
@@ -177,18 +177,33 @@ export default {
 	z-index: 1;
 }
 
-.app-content-list-item-star.icon-important {
-	left: 7px;
-	top: 13px;
-	opacity: 1;
-	&:hover {
-		opacity: 0.5;
-	}
+.icon-important {
 	::v-deep path {
 		fill: #ffcc00;
 		stroke: var(--color-main-background);
 	}
+	.app-content-list-item:hover &,
+	.app-content-list-item:focus &,
+	.app-content-list-item.active & {
+		::v-deep path {
+			stroke: var(--color-background-dark);
+		}
+	}
+
+	// In message list, but not the one in the action menu
+	&.app-content-list-item-star {
+		background-image: none;
+		left: 7px;
+		top: 13px;
+		opacity: 1;
+
+		&:hover,
+		&:focus {
+			opacity: 0.5;
+		}
+	}
 }
+
 .app-content-list-item.unseen {
 	font-weight: bold;
 }
