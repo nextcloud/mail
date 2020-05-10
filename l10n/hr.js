@@ -80,7 +80,7 @@ OC.L10N.register(
     "Could not open mailbox" : "Nije moguće otvoriti sandučić",
     "Loading messages" : "Učitavanje poruka",
     "Indexing your messages. This can take a bit longer for larger mailboxes." : "Indeksiranje poruka u tijeku. Ova radnja može potrajati za veće sandučiće.",
-    "Priority" : "Prioritet",
+    "Important" : "Važno",
     "Favorites" : "Favoriti",
     "Other" : "Ostalo",
     "Not found" : "Nije pronađeno",

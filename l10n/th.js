@@ -18,7 +18,7 @@ OC.L10N.register(
     "Choose a file to add as attachment" : "เลือกไฟล์ที่ต้องการแนบ",
     "Favorite" : "รายการโปรด",
     "Delete" : "ลบ",
-    "Priority" : "ลำดับความสำคัญ",
+    "Important" : "สำคัญ",
     "Favorites" : "รายการโปรด",
     "Other" : "อื่นๆ",
     "to" : "ถึง",

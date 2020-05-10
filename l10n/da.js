@@ -66,7 +66,6 @@ OC.L10N.register(
     "Mark unread" : "Marker som ulæst",
     "Delete" : "Slet",
     "Loading messages" : "Henter beskedder",
-    "Priority" : "Prioritet",
     "Favorites" : "Favoritter",
     "Other" : "Andet",
     "Not found" : "Ikke fundet",

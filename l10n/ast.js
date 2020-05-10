@@ -31,7 +31,7 @@ OC.L10N.register(
     "Choose a file to add as attachment" : "Escueyi un ficheru p'amestalu como axuntu",
     "Favorite" : "Marcar como favoritu",
     "Delete" : "Desaniciar",
-    "Priority" : "Prioridá",
+    "Important" : "Importante",
     "Favorites" : "Favorites",
     "Other" : "Otru",
     "to" : "hasta",

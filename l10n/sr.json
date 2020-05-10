@@ -80,7 +80,7 @@
     "Could not open mailbox" : "Не могу да отворим сандуче",
     "Loading messages" : "Учитавам поруке",
     "Indexing your messages. This can take a bit longer for larger mailboxes." : "Индексирам Ваше поруке. Ово може потрајати на већим сандучетима.",
-    "Priority" : "Приоритет",
+    "Important" : "Важно",
     "Favorites" : "Омиљене",
     "Other" : "Остало",
     "Not found" : "Није нађено",

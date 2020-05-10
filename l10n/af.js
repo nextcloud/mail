@@ -27,7 +27,6 @@ OC.L10N.register(
     "Send" : "Stuur",
     "Favorite" : "Gunsteling",
     "Delete" : "Skrap",
-    "Priority" : "Prioriteit",
     "Favorites" : "Gunstelinge",
     "Other" : "Ander",
     "to" : "aan",

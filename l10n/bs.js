@@ -11,6 +11,7 @@ OC.L10N.register(
     "Send" : "Pošalji",
     "Favorite" : "Favorit",
     "Delete" : "Obriši",
+    "Important" : "Važno",
     "Favorites" : "Favoriti",
     "Other" : "Ostali",
     "to" : "do",

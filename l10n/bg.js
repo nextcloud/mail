@@ -55,7 +55,7 @@ OC.L10N.register(
     "Mark unread" : "Маркирай като непрочетено",
     "Delete" : "Изтриване",
     "Loading messages" : "Зареждане на съобщенията",
-    "Priority" : "Приоритет",
+    "Important" : "Важно",
     "Favorites" : "Любими",
     "Other" : "Друг",
     "to" : "до",

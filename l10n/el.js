@@ -83,7 +83,7 @@ OC.L10N.register(
     "Could not open mailbox" : "Δεν ήταν δυνατό το άνοιγμα του γραμματοκιβωτίου",
     "Loading messages" : "Φόρτωση μηνυμάτων",
     "Indexing your messages. This can take a bit longer for larger mailboxes." : "Αρχειοθέτηση των μηνυμάτων σας. Αυτό μπορεί να διαρκέσει περισσότερο για μεγαλύτερα γραμματοκιβώτια.",
-    "Priority" : "Προτεραιότητα",
+    "Important" : "Σημαντικό ",
     "Favorites" : "Αγαπημένα",
     "Other" : "Άλλο",
     "Not found" : "Δε βρέθηκε",

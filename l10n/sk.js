@@ -83,7 +83,6 @@ OC.L10N.register(
     "Could not open mailbox" : "Poštovú schránku sa nepodarilo otvoriť",
     "Loading messages" : "Načítavam správy",
     "Indexing your messages. This can take a bit longer for larger mailboxes." : "Indexovanie správ. U väčších poštových schránok to môže chvíľu trvať.",
-    "Priority" : "Priorita",
     "Favorites" : "Obľúbené",
     "Other" : "Iné",
     "Not found" : "Nenájdené",

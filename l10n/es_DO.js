@@ -39,7 +39,6 @@ OC.L10N.register(
     "Favorite" : "Hacer favorito",
     "Mark read" : "Marcar como leído",
     "Delete" : "Borrar",
-    "Priority" : "Prioridad",
     "Favorites" : "Favoritos",
     "Other" : "Otro",
     "to" : "para",

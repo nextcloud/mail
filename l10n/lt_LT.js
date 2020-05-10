@@ -74,7 +74,7 @@ OC.L10N.register(
     "Report this bug" : "Pranešti apie šią klaidą",
     "Could not open mailbox" : "Nepavyko atverti pašto dėžutės",
     "Loading messages" : "Įkeliami laiškai",
-    "Priority" : "Pirmenybė",
+    "Important" : "Svarbios",
     "Favorites" : "Mėgstamos",
     "Other" : "Kita",
     "Not found" : "Nerasta",

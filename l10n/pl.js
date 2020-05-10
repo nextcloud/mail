@@ -83,7 +83,7 @@ OC.L10N.register(
     "Could not open mailbox" : "Nie można otworzyć skrzynki pocztowej",
     "Loading messages" : "Ładowanie wiadomości",
     "Indexing your messages. This can take a bit longer for larger mailboxes." : "Indeksowanie wiadomości. W przypadku większych skrzynek pocztowych może to potrwać trochę dłużej.",
-    "Priority" : "Priorytet",
+    "Important" : "Ważne",
     "Favorites" : "Ulubione",
     "Other" : "Inne",
     "Not found" : "Nie znaleziono",

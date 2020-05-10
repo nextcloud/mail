@@ -81,7 +81,6 @@ OC.L10N.register(
     "Could not open mailbox" : "לא ניתן לפתוח את תיבת הדואר",
     "Loading messages" : "ההודעות נטענות",
     "Indexing your messages. This can take a bit longer for larger mailboxes." : "ההודעות שלך מסודרות באינדקס. פעולה זו עשויה לארוך זמן מה בתיבות דואר גדולות.",
-    "Priority" : "עדיפות",
     "Favorites" : "מועדפים",
     "Other" : "אחר",
     "Not found" : "לא נמצא",

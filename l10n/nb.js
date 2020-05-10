@@ -54,7 +54,7 @@ OC.L10N.register(
     "Delete" : "Slett",
     "Report this bug" : "Rapporter denne feilen",
     "Loading messages" : "Henter meldinger",
-    "Priority" : "Prioritet",
+    "Important" : "Viktig",
     "Favorites" : "Favoritter",
     "Other" : "Annet",
     "Not found" : "Ikke funnet",

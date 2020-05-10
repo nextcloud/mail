@@ -81,7 +81,7 @@
     "Could not open mailbox" : "No se pudo abrir la bandeja de entrada",
     "Loading messages" : "Cargando mensajes",
     "Indexing your messages. This can take a bit longer for larger mailboxes." : "Indexando sus mensajes. Esto puede tardar un poco más en buzones grandes.",
-    "Priority" : "Prioridad",
+    "Important" : "Importante",
     "Favorites" : "Favoritos",
     "Other" : "Otro",
     "Not found" : "No encontrado",

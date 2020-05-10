@@ -12,6 +12,7 @@ OC.L10N.register(
     "Send" : "Send",
     "Favorite" : "Favoritt",
     "Delete" : "Ta bort",
+    "Important" : "Viktig",
     "Favorites" : "Favorit",
     "Other" : "Anna",
     "to" : "til",

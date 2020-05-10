@@ -65,7 +65,6 @@ OC.L10N.register(
     "Delete" : "Suprimeix",
     "Report this bug" : "Informa d'aquest error",
     "Loading messages" : "S'estan carregant missatges",
-    "Priority" : "Prioritat",
     "Favorites" : "Favorits",
     "Other" : "Un altre",
     "Not found" : "No s'ha trobat",

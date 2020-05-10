@@ -74,7 +74,6 @@ OC.L10N.register(
     "Could not open mailbox" : "Postilaatikkoa ei voitu avata",
     "Loading messages" : "Ladataan viestejä",
     "Indexing your messages. This can take a bit longer for larger mailboxes." : "Viestejäsi indeksoidaan. Tämä saattaa kestää hetken varsinkin suurikokoisissa postilaatikoissa.",
-    "Priority" : "Tärkeys",
     "Favorites" : "Suosikit",
     "Other" : "Muu",
     "Not found" : "Ei löytynyt",

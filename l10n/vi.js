@@ -14,6 +14,7 @@ OC.L10N.register(
     "Send" : "Gởi",
     "Favorite" : "Ưa thích",
     "Delete" : "Xóa",
+    "Important" : "Quan trọng",
     "Favorites" : "Ưa thích",
     "Other" : "Khác",
     "to" : "đến",

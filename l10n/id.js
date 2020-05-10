@@ -20,6 +20,7 @@ OC.L10N.register(
     "Choose a file to add as attachment" : "Pilih berkas untuk ditambahkan sebagai lampiran",
     "Favorite" : "Favorit",
     "Delete" : "Hapus",
+    "Important" : "Penting",
     "Favorites" : "Disukai",
     "Other" : "Lainnya",
     "to" : "untuk",

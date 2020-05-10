@@ -7,6 +7,7 @@ OC.L10N.register(
     "Connect" : "منسلک",
     "Send" : "بھجیں",
     "Delete" : "حذف کریں",
+    "Important" : "اہم",
     "Favorites" : "Favorites",
     "Other" : "دیگر",
     "Reply" : "جواب",

@@ -75,6 +75,7 @@ OC.L10N.register(
     "Could not open mailbox" : "صندوق پستی امکان پذیر نیست",
     "Loading messages" : "بارگیری پیام ها",
     "Indexing your messages. This can take a bit longer for larger mailboxes." : "نمایه سازی پیام های شما این می تواند کمی برای صندوق های پستی بزرگتر کمی طولانی شود.",
+    "Important" : "مهم",
     "Favorites" : "علاقه مندی ها",
     "Other" : "دیگر",
     "Not found" : "پیدا نشد",

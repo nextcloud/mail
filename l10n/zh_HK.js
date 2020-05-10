@@ -11,6 +11,7 @@ OC.L10N.register(
     "Sending …" : "發送中 …",
     "Send" : "發送",
     "Delete" : "刪除",
+    "Important" : "重要",
     "Favorites" : "最愛",
     "Other" : "其他",
     "to" : "至",

@@ -83,7 +83,7 @@ OC.L10N.register(
     "Could not open mailbox" : "Ezin izan da postontzia ireki",
     "Loading messages" : "Mezuak kargatzen",
     "Indexing your messages. This can take a bit longer for larger mailboxes." : "Zure mezuak indexatzen. Honek denbora dezente har dezake postontzi handietan.",
-    "Priority" : "Lehentasuna",
+    "Important" : "Garrantzitsua",
     "Favorites" : "Gogokoak",
     "Other" : "Beste bat",
     "Not found" : "Ez da aurkitu",

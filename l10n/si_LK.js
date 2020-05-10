@@ -8,6 +8,7 @@ OC.L10N.register(
     "Save" : "සුරකින්න",
     "Connect" : "සම්බන්ධ වන්න",
     "Delete" : "ඉවත් කරන්න",
+    "Important" : "වැදගත්",
     "Favorites" : "Favorites",
     "Other" : "වෙනත්",
     "Settings" : "සැකසුම්",

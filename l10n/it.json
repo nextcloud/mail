@@ -81,7 +81,7 @@
     "Could not open mailbox" : "Impossibile aprire la casella di posta",
     "Loading messages" : "Caricamento messaggi",
     "Indexing your messages. This can take a bit longer for larger mailboxes." : "Indicizzazione dei tuoi messaggi. Può richiedere più tempo per le caselle di posta più grandi.",
-    "Priority" : "Priorità",
+    "Important" : "Importante",
     "Favorites" : "Preferiti",
     "Other" : "Altro",
     "Not found" : "Non trovato",

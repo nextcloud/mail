@@ -71,7 +71,7 @@ OC.L10N.register(
     "Blind copy recipients only" : "Le prejemniki skrite kopije",
     "Report this bug" : "Pošlji poročilo o hrošču",
     "Loading messages" : "Nalaganje sporočil",
-    "Priority" : "Prednost",
+    "Important" : "Pomembno",
     "Favorites" : "Priljubljene",
     "Other" : "Drugo",
     "Not found" : "Ni mogoče najti",

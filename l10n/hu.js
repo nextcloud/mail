@@ -76,7 +76,7 @@ OC.L10N.register(
     "Report this bug" : "A hiba bejelentése",
     "Could not open mailbox" : "Mailbox nem nyitható meg",
     "Loading messages" : "Üzenetek betöltése",
-    "Priority" : "Prioritás",
+    "Important" : "Fontos",
     "Favorites" : "Kedvencek",
     "Other" : "Egyéb",
     "Not found" : "Nem található",

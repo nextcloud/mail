@@ -31,7 +31,6 @@ OC.L10N.register(
     "Favorite" : "Lemmik",
     "Mark read" : "Märgi loetuks",
     "Delete" : "Kustuta",
-    "Priority" : "Prioriteet",
     "Favorites" : "Lemmikud",
     "Other" : "Muu",
     "to" : "saaja",

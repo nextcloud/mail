@@ -74,7 +74,6 @@ OC.L10N.register(
     "Report this bug" : "Пријави грешка",
     "Could not open mailbox" : "Неможе да се отвори сандачето",
     "Loading messages" : "Вчитување пораки",
-    "Priority" : "Приоритет",
     "Favorites" : "Омилени",
     "Other" : "Останато",
     "Not found" : "Не е пронајдено",

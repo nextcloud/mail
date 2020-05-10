@@ -80,7 +80,7 @@ OC.L10N.register(
     "Could not open mailbox" : "Kunde inte öppna brevlådan",
     "Loading messages" : "Läser in meddelanden",
     "Indexing your messages. This can take a bit longer for larger mailboxes." : "Indexera dina meddelanden. Det kan ta lite längre tid för större brevlådor.",
-    "Priority" : "Prioritet",
+    "Important" : "Viktigt",
     "Favorites" : "Favoriter",
     "Other" : "Övrigt",
     "Not found" : "Hittades inte",

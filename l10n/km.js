@@ -11,6 +11,7 @@ OC.L10N.register(
     "Sending …" : "កំពុង​ផ្ញើរ...",
     "Send" : "ផ្ញើ",
     "Delete" : "លុប",
+    "Important" : "សំខាន់",
     "Favorites" : "Favorites",
     "Other" : "ផ្សេងៗ",
     "to" : "ទៅ",

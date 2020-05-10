@@ -22,7 +22,7 @@ OC.L10N.register(
     "Choose a file to add as attachment" : "Обрати файл для вкладення",
     "Favorite" : "Улюблений",
     "Delete" : "Видалити",
-    "Priority" : "Перевага",
+    "Important" : "Важливий",
     "Favorites" : "Улюблене",
     "Other" : "Інший",
     "to" : "до",

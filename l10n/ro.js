@@ -23,6 +23,7 @@ OC.L10N.register(
     "Send" : "Trimite",
     "Favorite" : "Favorite",
     "Delete" : "Șterge",
+    "Important" : "Important",
     "Favorites" : "Favorite",
     "Other" : "Altele",
     "to" : "către",

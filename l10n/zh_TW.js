@@ -45,7 +45,6 @@ OC.L10N.register(
     "Unfavorite" : "取消我的最愛",
     "Favorite" : "我的最愛",
     "Delete" : "刪除",
-    "Priority" : "優先",
     "Favorites" : "我的最愛",
     "Other" : "其他",
     "to" : "至",

@@ -71,7 +71,7 @@ OC.L10N.register(
     "Blind copy recipients only" : "Einungis viðtakendur dulinna afrita",
     "Report this bug" : "Tilkynna þessa villu",
     "Loading messages" : "Hleð inn skilaboðum",
-    "Priority" : "Forgangur",
+    "Important" : "Mikilvægt",
     "Favorites" : "Eftirlæti",
     "Other" : "Annað",
     "Not found" : "Fannst ekki",
