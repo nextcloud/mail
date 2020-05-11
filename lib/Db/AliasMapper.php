@@ -15,7 +15,9 @@ declare(strict_types=1);
 namespace OCA\Mail\Db;
 
 use OCP\AppFramework\Db\QBMapper;
+use OCP\DB\QueryBuilder\IQueryBuilder;
 use OCP\IDBConnection;
+use function array_map;
 
 class AliasMapper extends QBMapper {
 
@@ -79,6 +81,25 @@ class AliasMapper extends QBMapper {
 			->delete($this->getTableName())
 			->where($qb->expr()->eq('account_id', $qb->createNamedParameter($accountId)));
 
+		$query->execute();
+	}
+
+	public function deleteOrphans(): void {
+		$qb1 = $this->db->getQueryBuilder();
+		$idsQuery = $qb1->select('a.id')
+			->from($this->getTableName(), 'a')
+			->leftJoin('a', 'mail_accounts', 'ac', $qb1->expr()->eq('a.account_id', 'ac.id'))
+			->where($qb1->expr()->isNull('ac.id'));
+		$result = $idsQuery->execute();
+		$ids = array_map(function (array $row) {
+			return (int)$row['id'];
+		}, $result->fetchAll());
+		$result->closeCursor();
+
+		$qb2 = $this->db->getQueryBuilder();
+		$query = $qb2
+			->delete($this->getTableName())
+			->where($qb2->expr()->in('id', $qb2->createNamedParameter($ids, IQueryBuilder::PARAM_INT_ARRAY), IQueryBuilder::PARAM_INT_ARRAY));
 		$query->execute();
 	}
 }
