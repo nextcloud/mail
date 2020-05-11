@@ -83,6 +83,7 @@ OC.L10N.register(
     "Could not open mailbox" : "Posta kutusu açılamadı",
     "Loading messages" : "İletiler yükleniyor",
     "Indexing your messages. This can take a bit longer for larger mailboxes." : "İletileriniz dizine ekleniyor. Çok sayıda ileti bulunan posta kutularında bu işlem biraz zaman alabilir.",
+    "Important" : "Önemli",
     "Favorites" : "Sık kullanılanlar",
     "Other" : "Diğer",
     "Not found" : "Bulunamadı",

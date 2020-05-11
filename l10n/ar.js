@@ -39,6 +39,7 @@ OC.L10N.register(
     "Draft: " : "المسودة:",
     "Favorite" : "المفضلة",
     "Delete" : "حذف",
+    "Important" : "مهم",
     "Favorites" : "المفضلات",
     "Other" : "آخر",
     "Not found" : "غير موجود",

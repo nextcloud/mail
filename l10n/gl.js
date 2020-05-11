@@ -45,7 +45,7 @@ OC.L10N.register(
     "Bcc" : "Cca",
     "Subject" : "Asunto",
     "Subject …" : "Asunto...",
-    "This message came from a noreply address so your reply will probably not be read." : "Esta mensaxe procede dun enderezo «sen resposta» polo que a súa resposta probablemente non sexa lida nunca.",
+    "This message came from a noreply address so your reply will probably not be read." : "Esta mensaxe procede dun enderezo «sen resposta» polo que a súa resposta probabelmente non sexa lida nunca.",
     "Write message …" : "Escribir a mensaxe…",
     "Saving draft …" : "Gardando o borrador…",
     "Draft saved" : "Gardouse o borrador",

@@ -9,6 +9,7 @@ OC.L10N.register(
     "Keyboard shortcuts" : "விசைப்பலகை குறுக்குவழிகள்",
     "Favorite" : "விருப்பமான",
     "Delete" : "நீக்குக",
+    "Important" : "முக்கியமான ",
     "Favorites" : "விருப்பங்கள்",
     "Other" : "மற்றவை",
     "Settings" : "அமைப்புகள்",

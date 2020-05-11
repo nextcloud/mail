@@ -74,7 +74,7 @@ OC.L10N.register(
     "Unfavorite" : "Nicht favorisieren",
     "Favorite" : "Favorit",
     "Mark unimportant" : "Als unwichtig markieren",
-    "Mark important" : "Als unwichtig markieren",
+    "Mark important" : "Als wichtig markieren",
     "Mark read" : "Als gelesen markieren",
     "Mark unread" : "Als ungelesen markieren",
     "Delete" : "Löschen",

@@ -73,6 +73,7 @@ OC.L10N.register(
     "Could not open mailbox" : "Ne eblis malfermi poŝtkesto",
     "Loading messages" : "Ŝargas mesaĝojn",
     "Indexing your messages. This can take a bit longer for larger mailboxes." : "Indeksas viajn mesaĝojn. Tio eble daŭrus iom pli longe por pli grandaj poŝtkestoj.",
+    "Important" : "Grava",
     "Favorites" : "Pliŝataĵoj",
     "Other" : "Alia",
     "Not found" : "Ne trovita",

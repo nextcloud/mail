@@ -83,6 +83,7 @@ OC.L10N.register(
     "Could not open mailbox" : "E-Mail-Postfach konnte nicht geöffnet werden",
     "Loading messages" : "Lade Nachrichten",
     "Indexing your messages. This can take a bit longer for larger mailboxes." : "Indiziere Deine Nachrichten. Dies kann bei größeren E-Mail-Postfächern etwas länger dauern.",
+    "Important" : "Wichtig",
     "Favorites" : "Favoriten",
     "Other" : "Andere",
     "Not found" : "Nicht gefunden",

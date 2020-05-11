@@ -81,6 +81,7 @@
     "Could not open mailbox" : "Poštovú schránku sa nepodarilo otvoriť",
     "Loading messages" : "Načítavam správy",
     "Indexing your messages. This can take a bit longer for larger mailboxes." : "Indexovanie správ. U väčších poštových schránok to môže chvíľu trvať.",
+    "Important" : "Dôležité",
     "Favorites" : "Obľúbené",
     "Other" : "Iné",
     "Not found" : "Nenájdené",

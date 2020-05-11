@@ -83,6 +83,7 @@ OC.L10N.register(
     "Could not open mailbox" : "Kon postbus niet openen",
     "Loading messages" : "Berichten aan het laden",
     "Indexing your messages. This can take a bit longer for larger mailboxes." : "Indexeren van je berichten. Dit kan wat tijd kosten voor groet brievenbussen.",
+    "Important" : "Belangrijk",
     "Favorites" : "Favorieten",
     "Other" : "Ander",
     "Not found" : "Niet gevonden",

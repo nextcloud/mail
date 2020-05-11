@@ -9,6 +9,7 @@ OC.L10N.register(
     "Send" : "يوللا",
     "Favorite" : "يىغقۇچ",
     "Delete" : "ئۆچۈر",
+    "Important" : "مۇھىم",
     "Favorites" : "يىغقۇچ",
     "Other" : "باشقا",
     "Reply" : "جاۋاب قايتۇر",
