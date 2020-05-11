@@ -469,4 +469,40 @@ class MessageMapper extends QBMapper {
 
 		return $this->findRecipients($this->findEntities($select));
 	}
+
+	public function deleteOrphans(): void {
+		$qb1 = $this->db->getQueryBuilder();
+		$idsQuery = $qb1->select('m.id')
+			->from($this->getTableName(), 'm')
+			->leftJoin('m', 'mail_mailboxes', 'mb', $qb1->expr()->eq('m.mailbox_id', 'mb.id'))
+			->where($qb1->expr()->isNull('mb.id'));
+		$result = $idsQuery->execute();
+		$ids = array_map(function (array $row) {
+			return (int)$row['id'];
+		}, $result->fetchAll());
+		$result->closeCursor();
+
+		$qb2 = $this->db->getQueryBuilder();
+		$query = $qb2
+			->delete($this->getTableName())
+			->where($qb2->expr()->in('id', $qb2->createNamedParameter($ids, IQueryBuilder::PARAM_INT_ARRAY), IQueryBuilder::PARAM_INT_ARRAY));
+		$query->execute();
+
+		$qb3 = $this->db->getQueryBuilder();
+		$recipientIdsQuery = $qb3->selectDistinct('r.id')
+			->from('mail_recipients', 'r')
+			->leftJoin('r', 'mail_messages', 'm', $qb3->expr()->eq('r.message_id', 'm.id'))
+			->where($qb3->expr()->isNull('m.id'));
+		$result = $recipientIdsQuery->execute();
+		$ids = array_map(function (array $row) {
+			return (int)$row['id'];
+		}, $result->fetchAll());
+		$result->closeCursor();
+
+		$qb4 = $this->db->getQueryBuilder();
+		$recipientsQuery = $qb4
+			->delete('mail_recipients')
+			->where($qb4->expr()->in('id', $qb4->createNamedParameter($ids, IQueryBuilder::PARAM_INT_ARRAY), IQueryBuilder::PARAM_INT_ARRAY));
+		$recipientsQuery->execute();
+	}
 }

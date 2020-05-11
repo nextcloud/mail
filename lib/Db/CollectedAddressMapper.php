@@ -25,6 +25,7 @@ namespace OCA\Mail\Db;
 use OCP\AppFramework\Db\QBMapper;
 use OCP\DB\QueryBuilder\IQueryBuilder;
 use OCP\IDBConnection;
+use function array_map;
 
 class CollectedAddressMapper extends QBMapper {
 
@@ -99,5 +100,24 @@ class CollectedAddressMapper extends QBMapper {
 		}
 
 		return $this->findEntities($query);
+	}
+
+	public function deleteOrphans(): void {
+		$qb1 = $this->db->getQueryBuilder();
+		$idsQuery = $qb1->selectDistinct('c.id')
+			->from($this->getTableName(), 'c')
+			->leftJoin('c', 'mail_accounts', 'a', $qb1->expr()->eq('c.user_id', 'a.user_id'))
+			->where($qb1->expr()->isNull('a.id'));
+		$result = $idsQuery->execute();
+		$ids = array_map(function (array $row) {
+			return (int)$row['id'];
+		}, $result->fetchAll());
+		$result->closeCursor();
+
+		$qb2 = $this->db->getQueryBuilder();
+		$query = $qb2
+			->delete($this->getTableName())
+			->where($qb2->expr()->in('id', $qb2->createNamedParameter($ids, IQueryBuilder::PARAM_INT_ARRAY), IQueryBuilder::PARAM_INT_ARRAY));
+		$query->execute();
 	}
 }
