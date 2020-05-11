@@ -49,6 +49,7 @@ use OCA\Mail\Listener\MessageCacheUpdaterListener;
 use OCA\Mail\Listener\NewMessageClassificationListener;
 use OCA\Mail\Listener\SaveSentMessageListener;
 use OCA\Mail\Listener\TrashMailboxCreatorListener;
+use OCA\Mail\Listener\UserDeletedListener;
 use OCA\Mail\Service\Attachment\AttachmentService;
 use OCA\Mail\Service\AvatarService;
 use OCA\Mail\Service\MailManager;
@@ -57,6 +58,7 @@ use OCA\Mail\Service\MailTransmission;
 use OCA\Mail\Service\UserPreferenceSevice;
 use OCP\AppFramework\IAppContainer;
 use OCP\EventDispatcher\IEventDispatcher;
+use OCP\User\Events\UserDeletedEvent;
 use OCP\Util;
 
 class BootstrapSingleton {
@@ -133,5 +135,6 @@ class BootstrapSingleton {
 		$dispatcher->addServiceListener(MessageSentEvent::class, SaveSentMessageListener::class);
 		$dispatcher->addServiceListener(NewMessagesSynchronized::class, NewMessageClassificationListener::class);
 		$dispatcher->addServiceListener(SaveDraftEvent::class, DraftMailboxCreatorListener::class);
+		$dispatcher->addServiceListener(UserDeletedEvent::class, UserDeletedListener::class);
 	}
 }
