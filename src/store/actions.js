@@ -607,10 +607,10 @@ export default {
 			newUid: uid,
 		})
 	},
-	deleteMessage({getters, commit}, {accountId, folderId, id}) {
-		commit('removeEnvelope', {accountId, folderId, id})
+	deleteMessage({getters, commit}, {accountId, folderId, id, query}) {
+		commit('removeEnvelope', {accountId, folderId, id, query})
 
-		return deleteMessage(accountId, folderId, id)
+		return deleteMessage(accountId, folderId, id, query)
 			.then(() => {
 				const folder = getters.getFolder(accountId, folderId)
 				if (!folder) {

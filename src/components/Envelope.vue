@@ -162,6 +162,7 @@ export default {
 				accountId: this.data.accountId,
 				folderId: this.data.folderId,
 				id: this.data.id,
+				query: undefined,
 			})
 		},
 	},
