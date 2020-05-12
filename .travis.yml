@@ -13,7 +13,7 @@ services:
 
 env:
   global:
-  - CORE_BRANCH=master
+  - CORE_BRANCH=stable19
   - PHP_COVERAGE=FALSE
   - TEST_SUITE=TEST-PHP
   - DB=mysql
