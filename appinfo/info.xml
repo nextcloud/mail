@@ -43,6 +43,7 @@
 		</post-migration>
 	</repair-steps>
 	<commands>
+		<command>OCA\Mail\Command\CleanUp</command>
 		<command>OCA\Mail\Command\CreateAccount</command>
 		<command>OCA\Mail\Command\DiagnoseAccount</command>
 		<command>OCA\Mail\Command\ExportAccount</command>
