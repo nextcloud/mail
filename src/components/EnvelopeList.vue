@@ -3,12 +3,21 @@
 		<transition-group name="list">
 			<div id="list-refreshing" key="loading" class="icon-loading-small" :class="{refreshing: refreshing}" />
 			<Envelope
-				v-for="env in envelopes"
+				v-for="env in envelopesToShow"
 				:key="env.uid"
 				:data="env"
 				:folder="folder"
 				@delete="$emit('delete', env.uid)"
 			/>
+			<div
+				v-if="collapsible && envelopes.length > collapseThreshold"
+				:key="'list-collapse-' + this.searchQuery"
+				class="collapse-expand"
+				@click="collapsed = !collapsed"
+			>
+				<template v-if="collapsed">{{ t('mail', 'Show all {nr} messages', {nr: envelopes.length}) }}</template>
+				<template v-else>{{ t('mail', 'Collapse messages') }}</template>
+			</div>
 			<div id="load-more-mail-messages" key="loadingMore" :class="{'icon-loading-small': loadingMore}" />
 		</transition-group>
 	</div>
@@ -35,6 +44,11 @@ export default {
 			type: Array,
 			required: true,
 		},
+		searchQuery: {
+			type: String,
+			required: false,
+			default: undefined,
+		},
 		refreshing: {
 			type: Boolean,
 			required: true,
@@ -42,6 +56,29 @@ export default {
 		loadingMore: {
 			type: Boolean,
 			required: true,
+		},
+		collapsible: {
+			type: Boolean,
+			required: false,
+			default: false,
+		},
+		collapsed: {
+			type: Boolean,
+			required: false,
+			default: false,
+		},
+	},
+	data() {
+		return {
+			collapseThreshold: 5,
+		}
+	},
+	computed: {
+		envelopesToShow() {
+			if (this.collapsible && this.collapsed) {
+				return this.envelopes.slice(0, this.collapseThreshold)
+			}
+			return this.envelopes
 		},
 	},
 }
@@ -51,6 +88,13 @@ export default {
 div {
 	// So we can align the loading spinner in the Priority inbox
 	position: relative;
+}
+
+.collapse-expand {
+	text-align: center;
+	margin-top: 10px;
+	cursor: pointer;
+	color: var(--color-text-maxcontrast);
 }
 
 #load-more-mail-messages {

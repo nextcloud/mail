@@ -33,9 +33,12 @@
 		v-else
 		:account="account"
 		:folder="folder"
+		:search-query="searchQuery"
 		:envelopes="envelopes"
 		:refreshing="refreshing"
 		:loading-more="loadingMore"
+		:collapsible="collapsible"
+		:collapsed.sync="collapsed"
 		@delete="onDelete"
 	/>
 </template>
@@ -96,9 +99,15 @@ export default {
 			required: false,
 			default: false,
 		},
+		collapsible: {
+			type: Boolean,
+			required: false,
+			default: false,
+		},
 	},
 	data() {
 		return {
+			collapsed: this.collapsible, // collapse by default
 			error: false,
 			refreshing: false,
 			loadingMore: false,
