@@ -27,6 +27,7 @@
 						:paginate="false"
 						:search-query="appendToSearch('is:important not:starred')"
 						:is-priority-inbox="true"
+						:collapsible="true"
 						:bus="bus"
 					/>
 					<SectionTitle class="app-content-list-item starred" :name="t('mail', 'Favorites')" />
@@ -37,6 +38,7 @@
 						:paginate="false"
 						:search-query="appendToSearch('is:starred not:important')"
 						:is-priority-inbox="true"
+						:collapsible="true"
 						:bus="bus"
 					/>
 					<SectionTitle class="app-content-list-item other" :name="t('mail', 'Other')" />
