@@ -1,5 +1,5 @@
 <template>
-	<router-link class="app-content-list-item" :class="{unseen: data.flags.unseen, draft}" :to="link">
+	<router-link class="app-content-list-item" :class="{seen: data.flags.seen, draft}" :to="link">
 		<div
 			v-if="folder.isUnified"
 			class="mail-message-account-color"
@@ -17,6 +17,12 @@
 			:data-starred="data.flags.important ? 'true' : 'false'"
 			@click.prevent="onToggleImportant"
 			v-html="importantSvg"
+		></div>
+		<div
+			v-if="data.flags.junk"
+			class="app-content-list-item-star icon-junk"
+			:data-starred="data.flags.junk ? 'true' : 'false'"
+			@click.prevent="onToggleJunk"
 		></div>
 		<div class="app-content-list-item-icon">
 			<Avatar :display-name="addresses" :email="avatarEmail" />
@@ -43,7 +49,10 @@
 				data.flags.important ? t('mail', 'Mark unimportant') : t('mail', 'Mark important')
 			}}</ActionButton>
 			<ActionButton icon="icon-mail" @click.prevent="onToggleSeen">{{
-				data.flags.unseen ? t('mail', 'Mark read') : t('mail', 'Mark unread')
+				data.flags.seen ? t('mail', 'Mark unread') : t('mail', 'Mark read')
+			}}</ActionButton>
+			<ActionButton icon="icon-junk" @click.prevent="onToggleJunk">{{
+				data.flags.junk ? t('mail', 'Mark not spam') : t('mail', 'Mark as spam')
 			}}</ActionButton>
 			<ActionButton icon="icon-delete" @click.prevent="onDelete">{{ t('mail', 'Delete') }}</ActionButton>
 		</Actions>
@@ -156,6 +165,9 @@ export default {
 		onToggleSeen() {
 			this.$store.dispatch('toggleEnvelopeSeen', this.data)
 		},
+		onToggleJunk() {
+			this.$store.dispatch('toggleEnvelopeJunk', this.data)
+		},
 		onDelete() {
 			this.$emit('delete')
 			this.$store.dispatch('deleteMessage', {
@@ -204,8 +216,12 @@ export default {
 	}
 }
 
-.app-content-list-item.unseen {
+.app-content-list-item:not(.seen) {
 	font-weight: bold;
+}
+.app-content-list-item-star.junk {
+	background-image: var(--icon-junk-000);
+	opacity: 1;
 }
 .app-content-list-item.draft .app-content-list-item-line-two {
 	font-style: italic;

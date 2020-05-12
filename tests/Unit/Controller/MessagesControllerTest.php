@@ -374,7 +374,7 @@ class MessagesControllerTest extends TestCase {
 			->will($this->returnValue($this->account));
 		$this->mailManager->expects($this->once())
 			->method('flagMessage')
-			->with($this->account, 'my folder', $messageId, 'seen', true);
+			->with($this->account, 'my folder', $messageId, 'unseen', false);
 
 		$expected = new JSONResponse();
 		$response = $this->controller->setFlags(

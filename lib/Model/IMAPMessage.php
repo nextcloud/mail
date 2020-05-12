@@ -48,6 +48,7 @@ use OCP\AppFramework\Db\DoesNotExistException;
 use OCP\Files\File;
 use OCP\Files\SimpleFS\ISimpleFile;
 use function base64_encode;
+use function in_array;
 use function mb_convert_encoding;
 
 class IMAPMessage implements IMessage, JsonSerializable {
@@ -133,7 +134,7 @@ class IMAPMessage implements IMessage, JsonSerializable {
 	public function getFlags(): array {
 		$flags = $this->fetch->getFlags();
 		return [
-			'unseen' => !in_array(Horde_Imap_Client::FLAG_SEEN, $flags),
+			'seen' => in_array(Horde_Imap_Client::FLAG_SEEN, $flags),
 			'flagged' => in_array(Horde_Imap_Client::FLAG_FLAGGED, $flags),
 			'answered' => in_array(Horde_Imap_Client::FLAG_ANSWERED, $flags),
 			'deleted' => in_array(Horde_Imap_Client::FLAG_DELETED, $flags),
@@ -644,7 +645,10 @@ class IMAPMessage implements IMessage, JsonSerializable {
 		$msg->setFlagFlagged(in_array(Horde_Imap_Client::FLAG_FLAGGED, $flags, true));
 		$msg->setFlagSeen(in_array(Horde_Imap_Client::FLAG_SEEN, $flags, true));
 		$msg->setFlagForwarded(in_array(Horde_Imap_Client::FLAG_FORWARDED, $flags, true));
-		$msg->setFlagJunk(in_array(Horde_Imap_Client::FLAG_JUNK, $flags, true));
+		$msg->setFlagJunk(
+			in_array(Horde_Imap_Client::FLAG_JUNK, $flags, true) ||
+			in_array('junk', $flags, true)
+		);
 		$msg->setFlagNotjunk(in_array(Horde_Imap_Client::FLAG_NOTJUNK, $flags, true));
 		$msg->setFlagImportant(false);
 		$msg->setFlagAttachments(false);
