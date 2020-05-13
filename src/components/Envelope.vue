@@ -78,7 +78,7 @@ export default {
 		},
 		searchQuery: {
 			type: String,
-			required: false,
+			required: true,
 			default: undefined,
 		},
 	},

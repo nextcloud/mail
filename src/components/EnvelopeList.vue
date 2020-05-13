@@ -7,6 +7,7 @@
 				:key="env.uid"
 				:data="env"
 				:folder="folder"
+				:search-query="searchQuery"
 				@delete="$emit('delete', env.uid)"
 			/>
 			<div
