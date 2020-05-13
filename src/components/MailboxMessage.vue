@@ -54,7 +54,7 @@
 				</template>
 			</AppContentList>
 			<NewMessageDetail v-if="newMessage" />
-			<Message v-else-if="showMessage" @delete="deleteMessage" />
+			<Message v-else-if="showMessage" :search-query="searchQuery" @delete="deleteMessage" />
 			<NoMessageSelected v-else-if="hasMessages && !isMobile" />
 		</div>
 	</AppContent>

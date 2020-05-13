@@ -127,6 +127,7 @@ export default {
 			rawMessage: '',
 			sourceLoading: false,
 			showSource: false,
+			searchQuery: undefined,
 		}
 	},
 	computed: {
@@ -274,6 +275,7 @@ export default {
 				accountId: this.message.accountId,
 				folderId: this.message.folderId,
 				id: this.message.id,
+				query: this.searchQuery,
 			})
 		},
 		async onShowSource() {
