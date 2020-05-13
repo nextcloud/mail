@@ -1,6 +1,14 @@
 # Changelog
 All notable changes to this project will be documented in this file.
 
+## 1.3.5 - unreleased
+### Fixed
+- Mailvelope integration. Make sure to enable the API mode in your settings.
+- Endless initial sync due to empty partial page
+- Safari message height issue
+- Send button background on Safari
+- Data cleanup of orphaned accounts and rows
+
 ## 1.3.4 - 2020-04-27
 ### Added
 - Incomplete initial sync now logs the current progress
