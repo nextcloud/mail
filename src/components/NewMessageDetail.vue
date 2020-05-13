@@ -81,6 +81,7 @@ export default {
 						cc: [],
 						subject: buildReplySubject(message.subject),
 						body: this.originalBody,
+						originalBody: this.originalBody,
 						replyTo: message,
 					}
 				} else if (this.$route.params.messageUid === 'replyAll') {
@@ -97,6 +98,7 @@ export default {
 						cc: recipients.cc,
 						subject: buildReplySubject(message.subject),
 						body: this.originalBody,
+						originalBody: this.originalBody,
 						replyTo: message,
 					}
 				} else {
@@ -107,6 +109,7 @@ export default {
 						cc: [],
 						subject: buildForwardSubject(message.subject),
 						body: this.originalBody,
+						originalBody: this.originalBody,
 						forwardFrom: message,
 					}
 				}

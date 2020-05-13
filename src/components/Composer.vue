@@ -103,13 +103,20 @@
 				@keyup="onInputChanged"
 			/>
 		</div>
-		<div v-if="noReply" class="warning noreply-box">
+		<div v-if="noReply" class="warning noreply-warning">
 			{{ t('mail', 'This message came from a noreply address so your reply will probably not be read.') }}
+		</div>
+		<div v-if="mailvelope.keysMissing.length" class="warning noreply-warning">
+			{{
+				t('mail', 'The following recipients do not have a PGP key: {recipients}.', {
+					recipients: mailvelope.keysMissing.join(', '),
+				})
+			}}
 		</div>
 		<div class="composer-fields">
 			<!--@keypress="onBodyKeyPress"-->
 			<TextEditor
-				v-if="editorPlainText"
+				v-if="!encrypt && editorPlainText"
 				key="editor-plain"
 				v-model="bodyVal"
 				name="body"
@@ -120,7 +127,7 @@
 				@input="onInputChanged"
 			></TextEditor>
 			<TextEditor
-				v-else
+				v-else-if="!encrypt && !editorPlainText"
 				key="editor-rich"
 				v-model="bodyVal"
 				:html="true"
@@ -131,6 +138,14 @@
 				:bus="bus"
 				@input="onInputChanged"
 			></TextEditor>
+			<MailvelopeEditor
+				v-else
+				ref="mailvelopeEditor"
+				v-model="bodyVal"
+				:recipients="allRecipients"
+				:quoted-text="body"
+				:is-reply-or-forward="isReply || isForward"
+			/>
 		</div>
 		<div class="composer-actions">
 			<ComposerAttachments v-model="attachments" :bus="bus" @upload="onAttachmentsUploading" />
@@ -146,16 +161,26 @@
 					<ActionButton icon="icon-folder" @click="onAddCloudAttachment">{{
 						t('mail', 'Add attachment from Files')
 					}}</ActionButton>
-					<ActionButton icon="icon-folder" @click="onAddCloudAttachmentLink">{{
+					<ActionButton :disabled="encrypt" icon="icon-folder" @click="onAddCloudAttachmentLink">{{
 						t('mail', 'Add attachment link from Files')
 					}}</ActionButton>
 					<ActionCheckbox
-						:checked="!editorPlainText"
-						:text="t('mail', 'Enable formatting')"
+						:checked="!encrypt && !editorPlainText"
+						:disabled="encrypt"
 						@check="editorPlainText = false"
 						@uncheck="editorPlainText = true"
 						>{{ t('mail', 'Enable formatting') }}</ActionCheckbox
 					>
+					<ActionCheckbox
+						v-if="mailvelope.available"
+						:checked="encrypt"
+						@check="encrypt = true"
+						@uncheck="encrypt = false"
+						>{{ t('mail', 'Encrypt message with Mailvelope') }}</ActionCheckbox
+					>
+					<ActionLink v-else href="https://www.mailvelope.com/" target="_blank" icon="icon-password">{{
+						t('mail', 'Looking for a way to encrypt your emails? Install the Mailvelope browser extension!')
+					}}</ActionLink>
 				</Actions>
 				<div>
 					<input
@@ -193,17 +218,21 @@ import debouncePromise from 'debounce-promise'
 import Actions from '@nextcloud/vue/dist/Components/Actions'
 import ActionButton from '@nextcloud/vue/dist/Components/ActionButton'
 import ActionCheckbox from '@nextcloud/vue/dist/Components/ActionCheckbox'
+import ActionLink from '@nextcloud/vue/dist/Components/ActionLink'
 import Multiselect from '@nextcloud/vue/dist/Components/Multiselect'
 import {translate as t} from '@nextcloud/l10n'
 import Vue from 'vue'
 
 import ComposerAttachments from './ComposerAttachments'
 import {findRecipient} from '../service/AutocompleteService'
-import {detect, html, toHtml, toPlain} from '../util/text'
+import {detect, html, plain, toHtml, toPlain} from '../util/text'
 import Loading from './Loading'
 import logger from '../logger'
 import TextEditor from './TextEditor'
 import {buildReplyBody} from '../ReplyBuilder'
+import MailvelopeEditor from './MailvelopeEditor'
+import {getMailvelope} from '../crypto/mailvelope'
+import {isPgpgMessage} from '../crypto/pgp'
 
 const debouncedSearch = debouncePromise(findRecipient, 500)
 
@@ -220,9 +249,11 @@ const STATES = Object.seal({
 export default {
 	name: 'Composer',
 	components: {
+		MailvelopeEditor,
 		Actions,
 		ActionButton,
 		ActionCheckbox,
+		ActionLink,
 		ComposerAttachments,
 		Loading,
 		Multiselect,
@@ -282,7 +313,6 @@ export default {
 			bodyVal: toHtml(this.body).value,
 			attachments: [],
 			noReply: this.to.some((to) => to.email.startsWith('noreply@') || to.email.startsWith('no-reply@')),
-			submitButtonTitle: t('mail', 'Send'),
 			draftsPromise: Promise.resolve(),
 			attachmentsPromise: Promise.resolve(),
 			savingDraft: undefined,
@@ -294,21 +324,37 @@ export default {
 			selectCc: this.cc,
 			selectBcc: this.bcc,
 			bus: new Vue(),
+			encrypt: false,
+			mailvelope: {
+				available: false,
+				keyRing: undefined,
+				keysMissing: [],
+			},
 		}
 	},
 	computed: {
 		aliases() {
 			return this.$store.getters.accounts.filter((a) => !a.isUnified)
 		},
+		allRecipients() {
+			return this.selectTo.concat(this.selectCc).concat(this.selectBcc)
+		},
 		selectableRecipients() {
 			return this.newRecipients
 				.concat(this.autocompleteRecipients)
 				.map((recipient) => ({...recipient, label: recipient.label || recipient.email}))
 		},
+		isForward() {
+			return this.forwardFrom !== undefined
+		},
 		isReply() {
 			return this.replyTo !== undefined
 		},
 		canSend() {
+			if (this.encrypt && this.mailvelope.keysMissing.length) {
+				return false
+			}
+
 			return this.selectTo.length > 0 || this.selectCc.length > 0 || this.selectBcc.length > 0
 		},
 		editorPlainText() {
@@ -317,15 +363,27 @@ export default {
 			}
 			return false
 		},
+		submitButtonTitle() {
+			if (!this.mailvelope.available) {
+				return t('mail', 'Send')
+			}
+
+			return this.encrypt ? t('mail', 'Encrypt and send') : t('mail', 'Send unencrypted')
+		},
 	},
 	watch: {
 		'$route.params.messageUid'(newID) {
 			this.reset()
 		},
+		allRecipients() {
+			this.checkRecipientsKeys()
+		},
 	},
-	beforeMount() {
+	async beforeMount() {
 		this.setAlias()
 		this.initBody()
+
+		await this.onMailvelopeLoaded(await getMailvelope())
 	},
 	mounted() {
 		this.$refs.toLabel.$el.focus()
@@ -343,6 +401,8 @@ export default {
 	},
 	beforeDestroy() {
 		this.$root.$off('newMessage')
+
+		window.removeEventListener('mailvelope', this.onMailvelopeLoaded)
 	},
 	methods: {
 		setAlias() {
@@ -351,6 +411,16 @@ export default {
 			} else {
 				this.selectedAlias = this.aliases[0]
 			}
+		},
+		async checkRecipientsKeys() {
+			if (!this.encrypt || !this.mailvelope.available) {
+				return
+			}
+
+			const recipients = this.allRecipients.map((r) => r.email)
+			const keysValid = await this.mailvelope.keyRing.validKeyForAddress(recipients)
+			logger.debug('recipients keys validated', {recipients, keysValid})
+			this.mailvelope.keysMissing = recipients.filter((r) => keysValid[r] === false)
 		},
 		initBody() {
 			if (this.replyTo) {
@@ -398,7 +468,7 @@ export default {
 				bcc: this.selectBcc.map(this.recipientToRfc822).join(', '),
 				draftUID: uid,
 				subject: this.subjectVal,
-				body: html(this.bodyVal),
+				body: this.encrypt ? plain(this.bodyVal) : html(this.bodyVal),
 				attachments: this.attachments,
 				folderId: this.replyTo ? this.replyTo.folderId : undefined,
 				messageId: this.replyTo ? this.replyTo.id : undefined,
@@ -460,6 +530,17 @@ export default {
 				.catch((error) => logger.error('could not upload attachments', {error}))
 				.then(() => logger.debug('attachments uploaded'))
 		},
+		async onMailvelopeLoaded(mailvelope) {
+			this.encrypt = isPgpgMessage(this.body)
+			this.mailvelope.available = true
+			logger.info('Mailvelope loaded', {
+				encrypt: this.encrypt,
+				isPgpgMessage: isPgpgMessage(this.body),
+				keyRing: this.mailvelope.keyRing,
+			})
+			this.mailvelope.keyRing = await mailvelope.getKeyring()
+			await this.checkRecipientsKeys()
+		},
 		onNewToAddr(addr) {
 			this.onNewAddr(addr, this.selectTo)
 		},
@@ -477,7 +558,12 @@ export default {
 			this.newRecipients.push(res)
 			list.push(res)
 		},
-		onSend() {
+		async onSend() {
+			if (this.encrypt) {
+				logger.debug('get encrypted message from mailvelope')
+				await this.$refs.mailvelopeEditor.pull()
+			}
+
 			this.state = STATES.UPLOADING
 
 			return this.attachmentsPromise
@@ -598,7 +684,7 @@ export default {
 	padding: 24px 12px;
 }
 
-.noreply-box {
+.warning-box {
 	padding: 5px 12px;
 	border-radius: 0;
 }
