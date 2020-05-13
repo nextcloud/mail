@@ -37,12 +37,14 @@
 		"pear-pear.horde.org/horde_text_flowed": "^2.0.3@stable",
 		"pear-pear.horde.org/horde_util": "^2.5.8@stable",
 		"pear-pear.horde.org/horde_smtp": "^1.9.5@stable",
-		"psr/log": "^1"
+		"psr/log": "^1",
+		"php-ai/php-ml": "^0.8.0"
 	},
 	"require-dev": {
 		"roave/security-advisories": "dev-master",
 		"christophwurst/nextcloud": "^v18.0.0",
 		"christophwurst/nextcloud_testing": "0.10.0",
+		"coenjacobs/mozart": "^0.5.0",
 		"nextcloud/coding-standard": "^0.3.0",
 		"phan/phan": "^3.0",
 		"vimeo/psalm": "^3.9"
@@ -52,9 +54,28 @@
 		"cs:fix": "php-cs-fixer fix",
 		"lint": "find . -name \\*.php -not -path './vendor/*' -exec php -l \"{}\" \\;",
 		"phan": "phan --allow-polyfill-parser -k .phan/config.php",
+		"post-install-cmd": [
+			"\"vendor/bin/mozart\" compose",
+			"composer dump-autoload"
+		],
+		"post-update-cmd": [
+			"\"vendor/bin/mozart\" compose",
+			"composer dump-autoload"
+		],
 		"test:integration": "phpunit -c tests/phpunit.integration.xml tests/Integration --fail-on-warning",
 		"test:integration:dev": "phpunit -c tests/phpunit.integration.xml tests/Integration --no-coverage --fail-on-warning --stop-on-error --stop-on-failure",
 		"test:unit": "phpunit -c tests/phpunit.unit.xml tests/Unit --fail-on-warning",
 		"test:unit:dev": "phpunit -c tests/phpunit.unit.xml tests/Unit --no-coverage --fail-on-warning --stop-on-error --stop-on-failure"
+	},
+	"extra": {
+		"mozart": {
+			"dep_namespace": "OCA\\Mail\\Vendor\\",
+			"dep_directory": "/lib/Vendor/",
+			"classmap_directory": "/lib/autoload/",
+			"classmap_prefix": "NEXTCLOUDMAIL_",
+			"packages": [
+				"php-ai/php-ml"
+			]
+		}
 	}
 }

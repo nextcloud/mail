@@ -1,5 +1,6 @@
 # Composer
 composer.phar
+/lib/Vendor
 /vendor/
 
 # Mac OS

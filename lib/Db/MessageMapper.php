@@ -470,6 +470,29 @@ class MessageMapper extends QBMapper {
 		return $this->findRecipients($this->findEntities($select));
 	}
 
+	/**
+	 * @param array $mailboxIds
+	 * @param int $limit
+	 *
+	 * @return string[]
+	 */
+	public function findLatestMessages(array $mailboxIds, int $limit): array {
+		$qb = $this->db->getQueryBuilder();
+
+		$select = $qb
+			->select('m.*')
+			->from($this->getTableName(), 'm')
+			->join('m', 'mail_recipients', 'r', $qb->expr()->eq('m.id', 'r.message_id', IQueryBuilder::PARAM_INT))
+			->where(
+				$qb->expr()->eq('r.type', $qb->createNamedParameter(Address::TYPE_FROM, IQueryBuilder::PARAM_INT), IQueryBuilder::PARAM_INT),
+				$qb->expr()->in('m.mailbox_id', $qb->createNamedParameter($mailboxIds, IQueryBuilder::PARAM_INT_ARRAY), IQueryBuilder::PARAM_INT_ARRAY)
+			)
+			->orderBy('sent_at', 'desc')
+			->setMaxResults($limit);
+
+		return $this->findRecipients($this->findEntities($select));
+	}
+
 	public function deleteOrphans(): void {
 		$qb1 = $this->db->getQueryBuilder();
 		$idsQuery = $qb1->select('m.id')
