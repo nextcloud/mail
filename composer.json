@@ -50,7 +50,7 @@
 	"scripts": {
 		"cs:check": "php-cs-fixer fix --dry-run --diff",
 		"cs:fix": "php-cs-fixer fix",
-		"lint": "find . -name \\*.php -not -path './vendor/*' -exec php -l \"{}\" \\;",
+		"lint": "find . -name \\*.php -not -path './vendor/*' -print0 | xargs -0 -n1 php -l",
 		"phan": "phan --allow-polyfill-parser -k .phan/config.php",
 		"test:integration": "phpunit -c tests/phpunit.integration.xml tests/Integration --fail-on-warning",
 		"test:integration:dev": "phpunit -c tests/phpunit.integration.xml tests/Integration --no-coverage --fail-on-warning --stop-on-error --stop-on-failure",
