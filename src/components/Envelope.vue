@@ -76,6 +76,11 @@ export default {
 			type: Object,
 			required: true,
 		},
+		searchQuery: {
+			type: String,
+			required: false,
+			default: undefined,
+		},
 	},
 	data() {
 		return {
@@ -162,7 +167,7 @@ export default {
 				accountId: this.data.accountId,
 				folderId: this.data.folderId,
 				id: this.data.id,
-				query: undefined,
+				query: this.searchQuery,
 			})
 		},
 	},

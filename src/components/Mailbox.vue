@@ -304,6 +304,7 @@ export default {
 							accountId: env.accountId,
 							folderId: env.folderId,
 							id: env.id,
+							query: this.searchQuery,
 						})
 						.catch((error) =>
 							logger.error('could not delete envelope', {
