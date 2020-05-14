@@ -76,6 +76,7 @@
 			"classmap_prefix": "NEXTCLOUDMAIL_",
 			"packages": [
 				"arthurhoaro/favicon",
+				"ezyang/htmlpurifier",
 				"gravatarphp/gravatar"
 			]
 		}
