@@ -61,6 +61,10 @@ class ImportantMessagesExtractor implements IExtractor {
 	}
 
 	public function extract(string $email): float {
-		return ($this->flaggedMessages[$email] ?? 0) / ($this->totalMessages[$email] ?? 0);
+		if (($total = $this->totalMessages[$email] ?? 0) === 0) {
+			// Prevent div by 0
+			return 0;
+		}
+		return ($this->flaggedMessages[$email] ?? 0) / $total;
 	}
 }
