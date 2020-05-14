@@ -13,7 +13,7 @@
 				v-if="collapsible && envelopes.length > collapseThreshold"
 				:key="'list-collapse-' + this.searchQuery"
 				class="collapse-expand"
-				@click="collapsed = !collapsed"
+				@click="$emit('update:collapsed', !collapsed)"
 			>
 				<template v-if="collapsed">{{ t('mail', 'Show all {nr} messages', {nr: envelopes.length}) }}</template>
 				<template v-else>{{ t('mail', 'Collapse messages') }}</template>
