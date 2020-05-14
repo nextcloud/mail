@@ -25,8 +25,8 @@ declare(strict_types=1);
 namespace OCA\Mail\Service\Avatar;
 
 use Exception;
-use Favicon\Favicon;
 use Horde_Mail_Rfc822_Address;
+use OCA\Mail\Vendor\Favicon\Favicon;
 use OCP\Files\IMimeTypeDetector;
 use OCP\Http\Client\IClientService;
 

@@ -74,6 +74,7 @@
 			"classmap_directory": "/lib/autoload/",
 			"classmap_prefix": "NEXTCLOUDMAIL_",
 			"packages": [
+				"arthurhoaro/favicon",
 				"php-ai/php-ml"
 			]
 		}

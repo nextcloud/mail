@@ -25,45 +25,22 @@ declare(strict_types=1);
 
 namespace OCA\Mail\Tests\Integration\Service\Avatar;
 
-use DirectoryIterator;
-use Favicon\Favicon;
 use OC;
 use OCA\Mail\Service\Avatar\AvatarFactory;
 use OCA\Mail\Service\Avatar\FaviconSource;
 use ChristophWurst\Nextcloud\Testing\TestCase;
+use OCA\Mail\Vendor\Favicon\Favicon;
 use OCP\Files\IMimeTypeDetector;
 use OCP\Http\Client\IClientService;
 use OCP\IServerContainer;
-use function iterator_to_array;
-use function unlink;
 
 class FaviconSourceTest extends TestCase {
 
 	/** @var IServerContainer */
 	private $serverContainer;
 
-	/**
-	 * @return string[]
-	 */
-	private function getCacheFiles(): iterable {
-		foreach (new DirectoryIterator(__DIR__ . '/../../../../vendor/arthurhoaro/favicon/resources/cache') as $entry) {
-			if ($entry->isDot() || $entry->getFilename() === '.gitkeep') {
-				continue;
-			}
-			yield $entry->getRealPath();
-		}
-	}
-
-	private function clearFaviconCacheDir(): void {
-		foreach ($this->getCacheFiles() as $cacheFile) {
-			unlink($cacheFile);
-		}
-	}
-
 	protected function setUp(): void {
 		parent::setUp();
-
-		$this->clearFaviconCacheDir();
 
 		$this->serverContainer = OC::$server;
 	}
@@ -84,6 +61,5 @@ class FaviconSourceTest extends TestCase {
 		$avatar = $source->fetch($email, $avatarFactory);
 
 		$this->assertNotNull($avatar);
-		$this->assertEmpty(iterator_to_array($this->getCacheFiles()));
 	}
 }
