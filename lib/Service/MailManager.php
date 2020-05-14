@@ -43,8 +43,6 @@ use OCA\Mail\IMAP\MessageMapper;
 use OCA\Mail\Model\IMAPMessage;
 use OCP\AppFramework\Db\DoesNotExistException;
 use OCP\EventDispatcher\IEventDispatcher;
-use function in_array;
-use function strtolower;
 
 class MailManager implements IMailManager {
 
@@ -52,12 +50,13 @@ class MailManager implements IMailManager {
 	 * https://tools.ietf.org/html/rfc3501#section-2.3.2
 	 */
 	private const ALLOWED_FLAGS = [
-		Horde_Imap_Client::FLAG_SEEN,
-		Horde_Imap_Client::FLAG_ANSWERED,
-		Horde_Imap_Client::FLAG_FLAGGED,
-		Horde_Imap_Client::FLAG_DELETED,
-		Horde_Imap_Client::FLAG_DRAFT,
-		Horde_Imap_Client::FLAG_RECENT,
+		'seen' => [Horde_Imap_Client::FLAG_SEEN],
+		'answered' => [Horde_Imap_Client::FLAG_ANSWERED],
+		'flagged' => [Horde_Imap_Client::FLAG_FLAGGED],
+		'deleted' => [Horde_Imap_Client::FLAG_DELETED],
+		'draft' => [Horde_Imap_Client::FLAG_DRAFT],
+		'recent' => [Horde_Imap_Client::FLAG_RECENT],
+		'junk' => [Horde_Imap_Client::FLAG_JUNK, 'junk'],
 	];
 
 	/** @var IMAPClientFactory */
@@ -292,17 +291,17 @@ class MailManager implements IMailManager {
 		}
 
 		// Only send system flags to the IMAP server as other flags might not be supported
-		if (in_array(strtolower("\\$flag"), self::ALLOWED_FLAGS, true)) {
-			try {
-				$normalized = '\\' . strtolower($flag);
+		$imapFlags = self::ALLOWED_FLAGS[$flag] ?? [];
+		try {
+			foreach ($imapFlags as $imapFlag) {
 				if ($value) {
-					$this->messageMapper->addFlag($client, $mb, $uid, $normalized);
+					$this->messageMapper->addFlag($client, $mb, $uid, $imapFlag);
 				} else {
-					$this->messageMapper->removeFlag($client, $mb, $uid, $normalized);
+					$this->messageMapper->removeFlag($client, $mb, $uid, $imapFlag);
 				}
-			} catch (Horde_Imap_Client_Exception $e) {
-				throw new ServiceException("Could not set message flag on IMAP: " . $e->getMessage(), $e->getCode(), $e);
 			}
+		} catch (Horde_Imap_Client_Exception $e) {
+			throw new ServiceException("Could not set message flag on IMAP: " . $e->getMessage(), $e->getCode(), $e);
 		}
 
 		$this->eventDispatcher->dispatch(

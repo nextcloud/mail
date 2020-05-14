@@ -91,7 +91,7 @@ class SyncAccount extends Command {
 			$this->mailboxSync->sync($account, $force);
 			$this->syncService->syncAccount($account, $force);
 		} catch (ServiceException $e) {
-			if (!($e->getPrevious() instanceof IncompleteSyncException)) {
+			if (!($e instanceof IncompleteSyncException)) {
 				throw $e;
 			}
 

@@ -208,7 +208,7 @@ class Message extends Entity implements JsonSerializable {
 			'subject' => $this->getSubject(),
 			'dateInt' => $this->getSentAt(),
 			'flags' => [
-				'unseen' => !$this->getFlagSeen(),
+				'seen' => $this->getFlagSeen(),
 				'flagged' => $this->getFlagFlagged(),
 				'answered' => $this->getFlagAnswered(),
 				'deleted' => $this->getFlagDeleted(),
@@ -216,6 +216,7 @@ class Message extends Entity implements JsonSerializable {
 				'forwarded' => $this->getFlagForwarded(),
 				'hasAttachments' => $this->getFlagAttachments() ?? false,
 				'important' => $this->getFlagImportant(),
+				'junk' => $this->getFlagJunk(),
 			],
 			'from' => $this->getFrom()->jsonSerialize(),
 			'to' => $this->getTo()->jsonSerialize(),

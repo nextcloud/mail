@@ -26,13 +26,11 @@ declare(strict_types=1);
 namespace OCA\Mail\Service\Classification;
 
 use OCA\Mail\Account;
-use OCA\Mail\Address;
 use OCA\Mail\Db\Mailbox;
 use OCA\Mail\Db\MailboxMapper;
 use OCA\Mail\Db\Message;
+use OCA\Mail\Db\StatisticsDao;
 use OCP\AppFramework\Db\DoesNotExistException;
-use OCP\DB\QueryBuilder\IQueryBuilder;
-use OCP\IDBConnection;
 
 class OftenReadSenderClassifier extends AClassifier {
 	use SafeRatio;
@@ -40,13 +38,13 @@ class OftenReadSenderClassifier extends AClassifier {
 	/** @var MailboxMapper */
 	private $mailboxMapper;
 
-	/** @var IDBConnection */
-	private $db;
+	/** @var StatisticsDao */
+	private $statisticsDao;
 
 	public function __construct(MailboxMapper $mailboxMapper,
-								IDBConnection $db) {
+								StatisticsDao $statisticsDao) {
 		$this->mailboxMapper = $mailboxMapper;
-		$this->db = $db;
+		$this->statisticsDao = $statisticsDao;
 	}
 
 	public function isImportant(Account $account, Mailbox $mailbox, Message $message): bool {
@@ -62,42 +60,9 @@ class OftenReadSenderClassifier extends AClassifier {
 		}
 
 		return $this->greater(
-			$this->getNrOfReadMessages($mb, $sender->getEmail()),
-			$this->getNumberOfMessages($mb, $sender->getEmail()),
+			$this->statisticsDao->getNrOfReadMessages($mb, $sender->getEmail()),
+			$this->statisticsDao->getNumberOfMessages($mb, $sender->getEmail()),
 			0.7
 		);
-	}
-
-	private function getNrOfReadMessages(Mailbox $mb, string $email): int {
-		$qb = $this->db->getQueryBuilder();
-
-		$select = $qb->select($qb->func()->count('*'))
-			->from('mail_recipients', 'r')
-			->join('r', 'mail_messages', 'm', $qb->expr()->eq('m.id', 'r.message_id', IQueryBuilder::PARAM_INT))
-			->join('r', 'mail_mailboxes', 'mb', $qb->expr()->eq('mb.id', $qb->expr()->castColumn('m.mailbox_id', IQueryBuilder::PARAM_INT), IQueryBuilder::PARAM_INT))
-			->where($qb->expr()->eq('r.type', $qb->createNamedParameter(Address::TYPE_FROM), IQueryBuilder::PARAM_INT))
-			->andWhere($qb->expr()->eq('mb.id', $qb->createNamedParameter($mb->getId(), IQueryBuilder::PARAM_INT)))
-			->andWhere($qb->expr()->eq('m.flag_seen', $qb->createNamedParameter(true, IQueryBuilder::PARAM_BOOL)))
-			->andWhere($qb->expr()->eq('r.email', $qb->createNamedParameter($email)));
-		$result = $select->execute();
-		$cnt = $result->fetchColumn();
-		$result->closeCursor();
-		return (int)$cnt;
-	}
-
-	private function getNumberOfMessages(Mailbox $mb, string $email): int {
-		$qb = $this->db->getQueryBuilder();
-
-		$select = $qb->select($qb->func()->count('*'))
-			->from('mail_recipients', 'r')
-			->join('r', 'mail_messages', 'm', $qb->expr()->eq('m.id', 'r.message_id', IQueryBuilder::PARAM_INT))
-			->join('r', 'mail_mailboxes', 'mb', $qb->expr()->eq('mb.id', $qb->expr()->castColumn('m.mailbox_id', IQueryBuilder::PARAM_INT), IQueryBuilder::PARAM_INT))
-			->where($qb->expr()->eq('r.type', $qb->createNamedParameter(Address::TYPE_FROM), IQueryBuilder::PARAM_INT))
-			->andWhere($qb->expr()->eq('mb.id', $qb->createNamedParameter($mb->getId(), IQueryBuilder::PARAM_INT)))
-			->andWhere($qb->expr()->eq('r.email', $qb->createNamedParameter($email)));
-		$result = $select->execute();
-		$cnt = $result->fetchColumn();
-		$result->closeCursor();
-		return (int)$cnt;
 	}
 }

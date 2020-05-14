@@ -40,7 +40,11 @@
 							{{ t('mail', 'Forward') }}
 						</ActionButton>
 						<ActionButton icon="icon-mail" @click="onToggleSeen">
-							{{ envelope.flags.unseen ? t('mail', 'Mark read') : t('mail', 'Mark unread') }}
+							{{ envelope.flags.seen ? t('mail', 'Mark unread') : t('mail', 'Mark read') }}
+						</ActionButton>
+
+						<ActionButton icon="icon-junk" @click="onToggleJunk">
+							{{ envelope.flags.notjunk ? t('mail', 'Mark not junk') : t('mail', 'Mark junk') }}
 						</ActionButton>
 						<ActionButton
 							:icon="sourceLoading ? 'icon-loading-small' : 'icon-details'"
@@ -66,6 +70,7 @@
 					<Itinerary :entries="message.itineraries" :message-id="message.messageId" />
 				</div>
 				<MessageHTMLBody v-if="message.hasHtmlBody" :url="htmlUrl" />
+				<MessageEncryptedBody v-else-if="isEncrypted" :body="message.body" :from="from" />
 				<MessagePlainTextBody v-else :body="message.body" :signature="message.signature" />
 				<Popover v-if="message.attachments[0]" class="attachment-popover">
 					<Actions slot="trigger">
@@ -92,7 +97,10 @@ import AddressList from './AddressList'
 import {buildRecipients as buildReplyRecipients, buildReplySubject} from '../ReplyBuilder'
 import Error from './Error'
 import {getRandomMessageErrorMessage} from '../util/ErrorMessageFactory'
+import {html, plain} from '../util/text'
+import {isPgpgMessage} from '../crypto/pgp'
 import Itinerary from './Itinerary'
+import MessageEncryptedBody from './MessageEncryptedBody'
 import MessageHTMLBody from './MessageHTMLBody'
 import MessagePlainTextBody from './MessagePlainTextBody'
 import Loading from './Loading'
@@ -110,6 +118,7 @@ export default {
 		Itinerary,
 		Loading,
 		MessageAttachments,
+		MessageEncryptedBody,
 		MessageHTMLBody,
 		MessagePlainTextBody,
 		Modal,
@@ -131,6 +140,12 @@ export default {
 		}
 	},
 	computed: {
+		from() {
+			return this.message.from[0]?.email
+		},
+		isEncrypted() {
+			return isPgpgMessage(this.message.hasHtmlBody ? html(this.message.body) : plain(this.message.body))
+		},
 		htmlUrl() {
 			return generateUrl('/apps/mail/api/accounts/{accountId}/folders/{folderId}/messages/{id}/html', {
 				accountId: this.message.accountId,
@@ -212,7 +227,7 @@ export default {
 
 				this.loading = false
 
-				if (envelope.flags.unseen) {
+				if (!envelope.flags.seen) {
 					return this.$store.dispatch('toggleEnvelopeSeen', envelope)
 				}
 			} catch (error) {
@@ -268,6 +283,9 @@ export default {
 		},
 		onToggleSeen() {
 			this.$store.dispatch('toggleEnvelopeSeen', this.envelope)
+		},
+		onToggleJunk() {
+			this.$store.dispatch('toggleEnvelopeJunk', this.envelope)
 		},
 		onDelete() {
 			this.$emit('delete', this.envelope.uid)

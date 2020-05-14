@@ -22,6 +22,7 @@
 		"christophwurst/kitinerary": "^0.2",
 		"christophwurst/kitinerary-bin": "^0.2",
 		"christophwurst/kitinerary-flatpak": "^0.2",
+		"coenjacobs/mozart": "^0.5.1",
 		"ezyang/htmlpurifier": "4.12.0",
 		"gravatarphp/gravatar": "^2.0",
 		"kwi/urllinker": "dev-bleeding",
@@ -37,7 +38,8 @@
 		"pear-pear.horde.org/horde_text_flowed": "^2.0.3@stable",
 		"pear-pear.horde.org/horde_util": "^2.5.8@stable",
 		"pear-pear.horde.org/horde_smtp": "^1.9.5@stable",
-		"psr/log": "^1"
+		"psr/log": "^1",
+		"php-ai/php-ml": "^0.8.0"
 	},
 	"require-dev": {
 		"roave/security-advisories": "dev-master",
@@ -50,11 +52,31 @@
 	"scripts": {
 		"cs:check": "php-cs-fixer fix --dry-run --diff",
 		"cs:fix": "php-cs-fixer fix",
-		"lint": "find . -name \\*.php -not -path './vendor/*' -exec php -l \"{}\" \\;",
+		"lint": "find . -name \\*.php -not -path './vendor/*' -print0 | xargs -0 -n1 php -l",
 		"phan": "phan --allow-polyfill-parser -k .phan/config.php",
+		"post-install-cmd": [
+			"\"vendor/bin/mozart\" compose",
+			"composer dump-autoload"
+		],
+		"post-update-cmd": [
+			"\"vendor/bin/mozart\" compose",
+			"composer dump-autoload"
+		],
 		"test:integration": "phpunit -c tests/phpunit.integration.xml tests/Integration --fail-on-warning",
 		"test:integration:dev": "phpunit -c tests/phpunit.integration.xml tests/Integration --no-coverage --fail-on-warning --stop-on-error --stop-on-failure",
 		"test:unit": "phpunit -c tests/phpunit.unit.xml tests/Unit --fail-on-warning",
 		"test:unit:dev": "phpunit -c tests/phpunit.unit.xml tests/Unit --no-coverage --fail-on-warning --stop-on-error --stop-on-failure"
+	},
+	"extra": {
+		"mozart": {
+			"dep_namespace": "OCA\\Mail\\Vendor\\",
+			"dep_directory": "/lib/Vendor/",
+			"classmap_directory": "/lib/autoload/",
+			"classmap_prefix": "NEXTCLOUDMAIL_",
+			"packages": [
+				"arthurhoaro/favicon",
+				"php-ai/php-ml"
+			]
+		}
 	}
 }

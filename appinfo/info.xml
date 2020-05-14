@@ -12,7 +12,7 @@
 - **🙈 We’re not reinventing the wheel!** Based on the great [Horde](http://horde.org) libraries.
 - **📬 Want to host your own mail server?** We don’t have to reimplement this as you could set up [Mail-in-a-Box](https://mailinabox.email)!
 	]]></description>
-	<version>1.4.0</version>
+	<version>1.4.0-alpha1</version>
 	<licence>agpl</licence>
 	<author>Christoph Wurst</author>
 	<author>Roeland Jago Douma</author>
@@ -36,17 +36,19 @@
 	<repair-steps>
 		<post-migration>
 			<step>OCA\Mail\Migration\FixCollectedAddresses</step>
-			<step>OCA\Mail\Migration\FixAccountSyncs</step>
+			<step>OCA\Mail\Migration\FixBackgroundJobs</step>
 			<step>OCA\Mail\Migration\MakeItineraryExtractorExecutable</step>
 			<step>OCA\Mail\Migration\MigrateProvisioningConfig</step>
 			<step>OCA\Mail\Migration\ProvisionAccounts</step>
 		</post-migration>
 	</repair-steps>
 	<commands>
+		<command>OCA\Mail\Command\CleanUp</command>
 		<command>OCA\Mail\Command\CreateAccount</command>
 		<command>OCA\Mail\Command\DiagnoseAccount</command>
 		<command>OCA\Mail\Command\ExportAccount</command>
 		<command>OCA\Mail\Command\SyncAccount</command>
+		<command>OCA\Mail\Command\TrainAccount</command>
 	</commands>
 	<settings>
 		<admin>OCA\Mail\Settings\AdminSettings</admin>
