@@ -39,16 +39,15 @@ const translateSpecial = (folder) => {
 		return t('mail', 'Favorites')
 	}
 	if (folder.specialUse.includes('inbox')) {
-		// TRANSLATORS: translated mail box name
-		if (folder.isUnified === true) {
+		if (folder.isPriorityInbox) {
+			// TRANSLATORS: translated mail box name
+			return t('mail', 'Priority inbox')
+		} else if (folder.isUnified) {
+			// TRANSLATORS: translated mail box name
 			return t('mail', 'All inboxes')
 		} else {
+			// TRANSLATORS: translated mail box name
 			return t('mail', 'Inbox')
-		}
-	}
-	if (folder.specialUse.includes('priority')) {
-		if (folder.isPriorityInbox === true) {
-			return t('mail', 'Priority inbox')
 		}
 	}
 	if (folder.specialUse.includes('junk')) {

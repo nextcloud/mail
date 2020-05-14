@@ -20,7 +20,13 @@
  */
 
 import mutations from '../../../store/mutations'
-import {UNIFIED_ACCOUNT_ID, UNIFIED_INBOX_UID} from '../../../store/constants'
+import {
+	PRIORITY_INBOX_ID,
+	PRIORITY_INBOX_UID,
+	UNIFIED_ACCOUNT_ID,
+	UNIFIED_INBOX_ID,
+	UNIFIED_INBOX_UID,
+} from '../../../store/constants'
 
 describe('Vuex store mutations', () => {
 	it('adds envelopes', () => {
@@ -159,7 +165,7 @@ describe('Vuex store mutations', () => {
 				[UNIFIED_ACCOUNT_ID]: {
 					accountId: UNIFIED_ACCOUNT_ID,
 					id: UNIFIED_ACCOUNT_ID,
-					folders: [],
+					folders: [UNIFIED_INBOX_UID, PRIORITY_INBOX_UID],
 				},
 			},
 			envelopes: {
@@ -173,8 +179,26 @@ describe('Vuex store mutations', () => {
 			folders: {
 				'13-INBOX': {
 					id: 'INBOX',
+					specialUse: ['inbox'],
+					specialRole: 'inbox',
 					envelopeLists: {
 						'': ['13-INBOX-123'],
+					},
+				},
+				[UNIFIED_INBOX_UID]: {
+					id: UNIFIED_INBOX_ID,
+					specialUse: ['inbox'],
+					specialRole: 'inbox',
+					envelopeLists: {
+						'': ['13-INBOX-123'],
+					},
+				},
+				[PRIORITY_INBOX_UID]: {
+					id: PRIORITY_INBOX_ID,
+					specialUse: ['inbox'],
+					specialRole: 'inbox',
+					envelopeLists: {
+						'is:starred not:important': ['13-INBOX-123'],
 					},
 				},
 			},
@@ -191,7 +215,7 @@ describe('Vuex store mutations', () => {
 				[UNIFIED_ACCOUNT_ID]: {
 					accountId: UNIFIED_ACCOUNT_ID,
 					id: UNIFIED_ACCOUNT_ID,
-					folders: [],
+					folders: [UNIFIED_INBOX_UID, PRIORITY_INBOX_UID],
 				},
 			},
 			envelopes: {
@@ -205,8 +229,26 @@ describe('Vuex store mutations', () => {
 			folders: {
 				'13-INBOX': {
 					id: 'INBOX',
+					specialUse: ['inbox'],
+					specialRole: 'inbox',
 					envelopeLists: {
 						'': [],
+					},
+				},
+				[UNIFIED_INBOX_UID]: {
+					id: UNIFIED_INBOX_ID,
+					specialUse: ['inbox'],
+					specialRole: 'inbox',
+					envelopeLists: {
+						'': [],
+					},
+				},
+				[PRIORITY_INBOX_UID]: {
+					id: PRIORITY_INBOX_ID,
+					specialUse: ['inbox'],
+					specialRole: 'inbox',
+					envelopeLists: {
+						'is:starred not:important': [],
 					},
 				},
 			},

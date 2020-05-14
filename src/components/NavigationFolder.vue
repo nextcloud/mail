@@ -151,7 +151,7 @@ export default {
 		icon() {
 			if (this.filter === 'starred') {
 				return 'icon-flagged'
-			} else if (this.folder.specialRole === 'priority') {
+			} else if (this.folder.isPriorityInbox) {
 				return 'icon-important'
 			}
 			return this.folder.specialRole ? 'icon-' + this.folder.specialRole : 'icon-folder'

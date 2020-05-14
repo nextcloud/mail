@@ -445,7 +445,6 @@ export default {
 						accountId,
 						folderId,
 						id,
-						query,
 					})
 					// Already removed from unified inbox
 				})
