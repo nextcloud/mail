@@ -25,7 +25,7 @@ declare(strict_types=1);
 namespace OCA\Mail\Service\Avatar;
 
 use Exception;
-use Gravatar\Gravatar;
+use OCA\Mail\Vendor\Gravatar\Gravatar;
 use OCP\Http\Client\IClientService;
 
 class GravatarSource implements IAvatarSource {
