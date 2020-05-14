@@ -12,6 +12,7 @@ $config
 	->ignoreVCSIgnored(true)
 	->notPath('build')
 	->notPath('l10n')
+	->notPath('lib/Vendor')
 	->notPath('src')
 	->notPath('vendor')
 	->in(__DIR__);
