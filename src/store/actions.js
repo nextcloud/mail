@@ -128,7 +128,7 @@ export default {
 	patchAccount({commit}, {account, data}) {
 		return patchAccount(account, data).then((account) => {
 			console.debug('account patched', account, data)
-			commit('editAccount', data)
+			commit('patchAccount', {account, data})
 			return account
 		})
 	},

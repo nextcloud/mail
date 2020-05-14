@@ -21,6 +21,7 @@
 
 <template>
 	<AppNavigationItem
+		v-if="visible"
 		:id="genId(folder)"
 		:key="genId(folder)"
 		:allow-collapse="true"
@@ -135,6 +136,12 @@ export default {
 		}
 	},
 	computed: {
+		visible() {
+			return (
+				this.account.showSubscribedOnly === false ||
+				(this.folder.attributes && this.folder.attributes.includes('\\subscribed'))
+			)
+		},
 		title() {
 			if (this.filter === 'starred') {
 				// Little hack to trick the translation logic into a different path

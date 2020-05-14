@@ -185,6 +185,7 @@ class AccountsController extends Controller {
 	 * @param int $accountId
 	 * @param string|null $editorMode
 	 * @param int|null $order
+	 * @param bool|null $showSubscribedOnly
 	 *
 	 * @return JSONResponse
 	 *
@@ -192,7 +193,8 @@ class AccountsController extends Controller {
 	 */
 	public function patchAccount(int $accountId,
 								 string $editorMode = null,
-								 int $order = null): JSONResponse {
+								 int $order = null,
+								 bool $showSubscribedOnly = null): JSONResponse {
 		$account = $this->accountService->find($this->currentUserId, $accountId);
 
 		if ($account === null) {
@@ -205,6 +207,9 @@ class AccountsController extends Controller {
 		}
 		if ($order !== null) {
 			$dbAccount->setOrder($order);
+		}
+		if ($showSubscribedOnly !== null) {
+			$dbAccount->setShowSubscribedOnly($showSubscribedOnly);
 		}
 		return new JSONResponse(
 			$this->accountService->save($dbAccount)->toJson()

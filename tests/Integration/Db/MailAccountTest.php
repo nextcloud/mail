@@ -63,6 +63,7 @@ class MailAccountTest extends TestCase {
 			'editorMode' => 'html',
 			'provisioned' => false,
 			'order' => 13,
+			'showSubscribedOnly' => null,
 		], $a->toJson());
 	}
 
@@ -83,6 +84,7 @@ class MailAccountTest extends TestCase {
 			'editorMode' => null,
 			'provisioned' => false,
 			'order' => null,
+			'showSubscribedOnly' => null,
 		];
 		$a = new MailAccount($expected);
 		// TODO: fix inconsistency
