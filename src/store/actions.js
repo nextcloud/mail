@@ -628,6 +628,7 @@ export default {
 		})
 	},
 	deleteMessage({getters, commit}, {accountId, folderId, id, query}) {
+		logger.debug('deleting message', {accountId, folderId, id, query})
 		commit('removeEnvelope', {accountId, folderId, id, query})
 
 		return deleteMessage(accountId, folderId, id, query)

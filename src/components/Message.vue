@@ -124,6 +124,13 @@ export default {
 		Modal,
 		Popover,
 	},
+	props: {
+		searchQuery: {
+			type: String,
+			required: true,
+			default: undefined,
+		},
+	},
 	data() {
 		return {
 			loading: true,
@@ -136,7 +143,6 @@ export default {
 			rawMessage: '',
 			sourceLoading: false,
 			showSource: false,
-			searchQuery: undefined,
 		}
 	},
 	computed: {
