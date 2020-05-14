@@ -137,46 +137,46 @@ export default {
 	flagEnvelope(state, {envelope, flag, value}) {
 		envelope.flags[flag] = value
 	},
-	removeEnvelope(state, {accountId, folderId, id, query}) {
+	removeEnvelope(state, {accountId, folderId, id}) {
 		const folder = state.folders[normalizedFolderId(accountId, folderId)]
-		const list = folder.envelopeLists[normalizedEnvelopeListId(query)]
-		if (!list) {
-			console.warn(
-				`envelope list for {${normalizedEnvelopeListId(
-					query
-				)}} does not exist for account ${accountId} and folder ${folderId}`
-			)
+		for (const listId in folder.envelopeLists) {
+			if (!Object.hasOwnProperty.call(folder.envelopeLists, listId)) {
+				continue
+			}
+			const list = folder.envelopeLists[listId]
+			const idx = list.indexOf(normalizedMessageId(accountId, folderId, id))
+			if (idx < 0) {
+				continue
+			}
+			console.debug('envelope removed from mailbox', accountId, folder.id, id, listId)
+			list.splice(idx, 1)
 		}
-		const idx = list.indexOf(normalizedMessageId(accountId, folderId, id))
-		if (idx < 0) {
-			console.warn('envelope does not exist', accountId, folder.id, id)
-			return
-		}
-		list.splice(idx, 1)
 
-		const unifiedAccount = state.accounts[UNIFIED_ACCOUNT_ID]
-		unifiedAccount.folders
+		state.accounts[UNIFIED_ACCOUNT_ID].folders
 			.map((fId) => state.folders[fId])
 			.filter((f) => f.specialRole && f.specialRole === folder.specialRole)
 			.forEach((folder) => {
-				const list = folder.envelopeLists[normalizedEnvelopeListId(query)]
-				if (!list) {
-					console.warn(
-						`envelope list for {${normalizedEnvelopeListId(
-							query
-						)}} does not exist for unified account ${accountId} and folder ${folderId}`
-					)
-					return
+				for (const listId in folder.envelopeLists) {
+					if (!Object.hasOwnProperty.call(folder.envelopeLists, listId)) {
+						continue
+					}
+					const list = folder.envelopeLists[listId]
+					const idx = list.indexOf(normalizedMessageId(accountId, folderId, id))
+					if (idx < 0) {
+						console.warn(
+							'envelope does not exist in unified mailbox',
+							accountId,
+							folder.id,
+							id,
+							listId,
+							list
+						)
+						continue
+					}
+					console.debug('envelope removed from unified mailbox', accountId, folder.id, id, listId)
+					list.splice(idx, 1)
 				}
-				const idx = list.indexOf(normalizedMessageId(accountId, folderId, id))
-				if (idx < 0) {
-					console.warn('envelope does not exist in unified mailbox', accountId, folder.id, id)
-					return
-				}
-				list.splice(idx, 1)
 			})
-
-		Vue.delete(list, normalizedMessageId(accountId, folderId, id))
 	},
 	addMessage(state, {accountId, folderId, message}) {
 		const uid = normalizedMessageId(accountId, folderId, message.id)
