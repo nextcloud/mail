@@ -31,6 +31,7 @@ use ChristophWurst\KItinerary\Flatpak\FlatpakAdapter;
 use ChristophWurst\KItinerary\Itinerary;
 use ChristophWurst\KItinerary\ItineraryExtractor as Extractor;
 use ChristophWurst\KItinerary\Bin\BinaryAdapter;
+use ChristophWurst\KItinerary\Sys\SysAdapter;
 use OCA\Mail\Integration\Psr\LoggerAdapter;
 use OCP\ILogger;
 
@@ -45,14 +46,19 @@ class ItineraryExtractor {
 	/** @var ILogger */
 	private $logger;
 
+	/** @var SysAdapter */
+	private $sysAdapter;
+
 	/** @var Adapter */
 	private $adapter;
 
 	public function __construct(BinaryAdapter $binAdapter,
 								FlatpakAdapter $flatpakAdapter,
+								SysAdapter $sysAdapter,
 								ILogger $logger) {
 		$this->binAdapter = $binAdapter;
 		$this->flatpakAdapter = $flatpakAdapter;
+		$this->sysAdapter = $sysAdapter;
 		$this->logger = $logger;
 	}
 
@@ -63,6 +69,10 @@ class ItineraryExtractor {
 		}
 		if ($this->flatpakAdapter->isAvailable()) {
 			return $this->flatpakAdapter;
+		}
+		if ($this->sysAdapter->isAvailable()) {
+			$this->sysAdapter->setLogger(new LoggerAdapter($this->logger));
+			return $this->sysAdapter;
 		}
 		return null;
 	}
