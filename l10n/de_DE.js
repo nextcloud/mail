@@ -45,7 +45,7 @@ OC.L10N.register(
     "Subject" : "Betreff",
     "Subject …" : "Betreff…",
     "This message came from a noreply address so your reply will probably not be read." : "Diese Nachricht stammt von einer Niachtantworten-Adresse, daher wird Ihre Antwort wahrscheinlich nicht gelesen werden.",
-    "The following recipients do not have a PGP key: {recipients}." : "Die folgenden Empfänger haben keinen PGP Schlüssel: {recipients}.",
+    "The following recipients do not have a PGP key: {recipients}." : "Die folgenden Empfänger haben keinen PGP-Schlüssel: {recipients}.",
     "Write message …" : "Nachricht verfassen...",
     "Saving draft …" : "Speichere Entwurf …",
     "Draft saved" : "Entwurf gespeichert",

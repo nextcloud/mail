@@ -50,6 +50,7 @@ OC.L10N.register(
     "Other" : "Інший",
     "to" : "до",
     "Reply" : "Відповісти",
+    "Forward" : "Вперед",
     "Unnamed" : "Без назви",
     "Choose a folder to store the attachment in" : "Оберіть теку для зберігання вкладень",
     "Settings" : "Налаштування",
