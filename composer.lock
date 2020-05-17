@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "9d79433615022d8b2ddea57f1fffbd8b",
+    "content-hash": "ab5df23f5e6aa039abbb5dc1cdb9de2d",
     "packages": [
         {
             "name": "arthurhoaro/favicon",
@@ -1096,29 +1096,28 @@
         },
         {
             "name": "php-ai/php-ml",
-            "version": "0.8.0",
+            "version": "0.9.0",
             "source": {
                 "type": "git",
                 "url": "https://github.com/php-ai/php-ml.git",
-                "reference": "5e02b893e904761cd7e2415b11778cd421494c07"
+                "reference": "aae3005aa784ab55ad465d8ce0b25621bb343d7a"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/php-ai/php-ml/zipball/5e02b893e904761cd7e2415b11778cd421494c07",
-                "reference": "5e02b893e904761cd7e2415b11778cd421494c07",
+                "url": "https://api.github.com/repos/php-ai/php-ml/zipball/aae3005aa784ab55ad465d8ce0b25621bb343d7a",
+                "reference": "aae3005aa784ab55ad465d8ce0b25621bb343d7a",
                 "shasum": ""
             },
             "require": {
-                "php": "^7.1"
+                "php": "^7.2"
             },
             "require-dev": {
-                "phpbench/phpbench": "^0.14.0",
-                "phpstan/phpstan-phpunit": "^0.10",
-                "phpstan/phpstan-shim": "^0.10",
-                "phpstan/phpstan-strict-rules": "^0.10",
-                "phpunit/phpunit": "^7.0.0",
-                "symplify/coding-standard": "^5.1",
-                "symplify/easy-coding-standard": "^5.1"
+                "phpbench/phpbench": "^0.16.0",
+                "phpstan/phpstan": "^0.12",
+                "phpstan/phpstan-phpunit": "^0.12",
+                "phpstan/phpstan-strict-rules": "^0.12",
+                "phpunit/phpunit": "^8.0",
+                "symplify/easy-coding-standard": "^6.0"
             },
             "type": "library",
             "autoload": {
@@ -1147,7 +1146,7 @@
                 "machine learning",
                 "pattern recognition"
             ],
-            "time": "2019-03-20T22:22:45+00:00"
+            "time": "2020-05-15T05:44:34+00:00"
         },
         {
             "name": "psr/container",

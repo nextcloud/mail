@@ -39,7 +39,7 @@
 		"pear-pear.horde.org/horde_util": "^2.5.8@stable",
 		"pear-pear.horde.org/horde_smtp": "^1.9.5@stable",
 		"psr/log": "^1",
-		"php-ai/php-ml": "^0.8.0"
+		"php-ai/php-ml": "^0.9.0"
 	},
 	"require-dev": {
 		"roave/security-advisories": "dev-master",
