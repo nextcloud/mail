@@ -187,7 +187,7 @@ OC.L10N.register(
     "Priority inbox" : "Vorrangiger Posteingang",
     "All inboxes" : "Alle Posteingänge",
     "Inbox" : "Posteingang",
-    "Junk" : "Spam",
+    "Junk" : "Junk",
     "Sent" : "Gesendet",
     "Trash" : "Papierkorb",
     "Error while sharing file" : "Fehler beim Teilen der Datei",
