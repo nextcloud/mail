@@ -125,9 +125,9 @@ class StatisticsDao {
 		$select = $qb->select($qb->func()->count('*'))
 			->from('mail_recipients', 'r')
 			->join('r', 'mail_messages', 'm', $qb->expr()->eq('m.id', 'r.message_id', IQueryBuilder::PARAM_INT))
-			->where($qb->expr()->eq('r.type', $qb->createNamedParameter(Address::TYPE_FROM), IQueryBuilder::PARAM_INT))
-			->andWhere($qb->expr()->eq('m.mailbox_id', $qb->createNamedParameter($mb->getId(), IQueryBuilder::PARAM_INT)))
-			->andWhere($qb->expr()->eq('r.email', $qb->createNamedParameter($email, IQueryBuilder::PARAM_STR_ARRAY), IQueryBuilder::PARAM_STR_ARRAY));
+			->where($qb->expr()->eq('r.type', $qb->createNamedParameter(Address::TYPE_FROM, IQueryBuilder::PARAM_INT), IQueryBuilder::PARAM_INT))
+			->andWhere($qb->expr()->eq('m.mailbox_id', $qb->createNamedParameter($mb->getId(), IQueryBuilder::PARAM_INT), IQueryBuilder::PARAM_INT))
+			->andWhere($qb->expr()->eq('r.email', $qb->createNamedParameter($email, IQueryBuilder::PARAM_STR), IQueryBuilder::PARAM_STR));
 		$result = $select->execute();
 		$cnt = $result->fetchColumn();
 		$result->closeCursor();
