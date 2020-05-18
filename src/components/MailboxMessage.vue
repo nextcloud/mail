@@ -35,9 +35,10 @@
 						class="nameimportant"
 						:account="unifiedAccount"
 						:folder="unifiedInbox"
-						:paginate="false"
 						:search-query="appendToSearch('is:important')"
+						:paginate="'manual'"
 						:is-priority-inbox="true"
+						:initial-page-size="5"
 						:collapsible="true"
 						:bus="bus"
 					/>
@@ -46,10 +47,10 @@
 						class="namestarred"
 						:account="unifiedAccount"
 						:folder="unifiedInbox"
-						:paginate="false"
 						:search-query="appendToSearch('is:starred not:important')"
+						:paginate="'manual'"
 						:is-priority-inbox="true"
-						:collapsible="true"
+						:initial-page-size="5"
 						:bus="bus"
 					/>
 					<SectionTitle class="app-content-list-item other" :name="t('mail', 'Other')" />
