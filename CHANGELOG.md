@@ -1,7 +1,7 @@
 # Changelog
 All notable changes to this project will be documented in this file.
 
-## 1.3.5 - unreleased
+## 1.3.5 - 2020-05-18
 ### Fixed
 - Mailvelope integration. Make sure to enable the API mode in your settings.
 - Endless initial sync due to empty partial page
