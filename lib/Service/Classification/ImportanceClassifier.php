@@ -46,8 +46,21 @@ use function array_combine;
 use function array_filter;
 use function array_map;
 use function array_slice;
+use function count;
 use function json_encode;
 
+/**
+ * Classify importance of messages
+ *
+ * This services uses machine learning techniques to guess the importance of in-
+ * coming messages. The training will be done in the background, so the actual
+ * classification can happen fast.
+ *
+ * To overcome the "cold start" problem there is also a fall-back mechanism of
+ * rule-based classification that is active as long as there are too few important
+ * messages to learn meaningful patterns of what the users typically considers
+ * as important.
+ */
 class ImportanceClassifier {
 
 	/**
@@ -73,6 +86,13 @@ class ImportanceClassifier {
 	private const LABEL_NOT_IMPORTANT = 'ni';
 
 	/**
+	 * The minimum number of important messages. Without those the unsupervised
+	 * training would yield random classification. Hence we switch to a rule-based
+	 * classifier. This is known as the "cold start" problem.
+	 */
+	private const COLD_START_THRESHOLD = 20;
+
+	/**
 	 * The maximum number of data sets to train the classifier with
 	 */
 	private const MAX_TRAINING_SET_SIZE = 1000;
@@ -92,6 +112,9 @@ class ImportanceClassifier {
 	/** @var PerformanceLogger */
 	private $performanceLogger;
 
+	/** @var ImportanceRulesClassifier */
+	private $rulesClassifier;
+
 	/** @var ILogger */
 	private $logger;
 
@@ -100,12 +123,14 @@ class ImportanceClassifier {
 								CompositeExtractor $extractor,
 								PersistenceService $persistenceService,
 								PerformanceLogger $performanceLogger,
+								ImportanceRulesClassifier $rulesClassifier,
 								ILogger $logger) {
 		$this->mailboxMapper = $mailboxMapper;
 		$this->messageMapper = $messageMapper;
 		$this->extractor = $extractor;
 		$this->persistenceService = $persistenceService;
 		$this->performanceLogger = $performanceLogger;
+		$this->rulesClassifier = $rulesClassifier;
 		$this->logger = $logger;
 	}
 
@@ -143,7 +168,7 @@ class ImportanceClassifier {
 		$importantMessages = array_filter($messages, function (Message $message) {
 			return $message->getFlagImportant();
 		});
-		if (empty($importantMessages)) {
+		if (count($importantMessages) < self::COLD_START_THRESHOLD) {
 			$this->logger->warning('not enough messages to train a classifier');
 			$perf->end();
 			return;
@@ -259,8 +284,20 @@ class ImportanceClassifier {
 	public function classifyImportance(Account $account, Mailbox $mailbox, array $messages): array {
 		$estimator = $this->persistenceService->loadLatest($account);
 		if ($estimator === null) {
-			// TODO: fallback to rules-based classification
-			return [];
+			$predictions = $this->rulesClassifier->classifyImportance(
+				$account,
+				$this->getIncomingMailboxes($account),
+				$this->getOutgoingMailboxes($account),
+				$messages
+			);
+			return array_combine(
+				array_map(function (Message $m) {
+					return $m->getUid();
+				}, $messages),
+				array_map(function (Message $m) use ($predictions) {
+					return ($predictions[$m->getUid()] ?? false) === true;
+				}, $messages)
+			);
 		}
 
 		$features = $this->getFeaturesAndImportance(

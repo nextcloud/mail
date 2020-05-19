@@ -62,6 +62,11 @@ class SentMessagesExtractor implements IExtractor {
 	}
 
 	public function extract(string $email): float {
-		return ($this->messagesSent[$email] ?? 0) / $this->messagesSentTotal;
+		if (($messagesSentTotal = $this->messagesSentTotal) === 0) {
+			// Prevent div by 0
+			return 0;
+		}
+
+		return ($this->messagesSent[$email] ?? 0) / $messagesSentTotal;
 	}
 }
