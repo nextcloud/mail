@@ -16,12 +16,7 @@
 				:checked="useDataCollection"
 				@change="onToggleCollectData"
 			/>
-			<label for="data-collection-toggle">{{
-				t(
-					'mail',
-					'Allow the app to collect data about your interactions. Based on this data, the app will adapt to your preferences. The data will only be stored locally.'
-				)
-			}}</label>
+			<label for="data-collection-toggle">{{ text }}</label>
 		</p>
 
 		<p v-if="loadingAvatarSettings" class="app-settings avatar-settings">
@@ -60,10 +55,8 @@ export default {
 	data() {
 		return {
 			loadingAvatarSettings: false,
-			text: t(
-				'mail',
-				'Allow the app to collect data about your interactions. Based on this data, the app will adapt to your preferences. The data will only be stored locally.'
-			),
+			// eslint-disable-next-line
+			text: t('mail', 'Allow the app to collect data about your interactions. Based on this data, the app will adapt to your preferences. The data will only be stored locally.'),
 			loadingOptOutSettings: false,
 		}
 	},
