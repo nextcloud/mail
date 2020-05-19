@@ -604,6 +604,46 @@ export default {
 			})
 		})
 	},
+	markEnvelopeFavoriteOrUnfavorite({commit, getters}, {envelope, favFlag}) {
+		// Change immediately and switch back on error
+		const oldState = envelope.flags.flagged
+		commit('flagEnvelope', {
+			envelope,
+			flag: 'flagged',
+			value: favFlag,
+		})
+
+		setEnvelopeFlag(envelope.accountId, envelope.folderId, envelope.id, 'flagged', favFlag).catch((e) => {
+			console.error('could not favorite/unfavorite message ' + envelope.uid, e)
+
+			// Revert change
+			commit('flagEnvelope', {
+				envelope,
+				flag: 'flagged',
+				value: oldState,
+			})
+		})
+	},
+	markEnvelopeSeenOrUnseen({commit, getters}, {envelope, seenFlag}) {
+		// Change immediately and switch back on error
+		const oldState = envelope.flags.unseen
+		commit('flagEnvelope', {
+			envelope,
+			flag: 'unseen',
+			value: seenFlag,
+		})
+
+		setEnvelopeFlag(envelope.accountId, envelope.folderId, envelope.id, 'unseen', seenFlag).catch((e) => {
+			console.error('could not mark message ' + envelope.uid + ' seen/unseen', e)
+
+			// Revert change
+			commit('flagEnvelope', {
+				envelope,
+				flag: 'unseen',
+				value: oldState,
+			})
+		})
+	},
 	fetchMessage({commit}, uid) {
 		const {accountId, folderId, id} = parseUid(uid)
 		return fetchMessage(accountId, folderId, id).then((message) => {

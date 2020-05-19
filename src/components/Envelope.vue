@@ -1,5 +1,5 @@
 <template>
-	<router-link class="app-content-list-item" :class="{seen: data.flags.seen, draft}" :to="link">
+	<router-link class="app-content-list-item" :class="{seen: data.flags.seen, draft, selected: selected}" :to="link">
 		<div
 			v-if="folder.isUnified"
 			class="mail-message-account-color"
@@ -26,6 +26,10 @@
 		></div>
 		<div class="app-content-list-item-icon">
 			<Avatar :display-name="addresses" :email="avatarEmail" />
+			<p v-if="selectMode" class="app-content-list-item-select-checkbox">
+				<input :id="`select-checkbox-${data.uid}`" class="checkbox" type="checkbox" :checked="selected" />
+				<label :for="`select-checkbox-${data.uid}`" @click.prevent="toggleSelected" />
+			</p>
 		</div>
 		<div class="app-content-list-item-line-one" :title="addresses">
 			{{ addresses }}
@@ -53,6 +57,9 @@
 			}}</ActionButton>
 			<ActionButton icon="icon-junk" @click.prevent="onToggleJunk">{{
 				data.flags.junk ? t('mail', 'Mark not spam') : t('mail', 'Mark as spam')
+			}}</ActionButton>
+			<ActionButton icon="icon-checkmark" :close-after-click="true" @click.prevent="onSelect">{{
+				selected ? t('mail', 'Unselect') : t('mail', 'Select')
 			}}</ActionButton>
 			<ActionButton icon="icon-delete" @click.prevent="onDelete">{{ t('mail', 'Delete') }}</ActionButton>
 		</Actions>
@@ -84,6 +91,14 @@ export default {
 		folder: {
 			type: Object,
 			required: true,
+		},
+		selectMode: {
+			type: Boolean,
+			default: false,
+		},
+		selected: {
+			type: Boolean,
+			default: false,
 		},
 	},
 	data() {
@@ -156,6 +171,12 @@ export default {
 		},
 	},
 	methods: {
+		onSelect() {
+			this.$emit('update:selected', true)
+		},
+		toggleSelected() {
+			this.$emit('update:selected', !this.selected)
+		},
 		onToggleFlagged() {
 			this.$store.dispatch('toggleEnvelopeFlagged', this.data)
 		},
@@ -216,7 +237,17 @@ export default {
 	}
 }
 
-.app-content-list-item:not(.seen) {
+.app-content-list-item .app-content-list-item-select-checkbox {
+	display: inline-block;
+	vertical-align: middle;
+	position: absolute;
+	left: 22px;
+	top: 20px;
+	z-index: 50; // same as icon-starred
+}
+
+.app-content-list-item.selected {
+	background-color: var(--color-background-dark);
 	font-weight: bold;
 }
 .app-content-list-item-star.junk {
@@ -225,6 +256,9 @@ export default {
 }
 .app-content-list-item.draft .app-content-list-item-line-two {
 	font-style: italic;
+}
+.app-content-list-item.active {
+	background-color: var(--color-primary-light);
 }
 
 .icon-reply,
