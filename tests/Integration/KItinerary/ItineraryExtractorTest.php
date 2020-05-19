@@ -27,6 +27,7 @@ namespace OCA\Mail\Tests\Unit\KItinerary;
 
 use ChristophWurst\KItinerary\Bin\BinaryAdapter;
 use ChristophWurst\KItinerary\Flatpak\FlatpakAdapter;
+use ChristophWurst\KItinerary\Sys\SysAdapter;
 use ChristophWurst\Nextcloud\Testing\TestCase;
 use OCA\Mail\Integration\KItinerary\ItineraryExtractor;
 use OCP\ILogger;
@@ -40,6 +41,9 @@ class ItineraryExtractorTest extends TestCase {
 	/** @var FlatpakAdapter|MockObject */
 	private $flatpakAdapter;
 
+	/** @var SysAdapter|MockObject */
+	private $sysAdapter;
+
 	/** @var ILogger|MockObject */
 	private $logger;
 
@@ -51,11 +55,13 @@ class ItineraryExtractorTest extends TestCase {
 
 		$this->binaryAdapter = $this->createMock(BinaryAdapter::class);
 		$this->flatpakAdapter = $this->createMock(FlatpakAdapter::class);
+		$this->sysAdapter = $this->createMock(SysAdapter::class);
 		$this->logger = $this->createMock(ILogger::class);
 
 		$this->extractor = new ItineraryExtractor(
 			$this->binaryAdapter,
 			$this->flatpakAdapter,
+			$this->sysAdapter,
 			$this->logger
 		);
 	}
@@ -95,6 +101,20 @@ class ItineraryExtractorTest extends TestCase {
 			->method('isAvailable')
 			->willReturn(true);
 		$this->flatpakAdapter->expects($this->once())
+			->method('extractFromString');
+
+		$itinerary = $this->extractor->extract('data');
+
+		$this->assertEquals([], $itinerary->jsonSerialize());
+	}
+
+	public function testSysAvailable() {
+		$this->binaryAdapter->expects($this->never())
+			->method('extractFromString');
+		$this->sysAdapter->expects($this->once())
+			->method('isAvailable')
+			->willReturn(true);
+		$this->sysAdapter->expects($this->once())
 			->method('extractFromString');
 
 		$itinerary = $this->extractor->extract('data');
