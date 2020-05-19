@@ -67,6 +67,8 @@ use OCP\AppFramework\Db\Entity;
  * @method void setProvisioned(bool $provisioned)
  * @method int getOrder()
  * @method void setOrder(int $order)
+ * @method bool getShowSubscribedOnly()
+ * @method void setShowSubscribedOnly(bool $showSubscribedOnly)
  */
 class MailAccount extends Entity {
 	protected $userId;
@@ -87,6 +89,7 @@ class MailAccount extends Entity {
 	protected $editorMode;
 	protected $provisioned;
 	protected $order;
+	protected $showSubscribedOnly;
 
 	/**
 	 * @param array $params
@@ -133,12 +136,16 @@ class MailAccount extends Entity {
 		if (isset($params['smtpPassword'])) {
 			$this->setOutboundPassword($params['smtpPassword']);
 		}
+		if (isset($params['showSubscribedOnly'])) {
+			$this->setShowSubscribedOnly($params['showSubscribedOnly']);
+		}
 
 		$this->addType('inboundPort', 'integer');
 		$this->addType('outboundPort', 'integer');
 		$this->addType('lastMailboxSync', 'integer');
 		$this->addType('provisioned', 'bool');
 		$this->addType('order', 'integer');
+		$this->addType('showSubscribedOnly', 'boolean');
 	}
 
 	/**
@@ -157,6 +164,7 @@ class MailAccount extends Entity {
 			'signature' => $this->getSignature(),
 			'editorMode' => $this->getEditorMode(),
 			'provisioned' => $this->getProvisioned(),
+			'showSubscribedOnly' => $this->getShowSubscribedOnly(),
 		];
 
 		if (!is_null($this->getOutboundHost())) {

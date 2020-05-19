@@ -37,6 +37,13 @@
 			<ActionRouter :to="settingsRoute" icon="icon-settings">
 				{{ t('mail', 'Edit account') }}
 			</ActionRouter>
+			<ActionCheckbox
+				:checked="account.showSubscribedOnly"
+				:disabled="savingShowOnlySubscribed"
+				@update:checked="changeShowSubscribedOnly"
+			>
+				{{ t('mail', 'Show only subscribed folders') }}
+			</ActionCheckbox>
 			<ActionInput icon="icon-add" @submit="createFolder">
 				{{ t('mail', 'Add folder') }}
 			</ActionInput>
@@ -58,6 +65,7 @@ import AppNavigationItem from '@nextcloud/vue/dist/Components/AppNavigationItem'
 import AppNavigationIconBullet from '@nextcloud/vue/dist/Components/AppNavigationIconBullet'
 import ActionRouter from '@nextcloud/vue/dist/Components/ActionRouter'
 import ActionButton from '@nextcloud/vue/dist/Components/ActionButton'
+import ActionCheckbox from '@nextcloud/vue/dist/Components/ActionCheckbox'
 import ActionInput from '@nextcloud/vue/dist/Components/ActionInput'
 import {generateUrl} from '@nextcloud/router'
 
@@ -71,6 +79,7 @@ export default {
 		AppNavigationIconBullet,
 		ActionRouter,
 		ActionButton,
+		ActionCheckbox,
 		ActionInput,
 	},
 	props: {
@@ -93,6 +102,7 @@ export default {
 			loading: {
 				delete: false,
 			},
+			savingShowOnlySubscribed: false,
 		}
 	},
 	computed: {
@@ -174,6 +184,25 @@ export default {
 			this.$store
 				.dispatch('moveAccount', {account: this.account})
 				.catch((error) => logger.error('could not move account down', {error}))
+		},
+		changeShowSubscribedOnly(onlySubscribed) {
+			this.savingShowOnlySubscribed = true
+			this.$store
+				.dispatch('patchAccount', {
+					account: this.account,
+					data: {
+						showSubscribedOnly: onlySubscribed,
+					},
+				})
+				.then(() => {
+					this.savingShowOnlySubscribed = false
+					logger.info('show only subscribed folders updated to ' + onlySubscribed)
+				})
+				.catch((error) => {
+					logger.error('could not update subscription mode', {error})
+					this.savingShowOnlySubscribed = false
+					throw error
+				})
 		},
 	},
 }

@@ -56,7 +56,7 @@ class FolderMapper {
 	 */
 	public function getFolders(Account $account, Horde_Imap_Client_Socket $client,
 							   string $pattern = '*'): array {
-		$mailboxes = $client->listMailboxes($pattern, Horde_Imap_Client::MBOX_ALL, [
+		$mailboxes = $client->listMailboxes($pattern, Horde_Imap_Client::MBOX_ALL_SUBSCRIBED, [
 			'delimiter' => true,
 			'attributes' => true,
 			'special_use' => true,
@@ -82,7 +82,7 @@ class FolderMapper {
 								 string $name): Folder {
 		$client->createMailbox($name);
 
-		$list = $client->listMailboxes($name, Horde_Imap_Client::MBOX_ALL, [
+		$list = $client->listMailboxes($name, Horde_Imap_Client::MBOX_ALL_SUBSCRIBED, [
 			'delimiter' => true,
 			'attributes' => true,
 			'special_use' => true,

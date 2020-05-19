@@ -70,6 +70,9 @@ export default {
 	editAccount(state, account) {
 		Vue.set(state.accounts, account.id, Object.assign({}, state.accounts[account.id], account))
 	},
+	patchAccount(state, {account, data}) {
+		Vue.set(state.accounts, account.id, Object.assign({}, state.accounts[account.id], data))
+	},
 	saveAccountsOrder(state, {account, order}) {
 		Vue.set(account, 'order', order)
 		Vue.set(

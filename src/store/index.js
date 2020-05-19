@@ -48,6 +48,7 @@ export default new Vuex.Store({
 				collapsed: false,
 				emailAddress: '',
 				name: '',
+				showSubscribedOnly: false,
 			},
 		},
 		accountList: [UNIFIED_ACCOUNT_ID],
@@ -55,6 +56,7 @@ export default new Vuex.Store({
 			[UNIFIED_INBOX_UID]: {
 				id: UNIFIED_INBOX_ID,
 				accountId: 0,
+				attributes: ['\\subscribed'],
 				isUnified: true,
 				specialUse: ['inbox'],
 				specialRole: 'inbox',
@@ -65,6 +67,7 @@ export default new Vuex.Store({
 			[PRIORITY_INBOX_UID]: {
 				id: PRIORITY_INBOX_ID,
 				accountId: 0,
+				attributes: ['\\subscribed'],
 				isPriorityInbox: true,
 				specialUse: ['inbox'],
 				specialRole: 'inbox',

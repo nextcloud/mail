@@ -42,7 +42,12 @@ export default {
 			return 'collapse-' + this.account.id
 		},
 		title() {
-			return this.account.collapsed ? t('mail', 'Show all folders') : t('mail', 'Collapse folders')
+			if (this.account.collapsed && this.account.showSubscribedOnly) {
+				return t('mail', 'Show all subscribed folders')
+			} else if (this.account.collapsed && !this.account.showSubscribedOnly) {
+				return t('mail', 'Show all folders')
+			}
+			return t('mail', 'Collapse folders')
 		},
 	},
 	methods: {
