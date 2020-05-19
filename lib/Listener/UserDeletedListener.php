@@ -30,7 +30,7 @@ use OCA\Mail\Service\AccountService;
 use OCP\EventDispatcher\Event;
 use OCP\EventDispatcher\IEventListener;
 use OCP\ILogger;
-use OCP\User\Events\BeforeUserDeletedEvent;
+use OCP\User\Events\UserDeletedEvent;
 
 class UserDeletedListener implements IEventListener {
 
@@ -47,7 +47,7 @@ class UserDeletedListener implements IEventListener {
 	}
 
 	public function handle(Event $event): void {
-		if (!($event instanceof BeforeUserDeletedEvent)) {
+		if (!($event instanceof UserDeletedEvent)) {
 			// Unrelated
 			return;
 		}
