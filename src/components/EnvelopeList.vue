@@ -11,7 +11,7 @@
 			/>
 			<div
 				v-if="collapsible && envelopes.length > collapseThreshold"
-				:key="'list-collapse-' + this.searchQuery"
+				:key="'list-collapse-' + searchQuery"
 				class="collapse-expand"
 				@click="$emit('update:collapsed', !collapsed)"
 			>
