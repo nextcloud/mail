@@ -77,6 +77,8 @@ OC.L10N.register(
     "Mark important" : "Markera som viktigt",
     "Mark unread" : "Markera som oläst",
     "Mark read" : "Markera som läst",
+    "Unselect" : "Avmarkera",
+    "Select" : "Välj",
     "Delete" : "Ta bort",
     "Blind copy recipients only" : "Endast mottagare för blindkopior",
     "Report this bug" : "Rapportera detta fel",

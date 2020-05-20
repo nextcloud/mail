@@ -83,6 +83,8 @@ OC.L10N.register(
     "Mark read" : "Пометить как прочитанное",
     "Mark not spam" : "Пометить как не являющееся спамом",
     "Mark as spam" : "Пометить как спам",
+    "Unselect" : "Снять выбор",
+    "Select" : "Выбрать",
     "Delete" : "Удалить",
     "Blind copy recipients only" : "Только получатели скрытой копии",
     "Show all {nr} messages" : "Показать все {nr} сообщения",

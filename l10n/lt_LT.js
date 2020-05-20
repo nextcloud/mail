@@ -70,6 +70,8 @@ OC.L10N.register(
     "Mark important" : "Žymėti kaip svarbų",
     "Mark unread" : "Žymėti kaip neskaitytą",
     "Mark read" : "Žymėti kaip skaitytą",
+    "Unselect" : "Nuimti žymėjimą",
+    "Select" : "Pasirinkti",
     "Delete" : "Ištrinti",
     "Report this bug" : "Pranešti apie šią klaidą",
     "Could not open mailbox" : "Nepavyko atverti pašto dėžutės",

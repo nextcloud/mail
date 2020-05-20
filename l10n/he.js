@@ -75,6 +75,8 @@ OC.L10N.register(
     "Mark important" : "סימון כחשוב",
     "Mark unread" : "סימון כלא נקרא",
     "Mark read" : "סימון כנקרא",
+    "Unselect" : "ביטול בחירה",
+    "Select" : "בחירה",
     "Delete" : "מחיקה",
     "Blind copy recipients only" : "נמענים נסתרים בלבד",
     "Report this bug" : "דיווח על התקלה הזו",

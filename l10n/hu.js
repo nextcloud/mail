@@ -72,6 +72,8 @@ OC.L10N.register(
     "Mark important" : "Fontosnak jelöl",
     "Mark unread" : "Olvasatlannak jelöl",
     "Mark read" : "Olvasottnak jelöl",
+    "Unselect" : "Kiválasztás megszüntetése",
+    "Select" : "Kijelölés",
     "Delete" : "Törlés",
     "Report this bug" : "A hiba bejelentése",
     "Could not open mailbox" : "Mailbox nem nyitható meg",

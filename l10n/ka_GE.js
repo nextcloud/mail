@@ -37,6 +37,7 @@ OC.L10N.register(
     "Unfavorite" : "რჩეულებიდან ამოშლა",
     "Favorite" : "რჩეული",
     "Mark read" : "მონიშნეთ წაკითხულად",
+    "Select" : "არჩევა",
     "Delete" : "გაუქმება",
     "Important" : "აუცილებელი",
     "Favorites" : "რჩეულები",

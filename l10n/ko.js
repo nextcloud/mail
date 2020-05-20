@@ -43,6 +43,8 @@ OC.L10N.register(
     "Unfavorite" : "즐겨찾기에서 삭제",
     "Favorite" : "즐겨찾기",
     "Mark read" : "읽은 상태로 표시",
+    "Unselect" : "선택 해제",
+    "Select" : "선택",
     "Delete" : "삭제",
     "Loading messages" : "메세지를 불러오는 중",
     "Important" : "중요",

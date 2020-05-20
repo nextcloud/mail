@@ -35,6 +35,7 @@ OC.L10N.register(
     "Unfavorite" : "Jo i/e preferuar",
     "Favorite" : "I/E Preferuar",
     "Mark read" : "Shëno të lexuar",
+    "Select" : "Zgjidhni",
     "Delete" : "Fshij",
     "Important" : "E rëndësishme",
     "Favorites" : "Favorites",

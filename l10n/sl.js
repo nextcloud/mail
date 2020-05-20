@@ -67,6 +67,8 @@ OC.L10N.register(
     "Favorite" : "Priljubljeno",
     "Mark unread" : "Označi kot neprebrano",
     "Mark read" : "Označi kot prebrano",
+    "Unselect" : "Odstrani izbor",
+    "Select" : "Izbor",
     "Delete" : "Izbriši",
     "Blind copy recipients only" : "Le prejemniki skrite kopije",
     "Report this bug" : "Pošlji poročilo o hrošču",

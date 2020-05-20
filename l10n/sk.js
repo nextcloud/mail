@@ -83,6 +83,8 @@ OC.L10N.register(
     "Mark read" : "Označiť ako prečítané",
     "Mark not spam" : "Označiť ako nie je spam",
     "Mark as spam" : "Označiť ako spam",
+    "Unselect" : "Zrušiť výber",
+    "Select" : "Vybrať",
     "Delete" : "Zmazať",
     "Blind copy recipients only" : "Iba príjemcovia slepej kópie",
     "Show all {nr} messages" : "Zobraziť všetky {nr} správy",

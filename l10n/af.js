@@ -26,6 +26,7 @@ OC.L10N.register(
     "Message sent!" : "Boodskap gestuur!",
     "Send" : "Stuur",
     "Favorite" : "Gunsteling",
+    "Select" : "Kies",
     "Delete" : "Skrap",
     "Important" : "Belangrik",
     "Favorites" : "Gunstelinge",

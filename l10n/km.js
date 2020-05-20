@@ -10,6 +10,7 @@ OC.L10N.register(
     "Connect" : "ភ្ជាប់",
     "Sending …" : "កំពុង​ផ្ញើរ...",
     "Send" : "ផ្ញើ",
+    "Select" : "Select",
     "Delete" : "លុប",
     "Important" : "សំខាន់",
     "Favorites" : "Favorites",

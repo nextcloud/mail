@@ -7,6 +7,8 @@ OC.L10N.register(
     "Save" : "ساتل",
     "Send" : "لېږل",
     "Favorite" : "په نښه شوی",
+    "Unselect" : "سشیبشسیب",
+    "Select" : "ټاکل",
     "Delete" : "ړنګول",
     "Favorites" : "په نښه شوي",
     "Other" : "نور",

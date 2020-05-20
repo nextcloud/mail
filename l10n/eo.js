@@ -67,6 +67,8 @@ OC.L10N.register(
     "Favorite" : "Pliŝatati",
     "Mark unread" : "Marki kiel nelegita",
     "Mark read" : "Marki kiel legita",
+    "Unselect" : "Malelekti",
+    "Select" : "Elekti",
     "Delete" : "Forigi",
     "Blind copy recipients only" : "Nur blindkopiaj ricevontoj",
     "Report this bug" : "Raporti tiun problemon",

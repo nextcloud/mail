@@ -7,6 +7,7 @@ OC.L10N.register(
     "Save" : "Պահպանել",
     "Connect" : "Միանալ",
     "Send" : "Ուղարկել",
+    "Select" : "Select",
     "Delete" : "հեռացնել",
     "Favorites" : "Favorites",
     "Other" : "Այլ",

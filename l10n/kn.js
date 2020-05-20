@@ -9,6 +9,7 @@ OC.L10N.register(
     "Save" : "﻿ಉಳಿಸಿ",
     "Send" : "﻿ಕಳುಹಿಸಿ",
     "Favorite" : "ಅಚ್ಚುಮೆಚ್ಚಿನ",
+    "Select" : "Select",
     "Delete" : "﻿ಅಳಿಸಿ",
     "Favorites" : "ಅಚ್ಚುಮೆಚ್ಚಿನ",
     "Other" : "﻿ಇತರೆ",

@@ -62,6 +62,8 @@ OC.L10N.register(
     "Favorite" : "Preferit",
     "Mark unread" : "Marca com a no llegit",
     "Mark read" : "Marca com a llegit",
+    "Unselect" : "No seleccionis",
+    "Select" : "Selecciona",
     "Delete" : "Suprimeix",
     "Report this bug" : "Informa d'aquest error",
     "Loading messages" : "S'estan carregant missatges",

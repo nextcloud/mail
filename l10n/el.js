@@ -83,6 +83,8 @@ OC.L10N.register(
     "Mark read" : "Σημείωση ως ανεγνωσμένου",
     "Mark not spam" : "Σήμανση ως μη ανεπιθύμητο",
     "Mark as spam" : "Σήμανση ως ανεπιθύμητο",
+    "Unselect" : "Αναίρεση επιλογής",
+    "Select" : "Επιλογή",
     "Delete" : "Διαγραφή",
     "Blind copy recipients only" : "Αποδέκτες με απόκρυψη μόνο",
     "Show all {nr} messages" : "Εμφάνιση όλων των μηνυμάτων {nr}",

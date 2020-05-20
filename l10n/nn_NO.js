@@ -11,6 +11,7 @@ OC.L10N.register(
     "Retry" : "Forsøk att",
     "Send" : "Send",
     "Favorite" : "Favoritt",
+    "Select" : "Vel",
     "Delete" : "Ta bort",
     "Important" : "Viktig",
     "Favorites" : "Favorit",

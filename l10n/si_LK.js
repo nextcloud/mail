@@ -7,6 +7,7 @@ OC.L10N.register(
     "None" : "කිසිවක් නැත",
     "Save" : "සුරකින්න",
     "Connect" : "සම්බන්ධ වන්න",
+    "Select" : "Select",
     "Delete" : "ඉවත් කරන්න",
     "Important" : "වැදගත්",
     "Favorites" : "Favorites",

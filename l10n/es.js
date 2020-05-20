@@ -83,6 +83,8 @@ OC.L10N.register(
     "Mark read" : "Marcar como leído",
     "Mark not spam" : "Marcar como correo deseado",
     "Mark as spam" : "Marcar como correo no deseado",
+    "Unselect" : "Deseleccionar",
+    "Select" : "Seleccionar",
     "Delete" : "Eliminar",
     "Blind copy recipients only" : "Sólo a destinatarios con copia oculta (CCO)",
     "Show all {nr} messages" : "Mostrar todos los {nr} mensajes",

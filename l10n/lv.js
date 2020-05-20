@@ -32,6 +32,8 @@ OC.L10N.register(
     "Send" : "Sūtīt",
     "Choose a file to add as attachment" : "Izvēlēties datni ko pievienot kā pielikumu",
     "Favorite" : "Favorīts",
+    "Unselect" : "Noņemt atlasi",
+    "Select" : "Atzīmēt",
     "Delete" : "Dzēst",
     "Important" : "Svarīgi",
     "Favorites" : "Favorīti",

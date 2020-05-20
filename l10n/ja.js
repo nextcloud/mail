@@ -67,6 +67,8 @@ OC.L10N.register(
     "Favorite" : "お気に入り",
     "Mark unread" : "未読にする",
     "Mark read" : "既読にする",
+    "Unselect" : "選択解除",
+    "Select" : "選択",
     "Delete" : "削除",
     "Blind copy recipients only" : "BCC受信者のみ",
     "Report this bug" : "バグを報告",

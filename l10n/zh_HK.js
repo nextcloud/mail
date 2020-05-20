@@ -10,6 +10,7 @@ OC.L10N.register(
     "Connect" : "連線",
     "Sending …" : "發送中 …",
     "Send" : "發送",
+    "Select" : "Select",
     "Delete" : "刪除",
     "Important" : "重要",
     "Favorites" : "最愛",

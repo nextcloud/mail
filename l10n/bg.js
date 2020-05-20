@@ -53,6 +53,8 @@ OC.L10N.register(
     "Favorite" : "Любима",
     "Mark unread" : "Маркирай като непрочетено",
     "Mark read" : "Маркирай като прочетено",
+    "Unselect" : "Размаркирай",
+    "Select" : "Избери",
     "Delete" : "Изтриване",
     "Loading messages" : "Зареждане на съобщенията",
     "Important" : "Важно",

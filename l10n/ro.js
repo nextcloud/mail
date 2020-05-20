@@ -22,6 +22,7 @@ OC.L10N.register(
     "Message sent!" : "Mesaj trimis!",
     "Send" : "Trimite",
     "Favorite" : "Favorite",
+    "Select" : "Select",
     "Delete" : "Șterge",
     "Important" : "Important",
     "Favorites" : "Favorite",
