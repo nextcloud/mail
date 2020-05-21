@@ -87,6 +87,7 @@ OC.L10N.register(
     "Select" : "Sélectionner",
     "Delete" : "Supprimer",
     "Blind copy recipients only" : "Destinataires en copie cachée seulement",
+    "Delete " : "Supprimer",
     "Show all {nr} messages" : "Voir les {nr} messages",
     "Collapse messages" : "Replier les messages",
     "Report this bug" : "Signaler ce bogue",

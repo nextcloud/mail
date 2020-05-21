@@ -8,6 +8,7 @@ OC.L10N.register(
     "Connect" : "باغلان",
     "Send" : "يوللا",
     "Favorite" : "يىغقۇچ",
+    "Select" : "Select",
     "Delete" : "ئۆچۈر",
     "Important" : "مۇھىم",
     "Favorites" : "يىغقۇچ",

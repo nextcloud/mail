@@ -51,6 +51,8 @@ OC.L10N.register(
     "Favorite" : "Merk som favoritt",
     "Mark unread" : "Marker som ulest",
     "Mark read" : "Marker som lest",
+    "Unselect" : "Velg bort",
+    "Select" : "Velg",
     "Delete" : "Slett",
     "Report this bug" : "Rapporter denne feilen",
     "Loading messages" : "Henter meldinger",

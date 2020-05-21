@@ -30,6 +30,7 @@ OC.L10N.register(
     "Choose a file to add as attachment" : "Vali fail, mida manustada",
     "Favorite" : "Lemmik",
     "Mark read" : "Märgi loetuks",
+    "Select" : "Vali",
     "Delete" : "Kustuta",
     "Important" : "Tähtis",
     "Favorites" : "Lemmikud",

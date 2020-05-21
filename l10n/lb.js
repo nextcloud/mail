@@ -11,6 +11,7 @@ OC.L10N.register(
     "Go back" : "Zeréckgoen",
     "Send" : "Schécken",
     "Favorite" : "Favorit",
+    "Select" : "Select",
     "Delete" : "Läschen",
     "Important" : "Wichteg",
     "Favorites" : "Favoriten",

@@ -76,6 +76,8 @@ OC.L10N.register(
     "Mark important" : "Означи као битно",
     "Mark unread" : "Означи као непрочитано",
     "Mark read" : "Означи као прочитано",
+    "Unselect" : "Уклони избор",
+    "Select" : "Обележи",
     "Delete" : "Избриши",
     "Blind copy recipients only" : "Само примаоци невидљиве копије",
     "Report this bug" : "Пријави ову грешку",

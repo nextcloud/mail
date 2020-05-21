@@ -38,6 +38,8 @@ OC.L10N.register(
     "Choose a file to add as attachment" : "اختر ملف لإضافته كمرفق",
     "Draft: " : "المسودة:",
     "Favorite" : "المفضلة",
+    "Unselect" : "إلغاء التحديد",
+    "Select" : "تحديد",
     "Delete" : "حذف",
     "Important" : "مهم",
     "Favorites" : "المفضلات",

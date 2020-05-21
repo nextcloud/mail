@@ -69,6 +69,8 @@ OC.L10N.register(
     "Mark important" : "Означи важна",
     "Mark unread" : "Означи како непрочитано",
     "Mark read" : "Означи како прочитано",
+    "Unselect" : "Поништи избор",
+    "Select" : "Select",
     "Delete" : "Избриши",
     "Blind copy recipients only" : "Само приматели на слепи копии",
     "Report this bug" : "Пријави грешка",

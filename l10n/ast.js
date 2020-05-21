@@ -30,6 +30,7 @@ OC.L10N.register(
     "Send" : "Unviar",
     "Choose a file to add as attachment" : "Escueyi un ficheru p'amestalu como axuntu",
     "Favorite" : "Marcar como favoritu",
+    "Select" : "Esbillar",
     "Delete" : "Desaniciar",
     "Important" : "Importante",
     "Favorites" : "Favorites",

@@ -67,6 +67,8 @@ OC.L10N.register(
     "Favorite" : "Eftirlæti",
     "Mark unread" : "Merkja sem ólesið",
     "Mark read" : "Merkja sem lesið",
+    "Unselect" : "Afvelja",
+    "Select" : "Velja",
     "Delete" : "Eyða",
     "Blind copy recipients only" : "Einungis viðtakendur dulinna afrita",
     "Report this bug" : "Tilkynna þessa villu",

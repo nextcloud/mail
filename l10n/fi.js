@@ -68,6 +68,8 @@ OC.L10N.register(
     "Favorite" : "Suosikki",
     "Mark unread" : "Merkitse lukemattomaksi",
     "Mark read" : "Merkitse luetuksi",
+    "Unselect" : "Poista valinta",
+    "Select" : "Valitse",
     "Delete" : "Poista",
     "Blind copy recipients only" : "Vain piilokopion vastaanottajat",
     "Report this bug" : "Ilmoita viasta",

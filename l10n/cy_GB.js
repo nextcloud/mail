@@ -51,6 +51,7 @@ OC.L10N.register(
     "Favorite" : "Ffefryn",
     "Mark unread" : "Nodi heb ei ddarllen",
     "Mark read" : "Marcio wedi'i ddarllen",
+    "Select" : "Select",
     "Delete" : "Dileu",
     "Report this bug" : "Cofnodi'r gwall",
     "Loading messages" : "Llwytho negeseuon",

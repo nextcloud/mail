@@ -7,6 +7,7 @@ OC.L10N.register(
     "Save" : "Simpan",
     "Connect" : "Berhubung",
     "Send" : "Hantar",
+    "Select" : "Select",
     "Delete" : "Padam",
     "Favorites" : "Favorites",
     "Other" : "Lain",

@@ -83,6 +83,8 @@ OC.L10N.register(
     "Mark read" : "Markeer gelezen",
     "Mark not spam" : "Markeer als geen-spam",
     "Mark as spam" : "Markeren als spam",
+    "Unselect" : "Deselecteren",
+    "Select" : "Selecteer",
     "Delete" : "Verwijderen",
     "Blind copy recipients only" : "Alleen ontvangers van blinde kopie",
     "Show all {nr} messages" : "Toon alle {nr} berichten",

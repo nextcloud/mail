@@ -32,6 +32,7 @@ OC.L10N.register(
     "Favorite" : "Favorito",
     "Mark unread" : "Marcar como não lido",
     "Mark read" : "Marcar como lido",
+    "Select" : "Seleccionar",
     "Delete" : "Eliminar",
     "Important" : "Importante",
     "Favorites" : "Favoritos",

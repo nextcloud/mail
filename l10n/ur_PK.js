@@ -6,6 +6,7 @@ OC.L10N.register(
     "Save" : "حفظ",
     "Connect" : "منسلک",
     "Send" : "بھجیں",
+    "Select" : "Select",
     "Delete" : "حذف کریں",
     "Important" : "اہم",
     "Favorites" : "Favorites",

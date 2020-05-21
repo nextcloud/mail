@@ -14,6 +14,7 @@ OC.L10N.register(
     "Send" : "Göndər",
     "Choose a file to add as attachment" : "Əlavə ediləcək faylı seçin",
     "Favorite" : "İstəkli",
+    "Select" : "Select",
     "Delete" : "Sil",
     "Important" : "Vacib",
     "Favorites" : "Sevimlilər",
