@@ -34,6 +34,7 @@ OC.L10N.register(
     "Use Gravatar and favicon avatars" : "Gravatar ve favicon avatarları kullanılsın",
     "Register as application for mail links" : "E-posta bağlantıları uygulaması olarak ata",
     "Keyboard shortcuts" : "Tuş takımı kısayolları",
+    "Allow the app to collect data about your interactions. Based on this data, the app will adapt to your preferences. The data will only be stored locally." : "Uygulamanın etkileşimleriniz ile ilgili veri toplamasına izin verin. Uygulama bu verilere göre ayarlarınızı değiştirir. Veriler yalnız yerel olarak saklanır ve başka bir yere aktarılmaz.",
     "From" : "Kimden",
     "Select account" : "Hesap seçin",
     "To" : "Kime",

@@ -34,6 +34,7 @@ OC.L10N.register(
     "Use Gravatar and favicon avatars" : "Usar avatares de Gravatar y favicon",
     "Register as application for mail links" : "Usar aplicación para abrir enlaces de correo",
     "Keyboard shortcuts" : "Atajos de teclado",
+    "Allow the app to collect data about your interactions. Based on this data, the app will adapt to your preferences. The data will only be stored locally." : "Permitir a la app recolectar datos sobre sus interacciones. Basándose en estos datos, la app se adaptará mejor a sus preferencias. Estos datos sólo se almacenan localmente.",
     "From" : "De",
     "Select account" : "Seleccione una cuenta",
     "To" : "Para",

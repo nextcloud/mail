@@ -32,6 +32,7 @@
     "Use Gravatar and favicon avatars" : "Używaj awatarów Gravatar i favicon",
     "Register as application for mail links" : "Zarejestruj się jako aplikacja do linków pocztowych",
     "Keyboard shortcuts" : "Skróty klawiaturowe",
+    "Allow the app to collect data about your interactions. Based on this data, the app will adapt to your preferences. The data will only be stored locally." : "Zezwól aplikacji na zbieranie danych o Twoich interakcjach. Na podstawie tych danych aplikacja dostosuje się do Twoich preferencji. Dane będą przechowywane tylko lokalnie.",
     "From" : "Od",
     "Select account" : "Wybierz konto",
     "To" : "Do",
