@@ -42,7 +42,6 @@ export const getters = {
 	},
 	getSubMailboxes: (state, getters) => (id) => {
 		const mailbox = getters.getMailbox(id)
-
 		return mailbox.mailboxes.map((id) => state.mailboxes[id])
 	},
 	getUnifiedMailbox: (state) => (specialRole) => {

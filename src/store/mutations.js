@@ -19,22 +19,37 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
+import { curry } from 'ramda'
 import orderBy from 'lodash/fp/orderBy'
 import sortedUniqBy from 'lodash/fp/sortedUniqBy'
 import Vue from 'vue'
 
-import { buildMailboxHierarchy } from '../imap/MailboxHierarchy'
-import { havePrefix } from '../imap/MailboxPrefix'
 import { sortMailboxes } from '../imap/MailboxSorter'
 import { normalizedEnvelopeListId } from './normalization'
 import { UNIFIED_ACCOUNT_ID } from './constants'
 
-const addMailboxToState = (state, account) => (mailbox) => {
+const addMailboxToState = curry((state, account, mailbox) => {
 	mailbox.accountId = account.id
+	mailbox.mailboxes = []
 	mailbox.envelopeLists = {}
+
+	// Add all mailboxes (including submailboxes to state, but only toplevel to account
+	if (mailbox.name.includes(mailbox.delimiter)) {
+		mailbox.displayName = mailbox.name.substr(mailbox.name.lastIndexOf(mailbox.delimiter) + 1)
+		mailbox.path = mailbox.name.substr(0, mailbox.name.lastIndexOf(mailbox.delimiter))
+	} else {
+		mailbox.displayName = mailbox.name
+		mailbox.path = ''
+	}
+
 	Vue.set(state.mailboxes, mailbox.databaseId, mailbox)
-	return mailbox.databaseId
-}
+	const parent = Object.values(state.mailboxes).find(mb => mb.name === mailbox.path)
+	if (mailbox.path === '' || !parent) {
+		account.mailboxes.push(mailbox.databaseId)
+	} else {
+		parent.mailboxes.push(mailbox.databaseId)
+	}
+})
 
 const sortAccounts = (accounts) => {
 	accounts.sort((a1, a2) => a1.order - a2.order)
@@ -55,16 +70,9 @@ export default {
 		)
 
 		// Save the mailboxes to the store, but only keep IDs in the account's mailboxes list
-		const mailboxes = buildMailboxHierarchy(sortMailboxes(account.mailboxes), havePrefix(account.mailboxes))
+		const mailboxes = sortMailboxes(account.mailboxes || [])
 		Vue.set(account, 'mailboxes', [])
-		const addToState = addMailboxToState(state, account)
-		mailboxes.forEach((mailbox) => {
-			// Add all mailboxes (including submailboxes to state, but only toplevel to account
-			const id = addToState(mailbox)
-			Vue.set(mailbox, 'mailboxes', mailbox.mailboxes.map(addToState))
-
-			account.mailboxes.push(id)
-		})
+		mailboxes.map(addMailboxToState(state, account))
 	},
 	editAccount(state, account) {
 		Vue.set(state.accounts, account.id, Object.assign({}, state.accounts[account.id], account))
@@ -87,27 +95,7 @@ export default {
 		state.accounts[accountId].collapsed = false
 	},
 	addMailbox(state, { account, mailbox }) {
-		// Flatten the existing ones before updating the hierarchy
-		const existing = account.mailboxes.map((id) => state.mailboxes[id])
-		existing.forEach((mailbox) => {
-			if (!mailbox.mailboxes) {
-				return
-			}
-			mailbox.mailboxes.map((id) => existing.push(state.mailboxes[id]))
-			mailbox.mailboxes = []
-		})
-		// Save the mailboxes to the store, but only keep IDs in the account's mailboxes list
-		existing.push(mailbox)
-		const mailboxes = buildMailboxHierarchy(sortMailboxes(existing), havePrefix(existing))
-		Vue.set(account, 'mailboxes', [])
-		const addToState = addMailboxToState(state, account)
-		mailboxes.forEach((mailbox) => {
-			// Add all mailboxes (including submailboxes to state, but only toplevel to account
-			const id = addToState(mailbox)
-			Vue.set(mailbox, 'mailboxes', mailbox.mailboxes.map(addToState))
-
-			account.mailboxes.push(id)
-		})
+		addMailboxToState(state, account, mailbox)
 	},
 	removeMailbox(state, { id }) {
 		const mailbox = state.mailboxes[id]
@@ -119,13 +107,13 @@ export default {
 			throw new Error(`Account ${mailbox.accountId} of mailbox ${id} is unknown`)
 		}
 		Vue.delete(state.mailboxes, id)
-		account.mailboxes = account.mailboxes.filter((mbId) => mbId !== id)
-		account.mailboxes.forEach((fId) => {
-			const mailbox = state.mailboxes[fId]
-			if (mailbox.mailboxes) {
-				mailbox.mailboxes = mailbox.mailboxes.filter((mbId) => mbId !== id)
-			}
-		})
+
+		// Travers through the account and the full mailbox tree to find any dangling pointers
+		const removeRec = (parent) => {
+			parent.mailboxes = parent.mailboxes.filter((mbId) => mbId !== id)
+			parent.mailboxes.map(mbid => removeRec(state.mailboxes[mbid]))
+		}
+		removeRec(account)
 	},
 	addEnvelope(state, { query, envelope }) {
 		const mailbox = state.mailboxes[envelope.mailboxId]

@@ -70,7 +70,7 @@
 					@click="clearCache">
 					{{ t('mail', 'Clear locally cached data, in case there are issues with synchronization.') }}
 				</ActionButton>
-				<ActionButton v-if="!account.isUnified && !mailbox.specialRole" icon="icon-delete" @click="deleteMailbox">
+				<ActionButton v-if="!account.isUnified && !mailbox.specialRole && !hasSubMailboxes" icon="icon-delete" @click="deleteMailbox">
 					{{ t('mail', 'Delete folder') }}
 				</ActionButton>
 			</template>
@@ -175,6 +175,9 @@ export default {
 					filter: this.filter ? this.filter : undefined,
 				},
 			}
+		},
+		hasSubMailboxes() {
+			return this.subMailboxes.length > 0
 		},
 		subMailboxes() {
 			return this.$store.getters.getSubMailboxes(this.mailbox.databaseId)
