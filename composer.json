@@ -23,7 +23,7 @@
 		"christophwurst/kitinerary-bin": "^0.2",
 		"christophwurst/kitinerary-flatpak": "^0.2",
 		"christophwurst/kitinerary-sys": "^0.1.0",
-		"coenjacobs/mozart": "^0.5.1",
+		"coenjacobs/mozart": "0.6.0-beta-2",
 		"ezyang/htmlpurifier": "4.12.0",
 		"gravatarphp/gravatar": "^2.0",
 		"kwi/urllinker": "dev-bleeding",
@@ -40,7 +40,7 @@
 		"pear-pear.horde.org/horde_util": "^2.5.8@stable",
 		"pear-pear.horde.org/horde_smtp": "^1.9.5@stable",
 		"psr/log": "^1",
-		"php-ai/php-ml": "^0.9.0"
+		"rubix/ml": "0.1.0-rc3"
 	},
 	"require-dev": {
 		"roave/security-advisories": "dev-master",
@@ -76,8 +76,7 @@
 			"classmap_prefix": "NEXTCLOUDMAIL_",
 			"packages": [
 				"arthurhoaro/favicon",
-				"gravatarphp/gravatar",
-				"php-ai/php-ml"
+				"gravatarphp/gravatar"
 			]
 		}
 	}
