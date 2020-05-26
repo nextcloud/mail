@@ -13,6 +13,7 @@ OC.L10N.register(
     "Go back" : "Quay lại",
     "Send" : "Gởi",
     "Favorite" : "Ưa thích",
+    "Select" : "Select",
     "Delete" : "Xóa",
     "Important" : "Quan trọng",
     "Favorites" : "Ưa thích",

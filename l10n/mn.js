@@ -26,6 +26,7 @@ OC.L10N.register(
     "Message sent!" : "зурвас илгээсэн",
     "Send" : "илгээх",
     "Favorite" : "Дуртай",
+    "Select" : "Сонгох",
     "Delete" : "Устгах",
     "Favorites" : "Онцолсон",
     "Other" : "Бусад",

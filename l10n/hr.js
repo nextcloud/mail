@@ -77,6 +77,8 @@ OC.L10N.register(
     "Mark important" : "Označi kao važno",
     "Mark unread" : "Označi kao nepročitano",
     "Mark read" : "Označi kao pročitano",
+    "Unselect" : "Poništi odabir",
+    "Select" : "Odaberi",
     "Delete" : "Izbriši",
     "Blind copy recipients only" : "Samo primatelji skrivenih kopija poruke",
     "Report this bug" : "Prijavi ovu pogrešku",

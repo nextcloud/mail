@@ -10,6 +10,7 @@ OC.L10N.register(
     "Select account" : "Označite nalog",
     "Send" : "Pošalji",
     "Favorite" : "Omiljene",
+    "Select" : "Obeleži",
     "Delete" : "Delete",
     "Favorites" : "Omiljene",
     "Other" : "Ostali",

@@ -25,7 +25,7 @@
 						:account="unifiedAccount"
 						:folder="unifiedInbox"
 						:paginate="false"
-						:search-query="appendToSearch('is:important not:starred')"
+						:search-query="appendToSearch('is:important')"
 						:is-priority-inbox="true"
 						:collapsible="true"
 						:bus="bus"

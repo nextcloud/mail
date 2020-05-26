@@ -44,6 +44,8 @@ OC.L10N.register(
     "No messages in this folder" : "此收件匣中沒有信件",
     "Unfavorite" : "取消我的最愛",
     "Favorite" : "我的最愛",
+    "Unselect" : "取消選取",
+    "Select" : "選取",
     "Delete" : "刪除",
     "Important" : "重要",
     "Favorites" : "我的最愛",
