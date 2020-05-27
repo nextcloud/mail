@@ -28,6 +28,7 @@ use ChristophWurst\Nextcloud\Testing\TestCase;
 use Exception;
 use Horde_Exception;
 use OCA\Mail\Account;
+use OCA\Mail\Contracts\IMailManager;
 use OCA\Mail\Contracts\IMailTransmission;
 use OCA\Mail\Controller\AccountsController;
 use OCA\Mail\Exception\ClientException;
@@ -94,6 +95,9 @@ class AccountsControllerTest extends TestCase {
 	/** @var SetupService|MockObject */
 	private $setupService;
 
+	/** @var IMailManager|MockObject */
+	private $mailManager;
+
 	protected function setUp(): void {
 		parent::setUp();
 
@@ -112,9 +116,21 @@ class AccountsControllerTest extends TestCase {
 		$this->aliasesService = $this->createMock(AliasesService::class);
 		$this->transmission = $this->createMock(IMailTransmission::class);
 		$this->setupService = $this->createMock(SetupService::class);
+		$this->mailManager = $this->createMock(IMailManager::class);
 
-		$this->controller = new AccountsController($this->appName, $this->request, $this->accountService, $this->groupsIntegration, $this->userId,
-			$this->logger, $this->l10n, $this->aliasesService, $this->transmission, $this->setupService);
+		$this->controller = new AccountsController(
+			$this->appName,
+			$this->request,
+			$this->accountService,
+			$this->groupsIntegration,
+			$this->userId,
+			$this->logger,
+			$this->l10n,
+			$this->aliasesService,
+			$this->transmission,
+			$this->setupService,
+			$this->mailManager
+		);
 		$this->account = $this->createMock(Account::class);
 		$this->accountId = 123;
 	}
