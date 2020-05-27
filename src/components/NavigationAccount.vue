@@ -27,7 +27,8 @@
 		:icon="iconError"
 		:menu-open.sync="menuOpen"
 		:title="account.emailAddress"
-		:to="settingsRoute"
+		:to="firstFolderRoute"
+		exact="true"
 	>
 		<!-- Color dot -->
 		<AppNavigationIconBullet v-if="bulletColor" slot="icon" :color="bulletColor" />
@@ -87,6 +88,10 @@ export default {
 			type: Object,
 			required: true,
 		},
+		firstFolder: {
+			type: Object,
+			required: true,
+		},
 		isFirst: {
 			type: Boolean,
 			default: false,
@@ -114,6 +119,15 @@ export default {
 				name: 'accountSettings',
 				params: {
 					accountId: this.account.id,
+				},
+			}
+		},
+		firstFolderRoute() {
+			return {
+				name: 'folder',
+				params: {
+					accountId: this.account.id,
+					folderId: this.firstFolder.id,
 				},
 			}
 		},

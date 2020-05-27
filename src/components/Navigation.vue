@@ -33,6 +33,7 @@
 					v-if="group.account"
 					:key="group.account.id"
 					:account="group.account"
+					:first-folder="group.folders[0]"
 					:is-first="isFirst(group.account)"
 					:is-last="isLast(group.account)"
 				/>
