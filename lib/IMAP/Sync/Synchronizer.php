@@ -59,7 +59,7 @@ class Synchronizer {
 						 int $criteria = Horde_Imap_Client::SYNC_NEWMSGSUIDS | Horde_Imap_Client::SYNC_FLAGSUIDS | Horde_Imap_Client::SYNC_VANISHEDUIDS): Response {
 		$mailbox = new Horde_Imap_Client_Mailbox($request->getMailbox());
 		try {
-			if ($criteria & Horde_Imap_Client::SYNC_NEWMSGS) {
+			if ($criteria & Horde_Imap_Client::SYNC_NEWMSGSUIDS) {
 				$newUids = $this->getNewMessageUids($imapClient, $mailbox, $request);
 			} else {
 				$newUids = [];
@@ -99,7 +99,7 @@ class Synchronizer {
 	 */
 	private function getNewMessageUids(Horde_Imap_Client_Base $imapClient, Horde_Imap_Client_Mailbox $mailbox, Request $request): array {
 		$newUids = $imapClient->sync($mailbox, $request->getToken(), [
-			'criteria' => Horde_Imap_Client::SYNC_NEWMSGS,
+			'criteria' => Horde_Imap_Client::SYNC_NEWMSGSUIDS,
 		])->newmsgsuids->ids;
 		return $newUids;
 	}
