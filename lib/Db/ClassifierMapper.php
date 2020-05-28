@@ -50,7 +50,7 @@ class ClassifierMapper extends QBMapper {
 				$qb->expr()->eq('account_id', $qb->createNamedParameter($id, IQueryBuilder::PARAM_INT), IQueryBuilder::PARAM_INT),
 				$qb->expr()->eq('active', $qb->createNamedParameter(true, IQueryBuilder::PARAM_BOOL), IQueryBuilder::PARAM_BOOL)
 			)
-			->orderBy('created_at', 'asc')
+			->orderBy('created_at', 'desc')
 			->setMaxResults(1);
 
 		return $this->findEntity($select);
