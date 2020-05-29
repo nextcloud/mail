@@ -9,6 +9,7 @@
 import Content from '@nextcloud/vue/dist/Components/Content'
 
 import MailboxMessage from '../components/MailboxMessage'
+import isMobile from '@nextcloud/vue/dist/Mixins/isMobile'
 import logger from '../logger'
 import Navigation from '../components/Navigation'
 
@@ -19,6 +20,7 @@ export default {
 		MailboxMessage,
 		Navigation,
 	},
+	mixins: [isMobile],
 	computed: {
 		activeAccount() {
 			return this.$store.getters.getAccount(this.$route.params.accountId)
@@ -35,6 +37,7 @@ export default {
 			if (
 				from.name === 'message' &&
 				to.name === 'folder' &&
+				!this.isMobile &&
 				Number.parseInt(from.params.accountId, 10) === Number.parseInt(to.params.accountId, 10) &&
 				from.params.folderId === to.params.folderId &&
 				from.params.filter === to.params.filter
