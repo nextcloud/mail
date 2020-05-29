@@ -326,7 +326,7 @@ class MessageMapper extends QBMapper {
 			$select->andWhere(
 				$qb->expr()->iLike(
 					'subject',
-					$qb->createNamedParameter('%' . $query->getSubject() . '%', IQueryBuilder::PARAM_STR),
+					$qb->createNamedParameter('%' . $this->db->escapeLikeParameter($query-> $query->getSubject()) . '%', IQueryBuilder::PARAM_STR),
 					IQueryBuilder::PARAM_STR
 				)
 			);
