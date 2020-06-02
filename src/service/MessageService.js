@@ -53,8 +53,8 @@ export function fetchEnvelopes(accountId, folderId, query, cursor, limit) {
 			params,
 		})
 		.then((resp) => {
-			resp.data.forEach((message) => {
-				prefetchMessage(accountId, folderId, message.id)
+			resp.data.forEach(message => {
+				prefetchMessage.push({accountId: accountId, folderId: folderId, messageId: message.id})
 			})
 			return resp.data
 		})
@@ -81,8 +81,8 @@ export async function syncEnvelopes(accountId, folderId, uids, query, init = fal
 			throw new SyncIncompleteError()
 		}
 
-		response.data.newMessages.forEach((message) => {
-			prefetchMessage(accountId, folderId, message.id)
+		response.data.newMessages.forEach(message => {
+			prefetchMessage.push({accountId: accountId, folderId: folderId, messageId: message.id})
 		})
 
 		const amend = amendEnvelopeWithIds(accountId, folderId)
@@ -96,10 +96,14 @@ export async function syncEnvelopes(accountId, folderId, uids, query, init = fal
 	}
 }
 
-export async function prefetchMessage(accountId, folderId, id) {
-	await fetchMessage(accountId, folderId, id)
-	await fetchMessageHtml(accountId, folderId, id)
-}
+var Queue = require('better-queue');
+var MemoryStore = require('better-queue-memory')
+
+var prefetchMessage = new Queue(function(task, cb) {
+	fetchMessage(task.accountId, task.folderId, task.messageId)
+	fetchMessageHtml(task.accountId, task.folderId, task.messageId)
+	cb()
+},{store: new MemoryStore(),});
 
 export async function clearCache(accountId, folderId) {
 	const url = generateUrl('/apps/mail/api/accounts/{accountId}/folders/{folderId}/sync', {
