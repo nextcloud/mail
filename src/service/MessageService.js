@@ -100,12 +100,12 @@ var Queue = require('better-queue')
 var MemoryStore = require('better-queue-memory')
 
 var prefetchMessage = new Queue(
-	function(task, cb) {
+	function (task, cb) {
 		fetchMessage(task.accountId, task.folderId, task.messageId)
 		fetchMessageHtml(task.accountId, task.folderId, task.messageId)
 		cb()
 	},
-	{store: new MemoryStore(),}
+	{store: new MemoryStore()}
 )
 
 export async function clearCache(accountId, folderId) {
