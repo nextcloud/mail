@@ -78,7 +78,14 @@
 				"arthurhoaro/favicon",
 				"ezyang/htmlpurifier",
 				"gravatarphp/gravatar"
-			]
+			],
+			"override_autoload": {
+				"ezyang/htmlpurifier": {
+					"classmap": [
+						"library/"
+					]
+				}
+			}
 		}
 	}
 }
