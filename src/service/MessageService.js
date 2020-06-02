@@ -53,7 +53,7 @@ export function fetchEnvelopes(accountId, folderId, query, cursor, limit) {
 			params,
 		})
 		.then((resp) => {
-			resp.data.forEach(message => {
+			resp.data.forEach((message) => {
 				prefetchMessage(accountId, folderId, message.id)
 			})
 			return resp.data
@@ -81,7 +81,7 @@ export async function syncEnvelopes(accountId, folderId, uids, query, init = fal
 			throw new SyncIncompleteError()
 		}
 
-		response.data.newMessages.forEach(message => {
+		response.data.newMessages.forEach((message) => {
 			prefetchMessage(accountId, folderId, message.id)
 		})
 
@@ -154,7 +154,6 @@ export function fetchMessage(accountId, folderId, id) {
 			return Promise.reject(parseErrorResponse(error.response))
 		})
 }
-
 
 export function fetchMessageHtml(accountId, folderId, id) {
 	const url = generateUrl('/apps/mail/api/accounts/{accountId}/folders/{folderId}/messages/{id}/html', {
