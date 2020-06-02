@@ -33,6 +33,7 @@ use OCA\Mail\Db\MailboxMapper;
 use OCA\Mail\Db\Message;
 use OCA\Mail\Db\MessageMapper;
 use OCA\Mail\Exception\ClassifierTrainingException;
+use OCA\Mail\Exception\ServiceException;
 use OCA\Mail\Service\Classification\FeatureExtraction\CompositeExtractor;
 use OCA\Mail\Support\PerformanceLogger;
 use OCP\AppFramework\Db\DoesNotExistException;
@@ -281,7 +282,8 @@ class ImportanceClassifier {
 	 * @param Mailbox $mailbox
 	 * @param Message[] $messages
 	 *
-	 * @return array
+	 * @return bool[]
+	 * @throws ServiceException
 	 */
 	public function classifyImportance(Account $account, Mailbox $mailbox, array $messages): array {
 		$estimator = $this->persistenceService->loadLatest($account);

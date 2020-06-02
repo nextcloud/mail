@@ -27,9 +27,11 @@ namespace OCA\Mail\Listener;
 
 use Horde_Imap_Client;
 use OCA\Mail\Events\NewMessagesSynchronized;
+use OCA\Mail\Exception\ServiceException;
 use OCA\Mail\Service\Classification\ImportanceClassifier;
 use OCP\EventDispatcher\Event;
 use OCP\EventDispatcher\IEventListener;
+use OCP\ILogger;
 
 class NewMessageClassificationListener implements IEventListener {
 	private const EXEMPT_FROM_CLASSIFICATION = [
@@ -43,8 +45,13 @@ class NewMessageClassificationListener implements IEventListener {
 	/** @var ImportanceClassifier */
 	private $classifier;
 
-	public function __construct(ImportanceClassifier $classifier) {
+	/** @var ILogger */
+	private $logger;
+
+	public function __construct(ImportanceClassifier $classifier,
+								ILogger $logger) {
 		$this->classifier = $classifier;
+		$this->logger = $logger;
 	}
 
 	public function handle(Event $event): void {
@@ -59,16 +66,23 @@ class NewMessageClassificationListener implements IEventListener {
 			}
 		}
 
-		$predictions = $this->classifier->classifyImportance(
-			$event->getAccount(),
-			$event->getMailbox(),
-			$event->getMessages()
-		);
+		try {
+			$predictions = $this->classifier->classifyImportance(
+				$event->getAccount(),
+				$event->getMailbox(),
+				$event->getMessages()
+			);
 
-		foreach ($event->getMessages() as $message) {
-			if ($predictions[$message->getUid()] ?? false) {
-				$message->setFlagImportant(true);
+			foreach ($event->getMessages() as $message) {
+				if ($predictions[$message->getUid()] ?? false) {
+					$message->setFlagImportant(true);
+				}
 			}
+		} catch (ServiceException $e) {
+			$this->logger->logException($e, [
+				'message' => 'Could not classify incoming message importance: ' . $e->getMessage(),
+				'level' => ILogger::ERROR,
+			]);
 		}
 	}
 }
