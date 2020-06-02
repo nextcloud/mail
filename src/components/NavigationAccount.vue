@@ -28,7 +28,7 @@
 		:menu-open.sync="menuOpen"
 		:title="account.emailAddress"
 		:to="firstFolderRoute"
-		exact="true"
+		:exact="true"
 	>
 		<!-- Color dot -->
 		<AppNavigationIconBullet v-if="bulletColor" slot="icon" :color="bulletColor" />
