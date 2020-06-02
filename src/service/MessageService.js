@@ -52,7 +52,12 @@ export function fetchEnvelopes(accountId, folderId, query, cursor, limit) {
 		.get(url, {
 			params,
 		})
-		.then((resp) => resp.data)
+		.then((resp) => {
+			resp.data.forEach(message => {
+				prefetchMessage(accountId, folderId, message.id)
+			})
+			return resp.data
+		})
 		.then(map(amendEnvelopeWithIds(accountId, folderId)))
 		.catch((error) => {
 			throw convertAxiosError(error)
@@ -76,6 +81,10 @@ export async function syncEnvelopes(accountId, folderId, uids, query, init = fal
 			throw new SyncIncompleteError()
 		}
 
+		response.data.newMessages.forEach(message => {
+			prefetchMessage(accountId, folderId, message.id)
+		})
+
 		const amend = amendEnvelopeWithIds(accountId, folderId)
 		return {
 			newMessages: response.data.newMessages.map(amend),
@@ -85,6 +94,11 @@ export async function syncEnvelopes(accountId, folderId, uids, query, init = fal
 	} catch (e) {
 		throw convertAxiosError(e)
 	}
+}
+
+export async function prefetchMessage(accountId, folderId, id) {
+	fetchMessage(accountId, folderId, id)
+	fetchMessageHtml(accountId, folderId, id)
 }
 
 export async function clearCache(accountId, folderId) {
@@ -125,6 +139,25 @@ export function setEnvelopeFlag(accountId, folderId, id, flag, value) {
 
 export function fetchMessage(accountId, folderId, id) {
 	const url = generateUrl('/apps/mail/api/accounts/{accountId}/folders/{folderId}/messages/{id}/body', {
+		accountId,
+		folderId,
+		id,
+	})
+
+	return axios
+		.get(url)
+		.then((resp) => resp.data)
+		.catch((error) => {
+			if (error.response && error.response.status === 404) {
+				return undefined
+			}
+			return Promise.reject(parseErrorResponse(error.response))
+		})
+}
+
+
+export function fetchMessageHtml(accountId, folderId, id) {
+	const url = generateUrl('/apps/mail/api/accounts/{accountId}/folders/{folderId}/messages/{id}/html', {
 		accountId,
 		folderId,
 		id,
