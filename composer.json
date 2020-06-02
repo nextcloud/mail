@@ -23,7 +23,7 @@
 		"christophwurst/kitinerary-bin": "^0.2",
 		"christophwurst/kitinerary-flatpak": "^0.2",
 		"christophwurst/kitinerary-sys": "^0.1.0",
-		"coenjacobs/mozart": "0.6.0-beta-2",
+		"coenjacobs/mozart": "0.6.0-beta-3",
 		"ezyang/htmlpurifier": "4.12.0",
 		"gravatarphp/gravatar": "^2.0",
 		"kwi/urllinker": "dev-bleeding",

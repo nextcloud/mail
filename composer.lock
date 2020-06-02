@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "84bdd07aa7a5153551fdc7c617e8d933",
+    "content-hash": "9f1938648ae6d8ccf396eec5f1a43ff5",
     "packages": [
         {
             "name": "amphp/amp",
@@ -679,16 +679,16 @@
         },
         {
             "name": "coenjacobs/mozart",
-            "version": "0.6.0-beta-2",
+            "version": "0.6.0-beta-3",
             "source": {
                 "type": "git",
                 "url": "https://github.com/coenjacobs/mozart.git",
-                "reference": "a0207484516bd79564f4223a0f3056a7e1e0b34a"
+                "reference": "965d698d76639587b26c878b22f4373c32f3d9ee"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/coenjacobs/mozart/zipball/a0207484516bd79564f4223a0f3056a7e1e0b34a",
-                "reference": "a0207484516bd79564f4223a0f3056a7e1e0b34a",
+                "url": "https://api.github.com/repos/coenjacobs/mozart/zipball/965d698d76639587b26c878b22f4373c32f3d9ee",
+                "reference": "965d698d76639587b26c878b22f4373c32f3d9ee",
                 "shasum": ""
             },
             "require": {
@@ -727,7 +727,7 @@
                     "type": "github"
                 }
             ],
-            "time": "2020-05-23T13:12:01+00:00"
+            "time": "2020-06-02T06:54:01+00:00"
         },
         {
             "name": "ezyang/htmlpurifier",
