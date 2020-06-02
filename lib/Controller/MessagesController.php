@@ -231,7 +231,11 @@ class MessagesController extends Controller {
 			return $this->enrichDownloadUrl($accountId, $folderId, $messageId, $a);
 		}, $json['attachments']);
 
-		return new JSONResponse($json);
+		$response = new JSONResponse($json);
+
+		$response->cacheFor(90 * 24 * 60 * 60);
+
+		return $response;
 	}
 
 	/**
