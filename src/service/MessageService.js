@@ -97,8 +97,8 @@ export async function syncEnvelopes(accountId, folderId, uids, query, init = fal
 }
 
 export async function prefetchMessage(accountId, folderId, id) {
-	fetchMessage(accountId, folderId, id)
-	fetchMessageHtml(accountId, folderId, id)
+	await fetchMessage(accountId, folderId, id)
+	await fetchMessageHtml(accountId, folderId, id)
 }
 
 export async function clearCache(accountId, folderId) {
