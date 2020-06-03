@@ -91,7 +91,7 @@ class IspDbConfigurationDetector {
 		// TODO: use horde libs for email address parsing
 		list(, $host) = explode("@", $email);
 
-		$ispdb = $this->ispDb->query($host);
+		$ispdb = $this->ispDb->query($host, $email);
 
 		if (empty($ispdb)) {
 			// Nothing to detect
@@ -157,9 +157,11 @@ class IspDbConfigurationDetector {
 			$user = $email;
 		} elseif ($imap['username'] === '%EMAILLOCALPART%') {
 			list($user,) = explode("@", $email);
-		} else {
-			$this->logger->info("Unknown username variable: " . $imap['username']);
+		} elseif (empty($imap['username'])) {
+			$this->logger->info("imap username is either an invalid placeholder or is empty");
 			return null;
+		} else {
+			$user = $imap['username'];
 		}
 
 		try {
@@ -209,9 +211,11 @@ class IspDbConfigurationDetector {
 				$user = $email;
 			} elseif ($smtp['username'] === '%EMAILLOCALPART%') {
 				list($user,) = explode("@", $email);
-			} else {
-				$this->logger->info("Unknown username variable: " . $smtp['username']);
+			} elseif (empty($smtp['username'])) {
+				$this->logger->info("smtp username is either an unknown placeholder or is empty");
 				return null;
+			} else {
+				$user = $smtp['username'];
 			}
 
 			$account->setOutboundHost($smtp['hostname']);
