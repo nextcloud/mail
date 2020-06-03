@@ -141,6 +141,12 @@ class PersistenceService {
 		$this->mapper->update($classifier);
 	}
 
+	/**
+	 * @param Account $account
+	 *
+	 * @return Estimator|null
+	 * @throws ServiceException
+	 */
 	public function loadLatest(Account $account): ?Estimator {
 		try {
 			$latestModel = $this->mapper->findLatest($account->getId());
@@ -150,6 +156,12 @@ class PersistenceService {
 		return $this->load($latestModel->getId());
 	}
 
+	/**
+	 * @param int $id
+	 *
+	 * @return Estimator
+	 * @throws ServiceException
+	 */
 	public function load(int $id): Estimator {
 		$cached = $this->getCached($id);
 		if ($cached !== null) {
