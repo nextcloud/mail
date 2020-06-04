@@ -5333,20 +5333,20 @@
         },
         {
             "name": "symfony/stopwatch",
-            "version": "v4.4.8",
+            "version": "v4.4.9",
             "source": {
                 "type": "git",
                 "url": "https://github.com/symfony/stopwatch.git",
-                "reference": "e0324d3560e4128270e3f08617480d9233d81cfc"
+                "reference": "f51fb90df1154a7f75987198a9689e28f91e6a50"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/symfony/stopwatch/zipball/e0324d3560e4128270e3f08617480d9233d81cfc",
-                "reference": "e0324d3560e4128270e3f08617480d9233d81cfc",
+                "url": "https://api.github.com/repos/symfony/stopwatch/zipball/f51fb90df1154a7f75987198a9689e28f91e6a50",
+                "reference": "f51fb90df1154a7f75987198a9689e28f91e6a50",
                 "shasum": ""
             },
             "require": {
-                "php": "^7.1.3",
+                "php": ">=7.1.3",
                 "symfony/service-contracts": "^1.0|^2"
             },
             "type": "library",
@@ -5379,7 +5379,7 @@
             ],
             "description": "Symfony Stopwatch Component",
             "homepage": "https://symfony.com",
-            "time": "2020-03-27T16:54:36+00:00"
+            "time": "2020-05-20T08:37:50+00:00"
         },
         {
             "name": "theseer/tokenizer",
