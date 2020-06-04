@@ -27,7 +27,7 @@
 		<transition-group name="list">
 			<div id="list-refreshing" key="loading" class="icon-loading-small" :class="{refreshing: refreshing}" />
 			<Envelope
-				v-for="env in envelopesToShow"
+				v-for="env in envelopes"
 				:key="env.uid"
 				:data="env"
 				:folder="folder"
@@ -37,13 +37,12 @@
 				@update:selected="onEnvelopeSelectToggle(env, ...$event)"
 			/>
 			<div
-				v-if="collapsible && envelopes.length > collapseThreshold"
+				v-if="loadMoreButton && !loadingMore"
 				:key="'list-collapse-' + searchQuery"
-				class="collapse-expand"
-				@click="$emit('update:collapsed', !collapsed)"
+				class="load-more"
+				@click="$emit('loadMore')"
 			>
-				<template v-if="collapsed">{{ t('mail', 'Show all {nr} messages', {nr: envelopes.length}) }}</template>
-				<template v-else>{{ t('mail', 'Collapse messages') }}</template>
+				{{ t('mail', 'Load more') }}
 			</div>
 			<div id="load-more-mail-messages" key="loadingMore" :class="{'icon-loading-small': loadingMore}" />
 		</transition-group>
@@ -90,12 +89,7 @@ export default {
 			type: Boolean,
 			required: true,
 		},
-		collapsible: {
-			type: Boolean,
-			required: false,
-			default: false,
-		},
-		collapsed: {
+		loadMoreButton: {
 			type: Boolean,
 			required: false,
 			default: false,
@@ -104,16 +98,9 @@ export default {
 	data() {
 		return {
 			selection: [],
-			collapseThreshold: 5,
 		}
 	},
 	computed: {
-		envelopesToShow() {
-			if (this.collapsible && this.collapsed) {
-				return this.envelopes.slice(0, this.collapseThreshold)
-			}
-			return this.envelopes
-		},
 		selectMode() {
 			// returns true when in selection mode (where the user selects several emails at once)
 			return this.selection.length > 0
@@ -210,7 +197,7 @@ div {
 	position: relative;
 }
 
-.collapse-expand {
+.load-more {
 	text-align: center;
 	margin-top: 10px;
 	cursor: pointer;
