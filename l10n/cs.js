@@ -93,8 +93,6 @@ OC.L10N.register(
     "Favorite " : "Přidat mezi oblíbené",
     "Unselect " : "Zrušit výběr",
     "Delete " : "Smazat",
-    "Show all {nr} messages" : "Zobrazit všech {nr} zpráv",
-    "Collapse messages" : "Sbalit správy",
     "Report this bug" : "Nahlásit tuto chybu",
     "Could not open mailbox" : "Nedaří se otevřít e-mailovou schránku",
     "Loading messages" : "Načítání zpráv",

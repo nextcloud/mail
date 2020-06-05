@@ -29,6 +29,7 @@ use OCA\Mail\Exception\ServiceException;
 use OCA\Mail\Folder;
 use OCA\Mail\IMAP\FolderStats;
 use OCA\Mail\Model\IMAPMessage;
+use OCA\Mail\Service\Quota;
 
 interface IMailManager {
 
@@ -126,4 +127,11 @@ interface IMailManager {
 	 * @throws ServiceException
 	 */
 	public function flagMessage(Account $account, string $mailbox, int $uid, string $flag, bool $value): void;
+
+	/**
+	 * @param Account $account
+	 *
+	 * @return Quota|null
+	 */
+	public function getQuota(Account $account): ?Quota;
 }

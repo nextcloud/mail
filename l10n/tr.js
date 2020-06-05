@@ -93,8 +93,6 @@ OC.L10N.register(
     "Favorite " : "Sık kullanılanlara ekle",
     "Unselect " : "Bırak",
     "Delete " : "Sil",
-    "Show all {nr} messages" : "Tüm {nr} iletiyi görüntüle",
-    "Collapse messages" : "İletileri daralt",
     "Report this bug" : "Bu hatayı bildirin",
     "Could not open mailbox" : "Posta kutusu açılamadı",
     "Loading messages" : "İletiler yükleniyor",

@@ -23,36 +23,36 @@ declare(strict_types=1);
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-namespace OCA\Mail\Db;
+namespace OCA\Mail\Service;
 
-use OCP\AppFramework\Db\DoesNotExistException;
-use OCP\AppFramework\Db\QBMapper;
-use OCP\DB\QueryBuilder\IQueryBuilder;
-use OCP\IDBConnection;
+use JsonSerializable;
 
-class ClassifierMapper extends QBMapper {
-	public function __construct(IDBConnection $db) {
-		parent::__construct($db, 'mail_classifiers');
+class Quota implements JsonSerializable {
+
+	/** @var int */
+	private $usage;
+
+	/** @var int */
+	private $limit;
+
+	public function __construct(int $usage,
+								int $limit) {
+		$this->usage = $usage;
+		$this->limit = $limit;
 	}
 
-	/**
-	 * @param int $id
-	 *
-	 * @return Classifier
-	 * @throws DoesNotExistException
-	 */
-	public function findLatest(int $id): Classifier {
-		$qb = $this->db->getQueryBuilder();
+	public function getUsage(): int {
+		return $this->usage;
+	}
 
-		$select = $qb->select('*')
-			->from($this->getTableName())
-			->where(
-				$qb->expr()->eq('account_id', $qb->createNamedParameter($id, IQueryBuilder::PARAM_INT), IQueryBuilder::PARAM_INT),
-				$qb->expr()->eq('active', $qb->createNamedParameter(true, IQueryBuilder::PARAM_BOOL), IQueryBuilder::PARAM_BOOL)
-			)
-			->orderBy('created_at', 'desc')
-			->setMaxResults(1);
+	public function getLimit(): int {
+		return $this->limit;
+	}
 
-		return $this->findEntity($select);
+	public function jsonSerialize() {
+		return [
+			'usage' => $this->getUsage(),
+			'limit' => $this->getLimit(),
+		];
 	}
 }

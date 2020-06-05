@@ -30,9 +30,11 @@ declare(strict_types=1);
 namespace OCA\Mail\Controller;
 
 use Exception;
+use OCA\Mail\Contracts\IMailManager;
 use OCA\Mail\Contracts\IMailTransmission;
 use OCA\Mail\Exception\ClientException;
 use OCA\Mail\Exception\ServiceException;
+use OCA\Mail\Http\JsonResponse as MailJsonResponse;
 use OCA\Mail\Model\NewMessageData;
 use OCA\Mail\Model\RepliedMessageData;
 use OCA\Mail\Service\AccountService;
@@ -72,7 +74,20 @@ class AccountsController extends Controller {
 	/** @var SetupService */
 	private $setup;
 
-	public function __construct(string $appName, IRequest $request, AccountService $accountService, GroupsIntegration $groupsIntegration, $UserId, ILogger $logger, IL10N $l10n, AliasesService $aliasesService, IMailTransmission $mailTransmission, SetupService $setup
+	/** @var IMailManager */
+	private $mailManager;
+
+	public function __construct(string $appName,
+								IRequest $request,
+								AccountService $accountService,
+								GroupsIntegration $groupsIntegration,
+								$UserId,
+								ILogger $logger,
+								IL10N $l10n,
+								AliasesService $aliasesService,
+								IMailTransmission $mailTransmission,
+								SetupService $setup,
+								IMailManager $mailManager
 	) {
 		parent::__construct($appName, $request);
 		$this->accountService = $accountService;
@@ -83,6 +98,7 @@ class AccountsController extends Controller {
 		$this->aliasesService = $aliasesService;
 		$this->mailTransmission = $mailTransmission;
 		$this->setup = $setup;
+		$this->mailManager = $mailManager;
 	}
 
 	/**
@@ -392,5 +408,23 @@ class AccountsController extends Controller {
 			$this->logger->error('Saving draft failed: ' . $ex->getMessage());
 			throw $ex;
 		}
+	}
+
+	/**
+	 * @NoAdminRequired
+	 *
+	 * @param int $accountId
+	 *
+	 * @return JSONResponse
+	 * @throws ClientException
+	 */
+	public function getQuota(int $accountId): JSONResponse {
+		$account = $this->accountService->find($this->currentUserId, $accountId);
+
+		$quota = $this->mailManager->getQuota($account);
+		if ($quota === null) {
+			return MailJsonResponse::fail([], Http::STATUS_NOT_IMPLEMENTED);
+		}
+		return MailJsonResponse::success($quota);
 	}
 }

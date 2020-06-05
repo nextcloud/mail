@@ -322,6 +322,16 @@ class MessageMapper extends QBMapper {
 			);
 		}
 
+		if ($query->getSubject() !== null) {
+			$select->andWhere(
+				$qb->expr()->iLike(
+					'subject',
+					$qb->createNamedParameter('%' . $this->db->escapeLikeParameter($query-> $query->getSubject()) . '%', IQueryBuilder::PARAM_STR),
+					IQueryBuilder::PARAM_STR
+				)
+			);
+		}
+
 		if ($query->getCursor() !== null) {
 			$select->andWhere(
 				$qb->expr()->lt('sent_at', $qb->createNamedParameter($query->getCursor(), IQueryBuilder::PARAM_INT))

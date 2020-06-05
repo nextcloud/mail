@@ -6,7 +6,6 @@
 [![PHP Coverage](https://scrutinizer-ci.com/g/nextcloud/mail/badges/coverage.png?b=master)](https://scrutinizer-ci.com/g/nextcloud/mail/?branch=master)
 [![JavaScript Coverage](https://coveralls.io/repos/github/nextcloud/mail/badge.svg)](https://coveralls.io/github/nextcloud/mail)
 [![Dependabot Status](https://api.dependabot.com/badges/status?host=github&repo=nextcloud/mail)](https://dependabot.com)
-[![Bountysource](https://img.shields.io/bountysource/team/nextcloud/activity.svg?maxAge=2592000)](https://www.bountysource.com/teams/nextcloud/issues?tracker_ids=44154351)
 
 **💌 A mail app for [Nextcloud](https://nextcloud.com)**
 

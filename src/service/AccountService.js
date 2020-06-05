@@ -1,5 +1,5 @@
 import {generateUrl} from '@nextcloud/router'
-import HttpClient from '@nextcloud/axios'
+import axios from '@nextcloud/axios'
 
 export const fixAccountId = (original) => {
 	return {
@@ -11,7 +11,8 @@ export const fixAccountId = (original) => {
 export const create = (data) => {
 	const url = generateUrl('/apps/mail/api/accounts')
 
-	return HttpClient.post(url, data)
+	return axios
+		.post(url, data)
 		.then((resp) => resp.data)
 		.then(fixAccountId)
 		.catch((e) => {
@@ -28,7 +29,8 @@ export const patch = (account, data) => {
 		id: account.accountId,
 	})
 
-	return HttpClient.patch(url, data)
+	return axios
+		.patch(url, data)
 		.then((resp) => resp.data)
 		.then(fixAccountId)
 }
@@ -38,7 +40,8 @@ export const update = (data) => {
 		id: data.accountId,
 	})
 
-	return HttpClient.put(url, data)
+	return axios
+		.put(url, data)
 		.then((resp) => resp.data)
 		.then(fixAccountId)
 }
@@ -51,7 +54,8 @@ export const updateSignature = (account, signature) => {
 		signature,
 	}
 
-	return HttpClient.put(url, data)
+	return axios
+		.put(url, data)
 		.then((resp) => resp.data)
 		.then(fixAccountId)
 }
@@ -59,7 +63,7 @@ export const updateSignature = (account, signature) => {
 export const fetchAll = () => {
 	const url = generateUrl('/apps/mail/api/accounts')
 
-	return HttpClient.get(url).then((resp) => resp.data.map(fixAccountId))
+	return axios.get(url).then((resp) => resp.data.map(fixAccountId))
 }
 
 export const fetch = (id) => {
@@ -67,7 +71,26 @@ export const fetch = (id) => {
 		id,
 	})
 
-	return HttpClient.get(url).then((resp) => fixAccountId(resp.data))
+	return axios.get(url).then((resp) => fixAccountId(resp.data))
+}
+
+export const fetchQuota = async (id) => {
+	const url = generateUrl('/apps/mail/api/accounts/{id}/quota', {
+		id,
+	})
+
+	try {
+		const resp = await axios.get(url)
+
+		return resp.data.data
+	} catch (e) {
+		if ('response' in e && e.response.status === 501) {
+			// The server does not support quota
+			return false
+		}
+		// Something else
+		throw e
+	}
 }
 
 export const deleteAccount = (id) => {
@@ -75,5 +98,5 @@ export const deleteAccount = (id) => {
 		id,
 	})
 
-	return HttpClient.delete(url).then((resp) => fixAccountId(resp.data))
+	return axios.delete(url).then((resp) => fixAccountId(resp.data))
 }

@@ -93,8 +93,6 @@ OC.L10N.register(
     "Favorite " : "הוספה למועדפים",
     "Unselect " : "ביטול בחירה",
     "Delete " : "מחיקה",
-    "Show all {nr} messages" : "להציג את כל {nr} ההודעות",
-    "Collapse messages" : "צמצום הודעות",
     "Report this bug" : "דיווח על התקלה הזו",
     "Could not open mailbox" : "לא ניתן לפתוח את תיבת הדואר",
     "Loading messages" : "ההודעות נטענות",

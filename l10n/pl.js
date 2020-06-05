@@ -93,8 +93,6 @@ OC.L10N.register(
     "Favorite " : "Ulubione ",
     "Unselect " : "Odznacz ",
     "Delete " : "Usuń ",
-    "Show all {nr} messages" : "Pokaż wszystkie {nr} wiadomości",
-    "Collapse messages" : "Zwiń wiadomości",
     "Report this bug" : "Zgłoś ten błąd",
     "Could not open mailbox" : "Nie można otworzyć skrzynki pocztowej",
     "Loading messages" : "Ładowanie wiadomości",

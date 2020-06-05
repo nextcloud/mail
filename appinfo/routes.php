@@ -55,6 +55,11 @@ return [
 			'verb' => 'PUT'
 		],
 		[
+			'name' => 'accounts#getQuota',
+			'url' => '/api/accounts/{accountId}/quota',
+			'verb' => 'GET'
+		],
+		[
 			'name' => 'folders#sync',
 			'url' => '/api/accounts/{accountId}/folders/{folderId}/sync',
 			'verb' => 'POST'

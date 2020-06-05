@@ -19,14 +19,26 @@
 					:bus="bus"
 				/>
 				<template v-else>
-					<SectionTitle class="app-content-list-item important" :name="t('mail', 'Important')" />
+					<li class="app-content-list-item">
+						<SectionTitle class="important" :name="t('mail', 'Important')" />
+						<Popover trigger="hover focus">
+							<button slot="trigger" class="button icon-info"></button>
+							{{
+								t(
+									'mail',
+									'Messages will automatically be marked as important based on which messages you interacted with or marked as important. In the beginning you might have to manually change the importance to teach the system, but it will improve over time.'
+								)
+							}}
+						</Popover>
+					</li>
 					<Mailbox
 						class="nameimportant"
 						:account="unifiedAccount"
 						:folder="unifiedInbox"
-						:paginate="false"
 						:search-query="appendToSearch('is:important')"
+						:paginate="'manual'"
 						:is-priority-inbox="true"
+						:initial-page-size="5"
 						:collapsible="true"
 						:bus="bus"
 					/>
@@ -35,10 +47,10 @@
 						class="namestarred"
 						:account="unifiedAccount"
 						:folder="unifiedInbox"
-						:paginate="false"
 						:search-query="appendToSearch('is:starred not:important')"
+						:paginate="'manual'"
 						:is-priority-inbox="true"
-						:collapsible="true"
+						:initial-page-size="5"
 						:bus="bus"
 					/>
 					<SectionTitle class="app-content-list-item other" :name="t('mail', 'Other')" />
@@ -63,6 +75,7 @@
 <script>
 import AppContent from '@nextcloud/vue/dist/Components/AppContent'
 import AppContentList from '@nextcloud/vue/dist/Components/AppContentList'
+import Popover from '@nextcloud/vue/dist/Components/Popover'
 import infiniteScroll from 'vue-infinite-scroll'
 import isMobile from '@nextcloud/vue/dist/Mixins/isMobile'
 import SectionTitle from './SectionTitle'
@@ -84,6 +97,7 @@ export default {
 	},
 	components: {
 		AppContent,
+		Popover,
 		AppContentList,
 		AppDetailsToggle,
 		Mailbox,
@@ -212,4 +226,26 @@ export default {
 }
 </script>
 
-<style scoped></style>
+<style lang="scss" scoped>
+.v-popover > .trigger > {
+	z-index: 1;
+}
+.icon-info {
+	background-image: var(--icon-info-000);
+}
+.app-content-list-item:hover {
+	background: transparent;
+}
+.button {
+	background-color: var(--color-main-background);
+	width: 44px;
+	height: 44px;
+	border: 0;
+	margin-bottom: 17px;
+
+	&:hover,
+	&:focus {
+		background-color: var(--color-background-dark);
+	}
+}
+</style>

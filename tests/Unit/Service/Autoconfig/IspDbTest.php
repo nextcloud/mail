@@ -39,8 +39,8 @@ class IspDbtest extends TestCase {
 
 	public function queryData() {
 		return [
-			['gmail.com'],
-			['outlook.com'],
+			['gmail.com', 'user@gmail.com',],
+			['outlook.com', 'user@outlook.com',],
 		];
 	}
 
@@ -48,19 +48,20 @@ class IspDbtest extends TestCase {
 	 * @dataProvider queryData
 	 *
 	 * @param string $domain
+	 * @param string $email
 	 */
-	public function testQueryRealServers($domain) {
+	public function testQueryRealServers(string $domain, string $email): void {
 		$this->markTestSkipped('does not work reliably');
 		return;
 
 		$ispDb = new IspDb($this->logger);
-		$result = $ispDb->query($domain);
+		$result = $ispDb->query($domain, $email);
 		$this->assertContainsIspData($result);
 	}
 
 	public function fakeAutoconfigData() {
 		return [
-			['freenet.de', true],
+			['freenet.de', 'user@freenet.de', true],
 			//['example.com', false], //should it fail?
 		];
 	}
@@ -68,13 +69,13 @@ class IspDbtest extends TestCase {
 	/**
 	 * @dataProvider fakeAutoconfigData
 	 */
-	public function testQueryFakeAutoconfig($domain, $shouldSucceed) {
+	public function testQueryFakeAutoconfig(string $domain, string $email, bool $shouldSucceed) {
 		$urls = [
 			dirname(__FILE__) . '/../../../resources/autoconfig-freenet.xml',
 		];
 		$ispDb = $this->getIspDbMock($urls);
 
-		$result = $ispDb->query($domain);
+		$result = $ispDb->query($domain, $email);
 
 		if ($shouldSucceed) {
 			$this->assertContainsIspData($result);

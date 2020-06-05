@@ -33,13 +33,16 @@ use OCA\Mail\Db\MailboxMapper;
 use OCA\Mail\Db\Message;
 use OCA\Mail\Db\MessageMapper;
 use OCA\Mail\Exception\ClassifierTrainingException;
+use OCA\Mail\Exception\ServiceException;
 use OCA\Mail\Service\Classification\FeatureExtraction\CompositeExtractor;
 use OCA\Mail\Support\PerformanceLogger;
-use OCA\Mail\Vendor\Phpml\Classification\NaiveBayes;
-use OCA\Mail\Vendor\Phpml\Estimator;
-use OCA\Mail\Vendor\Phpml\Metric\ClassificationReport;
 use OCP\AppFramework\Db\DoesNotExistException;
 use OCP\ILogger;
+use Rubix\ML\Classifiers\GaussianNB;
+use Rubix\ML\CrossValidation\Reports\MulticlassBreakdown;
+use Rubix\ML\Datasets\Labeled;
+use Rubix\ML\Datasets\Unlabeled;
+use Rubix\ML\Estimator;
 use RuntimeException;
 use function array_column;
 use function array_combine;
@@ -279,7 +282,8 @@ class ImportanceClassifier {
 	 * @param Mailbox $mailbox
 	 * @param Message[] $messages
 	 *
-	 * @return array
+	 * @return bool[]
+	 * @throws ServiceException
 	 */
 	public function classifyImportance(Account $account, Mailbox $mailbox, array $messages): array {
 		$estimator = $this->persistenceService->loadLatest($account);
@@ -306,7 +310,9 @@ class ImportanceClassifier {
 			$this->getOutgoingMailboxes($account),
 			$messages
 		);
-		$predictions = $estimator->predict(array_column($features, 'features'));
+		$predictions = $estimator->predict(
+			Unlabeled::build(array_column($features, 'features'))
+		);
 		return array_combine(
 			array_map(function (Message $m) {
 				return $m->getUid();
@@ -317,12 +323,12 @@ class ImportanceClassifier {
 		);
 	}
 
-	private function trainClassifier(array $trainingSet): Estimator {
-		$classifier = new NaiveBayes();
-		$classifier->train(
+	private function trainClassifier(array $trainingSet): GaussianNB {
+		$classifier = new GaussianNB();
+		$classifier->train(Labeled::build(
 			array_column($trainingSet, 'features'),
 			array_column($trainingSet, 'label')
-		);
+		));
 		return $classifier;
 	}
 
@@ -337,8 +343,19 @@ class ImportanceClassifier {
 	private function validateClassifier(Estimator $estimator,
 										array $trainingSet,
 										array $validationSet): Classifier {
-		$predictedValidationLabel = $estimator->predict(array_column($validationSet, 'features'));
-		$report = new ClassificationReport($predictedValidationLabel, array_column($validationSet, 'label'));
+		$predictedValidationLabel = $estimator->predict(Unlabeled::build(
+			array_column($validationSet, 'features')
+		));
+
+		$reporter = new MulticlassBreakdown();
+		$report = $reporter->generate(
+			$predictedValidationLabel,
+			array_column($validationSet, 'label')
+		);
+		$recallImportant = $report['classes'][self::LABEL_IMPORTANT]['recall'];
+		$precisionImportant = $report['classes'][self::LABEL_IMPORTANT]['precision'];
+		$f1ScoreImportant = $report['classes'][self::LABEL_IMPORTANT]['f1_score'];
+
 		/**
 		 * What we care most is the percentage of messages classified as important in relation to the truly important messages
 		 * as we want to have a classification that rather flags too much as important that too little.
@@ -350,19 +367,10 @@ class ImportanceClassifier {
 		 * Ref https://en.wikipedia.org/wiki/F1_score
 		 */
 		$this->logger->debug("classification report: " . json_encode([
-			'recall' => $report->getRecall(),
-			'precision' => $report->getPrecision(),
-			'f1Score' => $report->getF1score(),
+			'recall' => $recallImportant,
+			'precision' => $precisionImportant,
+			'f1Score' => $f1ScoreImportant,
 		]));
-		if (($recallImportant = $report->getRecall()[self::LABEL_IMPORTANT] ?? null) === null) {
-			throw new ClassifierTrainingException("Importance recall is null");
-		}
-		if (($precisionImportant = $report->getPrecision()[self::LABEL_IMPORTANT] ?? null) === null) {
-			throw new ClassifierTrainingException("Importance recall is null");
-		}
-		if (($f1ScoreImportant = $report->getF1score()[self::LABEL_IMPORTANT] ?? null) === null) {
-			throw new ClassifierTrainingException("Importance recall is null");
-		}
 		$this->logger->debug("classifier validated: recall(important)=$recallImportant, precision(important)=$precisionImportant f1(important)=$f1ScoreImportant");
 
 		$classifier = new Classifier();

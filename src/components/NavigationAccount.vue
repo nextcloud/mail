@@ -27,13 +27,18 @@
 		:icon="iconError"
 		:menu-open.sync="menuOpen"
 		:title="account.emailAddress"
-		:to="settingsRoute"
+		:to="firstFolderRoute"
+		:exact="true"
+		@update:menuOpen="onMenuToggle"
 	>
 		<!-- Color dot -->
 		<AppNavigationIconBullet v-if="bulletColor" slot="icon" :color="bulletColor" />
 
 		<!-- Actions -->
 		<template #actions>
+			<ActionText v-if="!account.isUnified" icon="icon-info" :title="t('mail', 'Quota')">
+				{{ quotaText }}
+			</ActionText>
 			<ActionRouter :to="settingsRoute" icon="icon-settings">
 				{{ t('mail', 'Edit account') }}
 			</ActionRouter>
@@ -67,10 +72,13 @@ import ActionRouter from '@nextcloud/vue/dist/Components/ActionRouter'
 import ActionButton from '@nextcloud/vue/dist/Components/ActionButton'
 import ActionCheckbox from '@nextcloud/vue/dist/Components/ActionCheckbox'
 import ActionInput from '@nextcloud/vue/dist/Components/ActionInput'
+import ActionText from '@nextcloud/vue/dist/Components/ActionText'
+import {formatFileSize} from '@nextcloud/files'
 import {generateUrl} from '@nextcloud/router'
 
 import {calculateAccountColor} from '../util/AccountColor'
 import logger from '../logger'
+import {fetchQuota} from '../service/AccountService'
 
 export default {
 	name: 'NavigationAccount',
@@ -81,9 +89,14 @@ export default {
 		ActionButton,
 		ActionCheckbox,
 		ActionInput,
+		ActionText,
 	},
 	props: {
 		account: {
+			type: Object,
+			required: true,
+		},
+		firstFolder: {
 			type: Object,
 			required: true,
 		},
@@ -103,6 +116,7 @@ export default {
 				delete: false,
 			},
 			savingShowOnlySubscribed: false,
+			quota: undefined,
 		}
 	},
 	computed: {
@@ -117,6 +131,15 @@ export default {
 				},
 			}
 		},
+		firstFolderRoute() {
+			return {
+				name: 'folder',
+				params: {
+					accountId: this.account.id,
+					folderId: this.firstFolder.id,
+				},
+			}
+		},
 		id() {
 			return 'account-' + this.account.id
 		},
@@ -125,6 +148,19 @@ export default {
 		},
 		iconError() {
 			return this.account.error ? 'icon-error' : undefined
+		},
+		quotaText() {
+			if (this.quota === undefined) {
+				return t('mail', 'Loading …')
+			}
+			if (this.quota === false) {
+				return t('mail', 'Not supported by the server')
+			}
+
+			return t('mail', '{usage} of {limit} used', {
+				usage: formatFileSize(this.quota.usage),
+				limit: formatFileSize(this.quota.limit),
+			})
 		},
 	},
 	methods: {
@@ -203,6 +239,25 @@ export default {
 					this.savingShowOnlySubscribed = false
 					throw error
 				})
+		},
+		onMenuToggle(open) {
+			if (open) {
+				console.debug('accounts menu opened, fetching quota')
+				this.fetchQuota()
+			}
+		},
+		async fetchQuota() {
+			const quota = await fetchQuota(this.account.id)
+			console.debug('quota fetched', {
+				quota,
+			})
+
+			if (quota === undefined) {
+				// Server does not support this
+				this.quota = false
+			} else {
+				this.quota = quota
+			}
 		},
 	},
 }
