@@ -25,6 +25,7 @@ declare(strict_types=1);
 
 namespace OCA\Mail\Http;
 
+use JsonSerializable;
 use OCA\Mail\Exception\ClientException;
 use OCP\AppFramework\Http;
 use OCP\AppFramework\Http\JSONResponse as Base;
@@ -46,7 +47,13 @@ class JsonResponse extends Base {
 		$this->addHeader('x-mail-response', 'true');
 	}
 
-	public static function success(array $data = [],
+	/**
+	 * @param array|JsonSerializable|bool|string $data
+	 * @param int $status
+	 *
+	 * @return static
+	 */
+	public static function success($data = null,
 								   int $status = Http::STATUS_OK): self {
 		return new self(
 			[
@@ -57,7 +64,13 @@ class JsonResponse extends Base {
 		);
 	}
 
-	public static function fail(array $data = [],
+	/**
+	 * @param array|JsonSerializable|bool|string $data
+	 * @param int $status
+	 *
+	 * @return static
+	 */
+	public static function fail($data = null,
 								int $status = Http::STATUS_BAD_REQUEST): self {
 		return new self(
 			[
