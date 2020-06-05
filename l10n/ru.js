@@ -93,8 +93,6 @@ OC.L10N.register(
     "Favorite " : "Добавить в избранное",
     "Unselect " : "Снять выбор",
     "Delete " : "Удалить",
-    "Show all {nr} messages" : "Показать все {nr} сообщения",
-    "Collapse messages" : "Свернуть сообщения",
     "Report this bug" : "Отправить отчёт об этой ошибке",
     "Could not open mailbox" : "Невозможно открыть почтовый ящик",
     "Loading messages" : "Загрузка сообщений",

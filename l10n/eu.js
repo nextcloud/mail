@@ -90,7 +90,6 @@ OC.L10N.register(
     "Favorite " : "Gehitu gogoko gisa",
     "Unselect " : "Desautatu",
     "Delete " : "Ezabatu",
-    "Show all {nr} messages" : "Erakutsi {nr} mezuak",
     "Report this bug" : "Eman errore honen berri",
     "Could not open mailbox" : "Ezin izan da postontzia ireki",
     "Loading messages" : "Mezuak kargatzen",

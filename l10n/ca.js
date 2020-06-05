@@ -93,8 +93,6 @@ OC.L10N.register(
     "Favorite " : "Preferits",
     "Unselect " : "Deselecciona ",
     "Delete " : "Eliminar ",
-    "Show all {nr} messages" : "Mostra tots els missatges de {nr}",
-    "Collapse messages" : "Contraure missatges",
     "Report this bug" : "Informa d'aquest error",
     "Could not open mailbox" : "No es pot obrir la bústia de correu",
     "Loading messages" : "S'estan carregant missatges",

@@ -93,8 +93,6 @@ OC.L10N.register(
     "Favorite " : "收藏",
     "Unselect " : "取消选择",
     "Delete " : "删除",
-    "Show all {nr} messages" : "显示所有 {nr} 消息",
-    "Collapse messages" : "隐藏消息",
     "Report this bug" : "报告此问题",
     "Could not open mailbox" : "无法打开邮箱",
     "Loading messages" : "正在加载消息",

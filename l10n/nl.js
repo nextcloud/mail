@@ -93,8 +93,6 @@ OC.L10N.register(
     "Favorite " : "Favoriet maken",
     "Unselect " : "Deselecteren",
     "Delete " : "Verwijderen",
-    "Show all {nr} messages" : "Toon alle {nr} berichten",
-    "Collapse messages" : "Berichten inklappen",
     "Report this bug" : "Meld deze fout",
     "Could not open mailbox" : "Kon postbus niet openen",
     "Loading messages" : "Berichten aan het laden",
