@@ -59,6 +59,7 @@ OC.L10N.register(
     "The images have been blocked to protect your privacy." : "تم حجب هذه الصورة لحماية خصوصيتك",
     "New message" : "رسالة جديدة",
     "Settings" : "الإعدادات",
+    "Quota" : "الحصة",
     "Add folder" : "إضافة مجلد",
     "Remove account" : "حذف حساب",
     "Cancel" : "إلغاء",

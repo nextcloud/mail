@@ -40,6 +40,7 @@ OC.L10N.register(
     "The images have been blocked to protect your privacy." : " таны хувийн нууцыг хамгаалахын тулд дүрсийг хаасан байна.",
     "New message" : "шинэ зурвас",
     "Settings" : "тохиргоо",
+    "Quota" : " хувь хэмжээ",
     "Add folder" : "Add folder",
     "Remove account" : "Аккаунт устгах",
     "Cancel" : "болиулах",

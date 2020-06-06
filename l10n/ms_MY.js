@@ -13,6 +13,7 @@ OC.L10N.register(
     "Other" : "Lain",
     "to" : "kepada",
     "Settings" : "Tetapan",
+    "Quota" : "Kuota",
     "Add folder" : "Add folder",
     "Cancel" : "Batal",
     "General" : "Umum",

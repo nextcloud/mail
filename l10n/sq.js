@@ -53,6 +53,7 @@ OC.L10N.register(
     "The images have been blocked to protect your privacy." : "Imazhet janë bllokuar për të mbrojtur privatësinë tuaj.",
     "New message" : "Mesazh i ri",
     "Settings" : "Konfigurimet",
+    "Quota" : "Kuotë",
     "Add folder" : "Shto dosje",
     "Remove account" : "Fshij llogarinë",
     "Cancel" : "Anullo",

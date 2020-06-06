@@ -20,6 +20,7 @@ OC.L10N.register(
     "Reply" : "Äntwerten",
     "Unnamed" : "ouni Numm",
     "Settings" : "Astellungen",
+    "Quota" : "Quota",
     "Add folder" : "Add folder",
     "Remove account" : "De Kont läschen",
     "Cancel" : "Ofbriechen",

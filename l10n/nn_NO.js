@@ -18,6 +18,7 @@ OC.L10N.register(
     "Other" : "Anna",
     "to" : "til",
     "Settings" : "Instillingar",
+    "Quota" : "Kvote",
     "Add folder" : "Add folder",
     "Cancel" : "Avbryt",
     "Signature" : "Signatur",
