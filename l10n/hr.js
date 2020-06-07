@@ -109,6 +109,7 @@ OC.L10N.register(
     "Show images from this\tsender" : "Prikaži slike ovog\tpošiljatelja",
     "New message" : "Nova poruka",
     "Settings" : "Postavke",
+    "Quota" : "Kvota",
     "Edit account" : "Uredi račun",
     "Add folder" : "Dodaj mapu",
     "Move Up" : "Premjesti gore",

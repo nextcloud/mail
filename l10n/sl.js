@@ -94,6 +94,7 @@ OC.L10N.register(
     "Show images from this\tsender" : "Pokaži slike od tega \tpošiljatelja",
     "New message" : "Novo sporočilo",
     "Settings" : "Nastavitve",
+    "Quota" : "Količinska omejitev",
     "Edit account" : "Uredi račun",
     "Add folder" : "Dodaj mapo",
     "Move Up" : "Premakni navzgor",

@@ -101,6 +101,7 @@ OC.L10N.register(
     "Show images from this\tsender" : "Rodyti paveikslus nuo šio\tsiuntėjo",
     "New message" : "Naujas laiškas",
     "Settings" : "Nustatymai",
+    "Quota" : "Leidžiamas duomenų kiekis",
     "Edit account" : "Taisyti paskyrą",
     "Add folder" : "Pridėti aplanką",
     "Move Up" : "Pakelti",

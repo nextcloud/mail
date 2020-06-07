@@ -133,6 +133,8 @@ OC.L10N.register(
     "Move down" : "Nach unten verschieben",
     "Remove account" : "Konto löschen",
     "Loading …" : "Lade ...",
+    "Not supported by the server" : "Wird vom Server nicht unterstützt",
+    "{usage} of {limit} used" : "{usage} von {limit} genutzt",
     "Remove account {email}" : "Konto {email} löschen",
     "Remove {email}" : "{email} löschen",
     "Cancel" : "Abbrechen",

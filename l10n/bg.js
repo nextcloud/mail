@@ -71,6 +71,7 @@ OC.L10N.register(
     "Choose a folder to store the attachment in" : "Избери папка, където да бъде запазен прикаченият файл",
     "New message" : "Ново съобщение",
     "Settings" : "Настройки",
+    "Quota" : "Квота",
     "Edit account" : "Редактиране на профила",
     "Add folder" : "Добави папка",
     "Remove account" : "Изтриване",

@@ -94,6 +94,7 @@ OC.L10N.register(
     "Show images from this\tsender" : "Birta myndir frá þessum\tsendanda",
     "New message" : "Ný skilaboð",
     "Settings" : "Stillingar",
+    "Quota" : "Kvóti",
     "Edit account" : "Breyta notandaaðgangi",
     "Add folder" : "Bæta við möppu",
     "Remove account" : "Remove account",

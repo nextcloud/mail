@@ -124,6 +124,7 @@ OC.L10N.register(
     "Show images from this\tsender" : "显示此发件人的图片",
     "New message" : "新建消息",
     "Settings" : "设置",
+    "Quota" : "配额",
     "Edit account" : "编辑账号",
     "Show only subscribed folders" : "仅显示已订阅的文件夹",
     "Add folder" : "添加文件夹",

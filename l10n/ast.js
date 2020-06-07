@@ -44,6 +44,7 @@ OC.L10N.register(
     "The images have been blocked to protect your privacy." : "Bloquiáronse les imáxenes pa protexer la to privacidá.",
     "New message" : "Mensaxe nuevu",
     "Settings" : "Axustes",
+    "Quota" : "Cuota",
     "Add folder" : "Add folder",
     "Remove account" : "Desaniciar cuenta",
     "Loading …" : "Cargando...",

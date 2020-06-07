@@ -133,6 +133,8 @@ OC.L10N.register(
     "Move down" : "Přesunout dolů",
     "Remove account" : "Odebrat účet",
     "Loading …" : "Načítání…",
+    "Not supported by the server" : "Nepodporováno serverem",
+    "{usage} of {limit} used" : "využito {usage} z {limit}",
     "Remove account {email}" : "Odebrat účet {email}",
     "Remove {email}" : "Odebrat {email}",
     "Cancel" : "Storno",

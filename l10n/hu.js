@@ -102,6 +102,7 @@ OC.L10N.register(
     "Show images from this\tsender" : "Képek megjelenítése a küldőtől \tsender",
     "New message" : "Új üzenet",
     "Settings" : "Beállítások",
+    "Quota" : "Kvóta",
     "Edit account" : "Fiók szerkesztése",
     "Add folder" : "Mappa hozzáadás",
     "Move Up" : "Mozgatás Fel",

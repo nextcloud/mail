@@ -64,6 +64,7 @@ OC.L10N.register(
     "The images have been blocked to protect your privacy." : "為維護您的隱私，圖片將不會被載入",
     "New message" : "新信件",
     "Settings" : "設定",
+    "Quota" : "用量",
     "Add folder" : "新增資料夾",
     "Remove account" : "移除帳號",
     "Loading …" : "載入中 ...",

@@ -133,6 +133,8 @@ OC.L10N.register(
     "Move down" : "Mover cara abaixo",
     "Remove account" : "Retirar a conta",
     "Loading …" : "Cargando…",
+    "Not supported by the server" : "Non é compatíbel co servidor",
+    "{usage} of {limit} used" : "Usado {usage} de {limit}",
     "Remove account {email}" : "Retirar a conta {email}",
     "Remove {email}" : "Retirar {email}",
     "Cancel" : "Cancelar",

@@ -124,6 +124,7 @@ OC.L10N.register(
     "Show images from this\tsender" : "Exibir imagens deste\tremetente",
     "New message" : "Nova mensagem",
     "Settings" : "Configurações",
+    "Quota" : "Cota",
     "Edit account" : "Editar conta",
     "Show only subscribed folders" : "Mostrar somente pastas subscritas",
     "Add folder" : "Adicionar pasta",

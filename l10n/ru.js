@@ -124,6 +124,7 @@ OC.L10N.register(
     "Show images from this\tsender" : "Показать изображения от этого\tотправителя",
     "New message" : "Создать сообщение",
     "Settings" : "Настройки",
+    "Quota" : "Квота",
     "Edit account" : "Изменить учётную запись",
     "Add folder" : "Добавить папку",
     "Move Up" : "Переместить выше",

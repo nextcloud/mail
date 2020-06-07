@@ -39,6 +39,7 @@ OC.L10N.register(
     "Unnamed" : "Naamloos",
     "New message" : "Nuwe boodskap",
     "Settings" : "Instellings",
+    "Quota" : "Kwota",
     "Add folder" : "Voeg 'n gids by",
     "Remove account" : "Verwyder rekening",
     "Loading …" : "Laai …",

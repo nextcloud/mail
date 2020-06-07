@@ -124,6 +124,7 @@ OC.L10N.register(
     "Show images from this\tsender" : "הצגת תמונות מהשולח הזה",
     "New message" : "הודעה חדשה",
     "Settings" : "הגדרות",
+    "Quota" : "מכיסה",
     "Edit account" : "עריכת חשבון",
     "Show only subscribed folders" : "להציג תיקיות שבמינוי בלבד",
     "Add folder" : "הוספת תיקייה",

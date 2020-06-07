@@ -98,6 +98,7 @@ OC.L10N.register(
     "Show images from this\tsender" : "Прикажувај ги сликите од овој\tиспраќач",
     "New message" : "Нова порака",
     "Settings" : "Параметри",
+    "Quota" : "Квота",
     "Edit account" : "Измени сметка",
     "Add folder" : "Додади папка",
     "Remove account" : "Отстрани сметка",
