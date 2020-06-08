@@ -1,6 +1,31 @@
 # Changelog
 All notable changes to this project will be documented in this file.
 
+## 1.4.0 - 2020-05-16
+### Added
+- Priority Inbox: the combined inbox is now classified into important messages, favorites and others to keep you organized
+- Actions on multiple message (multiselect)
+- Mark as junk
+- Make as important
+- Search by subject
+- Confirmation when deleting account
+### Changed
+- Migrate from php-ml to rubix-ml
+- Show only subscribed folders
+- Open inbox when clicking on account item
+- Consistency of "important" icon
+- Make loading spinner not move all messages
+- Change empty-content message on mail
+- Incomplete initial sync now logs the current progress
+### Fixed
+- Delete all user's accounts when the user is being deleted
+- Navigation from account settings to new message composer
+- Navigating back from small screens
+- User data cleanup after user deletion
+- Message deletion from priority inbox
+- Vertical space between sections in priority inbox
+- Endless initial sync due to empty partial page
+
 ## 1.3.4 - 2020-04-27
 ### Added
 - Incomplete initial sync now logs the current progress
