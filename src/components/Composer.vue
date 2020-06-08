@@ -167,8 +167,8 @@
 					<ActionCheckbox
 						:checked="!encrypt && !editorPlainText"
 						:disabled="encrypt"
-						@check="editorPlainText = false"
-						@uncheck="editorPlainText = true"
+						@check="editorMode = 'html'"
+						@uncheck="editorMode = 'plaintext'"
 						>{{ t('mail', 'Enable formatting') }}</ActionCheckbox
 					>
 					<ActionCheckbox
@@ -330,6 +330,7 @@ export default {
 				keyRing: undefined,
 				keysMissing: [],
 			},
+			editorMode: 'html',
 		}
 	},
 	computed: {
@@ -358,10 +359,7 @@ export default {
 			return this.selectTo.length > 0 || this.selectCc.length > 0 || this.selectBcc.length > 0
 		},
 		editorPlainText() {
-			if (this.selectedAlias) {
-				return this.selectedAlias.editorMode === 'plaintext'
-			}
-			return false
+			return this.editorMode === 'plaintext'
 		},
 		submitButtonTitle() {
 			if (!this.mailvelope.available) {
@@ -406,10 +404,14 @@ export default {
 	},
 	methods: {
 		setAlias() {
+			const previous = this.selectedAlias
 			if (this.fromAccount) {
 				this.selectedAlias = this.aliases.find((alias) => alias.id === this.fromAccount)
 			} else {
 				this.selectedAlias = this.aliases[0]
+			}
+			if (previous === undefined) {
+				this.editorMode = this.selectedAlias.editorMode
 			}
 		},
 		async checkRecipientsKeys() {
