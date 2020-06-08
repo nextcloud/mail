@@ -87,15 +87,7 @@ class MailboxSync {
 			throw new ServiceException("IMAP error" . $e->getMessage(), $e->getCode(), $e);
 		}
 
-		try {
-			$this->folderMapper->getFoldersStatus($folders, $client);
-		} catch (Horde_Imap_Client_Exception $e) {
-			// Log but carry on, this is not THAT critical
-			$this->logger->logException($e, [
-				'message' => 'Could not get mailbox status: ' . $e->getMessage(),
-				'level' => ILogger::ERROR,
-			]);
-		}
+		$this->folderMapper->getFoldersStatus($folders, $client);
 		$this->folderMapper->detectFolderSpecialUse($folders);
 
 		$old = $this->mailboxMapper->findAll($account);

@@ -23,6 +23,7 @@ declare(strict_types=1);
 
 namespace OCA\Mail\IMAP;
 
+use OCP\ILogger;
 use function array_filter;
 use function array_map;
 use function in_array;
@@ -35,6 +36,13 @@ use OCA\Mail\Exception\ServiceException;
 use OCA\Mail\Folder;
 
 class FolderMapper {
+
+	/** @var ILogger */
+	private $logger;
+
+	public function __construct(ILogger $logger) {
+		$this->logger = $logger;
+	}
 
 	/**
 	 * This is a temporary workaround for when the sieve folder is a subfolder of
@@ -100,23 +108,22 @@ class FolderMapper {
 	 * @param Folder[] $folders
 	 * @param Horde_Imap_Client_Socket $client
 	 *
-	 * @throws Horde_Imap_Client_Exception
-	 *
 	 * @return void
 	 */
 	public function getFoldersStatus(array $folders,
 									 Horde_Imap_Client_Socket $client): void {
-		$mailboxes = array_map(function (Folder $folder) {
-			return $folder->getMailbox();
-		}, array_filter($folders, function (Folder $folder) {
-			return $folder->isSearchable();
-		}));
-
-		$status = $client->status($mailboxes);
-
 		foreach ($folders as $folder) {
 			if (isset($status[$folder->getMailbox()])) {
-				$folder->setStatus($status[$folder->getMailbox()]);
+				try {
+					$folder->setStatus(
+						$client->status($folder->getMailbox())
+					);
+				} catch (Horde_Imap_Client_Exception $e) {
+					$this->logger->logException($e, [
+						'message' => 'Could not get mailbox status: ' . $e->getMessage(),
+						'level' => ILogger::ERROR,
+					]);
+				}
 			}
 		}
 	}

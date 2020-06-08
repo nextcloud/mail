@@ -97,18 +97,6 @@ class FolderTest extends TestCase {
 		$this->assertSame('flagged', $this->folder->getSpecialUse()[0]);
 	}
 
-	public function testIsSearchable() {
-		$this->mockFolder([]);
-
-		$this->assertTrue($this->folder->isSearchable());
-	}
-
-	public function testIsNotSearchable() {
-		$this->mockFolder(['\noselect']);
-
-		$this->assertFalse($this->folder->isSearchable());
-	}
-
 	public function testJsonSerialize() {
 		$this->mockFolder();
 		$subFolder = $this->createMock(Folder::class);
