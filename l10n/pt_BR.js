@@ -93,6 +93,7 @@ OC.L10N.register(
     "Favorite " : "Favoritar",
     "Unselect " : "Desmarcar",
     "Delete " : "Excluir",
+    "Load more" : "Carregar mais",
     "Report this bug" : "Reportar este erro",
     "Could not open mailbox" : "Não foi possível abrir a caixa postal",
     "Loading messages" : "Carregando mensagens",

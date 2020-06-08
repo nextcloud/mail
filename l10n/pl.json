@@ -131,6 +131,8 @@
     "Move down" : "Przenieś niżej",
     "Remove account" : "Usuń konto",
     "Loading …" : "Wczytywanie…",
+    "Not supported by the server" : "Nieobsługiwany przez serwer",
+    "{usage} of {limit} used" : "Użyto {usage} z {limit}",
     "Remove account {email}" : "Usuń konto {email}",
     "Remove {email}" : "Usuń {email}",
     "Cancel" : "Anuluj",
