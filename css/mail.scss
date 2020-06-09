@@ -318,31 +318,18 @@
 }
 
 /* icons */
-.icon-inbox {
-	@include icon-color('inbox', 'mail', $color-black);
-}
-.icon-important {
-	@include icon-color('important', 'mail', $color-black);
-}
+@include icon-black-white('inbox', 'mail', 1);
+@include icon-black-white('important', 'mail', 1);
+
 .icon-flagged {
 	@include icon-color('star', 'mail', $color-black);
 }
-.icon-drafts {
-	@include icon-color('drafts', 'mail', $color-black);
-}
-.icon-sent {
-	@include icon-color('sent', 'mail', $color-black);
-}
-.icon-archive {
-	@include icon-color('archive', 'mail', $color-black);
-}
-.icon-junk {
-	@include icon-color('junk', 'mail', $color-black);
-}
-.icon-trash {
-	@include icon-color('trash', 'mail', $color-black);
-}
 
+@include icon-black-white('drafts', 'mail', 1);
+@include icon-black-white('sent', 'mail', 1);
+@include icon-black-white('archive', 'mail', 1);
+@include icon-black-white('junk', 'mail', 1);
+@include icon-black-white('trash', 'mail', 1);
 @include icon-black-white('reply', 'mail', 1);
 @include icon-black-white('reply-all', 'mail', 1);
 @include icon-black-white('forward', 'mail', 1);
