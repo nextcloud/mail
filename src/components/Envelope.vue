@@ -246,6 +246,9 @@ export default {
 	z-index: 50; // same as icon-starred
 }
 
+.app-content-list-item:not(.seen) {
+	font-weight: bold;
+}
 .app-content-list-item.selected {
 	background-color: var(--color-background-dark);
 	font-weight: bold;
