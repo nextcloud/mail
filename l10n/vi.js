@@ -21,6 +21,7 @@ OC.L10N.register(
     "to" : "đến",
     "Reply" : "Trả l",
     "Settings" : "Thiết lập",
+    "Quota" : "Hạn ngạch",
     "Add folder" : "Add folder",
     "Remove account" : "Xóa tài khoản",
     "Cancel" : "Hủy bỏ",

@@ -30,6 +30,7 @@ OC.L10N.register(
     "Reply" : "Balas",
     "Choose a folder to store the attachment in" : "Pilih folder untuk menyimpan lampiran didalamnya",
     "Settings" : "Setelan",
+    "Quota" : "Kuota",
     "Add folder" : "Add folder",
     "Remove account" : "Hapus akun",
     "Cancel" : "Membatalkan",
