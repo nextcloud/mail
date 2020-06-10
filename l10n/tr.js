@@ -133,6 +133,8 @@ OC.L10N.register(
     "Move down" : "Aşağı taşı",
     "Remove account" : "Hesabı sil",
     "Loading …" : "Yükleniyor …",
+    "Not supported by the server" : "Sunucu tarafından desteklenmiyor",
+    "{usage} of {limit} used" : "{usage} / {limit} kullanılmış",
     "Remove account {email}" : "{email} hesabını kaldır",
     "Remove {email}" : "{email} sil",
     "Cancel" : "İptal",
