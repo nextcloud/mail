@@ -43,6 +43,7 @@ OC.L10N.register(
     "Choose a folder to store the attachment in" : "Vali kaust, kuhu manus salvestada",
     "New message" : "Uus sõnum",
     "Settings" : "Seaded",
+    "Quota" : "Kvoot",
     "Add folder" : "Add folder",
     "Remove account" : "Eemalda konto",
     "Cancel" : "Loobu",

@@ -62,6 +62,7 @@ OC.L10N.register(
     "The images have been blocked to protect your privacy." : "Attēli tiek bloķēti, lai aizsargātu jūsu konfidencialitāti.",
     "New message" : "Jauna ziņa",
     "Settings" : "Iestatījumi",
+    "Quota" : "Kvota",
     "Add folder" : "Pievienot mapi",
     "Remove account" : "Noņemt kontu",
     "Cancel" : "Atcelt",

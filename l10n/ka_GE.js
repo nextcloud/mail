@@ -56,6 +56,7 @@ OC.L10N.register(
     "The images have been blocked to protect your privacy." : "სურათები თქვენი კონფიდენციალურობის დასაცავად დაიბლოკა",
     "New message" : "ახალი წერილი",
     "Settings" : "პარამეტრები",
+    "Quota" : "კვოტა",
     "Add folder" : "Add folder",
     "Remove account" : "ანგარიშის გაუქმება",
     "Cancel" : "უარყოფა",

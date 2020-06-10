@@ -17,6 +17,7 @@ OC.L10N.register(
     "Other" : "Ostali",
     "to" : "do",
     "Settings" : "Podešavanje",
+    "Quota" : "Kvota",
     "Add folder" : "Add folder",
     "Cancel" : "Otkaži",
     "User" : "User",

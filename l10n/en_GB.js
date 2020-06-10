@@ -58,6 +58,7 @@ OC.L10N.register(
     "The images have been blocked to protect your privacy." : "The images have been blocked to protect your privacy.",
     "New message" : "New message",
     "Settings" : "Settings",
+    "Quota" : "Quota",
     "Add folder" : "Add folder",
     "Remove account" : "Remove account",
     "Cancel" : "Cancel",
