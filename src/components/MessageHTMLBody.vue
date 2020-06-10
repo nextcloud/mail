@@ -3,7 +3,7 @@
 		<div v-if="hasBlockedContent" id="mail-message-has-blocked-content">
 			{{ t('mail', 'The images have been blocked to protect your privacy.') }}
 			<button @click="onShowBlockedContent">
-				{{ t('mail', 'Show images from this	sender') }}
+				{{ t('mail', 'Show images from this sender') }}
 			</button>
 		</div>
 		<div v-if="loading" class="icon-loading" />
