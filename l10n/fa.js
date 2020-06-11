@@ -95,7 +95,6 @@ OC.L10N.register(
     "Save all to Files" : "ذخیره همه در پرونده ها",
     "Choose a folder to store the attachments in" : "پوشه ای را برای ذخیره کردن پیوست ها انتخاب کنید",
     "The images have been blocked to protect your privacy." : "تصاویر برای محافظت از حریم خصوصی شما مسدود شده اند.",
-    "Show images from this\tsender" : "نمایش تصاویر از این فرستنده",
     "New message" : "پیام جدید",
     "Settings" : "تنظیمات",
     "Quota" : "سهم",

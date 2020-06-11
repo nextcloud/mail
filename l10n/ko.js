@@ -95,6 +95,7 @@ OC.L10N.register(
     "Choose a folder to store the attachment in" : "첨부 항목을 저장할 폴더 선택",
     "Save all to Files" : "모두 저장",
     "The images have been blocked to protect your privacy." : "개인 정보를 보호하기 위해 사진을 차단했습니다.",
+    "Show images from this sender" : "이 발신자의 사진 표시",
     "New message" : "새로운 메시지",
     "Settings" : "설정",
     "Quota" : "할당량",

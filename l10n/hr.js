@@ -106,7 +106,7 @@ OC.L10N.register(
     "Save all to Files" : "Spremi sve u datoteke",
     "Choose a folder to store the attachments in" : "Izaberi mapu za spremanje privitaka",
     "The images have been blocked to protect your privacy." : "Slike su blokirane u svrhu zaštite privatnosti.",
-    "Show images from this\tsender" : "Prikaži slike ovog\tpošiljatelja",
+    "Show images from this sender" : "Prikaži slike od ovog pošaljioca",
     "New message" : "Nova poruka",
     "Settings" : "Postavke",
     "Quota" : "Kvota",

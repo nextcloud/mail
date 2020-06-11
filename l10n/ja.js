@@ -91,7 +91,7 @@ OC.L10N.register(
     "Save all to Files" : "すべてファイルに保存",
     "Choose a folder to store the attachments in" : "添付ファイルを保存するフォルダを選択してください",
     "The images have been blocked to protect your privacy." : "画像はあなたのプライバシーを守るためにブロックされています。",
-    "Show images from this\tsender" : "この\t送信者からの画像を表示する",
+    "Show images from this sender" : "この送信者からの画像を表示する",
     "New message" : "新規メッセージ",
     "Settings" : "設定",
     "Quota" : "クオータ",
