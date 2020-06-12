@@ -120,6 +120,7 @@ OC.L10N.register(
     "Choose a folder to store the attachments in" : "Selecteer een folder waarin de bijlagen opgeslagen moeten worden",
     "This message is encrypted with PGP. Install Mailvelope to decrypt it." : "Dit bericht is versleuteld met PGP. Installeer Mailvelope om het te ontcijferen.",
     "The images have been blocked to protect your privacy." : "De afbeeldingen zijn geblokkeerd om je privacy te beschermen",
+    "Show images from this sender" : "Laat afbeeldingen zien van deze afzender",
     "New message" : "Nieuw bericht",
     "Settings" : "Instellingen",
     "Quota" : "Quota",

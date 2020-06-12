@@ -118,6 +118,7 @@
     "Choose a folder to store the attachments in" : "Επιλέξτε ένα φάκελο για να αποθηκεύσετε μέσα τα συνημμένα",
     "This message is encrypted with PGP. Install Mailvelope to decrypt it." : "Το μήνυμα είναι κρυπτογραφημένο με PGP. Εγκαταστήστε το Mailvelope για αποκρυπτογράφηση.",
     "The images have been blocked to protect your privacy." : "Οι εικόνες έχουν αποκλειστεί για να προστατευθεί η ιδιωτικότητά σας.",
+    "Show images from this sender" : "Εμφάνιση εικόνων από αυτόν τον αποστολέα",
     "New message" : "Νέο μήνυμα",
     "Settings" : "Ρυθμίσεις",
     "Quota" : "Σύνολο χώρου",

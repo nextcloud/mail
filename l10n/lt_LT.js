@@ -98,6 +98,7 @@ OC.L10N.register(
     "Save all to Files" : "Įrašyti visus į Failus",
     "Choose a folder to store the attachments in" : "Pasirinkite aplanką, kuriame laikyti priedus",
     "The images have been blocked to protect your privacy." : "Tam, kad būtų apsaugotas jūsų privatumas, paveikslai buvo užblokuoti.",
+    "Show images from this sender" : "Rodyti paveikslus nuo šio siuntėjo",
     "New message" : "Naujas laiškas",
     "Settings" : "Nustatymai",
     "Quota" : "Leidžiamas duomenų kiekis",

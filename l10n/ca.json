@@ -117,6 +117,7 @@
     "Choose a folder to store the attachments in" : "Trieu una carpeta per emmagatzemar-hi els fitxers adjunts",
     "This message is encrypted with PGP. Install Mailvelope to decrypt it." : "Aquest missatge està encriptat amb PGP. Instal·leu el Mailvelope per desencriptar-lo.",
     "The images have been blocked to protect your privacy." : "S'han blocat les imatges per protegir la vostra privadesa.",
+    "Show images from this sender" : "Mostra imatges d'aquest remitent",
     "New message" : "Escriu un missatge",
     "Settings" : "Paràmetres",
     "Quota" : "Quota",
