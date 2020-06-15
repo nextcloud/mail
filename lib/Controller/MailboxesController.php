@@ -80,6 +80,7 @@ class MailboxesController extends Controller {
 	 * @TrapError
 	 *
 	 * @param int $accountId
+	 *
 	 * @return JSONResponse
 	 *
 	 * @throws ClientException
@@ -95,6 +96,31 @@ class MailboxesController extends Controller {
 			'mailboxes' => $mailboxes,
 			'delimiter' => reset($mailboxes)->getDelimiter(),
 		]);
+	}
+
+	/**
+	 * @NoAdminRequired
+	 * @TrapError
+	 *
+	 * @param int $id
+	 * @param string $name
+	 *
+	 * @return JSONResponse
+	 */
+	public function patch(int $id,
+						  ?string $name = null): JSONResponse {
+		$mailbox = $this->mailManager->getMailbox($this->currentUserId, $id);
+		$account = $this->accountService->find($this->currentUserId, $mailbox->getAccountId());
+
+		if ($name !== null) {
+			$mailbox = $this->mailManager->renameMailbox(
+				$account,
+				$mailbox,
+				$name
+			);
+		}
+
+		return new JSONResponse($mailbox);
 	}
 
 	/**
@@ -121,7 +147,7 @@ class MailboxesController extends Controller {
 				$mailbox,
 				Horde_Imap_Client::SYNC_NEWMSGSUIDS | Horde_Imap_Client::SYNC_FLAGSUIDS | Horde_Imap_Client::SYNC_VANISHEDUIDS,
 				array_map(function ($id) {
-					return (int) $id;
+					return (int)$id;
 				}, $ids),
 				!$init,
 				$query
@@ -235,7 +261,7 @@ class MailboxesController extends Controller {
 		$mailbox = $this->mailManager->getMailbox($this->currentUserId, $id);
 		$account = $this->accountService->find($this->currentUserId, $mailbox->getAccountId());
 
-		$this->mailManager->deleteMailbox($account,  $mailbox);
+		$this->mailManager->deleteMailbox($account, $mailbox);
 		return new JSONResponse();
 	}
 }

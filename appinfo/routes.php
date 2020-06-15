@@ -90,6 +90,11 @@ return [
 			'verb' => 'GET'
 		],
 		[
+			'name' => 'mailboxes#patch',
+			'url' => '/api/mailboxes/{id}',
+			'verb' => 'PATCH'
+		],
+		[
 			'name' => 'mailboxes#sync',
 			'url' => '/api/mailboxes/{id}/sync',
 			'verb' => 'POST'

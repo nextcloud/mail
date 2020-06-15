@@ -55,6 +55,7 @@ import {
 	deleteMailbox,
 	fetchAll as fetchAllMailboxes,
 	markMailboxRead,
+	patchMailbox,
 } from '../service/MailboxService'
 import {
 	deleteMessage,
@@ -673,5 +674,14 @@ export default {
 	async deleteAlias({ commit }, { account, aliasToDelete }) {
 		await deleteAlias(account, aliasToDelete)
 		commit('deleteAlias', { account, alias: aliasToDelete })
+	},
+	async renameMailbox({ commit }, { account, mailbox, newName }) {
+		const newMailbox = await patchMailbox(mailbox.databaseId, {
+			name: newName,
+		})
+
+		console.debug(`mailbox ${mailbox.databaseId} renamed to ${newName}`, { mailbox })
+		commit('removeMailbox', { id: mailbox.databaseId })
+		commit('addMailbox', { account, mailbox: newMailbox })
 	},
 }

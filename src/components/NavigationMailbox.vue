@@ -50,7 +50,6 @@
 					@click="markAsRead">
 					{{ t('mail', 'Mark all messages of this mailbox as read') }}
 				</ActionButton>
-
 				<ActionButton
 					v-if="!editing && top && !account.isUnified && mailbox.specialRole !== 'flagged'"
 					icon="icon-folder"
@@ -58,6 +57,17 @@
 					{{ t('mail', 'Add subfolder') }}
 				</ActionButton>
 				<ActionInput v-if="editing" icon="icon-folder" @submit.prevent.stop="createMailbox" />
+				<ActionButton
+					v-if="renameLabel && !hasSubMailboxes && !account.isUnified"
+					icon="icon-rename"
+					@click.prevent.stop="openRenameInput">
+					{{ t('mail', 'Edit name') }}
+				</ActionButton>
+				<ActionInput
+					v-if="renameInput"
+					icon="icon-rename"
+					:value.sync="mailboxName"
+					@submit.prevent.stop="renameMailbox" />
 				<ActionText v-if="showSaving" icon="icon-loading-small">
 					{{ t('mail', 'Saving') }}
 				</ActionText>
@@ -101,6 +111,7 @@ import { getMailboxStatus } from '../service/MailboxService'
 import logger from '../logger'
 import { translatePlural as n } from '@nextcloud/l10n'
 import { translate as translateMailboxName } from '../i18n/MailboxTranslator'
+import { showInfo } from '@nextcloud/dialogs'
 
 export default {
 	name: 'NavigationMailbox',
@@ -140,6 +151,10 @@ export default {
 			editing: false,
 			showSubMailboxes: false,
 			menuOpen: false,
+			renameLabel: true,
+			renameInput: false,
+			mailboxName: this.mailbox.displayName,
+
 		}
 	},
 	computed: {
@@ -319,6 +334,33 @@ export default {
 					}
 				}
 			)
+		},
+		async renameMailbox() {
+			this.renameInput = false
+			this.showSaving = false
+
+			try {
+				await this.$store.dispatch('renameMailbox', {
+					account: this.account,
+					mailbox: this.mailbox,
+					newName: this.mailboxName,
+				})
+				this.renameLabel = true
+				this.renameInput = false
+				this.showSaving = false
+			} catch (error) {
+				showInfo(t('mail', 'An error occurred, unable to rename the mailbox.'))
+				console.error(error)
+				this.renameLabel = false
+				this.renameInput = false
+				this.showSaving = true
+			}
+		},
+		openRenameInput() {
+			// Hide label and show input
+			this.renameLabel = false
+			this.renameInput = true
+			this.showSaving = false
 		},
 	},
 }

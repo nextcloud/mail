@@ -222,4 +222,5 @@ export default {
 	deleteAlias(state, { account, alias }) {
 		account.aliases.splice(account.aliases.indexOf(alias), 1)
 	},
+
 }
