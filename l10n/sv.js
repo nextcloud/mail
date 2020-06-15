@@ -106,7 +106,7 @@ OC.L10N.register(
     "Save all to Files" : "Spara alla i filer",
     "Choose a folder to store the attachments in" : "Välj en mapp att spara bifogade filer i",
     "The images have been blocked to protect your privacy." : "Bilderna har blockerats av säkerhetsskäl.",
-    "Show images from this\tsender" : "Visa bilder från denna\tavsändare",
+    "Show images from this sender" : "Visa bilder från denna avsändare",
     "New message" : "Nytt meddelande",
     "Settings" : "Inställningar",
     "Quota" : "Kvot",

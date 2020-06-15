@@ -56,6 +56,7 @@ OC.L10N.register(
     "Choose a folder to store the attachment in" : "Choose a folder to store the attachment in",
     "Save all to Files" : "Save all to Files",
     "The images have been blocked to protect your privacy." : "The images have been blocked to protect your privacy.",
+    "Show images from this sender" : "Show images from this sender",
     "New message" : "New message",
     "Settings" : "Settings",
     "Quota" : "Quota",

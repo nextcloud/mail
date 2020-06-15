@@ -97,6 +97,7 @@ OC.L10N.register(
     "Save all to Files" : "Gem alle filer",
     "Choose a folder to store the attachments in" : "Vælg den mappe, hvor vedhæftningerne skal gemmes i",
     "The images have been blocked to protect your privacy." : "Dette billede er blevet blokeret for at beskytte din privat liv",
+    "Show images from this sender" : "Vis billeder fra denne afsender",
     "New message" : "Ny besked",
     "Settings" : "Indstillinger",
     "Quota" : "Kvote",
