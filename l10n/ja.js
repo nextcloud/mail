@@ -152,6 +152,7 @@ OC.L10N.register(
     "Junk" : "迷惑メール",
     "Sent" : "送信",
     "Trash" : "ゴミ箱",
+    "Error while sharing file" : "共有中にエラーが発生しました",
     "{from}\n{subject}" : "{from}\n{subject}",
     "_%n new message \nfrom {from}_::_%n new messages \nfrom {from}_" : ["%n個の新しいメッセージ\nfrom{from}"],
     "Nextcloud Mail" : "Nextcloud メール",

@@ -190,7 +190,7 @@ OC.L10N.register(
     "Refresh" : "Aktualisieren",
     "Connect your mail account" : "Verbinden Sie Ihr E-Mail-Konto",
     "Unexpected error during account creation" : "Fehler bei der Erstellung des Kontos",
-    "Itinerary for {type} is not supported yet" : "Reiseroute für {Typ} wird noch nicht unterstützt",
+    "Itinerary for {type} is not supported yet" : "Reiseroute für {type} wird noch nicht unterstützt",
     "All" : "Alle",
     "Archive" : "Archivieren",
     "Drafts" : "Entwürfe",
