@@ -27,7 +27,9 @@ namespace OCA\Mail\Command;
 
 use OCA\Mail\Service\AccountService;
 use OCA\Mail\Service\Classification\ImportanceClassifier;
+use OCA\Mail\Support\ConsoleLoggerDecorator;
 use OCP\AppFramework\Db\DoesNotExistException;
+use OCP\ILogger;
 use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Input\InputArgument;
 use Symfony\Component\Console\Input\InputInterface;
@@ -43,12 +45,17 @@ class TrainAccount extends Command {
 	/** @var ImportanceClassifier */
 	private $classifier;
 
+	/** @var ILogger */
+	private $logger;
+
 	public function __construct(AccountService $service,
-								ImportanceClassifier $classifier) {
+								ImportanceClassifier $classifier,
+								ILogger $logger) {
 		parent::__construct();
 
 		$this->accountService = $service;
 		$this->classifier = $classifier;
+		$this->logger = $logger;
 	}
 
 	/**
@@ -72,7 +79,14 @@ class TrainAccount extends Command {
 			$output->writeln("<error>account $accountId does not exist</error>");
 			return 1;
 		}
-		$this->classifier->train($account);
+		$consoleLogger = new ConsoleLoggerDecorator(
+			$this->logger,
+			$output
+		);
+		$this->classifier->train(
+			$account,
+			$consoleLogger
+		);
 
 		$mbs = (int)(memory_get_peak_usage() / 1024 / 1024);
 		$output->writeln('<info>' . $mbs . 'MB of memory used</info>');
