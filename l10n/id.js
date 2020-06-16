@@ -16,6 +16,7 @@ OC.L10N.register(
     "Upload attachment" : "Unggah lampiran",
     "Sending …" : "Mengirim ...",
     "Go back" : "Kembali",
+    "Retry" : "Ulangi",
     "Message sent!" : "Kirim pesan!",
     "Send" : "Kirim",
     "Choose a file to add as attachment" : "Pilih berkas untuk ditambahkan sebagai lampiran",

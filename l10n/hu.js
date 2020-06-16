@@ -99,7 +99,7 @@ OC.L10N.register(
     "Save all to Files" : "Minden mentése a Fájlokba",
     "Choose a folder to store the attachments in" : "Válasszon egy mappát a mellékletek tárolásához",
     "The images have been blocked to protect your privacy." : "A személyes adataid védelme érdekében a képeket letiltottuk.",
-    "Show images from this\tsender" : "Képek megjelenítése a küldőtől \tsender",
+    "Show images from this sender" : "Képek megjelenítése ettől a feladótól",
     "New message" : "Új üzenet",
     "Settings" : "Beállítások",
     "Quota" : "Kvóta",

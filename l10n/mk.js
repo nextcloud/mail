@@ -95,7 +95,6 @@ OC.L10N.register(
     "Save all to Files" : "Зачувај ги сите во датотеките",
     "Choose a folder to store the attachments in" : "Избери папка за зачувување на прилозите",
     "The images have been blocked to protect your privacy." : "Сликите се блокирани за да ја заштитите вашата приватност.",
-    "Show images from this\tsender" : "Прикажувај ги сликите од овој\tиспраќач",
     "New message" : "Нова порака",
     "Settings" : "Параметри",
     "Quota" : "Квота",

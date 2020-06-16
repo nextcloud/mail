@@ -38,6 +38,7 @@ OC.L10N.register(
     "Choose a folder to store the attachment in" : "-д хавсралт хадгалах фолдер сонгоно уу",
     "Save all to Files" : "бүх файлыг хадгалах",
     "The images have been blocked to protect your privacy." : " таны хувийн нууцыг хамгаалахын тулд дүрсийг хаасан байна.",
+    "Show images from this sender" : " илгээгчээс харуулах зургууд",
     "New message" : "шинэ зурвас",
     "Settings" : "тохиргоо",
     "Quota" : " хувь хэмжээ",

@@ -91,7 +91,7 @@ OC.L10N.register(
     "Save all to Files" : "Vista allt í skrár",
     "Choose a folder to store the attachments in" : "Veldu möppu þar sem á að geyma viðhengin",
     "The images have been blocked to protect your privacy." : "Lokað hefur verið á myndir til að vernda einkalíf þitt.",
-    "Show images from this\tsender" : "Birta myndir frá þessum\tsendanda",
+    "Show images from this sender" : "Birta myndir frá þessum sendanda",
     "New message" : "Ný skilaboð",
     "Settings" : "Stillingar",
     "Quota" : "Kvóti",
