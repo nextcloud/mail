@@ -132,6 +132,10 @@ class ImportanceClassifier {
 		$this->rulesClassifier = $rulesClassifier;
 	}
 
+	private function filterMessageHasSenderEmail(Message $message): bool {
+		return $message->getFrom()->first() !== null && $message->getFrom()->first()->getEmail() !== null;
+	}
+
 	/**
 	 * Train an account's classifier of important messages
 	 *
@@ -161,9 +165,7 @@ class ImportanceClassifier {
 		}, $incomingMailboxes);
 		$messages = array_filter(
 			$this->messageMapper->findLatestMessages($mailboxIds, self::MAX_TRAINING_SET_SIZE),
-			function (Message $message) {
-				return $message->getFrom()->first() !== null;
-			}
+			[$this, 'filterMessageHasSenderEmail']
 		);
 		$importantMessages = array_filter($messages, function (Message $message) {
 			return $message->getFlagImportant();
@@ -308,12 +310,13 @@ class ImportanceClassifier {
 				}, $messages)
 			);
 		}
+		$messagesWithSender = array_filter($messages, [$this, 'filterMessageHasSenderEmail']);
 
 		$features = $this->getFeaturesAndImportance(
 			$account,
 			$this->getIncomingMailboxes($account),
 			$this->getOutgoingMailboxes($account),
-			$messages
+			$messagesWithSender
 		);
 		$predictions = $estimator->predict(
 			Unlabeled::build(array_column($features, 'features'))
@@ -321,7 +324,7 @@ class ImportanceClassifier {
 		return array_combine(
 			array_map(function (Message $m) {
 				return $m->getUid();
-			}, $messages),
+			}, $messagesWithSender),
 			array_map(function ($p) {
 				return $p === self::LABEL_IMPORTANT;
 			}, $predictions)
