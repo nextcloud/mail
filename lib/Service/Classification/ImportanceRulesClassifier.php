@@ -82,7 +82,7 @@ class ImportanceRulesClassifier {
 			}, $messages),
 			array_map(function (Message $m) {
 				$from = $m->getFrom()->first();
-				if ($from === null) {
+				if ($from === null || $from->getEmail() === null) {
 					return false;
 				}
 
