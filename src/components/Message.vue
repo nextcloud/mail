@@ -39,12 +39,18 @@
 						<ActionButton icon="icon-forward" @click="forwardMessage">
 							{{ t('mail', 'Forward') }}
 						</ActionButton>
+						<ActionButton icon="icon-starred" @click.prevent="onToggleFlagged">{{
+							envelope.flags.flagged ? t('mail', 'Unfavorite') : t('mail', 'Favorite')
+						}}</ActionButton>
+						<ActionButton icon="icon-important" @click.prevent="onToggleImportant">{{
+							envelope.flags.important ? t('mail', 'Mark unimportant') : t('mail', 'Mark important')
+						}}</ActionButton>
 						<ActionButton icon="icon-mail" @click="onToggleSeen">
 							{{ envelope.flags.seen ? t('mail', 'Mark unread') : t('mail', 'Mark read') }}
 						</ActionButton>
 
 						<ActionButton icon="icon-junk" @click="onToggleJunk">
-							{{ envelope.flags.notjunk ? t('mail', 'Mark not junk') : t('mail', 'Mark junk') }}
+							{{ envelope.flags.junk ? t('mail', 'Mark not spam') : t('mail', 'Mark as spam') }}
 						</ActionButton>
 						<ActionButton
 							:icon="sourceLoading ? 'icon-loading-small' : 'icon-details'"
@@ -315,6 +321,12 @@ export default {
 		onCloseSource() {
 			this.showSource = false
 		},
+		onToggleImportant() {
+			this.$store.dispatch('toggleEnvelopeImportant', this.envelope)
+		},
+		onToggleFlagged() {
+			this.$store.dispatch('toggleEnvelopeFlagged', this.envelope)
+		},
 	},
 }
 </script>
@@ -472,5 +484,8 @@ export default {
 	font-family: monospace;
 	white-space: pre-wrap;
 	user-select: text;
+}
+.app-content-list-item-star.icon-starred {
+	display: none;
 }
 </style>

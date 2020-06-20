@@ -14,6 +14,7 @@ OC.L10N.register(
     "Favorites" : "ಅಚ್ಚುಮೆಚ್ಚಿನ",
     "Other" : "﻿ಇತರೆ",
     "Settings" : "ಆಯ್ಕೆ",
+    "Quota" : "ಪಾಲು",
     "Add folder" : "Add folder",
     "Cancel" : "﻿ರದ್ದು",
     "User" : "User",

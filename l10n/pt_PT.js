@@ -47,6 +47,7 @@ OC.L10N.register(
     "Choose a folder to store the attachment in" : "Escolha uma pasta para guardar o anexo",
     "Save all to Files" : "Guardar todos em Ficheiros",
     "Settings" : "Definições",
+    "Quota" : "Quota",
     "Edit account" : "Editar conta",
     "Add folder" : "Add folder",
     "Remove account" : "Remover conta",

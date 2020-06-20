@@ -14,6 +14,7 @@ OC.L10N.register(
     "Favorites" : "விருப்பங்கள்",
     "Other" : "மற்றவை",
     "Settings" : "அமைப்புகள்",
+    "Quota" : "பங்கு",
     "Add folder" : "Add folder",
     "Cancel" : "இரத்து செய்க",
     "General" : "பொதுவான",

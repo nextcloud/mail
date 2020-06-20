@@ -27,6 +27,7 @@ OC.L10N.register(
     "Unnamed" : "ไม่มีชื่อ",
     "Choose a folder to store the attachment in" : "เลือกโฟลเดอร์ที่จะเก็บสิ่งที่แนบมาใน",
     "Settings" : "ตั้งค่า",
+    "Quota" : "โควต้า",
     "Add folder" : "Add folder",
     "Remove account" : "ลบบัญชี",
     "Cancel" : "ยกเลิก",

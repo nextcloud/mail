@@ -13,6 +13,7 @@ OC.L10N.register(
     "Favorites" : "Favorites",
     "Other" : "වෙනත්",
     "Settings" : "සැකසුම්",
+    "Quota" : "සලාකය",
     "Add folder" : "Add folder",
     "Cancel" : "අවලංගු කරන්න",
     "General" : "සාමාන්‍යයෙන්",
