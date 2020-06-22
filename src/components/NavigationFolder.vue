@@ -33,7 +33,7 @@
 	>
 		<!-- actions -->
 		<template slot="actions">
-			<template v-if="top">
+			<template>
 				<ActionText
 					v-if="!account.isUnified && folder.specialRole !== 'flagged'"
 					icon="icon-info"
@@ -53,7 +53,7 @@
 				</ActionButton>
 
 				<ActionInput
-					v-if="!account.isUnified && folder.specialRole !== 'flagged'"
+					v-if="top && !account.isUnified && folder.specialRole !== 'flagged'"
 					icon="icon-add"
 					@submit="createFolder"
 				>
