@@ -253,14 +253,13 @@ export default {
 					.catch((err) => {
 						console.error('could not delete draft', err)
 						logger.error('could not delete draft', (this.oldAccountId, this.oldFolderId))
-						const envelope = getters.getEnvelope(accountId, folderId, id)
 						throw err
 					})
 				}
 			}
 			this.oldAccountId = data.account
 			this.oldFolderId = data.folder
-			
+
 			if (data.draftUID === undefined && this.draft) {
 				logger.debug('draft data does not have a draftUID, adding one')
 				data.draftUID = this.draft.id
