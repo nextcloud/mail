@@ -36,7 +36,7 @@ import {getRandomMessageErrorMessage} from '../util/ErrorMessageFactory'
 import {detect, html, plain, toPlain} from '../util/text'
 import Loading from './Loading'
 import logger from '../logger'
-import {saveDraft, sendMessage} from '../service/MessageService'
+import {saveDraft, sendMessage, deleteMessage} from '../service/MessageService'
 
 export default {
 	name: 'NewMessageDetail',
@@ -54,6 +54,8 @@ export default {
 			originalBody: undefined,
 			errorMessage: '',
 			error: undefined,
+			oldAccountId: undefined,
+			oldFolderId: undefined,
 		}
 	},
 	computed: {
@@ -243,6 +245,22 @@ export default {
 			}
 		},
 		saveDraft(data) {
+			if (this.oldAccountId && this.oldFolderId && data.draftUID !== undefined) {
+				if (this.oldAccountId !== data.accountId) {
+					this.oldAccountId = data.account
+					this.oldFolderId = data.folder
+					deleteMessage(this.oldAccountId, this.oldFolderId)
+					.catch((err) => {
+						console.error('could not delete draft', err)
+						logger.error('could not delete draft', (this.oldAccountId, this.oldFolderId))
+						const envelope = getters.getEnvelope(accountId, folderId, id)
+						throw err
+					})
+				}
+			}
+			this.oldAccountId = data.account
+			this.oldFolderId = data.folder
+			
 			if (data.draftUID === undefined && this.draft) {
 				logger.debug('draft data does not have a draftUID, adding one')
 				data.draftUID = this.draft.id
