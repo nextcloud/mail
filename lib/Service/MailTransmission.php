@@ -147,8 +147,9 @@ class MailTransmission implements IMailTransmission {
 			'Subject' => $message->getSubject(),
 		];
 
-		if ($message->getInReplyTo() !== null) {
-			$headers['In-Reply-To'] = $message->getInReplyTo();
+		if (($inReplyTo = $message->getInReplyTo()) !== null) {
+			$headers['References'] = $inReplyTo;
+			$headers['In-Reply-To'] = $inReplyTo;
 		}
 
 		$mail = new Horde_Mime_Mail();
