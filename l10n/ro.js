@@ -10,6 +10,7 @@ OC.L10N.register(
     "None" : "Niciuna",
     "SSL/TLS" : "SSL/TLS",
     "STARTTLS" : "STARTTLS",
+    "IMAP Password" : "Parolă IMAP",
     "SMTP Password" : "Parolă SMTP",
     "Save" : "Salvează",
     "Connect" : "Conectare",
