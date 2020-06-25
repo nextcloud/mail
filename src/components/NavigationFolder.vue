@@ -25,10 +25,12 @@
 		:id="genId(folder)"
 		:key="genId(folder)"
 		:allow-collapse="true"
+		:menu-open.sync="menuOpen"
 		:force-menu="true"
 		:icon="icon"
 		:title="title"
 		:to="to"
+		:open.sync="showSubFolders"
 		@update:menuOpen="onMenuToggle"
 	>
 		<!-- actions -->
@@ -52,13 +54,17 @@
 					{{ t('mail', 'Mark all messages of this folder as read') }}
 				</ActionButton>
 
-				<ActionInput
-					v-if="top && !account.isUnified && folder.specialRole !== 'flagged'"
-					icon="icon-add"
-					@submit="createFolder"
+				<ActionButton
+					v-if="!editing && top && !account.isUnified && folder.specialRole !== 'flagged'"
+					icon="icon-folder"
+					@click="openCreateFolder"
 				>
 					{{ t('mail', 'Add subfolder') }}
-				</ActionInput>
+				</ActionButton>
+				<ActionInput v-if="editing" icon="icon-folder" @submit.prevent.stop="createFolder" />
+				<ActionText v-if="showSaving" icon="icon-loading-small">
+					{{ t('mail', 'Saving') }}
+				</ActionText>
 
 				<ActionButton
 					v-if="debug && !account.isUnified && folder.specialRole !== 'flagged'"
@@ -133,6 +139,10 @@ export default {
 			folderStats: undefined,
 			loadingMarkAsRead: false,
 			clearingCache: false,
+			showSaving: false,
+			editing: false,
+			showSubFolders: false,
+			menuOpen: false,
 		}
 	},
 	computed: {
@@ -235,21 +245,30 @@ export default {
 			}
 		},
 
-		createFolder(e) {
+		async createFolder(e) {
+			this.editing = true
 			const name = e.target.elements[1].value
 			const withPrefix = atob(this.folder.id) + this.folder.delimiter + name
 			logger.info(`creating folder ${withPrefix} as subfolder of ${this.folder.id}`)
 			this.menuOpen = false
-			this.$store
-				.dispatch('createFolder', {
+			try {
+				await this.$store.dispatch('createFolder', {
 					account: this.account,
 					name: withPrefix,
 				})
-				.then(() => logger.info(`folder ${withPrefix} created`))
-				.catch((error) => {
-					logger.error(`could not create folder ${withPrefix}`, {error})
-					throw error
-				})
+			} catch (error) {
+				logger.error(`could not create folder ${withPrefix}`, {error})
+				throw error
+			} finally {
+				this.editing = false
+				this.showSaving = false
+			}
+			logger.info(`folder ${withPrefix} created`)
+			this.showSubFolders = true
+		},
+		openCreateFolder() {
+			this.editing = true
+			this.showSaving = false
 		},
 		markAsRead() {
 			this.loadingMarkAsRead = true
