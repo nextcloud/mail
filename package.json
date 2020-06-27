@@ -17,7 +17,7 @@
   "dependencies": {
     "@bundle-analyzer/webpack-plugin": "^0.5.1",
     "@ckeditor/ckeditor5-alignment": "^19.0.1",
-    "@ckeditor/ckeditor5-basic-styles": "^19.0.1",
+    "@ckeditor/ckeditor5-basic-styles": "^20.0.0",
     "@ckeditor/ckeditor5-block-quote": "^19.0.1",
     "@ckeditor/ckeditor5-build-balloon": "^19.0.2",
     "@ckeditor/ckeditor5-dev-utils": "^20.0.0",
