@@ -23,7 +23,7 @@
     "@ckeditor/ckeditor5-dev-utils": "^20.0.0",
     "@ckeditor/ckeditor5-dev-webpack-plugin": "^20.0.0",
     "@ckeditor/ckeditor5-editor-balloon": "^19.0.1",
-    "@ckeditor/ckeditor5-essentials": "^19.0.1",
+    "@ckeditor/ckeditor5-essentials": "^20.0.0",
     "@ckeditor/ckeditor5-heading": "^19.0.1",
     "@ckeditor/ckeditor5-link": "^19.0.1",
     "@ckeditor/ckeditor5-paragraph": "^19.1.0",
