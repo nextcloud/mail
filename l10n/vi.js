@@ -24,6 +24,7 @@ OC.L10N.register(
     "Quota" : "Hạn ngạch",
     "Add folder" : "Add folder",
     "Remove account" : "Xóa tài khoản",
+    "Loading …" : "Đang tải...",
     "Cancel" : "Hủy bỏ",
     "Mark all as read" : "Đánh dấu tất cả như đã ",
     "Clear cache" : "Xóa bộ nhớ ",
