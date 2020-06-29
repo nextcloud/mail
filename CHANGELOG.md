@@ -1,6 +1,14 @@
 # Changelog
 All notable changes to this project will be documented in this file.
 
+## 1.4.1 - 2020-06-30
+### Fixed
+- Importance classifier debuggability
+- Fix classification of senders with no email
+- Add action menu to subfolders
+- Add missing `References` header on replies
+- Fix saving the serialized classified object on Nextcloud 18
+
 ## 1.4.0 - 2020-05-16
 ### Added
 - Priority Inbox: the combined inbox is now classified into important messages, favorites and others to keep you organized
