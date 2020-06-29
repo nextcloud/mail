@@ -133,7 +133,8 @@ class PersistenceService {
 				$folder = $this->appData->newFolder(self::ADD_DATA_FOLDER);
 				$this->logger->debug('New folder created for serialized classifiers');
 			}
-			$folder->newFile($classifier->getId(), $serializedClassifier);
+			$file = $folder->newFile($classifier->getId());
+			$file->putContent($serializedClassifier);
 			$this->logger->debug('Serialized classifier written to app data');
 		} catch (NotPermittedException $e) {
 			throw new ServiceException("Could not create classifiers directory: " . $e->getMessage(), 0, $e);
