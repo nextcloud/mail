@@ -1,6 +1,14 @@
 # Changelog
 All notable changes to this project will be documented in this file.
 
+## 1.4.1 - 2020-06-30
+### Fixed
+- Importance classifier debuggability
+- Fix classification of senders with no email
+- Add action menu to subfolders
+- Add missing `References` header on replies
+- Fix saving the serialized classified object on Nextcloud 18
+
 ## 1.3.6 - 2020-06-30
 ### Fixed
 - User data cleanup after account deletion
