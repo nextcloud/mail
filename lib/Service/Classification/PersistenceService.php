@@ -116,6 +116,8 @@ class PersistenceService {
 		try {
 			$persister = new Filesystem($tmpPath);
 			$persister->save($estimator);
+			$serializedClassifier = file_get_contents($tmpPath);
+			$this->logger->debug('Serialized classifier written to tmp file (' . strlen($serializedClassifier) . 'B');
 		} catch (RuntimeException $e) {
 			throw new ServiceException("Could not serialize classifier: " . $e->getMessage(), 0, $e);
 		}
@@ -126,10 +128,14 @@ class PersistenceService {
 		try {
 			try {
 				$folder = $this->appData->getFolder(self::ADD_DATA_FOLDER);
+				$this->logger->debug('Using existing folder for the serialized classifier');
 			} catch (NotFoundException $e) {
 				$folder = $this->appData->newFolder(self::ADD_DATA_FOLDER);
+				$this->logger->debug('New folder created for serialized classifiers');
 			}
-			$folder->newFile($classifier->getId(), file_get_contents($tmpPath));
+			$file = $folder->newFile($classifier->getId());
+			$file->putContent($serializedClassifier);
+			$this->logger->debug('Serialized classifier written to app data');
 		} catch (NotPermittedException $e) {
 			throw new ServiceException("Could not create classifiers directory: " . $e->getMessage(), 0, $e);
 		}
@@ -168,6 +174,7 @@ class PersistenceService {
 			$this->logger->debug("Using cached serialized classifier $id");
 			$serialized = $cached;
 		} else {
+			$this->logger->debug("Loading serialized classifier from app data");
 			try {
 				$modelsFolder = $this->appData->getFolder(self::ADD_DATA_FOLDER);
 				$modelFile = $modelsFolder->getFile((string)$id);
