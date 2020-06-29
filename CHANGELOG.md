@@ -1,6 +1,13 @@
 # Changelog
 All notable changes to this project will be documented in this file.
 
+## 1.3.6 - 2020-06-29
+### Fixed
+- User data cleanup after account deletion
+- Navigating back on mobile
+- Formatting toggle in message composer
+- Missing `References` header for replies
+
 ## 1.3.5 - 2020-05-18
 ### Fixed
 - Mailvelope integration. Make sure to enable the API mode in your settings.
