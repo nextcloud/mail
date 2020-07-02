@@ -59,6 +59,7 @@ import {
 	setEnvelopeFlag,
 	syncEnvelopes,
 } from '../service/MessageService'
+import {createAlias, deleteAlias} from '../service/AliasService'
 import logger from '../logger'
 import {normalizedEnvelopeListId} from './normalization'
 import {showNewMessagesNotification} from '../service/NotificationService'
@@ -695,5 +696,13 @@ export default {
 				}
 				throw err
 			})
+	},
+	async createAlias({commit}, {account, aliasToAdd}) {
+		const alias = await createAlias(account, aliasToAdd)
+		commit('createAlias', {account, alias})
+	},
+	async deleteAlias({commit}, {account, aliasToDelete}) {
+		const alias = await deleteAlias(account, aliasToDelete)
+		commit('deleteAlias', {account, alias: aliasToDelete})
 	},
 }

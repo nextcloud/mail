@@ -126,11 +126,11 @@ class MailTransmission implements IMailTransmission {
 			$message = $this->buildNewMessage($account, $messageData);
 		}
 
+		$account->setAlias($alias);
 		$fromEmail = $alias ? $alias->getAlias() : $account->getEMailAddress();
 		$from = new AddressList([
 			new Address($account->getName(), $fromEmail),
 		]);
-		$account->setAlias($alias);
 		$message->setFrom($from);
 		$message->setCC($messageData->getCc());
 		$message->setBcc($messageData->getBcc());
