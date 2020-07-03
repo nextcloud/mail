@@ -32,6 +32,7 @@ use OCA\Mail\Contracts\IMailTransmission;
 use OCA\Mail\Contracts\IUserPreferences;
 use OCA\Mail\Events\BeforeMessageDeletedEvent;
 use OCA\Mail\Events\DraftSavedEvent;
+use OCA\Mail\Events\SynchronizationEvent;
 use OCA\Mail\Events\MessageDeletedEvent;
 use OCA\Mail\Events\MessageFlaggedEvent;
 use OCA\Mail\Events\MessageSentEvent;
@@ -44,6 +45,7 @@ use OCA\Mail\Listener\DeleteDraftListener;
 use OCA\Mail\Listener\DraftMailboxCreatorListener;
 use OCA\Mail\Listener\FlagRepliedMessageListener;
 use OCA\Mail\Listener\InteractionListener;
+use OCA\Mail\Listener\AccountSynchronizedThreadUpdaterListener;
 use OCA\Mail\Listener\MessageCacheUpdaterListener;
 use OCA\Mail\Listener\NewMessageClassificationListener;
 use OCA\Mail\Listener\SaveSentMessageListener;
@@ -111,6 +113,7 @@ class Application extends App {
 		$dispatcher->addServiceListener(MessageSentEvent::class, SaveSentMessageListener::class);
 		$dispatcher->addServiceListener(NewMessagesSynchronized::class, NewMessageClassificationListener::class);
 		$dispatcher->addServiceListener(SaveDraftEvent::class, DraftMailboxCreatorListener::class);
+		$dispatcher->addServiceListener(SynchronizationEvent::class, AccountSynchronizedThreadUpdaterListener::class);
 		$dispatcher->addServiceListener(UserDeletedEvent::class, UserDeletedListener::class);
 	}
 }
