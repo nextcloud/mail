@@ -93,6 +93,9 @@ class MessageMapper extends QBMapper {
 		$qb1->insert($this->getTableName());
 		$qb1->setValue('uid', $qb1->createParameter('uid'));
 		$qb1->setValue('message_id', $qb1->createParameter('message_id'));
+		$qb1->setValue('references', $qb1->createParameter('references'));
+		$qb1->setValue('in_reply_to', $qb1->createParameter('in_reply_to'));
+		$qb1->setValue('thread_root_id', $qb1->createParameter('thread_root_id'));
 		$qb1->setValue('mailbox_id', $qb1->createParameter('mailbox_id'));
 		$qb1->setValue('subject', $qb1->createParameter('subject'));
 		$qb1->setValue('sent_at', $qb1->createParameter('sent_at'));
@@ -116,6 +119,12 @@ class MessageMapper extends QBMapper {
 		foreach ($messages as $message) {
 			$qb1->setParameter('uid', $message->getUid(), IQueryBuilder::PARAM_INT);
 			$qb1->setParameter('message_id', $message->getMessageId(), IQueryBuilder::PARAM_STR);
+			$inReplyTo = $message->getInReplyTo();
+			$qb1->setParameter('in_reply_to', $inReplyTo, $inReplyTo === null ? IQueryBuilder::PARAM_NULL : IQueryBuilder::PARAM_STR);
+			$references = $message->getReferences();
+			$qb1->setParameter('references', $references, $references === null ? IQueryBuilder::PARAM_NULL : IQueryBuilder::PARAM_STR);
+			$threadRootId = $message->getThreadRootId();
+			$qb1->setParameter('thread_root_id', $threadRootId,$threadRootId === null ? IQueryBuilder::PARAM_NULL : IQueryBuilder::PARAM_STR);
 			$qb1->setParameter('mailbox_id', $message->getMailboxId(), IQueryBuilder::PARAM_INT);
 			$qb1->setParameter('subject', $message->getSubject(), IQueryBuilder::PARAM_STR);
 			$qb1->setParameter('sent_at', $message->getSentAt(), IQueryBuilder::PARAM_INT);

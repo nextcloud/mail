@@ -200,6 +200,16 @@ class MessageMapper {
 		$query->flags();
 		$query->uid();
 		$query->imapDate();
+		$query->headers(
+			'references',
+			[
+				'references',
+			],
+			[
+				'cache' => true,
+				'peek' => true,
+			]
+		);
 
 		$fetchResults = iterator_to_array($client->fetch($mailbox, $query, [
 			'ids' => new Horde_Imap_Client_Ids($ids),
