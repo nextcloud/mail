@@ -1,7 +1,7 @@
 # Changelog
 All notable changes to this project will be documented in this file.
 
-## 1.4.1 - 2020-06-30
+## 1.4.1 - 2020-07-06
 ### Fixed
 - Importance classifier debuggability
 - Fix classification of senders with no email
