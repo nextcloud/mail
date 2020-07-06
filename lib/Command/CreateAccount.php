@@ -82,10 +82,7 @@ class CreateAccount extends Command {
 		$this->addArgument(self::ARGUMENT_SMTP_PASSWORD, InputArgument::REQUIRED);
 	}
 
-	/**
-	 * @return void
-	 */
-	protected function execute(InputInterface $input, OutputInterface $output) {
+	protected function execute(InputInterface $input, OutputInterface $output): int {
 		$userId = $input->getArgument(self::ARGUMENT_USER_ID);
 		$name = $input->getArgument(self::ARGUMENT_NAME);
 		$email = $input->getArgument(self::ARGUMENT_EMAIL);
@@ -122,5 +119,7 @@ class CreateAccount extends Command {
 		$this->accountService->save($account);
 
 		$output->writeln("<info>Account $email created</info>");
+
+		return 0;
 	}
 }

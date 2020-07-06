@@ -70,7 +70,7 @@ class DiagnoseAccount extends Command {
 		$this->addArgument(self::ARGUMENT_ACCOUNT_ID, InputArgument::REQUIRED);
 	}
 
-	protected function execute(InputInterface $input, OutputInterface $output) {
+	protected function execute(InputInterface $input, OutputInterface $output): int {
 		$accountId = (int)$input->getArgument(self::ARGUMENT_ACCOUNT_ID);
 
 		try {
