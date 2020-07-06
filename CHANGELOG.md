@@ -1,7 +1,7 @@
 # Changelog
 All notable changes to this project will be documented in this file.
 
-## 1.3.6 - 2020-06-30
+## 1.3.6 - 2020-07-06
 ### Fixed
 - User data cleanup after account deletion
 - Navigating back on mobile
