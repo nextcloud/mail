@@ -47,10 +47,9 @@ class CleanUp extends Command {
 		$this->setDescription('clean up all orphaned data');
 	}
 
-	/**
-	 * @return void
-	 */
-	protected function execute(InputInterface $input, OutputInterface $output) {
+	protected function execute(InputInterface $input, OutputInterface $output): int {
 		$this->cleanupService->cleanUp();
+
+		return 0;
 	}
 }

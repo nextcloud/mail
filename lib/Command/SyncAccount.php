@@ -71,10 +71,7 @@ class SyncAccount extends Command {
 		$this->addOption(self::OPTION_FORCE, 'f', InputOption::VALUE_NONE);
 	}
 
-	/**
-	 * @return void
-	 */
-	protected function execute(InputInterface $input, OutputInterface $output) {
+	protected function execute(InputInterface $input, OutputInterface $output): int {
 		$accountId = (int)$input->getArgument(self::ARGUMENT_ACCOUNT_ID);
 		$force = $input->getOption(self::OPTION_FORCE);
 
@@ -84,6 +81,8 @@ class SyncAccount extends Command {
 
 		$mbs = (int)(memory_get_peak_usage() / 1024 / 1024);
 		$output->writeln('<info>' . $mbs . 'MB of memory used</info>');
+
+		return 0;
 	}
 
 	private function sync(Account $account, bool $force, OutputInterface $output) {
