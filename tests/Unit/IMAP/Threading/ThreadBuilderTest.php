@@ -29,9 +29,13 @@ use ChristophWurst\Nextcloud\Testing\TestCase;
 use OCA\Mail\IMAP\Threading\Container;
 use OCA\Mail\IMAP\Threading\Message;
 use OCA\Mail\IMAP\Threading\ThreadBuilder;
-use function array_values;
+use OCA\Mail\Support\PerformanceLogger;
+use PHPUnit\Framework\MockObject\MockObject;
 
 class ThreadBuilderTest extends TestCase {
+
+	/** @var PerformanceLogger|MockObject */
+	private $performanceLogger;
 
 	/** @var ThreadBuilder */
 	private $builder;
@@ -39,7 +43,11 @@ class ThreadBuilderTest extends TestCase {
 	protected function setUp(): void {
 		parent::setUp();
 
-		$this->builder = new ThreadBuilder();
+		$this->performanceLogger = $this->createMock(PerformanceLogger::class);
+
+		$this->builder = new ThreadBuilder(
+			$this->performanceLogger
+		);
 	}
 
 	/**

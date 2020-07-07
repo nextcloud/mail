@@ -25,10 +25,18 @@ declare(strict_types=1);
 
 namespace OCA\Mail\IMAP\Threading;
 
+use OCA\Mail\Support\PerformanceLogger;
 use function array_key_exists;
 use function count;
 
 class ThreadBuilder {
+
+	/** @var PerformanceLogger */
+	private $performanceLogger;
+
+	public function __construct(PerformanceLogger $performanceLogger) {
+		$this->performanceLogger = $performanceLogger;
+	}
 
 	/**
 	 * @param Message[] $messages
@@ -36,21 +44,29 @@ class ThreadBuilder {
 	 * @return Container[]
 	 */
 	public function build(array $messages): array {
+		$log = $this->performanceLogger->start('Threading ' . count($messages) . ' messages');
+
 		// Step 1
 		$idTable = $this->buildIdTable($messages);
+		$log->step('build ID table');
 
 		// Step 2
 		$rootContainer = $this->buildRootContainer($idTable);
+		$log->step('build root container');
 
 		// Step 3
 		unset($idTable);
+		$log->step('free ID table');
 
 		// Step 4
 		$this->pruneContainers($rootContainer);
+		$log->step('prune containers');
 
 		// Step 5
 		$this->groupBySubject($rootContainer);
+		$log->step('group by subject');
 
+		$log->end();
 		// Return the children with reset numeric keys
 		return array_values($rootContainer->getChildren());
 	}
