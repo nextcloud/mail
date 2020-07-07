@@ -17,6 +17,7 @@ OC.L10N.register(
     "Reply" : "Respont",
     "Settings" : "Arventennoù",
     "Cancel" : "Arrest",
+    "Host" : "Ostiz",
     "Port" : "Porzh",
     "Change name" : "Cheñch env",
     "Search" : "Klask",
