@@ -442,4 +442,51 @@ class ThreadBuilderTest extends TestCase {
 			$this->abstract($result)
 		);
 	}
+
+	/**
+	 * This is a test case from real-world data, compared to how Evolution renders the thread
+	 *
+	 * Message IDs and subject were obfuscated because they don't matter much
+	 */
+	public function testRealWorldLinearThread(): void {
+		$messages = [
+			new Message('Sub', '<msg1@mail.host>', []),
+			new Message('Re: Sub', '<msg2@mail.host>', ['<msg1@mail.host>']),
+			new Message('Re: Sub', '<msg3@mail.host>', ['<msg1@mail.host>', '<msg2@mail.host>']),
+			new Message('Re: Sub', '<msg4@mail.host>', ['<msg1@mail.host>', '<msg2@mail.host>', '<msg3@mail.host>']),
+			new Message('Re: Sub', '<msg5@mail.host>', ['<msg1@mail.host>', '<msg2@mail.host>', '<msg3@mail.host>', '<msg4@mail.host>']),
+		];
+
+		$result = $this->builder->build($messages);
+
+		$this->assertEquals(
+			[
+				[
+					'id' => '<msg1@mail.host>',
+					'children' => [
+						[
+							'id' => '<msg2@mail.host>',
+							'children' => [
+								[
+									'id' => '<msg3@mail.host>',
+									'children' => [
+										[
+											'id' => '<msg4@mail.host>',
+											'children' => [
+												[
+													'id' => '<msg5@mail.host>',
+													'children' => [],
+												],
+											],
+										],
+									],
+								],
+							],
+						],
+					],
+				],
+			],
+			$this->abstract($result)
+		);
+	}
 }
