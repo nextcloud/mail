@@ -17,6 +17,7 @@ OC.L10N.register(
     "Favorites" : "Pennrolloù",
     "Other" : "All",
     "Reply" : "Respont",
+    "Forward" : "War-raok",
     "Settings" : "Arventennoù",
     "Remove account" : "Lemel ar c'hont",
     "Cancel" : "Arrest",
