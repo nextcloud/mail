@@ -35,7 +35,6 @@ use OCP\EventDispatcher\Event;
 use OCP\EventDispatcher\IEventListener;
 use OCP\ILogger;
 use function array_chunk;
-use function array_filter;
 use function iterator_to_array;
 
 class AccountSynchronizedThreadUpdaterListener implements IEventListener {
@@ -69,11 +68,8 @@ class AccountSynchronizedThreadUpdaterListener implements IEventListener {
 		$threads = $this->builder->build($messages);
 		$this->logger->debug("Account $accountId has " . count($threads) . " threads");
 		$flattened = iterator_to_array($this->flattenThreads($threads), false);
-		$needUpdate = array_filter($flattened, function (DatabaseMessage $msg) {
-			return $msg->isDirty();
-		});
-		$this->logger->debug("Account $accountId has " . count($needUpdate) . " messages with a new thread ID");
-		foreach (array_chunk($needUpdate, 500) as $chunk) {
+		$this->logger->debug("Account $accountId has " . count($flattened) . " messages with a new thread ID");
+		foreach (array_chunk($flattened, 500) as $chunk) {
 			$this->mapper->writeThreadIds($chunk);
 		}
 	}
@@ -94,7 +90,9 @@ class AccountSynchronizedThreadUpdaterListener implements IEventListener {
 				} else {
 					$message->setThreadRootId($threadId);
 				}
-				yield $message;
+				if ($message->isDirty()) {
+					yield $message;
+				}
 			}
 
 			yield from $this->flattenThreads(
