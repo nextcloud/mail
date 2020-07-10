@@ -489,4 +489,87 @@ class ThreadBuilderTest extends TestCase {
 			$this->abstract($result)
 		);
 	}
+
+	/**
+	 * This is a test case from real-world data, compared to how Evolution renders the thread
+	 *
+	 * Message IDs and subject were obfuscated because they don't matter much
+	 */
+	public function testRealWorldTwoSimilarThreads(): void {
+		$messages = [
+			new Message('Sub', '<o1@mail.host>', []),
+			new Message('Re: Sub', '<o1re1@mail.host>', ['<o1@mail.host>']),
+			new Message('Re: Sub', '<o1re2@mail.host>', ['<o1@mail.host>']),
+			new Message('Re: Sub', '<o1re11@mail.host>', ['<o1@mail.host>', '<o1re1@mail.host>']),
+			new Message('Re: Sub', '<o1re111@mail.host>', ['<o1@mail.host>', '<o1re1@mail.host>', '<o1re11@mail.host>']),
+			new Message('Re: Sub', '<o1re1111@mail.host>', ['<o1@mail.host>', '<o1re11@mail.host>', '<o1re111@mail.host>']),
+			new Message('Re: Sub', '<o1re3@mail.host>', ['<o1@mail.host>']),
+			new Message('Re: Sub', '<o1re4@mail.host>', ['<o1@mail.host>']),
+			new Message('Re: Sub', '<o1re5@mail.host>', ['<o1@mail.host>']),
+			new Message('Re: Sub', '<o1re6@mail.host>', ['<o1@mail.host>']),
+			new Message('Sub', '<o2@mail.host>', []),
+			new Message('Re: Sub', '<o2re1@mail.host>', ['<o2@mail.host>']),
+		];
+
+		$result = $this->builder->build($messages);
+
+		$this->assertEquals(
+			[
+				[
+					'id' => '<o1@mail.host>',
+					'children' => [
+						[
+							'id' => '<o1re1@mail.host>',
+							'children' => [
+								[
+									'id' => '<o1re11@mail.host>',
+									'children' => [
+										[
+											'id' => '<o1re111@mail.host>',
+											'children' => [
+												[
+													'id' => '<o1re1111@mail.host>',
+													'children' => [],
+												],
+											],
+										],
+									],
+								],
+							],
+						],
+						[
+							'id' => '<o1re2@mail.host>',
+							'children' => [],
+						],
+						[
+							'id' => '<o1re3@mail.host>',
+							'children' => [],
+						],
+						[
+							'id' => '<o1re4@mail.host>',
+							'children' => [],
+						],
+						[
+							'id' => '<o1re5@mail.host>',
+							'children' => [],
+						],
+						[
+							'id' => '<o1re6@mail.host>',
+							'children' => [],
+						],
+					],
+				],
+				[
+					'id' => '<o2@mail.host>',
+					'children' => [
+						[
+							'id' => '<o2re1@mail.host>',
+							'children' => [],
+						],
+					],
+				],
+			],
+			$this->abstract($result)
+		);
+	}
 }
