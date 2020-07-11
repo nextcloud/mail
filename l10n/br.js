@@ -21,6 +21,7 @@ OC.L10N.register(
     "Settings" : "Arventennoù",
     "Remove account" : "Lemel ar c'hont",
     "Cancel" : "Arrest",
+    "General" : "Hollek",
     "User" : "Implijer",
     "Host" : "Ostiz",
     "Port" : "Porzh",
