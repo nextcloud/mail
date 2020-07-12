@@ -53,10 +53,7 @@ class ExportAccount extends Command {
 		$this->addArgument(self::ARGUMENT_USER_ID, InputArgument::REQUIRED);
 	}
 
-	/**
-	 * @return void
-	 */
-	protected function execute(InputInterface $input, OutputInterface $output) {
+	protected function execute(InputInterface $input, OutputInterface $output): int {
 		$userId = $input->getArgument(self::ARGUMENT_USER_ID);
 
 		$accounts = $this->accountService->findByUserId($userId);
@@ -70,5 +67,7 @@ class ExportAccount extends Command {
 			$output->writeln("- SMTP user: " . $account->getMailAccount()->getOutboundUser());
 			$output->writeln("- SMTP host: " . $account->getMailAccount()->getOutboundHost() . ":" . $account->getMailAccount()->getOutboundPort() . ", security: " . $account->getMailAccount()->getOutboundSslMode());
 		}
+
+		return 0;
 	}
 }

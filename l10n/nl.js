@@ -97,7 +97,7 @@ OC.L10N.register(
     "Report this bug" : "Meld deze fout",
     "Could not open mailbox" : "Kon postbus niet openen",
     "Loading messages" : "Berichten aan het laden",
-    "Indexing your messages. This can take a bit longer for larger mailboxes." : "Indexeren van je berichten. Dit kan wat tijd kosten voor groet brievenbussen.",
+    "Indexing your messages. This can take a bit longer for larger mailboxes." : "Indexeren van je berichten. Dit kan wat tijd kosten voor grote brievenbussen.",
     "Important" : "Belangrijk",
     "Favorites" : "Favorieten",
     "Other" : "Ander",
