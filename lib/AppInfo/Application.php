@@ -41,6 +41,7 @@ use OCA\Mail\Events\SaveDraftEvent;
 use OCA\Mail\Http\Middleware\ErrorMiddleware;
 use OCA\Mail\Http\Middleware\ProvisioningMiddleware;
 use OCA\Mail\Listener\AddressCollectionListener;
+use OCA\Mail\Listener\DashboardPanelListener;
 use OCA\Mail\Listener\DeleteDraftListener;
 use OCA\Mail\Listener\DraftMailboxCreatorListener;
 use OCA\Mail\Listener\FlagRepliedMessageListener;
@@ -59,6 +60,7 @@ use OCA\Mail\Service\Search\MailSearch;
 use OCA\Mail\Service\UserPreferenceSevice;
 use OCP\AppFramework\App;
 use OCP\AppFramework\IAppContainer;
+use OCP\Dashboard\RegisterWidgetEvent;
 use OCP\EventDispatcher\IEventDispatcher;
 use OCP\User\Events\UserDeletedEvent;
 use OCP\Util;
@@ -115,5 +117,6 @@ class Application extends App {
 		$dispatcher->addServiceListener(SaveDraftEvent::class, DraftMailboxCreatorListener::class);
 		$dispatcher->addServiceListener(SynchronizationEvent::class, AccountSynchronizedThreadUpdaterListener::class);
 		$dispatcher->addServiceListener(UserDeletedEvent::class, UserDeletedListener::class);
+		$dispatcher->addServiceListener(RegisterWidgetEvent::class, DashboardPanelListener::class);
 	}
 }
