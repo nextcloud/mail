@@ -340,6 +340,41 @@ class MessageMapper extends QBMapper {
 	}
 
 	/**
+	 * @param Account $account
+	 * @param int $messageId
+	 *
+	 * @return Message[]
+	 */
+	public function findThread(Account $account, int $messageId): array {
+		$qb = $this->db->getQueryBuilder();
+		$subQb1 = $this->db->getQueryBuilder();
+		$subQb2 = $this->db->getQueryBuilder();
+
+		$mailboxIdsQuery = $subQb1
+			->select('id')
+			->from('mail_mailboxes')
+			->where($qb->expr()->eq('account_id', $qb->createNamedParameter($account->getId(), IQueryBuilder::PARAM_INT)));
+		$threadRootIdsQuery = $subQb2
+			->select('thread_root_id')
+			->from($this->getTableName())
+			->where(
+				$qb->expr()->eq('id', $qb->createNamedParameter($messageId, IQueryBuilder::PARAM_INT), IQueryBuilder::PARAM_INT)
+			);
+
+		$selectMessages = $qb
+			->select('*')
+			->from($this->getTableName())
+			->where(
+				$qb->expr()->isNotNull('thread_root_id'),
+				$qb->expr()->in('thread_root_id', $qb->createFunction($threadRootIdsQuery->getSQL()), IQueryBuilder::PARAM_INT_ARRAY),
+				$qb->expr()->in('mailbox_id', $qb->createFunction($mailboxIdsQuery->getSQL()), IQueryBuilder::PARAM_INT_ARRAY)
+			)
+			->orderBy('sent_at', 'desc');
+
+		return $this->findRecipients($this->findEntities($selectMessages));
+	}
+
+	/**
 	 * @param Mailbox $mailbox
 	 * @param SearchQuery $query
 	 * @param int|null $limit

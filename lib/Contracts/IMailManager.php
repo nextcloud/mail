@@ -86,6 +86,14 @@ interface IMailManager {
 	public function getMessage(Account $account, string $mailbox, int $id, bool $loadBody = false): IMAPMessage;
 
 	/**
+	 * @param Account $account
+	 * @param int $messageId database message ID
+	 *
+	 * @return IMAPMessage[]
+	 */
+	public function getThread(Account $account, int $messageId): array;
+
+	/**
 	 * @param Account $sourceAccount
 	 * @param string $sourceFolderId
 	 * @param int $messageId

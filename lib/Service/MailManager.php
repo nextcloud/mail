@@ -30,6 +30,7 @@ use OCA\Mail\Account;
 use OCA\Mail\Contracts\IMailManager;
 use OCA\Mail\Db\Mailbox;
 use OCA\Mail\Db\MailboxMapper;
+use OCA\Mail\Db\MessageMapper as DbMessageMapper;
 use OCA\Mail\Events\BeforeMessageDeletedEvent;
 use OCA\Mail\Events\MessageDeletedEvent;
 use OCA\Mail\Events\MessageFlaggedEvent;
@@ -40,7 +41,7 @@ use OCA\Mail\IMAP\FolderMapper;
 use OCA\Mail\IMAP\FolderStats;
 use OCA\Mail\IMAP\IMAPClientFactory;
 use OCA\Mail\IMAP\MailboxSync;
-use OCA\Mail\IMAP\MessageMapper;
+use OCA\Mail\IMAP\MessageMapper as ImapMessageMapper;
 use OCA\Mail\Model\IMAPMessage;
 use OCP\AppFramework\Db\DoesNotExistException;
 use OCP\EventDispatcher\IEventDispatcher;
@@ -74,8 +75,11 @@ class MailManager implements IMailManager {
 	/** @var FolderMapper */
 	private $folderMapper;
 
-	/** @var MessageMapper */
-	private $messageMapper;
+	/** @var ImapMessageMapper */
+	private $imapMessageMapper;
+
+	/** @var DbMessageMapper */
+	private $dbMessageMapper;
 
 	/** @var IEventDispatcher */
 	private $eventDispatcher;
@@ -84,13 +88,15 @@ class MailManager implements IMailManager {
 								MailboxMapper $mailboxMapper,
 								MailboxSync $mailboxSync,
 								FolderMapper $folderMapper,
-								MessageMapper $messageMapper,
+								ImapMessageMapper $messageMapper,
+								DbMessageMapper $dbMessageMapper,
 								IEventDispatcher $eventDispatcher) {
 		$this->imapClientFactory = $imapClientFactory;
 		$this->mailboxMapper = $mailboxMapper;
 		$this->mailboxSync = $mailboxSync;
 		$this->folderMapper = $folderMapper;
-		$this->messageMapper = $messageMapper;
+		$this->imapMessageMapper = $messageMapper;
+		$this->dbMessageMapper = $dbMessageMapper;
 		$this->eventDispatcher = $eventDispatcher;
 	}
 
@@ -151,7 +157,7 @@ class MailManager implements IMailManager {
 		$mailbox = $this->mailboxMapper->find($account, $mailbox);
 
 		try {
-			return $this->messageMapper->find(
+			return $this->imapMessageMapper->find(
 				$client,
 				$mailbox->getName(),
 				$id,
@@ -160,6 +166,10 @@ class MailManager implements IMailManager {
 		} catch (Horde_Imap_Client_Exception|DoesNotExistException $e) {
 			throw new ServiceException("Could not load message", $e->getCode(), $e);
 		}
+	}
+
+	public function getThread(Account $account, int $messageId): array {
+		return $this->dbMessageMapper->findThread($account, $messageId);
 	}
 
 	/**
@@ -176,7 +186,7 @@ class MailManager implements IMailManager {
 		$client = $this->imapClientFactory->getClient($account);
 
 		try {
-			return $this->messageMapper->getSource(
+			return $this->imapMessageMapper->getSource(
 				$client,
 				$mailbox,
 				$id
@@ -240,13 +250,13 @@ class MailManager implements IMailManager {
 
 		if ($mailboxId === $trashMailbox->getName()) {
 			// Delete inside trash -> expunge
-			$this->messageMapper->expunge(
+			$this->imapMessageMapper->expunge(
 				$this->imapClientFactory->getClient($account),
 				$sourceMailbox->getName(),
 				$messageId
 			);
 		} else {
-			$this->messageMapper->move(
+			$this->imapMessageMapper->move(
 				$this->imapClientFactory->getClient($account),
 				$sourceMailbox->getName(),
 				$messageId,
@@ -276,13 +286,13 @@ class MailManager implements IMailManager {
 											  int $messageId): void {
 		$client = $this->imapClientFactory->getClient($account);
 
-		$this->messageMapper->move($client, $sourceFolderId, $messageId, $destFolderId);
+		$this->imapMessageMapper->move($client, $sourceFolderId, $messageId, $destFolderId);
 	}
 
 	public function markFolderAsRead(Account $account, string $folderId): void {
 		$client = $this->imapClientFactory->getClient($account);
 
-		$this->messageMapper->markAllRead($client, $folderId);
+		$this->imapMessageMapper->markAllRead($client, $folderId);
 	}
 
 	public function flagMessage(Account $account, string $mailbox, int $uid, string $flag, bool $value): void {
@@ -298,9 +308,9 @@ class MailManager implements IMailManager {
 		try {
 			foreach ($imapFlags as $imapFlag) {
 				if ($value) {
-					$this->messageMapper->addFlag($client, $mb, $uid, $imapFlag);
+					$this->imapMessageMapper->addFlag($client, $mb, $uid, $imapFlag);
 				} else {
-					$this->messageMapper->removeFlag($client, $mb, $uid, $imapFlag);
+					$this->imapMessageMapper->removeFlag($client, $mb, $uid, $imapFlag);
 				}
 			}
 		} catch (Horde_Imap_Client_Exception $e) {
