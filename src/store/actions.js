@@ -150,6 +150,7 @@ export default {
 		return createFolder(account.id, name).then((folder) => {
 			console.debug(`folder ${name} created for account ${account.id}`, {folder})
 			commit('addFolder', {account, folder})
+			commit('expandAccount', account.id)
 		})
 	},
 	moveAccount({commit, getters}, {account, up}) {

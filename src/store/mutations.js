@@ -84,6 +84,9 @@ export default {
 	toggleAccountCollapsed(state, accountId) {
 		state.accounts[accountId].collapsed = !state.accounts[accountId].collapsed
 	},
+	expandAccount(state, accountId) {
+		state.accounts[accountId].collapsed = false
+	},
 	addFolder(state, {account, folder}) {
 		// Flatten the existing ones before updating the hierarchy
 		const existing = account.folders.map((id) => state.folders[id])

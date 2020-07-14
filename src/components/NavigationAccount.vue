@@ -49,9 +49,13 @@
 			>
 				{{ t('mail', 'Show only subscribed folders') }}
 			</ActionCheckbox>
-			<ActionInput icon="icon-add" @submit="createFolder">
+			<ActionButton v-if="!editing" icon="icon-folder" @click="openCreateFolder">
 				{{ t('mail', 'Add folder') }}
-			</ActionInput>
+			</ActionButton>
+			<ActionInput v-if="editing" icon="icon-folder" @submit.prevent.stop="createFolder" />
+			<ActionText v-if="showSaving" icon="icon-loading-small">
+				{{ t('mail', 'Saving') }}
+			</ActionText>
 			<ActionButton v-if="!isFirst" icon="icon-triangle-n" @click="changeAccountOrderUp">
 				{{ t('mail', 'Move Up') }}
 			</ActionButton>
@@ -117,6 +121,8 @@ export default {
 			},
 			savingShowOnlySubscribed: false,
 			quota: undefined,
+			editing: false,
+			showSaving: false,
 		}
 	},
 	computed: {
@@ -165,6 +171,7 @@ export default {
 	},
 	methods: {
 		createFolder(e) {
+			this.editing = true
 			const name = e.target.elements[1].value
 			logger.info('creating folder ' + name)
 			this.menuOpen = false
@@ -175,6 +182,12 @@ export default {
 					logger.error('could not create folder', {error})
 					throw error
 				})
+			this.editing = false
+			this.showSaving = false
+		},
+		openCreateFolder() {
+			this.editing = true
+			this.showSaving = false
 		},
 		removeAccount() {
 			const id = this.account.id
