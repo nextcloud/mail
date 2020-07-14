@@ -67,6 +67,7 @@ OC.L10N.register(
     "User" : "Usuario",
     "Host" : "Servidor",
     "Port" : "Puerto",
+    "Change name" : "Cambiar nombre",
     "Speed up your Mail experience with these quick shortcuts." : "Acelera tu experiencia de correo con estos atajos rápidos.",
     "Compose new message" : "Redactar nuevo mensaje",
     "Newer message" : "Mensaje mas nuevo",
