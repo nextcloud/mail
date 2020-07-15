@@ -9,7 +9,7 @@
 				v-model="selectedAlias"
 				:options="aliases"
 				label="name"
-				track-by="id"
+				track-by="selectId"
 				:searchable="false"
 				:hide-selected="true"
 				:custom-label="formatAliases"
@@ -335,7 +335,31 @@ export default {
 	},
 	computed: {
 		aliases() {
-			return this.$store.getters.accounts.filter((a) => !a.isUnified)
+			let cnt = 0
+			const accounts = this.$store.getters.accounts.filter((a) => !a.isUnified)
+			const aliases = accounts.flatMap((account) => [
+				{
+					id: account.id,
+					aliasId: null,
+					selectId: cnt++,
+					editorMode: account.editorMode,
+					signature: account.signature,
+					name: account.name,
+					emailAddress: account.emailAddress,
+				},
+				account.aliases.map((alias) => {
+					return {
+						id: account.id,
+						aliasId: alias.id,
+						selectId: cnt++,
+						editorMode: account.editorMode,
+						signature: account.signature,
+						name: alias.name,
+						emailAddress: alias.alias,
+					}
+				}),
+			])
+			return aliases.flat()
 		},
 		allRecipients() {
 			return this.selectTo.concat(this.selectCc).concat(this.selectBcc)
@@ -465,6 +489,7 @@ export default {
 		getMessageData(uid) {
 			return {
 				account: this.selectedAlias.id,
+				aliasId: this.selectedAlias.aliasId,
 				to: this.selectTo.map(this.recipientToRfc822).join(', '),
 				cc: this.selectCc.map(this.recipientToRfc822).join(', '),
 				bcc: this.selectBcc.map(this.recipientToRfc822).join(', '),

@@ -13,6 +13,7 @@
 						:title="t('mail', 'Change name')"
 					></a>
 				</p>
+				<AliasSettings v-if="!account.provisioned" :account="account" />
 			</div>
 			<SignatureSettings :account="account" />
 			<EditorSettings :account="account" />
@@ -41,27 +42,25 @@ import EditorSettings from '../components/EditorSettings'
 import Logger from '../logger'
 import Navigation from '../components/Navigation'
 import SignatureSettings from '../components/SignatureSettings'
+import AliasSettings from '../components/AliasSettings'
 
 export default {
 	name: 'AccountSettings',
 	components: {
 		AccountForm,
+		AliasSettings,
 		AppContent,
 		Content,
 		EditorSettings,
 		Navigation,
 		SignatureSettings,
 	},
-	data() {
-		const account = this.$store.getters.getAccount(this.$route.params.accountId)
-		return {
-			account,
-			signature: account.signature,
-		}
-	},
 	computed: {
 		menu() {
 			return this.buildMenu()
+		},
+		account() {
+			return this.$store.getters.getAccount(this.$route.params.accountId)
 		},
 		displayName() {
 			return this.$store.getters.getAccount(this.$route.params.accountId).name

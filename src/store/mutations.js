@@ -220,4 +220,10 @@ export default {
 	removeMessage(state, {accountId, folderId, id}) {
 		Vue.delete(state.messages, normalizedMessageId(accountId, folderId, id))
 	},
+	createAlias(state, {account, alias}) {
+		account.aliases.push(alias)
+	},
+	deleteAlias(state, {account, alias}) {
+		account.aliases.splice(account.aliases.indexOf(alias), 1)
+	},
 }
