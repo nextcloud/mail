@@ -60,6 +60,7 @@ OC.L10N.register(
     "Settings" : "Configuraciones ",
     "Quota" : "Cuota",
     "Add folder" : "Agregar carpeta",
+    "Saving" : "Guardando",
     "Remove account" : "Eliminar cuenta",
     "Cancel" : "Cancelar",
     "Show all folders" : "Mostrar todas las carpetas",

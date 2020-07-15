@@ -122,6 +122,7 @@ OC.L10N.register(
     "Edit account" : "Editatu kontua",
     "Show only subscribed folders" : "Erakutsi harpidetutako karpetak soilik",
     "Add folder" : "Gehitu karpeta",
+    "Saving" : "Gordetzen",
     "Move Up" : "Eraman gora",
     "Move down" : "Eraman behera",
     "Remove account" : "Kendu kontua",

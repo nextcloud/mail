@@ -46,6 +46,7 @@ OC.L10N.register(
     "Settings" : "Axustes",
     "Quota" : "Cuota",
     "Add folder" : "Add folder",
+    "Saving" : "Guardando",
     "Remove account" : "Desaniciar cuenta",
     "Loading …" : "Cargando...",
     "Cancel" : "Encaboxar",

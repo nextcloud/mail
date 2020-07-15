@@ -126,6 +126,7 @@ OC.L10N.register(
     "Edit account" : "עריכת חשבון",
     "Show only subscribed folders" : "להציג תיקיות שבמינוי בלבד",
     "Add folder" : "הוספת תיקייה",
+    "Saving" : "שמירה",
     "Move Up" : "להעלות למעלה",
     "Move down" : "להוריד למטה",
     "Remove account" : "הסרת חשבון",

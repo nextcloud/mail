@@ -111,6 +111,7 @@ OC.L10N.register(
     "Quota" : "Квота",
     "Edit account" : "Измени налог",
     "Add folder" : "Додај фасциклу",
+    "Saving" : "Чувам",
     "Move Up" : "Помери нагоре",
     "Move down" : "Помери надоле",
     "Remove account" : "Уклони налог",

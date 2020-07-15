@@ -67,6 +67,7 @@ OC.L10N.register(
     "Settings" : "設定",
     "Quota" : "用量",
     "Add folder" : "新增資料夾",
+    "Saving" : "儲存中...",
     "Remove account" : "移除帳號",
     "Loading …" : "載入中 ...",
     "Cancel" : "取消",

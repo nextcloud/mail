@@ -127,6 +127,7 @@ OC.L10N.register(
     "Edit account" : "Account bewerken",
     "Show only subscribed folders" : "Toon alleen geabonneerde mappen",
     "Add folder" : "Toevoegen map",
+    "Saving" : "Opslaan",
     "Move Up" : "Hoger zetten",
     "Move down" : "Lager zetten",
     "Remove account" : "Verwijder account",

@@ -97,6 +97,7 @@ OC.L10N.register(
     "Quota" : "クオータ",
     "Edit account" : "アカウント編集",
     "Add folder" : "フォルダーを追加",
+    "Saving" : "保存しています",
     "Move Up" : "上に移動",
     "Move down" : "下に移動",
     "Remove account" : "アカウント削除",

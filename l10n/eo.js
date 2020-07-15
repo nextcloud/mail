@@ -99,6 +99,7 @@ OC.L10N.register(
     "Quota" : "Kvoto",
     "Edit account" : "Redakti konton",
     "Add folder" : "Aldoni dosierujon",
+    "Saving" : "Konservado",
     "Move Up" : "Movi supren",
     "Move down" : "Movi malsupren",
     "Remove account" : "Forigi konton",

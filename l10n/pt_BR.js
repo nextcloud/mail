@@ -127,6 +127,7 @@ OC.L10N.register(
     "Edit account" : "Editar conta",
     "Show only subscribed folders" : "Mostrar somente pastas subscritas",
     "Add folder" : "Adicionar pasta",
+    "Saving" : "Salvando",
     "Move Up" : "Mover para cima",
     "Move down" : "Mover para baixo",
     "Remove account" : "Excluir a conta",

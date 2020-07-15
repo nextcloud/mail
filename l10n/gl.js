@@ -127,6 +127,7 @@ OC.L10N.register(
     "Edit account" : "Editar a conta",
     "Show only subscribed folders" : "Amosar só os cartafoles subscritos",
     "Add folder" : "Engadir cartafol",
+    "Saving" : "Gardando",
     "Move Up" : "Mover cara arriba",
     "Move down" : "Mover cara abaixo",
     "Remove account" : "Retirar a conta",

@@ -103,6 +103,7 @@ OC.L10N.register(
     "Quota" : "Kiintiö",
     "Edit account" : "Muokkaa tiliä",
     "Add folder" : "Lisää kansio",
+    "Saving" : "Tallennetaan",
     "Move Up" : "Siirrä ylös",
     "Move down" : "Siirrä alas",
     "Remove account" : "Poista tili",

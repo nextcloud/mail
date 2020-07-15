@@ -112,6 +112,7 @@ OC.L10N.register(
     "Quota" : "Kvota",
     "Edit account" : "Uredi račun",
     "Add folder" : "Dodaj mapu",
+    "Saving" : "Spremanje",
     "Move Up" : "Premjesti gore",
     "Move down" : "Premjesti dolje",
     "Remove account" : "Izbriši račun",

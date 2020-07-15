@@ -33,6 +33,7 @@ OC.L10N.register(
     "Settings" : "Setelan",
     "Quota" : "Kuota",
     "Add folder" : "Add folder",
+    "Saving" : "Menyimpan",
     "Remove account" : "Hapus akun",
     "Cancel" : "Membatalkan",
     "Mark all as read" : "Tandai semua telah dibaca",

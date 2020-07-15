@@ -22,6 +22,7 @@ OC.L10N.register(
     "Settings" : "Astellungen",
     "Quota" : "Quota",
     "Add folder" : "Add folder",
+    "Saving" : "Speicheren...",
     "Remove account" : "De Kont läschen",
     "Cancel" : "Ofbriechen",
     "General" : "Allgemeng",

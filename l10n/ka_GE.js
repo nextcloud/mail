@@ -59,6 +59,7 @@ OC.L10N.register(
     "Settings" : "პარამეტრები",
     "Quota" : "კვოტა",
     "Add folder" : "Add folder",
+    "Saving" : "მიმდინარეობს შენახვა",
     "Remove account" : "ანგარიშის გაუქმება",
     "Cancel" : "უარყოფა",
     "Show all folders" : "ყველა დირექტორიის ჩვენება",

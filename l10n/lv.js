@@ -65,6 +65,7 @@ OC.L10N.register(
     "Settings" : "Iestatījumi",
     "Quota" : "Kvota",
     "Add folder" : "Pievienot mapi",
+    "Saving" : "Saglabā",
     "Remove account" : "Noņemt kontu",
     "Cancel" : "Atcelt",
     "Show all folders" : "Rādīt visas mapes",

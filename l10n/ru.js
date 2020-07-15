@@ -127,6 +127,7 @@ OC.L10N.register(
     "Edit account" : "Изменить учётную запись",
     "Show only subscribed folders" : "Показывать только папки из подписки",
     "Add folder" : "Добавить папку",
+    "Saving" : "Сохранение",
     "Move Up" : "Переместить выше",
     "Move down" : "Переместить ниже",
     "Remove account" : "Удалить учётную запись",

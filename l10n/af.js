@@ -41,6 +41,7 @@ OC.L10N.register(
     "Settings" : "Instellings",
     "Quota" : "Kwota",
     "Add folder" : "Voeg 'n gids by",
+    "Saving" : "Stoor tans",
     "Remove account" : "Verwyder rekening",
     "Loading …" : "Laai …",
     "Cancel" : "Kanselleer",

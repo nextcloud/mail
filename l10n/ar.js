@@ -62,6 +62,7 @@ OC.L10N.register(
     "Settings" : "الإعدادات",
     "Quota" : "الحصة",
     "Add folder" : "إضافة مجلد",
+    "Saving" : "جاري الحفظ ...",
     "Remove account" : "حذف حساب",
     "Cancel" : "إلغاء",
     "Show all folders" : "أظهر جميع المجلدات",

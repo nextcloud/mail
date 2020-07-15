@@ -59,6 +59,7 @@ OC.L10N.register(
     "New message" : "Mensaje nuevo",
     "Settings" : "Configuraciones ",
     "Quota" : "Cuota",
+    "Saving" : "Guardando",
     "Remove account" : "Eliminar cuenta",
     "Cancel" : "Cancelar",
     "Show all folders" : "Mostrar todas las carpetas",

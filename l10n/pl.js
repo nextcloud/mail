@@ -127,6 +127,7 @@ OC.L10N.register(
     "Edit account" : "Edytuj konto",
     "Show only subscribed folders" : "Pokaż tylko subskrybowane foldery",
     "Add folder" : "Dodaj folder",
+    "Saving" : "Zapisywanie",
     "Move Up" : "Przenieś wyżej",
     "Move down" : "Przenieś niżej",
     "Remove account" : "Usuń konto",

@@ -35,6 +35,7 @@ OC.L10N.register(
     "Settings" : "Setări",
     "Quota" : "Procent",
     "Add folder" : "Add folder",
+    "Saving" : "Se salvează",
     "Remove account" : "Sterge contul",
     "Loading …" : "Se încarcă…",
     "Cancel" : "Anulează",

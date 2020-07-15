@@ -50,6 +50,7 @@ OC.L10N.register(
     "Quota" : "Quota",
     "Edit account" : "Editar conta",
     "Add folder" : "Add folder",
+    "Saving" : "A guardar",
     "Remove account" : "Remover conta",
     "Cancel" : "Cancelar",
     "Show all folders" : "Mostrar todas as pastas",

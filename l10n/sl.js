@@ -101,6 +101,7 @@ OC.L10N.register(
     "Quota" : "Količinska omejitev",
     "Edit account" : "Uredi račun",
     "Add folder" : "Dodaj mapo",
+    "Saving" : "Poteka shranjevanje ...",
     "Move Up" : "Premakni navzgor",
     "Move down" : "Premakni navzdol",
     "Remove account" : "Odstrani račun",

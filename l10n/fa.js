@@ -100,6 +100,7 @@ OC.L10N.register(
     "Quota" : "سهم",
     "Edit account" : "ویرایش حساب",
     "Add folder" : "Add folder",
+    "Saving" : "درحال ذخیره",
     "Move Up" : "حرکت به بالا",
     "Move down" : "حرکت به پایین",
     "Remove account" : "حذف حساب کاربری",

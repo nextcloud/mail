@@ -97,6 +97,7 @@ OC.L10N.register(
     "Quota" : "Kvóti",
     "Edit account" : "Breyta notandaaðgangi",
     "Add folder" : "Bæta við möppu",
+    "Saving" : "Vista",
     "Remove account" : "Remove account",
     "Loading …" : "Hleð inn …",
     "Cancel" : "Hætta við",

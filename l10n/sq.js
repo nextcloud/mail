@@ -56,6 +56,7 @@ OC.L10N.register(
     "Settings" : "Konfigurimet",
     "Quota" : "Kuotë",
     "Add folder" : "Shto dosje",
+    "Saving" : "Duke u ruajtur!",
     "Remove account" : "Fshij llogarinë",
     "Cancel" : "Anullo",
     "Show all folders" : "Shfaqi krejt dosjet",

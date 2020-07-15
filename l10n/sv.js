@@ -112,6 +112,7 @@ OC.L10N.register(
     "Quota" : "Kvot",
     "Edit account" : "Redigera konto",
     "Add folder" : "Lägg till mapp",
+    "Saving" : "Sparar",
     "Move Up" : "Flytta upp",
     "Move down" : "Flytta ner",
     "Remove account" : "Radera konto",

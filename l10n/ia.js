@@ -29,6 +29,7 @@ OC.L10N.register(
     "Settings" : "Configurationes",
     "Quota" : "Quota",
     "Add folder" : "Add folder",
+    "Saving" : "Salveguardante",
     "Remove account" : "Remover conto",
     "Cancel" : "Cancellar",
     "Show all folders" : "Monstrar tote dossiers",

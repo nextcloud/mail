@@ -126,6 +126,7 @@ OC.L10N.register(
     "Edit account" : "Edita el compte",
     "Show only subscribed folders" : "Mostra només carpetes subscrites",
     "Add folder" : "Afegeix una carpeta",
+    "Saving" : "S'està desant",
     "Move Up" : "Mou amunt",
     "Move down" : "Mou avall",
     "Remove account" : "Suprimeix el compte",

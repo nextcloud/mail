@@ -61,6 +61,7 @@ OC.L10N.register(
     "Settings" : "Settings",
     "Quota" : "Quota",
     "Add folder" : "Add folder",
+    "Saving" : "Saving",
     "Remove account" : "Remove account",
     "Cancel" : "Cancel",
     "Show all folders" : "Show all folders",

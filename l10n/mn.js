@@ -43,6 +43,7 @@ OC.L10N.register(
     "Settings" : "тохиргоо",
     "Quota" : " хувь хэмжээ",
     "Add folder" : "Add folder",
+    "Saving" : "хадгаламж",
     "Remove account" : "Аккаунт устгах",
     "Cancel" : "болиулах",
     "Show all folders" : "Бүх хавтас харуулах",

@@ -105,6 +105,7 @@ OC.L10N.register(
     "Quota" : "Kvóta",
     "Edit account" : "Fiók szerkesztése",
     "Add folder" : "Mappa hozzáadás",
+    "Saving" : "Mentés",
     "Move Up" : "Mozgatás Fel",
     "Move down" : "Mozgatás Le",
     "Remove account" : "Fiók eltávolítása",

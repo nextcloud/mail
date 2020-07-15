@@ -45,6 +45,7 @@ OC.L10N.register(
     "Settings" : "Seaded",
     "Quota" : "Kvoot",
     "Add folder" : "Add folder",
+    "Saving" : "Salvestamine",
     "Remove account" : "Eemalda konto",
     "Cancel" : "Loobu",
     "Show all folders" : "Näita kõiki kaustu",

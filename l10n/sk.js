@@ -127,6 +127,7 @@ OC.L10N.register(
     "Edit account" : "Upraviť účet",
     "Show only subscribed folders" : "Zobraziť iba schválené priečinky",
     "Add folder" : "Pridať priečinok",
+    "Saving" : "Ukladá sa",
     "Move Up" : "Presunúť hore",
     "Move down" : "Presunúť dole",
     "Remove account" : "Odobrať účet",

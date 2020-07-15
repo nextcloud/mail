@@ -127,6 +127,7 @@ OC.L10N.register(
     "Edit account" : "Hesabı düzenle",
     "Show only subscribed folders" : "Yalnız abone olunmuş klasörler görüntülensin",
     "Add folder" : "Klasör ekle",
+    "Saving" : "Kaydediliyor",
     "Move Up" : "Yukarı taşı",
     "Move down" : "Aşağı taşı",
     "Remove account" : "Hesabı sil",
