@@ -207,7 +207,7 @@ export default {
 							accountId: this.$route.params.accountId,
 							folderId: this.$route.params.folderId,
 							filter: this.$route.params.filter ? this.$route.params.filter : undefined,
-							messageUid: first.uid,
+							messageUuid: first.uuid,
 						},
 					})
 				}
@@ -268,14 +268,14 @@ export default {
 		},
 		handleShortcut(e) {
 			const envelopes = this.envelopes
-			const currentUid = this.$route.params.messageUid
+			const currentUuid = this.$route.params.messageUuid
 
-			if (!currentUid) {
+			if (!currentUuid) {
 				logger.debug('ignoring shortcut: no envelope selected')
 				return
 			}
 
-			const current = envelopes.filter((e) => e.uid === currentUid)
+			const current = envelopes.filter((e) => e.uuid === currentUuid)
 			if (current.length === 0) {
 				logger.debug('ignoring shortcut: currently displayed messages is not in current envelope list')
 				return
@@ -311,18 +311,18 @@ export default {
 							accountId: this.$route.params.accountId,
 							folderId: this.$route.params.folderId,
 							filter: this.$route.params.filter ? this.$route.params.filter : undefined,
-							messageUid: next.uid,
+							messageUuid: next.uuid,
 						},
 					})
 					break
 				case 'del':
 					logger.debug('deleting', {env})
-					this.onDelete(env.uid)
+					this.onDelete(env.uuid)
 					this.$store
 						.dispatch('deleteMessage', {
 							accountId: env.accountId,
 							folderId: env.folderId,
-							id: env.id,
+							uid: env.uid,
 						})
 						.catch((error) =>
 							logger.error('could not delete envelope', {
@@ -384,14 +384,14 @@ export default {
 				this.refreshing = false
 			}
 		},
-		onDelete(uid) {
-			const idx = findIndex(propEq('uid', uid), this.envelopes)
+		onDelete(uuid) {
+			const idx = findIndex(propEq('uuid', uuid), this.envelopes)
 			if (idx === -1) {
 				logger.debug('envelope to delete does not exist in envelope list')
 				return
 			}
 			this.envelopes.splice(idx, 1)
-			if (uid !== this.$route.params.messageUid) {
+			if (uuid !== this.$route.params.messageUuid) {
 				logger.debug('other message open, not jumping to the next/previous message')
 				return
 			}
@@ -410,7 +410,7 @@ export default {
 					accountId: this.$route.params.accountId,
 					folderId: this.$route.params.folderId,
 					filter: this.$route.params.filter ? this.$route.params.filter : undefined,
-					messageUid: next.uid,
+					messageUuid: next.uuid,
 				},
 			})
 		},

@@ -19,26 +19,26 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-import {parseUid} from '../../../util/EnvelopeUidParser'
+import {parseUuid} from '../../../util/EnvelopeUidParser'
 
 describe('EnvelopeUidParser', () => {
 	it('parses a simple UID', () => {
-		const uid = '1-SU5CT1g=-123'
+		const uuid = '1-SU5CT1g=-123'
 
-		const parsed = parseUid(uid)
+		const parsed = parseUuid(uuid)
 
 		expect(parsed.accountId).to.equal(1)
 		expect(parsed.folderId).to.equal('SU5CT1g=')
-		expect(parsed.id).to.equal(123)
+		expect(parsed.uid).to.equal(123)
 	})
 
 	it('parses the default account UID', () => {
-		const uid = '-2-SU5CT1g=-123'
+		const uuid = '-2-SU5CT1g=-123'
 
-		const parsed = parseUid(uid)
+		const parsed = parseUuid(uuid)
 
 		expect(parsed.accountId).to.equal(-2)
 		expect(parsed.folderId).to.equal('SU5CT1g=')
-		expect(parsed.id).to.equal(123)
+		expect(parsed.uid).to.equal(123)
 	})
 })

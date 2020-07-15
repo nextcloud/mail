@@ -23,7 +23,7 @@ export default {
 				params: {
 					accountId: this.$route.params.accountId,
 					folderId: this.$route.params.folderId,
-					messageUid: 'new',
+					messageUuid: 'new',
 				},
 				query: {
 					to: this.email,

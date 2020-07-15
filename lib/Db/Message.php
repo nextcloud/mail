@@ -233,7 +233,8 @@ class Message extends Entity implements JsonSerializable {
 
 	public function jsonSerialize() {
 		return [
-			'id' => $this->getUid(), // Change to UID on front-end
+			'databaseId' => $this->getId(),
+			'uid' => $this->getUid(),
 			'subject' => $this->getSubject(),
 			'dateInt' => $this->getSentAt(),
 			'flags' => [

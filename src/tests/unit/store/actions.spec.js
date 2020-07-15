@@ -29,12 +29,12 @@ import * as NotificationService from '../../../service/NotificationService'
 import {normalizedMessageId} from '../../../store/normalization'
 import {UNIFIED_ACCOUNT_ID, UNIFIED_INBOX_ID} from '../../../store/constants'
 
-const mockEnvelope = curry((accountId, folderId, id) => ({
+const mockEnvelope = curry((accountId, folderId, uid) => ({
 	accountId,
 	folderId,
-	id,
-	uid: normalizedMessageId(accountId, folderId, id),
-	dateInt: id * 10000,
+	uid,
+	uuid: normalizedMessageId(accountId, folderId, uid),
+	dateInt: uid * 10000,
 }))
 
 describe('Vuex store actions', () => {
@@ -154,8 +154,8 @@ describe('Vuex store actions', () => {
 			Promise.resolve(
 				reverse(
 					range(1, 21).map((n) => ({
-						id: n,
-						uid: normalizedMessageId(13, 'INBOX', n),
+						uid: n,
+						uuid: normalizedMessageId(13, 'INBOX', n),
 						dateInt: n * 10000,
 					}))
 				)
@@ -170,8 +170,8 @@ describe('Vuex store actions', () => {
 		expect(page).to.deep.equal(
 			reverse(
 				range(1, 21).map((n) => ({
-					id: n,
-					uid: normalizedMessageId(13, 'INBOX', n),
+					uid: n,
+					uuid: normalizedMessageId(13, 'INBOX', n),
 					dateInt: n * 10000,
 				}))
 			)

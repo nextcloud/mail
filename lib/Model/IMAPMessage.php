@@ -448,7 +448,7 @@ class IMAPMessage implements IMessage, JsonSerializable {
 	 */
 	public function jsonSerialize(): array {
 		return [
-			'id' => $this->getUid(),
+			'uid' => $this->getUid(),
 			'messageId' => $this->getMessageId(),
 			'from' => $this->getFrom()->jsonSerialize(),
 			'to' => $this->getTo()->jsonSerialize(),

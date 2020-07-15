@@ -21,7 +21,7 @@
 
 const reg = /^(-?\d+)-((?:[A-Za-z0-9+/]{4})*(?:[A-Za-z0-9+/]{2}==|[A-Za-z0-9+/]{3}=|[A-Za-z0-9+/]{4}))-(\d+)$/
 
-export const parseUid = (str) => {
+export const parseUuid = (str) => {
 	const match = reg.exec(str)
 
 	if (match === null) {
@@ -32,6 +32,6 @@ export const parseUid = (str) => {
 	return {
 		accountId: parseInt(match[1], 10),
 		folderId: match[2],
-		id: parseInt(match[3], 10),
+		uid: parseInt(match[3], 10),
 	}
 }

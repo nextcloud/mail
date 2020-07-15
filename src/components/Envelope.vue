@@ -124,7 +124,7 @@ export default {
 						accountId: this.$route.params.accountId,
 						folderId: this.$route.params.folderId,
 						filter: this.$route.params.filter ? this.$route.params.filter : undefined,
-						messageUid: 'new',
+						messageUuid: 'new',
 						draftUid: this.data.uid,
 					},
 					exact: true,
@@ -136,7 +136,7 @@ export default {
 						accountId: this.$route.params.accountId,
 						folderId: this.$route.params.folderId,
 						filter: this.$route.params.filter ? this.$route.params.filter : undefined,
-						messageUid: this.data.uid,
+						messageUuid: this.data.uuid,
 					},
 					exact: true,
 				}
@@ -194,7 +194,7 @@ export default {
 			this.$store.dispatch('deleteMessage', {
 				accountId: this.data.accountId,
 				folderId: this.data.folderId,
-				id: this.data.id,
+				uid: this.data.uid,
 			})
 		},
 	},

@@ -394,7 +394,7 @@ export default {
 		},
 	},
 	watch: {
-		'$route.params.messageUid'(newID) {
+		'$route.params.messageUuid'() {
 			this.reset()
 		},
 		allRecipients() {
@@ -498,7 +498,7 @@ export default {
 				body: this.encrypt ? plain(this.bodyVal) : html(this.bodyVal),
 				attachments: this.attachments,
 				folderId: this.replyTo ? this.replyTo.folderId : undefined,
-				messageId: this.replyTo ? this.replyTo.id : undefined,
+				messageId: this.replyTo ? this.replyTo.uid : undefined,
 				isHtml: !this.editorPlainText,
 			}
 		},
