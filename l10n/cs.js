@@ -127,6 +127,7 @@ OC.L10N.register(
     "Edit account" : "Upravit účet",
     "Show only subscribed folders" : "Zobrazit pouze složky, u kterých jste přihlášeni k odběru",
     "Add folder" : "Přidat složku",
+    "Saving" : "Ukládá se",
     "Move Up" : "Přesunout nahoru",
     "Move down" : "Přesunout dolů",
     "Remove account" : "Odebrat účet",

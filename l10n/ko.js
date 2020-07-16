@@ -101,6 +101,7 @@ OC.L10N.register(
     "Quota" : "할당량",
     "Edit account" : "계정 편집",
     "Add folder" : "폴더 추가",
+    "Saving" : "저장 중",
     "Remove account" : "계정 삭제",
     "Loading …" : "불러오는 중 …",
     "Cancel" : "취소",

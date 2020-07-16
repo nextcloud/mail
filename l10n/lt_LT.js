@@ -107,6 +107,7 @@ OC.L10N.register(
     "Quota" : "Leidžiamas duomenų kiekis",
     "Edit account" : "Taisyti paskyrą",
     "Add folder" : "Pridėti aplanką",
+    "Saving" : "Įrašoma",
     "Move Up" : "Pakelti",
     "Move down" : "Nuleisti",
     "Remove account" : "Šalinti paskyrą",

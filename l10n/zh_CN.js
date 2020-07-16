@@ -126,6 +126,7 @@ OC.L10N.register(
     "Edit account" : "编辑账号",
     "Show only subscribed folders" : "仅显示已订阅的文件夹",
     "Add folder" : "添加文件夹",
+    "Saving" : "正在保存",
     "Move Up" : "上移",
     "Move down" : "下移",
     "Remove account" : "移除账号",

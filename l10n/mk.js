@@ -100,6 +100,7 @@ OC.L10N.register(
     "Quota" : "Квота",
     "Edit account" : "Измени сметка",
     "Add folder" : "Додади папка",
+    "Saving" : "Зачувува",
     "Remove account" : "Отстрани сметка",
     "Loading …" : "Се вчитува…",
     "Cancel" : "Откажи",

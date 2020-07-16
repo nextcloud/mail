@@ -74,6 +74,7 @@ OC.L10N.register(
     "Quota" : "Квота",
     "Edit account" : "Редактиране на профила",
     "Add folder" : "Добави папка",
+    "Saving" : "Запазване",
     "Remove account" : "Изтриване",
     "Loading …" : "Зарежда …",
     "Cancel" : "Отказ",

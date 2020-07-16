@@ -122,6 +122,7 @@ OC.L10N.register(
     "Edit account" : "Редагувати обліковий запис",
     "Show only subscribed folders" : "Показувати лише підписані теки",
     "Add folder" : "Додати теку",
+    "Saving" : "Збереження",
     "Move Up" : "Пересунути вгору",
     "Move down" : "Пересунути вниз",
     "Remove account" : "Вилучити обліковий запис",

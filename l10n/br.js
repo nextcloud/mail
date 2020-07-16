@@ -9,6 +9,7 @@ OC.L10N.register(
     "Save" : "Entilañ",
     "Connect" : "Kenstagañ",
     "+ Cc/Bcc" : "+ Cc/Bcc",
+    "Retry" : "Klaskit en dro",
     "Send" : "Kas",
     "Favorite" : "Pennroll",
     "Unselect" : "Dizibab",

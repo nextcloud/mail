@@ -78,6 +78,7 @@ OC.L10N.register(
     "Settings" : "Innstillinger",
     "Quota" : "Kvote",
     "Add folder" : "Legg til mappe",
+    "Saving" : "Lagrer",
     "Remove account" : "Fjern konto",
     "Loading …" : "Laster...",
     "Cancel" : "Avbryt",

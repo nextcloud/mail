@@ -103,6 +103,7 @@ OC.L10N.register(
     "Quota" : "Kvote",
     "Edit account" : "Rediger konto",
     "Add folder" : "Tilføj mappe",
+    "Saving" : "Gemmer",
     "Move Up" : "Flyt op",
     "Move down" : "Flyt ned",
     "Remove account" : "Fjern konto",
