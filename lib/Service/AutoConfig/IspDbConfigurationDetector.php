@@ -222,7 +222,6 @@ class IspDbConfigurationDetector {
 			$account->setOutboundPort($smtp['port']);
 			$account->setOutboundPassword($this->crypto->encrypt($password));
 			$account->setOutboundUser($user);
-			$account->setOutboundSslMode(strtolower($smtp['socketType']));
 
 			/** mapping 'STARTTLS' expected by e.g. Thunderbird to 'tls' used by mail app */
 			if (strtolower($smtp['socketType']) === 'starttls') {
