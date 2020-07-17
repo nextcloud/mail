@@ -105,6 +105,11 @@ return [
 			'verb' => 'GET'
 		],
 		[
+			'name' => 'messages#getThread',
+			'url' => '/api/accounts/{accountId}/message/{id}/thread',
+			'verb' => 'GET'
+		],
+		[
 			'name' => 'messages#setFlags',
 			'url' => '/api/accounts/{accountId}/folders/{folderId}/messages/{messageId}/flags',
 			'verb' => 'PUT'
