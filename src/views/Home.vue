@@ -91,7 +91,7 @@ export default {
 				params: {
 					accountId: firstAccount.id,
 					folderId: firstFolder.id,
-					messageUid: 'new',
+					messageUuid: 'new',
 				},
 				query: {
 					to: this.$route.query.to,
@@ -111,7 +111,7 @@ export default {
 				params: {
 					accountId: this.$route.params.accountId,
 					folderId: this.$route.params.folderId,
-					messageUid: 'new',
+					messageUuid: 'new',
 				},
 			})
 		},

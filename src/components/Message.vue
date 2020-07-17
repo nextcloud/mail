@@ -152,17 +152,17 @@ export default {
 			return isPgpgMessage(this.message.hasHtmlBody ? html(this.message.body) : plain(this.message.body))
 		},
 		htmlUrl() {
-			return generateUrl('/apps/mail/api/accounts/{accountId}/folders/{folderId}/messages/{id}/html', {
+			return generateUrl('/apps/mail/api/accounts/{accountId}/folders/{folderId}/messages/{uid}/html', {
 				accountId: this.message.accountId,
 				folderId: this.message.folderId,
-				id: this.message.id,
+				uid: this.message.uid,
 			})
 		},
 		replyTo() {
 			return {
 				accountId: this.message.accountId,
 				folderId: this.message.folderId,
-				messageId: this.message.id,
+				messageId: this.message.uid,
 			}
 		},
 		hasMultipleRecipients() {
@@ -175,7 +175,7 @@ export default {
 				from.name === to.name &&
 				Number.parseInt(from.params.accountId, 10) === Number.parseInt(to.params.accountId, 10) &&
 				from.params.folderId === to.params.folderId &&
-				from.params.messageUid === to.params.messageUid &&
+				from.params.messageUuid === to.params.messageUuid &&
 				from.params.filter === to.params.filter
 			) {
 				logger.debug('navigated but the message is still the same')
@@ -197,17 +197,17 @@ export default {
 			this.replyRecipient = {}
 			this.replySubject = ''
 
-			const messageUid = this.$route.params.messageUid
+			const messageUuid = this.$route.params.messageUuid
 
 			try {
 				const [envelope, message] = await Promise.all([
-					this.$store.dispatch('fetchEnvelope', messageUid),
-					this.$store.dispatch('fetchMessage', messageUid),
+					this.$store.dispatch('fetchEnvelope', messageUuid),
+					this.$store.dispatch('fetchMessage', messageUuid),
 				])
 				logger.debug('envelope and message fetched', {envelope, message})
 				// TODO: add timeout so that message isn't flagged when only viewed
 				// for a few seconds
-				if (message && message.uid !== this.$route.params.messageUid) {
+				if (message && message.uuid !== this.$route.params.messageUuid) {
 					logger.debug("User navigated away, loaded message won't be shown nor flagged as seen")
 					return
 				}
@@ -216,7 +216,7 @@ export default {
 				this.message = message
 
 				if (envelope === undefined || message === undefined) {
-					logger.info('message could not be found', {messageUid, envelope, message})
+					logger.info('message could not be found', {messageUuid: messageUuid, envelope, message})
 					this.errorMessage = getRandomMessageErrorMessage()
 					this.loading = false
 					return
@@ -236,7 +236,7 @@ export default {
 					return this.$store.dispatch('toggleEnvelopeSeen', envelope)
 				}
 			} catch (error) {
-				logger.error('could not load message ', {messageUid, error})
+				logger.error('could not load message ', {messageUuid, error})
 				if (error.isError) {
 					this.errorMessage = t('mail', 'Could not load your message')
 					this.error = error
@@ -250,11 +250,11 @@ export default {
 				params: {
 					accountId: this.$route.params.accountId,
 					folderId: this.$route.params.folderId,
-					messageUid: 'reply',
+					messageUuid: 'reply',
 					filter: this.$route.params.filter ? this.$route.params.filter : undefined,
 				},
 				query: {
-					uid: this.message.uid,
+					uuid: this.message.uuid,
 				},
 			})
 		},
@@ -264,11 +264,11 @@ export default {
 				params: {
 					accountId: this.$route.params.accountId,
 					folderId: this.$route.params.folderId,
-					messageUid: 'replyAll',
+					messageUuid: 'replyAll',
 					filter: this.$route.params.filter ? this.$route.params.filter : undefined,
 				},
 				query: {
-					uid: this.message.uid,
+					uuid: this.message.uuid,
 				},
 			})
 		},
@@ -278,11 +278,11 @@ export default {
 				params: {
 					accountId: this.$route.params.accountId,
 					folderId: this.$route.params.folderId,
-					messageUid: 'new',
+					messageUuid: 'new',
 					filter: this.$route.params.filter ? this.$route.params.filter : undefined,
 				},
 				query: {
-					uid: this.message.uid,
+					uuid: this.message.uuid,
 				},
 			})
 		},
@@ -297,7 +297,7 @@ export default {
 			this.$store.dispatch('deleteMessage', {
 				accountId: this.message.accountId,
 				folderId: this.message.folderId,
-				id: this.message.id,
+				uid: this.message.uid,
 			})
 		},
 		async onShowSource() {
@@ -305,10 +305,10 @@ export default {
 
 			try {
 				const resp = await axios.get(
-					generateUrl('/apps/mail/api/accounts/{accountId}/folders/{folderId}/messages/{id}/source', {
+					generateUrl('/apps/mail/api/accounts/{accountId}/folders/{folderId}/messages/{uid}/source', {
 						accountId: this.message.accountId,
 						folderId: this.message.folderId,
-						id: this.message.id,
+						uid: this.message.uid,
 					})
 				)
 

@@ -28,12 +28,12 @@
 			<div id="list-refreshing" key="loading" class="icon-loading-small" :class="{refreshing: refreshing}" />
 			<Envelope
 				v-for="env in envelopes"
-				:key="env.uid"
+				:key="env.uuid"
 				:data="env"
 				:folder="folder"
 				:selected="isEnvelopeSelected(envelopes.indexOf(env))"
 				:select-mode="selectMode"
-				@delete="$emit('delete', env.uid)"
+				@delete="$emit('delete', env.uuid)"
 				@update:selected="onEnvelopeSelectToggle(env, ...$event)"
 			/>
 			<div
@@ -144,8 +144,8 @@ export default {
 		},
 		deleteAllSelected() {
 			this.selection.forEach((envelopeId) => {
-				// Navigate if the message beeing deleted is the one currently viewed
-				if (this.envelopes[envelopeId].uid == this.$route.params.messageUid) {
+				// Navigate if the message being deleted is the one currently viewed
+				if (this.envelopes[envelopeId].uuid == this.$route.params.messageUuid) {
 					let next
 					if (envelopeId === 0) {
 						next = this.envelopes[envelopeId + 1]
@@ -159,7 +159,7 @@ export default {
 							params: {
 								accountId: this.$route.params.accountId,
 								folderId: this.$route.params.folderId,
-								messageUid: next.uid,
+								messageUuid: next.uuid,
 							},
 						})
 					}

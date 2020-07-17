@@ -164,9 +164,9 @@ export default {
 		},
 		newMessage() {
 			return (
-				this.$route.params.messageUid === 'new' ||
-				this.$route.params.messageUid === 'reply' ||
-				this.$route.params.messageUid === 'replyAll'
+				this.$route.params.messageUuid === 'new' ||
+				this.$route.params.messageUuid === 'reply' ||
+				this.$route.params.messageUuid === 'replyAll'
 			)
 		},
 	},

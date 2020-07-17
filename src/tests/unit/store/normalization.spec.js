@@ -36,7 +36,7 @@ describe('Vuex store normalization', () => {
 		const folderId = 'INBOX'
 		const messageId = 123
 
-		const id = normalizedMessageId(accountId, folderId, 123)
+		const id = normalizedMessageId(accountId, folderId, messageId)
 
 		expect(id).to.equal('13-INBOX-123')
 	})

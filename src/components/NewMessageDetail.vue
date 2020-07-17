@@ -67,12 +67,12 @@ export default {
 					subject: this.draft.subject,
 					body: this.draft.hasHtmlBody ? html(this.draft.body) : plain(this.draft.body),
 				}
-			} else if (this.$route.query.uid !== undefined) {
+			} else if (this.$route.query.uuid !== undefined) {
 				// Forward or reply to a message
 				const message = this.original
 				logger.debug('forwarding or replying to message', {message})
 
-				if (this.$route.params.messageUid === 'reply') {
+				if (this.$route.params.messageUuid === 'reply') {
 					logger.debug('simple reply')
 
 					return {
@@ -84,7 +84,7 @@ export default {
 						originalBody: this.originalBody,
 						replyTo: message,
 					}
-				} else if (this.$route.params.messageUid === 'replyAll') {
+				} else if (this.$route.params.messageUuid === 'replyAll') {
 					logger.debug('replying to all', {original: this.original})
 					const account = this.$store.getters.getAccount(message.accountId)
 					const recipients = buildReplyRecipients(message, {
@@ -164,8 +164,8 @@ export default {
 		fetchMessage() {
 			if (this.$route.params.draftUid !== undefined) {
 				return this.fetchDraftMessage(this.$route.params.draftUid)
-			} else if (this.$route.query.uid !== undefined) {
-				return this.fetchOriginalMessage(this.$route.query.uid)
+			} else if (this.$route.query.uuid !== undefined) {
+				return this.fetchOriginalMessage(this.$route.query.uuid)
 			}
 		},
 		fetchDraftMessage(draftUid) {
@@ -209,7 +209,7 @@ export default {
 
 			try {
 				const message = await this.$store.dispatch('fetchMessage', uid)
-				if (message.uid !== this.$route.query.uid) {
+				if (message.uuid !== this.$route.query.uuid) {
 					logger.debug("User navigated away, loaded original message won't be used")
 					return
 				}
@@ -221,10 +221,10 @@ export default {
 				if (message.hasHtmlBody) {
 					logger.debug('original message has HTML body')
 					const resp = await Axios.get(
-						generateUrl('/apps/mail/api/accounts/{accountId}/folders/{folderId}/messages/{id}/html', {
+						generateUrl('/apps/mail/api/accounts/{accountId}/folders/{folderId}/messages/{uid}/html', {
 							accountId: message.accountId,
 							folderId: message.folderId,
-							id: message.id,
+							uid: message.uid,
 						})
 					)
 
@@ -270,7 +270,7 @@ export default {
 							params: {
 								accountId: this.$route.params.accountId,
 								folderId: this.$route.params.folderId,
-								messageUid: 'new',
+								messageUuid: 'new',
 								draftUid: this.draft.uid,
 							},
 						})

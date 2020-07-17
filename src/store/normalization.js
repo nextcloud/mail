@@ -25,8 +25,8 @@ export const normalizedFolderId = curry((accountId, folderId) => {
 	return `${accountId}-${folderId}`
 })
 
-export const normalizedMessageId = curry((accountId, folderId, messageId) => {
-	return `${accountId}-${folderId}-${messageId}`
+export const normalizedMessageId = curry((accountId, folderId, uid) => {
+	return `${accountId}-${folderId}-${uid}`
 })
 
 export const normalizedEnvelopeListId = defaultTo('')

@@ -126,7 +126,10 @@ export default {
 
 			// FIXME: this assumes that there's at least one folder
 			const folderId = this.$route.params.folderId || this.$store.getters.getFolders(accountId)[0].id
-			if (this.$router.currentRoute.name === 'message' && this.$router.currentRoute.params.messageUid === 'new') {
+			if (
+				this.$router.currentRoute.name === 'message' &&
+				this.$router.currentRoute.params.messageUuid === 'new'
+			) {
 				// If we already show the composer, navigating to it would be pointless (and doesn't work)
 				// instead trigger an event to reset the composer
 				this.$root.$emit('newMessage')
@@ -140,7 +143,7 @@ export default {
 						accountId,
 						folderId,
 						filter: this.$route.params.filter ? this.$route.params.filter : undefined,
-						messageUid: 'new',
+						messageUuid: 'new',
 					},
 				})
 				.catch((err) => {

@@ -112,13 +112,13 @@ export default {
 	},
 	addEnvelope(state, {accountId, folderId, query, envelope}) {
 		const folder = state.folders[normalizedFolderId(accountId, folderId)]
-		Vue.set(state.envelopes, envelope.uid, envelope)
+		Vue.set(state.envelopes, envelope.uuid, envelope)
 		const listId = normalizedEnvelopeListId(query)
 		const existing = folder.envelopeLists[listId] || []
-		const uidToDateInt = (uid) => state.envelopes[uid].dateInt
-		const sortedUniqByDateInt = sortedUniqBy(uidToDateInt)
-		const orderByDateInt = orderBy(uidToDateInt, 'desc')
-		Vue.set(folder.envelopeLists, listId, sortedUniqByDateInt(orderByDateInt(existing.concat([envelope.uid]))))
+		const uuidToDateInt = (uuid) => state.envelopes[uuid].dateInt
+		const sortedUniqByDateInt = sortedUniqBy(uuidToDateInt)
+		const orderByDateInt = orderBy(uuidToDateInt, 'desc')
+		Vue.set(folder.envelopeLists, listId, sortedUniqByDateInt(orderByDateInt(existing.concat([envelope.uuid]))))
 
 		const unifiedAccount = state.accounts[UNIFIED_ACCOUNT_ID]
 		unifiedAccount.folders
@@ -129,7 +129,7 @@ export default {
 				Vue.set(
 					folder.envelopeLists,
 					listId,
-					sortedUniqByDateInt(orderByDateInt(existing.concat([envelope.uid])))
+					sortedUniqByDateInt(orderByDateInt(existing.concat([envelope.uuid])))
 				)
 			})
 	},
@@ -143,18 +143,18 @@ export default {
 	flagEnvelope(state, {envelope, flag, value}) {
 		envelope.flags[flag] = value
 	},
-	removeEnvelope(state, {accountId, folderId, id}) {
+	removeEnvelope(state, {accountId, folderId, uid}) {
 		const folder = state.folders[normalizedFolderId(accountId, folderId)]
 		for (const listId in folder.envelopeLists) {
 			if (!Object.hasOwnProperty.call(folder.envelopeLists, listId)) {
 				continue
 			}
 			const list = folder.envelopeLists[listId]
-			const idx = list.indexOf(normalizedMessageId(accountId, folderId, id))
+			const idx = list.indexOf(normalizedMessageId(accountId, folderId, uid))
 			if (idx < 0) {
 				continue
 			}
-			console.debug('envelope removed from mailbox', accountId, folder.id, id, listId)
+			console.debug('envelope removed from mailbox', accountId, folder.id, uid, listId)
 			list.splice(idx, 1)
 		}
 
@@ -167,29 +167,29 @@ export default {
 						continue
 					}
 					const list = folder.envelopeLists[listId]
-					const idx = list.indexOf(normalizedMessageId(accountId, folderId, id))
+					const idx = list.indexOf(normalizedMessageId(accountId, folderId, uid))
 					if (idx < 0) {
 						console.warn(
 							'envelope does not exist in unified mailbox',
 							accountId,
 							folder.id,
-							id,
+							uid,
 							listId,
 							list
 						)
 						continue
 					}
-					console.debug('envelope removed from unified mailbox', accountId, folder.id, id, listId)
+					console.debug('envelope removed from unified mailbox', accountId, folder.id, uid, listId)
 					list.splice(idx, 1)
 				}
 			})
 	},
 	addMessage(state, {accountId, folderId, message}) {
-		const uid = normalizedMessageId(accountId, folderId, message.id)
+		const uuid = normalizedMessageId(accountId, folderId, message.uid)
 		message.accountId = accountId
 		message.folderId = folderId
-		message.uid = uid
-		Vue.set(state.messages, uid, message)
+		message.uuid = uuid
+		Vue.set(state.messages, uuid, message)
 	},
 	updateDraft(state, {draft, data, newUid}) {
 		// Update draft's UID
@@ -217,8 +217,8 @@ export default {
 		Vue.set(state.envelopes, uid, draft)
 		Vue.set(state.messages, uid, draft)
 	},
-	removeMessage(state, {accountId, folderId, id}) {
-		Vue.delete(state.messages, normalizedMessageId(accountId, folderId, id))
+	removeMessage(state, {accountId, folderId, uid}) {
+		Vue.delete(state.messages, normalizedMessageId(accountId, folderId, uid))
 	},
 	createAlias(state, {account, alias}) {
 		account.aliases.push(alias)
