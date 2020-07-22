@@ -30,6 +30,7 @@ OC.L10N.register(
     "SMTP Password" : "SMTP лозинка",
     "Save" : "Сачувај",
     "Connect" : "Повежи се",
+    "Add alias" : "Додајте алиас",
     "Add mail account" : "Додај налог е-поште",
     "Use Gravatar and favicon avatars" : "Користи Граватар и аватаре favicon-а",
     "Register as application for mail links" : "Региструј се као аликација за везе е-поште",
