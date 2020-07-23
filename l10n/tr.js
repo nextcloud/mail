@@ -30,6 +30,7 @@ OC.L10N.register(
     "SMTP Password" : "SMTP Parolası",
     "Save" : "Kaydet",
     "Connect" : "Bağlan",
+    "Add alias" : "Takma ad ekle",
     "Add mail account" : "E-posta hesabı ekle",
     "Use Gravatar and favicon avatars" : "Gravatar ve favicon avatarları kullanılsın",
     "Register as application for mail links" : "E-posta bağlantıları uygulaması olarak ata",
