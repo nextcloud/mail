@@ -3276,16 +3276,16 @@
         },
         {
             "name": "phan/phan",
-            "version": "3.0.5",
+            "version": "3.1.0",
             "source": {
                 "type": "git",
                 "url": "https://github.com/phan/phan.git",
-                "reference": "5caa68cc8024e537120d1fe9b835bc8525c660fa"
+                "reference": "b04358cfb5a9ead1c587c08fdbe84283f8c46c01"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/phan/phan/zipball/5caa68cc8024e537120d1fe9b835bc8525c660fa",
-                "reference": "5caa68cc8024e537120d1fe9b835bc8525c660fa",
+                "url": "https://api.github.com/repos/phan/phan/zipball/b04358cfb5a9ead1c587c08fdbe84283f8c46c01",
+                "reference": "b04358cfb5a9ead1c587c08fdbe84283f8c46c01",
                 "shasum": ""
             },
             "require": {
@@ -3303,7 +3303,6 @@
                 "symfony/polyfill-mbstring": "^1.11.0"
             },
             "require-dev": {
-                "brianium/paratest": "^4.0.0",
                 "phpunit/phpunit": "^8.5.0"
             },
             "suggest": {
@@ -3345,7 +3344,7 @@
                 "php",
                 "static"
             ],
-            "time": "2020-07-03T23:01:25+00:00"
+            "time": "2020-07-16T23:20:03+00:00"
         },
         {
             "name": "phar-io/manifest",
