@@ -8,7 +8,7 @@ OC.L10N.register(
     "SSL/TLS" : "SSL/TLS",
     "STARTTLS" : "STARTTLS",
     "SMTP Password" : "Ger-tremen SMTP",
-    "Save" : "Entilañ",
+    "Save" : "Enrollañ",
     "Connect" : "Kenstagañ",
     "+ Cc/Bcc" : "+ Cc/Bcc",
     "Retry" : "Klaskit en dro",
