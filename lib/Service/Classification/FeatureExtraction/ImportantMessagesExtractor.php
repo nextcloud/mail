@@ -54,7 +54,7 @@ class ImportantMessagesExtractor implements IExtractor {
 			return $message->getFrom()->first()->getEmail();
 		}, array_filter($messages, function (Message $message) {
 			return $message->getFrom()->first() !== null && $message->getFrom()->first()->getEmail() !== null;
-		}));
+		})));
 		$this->totalMessages = $this->statisticsDao->getNumberOfMessagesGrouped($incomingMailboxes, $senders);
 		$this->flaggedMessages = $this->statisticsDao->getNumberOfMessagesWithFlagGrouped($incomingMailboxes, 'important', $senders);
 
