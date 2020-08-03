@@ -1,4 +1,4 @@
-import {createLocalVue, shallowMount} from '@vue/test-utils'
+import { createLocalVue, shallowMount } from '@vue/test-utils'
 import VTooltip from 'v-tooltip'
 
 import Address from '../../../components/Address.vue'

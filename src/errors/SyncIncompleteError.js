@@ -20,6 +20,7 @@
  */
 
 export default class SyncIncompleteError extends Error {
+
 	constructor(message) {
 		super(message)
 		this.name = SyncIncompleteError.getName()
@@ -29,4 +30,5 @@ export default class SyncIncompleteError extends Error {
 	static getName() {
 		return 'SyncIncompleteError'
 	}
+
 }

@@ -37,7 +37,10 @@
 			}}
 		</p>
 		<div>
-			<input id="mail-provision-toggle" v-model="active" type="checkbox" class="checkbox" />
+			<input id="mail-provision-toggle"
+				v-model="active"
+				type="checkbox"
+				class="checkbox">
 			<label for="mail-provision-toggle">
 				{{ t('mail', 'Provision an account for every user') }}
 			</label>
@@ -45,55 +48,55 @@
 		<div v-if="active" class="form-preview-row">
 			<form @submit.prevent="submit">
 				<div class="settings-group">
-					<div class="group-title">{{ t('mail', 'General') }}</div>
+					<div class="group-title">
+						{{ t('mail', 'General') }}
+					</div>
 					<div class="group-inputs">
 						<label for="mail-provision-email"> {{ t('mail', 'Email address') }}* </label>
-						<br />
+						<br>
 						<input
 							id="mail-provision-email"
 							v-model="emailTemplate"
 							:disabled="loading"
 							name="email"
-							type="text"
-						/>
+							type="text">
 					</div>
 				</div>
 				<div class="settings-group">
-					<div class="group-title">{{ t('mail', 'IMAP') }}</div>
+					<div class="group-title">
+						{{ t('mail', 'IMAP') }}
+					</div>
 					<div class="group-inputs">
 						<label for="mail-provision-imap-user">
 							{{ t('mail', 'User') }}*
-							<br />
+							<br>
 							<input
 								id="mail-provision-imap-user"
 								v-model="imapUser"
 								:disabled="loading"
 								name="email"
-								type="text"
-							/>
+								type="text">
 						</label>
 						<div class="flex-row">
 							<label for="mail-provision-imap-host">
 								{{ t('mail', 'Host') }}
-								<br />
+								<br>
 								<input
 									id="mail-provision-imap-host"
 									v-model="imapHost"
 									:disabled="loading"
 									name="email"
-									type="text"
-								/>
+									type="text">
 							</label>
 							<label for="mail-provision-imap-port">
 								{{ t('mail', 'Port') }}
-								<br />
+								<br>
 								<input
 									id="mail-provision-imap-port"
 									v-model="imapPort"
 									:disabled="loading"
 									name="email"
-									type="number"
-								/>
+									type="number">
 							</label>
 						</div>
 						<div class="flex-row">
@@ -103,81 +106,71 @@
 								type="radio"
 								name="man-imap-sec"
 								:disabled="loading"
-								value="none"
-							/>
+								value="none">
 							<label
 								class="button"
 								for="mail-provision-imap-user-none"
-								:class="{primary: imapSslMode === 'none'}"
-								>{{ t('mail', 'None') }}</label
-							>
+								:class="{primary: imapSslMode === 'none'}">{{ t('mail', 'None') }}</label>
 							<input
 								id="mail-provision-imap-user-ssl"
 								v-model="imapSslMode"
 								type="radio"
 								name="man-imap-sec"
 								:disabled="loading"
-								value="ssl"
-							/>
+								value="ssl">
 							<label
 								class="button"
 								for="mail-provision-imap-user-ssl"
-								:class="{primary: imapSslMode === 'ssl'}"
-								>{{ t('mail', 'SSL/TLS') }}</label
-							>
+								:class="{primary: imapSslMode === 'ssl'}">{{ t('mail', 'SSL/TLS') }}</label>
 							<input
 								id="mail-provision-imap-user-tls"
 								v-model="imapSslMode"
 								type="radio"
 								name="man-imap-sec"
 								:disabled="loading"
-								value="tls"
-							/>
+								value="tls">
 							<label
 								class="button"
 								for="mail-provision-imap-user-tls"
-								:class="{primary: imapSslMode === 'tls'}"
-								>{{ t('mail', 'STARTTLS') }}</label
-							>
+								:class="{primary: imapSslMode === 'tls'}">{{ t('mail', 'STARTTLS') }}</label>
 						</div>
 					</div>
 				</div>
 				<div class="settings-group">
-					<div class="group-title">{{ t('mail', 'SMTP') }}</div>
+					<div class="group-title">
+						{{ t('mail', 'SMTP') }}
+					</div>
 					<div class="group-inputs">
 						<label for="mail-provision-smtp-user">
 							{{ t('mail', 'User') }}*
-							<br />
+							<br>
 							<input
 								id="mail-provision-smtp-user"
 								v-model="smtpUser"
 								:disabled="loading"
 								name="email"
-								type="text"
-							/>
+								type="text">
 						</label>
 						<div class="flex-row">
 							<label for="mail-provision-imap-host">
 								{{ t('mail', 'Host') }}
-								<br />
+								<br>
 								<input
 									id="mail-provision-smtp-host"
 									v-model="smtpHost"
 									:disabled="loading"
 									name="email"
-									type="text"
-								/>
+									type="text">
 							</label>
 							<label for="mail-provision-smtp-port">
 								{{ t('mail', 'Port') }}
-								<br />
+								<br>
 								<input
 									id="mail-provision-smtp-port"
 									v-model="smtpPort"
 									:disabled="loading"
 									name="email"
-									type="number"
-								/>
+									type="number">
 							</label>
 						</div>
 						<div class="flex-row">
@@ -187,61 +180,50 @@
 								type="radio"
 								name="man-smtp-sec"
 								:disabled="loading"
-								value="none"
-							/>
+								value="none">
 							<label
 								class="button"
 								for="mail-provision-smtp-user-none"
-								:class="{primary: smtpSslMode === 'none'}"
-								>{{ t('mail', 'None') }}</label
-							>
+								:class="{primary: smtpSslMode === 'none'}">{{ t('mail', 'None') }}</label>
 							<input
 								id="mail-provision-smtp-user-ssl"
 								v-model="smtpSslMode"
 								type="radio"
 								name="man-smtp-sec"
 								:disabled="loading"
-								value="ssl"
-							/>
+								value="ssl">
 							<label
 								class="button"
 								for="mail-provision-smtp-user-ssl"
-								:class="{primary: smtpSslMode === 'ssl'}"
-								>{{ t('mail', 'SSL/TLS') }}</label
-							>
+								:class="{primary: smtpSslMode === 'ssl'}">{{ t('mail', 'SSL/TLS') }}</label>
 							<input
 								id="mail-provision-smtp-user-tls"
 								v-model="smtpSslMode"
 								type="radio"
 								name="man-smtp-sec"
 								:disabled="loading"
-								value="tls"
-							/>
+								value="tls">
 							<label
 								class="button"
 								for="mail-provision-smtp-user-tls"
-								:class="{primary: smtpSslMode === 'tls'}"
-								>{{ t('mail', 'STARTTLS') }}</label
-							>
+								:class="{primary: smtpSslMode === 'tls'}">{{ t('mail', 'STARTTLS') }}</label>
 						</div>
 					</div>
 				</div>
 				<div class="settings-group">
-					<div class="group-title"></div>
+					<div class="group-title" />
 					<div class="group-inputs">
 						<input
 							type="submit"
 							class="primary"
 							:disabled="loading"
-							:value="t('mail', 'Apply and create/update for all users')"
-						/>
+							:value="t('mail', 'Apply and create/update for all users')">
 						<input
 							type="button"
 							:disabled="loading"
 							:value="t('mail', 'Disable and un-provision existing accounts')"
-							@click="disable"
-						/>
-						<br />
+							@click="disable">
+						<br>
 						<small>{{
 							t('mail', "* %USERID% and %EMAIL% will be replaced with the user's UID and email")
 						}}</small>
@@ -267,11 +249,11 @@
 <script>
 import logger from '../../logger'
 import ProvisionPreview from './ProvisionPreview'
-import {disableProvisioning, saveProvisioningSettings} from '../../service/SettingsService'
+import { disableProvisioning, saveProvisioningSettings } from '../../service/SettingsService'
 
 export default {
 	name: 'ProvisioningSettings',
-	components: {ProvisionPreview},
+	components: { ProvisionPreview },
 	props: {
 		settings: {
 			type: Object,
@@ -317,7 +299,7 @@ export default {
 		},
 	},
 	beforeMount() {
-		logger.debug('provisioning settings loaded', {settings: this.settings})
+		logger.debug('provisioning settings loaded', { settings: this.settings })
 	},
 	methods: {
 		submit() {
@@ -339,7 +321,7 @@ export default {
 				})
 				.catch((error) => {
 					// TODO: show user feedback
-					logger.error('Could not save provisioning settings', {error})
+					logger.error('Could not save provisioning settings', { error })
 				})
 				.then(() => {
 					this.loading = false
@@ -353,7 +335,7 @@ export default {
 					logger.info('deprovisioned successfully')
 				})
 				.catch((error) => {
-					logger.error('could not deprovision accounts', {error})
+					logger.error('could not deprovision accounts', { error })
 				})
 				.then(() => {
 					this.active = false

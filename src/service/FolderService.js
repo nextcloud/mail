@@ -1,4 +1,4 @@
-import {generateUrl} from '@nextcloud/router'
+import { generateUrl } from '@nextcloud/router'
 import Axios from '@nextcloud/axios'
 
 export function fetchAll(accountId) {

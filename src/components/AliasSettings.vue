@@ -23,7 +23,7 @@
 			<li v-for="curAlias in aliases" :key="curAlias.id">
 				<strong>{{ curAlias.name }}</strong> &lt;{{ curAlias.alias }}&gt;
 
-				<button class="icon-delete" @click="deleteAlias(curAlias)"></button>
+				<button class="icon-delete" @click="deleteAlias(curAlias)" />
 			</li>
 		</ul>
 
@@ -34,8 +34,7 @@
 				v-model="alias.aliasName"
 				type="text"
 				:placeholder="t('mail', 'Name')"
-				:disabled="loading"
-			/>
+				:disabled="loading">
 
 			<input
 				v-if="addMode"
@@ -44,8 +43,7 @@
 				v-model="alias.alias"
 				type="email"
 				:placeholder="t('mail', 'Mail Address')"
-				:disabled="loading"
-			/>
+				:disabled="loading">
 		</div>
 
 		<div>
@@ -58,8 +56,7 @@
 				class="primary"
 				:class="loading ? 'icon-loading-small-dark' : 'icon-checkmark-white'"
 				:disabled="loading"
-				@click="saveAlias"
-			>
+				@click="saveAlias">
 				{{ t('mail', 'Save') }}
 			</button>
 		</div>
@@ -82,7 +79,7 @@ export default {
 		return {
 			addMode: false,
 			loading: false,
-			alias: {aliasName: this.account.name, alias: ''},
+			alias: { aliasName: this.account.name, alias: '' },
 		}
 	},
 	computed: {
@@ -100,15 +97,15 @@ export default {
 		},
 		async deleteAlias(alias) {
 			this.loading = true
-			await this.$store.dispatch('deleteAlias', {account: this.account, aliasToDelete: alias})
+			await this.$store.dispatch('deleteAlias', { account: this.account, aliasToDelete: alias })
 			logger.info('alias deleted')
 			this.loading = false
 		},
 		async saveAlias() {
 			this.loading = true
-			await this.$store.dispatch('createAlias', {account: this.account, aliasToAdd: this.alias})
+			await this.$store.dispatch('createAlias', { account: this.account, aliasToAdd: this.alias })
 			logger.info('alias added')
-			this.alias = {aliasName: this.account.name, alias: ''}
+			this.alias = { aliasName: this.account.name, alias: '' }
 			this.loading = false
 		},
 	},

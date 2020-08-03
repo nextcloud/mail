@@ -20,8 +20,8 @@
  *
  */
 
-import {buildReplyBody, buildRecipients, buildReplySubject} from '../../ReplyBuilder'
-import {html, plain} from '../../util/text'
+import { buildReplyBody, buildRecipients, buildReplySubject } from '../../ReplyBuilder'
+import { html, plain } from '../../util/text'
 
 describe('ReplyBuilder', () => {
 	it('creates a reply body without any sender', () => {
@@ -51,7 +51,7 @@ describe('ReplyBuilder', () => {
 
 	let envelope
 
-	beforeEach(function () {
+	beforeEach(function() {
 		envelope = {}
 	})
 
@@ -93,7 +93,7 @@ describe('ReplyBuilder', () => {
 		envelope.to = [b, c]
 		envelope.cc = []
 
-		var reply = buildRecipients(envelope, b)
+		const reply = buildRecipients(envelope, b)
 
 		assertSameAddressList(reply.from, [b])
 		assertSameAddressList(reply.to, [a, c])
@@ -189,7 +189,7 @@ describe('ReplyBuilder', () => {
 		envelope.to = [a, b]
 		envelope.cc = []
 
-		var reply = buildRecipients(envelope, a)
+		const reply = buildRecipients(envelope, a)
 
 		assertSameAddressList(reply.from, [a])
 		assertSameAddressList(reply.to, [b])
@@ -219,7 +219,7 @@ describe('ReplyBuilder', () => {
 		envelope.to = [a]
 		envelope.cc = []
 
-		var reply = buildRecipients(envelope, a)
+		const reply = buildRecipients(envelope, a)
 
 		assertSameAddressList(reply.from, [a])
 		assertSameAddressList(reply.to, [a])

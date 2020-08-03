@@ -6,22 +6,19 @@
 				:key="idx"
 				:data="entry"
 				:calendars="calendars"
-				:message-id="messageId"
-			/>
+				:message-id="messageId" />
 			<FlightReservation
 				v-else-if="entry['@type'] === 'FlightReservation'"
 				:key="idx"
 				:data="entry"
 				:calendars="calendars"
-				:message-id="messageId"
-			/>
+				:message-id="messageId" />
 			<TrainReservation
 				v-else-if="entry['@type'] === 'TrainReservation'"
 				:key="idx"
 				:data="entry"
 				:calendars="calendars"
-				:message-id="messageId"
-			/>
+				:message-id="messageId" />
 			<span v-else :key="idx">{{
 				t('mail', 'Itinerary for {type} is not supported yet', {type: entry['@type']})
 			}}</span>
@@ -32,7 +29,7 @@
 <script>
 import once from 'lodash/fp/once'
 
-import {getUserCalendars} from '../service/DAVService'
+import { getUserCalendars } from '../service/DAVService'
 import logger from '../logger'
 import EventReservation from './itinerary/EventReservation'
 import FlightReservation from './itinerary/FlightReservation'
@@ -65,7 +62,7 @@ export default {
 	mounted() {
 		getUserCalendarsOnce()
 			.then((calendars) => (this.calendars = calendars))
-			.catch((error) => logger.error('Could not load calendars', {error}))
+			.catch((error) => logger.error('Could not load calendars', { error }))
 	},
 }
 </script>

@@ -19,14 +19,14 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-import {getMailvelope} from '../../../crypto/mailvelope'
+import { getMailvelope } from '../../../crypto/mailvelope'
 
 describe('mailvelope', () => {
 	afterEach(() => {
 		delete window.mailvelope
 	})
 
-	it('loads statically', async () => {
+	it('loads statically', async() => {
 		window.mailvelope = {
 			mock: 3,
 		}
@@ -36,7 +36,7 @@ describe('mailvelope', () => {
 		expect(mailvelope).to.deep.equal(window.mailvelope)
 	})
 
-	it('loads dynamically', async () => {
+	it('loads dynamically', async() => {
 		const p = getMailvelope()
 		window.mailvelope = {
 			mock: 3,

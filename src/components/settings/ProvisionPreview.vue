@@ -25,8 +25,8 @@
 			<span v-if="data.uid">uid={{ data.uid }}</span>
 			<span v-if="data.email">email={{ email }}</span>
 		</b>
-		<br />
-		{{ t('mail', 'Email: {email}', {email}) }}<br />
+		<br>
+		{{ t('mail', 'Email: {email}', {email}) }}<br>
 		{{
 			t('mail', 'IMAP: {user} on {host}:{port} ({ssl} encryption)', {
 				user: imapUser,
@@ -34,7 +34,7 @@
 				port: imapPort,
 				ssl: imapSslMode,
 			})
-		}}<br />
+		}}<br>
 		{{
 			t('mail', 'SMTP: {user} on {host}:{port} ({ssl} encryption)', {
 				user: smtpUser,
@@ -42,7 +42,7 @@
 				port: smtpPort,
 				ssl: smtpSslMode,
 			})
-		}}<br />
+		}}<br>
 	</div>
 </template>
 

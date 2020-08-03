@@ -1,12 +1,12 @@
 <template>
 	<div>
-		<div v-if="mailvelope" id="mail-content"></div>
+		<div v-if="mailvelope" id="mail-content" />
 		<span v-else>{{ t('mail', 'This message is encrypted with PGP. Install Mailvelope to decrypt it.') }}</span>
 	</div>
 </template>
 
 <script>
-import {getMailvelope} from '../crypto/mailvelope'
+import { getMailvelope } from '../crypto/mailvelope'
 
 export default {
 	name: 'MessageEncryptedBody',

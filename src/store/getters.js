@@ -19,10 +19,10 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-import {defaultTo, head} from 'ramda'
+import { defaultTo, head } from 'ramda'
 
-import {UNIFIED_ACCOUNT_ID} from './constants'
-import {normalizedEnvelopeListId, normalizedFolderId, normalizedMessageId} from './normalization'
+import { UNIFIED_ACCOUNT_ID } from './constants'
+import { normalizedEnvelopeListId, normalizedFolderId, normalizedMessageId } from './normalization'
 
 export const getters = {
 	getPreference: (state) => (key, def) => {

@@ -1,4 +1,4 @@
-import {generateUrl} from '@nextcloud/router'
+import { generateUrl } from '@nextcloud/router'
 import axios from '@nextcloud/axios'
 
 export const fixAccountId = (original) => {
@@ -25,7 +25,7 @@ export const create = (data) => {
 }
 
 export const patch = (account, data) => {
-	const url = generateUrl(`/apps/mail/api/accounts/{id}`, {
+	const url = generateUrl('/apps/mail/api/accounts/{id}', {
 		id: account.accountId,
 	})
 
@@ -36,7 +36,7 @@ export const patch = (account, data) => {
 }
 
 export const update = (data) => {
-	const url = generateUrl(`/apps/mail/api/accounts/{id}`, {
+	const url = generateUrl('/apps/mail/api/accounts/{id}', {
 		id: data.accountId,
 	})
 
@@ -47,7 +47,7 @@ export const update = (data) => {
 }
 
 export const updateSignature = (account, signature) => {
-	const url = generateUrl(`/apps/mail/api/accounts/{id}/signature`, {
+	const url = generateUrl('/apps/mail/api/accounts/{id}/signature', {
 		id: account.id,
 	})
 	const data = {
@@ -74,7 +74,7 @@ export const fetch = (id) => {
 	return axios.get(url).then((resp) => fixAccountId(resp.data))
 }
 
-export const fetchQuota = async (id) => {
+export const fetchQuota = async(id) => {
 	const url = generateUrl('/apps/mail/api/accounts/{id}/quota', {
 		id,
 	})

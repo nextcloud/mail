@@ -38,8 +38,8 @@ const flattenError = (error) => {
 }
 
 const flattenTrace = (trace) => {
-	return trace.reduce(function (acc, entry) {
-		var text = ''
+	return trace.reduce(function(acc, entry) {
+		let text = ''
 		if (entry.class) {
 			text += '  at ' + entry.class + '::' + entry.function
 		} else {
@@ -54,22 +54,22 @@ const flattenTrace = (trace) => {
 
 export const getReportUrl = (error) => {
 	console.error(error)
-	var message = error.message || 'An unkown error occurred.'
+	let message = error.message || 'An unkown error occurred.'
 	if (!message.endsWith('.')) {
 		message += '.'
 	}
-	var builder = new IssueTemplateBuilder()
-	var template = builder
+	const builder = new IssueTemplateBuilder()
+	const template = builder
 		.addEmptyStepsToReproduce()
 		.addExpectedActualBehaviour()
 		.addLogs('Error', flattenError(error))
 		.render()
 
 	return (
-		'https://github.com/nextcloud/mail/issues/new' +
-		'?title=' +
-		encodeURIComponent(message) +
-		'&body=' +
-		encodeURIComponent(template)
+		'https://github.com/nextcloud/mail/issues/new'
+		+ '?title='
+		+ encodeURIComponent(message)
+		+ '&body='
+		+ encodeURIComponent(template)
 	)
 }

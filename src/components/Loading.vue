@@ -1,12 +1,12 @@
 <template>
 	<div v-if="hint" class="emptycontent">
-		<a class="icon-loading"></a>
+		<a class="icon-loading" />
 		<h2>{{ hint }}</h2>
 		<transition name="fade">
 			<em v-if="slowHint && slow">{{ slowHint }}</em>
 		</transition>
 	</div>
-	<div v-else class="container icon-loading"></div>
+	<div v-else class="container icon-loading" />
 </template>
 
 <script>
