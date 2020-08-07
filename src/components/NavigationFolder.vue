@@ -31,16 +31,14 @@
 		:title="title"
 		:to="to"
 		:open.sync="showSubFolders"
-		@update:menuOpen="onMenuToggle"
-	>
+		@update:menuOpen="onMenuToggle">
 		<!-- actions -->
 		<template slot="actions">
 			<template>
 				<ActionText
 					v-if="!account.isUnified && folder.specialRole !== 'flagged'"
 					icon="icon-info"
-					:title="folderId"
-				>
+					:title="folderId">
 					{{ statsText }}
 				</ActionText>
 
@@ -49,16 +47,14 @@
 					icon="icon-mail"
 					:title="t('mail', 'Mark all as read')"
 					:disabled="loadingMarkAsRead"
-					@click="markAsRead"
-				>
+					@click="markAsRead">
 					{{ t('mail', 'Mark all messages of this folder as read') }}
 				</ActionButton>
 
 				<ActionButton
 					v-if="!editing && top && !account.isUnified && folder.specialRole !== 'flagged'"
 					icon="icon-folder"
-					@click="openCreateFolder"
-				>
+					@click="openCreateFolder">
 					{{ t('mail', 'Add subfolder') }}
 				</ActionButton>
 				<ActionInput v-if="editing" icon="icon-folder" @submit.prevent.stop="createFolder" />
@@ -71,8 +67,7 @@
 					icon="icon-settings"
 					:title="t('mail', 'Clear cache')"
 					:disabled="clearingCache"
-					@click="clearCache"
-				>
+					@click="clearCache">
 					{{ t('mail', 'Clear locally cached data, in case there are issues with synchronization.') }}
 				</ActionButton>
 			</template>
@@ -87,8 +82,7 @@
 			:key="genId(subFolder)"
 			:account="account"
 			:folder="subFolder"
-			:top="false"
-		/>
+			:top="false" />
 	</AppNavigationItem>
 </template>
 
@@ -99,11 +93,11 @@ import ActionButton from '@nextcloud/vue/dist/Components/ActionButton'
 import ActionInput from '@nextcloud/vue/dist/Components/ActionInput'
 import ActionText from '@nextcloud/vue/dist/Components/ActionText'
 
-import {clearCache} from '../service/MessageService'
-import {getFolderStats} from '../service/FolderService'
+import { clearCache } from '../service/MessageService'
+import { getFolderStats } from '../service/FolderService'
 import logger from '../logger'
-import {translatePlural as n} from '@nextcloud/l10n'
-import {translate as translateMailboxName} from '../i18n/MailboxTranslator'
+import { translatePlural as n } from '@nextcloud/l10n'
+import { translate as translateMailboxName } from '../i18n/MailboxTranslator'
 
 export default {
 	name: 'NavigationFolder',
@@ -148,8 +142,8 @@ export default {
 	computed: {
 		visible() {
 			return (
-				this.account.showSubscribedOnly === false ||
-				(this.folder.attributes && this.folder.attributes.includes('\\subscribed'))
+				this.account.showSubscribedOnly === false
+				|| (this.folder.attributes && this.folder.attributes.includes('\\subscribed'))
 			)
 		},
 		title() {
@@ -211,6 +205,8 @@ export default {
 	methods: {
 		/**
 		 * Generate unique key id for a specific folder
+		 * @param {Object} folder the folder to gen id for
+		 * @returns {string}
 		 */
 		genId(folder) {
 			return 'account-' + this.account.id + '_' + folder.id
@@ -237,10 +233,10 @@ export default {
 
 			try {
 				const stats = await getFolderStats(this.account.id, this.folder.id)
-				logger.debug('loaded folder stats', {stats})
+				logger.debug('loaded folder stats', { stats })
 				this.folderStats = stats
 			} catch (error) {
-				this.folderStats = {error: true}
+				this.folderStats = { error: true }
 				logger.error(`could not load folder stats for ${this.folder.id}`, error)
 			}
 		},
@@ -257,7 +253,7 @@ export default {
 					name: withPrefix,
 				})
 			} catch (error) {
-				logger.error(`could not create folder ${withPrefix}`, {error})
+				logger.error(`could not create folder ${withPrefix}`, { error })
 				throw error
 			} finally {
 				this.editing = false
@@ -279,7 +275,7 @@ export default {
 					folderId: this.folder.id,
 				})
 				.then(() => logger.info(`folder ${this.folder.id} marked as read`))
-				.catch((error) => logger.error(`could not mark folder ${this.folder.id} as read`, {error}))
+				.catch((error) => logger.error(`could not mark folder ${this.folder.id} as read`, { error }))
 				.then(() => (this.loadingMarkAsRead = false))
 		},
 		async clearCache() {

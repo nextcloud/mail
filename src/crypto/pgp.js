@@ -1,4 +1,4 @@
-/*
+/**
  * @copyright 2020 Christoph Wurst <christoph@winzerhof-wurst.at>
  *
  * @author 2020 Christoph Wurst <christoph@winzerhof-wurst.at>
@@ -19,11 +19,9 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-import startsWith from 'lodash/fp/startsWith'
-
 /**
- * @param {Text} message
- * @return {boolean|*}
+ * @param {Text} message the message
+ * @returns {boolean|*}
  */
 export const isPgpgMessage = (message) =>
 	message.format === 'plain' && message.value.startsWith('-----BEGIN PGP MESSAGE-----')

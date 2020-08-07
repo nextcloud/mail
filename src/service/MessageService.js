@@ -1,9 +1,9 @@
-import {generateUrl} from '@nextcloud/router'
+import { generateUrl } from '@nextcloud/router'
 import axios from '@nextcloud/axios'
-import {curry, map} from 'ramda'
+import { curry, map } from 'ramda'
 
-import {parseErrorResponse} from '../http/ErrorResponseParser'
-import {convertAxiosError} from '../errors/convert'
+import { parseErrorResponse } from '../http/ErrorResponseParser'
+import { convertAxiosError } from '../errors/convert'
 import SyncIncompleteError from '../errors/SyncIncompleteError'
 
 const amendEnvelopeWithIds = curry((accountId, folderId, envelope) => ({
@@ -116,10 +116,7 @@ export function setEnvelopeFlag(accountId, folderId, uid, flag, value) {
 
 	return axios
 		.put(url, {
-			flags: flags,
-		})
-		.then(() => {
-			value
+			flags,
 		})
 }
 

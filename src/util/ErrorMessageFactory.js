@@ -17,7 +17,7 @@
  *
  */
 
-import {translate as t} from '@nextcloud/l10n'
+import { translate as t } from '@nextcloud/l10n'
 
 const smileys = [':-(', ':-/', ':-\\', ':-|', ":'-(", ":'-/", ":'-\\", ":'-|"]
 
@@ -26,7 +26,7 @@ const getRandomSmiley = () => {
 }
 
 /**
- * @param {Folder} folder
+ * @param {Folder} folder a folder
  * @returns {string}
  */
 export const getRandomFolderErrorMessage = (folder) => {

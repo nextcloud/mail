@@ -25,9 +25,8 @@
 	<Loading
 		v-else-if="loadingCacheInitialization"
 		:hint="t('mail', 'Loading messages')"
-		:slow-hint="t('mail', 'Indexing your messages. This can take a bit longer for larger mailboxes.')"
-	/>
-	<EmptyMailboxSection v-else-if="isPriorityInbox && !hasMessages" key="empty"></EmptyMailboxSection>
+		:slow-hint="t('mail', 'Indexing your messages. This can take a bit longer for larger mailboxes.')" />
+	<EmptyMailboxSection v-else-if="isPriorityInbox && !hasMessages" key="empty" />
 	<EmptyMailbox v-else-if="!hasMessages" key="empty" />
 	<EnvelopeList
 		v-else
@@ -39,24 +38,22 @@
 		:loading-more="loadingMore"
 		:load-more-button="showLoadMore"
 		@delete="onDelete"
-		@loadMore="loadMore"
-	/>
+		@loadMore="loadMore" />
 </template>
 
 <script>
 import EmptyMailbox from './EmptyMailbox'
 import EnvelopeList from './EnvelopeList'
 import Error from './Error'
-import {findIndex, propEq} from 'ramda'
+import { findIndex, propEq } from 'ramda'
 import isMobile from '@nextcloud/vue/dist/Mixins/isMobile'
 import Loading from './Loading'
 import logger from '../logger'
 import MailboxLockedError from '../errors/MailboxLockedError'
 import MailboxNotCachedError from '../errors/MailboxNotCachedError'
-import {matchError} from '../errors/match'
-import {wait} from '../util/wait'
+import { matchError } from '../errors/match'
+import { wait } from '../util/wait'
 import EmptyMailboxSection from './EmptyMailboxSection'
-import {normalizedEnvelopeListId} from '../store/normalization'
 
 export default {
 	name: 'Mailbox',
@@ -191,13 +188,13 @@ export default {
 					limit: this.initialPageSize,
 				})
 
-				logger.debug(envelopes.length + ' envelopes fetched', {envelopes})
+				logger.debug(envelopes.length + ' envelopes fetched', { envelopes })
 
 				this.loadingEnvelopes = false
 
 				if (this.openFirst && !this.isMobile && this.$route.name !== 'message' && envelopes.length > 0) {
 					// Show first message
-					let first = envelopes[0]
+					const first = envelopes[0]
 
 					// Keep the selected account-folder combination, but navigate to the message
 					// (it's not a bug that we don't use first.accountId and first.folderId here)
@@ -213,26 +210,26 @@ export default {
 				}
 			} catch (error) {
 				await matchError(error, {
-					[MailboxLockedError.getName()]: async (error) => {
-						logger.info('Mailbox is locked', {error})
+					[MailboxLockedError.getName()]: async(error) => {
+						logger.info('Mailbox is locked', { error })
 
 						await wait(15 * 1000)
 						// Keep trying
 						await this.loadEnvelopes()
 					},
-					[MailboxNotCachedError.getName()]: async (error) => {
-						logger.info('Mailbox not cached. Triggering initialization', {error})
+					[MailboxNotCachedError.getName()]: async(error) => {
+						logger.info('Mailbox not cached. Triggering initialization', { error })
 						this.loadingEnvelopes = false
 
 						try {
 							await this.initializeCache()
 						} catch (error) {
-							logger.error('Could not initialize cache', {error})
+							logger.error('Could not initialize cache', { error })
 							this.error = error
 						}
 					},
 					default: (error) => {
-						logger.error('Could not fetch envelopes', {error})
+						logger.error('Could not fetch envelopes', { error })
 						this.loadingEnvelopes = false
 						this.error = error
 					},
@@ -261,7 +258,7 @@ export default {
 					this.endReached = true
 				}
 			} catch (error) {
-				logger.error('could not fetch next envelope page', {error})
+				logger.error('could not fetch next envelope page', { error })
 			} finally {
 				this.loadingMore = false
 			}
@@ -283,82 +280,82 @@ export default {
 
 			const env = current[0]
 			const idx = envelopes.indexOf(env)
+			let next
 
 			switch (e.srcKey) {
-				case 'next':
-				case 'prev':
-					let next
-					if (e.srcKey === 'next') {
-						next = envelopes[idx + 1]
-					} else {
-						next = envelopes[idx - 1]
-					}
+			case 'next':
+			case 'prev':
+				if (e.srcKey === 'next') {
+					next = envelopes[idx + 1]
+				} else {
+					next = envelopes[idx - 1]
+				}
 
-					if (!next) {
-						logger.debug('ignoring shortcut: head or tail of envelope list reached', {
-							envelopes,
-							idx,
-							srcKey: e.srcKey,
-						})
-						return
-					}
-
-					// Keep the selected account-folder combination, but navigate to a different message
-					// (it's not a bug that we don't use next.accountId and next.folderId here)
-					this.$router.push({
-						name: 'message',
-						params: {
-							accountId: this.$route.params.accountId,
-							folderId: this.$route.params.folderId,
-							filter: this.$route.params.filter ? this.$route.params.filter : undefined,
-							messageUuid: next.uuid,
-						},
+				if (!next) {
+					logger.debug('ignoring shortcut: head or tail of envelope list reached', {
+						envelopes,
+						idx,
+						srcKey: e.srcKey,
 					})
-					break
-				case 'del':
-					logger.debug('deleting', {env})
-					this.onDelete(env.uuid)
-					this.$store
-						.dispatch('deleteMessage', {
-							accountId: env.accountId,
-							folderId: env.folderId,
-							uid: env.uid,
-						})
-						.catch((error) =>
-							logger.error('could not delete envelope', {
-								env,
-								error,
-							})
-						)
+					return
+				}
 
-					break
-				case 'flag':
-					logger.debug('flagging envelope via shortkey', {env})
-					this.$store.dispatch('toggleEnvelopeFlagged', env).catch((error) =>
-						logger.error('could not flag envelope via shortkey', {
+				// Keep the selected account-folder combination, but navigate to a different message
+				// (it's not a bug that we don't use next.accountId and next.folderId here)
+				this.$router.push({
+					name: 'message',
+					params: {
+						accountId: this.$route.params.accountId,
+						folderId: this.$route.params.folderId,
+						filter: this.$route.params.filter ? this.$route.params.filter : undefined,
+						messageUuid: next.uuid,
+					},
+				})
+				break
+			case 'del':
+				logger.debug('deleting', { env })
+				this.onDelete(env.uuid)
+				this.$store
+					.dispatch('deleteMessage', {
+						accountId: env.accountId,
+						folderId: env.folderId,
+						uid: env.uid,
+					})
+					.catch((error) =>
+						logger.error('could not delete envelope', {
 							env,
 							error,
 						})
 					)
-					break
-				case 'refresh':
-					logger.debug('syncing envelopes via shortkey')
-					if (!this.refreshing) {
-						this.sync()
-					}
 
-					break
-				case 'unseen':
-					logger.debug('marking message as seen/unseen via shortkey', {env})
-					this.$store.dispatch('toggleEnvelopeSeen', env).catch((error) =>
-						logger.error('could not mark envelope as seen/unseen via shortkey', {
-							env,
-							error,
-						})
-					)
-					break
-				default:
-					logger.warn('shortcut ' + e.srcKey + ' is unknown. ignoring.')
+				break
+			case 'flag':
+				logger.debug('flagging envelope via shortkey', { env })
+				this.$store.dispatch('toggleEnvelopeFlagged', env).catch((error) =>
+					logger.error('could not flag envelope via shortkey', {
+						env,
+						error,
+					})
+				)
+				break
+			case 'refresh':
+				logger.debug('syncing envelopes via shortkey')
+				if (!this.refreshing) {
+					this.sync()
+				}
+
+				break
+			case 'unseen':
+				logger.debug('marking message as seen/unseen via shortkey', { env })
+				this.$store.dispatch('toggleEnvelopeSeen', env).catch((error) =>
+					logger.error('could not mark envelope as seen/unseen via shortkey', {
+						env,
+						error,
+					})
+				)
+				break
+			default:
+				logger.warn('shortcut ' + e.srcKey + ' is unknown. ignoring.')
 			}
 		},
 		async sync() {
@@ -374,10 +371,10 @@ export default {
 			} catch (error) {
 				matchError(error, {
 					[MailboxLockedError.getName()](error) {
-						logger.info('Background sync failed because the mailbox is locked', {error})
+						logger.info('Background sync failed because the mailbox is locked', { error })
 					},
 					default(error) {
-						logger.error('Could not sync envelopes: ' + error.message, {error})
+						logger.error('Could not sync envelopes: ' + error.message, { error })
 					},
 				})
 			} finally {
@@ -436,7 +433,7 @@ export default {
 
 				logger.debug("Mailbox sync'ed in background")
 			} catch (error) {
-				logger.error('Background sync failed: ' + error.message, {error})
+				logger.error('Background sync failed: ' + error.message, { error })
 			}
 		},
 		stopInterval() {

@@ -19,7 +19,7 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-import {buildMailboxHierarchy} from '../../../imap/MailboxHierarchy'
+import { buildMailboxHierarchy } from '../../../imap/MailboxHierarchy'
 
 describe('mailboxHierarchyBuilder', () => {
 	it('handles empty collections', () => {

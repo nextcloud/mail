@@ -1,9 +1,15 @@
 <template>
 	<div class="reservation">
 		<div class="departure">
-			<div class="station">{{ data.reservationFor.departureStation.name }}</div>
-			<div v-if="departureDate">{{ departureDate }}</div>
-			<div v-if="departureTime">{{ departureTime }}</div>
+			<div class="station">
+				{{ data.reservationFor.departureStation.name }}
+			</div>
+			<div v-if="departureDate">
+				{{ departureDate }}
+			</div>
+			<div v-if="departureTime">
+				{{ departureTime }}
+			</div>
 		</div>
 		<div class="connection">
 			<div><TrainIcon :title="t('mail', 'Train')" /></div>
@@ -11,9 +17,15 @@
 			<div><ArrowIcon decorative /></div>
 		</div>
 		<div class="arrival">
-			<div class="station">{{ data.reservationFor.arrivalStation.name }}</div>
-			<div v-if="arrivalDate">{{ arrivalDate }}</div>
-			<div v-if="arrivalTime">{{ arrivalTime }}</div>
+			<div class="station">
+				{{ data.reservationFor.arrivalStation.name }}
+			</div>
+			<div v-if="arrivalDate">
+				{{ arrivalDate }}
+			</div>
+			<div v-if="arrivalTime">
+				{{ arrivalTime }}
+			</div>
 		</div>
 		<CalendarImport v-if="canImport" :calendars="calendars" :handler="handleImport" />
 	</div>
@@ -24,11 +36,11 @@ import ArrowIcon from 'vue-material-design-icons/ArrowRight'
 import ical from 'ical.js'
 import md5 from 'md5'
 import moment from '@nextcloud/moment'
-import {showError, showSuccess} from '@nextcloud/dialogs'
+import { showError, showSuccess } from '@nextcloud/dialogs'
 import TrainIcon from 'vue-material-design-icons/Train'
 
 import CalendarImport from './CalendarImport'
-import {importCalendarEvent} from '../../service/DAVService'
+import { importCalendarEvent } from '../../service/DAVService'
 import logger from '../../logger'
 
 export default {
@@ -85,8 +97,8 @@ export default {
 		},
 		canImport() {
 			return (
-				('departureTime' in this.data.reservationFor && 'arrivalTime' in this.data.reservationFor) ||
-				'departureDay' in this.data.reservationFor
+				('departureTime' in this.data.reservationFor && 'arrivalTime' in this.data.reservationFor)
+				|| 'departureDay' in this.data.reservationFor
 			)
 		},
 	},
@@ -130,15 +142,15 @@ export default {
 
 			const cal = new ical.Component('VCALENDAR')
 			cal.addSubcomponent(event)
-			logger.debug('generated calendar event from train reservation data', {ical: cal.toString()})
+			logger.debug('generated calendar event from train reservation data', { ical: cal.toString() })
 
 			return importCalendarEvent(calendar.url)(cal.toString())
 				.then(() => {
 					logger.debug('event successfully imported')
-					showSuccess(t('mail', 'Event imported into {calendar}', {calendar: calendar.displayname}))
+					showSuccess(t('mail', 'Event imported into {calendar}', { calendar: calendar.displayname }))
 				})
 				.catch((error) => {
-					logger.error('Could not import event', {error})
+					logger.error('Could not import event', { error })
 					showError(t('mail', 'Could not create event'))
 				})
 		},

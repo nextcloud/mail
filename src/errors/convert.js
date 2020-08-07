@@ -1,4 +1,4 @@
-/*
+/**
  * @copyright 2020 Christoph Wurst <christoph@winzerhof-wurst.at>
  *
  * @author 2020 Christoph Wurst <christoph@winzerhof-wurst.at>
@@ -28,7 +28,8 @@ const map = {
 }
 
 /**
- * @param {object} axiosError
+ * @param {Object} axiosError the axios Error
+ * @returns {Error}
  */
 export const convertAxiosError = (axiosError) => {
 	if (!('response' in axiosError)) {

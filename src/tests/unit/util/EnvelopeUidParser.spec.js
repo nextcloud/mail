@@ -19,7 +19,7 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-import {parseUuid} from '../../../util/EnvelopeUidParser'
+import { parseUuid } from '../../../util/EnvelopeUidParser'
 
 describe('EnvelopeUidParser', () => {
 	it('parses a simple UID', () => {

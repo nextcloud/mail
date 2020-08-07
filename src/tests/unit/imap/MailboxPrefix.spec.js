@@ -19,7 +19,7 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-import {havePrefix} from '../../../imap/MailboxPrefix'
+import { havePrefix } from '../../../imap/MailboxPrefix'
 
 describe('MailboxPrefix', () => {
 	it('does not find a prefix if there is none', () => {

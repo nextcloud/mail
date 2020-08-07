@@ -9,20 +9,18 @@
 				:show-details="showMessage"
 				:infinite-scroll-disabled="false"
 				:infinite-scroll-distance="10"
-				@shortkey.native="onShortcut"
-			>
+				@shortkey.native="onShortcut">
 				<Mailbox
 					v-if="!folder.isPriorityInbox"
 					:account="account"
 					:folder="folder"
 					:search-query="query"
-					:bus="bus"
-				/>
+					:bus="bus" />
 				<template v-else>
 					<li class="app-content-list-item">
 						<SectionTitle class="important" :name="t('mail', 'Important')" />
 						<Popover trigger="hover focus">
-							<button slot="trigger" class="button icon-info"></button>
+							<button slot="trigger" class="button icon-info" />
 							{{
 								t(
 									'mail',
@@ -40,8 +38,7 @@
 						:is-priority-inbox="true"
 						:initial-page-size="5"
 						:collapsible="true"
-						:bus="bus"
-					/>
+						:bus="bus" />
 					<SectionTitle class="app-content-list-item starred" :name="t('mail', 'Favorites')" />
 					<Mailbox
 						class="namestarred"
@@ -51,8 +48,7 @@
 						:paginate="'manual'"
 						:is-priority-inbox="true"
 						:initial-page-size="5"
-						:bus="bus"
-					/>
+						:bus="bus" />
 					<SectionTitle class="app-content-list-item other" :name="t('mail', 'Other')" />
 					<Mailbox
 						class="nameother"
@@ -61,8 +57,7 @@
 						:open-first="false"
 						:search-query="appendToSearch('not:starred not:important')"
 						:is-priority-inbox="true"
-						:bus="bus"
-					/>
+						:bus="bus" />
 				</template>
 			</AppContentList>
 			<NewMessageDetail v-if="newMessage" />
@@ -87,8 +82,8 @@ import Mailbox from './Mailbox'
 import Message from './Message'
 import NewMessageDetail from './NewMessageDetail'
 import NoMessageSelected from './NoMessageSelected'
-import {normalizedEnvelopeListId} from '../store/normalization'
-import {UNIFIED_ACCOUNT_ID, UNIFIED_INBOX_ID} from '../store/constants'
+import { normalizedEnvelopeListId } from '../store/normalization'
+import { UNIFIED_ACCOUNT_ID, UNIFIED_INBOX_ID } from '../store/constants'
 
 export default {
 	name: 'MailboxMessage',
@@ -164,15 +159,16 @@ export default {
 		},
 		newMessage() {
 			return (
-				this.$route.params.messageUuid === 'new' ||
-				this.$route.params.messageUuid === 'reply' ||
-				this.$route.params.messageUuid === 'replyAll'
+				this.$route.params.messageUuid === 'new'
+				|| this.$route.params.messageUuid === 'reply'
+				|| this.$route.params.messageUuid === 'replyAll'
 			)
 		},
 	},
 	created() {
 		this.alive = true
 
+		// eslint-disable-next-line no-new
 		new OCA.Search(this.searchProxy, this.clearSearchProxy)
 	},
 	beforeDestroy() {
@@ -193,7 +189,7 @@ export default {
 			this.bus.$emit('delete', envelopeUid)
 		},
 		onScroll(event) {
-			logger.debug('scroll', {event})
+			logger.debug('scroll', { event })
 
 			this.bus.$emit('loadMore')
 		},

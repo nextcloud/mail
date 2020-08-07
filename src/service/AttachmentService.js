@@ -20,7 +20,7 @@
  */
 
 import Axios from '@nextcloud/axios'
-import {generateUrl} from '@nextcloud/router'
+import { generateUrl } from '@nextcloud/router'
 
 export function saveAttachmentToFiles(accountId, folderId, messageId, attachmentId, directory) {
 	const url = generateUrl(
@@ -56,7 +56,7 @@ export const uploadLocalAttachment = (file, progress) => {
 
 	return Axios.post(url, data, opts)
 		.then((resp) => resp.data)
-		.then(({id}) => {
+		.then(({ id }) => {
 			return {
 				file,
 				id,

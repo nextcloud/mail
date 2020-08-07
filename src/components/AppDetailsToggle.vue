@@ -20,7 +20,10 @@
   -->
 
 <template>
-	<div v-if="isMobile" class="toggle icon-confirm" tabindex="0" @click="$emit('close')"></div>
+	<div v-if="isMobile"
+		class="toggle icon-confirm"
+		tabindex="0"
+		@click="$emit('close')" />
 </template>
 
 <script>

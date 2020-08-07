@@ -19,7 +19,7 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-import {normalizedFolderId, normalizedMessageId} from '../../../store/normalization'
+import { normalizedFolderId, normalizedMessageId } from '../../../store/normalization'
 
 describe('Vuex store normalization', () => {
 	it('creates a unique folder ID', () => {

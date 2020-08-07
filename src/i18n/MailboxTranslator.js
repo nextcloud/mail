@@ -19,7 +19,7 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-import {translate as t} from '@nextcloud/l10n'
+import { translate as t } from '@nextcloud/l10n'
 
 const translateSpecial = (folder) => {
 	if (folder.specialUse.includes('all')) {
