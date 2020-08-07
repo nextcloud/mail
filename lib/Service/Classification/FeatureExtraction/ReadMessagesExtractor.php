@@ -53,8 +53,8 @@ class ReadMessagesExtractor implements IExtractor {
 		$senders = array_unique(array_map(function (Message $message) {
 			return $message->getFrom()->first()->getEmail();
 		}, array_filter($messages, function (Message $message) {
-                        return $message->getFrom()->first() !== null && $message->getFrom()->first()->getEmail() !== null;
-                })));
+			return $message->getFrom()->first() !== null && $message->getFrom()->first()->getEmail() !== null;
+		})));
 
 		$this->totalMessages = $this->statisticsDao->getNumberOfMessagesGrouped($incomingMailboxes, $senders);
 		$this->readMessages = $this->statisticsDao->getNumberOfMessagesWithFlagGrouped($incomingMailboxes, 'seen', $senders);
