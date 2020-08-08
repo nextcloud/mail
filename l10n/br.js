@@ -24,6 +24,7 @@ OC.L10N.register(
     "Settings" : "Arventennoù",
     "Quota" : "Quota",
     "Remove account" : "Lemel ar c'hont",
+    "Loading …" : "O Kargañ ...",
     "Cancel" : "Arrest",
     "General" : "Hollek",
     "User" : "Implijer",
