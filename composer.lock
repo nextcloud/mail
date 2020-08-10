@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "6d5dcf6863e263c586c954e3181d990e",
+    "content-hash": "53c76fb4abadd1afc9a4585ffa133ec9",
     "packages": [
         {
             "name": "amphp/amp",
@@ -1679,37 +1679,41 @@
         },
         {
             "name": "rubix/ml",
-            "version": "0.1.0-rc3",
+            "version": "0.1.1",
             "source": {
                 "type": "git",
                 "url": "https://github.com/RubixML/RubixML.git",
-                "reference": "403e933fa4b351cccc2c8923b17d3f8b059bdba7"
+                "reference": "228780ba5ac4e739b8c00339bf38cde8c98e4fd3"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/RubixML/RubixML/zipball/403e933fa4b351cccc2c8923b17d3f8b059bdba7",
-                "reference": "403e933fa4b351cccc2c8923b17d3f8b059bdba7",
+                "url": "https://api.github.com/repos/RubixML/RubixML/zipball/228780ba5ac4e739b8c00339bf38cde8c98e4fd3",
+                "reference": "228780ba5ac4e739b8c00339bf38cde8c98e4fd3",
                 "shasum": ""
             },
             "require": {
                 "amphp/parallel": "^1.3",
                 "php": ">=7.2",
                 "psr/log": "^1.1",
-                "rubix/tensor": "^2.0"
+                "rubix/tensor": "^2.0",
+                "symfony/polyfill-mbstring": "^1.0",
+                "symfony/polyfill-php80": "^1.17"
             },
             "require-dev": {
                 "friendsofphp/php-cs-fixer": "2.16.*",
-                "phpbench/phpbench": "0.16.*",
+                "phpbench/phpbench": "0.17.*",
                 "phpstan/phpstan": "0.12.*",
                 "phpstan/phpstan-phpunit": "0.12.*",
                 "phpunit/phpunit": "8.5.*"
             },
             "suggest": {
-                "ext-gd": "For image vectorization",
+                "ext-gd": "For image manipulation",
                 "ext-igbinary": "For binary serialization of persistables",
+                "ext-mbstring": "For fast multibyte string manipulation",
                 "ext-redis": "To persist models to a Redis DB",
                 "ext-svm": "For Support Vector Machine engine (libsvm)",
-                "ext-tensor": "For fast Matrix/Vector computing"
+                "ext-tensor": "For fast Matrix/Vector computing",
+                "rubix/extras": "For experimental features"
             },
             "type": "library",
             "autoload": {
@@ -1733,11 +1737,6 @@
                     "role": "Lead Engineer"
                 },
                 {
-                    "name": "Core Team",
-                    "email": "support@rubixml.com",
-                    "homepage": "https://github.com/orgs/RubixML/teams/core"
-                },
-                {
                     "name": "Contributors",
                     "homepage": "https://github.com/RubixML/RubixML/graphs/contributors"
                 }
@@ -1745,37 +1744,91 @@
             "description": "A high-level machine learning and deep learning library for the PHP language.",
             "homepage": "https://rubixml.com",
             "keywords": [
+                "Algorithm",
+                "Deep learning",
+                "Linear regression",
+                "Neural network",
                 "Rubix",
+                "adaboost",
                 "ai",
                 "analytics",
-                "anomaly-detection",
-                "artificial-intelligence",
+                "anomaly detection",
+                "artificial intelligence",
+                "cart",
                 "classification",
+                "classifier",
                 "clustering",
-                "cross-validation",
-                "data-mining",
-                "data-science",
-                "deep-learning",
-                "dimensionality-reduction",
-                "feature-extraction",
+                "cross validation",
+                "data mining",
+                "data science",
+                "dataset",
+                "dbscan",
+                "dimensionality reduction",
+                "ensemble",
+                "estimator",
+                "etl",
+                "feature extraction",
+                "feature importance",
+                "feature selection",
+                "gaussian mixture",
+                "gmm",
+                "gradient boost",
+                "grid search",
+                "image recognition",
+                "imputation",
+                "inference",
+                "isolation forest",
                 "k-means",
-                "k-nearest-neighbors",
-                "machine-learning",
-                "manifold-learning",
+                "k-nearest neighbors",
+                "kmeans",
+                "knn",
+                "local outlier factor",
+                "loda",
+                "lof",
+                "logistic regression",
+                "machine learning",
+                "manifold learning",
+                "mean shift",
                 "ml",
-                "naive-bayes",
-                "neural-network",
+                "mlp",
+                "multilayer perceptron",
+                "naive bayes",
+                "natural language processing",
+                "nearest neighbors",
+                "nlp",
+                "outlier detection",
                 "php",
-                "predictive-modeling",
-                "regression"
+                "php machine learning",
+                "php ml",
+                "prediction",
+                "predictive modeling",
+                "random forest",
+                "recommendation",
+                "regression",
+                "regressor",
+                "ridge",
+                "rubix ml",
+                "rubixml",
+                "softmax",
+                "supervised learning",
+                "support vector machine",
+                "svm",
+                "t-sne",
+                "text mining",
+                "tsne",
+                "unsupervised learning"
             ],
             "funding": [
+                {
+                    "url": "https://github.com/sponsors/RubixML",
+                    "type": "github"
+                },
                 {
                     "url": "https://www.patreon.com/rubixml",
                     "type": "patreon"
                 }
             ],
-            "time": "2020-05-10T05:51:56+00:00"
+            "time": "2020-08-08T00:23:03+00:00"
         },
         {
             "name": "rubix/tensor",
@@ -6055,7 +6108,6 @@
         "pear-pear.horde.org/horde_text_flowed": 0,
         "pear-pear.horde.org/horde_util": 0,
         "pear-pear.horde.org/horde_smtp": 0,
-        "rubix/ml": 5,
         "roave/security-advisories": 20
     },
     "prefer-stable": false,
