@@ -254,4 +254,88 @@ describe('Vuex store mutations', () => {
 			},
 		})
 	})
+
+	it('removes a folder', () => {
+		const state = {
+			accounts: {
+				13: {
+					accountId: 13,
+					id: 13,
+					folders: ['13-INBOX'],
+				},
+			},
+			folders: {
+				'13-INBOX': {
+					id: 'INBOX',
+					specialUse: ['inbox'],
+					specialRole: 'inbox',
+				},
+			},
+		}
+
+		mutations.removeFolder(state, {
+			accountId: 13,
+			folderId: 'INBOX',
+		})
+
+		expect(state).to.deep.equal({
+			accounts: {
+				13: {
+					accountId: 13,
+					id: 13,
+					folders: [],
+				},
+			},
+			folders: {},
+		})
+	})
+
+	it('removes a subfolder', () => {
+		const state = {
+			accounts: {
+				13: {
+					accountId: 13,
+					id: 13,
+					folders: ['13-INBOX'],
+				},
+			},
+			folders: {
+				'13-INBOX': {
+					id: 'INBOX',
+					specialUse: ['inbox'],
+					specialRole: 'inbox',
+					folders: ['13-INBOX.sub'],
+				},
+				'13-INBOX.sub': {
+					id: 'INBOX.sub',
+					specialUse: ['inbox'],
+					specialRole: 'inbox',
+					folders: [],
+				},
+			},
+		}
+
+		mutations.removeFolder(state, {
+			accountId: 13,
+			folderId: 'INBOX.sub',
+		})
+
+		expect(state).to.deep.equal({
+			accounts: {
+				13: {
+					accountId: 13,
+					id: 13,
+					folders: ['13-INBOX'],
+				},
+			},
+			folders: {
+				'13-INBOX': {
+					id: 'INBOX',
+					specialUse: ['inbox'],
+					specialRole: 'inbox',
+					folders: [],
+				},
+			},
+		})
+	})
 })

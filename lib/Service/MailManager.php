@@ -373,4 +373,21 @@ class MailManager implements IMailManager {
 			1024 * (int)($storage['limit'] ?? 0)
 		);
 	}
+
+	/**
+	 * @param Account $account
+	 * @param string $folderId
+	 * @throws ServiceException
+	 */
+	public function deleteMailbox(Account $account,
+								  string $folderId): void {
+		try {
+			$mailbox = $this->mailboxMapper->find($account, $folderId);
+		} catch (DoesNotExistException $e) {
+			throw new ServiceException("Source mailbox $folderId does not exist", 0, $e);
+		}
+		$client = $this->imapClientFactory->getClient($account);
+		$this->folderMapper->delete($client, $folderId);
+		$this->mailboxMapper->delete($mailbox);
+	}
 }

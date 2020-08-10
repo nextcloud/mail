@@ -110,6 +110,18 @@ export default {
 			account.folders.push(id)
 		})
 	},
+	removeFolder(state, { accountId, folderId }) {
+		const account = state.accounts[accountId]
+		const id = normalizedFolderId(accountId, folderId)
+		Vue.delete(state.folders, id)
+		account.folders = account.folders.filter((fId) => fId !== id)
+		account.folders.forEach((fId) => {
+			const folder = state.folders[fId]
+			if (folder.folders) {
+				folder.folders = folder.folders.filter((fId) => fId !== id)
+			}
+		})
+	},
 	addEnvelope(state, { accountId, folderId, query, envelope }) {
 		const folder = state.folders[normalizedFolderId(accountId, folderId)]
 		Vue.set(state.envelopes, envelope.uuid, envelope)
