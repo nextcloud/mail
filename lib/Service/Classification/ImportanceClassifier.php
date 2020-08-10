@@ -172,7 +172,7 @@ class ImportanceClassifier {
 		});
 		$logger->debug('found ' . count($messages) . ' messages of which ' . count($importantMessages) . ' are important');
 		if (count($importantMessages) < self::COLD_START_THRESHOLD) {
-			$logger->warning('not enough messages to train a classifier');
+			$logger->info('not enough messages to train a classifier');
 			$perf->end();
 			return;
 		}
@@ -192,7 +192,7 @@ class ImportanceClassifier {
 		$trainingSet = array_slice($dataSet, $validationThreshold);
 		$logger->debug('data set split into ' . count($trainingSet) . ' training and ' . count($validationSet) . ' validation sets');
 		if (empty($validationSet) || empty($trainingSet)) {
-			$logger->warning('not enough messages to train a classifier');
+			$logger->info('not enough messages to train a classifier');
 			$perf->end();
 			return;
 		}
