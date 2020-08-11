@@ -40,6 +40,7 @@ use OCA\Mail\IMAP\PreviewEnhancer;
 use OCA\Mail\IMAP\Search\Provider as ImapSearchProvider;
 use OCP\AppFramework\Db\DoesNotExistException;
 use OCP\ILogger;
+use OCP\IUser;
 
 class MailSearch implements IMailSearch {
 
@@ -130,8 +131,32 @@ class MailSearch implements IMailSearch {
 			$account,
 			$mailbox,
 			$this->messageMapper->findByIds(
-				$this->getIds($account, $mailbox, $query, $limit)
+				$this->getIdsLocally($account, $mailbox, $query, $limit)
 			)
+		);
+	}
+
+	/**
+	 * @param IUser $user
+	 * @param string|null $filter
+	 * @param int|null $cursor
+	 *
+	 * @return Message[]
+	 *
+	 * @throws ClientException
+	 * @throws ServiceException
+	 */
+	public function findMessagesGlobally(IUser $user,
+								 ?string $filter,
+								 ?int $cursor,
+								 ?int $limit): array {
+		$query = $this->filterStringParser->parse($filter);
+		if ($cursor !== null) {
+			$query->setCursor($cursor);
+		}
+
+		return $this->messageMapper->findByIds(
+			$this->getIdsGlobally($user, $query, $limit)
 		);
 	}
 
@@ -140,7 +165,7 @@ class MailSearch implements IMailSearch {
 	 *
 	 * @throws ServiceException
 	 */
-	private function getIds(Account $account, Mailbox $mailbox, SearchQuery $query, ?int $limit): array {
+	private function getIdsLocally(Account $account, Mailbox $mailbox, SearchQuery $query, ?int $limit): array {
 		if (empty($query->getTextTokens())) {
 			return $this->messageMapper->findIdsByQuery($mailbox, $query, $limit);
 		}
@@ -151,5 +176,16 @@ class MailSearch implements IMailSearch {
 			$query
 		);
 		return $this->messageMapper->findIdsByQuery($mailbox, $query, $limit, $fromImap);
+	}
+
+	/**
+	 * We combine local flag and headers merge with UIDs that match the body search if necessary
+	 *
+	 * @todo find a way to search across all mailboxes efficiently without iterating over each of them and include IMAP results
+	 *
+	 * @throws ServiceException
+	 */
+	private function getIdsGlobally(IUser $user, SearchQuery $query, ?int $limit): array {
+		return $this->messageMapper->findIdsGloballyByQuery($user, $query, $limit);
 	}
 }

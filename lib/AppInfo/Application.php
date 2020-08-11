@@ -55,6 +55,7 @@ use OCA\Mail\Listener\NewMessageClassificationListener;
 use OCA\Mail\Listener\SaveSentMessageListener;
 use OCA\Mail\Listener\TrashMailboxCreatorListener;
 use OCA\Mail\Listener\UserDeletedListener;
+use OCA\Mail\Search\Provider;
 use OCA\Mail\Service\Attachment\AttachmentService;
 use OCA\Mail\Service\AvatarService;
 use OCA\Mail\Service\MailManager;
@@ -116,6 +117,7 @@ class Application extends App implements IBootstrap {
 		$context->registerMiddleWare(ProvisioningMiddleware::class);
 
 		$context->registerDashboardWidget(MailWidget::class);
+		$context->registerSearchProvider(Provider::class);
 
 		// bypass Horde Translation system
 		Horde_Translation::setHandler('Horde_Imap_Client', new HordeTranslationHandler());
