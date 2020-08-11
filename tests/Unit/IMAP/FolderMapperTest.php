@@ -135,8 +135,8 @@ class FolderMapperTest extends TestCase {
 			->method('getMailbox')
 			->willReturn('folder1');
 		$folders[0]->expects($this->once())
-			->method('isSearchable')
-			->willReturn(true);
+			->method('getAttributes')
+			->willReturn([]);
 		$client->expects($this->once())
 			->method('status')
 			->with($this->equalTo(['folder1']))
@@ -160,8 +160,8 @@ class FolderMapperTest extends TestCase {
 			->method('getMailbox')
 			->willReturn('folder1');
 		$folders[0]->expects($this->once())
-			->method('isSearchable')
-			->willReturn(true);
+			->method('getAttributes')
+			->willReturn([]);
 		$client->expects($this->once())
 			->method('status')
 			->with($this->equalTo(['folder1']))
@@ -183,8 +183,8 @@ class FolderMapperTest extends TestCase {
 			->method('getMailbox')
 			->willReturn('folder1');
 		$folders[0]->expects($this->once())
-			->method('isSearchable')
-			->willReturn(false);
+			->method('getAttributes')
+			->willReturn(['\\noselect']);
 		$client->expects($this->once())
 			->method('status')
 			->with($this->equalTo([]))

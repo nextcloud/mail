@@ -103,18 +103,13 @@ class MailManager implements IMailManager {
 	/**
 	 * @param Account $account
 	 *
-	 * @return Folder[]
+	 * @return Mailbox[]
 	 * @throws ServiceException
 	 */
-	public function getFolders(Account $account): array {
+	public function getMailboxes(Account $account): array {
 		$this->mailboxSync->sync($account);
 
-		return array_map(
-			function (Mailbox $mb) {
-				return $mb->toFolder();
-			},
-			$this->mailboxMapper->findAll($account)
-		);
+		return $this->mailboxMapper->findAll($account);
 	}
 
 	/**

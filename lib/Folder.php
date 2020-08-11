@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 /**
  * @author Christoph Wurst <christoph@winzerhof-wurst.at>
  *
@@ -22,9 +24,8 @@
 namespace OCA\Mail;
 
 use Horde_Imap_Client_Mailbox;
-use JsonSerializable;
 
-class Folder implements JsonSerializable {
+class Folder {
 
 	/** @var int */
 	private $accountId;
@@ -38,16 +39,12 @@ class Folder implements JsonSerializable {
 	/** @var string */
 	private $delimiter;
 
-	/** @var Folder[] */
-	private $folders;
-
 	/** @var array */
 	private $status;
 
 	/** @var string[] */
 	private $specialUse;
 
-	/** @var string */
 	/**
 	 * @param Account $account
 	 * @param Horde_Imap_Client_Mailbox $mailbox
@@ -59,7 +56,6 @@ class Folder implements JsonSerializable {
 		$this->mailbox = $mailbox;
 		$this->attributes = $attributes;
 		$this->delimiter = $delimiter;
-		$this->folders = [];
 		$this->status = [];
 		$this->specialUse = [];
 	}
@@ -78,20 +74,8 @@ class Folder implements JsonSerializable {
 		return $this->delimiter;
 	}
 
-	/**
-	 * @return array
-	 */
-	public function getAttributes() {
+	public function getAttributes(): array {
 		return $this->attributes;
-	}
-
-	/**
-	 * @param Folder $folder
-	 *
-	 * @return void
-	 */
-	public function addFolder(Folder $folder): void {
-		$this->folders[$folder->getMailbox()] = $folder;
 	}
 
 	/**
@@ -117,47 +101,5 @@ class Folder implements JsonSerializable {
 	 */
 	public function getSpecialUse() {
 		return $this->specialUse;
-	}
-
-	/**
-	 * @return Folder[]
-	 */
-	public function getFolders() {
-		return $this->folders;
-	}
-
-	/**
-	 * @return boolean
-	 */
-	public function isSearchable() {
-		return !in_array('\noselect', $this->getAttributes());
-	}
-
-	/**
-	 * @return array
-	 */
-	public function jsonSerialize() {
-		$folders = [];
-		foreach ($this->folders as $folder) {
-			$folders[$folder->getMailbox()] = $folder->jsonSerialize();
-		}
-		return [
-			'id' => base64_encode($this->getMailbox()),
-			'accountId' => $this->accountId,
-			'displayName' => $this->getMailbox(),
-			'unseen' => isset($this->status['unseen']) ? $this->status['unseen'] : 0,
-			'total' => isset($this->status['messages']) ? (int) $this->status['messages'] : 0,
-			'isEmpty' => isset($this->status['messages']) ? 0 >= (int) $this->status['messages'] : true,
-			'noSelect' => !$this->isSelectable(),
-			'attributes' => $this->attributes,
-			'delimiter' => $this->delimiter,
-			'folders' => array_values($folders),
-			'specialUse' => $this->specialUse,
-			'specialRole' => empty($this->specialUse) ? null : $this->specialUse[0],
-		];
-	}
-
-	public function isSelectable(): bool {
-		return !in_array('\noselect', $this->attributes);
 	}
 }

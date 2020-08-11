@@ -27,7 +27,7 @@ use ChristophWurst\Nextcloud\Testing\TestCase;
 use OCA\Mail\Account;
 use OCA\Mail\Contracts\IUserPreferences;
 use OCA\Mail\Controller\PageController;
-use OCA\Mail\Folder;
+use OCA\Mail\Db\Mailbox;
 use OCA\Mail\Service\AccountService;
 use OCA\Mail\Service\AliasesService;
 use OCA\Mail\Service\MailManager;
@@ -119,7 +119,7 @@ class PageControllerTest extends TestCase {
 	public function testIndex() {
 		$account1 = $this->createMock(Account::class);
 		$account2 = $this->createMock(Account::class);
-		$folder = $this->createMock(Folder::class);
+		$mailbox = $this->createMock(Mailbox::class);
 		$this->preferences->expects($this->exactly(2))
 			->method('getPreference')
 			->willReturnMap([
@@ -134,11 +134,11 @@ class PageControllerTest extends TestCase {
 				$account2,
 			]));
 		$this->mailManager->expects($this->at(0))
-			->method('getFolders')
+			->method('getMailboxes')
 			->with($account1)
-			->willReturn([$folder]);
+			->willReturn([$mailbox]);
 		$this->mailManager->expects($this->at(1))
-			->method('getFolders')
+			->method('getMailboxes')
 			->with($account2)
 			->willReturn([]);
 		$account1->expects($this->once())
@@ -146,7 +146,7 @@ class PageControllerTest extends TestCase {
 			->will($this->returnValue([
 				'accountId' => 1,
 			]));
-		$folder->expects($this->once())
+		$mailbox->expects($this->once())
 			->method('jsonSerialize')
 			->willReturn(['id' => 'inbox']);
 		$account1->expects($this->once())

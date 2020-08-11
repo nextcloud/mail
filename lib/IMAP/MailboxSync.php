@@ -27,6 +27,7 @@ namespace OCA\Mail\IMAP;
 
 use Horde_Imap_Client_Exception;
 use OCA\Mail\Exception\ServiceException;
+use function in_array;
 use function json_encode;
 use OCA\Mail\Account;
 use OCA\Mail\Db\MailAccountMapper;
@@ -130,7 +131,7 @@ class MailboxSync {
 		$mailbox->setDelimiter($folder->getDelimiter());
 		$mailbox->setMessages(0); // TODO
 		$mailbox->setUnseen(0); // TODO
-		$mailbox->setSelectable($folder->isSelectable());
+		$mailbox->setSelectable(!in_array('\noselect', $folder->getAttributes()));
 		$mailbox->setSpecialUse(json_encode($folder->getSpecialUse()));
 		$this->mailboxMapper->update($mailbox);
 	}
@@ -143,7 +144,7 @@ class MailboxSync {
 		$mailbox->setDelimiter($folder->getDelimiter());
 		$mailbox->setMessages(0); // TODO
 		$mailbox->setUnseen(0); // TODO
-		$mailbox->setSelectable($folder->isSelectable());
+		$mailbox->setSelectable(!in_array('\noselect', $folder->getAttributes()));
 		$mailbox->setSpecialUse(json_encode($folder->getSpecialUse()));
 		$this->mailboxMapper->insert($mailbox);
 	}

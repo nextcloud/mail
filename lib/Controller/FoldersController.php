@@ -90,12 +90,12 @@ class FoldersController extends Controller {
 	public function index(int $accountId): JSONResponse {
 		$account = $this->accountService->find($this->currentUserId, $accountId);
 
-		$folders = $this->mailManager->getFolders($account);
+		$mailboxes = $this->mailManager->getMailboxes($account);
 		return new JSONResponse([
 			'id' => $accountId,
 			'email' => $account->getEmail(),
-			'folders' => $folders,
-			'delimiter' => reset($folders)->getDelimiter(),
+			'folders' => $mailboxes,
+			'delimiter' => reset($mailboxes)->getDelimiter(),
 		]);
 	}
 

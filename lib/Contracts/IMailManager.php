@@ -24,6 +24,7 @@ declare(strict_types=1);
 namespace OCA\Mail\Contracts;
 
 use OCA\Mail\Account;
+use OCA\Mail\Db\Mailbox;
 use OCA\Mail\Exception\ClientException;
 use OCA\Mail\Exception\ServiceException;
 use OCA\Mail\Folder;
@@ -36,11 +37,11 @@ interface IMailManager {
 	/**
 	 * @param Account $account
 	 *
-	 * @return Folder[]
+	 * @return Mailbox[]
 	 *
 	 * @throws ServiceException
 	 */
-	public function getFolders(Account $account): array;
+	public function getMailboxes(Account $account): array;
 
 	/**
 	 * @param Account $account

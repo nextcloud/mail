@@ -86,7 +86,7 @@ class FoldersControllerTest extends TestCase {
 			->with($this->equalTo($this->userId), $this->equalTo($accountId))
 			->willReturn($account);
 		$this->mailManager->expects($this->once())
-			->method('getFolders')
+			->method('getMailboxes')
 			->with($this->equalTo($account))
 			->willReturn([
 				$folder
