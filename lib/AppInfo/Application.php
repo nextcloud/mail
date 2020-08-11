@@ -24,12 +24,15 @@ declare(strict_types=1);
 
 namespace OCA\Mail\AppInfo;
 
+use Exception;
+use Horde_Translation;
 use OCA\Mail\Contracts\IAttachmentService;
 use OCA\Mail\Contracts\IAvatarService;
 use OCA\Mail\Contracts\IMailManager;
 use OCA\Mail\Contracts\IMailSearch;
 use OCA\Mail\Contracts\IMailTransmission;
 use OCA\Mail\Contracts\IUserPreferences;
+use OCA\Mail\Dashboard\MailWidget;
 use OCA\Mail\Events\BeforeMessageDeletedEvent;
 use OCA\Mail\Events\DraftSavedEvent;
 use OCA\Mail\Events\SynchronizationEvent;
@@ -38,10 +41,10 @@ use OCA\Mail\Events\MessageFlaggedEvent;
 use OCA\Mail\Events\MessageSentEvent;
 use OCA\Mail\Events\NewMessagesSynchronized;
 use OCA\Mail\Events\SaveDraftEvent;
+use OCA\Mail\HordeTranslationHandler;
 use OCA\Mail\Http\Middleware\ErrorMiddleware;
 use OCA\Mail\Http\Middleware\ProvisioningMiddleware;
 use OCA\Mail\Listener\AddressCollectionListener;
-use OCA\Mail\Listener\DashboardPanelListener;
 use OCA\Mail\Listener\DeleteDraftListener;
 use OCA\Mail\Listener\DraftMailboxCreatorListener;
 use OCA\Mail\Listener\FlagRepliedMessageListener;
@@ -59,64 +62,67 @@ use OCA\Mail\Service\MailTransmission;
 use OCA\Mail\Service\Search\MailSearch;
 use OCA\Mail\Service\UserPreferenceSevice;
 use OCP\AppFramework\App;
-use OCP\AppFramework\IAppContainer;
-use OCP\Dashboard\RegisterWidgetEvent;
-use OCP\EventDispatcher\IEventDispatcher;
+use OCP\AppFramework\Bootstrap\IBootContext;
+use OCP\AppFramework\Bootstrap\IBootstrap;
+use OCP\AppFramework\Bootstrap\IRegistrationContext;
+use OCP\IServerContainer;
 use OCP\User\Events\UserDeletedEvent;
 use OCP\Util;
+use Psr\Container\ContainerInterface;
 
-class Application extends App {
+class Application extends App implements IBootstrap {
 	public const APP_ID = 'mail';
 
 	public function __construct(array $urlParams = []) {
 		parent::__construct(self::APP_ID, $urlParams);
-
-		$this->initializeAppContainer($this->getContainer());
-		$this->registerEvents($this->getContainer());
 	}
 
-	private function initializeAppContainer(IAppContainer $container): void {
-		$transport = $container->getServer()->getConfig()->getSystemValue('app.mail.transport', 'smtp');
-		$testSmtp = $transport === 'smtp';
+	public function register(IRegistrationContext $context): void {
+		if ((@include_once __DIR__ . '/../../vendor/autoload.php') === false) {
+			throw new Exception('Cannot include autoload. Did you run install dependencies using composer?');
+		}
 
-		$container->registerAlias(IAvatarService::class, AvatarService::class);
-		$container->registerAlias(IAttachmentService::class, AttachmentService::class);
-		$container->registerAlias(IMailManager::class, MailManager::class);
-		$container->registerAlias(IMailSearch::class, MailSearch::class);
-		$container->registerAlias(IMailTransmission::class, MailTransmission::class);
-		$container->registerAlias(IUserPreferences::class, UserPreferenceSevice::class);
+		$context->registerParameter('hostname', Util::getServerHostName());
 
-		$container->registerService("userFolder", function () use ($container) {
-			$user = $container->query("UserId");
-			return $container->getServer()->getUserFolder($user);
+		$context->registerService('userFolder', function (ContainerInterface $c) {
+			$userContainer = $c->get(IServerContainer::class);
+			$uid = $c->get('UserId');
+
+			return $userContainer->getUserFolder($uid);
 		});
 
-		$container->registerParameter('testSmtp', $testSmtp);
-		$container->registerParameter('hostname', Util::getServerHostName());
+		$context->registerServiceAlias(IAvatarService::class, AvatarService::class);
+		$context->registerServiceAlias(IAttachmentService::class, AttachmentService::class);
+		$context->registerServiceAlias(IMailManager::class, MailManager::class);
+		$context->registerServiceAlias(IMailSearch::class, MailSearch::class);
+		$context->registerServiceAlias(IMailTransmission::class, MailTransmission::class);
+		$context->registerServiceAlias(IUserPreferences::class, UserPreferenceSevice::class);
 
-		$container->registerAlias('ErrorMiddleware', ErrorMiddleware::class);
-		$container->registerMiddleWare('ErrorMiddleware');
-		$container->registerAlias('ProvisioningMiddleware', ProvisioningMiddleware::class);
-		$container->registerMiddleWare('ProvisioningMiddleware');
+		$context->registerEventListener(BeforeMessageDeletedEvent::class, TrashMailboxCreatorListener::class);
+		$context->registerEventListener(DraftSavedEvent::class, DeleteDraftListener::class);
+		$context->registerEventListener(MessageFlaggedEvent::class, MessageCacheUpdaterListener::class);
+		$context->registerEventListener(MessageDeletedEvent::class, MessageCacheUpdaterListener::class);
+		$context->registerEventListener(MessageSentEvent::class, AddressCollectionListener::class);
+		$context->registerEventListener(MessageSentEvent::class, DeleteDraftListener::class);
+		$context->registerEventListener(MessageSentEvent::class, FlagRepliedMessageListener::class);
+		$context->registerEventListener(MessageSentEvent::class, InteractionListener::class);
+		$context->registerEventListener(MessageSentEvent::class, SaveSentMessageListener::class);
+		$context->registerEventListener(NewMessagesSynchronized::class, NewMessageClassificationListener::class);
+		$context->registerEventListener(SaveDraftEvent::class, DraftMailboxCreatorListener::class);
+		$context->registerEventListener(SynchronizationEvent::class, AccountSynchronizedThreadUpdaterListener::class);
+		$context->registerEventListener(UserDeletedEvent::class, UserDeletedListener::class);
+
+		$context->registerMiddleWare(ErrorMiddleware::class);
+		$context->registerMiddleWare(ProvisioningMiddleware::class);
+
+		$context->registerDashboardWidget(MailWidget::class);
+
+		// bypass Horde Translation system
+		Horde_Translation::setHandler('Horde_Imap_Client', new HordeTranslationHandler());
+		Horde_Translation::setHandler('Horde_Mime', new HordeTranslationHandler());
+		Horde_Translation::setHandler('Horde_Smtp', new HordeTranslationHandler());
 	}
 
-	private function registerEvents(IAppContainer $container): void {
-		/** @var IEventDispatcher $dispatcher */
-		$dispatcher = $container->query(IEventDispatcher::class);
-
-		$dispatcher->addServiceListener(BeforeMessageDeletedEvent::class, TrashMailboxCreatorListener::class);
-		$dispatcher->addServiceListener(DraftSavedEvent::class, DeleteDraftListener::class);
-		$dispatcher->addServiceListener(MessageFlaggedEvent::class, MessageCacheUpdaterListener::class);
-		$dispatcher->addServiceListener(MessageDeletedEvent::class, MessageCacheUpdaterListener::class);
-		$dispatcher->addServiceListener(MessageSentEvent::class, AddressCollectionListener::class);
-		$dispatcher->addServiceListener(MessageSentEvent::class, DeleteDraftListener::class);
-		$dispatcher->addServiceListener(MessageSentEvent::class, FlagRepliedMessageListener::class);
-		$dispatcher->addServiceListener(MessageSentEvent::class, InteractionListener::class);
-		$dispatcher->addServiceListener(MessageSentEvent::class, SaveSentMessageListener::class);
-		$dispatcher->addServiceListener(NewMessagesSynchronized::class, NewMessageClassificationListener::class);
-		$dispatcher->addServiceListener(SaveDraftEvent::class, DraftMailboxCreatorListener::class);
-		$dispatcher->addServiceListener(SynchronizationEvent::class, AccountSynchronizedThreadUpdaterListener::class);
-		$dispatcher->addServiceListener(UserDeletedEvent::class, UserDeletedListener::class);
-		$dispatcher->addServiceListener(RegisterWidgetEvent::class, DashboardPanelListener::class);
+	public function boot(IBootContext $context): void {
 	}
 }
