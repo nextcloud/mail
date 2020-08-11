@@ -45,8 +45,8 @@ class SearchQuery {
 	/** @var string[] */
 	private $bcc = [];
 
-	/** @var string|null */
-	private $subject;
+	/** @var string[] */
+	private $subjects = [];
 
 	/** @var string[] */
 	private $textTokens = [];
@@ -120,15 +120,12 @@ class SearchQuery {
 		$this->bcc[] = $bcc;
 	}
 
-	/**
-	 * @return string|null
-	 */
-	public function getSubject(): ?string {
-		return $this->subject;
+	public function getSubjects(): array {
+		return $this->subjects;
 	}
 
-	public function setSubject(?string $subject): void {
-		$this->subject = $subject;
+	public function addSubject(string $subject): void {
+		$this->subjects[] = $subject;
 	}
 
 	/**
