@@ -146,6 +146,7 @@ OC.L10N.register(
     "Add subfolder" : "Προσθήκη υποφακέλου",
     "Clear cache" : "Εκκαθάριση προσωρινής μνήμης",
     "Clear locally cached data, in case there are issues with synchronization." : "Εκκαθαρίστε τα δεδομένα κρυφής μνήμης, σε περίπτωση που υπάρχουν προβλήματα με το συγχρονισμό.",
+    "Delete folder" : "Διαγραφή φακέλου",
     "_{total} message_::_{total} messages_" : ["{total} μήνυμα","{total} μηνύματα"],
     "Could not load your draft" : "Δεν ήταν δυνατή η φόρτωση του πρόχειρου σας",
     "Could not load original message" : "Δεν ήταν δυνατή η φόρτωση του πρωτότυπου μηνύματος",

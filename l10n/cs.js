@@ -146,6 +146,7 @@ OC.L10N.register(
     "Add subfolder" : "Přidat podsložku",
     "Clear cache" : "Vyprázdnit mezipaměť",
     "Clear locally cached data, in case there are issues with synchronization." : "V případě, že jsou problémy se synchronizací, vyčistěte data v místní mezipaměti.",
+    "Delete folder" : "Smazat složku",
     "_{total} message_::_{total} messages_" : ["{total} zpráva","{total} zprávy","{total} zpráv","{total} zprávy"],
     "Could not load your draft" : "Nedaří se načíst váš koncept",
     "Could not load original message" : "Nedaří se načíst původní zprávu",

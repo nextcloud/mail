@@ -36,6 +36,7 @@ OC.L10N.register(
     "Collapse folders" : "ยุบโฟลเดอร์",
     "Mark all as read" : "เลือกอ่านทั้งหมด",
     "Clear cache" : "ล้างแคช",
+    "Delete folder" : "ลบโฟลเดอร์",
     "General" : "ทั่วไป",
     "User" : "User",
     "Host" : "โฮสต์",

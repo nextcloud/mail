@@ -84,6 +84,7 @@ OC.L10N.register(
     "Mark all messages of this folder as read" : "Маркирай всички съобщения в папката като прочетени",
     "Add subfolder" : "Добави подпапка",
     "Clear cache" : "Изтриване на кеша",
+    "Delete folder" : "Изтриване на папка",
     "No message selected" : "Не е избрано съобщение",
     "Signature" : "Подпис",
     "A signature is added to the text of new messages and replies." : "Подписът се добавя в края на текста, на изходящите съобщения.",

@@ -42,6 +42,7 @@ OC.L10N.register(
     "Show all folders" : "Arată toate directoarele",
     "Mark all as read" : "Marcaţi tot ca fiind citit",
     "Clear cache" : "Șterge cache",
+    "Delete folder" : "Șterge director",
     "Signature" : "Semnătură",
     "General" : "General",
     "User" : "Utilizator",

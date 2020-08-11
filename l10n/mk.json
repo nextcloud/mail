@@ -108,6 +108,7 @@
     "Mark all messages of this folder as read" : "Означи ги сите пораки во оваа папка како прочитани",
     "Add subfolder" : "Додади подпапка",
     "Clear cache" : "Избриши го кешот",
+    "Delete folder" : "Избриши папка",
     "_{total} message_::_{total} messages_" : ["{total} порака","{total} пораки"],
     "Could not load your draft" : "Неможе да се вчита вашиот нацрт",
     "Could not load original message" : "Неможе да се вчита оргиналната порака",

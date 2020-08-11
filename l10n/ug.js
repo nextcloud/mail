@@ -17,6 +17,7 @@ OC.L10N.register(
     "Settings" : "تەڭشەكلەر",
     "Add folder" : "Add folder",
     "Cancel" : "ۋاز كەچ",
+    "Delete folder" : "قىسقۇچ ئۆچۈر",
     "General" : "ئادەتتىكى",
     "User" : "User",
     "Host" : "باش ئاپپارات",

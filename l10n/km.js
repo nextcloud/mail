@@ -20,6 +20,7 @@ OC.L10N.register(
     "Settings" : "ការកំណត់",
     "Add folder" : "Add folder",
     "Cancel" : "បោះបង់",
+    "Delete folder" : "លុប​ថត",
     "General" : "ទូទៅ",
     "User" : "User",
     "Host" : "ម៉ាស៊ីន​ផ្ទុក",

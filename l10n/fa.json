@@ -110,6 +110,7 @@
     "Mark all messages of this folder as read" : "تمام پیام های این پوشه را به عنوان خوانده شده علامت گذاری کنید",
     "Add subfolder" : "زیر پوشه را اضافه کنید",
     "Clear cache" : "پاک‌سازی انباره",
+    "Delete folder" : "حذف پوشه",
     "Could not load your draft" : "پیش نویس شما بارگیری نمی شود",
     "Could not load original message" : "پیام اصلی بارگیری نشد",
     "No message selected" : "پیامی انتخاب نشده است",

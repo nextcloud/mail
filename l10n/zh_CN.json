@@ -144,6 +144,7 @@
     "Add subfolder" : "添加子文件夹",
     "Clear cache" : "清空缓存",
     "Clear locally cached data, in case there are issues with synchronization." : "万一同步出现问题，请清除本地缓存的数据。",
+    "Delete folder" : "删除文件夹",
     "_{total} message_::_{total} messages_" : ["{total} 条消息"],
     "Could not load your draft" : "无法加载您的草稿",
     "Could not load original message" : "无法加载初始消息",

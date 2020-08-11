@@ -146,6 +146,7 @@ OC.L10N.register(
     "Add subfolder" : "Додај подфасциклу",
     "Clear cache" : "Очисти кеш",
     "Clear locally cached data, in case there are issues with synchronization." : "Очисти локално кеширане податке, у случају да има проблема са синхронизацијом.",
+    "Delete folder" : "Обриши фасциклу",
     "_{total} message_::_{total} messages_" : ["{total} порука","{total} поруке","{total} порука"],
     "Could not load your draft" : "Не могу да учитам нацрт",
     "Could not load original message" : "Не могу да учитам оригиналну поруку",

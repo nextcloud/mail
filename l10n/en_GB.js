@@ -68,6 +68,7 @@ OC.L10N.register(
     "Collapse folders" : "Collapse folders",
     "Mark all as read" : "Mark all as read",
     "Clear cache" : "Clear cache",
+    "Delete folder" : "Delete folder",
     "Signature" : "Signature",
     "General" : "General",
     "User" : "User",

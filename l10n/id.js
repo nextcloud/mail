@@ -38,6 +38,7 @@ OC.L10N.register(
     "Cancel" : "Membatalkan",
     "Mark all as read" : "Tandai semua telah dibaca",
     "Clear cache" : "Bersihkan cache",
+    "Delete folder" : "Hapus folder",
     "Signature" : "Tanda",
     "General" : "Umum",
     "User" : "Pengguna",

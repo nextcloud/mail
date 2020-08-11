@@ -115,6 +115,7 @@ OC.L10N.register(
     "Mark all messages of this folder as read" : "Merkitse tämän kansion kaikki viestit luetuiksi",
     "Add subfolder" : "Lisää alikansio",
     "Clear cache" : "Tyhjennä välimuisti",
+    "Delete folder" : "Poista kansio",
     "_{total} message_::_{total} messages_" : ["{total} viesti","{total} viestiä"],
     "Could not load your draft" : "Luonnosta ei voitu ladata",
     "Could not load original message" : "Alkuperäistä viestiä ei voitu ladata",

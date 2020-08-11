@@ -28,6 +28,7 @@ OC.L10N.register(
     "Cancel" : "Dayandır",
     "Mark all as read" : "Hamısını oxunulmuş kimi qeydə al",
     "Clear cache" : "Keşi təmizlə",
+    "Delete folder" : "Qovluğu sil",
     "General" : "Ümumi",
     "User" : "User",
     "Host" : "Şəbəkədə ünvan",

@@ -146,6 +146,7 @@ OC.L10N.register(
     "Add subfolder" : "Pridať podpriečinok",
     "Clear cache" : "Vymazať vyrovnávaciu pamäť",
     "Clear locally cached data, in case there are issues with synchronization." : "V prípade problémov so synchronizáciou, vyčistite údaje vo vyrovnávacej pamäti.",
+    "Delete folder" : "Zmazať priečinok",
     "_{total} message_::_{total} messages_" : ["{total} správa","{total} správy","{total} správy","{total} správ"],
     "Could not load your draft" : "Koncept sa nepodarilo načítať",
     "Could not load original message" : "Nepodarilo sa načítať pôvodnú správu",

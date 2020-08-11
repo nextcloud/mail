@@ -138,6 +138,7 @@ OC.L10N.register(
     "Add subfolder" : "Gehitu azpi-karpeta bat",
     "Clear cache" : "Garbitu cachea",
     "Clear locally cached data, in case there are issues with synchronization." : "Ezabatu lokalean katxeatutako datuak, sinkronizaziorik arazorik badagoen.",
+    "Delete folder" : "Ezabatu karpeta",
     "_{total} message_::_{total} messages_" : ["Mezu {total}","{total} mezu"],
     "Could not load your draft" : "Ezin izan da zure zirriborroa kargatu",
     "Could not load original message" : "Ezin izan da jatorrizko mezua kargatu",

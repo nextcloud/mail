@@ -45,6 +45,7 @@ OC.L10N.register(
     "Remove account" : "Verwyder rekening",
     "Loading …" : "Laai …",
     "Cancel" : "Kanselleer",
+    "Delete folder" : "Skrap vouer",
     "Signature" : "Handtekening",
     "General" : "Algemeen",
     "User" : "Gebruiker",

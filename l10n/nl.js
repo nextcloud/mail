@@ -145,6 +145,7 @@ OC.L10N.register(
     "Add subfolder" : "Toevoegen submap",
     "Clear cache" : "Leegmaken cache",
     "Clear locally cached data, in case there are issues with synchronization." : "Maak de lokale gegevenscache schoon, als er problemen zijn bij synchronisatie.",
+    "Delete folder" : "Verwijderen map",
     "_{total} message_::_{total} messages_" : ["{total} bericht","{total} berichten"],
     "Could not load your draft" : "Kan jouw concept niet laden",
     "Could not load original message" : "Het originele bericht kan niet worden geladen",

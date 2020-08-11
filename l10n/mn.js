@@ -47,6 +47,7 @@ OC.L10N.register(
     "Remove account" : "Аккаунт устгах",
     "Cancel" : "болиулах",
     "Show all folders" : "Бүх хавтас харуулах",
+    "Delete folder" : "Хавтсыг устгах",
     "Signature" : "Гарын үсэг",
     "General" : "Ерөнхий",
     "User" : "Хэрэглэгч",

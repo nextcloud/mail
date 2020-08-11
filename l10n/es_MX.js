@@ -67,6 +67,7 @@ OC.L10N.register(
     "Collapse folders" : "Compactar carpetas",
     "Mark all as read" : "Marcar todos como leídos",
     "Clear cache" : "Borrar el caché",
+    "Delete folder" : "Borrar carpeta",
     "Signature" : "Firma",
     "General" : "General",
     "User" : "Usuario",

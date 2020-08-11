@@ -146,6 +146,7 @@ OC.L10N.register(
     "Add subfolder" : "Unterordner hinzufügen",
     "Clear cache" : "Cache löschen",
     "Clear locally cached data, in case there are issues with synchronization." : "Löschen Sie lokal zwischengespeicherte Daten, falls es Probleme mit der Synchronisierung gibt.",
+    "Delete folder" : "Ordner löschen",
     "_{total} message_::_{total} messages_" : ["{total} Nachricht","{total} Nachrichten"],
     "Could not load your draft" : "Ihr Entwurf konnte nicht geladen werden",
     "Could not load original message" : "Original Nachricht konnte nicht geladen werden",

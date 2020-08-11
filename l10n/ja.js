@@ -144,6 +144,7 @@ OC.L10N.register(
     "Add subfolder" : "サブフォルダを追加",
     "Clear cache" : "キャッシュをクリア",
     "Clear locally cached data, in case there are issues with synchronization." : "同期の問題を解消を解消するために、ローカルにキャッシュされたデータを消去",
+    "Delete folder" : "フォルダを削除",
     "_{total} message_::_{total} messages_" : ["{total} メッセージ"],
     "Could not load your draft" : "下書きを読み込めませんでした",
     "Could not load original message" : "元のメッセージを読み込めませんでした",

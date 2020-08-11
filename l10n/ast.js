@@ -54,6 +54,7 @@ OC.L10N.register(
     "Collapse folders" : "Contrayer carpetes",
     "Mark all as read" : "Conseñar too como lleío",
     "Clear cache" : "Llimpiar caché",
+    "Delete folder" : "Desaniciar",
     "Signature" : "Robla",
     "General" : "Xeneral",
     "User" : "Usuariu",

@@ -142,6 +142,7 @@ OC.L10N.register(
     "Add subfolder" : "Afegeix una subcarpeta",
     "Clear cache" : "Neteja la memòria cau",
     "Clear locally cached data, in case there are issues with synchronization." : "Esborra les dades locals de la memòria cau, en cas que hi hagi problemes amb la sincronització.",
+    "Delete folder" : "Suprimeix la carpeta",
     "_{total} message_::_{total} messages_" : ["{total} missatge","{total} missatges"],
     "Could not load your draft" : "No s’ha pogut carregar el vostre esborrany",
     "Could not load original message" : "No s'ha pogut carregar el missatge original",

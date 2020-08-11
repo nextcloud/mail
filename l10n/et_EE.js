@@ -51,6 +51,7 @@ OC.L10N.register(
     "Show all folders" : "Näita kõiki kaustu",
     "Mark all as read" : "Märgi loetuks",
     "Clear cache" : "Tühjenda puhver",
+    "Delete folder" : "Kustuta kaust",
     "Signature" : "Allkiri",
     "General" : "Üldine",
     "User" : "Kasutaja",

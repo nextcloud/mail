@@ -119,6 +119,7 @@ OC.L10N.register(
     "Mark all messages of this folder as read" : "A mappában található összes üzenet megjelölése olvasottként",
     "Add subfolder" : "Almappa hozzáadás",
     "Clear cache" : "Gyorsítótár ürítése",
+    "Delete folder" : "Mappa törlés",
     "Could not load your draft" : "Nem lehet betölteni a vázlatot",
     "Could not load original message" : "Nem lehet betölteni az eredeti üzenetet",
     "No message selected" : "Nincs kiválasztott üzenet",

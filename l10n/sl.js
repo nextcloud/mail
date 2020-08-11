@@ -113,6 +113,7 @@ OC.L10N.register(
     "Mark all messages of this folder as read" : "Označi vsa sporočila v tej mapi kot prebrana",
     "Add subfolder" : "Dodaj podmapo",
     "Clear cache" : "Počisti predpomnilnik",
+    "Delete folder" : "Izbriši mapo",
     "Could not load your draft" : "Osnutka ni mogoče naložiti",
     "Could not load original message" : "Ni mogoče naložiti izvornega sporočila",
     "No message selected" : "Ni izbranega nobenega sporočila",

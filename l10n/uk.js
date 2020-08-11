@@ -139,6 +139,7 @@ OC.L10N.register(
     "Mark all messages of this folder as read" : "Позначити усі повідомлення у цій теці як прочитані",
     "Add subfolder" : "Додати підтеку",
     "Clear cache" : "Очистити кеш",
+    "Delete folder" : "Вилучити теку",
     "_{total} message_::_{total} messages_" : ["{total] повідомлення","{total] повідомлення","{total] повідомлень","{total} повідомлень"],
     "Could not load your draft" : "Неможливо завантажити чернетку",
     "Could not load original message" : "Неможливо завантажити оригінал повідомлення",

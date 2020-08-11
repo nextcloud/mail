@@ -28,6 +28,7 @@ OC.L10N.register(
     "Cancel" : "বাতির",
     "Mark all as read" : "সব পঠিত হিসেবে চিহ্নিত কর",
     "Clear cache" : "ক্যাশে পরিষ্কার কর",
+    "Delete folder" : "ফোল্ডার মোছ",
     "General" : "সাধারণ",
     "User" : "User",
     "Host" : "হোস্ট",

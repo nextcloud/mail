@@ -146,6 +146,7 @@ OC.L10N.register(
     "Add subfolder" : "Добавить подпапку",
     "Clear cache" : "Очистить кеш",
     "Clear locally cached data, in case there are issues with synchronization." : "Очистить локальный кеш данных в случае проблем с синхронизацией.",
+    "Delete folder" : "Удалить каталог",
     "_{total} message_::_{total} messages_" : ["{total} письмо","{total} письма","{total} писем","{total} письма"],
     "Could not load your draft" : "Невозможно загрузить ваш черновик",
     "Could not load original message" : "Не удалось загрузить исходное письмо",

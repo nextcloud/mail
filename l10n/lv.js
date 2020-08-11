@@ -70,6 +70,7 @@ OC.L10N.register(
     "Cancel" : "Atcelt",
     "Show all folders" : "Rādīt visas mapes",
     "Collapse folders" : "Sakļaut mapes",
+    "Delete folder" : "Dzēst mapi",
     "Signature" : "Paraksts",
     "General" : "Vispārīgs",
     "User" : "Lietotājs",

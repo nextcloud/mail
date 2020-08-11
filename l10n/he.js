@@ -142,6 +142,7 @@ OC.L10N.register(
     "Add subfolder" : "הוספת תת־תיקייה",
     "Clear cache" : "פינוי מטמון",
     "Clear locally cached data, in case there are issues with synchronization." : "פינוי הנתונים שמאוחסנים מקומית במטמון, במקרה שיש תקלות בסנכרון.",
+    "Delete folder" : "מחיקת תיקייה",
     "_{total} message_::_{total} messages_" : ["הודעה אחת","{total} הודעות","{total} הודעות","{total} הודעות"],
     "Could not load your draft" : "לא ניתן לטעון את הטיוטה שלך",
     "Could not load original message" : "לא ניתן לטעון את ההודעה המקורית",

@@ -146,6 +146,7 @@ OC.L10N.register(
     "Add subfolder" : "Ajouter un sous-dossier",
     "Clear cache" : "Vider le cache",
     "Clear locally cached data, in case there are issues with synchronization." : "Supprimer les données locales en cache pour régler les problèmes de synchronisation.",
+    "Delete folder" : "Supprimer le dossier",
     "_{total} message_::_{total} messages_" : ["{total} message","{total} messages"],
     "Could not load your draft" : "Impossible de charger votre brouillon",
     "Could not load original message" : "Impossible de charger le message d'origine",

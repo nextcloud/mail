@@ -127,6 +127,7 @@ OC.L10N.register(
     "Add subfolder" : "Skapa undermapp",
     "Clear cache" : "Rensa cachen",
     "Clear locally cached data, in case there are issues with synchronization." : "Rensa lokalt cachad data, ifall det finns problem med synkronisering.",
+    "Delete folder" : "Radera mapp",
     "_{total} message_::_{total} messages_" : ["{total} meddelande","{total} meddelanden"],
     "Could not load your draft" : "Kunde inte läsa in ditt utkast",
     "Could not load original message" : "Det gick inte att läsa in originalmeddelandet",

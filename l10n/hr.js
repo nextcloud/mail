@@ -145,6 +145,7 @@ OC.L10N.register(
     "Add subfolder" : "Dodaj podmapu",
     "Clear cache" : "Izbriši predmemoriju",
     "Clear locally cached data, in case there are issues with synchronization." : "Izbrišite podatke iz lokalnog međuspremnika u slučaju da postoje problemi sa sinkronizacijom.",
+    "Delete folder" : "Izbriši mapu",
     "_{total} message_::_{total} messages_" : ["{total} poruka","{total} poruka","{total} poruka"],
     "Could not load your draft" : "Učitavanje vaše skice nije uspjelo",
     "Could not load original message" : "Nije moguće učitati izvornu poruku",

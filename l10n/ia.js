@@ -34,6 +34,7 @@ OC.L10N.register(
     "Cancel" : "Cancellar",
     "Show all folders" : "Monstrar tote dossiers",
     "Collapse folders" : "Plicar dossiers",
+    "Delete folder" : "Deler dossier",
     "General" : "General",
     "User" : "User",
     "Host" : "Hospite",

@@ -66,6 +66,7 @@ OC.L10N.register(
     "Collapse folders" : "დირექტორიების კოლაფსი",
     "Mark all as read" : "ყველას წაკითხულად მონიშვნა",
     "Clear cache" : "კეშის გასუფთავება",
+    "Delete folder" : "დირექტორიის გაუქმება",
     "Signature" : "ხელმოწერა",
     "General" : "ზოგადი",
     "User" : "მომხმარებელი",
