@@ -3,9 +3,9 @@
 declare(strict_types=1);
 
 /**
- * @copyright 2017 Christoph Wurst <christoph@winzerhof-wurst.at>
+ * @copyright 2020 Christoph Wurst <christoph@winzerhof-wurst.at>
  *
- * @author 2017 Christoph Wurst <christoph@winzerhof-wurst.at>
+ * @author 2020 Christoph Wurst <christoph@winzerhof-wurst.at>
  *
  * @license GNU AGPL version 3 or any later version
  *
@@ -21,46 +21,22 @@ declare(strict_types=1);
  *
  * You should have received a copy of the GNU Affero General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
- *
  */
 
-namespace OCA\Mail\Service;
+namespace OCA\Mail;
 
-use OCA\Mail\Contracts\IUserPreferences;
 use OCP\IConfig;
 
-class UserPreferenceSevice implements IUserPreferences {
+class SystemConfig {
 
 	/** @var IConfig */
 	private $config;
 
-	/** @var string */
-	private $UserId;
-
-	/**
-	 * @param IConfig $config
-	 * @param string $UserId
-	 */
-	public function __construct(IConfig $config, $UserId) {
+	public function __construct(IConfig $config) {
 		$this->config = $config;
-		$this->UserId = $UserId;
 	}
 
-	/**
-	 * @param string $key
-	 * @param mixed $value
-	 * @return mixed new value
-	 */
-	public function setPreference($key, $value) {
-		$this->config->setUserValue($this->UserId, 'mail', $key, $value);
-		return $value;
-	}
-
-	/**
-	 * @param string $key
-	 * @param mixed|null $default
-	 */
-	public function getPreference($key, $default = null) {
-		return $this->config->getUserValue($this->UserId, 'mail', $key, $default);
+	public function hasWorkingSmtp(): bool {
+		return $this->config->getSystemValue('app.mail.transport', 'smtp') === 'smtp';
 	}
 }

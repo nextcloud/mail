@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 /**
  * @author Christoph Wurst <christoph@winzerhof-wurst.at>
  *
@@ -26,15 +28,19 @@ use OCA\Mail\Db\MailAccount;
 use OCA\Mail\Service\AutoConfig\MxRecord;
 use OCA\Mail\Service\AutoConfig\SmtpConnectivityTester;
 use OCA\Mail\Service\AutoConfig\SmtpServerDetector;
-use PHPUnit_Framework_MockObject_MockObject;
+use OCA\Mail\SystemConfig;
+use PHPUnit\Framework\MockObject\MockObject;
 
 class SmtpServerDetectorTest extends TestCase {
 
-	/** @var MxRecord|PHPUnit_Framework_MockObject_MockObject */
+	/** @var MxRecord|MockObject */
 	private $mxRecord;
 
-	/** @var SmtpConnectivityTester|PHPUnit_Framework_MockObject_MockObject */
+	/** @var SmtpConnectivityTester|MockObject */
 	private $smtpConnectivityTester;
+
+	/** @var SystemConfig|MockObject */
+	private $systemConfig;
 
 	/** @var SmtpServerDetector */
 	private $detector;
@@ -44,14 +50,22 @@ class SmtpServerDetectorTest extends TestCase {
 
 		$this->mxRecord = $this->createMock(MxRecord::class);
 		$this->smtpConnectivityTester = $this->createMock(SmtpConnectivityTester::class);
+		$this->systemConfig = $this->createMock(SystemConfig::class);
 
-		$this->detector = new SmtpServerDetector($this->mxRecord, $this->smtpConnectivityTester, true);
+		$this->detector = new SmtpServerDetector(
+			$this->mxRecord,
+			$this->smtpConnectivityTester,
+			$this->systemConfig
+		);
 	}
 
 	public function testDetectNo() {
 		$account = $this->createMock(MailAccount::class);
 		$email = 'user@domain.tld';
 		$password = 'mypassword';
+		$this->systemConfig->expects($this->once())
+			->method('hasWorkingSmtp')
+			->willReturn(true);
 		$this->mxRecord->expects($this->once())
 			->method('query')
 			->with($this->equalTo('domain.tld'))
@@ -70,6 +84,9 @@ class SmtpServerDetectorTest extends TestCase {
 		$account = $this->createMock(MailAccount::class);
 		$email = 'user@domain.tld';
 		$password = 'mypassword';
+		$this->systemConfig->expects($this->once())
+			->method('hasWorkingSmtp')
+			->willReturn(true);
 		$this->mxRecord->expects($this->once())
 			->method('query')
 			->with($this->equalTo('domain.tld'))
@@ -88,6 +105,9 @@ class SmtpServerDetectorTest extends TestCase {
 		$account = $this->createMock(MailAccount::class);
 		$email = 'user@domain.tld';
 		$password = 'mypassword';
+		$this->systemConfig->expects($this->once())
+			->method('hasWorkingSmtp')
+			->willReturn(true);
 		$this->mxRecord->expects($this->once())
 			->method('query')
 			->with($this->equalTo('domain.tld'))
