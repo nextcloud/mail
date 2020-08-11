@@ -97,12 +97,6 @@ class MailManagerTest extends TestCase {
 			$this->createMock(Mailbox::class),
 			$this->createMock(Mailbox::class),
 		];
-		$folders = [
-			$this->createMock(Folder::class),
-			$this->createMock(Folder::class),
-		];
-		$mailboxes[0]->method('toFolder')->willReturn($folders[0]);
-		$mailboxes[1]->method('toFolder')->willReturn($folders[1]);
 		$this->mailboxSync->expects($this->once())
 			->method('sync')
 			->with($this->equalTo($account));
@@ -111,9 +105,9 @@ class MailManagerTest extends TestCase {
 			->with($this->equalTo($account))
 			->willReturn($mailboxes);
 
-		$result = $this->manager->getFolders($account);
+		$result = $this->manager->getMailboxes($account);
 
-		$this->assertSame($folders, $result);
+		$this->assertSame($mailboxes, $result);
 	}
 
 	public function testCreateFolder() {

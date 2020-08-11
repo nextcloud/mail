@@ -109,7 +109,7 @@ class FolderMapper {
 		$mailboxes = array_map(function (Folder $folder) {
 			return $folder->getMailbox();
 		}, array_filter($folders, function (Folder $folder) {
-			return $folder->isSearchable();
+			return !in_array('\noselect', $folder->getAttributes());
 		}));
 
 		$status = $client->status($mailboxes);
