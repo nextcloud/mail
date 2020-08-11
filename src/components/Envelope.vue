@@ -1,7 +1,7 @@
 <template>
 	<router-link class="app-content-list-item" :class="{seen: data.flags.seen, draft, selected: selected}" :to="link">
 		<div
-			v-if="folder.isUnified"
+			v-if="mailbox.isUnified"
 			class="mail-message-account-color"
 			:style="{'background-color': accountColor}" />
 		<div
@@ -99,7 +99,7 @@ export default {
 			type: Object,
 			required: true,
 		},
-		folder: {
+		mailbox: {
 			type: Object,
 			required: true,
 		},
@@ -126,17 +126,16 @@ export default {
 		},
 		link() {
 			if (this.draft) {
-				// TODO: does not work with a unified drafts folder
-				//       the query should also contain the account and folder
+				// TODO: does not work with a unified drafts mailbox
+				//       the query should also contain the account and mailbox
 				//       id for that to work
 				return {
 					name: 'message',
 					params: {
-						accountId: this.$route.params.accountId,
-						folderId: this.$route.params.folderId,
+						mailboxId: this.$route.params.mailboxId,
 						filter: this.$route.params.filter ? this.$route.params.filter : undefined,
-						messageUuid: 'new',
-						draftUid: this.data.uid,
+						threadId: 'new',
+						draftId: this.data.databaseId,
 					},
 					exact: true,
 				}
@@ -144,36 +143,35 @@ export default {
 				return {
 					name: 'message',
 					params: {
-						accountId: this.$route.params.accountId,
-						folderId: this.$route.params.folderId,
+						mailboxId: this.$route.params.mailboxId,
 						filter: this.$route.params.filter ? this.$route.params.filter : undefined,
-						messageUuid: this.data.uuid,
+						threadId: this.data.databaseId,
 					},
 					exact: true,
 				}
 			}
 		},
 		addresses() {
-			// Show recipients' label/address in a sent folder
-			if (this.folder.specialRole === 'sent') {
+			// Show recipients' label/address in a sent mailbox
+			if (this.mailbox.specialRole === 'sent') {
 				const recipients = [this.data.to, this.data.cc].flat().map(function(recipient) {
 					return recipient.label ? recipient.label : recipient.email
 				})
 				return recipients.length > 0 ? recipients.join(', ') : t('mail', 'Blind copy recipients only')
 			}
-			// Show sender label/address in other folder types
+			// Show sender label/address in other mailbox types
 			return this.data.from.length === 0 ? '?' : this.data.from[0].label || this.data.from[0].email
 		},
 		avatarEmail() {
-			// Show first recipients' avatar in a sent folder (or undefined when sent to Bcc only)
-			if (this.folder.specialRole === 'sent') {
+			// Show first recipients' avatar in a sent mailbox (or undefined when sent to Bcc only)
+			if (this.mailbox.specialRole === 'sent') {
 				const recipients = [this.data.to, this.data.cc].flat().map(function(recipient) {
 					return recipient.email
 				})
 				return recipients.length > 0 ? recipients[0] : undefined
 			}
 
-			// Show sender avatar in other folder types
+			// Show sender avatar in other mailbox types
 			if (this.data.from.length > 0) {
 				return this.data.from[0].email
 			} else {
@@ -203,9 +201,7 @@ export default {
 		onDelete() {
 			this.$emit('delete')
 			this.$store.dispatch('deleteMessage', {
-				accountId: this.data.accountId,
-				folderId: this.data.folderId,
-				uid: this.data.uid,
+				id: this.data.databaseId,
 			})
 		},
 	},

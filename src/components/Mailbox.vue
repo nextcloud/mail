@@ -31,7 +31,7 @@
 	<EnvelopeList
 		v-else
 		:account="account"
-		:folder="folder"
+		:mailbox="mailbox"
 		:search-query="searchQuery"
 		:envelopes="envelopesToShow"
 		:refreshing="refreshing"
@@ -70,7 +70,7 @@ export default {
 			type: Object,
 			required: true,
 		},
-		folder: {
+		mailbox: {
 			type: Object,
 			required: true,
 		},
@@ -115,7 +115,7 @@ export default {
 	},
 	computed: {
 		envelopes() {
-			return this.$store.getters.getEnvelopes(this.account.id, this.folder.id, this.searchQuery)
+			return this.$store.getters.getEnvelopes(this.mailbox.databaseId, this.searchQuery)
 		},
 		envelopesToShow() {
 			if (this.paginate === 'manual' && !this.expanded) {
@@ -134,7 +134,7 @@ export default {
 		account() {
 			this.loadEnvelopes()
 		},
-		folder() {
+		mailbox() {
 			this.loadEnvelopes()
 		},
 		searchQuery() {
@@ -163,8 +163,7 @@ export default {
 
 			this.$store
 				.dispatch('syncEnvelopes', {
-					accountId: this.account.id,
-					folderId: this.folder.id,
+					mailboxId: this.mailbox.databaseId,
 					query: this.searchQuery,
 					init: true,
 				})
@@ -175,15 +174,14 @@ export default {
 				})
 		},
 		async loadEnvelopes() {
-			logger.debug('fetching envelopes')
+			logger.debug(`fetching envelopes for mailbox ${this.mailbox.databaseId} and query ${this.searchQuery}`, this.mailbox)
 			this.loadingEnvelopes = true
 			this.loadingCacheInitialization = false
 			this.error = false
 
 			try {
 				const envelopes = await this.$store.dispatch('fetchEnvelopes', {
-					accountId: this.account.id,
-					folderId: this.folder.id,
+					mailboxId: this.mailbox.databaseId,
 					query: this.searchQuery,
 					limit: this.initialPageSize,
 				})
@@ -196,15 +194,15 @@ export default {
 					// Show first message
 					const first = envelopes[0]
 
-					// Keep the selected account-folder combination, but navigate to the message
-					// (it's not a bug that we don't use first.accountId and first.folderId here)
+					// Keep the selected account-mailbox combination, but navigate to the message
+					// (it's not a bug that we don't use first.accountId and first.mailboxId here)
+					logger.debug('showing the first message of mailbox ' + this.$route.params.mailboxId)
 					this.$router.replace({
 						name: 'message',
 						params: {
-							accountId: this.$route.params.accountId,
-							folderId: this.$route.params.folderId,
+							mailboxId: this.$route.params.mailboxId,
 							filter: this.$route.params.filter ? this.$route.params.filter : undefined,
-							messageUuid: first.uuid,
+							threadId: first.databaseId,
 						},
 					})
 				}
@@ -248,8 +246,7 @@ export default {
 
 			try {
 				const envelopes = await this.$store.dispatch('fetchNextEnvelopePage', {
-					accountId: this.account.accountId,
-					folderId: this.folder.id,
+					mailboxId: this.mailbox.databaseId,
 					envelopes: this.envelopes,
 					query: this.searchQuery,
 				})
@@ -265,22 +262,17 @@ export default {
 		},
 		handleShortcut(e) {
 			const envelopes = this.envelopes
-			const currentUuid = this.$route.params.messageUuid
+			const currentId = parseInt(this.$route.params.threadId, 10)
 
-			if (!currentUuid) {
-				logger.debug('ignoring shortcut: no envelope selected')
-				return
-			}
-
-			const current = envelopes.filter((e) => e.uuid === currentUuid)
-			if (current.length === 0) {
-				logger.debug('ignoring shortcut: currently displayed messages is not in current envelope list')
-				return
-			}
-
-			const env = current[0]
+			const env = envelopes.find((e) => e.databaseId === currentId)
 			const idx = envelopes.indexOf(env)
 			let next
+
+			if (e.srcKey !== 'refresh' && !env) {
+				logger.debug('envelope is not in the list, ignoring shortcut', {
+					srcKey: e.srcKey,
+				})
+			}
 
 			switch (e.srcKey) {
 			case 'next':
@@ -300,26 +292,23 @@ export default {
 					return
 				}
 
-				// Keep the selected account-folder combination, but navigate to a different message
-				// (it's not a bug that we don't use next.accountId and next.folderId here)
+				// Keep the selected account-mailbox combination, but navigate to a different message
+				// (it's not a bug that we don't use next.accountId and next.mailboxId here)
 				this.$router.push({
 					name: 'message',
 					params: {
-						accountId: this.$route.params.accountId,
-						folderId: this.$route.params.folderId,
+						mailboxId: this.$route.params.mailboxId,
 						filter: this.$route.params.filter ? this.$route.params.filter : undefined,
-						messageUuid: next.uuid,
+						threadId: next.databaseId,
 					},
 				})
 				break
 			case 'del':
 				logger.debug('deleting', { env })
-				this.onDelete(env.uuid)
+				this.onDelete(env.databaseId)
 				this.$store
 					.dispatch('deleteMessage', {
-						accountId: env.accountId,
-						folderId: env.folderId,
-						uid: env.uid,
+						id: env.databaseId,
 					})
 					.catch((error) =>
 						logger.error('could not delete envelope', {
@@ -365,7 +354,7 @@ export default {
 			try {
 				await this.$store.dispatch('syncEnvelopes', {
 					accountId: this.account.accountId,
-					folderId: this.folder.id,
+					mailboxId: this.mailbox.databaseId,
 					query: this.searchQuery,
 				})
 			} catch (error) {
@@ -381,14 +370,14 @@ export default {
 				this.refreshing = false
 			}
 		},
-		onDelete(uuid) {
-			const idx = findIndex(propEq('uuid', uuid), this.envelopes)
+		onDelete(id) {
+			const idx = findIndex(propEq('databaseId', id), this.envelopes)
 			if (idx === -1) {
 				logger.debug('envelope to delete does not exist in envelope list')
 				return
 			}
 			this.envelopes.splice(idx, 1)
-			if (uuid !== this.$route.params.messageUuid) {
+			if (id !== this.$route.params.threadId) {
 				logger.debug('other message open, not jumping to the next/previous message')
 				return
 			}
@@ -399,15 +388,14 @@ export default {
 				return
 			}
 
-			// Keep the selected account-folder combination, but navigate to a different message
-			// (it's not a bug that we don't use next.accountId and next.folderId here)
+			// Keep the selected mailbox, but navigate to a different message
+			// (it's not a bug that we don't use next.mailboxId here)
 			this.$router.push({
 				name: 'message',
 				params: {
-					accountId: this.$route.params.accountId,
-					folderId: this.$route.params.folderId,
+					mailboxId: this.$route.params.mailboxId,
 					filter: this.$route.params.filter ? this.$route.params.filter : undefined,
-					messageUuid: next.uuid,
+					threadId: next.databaseId,
 				},
 			})
 		},
@@ -421,13 +409,12 @@ export default {
 		},
 		async loadMailbox() {
 			// When the account is unified or inbox, return nothing, else sync the mailbox
-			if (this.account.isUnified || this.folder.specialRole === 'inbox') {
+			if (this.account.isUnified || this.mailbox.specialRole === 'inbox') {
 				return
 			}
 			try {
 				await this.$store.dispatch('syncEnvelopes', {
-					accountId: this.$route.params.accountId,
-					folderId: this.$route.params.folderId,
+					mailboxId: this.$route.params.mailboxId,
 					query: this.searchQuery,
 				})
 

@@ -25,16 +25,15 @@ import Vue from 'vue'
 
 import { buildMailboxHierarchy } from '../imap/MailboxHierarchy'
 import { havePrefix } from '../imap/MailboxPrefix'
-import { normalizedFolderId, normalizedMessageId, normalizedEnvelopeListId } from './normalization'
 import { sortMailboxes } from '../imap/MailboxSorter'
+import { normalizedEnvelopeListId } from './normalization'
 import { UNIFIED_ACCOUNT_ID } from './constants'
 
-const addFolderToState = (state, account) => (folder) => {
-	const id = normalizedFolderId(account.id, folder.id)
-	folder.accountId = account.id
-	folder.envelopeLists = {}
-	Vue.set(state.folders, id, folder)
-	return id
+const addMailboxToState = (state, account) => (mailbox) => {
+	mailbox.accountId = account.id
+	mailbox.envelopeLists = {}
+	Vue.set(state.mailboxes, mailbox.databaseId, mailbox)
+	return mailbox.databaseId
 }
 
 const sortAccounts = (accounts) => {
@@ -55,16 +54,16 @@ export default {
 			sortAccounts(state.accountList.concat([account.id]).map((id) => state.accounts[id])).map((a) => a.id)
 		)
 
-		// Save the folders to the store, but only keep IDs in the account's folder list
-		const folders = buildMailboxHierarchy(sortMailboxes(account.folders || []), havePrefix(account.folders))
-		Vue.set(account, 'folders', [])
-		const addToState = addFolderToState(state, account)
-		folders.forEach((folder) => {
-			// Add all folders (including subfolders to state, but only toplevel to account
-			const id = addToState(folder)
-			Vue.set(folder, 'folders', folder.folders.map(addToState))
+		// Save the mailboxes to the store, but only keep IDs in the account's mailboxes list
+		const mailboxes = buildMailboxHierarchy(sortMailboxes(account.mailboxes), havePrefix(account.mailboxes))
+		Vue.set(account, 'mailboxes', [])
+		const addToState = addMailboxToState(state, account)
+		mailboxes.forEach((mailbox) => {
+			// Add all mailboxes (including submailboxes to state, but only toplevel to account
+			const id = addToState(mailbox)
+			Vue.set(mailbox, 'mailboxes', mailbox.mailboxes.map(addToState))
 
-			account.folders.push(id)
+			account.mailboxes.push(id)
 		})
 	},
 	editAccount(state, account) {
@@ -87,61 +86,68 @@ export default {
 	expandAccount(state, accountId) {
 		state.accounts[accountId].collapsed = false
 	},
-	addFolder(state, { account, folder }) {
+	addMailbox(state, { account, mailbox }) {
 		// Flatten the existing ones before updating the hierarchy
-		const existing = account.folders.map((id) => state.folders[id])
-		existing.forEach((folder) => {
-			if (!folder.folders) {
+		const existing = account.mailboxes.map((id) => state.mailboxes[id])
+		existing.forEach((mailbox) => {
+			if (!mailbox.mailboxes) {
 				return
 			}
-			folder.folders.map((id) => existing.push(state.folders[id]))
-			folder.folders = []
+			mailbox.mailboxes.map((id) => existing.push(state.mailboxes[id]))
+			mailbox.mailboxes = []
 		})
-		// Save the folders to the store, but only keep IDs in the account's folder list
-		existing.push(folder)
-		const folders = buildMailboxHierarchy(sortMailboxes(existing), havePrefix(existing))
-		Vue.set(account, 'folders', [])
-		const addToState = addFolderToState(state, account)
-		folders.forEach((folder) => {
-			// Add all folders (including subfolders to state, but only toplevel to account
-			const id = addToState(folder)
-			Vue.set(folder, 'folders', folder.folders.map(addToState))
+		// Save the mailboxes to the store, but only keep IDs in the account's mailboxes list
+		existing.push(mailbox)
+		const mailboxes = buildMailboxHierarchy(sortMailboxes(existing), havePrefix(existing))
+		Vue.set(account, 'mailboxes', [])
+		const addToState = addMailboxToState(state, account)
+		mailboxes.forEach((mailbox) => {
+			// Add all mailboxes (including submailboxes to state, but only toplevel to account
+			const id = addToState(mailbox)
+			Vue.set(mailbox, 'mailboxes', mailbox.mailboxes.map(addToState))
 
-			account.folders.push(id)
+			account.mailboxes.push(id)
 		})
 	},
-	removeFolder(state, { accountId, folderId }) {
-		const account = state.accounts[accountId]
-		const id = normalizedFolderId(accountId, folderId)
-		Vue.delete(state.folders, id)
-		account.folders = account.folders.filter((fId) => fId !== id)
-		account.folders.forEach((fId) => {
-			const folder = state.folders[fId]
-			if (folder.folders) {
-				folder.folders = folder.folders.filter((fId) => fId !== id)
+	removeMailbox(state, { id }) {
+		const mailbox = state.mailboxes[id]
+		if (mailbox === undefined) {
+			throw new Error(`Mailbox ${id} does not exist`)
+		}
+		const account = state.accounts[mailbox.accountId]
+		if (account === undefined) {
+			throw new Error(`Account ${mailbox.accountId} of mailbox ${id} is unknown`)
+		}
+		Vue.delete(state.mailboxes, id)
+		account.mailboxes = account.mailboxes.filter((mbId) => mbId !== id)
+		account.mailboxes.forEach((fId) => {
+			const mailbox = state.mailboxes[fId]
+			if (mailbox.mailboxes) {
+				mailbox.mailboxes = mailbox.mailboxes.filter((mbId) => mbId !== id)
 			}
 		})
 	},
-	addEnvelope(state, { accountId, folderId, query, envelope }) {
-		const folder = state.folders[normalizedFolderId(accountId, folderId)]
-		Vue.set(state.envelopes, envelope.uuid, envelope)
+	addEnvelope(state, { query, envelope }) {
+		const mailbox = state.mailboxes[envelope.mailboxId]
+		Vue.set(state.envelopes, envelope.databaseId, envelope)
+		Vue.set(envelope, 'accountId', mailbox.accountId)
 		const listId = normalizedEnvelopeListId(query)
-		const existing = folder.envelopeLists[listId] || []
-		const uuidToDateInt = (uuid) => state.envelopes[uuid].dateInt
-		const sortedUniqByDateInt = sortedUniqBy(uuidToDateInt)
-		const orderByDateInt = orderBy(uuidToDateInt, 'desc')
-		Vue.set(folder.envelopeLists, listId, sortedUniqByDateInt(orderByDateInt(existing.concat([envelope.uuid]))))
+		const existing = mailbox.envelopeLists[listId] || []
+		const idToDateInt = (id) => state.envelopes[id].dateInt
+		const sortedUniqByDateInt = sortedUniqBy(idToDateInt)
+		const orderByDateInt = orderBy(idToDateInt, 'desc')
+		Vue.set(mailbox.envelopeLists, listId, sortedUniqByDateInt(orderByDateInt(existing.concat([envelope.databaseId]))))
 
 		const unifiedAccount = state.accounts[UNIFIED_ACCOUNT_ID]
-		unifiedAccount.folders
-			.map((fId) => state.folders[fId])
-			.filter((f) => f.specialRole && f.specialRole === folder.specialRole)
-			.forEach((folder) => {
-				const existing = folder.envelopeLists[listId] || []
+		unifiedAccount.mailboxes
+			.map((mbId) => state.mailboxes[mbId])
+			.filter((mb) => mb.specialRole && mb.specialRole === mailbox.specialRole)
+			.forEach((mailbox) => {
+				const existing = mailbox.envelopeLists[listId] || []
 				Vue.set(
-					folder.envelopeLists,
+					mailbox.envelopeLists,
 					listId,
-					sortedUniqByDateInt(orderByDateInt(existing.concat([envelope.uuid])))
+					sortedUniqByDateInt(orderByDateInt(existing.concat([envelope.databaseId])))
 				)
 			})
 	},
@@ -155,82 +161,56 @@ export default {
 	flagEnvelope(state, { envelope, flag, value }) {
 		envelope.flags[flag] = value
 	},
-	removeEnvelope(state, { accountId, folderId, uid }) {
-		const folder = state.folders[normalizedFolderId(accountId, folderId)]
-		for (const listId in folder.envelopeLists) {
-			if (!Object.hasOwnProperty.call(folder.envelopeLists, listId)) {
+	removeEnvelope(state, { id }) {
+		const envelope = state.envelopes[id]
+		if (!envelope) {
+			console.warn('envelope ' + id + ' is unknown, can\'t remove it')
+			return
+		}
+		const mailbox = state.mailboxes[envelope.mailboxId]
+		for (const listId in mailbox.envelopeLists) {
+			if (!Object.hasOwnProperty.call(mailbox.envelopeLists, listId)) {
 				continue
 			}
-			const list = folder.envelopeLists[listId]
-			const idx = list.indexOf(normalizedMessageId(accountId, folderId, uid))
+			const list = mailbox.envelopeLists[listId]
+			const idx = list.indexOf(id)
 			if (idx < 0) {
 				continue
 			}
-			console.debug('envelope removed from mailbox', accountId, folder.id, uid, listId)
+			console.debug('envelope ' + id + ' removed from mailbox list ' + listId)
 			list.splice(idx, 1)
 		}
 
-		state.accounts[UNIFIED_ACCOUNT_ID].folders
-			.map((fId) => state.folders[fId])
-			.filter((f) => f.specialRole && f.specialRole === folder.specialRole)
-			.forEach((folder) => {
-				for (const listId in folder.envelopeLists) {
-					if (!Object.hasOwnProperty.call(folder.envelopeLists, listId)) {
+		state.accounts[UNIFIED_ACCOUNT_ID].mailboxes
+			.map((mailboxId) => state.mailboxes[mailboxId])
+			.filter((mb) => mb.specialRole && mb.specialRole === mailbox.specialRole)
+			.forEach((mailbox) => {
+				for (const listId in mailbox.envelopeLists) {
+					if (!Object.hasOwnProperty.call(mailbox.envelopeLists, listId)) {
 						continue
 					}
-					const list = folder.envelopeLists[listId]
-					const idx = list.indexOf(normalizedMessageId(accountId, folderId, uid))
+					const list = mailbox.envelopeLists[listId]
+					const idx = list.indexOf(id)
 					if (idx < 0) {
 						console.warn(
 							'envelope does not exist in unified mailbox',
-							accountId,
-							folder.id,
-							uid,
+							mailbox.databaseId,
+							id,
 							listId,
 							list
 						)
 						continue
 					}
-					console.debug('envelope removed from unified mailbox', accountId, folder.id, uid, listId)
+					console.debug('envelope removed from unified mailbox', mailbox.databaseId, id)
 					list.splice(idx, 1)
 				}
 			})
 	},
-	addMessage(state, { accountId, folderId, message }) {
-		const uuid = normalizedMessageId(accountId, folderId, message.uid)
-		message.accountId = accountId
-		message.folderId = folderId
-		message.uuid = uuid
-		Vue.set(state.messages, uuid, message)
+	addMessage(state, { message }) {
+		Vue.set(state.messages, message.databaseId, message)
 	},
-	updateDraft(state, { draft, data, newUid }) {
-		// Update draft's UID
-		const oldUid = draft.uid
-		const uid = normalizedMessageId(draft.accountId, draft.folderId, newUid)
-		console.debug('saving draft as UID ' + uid)
-		draft.uid = uid
-
-		// TODO: strategy to keep the full draft object in sync, not just the visible
-		//       changes
-		draft.subject = data.subject
-
-		// Update ref in folder's envelope list
-		const envs = state.folders[normalizedFolderId(draft.accountId, draft.folderId)].envelopes
-		const idx = envs.indexOf(oldUid)
-		if (idx < 0) {
-			console.warn('not replacing draft ' + oldUid + ' in envelope list because it did not exist')
-		} else {
-			envs[idx] = uid
-		}
-
-		// Move message/envelope objects to new keys
-		Vue.delete(state.envelopes, oldUid)
-		Vue.delete(state.messages, oldUid)
-		Vue.set(state.envelopes, uid, draft)
-		Vue.set(state.messages, uid, draft)
-	},
-	removeMessage(state, { accountId, folderId, uid }) {
-		Vue.delete(state.messages, normalizedMessageId(accountId, folderId, uid))
+	removeMessage(state, { id }) {
+		Vue.delete(state.messages, id)
 	},
 	createAlias(state, { account, alias }) {
 		account.aliases.push(alias)

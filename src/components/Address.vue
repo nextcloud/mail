@@ -28,9 +28,8 @@ export default {
 			return {
 				name: 'message',
 				params: {
-					accountId: this.$route.params.accountId,
-					folderId: this.$route.params.folderId,
-					messageUuid: 'new',
+					mailboxId: this.$route.params.mailboxId,
+					threadId: 'new',
 				},
 				query: {
 					to: this.email,

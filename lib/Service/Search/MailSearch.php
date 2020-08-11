@@ -75,32 +75,26 @@ class MailSearch implements IMailSearch {
 		$this->logger = $logger;
 	}
 
-	public function findMessage(Account $account, string $mailboxName, int $uid): Message {
-		try {
-			$mailbox = $this->mailboxMapper->find($account, $mailboxName);
-		} catch (DoesNotExistException $e) {
-			throw new ServiceException('Mailbox does not exist', 0, $e);
-		}
-
-		$messages = $this->previewEnhancer->process(
+	public function findMessage(Account $account,
+								Mailbox $mailbox,
+								Message $message): Message {
+		$processed = $this->previewEnhancer->process(
 			$account,
 			$mailbox,
-			$this->messageMapper->findByUids(
-				$mailbox,
-				[$uid]
-			)
+			[$message]
 		);
-		if (empty($messages)) {
+		if (empty($processed)) {
 			throw new DoesNotExistException("Message does not exist");
 		}
-		return $messages[0];
+		return $processed[0];
 	}
 
 	/**
 	 * @param Account $account
-	 * @param string $mailboxName
+	 * @param Mailbox $mailbox
 	 * @param string|null $filter
 	 * @param int|null $cursor
+	 * @param int|null $limit
 	 *
 	 * @return Message[]
 	 *
@@ -108,16 +102,10 @@ class MailSearch implements IMailSearch {
 	 * @throws ServiceException
 	 */
 	public function findMessages(Account $account,
-								 string $mailboxName,
+								 Mailbox $mailbox,
 								 ?string $filter,
 								 ?int $cursor,
 								 ?int $limit): array {
-		try {
-			$mailbox = $this->mailboxMapper->find($account, $mailboxName);
-		} catch (DoesNotExistException $e) {
-			throw new ServiceException('Mailbox does not exist', 0, $e);
-		}
-
 		if ($mailbox->hasLocks()) {
 			throw MailboxLockedException::from($mailbox);
 		}
@@ -141,9 +129,8 @@ class MailSearch implements IMailSearch {
 		return $this->previewEnhancer->process(
 			$account,
 			$mailbox,
-			$this->messageMapper->findByUids(
-				$mailbox,
-				$this->getUids($account, $mailbox, $query, $limit)
+			$this->messageMapper->findByIds(
+				$this->getIds($account, $mailbox, $query, $limit)
 			)
 		);
 	}
@@ -153,9 +140,9 @@ class MailSearch implements IMailSearch {
 	 *
 	 * @throws ServiceException
 	 */
-	private function getUids(Account $account, Mailbox $mailbox, SearchQuery $query, ?int $limit): array {
+	private function getIds(Account $account, Mailbox $mailbox, SearchQuery $query, ?int $limit): array {
 		if (empty($query->getTextTokens())) {
-			return $this->messageMapper->findUidsByQuery($mailbox, $query, $limit);
+			return $this->messageMapper->findIdsByQuery($mailbox, $query, $limit);
 		}
 
 		$fromImap = $this->imapSearchProvider->findMatches(
@@ -163,6 +150,6 @@ class MailSearch implements IMailSearch {
 			$mailbox,
 			$query
 		);
-		return $this->messageMapper->findUidsByQuery($mailbox, $query, $limit, $fromImap);
+		return $this->messageMapper->findIdsByQuery($mailbox, $query, $limit, $fromImap);
 	}
 }

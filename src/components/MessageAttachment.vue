@@ -57,7 +57,6 @@ import { translate as t } from '@nextcloud/l10n'
 import { getFilePickerBuilder } from '@nextcloud/dialogs'
 import PopoverMenu from '@nextcloud/vue/dist/Components/PopoverMenu'
 
-import { parseUuid } from '../util/EnvelopeUidParser'
 import Logger from '../logger'
 
 import { downloadAttachment, saveAttachmentToFiles } from '../service/AttachmentService'
@@ -140,10 +139,10 @@ export default {
 			return formatFileSize(size)
 		},
 		saveToCloud() {
-			const saveAttachment = (accountId, folderId, messageId, attachmentId) => (directory) => {
-				return saveAttachmentToFiles(accountId, folderId, messageId, attachmentId, directory)
+			const saveAttachment = (id, attachmentId) => (directory) => {
+				return saveAttachmentToFiles(id, attachmentId, directory)
 			}
-			const { accountId, folderId, uid } = parseUuid(this.$route.params.messageUuid)
+			const id = this.$route.params.threadId
 			const picker = getFilePickerBuilder(t('mail', 'Choose a folder to store the attachment in'))
 				.setMultiSelect(false)
 				.addMimeTypeFilter('httpd/unix-directory')
@@ -157,7 +156,7 @@ export default {
 					this.savingToCloud = true
 					return dest
 				})
-				.then(saveAttachment(accountId, folderId, uid, this.id))
+				.then(saveAttachment(id, this.id))
 				.then(() => Logger.info('saved'))
 				.catch((e) => Logger.error('not saved', { error: e }))
 				.then(() => (this.savingToCloud = false))

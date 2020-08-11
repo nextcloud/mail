@@ -29,6 +29,7 @@ use ChristophWurst\Nextcloud\Testing\TestCase;
 use OCA\Mail\Account;
 use OCA\Mail\Db\Mailbox;
 use OCA\Mail\Db\MailboxMapper;
+use OCA\Mail\Db\Message;
 use OCA\Mail\Events\SaveDraftEvent;
 use OCA\Mail\IMAP\IMAPClientFactory;
 use OCA\Mail\IMAP\MailboxSync;
@@ -85,10 +86,12 @@ class DraftMailboxCreatorListenerTest extends TestCase {
 		$account = $this->createMock(Account::class);
 		/** @var NewMessageData|MockObject $newMessageData */
 		$newMessageData = $this->createMock(NewMessageData::class);
+		$draft = new Message();
+		$draft->setUid(123);
 		$event = new SaveDraftEvent(
 			$account,
 			$newMessageData,
-			123
+			$draft
 		);
 		/** @var \Horde_Imap_Client_Socket|MockObject $client */
 		$client = $this->createMock(\Horde_Imap_Client_Socket::class);
@@ -113,10 +116,12 @@ class DraftMailboxCreatorListenerTest extends TestCase {
 		$account = $this->createMock(Account::class);
 		/** @var NewMessageData|MockObject $newMessageData */
 		$newMessageData = $this->createMock(NewMessageData::class);
+		$draft = new Message();
+		$draft->setUid(123);
 		$event = new SaveDraftEvent(
 			$account,
 			$newMessageData,
-			123
+			$draft
 		);
 		/** @var \Horde_Imap_Client_Socket|MockObject $client */
 		$client = $this->createMock(\Horde_Imap_Client_Socket::class);

@@ -173,7 +173,7 @@ class PageControllerTest extends TestCase {
 					'a11',
 					'a12',
 				],
-				'folders' => [
+				'mailboxes' => [
 					[
 						'id' => 'inbox',
 					],
@@ -185,7 +185,7 @@ class PageControllerTest extends TestCase {
 					'a21',
 					'a22',
 				],
-				'folders' => [],
+				'mailboxes' => [],
 			],
 		];
 

@@ -30,8 +30,10 @@ declare(strict_types=1);
 namespace OCA\Mail\Controller;
 
 use Exception;
+use Horde_Imap_Client;
 use OCA\Mail\Contracts\IMailManager;
 use OCA\Mail\Contracts\IMailTransmission;
+use OCA\Mail\Db\Mailbox;
 use OCA\Mail\Exception\ClientException;
 use OCA\Mail\Exception\ServiceException;
 use OCA\Mail\Http\JsonResponse as MailJsonResponse;
@@ -41,6 +43,7 @@ use OCA\Mail\Service\AccountService;
 use OCA\Mail\Service\AliasesService;
 use OCA\Mail\Service\GroupsIntegration;
 use OCA\Mail\Service\SetupService;
+use OCA\Mail\Service\Sync\SyncService;
 use OCP\AppFramework\Controller;
 use OCP\AppFramework\Http;
 use OCP\AppFramework\Http\JSONResponse;
@@ -77,17 +80,37 @@ class AccountsController extends Controller {
 	/** @var IMailManager */
 	private $mailManager;
 
+	/** @var SyncService */
+	private $syncService;
+
+	/**
+	 * AccountsController constructor.
+	 *
+	 * @param string $appName
+	 * @param IRequest $request
+	 * @param AccountService $accountService
+	 * @param GroupsIntegration $groupsIntegration
+	 * @param $UserId
+	 * @param ILogger $logger
+	 * @param IL10N $l10n
+	 * @param AliasesService $aliasesService
+	 * @param IMailTransmission $mailTransmission
+	 * @param SetupService $setup
+	 * @param IMailManager $mailManager
+	 * @param SyncService $syncService
+	 */
 	public function __construct(string $appName,
-								IRequest $request,
-								AccountService $accountService,
-								GroupsIntegration $groupsIntegration,
-								$UserId,
-								ILogger $logger,
-								IL10N $l10n,
-								AliasesService $aliasesService,
-								IMailTransmission $mailTransmission,
-								SetupService $setup,
-								IMailManager $mailManager
+								   IRequest $request,
+								   AccountService $accountService,
+								   GroupsIntegration $groupsIntegration,
+								   $UserId,
+								   ILogger $logger,
+								   IL10N $l10n,
+								   AliasesService $aliasesService,
+								   IMailTransmission $mailTransmission,
+								   SetupService $setup,
+								   IMailManager $mailManager,
+								   SyncService $syncService
 	) {
 		parent::__construct($appName, $request);
 		$this->accountService = $accountService;
@@ -99,6 +122,7 @@ class AccountsController extends Controller {
 		$this->mailTransmission = $mailTransmission;
 		$this->setup = $setup;
 		$this->mailManager = $mailManager;
+		$this->syncService = $syncService;
 	}
 
 	/**
@@ -123,13 +147,13 @@ class AccountsController extends Controller {
 	 * @NoAdminRequired
 	 * @TrapError
 	 *
-	 * @param int $accountId
+	 * @param int $id
 	 *
 	 * @return JSONResponse
 	 * @throws ClientException
 	 */
-	public function show($accountId): JSONResponse {
-		return new JSONResponse($this->accountService->find($this->currentUserId, $accountId));
+	public function show(int $id): JSONResponse {
+		return new JSONResponse($this->accountService->find($this->currentUserId, $id));
 	}
 
 	/**
@@ -198,7 +222,7 @@ class AccountsController extends Controller {
 	 * @NoAdminRequired
 	 * @TrapError
 	 *
-	 * @param int $accountId
+	 * @param int $id
 	 * @param string|null $editorMode
 	 * @param int|null $order
 	 * @param bool|null $showSubscribedOnly
@@ -207,11 +231,11 @@ class AccountsController extends Controller {
 	 *
 	 * @throws ClientException
 	 */
-	public function patchAccount(int $accountId,
+	public function patchAccount(int $id,
 								 string $editorMode = null,
 								 int $order = null,
 								 bool $showSubscribedOnly = null): JSONResponse {
-		$account = $this->accountService->find($this->currentUserId, $accountId);
+		$account = $this->accountService->find($this->currentUserId, $id);
 
 		if ($account === null) {
 			return new JSONResponse(null, Http::STATUS_FORBIDDEN);
@@ -236,7 +260,7 @@ class AccountsController extends Controller {
 	 * @NoAdminRequired
 	 * @TrapError
 	 *
-	 * @param int $accountId
+	 * @param int $id
 	 * @param string|null $signature
 	 *
 	 * @return JSONResponse
@@ -244,8 +268,8 @@ class AccountsController extends Controller {
 	 * @throws ClientException
 	 * @throws ServiceException
 	 */
-	public function updateSignature(int $accountId, string $signature = null): JSONResponse {
-		$this->accountService->updateSignature($accountId, $this->currentUserId, $signature);
+	public function updateSignature(int $id, string $signature = null): JSONResponse {
+		$this->accountService->updateSignature($id, $this->currentUserId, $signature);
 		return new JSONResponse();
 	}
 
@@ -259,7 +283,7 @@ class AccountsController extends Controller {
 	 *
 	 * @throws ClientException
 	 */
-	public function destroy($id): JSONResponse {
+	public function destroy(int $id): JSONResponse {
 		$this->accountService->delete($this->currentUserId, $id);
 		return new JSONResponse();
 	}
@@ -315,13 +339,13 @@ class AccountsController extends Controller {
 	 * @NoAdminRequired
 	 * @TrapError
 	 *
-	 * @param int $accountId
+	 * @param int $id
 	 * @param string $subject
 	 * @param string $body
 	 * @param string $to
 	 * @param string $cc
 	 * @param string $bcc
-	 * @param int|null $draftUID
+	 * @param int|null $draftId
 	 * @param string|null $folderId
 	 * @param int|null $messageId
 	 * @param mixed $attachments
@@ -332,19 +356,19 @@ class AccountsController extends Controller {
 	 * @throws ClientException
 	 * @throws ServiceException
 	 */
-	public function send(int $accountId,
+	public function send(int $id,
 						 string $subject,
 						 string $body,
 						 string $to,
 						 string $cc,
 						 string $bcc,
 						 bool $isHtml = true,
-						 int $draftUID = null,
+						 int $draftId = null,
 						 string $folderId = null,
 						 int $messageId = null,
 						 array $attachments = [],
 						 int $aliasId = null): JSONResponse {
-		$account = $this->accountService->find($this->currentUserId, $accountId);
+		$account = $this->accountService->find($this->currentUserId, $id);
 		$alias = $aliasId ? $this->aliasesService->find($aliasId, $this->currentUserId) : null;
 
 		$expandedTo = $this->groupsIntegration->expand($to);
@@ -357,8 +381,16 @@ class AccountsController extends Controller {
 			$repliedMessageData = new RepliedMessageData($account, base64_decode($folderId), $messageId);
 		}
 
+		$draft = null;
+		if ($draftId !== null) {
+			try {
+				$draft = $this->mailManager->getMessage($this->currentUserId, $draftId);
+			} catch (ClientException $e) {
+				$this->logger->info("Draft " . $draftId . " could not be loaded: " . $e->getMessage());
+			}
+		}
 		try {
-			$this->mailTransmission->sendMessage($messageData, $repliedMessageData, $alias, $draftUID);
+			$this->mailTransmission->sendMessage($messageData, $repliedMessageData, $alias, $draft);
 			return new JSONResponse();
 		} catch (ServiceException $ex) {
 			$this->logger->error('Sending mail failed: ' . $ex->getMessage());
@@ -370,7 +402,7 @@ class AccountsController extends Controller {
 	 * @NoAdminRequired
 	 * @TrapError
 	 *
-	 * @param int $accountId
+	 * @param int $id
 	 * @param string $subject
 	 * @param string $body
 	 * @param string $to
@@ -382,27 +414,43 @@ class AccountsController extends Controller {
 	 *
 	 * @throws ClientException
 	 */
-	public function draft(int $accountId,
-						  string $subject = null,
+	public function draft(int $id,
+						  string $subject,
 						  string $body,
 						  string $to,
 						  string $cc,
 						  string $bcc,
 						  bool $isHtml = true,
-						  int $draftUID = null): JSONResponse {
-		if ($draftUID === null) {
-			$this->logger->info("Saving a new draft in account <$accountId>");
+						  int $draftId = null): JSONResponse {
+		if ($draftId === null) {
+			$this->logger->info("Saving a new draft in account <$id>");
 		} else {
-			$this->logger->info("Updating draft <$draftUID> in account <$accountId>");
+			$this->logger->info("Updating draft <$draftId> in account <$id>");
 		}
 
-		$account = $this->accountService->find($this->currentUserId, $accountId);
+		$account = $this->accountService->find($this->currentUserId, $id);
+		$previousDraft = null;
+		if ($draftId !== null) {
+			try {
+				$previousDraft = $this->mailManager->getMessage($this->currentUserId, $draftId);
+			} catch (ClientException $e) {
+				$this->logger->info("Draft " . $draftId . " could not be loaded: " . $e->getMessage());
+			}
+		}
 		$messageData = NewMessageData::fromRequest($account, $to, $cc, $bcc, $subject, $body, [], $isHtml);
 
 		try {
-			$newUID = $this->mailTransmission->saveDraft($messageData, $draftUID);
+			/** @var Mailbox $draftsMailbox */
+			[, $draftsMailbox, $newUID] = $this->mailTransmission->saveDraft($messageData, $previousDraft);
+			$this->syncService->syncMailbox(
+				$account,
+				$draftsMailbox,
+				Horde_Imap_Client::SYNC_NEWMSGS,
+				[],
+				false
+			);
 			return new JSONResponse([
-				'uid' => $newUID,
+				'id' => $this->mailManager->getMessageIdForUid($draftsMailbox, $newUID)
 			]);
 		} catch (ServiceException $ex) {
 			$this->logger->error('Saving draft failed: ' . $ex->getMessage());
@@ -413,13 +461,13 @@ class AccountsController extends Controller {
 	/**
 	 * @NoAdminRequired
 	 *
-	 * @param int $accountId
+	 * @param int $id
 	 *
 	 * @return JSONResponse
 	 * @throws ClientException
 	 */
-	public function getQuota(int $accountId): JSONResponse {
-		$account = $this->accountService->find($this->currentUserId, $accountId);
+	public function getQuota(int $id): JSONResponse {
+		$account = $this->accountService->find($this->currentUserId, $id);
 
 		$quota = $this->mailManager->getQuota($account);
 		if ($quota === null) {

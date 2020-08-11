@@ -47,12 +47,12 @@ describe('mailboxHierarchyBuilder', () => {
 			{
 				id: btoa('INBOX'),
 				delimiter: '.',
-				folders: [],
+				mailboxes: [],
 			},
 			{
 				id: btoa('Sent'),
 				delimiter: '.',
-				folders: [],
+				mailboxes: [],
 			},
 		])
 	})
@@ -74,11 +74,11 @@ describe('mailboxHierarchyBuilder', () => {
 			{
 				id: btoa('Archive'),
 				delimiter: '.',
-				folders: [
+				mailboxes: [
 					{
 						id: btoa('Archive.Sent'),
 						delimiter: '.',
-						folders: [],
+						mailboxes: [],
 					},
 				],
 			},
@@ -106,23 +106,23 @@ describe('mailboxHierarchyBuilder', () => {
 			{
 				id: btoa('Archive'),
 				delimiter: '.',
-				folders: [
+				mailboxes: [
 					{
 						id: btoa('Archive.Sent'),
 						delimiter: '.',
-						folders: [],
+						mailboxes: [],
 					},
 					{
 						id: btoa('Archive.Sent.Old'),
 						delimiter: '.',
-						folders: [],
+						mailboxes: [],
 					},
 				],
 			},
 		])
 	})
 
-	it('does not use the flagged inbox as subfolder of inbox', () => {
+	it('does not use the flagged inbox as submailbox of inbox', () => {
 		const mb1 = {
 			id: btoa('INBOX'),
 			delimiter: '/',
@@ -143,17 +143,17 @@ describe('mailboxHierarchyBuilder', () => {
 			{
 				id: btoa('INBOX'),
 				delimiter: '/',
-				folders: [],
+				mailboxes: [],
 			},
 			{
 				id: btoa('INBOX/FLAGGED'),
 				delimiter: '/',
-				folders: [],
+				mailboxes: [],
 			},
 			{
 				id: btoa('Archive'),
 				delimiter: '/',
-				folders: [],
+				mailboxes: [],
 			},
 		])
 	})
@@ -175,11 +175,11 @@ describe('mailboxHierarchyBuilder', () => {
 			{
 				id: btoa('INBOX.Archive'),
 				delimiter: '.',
-				folders: [
+				mailboxes: [
 					{
 						id: btoa('INBOX.Archive.Sent'),
 						delimiter: '.',
-						folders: [],
+						mailboxes: [],
 					},
 				],
 			},

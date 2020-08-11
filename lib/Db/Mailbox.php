@@ -121,12 +121,14 @@ class Mailbox extends Entity implements JsonSerializable {
 		return [
 			'databaseId' => $this->getId(),
 			'id' => base64_encode($this->getName()),
+			'name' => $this->getName(),
 			'accountId' => $this->accountId,
 			'displayName' => $this->getName(),
 			'attributes' => json_decode($this->attributes ?? '[]', true) ?? [],
 			'delimiter' => $this->delimiter,
 			'specialUse' => $specialUse,
 			'specialRole' => $specialUse[0] ?? 0,
+			'mailboxes' => [],
 		];
 	}
 }

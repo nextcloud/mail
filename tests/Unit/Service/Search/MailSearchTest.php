@@ -89,14 +89,11 @@ class MailSearchTest extends TestCase {
 		$mailbox = new Mailbox();
 		$mailbox->setSyncNewToken('abc');
 		$mailbox->setSyncChangedToken('def');
-		$this->mailboxMapper->expects($this->once())
-			->method('find')
-			->willReturn($mailbox);
 		$this->expectException(MailboxNotCachedException::class);
 
 		$this->search->findMessages(
 			$account,
-			'INBOX',
+			$mailbox,
 			null,
 			null,
 			null
@@ -107,14 +104,11 @@ class MailSearchTest extends TestCase {
 		$account = $this->createMock(Account::class);
 		$mailbox = new Mailbox();
 		$mailbox->setSyncNewLock(123);
-		$this->mailboxMapper->expects($this->once())
-			->method('find')
-			->willReturn($mailbox);
 		$this->expectException(MailboxLockedException::class);
 
 		$this->search->findMessages(
 			$account,
-			'INBOX',
+			$mailbox,
 			null,
 			null,
 			null
@@ -127,13 +121,10 @@ class MailSearchTest extends TestCase {
 		$mailbox->setSyncNewToken('abc');
 		$mailbox->setSyncChangedToken('def');
 		$mailbox->setSyncVanishedToken('ghi');
-		$this->mailboxMapper->expects($this->once())
-			->method('find')
-			->willReturn($mailbox);
 
 		$messages = $this->search->findMessages(
 			$account,
-			'INBOX',
+			$mailbox,
 			null,
 			null,
 			null
@@ -148,9 +139,6 @@ class MailSearchTest extends TestCase {
 		$mailbox->setSyncNewToken('abc');
 		$mailbox->setSyncChangedToken('def');
 		$mailbox->setSyncVanishedToken('ghi');
-		$this->mailboxMapper->expects($this->once())
-			->method('find')
-			->willReturn($mailbox);
 		$query = new SearchQuery();
 		$query->addFlag('seen');
 		$this->filterStringParser->expects($this->once())
@@ -158,11 +146,7 @@ class MailSearchTest extends TestCase {
 			->with('my search')
 			->willReturn($query);
 		$this->messageMapper->expects($this->once())
-			->method('findUidsByQuery')
-			->with($mailbox, $query, null)
-			->willReturn([1, 2]);
-		$this->messageMapper->expects($this->once())
-			->method('findByUids')
+			->method('findByIds')
 			->willReturn([
 				$this->createMock(Message::class),
 				$this->createMock(Message::class),
@@ -175,7 +159,7 @@ class MailSearchTest extends TestCase {
 
 		$messages = $this->search->findMessages(
 			$account,
-			'INBOX',
+			$mailbox,
 			'my search',
 			null,
 			null
@@ -190,9 +174,6 @@ class MailSearchTest extends TestCase {
 		$mailbox->setSyncNewToken('abc');
 		$mailbox->setSyncChangedToken('def');
 		$mailbox->setSyncVanishedToken('ghi');
-		$this->mailboxMapper->expects($this->once())
-			->method('find')
-			->willReturn($mailbox);
 		$query = new SearchQuery();
 		$query->addTextToken('my');
 		$query->addTextToken('search');
@@ -205,11 +186,7 @@ class MailSearchTest extends TestCase {
 			->with($account, $mailbox, $query)
 			->willReturn([2, 3]);
 		$this->messageMapper->expects($this->once())
-			->method('findUidsByQuery')
-			->with($mailbox, $query, null, [2, 3])
-			->willReturn([1, 2]);
-		$this->messageMapper->expects($this->once())
-			->method('findByUids')
+			->method('findByIds')
 			->willReturn([
 				$this->createMock(Message::class),
 				$this->createMock(Message::class),
@@ -220,7 +197,7 @@ class MailSearchTest extends TestCase {
 
 		$messages = $this->search->findMessages(
 			$account,
-			'INBOX',
+			$mailbox,
 			'my search',
 			null,
 			null

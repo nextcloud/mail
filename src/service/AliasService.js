@@ -2,12 +2,13 @@ import { generateUrl } from '@nextcloud/router'
 import axios from '@nextcloud/axios'
 
 export const createAlias = async(account, data) => {
-	const url = generateUrl('/apps/mail/api/accounts/{id}/aliases', {
-		id: account.accountId,
-	})
+	const url = generateUrl('/apps/mail/api/aliases')
 
 	return axios
-		.post(url, data)
+		.post(url, {
+			accountId: account.id,
+			...data,
+		})
 		.then((resp) => resp.data)
 		.catch((e) => {
 			if (e.response && e.response.status === 400) {

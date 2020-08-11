@@ -30,6 +30,7 @@ use Horde_Imap_Client_Exception;
 use OCA\Mail\Account;
 use OCA\Mail\Db\Mailbox;
 use OCA\Mail\Db\MailboxMapper;
+use OCA\Mail\Db\Message;
 use OCA\Mail\Events\DraftSavedEvent;
 use OCA\Mail\Events\MessageSentEvent;
 use OCA\Mail\IMAP\IMAPClientFactory;
@@ -70,17 +71,18 @@ class DeleteDraftListener implements IEventListener {
 	}
 
 	public function handle(Event $event): void {
-		if ($event instanceof DraftSavedEvent && $event->getDraftUid() !== null) {
-			$this->deleteDraft($event->getAccount(), $event->getDraftUid());
-		} elseif ($event instanceof MessageSentEvent && $event->getDraftUid() !== null) {
-			$this->deleteDraft($event->getAccount(), $event->getDraftUid());
+		if ($event instanceof DraftSavedEvent && $event->getDraft() !== null) {
+			$this->deleteDraft($event->getAccount(), $event->getDraft());
+		} elseif ($event instanceof MessageSentEvent && $event->getDraft() !== null) {
+			$this->deleteDraft($event->getAccount(), $event->getDraft());
 		}
 	}
 
 	/**
-	 * @param DraftSavedEvent $event
+	 * @param Account $account
+	 * @param Message $draft
 	 */
-	private function deleteDraft(Account $account, int $draftUid): void {
+	private function deleteDraft(Account $account, Message $draft): void {
 		$client = $this->imapClientFactory->getClient($account);
 		$draftsMailbox = $this->getDraftsMailbox($account);
 
@@ -88,7 +90,7 @@ class DeleteDraftListener implements IEventListener {
 			$this->messageMapper->addFlag(
 				$client,
 				$draftsMailbox,
-				$draftUid,
+				$draft->getUid(), // TODO: the UID could be from another mailbox
 				Horde_Imap_Client::FLAG_DELETED
 			);
 		} catch (Horde_Imap_Client_Exception $e) {

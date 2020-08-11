@@ -48,6 +48,7 @@ class MailAccountTest extends TestCase {
 		$a->setOrder(13);
 
 		$this->assertEquals([
+			'id' => 12345,
 			'accountId' => 12345,
 			'name' => 'Peter Parker',
 			'emailAddress' => 'peter.parker@marvel.com',
@@ -69,6 +70,7 @@ class MailAccountTest extends TestCase {
 
 	public function testMailAccountConstruct() {
 		$expected = [
+			'id' => 12345,
 			'accountId' => 12345,
 			'accountName' => 'Peter Parker',
 			'emailAddress' => 'peter.parker@marvel.com',

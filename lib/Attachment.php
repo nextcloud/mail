@@ -32,13 +32,13 @@ class Attachment {
 	/**
 	 * @param \Horde_Imap_Client_Socket $conn
 	 * @param \Horde_Imap_Client_Mailbox $mailBox
-	 * @param int $messageId
+	 * @param int $messageUid
 	 * @param string $attachmentId
 	 */
-	public function __construct($conn, $mailBox, $messageId, $attachmentId) {
+	public function __construct($conn, $mailBox, $messageUid, $attachmentId) {
 		$this->conn = $conn;
 		$this->mailBox = $mailBox;
-		$this->messageId = $messageId;
+		$this->messageUid = $messageUid;
 		$this->attachmentId = $attachmentId;
 
 		$this->load();
@@ -53,7 +53,7 @@ class Attachment {
 	 * @var \Horde_Imap_Client_Mailbox
 	 */
 	private $mailBox;
-	private $messageId;
+	private $messageUid;
 	private $attachmentId;
 
 	/**
@@ -67,13 +67,13 @@ class Attachment {
 		$fetch_query->mimeHeader($this->attachmentId);
 
 		// $list is an array of Horde_Imap_Client_Data_Fetch objects.
-		$ids = new \Horde_Imap_Client_Ids($this->messageId);
+		$ids = new \Horde_Imap_Client_Ids($this->messageUid);
 		$headers = $this->conn->fetch($this->mailBox, $fetch_query, ['ids' => $ids]);
 		/** @var $fetch Horde_Imap_Client_Data_Fetch */
-		if (!isset($headers[$this->messageId])) {
+		if (!isset($headers[$this->messageUid])) {
 			throw new DoesNotExistException('Unable to load the attachment.');
 		}
-		$fetch = $headers[$this->messageId];
+		$fetch = $headers[$this->messageUid];
 		/** @var \Horde_Mime_Headers $mimeHeaders */
 		$mimeHeaders = $fetch->getMimeHeader($this->attachmentId, Horde_Imap_Client_Data_Fetch::HEADER_PARSE);
 

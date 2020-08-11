@@ -89,25 +89,25 @@ class AccountService {
 
 	/**
 	 * @param string $uid
-	 * @param int $accountId
+	 * @param int $id
 	 *
 	 * @return Account
 	 * @throws ClientException
 	 */
-	public function find(string $uid, int $accountId): Account {
+	public function find(string $uid, int $id): Account {
 		if ($this->accounts !== null) {
 			foreach ($this->accounts as $account) {
-				if ($account->getId() === $accountId) {
+				if ($account->getId() === $id) {
 					return $account;
 				}
 			}
-			throw new ClientException("Account $accountId does not exist or you don\'t have permission to access it");
+			throw new ClientException("Account $id does not exist or you don\'t have permission to access it");
 		}
 
 		try {
-			return new Account($this->mapper->find($uid, $accountId));
+			return new Account($this->mapper->find($uid, $id));
 		} catch (DoesNotExistException $e) {
-			throw new ClientException("Account $accountId does not exist or you don\'t have permission to access it");
+			throw new ClientException("Account $id does not exist or you don\'t have permission to access it");
 		}
 	}
 

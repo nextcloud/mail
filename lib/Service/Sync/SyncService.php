@@ -38,10 +38,8 @@ use OCA\Mail\IMAP\PreviewEnhancer;
 use OCA\Mail\IMAP\Sync\Response;
 use OCA\Mail\Service\Search\FilterStringParser;
 use OCA\Mail\Service\Search\SearchQuery;
-use OCP\AppFramework\Db\DoesNotExistException;
 use function array_diff;
 use function array_map;
-use function end;
 
 class SyncService {
 
@@ -74,28 +72,24 @@ class SyncService {
 
 	/**
 	 * @param Account $account
-	 * @param string $mailboxId
+	 * @param Mailbox $mailbox
 	 *
 	 * @throws MailboxLockedException
 	 * @throws ServiceException
 	 */
 	public function clearCache(Account $account,
-							   string $mailboxId): void {
-		try {
-			$mailbox = $this->mailboxMapper->find($account, $mailboxId);
-		} catch (DoesNotExistException $e) {
-			throw new ServiceException('Mailbox to sync does not exist in the database', 0, $e);
-		}
-
+							   Mailbox $mailbox): void {
 		$this->synchronizer->clearCache($account, $mailbox);
 	}
 
 	/**
 	 * @param Account $account
-	 * @param string $mailboxId
+	 * @param Mailbox $mailbox
 	 * @param int $criteria
-	 * @param array $knownUids
+	 * @param int[] $knownIds
 	 * @param bool $partialOnly
+	 *
+	 * @param string|null $filter
 	 *
 	 * @return Response
 	 * @throws ClientException
@@ -103,17 +97,11 @@ class SyncService {
 	 * @throws ServiceException
 	 */
 	public function syncMailbox(Account $account,
-								string $mailboxId,
+								Mailbox $mailbox,
 								int $criteria,
-								array $knownUids,
+								array $knownIds,
 								bool $partialOnly,
 								string $filter = null): Response {
-		try {
-			$mailbox = $this->mailboxMapper->find($account, $mailboxId);
-		} catch (DoesNotExistException $e) {
-			throw new ServiceException('Mailbox to sync does not exist in the database', 0, $e);
-		}
-
 		if ($partialOnly && !$mailbox->isCached()) {
 			throw MailboxNotCachedException::from($mailbox);
 		}
@@ -122,52 +110,57 @@ class SyncService {
 			$account,
 			$mailbox,
 			$criteria,
-			$knownUids,
+			$this->messageMapper->findUidsForIds($mailbox, $knownIds),
 			!$partialOnly
 		);
 
 		$query = $filter === null ? null : $this->filterStringParser->parse($filter);
-
-		return $this->getDatabaseSyncChanges($account, $mailbox, $knownUids, $query);
+		return $this->getDatabaseSyncChanges(
+			$account,
+			$mailbox,
+			$knownIds,
+			$query
+		);
 	}
 
 	/**
 	 * @param Account $account
 	 * @param Mailbox $mailbox
-	 * @param array $knownUids
+	 * @param int[] $knownIds
 	 * @param SearchQuery $query
 	 *
 	 * @return Response
 	 * @todo does not work with text token search queries
 	 *
 	 */
-	private function getDatabaseSyncChanges(Account $account, Mailbox $mailbox, array $knownUids, ?SearchQuery $query): Response {
-		if (empty($knownUids)) {
-			$newUids = $this->messageMapper->findAllUids($mailbox);
+	private function getDatabaseSyncChanges(Account $account,
+											Mailbox $mailbox,
+											array $knownIds,
+											?SearchQuery $query): Response {
+		if (empty($knownIds)) {
+			$newIds = $this->messageMapper->findAllIds($mailbox);
 		} else {
-			sort($knownUids, SORT_NUMERIC);
-			$last = end($knownUids);
-			$newUids = $this->messageMapper->findNewUids($mailbox, $last);
+			$newIds = $this->messageMapper->findNewIds($mailbox, $knownIds);
 		}
 
 		if ($query !== null) {
 			// Filter new messages to those that also match the current filter
-			$newUids = $this->messageMapper->findUidsByQuery($mailbox, $query, null, $newUids);
+			$newIds = $this->messageMapper->findIdsByQuery($mailbox, $query, null, $newIds);
 		}
-		$new = $this->messageMapper->findByUids($mailbox, $newUids);
+		$new = $this->messageMapper->findByIds($newIds);
 
 		// TODO: $changed = $this->messageMapper->findChanged($mailbox, $uids);
 		if ($query !== null) {
-			$changedUids = $this->messageMapper->findUidsByQuery($mailbox, $query, null, $knownUids);
+			$changedIds = $this->messageMapper->findIdsByQuery($mailbox, $query, null, $knownIds);
 		} else {
-			$changedUids = $knownUids;
+			$changedIds = $knownIds;
 		}
-		$changed = $this->messageMapper->findByUids($mailbox, $changedUids);
+		$changed = $this->messageMapper->findByIds($changedIds);
 
-		$stillKnownUids = array_map(static function (Message $msg) {
-			return $msg->getUid();
+		$stillKnownIds = array_map(static function (Message $msg) {
+			return $msg->getId();
 		}, $changed);
-		$vanished = array_values(array_diff($knownUids, $stillKnownUids));
+		$vanished = array_values(array_diff($knownIds, $stillKnownIds));
 
 		return new Response(
 			$this->previewEnhancer->process($account, $mailbox, $new),

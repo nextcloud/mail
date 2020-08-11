@@ -364,14 +364,14 @@ class MessageMapper {
 	/**
 	 * @param Horde_Imap_Client_Socket $client
 	 * @param string $mailbox
-	 * @param int $id
+	 * @param int $uid
 	 *
 	 * @return string|null
 	 * @throws ServiceException
 	 */
 	public function getSource(Horde_Imap_Client_Socket $client,
 							  string $mailbox,
-							  int $id): ?string {
+							  int $uid): ?string {
 		$query = new Horde_Imap_Client_Fetch_Query();
 		$query->uid();
 		$query->fullText([
@@ -380,7 +380,7 @@ class MessageMapper {
 
 		try {
 			$result = iterator_to_array($client->fetch($mailbox, $query, [
-				'ids' => new Horde_Imap_Client_Ids($id),
+				'ids' => new Horde_Imap_Client_Ids($uid),
 			]), false);
 		} catch (Horde_Imap_Client_Exception $e) {
 			throw new ServiceException("Could not fetch message source: " . $e->getMessage(), $e->getCode(), $e);
@@ -399,13 +399,13 @@ class MessageMapper {
 
 	public function getHtmlBody(Horde_Imap_Client_Socket $client,
 								string $mailbox,
-								int $id): ?string {
+								int $uid): ?string {
 		$messageQuery = new Horde_Imap_Client_Fetch_Query();
 		$messageQuery->envelope();
 		$messageQuery->structure();
 
 		$result = $client->fetch($mailbox, $messageQuery, [
-			'ids' => new Horde_Imap_Client_Ids([$id]),
+			'ids' => new Horde_Imap_Client_Ids([$uid]),
 		]);
 
 		if (($message = $result->first()) === null) {
@@ -435,7 +435,7 @@ class MessageMapper {
 		}
 
 		$parts = $client->fetch($mailbox, $partsQuery, [
-			'ids' => new Horde_Imap_Client_Ids([$id]),
+			'ids' => new Horde_Imap_Client_Ids([$uid]),
 		]);
 
 		foreach ($parts as $part) {
@@ -456,12 +456,12 @@ class MessageMapper {
 
 	public function getRawAttachments(Horde_Imap_Client_Socket $client,
 									  string $mailbox,
-									  int $id): array {
+									  int $uid): array {
 		$messageQuery = new Horde_Imap_Client_Fetch_Query();
 		$messageQuery->structure();
 
 		$result = $client->fetch($mailbox, $messageQuery, [
-			'ids' => new Horde_Imap_Client_Ids([$id]),
+			'ids' => new Horde_Imap_Client_Ids([$uid]),
 		]);
 
 		if (($structureResult = $result->first()) === null) {
@@ -488,7 +488,7 @@ class MessageMapper {
 		}
 
 		$parts = $client->fetch($mailbox, $partsQuery, [
-			'ids' => new Horde_Imap_Client_Ids([$id]),
+			'ids' => new Horde_Imap_Client_Ids([$uid]),
 		]);
 		if (($messageData = $parts->first()) === null) {
 			throw new DoesNotExistException('Message does not exist');

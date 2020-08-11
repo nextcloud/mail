@@ -39,6 +39,7 @@ use OCA\Mail\Contracts\IAttachmentService;
 use OCA\Mail\Contracts\IMailTransmission;
 use OCA\Mail\Db\Alias;
 use OCA\Mail\Db\MailboxMapper;
+use OCA\Mail\Db\Message;
 use OCA\Mail\Events\DraftSavedEvent;
 use OCA\Mail\Events\MessageSentEvent;
 use OCA\Mail\Events\SaveDraftEvent;
@@ -102,22 +103,10 @@ class MailTransmission implements IMailTransmission {
 		$this->logger = $logger;
 	}
 
-	/**
-	 * Send a new message or reply to an existing one
-	 *
-	 * @param NewMessageData $messageData
-	 * @param RepliedMessageData $replyData
-	 * @param Alias|null $alias
-	 * @param int|null $draftUID
-	 *
-	 * @throws ServiceException
-	 *
-	 * @return void
-	 */
 	public function sendMessage(NewMessageData $messageData,
 								RepliedMessageData $replyData = null,
 								Alias $alias = null,
-								int $draftUID = null) {
+								Message $draft = null) {
 		$account = $messageData->getAccount();
 
 		if ($replyData !== null) {
@@ -178,17 +167,22 @@ class MailTransmission implements IMailTransmission {
 
 		$this->eventDispatcher->dispatch(
 			MessageSentEvent::class,
-			new MessageSentEvent($account, $messageData, $replyData, $draftUID, $message, $mail)
+			new MessageSentEvent($account, $messageData, $replyData, $draft, $message, $mail)
 		);
 	}
 
 	/**
+	 * @param NewMessageData $message
+	 * @param Message|null $previousDraft
+	 *
+	 * @return array
+	 *
 	 * @throws ServiceException
 	 */
-	public function saveDraft(NewMessageData $message, int $draftUID = null): int {
+	public function saveDraft(NewMessageData $message, Message $previousDraft = null): array {
 		$this->eventDispatcher->dispatch(
 			SaveDraftEvent::class,
-			new SaveDraftEvent($message->getAccount(), $message, $draftUID)
+			new SaveDraftEvent($message->getAccount(), $message, $previousDraft)
 		);
 
 		$account = $message->getAccount();
@@ -243,10 +237,10 @@ class MailTransmission implements IMailTransmission {
 
 		$this->eventDispatcher->dispatch(
 			DraftSavedEvent::class,
-			new DraftSavedEvent($account, $message, $draftUID)
+			new DraftSavedEvent($account, $message, $previousDraft)
 		);
 
-		return $newUid;
+		return [$account, $draftsMailbox, $newUid];
 	}
 
 	private function buildReplyMessage(Account $account,

@@ -33,12 +33,12 @@
 				:class="{refreshing: refreshing}" />
 			<Envelope
 				v-for="env in envelopes"
-				:key="env.uuid"
+				:key="env.databaseId"
 				:data="env"
-				:folder="folder"
+				:mailbox="mailbox"
 				:selected="isEnvelopeSelected(envelopes.indexOf(env))"
 				:select-mode="selectMode"
-				@delete="$emit('delete', env.uuid)"
+				@delete="$emit('delete', env.databaseId)"
 				@update:selected="onEnvelopeSelectToggle(env, ...$event)" />
 			<div
 				v-if="loadMoreButton && !loadingMore"
@@ -57,6 +57,7 @@ import Actions from '@nextcloud/vue/dist/Components/Actions'
 import ActionButton from '@nextcloud/vue/dist/Components/ActionButton'
 
 import Envelope from './Envelope'
+import logger from '../logger'
 
 export default {
 	name: 'EnvelopeList',
@@ -70,7 +71,7 @@ export default {
 			type: Object,
 			required: true,
 		},
-		folder: {
+		mailbox: {
 			type: Object,
 			required: true,
 		},
@@ -148,7 +149,7 @@ export default {
 		deleteAllSelected() {
 			this.selection.forEach((envelopeId) => {
 				// Navigate if the message being deleted is the one currently viewed
-				if (this.envelopes[envelopeId].uuid === this.$route.params.messageUuid) {
+				if (this.envelopes[envelopeId].databaseId === this.$route.params.threadId) {
 					let next
 					if (envelopeId === 0) {
 						next = this.envelopes[envelopeId + 1]
@@ -160,14 +161,16 @@ export default {
 						this.$router.push({
 							name: 'message',
 							params: {
-								accountId: this.$route.params.accountId,
-								folderId: this.$route.params.folderId,
-								messageUuid: next.uuid,
+								mailboxId: this.$route.params.mailboxId,
+								threadId: next.databaseId,
 							},
 						})
 					}
 				}
-				this.$store.dispatch('deleteMessage', this.envelopes[envelopeId])
+				logger.info(`deleting message ${this.envelopes[envelopeId].databaseId}`)
+				this.$store.dispatch('deleteMessage', {
+					id: this.envelopes[envelopeId].databaseId,
+				})
 			})
 			this.unselectAll()
 		},

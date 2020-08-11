@@ -31,6 +31,7 @@ use OCA\Mail\Account;
 use OCA\Mail\Contracts\IMailManager;
 use OCA\Mail\Contracts\IMailTransmission;
 use OCA\Mail\Controller\AccountsController;
+use OCA\Mail\Db\Mailbox;
 use OCA\Mail\Exception\ClientException;
 use OCA\Mail\Model\NewMessageData;
 use OCA\Mail\Model\RepliedMessageData;
@@ -39,6 +40,7 @@ use OCA\Mail\Service\AliasesService;
 use OCA\Mail\Service\AutoConfig\AutoConfig;
 use OCA\Mail\Service\SetupService;
 use OCA\Mail\Service\GroupsIntegration;
+use OCA\Mail\Service\Sync\SyncService;
 use OCP\AppFramework\Db\DoesNotExistException;
 use OCP\AppFramework\Http;
 use OCP\AppFramework\Http\JSONResponse;
@@ -98,6 +100,9 @@ class AccountsControllerTest extends TestCase {
 	/** @var IMailManager|MockObject */
 	private $mailManager;
 
+	/** @var SyncService|MockObject */
+	private $syncService;
+
 	protected function setUp(): void {
 		parent::setUp();
 
@@ -117,6 +122,7 @@ class AccountsControllerTest extends TestCase {
 		$this->transmission = $this->createMock(IMailTransmission::class);
 		$this->setupService = $this->createMock(SetupService::class);
 		$this->mailManager = $this->createMock(IMailManager::class);
+		$this->syncService = $this->createMock(SyncService::class);
 
 		$this->controller = new AccountsController(
 			$this->appName,
@@ -129,7 +135,8 @@ class AccountsControllerTest extends TestCase {
 			$this->aliasesService,
 			$this->transmission,
 			$this->setupService,
-			$this->mailManager
+			$this->mailManager,
+			$this->syncService
 		);
 		$this->account = $this->createMock(Account::class);
 		$this->accountId = 123;
@@ -461,7 +468,7 @@ class AccountsControllerTest extends TestCase {
 		$this->assertEquals($expected, $resp);
 	}
 
-	public function draftDataProvider() {
+	public function draftDataProvider(): array {
 		return [
 			[false, false],
 			[true, true],
@@ -470,28 +477,33 @@ class AccountsControllerTest extends TestCase {
 		];
 	}
 
-	public function testDraft() {
+	public function testDraft(): void {
 		$subject = 'Hello';
 		$body = 'Hi!';
 		$to = 'user1@example.com';
 		$cc = '"user2" <user2@example.com>, user3@example.com';
 		$bcc = 'user4@example.com';
-		$uid = 123;
-		$newUID = 124;
-
+		$id = 123;
+		$newId = 1245;
+		$newUid = 124;
+		$account = $this->createMock(Account::class);
+		$mailbox = new Mailbox();
 		$this->accountService->expects($this->once())
 			->method('find')
 			->with($this->userId, $this->accountId)
 			->will($this->returnValue($this->account));
 		$this->transmission->expects($this->once())
 			->method('saveDraft')
-			->willReturn($newUID);
+			->willReturn([$account, $mailbox, $newUid]);
+		$this->mailManager->expects($this->once())
+			->method('getMessageIdForUid')
+			->willReturn($newId);
+
+		$actual = $this->controller->draft($this->accountId, $subject, $body, $to, $cc, $bcc, true, $id);
 
 		$expected = new JSONResponse([
-			'uid' => $newUID,
+			'id' => $newId,
 		]);
-		$actual = $this->controller->draft($this->accountId, $subject, $body, $to, $cc, $bcc, true, $uid);
-
 		$this->assertEquals($expected, $actual);
 	}
 }

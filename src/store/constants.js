@@ -18,10 +18,7 @@
  * You should have received a copy of the GNU Affero General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-import { normalizedFolderId } from './normalization'
 
 export const UNIFIED_ACCOUNT_ID = 0
-export const UNIFIED_INBOX_ID = btoa('inbox')
-export const UNIFIED_INBOX_UID = normalizedFolderId(UNIFIED_ACCOUNT_ID, UNIFIED_INBOX_ID)
-export const PRIORITY_INBOX_ID = btoa('priority')
-export const PRIORITY_INBOX_UID = UNIFIED_ACCOUNT_ID + '-' + PRIORITY_INBOX_ID
+export const UNIFIED_INBOX_ID = 'unified'
+export const PRIORITY_INBOX_ID = 'priority'

@@ -153,6 +153,7 @@ class MailAccount extends Entity {
 	 */
 	public function toJson() {
 		$result = [
+			'id' => $this->getId(),
 			'accountId' => $this->getId(),
 			'name' => $this->getName(),
 			'order' => $this->getOrder(),

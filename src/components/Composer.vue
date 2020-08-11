@@ -405,7 +405,7 @@ export default {
 		},
 	},
 	watch: {
-		'$route.params.messageUuid'() {
+		'$route.params.threadId'() {
 			this.reset()
 		},
 		allRecipients() {
@@ -497,29 +497,28 @@ export default {
 				return `"${recipient.label}" <${recipient.email}>`
 			}
 		},
-		getMessageData(uid) {
+		getMessageData(id) {
 			return {
 				account: this.selectedAlias.id,
 				aliasId: this.selectedAlias.aliasId,
 				to: this.selectTo.map(this.recipientToRfc822).join(', '),
 				cc: this.selectCc.map(this.recipientToRfc822).join(', '),
 				bcc: this.selectBcc.map(this.recipientToRfc822).join(', '),
-				draftUID: uid,
+				draftId: id,
 				subject: this.subjectVal,
 				body: this.encrypt ? plain(this.bodyVal) : html(this.bodyVal),
 				attachments: this.attachments,
-				folderId: this.replyTo ? this.replyTo.folderId : undefined,
-				messageId: this.replyTo ? this.replyTo.uid : undefined,
+				messageId: this.replyTo ? this.replyTo.databaseId : undefined,
 				isHtml: !this.editorPlainText,
 			}
 		},
 		saveDraft(data) {
 			this.savingDraft = true
 			this.draftsPromise = this.draftsPromise
-				.then((uid) => {
-					const draftData = data(uid)
+				.then((id) => {
+					const draftData = data(id)
 					if (
-						!uid
+						!id
 						&& !draftData.subject
 						&& !draftData.body
 						&& !draftData.cc
@@ -531,7 +530,7 @@ export default {
 						// and fires an input event
 						logger.debug('Nothing substantial to save, ignoring draft save')
 						this.savingDraft = false
-						return uid
+						return id
 					}
 					return this.draft(draftData)
 				})

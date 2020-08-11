@@ -25,14 +25,26 @@ namespace OCA\Mail\Contracts;
 
 use OCA\Mail\Account;
 use OCA\Mail\Db\Mailbox;
+use OCA\Mail\Db\Message;
 use OCA\Mail\Exception\ClientException;
 use OCA\Mail\Exception\ServiceException;
 use OCA\Mail\Folder;
 use OCA\Mail\IMAP\FolderStats;
 use OCA\Mail\Model\IMAPMessage;
 use OCA\Mail\Service\Quota;
+use OCP\AppFramework\Db\DoesNotExistException;
 
 interface IMailManager {
+
+	/**
+	 * @param string $uid
+	 * @param int $id
+	 *
+	 * @return Mailbox
+	 *
+	 * @throws DoesNotExistException
+	 */
+	public function getMailbox(string $uid, int $id): Mailbox;
 
 	/**
 	 * @param Account $account
@@ -47,44 +59,63 @@ interface IMailManager {
 	 * @param Account $account
 	 * @param string $name
 	 *
-	 * @return Folder
+	 * @return Mailbox
 	 *
 	 * @throws ServiceException
 	 */
-	public function createFolder(Account $account, string $name): Folder;
+	public function createMailbox(Account $account, string $name): Mailbox;
 
 	/**
 	 * @param Account $account
-	 * @param string $folderId
+	 * @param Mailbox $mailbox
 	 *
 	 * @return FolderStats
-	 *
-	 * @throws ServiceException
 	 */
-	public function getFolderStats(Account $account, string $folderId): FolderStats;
+	public function getMailboxStats(Account $account, Mailbox $mailbox): FolderStats;
+
+	/**
+	 * @param Mailbox $mailbox
+	 * @param $uid
+	 *
+	 * @return int|null
+	 */
+	public function getMessageIdForUid(Mailbox $mailbox, $uid): ?int;
+
+	/**
+	 * @param string $uid
+	 * @param int $id
+	 *
+	 * @return Mailbox
+	 *
+	 * @throws ClientException
+	 */
+	public function getMessage(string $uid, int $id): Message;
 
 	/**
 	 * @param Account $account
 	 * @param string $mb
-	 * @param int $id
+	 * @param int $uid
 	 *
 	 * @return string
 	 * @throws ClientException
 	 * @throws ServiceException
 	 */
-	public function getSource(Account $account, string $mb, int $id): string;
+	public function getSource(Account $account, string $mb, int $uid): ?string;
 
 	/**
 	 * @param Account $account
-	 * @param string $mailbox
-	 * @param int $id
+	 * @param Mailbox $mailbox
+	 * @param int $uid
 	 * @param bool $loadBody
 	 *
 	 * @return IMAPMessage
 	 *
 	 * @throws ServiceException
 	 */
-	public function getMessage(Account $account, string $mailbox, int $id, bool $loadBody = false): IMAPMessage;
+	public function getImapMessage(Account $account,
+								   Mailbox $mailbox,
+								   int $uid,
+								   bool $loadBody = false): IMAPMessage;
 
 	/**
 	 * @param Account $account
@@ -97,14 +128,17 @@ interface IMailManager {
 	/**
 	 * @param Account $sourceAccount
 	 * @param string $sourceFolderId
-	 * @param int $messageId
+	 * @param int $uid
 	 * @param Account $destinationAccount
 	 * @param string $destFolderId
 	 *
 	 * @throws ServiceException
 	 */
-	public function moveMessage(Account $sourceAccount, string $sourceFolderId, int $messageId,
-								Account $destinationAccount, string $destFolderId);
+	public function moveMessage(Account $sourceAccount,
+								string $sourceFolderId,
+								int $uid,
+								Account $destinationAccount,
+								string $destFolderId);
 
 	/**
 	 * @param Account $account
@@ -119,11 +153,9 @@ interface IMailManager {
 	 * Mark all messages of a folder as read
 	 *
 	 * @param Account $account
-	 * @param string $folderId
-	 *
-	 * @throws ServiceException
+	 * @param Mailbox $mailbox
 	 */
-	public function markFolderAsRead(Account $account, string $folderId): void;
+	public function markFolderAsRead(Account $account, Mailbox $mailbox): void;
 
 	/**
 	 * @param Account $account
@@ -146,9 +178,9 @@ interface IMailManager {
 
 	/**
 	 * @param Account $account
-	 * @param string $folderId
+	 * @param Mailbox $mailbox
 	 *
 	 * @throws ServiceException
 	 */
-	public function deleteMailbox(Account $account, string $folderId): void;
+	public function deleteMailbox(Account $account, Mailbox $mailbox): void;
 }

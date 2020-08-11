@@ -47,11 +47,12 @@ interface IMailBox {
 	public function getMessage(int $id, bool $loadHtmlMessageBody = false);
 
 	/**
-	 * @param int $messageId
+	 * @param int $messageUid
 	 * @param string $attachmentId
+	 *
 	 * @return Attachment
 	 */
-	public function getAttachment(int $messageId, string $attachmentId): Attachment;
+	public function getAttachment(int $messageUid, string $attachmentId): Attachment;
 
 	/**
 	 * @param int $flags

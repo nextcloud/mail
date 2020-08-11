@@ -110,6 +110,9 @@ class ThreadBuilder {
 			// Step 1.C
 			//$parentId = $message->getReferences()[count($message->getReferences()) - 1] ?? null;
 			//$container->setParent($idTable[$parentId] ?? null);
+			if ($parent === $container) {
+				throw new \Exception("about to run into a nasty endless loop");
+			}
 			if ($parent === null || !$parent->hasAncestor($container)) {
 				$container->setParent($parent);
 			}

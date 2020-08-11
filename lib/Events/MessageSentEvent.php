@@ -27,6 +27,7 @@ namespace OCA\Mail\Events;
 
 use Horde_Mime_Mail;
 use OCA\Mail\Account;
+use OCA\Mail\Db\Message;
 use OCA\Mail\Model\IMessage;
 use OCA\Mail\Model\NewMessageData;
 use OCA\Mail\Model\RepliedMessageData;
@@ -43,8 +44,8 @@ class MessageSentEvent extends Event {
 	/** @var null|RepliedMessageData */
 	private $repliedMessageData;
 
-	/** @var int|null */
-	private $draftUid;
+	/** @var Message|null */
+	private $draft;
 
 	/** @var IMessage */
 	private $message;
@@ -55,14 +56,14 @@ class MessageSentEvent extends Event {
 	public function __construct(Account $account,
 								NewMessageData $newMessageData,
 								?RepliedMessageData $repliedMessageData,
-								?int $draftUid,
+								?Message $draft,
 								IMessage $message,
 								Horde_Mime_Mail $mail) {
 		parent::__construct();
 		$this->account = $account;
 		$this->newMessageData = $newMessageData;
 		$this->repliedMessageData = $repliedMessageData;
-		$this->draftUid = $draftUid;
+		$this->draft = $draft;
 		$this->message = $message;
 		$this->mail = $mail;
 	}
@@ -79,8 +80,8 @@ class MessageSentEvent extends Event {
 		return $this->repliedMessageData;
 	}
 
-	public function getDraftUid(): ?int {
-		return $this->draftUid;
+	public function getDraft(): ?Message {
+		return $this->draft;
 	}
 
 	public function getMessage(): IMessage {

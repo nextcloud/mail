@@ -24,14 +24,15 @@ declare(strict_types=1);
 namespace OCA\Mail\IMAP\Sync;
 
 use JsonSerializable;
+use OCA\Mail\Db\Message;
 use OCA\Mail\Model\IMAPMessage;
 
 class Response implements JsonSerializable {
 
-	/** @var IMAPMessage[] */
+	/** @var IMAPMessage|Message[] */
 	private $newMessages;
 
-	/** @var IMAPMessage[] */
+	/** @var IMAPMessage|Message[] */
 	private $changedMessages;
 
 	/** @var int[] */
@@ -39,8 +40,8 @@ class Response implements JsonSerializable {
 
 	/**
 	 * @param string $syncToken
-	 * @param IMAPMessage[] $newMessages
-	 * @param IMAPMessage[] $changedMessages
+	 * @param IMAPMessage|Message[] $newMessages
+	 * @param IMAPMessage|Message[] $changedMessages
 	 * @param int[] $vanishedMessageUids
 	 */
 	public function __construct(array $newMessages = [],
@@ -52,14 +53,14 @@ class Response implements JsonSerializable {
 	}
 
 	/**
-	 * @return IMAPMessage[]
+	 * @return IMAPMessage|Message[]
 	 */
 	public function getNewMessages(): array {
 		return $this->newMessages;
 	}
 
 	/**
-	 * @return IMAPMessage[]
+	 * @return IMAPMessage|Message[]
 	 */
 	public function getChangedMessages(): array {
 		return $this->changedMessages;

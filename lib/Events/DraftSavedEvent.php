@@ -26,6 +26,7 @@ declare(strict_types=1);
 namespace OCA\Mail\Events;
 
 use OCA\Mail\Account;
+use OCA\Mail\Db\Message;
 use OCA\Mail\Model\NewMessageData;
 use OCP\EventDispatcher\Event;
 
@@ -37,16 +38,16 @@ class DraftSavedEvent extends Event {
 	/** @var NewMessageData */
 	private $newMessageData;
 
-	/** @var int|null */
-	private $draftUid;
+	/** @var Message|null */
+	private $draft;
 
 	public function __construct(Account $account,
 								NewMessageData $newMessageData,
-								?int $draftUid) {
+								?Message $draft) {
 		parent::__construct();
 		$this->account = $account;
 		$this->newMessageData = $newMessageData;
-		$this->draftUid = $draftUid;
+		$this->draft = $draft;
 	}
 
 	public function getAccount(): Account {
@@ -57,7 +58,7 @@ class DraftSavedEvent extends Event {
 		return $this->newMessageData;
 	}
 
-	public function getDraftUid(): ?int {
-		return $this->draftUid;
+	public function getDraft(): ?Message {
+		return $this->draft;
 	}
 }

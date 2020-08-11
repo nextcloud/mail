@@ -48,7 +48,6 @@ use OCA\Mail\Service\Html;
 use OCP\AppFramework\Db\DoesNotExistException;
 use OCP\Files\File;
 use OCP\Files\SimpleFS\ISimpleFile;
-use function base64_encode;
 use function in_array;
 use function mb_convert_encoding;
 
@@ -422,15 +421,17 @@ class IMAPMessage implements IMessage, JsonSerializable {
 	}
 
 	/**
+	 * @param int $id
+	 *
 	 * @return array
 	 */
-	public function getFullMessage(int $accountId, string $mailbox, int $id): array {
+	public function getFullMessage(int $id): array {
 		$mailBody = $this->plainMessage;
 
 		$data = $this->jsonSerialize();
 		if ($this->hasHtmlMessage) {
 			$data['hasHtmlBody'] = true;
-			$data['body'] = $this->getHtmlBody($accountId, $mailbox, $id);
+			$data['body'] = $this->getHtmlBody($id);
 		} else {
 			$mailBody = $this->htmlService->convertLinks($mailBody);
 			list($mailBody, $signature) = $this->htmlService->parseMailBody($mailBody);
@@ -462,17 +463,13 @@ class IMAPMessage implements IMessage, JsonSerializable {
 	}
 
 	/**
-	 * @param int $accountId
-	 * @param string $folderId
-	 * @param int $messageId
+	 * @param int $id
 	 *
 	 * @return string
 	 */
-	public function getHtmlBody(int $accountId, string $folderId, int $messageId): string {
+	public function getHtmlBody(int $id): string {
 		return $this->htmlService->sanitizeHtmlMailBody($this->htmlMessage, [
-			'accountId' => $accountId,
-			'folderId' => base64_encode($folderId),
-			'messageId' => $messageId,
+			'id' => $id,
 		], function ($cid) {
 			$match = array_filter($this->attachments,
 				function ($a) use ($cid) {

@@ -30,98 +30,123 @@ return [
 			'verb' => 'GET'
 		],
 		[
+			'name' => 'page#setup',
+			'url' => '/setup',
+			'verb' => 'GET'
+		],
+		[
+			'name' => 'page#keyboardShortcuts',
+			'url' => '/keyboard-shortcuts',
+			'verb' => 'GET'
+		],
+		[
+			'name' => 'page#accountSettings',
+			'url' => '/accounts/{id}/settings',
+			'verb' => 'GET'
+		],
+		[
+			'name' => 'page#mailbox',
+			'url' => '/box/{id}',
+			'verb' => 'GET'
+		],
+		[
+			'name' => 'page#thread',
+			'url' => '/box/{mailboxId}/thread/{id}',
+			'verb' => 'GET'
+		],
+		[
+			'name' => 'page#index',
+			'url' => '/',
+			'verb' => 'GET'
+		],
+		[
 			'name' => 'page#compose',
 			'url' => '/compose',
 			'verb' => 'GET'
 		],
 		[
 			'name' => 'accounts#send',
-			'url' => '/api/accounts/{accountId}/send',
+			'url' => '/api/accounts/{id}/send',
 			'verb' => 'POST'
 		],
 		[
 			'name' => 'accounts#draft',
-			'url' => '/api/accounts/{accountId}/draft',
+			'url' => '/api/accounts/{id}/draft',
 			'verb' => 'POST'
 		],
 		[
 			'name' => 'accounts#patchAccount',
-			'url' => '/api/accounts/{accountId}',
+			'url' => '/api/accounts/{id}',
 			'verb' => 'PATCH'
 		],
 		[
 			'name' => 'accounts#updateSignature',
-			'url' => '/api/accounts/{accountId}/signature',
+			'url' => '/api/accounts/{id}/signature',
 			'verb' => 'PUT'
 		],
 		[
 			'name' => 'accounts#getQuota',
-			'url' => '/api/accounts/{accountId}/quota',
+			'url' => '/api/accounts/{id}/quota',
 			'verb' => 'GET'
 		],
 		[
-			'name' => 'folders#sync',
-			'url' => '/api/accounts/{accountId}/folders/{folderId}/sync',
+			'name' => 'mailboxes#sync',
+			'url' => '/api/mailboxes/{id}/sync',
 			'verb' => 'POST'
 		],
 		[
-			'name' => 'folders#clearCache',
-			'url' => '/api/accounts/{accountId}/folders/{folderId}/sync',
+			'name' => 'mailboxes#clearCache',
+			'url' => '/api/mailboxes/{id}/sync',
 			'verb' => 'DELETE'
 		],
 		[
-			'name' => 'folders#markAllAsRead',
-			'url' => '/api/accounts/{accountId}/folders/{folderId}/read',
+			'name' => 'mailboxes#markAllAsRead',
+			'url' => '/api/mailboxes/{id}/read',
 			'verb' => 'POST'
 		],
 		[
-			'name' => 'folders#stats',
-			'url' => '/api/accounts/{accountId}/folders/{folderId}/stats',
+			'name' => 'mailboxes#stats',
+			'url' => '/api/mailboxes/{id}/stats',
 			'verb' => 'GET'
-		],
-		[
-			'name' => 'folders#delete',
-			'url' => '/api/accounts/{accountId}/folders/{folderId}',
-			'verb' => 'DELETE'
 		],
 		[
 			'name' => 'messages#downloadAttachment',
-			'url' => '/api/accounts/{accountId}/folders/{folderId}/messages/{messageId}/attachment/{attachmentId}',
+			'url' => '/api/messages/{id}/attachment/{attachmentId}',
 			'verb' => 'GET'
 		],
 		[
 			'name' => 'messages#saveAttachment',
-			'url' => '/api/accounts/{accountId}/folders/{folderId}/messages/{messageId}/attachment/{attachmentId}',
+			'url' => '/api/messages/{id}/attachment/{attachmentId}',
 			'verb' => 'POST'
 		],
 		[
 			'name' => 'messages#getBody',
-			'url' => '/api/accounts/{accountId}/folders/{folderId}/messages/{messageId}/body',
+			'url' => '/api/messages/{id}/body',
 			'verb' => 'GET'
 		],
 		[
 			'name' => 'messages#getSource',
-			'url' => '/api/accounts/{accountId}/folders/{folderId}/messages/{messageId}/source',
+			'url' => '/api/messages/{id}/source',
 			'verb' => 'GET'
 		],
 		[
 			'name' => 'messages#getHtmlBody',
-			'url' => '/api/accounts/{accountId}/folders/{folderId}/messages/{messageId}/html',
+			'url' => '/api/messages/{id}/html',
 			'verb' => 'GET'
 		],
 		[
 			'name' => 'messages#getThread',
-			'url' => '/api/accounts/{accountId}/message/{id}/thread',
+			'url' => '/api/messages/{id}/thread',
 			'verb' => 'GET'
 		],
 		[
 			'name' => 'messages#setFlags',
-			'url' => '/api/accounts/{accountId}/folders/{folderId}/messages/{messageId}/flags',
+			'url' => '/api/messages/{id}/flags',
 			'verb' => 'PUT'
 		],
 		[
 			'name' => 'messages#move',
-			'url' => '/api/accounts/{accountId}/folders/{folderId}/messages/{id}/move',
+			'url' => '/api/messages/{id}/move',
 			'verb' => 'POST'
 		],
 		[
@@ -159,9 +184,9 @@ return [
 		'accounts' => ['url' => '/api/accounts'],
 		'aliases' => ['url' => '/api/accounts/{accountId}/aliases'],
 		'autoComplete' => ['url' => '/api/autoComplete'],
-		'folders' => ['url' => '/api/accounts/{accountId}/folders'],
 		'localAttachments' => ['url' => '/api/attachments'],
-		'messages' => ['url' => '/api/accounts/{accountId}/folders/{folderId}/messages'],
+		'mailboxes' => ['url' => '/api/mailboxes'],
+		'messages' => ['url' => '/api/messages'],
 		'preferences' => ['url' => '/api/preferences'],
 	]
 ];

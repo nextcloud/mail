@@ -10,6 +10,7 @@ const Setup = () => import('./views/Setup')
 Vue.use(Router)
 
 export default new Router({
+	mode: 'history',
 	base: generateUrl('/apps/mail/'),
 	linkActiveClass: 'active',
 	routes: [
@@ -24,12 +25,12 @@ export default new Router({
 			component: Home,
 		},
 		{
-			path: '/accounts/:accountId/folders/:filter?/:folderId',
-			name: 'folder',
+			path: '/box/:filter?/:mailboxId',
+			name: 'mailbox',
 			component: Home,
 		},
 		{
-			path: '/accounts/:accountId/folders/:filter?/:folderId/message/:messageUuid/:draftUid?',
+			path: '/box/:filter?/:mailboxId/thread/:threadId/:draftId?',
 			name: 'message',
 			component: Home,
 		},

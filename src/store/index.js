@@ -25,9 +25,7 @@ import Vuex from 'vuex'
 import {
 	UNIFIED_ACCOUNT_ID,
 	UNIFIED_INBOX_ID,
-	UNIFIED_INBOX_UID,
 	PRIORITY_INBOX_ID,
-	PRIORITY_INBOX_UID,
 } from './constants'
 import actions from './actions'
 import { getters } from './getters'
@@ -44,7 +42,7 @@ export default new Vuex.Store({
 				id: UNIFIED_ACCOUNT_ID,
 				accountId: UNIFIED_ACCOUNT_ID,
 				isUnified: true,
-				folders: [PRIORITY_INBOX_UID, UNIFIED_INBOX_UID],
+				mailboxes: [PRIORITY_INBOX_ID, UNIFIED_INBOX_ID],
 				collapsed: false,
 				emailAddress: '',
 				name: '',
@@ -52,27 +50,29 @@ export default new Vuex.Store({
 			},
 		},
 		accountList: [UNIFIED_ACCOUNT_ID],
-		folders: {
-			[UNIFIED_INBOX_UID]: {
+		mailboxes: {
+			[UNIFIED_INBOX_ID]: {
 				id: UNIFIED_INBOX_ID,
+				databaseId: UNIFIED_INBOX_ID,
 				accountId: 0,
 				attributes: ['\\subscribed'],
 				isUnified: true,
 				specialUse: ['inbox'],
 				specialRole: 'inbox',
 				unread: 0,
-				folders: [],
+				mailboxes: [],
 				envelopeLists: {},
 			},
-			[PRIORITY_INBOX_UID]: {
+			[PRIORITY_INBOX_ID]: {
 				id: PRIORITY_INBOX_ID,
+				databaseId: PRIORITY_INBOX_ID,
 				accountId: 0,
 				attributes: ['\\subscribed'],
 				isPriorityInbox: true,
 				specialUse: ['inbox'],
 				specialRole: 'inbox',
 				unread: 0,
-				folders: [],
+				mailboxes: [],
 				envelopeLists: {},
 			},
 		},

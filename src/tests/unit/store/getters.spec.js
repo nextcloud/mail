@@ -33,7 +33,7 @@ describe('Vuex store getters', () => {
 		state = {
 			accountList: [],
 			accounts: {},
-			folders: {},
+			mailboxes: {},
 			envelopes: {},
 			messages: {},
 		}
@@ -68,5 +68,4 @@ describe('Vuex store getters', () => {
 			accountId: 13,
 		})
 	})
-	it('gets account folders', () => {})
 })
