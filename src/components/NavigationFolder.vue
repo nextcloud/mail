@@ -145,8 +145,9 @@ export default {
 	computed: {
 		visible() {
 			return (
-				this.account.showSubscribedOnly === false
-				|| (this.folder.attributes && this.folder.attributes.includes('\\subscribed'))
+				(this.account.showSubscribedOnly === false
+				|| (this.folder.attributes && this.folder.attributes.includes('\\subscribed')))
+				&& this.isUnifiedButOnlyInbox
 			)
 		},
 		title() {
@@ -203,6 +204,10 @@ export default {
 				}
 			}
 			return t('mail', 'Loading …')
+		},
+		isUnifiedButOnlyInbox() {
+			if (!this.folder.isUnified) return true
+			return this.folder.specialUse.includes('inbox') && this.$store.getters.accounts.length > 2
 		},
 	},
 	methods: {
