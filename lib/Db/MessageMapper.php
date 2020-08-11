@@ -428,12 +428,16 @@ class MessageMapper extends QBMapper {
 			);
 		}
 
-		if ($query->getSubject() !== null) {
+		if (!empty($query->getSubjects())) {
 			$select->andWhere(
-				$qb->expr()->iLike(
-					'subject',
-					$qb->createNamedParameter('%' . $this->db->escapeLikeParameter($query->$query->getSubject()) . '%', IQueryBuilder::PARAM_STR),
-					IQueryBuilder::PARAM_STR
+				$qb->expr()->orX(
+					...array_map(function(string $subject) use ($qb) {
+						return $qb->expr()->iLike(
+							'subject',
+							$qb->createNamedParameter('%' . $this->db->escapeLikeParameter($subject) . '%', IQueryBuilder::PARAM_STR),
+							IQueryBuilder::PARAM_STR
+						);
+					}, $query->getSubjects())
 				)
 			);
 		}

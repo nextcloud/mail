@@ -45,6 +45,9 @@ class FilterStringParser {
 		foreach ($tokens as $token) {
 			if (!$this->parseFilterToken($query, $token)) {
 				$query->addTextToken($token);
+
+				// Always look into the subject as well
+				$query->addSubject($token);
 			}
 		}
 
@@ -81,7 +84,7 @@ class FilterStringParser {
 				$query->addBcc($param);
 				return true;
 			case 'subject':
-				$query->setSubject($param);
+				$query->addSubject($param);
 				return true;
 		}
 
