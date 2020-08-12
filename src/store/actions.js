@@ -40,7 +40,7 @@ import {
 	where,
 } from 'ramda'
 
-import {savePreference} from '../service/PreferenceService'
+import { savePreference } from '../service/PreferenceService'
 import {
 	create as createAccount,
 	deleteAccount,
@@ -50,7 +50,12 @@ import {
 	update as updateAccount,
 	updateSignature,
 } from '../service/AccountService'
-import {create as createFolder, fetchAll as fetchAllFolders, markFolderRead} from '../service/FolderService'
+import {
+	create as createFolder,
+	fetchAll as fetchAllFolders,
+	markFolderRead,
+	deleteFolder,
+} from '../service/FolderService'
 import {
 	deleteMessage,
 	fetchEnvelope,
@@ -59,15 +64,16 @@ import {
 	setEnvelopeFlag,
 	syncEnvelopes,
 } from '../service/MessageService'
+import { createAlias, deleteAlias } from '../service/AliasService'
 import logger from '../logger'
-import {normalizedEnvelopeListId} from './normalization'
-import {showNewMessagesNotification} from '../service/NotificationService'
-import {parseUid} from '../util/EnvelopeUidParser'
-import {matchError} from '../errors/match'
+import { normalizedEnvelopeListId } from './normalization'
+import { showNewMessagesNotification } from '../service/NotificationService'
+import { parseUuid } from '../util/EnvelopeUidParser'
+import { matchError } from '../errors/match'
 import SyncIncompleteError from '../errors/SyncIncompleteError'
 import MailboxLockedError from '../errors/MailboxLockedError'
-import {wait} from '../util/wait'
-import {UNIFIED_ACCOUNT_ID, UNIFIED_INBOX_ID} from './constants'
+import { wait } from '../util/wait'
+import { UNIFIED_ACCOUNT_ID, UNIFIED_INBOX_ID } from './constants'
 
 const PAGE_SIZE = 20
 
@@ -86,27 +92,27 @@ const findIndividualFolders = curry((getFolders, specialRole) =>
 const combineEnvelopeLists = pipe(flatten, orderBy(prop('dateInt'), 'desc'))
 
 export default {
-	savePreference({commit, getters}, {key, value}) {
-		return savePreference(key, value).then(({value}) => {
+	savePreference({ commit, getters }, { key, value }) {
+		return savePreference(key, value).then(({ value }) => {
 			commit('savePreference', {
 				key,
 				value,
 			})
 		})
 	},
-	fetchAccounts({commit, getters}) {
+	fetchAccounts({ commit, getters }) {
 		return fetchAllAccounts().then((accounts) => {
 			accounts.forEach((account) => commit('addAccount', account))
 			return getters.accounts
 		})
 	},
-	fetchAccount({commit}, id) {
+	fetchAccount({ commit }, id) {
 		return fetchAccount(id).then((account) => {
 			commit('addAccount', account)
 			return account
 		})
 	},
-	createAccount({commit}, config) {
+	createAccount({ commit }, config) {
 		return createAccount(config).then((account) => {
 			logger.debug(`account ${account.id} created, fetching folders …`, account)
 			return fetchAllFolders(account.id)
@@ -118,41 +124,46 @@ export default {
 				.then(() => account)
 		})
 	},
-	updateAccount({commit}, config) {
+	updateAccount({ commit }, config) {
 		return updateAccount(config).then((account) => {
 			console.debug('account updated', account)
 			commit('editAccount', account)
 			return account
 		})
 	},
-	patchAccount({commit}, {account, data}) {
+	patchAccount({ commit }, { account, data }) {
 		return patchAccount(account, data).then((account) => {
 			console.debug('account patched', account, data)
-			commit('patchAccount', {account, data})
+			commit('patchAccount', { account, data })
 			return account
 		})
 	},
-	updateAccountSignature({commit}, {account, signature}) {
+	updateAccountSignature({ commit }, { account, signature }) {
 		return updateSignature(account, signature).then(() => {
 			console.debug('account signature updated')
-			const updated = Object.assign({}, account, {signature})
+			const updated = Object.assign({}, account, { signature })
 			commit('editAccount', updated)
 			return account
 		})
 	},
-	deleteAccount({commit}, account) {
+	deleteAccount({ commit }, account) {
 		return deleteAccount(account.id).catch((err) => {
 			console.error('could not delete account', err)
 			throw err
 		})
 	},
-	createFolder({commit}, {account, name}) {
+	async deleteFolder({ commit }, { account, folder }) {
+		await deleteFolder(account.id, folder.id)
+		commit('removeFolder', { accountId: account.id, folderId: folder.id })
+	},
+	createFolder({ commit }, { account, name }) {
 		return createFolder(account.id, name).then((folder) => {
-			console.debug(`folder ${name} created for account ${account.id}`, {folder})
-			commit('addFolder', {account, folder})
+			console.debug(`folder ${name} created for account ${account.id}`, { folder })
+			commit('addFolder', { account, folder })
+			commit('expandAccount', account.id)
 		})
 	},
-	moveAccount({commit, getters}, {account, up}) {
+	moveAccount({ commit, getters }, { account, up }) {
 		const accounts = getters.accounts
 		const index = accounts.indexOf(account)
 		if (up) {
@@ -169,12 +180,12 @@ export default {
 				if (account.id === 0) {
 					return
 				}
-				commit('saveAccountsOrder', {account, order: idx})
-				return patchAccount(account, {order: idx})
+				commit('saveAccountsOrder', { account, order: idx })
+				return patchAccount(account, { order: idx })
 			})
 		)
 	},
-	markFolderRead({getters, dispatch}, {accountId, folderId}) {
+	markFolderRead({ getters, dispatch }, { accountId, folderId }) {
 		const folder = getters.getFolder(accountId, folderId)
 
 		if (folder.isUnified) {
@@ -192,21 +203,21 @@ export default {
 
 		return markFolderRead(accountId, folderId).then(
 			dispatch('syncEnvelopes', {
-				accountId: accountId,
-				folderId: folderId,
+				accountId,
+				folderId,
 			})
 		)
 	},
-	fetchEnvelope({commit, getters}, uid) {
-		const {accountId, folderId, id} = parseUid(uid)
+	fetchEnvelope({ commit, getters }, uuid) {
+		const { accountId, folderId, uid } = parseUuid(uuid)
 
-		const cached = getters.getEnvelope(accountId, folderId, id)
+		const cached = getters.getEnvelope(accountId, folderId, uid)
 		if (cached) {
-			logger.debug(`using cached value for envelope ${uid}`)
+			logger.debug(`using cached value for envelope ${uuid}`)
 			return cached
 		}
 
-		return fetchEnvelope(accountId, folderId, id).then((envelope) => {
+		return fetchEnvelope(accountId, folderId, uid).then((envelope) => {
 			// Only commit if not undefined (not found)
 			if (envelope) {
 				commit('addEnvelope', {
@@ -217,10 +228,10 @@ export default {
 			}
 
 			// Always use the object from the store
-			return getters.getEnvelope(accountId, folderId, id)
+			return getters.getEnvelope(accountId, folderId, uid)
 		})
 	},
-	fetchEnvelopes({state, commit, getters, dispatch}, {accountId, folderId, query}) {
+	fetchEnvelopes({ state, commit, getters, dispatch }, { accountId, folderId, query }) {
 		const folder = getters.getFolder(accountId, folderId)
 
 		if (folder.isUnified) {
@@ -273,7 +284,7 @@ export default {
 			)
 		)(accountId, folderId, query, undefined, PAGE_SIZE)
 	},
-	fetchNextEnvelopePage({commit, getters, dispatch}, {accountId, folderId, query, rec = true}) {
+	fetchNextEnvelopePage({ commit, getters, dispatch }, { accountId, folderId, query, rec = true }) {
 		const folder = getters.getFolder(accountId, folderId)
 
 		if (folder.isUnified) {
@@ -376,7 +387,7 @@ export default {
 			return envelopes
 		})
 	},
-	syncEnvelopes({commit, getters, dispatch}, {accountId, folderId, query, init = false}) {
+	syncEnvelopes({ commit, getters, dispatch }, { accountId, folderId, query, init = false }) {
 		const folder = getters.getFolder(accountId, folderId)
 
 		if (folder.isUnified) {
@@ -421,7 +432,7 @@ export default {
 			)
 		}
 
-		const uids = getters.getEnvelopes(accountId, folderId, query).map((env) => env.id)
+		const uids = getters.getEnvelopes(accountId, folderId, query).map((env) => env.uid)
 
 		return syncEnvelopes(accountId, folderId, uids, query, init)
 			.then((syncData) => {
@@ -445,11 +456,11 @@ export default {
 						envelope,
 					})
 				})
-				syncData.vanishedMessages.forEach((id) => {
+				syncData.vanishedMessages.forEach((uid) => {
 					commit('removeEnvelope', {
 						accountId,
 						folderId,
-						id,
+						uid,
 					})
 					// Already removed from unified inbox
 				})
@@ -460,11 +471,11 @@ export default {
 				return matchError(error, {
 					[SyncIncompleteError.getName()]() {
 						console.warn('(initial) sync is incomplete, retriggering')
-						return dispatch('syncEnvelopes', {accountId, folderId, query, init})
+						return dispatch('syncEnvelopes', { accountId, folderId, query, init })
 					},
 					[MailboxLockedError.getName()](error) {
-						logger.info('Sync failed because the mailbox is locked, retriggering', {error})
-						return wait(1500).then(() => dispatch('syncEnvelopes', {accountId, folderId, query, init}))
+						logger.info('Sync failed because the mailbox is locked, retriggering', { error })
+						return wait(1500).then(() => dispatch('syncEnvelopes', { accountId, folderId, query, init }))
 					},
 					default(error) {
 						console.error('Could not sync envelopes: ' + error.message, error)
@@ -472,13 +483,13 @@ export default {
 				})
 			})
 	},
-	async syncInboxes({getters, dispatch}) {
+	async syncInboxes({ getters, dispatch }) {
 		const results = await Promise.all(
 			getters.accounts
 				.filter((a) => !a.isUnified)
 				.map((account) => {
 					return Promise.all(
-						getters.getFolders(account.id).map(async (folder) => {
+						getters.getFolders(account.id).map(async(folder) => {
 							if (folder.specialRole !== 'inbox') {
 								return
 							}
@@ -508,7 +519,7 @@ export default {
 			// Make sure the priority inbox is updated as well
 			logger.info('updating priority inbox')
 			for (const query of ['is:important not:starred', 'is:starred not:important', 'not:starred not:important']) {
-				logger.info("sync'ing priority inbox section", {query})
+				logger.info("sync'ing priority inbox section", { query })
 				const folder = getters.getFolder(UNIFIED_ACCOUNT_ID, UNIFIED_INBOX_ID)
 				const list = folder.envelopeLists[normalizedEnvelopeListId(query)]
 				if (list === undefined) {
@@ -529,7 +540,7 @@ export default {
 			showNewMessagesNotification(newMessages)
 		}
 	},
-	toggleEnvelopeFlagged({commit, getters}, envelope) {
+	toggleEnvelopeFlagged({ commit, getters }, envelope) {
 		// Change immediately and switch back on error
 		const oldState = envelope.flags.flagged
 		commit('flagEnvelope', {
@@ -538,7 +549,7 @@ export default {
 			value: !oldState,
 		})
 
-		setEnvelopeFlag(envelope.accountId, envelope.folderId, envelope.id, 'flagged', !oldState).catch((e) => {
+		setEnvelopeFlag(envelope.accountId, envelope.folderId, envelope.uid, 'flagged', !oldState).catch((e) => {
 			console.error('could not toggle message flagged state', e)
 
 			// Revert change
@@ -549,7 +560,7 @@ export default {
 			})
 		})
 	},
-	toggleEnvelopeImportant({commit, getters}, envelope) {
+	toggleEnvelopeImportant({ commit, getters }, envelope) {
 		// Change immediately and switch back on error
 		const oldState = envelope.flags.important
 		commit('flagEnvelope', {
@@ -558,7 +569,7 @@ export default {
 			value: !oldState,
 		})
 
-		setEnvelopeFlag(envelope.accountId, envelope.folderId, envelope.id, 'important', !oldState).catch((e) => {
+		setEnvelopeFlag(envelope.accountId, envelope.folderId, envelope.uid, 'important', !oldState).catch((e) => {
 			console.error('could not toggle message important state', e)
 
 			// Revert change
@@ -569,7 +580,7 @@ export default {
 			})
 		})
 	},
-	toggleEnvelopeSeen({commit, getters}, envelope) {
+	toggleEnvelopeSeen({ commit, getters }, envelope) {
 		// Change immediately and switch back on error
 		const oldState = envelope.flags.seen
 		commit('flagEnvelope', {
@@ -578,7 +589,7 @@ export default {
 			value: !oldState,
 		})
 
-		setEnvelopeFlag(envelope.accountId, envelope.folderId, envelope.id, 'seen', !oldState).catch((e) => {
+		setEnvelopeFlag(envelope.accountId, envelope.folderId, envelope.uid, 'seen', !oldState).catch((e) => {
 			console.error('could not toggle message seen state', e)
 
 			// Revert change
@@ -589,7 +600,7 @@ export default {
 			})
 		})
 	},
-	toggleEnvelopeJunk({commit, getters}, envelope) {
+	toggleEnvelopeJunk({ commit, getters }, envelope) {
 		// Change immediately and switch back on error
 		const oldState = envelope.flags.junk
 		commit('flagEnvelope', {
@@ -598,7 +609,7 @@ export default {
 			value: !oldState,
 		})
 
-		setEnvelopeFlag(envelope.accountId, envelope.folderId, envelope.id, 'junk', !oldState).catch((e) => {
+		setEnvelopeFlag(envelope.accountId, envelope.folderId, envelope.uid, 'junk', !oldState).catch((e) => {
 			console.error('could not toggle message junk state', e)
 
 			// Revert change
@@ -609,7 +620,7 @@ export default {
 			})
 		})
 	},
-	markEnvelopeFavoriteOrUnfavorite({commit, getters}, {envelope, favFlag}) {
+	markEnvelopeFavoriteOrUnfavorite({ commit, getters }, { envelope, favFlag }) {
 		// Change immediately and switch back on error
 		const oldState = envelope.flags.flagged
 		commit('flagEnvelope', {
@@ -618,7 +629,7 @@ export default {
 			value: favFlag,
 		})
 
-		setEnvelopeFlag(envelope.accountId, envelope.folderId, envelope.id, 'flagged', favFlag).catch((e) => {
+		setEnvelopeFlag(envelope.accountId, envelope.folderId, envelope.uid, 'flagged', favFlag).catch((e) => {
 			console.error('could not favorite/unfavorite message ' + envelope.uid, e)
 
 			// Revert change
@@ -629,7 +640,7 @@ export default {
 			})
 		})
 	},
-	markEnvelopeSeenOrUnseen({commit, getters}, {envelope, seenFlag}) {
+	markEnvelopeSeenOrUnseen({ commit, getters }, { envelope, seenFlag }) {
 		// Change immediately and switch back on error
 		const oldState = envelope.flags.unseen
 		commit('flagEnvelope', {
@@ -638,7 +649,7 @@ export default {
 			value: seenFlag,
 		})
 
-		setEnvelopeFlag(envelope.accountId, envelope.folderId, envelope.id, 'unseen', seenFlag).catch((e) => {
+		setEnvelopeFlag(envelope.accountId, envelope.folderId, envelope.uid, 'unseen', seenFlag).catch((e) => {
 			console.error('could not mark message ' + envelope.uid + ' seen/unseen', e)
 
 			// Revert change
@@ -649,9 +660,9 @@ export default {
 			})
 		})
 	},
-	fetchMessage({commit}, uid) {
-		const {accountId, folderId, id} = parseUid(uid)
-		return fetchMessage(accountId, folderId, id).then((message) => {
+	fetchMessage({ commit }, uuid) {
+		const { accountId, folderId, uid } = parseUuid(uuid)
+		return fetchMessage(accountId, folderId, uid).then((message) => {
 			// Only commit if not undefined (not found)
 			if (message) {
 				commit('addMessage', {
@@ -664,35 +675,43 @@ export default {
 			return message
 		})
 	},
-	replaceDraft({getters, commit}, {draft, uid, data}) {
+	replaceDraft({ getters, commit }, { draft, uid, data }) {
 		commit('updateDraft', {
 			draft,
 			data,
 			newUid: uid,
 		})
 	},
-	deleteMessage({getters, commit}, {accountId, folderId, id}) {
-		commit('removeEnvelope', {accountId, folderId, id})
+	deleteMessage({ getters, commit }, { accountId, folderId, uid }) {
+		commit('removeEnvelope', { accountId, folderId, uid })
 
-		return deleteMessage(accountId, folderId, id)
+		return deleteMessage(accountId, folderId, uid)
 			.then(() => {
 				const folder = getters.getFolder(accountId, folderId)
 				if (!folder) {
-					logger.error('could not find folder', {accountId, folderId})
+					logger.error('could not find folder', { accountId, folderId })
 					return
 				}
-				commit('removeMessage', {accountId, folder, id})
-				console.log('message removed')
+				commit('removeMessage', { accountId, folder, uid })
+				console.debug('message removed')
 			})
 			.catch((err) => {
 				console.error('could not delete message', err)
-				const envelope = getters.getEnvelope(accountId, folderId, id)
+				const envelope = getters.getEnvelope(accountId, folderId, uid)
 				if (envelope) {
-					commit('addEnvelope', {accountId, folderId, envelope})
+					commit('addEnvelope', { accountId, folderId, envelope })
 				} else {
-					logger.error('could not find envelope', {accountId, folderId, id})
+					logger.error('could not find envelope', { accountId, folderId, uid })
 				}
 				throw err
 			})
+	},
+	async createAlias({ commit }, { account, aliasToAdd }) {
+		const alias = await createAlias(account, aliasToAdd)
+		commit('createAlias', { account, alias })
+	},
+	async deleteAlias({ commit }, { account, aliasToDelete }) {
+		await deleteAlias(account, aliasToDelete)
+		commit('deleteAlias', { account, alias: aliasToDelete })
 	},
 }

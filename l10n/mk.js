@@ -1,11 +1,11 @@
 OC.L10N.register(
     "mail",
     {
-    "Mail" : "Електронска пошта",
     "Auto detect failed. Please use manual mode." : "Неуспешно автоматско детектирање. Ве молиме рачно внесете ги параметрите.",
     "Updating account failed: " : "Неуспешно ажурирање на сметка:",
     "Creating account failed: " : "Неуспешно креирање на сметка:",
     "Embedded message %s" : "Вметната порака %s",
+    "Mail" : "Електронска пошта",
     "💌 A mail app for Nextcloud" : "💌 Апликација за електронска пошта за Nextcloud",
     "**💌 A mail app for Nextcloud**\n\n- **🚀 Integration with other Nextcloud apps!** Currently Contacts, Calendar & Files – more to come.\n- **📥 Multiple mail accounts!** Personal and company account? No problem, and a nice unified inbox. Connect any IMAP account.\n- **🔒 Send & receive encrypted mails!** Using the great [Mailvelope](https://mailvelope.com) browser extension.\n- **🙈 We’re not reinventing the wheel!** Based on the great [Horde](http://horde.org) libraries.\n- **📬 Want to host your own mail server?** We don’t have to reimplement this as you could set up [Mail-in-a-Box](https://mailinabox.email)!" : "**💌 Апликација за електронска пошта за Nextcloud**\n\n- **🚀 Интеграција со други Nextcloud апликации!** Моментално Контакти, Календари & Датотеки.\n- **📥 Повеќе сметки за пошта!** Лична и бизнис сметка? Нема проблем, и убаво унифицирано сандаче. Поврзете ја секоја IMAP сметка.\n- **🔒 Испраќање & примање на криптирани пораки!** Користејќи го одличното [Mailvelope](https://mailvelope.com) искуство на прелистувачот.\n- **🙈 Ние не го реинвестираме тркалото!** Врз основа на одличните [Horde](http://horde.org) библиотеки.\n- **📬 Сакате да бидете домаќин на вашиот сопствен сервер за пошта?** Не мора да го повториме ова како што можете да го поставите [Mail-in-a-Box](https://mailinabox.email)!",
     "Auto" : "Автоматски",
@@ -100,6 +100,7 @@ OC.L10N.register(
     "Quota" : "Квота",
     "Edit account" : "Измени сметка",
     "Add folder" : "Додади папка",
+    "Saving" : "Зачувува",
     "Remove account" : "Отстрани сметка",
     "Loading …" : "Се вчитува…",
     "Cancel" : "Откажи",
@@ -109,6 +110,7 @@ OC.L10N.register(
     "Mark all messages of this folder as read" : "Означи ги сите пораки во оваа папка како прочитани",
     "Add subfolder" : "Додади подпапка",
     "Clear cache" : "Избриши го кешот",
+    "Delete folder" : "Избриши папка",
     "_{total} message_::_{total} messages_" : ["{total} порака","{total} пораки"],
     "Could not load your draft" : "Неможе да се вчита вашиот нацрт",
     "Could not load original message" : "Неможе да се вчита оргиналната порака",

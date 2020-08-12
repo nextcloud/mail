@@ -80,6 +80,11 @@ return [
 			'verb' => 'GET'
 		],
 		[
+			'name' => 'folders#delete',
+			'url' => '/api/accounts/{accountId}/folders/{folderId}',
+			'verb' => 'DELETE'
+		],
+		[
 			'name' => 'messages#downloadAttachment',
 			'url' => '/api/accounts/{accountId}/folders/{folderId}/messages/{messageId}/attachment/{attachmentId}',
 			'verb' => 'GET'
@@ -102,6 +107,11 @@ return [
 		[
 			'name' => 'messages#getHtmlBody',
 			'url' => '/api/accounts/{accountId}/folders/{folderId}/messages/{messageId}/html',
+			'verb' => 'GET'
+		],
+		[
+			'name' => 'messages#getThread',
+			'url' => '/api/accounts/{accountId}/message/{id}/thread',
 			'verb' => 'GET'
 		],
 		[

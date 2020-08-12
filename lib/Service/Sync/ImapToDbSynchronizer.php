@@ -31,6 +31,7 @@ use OCA\Mail\Account;
 use OCA\Mail\Db\Mailbox;
 use OCA\Mail\Db\MailboxMapper;
 use OCA\Mail\Db\MessageMapper as DatabaseMessageMapper;
+use OCA\Mail\Events\SynchronizationEvent;
 use OCA\Mail\Events\NewMessagesSynchronized;
 use OCA\Mail\Exception\ClientException;
 use OCA\Mail\Exception\IncompleteSyncException;
@@ -115,9 +116,15 @@ class ImapToDbSynchronizer {
 				$mailbox,
 				$criteria,
 				null,
-				$force
+				$force,
+				true
 			);
 		}
+		$this->dispatcher->dispatchTyped(
+			new SynchronizationEvent(
+				$account
+			)
+		);
 	}
 
 	/**
@@ -166,8 +173,6 @@ class ImapToDbSynchronizer {
 	}
 
 	/**
-	 * @param int[] $knownUids
-	 *
 	 * @throws ClientException
 	 * @throws MailboxNotCachedException
 	 * @throws ServiceException
@@ -176,7 +181,8 @@ class ImapToDbSynchronizer {
 						 Mailbox $mailbox,
 						 int $criteria = Horde_Imap_Client::SYNC_NEWMSGSUIDS | Horde_Imap_Client::SYNC_FLAGSUIDS | Horde_Imap_Client::SYNC_VANISHEDUIDS,
 						 array $knownUids = null,
-						 bool $force = false): void {
+						 bool $force = false,
+						 bool $batchSync = false): void {
 		if ($mailbox->getSelectable() === false) {
 			return;
 		}
@@ -221,6 +227,14 @@ class ImapToDbSynchronizer {
 			if ($criteria & Horde_Imap_Client::SYNC_NEWMSGSUIDS) {
 				$this->mailboxMapper->unlockFromNewSync($mailbox);
 			}
+		}
+
+		if (!$batchSync) {
+			$this->dispatcher->dispatchTyped(
+				new SynchronizationEvent(
+					$account
+				)
+			);
 		}
 	}
 

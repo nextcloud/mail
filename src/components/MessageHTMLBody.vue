@@ -8,16 +8,20 @@
 		</div>
 		<div v-if="loading" class="icon-loading" />
 		<div id="message-container" :class="{hidden: loading}">
-			<iframe id="message-frame" ref="iframe" :src="url" seamless @load="onMessageFrameLoad" />
+			<iframe id="message-frame"
+				ref="iframe"
+				:src="url"
+				seamless
+				@load="onMessageFrameLoad" />
 		</div>
 	</div>
 </template>
 
 <script>
 import PrintScout from 'printscout'
-const scout = new PrintScout()
 
 import logger from '../logger'
+const scout = new PrintScout()
 
 export default {
 	name: 'MessageHTMLBody',
@@ -48,10 +52,9 @@ export default {
 		},
 		onMessageFrameLoad() {
 			const iframeDoc = this.getIframeDoc()
-			const iframeBody = iframeDoc.querySelectorAll('body')[0]
-			this.hasBlockedContent =
-				iframeDoc.querySelectorAll('[data-original-src]').length > 0 ||
-				iframeDoc.querySelectorAll('[data-original-style]').length > 0
+			this.hasBlockedContent
+				= iframeDoc.querySelectorAll('[data-original-src]').length > 0
+				|| iframeDoc.querySelectorAll('[data-original-style]').length > 0
 
 			this.loading = false
 		},

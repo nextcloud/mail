@@ -19,7 +19,7 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-import {wait} from '../../../util/wait'
+import { wait } from '../../../util/wait'
 
 describe('wait', () => {
 	it('waits', (done) => {

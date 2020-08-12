@@ -25,8 +25,9 @@ declare(strict_types=1);
 
 namespace OCA\Mail\Db;
 
-use OCA\Mail\Folder;
+use JsonSerializable;
 use OCP\AppFramework\Db\Entity;
+use function base64_encode;
 use function in_array;
 use function json_decode;
 use function ltrim;
@@ -62,7 +63,7 @@ use function strtolower;
  * @method string getSpecialUse()
  * @method void setSpecialUse(string $specialUse)
  */
-class Mailbox extends Entity {
+class Mailbox extends Entity implements JsonSerializable {
 	protected $name;
 	protected $accountId;
 	protected $syncNewToken;
@@ -86,19 +87,6 @@ class Mailbox extends Entity {
 		$this->addType('syncChangedLock', 'integer');
 		$this->addType('syncVanishedLock', 'integer');
 		$this->addType('selectable', 'boolean');
-	}
-
-	public function toFolder(): Folder {
-		$folder = new Folder(
-			$this->accountId,
-			new \Horde_Imap_Client_Mailbox($this->name),
-			json_decode($this->getAttributes() ?? '[]', true) ?? [],
-			$this->delimiter
-		);
-		foreach ($this->getSpecialUseParsed() as $use) {
-			$folder->addSpecialUse($use);
-		}
-		return $folder;
 	}
 
 	private function getSpecialUseParsed(): array {
@@ -126,5 +114,19 @@ class Mailbox extends Entity {
 		return $this->getSyncNewLock() !== null
 			|| $this->getSyncChangedLock() !== null
 			|| $this->getSyncVanishedLock() !== null;
+	}
+
+	public function jsonSerialize() {
+		$specialUse = $this->getSpecialUseParsed();
+		return [
+			'databaseId' => $this->getId(),
+			'id' => base64_encode($this->getName()),
+			'accountId' => $this->accountId,
+			'displayName' => $this->getName(),
+			'attributes' => json_decode($this->attributes ?? '[]', true) ?? [],
+			'delimiter' => $this->delimiter,
+			'specialUse' => $specialUse,
+			'specialRole' => $specialUse[0] ?? 0,
+		];
 	}
 }

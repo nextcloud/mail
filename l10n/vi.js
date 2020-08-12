@@ -28,6 +28,7 @@ OC.L10N.register(
     "Cancel" : "Hủy bỏ",
     "Mark all as read" : "Đánh dấu tất cả như đã ",
     "Clear cache" : "Xóa bộ nhớ ",
+    "Delete folder" : "Xóa thư mục",
     "Signature" : "Chữ ký",
     "General" : "Tổng hợp",
     "User" : "Người dùng",

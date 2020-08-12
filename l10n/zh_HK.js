@@ -19,6 +19,7 @@ OC.L10N.register(
     "Reply" : "回覆",
     "Settings" : "設定",
     "Add folder" : "Add folder",
+    "Saving" : "儲存中",
     "Cancel" : "取消",
     "Signature" : "署名",
     "General" : "一般",

@@ -26,8 +26,10 @@ declare(strict_types=1);
 namespace OCA\Mail\Db;
 
 use Horde_Imap_Client;
+use OCA\Mail\Account;
 use OCA\Mail\Address;
 use OCA\Mail\AddressList;
+use OCA\Mail\IMAP\Threading\DatabaseMessage;
 use OCA\Mail\Service\Search\SearchQuery;
 use OCP\AppFramework\Db\QBMapper;
 use OCP\AppFramework\Utility\ITimeFactory;
@@ -86,6 +88,66 @@ class MessageMapper extends QBMapper {
 		return $this->findUids($query);
 	}
 
+	/**
+	 * @param Account $account
+	 *
+	 * @return DatabaseMessage[]
+	 */
+	public function findThreadingData(Account $account): array {
+		$mailboxesQuery = $this->db->getQueryBuilder();
+		$messagesQuery = $this->db->getQueryBuilder();
+
+		$mailboxesQuery->select('id')
+			->from('mail_mailboxes')
+			->where($mailboxesQuery->expr()->eq('account_id', $messagesQuery->createNamedParameter($account->getId(), IQueryBuilder::PARAM_INT), IQueryBuilder::PARAM_INT));
+		$messagesQuery->select('id', 'subject', 'message_id', 'in_reply_to', 'references', 'thread_root_id')
+			->from($this->getTableName())
+			->where($messagesQuery->expr()->in('mailbox_id', $messagesQuery->createFunction($mailboxesQuery->getSQL()), IQueryBuilder::PARAM_INT_ARRAY))
+			->andWhere($messagesQuery->expr()->isNotNull('message_id'));
+
+		$result = $messagesQuery->execute();
+		$messages = array_map(function (array $row) {
+			return DatabaseMessage::fromRowData(
+				(int)$row['id'],
+				$row['subject'],
+				$row['message_id'],
+				$row['references'],
+				$row['in_reply_to'],
+				$row['thread_root_id']
+			);
+		}, $result->fetchAll());
+		$result->closeCursor();
+
+		return $messages;
+	}
+
+	/**
+	 * @param DatabaseMessage[] $messages
+	 *
+	 * @todo combine threads and send just one query per thread, like UPDATE ... SET thread_root_id = xxx where UID IN (...)
+	 */
+	public function writeThreadIds(array $messages): void {
+		$this->db->beginTransaction();
+
+		$query = $this->db->getQueryBuilder();
+		$query->update($this->getTableName())
+			->set('thread_root_id', $query->createParameter('thread_root_id'))
+			->where($query->expr()->eq('id', $query->createParameter('id')));
+
+		foreach ($messages as $message) {
+			$query->setParameter(
+				'thread_root_id',
+				$message->getThreadRootId(),
+				$message->getThreadRootId() === null ? IQueryBuilder::PARAM_NULL : IQueryBuilder::PARAM_STR
+			);
+			$query->setParameter('id', $message->getDatabaseId(), IQueryBuilder::PARAM_INT);
+
+			$query->execute();
+		}
+
+		$this->db->commit();
+	}
+
 	public function insertBulk(Message ...$messages): void {
 		$this->db->beginTransaction();
 
@@ -124,7 +186,7 @@ class MessageMapper extends QBMapper {
 			$references = $message->getReferences();
 			$qb1->setParameter('references', $references, $references === null ? IQueryBuilder::PARAM_NULL : IQueryBuilder::PARAM_STR);
 			$threadRootId = $message->getThreadRootId();
-			$qb1->setParameter('thread_root_id', $threadRootId,$threadRootId === null ? IQueryBuilder::PARAM_NULL : IQueryBuilder::PARAM_STR);
+			$qb1->setParameter('thread_root_id', $threadRootId, $threadRootId === null ? IQueryBuilder::PARAM_NULL : IQueryBuilder::PARAM_STR);
 			$qb1->setParameter('mailbox_id', $message->getMailboxId(), IQueryBuilder::PARAM_INT);
 			$qb1->setParameter('subject', $message->getSubject(), IQueryBuilder::PARAM_STR);
 			$qb1->setParameter('sent_at', $message->getSentAt(), IQueryBuilder::PARAM_INT);
@@ -278,6 +340,41 @@ class MessageMapper extends QBMapper {
 	}
 
 	/**
+	 * @param Account $account
+	 * @param int $messageId
+	 *
+	 * @return Message[]
+	 */
+	public function findThread(Account $account, int $messageId): array {
+		$qb = $this->db->getQueryBuilder();
+		$subQb1 = $this->db->getQueryBuilder();
+		$subQb2 = $this->db->getQueryBuilder();
+
+		$mailboxIdsQuery = $subQb1
+			->select('id')
+			->from('mail_mailboxes')
+			->where($qb->expr()->eq('account_id', $qb->createNamedParameter($account->getId(), IQueryBuilder::PARAM_INT)));
+		$threadRootIdsQuery = $subQb2
+			->select('thread_root_id')
+			->from($this->getTableName())
+			->where(
+				$qb->expr()->eq('id', $qb->createNamedParameter($messageId, IQueryBuilder::PARAM_INT), IQueryBuilder::PARAM_INT)
+			);
+
+		$selectMessages = $qb
+			->select('*')
+			->from($this->getTableName())
+			->where(
+				$qb->expr()->isNotNull('thread_root_id'),
+				$qb->expr()->in('thread_root_id', $qb->createFunction($threadRootIdsQuery->getSQL()), IQueryBuilder::PARAM_INT_ARRAY),
+				$qb->expr()->in('mailbox_id', $qb->createFunction($mailboxIdsQuery->getSQL()), IQueryBuilder::PARAM_INT_ARRAY)
+			)
+			->orderBy('sent_at', 'desc');
+
+		return $this->findRecipients($this->findEntities($selectMessages));
+	}
+
+	/**
 	 * @param Mailbox $mailbox
 	 * @param SearchQuery $query
 	 * @param int|null $limit
@@ -335,7 +432,7 @@ class MessageMapper extends QBMapper {
 			$select->andWhere(
 				$qb->expr()->iLike(
 					'subject',
-					$qb->createNamedParameter('%' . $this->db->escapeLikeParameter($query-> $query->getSubject()) . '%', IQueryBuilder::PARAM_STR),
+					$qb->createNamedParameter('%' . $this->db->escapeLikeParameter($query->$query->getSubject()) . '%', IQueryBuilder::PARAM_STR),
 					IQueryBuilder::PARAM_STR
 				)
 			);

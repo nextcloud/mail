@@ -19,14 +19,14 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-import {curry, defaultTo} from 'ramda'
+import { curry, defaultTo } from 'ramda'
 
 export const normalizedFolderId = curry((accountId, folderId) => {
 	return `${accountId}-${folderId}`
 })
 
-export const normalizedMessageId = curry((accountId, folderId, messageId) => {
-	return `${accountId}-${folderId}-${messageId}`
+export const normalizedMessageId = curry((accountId, folderId, uid) => {
+	return `${accountId}-${folderId}-${uid}`
 })
 
 export const normalizedEnvelopeListId = defaultTo('')

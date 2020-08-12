@@ -29,8 +29,7 @@
 		:title="account.emailAddress"
 		:to="firstFolderRoute"
 		:exact="true"
-		@update:menuOpen="onMenuToggle"
-	>
+		@update:menuOpen="onMenuToggle">
 		<!-- Color dot -->
 		<AppNavigationIconBullet v-if="bulletColor" slot="icon" :color="bulletColor" />
 
@@ -45,13 +44,16 @@
 			<ActionCheckbox
 				:checked="account.showSubscribedOnly"
 				:disabled="savingShowOnlySubscribed"
-				@update:checked="changeShowSubscribedOnly"
-			>
+				@update:checked="changeShowSubscribedOnly">
 				{{ t('mail', 'Show only subscribed folders') }}
 			</ActionCheckbox>
-			<ActionInput icon="icon-add" @submit="createFolder">
+			<ActionButton v-if="!editing" icon="icon-folder" @click="openCreateFolder">
 				{{ t('mail', 'Add folder') }}
-			</ActionInput>
+			</ActionButton>
+			<ActionInput v-if="editing" icon="icon-folder" @submit.prevent.stop="createFolder" />
+			<ActionText v-if="showSaving" icon="icon-loading-small">
+				{{ t('mail', 'Saving') }}
+			</ActionText>
 			<ActionButton v-if="!isFirst" icon="icon-triangle-n" @click="changeAccountOrderUp">
 				{{ t('mail', 'Move Up') }}
 			</ActionButton>
@@ -73,12 +75,12 @@ import ActionButton from '@nextcloud/vue/dist/Components/ActionButton'
 import ActionCheckbox from '@nextcloud/vue/dist/Components/ActionCheckbox'
 import ActionInput from '@nextcloud/vue/dist/Components/ActionInput'
 import ActionText from '@nextcloud/vue/dist/Components/ActionText'
-import {formatFileSize} from '@nextcloud/files'
-import {generateUrl} from '@nextcloud/router'
+import { formatFileSize } from '@nextcloud/files'
+import { generateUrl } from '@nextcloud/router'
 
-import {calculateAccountColor} from '../util/AccountColor'
+import { calculateAccountColor } from '../util/AccountColor'
 import logger from '../logger'
-import {fetchQuota} from '../service/AccountService'
+import { fetchQuota } from '../service/AccountService'
 
 export default {
 	name: 'NavigationAccount',
@@ -117,6 +119,8 @@ export default {
 			},
 			savingShowOnlySubscribed: false,
 			quota: undefined,
+			editing: false,
+			showSaving: false,
 		}
 	},
 	computed: {
@@ -165,30 +169,37 @@ export default {
 	},
 	methods: {
 		createFolder(e) {
+			this.editing = true
 			const name = e.target.elements[1].value
 			logger.info('creating folder ' + name)
 			this.menuOpen = false
 			this.$store
-				.dispatch('createFolder', {account: this.account, name})
+				.dispatch('createFolder', { account: this.account, name })
 				.then(() => logger.info(`folder ${name} created`))
 				.catch((error) => {
-					logger.error('could not create folder', {error})
+					logger.error('could not create folder', { error })
 					throw error
 				})
+			this.editing = false
+			this.showSaving = false
+		},
+		openCreateFolder() {
+			this.editing = true
+			this.showSaving = false
 		},
 		removeAccount() {
 			const id = this.account.id
-			logger.info('delete account', {account: this.account})
+			logger.info('delete account', { account: this.account })
 			OC.dialogs.confirmDestructive(
 				t(
 					'mail',
 					'The account for {email} and cached email data will be removed from Nextcloud, but not from your email provider.',
-					{email: this.account.emailAddress}
+					{ email: this.account.emailAddress }
 				),
-				t('mail', 'Remove account {email}', {email: this.account.emailAddress}),
+				t('mail', 'Remove account {email}', { email: this.account.emailAddress }),
 				{
 					type: OC.dialogs.YES_NO_BUTTONS,
-					confirm: t('mail', 'Remove {email}', {email: this.account.emailAddress}),
+					confirm: t('mail', 'Remove {email}', { email: this.account.emailAddress }),
 					confirmClasses: 'error',
 					cancel: t('mail', 'Cancel'),
 				},
@@ -205,7 +216,7 @@ export default {
 								// TODO: update store and handle this more efficiently
 								location.href = generateUrl('/apps/mail')
 							})
-							.catch((error) => logger.error('could not delete account', {error}))
+							.catch((error) => logger.error('could not delete account', { error }))
 					}
 					this.loading.delete = false
 				}
@@ -213,13 +224,13 @@ export default {
 		},
 		changeAccountOrderUp() {
 			this.$store
-				.dispatch('moveAccount', {account: this.account, up: true})
-				.catch((error) => logger.error('could not move account up', {error}))
+				.dispatch('moveAccount', { account: this.account, up: true })
+				.catch((error) => logger.error('could not move account up', { error }))
 		},
 		changeAccountOrderDown() {
 			this.$store
-				.dispatch('moveAccount', {account: this.account})
-				.catch((error) => logger.error('could not move account down', {error}))
+				.dispatch('moveAccount', { account: this.account })
+				.catch((error) => logger.error('could not move account down', { error }))
 		},
 		changeShowSubscribedOnly(onlySubscribed) {
 			this.savingShowOnlySubscribed = true
@@ -235,7 +246,7 @@ export default {
 					logger.info('show only subscribed folders updated to ' + onlySubscribed)
 				})
 				.catch((error) => {
-					logger.error('could not update subscription mode', {error})
+					logger.error('could not update subscription mode', { error })
 					this.savingShowOnlySubscribed = false
 					throw error
 				})

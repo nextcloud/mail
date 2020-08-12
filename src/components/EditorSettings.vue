@@ -26,11 +26,19 @@
 			{{ t('mail', 'Preferred writing mode for new messages and replies.') }}
 		</p>
 		<p>
-			<input id="plaintext" v-model="mode" type="radio" class="radio" value="plaintext" />
+			<input id="plaintext"
+				v-model="mode"
+				type="radio"
+				class="radio"
+				value="plaintext">
 			<label :class="{primary: mode === 'plaintext'}" for="plaintext">
 				{{ t('mail', 'Plain text') }}
 			</label>
-			<input id="richtext" v-model="mode" type="radio" class="radio" value="richtext" />
+			<input id="richtext"
+				v-model="mode"
+				type="radio"
+				class="radio"
+				value="richtext">
 			<label :class="{primary: mode === 'richtext'}" for="richtext">
 				{{ t('mail', 'Rich text') }}
 			</label>
@@ -67,7 +75,7 @@ export default {
 					Logger.info('editor mode updated')
 				})
 				.catch((error) => {
-					Logger.error('could not update editor mode', {error})
+					Logger.error('could not update editor mode', { error })
 					this.editorMode = oldVal
 					throw error
 				})

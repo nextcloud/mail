@@ -1,11 +1,11 @@
 OC.L10N.register(
     "mail",
     {
-    "Mail" : "Retpoŝtilo",
     "Auto detect failed. Please use manual mode." : "Aŭtomata rekono malsukcesis. Bv. uzi permanan reĝimon.",
     "Updating account failed: " : "Ĝisdatigo de konto malsukcesis:",
     "Creating account failed: " : "Kreo de konto malsukcesis:",
     "Embedded message %s" : "Enkorpiga mesaĝo %s",
+    "Mail" : "Retpoŝtilo",
     "💌 A mail app for Nextcloud" : "Poŝtprogrameto por Nextcloud",
     "Auto" : "Aŭtomate",
     "Name" : "Nomo",
@@ -99,6 +99,7 @@ OC.L10N.register(
     "Quota" : "Kvoto",
     "Edit account" : "Redakti konton",
     "Add folder" : "Aldoni dosierujon",
+    "Saving" : "Konservado",
     "Move Up" : "Movi supren",
     "Move down" : "Movi malsupren",
     "Remove account" : "Forigi konton",
@@ -110,6 +111,7 @@ OC.L10N.register(
     "Mark all messages of this folder as read" : "Marki ĉiujn mesaĝojn el tiu dosierujo kiel legitaj",
     "Add subfolder" : "Aldoni subdosierujon",
     "Clear cache" : "Forviŝi la kaŝmemoron",
+    "Delete folder" : "Forigi dosierujon",
     "_{total} message_::_{total} messages_" : ["{total} mesaĝo","{total} mesaĝoj"],
     "Could not load your draft" : "Ne eblis ŝargi vian malneton",
     "Could not load original message" : "Ne eblis ŝargi originalan mesaĝon",

@@ -26,7 +26,7 @@
 
 <script>
 import logger from './logger'
-import {matchError} from './errors/match'
+import { matchError } from './errors/match'
 import MailboxLockedError from './errors/MailboxLockedError'
 
 export default {
@@ -36,7 +36,7 @@ export default {
 	},
 	methods: {
 		sync() {
-			setTimeout(async () => {
+			setTimeout(async() => {
 				try {
 					await this.$store.dispatch('syncInboxes')
 
@@ -44,10 +44,10 @@ export default {
 				} catch (error) {
 					matchError(error, {
 						[MailboxLockedError.name](error) {
-							logger.info('Background sync failed because a mailbox is locked', {error})
+							logger.info('Background sync failed because a mailbox is locked', { error })
 						},
 						default(error) {
-							logger.error('Background sync failed: ' + error.message, {error})
+							logger.error('Background sync failed: ' + error.message, { error })
 						},
 					})
 				} finally {

@@ -5,13 +5,13 @@
 			v-else-if="!message"
 			:error="error && error.message ? error.message : t('mail', 'Not found')"
 			:message="errorMessage"
-			:data="error"
-		>
-		</Error>
+			:data="error" />
 		<template v-else>
 			<div id="mail-message-header">
 				<div id="mail-message-header-fields">
-					<h2 :title="message.subject">{{ message.subject }}</h2>
+					<h2 :title="message.subject">
+						{{ message.subject }}
+					</h2>
 					<p class="transparency">
 						<AddressList :entries="message.from" />
 						{{ t('mail', 'to') }}
@@ -28,8 +28,7 @@
 								? 'icon-reply-all-white button primary'
 								: 'icon-reply-white button primary'
 						"
-						@click="hasMultipleRecipients ? replyAll() : replyMessage()"
-					>
+						@click="hasMultipleRecipients ? replyAll() : replyMessage()">
 						<span class="action-label">{{ t('mail', 'Reply') }}</span>
 					</div>
 					<Actions id="mail-message-actions-menu" class="app-content-list-item-menu" menu-align="right">
@@ -39,12 +38,16 @@
 						<ActionButton icon="icon-forward" @click="forwardMessage">
 							{{ t('mail', 'Forward') }}
 						</ActionButton>
-						<ActionButton icon="icon-starred" @click.prevent="onToggleFlagged">{{
-							envelope.flags.flagged ? t('mail', 'Unfavorite') : t('mail', 'Favorite')
-						}}</ActionButton>
-						<ActionButton icon="icon-important" @click.prevent="onToggleImportant">{{
-							envelope.flags.important ? t('mail', 'Mark unimportant') : t('mail', 'Mark important')
-						}}</ActionButton>
+						<ActionButton icon="icon-starred" @click.prevent="onToggleFlagged">
+							{{
+								envelope.flags.flagged ? t('mail', 'Unfavorite') : t('mail', 'Favorite')
+							}}
+						</ActionButton>
+						<ActionButton icon="icon-important" @click.prevent="onToggleImportant">
+							{{
+								envelope.flags.important ? t('mail', 'Mark unimportant') : t('mail', 'Mark important')
+							}}
+						</ActionButton>
 						<ActionButton icon="icon-mail" @click="onToggleSeen">
 							{{ envelope.flags.seen ? t('mail', 'Mark unread') : t('mail', 'Mark read') }}
 						</ActionButton>
@@ -55,8 +58,7 @@
 						<ActionButton
 							:icon="sourceLoading ? 'icon-loading-small' : 'icon-details'"
 							:disabled="sourceLoading"
-							@click="onShowSource"
-						>
+							@click="onShowSource">
 							{{ t('mail', 'View source') }}
 						</ActionButton>
 						<ActionButton icon="icon-delete" @click.prevent="onDelete">
@@ -80,11 +82,13 @@
 				<MessagePlainTextBody v-else :body="message.body" :signature="message.signature" />
 				<Popover v-if="message.attachments[0]" class="attachment-popover">
 					<Actions slot="trigger">
-						<ActionButton icon="icon-public icon-attachment">Attachments</ActionButton>
+						<ActionButton icon="icon-public icon-attachment">
+							Attachments
+						</ActionButton>
 					</Actions>
 					<MessageAttachments :attachments="message.attachments" />
 				</Popover>
-				<div id="reply-composer"></div>
+				<div id="reply-composer" />
 			</div>
 		</template>
 	</AppContentDetails>
@@ -97,14 +101,14 @@ import Popover from '@nextcloud/vue/dist/Components/Popover'
 import AppContentDetails from '@nextcloud/vue/dist/Components/AppContentDetails'
 import axios from '@nextcloud/axios'
 import Modal from '@nextcloud/vue/dist/Components/Modal'
-import {generateUrl} from '@nextcloud/router'
+import { generateUrl } from '@nextcloud/router'
 
 import AddressList from './AddressList'
-import {buildRecipients as buildReplyRecipients, buildReplySubject} from '../ReplyBuilder'
+import { buildRecipients as buildReplyRecipients, buildReplySubject } from '../ReplyBuilder'
 import Error from './Error'
-import {getRandomMessageErrorMessage} from '../util/ErrorMessageFactory'
-import {html, plain} from '../util/text'
-import {isPgpgMessage} from '../crypto/pgp'
+import { getRandomMessageErrorMessage } from '../util/ErrorMessageFactory'
+import { html, plain } from '../util/text'
+import { isPgpgMessage } from '../crypto/pgp'
 import Itinerary from './Itinerary'
 import MessageEncryptedBody from './MessageEncryptedBody'
 import MessageHTMLBody from './MessageHTMLBody'
@@ -152,17 +156,17 @@ export default {
 			return isPgpgMessage(this.message.hasHtmlBody ? html(this.message.body) : plain(this.message.body))
 		},
 		htmlUrl() {
-			return generateUrl('/apps/mail/api/accounts/{accountId}/folders/{folderId}/messages/{id}/html', {
+			return generateUrl('/apps/mail/api/accounts/{accountId}/folders/{folderId}/messages/{uid}/html', {
 				accountId: this.message.accountId,
 				folderId: this.message.folderId,
-				id: this.message.id,
+				uid: this.message.uid,
 			})
 		},
 		replyTo() {
 			return {
 				accountId: this.message.accountId,
 				folderId: this.message.folderId,
-				messageId: this.message.id,
+				messageId: this.message.uid,
 			}
 		},
 		hasMultipleRecipients() {
@@ -172,16 +176,16 @@ export default {
 	watch: {
 		$route(to, from) {
 			if (
-				from.name === to.name &&
-				Number.parseInt(from.params.accountId, 10) === Number.parseInt(to.params.accountId, 10) &&
-				from.params.folderId === to.params.folderId &&
-				from.params.messageUid === to.params.messageUid &&
-				from.params.filter === to.params.filter
+				from.name === to.name
+				&& Number.parseInt(from.params.accountId, 10) === Number.parseInt(to.params.accountId, 10)
+				&& from.params.folderId === to.params.folderId
+				&& from.params.messageUuid === to.params.messageUuid
+				&& from.params.filter === to.params.filter
 			) {
 				logger.debug('navigated but the message is still the same')
 				return
 			}
-			logger.debug('navigated to another message', {to, from})
+			logger.debug('navigated to another message', { to, from })
 			this.fetchMessage()
 		},
 	},
@@ -197,17 +201,17 @@ export default {
 			this.replyRecipient = {}
 			this.replySubject = ''
 
-			const messageUid = this.$route.params.messageUid
+			const messageUuid = this.$route.params.messageUuid
 
 			try {
 				const [envelope, message] = await Promise.all([
-					this.$store.dispatch('fetchEnvelope', messageUid),
-					this.$store.dispatch('fetchMessage', messageUid),
+					this.$store.dispatch('fetchEnvelope', messageUuid),
+					this.$store.dispatch('fetchMessage', messageUuid),
 				])
-				logger.debug('envelope and message fetched', {envelope, message})
+				logger.debug('envelope and message fetched', { envelope, message })
 				// TODO: add timeout so that message isn't flagged when only viewed
 				// for a few seconds
-				if (message && message.uid !== this.$route.params.messageUid) {
+				if (message && message.uuid !== this.$route.params.messageUuid) {
 					logger.debug("User navigated away, loaded message won't be shown nor flagged as seen")
 					return
 				}
@@ -216,7 +220,7 @@ export default {
 				this.message = message
 
 				if (envelope === undefined || message === undefined) {
-					logger.info('message could not be found', {messageUid, envelope, message})
+					logger.info('message could not be found', { messageUuid, envelope, message })
 					this.errorMessage = getRandomMessageErrorMessage()
 					this.loading = false
 					return
@@ -236,7 +240,7 @@ export default {
 					return this.$store.dispatch('toggleEnvelopeSeen', envelope)
 				}
 			} catch (error) {
-				logger.error('could not load message ', {messageUid, error})
+				logger.error('could not load message ', { messageUuid, error })
 				if (error.isError) {
 					this.errorMessage = t('mail', 'Could not load your message')
 					this.error = error
@@ -250,11 +254,11 @@ export default {
 				params: {
 					accountId: this.$route.params.accountId,
 					folderId: this.$route.params.folderId,
-					messageUid: 'reply',
+					messageUuid: 'reply',
 					filter: this.$route.params.filter ? this.$route.params.filter : undefined,
 				},
 				query: {
-					uid: this.message.uid,
+					uuid: this.message.uuid,
 				},
 			})
 		},
@@ -264,11 +268,11 @@ export default {
 				params: {
 					accountId: this.$route.params.accountId,
 					folderId: this.$route.params.folderId,
-					messageUid: 'replyAll',
+					messageUuid: 'replyAll',
 					filter: this.$route.params.filter ? this.$route.params.filter : undefined,
 				},
 				query: {
-					uid: this.message.uid,
+					uuid: this.message.uuid,
 				},
 			})
 		},
@@ -278,11 +282,11 @@ export default {
 				params: {
 					accountId: this.$route.params.accountId,
 					folderId: this.$route.params.folderId,
-					messageUid: 'new',
+					messageUuid: 'new',
 					filter: this.$route.params.filter ? this.$route.params.filter : undefined,
 				},
 				query: {
-					uid: this.message.uid,
+					uuid: this.message.uuid,
 				},
 			})
 		},
@@ -297,7 +301,7 @@ export default {
 			this.$store.dispatch('deleteMessage', {
 				accountId: this.message.accountId,
 				folderId: this.message.folderId,
-				id: this.message.id,
+				uid: this.message.uid,
 			})
 		},
 		async onShowSource() {
@@ -305,10 +309,10 @@ export default {
 
 			try {
 				const resp = await axios.get(
-					generateUrl('/apps/mail/api/accounts/{accountId}/folders/{folderId}/messages/{id}/source', {
+					generateUrl('/apps/mail/api/accounts/{accountId}/folders/{folderId}/messages/{uid}/source', {
 						accountId: this.message.accountId,
 						folderId: this.message.folderId,
-						id: this.message.id,
+						uid: this.message.uid,
 					})
 				)
 

@@ -1,9 +1,9 @@
 OC.L10N.register(
     "mail",
     {
-    "Mail" : "Email",
     "Auto detect failed. Please use manual mode." : "Deteksi otomatis gagal. Mohon gunakan modus manual.",
     "Creating account failed: " : "Gagal membuat akun:",
+    "Mail" : "Email",
     "Name" : "Nama",
     "Password" : "Kata kunci",
     "None" : "Tidak ada",
@@ -33,10 +33,12 @@ OC.L10N.register(
     "Settings" : "Setelan",
     "Quota" : "Kuota",
     "Add folder" : "Add folder",
+    "Saving" : "Menyimpan",
     "Remove account" : "Hapus akun",
     "Cancel" : "Membatalkan",
     "Mark all as read" : "Tandai semua telah dibaca",
     "Clear cache" : "Bersihkan cache",
+    "Delete folder" : "Hapus folder",
     "Signature" : "Tanda",
     "General" : "Umum",
     "User" : "Pengguna",

@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 /**
  * @copyright 2017 Christoph Wurst <christoph@winzerhof-wurst.at>
  *
@@ -40,8 +42,8 @@ class UserPreferenceSevice implements IUserPreferences {
 	 * @param string $UserId
 	 */
 	public function __construct(IConfig $config, $UserId) {
-		$this->UserId = $UserId;
 		$this->config = $config;
+		$this->UserId = $UserId;
 	}
 
 	/**

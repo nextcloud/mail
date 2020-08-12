@@ -236,6 +236,23 @@ class MessagesController extends Controller {
 
 	/**
 	 * @NoAdminRequired
+	 * @NoCSRFRequired
+	 * @TrapError
+	 *
+	 * @param int $accountId
+	 * @param string $folderId
+	 *
+	 * @return JSONResponse
+	 * @throws ClientException
+	 */
+	public function getThread(int $accountId, int $id): JSONResponse {
+		$account = $this->accountService->find($this->currentUserId, $accountId);
+
+		return new JSONResponse($this->mailManager->getThread($account, $id));
+	}
+
+	/**
+	 * @NoAdminRequired
 	 * @TrapError
 	 *
 	 * @param int $accountId

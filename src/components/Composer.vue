@@ -9,14 +9,13 @@
 				v-model="selectedAlias"
 				:options="aliases"
 				label="name"
-				track-by="id"
+				track-by="selectId"
 				:searchable="false"
 				:hide-selected="true"
 				:custom-label="formatAliases"
 				:placeholder="t('mail', 'Select account')"
 				:clear-on-select="false"
-				@keyup="onInputChanged"
-			/>
+				@keyup="onInputChanged" />
 		</div>
 		<div class="composer-fields">
 			<label class="to-label" for="to">
@@ -37,9 +36,11 @@
 				:preserve-search="true"
 				@keyup="onInputChanged"
 				@tag="onNewToAddr"
-				@search-change="onAutocomplete"
-			/>
-			<a v-if="!showCC" class="copy-toggle" href="#" @click.prevent="showCC = true">
+				@search-change="onAutocomplete" />
+			<a v-if="!showCC"
+				class="copy-toggle"
+				href="#"
+				@click.prevent="showCC = true">
 				{{ t('mail', '+ Cc/Bcc') }}
 			</a>
 		</div>
@@ -61,8 +62,7 @@
 				:preserve-search="true"
 				@keyup="onInputChanged"
 				@tag="onNewCcAddr"
-				@search-change="onAutocomplete"
-			>
+				@search-change="onAutocomplete">
 				<span slot="noOptions">{{ t('mail', 'No contacts found.') }}</span>
 			</Multiselect>
 		</div>
@@ -83,8 +83,7 @@
 				:preserve-search="true"
 				@keyup="onInputChanged"
 				@tag="onNewBccAddr"
-				@search-change="onAutocomplete"
-			>
+				@search-change="onAutocomplete">
 				<span slot="noOptions">{{ t('mail', 'No contacts found.') }}</span>
 			</Multiselect>
 		</div>
@@ -100,8 +99,7 @@
 				class="subject"
 				autocomplete="off"
 				:placeholder="t('mail', 'Subject …')"
-				@keyup="onInputChanged"
-			/>
+				@keyup="onInputChanged">
 		</div>
 		<div v-if="noReply" class="warning noreply-warning">
 			{{ t('mail', 'This message came from a noreply address so your reply will probably not be read.') }}
@@ -124,8 +122,7 @@
 				:placeholder="t('mail', 'Write message …')"
 				:focus="isReply"
 				:bus="bus"
-				@input="onInputChanged"
-			></TextEditor>
+				@input="onInputChanged" />
 			<TextEditor
 				v-else-if="!encrypt && !editorPlainText"
 				key="editor-rich"
@@ -136,16 +133,14 @@
 				:placeholder="t('mail', 'Write message …')"
 				:focus="isReply"
 				:bus="bus"
-				@input="onInputChanged"
-			></TextEditor>
+				@input="onInputChanged" />
 			<MailvelopeEditor
 				v-else
 				ref="mailvelopeEditor"
 				v-model="bodyVal"
 				:recipients="allRecipients"
 				:quoted-text="body"
-				:is-reply-or-forward="isReply || isForward"
-			/>
+				:is-reply-or-forward="isReply || isForward" />
 		</div>
 		<div class="composer-actions">
 			<ComposerAttachments v-model="attachments" :bus="bus" @upload="onAttachmentsUploading" />
@@ -155,32 +150,43 @@
 					<span v-else-if="savingDraft === false" id="draft-status">{{ t('mail', 'Draft saved') }}</span>
 				</p>
 				<Actions>
-					<ActionButton icon="icon-upload" @click="onAddLocalAttachment">{{
-						t('mail', 'Upload attachment')
-					}}</ActionButton>
-					<ActionButton icon="icon-folder" @click="onAddCloudAttachment">{{
-						t('mail', 'Add attachment from Files')
-					}}</ActionButton>
-					<ActionButton :disabled="encrypt" icon="icon-folder" @click="onAddCloudAttachmentLink">{{
-						t('mail', 'Add attachment link from Files')
-					}}</ActionButton>
+					<ActionButton icon="icon-upload" @click="onAddLocalAttachment">
+						{{
+							t('mail', 'Upload attachment')
+						}}
+					</ActionButton>
+					<ActionButton icon="icon-folder" @click="onAddCloudAttachment">
+						{{
+							t('mail', 'Add attachment from Files')
+						}}
+					</ActionButton>
+					<ActionButton :disabled="encrypt" icon="icon-folder" @click="onAddCloudAttachmentLink">
+						{{
+							t('mail', 'Add attachment link from Files')
+						}}
+					</ActionButton>
 					<ActionCheckbox
 						:checked="!encrypt && !editorPlainText"
 						:disabled="encrypt"
 						@check="editorMode = 'html'"
-						@uncheck="editorMode = 'plaintext'"
-						>{{ t('mail', 'Enable formatting') }}</ActionCheckbox
-					>
+						@uncheck="editorMode = 'plaintext'">
+						{{ t('mail', 'Enable formatting') }}
+					</ActionCheckbox>
 					<ActionCheckbox
 						v-if="mailvelope.available"
 						:checked="encrypt"
 						@check="encrypt = true"
-						@uncheck="encrypt = false"
-						>{{ t('mail', 'Encrypt message with Mailvelope') }}</ActionCheckbox
-					>
-					<ActionLink v-else href="https://www.mailvelope.com/" target="_blank" icon="icon-password">{{
-						t('mail', 'Looking for a way to encrypt your emails? Install the Mailvelope browser extension!')
-					}}</ActionLink>
+						@uncheck="encrypt = false">
+						{{ t('mail', 'Encrypt message with Mailvelope') }}
+					</ActionCheckbox>
+					<ActionLink v-else
+						href="https://www.mailvelope.com/"
+						target="_blank"
+						icon="icon-password">
+						{{
+							t('mail', 'Looking for a way to encrypt your emails? Install the Mailvelope browser extension!')
+						}}
+					</ActionLink>
 				</Actions>
 				<div>
 					<input
@@ -188,8 +194,7 @@
 						type="submit"
 						:value="submitButtonTitle"
 						:disabled="!canSend"
-						@click="onSend"
-					/>
+						@click="onSend">
 				</div>
 			</div>
 		</div>
@@ -198,9 +203,15 @@
 	<Loading v-else-if="state === STATES.SENDING" :hint="t('mail', 'Sending …')" />
 	<div v-else-if="state === STATES.ERROR" class="emptycontent">
 		<h2>{{ t('mail', 'Error sending your message') }}</h2>
-		<p v-if="errorText">{{ errorText }}</p>
-		<button class="button" @click="state = STATES.EDITING">{{ t('mail', 'Go back') }}</button>
-		<button class="button primary" @click="onSend">{{ t('mail', 'Retry') }}</button>
+		<p v-if="errorText">
+			{{ errorText }}
+		</p>
+		<button class="button" @click="state = STATES.EDITING">
+			{{ t('mail', 'Go back') }}
+		</button>
+		<button class="button primary" @click="onSend">
+			{{ t('mail', 'Retry') }}
+		</button>
 	</div>
 	<div v-else class="emptycontent">
 		<h2>{{ t('mail', 'Message sent!') }}</h2>
@@ -220,19 +231,19 @@ import ActionButton from '@nextcloud/vue/dist/Components/ActionButton'
 import ActionCheckbox from '@nextcloud/vue/dist/Components/ActionCheckbox'
 import ActionLink from '@nextcloud/vue/dist/Components/ActionLink'
 import Multiselect from '@nextcloud/vue/dist/Components/Multiselect'
-import {translate as t} from '@nextcloud/l10n'
+import { translate as t } from '@nextcloud/l10n'
 import Vue from 'vue'
 
 import ComposerAttachments from './ComposerAttachments'
-import {findRecipient} from '../service/AutocompleteService'
-import {detect, html, plain, toHtml, toPlain} from '../util/text'
+import { findRecipient } from '../service/AutocompleteService'
+import { detect, html, plain, toHtml, toPlain } from '../util/text'
 import Loading from './Loading'
 import logger from '../logger'
 import TextEditor from './TextEditor'
-import {buildReplyBody} from '../ReplyBuilder'
+import { buildReplyBody } from '../ReplyBuilder'
 import MailvelopeEditor from './MailvelopeEditor'
-import {getMailvelope} from '../crypto/mailvelope'
-import {isPgpgMessage} from '../crypto/pgp'
+import { getMailvelope } from '../crypto/mailvelope'
+import { isPgpgMessage } from '../crypto/pgp'
 
 const debouncedSearch = debouncePromise(findRecipient, 500)
 
@@ -335,7 +346,31 @@ export default {
 	},
 	computed: {
 		aliases() {
-			return this.$store.getters.accounts.filter((a) => !a.isUnified)
+			let cnt = 0
+			const accounts = this.$store.getters.accounts.filter((a) => !a.isUnified)
+			const aliases = accounts.flatMap((account) => [
+				{
+					id: account.id,
+					aliasId: null,
+					selectId: cnt++,
+					editorMode: account.editorMode,
+					signature: account.signature,
+					name: account.name,
+					emailAddress: account.emailAddress,
+				},
+				account.aliases.map((alias) => {
+					return {
+						id: account.id,
+						aliasId: alias.id,
+						selectId: cnt++,
+						editorMode: account.editorMode,
+						signature: account.signature,
+						name: alias.name,
+						emailAddress: alias.alias,
+					}
+				}),
+			])
+			return aliases.flat()
 		},
 		allRecipients() {
 			return this.selectTo.concat(this.selectCc).concat(this.selectBcc)
@@ -343,7 +378,7 @@ export default {
 		selectableRecipients() {
 			return this.newRecipients
 				.concat(this.autocompleteRecipients)
-				.map((recipient) => ({...recipient, label: recipient.label || recipient.email}))
+				.map((recipient) => ({ ...recipient, label: recipient.label || recipient.email }))
 		},
 		isForward() {
 			return this.forwardFrom !== undefined
@@ -370,7 +405,7 @@ export default {
 		},
 	},
 	watch: {
-		'$route.params.messageUid'(newID) {
+		'$route.params.messageUuid'() {
 			this.reset()
 		},
 		allRecipients() {
@@ -421,7 +456,7 @@ export default {
 
 			const recipients = this.allRecipients.map((r) => r.email)
 			const keysValid = await this.mailvelope.keyRing.validKeyForAddress(recipients)
-			logger.debug('recipients keys validated', {recipients, keysValid})
+			logger.debug('recipients keys validated', { recipients, keysValid })
 			this.mailvelope.keysMissing = recipients.filter((r) => keysValid[r] === false)
 		},
 		initBody() {
@@ -465,6 +500,7 @@ export default {
 		getMessageData(uid) {
 			return {
 				account: this.selectedAlias.id,
+				aliasId: this.selectedAlias.aliasId,
 				to: this.selectTo.map(this.recipientToRfc822).join(', '),
 				cc: this.selectCc.map(this.recipientToRfc822).join(', '),
 				bcc: this.selectBcc.map(this.recipientToRfc822).join(', '),
@@ -473,7 +509,7 @@ export default {
 				body: this.encrypt ? plain(this.bodyVal) : html(this.bodyVal),
 				attachments: this.attachments,
 				folderId: this.replyTo ? this.replyTo.folderId : undefined,
-				messageId: this.replyTo ? this.replyTo.id : undefined,
+				messageId: this.replyTo ? this.replyTo.uid : undefined,
 				isHtml: !this.editorPlainText,
 			}
 		},
@@ -483,12 +519,12 @@ export default {
 				.then((uid) => {
 					const draftData = data(uid)
 					if (
-						!uid &&
-						!draftData.subject &&
-						!draftData.body &&
-						!draftData.cc &&
-						!draftData.bcc &&
-						!draftData.to
+						!uid
+						&& !draftData.subject
+						&& !draftData.body
+						&& !draftData.cc
+						&& !draftData.bcc
+						&& !draftData.to
 					) {
 						// this might happen after a call to reset()
 						// where the text input gets reset as well
@@ -529,7 +565,7 @@ export default {
 		onAttachmentsUploading(uploaded) {
 			this.attachmentsPromise = this.attachmentsPromise
 				.then(() => uploaded)
-				.catch((error) => logger.error('could not upload attachments', {error}))
+				.catch((error) => logger.error('could not upload attachments', { error }))
 				.then(() => logger.debug('attachments uploaded'))
 		},
 		async onMailvelopeLoaded(mailvelope) {
@@ -576,7 +612,7 @@ export default {
 				.then(() => logger.info('message sent'))
 				.then(() => (this.state = STATES.FINISHED))
 				.catch((error) => {
-					logger.error('could not send message', {error})
+					logger.error('could not send message', { error })
 					if (error && error.toString) {
 						this.errorText = error.toString()
 					}
@@ -607,6 +643,7 @@ export default {
 		},
 		/**
 		 * Format aliases for the Multiselect
+		 * @param {Object} alias the alias to format
 		 * @returns {string}
 		 */
 		formatAliases(alias) {

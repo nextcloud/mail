@@ -1,23 +1,23 @@
-import {generateUrl} from '@nextcloud/router'
+import { generateUrl } from '@nextcloud/router'
 import axios from '@nextcloud/axios'
-import {curry, map} from 'ramda'
+import { curry, map } from 'ramda'
 
-import {parseErrorResponse} from '../http/ErrorResponseParser'
-import {convertAxiosError} from '../errors/convert'
+import { parseErrorResponse } from '../http/ErrorResponseParser'
+import { convertAxiosError } from '../errors/convert'
 import SyncIncompleteError from '../errors/SyncIncompleteError'
 
 const amendEnvelopeWithIds = curry((accountId, folderId, envelope) => ({
 	accountId,
 	folderId,
-	uid: `${accountId}-${folderId}-${envelope.id}`,
+	uuid: `${accountId}-${folderId}-${envelope.uid}`,
 	...envelope,
 }))
 
-export function fetchEnvelope(accountId, folderId, id) {
-	const url = generateUrl('/apps/mail/api/accounts/{accountId}/folders/{folderId}/messages/{id}', {
+export function fetchEnvelope(accountId, folderId, uid) {
+	const url = generateUrl('/apps/mail/api/accounts/{accountId}/folders/{folderId}/messages/{uid}', {
 		accountId,
 		folderId,
-		id,
+		uid,
 	})
 
 	return axios
@@ -104,11 +104,11 @@ export async function clearCache(accountId, folderId) {
 	}
 }
 
-export function setEnvelopeFlag(accountId, folderId, id, flag, value) {
-	const url = generateUrl('/apps/mail/api/accounts/{accountId}/folders/{folderId}/messages/{id}/flags', {
+export function setEnvelopeFlag(accountId, folderId, uid, flag, value) {
+	const url = generateUrl('/apps/mail/api/accounts/{accountId}/folders/{folderId}/messages/{uid}/flags', {
 		accountId,
 		folderId,
-		id,
+		uid,
 	})
 
 	const flags = {}
@@ -116,10 +116,7 @@ export function setEnvelopeFlag(accountId, folderId, id, flag, value) {
 
 	return axios
 		.put(url, {
-			flags: flags,
-		})
-		.then(() => {
-			value
+			flags,
 		})
 }
 

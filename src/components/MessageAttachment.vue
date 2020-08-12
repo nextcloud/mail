@@ -21,10 +21,10 @@
 
 <template>
 	<div class="attachment" @click="download">
-		<img v-if="isImage" class="mail-attached-image" :src="url" />
-		<img class="attachment-icon" :src="mimeUrl" />
-		<span class="attachment-name" :title="label"
-			>{{ name }}
+		<img v-if="isImage" class="mail-attached-image" :src="url">
+		<img class="attachment-icon" :src="mimeUrl">
+		<span class="attachment-name"
+			:title="label">{{ name }}
 			<span class="attachment-size">({{ humanReadable(size) }})</span>
 		</span>
 		<button
@@ -33,38 +33,35 @@
 			:class="{'icon-add': !loadingCalendars, 'icon-loading-small': loadingCalendars}"
 			:disabled="loadingCalendars"
 			:title="t('mail', 'Import into calendar')"
-			@click.stop="loadCalendars"
-		></button>
-		<button class="button icon-download attachment-download" :title="t('mail', 'Download attachment')"></button>
+			@click.stop="loadCalendars" />
+		<button class="button icon-download attachment-download" :title="t('mail', 'Download attachment')" />
 		<button
 			class="attachment-save-to-cloud"
 			:class="{'icon-folder': !savingToCloud, 'icon-loading-small': savingToCloud}"
 			:disabled="savingToCloud"
 			:title="t('mail', 'Save to Files')"
-			@click.stop="saveToCloud"
-		></button>
+			@click.stop="saveToCloud" />
 		<div
 			v-on-click-outside="closeCalendarPopover"
 			class="popovermenu bubble attachment-import-popover hidden"
-			:class="{open: showCalendarPopover}"
-		>
+			:class="{open: showCalendarPopover}">
 			<PopoverMenu :menu="calendarMenuEntries" />
 		</div>
 	</div>
 </template>
 
 <script>
-import {formatFileSize} from '@nextcloud/files'
-import {mixin as onClickOutside} from 'vue-on-click-outside'
-import {translate as t} from '@nextcloud/l10n'
-import {getFilePickerBuilder} from '@nextcloud/dialogs'
+import { formatFileSize } from '@nextcloud/files'
+import { mixin as onClickOutside } from 'vue-on-click-outside'
+import { translate as t } from '@nextcloud/l10n'
+import { getFilePickerBuilder } from '@nextcloud/dialogs'
 import PopoverMenu from '@nextcloud/vue/dist/Components/PopoverMenu'
 
-import {parseUid} from '../util/EnvelopeUidParser'
+import { parseUuid } from '../util/EnvelopeUidParser'
 import Logger from '../logger'
 
-import {downloadAttachment, saveAttachmentToFiles} from '../service/AttachmentService'
-import {getUserCalendars, importCalendarEvent} from '../service/DAVService'
+import { downloadAttachment, saveAttachmentToFiles } from '../service/AttachmentService'
+import { getUserCalendars, importCalendarEvent } from '../service/DAVService'
 
 export default {
 	name: 'MessageAttachment',
@@ -146,7 +143,7 @@ export default {
 			const saveAttachment = (accountId, folderId, messageId, attachmentId) => (directory) => {
 				return saveAttachmentToFiles(accountId, folderId, messageId, attachmentId, directory)
 			}
-			const {accountId, folderId, id} = parseUid(this.$route.params.messageUid)
+			const { accountId, folderId, uid } = parseUuid(this.$route.params.messageUuid)
 			const picker = getFilePickerBuilder(t('mail', 'Choose a folder to store the attachment in'))
 				.setMultiSelect(false)
 				.addMimeTypeFilter('httpd/unix-directory')
@@ -160,9 +157,9 @@ export default {
 					this.savingToCloud = true
 					return dest
 				})
-				.then(saveAttachment(accountId, folderId, id, this.id))
+				.then(saveAttachment(accountId, folderId, uid, this.id))
 				.then(() => Logger.info('saved'))
-				.catch((e) => Logger.error('not saved', {error: e}))
+				.catch((e) => Logger.error('not saved', { error: e }))
 				.then(() => (this.savingToCloud = false))
 		},
 		download() {
@@ -185,7 +182,7 @@ export default {
 				downloadAttachment(this.url)
 					.then(importCalendarEvent(url))
 					.then(() => Logger.info('calendar imported'))
-					.catch((e) => Logger.error('import error', {error: e}))
+					.catch((e) => Logger.error('import error', { error: e }))
 					.then(() => (this.showCalendarPopover = false))
 			}
 		},

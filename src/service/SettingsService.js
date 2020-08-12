@@ -20,7 +20,7 @@
  */
 
 import axios from '@nextcloud/axios'
-import {generateUrl} from '@nextcloud/router'
+import { generateUrl } from '@nextcloud/router'
 
 export const saveProvisioningSettings = (config) => {
 	const url = generateUrl('/apps/mail/api/settings/provisioning')

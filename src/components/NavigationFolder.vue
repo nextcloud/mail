@@ -25,20 +25,20 @@
 		:id="genId(folder)"
 		:key="genId(folder)"
 		:allow-collapse="true"
+		:menu-open.sync="menuOpen"
 		:force-menu="true"
 		:icon="icon"
 		:title="title"
 		:to="to"
-		@update:menuOpen="onMenuToggle"
-	>
+		:open.sync="showSubFolders"
+		@update:menuOpen="onMenuToggle">
 		<!-- actions -->
 		<template slot="actions">
 			<template>
 				<ActionText
 					v-if="!account.isUnified && folder.specialRole !== 'flagged'"
 					icon="icon-info"
-					:title="folderId"
-				>
+					:title="folderId">
 					{{ statsText }}
 				</ActionText>
 
@@ -47,27 +47,31 @@
 					icon="icon-mail"
 					:title="t('mail', 'Mark all as read')"
 					:disabled="loadingMarkAsRead"
-					@click="markAsRead"
-				>
+					@click="markAsRead">
 					{{ t('mail', 'Mark all messages of this folder as read') }}
 				</ActionButton>
 
-				<ActionInput
-					v-if="top && !account.isUnified && folder.specialRole !== 'flagged'"
-					icon="icon-add"
-					@submit="createFolder"
-				>
+				<ActionButton
+					v-if="!editing && top && !account.isUnified && folder.specialRole !== 'flagged'"
+					icon="icon-folder"
+					@click="openCreateFolder">
 					{{ t('mail', 'Add subfolder') }}
-				</ActionInput>
+				</ActionButton>
+				<ActionInput v-if="editing" icon="icon-folder" @submit.prevent.stop="createFolder" />
+				<ActionText v-if="showSaving" icon="icon-loading-small">
+					{{ t('mail', 'Saving') }}
+				</ActionText>
 
 				<ActionButton
 					v-if="debug && !account.isUnified && folder.specialRole !== 'flagged'"
 					icon="icon-settings"
 					:title="t('mail', 'Clear cache')"
 					:disabled="clearingCache"
-					@click="clearCache"
-				>
+					@click="clearCache">
 					{{ t('mail', 'Clear locally cached data, in case there are issues with synchronization.') }}
+				</ActionButton>
+				<ActionButton v-if="!account.isUnified && !folder.specialRole" icon="icon-delete" @click="deleteFolder">
+					{{ t('mail', 'Delete folder') }}
 				</ActionButton>
 			</template>
 		</template>
@@ -81,8 +85,7 @@
 			:key="genId(subFolder)"
 			:account="account"
 			:folder="subFolder"
-			:top="false"
-		/>
+			:top="false" />
 	</AppNavigationItem>
 </template>
 
@@ -93,11 +96,11 @@ import ActionButton from '@nextcloud/vue/dist/Components/ActionButton'
 import ActionInput from '@nextcloud/vue/dist/Components/ActionInput'
 import ActionText from '@nextcloud/vue/dist/Components/ActionText'
 
-import {clearCache} from '../service/MessageService'
-import {getFolderStats} from '../service/FolderService'
+import { clearCache } from '../service/MessageService'
+import { getFolderStats } from '../service/FolderService'
 import logger from '../logger'
-import {translatePlural as n} from '@nextcloud/l10n'
-import {translate as translateMailboxName} from '../i18n/MailboxTranslator'
+import { translatePlural as n } from '@nextcloud/l10n'
+import { translate as translateMailboxName } from '../i18n/MailboxTranslator'
 
 export default {
 	name: 'NavigationFolder',
@@ -133,13 +136,17 @@ export default {
 			folderStats: undefined,
 			loadingMarkAsRead: false,
 			clearingCache: false,
+			showSaving: false,
+			editing: false,
+			showSubFolders: false,
+			menuOpen: false,
 		}
 	},
 	computed: {
 		visible() {
 			return (
-				this.account.showSubscribedOnly === false ||
-				(this.folder.attributes && this.folder.attributes.includes('\\subscribed'))
+				this.account.showSubscribedOnly === false
+				|| (this.folder.attributes && this.folder.attributes.includes('\\subscribed'))
 			)
 		},
 		title() {
@@ -201,6 +208,8 @@ export default {
 	methods: {
 		/**
 		 * Generate unique key id for a specific folder
+		 * @param {Object} folder the folder to gen id for
+		 * @returns {string}
 		 */
 		genId(folder) {
 			return 'account-' + this.account.id + '_' + folder.id
@@ -227,29 +236,38 @@ export default {
 
 			try {
 				const stats = await getFolderStats(this.account.id, this.folder.id)
-				logger.debug('loaded folder stats', {stats})
+				logger.debug('loaded folder stats', { stats })
 				this.folderStats = stats
 			} catch (error) {
-				this.folderStats = {error: true}
+				this.folderStats = { error: true }
 				logger.error(`could not load folder stats for ${this.folder.id}`, error)
 			}
 		},
 
-		createFolder(e) {
+		async createFolder(e) {
+			this.editing = true
 			const name = e.target.elements[1].value
 			const withPrefix = atob(this.folder.id) + this.folder.delimiter + name
 			logger.info(`creating folder ${withPrefix} as subfolder of ${this.folder.id}`)
 			this.menuOpen = false
-			this.$store
-				.dispatch('createFolder', {
+			try {
+				await this.$store.dispatch('createFolder', {
 					account: this.account,
 					name: withPrefix,
 				})
-				.then(() => logger.info(`folder ${withPrefix} created`))
-				.catch((error) => {
-					logger.error(`could not create folder ${withPrefix}`, {error})
-					throw error
-				})
+			} catch (error) {
+				logger.error(`could not create folder ${withPrefix}`, { error })
+				throw error
+			} finally {
+				this.editing = false
+				this.showSaving = false
+			}
+			logger.info(`folder ${withPrefix} created`)
+			this.showSubFolders = true
+		},
+		openCreateFolder() {
+			this.editing = true
+			this.showSaving = false
 		},
 		markAsRead() {
 			this.loadingMarkAsRead = true
@@ -260,7 +278,7 @@ export default {
 					folderId: this.folder.id,
 				})
 				.then(() => logger.info(`folder ${this.folder.id} marked as read`))
-				.catch((error) => logger.error(`could not mark folder ${this.folder.id} as read`, {error}))
+				.catch((error) => logger.error(`could not mark folder ${this.folder.id} as read`, { error }))
 				.then(() => (this.loadingMarkAsRead = false))
 		},
 		async clearCache() {
@@ -278,6 +296,32 @@ export default {
 			} finally {
 				this.clearCache = false
 			}
+		},
+		deleteFolder() {
+			const id = this.folder.id
+			logger.info('delete folder', { folder: this.folder })
+			OC.dialogs.confirmDestructive(
+				t('mail', 'The folder and all messages in it will be deleted.', {
+					folderId: this.folderId,
+				}),
+				t('mail', 'Delete folder'),
+				{
+					type: OC.dialogs.YES_NO_BUTTONS,
+					confirm: t('mail', 'Delete folder {folderId}', { folderId: this.folderId }),
+					confirmClasses: 'error',
+					cancel: t('mail', 'Cancel'),
+				},
+				(result) => {
+					if (result) {
+						return this.$store
+							.dispatch('deleteFolder', { account: this.account, folder: this.folder })
+							.then(() => {
+								logger.info(`folder ${id} deleted`)
+							})
+							.catch((error) => logger.error('could not delete folder', { error }))
+					}
+				}
+			)
 		},
 	},
 }

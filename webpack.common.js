@@ -20,6 +20,7 @@ if (process.env.BUNDLE_ANALYZER_TOKEN) {
 module.exports = {
 	entry: {
 		autoredirect: path.join(__dirname, 'src/autoredirect.js'),
+		dashboard: path.join(__dirname, 'src/main-dashboard.js'),
 		mail: path.join(__dirname, 'src/main.js'),
 		settings: path.join(__dirname, 'src/main-settings')
 	},
@@ -48,7 +49,6 @@ module.exports = {
 			{
 				test: /\.js$/,
 				loader: 'babel-loader',
-				exclude: /node_modules/,
 				exclude: /node_modules(?!(\/|\\)(@ckeditor)(\/|\\))/
 			},
 			{

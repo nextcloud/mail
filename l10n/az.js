@@ -1,9 +1,9 @@
 OC.L10N.register(
     "mail",
     {
-    "Mail" : "Məktub",
     "Auto detect failed. Please use manual mode." : "Avtomatik təyinatda səhv baş verdi. Xahiş olunur əl rejimini seçəsiniz.",
     "Creating account failed: " : "Hesabın yaradılmasında səhv:",
+    "Mail" : "Məktub",
     "Name" : "Ad",
     "Password" : "Şifrə",
     "None" : "Heç bir",
@@ -28,6 +28,7 @@ OC.L10N.register(
     "Cancel" : "Dayandır",
     "Mark all as read" : "Hamısını oxunulmuş kimi qeydə al",
     "Clear cache" : "Keşi təmizlə",
+    "Delete folder" : "Qovluğu sil",
     "General" : "Ümumi",
     "User" : "User",
     "Host" : "Şəbəkədə ünvan",

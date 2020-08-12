@@ -20,12 +20,12 @@
   -->
 
 <template>
-	<div id="mailvelope-composer"></div>
+	<div id="mailvelope-composer" />
 </template>
 
 <script>
 import logger from '../logger'
-import {isPgpgMessage} from '../crypto/pgp'
+import { isPgpgMessage } from '../crypto/pgp'
 
 export default {
 	name: 'MailvelopeEditor',
@@ -64,9 +64,9 @@ export default {
 	methods: {
 		async pull() {
 			const recipients = this.recipients.map((r) => r.email)
-			logger.info('encrypting message', {recipients})
+			logger.info('encrypting message', { recipients })
 			const armored = await this.editor.encrypt(recipients)
-			logger.info('message encryted', {armored})
+			logger.info('message encryted', { armored })
 
 			this.$emit('input', armored)
 		},

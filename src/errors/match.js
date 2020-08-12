@@ -1,4 +1,4 @@
-/*
+/**
  * @copyright 2020 Christoph Wurst <christoph@winzerhof-wurst.at>
  *
  * @author 2020 Christoph Wurst <christoph@winzerhof-wurst.at>
@@ -20,15 +20,15 @@
  */
 
 /**
- * @param {Error} error
- * @param {object} matches
+ * @param {Error} error error
+ * @param {object} matches matches
  */
-export const matchError = async (error, matches) => {
+export const matchError = async(error, matches) => {
 	if (error.name in matches) {
 		return await Promise.resolve(matches[error.name](error))
 	}
 	if ('default' in matches) {
-		return await Promise.resolve(matches['default'](error))
+		return await Promise.resolve(matches.default(error))
 	}
 	throw new Error('unhandled error in match: ' + error.name)
 }

@@ -20,21 +20,21 @@
  */
 
 import sinon from 'sinon'
-import {curry, prop, range, reverse} from 'ramda'
+import { curry, prop, range, reverse } from 'ramda'
 import orderBy from 'lodash/fp/orderBy'
 
 import actions from '../../../store/actions'
 import * as MessageService from '../../../service/MessageService'
 import * as NotificationService from '../../../service/NotificationService'
-import {normalizedMessageId} from '../../../store/normalization'
-import {UNIFIED_ACCOUNT_ID, UNIFIED_INBOX_ID} from '../../../store/constants'
+import { normalizedMessageId } from '../../../store/normalization'
+import { UNIFIED_ACCOUNT_ID, UNIFIED_INBOX_ID } from '../../../store/constants'
 
-const mockEnvelope = curry((accountId, folderId, id) => ({
+const mockEnvelope = curry((accountId, folderId, uid) => ({
 	accountId,
 	folderId,
-	id,
-	uid: normalizedMessageId(accountId, folderId, id),
-	dateInt: id * 10000,
+	uid,
+	uuid: normalizedMessageId(accountId, folderId, uid),
+	dateInt: uid * 10000,
 }))
 
 describe('Vuex store actions', () => {
@@ -71,7 +71,7 @@ describe('Vuex store actions', () => {
 		expect(envelopes).to.be.empty
 	})
 
-	it('creates a unified page from one mailbox', async () => {
+	it('creates a unified page from one mailbox', async() => {
 		context.getters.accounts.push({
 			id: 13,
 			accountId: 13,
@@ -134,7 +134,7 @@ describe('Vuex store actions', () => {
 		})
 	})
 
-	it('fetches the next individual page', async () => {
+	it('fetches the next individual page', async() => {
 		context.getters.accounts.push({
 			id: 13,
 			accountId: 13,
@@ -154,8 +154,8 @@ describe('Vuex store actions', () => {
 			Promise.resolve(
 				reverse(
 					range(1, 21).map((n) => ({
-						id: n,
-						uid: normalizedMessageId(13, 'INBOX', n),
+						uid: n,
+						uuid: normalizedMessageId(13, 'INBOX', n),
 						dateInt: n * 10000,
 					}))
 				)
@@ -170,8 +170,8 @@ describe('Vuex store actions', () => {
 		expect(page).to.deep.equal(
 			reverse(
 				range(1, 21).map((n) => ({
-					id: n,
-					uid: normalizedMessageId(13, 'INBOX', n),
+					uid: n,
+					uuid: normalizedMessageId(13, 'INBOX', n),
 					dateInt: n * 10000,
 				}))
 			)
@@ -179,7 +179,7 @@ describe('Vuex store actions', () => {
 		expect(context.commit).to.have.callCount(20)
 	})
 
-	it('builds the next unified page with local data', async () => {
+	it('builds the next unified page with local data', async() => {
 		const page1 = reverse(range(25, 30))
 		const page2 = reverse(range(30, 35))
 		const msgs1 = reverse(range(10, 30))
@@ -243,7 +243,7 @@ describe('Vuex store actions', () => {
 		expect(page.length).to.equal(20)
 	})
 
-	it('builds the next unified page with partial fetch', async () => {
+	it('builds the next unified page with partial fetch', async() => {
 		const page1 = reverse(range(25, 30))
 		const page2 = reverse(range(30, 35))
 		const msgs1 = reverse(range(25, 30))
@@ -325,7 +325,7 @@ describe('Vuex store actions', () => {
 			sinon.restore()
 		})
 
-		it('fetches the inbox first', async () => {
+		it('fetches the inbox first', async() => {
 			context.getters.accounts.push({
 				id: 13,
 				accountId: 13,
@@ -392,7 +392,7 @@ describe('Vuex store actions', () => {
 			expect(NotificationService.showNewMessagesNotification).not.have.been.called
 		})
 
-		it('syncs each individual mailbox', async () => {
+		it('syncs each individual mailbox', async() => {
 			context.getters.accounts.push({
 				id: 13,
 				accountId: 13,
@@ -448,7 +448,7 @@ describe('Vuex store actions', () => {
 					accountId: 13,
 					folderId: 'INBOX',
 				})
-				.returns(Promise.resolve([{id: 123}, {id: 321}]))
+				.returns(Promise.resolve([{ id: 123 }, { id: 321 }]))
 
 			await actions.syncInboxes(context)
 

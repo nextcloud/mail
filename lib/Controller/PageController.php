@@ -116,8 +116,8 @@ class PageController extends Controller {
 			$json['aliases'] = $this->aliasesService->findAll($mailAccount->getId(),
 				$this->currentUserId);
 			try {
-				$folders = $this->mailManager->getFolders($mailAccount);
-				$json['folders'] = $folders;
+				$mailboxes = $this->mailManager->getMailboxes($mailAccount);
+				$json['folders'] = $mailboxes;
 			} catch (Exception $ex) {
 				$this->logger->logException($ex, [
 					'message' => 'Could not load account folders: ' . $ex->getMessage(),

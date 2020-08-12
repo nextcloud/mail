@@ -1,8 +1,8 @@
 OC.L10N.register(
     "mail",
     {
-    "Mail" : "шуудан",
     "Creating account failed: " : "аккаунт үүсгэж чадсангүй:",
+    "Mail" : "шуудан",
     "Name" : "нэр",
     "Mail Address" : "шуудангийн хаяг",
     "Password" : "нууц үг",
@@ -43,9 +43,11 @@ OC.L10N.register(
     "Settings" : "тохиргоо",
     "Quota" : " хувь хэмжээ",
     "Add folder" : "Add folder",
+    "Saving" : "хадгаламж",
     "Remove account" : "Аккаунт устгах",
     "Cancel" : "болиулах",
     "Show all folders" : "Бүх хавтас харуулах",
+    "Delete folder" : "Хавтсыг устгах",
     "Signature" : "Гарын үсэг",
     "General" : "Ерөнхий",
     "User" : "Хэрэглэгч",

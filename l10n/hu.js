@@ -1,11 +1,11 @@
 OC.L10N.register(
     "mail",
     {
-    "Mail" : "Levelezés",
     "Auto detect failed. Please use manual mode." : "Automatikus észlelés sikertelen. Használja a manuális módot.",
     "Updating account failed: " : "Fiók frissítése sikertelen:",
     "Creating account failed: " : "Fiók létrehozása sikertelen: ",
     "Embedded message %s" : "Beágyazott üzenet %s",
+    "Mail" : "Levelezés",
     "💌 A mail app for Nextcloud" : "E-mail alkalmazás a Nextcloud-hoz",
     "Auto" : "Automatikus",
     "Name" : "Név",
@@ -105,6 +105,7 @@ OC.L10N.register(
     "Quota" : "Kvóta",
     "Edit account" : "Fiók szerkesztése",
     "Add folder" : "Mappa hozzáadás",
+    "Saving" : "Mentés",
     "Move Up" : "Mozgatás Fel",
     "Move down" : "Mozgatás Le",
     "Remove account" : "Fiók eltávolítása",
@@ -118,6 +119,7 @@ OC.L10N.register(
     "Mark all messages of this folder as read" : "A mappában található összes üzenet megjelölése olvasottként",
     "Add subfolder" : "Almappa hozzáadás",
     "Clear cache" : "Gyorsítótár ürítése",
+    "Delete folder" : "Mappa törlés",
     "Could not load your draft" : "Nem lehet betölteni a vázlatot",
     "Could not load original message" : "Nem lehet betölteni az eredeti üzenetet",
     "No message selected" : "Nincs kiválasztott üzenet",

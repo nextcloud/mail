@@ -17,6 +17,7 @@ OC.L10N.register(
     "Quota" : "பங்கு",
     "Add folder" : "Add folder",
     "Cancel" : "இரத்து செய்க",
+    "Delete folder" : "கோப்பை அழிக்க",
     "General" : "பொதுவான",
     "User" : "User",
     "Host" : "ஓம்புனர்",

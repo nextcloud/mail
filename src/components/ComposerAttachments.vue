@@ -27,29 +27,33 @@
 				<div class="new-message-attachment-name">
 					{{ attachment.displayName }}
 				</div>
-				<div class="new-message-attachments-action svg icon-delete" @click="onDelete(attachment)"></div>
+				<div class="new-message-attachments-action svg icon-delete" @click="onDelete(attachment)" />
 			</li>
 			<li v-if="uploading" class="attachments-upload-progress">
-				<div :class="{'icon-loading-small': uploading}"></div>
+				<div :class="{'icon-loading-small': uploading}" />
 				<div>{{ uploading ? t('mail', 'Uploading {percent}% …', {percent: uploadProgress}) : '' }}</div>
 			</li>
 		</ul>
 
-		<input ref="localAttachments" type="file" multiple style="display: none;" @change="onLocalAttachmentSelected" />
+		<input ref="localAttachments"
+			type="file"
+			multiple
+			style="display: none;"
+			@change="onLocalAttachmentSelected">
 	</div>
 </template>
 
 <script>
 import map from 'lodash/fp/map'
 import trimStart from 'lodash/fp/trimCharsStart'
-import {getRequestToken} from '@nextcloud/auth'
-import {translate as t} from '@nextcloud/l10n'
-import {getFilePickerBuilder} from '@nextcloud/dialogs'
+import { getRequestToken } from '@nextcloud/auth'
+import { translate as t } from '@nextcloud/l10n'
+import { getFilePickerBuilder } from '@nextcloud/dialogs'
 import Vue from 'vue'
 
 import Logger from '../logger'
-import {uploadLocalAttachment} from '../service/AttachmentService'
-import {shareFile} from '../service/FileSharingService'
+import { uploadLocalAttachment } from '../service/AttachmentService'
+import { shareFile } from '../service/FileSharingService'
 
 export default {
 	name: 'ComposerAttachments',
@@ -73,7 +77,7 @@ export default {
 		uploadProgress() {
 			let uploaded = 0
 			let total = 0
-			for (let id in this.uploads) {
+			for (const id in this.uploads) {
 				uploaded += this.uploads[id].uploaded
 				total += this.uploads[id].total
 			}
@@ -115,14 +119,14 @@ export default {
 					uploaded: 0,
 				})
 
-				return uploadLocalAttachment(file, progress(file.name)).then(({file, id}) => {
+				return uploadLocalAttachment(file, progress(file.name)).then(({ file, id }) => {
 					Logger.info('uploaded')
 					return this.emitNewAttachment(this.fileNameToAttachment(file.name, id))
 				})
 			})(e.target.files)
 
 			const done = Promise.all(promises)
-				.catch((error) => Logger.error('could not upload all attachments', {error}))
+				.catch((error) => Logger.error('could not upload all attachments', { error }))
 				.then(() => (this.uploading = false))
 
 			this.$emit('upload', done)
@@ -135,19 +139,19 @@ export default {
 			return picker
 				.pick(t('mail', 'Choose a file to add as attachment'))
 				.then((path) => this.emitNewAttachment(this.fileNameToAttachment(path)))
-				.catch((error) => Logger.error('could not choose a file as attachment', {error}))
+				.catch((error) => Logger.error('could not choose a file as attachment', { error }))
 		},
 		onAddCloudAttachmentLink() {
 			const picker = getFilePickerBuilder(t('mail', 'Choose a file to share as a link')).build()
 
 			return picker
 				.pick(t('mail', 'Choose a file to share as a link'))
-				.then(async (path) => {
+				.then(async(path) => {
 					const url = await shareFile(path, getRequestToken())
 
 					return this.appendToBodyAtCursor(`<a href="${url}">${url}</a>`)
 				})
-				.catch((error) => Logger.error('could not choose a file as attachment link', {error}))
+				.catch((error) => Logger.error('could not choose a file as attachment link', { error }))
 		},
 		onDelete(attachment) {
 			this.$emit(

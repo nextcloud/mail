@@ -1,11 +1,10 @@
 <template>
 	<form id="account-form" @submit.prevent="onSubmit">
-		<tabs
+		<Tabs
 			:options="{useUrlFragment: false, defaultTabHash: settingsPage ? 'manual' : 'auto'}"
 			cache-lifetime="0"
-			@changed="onModeChanged"
-		>
-			<tab id="auto" key="auto" :name="t('mail', 'Auto')">
+			@changed="onModeChanged">
+			<Tab id="auto" key="auto" :name="t('mail', 'Auto')">
 				<label for="auto-name">{{ t('mail', 'Name') }}</label>
 				<input
 					id="auto-name"
@@ -13,8 +12,7 @@
 					type="text"
 					:placeholder="t('mail', 'Name')"
 					:disabled="loading"
-					autofocus
-				/>
+					autofocus>
 				<label for="auto-address">{{ t('mail', 'Mail Address') }}</label>
 				<input
 					id="auto-address"
@@ -22,8 +20,7 @@
 					type="email"
 					:placeholder="t('mail', 'Mail Address')"
 					:disabled="loading"
-					required
-				/>
+					required>
 				<label for="auto-password">{{ t('mail', 'Password') }}</label>
 				<input
 					id="auto-password"
@@ -31,18 +28,16 @@
 					type="password"
 					:placeholder="t('mail', 'Password')"
 					:disabled="loading"
-					required
-				/>
-			</tab>
-			<tab id="manual" key="manual" :name="t('mail', 'Manual')">
+					required>
+			</Tab>
+			<Tab id="manual" key="manual" :name="t('mail', 'Manual')">
 				<label for="man-name">{{ t('mail', 'Name') }}</label>
 				<input
 					id="man-name"
 					v-model="manualConfig.accountName"
 					type="text"
 					:placeholder="t('mail', 'Name')"
-					:disabled="loading"
-				/>
+					:disabled="loading">
 				<label for="man-address">{{ t('mail', 'Mail Address') }}</label>
 				<input
 					id="man-address"
@@ -50,8 +45,7 @@
 					type="email"
 					:placeholder="t('mail', 'Mail Address')"
 					:disabled="loading"
-					required
-				/>
+					required>
 
 				<h3>{{ t('mail', 'IMAP Settings') }}</h3>
 				<label for="man-imap-host">{{ t('mail', 'IMAP Host') }}</label>
@@ -61,8 +55,7 @@
 					type="text"
 					:placeholder="t('mail', 'IMAP Host')"
 					:disabled="loading"
-					required
-				/>
+					required>
 				<h4>{{ t('mail', 'IMAP Security') }}</h4>
 				<div class="flex-row">
 					<input
@@ -72,14 +65,11 @@
 						name="man-imap-sec"
 						:disabled="loading"
 						value="none"
-						@change="onImapSslModeChange"
-					/>
+						@change="onImapSslModeChange">
 					<label
 						class="button"
 						for="man-imap-sec-none"
-						:class="{primary: manualConfig.imapSslMode === 'none'}"
-						>{{ t('mail', 'None') }}</label
-					>
+						:class="{primary: manualConfig.imapSslMode === 'none'}">{{ t('mail', 'None') }}</label>
 					<input
 						id="man-imap-sec-ssl"
 						v-model="manualConfig.imapSslMode"
@@ -87,14 +77,11 @@
 						name="man-imap-sec"
 						:disabled="loading"
 						value="ssl"
-						@change="onImapSslModeChange"
-					/>
+						@change="onImapSslModeChange">
 					<label
 						class="button"
 						for="man-imap-sec-ssl"
-						:class="{primary: manualConfig.imapSslMode === 'ssl'}"
-						>{{ t('mail', 'SSL/TLS') }}</label
-					>
+						:class="{primary: manualConfig.imapSslMode === 'ssl'}">{{ t('mail', 'SSL/TLS') }}</label>
 					<input
 						id="man-imap-sec-tls"
 						v-model="manualConfig.imapSslMode"
@@ -102,14 +89,11 @@
 						name="man-imap-sec"
 						:disabled="loading"
 						value="tls"
-						@change="onImapSslModeChange"
-					/>
+						@change="onImapSslModeChange">
 					<label
 						class="button"
 						for="man-imap-sec-tls"
-						:class="{primary: manualConfig.imapSslMode === 'tls'}"
-						>{{ t('mail', 'STARTTLS') }}</label
-					>
+						:class="{primary: manualConfig.imapSslMode === 'tls'}">{{ t('mail', 'STARTTLS') }}</label>
 				</div>
 				<label for="man-imap-port">{{ t('mail', 'IMAP Port') }}</label>
 				<input
@@ -118,8 +102,7 @@
 					type="number"
 					:placeholder="t('mail', 'IMAP Port')"
 					:disabled="loading"
-					required
-				/>
+					required>
 				<label for="man-imap-user">{{ t('mail', 'IMAP User') }}</label>
 				<input
 					id="man-imap-user"
@@ -127,8 +110,7 @@
 					type="text"
 					:placeholder="t('mail', 'IMAP User')"
 					:disabled="loading"
-					required
-				/>
+					required>
 				<label for="man-imap-password">{{ t('mail', 'IMAP Password') }}</label>
 				<input
 					id="man-imap-password"
@@ -136,8 +118,7 @@
 					type="password"
 					:placeholder="t('mail', 'IMAP Password')"
 					:disabled="loading"
-					required
-				/>
+					required>
 
 				<h3>{{ t('mail', 'SMTP Settings') }}</h3>
 				<input
@@ -147,8 +128,7 @@
 					name="smtp-host"
 					:placeholder="t('mail', 'SMTP Host')"
 					:disabled="loading"
-					required
-				/>
+					required>
 				<h4>{{ t('mail', 'SMTP Security') }}</h4>
 				<div class="flex-row">
 					<input
@@ -158,14 +138,11 @@
 						name="man-smtp-sec"
 						:disabled="loading"
 						value="none"
-						@change="onSmtpSslModeChange"
-					/>
+						@change="onSmtpSslModeChange">
 					<label
 						class="button"
 						for="man-smtp-sec-none"
-						:class="{primary: manualConfig.smtpSslMode === 'none'}"
-						>{{ t('mail', 'None') }}</label
-					>
+						:class="{primary: manualConfig.smtpSslMode === 'none'}">{{ t('mail', 'None') }}</label>
 					<input
 						id="man-smtp-sec-ssl"
 						v-model="manualConfig.smtpSslMode"
@@ -173,14 +150,11 @@
 						name="man-smtp-sec"
 						:disabled="loading"
 						value="ssl"
-						@change="onSmtpSslModeChange"
-					/>
+						@change="onSmtpSslModeChange">
 					<label
 						class="button"
 						for="man-smtp-sec-ssl"
-						:class="{primary: manualConfig.smtpSslMode === 'ssl'}"
-						>{{ t('mail', 'SSL/TLS') }}</label
-					>
+						:class="{primary: manualConfig.smtpSslMode === 'ssl'}">{{ t('mail', 'SSL/TLS') }}</label>
 					<input
 						id="man-smtp-sec-tls"
 						v-model="manualConfig.smtpSslMode"
@@ -188,14 +162,11 @@
 						name="man-smtp-sec"
 						:disabled="loading"
 						value="tls"
-						@change="onSmtpSslModeChange"
-					/>
+						@change="onSmtpSslModeChange">
 					<label
 						class="button"
 						for="man-smtp-sec-tls"
-						:class="{primary: manualConfig.smtpSslMode === 'tls'}"
-						>{{ t('mail', 'STARTTLS') }}</label
-					>
+						:class="{primary: manualConfig.smtpSslMode === 'tls'}">{{ t('mail', 'STARTTLS') }}</label>
 				</div>
 				<label for="man-smtp-port">{{ t('mail', 'SMTP Port') }}</label>
 				<input
@@ -204,8 +175,7 @@
 					type="number"
 					:placeholder="t('mail', 'SMTP Port')"
 					:disabled="loading"
-					required
-				/>
+					required>
 				<label for="man-smtp-user">{{ t('mail', 'SMTP User') }}</label>
 				<input
 					id="man-smtp-user"
@@ -213,8 +183,7 @@
 					type="text"
 					:placeholder="t('mail', 'SMTP User')"
 					:disabled="loading"
-					required
-				/>
+					required>
 				<label for="man-smtp-password">{{ t('mail', 'SMTP Password') }}</label>
 				<input
 					id="man-smtp-password"
@@ -222,17 +191,20 @@
 					type="password"
 					:placeholder="t('mail', 'SMTP Password')"
 					:disabled="loading"
-					required
-				/>
-			</tab>
-		</tabs>
-		<slot name="feedback"></slot>
-		<input type="submit" class="primary" :disabled="loading" :value="submitButtonText" @click.prevent="onSubmit" />
+					required>
+			</Tab>
+		</Tabs>
+		<slot name="feedback" />
+		<input type="submit"
+			class="primary"
+			:disabled="loading"
+			:value="submitButtonText"
+			@click.prevent="onSubmit">
 	</form>
 </template>
 
 <script>
-import {Tab, Tabs} from 'vue-tabs-component'
+import { Tab, Tabs } from 'vue-tabs-component'
 
 import logger from '../logger'
 
@@ -331,24 +303,24 @@ export default {
 		},
 		onImapSslModeChange() {
 			switch (this.manualConfig.imapSslMode) {
-				case 'none':
-				case 'tls':
-					this.manualConfig.imapPort = 143
-					break
-				case 'ssl':
-					this.manualConfig.imapPort = 993
-					break
+			case 'none':
+			case 'tls':
+				this.manualConfig.imapPort = 143
+				break
+			case 'ssl':
+				this.manualConfig.imapPort = 993
+				break
 			}
 		},
 		onSmtpSslModeChange() {
 			switch (this.manualConfig.smtpSslMode) {
-				case 'none':
-				case 'tls':
-					this.manualConfig.smtpPort = 587
-					break
-				case 'ssl':
-					this.manualConfig.smtpPort = 465
-					break
+			case 'none':
+			case 'tls':
+				this.manualConfig.smtpPort = 587
+				break
+			case 'ssl':
+				this.manualConfig.smtpPort = 465
+				break
 			}
 		},
 		saveChanges() {
@@ -365,12 +337,12 @@ export default {
 			}
 		},
 		onSubmit(event) {
-			console.debug('account form submitted', {event})
+			console.debug('account form submitted', { event })
 
 			this.loading = true
 
 			this.saveChanges()
-				.catch((error) => logger.error('could not save account details', {error}))
+				.catch((error) => logger.error('could not save account details', { error }))
 				.then(() => (this.loading = false))
 		},
 	},

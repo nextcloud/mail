@@ -10,11 +10,13 @@
 					}}</span>
 				</div>
 				<Actions class="app-content-list-item-menu" menu-align="right">
-					<ActionButton icon="icon-starred" @click.prevent="favoriteOrUnfavoriteAll">{{
-						areAllSelectedFavorite
-							? t('mail', 'Unfavorite ' + selection.length)
-							: t('mail', 'Favorite ' + selection.length)
-					}}</ActionButton>
+					<ActionButton icon="icon-starred" @click.prevent="favoriteOrUnfavoriteAll">
+						{{
+							areAllSelectedFavorite
+								? t('mail', 'Unfavorite ' + selection.length)
+								: t('mail', 'Favorite ' + selection.length)
+						}}
+					</ActionButton>
 					<ActionButton icon="icon-close" @click.prevent="unselectAll">
 						{{ t('mail', 'Unselect ' + selection.length) }}
 					</ActionButton>
@@ -25,23 +27,24 @@
 			</div>
 		</transition>
 		<transition-group name="list">
-			<div id="list-refreshing" key="loading" class="icon-loading-small" :class="{refreshing: refreshing}" />
+			<div id="list-refreshing"
+				key="loading"
+				class="icon-loading-small"
+				:class="{refreshing: refreshing}" />
 			<Envelope
 				v-for="env in envelopes"
-				:key="env.uid"
+				:key="env.uuid"
 				:data="env"
 				:folder="folder"
 				:selected="isEnvelopeSelected(envelopes.indexOf(env))"
 				:select-mode="selectMode"
-				@delete="$emit('delete', env.uid)"
-				@update:selected="onEnvelopeSelectToggle(env, ...$event)"
-			/>
+				@delete="$emit('delete', env.uuid)"
+				@update:selected="onEnvelopeSelectToggle(env, ...$event)" />
 			<div
 				v-if="loadMoreButton && !loadingMore"
 				:key="'list-collapse-' + searchQuery"
 				class="load-more"
-				@click="$emit('loadMore')"
-			>
+				@click="$emit('loadMore')">
 				{{ t('mail', 'Load more') }}
 			</div>
 			<div id="load-more-mail-messages" key="loadingMore" :class="{'icon-loading-small': loadingMore}" />
@@ -116,36 +119,36 @@ export default {
 	},
 	methods: {
 		isEnvelopeSelected(idx) {
-			if (this.selection.length == 0) {
+			if (this.selection.length === 0) {
 				return false
 			}
 
 			return this.selection.includes(idx)
 		},
 		markSelectedSeenOrUnseen() {
-			let seenFlag = this.areAllSelectedRead
+			const seenFlag = this.areAllSelectedRead
 			this.selection.forEach((envelopeId) => {
 				this.$store.dispatch('markEnvelopeSeenOrUnseen', {
 					envelope: this.envelopes[envelopeId],
-					seenFlag: seenFlag,
+					seenFlag,
 				})
 			})
 			this.unselectAll()
 		},
 		favoriteOrUnfavoriteAll() {
-			let favFlag = !this.areAllSelectedFavorite
+			const favFlag = !this.areAllSelectedFavorite
 			this.selection.forEach((envelopeId) => {
 				this.$store.dispatch('markEnvelopeFavoriteOrUnfavorite', {
 					envelope: this.envelopes[envelopeId],
-					favFlag: favFlag,
+					favFlag,
 				})
 			})
 			this.unselectAll()
 		},
 		deleteAllSelected() {
 			this.selection.forEach((envelopeId) => {
-				// Navigate if the message beeing deleted is the one currently viewed
-				if (this.envelopes[envelopeId].uid == this.$route.params.messageUid) {
+				// Navigate if the message being deleted is the one currently viewed
+				if (this.envelopes[envelopeId].uuid === this.$route.params.messageUuid) {
 					let next
 					if (envelopeId === 0) {
 						next = this.envelopes[envelopeId + 1]
@@ -159,7 +162,7 @@ export default {
 							params: {
 								accountId: this.$route.params.accountId,
 								folderId: this.$route.params.folderId,
-								messageUid: next.uid,
+								messageUuid: next.uuid,
 							},
 						})
 					}
@@ -179,7 +182,6 @@ export default {
 				this.selection.splice(this.selection.indexOf(idx), 1)
 			}
 
-			return
 		},
 		unselectAll() {
 			this.envelopes.forEach((env) => {

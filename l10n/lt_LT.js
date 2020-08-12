@@ -1,11 +1,11 @@
 OC.L10N.register(
     "mail",
     {
-    "Mail" : "Paštas",
     "Auto detect failed. Please use manual mode." : "Automatinis nustatymų aptikimas nepavyko. Įveskite duomenis rankiniu būdu.",
     "Updating account failed: " : "Paskyros atnaujinimas nepavyko: ",
     "Creating account failed: " : "Paskyros sukūrimas nepavyko: ",
     "Embedded message %s" : "Įterptas laiškas %s",
+    "Mail" : "Paštas",
     "💌 A mail app for Nextcloud" : "💌 Pašto programėlė, skirta Nextcloud",
     "Auto" : "Automatiškai",
     "Name" : "Vardas",
@@ -107,6 +107,7 @@ OC.L10N.register(
     "Quota" : "Leidžiamas duomenų kiekis",
     "Edit account" : "Taisyti paskyrą",
     "Add folder" : "Pridėti aplanką",
+    "Saving" : "Įrašoma",
     "Move Up" : "Pakelti",
     "Move down" : "Nuleisti",
     "Remove account" : "Šalinti paskyrą",
@@ -120,6 +121,7 @@ OC.L10N.register(
     "Mark all messages of this folder as read" : "Žymėti visus laiškus šiame aplanke kaip skaitytus",
     "Add subfolder" : "Pridėti poaplankį",
     "Clear cache" : "Išvalyti podėlį",
+    "Delete folder" : "Ištrinti aplanką",
     "_{total} message_::_{total} messages_" : ["{total} laiškas","{total} laiškai","{total} laiškų","{total} laiškas"],
     "Could not load your draft" : "Nepavyko įkelti jūsų juodraščio",
     "Could not load original message" : "Nepavyko įkelti pradinio laiško",

@@ -24,6 +24,7 @@ declare(strict_types=1);
 namespace OCA\Mail\Contracts;
 
 use OCA\Mail\Account;
+use OCA\Mail\Db\Mailbox;
 use OCA\Mail\Exception\ClientException;
 use OCA\Mail\Exception\ServiceException;
 use OCA\Mail\Folder;
@@ -36,11 +37,11 @@ interface IMailManager {
 	/**
 	 * @param Account $account
 	 *
-	 * @return Folder[]
+	 * @return Mailbox[]
 	 *
 	 * @throws ServiceException
 	 */
-	public function getFolders(Account $account): array;
+	public function getMailboxes(Account $account): array;
 
 	/**
 	 * @param Account $account
@@ -84,6 +85,14 @@ interface IMailManager {
 	 * @throws ServiceException
 	 */
 	public function getMessage(Account $account, string $mailbox, int $id, bool $loadBody = false): IMAPMessage;
+
+	/**
+	 * @param Account $account
+	 * @param int $messageId database message ID
+	 *
+	 * @return IMAPMessage[]
+	 */
+	public function getThread(Account $account, int $messageId): array;
 
 	/**
 	 * @param Account $sourceAccount
@@ -134,4 +143,12 @@ interface IMailManager {
 	 * @return Quota|null
 	 */
 	public function getQuota(Account $account): ?Quota;
+
+	/**
+	 * @param Account $account
+	 * @param string $folderId
+	 *
+	 * @throws ServiceException
+	 */
+	public function deleteMailbox(Account $account, string $folderId): void;
 }

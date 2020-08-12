@@ -1,4 +1,4 @@
-/*
+/**
  * @copyright 2020 Christoph Wurst <christoph@winzerhof-wurst.at>
  *
  * @author 2020 Christoph Wurst <christoph@winzerhof-wurst.at>
@@ -20,6 +20,7 @@
  */
 
 export default class MailboxLockedError extends Error {
+
 	constructor(message) {
 		super(message)
 		this.name = MailboxLockedError.getName()
@@ -29,4 +30,5 @@ export default class MailboxLockedError extends Error {
 	static getName() {
 		return 'MailboxLockedError'
 	}
+
 }

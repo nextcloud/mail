@@ -32,16 +32,14 @@
 				:is-image="attachment.isImage"
 				:is-calendar-event="attachment.isCalendarEvent"
 				:mime="attachment.mime"
-				:mime-url="attachment.mimeUrl"
-			/>
+				:mime-url="attachment.mimeUrl" />
 		</div>
 		<p v-if="moreThanOne">
 			<button
 				class="attachments-save-to-cloud"
 				:class="{'icon-folder': !savingToCloud, 'icon-loading-small': savingToCloud}"
 				:disabled="savingToCloud"
-				@click="saveAll"
-			>
+				@click="saveAll">
 				{{ t('mail', 'Save all to Files') }}
 			</button>
 		</p>
@@ -49,9 +47,9 @@
 </template>
 
 <script>
-import {getFilePickerBuilder} from '@nextcloud/dialogs'
-import {parseUid} from '../util/EnvelopeUidParser'
-import {saveAttachmentsToFiles} from '../service/AttachmentService'
+import { getFilePickerBuilder } from '@nextcloud/dialogs'
+import { parseUuid } from '../util/EnvelopeUidParser'
+import { saveAttachmentsToFiles } from '../service/AttachmentService'
 
 import MessageAttachment from './MessageAttachment'
 import Logger from '../logger'
@@ -89,7 +87,7 @@ export default {
 			const saveAttachments = (accountId, folderId, messageId) => (directory) => {
 				return saveAttachmentsToFiles(accountId, folderId, messageId, directory)
 			}
-			const {accountId, folderId, id} = parseUid(this.$route.params.messageUid)
+			const { accountId, folderId, uid } = parseUuid(this.$route.params.messageUuid)
 
 			return picker
 				.pick()
@@ -97,9 +95,9 @@ export default {
 					this.savingToCloud = true
 					return dest
 				})
-				.then(saveAttachments(accountId, folderId, id))
+				.then(saveAttachments(accountId, folderId, uid))
 				.then(() => Logger.info('saved'))
-				.catch((error) => Logger.error('not saved', {error}))
+				.catch((error) => Logger.error('not saved', { error }))
 				.then(() => (this.savingToCloud = false))
 		},
 	},

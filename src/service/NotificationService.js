@@ -1,4 +1,4 @@
-/*
+/**
  * @copyright 2018 Christoph Wurst <christoph@winzerhof-wurst.at>
  *
  * @author 2018 Christoph Wurst <christoph@winzerhof-wurst.at>
@@ -20,25 +20,25 @@
  */
 
 import uniq from 'lodash/fp/uniq'
-import {translate as t, translatePlural as n} from '@nextcloud/l10n'
-import {generateFilePath} from '@nextcloud/router'
+import { translate as t, translatePlural as n } from '@nextcloud/l10n'
+import { generateFilePath } from '@nextcloud/router'
 
 import Logger from '../logger'
 
 /**
  * @todo use Notification.requestPermission().then once all browsers support promise API
  *
- * @return {Promise}
+ * @returns {Promise}
  */
 const request = () => {
 	if (!('Notification' in window)) {
 		Logger.info('browser does not support desktop notifications')
-		return Promise.reject()
+		return Promise.reject(new Error('browser does not support desktop notifications'))
 	} else if (Notification.permission === 'granted') {
 		return Promise.resolve()
 	} else if (Notification.permission === 'denied') {
 		Logger.info('desktop notifications are denied')
-		return Promise.reject()
+		return Promise.reject(new Error('desktop notifications are denied'))
 	}
 
 	Logger.info('requesting permissions to show desktop notifications')
@@ -49,13 +49,13 @@ const showNotification = (title, body, icon) => {
 	request().then(() => {
 		if (document.querySelector(':focus') !== null) {
 			Logger.debug('browser is active. notification request is ignored')
-			return
+
 		}
 	})
 
 	const notification = new Notification(title, {
-		body: body,
-		icon: icon,
+		body,
+		icon,
 	})
 	notification.onclick = () => {
 		window.focus()

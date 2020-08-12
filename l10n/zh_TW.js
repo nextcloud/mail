@@ -1,10 +1,10 @@
 OC.L10N.register(
     "mail",
     {
-    "Mail" : "電子郵件",
     "Auto detect failed. Please use manual mode." : "自動偵測失敗，請改用手動輸入",
     "Updating account failed: " : "更新帳戶失敗",
     "Creating account failed: " : "建立帳號失敗：",
+    "Mail" : "電子郵件",
     "Auto" : "自動",
     "Name" : "名字",
     "Mail Address" : "郵件地址",
@@ -67,6 +67,7 @@ OC.L10N.register(
     "Settings" : "設定",
     "Quota" : "用量",
     "Add folder" : "新增資料夾",
+    "Saving" : "儲存中...",
     "Remove account" : "移除帳號",
     "Loading …" : "載入中 ...",
     "Cancel" : "取消",
@@ -74,6 +75,7 @@ OC.L10N.register(
     "Collapse folders" : "收合收件匣",
     "Mark all as read" : "全部標示為已閱讀",
     "Clear cache" : "清除快取",
+    "Delete folder" : "刪除資料夾",
     "Signature" : "簽章",
     "General" : "一般",
     "User" : "使用者",

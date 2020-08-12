@@ -20,6 +20,7 @@ OC.L10N.register(
     "Quota" : "Kvota",
     "Add folder" : "Add folder",
     "Cancel" : "Otkaži",
+    "Delete folder" : "Izbriši fasciklu",
     "User" : "User",
     "Port" : "Priključak",
     "Search" : "Search",

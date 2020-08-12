@@ -1,9 +1,9 @@
 { "translations": {
-    "Mail" : "ایمیل",
     "Auto detect failed. Please use manual mode." : "شناسایی خودکار با شکست مواجه شد. لطفا از حالت دستی استفاده کنید.",
     "Updating account failed: " : "به روزرسانی حساب انجام نشد:",
     "Creating account failed: " : "ایجاد حساب کاربری انجام نشد:",
     "Embedded message %s" : "پیام درج شده%s",
+    "Mail" : "ایمیل",
     "💌 A mail app for Nextcloud" : "یک برنامه نامه پستی برای Nextcloud",
     "**💌 A mail app for Nextcloud**\n\n- **🚀 Integration with other Nextcloud apps!** Currently Contacts, Calendar & Files – more to come.\n- **📥 Multiple mail accounts!** Personal and company account? No problem, and a nice unified inbox. Connect any IMAP account.\n- **🔒 Send & receive encrypted mails!** Using the great [Mailvelope](https://mailvelope.com) browser extension.\n- **🙈 We’re not reinventing the wheel!** Based on the great [Horde](http://horde.org) libraries.\n- **📬 Want to host your own mail server?** We don’t have to reimplement this as you could set up [Mail-in-a-Box](https://mailinabox.email)!" : "** 💌 برنامه نامه پستی برای Nextcloud ** - ** 🚀 ادغام با سایر برنامه های Nextcloud! ** در حال حاضر مخاطبین ، تقویم و پرونده ها - موارد دیگر .- ** accounts حساب های پستی متعدد! ** حساب شخصی و شرکت ؟ مشکلی نیست و یک صندوق ورودی خوب و یکپارچه. هر حساب IMAP را وصل کنید .- ** 🔒 نامه های رمزگذاری شده را ارسال و دریافت کنید! ** با استفاده از افزونه مرورگر [Mailvelope] بزرگ (https://mailvelope.com) .- ** 🙈 ما دوباره چرخ را اختراع نمی کنیم! * * بر اساس کتابخانه های بزرگ [هورد] (http://horde.org) .- ** 📬 آیا می خواهید میزبان سرور پست الکترونیکی خود باشید؟ ** ما نیازی نیست که مجدداً این کار را دوباره انجام دهیم زیرا می توانید [Mail- in-a-Box] (https://mailinabox.email)!",
     "Auto" : "خودکار",
@@ -98,6 +98,7 @@
     "Quota" : "سهم",
     "Edit account" : "ویرایش حساب",
     "Add folder" : "Add folder",
+    "Saving" : "درحال ذخیره",
     "Move Up" : "حرکت به بالا",
     "Move down" : "حرکت به پایین",
     "Remove account" : "حذف حساب کاربری",
@@ -109,6 +110,7 @@
     "Mark all messages of this folder as read" : "تمام پیام های این پوشه را به عنوان خوانده شده علامت گذاری کنید",
     "Add subfolder" : "زیر پوشه را اضافه کنید",
     "Clear cache" : "پاک‌سازی انباره",
+    "Delete folder" : "حذف پوشه",
     "Could not load your draft" : "پیش نویس شما بارگیری نمی شود",
     "Could not load original message" : "پیام اصلی بارگیری نشد",
     "No message selected" : "پیامی انتخاب نشده است",

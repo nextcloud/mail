@@ -1,11 +1,11 @@
 OC.L10N.register(
     "mail",
     {
-    "Mail" : "Mail",
     "Auto detect failed. Please use manual mode." : "Fejl ved autodetektion. Anvend venligst manuel opsætning",
     "Updating account failed: " : "Kontoen blev ikke opdateret:",
     "Creating account failed: " : "Oprettelse af konto mislykkedes:",
     "Embedded message %s" : "Indlejret besked %s",
+    "Mail" : "Mail",
     "💌 A mail app for Nextcloud" : "💌 En mail app til Nextcloud",
     "Auto" : "Auto",
     "Name" : "Navn",
@@ -103,6 +103,7 @@ OC.L10N.register(
     "Quota" : "Kvote",
     "Edit account" : "Rediger konto",
     "Add folder" : "Tilføj mappe",
+    "Saving" : "Gemmer",
     "Move Up" : "Flyt op",
     "Move down" : "Flyt ned",
     "Remove account" : "Fjern konto",
@@ -114,6 +115,7 @@ OC.L10N.register(
     "Mark all messages of this folder as read" : "Markér alle beskeder i denne mappe som læst",
     "Add subfolder" : "Tilføj undermappe",
     "Clear cache" : "Ryd cache",
+    "Delete folder" : "Slet mappe",
     "_{total} message_::_{total} messages_" : ["{total} besked","{total} beskeder"],
     "Could not load your draft" : "Kladden kunne ikke indlæses",
     "Could not load original message" : "Den originale besked kunne ikke indlæses",

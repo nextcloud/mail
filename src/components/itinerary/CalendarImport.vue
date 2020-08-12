@@ -25,9 +25,9 @@
 			v-for="(calendar, idx) in cals"
 			:key="idx"
 			:icon="calendar.loading ? 'icon-loading-small' : 'icon-add'"
-			@click="onImport(calendar)"
-			>{{ t('mail', 'Import into {calendar}', {calendar: calendar.displayname}) }}</ActionButton
-		>
+			@click="onImport(calendar)">
+			{{ t('mail', 'Import into {calendar}', {calendar: calendar.displayname}) }}
+		</ActionButton>
 	</Actions>
 </template>
 

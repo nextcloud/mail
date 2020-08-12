@@ -211,13 +211,12 @@ class ThreadBuilder {
 				&& $container->hasMessage() && $container->getMessage()->hasReSubject()) {
 				$container->setParent($subjectContainer);
 				$subjectTable[$subject];
-			} else {
-				$new = Container::empty();
-				$container->setParent($new);
-				$subjectContainer->setParent($new);
-				$new->setParent($root);
-				$subjectTable[$subject] = $new;
 			}
+			/*
+			 * According to RFC5256 we would have to combine two messages with the same subject
+			 * to a thread. But this will also group unrelated messages, so we deliberately omit
+			 * this, just like most other clients do.
+			 */
 		}
 	}
 

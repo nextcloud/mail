@@ -24,6 +24,7 @@ declare(strict_types=1);
 namespace OCA\Mail\Service\AutoConfig;
 
 use OCA\Mail\Db\MailAccount;
+use OCA\Mail\SystemConfig;
 
 class SmtpServerDetector {
 
@@ -33,20 +34,20 @@ class SmtpServerDetector {
 	/** @var SmtpConnectivityTester */
 	private $smtpConnectivityTester;
 
-	/** @var bool */
-	private $testSmtp;
+	/** @var SystemConfig */
+	private $systemConfig;
 
 	/**
 	 * @param MxRecord $mxRecord
 	 * @param SmtpConnectivityTester $smtpTester
-	 * @param bool $testSmtp
+	 * @param
 	 */
 	public function __construct(MxRecord $mxRecord,
 								SmtpConnectivityTester $smtpTester,
-								bool $testSmtp) {
+								SystemConfig $systemConfig) {
 		$this->mxRecord = $mxRecord;
 		$this->smtpConnectivityTester = $smtpTester;
-		$this->testSmtp = $testSmtp;
+		$this->systemConfig = $systemConfig;
 	}
 
 	/**
@@ -58,7 +59,7 @@ class SmtpServerDetector {
 	public function detect(MailAccount $account,
 						   string $email,
 						   string $password): bool {
-		if (!$this->testSmtp) {
+		if (!$this->systemConfig->hasWorkingSmtp()) {
 			return true;
 		}
 

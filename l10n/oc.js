@@ -1,9 +1,9 @@
 OC.L10N.register(
     "mail",
     {
-    "Mail" : "Mail",
     "Auto detect failed. Please use manual mode." : "L'autodeteccion a fracassat. Utilizatz lo mòde manual.",
     "Creating account failed: " : "La creacion del compte a fracassat :",
+    "Mail" : "Mail",
     "Name" : "Nom",
     "Password" : "Senhal",
     "None" : "Pas cap",
@@ -28,6 +28,7 @@ OC.L10N.register(
     "Cancel" : "Anullar",
     "Mark all as read" : "Marcar totes coma legits",
     "Clear cache" : "Voidar l'escondedor",
+    "Delete folder" : "Suprimir lo repertòri",
     "General" : "Generals",
     "User" : "User",
     "Search" : "Search",

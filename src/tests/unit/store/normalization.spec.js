@@ -19,7 +19,7 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-import {normalizedFolderId, normalizedMessageId} from '../../../store/normalization'
+import { normalizedFolderId, normalizedMessageId } from '../../../store/normalization'
 
 describe('Vuex store normalization', () => {
 	it('creates a unique folder ID', () => {
@@ -36,7 +36,7 @@ describe('Vuex store normalization', () => {
 		const folderId = 'INBOX'
 		const messageId = 123
 
-		const id = normalizedMessageId(accountId, folderId, 123)
+		const id = normalizedMessageId(accountId, folderId, messageId)
 
 		expect(id).to.equal('13-INBOX-123')
 	})

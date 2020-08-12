@@ -88,6 +88,6 @@ class IMAPMessageTest extends TestCase {
 
 		$json = $m->jsonSerialize();
 
-		$this->assertEquals(1234, $json['id']);
+		$this->assertEquals(1234, $json['uid']);
 	}
 }

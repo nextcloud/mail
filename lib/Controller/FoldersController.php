@@ -90,12 +90,12 @@ class FoldersController extends Controller {
 	public function index(int $accountId): JSONResponse {
 		$account = $this->accountService->find($this->currentUserId, $accountId);
 
-		$folders = $this->mailManager->getFolders($account);
+		$mailboxes = $this->mailManager->getMailboxes($account);
 		return new JSONResponse([
 			'id' => $accountId,
 			'email' => $account->getEmail(),
-			'folders' => $folders,
-			'delimiter' => reset($folders)->getDelimiter(),
+			'folders' => $mailboxes,
+			'delimiter' => reset($mailboxes)->getDelimiter(),
 		]);
 	}
 
@@ -233,5 +233,18 @@ class FoldersController extends Controller {
 		$account = $this->accountService->find($this->currentUserId, $accountId);
 
 		return new JSONResponse($this->mailManager->createFolder($account, $name));
+	}
+
+	/**
+	 * @NoAdminRequired
+	 * @TrapError
+	 * @param int $accountId
+	 * @param string $folderId
+	 * @throws ServiceException
+	 */
+	public function delete(int $accountId, string $folderId): JSONResponse {
+		$account = $this->accountService->find($this->currentUserId, $accountId);
+		$this->mailManager->deleteMailbox($account,  base64_decode($folderId));
+		return new JSONResponse();
 	}
 }

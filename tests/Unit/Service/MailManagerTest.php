@@ -28,6 +28,7 @@ use Horde_Imap_Client_Socket;
 use OCA\Mail\Account;
 use OCA\Mail\Db\Mailbox;
 use OCA\Mail\Db\MailboxMapper;
+use OCA\Mail\Db\MessageMapper as DbMessageMapper;
 use OCA\Mail\Events\BeforeMessageDeletedEvent;
 use OCA\Mail\Exception\ServiceException;
 use OCA\Mail\Folder;
@@ -35,7 +36,7 @@ use OCA\Mail\IMAP\FolderMapper;
 use OCA\Mail\IMAP\FolderStats;
 use OCA\Mail\IMAP\IMAPClientFactory;
 use OCA\Mail\IMAP\MailboxSync;
-use OCA\Mail\IMAP\MessageMapper;
+use OCA\Mail\IMAP\MessageMapper as ImapMessageMapper;
 use OCA\Mail\Service\MailManager;
 use OCP\AppFramework\Db\DoesNotExistException;
 use OCP\EventDispatcher\IEventDispatcher;
@@ -55,8 +56,11 @@ class MailManagerTest extends TestCase {
 	/** @var FolderMapper|MockObject */
 	private $folderMapper;
 
-	/** @var MessageMapper|MockObject */
-	private $messageMapper;
+	/** @var ImapMessageMapper|MockObject */
+	private $imapMessageMapper;
+
+	/** @var DbMessageMapper|MockObject */
+	private $dbMessageMapper;
 
 	/** @var IEventDispatcher|MockObject */
 	private $eventDispatcher;
@@ -70,7 +74,8 @@ class MailManagerTest extends TestCase {
 		$this->imapClientFactory = $this->createMock(IMAPClientFactory::class);
 		$this->mailboxMapper = $this->createMock(MailboxMapper::class);
 		$this->folderMapper = $this->createMock(FolderMapper::class);
-		$this->messageMapper = $this->createMock(MessageMapper::class);
+		$this->imapMessageMapper = $this->createMock(ImapMessageMapper::class);
+		$this->dbMessageMapper = $this->createMock(DbMessageMapper::class);
 		$this->mailboxSync = $this->createMock(MailboxSync::class);
 		$this->eventDispatcher = $this->createMock(IEventDispatcher::class);
 
@@ -79,7 +84,8 @@ class MailManagerTest extends TestCase {
 			$this->mailboxMapper,
 			$this->mailboxSync,
 			$this->folderMapper,
-			$this->messageMapper,
+			$this->imapMessageMapper,
+			$this->dbMessageMapper,
 			$this->eventDispatcher
 		);
 	}
@@ -91,12 +97,6 @@ class MailManagerTest extends TestCase {
 			$this->createMock(Mailbox::class),
 			$this->createMock(Mailbox::class),
 		];
-		$folders = [
-			$this->createMock(Folder::class),
-			$this->createMock(Folder::class),
-		];
-		$mailboxes[0]->method('toFolder')->willReturn($folders[0]);
-		$mailboxes[1]->method('toFolder')->willReturn($folders[1]);
 		$this->mailboxSync->expects($this->once())
 			->method('sync')
 			->with($this->equalTo($account));
@@ -105,9 +105,9 @@ class MailManagerTest extends TestCase {
 			->with($this->equalTo($account))
 			->willReturn($mailboxes);
 
-		$result = $this->manager->getFolders($account);
+		$result = $this->manager->getMailboxes($account);
 
-		$this->assertSame($folders, $result);
+		$this->assertSame($mailboxes, $result);
 	}
 
 	public function testCreateFolder() {
@@ -219,7 +219,7 @@ class MailManagerTest extends TestCase {
 		$this->imapClientFactory->expects($this->once())
 			->method('getClient')
 			->willReturn($client);
-		$this->messageMapper->expects($this->once())
+		$this->imapMessageMapper->expects($this->once())
 			->method('move')
 			->with(
 				$client,
@@ -256,7 +256,7 @@ class MailManagerTest extends TestCase {
 		$this->imapClientFactory->expects($this->once())
 			->method('getClient')
 			->willReturn($client);
-		$this->messageMapper->expects($this->once())
+		$this->imapMessageMapper->expects($this->once())
 			->method('expunge')
 			->with(
 				$client,
@@ -277,9 +277,9 @@ class MailManagerTest extends TestCase {
 		$this->imapClientFactory->expects($this->once())
 			->method('getClient')
 			->willReturn($client);
-		$this->messageMapper->expects($this->never())
+		$this->imapMessageMapper->expects($this->never())
 			->method('addFlag');
-		$this->messageMapper->expects($this->never())
+		$this->imapMessageMapper->expects($this->never())
 			->method('removeFlag');
 
 		$this->manager->flagMessage($account, 'INBOX', 123, 'important', true);
@@ -296,12 +296,22 @@ class MailManagerTest extends TestCase {
 			->method('find')
 			->with($account, 'INBOX')
 			->willReturn($mb);
-		$this->messageMapper->expects($this->never())
+		$this->imapMessageMapper->expects($this->never())
 			->method('addFlag');
-		$this->messageMapper->expects($this->once())
+		$this->imapMessageMapper->expects($this->once())
 			->method('removeFlag')
 			->with($client, $mb, 123, '\\seen');
 
 		$this->manager->flagMessage($account, 'INBOX', 123, 'seen', false);
+	}
+
+	public function testGetThread(): void {
+		$account = $this->createMock(Account::class);
+		$messageId = 123;
+		$this->dbMessageMapper->expects($this->once())
+			->method('findThread')
+			->with($account, $messageId);
+
+		$this->manager->getThread($account, $messageId);
 	}
 }

@@ -1,9 +1,9 @@
 OC.L10N.register(
     "mail",
     {
-    "Mail" : "Поща",
     "Auto detect failed. Please use manual mode." : "Неуспешни автоматични настройки. Моля, използвай ръчен режим.",
     "Creating account failed: " : "Неуспешно създаване на профил:",
+    "Mail" : "Поща",
     "Auto" : "Автоматично",
     "Name" : "Име",
     "Mail Address" : "Имейл адрес",
@@ -74,6 +74,7 @@ OC.L10N.register(
     "Quota" : "Квота",
     "Edit account" : "Редактиране на профила",
     "Add folder" : "Добави папка",
+    "Saving" : "Запазване",
     "Remove account" : "Изтриване",
     "Loading …" : "Зарежда …",
     "Cancel" : "Отказ",
@@ -83,6 +84,7 @@ OC.L10N.register(
     "Mark all messages of this folder as read" : "Маркирай всички съобщения в папката като прочетени",
     "Add subfolder" : "Добави подпапка",
     "Clear cache" : "Изтриване на кеша",
+    "Delete folder" : "Изтриване на папка",
     "No message selected" : "Не е избрано съобщение",
     "Signature" : "Подпис",
     "A signature is added to the text of new messages and replies." : "Подписът се добавя в края на текста, на изходящите съобщения.",

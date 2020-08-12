@@ -21,6 +21,7 @@ OC.L10N.register(
     "Quota" : "Kvote",
     "Add folder" : "Add folder",
     "Cancel" : "Avbryt",
+    "Delete folder" : "Slett mappe",
     "Signature" : "Signatur",
     "General" : "Generelt",
     "User" : "Bruker",

@@ -1,9 +1,9 @@
 OC.L10N.register(
     "mail",
     {
-    "Mail" : "Corréu",
     "Auto detect failed. Please use manual mode." : "Falló l'autodeteición. Por favor, usa el mou manual.",
     "Creating account failed: " : "Fallu creando la cuenta:",
+    "Mail" : "Corréu",
     "Name" : "Nome",
     "Mail Address" : "Direición de corréu",
     "Password" : "Contraseña",
@@ -46,6 +46,7 @@ OC.L10N.register(
     "Settings" : "Axustes",
     "Quota" : "Cuota",
     "Add folder" : "Add folder",
+    "Saving" : "Guardando",
     "Remove account" : "Desaniciar cuenta",
     "Loading …" : "Cargando...",
     "Cancel" : "Encaboxar",
@@ -53,6 +54,7 @@ OC.L10N.register(
     "Collapse folders" : "Contrayer carpetes",
     "Mark all as read" : "Conseñar too como lleío",
     "Clear cache" : "Llimpiar caché",
+    "Delete folder" : "Desaniciar",
     "Signature" : "Robla",
     "General" : "Xeneral",
     "User" : "Usuariu",

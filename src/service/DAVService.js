@@ -17,10 +17,10 @@
  *
  */
 
-import {Client} from 'davclient.js'
+import { Client } from 'davclient.js'
 import ical from 'ical.js'
-import {getCurrentUser, getRequestToken} from '@nextcloud/auth'
-import {generateRemoteUrl} from '@nextcloud/router'
+import { getCurrentUser, getRequestToken } from '@nextcloud/auth'
+import { generateRemoteUrl } from '@nextcloud/router'
 import Axios from '@nextcloud/axios'
 
 import Logger from '../logger'
@@ -54,15 +54,15 @@ const getResponseCodeFromHTTPResponse = (t) => {
 
 const getACLFromResponse = (properties) => {
 	let canWrite = false
-	let acl = properties['{DAV:}acl']
+	const acl = properties['{DAV:}acl']
 	if (acl) {
-		for (var k = 0; k < acl.length; k++) {
-			var href = acl[k].getElementsByTagNameNS('DAV:', 'href')
+		for (let k = 0; k < acl.length; k++) {
+			let href = acl[k].getElementsByTagNameNS('DAV:', 'href')
 			if (href.length === 0) {
 				continue
 			}
 			href = href[0].textContent
-			var writeNode = acl[k].getElementsByTagNameNS('DAV:', 'write')
+			const writeNode = acl[k].getElementsByTagNameNS('DAV:', 'write')
 			if (writeNode.length > 0) {
 				canWrite = true
 			}
@@ -86,7 +86,7 @@ const getCalendarData = (properties) => {
 
 	const components = properties['{urn:ietf:params:xml:ns:caldav}supported-calendar-component-set'] || []
 	for (let i = 0; i < components.length; i++) {
-		var name = components[i].attributes.getNamedItem('name').textContent.toLowerCase()
+		const name = components[i].attributes.getNamedItem('name').textContent.toLowerCase()
 		if (Object.hasOwnProperty.call(data.components, name)) {
 			data.components[name] = true
 		}
@@ -99,7 +99,7 @@ const getCalendarData = (properties) => {
  * @returns {Promise}
  */
 export const getUserCalendars = () => {
-	var url = generateRemoteUrl('dav/calendars') + '/' + getCurrentUser().uid + '/'
+	const url = generateRemoteUrl('dav/calendars') + '/' + getCurrentUser().uid + '/'
 
 	return client
 		.propFind(url, props, 1, {
@@ -156,7 +156,7 @@ const splitCalendar = (data) => {
 		allObjects[componentName] = {}
 
 		vobjects.forEach((vobject) => {
-			var uid = vobject.getFirstPropertyValue('uid')
+			const uid = vobject.getFirstPropertyValue('uid')
 			allObjects[componentName][uid] = allObjects[componentName][uid] || []
 			allObjects[componentName][uid].push(vobject)
 		})
@@ -165,11 +165,11 @@ const splitCalendar = (data) => {
 	const split = []
 	componentNames.forEach((componentName) => {
 		split[componentName] = []
-		for (let objectsId in allObjects[componentName]) {
+		for (const objectsId in allObjects[componentName]) {
 			const objects = allObjects[componentName][objectsId]
 			const component = createICalElement()
 			timezones.forEach(component.addSubcomponent.bind(component))
-			for (let objectId in objects) {
+			for (const objectId in objects) {
 				component.addSubcomponent(objects[objectId])
 			}
 			split[componentName].push(component.toString())
@@ -184,8 +184,8 @@ const splitCalendar = (data) => {
 }
 
 /**
- * @param {String} url
- * @param {Object} data
+ * @param {String} url the url
+ * @param {Object} data the data
  * @returns {Promise}
  */
 export const importCalendarEvent = (url) => (data) => {
@@ -198,9 +198,9 @@ export const importCalendarEvent = (url) => (data) => {
 	const file = splitCalendar(data)
 	const components = ['vevent', 'vjournal', 'vtodo']
 	components.forEach((componentName) => {
-		for (let componentId in file.split[componentName]) {
+		for (const componentId in file.split[componentName]) {
 			const component = file.split[componentName][componentId]
-			Logger.info('importing event component', {component})
+			Logger.info('importing event component', { component })
 			promises.push(
 				Promise.resolve(
 					Axios.put(url + getRandomString() + '.ics', component, {

@@ -19,9 +19,9 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-import {curry, mapObjIndexed} from 'ramda'
+import { curry, mapObjIndexed } from 'ramda'
 
-import {getters} from '../../../store/getters'
+import { getters } from '../../../store/getters'
 
 const bindGetterToState = curry((getters, state, num, key) => getters[key](state, getters))
 

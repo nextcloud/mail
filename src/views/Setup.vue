@@ -2,7 +2,7 @@
 	<Content app-name="mail">
 		<Navigation v-if="hasAccounts" />
 		<div id="emptycontent">
-			<div class="icon-mail"></div>
+			<div class="icon-mail" />
 			<h2>{{ t('mail', 'Connect your mail account') }}</h2>
 			<AccountForm :display-name="displayName" :email="email" :save="onSave">
 				<template v-if="error" #feedback class="warning">
@@ -15,8 +15,8 @@
 
 <script>
 import Content from '@nextcloud/vue/dist/Components/Content'
-import {loadState} from '@nextcloud/initial-state'
-import {translate as t} from '@nextcloud/l10n'
+import { loadState } from '@nextcloud/initial-state'
+import { translate as t } from '@nextcloud/l10n'
 
 import AccountForm from '../components/AccountForm'
 import Navigation from '../components/Navigation'
@@ -56,7 +56,7 @@ export default {
 					return account
 				})
 				.catch((error) => {
-					logger.error('Could not create account', {error})
+					logger.error('Could not create account', { error })
 
 					if (error.message) {
 						this.error = error.message

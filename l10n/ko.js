@@ -1,10 +1,10 @@
 OC.L10N.register(
     "mail",
     {
-    "Mail" : "메일",
     "Auto detect failed. Please use manual mode." : "자동 감지가 실패했습니다. 수동 모드를 사용하십시오.",
     "Updating account failed: " : "계정 업데이트 실패:",
     "Creating account failed: " : "계정 생성 실패: ",
+    "Mail" : "메일",
     "💌 A mail app for Nextcloud" : "Nextcloud 메일 앱",
     "Auto" : "자동",
     "Name" : "이름",
@@ -101,6 +101,7 @@ OC.L10N.register(
     "Quota" : "할당량",
     "Edit account" : "계정 편집",
     "Add folder" : "폴더 추가",
+    "Saving" : "저장 중",
     "Remove account" : "계정 삭제",
     "Loading …" : "불러오는 중 …",
     "Cancel" : "취소",
@@ -108,6 +109,7 @@ OC.L10N.register(
     "Collapse folders" : "폴더 접기",
     "Mark all as read" : "모두 읽은 것으로 표시",
     "Clear cache" : "Clear cache",
+    "Delete folder" : "폴더 삭제",
     "Signature" : "서명",
     "General" : "일반",
     "User" : "사용자",

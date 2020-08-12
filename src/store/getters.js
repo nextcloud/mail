@@ -19,10 +19,10 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-import {defaultTo, head} from 'ramda'
+import { defaultTo, head } from 'ramda'
 
-import {UNIFIED_ACCOUNT_ID} from './constants'
-import {normalizedEnvelopeListId, normalizedFolderId, normalizedMessageId} from './normalization'
+import { UNIFIED_ACCOUNT_ID } from './constants'
+import { normalizedEnvelopeListId, normalizedFolderId, normalizedMessageId } from './normalization'
 
 export const getters = {
 	getPreference: (state) => (key, def) => {
@@ -52,8 +52,8 @@ export const getters = {
 				.filter((folder) => folder.specialRole === specialRole)
 		)
 	},
-	getEnvelope: (state) => (accountId, folderId, id) => {
-		return state.envelopes[normalizedMessageId(accountId, folderId, id)]
+	getEnvelope: (state) => (accountId, folderId, uid) => {
+		return state.envelopes[normalizedMessageId(accountId, folderId, uid)]
 	},
 	getEnvelopeById: (state) => (id) => {
 		return state.envelopes[id]
@@ -62,7 +62,7 @@ export const getters = {
 		const list = getters.getFolder(accountId, folderId).envelopeLists[normalizedEnvelopeListId(query)] || []
 		return list.map((msgId) => state.envelopes[msgId])
 	},
-	getMessage: (state) => (accountId, folderId, id) => {
-		return state.messages[normalizedMessageId(accountId, folderId, id)]
+	getMessage: (state) => (accountId, folderId, uid) => {
+		return state.messages[normalizedMessageId(accountId, folderId, uid)]
 	},
 }

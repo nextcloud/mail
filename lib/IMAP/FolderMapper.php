@@ -109,7 +109,7 @@ class FolderMapper {
 		$mailboxes = array_map(function (Folder $folder) {
 			return $folder->getMailbox();
 		}, array_filter($folders, function (Folder $folder) {
-			return $folder->isSearchable();
+			return !in_array('\noselect', $folder->getAttributes());
 		}));
 
 		$status = $client->status($mailboxes);
@@ -217,6 +217,19 @@ class FolderMapper {
 			if (in_array($lowercaseId, $specialNames)) {
 				$folder->addSpecialUse($specialRole);
 			}
+		}
+	}
+
+	/**
+	 * @param Horde_Imap_Client_Socket $client
+	 * @param string $folderId
+	 * @throws ServiceException
+	 */
+	public function delete(Horde_Imap_Client_Socket $client, string $folderId): void {
+		try {
+			$client->deleteMailbox($folderId);
+		} catch (Horde_Imap_Client_Exception $e) {
+			throw new ServiceException('Could not delete mailbox: '.$e->getMessage(), 0, $e);
 		}
 	}
 }
