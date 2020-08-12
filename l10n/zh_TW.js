@@ -1,10 +1,10 @@
 OC.L10N.register(
     "mail",
     {
-    "Mail" : "電子郵件",
     "Auto detect failed. Please use manual mode." : "自動偵測失敗，請改用手動輸入",
     "Updating account failed: " : "更新帳戶失敗",
     "Creating account failed: " : "建立帳號失敗：",
+    "Mail" : "電子郵件",
     "Auto" : "自動",
     "Name" : "名字",
     "Mail Address" : "郵件地址",

@@ -1,7 +1,7 @@
 { "translations": {
-    "Mail" : "Mail",
     "Auto detect failed. Please use manual mode." : "L'autodeteccion a fracassat. Utilizatz lo mòde manual.",
     "Creating account failed: " : "La creacion del compte a fracassat :",
+    "Mail" : "Mail",
     "Name" : "Nom",
     "Password" : "Senhal",
     "None" : "Pas cap",

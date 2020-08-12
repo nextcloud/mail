@@ -1,9 +1,9 @@
 OC.L10N.register(
     "mail",
     {
-    "Mail" : "Posta",
     "Auto detect failed. Please use manual mode." : "Vetëzbulimi dështoi. Ju lutemi, përdorni metodën dorazi.",
     "Creating account failed: " : "Krijimi i llogarisë dështoi: ",
+    "Mail" : "Posta",
     "Name" : "Emri",
     "Mail Address" : "Adresa e postës elektronike",
     "Password" : "Fjalëkalimi",

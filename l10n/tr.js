@@ -1,11 +1,11 @@
 OC.L10N.register(
     "mail",
     {
-    "Mail" : "E-posta",
     "Auto detect failed. Please use manual mode." : "Otomatik olarak algılanamadı. Lütfen el ile kipini kullanın.",
     "Updating account failed: " : "Hesap güncellenemedi:",
     "Creating account failed: " : "Hesap oluşturulamadı:",
     "Embedded message %s" : "Gömülü ileti %s",
+    "Mail" : "E-posta",
     "💌 A mail app for Nextcloud" : "💌 Nextcloud e-posta uygulaması",
     "**💌 A mail app for Nextcloud**\n\n- **🚀 Integration with other Nextcloud apps!** Currently Contacts, Calendar & Files – more to come.\n- **📥 Multiple mail accounts!** Personal and company account? No problem, and a nice unified inbox. Connect any IMAP account.\n- **🔒 Send & receive encrypted mails!** Using the great [Mailvelope](https://mailvelope.com) browser extension.\n- **🙈 We’re not reinventing the wheel!** Based on the great [Horde](http://horde.org) libraries.\n- **📬 Want to host your own mail server?** We don’t have to reimplement this as you could set up [Mail-in-a-Box](https://mailinabox.email)!" : "**💌 Nextcloud için bir e-posta uygulaması**\n\n- **🚀 Diğer Nextcloud uygulamaları ile bir arada çalışır!** Şu anda Kişiler, Takvim ve Dosyalar – diğer uygulamalar eklenecek.\n- **📥 Birden çok e-posta hesabını destekler!** Kişisel ya da kurumsal hesaplarınızı sorunsuz olarak tek ve güzel bir gelen kutusunda görebilirsiniz. Tüm IMAP hesaplarına bağlanabilirsiniz.\n- **🔒 Şifreli e-posta gönderip alabilir!** Harika [Mailvelope](https://mailvelope.com) web tarayıcı eklentisini kullanabilirsiniz.\n- **🙈 Tekerleği yeniden keşfetmiyoruz!** Harika [Horde](http://horde.org) kitaplıklarını kullanıyoruz.\n- **📬 Kendi e-posta sunucunuzu kurmak mı istiyorsunuz?** [Mail-in-a-Box](https://mailinabox.email) kurabileceğiniz için bu özelliği eklememiz gerekmiyor!",
     "Auto" : "Otomatik",
@@ -146,6 +146,7 @@ OC.L10N.register(
     "Add subfolder" : "Alt klasör ekle",
     "Clear cache" : "Ön belleği temizle",
     "Clear locally cached data, in case there are issues with synchronization." : "Eşitleme sırasında sorun çıkarsa, yerel ön bellek verisini sıfırlar.",
+    "Delete folder" : "Klasörü sil",
     "_{total} message_::_{total} messages_" : ["{total} ileti","{total} ileti"],
     "Could not load your draft" : "Taslağınız yüklenemedi",
     "Could not load original message" : "Özgün ileti yüklenemedi",

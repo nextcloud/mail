@@ -1,8 +1,8 @@
 OC.L10N.register(
     "mail",
     {
-    "Mail" : "шуудан",
     "Creating account failed: " : "аккаунт үүсгэж чадсангүй:",
+    "Mail" : "шуудан",
     "Name" : "нэр",
     "Mail Address" : "шуудангийн хаяг",
     "Password" : "нууц үг",

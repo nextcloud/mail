@@ -1,10 +1,10 @@
 OC.L10N.register(
     "mail",
     {
-    "Mail" : "E-bost",
     "Auto detect failed. Please use manual mode." : "Methodd awtoganfod. Defnyddiwch y modd llaw.",
     "Updating account failed: " : "Methodd diweddaru'r cyfrif :",
     "Creating account failed: " : "Methodd creu'r cyfrif:",
+    "Mail" : "E-bost",
     "Auto" : "Awto",
     "Name" : "Enw",
     "Mail Address" : "Cyfeiriad E-bost",

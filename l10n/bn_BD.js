@@ -1,8 +1,8 @@
 OC.L10N.register(
     "mail",
     {
-    "Mail" : "মেইল",
     "Creating account failed: " : "একাউন্ট তৈরী করা গেলনা:",
+    "Mail" : "মেইল",
     "Name" : "নাম",
     "Password" : "কূটশব্দ",
     "None" : "কোনটিই নয়",

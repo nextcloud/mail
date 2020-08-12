@@ -1,11 +1,11 @@
 OC.L10N.register(
     "mail",
     {
-    "Mail" : "Mail",
     "Auto detect failed. Please use manual mode." : "Fejl ved autodetektion. Anvend venligst manuel opsætning",
     "Updating account failed: " : "Kontoen blev ikke opdateret:",
     "Creating account failed: " : "Oprettelse af konto mislykkedes:",
     "Embedded message %s" : "Indlejret besked %s",
+    "Mail" : "Mail",
     "💌 A mail app for Nextcloud" : "💌 En mail app til Nextcloud",
     "Auto" : "Auto",
     "Name" : "Navn",

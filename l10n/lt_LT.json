@@ -1,9 +1,9 @@
 { "translations": {
-    "Mail" : "Paštas",
     "Auto detect failed. Please use manual mode." : "Automatinis nustatymų aptikimas nepavyko. Įveskite duomenis rankiniu būdu.",
     "Updating account failed: " : "Paskyros atnaujinimas nepavyko: ",
     "Creating account failed: " : "Paskyros sukūrimas nepavyko: ",
     "Embedded message %s" : "Įterptas laiškas %s",
+    "Mail" : "Paštas",
     "💌 A mail app for Nextcloud" : "💌 Pašto programėlė, skirta Nextcloud",
     "Auto" : "Automatiškai",
     "Name" : "Vardas",

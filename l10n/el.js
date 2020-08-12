@@ -1,11 +1,11 @@
 OC.L10N.register(
     "mail",
     {
-    "Mail" : "Αλληλογραφία",
     "Auto detect failed. Please use manual mode." : "Η αυτόματη ανίχνευση απέτυχε. Παρακαλούμε χρησιμοποιήστε τη χειροκίνητη λειτουργία.",
     "Updating account failed: " : "Αποτυχία ενημέρωσης λογαριασμού:",
     "Creating account failed: " : "Αποτυχία δημιουργίας λογαριασμού:",
     "Embedded message %s" : "Ενσωματωμένο μήνυμα %s",
+    "Mail" : "Αλληλογραφία",
     "💌 A mail app for Nextcloud" : "Εφαρμογή ηλ.ταχυδρομείου για το Nextcloud",
     "**💌 A mail app for Nextcloud**\n\n- **🚀 Integration with other Nextcloud apps!** Currently Contacts, Calendar & Files – more to come.\n- **📥 Multiple mail accounts!** Personal and company account? No problem, and a nice unified inbox. Connect any IMAP account.\n- **🔒 Send & receive encrypted mails!** Using the great [Mailvelope](https://mailvelope.com) browser extension.\n- **🙈 We’re not reinventing the wheel!** Based on the great [Horde](http://horde.org) libraries.\n- **📬 Want to host your own mail server?** We don’t have to reimplement this as you could set up [Mail-in-a-Box](https://mailinabox.email)!" : "**💌 Εφαρμογή ηλ.ταχυδρομείου για το Nextcloud **\n\n- **🚀 Συνεργασία με άλλες εφαρμογές Nextcloud!** Για την ώρα με Επαφές, Ημερολόγιο & Αρχεία - προσεχώς και άλλες.\n- **📥 Πολλαπλοί λογαριασμοί ταχυδρομίου!** Προσωπικοί και επαγγελματικοί λογαριασμοί? Χωρίς πρόβλημα και με ένα όμορφο περιβάλλον. Συνδέστε οποιονδήποτε λογαριασμό IMAP.\n- **🔒 Αποστολή & λήψη κρυπτογραφημένων μηνυμάτων!** Χρησιμοποιώντας το υπέροχο [Mailvelope](https://mailvelope.com) πρόσθετο φυλλομετρητή.\n- **🙈 Δεν ανακαλύπτουμε τον τροχό!** Βασισμένο στις υπέροχες [Horde](http://horde.org) βιβλιοθήκες.\n- **📬 Χρειάζεστε τον δικό σας διακομιστή?** Δεν χρειάζεται να επαναλάβουμε πως μπορείτε να τον δημιουργήσετε [Mail-in-a-Box](https://mailinabox.email)!",
     "Auto" : "Αυτόματα",

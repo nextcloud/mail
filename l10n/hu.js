@@ -1,11 +1,11 @@
 OC.L10N.register(
     "mail",
     {
-    "Mail" : "Levelezés",
     "Auto detect failed. Please use manual mode." : "Automatikus észlelés sikertelen. Használja a manuális módot.",
     "Updating account failed: " : "Fiók frissítése sikertelen:",
     "Creating account failed: " : "Fiók létrehozása sikertelen: ",
     "Embedded message %s" : "Beágyazott üzenet %s",
+    "Mail" : "Levelezés",
     "💌 A mail app for Nextcloud" : "E-mail alkalmazás a Nextcloud-hoz",
     "Auto" : "Automatikus",
     "Name" : "Név",

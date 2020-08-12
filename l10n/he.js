@@ -1,11 +1,11 @@
 OC.L10N.register(
     "mail",
     {
-    "Mail" : "דואר",
     "Auto detect failed. Please use manual mode." : "איתור אוטומטי נכשל. יש להשתמש במצב ידני.",
     "Updating account failed: " : "עדכון החשבון נכשל:",
     "Creating account failed: " : "יצירת חשבון נכשלה:",
     "Embedded message %s" : "הודעה מוטמעת %s",
+    "Mail" : "דואר",
     "💌 A mail app for Nextcloud" : "💌 יישומון דוא״ל ל־Nextcloud",
     "**💌 A mail app for Nextcloud**\n\n- **🚀 Integration with other Nextcloud apps!** Currently Contacts, Calendar & Files – more to come.\n- **📥 Multiple mail accounts!** Personal and company account? No problem, and a nice unified inbox. Connect any IMAP account.\n- **🔒 Send & receive encrypted mails!** Using the great [Mailvelope](https://mailvelope.com) browser extension.\n- **🙈 We’re not reinventing the wheel!** Based on the great [Horde](http://horde.org) libraries.\n- **📬 Want to host your own mail server?** We don’t have to reimplement this as you could set up [Mail-in-a-Box](https://mailinabox.email)!" : "**💌 יישומון דוא״ל ל־Nextcloud**\n\n- **🚀 משתלב עם יישומונים אחרים של Nextcloud!** נכון לעכשיו מול אנשי קשר, יומן וקבצים – עוד כאלה בקרוב.\n- **📥 ריבוי חשבונות דוא״ל!** חשבונות פרטיים ועסקיים? אין בעיה, בתוספת תיבת דואר נכנס מאוחדת. ניתן לחבר כל חשבון IMAP באשר הוא.\n- **🔒 שליחה וקבלה של הודעות מוצפנות!** באמצעות הרחבת הדפדפן הנהדרת [Mailvelope](https://mailvelope.com).\n- **🙈 אנחנו לא ממציאים מחדש את הגלגל!** מבוסס על הספריות הנפלאות של [Horde](http://horde.org).\n- **📬 מעניין אותך לארח שרת דוא״ל משלך?** אין לנו צורך להטמיע את זה מחדש כיוון שיש לך אפשרות להשתמש ב־[Mail-in-a-Box](https://mailinabox.email)!",
     "Auto" : "אוטומטי",

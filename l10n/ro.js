@@ -1,8 +1,8 @@
 OC.L10N.register(
     "mail",
     {
-    "Mail" : "Mail",
     "Creating account failed: " : "Crearea contului a eșuat:",
+    "Mail" : "Mail",
     "Name" : "Nume",
     "Mail Address" : "Adresă Mail",
     "Password" : "Parolă",

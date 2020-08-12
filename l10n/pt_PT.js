@@ -1,9 +1,9 @@
 OC.L10N.register(
     "mail",
     {
-    "Mail" : "Correio",
     "Auto detect failed. Please use manual mode." : "A deteção automática falhou. Por favor, utilize o modo manual",
     "Creating account failed: " : "Não foi possível criar a conta:",
+    "Mail" : "Correio",
     "Name" : "Nome",
     "Mail Address" : "Endereço de Correio",
     "Password" : "Palavra-passe",

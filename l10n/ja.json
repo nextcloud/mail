@@ -1,8 +1,8 @@
 { "translations": {
-    "Mail" : "メール",
     "Auto detect failed. Please use manual mode." : "自動判別に失敗しました。手動モードをご利用ください。",
     "Updating account failed: " : "アカウントの更新に失敗：",
     "Creating account failed: " : "アカウント作成に失敗:",
+    "Mail" : "メール",
     "💌 A mail app for Nextcloud" : "💌Nextcloudのメールアプリ",
     "**💌 A mail app for Nextcloud**\n\n- **🚀 Integration with other Nextcloud apps!** Currently Contacts, Calendar & Files – more to come.\n- **📥 Multiple mail accounts!** Personal and company account? No problem, and a nice unified inbox. Connect any IMAP account.\n- **🔒 Send & receive encrypted mails!** Using the great [Mailvelope](https://mailvelope.com) browser extension.\n- **🙈 We’re not reinventing the wheel!** Based on the great [Horde](http://horde.org) libraries.\n- **📬 Want to host your own mail server?** We don’t have to reimplement this as you could set up [Mail-in-a-Box](https://mailinabox.email)!" : "**💌Nextcloudのメールアプリ**\n\n- **🚀他のNextcloudアプリとの統合！** 現在は連絡先、カレンダー、およびファイルと統合 – 今後さらに追加予定。\n- **📥複数のメールアカウント！** 個人と企業で別のアカウントをお使いですか？ 問題ありません。統合された受信トレイがあります。どんなIMAPアカウントでも接続できます。\n- **🔒暗号化されたメールを送受信！** 優れた[Mailvelope](https://mailvelope.com)ブラウザー拡張機能を使用。\n- **🙈車輪の再発明は行っていません！** 素晴らしい[Horde](http://horde.org)ライブラリに基づいています。\n- **📬独自のメールサーバーを提供したいですか？** [Mail-in-a-Box](https://mailinabox.email)を設定できるため、これを再実装する必要はありません！",
     "Auto" : "自動",

@@ -1,11 +1,11 @@
 OC.L10N.register(
     "mail",
     {
-    "Mail" : "E-pasts",
     "Auto detect failed. Please use manual mode." : "Automātiski noteikt neizdevās. Lūdzu, izmantojiet manuālo režīmu.",
     "Updating account failed: " : "Neizdevās labot konts",
     "Creating account failed: " : "Konta izveide neizdevās:",
     "Embedded message %s" : "Iegultais ziņojums%s",
+    "Mail" : "E-pasts",
     "💌 A mail app for Nextcloud" : "Nextcloud E-pasta lietotne",
     "Auto" : "Automātiski",
     "Name" : "Nosaukums",

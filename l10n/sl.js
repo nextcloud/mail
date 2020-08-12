@@ -1,10 +1,10 @@
 OC.L10N.register(
     "mail",
     {
-    "Mail" : "Pošta",
     "Auto detect failed. Please use manual mode." : "Samodejno zaznavanje je spodletelo. Zaznavo bo treba izvesti ročno.",
     "Updating account failed: " : "Posodobitev računa je spodletela:",
     "Creating account failed: " : "Ustvarjanje računa je spodletelo:",
+    "Mail" : "Pošta",
     "💌 A mail app for Nextcloud" : "💌 Poštni program za Nextcloud",
     "**💌 A mail app for Nextcloud**\n\n- **🚀 Integration with other Nextcloud apps!** Currently Contacts, Calendar & Files – more to come.\n- **📥 Multiple mail accounts!** Personal and company account? No problem, and a nice unified inbox. Connect any IMAP account.\n- **🔒 Send & receive encrypted mails!** Using the great [Mailvelope](https://mailvelope.com) browser extension.\n- **🙈 We’re not reinventing the wheel!** Based on the great [Horde](http://horde.org) libraries.\n- **📬 Want to host your own mail server?** We don’t have to reimplement this as you could set up [Mail-in-a-Box](https://mailinabox.email)!" : "**Program za elektronsko pošto Nextcloud**\n\n- **Zagotovljena je povezljivost z drugimi programi Nextcloud!** Trenutno so podprti programi Stiki, Koledar in Datoteke – in še jih bo.\n- **Mogoča je nastavitev več poštnih računov!** Imate osebni in službeni račun? Ni panika, podprta je tudi enotna mapa prejetih sporočil. Povezati je mogoče katerikoli račun IMAP.\n- **Podprto je pošiljanje šifriranih sporočil** Omogočeno z uporabo odlične razširitve [Mailvelope](https://mailvelope.com).\n- **Ne odkrivamo ponovno kolesa!** Program je zasnovan na odločnih knjižnicah [Horde](http://horde.org).\n- **Ali želite imeti svoj poštni strežnik?** Tega nam ni treba znova programirati, saj lahko uporabite [Mail-in-a-Box](https://mailinabox.email)!",
     "Auto" : "Samodejno",

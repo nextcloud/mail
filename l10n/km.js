@@ -1,8 +1,8 @@
 OC.L10N.register(
     "mail",
     {
-    "Mail" : "សំបុត្រ",
     "Creating account failed: " : "ការបង្កើត​គណនី​បរាជ័យ",
+    "Mail" : "សំបុត្រ",
     "Name" : "ឈ្មោះ",
     "Password" : "ពាក្យសម្ងាត់",
     "None" : "គ្មាន",

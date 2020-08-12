@@ -1,10 +1,10 @@
 OC.L10N.register(
     "mail",
     {
-    "Mail" : "Mail",
     "Auto detect failed. Please use manual mode." : "Auto detect failed. Please use manual mode.",
     "Updating account failed: " : "Updating account failed: ",
     "Creating account failed: " : "Creating account failed: ",
+    "Mail" : "Mail",
     "Name" : "Name",
     "Mail Address" : "Mail Address",
     "Password" : "Password",
