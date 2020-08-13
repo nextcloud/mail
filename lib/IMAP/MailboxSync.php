@@ -125,6 +125,18 @@ class MailboxSync {
 		$this->mailAccountMapper->update($account->getMailAccount());
 	}
 
+	/**
+	 * @param Folder $folder
+	 * @param Mailbox $mailbox
+	 *
+	 * @return string
+	 */
+	public function updateMailboxAttributes(Folder $folder, Mailbox $mailbox) : string {
+		$attributes = $folder->getAttributes();
+		$mailbox->setAttributes(json_encode($attributes));
+		return $this->mailboxMapper->update($mailbox)->getAttributes();
+	}
+
 	private function updateMailboxFromFolder(Folder $folder, Mailbox $mailbox): void {
 		$mailbox->setDelimiter($folder->getDelimiter());
 		$mailbox->setAttributes(json_encode($folder->getAttributes()));

@@ -247,4 +247,20 @@ class FoldersController extends Controller {
 		$this->mailManager->deleteMailbox($account,  base64_decode($folderId));
 		return new JSONResponse();
 	}
+
+	/**
+	 * @NoAdminRequired
+	 * @TrapError
+	 * @throws ClientException
+	 * @throws ServiceException
+	 */
+	public function updateSubscription(int $accountId, string $folderId, bool $subscribed) {
+		$account = $this->accountService->find($this->currentUserId, $accountId);
+
+		if (empty($accountId) || empty($folderId)) {
+			return new JSONResponse(null, Http::STATUS_BAD_REQUEST);
+		}
+		$subscribed = $this->mailManager->updateSubscription($account, base64_decode($folderId), $subscribed);
+		return new JSONResponse(['subscribed' => $subscribed]);
+	}
 }

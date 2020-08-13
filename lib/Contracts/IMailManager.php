@@ -151,4 +151,15 @@ interface IMailManager {
 	 * @throws ServiceException
 	 */
 	public function deleteMailbox(Account $account, string $folderId): void;
+
+	/**
+	 * @param Account $account
+	 * @param string $mailbox
+	 * @param bool $subscribed
+	 *
+	 * @return bool
+	 * @throws ClientException
+	 * @throws ServiceException
+	 */
+	public function updateSubscription(Account $account, string $mailbox, bool $subscribed): bool;
 }

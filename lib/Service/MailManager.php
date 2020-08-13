@@ -290,6 +290,37 @@ class MailManager implements IMailManager {
 		$this->imapMessageMapper->markAllRead($client, $folderId);
 	}
 
+	/**
+	 * @param Account $account
+	 * @param string $mailbox
+	 * @param bool $subscribed
+	 *
+	 * @return bool
+	 * @throws ClientException
+	 * @throws ServiceException
+	 *
+	 */
+
+	public function updateSubscription(Account $account, string $mailbox, bool $subscribed): bool {
+		$client = $this->imapClientFactory->getClient($account);
+		try {
+			$mb = $this->mailboxMapper->find($account, $mailbox);
+		} catch (DoesNotExistException $e) {
+			throw new ClientException("Mailbox $mailbox does not exist", 0, $e);
+		}
+		try {
+			$client->subscribeMailbox($mailbox, $subscribed);
+		} catch (Horde_Imap_Client_Exception $e) {
+			throw new ServiceException("Could not set subscription status for mailbox $mailbox on IMAP: " . $e->getMessage(), $e->getCode(), $e);
+		}
+		$folders = $this->folderMapper->getFolders($account, $client, $mailbox);
+		if (count($folders) !== 1) {
+			throw new ServiceException("Could not identify IMAP Folder $$mailbox");
+		}
+		$attrributes = $this->mailboxSync->updateMailboxAttributes($folders[$mailbox], $mb);
+		return stripos($attrributes, '\\subscribed') !== false;
+	}
+
 	public function flagMessage(Account $account, string $mailbox, int $uid, string $flag, bool $value): void {
 		$client = $this->imapClientFactory->getClient($account);
 		try {

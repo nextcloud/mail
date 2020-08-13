@@ -238,4 +238,19 @@ export default {
 	deleteAlias(state, { account, alias }) {
 		account.aliases.splice(account.aliases.indexOf(alias), 1)
 	},
+	changeFolderSubscription(state, { accountId, folderId, isSubscribed }) {
+		const uid = normalizedFolderId(accountId, folderId)
+		const folder = state.folders[uid]
+		const attributes = folder.attributes
+		if (isSubscribed) {
+			if (!folder.attributes.includes('\\subscribed')) {
+				attributes.push('\\subscribed')
+			}
+		} else {
+			if (folder.attributes.includes('\\subscribed')) {
+				attributes.splice(attributes.indexOf('\\subscribed'), 1)
+			}
+		}
+		Vue.set(state.folders[uid], 'attributes', attributes)
+	},
 }

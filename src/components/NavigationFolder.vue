@@ -70,9 +70,14 @@
 					@click="clearCache">
 					{{ t('mail', 'Clear locally cached data, in case there are issues with synchronization.') }}
 				</ActionButton>
-				<ActionButton v-if="!account.isUnified && !folder.specialRole" icon="icon-delete" @click="deleteFolder">
-					{{ t('mail', 'Delete folder') }}
-				</ActionButton>
+
+				<ActionCheckbox
+					v-if="notVirtual"
+					:checked="isSubscribed"
+					:disabled="changeSubscription"
+					@update:checked="changeFolderSubscription">
+					{{ t('mail', 'Subscribed') }}
+				</ActionCheckbox>
 			</template>
 		</template>
 		<AppNavigationCounter v-if="folder.unread" slot="counter">
@@ -93,6 +98,7 @@
 import AppNavigationItem from '@nextcloud/vue/dist/Components/AppNavigationItem'
 import AppNavigationCounter from '@nextcloud/vue/dist/Components/AppNavigationCounter'
 import ActionButton from '@nextcloud/vue/dist/Components/ActionButton'
+import ActionCheckbox from '@nextcloud/vue/dist/Components/ActionCheckbox'
 import ActionInput from '@nextcloud/vue/dist/Components/ActionInput'
 import ActionText from '@nextcloud/vue/dist/Components/ActionText'
 
@@ -109,6 +115,7 @@ export default {
 		AppNavigationCounter,
 		ActionText,
 		ActionButton,
+		ActionCheckbox,
 		ActionInput,
 	},
 	props: {
@@ -137,6 +144,7 @@ export default {
 			loadingMarkAsRead: false,
 			clearingCache: false,
 			showSaving: false,
+			changeSubscription: false,
 			editing: false,
 			showSubFolders: false,
 			menuOpen: false,
@@ -144,10 +152,10 @@ export default {
 	},
 	computed: {
 		visible() {
-			return (
-				this.account.showSubscribedOnly === false
-				|| (this.folder.attributes && this.folder.attributes.includes('\\subscribed'))
-			)
+			return this.account.showSubscribedOnly === false || this.isSubscribed
+		},
+		notVirtual() {
+			return !this.account.isUnified && this.folder.specialRole !== 'flagged'
 		},
 		title() {
 			if (this.filter === 'starred') {
@@ -203,6 +211,9 @@ export default {
 				}
 			}
 			return t('mail', 'Loading …')
+		},
+		isSubscribed() {
+			return this.folder.attributes && this.folder.attributes.includes('\\subscribed')
 		},
 	},
 	methods: {
@@ -280,6 +291,22 @@ export default {
 				.then(() => logger.info(`folder ${this.folder.id} marked as read`))
 				.catch((error) => logger.error(`could not mark folder ${this.folder.id} as read`, { error }))
 				.then(() => (this.loadingMarkAsRead = false))
+		},
+		async changeFolderSubscription(subscribed) {
+			try {
+				this.changeSubscription = true
+
+				await this.$store.dispatch('changeFolderSubscription', {
+					accountId: this.account.id,
+					folderId: this.folder.id,
+					subscribed,
+				})
+			} catch (error) {
+				logger.error('could not update subscription', { error })
+				throw error
+			} finally {
+				this.changeSubscription = false
+			}
 		},
 		async clearCache() {
 			try {

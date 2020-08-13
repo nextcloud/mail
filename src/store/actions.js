@@ -55,6 +55,7 @@ import {
 	fetchAll as fetchAllFolders,
 	markFolderRead,
 	deleteFolder,
+	changeFolderSubscription,
 } from '../service/FolderService'
 import {
 	deleteMessage,
@@ -208,8 +209,18 @@ export default {
 			})
 		)
 	},
-	fetchEnvelope({ commit, getters }, uuid) {
-		const { accountId, folderId, uid } = parseUuid(uuid)
+	changeFolderSubscription({ commit }, { accountId, folderId, subscribed }) {
+		logger.debug('Toggle subscription for account: ' + accountId + ' folder ' + folderId + ' to ' + subscribed)
+		return changeFolderSubscription(accountId, folderId, subscribed).then((res) => {
+			commit('changeFolderSubscription', {
+				accountId,
+				folderId,
+				isSubscribed: res.subscribed,
+			})
+		})
+	},
+	fetchEnvelope({ commit, getters }, uid) {
+		const { accountId, folderId, id } = parseUid(uid)
 
 		const cached = getters.getEnvelope(accountId, folderId, uid)
 		if (cached) {

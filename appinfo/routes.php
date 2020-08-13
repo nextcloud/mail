@@ -85,6 +85,11 @@ return [
 			'verb' => 'DELETE'
 		],
 		[
+			'name' => 'folders#updateSubscription',
+			'url' => '/api/accounts/{accountId}/folders/{folderId}/subscribe',
+			'verb' => 'POST'
+		],
+		[
 			'name' => 'messages#downloadAttachment',
 			'url' => '/api/accounts/{accountId}/folders/{folderId}/messages/{messageId}/attachment/{attachmentId}',
 			'verb' => 'GET'

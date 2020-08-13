@@ -48,3 +48,16 @@ export const deleteFolder = async(accountId, folderId) => {
 
 	await Axios.delete(url)
 }
+
+export function changeFolderSubscription(accountId, folderId, subscribed) {
+	const url = generateUrl('/apps/mail/api/accounts/{accountId}/folders/{folderId}/subscribe', {
+		accountId,
+		folderId,
+	})
+
+	const data = {
+		subscribed,
+	}
+
+	return Axios.post(url, data).then((resp) => resp.data)
+}
