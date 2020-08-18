@@ -222,8 +222,14 @@ class IspDbConfigurationDetector {
 			$account->setOutboundPort($smtp['port']);
 			$account->setOutboundPassword($this->crypto->encrypt($password));
 			$account->setOutboundUser($user);
-			$account->setOutboundSslMode(strtolower($smtp['socketType']));
 
+			/** mapping 'STARTTLS' expected by e.g. Thunderbird to 'tls' used by mail app */
+			if (strtolower($smtp['socketType']) === 'starttls') {
+				$account->setOutboundSslMode('tls');
+			} else {
+				$account->setOutboundSslMode(strtolower($smtp['socketType']));
+			}
+			
 			$a = new Account($account);
 			$transport = $this->smtpClientFactory->create($a);
 			if ($transport instanceof Horde_Mail_Transport_Smtphorde) {
