@@ -74,6 +74,7 @@ OC.L10N.register(
     "User" : "User",
     "Host" : "Host",
     "Port" : "Port",
+    "Change name" : "Change name",
     "Speed up your Mail experience with these quick shortcuts." : "Speed up your Mail experience with these quick shortcuts.",
     "Compose new message" : "Compose new message",
     "Newer message" : "Newer message",

@@ -39,7 +39,7 @@
 				<p class="empty-content__text">
 					{{ t('mail', 'No messages found yet') }}
 				</p>
-				<a v-if="accounts.length === 2" :href="accountSetupUrl" class="button">{{ t('mail', 'Set up an account') }}</a>
+				<a v-if="accounts.length === 0" :href="accountSetupUrl" class="button">{{ t('mail', 'Set up an account') }}</a>
 			</div>
 		</template>
 	</DashboardWidget>

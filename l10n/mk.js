@@ -89,7 +89,7 @@ OC.L10N.register(
     "Message source" : "Извор на пораката",
     "Could not load your message" : "Неможе да се вчита пораката",
     "Import into calendar" : "Увези во календар",
-    "Download attachment" : "Превземи прилог",
+    "Download attachment" : "Преземи прилог",
     "Save to Files" : "Зачувај во датотеките",
     "Choose a folder to store the attachment in" : "Избери папка за зачувување на прилогот",
     "Save all to Files" : "Зачувај ги сите во датотеките",

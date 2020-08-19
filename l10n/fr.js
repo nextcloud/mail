@@ -187,6 +187,7 @@ OC.L10N.register(
     "Change name" : "Modifier le nom",
     "Mail server" : "Serveur de messagerie",
     "No messages found yet" : "Aucun message pour l'instant",
+    "Set up an account" : "Créer un compte",
     "Speed up your Mail experience with these quick shortcuts." : "Accélérez votre expérience Mail avec ces raccourcis rapides.",
     "Compose new message" : "Rédigez un nouveau message",
     "Newer message" : "Message plus récent",
