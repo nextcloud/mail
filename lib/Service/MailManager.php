@@ -310,6 +310,28 @@ class MailManager implements IMailManager {
 		$this->imapMessageMapper->markAllRead($client, $mailbox->getName());
 	}
 
+	public function updateSubscription(Account $account, Mailbox $mailbox, bool $subscribed): Mailbox {
+		/**
+		 * 1. Change subscription on IMAP
+		 */
+		$client = $this->imapClientFactory->getClient($account);
+		try {
+			$client->subscribeMailbox($mailbox->getName(), $subscribed);
+		} catch (Horde_Imap_Client_Exception $e) {
+			throw new ServiceException("Could not set subscription status for mailbox $mailbox on IMAP: " . $e->getMessage(), $e->getCode(), $e);
+		}
+
+		/**
+		 * 2. Pull changes into the mailbox database cache
+		 */
+		$this->mailboxSync->sync($account, true);
+
+		/**
+		 * 3. Return the updated object
+		 */
+		return $this->mailboxMapper->find($account, $mailbox->getName());
+	}
+
 	public function flagMessage(Account $account, string $mailbox, int $uid, string $flag, bool $value): void {
 		$client = $this->imapClientFactory->getClient($account);
 		try {

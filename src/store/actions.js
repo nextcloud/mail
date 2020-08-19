@@ -212,6 +212,21 @@ export default {
 			})
 		)
 	},
+	async changeMailboxSubscription({ commit }, { mailbox, subscribed }) {
+		logger.debug(`toggle subscription for mailbox ${mailbox.databaseId}`, {
+			mailbox,
+			subscribed,
+		})
+		const updated = await patchMailbox(mailbox.databaseId, { subscribed })
+
+		commit('updateMailbox', {
+			mailbox: updated,
+		})
+		logger.debug(`subscription for mailbox ${mailbox.databaseId} updated`, {
+			mailbox,
+			updated,
+		})
+	},
 	fetchEnvelope({ commit, getters }, id) {
 		const cached = getters.getEnvelope(id)
 		if (cached) {
