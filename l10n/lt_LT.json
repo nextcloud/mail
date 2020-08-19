@@ -141,6 +141,7 @@
     "Email: {email}" : "El. paštas: {email}",
     "IMAP: {user} on {host}:{port} ({ssl} encryption)" : "IMAP: {user} ties {host}:{port} ({ssl} šifravimas)",
     "SMTP: {user} on {host}:{port} ({ssl} encryption)" : "SMTP: {user} ties {host}:{port} ({ssl} šifravimas)",
+    "Provision an account for every user" : "Parūpinti paskyrą kiekvienam naudotojui",
     "General" : "Bendra",
     "Email address" : "El. pašto adresas",
     "IMAP" : "IMAP",
