@@ -93,6 +93,7 @@ OC.L10N.register(
     "User" : "Bruker",
     "Host" : "Server",
     "Port" : "Port",
+    "Change name" : "Bytt navn",
     "Speed up your Mail experience with these quick shortcuts." : "Arbeid raskere i Mail med disse raske snarveiene",
     "Compose new message" : "Lag ny melding",
     "Newer message" : "Nyere melding",
