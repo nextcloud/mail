@@ -20,11 +20,15 @@
   -->
 
 <template>
-	<BaseAvatar v-if="loading || !hasAvatar" :display-name="displayName" :size="40" />
+	<BaseAvatar v-if="loading || !hasAvatar"
+		:display-name="displayName"
+		:size="40"
+		:disable-tooltip="disableTooltip" />
 	<BaseAvatar v-else
 		:display-name="displayName"
 		:url="avatarUrl"
-		:size="40" />
+		:size="40"
+		:disable-tooltip="disableTooltip" />
 </template>
 
 <script>
@@ -45,6 +49,10 @@ export default {
 		email: {
 			type: String,
 			required: true,
+		},
+		disableTooltip: {
+			type: Boolean,
+			default: false,
 		},
 	},
 	data() {
