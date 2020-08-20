@@ -29,7 +29,11 @@
 		<template v-slot:default="{ item }">
 			<DashboardWidgetItem :item="getWidgetItem(item)">
 				<template v-slot:avatar>
-					<Avatar v-if="item.from" :email="item.from[0].email" :display-name="item.from[0].label" />
+					<Avatar v-if="item.from"
+						:email="item.from[0].email"
+						:display-name="item.from[0].label"
+						:disable-tooltip="true"
+						:size="44" />
 				</template>
 			</DashboardWidgetItem>
 		</template>
