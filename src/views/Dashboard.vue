@@ -32,7 +32,8 @@
 					<Avatar v-if="item.from"
 						:email="item.from[0].email"
 						:display-name="item.from[0].label"
-						:disable-tooltip="true" />
+						:disable-tooltip="true"
+						:size="44" />
 				</template>
 			</DashboardWidgetItem>
 		</template>
