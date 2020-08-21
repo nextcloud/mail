@@ -17,13 +17,13 @@
 					:search-query="query"
 					:bus="bus" />
 				<template v-else>
-					<li class="app-content-list-item">
+					<div class="app-content-list-item">
 						<SectionTitle class="important" :name="t('mail', 'Important')" />
 						<Popover trigger="hover focus">
-							<button slot="trigger" class="button icon-info" />
+							<button slot="trigger" :aria-label="t('mail', 'Important info')" class="button icon-info" />
 							{{ importantInfo }}
 						</Popover>
-					</li>
+					</div>
 					<Mailbox
 						class="nameimportant"
 						:account="unifiedAccount"
