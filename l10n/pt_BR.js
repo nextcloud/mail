@@ -103,6 +103,7 @@ OC.L10N.register(
     "Important" : "Importante",
     "Favorites" : "Favoritos",
     "Other" : "Outro",
+    "Messages will automatically be marked as important based on which messages you interacted with or marked as important. In the beginning you might have to manually change the importance to teach the system, but it will improve over time." : "As mensagens serão automaticamente marcadas como importantes com base nas mensagens com as quais você interagiu ou marcou como importantes. No início você pode ter que mudar manualmente a importância para ensinar o sistema, mas ele irá melhorar com o tempo.",
     "Not found" : "Não encontrado",
     "to" : "para",
     "cc" : "cc",

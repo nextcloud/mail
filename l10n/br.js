@@ -26,6 +26,7 @@ OC.L10N.register(
     "Remove account" : "Lemel ar c'hont",
     "Loading …" : "O Kargañ ...",
     "Cancel" : "Arrest",
+    "Clear cache" : "Gwalc'hiñ ar c'hache",
     "Delete folder" : "Dilemel an teuliad",
     "General" : "Hollek",
     "User" : "Implijer",

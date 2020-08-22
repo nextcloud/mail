@@ -103,6 +103,7 @@ OC.L10N.register(
     "Important" : "Ważne",
     "Favorites" : "Ulubione",
     "Other" : "Inne",
+    "Messages will automatically be marked as important based on which messages you interacted with or marked as important. In the beginning you might have to manually change the importance to teach the system, but it will improve over time." : "Wiadomości będą automatycznie oznaczane jako ważne na podstawie wiadomości, z którymi wchodziłeś w interakcję lub które oznaczałeś jako ważne. Na początku być może trzeba będzie ręcznie zmienić ważność dla uczenia systemu, ale z czasem będzie się poprawiać.",
     "Not found" : "Nie znaleziono",
     "to" : "do",
     "cc" : "DW",
