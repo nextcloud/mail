@@ -453,7 +453,7 @@ export default {
 	}
 
 	#header,
-	#app-navigation,
+	.app-navigation,
 	#reply-composer,
 	#forward-button,
 	#mail-message-has-blocked-content,
@@ -462,7 +462,7 @@ export default {
 	.mail-message-attachments {
 		display: none !important;
 	}
-	#app-content {
+	.app-content {
 		margin-left: 0 !important;
 	}
 	.mail-message-body {

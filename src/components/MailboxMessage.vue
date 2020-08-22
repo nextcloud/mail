@@ -242,4 +242,8 @@ export default {
 		background-color: var(--color-background-dark);
 	}
 }
+
+#app-content-wrapper {
+	display: flex;
+}
 </style>
