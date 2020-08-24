@@ -10,6 +10,7 @@
 		<div id="message-container" :class="{hidden: loading}">
 			<iframe id="message-frame"
 				ref="iframe"
+				:title="t('mail', 'Message frame')"
 				:src="url"
 				seamless
 				@load="onMessageFrameLoad" />
