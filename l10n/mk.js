@@ -31,7 +31,7 @@ OC.L10N.register(
     "Save" : "Зачувај",
     "Connect" : "Поврзи се",
     "Add mail account" : "Додади е-пошта сметка",
-    "Use Gravatar and favicon avatars" : "Користете Gravatar и favicon аватари",
+    "Use Gravatar and favicon avatars" : "Користете Граватар и Фавикон аватари",
     "Keyboard shortcuts" : "Кратенки преку тастатура",
     "From" : "Од",
     "Select account" : "Избете сметка",
