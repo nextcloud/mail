@@ -29,6 +29,7 @@ use ChristophWurst\Nextcloud\Testing\TestCase;
 use OCA\Mail\Account;
 use OCA\Mail\Db\Mailbox;
 use OCA\Mail\Db\MailboxMapper;
+use OCA\Mail\Db\Message;
 use OCA\Mail\Events\MessageSentEvent;
 use OCA\Mail\Exception\ServiceException;
 use OCA\Mail\IMAP\IMAPClientFactory;
@@ -101,11 +102,13 @@ class SaveSentMessageListenerTest extends TestCase {
 		$message = $this->createMock(IMessage::class);
 		/** @var \Horde_Mime_Mail|MockObject $mail */
 		$mail = $this->createMock(\Horde_Mime_Mail::class);
+		$draft = new Message();
+		$draft->setUid(123);
 		$event = new MessageSentEvent(
 			$account,
 			$newMessageData,
 			$repliedMessageData,
-			123,
+			$draft,
 			$message,
 			$mail
 		);
@@ -153,11 +156,13 @@ class SaveSentMessageListenerTest extends TestCase {
 		$message = $this->createMock(IMessage::class);
 		/** @var \Horde_Mime_Mail|MockObject $mail */
 		$mail = $this->createMock(\Horde_Mime_Mail::class);
+		$draft = new Message();
+		$draft->setUid(123);
 		$event = new MessageSentEvent(
 			$account,
 			$newMessageData,
 			$repliedMessageData,
-			123,
+			$draft,
 			$message,
 			$mail
 		);
@@ -207,11 +212,13 @@ class SaveSentMessageListenerTest extends TestCase {
 		$message = $this->createMock(IMessage::class);
 		/** @var \Horde_Mime_Mail|MockObject $mail */
 		$mail = $this->createMock(\Horde_Mime_Mail::class);
+		$draft = new Message();
+		$draft->setUid(123);
 		$event = new MessageSentEvent(
 			$account,
 			$newMessageData,
 			$repliedMessageData,
-			123,
+			$draft,
 			$message,
 			$mail
 		);
@@ -244,11 +251,13 @@ class SaveSentMessageListenerTest extends TestCase {
 		$message = $this->createMock(IMessage::class);
 		/** @var \Horde_Mime_Mail|MockObject $mail */
 		$mail = $this->createMock(\Horde_Mime_Mail::class);
+		$draft = new Message();
+		$draft->setUid(123);
 		$event = new MessageSentEvent(
 			$account,
 			$newMessageData,
 			$repliedMessageData,
-			123,
+			$draft,
 			$message,
 			$mail
 		);

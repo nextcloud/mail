@@ -54,9 +54,10 @@ class AliasesController extends Controller {
 	 * @TrapError
 	 *
 	 * @param int $accountId
+	 *
 	 * @return JSONResponse
 	 */
-	public function index($accountId): JSONResponse {
+	public function index(int $accountId): JSONResponse {
 		return new JSONResponse($this->aliasService->findAll($accountId, $this->currentUser->getUID()));
 	}
 
@@ -83,7 +84,7 @@ class AliasesController extends Controller {
 	 * @param int $id
 	 * @return JSONResponse
 	 */
-	public function destroy($id): JSONResponse {
+	public function destroy(int $id): JSONResponse {
 		return new JSONResponse($this->aliasService->delete($id, $this->currentUser->getUID()));
 	}
 
@@ -94,9 +95,10 @@ class AliasesController extends Controller {
 	 * @param int $accountId
 	 * @param string $alias
 	 * @param string $aliasName
+	 *
 	 * @return JSONResponse
 	 */
-	public function create($accountId, $alias, $aliasName): JSONResponse {
+	public function create(int $accountId, string $alias, string $aliasName): JSONResponse {
 		return new JSONResponse($this->aliasService->create($accountId, $alias, $aliasName), Http::STATUS_CREATED);
 	}
 }

@@ -30,6 +30,7 @@ use OCA\Mail\Account;
 use OCA\Mail\Contracts\IMailManager;
 use OCA\Mail\Db\Mailbox;
 use OCA\Mail\Db\MailboxMapper;
+use OCA\Mail\Db\Message;
 use OCA\Mail\Db\MessageMapper as DbMessageMapper;
 use OCA\Mail\Events\BeforeMessageDeletedEvent;
 use OCA\Mail\Events\MessageDeletedEvent;
@@ -100,6 +101,14 @@ class MailManager implements IMailManager {
 		$this->eventDispatcher = $eventDispatcher;
 	}
 
+	public function getMailbox(string $uid, int $id): Mailbox {
+		try {
+			return $this->mailboxMapper->findByUid($id, $uid);
+		} catch (DoesNotExistException $e) {
+			throw new ClientException("Mailbox $id does not exist", 0, $e);
+		}
+	}
+
 	/**
 	 * @param Account $account
 	 *
@@ -116,10 +125,10 @@ class MailManager implements IMailManager {
 	 * @param Account $account
 	 * @param string $name
 	 *
-	 * @return Folder
+	 * @return Mailbox
 	 * @throws ServiceException
 	 */
-	public function createFolder(Account $account, string $name): Folder {
+	public function createMailbox(Account $account, string $name): Mailbox {
 		$client = $this->imapClientFactory->getClient($account);
 
 		$folder = $this->folderMapper->createFolder($client, $account, $name);
@@ -132,30 +141,33 @@ class MailManager implements IMailManager {
 
 		$this->mailboxSync->sync($account, true);
 
-		return $folder;
+		return $this->mailboxMapper->find($account, $name);
 	}
 
 	/**
 	 * @param Account $account
-	 * @param string $folderId
+	 * @param Mailbox $mailbox
 	 *
 	 * @return FolderStats
+	 * @throws Horde_Imap_Client_Exception
 	 */
-	public function getFolderStats(Account $account, string $folderId): FolderStats {
+	public function getMailboxStats(Account $account, Mailbox $mailbox): FolderStats {
 		$client = $this->imapClientFactory->getClient($account);
 
-		return $this->folderMapper->getFoldersStatusAsObject($client, $folderId);
+		return $this->folderMapper->getFoldersStatusAsObject($client, $mailbox->getName());
 	}
 
-	public function getMessage(Account $account, string $mailbox, int $id, bool $loadBody = false): IMAPMessage {
+	public function getImapMessage(Account $account,
+								   Mailbox $mailbox,
+								   int $uid,
+								   bool $loadBody = false): IMAPMessage {
 		$client = $this->imapClientFactory->getClient($account);
-		$mailbox = $this->mailboxMapper->find($account, $mailbox);
 
 		try {
 			return $this->imapMessageMapper->find(
 				$client,
 				$mailbox->getName(),
-				$id,
+				$uid,
 				$loadBody
 			);
 		} catch (Horde_Imap_Client_Exception|DoesNotExistException $e) {
@@ -167,24 +179,32 @@ class MailManager implements IMailManager {
 		return $this->dbMessageMapper->findThread($account, $messageId);
 	}
 
+	public function getMessageIdForUid(Mailbox $mailbox, $uid): ?int {
+		return $this->dbMessageMapper->getIdForUid($mailbox, $uid);
+	}
+
+	public function getMessage(string $uid, int $id): Message {
+		return $this->dbMessageMapper->findByUserId($uid, $id);
+	}
+
 	/**
 	 * @param Account $account
 	 * @param string $mb
-	 * @param int $id
+	 * @param int $uid
 	 *
 	 * @return string
 	 *
 	 * @throws ClientException
 	 * @throws ServiceException
 	 */
-	public function getSource(Account $account, string $mailbox, int $id): string {
+	public function getSource(Account $account, string $mailbox, int $uid): ?string {
 		$client = $this->imapClientFactory->getClient($account);
 
 		try {
 			return $this->imapMessageMapper->getSource(
 				$client,
 				$mailbox,
-				$id
+				$uid
 			);
 		} catch (Horde_Imap_Client_Exception|DoesNotExistException $e) {
 			throw new ServiceException("Could not load message", 0, $e);
@@ -194,7 +214,7 @@ class MailManager implements IMailManager {
 	/**
 	 * @param Account $sourceAccount
 	 * @param string $sourceFolderId
-	 * @param int $messageId
+	 * @param int $uid
 	 * @param Account $destinationAccount
 	 * @param string $destFolderId
 	 *
@@ -204,7 +224,7 @@ class MailManager implements IMailManager {
 	 */
 	public function moveMessage(Account $sourceAccount,
 								string $sourceFolderId,
-								int $messageId,
+								int $uid,
 								Account $destinationAccount,
 								string $destFolderId) {
 		if ($sourceAccount->getId() === $destinationAccount->getId()) {
@@ -212,7 +232,7 @@ class MailManager implements IMailManager {
 				$sourceAccount,
 				$sourceFolderId,
 				$destFolderId,
-				$messageId
+				$uid
 			);
 		} else {
 			throw new ServiceException('It is not possible to move across accounts yet');
@@ -284,10 +304,10 @@ class MailManager implements IMailManager {
 		$this->imapMessageMapper->move($client, $sourceFolderId, $messageId, $destFolderId);
 	}
 
-	public function markFolderAsRead(Account $account, string $folderId): void {
+	public function markFolderAsRead(Account $account, Mailbox $mailbox): void {
 		$client = $this->imapClientFactory->getClient($account);
 
-		$this->imapMessageMapper->markAllRead($client, $folderId);
+		$this->imapMessageMapper->markAllRead($client, $mailbox->getName());
 	}
 
 	public function flagMessage(Account $account, string $mailbox, int $uid, string $flag, bool $value): void {
@@ -371,18 +391,14 @@ class MailManager implements IMailManager {
 
 	/**
 	 * @param Account $account
-	 * @param string $folderId
+	 * @param Mailbox $mailbox
+	 *
 	 * @throws ServiceException
 	 */
 	public function deleteMailbox(Account $account,
-								  string $folderId): void {
-		try {
-			$mailbox = $this->mailboxMapper->find($account, $folderId);
-		} catch (DoesNotExistException $e) {
-			throw new ServiceException("Source mailbox $folderId does not exist", 0, $e);
-		}
+								  Mailbox $mailbox): void {
 		$client = $this->imapClientFactory->getClient($account);
-		$this->folderMapper->delete($client, $folderId);
+		$this->folderMapper->delete($client, $mailbox->getName());
 		$this->mailboxMapper->delete($mailbox);
 	}
 }

@@ -23,12 +23,12 @@ declare(strict_types=1);
 
 namespace OCA\Mail\Tests\Unit\Controller;
 
+use OCA\Mail\Db\Mailbox;
 use OCA\Mail\Service\Sync\SyncService;
 use PHPUnit\Framework\MockObject\MockObject;
-use function base64_encode;
 use OCA\Mail\Account;
 use OCA\Mail\Contracts\IMailManager;
-use OCA\Mail\Controller\FoldersController;
+use OCA\Mail\Controller\MailboxesController;
 use OCA\Mail\Exception\NotImplemented;
 use OCA\Mail\Folder;
 use OCA\Mail\IMAP\FolderStats;
@@ -37,7 +37,7 @@ use ChristophWurst\Nextcloud\Testing\TestCase;
 use OCP\AppFramework\Http\JSONResponse;
 use OCP\IRequest;
 
-class FoldersControllerTest extends TestCase {
+class MailboxesControllerTest extends TestCase {
 
 	/** @var string */
 	private $appName = 'mail';
@@ -54,7 +54,7 @@ class FoldersControllerTest extends TestCase {
 	/** @var IMailManager|MockObject */
 	private $mailManager;
 
-	/** @var FoldersController */
+	/** @var MailboxesController */
 	private $controller;
 
 	/** @var SyncService|MockObject */
@@ -67,7 +67,7 @@ class FoldersControllerTest extends TestCase {
 		$this->accountService = $this->createMock(AccountService::class);
 		$this->mailManager = $this->createMock(IMailManager::class);
 		$this->syncService = $this->createMock(SyncService::class);
-		$this->controller = new FoldersController(
+		$this->controller = new MailboxesController(
 			$this->appName,
 			$this->request,
 			$this->accountService,
@@ -103,7 +103,7 @@ class FoldersControllerTest extends TestCase {
 		$expected = new JSONResponse([
 			'id' => 28,
 			'email' => 'user@example.com',
-			'folders' => [
+			'mailboxes' => [
 				$folder,
 			],
 			'delimiter' => '.',
@@ -119,20 +119,20 @@ class FoldersControllerTest extends TestCase {
 
 	public function testCreate() {
 		$account = $this->createMock(Account::class);
-		$folder = $this->createMock(Folder::class);
+		$mailbox = new Mailbox();
 		$accountId = 28;
 		$this->accountService->expects($this->once())
 			->method('find')
 			->with($this->equalTo($this->userId), $this->equalTo($accountId))
 			->willReturn($account);
 		$this->mailManager->expects($this->once())
-			->method('createFolder')
+			->method('createMailbox')
 			->with($this->equalTo($account), $this->equalTo('new'))
-			->willReturn($folder);
+			->willReturn($mailbox);
 
 		$response = $this->controller->create($accountId, 'new');
 
-		$expected = new JSONResponse($folder);
+		$expected = new JSONResponse($mailbox);
 		$this->assertEquals($expected, $response);
 	}
 
@@ -140,16 +140,22 @@ class FoldersControllerTest extends TestCase {
 		$account = $this->createMock(Account::class);
 		$stats = $this->createMock(FolderStats::class);
 		$accountId = 28;
+		$mailbox = new Mailbox();
+		$mailbox->setAccountId($accountId);
+		$this->mailManager->expects($this->once())
+			->method('getMailbox')
+			->with('john', 13)
+			->willReturn($mailbox);
 		$this->accountService->expects($this->once())
 			->method('find')
 			->with($this->equalTo($this->userId), $this->equalTo($accountId))
 			->willReturn($account);
 		$this->mailManager->expects($this->once())
-			->method('getFolderStats')
-			->with($this->equalTo($account), $this->equalTo('INBOX'))
+			->method('getMailboxStats')
+			->with($this->equalTo($account), $mailbox)
 			->willReturn($stats);
 
-		$response = $this->controller->stats($accountId, base64_encode('INBOX'));
+		$response = $this->controller->stats(13);
 
 		$expected = new JSONResponse($stats);
 		$this->assertEquals($expected, $response);

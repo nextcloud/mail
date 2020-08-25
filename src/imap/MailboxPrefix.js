@@ -24,7 +24,7 @@ const PREFIX = 'INBOX'
 export const havePrefix = (mailboxes) => {
 	return (
 		mailboxes.filter((mailbox) => {
-			const hierarchy = mailbox.id.split(mailbox.delimiter)
+			const hierarchy = mailbox.name.split(mailbox.delimiter)
 			if (hierarchy.length < 1 || hierarchy[0] !== PREFIX) {
 				return false
 			}

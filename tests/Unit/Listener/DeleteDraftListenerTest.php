@@ -26,6 +26,7 @@ use ChristophWurst\Nextcloud\Testing\TestCase;
 use OCA\Mail\Account;
 use OCA\Mail\Db\Mailbox;
 use OCA\Mail\Db\MailboxMapper;
+use OCA\Mail\Db\Message;
 use OCA\Mail\Events\DraftSavedEvent;
 use OCA\Mail\Events\MessageSentEvent;
 use OCA\Mail\IMAP\IMAPClientFactory;
@@ -110,10 +111,13 @@ class DeleteDraftListenerTest extends TestCase {
 		$account = $this->createMock(Account::class);
 		/** @var NewMessageData|MockObject $newMessageData */
 		$newMessageData = $this->createMock(NewMessageData::class);
+		$draft = new Message();
+		$uid = 123;
+		$draft->setUid($uid);
 		$event = new DraftSavedEvent(
 			$account,
 			$newMessageData,
-			123
+			$draft
 		);
 		/** @var \Horde_Imap_Client_Socket|MockObject $client */
 		$client = $this->createMock(\Horde_Imap_Client_Socket::class);
@@ -149,7 +153,7 @@ class DeleteDraftListenerTest extends TestCase {
 			->with(
 				$client,
 				$mailbox,
-				123,
+				$uid,
 				\Horde_Imap_Client::FLAG_DELETED
 			);
 		$client->expects($this->once())
@@ -190,11 +194,14 @@ class DeleteDraftListenerTest extends TestCase {
 		$message = $this->createMock(IMessage::class);
 		/** @var \Horde_Mime_Mail|MockObject $mail */
 		$mail = $this->createMock(\Horde_Mime_Mail::class);
+		$draft = new Message();
+		$uid = 123;
+		$draft->setUid($uid);
 		$event = new MessageSentEvent(
 			$account,
 			$newMessageData,
 			$repliedMessageData,
-			123,
+			$draft,
 			$message,
 			$mail
 		);
@@ -215,7 +222,7 @@ class DeleteDraftListenerTest extends TestCase {
 			->with(
 				$client,
 				$mailbox,
-				123,
+				$uid,
 				\Horde_Imap_Client::FLAG_DELETED
 			);
 		$client->expects($this->once())

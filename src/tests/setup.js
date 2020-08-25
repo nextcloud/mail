@@ -45,4 +45,5 @@ global.OC = {
 			return string
 		},
 	},
+	isUserAdmin: () => false,
 }

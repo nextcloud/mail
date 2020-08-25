@@ -27,7 +27,7 @@ use Horde_Imap_Client;
 use OC;
 use OCA\Mail\Account;
 use OCA\Mail\Contracts\IMailManager;
-use OCA\Mail\Controller\FoldersController;
+use OCA\Mail\Controller\MailboxesController;
 use OCA\Mail\Service\AccountService;
 use OCA\Mail\Service\Sync\SyncService;
 use OCA\Mail\Tests\Integration\Framework\ImapTest;
@@ -37,13 +37,13 @@ class MailboxSynchronizationTest extends TestCase {
 	use ImapTest,
 		ImapTestAccount;
 
-	/** @var FoldersController */
+	/** @var MailboxesController */
 	private $foldersController;
 
 	protected function setUp(): void {
 		parent::setUp();
 
-		$this->foldersController = new FoldersController(
+		$this->foldersController = new MailboxesController(
 			'mail',
 			OC::$server->getRequest(),
 			OC::$server->query(AccountService::class),
@@ -55,21 +55,28 @@ class MailboxSynchronizationTest extends TestCase {
 
 	public function testSyncEmptyMailbox() {
 		$account = $this->createTestAccount();
-		$mailbox = 'INBOX';
+		/** @var IMailManager $mailManager */
+		$mailManager = OC::$server->query(IMailManager::class);
+		$mailBoxes = $mailManager->getMailboxes(new Account($account));
+		$inbox = null;
+		foreach ($mailBoxes as $mailBox) {
+			if ($mailBox->getName() === 'INBOX') {
+				$inbox = $mailBox;
+				break;
+			}
+		}
 		/** @var SyncService $syncService */
 		$syncService = OC::$server->query(SyncService::class);
 		$syncService->syncMailbox(
 			new Account($account),
-			$mailbox,
+			$inbox,
 			Horde_Imap_Client::SYNC_NEWMSGSUIDS | Horde_Imap_Client::SYNC_FLAGSUIDS | Horde_Imap_Client::SYNC_VANISHEDUIDS,
 			[],
 			false
 		);
-		$mailbox = 'INBOX';
 
 		$jsonResponse = $this->foldersController->sync(
-			$account->getId(),
-			base64_encode($mailbox),
+			$inbox->getId(),
 			[]
 		);
 
@@ -87,10 +94,19 @@ class MailboxSynchronizationTest extends TestCase {
 		$account = $this->createTestAccount();
 		/** @var SyncService $syncService */
 		$syncService = OC::$server->query(SyncService::class);
-		$mailbox = 'INBOX';
+		/** @var IMailManager $mailManager */
+		$mailManager = OC::$server->query(IMailManager::class);
+		$mailBoxes = $mailManager->getMailboxes(new Account($account));
+		$inbox = null;
+		foreach ($mailBoxes as $mailBox) {
+			if ($mailBox->getName() === 'INBOX') {
+				$inbox = $mailBox;
+				break;
+			}
+		}
 		$syncService->syncMailbox(
 			new Account($account),
-			$mailbox,
+			$inbox,
 			Horde_Imap_Client::SYNC_NEWMSGSUIDS | Horde_Imap_Client::SYNC_FLAGSUIDS | Horde_Imap_Client::SYNC_VANISHEDUIDS,
 			[],
 			false
@@ -100,11 +116,10 @@ class MailboxSynchronizationTest extends TestCase {
 			->from('ralph@buffington@domain.tld')
 			->to('user@domain.tld')
 			->finish();
-		$newUid = $this->saveMessage($mailbox, $message, $account);
+		$newUid = $this->saveMessage($inbox->getName(), $message, $account);
 
 		$jsonResponse = $this->foldersController->sync(
-			$account->getId(),
-			base64_encode($mailbox),
+			$inbox->getId(),
 			[]
 		);
 		$syncJson = $jsonResponse->getData()->jsonSerialize();
@@ -124,19 +139,29 @@ class MailboxSynchronizationTest extends TestCase {
 			->from('ralph@buffington@domain.tld')
 			->to('user@domain.tld')
 			->finish();
-		$id = $this->saveMessage($mailbox, $message, $account);
+		$uid = $this->saveMessage($mailbox, $message, $account);
+		/** @var IMailManager $mailManager */
+		$mailManager = OC::$server->query(IMailManager::class);
+		$mailBoxes = $mailManager->getMailboxes(new Account($account));
+		$inbox = null;
+		foreach ($mailBoxes as $mailBox) {
+			if ($mailBox->getName() === 'INBOX') {
+				$inbox = $mailBox;
+				break;
+			}
+		}
 		$syncService->syncMailbox(
 			new Account($account),
-			$mailbox,
+			$inbox,
 			Horde_Imap_Client::SYNC_NEWMSGSUIDS | Horde_Imap_Client::SYNC_FLAGSUIDS | Horde_Imap_Client::SYNC_VANISHEDUIDS,
 			[],
 			false
 		);
-		$this->flagMessage($mailbox, $id, $account);
+		$this->flagMessage($mailbox, $uid, $account);
+		$id = $mailManager->getMessageIdForUid($inbox, $uid);
 
 		$jsonResponse = $this->foldersController->sync(
-			$account->getId(),
-			base64_encode($mailbox),
+			$inbox->getId(),
 			[
 				$id
 			]);
@@ -156,11 +181,21 @@ class MailboxSynchronizationTest extends TestCase {
 			->to('user@domain.tld')
 			->finish();
 		$id = $this->saveMessage($mailbox, $message, $account);
+		/** @var IMailManager $mailManager */
+		$mailManager = OC::$server->query(IMailManager::class);
+		$mailBoxes = $mailManager->getMailboxes(new Account($account));
+		$inbox = null;
+		foreach ($mailBoxes as $mailBox) {
+			if ($mailBox->getName() === 'INBOX') {
+				$inbox = $mailBox;
+				break;
+			}
+		}
 		/** @var SyncService $syncService */
 		$syncService = OC::$server->query(SyncService::class);
 		$syncService->syncMailbox(
 			new Account($account),
-			$mailbox,
+			$inbox,
 			Horde_Imap_Client::SYNC_NEWMSGSUIDS | Horde_Imap_Client::SYNC_FLAGSUIDS | Horde_Imap_Client::SYNC_VANISHEDUIDS,
 			[],
 			false
@@ -168,8 +203,7 @@ class MailboxSynchronizationTest extends TestCase {
 		$this->deleteMessage($mailbox, $id, $account);
 
 		$jsonResponse = $this->foldersController->sync(
-			$account->getId(),
-			base64_encode($mailbox),
+			$inbox->getId(),
 			[
 				$id
 			]);

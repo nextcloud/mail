@@ -22,13 +22,11 @@
 import Axios from '@nextcloud/axios'
 import { generateUrl } from '@nextcloud/router'
 
-export function saveAttachmentToFiles(accountId, folderId, messageId, attachmentId, directory) {
+export function saveAttachmentToFiles(id, attachmentId, directory) {
 	const url = generateUrl(
-		'apps/mail/api/accounts/{accountId}/folders/{folderId}/messages/{messageId}/attachment/{attachmentId}',
+		'/apps/mail/api/messages/{id}/attachment/{attachmentId}',
 		{
-			accountId,
-			folderId,
-			messageId,
+			id,
 			attachmentId,
 		}
 	)
@@ -38,8 +36,8 @@ export function saveAttachmentToFiles(accountId, folderId, messageId, attachment
 	})
 }
 
-export function saveAttachmentsToFiles(accountId, folderId, messageId, directory) {
-	return saveAttachmentToFiles(accountId, folderId, messageId, 0, directory)
+export function saveAttachmentsToFiles(id, directory) {
+	return saveAttachmentToFiles(id, 0, directory)
 }
 
 export function downloadAttachment(url) {

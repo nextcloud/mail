@@ -21,28 +21,28 @@
 
 import { translate as t } from '@nextcloud/l10n'
 
-const translateSpecial = (folder) => {
-	if (folder.specialUse.includes('all')) {
+const translateSpecial = (mailbox) => {
+	if (mailbox.specialUse.includes('all')) {
 		// TRANSLATORS: translated mail box name
 		return t('mail', 'All')
 	}
-	if (folder.specialUse.includes('archive')) {
+	if (mailbox.specialUse.includes('archive')) {
 		// TRANSLATORS: translated mail box name
 		return t('mail', 'Archive')
 	}
-	if (folder.specialUse.includes('drafts')) {
+	if (mailbox.specialUse.includes('drafts')) {
 		// TRANSLATORS: translated mail box name
 		return t('mail', 'Drafts')
 	}
-	if (folder.specialUse.includes('flagged')) {
+	if (mailbox.specialUse.includes('flagged')) {
 		// TRANSLATORS: translated mail box name
 		return t('mail', 'Favorites')
 	}
-	if (folder.specialUse.includes('inbox')) {
-		if (folder.isPriorityInbox) {
+	if (mailbox.specialUse.includes('inbox')) {
+		if (mailbox.isPriorityInbox) {
 			// TRANSLATORS: translated mail box name
 			return t('mail', 'Priority inbox')
-		} else if (folder.isUnified) {
+		} else if (mailbox.isUnified) {
 			// TRANSLATORS: translated mail box name
 			return t('mail', 'All inboxes')
 		} else {
@@ -50,28 +50,28 @@ const translateSpecial = (folder) => {
 			return t('mail', 'Inbox')
 		}
 	}
-	if (folder.specialUse.includes('junk')) {
+	if (mailbox.specialUse.includes('junk')) {
 		// TRANSLATORS: translated mail box name
 		return t('mail', 'Junk')
 	}
-	if (folder.specialUse.includes('sent')) {
+	if (mailbox.specialUse.includes('sent')) {
 		// TRANSLATORS: translated mail box name
 		return t('mail', 'Sent')
 	}
-	if (folder.specialUse.includes('trash')) {
+	if (mailbox.specialUse.includes('trash')) {
 		// TRANSLATORS: translated mail box name
 		return t('mail', 'Trash')
 	}
-	throw new Error(`unknown special use ${folder.specialUse}`)
+	throw new Error(`unknown special use ${mailbox.specialUse}`)
 }
 
-export const translate = (folder) => {
-	if (folder.specialUse.length > 0) {
+export const translate = (mailbox) => {
+	if (mailbox.specialUse.length > 0) {
 		try {
-			return translateSpecial(folder)
+			return translateSpecial(mailbox)
 		} catch (e) {
-			console.error('could not translate special folder', e)
+			console.error('could not translate special mailbox', e)
 		}
 	}
-	return folder.displayName
+	return mailbox.displayName
 }

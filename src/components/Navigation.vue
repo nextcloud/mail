@@ -32,24 +32,24 @@
 					v-if="group.account"
 					:key="group.account.id"
 					:account="group.account"
-					:first-folder="group.folders[0]"
+					:first-mailbox="group.mailboxes[0]"
 					:is-first="isFirst(group.account)"
 					:is-last="isLast(group.account)" />
-				<template v-for="item in group.folders">
-					<NavigationFolder
+				<template v-for="item in group.mailboxes">
+					<NavigationMailbox
 						v-show="
 							!group.isCollapsible ||
 								!group.account.collapsed ||
 								SHOW_COLLAPSED.indexOf(item.specialRole) !== -1
 						"
-						:key="item.key"
+						:key="item.databaseId"
 						:account="group.account"
-						:folder="item" />
-					<NavigationFolder
+						:mailbox="item" />
+					<NavigationMailbox
 						v-if="!group.account.isUnified && item.specialRole === 'inbox'"
-						:key="item.key + '-starred'"
+						:key="item.databaseId + '-starred'"
 						:account="group.account"
-						:folder="item"
+						:mailbox="item"
 						filter="starred" />
 				</template>
 				<NavigationAccountExpandCollapse
@@ -74,7 +74,7 @@ import AppNavigationSpacer from '@nextcloud/vue/dist/Components/AppNavigationSpa
 import logger from '../logger'
 import NavigationAccount from './NavigationAccount'
 import NavigationAccountExpandCollapse from './NavigationAccountExpandCollapse'
-import NavigationFolder from './NavigationFolder'
+import NavigationMailbox from './NavigationMailbox'
 
 import AppSettingsMenu from '../components/AppSettingsMenu'
 
@@ -90,7 +90,7 @@ export default {
 		AppSettingsMenu,
 		NavigationAccount,
 		NavigationAccountExpandCollapse,
-		NavigationFolder,
+		NavigationMailbox,
 	},
 	data() {
 		return {
@@ -100,16 +100,16 @@ export default {
 	computed: {
 		menu() {
 			return this.$store.getters.accounts.map((account) => {
-				const folders = this.$store.getters.getFolders(account.id)
-				const nonSpecialRoleFolders = folders.filter(
-					(folder) => SHOW_COLLAPSED.indexOf(folder.specialRole) === -1
+				const mailboxes = this.$store.getters.getMailboxes(account.id)
+				const nonSpecialRoleMailboxes = mailboxes.filter(
+					(mailbox) => SHOW_COLLAPSED.indexOf(mailbox.specialRole) === -1
 				)
-				const isCollapsible = nonSpecialRoleFolders.length > 1
+				const isCollapsible = nonSpecialRoleMailboxes.length > 1
 
 				return {
 					id: account.id,
 					account,
-					folders,
+					mailboxes,
 					isCollapsible,
 				}
 			})
@@ -119,11 +119,10 @@ export default {
 		onNewMessage() {
 			const accountId = this.$route.params.accountId || this.$store.getters.accounts[0].id
 
-			// FIXME: this assumes that there's at least one folder
-			const folderId = this.$route.params.folderId || this.$store.getters.getFolders(accountId)[0].id
+			const mailboxId = this.$route.params.mailboxId || this.$store.getters.getMailboxes(accountId)[0]?.databaseId
 			if (
 				this.$router.currentRoute.name === 'message'
-				&& this.$router.currentRoute.params.messageUuid === 'new'
+				&& this.$router.currentRoute.params.getMailboxes === 'new'
 			) {
 				// If we already show the composer, navigating to it would be pointless (and doesn't work)
 				// instead trigger an event to reset the composer
@@ -135,10 +134,9 @@ export default {
 				.push({
 					name: 'message',
 					params: {
-						accountId,
-						folderId,
+						mailboxId,
 						filter: this.$route.params.filter ? this.$route.params.filter : undefined,
-						messageUuid: 'new',
+						threadId: 'new',
 					},
 				})
 				.catch((err) => {

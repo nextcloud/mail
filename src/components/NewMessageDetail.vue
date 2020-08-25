@@ -25,6 +25,7 @@
 import AppContentDetails from '@nextcloud/vue/dist/Components/AppContentDetails'
 import Axios from '@nextcloud/axios'
 import { generateUrl } from '@nextcloud/router'
+import { translate as t } from '@nextcloud/l10n'
 
 import { buildForwardSubject, buildReplySubject, buildRecipients as buildReplyRecipients } from '../ReplyBuilder'
 import Composer from './Composer'
@@ -64,13 +65,15 @@ export default {
 					subject: this.draft.subject,
 					body: this.draft.hasHtmlBody ? html(this.draft.body) : plain(this.draft.body),
 				}
-			} else if (this.$route.query.uuid !== undefined) {
+			} else if (this.$route.query.messageId !== undefined) {
 				// Forward or reply to a message
 				const message = this.original
 				logger.debug('forwarding or replying to message', { message })
 
-				if (this.$route.params.messageUuid === 'reply') {
-					logger.debug('simple reply')
+				if (this.$route.params.threadId === 'reply') {
+					logger.debug('simple reply', {
+						message,
+					})
 
 					return {
 						accountId: message.accountId,
@@ -81,7 +84,7 @@ export default {
 						originalBody: this.originalBody,
 						replyTo: message,
 					}
-				} else if (this.$route.params.messageUuid === 'replyAll') {
+				} else if (this.$route.params.threadId === 'replyAll') {
 					logger.debug('replying to all', { original: this.original })
 					const account = this.$store.getters.getAccount(message.accountId)
 					const recipients = buildReplyRecipients(message, {
@@ -112,6 +115,9 @@ export default {
 				}
 			} else {
 				// New or mailto: message
+				logger.debug('composing a new message or handling a mailto link', {
+					threadId: this.$route.params.threadId,
+				})
 
 				let accountId
 				// Only preselect an account when we're not in a unified mailbox
@@ -134,10 +140,14 @@ export default {
 			// `saveDraft` replaced the current URL with the updated draft UID
 			// in that case we don't really start a new draft but just keep the
 			// URL consistent, hence not loading anything
-			if (this.draft && to.name === 'message' && to.params.draftUid === this.draft.uid) {
+			if (to.name === 'message' && this.draft && to.params.draftId === parseInt(this.draft.databaseId, 10)) {
 				logger.debug('detected navigation to current (new) draft UID, not reloading')
 				return
 			}
+			logger.debug('the  draft ID changed, we have to fetch the draft', {
+				currentId: this.draft.databaseId,
+				newId: to.params.draftId,
+			})
 
 			this.fetchMessage()
 		},
@@ -159,30 +169,33 @@ export default {
 			]
 		},
 		fetchMessage() {
-			if (this.$route.params.draftUid !== undefined) {
-				return this.fetchDraftMessage(this.$route.params.draftUid)
-			} else if (this.$route.query.uuid !== undefined) {
-				return this.fetchOriginalMessage(this.$route.query.uuid)
+			if (this.$route.params.draftId !== undefined) {
+				return this.fetchDraftMessage(this.$route.params.draftId)
+			} else if (this.$route.query.messageId !== undefined) {
+				return this.fetchOriginalMessage(this.$route.query.messageId)
 			}
 		},
-		fetchDraftMessage(draftUid) {
+		fetchDraftMessage(id) {
 			this.loading = true
 			this.draft = undefined
 			this.error = undefined
 			this.errorMessage = ''
 
 			this.$store
-				.dispatch('fetchMessage', draftUid)
+				.dispatch('fetchMessage', id)
 				.then((draft) => {
-					if (draft.uid !== this.$route.params.draftUid) {
-						logger.debug("User navigated away, loaded draft won't be shown")
+					if (draft.databaseId !== parseInt(this.$route.params.draftId, 10)) {
+						logger.debug("User navigated away, loaded draft won't be shown", {
+							draft,
+							draftId: this.$route.params.draftId,
+						})
 						return
 					}
 
 					this.draft = draft
 
 					if (this.draft === undefined) {
-						logger.info('draft could not be found', { draftUid })
+						logger.info('draft could not be found', { id })
 						this.errorMessage = getRandomMessageErrorMessage()
 						this.loading = false
 						return
@@ -191,7 +204,7 @@ export default {
 					this.loading = false
 				})
 				.catch((error) => {
-					logger.error('could not load draft ' + draftUid, { error })
+					logger.error(`could not load draft ${id}`, { error })
 					if (error.isError) {
 						this.errorMessage = t('mail', 'Could not load your draft')
 						this.error = error
@@ -199,15 +212,21 @@ export default {
 					}
 				})
 		},
-		async fetchOriginalMessage(uid) {
+		async fetchOriginalMessage(id) {
 			this.loading = true
 			this.error = undefined
 			this.errorMessage = ''
 
+			logger.debug(`fetching original message ${id}`)
+
 			try {
-				const message = await this.$store.dispatch('fetchMessage', uid)
-				if (message.uuid !== this.$route.query.uuid) {
-					logger.debug("User navigated away, loaded original message won't be used")
+				const message = await this.$store.dispatch('fetchMessage', id)
+				if (message.databaseId !== parseInt(this.$route.query.messageId, 10)) {
+					logger.debug("User navigated away, loaded original message won't be used", {
+						message,
+						messageId: message.databaseId,
+						urlId: this.$route.query.messageId,
+					})
 					return
 				}
 
@@ -218,10 +237,8 @@ export default {
 				if (message.hasHtmlBody) {
 					logger.debug('original message has HTML body')
 					const resp = await Axios.get(
-						generateUrl('/apps/mail/api/accounts/{accountId}/folders/{folderId}/messages/{uid}/html', {
-							accountId: message.accountId,
-							folderId: message.folderId,
-							uid: message.uid,
+						generateUrl('/apps/mail/api/messages/{id}/html', {
+							id,
 						})
 					)
 
@@ -229,7 +246,7 @@ export default {
 				}
 				this.originalBody = body
 			} catch (error) {
-				logger.error('could not load original message ' + uid, { error })
+				logger.error('could not load original message ' + id, { error })
 				if (error.isError) {
 					this.errorMessage = t('mail', 'Could not load original message')
 					this.error = error
@@ -239,41 +256,17 @@ export default {
 				this.loading = false
 			}
 		},
-		saveDraft(data) {
-			if (data.draftUID === undefined && this.draft) {
-				logger.debug('draft data does not have a draftUID, adding one')
-				data.draftUID = this.draft.id
+		async saveDraft(data) {
+			if (data.draftId === undefined && this.draft) {
+				logger.debug('draft data does not have a draftId, adding one', { draft: this.draft, data, id: this.draft.databaseId })
+				data.draftId = this.draft.databaseId
 			}
 			const dataForServer = {
 				...data,
 				body: data.isHtml ? data.body.value : toPlain(data.body).value,
 			}
-			return saveDraft(data.account, dataForServer).then(({ uid }) => {
-				if (this.draft === undefined) {
-					return uid
-				}
-
-				logger.info('replacing draft ' + this.draft.uid + ' with ' + uid)
-				const update = {
-					draft: this.draft,
-					uid,
-					data,
-				}
-				return this.$store
-					.dispatch('replaceDraft', update)
-					.then(() =>
-						this.$router.replace({
-							name: 'message',
-							params: {
-								accountId: this.$route.params.accountId,
-								folderId: this.$route.params.folderId,
-								messageUuid: 'new',
-								draftUid: this.draft.uid,
-							},
-						})
-					)
-					.then(() => uid)
-			})
+			const { id } = await saveDraft(data.account, dataForServer)
+			return id
 		},
 		sendMessage(data) {
 			logger.debug('sending message', { data })

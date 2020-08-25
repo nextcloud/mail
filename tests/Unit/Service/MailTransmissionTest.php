@@ -245,7 +245,7 @@ class MailTransmissionTest extends TestCase {
 			->with($client, $draftsMailbox, $this->anything())
 			->willReturn(13);
 
-		$newId = $this->transmission->saveDraft($messageData);
+		[,,$newId] = $this->transmission->saveDraft($messageData);
 
 		$this->assertEquals(13, $newId);
 	}

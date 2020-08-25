@@ -123,7 +123,7 @@ trait ImapTest {
 	 *
 	 * @return int id of the new message
 	 */
-	public function saveMessage($mailbox, SimpleMessage $message, MailAccount $account = null) {
+	public function saveMessage(string $mailbox, SimpleMessage $message, MailAccount $account = null) {
 		$client = $this->getClient($account);
 
 		$headers = [
@@ -201,7 +201,7 @@ trait ImapTest {
 	 * @param int $number
 	 * @param string $mailbox
 	 */
-	public function assertMessageCount($number, $mailbox) {
+	public function assertMessageCount(int $number, string $mailbox) {
 		$client = $this->getTestClient();
 
 		$query = new Horde_Imap_Client_Fetch_Query();

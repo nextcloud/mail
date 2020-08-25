@@ -22,7 +22,7 @@
 import { defaultTo, head } from 'ramda'
 
 import { UNIFIED_ACCOUNT_ID } from './constants'
-import { normalizedEnvelopeListId, normalizedFolderId, normalizedMessageId } from './normalization'
+import { normalizedEnvelopeListId } from './normalization'
 
 export const getters = {
 	getPreference: (state) => (key, def) => {
@@ -34,35 +34,32 @@ export const getters = {
 	accounts: (state) => {
 		return state.accountList.map((id) => state.accounts[id])
 	},
-	getFolder: (state) => (accountId, folderId) => {
-		return state.folders[normalizedFolderId(accountId, folderId)]
+	getMailbox: (state) => (id) => {
+		return state.mailboxes[id]
 	},
-	getFolders: (state) => (accountId) => {
-		return state.accounts[accountId].folders.map((folderId) => state.folders[folderId])
+	getMailboxes: (state) => (accountId) => {
+		return state.accounts[accountId].mailboxes.map((id) => state.mailboxes[id])
 	},
-	getSubfolders: (state, getters) => (accountId, folderId) => {
-		const folder = getters.getFolder(accountId, folderId)
+	getSubMailboxes: (state, getters) => (id) => {
+		const mailbox = getters.getMailbox(id)
 
-		return folder.folders.map((id) => state.folders[id])
+		return mailbox.mailboxes.map((id) => state.mailboxes[id])
 	},
-	getUnifiedFolder: (state) => (specialRole) => {
+	getUnifiedMailbox: (state) => (specialRole) => {
 		return head(
-			state.accounts[UNIFIED_ACCOUNT_ID].folders
-				.map((folderId) => state.folders[folderId])
-				.filter((folder) => folder.specialRole === specialRole)
+			state.accounts[UNIFIED_ACCOUNT_ID].mailboxes
+				.map((id) => state.mailboxes[id])
+				.filter((mailbox) => mailbox.specialRole === specialRole)
 		)
 	},
-	getEnvelope: (state) => (accountId, folderId, uid) => {
-		return state.envelopes[normalizedMessageId(accountId, folderId, uid)]
-	},
-	getEnvelopeById: (state) => (id) => {
+	getEnvelope: (state) => (id) => {
 		return state.envelopes[id]
 	},
-	getEnvelopes: (state, getters) => (accountId, folderId, query) => {
-		const list = getters.getFolder(accountId, folderId).envelopeLists[normalizedEnvelopeListId(query)] || []
+	getEnvelopes: (state, getters) => (mailboxId, query) => {
+		const list = getters.getMailbox(mailboxId).envelopeLists[normalizedEnvelopeListId(query)] || []
 		return list.map((msgId) => state.envelopes[msgId])
 	},
-	getMessage: (state) => (accountId, folderId, uid) => {
-		return state.messages[normalizedMessageId(accountId, folderId, uid)]
+	getMessage: (state) => (id) => {
+		return state.messages[id]
 	},
 }

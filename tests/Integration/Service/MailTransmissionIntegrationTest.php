@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 /**
  * @author Christoph Wurst <christoph@winzerhof-wurst.at>
  *
@@ -29,6 +31,7 @@ use OCA\Mail\Contracts\IMailTransmission;
 use OCA\Mail\Db\MailAccount;
 use OCA\Mail\Db\MailAccountMapper;
 use OCA\Mail\Db\MailboxMapper;
+use OCA\Mail\Db\Message;
 use OCA\Mail\IMAP\IMAPClientFactory;
 use OCA\Mail\IMAP\MessageMapper;
 use OCA\Mail\Model\NewMessageData;
@@ -169,7 +172,7 @@ class MailTransmissionIntegrationTest extends TestCase {
 
 		$message = NewMessageData::fromRequest($this->account, 'recipient@domain.com', null, null, '', 'hello there', []);
 		$reply = new RepliedMessageData($this->account, $inbox, $originalUID);
-		$uid = $this->transmission->sendMessage($message, $reply);
+		$this->transmission->sendMessage($message, $reply);
 
 		$this->assertMailboxExists('Sent');
 		$this->assertMessageCount(1, 'Sent');
@@ -194,7 +197,7 @@ class MailTransmissionIntegrationTest extends TestCase {
 
 	public function testSaveNewDraft() {
 		$message = NewMessageData::fromRequest($this->account, 'recipient@domain.com', null, null, 'greetings', 'hello there', [], false);
-		$uid = $this->transmission->saveDraft($message);
+		[,,$uid] = $this->transmission->saveDraft($message);
 		// There should be a new mailbox …
 		$this->assertMailboxExists('Drafts');
 		// … and it should have exactly one message …
@@ -205,9 +208,11 @@ class MailTransmissionIntegrationTest extends TestCase {
 
 	public function testReplaceDraft() {
 		$message1 = NewMessageData::fromRequest($this->account, 'recipient@domain.com', null, null, 'greetings', 'hello t', []);
-		$uid = $this->transmission->saveDraft($message1);
+		[,,$uid] = $this->transmission->saveDraft($message1);
 		$message2 = NewMessageData::fromRequest($this->account, 'recipient@domain.com', null, null, 'greetings', 'hello there', []);
-		$this->transmission->saveDraft($message2, $uid);
+		$previous = new Message();
+		$previous->setUid($uid);
+		$this->transmission->saveDraft($message2, $previous);
 
 		$this->assertMessageCount(1, 'Drafts');
 	}

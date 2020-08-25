@@ -21,8 +21,8 @@
 
 const getParentId = (mailbox, hasPrefix) => {
 	const top = hasPrefix ? 1 : 0
-	const hierarchy = atob(mailbox.id).split(mailbox.delimiter)
-	if (hierarchy.length <= top + 1 || atob(mailbox.id) === 'INBOX/FLAGGED') {
+	const hierarchy = mailbox.name.split(mailbox.delimiter)
+	if (hierarchy.length <= top + 1 || mailbox.name === 'INBOX/FLAGGED') {
 		return
 	}
 	if (hasPrefix) {
@@ -40,7 +40,7 @@ export const buildMailboxHierarchy = (mailboxes, havePrefix) => {
 
 	const cloned = mailboxes.map((mailbox) => {
 		return {
-			folders: [],
+			mailboxes: [],
 			...mailbox,
 		}
 	})
@@ -52,9 +52,9 @@ export const buildMailboxHierarchy = (mailboxes, havePrefix) => {
 		}
 
 		const parentId = getParentId(mailbox, havePrefix)
-		const parent = cloned.filter((mailbox) => atob(mailbox.id) === parentId)[0]
+		const parent = cloned.filter((mailbox) => mailbox.name === parentId)[0]
 		if (parent) {
-			parent.folders.push(mailbox)
+			parent.mailboxes.push(mailbox)
 		}
 	})
 

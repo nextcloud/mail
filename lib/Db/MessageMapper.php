@@ -31,6 +31,7 @@ use OCA\Mail\Address;
 use OCA\Mail\AddressList;
 use OCA\Mail\IMAP\Threading\DatabaseMessage;
 use OCA\Mail\Service\Search\SearchQuery;
+use OCP\AppFramework\Db\DoesNotExistException;
 use OCP\AppFramework\Db\QBMapper;
 use OCP\AppFramework\Utility\ITimeFactory;
 use OCP\DB\QueryBuilder\IQueryBuilder;
@@ -51,10 +52,30 @@ class MessageMapper extends QBMapper {
 		$this->timeFactory = $timeFactory;
 	}
 
+	/**
+	 * @param IQueryBuilder $query
+	 *
+	 * @return int[]
+	 */
 	private function findUids(IQueryBuilder $query): array {
 		$result = $query->execute();
 		$uids = array_map(function (array $row) {
 			return (int)$row['uid'];
+		}, $result->fetchAll());
+		$result->closeCursor();
+
+		return $uids;
+	}
+
+	/**
+	 * @param IQueryBuilder $query
+	 *
+	 * @return int[]
+	 */
+	private function findIds(IQueryBuilder $query): array {
+		$result = $query->execute();
+		$uids = array_map(function (array $row) {
+			return (int)$row['id'];
 		}, $result->fetchAll());
 		$result->closeCursor();
 
@@ -78,12 +99,64 @@ class MessageMapper extends QBMapper {
 		return $max;
 	}
 
+	public function findByUserId(string $uid, int $id): Message {
+		$query = $this->db->getQueryBuilder();
+
+		$query->select('m.*')
+			->from($this->getTableName(), 'm')
+			->join('m', 'mail_mailboxes', 'mb', $query->expr()->eq('m.mailbox_id', 'mb.id', IQueryBuilder::PARAM_INT))
+			->join('m', 'mail_accounts', 'a', $query->expr()->eq('mb.account_id', 'a.id', IQueryBuilder::PARAM_INT))
+			->where(
+				$query->expr()->eq('a.user_id', $query->createNamedParameter($uid)),
+				$query->expr()->eq('m.id', $query->createNamedParameter($id, IQueryBuilder::PARAM_INT), IQueryBuilder::PARAM_INT)
+			);
+
+		$results = $this->findRecipients($this->findEntities($query));
+		if (empty($results)) {
+			throw new DoesNotExistException("Message $id does not exist");
+		}
+		return $results[0];
+	}
+
 	public function findAllUids(Mailbox $mailbox): array {
 		$query = $this->db->getQueryBuilder();
 
 		$query->select('uid')
 			->from($this->getTableName())
-			->where($query->expr()->eq('mailbox_id', $query->createNamedParameter($mailbox->getId())));
+			->where($query->expr()->eq('mailbox_id', $query->createNamedParameter($mailbox->getId(), IQueryBuilder::PARAM_INT), IQueryBuilder::PARAM_INT));
+
+		return $this->findUids($query);
+	}
+
+	public function findAllIds(Mailbox $mailbox): array {
+		$query = $this->db->getQueryBuilder();
+
+		$query->select('id')
+			->from($this->getTableName())
+			->where($query->expr()->eq('mailbox_id', $query->createNamedParameter($mailbox->getId(), IQueryBuilder::PARAM_INT), IQueryBuilder::PARAM_INT));
+
+		return $this->findIds($query);
+	}
+
+	/**
+	 * @param Mailbox $mailbox
+	 * @param int[] $ids
+	 *
+	 * @return int[]
+	 */
+	public function findUidsForIds(Mailbox $mailbox, array $ids) {
+		if (empty($ids)) {
+			// Shortcut for empty sets
+			return [];
+		}
+
+		$query = $this->db->getQueryBuilder();
+		$query->select('uid')
+			->from($this->getTableName())
+			->where(
+				$query->expr()->eq('mailbox_id', $query->createNamedParameter($mailbox->getId(), IQueryBuilder::PARAM_INT), IQueryBuilder::PARAM_INT),
+				$query->expr()->in('id', $query->createNamedParameter($ids, IQueryBuilder::PARAM_INT_ARRAY), IQueryBuilder::PARAM_INT_ARRAY)
+			);
 
 		return $this->findUids($query);
 	}
@@ -382,11 +455,11 @@ class MessageMapper extends QBMapper {
 	 *
 	 * @return int[]
 	 */
-	public function findUidsByQuery(Mailbox $mailbox, SearchQuery $query, ?int $limit, array $uids = null): array {
+	public function findIdsByQuery(Mailbox $mailbox, SearchQuery $query, ?int $limit, array $uids = null): array {
 		$qb = $this->db->getQueryBuilder();
 
 		$select = $qb
-			->selectDistinct('m.uid')
+			->selectDistinct('m.id')
 			->addSelect('m.sent_at')
 			->from($this->getTableName(), 'm');
 
@@ -477,7 +550,7 @@ class MessageMapper extends QBMapper {
 		}
 
 		return array_map(function (Message $message) {
-			return $message->getUid();
+			return $message->getId();
 		}, $this->findEntities($select));
 	}
 
@@ -496,6 +569,28 @@ class MessageMapper extends QBMapper {
 			->where(
 				$qb->expr()->eq('mailbox_id', $qb->createNamedParameter($mailbox->getId()), IQueryBuilder::PARAM_INT),
 				$qb->expr()->in('uid', $qb->createNamedParameter($uids, IQueryBuilder::PARAM_INT_ARRAY))
+			)
+			->orderBy('sent_at', 'desc');
+
+		return $this->findRecipients($this->findEntities($select));
+	}
+
+	/**
+	 * @param int[] $ids
+	 *
+	 * @return Message[]
+	 */
+	public function findByIds(array $ids): array {
+		if (empty($ids)) {
+			return [];
+		}
+		$qb = $this->db->getQueryBuilder();
+
+		$select = $qb
+			->select('*')
+			->from($this->getTableName())
+			->where(
+				$qb->expr()->in('id', $qb->createNamedParameter($ids, IQueryBuilder::PARAM_INT_ARRAY), IQueryBuilder::PARAM_INT_ARRAY)
 			)
 			->orderBy('sent_at', 'desc');
 
@@ -558,18 +653,26 @@ class MessageMapper extends QBMapper {
 	 *
 	 * @return Message[]
 	 */
-	public function findNewUids(Mailbox $mailbox, int $highest): array {
+	public function findNewIds(Mailbox $mailbox, array $ids): array {
 		$qb = $this->db->getQueryBuilder();
+		$sub = $this->db->getQueryBuilder();
 
+		$subSelect = $sub
+			->select($sub->func()->max('uid'))
+			->from($this->getTableName())
+			->where(
+				$sub->expr()->eq('mailbox_id', $qb->createNamedParameter($mailbox->getId(), IQueryBuilder::PARAM_INT)),
+				$sub->expr()->in('id', $qb->createNamedParameter($ids, IQueryBuilder::PARAM_INT_ARRAY), IQueryBuilder::PARAM_INT_ARRAY)
+			);
 		$select = $qb
-			->select('uid')
+			->select('id')
 			->from($this->getTableName())
 			->where(
 				$qb->expr()->eq('mailbox_id', $qb->createNamedParameter($mailbox->getId(), IQueryBuilder::PARAM_INT)),
-				$qb->expr()->gt('uid', $qb->createNamedParameter($highest, IQueryBuilder::PARAM_INT))
+				$qb->expr()->gt('uid', $qb->createFunction('(' . $subSelect->getSQL() . ')'), IQueryBuilder::PARAM_INT)
 			);
 
-		return $this->findUids($select);
+		return $this->findIds($select);
 	}
 
 	public function findChanged(Mailbox $mailbox, int $since): array {
@@ -643,5 +746,23 @@ class MessageMapper extends QBMapper {
 			->delete('mail_recipients')
 			->where($qb4->expr()->in('id', $qb4->createNamedParameter($ids, IQueryBuilder::PARAM_INT_ARRAY), IQueryBuilder::PARAM_INT_ARRAY));
 		$recipientsQuery->execute();
+	}
+
+	public function getIdForUid(Mailbox $mailbox, $uid): ?int {
+		$qb = $this->db->getQueryBuilder();
+
+		$select = $qb
+			->select('m.id')
+			->from($this->getTableName(), 'm')
+			->where(
+				$qb->expr()->eq('mailbox_id', $qb->createNamedParameter($mailbox->getId()), IQueryBuilder::PARAM_INT),
+				$qb->expr()->eq('uid', $qb->createNamedParameter($uid, IQueryBuilder::PARAM_INT), IQueryBuilder::PARAM_INT)
+			);
+		$result = $select->execute();
+		$rows = $result->fetchAll();
+		if (empty($rows)) {
+			return null;
+		}
+		return (int) $rows[0]['id'];
 	}
 }

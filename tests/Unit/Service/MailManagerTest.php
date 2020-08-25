@@ -127,10 +127,15 @@ class MailManagerTest extends TestCase {
 		$this->folderMapper->expects($this->once())
 			->method('detectFolderSpecialUse')
 			->with($this->equalTo([$folder]));
+		$mailbox = new Mailbox();
+		$this->mailboxMapper->expects($this->once())
+			->method('find')
+			->with($account, 'new')
+			->willReturn($mailbox);
 
-		$created = $this->manager->createFolder($account, 'new');
+		$created = $this->manager->createMailbox($account, 'new');
 
-		$this->assertEquals($folder, $created);
+		$this->assertEquals($mailbox, $created);
 	}
 
 	public function testGetFolderStats() {
@@ -144,8 +149,13 @@ class MailManagerTest extends TestCase {
 			->method('getFoldersStatusAsObject')
 			->with($this->equalTo($client), $this->equalTo('INBOX'))
 			->willReturn($stats);
+		$mailbox = new Mailbox();
+		$mailbox->setName('INBOX');
 
-		$actual = $this->manager->getFolderStats($account, 'INBOX');
+		$actual = $this->manager->getMailboxStats(
+			$account,
+			$mailbox
+		);
 
 		$this->assertEquals($stats, $actual);
 	}

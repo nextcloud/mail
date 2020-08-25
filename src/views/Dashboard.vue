@@ -50,13 +50,16 @@
 </template>
 
 <script>
-import { fetchEnvelopes } from '../service/MessageService'
 import { loadState } from '@nextcloud/initial-state'
 import { generateUrl, imagePath } from '@nextcloud/router'
-import Avatar from '../components/Avatar'
 import { DashboardWidget, DashboardWidgetItem } from '@nextcloud/vue-dashboard'
 import orderBy from 'lodash/fp/orderBy'
 import prop from 'lodash/fp/prop'
+
+import Avatar from '../components/Avatar'
+import { fetchEnvelopes } from '../service/MessageService'
+import logger from '../logger'
+import { fetchAll } from '../service/MailboxService'
 
 const accounts = loadState('mail', 'mail-accounts')
 const orderByDateInt = orderBy(prop('dateInt'), 'desc')
@@ -72,15 +75,13 @@ export default {
 		return {
 			messages: [],
 			accounts,
+			loading: true,
 			fetchedAccounts: 0,
 			emptyImage: imagePath('mail', 'newsletter.svg'),
 			accountSetupUrl: generateUrl('/apps/mail/#/setup'),
 		}
 	},
 	computed: {
-		loading() {
-			return this.fetchedAccounts < this.accounts.length
-		},
 		importantMessages() {
 			if (!this.messages) {
 				return []
@@ -89,9 +90,8 @@ export default {
 		},
 		getWidgetItem() {
 			return (item) => {
-				const { uid, accountId, mailbox } = item
 				return {
-					targetUrl: generateUrl(`/apps/mail/#/accounts/${accountId}/folders/${mailbox}/message/${accountId}-${mailbox}-${uid}`),
+					targetUrl: generateUrl(`/apps/mail/box/priority/thread/${item.databaseId}`),
 					mainText: item.from ? item.from[0].label : '',
 					subText: item.subject,
 					message: item,
@@ -99,15 +99,33 @@ export default {
 			}
 		},
 	},
-	mounted() {
-		// TODO: check if there is a more sane way to query this and if other mailboxes should be fetched as well
-		this.accounts.forEach((account) => {
-			fetchEnvelopes(account.accountId, btoa('INBOX'), 'is:important', undefined, 10).then((messages) => {
-				messages = messages.map((message) => ({ ...message, accountId: account.accountId, mailbox: btoa('INBOX') }))
-				this.messages = this.messages !== null ? [...this.messages, ...messages] : messages
-				this.fetchedAccounts++
+	async mounted() {
+		const accountInboxes = await Promise.all(this.accounts.map(async(account) => {
+			logger.debug('account', {
+				account,
 			})
+
+			const mailboxes = await fetchAll(account.accountId)
+
+			logger.debug('mailboxes', {
+				mailboxes,
+			})
+
+			return mailboxes.filter(mb => mb.specialRole === 'inbox')
+		}))
+		const inboxes = accountInboxes.flat()
+
+		logger.debug(`found ${inboxes.length} inboxes`, {
+			inboxes,
 		})
+
+		await Promise.all(inboxes.map(async(mailbox) => {
+			const messages = await fetchEnvelopes(mailbox.databaseId, 'is:important', undefined, 10)
+			this.messages = this.messages !== null ? [...this.messages, ...messages] : messages
+			this.fetchedAccounts++
+		}))
+
+		this.loading = false
 	},
 }
 </script>

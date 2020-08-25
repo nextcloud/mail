@@ -1,28 +1,24 @@
 import { generateUrl } from '@nextcloud/router'
 import axios from '@nextcloud/axios'
-import { curry, map } from 'ramda'
+import { curry } from 'ramda'
 
 import { parseErrorResponse } from '../http/ErrorResponseParser'
 import { convertAxiosError } from '../errors/convert'
 import SyncIncompleteError from '../errors/SyncIncompleteError'
 
-const amendEnvelopeWithIds = curry((accountId, folderId, envelope) => ({
+const amendEnvelopeWithIds = curry((accountId, envelope) => ({
 	accountId,
-	folderId,
-	uuid: `${accountId}-${folderId}-${envelope.uid}`,
 	...envelope,
 }))
 
-export function fetchEnvelope(accountId, folderId, uid) {
-	const url = generateUrl('/apps/mail/api/accounts/{accountId}/folders/{folderId}/messages/{uid}', {
-		accountId,
-		folderId,
-		uid,
+export function fetchEnvelope(id) {
+	const url = generateUrl('/apps/mail/api/messages/{id}', {
+		id,
 	})
 
 	return axios
 		.get(url)
-		.then((resp) => amendEnvelopeWithIds(accountId, folderId, resp.data))
+		.then((resp) => resp.data)
 		.catch((error) => {
 			if (error.response && error.response.status === 404) {
 				return undefined
@@ -31,12 +27,11 @@ export function fetchEnvelope(accountId, folderId, uid) {
 		})
 }
 
-export function fetchEnvelopes(accountId, folderId, query, cursor, limit) {
-	const url = generateUrl('/apps/mail/api/accounts/{accountId}/folders/{folderId}/messages', {
-		accountId,
-		folderId,
-	})
-	const params = {}
+export function fetchEnvelopes(mailboxId, query, cursor, limit) {
+	const url = generateUrl('/apps/mail/api/messages')
+	const params = {
+		mailboxId,
+	}
 
 	if (query) {
 		params.filter = query
@@ -53,21 +48,19 @@ export function fetchEnvelopes(accountId, folderId, query, cursor, limit) {
 			params,
 		})
 		.then((resp) => resp.data)
-		.then(map(amendEnvelopeWithIds(accountId, folderId)))
 		.catch((error) => {
 			throw convertAxiosError(error)
 		})
 }
 
-export async function syncEnvelopes(accountId, folderId, uids, query, init = false) {
-	const url = generateUrl('/apps/mail/api/accounts/{accountId}/folders/{folderId}/sync', {
-		accountId,
-		folderId,
+export async function syncEnvelopes(accountId, id, ids, query, init = false) {
+	const url = generateUrl('/apps/mail/api/mailboxes/{id}/sync', {
+		id,
 	})
 
 	try {
 		const response = await axios.post(url, {
-			uids,
+			ids,
 			query,
 			init,
 		})
@@ -76,7 +69,7 @@ export async function syncEnvelopes(accountId, folderId, uids, query, init = fal
 			throw new SyncIncompleteError()
 		}
 
-		const amend = amendEnvelopeWithIds(accountId, folderId)
+		const amend = amendEnvelopeWithIds(accountId)
 		return {
 			newMessages: response.data.newMessages.map(amend),
 			changedMessages: response.data.changedMessages.map(amend),
@@ -87,10 +80,9 @@ export async function syncEnvelopes(accountId, folderId, uids, query, init = fal
 	}
 }
 
-export async function clearCache(accountId, folderId) {
-	const url = generateUrl('/apps/mail/api/accounts/{accountId}/folders/{folderId}/sync', {
-		accountId,
-		folderId,
+export async function clearCache(accountId, id) {
+	const url = generateUrl('/apps/mail/api/mailboxes/{id}/sync', {
+		id,
 	})
 
 	try {
@@ -104,38 +96,34 @@ export async function clearCache(accountId, folderId) {
 	}
 }
 
-export function setEnvelopeFlag(accountId, folderId, uid, flag, value) {
-	const url = generateUrl('/apps/mail/api/accounts/{accountId}/folders/{folderId}/messages/{uid}/flags', {
-		accountId,
-		folderId,
-		uid,
-	})
-
-	const flags = {}
-	flags[flag] = value
-
-	return axios
-		.put(url, {
-			flags,
-		})
-}
-
-export function fetchMessage(accountId, folderId, id) {
-	const url = generateUrl('/apps/mail/api/accounts/{accountId}/folders/{folderId}/messages/{id}/body', {
-		accountId,
-		folderId,
+export function setEnvelopeFlag(id, flag, value) {
+	const url = generateUrl('/apps/mail/api/messages/{id}/flags', {
 		id,
 	})
 
 	return axios
-		.get(url)
-		.then((resp) => resp.data)
-		.catch((error) => {
-			if (error.response && error.response.status === 404) {
-				return undefined
-			}
-			return Promise.reject(parseErrorResponse(error.response))
+		.put(url, {
+			flags: {
+				[flag]: value,
+			},
 		})
+}
+
+export async function fetchMessage(id) {
+	const url = generateUrl('/apps/mail/api/messages/{id}/body', {
+		id,
+	})
+
+	try {
+		const resp = await axios.get(url)
+		return resp.data
+	} catch (error) {
+		if (error.response && error.response.status === 404) {
+			return undefined
+		}
+
+		throw parseErrorResponse(error.response)
+	}
 }
 
 export async function saveDraft(accountId, data) {
@@ -154,10 +142,8 @@ export function sendMessage(accountId, data) {
 	return axios.post(url, data).then((resp) => resp.data)
 }
 
-export function deleteMessage(accountId, folderId, id) {
-	const url = generateUrl('/apps/mail/api/accounts/{accountId}/folders/{folderId}/messages/{id}', {
-		accountId,
-		folderId,
+export function deleteMessage(id) {
+	const url = generateUrl('/apps/mail/api/messages/{id}', {
 		id,
 	})
 

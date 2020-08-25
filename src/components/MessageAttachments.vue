@@ -48,7 +48,6 @@
 
 <script>
 import { getFilePickerBuilder } from '@nextcloud/dialogs'
-import { parseUuid } from '../util/EnvelopeUidParser'
 import { saveAttachmentsToFiles } from '../service/AttachmentService'
 
 import MessageAttachment from './MessageAttachment'
@@ -84,10 +83,10 @@ export default {
 				.setType(1)
 				.build()
 
-			const saveAttachments = (accountId, folderId, messageId) => (directory) => {
-				return saveAttachmentsToFiles(accountId, folderId, messageId, directory)
+			const saveAttachments = (id) => (directory) => {
+				return saveAttachmentsToFiles(id, directory)
 			}
-			const { accountId, folderId, uid } = parseUuid(this.$route.params.messageUuid)
+			const id = this.$route.params.threadId
 
 			return picker
 				.pick()
@@ -95,7 +94,7 @@ export default {
 					this.savingToCloud = true
 					return dest
 				})
-				.then(saveAttachments(accountId, folderId, uid))
+				.then(saveAttachments(id))
 				.then(() => Logger.info('saved'))
 				.catch((error) => Logger.error('not saved', { error }))
 				.then(() => (this.savingToCloud = false))
