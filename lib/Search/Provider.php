@@ -75,14 +75,23 @@ class Provider implements IProvider {
 	}
 
 	public function search(IUser $user, ISearchQuery $query): SearchResult {
+		$cursor = $query->getCursor();
 		$messages = $this->mailSearch->findMessagesGlobally(
 			$user,
 			$query->getTerm(),
-			$query->getCursor(),
+			empty($cursor) ? null : ((int) $cursor),
 			$query->getLimit()
 		);
 
-		return SearchResult::complete(
+		$last = end($messages);
+		if ($last === false) {
+			return SearchResult::complete(
+				$this->getName(),
+				[]
+			);
+		}
+
+		return SearchResult::paginated(
 			$this->getName(),
 			array_map(function (Message $message) {
 				$formattedDate = $this->dateTimeFormatter->formatDateTimeRelativeDay($message->getSentAt(), 'short');
@@ -103,7 +112,8 @@ class Provider implements IProvider {
 					]), // TODO: deep URL
 					'icon-mail'
 				);
-			}, $messages)
+			}, $messages),
+			$last->getSentAt()
 		);
 	}
 }
