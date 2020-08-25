@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "53c76fb4abadd1afc9a4585ffa133ec9",
+    "content-hash": "3e19e2565329e6824d39d5cd504d1450",
     "packages": [
         {
             "name": "amphp/amp",
@@ -728,12 +728,6 @@
                 }
             ],
             "description": "Composes all dependencies as a package inside a WordPress plugin",
-            "funding": [
-                {
-                    "url": "https://github.com/coenjacobs",
-                    "type": "github"
-                }
-            ],
             "time": "2020-05-23T13:12:01+00:00"
         },
         {
@@ -2361,25 +2355,25 @@
     "packages-dev": [
         {
             "name": "christophwurst/nextcloud",
-            "version": "v18.0.4",
+            "version": "v20.0.0-beta1",
             "source": {
                 "type": "git",
                 "url": "https://github.com/ChristophWurst/nextcloud_composer.git",
-                "reference": "075e5ad6e2c112247bca5cc4c69d0a7f9034dc6e"
+                "reference": "2aeb8b5608b192a184ac3b7805eee879f8e966fc"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/ChristophWurst/nextcloud_composer/zipball/075e5ad6e2c112247bca5cc4c69d0a7f9034dc6e",
-                "reference": "075e5ad6e2c112247bca5cc4c69d0a7f9034dc6e",
+                "url": "https://api.github.com/repos/ChristophWurst/nextcloud_composer/zipball/2aeb8b5608b192a184ac3b7805eee879f8e966fc",
+                "reference": "2aeb8b5608b192a184ac3b7805eee879f8e966fc",
                 "shasum": ""
             },
             "require": {
-                "php": "^7.1"
+                "php": "^7.2"
             },
             "type": "library",
             "extra": {
                 "branch-alias": {
-                    "dev-master": "18.0.0-dev"
+                    "dev-master": "20.0.0-dev"
                 }
             },
             "notification-url": "https://packagist.org/downloads/",
@@ -2393,7 +2387,7 @@
                 }
             ],
             "description": "Composer package containing Nextcloud's public API (classes, interfaces)",
-            "time": "2020-04-27T12:42:11+00:00"
+            "time": "2020-08-24T12:36:50+00:00"
         },
         {
             "name": "christophwurst/nextcloud_testing",
@@ -2746,20 +2740,6 @@
             "keywords": [
                 "constructor",
                 "instantiate"
-            ],
-            "funding": [
-                {
-                    "url": "https://www.doctrine-project.org/sponsorship.html",
-                    "type": "custom"
-                },
-                {
-                    "url": "https://www.patreon.com/phpdoctrine",
-                    "type": "patreon"
-                },
-                {
-                    "url": "https://tidelift.com/funding/github/packagist/doctrine%2Finstantiator",
-                    "type": "tidelift"
-                }
             ],
             "time": "2020-05-29T17:27:14+00:00"
         },
@@ -4097,7 +4077,6 @@
             "keywords": [
                 "tokenizer"
             ],
-            "abandoned": true,
             "time": "2019-09-17T06:23:10+00:00"
         },
         {
@@ -6112,7 +6091,8 @@
         "pear-pear.horde.org/horde_text_flowed": 0,
         "pear-pear.horde.org/horde_util": 0,
         "pear-pear.horde.org/horde_smtp": 0,
-        "roave/security-advisories": 20
+        "roave/security-advisories": 20,
+        "christophwurst/nextcloud": 10
     },
     "prefer-stable": false,
     "prefer-lowest": false,
