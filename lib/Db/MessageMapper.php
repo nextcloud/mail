@@ -36,9 +36,12 @@ use OCP\AppFramework\Db\QBMapper;
 use OCP\AppFramework\Utility\ITimeFactory;
 use OCP\DB\QueryBuilder\IQueryBuilder;
 use OCP\IDBConnection;
+use OCP\IUser;
 use function array_combine;
 use function array_keys;
 use function array_map;
+use function in_array;
+use function ltrim;
 use function mb_substr;
 
 class MessageMapper extends QBMapper {
@@ -501,12 +504,124 @@ class MessageMapper extends QBMapper {
 			);
 		}
 
-		if ($query->getSubject() !== null) {
+		if (!empty($query->getSubjects())) {
 			$select->andWhere(
-				$qb->expr()->iLike(
-					'subject',
-					$qb->createNamedParameter('%' . $this->db->escapeLikeParameter($query->$query->getSubject()) . '%', IQueryBuilder::PARAM_STR),
-					IQueryBuilder::PARAM_STR
+				$qb->expr()->orX(
+					...array_map(function (string $subject) use ($qb) {
+						return $qb->expr()->iLike(
+							'subject',
+							$qb->createNamedParameter('%' . $this->db->escapeLikeParameter($subject) . '%', IQueryBuilder::PARAM_STR),
+							IQueryBuilder::PARAM_STR
+						);
+					}, $query->getSubjects())
+				)
+			);
+		}
+
+		if ($query->getCursor() !== null) {
+			$select->andWhere(
+				$qb->expr()->lt('sent_at', $qb->createNamedParameter($query->getCursor(), IQueryBuilder::PARAM_INT))
+			);
+		}
+		if ($uids !== null) {
+			$select->andWhere(
+				$qb->expr()->in('uid', $qb->createNamedParameter($uids, IQueryBuilder::PARAM_INT_ARRAY))
+			);
+		}
+
+		$flags = $query->getFlags();
+		$flagKeys = array_keys($flags);
+		foreach ([
+			Horde_Imap_Client::FLAG_ANSWERED,
+			Horde_Imap_Client::FLAG_DELETED,
+			Horde_Imap_Client::FLAG_DRAFT,
+			Horde_Imap_Client::FLAG_FLAGGED,
+			Horde_Imap_Client::FLAG_RECENT,
+			Horde_Imap_Client::FLAG_SEEN,
+			Horde_Imap_Client::FLAG_FORWARDED,
+			Horde_Imap_Client::FLAG_JUNK,
+			Horde_Imap_Client::FLAG_NOTJUNK,
+			'\\important',
+		] as $flag) {
+			if (in_array($flag, $flagKeys, true)) {
+				$key = ltrim($flag, '\\');
+				$select->andWhere($qb->expr()->eq("flag_$key", $qb->createNamedParameter($flags[$flag], IQueryBuilder::PARAM_BOOL)));
+			}
+		}
+
+		$select = $select
+			->orderBy('sent_at', 'desc');
+
+		if ($limit !== null) {
+			$select = $select->setMaxResults($limit);
+		}
+
+		return array_map(function (Message $message) {
+			return $message->getId();
+		}, $this->findEntities($select));
+	}
+
+	public function findIdsGloballyByQuery(IUser $user, SearchQuery $query, ?int $limit, array $uids = null): array {
+		$qb = $this->db->getQueryBuilder();
+		$qbMailboxes = $this->db->getQueryBuilder();
+
+		$select = $qb
+			->selectDistinct('m.id')
+			->addSelect('m.sent_at')
+			->from($this->getTableName(), 'm');
+
+		if (!empty($query->getFrom())) {
+			$select->innerJoin('m', 'mail_recipients', 'r0', 'm.id = r0.message_id');
+		}
+		if (!empty($query->getTo())) {
+			$select->innerJoin('m', 'mail_recipients', 'r1', 'm.id = r1.message_id');
+		}
+		if (!empty($query->getCc())) {
+			$select->innerJoin('m', 'mail_recipients', 'r2', 'm.id = r2.message_id');
+		}
+		if (!empty($query->getBcc())) {
+			$select->innerJoin('m', 'mail_recipients', 'r3', 'm.id = r3.message_id');
+		}
+
+		$selectMailboxIds = $qbMailboxes->select('mb.id')
+			->from('mail_mailboxes', 'mb')
+			->join('mb', 'mail_accounts', 'a', $qb->expr()->eq('a.id', 'mb.account_id', IQueryBuilder::PARAM_INT))
+			->where($qb->expr()->eq('a.user_id', $qb->createNamedParameter($user->getUID())));
+		$select->where(
+			$qb->expr()->in('mailbox_id', $qb->createFunction($selectMailboxIds->getSQL()), IQueryBuilder::PARAM_INT_ARRAY)
+		);
+
+		if (!empty($query->getFrom())) {
+			$select->andWhere(
+				$qb->expr()->in('r0.email', $qb->createNamedParameter($query->getFrom(), IQueryBuilder::PARAM_STR_ARRAY))
+			);
+		}
+		if (!empty($query->getTo())) {
+			$select->andWhere(
+				$qb->expr()->in('r1.email', $qb->createNamedParameter($query->getTo(), IQueryBuilder::PARAM_STR_ARRAY))
+			);
+		}
+		if (!empty($query->getCc())) {
+			$select->andWhere(
+				$qb->expr()->in('r2.email', $qb->createNamedParameter($query->getCc(), IQueryBuilder::PARAM_STR_ARRAY))
+			);
+		}
+		if (!empty($query->getBcc())) {
+			$select->andWhere(
+				$qb->expr()->in('r3.email', $qb->createNamedParameter($query->getBcc(), IQueryBuilder::PARAM_STR_ARRAY))
+			);
+		}
+
+		if (!empty($query->getSubjects())) {
+			$select->andWhere(
+				$qb->expr()->orX(
+					...array_map(function (string $subject) use ($qb) {
+						return $qb->expr()->iLike(
+							'subject',
+							$qb->createNamedParameter('%' . $this->db->escapeLikeParameter($subject) . '%', IQueryBuilder::PARAM_STR),
+							IQueryBuilder::PARAM_STR
+						);
+					}, $query->getSubjects())
 				)
 			);
 		}
