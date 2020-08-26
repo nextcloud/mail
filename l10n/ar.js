@@ -4,6 +4,7 @@ OC.L10N.register(
     "Auto detect failed. Please use manual mode." : "فشل في عملية التحقق الآلي. الرجاء استخدام نمط الدليل.",
     "Updating account failed: " : "فشلت عملية تحديث الحساب :",
     "Creating account failed: " : "فشل في إنشاء الحساب:",
+    "Mails" : "الرسائل",
     "Mail" : "البريد",
     "Name" : "الإسم",
     "Mail Address" : "عنوان البريد الإلكتروني",

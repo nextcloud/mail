@@ -118,7 +118,6 @@ OC.L10N.register(
     "Show all folders" : "Rodyti visus aplankus",
     "Collapse folders" : "Suskleisti aplankus",
     "Mark all as read" : "Žymėti visus kaip skaitytus",
-    "Mark all messages of this folder as read" : "Žymėti visus laiškus šiame aplanke kaip skaitytus",
     "Add subfolder" : "Pridėti poaplankį",
     "Clear cache" : "Išvalyti podėlį",
     "Delete folder" : "Ištrinti aplanką",

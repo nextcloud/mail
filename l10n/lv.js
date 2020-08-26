@@ -5,6 +5,7 @@ OC.L10N.register(
     "Updating account failed: " : "Neizdevās labot konts",
     "Creating account failed: " : "Konta izveide neizdevās:",
     "Embedded message %s" : "Iegultais ziņojums%s",
+    "Mails" : "E-pasta sūtījumi",
     "Mail" : "E-pasts",
     "💌 A mail app for Nextcloud" : "Nextcloud E-pasta lietotne",
     "Auto" : "Automātiski",

@@ -81,7 +81,6 @@ OC.L10N.register(
     "Show all folders" : "Покажи всички папки",
     "Collapse folders" : "Свиване на папки",
     "Mark all as read" : "Маркирай всички като прочетени",
-    "Mark all messages of this folder as read" : "Маркирай всички съобщения в папката като прочетени",
     "Add subfolder" : "Добави подпапка",
     "Clear cache" : "Изтриване на кеша",
     "Delete folder" : "Изтриване на папка",

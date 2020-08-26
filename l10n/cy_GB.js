@@ -76,7 +76,6 @@ OC.L10N.register(
     "Show all folders" : "Dangos pob ffolder",
     "Collapse folders" : "Cwympo ffolderi",
     "Mark all as read" : "Marcio'r cyfan wedi'u darllen",
-    "Mark all messages of this folder as read" : "Marcio'r holl negeseuon y ffolder hon fel y'u darllenwyd",
     "Add subfolder" : "Ychwanegu is-ffolder",
     "Could not load your draft" : "Methu llwytho eich drafft",
     "No message selected" : "Dim neges wedi'i dewis",
