@@ -31,7 +31,7 @@ export const sortMailboxes = (mailboxes) => {
 			const s2 = specialRolesOrder.indexOf(f2.specialUse[0])
 
 			if (s1 === s2) {
-				return atob(f1.id).localeCompare(atob(f2.id))
+				return f1.name.localeCompare(f2.name)
 			}
 
 			return s1 - s2
@@ -40,7 +40,7 @@ export const sortMailboxes = (mailboxes) => {
 		} else if (f2.specialUse.length) {
 			return 1
 		} else {
-			return atob(f1.id).localeCompare(atob(f2.id))
+			return f1.name.localeCompare(f2.name)
 		}
 	})
 	return c

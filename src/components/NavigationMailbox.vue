@@ -243,7 +243,7 @@ export default {
 		async createMailbox(e) {
 			this.editing = true
 			const name = e.target.elements[1].value
-			const withPrefix = atob(this.mailbox.databaseId) + this.mailbox.delimiter + name
+			const withPrefix = this.mailbox.name + this.mailbox.delimiter + name
 			logger.info(`creating mailbox ${withPrefix} as submailbox of ${this.mailbox.databaseId}`)
 			this.menuOpen = false
 			try {

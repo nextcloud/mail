@@ -24,7 +24,7 @@ import { translate } from '../../../i18n/MailboxTranslator'
 describe('MailboxTranslator', () => {
 	it('translates the inbox', () => {
 		const mailbox = {
-			id: btoa('INBOX'),
+			name: 'INBOX',
 			specialUse: ['inbox'],
 		}
 
@@ -35,7 +35,7 @@ describe('MailboxTranslator', () => {
 
 	it('does not translate an arbitrary mailbox', () => {
 		const mailbox = {
-			id: btoa('Newsletters'),
+			name: 'Newsletters',
 			displayName: 'Newsletters',
 			specialUse: [],
 		}
