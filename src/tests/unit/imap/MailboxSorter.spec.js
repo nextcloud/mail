@@ -24,11 +24,11 @@ import { sortMailboxes } from '../../../imap/MailboxSorter'
 describe('mailboxSorter', () => {
 	it('sorts ordinary mailboxes', () => {
 		const mb1 = {
-			id: btoa('Inbox 1'),
+			name: 'Inbox 1',
 			specialUse: [],
 		}
 		const mb2 = {
-			id: btoa('Inbox 2'),
+			name: 'Inbox 2',
 			specialUse: [],
 		}
 		const mailboxes = [mb2, mb1]
@@ -40,11 +40,11 @@ describe('mailboxSorter', () => {
 
 	it('lists special mailboxes first', () => {
 		const mb1 = {
-			id: btoa('Inbox 1'),
+			name: 'Inbox 1',
 			specialUse: [],
 		}
 		const mb2 = {
-			id: btoa('Inbox 2'),
+			name: 'Inbox 2',
 			specialUse: ['inbox'],
 		}
 		const mailboxes = [mb1, mb2]
@@ -56,11 +56,11 @@ describe('mailboxSorter', () => {
 
 	it('sorts equally special mailboxes', () => {
 		const mb1 = {
-			id: btoa('Inbox 1'),
+			name: 'Inbox 1',
 			specialUse: ['inbox'],
 		}
 		const mb2 = {
-			id: btoa('Inbox 2'),
+			name: 'Inbox 2',
 			specialUse: ['inbox'],
 		}
 		const mailboxes = [mb1, mb2]
@@ -72,27 +72,27 @@ describe('mailboxSorter', () => {
 
 	it('sorts real-world mailboxes', () => {
 		const mb1 = {
-			id: btoa('Drafts'),
+			name: 'Drafts',
 			specialUse: ['drafts'],
 		}
 		const mb2 = {
-			id: btoa('Inbox'),
+			name: 'Inbox',
 			specialUse: ['inbox'],
 		}
 		const mb3 = {
-			id: btoa('Other 2'),
+			name: 'Other 2',
 			specialUse: [],
 		}
 		const mb4 = {
-			id: btoa('Other 1'),
+			name: 'Other 1',
 			specialUse: [],
 		}
 		const mb5 = {
-			id: btoa('Sent'),
+			name: 'Sent',
 			specialUse: ['sent'],
 		}
 		const mb6 = {
-			id: btoa('Sent2'),
+			name: 'Sent2',
 			specialUse: ['sent'],
 		}
 		const mailboxes = [mb1, mb2, mb3, mb4, mb5, mb6]

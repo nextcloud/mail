@@ -32,11 +32,11 @@ describe('mailboxHierarchyBuilder', () => {
 
 	it('builds a flat hierarchy', () => {
 		const mb1 = {
-			id: btoa('INBOX'),
+			name: 'INBOX',
 			delimiter: '.',
 		}
 		const mb2 = {
-			id: btoa('Sent'),
+			name: 'Sent',
 			delimiter: '.',
 		}
 		const mailboxes = [mb1, mb2]
@@ -45,12 +45,12 @@ describe('mailboxHierarchyBuilder', () => {
 
 		expect(hierarchy).to.deep.equal([
 			{
-				id: btoa('INBOX'),
+				name: 'INBOX',
 				delimiter: '.',
 				mailboxes: [],
 			},
 			{
-				id: btoa('Sent'),
+				name: 'Sent',
 				delimiter: '.',
 				mailboxes: [],
 			},
@@ -59,11 +59,11 @@ describe('mailboxHierarchyBuilder', () => {
 
 	it('builds a nested hierarchy with one level', () => {
 		const mb1 = {
-			id: btoa('Archive'),
+			name: 'Archive',
 			delimiter: '.',
 		}
 		const mb2 = {
-			id: btoa('Archive.Sent'),
+			name: 'Archive.Sent',
 			delimiter: '.',
 		}
 		const mailboxes = [mb1, mb2]
@@ -72,11 +72,11 @@ describe('mailboxHierarchyBuilder', () => {
 
 		expect(hierarchy).to.deep.equal([
 			{
-				id: btoa('Archive'),
+				name: 'Archive',
 				delimiter: '.',
 				mailboxes: [
 					{
-						id: btoa('Archive.Sent'),
+						name: 'Archive.Sent',
 						delimiter: '.',
 						mailboxes: [],
 					},
@@ -87,15 +87,15 @@ describe('mailboxHierarchyBuilder', () => {
 
 	it('builds a nested hierarchy with two levels', () => {
 		const mb1 = {
-			id: btoa('Archive'),
+			name: 'Archive',
 			delimiter: '.',
 		}
 		const mb2 = {
-			id: btoa('Archive.Sent'),
+			name: 'Archive.Sent',
 			delimiter: '.',
 		}
 		const mb3 = {
-			id: btoa('Archive.Sent.Old'),
+			name: 'Archive.Sent.Old',
 			delimiter: '.',
 		}
 		const mailboxes = [mb1, mb2, mb3]
@@ -104,16 +104,16 @@ describe('mailboxHierarchyBuilder', () => {
 
 		expect(hierarchy).to.deep.equal([
 			{
-				id: btoa('Archive'),
+				name: 'Archive',
 				delimiter: '.',
 				mailboxes: [
 					{
-						id: btoa('Archive.Sent'),
+						name: 'Archive.Sent',
 						delimiter: '.',
 						mailboxes: [],
 					},
 					{
-						id: btoa('Archive.Sent.Old'),
+						name: 'Archive.Sent.Old',
 						delimiter: '.',
 						mailboxes: [],
 					},
@@ -124,15 +124,15 @@ describe('mailboxHierarchyBuilder', () => {
 
 	it('does not use the flagged inbox as submailbox of inbox', () => {
 		const mb1 = {
-			id: btoa('INBOX'),
+			name: 'INBOX',
 			delimiter: '/',
 		}
 		const mb2 = {
-			id: btoa('INBOX/FLAGGED'),
+			name: 'INBOX/FLAGGED',
 			delimiter: '/',
 		}
 		const mb3 = {
-			id: btoa('Archive'),
+			name: 'Archive',
 			delimiter: '/',
 		}
 		const mailboxes = [mb1, mb2, mb3]
@@ -141,17 +141,17 @@ describe('mailboxHierarchyBuilder', () => {
 
 		expect(hierarchy).to.deep.equal([
 			{
-				id: btoa('INBOX'),
+				name: 'INBOX',
 				delimiter: '/',
 				mailboxes: [],
 			},
 			{
-				id: btoa('INBOX/FLAGGED'),
+				name: 'INBOX/FLAGGED',
 				delimiter: '/',
 				mailboxes: [],
 			},
 			{
-				id: btoa('Archive'),
+				name: 'Archive',
 				delimiter: '/',
 				mailboxes: [],
 			},
@@ -160,11 +160,11 @@ describe('mailboxHierarchyBuilder', () => {
 
 	it('builds a nested hierarchy with a prefix', () => {
 		const mb1 = {
-			id: btoa('INBOX.Archive'),
+			name: 'INBOX.Archive',
 			delimiter: '.',
 		}
 		const mb2 = {
-			id: btoa('INBOX.Archive.Sent'),
+			name: 'INBOX.Archive.Sent',
 			delimiter: '.',
 		}
 		const mailboxes = [mb1, mb2]
@@ -173,11 +173,11 @@ describe('mailboxHierarchyBuilder', () => {
 
 		expect(hierarchy).to.deep.equal([
 			{
-				id: btoa('INBOX.Archive'),
+				name: 'INBOX.Archive',
 				delimiter: '.',
 				mailboxes: [
 					{
-						id: btoa('INBOX.Archive.Sent'),
+						name: 'INBOX.Archive.Sent',
 						delimiter: '.',
 						mailboxes: [],
 					},

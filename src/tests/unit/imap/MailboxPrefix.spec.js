@@ -25,11 +25,11 @@ describe('MailboxPrefix', () => {
 	it('does not find a prefix if there is none', () => {
 		const mailboxes = [
 			{
-				id: 'INBOX',
+				name: 'INBOX',
 				delimiter: '.',
 			},
 			{
-				id: 'Sent',
+				name: 'Sent',
 				delimiter: '.',
 			},
 		]
@@ -42,11 +42,11 @@ describe('MailboxPrefix', () => {
 	it('detects a prefix', () => {
 		const mailboxes = [
 			{
-				id: 'INBOX',
+				name: 'INBOX',
 				delimiter: '.',
 			},
 			{
-				id: 'INBOX.Sent',
+				name: 'INBOX.Sent',
 				delimiter: '.',
 			},
 		]
