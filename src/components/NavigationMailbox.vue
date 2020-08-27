@@ -43,7 +43,7 @@
 				</ActionText>
 
 				<ActionButton
-					v-if="mailbox.specialRole !== 'flagged'"
+					v-if="mailbox.specialRole !== 'flagged' && !account.isUnified"
 					icon="icon-mail"
 					:title="t('mail', 'Mark all as read')"
 					:disabled="loadingMarkAsRead"

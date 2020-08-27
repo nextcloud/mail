@@ -39,7 +39,7 @@
 				{{ quotaText }}
 			</ActionText>
 			<ActionRouter :to="settingsRoute" icon="icon-settings">
-				{{ t('mail', 'Edit account') }}
+				{{ t('mail', 'Account settings') }}
 			</ActionRouter>
 			<ActionCheckbox
 				:checked="account.showSubscribedOnly"
@@ -55,7 +55,7 @@
 				{{ t('mail', 'Saving') }}
 			</ActionText>
 			<ActionButton v-if="!isFirst" icon="icon-triangle-n" @click="changeAccountOrderUp">
-				{{ t('mail', 'Move Up') }}
+				{{ t('mail', 'Move up') }}
 			</ActionButton>
 			<ActionButton v-if="!isLast" icon="icon-triangle-s" @click="changeAccountOrderDown">
 				{{ t('mail', 'Move down') }}

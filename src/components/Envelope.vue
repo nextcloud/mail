@@ -45,14 +45,14 @@
 			<Moment :timestamp="data.dateInt" />
 		</div>
 		<Actions class="app-content-list-item-menu" menu-align="right">
-			<ActionButton icon="icon-starred" @click.prevent="onToggleFlagged">
-				{{
-					data.flags.flagged ? t('mail', 'Unfavorite') : t('mail', 'Favorite')
-				}}
-			</ActionButton>
 			<ActionButton icon="icon-important" @click.prevent="onToggleImportant">
 				{{
 					data.flags.important ? t('mail', 'Mark unimportant') : t('mail', 'Mark important')
+				}}
+			</ActionButton>
+			<ActionButton icon="icon-starred" @click.prevent="onToggleFlagged">
+				{{
+					data.flags.flagged ? t('mail', 'Mark unfavorite') : t('mail', 'Mark favorite')
 				}}
 			</ActionButton>
 			<ActionButton icon="icon-mail" @click.prevent="onToggleSeen">
