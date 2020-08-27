@@ -172,16 +172,6 @@ class PageController extends Controller {
 	 *
 	 * @return TemplateResponse
 	 */
-	public function keyboardShortcuts(): TemplateResponse {
-		return $this->index();
-	}
-
-	/**
-	 * @NoAdminRequired
-	 * @NoCSRFRequired
-	 *
-	 * @return TemplateResponse
-	 */
 	public function accountSettings(int $id): TemplateResponse {
 		return $this->index();
 	}

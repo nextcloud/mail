@@ -36,26 +36,33 @@
 				{{ t('mail', 'Register as application for mail links') }}
 			</button>
 		</p>
-		<p class="icon-details app-settings-button button">
-			<router-link :to="{name: 'keyboardShortcuts'}">
-				{{ t('mail', 'Keyboard shortcuts') }}
-			</router-link>
-		</p>
+		<button
+			class="icon-details app-settings-button"
+			@click.prevent.stop="showKeyboardShortcuts"
+			@shortkey.native="toggleKeyboardShortcuts">
+			{{ t('mail', 'Show keyboard shortcuts') }}
+		</button>
+		<KeyboardShortcuts v-if="displayKeyboardShortcuts" @close="closeKeyboardShortcuts" />
 	</div>
 </template>
 
 <script>
 import Logger from '../logger'
 import { generateUrl } from '@nextcloud/router'
+import KeyboardShortcuts from '../views/KeyboardShortcuts'
 
 export default {
 	name: 'AppSettingsMenu',
+	components: {
+		KeyboardShortcuts,
+	},
 	data() {
 		return {
 			loadingAvatarSettings: false,
 			// eslint-disable-next-line
 			text: t('mail', 'Allow the app to collect data about your interactions. Based on this data, the app will adapt to your preferences. The data will only be stored locally.'),
 			loadingOptOutSettings: false,
+			displayKeyboardShortcuts: false,
 		}
 	},
 	computed: {
@@ -104,6 +111,24 @@ export default {
 				}
 			}
 		},
+		/**
+		 * Show the keyboard shortcuts overview
+		 */
+		showKeyboardShortcuts() {
+			this.displayKeyboardShortcuts = true
+		},
+		/**
+		 * Hide the keyboard shortcuts overview
+		 */
+		closeKeyboardShortcuts() {
+			this.displayKeyboardShortcuts = false
+		},
+		/**
+		 * Toggles the keyboard shortcuts overview
+		 */
+		toggleKeyboardShortcuts() {
+			this.displayKeyboardShortcuts = !this.displayKeyboardShortcuts
+		},
 	},
 }
 </script>
@@ -119,6 +144,7 @@ p.app-settings {
 }
 .app-settings-button {
 	display: block;
+
 	padding-left: 34px;
 	background-position: 10px center;
 }
