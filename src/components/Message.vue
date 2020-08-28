@@ -38,14 +38,14 @@
 						<ActionButton icon="icon-forward" @click="forwardMessage">
 							{{ t('mail', 'Forward') }}
 						</ActionButton>
-						<ActionButton icon="icon-starred" @click.prevent="onToggleFlagged">
-							{{
-								envelope.flags.flagged ? t('mail', 'Unfavorite') : t('mail', 'Favorite')
-							}}
-						</ActionButton>
 						<ActionButton icon="icon-important" @click.prevent="onToggleImportant">
 							{{
 								envelope.flags.important ? t('mail', 'Mark unimportant') : t('mail', 'Mark important')
+							}}
+						</ActionButton>
+						<ActionButton icon="icon-starred" @click.prevent="onToggleFlagged">
+							{{
+								envelope.flags.flagged ? t('mail', 'Mark unfavorite') : t('mail', 'Mark favorite')
 							}}
 						</ActionButton>
 						<ActionButton icon="icon-mail" @click="onToggleSeen">
