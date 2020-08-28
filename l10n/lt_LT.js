@@ -5,6 +5,7 @@ OC.L10N.register(
     "Updating account failed: " : "Paskyros atnaujinimas nepavyko: ",
     "Creating account failed: " : "Paskyros sukūrimas nepavyko: ",
     "Embedded message %s" : "Įterptas laiškas %s",
+    "Mails" : "El. laiškai",
     "Mail" : "Paštas",
     "💌 A mail app for Nextcloud" : "💌 Pašto programėlė, skirta Nextcloud",
     "Auto" : "Automatiškai",
