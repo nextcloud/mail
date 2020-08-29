@@ -16,7 +16,6 @@ OC.L10N.register(
     "Message sent!" : "ส่งข้อความ!",
     "Send" : "ส่ง",
     "Choose a file to add as attachment" : "เลือกไฟล์ที่ต้องการแนบ",
-    "Favorite" : "รายการโปรด",
     "Select" : "Select",
     "Delete" : "ลบ",
     "Important" : "สำคัญ",

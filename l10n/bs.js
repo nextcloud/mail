@@ -9,7 +9,6 @@ OC.L10N.register(
     "Save" : "Spremi",
     "Keyboard shortcuts" : "Tipkovni prečaci",
     "Send" : "Pošalji",
-    "Favorite" : "Favorit",
     "Select" : "Select",
     "Delete" : "Obriši",
     "Important" : "Važno",

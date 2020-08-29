@@ -42,8 +42,6 @@ OC.L10N.register(
     "Send" : "傳送",
     "Choose a file to add as attachment" : "選擇檔案作為附件",
     "No messages in this folder" : "此收件匣中沒有信件",
-    "Unfavorite" : "取消我的最愛",
-    "Favorite" : "我的最愛",
     "Unselect" : "取消選取",
     "Select" : "選取",
     "Delete" : "刪除",

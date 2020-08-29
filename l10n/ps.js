@@ -6,7 +6,6 @@ OC.L10N.register(
     "Password" : "پاسورډ",
     "Save" : "ساتل",
     "Send" : "لېږل",
-    "Favorite" : "په نښه شوی",
     "Unselect" : "سشیبشسیب",
     "Select" : "ټاکل",
     "Delete" : "ړنګول",

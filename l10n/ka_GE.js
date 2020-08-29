@@ -34,8 +34,6 @@ OC.L10N.register(
     "Message sent!" : "წერილი გაგზავნილია!",
     "Send" : "გაგზავნა",
     "Choose a file to add as attachment" : "დანართად დასამატებლად აირჩიეთ ფაილი",
-    "Unfavorite" : "რჩეულებიდან ამოშლა",
-    "Favorite" : "რჩეული",
     "Mark read" : "მონიშნეთ წაკითხულად",
     "Select" : "არჩევა",
     "Delete" : "გაუქმება",

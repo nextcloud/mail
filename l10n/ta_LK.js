@@ -7,7 +7,6 @@ OC.L10N.register(
     "Save" : "சேமிக்க ",
     "Connect" : "இணைக்க",
     "Keyboard shortcuts" : "விசைப்பலகை குறுக்குவழிகள்",
-    "Favorite" : "விருப்பமான",
     "Select" : "Select",
     "Delete" : "நீக்குக",
     "Important" : "முக்கியமான ",

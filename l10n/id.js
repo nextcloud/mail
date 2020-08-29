@@ -20,7 +20,6 @@ OC.L10N.register(
     "Message sent!" : "Kirim pesan!",
     "Send" : "Kirim",
     "Choose a file to add as attachment" : "Pilih berkas untuk ditambahkan sebagai lampiran",
-    "Favorite" : "Favorit",
     "Unselect" : "Batal pilih",
     "Select" : "Pilih",
     "Delete" : "Hapus",

@@ -7,7 +7,6 @@ OC.L10N.register(
     "Save" : "ساقلا",
     "Connect" : "باغلان",
     "Send" : "يوللا",
-    "Favorite" : "يىغقۇچ",
     "Select" : "Select",
     "Delete" : "ئۆچۈر",
     "Important" : "مۇھىم",

@@ -22,7 +22,6 @@ OC.L10N.register(
     "Retry" : "Reîncearcă",
     "Message sent!" : "Mesaj trimis!",
     "Send" : "Trimite",
-    "Favorite" : "Favorite",
     "Select" : "Select",
     "Delete" : "Șterge",
     "Important" : "Important",

@@ -12,7 +12,6 @@ OC.L10N.register(
     "Upload attachment" : "Tải lên một đính kèm",
     "Go back" : "Quay lại",
     "Send" : "Gởi",
-    "Favorite" : "Ưa thích",
     "Select" : "Select",
     "Delete" : "Xóa",
     "Important" : "Quan trọng",

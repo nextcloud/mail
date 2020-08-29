@@ -47,8 +47,6 @@ OC.L10N.register(
     "Choose a file to add as attachment" : "Velg en fil å legge til som vedlegg",
     "No messages in this folder" : "Ingen meldinger i denne mappen",
     "Draft: " : "Kladd:",
-    "Unfavorite" : "Fjern favorittmarkering",
-    "Favorite" : "Merk som favoritt",
     "Mark unread" : "Marker som ulest",
     "Mark read" : "Marker som lest",
     "Unselect" : "Velg bort",

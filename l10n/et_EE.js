@@ -28,7 +28,6 @@ OC.L10N.register(
     "Message sent!" : "Sõnum on saadetud!",
     "Send" : "Saada",
     "Choose a file to add as attachment" : "Vali fail, mida manustada",
-    "Favorite" : "Lemmik",
     "Mark read" : "Märgi loetuks",
     "Select" : "Vali",
     "Delete" : "Kustuta",

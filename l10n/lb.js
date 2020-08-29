@@ -10,7 +10,6 @@ OC.L10N.register(
     "Select account" : "Account auswielen",
     "Go back" : "Zeréckgoen",
     "Send" : "Schécken",
-    "Favorite" : "Favorit",
     "Select" : "Select",
     "Delete" : "Läschen",
     "Important" : "Wichteg",

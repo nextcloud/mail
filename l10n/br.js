@@ -14,8 +14,6 @@ OC.L10N.register(
     "+ Cc/Bcc" : "+ Cc/Bcc",
     "Retry" : "Klaskit en dro",
     "Send" : "Kas",
-    "Unfavorite" : "Digaretañ",
-    "Favorite" : "Pennroll",
     "Unselect" : "Dizibab",
     "Select" : "Dibab",
     "Delete" : "Dilemel",

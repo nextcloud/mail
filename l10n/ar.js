@@ -39,7 +39,6 @@ OC.L10N.register(
     "Choose a file to add as attachment" : "اختر ملف لإضافته كمرفق",
     "Choose a file to share as a link" : "اختر ملفا لمشاركته كرابط",
     "Draft: " : "المسودة:",
-    "Favorite" : "المفضلة",
     "Unselect" : "إلغاء التحديد",
     "Select" : "تحديد",
     "Delete" : "حذف",

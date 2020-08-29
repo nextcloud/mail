@@ -35,8 +35,6 @@ OC.L10N.register(
     "Send" : "Send",
     "Choose a file to add as attachment" : "Choose a file to add as attachment",
     "No messages in this folder" : "No messages in this folder",
-    "Unfavorite" : "Unfavourite",
-    "Favorite" : "Favourite",
     "Mark read" : "Mark read",
     "Select" : "Select",
     "Delete" : "Delete",

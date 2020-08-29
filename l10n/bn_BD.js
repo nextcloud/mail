@@ -13,7 +13,6 @@ OC.L10N.register(
     "Go back" : "ফিরে যাও",
     "Send" : "পাঠাও",
     "Choose a file to add as attachment" : "সংযুক্তি দেয়ার জন্য একটি ফাইল নির্বাচন করুন",
-    "Favorite" : "প্রিয়জন",
     "Select" : "সিলেক্ট",
     "Delete" : "মুছে",
     "Important" : "গুরুত্বপূর্ণ",

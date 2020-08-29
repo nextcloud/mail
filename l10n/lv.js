@@ -42,7 +42,6 @@ OC.L10N.register(
     "Send" : "Sūtīt",
     "Choose a file to add as attachment" : "Izvēlēties datni ko pievienot kā pielikumu",
     "No messages in this folder" : "Šajā mapē nav neviens ziņojums",
-    "Favorite" : "Favorīts",
     "Unselect" : "Noņemt atlasi",
     "Select" : "Atzīmēt",
     "Delete" : "Dzēst",
