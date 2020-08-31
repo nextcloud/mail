@@ -104,6 +104,80 @@ describe('Vuex store mutations', () => {
 		})
 	})
 
+	it('adds an account with a personal namespace', () => {
+		const state = {
+			accountList: [],
+			accounts: {},
+			envelopes: {},
+			mailboxes: {},
+		}
+
+		mutations.addAccount(state, {
+			accountId: 13,
+			id: 13,
+			mailboxes: [
+				{
+					databaseId: 345,
+					name: 'INBOX',
+					delimiter: '.',
+					specialUse: ['inbox'],
+					specialRole: 'inbox',
+				},
+				{
+					databaseId: 346,
+					name: 'INBOX.Sent',
+					delimiter: '.',
+					specialUse: ['sent'],
+					specialRole: 'sent',
+				},
+			],
+			personalNamespace: 'INBOX.',
+		})
+
+		expect(state).to.deep.equal({
+			accountList: [13],
+			accounts: {
+				13: {
+					accountId: 13,
+					id: 13,
+					mailboxes: [
+						345,
+						346,
+					],
+					collapsed: true,
+					personalNamespace: 'INBOX.',
+				},
+			},
+			envelopes: {},
+			mailboxes: {
+				345: {
+					accountId: 13,
+					databaseId: 345,
+					name: 'INBOX',
+					displayName: 'INBOX',
+					specialUse: ['inbox'],
+					specialRole: 'inbox',
+					delimiter: '.',
+					envelopeLists: {},
+					path: '',
+					mailboxes: [],
+				},
+				346: {
+					accountId: 13,
+					databaseId: 346,
+					name: 'INBOX.Sent',
+					displayName: 'Sent',
+					specialUse: ['sent'],
+					specialRole: 'sent',
+					delimiter: '.',
+					envelopeLists: {},
+					path: 'INBOX.',
+					mailboxes: [],
+				}
+			},
+		})
+	})
+
 	it('adds an account with two levels of mailboxes', () => {
 		const state = {
 			accountList: [],

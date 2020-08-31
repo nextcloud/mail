@@ -24,6 +24,7 @@ import { curry, prop, range, reverse } from 'ramda'
 import orderBy from 'lodash/fp/orderBy'
 
 import actions from '../../../store/actions'
+import * as MailboxService from '../../../service/MailboxService'
 import * as MessageService from '../../../service/MessageService'
 import * as NotificationService from '../../../service/NotificationService'
 import { UNIFIED_ACCOUNT_ID, UNIFIED_INBOX_ID } from '../../../store/constants'
@@ -38,6 +39,8 @@ describe('Vuex store actions', () => {
 	let context
 
 	beforeEach(() => {
+		sinon.stub(MailboxService, 'create')
+
 		context = {
 			commit: sinon.stub(),
 			dispatch: sinon.stub(),
@@ -53,6 +56,78 @@ describe('Vuex store actions', () => {
 
 	afterEach(() => {
 		sinon.restore()
+	})
+
+	it('creates a mailbox', async () => {
+		const account = {
+			id: 13,
+			personalNamespace: '',
+		}
+		const name = 'Important'
+		const mailbox = {
+			'name': 'Important',
+		}
+		MailboxService.create.withArgs(13, 'Important').returns(mailbox)
+
+		const result = await actions.createMailbox(context, {account, name})
+
+		expect(result).to.deep.equal(mailbox)
+		expect(context.commit).to.have.been.calledTwice
+		expect(context.commit).to.have.been.calledWith('addMailbox', { account, mailbox})
+	})
+
+	it('creates a sub-mailbox', async () => {
+		const account = {
+			id: 13,
+			personalNamespace: '',
+		}
+		const name = 'Archive.2020'
+		const mailbox = {
+			'name': 'Archive.2020',
+		}
+		MailboxService.create.withArgs(13, 'Archive.2020').returns(mailbox)
+
+		const result = await actions.createMailbox(context, {account, name})
+
+		expect(result).to.deep.equal(mailbox)
+		expect(context.commit).to.have.been.calledTwice
+		expect(context.commit).to.have.been.calledWith('addMailbox', { account, mailbox})
+	})
+
+	it('adds a prefix to new mailboxes if the account has a personal namespace', async () => {
+		const account = {
+			id: 13,
+			personalNamespace: 'INBOX.',
+		}
+		const name = 'Important'
+		const mailbox = {
+			'name': 'INBOX.Important',
+		}
+		MailboxService.create.withArgs(13, 'INBOX.Important').returns(mailbox)
+
+		const result = await actions.createMailbox(context, {account, name})
+
+		expect(result).to.deep.equal(mailbox)
+		expect(context.commit).to.have.been.calledTwice
+		expect(context.commit).to.have.been.calledWith('addMailbox', { account, mailbox})
+	})
+
+	it('adds no prefix to new sub-mailboxes if the account has a personal namespace', async () => {
+		const account = {
+			id: 13,
+			personalNamespace: 'INBOX.',
+		}
+		const name = 'INBOX.Archive.2020'
+		const mailbox = {
+			'name': 'INBOX.Archive.2020',
+		}
+		MailboxService.create.withArgs(13, 'INBOX.Archive.2020').returns(mailbox)
+
+		const result = await actions.createMailbox(context, {account, name})
+
+		expect(result).to.deep.equal(mailbox)
+		expect(context.commit).to.have.been.calledTwice
+		expect(context.commit).to.have.been.calledWith('addMailbox', { account, mailbox})
 	})
 
 	it('combines unified inbox even if no inboxes are present', () => {

@@ -20,6 +20,7 @@
  */
 
 import { curry } from 'ramda'
+import escapeRegExp from 'lodash/fp/escapeRegExp'
 import orderBy from 'lodash/fp/orderBy'
 import sortedUniqBy from 'lodash/fp/sortedUniqBy'
 import Vue from 'vue'
@@ -34,11 +35,26 @@ const addMailboxToState = curry((state, account, mailbox) => {
 	mailbox.envelopeLists = {}
 
 	// Add all mailboxes (including submailboxes to state, but only toplevel to account
-	if (mailbox.name.includes(mailbox.delimiter)) {
+	const nameWithoutPrefix = account.personalNamespace
+		? mailbox.name.replace(new RegExp(escapeRegExp(account.personalNamespace)), '')
+		: mailbox.name
+	if (nameWithoutPrefix.includes(mailbox.delimiter)) {
+		/**
+		 * Sub-mailbox, e.g. 'Archive.2020' or 'INBOX.Archive.2020'
+		 */
 		mailbox.displayName = mailbox.name.substr(mailbox.name.lastIndexOf(mailbox.delimiter) + 1)
 		mailbox.path = mailbox.name.substr(0, mailbox.name.lastIndexOf(mailbox.delimiter))
+	} else if (account.personalNamespace && mailbox.name.startsWith(account.personalNamespace)) {
+		/**
+		 * Top-level mailbox, but with a personal namespace, e.g. 'INBOX.Sent'
+		 */
+		mailbox.displayName = nameWithoutPrefix
+		mailbox.path = account.personalNamespace
 	} else {
-		mailbox.displayName = mailbox.name
+		/**
+		 * Top-level mailbox, e.g. 'INBOX' or 'Draft'
+		 */
+		mailbox.displayName = nameWithoutPrefix
 		mailbox.path = ''
 	}
 
