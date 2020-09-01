@@ -100,30 +100,30 @@
 /* app navigation */
 
 /* do not display empty folders in the sidebar */
-#app-navigation .empty {
+.app-navigation .empty {
 	display: none;
 }
 
-#app-navigation .navigation-account:not(:first-child) {
+.app-navigation .navigation-account:not(:first-child) {
     margin-top: 22px;
 }
 
 
 /* do not overlap collapse icon with special use icon */
-#app-navigation .special-inbox .collapse,
-#app-navigation .special-drafts .collapse,
-#app-navigation .special-sent .collapse,
-#app-navigation .special-trash .collapse {
+.app-navigation .special-inbox .collapse,
+.app-navigation .special-drafts .collapse,
+.app-navigation .special-sent .collapse,
+.app-navigation .special-trash .collapse {
 	display: none !important;
 }
-#app-navigation .special-inbox:hover .collapse,
-#app-navigation .special-inbox:focus .collapse,
-#app-navigation .special-drafts:hover .collapse,
-#app-navigation .special-drafts:focus .collapse,
-#app-navigation .special-sent:hover .collapse,
-#app-navigation .special-sent:focus .collapse,
-#app-navigation .special-trash:hover .collapse,
-#app-navigation .special-trash:focus .collapse {
+.app-navigation .special-inbox:hover .collapse,
+.app-navigation .special-inbox:focus .collapse,
+.app-navigation .special-drafts:hover .collapse,
+.app-navigation .special-drafts:focus .collapse,
+.app-navigation .special-sent:hover .collapse,
+.app-navigation .special-sent:focus .collapse,
+.app-navigation .special-trash:hover .collapse,
+.app-navigation .special-trash:focus .collapse {
 	display: inline-block !important;
 }
 
@@ -208,12 +208,12 @@
 	background: radial-gradient(ellipse at top, var(--color-main-background),rgba(255,255,255,0) 70%);
 }
 
-#app-navigation .msg.success {
+.app-navigation .msg.success {
 	color: #fff;
 	background-color: var(--color-success);
 	padding: 3px;
 }
-#app-navigation .msg.error {
+.app-navigation .msg.error {
 	color: #fff;
 	background-color: var(--color-error);
 	padding: 3px;
@@ -336,7 +336,7 @@
 
 // FIXES for core apps.scss
 
-#app-navigation {
+.app-navigation {
 	> ul {
 		> .navigation-account > li,
 		> .navigation-account > .folders > li,
