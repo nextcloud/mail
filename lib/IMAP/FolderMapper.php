@@ -140,6 +140,19 @@ class FolderMapper {
 	}
 
 	/**
+	 * @param Horde_Imap_Client_Socket $client
+	 * @param string $oldName
+	 * @param string $newName
+	 *
+	 * @throws Horde_Imap_Client_Exception
+	 */
+	public function renameFolder(Horde_Imap_Client_Socket $client,
+								 string $oldName,
+								 string $newName): void {
+		$client->renameMailbox($oldName, $newName);
+	}
+
+	/**
 	 * @param Folder[] $folders
 	 *
 	 * @return void

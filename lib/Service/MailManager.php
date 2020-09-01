@@ -389,6 +389,31 @@ class MailManager implements IMailManager {
 		);
 	}
 
+	public function renameMailbox(Account $account, Mailbox $mailbox, string $name): Mailbox {
+		/*
+		 * 1. Rename on IMAP
+		 */
+		$this->folderMapper->renameFolder(
+			$this->imapClientFactory->getClient($account),
+			$mailbox->getName(),
+			$name
+		);
+
+		/**
+		 * 2. Get the IMAP changes into our database cache
+		 */
+		$this->mailboxSync->sync($account, true);
+
+		/**
+		 * 3. Return the cached object with the new ID
+		 */
+		try {
+			return $this->mailboxMapper->find($account, $name);
+		} catch (DoesNotExistException $e) {
+			throw new ServiceException("The renamed mailbox $name does not exist", 0, $e);
+		}
+	}
+
 	/**
 	 * @param Account $account
 	 * @param Mailbox $mailbox

@@ -46,3 +46,11 @@ export const deleteMailbox = async(id) => {
 
 	await axios.delete(url)
 }
+export async function patchMailbox(id, data) {
+	const url = generateUrl('/apps/mail/api/mailboxes/{id}', {
+		id,
+	})
+
+	const response = await axios.patch(url, data)
+	return response.data
+}

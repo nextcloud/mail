@@ -177,6 +177,19 @@ interface IMailManager {
 	public function getQuota(Account $account): ?Quota;
 
 	/**
+	 * Rename a mailbox and get the new (cached) version
+	 *
+	 * @param Account $account
+	 * @param Mailbox $mailbox
+	 * @param string $name
+	 *
+	 * @return Mailbox
+	 *
+	 * @throw ServiceException
+	 */
+	public function renameMailbox(Account $account, Mailbox $mailbox, string $name): Mailbox;
+
+	/**
 	 * @param Account $account
 	 * @param Mailbox $mailbox
 	 *
