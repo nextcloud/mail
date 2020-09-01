@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "3e19e2565329e6824d39d5cd504d1450",
+    "content-hash": "7737f2a64fc7f37b9b16ea5ccee63043",
     "packages": [
         {
             "name": "amphp/amp",
@@ -1679,16 +1679,16 @@
         },
         {
             "name": "rubix/ml",
-            "version": "0.1.1",
+            "version": "0.1.3",
             "source": {
                 "type": "git",
                 "url": "https://github.com/RubixML/RubixML.git",
-                "reference": "228780ba5ac4e739b8c00339bf38cde8c98e4fd3"
+                "reference": "421816cbed58931647a960c3d5f282dacfb0adca"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/RubixML/RubixML/zipball/228780ba5ac4e739b8c00339bf38cde8c98e4fd3",
-                "reference": "228780ba5ac4e739b8c00339bf38cde8c98e4fd3",
+                "url": "https://api.github.com/repos/RubixML/RubixML/zipball/421816cbed58931647a960c3d5f282dacfb0adca",
+                "reference": "421816cbed58931647a960c3d5f282dacfb0adca",
                 "shasum": ""
             },
             "require": {
@@ -1798,6 +1798,7 @@
                 "nlp",
                 "outlier detection",
                 "php",
+                "php ai",
                 "php machine learning",
                 "php ml",
                 "prediction",
@@ -1828,7 +1829,7 @@
                     "type": "patreon"
                 }
             ],
-            "time": "2020-08-08T00:23:03+00:00"
+            "time": "2020-08-25T04:44:41+00:00"
         },
         {
             "name": "rubix/tensor",
