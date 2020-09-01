@@ -69,6 +69,8 @@ use OCP\AppFramework\Db\Entity;
  * @method void setOrder(int $order)
  * @method bool getShowSubscribedOnly()
  * @method void setShowSubscribedOnly(bool $showSubscribedOnly)
+ * @method string|null getPersonalNamespace()
+ * @method void setPersonalNamespace(string|null $personalNamespace)
  */
 class MailAccount extends Entity {
 	protected $userId;
@@ -90,6 +92,7 @@ class MailAccount extends Entity {
 	protected $provisioned;
 	protected $order;
 	protected $showSubscribedOnly;
+	protected $personalNamespace;
 
 	/**
 	 * @param array $params
@@ -146,6 +149,7 @@ class MailAccount extends Entity {
 		$this->addType('provisioned', 'bool');
 		$this->addType('order', 'integer');
 		$this->addType('showSubscribedOnly', 'boolean');
+		$this->addType('personalNamespace', 'string');
 	}
 
 	/**
@@ -166,6 +170,7 @@ class MailAccount extends Entity {
 			'editorMode' => $this->getEditorMode(),
 			'provisioned' => $this->getProvisioned(),
 			'showSubscribedOnly' => $this->getShowSubscribedOnly(),
+			'personalNamespace' => $this->getPersonalNamespace(),
 		];
 
 		if (!is_null($this->getOutboundHost())) {

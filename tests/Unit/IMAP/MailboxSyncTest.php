@@ -23,6 +23,7 @@
 namespace OCA\Mail\Tests\Unit\IMAP;
 
 use ChristophWurst\Nextcloud\Testing\TestCase;
+use Horde_Imap_Client_Exception;
 use Horde_Imap_Client_Socket;
 use OC\AppFramework\Utility\TimeFactory;
 use OCA\Mail\Account;
@@ -103,6 +104,9 @@ class MailboxSyncTest extends TestCase {
 			->method('getClient')
 			->with($account)
 			->willReturn($client);
+		$client->expects($this->once())
+			->method('getNamespaces')
+			->willThrowException(new Horde_Imap_Client_Exception());
 		$folders = [
 			$this->createMock(Folder::class),
 			$this->createMock(Folder::class),

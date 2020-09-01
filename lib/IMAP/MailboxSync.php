@@ -25,7 +25,10 @@ declare(strict_types=1);
 
 namespace OCA\Mail\IMAP;
 
+use Horde_Imap_Client;
+use Horde_Imap_Client_Data_Namespace;
 use Horde_Imap_Client_Exception;
+use Horde_Imap_Client_Namespace_List;
 use OCA\Mail\Exception\ServiceException;
 use function in_array;
 use function json_encode;
@@ -81,6 +84,16 @@ class MailboxSync {
 		}
 
 		$client = $this->imapClientFactory->getClient($account);
+		try {
+			$namespaces = $client->getNamespaces([], [
+				'ob_return' => true,
+			]);
+			$account->getMailAccount()->setPersonalNamespace(
+				$this->getPersonalNamespace($namespaces)
+			);
+		} catch (Horde_Imap_Client_Exception $e) {
+			$this->logger->debug('Getting namespaces for account ' . $account->getId() . ' failed: ' . $e->getMessage());
+		}
 
 		try {
 			$folders = $this->folderMapper->getFolders($account, $client);
@@ -123,6 +136,16 @@ class MailboxSync {
 
 		$account->getMailAccount()->setLastMailboxSync($this->timeFactory->getTime());
 		$this->mailAccountMapper->update($account->getMailAccount());
+	}
+
+	private function getPersonalNamespace(Horde_Imap_Client_Namespace_List $namespaces): ?string {
+		foreach ($namespaces as $namespace) {
+			/** @var Horde_Imap_Client_Data_Namespace $namespace */
+			if ($namespace->type === Horde_Imap_Client::NS_PERSONAL) {
+				return $namespace->name;
+			}
+		}
+		return null;
 	}
 
 	private function updateMailboxFromFolder(Folder $folder, Mailbox $mailbox): void {

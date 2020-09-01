@@ -156,10 +156,14 @@ export default {
 		commit('removeMailbox', { id: mailbox.databaseId })
 	},
 	async createMailbox({ commit }, { account, name }) {
-		const mailbox = await createMailbox(account.id, name)
-		console.debug(`mailbox ${name} created for account ${account.id}`, { mailbox })
+		const prefixed = (account.personalNamespace && !name.startsWith(account.personalNamespace))
+			? account.personalNamespace + name
+			: name
+		const mailbox = await createMailbox(account.id, prefixed)
+		console.debug(`mailbox ${prefixed} created for account ${account.id}`, { mailbox })
 		commit('addMailbox', { account, mailbox })
 		commit('expandAccount', account.id)
+		return mailbox
 	},
 	moveAccount({ commit, getters }, { account, up }) {
 		const accounts = getters.accounts

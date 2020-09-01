@@ -27,6 +27,582 @@ import {
 } from '../../../store/constants'
 
 describe('Vuex store mutations', () => {
+	it('adds an account with no mailboxes', () => {
+		const state = {
+			accountList: [],
+			accounts: {},
+			envelopes: {},
+			mailboxes: {},
+		}
+
+		mutations.addAccount(state, {
+			accountId: 13,
+			id: 13,
+			mailboxes: [],
+		})
+
+		expect(state).to.deep.equal({
+			accountList: [13],
+			accounts: {
+				13: {
+					accountId: 13,
+					id: 13,
+					mailboxes: [],
+					collapsed: true,
+				},
+			},
+			envelopes: {},
+			mailboxes: {},
+		})
+	})
+
+	it('adds an account with one level of mailboxes', () => {
+		const state = {
+			accountList: [],
+			accounts: {},
+			envelopes: {},
+			mailboxes: {},
+		}
+
+		mutations.addAccount(state, {
+			accountId: 13,
+			id: 13,
+			mailboxes: [
+				{
+					databaseId: 345,
+					name: 'INBOX',
+					delimiter: '.',
+				},
+			],
+		})
+
+		expect(state).to.deep.equal({
+			accountList: [13],
+			accounts: {
+				13: {
+					accountId: 13,
+					id: 13,
+					mailboxes: [
+						345,
+					],
+					collapsed: true,
+				},
+			},
+			envelopes: {},
+			mailboxes: {
+				345: {
+					accountId: 13,
+					databaseId: 345,
+					name: 'INBOX',
+					displayName: 'INBOX',
+					delimiter: '.',
+					envelopeLists: {},
+					path: '',
+					mailboxes: [],
+				},
+			},
+		})
+	})
+
+	it('adds an account with a personal namespace', () => {
+		const state = {
+			accountList: [],
+			accounts: {},
+			envelopes: {},
+			mailboxes: {},
+		}
+
+		mutations.addAccount(state, {
+			accountId: 13,
+			id: 13,
+			mailboxes: [
+				{
+					databaseId: 345,
+					name: 'INBOX',
+					delimiter: '.',
+					specialUse: ['inbox'],
+					specialRole: 'inbox',
+				},
+				{
+					databaseId: 346,
+					name: 'INBOX.Sent',
+					delimiter: '.',
+					specialUse: ['sent'],
+					specialRole: 'sent',
+				},
+			],
+			personalNamespace: 'INBOX.',
+		})
+
+		expect(state).to.deep.equal({
+			accountList: [13],
+			accounts: {
+				13: {
+					accountId: 13,
+					id: 13,
+					mailboxes: [
+						345,
+						346,
+					],
+					collapsed: true,
+					personalNamespace: 'INBOX.',
+				},
+			},
+			envelopes: {},
+			mailboxes: {
+				345: {
+					accountId: 13,
+					databaseId: 345,
+					name: 'INBOX',
+					displayName: 'INBOX',
+					specialUse: ['inbox'],
+					specialRole: 'inbox',
+					delimiter: '.',
+					envelopeLists: {},
+					path: '',
+					mailboxes: [],
+				},
+				346: {
+					accountId: 13,
+					databaseId: 346,
+					name: 'INBOX.Sent',
+					displayName: 'Sent',
+					specialUse: ['sent'],
+					specialRole: 'sent',
+					delimiter: '.',
+					envelopeLists: {},
+					path: 'INBOX.',
+					mailboxes: [],
+				}
+			},
+		})
+	})
+
+	it('adds an account with two levels of mailboxes', () => {
+		const state = {
+			accountList: [],
+			accounts: {},
+			envelopes: {},
+			mailboxes: {},
+		}
+
+		mutations.addAccount(state, {
+			accountId: 13,
+			id: 13,
+			mailboxes: [
+				{
+					databaseId: 345,
+					name: 'Archive',
+					delimiter: '.',
+					specialUse: ['archive'],
+					specialRole: 'archive',
+				},
+				{
+					databaseId: 346,
+					name: 'Archive.2020',
+					delimiter: '.',
+					specialUse: ['archive'],
+					specialRole: 'archive',
+				},
+			],
+		})
+
+		expect(state).to.deep.equal({
+			accountList: [13],
+			accounts: {
+				13: {
+					accountId: 13,
+					id: 13,
+					mailboxes: [
+						345,
+					],
+					collapsed: true,
+				},
+			},
+			envelopes: {},
+			mailboxes: {
+				345: {
+					accountId: 13,
+					databaseId: 345,
+					name: 'Archive',
+					displayName: 'Archive',
+					delimiter: '.',
+					envelopeLists: {},
+					path: '',
+					specialUse: ['archive'],
+					specialRole: 'archive',
+					mailboxes: [
+						346,
+					],
+				},
+				346: {
+					accountId: 13,
+					databaseId: 346,
+					name: 'Archive.2020',
+					displayName: '2020',
+					delimiter: '.',
+					envelopeLists: {},
+					path: 'Archive',
+					specialUse: ['archive'],
+					specialRole: 'archive',
+					mailboxes: [],
+				},
+			},
+		})
+	})
+
+	it('adds an account with three levels of mailboxes', () => {
+		const state = {
+			accountList: [],
+			accounts: {},
+			envelopes: {},
+			mailboxes: {},
+		}
+
+		mutations.addAccount(state, {
+			accountId: 13,
+			id: 13,
+			mailboxes: [
+				{
+					databaseId: 345,
+					name: 'Archive',
+					delimiter: '.',
+					specialUse: ['archive'],
+					specialRole: 'archive',
+				},
+				{
+					databaseId: 346,
+					name: 'Archive.2020',
+					delimiter: '.',
+					specialUse: ['archive'],
+					specialRole: 'archive',
+				},
+				{
+					databaseId: 347,
+					name: 'Archive.2020.08',
+					delimiter: '.',
+					specialUse: ['archive'],
+					specialRole: 'archive',
+				},
+			],
+		})
+
+		expect(state).to.deep.equal({
+			accountList: [13],
+			accounts: {
+				13: {
+					accountId: 13,
+					id: 13,
+					mailboxes: [
+						345,
+					],
+					collapsed: true,
+				},
+			},
+			envelopes: {},
+			mailboxes: {
+				345: {
+					accountId: 13,
+					databaseId: 345,
+					name: 'Archive',
+					displayName: 'Archive',
+					delimiter: '.',
+					envelopeLists: {},
+					path: '',
+					specialUse: ['archive'],
+					specialRole: 'archive',
+					mailboxes: [
+						346,
+					],
+				},
+				346: {
+					accountId: 13,
+					databaseId: 346,
+					name: 'Archive.2020',
+					displayName: '2020',
+					delimiter: '.',
+					envelopeLists: {},
+					path: 'Archive',
+					specialUse: ['archive'],
+					specialRole: 'archive',
+					mailboxes: [
+						347,
+					],
+				},
+				347: {
+					accountId: 13,
+					databaseId: 347,
+					name: 'Archive.2020.08',
+					displayName: '08',
+					delimiter: '.',
+					envelopeLists: {},
+					path: 'Archive.2020',
+					specialUse: ['archive'],
+					specialRole: 'archive',
+					mailboxes: [],
+				},
+			},
+		})
+	})
+
+	it('adds a top level mailbox', () => {
+		const account = {
+			accountId: 13,
+			id: 13,
+			mailboxes: [
+				345,
+			],
+			collapsed: true,
+		}
+		const state = {
+			accountList: [13],
+			accounts: {
+				13: account,
+			},
+			envelopes: {},
+			mailboxes: {
+				345: {
+					accountId: 13,
+					databaseId: 345,
+					name: 'Archive',
+					displayName: 'Archive',
+					delimiter: '.',
+					envelopeLists: {},
+					path: '',
+					specialUse: ['archive'],
+					specialRole: 'archive',
+					mailboxes: [],
+				}
+			},
+		}
+
+		mutations.addMailbox(
+			state,
+			{
+				account,
+				mailbox: {
+					databaseId: 346,
+					name: 'Brchive',
+					delimiter: '.',
+					specialUse: ['archive'],
+					specialRole: 'archive',
+				}
+			})
+
+		expect(state).to.deep.equal({
+			accountList: [13],
+			accounts: {
+				13: {
+					accountId: 13,
+					id: 13,
+					mailboxes: [
+						345,
+						346,
+					],
+					collapsed: true,
+				},
+			},
+			envelopes: {},
+			mailboxes: {
+				345: {
+					accountId: 13,
+					databaseId: 345,
+					name: 'Archive',
+					displayName: 'Archive',
+					delimiter: '.',
+					envelopeLists: {},
+					path: '',
+					specialUse: ['archive'],
+					specialRole: 'archive',
+					mailboxes: [],
+				},
+				346: {
+					accountId: 13,
+					databaseId: 346,
+					name: 'Brchive',
+					displayName: 'Brchive',
+					delimiter: '.',
+					envelopeLists: {},
+					path: '',
+					specialUse: ['archive'],
+					specialRole: 'archive',
+					mailboxes: [],
+				},
+			},
+		})
+	})
+
+	it('adds a sub-mailbox', () => {
+		const account = {
+			accountId: 13,
+			id: 13,
+			mailboxes: [
+				345,
+			],
+			collapsed: true,
+		}
+		const state = {
+			accountList: [13],
+			accounts: {
+				13: account,
+			},
+			envelopes: {},
+			mailboxes: {
+				345: {
+					accountId: 13,
+					databaseId: 345,
+					name: 'Archive',
+					displayName: 'Archive',
+					delimiter: '.',
+					envelopeLists: {},
+					path: '',
+					specialUse: ['archive'],
+					specialRole: 'archive',
+					mailboxes: [],
+				}
+			},
+		}
+
+		mutations.addMailbox(
+			state,
+			{
+				account,
+				mailbox: {
+					databaseId: 346,
+					name: 'Archive.2020',
+					delimiter: '.',
+					specialUse: ['archive'],
+					specialRole: 'archive',
+				}
+			})
+
+		expect(state).to.deep.equal({
+			accountList: [13],
+			accounts: {
+				13: {
+					accountId: 13,
+					id: 13,
+					mailboxes: [
+						345,
+					],
+					collapsed: true,
+				},
+			},
+			envelopes: {},
+			mailboxes: {
+				345: {
+					accountId: 13,
+					databaseId: 345,
+					name: 'Archive',
+					displayName: 'Archive',
+					delimiter: '.',
+					envelopeLists: {},
+					path: '',
+					specialUse: ['archive'],
+					specialRole: 'archive',
+					mailboxes: [
+						346,
+					],
+				},
+				346: {
+					accountId: 13,
+					databaseId: 346,
+					name: 'Archive.2020',
+					displayName: '2020',
+					delimiter: '.',
+					envelopeLists: {},
+					path: 'Archive',
+					specialUse: ['archive'],
+					specialRole: 'archive',
+					mailboxes: [],
+				},
+			},
+		})
+	})
+
+	it('removes a mailbox', () => {
+		const state = {
+			accounts: {
+				13: {
+					accountId: 13,
+					id: 13,
+					mailboxes: [27],
+				},
+			},
+			mailboxes: {
+				27: {
+					accountId: 13,
+					specialUse: ['inbox'],
+					specialRole: 'inbox',
+					mailboxes: [],
+				},
+			},
+		}
+
+		mutations.removeMailbox(state, {
+			id: 27,
+		})
+
+		expect(state).to.deep.equal({
+			accounts: {
+				13: {
+					accountId: 13,
+					id: 13,
+					mailboxes: [],
+				},
+			},
+			mailboxes: {},
+		})
+	})
+
+	it('removes a sub-mailbox', () => {
+		const state = {
+			accounts: {
+				13: {
+					accountId: 13,
+					id: 13,
+					mailboxes: [27],
+				},
+			},
+			mailboxes: {
+				27: {
+					accountId: 13,
+					specialUse: ['inbox'],
+					specialRole: 'inbox',
+					mailboxes: [28],
+				},
+				28: {
+					accountId: 13,
+					specialUse: ['inbox'],
+					specialRole: 'inbox',
+					mailboxes: [],
+				},
+			},
+		}
+
+		mutations.removeMailbox(state, {
+			id: 28,
+		})
+
+		expect(state).to.deep.equal({
+			accounts: {
+				13: {
+					accountId: 13,
+					id: 13,
+					mailboxes: [27],
+				},
+			},
+			mailboxes: {
+				27: {
+					accountId: 13,
+					specialUse: ['inbox'],
+					specialRole: 'inbox',
+					mailboxes: [],
+				},
+			},
+		})
+	})
+
 	it('adds envelopes', () => {
 		const state = {
 			accounts: {
@@ -177,7 +753,6 @@ describe('Vuex store mutations', () => {
 			},
 			mailboxes: {
 				27: {
-					id: 'INBOX',
 					specialUse: ['inbox'],
 					specialRole: 'inbox',
 					envelopeLists: {
@@ -224,7 +799,6 @@ describe('Vuex store mutations', () => {
 			},
 			mailboxes: {
 				27: {
-					id: 'INBOX',
 					specialUse: ['inbox'],
 					specialRole: 'inbox',
 					envelopeLists: {
@@ -246,92 +820,6 @@ describe('Vuex store mutations', () => {
 					envelopeLists: {
 						'is:starred not:important': [],
 					},
-				},
-			},
-		})
-	})
-
-	it('removes a mailbox', () => {
-		const state = {
-			accounts: {
-				13: {
-					accountId: 13,
-					id: 13,
-					mailboxes: [27],
-				},
-			},
-			mailboxes: {
-				27: {
-					id: 'INBOX',
-					accountId: 13,
-					specialUse: ['inbox'],
-					specialRole: 'inbox',
-				},
-			},
-		}
-
-		mutations.removeMailbox(state, {
-			id: 27,
-		})
-
-		expect(state).to.deep.equal({
-			accounts: {
-				13: {
-					accountId: 13,
-					id: 13,
-					mailboxes: [],
-				},
-			},
-			mailboxes: {},
-		})
-	})
-
-	it('removes a sub-mailbox', () => {
-		const state = {
-			accounts: {
-				13: {
-					accountId: 13,
-					id: 13,
-					mailboxes: [27],
-				},
-			},
-			mailboxes: {
-				27: {
-					id: 'INBOX',
-					accountId: 13,
-					specialUse: ['inbox'],
-					specialRole: 'inbox',
-					mailboxes: [28],
-				},
-				28: {
-					id: 'INBOX.sub',
-					accountId: 13,
-					specialUse: ['inbox'],
-					specialRole: 'inbox',
-					mailboxes: [],
-				},
-			},
-		}
-
-		mutations.removeMailbox(state, {
-			id: 28,
-		})
-
-		expect(state).to.deep.equal({
-			accounts: {
-				13: {
-					accountId: 13,
-					id: 13,
-					mailboxes: [27],
-				},
-			},
-			mailboxes: {
-				27: {
-					id: 'INBOX',
-					accountId: 13,
-					specialUse: ['inbox'],
-					specialRole: 'inbox',
-					mailboxes: [],
 				},
 			},
 		})
