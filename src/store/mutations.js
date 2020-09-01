@@ -213,6 +213,9 @@ export default {
 	addMessage(state, { message }) {
 		Vue.set(state.messages, message.databaseId, message)
 	},
+	addMessageThread(state, { message, thread }) {
+		Vue.set(message, 'thread', thread)
+	},
 	removeMessage(state, { id }) {
 		Vue.delete(state.messages, id)
 	},

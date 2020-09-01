@@ -64,6 +64,7 @@ import {
 	fetchMessage,
 	setEnvelopeFlag,
 	syncEnvelopes,
+	fetchThread,
 } from '../service/MessageService'
 import { createAlias, deleteAlias } from '../service/AliasService'
 import logger from '../logger'
@@ -645,8 +646,13 @@ export default {
 			commit('addMessage', {
 				message,
 			})
-		}
 
+			const thread = await fetchThread(message.databaseId)
+			commit('addMessageThread', {
+				message,
+				thread,
+			})
+		}
 		return message
 	},
 	async deleteMessage({ getters, commit }, { id }) {

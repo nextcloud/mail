@@ -73,6 +73,16 @@
 					</Modal>
 				</div>
 			</div>
+			<router-link v-for="threadMessage in previousThread"
+				:key="threadMessage.id"
+				:to="threadRoute(threadMessage)"
+				class="icon-mail">
+				<div class="address">
+					{{ threadMessage.from[0].label }}
+				</div>
+				<!-- TODO: instead of subject it should be shown the first line of the message #2666 -->
+				{{ threadMessage.subject }}
+			</router-link>
 			<div :class="[message.hasHtmlBody ? 'mail-message-body mail-message-body-html' : 'mail-message-body']">
 				<div v-if="message.itineraries.length > 0" class="message-itinerary">
 					<Itinerary :entries="message.itineraries" :message-id="message.messageId" />
@@ -90,6 +100,16 @@
 				</Popover>
 				<div id="reply-composer" />
 			</div>
+			<router-link v-for="threadMessage in successiveThread"
+				:key="threadMessage.id"
+				:to="threadRoute(threadMessage)"
+				class="icon-mail">
+				<div class="address">
+					{{ threadMessage.from[0].label }}
+				</div>
+				<!-- TODO: instead of subject it should be shown the first line of the message #2666 -->
+				{{ threadMessage.subject }}
+			</router-link>
 		</template>
 	</AppContentDetails>
 </template>
@@ -104,7 +124,10 @@ import Modal from '@nextcloud/vue/dist/Components/Modal'
 import { generateUrl } from '@nextcloud/router'
 
 import AddressList from './AddressList'
-import { buildRecipients as buildReplyRecipients, buildReplySubject } from '../ReplyBuilder'
+import {
+	buildRecipients as buildReplyRecipients,
+	buildReplySubject,
+} from '../ReplyBuilder'
 import Error from './Error'
 import { getRandomMessageErrorMessage } from '../util/ErrorMessageFactory'
 import { html, plain } from '../util/text'
@@ -150,7 +173,7 @@ export default {
 	},
 	computed: {
 		from() {
-			return this.message.from[0]?.email
+			return this.message.from.length === 0 ? '?' : this.message.from[0].label || this.message.from[0].email
 		},
 		isEncrypted() {
 			return isPgpgMessage(this.message.hasHtmlBody ? html(this.message.body) : plain(this.message.body))
@@ -162,6 +185,16 @@ export default {
 		},
 		hasMultipleRecipients() {
 			return this.replyRecipient.to.concat(this.replyRecipient.cc).length > 1
+		},
+		previousThread() {
+			// Only show younger messages, not the current one
+			return this.$store.getters.getMessageThread(this.message.databaseId)
+				.filter(m => m.dateInt > this.message.dateInt)
+		},
+		successiveThread() {
+			// Only show older messages, not the current one
+			return this.$store.getters.getMessageThread(this.message.databaseId)
+				.filter(m => m.dateInt < this.message.dateInt)
 		},
 	},
 	watch: {
@@ -239,6 +272,15 @@ export default {
 					this.error = error
 					this.loading = false
 				}
+			}
+		},
+		threadRoute(threadMessage) {
+			return {
+				name: 'message',
+				params: {
+					mailboxId: threadMessage.mailboxId,
+					threadId: threadMessage.databaseId,
+				},
 			}
 		},
 		replyMessage() {
@@ -321,7 +363,7 @@ export default {
 }
 </script>
 
-<style lang="scss">
+<style lang="scss" scoped>
 #mail-message {
 	flex-grow: 1;
 }
@@ -330,6 +372,25 @@ export default {
 	flex: 1;
 	margin-bottom: 10px;
 	position: relative;
+}
+a {
+	display: block;
+	border-bottom: 1px solid var(--color-primary-light);
+	padding-left: 30px;
+	margin-bottom: 15px;
+	horiz-align: center;
+	opacity: 0.7;
+
+	&:hover {
+		opacity: 1;
+	}
+}
+.address {
+	font-weight: bold;
+}
+.icon-mail {
+	background-image: var(--icon-mail-000);
+	background-position: 0 center;
 }
 
 #mail-message-header {

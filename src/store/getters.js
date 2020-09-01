@@ -61,4 +61,7 @@ export const getters = {
 	getMessage: (state) => (id) => {
 		return state.messages[id]
 	},
+	getMessageThread: (state) => (id) => {
+		return state.messages[id]?.thread ?? []
+	},
 }
