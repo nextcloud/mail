@@ -4,7 +4,6 @@ import { generateUrl } from '@nextcloud/router'
 
 const AccountSettings = () => import('./views/AccountSettings')
 const Home = () => import('./views/Home')
-const KeyboardShortcuts = () => import('./views/KeyboardShortcuts')
 const Setup = () => import('./views/Setup')
 
 Vue.use(Router)
@@ -38,11 +37,6 @@ export default new Router({
 			path: '/accounts/:accountId/settings',
 			name: 'accountSettings',
 			component: AccountSettings,
-		},
-		{
-			path: '/keyboard-shortcuts',
-			name: 'keyboardShortcuts',
-			component: KeyboardShortcuts,
 		},
 		{
 			path: '/setup',

@@ -1,73 +1,74 @@
 <template>
-	<Content app-name="mail">
-		<Navigation />
-		<AppContent>
-			<AppContentDetails>
-				<h2>{{ t('mail', 'Keyboard shortcuts') }}</h2>
+	<Modal
+		size="large"
+		:title="t('mail', 'Keyboard shortcut')"
+		@close="$emit('close')">
+		<h2>{{ t('mail', 'Keyboard shortcuts') }}</h2>
 
-				<p>{{ t('mail', 'Speed up your Mail experience with these quick shortcuts.') }}</p>
+		<p>{{ t('mail', 'Speed up your Mail experience with these quick shortcuts.') }}</p>
 
-				<dl>
-					<div>
-						<dt><kbd>C</kbd></dt>
-						<dd>{{ t('mail', 'Compose new message') }}</dd>
-					</div>
-					<div>
-						<dt><kbd>←</kbd></dt>
-						<dd>{{ t('mail', 'Newer message') }}</dd>
-					</div>
-					<div>
-						<dt><kbd>→</kbd></dt>
-						<dd>{{ t('mail', 'Older message') }}</dd>
-					</div>
+		<dl>
+			<div>
+				<dt><kbd>C</kbd></dt>
+				<dd>{{ t('mail', 'Compose new message') }}</dd>
+			</div>
+			<div>
+				<dt><kbd>←</kbd></dt>
+				<dd>{{ t('mail', 'Newer message') }}</dd>
+			</div>
+			<div>
+				<dt><kbd>→</kbd></dt>
+				<dd>{{ t('mail', 'Older message') }}</dd>
+			</div>
 
-					<div>
-						<dt><kbd>S</kbd></dt>
-						<dd>{{ t('mail', 'Toggle star') }}</dd>
-					</div>
-					<div>
-						<dt><kbd>U</kbd></dt>
-						<dd>{{ t('mail', 'Toggle unread') }}</dd>
-					</div>
-					<div>
-						<dt><kbd>Del</kbd></dt>
-						<dd>{{ t('mail', 'Delete') }}</dd>
-					</div>
+			<div>
+				<dt><kbd>S</kbd></dt>
+				<dd>{{ t('mail', 'Toggle star') }}</dd>
+			</div>
+			<div>
+				<dt><kbd>U</kbd></dt>
+				<dd>{{ t('mail', 'Toggle unread') }}</dd>
+			</div>
+			<div>
+				<dt><kbd>Del</kbd></dt>
+				<dd>{{ t('mail', 'Delete') }}</dd>
+			</div>
 
-					<div>
-						<dt><kbd>Ctrl</kbd> + <kbd>F</kbd></dt>
-						<dd>{{ t('mail', 'Search') }}</dd>
-					</div>
-					<div>
-						<dt><kbd>Ctrl</kbd> + <kbd>Enter</kbd></dt>
-						<dd>{{ t('mail', 'Send') }}</dd>
-					</div>
-					<div>
-						<dt><kbd>R</kbd></dt>
-						<dd>{{ t('mail', 'Refresh') }}</dd>
-					</div>
-				</dl>
-			</AppContentDetails>
-		</AppContent>
-	</Content>
+			<div>
+				<dt><kbd>Ctrl</kbd> + <kbd>F</kbd></dt>
+				<dd>{{ t('mail', 'Search') }}</dd>
+			</div>
+			<div>
+				<dt><kbd>Ctrl</kbd> + <kbd>Enter</kbd></dt>
+				<dd>{{ t('mail', 'Send') }}</dd>
+			</div>
+			<div>
+				<dt><kbd>R</kbd></dt>
+				<dd>{{ t('mail', 'Refresh') }}</dd>
+			</div>
+		</dl>
+	</Modal>
 </template>
 
 <script>
-import AppContent from '@nextcloud/vue/dist/Components/AppContent'
-import AppContentDetails from '@nextcloud/vue/dist/Components/AppContentDetails'
-import Content from '@nextcloud/vue/dist/Components/Content'
-
-import Navigation from '../components/Navigation'
+import Modal from '@nextcloud/vue/dist/Components/Modal'
 
 export default {
 	name: 'KeyboardShortcuts',
 	components: {
-		AppContent,
-		AppContentDetails,
-		Content,
-		Navigation,
+		Modal,
 	},
 }
 </script>
 
-<style></style>
+<style lang="scss" scoped>
+::v-deep .modal-wrapper .modal-container {
+	display: block;
+	overflow: hidden;
+	transition: transform 300ms ease;
+	border-radius: var(--border-radius-large);
+	box-shadow: 0 0 40px rgba(0,0,0,0.2);
+	padding: 30px 40px 20px;
+}
+
+</style>

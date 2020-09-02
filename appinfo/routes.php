@@ -35,11 +35,6 @@ return [
 			'verb' => 'GET'
 		],
 		[
-			'name' => 'page#keyboardShortcuts',
-			'url' => '/keyboard-shortcuts',
-			'verb' => 'GET'
-		],
-		[
 			'name' => 'page#accountSettings',
 			'url' => '/accounts/{id}/settings',
 			'verb' => 'GET'
