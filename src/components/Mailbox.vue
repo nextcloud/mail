@@ -197,14 +197,26 @@ export default {
 					// Keep the selected account-mailbox combination, but navigate to the message
 					// (it's not a bug that we don't use first.accountId and first.mailboxId here)
 					logger.debug('showing the first message of mailbox ' + this.$route.params.mailboxId)
-					this.$router.replace({
-						name: 'message',
-						params: {
-							mailboxId: this.$route.params.mailboxId,
-							filter: this.$route.params.filter ? this.$route.params.filter : undefined,
-							threadId: first.databaseId,
-						},
-					})
+					if (first.flags.draft) {
+						this.$router.replace({
+							name: 'message',
+							params: {
+								mailboxId: this.$route.params.mailboxId,
+								filter: this.$route.params.filter ? this.$route.params.filter : undefined,
+								threadId: 'new',
+								draftId: first.databaseId,
+							},
+						})
+					} else {
+						this.$router.replace({
+							name: 'message',
+							params: {
+								mailboxId: this.$route.params.mailboxId,
+								filter: this.$route.params.filter ? this.$route.params.filter : undefined,
+								threadId: first.databaseId,
+							},
+						})
+					}
 				}
 			} catch (error) {
 				await matchError(error, {
