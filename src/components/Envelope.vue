@@ -65,7 +65,7 @@
 					data.flags.junk ? t('mail', 'Mark not spam') : t('mail', 'Mark as spam')
 				}}
 			</ActionButton>
-			<ActionButton icon="icon-checkmark" :close-after-click="true" @click.prevent="onSelect">
+			<ActionButton icon="icon-checkmark" :close-after-click="true" @click.prevent="toggleSelected">
 				{{
 					selected ? t('mail', 'Unselect') : t('mail', 'Select')
 				}}
@@ -180,9 +180,6 @@ export default {
 		},
 	},
 	methods: {
-		onSelect() {
-			this.$emit('update:selected', true)
-		},
 		toggleSelected() {
 			this.$emit('update:selected', !this.selected)
 		},
@@ -199,6 +196,11 @@ export default {
 			this.$store.dispatch('toggleEnvelopeJunk', this.data)
 		},
 		onDelete() {
+			// Remove from selection first
+			if (this.selected) {
+				this.$emit('update:selected', false)
+			}
+			// Delete
 			this.$emit('delete')
 			this.$store.dispatch('deleteMessage', {
 				id: this.data.databaseId,
