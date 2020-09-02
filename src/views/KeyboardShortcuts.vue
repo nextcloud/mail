@@ -64,11 +64,15 @@ export default {
 <style lang="scss" scoped>
 ::v-deep .modal-wrapper .modal-container {
 	display: block;
-	overflow: hidden;
+	overflow: scroll;
 	transition: transform 300ms ease;
 	border-radius: var(--border-radius-large);
 	box-shadow: 0 0 40px rgba(0,0,0,0.2);
 	padding: 30px 40px 20px;
+}
+dt {
+	width: auto;
+	text-align: left;
 }
 
 </style>
