@@ -233,6 +233,8 @@ class MessagesController extends Controller {
 				$a
 			);
 		}, $json['attachments']);
+		$json['accountId'] = $account->getId();
+		$json['mailboxId'] = $mailbox->getId();
 		$json['databaseId'] = $message->getId();
 
 		return new JSONResponse($json);
