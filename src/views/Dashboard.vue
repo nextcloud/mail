@@ -38,13 +38,14 @@
 			</DashboardWidgetItem>
 		</template>
 		<template v-slot:empty-content>
-			<div class="empty-content">
-				<img class="empty-content__image" :src="emptyImage">
-				<p class="empty-content__text">
-					{{ t('mail', 'No messages found yet') }}
-				</p>
-				<a v-if="accounts.length === 0" :href="accountSetupUrl" class="button">{{ t('mail', 'Set up an account') }}</a>
-			</div>
+			<EmptyContent id="mail--empty-content" icon="icon-checkmark">
+				<template #desc>
+					{{ t('mail', 'No message found yet') }}
+					<div class="no-account">
+						<a v-if="accounts.length === 0" :href="accountSetupUrl" class="button">{{ t('mail', 'Set up an account') }}</a>
+					</div>
+				</template>
+			</EmptyContent>
 		</template>
 	</DashboardWidget>
 </template>
@@ -55,6 +56,7 @@ import { generateUrl, imagePath } from '@nextcloud/router'
 import { DashboardWidget, DashboardWidgetItem } from '@nextcloud/vue-dashboard'
 import orderBy from 'lodash/fp/orderBy'
 import prop from 'lodash/fp/prop'
+import EmptyContent from '@nextcloud/vue/dist/Components/EmptyContent'
 
 import Avatar from '../components/Avatar'
 import { fetchEnvelopes } from '../service/MessageService'
@@ -70,6 +72,7 @@ export default {
 		Avatar,
 		DashboardWidget,
 		DashboardWidgetItem,
+		EmptyContent,
 	},
 	data() {
 		return {
@@ -130,19 +133,13 @@ export default {
 }
 </script>
 
-<style lang="scss" scoped>
-.empty-content {
+<style lang="scss">
+#mail--empty-content {
 	text-align: center;
-	margin-top: 50px;
+	margin-top: 5vh;
 }
-.empty-content__image {
-	width: 80%;
-	margin: auto;
-	margin-bottom: 10px;
-}
-.empty-content__text {
-	color: var(--color-text-maxcontrast);
-	text-align: center;
-	margin-bottom: 10px;
+.no-account {
+	margin-top: 5vh;
+	margin-right: 5px;
 }
 </style>
