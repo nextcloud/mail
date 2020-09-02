@@ -108,7 +108,8 @@ class MailboxesController extends Controller {
 	 * @return JSONResponse
 	 */
 	public function patch(int $id,
-						  ?string $name = null): JSONResponse {
+						  ?string $name = null,
+						  ?bool $subscribed = null): JSONResponse {
 		$mailbox = $this->mailManager->getMailbox($this->currentUserId, $id);
 		$account = $this->accountService->find($this->currentUserId, $mailbox->getAccountId());
 
@@ -117,6 +118,13 @@ class MailboxesController extends Controller {
 				$account,
 				$mailbox,
 				$name
+			);
+		}
+		if ($subscribed !== null) {
+			$mailbox = $this->mailManager->updateSubscription(
+				$account,
+				$mailbox,
+				$subscribed
 			);
 		}
 
