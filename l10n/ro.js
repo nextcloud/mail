@@ -40,6 +40,7 @@ OC.L10N.register(
     "Cancel" : "Anulează",
     "Show all folders" : "Arată toate directoarele",
     "Mark all as read" : "Marcaţi tot ca fiind citit",
+    "Edit name" : "Modifică numele",
     "Clear cache" : "Șterge cache",
     "Delete folder" : "Șterge director",
     "Signature" : "Semnătură",

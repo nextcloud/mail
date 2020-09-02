@@ -108,6 +108,7 @@ OC.L10N.register(
     "Collapse folders" : "Сокриј ги папките",
     "Mark all as read" : "Означи ги сите како прочитани",
     "Add subfolder" : "Додади подпапка",
+    "Edit name" : "Уреди име",
     "Clear cache" : "Избриши го кешот",
     "Delete folder" : "Избриши папка",
     "_{total} message_::_{total} messages_" : ["{total} порака","{total} пораки"],

@@ -149,6 +149,7 @@ OC.L10N.register(
     "Mark all as read" : "Tümünü okunmuş olarak işaretle",
     "Mark all messages of this mailbox as read" : "Bu kutudaki tüm iletileri okunmuş olarak işaretle",
     "Add subfolder" : "Alt klasör ekle",
+    "Edit name" : "Adı düzenle",
     "Clear cache" : "Ön belleği temizle",
     "Clear locally cached data, in case there are issues with synchronization." : "Eşitleme sırasında sorun çıkarsa, yerel ön bellek verisini sıfırlar.",
     "Delete folder" : "Klasörü sil",

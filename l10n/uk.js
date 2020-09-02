@@ -135,6 +135,7 @@ OC.L10N.register(
     "Collapse folders" : "Згорнути теки",
     "Mark all as read" : "Всі прочитані",
     "Add subfolder" : "Додати підтеку",
+    "Edit name" : "Редагувати назву",
     "Clear cache" : "Очистити кеш",
     "Delete folder" : "Вилучити теку",
     "_{total} message_::_{total} messages_" : ["{total] повідомлення","{total] повідомлення","{total] повідомлень","{total} повідомлень"],

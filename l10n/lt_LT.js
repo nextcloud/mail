@@ -119,6 +119,7 @@ OC.L10N.register(
     "Collapse folders" : "Suskleisti aplankus",
     "Mark all as read" : "Žymėti visus kaip skaitytus",
     "Add subfolder" : "Pridėti poaplankį",
+    "Edit name" : "Taisyti pavadinimą",
     "Clear cache" : "Išvalyti podėlį",
     "Delete folder" : "Ištrinti aplanką",
     "Delete folder {name}" : "Ištrinti aplanką {name}",

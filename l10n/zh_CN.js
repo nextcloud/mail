@@ -141,6 +141,7 @@ OC.L10N.register(
     "Collapse folders" : "折叠文件夹",
     "Mark all as read" : "标记所有为已读",
     "Add subfolder" : "添加子文件夹",
+    "Edit name" : "编辑名称",
     "Clear cache" : "清空缓存",
     "Clear locally cached data, in case there are issues with synchronization." : "万一同步出现问题，请清除本地缓存的数据。",
     "Delete folder" : "删除文件夹",

@@ -139,6 +139,7 @@ OC.L10N.register(
     "Collapse folders" : "すべて展開",
     "Mark all as read" : "すべて既読にする",
     "Add subfolder" : "サブフォルダを追加",
+    "Edit name" : "名前を編集",
     "Clear cache" : "キャッシュをクリア",
     "Clear locally cached data, in case there are issues with synchronization." : "同期の問題を解消を解消するために、ローカルにキャッシュされたデータを消去",
     "Delete folder" : "フォルダを削除",

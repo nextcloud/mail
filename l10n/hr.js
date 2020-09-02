@@ -140,6 +140,7 @@ OC.L10N.register(
     "Collapse folders" : "Sakrij mape",
     "Mark all as read" : "Označi sve kao pročitano",
     "Add subfolder" : "Dodaj podmapu",
+    "Edit name" : "Uredi naziv",
     "Clear cache" : "Izbriši predmemoriju",
     "Clear locally cached data, in case there are issues with synchronization." : "Izbrišite podatke iz lokalnog međuspremnika u slučaju da postoje problemi sa sinkronizacijom.",
     "Delete folder" : "Izbriši mapu",

@@ -141,6 +141,7 @@
     "Collapse folders" : "Replega les carpetes",
     "Mark all as read" : "Marca-ho tot com a llegit",
     "Add subfolder" : "Afegeix una subcarpeta",
+    "Edit name" : "Edita nom",
     "Clear cache" : "Neteja la memòria cau",
     "Clear locally cached data, in case there are issues with synchronization." : "Esborra les dades locals de la memòria cau, en cas que hi hagi problemes amb la sincronització.",
     "Delete folder" : "Suprimeix la carpeta",

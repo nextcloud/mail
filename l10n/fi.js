@@ -128,6 +128,7 @@ OC.L10N.register(
     "Collapse folders" : "Supista kansiot",
     "Mark all as read" : "Merkitse kaikki luetuiksi",
     "Add subfolder" : "Lisää alikansio",
+    "Edit name" : "Muokkaa nimeä",
     "Clear cache" : "Tyhjennä välimuisti",
     "Delete folder" : "Poista kansio",
     "The folder and all messages in it will be deleted." : "Tämä kansio ja kaikki sen viestit poistetaan.",

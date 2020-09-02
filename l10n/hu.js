@@ -115,6 +115,7 @@ OC.L10N.register(
     "Collapse folders" : "Mappák összecsukása",
     "Mark all as read" : "Az összes megjelölése olvasottként",
     "Add subfolder" : "Almappa hozzáadás",
+    "Edit name" : "Név szerkesztése",
     "Clear cache" : "Gyorsítótár ürítése",
     "Delete folder" : "Mappa törlés",
     "Could not load your draft" : "Nem lehet betölteni a vázlatot",

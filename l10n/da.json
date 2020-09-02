@@ -109,6 +109,7 @@
     "Collapse folders" : "Fold mapper sammen",
     "Mark all as read" : "Markér alle som læst",
     "Add subfolder" : "Tilføj undermappe",
+    "Edit name" : "Rediger navn",
     "Clear cache" : "Ryd cache",
     "Delete folder" : "Slet mappe",
     "_{total} message_::_{total} messages_" : ["{total} besked","{total} beskeder"],

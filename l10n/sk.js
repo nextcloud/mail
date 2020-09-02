@@ -142,6 +142,7 @@ OC.L10N.register(
     "Collapse folders" : "Zvinúť priečinky",
     "Mark all as read" : "Označ všetko ako prečítané",
     "Add subfolder" : "Pridať podpriečinok",
+    "Edit name" : "Upraviť názov",
     "Clear cache" : "Vymazať vyrovnávaciu pamäť",
     "Clear locally cached data, in case there are issues with synchronization." : "V prípade problémov so synchronizáciou, vyčistite údaje vo vyrovnávacej pamäti.",
     "Delete folder" : "Zmazať priečinok",

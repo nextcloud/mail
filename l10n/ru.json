@@ -139,6 +139,7 @@
     "Collapse folders" : "Свернуть папки",
     "Mark all as read" : "Пометить всё как прочитанное",
     "Add subfolder" : "Добавить подпапку",
+    "Edit name" : "Изменить название",
     "Clear cache" : "Очистить кеш",
     "Clear locally cached data, in case there are issues with synchronization." : "Очистить локальный кеш данных в случае проблем с синхронизацией.",
     "Delete folder" : "Удалить каталог",

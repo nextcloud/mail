@@ -28,6 +28,7 @@ OC.L10N.register(
     "Remove account" : "Lemel ar c'hont",
     "Loading …" : "O Kargañ ...",
     "Cancel" : "Arrest",
+    "Edit name" : "Ebmann anv",
     "Clear cache" : "Gwalc'hiñ ar c'hache",
     "Delete folder" : "Dilemel an teuliad",
     "The folder and all messages in it will be deleted." : "An teuliad a pep kemenadenn enhañ a vo lamet",

@@ -104,6 +104,7 @@ OC.L10N.register(
     "Collapse folders" : "Fella möppur saman",
     "Mark all as read" : "Merkja allt sem lesið",
     "Add subfolder" : "Bæta við undirmöppu",
+    "Edit name" : "Breyta heiti",
     "Clear cache" : "Hreinsa skyndiminni",
     "Delete folder" : "Eyða möppu",
     "Could not load your draft" : "Gat ekki hlaðið inn drögunum þínum",

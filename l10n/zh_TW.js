@@ -72,6 +72,7 @@ OC.L10N.register(
     "Show all folders" : "顯示所有收件匣",
     "Collapse folders" : "收合收件匣",
     "Mark all as read" : "全部標示為已閱讀",
+    "Edit name" : "編輯名稱",
     "Clear cache" : "清除快取",
     "Delete folder" : "刪除資料夾",
     "Signature" : "簽章",

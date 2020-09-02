@@ -122,6 +122,7 @@ OC.L10N.register(
     "Collapse folders" : "Dölj mappar",
     "Mark all as read" : "Markera alla som lästa",
     "Add subfolder" : "Skapa undermapp",
+    "Edit name" : "Ändra namn",
     "Clear cache" : "Rensa cachen",
     "Clear locally cached data, in case there are issues with synchronization." : "Rensa lokalt cachad data, ifall det finns problem med synkronisering.",
     "Delete folder" : "Radera mapp",

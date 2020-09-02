@@ -149,6 +149,7 @@ OC.L10N.register(
     "Mark all as read" : "Marcar todo como lido",
     "Mark all messages of this mailbox as read" : "Marcar todas as mensaxes desta caixa de correo como lidas",
     "Add subfolder" : "Engadir subcartafol",
+    "Edit name" : "Editar o nome",
     "Clear cache" : "Limpar a caché",
     "Clear locally cached data, in case there are issues with synchronization." : "Borrar datos en caché local, no caso de que haxa problemas coa sincronización.",
     "Delete folder" : "Eliminar cartafol",

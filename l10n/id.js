@@ -36,6 +36,7 @@ OC.L10N.register(
     "Remove account" : "Hapus akun",
     "Cancel" : "Membatalkan",
     "Mark all as read" : "Tandai semua telah dibaca",
+    "Edit name" : "Edit nama",
     "Clear cache" : "Bersihkan cache",
     "Delete folder" : "Hapus folder",
     "Signature" : "Tanda",

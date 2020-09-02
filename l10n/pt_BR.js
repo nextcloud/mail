@@ -146,6 +146,7 @@ OC.L10N.register(
     "Mark all as read" : "Marcar todas como lidas",
     "Mark all messages of this mailbox as read" : "Marcar todas as mensagens desta caixa como lidas",
     "Add subfolder" : "Adicionar subpasta",
+    "Edit name" : "Editar nome",
     "Clear cache" : "Limpar cache",
     "Clear locally cached data, in case there are issues with synchronization." : "Limpar dados armazenados localmente em cache, caso haja problemas com a sincronização.",
     "Delete folder" : "Excluir pasta",

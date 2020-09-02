@@ -137,6 +137,7 @@ OC.L10N.register(
     "Collapse folders" : "קיווץ תיקיות",
     "Mark all as read" : "סימון הכול כנקרא",
     "Add subfolder" : "הוספת תת־תיקייה",
+    "Edit name" : "ערוך שם",
     "Clear cache" : "פינוי מטמון",
     "Clear locally cached data, in case there are issues with synchronization." : "פינוי הנתונים שמאוחסנים מקומית במטמון, במקרה שיש תקלות בסנכרון.",
     "Delete folder" : "מחיקת תיקייה",

@@ -106,6 +106,7 @@ OC.L10N.register(
     "Show all folders" : "모든 폴더 보기",
     "Collapse folders" : "폴더 접기",
     "Mark all as read" : "모두 읽은 것으로 표시",
+    "Edit name" : "이름 편집",
     "Clear cache" : "Clear cache",
     "Delete folder" : "폴더 삭제",
     "Signature" : "서명",

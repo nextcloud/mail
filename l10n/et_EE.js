@@ -49,6 +49,7 @@ OC.L10N.register(
     "Cancel" : "Loobu",
     "Show all folders" : "Näita kõiki kaustu",
     "Mark all as read" : "Märgi loetuks",
+    "Edit name" : "Muuda nime",
     "Clear cache" : "Tühjenda puhver",
     "Delete folder" : "Kustuta kaust",
     "Signature" : "Allkiri",

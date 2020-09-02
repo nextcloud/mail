@@ -109,6 +109,7 @@ OC.L10N.register(
     "Collapse folders" : "Zloži mape",
     "Mark all as read" : "Označi vse kot prebrano",
     "Add subfolder" : "Dodaj podmapo",
+    "Edit name" : "Uredi ime",
     "Clear cache" : "Počisti predpomnilnik",
     "Delete folder" : "Izbriši mapo",
     "Could not load your draft" : "Osnutka ni mogoče naložiti",

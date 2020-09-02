@@ -108,6 +108,7 @@ OC.L10N.register(
     "Collapse folders" : "پوشه ها را جمع کنید",
     "Mark all as read" : "علامت همه به عنوان خوانده‌شده",
     "Add subfolder" : "زیر پوشه را اضافه کنید",
+    "Edit name" : "ویرایش نام",
     "Clear cache" : "پاک‌سازی انباره",
     "Delete folder" : "حذف پوشه",
     "Could not load your draft" : "پیش نویس شما بارگیری نمی شود",

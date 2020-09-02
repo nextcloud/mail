@@ -26,6 +26,7 @@ OC.L10N.register(
     "Loading …" : "Đang tải...",
     "Cancel" : "Hủy bỏ",
     "Mark all as read" : "Đánh dấu tất cả như đã ",
+    "Edit name" : "Sửa đổi tên",
     "Clear cache" : "Xóa bộ nhớ ",
     "Delete folder" : "Xóa thư mục",
     "Signature" : "Chữ ký",

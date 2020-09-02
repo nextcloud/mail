@@ -80,6 +80,7 @@ OC.L10N.register(
     "Collapse folders" : "Свиване на папки",
     "Mark all as read" : "Маркирай всички като прочетени",
     "Add subfolder" : "Добави подпапка",
+    "Edit name" : "Редактирай името",
     "Clear cache" : "Изтриване на кеша",
     "Delete folder" : "Изтриване на папка",
     "No message selected" : "Не е избрано съобщение",
