@@ -1,23 +1,23 @@
 <template>
 	<Content v-shortkey.once="['c']" app-name="mail" @shortkey.native="onNewMessage">
 		<Navigation />
-		<MailboxMessage v-if="activeAccount" :account="activeAccount" :mailbox="activeMailbox" />
+		<MailboxThread v-if="activeAccount" :account="activeAccount" :mailbox="activeMailbox" />
 	</Content>
 </template>
 
 <script>
 import Content from '@nextcloud/vue/dist/Components/Content'
 
-import MailboxMessage from '../components/MailboxMessage'
 import isMobile from '@nextcloud/vue/dist/Mixins/isMobile'
 import logger from '../logger'
+import MailboxThread from '../components/MailboxThread'
 import Navigation from '../components/Navigation'
 
 export default {
 	name: 'Home',
 	components: {
 		Content,
-		MailboxMessage,
+		MailboxThread,
 		Navigation,
 	},
 	mixins: [isMobile],
