@@ -128,7 +128,7 @@ import MessageAttachments from './MessageAttachments'
 import ThreadMessage from './ThreadMessage'
 
 export default {
-	name: 'Message',
+	name: 'Thread',
 	components: {
 		ActionButton,
 		Actions,

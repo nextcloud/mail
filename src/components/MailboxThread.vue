@@ -56,7 +56,7 @@
 				</template>
 			</AppContentList>
 			<NewMessageDetail v-if="newMessage" />
-			<Message v-else-if="showMessage" @delete="deleteMessage" />
+			<Thread v-else-if="showMessage" @delete="deleteMessage" />
 			<NoMessageSelected v-else-if="hasMessages && !isMobile" />
 		</div>
 	</AppContent>
@@ -74,27 +74,27 @@ import Vue from 'vue'
 import AppDetailsToggle from './AppDetailsToggle'
 import logger from '../logger'
 import Mailbox from './Mailbox'
-import Message from './Message'
 import NewMessageDetail from './NewMessageDetail'
 import NoMessageSelected from './NoMessageSelected'
 import { normalizedEnvelopeListId } from '../store/normalization'
+import Thread from './Thread'
 import { UNIFIED_ACCOUNT_ID, UNIFIED_INBOX_ID } from '../store/constants'
 
 export default {
-	name: 'MailboxMessage',
+	name: 'MailboxThread',
 	directives: {
 		infiniteScroll,
 	},
 	components: {
 		AppContent,
-		Popover,
 		AppContentList,
 		AppDetailsToggle,
 		Mailbox,
-		Message,
 		NewMessageDetail,
 		NoMessageSelected,
+		Popover,
 		SectionTitle,
+		Thread,
 	},
 	mixins: [isMobile],
 	props: {
