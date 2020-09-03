@@ -189,12 +189,12 @@ export default {
 		previousThread() {
 			// Only show younger messages, not the current one
 			return this.$store.getters.getMessageThread(this.message.databaseId)
-				.filter(m => m.dateInt > this.message.dateInt)
+				.filter(m => m.dateInt < this.message.dateInt)
 		},
 		successiveThread() {
 			// Only show older messages, not the current one
 			return this.$store.getters.getMessageThread(this.message.databaseId)
-				.filter(m => m.dateInt < this.message.dateInt)
+				.filter(m => m.dateInt > this.message.dateInt)
 		},
 	},
 	watch: {
