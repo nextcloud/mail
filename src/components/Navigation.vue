@@ -26,42 +26,46 @@
 			button-id="mail_new_message"
 			button-class="icon-add"
 			@click="onNewMessage" />
-		<ul id="accounts-list">
-			<template v-for="group in menu">
-				<NavigationAccount
-					v-if="group.account"
-					:key="group.account.id"
-					:account="group.account"
-					:first-mailbox="group.mailboxes[0]"
-					:is-first="isFirst(group.account)"
-					:is-last="isLast(group.account)" />
-				<template v-for="item in group.mailboxes">
-					<NavigationMailbox
-						v-show="
-							!group.isCollapsible ||
-								!group.account.collapsed ||
-								SHOW_COLLAPSED.indexOf(item.specialRole) !== -1
-						"
-						:key="item.databaseId"
+		<template #list>
+			<ul id="accounts-list">
+				<template v-for="group in menu">
+					<NavigationAccount
+						v-if="group.account"
+						:key="group.account.id"
 						:account="group.account"
-						:mailbox="item" />
-					<NavigationMailbox
-						v-if="!group.account.isUnified && item.specialRole === 'inbox'"
-						:key="item.databaseId + '-starred'"
-						:account="group.account"
-						:mailbox="item"
-						filter="starred" />
+						:first-mailbox="group.mailboxes[0]"
+						:is-first="isFirst(group.account)"
+						:is-last="isLast(group.account)" />
+					<template v-for="item in group.mailboxes">
+						<NavigationMailbox
+							v-show="
+								!group.isCollapsible ||
+									!group.account.collapsed ||
+									SHOW_COLLAPSED.indexOf(item.specialRole) !== -1
+							"
+							:key="item.databaseId"
+							:account="group.account"
+							:mailbox="item" />
+						<NavigationMailbox
+							v-if="!group.account.isUnified && item.specialRole === 'inbox'"
+							:key="item.databaseId + '-starred'"
+							:account="group.account"
+							:mailbox="item"
+							filter="starred" />
+					</template>
+					<NavigationAccountExpandCollapse
+						v-if="!group.account.isUnified && group.isCollapsible"
+						:key="'collapse-' + group.account.id"
+						:account="group.account" />
+					<AppNavigationSpacer :key="'spacer-' + group.account.id" />
 				</template>
-				<NavigationAccountExpandCollapse
-					v-if="!group.account.isUnified && group.isCollapsible"
-					:key="'collapse-' + group.account.id"
-					:account="group.account" />
-				<AppNavigationSpacer :key="'spacer-' + group.account.id" />
-			</template>
-		</ul>
-		<AppNavigationSettings :title="t('mail', 'Settings')">
-			<AppSettingsMenu />
-		</AppNavigationSettings>
+			</ul>
+		</template>
+		<template #footer>
+			<AppNavigationSettings :title="t('mail', 'Settings')">
+				<AppSettingsMenu />
+			</AppNavigationSettings>
+		</template>
 	</AppNavigation>
 </template>
 
@@ -155,4 +159,5 @@ export default {
 }
 </script>
 
-<style scoped></style>
+<style scoped>
+</style>
