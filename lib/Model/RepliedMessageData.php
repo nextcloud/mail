@@ -24,6 +24,7 @@ declare(strict_types=1);
 namespace OCA\Mail\Model;
 
 use OCA\Mail\Account;
+use OCA\Mail\Db\Message;
 
 /**
  * An immutable DTO that holds information about a message that is replied to
@@ -33,35 +34,19 @@ class RepliedMessageData {
 	/** @var Account */
 	private $account;
 
-	/** @var string */
-	private $folderId;
+	/** @var Message */
+	private $message;
 
-	/** @var int */
-	private $id;
-
-	/**
-	 * @param Account $account
-	 * @param string $folderId
-	 * @param int $id
-	 */
-	public function __construct(Account $account, string $folderId, int $id) {
+	public function __construct(Account $account, Message  $message) {
 		$this->account = $account;
-		$this->folderId = $folderId;
-		$this->id = $id;
+		$this->message = $message;
 	}
 
-	/**
-	 * @return Account
-	 */
 	public function getAccount(): Account {
 		return $this->account;
 	}
 
-	public function getFolderId(): string {
-		return $this->folderId;
-	}
-
-	public function getId(): int {
-		return $this->id;
+	public function getMessage(): Message {
+		return $this->message;
 	}
 }

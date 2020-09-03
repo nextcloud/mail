@@ -93,6 +93,32 @@ class MailboxMapper extends QBMapper {
 	 * @throws DoesNotExistException
 	 * @throws ServiceException
 	 */
+	public function findById(int $id): Mailbox {
+		$qb = $this->db->getQueryBuilder();
+
+		$select = $qb->select('*')
+			->from($this->getTableName())
+			->where(
+				$qb->expr()->eq('id', $qb->createNamedParameter($id, IQueryBuilder::PARAM_INT), IQueryBuilder::PARAM_INT)
+			);
+
+		try {
+			return $this->findEntity($select);
+		} catch (MultipleObjectsReturnedException $e) {
+			// Not possible due to DB constraints
+			throw new ServiceException("The impossible has happened", 42, $e);
+		}
+	}
+
+	/**
+	 * @param int $id
+	 * @param string $uid
+	 *
+	 * @return Mailbox
+	 *
+	 * @throws DoesNotExistException
+	 * @throws ServiceException
+	 */
 	public function findByUid(int $id, string $uid): Mailbox {
 		$qb = $this->db->getQueryBuilder();
 
