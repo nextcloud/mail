@@ -73,16 +73,9 @@
 					</Modal>
 				</div>
 			</div>
-			<router-link v-for="threadMessage in previousThread"
-				:key="threadMessage.id"
-				:to="threadRoute(threadMessage)"
-				class="icon-mail">
-				<div class="address">
-					{{ threadMessage.from[0].label }}
-				</div>
-				<!-- TODO: instead of subject it should be shown the first line of the message #2666 -->
-				{{ threadMessage.subject }}
-			</router-link>
+			<ThreadMessage v-for="threadMessage in previousThread"
+				:key="threadMessage.databaseId"
+				:message="threadMessage" />
 			<div :class="[message.hasHtmlBody ? 'mail-message-body mail-message-body-html' : 'mail-message-body']">
 				<div v-if="message.itineraries.length > 0" class="message-itinerary">
 					<Itinerary :entries="message.itineraries" :message-id="message.messageId" />
@@ -100,16 +93,9 @@
 				</Popover>
 				<div id="reply-composer" />
 			</div>
-			<router-link v-for="threadMessage in successiveThread"
-				:key="threadMessage.id"
-				:to="threadRoute(threadMessage)"
-				class="icon-mail">
-				<div class="address">
-					{{ threadMessage.from[0].label }}
-				</div>
-				<!-- TODO: instead of subject it should be shown the first line of the message #2666 -->
-				{{ threadMessage.subject }}
-			</router-link>
+			<ThreadMessage v-for="threadMessage in successiveThread"
+				:key="threadMessage.databaseId"
+				:message="threadMessage" />
 		</template>
 	</AppContentDetails>
 </template>
@@ -139,6 +125,7 @@ import MessagePlainTextBody from './MessagePlainTextBody'
 import Loading from './Loading'
 import logger from '../logger'
 import MessageAttachments from './MessageAttachments'
+import ThreadMessage from './ThreadMessage'
 
 export default {
 	name: 'Message',
@@ -156,6 +143,7 @@ export default {
 		MessagePlainTextBody,
 		Modal,
 		Popover,
+		ThreadMessage,
 	},
 	data() {
 		return {
@@ -274,15 +262,6 @@ export default {
 				}
 			}
 		},
-		threadRoute(threadMessage) {
-			return {
-				name: 'message',
-				params: {
-					mailboxId: threadMessage.mailboxId,
-					threadId: threadMessage.databaseId,
-				},
-			}
-		},
 		replyMessage() {
 			this.$router.push({
 				name: 'message',
@@ -372,25 +351,6 @@ export default {
 	flex: 1;
 	margin-bottom: 10px;
 	position: relative;
-}
-a {
-	display: block;
-	border-bottom: 1px solid var(--color-primary-light);
-	padding-left: 30px;
-	margin-bottom: 15px;
-	horiz-align: center;
-	opacity: 0.7;
-
-	&:hover {
-		opacity: 1;
-	}
-}
-.address {
-	font-weight: bold;
-}
-.icon-mail {
-	background-image: var(--icon-mail-000);
-	background-position: 0 center;
 }
 
 #mail-message-header {
