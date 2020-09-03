@@ -52,6 +52,7 @@ OC.L10N.register(
     "User" : "Хэрэглэгч",
     "Host" : "хост",
     "Port" : "порт",
+    "Keyboard shortcut" : "Keyboard товчлуур",
     "Search" : "Хайх",
     "Refresh" : "Сэргээх",
     "Connect your mail account" : "Таны мэйл бүртгэлийг холбоно",

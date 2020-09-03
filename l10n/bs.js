@@ -7,7 +7,6 @@ OC.L10N.register(
     "None" : "Ništa",
     "SMTP Password" : "SMPT Lozinka",
     "Save" : "Spremi",
-    "Keyboard shortcuts" : "Tipkovni prečaci",
     "Send" : "Pošalji",
     "Select" : "Select",
     "Delete" : "Obriši",
@@ -22,6 +21,7 @@ OC.L10N.register(
     "Delete folder" : "Izbriši fasciklu",
     "User" : "User",
     "Port" : "Priključak",
+    "Keyboard shortcuts" : "Tipkovni prečaci",
     "Search" : "Search",
     "All" : "Sve"
 },

@@ -37,7 +37,6 @@ OC.L10N.register(
     "Host" : "Ostiz",
     "Port" : "Porzh",
     "Change name" : "Cheñch env",
-    "No messages found yet" : "Kemenadenn kavet ebet evit ar poent",
     "Set up an account" : "Staliañ ur c'hont",
     "Search" : "Klask",
     "Refresh" : "Freskaat",

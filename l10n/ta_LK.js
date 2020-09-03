@@ -6,7 +6,6 @@ OC.L10N.register(
     "None" : "ஒன்றுமில்லை",
     "Save" : "சேமிக்க ",
     "Connect" : "இணைக்க",
-    "Keyboard shortcuts" : "விசைப்பலகை குறுக்குவழிகள்",
     "Select" : "Select",
     "Delete" : "நீக்குக",
     "Important" : "முக்கியமான ",
@@ -21,6 +20,7 @@ OC.L10N.register(
     "User" : "User",
     "Host" : "ஓம்புனர்",
     "Port" : "துறை ",
+    "Keyboard shortcuts" : "விசைப்பலகை குறுக்குவழிகள்",
     "Search" : "Search",
     "Refresh" : "மீள் ஏற்றுக",
     "All" : "எல்லாம்"

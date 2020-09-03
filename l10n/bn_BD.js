@@ -8,7 +8,6 @@ OC.L10N.register(
     "None" : "কোনটিই নয়",
     "Save" : "সংরক্ষণ",
     "Connect" : "সংযুক্ত হও",
-    "Keyboard shortcuts" : "কী-বোর্ড শর্টকাট",
     "Sending …" : "পাঠানো হচ্ছে......",
     "Go back" : "ফিরে যাও",
     "Send" : "পাঠাও",
@@ -32,6 +31,7 @@ OC.L10N.register(
     "User" : "User",
     "Host" : "হোস্ট",
     "Port" : "পোর্ট",
+    "Keyboard shortcuts" : "কী-বোর্ড শর্টকাট",
     "Search" : "Search",
     "Refresh" : "নবোদ্যম",
     "All" : "সবাই"
