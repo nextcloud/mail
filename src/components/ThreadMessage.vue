@@ -22,17 +22,27 @@
 <template>
 	<router-link :to="route"
 		class="icon-mail">
-		<div class="address">
-			{{ message.from[0].label }}
+		<div class="left">
+			<div class="sender">
+				{{ message.from[0].label }}
+			</div>
+			<div class="preview">
+				<!-- TODO: instead of subject it should be shown the first line of the message #2666 -->
+				{{ message.subject }}
+			</div>
 		</div>
-		<!-- TODO: instead of subject it should be shown the first line of the message #2666 -->
-		{{ message.subject }}
+		<div class="right">
+			<div><Moment :timestamp="message.dateInt" /></div>
+		</div>
 	</router-link>
 </template>
 
 <script>
+import Moment from './Moment'
+
 export default {
 	name: 'ThreadMessage',
+	components: { Moment },
 	props: {
 		message: {
 			required: true,
@@ -54,23 +64,27 @@ export default {
 </script>
 
 <style lang="scss" scoped>
-a {
-	display: block;
+.icon-mail {
+	background-image: var(--icon-mail-000);
+	background-position: 0 center;
+
+	display: flex;
+	flex-direction: row;
+	justify-content: space-between;
+	align-items: center;
+
 	border-bottom: 1px solid var(--color-primary-light);
 	padding-left: 30px;
 	margin-bottom: 15px;
 	horiz-align: center;
 	opacity: 0.7;
 
-&:hover {
-	 opacity: 1;
- }
-}
-.address {
-	font-weight: bold;
-}
-.icon-mail {
-	background-image: var(--icon-mail-000);
-	background-position: 0 center;
+	&:hover {
+		opacity: 1;
+	}
+
+	.sender {
+		font-weight: bold;
+	}
 }
 </style>
