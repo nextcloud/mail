@@ -1,12 +1,12 @@
 <template>
 	<AppContent>
-		<AppDetailsToggle v-if="showMessage" @close="hideMessage" />
+		<AppDetailsToggle v-if="showThread" @close="hideMessage" />
 		<div id="app-content-wrapper">
 			<AppContentList
 				v-infinite-scroll="onScroll"
 				v-shortkey.once="shortkeys"
 				infinite-scroll-immediate-check="false"
-				:show-details="showMessage"
+				:show-details="showThread"
 				:infinite-scroll-disabled="false"
 				:infinite-scroll-distance="10"
 				@shortkey.native="onShortcut">
@@ -56,8 +56,8 @@
 				</template>
 			</AppContentList>
 			<NewMessageDetail v-if="newMessage" />
-			<Thread v-else-if="showMessage" @delete="deleteMessage" />
-			<NoMessageSelected v-else-if="hasMessages && !isMobile" />
+			<Thread v-else-if="showThread" @delete="deleteMessage" />
+			<NoMessageSelected v-else-if="hasEnvelopes && !isMobile" />
 		</div>
 	</AppContent>
 </template>
@@ -76,7 +76,6 @@ import logger from '../logger'
 import Mailbox from './Mailbox'
 import NewMessageDetail from './NewMessageDetail'
 import NoMessageSelected from './NoMessageSelected'
-import { normalizedEnvelopeListId } from '../store/normalization'
 import Thread from './Thread'
 import { UNIFIED_ACCOUNT_ID, UNIFIED_INBOX_ID } from '../store/constants'
 
@@ -131,19 +130,11 @@ export default {
 		unifiedInbox() {
 			return this.$store.getters.getMailbox(UNIFIED_INBOX_ID)
 		},
-		hasMessages() {
-			// it actually should be `return this.$store.getters.getEnvelopes(this.account.id, this.mailbox.databaseId).length > 0`
-			// but for some reason Vue doesn't track the dependencies on reactive data then and messages in submailboxes can't
-			// be opened then
-			const list = this.mailbox.envelopeLists[normalizedEnvelopeListId(this.searchQuery)]
-
-			if (list === undefined) {
-				return false
-			}
-			return list.length > 0
+		hasEnvelopes() {
+			return this.$store.getters.getEnvelopes(this.mailbox.databaseId, this.searchQuery).length > 0
 		},
-		showMessage() {
-			return (this.mailbox.isPriorityInbox === true || this.hasMessages) && this.$route.name === 'message'
+		showThread() {
+			return (this.mailbox.isPriorityInbox === true || this.hasEnvelopes) && this.$route.name === 'message'
 		},
 		query() {
 			if (this.$route.params.filter === 'starred') {

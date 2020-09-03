@@ -50,7 +50,7 @@
 	}
 
 	/* reply-forward actions align to the far right */
-	#mail-message-header #mail-message-actions {
+	#mail-thread-header .mail-message-actions {
 		margin-right: 5px;
 	}
 }
