@@ -121,7 +121,7 @@ interface IMailManager {
 	 * @param Account $account
 	 * @param int $messageId database message ID
 	 *
-	 * @return IMAPMessage[]
+	 * @return Message[]
 	 */
 	public function getThread(Account $account, int $messageId): array;
 
