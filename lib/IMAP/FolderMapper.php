@@ -217,10 +217,10 @@ class FolderMapper {
 	protected function guessSpecialUse(Folder $folder): void {
 		$specialFoldersDict = [
 			'inbox' => ['inbox'],
-			'sent' => ['sent', 'sent items', 'sent messages', 'sent-mail', 'sentmail'],
-			'drafts' => ['draft', 'drafts'],
-			'archive' => ['archive', 'archives'],
-			'trash' => ['deleted messages', 'trash'],
+			'sent' => ['sent', 'sent items', 'sent messages', 'sent-mail', 'sentmail', 'gesendet'],
+			'drafts' => ['draft', 'drafts', 'entwürfe'],
+			'archive' => ['archive', 'archives', 'archiv'],
+			'trash' => ['deleted messages', 'trash', 'papierkorb'],
 			'junk' => ['junk', 'spam', 'bulk mail'],
 		];
 
