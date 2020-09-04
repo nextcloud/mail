@@ -11,10 +11,10 @@ OC.L10N.register(
     "Important" : "اہم",
     "Favorites" : "Favorites",
     "Other" : "دیگر",
-    "Reply" : "جواب",
     "Settings" : "سیٹینگز",
     "Add folder" : "Add folder",
     "Cancel" : "منسوخ کریں",
+    "Reply" : "جواب",
     "User" : "User",
     "Search" : "Search"
 },
