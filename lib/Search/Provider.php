@@ -96,21 +96,31 @@ class Provider implements IProvider {
 			array_map(function (Message $message) {
 				$formattedDate = $this->dateTimeFormatter->formatDateTimeRelativeDay($message->getSentAt(), 'short');
 				$sender = $message->getFrom()->first();
+
 				if ($sender !== null && $sender->getLabel() !== null) {
 					$subline = $sender->getLabel() . ' – ' . $formattedDate;
 				} else {
 					$subline = $formattedDate;
 				}
 
+				if ($sender !== null && $sender->getEmail() !== null) {
+					$from = $sender->getEmail();
+				} else {
+					$from = null;
+				}
+
 				return new SearchResultEntry(
-					'',
+					is_null($from) ? '' : $this->urlGenerator->linkToRoute('mail.avatars.image', [
+						'email' => $from,
+					]),
 					$message->getSubject(),
 					$subline,
 					$this->urlGenerator->linkToRouteAbsolute('mail.page.thread', [
 						'mailboxId' => $message->getMailboxId(),
 						'id' => $message->getId(),
 					]), // TODO: deep URL
-					'icon-mail'
+					'icon-mail',
+					!is_null($from)
 				);
 			}, $messages),
 			$last->getSentAt()
