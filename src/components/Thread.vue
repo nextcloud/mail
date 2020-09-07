@@ -464,7 +464,7 @@ export default {
 	margin-left: 4px;
 }
 
-.modal-container {
+::v-deep .modal-container {
 	overflow-y: scroll !important;
 }
 
