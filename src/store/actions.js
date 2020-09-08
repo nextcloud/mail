@@ -227,24 +227,23 @@ export default {
 			updated,
 		})
 	},
-	fetchEnvelope({ commit, getters }, id) {
+	async fetchEnvelope({ commit, getters }, id) {
 		const cached = getters.getEnvelope(id)
 		if (cached) {
 			logger.debug(`using cached value for envelope ${id}`)
 			return cached
 		}
 
-		return fetchEnvelope(id).then((envelope) => {
-			// Only commit if not undefined (not found)
-			if (envelope) {
-				commit('addEnvelope', {
-					envelope,
-				})
-			}
+		const envelope = await fetchEnvelope(id)
+		// Only commit if not undefined (not found)
+		if (envelope) {
+			commit('addEnvelope', {
+				envelope,
+			})
+		}
 
-			// Always use the object from the store
-			return getters.getEnvelope(id)
-		})
+		// Always use the object from the store
+		return getters.getEnvelope(id)
 	},
 	fetchEnvelopes({ state, commit, getters, dispatch }, { mailboxId, query }) {
 		const mailbox = getters.getMailbox(mailboxId)
@@ -392,7 +391,6 @@ export default {
 		})
 	},
 	syncEnvelopes({ commit, getters, dispatch }, { mailboxId, query, init = false }) {
-		// TODO: use mailboxId
 		const mailbox = getters.getMailbox(mailboxId)
 
 		if (mailbox.isUnified) {
@@ -438,6 +436,8 @@ export default {
 		const ids = getters.getEnvelopes(mailboxId, query).map((env) => env.databaseId)
 		return syncEnvelopes(mailbox.accountId, mailboxId, ids, query, init)
 			.then((syncData) => {
+				logger.info(`mailbox ${mailboxId} synchronized, ${syncData.newMessages.length} new, ${syncData.changedMessages.length} changed and ${syncData.vanishedMessages.length} vanished messages`)
+
 				const unifiedMailbox = getters.getUnifiedMailbox(mailbox.specialRole)
 
 				syncData.newMessages.forEach((envelope) => {
@@ -654,18 +654,20 @@ export default {
 			})
 		})
 	},
+	async fetchThread({ getters, commit }, id) {
+		const thread = await fetchThread(id)
+		commit('addEnvelopeThread', {
+			id,
+			thread,
+		})
+		return thread
+	},
 	async fetchMessage({ getters, commit }, id) {
 		const message = await fetchMessage(id)
 		// Only commit if not undefined (not found)
 		if (message) {
 			commit('addMessage', {
 				message,
-			})
-
-			const thread = await fetchThread(message.databaseId)
-			commit('addMessageThread', {
-				message,
-				thread,
 			})
 		}
 		return message

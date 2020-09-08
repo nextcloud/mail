@@ -280,19 +280,6 @@
 	vertical-align: text-top;
 }
 
-#mail-message-header {
-	height: 90px;
-	z-index: 100;
-	position: fixed; // ie fallback
-	position: -webkit-sticky; // ios/safari fallback
-	position: sticky;
-	top: $header-height;
-	background: -webkit-linear-gradient(var(--color-main-background), var(--color-main-background) 80%, rgba(255,255,255,0));
-	background: -o-linear-gradient(var(--color-main-background), var(--color-main-background)  80%, rgba(255,255,255,0));
-	background: -moz-linear-gradient(var(--color-main-background), var(--color-main-background)  80%, rgba(255,255,255,0));
-	background: linear-gradient(var(--color-main-background), var(--color-main-background)  80%, rgba(255,255,255,0));
-}
-
 .transparency {
 	-ms-filter: "progid:DXImageTransform.Microsoft.Alpha(Opacity=60)";
 	opacity: .6;

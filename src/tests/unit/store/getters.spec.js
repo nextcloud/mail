@@ -68,4 +68,65 @@ describe('Vuex store getters', () => {
 			accountId: 13,
 		})
 	})
+	it('returns an envelope\'s empty thread', () => {
+		state.envelopes[1] = {
+			databaseId: 1,
+			uid: 101,
+			mailboxId: 13,
+		}
+		const getters = bindGetters()
+
+		const thread = getters.getEnvelopeThread(1)
+
+		expect(thread).to.be.empty
+	})
+	it('returns an envelope\'s empty thread', () => {
+		state.envelopes[1] = {
+			databaseId: 1,
+			uid: 101,
+			mailboxId: 13,
+			thread: [
+				1,
+				2,
+				3,
+			]
+		}
+		state.envelopes[2] = {
+			databaseId: 1,
+			uid: 101,
+			mailboxId: 13,
+		}
+		state.envelopes[3] = {
+			databaseId: 1,
+			uid: 101,
+			mailboxId: 13,
+		}
+		const getters = bindGetters()
+
+		const thread = getters.getEnvelopeThread(1)
+
+		expect(thread).to.not.be.empty
+		expect(thread).to.deep.equal([
+			{
+				databaseId: 1,
+				uid: 101,
+				mailboxId: 13,
+				thread: [
+					1,
+					2,
+					3,
+				]
+			},
+			{
+				databaseId: 1,
+				uid: 101,
+				mailboxId: 13,
+			},
+			{
+				databaseId: 1,
+				uid: 101,
+				mailboxId: 13,
+			},
+		])
+	})
 })

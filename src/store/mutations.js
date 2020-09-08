@@ -32,7 +32,7 @@ import { UNIFIED_ACCOUNT_ID } from './constants'
 const addMailboxToState = curry((state, account, mailbox) => {
 	mailbox.accountId = account.id
 	mailbox.mailboxes = []
-	mailbox.envelopeLists = {}
+	Vue.set(mailbox, 'envelopeLists', {})
 
 	// Add all mailboxes (including submailboxes to state, but only toplevel to account
 	const nameWithoutPrefix = account.personalNamespace
@@ -216,8 +216,16 @@ export default {
 	addMessage(state, { message }) {
 		Vue.set(state.messages, message.databaseId, message)
 	},
-	addMessageThread(state, { message, thread }) {
-		Vue.set(message, 'thread', thread)
+	addEnvelopeThread(state, { id, thread }) {
+		// Store the envelopes, merge into any existing object if one exists
+		thread.map(e => {
+			const mailbox = state.mailboxes[e.mailboxId]
+			Vue.set(e, 'accountId', mailbox.accountId)
+			Vue.set(state.envelopes, e.databaseId, Object.assign({}, state.envelopes[e.databaseId] || {}, e))
+		})
+
+		// Store the references
+		Vue.set(state.envelopes[id], 'thread', thread.map(e => e.databaseId))
 	},
 	removeMessage(state, { id }) {
 		Vue.delete(state.messages, id)

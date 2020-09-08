@@ -824,4 +824,78 @@ describe('Vuex store mutations', () => {
 			},
 		})
 	})
+
+	it('adds a thread', () => {
+		const envelope = {
+			databaseId: 123,
+			mailboxId: 27,
+			uid: 12345,
+		}
+		const state = {
+			mailboxes: {
+				27: {
+					databaseId: 27,
+					accountId: 1,
+				},
+			},
+			envelopes: {
+				[envelope.databaseId]: envelope,
+			},
+		}
+
+		mutations.addEnvelopeThread(state, {
+			id: 123,
+			thread: [
+				{
+					databaseId: 122,
+					mailboxId: 27,
+					uid: 12344,
+				},
+				{
+					databaseId: 123,
+					mailboxId: 27,
+					uid: 12345,
+				},
+				{
+					databaseId: 124,
+					mailboxId: 27,
+					uid: 12346,
+				}
+			],
+		})
+
+		expect(state).to.deep.equal({
+			mailboxes: {
+				27: {
+					databaseId: 27,
+					accountId: 1,
+				},
+			},
+			envelopes: {
+				122: {
+					databaseId: 122,
+					mailboxId: 27,
+					accountId: 1,
+					uid: 12344,
+				},
+				123: {
+					databaseId: 123,
+					mailboxId: 27,
+					accountId: 1,
+					uid: 12345,
+					thread: [
+						122,
+						123,
+						124,
+					]
+				},
+				124: {
+					databaseId: 124,
+					mailboxId: 27,
+					accountId: 1,
+					uid: 12346,
+				},
+			},
+		})
+	})
 })
