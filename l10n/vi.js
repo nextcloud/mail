@@ -27,7 +27,6 @@ OC.L10N.register(
     "Clear cache" : "Xóa bộ nhớ ",
     "Delete folder" : "Xóa thư mục",
     "Signature" : "Chữ ký",
-    "to" : "đến",
     "Reply" : "Trả l",
     "General" : "Tổng hợp",
     "User" : "Người dùng",

@@ -26,7 +26,6 @@ OC.L10N.register(
     "Mark all as read" : "Marcar totes coma legits",
     "Clear cache" : "Voidar l'escondedor",
     "Delete folder" : "Suprimir lo repertòri",
-    "to" : "a",
     "Reply" : "Respondre",
     "General" : "Generals",
     "User" : "User",

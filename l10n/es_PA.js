@@ -58,8 +58,6 @@ OC.L10N.register(
     "Clear cache" : "Borrar el caché",
     "Delete folder" : "Borrar carpeta",
     "Signature" : "Firma",
-    "to" : "para",
-    "cc" : "cc",
     "Reply" : "Responder",
     "Forward" : "Adelante",
     "General" : "General",

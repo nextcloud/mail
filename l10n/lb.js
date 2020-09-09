@@ -23,7 +23,6 @@ OC.L10N.register(
     "Remove account" : "De Kont läschen",
     "Cancel" : "Ofbriechen",
     "Delete folder" : "Dossier läschen",
-    "to" : "bis",
     "Reply" : "Äntwerten",
     "General" : "Allgemeng",
     "User" : "User",

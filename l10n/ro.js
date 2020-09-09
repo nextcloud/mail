@@ -41,7 +41,6 @@ OC.L10N.register(
     "Clear cache" : "Șterge cache",
     "Delete folder" : "Șterge director",
     "Signature" : "Semnătură",
-    "to" : "către",
     "Reply" : "Răspunde",
     "General" : "General",
     "User" : "Utilizator",

@@ -33,7 +33,6 @@ OC.L10N.register(
     "Mark all as read" : "เลือกอ่านทั้งหมด",
     "Clear cache" : "ล้างแคช",
     "Delete folder" : "ลบโฟลเดอร์",
-    "to" : "ถึง",
     "Reply" : "ตอบกลับ",
     "General" : "ทั่วไป",
     "User" : "User",

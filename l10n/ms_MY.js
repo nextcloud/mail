@@ -15,7 +15,6 @@ OC.L10N.register(
     "Quota" : "Kuota",
     "Add folder" : "Add folder",
     "Cancel" : "Batal",
-    "to" : "kepada",
     "General" : "Umum",
     "User" : "User",
     "Search" : "Search",

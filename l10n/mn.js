@@ -45,7 +45,6 @@ OC.L10N.register(
     "Show all folders" : "Бүх хавтас харуулах",
     "Delete folder" : "Хавтсыг устгах",
     "Signature" : "Гарын үсэг",
-    "to" : "Дуусах нь",
     "Reply" : "хариулт",
     "Forward" : "дамжих",
     "General" : "Ерөнхий",

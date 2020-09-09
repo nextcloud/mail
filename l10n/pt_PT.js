@@ -52,7 +52,6 @@ OC.L10N.register(
     "Clear cache" : "Limpar cache",
     "Delete folder" : "Eliminar pasta",
     "Signature" : "Assinatura",
-    "to" : "Para",
     "Reply" : "Resposta",
     "Reply to sender only" : "Resposta apenas ao remetente",
     "Forward" : "Encaminhar",

@@ -66,8 +66,6 @@ OC.L10N.register(
     "Collapse folders" : "Sakļaut mapes",
     "Delete folder" : "Dzēst mapi",
     "Signature" : "Paraksts",
-    "to" : "kam",
-    "cc" : "kopija",
     "Reply" : "Atbildēt",
     "Forward" : "Turpināt",
     "View source" : "Skatīt avotu",

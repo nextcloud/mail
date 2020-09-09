@@ -42,7 +42,6 @@ OC.L10N.register(
     "Cancel" : "Kanselleer",
     "Delete folder" : "Skrap vouer",
     "Signature" : "Handtekening",
-    "to" : "aan",
     "Reply" : "Antwoord",
     "Forward" : "Stuur aan",
     "General" : "Algemeen",

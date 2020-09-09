@@ -48,8 +48,6 @@ OC.L10N.register(
     "Clear cache" : "Tühjenda puhver",
     "Delete folder" : "Kustuta kaust",
     "Signature" : "Allkiri",
-    "to" : "saaja",
-    "cc" : "cc",
     "Reply" : "Vasta",
     "Forward" : "Edasi",
     "General" : "Üldine",

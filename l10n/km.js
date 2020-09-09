@@ -19,7 +19,6 @@ OC.L10N.register(
     "Add folder" : "Add folder",
     "Cancel" : "បោះបង់",
     "Delete folder" : "លុប​ថត",
-    "to" : "ទៅ",
     "Reply" : "ឆ្លើយតប",
     "General" : "ទូទៅ",
     "User" : "User",

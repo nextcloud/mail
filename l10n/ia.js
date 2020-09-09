@@ -31,7 +31,6 @@ OC.L10N.register(
     "Show all folders" : "Monstrar tote dossiers",
     "Collapse folders" : "Plicar dossiers",
     "Delete folder" : "Deler dossier",
-    "to" : "a",
     "Reply" : "Responder",
     "General" : "General",
     "User" : "User",

@@ -58,8 +58,6 @@ OC.L10N.register(
     "Clear cache" : "Pastroje fshehtinën",
     "Delete folder" : "Fshini dosjen",
     "Signature" : "Nënshkrimi",
-    "to" : "te",
-    "cc" : "cc",
     "Reply" : "Përgjigju",
     "Forward" : "Përpara",
     "General" : "Të përgjithshme",

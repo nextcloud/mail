@@ -20,7 +20,6 @@ OC.L10N.register(
     "Saving" : "儲存中",
     "Cancel" : "取消",
     "Signature" : "署名",
-    "to" : "至",
     "Reply" : "回覆",
     "General" : "一般",
     "User" : "User",

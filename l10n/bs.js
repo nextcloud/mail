@@ -18,7 +18,6 @@ OC.L10N.register(
     "Add folder" : "Add folder",
     "Cancel" : "Otkaži",
     "Delete folder" : "Izbriši fasciklu",
-    "to" : "do",
     "User" : "User",
     "Port" : "Priključak",
     "Keyboard shortcuts" : "Tipkovni prečaci",

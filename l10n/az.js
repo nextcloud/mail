@@ -26,7 +26,6 @@ OC.L10N.register(
     "Mark all as read" : "Hamısını oxunulmuş kimi qeydə al",
     "Clear cache" : "Keşi təmizlə",
     "Delete folder" : "Qovluğu sil",
-    "to" : "doğru",
     "Reply" : "Cavab",
     "General" : "Ümumi",
     "User" : "User",

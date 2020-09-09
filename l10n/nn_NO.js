@@ -20,7 +20,6 @@ OC.L10N.register(
     "Cancel" : "Avbryt",
     "Delete folder" : "Slett mappe",
     "Signature" : "Signatur",
-    "to" : "til",
     "General" : "Generelt",
     "User" : "Bruker",
     "Host" : "Tenar",

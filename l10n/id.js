@@ -38,7 +38,6 @@ OC.L10N.register(
     "Clear cache" : "Bersihkan cache",
     "Delete folder" : "Hapus folder",
     "Signature" : "Tanda",
-    "to" : "untuk",
     "Reply" : "Balas",
     "General" : "Umum",
     "User" : "Pengguna",
