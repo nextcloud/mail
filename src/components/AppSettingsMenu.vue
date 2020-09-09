@@ -39,7 +39,7 @@
 		<button
 			class="icon-details app-settings-button"
 			@click.prevent.stop="showKeyboardShortcuts"
-			@shortkey.native="toggleKeyboardShortcuts">
+			@shortkey="toggleKeyboardShortcuts">
 			{{ t('mail', 'Show keyboard shortcuts') }}
 		</button>
 		<KeyboardShortcuts v-if="displayKeyboardShortcuts" @close="closeKeyboardShortcuts" />
