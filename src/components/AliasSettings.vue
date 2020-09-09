@@ -130,6 +130,15 @@ input {
 }
 .icon-delete {
 	vertical-align: bottom;
+	background-image: var(--icon-delete-000);
+	background-color: var(--color-main-background);
+	border: none;
+	opacity: 0.7;
+
+	&:hover,
+	&:focus {
+		opacity: 1;
+	}
 }
 .icon-add {
 	background-image: var(--icon-add-fff);

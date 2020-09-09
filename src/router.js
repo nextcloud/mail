@@ -2,7 +2,6 @@ import Vue from 'vue'
 import Router from 'vue-router'
 import { generateUrl } from '@nextcloud/router'
 
-const AccountSettings = () => import('./views/AccountSettings')
 const Home = () => import('./views/Home')
 const Setup = () => import('./views/Setup')
 
@@ -32,11 +31,6 @@ export default new Router({
 			path: '/box/:filter?/:mailboxId/thread/:threadId/:draftId?',
 			name: 'message',
 			component: Home,
-		},
-		{
-			path: '/accounts/:accountId/settings',
-			name: 'accountSettings',
-			component: AccountSettings,
 		},
 		{
 			path: '/setup',

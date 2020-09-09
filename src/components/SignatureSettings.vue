@@ -112,7 +112,7 @@ export default {
 }
 
 .ck.ck-editor__editable_inline {
-	width: 400px;
+	width: 330px;
 	max-width: 78vw;
 	height: 100px;
 	border-radius: var(--border-radius) !important;
