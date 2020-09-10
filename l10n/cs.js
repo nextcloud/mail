@@ -158,6 +158,7 @@ OC.L10N.register(
     "A signature is added to the text of new messages and replies." : "Podpis je přidán pod text nových zpráv a odpovědí.",
     "Signature …" : "Podpis…",
     "Save signature" : "Uložit podpis",
+    "Could not load your message thread" : "Nepodařilo se načíst vlákno se zprávou",
     "Reply" : "Odpovědět",
     "Reply to sender only" : "Odpovědět pouze odesílateli",
     "Forward" : "Přeposlat",

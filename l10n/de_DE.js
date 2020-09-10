@@ -158,6 +158,7 @@ OC.L10N.register(
     "A signature is added to the text of new messages and replies." : "Dem Text der Nachrichten und Antworten wird eine Signatur hinzugefügt.",
     "Signature …" : "Signatur...",
     "Save signature" : "Signatur speichern",
+    "Could not load your message thread" : "Nachrichtenverlauf konnte nicht geöffnet werden",
     "Reply" : "Antworten",
     "Reply to sender only" : "Nur dem Absender antworten",
     "Forward" : "Weiterleiten",

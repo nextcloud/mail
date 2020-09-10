@@ -158,6 +158,7 @@ OC.L10N.register(
     "A signature is added to the text of new messages and replies." : "Engádese unha sinatura ao texto das mensaxes novas e de resposta.",
     "Signature …" : "Sinatura…",
     "Save signature" : "Gardar a sinatura",
+    "Could not load your message thread" : "Non foi posíbel cargar o fío da mensaxe",
     "Reply" : "Responder",
     "Reply to sender only" : "Responder só ao remitente",
     "Forward" : "Reenviar",
