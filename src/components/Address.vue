@@ -3,8 +3,7 @@
 		v-tooltip.bottom="email"
 		:to="newMessageRoute"
 		exact>
-		{{ label }}
-	</router-link>
+		{{ label }}</router-link>
 	<router-link v-else :to="newMessageRoute" exact>
 		{{ label }}
 	</router-link>
