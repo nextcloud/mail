@@ -30,6 +30,7 @@ use OCA\Mail\Contracts\IMailSearch;
 use OCA\Mail\Db\Message;
 use OCP\IDateTimeFormatter;
 use OCP\IL10N;
+use OCP\ILogger;
 use OCP\IURLGenerator;
 use OCP\IUser;
 use OCP\Search\IProvider;
@@ -52,12 +53,17 @@ class Provider implements IProvider {
 	/** @var IURLGenerator */
 	private $urlGenerator;
 
+	/** @var ILogger */
+	private $logger;
+
 	public function __construct(IMailSearch $mailSearch,
 								IL10N $l10n,
+								ILogger $logger,
 								IDateTimeFormatter $dateTimeFormatter,
 								IURLGenerator $urlGenerator) {
 		$this->mailSearch = $mailSearch;
 		$this->l10n = $l10n;
+		$this->logger = $logger;
 		$this->dateTimeFormatter = $dateTimeFormatter;
 		$this->urlGenerator = $urlGenerator;
 	}
@@ -76,12 +82,30 @@ class Provider implements IProvider {
 
 	public function search(IUser $user, ISearchQuery $query): SearchResult {
 		$cursor = $query->getCursor();
+
+		// Search in local cache (doesn't contain the boday of emails)
 		$messages = $this->mailSearch->findMessagesGlobally(
 			$user,
 			$query->getTerm(),
 			empty($cursor) ? null : ((int) $cursor),
 			$query->getLimit()
 		);
+
+		// Search in body of emails on the IMAP server
+		$messages2 = $this->mailSearch->findMessagesLocally(
+			$user,
+			$query->getTerm(),
+			empty($cursor) ? null : ((int) $cursor),
+			$query->getLimit()
+		);
+		$this->logger->debug('********** DEBUG SEARCH ************');
+		$this->logger->debug(implode('-', array_map(function (Message $message) {
+			$message->getFrom();
+			},$messages)));
+		$this->logger->debug(implode('-', array_map(function (Message $message) {
+			$message->getFrom();
+			},$messages2)));
+		$messages = array_merge($messages, $messages2);
 
 		$last = end($messages);
 		if ($last === false) {

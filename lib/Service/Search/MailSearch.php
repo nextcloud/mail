@@ -38,6 +38,7 @@ use OCA\Mail\Exception\MailboxNotCachedException;
 use OCA\Mail\Exception\ServiceException;
 use OCA\Mail\IMAP\PreviewEnhancer;
 use OCA\Mail\IMAP\Search\Provider as ImapSearchProvider;
+use OCA\Mail\Service\AccountService;
 use OCP\AppFramework\Db\DoesNotExistException;
 use OCP\ILogger;
 use OCP\IUser;
@@ -67,12 +68,14 @@ class MailSearch implements IMailSearch {
 								ImapSearchProvider $imapSearchProvider,
 								MessageMapper $messageMapper,
 								PreviewEnhancer $previewEnhancer,
+								AccountService $accountService,
 								ILogger $logger) {
 		$this->filterStringParser = $filterStringParser;
 		$this->mailboxMapper = $mailboxMapper;
 		$this->imapSearchProvider = $imapSearchProvider;
 		$this->messageMapper = $messageMapper;
 		$this->previewEnhancer = $previewEnhancer;
+		$this->accountService = $accountService;
 		$this->logger = $logger;
 	}
 
@@ -146,6 +149,34 @@ class MailSearch implements IMailSearch {
 	 * @throws ClientException
 	 * @throws ServiceException
 	 */
+	public function findMessagesLocally(IUser $user,
+								 ?string $filter,
+								 ?int $cursor,
+								 ?int $limit): array {
+		$query = $this->filterStringParser->parse($filter);
+		if ($cursor !== null) {
+			$query->setCursor($cursor);
+		}
+
+		$account = $this->accountService->findByUserId($user->getUID())[0];
+
+		$mailbox = $this->mailboxMapper->find($account, 'INBOX');
+
+		return $this->messageMapper->findByIds(
+			$this->getIdsLocally($account, $mailbox, $query, $limit)
+		);
+	}
+
+	/**
+	 * @param IUser $user
+	 * @param string|null $filter
+	 * @param int|null $cursor
+	 *
+	 * @return Message[]
+	 *
+	 * @throws ClientException
+	 * @throws ServiceException
+	 */
 	public function findMessagesGlobally(IUser $user,
 								 ?string $filter,
 								 ?int $cursor,
@@ -170,12 +201,25 @@ class MailSearch implements IMailSearch {
 			return $this->messageMapper->findIdsByQuery($mailbox, $query, $limit);
 		}
 
+		$this->logger->debug('******* DEBUG ******');
+		$this->logger->debug(implode(' ',$account->jsonSerialize()));
+		$this->logger->debug(implode(' ',$query->getSubjects()));
+
 		$fromImap = $this->imapSearchProvider->findMatches(
 			$account,
 			$mailbox,
 			$query
 		);
-		return $this->messageMapper->findIdsByQuery($mailbox, $query, $limit, $fromImap);
+
+		$this->logger->debug('******* DEBUG2 ******');
+		$this->logger->debug(implode(' ',$fromImap));
+
+		$results = $this->messageMapper->findIdsByUids($mailbox, $limit, $fromImap);
+
+		$this->logger->debug('******* DEBUG3 ******');
+		$this->logger->debug(implode(' ',$results));
+
+		return $results;
 	}
 
 	/**

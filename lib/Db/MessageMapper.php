@@ -451,6 +451,40 @@ class MessageMapper extends QBMapper {
 	}
 
 	/**
+	 * Gets message IDs based on their IMAP UID
+	 * @param Mailbox $mailbox
+	 * @param int|null $limit
+	 * @param int[]|null $uids
+	 *
+	 * @return int[]
+	 */
+	public function findIdsByUids(Mailbox $mailbox, ?int $limit, array $uids = null): array {
+		$qb = $this->db->getQueryBuilder();
+
+		$select = $qb
+			->selectDistinct('m.id')
+			->addSelect('m.sent_at')
+			->from($this->getTableName(), 'm');
+
+		if ($uids !== null) {
+			$select->andWhere(
+				$qb->expr()->in('uid', $qb->createNamedParameter($uids, IQueryBuilder::PARAM_INT_ARRAY))
+			);
+		}
+
+		$select = $select
+			->orderBy('sent_at', 'desc');
+
+		if ($limit !== null) {
+			$select = $select->setMaxResults($limit);
+		}
+
+		return array_map(function (Message $message) {
+			return $message->getId();
+		}, $this->findEntities($select));
+	}
+
+	/**
 	 * @param Mailbox $mailbox
 	 * @param SearchQuery $query
 	 * @param int|null $limit
