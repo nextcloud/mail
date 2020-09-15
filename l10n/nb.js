@@ -87,6 +87,7 @@ OC.L10N.register(
     "Reply" : "Svar",
     "Forward" : "Fremover",
     "General" : "Generell",
+    "Email address" : "E-post adresse",
     "User" : "Bruker",
     "Host" : "Server",
     "Port" : "Port",
