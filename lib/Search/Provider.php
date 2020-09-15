@@ -106,7 +106,7 @@ class Provider implements IProvider {
 					'',
 					$message->getSubject(),
 					$subline,
-					$this->urlGenerator->linkToRoute('mail.page.thread', [
+					$this->urlGenerator->linkToRouteAbsolute('mail.page.thread', [
 						'mailboxId' => $message->getMailboxId(),
 						'id' => $message->getId(),
 					]), // TODO: deep URL
