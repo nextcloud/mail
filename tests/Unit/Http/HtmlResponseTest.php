@@ -35,7 +35,8 @@ class HtmlResponseTest extends TestCase {
 	 */
 	public function testIt($content) {
 		$resp = new HtmlResponse($content);
-		$this->assertEquals($content, $resp->render());
+		$injectedStyles = "<style>* { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen-Sans, Cantarell, Ubuntu, 'Helvetica Neue', Arial, 'Noto Color Emoji', sans-serif, 'Apple Color Emoji', 'Segoe UI Emoji', 'Segoe UI Symbol'; }</style>";
+		$this->assertEquals($injectedStyles . $content, $resp->render());
 	}
 
 	public function providesResponseData() {
