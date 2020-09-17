@@ -158,6 +158,7 @@ OC.L10N.register(
     "A signature is added to the text of new messages and replies." : "Yeni ileti ve yanıtlar için bir imza eklendi.",
     "Signature …" : "İmza …",
     "Save signature" : "İmzayı kaydet",
+    "Could not load your message thread" : "İleti grubunuz yüklenemedi",
     "Reply" : "Yanıtla",
     "Reply to sender only" : "Yalnız gönderene yanıtla",
     "Forward" : "İlet",
