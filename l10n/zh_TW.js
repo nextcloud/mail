@@ -76,6 +76,7 @@ OC.L10N.register(
     "User" : "使用者",
     "Host" : "主機",
     "Port" : "連接埠",
+    "Change name" : "更改名稱",
     "Keyboard shortcut" : "快速鍵",
     "Keyboard shortcuts" : "快速鍵",
     "Speed up your Mail experience with these quick shortcuts." : "使用快速鍵來加速您的操作體驗",
