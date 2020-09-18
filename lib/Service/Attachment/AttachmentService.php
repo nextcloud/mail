@@ -48,13 +48,15 @@ class AttachmentService implements IAttachmentService {
 	/**
 	 * @param string $userId
 	 * @param UploadedFile $file
+	 * @param string $mimeType
 	 * @return LocalAttachment
 	 * @throws UploadException
 	 */
-	public function addFile(string $userId, UploadedFile $file): LocalAttachment {
+	public function addFile(string $userId, UploadedFile $file, string $mimeType): LocalAttachment {
 		$attachment = new LocalAttachment();
 		$attachment->setUserId($userId);
 		$attachment->setFileName($file->getFileName());
+		$attachment->setMimeType($mimeType);
 
 		$persisted = $this->mapper->insert($attachment);
 		try {

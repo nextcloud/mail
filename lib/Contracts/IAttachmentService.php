@@ -32,7 +32,7 @@ interface IAttachmentService {
 	/**
 	 * Save an uploaded file
 	 */
-	public function addFile(string $userId, UploadedFile $file): LocalAttachment;
+	public function addFile(string $userId, UploadedFile $file, string $mimType): LocalAttachment;
 
 	/**
 	 * Try to get an attachment by id

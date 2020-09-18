@@ -30,6 +30,7 @@ use OCA\Mail\Service\Attachment\UploadedFile;
 use OCP\AppFramework\Controller;
 use OCP\AppFramework\Http;
 use OCP\AppFramework\Http\JSONResponse;
+use OCP\ILogger;
 use OCP\IRequest;
 
 class LocalAttachmentsController extends Controller {
@@ -40,6 +41,9 @@ class LocalAttachmentsController extends Controller {
 	/** @var string */
 	private $userId;
 
+	/** @var ILogger */
+	private $logger;
+
 	/**
 	 * @param string $appName
 	 * @param IRequest $request
@@ -47,9 +51,10 @@ class LocalAttachmentsController extends Controller {
 	 * @param string $UserId
 	 */
 	public function __construct(string $appName, IRequest $request,
-								IAttachmentService $attachmentService, $UserId) {
+					IAttachmentService $attachmentService, ILogger $logger, $UserId) {
 		parent::__construct($appName, $request);
 		$this->attachmentService = $attachmentService;
+		$this->logger = $logger;
 		$this->userId = $UserId;
 	}
 
@@ -67,7 +72,12 @@ class LocalAttachmentsController extends Controller {
 		}
 
 		$uploadedFile = new UploadedFile($file);
-		$attachment = $this->attachmentService->addFile($this->userId, $uploadedFile);
+
+		$finfo = finfo_open(FILEINFO_MIME_TYPE);
+		$mimeType = finfo_file($finfo, $uploadedFile->getTempPath());
+		unset($finfo);
+
+		$attachment = $this->attachmentService->addFile($this->userId, $uploadedFile, $mimeType);
 
 		return new JSONResponse($attachment, Http::STATUS_CREATED);
 	}
