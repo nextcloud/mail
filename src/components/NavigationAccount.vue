@@ -272,3 +272,12 @@ export default {
 	},
 }
 </script>
+<style lang="scss" scoped>
+
+::v-deep .action-input {
+
+	&__label {
+		box-sizing: border-box;
+	}
+}
+</style>
