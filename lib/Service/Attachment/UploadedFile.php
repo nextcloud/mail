@@ -49,4 +49,11 @@ class UploadedFile {
 	public function getTempPath() {
 		return isset($this->fileData['tmp_name']) ? $this->fileData['tmp_name'] : null;
 	}
+
+	/**
+	 * @return string
+	 */
+	public function getMimeType() {
+		return isset($this->fileData['type']) ? $this->fileData['type'] : 'application/octet-stream';
+	}
 }

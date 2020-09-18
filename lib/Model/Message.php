@@ -249,7 +249,7 @@ class Message implements IMessage {
 		$part->setDisposition('attachment');
 		$part->setName($attachment->getFileName());
 		$part->setContents($file->getContent());
-		$part->setType($file->getMimeType());
+		$part->setType($attachment->getMimeType());
 		$this->localAttachments[] = $part;
 	}
 }
