@@ -21,7 +21,12 @@
 
 <template>
 	<div>
-		<div class="icon-mail">
+		<div>
+			<Avatar v-if="envelope.from && envelope.from[0]"
+				:email="envelope.from[0].email"
+				:display-name="envelope.from[0].label"
+				:disable-tooltip="true"
+				:size="25" />
 			<router-link
 				:to="route"
 				event=""
@@ -95,7 +100,6 @@
 			:data="error" />
 	</div>
 </template>
-
 <script>
 import Actions from '@nextcloud/vue/dist/Components/Actions'
 import ActionButton from '@nextcloud/vue/dist/Components/ActionButton'
@@ -105,6 +109,7 @@ import Loading from './Loading'
 import logger from '../logger'
 import Message from './Message'
 import Moment from './Moment'
+import Avatar from './Avatar'
 import { buildRecipients as buildReplyRecipients } from '../ReplyBuilder'
 import { generateUrl } from '@nextcloud/router'
 
@@ -117,6 +122,7 @@ export default {
 		Loading,
 		Moment,
 		Message,
+		Avatar,
 	},
 	props: {
 		envelope: {
@@ -285,25 +291,6 @@ export default {
 </script>
 
 <style lang="scss" scoped>
-.icon-mail {
-	background-image: var(--icon-mail-000);
-	background-position: 0 center;
-
-	display: flex;
-	flex-direction: row;
-	justify-content: space-between;
-	align-items: center;
-
-	border-bottom: 1px solid var(--color-primary-light);
-	padding-left: 30px;
-	margin-bottom: 15px;
-	horiz-align: center;
-	opacity: 0.7;
-
-	&:hover {
-		opacity: 1;
-	}
-
 	.sender {
 		font-weight: bold;
 	}
@@ -321,5 +308,4 @@ export default {
 			margin-left: 4px;
 		}
 	}
-}
 </style>
