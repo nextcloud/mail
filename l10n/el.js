@@ -124,6 +124,7 @@ OC.L10N.register(
     "Show only subscribed folders" : "Εμφάνιση μόνο εγγεγραμμένων φακέλων",
     "Add folder" : "Προσθήκη φακέλου",
     "Saving" : "Αποθήκευση",
+    "Move up" : "Μετακίνηση επάνω",
     "Move down" : "Μετακίνηση Κάτω",
     "Remove account" : "Αφαίρεση λογαριασμού",
     "Loading …" : "Φόρτωση…",
