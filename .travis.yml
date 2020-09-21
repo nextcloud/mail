@@ -2,7 +2,6 @@ sudo: required
 dist: xenial
 language: php
 php:
-  - 7.2
   - 7.3
   - 7.4
 
@@ -22,14 +21,16 @@ env:
 
 matrix:
   include:
-    - php: 7.3
+    - php: 7.4
       env: "DB=pgsql"
-    - php: 7.3
+    - php: 7.4
       env: "TEST_SUITE=TEST-JS"
-    - php: 7.3
+    - php: 7.4
       env: "TEST_SUITE=PACKAGE"
-    - php: 7.2
+    - php: 7.3
       env: "PHP_COVERAGE=TRUE"
+    - php: 7.2
+      env: "CORE_BRANCH=stable20"
     - php: nightly
       env: "DB=sqlite PATCH_VERSION_CHECK=TRUE"
   fast_finish: true
