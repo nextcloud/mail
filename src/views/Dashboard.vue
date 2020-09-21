@@ -27,7 +27,7 @@
 		@hide="() => {}"
 		@markDone="() => {}">
 		<template v-slot:default="{ item }">
-			<DashboardWidgetItem :item="getWidgetItem(item)">
+			<DashboardWidgetItem :target-url="itemTargetUrl(item)" :main-text="itemMainText(item)" :sub-text="itemSubText(item)">
 				<template v-slot:avatar>
 					<Avatar v-if="item.from"
 						:email="item.from[0].email"
@@ -91,16 +91,6 @@ export default {
 			}
 			return orderByDateInt(this.messages).slice(0, 7)
 		},
-		getWidgetItem() {
-			return (item) => {
-				return {
-					targetUrl: generateUrl(`/apps/mail/box/priority/thread/${item.databaseId}`),
-					mainText: item.from ? item.from[0].label : '',
-					subText: item.subject,
-					message: item,
-				}
-			}
-		},
 	},
 	async mounted() {
 		const accountInboxes = await Promise.all(this.accounts.map(async(account) => {
@@ -129,6 +119,17 @@ export default {
 		}))
 
 		this.loading = false
+	},
+	methods: {
+		itemMainText(item) {
+			return item.from ? item.from[0].label : ''
+		},
+		itemSubText(item) {
+			return item.subject
+		},
+		itemTargetUrl(item) {
+			return generateUrl(`/apps/mail/box/priority/thread/${item.databaseId}`)
+		},
 	},
 }
 </script>
