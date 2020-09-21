@@ -25,6 +25,11 @@ You can use the php-mail function to send mails. This is needed for some webhost
 ```php
 'app.mail.transport' => 'php-mail'
 ```
+### Disable TLS verification for IMAP/SMTP
+Turn off TLS verfication for IMAP/SMTP. This happens globally for all accounts and is only needed in edge cases like with email servers that have a self-signed certificate.
+```php
+'app.mail.verify-tls-peer' => 'false'
+```
 
 ## Troubleshooting
 
