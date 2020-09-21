@@ -97,6 +97,7 @@ export default {
 
 #message-container {
 	flex: 1;
+	min-height: 50vh;
 }
 
 #message-frame {

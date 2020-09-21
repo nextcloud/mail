@@ -21,25 +21,27 @@
 
 <template>
 	<div>
-		<div>
+		<div class="envelope--header">
 			<Avatar v-if="envelope.from && envelope.from[0]"
 				:email="envelope.from[0].email"
 				:display-name="envelope.from[0].label"
 				:disable-tooltip="true"
-				:size="25" />
+				:size="40" />
 			<router-link
 				:to="route"
 				event=""
 				class="left"
 				@click.native.prevent="$emit('toggleExpand', $event)">
 				<span class="sender">{{ envelope.from[0].label }}</span>
-				<span class="preview">
-					<!-- TODO: instead of subject it should be shown the first line of the message #2666 -->
-					{{ envelope.subject }}
-				</span>
+				<div class="subject">
+					<span class="preview">
+						<!-- TODO: instead of subject it should be shown the first line of the message #2666 -->
+						{{ envelope.subject }}
+					</span>
+				</div>
 			</router-link>
 			<div class="right">
-				<Moment :timestamp="envelope.dateInt" />
+				<Moment class="timestamp" :timestamp="envelope.dateInt" />
 				<div
 					class="button"
 					:class="{
@@ -293,6 +295,7 @@ export default {
 <style lang="scss" scoped>
 	.sender {
 		font-weight: bold;
+		margin-left: 8px;
 	}
 
 	.right {
@@ -307,5 +310,41 @@ export default {
 		.app-content-list-item-menu {
 			margin-left: 4px;
 		}
+
+		.timestamp {
+			margin-right: 10px;
+			font-size: small;
+			white-space: nowrap;
+			margin-bottom: 0;
+		}
 	}
+	.button {
+		color: var(--color-main-background);
+		&:not(.active):not(.primary) {
+			display: none;
+
+			&.primary {
+				background-color: var(--color-primary);
+				opacity: 1;
+				margin-bottom: 0;
+
+			}
+		}
+	}
+	.avatardiv {
+		display: inline-block;
+		margin-bottom: -23px;
+	}
+	.subject {
+		margin-left: 8px;
+		cursor: default;
+	}
+	.envelope--header {
+		display: flex;
+		padding-bottom: 20px
+	}
+	.left {
+		flex-grow: 1;
+	}
+
 </style>

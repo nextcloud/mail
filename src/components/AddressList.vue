@@ -2,8 +2,8 @@
 	<span>
 		<template v-for="(entry, idx) in entries">
 			<Address :key="entry.email" :email="entry.email" :label="entry.label" /><!--
-			--><span v-if="idx === entries.length - 2" :key="'split' + entry.email">{{ t('mail', 'and') }}</span><!--
-			--><span v-else-if="idx + 1 < entries.length" :key="'split' + entry.email">, </span>
+			--><span v-if="idx === entries.length - 2" :key="'split' + entry.email">{{ t('mail', 'and') }}</span>
+			<span v-else-if="idx + 1 < entries.length" :key="'split' + entry.email">, </span>
 		</template>
 	</span>
 </template>
