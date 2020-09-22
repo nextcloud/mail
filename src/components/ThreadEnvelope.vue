@@ -206,7 +206,7 @@ export default {
 				logger.debug(`message ${this.envelope.databaseId} fetched`, { message })
 
 				if (!this.envelope.flags.seen) {
-					return this.$store.dispatch('toggleEnvelopeSeen', this.envelope)
+					this.$store.dispatch('toggleEnvelopeSeen', this.envelope)
 				}
 
 				this.loading = false
