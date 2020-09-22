@@ -251,10 +251,6 @@ export default {
 	}
 }
 
-::v-deep .modal-container {
-	overflow-y: scroll !important;
-}
-
 @media print {
 	#mail-thread-header-fields {
 		position: relative;
