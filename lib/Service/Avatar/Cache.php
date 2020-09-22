@@ -66,7 +66,7 @@ class Cache {
 	/**
 	 * @param string $email
 	 * @param string $uid
-	 * @return Avatar|null avatar URL
+	 * @return Avatar|null|false the avatar if cached, false if cached but no value and null if not cached
 	 */
 	public function get(string $email, string $uid) {
 		$cached = $this->cache->get($this->buildUrlKey($email, $uid));
@@ -74,23 +74,26 @@ class Cache {
 		if (is_null($cached)) {
 			return null;
 		}
+		if ($cached === false) {
+			return false;
+		}
 
 		if ($cached['isExternal']) {
 			return $this->avatarFactory->createExternal($cached['url'], $cached['mime']);
-		} else {
-			return $this->avatarFactory->createInternal($cached['url'], $cached['mime']);
 		}
+
+		return $this->avatarFactory->createInternal($cached['url'], $cached['mime']);
 	}
 
 	/**
 	 * @param string $email
 	 * @param string $uid
-	 * @param Avatar $avatar
+	 * @param Avatar|null $avatar
 	 *
 	 * @return void
 	 */
-	public function add(string $email, string $uid, Avatar $avatar): void {
-		$this->cache->set($this->buildUrlKey($email, $uid), $avatar->jsonSerialize(), self::CACHE_TTL);
+	public function add(string $email, string $uid, ?Avatar $avatar): void {
+		$this->cache->set($this->buildUrlKey($email, $uid), $avatar === null ? false : $avatar->jsonSerialize(), self::CACHE_TTL);
 	}
 
 	/**

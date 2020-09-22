@@ -102,8 +102,9 @@ class AvatarServiceTest extends TestCase {
 			->method('fetch')
 			->with($email, $this->avatarFactory, true)
 			->willReturn(null);
-		$this->cache->expects($this->never())
-			->method('add');
+		$this->cache->expects($this->once())
+			->method('add')
+			->with($email, $uid, null);
 
 		$url = $this->avatarService->getAvatar($email, $uid);
 
@@ -126,8 +127,9 @@ class AvatarServiceTest extends TestCase {
 			->method('fetch')
 			->with($email, $this->avatarFactory, true)
 			->willReturn($avatar);
-		$this->cache->expects($this->never())
-			->method('add');
+		$this->cache->expects($this->once())
+			->method('add')
+			->with($email, $uid, null);
 
 		$url = $this->avatarService->getAvatar($email, $uid);
 
