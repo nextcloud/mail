@@ -32,6 +32,11 @@ class HtmlResponse extends Response {
 	/** @var string */
 	private $content;
 
+	private $injectedStyles = <<<EOF
+* { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen-Sans, Cantarell, Ubuntu, 'Helvetica Neue', Arial, 'Noto Color Emoji', sans-serif, 'Apple Color Emoji', 'Segoe UI Emoji', 'Segoe UI Symbol'; }
+EOF;
+
+
 	public function __construct(string $content) {
 		parent::__construct();
 		$this->content = $content;
@@ -43,6 +48,6 @@ class HtmlResponse extends Response {
 	 * @return string the file contents
 	 */
 	public function render(): string {
-		return $this->content;
+		return '<style>' . $this->injectedStyles . '</style>' . $this->content;
 	}
 }
