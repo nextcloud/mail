@@ -136,7 +136,7 @@ export default {
 	},
 	addEnvelope(state, { query, envelope }) {
 		const mailbox = state.mailboxes[envelope.mailboxId]
-		Vue.set(state.envelopes, envelope.databaseId, envelope)
+		Vue.set(state.envelopes, envelope.databaseId, Object.assign({}, state.envelopes[envelope.databaseId] || {}, envelope))
 		Vue.set(envelope, 'accountId', mailbox.accountId)
 		const listId = normalizedEnvelopeListId(query)
 		const existing = mailbox.envelopeLists[listId] || []
