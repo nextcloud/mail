@@ -114,6 +114,7 @@ import Moment from './Moment'
 import Avatar from './Avatar'
 import { buildRecipients as buildReplyRecipients } from '../ReplyBuilder'
 import { generateUrl } from '@nextcloud/router'
+import Modal from '@nextcloud/vue/dist/Components/Modal'
 
 export default {
 	name: 'ThreadEnvelope',
@@ -124,6 +125,7 @@ export default {
 		Loading,
 		Moment,
 		Message,
+		Modal,
 		Avatar,
 	},
 	props: {
@@ -345,6 +347,9 @@ export default {
 	}
 	.left {
 		flex-grow: 1;
+	}
+	::v-deep .modal-container {
+		overflow-y: scroll !important;
 	}
 
 </style>
