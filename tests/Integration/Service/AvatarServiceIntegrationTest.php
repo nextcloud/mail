@@ -58,17 +58,6 @@ class AvatarServiceIntegrationTest extends TestCase {
 		$this->assertNotNull($image);
 	}
 
-	public function testGithubFavicon() {
-		$this->markTestSkipped('does not work reliably at the moment');
-		return;
-
-		$avatar = $this->service->getAvatar('no-reply@github.com', 'jane');
-		$this->assertNotNull($avatar);
-		$this->assertEquals('https://github.githubassets.com/favicon.ico', $avatar->getUrl());
-		$image = $this->service->getAvatarImage('no-reply@github.com', 'jane');
-		$this->assertNotNull($image);
-	}
-
 	public function testChristophsFavicon() {
 		$avatar = $this->service->getAvatar('christoph@winzerhof-wurst.at', 'jan');
 		$this->assertNull($avatar); // There is none

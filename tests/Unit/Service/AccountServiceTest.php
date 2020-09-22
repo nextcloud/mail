@@ -106,11 +106,6 @@ class AccountServiceTest extends TestCase {
 		$this->assertEquals($expected, $actual);
 	}
 
-	public function testFindNotFound() {
-		// TODO: implement code + write tests
-		$this->markTestSkipped('todo');
-	}
-
 	public function testDelete() {
 		$accountId = 33;
 
