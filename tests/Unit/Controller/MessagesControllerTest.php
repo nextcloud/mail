@@ -161,21 +161,6 @@ class MessagesControllerTest extends TestCase {
 		\OC::$server->offsetSet(ITimeFactory::class, $this->oldFactory);
 	}
 
-	public function testIndex() {
-		// TODO: write test
-		$this->markTestSkipped('todo');
-	}
-
-	public function testShow() {
-		// TODO: write test
-		$this->markTestSkipped('todo');
-	}
-
-	public function testShowMessageNotFound() {
-		// TODO: write test
-		$this->markTestSkipped('todo');
-	}
-
 	public function testGetHtmlBody() {
 		$accountId = 17;
 		$mailboxId = 13;

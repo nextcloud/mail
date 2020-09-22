@@ -23,7 +23,6 @@
 namespace OCA\Mail\Tests\Unit\Service\Autoconfig;
 
 use ChristophWurst\Nextcloud\Testing\TestCase;
-use OCA\Mail\Service\AutoConfig\IspDb;
 use OCP\ILogger;
 
 class IspDbtest extends TestCase {
@@ -42,21 +41,6 @@ class IspDbtest extends TestCase {
 			['gmail.com', 'user@gmail.com',],
 			['outlook.com', 'user@outlook.com',],
 		];
-	}
-
-	/**
-	 * @dataProvider queryData
-	 *
-	 * @param string $domain
-	 * @param string $email
-	 */
-	public function testQueryRealServers(string $domain, string $email): void {
-		$this->markTestSkipped('does not work reliably');
-		return;
-
-		$ispDb = new IspDb($this->logger);
-		$result = $ispDb->query($domain, $email);
-		$this->assertContainsIspData($result);
 	}
 
 	public function fakeAutoconfigData() {
