@@ -437,13 +437,21 @@ class MessageMapper extends QBMapper {
 				$qb->expr()->eq('id', $qb->createNamedParameter($messageId, IQueryBuilder::PARAM_INT), IQueryBuilder::PARAM_INT)
 			);
 
+		/**
+		 * Select the message with the given ID or any that has the same thread ID
+		 */
 		$selectMessages = $qb
 			->select('*')
 			->from($this->getTableName())
 			->where(
-				$qb->expr()->isNotNull('thread_root_id'),
-				$qb->expr()->in('thread_root_id', $qb->createFunction($threadRootIdsQuery->getSQL()), IQueryBuilder::PARAM_INT_ARRAY),
-				$qb->expr()->in('mailbox_id', $qb->createFunction($mailboxIdsQuery->getSQL()), IQueryBuilder::PARAM_INT_ARRAY)
+				$qb->expr()->in('mailbox_id', $qb->createFunction($mailboxIdsQuery->getSQL()), IQueryBuilder::PARAM_INT_ARRAY),
+				$qb->expr()->orX(
+					$qb->expr()->eq('id', $qb->createNamedParameter($messageId, IQueryBuilder::PARAM_INT), IQueryBuilder::PARAM_INT),
+					$qb->expr()->andX(
+						$qb->expr()->isNotNull('thread_root_id'),
+						$qb->expr()->in('thread_root_id', $qb->createFunction($threadRootIdsQuery->getSQL()), IQueryBuilder::PARAM_INT_ARRAY)
+					)
+				)
 			)
 			->orderBy('sent_at', 'desc');
 
