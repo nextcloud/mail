@@ -41,6 +41,7 @@ use OCA\Mail\Service\MailManager;
 use OCP\AppFramework\Db\DoesNotExistException;
 use OCP\EventDispatcher\IEventDispatcher;
 use PHPUnit\Framework\MockObject\MockObject;
+use Psr\Log\LoggerInterface;
 
 class MailManagerTest extends TestCase {
 
@@ -68,6 +69,9 @@ class MailManagerTest extends TestCase {
 	/** @var MailManager */
 	private $manager;
 
+	/** @var MockObject|LoggerInterface */
+	private $logger;
+
 	protected function setUp(): void {
 		parent::setUp();
 
@@ -78,6 +82,7 @@ class MailManagerTest extends TestCase {
 		$this->dbMessageMapper = $this->createMock(DbMessageMapper::class);
 		$this->mailboxSync = $this->createMock(MailboxSync::class);
 		$this->eventDispatcher = $this->createMock(IEventDispatcher::class);
+		$this->logger = $this->createMock(LoggerInterface::class);
 
 		$this->manager = new MailManager(
 			$this->imapClientFactory,
@@ -86,7 +91,8 @@ class MailManagerTest extends TestCase {
 			$this->folderMapper,
 			$this->imapMessageMapper,
 			$this->dbMessageMapper,
-			$this->eventDispatcher
+			$this->eventDispatcher,
+			$this->logger
 		);
 	}
 

@@ -30,6 +30,7 @@ use Horde_Imap_Client_Data_Namespace;
 use Horde_Imap_Client_Exception;
 use Horde_Imap_Client_Namespace_List;
 use OCA\Mail\Exception\ServiceException;
+use Psr\Log\LoggerInterface;
 use function in_array;
 use function json_encode;
 use OCA\Mail\Account;
@@ -38,7 +39,6 @@ use OCA\Mail\Db\Mailbox;
 use OCA\Mail\Db\MailboxMapper;
 use OCA\Mail\Folder;
 use OCP\AppFramework\Utility\ITimeFactory;
-use OCP\ILogger;
 
 class MailboxSync {
 
@@ -57,29 +57,26 @@ class MailboxSync {
 	/** @var ITimeFactory */
 	private $timeFactory;
 
-	/** @var ILogger */
-	private $logger;
-
 	public function __construct(MailboxMapper $mailboxMapper,
 								FolderMapper $folderMapper,
 								MailAccountMapper $mailAccountMapper,
 								IMAPClientFactory $imapClientFactory,
-								ITimeFactory $timeFactory,
-								ILogger $logger) {
+								ITimeFactory $timeFactory) {
 		$this->mailboxMapper = $mailboxMapper;
 		$this->folderMapper = $folderMapper;
 		$this->mailAccountMapper = $mailAccountMapper;
 		$this->imapClientFactory = $imapClientFactory;
 		$this->timeFactory = $timeFactory;
-		$this->logger = $logger;
 	}
 
 	/**
 	 * @throws ServiceException
 	 */
-	public function sync(Account $account, bool $force = false): void {
+	public function sync(Account $account,
+						 LoggerInterface $logger,
+						 bool $force = false): void {
 		if (!$force && $account->getMailAccount()->getLastMailboxSync() >= ($this->timeFactory->getTime() - 7200)) {
-			$this->logger->debug("account is up to date, skipping mailbox sync");
+			$logger->debug("account is up to date, skipping mailbox sync");
 			return;
 		}
 
@@ -92,7 +89,7 @@ class MailboxSync {
 				$this->getPersonalNamespace($namespaces)
 			);
 		} catch (Horde_Imap_Client_Exception $e) {
-			$this->logger->debug('Getting namespaces for account ' . $account->getId() . ' failed: ' . $e->getMessage());
+			$logger->debug('Getting namespaces for account ' . $account->getId() . ' failed: ' . $e->getMessage());
 		}
 
 		try {

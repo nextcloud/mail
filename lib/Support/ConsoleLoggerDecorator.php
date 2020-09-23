@@ -25,81 +25,74 @@ declare(strict_types=1);
 
 namespace OCA\Mail\Support;
 
-use OCP\ILogger;
+use Psr\Log\LoggerInterface;
 use Symfony\Component\Console\Output\OutputInterface;
-use Throwable;
 
-class ConsoleLoggerDecorator implements ILogger {
+class ConsoleLoggerDecorator implements LoggerInterface {
 
-	/** @var ILogger */
+	/** @var LoggerInterface */
 	private $inner;
 
 	/** @var OutputInterface */
 	private $consoleOutput;
 
-	public function __construct(ILogger $inner,
+	public function __construct(LoggerInterface $inner,
 								OutputInterface $consoleOutput) {
 		$this->inner = $inner;
 		$this->consoleOutput = $consoleOutput;
 	}
 
-	public function emergency(string $message, array $context = []) {
+	public function emergency($message, array $context = []) {
 		$this->consoleOutput->writeln("<error>[emergency] $message</error>");
 
-		return $this->inner->emergency($message, $context);
+		$this->inner->emergency($message, $context);
 	}
 
-	public function alert(string $message, array $context = []) {
+	public function alert($message, array $context = []) {
 		$this->consoleOutput->writeln("<error>[alert] $message</error>");
 
-		return $this->inner->alert($message, $context);
+		$this->inner->alert($message, $context);
 	}
 
-	public function critical(string $message, array $context = []) {
+	public function critical($message, array $context = []) {
 		$this->consoleOutput->writeln("<error>[critical] $message</error>");
 
-		return $this->inner->critical($message, $context);
+		$this->inner->critical($message, $context);
 	}
 
-	public function error(string $message, array $context = []) {
+	public function error($message, array $context = []) {
 		$this->consoleOutput->writeln("<error>[error] $message</error>");
 
-		return $this->inner->error($message, $context);
+		$this->inner->error($message, $context);
 	}
 
-	public function warning(string $message, array $context = []) {
+	public function warning($message, array $context = []) {
 		$this->consoleOutput->writeln("[warning] $message");
 
-		return $this->inner->warning($message, $context);
+		$this->inner->warning($message, $context);
 	}
 
-	public function notice(string $message, array $context = []) {
+	public function notice($message, array $context = []) {
 		$this->consoleOutput->writeln("<info>[notice] $message</info>");
 
-		return $this->inner->notice($message, $context);
+		$this->inner->notice($message, $context);
 	}
 
-	public function info(string $message, array $context = []) {
+	public function info($message, array $context = []) {
 		$this->consoleOutput->writeln("<info>[info] $message</info>");
 
-		return $this->inner->info($message, $context);
+		$this->inner->info($message, $context);
 	}
 
-	public function debug(string $message, array $context = []) {
+	public function debug($message, array $context = []) {
 		$this->consoleOutput->writeln("[debug] $message");
 
-		return $this->inner->debug($message, $context);
+		$this->inner->debug($message, $context);
 	}
 
-	public function log(int $level, string $message, array $context = []) {
+	public function log($level, $message, array $context = []) {
 		$this->consoleOutput->writeln("<info>[log] $message</info>");
 
-		return $this->inner->log($level, $message, $context);
-	}
-
-	public function logException(Throwable $exception, array $context = []) {
-		$this->consoleOutput->writeln("<error>[exception] {$exception->getMessage()}</error>");
-
-		$this->inner->logException($exception, $context);
+		$this->inner->log($level, $message, $context);
 	}
 }

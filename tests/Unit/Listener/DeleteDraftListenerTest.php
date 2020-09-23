@@ -1,4 +1,7 @@
 <?php
+
+declare(strict_types=1);
+
 /**
  * @copyright 2019 Christoph Wurst <christoph@winzerhof-wurst.at>
  *
@@ -39,8 +42,8 @@ use OCA\Mail\Model\RepliedMessageData;
 use OCP\AppFramework\Db\DoesNotExistException;
 use OCP\EventDispatcher\Event;
 use OCP\EventDispatcher\IEventListener;
-use OCP\ILogger;
 use PHPUnit\Framework\MockObject\MockObject;
+use Psr\Log\LoggerInterface;
 
 class DeleteDraftListenerTest extends TestCase {
 
@@ -56,7 +59,7 @@ class DeleteDraftListenerTest extends TestCase {
 	/** @var MailboxSync|MockObject */
 	private $mailboxSync;
 
-	/** @var ILogger|MockObject */
+	/** @var LoggerInterface|MockObject */
 	private $logger;
 
 	/** @var IEventListener */
@@ -69,7 +72,7 @@ class DeleteDraftListenerTest extends TestCase {
 		$this->mailboxMapper = $this->createMock(MailboxMapper::class);
 		$this->messageMapper = $this->createMock(MessageMapper::class);
 		$this->mailboxSync = $this->createMock(MailboxSync::class);
-		$this->logger = $this->createMock(ILogger::class);
+		$this->logger = $this->createMock(LoggerInterface::class);
 
 		$this->listener = new DeleteDraftListener(
 			$this->imapClientFactory,
@@ -101,7 +104,7 @@ class DeleteDraftListenerTest extends TestCase {
 		$this->messageMapper->expects($this->never())
 			->method('addFlag');
 		$this->logger->expects($this->never())
-			->method('logException');
+			->method('error');
 
 		$this->listener->handle($event);
 	}
@@ -143,7 +146,7 @@ class DeleteDraftListenerTest extends TestCase {
 			);
 		$this->mailboxSync->expects($this->once())
 			->method('sync')
-			->with($account, true);
+			->with($account, $this->logger, true);
 		$this->mailboxMapper->expects($this->at(1))
 			->method('findSpecial')
 			->with($account, 'drafts')
@@ -160,7 +163,7 @@ class DeleteDraftListenerTest extends TestCase {
 			->method('expunge')
 			->with('Drafts');
 		$this->logger->expects($this->never())
-			->method('logException');
+			->method('error');
 
 		$this->listener->handle($event);
 	}
@@ -178,7 +181,7 @@ class DeleteDraftListenerTest extends TestCase {
 		$this->messageMapper->expects($this->never())
 			->method('addFlag');
 		$this->logger->expects($this->never())
-			->method('logException');
+			->method('error');
 
 		$this->listener->handle($event);
 	}
@@ -229,7 +232,7 @@ class DeleteDraftListenerTest extends TestCase {
 			->method('expunge')
 			->with('Drafts');
 		$this->logger->expects($this->never())
-			->method('logException');
+			->method('error');
 
 		$this->listener->handle($event);
 	}

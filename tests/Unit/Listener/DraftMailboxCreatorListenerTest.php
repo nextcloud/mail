@@ -37,8 +37,8 @@ use OCA\Mail\Listener\DraftMailboxCreatorListener;
 use OCA\Mail\Model\NewMessageData;
 use OCP\AppFramework\Db\DoesNotExistException;
 use OCP\EventDispatcher\Event;
-use OCP\ILogger;
 use PHPUnit\Framework\MockObject\MockObject;
+use Psr\Log\LoggerInterface;
 
 class DraftMailboxCreatorListenerTest extends TestCase {
 
@@ -51,7 +51,7 @@ class DraftMailboxCreatorListenerTest extends TestCase {
 	/** @var MailboxSync|MockObject */
 	private $mailboxSync;
 
-	/** @var ILogger|MockObject */
+	/** @var LoggerInterface|MockObject */
 	private $logger;
 
 	/** @var DraftMailboxCreatorListener */
@@ -63,7 +63,7 @@ class DraftMailboxCreatorListenerTest extends TestCase {
 		$this->mailboxMapper = $this->createMock(MailboxMapper::class);
 		$this->imapClientFactory = $this->createMock(IMAPClientFactory::class);
 		$this->mailboxSync = $this->createMock(MailboxSync::class);
-		$this->logger = $this->createMock(ILogger::class);
+		$this->logger = $this->createMock(LoggerInterface::class);
 
 		$this->listener = new DraftMailboxCreatorListener(
 			$this->mailboxMapper,
@@ -106,7 +106,7 @@ class DraftMailboxCreatorListenerTest extends TestCase {
 			->with($account, 'drafts')
 			->willReturn($mailbox);
 		$this->logger->expects($this->never())
-			->method('logException');
+			->method('error');
 
 		$this->listener->handle($event);
 	}
@@ -147,9 +147,9 @@ class DraftMailboxCreatorListenerTest extends TestCase {
 			);
 		$this->mailboxSync->expects($this->once())
 			->method('sync')
-			->with($account, true);
+			->with($account, $this->logger, true);
 		$this->logger->expects($this->never())
-			->method('logException');
+			->method('error');
 
 		$this->listener->handle($event);
 	}

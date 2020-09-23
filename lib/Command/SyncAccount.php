@@ -29,8 +29,10 @@ use OCA\Mail\Account;
 use OCA\Mail\Exception\IncompleteSyncException;
 use OCA\Mail\Exception\ServiceException;
 use OCA\Mail\IMAP\MailboxSync;
+use OCA\Mail\Integration\Psr\LoggerAdapter;
 use OCA\Mail\Service\AccountService;
 use OCA\Mail\Service\Sync\ImapToDbSynchronizer;
+use OCA\Mail\Support\ConsoleLoggerDecorator;
 use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Input\InputArgument;
 use Symfony\Component\Console\Input\InputInterface;
@@ -51,14 +53,19 @@ class SyncAccount extends Command {
 	/** @var ImapToDbSynchronizer */
 	private $syncService;
 
+	/** @var LoggerAdapter */
+	private $logger;
+
 	public function __construct(AccountService $service,
 								MailboxSync $mailboxSync,
-								ImapToDbSynchronizer $messageSync) {
+								ImapToDbSynchronizer $messageSync,
+								LoggerAdapter $logger) {
 		parent::__construct();
 
 		$this->accountService = $service;
 		$this->mailboxSync = $mailboxSync;
 		$this->syncService = $messageSync;
+		$this->logger = $logger;
 	}
 
 	/**
@@ -86,9 +93,14 @@ class SyncAccount extends Command {
 	}
 
 	private function sync(Account $account, bool $force, OutputInterface $output) {
+		$consoleLogger = new ConsoleLoggerDecorator(
+			$this->logger,
+			$output
+		);
+
 		try {
-			$this->mailboxSync->sync($account, $force);
-			$this->syncService->syncAccount($account, $force);
+			$this->mailboxSync->sync($account, $consoleLogger, $force);
+			$this->syncService->syncAccount($account, $consoleLogger, $force);
 		} catch (ServiceException $e) {
 			if (!($e instanceof IncompleteSyncException)) {
 				throw $e;

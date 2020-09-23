@@ -39,7 +39,7 @@ use OCA\Mail\IMAP\MessageMapper;
 use OCP\AppFramework\Db\DoesNotExistException;
 use OCP\EventDispatcher\Event;
 use OCP\EventDispatcher\IEventListener;
-use OCP\ILogger;
+use Psr\Log\LoggerInterface;
 
 class DeleteDraftListener implements IEventListener {
 
@@ -55,14 +55,14 @@ class DeleteDraftListener implements IEventListener {
 	/** @var MailboxSync */
 	private $mailboxSync;
 
-	/** @var ILogger */
+	/** @var LoggerInterface */
 	private $logger;
 
 	public function __construct(IMAPClientFactory $imapClientFactory,
 								MailboxMapper $mailboxMapper,
 								MessageMapper $messageMapper,
 								MailboxSync $mailboxSync,
-								ILogger $logger) {
+								LoggerInterface $logger) {
 		$this->imapClientFactory = $imapClientFactory;
 		$this->mailboxMapper = $mailboxMapper;
 		$this->messageMapper = $messageMapper;
@@ -94,16 +94,16 @@ class DeleteDraftListener implements IEventListener {
 				Horde_Imap_Client::FLAG_DELETED
 			);
 		} catch (Horde_Imap_Client_Exception $e) {
-			$this->logger->logException($e, [
-				'message' => 'Could not flag draft as deleted'
+			$this->logger->error('Could not flag draft as deleted', [
+				'exception' => $e,
 			]);
 		}
 
 		try {
 			$client->expunge($draftsMailbox->getName());
 		} catch (Horde_Imap_Client_Exception $e) {
-			$this->logger->logException($e, [
-				'message' => 'Could not expunge drafts folder'
+			$this->logger->error('Could not expunge drafts folder', [
+				'exception' => $e,
 			]);
 		}
 	}
@@ -134,12 +134,12 @@ class DeleteDraftListener implements IEventListener {
 				]
 			);
 		} catch (Horde_Imap_Client_Exception $e) {
-			$this->logger->logException($e, [
-				'message' => 'Could not create drafts mailbox',
+			$this->logger->error('Could not create drafts mailbox', [
+				'exception' => $e,
 			]);
 		}
 
 		// TODO: find a more elegant solution for updating the mailbox cache
-		$this->mailboxSync->sync($account, true);
+		$this->mailboxSync->sync($account, $this->logger,true);
 	}
 }

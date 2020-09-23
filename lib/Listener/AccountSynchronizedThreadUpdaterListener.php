@@ -33,11 +33,11 @@ use OCA\Mail\IMAP\Threading\DatabaseMessage;
 use OCA\Mail\IMAP\Threading\ThreadBuilder;
 use OCP\EventDispatcher\Event;
 use OCP\EventDispatcher\IEventListener;
-use OCP\ILogger;
 use function array_chunk;
 use function iterator_to_array;
 
 class AccountSynchronizedThreadUpdaterListener implements IEventListener {
+	private const WRITE_IDS_CHUNK_SIZE = 500;
 
 	/** @var MessageMapper */
 	private $mapper;
@@ -45,15 +45,10 @@ class AccountSynchronizedThreadUpdaterListener implements IEventListener {
 	/** @var ThreadBuilder */
 	private $builder;
 
-	/** @var ILogger */
-	private $logger;
-
 	public function __construct(MessageMapper $mapper,
-								ThreadBuilder $builder,
-								ILogger $logger) {
+								ThreadBuilder $builder) {
 		$this->mapper = $mapper;
 		$this->builder = $builder;
-		$this->logger = $logger;
 	}
 
 	public function handle(Event $event): void {
@@ -63,14 +58,17 @@ class AccountSynchronizedThreadUpdaterListener implements IEventListener {
 		}
 
 		$accountId = $event->getAccount()->getId();
+		$logger = $event->getLogger();
 		$messages = $this->mapper->findThreadingData($event->getAccount());
-		$this->logger->debug("Account $accountId has " . count($messages) . " messages for threading");
-		$threads = $this->builder->build($messages);
-		$this->logger->debug("Account $accountId has " . count($threads) . " threads");
+		$logger->debug("Account $accountId has " . count($messages) . " messages for threading");
+		$threads = $this->builder->build($messages, $logger);
+		$logger->debug("Account $accountId has " . count($threads) . " threads");
 		$flattened = iterator_to_array($this->flattenThreads($threads), false);
-		$this->logger->debug("Account $accountId has " . count($flattened) . " messages with a new thread ID");
-		foreach (array_chunk($flattened, 500) as $chunk) {
+		$logger->debug("Account $accountId has " . count($flattened) . " messages with a new thread IDs");
+		foreach (array_chunk($flattened, self::WRITE_IDS_CHUNK_SIZE) as $chunk) {
 			$this->mapper->writeThreadIds($chunk);
+
+			$logger->debug("Chunk of " . self::WRITE_IDS_CHUNK_SIZE . " messages updated");
 		}
 	}
 

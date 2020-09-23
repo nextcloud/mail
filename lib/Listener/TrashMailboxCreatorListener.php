@@ -34,7 +34,7 @@ use OCA\Mail\IMAP\MailboxSync;
 use OCP\AppFramework\Db\DoesNotExistException;
 use OCP\EventDispatcher\Event;
 use OCP\EventDispatcher\IEventListener;
-use OCP\ILogger;
+use Psr\Log\LoggerInterface;
 
 class TrashMailboxCreatorListener implements IEventListener {
 
@@ -47,13 +47,13 @@ class TrashMailboxCreatorListener implements IEventListener {
 	/** @var MailboxSync */
 	private $mailboxSync;
 
-	/** @var ILogger */
+	/** @var LoggerInterface */
 	private $logger;
 
 	public function __construct(MailboxMapper $mailboxMapper,
 								IMAPClientFactory $imapClientFactory,
 								MailboxSync $mailboxSync,
-								ILogger $logger) {
+								LoggerInterface $logger) {
 		$this->mailboxMapper = $mailboxMapper;
 		$this->imapClientFactory = $imapClientFactory;
 		$this->mailboxSync = $mailboxSync;
@@ -92,10 +92,10 @@ class TrashMailboxCreatorListener implements IEventListener {
 			);
 
 			// TODO: find a more elegant solution for updating the mailbox cache
-			$this->mailboxSync->sync($account, true);
+			$this->mailboxSync->sync($account, $this->logger,true);
 		} catch (Horde_Imap_Client_Exception $e) {
-			$this->logger->logException($e, [
-				'message' => 'Could not creat trash mailbox',
+			$this->logger->error('Could not creat trash mailbox', [
+				'exception' => $e,
 			]);
 		}
 	}

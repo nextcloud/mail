@@ -38,6 +38,7 @@ use OCA\Mail\IMAP\PreviewEnhancer;
 use OCA\Mail\IMAP\Sync\Response;
 use OCA\Mail\Service\Search\FilterStringParser;
 use OCA\Mail\Service\Search\SearchQuery;
+use Psr\Log\LoggerInterface;
 use function array_diff;
 use function array_map;
 
@@ -58,16 +59,21 @@ class SyncService {
 	/** @var PreviewEnhancer */
 	private $previewEnhancer;
 
+	/** @var LoggerInterface */
+	private $logger;
+
 	public function __construct(ImapToDbSynchronizer $synchronizer,
 								FilterStringParser $filterStringParser,
 								MailboxMapper $mailboxMapper,
 								MessageMapper $messageMapper,
-								PreviewEnhancer $previewEnhancer) {
+								PreviewEnhancer $previewEnhancer,
+								LoggerInterface $logger) {
 		$this->synchronizer = $synchronizer;
 		$this->filterStringParser = $filterStringParser;
 		$this->mailboxMapper = $mailboxMapper;
 		$this->messageMapper = $messageMapper;
 		$this->previewEnhancer = $previewEnhancer;
+		$this->logger = $logger;
 	}
 
 	/**
@@ -109,6 +115,7 @@ class SyncService {
 		$this->synchronizer->sync(
 			$account,
 			$mailbox,
+			$this->logger,
 			$criteria,
 			$this->messageMapper->findUidsForIds($mailbox, $knownIds),
 			!$partialOnly
