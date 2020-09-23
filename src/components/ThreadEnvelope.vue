@@ -82,6 +82,12 @@
 						@click="onShowSource">
 						{{ t('mail', 'View source') }}
 					</ActionButton>
+					<ActionLink v-if="debug"
+						icon="icon-download"
+						:download="threadingFileName"
+						:href="threadingFile">
+						{{ t('mail', 'Download thread data for debugging') }}
+					</ActionLink>
 					<ActionButton icon="icon-delete" @click.prevent="onDelete">
 						{{ t('mail', 'Delete') }}
 					</ActionButton>
@@ -105,6 +111,7 @@
 <script>
 import Actions from '@nextcloud/vue/dist/Components/Actions'
 import ActionButton from '@nextcloud/vue/dist/Components/ActionButton'
+import ActionLink from '@nextcloud/vue/dist/Components/ActionLink'
 import axios from '@nextcloud/axios'
 import Error from './Error'
 import Loading from './Loading'
@@ -121,6 +128,7 @@ export default {
 	components: {
 		Actions,
 		ActionButton,
+		ActionLink,
 		Error,
 		Loading,
 		Moment,
@@ -149,6 +157,7 @@ export default {
 	},
 	data() {
 		return {
+			debug: window?.OC?.debug || false,
 			loading: false,
 			error: undefined,
 			message: undefined,
@@ -158,6 +167,18 @@ export default {
 		}
 	},
 	computed: {
+		threadingFile() {
+			return `data:text/plain;base64,${btoa(JSON.stringify({
+				subject: this.envelope.subject,
+				messageId: this.envelope.messageId,
+				inReplyTo: this.envelope.inReplyTo,
+				references: this.envelope.references,
+				threadRootId: this.envelope.threadRootId,
+			}, null, 2))}`
+		},
+		threadingFileName() {
+			return `${this.envelope.databaseId}.json`
+		},
 		route() {
 			return {
 				name: 'message',

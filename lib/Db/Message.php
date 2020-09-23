@@ -30,12 +30,14 @@ use JsonSerializable;
 use OCA\Mail\AddressList;
 use OCP\AppFramework\Db\Entity;
 use function in_array;
+use function json_decode;
 use function json_encode;
 
 /**
  * @method void setUid(int $uid)
  * @method int getUid()
  * @method string getMessageId()
+ * @method void setReferences(string $references)
  * @method string|null getReferences()
  * @method string|null getInReplyTo()
  * @method string|null getThreadRootId()
@@ -146,7 +148,7 @@ class Message extends Entity implements JsonSerializable {
 		$this->setMessageIdFieldIfNotEmpty('messageId', $messageId);
 	}
 
-	public function setReferences(?string $references): void {
+	public function setRawReferences(?string $references): void {
 		$parsed = new Horde_Mail_Rfc822_Identification($references);
 		$this->setter('references', [json_encode($parsed->ids)]);
 	}
@@ -254,6 +256,10 @@ class Message extends Entity implements JsonSerializable {
 			'cc' => $this->getCc()->jsonSerialize(),
 			'bcc' => $this->getBcc()->jsonSerialize(),
 			'mailboxId' => $this->getMailboxId(),
+			'messageId' => $this->getMessageId(),
+			'inReplyTo' => $this->getInReplyTo(),
+			'references' => empty($this->getReferences()) ? null: json_decode($this->getReferences(), true),
+			'threadRootId' => $this->getThreadRootId(),
 		];
 	}
 }

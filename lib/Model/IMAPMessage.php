@@ -642,7 +642,7 @@ class IMAPMessage implements IMessage, JsonSerializable {
 
 		$msg->setUid($this->getUid());
 		$msg->setMessageId($this->getMessageId());
-		$msg->setReferences($this->getRawReferences());
+		$msg->setRawReferences($this->getRawReferences());
 		$msg->setThreadRootId($this->getMessageId());
 		$msg->setInReplyTo($this->getRawInReplyTo());
 		$msg->setMailboxId($mailboxId);
