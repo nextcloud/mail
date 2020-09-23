@@ -339,6 +339,13 @@ class MailManager implements IMailManager {
 		return $this->mailboxMapper->find($account, $mailbox->getName());
 	}
 
+	public function enableMailboxBackgroundSync(Mailbox $mailbox,
+												bool $syncInBackground): Mailbox {
+		$mailbox->setSyncInBackground($syncInBackground);
+
+		return $this->mailboxMapper->update($mailbox);
+	}
+
 	public function flagMessage(Account $account, string $mailbox, int $uid, string $flag, bool $value): void {
 		$client = $this->imapClientFactory->getClient($account);
 		try {

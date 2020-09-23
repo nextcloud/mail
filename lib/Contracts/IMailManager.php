@@ -209,4 +209,15 @@ interface IMailManager {
 	public function updateSubscription(Account $account,
 									   Mailbox $mailbox,
 									   bool $subscribed): Mailbox;
+
+	/**
+	 * @param string $mailbox
+	 * @param bool $syncInBackground
+	 *
+	 * @return Mailbox
+	 * @throws ClientException
+	 * @throws ServiceException
+	 */
+	public function enableMailboxBackgroundSync(Mailbox $mailbox,
+												bool $syncInBackground): Mailbox;
 }
