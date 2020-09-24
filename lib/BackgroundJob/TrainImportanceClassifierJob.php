@@ -31,7 +31,7 @@ use OCP\AppFramework\Db\DoesNotExistException;
 use OCP\AppFramework\Utility\ITimeFactory;
 use OCP\BackgroundJob\IJobList;
 use OCP\BackgroundJob\TimedJob;
-use OCP\ILogger;
+use Psr\Log\LoggerInterface;
 use Throwable;
 
 class TrainImportanceClassifierJob extends TimedJob {
@@ -45,14 +45,14 @@ class TrainImportanceClassifierJob extends TimedJob {
 	/** @var IJobList */
 	private $jobList;
 
-	/** @var ILogger */
+	/** @var LoggerInterface */
 	private $logger;
 
 	public function __construct(ITimeFactory $time,
 								AccountService $accountService,
 								ImportanceClassifier $classifier,
 								IJobList $jobList,
-								ILogger $logger) {
+								LoggerInterface $logger) {
 		parent::__construct($time);
 
 		$this->accountService = $accountService;
@@ -80,8 +80,8 @@ class TrainImportanceClassifierJob extends TimedJob {
 				$this->logger
 			);
 		} catch (Throwable $e) {
-			$this->logger->logException($e, [
-				'message' => 'Cron importance classifier training failed: ' . $e->getMessage(),
+			$this->logger->error('Cron importance classifier training failed: ' . $e->getMessage(), [
+				'exception' => $e,
 			]);
 		}
 	}
