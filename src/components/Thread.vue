@@ -175,7 +175,7 @@ export default {
 #mail-thread-header-fields {
 	// initial width
 	width: 0;
-	padding-left: 38px;
+	padding-left: 60px;
 	// grow and try to fill 100%
 	flex: 1 1 auto;
 	h2,
@@ -206,7 +206,7 @@ export default {
 }
 
 #mail-content, .mail-signature {
-	margin: 10px 38px 50px 38px;
+	margin: 10px 38px 50px 60px;
 
 	.mail-message-body-html & {
 		margin-bottom: -44px; // accounting for the sticky attachment button

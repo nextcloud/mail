@@ -364,7 +364,13 @@ export default {
 	}
 	.envelope--header {
 		display: flex;
-		padding-bottom: 20px
+		padding: 10px;
+		margin-bottom: 3px;
+		border-radius: var(--border-radius);
+
+		&:hover {
+			background-color: var(--color-background-hover);
+		}
 	}
 	.left {
 		flex-grow: 1;
