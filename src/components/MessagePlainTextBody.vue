@@ -1,6 +1,6 @@
 <template>
 	<div>
-		<div id="mail-content" v-html="nl2br(body)" />
+		<div id="mail-content" v-html="nl2br(enhancedBody)" />
 		<details v-if="signature" class="mail-signature">
 			<summary>{{ signatureSummaryAndBody.summary }}</summary>
 			<span v-html="nl2br(signatureSummaryAndBody.body)" />
@@ -24,6 +24,11 @@ export default {
 		},
 	},
 	computed: {
+		enhancedBody() {
+			return this.body.replace(/(&gt;.+\n?)+/g, (match) => {
+				return `<details class="quoted-text"><summary>${t('mail', 'Quoted text')}</summary>${match}</details>`
+			})
+		},
 		signatureSummaryAndBody() {
 			const matches = this.signature.match(regFirstParagraph)
 
@@ -54,11 +59,16 @@ export default {
 }
 </script>
 
+<style lang="scss">
+.quoted-text {
+	color: var(--color-text-maxcontrast)
+}
+</style>
 <style lang="scss" scoped>
 #mail-content, .mail-signature {
 	white-space: pre;
 }
-.mail-signature {
+.mail-signature, .quoted {
 	color: var(--color-text-maxcontrast)
 }
 </style>
