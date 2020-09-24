@@ -31,11 +31,16 @@ use OCA\Mail\IMAP\Threading\Message;
 use OCA\Mail\IMAP\Threading\ThreadBuilder;
 use OCA\Mail\Support\PerformanceLogger;
 use PHPUnit\Framework\MockObject\MockObject;
+use Psr\Log\LoggerInterface;
+use Psr\Log\NullLogger;
 
 class ThreadBuilderTest extends TestCase {
 
 	/** @var PerformanceLogger|MockObject */
 	private $performanceLogger;
+
+	/** @var LoggerInterface */
+	private $logger;
 
 	/** @var ThreadBuilder */
 	private $builder;
@@ -44,6 +49,7 @@ class ThreadBuilderTest extends TestCase {
 		parent::setUp();
 
 		$this->performanceLogger = $this->createMock(PerformanceLogger::class);
+		$this->logger = new NullLogger();
 
 		$this->builder = new ThreadBuilder(
 			$this->performanceLogger
@@ -67,7 +73,7 @@ class ThreadBuilderTest extends TestCase {
 	public function testBuildEmpty(): void {
 		$messages = [];
 
-		$result = $this->builder->build($messages);
+		$result = $this->builder->build($messages, $this->logger);
 
 		$this->assertEquals([], $result);
 	}
@@ -79,7 +85,7 @@ class ThreadBuilderTest extends TestCase {
 			new Message('s3', 'id3', []),
 		];
 
-		$result = $this->builder->build($messages);
+		$result = $this->builder->build($messages, $this->logger);
 
 		$this->assertEquals(
 			[
@@ -106,7 +112,7 @@ class ThreadBuilderTest extends TestCase {
 			new Message('Re:s1', 'id2', ['id1']),
 		];
 
-		$result = $this->builder->build($messages);
+		$result = $this->builder->build($messages, $this->logger);
 
 		$this->assertEquals(
 			[
@@ -130,7 +136,7 @@ class ThreadBuilderTest extends TestCase {
 			new Message('s2', 'id2', ['id1']),
 		];
 
-		$result = $this->builder->build($messages);
+		$result = $this->builder->build($messages, $this->logger);
 
 		$this->assertEquals(
 			[
@@ -154,7 +160,7 @@ class ThreadBuilderTest extends TestCase {
 			new Message('Re:s1', 'id2', []),
 		];
 
-		$result = $this->builder->build($messages);
+		$result = $this->builder->build($messages, $this->logger);
 
 		$this->assertEquals(
 			[
@@ -184,7 +190,7 @@ class ThreadBuilderTest extends TestCase {
 			new Message('s3', 'id3', ['id2']),
 		];
 
-		$result = $this->builder->build($messages);
+		$result = $this->builder->build($messages, $this->logger);
 
 		$this->assertEquals(
 			[
@@ -222,7 +228,7 @@ class ThreadBuilderTest extends TestCase {
 			new Message('Re:s1', 'id4', ['id3']),
 		];
 
-		$result = $this->builder->build($messages);
+		$result = $this->builder->build($messages, $this->logger);
 
 		$this->assertEquals(
 			[
@@ -266,7 +272,7 @@ class ThreadBuilderTest extends TestCase {
 			new Message('Re:s1', 'id7', ['id1', 'id3']),
 		];
 
-		$result = $this->builder->build($messages);
+		$result = $this->builder->build($messages, $this->logger);
 
 		$this->assertEquals(
 			[
@@ -322,7 +328,7 @@ class ThreadBuilderTest extends TestCase {
 			new Message('Re:s1', 'id7', ['id3']),
 		];
 
-		$result = $this->builder->build($messages);
+		$result = $this->builder->build($messages, $this->logger);
 
 		$this->assertEquals(
 			[
@@ -368,7 +374,7 @@ class ThreadBuilderTest extends TestCase {
 			new Message('s2', 'id2', ['id1']),
 		];
 
-		$result = $this->builder->build($messages);
+		$result = $this->builder->build($messages, $this->logger);
 
 		$this->assertEquals(
 			[
@@ -393,7 +399,7 @@ class ThreadBuilderTest extends TestCase {
 			new Message('s3', 'id3', ['id1']),
 		];
 
-		$result = $this->builder->build($messages);
+		$result = $this->builder->build($messages, $this->logger);
 
 		$this->assertEquals(
 			[
@@ -421,7 +427,7 @@ class ThreadBuilderTest extends TestCase {
 			new Message('Re:s2', 'id3', ['id1']),
 		];
 
-		$result = $this->builder->build($messages);
+		$result = $this->builder->build($messages, $this->logger);
 
 		$this->assertEquals(
 			[
@@ -457,7 +463,7 @@ class ThreadBuilderTest extends TestCase {
 			new Message('Re: Sub', '<msg5@mail.host>', ['<msg1@mail.host>', '<msg2@mail.host>', '<msg3@mail.host>', '<msg4@mail.host>']),
 		];
 
-		$result = $this->builder->build($messages);
+		$result = $this->builder->build($messages, $this->logger);
 
 		$this->assertEquals(
 			[
@@ -511,7 +517,7 @@ class ThreadBuilderTest extends TestCase {
 			new Message('Re: Sub', '<o2re1@mail.host>', ['<o2@mail.host>']),
 		];
 
-		$result = $this->builder->build($messages);
+		$result = $this->builder->build($messages, $this->logger);
 
 		$this->assertEquals(
 			[

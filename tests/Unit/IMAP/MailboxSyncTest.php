@@ -1,4 +1,7 @@
 <?php
+
+declare(strict_types=1);
+
 /**
  * @copyright 2019 Christoph Wurst <christoph@winzerhof-wurst.at>
  *
@@ -35,8 +38,8 @@ use OCA\Mail\IMAP\FolderMapper;
 use OCA\Mail\IMAP\IMAPClientFactory;
 use OCA\Mail\IMAP\MailboxSync;
 use OCP\AppFramework\Utility\ITimeFactory;
-use OCP\ILogger;
 use PHPUnit\Framework\MockObject\MockObject;
+use Psr\Log\NullLogger;
 
 class MailboxSyncTest extends TestCase {
 
@@ -55,9 +58,6 @@ class MailboxSyncTest extends TestCase {
 	/** @var TimeFactory|MockObject */
 	private $timeFactory;
 
-	/** @var ILogger|MockObject */
-	private $logger;
-
 	/** @var MailboxSync */
 	private $sync;
 
@@ -69,15 +69,13 @@ class MailboxSyncTest extends TestCase {
 		$this->mailAccountMapper = $this->createMock(MailAccountMapper::class);
 		$this->imapClientFactory = $this->createMock(IMAPClientFactory::class);
 		$this->timeFactory = $this->createMock(ITimeFactory::class);
-		$this->logger = $this->createMock(ILogger::class);
 
 		$this->sync = new MailboxSync(
 			$this->mailboxMapper,
 			$this->folderMapper,
 			$this->mailAccountMapper,
 			$this->imapClientFactory,
-			$this->timeFactory,
-			$this->logger
+			$this->timeFactory
 		);
 	}
 
@@ -90,7 +88,7 @@ class MailboxSyncTest extends TestCase {
 		$this->imapClientFactory->expects($this->never())
 			->method('getClient');
 
-		$this->sync->sync($account);
+		$this->sync->sync($account, new NullLogger());
 	}
 
 	public function testSync() {
@@ -119,6 +117,6 @@ class MailboxSyncTest extends TestCase {
 			->method('detectFolderSpecialUse')
 			->with($folders);
 
-		$this->sync->sync($account);
+		$this->sync->sync($account, new NullLogger());
 	}
 }

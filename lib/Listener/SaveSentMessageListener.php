@@ -37,7 +37,7 @@ use OCA\Mail\IMAP\MessageMapper;
 use OCP\AppFramework\Db\DoesNotExistException;
 use OCP\EventDispatcher\Event;
 use OCP\EventDispatcher\IEventListener;
-use OCP\ILogger;
+use Psr\Log\LoggerInterface;
 
 class SaveSentMessageListener implements IEventListener {
 
@@ -53,14 +53,14 @@ class SaveSentMessageListener implements IEventListener {
 	/** @var MailboxSync */
 	private $mailboxSync;
 
-	/** @var ILogger */
+	/** @var LoggerInterface */
 	private $logger;
 
 	public function __construct(MailboxMapper $mailboxMapper,
 								IMAPClientFactory $imapClientFactory,
 								MessageMapper $messageMapper,
 								MailboxSync $mailboxSync,
-								ILogger $logger) {
+								LoggerInterface $logger) {
 		$this->mailboxMapper = $mailboxMapper;
 		$this->imapClientFactory = $imapClientFactory;
 		$this->messageMapper = $messageMapper;
@@ -113,14 +113,13 @@ class SaveSentMessageListener implements IEventListener {
 		} catch (Horde_Imap_Client_Exception $e) {
 			// Let's assume this error is caused because the mailbox already exists,
 			// caused by concurrent requests or out-of-sync mailbox cache
-			$this->logger->logException($e, [
-				'message' => 'Could not create sent mailbox: ' . $e->getMessage(),
-				'level' => ILogger::WARN,
+			$this->logger->warning('Could not create sent mailbox: ' . $e->getMessage(), [
+				'exception' => $e,
 			]);
 		}
 
 		// TODO: find a more elegant solution for updating the mailbox cache
-		$this->mailboxSync->sync($account, true);
+		$this->mailboxSync->sync($account, $this->logger,true);
 
 		return $this->mailboxMapper->findSpecial($account, 'sent');
 	}

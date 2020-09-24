@@ -26,6 +26,7 @@ declare(strict_types=1);
 namespace OCA\Mail\IMAP\Threading;
 
 use OCA\Mail\Support\PerformanceLogger;
+use Psr\Log\LoggerInterface;
 use function array_key_exists;
 use function count;
 
@@ -43,8 +44,11 @@ class ThreadBuilder {
 	 *
 	 * @return Container[]
 	 */
-	public function build(array $messages): array {
-		$log = $this->performanceLogger->start('Threading ' . count($messages) . ' messages');
+	public function build(array $messages, LoggerInterface $logger): array {
+		$log = $this->performanceLogger->startWithLogger(
+			'Threading ' . count($messages) . ' messages',
+			$logger
+		);
 
 		// Step 1
 		$idTable = $this->buildIdTable($messages);

@@ -39,11 +39,11 @@ use OCA\Mail\Listener\SaveSentMessageListener;
 use OCA\Mail\Model\IMessage;
 use OCA\Mail\Model\NewMessageData;
 use OCA\Mail\Model\RepliedMessageData;
-use OCA\TwoFactorAdmin\Listener\IListener;
 use OCP\AppFramework\Db\DoesNotExistException;
 use OCP\EventDispatcher\Event;
-use OCP\ILogger;
+use OCP\EventDispatcher\IEventListener;
 use PHPUnit\Framework\MockObject\MockObject;
+use Psr\Log\LoggerInterface;
 
 class SaveSentMessageListenerTest extends TestCase {
 
@@ -59,10 +59,10 @@ class SaveSentMessageListenerTest extends TestCase {
 	/** @var MailboxSync|MockObject */
 	private $mailboxSync;
 
-	/** @var ILogger|MockObject */
+	/** @var LoggerInterface|MockObject */
 	private $logger;
 
-	/** @var IListener */
+	/** @var IEventListener */
 	private $listener;
 
 	protected function setUp(): void {
@@ -72,7 +72,7 @@ class SaveSentMessageListenerTest extends TestCase {
 		$this->imapClientFactory = $this->createMock(IMAPClientFactory::class);
 		$this->messageMapper = $this->createMock(MessageMapper::class);
 		$this->mailboxSync = $this->createMock(MailboxSync::class);
-		$this->logger = $this->createMock(ILogger::class);
+		$this->logger = $this->createMock(LoggerInterface::class);
 
 		$this->listener = new SaveSentMessageListener(
 			$this->mailboxMapper,
@@ -121,6 +121,7 @@ class SaveSentMessageListenerTest extends TestCase {
 			->method('getClient')
 			->with($account)
 			->willReturn($client);
+		$exception = new \Horde_Imap_Client_Exception();
 		$client->expects($this->once())
 			->method('createMailbox')
 			->with(
@@ -131,14 +132,13 @@ class SaveSentMessageListenerTest extends TestCase {
 					],
 				]
 			)
-			->willThrowException(new \Horde_Imap_Client_Exception());
+			->willThrowException($exception);
 		$this->logger->expects($this->once())
-			->method('logException')
+			->method('warning')
 			->with(
-				$this->anything(),
+				'Could not create sent mailbox: ',
 				$this->equalTo([
-					'message' => 'Could not create sent mailbox: ',
-					'level' => ILogger::WARN,
+					'exception' => $exception,
 				])
 			);
 

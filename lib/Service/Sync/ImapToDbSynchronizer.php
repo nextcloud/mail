@@ -46,7 +46,7 @@ use OCA\Mail\IMAP\Sync\Synchronizer;
 use OCA\Mail\Model\IMAPMessage;
 use OCA\Mail\Support\PerformanceLogger;
 use OCP\EventDispatcher\IEventDispatcher;
-use OCP\ILogger;
+use Psr\Log\LoggerInterface;
 use Throwable;
 use function array_chunk;
 use function array_map;
@@ -80,7 +80,7 @@ class ImapToDbSynchronizer {
 	/** @var PerformanceLogger */
 	private $performanceLogger;
 
-	/** @var ILogger */
+	/** @var LoggerInterface */
 	private $logger;
 
 	public function __construct(DatabaseMessageMapper $dbMapper,
@@ -91,7 +91,7 @@ class ImapToDbSynchronizer {
 								Synchronizer $synchronizer,
 								IEventDispatcher $dispatcher,
 								PerformanceLogger $performanceLogger,
-								ILogger $logger) {
+								LoggerInterface $logger) {
 		$this->dbMapper = $dbMapper;
 		$this->clientFactory = $clientFactory;
 		$this->imapMapper = $imapMapper;
@@ -108,12 +108,14 @@ class ImapToDbSynchronizer {
 	 * @throws ServiceException
 	 */
 	public function syncAccount(Account $account,
+								LoggerInterface $logger,
 								bool $force = false,
 								int $criteria = Horde_Imap_Client::SYNC_NEWMSGSUIDS | Horde_Imap_Client::SYNC_FLAGSUIDS | Horde_Imap_Client::SYNC_VANISHEDUIDS): void {
 		foreach ($this->mailboxMapper->findAll($account) as $mailbox) {
 			$this->sync(
 				$account,
 				$mailbox,
+				$logger,
 				$criteria,
 				null,
 				$force,
@@ -122,7 +124,8 @@ class ImapToDbSynchronizer {
 		}
 		$this->dispatcher->dispatchTyped(
 			new SynchronizationEvent(
-				$account
+				$account,
+				$logger
 			)
 		);
 	}
@@ -179,6 +182,7 @@ class ImapToDbSynchronizer {
 	 */
 	public function sync(Account $account,
 						 Mailbox $mailbox,
+						 LoggerInterface $logger,
 						 int $criteria = Horde_Imap_Client::SYNC_NEWMSGSUIDS | Horde_Imap_Client::SYNC_FLAGSUIDS | Horde_Imap_Client::SYNC_VANISHEDUIDS,
 						 array $knownUids = null,
 						 bool $force = false,
@@ -202,14 +206,14 @@ class ImapToDbSynchronizer {
 				|| $mailbox->getSyncNewToken() === null
 				|| $mailbox->getSyncChangedToken() === null
 				|| $mailbox->getSyncVanishedToken() === null) {
-				$this->runInitialSync($account, $mailbox);
+				$this->runInitialSync($account, $mailbox, $logger);
 			} else {
 				try {
-					$this->runPartialSync($account, $mailbox, $criteria, $knownUids);
+					$this->runPartialSync($account, $mailbox, $logger, $criteria, $knownUids);
 				} catch (UidValidityChangedException $e) {
-					$this->logger->warning('Mailbox UID validity changed. Wiping cache and performing full sync.');
+					$logger->warning('Mailbox UID validity changed. Wiping cache and performing full sync.');
 					$this->resetCache($account, $mailbox);
-					$this->runInitialSync($account, $mailbox);
+					$this->runInitialSync($account, $mailbox, $logger);
 				}
 			}
 		} catch (ServiceException $e) {
@@ -232,7 +236,8 @@ class ImapToDbSynchronizer {
 		if (!$batchSync) {
 			$this->dispatcher->dispatchTyped(
 				new SynchronizationEvent(
-					$account
+					$account,
+					$this->logger
 				)
 			);
 		}
@@ -242,8 +247,13 @@ class ImapToDbSynchronizer {
 	 * @throws ServiceException
 	 * @throws IncompleteSyncException
 	 */
-	private function runInitialSync(Account $account, Mailbox $mailbox): void {
-		$perf = $this->performanceLogger->start('Initial sync ' . $account->getId() . ':' . $mailbox->getName());
+	private function runInitialSync(Account $account,
+									Mailbox $mailbox,
+									LoggerInterface  $logger): void {
+		$perf = $this->performanceLogger->startWithLogger(
+			'Initial sync ' . $account->getId() . ':' . $mailbox->getName(),
+			$logger
+		);
 
 		$highestKnownUid = $this->dbMapper->findHighestUid($mailbox);
 		$client = $this->clientFactory->getClient($account);
@@ -292,9 +302,13 @@ class ImapToDbSynchronizer {
 	 */
 	private function runPartialSync(Account $account,
 									Mailbox $mailbox,
+									LoggerInterface $logger,
 									int $criteria,
 									array $knownUids = null): void {
-		$perf = $this->performanceLogger->start('partial sync ' . $account->getId() . ':' . $mailbox->getName());
+		$perf = $this->performanceLogger->startWithLogger(
+			'partial sync ' . $account->getId() . ':' . $mailbox->getName(),
+			$logger
+		);
 
 		$client = $this->clientFactory->getClient($account);
 		$uids = $knownUids ?? $this->dbMapper->findAllUids($mailbox);

@@ -27,19 +27,29 @@ namespace OCA\Mail\Events;
 
 use OCA\Mail\Account;
 use OCP\EventDispatcher\Event;
+use Psr\Log\LoggerInterface;
 
 class SynchronizationEvent extends Event {
 
 	/** @var Account */
 	private $account;
 
-	public function __construct(Account $account) {
+	/** @var LoggerInterface */
+	private $logger;
+
+	public function __construct(Account $account,
+								LoggerInterface $logger) {
 		parent::__construct();
 
 		$this->account = $account;
+		$this->logger = $logger;
 	}
 
 	public function getAccount(): Account {
 		return $this->account;
+	}
+
+	public function getLogger(): LoggerInterface {
+		return $this->logger;
 	}
 }

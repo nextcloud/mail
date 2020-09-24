@@ -26,6 +26,7 @@ use OCA\Mail\Account;
 use OCA\Mail\Db\MailAccount;
 use OCA\Mail\IMAP\MailboxSync;
 use OCA\Mail\Service\AccountService;
+use Psr\Log\NullLogger;
 
 trait ImapTestAccount {
 
@@ -63,7 +64,7 @@ trait ImapTestAccount {
 
 		/** @var MailboxSync $mbSync */
 		$mbSync = OC::$server->query(MailboxSync::class);
-		$mbSync->sync(new Account($mailAccount));
+		$mbSync->sync(new Account($mailAccount), new NullLogger());
 
 		return $acc;
 	}

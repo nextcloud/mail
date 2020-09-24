@@ -33,7 +33,7 @@ use OCP\AppFramework\Db\DoesNotExistException;
 use OCP\AppFramework\Utility\ITimeFactory;
 use OCP\BackgroundJob\IJobList;
 use OCP\BackgroundJob\TimedJob;
-use OCP\ILogger;
+use Psr\Log\LoggerInterface;
 use Throwable;
 
 class SyncJob extends TimedJob {
@@ -47,7 +47,7 @@ class SyncJob extends TimedJob {
 	/** @var MailboxSync */
 	private $mailboxSync;
 
-	/** @var ILogger */
+	/** @var LoggerInterface */
 	private $logger;
 
 	/** @var IJobList */
@@ -57,7 +57,7 @@ class SyncJob extends TimedJob {
 								AccountService $accountService,
 								MailboxSync $mailboxSync,
 								ImapToDbSynchronizer $syncService,
-								ILogger $logger,
+								LoggerInterface $logger,
 								IJobList $jobList) {
 		parent::__construct($time);
 
@@ -88,15 +88,15 @@ class SyncJob extends TimedJob {
 		}
 
 		try {
-			$this->mailboxSync->sync($account, true);
-			$this->syncService->syncAccount($account);
+			$this->mailboxSync->sync($account, $this->logger,true);
+			$this->syncService->syncAccount($account, $this->logger);
 		} catch (IncompleteSyncException $e) {
-			$this->logger->logException($e, [
-				'level' => ILogger::WARN,
+			$this->logger->warning($e->getMessage(), [
+				'exception' => $e,
 			]);
 		} catch (Throwable $e) {
-			$this->logger->logException($e, [
-				'message' => 'Cron mail sync failed: ' . $e->getMessage(),
+			$this->logger->error('Cron mail sync failed: ' . $e->getMessage(), [
+				'exception' => $e,
 			]);
 		}
 	}

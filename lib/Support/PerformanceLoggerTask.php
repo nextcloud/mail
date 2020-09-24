@@ -26,7 +26,7 @@ declare(strict_types=1);
 namespace OCA\Mail\Support;
 
 use OCP\AppFramework\Utility\ITimeFactory;
-use OCP\ILogger;
+use Psr\Log\LoggerInterface;
 
 class PerformanceLoggerTask {
 
@@ -36,7 +36,7 @@ class PerformanceLoggerTask {
 	/** @var ITimeFactory */
 	private $timeFactory;
 
-	/** @var ILogger */
+	/** @var LoggerInterface */
 	private $logger;
 
 	/** @var int */
@@ -47,7 +47,7 @@ class PerformanceLoggerTask {
 
 	public function __construct(string $task,
 								ITimeFactory $timeFactory,
-								ILogger $logger) {
+								LoggerInterface $logger) {
 		$this->task = $task;
 		$this->timeFactory = $timeFactory;
 		$this->logger = $logger;
