@@ -107,13 +107,20 @@ class AvatarService implements IAvatarService {
 	 */
 	public function getAvatar(string $email, string $uid) {
 		$cachedAvatar = $this->cache->get($email, $uid);
-		if (!is_null($cachedAvatar)) {
+		if ($cachedAvatar) {
 			return $cachedAvatar;
+		}
+		if ($cachedAvatar === false) {
+			// We know there is no avatar
+			return null;
 		}
 
 		$avatar = $this->source->fetch($email, $this->avatarFactory, $this->externalAvatarsAllowed());
 		if (is_null($avatar) || !$this->hasAllowedMime($avatar)) {
 			// Cannot locate any avatar -> nothing to do here
+
+			$this->cache->add($email, $uid, null);
+
 			return null;
 		}
 
