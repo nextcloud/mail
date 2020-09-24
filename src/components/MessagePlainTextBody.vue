@@ -36,8 +36,6 @@ export default {
 
 <style scoped>
 .mail-signature {
-	font-family: monospace;
-	opacity: 0.5;
-	line-height: initial;
+	color: var(--color-text-maxcontrast)
 }
 </style>
