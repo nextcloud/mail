@@ -62,6 +62,8 @@ use function strtolower;
  * @method void setSelectable(bool $selectable)
  * @method string getSpecialUse()
  * @method void setSpecialUse(string $specialUse)
+ * @method bool getSyncInBackground()
+ * @method void setSyncInBackground(bool $sync)
  */
 class Mailbox extends Entity implements JsonSerializable {
 	protected $name;
@@ -78,6 +80,7 @@ class Mailbox extends Entity implements JsonSerializable {
 	protected $unseen;
 	protected $selectable;
 	protected $specialUse;
+	protected $syncInBackground;
 
 	public function __construct() {
 		$this->addType('accountId', 'integer');
@@ -87,6 +90,12 @@ class Mailbox extends Entity implements JsonSerializable {
 		$this->addType('syncChangedLock', 'integer');
 		$this->addType('syncVanishedLock', 'integer');
 		$this->addType('selectable', 'boolean');
+		$this->addType('syncInBackground', 'boolean');
+	}
+
+	public function isInbox(): bool {
+		// https://tools.ietf.org/html/rfc3501#section-5.1
+		return strtolower($this->getName()) === 'inbox';
 	}
 
 	private function getSpecialUseParsed(): array {
@@ -129,6 +138,7 @@ class Mailbox extends Entity implements JsonSerializable {
 			'specialUse' => $specialUse,
 			'specialRole' => $specialUse[0] ?? 0,
 			'mailboxes' => [],
+			'syncInBackground' => $this->getSyncInBackground(),
 		];
 	}
 }

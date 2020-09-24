@@ -89,6 +89,14 @@
 					{{ t('mail', 'Subscribed') }}
 				</ActionCheckbox>
 
+				<ActionCheckbox
+					v-if="notVirtual && notInbox"
+					:checked="mailbox.syncInBackground"
+					:disabled="changingSyncInBackground"
+					@update:checked="changeSyncInBackground">
+					{{ t('mail', 'Sync in background') }}
+				</ActionCheckbox>
+
 				<ActionButton v-if="!account.isUnified && !mailbox.specialRole && !hasSubMailboxes" icon="icon-delete" @click="deleteMailbox">
 					{{ t('mail', 'Delete folder') }}
 				</ActionButton>
@@ -160,6 +168,7 @@ export default {
 			clearingCache: false,
 			showSaving: false,
 			changeSubscription: false,
+			changingSyncInBackground: false,
 			editing: false,
 			showSubMailboxes: false,
 			menuOpen: false,
@@ -175,6 +184,9 @@ export default {
 				this.account.showSubscribedOnly === false
 				|| (this.mailbox.attributes && this.mailbox.attributes.includes('\\subscribed'))
 			)
+		},
+		notInbox() {
+			return this.mailbox.name.toLowerCase() !== 'inbox'
 		},
 		notVirtual() {
 			return !this.account.isUnified && this.mailbox.specialRole !== 'flagged'
@@ -326,6 +338,23 @@ export default {
 				throw error
 			} finally {
 				this.changeSubscription = false
+			}
+		},
+		async changeSyncInBackground(syncInBackground) {
+			try {
+				this.changingSyncInBackground = true
+
+				await this.$store.dispatch('patchMailbox', {
+					mailbox: this.mailbox,
+					attributes: {
+						syncInBackground,
+					},
+				})
+			} catch (error) {
+				logger.error(`could not update background sync flag of mailbox ${this.mailbox.databaseId}`, { error })
+				throw error
+			} finally {
+				this.changingSyncInBackground = false
 			}
 		},
 		async clearCache() {

@@ -227,6 +227,22 @@ export default {
 			updated,
 		})
 	},
+	async patchMailbox({ commit }, { mailbox, attributes }) {
+		logger.debug('patching mailbox', {
+			mailbox,
+			attributes,
+		})
+
+		const updated = await patchMailbox(mailbox.databaseId, attributes)
+
+		commit('updateMailbox', {
+			mailbox: updated,
+		})
+		logger.debug(`mailbox ${mailbox.databaseId} patched`, {
+			mailbox,
+			updated,
+		})
+	},
 	async fetchEnvelope({ commit, getters }, id) {
 		const cached = getters.getEnvelope(id)
 		if (cached) {

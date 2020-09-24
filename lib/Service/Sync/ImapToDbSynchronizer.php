@@ -112,6 +112,11 @@ class ImapToDbSynchronizer {
 								bool $force = false,
 								int $criteria = Horde_Imap_Client::SYNC_NEWMSGSUIDS | Horde_Imap_Client::SYNC_FLAGSUIDS | Horde_Imap_Client::SYNC_VANISHEDUIDS): void {
 		foreach ($this->mailboxMapper->findAll($account) as $mailbox) {
+			if (!$mailbox->isInbox() && !$mailbox->getSyncInBackground()) {
+				$logger->debug("Skipping mailbox sync for " . $mailbox->getName());
+				continue;
+			}
+
 			$this->sync(
 				$account,
 				$mailbox,
