@@ -20,4 +20,4 @@ imports:
 tools:
     external_code_coverage:
         timeout: 1200 # Timeout in seconds. 20 minutes
-        runs: 4
+        runs: 1
