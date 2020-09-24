@@ -7,9 +7,12 @@
 					<h2 :title="threadSubject">
 						{{ threadSubject }}
 					</h2>
-					<p class="transparency">
-						<AddressList :entries="threadParticipants" />
-					</p>
+					<div class="avatar-header">
+						<RecipientBubble v-for="participant in threadParticipants"
+							:key="participant.email"
+							:email="participant.email"
+							:label="participant.label" />
+					</div>
 				</div>
 			</div>
 			<ThreadEnvelope v-for="env in thread"
@@ -26,20 +29,21 @@
 import AppContentDetails from '@nextcloud/vue/dist/Components/AppContentDetails'
 import { prop, uniqBy } from 'ramda'
 
-import AddressList from './AddressList'
 import { getRandomMessageErrorMessage } from '../util/ErrorMessageFactory'
 import Loading from './Loading'
 import logger from '../logger'
+import RecipientBubble from './RecipientBubble'
 import ThreadEnvelope from './ThreadEnvelope'
 
 export default {
 	name: 'Thread',
 	components: {
-		AddressList,
+		RecipientBubble,
 		AppContentDetails,
 		Loading,
 		ThreadEnvelope,
 	},
+
 	data() {
 		return {
 			loading: true,
@@ -281,5 +285,11 @@ export default {
 }
 .app-content-list-item-star.icon-starred {
 	display: none;
+}
+.user-bubble__wrapper {
+	margin-right: 4px;
+}
+.user-bubble__title {
+	cursor: pointer;
 }
 </style>
