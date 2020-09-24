@@ -55,6 +55,7 @@ class AttachmentService implements IAttachmentService {
 		$attachment = new LocalAttachment();
 		$attachment->setUserId($userId);
 		$attachment->setFileName($file->getFileName());
+		$attachment->setMimeType($file->getMimeType());
 
 		$persisted = $this->mapper->insert($attachment);
 		try {

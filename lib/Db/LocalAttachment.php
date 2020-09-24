@@ -30,6 +30,8 @@ use OCP\AppFramework\Db\Entity;
  * @method void setUserId(string $userId)
  * @method string getFileName()
  * @method void setFileName(string $fileName)
+ * @method string getMimeType()
+ * @method void setMimeType(string $mimeType)
  * @method int getCreatedAt()
  * @method void setCreatedAt(int $createdAt)
  */
@@ -40,6 +42,9 @@ class LocalAttachment extends Entity implements JsonSerializable {
 
 	/** @var string */
 	protected $fileName;
+
+	/** @var string */
+	protected $mimeType;
 
 	/** @var mixed */
 	protected $createdAt;
