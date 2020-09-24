@@ -96,7 +96,7 @@ class Html {
 	 */
 	public function parseMailBody(string $body): array {
 		$signature = null;
-		$parts = explode("-- \r\n", $body);
+		$parts = preg_split("/-- (\n|(\r\n))/", $body);
 		if (count($parts) > 1) {
 			$signature = array_pop($parts);
 			$body = implode("-- \r\n", $parts);
