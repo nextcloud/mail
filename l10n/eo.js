@@ -30,7 +30,6 @@ OC.L10N.register(
     "SMTP Password" : "SMTP-pasvorto",
     "Save" : "Konservi",
     "Connect" : "Konekti",
-    "and" : "kaj",
     "Add mail account" : "Aldoni retpoŝtan konton",
     "Use Gravatar and favicon avatars" : "Uzi servon „Gravatar“ kaj avatarojn en retpaĝsimbolo",
     "Register as application for mail links" : "Registriĝi kiel programeto por retpoŝtligiloj",

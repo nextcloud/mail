@@ -31,7 +31,6 @@ OC.L10N.register(
     "SMTP Password" : "SMTP zaporka",
     "Save" : "Spremi",
     "Connect" : "Poveži",
-    "and" : "i",
     "Add mail account" : "Dodaj račun e-pošte",
     "Use Gravatar and favicon avatars" : "Upotrijebi avatare Gravatar i Favicon",
     "Register as application for mail links" : "Registriraj kao aplikaciju za poveznice e-pošte",

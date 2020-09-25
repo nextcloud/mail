@@ -32,7 +32,6 @@ OC.L10N.register(
     "SMTP Password" : "Senha SMTP",
     "Save" : "Salvar",
     "Connect" : "Conectar",
-    "and" : "e",
     "Add alias" : "Adicionar alias",
     "Add mail account" : "Adicionar conta de e-mail",
     "Use Gravatar and favicon avatars" : "Usar Gravatar e avatares para favicon",

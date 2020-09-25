@@ -30,7 +30,6 @@ OC.L10N.register(
     "SMTP Password" : "Geslo SMTP",
     "Save" : "Shrani",
     "Connect" : "Poveži",
-    "and" : "in",
     "Add mail account" : "Dodaj račun elektronske pošte",
     "Use Gravatar and favicon avatars" : "Uporabi podobe Gravatar in Favicon",
     "Show keyboard shortcuts" : "Pokaži tipkovne bližnjice",

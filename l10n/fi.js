@@ -31,7 +31,6 @@ OC.L10N.register(
     "SMTP Password" : "SMTP-salasana",
     "Save" : "Tallenna",
     "Connect" : "Yhdistä",
-    "and" : "ja",
     "Add alias" : "Lisää alias",
     "Add mail account" : "Lisää sähköpostitili",
     "Use Gravatar and favicon avatars" : "Käytä Gravatar- ja favicon-avatareja",

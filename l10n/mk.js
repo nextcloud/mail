@@ -31,7 +31,6 @@ OC.L10N.register(
     "SMTP Password" : "SMTP лозинка",
     "Save" : "Зачувај",
     "Connect" : "Поврзи се",
-    "and" : "и",
     "Add mail account" : "Додади е-пошта сметка",
     "Use Gravatar and favicon avatars" : "Користете Граватар и Фавикон аватари",
     "Show keyboard shortcuts" : "Прикажи кратенки преку тастатура",

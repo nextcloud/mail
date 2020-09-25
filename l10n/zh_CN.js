@@ -31,7 +31,6 @@ OC.L10N.register(
     "SMTP Password" : "SMTP 密码",
     "Save" : "保存",
     "Connect" : "连接",
-    "and" : "与",
     "Add alias" : "添加别名",
     "Add mail account" : "添加邮件账号",
     "Use Gravatar and favicon avatars" : "使用 Gravatar 和 favicon 形象",

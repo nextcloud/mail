@@ -32,7 +32,6 @@ OC.L10N.register(
     "SMTP Password" : "SMTP pasahitza",
     "Save" : "Gorde",
     "Connect" : "Konektatu",
-    "and" : "eta",
     "Add alias" : "Gehitu aliasa",
     "Add mail account" : "Gehitu posta-kontua",
     "Use Gravatar and favicon avatars" : "Erabili Gravatar eta favicon avatarrak",

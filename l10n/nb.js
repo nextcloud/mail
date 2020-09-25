@@ -27,7 +27,6 @@ OC.L10N.register(
     "SMTP Password" : "SMTP-passord",
     "Save" : "Lagre",
     "Connect" : "Koble til",
-    "and" : "og",
     "Add mail account" : "Legg til e-postkonto",
     "Use Gravatar and favicon avatars" : "Bruk Gravatar- og favikon-avatarer",
     "Show keyboard shortcuts" : "Vis tastatursnarveier",

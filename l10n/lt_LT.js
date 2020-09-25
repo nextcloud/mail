@@ -30,7 +30,6 @@ OC.L10N.register(
     "SMTP Password" : "SMTP slaptažodis",
     "Save" : "Įrašyti",
     "Connect" : "Prisijungti",
-    "and" : "ir",
     "Add mail account" : "Pridėti pašto paskyrą",
     "Use Gravatar and favicon avatars" : "Naudoti Gravatar ir svetainių piktogramų avatarus",
     "Show keyboard shortcuts" : "Rodyti klaviatūros kombinacijas",

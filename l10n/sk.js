@@ -32,7 +32,6 @@ OC.L10N.register(
     "SMTP Password" : "SMTP heslo",
     "Save" : "Uložiť",
     "Connect" : "Pripojiť",
-    "and" : "a",
     "Add alias" : "Pridať alias",
     "Add mail account" : "Pridať mailový účet",
     "Use Gravatar and favicon avatars" : "Použiť Gravatar a favicon avatary",

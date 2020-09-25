@@ -31,7 +31,6 @@ OC.L10N.register(
     "SMTP Password" : "ססמת SMTP",
     "Save" : "שמור",
     "Connect" : "התחברות",
-    "and" : "וגם",
     "Add mail account" : "הוספת חשבון דוא״ל",
     "Use Gravatar and favicon avatars" : "להשתמש בסמלים של Gravatar ושל favicon",
     "Register as application for mail links" : "רישום כיישום לטיפול בקישורי דוא״ל (mailto)",

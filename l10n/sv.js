@@ -32,7 +32,6 @@ OC.L10N.register(
     "SMTP Password" : "SMTP-lösenord",
     "Save" : "Spara",
     "Connect" : "Anslut",
-    "and" : "och",
     "Add alias" : " lägg till alias",
     "Add mail account" : "Lägg till e-postkonto",
     "Use Gravatar and favicon avatars" : "Använd Gravatar och favicon avatarer",

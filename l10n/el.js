@@ -32,7 +32,6 @@ OC.L10N.register(
     "SMTP Password" : "Συνθηματικό SMTP",
     "Save" : "Αποθήκευση",
     "Connect" : "Σύνδεση",
-    "and" : "και",
     "Add alias" : "Προσθήκη alias",
     "Add mail account" : "Προσθήκη λογαριασμού αλληλογραφίας",
     "Use Gravatar and favicon avatars" : "Χρησιμοποιήστε Gravatar και favicon avatars",
