@@ -361,9 +361,9 @@ class ImportanceClassifier {
 			$predictedValidationLabel,
 			array_column($validationSet, 'label')
 		);
-		$recallImportant = $report['classes'][self::LABEL_IMPORTANT]['recall'];
-		$precisionImportant = $report['classes'][self::LABEL_IMPORTANT]['precision'];
-		$f1ScoreImportant = $report['classes'][self::LABEL_IMPORTANT]['f1_score'];
+		$recallImportant = $report['classes'][self::LABEL_IMPORTANT]['recall'] ?? 0;
+		$precisionImportant = $report['classes'][self::LABEL_IMPORTANT]['precision'] ?? 0;
+		$f1ScoreImportant = $report['classes'][self::LABEL_IMPORTANT]['f1_score'] ?? 0;
 
 		/**
 		 * What we care most is the percentage of messages classified as important in relation to the truly important messages
