@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "7f10989291482af8b5b386c7269d0d54",
+    "content-hash": "fb22b9489df9c055086b2e84a63918b2",
     "packages": [
         {
             "name": "amphp/amp",
@@ -1679,16 +1679,16 @@
         },
         {
             "name": "rubix/ml",
-            "version": "0.1.4",
+            "version": "0.2.0",
             "source": {
                 "type": "git",
                 "url": "https://github.com/RubixML/RubixML.git",
-                "reference": "e8bf1d30dd3aaf6f7152a70557830820da73fded"
+                "reference": "a0ce91dc30033c1eaf15bd2b788bc70564364bdb"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/RubixML/RubixML/zipball/e8bf1d30dd3aaf6f7152a70557830820da73fded",
-                "reference": "e8bf1d30dd3aaf6f7152a70557830820da73fded",
+                "url": "https://api.github.com/repos/RubixML/RubixML/zipball/a0ce91dc30033c1eaf15bd2b788bc70564364bdb",
+                "reference": "a0ce91dc30033c1eaf15bd2b788bc70564364bdb",
                 "shasum": ""
             },
             "require": {
@@ -1749,6 +1749,7 @@
                 "Linear regression",
                 "Neural network",
                 "Rubix",
+                "TF-IDF",
                 "adaboost",
                 "ai",
                 "analytics",
@@ -1771,6 +1772,7 @@
                 "feature importance",
                 "feature selection",
                 "gaussian mixture",
+                "gbm",
                 "gmm",
                 "gradient boost",
                 "grid search",
@@ -1804,6 +1806,7 @@
                 "prediction",
                 "predictive modeling",
                 "random forest",
+                "ranking",
                 "recommendation",
                 "regression",
                 "regressor",
@@ -1816,6 +1819,7 @@
                 "svm",
                 "t-sne",
                 "text mining",
+                "tf idf",
                 "tsne",
                 "unsupervised learning"
             ],
@@ -1829,7 +1833,7 @@
                     "type": "patreon"
                 }
             ],
-            "time": "2020-08-29T09:22:14+00:00"
+            "time": "2020-09-13T19:08:14+00:00"
         },
         {
             "name": "rubix/tensor",
