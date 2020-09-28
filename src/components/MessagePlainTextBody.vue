@@ -30,9 +30,9 @@ export default {
 			})
 		},
 		signatureSummaryAndBody() {
-			const matches = this.signature.match(regFirstParagraph)
+			const matches = this.signature.trim().match(regFirstParagraph)
 
-			if (matches[0]) {
+			if (matches && matches[0]) {
 				return {
 					summary: matches[0],
 					body: this.signature.substring(matches[0].length),
