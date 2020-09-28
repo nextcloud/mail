@@ -66,7 +66,7 @@ export default {
 </style>
 <style lang="scss" scoped>
 #mail-content, .mail-signature {
-	white-space: pre-wrap;
+	white-space: pre;
 }
 .mail-signature, .quoted {
 	color: var(--color-text-maxcontrast)

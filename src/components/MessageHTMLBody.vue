@@ -85,7 +85,7 @@ export default {
 <style lang="scss" scoped>
 // account for 8px margin on iframe body
 #mail-content {
-	margin-left: 30px;
+	margin-left: 48px;
 	margin-top: 2px;
 	display: flex;
 	flex-direction: column;
