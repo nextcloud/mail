@@ -32,6 +32,8 @@ import Nextcloud from './mixins/Nextcloud'
 import router from './router'
 import store from './store'
 import { fixAccountId } from './service/AccountService'
+// Styles
+import '@nextcloud/dialogs/styles/toast.scss'
 
 // eslint-disable-next-line camelcase
 __webpack_nonce__ = btoa(getRequestToken())
