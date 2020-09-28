@@ -578,4 +578,34 @@ class ThreadBuilderTest extends TestCase {
 			$this->abstract($result)
 		);
 	}
+
+	public function testRealWorldThreadWithReply(): void {
+		$messages = [
+			new Message('sub', '<454AF3B1-C642-4976-AA00-DB33B34225C1@bollu.be>', ['<1A0C073E-8D77-4F05-9853-4A576D33B819@acme.be>']),
+			new Message('sub', '<1A0C073E-8D77-4F05-9853-4A576D33B819@acme.be>', []),
+			new Message('sub', '<9009C4EE-C517-4EAE-B0E3-75FE5EA25207@acme.be>', ["<1A0C073E-8D77-4F05-9853-4A576D33B819@acme.be>","<454AF3B1-C642-4976-AA00-DB33B34225C1@bollu.be>"]),
+		];
+
+		$result = $this->builder->build($messages, $this->logger);
+
+		$this->assertEquals(
+			[
+				[
+					'id' => '<1A0C073E-8D77-4F05-9853-4A576D33B819@acme.be>',
+					'children' => [
+						[
+							'id' => '<454AF3B1-C642-4976-AA00-DB33B34225C1@bollu.be>',
+							'children' => [
+								[
+									'id' => '<9009C4EE-C517-4EAE-B0E3-75FE5EA25207@acme.be>',
+									'children' => [],
+								],
+							],
+						],
+					],
+				],
+			],
+			$this->abstract($result)
+		);
+	}
 }
