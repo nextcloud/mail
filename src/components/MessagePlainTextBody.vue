@@ -2,7 +2,7 @@
 	<div>
 		<div id="mail-content" v-html="nl2br(enhancedBody)" />
 		<details v-if="signature" class="mail-signature">
-			<summary>{{ signatureSummaryAndBody.summary }}</summary>
+			<summary v-html="nl2br(signatureSummaryAndBody.summary)" />
 			<span v-html="nl2br(signatureSummaryAndBody.body)" />
 		</details>
 	</div>
