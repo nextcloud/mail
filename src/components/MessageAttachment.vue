@@ -189,27 +189,24 @@ export default {
 }
 </script>
 
-<style scoped>
+<style lang="scss" scoped>
 .attachment {
 	position: relative;
 	display: inline-block;
-	width: 200px;
-	border: 1px solid var(--color-border);
-	border-radius: 3px;
-	margin: 0 0 5px 0;
-	padding: 5px;
+	width: calc(100% - 32px);
+	padding: 16px;
 }
 
 .attachment:hover,
 .attachment span:hover {
-	background-color: var(--color-background-dark);
+	background-color: var(--color-background-hover);
 	cursor: pointer;
 }
 
 .mail-attached-image {
 	display: block;
 	max-width: 100%;
-	max-height: 120px;
+	border-radius: var(--border-radius);
 	cursor: pointer;
 }
 .mail-attached-image:hover {
@@ -220,10 +217,9 @@ export default {
 .attachment-download,
 .attachment-import {
 	position: absolute;
-	height: 32px;
-	width: 32px;
+	padding: 21px;
 	margin: 0;
-	bottom: 0;
+	bottom: 6px;
 	background-color: transparent;
 	border-color: transparent;
 }
