@@ -116,4 +116,7 @@ export default {
 	background-position: 9px center;
 	padding-left: 32px;
 }
+.oc-dialog {
+	z-index: 10000000;
+}
 </style>
