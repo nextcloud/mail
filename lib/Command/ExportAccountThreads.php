@@ -26,28 +26,43 @@ declare(strict_types=1);
 namespace OCA\Mail\Command;
 
 use OCA\Mail\Db\MessageMapper;
+use OCA\Mail\IMAP\Threading\DatabaseMessage;
 use OCA\Mail\Service\AccountService;
 use OCP\AppFramework\Db\DoesNotExistException;
+use OCP\Security\IHasher;
+use OCP\Security\ISecureRandom;
 use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Input\InputArgument;
 use Symfony\Component\Console\Input\InputInterface;
+use Symfony\Component\Console\Input\InputOption;
 use Symfony\Component\Console\Output\OutputInterface;
 use function json_encode;
 
 class ExportAccountThreads extends Command {
 	private const ARGUMENT_ACCOUNT_ID = 'account-id';
+	private const OPTION_REDACT = 'redact';
 
 	/** @var AccountService */
 	private $accountService;
+
+	/** @var ISecureRandom */
+	private $random;
+
+	/** @var IHasher */
+	private $hasher;
 
 	/** @var MessageMapper */
 	private $messageMapper;
 
 	public function __construct(AccountService $service,
+								ISecureRandom $random,
+								IHasher $hasher,
 								MessageMapper $messageMapper) {
 		parent::__construct();
 
 		$this->accountService = $service;
+		$this->random = $random;
+		$this->hasher = $hasher;
 		$this->messageMapper = $messageMapper;
 	}
 
@@ -55,6 +70,7 @@ class ExportAccountThreads extends Command {
 		$this->setName('mail:account:export-threads');
 		$this->setDescription('Exports a user\'s account threads');
 		$this->addArgument(self::ARGUMENT_ACCOUNT_ID, InputArgument::REQUIRED);
+		$this->addOption(self::OPTION_REDACT, 'r', InputOption::VALUE_NONE);
 	}
 
 	protected function execute(InputInterface $input, OutputInterface $output): int {
@@ -67,12 +83,27 @@ class ExportAccountThreads extends Command {
 			return 1;
 		}
 
-		$output->writeln(
-			json_encode(
-				$this->messageMapper->findThreadingData($account),
+		$threads = $this->messageMapper->findThreadingData($account);
+		if ($input->getOption(self::OPTION_REDACT)) {
+			$salt = $this->random->generate(32);
+			$output->writeln(json_encode(
+				array_map(function (DatabaseMessage $message) use ($salt) {
+					return $message->redact(
+						function (string $str) use ($salt) {
+							return hash('md5', $str . $salt) . "@redacted";
+						}
+					);
+				}, $threads),
 				JSON_PRETTY_PRINT
-			)
-		);
+			));
+		} else {
+			$output->writeln(
+				json_encode(
+					$threads,
+					JSON_PRETTY_PRINT
+				)
+			);
+		}
 
 		return 0;
 	}
