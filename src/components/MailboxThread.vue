@@ -21,7 +21,9 @@
 						<SectionTitle class="important" :name="t('mail', 'Important')" />
 						<Popover trigger="hover focus">
 							<button slot="trigger" :aria-label="t('mail', 'Important info')" class="button icon-info" />
-							{{ importantInfo }}
+							<p class="important-info">
+								{{ importantInfo }}
+							</p>
 						</Popover>
 					</div>
 					<Mailbox
@@ -215,12 +217,20 @@ export default {
 .v-popover > .trigger > {
 	z-index: 1;
 }
+
 .icon-info {
 	background-image: var(--icon-info-000);
 }
+
+.important-info {
+	max-width: 230px;
+	padding: 16px;
+}
+
 .app-content-list-item:hover {
 	background: transparent;
 }
+
 .button {
 	background-color: var(--color-main-background);
 	width: 44px;
