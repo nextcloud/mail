@@ -49,6 +49,7 @@
 		<command>OCA\Mail\Command\ExportAccount</command>
 		<command>OCA\Mail\Command\SyncAccount</command>
 		<command>OCA\Mail\Command\TrainAccount</command>
+		<command>OCA\Mail\Command\Thread</command>
 	</commands>
 	<settings>
 		<admin>OCA\Mail\Settings\AdminSettings</admin>
