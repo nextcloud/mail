@@ -67,9 +67,8 @@ class FlagRepliedMessageListener implements IEventListener {
 		}
 
 		try {
-			$mailbox = $this->mailboxMapper->find(
-				$event->getAccount(),
-				$event->getRepliedMessageData()->getFolderId()
+			$mailbox = $this->mailboxMapper->findById(
+				$event->getRepliedMessageData()->getMessage()->getMailboxId()
 			);
 		} catch (DoesNotExistException|ServiceException $e) {
 			$this->logger->logException($e, [
@@ -85,7 +84,7 @@ class FlagRepliedMessageListener implements IEventListener {
 			$this->messageMapper->addFlag(
 				$client,
 				$mailbox,
-				$event->getRepliedMessageData()->getId(),
+				$event->getRepliedMessageData()->getMessage()->getUid(),
 				Horde_Imap_Client::FLAG_ANSWERED
 			);
 		} catch (Horde_Imap_Client_Exception $e) {

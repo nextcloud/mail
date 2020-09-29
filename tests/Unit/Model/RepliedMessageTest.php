@@ -23,6 +23,7 @@ namespace OCA\Mail\Tests\Unit\Model;
 
 use ChristophWurst\Nextcloud\Testing\TestCase;
 use OCA\Mail\Account;
+use OCA\Mail\Db\Message;
 use OCA\Mail\Model\RepliedMessageData;
 use PHPUnit\Framework\MockObject\MockObject;
 
@@ -30,26 +31,18 @@ class RepliedMessageTest extends TestCase {
 	public function testGetAccount() {
 		/** @var Account|MockObject $account */
 		$account = $this->createMock(Account::class);
-		$data = new RepliedMessageData($account, "abc", 123);
+		$message = new Message();
+		$data = new RepliedMessageData($account, $message);
 
 		$this->assertEquals($account, $data->getAccount());
 	}
 
-	public function testGetFolderId() {
+	public function testGetMessage() {
 		/** @var Account|MockObject $account */
 		$account = $this->createMock(Account::class);
-		$folderId = 'INBOX';
-		$data = new RepliedMessageData($account, $folderId, 123);
+		$message = new Message();
+		$data = new RepliedMessageData($account, $message);
 
-		$this->assertEquals($folderId, $data->getFolderId());
-	}
-
-	public function testGetId() {
-		/** @var Account|MockObject $account */
-		$account = $this->createMock(Account::class);
-		$messageId = 12;
-		$data = new RepliedMessageData($account, "abc", $messageId);
-
-		$this->assertEquals($messageId, $data->getId());
+		$this->assertEquals($message, $data->getMessage());
 	}
 }

@@ -364,7 +364,6 @@ class AccountsController extends Controller {
 						 string $bcc,
 						 bool $isHtml = true,
 						 int $draftId = null,
-						 string $folderId = null,
 						 int $messageId = null,
 						 array $attachments = [],
 						 int $aliasId = null): JSONResponse {
@@ -377,8 +376,13 @@ class AccountsController extends Controller {
 
 		$messageData = NewMessageData::fromRequest($account, $expandedTo, $expandedCc, $expandedBcc, $subject, $body, $attachments, $isHtml);
 		$repliedMessageData = null;
-		if ($folderId !== null && $messageId !== null) {
-			$repliedMessageData = new RepliedMessageData($account, base64_decode($folderId), $messageId);
+		if ($messageId !== null) {
+			try {
+				$repliedMessage = $this->mailManager->getMessage($this->currentUserId, $messageId);
+			} catch (ClientException $e) {
+				$this->logger->info("Message in reply " . $messageId . " could not be loaded: " . $e->getMessage());
+			}
+			$repliedMessageData = new RepliedMessageData($account, $repliedMessage);
 		}
 
 		$draft = null;

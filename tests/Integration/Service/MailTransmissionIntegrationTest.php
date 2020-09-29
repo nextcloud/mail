@@ -33,6 +33,7 @@ use OCA\Mail\Db\MailAccountMapper;
 use OCA\Mail\Db\MailboxMapper;
 use OCA\Mail\Db\Message;
 use OCA\Mail\IMAP\IMAPClientFactory;
+use OCA\Mail\IMAP\MailboxSync;
 use OCA\Mail\IMAP\MessageMapper;
 use OCA\Mail\Model\NewMessageData;
 use OCA\Mail\Model\RepliedMessageData;
@@ -45,6 +46,7 @@ use OCP\EventDispatcher\IEventDispatcher;
 use OCP\ILogger;
 use OCP\IUser;
 use OCP\Security\ICrypto;
+use Psr\Log\NullLogger;
 
 class MailTransmissionIntegrationTest extends TestCase {
 	use ImapTest,
@@ -145,16 +147,25 @@ class MailTransmissionIntegrationTest extends TestCase {
 	}
 
 	public function testSendReply() {
-		$inbox = base64_encode('inbox');
 		$mb = $this->getMessageBuilder();
 		$originalMessage = $mb->from('from@domain.tld')
 			->to('to@domain.tld')
 			->subject('reply test')
 			->finish();
 		$originalUID = $this->saveMessage('inbox', $originalMessage);
+		/** @var MailboxSync $mbSync */
+		$mbSync = OC::$server->query(MailboxSync::class);
+		$mbSync->sync($this->account, new NullLogger(), true);
+		/** @var MailboxMapper $mailboxMapper */
+		$mailboxMapper = OC::$server->query(MailboxMapper::class);
+		$inbox = $mailboxMapper->find($this->account, 'INBOX');
+		$messageInReply = new Message();
+		$messageInReply->setUid($originalUID);
+		$messageInReply->setMessageId('message@server');
+		$messageInReply->setMailboxId($inbox->getId());
 
 		$message = NewMessageData::fromRequest($this->account, 'recipient@domain.com', null, null, 'greetings', 'hello there', []);
-		$reply = new RepliedMessageData($this->account, $inbox, $originalUID);
+		$reply = new RepliedMessageData($this->account, $messageInReply);
 		$this->transmission->sendMessage($message, $reply);
 
 		$this->assertMailboxExists('Sent');
@@ -162,16 +173,25 @@ class MailTransmissionIntegrationTest extends TestCase {
 	}
 
 	public function testSendReplyWithoutSubject() {
-		$inbox = base64_encode('inbox');
 		$mb = $this->getMessageBuilder();
 		$originalMessage = $mb->from('from@domain.tld')
 			->to('to@domain.tld')
 			->subject('reply test')
 			->finish();
 		$originalUID = $this->saveMessage('inbox', $originalMessage);
+		/** @var MailboxSync $mbSync */
+		$mbSync = OC::$server->query(MailboxSync::class);
+		$mbSync->sync($this->account, new NullLogger(), true);
+		/** @var MailboxMapper $mailboxMapper */
+		$mailboxMapper = OC::$server->query(MailboxMapper::class);
+		$inbox = $mailboxMapper->find($this->account, 'INBOX');
+		$messageInReply = new Message();
+		$messageInReply->setUid($originalUID);
+		$messageInReply->setMessageId('message@server');
+		$messageInReply->setMailboxId($inbox->getId());
 
 		$message = NewMessageData::fromRequest($this->account, 'recipient@domain.com', null, null, '', 'hello there', []);
-		$reply = new RepliedMessageData($this->account, $inbox, $originalUID);
+		$reply = new RepliedMessageData($this->account, $messageInReply);
 		$this->transmission->sendMessage($message, $reply);
 
 		$this->assertMailboxExists('Sent');
@@ -179,16 +199,25 @@ class MailTransmissionIntegrationTest extends TestCase {
 	}
 
 	public function testSendReplyWithoutReplySubject() {
-		$inbox = base64_encode('inbox');
 		$mb = $this->getMessageBuilder();
 		$originalMessage = $mb->from('from@domain.tld')
 			->to('to@domain.tld')
 			->subject('reply test')
 			->finish();
 		$originalUID = $this->saveMessage('inbox', $originalMessage);
+		/** @var MailboxSync $mbSync */
+		$mbSync = OC::$server->query(MailboxSync::class);
+		$mbSync->sync($this->account, new NullLogger(), true);
+		/** @var MailboxMapper $mailboxMapper */
+		$mailboxMapper = OC::$server->query(MailboxMapper::class);
+		$inbox = $mailboxMapper->find($this->account, 'INBOX');
+		$messageInReply = new Message();
+		$messageInReply->setUid($originalUID);
+		$messageInReply->setMessageId('message@server');
+		$messageInReply->setMailboxId($inbox->getId());
 
 		$message = NewMessageData::fromRequest($this->account, 'recipient@domain.com', null, null, 'Re: reply test', 'hello there', []);
-		$reply = new RepliedMessageData($this->account, $inbox, $originalUID);
+		$reply = new RepliedMessageData($this->account, $messageInReply);
 		$this->transmission->sendMessage($message, $reply);
 
 		$this->assertMailboxExists('Sent');

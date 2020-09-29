@@ -34,7 +34,6 @@ use OCA\Mail\Db\MailAccount;
 use OCA\Mail\Db\MailboxMapper;
 use OCA\Mail\IMAP\IMAPClientFactory;
 use OCA\Mail\IMAP\MessageMapper;
-use OCA\Mail\Model\IMAPMessage;
 use OCA\Mail\Model\Message;
 use OCA\Mail\Model\NewMessageData;
 use OCA\Mail\Model\RepliedMessageData;
@@ -194,22 +193,15 @@ class MailTransmissionTest extends TestCase {
 		$account->method('getMailAccount')->willReturn($mailAccount);
 		$messageData = NewMessageData::fromRequest($account, 'to@d.com', '', '', 'sub', 'bod');
 		$folderId = 'INBOX';
-		$repliedMessageId = 321;
-		$replyData = new RepliedMessageData($account, $folderId, $repliedMessageId);
+		$repliedMessageUid = 321;
+		$messageInReply = new \OCA\Mail\Db\Message();
+		$messageInReply->setUid($repliedMessageUid);
+		$messageInReply->setMessageId('message@server');
+		$replyData = new RepliedMessageData($account, $messageInReply);
 		$message = new Message();
 		$account->expects($this->once())
 			->method('newMessage')
 			->willReturn($message);
-		$client = $this->createMock(Horde_Imap_Client_Socket::class);
-		$this->imapClientFactory->expects($this->once())
-			->method('getClient')
-			->with($account)
-			->willReturn($client);
-		$repliedMessage = $this->createMock(IMAPMessage::class);
-		$this->messageMapper->expects($this->once())
-			->method('find')
-			->with($client, $folderId, $repliedMessageId)
-			->willReturn($repliedMessage);
 		$transport = $this->createMock(Horde_Mail_Transport::class);
 		$this->smtpClientFactory->expects($this->once())
 			->method('create')

@@ -25,7 +25,6 @@ namespace OCA\Mail\Service;
 
 use Horde_Exception;
 use Horde_Imap_Client;
-use Horde_Imap_Client_Exception;
 use Horde_Mail_Transport_Null;
 use Horde_Mime_Exception;
 use Horde_Mime_Headers_Date;
@@ -251,24 +250,8 @@ class MailTransmission implements IMailTransmission {
 		$message->setSubject($messageData->getSubject());
 		$message->setTo($messageData->getTo());
 
-		$client = $this->imapClientFactory->getClient($account);
-
-		try {
-			$repliedMessage = $this->messageMapper->find(
-				$client,
-				$replyData->getFolderId(),
-				$replyData->getId()
-			);
-
-			$message->setInReplyTo($repliedMessage->getMessageId());
-		} catch (DoesNotExistException $e) {
-			// Nothing to do
-		} catch (Horde_Imap_Client_Exception $e) {
-			$this->logger->logException($e, [
-				'level' => ILogger::WARN,
-				'messages' => 'Could not find draft message: ' . $e->getMessage(),
-			]);
-		}
+		$rawMessageId = $replyData->getMessage()->getMessageId();
+		$message->setInReplyTo($rawMessageId);
 
 		return $message;
 	}
