@@ -95,7 +95,7 @@ class AccountSynchronizedThreadUpdaterListener implements IEventListener {
 
 			yield from $this->flattenThreads(
 				$thread->getChildren(),
-				$message === null ? null : $message->getId()
+				$threadId ?? ($message === null ? null : $message->getId())
 			);
 		}
 	}
