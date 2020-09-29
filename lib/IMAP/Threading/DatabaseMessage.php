@@ -25,9 +25,11 @@ declare(strict_types=1);
 
 namespace OCA\Mail\IMAP\Threading;
 
+use JsonSerializable;
+use function array_merge;
 use function json_decode;
 
-class DatabaseMessage extends Message {
+class DatabaseMessage extends Message implements JsonSerializable {
 
 	/** @var int */
 	private $databaseId;
@@ -87,5 +89,14 @@ class DatabaseMessage extends Message {
 
 	public function isDirty(): bool {
 		return $this->dirty;
+	}
+
+	public function jsonSerialize(): array {
+		return array_merge(
+			parent::jsonSerialize(),
+			[
+				'databaseId' => $this->databaseId,
+			]
+		);
 	}
 }
