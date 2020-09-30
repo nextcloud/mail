@@ -26,6 +26,7 @@ OC.L10N.register(
     "Important" : "Penting",
     "Favorites" : "Disukai",
     "Other" : "Lainnya",
+    "Attachments" : "Lampiran",
     "Choose a folder to store the attachment in" : "Pilih folder untuk menyimpan lampiran didalamnya",
     "Settings" : "Setelan",
     "Quota" : "Kuota",

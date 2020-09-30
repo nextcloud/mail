@@ -16,6 +16,7 @@ OC.L10N.register(
     "Important" : "Quan trọng",
     "Favorites" : "Ưa thích",
     "Other" : "Khác",
+    "Attachments" : "Đính kèm",
     "Settings" : "Thiết lập",
     "Quota" : "Hạn ngạch",
     "Add folder" : "Add folder",

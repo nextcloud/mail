@@ -101,6 +101,7 @@ OC.L10N.register(
     "Important" : "重要",
     "Favorites" : "收藏",
     "Other" : "其他",
+    "Attachments" : "附件",
     "Import into calendar" : "导入到日历",
     "Download attachment" : "下载附件",
     "Save to Files" : "保存到“文件”",

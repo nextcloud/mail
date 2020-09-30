@@ -78,6 +78,7 @@ OC.L10N.register(
     "Important" : "مهم",
     "Favorites" : "علاقه مندی ها",
     "Other" : "دیگر",
+    "Attachments" : "پیوست‌ها",
     "Import into calendar" : "وارد تقویم شوید",
     "Download attachment" : "پیوست را بارگیری کنید",
     "Save to Files" : "ذخیره در پرونده ها",

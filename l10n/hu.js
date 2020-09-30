@@ -80,6 +80,7 @@ OC.L10N.register(
     "Important" : "Fontos",
     "Favorites" : "Kedvencek",
     "Other" : "Egyéb",
+    "Attachments" : "Mellékletek",
     "Import into calendar" : "Betöltés a naptárba",
     "Download attachment" : "Melléklet letöltése",
     "Save to Files" : "Metés a Fájlokba",

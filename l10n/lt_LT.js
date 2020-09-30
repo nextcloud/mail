@@ -83,6 +83,7 @@ OC.L10N.register(
     "Important" : "Svarbios",
     "Favorites" : "Mėgstamos",
     "Other" : "Kita",
+    "Attachments" : "Priedai",
     "Import into calendar" : "Importuoti į kalendorių",
     "Download attachment" : "Atsisiųsti priedą",
     "Save to Files" : "Įrašyti į Failus",

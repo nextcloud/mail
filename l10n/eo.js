@@ -76,6 +76,7 @@ OC.L10N.register(
     "Important" : "Grava",
     "Favorites" : "Pliŝataĵoj",
     "Other" : "Alia",
+    "Attachments" : "Dosieraj aldonaĵoj",
     "Import into calendar" : "Importi en kalendaron",
     "Download attachment" : "Elŝuti kunsendaĵon",
     "Save to Files" : "Konservi en „Dosieroj“",

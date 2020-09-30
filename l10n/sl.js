@@ -78,6 +78,7 @@ OC.L10N.register(
     "Important" : "Pomembno",
     "Favorites" : "Priljubljene",
     "Other" : "Drugo",
+    "Attachments" : "Priloge",
     "Import into calendar" : "Uvozi v koledar",
     "Download attachment" : "Prejmi prilogo",
     "Save to Files" : "Shrani v Datoteke",

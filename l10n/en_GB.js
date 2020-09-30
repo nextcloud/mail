@@ -41,6 +41,7 @@ OC.L10N.register(
     "Important" : "Important",
     "Favorites" : "Favourites",
     "Other" : "Other",
+    "Attachments" : "Attachments",
     "Import into calendar" : "Import into calendar",
     "Download attachment" : "Download attachment",
     "Save to Files" : "Save to Files",

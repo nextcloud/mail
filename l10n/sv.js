@@ -106,6 +106,7 @@ OC.L10N.register(
     "Favorites" : "Favoriter",
     "Other" : "Övrigt",
     "Messages will automatically be marked as important based on which messages you interacted with or marked as important. In the beginning you might have to manually change the importance to teach the system, but it will improve over time." : "Meddelanden kommer automatiskt att markeras som viktiga baserat på vilka meddelanden du interagerade med eller har markerat som viktiga. I början kan du behöva ändra vikten manuellt, men det kommer att förbättras med tiden.",
+    "Attachments" : "Bilagor",
     "Import into calendar" : "Importera till kalender",
     "Download attachment" : "Hämta bilaga",
     "Save to Files" : "Spara till filer",

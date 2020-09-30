@@ -75,6 +75,7 @@ OC.L10N.register(
     "Important" : "Mikilvægt",
     "Favorites" : "Eftirlæti",
     "Other" : "Annað",
+    "Attachments" : "Viðhengi",
     "Import into calendar" : "Flytja inn dagatal",
     "Download attachment" : "Sækja viðhengi",
     "Save to Files" : "Vista í skrár",

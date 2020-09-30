@@ -99,6 +99,7 @@ OC.L10N.register(
     "Important" : "חשוב",
     "Favorites" : "מועדפים",
     "Other" : "אחר",
+    "Attachments" : "קבצים מצורפים",
     "Import into calendar" : "ייבוא ליומן",
     "Download attachment" : "הורדת קובץ מצורף",
     "Save to Files" : "שמירה לקבצים",

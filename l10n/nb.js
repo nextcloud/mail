@@ -57,6 +57,7 @@ OC.L10N.register(
     "Important" : "Viktig",
     "Favorites" : "Favoritter",
     "Other" : "Annet",
+    "Attachments" : "Vedlegg",
     "Import into calendar" : "Importer til kalender",
     "Download attachment" : "Last ned vedlegg",
     "Save to Files" : "Lagre i Filer",

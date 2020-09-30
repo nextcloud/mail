@@ -104,6 +104,7 @@ OC.L10N.register(
     "Favorites" : "Αγαπημένα",
     "Other" : "Άλλο",
     "Messages will automatically be marked as important based on which messages you interacted with or marked as important. In the beginning you might have to manually change the importance to teach the system, but it will improve over time." : "Τα μηνύματα θα επισημανθούν αυτόματα ως σημαντικά με βάση αυτά με τα οποία επισημαίνετε ως σημαντικά. Στην αρχή ίσως χρειαστεί να τα αλλάζετε χειροκίνητα, έως ότου εκπαιδευτή το σύστημα, αλλά θα βελτιώνεται σταδιακά με την πάροδο του χρόνου.",
+    "Attachments" : "Συνημμένα",
     "Import into calendar" : "Εισαγωγή στο ημερολόγιο",
     "Download attachment" : "Λήψη συνημμένου",
     "Save to Files" : "Αποθήκευση στα Αρχεία",

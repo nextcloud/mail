@@ -44,6 +44,7 @@ OC.L10N.register(
     "Important" : "مهم",
     "Favorites" : "المفضلات",
     "Other" : "آخر",
+    "Attachments" : "المرفقات",
     "Import into calendar" : "إستيراد من التقويم",
     "Download attachment" : "تنزيل الملحق",
     "Save to Files" : "حفظ للـ الملفات",

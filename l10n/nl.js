@@ -106,6 +106,7 @@ OC.L10N.register(
     "Favorites" : "Favorieten",
     "Other" : "Ander",
     "Messages will automatically be marked as important based on which messages you interacted with or marked as important. In the beginning you might have to manually change the importance to teach the system, but it will improve over time." : "Berichten zullen automatisch als belangrijk gemarkeerd worden, gebaseerd op met welke berichten je gewerkt hebt of welke je als belangrijk hebt gemarkeerd. In het begin moet je misschien handmatig de belangrijkheid aanpassen om het systeem in te leren, maar het wordt beter met de tijd.",
+    "Attachments" : "Bijlagen",
     "Import into calendar" : "Toevoegen aan agenda",
     "Download attachment" : "Download bijlage",
     "Save to Files" : "Opslaan in Bestanden",

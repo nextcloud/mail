@@ -57,6 +57,7 @@ OC.L10N.register(
     "Important" : "Важно",
     "Favorites" : "Любими",
     "Other" : "Друг",
+    "Attachments" : "Прикачени файлове",
     "Download attachment" : "Изтегли прикачените файлове",
     "Save to Files" : "Запази във Файлове",
     "Unnamed" : "Без име",

@@ -102,6 +102,7 @@ OC.L10N.register(
     "Important" : "Dôležité",
     "Favorites" : "Obľúbené",
     "Other" : "Iné",
+    "Attachments" : "Prílohy",
     "Import into calendar" : "Importovať do kalendára",
     "Download attachment" : "Stiahnuť prílohu",
     "Save to Files" : "Uložiť do Súborov",

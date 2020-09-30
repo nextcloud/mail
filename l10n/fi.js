@@ -95,6 +95,7 @@ OC.L10N.register(
     "Important" : "Tärkeä",
     "Favorites" : "Suosikit",
     "Other" : "Muu",
+    "Attachments" : "Liitteet",
     "Import into calendar" : "Tuo kalenteriin",
     "Download attachment" : "Lataa liite",
     "Save to Files" : "Tallenna tiedostoihin",

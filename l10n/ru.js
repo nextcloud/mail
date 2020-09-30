@@ -106,6 +106,7 @@ OC.L10N.register(
     "Favorites" : "Избранные",
     "Other" : "Другой",
     "Messages will automatically be marked as important based on which messages you interacted with or marked as important. In the beginning you might have to manually change the importance to teach the system, but it will improve over time." : "Письма будут автоматически отмечаться важными на основе анализа ваших действий и присвоения метки «Важно». В первое время, возможно, потребуется обучить систему присвоением и удалением меток вручную.",
+    "Attachments" : "Вложения",
     "Import into calendar" : "Импортировать в календарь",
     "Download attachment" : "Скачать вложение",
     "Save to Files" : "Сохранить в файлы",

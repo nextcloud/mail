@@ -34,6 +34,7 @@ OC.L10N.register(
     "Important" : "Importante",
     "Favorites" : "Favoritos",
     "Other" : "Outro",
+    "Attachments" : "Anexos",
     "Download attachment" : "Transferir anexo",
     "Save to Files" : "Guardar em Ficheiros",
     "Unnamed" : "Sem nome",

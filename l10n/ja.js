@@ -99,6 +99,7 @@ OC.L10N.register(
     "Important" : "重要",
     "Favorites" : "お気に入り",
     "Other" : "その他",
+    "Attachments" : "添付ファイル",
     "Import into calendar" : "カレンダーにインポート",
     "Download attachment" : "添付ファイルをダウンロード",
     "Save to Files" : "ファイルに保存",

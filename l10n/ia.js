@@ -20,6 +20,7 @@ OC.L10N.register(
     "Important" : "Importante",
     "Favorites" : "Favoritos",
     "Other" : "Altere",
+    "Attachments" : "Attachamentos",
     "Unnamed" : "Non nominate",
     "Choose a folder to store the attachment in" : "Selectiona un dossier pro salveguardar le attachamento",
     "Settings" : "Configurationes",

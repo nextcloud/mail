@@ -96,6 +96,7 @@ OC.L10N.register(
     "Important" : "Важливі",
     "Favorites" : "Улюблене",
     "Other" : "Інші",
+    "Attachments" : "Вкладення",
     "Import into calendar" : "Імпортувати до календаря",
     "Download attachment" : "Звантажити вкладення",
     "Save to Files" : "Зберегти до Файлів",

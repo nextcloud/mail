@@ -29,6 +29,7 @@ OC.L10N.register(
     "Delete" : "Устгах",
     "Favorites" : "Онцолсон",
     "Other" : "Бусад",
+    "Attachments" : "Хавсралт",
     "Download attachment" : "Татаж авах хавсралт",
     "Save to Files" : "Файлд хадгална",
     "Choose a folder to store the attachment in" : "-д хавсралт хадгалах фолдер сонгоно уу",

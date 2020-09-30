@@ -13,6 +13,7 @@ OC.L10N.register(
     "Delete" : "Delete",
     "Favorites" : "Omiljene",
     "Other" : "Ostali",
+    "Attachments" : "Prilozi",
     "Settings" : "Postavke",
     "Add folder" : "Add folder",
     "Remove account" : "Ukloni nalog",

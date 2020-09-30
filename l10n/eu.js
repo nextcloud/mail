@@ -104,6 +104,7 @@ OC.L10N.register(
     "Favorites" : "Gogokoak",
     "Other" : "Beste bat",
     "Messages will automatically be marked as important based on which messages you interacted with or marked as important. In the beginning you might have to manually change the importance to teach the system, but it will improve over time." : "Mezuak automatikoki markatuko dira garrantzitsu bezala kontuan izanda zein mezurekin aritu zaren interakzioan edo zein markatu dituzun garratzitsu gisa. Hasieran garrantzia eskuz aldatu beharko duzu sistemari irakasteko, baina denborarekin hobetuko du.",
+    "Attachments" : "Eranskinak",
     "Import into calendar" : "Inportatu egutegira",
     "Download attachment" : "Deskargatu eranskina",
     "Save to Files" : "Gorde Fitxategiak-en",

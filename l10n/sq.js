@@ -37,6 +37,7 @@ OC.L10N.register(
     "Important" : "E rëndësishme",
     "Favorites" : "Favorites",
     "Other" : "Tjetër",
+    "Attachments" : "Bashkangjitjet",
     "Import into calendar" : "Importo në kalendar",
     "Download attachment" : "Shkarko bashkëlidhjen",
     "Save to Files" : "Ruaje te Skedarët",

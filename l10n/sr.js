@@ -100,6 +100,7 @@ OC.L10N.register(
     "Important" : "Важно",
     "Favorites" : "Омиљене",
     "Other" : "Остало",
+    "Attachments" : "Прилози",
     "Import into calendar" : "Увези у календар",
     "Download attachment" : "Скини прилог",
     "Save to Files" : "Сачувај у фајлове",
