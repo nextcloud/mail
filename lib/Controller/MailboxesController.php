@@ -147,20 +147,26 @@ class MailboxesController extends Controller {
 	 *
 	 * @param bool $init
 	 * @param string|null $query
+	 * @param string|'all' $criteria
 	 *
 	 * @return JSONResponse
 	 * @throws ClientException
 	 * @throws ServiceException
 	 */
-	public function sync(int $id, array $ids = [], bool $init = false, string $query = null): JSONResponse {
+	public function sync(int $id, array $ids = [], bool $init = false, string $query = null, string $criteria = 'all'): JSONResponse {
 		$mailbox = $this->mailManager->getMailbox($this->currentUserId, $id);
 		$account = $this->accountService->find($this->currentUserId, $mailbox->getAccountId());
+
+		$criteriaIds = Horde_Imap_Client::SYNC_NEWMSGSUIDS;
+		if ($criteria === 'all') {
+			$criteriaIds = $criteriaIds | Horde_Imap_Client::SYNC_FLAGSUIDS | Horde_Imap_Client::SYNC_VANISHEDUIDS;
+		}
 
 		try {
 			$syncResponse = $this->syncService->syncMailbox(
 				$account,
 				$mailbox,
-				Horde_Imap_Client::SYNC_NEWMSGSUIDS | Horde_Imap_Client::SYNC_FLAGSUIDS | Horde_Imap_Client::SYNC_VANISHEDUIDS,
+				$criteriaIds,
 				array_map(function ($id) {
 					return (int)$id;
 				}, $ids),
