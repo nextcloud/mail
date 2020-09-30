@@ -30,10 +30,10 @@
 		<Popover v-if="message.attachments[0]" class="attachment-popover">
 			<Actions slot="trigger">
 				<ActionButton icon="icon-public icon-attachment">
-					{{t('mail', 'Attachments')}}
+					{{ t('mail', 'Attachments') }}
 				</ActionButton>
 			</Actions>
-			<MessageAttachments :attachments="message.attachments" v-close-popover="true" />
+			<MessageAttachments v-close-popover="true" :attachments="message.attachments" />
 		</Popover>
 		<div id="reply-composer" />
 	</div>
