@@ -44,7 +44,10 @@
 		<div class="app-content-list-item-details date">
 			<Moment :timestamp="data.dateInt" />
 		</div>
-		<Actions class="app-content-list-item-menu" menu-align="right">
+		<Actions class="app-content-list-item-menu"
+			menu-align="right"
+			event=""
+			@click.native.prevent>
 			<ActionButton icon="icon-important" @click.prevent="onToggleImportant">
 				{{
 					data.flags.important ? t('mail', 'Mark unimportant') : t('mail', 'Mark important')
