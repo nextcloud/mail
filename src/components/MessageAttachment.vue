@@ -148,6 +148,7 @@ export default {
 				.addMimeTypeFilter('httpd/unix-directory')
 				.setModal(true)
 				.setType(1)
+				.allowDirectories(true)
 				.build()
 
 			return picker
