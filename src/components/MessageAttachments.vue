@@ -34,7 +34,7 @@
 				:mime="attachment.mime"
 				:mime-url="attachment.mimeUrl" />
 		</div>
-		<p class="attachments-button-wrapper" v-if="moreThanOne">
+		<p v-if="moreThanOne" class="attachments-button-wrapper">
 			<button
 				class="attachments-save-to-cloud"
 				:class="{'icon-folder': !savingToCloud, 'icon-loading-small': savingToCloud}"
