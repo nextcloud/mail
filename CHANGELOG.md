@@ -1,6 +1,43 @@
 # Changelog
 All notable changes to this project will be documented in this file.
 
+## 1.5.0 - 2020-10-03
+### Added
+- Threading: related message are shown as conversations
+- Mailbox management: add, move, rename and delete folders and subfolders
+- Unified search integration: find emails everywhere, you don't even have to open Mail
+- Dashboard integration: see all important email at a glance when you log into your cloud
+- Display account quota: see how much storage your account is using
+- Multilevel mailbox structure: no more limits on how deeply you next your folders
+- Aliases: manage your identities
+- Collapse quoted text and signatures: hide the parts of a message that are less important, but make it possible to expand if needed
+- Create new folders when saving attachments
+### Fixed
+- Fix formatting when it is checked individually from the account default
+- Catch throwable's during account sync
+- Fix icon color in dark theme
+- Fix inconsistend wording Spam vs Junk
+- Add action menu for subfolders
+- Add the missing references header for sent messages
+- Improve design of the folder creation
+- Show setup button if no accounts are set up
+- Improve accessibility
+- Make it possible to view messages of the same thread directly
+- Improve signature design
+- Do not navigate when clicking an envelope's menu
+- Change keyboardshortcut into modal
+- Allow toggeling of subscription status of folders
+- Fix dashboard empty content
+- Fix message source scroll bar
+- Inject styles for using native fonts in html mails
+- Fix unseen messages loading infinitely
+- Collapse plain text signatures into a detail element
+- Set file picker to copy mode
+- Collapse quoted text in plain text messages
+### Removed
+- Nextcloud 18 support (due to hard dependency on new API)
+- Nextcloud 19 support (due to hard dependency on new API)
+
 ## 1.4.1 - 2020-06-30
 ### Fixed
 - Importance classifier debuggability
