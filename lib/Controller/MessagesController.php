@@ -50,9 +50,9 @@ use OCP\AppFramework\Http\TemplateResponse;
 use OCP\Files\Folder;
 use OCP\Files\IMimeTypeDetector;
 use OCP\IL10N;
-use OCP\ILogger;
 use OCP\IRequest;
 use OCP\IURLGenerator;
+use Psr\Log\LoggerInterface;
 use function array_map;
 
 class MessagesController extends Controller {
@@ -72,7 +72,7 @@ class MessagesController extends Controller {
 	/** @var string */
 	private $currentUserId;
 
-	/** @var ILogger */
+	/** @var LoggerInterface */
 	private $logger;
 
 	/** @var Folder */
@@ -93,7 +93,7 @@ class MessagesController extends Controller {
 	 * @param AccountService $accountService
 	 * @param string $UserId
 	 * @param $userFolder
-	 * @param ILogger $logger
+	 * @param LoggerInterface $logger
 	 * @param IL10N $l10n
 	 * @param IMimeTypeDetector $mimeTypeDetector
 	 * @param IURLGenerator $urlGenerator
@@ -106,7 +106,7 @@ class MessagesController extends Controller {
 								ItineraryService $itineraryService,
 								string $UserId,
 								$userFolder,
-								ILogger $logger,
+								LoggerInterface $logger,
 								IL10N $l10n,
 								IMimeTypeDetector $mimeTypeDetector,
 								IURLGenerator $urlGenerator) {
