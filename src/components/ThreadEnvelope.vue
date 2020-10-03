@@ -122,6 +122,7 @@ import Avatar from './Avatar'
 import { buildRecipients as buildReplyRecipients } from '../ReplyBuilder'
 import { generateUrl } from '@nextcloud/router'
 import Modal from '@nextcloud/vue/dist/Components/Modal'
+import { Base64 } from 'js-base64'
 
 export default {
 	name: 'ThreadEnvelope',
@@ -168,7 +169,7 @@ export default {
 	},
 	computed: {
 		threadingFile() {
-			return `data:text/plain;base64,${btoa(JSON.stringify({
+			return `data:text/plain;base64,${Base64.encode(JSON.stringify({
 				subject: this.envelope.subject,
 				messageId: this.envelope.messageId,
 				inReplyTo: this.envelope.inReplyTo,
