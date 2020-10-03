@@ -25,7 +25,7 @@
     "@ckeditor/ckeditor5-editor-balloon": "^22.0.0",
     "@ckeditor/ckeditor5-essentials": "^22.0.0",
     "@ckeditor/ckeditor5-heading": "^22.0.0",
-    "@ckeditor/ckeditor5-link": "^22.0.0",
+    "@ckeditor/ckeditor5-link": "^23.0.0",
     "@ckeditor/ckeditor5-paragraph": "^22.0.0",
     "@ckeditor/ckeditor5-theme-lark": "^22.0.0",
     "@ckeditor/ckeditor5-vue": "^1.0.3",
