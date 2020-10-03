@@ -98,10 +98,10 @@ export default {
 #message-container {
 	flex: 1;
 	min-height: 50vh;
+	display: flex;
 }
 
 #message-frame {
-	height: 100%;
 	width: 100%;
 }
 </style>
