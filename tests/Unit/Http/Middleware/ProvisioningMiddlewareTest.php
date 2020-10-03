@@ -34,10 +34,10 @@ use OCP\Authentication\Exceptions\CredentialsUnavailableException;
 use OCP\Authentication\Exceptions\PasswordUnavailableException;
 use OCP\Authentication\LoginCredentials\ICredentials;
 use OCP\Authentication\LoginCredentials\IStore;
-use OCP\ILogger;
 use OCP\IUser;
 use OCP\IUserSession;
 use PHPUnit\Framework\MockObject\MockObject;
+use Psr\Log\LoggerInterface;
 
 class ProvisioningMiddlewareTest extends TestCase {
 
@@ -50,7 +50,7 @@ class ProvisioningMiddlewareTest extends TestCase {
 	/** @var Manager|MockObject */
 	private $provisioningManager;
 
-	/** @var ILogger|MockObject */
+	/** @var LoggerInterface|MockObject */
 	private $logger;
 
 	/** @var ProvisioningMiddleware */
@@ -62,7 +62,7 @@ class ProvisioningMiddlewareTest extends TestCase {
 		$this->userSession = $this->createMock(IUserSession::class);
 		$this->credentialStore = $this->createMock(IStore::class);
 		$this->provisioningManager = $this->createMock(Manager::class);
-		$this->logger = $this->createMock(ILogger::class);
+		$this->logger = $this->createMock(LoggerInterface::class);
 
 		$this->middleware = new ProvisioningMiddleware(
 			$this->userSession,
