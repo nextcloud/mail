@@ -4554,20 +4554,20 @@
         },
         {
             "name": "sabre/event",
-            "version": "5.1.1",
+            "version": "5.1.2",
             "source": {
                 "type": "git",
                 "url": "https://github.com/sabre-io/event.git",
-                "reference": "a37c73e535ddab02bd892f4bdab4867f9778cbea"
+                "reference": "c120bec57c17b6251a496efc82b732418b49d50a"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/sabre-io/event/zipball/a37c73e535ddab02bd892f4bdab4867f9778cbea",
-                "reference": "a37c73e535ddab02bd892f4bdab4867f9778cbea",
+                "url": "https://api.github.com/repos/sabre-io/event/zipball/c120bec57c17b6251a496efc82b732418b49d50a",
+                "reference": "c120bec57c17b6251a496efc82b732418b49d50a",
                 "shasum": ""
             },
             "require": {
-                "php": "^7.1|^8.0"
+                "php": "^7.1 || ^8.0"
             },
             "require-dev": {
                 "friendsofphp/php-cs-fixer": "~2.16.1",
@@ -4611,7 +4611,7 @@
                 "reactor",
                 "signal"
             ],
-            "time": "2020-09-19T20:29:54+00:00"
+            "time": "2020-10-03T11:02:22+00:00"
         },
         {
             "name": "sebastian/code-unit-reverse-lookup",
