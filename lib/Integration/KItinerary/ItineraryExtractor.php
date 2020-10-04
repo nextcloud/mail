@@ -32,8 +32,7 @@ use ChristophWurst\KItinerary\Itinerary;
 use ChristophWurst\KItinerary\ItineraryExtractor as Extractor;
 use ChristophWurst\KItinerary\Bin\BinaryAdapter;
 use ChristophWurst\KItinerary\Sys\SysAdapter;
-use OCA\Mail\Integration\Psr\LoggerAdapter;
-use OCP\ILogger;
+use Psr\Log\LoggerInterface;
 
 class ItineraryExtractor {
 
@@ -43,7 +42,7 @@ class ItineraryExtractor {
 	/** @var FlatpakAdapter */
 	private $flatpakAdapter;
 
-	/** @var ILogger */
+	/** @var LoggerInterface */
 	private $logger;
 
 	/** @var SysAdapter */
@@ -55,7 +54,7 @@ class ItineraryExtractor {
 	public function __construct(BinaryAdapter $binAdapter,
 								FlatpakAdapter $flatpakAdapter,
 								SysAdapter $sysAdapter,
-								ILogger $logger) {
+								LoggerInterface $logger) {
 		$this->binAdapter = $binAdapter;
 		$this->flatpakAdapter = $flatpakAdapter;
 		$this->sysAdapter = $sysAdapter;
@@ -64,14 +63,14 @@ class ItineraryExtractor {
 
 	private function findAvailableAdapter(): ?Adapter {
 		if ($this->binAdapter->isAvailable()) {
-			$this->binAdapter->setLogger(new LoggerAdapter($this->logger));
+			$this->binAdapter->setLogger($this->logger);
 			return $this->binAdapter;
 		}
 		if ($this->flatpakAdapter->isAvailable()) {
 			return $this->flatpakAdapter;
 		}
 		if ($this->sysAdapter->isAvailable()) {
-			$this->sysAdapter->setLogger(new LoggerAdapter($this->logger));
+			$this->sysAdapter->setLogger($this->logger);
 			return $this->sysAdapter;
 		}
 		return null;
@@ -90,8 +89,8 @@ class ItineraryExtractor {
 		try {
 			return (new Extractor($this->adapter))->extractFromString($content);
 		} catch (KItineraryRuntimeException $e) {
-			$this->logger->logException($e, [
-				'message' => 'Could not extract itinerary function from KItinerary integration',
+			$this->logger->error('Could not extract itinerary function from KItinerary integration: ' . $e->getMessage(), [
+				'exception' => $e,
 			]);
 			return new Itinerary();
 		}

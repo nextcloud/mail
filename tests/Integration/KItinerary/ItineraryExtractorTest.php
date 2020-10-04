@@ -30,8 +30,8 @@ use ChristophWurst\KItinerary\Flatpak\FlatpakAdapter;
 use ChristophWurst\KItinerary\Sys\SysAdapter;
 use ChristophWurst\Nextcloud\Testing\TestCase;
 use OCA\Mail\Integration\KItinerary\ItineraryExtractor;
-use OCP\ILogger;
 use PHPUnit\Framework\MockObject\MockObject;
+use Psr\Log\LoggerInterface;
 
 class ItineraryExtractorTest extends TestCase {
 
@@ -44,7 +44,7 @@ class ItineraryExtractorTest extends TestCase {
 	/** @var SysAdapter|MockObject */
 	private $sysAdapter;
 
-	/** @var ILogger|MockObject */
+	/** @var LoggerInterface|MockObject */
 	private $logger;
 
 	/** @var ItineraryExtractor */
@@ -56,7 +56,7 @@ class ItineraryExtractorTest extends TestCase {
 		$this->binaryAdapter = $this->createMock(BinaryAdapter::class);
 		$this->flatpakAdapter = $this->createMock(FlatpakAdapter::class);
 		$this->sysAdapter = $this->createMock(SysAdapter::class);
-		$this->logger = $this->createMock(ILogger::class);
+		$this->logger = $this->createMock(LoggerInterface::class);
 
 		$this->extractor = new ItineraryExtractor(
 			$this->binaryAdapter,
