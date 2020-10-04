@@ -32,7 +32,6 @@ use OCA\Mail\Db\Mailbox;
 use OCA\Mail\Exception\ServiceException;
 use OCA\Mail\IMAP\IMAPClientFactory;
 use OCA\Mail\Service\Search\SearchQuery;
-use OCP\ILogger;
 use function array_reduce;
 
 class Provider {
@@ -40,13 +39,8 @@ class Provider {
 	/** @var IMAPClientFactory */
 	private $clientFactory;
 
-	/** @var ILogger */
-	private $logger;
-
-	public function __construct(IMAPClientFactory $clientFactory,
-								ILogger $logger) {
+	public function __construct(IMAPClientFactory $clientFactory) {
 		$this->clientFactory = $clientFactory;
-		$this->logger = $logger;
 	}
 
 	/**
