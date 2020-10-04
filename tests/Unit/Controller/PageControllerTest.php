@@ -36,12 +36,12 @@ use OCP\AppFramework\Http\RedirectResponse;
 use OCP\AppFramework\Http\TemplateResponse;
 use OCP\IConfig;
 use OCP\IInitialStateService;
-use OCP\ILogger;
 use OCP\IRequest;
 use OCP\IURLGenerator;
 use OCP\IUser;
 use OCP\IUserSession;
 use PHPUnit\Framework\MockObject\MockObject;
+use Psr\Log\LoggerInterface;
 
 class PageControllerTest extends TestCase {
 
@@ -81,7 +81,7 @@ class PageControllerTest extends TestCase {
 	/** @var PageController */
 	private $controller;
 
-	/** @var ILogger|MockObject */
+	/** @var LoggerInterface|MockObject */
 	private $logger;
 
 	protected function setUp(): void {
@@ -98,7 +98,7 @@ class PageControllerTest extends TestCase {
 		$this->preferences = $this->createMock(IUserPreferences::class);
 		$this->mailManager = $this->createMock(MailManager::class);
 		$this->initialState = $this->createMock(IInitialStateService::class);
-		$this->logger = $this->createMock(ILogger::class);
+		$this->logger = $this->createMock(LoggerInterface::class);
 
 		$this->controller = new PageController(
 			$this->appName,

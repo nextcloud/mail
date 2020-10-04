@@ -38,10 +38,10 @@ use OCP\AppFramework\Http\RedirectResponse;
 use OCP\AppFramework\Http\TemplateResponse;
 use OCP\IConfig;
 use OCP\IInitialStateService;
-use OCP\ILogger;
 use OCP\IRequest;
 use OCP\IURLGenerator;
 use OCP\IUserSession;
+use Psr\Log\LoggerInterface;
 
 class PageController extends Controller {
 
@@ -72,7 +72,7 @@ class PageController extends Controller {
 	/** @var IInitialStateService */
 	private $initialStateService;
 
-	/** @var ILogger */
+	/** @var LoggerInterface */
 	private $logger;
 
 	public function __construct(string $appName,
@@ -86,7 +86,7 @@ class PageController extends Controller {
 								IUserPreferences $preferences,
 								IMailManager $mailManager,
 								IInitialStateService $initialStateService,
-								ILogger $logger) {
+								LoggerInterface $logger) {
 		parent::__construct($appName, $request);
 
 		$this->urlGenerator = $urlGenerator;
@@ -119,9 +119,8 @@ class PageController extends Controller {
 				$mailboxes = $this->mailManager->getMailboxes($mailAccount);
 				$json['mailboxes'] = $mailboxes;
 			} catch (Exception $ex) {
-				$this->logger->logException($ex, [
-					'message' => 'Could not load account mailboxes: ' . $ex->getMessage(),
-					'level' => ILogger::FATAL,
+				$this->logger->critical('Could not load account mailboxes: ' . $ex->getMessage(), [
+					'exception' => $ex,
 				]);
 				$json['mailboxes'] = [];
 				$json['error'] = true;

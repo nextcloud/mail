@@ -46,10 +46,10 @@ use OCP\AppFramework\Db\DoesNotExistException;
 use OCP\AppFramework\Http;
 use OCP\AppFramework\Http\JSONResponse;
 use OCP\IL10N;
-use OCP\ILogger;
 use OCP\IRequest;
 use OCP\Security\ICrypto;
 use PHPUnit\Framework\MockObject\MockObject;
+use Psr\Log\LoggerInterface;
 
 class AccountsControllerTest extends TestCase {
 
@@ -71,7 +71,7 @@ class AccountsControllerTest extends TestCase {
 	/** @var AutoConfig|MockObject */
 	private $autoConfig;
 
-	/** @var ILogger|MockObject */
+	/** @var LoggerInterface|MockObject */
 	private $logger;
 
 	/** @var IL10N|MockObject */
@@ -116,7 +116,7 @@ class AccountsControllerTest extends TestCase {
 			->will($this->returnArgument(0));
 		$this->userId = 'manfred';
 		$this->autoConfig = $this->createMock(AutoConfig::class);
-		$this->logger = $this->createMock(ILogger::class);
+		$this->logger = $this->createMock(LoggerInterface::class);
 		$this->l10n = $this->createMock(IL10N::class);
 		$this->crypto = $this->createMock(ICrypto::class);
 		$this->aliasesService = $this->createMock(AliasesService::class);

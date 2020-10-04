@@ -48,8 +48,8 @@ use OCP\AppFramework\Controller;
 use OCP\AppFramework\Http;
 use OCP\AppFramework\Http\JSONResponse;
 use OCP\IL10N;
-use OCP\ILogger;
 use OCP\IRequest;
+use Psr\Log\LoggerInterface;
 
 class AccountsController extends Controller {
 
@@ -62,7 +62,7 @@ class AccountsController extends Controller {
 	/** @var string */
 	private $currentUserId;
 
-	/** @var ILogger */
+	/** @var LoggerInterface */
 	private $logger;
 
 	/** @var IL10N */
@@ -91,7 +91,7 @@ class AccountsController extends Controller {
 	 * @param AccountService $accountService
 	 * @param GroupsIntegration $groupsIntegration
 	 * @param $UserId
-	 * @param ILogger $logger
+	 * @param LoggerInterface $logger
 	 * @param IL10N $l10n
 	 * @param AliasesService $aliasesService
 	 * @param IMailTransmission $mailTransmission
@@ -104,7 +104,7 @@ class AccountsController extends Controller {
 								   AccountService $accountService,
 								   GroupsIntegration $groupsIntegration,
 								   $UserId,
-								   ILogger $logger,
+								   LoggerInterface $logger,
 								   IL10N $l10n,
 								   AliasesService $aliasesService,
 								   IMailTransmission $mailTransmission,

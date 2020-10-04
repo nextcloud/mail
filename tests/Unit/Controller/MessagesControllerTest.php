@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 /**
  * @author Christoph Wurst <christoph@winzerhof-wurst.at>
  * @author Lukas Reschke <lukas@owncloud.com>
@@ -46,10 +48,10 @@ use OCP\AppFramework\Utility\ITimeFactory;
 use OCP\Files\Folder;
 use OCP\Files\IMimeTypeDetector;
 use OCP\IL10N;
-use OCP\ILogger;
 use OCP\IRequest;
 use OCP\IURLGenerator;
 use PHPUnit\Framework\MockObject\MockObject;
+use Psr\Log\LoggerInterface;
 
 class MessagesControllerTest extends TestCase {
 
@@ -77,7 +79,7 @@ class MessagesControllerTest extends TestCase {
 	/** @var MockObject|Folder */
 	private $userFolder;
 
-	/** @var MockObject|ILogger */
+	/** @var MockObject|LoggerInterface */
 	private $logger;
 
 	/** @var MockObject|IL10N */
@@ -119,7 +121,7 @@ class MessagesControllerTest extends TestCase {
 		$this->userId = 'john';
 		$this->userFolder = $this->createMock(Folder::class);
 		$this->request = $this->createMock(Request::class);
-		$this->logger = $this->createMock(ILogger::class);
+		$this->logger = $this->createMock(LoggerInterface::class);
 		$this->l10n = $this->createMock(IL10N::class);
 		$this->mimeTypeDetector = $this->createMock(IMimeTypeDetector::class);
 		$this->urlGenerator = $this->createMock(IURLGenerator::class);
@@ -215,7 +217,7 @@ class MessagesControllerTest extends TestCase {
 		$mailboxId = 987;
 		$id = 123;
 		$uid = 321;
-		$attachmentId = 3;
+		$attachmentId = "3";
 
 		// Attachment data
 		$contents = 'abcdef';
