@@ -29,10 +29,10 @@ use OCA\Mail\Account;
 use OCA\Mail\Exception\IncompleteSyncException;
 use OCA\Mail\Exception\ServiceException;
 use OCA\Mail\IMAP\MailboxSync;
-use OCA\Mail\Integration\Psr\LoggerAdapter;
 use OCA\Mail\Service\AccountService;
 use OCA\Mail\Service\Sync\ImapToDbSynchronizer;
 use OCA\Mail\Support\ConsoleLoggerDecorator;
+use Psr\Log\LoggerInterface;
 use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Input\InputArgument;
 use Symfony\Component\Console\Input\InputInterface;
@@ -53,13 +53,13 @@ class SyncAccount extends Command {
 	/** @var ImapToDbSynchronizer */
 	private $syncService;
 
-	/** @var LoggerAdapter */
+	/** @var LoggerInterface */
 	private $logger;
 
 	public function __construct(AccountService $service,
 								MailboxSync $mailboxSync,
 								ImapToDbSynchronizer $messageSync,
-								LoggerAdapter $logger) {
+								LoggerInterface $logger) {
 		parent::__construct();
 
 		$this->accountService = $service;
