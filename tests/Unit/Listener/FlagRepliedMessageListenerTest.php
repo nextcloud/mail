@@ -38,8 +38,8 @@ use OCA\Mail\Model\IMessage;
 use OCA\Mail\Model\NewMessageData;
 use OCA\Mail\Model\RepliedMessageData;
 use OCP\EventDispatcher\Event;
-use OCP\ILogger;
 use PHPUnit\Framework\MockObject\MockObject;
+use Psr\Log\LoggerInterface;
 
 class FlagRepliedMessageListenerTest extends TestCase {
 
@@ -52,7 +52,7 @@ class FlagRepliedMessageListenerTest extends TestCase {
 	/** @var MessageMapper|MockObject */
 	private $messageMapper;
 
-	/** @var ILogger|MockObject */
+	/** @var LoggerInterface|MockObject */
 	private $logger;
 
 	/** @var FlagRepliedMessageListener */
@@ -64,7 +64,7 @@ class FlagRepliedMessageListenerTest extends TestCase {
 		$this->imapClientFactory = $this->createMock(IMAPClientFactory::class);
 		$this->mailboxMapper = $this->createMock(MailboxMapper::class);
 		$this->messageMapper = $this->createMock(MessageMapper::class);
-		$this->logger = $this->createMock(ILogger::class);
+		$this->logger = $this->createMock(LoggerInterface::class);
 
 		$this->listener = new FlagRepliedMessageListener(
 			$this->imapClientFactory,
@@ -104,7 +104,7 @@ class FlagRepliedMessageListenerTest extends TestCase {
 		$this->mailboxMapper->expects($this->never())
 			->method('find');
 		$this->logger->expects($this->never())
-			->method('logException');
+			->method('error');
 
 		$this->listener->handle($event);
 	}
@@ -154,7 +154,7 @@ class FlagRepliedMessageListenerTest extends TestCase {
 				\Horde_Imap_Client::FLAG_ANSWERED
 			);
 		$this->logger->expects($this->never())
-			->method('logException');
+			->method('error');
 
 		$this->listener->handle($event);
 	}
