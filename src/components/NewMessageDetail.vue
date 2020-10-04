@@ -144,12 +144,18 @@ export default {
 				logger.debug('detected navigation to current (new) draft UID, not reloading')
 				return
 			}
-			logger.debug('the  draft ID changed, we have to fetch the draft', {
-				currentId: this.draft.databaseId,
-				newId: to.params.draftId,
-			})
 
-			this.fetchMessage()
+			if (to.params.threadId === 'new') {
+				// User pressed the 'New message button'
+				this.draft = undefined
+				this.loading = false
+			} else {
+				logger.debug('the  draft ID changed, we have to fetch the draft', {
+					currentId: (this.draft !== undefined) ? this.draft.databaseId : 'no draft currently loaded',
+					newId: to.params.draftId,
+				})
+				this.fetchMessage()
+			}
 		},
 	},
 	created() {
