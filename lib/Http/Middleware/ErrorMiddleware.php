@@ -39,12 +39,12 @@ use OCP\AppFramework\Http\Response;
 use OCP\AppFramework\Middleware;
 use OCP\AppFramework\Utility\IControllerMethodReflector;
 use OCP\IConfig;
-use OCP\ILogger;
+use Psr\Log\LoggerInterface;
 use Throwable;
 
 class ErrorMiddleware extends Middleware {
 
-	/** @var ILogger */
+	/** @var LoggerInterface */
 	private $logger;
 
 	/** @var IConfig */
@@ -55,10 +55,11 @@ class ErrorMiddleware extends Middleware {
 
 	/**
 	 * @param IConfig $config
-	 * @param ILogger $logger
+	 * @param LoggerInterface $logger
 	 * @param IControllerMethodReflector $reflector
 	 */
-	public function __construct(IConfig $config, ILogger $logger,
+	public function __construct(IConfig $config,
+								LoggerInterface $logger,
 								IControllerMethodReflector $reflector) {
 		$this->config = $config;
 		$this->logger = $logger;
@@ -91,9 +92,15 @@ class ErrorMiddleware extends Middleware {
 		}
 
 		$temporary = $this->isTemporaryException($exception);
-		$this->logger->logException($exception, [
-			'level' => $temporary ? ILogger::WARN : ILogger::ERROR,
-		]);
+		if ($temporary) {
+			$this->logger->warning($exception->getMessage(), [
+				'exception' => $exception,
+			]);
+		} else {
+			$this->logger->error($exception->getMessage(), [
+				'exception' => $exception,
+			]);
+		}
 		if ($this->config->getSystemValue('debug', false)) {
 			return JsonResponse::errorFromThrowable(
 				$exception,

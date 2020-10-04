@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 /**
  * @copyright 2017 Christoph Wurst <christoph@winzerhof-wurst.at>
  *
@@ -36,8 +38,8 @@ use OCP\AppFramework\Http;
 use OCP\AppFramework\Http\JSONResponse;
 use OCP\AppFramework\Utility\IControllerMethodReflector;
 use OCP\IConfig;
-use OCP\ILogger;
 use PHPUnit\Framework\MockObject\MockObject;
+use Psr\Log\LoggerInterface;
 use Throwable;
 
 class ErrorMiddlewareTest extends TestCase {
@@ -45,7 +47,7 @@ class ErrorMiddlewareTest extends TestCase {
 	/** @var IConfig|MockObject */
 	private $config;
 
-	/** @var ILogger|MockObject */
+	/** @var LoggerInterface|MockObject */
 	private $logger;
 
 	/** @var IControllerMethodReflector|MockObject */
@@ -58,7 +60,7 @@ class ErrorMiddlewareTest extends TestCase {
 		parent::setUp();
 
 		$this->config = $this->createMock(IConfig::class);
-		$this->logger = $this->createMock(ILogger::class);
+		$this->logger = $this->createMock(LoggerInterface::class);
 		$this->reflector = $this->createMock(IControllerMethodReflector::class);
 
 		$this->middleware = new ErrorMiddleware(
@@ -105,8 +107,10 @@ class ErrorMiddlewareTest extends TestCase {
 			->method('hasAnnotation')
 			->willReturn(true);
 		$this->logger->expects($this->exactly($shouldLog ? 1 : 0))
-			->method('logException')
-			->with($exception);
+			->method('error')
+			->with($exception->getMessage(), [
+				'exception' => $exception,
+			]);
 
 		$response = $this->middleware->afterException($controller, 'index', $exception);
 
@@ -122,8 +126,10 @@ class ErrorMiddlewareTest extends TestCase {
 			->method('hasAnnotation')
 			->willReturn(true);
 		$this->logger->expects($this->once())
-			->method('logException')
-			->with($outer);
+			->method('error')
+			->with($outer->getMessage(), [
+				'exception' => $outer,
+			]);
 
 		$response = $this->middleware->afterException($controller, 'index', $outer);
 
@@ -149,11 +155,10 @@ class ErrorMiddlewareTest extends TestCase {
 			->method('hasAnnotation')
 			->willReturn(true);
 		$this->logger->expects($this->once())
-			->method('logException')
-			->with(
-				$ex,
+			->method($temporary ? 'warning' : 'error')
+			->with($ex->getMessage(),
 				[
-					'level' => $temporary ? ILogger::WARN : ILogger::ERROR,
+					'exception' => $ex,
 				]
 			);
 

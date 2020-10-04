@@ -31,8 +31,8 @@ use OCP\AppFramework\Middleware;
 use OCP\Authentication\Exceptions\CredentialsUnavailableException;
 use OCP\Authentication\Exceptions\PasswordUnavailableException;
 use OCP\Authentication\LoginCredentials\IStore as ICredentialStore;
-use OCP\ILogger;
 use OCP\IUserSession;
+use Psr\Log\LoggerInterface;
 
 class ProvisioningMiddleware extends Middleware {
 
@@ -45,13 +45,13 @@ class ProvisioningMiddleware extends Middleware {
 	/** @var ProvisioningManager */
 	private $provisioningManager;
 
-	/** @var ILogger */
+	/** @var LoggerInterface */
 	private $logger;
 
 	public function __construct(IUserSession $userSession,
 								ICredentialStore $credentialStore,
 								ProvisioningManager $provisioningManager,
-								ILogger $logger) {
+								LoggerInterface $logger) {
 		$this->userSession = $userSession;
 		$this->credentialStore = $credentialStore;
 		$this->provisioningManager = $provisioningManager;
