@@ -39,8 +39,8 @@ use OCA\Mail\Model\RepliedMessageData;
 use OCA\Mail\Service\AutoCompletion\AddressCollector;
 use OCP\EventDispatcher\Event;
 use OCP\EventDispatcher\IEventListener;
-use OCP\ILogger;
 use PHPUnit\Framework\MockObject\MockObject;
+use Psr\Log\LoggerInterface;
 
 class AddressCollectionListenerTest extends TestCase {
 
@@ -50,7 +50,7 @@ class AddressCollectionListenerTest extends TestCase {
 	/** @var AddressCollector|MockObject */
 	private $addressCollector;
 
-	/** @var ILogger|MockObject */
+	/** @var LoggerInterface|MockObject */
 	private $logger;
 
 	/** @var IEventListener */
@@ -61,7 +61,7 @@ class AddressCollectionListenerTest extends TestCase {
 
 		$this->preferences = $this->createMock(IUserPreferences::class);
 		$this->addressCollector = $this->createMock(AddressCollector::class);
-		$this->logger = $this->createMock(ILogger::class);
+		$this->logger = $this->createMock(LoggerInterface::class);
 
 		$this->listener = new AddressCollectionListener(
 			$this->preferences,

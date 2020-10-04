@@ -31,7 +31,7 @@ use OCA\Mail\Exception\ServiceException;
 use OCA\Mail\Service\Classification\ImportanceClassifier;
 use OCP\EventDispatcher\Event;
 use OCP\EventDispatcher\IEventListener;
-use OCP\ILogger;
+use Psr\Log\LoggerInterface;
 use Throwable;
 
 class NewMessageClassificationListener implements IEventListener {
@@ -46,11 +46,11 @@ class NewMessageClassificationListener implements IEventListener {
 	/** @var ImportanceClassifier */
 	private $classifier;
 
-	/** @var ILogger */
+	/** @var LoggerInterface */
 	private $logger;
 
 	public function __construct(ImportanceClassifier $classifier,
-								ILogger $logger) {
+								LoggerInterface $logger) {
 		$this->classifier = $classifier;
 		$this->logger = $logger;
 	}
@@ -81,9 +81,8 @@ class NewMessageClassificationListener implements IEventListener {
 			}
 		} catch (Throwable|ServiceException $e) {
 			// TODO: remove Throwable catch once https://github.com/RubixML/RubixML/pull/69 landed here
-			$this->logger->logException($e, [
-				'message' => 'Could not classify incoming message importance: ' . $e->getMessage(),
-				'level' => ILogger::ERROR,
+			$this->logger->error('Could not classify incoming message importance: ' . $e->getMessage(), [
+				'exception' => $e,
 			]);
 		}
 	}

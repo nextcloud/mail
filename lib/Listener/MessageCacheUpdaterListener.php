@@ -30,18 +30,18 @@ use OCA\Mail\Events\MessageDeletedEvent;
 use OCA\Mail\Events\MessageFlaggedEvent;
 use OCP\EventDispatcher\Event;
 use OCP\EventDispatcher\IEventListener;
-use OCP\ILogger;
+use Psr\Log\LoggerInterface;
 
 class MessageCacheUpdaterListener implements IEventListener {
 
 	/** @var MessageMapper */
 	private $mapper;
 
-	/** @var ILogger */
+	/** @var LoggerInterface */
 	private $logger;
 
 	public function __construct(MessageMapper $mapper,
-								ILogger $logger) {
+								LoggerInterface $logger) {
 		$this->mapper = $mapper;
 		$this->logger = $logger;
 	}

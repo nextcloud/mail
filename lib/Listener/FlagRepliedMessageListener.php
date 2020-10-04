@@ -35,7 +35,7 @@ use OCA\Mail\IMAP\MessageMapper;
 use OCP\AppFramework\Db\DoesNotExistException;
 use OCP\EventDispatcher\Event;
 use OCP\EventDispatcher\IEventListener;
-use OCP\ILogger;
+use Psr\Log\LoggerInterface;
 
 class FlagRepliedMessageListener implements IEventListener {
 
@@ -48,13 +48,13 @@ class FlagRepliedMessageListener implements IEventListener {
 	/** @var MessageMapper */
 	private $messageMapper;
 
-	/** @var ILogger */
+	/** @var LoggerInterface */
 	private $logger;
 
 	public function __construct(IMAPClientFactory $imapClientFactory,
 								MailboxMapper $mailboxMapper,
 								MessageMapper $mapper,
-								ILogger $logger) {
+								LoggerInterface $logger) {
 		$this->imapClientFactory = $imapClientFactory;
 		$this->mailboxMapper = $mailboxMapper;
 		$this->messageMapper = $mapper;
@@ -71,9 +71,8 @@ class FlagRepliedMessageListener implements IEventListener {
 				$event->getRepliedMessageData()->getMessage()->getMailboxId()
 			);
 		} catch (DoesNotExistException|ServiceException $e) {
-			$this->logger->logException($e, [
-				'message' => 'Could not flag the message in reply to',
-				'level' => ILogger::WARN,
+			$this->logger->warning('Could not flag the message in reply to: ' . $e, [
+				'exception' => $e,
 			]);
 			// Not critical -> continue
 			return;
@@ -88,9 +87,8 @@ class FlagRepliedMessageListener implements IEventListener {
 				Horde_Imap_Client::FLAG_ANSWERED
 			);
 		} catch (Horde_Imap_Client_Exception $e) {
-			$this->logger->logException($e, [
-				'message' => 'Could not flag replied message',
-				'level' => ILogger::WARN,
+			$this->logger->warning('Could not flag replied message: ' . $e, [
+				'exception' => $e,
 			]);
 		}
 	}

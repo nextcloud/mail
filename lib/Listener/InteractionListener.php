@@ -27,11 +27,11 @@ namespace OCA\Mail\Listener;
 
 use OCA\Mail\Address;
 use OCA\Mail\Events\MessageSentEvent;
+use OCA\Mail\Integration\Psr\LoggerAdapter;
 use OCP\Contacts\Events\ContactInteractedWithEvent;
 use OCP\EventDispatcher\Event;
 use OCP\EventDispatcher\IEventDispatcher;
 use OCP\EventDispatcher\IEventListener;
-use OCP\ILogger;
 use OCP\IUserSession;
 use function class_exists;
 
@@ -43,12 +43,12 @@ class InteractionListener implements IEventListener {
 	/** @var IUserSession */
 	private $userSession;
 
-	/** @var ILogger */
+	/** @var LoggerAdapter */
 	private $logger;
 
 	public function __construct(IEventDispatcher $dispatcher,
 								IUserSession $userSession,
-								ILogger $logger) {
+								LoggerAdapter $logger) {
 		$this->dispatcher = $dispatcher;
 		$this->userSession = $userSession;
 		$this->logger = $logger;

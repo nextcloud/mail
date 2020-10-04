@@ -30,7 +30,7 @@ use OCA\Mail\Events\MessageSentEvent;
 use OCA\Mail\Service\AutoCompletion\AddressCollector;
 use OCP\EventDispatcher\Event;
 use OCP\EventDispatcher\IEventListener;
-use OCP\ILogger;
+use Psr\Log\LoggerInterface;
 use Throwable;
 
 class AddressCollectionListener implements IEventListener {
@@ -41,12 +41,12 @@ class AddressCollectionListener implements IEventListener {
 	/** @var AddressCollector */
 	private $collector;
 
-	/** @var ILogger */
+	/** @var LoggerInterface */
 	private $logger;
 
 	public function __construct(IUserPreferences $preferences,
 								AddressCollector $collector,
-								ILogger $logger) {
+								LoggerInterface $logger) {
 		$this->collector = $collector;
 		$this->logger = $logger;
 		$this->preferences = $preferences;
@@ -70,9 +70,8 @@ class AddressCollectionListener implements IEventListener {
 
 			$this->collector->addAddresses($addresses);
 		} catch (Throwable $e) {
-			$this->logger->logException($e, [
-				'message' => 'Error while collecting mail addresses',
-				'level' => ILogger::WARN,
+			$this->logger->warning('Error while collecting mail addresses: ' . $e, [
+				'exception' => $e,
 			]);
 		}
 	}

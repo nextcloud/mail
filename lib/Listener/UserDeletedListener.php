@@ -29,19 +29,19 @@ use OCA\Mail\Exception\ClientException;
 use OCA\Mail\Service\AccountService;
 use OCP\EventDispatcher\Event;
 use OCP\EventDispatcher\IEventListener;
-use OCP\ILogger;
 use OCP\User\Events\UserDeletedEvent;
+use Psr\Log\LoggerInterface;
 
 class UserDeletedListener implements IEventListener {
 
 	/** @var AccountService */
 	private $accountService;
 
-	/** @var ILogger */
+	/** @var LoggerInterface */
 	private $logger;
 
 	public function __construct(AccountService $accountService,
-								ILogger $logger) {
+								LoggerInterface $logger) {
 		$this->accountService = $accountService;
 		$this->logger = $logger;
 	}
@@ -60,9 +60,8 @@ class UserDeletedListener implements IEventListener {
 					$account->getId()
 				);
 			} catch (ClientException $e) {
-				$this->logger->logException($e, [
-					'message' => 'Could not delete user\'s Mail account: ' . $e->getMessage(),
-					'level' => ILogger::ERROR,
+				$this->logger->error('Could not delete user\'s Mail account: ' . $e->getMessage(), [
+					'exception' => $e,
 				]);
 			}
 		}
