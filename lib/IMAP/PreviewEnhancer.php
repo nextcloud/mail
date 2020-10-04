@@ -31,7 +31,7 @@ use OCA\Mail\Db\Mailbox;
 use OCA\Mail\Db\Message;
 use OCA\Mail\Db\MessageMapper as DbMapper;
 use OCA\Mail\IMAP\MessageMapper as ImapMapper;
-use OCP\ILogger;
+use Psr\Log\LoggerInterface;
 use function array_key_exists;
 use function array_map;
 use function array_merge;
@@ -48,13 +48,13 @@ class PreviewEnhancer {
 	/** @var DbMapper */
 	private $mapper;
 
-	/** @var ILogger */
+	/** @var LoggerInterface */
 	private $logger;
 
 	public function __construct(IMAPClientFactory $clientFactory,
 								ImapMapper $imapMapper,
 								DbMapper $dbMapper,
-								ILogger $logger) {
+								LoggerInterface $logger) {
 		$this->clientFactory = $clientFactory;
 		$this->imapMapper = $imapMapper;
 		$this->mapper = $dbMapper;
@@ -89,9 +89,8 @@ class PreviewEnhancer {
 			);
 		} catch (Horde_Imap_Client_Exception $e) {
 			// Ignore for now, but log
-			$this->logger->logException($e, [
-				'message' => 'Could not fetch structure detail data to enhance message previews',
-				'level' => ILogger::WARN,
+			$this->logger->warning('Could not fetch structure detail data to enhance message previews: ' . $e->getMessage(), [
+				'exception' => $e,
 			]);
 
 			return $messages;

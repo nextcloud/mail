@@ -32,12 +32,12 @@ use Horde_Imap_Client_Ids;
 use Horde_Imap_Client_Socket;
 use OCA\Mail\IMAP\MessageMapper;
 use OCA\Mail\Model\IMAPMessage;
-use OCP\ILogger;
 use PHPUnit\Framework\MockObject\MockObject;
+use Psr\Log\LoggerInterface;
 
 class MessageMapperTest extends TestCase {
 
-	/** @var ILogger|MockObject */
+	/** @var LoggerInterface|MockObject */
 	private $logger;
 
 	/** @var MessageMapper */
@@ -46,7 +46,7 @@ class MessageMapperTest extends TestCase {
 	protected function setUp(): void {
 		parent::setUp();
 
-		$this->logger = $this->createMock(ILogger::class);
+		$this->logger = $this->createMock(LoggerInterface::class);
 
 		$this->mapper = new MessageMapper(
 			$this->logger

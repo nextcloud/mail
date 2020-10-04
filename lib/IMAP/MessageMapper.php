@@ -36,7 +36,7 @@ use OCA\Mail\Db\Mailbox;
 use OCA\Mail\Exception\ServiceException;
 use OCA\Mail\Model\IMAPMessage;
 use OCP\AppFramework\Db\DoesNotExistException;
-use OCP\ILogger;
+use Psr\Log\LoggerInterface;
 use function array_filter;
 use function array_map;
 use function iterator_to_array;
@@ -44,10 +44,10 @@ use function reset;
 
 class MessageMapper {
 
-	/** @var ILogger */
+	/** @var LoggerInterface */
 	private $logger;
 
-	public function __construct(ILogger $logger) {
+	public function __construct(LoggerInterface $logger) {
 		$this->logger = $logger;
 	}
 
@@ -252,9 +252,10 @@ class MessageMapper {
 					'move' => true,
 				]);
 		} catch (Horde_Imap_Client_Exception $e) {
-			$this->logger->logException(
-				$e,
-				['level' => ILogger::DEBUG]
+			$this->logger->debug($e->getMessage(),
+				[
+					'exception' => $e,
+				]
 			);
 
 			throw new ServiceException(
@@ -288,21 +289,16 @@ class MessageMapper {
 					'delete' => true,
 				]);
 		} catch (Horde_Imap_Client_Exception $e) {
-			$this->logger->logException(
-				$e,
-				['level' => ILogger::DEBUG]
+			$this->logger->debug($e->getMessage(),
+				[
+					'exception' => $e,
+				]
 			);
 
 			throw new ServiceException("Could not expunge message $id", 0, $e);
 		}
 
-		$this->logger->info(
-			"Message expunged: {message} from mailbox {mailbox}",
-			[
-				'message' => $id,
-				'mailbox' => $mailbox,
-			]
-		);
+		$this->logger->info("Message expunged: $id from mailbox $mailbox");
 	}
 
 	/**
