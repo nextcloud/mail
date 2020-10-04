@@ -145,7 +145,7 @@ export default {
 				return
 			}
 			logger.debug('the  draft ID changed, we have to fetch the draft', {
-				currentId: this.draft.databaseId,
+				currentId: this?.draft?.databaseId ?? 'no draft currently loaded',
 				newId: to.params.draftId,
 			})
 
