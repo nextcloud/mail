@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "fb22b9489df9c055086b2e84a63918b2",
+    "content-hash": "f866bf8e367d48f73257e5a223c615b0",
     "packages": [
         {
             "name": "amphp/amp",
@@ -1679,16 +1679,16 @@
         },
         {
             "name": "rubix/ml",
-            "version": "0.2.0",
+            "version": "0.2.1",
             "source": {
                 "type": "git",
                 "url": "https://github.com/RubixML/RubixML.git",
-                "reference": "a0ce91dc30033c1eaf15bd2b788bc70564364bdb"
+                "reference": "7d78232e6f6ce439a822453389f2e442646eec04"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/RubixML/RubixML/zipball/a0ce91dc30033c1eaf15bd2b788bc70564364bdb",
-                "reference": "a0ce91dc30033c1eaf15bd2b788bc70564364bdb",
+                "url": "https://api.github.com/repos/RubixML/RubixML/zipball/7d78232e6f6ce439a822453389f2e442646eec04",
+                "reference": "7d78232e6f6ce439a822453389f2e442646eec04",
                 "shasum": ""
             },
             "require": {
@@ -1827,13 +1827,9 @@
                 {
                     "url": "https://github.com/sponsors/RubixML",
                     "type": "github"
-                },
-                {
-                    "url": "https://www.patreon.com/rubixml",
-                    "type": "patreon"
                 }
             ],
-            "time": "2020-09-13T19:08:14+00:00"
+            "time": "2020-09-27T08:24:41+00:00"
         },
         {
             "name": "rubix/tensor",
