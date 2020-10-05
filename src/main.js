@@ -32,6 +32,7 @@ import Nextcloud from './mixins/Nextcloud'
 import router from './router'
 import store from './store'
 import { fixAccountId } from './service/AccountService'
+import { Base64 } from 'js-base64'
 
 // eslint-disable-next-line camelcase
 __webpack_nonce__ = btoa(getRequestToken())
@@ -70,7 +71,7 @@ store.commit('savePreference', {
 	value: getPreferenceFromPage('collect-data'),
 })
 
-const accounts = JSON.parse(atob(getPreferenceFromPage('serialized-accounts')))
+const accounts = JSON.parse(Base64.decode(getPreferenceFromPage('serialized-accounts')))
 accounts.map(fixAccountId).forEach((account) => {
 	store.commit('addAccount', account)
 })
