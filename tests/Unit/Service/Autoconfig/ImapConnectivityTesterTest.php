@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 /**
  * @author Christoph Wurst <christoph@winzerhof-wurst.at>
  *
@@ -26,19 +28,18 @@ use Horde_Imap_Client_Exception;
 use OCA\Mail\Service\AutoConfig\ConnectivityTester;
 use OCA\Mail\Service\AutoConfig\ImapConnectivityTester;
 use OCA\Mail\Service\AutoConfig\ImapConnector;
-use OCP\ILogger;
-use OpenCloud\Common\Log\Logger as Logger2;
-use PHPUnit_Framework_MockObject_MockObject;
+use PHPUnit\Framework\MockObject\MockObject;
+use Psr\Log\LoggerInterface;
 
 class ImapConnectivityTesterTest extends TestCase {
 
-	/** @var ImapConnector|PHPUnit_Framework_MockObject_MockObject */
+	/** @var ImapConnector|MockObject */
 	private $imapConnector;
 
-	/** @var ConnectivityTester|PHPUnit_Framework_MockObject_MockObject */
+	/** @var ConnectivityTester|MockObject */
 	private $connectivityTester;
 
-	/** @var Logger2|PHPUnit_Framework_MockObject_MockObject */
+	/** @var LoggerInterface|MockObject */
 	private $logger;
 
 	/** @var ImapConnectivityTester */
@@ -49,8 +50,14 @@ class ImapConnectivityTesterTest extends TestCase {
 
 		$this->imapConnector = $this->createMock(ImapConnector::class);
 		$this->connectivityTester = $this->createMock(ConnectivityTester::class);
-		$this->logger = $this->createMock(ILogger::class);
-		$this->tester = new ImapConnectivityTester($this->imapConnector, $this->connectivityTester, 'dave', $this->logger);
+		$this->logger = $this->createMock(LoggerInterface::class);
+
+		$this->tester = new ImapConnectivityTester(
+			$this->imapConnector,
+			$this->connectivityTester,
+			'dave',
+			$this->logger
+		);
 	}
 
 	public function testTest() {

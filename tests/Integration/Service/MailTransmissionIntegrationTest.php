@@ -43,9 +43,9 @@ use OCA\Mail\SMTP\SmtpClientFactory;
 use OCA\Mail\Tests\Integration\Framework\ImapTest;
 use OCA\Mail\Tests\Integration\TestCase;
 use OCP\EventDispatcher\IEventDispatcher;
-use OCP\ILogger;
 use OCP\IUser;
 use OCP\Security\ICrypto;
+use Psr\Log\LoggerInterface;
 use Psr\Log\NullLogger;
 
 class MailTransmissionIntegrationTest extends TestCase {
@@ -93,6 +93,7 @@ class MailTransmissionIntegrationTest extends TestCase {
 		$this->account = new Account($mailAccount);
 		$this->attachmentService = OC::$server->query(IAttachmentService::class);
 		$userFolder = OC::$server->getUserFolder($this->user->getUID());
+
 		$this->transmission = new MailTransmission(
 			$userFolder,
 			$this->attachmentService,
@@ -101,7 +102,7 @@ class MailTransmissionIntegrationTest extends TestCase {
 			OC::$server->query(IEventDispatcher::class),
 			OC::$server->query(MailboxMapper::class),
 			OC::$server->query(MessageMapper::class),
-			OC::$server->query(ILogger::class)
+			OC::$server->query(LoggerInterface::class)
 		);
 	}
 

@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 /**
  * @author Christoph Wurst <christoph@winzerhof-wurst.at>
  *
@@ -26,16 +28,16 @@ use Horde_Imap_Client_Exception;
 use OCA\Mail\Db\MailAccount;
 use OCA\Mail\IMAP\IMAPClientFactory;
 use OCA\Mail\Service\AutoConfig\ImapConnector;
-use OCP\ILogger;
 use OCP\Security\ICrypto;
 use PHPUnit\Framework\MockObject\MockObject;
+use Psr\Log\LoggerInterface;
 
 class ImapConnectorTest extends TestCase {
 
 	/** @var ICrypto|MockObject */
 	private $crypto;
 
-	/** @var ILogger|MockObject */
+	/** @var LoggerInterface|MockObject */
 	private $logger;
 
 	/** @var IMAPClientFactory|MockObject */
@@ -48,10 +50,15 @@ class ImapConnectorTest extends TestCase {
 		parent::setUp();
 
 		$this->crypto = $this->createMock(ICrypto::class);
-		$this->logger = $this->createMock(ILogger::class);
+		$this->logger = $this->createMock(LoggerInterface::class);
 		$this->clientFactory = $this->createMock(IMAPClientFactory::class);
 
-		$this->connector = new ImapConnector($this->crypto, $this->logger, $this->clientFactory, 'christopher');
+		$this->connector = new ImapConnector(
+			$this->crypto,
+			$this->logger,
+			$this->clientFactory,
+			'christopher'
+		);
 	}
 
 	public function testSuccessfulConnection() {
@@ -59,7 +66,7 @@ class ImapConnectorTest extends TestCase {
 		$password = 'mypassword';
 		$name = 'User';
 		$host = 'localhost';
-		$port = '993';
+		$port = 993;
 		$ssl = 'ssl';
 		$user = 'user@domain.tld';
 
@@ -76,7 +83,7 @@ class ImapConnectorTest extends TestCase {
 		$password = 'notmypassword';
 		$name = 'User';
 		$host = 'localhost';
-		$port = '993';
+		$port = 993;
 		$ssl = 'ssl';
 		$user = 'user@domain.tld';
 		$this->expectException(Horde_Imap_Client_Exception::class);

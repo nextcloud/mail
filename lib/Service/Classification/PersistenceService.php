@@ -37,8 +37,8 @@ use OCP\Files\IAppData;
 use OCP\Files\NotFoundException;
 use OCP\Files\NotPermittedException;
 use OCP\ICacheFactory;
-use OCP\ILogger;
 use OCP\ITempManager;
+use Psr\Log\LoggerInterface;
 use Rubix\ML\Estimator;
 use Rubix\ML\Persistable;
 use Rubix\ML\Persisters\Filesystem;
@@ -69,7 +69,7 @@ class PersistenceService {
 	/** @var ICacheFactory */
 	private $cacheFactory;
 
-	/** @var ILogger */
+	/** @var LoggerInterface */
 	private $logger;
 
 	public function __construct(ClassifierMapper $mapper,
@@ -78,7 +78,7 @@ class PersistenceService {
 								ITimeFactory $timeFactory,
 								IAppManager $appManager,
 								ICacheFactory $cacheFactory,
-								ILogger $logger) {
+								LoggerInterface $logger) {
 		$this->mapper = $mapper;
 		$this->appData = $appData;
 		$this->tempManager = $tempManager;

@@ -39,7 +39,6 @@ use OCA\Mail\Exception\ServiceException;
 use OCA\Mail\IMAP\PreviewEnhancer;
 use OCA\Mail\IMAP\Search\Provider as ImapSearchProvider;
 use OCP\AppFramework\Db\DoesNotExistException;
-use OCP\ILogger;
 use OCP\IUser;
 
 class MailSearch implements IMailSearch {
@@ -59,21 +58,16 @@ class MailSearch implements IMailSearch {
 	/** @var PreviewEnhancer */
 	private $previewEnhancer;
 
-	/** @var ILogger */
-	private $logger;
-
 	public function __construct(FilterStringParser $filterStringParser,
 								MailboxMapper $mailboxMapper,
 								ImapSearchProvider $imapSearchProvider,
 								MessageMapper $messageMapper,
-								PreviewEnhancer $previewEnhancer,
-								ILogger $logger) {
+								PreviewEnhancer $previewEnhancer) {
 		$this->filterStringParser = $filterStringParser;
 		$this->mailboxMapper = $mailboxMapper;
 		$this->imapSearchProvider = $imapSearchProvider;
 		$this->messageMapper = $messageMapper;
 		$this->previewEnhancer = $previewEnhancer;
-		$this->logger = $logger;
 	}
 
 	public function findMessage(Account $account,

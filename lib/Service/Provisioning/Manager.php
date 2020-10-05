@@ -26,10 +26,10 @@ namespace OCA\Mail\Service\Provisioning;
 use OCA\Mail\Db\MailAccount;
 use OCA\Mail\Db\MailAccountMapper;
 use OCP\AppFramework\Db\DoesNotExistException;
-use OCP\ILogger;
 use OCP\IUser;
 use OCP\IUserManager;
 use OCP\Security\ICrypto;
+use Psr\Log\LoggerInterface;
 
 class Manager {
 
@@ -45,14 +45,14 @@ class Manager {
 	/** @var ICrypto */
 	private $crypto;
 
-	/** @var ILogger */
+	/** @var LoggerInterface */
 	private $logger;
 
 	public function __construct(IUserManager $userManager,
 								ConfigMapper $configMapper,
 								MailAccountMapper $mailAccountMapper,
 								ICrypto $crypto,
-								ILogger $logger) {
+								LoggerInterface $logger) {
 		$this->userManager = $userManager;
 		$this->configMapper = $configMapper;
 		$this->mailAccountMapper = $mailAccountMapper;

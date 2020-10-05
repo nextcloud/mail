@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 /**
  * @copyright 2017 Christoph Wurst <christoph@winzerhof-wurst.at>
  *
@@ -29,8 +31,8 @@ use OCA\Mail\Db\MailAccount;
 use OCA\Mail\Exception\ServiceException;
 use OCA\Mail\Service\AutoConfig\AutoConfig;
 use OCA\Mail\SMTP\SmtpClientFactory;
-use OCP\ILogger;
 use OCP\Security\ICrypto;
+use Psr\Log\LoggerInterface;
 
 class SetupService {
 
@@ -46,16 +48,14 @@ class SetupService {
 	/** @var SmtpClientFactory */
 	private $smtpClientFactory;
 
-	/** var ILogger */
+	/** var LoggerInterface */
 	private $logger;
 
-	/**
-	 * @param AutoConfig $autoConfig
-	 * @param AccountService $accountService
-	 * @param ICrypto $crypto
-	 * @param ILogger $logger
-	 */
-	public function __construct(AutoConfig $autoConfig, AccountService $accountService, ICrypto $crypto, SmtpClientFactory $smtpClientFactory, ILogger $logger) {
+	public function __construct(AutoConfig $autoConfig,
+								AccountService $accountService,
+								ICrypto $crypto,
+								SmtpClientFactory $smtpClientFactory,
+								LoggerInterface $logger) {
 		$this->autoConfig = $autoConfig;
 		$this->accountService = $accountService;
 		$this->crypto = $crypto;

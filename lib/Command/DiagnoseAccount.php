@@ -30,7 +30,7 @@ use Horde_Imap_Client_Socket;
 use OCA\Mail\IMAP\IMAPClientFactory;
 use OCA\Mail\Service\AccountService;
 use OCP\AppFramework\Db\DoesNotExistException;
-use OCP\ILogger;
+use Psr\Log\LoggerInterface;
 use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Input\InputArgument;
 use Symfony\Component\Console\Input\InputInterface;
@@ -48,12 +48,12 @@ class DiagnoseAccount extends Command {
 	/** @var IMAPClientFactory */
 	private $clientFactory;
 
-	/** @var ILogger */
+	/** @var LoggerInterface */
 	private $logger;
 
 	public function __construct(AccountService $service,
 								IMAPClientFactory $clientFactory,
-								ILogger $logger) {
+								LoggerInterface $logger) {
 		parent::__construct();
 
 		$this->accountService = $service;
@@ -89,8 +89,8 @@ class DiagnoseAccount extends Command {
 			$this->printCapabilitiesStats($output, $imapClient);
 			$this->printMailboxesMessagesStats($output, $imapClient);
 		} catch (Horde_Imap_Client_Exception $e) {
-			$this->logger->logException($e, [
-				'message' => 'Could not get account statistics',
+			$this->logger->error('Could not get account statistics: ' . $e, [
+				'exception' => $e,
 			]);
 			$output->writeln("<error>Horde error occurred: " . $e->getMessage() . ". See nextcloud.log for more details.</error>");
 			return 2;

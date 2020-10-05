@@ -23,18 +23,15 @@ declare(strict_types=1);
 
 namespace OCA\Mail\Service\AutoConfig;
 
-use OCP\ILogger;
+use Psr\Log\LoggerInterface;
 
 class ConnectivityTester {
 	public const CONNECTION_TIMEOUT = 5;
 
-	/** @var ILogger */
+	/** @var LoggerInterface */
 	protected $logger;
 
-	/**
-	 * @param ILogger $logger
-	 */
-	public function __construct(ILogger $logger) {
+	public function __construct(LoggerInterface $logger) {
 		$this->logger = $logger;
 	}
 

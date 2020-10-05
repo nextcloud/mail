@@ -29,7 +29,7 @@ use OCA\Mail\Service\AccountService;
 use OCA\Mail\Service\Classification\ImportanceClassifier;
 use OCA\Mail\Support\ConsoleLoggerDecorator;
 use OCP\AppFramework\Db\DoesNotExistException;
-use OCP\ILogger;
+use Psr\Log\LoggerInterface;
 use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Input\InputArgument;
 use Symfony\Component\Console\Input\InputInterface;
@@ -45,12 +45,12 @@ class TrainAccount extends Command {
 	/** @var ImportanceClassifier */
 	private $classifier;
 
-	/** @var ILogger */
+	/** @var LoggerInterface */
 	private $logger;
 
 	public function __construct(AccountService $service,
 								ImportanceClassifier $classifier,
-								ILogger $logger) {
+								LoggerInterface $logger) {
 		parent::__construct();
 
 		$this->accountService = $service;

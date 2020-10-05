@@ -27,8 +27,8 @@ use Exception;
 use OCA\Mail\Account;
 use OCA\Mail\Db\MailAccount;
 use OCA\Mail\SMTP\SmtpClientFactory;
-use OCP\ILogger;
 use OCP\Security\ICrypto;
+use Psr\Log\LoggerInterface;
 
 class SmtpConnectivityTester {
 
@@ -41,7 +41,7 @@ class SmtpConnectivityTester {
 	/** @var SmtpClientFactory */
 	private $clientFactory;
 
-	/** @var ILogger */
+	/** @var LoggerInterface */
 	private $logger;
 
 	/** @var string */
@@ -51,13 +51,13 @@ class SmtpConnectivityTester {
 	 * @param ConnectivityTester $connectivityTester
 	 * @param ICrypto $crypto
 	 * @param SmtpClientFactory $clientFactory
-	 * @param ILogger $logger
+	 * @param LoggerInterface $logger
 	 * @param string $UserId
 	 */
 	public function __construct(ConnectivityTester $connectivityTester,
 								ICrypto $crypto,
 								SmtpClientFactory $clientFactory,
-								ILogger $logger,
+								LoggerInterface $logger,
 								$UserId) {
 		$this->connectivityTester = $connectivityTester;
 		$this->crypto = $crypto;

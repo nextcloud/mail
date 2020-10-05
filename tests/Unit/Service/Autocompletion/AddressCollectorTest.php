@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 /**
  * @author Christoph Wurst <christoph@winzerhof-wurst.at>
  *
@@ -24,8 +26,9 @@ namespace OCA\Mail\Tests\Unit\Service\Autocompletion;
 use ChristophWurst\Nextcloud\Testing\TestCase;
 use OCA\Mail\AddressList;
 use OCA\Mail\Db\CollectedAddress;
+use OCA\Mail\Db\CollectedAddressMapper;
 use OCA\Mail\Service\AutoCompletion\AddressCollector;
-use OCP\ILogger;
+use Psr\Log\LoggerInterface;
 
 class AddressCollectorTest extends TestCase {
 	private $mapper;
@@ -36,14 +39,14 @@ class AddressCollectorTest extends TestCase {
 	protected function setUp(): void {
 		parent::setUp();
 
-		$this->mapper = $this->getMockBuilder('\OCA\Mail\Db\CollectedAddressMapper')
-			->disableOriginalConstructor()
-			->getMock();
-		$this->logger = $this->getMockBuilder(ILogger::class)
-			->disableOriginalConstructor()
-			->getMock();
+		$this->mapper = $this->createMock(CollectedAddressMapper::class);
+		$this->logger = $this->createMock(LoggerInterface::class);
 
-		$this->collector = new AddressCollector($this->mapper, $this->userId, $this->logger);
+		$this->collector = new AddressCollector(
+			$this->mapper,
+			$this->userId,
+			$this->logger
+		);
 	}
 
 	public function testAddAddresses() {
