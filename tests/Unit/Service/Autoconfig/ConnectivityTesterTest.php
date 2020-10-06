@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 /**
  * @author Christoph Wurst <christoph@winzerhof-wurst.at>
  *
@@ -23,12 +25,12 @@ namespace OCA\Mail\Tests\Unit\Service\Autoconfig;
 
 use ChristophWurst\Nextcloud\Testing\TestCase;
 use OCA\Mail\Service\AutoConfig\ConnectivityTester;
-use OCP\ILogger;
-use PHPUnit_Framework_MockObject_MockObject;
+use PHPUnit\Framework\MockObject\MockObject;
+use Psr\Log\LoggerInterface;
 
 class ConnectivityTesterTest extends TestCase {
 
-	/** @var ILogger|PHPUnit_Framework_MockObject_MockObject */
+	/** @var LoggerInterface|MockObject */
 	private $logger;
 
 	/** @var ConnectivityTester */
@@ -37,7 +39,7 @@ class ConnectivityTesterTest extends TestCase {
 	protected function setUp(): void {
 		parent::setUp();
 
-		$this->logger = $this->createMock(ILogger::class);
+		$this->logger = $this->createMock(LoggerInterface::class);
 
 		$this->tester = new ConnectivityTester($this->logger);
 	}

@@ -38,7 +38,6 @@ use OCA\Mail\IMAP\Search\Provider;
 use OCA\Mail\Service\Search\FilterStringParser;
 use OCA\Mail\Service\Search\MailSearch;
 use OCA\Mail\Service\Search\SearchQuery;
-use OCP\ILogger;
 use PHPUnit\Framework\MockObject\MockObject;
 
 class MailSearchTest extends TestCase {
@@ -48,9 +47,6 @@ class MailSearchTest extends TestCase {
 
 	/** @var MockObject|MailboxMapper */
 	private $mailboxMapper;
-
-	/** @var MockObject|ILogger */
-	private $logger;
 
 	/** @var MailSearch */
 	private $search;
@@ -72,15 +68,13 @@ class MailSearchTest extends TestCase {
 		$this->imapSearchProvider = $this->createMock(Provider::class);
 		$this->messageMapper = $this->createMock(MessageMapper::class);
 		$this->previewEnhancer = $this->createMock(PreviewEnhancer::class);
-		$this->logger = $this->createMock(ILogger::class);
 
 		$this->search = new MailSearch(
 			$this->filterStringParser,
 			$this->mailboxMapper,
 			$this->imapSearchProvider,
 			$this->messageMapper,
-			$this->previewEnhancer,
-			$this->logger
+			$this->previewEnhancer
 		);
 	}
 

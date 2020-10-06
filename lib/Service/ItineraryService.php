@@ -32,7 +32,7 @@ use OCA\Mail\IMAP\IMAPClientFactory;
 use OCA\Mail\IMAP\MessageMapper;
 use OCA\Mail\Integration\KItinerary\ItineraryExtractor;
 use OCP\ICacheFactory;
-use OCP\ILogger;
+use Psr\Log\LoggerInterface;
 use function array_reduce;
 use function count;
 use function json_encode;
@@ -51,7 +51,7 @@ class ItineraryService {
 	/** @var ItineraryExtractor */
 	private $extractor;
 
-	/** @var ILogger */
+	/** @var LoggerInterface */
 	private $logger;
 
 	public function __construct(IMAPClientFactory $clientFactory,
@@ -59,7 +59,7 @@ class ItineraryService {
 								MessageMapper $messageMapper,
 								ItineraryExtractor $extractor,
 								ICacheFactory $cacheFactory,
-								ILogger $logger) {
+								LoggerInterface $logger) {
 		$this->clientFactory = $clientFactory;
 		$this->mailboxMapper = $mailboxMapper;
 		$this->messageMapper = $messageMapper;

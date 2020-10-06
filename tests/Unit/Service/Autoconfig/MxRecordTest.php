@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 /**
  * @author Christoph Wurst <christoph@winzerhof-wurst.at>
  *
@@ -23,7 +25,7 @@ namespace OCA\Mail\Tests\Unit\Service\Autoconfig;
 
 use ChristophWurst\Nextcloud\Testing\TestCase;
 use OCA\Mail\Service\AutoConfig\MxRecord;
-use OCP\ILogger;
+use Psr\Log\LoggerInterface;
 
 class MxRecordTest extends TestCase {
 
@@ -33,7 +35,8 @@ class MxRecordTest extends TestCase {
 	protected function setUp(): void {
 		parent::setUp();
 
-		$logger = $this->createMock(ILogger::class);
+		$logger = $this->createMock(LoggerInterface::class);
+
 		$this->record = new MxRecord($logger);
 	}
 

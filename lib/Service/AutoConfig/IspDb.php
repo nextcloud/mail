@@ -26,11 +26,11 @@ declare(strict_types=1);
 namespace OCA\Mail\Service\AutoConfig;
 
 use Exception;
-use OCP\ILogger;
+use Psr\Log\LoggerInterface;
 
 class IspDb {
 
-	/** @var ILogger */
+	/** @var LoggerInterface */
 	private $logger;
 
 	/** @var string[] */
@@ -42,7 +42,7 @@ class IspDb {
 		];
 	}
 
-	public function __construct(ILogger $logger) {
+	public function __construct(LoggerInterface $logger) {
 		$this->logger = $logger;
 	}
 

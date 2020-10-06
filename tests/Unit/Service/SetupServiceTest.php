@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 /**
  * @copyright 2017 Christoph Wurst <christoph@winzerhof-wurst.at>
  *
@@ -31,25 +33,25 @@ use OCA\Mail\Service\AutoConfig\AutoConfig;
 use OCA\Mail\Service\SetupService;
 use OCA\Mail\SMTP\SmtpClientFactory;
 use ChristophWurst\Nextcloud\Testing\TestCase;
-use OCP\ILogger;
 use OCP\Security\ICrypto;
-use PHPUnit_Framework_MockObject_MockObject;
+use PHPUnit\Framework\MockObject\MockObject;
+use Psr\Log\LoggerInterface;
 
 class SetupServiceTest extends TestCase {
 
-	/** @var AutoConfig|PHPUnit_Framework_MockObject_MockObject */
+	/** @var AutoConfig|MockObject */
 	private $autoConfig;
 
-	/** @var AccountService|PHPUnit_Framework_MockObject_MockObject */
+	/** @var AccountService|MockObject */
 	private $accountService;
 
-	/** @var ICrypto|PHPUnit_Framework_MockObject_MockObject */
+	/** @var ICrypto|MockObject */
 	private $crypto;
 
-	/** @var SmtpClientFactory|PHPUnit_Framework_MockObject_MockObject */
+	/** @var SmtpClientFactory|MockObject */
 	private $smtpClientFactory;
 
-	/** @var ILogger|PHPUnit_Framework_MockObject_MockObject */
+	/** @var LoggerInterface|MockObject */
 	private $logger;
 
 	/** @var SetupService */
@@ -62,9 +64,15 @@ class SetupServiceTest extends TestCase {
 		$this->accountService = $this->createMock(AccountService::class);
 		$this->crypto = $this->createMock(ICrypto::class);
 		$this->smtpClientFactory = $this->createMock(SmtpClientFactory::class);
-		$this->logger = $this->createMock(ILogger::class);
+		$this->logger = $this->createMock(LoggerInterface::class);
 
-		$this->service = new SetupService($this->autoConfig, $this->accountService, $this->crypto, $this->smtpClientFactory, $this->logger);
+		$this->service = new SetupService(
+			$this->autoConfig,
+			$this->accountService,
+			$this->crypto,
+			$this->smtpClientFactory,
+			$this->logger
+		);
 	}
 
 	public function testCreateAutoConfiguredFailed() {

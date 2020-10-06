@@ -32,15 +32,15 @@ use Horde_Mail_Transport_Smtphorde;
 use OCA\Mail\Account;
 use OCA\Mail\Db\MailAccount;
 use OCA\Mail\SMTP\SmtpClientFactory;
-use OCP\ILogger;
 use OCP\Security\ICrypto;
+use Psr\Log\LoggerInterface;
 
 class IspDbConfigurationDetector {
 
 	/** @var string */
 	private $UserId;
 
-	/** @var ILogger */
+	/** @var LoggerInterface */
 	private $logger;
 
 	/** @var string */
@@ -59,15 +59,15 @@ class IspDbConfigurationDetector {
 	private $smtpClientFactory;
 
 	/**
-	 * @param ILogger $logger
-	 * @param string $UserId
+	 * @param LoggerInterface $logger
+	 * @param string|null $UserId
 	 * @param ICrypto $crypto
 	 * @param IspDb $ispDb
 	 * @param ImapConnector $imapConnector
 	 * @param SmtpClientFactory $smtpClientFactory
 	 */
-	public function __construct(ILogger $logger,
-								string $UserId = null,
+	public function __construct(LoggerInterface $logger,
+								?string $UserId,
 								ICrypto $crypto,
 								IspDb $ispDb,
 								ImapConnector $imapConnector,
@@ -229,7 +229,7 @@ class IspDbConfigurationDetector {
 			} else {
 				$account->setOutboundSslMode(strtolower($smtp['socketType']));
 			}
-			
+
 			$a = new Account($account);
 			$transport = $this->smtpClientFactory->create($a);
 			if ($transport instanceof Horde_Mail_Transport_Smtphorde) {

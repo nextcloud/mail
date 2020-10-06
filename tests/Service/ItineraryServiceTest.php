@@ -29,18 +29,22 @@ use ChristophWurst\KItinerary\Itinerary;
 use ChristophWurst\Nextcloud\Testing\TestCase;
 use Horde_Imap_Client_Socket;
 use OCA\Mail\Account;
+use OCA\Mail\Db\MailboxMapper;
 use OCA\Mail\IMAP\IMAPClientFactory;
 use OCA\Mail\IMAP\MessageMapper;
 use OCA\Mail\Integration\KItinerary\ItineraryExtractor;
 use OCA\Mail\Service\ItineraryService;
 use OCP\ICacheFactory;
-use OCP\ILogger;
 use PHPUnit\Framework\MockObject\MockObject;
+use Psr\Log\LoggerInterface;
 
 class ItineraryServiceTest extends TestCase {
 
 	/** @var IMAPClientFactory|MockObject */
 	private $imapClientFactory;
+
+	/** @var MailboxMapper|MockObject */
+	private $mailboxMapper;
 
 	/** @var MessageMapper|MockObject */
 	private $messageMapper;
@@ -58,16 +62,18 @@ class ItineraryServiceTest extends TestCase {
 		parent::setUp();
 
 		$this->imapClientFactory = $this->createMock(IMAPClientFactory::class);
+		$this->mailboxMapper = $this->createMock(MailboxMapper::class);
 		$this->messageMapper = $this->createMock(MessageMapper::class);
 		$this->itineraryExtractor = $this->createMock(ItineraryExtractor::class);
 		$this->cacheFactor = $this->createMock(ICacheFactory::class);
 
 		$this->service = new ItineraryService(
 			$this->imapClientFactory,
+			$this->mailboxMapper,
 			$this->messageMapper,
 			$this->itineraryExtractor,
 			$this->cacheFactor,
-			$this->createMock(ILogger::class)
+			$this->createMock(LoggerInterface::class)
 		);
 	}
 

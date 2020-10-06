@@ -53,7 +53,7 @@ use OCA\Mail\SMTP\SmtpClientFactory;
 use OCP\AppFramework\Db\DoesNotExistException;
 use OCP\EventDispatcher\IEventDispatcher;
 use OCP\Files\Folder;
-use OCP\ILogger;
+use Psr\Log\LoggerInterface;
 
 class MailTransmission implements IMailTransmission {
 
@@ -78,7 +78,7 @@ class MailTransmission implements IMailTransmission {
 	/** @var MessageMapper */
 	private $messageMapper;
 
-	/** @var ILogger */
+	/** @var LoggerInterface */
 	private $logger;
 
 	/**
@@ -91,7 +91,7 @@ class MailTransmission implements IMailTransmission {
 								IEventDispatcher $eventDispatcher,
 								MailboxMapper $mailboxMapper,
 								MessageMapper $messageMapper,
-								ILogger $logger) {
+								LoggerInterface $logger) {
 		$this->userFolder = $userFolder;
 		$this->attachmentService = $attachmentService;
 		$this->imapClientFactory = $imapClientFactory;

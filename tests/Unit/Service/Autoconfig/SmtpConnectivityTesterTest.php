@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 /**
  * @author Christoph Wurst <christoph@winzerhof-wurst.at>
  *
@@ -28,22 +30,22 @@ use OCA\Mail\Db\MailAccount;
 use OCA\Mail\Service\AutoConfig\ConnectivityTester;
 use OCA\Mail\Service\AutoConfig\SmtpConnectivityTester;
 use OCA\Mail\SMTP\SmtpClientFactory;
-use OCP\ILogger;
 use OCP\Security\ICrypto;
-use PHPUnit_Framework_MockObject_MockObject;
+use PHPUnit\Framework\MockObject\MockObject;
+use Psr\Log\LoggerInterface;
 
 class SmtpConnectivityTesterTest extends TestCase {
 
-	/** @var ConnectivityTester|PHPUnit_Framework_MockObject_MockObject */
+	/** @var ConnectivityTester|MockObject */
 	private $connectivityTester;
 
-	/** @var ICrypto|PHPUnit_Framework_MockObject_MockObject */
+	/** @var ICrypto|MockObject */
 	private $crypto;
 
-	/** @var SmtpClientFactory|PHPUnit_Framework_MockObject_MockObject */
+	/** @var SmtpClientFactory|MockObject */
 	private $clientFactory;
 
-	/** @var ILogger|PHPUnit_Framework_MockObject_MockObject */
+	/** @var LoggerInterface|MockObject */
 	private $logger;
 
 	/** @var SmtpConnectivityTester */
@@ -55,8 +57,15 @@ class SmtpConnectivityTesterTest extends TestCase {
 		$this->connectivityTester = $this->createMock(ConnectivityTester::class);
 		$this->crypto = $this->createMock(ICrypto::class);
 		$this->clientFactory = $this->createMock(SmtpClientFactory::class);
-		$this->logger = $this->createMock(ILogger::class);
-		$this->tester = new SmtpConnectivityTester($this->connectivityTester, $this->crypto, $this->clientFactory, $this->logger, 'dave');
+		$this->logger = $this->createMock(LoggerInterface::class);
+
+		$this->tester = new SmtpConnectivityTester(
+			$this->connectivityTester,
+			$this->crypto,
+			$this->clientFactory,
+			$this->logger,
+			'dave'
+		);
 	}
 
 	public function testTest() {

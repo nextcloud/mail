@@ -41,8 +41,8 @@ use OCA\Mail\Service\MailTransmission;
 use OCA\Mail\SMTP\SmtpClientFactory;
 use OCP\EventDispatcher\IEventDispatcher;
 use OCP\Files\Folder;
-use OCP\ILogger;
 use PHPUnit\Framework\MockObject\MockObject;
+use Psr\Log\LoggerInterface;
 
 class MailTransmissionTest extends TestCase {
 
@@ -67,7 +67,7 @@ class MailTransmissionTest extends TestCase {
 	/** @var MessageMapper|MockObject */
 	private $messageMapper;
 
-	/** @var ILogger|MockObject */
+	/** @var LoggerInterface|MockObject */
 	private $logger;
 
 	/** @var MailTransmission */
@@ -83,7 +83,7 @@ class MailTransmissionTest extends TestCase {
 		$this->eventDispatcher = $this->createMock(IEventDispatcher::class);
 		$this->mailboxMapper = $this->createMock(MailboxMapper::class);
 		$this->messageMapper = $this->createMock(MessageMapper::class);
-		$this->logger = $this->createMock(ILogger::class);
+		$this->logger = $this->createMock(LoggerInterface::class);
 
 		$this->transmission = new MailTransmission(
 			$this->userFolder,

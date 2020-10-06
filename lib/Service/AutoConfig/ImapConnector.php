@@ -24,17 +24,17 @@ declare(strict_types=1);
 namespace OCA\Mail\Service\AutoConfig;
 
 use OCA\Mail\IMAP\IMAPClientFactory;
-use OCP\ILogger;
 use OCP\Security\ICrypto;
 use OCA\Mail\Account;
 use OCA\Mail\Db\MailAccount;
+use Psr\Log\LoggerInterface;
 
 class ImapConnector {
 
 	/** @var ICrypto */
 	private $crypto;
 
-	/** @var ILogger */
+	/** @var LoggerInterface */
 	private $logger;
 
 	/** @var string */
@@ -44,9 +44,9 @@ class ImapConnector {
 	private $clientFactory;
 
 	public function __construct(ICrypto $crypto,
-								ILogger $logger,
+								LoggerInterface $logger,
 								IMAPClientFactory $clientFactory,
-								string $UserId = null) {
+								?string $UserId) {
 		$this->crypto = $crypto;
 		$this->logger = $logger;
 		$this->userId = $UserId;
