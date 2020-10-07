@@ -174,6 +174,11 @@ class ImapToDbSynchronizer {
 		$id = $account->getId() . ":" . $mailbox->getName();
 		$this->messageMapper->deleteAll($mailbox);
 		$this->logger->debug("All messages of $id cleared");
+		$clientCache = $this->clientFactory->getClient($account)->getCache();
+		if ($clientCache) {
+			// Clear cached data for mailbox
+			$clientCache->deleteMailbox($mailbox->getName());
+		}
 		$mailbox->setSyncNewToken(null);
 		$mailbox->setSyncChangedToken(null);
 		$mailbox->setSyncVanishedToken(null);
