@@ -148,7 +148,7 @@ export default {
 
 .mail-message-body {
 	flex: 1;
-	margin-bottom: 10px;
+	margin-bottom: 60px;
 	position: relative;
 }
 
