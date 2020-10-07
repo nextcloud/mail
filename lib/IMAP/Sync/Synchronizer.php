@@ -30,6 +30,7 @@ use Horde_Imap_Client_Exception_Sync;
 use Horde_Imap_Client_Ids;
 use Horde_Imap_Client_Mailbox;
 use OCA\Mail\Exception\UidValidityChangedException;
+use OCA\Mail\Exception\MailboxDoesNotSupportModSequencesException;
 use OCA\Mail\IMAP\MessageMapper;
 use function array_chunk;
 use function array_merge;
@@ -53,6 +54,7 @@ class Synchronizer {
 	 * @throws Horde_Imap_Client_Exception
 	 * @throws Horde_Imap_Client_Exception_Sync
 	 * @throws UidValidityChangedException
+	 * @throws MailboxDoesNotSupportModSequencesException
 	 */
 	public function sync(Horde_Imap_Client_Base $imapClient,
 						 Request $request,
@@ -77,6 +79,11 @@ class Synchronizer {
 		} catch (Horde_Imap_Client_Exception_Sync $e) {
 			if ($e->getCode() === Horde_Imap_Client_Exception_Sync::UIDVALIDITY_CHANGED) {
 				throw new UidValidityChangedException();
+			}
+			throw $e;
+		} catch (Horde_Imap_Client_Exception $e) {
+			if ($e->getCode() === Horde_Imap_Client_Exception::MBOXNOMODSEQ) {
+				throw new MailboxDoesNotSupportModSequencesException($e->getMessage(), $e->getCode(), $e);
 			}
 			throw $e;
 		}
