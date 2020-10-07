@@ -7,7 +7,7 @@
 					<h2 :title="threadSubject">
 						{{ threadSubject }}
 					</h2>
-					<div class="avatar-header">
+					<div class="avatar-header" ref="avatarHeader">
 						<RecipientBubble v-for="participant in threadParticipants"
 							:key="participant.email"
 							:email="participant.email"
@@ -48,6 +48,7 @@ export default {
 
 	data() {
 		return {
+			shownThreadParticipants: undefined,
 			loading: true,
 			message: undefined,
 			errorMessage: '',
@@ -96,6 +97,26 @@ export default {
 		this.resetThread()
 	},
 	methods: {
+		clipAvatarHeader() {
+			this.$nextTick(() => {
+				const avatarHeader = this.$refs.avatarHeader
+				let childrenWidth = 0
+				let i = 0
+
+				while (childrenWidth < avatarHeader.clientWidth && i < this.threadParticipants.length) {
+					childrenWidth += avatarHeader.childNodes[i].clientWidth
+					i++
+				}
+
+				const toShow = (i < this.threadParticipants.length) ?  i - 2 : this.threadParticipants.length
+				const recipients = this.thread.flatMap(envelope => {
+					return envelope.from.concat(envelope.to).concat(envelope.cc)
+				})
+				const uniqRecipients = uniqBy(prop('email'), recipients)
+				uniqRecipients.splice(toShow)
+				this.shownThreadParticipants = uniqRecipients
+			}, this)
+		},
 		toggleExpand(threadId) {
 			if (!this.expandedThreads.includes(threadId)) {
 				console.debug(`expand thread ${threadId}`)
@@ -157,6 +178,8 @@ export default {
 					this.loading = false
 				}
 			}
+
+			this.clipAvatarHeader()
 		},
 	},
 }
@@ -303,6 +326,10 @@ export default {
 	font-family: monospace;
 	white-space: pre-wrap;
 	user-select: text;
+}
+.avatar-header {
+	max-height: 20px;
+	overflow: hidden;
 }
 .app-content-list-item-star.icon-starred {
 	display: none;
