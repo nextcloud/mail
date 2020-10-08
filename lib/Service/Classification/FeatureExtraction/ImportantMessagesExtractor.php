@@ -33,7 +33,7 @@ use function array_unique;
 
 class ImportantMessagesExtractor implements IExtractor {
 
-	/** @var int */
+	/** @var int[] */
 	private $totalMessages = 0;
 
 	/** @var int[] */
