@@ -89,7 +89,7 @@ class Container {
 	}
 
 	public function getParent(): Container {
-		if ($this->isRoot()) {
+		if ($this->isRoot() || $this->parent === null) {
 			throw new RuntimeException('Container root has no parent');
 		}
 		return $this->parent;

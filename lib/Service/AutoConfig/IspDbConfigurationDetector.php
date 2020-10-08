@@ -203,9 +203,10 @@ class IspDbConfigurationDetector {
 	 * @param MailAccount $account
 	 * @param string $email
 	 * @param string $password
-	 * @return boolean
+	 *
+	 * @return bool|null
 	 */
-	private function testSmtpConfiguration(array $smtp, MailAccount $account, string $email, string $password) {
+	private function testSmtpConfiguration(array $smtp, MailAccount $account, string $email, string $password): ?bool {
 		try {
 			if ($smtp['username'] === '%EMAILADDRESS%') {
 				$user = $email;
