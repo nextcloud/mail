@@ -56,7 +56,7 @@ class AddressbookSource implements IAvatarSource {
 	public function fetch(string $email, AvatarFactory $factory) {
 		$url = $this->contactsIntegration->getPhoto($email);
 
-		if (is_null($url)) {
+		if ($url === false || $url === null) {
 			return null;
 		}
 
