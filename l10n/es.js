@@ -133,6 +133,7 @@ OC.L10N.register(
     "Loading …" : "Cargando …",
     "Not supported by the server" : "No soportado por el servidor",
     "{usage} of {limit} used" : "usado {usage} de {limit}",
+    "The account for {email} and cached email data will be removed from Nextcloud, but not from your email provider." : "La cuenta para {email} y los mensajes descargados localmente serán eliminados de Nextcloud, pero no del proveedor de correo.",
     "Remove account {email}" : "Eliminar cuenta {email}",
     "Remove {email}" : "Eliminar {email}",
     "Cancel" : "Cancelar",
