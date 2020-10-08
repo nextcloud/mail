@@ -4,8 +4,11 @@ on: [push]
 
 jobs:
   static-psalm-analysis:
-      name: Static analysis with Psalm
       runs-on: ubuntu-latest
+      strategy:
+          matrix:
+              ocp-version: [ 'dev-master', 'v20.0.0' ]
+      name: Nextcloud ${{ matrix.ocp-version }}
       steps:
           - name: Checkout
             uses: actions/checkout@master
@@ -16,5 +19,7 @@ jobs:
                 coverage: none
           - name: Install dependencies
             run: composer i
+          - name: Install dependencies
+            run: composer require --dev christophwurst/nextcloud:${{ matrix.ocp-version }}
           - name: Run coding standards check
             run: composer run psalm
