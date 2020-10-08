@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "f866bf8e367d48f73257e5a223c615b0",
+    "content-hash": "b5c664db4771e31d968320988c70427e",
     "packages": [
         {
             "name": "amphp/amp",
@@ -728,12 +728,6 @@
                 }
             ],
             "description": "Composes all dependencies as a package inside a WordPress plugin",
-            "funding": [
-                {
-                    "url": "https://github.com/coenjacobs",
-                    "type": "github"
-                }
-            ],
             "time": "2020-05-23T13:12:01+00:00"
         },
         {
@@ -2794,20 +2788,6 @@
             "keywords": [
                 "constructor",
                 "instantiate"
-            ],
-            "funding": [
-                {
-                    "url": "https://www.doctrine-project.org/sponsorship.html",
-                    "type": "custom"
-                },
-                {
-                    "url": "https://www.patreon.com/phpdoctrine",
-                    "type": "patreon"
-                },
-                {
-                    "url": "https://tidelift.com/funding/github/packagist/doctrine%2Finstantiator",
-                    "type": "tidelift"
-                }
             ],
             "time": "2020-05-29T17:27:14+00:00"
         },
@@ -6182,11 +6162,11 @@
     "prefer-stable": false,
     "prefer-lowest": false,
     "platform": {
-        "php": ">=7.2"
+        "php": ">=7.3"
     },
     "platform-dev": [],
     "platform-overrides": {
-        "php": "7.2"
+        "php": "7.3"
     },
     "plugin-api-version": "1.1.0"
 }
