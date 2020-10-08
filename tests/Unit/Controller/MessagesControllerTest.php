@@ -538,7 +538,7 @@ class MessagesControllerTest extends TestCase {
 			->with($this->equalTo($this->userId), $this->equalTo($accountId))
 			->will($this->throwException(new DoesNotExistException('')));
 
-		$expected = new JSONResponse(null, Http::STATUS_FORBIDDEN);
+		$expected = new JSONResponse([], Http::STATUS_FORBIDDEN);
 
 		$this->assertEquals($expected, $this->controller->destroy($id));
 	}

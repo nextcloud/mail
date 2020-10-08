@@ -63,12 +63,12 @@ class SettingsController extends Controller {
 			$smtpSslMode
 		);
 
-		return new JSONResponse(null);
+		return new JSONResponse([]);
 	}
 
 	public function deprovision(): JSONResponse {
 		$this->provisioningManager->deprovision();
 
-		return new JSONResponse(null);
+		return new JSONResponse([]);
 	}
 }
