@@ -16,5 +16,6 @@
     </projectFiles>
     <extraFiles>
         <directory name="vendor/christophwurst/nextcloud" />
+		<directory name="lib/Vendor" />
     </extraFiles>
 </psalm>
