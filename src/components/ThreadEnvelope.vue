@@ -27,10 +27,22 @@
 				:display-name="envelope.from[0].label"
 				:disable-tooltip="true"
 				:size="40" />
+			<div
+				v-if="envelope.flags.important"
+				class="app-content-list-item-star icon-important"
+				:data-starred="envelope.flags.important ? 'true' : 'false'"
+				@click.prevent="onToggleImportant"
+				v-html="importantSvg" />
+			<div
+				v-if="envelope.flags.flagged"
+				class="app-content-list-item-star icon-starred"
+				:data-starred="envelope.flags.flagged ? 'true' : 'false'"
+				@click.prevent="onToggleFlagged" />
 			<router-link
 				:to="route"
 				event=""
 				class="left"
+				:class="{seen: envelope.flags.seen}"
 				@click.native.prevent="$emit('toggleExpand', $event)">
 				<span class="sender">{{ envelope.from && envelope.from[0] ? envelope.from[0].label : '' }}</span>
 				<div class="subject">
@@ -123,6 +135,7 @@ import { buildRecipients as buildReplyRecipients } from '../ReplyBuilder'
 import { generateUrl } from '@nextcloud/router'
 import Modal from '@nextcloud/vue/dist/Components/Modal'
 import { Base64 } from 'js-base64'
+import importantSvg from '../../img/important.svg'
 
 export default {
 	name: 'ThreadEnvelope',
@@ -165,6 +178,7 @@ export default {
 			rawMessage: '',
 			sourceLoading: false,
 			showSource: false,
+			importantSvg,
 		}
 	},
 	computed: {
@@ -377,6 +391,39 @@ export default {
 	}
 	::v-deep .modal-container {
 		overflow-y: scroll !important;
+	}
+	.icon-important {
+		::v-deep path {
+			fill: #ffcc00;
+			stroke: var(--color-main-background);
+			cursor: pointer;
+		}
+
+		&.app-content-list-item-star {
+			background-image: none;
+			position: absolute;
+			opacity: 1;
+			width: 16px;
+			height: 16px;
+			margin-left: -1px;
+			display: flex;
+
+			&:hover,
+			&:focus {
+				opacity: 0.5;
+			}
+		}
+	}
+	.app-content-list-item-star.icon-starred {
+		display: inline-block;
+		position: absolute;
+		margin-top: -2px;
+		margin-left: 27px;
+		cursor: pointer;
+
+	}
+	.left:not(.seen) {
+		font-weight: bold;
 	}
 
 </style>
