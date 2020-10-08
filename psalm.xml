@@ -1,7 +1,7 @@
 <?xml version="1.0"?>
 <psalm
     totallyTyped="true"
-    errorLevel="1"
+    errorLevel="5"
     resolveFromConfigFile="true"
     xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
     xmlns="https://getpsalm.org/schema/config"
@@ -11,6 +11,10 @@
         <directory name="lib" />
         <ignoreFiles>
             <directory name="vendor" />
+            <directory name="lib/Vendor" />
         </ignoreFiles>
     </projectFiles>
+    <extraFiles>
+        <directory name="vendor/christophwurst/nextcloud" />
+    </extraFiles>
 </psalm>
