@@ -92,7 +92,8 @@ class ContactsIntegration {
 
 	/**
 	 * @param string $email
-	 * @return null|string
+	 *
+	 * @return false|null|string
 	 */
 	public function getPhoto(string $email) {
 		$result = $this->contactsManager->search($email, ['EMAIL']);
