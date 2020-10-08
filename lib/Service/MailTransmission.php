@@ -30,7 +30,6 @@ use Horde_Mime_Exception;
 use Horde_Mime_Headers_Date;
 use Horde_Mime_Headers_MessageId;
 use Horde_Mime_Mail;
-use OC\Files\Node\File;
 use OCA\Mail\Account;
 use OCA\Mail\Address;
 use OCA\Mail\AddressList;
@@ -52,6 +51,7 @@ use OCA\Mail\Model\RepliedMessageData;
 use OCA\Mail\SMTP\SmtpClientFactory;
 use OCP\AppFramework\Db\DoesNotExistException;
 use OCP\EventDispatcher\IEventDispatcher;
+use OCP\Files\File;
 use OCP\Files\Folder;
 use Psr\Log\LoggerInterface;
 
