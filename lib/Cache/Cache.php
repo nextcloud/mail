@@ -110,7 +110,7 @@ class Cache extends Horde_Imap_Client_Cache_Backend {
 	/**
 	 * Updates the cache.
 	 */
-	public function save() {
+	public function save(): void {
 		$lifetime = $this->_params['lifetime'];
 
 		foreach ($this->_update as $mbox => $val) {
@@ -195,7 +195,11 @@ class Cache extends Horde_Imap_Client_Cache_Backend {
 		));
 	}
 
-	/** {@inheritDoc} */
+	/**
+	 * {@inheritDoc}
+	 *
+	 * @return void
+	 */
 	public function set($mailbox, $data, $uidvalid) {
 		$update = array_keys($data);
 
@@ -242,14 +246,22 @@ class Cache extends Horde_Imap_Client_Cache_Backend {
 			: array_intersect_key($this->_slicemap[$mailbox]['d'], array_flip($entries));
 	}
 
-	/** {@inheritDoc} */
+	/**
+	 * {@inheritDoc}
+	 *
+	 * @return void
+	 */
 	public function setMetaData($mailbox, $data) {
 		$this->_loadSliceMap($mailbox, isset($data['uidvalid']) ? $data['uidvalid'] : null);
 		$this->_slicemap[$mailbox]['d'] = array_merge($this->_slicemap[$mailbox]['d'], $data);
 		$this->_toUpdate($mailbox, 'slicemap', true);
 	}
 
-	/** {@inheritDoc} */
+	/**
+	 * {@inheritDoc}
+	 *
+	 * @return void
+	 */
 	public function deleteMsgs($mailbox, $uids) {
 		$this->_loadSliceMap($mailbox);
 
@@ -290,13 +302,21 @@ class Cache extends Horde_Imap_Client_Cache_Backend {
 		}
 	}
 
-	/** {@inheritDoc} */
+	/**
+	 * {@inheritDoc}
+	 *
+	 * @return void
+	 */
 	public function deleteMailbox($mailbox) {
 		$this->_loadSliceMap($mailbox);
 		$this->_deleteMailbox($mailbox);
 	}
 
-	/** {@inheritDoc} */
+	/**
+	 * {@inheritDoc}
+	 *
+	 * @return void
+	 */
 	public function clear($lifetime) {
 		$this->_cache->clear();
 		$this->_data = $this->_loaded = $this->_slicemap = $this->_update = [];
@@ -326,8 +346,10 @@ class Cache extends Horde_Imap_Client_Cache_Backend {
 	 * Delete a mailbox from the cache.
 	 *
 	 * @param string $mbox The mailbox to delete.
+	 *
+	 * @return void
 	 */
-	protected function _deleteMailbox($mbox) {
+	protected function _deleteMailbox($mbox): void {
 		foreach (array_merge(array_keys(array_flip($this->_slicemap[$mbox]['s'])), ['slicemap']) as $slice) {
 			$cid = $this->_getCid($mbox, $slice);
 			$this->_cache->remove($cid);
@@ -347,8 +369,10 @@ class Cache extends Horde_Imap_Client_Cache_Backend {
 	 * @param string $mailbox The mailbox to load.
 	 * @param array $uids The UIDs to load.
 	 * @param integer $uidvalid The IMAP uidvalidity value of the mailbox.
+	 *
+	 * @return void
 	 */
-	protected function _loadUids($mailbox, $uids, $uidvalid = null) {
+	protected function _loadUids($mailbox, $uids, $uidvalid = null): void {
 		if (!isset($this->_data[$mailbox])) {
 			$this->_data[$mailbox] = [];
 		}
@@ -367,6 +391,8 @@ class Cache extends Horde_Imap_Client_Cache_Backend {
 	 *
 	 * @param string $mailbox The mailbox to load.
 	 * @param integer $slice The slice to load.
+	 *
+	 * @return void
 	 */
 	protected function _loadSlice($mailbox, $slice) {
 		$cache_id = $this->_getCid($mailbox, $slice);
@@ -408,6 +434,8 @@ class Cache extends Horde_Imap_Client_Cache_Backend {
 	 *
 	 * @param string $mailbox The mailbox.
 	 * @param integer $uidvalid The IMAP uidvalidity value of the mailbox.
+	 *
+	 * @return void
 	 */
 	protected function _loadSliceMap($mailbox, $uidvalid = null) {
 		if (!isset($this->_slicemap[$mailbox]) &&
@@ -454,8 +482,10 @@ class Cache extends Horde_Imap_Client_Cache_Backend {
 	 * @param string $mailbox The mailbox.
 	 * @param string $type 'add', 'slice', or 'slicemap'.
 	 * @param mixed $data The data to update.
+	 *
+	 * @return void
 	 */
-	protected function _toUpdate($mailbox, $type, $data) {
+	protected function _toUpdate($mailbox, $type, $data): void {
 		if (!isset($this->_update[$mailbox])) {
 			$this->_update[$mailbox] = [
 				'add' => [],

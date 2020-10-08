@@ -92,7 +92,7 @@ class SyncAccount extends Command {
 		return 0;
 	}
 
-	private function sync(Account $account, bool $force, OutputInterface $output) {
+	private function sync(Account $account, bool $force, OutputInterface $output): void {
 		$consoleLogger = new ConsoleLoggerDecorator(
 			$this->logger,
 			$output
