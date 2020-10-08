@@ -85,7 +85,7 @@ interface IMailManager {
 	 * @param string $uid
 	 * @param int $id
 	 *
-	 * @return Mailbox
+	 * @return Message
 	 *
 	 * @throws ClientException
 	 */
@@ -199,7 +199,7 @@ interface IMailManager {
 
 	/**
 	 * @param Account $account
-	 * @param string $mailbox
+	 * @param Mailbox $mailbox
 	 * @param bool $subscribed
 	 *
 	 * @return Mailbox
@@ -211,7 +211,7 @@ interface IMailManager {
 									   bool $subscribed): Mailbox;
 
 	/**
-	 * @param string $mailbox
+	 * @param Mailbox $mailbox
 	 * @param bool $syncInBackground
 	 *
 	 * @return Mailbox

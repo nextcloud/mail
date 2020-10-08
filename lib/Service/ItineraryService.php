@@ -31,6 +31,7 @@ use OCA\Mail\Db\MailboxMapper;
 use OCA\Mail\IMAP\IMAPClientFactory;
 use OCA\Mail\IMAP\MessageMapper;
 use OCA\Mail\Integration\KItinerary\ItineraryExtractor;
+use OCP\ICache;
 use OCP\ICacheFactory;
 use Psr\Log\LoggerInterface;
 use function array_reduce;
@@ -50,6 +51,9 @@ class ItineraryService {
 
 	/** @var ItineraryExtractor */
 	private $extractor;
+
+	/** @var ICache */
+	private $cache;
 
 	/** @var LoggerInterface */
 	private $logger;

@@ -31,6 +31,19 @@ use OCA\Mail\Db\MailboxMapper;
 use OCA\Mail\Db\MessageMapper;
 
 class CleanupService {
+
+	/** @var AliasMapper */
+	private $aliasMapper;
+
+	/** @var MailboxMapper */
+	private $mailboxMapper;
+
+	/** @var MessageMapper */
+	private $messageMapper;
+
+	/** @var CollectedAddressMapper */
+	private $collectedAddressMapper;
+
 	public function __construct(AliasMapper $aliasMapper,
 								MailboxMapper $mailboxMapper,
 								MessageMapper $messageMapper,

@@ -816,7 +816,7 @@ class MessageMapper extends QBMapper {
 	 * @param array $mailboxIds
 	 * @param int $limit
 	 *
-	 * @return string[]
+	 * @return Message[]
 	 */
 	public function findLatestMessages(array $mailboxIds, int $limit): array {
 		$qb = $this->db->getQueryBuilder();
