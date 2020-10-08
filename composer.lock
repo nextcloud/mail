@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "b5c664db4771e31d968320988c70427e",
+    "content-hash": "ae28046af90a0ad9cb1fd163d0fdf953",
     "packages": [
         {
             "name": "amphp/amp",
@@ -2356,16 +2356,16 @@
     "packages-dev": [
         {
             "name": "christophwurst/nextcloud",
-            "version": "v20.0.0-beta1",
+            "version": "v20.0.0",
             "source": {
                 "type": "git",
                 "url": "https://github.com/ChristophWurst/nextcloud_composer.git",
-                "reference": "2aeb8b5608b192a184ac3b7805eee879f8e966fc"
+                "reference": "898b3b7feda1d8a761dffeaeda6fccace44eb649"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/ChristophWurst/nextcloud_composer/zipball/2aeb8b5608b192a184ac3b7805eee879f8e966fc",
-                "reference": "2aeb8b5608b192a184ac3b7805eee879f8e966fc",
+                "url": "https://api.github.com/repos/ChristophWurst/nextcloud_composer/zipball/898b3b7feda1d8a761dffeaeda6fccace44eb649",
+                "reference": "898b3b7feda1d8a761dffeaeda6fccace44eb649",
                 "shasum": ""
             },
             "require": {
@@ -2388,7 +2388,7 @@
                 }
             ],
             "description": "Composer package containing Nextcloud's public API (classes, interfaces)",
-            "time": "2020-08-24T12:36:50+00:00"
+            "time": "2020-10-05T12:40:45+00:00"
         },
         {
             "name": "christophwurst/nextcloud_testing",
@@ -6156,8 +6156,7 @@
         "pear-pear.horde.org/horde_text_flowed": 0,
         "pear-pear.horde.org/horde_util": 0,
         "pear-pear.horde.org/horde_smtp": 0,
-        "roave/security-advisories": 20,
-        "christophwurst/nextcloud": 10
+        "roave/security-advisories": 20
     },
     "prefer-stable": false,
     "prefer-lowest": false,
