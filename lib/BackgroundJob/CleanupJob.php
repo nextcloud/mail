@@ -42,7 +42,7 @@ class CleanupJob extends TimedJob {
 		$this->setInterval(24 * 60 * 60);
 	}
 
-	protected function run($argument) {
+	protected function run($argument): void {
 		$this->cleanupService->cleanUp();
 	}
 }

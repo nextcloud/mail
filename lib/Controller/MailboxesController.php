@@ -180,7 +180,7 @@ class MailboxesController extends Controller {
 	 * @NoAdminRequired
 	 * @TrapError
 	 *
-	 * @param string $id
+	 * @param int $id
 	 *
 	 * @return JSONResponse
 	 * @throws ClientException

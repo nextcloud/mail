@@ -774,7 +774,7 @@ class MessageMapper extends QBMapper {
 	 * @param Mailbox $mailbox
 	 * @param int $highest
 	 *
-	 * @return Message[]
+	 * @return int[]
 	 */
 	public function findNewIds(Mailbox $mailbox, array $ids): array {
 		$qb = $this->db->getQueryBuilder();

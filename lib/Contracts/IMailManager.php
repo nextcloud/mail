@@ -93,14 +93,14 @@ interface IMailManager {
 
 	/**
 	 * @param Account $account
-	 * @param string $mb
+	 * @param string $mailbox
 	 * @param int $uid
 	 *
 	 * @return string
 	 * @throws ClientException
 	 * @throws ServiceException
 	 */
-	public function getSource(Account $account, string $mb, int $uid): ?string;
+	public function getSource(Account $account, string $mailbox, int $uid): ?string;
 
 	/**
 	 * @param Account $account

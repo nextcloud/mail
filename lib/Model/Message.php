@@ -50,16 +50,16 @@ class Message implements IMessage {
 	/** @var string|null */
 	private $inReplyTo = null;
 
-	/** @var array */
+	/** @var string[] */
 	private $flags = [];
 
 	/** @var string */
 	private $content = '';
 
-	/** @var File[] */
+	/** @var Horde_Mime_Part[] */
 	private $cloudAttachments = [];
 
-	/** @var int[] */
+	/** @var Horde_Mime_Part[] */
 	private $localAttachments = [];
 
 	public function __construct() {
@@ -81,7 +81,7 @@ class Message implements IMessage {
 	/**
 	 * Get all flags set on this message
 	 *
-	 * @return array
+	 * @return string[]
 	 */
 	public function getFlags(): array {
 		return $this->flags;
@@ -209,14 +209,14 @@ class Message implements IMessage {
 	}
 
 	/**
-	 * @return File[]
+	 * @return Horde_Mime_Part[]
 	 */
 	public function getCloudAttachments(): array {
 		return $this->cloudAttachments;
 	}
 
 	/**
-	 * @return int[]
+	 * @return Horde_Mime_Part[]
 	 */
 	public function getLocalAttachments(): array {
 		return $this->localAttachments;

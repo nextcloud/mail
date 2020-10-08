@@ -267,7 +267,7 @@ class MessagesController extends Controller {
 	 * @TrapError
 	 *
 	 * @param int $id
-	 * @param string $destFolderId
+	 * @param int $destFolderId
 	 *
 	 * @return JSONResponse
 	 *
@@ -398,7 +398,7 @@ class MessagesController extends Controller {
 	 * @param int $accountId
 	 * @param string $folderId
 	 * @param int $id
-	 * @param int $attachmentId
+	 * @param string $attachmentId
 	 *
 	 * @return Response
 	 *
@@ -439,7 +439,7 @@ class MessagesController extends Controller {
 	 * @TrapError
 	 *
 	 * @param int $id
-	 * @param int $attachmentId
+	 * @param string $attachmentId
 	 * @param string $targetPath
 	 *
 	 * @return JSONResponse
@@ -496,7 +496,7 @@ class MessagesController extends Controller {
 	 * @NoAdminRequired
 	 * @TrapError
 	 *
-	 * @param string $id
+	 * @param int $id
 	 * @param array $flags
 	 *
 	 * @return JSONResponse

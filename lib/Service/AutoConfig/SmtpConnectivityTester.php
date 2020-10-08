@@ -24,6 +24,7 @@ declare(strict_types=1);
 namespace OCA\Mail\Service\AutoConfig;
 
 use Exception;
+use Horde_Mail_Transport_Smtphorde;
 use OCA\Mail\Account;
 use OCA\Mail\Db\MailAccount;
 use OCA\Mail\SMTP\SmtpClientFactory;
@@ -135,6 +136,8 @@ class SmtpConnectivityTester {
 	protected function testStmtpConnection(MailAccount $mailAccount): void {
 		$account = new Account($mailAccount);
 		$smtp = $this->clientFactory->create($account);
-		$smtp->getSMTPObject();
+		if ($smtp instanceof Horde_Mail_Transport_Smtphorde) {
+			$smtp->getSMTPObject();
+		}
 	}
 }

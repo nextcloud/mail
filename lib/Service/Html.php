@@ -31,6 +31,7 @@ use Closure;
 use HTMLPurifier;
 use HTMLPurifier_Config;
 use HTMLPurifier_HTMLDefinition;
+use HTMLPurifier_URIDefinition;
 use HTMLPurifier_URISchemeRegistry;
 use Kwi\UrlLinker;
 use OCA\Mail\Service\HtmlPurify\CidURIScheme;
@@ -125,11 +126,13 @@ class Html {
 		$config->set('Cache.DefinitionImpl', null);
 
 		// Rewrite URL for redirection and proxying of content
+		/** @var HTMLPurifier_HTMLDefinition $html */
 		$html = $config->getDefinition('HTML');
 		$html->info_attr_transform_post['imagesrc'] = new TransformImageSrc($this->urlGenerator);
 		$html->info_attr_transform_post['cssbackground'] = new TransformCSSBackground($this->urlGenerator);
 		$html->info_attr_transform_post['htmllinks'] = new TransformHTMLLinks();
 
+		/** @var HTMLPurifier_URIDefinition $uri */
 		$uri = $config->getDefinition('URI');
 		$uri->addFilter(new TransformURLScheme($messageParameters, $mapCidToAttachmentId, $this->urlGenerator, $this->request), $config);
 

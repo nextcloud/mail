@@ -23,6 +23,7 @@ declare(strict_types=1);
 
 namespace OCA\Mail\Model;
 
+use Horde_Mime_Part;
 use OCA\Mail\AddressList;
 use OCA\Mail\Db\LocalAttachment;
 use OCP\Files\File;
@@ -45,7 +46,7 @@ interface IMessage {
 	public function getFlags(): array;
 
 	/**
-	 * @param array $flags
+	 * @param string $flags
 	 */
 	public function setFlags(array $flags);
 
@@ -120,12 +121,12 @@ interface IMessage {
 	public function setContent(string $content);
 
 	/**
-	 * @return File[]
+	 * @return Horde_Mime_Part[]
 	 */
 	public function getCloudAttachments(): array;
 
 	/**
-	 * @return int[]
+	 * @return Horde_Mime_Part[]
 	 */
 	public function getLocalAttachments(): array;
 
