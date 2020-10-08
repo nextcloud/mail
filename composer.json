@@ -12,11 +12,11 @@
 	],
 	"config": {
 		"platform": {
-			"php": "7.2"
+			"php": "7.3"
 		}
 	},
 	"require": {
-		"php": ">=7.2",
+		"php": ">=7.3",
 		"arthurhoaro/favicon": "^1.2",
 		"cerdic/css-tidy": "v1.7.1",
 		"christophwurst/kitinerary": "^0.2",

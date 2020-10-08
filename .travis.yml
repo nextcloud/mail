@@ -29,7 +29,7 @@ matrix:
       env: "TEST_SUITE=PACKAGE"
     - php: 7.3
       env: "PHP_COVERAGE=TRUE"
-    - php: 7.2
+    - php: 7.3
       env: "CORE_BRANCH=stable20"
     - php: nightly
       env: "DB=sqlite PATCH_VERSION_CHECK=TRUE"
