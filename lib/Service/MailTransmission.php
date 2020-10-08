@@ -102,6 +102,9 @@ class MailTransmission implements IMailTransmission {
 		$this->logger = $logger;
 	}
 
+	/**
+	 * @return void
+	 */
 	public function sendMessage(NewMessageData $messageData,
 								RepliedMessageData $replyData = null,
 								Alias $alias = null,

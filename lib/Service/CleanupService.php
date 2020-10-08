@@ -41,7 +41,7 @@ class CleanupService {
 		$this->collectedAddressMapper = $collectedAddressMapper;
 	}
 
-	public function cleanUp() {
+	public function cleanUp(): void {
 		$this->aliasMapper->deleteOrphans();
 		$this->mailboxMapper->deleteOrphans();
 		$this->messageMapper->deleteOrphans();
