@@ -1,14 +1,107 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <files psalm-version="3.16@d03e5ef057d6adc656c0ff7e166c50b73b4f48f3">
-  <file src="lib/Controller/AvatarsController.php">
-    <InvalidArgument occurrences="1">
-      <code>$avatar</code>
-    </InvalidArgument>
+  <file src="lib/Attachment.php">
+    <MissingDocblockType occurrences="1">
+      <code>$fetch</code>
+    </MissingDocblockType>
+  </file>
+  <file src="lib/Cache/Cache.php">
+    <InvalidScalarArgument occurrences="1">
+      <code>$slice</code>
+    </InvalidScalarArgument>
+    <TooManyArguments occurrences="2">
+      <code>get</code>
+      <code>get</code>
+    </TooManyArguments>
+  </file>
+  <file src="lib/Db/AliasMapper.php">
+    <ImplicitToStringCast occurrences="1">
+      <code>$qb2-&gt;createNamedParameter($ids, IQueryBuilder::PARAM_INT_ARRAY)</code>
+    </ImplicitToStringCast>
+  </file>
+  <file src="lib/Db/CollectedAddressMapper.php">
+    <ImplicitToStringCast occurrences="1">
+      <code>$qb2-&gt;createNamedParameter($ids, IQueryBuilder::PARAM_INT_ARRAY)</code>
+    </ImplicitToStringCast>
+  </file>
+  <file src="lib/Db/MailboxMapper.php">
+    <ImplicitToStringCast occurrences="1">
+      <code>$qb2-&gt;createNamedParameter($ids, IQueryBuilder::PARAM_INT_ARRAY)</code>
+    </ImplicitToStringCast>
+  </file>
+  <file src="lib/Db/MessageMapper.php">
+    <ImplicitToStringCast occurrences="44">
+      <code>$messagesQuery-&gt;createFunction($mailboxesQuery-&gt;getSQL())</code>
+      <code>$qb-&gt;createFunction($mailboxIdsQuery-&gt;getSQL())</code>
+      <code>$qb-&gt;createFunction($selectMailboxIds-&gt;getSQL())</code>
+      <code>$qb-&gt;createFunction($threadRootIdsQuery-&gt;getSQL())</code>
+      <code>$qb-&gt;createNamedParameter($ids, IQueryBuilder::PARAM_INT_ARRAY)</code>
+      <code>$qb-&gt;createNamedParameter($ids, IQueryBuilder::PARAM_INT_ARRAY)</code>
+      <code>$qb-&gt;createNamedParameter($mailboxIds, IQueryBuilder::PARAM_INT_ARRAY)</code>
+      <code>$qb-&gt;createNamedParameter($query-&gt;getBcc(), IQueryBuilder::PARAM_STR_ARRAY)</code>
+      <code>$qb-&gt;createNamedParameter($query-&gt;getBcc(), IQueryBuilder::PARAM_STR_ARRAY)</code>
+      <code>$qb-&gt;createNamedParameter($query-&gt;getCc(), IQueryBuilder::PARAM_STR_ARRAY)</code>
+      <code>$qb-&gt;createNamedParameter($query-&gt;getCc(), IQueryBuilder::PARAM_STR_ARRAY)</code>
+      <code>$qb-&gt;createNamedParameter($query-&gt;getFrom(), IQueryBuilder::PARAM_STR_ARRAY)</code>
+      <code>$qb-&gt;createNamedParameter($query-&gt;getFrom(), IQueryBuilder::PARAM_STR_ARRAY)</code>
+      <code>$qb-&gt;createNamedParameter($query-&gt;getTo(), IQueryBuilder::PARAM_STR_ARRAY)</code>
+      <code>$qb-&gt;createNamedParameter($query-&gt;getTo(), IQueryBuilder::PARAM_STR_ARRAY)</code>
+      <code>$qb-&gt;createNamedParameter($uids, IQueryBuilder::PARAM_INT_ARRAY)</code>
+      <code>$qb-&gt;createNamedParameter($uids, IQueryBuilder::PARAM_INT_ARRAY)</code>
+      <code>$qb-&gt;createNamedParameter($uids, IQueryBuilder::PARAM_INT_ARRAY)</code>
+      <code>$qb1-&gt;createParameter('flag_answered')</code>
+      <code>$qb1-&gt;createParameter('flag_deleted')</code>
+      <code>$qb1-&gt;createParameter('flag_draft')</code>
+      <code>$qb1-&gt;createParameter('flag_flagged')</code>
+      <code>$qb1-&gt;createParameter('flag_forwarded')</code>
+      <code>$qb1-&gt;createParameter('flag_important')</code>
+      <code>$qb1-&gt;createParameter('flag_junk')</code>
+      <code>$qb1-&gt;createParameter('flag_notjunk')</code>
+      <code>$qb1-&gt;createParameter('flag_seen')</code>
+      <code>$qb1-&gt;createParameter('in_reply_to')</code>
+      <code>$qb1-&gt;createParameter('mailbox_id')</code>
+      <code>$qb1-&gt;createParameter('message_id')</code>
+      <code>$qb1-&gt;createParameter('references')</code>
+      <code>$qb1-&gt;createParameter('sent_at')</code>
+      <code>$qb1-&gt;createParameter('subject')</code>
+      <code>$qb1-&gt;createParameter('thread_root_id')</code>
+      <code>$qb1-&gt;createParameter('uid')</code>
+      <code>$qb2-&gt;createNamedParameter($ids, IQueryBuilder::PARAM_INT_ARRAY)</code>
+      <code>$qb2-&gt;createNamedParameter(array_keys($indexedMessages), IQueryBuilder::PARAM_INT_ARRAY)</code>
+      <code>$qb2-&gt;createParameter('email')</code>
+      <code>$qb2-&gt;createParameter('label')</code>
+      <code>$qb2-&gt;createParameter('message_id')</code>
+      <code>$qb2-&gt;createParameter('type')</code>
+      <code>$qb4-&gt;createNamedParameter($ids, IQueryBuilder::PARAM_INT_ARRAY)</code>
+      <code>$query-&gt;createNamedParameter($ids, IQueryBuilder::PARAM_INT_ARRAY)</code>
+      <code>$query-&gt;createNamedParameter($uids, IQueryBuilder::PARAM_INT_ARRAY)</code>
+    </ImplicitToStringCast>
+  </file>
+  <file src="lib/Db/StatisticsDao.php">
+    <ImplicitToStringCast occurrences="7">
+      <code>$qb-&gt;createNamedParameter($emails, IQueryBuilder::PARAM_STR_ARRAY)</code>
+      <code>$qb-&gt;createNamedParameter($emails, IQueryBuilder::PARAM_STR_ARRAY)</code>
+      <code>$qb-&gt;createNamedParameter($emails, IQueryBuilder::PARAM_STR_ARRAY)</code>
+      <code>$qb-&gt;createNamedParameter($mailboxIds, IQueryBuilder::PARAM_INT_ARRAY)</code>
+      <code>$qb-&gt;createNamedParameter($mailboxIds, IQueryBuilder::PARAM_INT_ARRAY)</code>
+      <code>$qb-&gt;createNamedParameter($mailboxIds, IQueryBuilder::PARAM_INT_ARRAY)</code>
+      <code>$qb-&gt;createNamedParameter($mailboxIds, IQueryBuilder::PARAM_INT_ARRAY)</code>
+    </ImplicitToStringCast>
   </file>
   <file src="lib/IMAP/MessageMapper.php">
     <UndefinedDocblockClass occurrences="1">
       <code>$mail-&gt;getRaw()</code>
     </UndefinedDocblockClass>
+  </file>
+  <file src="lib/IMAP/Sync/Response.php">
+    <MismatchingDocblockParamType occurrences="2">
+      <code>IMAPMessage|Message[]</code>
+      <code>IMAPMessage|Message[]</code>
+    </MismatchingDocblockParamType>
+    <MismatchingDocblockReturnType occurrences="2">
+      <code>IMAPMessage|Message[]</code>
+      <code>IMAPMessage|Message[]</code>
+    </MismatchingDocblockReturnType>
   </file>
   <file src="lib/IMAP/Sync/Synchronizer.php">
     <InvalidArgument occurrences="2">
@@ -16,15 +109,20 @@
       <code>$newMessages</code>
     </InvalidArgument>
   </file>
+  <file src="lib/Listener/AccountSynchronizedThreadUpdaterListener.php">
+    <MismatchingDocblockReturnType occurrences="1">
+      <code>DatabaseMessage[]|Generator</code>
+    </MismatchingDocblockReturnType>
+  </file>
   <file src="lib/Model/IMAPMessage.php">
     <LessSpecificImplementedReturnType occurrences="1">
       <code>array</code>
     </LessSpecificImplementedReturnType>
   </file>
-  <file src="lib/Service/AutoConfig/SmtpConnectivityTester.php">
-    <UndefinedDocblockClass occurrences="1">
-      <code>$smtp-&gt;getSMTPObject()</code>
-    </UndefinedDocblockClass>
+  <file src="lib/Service/Classification/ImportanceClassifier.php">
+    <InvalidScalarArgument occurrences="1">
+      <code>$predictedValidationLabel</code>
+    </InvalidScalarArgument>
   </file>
   <file src="lib/Service/HtmlPurify/TransformURLScheme.php">
     <NullArgument occurrences="3">
@@ -38,5 +136,10 @@
       <code>$transport</code>
       <code>$transport</code>
     </InvalidArgument>
+  </file>
+  <file src="vendor/cerdic/css-tidy/class.csstidy.php">
+    <InvalidDocblock occurrences="1">
+      <code>public function parse_string_list($value) {</code>
+    </InvalidDocblock>
   </file>
 </files>
