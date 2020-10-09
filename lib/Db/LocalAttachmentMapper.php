@@ -27,6 +27,9 @@ use OCP\AppFramework\Db\QBMapper;
 use OCP\DB\QueryBuilder\IQueryBuilder;
 use OCP\IDBConnection;
 
+/**
+ * @template-extends QBMapper<LocalAttachment>
+ */
 class LocalAttachmentMapper extends QBMapper {
 
 	/**

@@ -33,6 +33,9 @@ use OCP\DB\QueryBuilder\IQueryBuilder;
 use OCP\IDBConnection;
 use OCP\IUser;
 
+/**
+ * @template-extends QBMapper<MailAccount>
+ */
 class MailAccountMapper extends QBMapper {
 
 	/**
