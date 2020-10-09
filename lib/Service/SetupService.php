@@ -127,12 +127,9 @@ class SetupService {
 		$transport = $this->smtpClientFactory->create($account);
 		$account->testConnectivity($transport);
 
-		if ($newAccount) {
-			$this->accountService->save($newAccount);
-			$this->logger->debug("account created " . $newAccount->getId());
-			return new Account($newAccount);
-		}
+		$this->accountService->save($newAccount);
+		$this->logger->debug("account created " . $newAccount->getId());
 
-		return null;
+		return $account;
 	}
 }

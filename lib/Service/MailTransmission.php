@@ -161,7 +161,11 @@ class MailTransmission implements IMailTransmission {
 		try {
 			$mail->send($transport, false, false);
 		} catch (Horde_Mime_Exception $e) {
-			throw new ServiceException('Could not send message: ' . $e->getMessage(), $e->getCode(), $e);
+			throw new ServiceException(
+				'Could not send message: ' . $e->getMessage(),
+				(int) $e->getCode(),
+				$e
+			);
 		}
 
 		$this->eventDispatcher->dispatch(

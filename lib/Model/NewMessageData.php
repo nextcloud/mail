@@ -105,9 +105,8 @@ class NewMessageData {
 		$toList = AddressList::parse($to ?: '');
 		$ccList = AddressList::parse($cc ?: '');
 		$bccList = AddressList::parse($bcc ?: '');
-		$attachmentsArray = $attachments === null ? [] : $attachments;
 
-		return new self($account, $toList, $ccList, $bccList, $subject, $body, $attachmentsArray, $isHtml);
+		return new self($account, $toList, $ccList, $bccList, $subject, $body, $attachments, $isHtml);
 	}
 
 	/**

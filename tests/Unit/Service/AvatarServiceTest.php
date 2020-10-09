@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 /**
  * @copyright 2017 Christoph Wurst <christoph@winzerhof-wurst.at>
  *
@@ -34,24 +36,24 @@ use OCA\Mail\Service\Avatar\IAvatarSource;
 use OCA\Mail\Service\AvatarService;
 use ChristophWurst\Nextcloud\Testing\TestCase;
 use OCP\IURLGenerator;
-use PHPUnit_Framework_MockObject_MockObject;
+use PHPUnit\Framework\MockObject\MockObject;
 
 class AvatarServiceTest extends TestCase {
 	public const BLACK_DOT_BASE64 = 'R0lGODlhAQABAIAAAAUEBAAAACwAAAAAAQABAAACAkQBADs=';
 
-	/** @var IAvatarSource|PHPUnit_Framework_MockObject_MockObject */
+	/** @var IAvatarSource|MockObject */
 	private $source;
 
-	/** @var Downloader|PHPUnit_Framework_MockObject_MockObject */
+	/** @var Downloader|MockObject */
 	private $downloader;
 
-	/** @var Cache|PHPUnit_Framework_MockObject_MockObject */
+	/** @var Cache|MockObject */
 	private $cache;
 
-	/** @var IURLGenerator|PHPUnit_Framework_MockObject_MockObject */
+	/** @var IURLGenerator|MockObject */
 	private $urlGenerator;
 
-	/** @var AvatarFactory|PHPUnit_Framework_MockObject_MockObject */
+	/** @var AvatarFactory|MockObject */
 	private $avatarFactory;
 
 	/** @var IUserPreferences */
@@ -77,14 +79,15 @@ class AvatarServiceTest extends TestCase {
 	public function testGetCachedAvatarUrl() {
 		$email = 'jane@doe.com';
 		$uid = 'john';
+		$avatar = new Avatar('https://doe.com/favicon.ico');
 		$this->cache->expects($this->once())
 			->method('get')
 			->with($email, $uid)
-			->willReturn('https://doe.com/favicon.ico');
+			->willReturn($avatar);
 
-		$url = $this->avatarService->getAvatar($email, $uid);
+		$result = $this->avatarService->getAvatar($email, $uid);
 
-		$this->assertEquals('https://doe.com/favicon.ico', $url);
+		$this->assertSame($avatar, $result);
 	}
 
 	public function testGetAvatarNoAvatarFound() {

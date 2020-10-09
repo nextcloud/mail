@@ -82,7 +82,7 @@ class Cache {
 			return $this->avatarFactory->createExternal($cached['url'], $cached['mime']);
 		}
 
-		return $this->avatarFactory->createInternal($cached['url'], $cached['mime']);
+		return $this->avatarFactory->createInternal($cached['url']);
 	}
 
 	/**

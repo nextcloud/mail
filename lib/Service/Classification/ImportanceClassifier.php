@@ -352,6 +352,7 @@ class ImportanceClassifier {
 										array $trainingSet,
 										array $validationSet,
 										LoggerInterface $logger): Classifier {
+		/** @var float[] $predictedValidationLabel */
 		$predictedValidationLabel = $estimator->predict(Unlabeled::build(
 			array_column($validationSet, 'features')
 		));

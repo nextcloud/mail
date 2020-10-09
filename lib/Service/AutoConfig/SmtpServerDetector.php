@@ -37,11 +37,6 @@ class SmtpServerDetector {
 	/** @var SystemConfig */
 	private $systemConfig;
 
-	/**
-	 * @param MxRecord $mxRecord
-	 * @param SmtpConnectivityTester $smtpTester
-	 * @param
-	 */
 	public function __construct(MxRecord $mxRecord,
 								SmtpConnectivityTester $smtpTester,
 								SystemConfig $systemConfig) {

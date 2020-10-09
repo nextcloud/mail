@@ -129,7 +129,7 @@ class MessageMapper {
 		// Determine min UID to fetch, but don't exceed the known maximum
 		$lower = max(
 			$min,
-			($highestKnownUid ?? 0) + 1
+			$highestKnownUid + 1
 		);
 		// Determine max UID to fetch, but don't exceed the known maximum
 		$upper = min(
@@ -170,7 +170,7 @@ class MessageMapper {
 
 				function (int $uid) use ($highestKnownUid) {
 					// Don't load the ones we already know
-					return $highestKnownUid === null || $uid > $highestKnownUid;
+					return $uid > $highestKnownUid;
 				}
 			),
 			0,
@@ -379,7 +379,11 @@ class MessageMapper {
 				'ids' => new Horde_Imap_Client_Ids($uid),
 			]), false);
 		} catch (Horde_Imap_Client_Exception $e) {
-			throw new ServiceException("Could not fetch message source: " . $e->getMessage(), $e->getCode(), $e);
+			throw new ServiceException(
+				"Could not fetch message source: " . $e->getMessage(),
+				(int) $e->getCode(),
+				$e
+			);
 		}
 
 		$msg = array_map(function (Horde_Imap_Client_Data_Fetch $result) {
