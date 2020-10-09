@@ -159,7 +159,11 @@ class Account implements JsonSerializable {
 			try {
 				$this->client->login();
 			} catch (Horde_Imap_Client_Exception $e) {
-				throw new ServiceException("Could not connect to IMAP: " . $e->getMessage(), $e->getCode(), $e);
+				throw new ServiceException(
+					"Could not connect to IMAP: " . $e->getMessage(),
+					(int) $e->getCode(),
+					$e
+				);
 			}
 		}
 		return $this->client;

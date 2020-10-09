@@ -96,7 +96,7 @@ class AvatarsController extends Controller {
 	 * @return Response
 	 */
 	public function image(string $email): Response {
-		if (is_null($email) || empty($email)) {
+		if (empty($email)) {
 			return new JSONResponse([], Http::STATUS_BAD_REQUEST);
 		}
 

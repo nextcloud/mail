@@ -145,7 +145,7 @@ class IMAPMessage implements IMessage, JsonSerializable {
 	}
 
 	/**
-	 * @param string $flags
+	 * @param string[] $flags
 	 *
 	 * @throws Exception
 	 *
@@ -331,7 +331,7 @@ class IMAPMessage implements IMessage, JsonSerializable {
 		// $list is an array of Horde_Imap_Client_Data_Fetch objects.
 		$ids = new Horde_Imap_Client_Ids($this->messageId);
 		$headers = $this->conn->fetch($this->mailBox, $fetch_query, ['ids' => $ids]);
-		/** @var $fetch \Horde_Imap_Client_Data_Fetch */
+		/** @var Horde_Imap_Client_Data_Fetch $fetch */
 		$fetch = $headers[$this->messageId];
 		if (is_null($fetch)) {
 			throw new DoesNotExistException("This email ($this->messageId) can't be found. Probably it was deleted from the server recently. Please reload.");
@@ -596,7 +596,7 @@ class IMAPMessage implements IMessage, JsonSerializable {
 	}
 
 	/**
-	 * @return int[]
+	 * @return Horde_Mime_Part[]
 	 */
 	public function getLocalAttachments(): array {
 		throw new Exception('not implemented');
@@ -622,7 +622,7 @@ class IMAPMessage implements IMessage, JsonSerializable {
 	}
 
 	/**
-	 * @return IMessage|null
+	 * @return string|null
 	 */
 	public function getInReplyTo() {
 		throw new Exception('not implemented');

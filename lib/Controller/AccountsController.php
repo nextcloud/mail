@@ -237,10 +237,6 @@ class AccountsController extends Controller {
 								 bool $showSubscribedOnly = null): JSONResponse {
 		$account = $this->accountService->find($this->currentUserId, $id);
 
-		if ($account === null) {
-			return new JSONResponse([], Http::STATUS_FORBIDDEN);
-		}
-
 		$dbAccount = $account->getMailAccount();
 		if ($editorMode !== null) {
 			$dbAccount->setEditorMode($editorMode);

@@ -95,12 +95,13 @@ class SetupService {
 	 * @param string $smtpUser
 	 * @param string $smtpPassword
 	 * @param string $uid
+	 * @param int|null $accountId
 	 *
 	 * @throws ServiceException
 	 *
 	 * @return Account|null
 	 */
-	public function createNewAccount($accountName, $emailAddress, $imapHost, $imapPort, $imapSslMode, $imapUser, $imapPassword, $smtpHost, $smtpPort, $smtpSslMode, $smtpUser, $smtpPassword, $uid, $accountId = null): ?Account {
+	public function createNewAccount($accountName, $emailAddress, $imapHost, $imapPort, $imapSslMode, $imapUser, $imapPassword, $smtpHost, $smtpPort, $smtpSslMode, $smtpUser, $smtpPassword, $uid, ?int $accountId = null): ?Account {
 		$this->logger->info('Setting up manually configured account');
 		$newAccount = new MailAccount([
 			'accountId' => $accountId,
@@ -126,12 +127,9 @@ class SetupService {
 		$transport = $this->smtpClientFactory->create($account);
 		$account->testConnectivity($transport);
 
-		if ($newAccount) {
-			$this->accountService->save($newAccount);
-			$this->logger->debug("account created " . $newAccount->getId());
-			return new Account($newAccount);
-		}
+		$this->accountService->save($newAccount);
+		$this->logger->debug("account created " . $newAccount->getId());
 
-		return null;
+		return $account;
 	}
 }

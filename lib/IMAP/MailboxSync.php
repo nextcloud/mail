@@ -96,7 +96,11 @@ class MailboxSync {
 			$folders = $this->folderMapper->getFolders($account, $client);
 			$this->folderMapper->getFoldersStatus($folders, $client);
 		} catch (Horde_Imap_Client_Exception $e) {
-			throw new ServiceException("IMAP error" . $e->getMessage(), $e->getCode(), $e);
+			throw new ServiceException(
+				"IMAP error" . $e->getMessage(),
+				(int) $e->getCode(),
+				$e
+			);
 		}
 		$this->folderMapper->detectFolderSpecialUse($folders);
 

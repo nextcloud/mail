@@ -102,7 +102,7 @@ class AttachmentStorage {
 		$folder = $this->getAttachmentFolder($userId);
 
 		try {
-			return $folder->getFile($attachmentId);
+			return $folder->getFile((string) $attachmentId);
 		} catch (NotFoundException $ex) {
 			throw new AttachmentNotFoundException();
 		}

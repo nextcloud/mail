@@ -26,16 +26,18 @@ declare(strict_types=1);
 
 namespace OCA\Mail\Contracts;
 
+use OCA\Mail\Service\Avatar\Avatar;
+
 interface IAvatarService {
 
 	/**
-	 * Try to find an avatar URL for the given email address
+	 * Try to find an avatar for the given email address
 	 *
 	 * @param string $email
 	 * @param string $uid
-	 * @return string|null URL, if one can be found
+	 * @return Avatar|null
 	 */
-	public function getAvatar(string $email, string $uid);
+	public function getAvatar(string $email, string $uid): ?Avatar;
 
 	/**
 	 * @param string $email

@@ -105,7 +105,7 @@ class AvatarService implements IAvatarService {
 	 * @param string $uid
 	 * @return Avatar|null
 	 */
-	public function getAvatar(string $email, string $uid) {
+	public function getAvatar(string $email, string $uid): ?Avatar {
 		$cachedAvatar = $this->cache->get($email, $uid);
 		if ($cachedAvatar) {
 			return $cachedAvatar;

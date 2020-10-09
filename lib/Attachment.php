@@ -69,10 +69,10 @@ class Attachment {
 		// $list is an array of Horde_Imap_Client_Data_Fetch objects.
 		$ids = new \Horde_Imap_Client_Ids($this->messageUid);
 		$headers = $this->conn->fetch($this->mailBox, $fetch_query, ['ids' => $ids]);
-		/** @var $fetch Horde_Imap_Client_Data_Fetch */
 		if (!isset($headers[$this->messageUid])) {
 			throw new DoesNotExistException('Unable to load the attachment.');
 		}
+		/** @var $fetch Horde_Imap_Client_Data_Fetch */
 		$fetch = $headers[$this->messageUid];
 		/** @var \Horde_Mime_Headers $mimeHeaders */
 		$mimeHeaders = $fetch->getMimeHeader($this->attachmentId, Horde_Imap_Client_Data_Fetch::HEADER_PARSE);

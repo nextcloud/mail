@@ -56,7 +56,7 @@
 		"lint": "find . -name \\*.php -not -path './vendor/*' -print0 | xargs -0 -n1 php -l",
 		"phan": "phan --allow-polyfill-parser -k .phan/config.php",
 		"psalm": "psalm",
-		"psalm:fix": "psalm --alter --issues=InvalidReturnType,InvalidNullableReturnType,MissingParamType,InvalidFalsableReturnType",
+		"psalm:fix": "psalm --alter --issues=InvalidReturnType,InvalidNullableReturnType,MismatchingDocblockParamType,MismatchingDocblockReturnType,MissingParamType,InvalidFalsableReturnType",
 		"post-install-cmd": [
 			"\"vendor/bin/mozart\" compose",
 			"composer dump-autoload"
