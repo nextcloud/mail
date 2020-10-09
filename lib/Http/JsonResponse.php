@@ -106,9 +106,12 @@ class JsonResponse extends Base {
 		);
 	}
 
+	/**
+	 * @param mixed[] $data
+	 */
 	public static function errorFromThrowable(Throwable $error,
 											  int $status = Http::STATUS_INTERNAL_SERVER_ERROR,
-											  $data = []): self {
+											  array $data = []): self {
 		return self::error(
 			$error->getMessage(),
 			$status,

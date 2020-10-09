@@ -222,10 +222,11 @@ class MailboxMapper extends QBMapper {
 	/**
 	 * @param Mailbox $mailbox
 	 * @param IQueryBuilder $query
+	 * @param int|null $value
 	 *
 	 * @return string
 	 */
-	private function eqOrNull(IQueryBuilder $query, string $column, $value, int $type): string {
+	private function eqOrNull(IQueryBuilder $query, string $column, ?int $value, int $type): string {
 		if ($value === null) {
 			return $query->expr()->isNull($column);
 		}
