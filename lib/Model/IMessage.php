@@ -46,7 +46,7 @@ interface IMessage {
 	public function getFlags(): array;
 
 	/**
-	 * @param string $flags
+	 * @param array $flags
 	 */
 	public function setFlags(array $flags);
 

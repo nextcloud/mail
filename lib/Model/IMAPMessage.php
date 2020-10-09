@@ -145,7 +145,7 @@ class IMAPMessage implements IMessage, JsonSerializable {
 	}
 
 	/**
-	 * @param string $flags
+	 * @param array $flags
 	 *
 	 * @throws Exception
 	 *
