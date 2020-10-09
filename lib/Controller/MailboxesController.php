@@ -168,7 +168,7 @@ class MailboxesController extends Controller {
 				$query
 			);
 		} catch (MailboxNotCachedException $e) {
-			return new JSONResponse(null, Http::STATUS_PRECONDITION_REQUIRED);
+			return new JSONResponse([], Http::STATUS_PRECONDITION_REQUIRED);
 		} catch (IncompleteSyncException $e) {
 			return \OCA\Mail\Http\JsonResponse::fail([], Http::STATUS_ACCEPTED);
 		}
@@ -180,7 +180,7 @@ class MailboxesController extends Controller {
 	 * @NoAdminRequired
 	 * @TrapError
 	 *
-	 * @param string $id
+	 * @param int $id
 	 *
 	 * @return JSONResponse
 	 * @throws ClientException
@@ -191,7 +191,7 @@ class MailboxesController extends Controller {
 		$account = $this->accountService->find($this->currentUserId, $mailbox->getAccountId());
 
 		$this->syncService->clearCache($account, $mailbox);
-		return new JSONResponse(null);
+		return new JSONResponse([]);
 	}
 
 	/**
@@ -210,7 +210,7 @@ class MailboxesController extends Controller {
 
 		$this->mailManager->markFolderAsRead($account, $mailbox);
 
-		return new JSONResponse(null);
+		return new JSONResponse([]);
 	}
 
 	/**

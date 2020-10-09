@@ -79,7 +79,7 @@ class AddressCollector {
 			}
 		} catch (Horde_Mail_Exception $ex) {
 			// Ignore it
-			$this->logger->debug("<$address> is not a valid RFC822 mail address");
+			$this->logger->debug("<" . $address->getEmail() . "> is not a valid RFC822 mail address");
 			return;
 		}
 		if ($address->getEmail() !== null && !$this->mapper->exists($this->userId, $address->getEmail())) {

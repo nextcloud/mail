@@ -124,9 +124,14 @@ class TransformURLScheme extends HTMLPurifier_URIFilter {
 		// otherwise it's an element that we send through our proxy
 		if ($element === 'href') {
 			$uri = new \HTMLPurifier_URI(
-				$this->request->getServerProtocol(), null, $this->request->getServerHost(), null,
+				$this->request->getServerProtocol(),
+				null,
+				$this->request->getServerHost(),
+				null,
 				$this->urlGenerator->linkToRoute('mail.proxy.redirect'),
-				'src=' . $originalURL, null);
+				'src=' . $originalURL,
+				null
+			);
 			return $uri;
 		} else {
 			$uri = new \HTMLPurifier_URI(

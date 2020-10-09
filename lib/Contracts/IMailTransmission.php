@@ -34,17 +34,17 @@ interface IMailTransmission {
 	/**
 	 * Send a new message or reply to an existing one
 	 *
-	 * @param NewMessageData $message
-	 * @param RepliedMessageData|null $reply
+	 * @param NewMessageData $messageData
+	 * @param RepliedMessageData|null $replyData
 	 * @param Alias|null $alias
 	 * @param Message|null $draft
 	 *
 	 * @throws ServiceException
 	 */
-	public function sendMessage(NewMessageData $message,
-								RepliedMessageData $reply = null,
+	public function sendMessage(NewMessageData $messageData,
+								RepliedMessageData $replyData = null,
 								Alias $alias = null,
-								Message $draft = null);
+								Message $draft = null): void;
 
 	/**
 	 * Save a message draft

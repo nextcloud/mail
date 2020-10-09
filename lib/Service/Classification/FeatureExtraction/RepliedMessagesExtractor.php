@@ -50,6 +50,7 @@ class RepliedMessagesExtractor implements IExtractor {
 							array $incomingMailboxes,
 							array $outgoingMailboxes,
 							array $messages): bool {
+		/** @var string[] $senders */
 		$senders = array_unique(array_map(function (Message $message) {
 			return $message->getFrom()->first()->getEmail();
 		}, array_filter($messages, function (Message $message) {

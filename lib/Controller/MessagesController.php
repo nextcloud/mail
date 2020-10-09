@@ -147,7 +147,7 @@ class MessagesController extends Controller {
 			$mailbox = $this->mailManager->getMailbox($this->currentUserId, $mailboxId);
 			$account = $this->accountService->find($this->currentUserId, $mailbox->getAccountId());
 		} catch (DoesNotExistException $e) {
-			return new JSONResponse(null, Http::STATUS_FORBIDDEN);
+			return new JSONResponse([], Http::STATUS_FORBIDDEN);
 		}
 
 		$this->logger->debug("loading messages of folder <$mailboxId>");
@@ -182,7 +182,7 @@ class MessagesController extends Controller {
 			$mailbox = $this->mailManager->getMailbox($this->currentUserId, $message->getMailboxId());
 			$account = $this->accountService->find($this->currentUserId, $mailbox->getAccountId());
 		} catch (DoesNotExistException $e) {
-			return new JSONResponse(null, Http::STATUS_FORBIDDEN);
+			return new JSONResponse([], Http::STATUS_FORBIDDEN);
 		}
 
 		$this->logger->debug("loading message <$id>");
@@ -213,7 +213,7 @@ class MessagesController extends Controller {
 			$mailbox = $this->mailManager->getMailbox($this->currentUserId, $message->getMailboxId());
 			$account = $this->accountService->find($this->currentUserId, $mailbox->getAccountId());
 		} catch (DoesNotExistException $e) {
-			return new JSONResponse(null, Http::STATUS_FORBIDDEN);
+			return new JSONResponse([], Http::STATUS_FORBIDDEN);
 		}
 
 		$json = $this->mailManager->getImapMessage(
@@ -256,7 +256,7 @@ class MessagesController extends Controller {
 			$mailbox = $this->mailManager->getMailbox($this->currentUserId, $message->getMailboxId());
 			$account = $this->accountService->find($this->currentUserId, $mailbox->getAccountId());
 		} catch (DoesNotExistException $e) {
-			return new JSONResponse(null, Http::STATUS_FORBIDDEN);
+			return new JSONResponse([], Http::STATUS_FORBIDDEN);
 		}
 
 		return new JSONResponse($this->mailManager->getThread($account, $id));
@@ -267,7 +267,7 @@ class MessagesController extends Controller {
 	 * @TrapError
 	 *
 	 * @param int $id
-	 * @param string $destFolderId
+	 * @param int $destFolderId
 	 *
 	 * @return JSONResponse
 	 *
@@ -282,7 +282,7 @@ class MessagesController extends Controller {
 			$srcAccount = $this->accountService->find($this->currentUserId, $srcMailbox->getAccountId());
 			$dstAccount = $this->accountService->find($this->currentUserId, $dstMailbox->getAccountId());
 		} catch (DoesNotExistException $e) {
-			return new JSONResponse(null, Http::STATUS_FORBIDDEN);
+			return new JSONResponse([], Http::STATUS_FORBIDDEN);
 		}
 
 		$this->mailManager->moveMessage(
@@ -313,7 +313,7 @@ class MessagesController extends Controller {
 			$mailbox = $this->mailManager->getMailbox($this->currentUserId, $message->getMailboxId());
 			$account = $this->accountService->find($this->currentUserId, $mailbox->getAccountId());
 		} catch (DoesNotExistException $e) {
-			return new JSONResponse(null, Http::STATUS_FORBIDDEN);
+			return new JSONResponse([], Http::STATUS_FORBIDDEN);
 		}
 
 		$response = new JSONResponse([
@@ -398,7 +398,7 @@ class MessagesController extends Controller {
 	 * @param int $accountId
 	 * @param string $folderId
 	 * @param int $id
-	 * @param int $attachmentId
+	 * @param string $attachmentId
 	 *
 	 * @return Response
 	 *
@@ -412,7 +412,7 @@ class MessagesController extends Controller {
 			$mailbox = $this->mailManager->getMailbox($this->currentUserId, $message->getMailboxId());
 			$account = $this->accountService->find($this->currentUserId, $mailbox->getAccountId());
 		} catch (DoesNotExistException $e) {
-			return new JSONResponse(null, Http::STATUS_FORBIDDEN);
+			return new JSONResponse([], Http::STATUS_FORBIDDEN);
 		}
 		$folder = $account->getMailbox($mailbox->getName());
 		$attachment = $folder->getAttachment($message->getUid(), $attachmentId);
@@ -439,7 +439,7 @@ class MessagesController extends Controller {
 	 * @TrapError
 	 *
 	 * @param int $id
-	 * @param int $attachmentId
+	 * @param string $attachmentId
 	 * @param string $targetPath
 	 *
 	 * @return JSONResponse
@@ -455,7 +455,7 @@ class MessagesController extends Controller {
 			$mailbox = $this->mailManager->getMailbox($this->currentUserId, $message->getMailboxId());
 			$account = $this->accountService->find($this->currentUserId, $mailbox->getAccountId());
 		} catch (DoesNotExistException $e) {
-			return new JSONResponse(null, Http::STATUS_FORBIDDEN);
+			return new JSONResponse([], Http::STATUS_FORBIDDEN);
 		}
 		$folder = $account->getMailbox($mailbox->getName());
 
@@ -496,7 +496,7 @@ class MessagesController extends Controller {
 	 * @NoAdminRequired
 	 * @TrapError
 	 *
-	 * @param string $id
+	 * @param int $id
 	 * @param array $flags
 	 *
 	 * @return JSONResponse
@@ -510,7 +510,7 @@ class MessagesController extends Controller {
 			$mailbox = $this->mailManager->getMailbox($this->currentUserId, $message->getMailboxId());
 			$account = $this->accountService->find($this->currentUserId, $mailbox->getAccountId());
 		} catch (DoesNotExistException $e) {
-			return new JSONResponse(null, Http::STATUS_FORBIDDEN);
+			return new JSONResponse([], Http::STATUS_FORBIDDEN);
 		}
 
 		foreach ($flags as $flag => $value) {
@@ -539,7 +539,7 @@ class MessagesController extends Controller {
 			$mailbox = $this->mailManager->getMailbox($this->currentUserId, $message->getMailboxId());
 			$account = $this->accountService->find($this->currentUserId, $mailbox->getAccountId());
 		} catch (DoesNotExistException $e) {
-			return new JSONResponse(null, Http::STATUS_FORBIDDEN);
+			return new JSONResponse([], Http::STATUS_FORBIDDEN);
 		}
 
 		$this->logger->debug("deleting message <$id>");

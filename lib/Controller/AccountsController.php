@@ -238,7 +238,7 @@ class AccountsController extends Controller {
 		$account = $this->accountService->find($this->currentUserId, $id);
 
 		if ($account === null) {
-			return new JSONResponse(null, Http::STATUS_FORBIDDEN);
+			return new JSONResponse([], Http::STATUS_FORBIDDEN);
 		}
 
 		$dbAccount = $account->getMailAccount();

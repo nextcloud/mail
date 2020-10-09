@@ -33,8 +33,8 @@ use function array_unique;
 
 class ImportantMessagesExtractor implements IExtractor {
 
-	/** @var int */
-	private $totalMessages = 0;
+	/** @var int[] */
+	private $totalMessages = [];
 
 	/** @var int[] */
 	private $flaggedMessages = [];
@@ -50,6 +50,7 @@ class ImportantMessagesExtractor implements IExtractor {
 							array $incomingMailboxes,
 							array $outgoingMailboxes,
 							array $messages): bool {
+		/** @var string[] $senders */
 		$senders = array_unique(array_map(function (Message $message) {
 			return $message->getFrom()->first()->getEmail();
 		}, array_filter($messages, function (Message $message) {
@@ -59,7 +60,7 @@ class ImportantMessagesExtractor implements IExtractor {
 		$this->flaggedMessages = $this->statisticsDao->getNumberOfMessagesWithFlagGrouped($incomingMailboxes, 'important', $senders);
 
 		// This extractor is only applicable if there are incoming messages
-		return $this->totalMessages > 0;
+		return !empty($this->totalMessages);
 	}
 
 	public function extract(string $email): float {

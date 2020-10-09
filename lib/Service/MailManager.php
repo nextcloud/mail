@@ -196,7 +196,7 @@ class MailManager implements IMailManager {
 
 	/**
 	 * @param Account $account
-	 * @param string $mb
+	 * @param string $mailbox
 	 * @param int $uid
 	 *
 	 * @return string
@@ -325,7 +325,7 @@ class MailManager implements IMailManager {
 		try {
 			$client->subscribeMailbox($mailbox->getName(), $subscribed);
 		} catch (Horde_Imap_Client_Exception $e) {
-			throw new ServiceException("Could not set subscription status for mailbox $mailbox on IMAP: " . $e->getMessage(), $e->getCode(), $e);
+			throw new ServiceException("Could not set subscription status for mailbox " . $mailbox->getId() . " on IMAP: " . $e->getMessage(), $e->getCode(), $e);
 		}
 
 		/**

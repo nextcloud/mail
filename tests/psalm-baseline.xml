@@ -1,0 +1,42 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<files psalm-version="3.16@d03e5ef057d6adc656c0ff7e166c50b73b4f48f3">
+  <file src="lib/Controller/AvatarsController.php">
+    <InvalidArgument occurrences="1">
+      <code>$avatar</code>
+    </InvalidArgument>
+  </file>
+  <file src="lib/IMAP/MessageMapper.php">
+    <UndefinedDocblockClass occurrences="1">
+      <code>$mail-&gt;getRaw()</code>
+    </UndefinedDocblockClass>
+  </file>
+  <file src="lib/IMAP/Sync/Synchronizer.php">
+    <InvalidArgument occurrences="2">
+      <code>$changedMessages</code>
+      <code>$newMessages</code>
+    </InvalidArgument>
+  </file>
+  <file src="lib/Model/IMAPMessage.php">
+    <LessSpecificImplementedReturnType occurrences="1">
+      <code>array</code>
+    </LessSpecificImplementedReturnType>
+  </file>
+  <file src="lib/Service/AutoConfig/SmtpConnectivityTester.php">
+    <UndefinedDocblockClass occurrences="1">
+      <code>$smtp-&gt;getSMTPObject()</code>
+    </UndefinedDocblockClass>
+  </file>
+  <file src="lib/Service/HtmlPurify/TransformURLScheme.php">
+    <NullArgument occurrences="3">
+      <code>null</code>
+      <code>null</code>
+      <code>null</code>
+    </NullArgument>
+  </file>
+  <file src="lib/Service/MailTransmission.php">
+    <InvalidArgument occurrences="2">
+      <code>$transport</code>
+      <code>$transport</code>
+    </InvalidArgument>
+  </file>
+</files>

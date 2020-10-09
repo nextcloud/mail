@@ -28,6 +28,8 @@ namespace OCA\Mail\Service\Avatar;
 
 use Exception;
 use OCP\Http\Client\IClientService;
+use function is_resource;
+use function stream_get_contents;
 
 class Downloader {
 
@@ -51,6 +53,10 @@ class Downloader {
 			return null;
 		}
 
-		return $resp->getBody();
+		$body = $resp->getBody();
+		if (is_resource($body)) {
+			return stream_get_contents($body);
+		}
+		return $body;
 	}
 }
