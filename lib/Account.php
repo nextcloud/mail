@@ -115,6 +115,13 @@ class Account implements JsonSerializable {
 	}
 
 	/**
+	 * @return boolean
+	 */
+	public function getSieveEnabled() {
+		return $this->account->getSieveEnabled();
+	}
+
+	/**
 	 * @deprecated use \OCA\Mail\IMAP\IMAPClientFactory instead
 	 * @return Horde_Imap_Client_Socket
 	 *

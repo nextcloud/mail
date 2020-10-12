@@ -31,6 +31,7 @@ use OCA\Mail\Contracts\IAvatarService;
 use OCA\Mail\Contracts\IMailManager;
 use OCA\Mail\Contracts\IMailSearch;
 use OCA\Mail\Contracts\IMailTransmission;
+use OCA\Mail\Contracts\ISieveParser;
 use OCA\Mail\Contracts\IUserPreferences;
 use OCA\Mail\Dashboard\MailWidget;
 use OCA\Mail\Events\BeforeMessageDeletedEvent;
@@ -62,6 +63,7 @@ use OCA\Mail\Service\MailManager;
 use OCA\Mail\Service\MailTransmission;
 use OCA\Mail\Service\Search\MailSearch;
 use OCA\Mail\Service\UserPreferenceSevice;
+use OCA\Mail\Sieve\SieveParser;
 use OCP\AppFramework\App;
 use OCP\AppFramework\Bootstrap\IBootContext;
 use OCP\AppFramework\Bootstrap\IBootstrap;
@@ -97,6 +99,7 @@ class Application extends App implements IBootstrap {
 		$context->registerServiceAlias(IMailManager::class, MailManager::class);
 		$context->registerServiceAlias(IMailSearch::class, MailSearch::class);
 		$context->registerServiceAlias(IMailTransmission::class, MailTransmission::class);
+		$context->registerServiceAlias(ISieveParser::class, SieveParser::class);
 		$context->registerServiceAlias(IUserPreferences::class, UserPreferenceSevice::class);
 
 		$context->registerEventListener(BeforeMessageDeletedEvent::class, TrashMailboxCreatorListener::class);

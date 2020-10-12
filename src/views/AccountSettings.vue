@@ -27,6 +27,9 @@
 						:account="account" />
 				</div>
 			</div>
+			<div v-if="account !== undefined">
+				<SieveAccountForm :account="account" />
+			</div>
 		</AppContent>
 	</Content>
 </template>
@@ -36,6 +39,7 @@ import AppContent from '@nextcloud/vue/dist/Components/AppContent'
 import Content from '@nextcloud/vue/dist/Components/Content'
 
 import AccountForm from '../components/AccountForm'
+import SieveAccountForm from '../components/SieveAccountForm'
 import EditorSettings from '../components/EditorSettings'
 import Logger from '../logger'
 import Navigation from '../components/Navigation'
@@ -47,6 +51,7 @@ export default {
 	components: {
 		AccountForm,
 		AliasSettings,
+		SieveAccountForm,
 		AppContent,
 		Content,
 		EditorSettings,

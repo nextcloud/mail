@@ -31,6 +31,7 @@
 		"pear-pear.horde.org/horde_exception": "^2.0.8@stable",
 		"pear-pear.horde.org/horde_imap_client": "^2.29.16@stable",
 		"pear-pear.horde.org/horde_mail": "^2.6.4@stable",
+		"pear-pear.horde.org/horde_managesieve": "^1.0.2@stable",
 		"pear-pear.horde.org/horde_mime": "^2.11.0@stable",
 		"pear-pear.horde.org/horde_nls": "^2.2.1@stable",
 		"pear-pear.horde.org/horde_stream": "^1.6.3@stable",

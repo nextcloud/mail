@@ -134,6 +134,9 @@ export default {
 		}
 		removeRec(account)
 	},
+	setSieveStatus(state, { account, sieveEnabled }) {
+		Vue.set(state.accounts[account.accountId], 'sieveEnabled', sieveEnabled)
+	},
 	addEnvelope(state, { query, envelope }) {
 		const mailbox = state.mailboxes[envelope.mailboxId]
 		Vue.set(state.envelopes, envelope.databaseId, Object.assign({}, state.envelopes[envelope.databaseId] || {}, envelope))

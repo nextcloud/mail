@@ -41,6 +41,14 @@
 			<ActionRouter :to="settingsRoute" icon="icon-settings">
 				{{ t('mail', 'Account settings') }}
 			</ActionRouter>
+			<!--
+			<ActionRouter v-if="account.sieveEnabled" :to="filterSettingsRoute" icon="icon-filter">
+				{{ t('mail', 'Edit filter settings') }}
+			</ActionRouter>
+			-->
+			<ActionRouter :to="filterSettingsRoute" icon="icon-filter">
+				{{ t('mail', 'Edit filter settings') }}
+			</ActionRouter>
 			<ActionCheckbox
 				:checked="account.showSubscribedOnly"
 				:disabled="savingShowOnlySubscribed"
@@ -130,6 +138,14 @@ export default {
 		settingsRoute() {
 			return {
 				name: 'accountSettings',
+				params: {
+					accountId: this.account.id,
+				},
+			}
+		},
+		filterSettingsRoute() {
+			return {
+				name: 'filterSettings',
 				params: {
 					accountId: this.account.id,
 				},

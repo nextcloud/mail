@@ -179,6 +179,26 @@ return [
 			'url' => '/api/settings/provisioning',
 			'verb' => 'DELETE'
 		],
+		[
+			'name' => 'sieve#updateSieveAccount',
+			'url' => '/api/sieve/{accountId}/account',
+			'verb' => 'PUT'
+		],
+		[
+			'name' => 'sieve#listScripts',
+			'url' => '/api/sieve/{accountId}/account',
+			'verb' => 'GET'
+		],
+		[
+			'name' => 'sieve#getScriptContent',
+			'url' => '/api/sieve/{accountId}/script/{scriptName}',
+			'verb' => 'GET'
+		],
+		[
+			'name' => 'sieve#setScriptContent',
+			'url' => '/api/sieve/{accountId}/script/{scriptName}',
+			'verb' => 'PUT'
+		],
 	],
 	'resources' => [
 		'accounts' => ['url' => '/api/accounts'],
@@ -188,5 +208,6 @@ return [
 		'mailboxes' => ['url' => '/api/mailboxes'],
 		'messages' => ['url' => '/api/messages'],
 		'preferences' => ['url' => '/api/preferences'],
+		'sieve' => ['url' => '/api/sieve'],
 	]
 ];
