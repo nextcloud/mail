@@ -53,7 +53,7 @@
     "lodash": "^4.17.20",
     "md5": "^2.3.0",
     "nextcloud_issuetemplate_builder": "^0.1.0",
-    "postcss-loader": "^3.0.0",
+    "postcss-loader": "^4.0.4",
     "printscout": "2.0.3",
     "ramda": "^0.27.0",
     "raw-loader": "^4.0.2",
