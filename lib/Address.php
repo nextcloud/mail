@@ -29,6 +29,9 @@ namespace OCA\Mail;
 use Horde_Mail_Rfc822_Address;
 use JsonSerializable;
 
+/**
+ * @psalm-immutable
+ */
 class Address implements JsonSerializable {
 	public const TYPE_FROM = 0;
 	public const TYPE_TO = 1;
@@ -38,16 +41,21 @@ class Address implements JsonSerializable {
 	/** @var Horde_Mail_Rfc822_Address */
 	private $wrapped;
 
-	/**
-	 * @param string $label
-	 * @param string $email
-	 */
-	public function __construct($label, $email) {
-		$this->wrapped = new Horde_Mail_Rfc822_Address($email);
+	private function __construct(Horde_Mail_Rfc822_Address $wrapped) {
+		$this->wrapped = $wrapped;
+	}
+
+	public static function fromHorde(Horde_Mail_Rfc822_Address $horde): self {
+		return new self($horde);
+	}
+
+	public static function fromRaw($label, $email): self {
+		$wrapped = new Horde_Mail_Rfc822_Address($email);
 		// If no label is set we use the email
 		if ($label !== $email && $label !== null) {
-			$this->wrapped->personal = $label;
+			$wrapped->personal = $label;
 		}
+		return new self($wrapped);
 	}
 
 	/**

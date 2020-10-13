@@ -68,15 +68,15 @@ class InteractionListenerTest extends TestCase {
 		}
 
 		$to = new AddressList([
-			new Address('rec 1', 'u1@domain.tld'),
-			new Address('rec 1', 'u2@domain.tld'),
+			Address::fromRaw('rec 1', 'u1@domain.tld'),
+			Address::fromRaw('rec 1', 'u2@domain.tld'),
 		]);
 		$cc = new AddressList([
-			new Address('rec 1', 'u3@domain.tld'),
+			Address::fromRaw('rec 1', 'u3@domain.tld'),
 		]);
 		$bcc = new AddressList([
-			new Address('rec 1', 'u4@domain.tld'),
-			new Address('rec 1', 'u2@domain.tld'), // intentional duplicate
+			Address::fromRaw('rec 1', 'u4@domain.tld'),
+			Address::fromRaw('rec 1', 'u2@domain.tld'), // intentional duplicate
 		]);
 		$event = $this->createMock(MessageSentEvent::class);
 		$message = $this->createMock(IMessage::class);

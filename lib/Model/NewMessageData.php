@@ -28,6 +28,8 @@ use OCA\Mail\AddressList;
 
 /**
  * Simple data class that wraps the request data of a new message or reply
+ *
+ * @psalm-immutable
  */
 class NewMessageData {
 
@@ -63,7 +65,7 @@ class NewMessageData {
 	 * @param string $subject
 	 * @param string $body
 	 * @param array $attachments
-	 * @package bool $isHtml
+	 * @param bool $isHtml
 	 */
 	public function __construct(Account $account,
 								AddressList $to,

@@ -117,7 +117,7 @@ class MailTransmission implements IMailTransmission {
 		$account->setAlias($alias);
 		$fromEmail = $alias ? $alias->getAlias() : $account->getEMailAddress();
 		$from = new AddressList([
-			new Address($account->getName(), $fromEmail),
+			Address::fromRaw($account->getName(), $fromEmail),
 		]);
 		$message->setFrom($from);
 		$message->setCC($messageData->getCc());
@@ -193,7 +193,7 @@ class MailTransmission implements IMailTransmission {
 		$imapMessage->setTo($message->getTo());
 		$imapMessage->setSubject($message->getSubject());
 		$from = new AddressList([
-			new Address($account->getName(), $account->getEMailAddress()),
+			Address::fromRaw($account->getName(), $account->getEMailAddress()),
 		]);
 		$imapMessage->setFrom($from);
 		$imapMessage->setCC($message->getCc());

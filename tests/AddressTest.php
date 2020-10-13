@@ -30,7 +30,7 @@ use OCA\Mail\Address;
 
 class AddressTest extends TestCase {
 	public function testSerialization() {
-		$address = new Address('Christoph Wurst', 'christoph@domain.tld');
+		$address = Address::fromRaw('Christoph Wurst', 'christoph@domain.tld');
 
 		$expected = [
 			'label' => 'Christoph Wurst',
@@ -42,7 +42,7 @@ class AddressTest extends TestCase {
 	}
 
 	public function testToHorde() {
-		$address = new Address('Christoph Wurst', 'christoph@domain.tld');
+		$address = Address::fromRaw('Christoph Wurst', 'christoph@domain.tld');
 		$expected = new Horde_Mail_Rfc822_Address('christoph@domain.tld');
 		$expected->personal = 'Christoph Wurst';
 
@@ -52,7 +52,7 @@ class AddressTest extends TestCase {
 	}
 
 	public function testEqualsIdentical() {
-		$address = new Address('Christoph Wurst', 'christoph@domain.tld');
+		$address = Address::fromRaw('Christoph Wurst', 'christoph@domain.tld');
 
 		$equals = $address->equals($address);
 
@@ -60,8 +60,8 @@ class AddressTest extends TestCase {
 	}
 
 	public function testEquals() {
-		$address1 = new Address('Christoph Wurst', 'christoph@domain1.tld');
-		$address2 = new Address('Christoph Wurst', 'christoph@domain1.tld');
+		$address1 = Address::fromRaw('Christoph Wurst', 'christoph@domain1.tld');
+		$address2 = Address::fromRaw('Christoph Wurst', 'christoph@domain1.tld');
 
 		$equals = $address1->equals($address2);
 
@@ -69,8 +69,8 @@ class AddressTest extends TestCase {
 	}
 
 	public function testDoesNotEqual() {
-		$address1 = new Address('Christoph Wurst', 'christoph@domain1.tld');
-		$address2 = new Address('Christoph Wurst', 'christoph@domain2.tld');
+		$address1 = Address::fromRaw('Christoph Wurst', 'christoph@domain1.tld');
+		$address2 = Address::fromRaw('Christoph Wurst', 'christoph@domain2.tld');
 
 		$equals = $address1->equals($address2);
 
@@ -78,8 +78,8 @@ class AddressTest extends TestCase {
 	}
 
 	public function testDoesNotEqualBecauseDifferentLabel() {
-		$address1 = new Address('Christoph Wurst', 'christoph@domain.tld');
-		$address2 = new Address('Wurst Christoph', 'christoph@domain.tld');
+		$address1 = Address::fromRaw('Christoph Wurst', 'christoph@domain.tld');
+		$address2 = Address::fromRaw('Wurst Christoph', 'christoph@domain.tld');
 
 		$equals = $address1->equals($address2);
 
