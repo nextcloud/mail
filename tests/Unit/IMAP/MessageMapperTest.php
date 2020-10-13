@@ -152,19 +152,27 @@ class MessageMapperTest extends TestCase {
 		$query = new Horde_Imap_Client_Fetch_Query();
 		$query->uid();
 		$uidResults = new Horde_Imap_Client_Fetch_Results();
-		$client->expects($this->at(1))
-			->method('fetch')
-			->with(
-				$mailbox,
-				$query,
-				[
-					'ids' => new Horde_Imap_Client_Ids('123:321'),
-				]
-			)->willReturn($uidResults);
 		$bodyResults = new Horde_Imap_Client_Fetch_Results();
-		$client->expects($this->at(2))
+		$client->expects($this->exactly(2))
 			->method('fetch')
-			->willReturn($bodyResults);
+			->withConsecutive(
+				[
+					$mailbox,
+					$query,
+					[
+						'ids' => new Horde_Imap_Client_Ids('123:321'),
+					]
+				],
+				[
+					$mailbox,
+					$this->anything(),
+					$this->anything()
+				]
+			)
+			->willReturnOnConsecutiveCalls(
+				$uidResults,
+				$bodyResults
+			);
 
 		$this->mapper->findAll(
 			$client,
@@ -199,19 +207,27 @@ class MessageMapperTest extends TestCase {
 		$query = new Horde_Imap_Client_Fetch_Query();
 		$query->uid();
 		$uidResults = new Horde_Imap_Client_Fetch_Results();
-		$client->expects($this->at(1))
-			->method('fetch')
-			->with(
-				$mailbox,
-				$query,
-				[
-					'ids' => new Horde_Imap_Client_Ids('301:321'),
-				]
-			)->willReturn($uidResults);
 		$bodyResults = new Horde_Imap_Client_Fetch_Results();
-		$client->expects($this->at(2))
+		$client->expects($this->exactly(2))
 			->method('fetch')
-			->willReturn($bodyResults);
+			->withConsecutive(
+				[
+					$mailbox,
+					$query,
+					[
+						'ids' => new Horde_Imap_Client_Ids('301:321'),
+					]
+				],
+				[
+					$mailbox,
+					$this->anything(),
+					$this->anything()
+				]
+			)
+			->willReturnOnConsecutiveCalls(
+				$uidResults,
+				$bodyResults
+			);
 
 		$this->mapper->findAll(
 			$client,

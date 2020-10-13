@@ -112,10 +112,17 @@ class SaveSentMessageListenerTest extends TestCase {
 			$message,
 			$mail
 		);
-		$this->mailboxMapper->expects($this->at(0))
+		$mailbox = new Mailbox();
+		$this->mailboxMapper->expects($this->exactly(2))
 			->method('findSpecial')
-			->with($account, 'sent')
-			->willThrowException(new DoesNotExistException(''));
+			->withConsecutive(
+				[$account, 'sent'],
+				[$account, 'sent']
+			)
+			->willReturnOnConsecutiveCalls(
+				$this->throwException(new DoesNotExistException('')),
+				$mailbox
+			);
 		$client = $this->createMock(\Horde_Imap_Client_Socket::class);
 		$this->imapClientFactory
 			->method('getClient')
@@ -166,10 +173,17 @@ class SaveSentMessageListenerTest extends TestCase {
 			$message,
 			$mail
 		);
-		$this->mailboxMapper->expects($this->at(0))
+		$mailbox = new Mailbox();
+		$this->mailboxMapper->expects($this->exactly(2))
 			->method('findSpecial')
-			->with($account, 'sent')
-			->willThrowException(new DoesNotExistException(''));
+			->withConsecutive(
+				[$account, 'sent'],
+				[$account, 'sent']
+			)
+			->willReturnOnConsecutiveCalls(
+				$this->throwException(new DoesNotExistException('')),
+				$mailbox
+			);
 		$client = $this->createMock(\Horde_Imap_Client_Socket::class);
 		$this->imapClientFactory
 			->method('getClient')
@@ -185,11 +199,6 @@ class SaveSentMessageListenerTest extends TestCase {
 					],
 				]
 			);
-		$mailbox = new Mailbox();
-		$this->mailboxMapper->expects($this->at(1))
-			->method('findSpecial')
-			->with($account, 'sent')
-			->willReturn($mailbox);
 		$this->messageMapper->expects($this->once())
 			->method('save')
 			->with(

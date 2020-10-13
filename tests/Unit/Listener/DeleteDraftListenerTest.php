@@ -130,10 +130,13 @@ class DeleteDraftListenerTest extends TestCase {
 			->willReturn($client);
 		$mailbox = new Mailbox();
 		$mailbox->setName('Drafts');
-		$this->mailboxMapper->expects($this->at(0))
+		$this->mailboxMapper->expects($this->exactly(2))
 			->method('findSpecial')
 			->with($account, 'drafts')
-			->willThrowException(new DoesNotExistException(''));
+			->willReturnOnConsecutiveCalls(
+				$this->throwException(new DoesNotExistException('')),
+				$mailbox
+			);
 		$client->expects($this->once())
 			->method('createMailbox')
 			->with(
@@ -147,10 +150,6 @@ class DeleteDraftListenerTest extends TestCase {
 		$this->mailboxSync->expects($this->once())
 			->method('sync')
 			->with($account, $this->logger, true);
-		$this->mailboxMapper->expects($this->at(1))
-			->method('findSpecial')
-			->with($account, 'drafts')
-			->willReturn($mailbox);
 		$this->messageMapper->expects($this->once())
 			->method('addFlag')
 			->with(
