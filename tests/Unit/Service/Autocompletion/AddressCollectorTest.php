@@ -64,20 +64,22 @@ class AddressCollectorTest extends TestCase {
 		$address2->setEmail('example@user.com');
 		$address2->setUserId($this->userId);
 
-		$this->mapper->expects($this->at(0))
+		$this->mapper->expects($this->exactly(2))
 			->method('exists')
-			->with($this->userId, 'user@example.com')
-			->will($this->returnValue(false));
-		$this->mapper->expects($this->at(1))
+			->withConsecutive(
+				[$this->userId, 'user@example.com'],
+				[$this->userId, 'example@user.com']
+			)
+			->willReturnOnConsecutiveCalls(
+				false,
+				false
+			);
+		$this->mapper->expects($this->exactly(2))
 			->method('insert')
-			->with($address1);
-		$this->mapper->expects($this->at(2))
-			->method('exists')
-			->with($this->userId, 'example@user.com')
-			->will($this->returnValue(false));
-		$this->mapper->expects($this->at(3))
-			->method('insert')
-			->with($address2);
+			->withConsecutive(
+				[$address1],
+				[$address2]
+			);
 
 		$this->collector->addAddresses($addressList);
 	}
@@ -88,7 +90,7 @@ class AddressCollectorTest extends TestCase {
 		];
 		$addressList = AddressList::parse($addresses);
 
-		$this->mapper->expects($this->at(0))
+		$this->mapper->expects($this->once())
 			->method('exists')
 			->with($this->userId, $addresses[0])
 			->will($this->returnValue(true));

@@ -133,14 +133,16 @@ class PageControllerTest extends TestCase {
 				$account1,
 				$account2,
 			]));
-		$this->mailManager->expects($this->at(0))
+		$this->mailManager->expects($this->exactly(2))
 			->method('getMailboxes')
-			->with($account1)
-			->willReturn([$mailbox]);
-		$this->mailManager->expects($this->at(1))
-			->method('getMailboxes')
-			->with($account2)
-			->willReturn([]);
+			->withConsecutive(
+				[$account1],
+				[$account2]
+			)
+			->willReturnOnConsecutiveCalls(
+				[$mailbox],
+				[]
+			);
 		$account1->expects($this->once())
 			->method('jsonSerialize')
 			->will($this->returnValue([
@@ -212,12 +214,12 @@ class PageControllerTest extends TestCase {
 			->with($this->equalTo('jane'), $this->equalTo('settings'),
 				$this->equalTo('email'), $this->equalTo(''))
 			->will($this->returnValue('jane@doe.cz'));
-		$this->initialState->expects($this->at(0))
+		$this->initialState->expects($this->exactly(2))
 			->method('provideInitialState')
-			->with('mail', 'prefill_displayName', 'Jane Doe');
-		$this->initialState->expects($this->at(1))
-			->method('provideInitialState')
-			->with('mail', 'prefill_email', 'jane@doe.cz');
+			->withConsecutive(
+				['mail', 'prefill_displayName', 'Jane Doe'],
+				['mail', 'prefill_email', 'jane@doe.cz']
+			);
 
 		$expected = new TemplateResponse($this->appName, 'index',
 			[
