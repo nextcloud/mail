@@ -57,6 +57,16 @@ use OCP\AppFramework\Db\Entity;
  * @method void setOutboundUser(string $outboundUser)
  * @method string|null getOutboundPassword()
  * @method void setOutboundPassword(string $outboundPassword)
+ * @method string|null getSieveHost()
+ * @method void setSieveHost(string|null $sieveHost)
+ * @method integer|null getSievePort()
+ * @method void setSievePort(integer|null $sievePort)
+ * @method string|null getSieveSslMode()
+ * @method void setSieveSslMode(string|null $sieveSslMode)
+ * @method string|null getSieveUser()
+ * @method void setSieveUser(string|null $sieveUser)
+ * @method string|null getSievePassword()
+ * @method void setSievePassword(string|null $sievePassword)
  * @method string|null getSignature()
  * @method void setSignature(string|null $signature)
  * @method int getLastMailboxSync()
@@ -86,6 +96,12 @@ class MailAccount extends Entity {
 	protected $outboundSslMode;
 	protected $outboundUser;
 	protected $outboundPassword;
+	protected $sieveEnabled;
+	protected $sieveHost;
+	protected $sievePort;
+	protected $sieveSslMode;
+	protected $sieveUser;
+	protected $sievePassword;
 	protected $signature;
 	protected $lastMailboxSync;
 	protected $editorMode;
@@ -139,6 +155,25 @@ class MailAccount extends Entity {
 		if (isset($params['smtpPassword'])) {
 			$this->setOutboundPassword($params['smtpPassword']);
 		}
+		if (isset($params['sieveEnabled'])) {
+			$this->sieveEnabled($params['sieveEnabled']);
+		}
+		if (isset($params['sieveHost'])) {
+			$this->setSieveHost($params['sieveHost']);
+		}
+		if (isset($params['sievePort'])) {
+			$this->setSievePort(intval($params['sievePort']));
+		}
+		if (isset($params['sieveSslMode'])) {
+			$this->setSieveSslMode($params['sieveSslMode']);
+		}
+		if (isset($params['sieveUser'])) {
+			$this->setSieveUser($params['sieveUser']);
+		}
+		if (isset($params['sievePassword'])) {
+			$this->setSievePassword($params['sievePassword']);
+		}
+
 		if (isset($params['showSubscribedOnly'])) {
 			$this->setShowSubscribedOnly($params['showSubscribedOnly']);
 		}
@@ -148,6 +183,8 @@ class MailAccount extends Entity {
 		$this->addType('lastMailboxSync', 'integer');
 		$this->addType('provisioned', 'bool');
 		$this->addType('order', 'integer');
+		$this->addType('sieveEnabled', 'boolean');
+		$this->addType('sievePort', 'integer');
 		$this->addType('showSubscribedOnly', 'boolean');
 		$this->addType('personalNamespace', 'string');
 	}
@@ -166,6 +203,7 @@ class MailAccount extends Entity {
 			'imapPort' => $this->getInboundPort(),
 			'imapUser' => $this->getInboundUser(),
 			'imapSslMode' => $this->getInboundSslMode(),
+			'sieveEnabled' => $this->getSieveEnabled(),
 			'signature' => $this->getSignature(),
 			'editorMode' => $this->getEditorMode(),
 			'provisioned' => $this->getProvisioned(),
@@ -178,6 +216,13 @@ class MailAccount extends Entity {
 			$result['smtpPort'] = $this->getOutboundPort();
 			$result['smtpUser'] = $this->getOutboundUser();
 			$result['smtpSslMode'] = $this->getOutboundSslMode();
+		}
+
+		if ($this->getSieveEnabled() !== null) {
+			$result['sieveHost'] = $this->getSieveHost();
+			$result['sievePort'] = $this->getSievePort();
+			$result['sieveUser'] = $this->getSieveUser();
+			$result['sieveSslMode'] = $this->getSieveSslMode();
 		}
 
 		return $result;

@@ -110,7 +110,7 @@ class SieveService {
 		$sieveExtensions = $sieveClient->getExtensions();
 		$scripts = $sieveClient->listScripts();
 		$activeScript = $sieveClient->getActive();
-		if( sizeof($scripts) > 0 && $activeScript ){
+		if (sizeof($scripts) > 0 && $activeScript) {
 			$scriptContent = $this->getScriptContent($account, $activeScript);
 		}
 		$supportedSieveStructure = $this->sieveParser->getSupportedSieveStructure($sieveExtensions);

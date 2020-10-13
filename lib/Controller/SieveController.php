@@ -47,7 +47,7 @@ class SieveController extends Controller {
 	 * @param string $appName
 	 * @param IRequest $request
 	 * @param AccountService $accountService
-	 * @param string $UserId
+	 * @param String $UserId
 	 * @param SieveService $sieveService
 	 * @param ILogger $logger
 	 */
@@ -55,7 +55,7 @@ class SieveController extends Controller {
 	public function __construct(string $appName,
 								IRequest $request,
 								AccountService $accountService,
-								$UserId,
+								String $UserId,
 								SieveService $sieveService,
 								ILogger $logger) {
 		parent::__construct($appName, $request);

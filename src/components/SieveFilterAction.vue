@@ -14,7 +14,7 @@
 		<template v-if="expectedParameters">
 			<div v-if="showAddress" class="flex_column">
 				<label :for="templateid + '-address'">{{ t('mail', 'Mailaddress') }}</label>
-				<input :id="templateid + '-address'" v-model="action.parameters.address[0]" class="mailaddress" >
+				<input :id="templateid + '-address'" v-model="action.parameters.address[0]" class="mailaddress">
 			</div>
 			<div v-if="showMailbox" class="flex_column">
 				<label :for="templateid + '-mailbox-picker'">{{ t('mail', 'Mailbox') }}</label>
@@ -64,12 +64,10 @@ export default {
 	},
 	computed: {
 		showAddress() {
-			var x = this.expectedParameters.address !== undefined
-			return x
+			return this.expectedParameters.address !== undefined
 		},
 		showMailbox() {
-			var x = this.expectedParameters.mailbox !== undefined
-			return x
+			return this.expectedParameters.mailbox !== undefined
 		},
 	},
 	mounted() {
@@ -82,22 +80,21 @@ export default {
 		setExpectedParameters(val) {
 			if (this.supportedsievestructure.supportedAction[val].parameters) {
 				logger.info('action: paremeters found')
-				var parameters = Object.assign({})
+				const parameters = Object.assign({})
 				const a = this.supportedsievestructure.supportedAction[val].parameters.split(' ')
 				a.forEach((element) => {
 					element = element.substring(1)
-					var multiple = false
-					var optional = false
-					const ast = element.indexOf('*')
-					if (element.indexOf('*') == 0) {
+					let multiple = false
+					let optional = false
+					if (element.indexOf('*') === 0) {
 						element = element.substring(1)
 						multiple = true
 					}
-					if (element.indexOf('?') == 0) {
+					if (element.indexOf('?') === 0) {
 						element = element.substring(1)
 						optional = true
 					}
-					parameters[element] = {multiple: multiple, optional: optional}
+					parameters[element] = { multiple, optional }
 					if (!this.action.parameters[element]) {
 						Vue.set(this.action.parameters, element, [])
 					}
@@ -105,7 +102,7 @@ export default {
 						const val = this.action.parameters.element
 						Vue.set(this.action.parameters[element], 0, val)
 					} else {
-						if (this.action.parameters[element].length == 0 && (!multiple || element == 'keylist')) {
+						if (this.action.parameters[element].length === 0 && (!multiple || element === 'keylist')) {
 							Vue.set(this.action.parameters[element], 0, '')
 						}
 					}

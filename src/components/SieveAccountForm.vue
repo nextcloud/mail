@@ -10,8 +10,7 @@
 					type="radio"
 					name="sieve-active"
 					:disabled="loading"
-					value="0"
-				/>
+					value="0">
 				<label class="button" for="sieve-disabled" :class="{primary: sieveAccount.sieveEnabled === '0'}">
 					{{ t('mail', 'Disabled') }}
 				</label>
@@ -21,8 +20,7 @@
 					type="radio"
 					name="sieve-active"
 					:disabled="loading"
-					value="1"
-				/>
+					value="1">
 				<label class="button" for="sieve-enabled" :class="{primary: sieveAccount.sieveEnabled === '1'}">
 					{{ t('mail', 'Enabled') }}
 				</label>
@@ -34,8 +32,7 @@
 					v-model="sieveAccount.sieveHost"
 					type="text"
 					:disabled="controlsDisabled"
-					required
-				/>
+					required>
 				<h4>{{ t('mail', 'Sieve Security') }}</h4>
 				<div class="flex-row">
 					<input
@@ -45,29 +42,24 @@
 						name="sieve-sec"
 						:disabled="controlsDisabled"
 						value="none"
-						@change="onSieveSslModeChange"
-					/>
+						@change="onSieveSslModeChange">
 					<label
 						class="button"
 						for="sieve-sec-none"
 						:disabled="controlsDisabled"
-						:class="{primary: sieveAccount.sieveSslMode === 'none'}"
-						>{{ t('mail', 'None') }}</label
-					>
+						:class="{primary: sieveAccount.sieveSslMode === 'none'}">{{ t('mail', 'None') }}</label>
 					<input
 						id="sieve-sec-ssl"
 						v-model="sieveAccount.sieveSslMode"
 						type="radio"
 						name="sieve-sec"
 						:disabled="controlsDisabled"
-						value="ssl"
-					/>
+						value="ssl">
 					<label
 						class="button"
 						for="sieve-sec-ssl"
 						:class="{primary: sieveAccount.sieveSslMode === 'ssl'}"
-						:disabled="controlsDisabled"
-					>
+						:disabled="controlsDisabled">
 						{{ t('mail', 'SSL/TLS') }}
 					</label>
 					<input
@@ -77,14 +69,12 @@
 						name="sieve-sec"
 						:disabled="controlsDisabled"
 						value="tls"
-						@change="onSieveSslModeChange"
-					/>
+						@change="onSieveSslModeChange">
 					<label
 						class="button"
 						for="sieve-sec-tls"
 						:class="{primary: sieveAccount.sieveSslMode === 'tls'}"
-						:disabled="controlsDisabled"
-					>
+						:disabled="controlsDisabled">
 						{{ t('mail', 'STARTTLS') }}
 					</label>
 				</div>
@@ -94,32 +84,28 @@
 					v-model="sieveAccount.sievePort"
 					type="text"
 					:disabled="controlsDisabled"
-					required
-				/>
+					required>
 				<label for="sieve-user" :disabled="controlsDisabled">{{ t('mail', 'Sieve User') }}</label>
 				<input
 					id="sieve-user"
 					v-model="sieveAccount.sieveUser"
 					type="text"
 					:disabled="controlsDisabled"
-					required
-				/>
+					required>
 				<label for="sieve-password" :disabled="controlsDisabled">{{ t('mail', 'Sieve Password') }}</label>
 				<input
 					id="sieve-password"
 					v-model="sieveAccount.sievePassword"
 					type="password"
 					:disabled="controlsDisabled"
-					required
-				/>
-				<slot name="feedback"></slot>
+					required>
+				<slot name="feedback" />
 				<input
 					type="submit"
 					class="primary"
 					:disabled="controlsDisabled"
 					:value="submitButtonText"
-					@click.prevent="onSubmit"
-				/>
+					@click.prevent="onSubmit">
 			</template>
 		</form>
 	</div>
@@ -128,7 +114,7 @@
 <script>
 import logger from '../logger'
 export default {
-	name: 'SieveSettings',
+	name: 'SieveAccountForm',
 	props: {
 		account: {
 			type: Object,
@@ -150,14 +136,14 @@ export default {
 				sieveHost: this.account.sieveHost
 					? this.account.sieveHost
 					: this.account.imapHost
-					? this.account.imapHost
-					: '',
+						? this.account.imapHost
+						: '',
 				sievePort: this.account.sievePort ? this.account.sievePort : '4190',
 				sieveUser: this.account.sieveUser
 					? this.account.sieveUser
 					: this.account.imapUser
-					? this.account.imapUser
-					: '',
+						? this.account.imapUser
+						: '',
 				sieveSslMode: this.account.sieveSslMode ? this.account.sieveSslMode : 'none',
 				sievePassword: '',
 				errorText: '',
@@ -177,7 +163,7 @@ export default {
 			try {
 				logger.info('Submit sieve account')
 				this.loading = true
-				const ret = await this.$store.dispatch('updateSieveAccount', {...this.sieveAccount})
+				const ret = await this.$store.dispatch('updateSieveAccount', { ...this.sieveAccount })
 				this.sieveAccount.errorText = ret.message
 				this.sieveAccount.sieveEnabled = ret.sieveEnabled ? '1' : '0'
 				this.sieveAccount.error = ret.sieveEnabled ? '0' : '1'

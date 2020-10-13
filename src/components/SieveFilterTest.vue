@@ -8,8 +8,7 @@
 					v-model="test.testSubject"
 					:options="Object.keys(supportedsievestructure.supportedTestSubjects)"
 					:searchable="false"
-					@select="onSelectSubject"
-				/>
+					@select="onSelectSubject" />
 			</div>
 		</div>
 		<template v-if="expectedParameters">
@@ -22,9 +21,7 @@
 						:options="addressParts"
 						:searchable="false"
 						:allow-empty="expectedParameters.addresspart.optional"
-						:multiple="expectedParameters.addresspart.multiple"
-					>
-					</Multiselect>
+						:multiple="expectedParameters.addresspart.multiple" />
 				</div>
 			</div>
 			<div v-if="showMatchTypes">
@@ -36,9 +33,7 @@
 						:options="matchtypes"
 						:searchable="false"
 						:allow-empty="expectedParameters.matchtype.optional"
-						:multiple="expectedParameters.matchtype.multiple"
-					>
-					</Multiselect>
+						:multiple="expectedParameters.matchtype.multiple" />
 				</div>
 			</div>
 			<div v-if="showEnvelopeParts">
@@ -50,9 +45,7 @@
 						:options="supportedsievestructure.envelopeParts"
 						:searchable="false"
 						:allow-empty="expectedParameters.envelopepart.optional"
-						:multiple="expectedParameters.envelopepart.multiple"
-					>
-					</Multiselect>
+						:multiple="expectedParameters.envelopepart.multiple" />
 				</div>
 			</div>
 			<div v-if="showHeaders">
@@ -67,9 +60,7 @@
 						:multiple="expectedParameters.headers.multiple"
 						:taggable="true"
 						tag-placeholder="Add this as new header"
-						@tag="addCustomHeader"
-					>
-					</Multiselect>
+						@tag="addCustomHeader" />
 				</div>
 			</div>
 			<div v-if="showKeylist" class="flex_column">
@@ -83,14 +74,12 @@
 					:multiple="true"
 					:taggable="true"
 					tag-placeholder="Add this as new key"
-					@tag="addKey"
-				>
-				</Multiselect>
+					@tag="addKey" />
 			</div>
 			<div v-if="expectedParameters.size">
 				<label :for="templateid + '-size'">{{ t('mail', 'Size') }}</label>
 				<div class="wrapper">
-					<input :id="templateid + '-size'" v-model="test.parameters.size[0]" />
+					<input :id="templateid + '-size'" v-model="test.parameters.size[0]">
 				</div>
 			</div>
 		</template>
@@ -100,7 +89,6 @@
 <script>
 import Multiselect from '@nextcloud/vue/dist/Components/Multiselect'
 import Vue from 'vue'
-import logger from '../logger'
 
 export default {
 	name: 'SieveFilterTest',
@@ -142,64 +130,64 @@ export default {
 				.map((a) => a.name)
 		},
 		envelopePartValue: {
-			get: function () {
+			get() {
 				return this.getValueForParameter('envelopepart')
 			},
-			set: function (value) {
+			set(value) {
 				this.setValueForParameter('envelopepart', value)
 			},
 		},
 		addressPartValue: {
-			get: function () {
+			get() {
 				return this.getValueForParameter('addresspart')
 			},
-			set: function (value) {
+			set(value) {
 				this.setValueForParameter('addresspart', value)
 			},
 		},
 		matchTypeValue: {
-			get: function () {
+			get() {
 				return this.getValueForParameter('matchtype')
 			},
-			set: function (value) {
+			set(value) {
 				this.setValueForParameter('matchtype', value)
 			},
 		},
 		headerValue: {
-			get: function () {
+			get() {
 				return this.getValueForParameter('headers')
 			},
-			set: function (value) {
+			set(value) {
 				this.setValueForParameter('headers', value)
 			},
 		},
 		showAddressParts() {
-			var x = this.expectedParameters.addresspart !== undefined
+			let x = this.expectedParameters.addresspart !== undefined
 			if (x) {
 				x = x && this.addressParts.length > 0
 			}
 			return x
 		},
 		showEnvelopeParts() {
-			var x = this.expectedParameters.envelopepart !== undefined
+			let x = this.expectedParameters.envelopepart !== undefined
 			if (x) {
 				x = x && this.supportedsievestructure.envelopeParts.length > 0
 			}
 			return x
 		},
 		showKeylist() {
-			var x = this.expectedParameters.keylist !== undefined
+			const x = this.expectedParameters.keylist !== undefined
 			return x
 		},
 		showMatchTypes() {
-			var x = this.expectedParameters.matchtype !== undefined
+			let x = this.expectedParameters.matchtype !== undefined
 			if (x) {
 				x = x && this.matchtypes.length > 0
 			}
 			return x
 		},
 		showHeaders() {
-			var x = this.expectedParameters.headers !== undefined
+			let x = this.expectedParameters.headers !== undefined
 			if (x) {
 				x = x && this.supportedsievestructure.headers.length > 0
 			}
@@ -242,22 +230,21 @@ export default {
 		},
 		setExpectedParameters(val) {
 			if (this.supportedsievestructure.supportedTestSubjects[val].parameters) {
-				var parameters = Object.assign({})
+				const parameters = Object.assign({})
 				const a = this.supportedsievestructure.supportedTestSubjects[val].parameters.split(' ')
 				a.forEach((element) => {
 					element = element.substring(1)
-					var multiple = false
-					var optional = false
-					const ast = element.indexOf('*')
-					if (element.indexOf('*') == 0) {
+					let multiple = false
+					let optional = false
+					if (element.indexOf('*') === 0) {
 						element = element.substring(1)
 						multiple = true
 					}
-					if (element.indexOf('?') == 0) {
+					if (element.indexOf('?') === 0) {
 						element = element.substring(1)
 						optional = true
 					}
-					parameters[element] = {multiple: multiple, optional: optional}
+					parameters[element] = { multiple, optional }
 					if (!this.test.parameters[element]) {
 						Vue.set(this.test.parameters, element, [])
 					}
@@ -265,7 +252,7 @@ export default {
 						const val = this.test.parameters.element
 						Vue.set(this.test.parameters[element], 0, val)
 					} else {
-						if (this.test.parameters[element].length == 0 && !multiple) {
+						if (this.test.parameters[element].length === 0 && !multiple) {
 							Vue.set(this.test.parameters[element], 0, '')
 						}
 					}

@@ -52,7 +52,7 @@ class SieveParser implements ISieveParser {
 	private $requirements = [];
 
 	/** @var $generatorName */
-	const GENERATOR_NAME = "Nextcloud Mail";
+	public const GENERATOR_NAME = "Nextcloud Mail";
 
 	/** @var $origin */
 	private $native = false;

@@ -1,6 +1,6 @@
 import {
 	// updateSieveAccount,
-	listScripts,
+	listFiltersets,
 	// getScriptContent as getSieveScriptContent,
 	// putScriptContent as putSieveScriptContent,
 } from '../service/SieveService'
@@ -55,7 +55,7 @@ export default {
 				})
 		}, */
 		listFiltersets({ commit }, accountId) {
-			return listScripts(accountId)
+			return listFiltersets(accountId)
 				.then((data) => {
 					console.info('sieve/listFiltersets returned')
 					commit('addFilterset', data)
@@ -106,6 +106,6 @@ export default {
 		},
 		isActiveFilterset(state) {
 			return state.activeFilterset === state.selectedFilterset
-		}
+		},
 	},
 }

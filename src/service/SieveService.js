@@ -19,7 +19,7 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-import {generateUrl} from '@nextcloud/router'
+import { generateUrl } from '@nextcloud/router'
 import Axios from '@nextcloud/axios'
 
 export const updateSieveAccount = (data) => {
@@ -30,7 +30,7 @@ export const updateSieveAccount = (data) => {
 	return Axios.put(url, data).then((resp) => resp.data)
 }
 
-export const listScripts = (accountId) => {
+export const listFiltersets = (accountId) => {
 	const url = generateUrl('/apps/mail/api/sieve/{id}/account', {
 		id: accountId,
 	})
@@ -38,7 +38,7 @@ export const listScripts = (accountId) => {
 	return Axios.get(url).then((resp) => resp.data)
 }
 
-export const getScriptContent = (accountId, scriptName) => {
+export const getFiltersetContent = (accountId, scriptName) => {
 	const url = generateUrl('/apps/mail/api/sieve/{id}/script/{scriptName}', {
 		id: accountId,
 		scriptName,
@@ -47,7 +47,7 @@ export const getScriptContent = (accountId, scriptName) => {
 	return Axios.get(url).then((resp) => resp.data)
 }
 
-export const putScriptContent = (accountId, scriptName, install, scriptContent) => {
+export const putFiltersetContent = (accountId, scriptName, install, scriptContent) => {
 	const url = generateUrl('/apps/mail/api/sieve/{id}/script/{scriptName}', {
 		id: accountId,
 		scriptName,

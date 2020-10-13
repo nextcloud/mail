@@ -204,7 +204,7 @@ class Account implements JsonSerializable {
 	 * @param string $sslMode
 	 * @return false|string
 	 */
-	protected function convertSslMode($sslMode) {
+	public function convertSslMode($sslMode) {
 		switch ($sslMode) {
 			case 'none':
 				return false;

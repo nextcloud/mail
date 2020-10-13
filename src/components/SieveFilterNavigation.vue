@@ -18,11 +18,10 @@
 					}"
 					:exact="true"
 					:title="rule.name"
-					icon="icon-filter"
-				>
+					icon="icon-filter">
 					<template slot="info">
 						<label class="comment"> {{ rule.comment }} </label>
-						<label class="description"></label>
+						<label class="description" />
 					</template>
 					<template slot="actions">
 						<ActionButton icon="icon-settings" :title="t('mail', 'edit')">
@@ -54,7 +53,7 @@
 import ActionButton from '@nextcloud/vue/dist/Components/ActionButton'
 import AppContentListEntry from './AppContentListEntry'
 import AppNavigationNew from '@nextcloud/vue/dist/Components/AppNavigationNew'
-import Vue from 'vue'
+
 export default {
 	name: 'SieveFilterNavigation',
 	components: {
@@ -90,7 +89,7 @@ export default {
 			const rule = {
 				index: -1,
 				name: 'new Rule',
-				parsedrule: {actions: [], conditions: {'condition-verb': 'if', testlist: {tests: []}}},
+				parsedrule: { actions: [], conditions: { 'condition-verb': 'if', testlist: { tests: [] } } },
 				rule: '',
 				type: 'rule',
 			}

@@ -3,6 +3,8 @@ import Router from 'vue-router'
 import { generateUrl } from '@nextcloud/router'
 
 const AccountSettings = () => import('./views/AccountSettings')
+const FilterSettings = () => import('./views/FilterSettings')
+const FilterRules = () => import('./views/SieveFilterRules')
 const Home = () => import('./views/Home')
 const Setup = () => import('./views/Setup')
 
@@ -42,6 +44,16 @@ export default new Router({
 			path: '/setup',
 			name: 'setup',
 			component: Setup,
+		},
+		{
+			path: '/accounts/:accountId/filterSettings/:filterSet?',
+			name: 'filterSettings',
+			component: FilterSettings,
+		},
+		{
+			path: '/accounts/:accountId/:filterSet/filterRules/:ruleIndex',
+			name: 'filterRules',
+			component: FilterRules,
 		},
 	],
 })
