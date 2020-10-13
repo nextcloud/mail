@@ -122,13 +122,6 @@ export default {
 		},
 	},
 	data() {
-		const fromAccountOr = (prop, def) => {
-			if (this.account !== undefined && this.account[prop] !== undefined) {
-				return this.account[prop]
-			} else {
-				return def
-			}
-		}
 		return {
 			sieveAccount: {
 				accountId: this.account.accountId,

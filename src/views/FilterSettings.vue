@@ -100,7 +100,6 @@ import Multiselect from '@nextcloud/vue/dist/Components/Multiselect'
 import Navigation from '../components/Navigation'
 import SieveFilterNavigation from '../components/SieveFilterNavigation'
 import SieveStore from '../store/sieve'
-import Vue from 'vue'
 
 export default {
 	name: 'FilterSettings',

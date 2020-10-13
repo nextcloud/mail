@@ -10,16 +10,17 @@
 			'app-content-list-entry--collapsible': collapsible,
 			active: isActive,
 		}"
-		class="app-content-list-entry"
-	>
+		class="app-content-list-entry">
 		<!-- Icon and title -->
-		<a v-if="!undo && !editing" class="app-content-list-entry-link" href="#" @click="onClick">
+		<a v-if="!undo && !editing"
+			class="app-content-list-entry-link"
+			href="#"
+			@click="onClick">
 			<!-- icon if not collapsible -->
 			<!-- never show the icon over the collapsible if mobile -->
 			<div
 				:class="{'icon-loading-small': loading, [icon]: icon && isIconShown}"
-				class="app-content-list-entry-icon"
-			>
+				class="app-content-list-entry-icon">
 				<slot v-if="!loading" v-show="isIconShown" name="icon" />
 			</div>
 			<span class="app-content-list-entry__title" :title="title">
@@ -36,16 +37,14 @@
 				:open="menuOpen"
 				:force-menu="forceMenu"
 				:default-icon="menuIcon"
-				@update:open="onMenuToggle"
-			>
+				@update:open="onMenuToggle">
 				<ActionButton v-if="editable && !editing" icon="icon-rename" @click="handleEdit">
 					{{ editLabel }}
 				</ActionButton>
 				<ActionButton
 					v-if="undo"
 					icon="app-content-list-entry__deleted-button icon-history"
-					@click="handleUndo"
-				/>
+					@click="handleUndo" />
 				<slot name="actions" />
 			</Actions>
 		</div>
@@ -58,8 +57,7 @@
 					v-model="newTitle"
 					type="text"
 					class="app-content-list-entry__edit-input"
-					:placeholder="editPlaceholder !== '' ? editPlaceholder : title"
-				/>
+					:placeholder="editPlaceholder !== '' ? editPlaceholder : title">
 				<button type="submit" class="icon-confirm" @click.stop.prevent="handleRename" />
 				<button type="reset" class="icon-close" @click.stop.prevent="cancelEdit" />
 			</form>
@@ -73,7 +71,8 @@
 </template>
 
 <script>
-import {directive as ClickOutside} from 'v-click-outside'
+// eslint-disable-next-line node/no-extraneous-import
+import { directive as ClickOutside } from 'v-click-outside'
 import Actions from '@nextcloud/vue/dist/Components/Actions'
 import ActionButton from '@nextcloud/vue/dist/Components/ActionButton'
 // import AppNavigationIconCollapsible from '@nextcloud/vue/src/components/AppNavigationItem/AppNavigationIconCollapsible'

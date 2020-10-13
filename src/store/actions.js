@@ -70,8 +70,8 @@ import {
 import { createAlias, deleteAlias } from '../service/AliasService'
 import {
 	updateSieveAccount,
-	getScriptContent as getSieveScriptContent,
-	putScriptContent as putSieveScriptContent,
+	getFiltersetContent as getSieveScriptContent,
+	putFiltersetContent as putSieveScriptContent,
 } from '../service/SieveService'
 import logger from '../logger'
 import { normalizedEnvelopeListId } from './normalization'
