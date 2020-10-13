@@ -28,7 +28,7 @@ use ChristophWurst\Nextcloud\Testing\TestCase;
 use PHPUnit\Framework\MockObject\MockObject;
 use Psr\Log\LoggerInterface;
 
-class IspDbtest extends TestCase {
+class IspDbTest extends TestCase {
 
 	/** @var MockObject|LoggerInterface */
 	private $logger;
