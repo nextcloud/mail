@@ -318,7 +318,6 @@ export default {
 
 <style lang="scss" scoped>
 	.sender {
-		font-weight: bold;
 		margin-left: 8px;
 	}
 
