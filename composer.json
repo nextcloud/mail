@@ -45,7 +45,7 @@
 	"require-dev": {
 		"roave/security-advisories": "dev-master",
 		"christophwurst/nextcloud": "v20.0.0",
-		"christophwurst/nextcloud_testing": "0.10.0",
+		"christophwurst/nextcloud_testing": "0.11.0",
 		"nextcloud/coding-standard": "^0.3.0",
 		"phan/phan": "^3.0",
 		"vimeo/psalm": "^3.9"
