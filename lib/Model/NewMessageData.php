@@ -46,7 +46,7 @@ class NewMessageData {
 	/** @var string */
 	private $subject;
 
-	/** @var string|null */
+	/** @var string */
 	private $body;
 
 	/** @var array */
@@ -61,7 +61,7 @@ class NewMessageData {
 	 * @param AddressList $cc
 	 * @param AddressList $bcc
 	 * @param string $subject
-	 * @param string|null $body
+	 * @param string $body
 	 * @param array $attachments
 	 * @package bool $isHtml
 	 */
@@ -70,7 +70,7 @@ class NewMessageData {
 								AddressList $cc,
 								AddressList $bcc,
 								string $subject,
-								string $body = null,
+								string $body,
 								array $attachments = [],
 								bool $isHtml = true) {
 		$this->account = $account;
@@ -99,7 +99,7 @@ class NewMessageData {
 									   string $cc = null,
 									   string $bcc = null,
 									   string $subject,
-									   string $body = null,
+									   string $body,
 									   array $attachments = [],
 									   bool $isHtml = true) {
 		$toList = AddressList::parse($to ?: '');
@@ -145,9 +145,9 @@ class NewMessageData {
 	}
 
 	/**
-	 * @return string|null
+	 * @return string
 	 */
-	public function getBody() {
+	public function getBody(): string {
 		return $this->body;
 	}
 
