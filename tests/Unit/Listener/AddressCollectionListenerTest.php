@@ -118,19 +118,19 @@ class AddressCollectionListenerTest extends TestCase {
 		);
 		$message->expects($this->once())
 			->method('getTo')
-			->willReturn(new AddressList([new Address('to', 'to@email')]));
+			->willReturn(new AddressList([Address::fromRaw('to', 'to@email')]));
 		$message->expects($this->once())
 			->method('getCC')
-			->willReturn(new AddressList([new Address('cc', 'cc@email')]));
+			->willReturn(new AddressList([Address::fromRaw('cc', 'cc@email')]));
 		$message->expects($this->once())
 			->method('getBCC')
-			->willReturn(new AddressList([new Address('bcc', 'bcc@email')]));
+			->willReturn(new AddressList([Address::fromRaw('bcc', 'bcc@email')]));
 		$this->addressCollector->expects($this->once())
 			->method('addAddresses')
 			->with($this->equalTo(new AddressList([
-				new Address('to', 'to@email'),
-				new Address('cc', 'cc@email'),
-				new Address('bcc', 'bcc@email'),
+				Address::fromRaw('to', 'to@email'),
+				Address::fromRaw('cc', 'cc@email'),
+				Address::fromRaw('bcc', 'bcc@email'),
 			])));
 		$this->logger->expects($this->never())->method($this->anything());
 

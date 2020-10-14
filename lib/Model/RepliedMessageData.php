@@ -28,6 +28,8 @@ use OCA\Mail\Db\Message;
 
 /**
  * An immutable DTO that holds information about a message that is replied to
+ *
+ * @psalm-immutable
  */
 class RepliedMessageData {
 

@@ -28,6 +28,9 @@ namespace OCA\Mail\Service\Avatar;
 
 use JsonSerializable;
 
+/**
+ * @psalm-immutable
+ */
 class Avatar implements JsonSerializable {
 
 	/** @var string */

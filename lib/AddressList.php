@@ -32,6 +32,9 @@ use Horde_Mail_Rfc822_List;
 use Horde_Mail_Rfc822_Object;
 use JsonSerializable;
 
+/**
+ * @psalm-immutable
+ */
 class AddressList implements Countable, JsonSerializable {
 
 	/** @var Address[] */
@@ -63,7 +66,7 @@ class AddressList implements Countable, JsonSerializable {
 	 */
 	public static function fromHorde(Horde_Mail_Rfc822_List $hordeList) {
 		$addresses = array_map(function (Horde_Mail_Rfc822_Address $addr) {
-			return new Address($addr->personal, $addr->bare_address);
+			return Address::fromHorde($addr);
 		}, array_filter(iterator_to_array($hordeList), function (Horde_Mail_Rfc822_Object $obj) {
 			// TODO: how to handle non-addresses? This doesn't seem right …
 			return $obj instanceof Horde_Mail_Rfc822_Address;
@@ -73,7 +76,7 @@ class AddressList implements Countable, JsonSerializable {
 
 	public static function fromRow(array $recipient): self {
 		return new self([
-			new Address($recipient['label'], $recipient['email'])
+			Address::fromRaw($recipient['label'], $recipient['email'])
 		]);
 	}
 
@@ -128,7 +131,7 @@ class AddressList implements Countable, JsonSerializable {
 	public function merge(AddressList $other) {
 		$addresses = $this->addresses;
 
-		array_walk($other->addresses, function (Address $address) use (&$addresses) {
+		foreach ($other->addresses as $address) {
 			$same = array_filter($addresses, function (Address $our) use ($address) {
 				// Check whether our array contains the other address
 				return $our->equals($address);
@@ -138,7 +141,7 @@ class AddressList implements Countable, JsonSerializable {
 				// have to add it
 				$addresses[] = $address;
 			}
-		});
+		}
 
 		return new AddressList($addresses);
 	}
