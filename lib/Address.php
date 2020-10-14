@@ -49,7 +49,7 @@ class Address implements JsonSerializable {
 		return new self($horde);
 	}
 
-	public static function fromRaw($label, $email): self {
+	public static function fromRaw(string $label, string $email): self {
 		$wrapped = new Horde_Mail_Rfc822_Address($email);
 		// If no label is set we use the email
 		if ($label !== $email && $label !== null) {

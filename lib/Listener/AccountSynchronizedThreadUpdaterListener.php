@@ -63,6 +63,7 @@ class AccountSynchronizedThreadUpdaterListener implements IEventListener {
 		$logger->debug("Account $accountId has " . count($messages) . " messages for threading");
 		$threads = $this->builder->build($messages, $logger);
 		$logger->debug("Account $accountId has " . count($threads) . " threads");
+		/** @var DatabaseMessage[] $flattened */
 		$flattened = iterator_to_array($this->flattenThreads($threads), false);
 		$logger->debug("Account $accountId has " . count($flattened) . " messages with a new thread IDs");
 		foreach (array_chunk($flattened, self::WRITE_IDS_CHUNK_SIZE) as $chunk) {
@@ -75,7 +76,8 @@ class AccountSynchronizedThreadUpdaterListener implements IEventListener {
 	/**
 	 * @param Container[] $threads
 	 *
-	 * @return DatabaseMessage[]|Generator
+	 * @return Generator
+	 * @psalm-return Generator<int, DatabaseMessage>
 	 */
 	private function flattenThreads(array $threads,
 									?string $threadId = null): Generator {
