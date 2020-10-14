@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<files psalm-version="3.16@d03e5ef057d6adc656c0ff7e166c50b73b4f48f3">
+<files psalm-version="3.17.1@8f211792d813e4dc89f04ed372785ce93b902fd1">
   <file src="lib/Attachment.php">
     <MissingDocblockType occurrences="1">
       <code>$fetch</code>
@@ -88,27 +88,6 @@
       <code>$qb-&gt;createNamedParameter($mailboxIds, IQueryBuilder::PARAM_INT_ARRAY)</code>
     </ImplicitToStringCast>
   </file>
-  <file src="lib/IMAP/MessageMapper.php">
-    <UndefinedDocblockClass occurrences="1">
-      <code>$mail-&gt;getRaw()</code>
-    </UndefinedDocblockClass>
-  </file>
-  <file src="lib/IMAP/Sync/Response.php">
-    <MismatchingDocblockParamType occurrences="2">
-      <code>IMAPMessage|Message[]</code>
-      <code>IMAPMessage|Message[]</code>
-    </MismatchingDocblockParamType>
-    <MismatchingDocblockReturnType occurrences="2">
-      <code>IMAPMessage|Message[]</code>
-      <code>IMAPMessage|Message[]</code>
-    </MismatchingDocblockReturnType>
-  </file>
-  <file src="lib/IMAP/Sync/Synchronizer.php">
-    <InvalidArgument occurrences="2">
-      <code>$changedMessages</code>
-      <code>$newMessages</code>
-    </InvalidArgument>
-  </file>
   <file src="lib/Listener/AccountSynchronizedThreadUpdaterListener.php">
     <MismatchingDocblockReturnType occurrences="1">
       <code>DatabaseMessage[]|Generator</code>
@@ -130,12 +109,6 @@
       <code>null</code>
       <code>null</code>
     </NullArgument>
-  </file>
-  <file src="lib/Service/MailTransmission.php">
-    <InvalidArgument occurrences="2">
-      <code>$transport</code>
-      <code>$transport</code>
-    </InvalidArgument>
   </file>
   <file src="vendor/cerdic/css-tidy/class.csstidy.php">
     <InvalidDocblock occurrences="1">
