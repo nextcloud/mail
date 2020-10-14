@@ -39,6 +39,7 @@ use OCA\Mail\Exception\MailboxLockedException;
 use OCA\Mail\Exception\MailboxNotCachedException;
 use OCA\Mail\Exception\ServiceException;
 use OCA\Mail\Exception\UidValidityChangedException;
+use OCA\Mail\Exception\MailboxDoesNotSupportModSequencesException;
 use OCA\Mail\IMAP\IMAPClientFactory;
 use OCA\Mail\IMAP\MessageMapper as ImapMessageMapper;
 use OCA\Mail\IMAP\Sync\Request;
@@ -217,6 +218,12 @@ class ImapToDbSynchronizer {
 					$this->runPartialSync($account, $mailbox, $logger, $criteria, $knownUids);
 				} catch (UidValidityChangedException $e) {
 					$logger->warning('Mailbox UID validity changed. Wiping cache and performing full sync.');
+					$this->resetCache($account, $mailbox);
+					$this->runInitialSync($account, $mailbox, $logger);
+				} catch (MailboxDoesNotSupportModSequencesException $e) {
+					$logger->warning('Mailbox does not support mod-sequences error occured. Wiping cache and performing full sync.', [
+						'exception' => $e,
+					]);
 					$this->resetCache($account, $mailbox);
 					$this->runInitialSync($account, $mailbox, $logger);
 				}
