@@ -27,6 +27,8 @@ namespace OCA\Mail\Service\Avatar;
 use Exception;
 use OCA\Mail\Vendor\Gravatar\Gravatar;
 use OCP\Http\Client\IClientService;
+use function is_resource;
+use function stream_get_contents;
 
 class GravatarSource implements IAvatarSource {
 
@@ -65,6 +67,9 @@ class GravatarSource implements IAvatarSource {
 
 		// Don't save 0 byte images
 		$body = $response->getBody();
+		if (is_resource($body)) {
+			$body = stream_get_contents($body);
+		}
 		if (strlen($body) === 0) {
 			return null;
 		}
