@@ -33,27 +33,25 @@ use OCA\Mail\Contracts\IMailSearch;
 use OCA\Mail\Contracts\IMailTransmission;
 use OCA\Mail\Contracts\IUserPreferences;
 use OCA\Mail\Dashboard\MailWidget;
-use OCA\Mail\Events\BeforeMessageDeletedEvent;
 use OCA\Mail\Events\DraftSavedEvent;
+use OCA\Mail\Events\MailboxesSynchronizedEvent;
 use OCA\Mail\Events\SynchronizationEvent;
 use OCA\Mail\Events\MessageDeletedEvent;
 use OCA\Mail\Events\MessageFlaggedEvent;
 use OCA\Mail\Events\MessageSentEvent;
 use OCA\Mail\Events\NewMessagesSynchronized;
-use OCA\Mail\Events\SaveDraftEvent;
 use OCA\Mail\HordeTranslationHandler;
 use OCA\Mail\Http\Middleware\ErrorMiddleware;
 use OCA\Mail\Http\Middleware\ProvisioningMiddleware;
 use OCA\Mail\Listener\AddressCollectionListener;
 use OCA\Mail\Listener\DeleteDraftListener;
-use OCA\Mail\Listener\DraftMailboxCreatorListener;
 use OCA\Mail\Listener\FlagRepliedMessageListener;
 use OCA\Mail\Listener\InteractionListener;
 use OCA\Mail\Listener\AccountSynchronizedThreadUpdaterListener;
+use OCA\Mail\Listener\MailboxesSynchronizedSpecialMailboxesUpdater;
 use OCA\Mail\Listener\MessageCacheUpdaterListener;
 use OCA\Mail\Listener\NewMessageClassificationListener;
 use OCA\Mail\Listener\SaveSentMessageListener;
-use OCA\Mail\Listener\TrashMailboxCreatorListener;
 use OCA\Mail\Listener\UserDeletedListener;
 use OCA\Mail\Search\Provider;
 use OCA\Mail\Service\Attachment\AttachmentService;
@@ -99,8 +97,8 @@ class Application extends App implements IBootstrap {
 		$context->registerServiceAlias(IMailTransmission::class, MailTransmission::class);
 		$context->registerServiceAlias(IUserPreferences::class, UserPreferenceSevice::class);
 
-		$context->registerEventListener(BeforeMessageDeletedEvent::class, TrashMailboxCreatorListener::class);
 		$context->registerEventListener(DraftSavedEvent::class, DeleteDraftListener::class);
+		$context->registerEventListener(MailboxesSynchronizedEvent::class, MailboxesSynchronizedSpecialMailboxesUpdater::class);
 		$context->registerEventListener(MessageFlaggedEvent::class, MessageCacheUpdaterListener::class);
 		$context->registerEventListener(MessageDeletedEvent::class, MessageCacheUpdaterListener::class);
 		$context->registerEventListener(MessageSentEvent::class, AddressCollectionListener::class);
@@ -109,7 +107,6 @@ class Application extends App implements IBootstrap {
 		$context->registerEventListener(MessageSentEvent::class, InteractionListener::class);
 		$context->registerEventListener(MessageSentEvent::class, SaveSentMessageListener::class);
 		$context->registerEventListener(NewMessagesSynchronized::class, NewMessageClassificationListener::class);
-		$context->registerEventListener(SaveDraftEvent::class, DraftMailboxCreatorListener::class);
 		$context->registerEventListener(SynchronizationEvent::class, AccountSynchronizedThreadUpdaterListener::class);
 		$context->registerEventListener(UserDeletedEvent::class, UserDeletedListener::class);
 

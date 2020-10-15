@@ -25,6 +25,8 @@ namespace OCA\Mail\Contracts;
 
 use OCA\Mail\Db\Alias;
 use OCA\Mail\Db\Message;
+use OCA\Mail\Exception\ClientException;
+use OCA\Mail\Exception\SentMailboxNotSetException;
 use OCA\Mail\Exception\ServiceException;
 use OCA\Mail\Model\NewMessageData;
 use OCA\Mail\Model\RepliedMessageData;
@@ -39,6 +41,7 @@ interface IMailTransmission {
 	 * @param Alias|null $alias
 	 * @param Message|null $draft
 	 *
+	 * @throws SentMailboxNotSetException
 	 * @throws ServiceException
 	 */
 	public function sendMessage(NewMessageData $messageData,
@@ -54,6 +57,7 @@ interface IMailTransmission {
 	 *
 	 * @return array
 	 *
+	 * @throws ClientException if no drafts mailbox is configured
 	 * @throws ServiceException
 	 */
 	public function saveDraft(NewMessageData $message, Message $previousDraft = null): array;

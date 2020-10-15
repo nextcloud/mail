@@ -16,6 +16,7 @@
 			</div>
 			<SignatureSettings :account="account" />
 			<EditorSettings :account="account" />
+			<AccountDefaultsSettings :account="account" />
 			<div v-if="!account.provisioned" class="section">
 				<h2>{{ t('mail', 'Mail server') }}</h2>
 				<div id="mail-settings">
@@ -35,16 +36,18 @@
 import AppContent from '@nextcloud/vue/dist/Components/AppContent'
 import Content from '@nextcloud/vue/dist/Components/Content'
 
+import AccountDefaultsSettings from '../components/AccountDefaultsSettings'
 import AccountForm from '../components/AccountForm'
+import AliasSettings from '../components/AliasSettings'
 import EditorSettings from '../components/EditorSettings'
 import Logger from '../logger'
 import Navigation from '../components/Navigation'
 import SignatureSettings from '../components/SignatureSettings'
-import AliasSettings from '../components/AliasSettings'
 
 export default {
 	name: 'AccountSettings',
 	components: {
+		AccountDefaultsSettings,
 		AccountForm,
 		AliasSettings,
 		AppContent,

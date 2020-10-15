@@ -71,6 +71,12 @@ use OCP\AppFramework\Db\Entity;
  * @method void setShowSubscribedOnly(bool $showSubscribedOnly)
  * @method string|null getPersonalNamespace()
  * @method void setPersonalNamespace(string|null $personalNamespace)
+ * @method void setDraftsMailboxId(?int $id)
+ * @method int|null getDraftsMailboxId()
+ * @method void setSentMailboxId(?int $id)
+ * @method int|null getSentMailboxId()
+ * @method void setTrashMailboxId(?int $id)
+ * @method int|null getTrashMailboxId()
  */
 class MailAccount extends Entity {
 	protected $userId;
@@ -93,6 +99,15 @@ class MailAccount extends Entity {
 	protected $order;
 	protected $showSubscribedOnly;
 	protected $personalNamespace;
+
+	/** @var int|null */
+	protected $draftsMailboxId;
+
+	/** @var int|null */
+	protected $sentMailboxId;
+
+	/** @var int|null */
+	protected $trashMailboxId;
 
 	/**
 	 * @param array $params
@@ -150,6 +165,9 @@ class MailAccount extends Entity {
 		$this->addType('order', 'integer');
 		$this->addType('showSubscribedOnly', 'boolean');
 		$this->addType('personalNamespace', 'string');
+		$this->addType('draftsMailboxId', 'integer');
+		$this->addType('sentMailboxId', 'integer');
+		$this->addType('trashMailboxId', 'integer');
 	}
 
 	/**
@@ -171,6 +189,9 @@ class MailAccount extends Entity {
 			'provisioned' => $this->getProvisioned(),
 			'showSubscribedOnly' => $this->getShowSubscribedOnly(),
 			'personalNamespace' => $this->getPersonalNamespace(),
+			'draftsMailboxId' => $this->getDraftsMailboxId(),
+			'sentMailboxId' => $this->getSentMailboxId(),
+			'trashMailboxId' => $this->getTrashMailboxId(),
 		];
 
 		if (!is_null($this->getOutboundHost())) {

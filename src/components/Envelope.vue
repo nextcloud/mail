@@ -107,9 +107,14 @@ import ActionButton from '@nextcloud/vue/dist/Components/ActionButton'
 import Moment from './Moment'
 import MoveModal from './MoveModal'
 import importantSvg from '../../img/important.svg'
+import { showError } from '@nextcloud/dialogs'
 
 import Avatar from './Avatar'
 import { calculateAccountColor } from '../util/AccountColor'
+import { matchError } from '../errors/match'
+import NoTrashMailboxConfiguredError
+	from '../errors/NoTrashMailboxConfiguredError'
+import logger from '../logger'
 
 export default {
 	name: 'Envelope',
@@ -230,15 +235,27 @@ export default {
 		onToggleJunk() {
 			this.$store.dispatch('toggleEnvelopeJunk', this.data)
 		},
-		onDelete() {
+		async onDelete() {
 			// Remove from selection first
 			this.setSelected(false)
 
 			// Delete
 			this.$emit('delete')
-			this.$store.dispatch('deleteMessage', {
-				id: this.data.databaseId,
-			})
+			try {
+				await this.$store.dispatch('deleteMessage', {
+					id: this.data.databaseId,
+				})
+			} catch (error) {
+				showError(await matchError(error, {
+					[NoTrashMailboxConfiguredError.getName()]() {
+						return t('mail', 'No trash mailbox configured')
+					},
+					default(error) {
+						logger.error('could not delete message', error)
+						return t('mail', 'Could not delete message')
+					},
+				}))
+			}
 		},
 		onOpenMoveModal() {
 			this.setSelected(false)

@@ -24,6 +24,7 @@ import Vue from 'vue'
 import { getRequestToken } from '@nextcloud/auth'
 import { sync } from 'vuex-router-sync'
 import { generateFilePath } from '@nextcloud/router'
+import '@nextcloud/dialogs/styles/toast.scss'
 import VueShortKey from 'vue-shortkey'
 import VTooltip from 'v-tooltip'
 

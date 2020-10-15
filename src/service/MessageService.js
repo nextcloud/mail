@@ -138,23 +138,36 @@ export async function saveDraft(accountId, data) {
 		accountId,
 	})
 
-	return (await axios.post(url, data)).data
+	try {
+		return (await axios.post(url, data)).data
+	} catch (e) {
+		throw convertAxiosError(e)
+	}
 }
 
-export function sendMessage(accountId, data) {
+export async function sendMessage(accountId, data) {
 	const url = generateUrl('/apps/mail/api/accounts/{accountId}/send', {
 		accountId,
 	})
 
-	return axios.post(url, data).then((resp) => resp.data)
+	try {
+		const resp = await axios.post(url, data)
+		return resp.data
+	} catch (e) {
+		throw convertAxiosError(e)
+	}
 }
 
-export function deleteMessage(id) {
+export async function deleteMessage(id) {
 	const url = generateUrl('/apps/mail/api/messages/{id}', {
 		id,
 	})
 
-	return axios.delete(url).then((resp) => resp.data)
+	try {
+		return (await axios.delete(url)).data
+	} catch (e) {
+		throw convertAxiosError(e)
+	}
 }
 
 export function moveMessage(id, destFolderId) {

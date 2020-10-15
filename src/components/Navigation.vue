@@ -41,7 +41,7 @@
 							v-show="
 								!group.isCollapsible ||
 									!group.account.collapsed ||
-									SHOW_COLLAPSED.indexOf(item.specialRole) !== -1
+									!isCollapsed(group.account, item)
 							"
 							:key="item.databaseId"
 							:account="group.account"
@@ -72,8 +72,10 @@
 <script>
 import AppNavigation from '@nextcloud/vue/dist/Components/AppNavigation'
 import AppNavigationNew from '@nextcloud/vue/dist/Components/AppNavigationNew'
-import AppNavigationSettings from '@nextcloud/vue/dist/Components/AppNavigationSettings'
-import AppNavigationSpacer from '@nextcloud/vue/dist/Components/AppNavigationSpacer'
+import AppNavigationSettings
+	from '@nextcloud/vue/dist/Components/AppNavigationSettings'
+import AppNavigationSpacer
+	from '@nextcloud/vue/dist/Components/AppNavigationSpacer'
 
 import logger from '../logger'
 import NavigationAccount from './NavigationAccount'
@@ -81,8 +83,6 @@ import NavigationAccountExpandCollapse from './NavigationAccountExpandCollapse'
 import NavigationMailbox from './NavigationMailbox'
 
 import AppSettingsMenu from '../components/AppSettingsMenu'
-
-const SHOW_COLLAPSED = Object.seal(['inbox', 'flagged', 'drafts', 'sent'])
 
 export default {
 	name: 'Navigation',
@@ -96,17 +96,12 @@ export default {
 		NavigationAccountExpandCollapse,
 		NavigationMailbox,
 	},
-	data() {
-		return {
-			SHOW_COLLAPSED,
-		}
-	},
 	computed: {
 		menu() {
 			return this.$store.getters.accounts.map((account) => {
 				const mailboxes = this.$store.getters.getMailboxes(account.id)
 				const nonSpecialRoleMailboxes = mailboxes.filter(
-					(mailbox) => SHOW_COLLAPSED.indexOf(mailbox.specialRole) === -1
+					(mailbox) => this.isCollapsed(account, mailbox)
 				)
 				const isCollapsible = nonSpecialRoleMailboxes.length > 1
 
@@ -120,6 +115,21 @@ export default {
 		},
 	},
 	methods: {
+		isCollapsed(account, mailbox) {
+			if (mailbox.specialRole === 'inbox') {
+				// INBOX is always visible
+				return false
+			}
+
+			if (mailbox.databaseId === account.draftsMailboxId
+				|| mailbox.databaseId === account.sentMailboxId
+				|| mailbox.databaseId === account.trashMailboxId) {
+				// Special folders are always visible
+				return false
+			}
+
+			return true
+		},
 		onNewMessage() {
 			const accountId = this.$route.params.accountId || this.$store.getters.accounts[0].id
 

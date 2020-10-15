@@ -146,7 +146,8 @@
 			<ComposerAttachments v-model="attachments" :bus="bus" @upload="onAttachmentsUploading" />
 			<div class="composer-actions-right">
 				<p class="composer-actions-draft">
-					<span v-if="savingDraft === true" id="draft-status">{{ t('mail', 'Saving draft …') }}</span>
+					<span v-if="!canSaveDraft" id="draft-status">{{ t('mail', 'Can not save draft because this account does not have a drafts mailbox configured.') }}</span>
+					<span v-else-if="savingDraft === true" id="draft-status">{{ t('mail', 'Saving draft …') }}</span>
 					<span v-else-if="savingDraft === false" id="draft-status">{{ t('mail', 'Draft saved') }}</span>
 				</p>
 				<Actions>
@@ -244,6 +245,11 @@ import { buildReplyBody } from '../ReplyBuilder'
 import MailvelopeEditor from './MailvelopeEditor'
 import { getMailvelope } from '../crypto/mailvelope'
 import { isPgpgMessage } from '../crypto/pgp'
+import { matchError } from '../errors/match'
+import NoSentMailboxConfiguredError
+	from '../errors/NoSentMailboxConfiguredError'
+import NoDraftsMailboxConfiguredError
+	from '../errors/NoDraftsMailboxConfiguredError'
 
 const debouncedSearch = debouncePromise(findRecipient, 500)
 
@@ -326,6 +332,7 @@ export default {
 			noReply: this.to.some((to) => to.email.startsWith('noreply@') || to.email.startsWith('no-reply@')),
 			draftsPromise: Promise.resolve(),
 			attachmentsPromise: Promise.resolve(),
+			canSaveDraft: true,
 			savingDraft: undefined,
 			saveDraftDebounced: debounce(700, this.saveDraft),
 			state: STATES.EDITING,
@@ -534,7 +541,26 @@ export default {
 					}
 					return this.draft(draftData)
 				})
-				.catch(logger.error.bind(logger))
+				.then((uid) => {
+					// It works (again)
+					this.canSaveDraft = true
+
+					return uid
+				})
+				.catch(async(error) => {
+					console.error('could not save draft', error)
+					const canSave = await matchError(error, {
+						[NoDraftsMailboxConfiguredError.getName()]() {
+							return false
+						},
+						default() {
+							return true
+						},
+					})
+					if (!canSave) {
+						this.canSaveDraft = false
+					}
+				})
 				.then((uid) => {
 					this.savingDraft = false
 					return uid
@@ -610,11 +636,18 @@ export default {
 				.then((data) => this.send(data))
 				.then(() => logger.info('message sent'))
 				.then(() => (this.state = STATES.FINISHED))
-				.catch((error) => {
+				.catch(async(error) => {
 					logger.error('could not send message', { error })
-					if (error && error.toString) {
-						this.errorText = error.toString()
-					}
+					this.errorText = await matchError(error, {
+						[NoSentMailboxConfiguredError.getName()]() {
+							return t('mail', 'No sent mailbox configured. Please pick one in the account settings.')
+						},
+						default(error) {
+							if (error && error.toString) {
+								return error.toString()
+							}
+						},
+					})
 					this.state = STATES.ERROR
 				})
 		},

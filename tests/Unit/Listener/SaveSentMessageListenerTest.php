@@ -27,13 +27,13 @@ namespace OCA\Mail\Tests\Unit\Listener;
 
 use ChristophWurst\Nextcloud\Testing\TestCase;
 use OCA\Mail\Account;
+use OCA\Mail\Db\MailAccount;
 use OCA\Mail\Db\Mailbox;
 use OCA\Mail\Db\MailboxMapper;
 use OCA\Mail\Db\Message;
 use OCA\Mail\Events\MessageSentEvent;
 use OCA\Mail\Exception\ServiceException;
 use OCA\Mail\IMAP\IMAPClientFactory;
-use OCA\Mail\IMAP\MailboxSync;
 use OCA\Mail\IMAP\MessageMapper;
 use OCA\Mail\Listener\SaveSentMessageListener;
 use OCA\Mail\Model\IMessage;
@@ -56,9 +56,6 @@ class SaveSentMessageListenerTest extends TestCase {
 	/** @var MessageMapper|MockObject */
 	private $messageMapper;
 
-	/** @var MailboxSync|MockObject */
-	private $mailboxSync;
-
 	/** @var LoggerInterface|MockObject */
 	private $logger;
 
@@ -71,14 +68,12 @@ class SaveSentMessageListenerTest extends TestCase {
 		$this->mailboxMapper = $this->createMock(MailboxMapper::class);
 		$this->imapClientFactory = $this->createMock(IMAPClientFactory::class);
 		$this->messageMapper = $this->createMock(MessageMapper::class);
-		$this->mailboxSync = $this->createMock(MailboxSync::class);
 		$this->logger = $this->createMock(LoggerInterface::class);
 
 		$this->listener = new SaveSentMessageListener(
 			$this->mailboxMapper,
 			$this->imapClientFactory,
 			$this->messageMapper,
-			$this->mailboxSync,
 			$this->logger
 		);
 	}
@@ -91,9 +86,11 @@ class SaveSentMessageListenerTest extends TestCase {
 		$this->addToAssertionCount(1);
 	}
 
-	public function testHandleMessageSentMailboxDoesNotExistCantCreate(): void {
+	public function testHandleMessageSentMailboxNotSet(): void {
 		/** @var Account|MockObject $account */
 		$account = $this->createMock(Account::class);
+		$mailAccount = new MailAccount();
+		$account->method('getMailAccount')->willReturn($mailAccount);
 		/** @var NewMessageData|MockObject $newMessageData */
 		$newMessageData = $this->createMock(NewMessageData::class);
 		/** @var RepliedMessageData|MockObject $repliedMessageData */
@@ -112,42 +109,10 @@ class SaveSentMessageListenerTest extends TestCase {
 			$message,
 			$mail
 		);
-		$mailbox = new Mailbox();
-		$this->mailboxMapper->expects($this->exactly(2))
-			->method('findSpecial')
-			->withConsecutive(
-				[$account, 'sent'],
-				[$account, 'sent']
-			)
-			->willReturnOnConsecutiveCalls(
-				$this->throwException(new DoesNotExistException('')),
-				$mailbox
-			);
-		$client = $this->createMock(\Horde_Imap_Client_Socket::class);
-		$this->imapClientFactory
-			->method('getClient')
-			->with($account)
-			->willReturn($client);
-		$exception = new \Horde_Imap_Client_Exception();
-		$client->expects($this->once())
-			->method('createMailbox')
-			->with(
-				'Sent',
-				[
-					'special_use' => [
-						\Horde_Imap_Client::SPECIALUSE_SENT,
-					],
-				]
-			)
-			->willThrowException($exception);
+		$this->mailboxMapper->expects($this->never())
+			->method('findById');
 		$this->logger->expects($this->once())
-			->method('warning')
-			->with(
-				'Could not create sent mailbox: ',
-				$this->equalTo([
-					'exception' => $exception,
-				])
-			);
+			->method('warning');
 
 		$this->listener->handle($event);
 	}
@@ -155,6 +120,9 @@ class SaveSentMessageListenerTest extends TestCase {
 	public function testHandleMessageSentMailboxDoesNotExist(): void {
 		/** @var Account|MockObject $account */
 		$account = $this->createMock(Account::class);
+		$mailAccount = new MailAccount();
+		$mailAccount->setSentMailboxId(123);
+		$account->method('getMailAccount')->willReturn($mailAccount);
 		/** @var NewMessageData|MockObject $newMessageData */
 		$newMessageData = $this->createMock(NewMessageData::class);
 		/** @var RepliedMessageData|MockObject $repliedMessageData */
@@ -173,39 +141,14 @@ class SaveSentMessageListenerTest extends TestCase {
 			$message,
 			$mail
 		);
-		$mailbox = new Mailbox();
-		$this->mailboxMapper->expects($this->exactly(2))
-			->method('findSpecial')
-			->withConsecutive(
-				[$account, 'sent'],
-				[$account, 'sent']
-			)
-			->willReturnOnConsecutiveCalls(
-				$this->throwException(new DoesNotExistException('')),
-				$mailbox
-			);
-		$client = $this->createMock(\Horde_Imap_Client_Socket::class);
-		$this->imapClientFactory
-			->method('getClient')
-			->with($account)
-			->willReturn($client);
-		$client->expects($this->once())
-			->method('createMailbox')
-			->with(
-				'Sent',
-				[
-					'special_use' => [
-						\Horde_Imap_Client::SPECIALUSE_SENT,
-					],
-				]
-			);
-		$this->messageMapper->expects($this->once())
-			->method('save')
-			->with(
-				$this->anything(),
-				$mailbox,
-				$mail
-			);
+		$this->mailboxMapper->expects($this->once())
+			->method('findById')
+			->with(123)
+			->willThrowException(new DoesNotExistException(''));
+		$this->messageMapper->expects($this->never())
+			->method('save');
+		$this->logger->expects($this->once())
+		->method('error');
 
 		$this->listener->handle($event);
 	}
@@ -213,6 +156,9 @@ class SaveSentMessageListenerTest extends TestCase {
 	public function testHandleMessageSentSavingError(): void {
 		/** @var Account|MockObject $account */
 		$account = $this->createMock(Account::class);
+		$mailAccount = new MailAccount();
+		$mailAccount->setSentMailboxId(123);
+		$account->method('getMailAccount')->willReturn($mailAccount);
 		/** @var NewMessageData|MockObject $newMessageData */
 		$newMessageData = $this->createMock(NewMessageData::class);
 		/** @var RepliedMessageData|MockObject $repliedMessageData */
@@ -233,8 +179,8 @@ class SaveSentMessageListenerTest extends TestCase {
 		);
 		$mailbox = new Mailbox();
 		$this->mailboxMapper->expects($this->once())
-			->method('findSpecial')
-			->with($account, 'sent')
+			->method('findById')
+			->with(123)
 			->willReturn($mailbox);
 		$this->messageMapper->expects($this->once())
 			->method('save')
@@ -252,6 +198,9 @@ class SaveSentMessageListenerTest extends TestCase {
 	public function testHandleMessageSent(): void {
 		/** @var Account|MockObject $account */
 		$account = $this->createMock(Account::class);
+		$mailAccount = new MailAccount();
+		$mailAccount->setSentMailboxId(123);
+		$account->method('getMailAccount')->willReturn($mailAccount);
 		/** @var NewMessageData|MockObject $newMessageData */
 		$newMessageData = $this->createMock(NewMessageData::class);
 		/** @var RepliedMessageData|MockObject $repliedMessageData */
@@ -272,8 +221,8 @@ class SaveSentMessageListenerTest extends TestCase {
 		);
 		$mailbox = new Mailbox();
 		$this->mailboxMapper->expects($this->once())
-			->method('findSpecial')
-			->with($account, 'sent')
+			->method('findById')
+			->with(123)
 			->willReturn($mailbox);
 		$this->messageMapper->expects($this->once())
 			->method('save')
@@ -282,6 +231,8 @@ class SaveSentMessageListenerTest extends TestCase {
 				$mailbox,
 				$mail
 			);
+		$this->logger->expects($this->never())->method('warning');
+		$this->logger->expects($this->never())->method('error');
 
 		$this->listener->handle($event);
 	}

@@ -234,7 +234,10 @@ class AccountsController extends Controller {
 	public function patchAccount(int $id,
 								 string $editorMode = null,
 								 int $order = null,
-								 bool $showSubscribedOnly = null): JSONResponse {
+								 bool $showSubscribedOnly = null,
+								 int $draftsMailboxId = null,
+								 int $sentMailboxId = null,
+								 int $trashMailboxId = null): JSONResponse {
 		$account = $this->accountService->find($this->currentUserId, $id);
 
 		$dbAccount = $account->getMailAccount();
@@ -246,6 +249,15 @@ class AccountsController extends Controller {
 		}
 		if ($showSubscribedOnly !== null) {
 			$dbAccount->setShowSubscribedOnly($showSubscribedOnly);
+		}
+		if ($draftsMailboxId !== null) {
+			$dbAccount->setDraftsMailboxId($draftsMailboxId);
+		}
+		if ($sentMailboxId !== null) {
+			$dbAccount->setSentMailboxId($sentMailboxId);
+		}
+		if ($trashMailboxId !== null) {
+			$dbAccount->setTrashMailboxId($trashMailboxId);
 		}
 		return new JSONResponse(
 			$this->accountService->save($dbAccount)->toJson()
@@ -452,7 +464,7 @@ class AccountsController extends Controller {
 			return new JSONResponse([
 				'id' => $this->mailManager->getMessageIdForUid($draftsMailbox, $newUID)
 			]);
-		} catch (ServiceException $ex) {
+		} catch (ClientException|ServiceException $ex) {
 			$this->logger->error('Saving draft failed: ' . $ex->getMessage());
 			throw $ex;
 		}

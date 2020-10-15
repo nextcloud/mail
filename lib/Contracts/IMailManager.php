@@ -145,6 +145,7 @@ interface IMailManager {
 	 * @param string $mailboxId
 	 * @param int $messageId
 	 *
+	 * @throws ClientException
 	 * @throws ServiceException
 	 */
 	public function deleteMessage(Account $account, string $mailboxId, int $messageId): void;

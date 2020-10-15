@@ -142,32 +142,6 @@ class MailboxMapper extends QBMapper {
 	}
 
 	/**
-	 * @throws DoesNotExistException
-	 */
-	public function findSpecial(Account $account, string $specialUse): Mailbox {
-		$mailboxes = $this->findAll($account);
-
-		// First, let's try to detect by special use attribute
-		foreach ($mailboxes as $mailbox) {
-			$specialUses = json_decode($mailbox->getSpecialUse(), true) ?? [];
-			if (in_array($specialUse, $specialUses, true)) {
-				return $mailbox;
-			}
-		}
-
-		// No luck so far, let's do another round and just guess
-		foreach ($mailboxes as $mailbox) {
-			// TODO: also check localized name
-			if (strtolower($mailbox->getName()) === strtolower($specialUse)) {
-				return $mailbox;
-			}
-		}
-
-		// Give up
-		throw new DoesNotExistException("Special mailbox $specialUse does not exist");
-	}
-
-	/**
 	 * @throws MailboxLockedException
 	 */
 	private function lockForSync(Mailbox $mailbox, string $attr, ?int $lock): int {

@@ -33,11 +33,13 @@ use OCA\Mail\Account;
 use OCA\Mail\Db\MailAccount;
 use OCA\Mail\Db\MailAccountMapper;
 use OCA\Mail\Db\MailboxMapper;
+use OCA\Mail\Events\MailboxesSynchronizedEvent;
 use OCA\Mail\Folder;
 use OCA\Mail\IMAP\FolderMapper;
 use OCA\Mail\IMAP\IMAPClientFactory;
 use OCA\Mail\IMAP\MailboxSync;
 use OCP\AppFramework\Utility\ITimeFactory;
+use OCP\EventDispatcher\IEventDispatcher;
 use PHPUnit\Framework\MockObject\MockObject;
 use Psr\Log\NullLogger;
 
@@ -61,6 +63,9 @@ class MailboxSyncTest extends TestCase {
 	/** @var MailboxSync */
 	private $sync;
 
+	/** @var IEventDispatcher|MockObject */
+	private $dispatcher;
+
 	protected function setUp(): void {
 		parent::setUp();
 
@@ -69,13 +74,15 @@ class MailboxSyncTest extends TestCase {
 		$this->mailAccountMapper = $this->createMock(MailAccountMapper::class);
 		$this->imapClientFactory = $this->createMock(IMAPClientFactory::class);
 		$this->timeFactory = $this->createMock(ITimeFactory::class);
+		$this->dispatcher = $this->createMock(IEventDispatcher::class);
 
 		$this->sync = new MailboxSync(
 			$this->mailboxMapper,
 			$this->folderMapper,
 			$this->mailAccountMapper,
 			$this->imapClientFactory,
-			$this->timeFactory
+			$this->timeFactory,
+			$this->dispatcher
 		);
 	}
 
@@ -87,6 +94,7 @@ class MailboxSyncTest extends TestCase {
 		$this->timeFactory->method('getTime')->willReturn(100000);
 		$this->imapClientFactory->expects($this->never())
 			->method('getClient');
+		$this->dispatcher->expects($this->never())->method('dispatchTyped');
 
 		$this->sync->sync($account, new NullLogger());
 	}
@@ -116,6 +124,10 @@ class MailboxSyncTest extends TestCase {
 		$this->folderMapper->expects($this->once())
 			->method('detectFolderSpecialUse')
 			->with($folders);
+		$this->dispatcher
+			->expects($this->once())
+			->method('dispatchTyped')
+			->with($this->equalTo(new MailboxesSynchronizedEvent($account)));
 
 		$this->sync->sync($account, new NullLogger());
 	}

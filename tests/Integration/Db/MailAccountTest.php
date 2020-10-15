@@ -66,6 +66,9 @@ class MailAccountTest extends TestCase {
 			'order' => 13,
 			'showSubscribedOnly' => null,
 			'personalNamespace' => null,
+			'draftsMailboxId' => null,
+			'sentMailboxId' => null,
+			'trashMailboxId' => null,
 		], $a->toJson());
 	}
 
@@ -89,6 +92,9 @@ class MailAccountTest extends TestCase {
 			'order' => null,
 			'showSubscribedOnly' => null,
 			'personalNamespace' => null,
+			'draftsMailboxId' => null,
+			'sentMailboxId' => null,
+			'trashMailboxId' => null,
 		];
 		$a = new MailAccount($expected);
 		// TODO: fix inconsistency
