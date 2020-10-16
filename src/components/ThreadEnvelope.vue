@@ -178,6 +178,10 @@ export default {
 		MoveModal,
 	},
 	props: {
+		bus: {
+			required: true,
+			type: Object,
+		},
 		envelope: {
 			required: true,
 			type: Object,
@@ -326,7 +330,7 @@ export default {
 			this.$store.dispatch('toggleEnvelopeJunk', this.envelope)
 		},
 		onDelete() {
-			this.$emit('delete', this.envelope.databaseId)
+			this.bus.$emit('delete', this.envelope.databaseId)
 			this.$store.dispatch('deleteMessage', {
 				id: this.envelope.databaseId,
 			})

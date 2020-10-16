@@ -672,6 +672,7 @@ export default {
 		})
 	},
 	async fetchThread({ getters, commit }, id) {
+		console.log('fetchThread', id)
 		const thread = await fetchThread(id)
 		commit('addEnvelopeThread', {
 			id,
@@ -689,9 +690,20 @@ export default {
 		}
 		return message
 	},
-	async deleteMessage({ getters, commit }, { id }) {
+	async deleteMessage({ getters, dispatch, commit }, { id }) {
 		commit('removeEnvelope', { id })
 
+		// When it's a thread, remove envelope id from other thread envelopes' thread property
+		dispatch('fetchThread', id).then(() => {
+			const env = getters.getEnvelope(id)
+			env.thread.forEach((envId) => {
+				dispatch('fetchThread', envId).then(() => {
+					commit('removeEnvelopeFromThread', { envId, id })
+				})
+			})
+		})
+
+		// Effectively delete the message on the IMAP server
 		try {
 			await deleteMessage(id)
 			commit('removeMessage', { id })

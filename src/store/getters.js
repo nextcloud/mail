@@ -63,7 +63,7 @@ export const getters = {
 	},
 	getEnvelopeThread: (state) => (id) => {
 		const thread = state.envelopes[id]?.thread ?? []
-		const envelopes = thread.map(id => state.envelopes[id])
+		const envelopes = thread.map((id) => state.envelopes[id])
 		return sortBy(prop('dateInt'), envelopes)
 	},
 }

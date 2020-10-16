@@ -174,6 +174,8 @@ export default {
 			console.warn('envelope ' + id + ' is unknown, can\'t remove it')
 			return
 		}
+
+		// Remove envelope from its mailbox
 		const mailbox = state.mailboxes[envelope.mailboxId]
 		for (const listId in mailbox.envelopeLists) {
 			if (!Object.hasOwnProperty.call(mailbox.envelopeLists, listId)) {
@@ -188,6 +190,7 @@ export default {
 			list.splice(idx, 1)
 		}
 
+		// Remove envelope from the mailboxes of the unified account
 		state.accounts[UNIFIED_ACCOUNT_ID].mailboxes
 			.map((mailboxId) => state.mailboxes[mailboxId])
 			.filter((mb) => mb.specialRole && mb.specialRole === mailbox.specialRole)
@@ -212,6 +215,10 @@ export default {
 					list.splice(idx, 1)
 				}
 			})
+	},
+	removeEnvelopeFromThread(state, envId, idToRemove) {
+		// Envelope is expected to have its thread property already computed
+		state.envelopes[envId].thread.splice(idToRemove)
 	},
 	addMessage(state, { message }) {
 		Vue.set(state.messages, message.databaseId, message)

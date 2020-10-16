@@ -20,6 +20,7 @@
 				:envelope="env"
 				:mailbox-id="$route.params.mailboxId"
 				:expanded="expandedThreads.includes(env.databaseId)"
+				:bus="bus"
 				@toggleExpand="toggleExpand(env.databaseId)" />
 		</template>
 	</AppContentDetails>
@@ -44,6 +45,12 @@ export default {
 		ThreadEnvelope,
 	},
 
+	props: {
+		bus: {
+			type: Object,
+			required: true,
+		},
+	},
 	data() {
 		return {
 			loading: true,
