@@ -110,7 +110,6 @@ export default {
 	},
 	data() {
 		return {
-			alive: false,
 			// eslint-disable-next-line
 			importantInfo: t('mail', 'Messages will automatically be marked as important based on which messages you interacted with or marked as important. In the beginning you might have to manually change the importance to teach the system, but it will improve over time.'),
 			bus: new Vue(),
@@ -155,17 +154,6 @@ export default {
 			)
 		},
 	},
-	created() {
-		this.alive = true
-
-		window.addEventListener('DOMContentLoaded', (event) => {
-			// eslint-disable-next-line no-new
-			new OCA.Search(this.searchProxy, this.clearSearchProxy)
-		})
-	},
-	beforeDestroy() {
-		this.alive = false
-	},
 	methods: {
 		hideMessage() {
 			this.$router.replace({
@@ -192,22 +180,6 @@ export default {
 				return str
 			}
 			return this.searchQuery + ' ' + str
-		},
-		searchProxy(query) {
-			if (this.alive) {
-				this.search(query)
-			}
-		},
-		clearSearchProxy() {
-			if (this.alive) {
-				this.clearSearch()
-			}
-		},
-		search(query) {
-			this.searchQuery = query
-		},
-		clearSearch() {
-			this.searchQuery = undefined
 		},
 	},
 }
