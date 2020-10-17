@@ -153,6 +153,7 @@ OC.L10N.register(
     "Delete folder {name}" : "Borrar carpeta {name}",
     "An error occurred, unable to rename the mailbox." : "Ha ocurrido un error. No se puede cambiar el nombre del buzón de correo",
     "_{total} message_::_{total} messages_" : ["{total} mensaje","{total} mensajes"],
+    "_{unread} unread of {total}_::_{unread} unread of {total}_" : ["{unread} sin leer de {total}","{unread} sin leer de {total}"],
     "Not found" : "No encontrado",
     "Could not load your draft" : "No se ha podido cargar el borrador",
     "Could not load original message" : "No se ha podido cargar el mensaje original",
