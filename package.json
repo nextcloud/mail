@@ -99,7 +99,7 @@
     "jsdom": "^16.4.0",
     "jsdom-global": "^3.0.2",
     "mocha": "^7.2.0",
-    "mochapack": "^1.1.15",
+    "mochapack": "^2.0.5",
     "node-sass": "^4.14.1",
     "sass-loader": "^10.0.3",
     "sinon": "^9.2.0",
