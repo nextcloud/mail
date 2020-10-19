@@ -442,5 +442,8 @@ export default {
 	.left:not(.seen) {
 		font-weight: bold;
 	}
+	::v-deep .action-button__text {
+		font-size: 15px;
+	}
 
 </style>

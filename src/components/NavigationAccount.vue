@@ -270,3 +270,10 @@ export default {
 	},
 }
 </script>
+
+<style lang="scss" scoped>
+::v-deep .action-button__text {
+	font-size: 15px;
+}
+
+</style>
