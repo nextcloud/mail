@@ -10,17 +10,23 @@
 					}}</span>
 				</div>
 				<Actions class="app-content-list-item-menu" menu-align="right">
-					<ActionButton icon="icon-starred" @click.prevent="favoriteOrUnfavoriteAll">
+					<ActionButton icon="icon-starred"
+						:close-after-click="true"
+						@click.prevent="favoriteOrUnfavoriteAll">
 						{{
 							areAllSelectedFavorite
 								? t('mail', 'Unfavorite ' + selection.length)
 								: t('mail', 'Favorite ' + selection.length)
 						}}
 					</ActionButton>
-					<ActionButton icon="icon-close" @click.prevent="unselectAll">
+					<ActionButton icon="icon-close"
+						:close-after-click="true"
+						@click.prevent="unselectAll">
 						{{ t('mail', 'Unselect ' + selection.length) }}
 					</ActionButton>
-					<ActionButton icon="icon-delete" @click.prevent="deleteAllSelected">
+					<ActionButton icon="icon-delete"
+						:close-after-click="true"
+						@click.prevent="deleteAllSelected">
 						{{ t('mail', 'Delete ' + selection.length) }}
 					</ActionButton>
 				</Actions>
