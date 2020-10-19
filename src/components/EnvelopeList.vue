@@ -24,12 +24,19 @@
 						@click.prevent="unselectAll">
 						{{ t('mail', 'Unselect ' + selection.length) }}
 					</ActionButton>
+					<ActionButton icon="icon-external" @click.prevent="onOpenMoveModal">
+						{{ t('mail', 'Move ' + selection.length) }}
+					</ActionButton>
 					<ActionButton icon="icon-delete"
 						:close-after-click="true"
 						@click.prevent="deleteAllSelected">
 						{{ t('mail', 'Delete ' + selection.length) }}
 					</ActionButton>
 				</Actions>
+				<MoveModal
+					v-if="showMoveModal"
+					:envelopes="selectedEnvelopes"
+					@close="onCloseMoveModal" />
 			</div>
 		</transition>
 		<transition-group name="list">
@@ -64,6 +71,7 @@ import ActionButton from '@nextcloud/vue/dist/Components/ActionButton'
 
 import Envelope from './Envelope'
 import logger from '../logger'
+import MoveModal from './MoveModal'
 
 export default {
 	name: 'EnvelopeList',
@@ -71,6 +79,7 @@ export default {
 		Actions,
 		ActionButton,
 		Envelope,
+		MoveModal,
 	},
 	props: {
 		account: {
@@ -108,6 +117,7 @@ export default {
 	data() {
 		return {
 			selection: [],
+			showMoveModal: false,
 		}
 	},
 	computed: {
@@ -122,6 +132,9 @@ export default {
 		areAllSelectedFavorite() {
 			// returns false if at least one selected message has not been favorited yet
 			return this.selection.every((idx) => this.envelopes[idx].flags.flagged === true)
+		},
+		selectedEnvelopes() {
+			return this.selection.map((idx) => this.envelopes[idx])
 		},
 	},
 	methods: {
@@ -197,6 +210,13 @@ export default {
 				env.flags.selected = false
 			})
 			this.selection = []
+		},
+		onOpenMoveModal() {
+			this.showMoveModal = true
+		},
+		onCloseMoveModal() {
+			this.showMoveModal = false
+			this.unselectAll()
 		},
 	},
 }

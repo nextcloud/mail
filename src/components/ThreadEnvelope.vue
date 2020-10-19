@@ -115,18 +115,25 @@
 						:close-after-click="true">
 						{{ t('mail', 'Download thread data for debugging') }}
 					</ActionLink>
+					<ActionButton icon="icon-external" :close-after-click="true" @click.prevent="onOpenMoveModal">
+						{{ t('mail', 'Move') }}
+					</ActionButton>
 					<ActionButton icon="icon-delete"
 						:close-after-click="true"
 						@click.prevent="onDelete">
 						{{ t('mail', 'Delete') }}
 					</ActionButton>
 				</Actions>
-				<Modal v-if="showSource" @close="onCloseSource">
+				<Modal v-if="showSource" class="source-modal" @close="onCloseSource">
 					<div class="section">
 						<h2>{{ t('mail', 'Message source') }}</h2>
 						<pre class="message-source">{{ rawMessage }}</pre>
 					</div>
 				</Modal>
+				<MoveModal
+					v-if="showMoveModal"
+					:envelopes="[envelope]"
+					@close="onCloseMoveModal" />
 			</div>
 		</div>
 		<Loading v-if="loading" />
@@ -148,6 +155,7 @@ import logger from '../logger'
 import Message from './Message'
 import Moment from './Moment'
 import Avatar from './Avatar'
+import MoveModal from './MoveModal'
 import { buildRecipients as buildReplyRecipients } from '../ReplyBuilder'
 import { generateUrl } from '@nextcloud/router'
 import Modal from '@nextcloud/vue/dist/Components/Modal'
@@ -166,6 +174,7 @@ export default {
 		Message,
 		Modal,
 		Avatar,
+		MoveModal,
 	},
 	props: {
 		envelope: {
@@ -195,6 +204,7 @@ export default {
 			rawMessage: '',
 			sourceLoading: false,
 			showSource: false,
+			showMoveModal: false,
 			importantSvg,
 		}
 	},
@@ -343,6 +353,18 @@ export default {
 		onToggleFlagged() {
 			this.$store.dispatch('toggleEnvelopeFlagged', this.envelope)
 		},
+		onOpenMoveModal() {
+			this.showMoveModal = true
+		},
+		onCloseMoveModal() {
+			this.showMoveModal = false
+			this.$router.replace({
+				name: 'mailbox',
+				params: {
+					mailboxId: this.$route.params.mailboxId,
+				},
+			})
+		},
 	},
 }
 </script>
@@ -406,7 +428,7 @@ export default {
 	.left {
 		flex-grow: 1;
 	}
-	::v-deep .modal-container {
+	.source-modal ::v-deep .modal-container {
 		overflow-y: scroll !important;
 	}
 	.icon-important {

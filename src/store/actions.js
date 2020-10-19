@@ -65,6 +65,7 @@ import {
 	setEnvelopeFlag,
 	syncEnvelopes,
 	fetchThread,
+	moveMessage,
 } from '../service/MessageService'
 import { createAlias, deleteAlias } from '../service/AliasService'
 import logger from '../logger'
@@ -722,5 +723,10 @@ export default {
 		console.debug(`mailbox ${mailbox.databaseId} renamed to ${newName}`, { mailbox })
 		commit('removeMailbox', { id: mailbox.databaseId })
 		commit('addMailbox', { account, mailbox: newMailbox })
+	},
+	async moveMessage({ commit }, { id, destMailboxId }) {
+		await moveMessage(id, destMailboxId)
+		commit('removeEnvelope', { id })
+		commit('removeMessage', { id })
 	},
 }
