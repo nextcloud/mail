@@ -53,42 +53,59 @@
 					<span class="action-label">{{ t('mail', 'Reply') }}</span>
 				</div>
 				<Actions class="app-content-list-item-menu" menu-align="right">
-					<ActionButton v-if="hasMultipleRecipients" icon="icon-reply" @click="replyMessage">
+					<ActionButton v-if="hasMultipleRecipients"
+						icon="icon-reply"
+						:close-after-click="true"
+						@click="replyMessage">
 						{{ t('mail', 'Reply to sender only') }}
 					</ActionButton>
-					<ActionButton icon="icon-forward" @click="forwardMessage">
+					<ActionButton icon="icon-forward"
+						:close-after-click="true"
+						@click="forwardMessage">
 						{{ t('mail', 'Forward') }}
 					</ActionButton>
-					<ActionButton icon="icon-important" @click.prevent="onToggleImportant">
+					<ActionButton icon="icon-important"
+						:close-after-click="true"
+						@click.prevent="onToggleImportant">
 						{{
 							envelope.flags.important ? t('mail', 'Mark unimportant') : t('mail', 'Mark important')
 						}}
 					</ActionButton>
-					<ActionButton icon="icon-starred" @click.prevent="onToggleFlagged">
+					<ActionButton icon="icon-starred"
+						:close-after-click="true"
+						click.prevent="onToggleFlagged">
 						{{
 							envelope.flags.flagged ? t('mail', 'Mark unfavorite') : t('mail', 'Mark favorite')
 						}}
 					</ActionButton>
-					<ActionButton icon="icon-mail" @click="onToggleSeen">
+					<ActionButton icon="icon-mail"
+						:close-after-click="true"
+						@click.prevent="onToggleSeen">
 						{{ envelope.flags.seen ? t('mail', 'Mark unread') : t('mail', 'Mark read') }}
 					</ActionButton>
 
-					<ActionButton icon="icon-junk" @click="onToggleJunk">
+					<ActionButton icon="icon-junk"
+						:close-after-click="true"
+						@click.prevent="onToggleJunk">
 						{{ envelope.flags.junk ? t('mail', 'Mark not spam') : t('mail', 'Mark as spam') }}
 					</ActionButton>
 					<ActionButton
 						:icon="sourceLoading ? 'icon-loading-small' : 'icon-details'"
 						:disabled="sourceLoading"
-						@click="onShowSource">
+						:close-after-click="true"
+						@click.prevent="onShowSource">
 						{{ t('mail', 'View source') }}
 					</ActionButton>
 					<ActionLink v-if="debug"
 						icon="icon-download"
 						:download="threadingFileName"
-						:href="threadingFile">
+						:href="threadingFile"
+						:close-after-click="true">
 						{{ t('mail', 'Download thread data for debugging') }}
 					</ActionLink>
-					<ActionButton icon="icon-delete" @click.prevent="onDelete">
+					<ActionButton icon="icon-delete"
+						:close-after-click="true"
+						@click.prevent="onDelete">
 						{{ t('mail', 'Delete') }}
 					</ActionButton>
 				</Actions>

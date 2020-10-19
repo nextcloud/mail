@@ -48,32 +48,44 @@
 			menu-align="right"
 			event=""
 			@click.native.prevent>
-			<ActionButton icon="icon-important" @click.prevent="onToggleImportant">
+			<ActionButton icon="icon-important"
+				:close-after-click="true"
+				@click.prevent="onToggleImportant">
 				{{
 					data.flags.important ? t('mail', 'Mark unimportant') : t('mail', 'Mark important')
 				}}
 			</ActionButton>
-			<ActionButton icon="icon-starred" @click.prevent="onToggleFlagged">
+			<ActionButton icon="icon-starred"
+				:close-after-click="true"
+				@click.prevent="onToggleFlagged">
 				{{
 					data.flags.flagged ? t('mail', 'Mark unfavorite') : t('mail', 'Mark favorite')
 				}}
 			</ActionButton>
-			<ActionButton icon="icon-mail" @click.prevent="onToggleSeen">
+			<ActionButton icon="icon-mail"
+				:close-after-click="true"
+				@click.prevent="onToggleSeen">
 				{{
 					data.flags.seen ? t('mail', 'Mark unread') : t('mail', 'Mark read')
 				}}
 			</ActionButton>
-			<ActionButton icon="icon-junk" @click.prevent="onToggleJunk">
+			<ActionButton icon="icon-junk"
+				:close-after-click="true"
+				@click.prevent="onToggleJunk">
 				{{
 					data.flags.junk ? t('mail', 'Mark not spam') : t('mail', 'Mark as spam')
 				}}
 			</ActionButton>
-			<ActionButton icon="icon-checkmark" :close-after-click="true" @click.prevent="toggleSelected">
+			<ActionButton icon="icon-checkmark"
+				:close-after-click="true"
+				@click.prevent="toggleSelected">
 				{{
 					selected ? t('mail', 'Unselect') : t('mail', 'Select')
 				}}
 			</ActionButton>
-			<ActionButton icon="icon-delete" @click.prevent="onDelete">
+			<ActionButton icon="icon-delete"
+				:close-after-click="true"
+				@click.prevent="onDelete">
 				{{ t('mail', 'Delete') }}
 			</ActionButton>
 		</Actions>
