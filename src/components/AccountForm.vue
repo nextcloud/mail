@@ -349,7 +349,7 @@ export default {
 }
 </script>
 
-<style>
+<style lang="scss" scoped>
 .tabs-component-tabs {
 	display: flex;
 }
@@ -394,6 +394,12 @@ label.button {
 	display: inline-block;
 	text-align: center;
 	flex-grow: 1;
+}
+label.primary {
+	color: var(--color-main-background);
+}
+input.primary {
+	color: var(--color-main-background);
 }
 
 input[type='radio'] {
