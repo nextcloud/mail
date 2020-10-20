@@ -253,10 +253,6 @@ export default {
 	}
 }
 
-.error {
-	padding-top: 5px;
-}
-
 .buttons {
 	display: flex;
 	justify-content: flex-end;
