@@ -15,9 +15,10 @@
 	<version>1.5.0</version>
 	<licence>agpl</licence>
 	<author>Christoph Wurst</author>
-	<author>Roeland Jago Douma</author>
 	<author>Greta Doçi</author>
+	<author>Julius Härtl</author>
 	<author>Cyrille Bollu</author>
+	<author>Holger Dehnhardt</author>
 	<author>Jan-Christoph Borchardt</author>
 	<namespace>Mail</namespace>
 	<documentation>
