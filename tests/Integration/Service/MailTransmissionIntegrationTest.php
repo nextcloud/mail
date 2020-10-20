@@ -76,6 +76,7 @@ class MailTransmissionIntegrationTest extends TestCase {
 		$mapper = OC::$server->query(MailAccountMapper::class);
 		$mailAccount = MailAccount::fromParams([
 			'userId' => $this->user->getUID(),
+			'name' => 'Test User',
 			'email' => 'user@domain.tld',
 			'inboundHost' => 'localhost',
 			'inboundPort' => '993',

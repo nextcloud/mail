@@ -36,7 +36,7 @@ class MxRecord {
 
 	/**
 	 * @param $host
-	 * @return bool|array
+	 * @return false|array
 	 */
 	public function query(string $host) {
 		if (getmxrr($host, $mxRecords, $mxWeight) === false) {

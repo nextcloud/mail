@@ -119,8 +119,8 @@ class SetupService {
 			'smtpPassword' => $smtpPassword
 		]);
 		$newAccount->setUserId($uid);
-		$newAccount->setInboundPassword($this->crypto->encrypt($newAccount->getInboundPassword()));
-		$newAccount->setOutboundPassword($this->crypto->encrypt($newAccount->getOutboundPassword()));
+		$newAccount->setInboundPassword($this->crypto->encrypt($imapPassword));
+		$newAccount->setOutboundPassword($this->crypto->encrypt($smtpPassword));
 
 		$account = new Account($newAccount);
 		$this->logger->debug('Connecting to account {account}', ['account' => $newAccount->getEmail()]);

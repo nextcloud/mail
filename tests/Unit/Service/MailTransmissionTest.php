@@ -103,6 +103,8 @@ class MailTransmissionTest extends TestCase {
 		/** @var Account|MockObject $account */
 		$account = $this->createMock(Account::class);
 		$account->method('getMailAccount')->willReturn($mailAccount);
+		$account->method('getName')->willReturn('Test User');
+		$account->method('getEMailAddress')->willReturn('test@user');
 		$messageData = NewMessageData::fromRequest($account, 'to@d.com', '', '', 'sub', 'bod');
 		$message = new Message();
 		$account->expects($this->once())
@@ -123,6 +125,8 @@ class MailTransmissionTest extends TestCase {
 		/** @var Account|MockObject $account */
 		$account = $this->createMock(Account::class);
 		$account->method('getMailAccount')->willReturn($mailAccount);
+		$account->method('getName')->willReturn('Test User');
+		$account->method('getEMailAddress')->willReturn('test@user');
 		$alias = new Alias();
 		$alias->setAlias('a@d.com');
 		$messageData = NewMessageData::fromRequest($account, 'to@d.com', '', '', 'sub', 'bod');
@@ -151,6 +155,8 @@ class MailTransmissionTest extends TestCase {
 		/** @var Account|MockObject $account */
 		$account = $this->createMock(Account::class);
 		$account->method('getMailAccount')->willReturn($mailAccount);
+		$account->method('getName')->willReturn('Test User');
+		$account->method('getEMailAddress')->willReturn('test@user');
 		$attachmenst = [
 			[
 				'fileName' => 'cat.jpg',
@@ -191,6 +197,8 @@ class MailTransmissionTest extends TestCase {
 		/** @var Account|MockObject $account */
 		$account = $this->createMock(Account::class);
 		$account->method('getMailAccount')->willReturn($mailAccount);
+		$account->method('getName')->willReturn('Test User');
+		$account->method('getEMailAddress')->willReturn('test@user');
 		$messageData = NewMessageData::fromRequest($account, 'to@d.com', '', '', 'sub', 'bod');
 		$folderId = 'INBOX';
 		$repliedMessageUid = 321;
@@ -217,6 +225,8 @@ class MailTransmissionTest extends TestCase {
 		/** @var Account|MockObject $account */
 		$account = $this->createMock(Account::class);
 		$account->method('getMailAccount')->willReturn($mailAccount);
+		$account->method('getName')->willReturn('Test User');
+		$account->method('getEMailAddress')->willReturn('test@user');
 		$messageData = NewMessageData::fromRequest($account, 'to@d.com', '', '', 'sub', 'bod');
 		$message = new Message();
 		$account->expects($this->once())
