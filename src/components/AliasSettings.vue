@@ -116,6 +116,7 @@ export default {
 .primary {
 	padding-left: 26px;
 	background-position: 6px;
+	color: var(--color-main-background);
 
 	&:after {
 		left: 14px;
@@ -129,5 +130,8 @@ input {
 }
 .icon-delete {
 	vertical-align: bottom;
+}
+.icon-add {
+	background-image: var(--icon-add-fff);
 }
 </style>
