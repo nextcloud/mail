@@ -784,8 +784,11 @@ export default {
 }
 </style>
 
-<style>
+<style lang="scss" scoped>
 .multiselect .multiselect__tags {
 	border: none !important;
+}
+.submit-message.send.primary.icon-confirm-white {
+color: var(--color-main-background);
 }
 </style>
