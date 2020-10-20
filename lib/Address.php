@@ -66,7 +66,8 @@ class Address implements JsonSerializable {
 	 * @return string|null
 	 */
 	public function getEmail(): ?string {
-		return $this->wrapped->bare_address;
+		// Lets make sure the e-mail is valid UTF-8 at all times
+		return iconv("UTF-8","UTF-8//IGNORE", $this->wrapped->bare_address);
 	}
 
 	/**
