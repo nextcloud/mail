@@ -150,6 +150,7 @@
     "Delete folder {name}" : "Supprimer le dossier {name}",
     "An error occurred, unable to rename the mailbox." : "Une erreur s'est produite, impossible de renommer la boîte aux lettres.",
     "_{total} message_::_{total} messages_" : ["{total} message","{total} messages"],
+    "_{unread} unread of {total}_::_{unread} unread of {total}_" : ["{unread} non lu sur {total}","{unread} non lus sur {total}"],
     "Not found" : "Non trouvé",
     "Could not load your draft" : "Impossible de charger votre brouillon",
     "Could not load original message" : "Impossible de charger le message d'origine",
