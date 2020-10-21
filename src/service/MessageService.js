@@ -156,3 +156,13 @@ export function deleteMessage(id) {
 
 	return axios.delete(url).then((resp) => resp.data)
 }
+
+export function moveMessage(id, destFolderId) {
+	const url = generateUrl('/apps/mail/api/messages/{id}/move', {
+		id,
+	})
+
+	return axios.post(url, {
+		destFolderId,
+	})
+}

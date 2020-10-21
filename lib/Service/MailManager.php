@@ -244,11 +244,23 @@ class MailManager implements IMailManager {
 								Account $destinationAccount,
 								string $destFolderId) {
 		if ($sourceAccount->getId() === $destinationAccount->getId()) {
+			try {
+				$sourceMailbox = $this->mailboxMapper->find($sourceAccount, $sourceFolderId);
+			} catch (DoesNotExistException $e) {
+				throw new ServiceException("Source mailbox $sourceFolderId does not exist", 0, $e);
+			}
+
 			$this->moveMessageOnSameAccount(
 				$sourceAccount,
 				$sourceFolderId,
 				$destFolderId,
 				$uid
+			);
+
+			// Delete cached source message (the source imap message is copied and deleted)
+			$this->eventDispatcher->dispatch(
+				MessageDeletedEvent::class,
+				new MessageDeletedEvent($sourceAccount, $sourceMailbox, $uid)
 			);
 		} else {
 			throw new ServiceException('It is not possible to move across accounts yet');

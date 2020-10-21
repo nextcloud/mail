@@ -32,23 +32,6 @@ export default {
 			return this.buildMenu()
 		},
 	},
-	watch: {
-		$route(to, from) {
-			if (
-				from.name === 'message'
-				&& to.name === 'mailbox'
-				&& !this.isMobile
-				&& from.params.mailboxId === to.params.mailboxId
-				&& from.params.filter === to.params.filter
-			) {
-				logger.warn("navigation from a message to just the mailbox. we don't want that, do we? let's go back", {
-					to,
-					from,
-				})
-				this.$router.replace(from)
-			}
-		},
-	},
 	created() {
 		const accounts = this.$store.getters.accounts
 

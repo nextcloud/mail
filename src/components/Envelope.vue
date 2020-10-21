@@ -83,12 +83,18 @@
 					selected ? t('mail', 'Unselect') : t('mail', 'Select')
 				}}
 			</ActionButton>
+			<ActionButton icon="icon-external"
+				:close-after-click="true"
+				@click.prevent="onOpenMoveModal">
+				{{ t('mail', 'Move') }}
+			</ActionButton>
 			<ActionButton icon="icon-delete"
 				:close-after-click="true"
 				@click.prevent="onDelete">
 				{{ t('mail', 'Delete') }}
 			</ActionButton>
 		</Actions>
+		<MoveModal v-if="showMoveModal" :envelopes="[data]" @close="onCloseMoveModal" />
 	</router-link>
 </template>
 
@@ -96,6 +102,7 @@
 import Actions from '@nextcloud/vue/dist/Components/Actions'
 import ActionButton from '@nextcloud/vue/dist/Components/ActionButton'
 import Moment from './Moment'
+import MoveModal from './MoveModal'
 import importantSvg from '../../img/important.svg'
 
 import Avatar from './Avatar'
@@ -108,6 +115,7 @@ export default {
 		ActionButton,
 		Avatar,
 		Moment,
+		MoveModal,
 	},
 	props: {
 		data: {
@@ -130,6 +138,7 @@ export default {
 	data() {
 		return {
 			importantSvg,
+			showMoveModal: false,
 		}
 	},
 	computed: {
@@ -195,6 +204,11 @@ export default {
 		},
 	},
 	methods: {
+		setSelected(value) {
+			if (this.selected !== value) {
+				this.$emit('update:selected', value)
+			}
+		},
 		toggleSelected() {
 			this.$emit('update:selected', !this.selected)
 		},
@@ -212,14 +226,20 @@ export default {
 		},
 		onDelete() {
 			// Remove from selection first
-			if (this.selected) {
-				this.$emit('update:selected', false)
-			}
+			this.setSelected(false)
+
 			// Delete
 			this.$emit('delete')
 			this.$store.dispatch('deleteMessage', {
 				id: this.data.databaseId,
 			})
+		},
+		onOpenMoveModal() {
+			this.setSelected(false)
+			this.showMoveModal = true
+		},
+		onCloseMoveModal() {
+			this.showMoveModal = false
 		},
 	},
 }
