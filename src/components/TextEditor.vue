@@ -32,11 +32,14 @@
 <script>
 import CKEditor from '@ckeditor/ckeditor5-vue'
 import AlignmentPlugin from '@ckeditor/ckeditor5-alignment/src/alignment'
+import Base64UploadAdapter from '@ckeditor/ckeditor5-upload/src/adapters/base64uploadadapter'
 import Editor from '@ckeditor/ckeditor5-editor-balloon/src/ballooneditor'
 import EssentialsPlugin from '@ckeditor/ckeditor5-essentials/src/essentials'
 import BlockQuotePlugin from '@ckeditor/ckeditor5-block-quote/src/blockquote'
 import BoldPlugin from '@ckeditor/ckeditor5-basic-styles/src/bold'
 import HeadingPlugin from '@ckeditor/ckeditor5-heading/src/heading'
+import ImagePlugin from '@ckeditor/ckeditor5-image/src/image'
+import ImageUploadPlugin from '@ckeditor/ckeditor5-image/src/imageupload'
 import ItalicPlugin from '@ckeditor/ckeditor5-basic-styles/src/italic'
 import LinkPlugin from '@ckeditor/ckeditor5-link/src/link'
 import ParagraphPlugin from '@ckeditor/ckeditor5-paragraph/src/paragraph'
@@ -77,8 +80,26 @@ export default {
 		const toolbar = ['undo', 'redo']
 
 		if (this.html) {
-			plugins.push(...[HeadingPlugin, AlignmentPlugin, BoldPlugin, ItalicPlugin, BlockQuotePlugin, LinkPlugin])
-			toolbar.unshift(...['heading', 'alignment', 'bold', 'italic', 'blockquote', 'link'])
+			plugins.push(...[
+				HeadingPlugin,
+				AlignmentPlugin,
+				BoldPlugin,
+				ItalicPlugin,
+				BlockQuotePlugin,
+				LinkPlugin,
+				ImagePlugin,
+				ImageUploadPlugin,
+				Base64UploadAdapter,
+			])
+			toolbar.unshift(...[
+				'heading',
+				'alignment',
+				'bold',
+				'italic',
+				'blockquote',
+				'link',
+				'imageUpload',
+			])
 		}
 
 		return {
