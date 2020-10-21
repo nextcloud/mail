@@ -132,6 +132,7 @@
 				</Modal>
 				<MoveModal
 					v-if="showMoveModal"
+					:account="account"
 					:envelopes="[envelope]"
 					@close="onCloseMoveModal" />
 			</div>
@@ -209,6 +210,9 @@ export default {
 		}
 	},
 	computed: {
+		account() {
+			return this.$store.getters.getAccount(this.envelope.accountId)
+		},
 		threadingFile() {
 			return `data:text/plain;base64,${Base64.encode(JSON.stringify({
 				subject: this.envelope.subject,
@@ -231,15 +235,14 @@ export default {
 			}
 		},
 		hasMultipleRecipients() {
-			const account = this.$store.getters.getAccount(this.envelope.accountId)
-			if (!account) {
+			if (!this.account) {
 				console.error('account is undefined', {
 					accountId: this.envelope.accountId,
 				})
 			}
 			const recipients = buildReplyRecipients(this.envelope, {
-				label: account.name,
-				email: account.emailAddress,
+				label: this.account.name,
+				email: this.account.emailAddress,
 			})
 			return recipients.to.concat(recipients.cc).length > 1
 		},

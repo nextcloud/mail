@@ -94,7 +94,10 @@
 				{{ t('mail', 'Delete') }}
 			</ActionButton>
 		</Actions>
-		<MoveModal v-if="showMoveModal" :envelopes="[data]" @close="onCloseMoveModal" />
+		<MoveModal v-if="showMoveModal"
+			:account="account"
+			:envelopes="[data]"
+			@close="onCloseMoveModal" />
 	</router-link>
 </template>
 
@@ -142,8 +145,11 @@ export default {
 		}
 	},
 	computed: {
+		account() {
+			return this.$store.getters.getAccount(this.data.accountId)
+		},
 		accountColor() {
-			return calculateAccountColor(this.$store.getters.getAccount(this.data.accountId).emailAddress)
+			return calculateAccountColor(this.account.emailAddress)
 		},
 		draft() {
 			return this.data.flags.draft

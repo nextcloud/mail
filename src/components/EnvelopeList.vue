@@ -24,7 +24,7 @@
 						@click.prevent="unselectAll">
 						{{ t('mail', 'Unselect ' + selection.length) }}
 					</ActionButton>
-					<ActionButton icon="icon-external" @click.prevent="onOpenMoveModal">
+					<ActionButton v-if="account.isUnified" icon="icon-external" @click.prevent="onOpenMoveModal">
 						{{ t('mail', 'Move ' + selection.length) }}
 					</ActionButton>
 					<ActionButton icon="icon-delete"
@@ -35,6 +35,7 @@
 				</Actions>
 				<MoveModal
 					v-if="showMoveModal"
+					:account="account"
 					:envelopes="selectedEnvelopes"
 					@close="onCloseMoveModal" />
 			</div>

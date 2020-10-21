@@ -40,7 +40,6 @@
     "@nextcloud/router": "^1.2.0",
     "@nextcloud/vue": "^2.7.0",
     "@nextcloud/vue-dashboard": "^1.0.1",
-    "@riophae/vue-treeselect": "^0.4.0",
     "@vue/babel-preset-app": "^4.5.7",
     "color-convert": "^2.0.1",
     "core-js": "^3.6.5",
