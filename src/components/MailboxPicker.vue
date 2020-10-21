@@ -102,14 +102,17 @@ export default {
 		},
 		onClickHome() {
 			this.selectedMailboxId = undefined
+			this.$emit('update:selected', undefined)
 			this.mailboxCrumbs = []
 		},
 		onClickCrumb(index) {
 			this.selectedMailboxId = this.mailboxCrumbs[index].databaseId
+			this.$emit('update:selected', this.selectedMailboxId)
 			this.mailboxCrumbs = this.mailboxCrumbs.slice(0, index + 1)
 		},
 		onClickMailbox(mailbox) {
-			this.destMailboxId = mailbox.databaseId
+			this.selectedMailboxId = mailbox.databaseId
+			this.$emit('update:selected', this.selectedMailboxId)
 			this.mailboxCrumbs.push(mailbox)
 		},
 		onSelect() {
