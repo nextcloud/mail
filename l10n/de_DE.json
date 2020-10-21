@@ -231,7 +231,7 @@
     "Could not load the message" : "Nachricht konnte nicht geladen werden",
     "Error loading message" : "Fehler beim Laden der Nachricht",
     "Forwarding to %s" : "Weiterleiten an %s",
-    "Click here if you are not automatically redirected within the next few seconds." : "Hier klicken, wenn Sie nicht iautomatisch innerhalb der nächsten Sekunden weitergeleitet werden.",
+    "Click here if you are not automatically redirected within the next few seconds." : "Hier klicken, wenn Sie nicht automatisch innerhalb der nächsten Sekunden weitergeleitet werden.",
     "Redirect" : "Weiterleiten",
     "The link leads to %s" : "Der Link führt nach %s",
     "If you don’t want to visit that page, you can return to <a href=\"%s\">Mail</a>." : "Wenn Sie diese Seite nicht besuchen möchten, können Sie <a href=\"%s\">Mail</a> zurückkehren.",
