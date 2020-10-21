@@ -47,6 +47,7 @@
 <script>
 import Modal from '@nextcloud/vue/dist/Components/Modal'
 
+import logger from '../logger'
 import { translate as translateMailboxName } from '../i18n/MailboxTranslator'
 
 export default {
@@ -103,36 +104,40 @@ export default {
 			this.destMailboxId = mailbox.databaseId
 			this.mailboxCrumbs.push(mailbox)
 		},
-		onMove() {
+		async onMove() {
 			if (!this.isMoveable) {
 				return
 			}
 
 			this.moving = true
 
-			const envelopeIds = this.envelopes
-				.filter((envelope) => envelope.mailboxId !== this.destMailboxId)
-				.map((envelope) => envelope.databaseId)
+			try {
+				const envelopeIds = this.envelopes
+					.filter((envelope) => envelope.mailboxId !== this.destMailboxId)
+					.map((envelope) => envelope.databaseId)
 
-			if (envelopeIds.length === 0) {
-				this.$emit('close')
-				return
-			}
+				if (envelopeIds.length === 0) {
+					this.$emit('close')
+					return
+				}
 
-			const promises = envelopeIds.map(async(id) => {
-				await this.$store.dispatch('moveMessage', {
-					id,
-					destMailboxId: this.destMailboxId,
+				await Promise.all(envelopeIds.map(async(id) => {
+					await this.$store.dispatch('moveMessage', {
+						id,
+						destMailboxId: this.destMailboxId,
+					})
+					this.hasMovedEnvelopes = true
+				}))
+
+				await this.$store.dispatch('syncEnvelopes', { mailboxId: this.destMailboxId })
+			} catch (error) {
+				logger.error('could not move messages', {
+					error,
 				})
-				this.hasMovedEnvelopes = true
-			})
-
-			Promise.all(promises).then(() => {
-				this.$store.dispatch('syncEnvelopes', { mailboxId: this.destMailboxId })
-			}).finally(() => {
+			} finally {
 				this.moving = false
 				this.$emit('close')
-			})
+			}
 		},
 		getMailboxIcon(mailbox) {
 			return mailbox.specialRole ? 'icon-' + mailbox.specialRole : 'icon-folder'
