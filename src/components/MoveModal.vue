@@ -55,6 +55,10 @@ export default {
 		Modal,
 	},
 	props: {
+		account: {
+			type: Object,
+			required: true,
+		},
 		envelopes: {
 			type: Array,
 			required: true,
@@ -69,9 +73,6 @@ export default {
 		}
 	},
 	computed: {
-		account() {
-			return this.$store.getters.getAccount(this.envelopes[0].accountId)
-		},
 		isMoveable() {
 			return !this.moving && this.destMailboxId
 		},

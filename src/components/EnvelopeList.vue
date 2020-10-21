@@ -35,6 +35,7 @@
 				</Actions>
 				<MoveModal
 					v-if="showMoveModal"
+					:account="account"
 					:envelopes="selectedEnvelopes"
 					@close="onCloseMoveModal" />
 			</div>
