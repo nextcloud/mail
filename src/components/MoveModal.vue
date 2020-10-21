@@ -77,13 +77,11 @@ export default {
 			return !this.moving && this.destMailboxId
 		},
 		mailboxes() {
-			let mailboxes = []
 			if (!this.destMailboxId) {
-				mailboxes = this.$store.getters.getMailboxes(this.account.accountId)
+				return this.$store.getters.getMailboxes(this.account.accountId)
 			} else {
-				mailboxes = this.$store.getters.getSubMailboxes(this.destMailboxId)
+				return this.$store.getters.getSubMailboxes(this.destMailboxId)
 			}
-			return mailboxes
 		},
 	},
 	methods: {
