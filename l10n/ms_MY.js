@@ -8,6 +8,7 @@ OC.L10N.register(
     "Connect" : "Berhubung",
     "Send" : "Hantar",
     "Select" : "Select",
+    "Move" : "Move",
     "Delete" : "Padam",
     "Favorites" : "Favorites",
     "Other" : "Lain",
