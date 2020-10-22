@@ -54,16 +54,16 @@
 			</router-link>
 			<div class="right">
 				<Moment class="timestamp" :timestamp="envelope.dateInt" />
-				<div
-					class="button"
+				<router-link
+					:to="hasMultipleRecipients ? replyAll : replyMessage"
 					:class="{
 						'icon-reply-all-white': hasMultipleRecipients,
 						'icon-reply-white': !hasMultipleRecipients,
 						primary: expanded,
 					}"
-					@click="hasMultipleRecipients ? replyAll() : replyMessage()">
-					<span class="action-label">{{ t('mail', 'Reply') }}</span>
-				</div>
+					class="button">
+					{{ t('mail', 'Reply') }}
+				</router-link>
 				<Actions class="app-content-list-item-menu" menu-align="right">
 					<ActionButton v-if="hasMultipleRecipients"
 						icon="icon-reply"
@@ -246,6 +246,32 @@ export default {
 			})
 			return recipients.to.concat(recipients.cc).length > 1
 		},
+		replyMessage() {
+			return {
+				name: 'message',
+				params: {
+					mailboxId: this.$route.params.mailboxId,
+					threadId: 'reply',
+					filter: this.$route.params.filter ? this.$route.params.filter : undefined,
+				},
+				query: {
+					messageId: this.$route.params.threadId,
+				},
+			}
+		},
+		replyAll() {
+			return {
+				name: 'message',
+				params: {
+					mailboxId: this.$route.params.mailboxId,
+					threadId: 'replyAll',
+					filter: this.$route.params.filter ? this.$route.params.filter : undefined,
+				},
+				query: {
+					messageId: this.$route.params.threadId,
+				},
+			}
+		},
 	},
 	watch: {
 		expanded(expanded) {
@@ -279,32 +305,6 @@ export default {
 			} catch (error) {
 				logger.error('Could not fetch message', { error })
 			}
-		},
-		replyMessage() {
-			this.$router.push({
-				name: 'message',
-				params: {
-					mailboxId: this.$route.params.mailboxId,
-					threadId: 'reply',
-					filter: this.$route.params.filter ? this.$route.params.filter : undefined,
-				},
-				query: {
-					messageId: this.$route.params.threadId,
-				},
-			})
-		},
-		replyAll() {
-			this.$router.push({
-				name: 'message',
-				params: {
-					mailboxId: this.$route.params.mailboxId,
-					threadId: 'replyAll',
-					filter: this.$route.params.filter ? this.$route.params.filter : undefined,
-				},
-				query: {
-					messageId: this.$route.params.threadId,
-				},
-			})
 		},
 		forwardMessage() {
 			this.$router.push({
