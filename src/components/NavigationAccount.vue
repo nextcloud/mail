@@ -69,7 +69,7 @@
 		</template>
 
 		<template #extra>
-			<AccountSettings  />
+			<AccountSettings :open.sync="showSettings" :account="account" />
 		</template>
 	</AppNavigationItem>
 </template>
@@ -88,8 +88,6 @@ import AccountSettings from './AccountSettings'
 import { calculateAccountColor } from '../util/AccountColor'
 import logger from '../logger'
 import { fetchQuota } from '../service/AccountService'
-import { emit } from '@nextcloud/event-bus'
-
 export default {
 	name: 'NavigationAccount',
 	components: {
@@ -129,7 +127,7 @@ export default {
 			quota: undefined,
 			editing: false,
 			showSaving: false,
-			displayAccountSettings: false,
+			showSettings: false,
 		}
 	},
 	computed: {
@@ -278,15 +276,7 @@ export default {
 		 * Shows the account settings
 		 */
 		showAccountSettings() {
-			emit('show-settings', {
-				'account': this.account,
-			})
-		},
-		/**
-		 * Hide the account settings overview
-		 */
-		closeAccountSettings() {
-			this.displayAccountSettings = false
+			this.showSettings = true
 		},
 	},
 }

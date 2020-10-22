@@ -24,12 +24,12 @@
 		:open.sync="showSettings">
 		<AppSettingsSection
 			:title="t('mail', 'Account settings')">
-				<strong>{{ displayName }}</strong> &lt;{{ email }}&gt;
-				<a
-					v-if="!account.provisioned"
-					class="button icon-rename"
-					href="#account-form"
-					:title="t('mail', 'Change name')" />
+			<strong>{{ displayName }}</strong> &lt;{{ email }}&gt;
+			<a
+				v-if="!account.provisioned"
+				class="button icon-rename"
+				href="#account-form"
+				:title="t('mail', 'Change name')" />
 		</AppSettingsSection>
 		<AppSettingsSection :title="t('mail', 'Alias settings')">
 			<AliasSettings v-if="!account.provisioned" :account="account" />
@@ -62,7 +62,6 @@ import SignatureSettings from '../components/SignatureSettings'
 import AliasSettings from '../components/AliasSettings'
 import AppSettingsDialog from '@nextcloud/vue/dist/Components/AppSettingsDialog'
 import AppSettingsSection from '@nextcloud/vue/dist/Components/AppSettingsSection'
-import { subscribe, unsubscribe } from '@nextcloud/event-bus'
 
 export default {
 	name: 'AccountSettings',
@@ -74,10 +73,19 @@ export default {
 		AppSettingsDialog,
 		AppSettingsSection,
 	},
+	props: {
+		account: {
+			required: true,
+			type: Object,
+		},
+		open: {
+			required: true,
+			type: Boolean,
+		},
+	},
 	data() {
 		return {
 			showSettings: false,
-			account: undefined,
 		}
 	},
 	computed: {
@@ -91,11 +99,17 @@ export default {
 			return this.account.emailAddress
 		},
 	},
-	mounted() {
-		subscribe('show-settings', this.handleShowSettings)
-	},
-	beforeDestroy() {
-		unsubscribe('show-settings', this.handleShowSettings)
+	watch: {
+		showSettings(value) {
+			if (!value) {
+				this.$emit('update:open', value)
+			}
+		},
+		open(value) {
+			if (value) {
+				this.showSettings = true
+			}
+		},
 	},
 	methods: {
 		onSave(data) {
@@ -111,10 +125,6 @@ export default {
 
 					throw error
 				})
-		},
-		handleShowSettings(payload) {
-			this.account = payload.account
-			this.showSettings = true
 		},
 	},
 }
