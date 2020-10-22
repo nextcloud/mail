@@ -21,18 +21,15 @@
 
 <template>
 	<AppSettingsDialog
-		:open.sync="showSettings"
-		first-selected-section="alias-settings">
+		:open.sync="showSettings">
 		<AppSettingsSection
 			:title="t('mail', 'Account settings')">
-			<p>
 				<strong>{{ displayName }}</strong> &lt;{{ email }}&gt;
 				<a
 					v-if="!account.provisioned"
-					class="button icon-renamesettings"
+					class="button icon-rename"
 					href="#account-form"
 					:title="t('mail', 'Change name')" />
-			</p>
 		</AppSettingsSection>
 		<AppSettingsSection :title="t('mail', 'Alias settings')">
 			<AliasSettings v-if="!account.provisioned" :account="account" />
@@ -65,6 +62,7 @@ import SignatureSettings from '../components/SignatureSettings'
 import AliasSettings from '../components/AliasSettings'
 import AppSettingsDialog from '@nextcloud/vue/dist/Components/AppSettingsDialog'
 import AppSettingsSection from '@nextcloud/vue/dist/Components/AppSettingsSection'
+import { subscribe, unsubscribe } from '@nextcloud/event-bus'
 
 export default {
 	name: 'AccountSettings',
@@ -76,15 +74,10 @@ export default {
 		AppSettingsDialog,
 		AppSettingsSection,
 	},
-	props: {
-		account: {
-			type: Object,
-			required: true,
-		},
-	},
 	data() {
 		return {
-			showSettings: true,
+			showSettings: false,
+			account: undefined,
 		}
 	},
 	computed: {
@@ -97,6 +90,12 @@ export default {
 		email() {
 			return this.account.emailAddress
 		},
+	},
+	mounted() {
+		subscribe('show-settings', this.handleShowSettings)
+	},
+	beforeDestroy() {
+		unsubscribe('show-settings', this.handleShowSettings)
 	},
 	methods: {
 		onSave(data) {
@@ -113,6 +112,10 @@ export default {
 					throw error
 				})
 		},
+		handleShowSettings(payload) {
+			this.account = payload.account
+			this.showSettings = true
+		},
 	},
 }
 </script>
@@ -126,7 +129,7 @@ export default {
 	box-shadow: 0 0 40px rgba(0,0,0,0.2);
 	padding: 30px 70px 20px;
 }
-.icon-renamesettings {
+.button.icon-rename {
 	background-image: var(--icon-rename-000);
 	background-color: var(--color-main-background);
 	border: none;

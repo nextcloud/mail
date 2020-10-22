@@ -69,7 +69,7 @@
 		</template>
 
 		<template #extra>
-			<AccountSettings v-if="displayAccountSettings" :account="account" @close="closeAccountSettings" />
+			<AccountSettings  />
 		</template>
 	</AppNavigationItem>
 </template>
@@ -88,6 +88,7 @@ import AccountSettings from './AccountSettings'
 import { calculateAccountColor } from '../util/AccountColor'
 import logger from '../logger'
 import { fetchQuota } from '../service/AccountService'
+import { emit } from '@nextcloud/event-bus'
 
 export default {
 	name: 'NavigationAccount',
@@ -277,8 +278,9 @@ export default {
 		 * Shows the account settings
 		 */
 		showAccountSettings() {
-			console.info('showAccountSettings showAccountSettings showAccountSettings')
-			this.displayAccountSettings = true
+			emit('show-settings', {
+				'account': this.account,
+			})
 		},
 		/**
 		 * Hide the account settings overview

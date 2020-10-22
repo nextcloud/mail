@@ -35,11 +35,6 @@ return [
 			'verb' => 'GET'
 		],
 		[
-			'name' => 'page#accountSettings',
-			'url' => '/accounts/{id}/settings',
-			'verb' => 'GET'
-		],
-		[
 			'name' => 'page#mailbox',
 			'url' => '/box/{id}',
 			'verb' => 'GET'
