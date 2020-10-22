@@ -34,6 +34,7 @@ use function array_map;
 use function file_exists;
 use function file_get_contents;
 use function json_decode;
+use function memory_get_peak_usage;
 
 class Thread extends Command {
 	public const ARGUMENT_INPUT_FILE = 'thread-file';
@@ -80,12 +81,15 @@ class Thread extends Command {
 				$serialized['subject'],
 				$serialized['id'],
 				$serialized['references'],
-				$serialized['threadRootId']
+				$serialized['threadRootId'] ?? null
 			);
 		}, $parsed);
 
 		$threads = $this->builder->build($threadData, $this->logger);
 		$output->writeln(count($threads) . " threads built from " . count($threadData) . " messages");
+
+		$mbs = (int)(memory_get_peak_usage() / 1024 / 1024);
+		$output->writeln('<info>' . $mbs . 'MB of memory used</info>');
 
 		return 0;
 	}
