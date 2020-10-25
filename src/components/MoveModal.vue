@@ -50,7 +50,6 @@ export default {
 					.map((envelope) => envelope.databaseId)
 
 				if (envelopeIds.length === 0) {
-					this.$emit('close')
 					return
 				}
 
@@ -64,6 +63,7 @@ export default {
 				}))
 
 				await this.$store.dispatch('syncEnvelopes', { mailboxId: this.destMailboxId })
+				this.$emit('move')
 			} catch (error) {
 				logger.error('could not move messages', {
 					error,
