@@ -9,32 +9,37 @@ export default {
 	namespaced: true,
 	state() {
 		return {
-			activeFilterset: '',
-			selectedFilterset: '',
+			ready: false,
+			sieveAccount: {},
+			activeFilterset: [],
+			selectedFilterset: [],
 			filtersetNames: [],
 			filterRules: [],
-			filtersetOrigin: '',
+			filtersetOrigin: [],
 			filtersets: Object(),
 			supportedSieveStructure: Object(),
 		}
 	},
 	 mutations: {
 		addFilterset(state, data) {
-			state.activeFilterset = data.activeScript
-			state.selectedFilterset = data.activeScript
-			state.filtersetNames = data.scripts
-			state.supportedSieveStructure = data.supportedSieveStructure
-			state.filtersets[state.selectedFilterset] = data.scriptContent
+			state.sieveAccount[data.accountId] = {}
+			state.sieveAccount[data.accountId].filtersets = {}
+			state.sieveAccount[data.accountId].activeFilterset = data.data.activeScript
+			state.sieveAccount[data.accountId].selectedFilterset = data.data.activeScript
+			state.sieveAccount[data.accountId].filtersetNames = data.data.scripts
+			state.sieveAccount[data.accountId].supportedSieveStructure = data.data.supportedSieveStructure
+			state.sieveAccount[data.accountId].filtersets[state.sieveAccount[data.accountId].selectedFilterset] = data.data.scriptContent
+			state.ready = true
 		},
-		extractFilterRules(state, scriptName) {
+		extractFilterRules(state, data) {
 			let i = 0
-			state.filterRules = []
-			state.filtersets[scriptName].forEach((rule, index) => {
+			state.sieveAccount[data.accountId].filterRules = []
+			state.sieveAccount[data.accountId].filtersets[data.activeScript].forEach((rule, index) => {
 				if (rule.type === 'header') {
-					state.filtersetOrigin = rule.scriptOrigin
+					state.sieveAccount[data.accountId].filtersetOrigin = rule.scriptOrigin
 				} else if (rule.type === 'rule') {
 					rule.index = index
-					state.filterRules[i] = rule
+					state.sieveAccount[data.accountId].filterRules[i] = rule
 					i++
 				}
 			})
@@ -55,11 +60,12 @@ export default {
 				})
 		}, */
 		listFiltersets({ commit }, accountId) {
+			this.state.ready = false
 			return listFiltersets(accountId)
 				.then((data) => {
 					console.info('sieve/listFiltersets returned')
-					commit('addFilterset', data)
-					commit('extractFilterRules', data.activeScript)
+					commit('addFilterset', { accountId, data })
+					commit('extractFilterRules', { accountId, activeScript: data.activeScript })
 					return data
 				})
 				.catch((err) => {
@@ -93,19 +99,25 @@ export default {
 	},
 	getters: {
 		getActiveFilterset(state) {
-			return state.activeFilterset
+			return accountId => state.sieveAccount[accountId].activeFilterset
 		},
 		getFiltersets(state) {
-			return state.filtersetNames
+			return accountId => state.sieveAccount[accountId].filtersetNames
 		},
 		getSelectedFilterset(state) {
-			return state.selectedFilterset
+			return accountId => state.sieveAccount[accountId].selectedFilterset
 		},
 		getFiltersetOrigin(state) {
-			return state.filtersetOrigin
+			return accountId => state.sieveAccount[accountId].filtersetOrigin
+		},
+		getFilterrules(state) {
+			return accountId => state.sieveAccount[accountId].filterRules
+		},
+		isReady(state) {
+			return state.ready
 		},
 		isActiveFilterset(state) {
-			return state.activeFilterset === state.selectedFilterset
+			return accountId => state.sieveAccount[accountId].activeFilterset === state.sieveAccount[accountId].selectedFilterset
 		},
 	},
 }

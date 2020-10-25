@@ -1,7 +1,7 @@
 <template>
 	<Content app-name="mail">
 		<Navigation />
-		<AppContent>
+		<AppContent v-if="isReady">
 			<div class="section">
 				<h2>{{ t('mail', 'Filter settings') }}</h2>
 				<h3>{{ account.emailAddress }}</h3>
@@ -125,20 +125,23 @@ export default {
 		}
 	},
 	computed: {
+		isReady() {
+			return this.$store.getters['sieve/isReady']
+		},
 		activeFilterset() {
-			return this.$store.getters['sieve/getActiveFilterset']
+			return this.$store.getters['sieve/getActiveFilterset'](this.account.accountId)
 		},
 		filtersets() {
-			return this.$store.getters['sieve/getFiltersets']
+			return this.$store.getters['sieve/getFiltersets'](this.account.accountId)
 		},
 		selectedFilterset() {
-			return this.$store.getters['sieve/getSelectedFilterset']
+			return this.$store.getters['sieve/getSelectedFilterset'](this.account.accountId)
 		},
 		filtersetOrigin() {
-			return this.$store.getters['sieve/getFiltersetOrigin']
+			return this.$store.getters['sieve/getFiltersetOrigin'](this.account.accountId)
 		},
 		scriptSaveable() {
-			return this.generatorName === this.$store.getters['sieve/getFiltersetOrigin']
+			return this.generatorName === this.$store.getters['sieve/getFiltersetOrigin'](this.account.accountId)
 		},
 		displayName() {
 			return this.$store.getters.getAccount(this.$route.params.accountId).name

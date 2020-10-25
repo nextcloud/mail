@@ -70,16 +70,15 @@ export default {
 			type: String,
 			required: true,
 		},
-		filterrules: {
-			type: Array,
-			required: true,
-		},
 		supportedsievestructure: {
 			type: Object,
 			required: true,
 		},
 	},
 	computed: {
+		filterrules() {
+			return this.$store.getters['sieve/getFilterrules'](this.account.id)
+		},
 		id() {
 			return 'filter-navigation'
 		},
