@@ -18,9 +18,9 @@
 				</div>
 			</span>
 			<div class="mailbox-list">
-				<ul v-if="mailboxes.length > 0">
+				<ul v-if="filteredMailboxes.length > 0">
 					<li
-						v-for="box in mailboxes"
+						v-for="box in filteredMailboxes "
 						:key="box.databaseId"
 						@click.prevent="onClickMailbox(box)">
 						<div :class="['mailbox-icon', getMailboxIcon(box)]" />
@@ -35,7 +35,7 @@
 				</div>
 			</div>
 			<div class="buttons">
-				<button class="primary" :disabled="loading || !selectedMailboxId" @click="onSelect">
+				<button class="primary" :disabled="loading || (!allowRoot && !selectedMailboxId)" @click="onSelect">
 					<span v-if="loading" class="icon-loading-small spinner" />
 					{{ loading ? labelSelectLoading : labelSelect }}
 				</button>
@@ -77,6 +77,15 @@ export default {
 			type: String,
 			default: t('mail', 'Choose'),
 		},
+		pickedMailbox: {
+			type: Object,
+			required: false,
+			default: () => undefined,
+		},
+		allowRoot: {
+			type: Boolean,
+			default: false,
+		},
 	},
 	data() {
 		return {
@@ -91,6 +100,12 @@ export default {
 			} else {
 				return this.$store.getters.getSubMailboxes(this.selectedMailboxId)
 			}
+		},
+		filteredMailboxes() {
+			if (this.pickedMailbox) {
+				return this.mailboxes.filter(mailbox => mailbox.databaseId !== this.pickedMailbox.databaseId)
+			}
+			return this.mailboxes
 		},
 	},
 	methods: {
