@@ -24,7 +24,11 @@
 						@click.prevent="unselectAll">
 						{{ t('mail', 'Unselect ' + selection.length) }}
 					</ActionButton>
-					<ActionButton v-if="account.isUnified" icon="icon-external" @click.prevent="onOpenMoveModal">
+					<ActionButton
+						v-if="!account.isUnified"
+						icon="icon-external"
+						:close-after-click="true"
+						@click.prevent="onOpenMoveModal">
 						{{ t('mail', 'Move ' + selection.length) }}
 					</ActionButton>
 					<ActionButton icon="icon-delete"
