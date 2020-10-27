@@ -45,6 +45,7 @@
     "core-js": "^3.6.5",
     "davclient.js": "git+https://github.com/owncloud/davclient.js.git#0.2.1",
     "debounce-promise": "^3.1.2",
+    "dompurify": "^2.2.0",
     "html-to-text": "^5.1.1",
     "ical.js": "^1.4.0",
     "js-base64": "^3.5.2",

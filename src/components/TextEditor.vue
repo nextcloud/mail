@@ -42,6 +42,7 @@ import LinkPlugin from '@ckeditor/ckeditor5-link/src/link'
 import ParagraphPlugin from '@ckeditor/ckeditor5-paragraph/src/paragraph'
 
 import { getLanguage } from '@nextcloud/l10n'
+import DOMPurify from 'dompurify'
 
 import logger from '../logger'
 
@@ -96,8 +97,15 @@ export default {
 			},
 		}
 	},
+	computed: {
+		sanitizedValue() {
+			return DOMPurify.sanitize(this.value, {
+				FORBID_TAGS: ['style'],
+			})
+		},
+	},
 	watch: {
-		value(newVal) {
+		sanitizedValue(newVal) {
 			// needed for reset in composer
 			this.text = newVal
 		},
@@ -175,7 +183,7 @@ export default {
 
 			// Set value as late as possible, so the custom schema listener is used
 			// for the initial editor model
-			this.text = this.value
+			this.text = this.sanitizedValue
 
 			logger.debug(`setting TextEditor contents to <${this.text}>`)
 
