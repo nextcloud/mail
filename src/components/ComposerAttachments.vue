@@ -109,7 +109,7 @@ export default {
 				displayName: trimStart('/')(name),
 				id,
 				size,
-				isLocal: id !== undefined,
+				type: id !== undefined ? 'local' : 'cloud',
 			}
 		},
 		emitNewAttachments(attachments) {
@@ -117,7 +117,7 @@ export default {
 		},
 		totalSizeOfUpload() {
 			return Object.values(this.value).reduce((acc, upload) => {
-				if (!upload.isLocal) {
+				if (!upload.type === 'local') {
 					// Ignore link shares
 					return acc
 				}

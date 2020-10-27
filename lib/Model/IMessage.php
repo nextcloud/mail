@@ -123,12 +123,13 @@ interface IMessage {
 	/**
 	 * @return Horde_Mime_Part[]
 	 */
-	public function getCloudAttachments(): array;
+	public function getAttachments(): array;
 
 	/**
-	 * @return Horde_Mime_Part[]
+	 * @param string $name
+	 * @param string $content
 	 */
-	public function getLocalAttachments(): array;
+	public function addForwardedAttachment(string $name, string $content): void;
 
 	/**
 	 * @param File $fileName

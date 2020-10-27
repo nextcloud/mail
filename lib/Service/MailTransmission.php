@@ -34,6 +34,7 @@ use OCA\Mail\Account;
 use OCA\Mail\Address;
 use OCA\Mail\AddressList;
 use OCA\Mail\Contracts\IAttachmentService;
+use OCA\Mail\Contracts\IMailManager;
 use OCA\Mail\Contracts\IMailTransmission;
 use OCA\Mail\Db\Alias;
 use OCA\Mail\Db\MailboxMapper;
@@ -59,11 +60,17 @@ use Psr\Log\LoggerInterface;
 
 class MailTransmission implements IMailTransmission {
 
+	/** @var AccountService */
+	private $accountService;
+
 	/** @var Folder */
 	private $userFolder;
 
 	/** @var IAttachmentService */
 	private $attachmentService;
+
+	/** @var IMailManager */
+	private $mailManager;
 
 	/** @var IMAPClientFactory */
 	private $imapClientFactory;
@@ -87,15 +94,19 @@ class MailTransmission implements IMailTransmission {
 	 * @param Folder $userFolder
 	 */
 	public function __construct($userFolder,
+								AccountService $accountService,
 								IAttachmentService $attachmentService,
+								IMailManager $mailManager,
 								IMAPClientFactory $imapClientFactory,
 								SmtpClientFactory $smtpClientFactory,
 								IEventDispatcher $eventDispatcher,
 								MailboxMapper $mailboxMapper,
 								MessageMapper $messageMapper,
 								LoggerInterface $logger) {
+		$this->accountService = $accountService;
 		$this->userFolder = $userFolder;
 		$this->attachmentService = $attachmentService;
+		$this->mailManager = $mailManager;
 		$this->imapClientFactory = $imapClientFactory;
 		$this->smtpClientFactory = $smtpClientFactory;
 		$this->eventDispatcher = $eventDispatcher;
@@ -128,7 +139,7 @@ class MailTransmission implements IMailTransmission {
 		$message->setCC($messageData->getCc());
 		$message->setBcc($messageData->getBcc());
 		$message->setContent($messageData->getBody());
-		$this->handleAttachments($account->getMailAccount()->getUserId(), $messageData, $message);
+		$this->handleAttachments($account, $messageData, $message);
 
 		$transport = $this->smtpClientFactory->create($account);
 		// build mime body
@@ -153,12 +164,8 @@ class MailTransmission implements IMailTransmission {
 			$mail->setBody($message->getContent());
 		}
 
-		// Append cloud attachments
-		foreach ($message->getCloudAttachments() as $attachment) {
-			$mail->addMimePart($attachment);
-		}
 		// Append local attachments
-		foreach ($message->getLocalAttachments() as $attachment) {
+		foreach ($message->getAttachments() as $attachment) {
 			$mail->addMimePart($attachment);
 		}
 
@@ -280,30 +287,35 @@ class MailTransmission implements IMailTransmission {
 	}
 
 	/**
-	 * @param string $userId
+	 * @param Account $account
 	 * @param NewMessageData $messageData
 	 * @param IMessage $message
 	 *
 	 * @return void
 	 */
-	private function handleAttachments(string $userId, NewMessageData $messageData, IMessage $message): void {
+	private function handleAttachments(Account $account, NewMessageData $messageData, IMessage $message): void {
 		foreach ($messageData->getAttachments() as $attachment) {
-			if (isset($attachment['isLocal']) && $attachment['isLocal']) {
-				$this->handleLocalAttachment($userId, $attachment, $message);
+			if (isset($attachment['type']) && $attachment['type'] === 'local') {
+				// Adds an uploaded attachment
+				$this->handleLocalAttachment($account, $attachment, $message);
+			} elseif (isset($attachment['type']) && $attachment['type'] === 'mail') {
+				// Adds an attachment from another email (use case is, eg., a mail forward)
+				$this->handleEmailAttachment($account, $attachment, $message);
 			} else {
+				// Adds an attachment from Files
 				$this->handleCloudAttachment($attachment, $message);
 			}
 		}
 	}
 
 	/**
-	 * @param string $userId
+	 * @param Account $account
 	 * @param array $attachment
 	 * @param IMessage $message
 	 *
 	 * @return int|null
 	 */
-	private function handleLocalAttachment(string $userId, array $attachment, IMessage $message) {
+	private function handleLocalAttachment(Account $account, array $attachment, IMessage $message) {
 		if (!isset($attachment['id'])) {
 			$this->logger->warning('ignoring local attachment because its id is unknown');
 			return null;
@@ -312,13 +324,42 @@ class MailTransmission implements IMailTransmission {
 		$id = (int)$attachment['id'];
 
 		try {
-			list($localAttachment, $file) = $this->attachmentService->getAttachment($userId, $id);
+			list($localAttachment, $file) = $this->attachmentService->getAttachment($account->getMailAccount()->getUserId(), $id);
 			$message->addLocalAttachment($localAttachment, $file);
 		} catch (AttachmentNotFoundException $ex) {
 			$this->logger->warning('ignoring local attachment because it does not exist');
 			// TODO: rethrow?
 			return null;
 		}
+	}
+
+	/**
+	 * @param Account $account
+	 * @param array $attachment
+	 * @param IMessage $message
+	 *
+	 * @return void
+	 *
+	 * Adds an attachment that's coming from another message's attachment (typical use case: email forwarding)
+	 *
+	 */
+	private function handleEmailAttachment(Account $account, array $attachment, IMessage $message) {
+
+		// Gets attachment from other message
+		$userId = $account->getMailAccount()->getUserId();
+		$attachmentMessage = $this->mailManager->getMessage($userId, (int)$attachment['messageId']);
+		$mailbox = $this->mailManager->getMailbox($userId, $attachmentMessage->getMailboxId());
+		$attachments = $this->messageMapper->getRawAttachments(
+			$this->imapClientFactory->getClient($account),
+			$mailbox->getName(),
+			$attachmentMessage->getUid(),
+			[
+				$attachment['id']
+			]
+		);
+
+		// Attaches attachment to new messsage
+		$message->addForwardedAttachment($attachment['fileName'], $attachments[0]);
 	}
 
 	/**

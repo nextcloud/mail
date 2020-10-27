@@ -589,17 +589,20 @@ class IMAPMessage implements IMessage, JsonSerializable {
 	}
 
 	/**
-	 * @return array
+	 * @return Horde_Mime_Part[]
 	 */
-	public function getCloudAttachments(): array {
+	public function getAttachments(): array {
 		throw new Exception('not implemented');
 	}
 
 	/**
-	 * @return Horde_Mime_Part[]
+	 * @param string $name
+	 * @param string $content
+	 *
+	 * @return void
 	 */
-	public function getLocalAttachments(): array {
-		throw new Exception('not implemented');
+	public function addForwardedAttachment(string $name, string $content): void {
+		throw new Exception('IMAP message is immutable');
 	}
 
 	/**
