@@ -1,6 +1,16 @@
 # Changelog
 All notable changes to this project will be documented in this file.
 
+## 1.5.1 - 2020-10-27
+- Fix displaying of messages with empty from field
+- Fix translation of delete account dialogue
+- Fix the overlapping between 2 threads
+- Fix saving aliases
+- Improve the message-frame height to use the remaining space
+- Change account-settings button colour to fit the theme
+- Make sure the email is valid UTF-8
+- Make the deserialized thread root ID nullable
+
 ## 1.5.0 - 2020-10-03
 ### Added
 - Threading: related message are shown as conversations
