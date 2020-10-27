@@ -125,9 +125,11 @@
 					</ActionButton>
 				</Actions>
 				<Modal v-if="showSource" class="source-modal" @close="onCloseSource">
-					<div class="section">
-						<h2>{{ t('mail', 'Message source') }}</h2>
-						<pre class="message-source">{{ rawMessage }}</pre>
+					<div class="source-modal-content">
+						<div class="section">
+							<h2>{{ t('mail', 'Message source') }}</h2>
+							<pre class="message-source">{{ rawMessage }}</pre>
+						</div>
 					</div>
 				</Modal>
 				<MoveModal
@@ -431,8 +433,16 @@ export default {
 	.left {
 		flex-grow: 1;
 	}
-	.source-modal ::v-deep .modal-container {
-		overflow-y: scroll !important;
+	.source-modal {
+		::v-deep .modal-container {
+			height: 800px;
+		}
+
+		.source-modal-content {
+			width: 100%;
+			height: 100%;
+			overflow-y: scroll;
+		}
 	}
 	.icon-important {
 		::v-deep path {
