@@ -24,6 +24,7 @@ namespace OCA\Mail\Tests\Unit\Http;
 
 use ChristophWurst\Nextcloud\Testing\TestCase;
 use OCA\Mail\Http\HtmlResponse;
+use OCP\Util;
 
 class HtmlResponseTest extends TestCase {
 
@@ -34,9 +35,18 @@ class HtmlResponseTest extends TestCase {
 	 * @param $contentType
 	 */
 	public function testIt($content) {
-		$resp = new HtmlResponse($content);
-		$injectedStyles = "<style>* { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen-Sans, Cantarell, Ubuntu, 'Helvetica Neue', Arial, 'Noto Color Emoji', sans-serif, 'Apple Color Emoji', 'Segoe UI Emoji', 'Segoe UI Symbol'; }</style>";
-		$this->assertEquals($injectedStyles . $content, $resp->render());
+		$defaultResp = new HtmlResponse($content);
+		$plainResp = new HtmlResponse($content, true);
+		$richResp = new HtmlResponse($content, false);
+
+		$scriptSrcRegex = preg_quote(Util::linkToAbsolute('mail', 'js/htmlresponse.js'), '/');
+		$contentRegex = preg_quote($content, '/');
+		$responseRegex = '/<script nonce=".+" src="' . $scriptSrcRegex . '"><\/script>'
+			. $contentRegex . '/';
+
+		$this->assertMatchesRegularExpression($responseRegex, $defaultResp->render());
+		$this->assertEquals($content, $plainResp->render());
+		$this->assertMatchesRegularExpression($responseRegex, $richResp->render());
 	}
 
 	public function providesResponseData() {

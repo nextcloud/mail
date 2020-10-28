@@ -155,7 +155,10 @@
 			</div>
 		</div>
 		<Loading v-if="loading" />
-		<Message v-else-if="message" :envelope="envelope" :message="message" />
+		<Message v-else-if="message"
+			:envelope="envelope"
+			:message="message"
+			:full-height="fullHeight" />
 		<Error v-else-if="error"
 			:error="error && error.message ? error.message : t('mail', 'Not found')"
 			:message="errorMessage"
@@ -214,6 +217,11 @@ export default {
 			default: undefined,
 		},
 		expanded: {
+			required: false,
+			type: Boolean,
+			default: false,
+		},
+		fullHeight: {
 			required: false,
 			type: Boolean,
 			default: false,

@@ -20,6 +20,7 @@
 				:envelope="env"
 				:mailbox-id="$route.params.mailboxId"
 				:expanded="expandedThreads.includes(env.databaseId)"
+				:full-height="thread.length === 1"
 				@move="onMove(env.databaseId)"
 				@toggleExpand="toggleExpand(env.databaseId)" />
 		</template>
