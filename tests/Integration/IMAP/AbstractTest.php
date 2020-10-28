@@ -52,13 +52,13 @@ abstract class AbstractTest extends TestCase {
 		$a = new MailAccount();
 		$a->setId(-1);
 		$a->setName('Mail');
-		$a->setInboundHost('localhost');
+		$a->setInboundHost('127.0.0.1');
 		$a->setInboundPort(993);
 		$a->setInboundUser($user);
 		$a->setInboundPassword($password);
 		$a->setInboundSslMode('ssl');
 		$a->setEmail($user);
-		$a->setOutboundHost('localhost');
+		$a->setOutboundHost('127.0.0.1');
 		$a->setOutboundPort(465);
 		$a->setOutboundUser($user);
 		$a->setOutboundPassword($password);

@@ -45,7 +45,7 @@ class FolderMapperIntegrationTest extends TestCase {
 		return new Horde_Imap_Client_Socket([
 			'username' => 'user@domain.tld',
 			'password' => 'mypassword',
-			'hostspec' => 'localhost',
+			'hostspec' => '127.0.0.1',
 			'port' => 993,
 			'secure' => 'ssl',
 		]);

@@ -1,6 +1,7 @@
 /babel.config.js
 /.babelrc
 /build
+codecov.yml
 /composer.*
 /CONTRIBUTING.md
 /coverage
@@ -29,7 +30,6 @@
 /postcss.config.js
 /psalm.xml
 /screenshots
-.scrutinizer.yml
 /src
 /tests
 .travis.yml

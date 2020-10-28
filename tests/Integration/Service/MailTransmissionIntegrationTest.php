@@ -77,13 +77,13 @@ class MailTransmissionIntegrationTest extends TestCase {
 		$mailAccount = MailAccount::fromParams([
 			'userId' => $this->user->getUID(),
 			'email' => 'user@domain.tld',
-			'inboundHost' => 'localhost',
+			'inboundHost' => '127.0.0.1',
 			'inboundPort' => '993',
 			'inboundSslMode' => 'ssl',
 			'inboundUser' => 'user@domain.tld',
 			'inboundPassword' => $crypo->encrypt('mypassword'),
-			'outboundHost' => 'localhost',
-			'outboundPort' => '2525',
+			'outboundHost' => '127.0.0.1',
+			'outboundPort' => '25',
 			'outboundSslMode' => 'none',
 			'outboundUser' => 'user@domain.tld',
 			'outboundPassword' => $crypo->encrypt('mypassword'),
@@ -103,6 +103,12 @@ class MailTransmissionIntegrationTest extends TestCase {
 			OC::$server->query(MessageMapper::class),
 			OC::$server->query(ILogger::class)
 		);
+	}
+
+	protected function tearDown(): void {
+		if ($this->client !== null) {
+			$this->client->logout();
+		}
 	}
 
 	public function testSendMail() {

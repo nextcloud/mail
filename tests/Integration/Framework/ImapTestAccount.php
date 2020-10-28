@@ -49,14 +49,14 @@ trait ImapTestAccount {
 		$mailAccount = new MailAccount();
 		$mailAccount->setUserId($this->getTestAccountUserId());
 		$mailAccount->setEmail('user@domain.tld');
-		$mailAccount->setInboundHost('localhost');
+		$mailAccount->setInboundHost('127.0.0.1');
 		$mailAccount->setInboundPort(993);
 		$mailAccount->setInboundSslMode('ssl');
 		$mailAccount->setInboundUser('user@domain.tld');
 		$mailAccount->setInboundPassword(OC::$server->getCrypto()->encrypt('mypassword'));
 
-		$mailAccount->setOutboundHost('localhost');
-		$mailAccount->setOutboundPort(2525);
+		$mailAccount->setOutboundHost('127.0.0.1');
+		$mailAccount->setOutboundPort(25);
 		$mailAccount->setOutboundUser('user@domain.tld');
 		$mailAccount->setOutboundPassword(OC::$server->getCrypto()->encrypt('mypassword'));
 		$mailAccount->setOutboundSslMode('none');
