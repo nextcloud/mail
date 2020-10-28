@@ -5,8 +5,20 @@
 				<div class="button primary" @click.prevent="markSelectedSeenOrUnseen">
 					<span id="action-label">{{
 						areAllSelectedRead
-							? t('mail', 'Mark ' + selection.length + ' unread')
-							: t('mail', 'Mark ' + selection.length + ' read')
+							? t(
+								'mail',
+								'Mark {number} unread',
+								{
+									number: selection.length,
+								}
+							)
+							: t(
+								'mail',
+								'Mark {number} read',
+								{
+									number: selection.length,
+								}
+							)
 					}}</span>
 				</div>
 				<Actions class="app-content-list-item-menu" menu-align="right">
@@ -15,26 +27,56 @@
 						@click.prevent="favoriteOrUnfavoriteAll">
 						{{
 							areAllSelectedFavorite
-								? t('mail', 'Unfavorite ' + selection.length)
-								: t('mail', 'Favorite ' + selection.length)
+								? t(
+									'mail',
+									'Unfavorite {number}',
+									{
+										number: selection.length,
+									}
+								)
+								: t(
+									'mail',
+									'Favorite {number}',
+									{
+										number: selection.length,
+									}
+								)
 						}}
 					</ActionButton>
 					<ActionButton icon="icon-close"
 						:close-after-click="true"
 						@click.prevent="unselectAll">
-						{{ t('mail', 'Unselect ' + selection.length) }}
+						{{ t(
+							'mail',
+							'Unselect {number}',
+							{
+								number: selection.length,
+							}
+						) }}
 					</ActionButton>
 					<ActionButton
 						v-if="!account.isUnified"
 						icon="icon-external"
 						:close-after-click="true"
 						@click.prevent="onOpenMoveModal">
-						{{ t('mail', 'Move ' + selection.length) }}
+						{{ t(
+							'mail',
+							'Move {number}',
+							{
+								number: selection.length,
+							}
+						) }}
 					</ActionButton>
 					<ActionButton icon="icon-delete"
 						:close-after-click="true"
 						@click.prevent="deleteAllSelected">
-						{{ t('mail', 'Delete ' + selection.length) }}
+						{{ t(
+							'mail',
+							'Delete {number}',
+							{
+								number: selection.length,
+							}
+						) }}
 					</ActionButton>
 				</Actions>
 				<MoveModal
