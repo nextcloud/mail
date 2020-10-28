@@ -65,7 +65,7 @@ class IMAPClientFactoryTest extends TestCase {
 		$mailAccount = new MailAccount();
 		$mailAccount->setId(123);
 		$mailAccount->setEmail('user@domain.tld');
-		$mailAccount->setInboundHost('localhost');
+		$mailAccount->setInboundHost('127.0.0.1');
 		$mailAccount->setInboundPort(993);
 		$mailAccount->setInboundSslMode('ssl');
 		$mailAccount->setInboundUser('user@domain.tld');

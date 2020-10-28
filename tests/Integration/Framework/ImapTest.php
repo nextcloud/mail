@@ -33,6 +33,7 @@ use OCA\Mail\Account;
 use OCA\Mail\Db\MailAccount;
 use OCA\Mail\IMAP\IMAPClientFactory;
 use OCP\AppFramework\QueryException;
+use function in_array;
 
 trait ImapTest {
 
@@ -55,7 +56,7 @@ trait ImapTest {
 			$this->client = new Horde_Imap_Client_Socket([
 				'username' => 'user@domain.tld',
 				'password' => 'mypassword',
-				'hostspec' => 'localhost',
+				'hostspec' => '127.0.0.1',
 				'port' => 993,
 				'secure' => 'ssl',
 			]);
@@ -79,6 +80,14 @@ trait ImapTest {
 				$this->deleteMailbox($client, $mailbox);
 			}
 		}
+	}
+
+	public function disconnectImapAccount(): void {
+		if ($this->client === null) {
+			return;
+		}
+
+		$this->client->logout();
 	}
 
 	/**
