@@ -81,6 +81,12 @@ class Account implements JsonSerializable {
 		$this->memcacheFactory = OC::$server->getMemcacheFactory();
 	}
 
+	public function __destruct() {
+		if ($this->client !== null) {
+			$this->client->logout();
+		}
+	}
+
 	public function getMailAccount(): MailAccount {
 		return $this->account;
 	}
@@ -160,7 +166,7 @@ class Account implements JsonSerializable {
 				$this->client->login();
 			} catch (Horde_Imap_Client_Exception $e) {
 				throw new ServiceException(
-					"Could not connect to IMAP: " . $e->getMessage(),
+					"Could not connect to IMAP host $host:$port: " . $e->getMessage(),
 					(int) $e->getCode(),
 					$e
 				);

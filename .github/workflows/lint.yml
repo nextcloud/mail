@@ -62,7 +62,7 @@ jobs:
           with:
               php-version: 7.4
               tools: composer:v1
-              extension-csv: ctype,curl,dom,gd,iconv,intl,json,mbstring,openssl,posix,sqlite,xml,zip
+              extensions: ctype,curl,dom,gd,iconv,intl,json,mbstring,openssl,posix,sqlite,xml,zip
               coverage: xdebug
         - name: Checkout Nextcloud
           run: git clone https://github.com/nextcloud/server.git --recursive --depth 1 -b ${{ matrix.nextcloud-versions }} nextcloud
