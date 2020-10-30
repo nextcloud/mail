@@ -25,6 +25,7 @@
 		 timeoutForSmallTests="900"
 		 timeoutForMediumTests="900"
 		 timeoutForLargeTests="900"
+		 cacheResult="true"
 		>
 	<testsuite name='Mail app tests'>
 		<directory suffix='test.php'>Integration</directory>
