@@ -44,6 +44,9 @@ use function in_array;
 use function ltrim;
 use function mb_substr;
 
+/**
+ * @template-extends QBMapper<Message>
+ */
 class MessageMapper extends QBMapper {
 
 	/** @var ITimeFactory */

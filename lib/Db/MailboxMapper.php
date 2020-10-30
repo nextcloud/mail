@@ -23,6 +23,9 @@ declare(strict_types=1);
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
+/**
+ * @template-extends QBMapper<Mailbox>
+ */
 namespace OCA\Mail\Db;
 
 use OCA\Mail\Account;
