@@ -76,7 +76,6 @@ OC.L10N.register(
     "Select" : "Pasirinkti",
     "Move" : "Perkelti",
     "Delete" : "Ištrinti",
-    "Delete " : "Ištrinti ",
     "Load more" : "Įkelti daugiau",
     "Report this bug" : "Pranešti apie šią klaidą",
     "Could not open mailbox" : "Nepavyko atverti pašto dėžutės",
