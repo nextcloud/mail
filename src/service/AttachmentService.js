@@ -37,6 +37,7 @@ export function saveAttachmentToFiles(id, attachmentId, directory) {
 }
 
 export function saveAttachmentsToFiles(id, directory) {
+	// attachmentId = 0 means 'all attachments' (see MessageController.php::saveAttachement)
 	return saveAttachmentToFiles(id, 0, directory)
 }
 
