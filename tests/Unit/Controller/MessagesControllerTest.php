@@ -361,7 +361,7 @@ class MessagesControllerTest extends TestCase {
 			->will($this->returnValue($this->mailbox));
 		$this->mailbox->expects($this->once())
 			->method('getMessage')
-			->with($id)
+			->with($uid)
 			->will($this->returnValue($this->message));
 		$this->message->attachments = [
 			[
