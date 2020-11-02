@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "e6bfbff1b3683e9bb91809d93dc8e35b",
+    "content-hash": "4fd96069939ef5c8add5c01deb4649f9",
     "packages": [
         {
             "name": "amphp/amp",
@@ -1734,16 +1734,16 @@
         },
         {
             "name": "rubix/ml",
-            "version": "0.2.2",
+            "version": "0.2.3",
             "source": {
                 "type": "git",
                 "url": "https://github.com/RubixML/RubixML.git",
-                "reference": "64549cbaded285e3ddd12bda7cb53b97134320c4"
+                "reference": "bde4eb8275a6a99e4eca90b4a02f4dba98608785"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/RubixML/RubixML/zipball/64549cbaded285e3ddd12bda7cb53b97134320c4",
-                "reference": "64549cbaded285e3ddd12bda7cb53b97134320c4",
+                "url": "https://api.github.com/repos/RubixML/RubixML/zipball/bde4eb8275a6a99e4eca90b4a02f4dba98608785",
+                "reference": "bde4eb8275a6a99e4eca90b4a02f4dba98608785",
                 "shasum": ""
             },
             "require": {
@@ -1757,6 +1757,7 @@
             "require-dev": {
                 "friendsofphp/php-cs-fixer": "2.16.*",
                 "phpbench/phpbench": "0.17.*",
+                "phpstan/extension-installer": "^1.0",
                 "phpstan/phpstan": "0.12.*",
                 "phpstan/phpstan-phpunit": "0.12.*",
                 "phpunit/phpunit": "8.5.*"
@@ -1884,7 +1885,7 @@
                     "type": "github"
                 }
             ],
-            "time": "2020-10-03T21:54:40+00:00"
+            "time": "2020-10-25T11:31:33+00:00"
         },
         {
             "name": "rubix/tensor",
