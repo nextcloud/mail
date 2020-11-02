@@ -41,10 +41,11 @@ interface IMailBox {
 	public function getSpecialRole();
 
 	/**
-	 * @param int $id
+	 * @param int $uid
+	 *
 	 * @return IMessage
 	 */
-	public function getMessage(int $id, bool $loadHtmlMessageBody = false);
+	public function getMessage(int $uid, bool $loadHtmlMessageBody = false);
 
 	/**
 	 * @param int $messageUid

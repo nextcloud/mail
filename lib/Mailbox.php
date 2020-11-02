@@ -96,13 +96,13 @@ class Mailbox implements IMailBox {
 	}
 
 	/**
-	 * @param int $id
+	 * @param int $uid
 	 * @param bool $loadHtmlMessageBody
 	 *
 	 * @return IMAPMessage
 	 */
-	public function getMessage(int $id, bool $loadHtmlMessageBody = false) {
-		return new IMAPMessage($this->conn, $this->mailBox, $id, null, $loadHtmlMessageBody);
+	public function getMessage(int $uid, bool $loadHtmlMessageBody = false) {
+		return new IMAPMessage($this->conn, $this->mailBox, $uid, null, $loadHtmlMessageBody);
 	}
 
 	/**
