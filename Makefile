@@ -47,7 +47,7 @@ build-js-production:
 watch-js:
 	npm run watch
 
-dev-setup: install-composer-deps-dev install-npm-deps-dev optimize-js
+dev-setup: install-composer-deps-dev install-npm-deps-dev build-js
 
 start-imap-docker:
 	docker pull $(docker_image)
