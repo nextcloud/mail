@@ -115,10 +115,14 @@
 <script>
 import Actions from '@nextcloud/vue/dist/Components/Actions'
 import ActionButton from '@nextcloud/vue/dist/Components/ActionButton'
+import { showError } from '@nextcloud/dialogs'
 
 import Envelope from './Envelope'
 import logger from '../logger'
 import MoveModal from './MoveModal'
+import { matchError } from '../errors/match'
+import NoTrashMailboxConfiguredError
+	from '../errors/NoTrashMailboxConfiguredError'
 
 export default {
 	name: 'EnvelopeList',
@@ -213,7 +217,7 @@ export default {
 			this.unselectAll()
 		},
 		deleteAllSelected() {
-			this.selection.forEach((envelopeId) => {
+			this.selection.forEach(async(envelopeId) => {
 				// Navigate if the message being deleted is the one currently viewed
 				if (this.envelopes[envelopeId].databaseId === this.$route.params.threadId) {
 					let next
@@ -234,9 +238,21 @@ export default {
 					}
 				}
 				logger.info(`deleting message ${this.envelopes[envelopeId].databaseId}`)
-				this.$store.dispatch('deleteMessage', {
-					id: this.envelopes[envelopeId].databaseId,
-				})
+				try {
+					await this.$store.dispatch('deleteMessage', {
+						id: this.envelopes[envelopeId].databaseId,
+					})
+				} catch (error) {
+					showError(await matchError(error, {
+						[NoTrashMailboxConfiguredError.getName()]() {
+							return t('mail', 'No trash mailbox configured')
+						},
+						default(error) {
+							logger.error('could not delete message', error)
+							return t('mail', 'Could not delete message')
+						},
+					}))
+				}
 			})
 			this.unselectAll()
 		},

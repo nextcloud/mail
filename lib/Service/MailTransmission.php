@@ -42,6 +42,8 @@ use OCA\Mail\Events\DraftSavedEvent;
 use OCA\Mail\Events\MessageSentEvent;
 use OCA\Mail\Events\SaveDraftEvent;
 use OCA\Mail\Exception\AttachmentNotFoundException;
+use OCA\Mail\Exception\ClientException;
+use OCA\Mail\Exception\SentMailboxNotSetException;
 use OCA\Mail\Exception\ServiceException;
 use OCA\Mail\IMAP\IMAPClientFactory;
 use OCA\Mail\IMAP\MessageMapper;
@@ -107,6 +109,9 @@ class MailTransmission implements IMailTransmission {
 								Alias $alias = null,
 								Message $draft = null): void {
 		$account = $messageData->getAccount();
+		if ($account->getMailAccount()->getSentMailboxId() === null) {
+			throw new SentMailboxNotSetException();
+		}
 
 		if ($replyData !== null) {
 			$message = $this->buildReplyMessage($account, $messageData, $replyData);
@@ -180,6 +185,7 @@ class MailTransmission implements IMailTransmission {
 	 *
 	 * @return array
 	 *
+	 * @throws ClientException
 	 * @throws ServiceException
 	 */
 	public function saveDraft(NewMessageData $message, Message $previousDraft = null): array {
@@ -225,7 +231,11 @@ class MailTransmission implements IMailTransmission {
 			$mail->send($transport, false, false);
 			// save the message in the drafts folder
 			$client = $this->imapClientFactory->getClient($account);
-			$draftsMailbox = $this->mailboxMapper->findSpecial($account, 'drafts');
+			$draftsMailboxId = $account->getMailAccount()->getDraftsMailboxId();
+			if ($draftsMailboxId === null) {
+				throw new ClientException("No drafts mailbox configured");
+			}
+			$draftsMailbox = $this->mailboxMapper->findById($draftsMailboxId);
 			$newUid = $this->messageMapper->save(
 				$client,
 				$draftsMailbox,

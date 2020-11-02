@@ -246,8 +246,13 @@ class ImportanceClassifier {
 	 */
 	private function getOutgoingMailboxes(Account $account): array {
 		try {
+			$sentMailboxId = $account->getMailAccount()->getSentMailboxId();
+			if ($sentMailboxId === null) {
+				return [];
+			}
+
 			return [
-				$this->mailboxMapper->findSpecial($account, 'sent')
+				$this->mailboxMapper->findById($sentMailboxId)
 			];
 		} catch (DoesNotExistException $e) {
 			return [];

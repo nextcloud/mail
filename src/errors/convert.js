@@ -21,10 +21,16 @@
 
 import MailboxLockedError from './MailboxLockedError'
 import MailboxNotCachedError from './MailboxNotCachedError'
+import NoDraftsMailboxConfiguredError from './NoDraftsMailboxConfiguredError'
+import NoSentMailboxConfiguredError from './NoSentMailboxConfiguredError'
+import NoTrashMailboxConfiguredError from './NoTrashMailboxConfiguredError'
 
 const map = {
+	'OCA\\Mail\\Exception\\DraftsMailboxNotSetException': NoDraftsMailboxConfiguredError,
 	'OCA\\Mail\\Exception\\MailboxLockedException': MailboxLockedError,
 	'OCA\\Mail\\Exception\\MailboxNotCachedException': MailboxNotCachedError,
+	'OCA\\Mail\\Exception\\SentMailboxNotSetException': NoSentMailboxConfiguredError,
+	'OCA\\Mail\\Exception\\TrashMailboxNotSetException': NoTrashMailboxConfiguredError,
 }
 
 /**

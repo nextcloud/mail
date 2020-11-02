@@ -95,6 +95,11 @@ class MailTransmissionIntegrationTest extends TestCase {
 		$this->attachmentService = OC::$server->query(IAttachmentService::class);
 		$userFolder = OC::$server->getUserFolder($this->user->getUID());
 
+		// Make sure the mailbox preferences are set
+		/** @var MailboxSync $mbSync */
+		$mbSync = OC::$server->query(MailboxSync::class);
+		$mbSync->sync($this->account, new NullLogger(), true);
+
 		$this->transmission = new MailTransmission(
 			$userFolder,
 			$this->attachmentService,

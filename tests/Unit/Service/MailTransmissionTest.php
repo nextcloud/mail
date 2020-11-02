@@ -100,6 +100,7 @@ class MailTransmissionTest extends TestCase {
 	public function testSendNewMessage() {
 		$mailAccount = new MailAccount();
 		$mailAccount->setUserId('testuser');
+		$mailAccount->setSentMailboxId(123);
 		/** @var Account|MockObject $account */
 		$account = $this->createMock(Account::class);
 		$account->method('getMailAccount')->willReturn($mailAccount);
@@ -122,6 +123,7 @@ class MailTransmissionTest extends TestCase {
 	public function testSendMessageFromAlias() {
 		$mailAccount = new MailAccount();
 		$mailAccount->setUserId('testuser');
+		$mailAccount->setSentMailboxId(123);
 		/** @var Account|MockObject $account */
 		$account = $this->createMock(Account::class);
 		$account->method('getMailAccount')->willReturn($mailAccount);
@@ -152,6 +154,7 @@ class MailTransmissionTest extends TestCase {
 	public function testSendNewMessageWithCloudAttachments() {
 		$mailAccount = new MailAccount();
 		$mailAccount->setUserId('testuser');
+		$mailAccount->setSentMailboxId(123);
 		/** @var Account|MockObject $account */
 		$account = $this->createMock(Account::class);
 		$account->method('getMailAccount')->willReturn($mailAccount);
@@ -194,6 +197,7 @@ class MailTransmissionTest extends TestCase {
 	public function testReplyToAnExistingMessage() {
 		$mailAccount = new MailAccount();
 		$mailAccount->setUserId('testuser');
+		$mailAccount->setSentMailboxId(123);
 		/** @var Account|MockObject $account */
 		$account = $this->createMock(Account::class);
 		$account->method('getMailAccount')->willReturn($mailAccount);
@@ -222,6 +226,7 @@ class MailTransmissionTest extends TestCase {
 	public function testSaveDraft() {
 		$mailAccount = new MailAccount();
 		$mailAccount->setUserId('testuser');
+		$mailAccount->setDraftsMailboxId(123);
 		/** @var Account|MockObject $account */
 		$account = $this->createMock(Account::class);
 		$account->method('getMailAccount')->willReturn($mailAccount);
@@ -239,8 +244,8 @@ class MailTransmissionTest extends TestCase {
 			->willReturn($client);
 		$draftsMailbox = new \OCA\Mail\Db\Mailbox();
 		$this->mailboxMapper->expects($this->once())
-			->method('findSpecial')
-			->with($account, 'drafts')
+			->method('findById')
+			->with(123)
 			->willReturn($draftsMailbox);
 		$this->messageMapper->expects($this->once())
 			->method('save')

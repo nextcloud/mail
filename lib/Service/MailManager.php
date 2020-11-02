@@ -37,6 +37,7 @@ use OCA\Mail\Events\MessageDeletedEvent;
 use OCA\Mail\Events\MessageFlaggedEvent;
 use OCA\Mail\Exception\ClientException;
 use OCA\Mail\Exception\ServiceException;
+use OCA\Mail\Exception\TrashMailboxNotSetException;
 use OCA\Mail\Folder;
 use OCA\Mail\IMAP\FolderMapper;
 use OCA\Mail\IMAP\FolderStats;
@@ -268,9 +269,9 @@ class MailManager implements IMailManager {
 	}
 
 	/**
+	 * @throws ClientException
 	 * @throws ServiceException
 	 * @todo evaluate if we should sync mailboxes first
-	 *
 	 */
 	public function deleteMessage(Account $account,
 								  string $mailboxId,
@@ -286,7 +287,11 @@ class MailManager implements IMailManager {
 			throw new ServiceException("Source mailbox $mailboxId does not exist", 0, $e);
 		}
 		try {
-			$trashMailbox = $this->mailboxMapper->findSpecial($account, 'trash');
+			$trashMailboxId = $account->getMailAccount()->getTrashMailboxId();
+			if ($trashMailboxId === null) {
+				throw new TrashMailboxNotSetException();
+			}
+			$trashMailbox = $this->mailboxMapper->findById($trashMailboxId);
 		} catch (DoesNotExistException $e) {
 			throw new ServiceException("No trash folder", 0, $e);
 		}

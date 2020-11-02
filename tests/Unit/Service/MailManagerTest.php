@@ -26,6 +26,7 @@ namespace OCA\Mail\Tests\Unit\Service;
 use ChristophWurst\Nextcloud\Testing\TestCase;
 use Horde_Imap_Client_Socket;
 use OCA\Mail\Account;
+use OCA\Mail\Db\MailAccount;
 use OCA\Mail\Db\Mailbox;
 use OCA\Mail\Db\MailboxMapper;
 use OCA\Mail\Db\MessageMapper as DbMessageMapper;
@@ -188,9 +189,12 @@ class MailManagerTest extends TestCase {
 		);
 	}
 
-	public function testDeleteMessageTrashFolderNotFound(): void {
+	public function testDeleteMessageTrashMailboxNotFound(): void {
 		/** @var Account|MockObject $account */
 		$account = $this->createMock(Account::class);
+		$mailAccount = new MailAccount();
+		$mailAccount->setTrashMailboxId(123);
+		$account->method('getMailAccount')->willReturn($mailAccount);
 		$this->eventDispatcher->expects($this->once())
 			->method('dispatch')
 			->with(
@@ -202,8 +206,8 @@ class MailManagerTest extends TestCase {
 			->with($account, 'INBOX')
 			->willReturn($this->createMock(Mailbox::class));
 		$this->mailboxMapper->expects($this->once())
-			->method('findSpecial')
-			->with($account, 'trash')
+			->method('findById')
+			->with(123)
 			->willThrowException(new DoesNotExistException(""));
 		$this->expectException(ServiceException::class);
 
@@ -217,6 +221,9 @@ class MailManagerTest extends TestCase {
 	public function testDeleteMessage(): void {
 		/** @var Account|MockObject $account */
 		$account = $this->createMock(Account::class);
+		$mailAccount = new MailAccount();
+		$mailAccount->setTrashMailboxId(123);
+		$account->method('getMailAccount')->willReturn($mailAccount);
 		$inbox = new Mailbox();
 		$inbox->setName('INBOX');
 		$trash = new Mailbox();
@@ -228,8 +235,8 @@ class MailManagerTest extends TestCase {
 			->with($account, 'INBOX')
 			->willReturn($inbox);
 		$this->mailboxMapper->expects($this->once())
-			->method('findSpecial')
-			->with($account, 'trash')
+			->method('findById')
+			->with(123)
 			->willReturn($trash);
 		$client = $this->createMock(Horde_Imap_Client_Socket::class);
 		$this->imapClientFactory->expects($this->once())
@@ -254,6 +261,9 @@ class MailManagerTest extends TestCase {
 	public function testExpungeMessage(): void {
 		/** @var Account|MockObject $account */
 		$account = $this->createMock(Account::class);
+		$mailAccount = new MailAccount();
+		$mailAccount->setTrashMailboxId(123);
+		$account->method('getMailAccount')->willReturn($mailAccount);
 		$source = new Mailbox();
 		$source->setName('Trash');
 		$trash = new Mailbox();
@@ -265,8 +275,8 @@ class MailManagerTest extends TestCase {
 			->with($account, 'Trash')
 			->willReturn($source);
 		$this->mailboxMapper->expects($this->once())
-			->method('findSpecial')
-			->with($account, 'trash')
+			->method('findById')
+			->with(123)
 			->willReturn($trash);
 		$client = $this->createMock(Horde_Imap_Client_Socket::class);
 		$this->imapClientFactory->expects($this->once())

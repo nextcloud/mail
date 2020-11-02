@@ -29,7 +29,9 @@ use Horde_Imap_Client;
 use Horde_Imap_Client_Data_Namespace;
 use Horde_Imap_Client_Exception;
 use Horde_Imap_Client_Namespace_List;
+use OCA\Mail\Events\MailboxesSynchronizedEvent;
 use OCA\Mail\Exception\ServiceException;
+use OCP\EventDispatcher\IEventDispatcher;
 use Psr\Log\LoggerInterface;
 use function in_array;
 use function json_encode;
@@ -57,16 +59,21 @@ class MailboxSync {
 	/** @var ITimeFactory */
 	private $timeFactory;
 
+	/** @var IEventDispatcher */
+	private $dispatcher;
+
 	public function __construct(MailboxMapper $mailboxMapper,
 								FolderMapper $folderMapper,
 								MailAccountMapper $mailAccountMapper,
 								IMAPClientFactory $imapClientFactory,
-								ITimeFactory $timeFactory) {
+								ITimeFactory $timeFactory,
+								IEventDispatcher $dispatcher) {
 		$this->mailboxMapper = $mailboxMapper;
 		$this->folderMapper = $folderMapper;
 		$this->mailAccountMapper = $mailAccountMapper;
 		$this->imapClientFactory = $imapClientFactory;
 		$this->timeFactory = $timeFactory;
+		$this->dispatcher = $dispatcher;
 	}
 
 	/**
@@ -98,7 +105,7 @@ class MailboxSync {
 		} catch (Horde_Imap_Client_Exception $e) {
 			throw new ServiceException(
 				"IMAP error: " . $e->getMessage(),
-				(int) $e->getCode(),
+				(int)$e->getCode(),
 				$e
 			);
 		}
@@ -113,6 +120,10 @@ class MailboxSync {
 		);
 
 		$this->persist($account, $folders, $indexedOld);
+
+		$this->dispatcher->dispatchTyped(
+			new MailboxesSynchronizedEvent($account)
+		);
 	}
 
 	private function persist(Account $account, array $folders, array $existing): void {

@@ -33,6 +33,9 @@ use OCA\Mail\Model\NewMessageData;
 use OCA\Mail\Model\RepliedMessageData;
 use OCP\EventDispatcher\Event;
 
+/**
+ * @psalm-immutable
+ */
 class MessageSentEvent extends Event {
 
 	/** @var Account */

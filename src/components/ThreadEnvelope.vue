@@ -164,6 +164,10 @@ import { generateUrl } from '@nextcloud/router'
 import Modal from '@nextcloud/vue/dist/Components/Modal'
 import { Base64 } from 'js-base64'
 import importantSvg from '../../img/important.svg'
+import { matchError } from '../errors/match'
+import { showError } from '@nextcloud/dialogs'
+import NoTrashMailboxConfiguredError
+	from '../errors/NoTrashMailboxConfiguredError'
 
 export default {
 	name: 'ThreadEnvelope',
@@ -327,11 +331,23 @@ export default {
 		onToggleJunk() {
 			this.$store.dispatch('toggleEnvelopeJunk', this.envelope)
 		},
-		onDelete() {
+		async onDelete() {
 			this.$emit('delete', this.envelope.databaseId)
-			this.$store.dispatch('deleteMessage', {
-				id: this.envelope.databaseId,
-			})
+			try {
+				await this.$store.dispatch('deleteMessage', {
+					id: this.envelope.databaseId,
+				})
+			} catch (error) {
+				showError(await matchError(error, {
+					[NoTrashMailboxConfiguredError.getName()]() {
+						return t('mail', 'No trash mailbox configured')
+					},
+					default(error) {
+						logger.error('could not delete message', error)
+						return t('mail', 'Could not delete message')
+					},
+				}))
+			}
 		},
 		async onShowSource() {
 			this.sourceLoading = true

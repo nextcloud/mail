@@ -54,6 +54,9 @@ import MailboxNotCachedError from '../errors/MailboxNotCachedError'
 import { matchError } from '../errors/match'
 import { wait } from '../util/wait'
 import EmptyMailboxSection from './EmptyMailboxSection'
+import { showError } from '@nextcloud/dialogs'
+import NoTrashMailboxConfiguredError
+	from '../errors/NoTrashMailboxConfiguredError'
 
 export default {
 	name: 'Mailbox',
@@ -272,7 +275,7 @@ export default {
 				this.loadingMore = false
 			}
 		},
-		handleShortcut(e) {
+		async handleShortcut(e) {
 			const envelopes = this.envelopes
 			const currentId = parseInt(this.$route.params.threadId, 10)
 
@@ -318,16 +321,25 @@ export default {
 			case 'del':
 				logger.debug('deleting', { env })
 				this.onDelete(env.databaseId)
-				this.$store
-					.dispatch('deleteMessage', {
+				try {
+					await this.$store.dispatch('deleteMessage', {
 						id: env.databaseId,
 					})
-					.catch((error) =>
-						logger.error('could not delete envelope', {
-							env,
-							error,
-						})
-					)
+				} catch (error) {
+					logger.error('could not delete envelope', {
+						env,
+						error,
+					})
+
+					showError(await matchError(error, {
+						[NoTrashMailboxConfiguredError.getName()]() {
+							return t('mail', 'No trash mailbox configured')
+						},
+						default() {
+							return t('mail', 'Could not delete message')
+						},
+					}))
+				}
 
 				break
 			case 'flag':
