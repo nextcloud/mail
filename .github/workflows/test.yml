@@ -8,20 +8,21 @@ jobs:
     strategy:
       matrix:
         php-versions: [7.3, 7.4]
-        nextcloud-versions: ['master']
-    name: php${{ matrix.php-versions }} unit tests
+        nextcloud-versions: ['stable20', 'master']
+    name: Nextcloud ${{ matrix.nextcloud-versions }} php${{ matrix.php-versions }} unit tests
     steps:
     - name: Set up php${{ matrix.php-versions }}
       uses: shivammathur/setup-php@master
       with:
         php-version: ${{ matrix.php-versions }}
-        extension-csv: ctype,curl,dom,gd,iconv,intl,json,mbstring,openssl,posix,sqlite,xml,zip
+        tools: composer:v1
+        extensions: ctype,curl,dom,gd,iconv,intl,json,mbstring,openssl,posix,sqlite,xml,zip
         coverage: xdebug
     - name: Checkout Nextcloud
       run: git clone https://github.com/nextcloud/server.git --recursive --depth 1 -b ${{ matrix.nextcloud-versions }} nextcloud
-    - name: Run tests
+    - name: Install Nextcloud
       run: php -f nextcloud/occ maintenance:install --database-name oc_autotest --database-user oc_autotest --admin-user admin --admin-pass admin --database sqlite --database-pass=''
-    - name: Checkout
+    - name: Checkout Mail
       uses: actions/checkout@master
       with:
         path: nextcloud/apps/mail
@@ -31,8 +32,98 @@ jobs:
     - name: Run tests
       working-directory: nextcloud/apps/mail
       run: composer run test:unit
-    - name: Upload coverage to Scrutinizer
-      working-directory: nextcloud/apps/mail
-      run: |
-          wget https://scrutinizer-ci.com/ocular.phar
-          php ocular.phar code-coverage:upload --format=php-clover tests/clover.unit.xml
+    - name: Report coverage
+      uses: codecov/codecov-action@v1
+      if: ${{ always() }}
+      with:
+        file: ./nextcloud/apps/mail/tests/clover.unit.xml
+        flags: unittests
+        fail_ci_if_error: true
+
+  integration-tests:
+      runs-on: ubuntu-latest
+      strategy:
+          matrix:
+              php-versions: [7.4]
+              nextcloud-versions: ['master']
+              db: ['sqlite', 'mysql', 'pgsql']
+      name: php${{ matrix.php-versions }}-${{ matrix.db }} integration tests
+      services:
+          mail-service:
+              image: christophwurst/imap-devel
+              env:
+                  MAILNAME: mail.domain.tld
+                  MAIL_ADDRESS: user@domain.tld
+                  MAIL_PASS: mypassword
+              ports:
+                  - 25:25
+                  - 143:143
+                  - 993:993
+          mysql-service:
+              image: mariadb:10
+              env:
+                  MYSQL_ROOT_PASSWORD: my-secret-pw
+                  MYSQL_DATABASE: nextcloud
+                  MYSQL_USER: nextcloud
+                  MYSQL_PASSWORD: nextcloud
+              ports:
+                  - 3306:3306
+              options: >-
+                  --health-cmd="mysqladmin ping"
+                  --health-interval=10s
+                  --health-timeout=5s
+                  --health-retries=3
+          postgres-service:
+              image: postgres
+              env:
+                  POSTGRES_USER: nextcloud
+                  POSTGRES_DB: nextcloud
+                  POSTGRES_PASSWORD: nextcloud
+              ports:
+                  - 5432:5432
+              options: >-
+                  --health-cmd pg_isready
+                  --health-interval 10s
+                  --health-timeout 5s
+                  --health-retries 5
+      steps:
+          - name: Set up php${{ matrix.php-versions }}
+            uses: shivammathur/setup-php@master
+            with:
+                php-version: ${{ matrix.php-versions }}
+                tools: composer:v1
+                extensions: ctype,curl,dom,gd,iconv,intl,json,mbstring,openssl,posix,sqlite,xml,zip
+                coverage: xdebug
+          - name: Checkout Nextcloud
+            run: git clone https://github.com/nextcloud/server.git --recursive --depth 1 -b ${{ matrix.nextcloud-versions }} nextcloud
+          - name: Install Nextcloud
+            run: php -f nextcloud/occ maintenance:install --database-host 127.0.0.1 --database-name nextcloud --database-user nextcloud --database-pass nextcloud --admin-user admin --admin-pass admin --database ${{ matrix.db }}
+          - name: Checkout Mail
+            uses: actions/checkout@master
+            with:
+                path: nextcloud/apps/mail
+          - name: Install dependencies
+            working-directory: nextcloud/apps/mail
+            run: composer install
+          - name: Install Mail
+            run: php -f nextcloud/occ app:enable mail
+          - name: Configure Nextcloud for testing
+            run: |
+                php -f nextcloud/occ config:system:set debug --type bool --value true
+                php -f nextcloud/occ config:system:set app.mail.verify-tls-peer --type bool --value false
+          - name: Run tests
+            working-directory: nextcloud/apps/mail
+            run: |
+                ss -tunlp
+                true | openssl s_client -crlf -connect 127.0.0.1:993
+                composer run test:integration
+          - name: Print debug logs
+            if: ${{ always() }}
+            run: cat nextcloud/data/horde_*.log
+          - name: Report coverage
+            uses: codecov/codecov-action@v1
+            if: ${{ always() }}
+            with:
+              file: ./nextcloud/apps/mail/tests/clover.integration.xml
+              flags: integrationtests
+              fail_ci_if_error: true

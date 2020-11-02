@@ -23,6 +23,8 @@ namespace OCA\Mail\Tests\Integration;
 
 use OCA\Mail\Tests\Integration\Framework\ImapTest;
 use ChristophWurst\Nextcloud\Testing\TestCase as Base;
+use function class_uses;
+use function in_array;
 
 class TestCase extends Base {
 	protected function setUp(): void {
@@ -30,7 +32,18 @@ class TestCase extends Base {
 
 		// If it's an IMAP test, we reset the test account automatically
 		if (in_array(ImapTest::class, class_uses($this))) {
+			/** @var ImapTest $this */
 			$this->resetImapAccount();
+		}
+	}
+
+	protected function tearDown(): void {
+		parent::tearDown();
+
+		// If it's an IMAP test, we reset the test account automatically
+		if (in_array(ImapTest::class, class_uses($this))) {
+			/** @var ImapTest $this */
+			$this->disconnectImapAccount();
 		}
 	}
 }
