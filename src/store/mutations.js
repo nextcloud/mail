@@ -77,7 +77,7 @@ export default {
 		Vue.set(state.preferences, key, value)
 	},
 	addAccount(state, account) {
-		account.collapsed = true
+		account.collapsed = account.collapsed ?? true
 		Vue.set(state.accounts, account.id, account)
 		Vue.set(
 			state,
@@ -109,6 +109,16 @@ export default {
 	},
 	expandAccount(state, accountId) {
 		state.accounts[accountId].collapsed = false
+	},
+	setAccountSetting(state, { accountId, key, value }) {
+		const accountSettings = state.allAccountSettings.find(settings => settings.accountId === accountId)
+		if (accountSettings) {
+			accountSettings[key] = value
+		} else {
+			const newAccountSettings = { accountId }
+			newAccountSettings[key] = value
+			state.allAccountSettings.push(newAccountSettings)
+		}
 	},
 	addMailbox(state, { account, mailbox }) {
 		addMailboxToState(state, account, mailbox)

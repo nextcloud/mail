@@ -148,6 +148,10 @@ export default {
 			return account
 		})
 	},
+	setAccountSetting({ commit, getters }, { accountId, key, value }) {
+		commit('setAccountSetting', { accountId, key, value })
+		return savePreference('account-settings', JSON.stringify(getters.getAllAccountSettings))
+	},
 	deleteAccount({ commit }, account) {
 		return deleteAccount(account.id).catch((err) => {
 			console.error('could not delete account', err)
@@ -166,6 +170,7 @@ export default {
 		console.debug(`mailbox ${prefixed} created for account ${account.id}`, { mailbox })
 		commit('addMailbox', { account, mailbox })
 		commit('expandAccount', account.id)
+		commit('setAccountSetting', { accountId: account.id, key: 'collapsed', value: false })
 		return mailbox
 	},
 	moveAccount({ commit, getters }, { account, up }) {

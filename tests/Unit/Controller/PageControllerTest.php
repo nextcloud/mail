@@ -120,11 +120,12 @@ class PageControllerTest extends TestCase {
 		$account1 = $this->createMock(Account::class);
 		$account2 = $this->createMock(Account::class);
 		$mailbox = $this->createMock(Mailbox::class);
-		$this->preferences->expects($this->exactly(2))
+		$this->preferences->expects($this->exactly(3))
 			->method('getPreference')
 			->willReturnMap([
 				['external-avatars', 'true', 'true'],
 				['collect-data', 'true', 'true'],
+				['account-settings', json_encode([]), json_encode([])],
 			]);
 		$this->accountService->expects($this->once())
 			->method('findByUserId')
@@ -227,7 +228,8 @@ class PageControllerTest extends TestCase {
 				'external-avatars' => 'true',
 				'app-version' => '1.2.3',
 				'accounts' => base64_encode(json_encode($accountsJson)),
-				'collect-data' => 'true'
+				'collect-data' => 'true',
+				'account-settings' => base64_encode(json_encode([])),
 			]);
 		$csp = new ContentSecurityPolicy();
 		$csp->addAllowedFrameDomain('\'self\'');

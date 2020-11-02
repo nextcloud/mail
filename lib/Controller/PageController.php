@@ -128,6 +128,8 @@ class PageController extends Controller {
 			$accountsJson[] = $json;
 		}
 
+		$accountSettings = $this->preferences->getPreference('account-settings', json_encode([]));
+
 		$user = $this->userSession->getUser();
 		$response = new TemplateResponse($this->appName, 'index',
 			[
@@ -136,6 +138,7 @@ class PageController extends Controller {
 				'accounts' => base64_encode(json_encode($accountsJson)),
 				'external-avatars' => $this->preferences->getPreference('external-avatars', 'true'),
 				'collect-data' => $this->preferences->getPreference('collect-data', 'true'),
+				'account-settings' => base64_encode($accountSettings),
 			]);
 		$this->initialStateService->provideInitialState(
 			Application::APP_ID,
