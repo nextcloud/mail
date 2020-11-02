@@ -116,7 +116,7 @@ class Html {
 		$config->set('HTML.TargetBlank', true);
 
 		// allow cid, http and ftp
-		$config->set('URI.AllowedSchemes', ['cid' => true, 'http' => true, 'https' => true, 'ftp' => true, 'mailto' => true]);
+		$config->set('URI.AllowedSchemes', ['data' => true, 'src'=>true, 'cid' => true, 'http' => true, 'https' => true, 'ftp' => true, 'mailto' => true]);
 		$config->set('URI.Host', Util::getServerHostName());
 
 		$config->set('Filter.ExtractStyleBlocks', true);
