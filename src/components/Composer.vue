@@ -473,9 +473,9 @@ export default {
 				this.bodyVal = this.bodyWithSignature(
 					this.selectedAlias,
 					buildReplyBody(
-						this.editorPlainText ? toPlain(this.originalBody) : toHtml(this.originalBody),
-						this.original.from[0],
-						this.original.dateInt
+						this.editorPlainText ? toPlain(this.body) : toHtml(this.body),
+						this.forwardFrom.from[0],
+						this.forwardFrom.dateInt
 					).value
 				).value
 			} else {
