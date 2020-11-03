@@ -1,6 +1,6 @@
 name: Packaging
 
-on: [push]
+on: [push, pull_request]
 
 jobs:
   release-tarball:
