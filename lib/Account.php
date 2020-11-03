@@ -185,8 +185,7 @@ class Account implements JsonSerializable {
 	public function getMailbox($folderId) {
 		return new Mailbox(
 			$this->getImapConnection(),
-			new Horde_Imap_Client_Mailbox($folderId),
-			[]
+			new Horde_Imap_Client_Mailbox($folderId)
 		);
 	}
 
