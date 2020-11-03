@@ -136,6 +136,7 @@
 					v-if="showMoveModal"
 					:account="account"
 					:envelopes="[envelope]"
+					@move="onMove"
 					@close="onCloseMoveModal" />
 			</div>
 		</div>
@@ -379,12 +380,9 @@ export default {
 		},
 		onCloseMoveModal() {
 			this.showMoveModal = false
-			this.$router.replace({
-				name: 'mailbox',
-				params: {
-					mailboxId: this.$route.params.mailboxId,
-				},
-			})
+		},
+		onMove() {
+			this.$emit('move')
 		},
 	},
 }

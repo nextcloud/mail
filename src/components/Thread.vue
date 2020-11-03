@@ -20,6 +20,7 @@
 				:envelope="env"
 				:mailbox-id="$route.params.mailboxId"
 				:expanded="expandedThreads.includes(env.databaseId)"
+				@move="onMove(env.databaseId)"
 				@toggleExpand="toggleExpand(env.databaseId)" />
 		</template>
 	</AppContentDetails>
@@ -54,8 +55,11 @@ export default {
 		}
 	},
 	computed: {
+		threadId() {
+			return parseInt(this.$route.params.threadId, 10)
+		},
 		thread() {
-			return this.$store.getters.getEnvelopeThread(this.$route.params.threadId)
+			return this.$store.getters.getEnvelopeThread(this.threadId)
 		},
 		threadParticipants() {
 			const recipients = this.thread.flatMap(envelope => {
@@ -84,11 +88,11 @@ export default {
 				return
 			}
 			logger.debug('navigated to another thread', { to, from })
-			this.fetchThread()
+			this.resetThread()
 		},
 	},
 	created() {
-		this.fetchThread()
+		this.resetThread()
 	},
 	methods: {
 		toggleExpand(threadId) {
@@ -100,12 +104,28 @@ export default {
 				this.expandedThreads = this.expandedThreads.filter(t => t !== threadId)
 			}
 		},
+		onMove(threadId) {
+			if (threadId === this.threadId) {
+				this.$router.replace({
+					name: 'mailbox',
+					params: {
+						mailboxId: this.$route.params.mailboxId,
+					},
+				})
+			} else {
+				this.expandedThreads = this.expandedThreads.filter((id) => id !== threadId)
+				this.fetchThread()
+			}
+		},
+		async resetThread() {
+			this.expandedThreads = [this.threadId]
+			await this.fetchThread()
+		},
 		async fetchThread() {
 			this.loading = true
 			this.errorMessage = ''
 			this.error = undefined
-			const threadId = parseInt(this.$route.params.threadId, 10)
-			this.expandedThreads = [threadId]
+			const threadId = this.threadId
 
 			try {
 				const thread = await this.$store.dispatch('fetchThread', threadId)
