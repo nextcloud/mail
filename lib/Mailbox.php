@@ -36,9 +36,8 @@ use Horde_Imap_Client_Exception;
 use Horde_Imap_Client_Mailbox;
 use Horde_Imap_Client_Socket;
 use OCA\Mail\Model\IMAPMessage;
-use OCA\Mail\Service\IMailBox;
 
-class Mailbox implements IMailBox {
+class Mailbox {
 
 	/**
 	 * @var Horde_Imap_Client_Socket
