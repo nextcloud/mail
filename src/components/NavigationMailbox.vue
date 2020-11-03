@@ -38,7 +38,7 @@
 				<ActionText
 					v-if="!account.isUnified && mailbox.specialRole !== 'flagged'"
 					icon="icon-info"
-					:title="mailbox.name">
+					:title="mailbox.specialRole ? t('mail', mailbox.name) : mailbox.name">
 					{{ statsText }}
 				</ActionText>
 
