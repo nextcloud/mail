@@ -236,7 +236,7 @@ export default {
 			this.$store.dispatch('toggleEnvelopeImportant', this.data)
 		},
 		onToggleSeen() {
-			this.$store.dispatch('toggleEnvelopeSeen', this.data)
+			this.$store.dispatch('toggleEnvelopeSeen', { envelope: this.data })
 		},
 		onToggleJunk() {
 			this.$store.dispatch('toggleEnvelopeJunk', this.data)
