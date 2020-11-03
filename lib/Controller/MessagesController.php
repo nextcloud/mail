@@ -462,7 +462,7 @@ class MessagesController extends Controller {
 		if ($attachmentId === '0') {
 			// Save all attachments
 			/* @var $m IMAPMessage */
-			$m = $folder->getMessage($id);
+			$m = $folder->getMessage($message->getUid());
 			$attachmentIds = array_map(function ($a) {
 				return $a['id'];
 			}, $m->attachments);
@@ -471,7 +471,7 @@ class MessagesController extends Controller {
 		}
 
 		foreach ($attachmentIds as $aid) {
-			$attachment = $folder->getAttachment($message->getUid(), $attachmentId);
+			$attachment = $folder->getAttachment($message->getUid(), $aid);
 
 			$fileName = $attachment->getName() ?? $this->l10n->t('Embedded message %s', [
 				$aid,
