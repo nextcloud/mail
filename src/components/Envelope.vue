@@ -91,6 +91,20 @@
 				@click.prevent="onOpenMoveModal">
 				{{ t('mail', 'Move') }}
 			</ActionButton>
+			<ActionRouter icon="icon-add"
+				:to="{
+					name: 'message',
+					params: {
+						mailboxId: $route.params.mailboxId,
+						threadId: 'asNew',
+						filter: $route.params.filter,
+					},
+					query: {
+						messageId: data.databaseId,
+					},
+				}">
+				{{ t('mail', 'Edit as new message') }}
+			</ActionRouter>
 			<ActionButton icon="icon-delete"
 				:close-after-click="true"
 				@click.prevent="onDelete">
@@ -107,6 +121,7 @@
 <script>
 import Actions from '@nextcloud/vue/dist/Components/Actions'
 import ActionButton from '@nextcloud/vue/dist/Components/ActionButton'
+import ActionRouter from '@nextcloud/vue/dist/Components/ActionRouter'
 import Moment from './Moment'
 import MoveModal from './MoveModal'
 import importantSvg from '../../img/important.svg'
@@ -124,6 +139,7 @@ export default {
 	components: {
 		Actions,
 		ActionButton,
+		ActionRouter,
 		Avatar,
 		Moment,
 		MoveModal,

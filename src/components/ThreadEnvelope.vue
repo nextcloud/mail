@@ -108,6 +108,20 @@
 						@click.prevent="onShowSource">
 						{{ t('mail', 'View source') }}
 					</ActionButton>
+					<ActionRouter icon="icon-add"
+						:to="{
+							name: 'message',
+							params: {
+								mailboxId: $route.params.mailboxId,
+								threadId: 'asNew',
+								filter: $route.params.filter,
+							},
+							query: {
+								messageId: envelope.databaseId,
+							},
+						}">
+						{{ t('mail', 'Edit as new message') }}
+					</ActionRouter>
 					<ActionLink v-if="debug"
 						icon="icon-download"
 						:download="threadingFileName"
@@ -152,6 +166,7 @@
 import Actions from '@nextcloud/vue/dist/Components/Actions'
 import ActionButton from '@nextcloud/vue/dist/Components/ActionButton'
 import ActionLink from '@nextcloud/vue/dist/Components/ActionLink'
+import ActionRouter from '@nextcloud/vue/dist/Components/ActionRouter'
 import axios from '@nextcloud/axios'
 import Error from './Error'
 import Loading from './Loading'
@@ -176,6 +191,7 @@ export default {
 		Actions,
 		ActionButton,
 		ActionLink,
+		ActionRouter,
 		Error,
 		Loading,
 		Moment,
