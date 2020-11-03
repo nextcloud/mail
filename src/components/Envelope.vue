@@ -154,7 +154,7 @@ export default {
 			return this.$store.getters.getAccount(this.data.accountId)
 		},
 		accountColor() {
-			return calculateAccountColor(this.account.emailAddress)
+			return calculateAccountColor(this.account?.emailAddress ?? '')
 		},
 		draft() {
 			return this.data.flags.draft
