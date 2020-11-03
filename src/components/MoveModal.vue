@@ -30,16 +30,12 @@ export default {
 	data() {
 		return {
 			moving: false,
-			hasMovedEnvelopes: false,
 			destMailboxId: undefined,
 		}
 	},
 	methods: {
 		onClose() {
 			this.$emit('close')
-			if (this.hasMovedEnvelopes) {
-				this.$store.dispatch('syncEnvelopes', { mailboxId: this.destMailboxId })
-			}
 		},
 		async onMove() {
 			this.moving = true
@@ -54,14 +50,10 @@ export default {
 					return
 				}
 
-				await Promise.all(envelopeIds.map(async(id) => {
-					await this.$store.dispatch('moveMessage', {
-						id,
-						destMailboxId: this.destMailboxId,
-					})
-
-					this.hasMovedEnvelopes = true
-				}))
+				await Promise.all(envelopeIds.map((id) => this.$store.dispatch('moveMessage', {
+					id,
+					destMailboxId: this.destMailboxId,
+				})))
 
 				await this.$store.dispatch('syncEnvelopes', { mailboxId: this.destMailboxId })
 			} catch (error) {
