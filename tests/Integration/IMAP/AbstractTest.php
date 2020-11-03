@@ -105,9 +105,8 @@ abstract class AbstractTest extends TestCase {
 	 * @param string $name
 	 */
 	public function existsMailBox($name) {
-		$mb = $this->getTestAccount()->getMailbox($name);
 		try {
-			$mb->getStatus();
+			self::$account->getImapConnection()->status($name);
 			return true;
 		} catch (Exception $ex) {
 			return false;
