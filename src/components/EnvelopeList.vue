@@ -111,7 +111,7 @@ export default {
 		},
 		areAllSelectedRead() {
 			// returns false if at least one selected message has not been read yet
-			return this.selection.every((idx) => this.envelopes[idx].flags.unseen === false)
+			return this.selection.every((idx) => this.envelopes[idx].flags.seen === true)
 		},
 		areAllSelectedFavorite() {
 			// returns false if at least one selected message has not been favorited yet
@@ -127,11 +127,11 @@ export default {
 			return this.selection.includes(idx)
 		},
 		markSelectedSeenOrUnseen() {
-			const seenFlag = this.areAllSelectedRead
+			const seen = !this.areAllSelectedRead
 			this.selection.forEach((envelopeId) => {
-				this.$store.dispatch('markEnvelopeSeenOrUnseen', {
+				this.$store.dispatch('toggleEnvelopeSeen', {
 					envelope: this.envelopes[envelopeId],
-					seenFlag,
+					seen,
 				})
 			})
 			this.unselectAll()

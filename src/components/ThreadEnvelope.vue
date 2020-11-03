@@ -227,7 +227,7 @@ export default {
 				logger.debug(`message ${this.envelope.databaseId} fetched`, { message })
 
 				if (!this.envelope.flags.seen) {
-					this.$store.dispatch('toggleEnvelopeSeen', this.envelope)
+					this.$store.dispatch('toggleEnvelopeSeen', { envelope: this.envelope })
 				}
 
 				this.loading = false
@@ -275,7 +275,7 @@ export default {
 			})
 		},
 		onToggleSeen() {
-			this.$store.dispatch('toggleEnvelopeSeen', this.envelope)
+			this.$store.dispatch('toggleEnvelopeSeen', { envelope: this.envelope })
 		},
 		onToggleJunk() {
 			this.$store.dispatch('toggleEnvelopeJunk', this.envelope)
