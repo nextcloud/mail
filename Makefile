@@ -15,16 +15,13 @@ clean:
 	rm -rf $(build_dir)
 	rm -rf node_modules
 
-composer.phar:
-	curl -sS https://getcomposer.org/installer | php
-
 install-deps: install-composer-deps-dev install-npm-deps-dev
 
-install-composer-deps: composer.phar
-	php composer.phar install --no-dev -o
+install-composer-deps:
+	composer install --no-dev -o
 
-install-composer-deps-dev: composer.phar
-	php composer.phar install -o
+install-composer-deps-dev:
+	composer install -o
 
 install-npm-deps:
 	npm install --production
@@ -57,10 +54,6 @@ start-docker:
 	-e MAIL_ADDRESS=user@domain.tld \
 	-e MAIL_PASS=mypassword \
 	christophwurst/imap-devel
-
-update-composer: composer.phar
-	rm -f composer.lock
-	php composer.phar install --prefer-dist
 
 appstore:
 	krankerl package
