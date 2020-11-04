@@ -120,6 +120,8 @@ class Html {
 		$config->set('URI.Host', Util::getServerHostName());
 
 		$config->set('Filter.ExtractStyleBlocks', true);
+		$config->set('CSS.AllowTricky', true);
+		$config->set('CSS.Proprietary', true);
 
 		// Disable the cache since ownCloud has no really appcache
 		// TODO: Fix this - requires https://github.com/owncloud/core/issues/10767 to be fixed
