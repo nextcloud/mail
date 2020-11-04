@@ -7,7 +7,15 @@ Then open the Mail app from the app menu. Put in your mail account credentials a
 
 ## Configuration
 
-Certain advanced or experimental features need to be specifically enabled in your `config.php`:
+### Attachment size limit
+
+Admins can prevent users from attaching large attachments to their emails. Users will be asked to use link shares instead.
+
+```php
+'app.mail.attachment-size-limit' => 3*1024*1024,
+```
+
+The unit is bytes. The example about with limit to 3MB attachments. The default is 0 bytes which means no upload limit.
 
 ### Timeouts
 Depending on your mail host, it may be necessary to increase your IMAP and/or SMTP timeout threshold. Currently IMAP defaults to 20 seconds and SMTP defaults to 2 seconds. They can be changed as follows:

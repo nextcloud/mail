@@ -196,10 +196,12 @@ class PageControllerTest extends TestCase {
 		$this->userSession->expects($this->once())
 			->method('getUser')
 			->will($this->returnValue($user));
-		$this->config->expects($this->once())
+		$this->config
 			->method('getSystemValue')
-			->with('debug', false)
-			->will($this->returnValue(true));
+			->willReturnMap([
+				['debug', false, true],
+				['app.mail.attachment-size-limit', 0, 123],
+			]);
 		$this->config->expects($this->once())
 			->method('getAppValue')
 			->with('mail', 'installed_version')
@@ -225,6 +227,7 @@ class PageControllerTest extends TestCase {
 		$expected = new TemplateResponse($this->appName, 'index',
 			[
 				'debug' => true,
+				'attachment-size-limit' => 123,
 				'external-avatars' => 'true',
 				'app-version' => '1.2.3',
 				'accounts' => base64_encode(json_encode($accountsJson)),

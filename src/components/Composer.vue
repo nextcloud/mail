@@ -143,7 +143,10 @@
 				:is-reply-or-forward="isReply || isForward" />
 		</div>
 		<div class="composer-actions">
-			<ComposerAttachments v-model="attachments" :bus="bus" @upload="onAttachmentsUploading" />
+			<ComposerAttachments v-model="attachments"
+				:bus="bus"
+				:upload-size-limit="attachmentSizeLimit"
+				@upload="onAttachmentsUploading" />
 			<div class="composer-actions-right">
 				<p class="composer-actions-draft">
 					<span v-if="!canSaveDraft" id="draft-status">{{ t('mail', 'Can not save draft because this account does not have a drafts mailbox configured.') }}</span>
@@ -384,6 +387,9 @@ export default {
 		},
 		allRecipients() {
 			return this.selectTo.concat(this.selectCc).concat(this.selectBcc)
+		},
+		attachmentSizeLimit() {
+			return this.$store.getters.getPreference('attachment-size-limit')
 		},
 		selectableRecipients() {
 			return this.newRecipients
