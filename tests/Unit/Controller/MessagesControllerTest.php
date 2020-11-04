@@ -412,7 +412,7 @@ class MessagesControllerTest extends TestCase {
 		$mailboxId = 987;
 		$id = 123;
 		$flags = [
-			'unseen' => false
+			'seen' => false
 		];
 		$message = new \OCA\Mail\Db\Message();
 		$message->setUid(444);
@@ -434,7 +434,7 @@ class MessagesControllerTest extends TestCase {
 			->will($this->returnValue($this->account));
 		$this->mailManager->expects($this->once())
 			->method('flagMessage')
-			->with($this->account, 'INBOX', 444, 'unseen', false);
+			->with($this->account, 'INBOX', 444, 'seen', false);
 
 		$expected = new JSONResponse();
 		$response = $this->controller->setFlags(
