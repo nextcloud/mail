@@ -43,7 +43,7 @@
 									!group.account.collapsed ||
 									SHOW_COLLAPSED.indexOf(item.specialRole) !== -1
 							"
-							:key="item.databaseId"
+							:key="'mailbox-' + item.databaseId"
 							:account="group.account"
 							:mailbox="item" />
 						<NavigationMailbox
