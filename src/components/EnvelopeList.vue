@@ -92,14 +92,15 @@
 				class="icon-loading-small"
 				:class="{refreshing: refreshing}" />
 			<Envelope
-				v-for="env in envelopes"
+				v-for="(env, index) in envelopes"
 				:key="env.databaseId"
 				:data="env"
 				:mailbox="mailbox"
-				:selected="isEnvelopeSelected(envelopes.indexOf(env))"
+				:selected="isEnvelopeSelected(index)"
 				:select-mode="selectMode"
 				@delete="$emit('delete', env.databaseId)"
-				@update:selected="onEnvelopeSelectToggle(env, ...$event)" />
+				@update:selected="onEnvelopeSelectToggle(index, ...$event)"
+				@select-multiple="onEnvelopeSelectMultiple(index)" />
 			<div
 				v-if="loadMoreButton && !loadingMore"
 				:key="'list-collapse-' + searchQuery"
@@ -169,6 +170,7 @@ export default {
 		return {
 			selection: [],
 			showMoveModal: false,
+			lastToggledIndex: undefined,
 		}
 	},
 	computed: {
@@ -256,9 +258,8 @@ export default {
 			})
 			this.unselectAll()
 		},
-		onEnvelopeSelectToggle(envelope, selected) {
-			const idx = this.envelopes.indexOf(envelope)
-
+		setEnvelopeSelected(idx, selected) {
+			const envelope = this.envelopes[idx]
 			if (selected) {
 				envelope.flags.selected = true
 				this.selection.push(idx)
@@ -266,7 +267,25 @@ export default {
 				envelope.flags.selected = false
 				this.selection.splice(this.selection.indexOf(idx), 1)
 			}
+		},
+		onEnvelopeSelectToggle(index, selected) {
+			this.lastToggledIndex = index
+			this.setEnvelopeSelected(index, selected)
+		},
+		onEnvelopeSelectMultiple(index) {
+			if (this.lastToggledIndex === undefined) {
+				return
+			}
 
+			const start = Math.min(this.lastToggledIndex, index)
+			const end = Math.max(this.lastToggledIndex, index)
+			const selected = this.selection.includes(index)
+			for (let i = start; i <= end; i++) {
+				if (this.selection.includes(i) !== !selected) {
+					this.setEnvelopeSelected(i, !selected)
+				}
+			}
+			this.lastToggledIndex = index
 		},
 		unselectAll() {
 			this.envelopes.forEach((env) => {

@@ -27,7 +27,10 @@
 					class="checkbox"
 					type="checkbox"
 					:checked="selected">
-				<label :for="`select-checkbox-${data.uid}`" @click.prevent="toggleSelected" />
+				<label
+					:for="`select-checkbox-${data.uid}`"
+					@click.exact.prevent="toggleSelected"
+					@click.shift.prevent="onSelectMultiple" />
 			</p>
 		</div>
 		<div class="app-content-list-item-line-one" :title="addresses">
@@ -222,6 +225,9 @@ export default {
 		},
 		toggleSelected() {
 			this.$emit('update:selected', !this.selected)
+		},
+		onSelectMultiple() {
+			this.$emit('select-multiple')
 		},
 		onToggleFlagged() {
 			this.$store.dispatch('toggleEnvelopeFlagged', this.data)
