@@ -1,6 +1,25 @@
 # Changelog
 All notable changes to this project will be documented in this file.
 
+## 1.6.0 – 2020-11-04
+### Added
+- Moving mails to other mailboxes of the same account (also usable on mobile)
+- New account preferences to pick the mailbox for draft, sent and trash mails
+- Important/favorite/read indicators inside the threaded view
+- Enhanced multiselect using the Shift key to select ranges
+### Changed
+- Minimum php version increased to 7.3 due to 7.2 EOL
+- Reply button is now a link – user can write the reply in a new tab
+- Internal code cleanup
+- Dependency updates
+### Fixed
+- Saving all attachments of an email to Nextcloud Files
+- Quoting the forwarded email
+- Seen/unseen handling in multiselect
+- Font weight in thread view
+- Font color of "Add account" button in app settings
+- Browser error when navigating away from a draft that hasn't loaded yet
+
 ## 1.5.1 - 2020-10-27
 - Fix displaying of messages with empty from field
 - Fix translation of delete account dialogue
