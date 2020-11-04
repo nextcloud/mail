@@ -590,16 +590,17 @@ export default {
 			})
 		})
 	},
-	toggleEnvelopeSeen({ commit, getters }, envelope) {
+	toggleEnvelopeSeen({ commit, getters }, { envelope, seen }) {
 		// Change immediately and switch back on error
 		const oldState = envelope.flags.seen
+		const newState = seen === undefined ? !oldState : seen
 		commit('flagEnvelope', {
 			envelope,
 			flag: 'seen',
-			value: !oldState,
+			value: newState,
 		})
 
-		setEnvelopeFlag(envelope.databaseId, 'seen', !oldState).catch((e) => {
+		setEnvelopeFlag(envelope.databaseId, 'seen', newState).catch((e) => {
 			console.error('could not toggle message seen state', e)
 
 			// Revert change
@@ -646,26 +647,6 @@ export default {
 			commit('flagEnvelope', {
 				envelope,
 				flag: 'flagged',
-				value: oldState,
-			})
-		})
-	},
-	markEnvelopeSeenOrUnseen({ commit, getters }, { envelope, seenFlag }) {
-		// Change immediately and switch back on error
-		const oldState = envelope.flags.unseen
-		commit('flagEnvelope', {
-			envelope,
-			flag: 'unseen',
-			value: seenFlag,
-		})
-
-		setEnvelopeFlag(envelope.databaseId, 'unseen', seenFlag).catch((e) => {
-			console.error('could not mark message ' + envelope.uid + ' seen/unseen', e)
-
-			// Revert change
-			commit('flagEnvelope', {
-				envelope,
-				flag: 'unseen',
 				value: oldState,
 			})
 		})

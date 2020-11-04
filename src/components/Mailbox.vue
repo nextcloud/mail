@@ -348,7 +348,7 @@ export default {
 				break
 			case 'unseen':
 				logger.debug('marking message as seen/unseen via shortkey', { env })
-				this.$store.dispatch('toggleEnvelopeSeen', env).catch((error) =>
+				this.$store.dispatch('toggleEnvelopeSeen', { envelope: env }).catch((error) =>
 					logger.error('could not mark envelope as seen/unseen via shortkey', {
 						env,
 						error,
