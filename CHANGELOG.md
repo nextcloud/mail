@@ -1,6 +1,12 @@
 # Changelog
 All notable changes to this project will be documented in this file.
 
+## 1.5.2 – 2020-11-04
+### Fixed
+- Saving all attachments of an email to Nextcloud Files
+- Quoting the forwarded email
+- Seen/unseen handling in multiselect
+
 ## 1.5.1 - 2020-10-27
 - Fix displaying of messages with empty from field
 - Fix translation of delete account dialogue
