@@ -90,6 +90,7 @@
     "Move" : "Déplacer",
     "Delete" : "Supprimer",
     "Blind copy recipients only" : "Destinataires en copie cachée seulement",
+    "Could not delete message" : "Impossible de supprimer le message",
     "Mark {number} unread" : "Marquer {number} non-lus",
     "Mark {number} read" : "Marquer {number} lus",
     "Unfavorite {number}" : "Retirer des favoris {number}",
