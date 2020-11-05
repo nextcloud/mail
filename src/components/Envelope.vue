@@ -1,5 +1,16 @@
 <template>
-	<router-link class="app-content-list-item" :class="{seen: data.flags.seen, draft, selected: selected}" :to="link">
+	<router-link
+		v-draggable-envelope="{
+			accountId: data.accountId ? data.accountId : mailbox.accountId,
+			mailboxId: data.mailboxId,
+			envelopeId: data.databaseId,
+			draggableLabel: `${data.subject} (${data.from[0].label})`,
+			selectedEnvelopes,
+		}"
+		class="app-content-list-item"
+		:class="{seen: data.flags.seen, draft, selected: selected}"
+		:to="link"
+		:data-envelope-id="data.databaseId">
 		<div
 			v-if="mailbox.isUnified"
 			class="mail-message-account-color"
@@ -133,6 +144,7 @@ import { matchError } from '../errors/match'
 import NoTrashMailboxConfiguredError
 	from '../errors/NoTrashMailboxConfiguredError'
 import logger from '../logger'
+import { DraggableEnvelopeDirective } from '../directives/drag-and-drop/draggable-envelope'
 
 export default {
 	name: 'Envelope',
@@ -143,6 +155,9 @@ export default {
 		Avatar,
 		Moment,
 		MoveModal,
+	},
+	directives: {
+		draggableEnvelope: DraggableEnvelopeDirective,
 	},
 	props: {
 		data: {
@@ -160,6 +175,11 @@ export default {
 		selected: {
 			type: Boolean,
 			default: false,
+		},
+		selectedEnvelopes: {
+			type: Array,
+			required: false,
+			default: () => [],
 		},
 	},
 	data() {

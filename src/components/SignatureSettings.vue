@@ -63,7 +63,6 @@ export default {
 		return {
 			loading: false,
 			bus: new Vue(),
-			signature: '',
 		}
 	},
 	created() {

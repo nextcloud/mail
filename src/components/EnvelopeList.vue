@@ -98,6 +98,7 @@
 				:mailbox="mailbox"
 				:selected="selection.includes(env.databaseId)"
 				:select-mode="selectMode"
+				:selected-envelopes="selectedEnvelopes"
 				@delete="$emit('delete', env.databaseId)"
 				@update:selected="onEnvelopeSelectToggle(env, index, ...$event)"
 				@select-multiple="onEnvelopeSelectMultiple(env, index)" />
@@ -125,6 +126,7 @@ import { matchError } from '../errors/match'
 import NoTrashMailboxConfiguredError
 	from '../errors/NoTrashMailboxConfiguredError'
 import { differenceWith } from 'ramda'
+import dragEventBus from '../directives/drag-and-drop/util/dragEventBus'
 
 export default {
 	name: 'EnvelopeList',
@@ -202,7 +204,20 @@ export default {
 				})
 		},
 	},
+	mounted() {
+		dragEventBus.$on('envelopesDropped', this.unselectAll)
+	},
+	beforeDestroy() {
+		dragEventBus.$off('envelopesDropped', this.unselectAll)
+	},
 	methods: {
+		isEnvelopeSelected(idx) {
+			if (this.selection.length === 0) {
+				return false
+			}
+
+			return this.selection.includes(idx)
+		},
 		markSelectedSeenOrUnseen() {
 			const seen = !this.areAllSelectedRead
 			this.selectedEnvelopes.forEach((envelope) => {
