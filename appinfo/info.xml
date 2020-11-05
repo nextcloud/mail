@@ -22,7 +22,9 @@
 	<author>Jan-Christoph Borchardt</author>
 	<namespace>Mail</namespace>
 	<documentation>
-		<admin>https://github.com/nextcloud/mail#readme</admin>
+		<user>https://github.com/nextcloud/mail/blob/master/doc/user.md</user>
+		<admin>https://github.com/nextcloud/mail/blob/master/doc/admin.md</admin>
+		<developer>https://github.com/nextcloud/mail/blob/master/doc/developer.md</developer>
 	</documentation>
 	<category>social</category>
 	<category>office</category>
