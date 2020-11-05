@@ -151,6 +151,7 @@ export default {
 				this.$route.params.threadId === 'new'
 				|| this.$route.params.threadId === 'reply'
 				|| this.$route.params.threadId === 'replyAll'
+				|| this.$route.params.threadId === 'asNew'
 			)
 		},
 	},

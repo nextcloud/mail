@@ -25,6 +25,7 @@
 import AppContentDetails from '@nextcloud/vue/dist/Components/AppContentDetails'
 import Axios from '@nextcloud/axios'
 import { generateUrl } from '@nextcloud/router'
+import { showWarning } from '@nextcloud/dialogs'
 import { translate as t } from '@nextcloud/l10n'
 
 import { buildForwardSubject, buildReplySubject, buildRecipients as buildReplyRecipients } from '../ReplyBuilder'
@@ -100,6 +101,21 @@ export default {
 						body: this.originalBody,
 						originalBody: this.originalBody,
 						replyTo: message,
+					}
+				} else if (this.$route.params.threadId === 'asNew') {
+					logger.debug('composing as new', { original: this.original })
+
+					if (this.original.attachments.length) {
+						showWarning(t('mail', 'Attachments were not copied. Please add them manually.'))
+					}
+
+					return {
+						accountId: message.accountId,
+						to: message.to,
+						cc: message.cc,
+						subject: message.subject,
+						body: this.originalBody,
+						originalBody: this.originalBody,
 					}
 				} else {
 					// forward
