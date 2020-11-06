@@ -24,7 +24,6 @@ namespace OCA\Mail\Tests\Unit\Http;
 
 use ChristophWurst\Nextcloud\Testing\TestCase;
 use OCA\Mail\Http\HtmlResponse;
-use OCP\Util;
 
 class HtmlResponseTest extends TestCase {
 
@@ -35,18 +34,13 @@ class HtmlResponseTest extends TestCase {
 	 * @param $contentType
 	 */
 	public function testIt($content) {
-		$defaultResp = new HtmlResponse($content);
-		$plainResp = new HtmlResponse($content, true);
-		$richResp = new HtmlResponse($content, false);
+		$nonce = "abc123";
+		$scriptUrl = "next.cloud/script.js";
+		$plainResp = HtmlResponse::plain($content);
+		$richResp = HtmlResponse::withResizer($content, $nonce, $scriptUrl);
 
-		$scriptSrcRegex = preg_quote(Util::linkToAbsolute('mail', 'js/htmlresponse.js'), '/');
-		$contentRegex = preg_quote($content, '/');
-		$responseRegex = '/<script nonce=".+" src="' . $scriptSrcRegex . '"><\/script>'
-			. $contentRegex . '/';
-
-		$this->assertMatchesRegularExpression($responseRegex, $defaultResp->render());
+		$this->assertStringContainsString("<script nonce=\"$nonce\" src=\"$scriptUrl\"></script>", $richResp->render());
 		$this->assertEquals($content, $plainResp->render());
-		$this->assertMatchesRegularExpression($responseRegex, $richResp->render());
 	}
 
 	public function providesResponseData() {
