@@ -25,7 +25,6 @@ declare(strict_types=1);
 
 namespace OCA\Mail\Http;
 
-use OCP\Util;
 use OCP\AppFramework\Http\Response;
 
 class HtmlResponse extends Response {
@@ -36,14 +35,42 @@ class HtmlResponse extends Response {
 	/** @var bool */
 	private $plain;
 
+	/** @var string|null */
+	private $nonce;
+
+	/** @var string|null */
+	private $scriptUrl;
+
 	/**
 	 * @param string $content message html content
 	 * @param bool $plain do not inject scripts if true (default=false)
+	 * @param string|null $nonce
+	 * @param string|null $scriptUrl
 	 */
-	public function __construct(string $content, bool $plain=false) {
+	private function __construct(string $content,
+								 bool $plain = false,
+								 string $nonce = null,
+								 string $scriptUrl = null) {
 		parent::__construct();
 		$this->content = $content;
 		$this->plain = $plain;
+		$this->nonce = $nonce;
+		$this->scriptUrl = $scriptUrl;
+	}
+
+	public static function plain(string $content): self {
+		return new self($content, true);
+	}
+
+	public static function withResizer(string $content,
+									   string $nonce,
+									   string $scriptUrl): self {
+		return new self(
+			$content,
+			false,
+			$nonce,
+			$scriptUrl,
+		);
 	}
 
 	/**
@@ -56,9 +83,6 @@ class HtmlResponse extends Response {
 			return $this->content;
 		}
 
-		$nonce = \OC::$server->getContentSecurityPolicyNonceManager()->getNonce();
-		$scriptSrc = Util::linkToAbsolute('mail', 'js/htmlresponse.js');
-		return '<script nonce="' . $nonce. '" src="' . $scriptSrc . '"></script>'
-			.  $this->content;
+		return '<script nonce="' . $this->nonce . '" src="' . $this->scriptUrl . '"></script>' . $this->content;
 	}
 }

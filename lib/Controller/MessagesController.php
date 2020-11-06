@@ -31,6 +31,7 @@ declare(strict_types=1);
 namespace OCA\Mail\Controller;
 
 use Exception;
+use OC\Security\CSP\ContentSecurityPolicyNonceManager;
 use OCA\Mail\Contracts\IMailManager;
 use OCA\Mail\Contracts\IMailSearch;
 use OCA\Mail\Exception\ClientException;
@@ -87,16 +88,23 @@ class MessagesController extends Controller {
 	/** @var IURLGenerator */
 	private $urlGenerator;
 
+	/** @var ContentSecurityPolicyNonceManager */
+	private $nonceManager;
+
 	/**
 	 * @param string $appName
 	 * @param IRequest $request
 	 * @param AccountService $accountService
+	 * @param IMailManager $mailManager
+	 * @param IMailSearch $mailSearch
+	 * @param ItineraryService $itineraryService
 	 * @param string $UserId
 	 * @param $userFolder
 	 * @param LoggerInterface $logger
 	 * @param IL10N $l10n
 	 * @param IMimeTypeDetector $mimeTypeDetector
 	 * @param IURLGenerator $urlGenerator
+	 * @param ContentSecurityPolicyNonceManager $nonceManager
 	 */
 	public function __construct(string $appName,
 								IRequest $request,
@@ -109,7 +117,8 @@ class MessagesController extends Controller {
 								LoggerInterface $logger,
 								IL10N $l10n,
 								IMimeTypeDetector $mimeTypeDetector,
-								IURLGenerator $urlGenerator) {
+								IURLGenerator $urlGenerator,
+								ContentSecurityPolicyNonceManager $nonceManager) {
 		parent::__construct($appName, $request);
 
 		$this->accountService = $accountService;
@@ -123,6 +132,7 @@ class MessagesController extends Controller {
 		$this->mimeTypeDetector = $mimeTypeDetector;
 		$this->urlGenerator = $urlGenerator;
 		$this->mailManager = $mailManager;
+		$this->nonceManager = $nonceManager;
 	}
 
 	/**
@@ -357,17 +367,23 @@ class MessagesController extends Controller {
 				);
 			}
 
-			$htmlResponse = new HtmlResponse(
-				$this->mailManager->getImapMessage(
-					$account,
-					$mailbox,
-					$message->getUid(),
-					true
-				)->getHtmlBody(
-					$id
-				),
-				$plain
+			$html = $this->mailManager->getImapMessage(
+				$account,
+				$mailbox,
+				$message->getUid(),
+				true
+			)->getHtmlBody(
+				$id
 			);
+			$htmlResponse = $plain ?
+				HtmlResponse::plain($html) :
+				HtmlResponse::withResizer(
+					$html,
+					$this->nonceManager->getNonce(),
+					$this->urlGenerator->getAbsoluteURL(
+						$this->urlGenerator->linkTo('mail', 'js/htmlresponse.js')
+					)
+				);
 
 			// Harden the default security policy
 			$policy = new ContentSecurityPolicy();

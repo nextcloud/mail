@@ -26,6 +26,7 @@ namespace OCA\Mail\Tests\Unit\Controller;
 
 use ChristophWurst\Nextcloud\Testing\TestCase;
 use OC\AppFramework\Http\Request;
+use OC\Security\CSP\ContentSecurityPolicyNonceManager;
 use OCA\Mail\Account;
 use OCA\Mail\Attachment;
 use OCA\Mail\Contracts\IMailManager;
@@ -106,6 +107,9 @@ class MessagesControllerTest extends TestCase {
 	/** @var MockObject|IURLGenerator */
 	private $urlGenerator;
 
+	/** @var MockObject|ContentSecurityPolicyNonceManager */
+	private $nonceManager;
+
 	/** @var ITimeFactory */
 	private $oldFactory;
 
@@ -125,6 +129,7 @@ class MessagesControllerTest extends TestCase {
 		$this->l10n = $this->createMock(IL10N::class);
 		$this->mimeTypeDetector = $this->createMock(IMimeTypeDetector::class);
 		$this->urlGenerator = $this->createMock(IURLGenerator::class);
+		$this->nonceManager = $this->createMock(ContentSecurityPolicyNonceManager::class);
 
 		$timeFactory = $this->createMocK(ITimeFactory::class);
 		$timeFactory->expects($this->any())
@@ -147,7 +152,8 @@ class MessagesControllerTest extends TestCase {
 			$this->logger,
 			$this->l10n,
 			$this->mimeTypeDetector,
-			$this->urlGenerator
+			$this->urlGenerator,
+			$this->nonceManager,
 		);
 
 		$this->account = $this->createMock(Account::class);
@@ -177,50 +183,56 @@ class MessagesControllerTest extends TestCase {
 		$message->setUid(123);
 		$mailbox->setAccountId($accountId);
 		$mailbox->setName($folderId);
-		$this->mailManager->expects($this->exactly(3))
+		$this->mailManager->expects($this->exactly(2))
 			->method('getMessage')
 			->with($this->userId, $messageId)
 			->willReturn($message);
-		$this->mailManager->expects($this->exactly(3))
+		$this->mailManager->expects($this->exactly(2))
 			->method('getMailbox')
 			->with($this->userId, $mailboxId)
 			->willReturn($mailbox);
-		$this->accountService->expects($this->exactly(3))
+		$this->accountService->expects($this->exactly(2))
 			->method('find')
 			->with($this->equalTo($this->userId), $this->equalTo($accountId))
 			->will($this->returnValue($this->account));
 		$imapMessage = $this->createMock(IMAPMessage::class);
-		$this->mailManager->expects($this->exactly(3))
+		$this->mailManager->expects($this->exactly(2))
 			->method('getImapMessage')
 			->with($this->account, $mailbox, 123, true)
 			->willReturn($imapMessage);
 
-		$expectedDefaultResponse = new HtmlResponse('');
-		$expectedDefaultResponse->cacheFor(3600);
-
-		$expectedPlainResponse = new HtmlResponse('', true);
+		$expectedPlainResponse = HtmlResponse::plain('');
 		$expectedPlainResponse->cacheFor(3600);
 
-		$expectedRichResponse = new HtmlResponse('', false);
+		$nonce = "abc123";
+		$relativeScriptUrl = "/script.js";
+		$scriptUrl = "next.cloud/script.js";
+		$this->nonceManager->expects($this->once())
+			->method('getNonce')
+			->willReturn($nonce);
+		$this->urlGenerator->expects($this->once())
+			->method('linkTo')
+			->with('mail', 'js/htmlresponse.js')
+			->willReturn($relativeScriptUrl);
+		$this->urlGenerator->expects($this->once())
+			->method('getAbsoluteURL')
+			->with($relativeScriptUrl)
+			->willReturn($scriptUrl);
+		$expectedRichResponse = HtmlResponse::withResizer('', $nonce, $scriptUrl);
 		$expectedRichResponse->cacheFor(3600);
 
-		if (class_exists('\OCP\AppFramework\Http\ContentSecurityPolicy')) {
-			$policy = new ContentSecurityPolicy();
-			$policy->allowEvalScript(false);
-			$policy->disallowScriptDomain('\'self\'');
-			$policy->disallowConnectDomain('\'self\'');
-			$policy->disallowFontDomain('\'self\'');
-			$policy->disallowMediaDomain('\'self\'');
-			$expectedDefaultResponse->setContentSecurityPolicy($policy);
-			$expectedPlainResponse->setContentSecurityPolicy($policy);
-			$expectedRichResponse->setContentSecurityPolicy($policy);
-		}
+		$policy = new ContentSecurityPolicy();
+		$policy->allowEvalScript(false);
+		$policy->disallowScriptDomain('\'self\'');
+		$policy->disallowConnectDomain('\'self\'');
+		$policy->disallowFontDomain('\'self\'');
+		$policy->disallowMediaDomain('\'self\'');
+		$expectedPlainResponse->setContentSecurityPolicy($policy);
+		$expectedRichResponse->setContentSecurityPolicy($policy);
 
-		$actualDefaultResponse = $this->controller->getHtmlBody($messageId);
 		$actualPlainResponse = $this->controller->getHtmlBody($messageId, true);
 		$actualRichResponse = $this->controller->getHtmlBody($messageId, false);
 
-		$this->assertEquals($expectedDefaultResponse, $actualDefaultResponse);
 		$this->assertEquals($expectedPlainResponse, $actualPlainResponse);
 		$this->assertEquals($expectedRichResponse, $actualRichResponse);
 	}
