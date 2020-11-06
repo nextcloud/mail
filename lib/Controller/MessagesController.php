@@ -336,12 +336,13 @@ class MessagesController extends Controller {
 	 * @TrapError
 	 *
 	 * @param int $id
+	 * @param bool $plain do not inject scripts if true (default=false)
 	 *
 	 * @return HtmlResponse|TemplateResponse
 	 *
 	 * @throws ClientException
 	 */
-	public function getHtmlBody(int $id): Response {
+	public function getHtmlBody(int $id, bool $plain=false): Response {
 		try {
 			try {
 				$message = $this->mailManager->getMessage($this->currentUserId, $id);
@@ -364,7 +365,8 @@ class MessagesController extends Controller {
 					true
 				)->getHtmlBody(
 					$id
-				)
+				),
+				$plain
 			);
 
 			// Harden the default security policy

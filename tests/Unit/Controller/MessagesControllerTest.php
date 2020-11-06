@@ -177,26 +177,33 @@ class MessagesControllerTest extends TestCase {
 		$message->setUid(123);
 		$mailbox->setAccountId($accountId);
 		$mailbox->setName($folderId);
-		$this->mailManager->expects($this->once())
+		$this->mailManager->expects($this->exactly(3))
 			->method('getMessage')
 			->with($this->userId, $messageId)
 			->willReturn($message);
-		$this->mailManager->expects($this->once())
+		$this->mailManager->expects($this->exactly(3))
 			->method('getMailbox')
 			->with($this->userId, $mailboxId)
 			->willReturn($mailbox);
-		$this->accountService->expects($this->once())
+		$this->accountService->expects($this->exactly(3))
 			->method('find')
 			->with($this->equalTo($this->userId), $this->equalTo($accountId))
 			->will($this->returnValue($this->account));
 		$imapMessage = $this->createMock(IMAPMessage::class);
-		$this->mailManager->expects($this->once())
+		$this->mailManager->expects($this->exactly(3))
 			->method('getImapMessage')
 			->with($this->account, $mailbox, 123, true)
 			->willReturn($imapMessage);
 
-		$expectedResponse = new HtmlResponse('');
-		$expectedResponse->cacheFor(3600);
+		$expectedDefaultResponse = new HtmlResponse('');
+		$expectedDefaultResponse->cacheFor(3600);
+
+		$expectedPlainResponse = new HtmlResponse('', true);
+		$expectedPlainResponse->cacheFor(3600);
+
+		$expectedRichResponse = new HtmlResponse('', false);
+		$expectedRichResponse->cacheFor(3600);
+
 		if (class_exists('\OCP\AppFramework\Http\ContentSecurityPolicy')) {
 			$policy = new ContentSecurityPolicy();
 			$policy->allowEvalScript(false);
@@ -204,12 +211,18 @@ class MessagesControllerTest extends TestCase {
 			$policy->disallowConnectDomain('\'self\'');
 			$policy->disallowFontDomain('\'self\'');
 			$policy->disallowMediaDomain('\'self\'');
-			$expectedResponse->setContentSecurityPolicy($policy);
+			$expectedDefaultResponse->setContentSecurityPolicy($policy);
+			$expectedPlainResponse->setContentSecurityPolicy($policy);
+			$expectedRichResponse->setContentSecurityPolicy($policy);
 		}
 
-		$actualResponse = $this->controller->getHtmlBody($messageId);
+		$actualDefaultResponse = $this->controller->getHtmlBody($messageId);
+		$actualPlainResponse = $this->controller->getHtmlBody($messageId, true);
+		$actualRichResponse = $this->controller->getHtmlBody($messageId, false);
 
-		$this->assertEquals($expectedResponse, $actualResponse);
+		$this->assertEquals($expectedDefaultResponse, $actualDefaultResponse);
+		$this->assertEquals($expectedPlainResponse, $actualPlainResponse);
+		$this->assertEquals($expectedRichResponse, $actualRichResponse);
 	}
 
 	public function testDownloadAttachment() {

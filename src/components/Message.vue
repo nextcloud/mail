@@ -24,7 +24,7 @@
 		<div v-if="message.itineraries.length > 0" class="message-itinerary">
 			<Itinerary :entries="message.itineraries" :message-id="message.messageId" />
 		</div>
-		<MessageHTMLBody v-if="message.hasHtmlBody" :url="htmlUrl" />
+		<MessageHTMLBody v-if="message.hasHtmlBody" :url="htmlUrl" :full-height="fullHeight" />
 		<MessageEncryptedBody v-else-if="isEncrypted" :body="message.body" :from="from" />
 		<MessagePlainTextBody v-else :body="message.body" :signature="message.signature" />
 		<Popover v-if="message.attachments[0]" class="attachment-popover">
@@ -73,6 +73,11 @@ export default {
 		message: {
 			required: true,
 			type: Object,
+		},
+		fullHeight: {
+			required: false,
+			type: Boolean,
+			default: false,
 		},
 	},
 	computed: {

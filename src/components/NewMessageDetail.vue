@@ -253,7 +253,7 @@ export default {
 				if (message.hasHtmlBody) {
 					logger.debug('original message has HTML body')
 					const resp = await Axios.get(
-						generateUrl('/apps/mail/api/messages/{id}/html', {
+						generateUrl('/apps/mail/api/messages/{id}/html?plain=true', {
 							id,
 						})
 					)
