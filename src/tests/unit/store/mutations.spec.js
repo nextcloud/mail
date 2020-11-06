@@ -643,7 +643,6 @@ describe('Vuex store mutations', () => {
 			},
 			envelopes: {
 				12345: {
-					accountId: 13,
 					mailboxId: 27,
 					databaseId: 12345,
 					uid: 321,
@@ -657,6 +656,82 @@ describe('Vuex store mutations', () => {
 					accountId: 13,
 					envelopeLists: {
 						'': [12345],
+					},
+				},
+			},
+		})
+	})
+
+	it('adds envelopes with overlapping timestamps', () => {
+		const state = {
+			accounts: {
+				[UNIFIED_ACCOUNT_ID]: {
+					accountId: UNIFIED_ACCOUNT_ID,
+					id: UNIFIED_ACCOUNT_ID,
+					mailboxes: [],
+				},
+			},
+			envelopes: {},
+			mailboxes: {
+				27: {
+					name: 'INBOX',
+					accountId: 13,
+					envelopeLists: {},
+				},
+			},
+		}
+
+		mutations.addEnvelope(state, {
+			query: undefined,
+			envelope: {
+				mailboxId: 27,
+				databaseId: 12345,
+				id: 123,
+				subject: 'henlo',
+				uid: 321,
+			},
+		})
+		mutations.addEnvelope(state, {
+			query: undefined,
+			envelope: {
+				mailboxId: 27,
+				databaseId: 12346,
+				id: 124,
+				subject: 'henlo 2',
+				uid: 322,
+			},
+		})
+
+		expect(state).to.deep.equal({
+			accounts: {
+				[UNIFIED_ACCOUNT_ID]: {
+					accountId: UNIFIED_ACCOUNT_ID,
+					id: UNIFIED_ACCOUNT_ID,
+					mailboxes: [],
+				},
+			},
+			envelopes: {
+				12345: {
+					mailboxId: 27,
+					databaseId: 12345,
+					uid: 321,
+					id: 123,
+					subject: 'henlo',
+				},
+				12346: {
+					mailboxId: 27,
+					databaseId: 12346,
+					id: 124,
+					subject: 'henlo 2',
+					uid: 322,
+				},
+			},
+			mailboxes: {
+				27: {
+					name: 'INBOX',
+					accountId: 13,
+					envelopeLists: {
+						'': [12345, 12346],
 					},
 				},
 			},
@@ -710,7 +785,6 @@ describe('Vuex store mutations', () => {
 				12345: {
 					databaseId: 12345,
 					mailboxId: 27,
-					accountId: 2,
 					uid: 321,
 					subject: 'henlo',
 				},
