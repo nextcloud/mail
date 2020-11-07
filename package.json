@@ -50,7 +50,7 @@
     "html-to-text": "^5.1.1",
     "ical.js": "^1.4.0",
     "iframe-resizer": "^4.2.11",
-    "js-base64": "^3.5.2",
+    "js-base64": "^3.6.0",
     "lodash": "^4.17.20",
     "md5": "^2.3.0",
     "nextcloud_issuetemplate_builder": "^0.1.0",
