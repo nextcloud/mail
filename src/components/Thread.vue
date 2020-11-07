@@ -8,10 +8,12 @@
 						{{ threadSubject }}
 					</h2>
 					<div class="avatar-header" ref="avatarHeader">
-						<RecipientBubble v-for="participant in threadParticipants"
+						<Avatar v-for="participant in threadParticipants.slice(0,Math.floor(parentWidth/22))"
+							class="avatar"
 							:key="participant.email"
 							:email="participant.email"
-							:label="participant.label" />
+							:display-name="participant.label"
+							:size=20 />
 					</div>
 				</div>
 			</div>
@@ -30,25 +32,30 @@
 <script>
 import AppContentDetails from '@nextcloud/vue/dist/Components/AppContentDetails'
 import { prop, uniqBy } from 'ramda'
+import { ReactiveRefs } from 'vue-reactive-refs'
+import Vue from 'vue'
 
 import { getRandomMessageErrorMessage } from '../util/ErrorMessageFactory'
 import Loading from './Loading'
 import logger from '../logger'
-import RecipientBubble from './RecipientBubble'
+import Avatar from './Avatar'
 import ThreadEnvelope from './ThreadEnvelope'
+
+Vue.use(ReactiveRefs)
 
 export default {
 	name: 'Thread',
 	components: {
-		RecipientBubble,
+		Avatar,
 		AppContentDetails,
 		Loading,
 		ThreadEnvelope,
 	},
 
+	refs: ['avatarHeader'],
+
 	data() {
 		return {
-			shownThreadParticipants: undefined,
 			loading: true,
 			message: undefined,
 			errorMessage: '',
@@ -56,7 +63,15 @@ export default {
 			expandedThreads: [],
 		}
 	},
+
 	computed: {
+		parentWidth() {
+			// Display maximum 10 recipient bubbles as long as this component hasn't finished rendering
+			// Note: This property needs 'vue-reactive-refs'
+			if (!this.$refs.avatarHeader) return 220
+
+			return this.$refs.avatarHeader.clientWidth
+		},
 		threadId() {
 			return parseInt(this.$route.params.threadId, 10)
 		},
@@ -97,26 +112,6 @@ export default {
 		this.resetThread()
 	},
 	methods: {
-		clipAvatarHeader() {
-			this.$nextTick(() => {
-				const avatarHeader = this.$refs.avatarHeader
-				let childrenWidth = 0
-				let i = 0
-
-				while (childrenWidth < avatarHeader.clientWidth && i < this.threadParticipants.length) {
-					childrenWidth += avatarHeader.childNodes[i].clientWidth
-					i++
-				}
-
-				const toShow = (i < this.threadParticipants.length) ?  i - 2 : this.threadParticipants.length
-				const recipients = this.thread.flatMap(envelope => {
-					return envelope.from.concat(envelope.to).concat(envelope.cc)
-				})
-				const uniqRecipients = uniqBy(prop('email'), recipients)
-				uniqRecipients.splice(toShow)
-				this.shownThreadParticipants = uniqRecipients
-			}, this)
-		},
 		toggleExpand(threadId) {
 			if (!this.expandedThreads.includes(threadId)) {
 				console.debug(`expand thread ${threadId}`)
@@ -178,8 +173,6 @@ export default {
 					this.loading = false
 				}
 			}
-
-			this.clipAvatarHeader()
 		},
 	},
 }
@@ -326,6 +319,9 @@ export default {
 	font-family: monospace;
 	white-space: pre-wrap;
 	user-select: text;
+}
+.avatar {
+	margin-right: 2px;
 }
 .avatar-header {
 	max-height: 20px;

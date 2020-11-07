@@ -66,6 +66,7 @@
     "vue-infinite-scroll": "^2.0.2",
     "vue-material-design-icons": "^4.11.0",
     "vue-on-click-outside": "^1.0.3",
+    "vue-reactive-refs": "^0.0.2",
     "vue-router": "^3.4.9",
     "vue-scroll": "^2.1.13",
     "vue-shortkey": "^3.1.7",
