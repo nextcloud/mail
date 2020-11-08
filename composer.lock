@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "e1eec7ef8d0ac75a4a81539d89b48d74",
+    "content-hash": "8b164f0f1b660562423c0b6f13786f08",
     "packages": [
         {
             "name": "amphp/amp",
@@ -493,16 +493,16 @@
         },
         {
             "name": "cerdic/css-tidy",
-            "version": "v1.7.2",
+            "version": "v1.7.3",
             "source": {
                 "type": "git",
                 "url": "https://github.com/Cerdic/CSSTidy.git",
-                "reference": "b6b466e206677b43cb1a05c4a364d88ee5d2cf08"
+                "reference": "919411b2c16ab985f7c61e0d9bb6c35d080f6cf6"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/Cerdic/CSSTidy/zipball/b6b466e206677b43cb1a05c4a364d88ee5d2cf08",
-                "reference": "b6b466e206677b43cb1a05c4a364d88ee5d2cf08",
+                "url": "https://api.github.com/repos/Cerdic/CSSTidy/zipball/919411b2c16ab985f7c61e0d9bb6c35d080f6cf6",
+                "reference": "919411b2c16ab985f7c61e0d9bb6c35d080f6cf6",
                 "shasum": ""
             },
             "require": {
@@ -534,7 +534,7 @@
                 }
             ],
             "description": "CSSTidy is a CSS minifier",
-            "time": "2020-10-09T11:40:00+00:00"
+            "time": "2020-11-03T13:08:18+00:00"
         },
         {
             "name": "christophwurst/kitinerary",

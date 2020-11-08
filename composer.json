@@ -18,7 +18,7 @@
 	"require": {
 		"php": ">=7.3",
 		"arthurhoaro/favicon": "^1.2",
-		"cerdic/css-tidy": "v1.7.2",
+		"cerdic/css-tidy": "v1.7.3",
 		"christophwurst/kitinerary": "^0.2",
 		"christophwurst/kitinerary-bin": "^0.2",
 		"christophwurst/kitinerary-flatpak": "^0.2",
