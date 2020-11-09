@@ -54,16 +54,13 @@ import Vue from 'vue'
 import Logger from '../logger'
 import { uploadLocalAttachment } from '../service/AttachmentService'
 import { shareFile } from '../service/FileSharingService'
+import EventBus from '../util/EventBus'
 
 export default {
 	name: 'ComposerAttachments',
 	props: {
 		value: {
 			type: Array,
-			required: true,
-		},
-		bus: {
-			type: Object,
 			required: true,
 		},
 	},
@@ -85,9 +82,9 @@ export default {
 		},
 	},
 	created() {
-		this.bus.$on('onAddLocalAttachment', this.onAddLocalAttachment)
-		this.bus.$on('onAddCloudAttachment', this.onAddCloudAttachment)
-		this.bus.$on('onAddCloudAttachmentLink', this.onAddCloudAttachmentLink)
+		EventBus.$on('onAddLocalAttachment', this.onAddLocalAttachment)
+		EventBus.$on('onAddCloudAttachment', this.onAddCloudAttachment)
+		EventBus.$on('onAddCloudAttachmentLink', this.onAddCloudAttachmentLink)
 	},
 	methods: {
 		onAddLocalAttachment() {
@@ -160,7 +157,7 @@ export default {
 			)
 		},
 		appendToBodyAtCursor(toAppend) {
-			this.bus.$emit('appendToBodyAtCursor', toAppend)
+			EventBus.$emit('appendToBodyAtCursor', toAppend)
 		},
 	},
 }

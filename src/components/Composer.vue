@@ -121,7 +121,6 @@
 				class="message-body"
 				:placeholder="t('mail', 'Write message …')"
 				:focus="isReply"
-				:bus="bus"
 				@input="onInputChanged" />
 			<TextEditor
 				v-else-if="!encrypt && !editorPlainText"
@@ -132,7 +131,6 @@
 				class="message-body"
 				:placeholder="t('mail', 'Write message …')"
 				:focus="isReply"
-				:bus="bus"
 				@input="onInputChanged" />
 			<MailvelopeEditor
 				v-else
@@ -143,7 +141,7 @@
 				:is-reply-or-forward="isReply || isForward" />
 		</div>
 		<div class="composer-actions">
-			<ComposerAttachments v-model="attachments" :bus="bus" @upload="onAttachmentsUploading" />
+			<ComposerAttachments v-model="attachments" @upload="onAttachmentsUploading" />
 			<div class="composer-actions-right">
 				<p class="composer-actions-draft">
 					<span v-if="!canSaveDraft" id="draft-status">{{ t('mail', 'Can not save draft because this account does not have a drafts mailbox configured.') }}</span>
@@ -250,6 +248,7 @@ import NoSentMailboxConfiguredError
 	from '../errors/NoSentMailboxConfiguredError'
 import NoDraftsMailboxConfiguredError
 	from '../errors/NoDraftsMailboxConfiguredError'
+import EventBus from '../util/EventBus'
 
 const debouncedSearch = debouncePromise(findRecipient, 500)
 
@@ -341,7 +340,6 @@ export default {
 			selectTo: this.to,
 			selectCc: this.cc,
 			selectBcc: this.bcc,
-			bus: new Vue(),
 			encrypt: false,
 			mailvelope: {
 				available: false,
@@ -571,13 +569,13 @@ export default {
 			this.saveDraftDebounced(this.getMessageData)
 		},
 		onAddLocalAttachment() {
-			this.bus.$emit('onAddLocalAttachment')
+			EventBus.$emit('onAddLocalAttachment')
 		},
 		onAddCloudAttachment() {
-			this.bus.$emit('onAddCloudAttachment')
+			EventBus.$emit('onAddCloudAttachment')
 		},
 		onAddCloudAttachmentLink() {
-			this.bus.$emit('onAddCloudAttachmentLink')
+			EventBus.$emit('onAddCloudAttachmentLink')
 		},
 		onAutocomplete(term) {
 			if (term === undefined || term === '') {

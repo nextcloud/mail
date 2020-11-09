@@ -45,6 +45,7 @@ import { getLanguage } from '@nextcloud/l10n'
 import DOMPurify from 'dompurify'
 
 import logger from '../logger'
+import EventBus from '../util/EventBus'
 
 export default {
 	name: 'TextEditor',
@@ -67,10 +68,6 @@ export default {
 		focus: {
 			type: Boolean,
 			default: false,
-		},
-		bus: {
-			type: Object,
-			required: true,
 		},
 	},
 	data() {
@@ -187,7 +184,7 @@ export default {
 
 			logger.debug(`setting TextEditor contents to <${this.text}>`)
 
-			this.bus.$on('appendToBodyAtCursor', this.appendToBodyAtCursor)
+			EventBus.$on('appendToBodyAtCursor', this.appendToBodyAtCursor)
 		},
 		onInput() {
 			logger.debug(`TextEditor input changed to <${this.text}>`)

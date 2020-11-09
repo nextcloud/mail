@@ -57,6 +57,7 @@ import EmptyMailboxSection from './EmptyMailboxSection'
 import { showError } from '@nextcloud/dialogs'
 import NoTrashMailboxConfiguredError
 	from '../errors/NoTrashMailboxConfiguredError'
+import EventBus from '../util/EventBus'
 
 export default {
 	name: 'Mailbox',
@@ -74,10 +75,6 @@ export default {
 			required: true,
 		},
 		mailbox: {
-			type: Object,
-			required: true,
-		},
-		bus: {
 			type: Object,
 			required: true,
 		},
@@ -145,18 +142,18 @@ export default {
 		},
 	},
 	created() {
-		this.bus.$on('loadMore', this.onScroll)
-		this.bus.$on('delete', this.onDelete)
-		this.bus.$on('shortcut', this.handleShortcut)
+		EventBus.$on('loadMore', this.onScroll)
+		EventBus.$on('delete', this.onDelete)
+		EventBus.$on('shortcut', this.handleShortcut)
 		this.loadMailboxInterval = setInterval(this.loadMailbox, 60000)
 	},
 	async mounted() {
 		return await this.loadEnvelopes()
 	},
 	destroyed() {
-		this.bus.$off('loadMore', this.onScroll)
-		this.bus.$off('delete', this.onDelete)
-		this.bus.$off('shortcut', this.handleShortcut)
+		EventBus.$off('loadMore', this.onScroll)
+		EventBus.$off('delete', this.onDelete)
+		EventBus.$off('shortcut', this.handleShortcut)
 		this.stopInterval()
 	},
 	methods: {

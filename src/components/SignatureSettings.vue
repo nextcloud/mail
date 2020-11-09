@@ -27,8 +27,7 @@
 		</p>
 		<TextEditor v-model="signature"
 			:html="true"
-			:placeholder="t('mail', 'Signature …')"
-			:bus="bus" />
+			:placeholder="t('mail', 'Signature …')" />
 		<button
 			class="primary"
 			:class="loading ? 'icon-loading-small-dark' : 'icon-checkmark-white'"
@@ -46,7 +45,6 @@
 import logger from '../logger'
 import TextEditor from './TextEditor'
 import { detect, toHtml } from '../util/text'
-import Vue from 'vue'
 
 export default {
 	name: 'SignatureSettings',
@@ -62,7 +60,6 @@ export default {
 	data() {
 		return {
 			loading: false,
-			bus: new Vue(),
 		}
 	},
 	computed: {

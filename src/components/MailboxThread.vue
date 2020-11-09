@@ -14,8 +14,7 @@
 					v-if="!mailbox.isPriorityInbox"
 					:account="account"
 					:mailbox="mailbox"
-					:search-query="query"
-					:bus="bus" />
+					:search-query="query" />
 				<template v-else>
 					<div class="app-content-list-item">
 						<SectionTitle class="important" :name="t('mail', 'Important')" />
@@ -34,8 +33,7 @@
 						:paginate="'manual'"
 						:is-priority-inbox="true"
 						:initial-page-size="5"
-						:collapsible="true"
-						:bus="bus" />
+						:collapsible="true" />
 					<SectionTitle class="app-content-list-item starred" :name="t('mail', 'Favorites')" />
 					<Mailbox
 						class="namestarred"
@@ -44,8 +42,7 @@
 						:search-query="appendToSearch('is:starred not:important')"
 						:paginate="'manual'"
 						:is-priority-inbox="true"
-						:initial-page-size="5"
-						:bus="bus" />
+						:initial-page-size="5" />
 					<SectionTitle class="app-content-list-item other" :name="t('mail', 'Other')" />
 					<Mailbox
 						class="nameother"
@@ -53,8 +50,7 @@
 						:mailbox="unifiedInbox"
 						:open-first="false"
 						:search-query="appendToSearch('not:starred not:important')"
-						:is-priority-inbox="true"
-						:bus="bus" />
+						:is-priority-inbox="true" />
 				</template>
 			</AppContentList>
 			<NewMessageDetail v-if="newMessage" />
@@ -71,7 +67,6 @@ import Popover from '@nextcloud/vue/dist/Components/Popover'
 import infiniteScroll from 'vue-infinite-scroll'
 import isMobile from '@nextcloud/vue/dist/Mixins/isMobile'
 import SectionTitle from './SectionTitle'
-import Vue from 'vue'
 
 import AppDetailsToggle from './AppDetailsToggle'
 import logger from '../logger'
@@ -80,6 +75,7 @@ import NewMessageDetail from './NewMessageDetail'
 import NoMessageSelected from './NoMessageSelected'
 import Thread from './Thread'
 import { UNIFIED_ACCOUNT_ID, UNIFIED_INBOX_ID } from '../store/constants'
+import EventBus from '../util/EventBus'
 
 export default {
 	name: 'MailboxThread',
@@ -112,7 +108,6 @@ export default {
 		return {
 			// eslint-disable-next-line
 			importantInfo: t('mail', 'Messages will automatically be marked as important based on which messages you interacted with or marked as important. In the beginning you might have to manually change the importance to teach the system, but it will improve over time.'),
-			bus: new Vue(),
 			searchQuery: undefined,
 			shortkeys: {
 				del: ['del'],
@@ -166,15 +161,15 @@ export default {
 			})
 		},
 		deleteMessage(id) {
-			this.bus.$emit('delete', id)
+			EventBus.$emit('delete', id)
 		},
 		onScroll(event) {
 			logger.debug('scroll', { event })
 
-			this.bus.$emit('loadMore')
+			EventBus.$emit('loadMore')
 		},
 		onShortcut(e) {
-			this.bus.$emit('shortcut', e)
+			EventBus.$emit('shortcut', e)
 		},
 		appendToSearch(str) {
 			if (this.searchQuery === undefined) {
