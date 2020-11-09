@@ -8,12 +8,15 @@
 						{{ threadSubject }}
 					</h2>
 					<div class="avatar-header" ref="avatarHeader">
-						<Avatar v-for="participant in threadParticipants.slice(0,Math.floor(parentWidth/22))"
-							class="avatar"
+						<RecipientBubble v-for="participant in threadParticipants.slice(0,participantsToDisplay)"
 							:key="participant.email"
 							:email="participant.email"
-							:display-name="participant.label"
-							:size=20 />
+							:label="participant.label" />
+						<span v-if="threadParticipants.length > participantsToDisplay"
+							v-tooltip.auto="remainingParticipants"
+							class="avatar-more">
+							{{ moreParticipantsString }}
+						</span>
 					</div>
 				</div>
 			</div>
@@ -38,7 +41,7 @@ import Vue from 'vue'
 import { getRandomMessageErrorMessage } from '../util/ErrorMessageFactory'
 import Loading from './Loading'
 import logger from '../logger'
-import Avatar from './Avatar'
+import RecipientBubble from './RecipientBubble'
 import ThreadEnvelope from './ThreadEnvelope'
 
 Vue.use(ReactiveRefs)
@@ -46,7 +49,7 @@ Vue.use(ReactiveRefs)
 export default {
 	name: 'Thread',
 	components: {
-		Avatar,
+		RecipientBubble,
 		AppContentDetails,
 		Loading,
 		ThreadEnvelope,
@@ -65,12 +68,38 @@ export default {
 	},
 
 	computed: {
-		parentWidth() {
+		moreParticipantsString() {
+			// Returns a number showing the number of thread participants that are not shown in the avatar-header
+			return `+${this.threadParticipants.length - this.participantsToDisplay}`
+		},
+		remainingParticipants() {
+			// Returns a string containing all thread participants that are not shown in the avatar-header
+			return this.threadParticipants.slice(this.participantsToDisplay)
+				.map(participant => {
+					if (participant.label !== participant.email) {
+						return participant.label + ' ' + participant.email
+					} else {
+						return participant.label
+					}
+				})
+				.join(', ')
+		},
+		participantsToDisplay() {
 			// Display maximum 10 recipient bubbles as long as this component hasn't finished rendering
 			// Note: This property needs 'vue-reactive-refs'
-			if (!this.$refs.avatarHeader) return 220
+			if (!this.$refs.avatarHeader || !this.threadParticipants) return 220
 
-			return this.$refs.avatarHeader.clientWidth
+			// Compute the number of participants to display depending on the width available
+			const avatarHeader = this.$refs.avatarHeader
+			let childrenWidth = 0
+			let i = 0
+			while (childrenWidth < avatarHeader.clientWidth && i < this.threadParticipants.length) {
+				childrenWidth += avatarHeader.childNodes[i].clientWidth
+				i++
+			}
+
+			return (i < this.threadParticipants.length) ? i - 2 : this.threadParticipants.length
+
 		},
 		threadId() {
 			return parseInt(this.$route.params.threadId, 10)
@@ -320,12 +349,12 @@ export default {
 	white-space: pre-wrap;
 	user-select: text;
 }
-.avatar {
-	margin-right: 2px;
-}
 .avatar-header {
-	max-height: 20px;
+	max-height: 22px;
 	overflow: hidden;
+}
+.avatar-more {
+	display: inline-block;
 }
 .app-content-list-item-star.icon-starred {
 	display: none;
