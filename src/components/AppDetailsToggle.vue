@@ -35,17 +35,27 @@ export default {
 }
 </script>
 
-<style scoped>
+<style lang="scss" scoped>
 .toggle {
 	position: fixed;
-	display: inline-block;
-	left: 0;
 	width: 44px;
 	height: 44px;
-	z-index: 1500;
+	padding: 14px;
 	cursor: pointer;
+	opacity: .6;
+	font-size: 16px;
+	line-height: 17px;
 	transform: rotate(180deg);
 	background-color: var(--color-main-background);
-	opacity: 1;
+	z-index: 2000;
+&:active,
+&:hover,
+&:focus {
+	 opacity: 1;
+ }
+// Hide app-navigation toggle if shown
+	&::v-deep + .app-navigation .app-navigation-toggle {
+	   display: none;
+   }
 }
 </style>
