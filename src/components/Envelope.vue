@@ -280,7 +280,6 @@ export default {
 			}
 		},
 		onOpenMoveModal() {
-			this.setSelected(false)
 			this.showMoveModal = true
 		},
 		onCloseMoveModal() {
