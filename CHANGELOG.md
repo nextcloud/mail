@@ -1,6 +1,21 @@
 # Changelog
 All notable changes to this project will be documented in this file.
 
+## 1.7.0 – 2020-11-11
+### Added
+* Possibility to move mailboxes
+* Improved HTML email rendering
+* Ability to edit existing messages as new ones
+### Changed
+* Admin documentation now contains more troubleshooting instructions
+* Show admin and developer documentation on app store
+### Fixed
+* Null error for messages with no sender information
+* Overlapping message with same timestamp
+* Wrong php7.2 support claimed in info.xml of v1.6.0
+* Unexpected borders on recipient pickers
+* Styling of automatic/manual account settings tabs
+
 ## 1.6.0 – 2020-11-04
 ### Added
 - Moving mails to other mailboxes of the same account (also usable on mobile)
