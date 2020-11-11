@@ -45,7 +45,7 @@ jobs:
       strategy:
           matrix:
               php-versions: [7.4]
-              nextcloud-versions: ['master']
+              nextcloud-versions: ['fix/no-brrr']
               db: ['sqlite', 'mysql', 'pgsql']
       name: php${{ matrix.php-versions }}-${{ matrix.db }} integration tests
       services:
@@ -106,7 +106,7 @@ jobs:
             working-directory: nextcloud/apps/mail
             run: composer install
           - name: Install Mail
-            run: php -f nextcloud/occ app:install mail
+            run: php -f nextcloud/occ app:enable mail
           - name: Configure Nextcloud for testing
             run: |
                 php -f nextcloud/occ config:system:set debug --type bool --value true
