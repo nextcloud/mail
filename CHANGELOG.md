@@ -1,6 +1,19 @@
 # Changelog
 All notable changes to this project will be documented in this file.
 
+## 1.6.1 – 2020-11-11
+### Fixed
+* Null error for messages with no sender information
+* Wrong php7.2 support claimed in info.xml of v1.6.0
+* Unexpected borders on recipient pickers
+* Styling of automatic/manual account settings tabs
+
+## 1.5.2 – 2020-11-11
+### Fixed
+* Null error for messages with no sender information
+* Unexpected borders on recipient pickers
+* Styling of automatic/manual account settings tabs
+
 ## 1.6.0 – 2020-11-04
 ### Added
 - Moving mails to other mailboxes of the same account (also usable on mobile)
