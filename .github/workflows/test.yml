@@ -106,7 +106,7 @@ jobs:
             working-directory: nextcloud/apps/mail
             run: composer install
           - name: Install Mail
-            run: php -f nextcloud/occ app:enable mail
+            run: php -f nextcloud/occ app:install mail
           - name: Configure Nextcloud for testing
             run: |
                 php -f nextcloud/occ config:system:set debug --type bool --value true
