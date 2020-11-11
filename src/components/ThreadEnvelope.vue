@@ -62,7 +62,7 @@
 						primary: expanded,
 					}"
 					class="button">
-					{{ t('mail', 'Reply') }}
+					<span class="action-label"> {{ t('mail', 'Reply') }}</span>
 				</router-link>
 				<Actions class="app-content-list-item-menu" menu-align="right">
 					<ActionButton v-if="hasMultipleRecipients"
