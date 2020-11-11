@@ -1,6 +1,12 @@
 # Changelog
 All notable changes to this project will be documented in this file.
 
+## 1.5.3 – 2020-11-11
+### Fixed
+* Null error for messages with no sender information
+* Unexpected borders on recipient pickers
+* Styling of automatic/manual account settings tabs
+
 ## 1.5.2 – 2020-11-04
 ### Fixed
 - Saving all attachments of an email to Nextcloud Files
