@@ -350,17 +350,17 @@ export default {
 </script>
 
 <style lang="scss" scoped>
-.tabs-component-tabs {
+::v-deep .tabs-component-tabs {
 	display: flex;
 }
 
-.tabs-component-tab {
+::v-deep .tabs-component-tab {
 	flex-grow: 1;
 	text-align: center;
 	color: var(--color-text-lighter);
 }
 
-.tabs-component-tab.is-active {
+::v-deep .tabs-component-tab.is-active {
 	border-bottom: 1px solid black;
 	font-weight: bold;
 }
