@@ -20,7 +20,7 @@
   -->
 
 <template>
-	<div>
+	<div class="envelope">
 		<div class="envelope--header">
 			<Avatar v-if="envelope.from && envelope.from[0]"
 				:email="envelope.from[0].email"
@@ -458,6 +458,12 @@ export default {
 		margin-left: 8px;
 		cursor: default;
 	}
+
+	.envelope {
+		display: flex;
+		flex-direction: column;
+	}
+
 	.envelope--header {
 		display: flex;
 		padding: 10px;
