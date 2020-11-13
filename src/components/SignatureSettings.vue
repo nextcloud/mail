@@ -63,12 +63,11 @@ export default {
 		return {
 			loading: false,
 			bus: new Vue(),
+			signature: '',
 		}
 	},
-	computed: {
-		signature() {
-			return this.account.signature ? toHtml(detect(this.account.signature)).value : ''
-		},
+	created() {
+		this.signature = this.account.signature ? toHtml(detect(this.account.signature)).value : ''
 	},
 	methods: {
 		deleteSignature() {
