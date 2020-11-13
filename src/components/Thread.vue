@@ -255,6 +255,12 @@ export default {
 <style lang="scss">
 #mail-message {
 	flex-grow: 1;
+
+	.icon-loading {
+		&:only-child:after {
+			margin-top: 20px;
+		}
+	}
 }
 
 .mail-message-body {

@@ -1,7 +1,6 @@
 <template>
 	<AppContent>
-		<template slot="aside">
-	<AppContent pane-config-key="mail">
+		<template slot="list">
 			<AppContentList
 				v-infinite-scroll="onScroll"
 				v-shortkey.once="shortkeys"
