@@ -133,7 +133,6 @@ class PageControllerTest extends TestCase {
 				['external-avatars', 'true', 'true'],
 				['reply-mode', 'top', 'bottom'],
 				['collect-data', 'true', 'true'],
-				['pane-sizes', '{}', '{}'],
 				['account-settings', json_encode([]), json_encode([])],
 			]);
 		$this->accountService->expects($this->once())
@@ -239,7 +238,6 @@ class PageControllerTest extends TestCase {
 				'reply-mode' => 'bottom',
 				'app-version' => '1.2.3',
 				'collect-data' => 'true',
-				'pane-sizes' => '{}',
 				'account-settings' => base64_encode(json_encode([])),
 			]);
 		$csp = new ContentSecurityPolicy();
