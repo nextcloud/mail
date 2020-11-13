@@ -1,6 +1,6 @@
 <template>
 	<AppContent>
-		<template slot="aside">
+		<template slot="list">
 			<AppContentList
 				v-infinite-scroll="onScroll"
 				v-shortkey.once="shortkeys"
@@ -60,11 +60,9 @@
 			</AppContentList>
 		</template>
 
-		<template slot="main">
-			<NewMessageDetail v-if="newMessage" />
-			<Thread v-else-if="showThread" @delete="deleteMessage" />
-			<NoMessageSelected v-else-if="hasEnvelopes && !isMobile" />
-		</template>
+		<NewMessageDetail v-if="newMessage" />
+		<Thread v-else-if="showThread" @delete="deleteMessage" />
+		<NoMessageSelected v-else-if="hasEnvelopes && !isMobile" />
 	</AppContent>
 </template>
 
