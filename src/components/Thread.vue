@@ -7,7 +7,7 @@
 					<h2 :title="threadSubject">
 						{{ threadSubject }}
 					</h2>
-					<div class="avatar-header" ref="avatarHeader">
+					<div ref="avatarHeader" class="avatar-header">
 						<RecipientBubble v-for="participant in threadParticipants.slice(0,participantsToDisplay)"
 							:key="participant.email"
 							:email="participant.email"
@@ -98,7 +98,16 @@ export default {
 				i++
 			}
 
-			return (i < this.threadParticipants.length) ? i - 2 : this.threadParticipants.length
+			if (isNaN(childrenWidth)) {
+				// screen is refreshing, recipientBubble list has already been clipped
+				return i - 1
+			} else if (i < this.threadParticipants.length) {
+				// There's not enough space to show all thread participants
+				return i - 2
+			} else {
+				// There's enough space to show all thread participants
+				return this.threadParticipants.length
+			}
 
 		},
 		threadId() {
