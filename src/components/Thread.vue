@@ -8,15 +8,27 @@
 						{{ threadSubject }}
 					</h2>
 					<div ref="avatarHeader" class="avatar-header">
+						<!-- Participants that can fit in the parent div -->
 						<RecipientBubble v-for="participant in threadParticipants.slice(0,participantsToDisplay)"
 							:key="participant.email"
 							:email="participant.email"
 							:label="participant.label" />
+						<!-- Indicator to show that there are more participants than displayed -->
 						<span v-if="threadParticipants.length > participantsToDisplay"
-							v-tooltip.auto="remainingParticipants"
+							v-tooltip.auto="{
+								content: remainingParticipants,
+								trigger: 'click',
+								html: true,
+							}"
 							class="avatar-more">
 							{{ moreParticipantsString }}
 						</span>
+						<!-- Remaining participants (if any) -->
+						<RecipientBubble v-for="participant in threadParticipants.slice(participantsToDisplay)"
+							class="avatar-hidden"
+							:key="participant.email"
+							:email="participant.email"
+							:label="participant.label" />
 					</div>
 				</div>
 			</div>
@@ -64,6 +76,7 @@ export default {
 			errorMessage: '',
 			error: undefined,
 			expandedThreads: [],
+			participantsToDisplay: 999,
 		}
 	},
 
@@ -76,39 +89,9 @@ export default {
 			// Returns a string containing all thread participants that are not shown in the avatar-header
 			return this.threadParticipants.slice(this.participantsToDisplay)
 				.map(participant => {
-					if (participant.label !== participant.email) {
-						return participant.label + ' ' + participant.email
-					} else {
-						return participant.label
-					}
+					return '<a href="mailto:' + participant.email + '">' + participant.label + '</a>'
 				})
-				.join(', ')
-		},
-		participantsToDisplay() {
-			// Display maximum 10 recipient bubbles as long as this component hasn't finished rendering
-			// Note: This property needs 'vue-reactive-refs'
-			if (!this.$refs.avatarHeader || !this.threadParticipants) return 220
-
-			// Compute the number of participants to display depending on the width available
-			const avatarHeader = this.$refs.avatarHeader
-			let childrenWidth = 0
-			let i = 0
-			while (childrenWidth < avatarHeader.clientWidth && i < this.threadParticipants.length) {
-				childrenWidth += avatarHeader.childNodes[i].clientWidth
-				i++
-			}
-
-			if (isNaN(childrenWidth)) {
-				// screen is refreshing, recipientBubble list has already been clipped
-				return i - 1
-			} else if (i < this.threadParticipants.length) {
-				// There's not enough space to show all thread participants
-				return i - 2
-			} else {
-				// There's enough space to show all thread participants
-				return this.threadParticipants.length
-			}
-
+				.join('<br>')
 		},
 		threadId() {
 			return parseInt(this.$route.params.threadId, 10)
@@ -148,8 +131,45 @@ export default {
 	},
 	created() {
 		this.resetThread()
+		window.addEventListener('resize', this.updateParticipantsToDisplay)
+
+		// Note: This watcher needs 'vue-reactive-refs'
+		this.$watch('$refs.avatarHeader', this.updateParticipantsToDisplay)
+	},
+	beforeDestroy() {
+		window.removeEventListener('resize', this.updateParticipantsToDisplay)
 	},
 	methods: {
+		updateParticipantsToDisplay() {
+			// Wait until everything is in place
+			if (!this.$refs.avatarHeader || !this.threadParticipants) {
+				return
+			}
+
+			// Compute the number of participants to display depending on the width available
+			const avatarHeader = this.$refs.avatarHeader
+			let childrenWidth = 0
+			let fits = 0
+			let skipped = 0
+			while (childrenWidth < avatarHeader.clientWidth && fits < this.threadParticipants.length) {
+				// Skipping the 'avatar-more' span
+				if (avatarHeader.childNodes[fits].clientWidth === undefined) {
+					fits += 3
+					skipped = 3
+					continue
+				}
+				childrenWidth += avatarHeader.childNodes[fits].clientWidth
+				fits++
+			}
+
+			if (fits < this.threadParticipants.length) {
+				// There's not enough space to show all thread participants
+				this.participantsToDisplay = fits - 2 - skipped
+			} else {
+				// There's enough space to show all thread participants
+				this.participantsToDisplay = this.threadParticipants.length
+			}
+		},
 		toggleExpand(threadId) {
 			if (!this.expandedThreads.includes(threadId)) {
 				console.debug(`expand thread ${threadId}`)
@@ -364,6 +384,9 @@ export default {
 }
 .avatar-more {
 	display: inline-block;
+}
+.avatar-hidden {
+	visibility: hidden;
 }
 .app-content-list-item-star.icon-starred {
 	display: none;
