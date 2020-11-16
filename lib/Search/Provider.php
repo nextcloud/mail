@@ -71,6 +71,11 @@ class Provider implements IProvider {
 	}
 
 	public function getOrder(string $route, array $routeParameters): int {
+		if (strpos($route, Application::APP_ID . '.') === 0) {
+			// Active app, prefer Mail results
+			return -1;
+		}
+
 		return 20;
 	}
 
