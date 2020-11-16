@@ -8,7 +8,7 @@ jobs:
     strategy:
       matrix:
         php-versions: [7.3, 7.4]
-        nextcloud-versions: ['stable20', 'master']
+        nextcloud-versions: ['revert-24060-revert-24039-faster-installation']
     name: Nextcloud ${{ matrix.nextcloud-versions }} php${{ matrix.php-versions }} unit tests
     steps:
     - name: Set up php${{ matrix.php-versions }}
@@ -45,7 +45,7 @@ jobs:
       strategy:
           matrix:
               php-versions: [7.4]
-              nextcloud-versions: ['master']
+              nextcloud-versions: ['revert-24060-revert-24039-faster-installation']
               db: ['sqlite', 'mysql', 'pgsql']
       name: php${{ matrix.php-versions }}-${{ matrix.db }} integration tests
       services:
