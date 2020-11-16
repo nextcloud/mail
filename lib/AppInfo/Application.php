@@ -72,11 +72,15 @@ use Psr\Container\ContainerInterface;
 class Application extends App implements IBootstrap {
 	public const APP_ID = 'mail';
 
+	public $registered = false;
+
 	public function __construct(array $urlParams = []) {
 		parent::__construct(self::APP_ID, $urlParams);
 	}
 
 	public function register(IRegistrationContext $context): void {
+		$this->registered = true;
+
 		if ((@include_once __DIR__ . '/../../vendor/autoload.php') === false) {
 			throw new Exception('Cannot include autoload. Did you run install dependencies using composer?');
 		}

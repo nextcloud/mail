@@ -25,6 +25,7 @@ namespace OCA\Mail\Migration;
 
 use Horde_Mail_Exception;
 use Horde_Mail_Rfc822_Address;
+use OCA\Mail\AppInfo\Application;
 use OCA\Mail\Db\CollectedAddress;
 use OCA\Mail\Db\CollectedAddressMapper;
 use OCP\Migration\IOutput;
@@ -44,6 +45,12 @@ class FixCollectedAddresses implements IRepairStep {
 	}
 
 	public function run(IOutput $output) {
+		/** @var Application $app */
+		$app = \OC::$server->get(Application::class);
+		if (!$app->registered) {
+			throw new \Exception("Mail app has not been registered");
+		}
+
 		$nrOfAddresses = $this->mapper->getTotal();
 		$output->startProgress($nrOfAddresses);
 
