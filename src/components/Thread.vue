@@ -24,12 +24,12 @@
 									:key="participant.email"
 									:email="participant.email"
 									:label="participant.label" />
-							</template>	
+							</template>
 						</VPopover>
 						<!-- Remaining participants, if any (Needed to have avatarHeader reactive) -->
 						<RecipientBubble v-for="participant in threadParticipants.slice(participantsToDisplay)"
-							class="avatar-hidden"
 							:key="participant.email"
+							class="avatar-hidden"
 							:email="participant.email"
 							:label="participant.label" />
 					</div>
