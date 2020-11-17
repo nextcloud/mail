@@ -96,11 +96,11 @@
 				:key="env.databaseId"
 				:data="env"
 				:mailbox="mailbox"
-				:selected="isEnvelopeSelected(index)"
+				:selected="selection.includes(env.databaseId)"
 				:select-mode="selectMode"
 				@delete="$emit('delete', env.databaseId)"
-				@update:selected="onEnvelopeSelectToggle(index, ...$event)"
-				@select-multiple="onEnvelopeSelectMultiple(index)" />
+				@update:selected="onEnvelopeSelectToggle(env, index, ...$event)"
+				@select-multiple="onEnvelopeSelectMultiple(env, index)" />
 			<div
 				v-if="loadMoreButton && !loadingMore"
 				:key="'list-collapse-' + searchQuery"
@@ -124,6 +124,7 @@ import MoveModal from './MoveModal'
 import { matchError } from '../errors/match'
 import NoTrashMailboxConfiguredError
 	from '../errors/NoTrashMailboxConfiguredError'
+import { differenceWith } from 'ramda'
 
 export default {
 	name: 'EnvelopeList',
@@ -180,29 +181,33 @@ export default {
 		},
 		areAllSelectedRead() {
 			// returns false if at least one selected message has not been read yet
-			return this.selection.every((idx) => this.envelopes[idx].flags.seen === true)
+			return this.selectedEnvelopes.every((env) => env.flags.seen === true)
 		},
 		areAllSelectedFavorite() {
 			// returns false if at least one selected message has not been favorited yet
-			return this.selection.every((idx) => this.envelopes[idx].flags.flagged === true)
+			return this.selectedEnvelopes.every((env) => env.flags.flagged === true)
 		},
 		selectedEnvelopes() {
-			return this.selection.map((idx) => this.envelopes[idx])
+			return this.envelopes.filter((env) => this.selection.includes(env.databaseId))
+		},
+	},
+	watch: {
+		envelopes(newVal, oldVal) {
+			// Unselect vanished envelopes
+			const newIds = newVal.map((env) => env.databaseId)
+			this.selection = this.selection.filter((id) => newIds.includes(id))
+			differenceWith((a, b) => a.databaseId === b.databaseId, oldVal, newVal)
+				.forEach((env) => {
+					env.flags.selected = false
+				})
 		},
 	},
 	methods: {
-		isEnvelopeSelected(idx) {
-			if (this.selection.length === 0) {
-				return false
-			}
-
-			return this.selection.includes(idx)
-		},
 		markSelectedSeenOrUnseen() {
 			const seen = !this.areAllSelectedRead
-			this.selection.forEach((envelopeId) => {
+			this.selectedEnvelopes.forEach((envelope) => {
 				this.$store.dispatch('toggleEnvelopeSeen', {
-					envelope: this.envelopes[envelopeId],
+					envelope,
 					seen,
 				})
 			})
@@ -210,23 +215,24 @@ export default {
 		},
 		favoriteOrUnfavoriteAll() {
 			const favFlag = !this.areAllSelectedFavorite
-			this.selection.forEach((envelopeId) => {
+			this.selectedEnvelopes.forEach((envelope) => {
 				this.$store.dispatch('markEnvelopeFavoriteOrUnfavorite', {
-					envelope: this.envelopes[envelopeId],
+					envelope,
 					favFlag,
 				})
 			})
 			this.unselectAll()
 		},
 		deleteAllSelected() {
-			this.selection.forEach(async(envelopeId) => {
+			this.selectedEnvelopes.forEach(async(envelope) => {
 				// Navigate if the message being deleted is the one currently viewed
-				if (this.envelopes[envelopeId].databaseId === this.$route.params.threadId) {
+				if (envelope.databaseId === this.$route.params.threadId) {
+					const index = this.envelopes.indexOf(envelope)
 					let next
-					if (envelopeId === 0) {
-						next = this.envelopes[envelopeId + 1]
+					if (index === 0) {
+						next = this.envelopes[index + 1]
 					} else {
-						next = this.envelopes[envelopeId - 1]
+						next = this.envelopes[index - 1]
 					}
 
 					if (next) {
@@ -239,10 +245,10 @@ export default {
 						})
 					}
 				}
-				logger.info(`deleting message ${this.envelopes[envelopeId].databaseId}`)
+				logger.info(`deleting message ${envelope.databaseId}`)
 				try {
 					await this.$store.dispatch('deleteMessage', {
-						id: this.envelopes[envelopeId].databaseId,
+						id: envelope.databaseId,
 					})
 				} catch (error) {
 					showError(await matchError(error, {
@@ -258,32 +264,30 @@ export default {
 			})
 			this.unselectAll()
 		},
-		setEnvelopeSelected(idx, selected) {
-			const envelope = this.envelopes[idx]
-			if (selected) {
+		setEnvelopeSelected(envelope, selected) {
+			const alreadySelected = this.selection.includes(envelope.databaseId)
+			if (selected && !alreadySelected) {
 				envelope.flags.selected = true
-				this.selection.push(idx)
-			} else {
+				this.selection.push(envelope.databaseId)
+			} else if (!selected && alreadySelected) {
 				envelope.flags.selected = false
-				this.selection.splice(this.selection.indexOf(idx), 1)
+				this.selection.splice(this.selection.indexOf(envelope.databaseId), 1)
 			}
 		},
-		onEnvelopeSelectToggle(index, selected) {
+		onEnvelopeSelectToggle(envelope, index, selected) {
 			this.lastToggledIndex = index
-			this.setEnvelopeSelected(index, selected)
+			this.setEnvelopeSelected(envelope, selected)
 		},
-		onEnvelopeSelectMultiple(index) {
+		onEnvelopeSelectMultiple(envelope, index) {
 			if (this.lastToggledIndex === undefined) {
 				return
 			}
 
 			const start = Math.min(this.lastToggledIndex, index)
 			const end = Math.max(this.lastToggledIndex, index)
-			const selected = this.selection.includes(index)
+			const selected = this.selection.includes(envelope.databaseId)
 			for (let i = start; i <= end; i++) {
-				if (this.selection.includes(i) !== !selected) {
-					this.setEnvelopeSelected(i, !selected)
-				}
+				this.setEnvelopeSelected(this.envelopes[i], !selected)
 			}
 			this.lastToggledIndex = index
 		},
