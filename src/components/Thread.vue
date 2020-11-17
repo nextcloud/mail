@@ -398,6 +398,10 @@ export default {
 .avatar-hidden {
 	visibility: hidden;
 }
+.popover-inner {
+	max-width: 500px;
+	border-radius: 10px;
+}
 
 .app-content-list-item-star.icon-starred {
 	display: none;
