@@ -72,9 +72,21 @@ store.commit('savePreference', {
 	value: getPreferenceFromPage('collect-data'),
 })
 
+const accountSettings = JSON.parse(Base64.decode(getPreferenceFromPage('account-settings')))
 const accounts = JSON.parse(Base64.decode(getPreferenceFromPage('serialized-accounts')))
 accounts.map(fixAccountId).forEach((account) => {
-	store.commit('addAccount', account)
+	const settings = accountSettings.find(settings => settings.accountId === account.id)
+	if (settings) {
+		delete settings.accountId
+		Object.entries(settings).forEach(([key, value]) => {
+			store.commit('setAccountSetting', {
+				accountId: account.id,
+				key,
+				value,
+			})
+		})
+	}
+	store.commit('addAccount', { ...account, ...settings })
 })
 
 export default new Vue({

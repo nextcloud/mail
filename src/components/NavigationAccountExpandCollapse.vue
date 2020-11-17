@@ -25,6 +25,7 @@
 
 <script>
 import AppNavigationItem from '@nextcloud/vue/dist/Components/AppNavigationItem'
+import logger from '../logger'
 
 export default {
 	name: 'NavigationAccountExpandCollapse',
@@ -51,8 +52,21 @@ export default {
 		},
 	},
 	methods: {
-		toggleCollapse() {
-			this.$store.commit('toggleAccountCollapsed', this.account.id)
+		async toggleCollapse() {
+			logger.debug('toggling collapsed folders for account ' + this.account.id)
+			try {
+				await this.$store.commit('toggleAccountCollapsed', this.account.id)
+				await this.$store
+					.dispatch('setAccountSetting', {
+						accountId: this.account.id,
+						key: 'collapsed',
+						value: this.account.collapsed,
+					})
+			} catch (error) {
+				logger.error('could not update account settings', {
+					error,
+				})
+			}
 		},
 	},
 }
