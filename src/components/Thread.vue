@@ -14,16 +14,19 @@
 							:email="participant.email"
 							:label="participant.label" />
 						<!-- Indicator to show that there are more participants than displayed -->
-						<span v-if="threadParticipants.length > participantsToDisplay"
-							v-tooltip.auto="{
-								content: remainingParticipants,
-								trigger: 'click',
-								html: true,
-							}"
+						<VPopover v-if="threadParticipants.length > participantsToDisplay"
 							class="avatar-more">
-							{{ moreParticipantsString }}
-						</span>
-						<!-- Remaining participants (if any) -->
+							<span>
+								{{ moreParticipantsString }}
+							</span>
+							<template slot="popover">
+								<RecipientBubble v-for="participant in threadParticipants.slice(participantsToDisplay)"
+									:key="participant.email"
+									:email="participant.email"
+									:label="participant.label" />
+							</template>	
+						</VPopover>
+						<!-- Remaining participants, if any (Needed to have avatarHeader reactive) -->
 						<RecipientBubble v-for="participant in threadParticipants.slice(participantsToDisplay)"
 							class="avatar-hidden"
 							:key="participant.email"
@@ -48,6 +51,7 @@
 import AppContentDetails from '@nextcloud/vue/dist/Components/AppContentDetails'
 import { prop, uniqBy } from 'ramda'
 import { ReactiveRefs } from 'vue-reactive-refs'
+import { VPopover } from 'v-tooltip'
 import Vue from 'vue'
 
 import { getRandomMessageErrorMessage } from '../util/ErrorMessageFactory'
@@ -65,6 +69,7 @@ export default {
 		AppContentDetails,
 		Loading,
 		ThreadEnvelope,
+		VPopover,
 	},
 
 	refs: ['avatarHeader'],
@@ -378,16 +383,21 @@ export default {
 	white-space: pre-wrap;
 	user-select: text;
 }
+
 .avatar-header {
 	max-height: 22px;
 	overflow: hidden;
 }
 .avatar-more {
 	display: inline-block;
+	max-height: 22px;
+	background-color: rgb(219, 219, 219);
+	border-radius: 2px;
 }
 .avatar-hidden {
 	visibility: hidden;
 }
+
 .app-content-list-item-star.icon-starred {
 	display: none;
 }
