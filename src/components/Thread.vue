@@ -16,7 +16,7 @@
 						<!-- Indicator to show that there are more participants than displayed -->
 						<VPopover v-if="threadParticipants.length > participantsToDisplay"
 							class="avatar-more">
-							<span>
+							<span class="avatar-more">
 								{{ moreParticipantsString }}
 							</span>
 							<template slot="popover">
@@ -385,14 +385,15 @@ export default {
 }
 
 .avatar-header {
-	max-height: 22px;
+	max-height: 24px;
 	overflow: hidden;
 }
 .avatar-more {
-	display: inline-block;
-	max-height: 22px;
-	background-color: rgb(219, 219, 219);
-	border-radius: 2px;
+	display: inline;
+	background-color: var(--color-background-dark);
+	padding: 0px 0px 1px 1px;
+	border-radius: 10px;
+	cursor: pointer;
 }
 .avatar-hidden {
 	visibility: hidden;
