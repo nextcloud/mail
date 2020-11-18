@@ -31,8 +31,11 @@ Turn off TLS verfication for IMAP/SMTP. This happens globally for all accounts a
 'app.mail.verify-tls-peer' => false
 ```
 
-[trouble](#troubleshooting)
 ## Troubleshooting
+
+### Database insert problems on MySQL
+
+If Mail fails to insert new rows for messages (`oc_mail_messages`), recipients (`oc_mail_recipients`) or similar tables, you are possibly not using the 4 byte support. See [the Nextcloud Admin Manual](https://docs.nextcloud.com/server/stable/admin_manual/configuration_database/mysql_4byte_support.html) on how to update your database configuration.
 
 ### Get account IDs
 
@@ -54,15 +57,17 @@ Account 1393:
 - SMTP host: mx.domain.com:587, security: tls
 ```
 
+In this example, `1393` is the *account ID*.
+
 ### Manual account synchronization and threading
 
 To troubleshoot synchronization or threading problems it's helpful to run the sync from the command line while the user does not use the web interface (reduces chances of a conflict):
 
 ```bash
-php -f occ mail:account:sync 12345
+php -f occ mail:account:sync 1393
 ```
 
-12345 represents the [account ID](#get-account-ids).
+1393 represents the [account ID](#get-account-ids).
 
 The command offers a ``--force`` option. Use it wisely as it doesn't perform the same path a typical web triggered sync request would do.
 
