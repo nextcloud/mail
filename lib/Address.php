@@ -79,7 +79,11 @@ class Address implements JsonSerializable {
 			return null;
 		}
 		// Lets make sure the e-mail is valid UTF-8 at all times
-		return iconv("UTF-8","UTF-8//IGNORE", $email);
+		$utf8 = iconv("UTF-8", "UTF-8//IGNORE", $email);
+		if ($utf8 === false) {
+			throw new \Exception("Email address <$email> could not be converted via iconv");
+		}
+		return $utf8;
 	}
 
 	/**
