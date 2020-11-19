@@ -21,6 +21,7 @@
 <script>
 import { iframeResizer } from 'iframe-resizer'
 import PrintScout from 'printscout'
+import { trustSender } from '../service/TrustedSenderService'
 
 import logger from '../logger'
 const scout = new PrintScout()
@@ -37,11 +38,16 @@ export default {
 			required: false,
 			default: false,
 		},
+		message: {
+			required: true,
+			type: Object,
+		},
 	},
 	data() {
 		return {
 			loading: true,
 			hasBlockedContent: false,
+			isSenderTrusted: this.message.isSenderTrusted,
 		}
 	},
 	beforeMount() {
@@ -81,6 +87,9 @@ export default {
 				|| iframeDoc.querySelectorAll('[data-original-style]').length > 0
 
 			this.loading = false
+			if (this.isSenderTrusted) {
+				this.onShowBlockedContent()
+			}
 		},
 		onAfterPrint() {
 			this.$refs.iframe.style.setProperty('height', '')
@@ -88,7 +97,7 @@ export default {
 		onBeforePrint() {
 			this.$refs.iframe.style.setProperty('height', `${this.getIframeDoc().body.scrollHeight}px`, 'important')
 		},
-		onShowBlockedContent() {
+		async onShowBlockedContent() {
 			const iframeDoc = this.getIframeDoc()
 			logger.debug('showing external images')
 			iframeDoc.querySelectorAll('[data-original-src]').forEach((node) => {
@@ -100,6 +109,8 @@ export default {
 				.forEach((node) => node.setAttribute('style', node.getAttribute('data-original-style')))
 
 			this.hasBlockedContent = false
+			trustSender(this.message.from[0].email, true)
+
 		},
 	},
 }

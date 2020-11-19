@@ -31,6 +31,7 @@ use OCA\Mail\Account;
 use OCA\Mail\Attachment;
 use OCA\Mail\Contracts\IMailManager;
 use OCA\Mail\Contracts\IMailSearch;
+use OCA\Mail\Contracts\ITrustedSenderService;
 use OCA\Mail\Controller\MessagesController;
 use OCA\Mail\Exception\ServiceException;
 use OCA\Mail\Http\AttachmentDownloadResponse;
@@ -110,6 +111,9 @@ class MessagesControllerTest extends TestCase {
 	/** @var MockObject|ContentSecurityPolicyNonceManager */
 	private $nonceManager;
 
+	/** @var MockObject|ITrustedSenderService */
+	private $trustedSenderService;
+
 	/** @var ITimeFactory */
 	private $oldFactory;
 
@@ -130,6 +134,7 @@ class MessagesControllerTest extends TestCase {
 		$this->mimeTypeDetector = $this->createMock(IMimeTypeDetector::class);
 		$this->urlGenerator = $this->createMock(IURLGenerator::class);
 		$this->nonceManager = $this->createMock(ContentSecurityPolicyNonceManager::class);
+		$this->trustedSenderService = $this->createMock(ITrustedSenderService::class);
 
 		$timeFactory = $this->createMocK(ITimeFactory::class);
 		$timeFactory->expects($this->any())
@@ -153,7 +158,8 @@ class MessagesControllerTest extends TestCase {
 			$this->l10n,
 			$this->mimeTypeDetector,
 			$this->urlGenerator,
-			$this->nonceManager
+			$this->nonceManager,
+			$this->trustedSenderService
 		);
 
 		$this->account = $this->createMock(Account::class);

@@ -31,6 +31,7 @@ use OCA\Mail\Contracts\IAvatarService;
 use OCA\Mail\Contracts\IMailManager;
 use OCA\Mail\Contracts\IMailSearch;
 use OCA\Mail\Contracts\IMailTransmission;
+use OCA\Mail\Contracts\ITrustedSenderService;
 use OCA\Mail\Contracts\IUserPreferences;
 use OCA\Mail\Dashboard\ImportantMailWidget;
 use OCA\Mail\Dashboard\UnreadMailWidget;
@@ -60,6 +61,7 @@ use OCA\Mail\Service\AvatarService;
 use OCA\Mail\Service\MailManager;
 use OCA\Mail\Service\MailTransmission;
 use OCA\Mail\Service\Search\MailSearch;
+use OCA\Mail\Service\TrustedSenderService;
 use OCA\Mail\Service\UserPreferenceSevice;
 use OCP\AppFramework\App;
 use OCP\AppFramework\Bootstrap\IBootContext;
@@ -96,6 +98,7 @@ class Application extends App implements IBootstrap {
 		$context->registerServiceAlias(IMailManager::class, MailManager::class);
 		$context->registerServiceAlias(IMailSearch::class, MailSearch::class);
 		$context->registerServiceAlias(IMailTransmission::class, MailTransmission::class);
+		$context->registerServiceAlias(ITrustedSenderService::class, TrustedSenderService::class);
 		$context->registerServiceAlias(IUserPreferences::class, UserPreferenceSevice::class);
 
 		$context->registerEventListener(DraftSavedEvent::class, DeleteDraftListener::class);
