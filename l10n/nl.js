@@ -212,7 +212,7 @@ OC.L10N.register(
     "All" : "Alle",
     "Archive" : "Archiveer",
     "Drafts" : "Concepten",
-    "Priority inbox" : "Prioriteit inbak",
+    "Priority inbox" : "Prioriteit",
     "All inboxes" : "Alle postvakken",
     "Inbox" : "Postvak in",
     "Junk" : "Ongewenst",
