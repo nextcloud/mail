@@ -116,7 +116,7 @@ If you encounter an issue with threading, e.g. messages that are supposed to gro
 php -f occ mail:account:export-threads 1393
 ```
 
-12345 represents the [account ID](#get-account-ids).
+1393 represents the [account ID](#get-account-ids).
 
 The output will look similar to this:
 
@@ -165,7 +165,7 @@ The output will look similar to this:
 It's recommended practice to pipe the export into a file, which you can later share with the Mail app community and developers:
 
 ```bash
-php -f occ mail:account:export-threads 12345 > /tmp/nextcloud-mail-threads-12345.json
+php -f occ mail:account:export-threads 1393 | gzip -c > /tmp/nextcloud-mail-threads-1393.json.gz
 ```
 
 ### Gmail
