@@ -232,7 +232,7 @@ OC.L10N.register(
     "Unexpected error during account creation" : "Erreur inattendue pendant la création du compte",
     "Itinerary for {type} is not supported yet" : "L'itinéraire pour {type} n'est pas encore pris en charge",
     "All" : "Tout",
-    "Archive" : "Archiver",
+    "Archive" : "Archive",
     "Drafts" : "Brouillons",
     "Priority inbox" : "Boite de réception prioritaire",
     "All inboxes" : "Toutes les boîtes",
