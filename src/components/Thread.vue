@@ -145,13 +145,11 @@ export default {
 
 			// Compute the number of participants to display depending on the width available
 			const avatarHeader = this.$refs.avatarHeader
+			const maxWidth = (avatarHeader.clientWidth - 100) // Reserve 100px for the avatar-more span
 			let childrenWidth = 0
 			let fits = 0
 			let idx = 0
-			console.log('avatarHeader', avatarHeader.clientWidth)
-			while (childrenWidth < avatarHeader.clientWidth && fits < this.threadParticipants.length) {
-				console.log('fits', fits)
-				console.log('childrenWidth', childrenWidth)
+			while (childrenWidth < maxWidth && fits < this.threadParticipants.length) {
 				// Skipping the 'avatar-more' span
 				if (avatarHeader.childNodes[idx].clientWidth === undefined) {
 					idx += 3
@@ -162,10 +160,9 @@ export default {
 				idx++
 			}
 
-			console.log('updateParticipantsToDisplay', fits)
-			if (childrenWidth > avatarHeader.clientWidth) {
+			if (childrenWidth > maxWidth) {
 				// There's not enough space to show all thread participants
-				this.participantsToDisplay = fits - 2
+				this.participantsToDisplay = fits - 1
 			} else {
 				// There's enough space to show all thread participants
 				this.participantsToDisplay = this.threadParticipants.length
