@@ -50,7 +50,6 @@
 <script>
 import AppContentDetails from '@nextcloud/vue/dist/Components/AppContentDetails'
 import { prop, uniqBy } from 'ramda'
-import { ReactiveRefs } from 'vue-reactive-refs'
 import { VPopover } from 'v-tooltip'
 import Vue from 'vue'
 
@@ -59,8 +58,6 @@ import Loading from './Loading'
 import logger from '../logger'
 import RecipientBubble from './RecipientBubble'
 import ThreadEnvelope from './ThreadEnvelope'
-
-Vue.use(ReactiveRefs)
 
 export default {
 	name: 'Thread',
@@ -71,8 +68,6 @@ export default {
 		ThreadEnvelope,
 		VPopover,
 	},
-
-	refs: ['avatarHeader'],
 
 	data() {
 		return {
@@ -137,9 +132,6 @@ export default {
 	created() {
 		this.resetThread()
 		window.addEventListener('resize', this.updateParticipantsToDisplay)
-
-		// Note: This watcher needs 'vue-reactive-refs'
-		this.$watch('$refs.avatarHeader', this.updateParticipantsToDisplay)
 	},
 	beforeDestroy() {
 		window.removeEventListener('resize', this.updateParticipantsToDisplay)
@@ -155,21 +147,25 @@ export default {
 			const avatarHeader = this.$refs.avatarHeader
 			let childrenWidth = 0
 			let fits = 0
-			let skipped = 0
+			let idx = 0
+			console.log('avatarHeader', avatarHeader.clientWidth)
 			while (childrenWidth < avatarHeader.clientWidth && fits < this.threadParticipants.length) {
+				console.log('fits', fits)
+				console.log('childrenWidth', childrenWidth)
 				// Skipping the 'avatar-more' span
-				if (avatarHeader.childNodes[fits].clientWidth === undefined) {
-					fits += 3
-					skipped = 3
+				if (avatarHeader.childNodes[idx].clientWidth === undefined) {
+					idx += 3
 					continue
 				}
-				childrenWidth += avatarHeader.childNodes[fits].clientWidth
+				childrenWidth += avatarHeader.childNodes[idx].clientWidth
 				fits++
+				idx++
 			}
 
-			if (fits < this.threadParticipants.length) {
+			console.log('updateParticipantsToDisplay', fits)
+			if (childrenWidth > avatarHeader.clientWidth) {
 				// There's not enough space to show all thread participants
-				this.participantsToDisplay = fits - 2 - skipped
+				this.participantsToDisplay = fits - 2
 			} else {
 				// There's enough space to show all thread participants
 				this.participantsToDisplay = this.threadParticipants.length
@@ -200,6 +196,8 @@ export default {
 		async resetThread() {
 			this.expandedThreads = [this.threadId]
 			await this.fetchThread()
+			// this.$nextTick(() => this.updateParticipantsToDisplay())
+			this.updateParticipantsToDisplay()
 		},
 		async fetchThread() {
 			this.loading = true
