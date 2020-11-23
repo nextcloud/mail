@@ -52,6 +52,7 @@ export default {
 			originalBody: undefined,
 			errorMessage: '',
 			error: undefined,
+			newDraftId: undefined,
 		}
 	},
 	computed: {
@@ -140,7 +141,12 @@ export default {
 			// `saveDraft` replaced the current URL with the updated draft UID
 			// in that case we don't really start a new draft but just keep the
 			// URL consistent, hence not loading anything
-			if (to.name === 'message' && this.draft && to.params.draftId === parseInt(this.draft.databaseId, 10)) {
+			if (to.name === 'message' && this.draft
+				&& (
+					to.params.draftId === parseInt(this.draft.databaseId, 10)
+					|| to.params.draftId === this.newDraftId
+				)
+			) {
 				logger.debug('detected navigation to current (new) draft UID, not reloading')
 				return
 			}
@@ -266,15 +272,41 @@ export default {
 				body: data.isHtml ? data.body.value : toPlain(data.body).value,
 			}
 			const { id } = await saveDraft(data.account, dataForServer)
+
+			// Remove old draft envelope
+			this.$store.commit('removeEnvelope', { id: data.draftId })
+			this.$store.commit('removeMessage', { id: data.draftId })
+
+			// Fetch new draft envelope
+			await this.$store.dispatch('fetchEnvelope', id)
+
+			// Update route to new draft (actual redirect will be skipped)
+			const account = this.$store.getters.getAccount(data.account)
+			if (parseInt(this.$route.params.mailboxId, 10) === account.draftsMailboxId) {
+				this.newDraftId = id
+				this.$router.replace({
+					to: 'message',
+					params: {
+						mailboxId: this.$route.params.mailboxId,
+						threadId: this.$route.params.threadId,
+						draftId: id,
+					},
+				})
+			}
+
 			return id
 		},
-		sendMessage(data) {
+		async sendMessage(data) {
 			logger.debug('sending message', { data })
 			const dataForServer = {
 				...data,
 				body: data.isHtml ? data.body.value : toPlain(data.body).value,
 			}
-			return sendMessage(data.account, dataForServer)
+			await sendMessage(data.account, dataForServer)
+
+			// Remove old draft envelope
+			this.$store.commit('removeEnvelope', { id: data.draftId })
+			this.$store.commit('removeMessage', { id: data.draftId })
 		},
 	},
 }
