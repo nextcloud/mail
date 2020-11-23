@@ -32,6 +32,7 @@ use OCA\Mail\Db\Mailbox;
 use OCA\Mail\Db\MailboxMapper;
 use OCA\Mail\Db\Message;
 use OCA\Mail\Events\DraftSavedEvent;
+use OCA\Mail\Events\MessageDeletedEvent;
 use OCA\Mail\Events\MessageSentEvent;
 use OCA\Mail\IMAP\IMAPClientFactory;
 use OCA\Mail\IMAP\MessageMapper;
@@ -41,6 +42,7 @@ use OCA\Mail\Model\NewMessageData;
 use OCA\Mail\Model\RepliedMessageData;
 use OCP\AppFramework\Db\DoesNotExistException;
 use OCP\EventDispatcher\Event;
+use OCP\EventDispatcher\IEventDispatcher;
 use OCP\EventDispatcher\IEventListener;
 use PHPUnit\Framework\MockObject\MockObject;
 use Psr\Log\LoggerInterface;
@@ -59,6 +61,9 @@ class DeleteDraftListenerTest extends TestCase {
 	/** @var LoggerInterface|MockObject */
 	private $logger;
 
+	/** @var IEventDispatcher|MockObject */
+	private $eventDispatcher;
+
 	/** @var IEventListener */
 	private $listener;
 
@@ -69,12 +74,14 @@ class DeleteDraftListenerTest extends TestCase {
 		$this->mailboxMapper = $this->createMock(MailboxMapper::class);
 		$this->messageMapper = $this->createMock(MessageMapper::class);
 		$this->logger = $this->createMock(LoggerInterface::class);
+		$this->eventDispatcher = $this->createMock(IEventDispatcher::class);
 
 		$this->listener = new DeleteDraftListener(
 			$this->imapClientFactory,
 			$this->mailboxMapper,
 			$this->messageMapper,
-			$this->logger
+			$this->logger,
+			$this->eventDispatcher
 		);
 	}
 
@@ -100,6 +107,8 @@ class DeleteDraftListenerTest extends TestCase {
 			->method('addFlag');
 		$this->logger->expects($this->never())
 			->method('error');
+		$this->eventDispatcher->expects($this->never())
+			->method('dispatchTyped');
 
 		$this->listener->handle($event);
 	}
@@ -181,6 +190,8 @@ class DeleteDraftListenerTest extends TestCase {
 			->method('addFlag');
 		$this->logger->expects($this->never())
 			->method('error');
+		$this->eventDispatcher->expects($this->never())
+			->method('dispatchTyped');
 
 		$this->listener->handle($event);
 	}
@@ -235,6 +246,15 @@ class DeleteDraftListenerTest extends TestCase {
 			->with('Drafts');
 		$this->logger->expects($this->never())
 			->method('error');
+
+		$messageDeletedEvent = new MessageDeletedEvent(
+			$account,
+			$mailbox,
+			$draft->getUid()
+		);
+		$this->eventDispatcher->expects($this->once())
+			->method('dispatchTyped')
+			->with($messageDeletedEvent);
 
 		$this->listener->handle($event);
 	}
