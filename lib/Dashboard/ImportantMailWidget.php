@@ -3,9 +3,8 @@
 declare(strict_types=1);
 
 /**
- * @copyright Copyright (c) 2020 Julius Härtl <jus@bitgrid.net>
+ * @copyright Copyright (c) 2020 Richard Steinmetz <richard@steinmetz.cloud>
  *
- * @author Julius Härtl <jus@bitgrid.net>
  * @author Richard Steinmetz <richard@steinmetz.cloud>
  *
  * @license GNU AGPL version 3 or any later version
@@ -25,27 +24,21 @@ declare(strict_types=1);
  *
  */
 
+namespace OCA\Mail\Dashboard;
 
-
-namespace OCA\Mail\Listener;
-
-use OCA\Mail\Dashboard\ImportantMailWidget;
-use OCA\Mail\Dashboard\UnreadMailWidget;
-use OCP\Dashboard\RegisterWidgetEvent;
-use OCP\EventDispatcher\Event;
-use OCP\EventDispatcher\IEventListener;
-
-class DashboardPanelListener implements IEventListener {
+class ImportantMailWidget extends MailWidget {
 
 	/**
 	 * @inheritDoc
 	 */
-	public function handle(Event $event): void {
-		if (!($event instanceof RegisterWidgetEvent)) {
-			return;
-		}
+	public function getId(): string {
+		return 'mail';
+	}
 
-		$event->registerWidget(ImportantMailWidget::class);
-		$event->registerWidget(UnreadMailWidget::class);
+	/**
+	 * @inheritDoc
+	 */
+	public function getTitle(): string {
+		return $this->l10n->t('Important mail');
 	}
 }
