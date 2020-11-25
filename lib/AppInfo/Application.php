@@ -32,7 +32,8 @@ use OCA\Mail\Contracts\IMailManager;
 use OCA\Mail\Contracts\IMailSearch;
 use OCA\Mail\Contracts\IMailTransmission;
 use OCA\Mail\Contracts\IUserPreferences;
-use OCA\Mail\Dashboard\MailWidget;
+use OCA\Mail\Dashboard\ImportantMailWidget;
+use OCA\Mail\Dashboard\UnreadMailWidget;
 use OCA\Mail\Events\DraftSavedEvent;
 use OCA\Mail\Events\MailboxesSynchronizedEvent;
 use OCA\Mail\Events\SynchronizationEvent;
@@ -113,7 +114,8 @@ class Application extends App implements IBootstrap {
 		$context->registerMiddleWare(ErrorMiddleware::class);
 		$context->registerMiddleWare(ProvisioningMiddleware::class);
 
-		$context->registerDashboardWidget(MailWidget::class);
+		$context->registerDashboardWidget(ImportantMailWidget::class);
+		$context->registerDashboardWidget(UnreadMailWidget::class);
 		$context->registerSearchProvider(Provider::class);
 
 		// bypass Horde Translation system
