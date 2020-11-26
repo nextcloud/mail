@@ -7,9 +7,27 @@
 					<h2 :title="threadSubject">
 						{{ threadSubject }}
 					</h2>
-					<div class="avatar-header">
-						<RecipientBubble v-for="participant in threadParticipants"
+					<div ref="avatarHeader" class="avatar-header">
+						<!-- Participants that can fit in the parent div -->
+						<RecipientBubble v-for="participant in threadParticipants.slice(0,participantsToDisplay)"
 							:key="participant.email"
+							:email="participant.email"
+							:label="participant.label" />
+						<!-- Indicator to show that there are more participants than displayed -->
+						<Popover v-if="threadParticipants.length > participantsToDisplay"
+							class="avatar-more">
+							<span slot="trigger" class="avatar-more">
+								{{ moreParticipantsString }}
+							</span>
+							<RecipientBubble v-for="participant in threadParticipants.slice(participantsToDisplay)"
+								:key="participant.email"
+								:email="participant.email"
+								:label="participant.label" />
+						</Popover>
+						<!-- Remaining participants, if any (Needed to have avatarHeader reactive) -->
+						<RecipientBubble v-for="participant in threadParticipants.slice(participantsToDisplay)"
+							:key="participant.email"
+							class="avatar-hidden"
 							:email="participant.email"
 							:label="participant.label" />
 					</div>
@@ -29,7 +47,10 @@
 
 <script>
 import AppContentDetails from '@nextcloud/vue/dist/Components/AppContentDetails'
+import Popover from '@nextcloud/vue/dist/Components/Popover'
+
 import { prop, uniqBy } from 'ramda'
+import debounce from 'lodash/fp/debounce'
 
 import { getRandomMessageErrorMessage } from '../util/ErrorMessageFactory'
 import Loading from './Loading'
@@ -44,6 +65,7 @@ export default {
 		AppContentDetails,
 		Loading,
 		ThreadEnvelope,
+		Popover,
 	},
 
 	data() {
@@ -53,9 +75,16 @@ export default {
 			errorMessage: '',
 			error: undefined,
 			expandedThreads: [],
+			participantsToDisplay: 999,
+			resizeDebounced: debounce(500, this.updateParticipantsToDisplay)
 		}
 	},
+
 	computed: {
+		moreParticipantsString() {
+			// Returns a number showing the number of thread participants that are not shown in the avatar-header
+			return `+${this.threadParticipants.length - this.participantsToDisplay}`
+		},
 		threadId() {
 			return parseInt(this.$route.params.threadId, 10)
 		},
@@ -94,8 +123,43 @@ export default {
 	},
 	created() {
 		this.resetThread()
+		window.addEventListener('resize', this.resizeDebounced)
+	},
+	beforeDestroy() {
+		window.removeEventListener('resize', this.resizeDebounced)
 	},
 	methods: {
+		updateParticipantsToDisplay() {
+			// Wait until everything is in place
+			if (!this.$refs.avatarHeader || !this.threadParticipants) {
+				return
+			}
+
+			// Compute the number of participants to display depending on the width available
+			const avatarHeader = this.$refs.avatarHeader
+			const maxWidth = (avatarHeader.clientWidth - 100) // Reserve 100px for the avatar-more span
+			let childrenWidth = 0
+			let fits = 0
+			let idx = 0
+			while (childrenWidth < maxWidth && fits < this.threadParticipants.length) {
+				// Skipping the 'avatar-more' span
+				if (avatarHeader.childNodes[idx].clientWidth === undefined) {
+					idx += 3
+					continue
+				}
+				childrenWidth += avatarHeader.childNodes[idx].clientWidth
+				fits++
+				idx++
+			}
+
+			if (childrenWidth > maxWidth) {
+				// There's not enough space to show all thread participants
+				this.participantsToDisplay = fits - 1
+			} else {
+				// There's enough space to show all thread participants
+				this.participantsToDisplay = this.threadParticipants.length
+			}
+		},
 		toggleExpand(threadId) {
 			if (!this.expandedThreads.includes(threadId)) {
 				console.debug(`expand thread ${threadId}`)
@@ -121,6 +185,7 @@ export default {
 		async resetThread() {
 			this.expandedThreads = [this.threadId]
 			await this.fetchThread()
+			this.updateParticipantsToDisplay()
 		},
 		async fetchThread() {
 			this.loading = true
@@ -304,6 +369,25 @@ export default {
 	white-space: pre-wrap;
 	user-select: text;
 }
+
+.avatar-header {
+	max-height: 24px;
+	overflow: hidden;
+}
+.avatar-more {
+	display: inline;
+	background-color: var(--color-background-dark);
+	padding: 0px 0px 1px 1px;
+	border-radius: 10px;
+	cursor: pointer;
+}
+.avatar-hidden {
+	visibility: hidden;
+}
+.popover__wrapper {
+	max-width: 500px;
+}
+
 .app-content-list-item-star.icon-starred {
 	display: none;
 }
