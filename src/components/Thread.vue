@@ -48,7 +48,9 @@
 <script>
 import AppContentDetails from '@nextcloud/vue/dist/Components/AppContentDetails'
 import Popover from '@nextcloud/vue/dist/Components/Popover'
+
 import { prop, uniqBy } from 'ramda'
+import debounce from 'lodash/fp/debounce'
 
 import { getRandomMessageErrorMessage } from '../util/ErrorMessageFactory'
 import Loading from './Loading'
@@ -120,10 +122,10 @@ export default {
 	},
 	created() {
 		this.resetThread()
-		window.addEventListener('resize', this.updateParticipantsToDisplay)
+		window.addEventListener('resize', debounce(500, this.updateParticipantsToDisplay))
 	},
 	beforeDestroy() {
-		window.removeEventListener('resize', this.updateParticipantsToDisplay)
+		window.removeEventListener('resize', debounce(500, this.updateParticipantsToDisplay))
 	},
 	methods: {
 		updateParticipantsToDisplay() {
