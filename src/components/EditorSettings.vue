@@ -20,11 +20,7 @@
   -->
 
 <template>
-	<div class="section">
-		<h2>{{ t('mail', 'Writing mode') }}</h2>
-		<p class="settings-hint">
-			{{ t('mail', 'Preferred writing mode for new messages and replies.') }}
-		</p>
+	<div>
 		<p>
 			<input id="plaintext"
 				v-model="mode"
@@ -85,11 +81,6 @@ export default {
 </script>
 
 <style lang="scss" scoped>
-.settings-hint {
-	margin-top: -12px;
-	margin-bottom: 6px;
-	color: var(--color-text-maxcontrast);
-}
 
 label {
 	padding-right: 12px;
