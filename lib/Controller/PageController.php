@@ -221,10 +221,17 @@ class PageController extends Controller {
 			function (&$value, $key) {
 				$value = "$key=" . urlencode($value);
 			});
-
-		$hashParams = '#mailto?' . implode('&', $params);
-
-		$baseUrl = $this->urlGenerator->linkToRoute("mail.page.index");
-		return new RedirectResponse($baseUrl . $hashParams);
+		$name = '?' . implode('&', $params);
+		$baseUrl = $this->urlGenerator->linkToRoute('mail.page.mailto');
+		return new RedirectResponse($baseUrl . $name);
+	}
+	/**
+	 * @NoAdminRequired
+	 * @NoCSRFRequired
+	 *
+	 * @return TemplateResponse
+	 */
+	public function mailto(): TemplateResponse {
+		return $this->index();
 	}
 }
