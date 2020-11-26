@@ -20,9 +20,9 @@
 								{{ moreParticipantsString }}
 							</span>
 							<RecipientBubble v-for="participant in threadParticipants.slice(participantsToDisplay)"
-									:key="participant.email"
-									:email="participant.email"
-									:label="participant.label" />
+								:key="participant.email"
+								:email="participant.email"
+								:label="participant.label" />
 						</Popover>
 						<!-- Remaining participants, if any (Needed to have avatarHeader reactive) -->
 						<RecipientBubble v-for="participant in threadParticipants.slice(participantsToDisplay)"
