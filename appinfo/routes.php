@@ -50,6 +50,11 @@ return [
 			'verb' => 'GET'
 		],
 		[
+			'name' => 'page#draft',
+			'url' => '/box/{mailboxId}/thread/new/{draftId}',
+			'verb' => 'GET'
+		],
+		[
 			'name' => 'page#index',
 			'url' => '/',
 			'verb' => 'GET'
