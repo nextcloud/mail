@@ -14,18 +14,16 @@
 							:email="participant.email"
 							:label="participant.label" />
 						<!-- Indicator to show that there are more participants than displayed -->
-						<VPopover v-if="threadParticipants.length > participantsToDisplay"
+						<Popover v-if="threadParticipants.length > participantsToDisplay"
 							class="avatar-more">
-							<span class="avatar-more">
+							<span slot="trigger" class="avatar-more">
 								{{ moreParticipantsString }}
 							</span>
-							<template slot="popover">
-								<RecipientBubble v-for="participant in threadParticipants.slice(participantsToDisplay)"
+							<RecipientBubble v-for="participant in threadParticipants.slice(participantsToDisplay)"
 									:key="participant.email"
 									:email="participant.email"
 									:label="participant.label" />
-							</template>
-						</VPopover>
+						</Popover>
 						<!-- Remaining participants, if any (Needed to have avatarHeader reactive) -->
 						<RecipientBubble v-for="participant in threadParticipants.slice(participantsToDisplay)"
 							:key="participant.email"
@@ -49,8 +47,8 @@
 
 <script>
 import AppContentDetails from '@nextcloud/vue/dist/Components/AppContentDetails'
+import Popover from '@nextcloud/vue/dist/Components/Popover'
 import { prop, uniqBy } from 'ramda'
-import { VPopover } from 'v-tooltip'
 
 import { getRandomMessageErrorMessage } from '../util/ErrorMessageFactory'
 import Loading from './Loading'
@@ -65,7 +63,7 @@ export default {
 		AppContentDetails,
 		Loading,
 		ThreadEnvelope,
-		VPopover,
+		Popover,
 	},
 
 	data() {
@@ -383,9 +381,8 @@ export default {
 .avatar-hidden {
 	visibility: hidden;
 }
-.popover-inner {
+.popover__wrapper {
 	max-width: 500px;
-	border-radius: 10px;
 }
 
 .app-content-list-item-star.icon-starred {
