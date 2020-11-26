@@ -84,14 +84,6 @@ export default {
 			// Returns a number showing the number of thread participants that are not shown in the avatar-header
 			return `+${this.threadParticipants.length - this.participantsToDisplay}`
 		},
-		remainingParticipants() {
-			// Returns a string containing all thread participants that are not shown in the avatar-header
-			return this.threadParticipants.slice(this.participantsToDisplay)
-				.map(participant => {
-					return '<a href="mailto:' + participant.email + '">' + participant.label + '</a>'
-				})
-				.join('<br>')
-		},
 		threadId() {
 			return parseInt(this.$route.params.threadId, 10)
 		},
@@ -192,7 +184,6 @@ export default {
 		async resetThread() {
 			this.expandedThreads = [this.threadId]
 			await this.fetchThread()
-			// this.$nextTick(() => this.updateParticipantsToDisplay())
 			this.updateParticipantsToDisplay()
 		},
 		async fetchThread() {
