@@ -202,6 +202,16 @@ class PageController extends Controller {
 	 * @NoAdminRequired
 	 * @NoCSRFRequired
 	 *
+	 * @return TemplateResponse
+	 */
+	public function draft(int $mailboxId, int $draftId): TemplateResponse {
+		return $this->index();
+	}
+
+	/**
+	 * @NoAdminRequired
+	 * @NoCSRFRequired
+	 *
 	 * @param string $uri
 	 *
 	 * @return RedirectResponse
