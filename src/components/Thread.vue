@@ -76,6 +76,7 @@ export default {
 			error: undefined,
 			expandedThreads: [],
 			participantsToDisplay: 999,
+			resizeDebounced: debounce(500, this.updateParticipantsToDisplay)
 		}
 	},
 
@@ -122,10 +123,10 @@ export default {
 	},
 	created() {
 		this.resetThread()
-		window.addEventListener('resize', debounce(500, this.updateParticipantsToDisplay))
+		window.addEventListener('resize', this.resizeDebounced)
 	},
 	beforeDestroy() {
-		window.removeEventListener('resize', debounce(500, this.updateParticipantsToDisplay))
+		window.removeEventListener('resize', this.resizeDebounced)
 	},
 	methods: {
 		updateParticipantsToDisplay() {
