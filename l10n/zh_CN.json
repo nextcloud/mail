@@ -4,6 +4,7 @@
     "Creating account failed: " : "创建账号失败：",
     "Embedded message %s" : "嵌入式消息 %s",
     "Important mail" : "重要邮件",
+    "Unread mail" : "未读邮件",
     "Mails" : "邮件",
     "Mail" : "邮件",
     "💌 A mail app for Nextcloud" : "💌 Nextcloud 上的一款邮件应用",

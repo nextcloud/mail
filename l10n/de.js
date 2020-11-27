@@ -6,6 +6,7 @@ OC.L10N.register(
     "Creating account failed: " : "Kontoerstellung fehlgeschlagen:",
     "Embedded message %s" : "Eingebettete Nachricht %s",
     "Important mail" : "Wichtige E-Mail",
+    "Unread mail" : "Ungelesene E-Mail",
     "Mails" : "E-Mails",
     "Mail" : "E-Mail",
     "💌 A mail app for Nextcloud" : "💌 Eine E-Mail-App für Nextcloud",
