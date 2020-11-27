@@ -65,6 +65,11 @@ return [
 			'verb' => 'GET'
 		],
 		[
+			'name' => 'page#mailto',
+			'url' => '/mailto',
+			'verb' => 'GET'
+		],
+		[
 			'name' => 'accounts#send',
 			'url' => '/api/accounts/{id}/send',
 			'verb' => 'POST'
