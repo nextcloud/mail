@@ -91,7 +91,7 @@ OC.L10N.register(
     "Draft: " : "Entwurf:",
     "Mark unimportant" : "Als unwichtig markieren",
     "Mark important" : "Als wichtig markieren",
-    "Mark unfavorite" : "Nicht favorisieren",
+    "Mark unfavorite" : "Als nicht favorisiert markieren",
     "Mark favorite" : "Als favorisiert markieren",
     "Mark unread" : "Als ungelesen markieren",
     "Mark read" : "Als gelesen markieren",

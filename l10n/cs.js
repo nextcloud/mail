@@ -105,6 +105,8 @@ OC.L10N.register(
     "Could not delete message" : "Zprávu se nedaří smazat",
     "Mark {number} unread" : "Označit {number} jako nepřečtené",
     "Mark {number} read" : "Označit {number} jako přečtené",
+    "Unfavorite {number}" : "Odebrat z oblíbených {number}",
+    "Favorite {number}" : "Přidat k oblíbeným {number}",
     "Unselect {number}" : "Zrušit výběr {number}",
     "Move {number}" : "Přesunout {number}",
     "Delete {number}" : "Smazat {number}",

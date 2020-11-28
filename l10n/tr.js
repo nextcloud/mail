@@ -6,6 +6,7 @@ OC.L10N.register(
     "Creating account failed: " : "Hesap oluşturulamadı:",
     "Embedded message %s" : "Gömülü ileti %s",
     "Important mail" : "Önemli e-posta",
+    "Unread mail" : "Okunmamış e-posta",
     "Mails" : "E-postalar",
     "Mail" : "E-posta",
     "💌 A mail app for Nextcloud" : "💌 Nextcloud e-posta uygulaması",
