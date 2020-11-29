@@ -111,7 +111,7 @@
     "Move {number}" : "{number} verschieben",
     "Delete {number}" : "{number} löschen",
     "Load more" : "Mehr laden",
-    "Report this bug" : "Diesen Bug melden",
+    "Report this bug" : "Diesen Fehler melden",
     "Could not open mailbox" : "E-Mail-Postfach konnte nicht geöffnet werden",
     "Loading messages" : "Lade Nachrichten",
     "Indexing your messages. This can take a bit longer for larger mailboxes." : "Ihre Nachrichten werden indiziert. Dies kann bei größeren E-Mail-Postfächern etwas länger dauern.",
