@@ -69,7 +69,7 @@ class HtmlResponse extends Response {
 			$content,
 			false,
 			$nonce,
-			$scriptUrl,
+			$scriptUrl
 		);
 	}
 
