@@ -1,0 +1,71 @@
+[droppable-mailbox] {
+	a.app-navigation-entry-link {
+		position: relative;
+
+		&:before,
+		&:after {
+			transition: .1s border-color ease-in-out;
+		}
+	}
+
+	> a {
+		&:before {
+			content: '';
+			position: absolute;
+			top: 0;
+			left: 2px;
+			bottom: 0;
+			right: 0;
+			transition: .1s opacity ease-in-out;
+			border: 2px solid transparent;
+			pointer-events: none;
+			border-radius: 20px;
+		}
+
+		&:after {
+			content: '';
+			position: absolute;
+			width: 0;
+			height: 0;
+			border-top: 5px solid transparent;
+			border-left: 5px solid transparent;
+			border-bottom: 5px solid transparent;
+			left: 4px;
+			top: 50%;
+			margin-top: -5px;
+		}
+	}
+}
+[droppable-mailbox="disabled"] {
+	pointer-events: none;
+	opacity: .3;
+}
+[droppable-mailbox="dragover"] {
+	> a {
+		&:before {
+			content: '';
+			position: absolute;
+			top: 0;
+			left: 2px;
+			bottom: 0;
+			right: 0;
+			transition: .1s opacity ease-in-out;
+			border: 2px solid var(--color-primary-element);
+			pointer-events: none;
+			border-radius: 20px;
+		}
+
+		&:after {
+			content: '';
+			position: absolute;
+			width: 0;
+			height: 0;
+			border-top: 5px solid transparent;
+			border-left: 5px solid var(--color-primary-element);
+			border-bottom: 5px solid transparent;
+			left: 4px;
+			top: 50%;
+			margin-top: -5px;
+		}
+	}
+}

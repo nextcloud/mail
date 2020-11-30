@@ -24,6 +24,11 @@
 		v-if="visible"
 		:id="genId(mailbox)"
 		:key="genId(mailbox)"
+		v-droppable-mailbox="{
+			mailboxId: mailbox.databaseId,
+			accountId: mailbox.accountId,
+			isValidDropTarget,
+		}"
 		:allow-collapse="true"
 		:menu-open.sync="menuOpen"
 		:force-menu="true"
@@ -142,6 +147,8 @@ import logger from '../logger'
 import { translatePlural as n } from '@nextcloud/l10n'
 import { translate as translateMailboxName } from '../i18n/MailboxTranslator'
 import { showInfo } from '@nextcloud/dialogs'
+import { DroppableMailboxDirective as droppableMailbox } from '../directives/drag-and-drop/droppable-mailbox'
+import dragEventBus from '../directives/drag-and-drop/util/dragEventBus'
 
 export default {
 	name: 'NavigationMailbox',
@@ -153,6 +160,9 @@ export default {
 		ActionCheckbox,
 		ActionInput,
 		MoveMailboxModal,
+	},
+	directives: {
+		droppableMailbox,
 	},
 	props: {
 		account: {
@@ -189,7 +199,6 @@ export default {
 			renameInput: false,
 			mailboxName: this.mailbox.displayName,
 			showMoveModal: false,
-
 		}
 	},
 	computed: {
@@ -262,6 +271,34 @@ export default {
 		isSubscribed() {
 			return this.mailbox.attributes && this.mailbox.attributes.includes('\\subscribed')
 		},
+		isDroppableSpecialMailbox() {
+			if (this.filter === 'starred') {
+				return false
+			}
+			return ![
+				this.account.draftsMailboxId,
+				this.account.sentMailboxId,
+			].includes(this.mailbox.databaseId)
+		},
+		isActive() {
+			return this.$route.params.mailboxId === this.mailbox.databaseId
+		},
+		isValidDropTarget() {
+			if (this.isActive) {
+				return false
+			}
+			return this.isDroppableSpecialMailbox || (!this.mailbox.specialRole && !this.account.isUnified)
+		},
+	},
+	mounted() {
+		dragEventBus.$on('dragStart', this.onDragStart)
+		dragEventBus.$on('dragEnd', this.onDragEnd)
+		dragEventBus.$on('envelopesMoved', this.onEnvelopesMoved)
+	},
+	beforeDestroy() {
+		dragEventBus.$off('dragStart', this.onDragStart)
+		dragEventBus.$off('dragEnd', this.onDragEnd)
+		dragEventBus.$off('envelopesMoved', this.onEnvelopesMoved)
 	},
 	methods: {
 		/**
@@ -443,6 +480,38 @@ export default {
 		},
 		onCloseMoveModal() {
 			this.showMoveModal = false
+		},
+		onDragStart({ accountId }) {
+			if (accountId !== this.mailbox.accountId) {
+				return
+			}
+			this.$store.commit('expandAccount', accountId)
+			this.showSubMailboxes = true
+		},
+		onDragEnd({ accountId }) {
+			if (accountId !== this.mailbox.accountId) {
+				return
+			}
+			this.showSubMailboxes = false
+		},
+		onEnvelopesMoved({ mailboxId, movedEnvelopes }) {
+			if (this.mailbox.databaseId !== mailboxId) {
+				return
+			}
+			const openedMessageHasBeenMoved = movedEnvelopes.find((movedEnvelope) => {
+				return movedEnvelope.envelopeId === this.$route.params.threadId
+			})
+			// navigate to the mailbox root
+			// if the currently displayed message has been moved
+			if (this.$route.name === 'message' && openedMessageHasBeenMoved) {
+				this.$router.push({
+					name: 'mailbox',
+					params: {
+						mailboxId: this.$route.params.mailboxId,
+						filter: this.$route.params?.filter,
+					},
+				})
+			}
 		},
 	},
 }

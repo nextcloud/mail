@@ -1,0 +1,49 @@
+[draggable-envelope="pending"] {
+	opacity: 0.6;
+	pointer-events: none;
+	cursor: default;
+}
+.draggable-envelope-ghost {
+	height: auto;
+	width: 300px;
+
+	&--counter {
+		position: absolute;
+		left: -40px;
+		background-color: var(--color-primary-element);
+		color: #fff;
+		font-weight: bold;
+		text-align: center;
+		display: inline-block;
+		margin-right: 10px;
+		border-top-left-radius: 20px;
+		border-bottom-left-radius: 20px;
+		width: 10px;
+		padding: 8px 15px;
+	}
+
+	&--label-wrapper {
+		&--label {
+			padding: 8px 15px;
+			text-overflow: ellipsis;
+			white-space: nowrap;
+			overflow: hidden;
+			width: 100%;
+			text-align: left;
+			margin-bottom: 1px;
+			background-color: #fff;
+			border-left: 2px solid var(--color-primary-element);
+
+			&:first-child {
+				border-top-right-radius: 20px;
+			}
+			&:last-child {
+				border-bottom-right-radius: 20px;
+				border-bottom-left-radius: 20px;
+			}
+			&:only-child {
+				border-bottom-left-radius: 0;
+			}
+		}
+	}
+}
