@@ -71,16 +71,34 @@ class MailboxesSynchronizedSpecialMailboxesUpdater implements IEventListener {
 		);
 
 		if ($mailAccount->getDraftsMailboxId() === null || !array_key_exists($mailAccount->getDraftsMailboxId(), $mailboxes)) {
-			$draftsMailbox = $this->findSpecial($mailboxes, 'drafts');
-			$mailAccount->setDraftsMailboxId($draftsMailbox->getId());
+			try {
+				$draftsMailbox = $this->findSpecial($mailboxes, 'drafts');
+				$mailAccount->setDraftsMailboxId($draftsMailbox->getId());
+			} catch (DoesNotExistException $e) {
+				$this->logger->info("Account " . $account->getId() . " does not have a drafts mailbox");
+
+				$mailAccount->setDraftsMailboxId(null);
+			}
 		}
 		if ($mailAccount->getSentMailboxId() === null || !array_key_exists($mailAccount->getSentMailboxId(), $mailboxes)) {
-			$sentMailbox = $this->findSpecial($mailboxes, 'sent');
-			$mailAccount->setSentMailboxId($sentMailbox->getId());
+			try {
+				$sentMailbox = $this->findSpecial($mailboxes, 'sent');
+				$mailAccount->setSentMailboxId($sentMailbox->getId());
+			} catch (DoesNotExistException $e) {
+				$this->logger->info("Account " . $account->getId() . " does not have a sent mailbox");
+
+				$mailAccount->setSentMailboxId(null);
+			}
 		}
 		if ($mailAccount->getTrashMailboxId() === null || !array_key_exists($mailAccount->getTrashMailboxId(), $mailboxes)) {
-			$trashMailbox = $this->findSpecial($mailboxes, 'trash');
-			$mailAccount->setTrashMailboxId($trashMailbox->getId());
+			try {
+				$trashMailbox = $this->findSpecial($mailboxes, 'trash');
+				$mailAccount->setTrashMailboxId($trashMailbox->getId());
+			} catch (DoesNotExistException $e) {
+				$this->logger->info("Account " . $account->getId() . " does not have a trash mailbox");
+
+				$mailAccount->setTrashMailboxId(null);
+			}
 		}
 
 		$this->mailAccountMapper->update($mailAccount);
