@@ -629,6 +629,8 @@ export default {
 
 			this.state = STATES.UPLOADING
 
+			const account = this.$store.getters.getAccount(this.selectedAlias.id)
+			console.log('account', account)
 			return this.attachmentsPromise
 				.then(() => (this.state = STATES.SENDING))
 				.then(() => this.draftsPromise)
@@ -637,13 +639,14 @@ export default {
 				.then(() => logger.info('message sent'))
 				.then(() => (this.state = STATES.FINISHED))
 				.then(setTimeout(() => {
-					this.$store.dispatch('syncEnvelopesByRole', {
-						role: 'sent',
-						accountId: this.selectedAlias.id,
+					this.$store.dispatch('syncEnvelopes', {
+						mailboxId: account.sentMailboxId,
+						query: '',
+						init: false,
 						filter: {
-							'syncChanged': false,
-							'syncNew': true,
-							'syncVanished': false,
+							syncChanged: false,
+							syncNew: true,
+							syncVanished: false,
 						},
 					})
 				}, 2000))
