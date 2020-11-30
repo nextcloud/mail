@@ -101,8 +101,8 @@ export default {
 				isLocal: id !== undefined,
 			}
 		},
-		emitNewAttachment(attachment) {
-			this.$emit('input', this.value.concat([attachment]))
+		emitNewAttachments(attachments) {
+			this.$emit('input', this.value.concat(attachments))
 		},
 		onLocalAttachmentSelected(e) {
 			this.uploading = true
@@ -121,7 +121,7 @@ export default {
 
 				return uploadLocalAttachment(file, progress(file.name)).then(({ file, id }) => {
 					Logger.info('uploaded')
-					return this.emitNewAttachment(this.fileNameToAttachment(file.name, id))
+					return this.emitNewAttachments([this.fileNameToAttachment(file.name, id)])
 				})
 			})(e.target.files)
 
@@ -134,11 +134,11 @@ export default {
 			return done
 		},
 		onAddCloudAttachment() {
-			const picker = getFilePickerBuilder(t('mail', 'Choose a file to add as attachment')).build()
+			const picker = getFilePickerBuilder(t('mail', 'Choose a file to add as attachment')).setMultiSelect(true).build()
 
 			return picker
 				.pick(t('mail', 'Choose a file to add as attachment'))
-				.then((path) => this.emitNewAttachment(this.fileNameToAttachment(path)))
+				.then((paths) => this.emitNewAttachments(paths.map(this.fileNameToAttachment)))
 				.catch((error) => Logger.error('could not choose a file as attachment', { error }))
 		},
 		onAddCloudAttachmentLink() {
