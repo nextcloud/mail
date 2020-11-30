@@ -61,7 +61,7 @@ export const fetchThread = async(id) => {
 }
 
 export async function syncEnvelopes(accountId, id, ids, query, init = false, filter) {
-	const url = generateUrl('/apps/mail/api/mailboxes/{id}/sync}', {
+	const url = generateUrl('/apps/mail/api/mailboxes/{id}/sync', {
 		id,
 	})
 

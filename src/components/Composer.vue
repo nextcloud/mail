@@ -630,7 +630,6 @@ export default {
 			this.state = STATES.UPLOADING
 
 			const account = this.$store.getters.getAccount(this.selectedAlias.id)
-			console.log('account', account)
 			return this.attachmentsPromise
 				.then(() => (this.state = STATES.SENDING))
 				.then(() => this.draftsPromise)
