@@ -247,6 +247,8 @@ import { isPgpgMessage } from '../crypto/pgp'
 
 const debouncedSearch = debouncePromise(findRecipient, 500)
 
+const NO_ALIAS_SET = -1
+
 Vue.use(Autosize)
 
 const STATES = Object.seal({
@@ -317,7 +319,7 @@ export default {
 	data() {
 		return {
 			showCC: this.cc.length > 0,
-			selectedAlias: -1, // Fixed in `beforeMount`
+			selectedAlias: NO_ALIAS_SET, // Fixed in `beforeMount`
 			autocompleteRecipients: this.to.concat(this.cc).concat(this.bcc),
 			newRecipients: [],
 			subjectVal: this.subject,
@@ -445,7 +447,7 @@ export default {
 			} else {
 				this.selectedAlias = this.aliases[0]
 			}
-			if (previous === undefined) {
+			if (previous === NO_ALIAS_SET) {
 				this.editorMode = this.selectedAlias.editorMode
 			}
 		},
