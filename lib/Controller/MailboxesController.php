@@ -147,26 +147,34 @@ class MailboxesController extends Controller {
 	 *
 	 * @param bool $init
 	 * @param string|null $query
-	 * @param string|'all' $criteria
+	 * @param bool[] $filter
 	 *
 	 * @return JSONResponse
 	 * @throws ClientException
 	 * @throws ServiceException
 	 */
-	public function sync(int $id, array $ids = [], bool $init = false, string $query = null, string $criteria = 'all'): JSONResponse {
+	public function sync(int $id, array $ids = [], bool $init = false, string $query = null, array $filter = []): JSONResponse {
 		$mailbox = $this->mailManager->getMailbox($this->currentUserId, $id);
 		$account = $this->accountService->find($this->currentUserId, $mailbox->getAccountId());
 
-		$criteriaIds = Horde_Imap_Client::SYNC_NEWMSGSUIDS;
-		if ($criteria === 'all') {
-			$criteriaIds = $criteriaIds | Horde_Imap_Client::SYNC_FLAGSUIDS | Horde_Imap_Client::SYNC_VANISHEDUIDS;
+		// What types of messages do we need to sync?
+		$toSync = 0;
+		if (!array_key_exists('syncChanged', $filter) or $filter['syncChanged'] === true) {
+			$toSync = Horde_Imap_Client::SYNC_FLAGSUIDS;
+		}
+		if (!array_key_exists('syncNew', $filter) or $filter['syncNew'] === true) {
+			$toSync |= Horde_Imap_Client::SYNC_NEWMSGSUIDS;
+				Horde_Imap_Client::SYNC_VANISHEDUIDS;
+		}
+		if (!array_key_exists('syncVanished', $filter) or $filter['syncVanished'] === true) {
+			$toSync |= Horde_Imap_Client::SYNC_VANISHEDUIDS;
 		}
 
 		try {
 			$syncResponse = $this->syncService->syncMailbox(
 				$account,
 				$mailbox,
-				$criteriaIds,
+				$toSync,
 				array_map(function ($id) {
 					return (int)$id;
 				}, $ids),

@@ -60,10 +60,9 @@ export const fetchThread = async(id) => {
 	return resp.data
 }
 
-export async function syncEnvelopes(accountId, id, ids, query, init = false, criteria = 'all') {
-	const url = generateUrl('/apps/mail/api/mailboxes/{id}/sync/{criteria}', {
+export async function syncEnvelopes(accountId, id, ids, query, init = false, filter) {
+	const url = generateUrl('/apps/mail/api/mailboxes/{id}/sync}', {
 		id,
-		criteria,
 	})
 
 	try {
@@ -71,6 +70,7 @@ export async function syncEnvelopes(accountId, id, ids, query, init = false, cri
 			ids,
 			query,
 			init,
+			filter,
 		})
 
 		if (response.status === 202) {

@@ -640,7 +640,11 @@ export default {
 					this.$store.dispatch('syncEnvelopesByRole', {
 						role: 'sent',
 						accountId: this.selectedAlias.id,
-						criteria: 'new-only',
+						filter: {
+							'syncChanged': false,
+							'syncNew': true,
+							'syncVanished': false,
+						},
 					})
 				}, 2000))
 				.catch(async(error) => {

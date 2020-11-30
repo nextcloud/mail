@@ -412,7 +412,7 @@ export default {
 			return envelopes
 		})
 	},
-	syncEnvelopesByRole({ commit, getters, dispatch }, { role, accountId, query, init = false, criteria = 'all' }) {
+	syncEnvelopesByRole({ commit, getters, dispatch }, { role, accountId, query, init = false, filter }) {
 		return Promise.all(getters.getMailboxes(accountId)
 			.filter(mb => mb.specialRole === role)
 			.map(mb =>
@@ -420,12 +420,12 @@ export default {
 					mailboxId: mb.databaseId,
 					query,
 					init,
-					criteria,
+					filter,
 				})
 			)
 		)
 	},
-	syncEnvelopes({ commit, getters, dispatch }, { mailboxId, query, init = false, criteria = 'all' }) {
+	syncEnvelopes({ commit, getters, dispatch }, { mailboxId, query, init = false, filter }) {
 		const mailbox = getters.getMailbox(mailboxId)
 
 		if (mailbox.isUnified) {
@@ -442,7 +442,7 @@ export default {
 										mailboxId: mailbox.databaseId,
 										query,
 										init,
-										criteria,
+										filter,
 									})
 								)
 						)
@@ -462,7 +462,7 @@ export default {
 										mailboxId: mailbox.databaseId,
 										query,
 										init,
-										criteria,
+										filter,
 									})
 								)
 						)
@@ -510,7 +510,7 @@ export default {
 							mailboxId,
 							query,
 							init,
-							criteria,
+							filter,
 						 })
 					},
 					[MailboxLockedError.getName()](error) {
