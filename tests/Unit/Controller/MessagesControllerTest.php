@@ -153,7 +153,7 @@ class MessagesControllerTest extends TestCase {
 			$this->l10n,
 			$this->mimeTypeDetector,
 			$this->urlGenerator,
-			$this->nonceManager,
+			$this->nonceManager
 		);
 
 		$this->account = $this->createMock(Account::class);
