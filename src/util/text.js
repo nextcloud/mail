@@ -20,7 +20,7 @@
  */
 
 import { curry } from 'ramda'
-import { fromString } from 'html-to-text'
+import { htmlToText } from 'html-to-text'
 
 /**
  * @type {Text}
@@ -110,19 +110,29 @@ export const toPlain = (text) => {
 	}
 	const withBlockBreaks = text.value.replace(/<\/div>/gi, '</div><br>')
 
-	const converted = fromString(withBlockBreaks, {
-		noLinkBrackets: true,
-		ignoreHref: true,
-		ignoreImage: true,
+	const converted = htmlToText(withBlockBreaks, {
+		tags: {
+			a: {
+				options: {
+					noLinkBrackets: true,
+					ignoreHref: true,
+				},
+			},
+			img: {
+				format: 'skip',
+			},
+		},
 		wordwrap: false,
-		format: {
-			blockquote(element, fn, options) {
-				return fn(element.children, options)
+		formatters: {
+			blockquote(element, walk, builder, formatOptions) {
+				walk(element.children, builder)
 					.replace(/\n\n\n/g, '\n\n') // remove triple line breaks
 					.replace(/^/gm, '> ') // add > quotation to each line
 			},
-			paragraph(element, fn, options) {
-				return fn(element.children, options) + '\n\n'
+			paragraph(element, walk, builder, formatOptions) {
+				walk(element.children, builder)
+				builder.addLineBreak()
+				builder.addLineBreak()
 			},
 		},
 	})
