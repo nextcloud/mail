@@ -458,7 +458,7 @@ export default {
 		}
 
 		const ids = getters.getEnvelopes(mailboxId, query).map((env) => env.databaseId)
-		return syncEnvelopes(mailbox.accountId, mailboxId, ids, query, init)
+		return syncEnvelopes(mailbox.accountId, mailboxId, ids, query, init, filter)
 			.then((syncData) => {
 				logger.info(`mailbox ${mailboxId} synchronized, ${syncData.newMessages.length} new, ${syncData.changedMessages.length} changed and ${syncData.vanishedMessages.length} vanished messages`)
 
@@ -502,7 +502,7 @@ export default {
 					},
 					[MailboxLockedError.getName()](error) {
 						logger.info('Sync failed because the mailbox is locked, retriggering', { error })
-						return wait(1500).then(() => dispatch('syncEnvelopes', { mailboxId, query, init }))
+						return wait(1500).then(() => dispatch('syncEnvelopes', { mailboxId, query, init, filter }))
 					},
 					default(error) {
 						console.error('Could not sync envelopes: ' + error.message, error)
