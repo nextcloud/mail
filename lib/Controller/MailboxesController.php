@@ -164,7 +164,6 @@ class MailboxesController extends Controller {
 		}
 		if (!array_key_exists('syncNew', $filter) or $filter['syncNew'] === true) {
 			$toSync |= Horde_Imap_Client::SYNC_NEWMSGSUIDS;
-				Horde_Imap_Client::SYNC_VANISHEDUIDS;
 		}
 		if (!array_key_exists('syncVanished', $filter) or $filter['syncVanished'] === true) {
 			$toSync |= Horde_Imap_Client::SYNC_VANISHEDUIDS;
