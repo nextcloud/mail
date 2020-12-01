@@ -247,7 +247,12 @@ class MessagesController extends Controller {
 		$json['mailboxId'] = $mailbox->getId();
 		$json['databaseId'] = $message->getId();
 
-		return new JSONResponse($json);
+		$response = new JSONResponse($json);
+
+		// Enable caching
+		$response->cacheFor(60 * 60);
+
+		return $response;
 	}
 
 	/**
