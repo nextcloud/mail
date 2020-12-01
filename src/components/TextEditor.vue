@@ -30,7 +30,7 @@
 </template>
 
 <script>
-import CKEditor from '@ckeditor/ckeditor5-vue'
+import CKEditor from '@ckeditor/ckeditor5-vue2'
 import AlignmentPlugin from '@ckeditor/ckeditor5-alignment/src/alignment'
 import Editor from '@ckeditor/ckeditor5-editor-balloon/src/ballooneditor'
 import EssentialsPlugin from '@ckeditor/ckeditor5-essentials/src/essentials'
