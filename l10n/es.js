@@ -6,6 +6,7 @@ OC.L10N.register(
     "Creating account failed: " : "No se ha podido crear la cuenta:",
     "Embedded message %s" : "Mensaje incrustado %s",
     "Important mail" : "Correo importante",
+    "Unread mail" : "Correo sin leer",
     "Mails" : "Mails",
     "Mail" : "Correo",
     "💌 A mail app for Nextcloud" : "Una app de correo para Nextcloud",
