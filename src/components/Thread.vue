@@ -76,7 +76,7 @@ export default {
 			error: undefined,
 			expandedThreads: [],
 			participantsToDisplay: 999,
-			resizeDebounced: debounce(500, this.updateParticipantsToDisplay)
+			resizeDebounced: debounce(500, this.updateParticipantsToDisplay),
 		}
 	},
 

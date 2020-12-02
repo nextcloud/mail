@@ -1,5 +1,7 @@
 <template>
 	<Content v-shortkey.once="['c']" app-name="mail" @shortkey.native="onNewMessage">
+		<AppDetailsToggle v-if="isMobile && isThreadShown"
+			@close="hideMessage" />
 		<Navigation />
 		<MailboxThread v-if="activeAccount" :account="activeAccount" :mailbox="activeMailbox" />
 	</Content>
@@ -7,6 +9,7 @@
 
 <script>
 import Content from '@nextcloud/vue/dist/Components/Content'
+import AppDetailsToggle from '../components/AppDetailsToggle'
 
 import isMobile from '@nextcloud/vue/dist/Mixins/isMobile'
 import logger from '../logger'
@@ -19,6 +22,7 @@ export default {
 		Content,
 		MailboxThread,
 		Navigation,
+		AppDetailsToggle,
 	},
 	mixins: [isMobile],
 	computed: {
@@ -30,6 +34,9 @@ export default {
 		},
 		menu() {
 			return this.buildMenu()
+		},
+		isThreadShown() {
+			return this.$route.params.threadId
 		},
 	},
 	created() {
@@ -94,8 +101,18 @@ export default {
 				},
 			})
 		},
+		hideMessage() {
+			this.$router.replace({
+				name: 'mailbox',
+				params: {
+					mailboxId: this.$route.params.mailboxId,
+					filter: this.$route.params?.filter,
+				},
+			})
+		},
 	},
 }
+
 </script>
 
 <style lang="scss" scoped>
