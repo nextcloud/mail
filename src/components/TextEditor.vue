@@ -24,7 +24,6 @@
 		v-if="ready"
 		:config="config"
 		:editor="editor"
-		@input="onInput"
 		@ready="onEditorReady" />
 </template>
 
@@ -77,9 +76,6 @@ export default {
 			editorInstance: {},
 			config: {
 				plugins,
-				toolbar: {
-					items: toolbar,
-				},
 			},
 		}
 	},
@@ -130,52 +126,6 @@ export default {
 			const schema = editor.model.schema
 
 			logger.debug('CKEditor editor is ready', { editor, schema })
-
-			this.editorInstance = editor
-
-			// Set 0 pixel margin to all <p> elements
-			editor.conversion.for('downcast').add((dispatcher) => {
-				dispatcher.on(
-					'insert:paragraph',
-					(evt, data, conversionApi) => {
-						const viewWriter = conversionApi.writer
-						viewWriter.setStyle('margin', '0', conversionApi.mapper.toViewElement(data.item))
-					},
-					{
-						priority: 'low',
-					}
-				)
-			})
-
-			schema.on(
-				'checkChild',
-				(evt, args) => {
-					const context = args[0]
-
-					if (context.endsWith('blockQuote')) {
-						// Prevent next listeners from being called.
-						evt.stop()
-						// Set the checkChild()'s return value.
-						evt.return = true
-					}
-				},
-				{
-					priority: 'highest',
-				}
-			)
-			if (this.focus) {
-				logger.debug('focusing TextEditor')
-				editor.editing.view.focus()
-			}
-
-			// Set value as late as possible, so the custom schema listener is used
-			// for the initial editor model
-			console.info('INIT TEXT VALUE')
-			this.text = this.sanitizedValue
-
-			logger.debug(`setting TextEditor contents to <${this.text}>`)
-
-			this.bus.$on('appendToBodyAtCursor', this.appendToBodyAtCursor)
 		},
 		onInput() {
 			logger.debug(`TextEditor input changed to <${this.text}>`)
