@@ -22,7 +22,6 @@
 <template>
 	<ckeditor
 		v-if="ready"
-		v-model="text"
 		:config="config"
 		:editor="editor"
 		@input="onInput"
@@ -31,15 +30,8 @@
 
 <script>
 import CKEditor from '@ckeditor/ckeditor5-vue2'
-import AlignmentPlugin from '@ckeditor/ckeditor5-alignment/src/alignment'
 import Editor from '@ckeditor/ckeditor5-editor-balloon/src/ballooneditor'
 import EssentialsPlugin from '@ckeditor/ckeditor5-essentials/src/essentials'
-import BlockQuotePlugin from '@ckeditor/ckeditor5-block-quote/src/blockquote'
-import BoldPlugin from '@ckeditor/ckeditor5-basic-styles/src/bold'
-import HeadingPlugin from '@ckeditor/ckeditor5-heading/src/heading'
-import ItalicPlugin from '@ckeditor/ckeditor5-basic-styles/src/italic'
-import LinkPlugin from '@ckeditor/ckeditor5-link/src/link'
-import ListStyle from '@ckeditor/ckeditor5-list/src/liststyle'
 import ParagraphPlugin from '@ckeditor/ckeditor5-paragraph/src/paragraph'
 
 import { getLanguage } from '@nextcloud/l10n'
@@ -78,23 +70,16 @@ export default {
 		const plugins = [EssentialsPlugin, ParagraphPlugin]
 		const toolbar = ['undo', 'redo']
 
-		if (this.html) {
-			plugins.push(...[HeadingPlugin, AlignmentPlugin, BoldPlugin, ItalicPlugin, BlockQuotePlugin, LinkPlugin, ListStyle])
-			toolbar.unshift(...['heading', 'alignment', 'bold', 'italic', 'bulletedList', 'numberedList', 'blockquote', 'link'])
-		}
-
 		return {
 			text: '',
 			ready: false,
 			editor: Editor,
 			editorInstance: {},
 			config: {
-				placeholder: this.placeholder,
 				plugins,
 				toolbar: {
 					items: toolbar,
 				},
-				language: 'en',
 			},
 		}
 	},
@@ -108,7 +93,8 @@ export default {
 	watch: {
 		sanitizedValue(newVal) {
 			// needed for reset in composer
-			this.text = newVal
+			//this.text = newVal
+			console.info('AFTER SANITIZED newVal')
 		},
 	},
 	beforeMount() {
@@ -184,6 +170,7 @@ export default {
 
 			// Set value as late as possible, so the custom schema listener is used
 			// for the initial editor model
+			console.info('INIT TEXT VALUE')
 			this.text = this.sanitizedValue
 
 			logger.debug(`setting TextEditor contents to <${this.text}>`)
