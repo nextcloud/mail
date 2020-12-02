@@ -1,6 +1,16 @@
 # Changelog
 All notable changes to this project will be documented in this file.
 
+## 1.5.4 – 2020-12-02
+### Fixed
+- Mail search results not shown on top
+- Saving signatures
+- Deletion of previous draft
+- Mailto route
+- Missing route for draft
+- Default editor mode
+- CKEditor crashes on Firefox
+
 ## 1.5.3 – 2020-11-11
 ### Fixed
 * Null error for messages with no sender information
