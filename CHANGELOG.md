@@ -1,6 +1,16 @@
 # Changelog
 All notable changes to this project will be documented in this file.
 
+## 1.7.1 – 2020-12-02
+### Fixed
+- Saving signatures
+- Deletion of previous draft
+- Mailto route
+- Php7.2 compatibility issues
+- Missing route for draft
+- Default editor mode
+- CKEditor crashes on Firefox
+
 ## 1.7.0 – 2020-11-11
 ### Added
 * Possibility to move mailboxes
