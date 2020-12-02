@@ -1,6 +1,17 @@
 # Changelog
 All notable changes to this project will be documented in this file.
 
+## 1.6.2 – 2020-12-02
+### Fixed
+- Mail search results not shown on top
+- Saving signatures
+- Deletion of previous draft
+- Mailto route
+- Php7.2 compatibility issues
+- Missing route for draft
+- Default editor mode
+- CKEditor crashes on Firefox
+
 ## 1.6.1 – 2020-11-11
 ### Fixed
 * Null error for messages with no sender information
