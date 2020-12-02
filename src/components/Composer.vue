@@ -161,9 +161,9 @@
 							t('mail', 'Add attachment from Files')
 						}}
 					</ActionButton>
-					<ActionButton :disabled="encrypt" icon="icon-folder" @click="onAddCloudAttachmentLink">
+					<ActionButton :disabled="encrypt" icon="icon-public" @click="onAddCloudAttachmentLink">
 						{{
-							t('mail', 'Add attachment link from Files')
+							addShareLink
 						}}
 					</ActionButton>
 					<ActionCheckbox
@@ -351,6 +351,7 @@ export default {
 				keysMissing: [],
 			},
 			editorMode: 'html',
+			addShareLink: t('mail', 'Add share link from {productName} Files', { productName: OC?.theme?.name ?? 'Nextcloud' }),
 		}
 	},
 	computed: {
@@ -817,13 +818,10 @@ export default {
 	background-position: 12px center;
 	margin-left: 4px;
 }
-</style>
-
-<style lang="scss" scoped>
 ::v-deep .multiselect .multiselect__tags {
 	border: none !important;
 }
 .submit-message.send.primary.icon-confirm-white {
-color: var(--color-main-background);
+	color: var(--color-main-background);
 }
 </style>
