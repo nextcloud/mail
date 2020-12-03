@@ -34,6 +34,8 @@ use Exception;
 use OC\Security\CSP\ContentSecurityPolicyNonceManager;
 use OCA\Mail\Contracts\IMailManager;
 use OCA\Mail\Contracts\IMailSearch;
+use OCA\Mail\Contracts\ITrustedSenderService;
+use OCA\Mail\Db\Message;
 use OCA\Mail\Exception\ClientException;
 use OCA\Mail\Exception\ServiceException;
 use OCA\Mail\Http\AttachmentDownloadResponse;
@@ -91,6 +93,9 @@ class MessagesController extends Controller {
 	/** @var ContentSecurityPolicyNonceManager */
 	private $nonceManager;
 
+	/** @var ITrustedSenderService */
+	private $trustedSenderService;
+
 	/**
 	 * @param string $appName
 	 * @param IRequest $request
@@ -105,6 +110,7 @@ class MessagesController extends Controller {
 	 * @param IMimeTypeDetector $mimeTypeDetector
 	 * @param IURLGenerator $urlGenerator
 	 * @param ContentSecurityPolicyNonceManager $nonceManager
+	 * @param ITrustedSenderService $trustedSenderService
 	 */
 	public function __construct(string $appName,
 								IRequest $request,
@@ -118,7 +124,8 @@ class MessagesController extends Controller {
 								IL10N $l10n,
 								IMimeTypeDetector $mimeTypeDetector,
 								IURLGenerator $urlGenerator,
-								ContentSecurityPolicyNonceManager $nonceManager) {
+								ContentSecurityPolicyNonceManager $nonceManager,
+								ITrustedSenderService $trustedSenderService) {
 		parent::__construct($appName, $request);
 
 		$this->accountService = $accountService;
@@ -133,6 +140,7 @@ class MessagesController extends Controller {
 		$this->urlGenerator = $urlGenerator;
 		$this->mailManager = $mailManager;
 		$this->nonceManager = $nonceManager;
+		$this->trustedSenderService = $trustedSenderService;
 	}
 
 	/**
@@ -149,6 +157,7 @@ class MessagesController extends Controller {
 	 * @throws ClientException
 	 * @throws ServiceException
 	 */
+
 	public function index(int $mailboxId,
 						  int $cursor = null,
 						  string $filter = null,
@@ -246,6 +255,7 @@ class MessagesController extends Controller {
 		$json['accountId'] = $account->getId();
 		$json['mailboxId'] = $mailbox->getId();
 		$json['databaseId'] = $message->getId();
+		$json['isSenderTrusted'] = $this->isSenderTrusted($message);
 
 		$response = new JSONResponse($json);
 
@@ -253,6 +263,22 @@ class MessagesController extends Controller {
 		$response->cacheFor(60 * 60);
 
 		return $response;
+	}
+
+	private function isSenderTrusted(Message $message): bool {
+		$from = $message->getFrom();
+		$first = $from->first();
+		if ($first === null) {
+			return false;
+		}
+		$email = $first->getEmail();
+		if ($email === null) {
+			return false;
+		}
+		return $this->trustedSenderService->isTrusted(
+			$this->currentUserId,
+			$email
+		);
 	}
 
 	/**

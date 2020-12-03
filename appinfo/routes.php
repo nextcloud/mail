@@ -189,6 +189,16 @@ return [
 			'url' => '/api/settings/provisioning',
 			'verb' => 'DELETE'
 		],
+		[
+			'name' => 'trusted_senders#setTrusted',
+			'url' => '/api/trustedsenders/{email}',
+			'verb' => 'PUT'
+		],
+		[
+			'name' => 'trusted_senders#removeTrust',
+			'url' => '/api/trustedsenders/{email}',
+			'verb' => 'DELETE'
+		],
 	],
 	'resources' => [
 		'accounts' => ['url' => '/api/accounts'],
