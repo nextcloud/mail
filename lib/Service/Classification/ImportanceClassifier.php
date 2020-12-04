@@ -190,7 +190,7 @@ class ImportanceClassifier {
 		);
 		$validationSet = array_slice($dataSet, 0, $validationThreshold);
 		$trainingSet = array_slice($dataSet, $validationThreshold);
-		$logger->debug('data set split into ' . count($trainingSet) . ' training and ' . count($validationSet) . ' validation sets');
+		$logger->debug('data set split into ' . count($trainingSet) . ' training and ' . count($validationSet) . ' validation sets with ' . count($trainingSet[0]['features'] ?? []) . ' dimensions');
 		if (empty($validationSet) || empty($trainingSet)) {
 			$logger->info('not enough messages to train a classifier');
 			$perf->end();
