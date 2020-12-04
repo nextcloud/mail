@@ -49,7 +49,7 @@ class ReadMessagesExtractor implements IExtractor {
 	public function prepare(Account $account,
 							array $incomingMailboxes,
 							array $outgoingMailboxes,
-							array $messages): bool {
+							array $messages): void {
 		$senders = array_unique(array_map(function (Message $message) {
 			return $message->getFrom()->first()->getEmail();
 		}, array_filter($messages, function (Message $message) {
@@ -58,8 +58,6 @@ class ReadMessagesExtractor implements IExtractor {
 
 		$this->totalMessages = $this->statisticsDao->getNumberOfMessagesGrouped($incomingMailboxes, $senders);
 		$this->readMessages = $this->statisticsDao->getNumberOfMessagesWithFlagGrouped($incomingMailboxes, 'seen', $senders);
-
-		return true;
 	}
 
 	public function extract(string $email): float {
