@@ -24,7 +24,6 @@ declare(strict_types=1);
 
 namespace OCA\Mail\AppInfo;
 
-use Exception;
 use Horde_Translation;
 use OCA\Mail\Contracts\IAttachmentService;
 use OCA\Mail\Contracts\IAvatarService;
@@ -72,6 +71,8 @@ use OCP\User\Events\UserDeletedEvent;
 use OCP\Util;
 use Psr\Container\ContainerInterface;
 
+include_once __DIR__ . '/../../vendor/autoload.php';
+
 class Application extends App implements IBootstrap {
 	public const APP_ID = 'mail';
 
@@ -80,10 +81,6 @@ class Application extends App implements IBootstrap {
 	}
 
 	public function register(IRegistrationContext $context): void {
-		if ((@include_once __DIR__ . '/../../vendor/autoload.php') === false) {
-			throw new Exception('Cannot include autoload. Did you run install dependencies using composer?');
-		}
-
 		$context->registerParameter('hostname', Util::getServerHostName());
 
 		$context->registerService('userFolder', function (ContainerInterface $c) {
