@@ -39,13 +39,11 @@ interface IExtractor {
 	 * @param Mailbox[] $incomingMailboxes
 	 * @param Mailbox[] $outgoingMailboxes
 	 * @param Message[] $messages
-	 *
-	 * @return bool
 	 */
 	public function prepare(Account $account,
 							array $incomingMailboxes,
 							array $outgoingMailboxes,
-							array $messages): bool;
+							array $messages): void;
 
 	/**
 	 * Return the feature value for the given sender address
