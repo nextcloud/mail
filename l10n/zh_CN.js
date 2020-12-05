@@ -62,7 +62,6 @@ OC.L10N.register(
     "Draft saved" : "草稿已保存",
     "Upload attachment" : "上传附件",
     "Add attachment from Files" : "从文件添加附件",
-    "Add attachment link from Files" : "从文件添加附件链接",
     "Enable formatting" : "启用格式化",
     "Encrypt message with Mailvelope" : "使用 Mailvelope 加密邮件",
     "Looking for a way to encrypt your emails? Install the Mailvelope browser extension!" : "在寻找加密您邮件的方法吗？安装 Mailvelope 浏览器扩展！",

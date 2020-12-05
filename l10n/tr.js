@@ -62,7 +62,6 @@ OC.L10N.register(
     "Draft saved" : "Taslak kaydedildi",
     "Upload attachment" : "Ek dosya yükle",
     "Add attachment from Files" : "Dosyalardan ek dosya ekle",
-    "Add attachment link from Files" : "Dosyalardan ek dosya bağlantısı ekle",
     "Enable formatting" : "Biçimlendirme kullanılsın",
     "Encrypt message with Mailvelope" : "İleti Mailvelope ile şifrelensin",
     "Looking for a way to encrypt your emails? Install the Mailvelope browser extension!" : "E-postalarınızı şifreleyecek bir yöntem mi arıyorsunuz? Mailvelope tarayıcı eklentisini kurun!",

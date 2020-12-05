@@ -55,7 +55,6 @@ OC.L10N.register(
     "Draft saved" : "Нацрт сачуван",
     "Upload attachment" : "Закачи прилог",
     "Add attachment from Files" : "Додај прилог из фајлова",
-    "Add attachment link from Files" : "Додај везу ка прилогу из Фајлова",
     "Enable formatting" : "Укључи форматирање",
     "Encrypt message with Mailvelope" : "Шифруј поруку са Mailvelope-ом",
     "Looking for a way to encrypt your emails? Install the Mailvelope browser extension!" : "Тражите начин да шифрујете Вашу пошту? Инсталирајте Mailvelope есктензију за веб читаче!",

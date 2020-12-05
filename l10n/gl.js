@@ -62,7 +62,6 @@ OC.L10N.register(
     "Draft saved" : "Gardouse o borrador",
     "Upload attachment" : "Enviar anexos",
     "Add attachment from Files" : "Engadir anexos dende Ficheiros",
-    "Add attachment link from Files" : "Engadir ligazón a anexos dende Ficheiros",
     "Enable formatting" : "Activar o formatado",
     "Encrypt message with Mailvelope" : "Cifrar a mensaxe con Mailvelope",
     "Looking for a way to encrypt your emails? Install the Mailvelope browser extension!" : "Busca unha forma de cifrar os seus correos electrónicos? Instale a extensión do navegador Mailvelope!",

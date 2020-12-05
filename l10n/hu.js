@@ -49,7 +49,6 @@ OC.L10N.register(
     "Draft saved" : "Vázlat elmentve",
     "Upload attachment" : "Csatolmány feltöltése",
     "Add attachment from Files" : "Csatolmány hozzáadása a Fájlok közül",
-    "Add attachment link from Files" : "Csatolmány hivatkozás hozzáadása a Fájlok közül",
     "Enable formatting" : "Formázás engedélyezése",
     "Uploading attachments …" : "Csatolmányok feltöltése ...",
     "Sending …" : "Küldés...",

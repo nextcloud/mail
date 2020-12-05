@@ -62,7 +62,6 @@ OC.L10N.register(
     "Draft saved" : "Bozza salvata",
     "Upload attachment" : "Carica allegato",
     "Add attachment from Files" : "Aggiungi allegato da File",
-    "Add attachment link from Files" : "Aggiungi collegamento di allegato da File",
     "Enable formatting" : "Abilita formattazione",
     "Encrypt message with Mailvelope" : "Cifra il messaggio con Mailvelope",
     "Looking for a way to encrypt your emails? Install the Mailvelope browser extension!" : "Stai cercando un modo per cifrare le tue email? Installa l'estensione per browser Mailvelope!",

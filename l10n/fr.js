@@ -62,7 +62,6 @@ OC.L10N.register(
     "Draft saved" : "Brouillon sauvegardé",
     "Upload attachment" : "Téléverser les pièces jointes",
     "Add attachment from Files" : "Ajouter des pièces jointes depuis Fichiers",
-    "Add attachment link from Files" : "Ajouter un lien de pièce jointe à partir des fichiers",
     "Enable formatting" : "Activer le formatage",
     "Encrypt message with Mailvelope" : "Chiffrer le message avec Mailvelope",
     "Looking for a way to encrypt your emails? Install the Mailvelope browser extension!" : "Vous recherchez comment protéger vos courriels ? Installez l'extension Mailvelope browser !",

@@ -60,7 +60,6 @@ OC.L10N.register(
     "Draft saved" : "Luonnos tallennettu",
     "Upload attachment" : "Lähetä liite",
     "Add attachment from Files" : "Lisää liitteitä tiedostosovelluksesta",
-    "Add attachment link from Files" : "Lisää liitelinkki tiedostosovelluksesta",
     "Enable formatting" : "Käytä muotoilua",
     "Encrypt message with Mailvelope" : "Salaa viesti Mailvelopella",
     "Looking for a way to encrypt your emails? Install the Mailvelope browser extension!" : "Etsitkö tapaa salata sähköpostisi? Asenna Mailvelope-selainlaajennus!",

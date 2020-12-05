@@ -51,7 +51,6 @@ OC.L10N.register(
     "Draft saved" : "Чернетку збережено",
     "Upload attachment" : "Завантажити вкладення",
     "Add attachment from Files" : "Додати вкладення з Файлів",
-    "Add attachment link from Files" : "Додати посилання на вкладення з Файлів",
     "Enable formatting" : "Увімкнути форматування",
     "Uploading attachments …" : "Завантаження вкладень...",
     "Sending …" : "Надсилання...",

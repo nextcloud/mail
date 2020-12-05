@@ -48,7 +48,6 @@ OC.L10N.register(
     "Write message …" : "메시지 작성중...",
     "Upload attachment" : "첨부 파일 업로드",
     "Add attachment from Files" : "파일 앱에서 첨부 파일 추가",
-    "Add attachment link from Files" : "파일에서 첨부파일 링크 추가",
     "Encrypt message with Mailvelope" : "Mailvelope로 메세지 암호화",
     "Uploading attachments …" : "첨부 파일 업로드...",
     "Sending …" : "보내는 중...",

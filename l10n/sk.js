@@ -55,7 +55,6 @@ OC.L10N.register(
     "Draft saved" : "Koncept je uložený",
     "Upload attachment" : "Nahrať prílohu",
     "Add attachment from Files" : "Pridať prílohu zo Súborov",
-    "Add attachment link from Files" : "Pridať odkaz na prílohu zo Súborov",
     "Enable formatting" : "Povoliť formátovanie",
     "Encrypt message with Mailvelope" : "Šifrovať správu pomocou Mailvelope",
     "Looking for a way to encrypt your emails? Install the Mailvelope browser extension!" : "Hľadáte spôsob, ako šifrovať svoje e-maily? Nainštalujte rozšírenie prehliadača Mailvelope!",

@@ -58,7 +58,6 @@ OC.L10N.register(
     "Draft saved" : "Juodraštis įrašytas",
     "Upload attachment" : "Įkelti priedą",
     "Add attachment from Files" : "Pridėti priedą iš Failų",
-    "Add attachment link from Files" : "Pridėti priedo nuorodą iš Failų",
     "Enable formatting" : "Įjungti formatavimą",
     "Encrypt message with Mailvelope" : "Šifruoti laišką naudojant Mailvelope",
     "Looking for a way to encrypt your emails? Install the Mailvelope browser extension!" : "Ieškote būdo kaip šifruoti savo el. laiškus? Įsidiekite Mailvelope naršyklės plėtinį!",

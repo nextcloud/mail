@@ -55,7 +55,6 @@ OC.L10N.register(
     "Draft saved" : "Το πρόχειρο αποθηκεύτηκε",
     "Upload attachment" : "Μεταφόρτωση συνημμένων",
     "Add attachment from Files" : "Προσθήκη συνημμένου από Αρχεία",
-    "Add attachment link from Files" : "Προσθήκη συνημμένου συνδέσμου από Αρχεία",
     "Enable formatting" : "Ενεργοποίηση διαμόρφωσης",
     "Encrypt message with Mailvelope" : "Κρυπτογράφηση μηνύματος με το Mailvelope",
     "Looking for a way to encrypt your emails? Install the Mailvelope browser extension!" : "Ψάχτετε τρόπο κρυπτογράφησης των emails σας; Εγκαταστήστε το πρόσθετο στον φυλλομετρητή σας Mailvelope !",
