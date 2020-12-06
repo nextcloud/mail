@@ -72,6 +72,7 @@ OC.L10N.register(
     "Retry" : "Powtórz",
     "Message sent!" : "Wiadomość wysłana!",
     "Write another message" : "Napisz kolejną wiadomość",
+    "Add share link from {productName} Files" : "Dodaj link do udostępnienia z Plików {productName}",
     "Send" : "Wyślij",
     "Encrypt and send" : "Zaszyfruj i wyślij",
     "Send unencrypted" : "Wyślij niezaszyfrowane",

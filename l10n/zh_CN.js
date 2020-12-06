@@ -72,6 +72,7 @@ OC.L10N.register(
     "Retry" : "重试",
     "Message sent!" : "消息已发送！",
     "Write another message" : "再写一条消息",
+    "Add share link from {productName} Files" : "添加来自 {productName} 文件的共享链接",
     "Send" : "发送",
     "Encrypt and send" : "加密并发送",
     "Send unencrypted" : "不加密发送",
