@@ -49,7 +49,7 @@ class SentMessagesExtractor implements IExtractor {
 	public function prepare(Account $account,
 							array $incomingMailboxes,
 							array $outgoingMailboxes,
-							array $messages): bool {
+							array $messages): void {
 		$senders = array_unique(array_map(function (Message $message) {
 			return $message->getFrom()->first()->getEmail();
 		}, array_filter($messages, function (Message $message) {
@@ -58,9 +58,6 @@ class SentMessagesExtractor implements IExtractor {
 
 		$this->messagesSentTotal = $this->statisticsDao->getMessagesTotal(...$outgoingMailboxes);
 		$this->messagesSent = $this->statisticsDao->getMessagesSentToGrouped($outgoingMailboxes, $senders);
-
-		// This extractor is only applicable if there are sent messages
-		return $this->messagesSentTotal > 0;
 	}
 
 	public function extract(string $email): float {
