@@ -81,6 +81,12 @@ class Account implements JsonSerializable {
 		$this->memcacheFactory = OC::$server->getMemcacheFactory();
 	}
 
+	public function __destruct() {
+		if ($this->client !== null) {
+			$this->client->logout();
+		}
+	}
+
 	public function getMailAccount(): MailAccount {
 		return $this->account;
 	}
