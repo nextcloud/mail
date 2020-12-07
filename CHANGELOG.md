@@ -1,6 +1,11 @@
 # Changelog
 All notable changes to this project will be documented in this file.
 
+## 1.4.2 – 2020-12-07
+### Fixed
+- CKEditor crashes on Firefox
+- Outdated javascript libraries
+
 ## 1.4.1 - 2020-07-06
 ### Fixed
 - Importance classifier debuggability
