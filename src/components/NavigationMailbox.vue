@@ -204,8 +204,8 @@ export default {
 	computed: {
 		visible() {
 			return (
-				this.account.showSubscribedOnly === false
-				|| (this.mailbox.attributes && this.mailbox.attributes.includes('\\subscribed'))
+				(this.account.showSubscribedOnly === false
+				|| (this.mailbox.attributes && this.mailbox.attributes.includes('\\subscribed'))) && this.isUnifiedButOnlyInbox
 			)
 		},
 		notInbox() {
@@ -288,6 +288,12 @@ export default {
 				return false
 			}
 			return this.isDroppableSpecialMailbox || (!this.mailbox.specialRole && !this.account.isUnified)
+		},
+		isUnifiedButOnlyInbox() {
+			if (!this.mailbox.isUnified) {
+				return true
+			}
+			return this.mailbox.specialUse.includes('inbox') && this.$store.getters.accounts.length > 2
 		},
 	},
 	mounted() {
