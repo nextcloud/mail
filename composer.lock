@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "8b164f0f1b660562423c0b6f13786f08",
+    "content-hash": "9bb67fe734222729a18585edf46555ce",
     "packages": [
         {
             "name": "amphp/amp",
@@ -1734,16 +1734,16 @@
         },
         {
             "name": "rubix/ml",
-            "version": "0.2.3",
+            "version": "0.2.4",
             "source": {
                 "type": "git",
                 "url": "https://github.com/RubixML/RubixML.git",
-                "reference": "bde4eb8275a6a99e4eca90b4a02f4dba98608785"
+                "reference": "87a92f390a087b5b2e923d7e54aaf476ead664ec"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/RubixML/RubixML/zipball/bde4eb8275a6a99e4eca90b4a02f4dba98608785",
-                "reference": "bde4eb8275a6a99e4eca90b4a02f4dba98608785",
+                "url": "https://api.github.com/repos/RubixML/RubixML/zipball/87a92f390a087b5b2e923d7e54aaf476ead664ec",
+                "reference": "87a92f390a087b5b2e923d7e54aaf476ead664ec",
                 "shasum": ""
             },
             "require": {
@@ -1752,6 +1752,7 @@
                 "psr/log": "^1.1",
                 "rubix/tensor": "^2.0",
                 "symfony/polyfill-mbstring": "^1.0",
+                "symfony/polyfill-php73": "^1.20",
                 "symfony/polyfill-php80": "^1.17"
             },
             "require-dev": {
@@ -1885,7 +1886,7 @@
                     "type": "github"
                 }
             ],
-            "time": "2020-10-25T11:31:33+00:00"
+            "time": "2020-11-30T05:30:14+00:00"
         },
         {
             "name": "rubix/tensor",
