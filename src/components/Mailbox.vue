@@ -139,6 +139,9 @@ export default {
 		},
 		mailbox() {
 			this.loadEnvelopes()
+				.then(() => {
+					this.sync(false)
+				})
 		},
 		searchQuery() {
 			this.loadEnvelopes()
@@ -151,7 +154,10 @@ export default {
 		this.loadMailboxInterval = setInterval(this.loadMailbox, 60000)
 	},
 	async mounted() {
-		return await this.loadEnvelopes()
+		this.loadEnvelopes()
+			.then(() => {
+				this.sync(false)
+			})
 	},
 	destroyed() {
 		this.bus.$off('loadMore', this.onScroll)
@@ -164,12 +170,7 @@ export default {
 			this.loadingCacheInitialization = true
 			this.error = false
 
-			this.$store
-				.dispatch('syncEnvelopes', {
-					mailboxId: this.mailbox.databaseId,
-					query: this.searchQuery,
-					init: true,
-				})
+			this.sync(true)
 				.then(() => {
 					this.loadingCacheInitialization = false
 
@@ -353,9 +354,7 @@ export default {
 				break
 			case 'refresh':
 				logger.debug('syncing envelopes via shortkey')
-				if (!this.refreshing) {
-					this.sync()
-				}
+				this.sync(false)
 
 				break
 			case 'unseen':
@@ -371,15 +370,19 @@ export default {
 				logger.warn('shortcut ' + e.srcKey + ' is unknown. ignoring.')
 			}
 		},
-		async sync() {
-			logger.debug("mailbox sync'ing")
-			this.refreshing = true
+		async sync(init = false) {
+			logger.debug('syncing mailbox')
+			if (this.refreshing) {
+				logger.debug("already sync'ing, aborting")
+				return
+			}
 
+			this.refreshing = true
 			try {
 				await this.$store.dispatch('syncEnvelopes', {
-					accountId: this.account.accountId,
 					mailboxId: this.mailbox.databaseId,
 					query: this.searchQuery,
+					init,
 				})
 			} catch (error) {
 				matchError(error, {
@@ -392,6 +395,7 @@ export default {
 				})
 			} finally {
 				this.refreshing = false
+				logger.debug("finished sync'ing mailbox")
 			}
 		},
 		onDelete(id) {
@@ -437,12 +441,7 @@ export default {
 				return
 			}
 			try {
-				await this.$store.dispatch('syncEnvelopes', {
-					mailboxId: this.$route.params.mailboxId,
-					query: this.searchQuery,
-				})
-
-				logger.debug("Mailbox sync'ed in background")
+				await this.sync(false)
 			} catch (error) {
 				logger.error('Background sync failed: ' + error.message, { error })
 			}
