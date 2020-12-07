@@ -632,7 +632,7 @@ export default {
 
 			this.state = STATES.UPLOADING
 
-			return this.attachmentsPromise
+			await this.attachmentsPromise
 				.then(() => (this.state = STATES.SENDING))
 				.then(() => this.draftsPromise)
 				.then(this.getMessageData)
@@ -653,6 +653,18 @@ export default {
 					})
 					this.state = STATES.ERROR
 				})
+
+			// Sync sent mailbox when it's currently open
+			const account = this.$store.getters.getAccount(this.selectedAlias.id)
+			if (parseInt(this.$route.params.mailboxId, 10) === account.sentMailboxId) {
+				setTimeout(() => {
+					this.$store.dispatch('syncEnvelopes', {
+						mailboxId: account.sentMailboxId,
+						query: '',
+						init: false,
+					})
+				}, 500)
+			}
 		},
 		reset() {
 			this.draftsPromise = Promise.resolve() // "resets" draft uid as well
