@@ -1,6 +1,10 @@
 # Changelog
 All notable changes to this project will be documented in this file.
 
+## 1.5.5 – 2020-12-07
+### Fixed
+- Priority inbox classifier input vector size
+
 ## 1.5.4 – 2020-12-02
 ### Fixed
 - Mail search results not shown on top
