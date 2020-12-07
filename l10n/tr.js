@@ -72,6 +72,7 @@ OC.L10N.register(
     "Retry" : "Yeniden Dene",
     "Message sent!" : "İleti gönderildi!",
     "Write another message" : "Başka bir ileti gönder",
+    "Add share link from {productName} Files" : "{productName} dosyalarından paylaşım bağlantısı ekle",
     "Send" : "Gönder",
     "Encrypt and send" : "Şifreleyip gönder",
     "Send unencrypted" : "Şifrelemeden gönder",
