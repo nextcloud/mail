@@ -1,6 +1,23 @@
 # Changelog
 All notable changes to this project will be documented in this file.
 
+## 1.7.2 – 2020-12-07
+### Fixed
+- Priority inbox classifier input vector size
+
+## 1.6.3 – 2020-12-07
+### Fixed
+- Priority inbox classifier input vector size
+
+## 1.5.5 – 2020-12-07
+### Fixed
+- Priority inbox classifier input vector size
+
+## 1.4.2 – 2020-12-07
+### Fixed
+- Priority inbox classifier input vector size
+- CKEditor crashes on Firefox
+
 ## 1.7.1 – 2020-12-02
 ### Fixed
 - Saving signatures
