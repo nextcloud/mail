@@ -86,7 +86,6 @@ export default {
 			text: '',
 			ready: false,
 			editor: Editor,
-			editorInstance: {},
 			config: {
 				placeholder: this.placeholder,
 				plugins,
