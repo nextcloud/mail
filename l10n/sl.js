@@ -6,6 +6,7 @@ OC.L10N.register(
     "Creating account failed: " : "Ustvarjanje računa je spodletelo:",
     "Embedded message %s" : "Vstavljeno sporočilo %s",
     "Important mail" : "Pomembno sporočilo",
+    "Unread mail" : "Neprebrana pošta",
     "Mails" : "Sporočila",
     "Mail" : "Pošta",
     "💌 A mail app for Nextcloud" : "💌 Poštni program za Nextcloud",
