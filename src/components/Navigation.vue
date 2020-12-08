@@ -25,6 +25,7 @@
 			:text="t('mail', 'New message')"
 			button-id="mail_new_message"
 			button-class="icon-add"
+			role="complementary"
 			@click="onNewMessage" />
 		<template #list>
 			<ul id="accounts-list">

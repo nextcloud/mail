@@ -44,10 +44,12 @@
 					@click.shift.prevent="onSelectMultiple" />
 			</p>
 		</div>
-		<div class="app-content-list-item-line-one" :title="addresses">
+		<div class="app-content-list-item-line-one"
+			:title="addresses">
 			{{ addresses }}
 		</div>
-		<div class="app-content-list-item-line-two" :title="data.subject">
+		<div class="app-content-list-item-line-two"
+			:title="data.subject">
 			<span v-if="data.flags.answered" class="icon-reply" />
 			<span v-if="data.flags.hasAttachments === true" class="icon-public icon-attachment" />
 			<span v-if="draft" class="draft">

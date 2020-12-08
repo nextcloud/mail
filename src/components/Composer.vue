@@ -209,9 +209,9 @@
 			</div>
 		</div>
 	</div>
-	<Loading v-else-if="state === STATES.UPLOADING" :hint="t('mail', 'Uploading attachments …')" />
-	<Loading v-else-if="state === STATES.SENDING" :hint="t('mail', 'Sending …')" />
-	<div v-else-if="state === STATES.ERROR" class="emptycontent">
+	<Loading v-else-if="state === STATES.UPLOADING" :hint="t('mail', 'Uploading attachments …')" role="alert" />
+	<Loading v-else-if="state === STATES.SENDING" :hint="t('mail', 'Sending …')" role="alert" />
+	<div v-else-if="state === STATES.ERROR" class="emptycontent" role="alert">
 		<h2>{{ t('mail', 'Error sending your message') }}</h2>
 		<p v-if="errorText">
 			{{ errorText }}

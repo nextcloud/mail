@@ -9,6 +9,8 @@
 				:show-details="showThread"
 				:infinite-scroll-disabled="false"
 				:infinite-scroll-distance="10"
+				role="heading"
+				:aria-level="2"
 				@shortkey.native="onShortcut">
 				<Mailbox
 					v-if="!mailbox.isPriorityInbox"

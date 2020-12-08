@@ -162,7 +162,8 @@
 		<Error v-else-if="error"
 			:error="error && error.message ? error.message : t('mail', 'Not found')"
 			:message="errorMessage"
-			:data="error" />
+			:data="error"
+			role="alert" />
 	</div>
 </template>
 <script>

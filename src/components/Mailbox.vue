@@ -20,8 +20,11 @@
   -->
 
 <template>
-	<Error v-if="error" :error="t('mail', 'Could not open mailbox')" message="" />
-	<Loading v-else-if="loadingEnvelopes" :hint="t('mail', 'Loading messages')" />
+	<Error v-if="error"
+		:error="t('mail', 'Could not open mailbox')"
+		message=""
+		role="alert" />
+	<Loading v-else-if="loadingEnvelopes" :hint="t('mail', 'Loading messages')" role="alert" />
 	<Loading
 		v-else-if="loadingCacheInitialization"
 		:hint="t('mail', 'Loading messages')"

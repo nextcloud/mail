@@ -5,7 +5,8 @@
 			v-else-if="error"
 			:error="error && error.message ? error.message : t('mail', 'Not found')"
 			:message="errorMessage"
-			:data="error" />
+			:data="error"
+			role="alert" />
 		<Composer
 			v-else
 			:from-account="composerData.accountId"
