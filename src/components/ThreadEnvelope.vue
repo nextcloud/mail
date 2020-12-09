@@ -85,7 +85,7 @@
 					</ActionButton>
 					<ActionButton icon="icon-starred"
 						:close-after-click="true"
-						click.prevent="onToggleFlagged">
+						@click.prevent="onToggleFlagged">
 						{{
 							envelope.flags.flagged ? t('mail', 'Mark unfavorite') : t('mail', 'Mark favorite')
 						}}
