@@ -346,7 +346,7 @@ export default {
 					filter: this.$route.params.filter ? this.$route.params.filter : undefined,
 				},
 				query: {
-					messageId: this.$route.params.threadId,
+					messageId: this.envelope.databaseId,
 				},
 			})
 		},
