@@ -72,6 +72,7 @@ OC.L10N.register(
     "Retry" : "Volver a intentar",
     "Message sent!" : "¡Mensaje enviado!",
     "Write another message" : "Escribir otro mensaje",
+    "Add share link from {productName} Files" : "Añade un enlace para compartir desde Archivos de {productName}",
     "Send" : "Enviar",
     "Encrypt and send" : "Cifrar y enviar",
     "Send unencrypted" : "Enviar sin cifrar",
