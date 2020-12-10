@@ -59,7 +59,7 @@
 					v-if="!editing && top && !account.isUnified && mailbox.specialRole !== 'flagged'"
 					icon="icon-folder"
 					@click="openCreateMailbox">
-					{{ t('mail', 'Add subfolder') }}
+					{{ t('mail', 'Add submailbox') }}
 				</ActionButton>
 				<ActionInput v-if="editing" icon="icon-folder" @submit.prevent.stop="createMailbox" />
 				<ActionButton
@@ -109,7 +109,7 @@
 				</ActionCheckbox>
 
 				<ActionButton v-if="!account.isUnified && !mailbox.specialRole && !hasSubMailboxes" icon="icon-delete" @click="deleteMailbox">
-					{{ t('mail', 'Delete folder') }}
+					{{ t('mail', 'Delete mailbox') }}
 				</ActionButton>
 			</template>
 		</template>
@@ -434,11 +434,11 @@ export default {
 			const id = this.mailbox.databaseId
 			logger.info('delete mailbox', { mailbox: this.mailbox })
 			OC.dialogs.confirmDestructive(
-				t('mail', 'The folder and all messages in it will be deleted.'),
-				t('mail', 'Delete folder'),
+				t('mail', 'The mailbox and all messages in it will be deleted.'),
+				t('mail', 'Delete mailbox'),
 				{
 					type: OC.dialogs.YES_NO_BUTTONS,
-					confirm: t('mail', 'Delete folder {name}', { name: this.mailbox.displayName }),
+					confirm: t('mail', 'Delete mailbox {name}', { name: this.mailbox.displayName }),
 					confirmClasses: 'error',
 					cancel: t('mail', 'Cancel'),
 				},
