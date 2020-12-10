@@ -2,7 +2,7 @@
 	<Modal @close="onClose">
 		<div ref="content" class="modal-content">
 			<h2 class="oc-dialog-title">
-				{{ t('mail', 'Choose target folder') }}
+				{{ t('mail', 'Choose target mailbox') }}
 			</h2>
 			<span class="crumbs">
 				<div class="level icon-breadcrumb">
@@ -31,7 +31,7 @@
 				</ul>
 				<div v-else class="empty">
 					<div class="empty-icon icon-folder" />
-					<h2>{{ t('mail', 'No more subfolders in here') }}</h2>
+					<h2>{{ t('mail', 'No more submailboxes in here') }}</h2>
 				</div>
 			</div>
 			<div class="buttons">
