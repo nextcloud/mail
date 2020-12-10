@@ -44,16 +44,16 @@ export default {
 		},
 		title() {
 			if (this.account.collapsed && this.account.showSubscribedOnly) {
-				return t('mail', 'Show all subscribed folders')
+				return t('mail', 'Show all subscribed mailbox')
 			} else if (this.account.collapsed && !this.account.showSubscribedOnly) {
-				return t('mail', 'Show all folders')
+				return t('mail', 'Show all mailboxes')
 			}
-			return t('mail', 'Collapse folders')
+			return t('mail', 'Collapse mailboxes')
 		},
 	},
 	methods: {
 		async toggleCollapse() {
-			logger.debug('toggling collapsed folders for account ' + this.account.id)
+			logger.debug('toggling collapsed mailboxes for account ' + this.account.id)
 			try {
 				await this.$store.commit('toggleAccountCollapsed', this.account.id)
 				await this.$store

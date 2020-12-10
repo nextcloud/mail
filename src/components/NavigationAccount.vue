@@ -45,10 +45,10 @@
 				:checked="account.showSubscribedOnly"
 				:disabled="savingShowOnlySubscribed"
 				@update:checked="changeShowSubscribedOnly">
-				{{ t('mail', 'Show only subscribed folders') }}
+				{{ t('mail', 'Show only subscribed mailboxes') }}
 			</ActionCheckbox>
 			<ActionButton v-if="!editing" icon="icon-folder" @click="openCreateMailbox">
-				{{ t('mail', 'Add folder') }}
+				{{ t('mail', 'Add mailbox') }}
 			</ActionButton>
 			<ActionInput v-if="editing" icon="icon-folder" @submit.prevent.stop="createMailbox" />
 			<ActionText v-if="showSaving" icon="icon-loading-small">
