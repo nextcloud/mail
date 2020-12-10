@@ -21,10 +21,6 @@
 
 <template>
 	<div class="section">
-		<h2>{{ t('mail', 'Signature') }}</h2>
-		<p class="settings-hint">
-			{{ t('mail', 'A signature is added to the text of new messages and replies.') }}
-		</p>
 		<TextEditor v-model="signature"
 			:html="true"
 			:placeholder="t('mail', 'Signature …')"
@@ -103,14 +99,9 @@ export default {
 </script>
 
 <style lang="scss" scoped>
-.settings-hint {
-	margin-top: -12px;
-	margin-bottom: 6px;
-	color: var(--color-text-maxcontrast);
-}
 
 .ck.ck-editor__editable_inline {
-	width: 400px;
+	width: 330px;
 	max-width: 78vw;
 	height: 100px;
 	border-radius: var(--border-radius) !important;
@@ -138,5 +129,10 @@ export default {
 	&:focus {
 		color: var(--color-main-text);
 	}
+}
+.section {
+	display: block;
+	padding: 0;
+	margin-bottom: 23px;
 }
 </style>

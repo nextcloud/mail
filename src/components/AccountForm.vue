@@ -358,6 +358,7 @@ export default {
 	flex-grow: 1;
 	text-align: center;
 	color: var(--color-text-lighter);
+	margin-bottom: 10px;
 }
 
 ::v-deep .tabs-component-tab.is-active {
