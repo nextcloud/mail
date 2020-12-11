@@ -277,19 +277,6 @@ export default {
 			})
 			return recipients.to.concat(recipients.cc).length > 1
 		},
-		replyMessage() {
-			return {
-				name: 'message',
-				params: {
-					mailboxId: this.$route.params.mailboxId,
-					threadId: 'reply',
-					filter: this.$route.params.filter ? this.$route.params.filter : undefined,
-				},
-				query: {
-					messageId: this.envelope.databaseId,
-				},
-			}
-		},
 		replyAll() {
 			return {
 				name: 'message',
@@ -336,6 +323,19 @@ export default {
 			} catch (error) {
 				logger.error('Could not fetch message', { error })
 			}
+		},
+		replyMessage() {
+			this.$router.push({
+				name: 'message',
+				params: {
+					mailboxId: this.$route.params.mailboxId,
+					threadId: 'reply',
+					filter: this.$route.params.filter ? this.$route.params.filter : undefined,
+				},
+				query: {
+					messageId: this.envelope.databaseId,
+				},
+			})
 		},
 		forwardMessage() {
 			this.$router.push({
