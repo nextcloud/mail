@@ -10,8 +10,6 @@ OC.L10N.register(
     "Select" : "ټاکل",
     "Move" : "انتقال",
     "Delete" : "ړنګول",
-    "Choose target folder" : "د ورانتقالېدو فولډر ټاکل",
-    "No more subfolders in here" : "منځ فولډر نشته",
     "Choose" : "غوره کړئ",
     "Favorites" : "په نښه شوي",
     "Other" : "نور",

@@ -17,7 +17,6 @@ OC.L10N.register(
     "Other" : "Ostali",
     "Attachments" : "Prilozi",
     "Settings" : "Postavke",
-    "Add folder" : "Add folder",
     "Remove account" : "Ukloni nalog",
     "Cancel" : "Otkaži",
     "Mark all as read" : "Označi sve kao pročitano",

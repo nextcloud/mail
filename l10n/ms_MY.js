@@ -14,7 +14,6 @@ OC.L10N.register(
     "Other" : "Lain",
     "Settings" : "Tetapan",
     "Quota" : "Kuota",
-    "Add folder" : "Add folder",
     "Cancel" : "Batal",
     "General" : "Umum",
     "User" : "User",

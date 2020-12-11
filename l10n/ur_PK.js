@@ -14,7 +14,6 @@ OC.L10N.register(
     "Favorites" : "Favorites",
     "Other" : "دیگر",
     "Settings" : "سیٹینگز",
-    "Add folder" : "Add folder",
     "Cancel" : "منسوخ کریں",
     "Reply" : "جواب",
     "User" : "User",
