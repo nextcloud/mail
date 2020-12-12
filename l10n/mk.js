@@ -91,6 +91,7 @@ OC.L10N.register(
     "Set up an account" : "Постави сметка",
     "Plain text" : "Обичен текст",
     "Rich text" : "Богат текст",
+    "No messages in this mailbox" : "Нема пораки во ова сандаче",
     "No messages" : "Нема пораки",
     "Draft: " : "Нацрт:",
     "Mark unimportant" : "Од-означи важна",
