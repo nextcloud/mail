@@ -1,6 +1,5 @@
 <template>
 	<AppContent>
-		<AppDetailsToggle v-if="showThread" @close="hideMessage" />
 		<div id="app-content-wrapper">
 			<AppContentList
 				v-infinite-scroll="onScroll"
@@ -75,7 +74,6 @@ import isMobile from '@nextcloud/vue/dist/Mixins/isMobile'
 import SectionTitle from './SectionTitle'
 import Vue from 'vue'
 
-import AppDetailsToggle from './AppDetailsToggle'
 import logger from '../logger'
 import Mailbox from './Mailbox'
 import NewMessageDetail from './NewMessageDetail'
@@ -91,7 +89,6 @@ export default {
 	components: {
 		AppContent,
 		AppContentList,
-		AppDetailsToggle,
 		Mailbox,
 		NewMessageDetail,
 		NoMessageSelected,
@@ -158,15 +155,6 @@ export default {
 		},
 	},
 	methods: {
-		hideMessage() {
-			this.$router.replace({
-				name: 'mailbox',
-				params: {
-					mailboxId: this.mailbox.databaseId,
-					filter: this.$route.params.filter ? this.$route.params.filter : undefined,
-				},
-			})
-		},
 		deleteMessage(id) {
 			this.bus.$emit('delete', id)
 		},
