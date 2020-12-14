@@ -47,15 +47,17 @@ export default {
 	line-height: 17px;
 	transform: rotate(180deg);
 	background-color: var(--color-main-background);
-	z-index: 2000;
-&:active,
-&:hover,
-&:focus {
-	 opacity: 1;
- }
-// Hide app-navigation toggle if shown
-	&::v-deep + .app-navigation .app-navigation-toggle {
-	   display: none;
-   }
+	z-index: 1100; // needs to be above the main content(1000) and below the navigation(1800)
+
+	&:active,
+	&:hover,
+	&:focus {
+		opacity: 1;
+	}
+
+	// Hide app navigation toggle in case we are on mobile and have the back arrow visible
+	&::v-deep + .app-navigation--close .app-navigation-toggle {
+		display: none;
+	}
 }
 </style>
