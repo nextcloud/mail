@@ -69,6 +69,9 @@ class Html {
 
 		$config = HTMLPurifier_Config::createDefault();
 
+		// Append target="_blank" to all link (a) elements
+		$config->set('HTML.TargetBlank', true);
+
 		// allow cid, http and ftp
 		$config->set('URI.AllowedSchemes', ['http' => true, 'https' => true, 'ftp' => true, 'mailto' => true]);
 		$config->set('URI.Host', Util::getServerHostName());
