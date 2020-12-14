@@ -39,7 +39,7 @@ class TransformHTMLLinks extends HTMLPurifier_AttrTransform {
 	 */
 	private $parser;
 
-	 /** @var IURLGenerator */
+	/** @var IURLGenerator */
 	private $urlGenerator;
 
 	public function __construct(IURLGenerator $urlGenerator) {
