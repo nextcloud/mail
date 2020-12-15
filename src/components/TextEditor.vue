@@ -203,6 +203,9 @@ export default {
 </script>
 
 <style lang="scss" scoped>
+::v-deep a {
+	color: var(--ck-color-link-default);
+}
 ::v-deep p {
 	cursor: text;
 }
