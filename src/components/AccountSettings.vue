@@ -47,7 +47,14 @@
 			</p>
 			<EditorSettings :account="account" />
 		</AppSettingsSection>
-
+		<AppSettingsSection :title=" t('mail', 'Default folders')">
+			<p class="settings-hint">
+				{{
+					t('mail', 'The folders to use for drafts, sent messages and deleted messages.')
+				}}
+			</p>
+			<AccountDefaultsSettings :account="account" />
+		</AppSettingsSection>
 		<AppSettingsSection :title="t('mail', 'Mail server')">
 			<div v-if="!account.provisioned">
 				<div id="mail-settings">
@@ -67,6 +74,7 @@
 <script>
 import AccountForm from '../components/AccountForm'
 import EditorSettings from '../components/EditorSettings'
+import AccountDefaultsSettings from '../components/AccountDefaultsSettings'
 import Logger from '../logger'
 import SignatureSettings from '../components/SignatureSettings'
 import AliasSettings from '../components/AliasSettings'
@@ -81,6 +89,7 @@ export default {
 		SignatureSettings,
 		AppSettingsDialog,
 		AppSettingsSection,
+		AccountDefaultsSettings,
 	},
 	props: {
 		account: {

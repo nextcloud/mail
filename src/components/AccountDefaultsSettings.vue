@@ -20,39 +20,22 @@
   -->
 
 <template>
-	<div class="section">
-		<h2>{{ t('mail', 'Defaults') }}</h2>
-		<p class="settings-hint">
-			{{
-				t('mail', 'Here you can select where Nextcloud Mail stores your drafts as well as sent and deleted messages.')
-			}}
+	<div>
+		<p>
+			{{ t('mail', 'Drafts are saved in:') }}
 		</p>
-		<table>
-			<tr>
-				<td>
-					{{ t('mail', 'Draft messages are saved to:') }}
-				</td>
-				<td>
-					<MailboxInlinePicker v-model="draftsMailbox" :account="account" :disabled="saving" />
-				</td>
-			</tr>
-			<tr>
-				<td>
-					{{ t('mail', 'Sent messages are saved to:') }}
-				</td>
-				<td>
-					<MailboxInlinePicker v-model="sentMailbox" :account="account" :disabled="saving" />
-				</td>
-			</tr>
-			<tr>
-				<td>
-					{{ t('mail', 'Deleted messages are moved to:') }}
-				</td>
-				<td>
-					<MailboxInlinePicker v-model="trashMailbox" :account="account" :disabled="saving" />
-				</td>
-			</tr>
-		</table>
+		<MailboxInlinePicker v-model="draftsMailbox" :account="account" :disabled="saving" />
+
+		<p>
+			{{ t('mail', 'Sent messages are saved in:') }}
+		</p>
+
+		<MailboxInlinePicker v-model="sentMailbox" :account="account" :disabled="saving" />
+		<p>
+			{{ t('mail', 'Deleted messages are moved in:') }}
+		</p>
+
+		<MailboxInlinePicker v-model="trashMailbox" :account="account" :disabled="saving" />
 	</div>
 </template>
 
