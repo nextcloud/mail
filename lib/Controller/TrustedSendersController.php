@@ -83,4 +83,18 @@ class TrustedSendersController extends Controller {
 
 		return JsonResponse::success(null);
 	}
+	/**
+	 * @NoAdminRequired
+	 * @TrapError
+	 *
+	 *
+	 * @return JsonResponse
+	 */
+	public function list(): JsonResponse {
+		$list = $this->trustedSenderService->getTrusted(
+			$this->uid
+		);
+
+		return JsonResponse::success($list);
+	}
 }

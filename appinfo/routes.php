@@ -199,6 +199,11 @@ return [
 			'url' => '/api/trustedsenders/{email}',
 			'verb' => 'DELETE'
 		],
+		[
+			'name' => 'trusted_senders#list',
+			'url' => '/api/trustedsenders',
+			'verb' => 'GET'
+		],
 	],
 	'resources' => [
 		'accounts' => ['url' => '/api/accounts'],

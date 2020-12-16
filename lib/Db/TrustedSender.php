@@ -25,6 +25,7 @@ declare(strict_types=1);
 
 namespace OCA\Mail\Db;
 
+use JsonSerializable;
 use OCP\AppFramework\Db\Entity;
 
 /**
@@ -33,11 +34,19 @@ use OCP\AppFramework\Db\Entity;
  * @method setUserId(string $userId): void
  * @method getUserId(): string
  */
-class TrustedSender extends Entity {
+class TrustedSender extends Entity implements JsonSerializable {
 
 	/** @var string */
 	protected $email;
 
 	/** @var string */
 	protected $userId;
+
+	public function jsonSerialize() {
+		return [
+			'id' => $this->id,
+			'email' => $this->email,
+			'uid' => $this->userId,
+		];
+	}
 }

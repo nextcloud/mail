@@ -112,7 +112,7 @@ export default {
 				.forEach((node) => node.setAttribute('style', node.getAttribute('data-original-style')))
 
 			this.hasBlockedContent = false
-			trustSender(this.message.from[0].email, true)
+			await trustSender(this.message.from[0].email, true)
 
 		},
 	},
