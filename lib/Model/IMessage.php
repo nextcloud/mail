@@ -129,7 +129,7 @@ interface IMessage {
 	 * @param string $name
 	 * @param string $content
 	 */
-	public function addForwardedAttachment(string $name, string $content): void;
+	public function addRawAttachment(string $name, string $content): void;
 
 	/**
 	 * @param File $fileName

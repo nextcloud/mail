@@ -228,6 +228,7 @@
 <script>
 import debounce from 'lodash/fp/debounce'
 import uniqBy from 'lodash/fp/uniqBy'
+import isArray from 'lodash/fp/isArray'
 import trimStart from 'lodash/fp/trimCharsStart'
 import Autosize from 'vue-autosize'
 import debouncePromise from 'debounce-promise'
@@ -236,6 +237,7 @@ import ActionButton from '@nextcloud/vue/dist/Components/ActionButton'
 import ActionCheckbox from '@nextcloud/vue/dist/Components/ActionCheckbox'
 import ActionLink from '@nextcloud/vue/dist/Components/ActionLink'
 import Multiselect from '@nextcloud/vue/dist/Components/Multiselect'
+import { showError } from '@nextcloud/dialogs'
 import { translate as t } from '@nextcloud/l10n'
 import Vue from 'vue'
 
@@ -452,17 +454,40 @@ export default {
 
 		// Add attachments in case of forward
 		if (this.forwardFrom?.attachments !== undefined) {
-			this.forwardFrom.attachments.forEach(att => {
-				const attachment = {
+			this.forwardFrom.attachments.map(att => {
+				this.attachments.push({
 					fileName: att.fileName,
-					displayName: trimStart('/')(att.fileName),
+					displayName: trimStart('/', att.fileName),
 					id: att.id,
 					messageId: this.forwardFrom.databaseId,
-					type: 'mail',
-				}
-				return this.attachments.push(attachment)
-			}, this)
+					type: 'message-attachment',
+				})
+			})
 		}
+
+		// Add messages forwarded as attachments
+		let forwards = []
+		if (this.$route.query.forwardedMessages && !isArray(this.$route.query.forwardedMessages)) {
+			forwards = [this.$route.query.forwardedMessages]
+		} else if (this.$route.query.forwardedMessages && isArray(this.$route.query.forwardedMessages)) {
+			forwards = this.$route.query.forwardedMessages
+		}
+		forwards.map(id => {
+			const env = this.$store.getters.getEnvelope(id)
+			if (!env) {
+				// TODO: also happens when the composer page is reloaded
+				showError(t('mail', 'Message {id} could not be found', {
+					id,
+				}))
+				return
+			}
+
+			this.attachments.push({
+				displayName: env.subject + '.eml',
+				id,
+				type: 'message',
+			})
+		})
 	},
 	beforeDestroy() {
 		this.$root.$off('newMessage')
