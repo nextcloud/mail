@@ -134,6 +134,7 @@ class PageController extends Controller {
 		$response = new TemplateResponse($this->appName, 'index',
 			[
 				'debug' => $this->config->getSystemValue('debug', false),
+				'attachment-size-limit' => $this->config->getSystemValue('app.mail.attachment-size-limit', 0),
 				'app-version' => $this->config->getAppValue('mail', 'installed_version'),
 				'accounts' => base64_encode(json_encode($accountsJson)),
 				'external-avatars' => $this->preferences->getPreference('external-avatars', 'true'),

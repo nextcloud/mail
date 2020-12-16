@@ -61,6 +61,10 @@ store.commit('savePreference', {
 	value: getPreferenceFromPage('debug-mode'),
 })
 store.commit('savePreference', {
+	key: 'attachment-size-limit',
+	value: Number.parseInt(getPreferenceFromPage('attachment-size-limit'), 10),
+})
+store.commit('savePreference', {
 	key: 'version',
 	value: getPreferenceFromPage('config-installed-version'),
 })
