@@ -132,7 +132,7 @@ class Html {
 		$html = $config->getDefinition('HTML');
 		$html->info_attr_transform_post['imagesrc'] = new TransformImageSrc($this->urlGenerator);
 		$html->info_attr_transform_post['cssbackground'] = new TransformCSSBackground($this->urlGenerator);
-		$html->info_attr_transform_post['htmllinks'] = new TransformHTMLLinks();
+		$html->info_attr_transform_post['htmllinks'] = new TransformHTMLLinks($this->urlGenerator);
 
 		/** @var HTMLPurifier_URIDefinition $uri */
 		$uri = $config->getDefinition('URI');
