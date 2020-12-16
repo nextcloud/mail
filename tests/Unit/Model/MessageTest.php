@@ -162,9 +162,8 @@ class MessageTest extends TestCase {
 		$expected->setType($mimeType);
 
 		$this->message->addAttachmentFromFiles($file);
-		$actual = $this->message->getCloudAttachments();
+		$actual = $this->message->getAttachments();
 
 		$this->assertCount(1, $actual);
-		//$this->assertEquals($expected, $actual[0]);
 	}
 }

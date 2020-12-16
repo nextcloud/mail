@@ -27,6 +27,7 @@ use ChristophWurst\Nextcloud\Testing\TestUser;
 use OC;
 use OCA\Mail\Account;
 use OCA\Mail\Contracts\IAttachmentService;
+use OCA\Mail\Contracts\IMailManager;
 use OCA\Mail\Contracts\IMailTransmission;
 use OCA\Mail\Db\MailAccount;
 use OCA\Mail\Db\MailAccountMapper;
@@ -37,6 +38,7 @@ use OCA\Mail\IMAP\MailboxSync;
 use OCA\Mail\IMAP\MessageMapper;
 use OCA\Mail\Model\NewMessageData;
 use OCA\Mail\Model\RepliedMessageData;
+use OCA\Mail\Service\AccountService;
 use OCA\Mail\Service\Attachment\UploadedFile;
 use OCA\Mail\Service\MailTransmission;
 use OCA\Mail\SMTP\SmtpClientFactory;
@@ -102,7 +104,9 @@ class MailTransmissionIntegrationTest extends TestCase {
 
 		$this->transmission = new MailTransmission(
 			$userFolder,
+			OC::$server->query(AccountService::class),
 			$this->attachmentService,
+			OC::$server->query(IMailManager::class),
 			OC::$server->query(IMAPClientFactory::class),
 			OC::$server->query(SmtpClientFactory::class),
 			OC::$server->query(IEventDispatcher::class),
@@ -134,7 +138,7 @@ class MailTransmissionIntegrationTest extends TestCase {
 		$this->attachmentService->addFile($this->user->getUID(), $file);
 		$message = NewMessageData::fromRequest($this->account, 'recipient@domain.com', null, null, 'greetings', 'hello there', [
 			[
-				'isLocal' => 'true',
+				'type' => 'local',
 				'id' => 13,
 			],
 		]);
@@ -149,7 +153,7 @@ class MailTransmissionIntegrationTest extends TestCase {
 		$userFolder->newFile('text.txt');
 		$message = NewMessageData::fromRequest($this->account, 'recipient@domain.com', null, null, 'greetings', 'hello there', [
 			[
-				'isLocal' => false,
+				'type' => 'Files',
 				'fileName' => 'text.txt',
 			],
 		]);

@@ -39,6 +39,7 @@ use OCP\AppFramework\Db\DoesNotExistException;
 use Psr\Log\LoggerInterface;
 use function array_filter;
 use function array_map;
+use function in_array;
 use function iterator_to_array;
 use function reset;
 
@@ -455,8 +456,9 @@ class MessageMapper {
 	}
 
 	public function getRawAttachments(Horde_Imap_Client_Socket $client,
-									  string $mailbox,
-									  int $uid): array {
+									string $mailbox,
+									int $uid,
+									?array $attachmentIds = []): array {
 		$messageQuery = new Horde_Imap_Client_Fetch_Query();
 		$messageQuery->structure();
 
@@ -475,6 +477,10 @@ class MessageMapper {
 			/** @var Horde_Mime_Part $part */
 			if ($part->getMimeId() === '0') {
 				// Ignore message header
+				continue;
+			}
+			if (!empty($attachmentIds) && !in_array($part->getMIMEId(), $attachmentIds, true)) {
+				// We are looking for specific parts only and this is not one of them
 				continue;
 			}
 
