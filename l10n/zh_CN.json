@@ -85,6 +85,7 @@
     "Uploading {percent}% …" : "正在上传 {percent}% …",
     "Choose a file to add as attachment" : "选择文件添加为附件",
     "Choose a file to share as a link" : "选择要共享的文件作为链接",
+    "_The attachment exceed the allowed attachments size of {size}. Please share the file via link instead._::_The attachments exceed the allowed attachments size of {size}. Please share the files via link instead._" : ["附件超出了允许的附件最大大小 {size}。请通过链接共享文件。"],
     "No message found yet" : "暂无消息",
     "Set up an account" : "设置一个账号",
     "Plain text" : "纯文本",

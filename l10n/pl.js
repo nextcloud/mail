@@ -87,6 +87,7 @@ OC.L10N.register(
     "Uploading {percent}% …" : "Wysłane {percent}%…",
     "Choose a file to add as attachment" : "Wybierz plik, aby dodać jako załącznik",
     "Choose a file to share as a link" : "Wybierz plik do udostępnienia przez link",
+    "_The attachment exceed the allowed attachments size of {size}. Please share the file via link instead._::_The attachments exceed the allowed attachments size of {size}. Please share the files via link instead._" : ["Załącznik przekracza dozwolony rozmiar załącznika {size}. Zamiast tego udostępnij plik za pośrednictwem linku.","Załączniki przekraczają dozwolony rozmiar załączników {size}. Zamiast tego udostępnij pliki za pośrednictwem linku.","Załączniki przekraczają dozwolony rozmiar załączników {size}. Zamiast tego udostępnij pliki za pośrednictwem linku.","Załączniki przekraczają dozwolony rozmiar załączników {size}. Zamiast tego udostępnij pliki za pośrednictwem linku."],
     "No message found yet" : "Nie znaleziono jeszcze wiadomości",
     "Set up an account" : "Załóż konto",
     "Plain text" : "Zwykły tekst",
