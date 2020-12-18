@@ -154,7 +154,13 @@ export default {
 
 			if (childrenWidth > maxWidth) {
 				// There's not enough space to show all thread participants
-				this.participantsToDisplay = fits - 1
+				if (fits > 1) {
+					this.participantsToDisplay = fits - 1
+				} else if (fits === 0) {
+					this.participantsToDisplay = 1
+				} else {
+					this.participantsToDisplay = fits
+				}
 			} else {
 				// There's enough space to show all thread participants
 				this.participantsToDisplay = this.threadParticipants.length
