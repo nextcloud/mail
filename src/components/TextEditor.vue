@@ -121,6 +121,7 @@ export default {
 			}
 
 			try {
+				logger.debug(`loading ${language} translations for CKEditor`)
 				await import(
 					/* webpackMode: "lazy-once" */
 					/* webpackPrefetch: true */
@@ -129,7 +130,7 @@ export default {
 				)
 				this.showEditor(language)
 			} catch (error) {
-				logger.error(`could not find CKEditor translations for "${language}"`)
+				logger.error(`could not find CKEditor translations for "${language}"`, { error })
 				this.showEditor('en')
 			}
 		},
