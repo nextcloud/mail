@@ -85,6 +85,7 @@
     "Uploading {percent}% …" : "Caricamento {percent}%…",
     "Choose a file to add as attachment" : "Scegli un file da aggiungere come allegato",
     "Choose a file to share as a link" : "Scegli un file da condividere come un collegamento",
+    "_The attachment exceed the allowed attachments size of {size}. Please share the file via link instead._::_The attachments exceed the allowed attachments size of {size}. Please share the files via link instead._" : ["Gli allegati superano le dimensioni consentite per gli allegati di {size}. Condividere invece il file tramite collegamento.","Gli allegati superano le dimensioni consentite per gli allegati di {size}. Condividere invece i file tramite collegamento."],
     "No message found yet" : "Ancora nessun messaggio trovato",
     "Set up an account" : "Configura un account",
     "Plain text" : "Testo semplice",
