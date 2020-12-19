@@ -383,7 +383,7 @@ class MessagesController extends Controller {
 	 *
 	 * @throws ClientException
 	 */
-	public function getHtmlBody(int $id, bool $plain=false): Response {
+	public function getHtmlBody(int $id, bool $plain = false): Response {
 		try {
 			try {
 				$message = $this->mailManager->getMessage($this->currentUserId, $id);

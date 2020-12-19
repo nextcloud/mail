@@ -71,7 +71,7 @@ class ContactsGroupService implements IGroupService {
 				continue;
 			}
 			foreach (explode(',', $r['CATEGORIES'] ?? '') as $group) {
-				$receivers[] =[
+				$receivers[] = [
 					'id' => $group,
 					'name' => $group
 				];

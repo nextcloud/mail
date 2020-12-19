@@ -464,7 +464,7 @@ class AccountsController extends Controller {
 			return new JSONResponse([
 				'id' => $this->mailManager->getMessageIdForUid($draftsMailbox, $newUID)
 			]);
-		} catch (ClientException|ServiceException $ex) {
+		} catch (ClientException | ServiceException $ex) {
 			$this->logger->error('Saving draft failed: ' . $ex->getMessage());
 			throw $ex;
 		}

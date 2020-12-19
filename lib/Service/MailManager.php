@@ -183,7 +183,7 @@ class MailManager implements IMailManager {
 				$uid,
 				$loadBody
 			);
-		} catch (Horde_Imap_Client_Exception|DoesNotExistException $e) {
+		} catch (Horde_Imap_Client_Exception | DoesNotExistException $e) {
 			throw new ServiceException(
 				"Could not load message",
 				(int) $e->getCode(),
@@ -223,7 +223,7 @@ class MailManager implements IMailManager {
 				$mailbox,
 				$uid
 			);
-		} catch (Horde_Imap_Client_Exception|DoesNotExistException $e) {
+		} catch (Horde_Imap_Client_Exception | DoesNotExistException $e) {
 			throw new ServiceException("Could not load message", 0, $e);
 		}
 	}

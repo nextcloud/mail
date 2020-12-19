@@ -74,7 +74,7 @@ class ProvisioningMiddleware extends Middleware {
 				$user,
 				$this->credentialStore->getLoginCredentials()->getPassword()
 			);
-		} catch (CredentialsUnavailableException|PasswordUnavailableException $e) {
+		} catch (CredentialsUnavailableException | PasswordUnavailableException $e) {
 			// Nothing to update
 			return;
 		}
