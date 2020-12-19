@@ -3400,16 +3400,16 @@
         },
         {
             "name": "friendsofphp/php-cs-fixer",
-            "version": "v2.17.1",
+            "version": "v2.17.2",
             "source": {
                 "type": "git",
                 "url": "https://github.com/FriendsOfPHP/PHP-CS-Fixer.git",
-                "reference": "5198b7308ed63f26799387fd7f3901c3db6bd7fd"
+                "reference": "aaee4f3d16a996fc0b570be0c69d3b80c909c507"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/FriendsOfPHP/PHP-CS-Fixer/zipball/5198b7308ed63f26799387fd7f3901c3db6bd7fd",
-                "reference": "5198b7308ed63f26799387fd7f3901c3db6bd7fd",
+                "url": "https://api.github.com/repos/FriendsOfPHP/PHP-CS-Fixer/zipball/aaee4f3d16a996fc0b570be0c69d3b80c909c507",
+                "reference": "aaee4f3d16a996fc0b570be0c69d3b80c909c507",
                 "shasum": ""
             },
             "require": {
@@ -3439,9 +3439,11 @@
                 "php-cs-fixer/accessible-object": "^1.0",
                 "php-cs-fixer/phpunit-constraint-isidenticalstring": "^1.2",
                 "php-cs-fixer/phpunit-constraint-xmlmatchesxsd": "^1.2.1",
-                "phpunit/phpunit": "^5.7.27 || ^6.5.14 || ^7.1",
+                "phpspec/prophecy-phpunit": "^1.1 || ^2.0",
+                "phpunit/phpunit": "^5.7.27 || ^6.5.14 || ^7.5.20 || ^8.5.13 || ^9.4.4 <9.5",
                 "phpunitgoodpractices/polyfill": "^1.5",
                 "phpunitgoodpractices/traits": "^1.9.1",
+                "sanmai/phpunit-legacy-adapter": "^6.4 || ^8.2.1",
                 "symfony/phpunit-bridge": "^5.1",
                 "symfony/yaml": "^3.0 || ^4.0 || ^5.0"
             },
@@ -3494,7 +3496,7 @@
                     "type": "github"
                 }
             ],
-            "time": "2020-12-08T13:47:02+00:00"
+            "time": "2020-12-17T16:41:55+00:00"
         },
         {
             "name": "microsoft/tolerant-php-parser",
@@ -5952,16 +5954,16 @@
         },
         {
             "name": "symfony/event-dispatcher",
-            "version": "v5.2.0",
+            "version": "v5.2.1",
             "source": {
                 "type": "git",
                 "url": "https://github.com/symfony/event-dispatcher.git",
-                "reference": "aa13a09811e6d2ad43f8fb336bebdb7691d85d3c"
+                "reference": "1c93f7a1dff592c252574c79a8635a8a80856042"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/symfony/event-dispatcher/zipball/aa13a09811e6d2ad43f8fb336bebdb7691d85d3c",
-                "reference": "aa13a09811e6d2ad43f8fb336bebdb7691d85d3c",
+                "url": "https://api.github.com/repos/symfony/event-dispatcher/zipball/1c93f7a1dff592c252574c79a8635a8a80856042",
+                "reference": "1c93f7a1dff592c252574c79a8635a8a80856042",
                 "shasum": ""
             },
             "require": {
@@ -6030,7 +6032,7 @@
                     "type": "tidelift"
                 }
             ],
-            "time": "2020-11-01T16:14:45+00:00"
+            "time": "2020-12-18T08:03:05+00:00"
         },
         {
             "name": "symfony/event-dispatcher-contracts",
@@ -6169,7 +6171,7 @@
         },
         {
             "name": "symfony/options-resolver",
-            "version": "v5.2.0",
+            "version": "v5.2.1",
             "source": {
                 "type": "git",
                 "url": "https://github.com/symfony/options-resolver.git",
@@ -6432,7 +6434,7 @@
         },
         {
             "name": "symfony/stopwatch",
-            "version": "v5.2.0",
+            "version": "v5.2.1",
             "source": {
                 "type": "git",
                 "url": "https://github.com/symfony/stopwatch.git",
