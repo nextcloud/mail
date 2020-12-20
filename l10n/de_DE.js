@@ -87,7 +87,7 @@ OC.L10N.register(
     "Uploading {percent}% …" : "Lade hoch ({percent}%)…",
     "Choose a file to add as attachment" : "Wählen Sie eine Datei, die als Anhang angefügt werden soll",
     "Choose a file to share as a link" : "Datei auswählen welche als Link geteilt wird",
-    "_The attachment exceed the allowed attachments size of {size}. Please share the file via link instead._::_The attachments exceed the allowed attachments size of {size}. Please share the files via link instead._" : ["Der Anhang überschreitet die zulässige Anhangsgröße von {size}. Bitte teilen Sie die Datei stattdessen über einen Link.","Die Anhänge überschreitet die zulässige Anhangsgröße von {size}. Bitte teilen Sie die Dateien stattdessen über einen Link."],
+    "_The attachment exceed the allowed attachments size of {size}. Please share the file via link instead._::_The attachments exceed the allowed attachments size of {size}. Please share the files via link instead._" : ["Der Anhang überschreitet die zulässige Anhangsgröße von {size}. Bitte teilen Sie die Datei stattdessen über einen Link.","Die Anhänge überschreiten die zulässige Anhangsgröße von {size}. Bitte teilen Sie die Dateien stattdessen über einen Link."],
     "No message found yet" : "Keine Nachrichten gefunden",
     "Set up an account" : "Konto einrichten",
     "Plain text" : "Klartext",
