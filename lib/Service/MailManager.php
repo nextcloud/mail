@@ -218,7 +218,7 @@ class MailManager implements IMailManager {
 		$client = $this->imapClientFactory->getClient($account);
 
 		try {
-			return $this->imapMessageMapper->getSource(
+			return $this->imapMessageMapper->getFullText(
 				$client,
 				$mailbox,
 				$uid

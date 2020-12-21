@@ -67,6 +67,18 @@
 							}
 						) }}
 					</ActionButton>
+					<ActionButton
+						icon="icon-forward"
+						:close-after-click="true"
+						@click.prevent="forwardSelectedAsAttachment">
+						{{ t(
+							'mail',
+							'Forward {number} as attachment',
+							{
+								number: selection.length,
+							}
+						) }}
+					</ActionButton>
 					<ActionButton icon="icon-delete"
 						:close-after-click="true"
 						@click.prevent="deleteAllSelected">
@@ -314,6 +326,20 @@ export default {
 		},
 		onOpenMoveModal() {
 			this.showMoveModal = true
+		},
+		async forwardSelectedAsAttachment() {
+			const selected = this.selection
+			this.$router.push({
+				name: 'message',
+				params: {
+					mailboxId: this.$route.params.mailboxId,
+					threadId: 'new',
+				},
+				query: {
+					forwardedMessages: selected,
+				},
+			})
+			this.unselectAll()
 		},
 		onCloseMoveModal() {
 			this.showMoveModal = false

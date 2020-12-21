@@ -366,9 +366,9 @@ class MessageMapper {
 	 * @return string|null
 	 * @throws ServiceException
 	 */
-	public function getSource(Horde_Imap_Client_Socket $client,
-							  string $mailbox,
-							  int $uid): ?string {
+	public function getFullText(Horde_Imap_Client_Socket $client,
+								string $mailbox,
+								int $uid): ?string {
 		$query = new Horde_Imap_Client_Fetch_Query();
 		$query->uid();
 		$query->fullText([

@@ -298,9 +298,12 @@ class MailTransmission implements IMailTransmission {
 			if (isset($attachment['type']) && $attachment['type'] === 'local') {
 				// Adds an uploaded attachment
 				$this->handleLocalAttachment($account, $attachment, $message);
-			} elseif (isset($attachment['type']) && $attachment['type'] === 'mail') {
+			} elseif (isset($attachment['type']) && $attachment['type'] === 'message') {
+				// Adds another message as attachment
+				$this->handleForwardedMessageAttachment($account, $attachment, $message);
+			} elseif (isset($attachment['type']) && $attachment['type'] === 'message-attachment') {
 				// Adds an attachment from another email (use case is, eg., a mail forward)
-				$this->handleEmailAttachment($account, $attachment, $message);
+				$this->handleForwardedAttachment($account, $attachment, $message);
 			} else {
 				// Adds an attachment from Files
 				$this->handleCloudAttachment($attachment, $message);
@@ -334,17 +337,38 @@ class MailTransmission implements IMailTransmission {
 	}
 
 	/**
-	 * @param Account $account
-	 * @param array $attachment
-	 * @param IMessage $message
-	 *
-	 * @return void
-	 *
 	 * Adds an attachment that's coming from another message's attachment (typical use case: email forwarding)
 	 *
+	 * @param Account $account
+	 * @param mixed[] $attachment
+	 * @param IMessage $message
 	 */
-	private function handleEmailAttachment(Account $account, array $attachment, IMessage $message) {
+	private function handleForwardedMessageAttachment(Account $account, array $attachment, IMessage $message): void {
+		// Gets original of other message
+		$userId = $account->getMailAccount()->getUserId();
+		$attachmentMessage = $this->mailManager->getMessage($userId, (int)$attachment['id']);
+		$mailbox = $this->mailManager->getMailbox($userId, $attachmentMessage->getMailboxId());
 
+		$fullText = $this->messageMapper->getFullText(
+			$this->imapClientFactory->getClient($account),
+			$mailbox->getName(),
+			$attachmentMessage->getUid()
+		);
+
+		$message->addRawAttachment(
+			$attachment['displayName'] ?? $attachmentMessage->getSubject() . '.eml',
+			$fullText
+		);
+	}
+
+	/**
+	 * Adds an attachment that's coming from another message's attachment (typical use case: email forwarding)
+	 *
+	 * @param Account $account
+	 * @param mixed[] $attachment
+	 * @param IMessage $message
+	 */
+	private function handleForwardedAttachment(Account $account, array $attachment, IMessage $message): void {
 		// Gets attachment from other message
 		$userId = $account->getMailAccount()->getUserId();
 		$attachmentMessage = $this->mailManager->getMessage($userId, (int)$attachment['messageId']);
@@ -358,8 +382,8 @@ class MailTransmission implements IMailTransmission {
 			]
 		);
 
-		// Attaches attachment to new messsage
-		$message->addForwardedAttachment($attachment['fileName'], $attachments[0]);
+		// Attaches attachment to new message
+		$message->addRawAttachment($attachment['fileName'], $attachments[0]);
 	}
 
 	/**

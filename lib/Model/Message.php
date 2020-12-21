@@ -217,7 +217,7 @@ class Message implements IMessage {
 	 * Adds a file that's coming from another email's attachment (typical
 	 * use case is forwarding a message)
 	 */
-	public function addForwardedAttachment(string $name, string $content): void {
+	public function addRawAttachment(string $name, string $content): void {
 		$mime = 'application/octet-stream';
 		if (extension_loaded('fileinfo')) {
 			$finfo = new finfo(FILEINFO_MIME_TYPE);

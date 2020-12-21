@@ -601,7 +601,7 @@ class IMAPMessage implements IMessage, JsonSerializable {
 	 *
 	 * @return void
 	 */
-	public function addForwardedAttachment(string $name, string $content): void {
+	public function addRawAttachment(string $name, string $content): void {
 		throw new Exception('IMAP message is immutable');
 	}
 
