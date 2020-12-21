@@ -87,6 +87,7 @@ OC.L10N.register(
     "Uploading {percent}% …" : "Yükleniyor %{percent} …",
     "Choose a file to add as attachment" : "Eklenecek ek dosyasını seçin",
     "Choose a file to share as a link" : "Bağlantı olarak paylaşılacak bir dosya seçin",
+    "_The attachment exceed the allowed attachments size of {size}. Please share the file via link instead._::_The attachments exceed the allowed attachments size of {size}. Please share the files via link instead._" : ["Ek dosya izin verilen {size} ek dosya boyutunu aşıyor. Lütfen dosyayı bağlantı ile paylaşın.","Ek dosyalar izin verilen {size} ek dosya boyutunu aşıyor. Lütfen dosyaları bağlantı ile paylaşın."],
     "No message found yet" : "Henüz bir ileti bulunamadı",
     "Set up an account" : "Bir hesap ekleyin",
     "Plain text" : "Düz metin",
