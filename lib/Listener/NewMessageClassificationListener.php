@@ -79,7 +79,7 @@ class NewMessageClassificationListener implements IEventListener {
 					$message->setFlagImportant(true);
 				}
 			}
-		} catch (Throwable|ServiceException $e) {
+		} catch (Throwable | ServiceException $e) {
 			// TODO: remove Throwable catch once https://github.com/RubixML/RubixML/pull/69 landed here
 			$this->logger->error('Could not classify incoming message importance: ' . $e->getMessage(), [
 				'exception' => $e,

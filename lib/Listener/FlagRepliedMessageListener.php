@@ -70,7 +70,7 @@ class FlagRepliedMessageListener implements IEventListener {
 			$mailbox = $this->mailboxMapper->findById(
 				$event->getRepliedMessageData()->getMessage()->getMailboxId()
 			);
-		} catch (DoesNotExistException|ServiceException $e) {
+		} catch (DoesNotExistException | ServiceException $e) {
 			$this->logger->warning('Could not flag the message in reply to: ' . $e, [
 				'exception' => $e,
 			]);
