@@ -445,7 +445,9 @@ export default {
 		await this.onMailvelopeLoaded(await getMailvelope())
 	},
 	mounted() {
-		this.$refs.toLabel.$el.focus()
+		if (!this.isReply) {
+			this.$refs.toLabel.$el.focus()
+		}
 
 		// event is triggered when user clicks 'new message' in navigation
 		this.$root.$on('newMessage', () => {
@@ -530,7 +532,8 @@ export default {
 					buildReplyBody(
 						this.editorPlainText ? toPlain(this.body) : toHtml(this.body),
 						this.replyTo.from[0],
-						this.replyTo.dateInt
+						this.replyTo.dateInt,
+						this.$store.getters.getPreference('reply-mode', 'top') === 'top'
 					).value
 				).value
 			} else if (this.forwardFrom) {
@@ -539,7 +542,8 @@ export default {
 					buildReplyBody(
 						this.editorPlainText ? toPlain(this.body) : toHtml(this.body),
 						this.forwardFrom.from[0],
-						this.forwardFrom.dateInt
+						this.forwardFrom.dateInt,
+						this.$store.getters.getPreference('reply-mode', 'top') === 'top'
 					).value
 				).value
 			} else {
