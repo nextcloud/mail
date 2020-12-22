@@ -72,7 +72,7 @@ describe('Vuex store actions', () => {
 		const result = await actions.createMailbox(context, {account, name})
 
 		expect(result).to.deep.equal(mailbox)
-		expect(context.commit).to.have.been.calledTwice
+		expect(context.commit).to.have.been.calledThrice
 		expect(context.commit).to.have.been.calledWith('addMailbox', { account, mailbox})
 	})
 
@@ -90,7 +90,7 @@ describe('Vuex store actions', () => {
 		const result = await actions.createMailbox(context, {account, name})
 
 		expect(result).to.deep.equal(mailbox)
-		expect(context.commit).to.have.been.calledTwice
+		expect(context.commit).to.have.been.calledThrice
 		expect(context.commit).to.have.been.calledWith('addMailbox', { account, mailbox})
 	})
 
@@ -108,7 +108,7 @@ describe('Vuex store actions', () => {
 		const result = await actions.createMailbox(context, {account, name})
 
 		expect(result).to.deep.equal(mailbox)
-		expect(context.commit).to.have.been.calledTwice
+		expect(context.commit).to.have.been.calledThrice
 		expect(context.commit).to.have.been.calledWith('addMailbox', { account, mailbox})
 	})
 
@@ -126,7 +126,7 @@ describe('Vuex store actions', () => {
 		const result = await actions.createMailbox(context, {account, name})
 
 		expect(result).to.deep.equal(mailbox)
-		expect(context.commit).to.have.been.calledTwice
+		expect(context.commit).to.have.been.calledThrice
 		expect(context.commit).to.have.been.calledWith('addMailbox', { account, mailbox})
 	})
 
