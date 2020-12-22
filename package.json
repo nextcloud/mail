@@ -11,8 +11,8 @@
     "watch": "NODE_ENV=development webpack --progress --watch --config webpack.dev.js",
     "lint": "eslint --ext .js,.vue --ignore-pattern tests src",
     "lint:fix": "eslint --ext .js,.vue --ignore-pattern tests src --fix",
-    "test": "mochapack --webpack-config webpack.test.js --require src/tests/setup.js \"src/tests/**/*.spec.js\"",
-    "test:watch": "mochapack -w --webpack-config webpack.test.js --require src/tests/setup.js \"src/tests/**/*.spec.js\""
+    "test": "NODE_ENV=testing mochapack --webpack-config webpack.test.js --require src/tests/setup.js \"src/tests/**/*.spec.js\"",
+    "test:watch": "NODE_ENV=testing mochapack -w --webpack-config webpack.test.js --require src/tests/setup.js \"src/tests/**/*.spec.js\""
   },
   "dependencies": {
     "@bundle-analyzer/webpack-plugin": "^0.5.1",
@@ -48,7 +48,7 @@
     "davclient.js": "git+https://github.com/owncloud/davclient.js.git#0.2.1",
     "debounce-promise": "^3.1.2",
     "dompurify": "^2.2.6",
-    "html-to-text": "^6.0.0",
+    "html-to-text": "^5.1.1",
     "ical.js": "^1.4.0",
     "iframe-resizer": "^4.2.11",
     "js-base64": "^3.6.0",

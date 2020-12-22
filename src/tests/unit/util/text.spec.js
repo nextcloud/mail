@@ -20,7 +20,7 @@
  *
  */
 
-import { html, toPlain, plain, detect } from '../../../util/text'
+import {detect, html, plain, toPlain} from '../../../util/text'
 
 describe('text', () => {
 	describe('toPlain', () => {
@@ -35,11 +35,10 @@ describe('text', () => {
 
 		it('breaks on divs', () => {
 			const source = html('<div>one</div><div>two</div>')
-			const expected = plain('one\ntwo')
 
 			const actual = toPlain(source)
 
-			expect(actual).to.deep.equal(expected)
+			expect(actual).to.deep.equal(plain('one\ntwo'))
 		})
 
 		it('produces a line break for each ending div element', () => {
