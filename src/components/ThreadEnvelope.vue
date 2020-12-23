@@ -55,7 +55,7 @@
 			<div class="right">
 				<Moment class="timestamp" :timestamp="envelope.dateInt" />
 				<router-link
-					:to="hasMultipleRecipients ? replyAll : replyMessage"
+					:to="hasMultipleRecipients ? replyAllLink : replyOneLink"
 					:class="{
 						'icon-reply-all-white': hasMultipleRecipients,
 						'icon-reply-white': !hasMultipleRecipients,
@@ -65,17 +65,17 @@
 					{{ t('mail', 'Reply') }}
 				</router-link>
 				<Actions class="app-content-list-item-menu" menu-align="right">
-					<ActionButton v-if="hasMultipleRecipients"
+					<ActionRouter v-if="hasMultipleRecipients"
 						icon="icon-reply"
 						:close-after-click="true"
-						@click="replyMessage">
+						:to="replyOneLink">
 						{{ t('mail', 'Reply to sender only') }}
-					</ActionButton>
-					<ActionButton icon="icon-forward"
+					</ActionRouter>
+					<ActionRouter icon="icon-forward"
 						:close-after-click="true"
-						@click="forwardMessage">
+						:to="forwardLink">
 						{{ t('mail', 'Forward') }}
-					</ActionButton>
+					</ActionRouter>
 					<ActionButton icon="icon-important"
 						:close-after-click="true"
 						@click.prevent="onToggleImportant">
@@ -277,12 +277,38 @@ export default {
 			})
 			return recipients.to.concat(recipients.cc).length > 1
 		},
-		replyAll() {
+		replyOneLink() {
+			return {
+				name: 'message',
+				params: {
+					mailboxId: this.$route.params.mailboxId,
+					threadId: 'reply',
+					filter: this.$route.params.filter ? this.$route.params.filter : undefined,
+				},
+				query: {
+					messageId: this.envelope.databaseId,
+				},
+			}
+		},
+		replyAllLink() {
 			return {
 				name: 'message',
 				params: {
 					mailboxId: this.$route.params.mailboxId,
 					threadId: 'replyAll',
+					filter: this.$route.params.filter ? this.$route.params.filter : undefined,
+				},
+				query: {
+					messageId: this.envelope.databaseId,
+				},
+			}
+		},
+		forwardLink() {
+			return {
+				name: 'message',
+				params: {
+					mailboxId: this.$route.params.mailboxId,
+					threadId: 'new',
 					filter: this.$route.params.filter ? this.$route.params.filter : undefined,
 				},
 				query: {
@@ -323,32 +349,6 @@ export default {
 			} catch (error) {
 				logger.error('Could not fetch message', { error })
 			}
-		},
-		replyMessage() {
-			this.$router.push({
-				name: 'message',
-				params: {
-					mailboxId: this.$route.params.mailboxId,
-					threadId: 'reply',
-					filter: this.$route.params.filter ? this.$route.params.filter : undefined,
-				},
-				query: {
-					messageId: this.envelope.databaseId,
-				},
-			})
-		},
-		forwardMessage() {
-			this.$router.push({
-				name: 'message',
-				params: {
-					mailboxId: this.$route.params.mailboxId,
-					threadId: 'new',
-					filter: this.$route.params.filter ? this.$route.params.filter : undefined,
-				},
-				query: {
-					messageId: this.$route.params.threadId,
-				},
-			})
 		},
 		onToggleSeen() {
 			this.$store.dispatch('toggleEnvelopeSeen', { envelope: this.envelope })
