@@ -1,7 +1,7 @@
 <template>
 	<router-link
 		v-draggable-envelope="{
-			accountId: data.accountId ? data.accountId : mailbox.accountId,
+			accountId: data.accountId ?? mailbox.accountId,
 			mailboxId: data.mailboxId,
 			envelopeId: data.databaseId,
 			draggableLabel: `${data.subject} (${data.from[0].label})`,
