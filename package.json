@@ -60,7 +60,7 @@
     "ramda": "^0.27.0",
     "raw-loader": "^4.0.2",
     "stylelint": "^13.8.0",
-    "v-tooltip": "^2.0.3",
+    "v-tooltip": "^2.1.1",
     "vue": "^2.6.12",
     "vue-autosize": "^1.0.2",
     "vue-click-outside": "^1.1.0",
