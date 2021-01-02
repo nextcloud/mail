@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "e25b93f003d4454cdecfa3b9b9a33e24",
+    "content-hash": "050dd75b33dbb4ea245ae677aa4d00d6",
     "packages": [
         {
             "name": "amphp/amp",
@@ -3779,16 +3779,16 @@
         },
         {
             "name": "phan/phan",
-            "version": "3.2.8",
+            "version": "4.0.1",
             "source": {
                 "type": "git",
                 "url": "https://github.com/phan/phan.git",
-                "reference": "ba0e5e2a8041b970f6fa03ae3e7ea8a4e6c1c18e"
+                "reference": "6f7acd037847d390175e73d71b14f38da037965f"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/phan/phan/zipball/ba0e5e2a8041b970f6fa03ae3e7ea8a4e6c1c18e",
-                "reference": "ba0e5e2a8041b970f6fa03ae3e7ea8a4e6c1c18e",
+                "url": "https://api.github.com/repos/phan/phan/zipball/6f7acd037847d390175e73d71b14f38da037965f",
+                "reference": "6f7acd037847d390175e73d71b14f38da037965f",
                 "shasum": ""
             },
             "require": {
@@ -3810,7 +3810,7 @@
                 "phpunit/phpunit": "^8.5.0"
             },
             "suggest": {
-                "ext-ast": "Needed for parsing ASTs (unless --use-fallback-parser is used). 1.0.1+ is needed, 1.0.8+ is recommended.",
+                "ext-ast": "Needed for parsing ASTs (unless --use-fallback-parser is used). 1.0.1+ is needed, 1.0.10+ is recommended.",
                 "ext-iconv": "Either iconv or mbstring is needed to ensure issue messages are valid utf-8",
                 "ext-igbinary": "Improves performance of polyfill when ext-ast is unavailable",
                 "ext-mbstring": "Either iconv or mbstring is needed to ensure issue messages are valid utf-8",
@@ -3848,7 +3848,7 @@
                 "php",
                 "static"
             ],
-            "time": "2020-12-23T19:14:41+00:00"
+            "time": "2020-12-31T21:21:49+00:00"
         },
         {
             "name": "phar-io/manifest",
@@ -4780,12 +4780,12 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/Roave/SecurityAdvisories.git",
-                "reference": "49da07b20a780d3fca9fe12e1db27975a2910c18"
+                "reference": "a2c04f857299a7119e96448249a9dd5954e099c1"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/Roave/SecurityAdvisories/zipball/49da07b20a780d3fca9fe12e1db27975a2910c18",
-                "reference": "49da07b20a780d3fca9fe12e1db27975a2910c18",
+                "url": "https://api.github.com/repos/Roave/SecurityAdvisories/zipball/a2c04f857299a7119e96448249a9dd5954e099c1",
+                "reference": "a2c04f857299a7119e96448249a9dd5954e099c1",
                 "shasum": ""
             },
             "conflict": {
@@ -4919,7 +4919,7 @@
                 "phpmussel/phpmussel": ">=1,<1.6",
                 "phpmyadmin/phpmyadmin": "<4.9.6|>=5,<5.0.3",
                 "phpoffice/phpexcel": "<1.8.2",
-                "phpoffice/phpspreadsheet": "<1.8",
+                "phpoffice/phpspreadsheet": "<1.16",
                 "phpunit/phpunit": ">=4.8.19,<4.8.28|>=5.0.10,<5.6.3",
                 "phpwhois/phpwhois": "<=4.2.5",
                 "phpxmlrpc/extras": "<0.6.1",
@@ -5089,7 +5089,7 @@
                     "type": "tidelift"
                 }
             ],
-            "time": "2020-12-21T18:11:20+00:00"
+            "time": "2020-12-31T19:24:22+00:00"
         },
         {
             "name": "sabre/event",
