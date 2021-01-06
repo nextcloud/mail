@@ -138,7 +138,7 @@ OC.L10N.register(
     "The images have been blocked to protect your privacy." : "As imagens foram bloqueadas para proteger sua privacidade",
     "Show images from this sender" : "Mostrar imagens deste remetente",
     "Message frame" : "Quadro da mensagem",
-    "Quoted text" : "Citar texto",
+    "Quoted text" : "Texto citado",
     "Moving" : "Movendo",
     "New message" : "Nova mensagem",
     "Settings" : "Configurações",
