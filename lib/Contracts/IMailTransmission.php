@@ -23,7 +23,9 @@ declare(strict_types=1);
 
 namespace OCA\Mail\Contracts;
 
+use OCA\Mail\Account;
 use OCA\Mail\Db\Alias;
+use OCA\Mail\Db\Mailbox;
 use OCA\Mail\Db\Message;
 use OCA\Mail\Exception\ClientException;
 use OCA\Mail\Exception\SentMailboxNotSetException;
@@ -61,4 +63,14 @@ interface IMailTransmission {
 	 * @throws ServiceException
 	 */
 	public function saveDraft(NewMessageData $message, Message $previousDraft = null): array;
+
+	/**
+	 * Send a mdn message
+	 *
+	 * @param Account $account
+	 * @param Mailbox $mailbox
+	 * @param Message $message the message to send an mdn for
+	 * @throws ServiceException
+	 */
+	public function sendMdn(Account $account, Mailbox $mailbox, Message $message): void;
 }

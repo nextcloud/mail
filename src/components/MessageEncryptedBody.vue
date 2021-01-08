@@ -1,15 +1,19 @@
 <template>
 	<div>
-		<div v-if="mailvelope" id="mail-content" />
+		<div v-if="mailvelope" id="mail-content">
+			<MdnRequest :message="message" />
+		</div>
 		<span v-else>{{ t('mail', 'This message is encrypted with PGP. Install Mailvelope to decrypt it.') }}</span>
 	</div>
 </template>
 
 <script>
 import { getMailvelope } from '../crypto/mailvelope'
+import MdnRequest from './MdnRequest'
 
 export default {
 	name: 'MessageEncryptedBody',
+	components: { MdnRequest },
 	props: {
 		body: {
 			type: String,
@@ -19,6 +23,10 @@ export default {
 			type: String,
 			required: false,
 			default: undefined,
+		},
+		message: {
+			required: true,
+			type: Object,
 		},
 	},
 	data() {

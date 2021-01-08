@@ -64,6 +64,7 @@ class MailManager implements IMailManager {
 		'draft' => [Horde_Imap_Client::FLAG_DRAFT],
 		'recent' => [Horde_Imap_Client::FLAG_RECENT],
 		'junk' => [Horde_Imap_Client::FLAG_JUNK, 'junk'],
+		'mdnsent' => [Horde_Imap_Client::FLAG_MDNSENT],
 	];
 
 	/** @var IMAPClientFactory */

@@ -1,6 +1,7 @@
 <template>
-	<div>
-		<div id="mail-content" v-html="nl2br(enhancedBody)" />
+	<div id="mail-content">
+		<MdnRequest :message="message" />
+		<div id="message-container" v-html="nl2br(enhancedBody)" />
 		<details v-if="signature" class="mail-signature">
 			<summary v-html="nl2br(signatureSummaryAndBody.summary)" />
 			<span v-html="nl2br(signatureSummaryAndBody.body)" />
@@ -9,10 +10,12 @@
 </template>
 
 <script>
+import MdnRequest from './MdnRequest'
 const regFirstParagraph = /(.+\n\r?)+(\n\r?)+/
 
 export default {
 	name: 'MessagePlainTextBody',
+	components: { MdnRequest },
 	props: {
 		body: {
 			type: String,
@@ -21,6 +24,10 @@ export default {
 		signature: {
 			type: String,
 			default: () => undefined,
+		},
+		message: {
+			required: true,
+			type: Object,
 		},
 	},
 	computed: {

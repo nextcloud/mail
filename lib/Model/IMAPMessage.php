@@ -140,7 +140,8 @@ class IMAPMessage implements IMessage, JsonSerializable {
 			'deleted' => in_array(Horde_Imap_Client::FLAG_DELETED, $flags),
 			'draft' => in_array(Horde_Imap_Client::FLAG_DRAFT, $flags),
 			'forwarded' => in_array(Horde_Imap_Client::FLAG_FORWARDED, $flags),
-			'hasAttachments' => $this->hasAttachments($this->fetch->getStructure())
+			'hasAttachments' => $this->hasAttachments($this->fetch->getStructure()),
+			'mdnsent' => in_array(Horde_Imap_Client::FLAG_MDNSENT, $flags, true),
 		];
 	}
 
@@ -175,6 +176,16 @@ class IMAPMessage implements IMessage, JsonSerializable {
 
 	private function getRawInReplyTo(): string {
 		return $this->fetch->getEnvelope()->in_reply_to;
+	}
+
+	public function getDispositionNotificationTo(): string {
+		/** @var Horde_Mime_Headers $headers */
+		$headers = $this->fetch->getHeaders('mdn', Horde_Imap_Client_Data_Fetch::HEADER_PARSE);
+		$header = $headers->getHeader('disposition-notification-to');
+		if ($header === null) {
+			return '';
+		}
+		return $header->value_single;
 	}
 
 	/**
@@ -327,6 +338,11 @@ class IMAPMessage implements IMessage, JsonSerializable {
 		$fetch_query->flags();
 		$fetch_query->size();
 		$fetch_query->imapDate();
+		$fetch_query->headers(
+			'mdn',
+			['disposition-notification-to'],
+			['cache' => true, 'peek' => true]
+		);
 
 		// $list is an array of Horde_Imap_Client_Data_Fetch objects.
 		$ids = new Horde_Imap_Client_Ids($this->messageId);
@@ -459,6 +475,7 @@ class IMAPMessage implements IMessage, JsonSerializable {
 			'dateInt' => $this->getSentDate()->getTimestamp(),
 			'flags' => $this->getFlags(),
 			'hasHtmlBody' => $this->hasHtmlMessage,
+			'dispositionNotificationTo' => $this->getDispositionNotificationTo(),
 		];
 	}
 
@@ -670,6 +687,7 @@ class IMAPMessage implements IMessage, JsonSerializable {
 		$msg->setFlagNotjunk(in_array(Horde_Imap_Client::FLAG_NOTJUNK, $flags, true));
 		$msg->setFlagImportant(false);
 		$msg->setFlagAttachments(false);
+		$msg->setFlagMdnsent(in_array(Horde_Imap_Client::FLAG_MDNSENT, $flags, true));
 
 		return $msg;
 	}

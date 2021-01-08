@@ -34,6 +34,7 @@ use Exception;
 use OC\Security\CSP\ContentSecurityPolicyNonceManager;
 use OCA\Mail\Contracts\IMailManager;
 use OCA\Mail\Contracts\IMailSearch;
+use OCA\Mail\Contracts\IMailTransmission;
 use OCA\Mail\Contracts\ITrustedSenderService;
 use OCA\Mail\Db\Message;
 use OCA\Mail\Exception\ClientException;
@@ -96,6 +97,9 @@ class MessagesController extends Controller {
 	/** @var ITrustedSenderService */
 	private $trustedSenderService;
 
+	/** @var IMailTransmission */
+	private $mailTransmission;
+
 	/**
 	 * @param string $appName
 	 * @param IRequest $request
@@ -111,6 +115,7 @@ class MessagesController extends Controller {
 	 * @param IURLGenerator $urlGenerator
 	 * @param ContentSecurityPolicyNonceManager $nonceManager
 	 * @param ITrustedSenderService $trustedSenderService
+	 * @param IMailTransmission $mailTransmission
 	 */
 	public function __construct(string $appName,
 								IRequest $request,
@@ -125,7 +130,8 @@ class MessagesController extends Controller {
 								IMimeTypeDetector $mimeTypeDetector,
 								IURLGenerator $urlGenerator,
 								ContentSecurityPolicyNonceManager $nonceManager,
-								ITrustedSenderService $trustedSenderService) {
+								ITrustedSenderService $trustedSenderService,
+								IMailTransmission $mailTransmission) {
 		parent::__construct($appName, $request);
 
 		$this->accountService = $accountService;
@@ -141,6 +147,7 @@ class MessagesController extends Controller {
 		$this->mailManager = $mailManager;
 		$this->nonceManager = $nonceManager;
 		$this->trustedSenderService = $trustedSenderService;
+		$this->mailTransmission = $mailTransmission;
 	}
 
 	/**
@@ -333,6 +340,41 @@ class MessagesController extends Controller {
 			$dstAccount,
 			$dstMailbox->getName()
 		);
+		return new JSONResponse();
+	}
+
+	/**
+	 * @NoAdminRequired
+	 * @TrapError
+	 *
+	 * @param int $id
+	 *
+	 * @return JSONResponse
+	 *
+	 * @throws ClientException
+	 * @throws ServiceException
+	 */
+	public function mdn(int $id): JSONResponse {
+		try {
+			$message = $this->mailManager->getMessage($this->currentUserId, $id);
+			$mailbox = $this->mailManager->getMailbox($this->currentUserId, $message->getMailboxId());
+			$account = $this->accountService->find($this->currentUserId, $mailbox->getAccountId());
+		} catch (DoesNotExistException $e) {
+			return new JSONResponse([], Http::STATUS_FORBIDDEN);
+		}
+
+		if ($message->getFlagMdnsent()) {
+			return new JSONResponse([], Http::STATUS_PRECONDITION_FAILED);
+		}
+
+		try {
+			$this->mailTransmission->sendMdn($account, $mailbox, $message);
+			$this->mailManager->flagMessage($account, $mailbox->getName(), $message->getUid(), 'mdnsent', true);
+		} catch (ServiceException $ex) {
+			$this->logger->error('Sending mdn failed: ' . $ex->getMessage());
+			throw $ex;
+		}
+
 		return new JSONResponse();
 	}
 

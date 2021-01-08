@@ -179,3 +179,15 @@ export function moveMessage(id, destFolderId) {
 		destFolderId,
 	})
 }
+
+export async function sendMdn(id, data) {
+	const url = generateUrl('/apps/mail/api/messages/{id}/mdn', {
+		id,
+	})
+
+	try {
+		await axios.post(url, data)
+	} catch (e) {
+		throw convertAxiosError(e)
+	}
+}
