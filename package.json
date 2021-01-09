@@ -50,7 +50,7 @@
     "dompurify": "^2.2.6",
     "html-to-text": "^5.1.1",
     "ical.js": "^1.4.0",
-    "iframe-resizer": "^4.2.11",
+    "iframe-resizer": "^4.3.0",
     "js-base64": "^3.6.0",
     "lodash": "^4.17.20",
     "md5": "^2.3.0",
