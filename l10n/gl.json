@@ -60,7 +60,7 @@
     "Subject" : "Asunto",
     "Subject …" : "Asunto...",
     "This message came from a noreply address so your reply will probably not be read." : "Esta mensaxe procede dun enderezo «sen resposta» polo que a súa resposta probabelmente non sexa lida nunca.",
-    "The following recipients do not have a PGP key: {recipients}." : "Os seguintes destinatarios non teñen unha chave PGP: {recipients}.",
+    "The following recipients do not have a PGP key: {recipients}." : "Os seguintes destinatarios non teñen unha clave PGP: {recipients}.",
     "Write message …" : "Escribir a mensaxe…",
     "Can not save draft because this account does not have a drafts mailbox configured." : "Non é posíbel gardar o borrador por mor de que esta conta non ten configurada unha caixa de correo de borradores.",
     "Saving draft …" : "Gardando o borrador…",

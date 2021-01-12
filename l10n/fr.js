@@ -118,7 +118,7 @@ OC.L10N.register(
     "Favorite {number}" : "Ajouter aux favoris {number}",
     "Unselect {number}" : "Désélectionner {number}",
     "Move {number}" : "Déplacer {number}",
-    "Forward {number} as attachment" : "Transmettre {nombre} en pièce jointe",
+    "Forward {number} as attachment" : "Transmettre {number} en pièce jointe",
     "Delete {number}" : "Supprimer {number}",
     "Load more" : "Charger d'avantage",
     "Report this bug" : "Signaler ce bogue",
