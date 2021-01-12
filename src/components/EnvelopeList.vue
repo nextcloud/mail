@@ -4,21 +4,26 @@
 			<div v-if="selectMode" key="multiselect-header" class="multiselect-header">
 				<div class="button primary" @click.prevent="markSelectedSeenOrUnseen">
 					<span id="action-label">{{
-						areAllSelectedRead
-							? t(
+						areAllSelectedRead (
+							n(
 								'mail',
 								'Mark {number} unread',
+								'Mark {number} unread',
+								selection.length,
 								{
 									number: selection.length,
 								}
-							)
-							: t(
+							),
+							n(
 								'mail',
 								'Mark {number} read',
+								'Mark {number} read',
+								selection.length,
 								{
 									number: selection.length,
 								}
 							)
+						)
 					}}</span>
 				</div>
 				<Actions class="app-content-list-item-menu" menu-align="right">
@@ -27,28 +32,35 @@
 						@click.prevent="favoriteOrUnfavoriteAll">
 						{{
 							areAllSelectedFavorite
-								? t(
-									'mail',
-									'Unfavorite {number}',
-									{
-										number: selection.length,
-									}
-								)
-								: t(
-									'mail',
-									'Favorite {number}',
-									{
-										number: selection.length,
-									}
+								( n(
+										'mail',
+										'Unfavorite {number}',
+										'Unfavorite {number}',
+										selection.length,
+										{
+											number: selection.length,
+										}
+									),
+									n(
+										'mail',
+										'Favorite {number}',
+										'Favorite {number}',
+										selection.length,
+										{
+											number: selection.length,
+										}
+									)
 								)
 						}}
 					</ActionButton>
 					<ActionButton icon="icon-close"
 						:close-after-click="true"
 						@click.prevent="unselectAll">
-						{{ t(
+						{{ n(
 							'mail',
 							'Unselect {number}',
+							'Unselect {number}',
+							selection.length,
 							{
 								number: selection.length,
 							}
@@ -59,9 +71,11 @@
 						icon="icon-external"
 						:close-after-click="true"
 						@click.prevent="onOpenMoveModal">
-						{{ t(
+						{{ n(
 							'mail',
 							'Move {number}',
+							'Move {number}',
+							selection.length,
 							{
 								number: selection.length,
 							}
@@ -71,9 +85,11 @@
 						icon="icon-forward"
 						:close-after-click="true"
 						@click.prevent="forwardSelectedAsAttachment">
-						{{ t(
+						{{ n(
 							'mail',
 							'Forward {number} as attachment',
+							'Forward {number} as attachment',
+							selection.length,
 							{
 								number: selection.length,
 							}
@@ -82,9 +98,11 @@
 					<ActionButton icon="icon-delete"
 						:close-after-click="true"
 						@click.prevent="deleteAllSelected">
-						{{ t(
+						{{ n(
 							'mail',
 							'Delete {number}',
+							'Delete {number}',
+							selection.length,
 							{
 								number: selection.length,
 							}
