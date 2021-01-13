@@ -36,6 +36,7 @@ OC.L10N.register(
     "Select" : "Zgjidhni",
     "Move" : "Zhvendos",
     "Delete" : "Fshij",
+    "Mark {number} unread" : "shënoje  {number} si të palexuar",
     "Choose" : "Zgjidhni",
     "Important" : "E rëndësishme",
     "Favorites" : "Favorites",
