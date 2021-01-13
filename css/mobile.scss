@@ -16,7 +16,7 @@
 	/* overlay message detail on top of message list */
 	#mail-message {
 		z-index: 100;
-		background: #fff;
+		background: var(--color-main-background);
 		width: 100%;
 		left: 0;
 		top: 0;
