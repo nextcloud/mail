@@ -249,6 +249,7 @@ class MessageMapper extends QBMapper {
 		$qb1->setValue('flag_junk', $qb1->createParameter('flag_junk'));
 		$qb1->setValue('flag_notjunk', $qb1->createParameter('flag_notjunk'));
 		$qb1->setValue('flag_important', $qb1->createParameter('flag_important'));
+		$qb1->setValue('flag_mdnsent', $qb1->createParameter('flag_mdnsent'));
 		$qb2 = $this->db->getQueryBuilder();
 
 		$qb2->insert('mail_recipients')
@@ -278,6 +279,7 @@ class MessageMapper extends QBMapper {
 			$qb1->setParameter('flag_junk', $message->getFlagJunk(), IQueryBuilder::PARAM_BOOL);
 			$qb1->setParameter('flag_notjunk', $message->getFlagNotjunk(), IQueryBuilder::PARAM_BOOL);
 			$qb1->setParameter('flag_important', $message->getFlagImportant(), IQueryBuilder::PARAM_BOOL);
+			$qb1->setParameter('flag_mdnsent', $message->getFlagMdnsent(), IQueryBuilder::PARAM_BOOL);
 
 			$qb1->execute();
 
@@ -328,6 +330,7 @@ class MessageMapper extends QBMapper {
 			->set('flag_forwarded', $query->createParameter('flag_forwarded'))
 			->set('flag_junk', $query->createParameter('flag_junk'))
 			->set('flag_notjunk', $query->createParameter('flag_notjunk'))
+			->set('flag_mdnsent', $query->createParameter('flag_mdnsent'))
 			->set('updated_at', $query->createNamedParameter($this->timeFactory->getTime()))
 			->where($query->expr()->andX(
 				$query->expr()->eq('uid', $query->createParameter('uid')),
@@ -350,6 +353,7 @@ class MessageMapper extends QBMapper {
 			$query->setParameter('flag_forwarded', $message->getFlagForwarded(), IQueryBuilder::PARAM_BOOL);
 			$query->setParameter('flag_junk', $message->getFlagJunk(), IQueryBuilder::PARAM_BOOL);
 			$query->setParameter('flag_notjunk', $message->getFlagNotjunk(), IQueryBuilder::PARAM_BOOL);
+			$query->setParameter('flag_mdnsent', $message->getFlagMdnsent(), IQueryBuilder::PARAM_BOOL);
 
 			$query->execute();
 		}
@@ -553,9 +557,10 @@ class MessageMapper extends QBMapper {
 			Horde_Imap_Client::FLAG_JUNK,
 			Horde_Imap_Client::FLAG_NOTJUNK,
 			'\\important',
+			Horde_Imap_Client::FLAG_MDNSENT,
 		] as $flag) {
 			if (in_array($flag, $flagKeys, true)) {
-				$key = ltrim($flag, '\\');
+				$key = ltrim($flag, '\\$');
 				$select->andWhere($qb->expr()->eq("flag_$key", $qb->createNamedParameter($flags[$flag], IQueryBuilder::PARAM_BOOL)));
 			}
 		}
@@ -661,9 +666,10 @@ class MessageMapper extends QBMapper {
 			Horde_Imap_Client::FLAG_JUNK,
 			Horde_Imap_Client::FLAG_NOTJUNK,
 			'\\important',
+			Horde_Imap_Client::FLAG_MDNSENT,
 		] as $flag) {
 			if (in_array($flag, $flagKeys, true)) {
-				$key = ltrim($flag, '\\');
+				$key = ltrim($flag, '\\$');
 				$select->andWhere($qb->expr()->eq("flag_$key", $qb->createNamedParameter($flags[$flag], IQueryBuilder::PARAM_BOOL)));
 			}
 		}

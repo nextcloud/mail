@@ -464,6 +464,7 @@ class AccountsControllerTest extends TestCase {
 			'',
 			'',
 			true,
+			false,
 			null,
 			$messageId,
 			[],

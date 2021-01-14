@@ -353,8 +353,9 @@ class AccountsController extends Controller {
 	 * @param string $to
 	 * @param string $cc
 	 * @param string $bcc
+	 * @param bool $isHtml
+	 * @param bool $requestMdn
 	 * @param int|null $draftId
-	 * @param string|null $folderId
 	 * @param int|null $messageId
 	 * @param mixed $attachments
 	 * @param int|null $aliasId
@@ -371,6 +372,7 @@ class AccountsController extends Controller {
 						 string $cc,
 						 string $bcc,
 						 bool $isHtml = true,
+						 bool $requestMdn = false,
 						 int $draftId = null,
 						 int $messageId = null,
 						 array $attachments = [],
@@ -382,7 +384,7 @@ class AccountsController extends Controller {
 		$expandedCc = $this->groupsIntegration->expand($cc);
 		$expandedBcc = $this->groupsIntegration->expand($bcc);
 
-		$messageData = NewMessageData::fromRequest($account, $expandedTo, $expandedCc, $expandedBcc, $subject, $body, $attachments, $isHtml);
+		$messageData = NewMessageData::fromRequest($account, $expandedTo, $expandedCc, $expandedBcc, $subject, $body, $attachments, $isHtml, $requestMdn);
 		$repliedMessageData = null;
 		if ($messageId !== null) {
 			try {

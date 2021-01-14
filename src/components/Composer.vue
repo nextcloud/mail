@@ -177,6 +177,12 @@
 						{{ t('mail', 'Enable formatting') }}
 					</ActionCheckbox>
 					<ActionCheckbox
+						:checked="requestMdn"
+						@check="requestMdn = true"
+						@uncheck="requestMdn = false">
+						{{ t('mail', 'Request a read receipt') }}
+					</ActionCheckbox>
+					<ActionCheckbox
 						v-if="mailvelope.available"
 						:checked="encrypt"
 						@check="encrypt = true"
@@ -358,6 +364,7 @@ export default {
 			},
 			editorMode: 'html',
 			addShareLink: t('mail', 'Add share link from {productName} Files', { productName: OC?.theme?.name ?? 'Nextcloud' }),
+			requestMdn: false,
 		}
 	},
 	computed: {
@@ -567,6 +574,7 @@ export default {
 				attachments: this.attachments,
 				messageId: this.replyTo ? this.replyTo.databaseId : undefined,
 				isHtml: !this.editorPlainText,
+				requestMdn: this.requestMdn,
 			}
 		},
 		saveDraft(data) {
@@ -725,6 +733,7 @@ export default {
 			this.state = STATES.EDITING
 			this.autocompleteRecipients = []
 			this.newRecipients = []
+			this.requestMdn = false
 
 			this.setAlias()
 			this.initBody()

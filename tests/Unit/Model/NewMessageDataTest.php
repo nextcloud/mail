@@ -35,7 +35,7 @@ class NewMessageDataTest extends TestCase {
 		$subject = 'Hello';
 		$body = 'Hi!';
 		$attachments = [];
-		$messageData = NewMessageData::fromRequest($account, $to, $cc, $bcc, $subject, $body, $attachments);
+		$messageData = NewMessageData::fromRequest($account, $to, $cc, $bcc, $subject, $body, $attachments, false, true);
 
 		$this->assertEquals($account, $messageData->getAccount());
 		$this->assertInstanceOf(AddressList::class, $messageData->getTo());
@@ -44,6 +44,8 @@ class NewMessageDataTest extends TestCase {
 		$this->assertEquals('Hello', $messageData->getSubject());
 		$this->assertEquals('Hi!', $messageData->getBody());
 		$this->assertEquals([], $messageData->getAttachments());
+		$this->assertFalse($messageData->isHtml());
+		$this->assertTrue($messageData->isMdnRequested());
 	}
 
 	public function testConstructionFromComplexRequestData() {

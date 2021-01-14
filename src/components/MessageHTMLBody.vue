@@ -1,5 +1,6 @@
 <template>
 	<div id="mail-content">
+		<MdnRequest :message="message" />
 		<div v-if="hasBlockedContent" id="mail-message-has-blocked-content">
 			{{ t('mail', 'The images have been blocked to protect your privacy.') }}
 			<button @click="onShowBlockedContent">
@@ -24,10 +25,12 @@ import PrintScout from 'printscout'
 import { trustSender } from '../service/TrustedSenderService'
 
 import logger from '../logger'
+import MdnRequest from './MdnRequest'
 const scout = new PrintScout()
 
 export default {
 	name: 'MessageHTMLBody',
+	components: { MdnRequest },
 	props: {
 		url: {
 			type: String,

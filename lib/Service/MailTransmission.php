@@ -25,11 +25,18 @@ namespace OCA\Mail\Service;
 
 use Horde_Exception;
 use Horde_Imap_Client;
+use Horde_Imap_Client_Data_Fetch;
+use Horde_Imap_Client_Fetch_Query;
+use Horde_Imap_Client_Ids;
 use Horde_Mail_Transport_Null;
 use Horde_Mime_Exception;
+use Horde_Mime_Headers;
+use Horde_Mime_Headers_Addresses;
 use Horde_Mime_Headers_Date;
 use Horde_Mime_Headers_MessageId;
+use Horde_Mime_Headers_Subject;
 use Horde_Mime_Mail;
+use Horde_Mime_Mdn;
 use OCA\Mail\Account;
 use OCA\Mail\Address;
 use OCA\Mail\AddressList;
@@ -37,6 +44,7 @@ use OCA\Mail\Contracts\IAttachmentService;
 use OCA\Mail\Contracts\IMailManager;
 use OCA\Mail\Contracts\IMailTransmission;
 use OCA\Mail\Db\Alias;
+use OCA\Mail\Db\Mailbox;
 use OCA\Mail\Db\MailboxMapper;
 use OCA\Mail\Db\Message;
 use OCA\Mail\Events\DraftSavedEvent;
@@ -154,6 +162,10 @@ class MailTransmission implements IMailTransmission {
 		if (($inReplyTo = $message->getInReplyTo()) !== null) {
 			$headers['References'] = $inReplyTo;
 			$headers['In-Reply-To'] = $inReplyTo;
+		}
+
+		if ($messageData->isMdnRequested()) {
+			$headers[Horde_Mime_Mdn::MDN_HEADER] = $message->getFrom()->first()->toHorde();
 		}
 
 		$mail = new Horde_Mime_Mail();
@@ -412,6 +424,70 @@ class MailTransmission implements IMailTransmission {
 
 		if (!is_null($file)) {
 			$message->addAttachmentFromFiles($file);
+		}
+	}
+
+	public function sendMdn(Account $account, Mailbox $mailbox, Message $message): void {
+		$imapClient = $this->imapClientFactory->getClient($account);
+
+		$query = new Horde_Imap_Client_Fetch_Query();
+		$query->flags();
+		$query->uid();
+		$query->imapDate();
+		$query->headers(
+			'mdn',
+			['disposition-notification-to', 'original-recipient'],
+			['cache' => true, 'peek' => true]
+		);
+
+		$fetchResults = iterator_to_array($imapClient->fetch($mailbox->getName(), $query, [
+			'ids' => new Horde_Imap_Client_Ids([$message->getUid()]),
+		]), false);
+
+		if (count($fetchResults) < 1) {
+			throw new ServiceException('Message "' .$message->getId() . '" not found.');
+		}
+
+		/** @var \Horde_Imap_Client_DateTime $imapDate */
+		$imapDate = $fetchResults[0]->getImapDate();
+		/** @var Horde_Mime_Headers $headers */
+		$mdnHeaders = $fetchResults[0]->getHeaders('mdn', Horde_Imap_Client_Data_Fetch::HEADER_PARSE);
+		/** @var Horde_Mime_Headers_Addresses|null $dispositionNotificationTo */
+		$dispositionNotificationTo = $mdnHeaders->getHeader('disposition-notification-to');
+		/** @var Horde_Mime_Headers_Addresses|null $originalRecipient */
+		$originalRecipient = $mdnHeaders->getHeader('original-recipient');
+
+		if ($dispositionNotificationTo === null) {
+			throw new ServiceException('Message "' .$message->getId() . '" has no disposition-notification-to header.');
+		}
+
+		$headers = new Horde_Mime_Headers();
+		$headers->addHeaderOb($dispositionNotificationTo);
+
+		if ($originalRecipient instanceof Horde_Mime_Headers_Addresses) {
+			$headers->addHeaderOb($originalRecipient);
+		}
+
+		$headers->addHeaderOb(new Horde_Mime_Headers_Subject(null, $message->getSubject()));
+		$headers->addHeaderOb(new Horde_Mime_Headers_Addresses('From', $message->getFrom()->toHorde()));
+		$headers->addHeaderOb(new Horde_Mime_Headers_Addresses('To', $message->getTo()->toHorde()));
+		$headers->addHeaderOb(new Horde_Mime_Headers_MessageId(null, $message->getMessageId()));
+		$headers->addHeaderOb(new Horde_Mime_Headers_Date(null, $imapDate->format('r')));
+
+		$smtpClient = $this->smtpClientFactory->create($account);
+
+		$mdn = new Horde_Mime_Mdn($headers);
+		try {
+			$mdn->generate(
+				true,
+				true,
+				'displayed',
+				$account->getMailAccount()->getOutboundHost(),
+				$smtpClient,
+				['from_addr' => $account->getEMailAddress()]
+			);
+		} catch (Horde_Mime_Exception $e) {
+			throw new ServiceException('Unable to send mdn for message "' . $message->getId() . '" caused by: ' . $e->getMessage(), 0, $e);
 		}
 	}
 }

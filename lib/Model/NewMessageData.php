@@ -57,6 +57,9 @@ class NewMessageData {
 	/** @var bool */
 	private $isHtml;
 
+	/** @var bool */
+	private $isMdnRequested;
+
 	/**
 	 * @param Account $account
 	 * @param AddressList $to
@@ -66,6 +69,7 @@ class NewMessageData {
 	 * @param string $body
 	 * @param array $attachments
 	 * @param bool $isHtml
+	 * @param bool $isMdnRequested
 	 */
 	public function __construct(Account $account,
 								AddressList $to,
@@ -74,7 +78,8 @@ class NewMessageData {
 								string $subject,
 								string $body,
 								array $attachments = [],
-								bool $isHtml = true) {
+								bool $isHtml = true,
+								bool $isMdnRequested = false) {
 		$this->account = $account;
 		$this->to = $to;
 		$this->cc = $cc;
@@ -83,6 +88,7 @@ class NewMessageData {
 		$this->body = $body;
 		$this->attachments = $attachments;
 		$this->isHtml = $isHtml;
+		$this->isMdnRequested = $isMdnRequested;
 	}
 
 	/**
@@ -93,7 +99,8 @@ class NewMessageData {
 	 * @param string $subject
 	 * @param string $body
 	 * @param array $attachments
-	 *
+	 * @param bool $isHtml
+	 * @param bool $requestMdn
 	 * @return NewMessageData
 	 */
 	public static function fromRequest(Account $account,
@@ -103,12 +110,13 @@ class NewMessageData {
 									   string $subject,
 									   string $body,
 									   array $attachments = [],
-									   bool $isHtml = true) {
+									   bool $isHtml = true,
+									   bool $requestMdn = false): NewMessageData {
 		$toList = AddressList::parse($to ?: '');
 		$ccList = AddressList::parse($cc ?: '');
 		$bccList = AddressList::parse($bcc ?: '');
 
-		return new self($account, $toList, $ccList, $bccList, $subject, $body, $attachments, $isHtml);
+		return new self($account, $toList, $ccList, $bccList, $subject, $body, $attachments, $isHtml, $requestMdn);
 	}
 
 	/**
@@ -162,5 +170,9 @@ class NewMessageData {
 
 	public function isHtml(): bool {
 		return $this->isHtml;
+	}
+
+	public function isMdnRequested(): bool {
+		return $this->isMdnRequested;
 	}
 }

@@ -69,6 +69,8 @@ use function json_encode;
  * @method null|bool getFlagAttachments()
  * @method void setFlagImportant(bool $important)
  * @method bool getFlagImportant()
+ * @method void setFlagMdnsent(bool $mdnsent)
+ * @method bool getFlagMdnsent()
  * @method void setPreviewText(?string $subject)
  * @method null|string getPreviewText()
  * @method void setUpdatedAt(int $time)
@@ -85,6 +87,7 @@ class Message extends Entity implements JsonSerializable {
 		'junk',
 		'notjunk',
 		'important',
+		'mdnsent'
 	];
 
 	protected $uid;
@@ -107,6 +110,7 @@ class Message extends Entity implements JsonSerializable {
 	protected $structureAnalyzed;
 	protected $flagAttachments;
 	protected $flagImportant = false;
+	protected $flagMdnsent;
 	protected $previewText;
 
 	/** @var AddressList */
@@ -141,6 +145,7 @@ class Message extends Entity implements JsonSerializable {
 		$this->addType('structureAnalyzed', 'bool');
 		$this->addType('flagAttachments', 'bool');
 		$this->addType('flagImportant', 'bool');
+		$this->addType('flagMdnsent', 'bool');
 		$this->addType('updatedAt', 'integer');
 	}
 
@@ -250,6 +255,7 @@ class Message extends Entity implements JsonSerializable {
 				'hasAttachments' => $this->getFlagAttachments() ?? false,
 				'important' => $this->getFlagImportant(),
 				'junk' => $this->getFlagJunk(),
+				'mdnsent' => $this->getFlagMdnsent(),
 			],
 			'from' => $this->getFrom()->jsonSerialize(),
 			'to' => $this->getTo()->jsonSerialize(),

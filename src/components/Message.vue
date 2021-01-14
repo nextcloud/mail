@@ -28,8 +28,14 @@
 			:url="htmlUrl"
 			:message="message"
 			:full-height="fullHeight" />
-		<MessageEncryptedBody v-else-if="isEncrypted" :body="message.body" :from="from" />
-		<MessagePlainTextBody v-else :body="message.body" :signature="message.signature" />
+		<MessageEncryptedBody v-else-if="isEncrypted"
+			:body="message.body"
+			:from="from"
+			:message="message" />
+		<MessagePlainTextBody v-else
+			:body="message.body"
+			:signature="message.signature"
+			:message="message" />
 		<Popover v-if="message.attachments[0]" class="attachment-popover">
 			<Actions slot="trigger">
 				<ActionButton icon="icon-public icon-attachment">

@@ -155,6 +155,11 @@ return [
 			'verb' => 'POST'
 		],
 		[
+			'name' => 'messages#mdn',
+			'url' => '/api/messages/{id}/mdn',
+			'verb' => 'POST'
+		],
+		[
 			'name' => 'avatars#url',
 			'url' => '/api/avatars/url/{email}',
 			'verb' => 'GET'
