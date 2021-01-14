@@ -96,7 +96,7 @@ class MessageMapper extends QBMapper {
 			->where($query->expr()->eq('mailbox_id', $query->createNamedParameter($mailbox->getId())));
 
 		$result = $query->execute();
-		$max = (int)$result->fetchColumn(0);
+		$max = (int)$result->fetchColumn();
 		$result->closeCursor();
 
 		if ($max === 0) {
