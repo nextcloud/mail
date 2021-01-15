@@ -71,7 +71,7 @@ export default {
 .vue-treeselect__control {
 	padding: 0;
 	border: 0;
-	width: 300px;
+	width: 250px;
 }
 .vue-treeselect__control-arrow-container {
 	display: none;
@@ -81,5 +81,6 @@ export default {
 }
 input.vue-treeselect__input {
 	margin: 0;
+	padding: 0;
 }
 </style>
