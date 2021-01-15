@@ -25,7 +25,6 @@ declare(strict_types=1);
 
 namespace OCA\Mail\Db;
 
-use Horde_Imap_Client;
 use OCA\Mail\Account;
 use OCA\Mail\Address;
 use OCA\Mail\AddressList;
@@ -40,7 +39,6 @@ use OCP\IUser;
 use function array_combine;
 use function array_keys;
 use function array_map;
-use function in_array;
 use function ltrim;
 use function mb_substr;
 
@@ -543,26 +541,9 @@ class MessageMapper extends QBMapper {
 				$qb->expr()->in('uid', $qb->createNamedParameter($uids, IQueryBuilder::PARAM_INT_ARRAY))
 			);
 		}
-
-		$flags = $query->getFlags();
-		$flagKeys = array_keys($flags);
-		foreach ([
-			Horde_Imap_Client::FLAG_ANSWERED,
-			Horde_Imap_Client::FLAG_DELETED,
-			Horde_Imap_Client::FLAG_DRAFT,
-			Horde_Imap_Client::FLAG_FLAGGED,
-			Horde_Imap_Client::FLAG_RECENT,
-			Horde_Imap_Client::FLAG_SEEN,
-			Horde_Imap_Client::FLAG_FORWARDED,
-			Horde_Imap_Client::FLAG_JUNK,
-			Horde_Imap_Client::FLAG_NOTJUNK,
-			'\\important',
-			Horde_Imap_Client::FLAG_MDNSENT,
-		] as $flag) {
-			if (in_array($flag, $flagKeys, true)) {
-				$key = ltrim($flag, '\\$');
-				$select->andWhere($qb->expr()->eq("flag_$key", $qb->createNamedParameter($flags[$flag], IQueryBuilder::PARAM_BOOL)));
-			}
+		foreach ($query->getFlags() as $flag) {
+			$key = ltrim($flag->getFlag(), '\\$');
+			$select->andWhere($qb->expr()->eq("flag_$key", $qb->createNamedParameter($flag->isSet(), IQueryBuilder::PARAM_BOOL)));
 		}
 
 		$select = $select
@@ -652,26 +633,9 @@ class MessageMapper extends QBMapper {
 				$qb->expr()->in('uid', $qb->createNamedParameter($uids, IQueryBuilder::PARAM_INT_ARRAY))
 			);
 		}
-
-		$flags = $query->getFlags();
-		$flagKeys = array_keys($flags);
-		foreach ([
-			Horde_Imap_Client::FLAG_ANSWERED,
-			Horde_Imap_Client::FLAG_DELETED,
-			Horde_Imap_Client::FLAG_DRAFT,
-			Horde_Imap_Client::FLAG_FLAGGED,
-			Horde_Imap_Client::FLAG_RECENT,
-			Horde_Imap_Client::FLAG_SEEN,
-			Horde_Imap_Client::FLAG_FORWARDED,
-			Horde_Imap_Client::FLAG_JUNK,
-			Horde_Imap_Client::FLAG_NOTJUNK,
-			'\\important',
-			Horde_Imap_Client::FLAG_MDNSENT,
-		] as $flag) {
-			if (in_array($flag, $flagKeys, true)) {
-				$key = ltrim($flag, '\\$');
-				$select->andWhere($qb->expr()->eq("flag_$key", $qb->createNamedParameter($flags[$flag], IQueryBuilder::PARAM_BOOL)));
-			}
+		foreach ($query->getFlags() as $flag) {
+			$key = ltrim($flag->getFlag(), '\\$');
+			$select->andWhere($qb->expr()->eq("flag_$key", $qb->createNamedParameter($flag->isSet(), IQueryBuilder::PARAM_BOOL)));
 		}
 
 		$select = $select

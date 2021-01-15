@@ -36,6 +36,7 @@ use OCA\Mail\Exception\MailboxNotCachedException;
 use OCA\Mail\IMAP\PreviewEnhancer;
 use OCA\Mail\IMAP\Search\Provider;
 use OCA\Mail\Service\Search\FilterStringParser;
+use OCA\Mail\Service\Search\Flag;
 use OCA\Mail\Service\Search\MailSearch;
 use OCA\Mail\Service\Search\SearchQuery;
 use PHPUnit\Framework\MockObject\MockObject;
@@ -134,7 +135,7 @@ class MailSearchTest extends TestCase {
 		$mailbox->setSyncChangedToken('def');
 		$mailbox->setSyncVanishedToken('ghi');
 		$query = new SearchQuery();
-		$query->addFlag('seen');
+		$query->addFlag(Flag::is(Flag::SEEN));
 		$this->filterStringParser->expects($this->once())
 			->method('parse')
 			->with('my search')

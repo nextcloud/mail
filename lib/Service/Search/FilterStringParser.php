@@ -25,17 +25,7 @@ declare(strict_types=1);
 
 namespace OCA\Mail\Service\Search;
 
-use Horde_Imap_Client;
-
 class FilterStringParser {
-	private const FLAG_MAP = [
-		'answered' => [Horde_Imap_Client::FLAG_ANSWERED, true],
-		'read' => [Horde_Imap_Client::FLAG_SEEN, true],
-		'starred' => [Horde_Imap_Client::FLAG_FLAGGED, true],
-		'unread' => [Horde_Imap_Client::FLAG_SEEN, false],
-		'important' => ['\\important', true],
-	];
-
 	public function parse(?string $filter): SearchQuery {
 		$query = new SearchQuery();
 		if (empty($filter)) {
@@ -61,13 +51,21 @@ class FilterStringParser {
 
 		list($type, $param) = explode(':', $token);
 		$type = strtolower($type);
+		$flagMap = [
+			'answered' => Flag::is(Flag::ANSWERED),
+			'read' => Flag::is(Flag::SEEN),
+			'starred' => Flag::is(Flag::FLAGGED),
+			'unread' => Flag::not(Flag::SEEN),
+			'important' => Flag::is(Flag::IMPORTANT),
+		];
 
 		switch ($type) {
 			case 'is':
 			case 'not':
-				if (array_key_exists($param, self::FLAG_MAP)) {
-					$flag = self::FLAG_MAP[$param];
-					$query->addFlag($flag[0], $type === 'is' ? $flag[1] : !$flag[1]);
+				if (array_key_exists($param, $flagMap)) {
+					/** @var Flag $flag */
+					$flag = $flagMap[$param];
+					$query->addFlag($type === 'is' ? $flag : $flag->invert());
 					return true;
 				}
 				break;

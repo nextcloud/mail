@@ -30,7 +30,7 @@ class SearchQuery {
 	/** @var int|null */
 	private $cursor;
 
-	/** @var bool[] */
+	/** @var Flag[] */
 	private $flags = [];
 
 	/** @var string[] */
@@ -66,14 +66,14 @@ class SearchQuery {
 	}
 
 	/**
-	 * @return bool[]
+	 * @return Flag[]
 	 */
 	public function getFlags(): array {
 		return $this->flags;
 	}
 
-	public function addFlag(string $flag, bool $value = true): void {
-		$this->flags[$flag] = $value;
+	public function addFlag(Flag $flag): void {
+		$this->flags[] = $flag;
 	}
 
 	/**
