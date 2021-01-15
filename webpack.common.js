@@ -1,5 +1,4 @@
 const path = require('path');
-const BundleAnalyzerPlugin = require('@bundle-analyzer/webpack-plugin')
 const CKEditorWebpackPlugin = require('@ckeditor/ckeditor5-dev-webpack-plugin');
 const {styles} = require('@ckeditor/ckeditor5-dev-utils');
 const { VueLoaderPlugin } = require('vue-loader');
@@ -12,10 +11,6 @@ const plugins = [
 	}),
 	new VueLoaderPlugin()
 ]
-
-if (process.env.BUNDLE_ANALYZER_TOKEN) {
-	plugins.push(new BundleAnalyzerPlugin({ token: process.env.BUNDLE_ANALYZER_TOKEN }))
-}
 
 module.exports = {
 	entry: {
