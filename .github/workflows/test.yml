@@ -22,6 +22,10 @@ jobs:
       run: git clone https://github.com/nextcloud/server.git --recursive --depth 1 -b ${{ matrix.nextcloud-versions }} nextcloud
     - name: Install Nextcloud
       run: php -f nextcloud/occ maintenance:install --database-name oc_autotest --database-user oc_autotest --admin-user admin --admin-pass admin --database sqlite --database-pass=''
+    - name: Fix php-parser on stable20 incompatibility with phpunit 9.3+
+      if: ${{ matrix.nextcloud-versions == 'stable20' }}
+      working-directory: nextcloud/3rdparty
+      run: composer require nikic/php-parser:4.10
     - name: Checkout Mail
       uses: actions/checkout@master
       with:
@@ -32,6 +36,8 @@ jobs:
     - name: Run tests
       working-directory: nextcloud/apps/mail
       run: composer run test:unit
+      env:
+        XDEBUG_MODE: coverage
     - name: Report coverage
       uses: codecov/codecov-action@v1
       if: ${{ always() }}
@@ -117,6 +123,8 @@ jobs:
                 ss -tunlp
                 true | openssl s_client -crlf -connect 127.0.0.1:993
                 composer run test:integration
+            env:
+                XDEBUG_MODE: coverage
           - name: Print debug logs
             if: ${{ always() }}
             run: cat nextcloud/data/horde_*.log

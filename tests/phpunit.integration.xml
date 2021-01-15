@@ -1,4 +1,4 @@
-<?xml version="1.0" encoding="utf-8" ?>
+<?xml version="1.0" encoding="utf-8"?>
 <!--
   ~ @copyright 2019 Christoph Wurst <christoph@winzerhof-wurst.at>
   ~
@@ -19,31 +19,19 @@
   ~ You should have received a copy of the GNU Affero General Public License
   ~ along with this program.  If not, see <http://www.gnu.org/licenses/>.
   -->
-
-<phpunit bootstrap="bootstrap.php"
-		 verbose="true"
-		 timeoutForSmallTests="900"
-		 timeoutForMediumTests="900"
-		 timeoutForLargeTests="900"
-		 cacheResult="true"
-		>
-	<testsuite name='Mail app tests'>
-		<directory suffix='test.php'>Integration</directory>
-		<directory suffix='Test.php'>Integration</directory>
-	</testsuite>
-	<!-- filters for code coverage -->
-	<filter>
-		<whitelist>
-			<directory suffix=".php">../</directory>
-			<exclude>
-				<directory suffix=".php">../mail/l10n</directory>
-				<directory suffix=".php">../mail/templates</directory>
-				<directory suffix=".php">../mail/tests</directory>
-			</exclude>
-		</whitelist>
-	</filter>
-	<logging>
-		<!-- and this is where your report will be written -->
-		<log type="coverage-clover" target="./clover.integration.xml"/>
-	</logging>
+<phpunit xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" bootstrap="bootstrap.php" verbose="true" timeoutForSmallTests="900" timeoutForMediumTests="900" timeoutForLargeTests="900" cacheResult="true" xsi:noNamespaceSchemaLocation="https://schema.phpunit.de/9.3/phpunit.xsd">
+  <coverage>
+    <include>
+      <directory suffix=".php">../lib</directory>
+    </include>
+    <exclude>
+      <directory suffix=".php">../mail/lib/Vendor</directory>
+    </exclude>
+    <report>
+      <clover outputFile="./clover.integration.xml"/>
+    </report>
+  </coverage>
+  <testsuite name="Mail app tests">
+    <directory suffix="Test.php">Integration</directory>
+  </testsuite>
 </phpunit>
