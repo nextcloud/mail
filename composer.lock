@@ -1890,25 +1890,25 @@
         },
         {
             "name": "rubix/tensor",
-            "version": "2.0.5",
+            "version": "2.1.0",
             "source": {
                 "type": "git",
                 "url": "https://github.com/RubixML/Tensor.git",
-                "reference": "6b9d2facf1861ad449b1ca15223fbd250d46fe8b"
+                "reference": "816bc1abf7a65eb0b5660fe445e5a909f5fd1ec5"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/RubixML/Tensor/zipball/6b9d2facf1861ad449b1ca15223fbd250d46fe8b",
-                "reference": "6b9d2facf1861ad449b1ca15223fbd250d46fe8b",
+                "url": "https://api.github.com/repos/RubixML/Tensor/zipball/816bc1abf7a65eb0b5660fe445e5a909f5fd1ec5",
+                "reference": "816bc1abf7a65eb0b5660fe445e5a909f5fd1ec5",
                 "shasum": ""
             },
             "require": {
                 "php": ">=7.2"
             },
             "require-dev": {
-                "friendsofphp/php-cs-fixer": "2.16.*",
-                "phalcon/zephir": "^0.12.14",
+                "friendsofphp/php-cs-fixer": "2.17.*",
                 "phpbench/phpbench": "0.16.*",
+                "phpstan/extension-installer": "^1.0",
                 "phpstan/phpstan": "0.12.*",
                 "phpstan/phpstan-phpunit": "0.12.*",
                 "phpunit/phpunit": "8.5.*"
@@ -1930,21 +1930,31 @@
             "authors": [
                 {
                     "name": "Andrew DalPino",
-                    "email": "me@andrewdalpino.com",
-                    "homepage": "https://andrewdalpino.com",
+                    "homepage": "https://github.com/andrewdalpino",
                     "role": "Lead Engineer"
+                },
+                {
+                    "name": "Contributors",
+                    "homepage": "https://github.com/RubixML/Tensor/graphs/contributors"
                 }
             ],
-            "description": "Tensor is a library and extension that provides objects for scientific computing in PHP.",
+            "description": "A library and extension that provides objects for scientific computing in PHP.",
             "homepage": "https://github.com/RubixML/Tensor",
             "keywords": [
                 "arithmetic",
                 "computation",
-                "linear-algebra",
+                "computing",
+                "decomposition",
+                "engineering",
+                "extension",
+                "linear algebra",
                 "math",
                 "matrix",
+                "norms",
                 "php",
-                "scientific-computing",
+                "random number generation",
+                "reduction",
+                "scientific computing",
                 "statistics",
                 "tensor",
                 "trigonometry",
@@ -1960,7 +1970,7 @@
                     "type": "github"
                 }
             ],
-            "time": "2020-04-17T04:55:11+00:00"
+            "time": "2021-01-15T02:06:21+00:00"
         },
         {
             "name": "squizlabs/php_codesniffer",
