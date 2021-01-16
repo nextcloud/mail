@@ -49,7 +49,7 @@ class FilterStringParser {
 			return false;
 		}
 
-		list($type, $param) = explode(':', $token);
+		[$type, $param] = explode(':', $token);
 		$type = strtolower($type);
 		$flagMap = [
 			'answered' => Flag::is(Flag::ANSWERED),

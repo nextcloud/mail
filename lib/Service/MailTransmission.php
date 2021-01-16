@@ -339,7 +339,7 @@ class MailTransmission implements IMailTransmission {
 		$id = (int)$attachment['id'];
 
 		try {
-			list($localAttachment, $file) = $this->attachmentService->getAttachment($account->getMailAccount()->getUserId(), $id);
+			[$localAttachment, $file] = $this->attachmentService->getAttachment($account->getMailAccount()->getUserId(), $id);
 			$message->addLocalAttachment($localAttachment, $file);
 		} catch (AttachmentNotFoundException $ex) {
 			$this->logger->warning('ignoring local attachment because it does not exist');

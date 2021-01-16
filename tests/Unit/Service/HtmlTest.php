@@ -73,7 +73,7 @@ class HtmlTest extends TestCase {
 		$urlGenerator = OC::$server->getURLGenerator();
 		$request = OC::$server->getRequest();
 		$html = new Html($urlGenerator, $request);
-		list($b, $s) = $html->parseMailBody($text);
+		[$b, $s] = $html->parseMailBody($text);
 		$this->assertSame($expectedBody, $b);
 		$this->assertSame($expectedSignature, $s);
 	}

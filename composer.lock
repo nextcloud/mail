@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "a19d89b57308fd8cbf6f389c16c9ec6e",
+    "content-hash": "63dedbbfd56ffda376ecefe8aa0ace28",
     "packages": [
         {
             "name": "amphp/amp",
@@ -3662,21 +3662,21 @@
         },
         {
             "name": "nextcloud/coding-standard",
-            "version": "v0.4.0",
+            "version": "v0.5.0",
             "source": {
                 "type": "git",
                 "url": "https://github.com/nextcloud/coding-standard.git",
-                "reference": "57654010946567d063d231ff0e1ea44e1289f965"
+                "reference": "742ed895ae76c10daf95e08488cfb3f554199f40"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/nextcloud/coding-standard/zipball/57654010946567d063d231ff0e1ea44e1289f965",
-                "reference": "57654010946567d063d231ff0e1ea44e1289f965",
+                "url": "https://api.github.com/repos/nextcloud/coding-standard/zipball/742ed895ae76c10daf95e08488cfb3f554199f40",
+                "reference": "742ed895ae76c10daf95e08488cfb3f554199f40",
                 "shasum": ""
             },
             "require": {
                 "friendsofphp/php-cs-fixer": "^2.17",
-                "php": "^7.3|^8.0"
+                "php": "^7.2|^8.0"
             },
             "type": "library",
             "autoload": {
@@ -3695,7 +3695,7 @@
                 }
             ],
             "description": "Nextcloud coding standards for the php cs fixer",
-            "time": "2020-12-14T07:22:40+00:00"
+            "time": "2021-01-11T14:15:58+00:00"
         },
         {
             "name": "nikic/php-parser",

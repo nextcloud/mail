@@ -101,7 +101,7 @@ class AvatarsController extends Controller {
 		}
 
 		$imageData = $this->avatarService->getAvatarImage($email, $this->uid);
-		list($avatar, $image) = $imageData;
+		[$avatar, $image] = $imageData;
 
 		if (is_null($imageData) || !$avatar->isExternal()) {
 			// This could happen if the cache invalidated meanwhile
