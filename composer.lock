@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "050dd75b33dbb4ea245ae677aa4d00d6",
+    "content-hash": "a19d89b57308fd8cbf6f389c16c9ec6e",
     "packages": [
         {
             "name": "amphp/amp",
@@ -2839,21 +2839,22 @@
         },
         {
             "name": "christophwurst/nextcloud_testing",
-            "version": "v0.11.0",
+            "version": "v0.12.1",
             "source": {
                 "type": "git",
                 "url": "https://github.com/ChristophWurst/nextcloud_testing.git",
-                "reference": "0eee0b087acdcc67a22b63ddcabecc5595941522"
+                "reference": "3cbba15c75b7442e21d661e16e84a549eec93f3f"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/ChristophWurst/nextcloud_testing/zipball/0eee0b087acdcc67a22b63ddcabecc5595941522",
-                "reference": "0eee0b087acdcc67a22b63ddcabecc5595941522",
+                "url": "https://api.github.com/repos/ChristophWurst/nextcloud_testing/zipball/3cbba15c75b7442e21d661e16e84a549eec93f3f",
+                "reference": "3cbba15c75b7442e21d661e16e84a549eec93f3f",
                 "shasum": ""
             },
             "require": {
-                "php-webdriver/webdriver": "^1.7",
-                "phpunit/phpunit": "^9.0"
+                "php": "^7.2|^8.0",
+                "php-webdriver/webdriver": "^1.9",
+                "phpunit/phpunit": "^8.0|^9.0"
             },
             "require-dev": {
                 "christophwurst/nextcloud": "^17.0"
@@ -2875,7 +2876,7 @@
                 }
             ],
             "description": "Simple and fast unit and integration testing framework for Nextcloud, based on PHPUnit",
-            "time": "2020-10-13T11:39:48+00:00"
+            "time": "2021-01-13T10:05:18+00:00"
         },
         {
             "name": "composer/package-versions-deprecated",
