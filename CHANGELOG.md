@@ -1,6 +1,36 @@
 # Changelog
 All notable changes to this project will be documented in this file.
 
+## 1.8.0 – unreleased
+## Added
+- Remember trusted senders
+- Message delivery notification
+- Drag and drop feature
+- Add original attachment when forwarding a mail
+- Unread mail dashboard widget
+- The possibility to add multiple files as attachments
+- Troubleshooting for mysql insert errors
+
+### Changed
+- Create a modal for account settings
+- Remove "All inboxes" if one account is set up
+- Improve the ckeditor list plugin
+- Automatically sync mailbox on opening
+
+### Fixed
+- Always show Mail search results first
+- Improve reply button icon styling
+- Saving signature problems
+- Layout issue for header
+- Deleted drafts
+- The route for "Register as application for mail links"
+- Make links highlighted in the ckeditor
+- Show sender in avatar header in all screen sizes
+- The Dark theme on small screen
+- Improve defaults layout
+- Use consistent input vector size for the importance classifier
+- Refactor flag stings for search into a class
+
 ## 1.7.2 – 2020-12-07
 ### Fixed
 - Priority inbox classifier input vector size
