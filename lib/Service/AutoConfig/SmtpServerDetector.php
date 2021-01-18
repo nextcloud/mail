@@ -60,7 +60,7 @@ class SmtpServerDetector {
 
 		// splitting the email address into user and host part
 		// TODO: use horde libs for email address parsing
-		list($user, $host) = explode("@", $email);
+		[$user, $host] = explode("@", $email);
 
 		/*
 		 * Try to get the mx record for the email address

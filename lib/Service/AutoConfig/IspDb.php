@@ -107,7 +107,7 @@ class IspDb {
 		$this->logger->debug("IsbDb: querying <$domain>");
 		if (strpos($domain, '@') !== false) {
 			// TODO: use horde mail address parsing instead
-			list(, $domain) = explode('@', $domain);
+			[, $domain] = explode('@', $domain);
 		}
 
 		$provider = [];
@@ -135,7 +135,7 @@ class IspDb {
 		if ($tryMx && ($dns = dns_get_record($domain, DNS_MX))) {
 			$domain = $dns[0]['target'];
 			if (!($provider = $this->query($domain, $email, false))) {
-				list(, $domain) = explode('.', $domain, 2);
+				[, $domain] = explode('.', $domain, 2);
 				$provider = $this->query($domain, $email, false);
 			}
 		}
