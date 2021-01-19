@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "beedeeea2f4e18d8fb439d702bd79344",
+    "content-hash": "f1890e07f0b00872a1729a4f9d0aab7d",
     "packages": [
         {
             "name": "amphp/amp",
@@ -1493,6 +1493,35 @@
                 "BSD-2-Clause"
             ],
             "description": "A collection of stream wrappers."
+        },
+        {
+            "name": "pear-pear.horde.org/Horde_Stringprep",
+            "version": "1.0.4",
+            "dist": {
+                "type": "file",
+                "url": "https://pear.horde.org/get/Horde_Stringprep-1.0.4.tgz"
+            },
+            "require": {
+                "ext-iconv": "*",
+                "ext-intl": "*",
+                "php": "<8.0.0.0"
+            },
+            "replace": {
+                "pear-horde/horde_stringprep": "== 1.0.4.0"
+            },
+            "type": "pear-library",
+            "autoload": {
+                "classmap": [
+                    ""
+                ]
+            },
+            "include-path": [
+                "/"
+            ],
+            "license": [
+                "LGPL-3.0"
+            ],
+            "description": "Horde wrapper around the znerol/php-stringprep package."
         },
         {
             "name": "pear-pear.horde.org/Horde_Support",
@@ -3422,16 +3451,16 @@
         },
         {
             "name": "friendsofphp/php-cs-fixer",
-            "version": "v2.18.1",
+            "version": "v2.18.2",
             "source": {
                 "type": "git",
                 "url": "https://github.com/FriendsOfPHP/PHP-CS-Fixer.git",
-                "reference": "c68ff6231adb276857761e43b7ed082f164dce0b"
+                "reference": "18f8c9d184ba777380794a389fabc179896ba913"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/FriendsOfPHP/PHP-CS-Fixer/zipball/c68ff6231adb276857761e43b7ed082f164dce0b",
-                "reference": "c68ff6231adb276857761e43b7ed082f164dce0b",
+                "url": "https://api.github.com/repos/FriendsOfPHP/PHP-CS-Fixer/zipball/18f8c9d184ba777380794a389fabc179896ba913",
+                "reference": "18f8c9d184ba777380794a389fabc179896ba913",
                 "shasum": ""
             },
             "require": {
@@ -3517,7 +3546,7 @@
                     "type": "github"
                 }
             ],
-            "time": "2021-01-21T18:50:42+00:00"
+            "time": "2021-01-26T00:22:21+00:00"
         },
         {
             "name": "microsoft/tolerant-php-parser",
@@ -6777,12 +6806,12 @@
             "version": "1.9.1",
             "source": {
                 "type": "git",
-                "url": "https://github.com/webmozarts/assert.git",
+                "url": "https://github.com/webmozart/assert.git",
                 "reference": "bafc69caeb4d49c39fd0779086c03a3738cbb389"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/webmozarts/assert/zipball/bafc69caeb4d49c39fd0779086c03a3738cbb389",
+                "url": "https://api.github.com/repos/webmozart/assert/zipball/bafc69caeb4d49c39fd0779086c03a3738cbb389",
                 "reference": "bafc69caeb4d49c39fd0779086c03a3738cbb389",
                 "shasum": ""
             },
@@ -6879,12 +6908,12 @@
         "pear-pear.horde.org/horde_mail": 0,
         "pear-pear.horde.org/horde_mime": 0,
         "pear-pear.horde.org/horde_nls": 0,
+        "pear-pear.horde.org/horde_smtp": 0,
         "pear-pear.horde.org/horde_stream": 0,
         "pear-pear.horde.org/horde_support": 0,
         "pear-pear.horde.org/horde_text_filter": 0,
         "pear-pear.horde.org/horde_text_flowed": 0,
         "pear-pear.horde.org/horde_util": 0,
-        "pear-pear.horde.org/horde_smtp": 0,
         "roave/security-advisories": 20
     },
     "prefer-stable": false,

@@ -13,7 +13,8 @@
 	"config": {
 		"platform": {
 			"php": "7.3"
-		}
+		},
+		"sort-packages": true
 	},
 	"require": {
 		"php": ">=7.3",
@@ -33,12 +34,13 @@
 		"pear-pear.horde.org/horde_mail": "^2.6.4@stable",
 		"pear-pear.horde.org/horde_mime": "^2.11.0@stable",
 		"pear-pear.horde.org/horde_nls": "^2.2.1@stable",
+		"pear-pear.horde.org/horde_smtp": "^1.9.5@stable",
 		"pear-pear.horde.org/horde_stream": "^1.6.3@stable",
+		"pear-pear.horde.org/horde_stringprep": "^1.0",
 		"pear-pear.horde.org/horde_support": "^2.2.0@stable",
 		"pear-pear.horde.org/horde_text_filter": "^2.3.5@stable",
 		"pear-pear.horde.org/horde_text_flowed": "^2.0.3@stable",
 		"pear-pear.horde.org/horde_util": "^2.5.8@stable",
-		"pear-pear.horde.org/horde_smtp": "^1.9.5@stable",
 		"psr/log": "^1",
 		"rubix/ml": "0.2.4"
 	},
