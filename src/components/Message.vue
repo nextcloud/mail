@@ -20,7 +20,9 @@
   -->
 
 <template>
-	<div :class="[message.hasHtmlBody ? 'mail-message-body mail-message-body-html' : 'mail-message-body']">
+	<div :class="[message.hasHtmlBody ? 'mail-message-body mail-message-body-html' : 'mail-message-body']"
+		role="region"
+		:aria-label="t('mail','Message body')">
 		<div v-if="message.itineraries.length > 0" class="message-itinerary">
 			<Itinerary :entries="message.itineraries" :message-id="message.messageId" />
 		</div>
