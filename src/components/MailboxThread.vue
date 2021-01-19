@@ -20,7 +20,7 @@
 					:bus="bus" />
 				<template v-else>
 					<div class="app-content-list-item">
-						<SectionTitle class="important" :name="t('mail', 'Important')" />
+						<SectionTitle class="important" :name="t('mail', 'Important and unread')" />
 						<Popover trigger="hover focus">
 							<button slot="trigger" :aria-label="t('mail', 'Important info')" class="button icon-info" />
 							<p class="important-info">
@@ -32,7 +32,7 @@
 						class="nameimportant"
 						:account="unifiedAccount"
 						:mailbox="unifiedInbox"
-						:search-query="appendToSearch('is:important')"
+						:search-query="appendToSearch('is:pi-important')"
 						:paginate="'manual'"
 						:is-priority-inbox="true"
 						:initial-page-size="5"
@@ -43,7 +43,7 @@
 						class="namestarred"
 						:account="unifiedAccount"
 						:mailbox="unifiedInbox"
-						:search-query="appendToSearch('is:starred not:important')"
+						:search-query="appendToSearch('is:pi-starred')"
 						:paginate="'manual'"
 						:is-priority-inbox="true"
 						:initial-page-size="5"
@@ -54,7 +54,7 @@
 						:account="unifiedAccount"
 						:mailbox="unifiedInbox"
 						:open-first="false"
-						:search-query="appendToSearch('not:starred not:important')"
+						:search-query="appendToSearch('is:pi-other')"
 						:is-priority-inbox="true"
 						:bus="bus" />
 				</template>

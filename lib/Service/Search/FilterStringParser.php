@@ -68,6 +68,55 @@ class FilterStringParser {
 					$query->addFlag($type === 'is' ? $flag : $flag->invert());
 					return true;
 				}
+				if ($param === 'pi-important') {
+					// We assume this is about 'is' and not 'not'
+					// imp && ~read
+					$query->addFlagExpression(
+						FlagExpression::and(
+							Flag::is(Flag::IMPORTANT),
+							Flag::not(Flag::SEEN)
+						)
+					);
+
+					return true;
+				}
+				if ($param === 'pi-starred') {
+					// We assume this is about 'is' and not 'not'
+					// fav /\ (~imp \/ (imp /\ read))
+					$query->addFlagExpression(
+						FlagExpression::and(
+							Flag::is(Flag::FLAGGED),
+							FlagExpression::or(
+								Flag::not(Flag::IMPORTANT),
+								FlagExpression::or(
+									Flag::is(Flag::IMPORTANT),
+									Flag::is(Flag::SEEN)
+								)
+							)
+						)
+					);
+
+					return true;
+				}
+				if ($param === 'pi-other') {
+					// We assume this is about 'is' and not 'not'
+					// ~fav && (~imp || (imp && read))
+					$query->addFlagExpression(
+						FlagExpression::and(
+							Flag::not(Flag::FLAGGED),
+							FlagExpression::or(
+								Flag::not(Flag::IMPORTANT),
+								FlagExpression::and(
+									Flag::is(Flag::IMPORTANT),
+									Flag::is(Flag::SEEN)
+								)
+							)
+						)
+					);
+
+					return true;
+				}
+
 				break;
 			case 'from':
 				$query->addFrom($param);

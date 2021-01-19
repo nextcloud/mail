@@ -29,6 +29,8 @@ use OCA\Mail\Account;
 use OCA\Mail\Address;
 use OCA\Mail\AddressList;
 use OCA\Mail\IMAP\Threading\DatabaseMessage;
+use OCA\Mail\Service\Search\Flag;
+use OCA\Mail\Service\Search\FlagExpression;
 use OCA\Mail\Service\Search\SearchQuery;
 use OCP\AppFramework\Db\DoesNotExistException;
 use OCP\AppFramework\Db\QBMapper;
@@ -36,9 +38,11 @@ use OCP\AppFramework\Utility\ITimeFactory;
 use OCP\DB\QueryBuilder\IQueryBuilder;
 use OCP\IDBConnection;
 use OCP\IUser;
+use RuntimeException;
 use function array_combine;
 use function array_keys;
 use function array_map;
+use function get_class;
 use function ltrim;
 use function mb_substr;
 
@@ -542,8 +546,14 @@ class MessageMapper extends QBMapper {
 			);
 		}
 		foreach ($query->getFlags() as $flag) {
-			$key = ltrim($flag->getFlag(), '\\$');
-			$select->andWhere($qb->expr()->eq("flag_$key", $qb->createNamedParameter($flag->isSet(), IQueryBuilder::PARAM_BOOL)));
+			$select->andWhere($qb->expr()->eq($this->flagToColumnName($flag), $qb->createNamedParameter($flag->isSet(), IQueryBuilder::PARAM_BOOL)));
+		}
+		if (!empty($query->getFlagExpressions())) {
+			$select->andWhere(
+				...array_map(function (FlagExpression $expr) use ($select) {
+					return $this->flagExpressionToQuery($expr, $select);
+				}, $query->getFlagExpressions())
+			);
 		}
 
 		$select = $select
@@ -634,8 +644,14 @@ class MessageMapper extends QBMapper {
 			);
 		}
 		foreach ($query->getFlags() as $flag) {
-			$key = ltrim($flag->getFlag(), '\\$');
-			$select->andWhere($qb->expr()->eq("flag_$key", $qb->createNamedParameter($flag->isSet(), IQueryBuilder::PARAM_BOOL)));
+			$select->andWhere($qb->expr()->eq($this->flagToColumnName($flag), $qb->createNamedParameter($flag->isSet(), IQueryBuilder::PARAM_BOOL)));
+		}
+		if (!empty($query->getFlagExpressions())) {
+			$select->andWhere(
+				...array_map(function (FlagExpression $expr) use ($select) {
+					return $this->flagExpressionToQuery($expr, $select);
+				}, $query->getFlagExpressions())
+			);
 		}
 
 		$select = $select
@@ -648,6 +664,39 @@ class MessageMapper extends QBMapper {
 		return array_map(function (Message $message) {
 			return $message->getId();
 		}, $this->findEntities($select));
+	}
+
+	private function flagExpressionToQuery(FlagExpression $expr, IQueryBuilder $qb): string {
+		$operands = array_map(function (object $operand) use ($qb) {
+			if ($operand instanceof Flag) {
+				return $qb->expr()->eq(
+					$this->flagToColumnName($operand),
+					$qb->createNamedParameter($operand->isSet(), IQueryBuilder::PARAM_BOOL),
+					IQueryBuilder::PARAM_BOOL
+				);
+			}
+			if ($operand instanceof FlagExpression) {
+				return $this->flagExpressionToQuery($operand, $qb);
+			}
+
+			throw new RuntimeException('Invalid operand type ' . get_class($operand));
+		}, $expr->getOperands());
+
+		switch ($expr->getOperator()) {
+			case 'and':
+				/** @psalm-suppress InvalidCast */
+				return (string) $qb->expr()->andX(...$operands);
+			case 'or':
+				/** @psalm-suppress InvalidCast */
+				return (string) $qb->expr()->orX(...$operands);
+			default:
+				throw new RuntimeException('Unknown operator ' . $expr->getOperator());
+		}
+	}
+
+	private function flagToColumnName(Flag $flag): string {
+		$key = ltrim($flag->getFlag(), '\\$');
+		return "flag_$key";
 	}
 
 	/**
