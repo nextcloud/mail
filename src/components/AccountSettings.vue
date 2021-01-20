@@ -68,6 +68,9 @@
 				</div>
 			</div>
 		</AppSettingsSection>
+		<AppSettingsSection :title="t('mail', 'Trusted senders')">
+			<TrustedSenders />
+		</AppSettingsSection>
 	</AppSettingsDialog>
 </template>
 
@@ -80,9 +83,11 @@ import SignatureSettings from '../components/SignatureSettings'
 import AliasSettings from '../components/AliasSettings'
 import AppSettingsDialog from '@nextcloud/vue/dist/Components/AppSettingsDialog'
 import AppSettingsSection from '@nextcloud/vue/dist/Components/AppSettingsSection'
+import TrustedSenders from './TrustedSenders'
 export default {
 	name: 'AccountSettings',
 	components: {
+		TrustedSenders,
 		AccountForm,
 		AliasSettings,
 		EditorSettings,
@@ -188,5 +193,4 @@ h2 {
 .app-settings-section {
 margin-bottom: 45px;
 }
-
 </style>

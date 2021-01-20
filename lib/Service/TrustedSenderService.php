@@ -62,4 +62,8 @@ class TrustedSenderService implements ITrustedSenderService {
 			);
 		}
 	}
+
+	public function getTrusted(string $uid): array {
+		return $this->mapper->findAll($uid);
+	}
 }

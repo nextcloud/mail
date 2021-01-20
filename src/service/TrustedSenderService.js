@@ -6,9 +6,14 @@ export async function trustSender(email, trustFlag) {
 		email,
 	})
 
-	 if (trustFlag) {
+	if (trustFlag) {
 		await axios.put(url)
 	} else {
 		await axios.delete(url)
 	}
+}
+export async function fetchTrustedSenders() {
+	const url = generateUrl('/apps/mail/api/trustedsenders')
+	const response = await axios.get(url)
+	return response.data.data
 }
