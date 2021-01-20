@@ -1,22 +1,19 @@
 # Changelog
 All notable changes to this project will be documented in this file.
 
-## 1.8.0 – unreleased
+## 1.8.0 – 2021-01-20
 ## Added
+- Drag and drop
 - Remember trusted senders
 - Message delivery notification
-- Drag and drop feature
-- Add original attachment when forwarding a mail
 - Unread mail dashboard widget
-- The possibility to add multiple files as attachments
-- Troubleshooting for mysql insert errors
-
+- Forward original attachments
+- Possibility to add multiple files as attachments
 ### Changed
-- Create a modal for account settings
-- Remove "All inboxes" if one account is set up
+- Account settings moved to modal
+- Hide "All inboxes" if only one account is set up
 - Improve the ckeditor list plugin
 - Automatically sync mailbox on opening
-
 ### Fixed
 - Always show Mail search results first
 - Improve reply button icon styling
@@ -29,7 +26,6 @@ All notable changes to this project will be documented in this file.
 - The Dark theme on small screen
 - Improve defaults layout
 - Use consistent input vector size for the importance classifier
-- Refactor flag stings for search into a class
 
 ## 1.7.2 – 2020-12-07
 ### Fixed
