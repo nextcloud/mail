@@ -129,7 +129,6 @@ OC.L10N.register(
     "Choose target mailbox" : "Elegir bandeja de destino",
     "No more submailboxes in here" : "No hay más sub-bandejas aquí",
     "Choose" : "Selecciona",
-    "Important" : "Importante",
     "Important info" : "Información importante",
     "Favorites" : "Favoritos",
     "Other" : "Otro",

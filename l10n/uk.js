@@ -93,7 +93,6 @@ OC.L10N.register(
     "Loading messages" : "Завантаження повідомлень",
     "Indexing your messages. This can take a bit longer for larger mailboxes." : "Індексування повідомлень. Ця дія може забрати більше часу для поштових скриньок з великим обсягом повідомлень.",
     "Choose" : "Вибрати",
-    "Important" : "Важливі",
     "Favorites" : "Улюблене",
     "Other" : "Інші",
     "Attachments" : "Вкладення",

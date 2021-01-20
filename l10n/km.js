@@ -14,7 +14,6 @@ OC.L10N.register(
     "Move" : "Move",
     "Delete" : "លុប",
     "Choose" : "ជ្រើស",
-    "Important" : "សំខាន់",
     "Favorites" : "Favorites",
     "Other" : "ផ្សេងៗ",
     "Settings" : "ការកំណត់",

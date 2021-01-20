@@ -118,7 +118,6 @@ OC.L10N.register(
     "Loading messages" : "Вчитување пораки",
     "Indexing your messages. This can take a bit longer for larger mailboxes." : "Индексирање на пораките. Ова може да трае многу долго за големи сандачиња.",
     "Choose" : "Избери",
-    "Important" : "Важно",
     "Important info" : "Важна информација",
     "Favorites" : "Омилени",
     "Other" : "Останато",

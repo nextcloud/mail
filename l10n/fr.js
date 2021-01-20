@@ -124,7 +124,6 @@ OC.L10N.register(
     "Choose target mailbox" : "Sélectionnez la boîte aux lettres de destination",
     "No more submailboxes in here" : "Plus de sous-boîtes aux lettres ici",
     "Choose" : "Sélectionner",
-    "Important" : "Important",
     "Important info" : "Information importante",
     "Favorites" : "Favoris",
     "Other" : "Divers",

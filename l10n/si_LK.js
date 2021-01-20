@@ -11,7 +11,6 @@ OC.L10N.register(
     "Move" : "Move",
     "Delete" : "ඉවත් කරන්න",
     "Choose" : "තෝරන්න",
-    "Important" : "වැදගත්",
     "Favorites" : "Favorites",
     "Other" : "වෙනත්",
     "Settings" : "සැකසුම්",

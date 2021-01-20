@@ -113,7 +113,6 @@ OC.L10N.register(
     "Loading messages" : "Mezuak kargatzen",
     "Indexing your messages. This can take a bit longer for larger mailboxes." : "Zure mezuak indexatzen. Honek denbora dezente har dezake postontzi handietan.",
     "Choose" : "Aukeratu",
-    "Important" : "Garrantzitsua",
     "Important info" : "Informazio garrantzitsua",
     "Favorites" : "Gogokoak",
     "Other" : "Beste bat",

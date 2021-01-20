@@ -14,7 +14,6 @@ OC.L10N.register(
     "Select" : "Select",
     "Move" : "Move",
     "Delete" : "刪除",
-    "Important" : "重要",
     "Favorites" : "最愛",
     "Other" : "其他",
     "Settings" : "設定",

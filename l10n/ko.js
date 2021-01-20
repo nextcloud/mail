@@ -88,7 +88,6 @@ OC.L10N.register(
     "Could not open mailbox" : "메일함을 열 수 없음",
     "Loading messages" : "메세지를 불러오는 중",
     "Choose" : "선택",
-    "Important" : "중요",
     "Important info" : "중요 정보",
     "Favorites" : "즐겨찾기",
     "Other" : "기타",

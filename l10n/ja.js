@@ -96,7 +96,6 @@ OC.L10N.register(
     "Loading messages" : "メッセージの読み込み中",
     "Indexing your messages. This can take a bit longer for larger mailboxes." : "メールをインデックスしています。大きいメールボックスの場合はしばらくお待ちください。",
     "Choose" : "選択",
-    "Important" : "重要",
     "Favorites" : "お気に入り",
     "Other" : "その他",
     "Attachments" : "添付ファイル",

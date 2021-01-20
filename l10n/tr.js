@@ -129,7 +129,6 @@ OC.L10N.register(
     "Choose target mailbox" : "Hedef e-posta kutusunu seçin",
     "No more submailboxes in here" : "Burada başka alt e-posta kutusu yok",
     "Choose" : "Seçin",
-    "Important" : "Önemli",
     "Important info" : "Önemli bilgiler",
     "Favorites" : "Sık kullanılanlar",
     "Other" : "Diğer",

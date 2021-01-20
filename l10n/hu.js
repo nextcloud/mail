@@ -81,7 +81,6 @@ OC.L10N.register(
     "Could not open mailbox" : "Mailbox nem nyitható meg",
     "Loading messages" : "Üzenetek betöltése",
     "Choose" : "Válasszon",
-    "Important" : "Fontos",
     "Favorites" : "Kedvencek",
     "Other" : "Egyéb",
     "Attachments" : "Mellékletek",

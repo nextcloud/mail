@@ -14,7 +14,6 @@ OC.L10N.register(
     "Move" : "Move",
     "Delete" : "Ta bort",
     "Choose" : "Vel",
-    "Important" : "Viktig",
     "Favorites" : "Favorit",
     "Other" : "Anna",
     "Settings" : "Instillingar",

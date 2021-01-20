@@ -26,7 +26,6 @@ OC.L10N.register(
     "Move" : "Pindah",
     "Delete" : "Hapus",
     "Choose" : "Pilih",
-    "Important" : "Penting",
     "Favorites" : "Disukai",
     "Other" : "Lainnya",
     "Attachments" : "Lampiran",

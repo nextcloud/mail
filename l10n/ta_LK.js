@@ -10,7 +10,6 @@ OC.L10N.register(
     "Move" : "Move",
     "Delete" : "நீக்குக",
     "Choose" : "தெரிவுசெய்க ",
-    "Important" : "முக்கியமான ",
     "Favorites" : "விருப்பங்கள்",
     "Other" : "மற்றவை",
     "Settings" : "அமைப்புகள்",

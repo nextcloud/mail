@@ -106,7 +106,6 @@ OC.L10N.register(
     "Loading messages" : "Įkeliami laiškai",
     "Indexing your messages. This can take a bit longer for larger mailboxes." : "Indeksuojami jūsų laiškai. Didelėse pašto dėžutėse tai gali užtrukti šiek tiek ilgiau.",
     "Choose" : "Pasirinkite",
-    "Important" : "Svarbūs",
     "Important info" : "Svarbi informacija",
     "Favorites" : "Mėgstami",
     "Other" : "Kita",

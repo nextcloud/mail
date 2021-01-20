@@ -129,7 +129,6 @@ OC.L10N.register(
     "Choose target mailbox" : "选择目标邮箱",
     "No more submailboxes in here" : "这里已经没有更多子邮箱",
     "Choose" : "选择",
-    "Important" : "重要",
     "Important info" : "重要信息",
     "Favorites" : "收藏",
     "Other" : "其他",

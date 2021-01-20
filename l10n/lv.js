@@ -46,7 +46,6 @@ OC.L10N.register(
     "Move" : "Pārvietot",
     "Delete" : "Dzēst",
     "Choose" : "Izvēlies",
-    "Important" : "Svarīgi",
     "Favorites" : "Favorīti",
     "Other" : "Cits",
     "Attachments" : "Pielikumi",

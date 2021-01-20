@@ -29,7 +29,6 @@ OC.L10N.register(
     "Move" : "Skuif",
     "Delete" : "Skrap",
     "Choose" : "Kies",
-    "Important" : "Belangrik",
     "Favorites" : "Gunstelinge",
     "Other" : "Ander",
     "Import into calendar" : "Voer in na kalender",

@@ -103,7 +103,6 @@ OC.L10N.register(
     "Loading messages" : "Läser in meddelanden",
     "Indexing your messages. This can take a bit longer for larger mailboxes." : "Indexera dina meddelanden. Det kan ta lite längre tid för större brevlådor.",
     "Choose" : "Välj",
-    "Important" : "Viktigt",
     "Important info" : "Viktig info",
     "Favorites" : "Favoriter",
     "Other" : "Övrigt",

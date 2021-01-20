@@ -38,7 +38,6 @@ OC.L10N.register(
     "Move" : "Mover",
     "Delete" : "Borrar",
     "Choose" : "Elige",
-    "Important" : "Importante",
     "Favorites" : "Favoritos",
     "Other" : "Otro",
     "Attachments" : "Adjuntos",

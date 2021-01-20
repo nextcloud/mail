@@ -57,7 +57,6 @@ OC.L10N.register(
     "Report this bug" : "Rapporter denne feilen",
     "Loading messages" : "Henter meldinger",
     "Choose" : "Velg",
-    "Important" : "Viktig",
     "Favorites" : "Favoritter",
     "Other" : "Annet",
     "Attachments" : "Vedlegg",

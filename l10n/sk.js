@@ -106,7 +106,6 @@ OC.L10N.register(
     "Loading messages" : "Načítavam správy",
     "Indexing your messages. This can take a bit longer for larger mailboxes." : "Indexovanie správ. U väčších poštových schránok to môže chvíľu trvať.",
     "Choose" : "Vybrať",
-    "Important" : "Dôležité",
     "Favorites" : "Obľúbené",
     "Other" : "Iné",
     "Attachments" : "Prílohy",

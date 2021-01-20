@@ -82,7 +82,6 @@ OC.L10N.register(
     "Loading messages" : "بارگیری پیام ها",
     "Indexing your messages. This can take a bit longer for larger mailboxes." : "نمایه سازی پیام های شما این می تواند کمی برای صندوق های پستی بزرگتر کمی طولانی شود.",
     "Choose" : "انتخاب کنید",
-    "Important" : "مهم",
     "Favorites" : "علاقه مندی ها",
     "Other" : "دیگر",
     "Attachments" : "پیوست‌ها",

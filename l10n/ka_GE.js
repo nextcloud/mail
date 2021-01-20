@@ -39,7 +39,6 @@ OC.L10N.register(
     "Move" : "გადატანა",
     "Delete" : "გაუქმება",
     "Choose" : "აირჩიეთ",
-    "Important" : "აუცილებელი",
     "Favorites" : "რჩეულები",
     "Other" : "სხვა",
     "Import into calendar" : "იმპორტი კალენდარში",

@@ -38,7 +38,6 @@ OC.L10N.register(
     "Delete" : "Fshij",
     "Mark {number} unread" : "shënoje  {number} si të palexuar",
     "Choose" : "Zgjidhni",
-    "Important" : "E rëndësishme",
     "Favorites" : "Favorites",
     "Other" : "Tjetër",
     "Attachments" : "Bashkangjitjet",

@@ -103,7 +103,6 @@ OC.L10N.register(
     "Loading messages" : "Učitavanje poruka",
     "Indexing your messages. This can take a bit longer for larger mailboxes." : "Indeksiranje poruka u tijeku. Ova radnja može potrajati za veće sandučiće.",
     "Choose" : "Odaberite",
-    "Important" : "Važno",
     "Important info" : "Važne informacije",
     "Favorites" : "Favoriti",
     "Other" : "Ostalo",

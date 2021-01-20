@@ -56,7 +56,6 @@ OC.L10N.register(
     "Move" : "移動",
     "Delete" : "刪除",
     "Choose" : "選擇",
-    "Important" : "重要",
     "Favorites" : "我的最愛",
     "Other" : "其他",
     "Attachments" : "附件",

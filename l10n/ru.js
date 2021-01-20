@@ -103,7 +103,6 @@ OC.L10N.register(
     "Loading messages" : "Загрузка сообщений",
     "Indexing your messages. This can take a bit longer for larger mailboxes." : "Выполняется индексация сообщений, это займёт некоторое время.",
     "Choose" : "Выберите",
-    "Important" : "Важные",
     "Important info" : "Важная информация",
     "Favorites" : "Избранные",
     "Other" : "Другой",

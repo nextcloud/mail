@@ -12,7 +12,6 @@ OC.L10N.register(
     "Move" : "Move",
     "Delete" : "Obriši",
     "Choose" : "Izaberite",
-    "Important" : "Važno",
     "Favorites" : "Favoriti",
     "Other" : "Ostali",
     "Settings" : "Podešavanje",

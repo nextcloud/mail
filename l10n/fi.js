@@ -106,7 +106,6 @@ OC.L10N.register(
     "Loading messages" : "Ladataan viestejä",
     "Indexing your messages. This can take a bit longer for larger mailboxes." : "Viestejäsi indeksoidaan. Tämä saattaa kestää hetken varsinkin suurikokoisissa postilaatikoissa.",
     "Choose" : "Valitse",
-    "Important" : "Tärkeä",
     "Important info" : "Tärkeää tietoa",
     "Favorites" : "Suosikit",
     "Other" : "Muu",

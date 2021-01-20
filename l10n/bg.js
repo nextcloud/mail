@@ -59,7 +59,6 @@ OC.L10N.register(
     "Delete" : "Изтриване",
     "Loading messages" : "Зареждане на съобщенията",
     "Choose" : "Изберете",
-    "Important" : "Важно",
     "Favorites" : "Любими",
     "Other" : "Друг",
     "Attachments" : "Прикачени файлове",

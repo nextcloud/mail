@@ -78,7 +78,6 @@ OC.L10N.register(
     "Delete" : "Slet",
     "Loading messages" : "Henter beskedder",
     "Choose" : "Vælg",
-    "Important" : "Vigtigt",
     "Favorites" : "Favoritter",
     "Other" : "Andet",
     "Attachments" : "Vedhæftede filer",

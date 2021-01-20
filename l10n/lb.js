@@ -14,7 +14,6 @@ OC.L10N.register(
     "Move" : "Verschieben",
     "Delete" : "Läschen",
     "Choose" : "Auswielen",
-    "Important" : "Wichteg",
     "Favorites" : "Favoriten",
     "Other" : "Aner",
     "Unnamed" : "ouni Numm",

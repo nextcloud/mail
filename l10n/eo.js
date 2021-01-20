@@ -79,7 +79,6 @@ OC.L10N.register(
     "Loading messages" : "Ŝargas mesaĝojn",
     "Indexing your messages. This can take a bit longer for larger mailboxes." : "Indeksas viajn mesaĝojn. Tio eble daŭrus iom pli longe por pli grandaj poŝtkestoj.",
     "Choose" : "Elekti",
-    "Important" : "Grava",
     "Favorites" : "Pliŝataĵoj",
     "Other" : "Alia",
     "Attachments" : "Dosieraj aldonaĵoj",

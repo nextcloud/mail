@@ -129,7 +129,6 @@ OC.L10N.register(
     "Choose target mailbox" : "Izbor ciljnega poštnega predala",
     "No more submailboxes in here" : "V tem predalu ni drugih predalov",
     "Choose" : "Izbor",
-    "Important" : "Pomembno",
     "Important info" : "Pomembno",
     "Favorites" : "Priljubljene",
     "Other" : "Drugo",

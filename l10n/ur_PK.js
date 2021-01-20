@@ -10,7 +10,6 @@ OC.L10N.register(
     "Move" : "Move",
     "Delete" : "حذف کریں",
     "Choose" : "منتخب کریں",
-    "Important" : "اہم",
     "Favorites" : "Favorites",
     "Other" : "دیگر",
     "Settings" : "سیٹینگز",

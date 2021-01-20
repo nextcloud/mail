@@ -129,7 +129,6 @@ OC.L10N.register(
     "Choose target mailbox" : "Wybierz docelową skrzynkę pocztową",
     "No more submailboxes in here" : "Nie ma więcej skrzynek podrzędnych",
     "Choose" : "Wybierz",
-    "Important" : "Ważne",
     "Important info" : "Ważna informacja",
     "Favorites" : "Ulubione",
     "Other" : "Inne",

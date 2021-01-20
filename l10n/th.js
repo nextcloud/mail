@@ -19,7 +19,6 @@ OC.L10N.register(
     "Move" : "Move",
     "Delete" : "ลบ",
     "Choose" : "เลือก",
-    "Important" : "สำคัญ",
     "Favorites" : "รายการโปรด",
     "Other" : "อื่นๆ",
     "Unnamed" : "ไม่มีชื่อ",

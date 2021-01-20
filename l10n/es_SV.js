@@ -39,7 +39,6 @@ OC.L10N.register(
     "Move" : "Mover",
     "Delete" : "Borrar",
     "Choose" : "Seleccionar",
-    "Important" : "Importante",
     "Favorites" : "Favoritos",
     "Other" : "Otro",
     "Import into calendar" : "Importar al calendario",

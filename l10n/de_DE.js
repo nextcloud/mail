@@ -129,7 +129,6 @@ OC.L10N.register(
     "Choose target mailbox" : "Zielpostfach auswählen",
     "No more submailboxes in here" : "Keine Unter-Postfächer vorhanden",
     "Choose" : "Auswählen",
-    "Important" : "Wichtig",
     "Important info" : "Wichtige Information",
     "Favorites" : "Favoriten",
     "Other" : "Andere",

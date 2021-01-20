@@ -10,7 +10,6 @@ OC.L10N.register(
     "Select" : "Select",
     "Move" : "Move",
     "Delete" : "ئۆچۈر",
-    "Important" : "مۇھىم",
     "Favorites" : "يىغقۇچ",
     "Other" : "باشقا",
     "Settings" : "تەڭشەكلەر",

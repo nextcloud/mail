@@ -115,7 +115,6 @@ OC.L10N.register(
     "Loading messages" : "ההודעות נטענות",
     "Indexing your messages. This can take a bit longer for larger mailboxes." : "ההודעות שלך מסודרות באינדקס. פעולה זו עשויה לארוך זמן מה בתיבות דואר גדולות.",
     "Choose" : "בחר",
-    "Important" : "חשוב",
     "Favorites" : "מועדפים",
     "Other" : "אחר",
     "Attachments" : "קבצים מצורפים",

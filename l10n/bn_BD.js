@@ -16,7 +16,6 @@ OC.L10N.register(
     "Move" : "Move",
     "Delete" : "মুছে",
     "Choose" : "বেছে নিন",
-    "Important" : "গুরুত্বপূর্ণ",
     "Favorites" : "প্রিয়জন",
     "Other" : "অন্যান্য",
     "Choose a folder to store the attachment in" : "সংযুক্তি সংরক্ষনের জন্য একটি ফোল্ডার নির্বাচন করুন",

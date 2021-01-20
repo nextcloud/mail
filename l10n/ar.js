@@ -50,7 +50,6 @@ OC.L10N.register(
     "No trash mailbox configured" : "لم يتم اعداد سلة المحذوفات لصندوق البريد",
     "Could not delete message" : "لا يمكن حذف الرسالة",
     "Choose" : "إختر",
-    "Important" : "مهم",
     "Favorites" : "المفضلات",
     "Other" : "آخر",
     "Attachments" : "المرفقات",

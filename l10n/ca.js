@@ -103,7 +103,6 @@ OC.L10N.register(
     "Loading messages" : "S'estan carregant missatges",
     "Indexing your messages. This can take a bit longer for larger mailboxes." : "Indexant els vostres missatges. Això pot prendre una mica més temps per a les bústies de correu més grans.",
     "Choose" : "Escolliu",
-    "Important" : "Importants",
     "Important info" : "Informació important",
     "Favorites" : "Favorits",
     "Other" : "Un altre",

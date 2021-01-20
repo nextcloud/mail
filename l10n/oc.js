@@ -19,7 +19,6 @@ OC.L10N.register(
     "Move" : "Move",
     "Delete" : "Suprimir",
     "Choose" : "Causir",
-    "Important" : "Important",
     "Favorites" : "Favorits",
     "Other" : "Autre",
     "Choose a folder to store the attachment in" : "Causissètz lo dorsièr dins lo qual enregistrar la pèça junta",

@@ -16,7 +16,6 @@ OC.L10N.register(
     "Move" : "Dịch chuyển",
     "Delete" : "Xóa",
     "Choose" : "Chọn",
-    "Important" : "Quan trọng",
     "Favorites" : "Ưa thích",
     "Other" : "Khác",
     "Attachments" : "Đính kèm",

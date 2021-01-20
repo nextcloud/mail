@@ -113,7 +113,6 @@ OC.L10N.register(
     "Loading messages" : "Hleð inn skilaboðum",
     "Indexing your messages. This can take a bit longer for larger mailboxes." : "Geri atriðaskrá yfir skilaboðin þín. Þetta getur tekið drjúga stund fyrir stór pósthólf.",
     "Choose" : "Velja",
-    "Important" : "Mikilvægt",
     "Important info" : "Mikilvægar upplýsingar",
     "Favorites" : "Eftirlæti",
     "Other" : "Annað",

@@ -33,7 +33,6 @@ OC.L10N.register(
     "Move" : "Liiguta",
     "Delete" : "Kustuta",
     "Choose" : "Vali",
-    "Important" : "Tähtis",
     "Favorites" : "Lemmikud",
     "Other" : "Muu",
     "Unnamed" : "Nimeta",

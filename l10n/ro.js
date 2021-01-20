@@ -26,7 +26,6 @@ OC.L10N.register(
     "Move" : "Mută",
     "Delete" : "Șterge",
     "Choose" : "Alege",
-    "Important" : "Important",
     "Favorites" : "Favorite",
     "Other" : "Altele",
     "Unnamed" : "Fără nume",

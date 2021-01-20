@@ -129,7 +129,6 @@ OC.L10N.register(
     "Choose target mailbox" : "Kies doel postbus",
     "No more submailboxes in here" : "Niet meer subpostbussen hier",
     "Choose" : "Kies",
-    "Important" : "Belangrijk",
     "Important info" : "Belangrijke informatie",
     "Favorites" : "Favorieten",
     "Other" : "Ander",

@@ -122,7 +122,6 @@ OC.L10N.register(
     "Choose target mailbox" : "Επιλέξτε γραμματοκιβώτιο προορισμού",
     "No more submailboxes in here" : "Δεν υπάρχουν άλλα υπο-γραμματοκιβώτια εδώ",
     "Choose" : "Επιλογή",
-    "Important" : "Σημαντικό ",
     "Important info" : "Σημαντική πλροφορία",
     "Favorites" : "Αγαπημένα",
     "Other" : "Άλλο",
