@@ -37,7 +37,7 @@
 					envelope.flags.important ? t('mail', 'Mark unimportant') : t('mail', 'Mark important')
 				}}
 			</ActionButton>
-			<ActionButton icon="icon-starred"
+			<ActionButton :icon="iconFavorite"
 				:close-after-click="true"
 				@click.prevent="onToggleFlagged">
 				{{
@@ -232,6 +232,9 @@ export default {
 		},
 		threadingFileName() {
 			return `${this.envelope.databaseId}.json`
+		},
+		iconFavorite() {
+			return this.envelope.flags.flagged ? 'icon-favorite' : 'icon-starred'
 		},
 	},
 	methods: {

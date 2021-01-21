@@ -339,7 +339,6 @@ export default {
 		margin-top: -2px;
 		margin-left: 27px;
 		cursor: pointer;
-
 	}
 	.left:not(.seen) {
 		font-weight: bold;
