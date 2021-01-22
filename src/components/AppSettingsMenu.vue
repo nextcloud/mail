@@ -147,6 +147,7 @@ p.app-settings {
 
 	padding-left: 34px;
 	background-position: 10px center;
+	text-align: left;
 }
 .app-settings-button.button.primary.new-button {
 	color: var(--color-main-background);
