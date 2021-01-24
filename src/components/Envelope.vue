@@ -120,7 +120,8 @@ export default {
 	},
 	computed: {
 		accountColor() {
-			return calculateAccountColor(this.account?.emailAddress ?? '')
+			const account = this.$store.getters.getAccount(this.data.accountId)
+			return calculateAccountColor(account?.emailAddress ?? '')
 		},
 		draft() {
 			return this.data.flags.draft
