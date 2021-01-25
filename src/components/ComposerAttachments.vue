@@ -103,15 +103,6 @@ export default {
 		onAddLocalAttachment() {
 			this.$refs.localAttachments.click()
 		},
-		fileNameToAttachment(name, size, id) {
-			return {
-				fileName: name,
-				displayName: trimStart('/')(name),
-				id,
-				size,
-				type: id !== undefined ? 'local' : 'cloud',
-			}
-		},
 		emitNewAttachments(attachments) {
 			this.$emit('input', this.value.concat(attachments))
 		},
@@ -157,8 +148,15 @@ export default {
 
 				return uploadLocalAttachment(file, progress(file.name)).then(({ file, id }) => {
 					logger.info('uploaded')
-					return this.emitNewAttachments([this.fileNameToAttachment(file.name, file.size, id)])
+					return this.emitNewAttachments([{
+						fileName: file.name,
+						displayName: trimStart('/')(name),
+						id,
+						size: file.size,
+						type: 'local',
+					}])
 				})
+
 			}, e.target.files)
 
 			const done = Promise.all(promises)
@@ -183,7 +181,13 @@ export default {
 					return
 				}
 
-				this.emitNewAttachments(paths.map(this.fileNameToAttachment))
+				this.emitNewAttachments(paths.map(function(name) {
+					return {
+						fileName: name,
+						displayName: trimStart('/')(name),
+						type: 'cloud',
+					}
+				}))
 			} catch (error) {
 				logger.error('could not choose a file as attachment', { error })
 			}
