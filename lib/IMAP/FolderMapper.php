@@ -224,8 +224,7 @@ class FolderMapper {
 			'junk' => ['junk', 'spam', 'bulk mail'],
 		];
 
-		$lowercaseExplode = explode($folder->getDelimiter(), $folder->getMailbox(), 2);
-		$lowercaseId = strtolower(array_pop($lowercaseExplode));
+		$lowercaseId = strtolower($folder->getMailbox());
 		foreach ($specialFoldersDict as $specialRole => $specialNames) {
 			if (in_array($lowercaseId, $specialNames)) {
 				$folder->addSpecialUse($specialRole);
