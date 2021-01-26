@@ -409,7 +409,6 @@ export default {
 				logger.debug('envelope to delete does not exist in envelope list')
 				return
 			}
-			this.envelopes.splice(idx, 1)
 			if (id !== this.$route.params.threadId) {
 				logger.debug('other message open, not jumping to the next/previous message')
 				return
