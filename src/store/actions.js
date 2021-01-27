@@ -75,10 +75,8 @@ import { matchError } from '../errors/match'
 import SyncIncompleteError from '../errors/SyncIncompleteError'
 import MailboxLockedError from '../errors/MailboxLockedError'
 import { wait } from '../util/wait'
-import { UNIFIED_INBOX_ID } from './constants'
 import { updateAccount as updateSieveAccount } from '../service/SieveService'
-
-const PAGE_SIZE = 20
+import { UNIFIED_INBOX_ID, PAGE_SIZE } from './constants'
 
 const sliceToPage = slice(0, PAGE_SIZE)
 
@@ -316,7 +314,15 @@ export default {
 			)
 		)(mailboxId, query, undefined, PAGE_SIZE)
 	},
-	fetchNextEnvelopePage({ commit, getters, dispatch }, { mailboxId, query, rec = true }) {
+	async fetchNextEnvelopePage({ commit, getters, dispatch }, { mailboxId, query }) {
+		const envelopes = await dispatch('fetchNextEnvelopes', {
+			mailboxId,
+			query,
+			quantity: PAGE_SIZE
+		})
+		return envelopes
+	},
+	async fetchNextEnvelopes({ commit, getters, dispatch }, { mailboxId, query, quantity, rec = true }) {
 		const mailbox = getters.getMailbox(mailboxId)
 
 		if (mailbox.isUnified) {
@@ -329,7 +335,7 @@ export default {
 			if (cursor === undefined) {
 				throw new Error('Unified list has no tail')
 			}
-			const nextLocalUnifiedEnvelopePage = pipe(
+			const nextLocalUnifiedEnvelopes = pipe(
 				findIndividualMailboxes(getters.getMailboxes, mailbox.specialRole),
 				map(getIndivisualLists(query)),
 				combineEnvelopeLists,
@@ -338,56 +344,58 @@ export default {
 						dateInt: gt(cursor),
 					})
 				),
-				sliceToPage
+				slice(0, quantity)
 			)
-			// We know the next page based on local data
-			// We have to fetch individual pages only if the page ends in the known
-			// next page. If it ended before, there is no data to fetch anyway. If
+			// We know the next envelopes based on local data
+			// We have to fetch individual envelopes only if it ends in the known
+			// next fetch. If it ended before, there is no data to fetch anyway. If
 			// it ends after, we have all the relevant data already
-			const needsFetch = curry((query, nextPage, f) => {
+			const needsFetch = curry((query, nextEnvelopes, f) => {
 				const c = individualCursor(query, f)
-				return nextPage.length < PAGE_SIZE || (c <= head(nextPage).dateInt && c >= last(nextPage).dateInt)
+				return nextEnvelopes.length < quantity || (c <= head(nextEnvelopes).dateInt && c >= last(nextEnvelopes).dateInt)
 			})
 
 			const mailboxesToFetch = (accounts) =>
 				pipe(
 					findIndividualMailboxes(getters.getMailboxes, mailbox.specialRole),
-					filter(needsFetch(query, nextLocalUnifiedEnvelopePage(accounts)))
+					filter(needsFetch(query, nextLocalUnifiedEnvelopes(accounts)))
 				)(accounts)
 			const mbs = mailboxesToFetch(getters.accounts)
 
 			if (rec && mbs.length) {
 				return pipe(
 					map((mb) =>
-						dispatch('fetchNextEnvelopePage', {
+						dispatch('fetchNextEnvelopes', {
 							mailboxId: mb.databaseId,
 							query,
+							quantity,
 						})
 					),
 					Promise.all.bind(Promise),
 					andThen(() =>
-						dispatch('fetchNextEnvelopePage', {
+						dispatch('fetchNextEnvelopes', {
 							mailboxId,
 							query,
+							quantity,
 							rec: false,
 						})
 					)
 				)(mbs)
 			}
 
-			const page = nextLocalUnifiedEnvelopePage(getters.accounts)
-			page.map((envelope) =>
+			const envelopes = nextLocalUnifiedEnvelopes(getters.accounts)
+			envelopes.map((envelope) =>
 				commit('addEnvelope', {
 					query,
 					envelope,
 				})
 			)
-			return page
+			return envelopes
 		}
 
 		const list = mailbox.envelopeLists[normalizedEnvelopeListId(query)]
 		if (list === undefined) {
-			console.warn("envelope list is not defined, can't fetch next page", mailboxId, query)
+			console.warn("envelope list is not defined, can't fetch next envelopes", mailboxId, query)
 			return Promise.resolve([])
 		}
 		const lastEnvelopeId = last(list)
@@ -400,8 +408,8 @@ export default {
 			return Promise.reject(new Error('Cannot find last envelope. Required for the mailbox cursor'))
 		}
 
-		return fetchEnvelopes(mailboxId, query, lastEnvelope.dateInt, PAGE_SIZE).then((envelopes) => {
-			logger.debug(`fetched ${envelopes.length} messages for the next page of mailbox ${mailboxId}`, {
+		return fetchEnvelopes(mailboxId, query, lastEnvelope.dateInt, quantity).then((envelopes) => {
+			logger.debug(`fetched ${envelopes.length} messages for mailbox ${mailboxId}`, {
 				envelopes,
 			})
 			envelopes.forEach((envelope) =>

@@ -68,7 +68,8 @@
 					:envelope="envelope"
 					:with-reply="false"
 					:with-select="false"
-					:with-show-source="true" />
+					:with-show-source="true"
+					@delete="$emit('delete',envelope.databaseId)" />
 			</div>
 		</div>
 		<Loading v-if="loading" />

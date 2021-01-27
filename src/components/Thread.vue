@@ -9,7 +9,7 @@
 					</h2>
 					<div ref="avatarHeader" class="avatar-header">
 						<!-- Participants that can fit in the parent div -->
-						<RecipientBubble v-for="participant in threadParticipants.slice(0,participantsToDisplay)"
+						<RecipientBubble v-for="participant in threadParticipants.slice(0, participantsToDisplay)"
 							:key="participant.email"
 							:email="participant.email"
 							:label="participant.label" />
@@ -39,6 +39,7 @@
 				:mailbox-id="$route.params.mailboxId"
 				:expanded="expandedThreads.includes(env.databaseId)"
 				:full-height="thread.length === 1"
+				@delete="$emit('delete', env.databaseId)"
 				@move="onMove(env.databaseId)"
 				@toggleExpand="toggleExpand(env.databaseId)" />
 		</template>
