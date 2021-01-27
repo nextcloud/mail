@@ -77,6 +77,18 @@ use OCP\AppFramework\Db\Entity;
  * @method int|null getSentMailboxId()
  * @method void setTrashMailboxId(?int $id)
  * @method int|null getTrashMailboxId()
+ * @method bool isSieveEnabled()
+ * @method void setSieveEnabled(bool $sieveEnabled)
+ * @method string|null getSieveHost()
+ * @method void setSieveHost(?string $sieveHost)
+ * @method int|null getSievePort()
+ * @method void setSievePort(?int $sievePort)
+ * @method string|null getSieveSslMode()
+ * @method void setSieveSslMode(?string $sieveSslMode)
+ * @method string|null getSieveUser()
+ * @method void setSieveUser(?string $sieveUser)
+ * @method string|null getSievePassword()
+ * @method void setSievePassword(?string $sievePassword)
  */
 class MailAccount extends Entity {
 	protected $userId;
@@ -108,6 +120,19 @@ class MailAccount extends Entity {
 
 	/** @var int|null */
 	protected $trashMailboxId;
+
+	/** @var bool */
+	protected $sieveEnabled = false;
+	/** @var string|null */
+	protected $sieveHost;
+	/** @var integer|null */
+	protected $sievePort;
+	/** @var string|null */
+	protected $sieveSslMode;
+	/** @var string|null */
+	protected $sieveUser;
+	/** @var string|null */
+	protected $sievePassword;
 
 	/**
 	 * @param array $params
@@ -168,6 +193,8 @@ class MailAccount extends Entity {
 		$this->addType('draftsMailboxId', 'integer');
 		$this->addType('sentMailboxId', 'integer');
 		$this->addType('trashMailboxId', 'integer');
+		$this->addType('sieveEnabled', 'boolean');
+		$this->addType('sievePort', 'integer');
 	}
 
 	/**
@@ -192,6 +219,7 @@ class MailAccount extends Entity {
 			'draftsMailboxId' => $this->getDraftsMailboxId(),
 			'sentMailboxId' => $this->getSentMailboxId(),
 			'trashMailboxId' => $this->getTrashMailboxId(),
+			'sieveEnabled' => $this->isSieveEnabled(),
 		];
 
 		if (!is_null($this->getOutboundHost())) {
@@ -199,6 +227,13 @@ class MailAccount extends Entity {
 			$result['smtpPort'] = $this->getOutboundPort();
 			$result['smtpUser'] = $this->getOutboundUser();
 			$result['smtpSslMode'] = $this->getOutboundSslMode();
+		}
+
+		if ($this->isSieveEnabled()) {
+			$result['sieveHost'] = $this->getSieveHost();
+			$result['sievePort'] = $this->getSievePort();
+			$result['sieveUser'] = $this->getSieveUser();
+			$result['sieveSslMode'] = $this->getSieveSslMode();
 		}
 
 		return $result;

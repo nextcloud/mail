@@ -39,6 +39,11 @@ class TestConfig extends Config {
 			'smtpHost' => 'mx.domain.com',
 			'smtpPort' => 567,
 			'smtpSslMode' => 'tls',
+			'sieveEnabled' => false,
+			'sieveHost' => '',
+			'sievePort' => 4190,
+			'sieveUser' => '',
+			'sieveSslMode' => 'tls',
 		]);
 	}
 }

@@ -28,6 +28,7 @@ namespace OCA\Mail\Tests\Unit\Service;
 
 use OCA\Mail\Account;
 use OCA\Mail\Db\MailAccount;
+use OCA\Mail\IMAP\IMAPClientFactory;
 use OCA\Mail\Service\AccountService;
 use OCA\Mail\Service\AutoConfig\AutoConfig;
 use OCA\Mail\Service\SetupService;
@@ -51,6 +52,9 @@ class SetupServiceTest extends TestCase {
 	/** @var SmtpClientFactory|MockObject */
 	private $smtpClientFactory;
 
+	/** @var IMAPClientFactory|MockObject */
+	private $imapClientFactory;
+
 	/** @var LoggerInterface|MockObject */
 	private $logger;
 
@@ -64,6 +68,7 @@ class SetupServiceTest extends TestCase {
 		$this->accountService = $this->createMock(AccountService::class);
 		$this->crypto = $this->createMock(ICrypto::class);
 		$this->smtpClientFactory = $this->createMock(SmtpClientFactory::class);
+		$this->imapClientFactory = $this->createMock(IMAPClientFactory::class);
 		$this->logger = $this->createMock(LoggerInterface::class);
 
 		$this->service = new SetupService(
@@ -71,6 +76,7 @@ class SetupServiceTest extends TestCase {
 			$this->accountService,
 			$this->crypto,
 			$this->smtpClientFactory,
+			$this->imapClientFactory,
 			$this->logger
 		);
 	}

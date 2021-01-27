@@ -204,6 +204,21 @@ return [
 			'url' => '/api/trustedsenders',
 			'verb' => 'GET'
 		],
+		[
+			'name' => 'sieve#updateAccount',
+			'url' => '/api/sieve/account/{id}',
+			'verb' => 'PUT'
+		],
+		[
+			'name' => 'sieve#getActiveScript',
+			'url' => '/api/sieve/active/{id}',
+			'verb' => 'GET'
+		],
+		[
+			'name' => 'sieve#updateActiveScript',
+			'url' => '/api/sieve/active/{id}',
+			'verb' => 'PUT'
+		]
 	],
 	'resources' => [
 		'accounts' => ['url' => '/api/accounts'],

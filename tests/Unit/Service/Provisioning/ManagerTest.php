@@ -178,6 +178,11 @@ class ManagerTest extends TestCase {
 			'%USERID%@domain.com',
 			'mx.domain.com',
 			567,
+			'tls',
+			false,
+			'',
+			'',
+			0,
 			'tls'
 		);
 	}

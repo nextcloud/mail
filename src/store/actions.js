@@ -62,10 +62,10 @@ import {
 	fetchEnvelope,
 	fetchEnvelopes,
 	fetchMessage,
-	setEnvelopeFlag,
-	syncEnvelopes,
 	fetchThread,
 	moveMessage,
+	setEnvelopeFlag,
+	syncEnvelopes,
 } from '../service/MessageService'
 import { createAlias, deleteAlias } from '../service/AliasService'
 import logger from '../logger'
@@ -76,6 +76,7 @@ import SyncIncompleteError from '../errors/SyncIncompleteError'
 import MailboxLockedError from '../errors/MailboxLockedError'
 import { wait } from '../util/wait'
 import { UNIFIED_INBOX_ID } from './constants'
+import { updateAccount as updateSieveAccount } from '../service/SieveService'
 
 const PAGE_SIZE = 20
 
@@ -714,5 +715,15 @@ export default {
 		await moveMessage(id, destMailboxId)
 		commit('removeEnvelope', { id })
 		commit('removeMessage', { id })
+	},
+	async updateSieveAccount({ commit }, { account, data }) {
+		logger.debug(`update sieve settings for account ${account.id}`)
+		try {
+			await updateSieveAccount(account.id, data)
+			commit('patchAccount', { account, data })
+		} catch (error) {
+			logger.error('failed to update sieve account: ', { error })
+			throw error
+		}
 	},
 }

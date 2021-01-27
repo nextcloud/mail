@@ -56,30 +56,6 @@ class ConfigTest extends TestCase {
 		$this->assertEquals('user@domain.se', $config->buildEmail($user));
 	}
 
-	public function testGetImapHost() {
-		$config = new Config([
-			'imapHost' => 'imap.domain.com',
-		]);
-
-		$this->assertEquals('imap.domain.com', $config->getImapHost());
-	}
-
-	public function testGetImapPort() {
-		$config = new Config([
-			'imapPort' => 993,
-		]);
-
-		$this->assertEquals(993, $config->getImapPort());
-	}
-
-	public function testGetImapSslMode() {
-		$config = new Config([
-			'imapSslMode' => 'ssl',
-		]);
-
-		$this->assertEquals('ssl', $config->getImapSslMode());
-	}
-
 	public function testBuildImapUserWithUserId() {
 		$user = $this->createMock(IUser::class);
 		$config = new Config([
@@ -125,30 +101,6 @@ class ConfigTest extends TestCase {
 		$this->assertEquals('user@domain.se', $config->buildImapUser($user));
 	}
 
-	public function testGetSmtpSslMode() {
-		$config = new Config([
-			'smtpSslMode' => 'tls',
-		]);
-
-		$this->assertEquals('tls', $config->getSmtpSslMode());
-	}
-
-	public function testGetSmtpHost() {
-		$config = new Config([
-			'smtpHost' => 'smtp.domain.com',
-		]);
-
-		$this->assertEquals('smtp.domain.com', $config->getSmtpHost());
-	}
-
-	public function testGetSmtpPort() {
-		$config = new Config([
-			'smtpPort' => 465,
-		]);
-
-		$this->assertEquals(465, $config->getSmtpPort());
-	}
-
 	public function testBuildSmtpUserWithUserId() {
 		$user = $this->createMock(IUser::class);
 		$config = new Config([
@@ -192,5 +144,77 @@ class ConfigTest extends TestCase {
 			->willReturn('user@domain.se');
 
 		$this->assertEquals('user@domain.se', $config->buildImapUser($user));
+	}
+
+	public function testBuildSieveUserWithUserId(): void {
+		$user = $this->createMock(IUser::class);
+		$config = new Config([
+			'sieveUser' => '%USERID%@domain.se',
+		]);
+		$user->expects($this->exactly(2))
+			->method('getUID')
+			->willReturn('test');
+		$user->expects($this->once())
+			->method('getEMailAddress')
+			->willReturn(null);
+
+		$this->assertEquals('test@domain.se', $config->buildSieveUser($user));
+	}
+
+	public function testBuilldSieveUserWithEmailPlaceholder(): void {
+		$user = $this->createMock(IUser::class);
+		$config = new Config([
+			'sieveUser' => '%EMAIL%',
+		]);
+		$user->expects($this->once())
+			->method('getUID')
+			->willReturn(null);
+		$user->expects($this->exactly(2))
+			->method('getEMailAddress')
+			->willReturn('user@domain.se');
+
+		$this->assertEquals('user@domain.se', $config->buildSieveUser($user));
+	}
+
+	public function testBuildSieveUserFromDefaultEmail(): void {
+		$user = $this->createMock(IUser::class);
+		$config = new Config([
+			'email' => '%EMAIL%',
+		]);
+		$user->expects($this->exactly(2))
+			->method('getUID')
+			->willReturn('user');
+		$user->expects($this->exactly(2))
+			->method('getEMailAddress')
+			->willReturn('user@domain.se');
+
+		$this->assertEquals('user@domain.se', $config->buildSieveUser($user));
+	}
+
+	/**
+	 * @param string $key
+	 * @param mixed $value
+	 * @dataProvider providerTestGetter
+	 */
+	public function testGetter(string $key, $value): void {
+		$config = new Config([
+			$key => $value
+		]);
+		$this->assertEquals($value, $config->{'get' . ucfirst($key)}());
+	}
+
+	public function providerTestGetter(): array {
+		return [
+			'smtpHost' => ['smtpHost', 'smtp.domain.com'],
+			'smtpPort' => ['smtpPort', 465],
+			'smtpSslMode' => ['smtpSslMode', 'tls'],
+			'imapHost' => ['imapHost', 'imap.domain.com'],
+			'imapPort' => ['imapPort', 993],
+			'imapSslMode' => ['imapSslMode', 'tls'],
+			'sieveEnabled' => ['sieveEnabled', true],
+			'sieveHost' => ['sieveHost', 'imap.domain.com'],
+			'sievePort' => ['sieveHost', 4190],
+			'sieveSslMode' => ['sieveSslMode', 'tls'],
+		];
 	}
 }

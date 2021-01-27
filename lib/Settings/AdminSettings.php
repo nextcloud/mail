@@ -61,6 +61,11 @@ class AdminSettings implements ISettings {
 				'smtpHost' => 'smtp.domain.com',
 				'smtpPort' => 587,
 				'smtpSslMode' => 'tls',
+				'sieveEnabled' => false,
+				'sieveUser' => '%USERID%@domain.com',
+				'sieveHost' => 'imap.domain.com',
+				'sievePort' => 4190,
+				'sieveSslMode' => 'tls',
 			])
 		);
 

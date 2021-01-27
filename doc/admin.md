@@ -28,6 +28,11 @@ Depending on your mail host, it may be necessary to increase your IMAP and/or SM
 ```php
 'app.mail.smtp.timeout' => 2
 ```
+#### Sieve timeout
+```php
+'app.mail.sieve.timeout' => 2
+```
+
 ### Use php-mail for sending mail
 You can use the php-mail function to send mails. This is needed for some webhosters (1&1 (1und1)):
 ```php
