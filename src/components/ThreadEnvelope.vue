@@ -64,94 +64,10 @@
 					class="button">
 					<span class="action-label"> {{ t('mail', 'Reply') }}</span>
 				</router-link>
-				<Actions class="app-content-list-item-menu" menu-align="right">
-					<ActionRouter v-if="hasMultipleRecipients"
-						icon="icon-reply"
-						:close-after-click="true"
-						:to="replyOneLink">
-						{{ t('mail', 'Reply to sender only') }}
-					</ActionRouter>
-					<ActionRouter icon="icon-forward"
-						:close-after-click="true"
-						:to="forwardLink">
-						{{ t('mail', 'Forward') }}
-					</ActionRouter>
-					<ActionButton icon="icon-important"
-						:close-after-click="true"
-						@click.prevent="onToggleImportant">
-						{{
-							envelope.flags.important ? t('mail', 'Mark unimportant') : t('mail', 'Mark important')
-						}}
-					</ActionButton>
-					<ActionButton icon="icon-starred"
-						:close-after-click="true"
-						@click.prevent="onToggleFlagged">
-						{{
-							envelope.flags.flagged ? t('mail', 'Mark unfavorite') : t('mail', 'Mark favorite')
-						}}
-					</ActionButton>
-					<ActionButton icon="icon-mail"
-						:close-after-click="true"
-						@click.prevent="onToggleSeen">
-						{{ envelope.flags.seen ? t('mail', 'Mark unread') : t('mail', 'Mark read') }}
-					</ActionButton>
-
-					<ActionButton icon="icon-junk"
-						:close-after-click="true"
-						@click.prevent="onToggleJunk">
-						{{ envelope.flags.junk ? t('mail', 'Mark not spam') : t('mail', 'Mark as spam') }}
-					</ActionButton>
-					<ActionButton
-						:icon="sourceLoading ? 'icon-loading-small' : 'icon-details'"
-						:disabled="sourceLoading"
-						:close-after-click="true"
-						@click.prevent="onShowSource">
-						{{ t('mail', 'View source') }}
-					</ActionButton>
-					<ActionRouter icon="icon-add"
-						:to="{
-							name: 'message',
-							params: {
-								mailboxId: $route.params.mailboxId,
-								threadId: 'asNew',
-								filter: $route.params.filter,
-							},
-							query: {
-								messageId: envelope.databaseId,
-							},
-						}">
-						{{ t('mail', 'Edit as new message') }}
-					</ActionRouter>
-					<ActionLink v-if="debug"
-						icon="icon-download"
-						:download="threadingFileName"
-						:href="threadingFile"
-						:close-after-click="true">
-						{{ t('mail', 'Download thread data for debugging') }}
-					</ActionLink>
-					<ActionButton icon="icon-external" :close-after-click="true" @click.prevent="onOpenMoveModal">
-						{{ t('mail', 'Move') }}
-					</ActionButton>
-					<ActionButton icon="icon-delete"
-						:close-after-click="true"
-						@click.prevent="onDelete">
-						{{ t('mail', 'Delete') }}
-					</ActionButton>
-				</Actions>
-				<Modal v-if="showSource" class="source-modal" @close="onCloseSource">
-					<div class="source-modal-content">
-						<div class="section">
-							<h2>{{ t('mail', 'Message source') }}</h2>
-							<pre class="message-source">{{ rawMessage }}</pre>
-						</div>
-					</div>
-				</Modal>
-				<MoveModal
-					v-if="showMoveModal"
-					:account="account"
-					:envelopes="[envelope]"
-					@move="onMove"
-					@close="onCloseMoveModal" />
+				<MenuEnvelope class="app-content-list-item-menu"
+					:envelope="envelope"
+					:with-select="false"
+					:with-show-source="true" />
 			</div>
 		</div>
 		<Loading v-if="loading" />
@@ -167,42 +83,25 @@
 	</div>
 </template>
 <script>
-import Actions from '@nextcloud/vue/dist/Components/Actions'
-import ActionButton from '@nextcloud/vue/dist/Components/ActionButton'
-import ActionLink from '@nextcloud/vue/dist/Components/ActionLink'
-import ActionRouter from '@nextcloud/vue/dist/Components/ActionRouter'
-import axios from '@nextcloud/axios'
 import Error from './Error'
 import Loading from './Loading'
 import logger from '../logger'
 import Message from './Message'
+import MenuEnvelope from './MenuEnvelope'
 import Moment from './Moment'
 import Avatar from './Avatar'
-import MoveModal from './MoveModal'
-import { buildRecipients as buildReplyRecipients } from '../ReplyBuilder'
-import { generateUrl } from '@nextcloud/router'
-import Modal from '@nextcloud/vue/dist/Components/Modal'
-import { Base64 } from 'js-base64'
 import importantSvg from '../../img/important.svg'
-import { matchError } from '../errors/match'
-import { showError } from '@nextcloud/dialogs'
-import NoTrashMailboxConfiguredError
-	from '../errors/NoTrashMailboxConfiguredError'
+import { buildRecipients as buildReplyRecipients } from '../ReplyBuilder'
 
 export default {
 	name: 'ThreadEnvelope',
 	components: {
-		Actions,
-		ActionButton,
-		ActionLink,
-		ActionRouter,
 		Error,
 		Loading,
+		MenuEnvelope,
 		Moment,
 		Message,
-		Modal,
 		Avatar,
-		MoveModal,
 	},
 	props: {
 		envelope: {
@@ -230,41 +129,15 @@ export default {
 	},
 	data() {
 		return {
-			debug: window?.OC?.debug || false,
 			loading: false,
 			error: undefined,
 			message: undefined,
-			rawMessage: '',
-			sourceLoading: false,
-			showSource: false,
-			showMoveModal: false,
 			importantSvg,
 		}
 	},
 	computed: {
 		account() {
 			return this.$store.getters.getAccount(this.envelope.accountId)
-		},
-		threadingFile() {
-			return `data:text/plain;base64,${Base64.encode(JSON.stringify({
-				subject: this.envelope.subject,
-				messageId: this.envelope.messageId,
-				inReplyTo: this.envelope.inReplyTo,
-				references: this.envelope.references,
-				threadRootId: this.envelope.threadRootId,
-			}, null, 2))}`
-		},
-		threadingFileName() {
-			return `${this.envelope.databaseId}.json`
-		},
-		route() {
-			return {
-				name: 'message',
-				params: {
-					mailboxId: this.mailboxId || this.envelope.mailboxId,
-					threadId: this.envelope.databaseId,
-				},
-			}
 		},
 		hasMultipleRecipients() {
 			if (!this.account) {
@@ -304,16 +177,12 @@ export default {
 				},
 			}
 		},
-		forwardLink() {
+		route() {
 			return {
 				name: 'message',
 				params: {
-					mailboxId: this.$route.params.mailboxId,
-					threadId: 'new',
-					filter: this.$route.params.filter ? this.$route.params.filter : undefined,
-				},
-				query: {
-					messageId: this.envelope.databaseId,
+					mailboxId: this.mailboxId || this.envelope.mailboxId,
+					threadId: this.envelope.databaseId,
 				},
 			}
 		},
@@ -350,64 +219,6 @@ export default {
 			} catch (error) {
 				logger.error('Could not fetch message', { error })
 			}
-		},
-		onToggleSeen() {
-			this.$store.dispatch('toggleEnvelopeSeen', { envelope: this.envelope })
-		},
-		onToggleJunk() {
-			this.$store.dispatch('toggleEnvelopeJunk', this.envelope)
-		},
-		async onDelete() {
-			this.$emit('delete', this.envelope.databaseId)
-			try {
-				await this.$store.dispatch('deleteMessage', {
-					id: this.envelope.databaseId,
-				})
-			} catch (error) {
-				showError(await matchError(error, {
-					[NoTrashMailboxConfiguredError.getName()]() {
-						return t('mail', 'No trash mailbox configured')
-					},
-					default(error) {
-						logger.error('could not delete message', error)
-						return t('mail', 'Could not delete message')
-					},
-				}))
-			}
-		},
-		async onShowSource() {
-			this.sourceLoading = true
-
-			try {
-				const resp = await axios.get(
-					generateUrl('/apps/mail/api/messages/{id}/source', {
-						id: this.envelope.databaseId,
-					})
-				)
-
-				this.rawMessage = resp.data.source
-				this.showSource = true
-			} finally {
-				this.sourceLoading = false
-			}
-		},
-		onCloseSource() {
-			this.showSource = false
-		},
-		onToggleImportant() {
-			this.$store.dispatch('toggleEnvelopeImportant', this.envelope)
-		},
-		onToggleFlagged() {
-			this.$store.dispatch('toggleEnvelopeFlagged', this.envelope)
-		},
-		onOpenMoveModal() {
-			this.showMoveModal = true
-		},
-		onCloseMoveModal() {
-			this.showMoveModal = false
-		},
-		onMove() {
-			this.$emit('move')
 		},
 	},
 }
