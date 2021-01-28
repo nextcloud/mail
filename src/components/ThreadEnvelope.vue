@@ -133,6 +133,7 @@ export default {
 			error: undefined,
 			message: undefined,
 			importantSvg,
+			seenTimer: undefined,
 		}
 	},
 	computed: {
@@ -201,6 +202,12 @@ export default {
 			this.fetchMessage()
 		}
 	},
+	beforeDestroy() {
+		if (this.seenTimer !== undefined) {
+			logger.info('Navigating away before seenTimer delay, will not mark message as seen/read')
+			clearTimeout(this.seenTimer)
+		}
+	},
 	methods: {
 		async fetchMessage() {
 			this.loading = true
@@ -212,7 +219,11 @@ export default {
 				logger.debug(`message ${this.envelope.databaseId} fetched`, { message })
 
 				if (!this.envelope.flags.seen) {
-					this.$store.dispatch('toggleEnvelopeSeen', { envelope: this.envelope })
+					logger.info('Starting timer to mark message as seen/read')
+					this.seenTimer = setTimeout(() => {
+						this.$store.dispatch('toggleEnvelopeSeen', { envelope: this.envelope })
+						this.seenTimer = undefined
+					}, 2000)
 				}
 
 				this.loading = false
