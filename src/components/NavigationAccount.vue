@@ -106,7 +106,7 @@ export default {
 		},
 		firstMailbox: {
 			type: Object,
-			required: true,
+			default: () => undefined,
 		},
 		isFirst: {
 			type: Boolean,
@@ -135,11 +135,15 @@ export default {
 			return this.account.isUnified !== true && this.account.visible !== false
 		},
 		firstMailboxRoute() {
-			return {
-				name: 'mailbox',
-				params: {
-					mailboxId: this.firstMailbox.databaseId,
-				},
+			if (this.firstMailbox) {
+				return {
+					name: 'mailbox',
+					params: {
+						mailboxId: this.firstMailbox.databaseId,
+					},
+				}
+			} else {
+				return ''
 			}
 		},
 		id() {
