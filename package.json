@@ -18,7 +18,7 @@
     "@ckeditor/ckeditor5-alignment": "~24.0.0",
     "@ckeditor/ckeditor5-basic-styles": "~24.0.0",
     "@ckeditor/ckeditor5-block-quote": "~24.0.0",
-    "@ckeditor/ckeditor5-build-balloon": "~24.0.0",
+    "@ckeditor/ckeditor5-build-balloon": "~25.0.0",
     "@ckeditor/ckeditor5-dev-utils": "24.0.2",
     "@ckeditor/ckeditor5-dev-webpack-plugin": "^24.0.2",
     "@ckeditor/ckeditor5-editor-balloon": "~24.0.0",
