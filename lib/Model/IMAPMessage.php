@@ -273,7 +273,7 @@ class IMAPMessage implements IMessage, JsonSerializable {
 	 * @return string
 	 */
 	public function getSubject(): string {
-		return $this->getEnvelope()->subject;
+		return iconv("UTF-8", "UTF-8//IGNORE", $this->getEnvelope()->subject);
 	}
 
 	/**
