@@ -167,6 +167,7 @@ OC.L10N.register(
     "Save signature" : "Gorde sinadura",
     "Could not load your message thread" : "Ezin izan da zure mezuen haria kargatu",
     "Reply" : "Erantzun",
+    "Remove" : "Kendu",
     "Import into {calendar}" : "Inportatu {calendar} egutegira",
     "Event imported into {calendar}" : "Gertaera inportatu da {calendar} egutegira",
     "Could not create event" : "Ezin izan da gertaera sortu",
