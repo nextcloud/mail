@@ -88,7 +88,7 @@ class FilterStringParser {
 							Flag::is(Flag::FLAGGED),
 							FlagExpression::or(
 								Flag::not(Flag::IMPORTANT),
-								FlagExpression::or(
+								FlagExpression::and(
 									Flag::is(Flag::IMPORTANT),
 									Flag::is(Flag::SEEN)
 								)
