@@ -95,7 +95,6 @@ OC.L10N.register(
     "No messages" : "אין הודעות",
     "Draft: " : "טיוטה:",
     "Blind copy recipients only" : "נמענים נסתרים בלבד",
-    "Delete {number}" : "מחיקה {number}",
     "Load more" : "לטעון עוד",
     "No trash mailbox configured" : "לא הוגדרה תיבת דוא״ל לאשפה",
     "Could not delete message" : "לא ניתן למחוק הודעה",
