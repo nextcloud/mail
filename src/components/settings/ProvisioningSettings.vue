@@ -152,7 +152,7 @@
 								type="text">
 						</label>
 						<div class="flex-row">
-							<label for="mail-provision-imap-host">
+							<label for="mail-provision-smtp-host">
 								{{ t('mail', 'Host') }}
 								<br>
 								<input
